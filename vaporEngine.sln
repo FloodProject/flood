@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C++ Express 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vaporEngine", "src\Engine\vaporEngine.vcproj", "{6F632FD5-78F5-4A09-A15F-3E2BF85B783F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vaporExamples", "src\Examples\fuckExamples.vcproj", "{7E63C46E-4243-4806-AE6C-944A2476F29F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6F632FD5-78F5-4A09-A15F-3E2BF85B783F} = {6F632FD5-78F5-4A09-A15F-3E2BF85B783F}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6F632FD5-78F5-4A09-A15F-3E2BF85B783F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6F632FD5-78F5-4A09-A15F-3E2BF85B783F}.Debug|Win32.Build.0 = Debug|Win32
+		{6F632FD5-78F5-4A09-A15F-3E2BF85B783F}.Release|Win32.ActiveCfg = Release|Win32
+		{6F632FD5-78F5-4A09-A15F-3E2BF85B783F}.Release|Win32.Build.0 = Release|Win32
+		{7E63C46E-4243-4806-AE6C-944A2476F29F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7E63C46E-4243-4806-AE6C-944A2476F29F}.Debug|Win32.Build.0 = Debug|Win32
+		{7E63C46E-4243-4806-AE6C-944A2476F29F}.Release|Win32.ActiveCfg = Release|Win32
+		{7E63C46E-4243-4806-AE6C-944A2476F29F}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
