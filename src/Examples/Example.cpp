@@ -1,9 +1,9 @@
-#include "vapor/Engine.h"
-
-#include <cmath>
+#include <vapor/Engine.h>
+#include <vapor/Math.h>
 
 using namespace vapor::resources;
 using namespace vapor::renderer;
+using namespace vapor::math;
 
 int main(int argc, char *argv[])
 {
