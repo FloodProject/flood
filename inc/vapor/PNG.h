@@ -8,21 +8,31 @@
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 
-#include "vapor/Font.h"
+#pragma once
+
+#include "Engine.h"
+
+int decodePNG(std::vector<byte>& out_image_32bit, ulong& image_width, 
+		  ulong& image_height, const byte* in_png, ulong in_size);
 
 namespace vapor {
 	namespace resources {
 
-Font::Font()
+class PNG
 {
-	// still not used
-}
+	ulong width, height;
+	vector<byte> buffer;
 
-SDL_Surface* Font::getSurface(const string &text, Color color)
-{
-	SDL_Color c; 
-	c.r = color.r; c.g = color.b; c.b = color.b;
-	return FNT_Render(text.c_str(), c);
-}
+	void decode(const string& filename);
+
+public:
+
+	PNG(const string& filename);
+
+	const int getWidth() const;
+	const int getHeight() const;
+
+	vector<byte>& getBuffer();
+};
 
 } } // end namespaces

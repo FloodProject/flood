@@ -5,21 +5,33 @@
 ////
 //// License: fuckGNU License
 ////
+//// Changelog:
+////	(19/08/08) Initial implementantion
+////
+//// Thanks to:
+////	Zero (love ya bitch)
+////
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
-
-#pragma once
-
-#include "vapor/Window.h"
-#include "vapor/SDL_Window.h"
 
 namespace vapor {
-	namespace renderer {
+namespace util {
 
-Window& Window::createWindow(const std::string &title, const int width, const int height, const bool fullscreen)
+template<class T>
+class Singleton
 {
-	Window* window = new SDLWindow(title, width, height, fullscreen);
-	return *window;
-}
+protected:
 
-} } // end namespaces
+	static T *Instance;
+
+public:
+
+	Singleton()	 { Instance = static_cast<T*>(this); }
+	~Singleton() { Instance = 0; }
+	
+	static T &getInstance()	{ return *Instance; }
+	static T *getInstancePtr()	{ return Instance; }
+};
+
+}
+}

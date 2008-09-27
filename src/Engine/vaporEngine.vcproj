@@ -156,7 +156,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Camera.h"
+				RelativePath="..\..\inc\vapor\Camera.h"
 				>
 			</File>
 			<File
@@ -164,7 +164,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\RenderQueue.h"
+				RelativePath="..\..\inc\vapor\RenderQueue.h"
 				>
 			</File>
 			<Filter
@@ -175,7 +175,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\inc\Window.h"
+					RelativePath="..\..\inc\vapor\Window.h"
 					>
 				</File>
 				<Filter
@@ -186,7 +186,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\inc\SDL_Window.h"
+						RelativePath="..\..\inc\vapor\SDL_Window.h"
 						>
 					</File>
 				</Filter>
@@ -195,14 +195,14 @@
 				Name="Device"
 				>
 				<File
-					RelativePath="..\..\inc\RenderDevice.h"
+					RelativePath="..\..\inc\vapor\RenderDevice.h"
 					>
 				</File>
 				<Filter
 					Name="Software"
 					>
 					<File
-						RelativePath="..\..\inc\SoftwareDevice.h"
+						RelativePath="..\..\inc\vapor\SoftwareDevice.h"
 						>
 					</File>
 				</Filter>
@@ -212,7 +212,7 @@
 			Name="Resources"
 			>
 			<File
-				RelativePath="..\..\inc\Color.h"
+				RelativePath="..\..\inc\vapor\Color.h"
 				>
 			</File>
 			<Filter
@@ -226,7 +226,11 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\inc\Milkshape3D.h"
+						RelativePath="..\..\inc\vapor\Milkshape3D.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\Milkshape3D_Data.h"
 						>
 					</File>
 				</Filter>
@@ -239,7 +243,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\inc\Font.h"
+					RelativePath="..\..\inc\vapor\Font.h"
 					>
 				</File>
 				<Filter
@@ -266,7 +270,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\inc\PNG.h"
+						RelativePath="..\..\inc\vapor\PNG.h"
 						>
 					</File>
 					<Filter
@@ -284,14 +288,14 @@
 			Name="Math"
 			>
 			<File
-				RelativePath=".\Math.h"
+				RelativePath="..\..\inc\vapor\Math.h"
 				>
 			</File>
 			<Filter
 				Name="Vectors"
 				>
 				<File
-					RelativePath="..\..\inc\Vector3.h"
+					RelativePath="..\..\inc\vapor\Vector3.h"
 					>
 				</File>
 			</Filter>
@@ -303,7 +307,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Matrix.h"
+					RelativePath="..\..\inc\vapor\Matrix.h"
 					>
 				</File>
 			</Filter>
@@ -316,16 +320,16 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\inc\Log.h"
+				RelativePath="..\..\inc\vapor\Log.h"
 				>
 			</File>
 			<File
-				RelativePath=".\LogExternalData.h"
+				RelativePath="..\..\inc\vapor\LogExternalData.h"
 				>
 			</File>
 		</Filter>
 		<File
-			RelativePath="..\..\inc\Engine.h"
+			RelativePath="..\..\inc\vapor\Engine.h"
 			>
 		</File>
 		<File

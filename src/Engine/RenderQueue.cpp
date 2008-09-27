@@ -3,7 +3,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-#include "RenderQueue.h"
+#include "vapor/RenderQueue.h"
 
 namespace vapor {
 	namespace renderer {

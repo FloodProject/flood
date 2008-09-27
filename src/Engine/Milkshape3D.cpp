@@ -1,7 +1,7 @@
 // based on official Milkshape3D viewer source
 
-#include "Milkshape3D.h"
-#include "File.h"
+#include "vapor/Milkshape3D.h"
+#include "vapor/File.h"
 
 namespace vapor {
 	namespace resources {

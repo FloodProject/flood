@@ -5,21 +5,20 @@
 ////
 //// License: fuckGNU License
 ////
+//// Changelog:
+////	(18/08/08) Initial implementantion
+////
+//// Thanks to:
+////	Zero (love ya bitch)
+////
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
-
-#pragma once
-
-#include "vapor/Window.h"
-#include "vapor/SDL_Window.h"
 
 namespace vapor {
-	namespace renderer {
+	namespace math {
 
-Window& Window::createWindow(const std::string &title, const int width, const int height, const bool fullscreen)
-{
-	Window* window = new SDLWindow(title, width, height, fullscreen);
-	return *window;
-}
+#include "Vector3.h"
+
+//const Vec3f vectorZero (0.0f, 0.0f, 0.0f);
 
 } } // end namespaces

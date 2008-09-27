@@ -15,7 +15,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "PNG.h"
+#include "vapor/PNG.h"
 
 namespace vapor {
 	namespace resources {
