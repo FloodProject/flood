@@ -1,3 +1,61 @@
+vaporEngine - whats the big deal?
+---------------------------------
+
+So, vaporEngine is just a tiny KISS 3D engine I've been working on in the past few months.
+
+The engine is divided in a few subsystems (enclosed in namespaces):
+
+	* log (logging)
+	* vfs (virtual file system)
+	* math (vectors, matrices, AABBs, ...)
+	* scene (scene graph)
+	* render (rendering)
+	* resources (textures, meshes, fonts, ...)
+
+
+
+
+
+Rendering-related classes
+-------------------------
+
+RenderQueue
+
+	this holds references to all the scene entities we are to render.
+	it sorts them by state (materials, opacity) to minimise state changes.
+
+RenderDevice
+	
+	represents the rendering device we are using. at startup the application
+	can ask the user what device he wants to use (OpenGL / DirectX / Software)
+	and then we create and use the device. all operations are to be done by this
+	abstract class. the user of the engine doesnt need to care about details.
+	this class only knows about rendering vertices/triangles and should not
+	know anything about the high-level geometry primitives.
+
+Window
+
+	just a class that has the window we are to render. this is abstract and will
+	have a subclass for every other operating system we are to support. right now
+	we are using SDL for creating and managing windows but it creates a pretty big
+	dependency and should be replaced by native code once there is time to do it.
+
+Camera
+
+	the camera class points to what the user is looking at. it is used to configure 
+	the type of projection we need and also handles the frustum culling operations.
+	the camera connects with the scenemanager/renderqueue.
+	
+	
+
+	
+Scene-related classes
+---------------------
+
+
+WIP (work-in-progress)
+----------------------
+
 High priority:
 
 	Add matrix class
@@ -23,9 +81,3 @@ Done:
 	Clean Visual Studio solutions
 	Add namespaces to subsystems
 	Add Milkshape model parser (DONE)
-	
-Features:
-
-	Render state management
-	Spatial culling
-	

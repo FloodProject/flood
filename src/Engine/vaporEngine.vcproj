@@ -149,7 +149,7 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Renderer"
+			Name="Render"
 			>
 			<File
 				RelativePath=".\Renderer.cpp"
@@ -324,16 +324,8 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="Matrices"
+				Name="Matrix"
 				>
-				<File
-					RelativePath=".\Matrix.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\Matrix.h"
-					>
-				</File>
 			</Filter>
 		</Filter>
 		<Filter
