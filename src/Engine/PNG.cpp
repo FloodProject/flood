@@ -17,6 +17,8 @@
 
 #include "vapor/PNG.h"
 
+using namespace std;
+
 namespace vapor {
 	namespace resources {
 
@@ -55,16 +57,6 @@ const int PNG::getWidth() const
 const int PNG::getHeight() const
 {
 	return height;
-}
-
-SDL_Surface* convertPNGToSurface(PNG &png)
-{
-	SDL_Surface* surf;
-	
-	surf = SDL_CreateRGBSurfaceFrom ( &(png.getBuffer()[0]), png.getWidth(), 
-		png.getHeight(), 32, png.getWidth()*4, 0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
-
-	return surf;
 }
 
 } } // end namespaces

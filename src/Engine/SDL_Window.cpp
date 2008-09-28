@@ -11,8 +11,10 @@
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 
-#include "vapor/Engine.h"
 #include "vapor/SDL_Window.h"
+
+namespace vapor {
+	namespace render {
 
 void setupViewport(int x, int y)
 { 
@@ -27,16 +29,16 @@ void setupViewport(int x, int y)
 }
 
 
-SDLWindow::SDLWindow(const string& title, const int width, const int height, const bool fullscreen)
-:	Window(width, height), FPS(0), pastFPS(0), past(0)
+SDLWindow::SDLWindow(const string& title, WindowSettings windowSettings)
+	:	Window(title, windowSettings)
 {
-	if (!init())
-		// we are doomed
+	if (!init() || !open())
+		//LOGME
 		exit(1);
 
-	open(title, width, height, fullscreen);
+	setTitle(title);
 
-	setupViewport(width, height);
+	//setupViewport(width, height);
 }
 
 SDLWindow::~SDLWindow()
@@ -59,29 +61,27 @@ bool SDLWindow::init(void)
 	return true;
 }
 
-bool SDLWindow::open(const string& title, const int width, const int height, const bool fullscreen)
+bool SDLWindow::open()
 {
 	Uint32 flags = SDL_OPENGL;
 
 	// check if we want fullscreen
-	if (fullscreen)
+	if (settings->fullscreen)
 		flags |= SDL_FULLSCREEN;
 
 	// check if we have hardware acceleration
 	if(vidinfo->hw_available)
 		flags |= SDL_HWSURFACE;
 
-	SDL_GL_SetAttribute( SDL_GL_RED_SIZE, 5 );
-	SDL_GL_SetAttribute( SDL_GL_GREEN_SIZE, 5 );
-	SDL_GL_SetAttribute( SDL_GL_BLUE_SIZE, 5 );
-	SDL_GL_SetAttribute( SDL_GL_ALPHA_SIZE, 5 );
-	SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 16 );
-	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
+	//SDL_GL_SetAttribute( SDL_GL_RED_SIZE, 5 );
+	//SDL_GL_SetAttribute( SDL_GL_GREEN_SIZE, 5 );
+	//SDL_GL_SetAttribute( SDL_GL_BLUE_SIZE, 5 );
+	//SDL_GL_SetAttribute( SDL_GL_ALPHA_SIZE, 5 );
+	//SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 16 );
+	//SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
 
 	// set the video mode
-	display = SDL_SetVideoMode(width, height, 32, flags);
-	
-	setTitle(title);
+	display = SDL_SetVideoMode(settings->width, settings->height, settings->bpp, flags);
 
 	if (!display)
 		// we are in deep shit
@@ -96,45 +96,7 @@ void SDLWindow::update()
 	SDL_GL_SwapBuffers();
 }
 
-void SDLWindow::blit(SDL_Surface *surface, int x, int y)
-{
-	SDL_Rect disp;
-	disp.x = x; disp.y = y; disp.w = surface->w; disp.h = surface->h;
-
-	SDL_BlitSurface (surface, NULL, display, &disp);
-}
-
-const char* SDLWindow::getFPS()
-{
-	static char buffer[20] = {0};
-    int currentTime = SDL_GetTicks();
-   
-    if ( currentTime - past >= 16 )
-    {
-      past = SDL_GetTicks();   // this should be done before redrawing screen     
-
-      //SDL_Flip( screen );
-      FPS++;
-    }
-   
-    if ( currentTime - pastFPS >= 1000 )
-    {
-	  #pragma warning(disable : 4996)
-      sprintf( buffer, "%d FPS", FPS );
-     
-      FPS = 0;
-      pastFPS = currentTime;
-    }
-
-	return buffer;
-}
-
-bool SDLWindow::clear ()
-{
-	return SDL_FillRect(display, NULL, 0) == 0;
-}
-
-bool SDLWindow::events()
+bool SDLWindow::pump()
 {
 	SDL_Event event;
 
@@ -168,3 +130,5 @@ void SDLWindow::setCursor(bool state) const
 {
 	SDL_ShowCursor(state);
 }
+
+} } // end namespaces

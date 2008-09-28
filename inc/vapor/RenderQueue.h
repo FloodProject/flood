@@ -11,7 +11,7 @@ using namespace std;
 using vapor::resources::Milkshape3D;
 
 namespace vapor {
-	namespace renderer {
+	namespace render {
 
 class RenderQueue
 {

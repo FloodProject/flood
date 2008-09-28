@@ -13,7 +13,9 @@
 
 #pragma once
 
-#include <cstdio>
+#include <string>
+
+using namespace std;
 
 namespace vapor {
 	namespace log {
@@ -59,4 +61,4 @@ public:
 	void error(const string &subsystem, const char* msg, ...);
 };
 
-} }
+} } // end namespaces

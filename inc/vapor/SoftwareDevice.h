@@ -1,9 +1,9 @@
 #pragma once
 
-#include "RenderDevice.h"
+#include "vapor/RenderDevice.h"
 
 namespace vapor {
-	namespace renderer {
+	namespace render {
 
 class SoftwareDevice : public RenderDevice
 {

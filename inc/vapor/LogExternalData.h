@@ -1,3 +1,5 @@
+#pragma once
+
 // this is very _ugly_
 
 static const char cs[] = 

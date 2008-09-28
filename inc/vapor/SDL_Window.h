@@ -6,42 +6,34 @@
 #include "Window.h"
 
 namespace vapor {
-	namespace renderer {
+	namespace render {
 
 class SDLWindow : public Window
 {
 public:
 
-	SDLWindow(const std::string &,const int,const int,const bool);
+	SDLWindow(const string& title, WindowSettings windowSettings);
 	virtual ~SDLWindow();
-
-	bool open (const string& title, const int width, const int height, const bool fullscreen);
-
-	bool clear ();
 
 	void update ();
 
-	void blit(SDL_Surface *surface, int x, int y);
-
-	const char* getFPS();
-
-	bool events();
+	bool pump();
 
 	void setTitle(const string& title) const;
 
 	void setCursor(bool state) const;
 
-
 private:
 
-	int FPS, pastFPS, past;
-
+	WindowSettings   *settings;			// window settings
 	SDL_VideoInfo	*vidinfo;			// video information
-
 	SDL_Surface		*display;			// the actual display surface
 
 	// Initializes the Display system
 	bool init();
+
+	// Opens a new window
+	bool open ();
 };
 
 } } // end namespaces

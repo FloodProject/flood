@@ -15,54 +15,43 @@
 using namespace std;
 
 namespace vapor {
-	namespace renderer {
+	namespace render {
+
+class WindowSettings
+{
+public:
+
+	WindowSettings(const int width, const int height, const int bpp, const bool fullscreen)
+		: width(width), height(height), fullscreen(fullscreen) { }
+
+	int width, height, bpp;
+	bool fullscreen;
+};
 
 class Window 
 {
 
 public:
 
-	Window (const int width, const int height) 
-		: m_width(width), m_height(height) { }
-	
-	virtual ~Window () { }
-
-	// Factory pattern to create the Window
-	static Window& createWindow (const string &title, const int width, const int height, const bool fullscreen);
-
-	// Opens a display window
-	virtual bool open (const string &title, const int width, const int height, const bool fullscreen) = 0;
-
-	// Clears the window
-	virtual bool clear () = 0;
+	Window (const string& title, WindowSettings windowSettings);
+	virtual ~Window ();
 
 	// Updates the window
 	virtual void update () = 0;
 
 	// Handles the event loop of the window
-	virtual bool events () = 0;
+	virtual bool pump () = 0;
 
 	// Sets the title of the window
-	virtual void setTitle (const string& title) const = 0;
+	virtual void setTitle (const string& title) const;
 
 	// Sets the visibility of the mouse cursor 
 	virtual void setCursor (bool state) const = 0;
 
-	// Get window width
-	virtual const int getWidth() const { return m_width; }
-
-	// Get window height
-	virtual const int getHeight() const { return m_height; }
-
-	// Get the FPS
-	virtual const char* getFPS() = 0;
-
 private:
 
-	int m_width, m_height, m_bpp;
-	std::string m_title;
-	// add fps-related stuff
-
+	WindowSettings& windowSettings;
+	string title;
 };
 
 } } // end namespaces

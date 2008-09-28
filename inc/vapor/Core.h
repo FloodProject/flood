@@ -2,7 +2,7 @@
 #include "Window.h"
 
 using namespace vapor::log;
-using namespace vapor::renderer;
+using namespace vapor::render;
 
 namespace vapor {
 	namespace core {

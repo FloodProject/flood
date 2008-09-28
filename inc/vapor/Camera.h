@@ -5,17 +5,20 @@
 using namespace vapor::math;
 
 namespace vapor {
-	namespace resources {
+	namespace render {
 
 class Camera
 {
 public:
 
+	Camera();
+	~Camera();
+
 	void lookAt(Vec3f pos);
 
 private:
 
-
+	// Frustum frustum;
 
 };
 

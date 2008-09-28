@@ -152,19 +152,11 @@
 			Name="Renderer"
 			>
 			<File
-				RelativePath=".\Camera.cpp"
+				RelativePath=".\Renderer.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\inc\vapor\Camera.h"
-				>
-			</File>
-			<File
-				RelativePath=".\RenderQueue.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\RenderQueue.h"
+				RelativePath="..\..\inc\vapor\Renderer.h"
 				>
 			</File>
 			<Filter
@@ -206,6 +198,42 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="OpenGL"
+					>
+					<File
+						RelativePath=".\OpenGL_Device.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\OpenGL_Device.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="Queue"
+				>
+				<File
+					RelativePath=".\RenderQueue.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\RenderQueue.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Camera"
+				>
+				<File
+					RelativePath=".\Camera.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\Camera.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -216,7 +244,7 @@
 				>
 			</File>
 			<Filter
-				Name="Models"
+				Name="Meshes"
 				>
 				<Filter
 					Name="Milkshape3D"
@@ -227,10 +255,6 @@
 					</File>
 					<File
 						RelativePath="..\..\inc\vapor\Milkshape3D.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\inc\vapor\Milkshape3D_Data.h"
 						>
 					</File>
 				</Filter>

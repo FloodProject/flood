@@ -13,16 +13,16 @@
 namespace vapor {
 	namespace resources {
 
-Font::Font()
-{
-	// still not used
-}
-
-SDL_Surface* Font::getSurface(const string &text, Color color)
-{
-	SDL_Color c; 
-	c.r = color.r; c.g = color.b; c.b = color.b;
-	return FNT_Render(text.c_str(), c);
-}
+//Font::Font()
+//{
+//	// still not used
+//}
+//
+//SDL_Surface* Font::getSurface(const string &text, Color color)
+//{
+//	SDL_Color c; 
+//	c.r = color.r; c.g = color.b; c.b = color.b;
+//	return FNT_Render(text.c_str(), c);
+//}
 
 } } // end namespaces

@@ -11,8 +11,13 @@
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 
-#include "vapor/Engine.h"
+#include <cstdarg>
+
+#include "vapor/Log.h"
 #include "vapor/LogExternalData.h"
+
+namespace vapor {
+	namespace log {
 
 Log::Log(const string &title, const string &filename)
 {
@@ -138,3 +143,5 @@ void Log::error(const string &subsystem, const char* msg, ...)
 	write(Error, subsystem, msg, args);
 	va_end(args);
 }
+
+} } // end namespaces

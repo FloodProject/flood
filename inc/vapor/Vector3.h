@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "Engine.h"
+//#include "Engine.h"
 
 namespace vapor {
 	namespace math {
@@ -139,8 +139,6 @@ public:
 
 typedef Vector3<float> Vec3f;
 typedef Vector3<double> Vec3d;
-
-typedef Vec3f Vertex;
 
 // Global zero vector constant
 //extern const Vec3f vectorZero;

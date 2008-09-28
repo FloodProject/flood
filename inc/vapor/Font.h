@@ -10,9 +10,6 @@
 
 #pragma once
 
-#include "Engine.h"
-#include "SDL_picofont.h"
-
 /////////////////////////////////////////////////////////////////////////////
 // This class represents a Font resource
 // In the future when we use FreeType it's gonna hold all the glyphs
@@ -22,12 +19,12 @@
 namespace vapor {
 	namespace resources {
 
-class Font
-{
-public:
-	Font();
-
-	static SDL_Surface* getSurface(const string &text, Color color = White);
-};
+//class Font
+//{
+//public:
+//	Font();
+//
+//	static SDL_Surface* getSurface(const string &text, Color color = White);
+//};
 
 } } // end namespaces

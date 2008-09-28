@@ -10,7 +10,12 @@
 
 #pragma once
 
-#include "Engine.h"
+#include <vector>
+#include <string>
+
+#include "vapor/Types.h"
+
+using namespace std;
 
 int decodePNG(std::vector<byte>& out_image_32bit, ulong& image_width, 
 		  ulong& image_height, const byte* in_png, ulong in_size);
