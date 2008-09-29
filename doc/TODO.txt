@@ -13,9 +13,6 @@ The engine is divided in a few subsystems (enclosed in namespaces):
 	* resources (textures, meshes, fonts, ...)
 
 
-
-
-
 Rendering-related classes
 -------------------------
 

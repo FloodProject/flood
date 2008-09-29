@@ -344,12 +344,20 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Scene"
+			>
+		</Filter>
 		<File
 			RelativePath="..\..\inc\vapor\Engine.h"
 			>
 		</File>
 		<File
 			RelativePath="..\..\doc\TODO.txt"
+			>
+		</File>
+		<File
+			RelativePath="..\..\inc\vapor\Types.h"
 			>
 		</File>
 		<File
