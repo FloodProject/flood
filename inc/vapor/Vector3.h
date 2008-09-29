@@ -131,6 +131,16 @@ public:
 		}
 	}
 
+	// special points
+        static const Vector3 ZERO;
+        static const Vector3 UNIT_X;
+        static const Vector3 UNIT_Y;
+        static const Vector3 UNIT_Z;
+        static const Vector3 NEGATIVE_UNIT_X;
+        static const Vector3 NEGATIVE_UNIT_Y;
+        static const Vector3 NEGATIVE_UNIT_Z;
+        static const Vector3 UNIT_SCALE;
+
 };
 
 /////////////////////////////////////////////////////////////////////////////
