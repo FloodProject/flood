@@ -352,6 +352,10 @@
 			RelativePath="..\..\doc\TODO.txt"
 			>
 		</File>
+		<File
+			RelativePath="..\..\inc\Triangle.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
