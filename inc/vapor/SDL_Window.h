@@ -12,7 +12,7 @@ class SDLWindow : public Window
 {
 public:
 
-	SDLWindow(const string& title, WindowSettings windowSettings);
+	SDLWindow(const string& title, shared_ptr<WindowSettings> windowSettings);
 	virtual ~SDLWindow();
 
 	void update ();

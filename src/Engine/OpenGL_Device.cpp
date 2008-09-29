@@ -5,7 +5,8 @@ namespace vapor {
 
 OpenGLDevice::OpenGLDevice()
 {
-	window = new SDLWindow();
+	shared_ptr<WindowSettings> wS(new WindowSettings(320, 240));
+	window = new SDLWindow("Testing!", wS);
 }
 
 OpenGLDevice::~OpenGLDevice()

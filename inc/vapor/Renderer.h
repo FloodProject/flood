@@ -22,8 +22,8 @@ public:
 
 private:
 
-	RenderQueue& renderQueue;
-	RenderDevice& renderDevice;
+	RenderQueue* renderQueue;
+	RenderDevice* renderDevice;
 };
 
 } } // end namespaces

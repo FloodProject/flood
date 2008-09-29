@@ -1,6 +1,7 @@
 #pragma once
 
 #include "vapor/Window.h"
+#include "vapor/RenderQueue.h"
 
 namespace vapor {
 	namespace render {
@@ -40,6 +41,12 @@ public:
 
 	// Pop projection matrix from stack
 	//void popProjectionMatrix (bool set = true) = 0;
+
+protected:
+
+	// Manages the objects to render
+	RenderQueue* renderQueue;
+
 };
 
 } } // end namespaces

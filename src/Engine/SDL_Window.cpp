@@ -29,9 +29,11 @@ void setupViewport(int x, int y)
 }
 
 
-SDLWindow::SDLWindow(const string& title, WindowSettings windowSettings)
+SDLWindow::SDLWindow(const string& title, shared_ptr<WindowSettings> windowSettings)
 	:	Window(title, windowSettings)
 {
+	this->windowSettings = windowSettings;
+
 	if (!init() || !open())
 		//LOGME
 		exit(1);

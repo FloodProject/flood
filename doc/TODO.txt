@@ -12,7 +12,6 @@ The engine is divided in a few subsystems (enclosed in namespaces):
 	* render (rendering)
 	* resources (textures, meshes, fonts, ...)
 
-
 Rendering-related classes
 -------------------------
 
@@ -29,6 +28,10 @@ RenderDevice
 	abstract class. the user of the engine doesnt need to care about details.
 	this class only knows about rendering vertices/triangles and should not
 	know anything about the high-level geometry primitives.
+	
+	each render device will also have a renderqueue and a subclass of window,
+	because window implementations depend on the rendering system used. for 
+	example, an opengl window will be different from an directx window.
 
 Window
 
@@ -43,38 +46,37 @@ Camera
 	the type of projection we need and also handles the frustum culling operations.
 	the camera connects with the scenemanager/renderqueue.
 	
-	
-
-	
 Scene-related classes
 ---------------------
+
+SceneGraph
 
 
 WIP (work-in-progress)
 ----------------------
 
-High priority:
+TODO:
 
-	Add matrix class
-	
+	Simple scene graph	
+	Add matrix and AABB class
 	
 Low priority:
 
 	Logging functions with type-safe variable arguments
 	CSS-styling to the logging output
 	Implement abstract timer class
-	Revise Window abstract class
 	Color copy cons and operators
-	Remove getFPS from Window, add getStatistics
-	Basic software renderer
 
 Nice to have:
 
 	Virtual File System :)
 	Font handling via FreeType 2
+	Basic software device
 	
 Done:
 	
 	Clean Visual Studio solutions
 	Add namespaces to subsystems
-	Add Milkshape model parser (DONE)
+	Add Milkshape model parser
+	Revise Window abstract class
+	Implement WindowSettings class

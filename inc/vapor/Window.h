@@ -10,9 +10,7 @@
 
 #pragma once
 
-#include <string>
-
-using namespace std;
+#include "vapor/Types.h"
 
 namespace vapor {
 	namespace render {
@@ -21,7 +19,8 @@ class WindowSettings
 {
 public:
 
-	WindowSettings(const int width, const int height, const int bpp, const bool fullscreen)
+	WindowSettings(const int width, const int height, 
+		const int bpp = 32, const bool fullscreen = false)
 		: width(width), height(height), fullscreen(fullscreen) { }
 
 	int width, height, bpp;
@@ -33,7 +32,7 @@ class Window
 
 public:
 
-	Window (const string& title, WindowSettings windowSettings);
+	Window (const string& title, shared_ptr<WindowSettings> windowSettings);
 	virtual ~Window ();
 
 	// Updates the window
@@ -48,10 +47,10 @@ public:
 	// Sets the visibility of the mouse cursor 
 	virtual void setCursor (bool state) const = 0;
 
-private:
+protected:
 
-	WindowSettings& windowSettings;
-	string title;
+	shared_ptr<WindowSettings> windowSettings;
+	string& title;
 };
 
 } } // end namespaces

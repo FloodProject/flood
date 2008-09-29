@@ -152,11 +152,7 @@
 			Name="Render"
 			>
 			<File
-				RelativePath=".\Renderer.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\Renderer.h"
+				RelativePath="..\..\inc\vapor\Triangle.h"
 				>
 			</File>
 			<Filter
@@ -358,10 +354,6 @@
 		</File>
 		<File
 			RelativePath="..\..\inc\vapor\Types.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\inc\Triangle.h"
 			>
 		</File>
 	</Files>

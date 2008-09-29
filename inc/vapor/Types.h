@@ -8,3 +8,13 @@ typedef unsigned int  uint;
 typedef unsigned char byte;
 typedef unsigned long ulong;
 typedef unsigned short ushort;
+
+/////////////////////////////////////////////////////////////////////////////
+// System headers
+/////////////////////////////////////////////////////////////////////////////
+
+#include <string>
+#include <vector>
+
+using namespace std;
+using std::tr1::shared_ptr;
