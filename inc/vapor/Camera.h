@@ -14,7 +14,7 @@ public:
 	Camera();
 	~Camera();
 
-	void lookAt(Vec3f pos);
+	void lookAt(Vector3f pos);
 
 private:
 

@@ -3,10 +3,11 @@
 namespace vapor {
 	namespace render {
 
-OpenGLDevice::OpenGLDevice()
+OpenGLDevice::OpenGLDevice(shared_ptr<WindowSettings> wS)
 {
-	shared_ptr<WindowSettings> wS(new WindowSettings(320, 240));
-	window = new SDLWindow("Testing!", wS);
+	window = new SDLWindow("",wS);
+
+	open();
 }
 
 OpenGLDevice::~OpenGLDevice()
@@ -24,6 +25,12 @@ void OpenGLDevice::open()
 	resetViewport();
 }
 
+void OpenGLDevice::clear()
+{
+	glClearColor(1.0f, 1.0f, 0.5f, 0.5f);
+	glClear(GL_COLOR_BUFFER_BIT);
+}
+
 void OpenGLDevice::resetViewport()
 {
 	WindowSettings &wS = window->getWindowSettings();
@@ -32,7 +39,7 @@ void OpenGLDevice::resetViewport()
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(45.0f, (GLfloat)wS.width / (GLfloat) wS.height, 1.0f, 100.0f);
+	gluPerspective(45.0f, (GLfloat) wS.width / (GLfloat) wS.height, 1.0f, 100.0f);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();

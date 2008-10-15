@@ -178,6 +178,22 @@
 	<References>
 	</References>
 	<Files>
+		<Filter
+			Name="Resources"
+			>
+			<File
+				RelativePath=".\icon1.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\vaporExamples.rc"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\Example.cpp"
 			>

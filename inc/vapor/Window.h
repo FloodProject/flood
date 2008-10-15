@@ -21,7 +21,7 @@ public:
 
 	WindowSettings(const int width, const int height, 
 		const int bpp = 32, const bool fullscreen = false)
-		: width(width), height(height), fullscreen(fullscreen) { }
+		: width(width), height(height), bpp(bpp), fullscreen(fullscreen) { }
 
 	int width, height, bpp;
 	bool fullscreen;
@@ -52,7 +52,7 @@ public:
 protected:
 
 	shared_ptr<WindowSettings> windowSettings;
-	string& title;
+	const string& title;
 };
 
 } } // end namespaces

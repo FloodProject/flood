@@ -12,8 +12,8 @@ The engine is divided in a few subsystems (enclosed in namespaces):
 	* render (rendering)
 	* resources (textures, meshes, fonts, ...)
 
-Rendering-related classes
--------------------------
+Rendering classes
+-----------------
 
 RenderQueue
 
@@ -47,10 +47,25 @@ Camera
 	the type of projection we need and also handles the frustum culling operations.
 	the camera connects with the scenemanager/renderqueue.
 	
-Scene-related classes
----------------------
+Scene classes
+-------------
 
-SceneGraph
+SceneManager
+
+
+Resource classes
+----------------
+
+Font
+
+Mesh
+
+Texture
+
+ResourceManager
+
+	this class will hold references to all the resource in use by the application.
+	these resources can be loaded at runtime using the ResourceManager interface.
 
 
 WIP (work-in-progress)
@@ -58,6 +73,10 @@ WIP (work-in-progress)
 
 TODO:
 
+	Render Triangle using RenderDevice interface
+	Log all the engine calls
+	Adapter class
+	Resource management
 	Simple scene graph	
 	Add matrix and AABB class
 	

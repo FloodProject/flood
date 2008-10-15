@@ -11,7 +11,7 @@ class OpenGLDevice : public RenderDevice
 
 public:
 
-	OpenGLDevice();
+	OpenGLDevice(shared_ptr<WindowSettings> wS);
 	virtual ~OpenGLDevice();
 
 	// Open the device
@@ -21,7 +21,7 @@ public:
 	void close();
 
 	// Clear buffers
-	void clear() = 0;
+	void clear();
 
 	Window& getWindow();
 

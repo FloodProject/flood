@@ -50,6 +50,7 @@
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough=""
 				WarningLevel="3"
+				WarnAsError="false"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -183,6 +184,10 @@
 				Name="Device"
 				>
 				<File
+					RelativePath=".\RenderDevice.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\inc\vapor\RenderDevice.h"
 					>
 				</File>
@@ -230,6 +235,10 @@
 					RelativePath="..\..\inc\vapor\Camera.h"
 					>
 				</File>
+			</Filter>
+			<Filter
+				Name="Adapter"
+				>
 			</Filter>
 		</Filter>
 		<Filter
@@ -330,6 +339,14 @@
 			<Filter
 				Name="Matrix"
 				>
+				<File
+					RelativePath=".\Matrix.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\Matrix.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter

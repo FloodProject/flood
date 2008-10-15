@@ -147,7 +147,7 @@ public:
 // TYPE DEFINITIONS
 /////////////////////////////////////////////////////////////////////////////
 
-typedef Vector3<float> Vec3f;
+typedef Vector3<float> Vector3f;
 typedef Vector3<double> Vec3d;
 
 // Global zero vector constant

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "vapor/Types.h"
 #include "vapor/Resource.h"
 
 namespace vapor {
@@ -11,7 +12,7 @@ class ResourceManager
 public:
 
 	void loadResource();
-	Resource& getResource();
+	Resource& getResource(string &name);
 
 
 private:

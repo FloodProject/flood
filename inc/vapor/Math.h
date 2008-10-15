@@ -18,10 +18,10 @@
 
 #include <cmath>
 
+#include "vapor/Vector3.h"
+
 namespace vapor {
 	namespace math {
-
-#include "Vector3.h"
 
 //const Vec3f vectorZero (0.0f, 0.0f, 0.0f);
 
