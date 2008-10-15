@@ -3,7 +3,7 @@
 #include "vapor/Renderable.h"
 #include "vapor/Vector3.h"
 
-using namespace math
+using namespace math;
 
 namespace vapor {
 	namespace render {

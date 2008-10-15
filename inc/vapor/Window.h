@@ -47,6 +47,8 @@ public:
 	// Sets the visibility of the mouse cursor 
 	virtual void setCursor (bool state) const = 0;
 
+	virtual WindowSettings& getWindowSettings();
+
 protected:
 
 	shared_ptr<WindowSettings> windowSettings;

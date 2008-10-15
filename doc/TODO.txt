@@ -26,12 +26,13 @@ RenderDevice
 	can ask the user what device he wants to use (OpenGL / DirectX / Software)
 	and then we create and use the device. all operations are to be done by this
 	abstract class. the user of the engine doesnt need to care about details.
-	this class only knows about rendering vertices/triangles and should not
-	know anything about the high-level geometry primitives.
+	this class only knows about rendering primitives (vertices/triangles) and 
+	should not know anything about the high-level mesh/models.
 	
-	each render device will also have a renderqueue and a subclass of window,
+	each render device will also manage a renderqueue and a subclass of window,
 	because window implementations depend on the rendering system used. for 
-	example, an opengl window will be different from an directx window.
+	example, an opengl window will be different from an directx window. it is
+	responsible for creating a new window if no window is passed to open.
 
 Window
 

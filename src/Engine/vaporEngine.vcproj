@@ -239,6 +239,14 @@
 				RelativePath="..\..\inc\vapor\Color.h"
 				>
 			</File>
+			<File
+				RelativePath=".\ResourceManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\ResourceManager.h"
+				>
+			</File>
 			<Filter
 				Name="Meshes"
 				>

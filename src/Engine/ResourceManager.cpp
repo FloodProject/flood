@@ -1,0 +1,1 @@
+#include "vapor/ResourceManager.h"

@@ -14,17 +14,20 @@ public:
 	RenderDevice();
 	virtual ~RenderDevice();
 
-	// Open the device
+	// open the device
 	virtual void open() = 0;
 
-	// Close the device
+	// close the device
 	virtual void close() = 0;
 
-	// Clear buffers
+	// clear buffers
 	virtual void clear() = 0;
 
-	// Get Render Window
+	// get window
 	virtual Window& getWindow() = 0;
+
+	// get adapter information
+	//virtual Adapter getAdapter() = 0;
 
 	//////////////////
 	// Matrices stuff

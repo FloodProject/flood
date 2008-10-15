@@ -3,7 +3,7 @@
 #include <SDL.h>
 #include <SDL_opengl.h>
 
-#include "Window.h"
+#include "vapor/Window.h"
 
 namespace vapor {
 	namespace render {
@@ -25,7 +25,6 @@ public:
 
 private:
 
-	WindowSettings   *settings;			// window settings
 	SDL_VideoInfo	*vidinfo;			// video information
 	SDL_Surface		*display;			// the actual display surface
 

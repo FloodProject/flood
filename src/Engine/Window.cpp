@@ -5,8 +5,10 @@
 namespace vapor {
 	namespace render {
 
-
-
+WindowSettings& Window::getWindowSettings()
+{
+	return *windowSettings;
+}
 
 
 } } // end namespaces

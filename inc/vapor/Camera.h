@@ -19,6 +19,7 @@ public:
 private:
 
 	// Frustum frustum;
+	int zoomX, zoomY;
 
 };
 

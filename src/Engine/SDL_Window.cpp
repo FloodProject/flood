@@ -16,18 +16,6 @@
 namespace vapor {
 	namespace render {
 
-void setupViewport(int x, int y)
-{ 
-	glViewport(0, 0, x, y);
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(45.0f, (GLfloat)x / (GLfloat) y, 1.0f, 100.0f);
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-}
-
 
 SDLWindow::SDLWindow(const string& title, shared_ptr<WindowSettings> windowSettings)
 	:	Window(title, windowSettings)
@@ -39,8 +27,6 @@ SDLWindow::SDLWindow(const string& title, shared_ptr<WindowSettings> windowSetti
 		exit(1);
 
 	setTitle(title);
-
-	//setupViewport(width, height);
 }
 
 SDLWindow::~SDLWindow()
@@ -68,7 +54,7 @@ bool SDLWindow::open()
 	Uint32 flags = SDL_OPENGL;
 
 	// check if we want fullscreen
-	if (settings->fullscreen)
+	if (windowSettings->fullscreen)
 		flags |= SDL_FULLSCREEN;
 
 	// check if we have hardware acceleration
@@ -80,10 +66,11 @@ bool SDLWindow::open()
 	//SDL_GL_SetAttribute( SDL_GL_BLUE_SIZE, 5 );
 	//SDL_GL_SetAttribute( SDL_GL_ALPHA_SIZE, 5 );
 	//SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 16 );
-	//SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
+	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
 
 	// set the video mode
-	display = SDL_SetVideoMode(settings->width, settings->height, settings->bpp, flags);
+	display = SDL_SetVideoMode(windowSettings->width,
+		windowSettings->height, windowSettings->bpp, flags);
 
 	if (!display)
 		// we are in deep shit
