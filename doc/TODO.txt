@@ -1,91 +1,32 @@
-vaporEngine - whats the big deal?
----------------------------------
-
-So, vaporEngine is just a tiny KISS 3D engine I've been working on in the past few months.
-
-The engine is divided in a few subsystems (enclosed in namespaces):
-
-	* log (logging)
-	* vfs (virtual file system)
-	* math (vectors, matrices, AABBs, ...)
-	* scene (scene graph)
-	* render (rendering)
-	* resources (textures, meshes, fonts, ...)
-
-Rendering classes
------------------
-
-RenderQueue
-
-	this holds references to all the scene entities we are to render.
-	it sorts them by state (materials, opacity) to minimise state changes.
-
-RenderDevice
-	
-	represents the rendering device we are using. at startup the application
-	can ask the user what device he wants to use (OpenGL / DirectX / Software)
-	and then we create and use the device. all operations are to be done by this
-	abstract class. the user of the engine doesnt need to care about details.
-	this class only knows about rendering primitives (vertices/triangles) and 
-	should not know anything about the high-level mesh/models.
-	
-	each render device will also manage a renderqueue and a subclass of window,
-	because window implementations depend on the rendering system used. for 
-	example, an opengl window will be different from an directx window. it is
-	responsible for creating a new window if no window is passed to open.
-
-Window
-
-	just a class that has the window we are to render. this is abstract and will
-	have a subclass for every other operating system we are to support. right now
-	we are using SDL for creating and managing windows but it creates a pretty big
-	dependency and should be replaced by native code once there is time to do it.
-
-Camera
-
-	the camera class points to what the user is looking at. it is used to configure 
-	the type of projection we need and also handles the frustum culling operations.
-	the camera connects with the scenemanager/renderqueue.
-	
-Scene classes
--------------
-
-SceneManager
-
-
-Resource classes
-----------------
-
-Font
-
-Mesh
-
-Texture
-
-ResourceManager
-
-	this class will hold references to all the resource in use by the application.
-	these resources can be loaded at runtime using the ResourceManager interface.
-
-
 WIP (work-in-progress)
-----------------------
+======================
+
+Milestone 1:
+
+	Render Triangle using RenderDevice interface
 
 TODO:
 
-	Render Triangle using RenderDevice interface
-	Log all the engine calls
+	Compile with MinGW GCC
 	Adapter class
 	Resource management
 	Simple scene graph	
 	Add matrix and AABB class
 	
 Low priority:
-
-	Logging functions with type-safe variable arguments
-	CSS-styling to the logging output
+	
 	Implement abstract timer class
 	Color copy cons and operators
+
+Log todo:
+
+	Log all the engine calls
+	CSS-styling to the logging output
+	Header in the log output
+	bind/functor for logging
+	Hierarchical log system
+	Logging functions with type-safe variable arguments
+	Logging boxes for system/CPU/GPU information
 
 Nice to have:
 
@@ -93,10 +34,12 @@ Nice to have:
 	Font handling via FreeType 2
 	Basic software device
 	
-Done:
+DONE:
+=====
 	
+	Organized the include directories
 	Clean Visual Studio solutions
 	Add namespaces to subsystems
 	Add Milkshape model parser
-	Revise Window abstract class
+	Clean up Window abstract class
 	Implement WindowSettings class

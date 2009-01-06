@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)src\Engine&quot;;&quot;$(SolutionDir)dep\SDL_picofont&quot;;&quot;$(SolutionDir)dep\SDL-1.2.13\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\SDL-1.2.13\include&quot;;&quot;$(SolutionDir)dep\GLee&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;"
 				PreprocessorDefinitions="WIN32;___DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				ExceptionHandling="1"
@@ -64,10 +64,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vaporEngine.lib SDL.lib SDLmain.lib opengl32.lib glu32.lib"
+				AdditionalDependencies="vaporEngine.lib SDL.lib  opengl32.lib glu32.lib glew32s.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-$(ConfigurationName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)dep\SDL-1.2.13\lib&quot;;&quot;$(SolutionDir)lib\$(ConfigurationName)&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)dep\SDL-1.2.13\lib&quot;;&quot;$(SolutionDir)lib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)dep\glew\lib&quot;"
+				IgnoreDefaultLibraryNames="libcmt.lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -121,7 +122,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)src\Engine&quot;;&quot;$(SolutionDir)dep\SDL_picofont&quot;;&quot;$(SolutionDir)dep\SDL-1.2.13\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\SDL-1.2.13\include&quot;;&quot;$(SolutionDir)dep\GLee&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
@@ -142,10 +143,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vaporEngine.lib SDL.lib SDLmain.lib opengl32.lib glu32.lib"
+				AdditionalDependencies="vaporEngine.lib SDL.lib  opengl32.lib glu32.lib glew32s.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-$(ConfigurationName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)dep\SDL-1.2.13\lib&quot;;&quot;$(SolutionDir)lib\$(ConfigurationName)&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)dep\SDL-1.2.13\lib&quot;;&quot;$(SolutionDir)lib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)dep\glew\lib&quot;"
+				IgnoreDefaultLibraryNames="libcmt.lib"
 				GenerateDebugInformation="false"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -191,6 +193,18 @@
 			</File>
 			<File
 				RelativePath=".\vaporExamples.rc"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Framework"
+			>
+			<File
+				RelativePath=".\Dialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Framework.h"
 				>
 			</File>
 		</Filter>

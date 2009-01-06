@@ -1,23 +1,18 @@
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
-//// 
-//// fuckEngine by triton (2008)
-////
-//// License: WTF Public License
-////
-//// Thanks to:
-////	MaulingMonkey @ #gamedev
-////
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+/************************************************************************
+*
+* vaporEngine by triton (2008)
+*
+*	<http://www.portugal-a-programar.org>
+*
+************************************************************************/
 
-#include <vector>
 #include <iostream>
 #include <fstream>
 
-#include "vapor/PNG.h"
+#include "vapor/resources/PNG.h"
 
-using namespace std;
+int decodePNG(std::vector<byte>& out_image_32bit, ulong& image_width, 
+			  ulong& image_height, const byte* in_png, ulong in_size);
 
 namespace vapor {
 	namespace resources {

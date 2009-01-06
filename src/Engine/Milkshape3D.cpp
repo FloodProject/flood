@@ -1,7 +1,15 @@
+/************************************************************************
+*
+* vaporEngine by triton (2008)
+*
+*	<http://www.portugal-a-programar.org>
+*
+************************************************************************/
+
 // based on official Milkshape3D viewer source
 
-#include "vapor/Milkshape3D.h"
-#include "vapor/File.h"
+#include "vapor/resources/Milkshape3D.h"
+#include "vapor/vfs/File.h"
 
 namespace vapor {
 	namespace resources {
@@ -25,7 +33,7 @@ bool Milkshape3D::load(const string &filename)
 	if (!fp) return false;
 	
 	if(!read_header())
-		goto error;
+		goto cleanup;
 	
 	read_vertices();
 	read_triangles();
@@ -38,7 +46,7 @@ bool Milkshape3D::load(const string &filename)
 	fclose(fp);
 	return true;
 
-error:
+cleanup:
 
 	fclose(fp);
 	return false;

@@ -1,28 +1,31 @@
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
-//// 
-//// fuckEngine by triton
-////
-//// License: fuckGNU License
-////
-//// Changelog:
-////	(19/08/08) Initial implementantion
-////
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+/************************************************************************
+*
+* vaporEngine by triton (2008)
+*
+*	<http://www.portugal-a-programar.org>
+*
+************************************************************************/
 
 #include <cstdarg>
 
-#include "vapor/Log.h"
-#include "vapor/LogExternalData.h"
+#include "vapor/log/Log.h"
+#include "vapor/log/LogFormat.h"
 
 namespace vapor {
 	namespace log {
 
+Log * _log = new Log("vaporEngine Log", "log.html");
+
 Log::Log(const string &title, const string &filename)
 {
-	open(filename);
+	if(!open(filename))
+		exit(EXIT_FAILURE);
+
+	even = true;
+
 	start(title);
+
+	info("log", "Creating log file '%s'", filename.c_str());
 }
 
 Log::~Log()
@@ -39,6 +42,7 @@ bool Log::open(const string &filename)
 	if (!(fp = fopen(filename.c_str(), "w+")))
 		return false;
 
+	// turn off file buffering
 	setbuf(fp, NULL);
 
 	return true;
@@ -54,9 +58,13 @@ void Log::close()
 
 void Log::write(const LogLevel level, const string &subsystem, const char* msg, va_list args)
 {
-	if(!fp)	return;
+	fprintf(fp, "\t<tr class=\"%s\">", even ? "even" : "odd");
 
-	fprintf(fp, "\t<tr>");
+	switch(level) {	
+		case Info:		fprintf(fp, "<td class=\"%s\"></td>", "info");	break;
+		case Warning:	fprintf(fp, "<td class=\"%s\"></td>", "warn");	break;
+		case Error:		fprintf(fp, "<td class=\"%s\"></td>", "error");	break;
+	}
 
 	fprintf(fp, "<td>%s</td>", ""); // date time
 	fprintf(fp, "<td>%s</td>", subsystem.c_str()); // subsystem
@@ -68,56 +76,18 @@ void Log::write(const LogLevel level, const string &subsystem, const char* msg, 
 	fprintf(fp, "</tr>\n");
 
 	fflush(fp);
-}
 
-void Log::css()
-{
-
-	fprintf(fp, "\t<style>");
-
-		fwrite(cs, sizeof(cs[0]), sizeof(cs)/sizeof(cs[0])-1, fp);
-
-	fprintf(fp, "\t</style>\n");
-}
-
-void Log::sorttable()
-{
-	fprintf(fp, "\t<script type=\"text/javascript\">\n");
-
-		fwrite(st, sizeof(st[0]), sizeof(st)/sizeof(st[0])-1, fp);
-	
-	fprintf(fp, "\t</script>\n");
+	even = !even;
 }
 
 void Log::start(const string &title)
-{
-	fprintf(fp,	"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\"\n"
-				"\t\"http://www.w3.org/TR/html4/strict.dtd\">\n");
-	
-	fprintf(fp, "<html>\n");
-
-	fprintf(fp, "<head>\n");
-		
-		fprintf(fp, "\t<title>%s</title>\n", title.c_str());
-	
-		css();
-		
-		//sorttable();
-
-	fprintf(fp, "</head>\n");
-
-	fprintf(fp, "<body>\n");
-
-	fprintf(fp, "<table>\n");
+{		
+	fprintf(fp, LOG_HTML, title.c_str(), LOG_CSS, LOG_JS_TABLES);
 }
 
 void Log::end()
 {
-	fprintf(fp, "</table>\n");
-
-	fprintf(fp, "</body>\n");
-	
-	fprintf(fp, "</html>\n");
+	fprintf(fp, "</table>\n" "</body>\n" "</html>\n");
 }
 
 void Log::info(const string &subsystem, const char* msg, ...)
@@ -142,6 +112,11 @@ void Log::error(const string &subsystem, const char* msg, ...)
 	va_start(args, msg);
 	write(Error, subsystem, msg, args);
 	va_end(args);
+}
+
+Log* Log::getLogger()
+{
+	return _log;
 }
 
 } } // end namespaces

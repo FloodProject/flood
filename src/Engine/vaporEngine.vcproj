@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\SDL-1.2.13\include&quot;;&quot;$(SolutionDir)dep\SDL_picofont&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\SDL-1.2.13\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;"
 				PreprocessorDefinitions="WIN32;___DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -50,7 +50,8 @@
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough=""
 				WarningLevel="3"
-				WarnAsError="false"
+				WarnAsError="true"
+				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -64,6 +65,8 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalDependencies="glew32s.lib freetype237MT_D.lib"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)dep\glew\lib&quot;;&quot;$(SolutionDir)dep\freetype\objs&quot;"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -108,13 +111,14 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\SDL-1.2.13\include&quot;;&quot;$(SolutionDir)dep\SDL_picofont&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\SDL-1.2.13\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
+				WarnAsError="true"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -128,6 +132,8 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalDependencies="glew32s.lib freetype237ST.lib"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)dep\glew\lib&quot;;&quot;$(SolutionDir)dep\freetype\objs&quot;"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -150,10 +156,111 @@
 	</References>
 	<Files>
 		<Filter
+			Name="Documentation"
+			Filter="*.txt"
+			>
+			<File
+				RelativePath="..\..\doc\CPP.txt"
+				>
+			</File>
+			<File
+				RelativePath="..\..\doc\DESIGN.txt"
+				>
+			</File>
+			<File
+				RelativePath="..\..\doc\TODO.txt"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Platform"
+			>
+			<File
+				RelativePath="..\..\inc\vapor\Platform.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\Types.h"
+				>
+			</File>
+			<Filter
+				Name="DynLib"
+				>
+				<File
+					RelativePath=".\DynamicLibrary.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\DynamicLibrary.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Log"
+				>
+				<File
+					RelativePath=".\Log.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\log\Log.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\log\LogFormat.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="System"
+				>
+				<Filter
+					Name="CPU"
+					>
+					<File
+						RelativePath=".\CPU.cpp"
+						>
+					</File>
+				</Filter>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="Math"
+			>
+			<File
+				RelativePath="..\..\inc\vapor\math\Math.h"
+				>
+			</File>
+			<Filter
+				Name="Vector"
+				>
+				<File
+					RelativePath=".\Vector3.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\math\Vector3.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Matrix"
+				>
+				<File
+					RelativePath=".\Matrix.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\math\Matrix.h"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
 			Name="Render"
 			>
 			<File
-				RelativePath="..\..\inc\vapor\Triangle.h"
+				RelativePath="..\..\inc\vapor\render\RenderTarget.h"
 				>
 			</File>
 			<Filter
@@ -164,53 +271,9 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\inc\vapor\Window.h"
+					RelativePath="..\..\inc\vapor\render\Window.h"
 					>
 				</File>
-				<Filter
-					Name="SDL"
-					>
-					<File
-						RelativePath=".\SDL_Window.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\inc\vapor\SDL_Window.h"
-						>
-					</File>
-				</Filter>
-			</Filter>
-			<Filter
-				Name="Device"
-				>
-				<File
-					RelativePath=".\RenderDevice.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\RenderDevice.h"
-					>
-				</File>
-				<Filter
-					Name="Software"
-					>
-					<File
-						RelativePath="..\..\inc\vapor\SoftwareDevice.h"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="OpenGL"
-					>
-					<File
-						RelativePath=".\OpenGL_Device.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\inc\vapor\OpenGL_Device.h"
-						>
-					</File>
-				</Filter>
 			</Filter>
 			<Filter
 				Name="Queue"
@@ -220,7 +283,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\inc\vapor\RenderQueue.h"
+					RelativePath="..\..\inc\vapor\render\RenderQueue.h"
 					>
 				</File>
 			</Filter>
@@ -232,20 +295,128 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\inc\vapor\Camera.h"
+					RelativePath="..\..\inc\vapor\render\Camera.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Primitives"
+				>
+				<File
+					RelativePath="..\..\inc\vapor\render\Renderable.h"
 					>
 				</File>
 			</Filter>
 			<Filter
 				Name="Adapter"
 				>
+				<File
+					RelativePath=".\Adapter.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\render\Adapter.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Device"
+				>
+				<File
+					RelativePath=".\Device.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\render\Device.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Buffer"
+				>
+				<File
+					RelativePath=".\BufferManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\render\BufferManager.h"
+					>
+				</File>
+				<Filter
+					Name="Vertex"
+					>
+					<File
+						RelativePath=".\VertexBuffer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\render\VertexBuffer.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Index"
+					>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="Renderers"
+				>
+				<Filter
+					Name="OpenGL"
+					>
+					<Filter
+						Name="Adapter"
+						>
+						<File
+							RelativePath=".\GL_Adapter.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\inc\vapor\render\opengl\GL_Adapter.h"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="Window"
+						>
+						<File
+							RelativePath=".\SDL_Window.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\inc\vapor\render\SDL_Window.h"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="Device"
+						>
+						<File
+							RelativePath=".\GL_Device.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\inc\vapor\render\opengl\GL_Device.h"
+							>
+						</File>
+					</Filter>
+				</Filter>
+				<Filter
+					Name="Software"
+					>
+					<File
+						RelativePath="..\..\inc\vapor\render\Software.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter
 			Name="Resources"
 			>
 			<File
-				RelativePath="..\..\inc\vapor\Color.h"
+				RelativePath="..\..\inc\vapor\resources\Color.h"
 				>
 			</File>
 			<File
@@ -253,7 +424,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\inc\vapor\ResourceManager.h"
+				RelativePath="..\..\inc\vapor\resources\ResourceManager.h"
 				>
 			</File>
 			<Filter
@@ -267,7 +438,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\inc\vapor\Milkshape3D.h"
+						RelativePath="..\..\inc\vapor\resources\Milkshape3D.h"
 						>
 					</File>
 				</Filter>
@@ -280,105 +451,61 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\inc\vapor\Font.h"
+					RelativePath="..\..\inc\vapor\resources\Font.h"
+					>
+				</File>
+				<File
+					RelativePath=".\FontManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\resources\FontManager.h"
 					>
 				</File>
 				<Filter
-					Name="picofont"
+					Name="Bitmap"
+					>
+				</Filter>
+				<Filter
+					Name="TrueType"
 					>
 					<File
-						RelativePath="..\..\dep\SDL_picofont\picofont.c"
+						RelativePath=".\TTF.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\dep\SDL_picofont\spf.c"
+						RelativePath="..\..\inc\vapor\resources\TTF.h"
 						>
 					</File>
 				</Filter>
 			</Filter>
 			<Filter
-				Name="Textures"
+				Name="Texture"
 				>
 				<Filter
 					Name="PNG"
 					>
 					<File
+						RelativePath="..\..\dep\picopng\picopng.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\PNG.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\inc\vapor\PNG.h"
+						RelativePath="..\..\inc\vapor\resources\PNG.h"
 						>
 					</File>
-					<Filter
-						Name="picopng"
-						>
-						<File
-							RelativePath=".\picopng.cpp"
-							>
-						</File>
-					</Filter>
 				</Filter>
 			</Filter>
-		</Filter>
-		<Filter
-			Name="Math"
-			>
-			<File
-				RelativePath="..\..\inc\vapor\Math.h"
-				>
-			</File>
-			<Filter
-				Name="Vectors"
-				>
-				<File
-					RelativePath="..\..\inc\vapor\Vector3.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Matrix"
-				>
-				<File
-					RelativePath=".\Matrix.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\Matrix.h"
-					>
-				</File>
-			</Filter>
-		</Filter>
-		<Filter
-			Name="Log"
-			>
-			<File
-				RelativePath=".\Log.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\Log.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\LogExternalData.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Scene"
-			>
 		</Filter>
 		<File
 			RelativePath="..\..\inc\vapor\Engine.h"
 			>
 		</File>
 		<File
-			RelativePath="..\..\doc\TODO.txt"
-			>
-		</File>
-		<File
-			RelativePath="..\..\inc\vapor\Types.h"
+			RelativePath="..\..\inc\vapor\EngineInfo.h"
 			>
 		</File>
 	</Files>

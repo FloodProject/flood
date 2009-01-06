@@ -1,32 +1,26 @@
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
-//// 
-//// fuckEngine by triton
-////
-//// License: fuckGNU License
-////
-//// Thanks to:
-////	Zero (love ya bitch)
-////
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+/************************************************************************
+*
+* vaporEngine by triton (2008)
+*
+*	<http://www.portugal-a-programar.org/
+*
+************************************************************************/
 
-#include "vapor/SDL_Window.h"
+// SDL_OpenGL conflicts with GLEW - this does the trick!
+#define NO_SDL_GLEXT
+#include <SDL_opengl.h>
+																																										
+#include "vapor/render/SDL_Window.h"
 
 namespace vapor {
 	namespace render {
 
-
-SDLWindow::SDLWindow(const string& title, shared_ptr<WindowSettings> windowSettings)
-	:	Window(title, windowSettings)
+SDLWindow::SDLWindow(WindowSettings *windowSettings)
+	:	Window(windowSettings)
 {
-	this->windowSettings = windowSettings;
-
-	if (!init() || !open())
-		//LOGME
+	if ( !init() || !open() ) {
 		exit(1);
-
-	setTitle(title);
+	}
 }
 
 SDLWindow::~SDLWindow()
@@ -39,12 +33,13 @@ bool SDLWindow::init(void)
 {
 	display = NULL;
 
-	// initialize video sub-system
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-		return false;
+	info("render::window", "Initializing SDL subsystem");
 
-	// get some information about the video
-	vidinfo = (SDL_VideoInfo*) SDL_GetVideoInfo();
+	// initialize video sub-system
+	if ( SDL_Init(SDL_INIT_VIDEO) < 0 ) {
+		error("render::window", "Failed to initialize SDL");
+		return false;
+	}
 
 	return true;
 }
@@ -54,12 +49,8 @@ bool SDLWindow::open()
 	Uint32 flags = SDL_OPENGL;
 
 	// check if we want fullscreen
-	if (windowSettings->fullscreen)
+	if ( _windowSettings->fullscreen )
 		flags |= SDL_FULLSCREEN;
-
-	// check if we have hardware acceleration
-	if(vidinfo->hw_available)
-		flags |= SDL_HWSURFACE;
 
 	//SDL_GL_SetAttribute( SDL_GL_RED_SIZE, 5 );
 	//SDL_GL_SetAttribute( SDL_GL_GREEN_SIZE, 5 );
@@ -69,12 +60,13 @@ bool SDLWindow::open()
 	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
 
 	// set the video mode
-	display = SDL_SetVideoMode(windowSettings->width,
-		windowSettings->height, windowSettings->bpp, flags);
+	display = SDL_SetVideoMode(getWindowSettings().width,
+		getWindowSettings().height, getWindowSettings().bpp, flags);
 
-	if (!display)
-		// we are in deep shit
+	if ( !display ) {
+		error("render::window", "Failed to create a display");
 		return false;
+	}
 
 	return true;
 }
@@ -89,13 +81,13 @@ bool SDLWindow::pump()
 {
 	SDL_Event event;
 
-	while(SDL_PollEvent(&event))
+	while( SDL_PollEvent(&event) )
 	{
-		switch(event.type)
+		switch ( event.type )
 		{
 
 		case SDL_KEYDOWN:
-			if (event.key.keysym.sym == SDLK_ESCAPE)
+			if ( event.key.keysym.sym == SDLK_ESCAPE )
 				return false;
 			else
 				break;
@@ -113,6 +105,7 @@ bool SDLWindow::pump()
 void SDLWindow::setTitle(const string& title) const
 {
 	SDL_WM_SetCaption(title.c_str(), NULL);
+	info("render::window", "Changing window title to '%s'", title.c_str());
 }
 
 void SDLWindow::setCursor(bool state) const

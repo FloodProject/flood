@@ -1,6 +1,20 @@
-#include <SDL_opengl.h>
+/************************************************************************
+*
+* vaporEngine by triton (2008)
+*
+*	<http://www.portugal-a-programar.org>
+*
+* DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+* Version 2, December 2004
+* 
+* DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+* TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+* 
+* 0. You just DO WHAT THE FUCK YOU WANT TO.
+*
+************************************************************************/
 
-#include "vapor/RenderQueue.h"
+#include "vapor/render/RenderQueue.h"
 
 namespace vapor {
 	namespace render {
@@ -14,9 +28,9 @@ RenderQueue::~RenderQueue()
 
 }
 
-void RenderQueue::addRenderable(Milkshape3D &mesh)
+void RenderQueue::addRenderable(Renderable *obj)
 {
-	listRenderables.push_back(mesh);
+	listRenderables.push_back(obj);
 }
 
 } } // end namespaces

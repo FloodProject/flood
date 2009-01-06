@@ -1,28 +1,31 @@
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
-//// 
-//// fuckEngine by triton (2008)
-////
-//// License: WTF Public License
-////
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+/************************************************************************
+*
+* vaporEngine by triton (2008)
+*
+*	<http://www.portugal-a-programar.org>
+*
+* DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+* Version 2, December 2004
+* 
+* DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+* TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+* 
+* 0. You just DO WHAT THE FUCK YOU WANT TO.
+*
+************************************************************************/
 
-#include "vapor/Font.h"
+#include "vapor/resources/Font.h"
 
 namespace vapor {
 	namespace resources {
 
-//Font::Font()
-//{
-//	// still not used
-//}
-//
-//SDL_Surface* Font::getSurface(const string &text, Color color)
-//{
-//	SDL_Color c; 
-//	c.r = color.r; c.g = color.b; c.b = color.b;
-//	return FNT_Render(text.c_str(), c);
-//}
+Font::Font()
+{
+	// still not used
+}
+
+Font::~Font() {
+
+}
 
 } } // end namespaces

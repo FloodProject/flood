@@ -1,5 +1,5 @@
-#include "vapor/Matrix.h"
-#include "vapor/Vector3.h"
+#include "vapor/math/Matrix.h"
+#include "vapor/math/Vector3.h"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -26,7 +26,7 @@
 //               | m31 m32 m33 |
 //               | tx  ty  tz  |
 //
-// Strict adherance to linear algebra rules dictates that this
+// Strict adherence to linear algebra rules dictates that this
 // multiplication is actually undefined.  To circumvent this, we can
 // consider the input and output vectors as having an assumed fourth
 // coordinate of 1.  Also, since we cannot technically invert a 4x3 matrix
@@ -58,7 +58,7 @@ namespace vapor {
 //
 // Set the matrix to identity
 
-void	Matrix4x3::identity() {
+void Matrix4x3::identity() {
 	m11 = 1.0f; m12 = 0.0f; m13 = 0.0f;
 	m21 = 0.0f; m22 = 1.0f; m23 = 0.0f;
 	m31 = 0.0f; m32 = 0.0f; m33 = 1.0f;
@@ -76,18 +76,18 @@ void	Matrix4x3::identity() {
 // See 7.1.7
 
 
-Vector3f	operator*(const Vector3f &p, const Matrix4x3 &m) {
+Vector3	operator*(const Vector3 &p, const Matrix4x3 &m) {
 
 	// Grind through the linear algebra.
 
-	return Vector3f(
+	return Vector3(
 		p.x*m.m11 + p.y*m.m21 + p.z*m.m31 + m.tx,
 		p.x*m.m12 + p.y*m.m22 + p.z*m.m32 + m.ty,
 		p.x*m.m13 + p.y*m.m23 + p.z*m.m33 + m.tz
 	);
 }
 
-Vector3f &operator*=(Vector3f &p, const Matrix4x3 &m) {
+Vector3 &operator*=(Vector3 &p, const Matrix4x3 &m) {
 	p = p * m;
 	return p;
 }
@@ -200,11 +200,10 @@ Matrix4x3 inverse(const Matrix4x3 &m) {
 	r.tz = -(m.tx*r.m13 + m.ty*r.m23 + m.tz*r.m33);
 
 	// Return it.  Ouch - involves a copy constructor call.  If speed
-	// is critical, we may need a seperate function which places the
+	// is critical, we may need a separate function which places the
 	// result where we want it...
 
 	return r;
 }
-
 
 } } // end namespaces
