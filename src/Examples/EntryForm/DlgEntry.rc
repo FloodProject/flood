@@ -1,0 +1,152 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+#include "..\Config.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+
+/*#if defined(APP_COMPILE_WITH_VS2002) || defined(APP_COMPILE_WITH_VS2003)
+#include "afxres.h"
+#endif*/
+
+#if defined(APP_COMPILE_WITH_VS2005) || defined(COMPILE_WITH_VS2008)
+#include <windows.h>
+#endif
+
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Español resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ESN)
+#ifdef _WIN32
+LANGUAGE LANG_SPANISH, SUBLANG_SPANISH_MODERN
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+/*#if defined(APP_COMPILE_WITH_VS2002) || defined(APP_COMPILE_WITH_VS2003)
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+#endif*/
+
+#if defined(APP_COMPILE_WITH_VS2005) || defined(COMPILE_WITH_VS2008)
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""windows.h""\r\n"
+    "\0"
+END
+#endif
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_DIALOG1, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 242
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 210
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DIALOG1 DIALOGEX 0, 0, 249, 196
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_POPUP | 
+    WS_CAPTION
+CAPTION "No name"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         107,IDC_STATIC+0,"Static",SS_BITMAP | SS_CENTERIMAGE | 
+                    SS_REALSIZEIMAGE,8,9,233,43,WS_EX_STATICEDGE
+
+    GROUPBOX        "Driver",IDC_STATIC+1,8,61,109,31
+	LTEXT           "Raster",IDC_STATIC+2,14,75,22,8
+    COMBOBOX        IDC_COMBO2,40,72,72,65,CBS_DROPDOWNLIST | WS_VSCROLL
+
+    GROUPBOX        "Image quality",IDC_STATIC+3,8,108,109,46
+	LTEXT           "T.Filter",IDC_STATIC+4,14,121,24,8
+    COMBOBOX        IDC_COMBO3,40,119,72,65,CBS_DROPDOWNLIST | WS_VSCROLL
+    CONTROL         "Full-Scene Antialiasing",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,14,138,90,10
+
+    GROUPBOX        "Display format",IDC_STATIC+5,122,61,119,93
+    LTEXT           "Resolution",IDC_STATIC+6,128,74,34,8
+    COMBOBOX        IDC_COMBO1,164,72,72,65,CBS_DROPDOWNLIST | WS_VSCROLL
+    CONTROL         "16-bit Back buffer",IDC_CHECK3,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,128,90,77,10
+    CONTROL         "16-bit Depth buffer",IDC_CHECK4,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,128,106,77,10
+    CONTROL         "Windowed mode",IDC_CHECK6,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,128,122,73,10
+    CONTROL         "V-Sync",IDC_CHECK2,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,128,138,38,10
+
+    CONTROL         "",IDC_STATIC+7,"Static",SS_GRAYFRAME,8,164,233,24,
+                    WS_EX_CLIENTEDGE
+
+    DEFPUSHBUTTON   "PLAY",IDOK,26,169,80,14,BS_FLAT,WS_EX_DLGMODALFRAME
+    PUSHBUTTON      "EXIT",IDCANCEL,137,169,84,14,BS_FLAT, WS_EX_DLGMODALFRAME
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_BITMAP1             BITMAP                  "Logo.bmp"
+#endif    // Español resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

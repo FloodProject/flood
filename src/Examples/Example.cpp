@@ -1,11 +1,16 @@
 #include "Framework.h"
 
-#ifdef WIN32
+#ifdef VAPOR_PLATFORM_WINDOWS
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, 
 				   LPSTR lpCmdLine, int nCmdShow)
+
 #else
+
 int main(int argc, char *argv[])
+
 #endif
+
 {
 	EngineFramework *example = new EngineFramework();
 

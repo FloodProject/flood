@@ -31,7 +31,7 @@ SDLWindow::~SDLWindow()
 
 bool SDLWindow::init(void)
 {
-	display = NULL;
+	display = nullptr;
 
 	info("render::window", "Initializing SDL subsystem");
 

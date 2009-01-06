@@ -359,58 +359,6 @@
 					>
 				</Filter>
 			</Filter>
-			<Filter
-				Name="Renderers"
-				>
-				<Filter
-					Name="OpenGL"
-					>
-					<Filter
-						Name="Adapter"
-						>
-						<File
-							RelativePath=".\GL_Adapter.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\..\inc\vapor\render\opengl\GL_Adapter.h"
-							>
-						</File>
-					</Filter>
-					<Filter
-						Name="Window"
-						>
-						<File
-							RelativePath=".\SDL_Window.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\..\inc\vapor\render\SDL_Window.h"
-							>
-						</File>
-					</Filter>
-					<Filter
-						Name="Device"
-						>
-						<File
-							RelativePath=".\GL_Device.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\..\inc\vapor\render\opengl\GL_Device.h"
-							>
-						</File>
-					</Filter>
-				</Filter>
-				<Filter
-					Name="Software"
-					>
-					<File
-						RelativePath="..\..\inc\vapor\render\Software.h"
-						>
-					</File>
-				</Filter>
-			</Filter>
 		</Filter>
 		<Filter
 			Name="Resources"
@@ -500,12 +448,60 @@
 				</Filter>
 			</Filter>
 		</Filter>
+		<Filter
+			Name="Renderers"
+			>
+			<Filter
+				Name="OpenGL"
+				>
+				<Filter
+					Name="Adapter"
+					>
+					<File
+						RelativePath=".\GL_Adapter.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\render\opengl\GL_Adapter.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Window"
+					>
+					<File
+						RelativePath=".\SDL_Window.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\render\SDL_Window.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Device"
+					>
+					<File
+						RelativePath=".\GL_Device.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\render\opengl\GL_Device.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="Software"
+				>
+				<File
+					RelativePath="..\..\inc\vapor\render\Software.h"
+					>
+				</File>
+			</Filter>
+		</Filter>
 		<File
 			RelativePath="..\..\inc\vapor\Engine.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\inc\vapor\EngineInfo.h"
 			>
 		</File>
 	</Files>
