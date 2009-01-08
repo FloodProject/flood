@@ -1,0 +1,9 @@
+HOW TO MAKE C++ SUCK LESS
+=========================
+
+
+import vapor.engine.core;
+
+namespace vapor.engine.core;
+
+NO FUCKIN HEADER FILES. lol

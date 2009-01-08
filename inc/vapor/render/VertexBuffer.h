@@ -2,8 +2,15 @@
 *
 * vaporEngine by triton (2008)
 *
-*	<http://www.portugal-a-programar.org>
+*	<http://www.portugal-a-programar.org/
 *
 ************************************************************************/
 
-#include "vapor/render/Camera.h"
+#pragma once
+
+class VertexBuffer
+{
+public:
+	VertexBuffer(void);
+	~VertexBuffer(void);
+};
