@@ -27,10 +27,12 @@
 #else
 	// Linux
 	#define VAPOR_PLATFORM_LINUX
+#elif
+	#error "Unknown platform (not currently supported by the engine)"
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-// Compiler detectionPlatform headers
+// Platform main headers
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef VAPOR_PLATFORM_WINDOWS
