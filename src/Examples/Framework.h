@@ -49,6 +49,10 @@ public:
 
 		// create the resource manager
 		resourceManager = new ResourceManager();
+
+		Log::getLogger()->error("triton::rulas", "i suck :(");
+
+		Log::getLogger()->warn("warn::barn", "carn");
 	}
 
 	void resources()

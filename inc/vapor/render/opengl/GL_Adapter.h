@@ -24,7 +24,6 @@ class GLAdapter : public render::Adapter
 public:
 
 	GLAdapter();
-	virtual ~GLAdapter();
 
 };
 

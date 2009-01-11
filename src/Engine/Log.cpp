@@ -58,7 +58,7 @@ void Log::close()
 
 void Log::write(const LogLevel level, const string &subsystem, const char* msg, va_list args)
 {
-	fprintf(fp, "\t<tr class=\"%s\">", even ? "even" : "odd");
+	fprintf(fp, "\t\t<tr class=\"%s\">", even ? "even" : "odd");
 
 	switch(level) {	
 		case Info:		fprintf(fp, "<td class=\"%s\"></td>", "info");	break;
@@ -87,7 +87,7 @@ void Log::start(const string &title)
 
 void Log::end()
 {
-	fprintf(fp, "</table>\n" "</body>\n" "</html>\n");
+	fprintf(fp, "\t</table>\n" "\t</div>\n" "</body>\n" "</html>\n");
 }
 
 void Log::info(const string &subsystem, const char* msg, ...)

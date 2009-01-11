@@ -39,7 +39,7 @@ public:
 private:
 
 	// primitive type of vertex buffer 
-	PrimitiveType _type;
+	//PrimitiveType _type;
 
 	VertexBuffer _vertexBuffer;
 	IndexBuffer _indexBuffer;
