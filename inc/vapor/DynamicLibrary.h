@@ -15,22 +15,24 @@ namespace vapor {
 
 // based on OGRE 3D headers
 #ifdef VAPOR_PLATFORM_WINDOWS
-# define DYNLIB_HANDLE				struct HINSTANCE__*
-# define DYNLIB_LOAD(lib)			LoadLibraryExA(lib, NULL, LOAD_WITH_ALTERED_SEARCH_PATH )
-# define DYNLIB_GETSYM(lib, sym)	GetProcAddress(lib, sym)
-# define DYNLIB_UNLOAD(lib)			FreeLibrary(lib)
+	#define DYNLIB_HANDLE				struct HINSTANCE__*
+	#define DYNLIB_LOAD(lib)			LoadLibraryExA(lib, NULL, LOAD_WITH_ALTERED_SEARCH_PATH)
+	#define DYNLIB_GETSYM(lib, sym)		GetProcAddress(lib, sym)
+	#define DYNLIB_UNLOAD(lib)			FreeLibrary(lib)
 #endif
 
 class DynamicLib
 {
 
 public:
-	DynamicLib(const string &name);
+
+	DynamicLib( const string &name );
 	~DynamicLib();
 
-	void* getSymbol(const string &symbol);
+	void* getSymbol( const string &symbol );
 
 private:
+
 	bool load();
 	
 	string _name;

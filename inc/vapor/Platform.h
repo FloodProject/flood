@@ -34,10 +34,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef VAPOR_PLATFORM_WINDOWS
-
 	// include the main Windows headers
 	#define WIN32_LEAN_AND_MEAN 
 	#include <Windows.h>	
-
 #endif
 

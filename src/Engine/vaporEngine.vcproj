@@ -173,6 +173,14 @@
 			</File>
 		</Filter>
 		<Filter
+			Name="VFS"
+			>
+			<File
+				RelativePath="..\..\inc\vapor\vfs\File.h"
+				>
+			</File>
+		</Filter>
+		<Filter
 			Name="Math"
 			>
 			<File
