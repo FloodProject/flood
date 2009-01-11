@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine by triton (2008)
+* vaporEngine by triton © (2008-2009)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "vapor/render/RenderTarget.h"
+#include "vapor/render/Target.h"
 
 namespace vapor {
 	namespace render {

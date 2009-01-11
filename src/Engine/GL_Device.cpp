@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine by triton (2008)
+* vaporEngine by triton © (2008-2009)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -8,6 +8,8 @@
 
 #include "vapor/render/opengl/GL_Device.h"
 #include "vapor/render/opengl/GL_Adapter.h"
+
+#ifdef VAPOR_RENDERER_OPENGL
 
 namespace vapor {
 	namespace render {
@@ -70,3 +72,5 @@ void GLDevice::resetViewport()
 }
 
 } } } // end namespaces
+
+#endif

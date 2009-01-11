@@ -8,29 +8,25 @@
 
 #pragma once
 
-#include "vapor/Engine.h"
-#include "vapor/resources/Resource.h"
-
-#include <map>
+#include "vapor/render/RenderQueue.h"
 
 namespace vapor {
-	namespace resources {
+	namespace render {
 
-class ResourceManager 
+class RenderTarget
 {
 
 public:
-	ResourceManager();
-	virtual ~ResourceManager();
 
-	void addResource(const char* name, Resource* resource);
-	Resource* getResource(string &name);
+	RenderTarget() {};
+	virtual ~RenderTarget() {};
+	
+	virtual void update() = 0;
 
 private:
 
-	map<string, Resource*> resourceMap;
+	// manages the objects to render
+	RenderQueue* renderQueue;
 };
-
-
 
 } } // end namespaces

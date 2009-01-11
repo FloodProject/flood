@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine by triton (2008)
+* vaporEngine by triton © (2008-2009)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -12,7 +12,7 @@
 
 #include "vapor/render/Window.h"
 #include "vapor/render/RenderQueue.h"
-#include "vapor/render/RenderTarget.h"
+#include "vapor/render/Target.h"
 #include "vapor/render/Adapter.h"
 #include "vapor/render/BufferManager.h"
 
@@ -31,7 +31,7 @@ namespace vapor {
  * details how all the rendering operations are implemented.
  *
  * This class only knows about rendering primitives (VertexBuffer and IndexBuffer)
- * and does not know anything about the high-level mesh/models/objects.
+ * and does not know anything about the high-level meshes.
  *
  * Each render device will also manage a list of render targets (Windows or RTT).
  * Window implementations depend on the rendering system used, for example, an
@@ -43,8 +43,8 @@ class Device
 {
 public:
 
-	Device();
-	virtual ~Device();
+	Device( );
+	virtual ~Device( );
 
 	//-----------------------------------//
 
@@ -58,12 +58,12 @@ public:
 	/**
 	 * Clears the active render target.
 	 */
-	virtual void clearTarget() = 0;
+	virtual void clearTarget( ) = 0;
 
 	/**
 	 * Updates the target render target.
-	 */
-	virtual void updateTarget();
+	 */ 
+	virtual void updateTarget( );
 
 	/**
 	 * Sets the active render target.
@@ -74,14 +74,14 @@ public:
 
 	//-----------------------------------//
 
-	// create a window if WHND not passed
-	virtual void open(WindowSettings& wS) = 0;
+	// create a window if not passed a WindowHandle
+	virtual void open( WindowSettings& wS ) = 0;
 
 	// get window class
-	virtual Window& getWindow();
+	virtual Window& getWindow( );
 
 	// get adapter information
-	virtual Adapter& getAdapter();
+	virtual Adapter& getAdapter( );
 
 	//-----------------------------------//
 

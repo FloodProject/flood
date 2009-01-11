@@ -17,7 +17,7 @@ The engine is divided in a few subsystems (enclosed in namespaces):
 	* math		(vectors, matrices, AABBs, ...)
 	* scene		(scene graph, bvh, ...)
 	* render	(opengl, directx, software)
-	* resources (textures, meshes, fonts, ...)
+	* resources	(textures, meshes, fonts, ...)
 	* input		(mouse, keyboard, ...)
 	* audio		(vorbis, mo3)
 	* video		(theora, ffmpeg)
@@ -57,8 +57,8 @@ Window
 
 	just a class that has the window we are to render. this is abstract and will
 	have a subclass for every other operating system / graphics api we are to support. 
-	right now it uses SDL for creating and managing windows but it creates a pretty big
-	dependency and should be replaced by native code.
+	right now it uses SDL for creating and managing windows but it creates a dependency 
+	and should be replaced by native code / alternative lib.
 	
 	each render target has a render queue that will be filled up by the camera 
 	once it is done with frustum culling.

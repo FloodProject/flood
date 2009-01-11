@@ -173,58 +173,6 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Platform"
-			>
-			<File
-				RelativePath="..\..\inc\vapor\Platform.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\Types.h"
-				>
-			</File>
-			<Filter
-				Name="DynLib"
-				>
-				<File
-					RelativePath=".\DynamicLibrary.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\DynamicLibrary.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Log"
-				>
-				<File
-					RelativePath=".\Log.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\log\Log.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\log\LogFormat.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="System"
-				>
-				<Filter
-					Name="CPU"
-					>
-					<File
-						RelativePath=".\CPU.cpp"
-						>
-					</File>
-				</Filter>
-			</Filter>
-		</Filter>
-		<Filter
 			Name="Math"
 			>
 			<File
@@ -259,105 +207,173 @@
 		<Filter
 			Name="Render"
 			>
-			<File
-				RelativePath="..\..\inc\vapor\render\RenderTarget.h"
-				>
-			</File>
 			<Filter
-				Name="Window"
+				Name="Common"
 				>
 				<File
-					RelativePath=".\Window.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\render\Window.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Queue"
-				>
-				<File
-					RelativePath=".\RenderQueue.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\render\RenderQueue.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Camera"
-				>
-				<File
-					RelativePath=".\Camera.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\render\Camera.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Primitives"
-				>
-				<File
-					RelativePath="..\..\inc\vapor\render\Renderable.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Adapter"
-				>
-				<File
-					RelativePath=".\Adapter.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\render\Adapter.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Device"
-				>
-				<File
-					RelativePath=".\Device.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\render\Device.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Buffer"
-				>
-				<File
-					RelativePath=".\BufferManager.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\render\BufferManager.h"
+					RelativePath="..\..\inc\vapor\render\Target.h"
 					>
 				</File>
 				<Filter
-					Name="Vertex"
+					Name="Adapter"
 					>
 					<File
-						RelativePath=".\VertexBuffer.cpp"
+						RelativePath=".\Adapter.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\inc\vapor\render\VertexBuffer.h"
+						RelativePath="..\..\inc\vapor\render\Adapter.h"
 						>
 					</File>
 				</Filter>
 				<Filter
-					Name="Index"
+					Name="Device"
 					>
+					<File
+						RelativePath=".\Device.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\render\Device.h"
+						>
+					</File>
 				</Filter>
+				<Filter
+					Name="Camera"
+					>
+					<File
+						RelativePath=".\Camera.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\render\Camera.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Buffer"
+					>
+					<File
+						RelativePath=".\BufferManager.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\render\BufferManager.h"
+						>
+					</File>
+					<Filter
+						Name="Vertex"
+						>
+						<File
+							RelativePath=".\VertexBuffer.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\inc\vapor\render\VertexBuffer.h"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="Index"
+						>
+						<File
+							RelativePath=".\IndexBuffer.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\inc\vapor\render\IndexBuffer.h"
+							>
+						</File>
+					</Filter>
+				</Filter>
+				<Filter
+					Name="Primitives"
+					>
+					<File
+						RelativePath=".\Renderable.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\render\Renderable.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Queue"
+					>
+					<File
+						RelativePath=".\RenderQueue.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\render\RenderQueue.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Window"
+					>
+					<File
+						RelativePath=".\Window.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\render\Window.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="OpenGL"
+				>
+				<Filter
+					Name="Adapter"
+					>
+					<File
+						RelativePath=".\GL_Adapter.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\render\opengl\GL_Adapter.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Window"
+					>
+					<Filter
+						Name="SDL"
+						>
+						<File
+							RelativePath=".\SDL_Window.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\inc\vapor\render\SDL_Window.h"
+							>
+						</File>
+					</Filter>
+				</Filter>
+				<Filter
+					Name="Device"
+					>
+					<File
+						RelativePath=".\GL_Device.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\render\opengl\GL_Device.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="Software"
+				>
+				<File
+					RelativePath="..\..\inc\vapor\render\Software.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -447,59 +463,67 @@
 					</File>
 				</Filter>
 			</Filter>
-		</Filter>
-		<Filter
-			Name="Renderers"
-			>
 			<Filter
-				Name="OpenGL"
+				Name="Shaders"
 				>
 				<Filter
-					Name="Adapter"
+					Name="Cg"
 					>
-					<File
-						RelativePath=".\GL_Adapter.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\inc\vapor\render\opengl\GL_Adapter.h"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="Window"
-					>
-					<File
-						RelativePath=".\SDL_Window.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\inc\vapor\render\SDL_Window.h"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="Device"
-					>
-					<File
-						RelativePath=".\GL_Device.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\inc\vapor\render\opengl\GL_Device.h"
-						>
-					</File>
 				</Filter>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="Core"
+			>
+			<File
+				RelativePath="..\..\inc\vapor\Platform.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\Types.h"
+				>
+			</File>
 			<Filter
-				Name="Software"
+				Name="Logging"
 				>
 				<File
-					RelativePath="..\..\inc\vapor\render\Software.h"
+					RelativePath=".\Log.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\log\Log.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\log\LogFormat.h"
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="DynLibs"
+				>
+				<File
+					RelativePath=".\DynamicLibrary.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\DynamicLibrary.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Input"
+				>
+			</Filter>
+			<Filter
+				Name="Windowing"
+				>
+			</Filter>
 		</Filter>
+		<File
+			RelativePath="..\..\inc\vapor\CompileOptions.h"
+			>
+		</File>
 		<File
 			RelativePath="..\..\inc\vapor\Engine.h"
 			>

@@ -6,23 +6,17 @@
 *
 ************************************************************************/
 
-#include "vapor/render/RenderQueue.h"
+#include "vapor/render/IndexBuffer.h"
 
-namespace vapor {
-	namespace render {
-
-RenderQueue::RenderQueue()
+IndexBuffer::IndexBuffer(void)
 {
 }
 
-RenderQueue::~RenderQueue()
+IndexBuffer::~IndexBuffer(void)
 {
-
 }
 
-void RenderQueue::addRenderable(Renderable *obj)
+bool IndexBuffer::is32bitIndexed()
 {
-	listRenderables.push_back(obj);
+	return _is32bit;
 }
-
-} } // end namespaces

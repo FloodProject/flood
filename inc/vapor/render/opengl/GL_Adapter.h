@@ -1,12 +1,16 @@
 /************************************************************************
 *
-* vaporEngine by triton (2008)
+* vaporEngine by triton © (2008-2009)
 *
 *	<http://www.portugal-a-programar.org>
 *
 ************************************************************************/
 
 #pragma once
+
+#include "vapor/CompileOptions.h"
+
+#ifdef VAPOR_RENDERER_OPENGL
 
 #include "vapor/render/Adapter.h"
 
@@ -25,3 +29,5 @@ public:
 };
 
 } } } // end namespaces
+
+#endif

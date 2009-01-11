@@ -6,12 +6,4 @@
 *
 ************************************************************************/
 
-#include "vapor/render/VertexBuffer.h"
-
-VertexBuffer::VertexBuffer(void)
-{
-}
-
-VertexBuffer::~VertexBuffer(void)
-{
-}
+#include "vapor/render/Renderable.h"

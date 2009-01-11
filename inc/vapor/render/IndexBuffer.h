@@ -6,12 +6,19 @@
 *
 ************************************************************************/
 
-#include "vapor/render/VertexBuffer.h"
+#pragma once
 
-VertexBuffer::VertexBuffer(void)
-{
-}
+#include "vapor/Engine.h"
 
-VertexBuffer::~VertexBuffer(void)
+class IndexBuffer
 {
-}
+public:
+	IndexBuffer(void);
+	~IndexBuffer(void);
+
+	bool is32bitIndexed();
+
+private:
+
+	bool _is32bit;
+};

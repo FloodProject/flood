@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine by triton (2008)
+* vaporEngine by triton © (2008-2009)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -16,10 +16,14 @@
 
 #pragma once
 
+#include "vapor/CompileOptions.h"
+
+#ifdef VAPOR_WINDOWING_SDL
+
 #include <SDL.h>
 
-#include "vapor/render/Window.h"
 #include "vapor/Engine.h"
+#include "vapor/render/Window.h"
 
 namespace vapor {
 	namespace render {
@@ -29,7 +33,7 @@ class SDLWindow : public Window
 public:
 
 	SDLWindow(WindowSettings *windowSettings);
-	~SDLWindow();
+	virtual ~SDLWindow();
 
 	void update ();
 
@@ -52,3 +56,5 @@ private:
 };
 
 } } // end namespaces
+
+#endif

@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine by triton (2008)
+* vaporEngine by triton © (2008-2009)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -8,8 +8,18 @@
 
 #pragma once
 
-#define GLEW_STATIC 
-#include <GL/glew.h>
+#include "vapor/CompileOptions.h"
+
+#ifdef VAPOR_RENDERER_OPENGL
+
+#ifdef VAPOR_WINDOWING_SDL
+	#define GLEW_STATIC 
+	#include <GL/glew.h>
+
+	// needed because SDL_OpenGL conflicts with GLEW
+	#define NO_SDL_GLEXT
+	#include <SDL_opengl.h>
+#endif
 
 #include "vapor/render/Device.h"
 #include "vapor/render/SDL_Window.h"
@@ -45,3 +55,5 @@ private:
 };
 
 } } } // end namespaces
+
+#endif

@@ -1,16 +1,14 @@
 /************************************************************************
 *
-* vaporEngine by triton (2008)
+* vaporEngine by triton © (2008-2009)
 *
 *	<http://www.portugal-a-programar.org/
 *
 ************************************************************************/
 
-// SDL_OpenGL conflicts with GLEW - this does the trick!
-#define NO_SDL_GLEXT
-#include <SDL_opengl.h>
-																																										
 #include "vapor/render/SDL_Window.h"
+
+#ifdef VAPOR_WINDOWING_SDL
 
 namespace vapor {
 	namespace render {
@@ -114,3 +112,5 @@ void SDLWindow::setCursor(bool state) const
 }
 
 } } // end namespaces
+
+#endif
