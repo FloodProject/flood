@@ -21,7 +21,6 @@ Low priority:
 Log todo:
 
 	Log all the engine calls
-	CSS-styling to the logging output
 	Header in the log output
 	bind/functor for logging
 	Hierarchical log system
@@ -29,7 +28,7 @@ Log todo:
 	Logging boxes for system/CPU/GPU information
 
 Nice to have:
-
+	CSS-styling to the logging output
 	Virtual File System :)
 	Font handling via FreeType 2
 	Basic software device

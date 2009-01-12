@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine by triton © (2008-2009)
+* vaporEngine team © (2008-2009)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -17,11 +17,9 @@ static const char LOG_HTML[] =
 		"\t\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n"
 	"<html xmlns='http://www.w3.org/1999/xhtml'>\n"
 		"<head>\n"
-		"\t<meta http-equiv='content-type' content='application/xhtml+xml; charset=utf-8'/>\n"
+			"\t<meta http-equiv='content-type' content='application/xhtml+xml; charset=utf-8'/>\n"
 			"\t<title>%s</title>\n"
-			"\t<style type=\"text/css\">\n" 
-				"%s"
-			"\t</style>\n"
+			"\t<style type=\"text/css\">\n" "%s" "\t</style>\n"
 			"\t<script type=\"text/javascript\" href=\"%s\">\n"
 			"\t</script>\n"
 		"</head>\n"

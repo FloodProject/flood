@@ -1,0 +1,14 @@
+vaporEngine Team
+================
+
+Programmers:
+
+	* João Matos aka triton
+	* Nuno Silva aka LittleCodingFox
+	
+Libraries used:
+
+	* SDL
+	* FreeType
+	* GLEW
+	* OpenGL
