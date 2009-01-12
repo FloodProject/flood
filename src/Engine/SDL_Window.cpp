@@ -6,6 +6,7 @@
 *
 ************************************************************************/
 
+#include <GL/glew.h>
 #include "vapor/render/SDL_Window.h"
 
 #ifdef VAPOR_WINDOWING_SDL
@@ -60,6 +61,8 @@ bool SDLWindow::open()
 	// set the video mode
 	display = SDL_SetVideoMode(getWindowSettings().width,
 		getWindowSettings().height, getWindowSettings().bpp, flags);
+
+	glewInit();
 
 	if ( !display ) {
 		error("render::window", "Failed to create a display");

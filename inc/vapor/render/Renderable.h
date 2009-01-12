@@ -15,6 +15,7 @@
 
 namespace vapor {
 	namespace render {
+		class Device;
 
 	namespace PrimitiveType { // GIMME enum class now!
 		enum PrimitiveType
@@ -35,14 +36,14 @@ class Renderable
 
 public:
 
+	// Render
+	virtual void Render(Device *device) = 0;
+
 
 private:
 
 	// primitive type of vertex buffer 
 	//PrimitiveType _type;
-
-	VertexBuffer _vertexBuffer;
-	IndexBuffer _indexBuffer;
 };
 
 } } // end namespaces

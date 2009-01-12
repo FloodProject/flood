@@ -26,9 +26,18 @@ GLDevice::GLDevice(WindowSettings& windowSettings)
 	_adapter = new GLAdapter();
 }
 
+void GLDevice::close()
+{
+	info("render::opengl", "Closing OpenGL rendering device");
+
+	for(std::list<GLVertexBuffer>::iterator it = VertexBuffers.begin(); it != VertexBuffers.end(); it++)
+	{
+		VertexBuffers.erase(it);
+	}
+}
+
 GLDevice::~GLDevice()
 {
-
 }
 
 void GLDevice::checkExtensions()
@@ -70,6 +79,13 @@ void GLDevice::resetViewport()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
+
+VertexBuffer *GLDevice::createVertexBuffer()
+{
+	GLVertexBuffer Buffer;
+	VertexBuffers.push_back(Buffer);
+	return &VertexBuffers.back();
+};
 
 } } } // end namespaces
 

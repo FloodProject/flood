@@ -277,10 +277,6 @@
 						Name="Vertex"
 						>
 						<File
-							RelativePath=".\VertexBuffer.cpp"
-							>
-						</File>
-						<File
 							RelativePath="..\..\inc\vapor\render\VertexBuffer.h"
 							>
 						</File>
@@ -288,10 +284,6 @@
 					<Filter
 						Name="Index"
 						>
-						<File
-							RelativePath=".\IndexBuffer.cpp"
-							>
-						</File>
 						<File
 							RelativePath="..\..\inc\vapor\render\IndexBuffer.h"
 							>
@@ -369,6 +361,10 @@
 				<Filter
 					Name="Device"
 					>
+					<File
+						RelativePath=".\GL_Buffers.cpp"
+						>
+					</File>
 					<File
 						RelativePath=".\GL_Device.cpp"
 						>

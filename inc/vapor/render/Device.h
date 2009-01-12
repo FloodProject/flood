@@ -15,6 +15,7 @@
 #include "vapor/render/Target.h"
 #include "vapor/render/Adapter.h"
 #include "vapor/render/BufferManager.h"
+#include "vapor/render/VertexBuffer.h"
 
 #include "vapor/math/Matrix.h"
 
@@ -82,6 +83,19 @@ public:
 
 	// get adapter information
 	virtual Adapter& getAdapter( );
+
+	// bind a vertex buffer (0 to unbind, non-0 to bind)
+	virtual void bindVertexBuffer(VertexBuffer *Buffer) = 0;
+
+	// bind an index buffer (0 to unbind, non-0 to bind)
+	virtual void bindIndexBuffer(IndexBuffer *Buffer) = 0;
+
+	
+	// create a Vertex Buffer
+	virtual VertexBuffer *createVertexBuffer() = 0;
+
+	// create an Index Buffer
+	virtual IndexBuffer *createIndexBuffer() = 0;
 
 	//-----------------------------------//
 
