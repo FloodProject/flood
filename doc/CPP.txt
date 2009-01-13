@@ -1,9 +1,44 @@
-HOW TO MAKE C++ SUCK LESS
-=========================
+CODING CONVENTIONS
+==================
 
+This lists the main aspects of the coding conventions used by vaporEngine.
 
-import vapor.engine.core;
+Directories structure
+---------------------
 
-namespace vapor.engine.core;
+	- bin (Binaries)
+	- doc (Documentation)
+	- src (Sources)
+	- inc (Includes)
+	- dep (Dependencies)
+	
+Source file structure
+---------------------
 
-NO FUCKIN HEADER FILES. lol
+	- Copyright notice
+	- Inclusion-guard (for header files)
+	- Internal header includes
+	- External header includes
+	- Declarations / definitions
+	
+Documentation
+-------------
+
+	- Write in clear plain-text
+	- Use the Markdown markup language for external documentation
+	- Internal documentation should be provided in each include/source file
+
+Miscellaneous
+-------------
+	
+	- nullptr is preferred to NULL (it's gonna be added in C++0x)
+	- enums shall be enclosed in a struct or namespace
+	- Don't copy code from other projects with incompatible licenses
+
+Subversion
+----------
+
+	- vaporEngine is kept in a Subversion repository in Assembla
+	- All commits should provide a sensible commit message
+	
+	

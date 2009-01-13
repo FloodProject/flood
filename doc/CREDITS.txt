@@ -12,3 +12,8 @@ Libraries used:
 	* FreeType
 	* GLEW
 	* OpenGL
+	
+Special thanks:
+
+	* fnds (helped out with CSS problems)
+	* Nazgulled (some suggestions for design)

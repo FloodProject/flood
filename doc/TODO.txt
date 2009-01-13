@@ -2,10 +2,12 @@ WIP (work-in-progress)
 ======================
 
 Milestone 1:
+------------
 
 	Render Triangle using RenderDevice interface
 
 TODO:
+-----
 
 	Compile with MinGW GCC
 	Adapter class
@@ -14,11 +16,13 @@ TODO:
 	Add matrix and AABB class
 	
 Low priority:
+-------------
 	
 	Implement abstract timer class
 	Color copy cons and operators
 
 Log todo:
+---------
 
 	Log all the engine calls
 	Header in the log output
@@ -28,13 +32,15 @@ Log todo:
 	Logging boxes for system/CPU/GPU information
 
 Nice to have:
+-------------
+
 	CSS-styling to the logging output
 	Virtual File System :)
 	Font handling via FreeType 2
 	Basic software device
 	
 DONE:
-=====
+-----
 	
 	Organized the include directories
 	Clean Visual Studio solutions
