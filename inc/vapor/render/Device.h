@@ -90,6 +90,8 @@ public:
 	// bind an index buffer (0 to unbind, non-0 to bind)
 	virtual void bindIndexBuffer(IndexBuffer *Buffer) = 0;
 
+	// draw a vertex buffer
+	virtual void draw(unsigned long Mode, unsigned long First, unsigned long Count);
 	
 	// create a Vertex Buffer
 	virtual VertexBuffer *createVertexBuffer() = 0;

@@ -30,10 +30,11 @@ namespace vapor {
 
 class GLVertexBuffer : public VertexBuffer
 {
+	friend class GLDevice;
 private:
-	unsigned long ID;
-	std::vector<unsigned char> Data;
-	std::vector<VertexElement> Elements;
+	unsigned long _ID;
+	std::vector<unsigned char> _data;
+	std::vector<VertexElement> _elements;
 public:
 	GLVertexBuffer(void);
 
@@ -94,7 +95,12 @@ private:
 
 	void checkExtensions();
 
-	std::list<GLVertexBuffer> VertexBuffers;
+	// Currently registered vertex buffers (Keep It Simply Safe)
+	std::list<GLVertexBuffer> _vertexBuffers;
+
+	// Binded VB and IB
+	GLVertexBuffer *_bindedVB;
+	IndexBuffer *_bindedIB;
 };
 
 } } } // end namespaces
