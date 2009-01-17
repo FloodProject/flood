@@ -1,15 +1,55 @@
+/************************************************************************
+*
+* vaporEngine by triton © (2008-2009)
+*
+*	<http://www.portugal-a-programar.org/
+*
+************************************************************************/
+
+#pragma once
+
+#include "vapor/Engine.h"
+
+#include <cstdio>
+
 namespace vapor {
 	namespace vfs {
 
-long getFileSize(FILE *fp)
-{
-	if(!fp) return -1;
+/**
+ * Represents a file.
+ */
 
-	fseek(fp, 0, SEEK_END);
-	long fileSize = ftell(fp);
-	fseek(fp, 0, SEEK_SET);
+class File {
 
-	return fileSize;
-}
+public:
+
+	File (string path);
+	~File ();
+
+	/**
+	 * Closes the file.
+	 */
+	void close();
+	
+	/**
+	 * Gets the file size.
+	 */
+	long getSize();
+
+	/**
+	 * Read file to buffer.
+	 */
+	long read(void* buffer, long size);
+
+	/**
+	 * Gets the path of the file.
+	 */
+	string getPath() { return _path; }
+
+private:
+
+	string	_path;
+	FILE*	_fp;
+};
 
 } } // end namespaces

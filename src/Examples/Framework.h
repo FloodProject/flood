@@ -14,8 +14,12 @@
 #include <vapor/render/Window.h>
 
 #include <vapor/resources/ResourceManager.h>
+
 #include <vapor/resources/Milkshape3D.h>
 #include <vapor/resources/TTF.h>
+
+#include "vapor/resources/PicoPNG_Codec.h"
+#include "vapor/resources/Image.h"
 
 using namespace vapor::resources;
 using namespace vapor::render;
@@ -44,15 +48,15 @@ public:
 		// create render device
 		device = Device::createDevice();
 
-		// set the window title
-		device->getWindow().setTitle("vaporEngine Example");
+		if(device) {
+			// set the window title
+			device->getWindow().setTitle("vaporEngine Example");
+		} else {
+			error("example::framework", "Error creating rendering device");
+		}
 
 		// create the resource manager
 		resourceManager = new ResourceManager();
-
-		Log::getLogger()->error("triton::rulas", "i suck :(");
-
-		Log::getLogger()->warn("warn::barn", "carn");
 	}
 
 	void resources()
@@ -61,7 +65,10 @@ public:
 		resourceManager->addResource("cube", new Milkshape3D("media/cubo.ms3d"));
 
 		// load a ttf font
-		resourceManager->addResource("arial", new TTF("arial.ttf"));
+		resourceManager->addResource("arial", new TTF("media/arial.ttf"));
+
+		PicoPNG* codec = new PicoPNG();
+		Image& img = codec->decode( File("media/triton.png") );
 	}
 
 	void render()
@@ -74,15 +81,15 @@ public:
 			// update the active target
 			device->updateTarget();
 
-		} while( device->getWindow().pump() ); 
+		} while( device->getWindow().pump() );
 	}
 
 	void cleanup()
 	{
 		// free all objects
 
-		delete device;
-		delete resourceManager;
+		if (device) delete device;
+		if (resourceManager) delete resourceManager;
 		delete Log::getLogger();
 	}
 
@@ -98,7 +105,7 @@ public:
 		resources();
 	
 		// main render loop
-		render();
+		//render();
 
 		// clean up time
 		cleanup();

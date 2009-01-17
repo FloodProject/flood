@@ -5,6 +5,7 @@ Programmers:
 
 	* João Matos aka triton
 	* Nuno Silva aka LittleCodingFox
+	* ersincyber
 	
 Libraries used:
 

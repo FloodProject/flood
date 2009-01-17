@@ -27,6 +27,7 @@
 #include "vapor/log/Log.h"
 using namespace vapor::log;
 
+// TODO: fix this ugly mess
 #define info	Log::getLogger()->info
 #define warn	Log::getLogger()->warn
 #define error	Log::getLogger()->error

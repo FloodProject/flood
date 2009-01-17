@@ -34,7 +34,7 @@ Log todo:
 Nice to have:
 -------------
 
-	CSS-styling to the logging output
+	
 	Virtual File System :)
 	Font handling via FreeType 2
 	Basic software device
@@ -42,9 +42,10 @@ Nice to have:
 DONE:
 -----
 	
-	Organized the include directories
-	Clean Visual Studio solutions
-	Add namespaces to subsystems
-	Add Milkshape model parser
-	Clean up Window abstract class
+	CSS-styling to the logging output
 	Implement WindowSettings class
+	Clean up Window abstract class
+	Add Milkshape model parser
+	Add namespaces to subsystems
+	Clean Visual Studio solutions
+	Organized the include directories

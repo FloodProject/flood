@@ -8,25 +8,26 @@
 
 #pragma once
 
-#include "vapor/Engine.h"
-#include "vapor/resources/Resource.h"
+#include "vapor/resources/Codec.h"
 
 namespace vapor {
 	namespace resources {
 
-class ResourceManager 
+/**
+ * This codec provides PNG decoding services using the lightweight, 
+ * thin, tiny, awesome, picoPNG library. :)
+ */
+
+class PicoPNG : public Codec
 {
 
 public:
-	ResourceManager();
-	virtual ~ResourceManager();
 
-	void addResource(const char* name, Resource* resource);
-	Resource* getResource(string &name);
+	PicoPNG();
 
-private:
+	virtual Image& decode(File& image);
 
-	map<string, Resource*> resourceMap;
+	virtual string getName() { return "picoPNG"; }
 };
 
 } } // end namespaces

@@ -8,15 +8,8 @@
 
 #pragma once
 
-#include <cstdio>
-#include <vector>
-#include <string>
-
 #include "vapor/Engine.h"
-
 #include "vapor/resources/Resource.h"
-
-using namespace std;
 
 namespace vapor {
 	namespace resources {

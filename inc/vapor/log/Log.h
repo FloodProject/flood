@@ -13,7 +13,9 @@
 namespace vapor {
 	namespace log {
 
-// Severity level of the Log message
+/**
+ * Severity level of the log message
+ */ 
 enum LogLevel
 {
 	Info,
@@ -21,7 +23,10 @@ enum LogLevel
 	Error
 };
 
-// This class represents an HTML log file
+/**
+ * Logging class used to output useful logging and debugging information
+ * to an output file format. Currently it outputs to XHTML.
+ */ 
 class Log
 {
 

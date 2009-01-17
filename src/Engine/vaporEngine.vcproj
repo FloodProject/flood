@@ -179,10 +179,18 @@
 		<Filter
 			Name="VFS"
 			>
-			<File
-				RelativePath="..\..\inc\vapor\vfs\File.h"
+			<Filter
+				Name="File"
 				>
-			</File>
+				<File
+					RelativePath=".\File.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\vfs\File.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Math"
@@ -219,6 +227,10 @@
 		<Filter
 			Name="Render"
 			>
+			<File
+				RelativePath="..\..\inc\vapor\resources\Color.h"
+				>
+			</File>
 			<Filter
 				Name="Common"
 				>
@@ -362,10 +374,6 @@
 					Name="Device"
 					>
 					<File
-						RelativePath=".\GL_Buffers.cpp"
-						>
-					</File>
-					<File
 						RelativePath=".\GL_Device.cpp"
 						>
 					</File>
@@ -383,14 +391,14 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Windowing"
+				>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Resources"
 			>
-			<File
-				RelativePath="..\..\inc\vapor\resources\Color.h"
-				>
-			</File>
 			<File
 				RelativePath=".\ResourceManager.cpp"
 				>
@@ -452,23 +460,39 @@
 				</Filter>
 			</Filter>
 			<Filter
-				Name="Texture"
+				Name="Images"
 				>
+				<File
+					RelativePath=".\Image.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\resources\Image.h"
+					>
+				</File>
 				<Filter
-					Name="PNG"
+					Name="Codecs"
 					>
 					<File
-						RelativePath="..\..\dep\picopng\picopng.cpp"
+						RelativePath="..\..\inc\vapor\resources\Codec.h"
 						>
 					</File>
-					<File
-						RelativePath=".\PNG.cpp"
+					<Filter
+						Name="PNG"
 						>
-					</File>
-					<File
-						RelativePath="..\..\inc\vapor\resources\PNG.h"
-						>
-					</File>
+						<File
+							RelativePath="..\..\dep\picopng\picopng.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\PicoPNG_Codec.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\inc\vapor\resources\PicoPNG_Codec.h"
+							>
+						</File>
+					</Filter>
 				</Filter>
 			</Filter>
 			<Filter
@@ -518,14 +542,6 @@
 					RelativePath="..\..\inc\vapor\DynamicLibrary.h"
 					>
 				</File>
-			</Filter>
-			<Filter
-				Name="Input"
-				>
-			</Filter>
-			<Filter
-				Name="Windowing"
-				>
 			</Filter>
 		</Filter>
 		<File

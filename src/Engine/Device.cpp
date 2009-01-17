@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/render/opengl/GL_Device.h"
+#include "vapor/render/Device.h"
 
 namespace vapor {
 	namespace render {
@@ -49,7 +49,13 @@ BufferManager* Device::getBufferManager()
 
 Device* Device::createDevice(WindowSettings wS)
 {
+
+#ifdef VAPOR_RENDERER_OPENGL
+	#include "vapor/render/opengl/GL_Device.h"
 	return new opengl::GLDevice(wS);
+#else
+	return nullptr;
+#endif
 }
 
 } } // end namespaces
