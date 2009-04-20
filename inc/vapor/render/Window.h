@@ -17,7 +17,7 @@ namespace vapor {
 /**
  * This is the class used to pass the Window-related information to the engine.
  * Settings it can handle are Bits-per-pixel, the size of the the window,
- * if it is fullscreen, and in the future, if the  user wants anti-aliasing.
+ * if it is fullscreen, and in the future, if the user wants anti-aliasing.
  */
 class WindowSettings
 {

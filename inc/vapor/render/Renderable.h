@@ -10,34 +10,39 @@
 
 #include "vapor/Engine.h"
 
+//#include "vapor/render/Device.h"
 #include "vapor/render/VertexBuffer.h"
 #include "vapor/render/IndexBuffer.h"
 
 namespace vapor {
 	namespace render {
-		class Device;
-
-	namespace PrimitiveType { // GIMME enum class now!
-		enum PrimitiveType
-		{
-			TRIANGLES,
-			LINES
-		};
-	};
 
 /**
- * Represents a render-able object, that is, the only rendering object
+ * Type of primitive of the renderable.
+ */
+
+namespace PrimitiveType { // GIMME enum class now!
+	enum PrimitiveType
+	{
+		TRIANGLES,
+		LINES
+	};
+}
+
+/**
+ * Represents a renderable object, that is, the only rendering object
  * the rendering Device knows and cares about. A render-able object has
  * at least one Vertex buffer and one Index buffer, and an primitive 
  * type associated with them.
  */
+
 class Renderable
 {
 
 public:
 
 	// Render
-	virtual void Render(Device *device) = 0;
+	//virtual void Render(Device *device) = 0;
 
 
 private:

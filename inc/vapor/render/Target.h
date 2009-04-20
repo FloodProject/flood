@@ -18,8 +18,8 @@ class RenderTarget
 
 public:
 
-	RenderTarget() {};
-	virtual ~RenderTarget() {};
+	RenderTarget() { }
+	virtual ~RenderTarget() { }
 	
 	virtual void update() = 0;
 

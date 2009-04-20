@@ -91,7 +91,7 @@ public:
 	virtual void bindIndexBuffer(IndexBuffer *Buffer) = 0;
 
 	// draw a vertex buffer
-	virtual void draw(unsigned long Mode, unsigned long First, unsigned long Count);
+	//virtual void draw(unsigned long Mode, unsigned long First, unsigned long Count);
 	
 	// create a Vertex Buffer
 	virtual VertexBuffer *createVertexBuffer() = 0;
@@ -112,7 +112,7 @@ protected:
 	RenderTarget *_activeTarget;
 
 	// list of render targets
-	//vector<RenderTarget*> renderTargets;
+	//vector<RenderTarget*> _renderTargets;
 
 	// adapter information
 	Adapter* _adapter;

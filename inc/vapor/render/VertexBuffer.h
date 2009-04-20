@@ -10,6 +10,7 @@
 
 namespace vapor {
 	namespace render {
+		
 		// Same goes for IBs
 		namespace BufferAccessUsage
 		{
@@ -90,4 +91,4 @@ public:
 	virtual void setVertexElements(VertexElement Elements[]) = 0;
 };
 
-}} // end namespaces
+} } // end namespaces

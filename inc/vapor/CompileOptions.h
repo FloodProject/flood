@@ -28,6 +28,7 @@
 // Graphics APIs
 /////////////////////////////////////////////////////////////////////////////
 
+#define VAPOR_RENDERER_NULL
 //#define VAPOR_RENDERER_OPENGL
 //#define VAPOR_RENDERER_DIRECTX
 

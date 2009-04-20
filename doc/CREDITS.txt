@@ -10,10 +10,10 @@ Programmers:
 Libraries used:
 
 	* SDL
+	* OpenGL
 	* FreeType
 	* GLEW
-	* OpenGL
-	
+
 Special thanks:
 
 	* fnds (helped out with CSS problems)

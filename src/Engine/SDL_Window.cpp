@@ -48,7 +48,7 @@ bool SDLWindow::open()
 	Uint32 flags = SDL_OPENGL;
 
 	// check if we want fullscreen
-	if ( _windowSettings->fullscreen )
+	if ( getWindowSettings().fullscreen )
 		flags |= SDL_FULLSCREEN;
 
 	//SDL_GL_SetAttribute( SDL_GL_RED_SIZE, 5 );
@@ -86,12 +86,10 @@ bool SDLWindow::pump()
 	{
 		switch ( event.type )
 		{
-
 		case SDL_KEYDOWN:
 			if ( event.key.keysym.sym == SDLK_ESCAPE )
 				return false;
-			else
-				break;
+			break;
 		case SDL_QUIT:
 				return false;
 				break;

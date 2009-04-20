@@ -94,53 +94,53 @@ VertexBuffer *GLDevice::createVertexBuffer()
 
 void GLDevice::bindVertexBuffer(VertexBuffer *Buffer)
 {
-	if(Buffer) //If valid
-	{
-		//Search for the real buffer (user may mistakenly use a non-GL buffer)
-		GLVertexBuffer *RealBuffer = 0;
-		for(std::list<GDVertexBuffer>::iterator it = _vertexBuffers.begin(); 
-			it != _vertexBuffers.end(); it++)
-		{
-			if(it._Ptr == Buffer)
-			{
-				RealBuffer = it._Ptr;
-				break;
-			};
-		};
+	//if(Buffer) //If valid
+	//{
+	//	//Search for the real buffer (user may mistakenly use a non-GL buffer)
+	//	GLVertexBuffer *RealBuffer = 0;
+	//	for(std::list<GDVertexBuffer>::iterator it = _vertexBuffers.begin(); 
+	//		it != _vertexBuffers.end(); it++)
+	//	{
+	//		if(it._Ptr == Buffer)
+	//		{
+	//			RealBuffer = it._Ptr;
+	//			break;
+	//		};
+	//	};
 
-		if(RealBuffer == 0) //if we didnt find it, ignore this operation
-		{
-			info("render::opengl::bindvertexbuffer", 
-				"Invalid buffer submitted for binding");
-			return;
-		};
+	//	if(RealBuffer == 0) //if we didnt find it, ignore this operation
+	//	{
+	//		info("render::opengl::bindvertexbuffer", 
+	//			"Invalid buffer submitted for binding");
+	//		return;
+	//	};
 
-		//if the previous buffer was a VBO, we have to unbind it.
-		if(_bindedVB && GLEW_ARB_vertex_buffer_object && glIsBufferARB(_bindedVB->ID))
-		{
-			glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
-		};
+	//	//if the previous buffer was a VBO, we have to unbind it.
+	//	if(_bindedVB && GLEW_ARB_vertex_buffer_object && glIsBufferARB(_bindedVB->ID))
+	//	{
+	//		glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
+	//	};
 
-		//Bind the buffer
-		if(GLEW_ARB_vertex_buffer_object && glIsBufferARB(RealBuffer->_ID))
-		{
-			glBindBufferARB(GL_ARRAY_BUFFER_ARB, RealBuffer->_ID);
-		};
+	//	//Bind the buffer
+	//	if(GLEW_ARB_vertex_buffer_object && glIsBufferARB(RealBuffer->_ID))
+	//	{
+	//		glBindBufferARB(GL_ARRAY_BUFFER_ARB, RealBuffer->_ID);
+	//	};
 
-		//reference our buffer
-		_bindedVB = RealBuffer;
-	}
-	else //If we don't 
-	{
-		//Unbind buffer (doesnt matter whether the last binded VB was a VBO or not)
-		if(GLEW_ARB_vertex_buffer_object)
-		{
-			glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
-		};
+	//	//reference our buffer
+	//	_bindedVB = RealBuffer;
+	//}
+	//else //If we don't 
+	//{
+	//	//Unbind buffer (doesnt matter whether the last binded VB was a VBO or not)
+	//	if(GLEW_ARB_vertex_buffer_object)
+	//	{
+	//		glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
+	//	};
 
-		//reference our buffer
-		_bindedVB = 0;
-	}
+	//	//reference our buffer
+	//	_bindedVB = 0;
+	//}
 }
 
 void GLDevice::bindIndexBuffer(IndexBuffer *Buffer)
@@ -164,10 +164,10 @@ void GLDevice::draw(unsigned long Mode, unsigned long First, unsigned long Count
 	//Convert vaporFlag to glFlag
 	switch(Mode)
 	{
-	case Primitive::TRIANGLES:
+	case PrimitiveType::TRIANGLES:
 		Mode = GL_TRIANGLES;
 		break;
-	case Primitive::LINES:
+	case PrimitiveType::LINES:
 		Mode = GL_LINES;
 		break;
 	};

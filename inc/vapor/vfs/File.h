@@ -46,6 +46,11 @@ public:
 	 */
 	string getPath() { return _path; }
 
+	/**
+	 * Checks if a file exists.
+	 */
+	static bool exists(string path);
+
 private:
 
 	string	_path;

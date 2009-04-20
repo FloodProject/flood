@@ -65,7 +65,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				AdditionalDependencies="glew32s.lib freetype237MT_D.lib"
+				AdditionalDependencies="glew32s.lib"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)dep\glew\lib&quot;;&quot;$(SolutionDir)dep\freetype\objs&quot;"
 			/>
 			<Tool
@@ -390,10 +390,6 @@
 					RelativePath="..\..\inc\vapor\render\Software.h"
 					>
 				</File>
-			</Filter>
-			<Filter
-				Name="Windowing"
-				>
 			</Filter>
 		</Filter>
 		<Filter

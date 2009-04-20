@@ -67,8 +67,13 @@ public:
 		// load a ttf font
 		resourceManager->addResource("arial", new TTF("media/arial.ttf"));
 
-		PicoPNG* codec = new PicoPNG();
-		Image& img = codec->decode( File("media/triton.png") );
+		PicoPNG& codec = *new PicoPNG();
+		
+		const string tritonImg = "media/tritona.png";
+		if ( File::exists(tritonImg) ) 
+			Image& img = codec.decode( File(tritonImg) );
+		else
+			warn("example::framework", "File '%s' does not exist.", tritonImg.c_str());
 	}
 
 	void render()

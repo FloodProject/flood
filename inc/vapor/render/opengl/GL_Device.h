@@ -13,7 +13,7 @@
 #ifdef VAPOR_RENDERER_OPENGL
 
 #ifdef VAPOR_WINDOWING_SDL
-	#define GLEW_STATIC 
+	#define GLEW_STATIC
 	#include <GL/glew.h>
 
 	// needed because SDL_OpenGL conflicts with GLEW
