@@ -6,10 +6,25 @@
 *
 ************************************************************************/
 
+#include "vapor/CompileOptions.h"
+
+#ifdef VAPOR_RENDERER_OPENGL
+	#include "vapor/render/opengl/GL_Device.h"
+#endif
+
 #include "vapor/render/Device.h"
 
 namespace vapor {
 	namespace render {
+
+Device& Device::createDevice(WindowSettings wS)
+{
+#ifdef VAPOR_RENDERER_OPENGL
+	return *new opengl::GLDevice(wS);
+#else
+	#error "A renderer is needed to compile the engine"
+#endif
+}
 
 Device::Device()
 {
@@ -45,17 +60,6 @@ void Device::setRenderTarget(RenderTarget* renderTarget)
 BufferManager* Device::getBufferManager()
 {
 	return _bufferManager;
-}
-
-Device* Device::createDevice(WindowSettings wS)
-{
-
-#ifdef VAPOR_RENDERER_OPENGL
-	#include "vapor/render/opengl/GL_Device.h"
-	return new opengl::GLDevice(wS);
-#else
-	return nullptr;
-#endif
 }
 
 } } // end namespaces

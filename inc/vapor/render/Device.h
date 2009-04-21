@@ -51,10 +51,9 @@ public:
 
 	/**
 	 * Creates a new rendering device, using the rendering API specified.
-	 *
-	 * @param wS window settings for the created window
+	 * TODO: add suport for passing a specific backend
 	 */
-	static Device* createDevice( WindowSettings wS = WindowSettings(640, 480) );
+	static Device& createDevice( WindowSettings wS = WindowSettings(640, 480) );
 
 	/**
 	 * Clears the active render target.
@@ -68,8 +67,6 @@ public:
 
 	/**
 	 * Sets the active render target.
-	 *
-	 * @param renderTarget render target to set as active
 	 */
 	virtual void setRenderTarget( RenderTarget *renderTarget );
 
@@ -79,25 +76,25 @@ public:
 	virtual void open( WindowSettings& wS ) = 0;
 
 	// get window class
-	virtual Window& getWindow( );
+	virtual Window& getWindow();
 
 	// get adapter information
-	virtual Adapter& getAdapter( );
+	virtual Adapter& getAdapter();
 
-	// bind a vertex buffer (0 to unbind, non-0 to bind)
-	virtual void bindVertexBuffer(VertexBuffer *Buffer) = 0;
+	//// bind a vertex buffer (0 to unbind, non-0 to bind)
+	//virtual void bindVertexBuffer(VertexBuffer *Buffer) = 0;
 
-	// bind an index buffer (0 to unbind, non-0 to bind)
-	virtual void bindIndexBuffer(IndexBuffer *Buffer) = 0;
+	//// bind an index buffer (0 to unbind, non-0 to bind)
+	//virtual void bindIndexBuffer(IndexBuffer *Buffer) = 0;
 
 	// draw a vertex buffer
 	//virtual void draw(unsigned long Mode, unsigned long First, unsigned long Count);
 	
-	// create a Vertex Buffer
-	virtual VertexBuffer *createVertexBuffer() = 0;
+	//// create a Vertex Buffer
+	//virtual VertexBuffer* createVertexBuffer() = 0;
 
-	// create an Index Buffer
-	virtual IndexBuffer *createIndexBuffer() = 0;
+	//// create an Index Buffer
+	//virtual IndexBuffer* createIndexBuffer() = 0;
 
 	//-----------------------------------//
 
@@ -109,7 +106,7 @@ public:
 protected:
 
 	// active render target
-	RenderTarget *_activeTarget;
+	RenderTarget* _activeTarget;
 
 	// list of render targets
 	//vector<RenderTarget*> _renderTargets;
@@ -120,7 +117,7 @@ protected:
 	// render window
 	Window* _window;
 
-	// buffer manager
+	// manages all buffers
 	BufferManager* _bufferManager;
 };
 

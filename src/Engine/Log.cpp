@@ -16,6 +16,30 @@ namespace vapor {
 
 Log * _log = new Log("vaporEngine Log", "log.html");
 
+void info(const string &subsystem, const char* msg, ...)
+{
+	va_list args;
+	va_start(args, msg);
+	Log::getLogger()->write(Info, subsystem, msg, args);
+	va_end(args);
+}
+
+void warn(const string &subsystem, const char* msg, ...)
+{
+	va_list args;
+	va_start(args, msg);
+	Log::getLogger()->write(Warning, subsystem, msg, args);
+	va_end(args);
+}
+
+void error(const string &subsystem, const char* msg, ...)
+{
+	va_list args;
+	va_start(args, msg);
+	Log::getLogger()->write(Error, subsystem, msg, args);
+	va_end(args);
+}
+
 Log::Log(const string &title, const string &filename)
 {
 	if(!open(filename))

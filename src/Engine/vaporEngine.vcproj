@@ -177,22 +177,6 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="VFS"
-			>
-			<Filter
-				Name="File"
-				>
-				<File
-					RelativePath=".\File.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\vfs\File.h"
-					>
-				</File>
-			</Filter>
-		</Filter>
-		<Filter
 			Name="Math"
 			>
 			<File
@@ -342,6 +326,10 @@
 			<Filter
 				Name="OpenGL"
 				>
+				<File
+					RelativePath="..\..\inc\vapor\render\opengl\GL.h"
+					>
+				</File>
 				<Filter
 					Name="Adapter"
 					>
@@ -355,22 +343,6 @@
 					</File>
 				</Filter>
 				<Filter
-					Name="Window"
-					>
-					<Filter
-						Name="SDL"
-						>
-						<File
-							RelativePath=".\SDL_Window.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\..\inc\vapor\render\SDL_Window.h"
-							>
-						</File>
-					</Filter>
-				</Filter>
-				<Filter
 					Name="Device"
 					>
 					<File
@@ -382,6 +354,14 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="Buffers"
+					>
+					<File
+						RelativePath=".\GL_VertexBuffer.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Software"
@@ -390,6 +370,22 @@
 					RelativePath="..\..\inc\vapor\render\Software.h"
 					>
 				</File>
+			</Filter>
+			<Filter
+				Name="Window"
+				>
+				<Filter
+					Name="SDL"
+					>
+					<File
+						RelativePath=".\SDL_Window.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\render\sdl\SDL_Window.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter
@@ -526,6 +522,10 @@
 					RelativePath="..\..\inc\vapor\log\LogFormat.h"
 					>
 				</File>
+				<File
+					RelativePath=".\LogHelper.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="DynLibs"
@@ -539,6 +539,22 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="File"
+				>
+				<File
+					RelativePath=".\File.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\vfs\File.h"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="VFS"
+			>
 		</Filter>
 		<File
 			RelativePath="..\..\inc\vapor\CompileOptions.h"

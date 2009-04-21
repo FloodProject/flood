@@ -1,4 +1,14 @@
-#include "Framework.h"
+/************************************************************************
+*
+* vaporEngine by triton © (2008-2009)
+*
+*	<http://www.portugal-a-programar.org>
+*
+************************************************************************/
+
+#include "Example.h"
+
+using namespace vapor::examples;
 
 #ifdef VAPOR_PLATFORM_WINDOWS
 
@@ -12,11 +22,8 @@ int main(int argc, char *argv[])
 #endif
 
 {
-	EngineFramework *example = new EngineFramework();
-
-	example->run();
-
-	delete example;
+	Example& example = *new Example();
+	delete &example;
 
 	return EXIT_SUCCESS;
 }

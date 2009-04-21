@@ -9,6 +9,7 @@
 #pragma once
 
 #include <vapor/Platform.h>
+#include <vapor/Types.h>
 
 namespace vapor {
 	namespace log {
@@ -23,25 +24,32 @@ enum LogLevel
 	Error
 };
 
+// Logging functions
+void info(const string &subsystem, const char* msg, ...);
+void warn(const string &subsystem, const char* msg, ...);
+void error(const string &subsystem, const char* msg, ...);
+
 /**
  * Logging class used to output useful logging and debugging information
  * to an output file format. Currently it outputs to XHTML.
  */ 
 class Log
 {
-
 public:
 	
 	Log(const string &title, const string &filename);
 	~Log();
+
+	// Gets the global engine logger
+	static Log* getLogger();
 
 	// Logging functions
 	void info(const string &subsystem, const char* msg, ...);
 	void warn(const string &subsystem, const char* msg, ...);
 	void error(const string &subsystem, const char* msg, ...);
 
-	// Gets the global engine logger
-	static Log* getLogger();
+	// Message logging functions
+	void write(const LogLevel level, const string &subsystem, const char* msg, va_list args);
 
 private:
 	
@@ -63,9 +71,6 @@ private:
 	// Writes the boilerplate HTML tags
 	void start(const string &title);
 	void end();
-
-	// Message logging functions
-	void write(const LogLevel level, const string &subsystem, const char* msg, va_list args);
 };
 
 } } // end namespaces

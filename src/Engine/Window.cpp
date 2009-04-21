@@ -20,10 +20,8 @@ WindowSettings::WindowSettings(const int width, const int height,
 }
 
 Window::Window(WindowSettings *windowSettings)
-: _windowSettings(windowSettings)
+	: _windowSettings(windowSettings)
 {
-	_windowSettings = windowSettings;
-
 	info("render::window", "Creating %dx%d window",
 		getWindowSettings().width, getWindowSettings().height);
 }

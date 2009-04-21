@@ -35,7 +35,7 @@ public:
 	/**
 	 * Gets a list of recognized extensions by this codec.
 	 */
-	list<string>& getExtensions() { return _extensions; };
+	virtual list<string>& getExtensions() { return _extensions; };
 
 	/**
 	 * Gets the name of this codec.

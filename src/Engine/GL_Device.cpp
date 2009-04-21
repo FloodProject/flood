@@ -6,10 +6,18 @@
 *
 ************************************************************************/
 
+#include "vapor/CompileOptions.h"
+
+#ifdef VAPOR_RENDERER_OPENGL
+
 #include "vapor/render/opengl/GL_Device.h"
 #include "vapor/render/opengl/GL_Adapter.h"
 
-#ifdef VAPOR_RENDERER_OPENGL
+#ifdef VAPOR_WINDOWING_SDL
+	#include <vapor/render/sdl/SDL_Window.h>
+#elif
+	#error "OpenGL renderer needs a windowing implementation"
+#endif
 
 namespace vapor {
 	namespace render {
@@ -25,20 +33,20 @@ GLDevice::GLDevice(WindowSettings& windowSettings)
 
 	_adapter = new GLAdapter();
 
-	_bindedVB = 0;
-	_bindedIB = 0;
+	//_bindedVB = 0;
+	//_bindedIB = 0;
 }
 
 void GLDevice::close()
 {
 	info("render::opengl", "Closing OpenGL rendering device");
 
-	for(std::list<GLVertexBuffer>::iterator it = _vertexBuffers.begin(); 
-		it != _vertexBuffers.end(); it++)
-	{
-		// erase each buffer because we dont want to erase them after OpenGL is terminated (VBOs)
-		_vertexBuffers.erase(it);
-	}
+	//for(std::list<GLVertexBuffer>::iterator it = _vertexBuffers.begin(); 
+	//	it != _vertexBuffers.end(); it++)
+	//{
+	//	// erase each buffer because we dont want to erase them after OpenGL is terminated (VBOs)
+	//	_vertexBuffers.erase(it);
+	//}
 }
 
 GLDevice::~GLDevice()
@@ -59,7 +67,6 @@ void GLDevice::checkExtensions()
 void GLDevice::open(WindowSettings &wS)
 {
 	_window = new SDLWindow(&wS);
-	
 	setRenderTarget(_window);
 
 	resetViewport();
@@ -85,15 +92,15 @@ void GLDevice::resetViewport()
 	glLoadIdentity();
 }
 
-VertexBuffer *GLDevice::createVertexBuffer()
-{
-	GLVertexBuffer Buffer;
-	_vertexBuffers.push_back(Buffer);
-	return &_vertexBuffers.back();
-};
+//VertexBuffer *GLDevice::createVertexBuffer()
+//{
+//	GLVertexBuffer Buffer;
+//	_vertexBuffers.push_back(Buffer);
+//	return &_vertexBuffers.back();
+//};
 
-void GLDevice::bindVertexBuffer(VertexBuffer *Buffer)
-{
+//void GLDevice::bindVertexBuffer(VertexBuffer *Buffer)
+//{
 	//if(Buffer) //If valid
 	//{
 	//	//Search for the real buffer (user may mistakenly use a non-GL buffer)
@@ -141,37 +148,37 @@ void GLDevice::bindVertexBuffer(VertexBuffer *Buffer)
 	//	//reference our buffer
 	//	_bindedVB = 0;
 	//}
-}
+//}
 
-void GLDevice::bindIndexBuffer(IndexBuffer *Buffer)
-{
-}
+//void GLDevice::bindIndexBuffer(IndexBuffer *Buffer)
+//{
+//}
 
-void GLDevice::draw(unsigned long Mode, unsigned long First, unsigned long Count)
-{
-	if(_bindedVB == 0)
-	{
-		info("render::opengl::draw", "Invalid binded VB");
-		return;
-	}
-
-	if(_bindedVB->_elements.size() == 0)
-	{
-		info("render::opengl::draw", "Binded VB has no Vertex Elements");
-		return;
-	};
-
-	//Convert vaporFlag to glFlag
-	switch(Mode)
-	{
-	case PrimitiveType::TRIANGLES:
-		Mode = GL_TRIANGLES;
-		break;
-	case PrimitiveType::LINES:
-		Mode = GL_LINES;
-		break;
-	};
-}
+//void GLDevice::draw(unsigned long Mode, unsigned long First, unsigned long Count)
+//{
+//	if(_bindedVB == 0)
+//	{
+//		info("render::opengl::draw", "Invalid binded VB");
+//		return;
+//	}
+//
+//	if(_bindedVB->_elements.size() == 0)
+//	{
+//		info("render::opengl::draw", "Binded VB has no Vertex Elements");
+//		return;
+//	};
+//
+//	//Convert vaporFlag to glFlag
+//	switch(Mode)
+//	{
+//	case PrimitiveType::TRIANGLES:
+//		Mode = GL_TRIANGLES;
+//		break;
+//	case PrimitiveType::LINES:
+//		Mode = GL_LINES;
+//		break;
+//	};
+//}
 
 } } } // end namespaces
 

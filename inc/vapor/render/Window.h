@@ -43,7 +43,7 @@ class Window : public RenderTarget
 
 public:
 
-	Window (WindowSettings *windowSettings);
+	Window (WindowSettings* windowSettings);
 	virtual ~Window ();
 
 	// Updates the window content
@@ -62,7 +62,7 @@ public:
 
 protected:
 
-	WindowSettings *_windowSettings;
+	WindowSettings* _windowSettings;
 };
 
 } } // end namespaces

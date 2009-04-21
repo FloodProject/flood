@@ -12,50 +12,12 @@
 
 #ifdef VAPOR_RENDERER_OPENGL
 
-#ifdef VAPOR_WINDOWING_SDL
-	#define GLEW_STATIC
-	#include <GL/glew.h>
-
-	// needed because SDL_OpenGL conflicts with GLEW
-	#define NO_SDL_GLEXT
-	#include <SDL_opengl.h>
-#endif
-
 #include "vapor/render/Device.h"
-#include "vapor/render/SDL_Window.h"
+#include "vapor/render/opengl/GL.h"
 
 namespace vapor {
 	namespace render {
 		namespace opengl {
-
-class GLVertexBuffer : public VertexBuffer
-{
-	friend class GLDevice;
-private:
-	unsigned long _ID;
-	std::vector<unsigned char> _data;
-	std::vector<VertexElement> _elements;
-public:
-	GLVertexBuffer(void);
-
-	virtual ~GLVertexBuffer(void);
-
-	// Map a buffer
-	void* map(unsigned long Usage);
-
-	// Unmap a buffer
-	void unmap();
-
-	// Create a buffer
-	void create(const void* Content, unsigned long ContentLength, 
-		unsigned long CreationUsage);
-
-	// Destroy a buffer
-	void destroy();
-
-	// Set the vertex elements of a buffer
-	void setVertexElements(VertexElement Elements[]);
-};
 
 class GLDevice : public Device
 {
@@ -74,20 +36,20 @@ public:
 	// Clear buffers
 	void clearTarget();
 
-	// bind a vertex buffer (0 to unbind, non-0 to bind)
-	void bindVertexBuffer(VertexBuffer *Buffer);
+	//// bind a vertex buffer (0 to unbind, non-0 to bind)
+	//void bindVertexBuffer(VertexBuffer *Buffer);
 
-	// bind an index buffer (0 to unbind, non-0 to bind)
-	void bindIndexBuffer(IndexBuffer *Buffer);
+	//// bind an index buffer (0 to unbind, non-0 to bind)
+	//void bindIndexBuffer(IndexBuffer *Buffer);
 
-	// draw a vertex buffer
-	void draw(unsigned long Mode, unsigned long First, unsigned long Count);
+	//// draw a vertex buffer
+	//void draw(unsigned long Mode, unsigned long First, unsigned long Count);
 
-	// create a Vertex Buffer
-	VertexBuffer *createVertexBuffer();
+	//// create a Vertex Buffer
+	//VertexBuffer *createVertexBuffer();
 
-	// create an Index Buffer
-	IndexBuffer *createIndexBuffer();
+	//// create an Index Buffer
+	//IndexBuffer *createIndexBuffer();
 
 private:
 
@@ -95,12 +57,12 @@ private:
 
 	void checkExtensions();
 
-	// Currently registered vertex buffers (Keep It Simply Safe)
-	std::list<GLVertexBuffer> _vertexBuffers;
+	//// Currently registered vertex buffers (Keep It Simply Safe)
+	//std::list<GLVertexBuffer> _vertexBuffers;
 
-	// Binded VB and IB
-	GLVertexBuffer *_bindedVB;
-	IndexBuffer *_bindedIB;
+	//// Binded VB and IB
+	//GLVertexBuffer *_bindedVB;
+	//IndexBuffer *_bindedIB;
 };
 
 } } } // end namespaces

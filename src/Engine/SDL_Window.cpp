@@ -6,10 +6,19 @@
 *
 ************************************************************************/
 
-#include <GL/glew.h>
 #include "vapor/render/SDL_Window.h"
 
 #ifdef VAPOR_WINDOWING_SDL
+
+#ifdef VAPOR_RENDERER_OPENGL
+	#include "vapor/render/opengl/GL.h"
+
+	// SDL conflicts with GLEW
+	#define NO_SDL_GLEXT
+	#include <SDL_opengl.h>
+#else
+	#error "SDL is missing a renderer implementation"
+#endif
 
 namespace vapor {
 	namespace render {

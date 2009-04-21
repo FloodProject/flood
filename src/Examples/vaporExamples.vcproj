@@ -200,16 +200,20 @@
 			Name="Framework"
 			>
 			<File
-				RelativePath=".\Dialog.h"
+				RelativePath="..\Framework\Framework.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Framework.h"
+				RelativePath="..\..\inc\vapor\Framework.h"
 				>
 			</File>
 		</Filter>
 		<File
 			RelativePath=".\Example.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\Example.h"
 			>
 		</File>
 	</Files>

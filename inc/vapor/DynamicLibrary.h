@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
+#include "vapor/Engine.h"
 
 namespace vapor {
 	namespace platform {
