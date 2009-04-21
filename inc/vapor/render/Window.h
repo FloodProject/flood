@@ -19,16 +19,22 @@ namespace vapor {
  * Settings it can handle are Bits-per-pixel, the size of the the window,
  * if it is fullscreen, and in the future, if the user wants anti-aliasing.
  */
-class WindowSettings
+class Settings
 {
-
 public:
 
-	WindowSettings(const int width, const int height, 
+	Settings(const int width, const int height, 
 		const int bpp = 32, const bool fullscreen = false);
 
-	int width, height, bpp;
-	bool fullscreen;
+	const int width() const { return _width; }
+	const int height() const { return _height; }
+	const int bpp() const { return _bpp; }
+	const bool fullscreen() const { return _fullscreen; }
+
+private:
+
+	int _width, _height, _bpp;
+	bool _fullscreen;
 };
 
 /**
@@ -43,7 +49,7 @@ class Window : public RenderTarget
 
 public:
 
-	Window (WindowSettings* windowSettings);
+	Window (Settings& settings);
 	virtual ~Window ();
 
 	// Updates the window content
@@ -58,11 +64,11 @@ public:
 	// Sets the visibility of the mouse cursor 
 	virtual void setCursor (bool state) const = 0;
 
-	virtual WindowSettings& getWindowSettings();
+	virtual Settings& getSettings();
 
 protected:
 
-	WindowSettings* _windowSettings;
+	Settings* _settings;
 };
 
 } } // end namespaces

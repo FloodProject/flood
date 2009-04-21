@@ -16,17 +16,10 @@ using namespace vapor::render;
 namespace vapor {
 	namespace framework {
 
-//void Framework::ask()
-//{
-//	Dialog *dialog = new Dialog();
-//	delete dialog;
-//}
-
 Framework::Framework()
 	: device(nullptr), window(nullptr), resourceManager(nullptr)
 {
 	init();
-
 	render();
 }
 
@@ -49,6 +42,12 @@ void Framework::init()
 	// set up all the resources
 	setupResources();
 }
+
+//void Framework::ask()
+//{
+//	Dialog *dialog = new Dialog();
+//	delete dialog;
+//}
 
 void Framework::setupResources()
 {

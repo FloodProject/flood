@@ -53,7 +53,7 @@ public:
 	 * Creates a new rendering device, using the rendering API specified.
 	 * TODO: add suport for passing a specific backend
 	 */
-	static Device& createDevice( WindowSettings wS = WindowSettings(640, 480) );
+	static Device& createDevice( Settings settings = Settings(640, 480) );
 
 	/**
 	 * Clears the active render target.
@@ -73,7 +73,7 @@ public:
 	//-----------------------------------//
 
 	// create a window if not passed a WindowHandle
-	virtual void open( WindowSettings& wS ) = 0;
+	virtual void open( Settings& wS ) = 0;
 
 	// get window class
 	virtual Window& getWindow();

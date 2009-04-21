@@ -23,11 +23,11 @@ namespace vapor {
 	namespace render {
 		namespace opengl {
 
-GLDevice::GLDevice(WindowSettings& windowSettings)
+GLDevice::GLDevice(Settings& settings)
 {
 	info("render::opengl", "Creating OpenGL rendering device");
 
-	open(windowSettings);
+	open(settings);
 
 	checkExtensions();
 
@@ -64,9 +64,9 @@ void GLDevice::checkExtensions()
 		error("render::opengl", "Failed to initialize GLEW: %s", glewGetErrorString(err));
 }
 
-void GLDevice::open(WindowSettings &wS)
+void GLDevice::open(Settings &settings)
 {
-	_window = new SDLWindow(&wS);
+	_window = new SDLWindow(settings);
 	setRenderTarget(_window);
 
 	resetViewport();
@@ -80,13 +80,13 @@ void GLDevice::clearTarget()
 
 void GLDevice::resetViewport()
 {
-	WindowSettings &wS = _window->getWindowSettings();
+	Settings &s = _window->getSettings();
 
-	glViewport(0, 0, wS.width, wS.height);
+	glViewport(0, 0, s.width(), s.height());
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(45.0f, (GLfloat) wS.width / (GLfloat) wS.height, 1.0f, 100.0f);
+	gluPerspective(45.0f, (GLfloat) s.width() / (GLfloat) s.height(), 1.0f, 100.0f);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();

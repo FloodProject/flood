@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/render/SDL_Window.h"
+#include "vapor/render/sdl/SDL_Window.h"
 
 #ifdef VAPOR_WINDOWING_SDL
 
@@ -23,8 +23,8 @@
 namespace vapor {
 	namespace render {
 
-SDLWindow::SDLWindow(WindowSettings *windowSettings)
-	:	Window(windowSettings)
+SDLWindow::SDLWindow(Settings& settings)
+	:	Window(settings)
 {
 	if ( !init() || !open() ) {
 		exit(1);
@@ -57,7 +57,7 @@ bool SDLWindow::open()
 	Uint32 flags = SDL_OPENGL;
 
 	// check if we want fullscreen
-	if ( getWindowSettings().fullscreen )
+	if ( getSettings().fullscreen() )
 		flags |= SDL_FULLSCREEN;
 
 	//SDL_GL_SetAttribute( SDL_GL_RED_SIZE, 5 );
@@ -68,8 +68,8 @@ bool SDLWindow::open()
 	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
 
 	// set the video mode
-	display = SDL_SetVideoMode(getWindowSettings().width,
-		getWindowSettings().height, getWindowSettings().bpp, flags);
+	display = SDL_SetVideoMode(getSettings().width(),
+		getSettings().height(), getSettings().bpp(), flags);
 
 	glewInit();
 

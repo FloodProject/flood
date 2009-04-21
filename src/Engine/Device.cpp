@@ -17,10 +17,10 @@
 namespace vapor {
 	namespace render {
 
-Device& Device::createDevice(WindowSettings wS)
+Device& Device::createDevice(Settings settings)
 {
 #ifdef VAPOR_RENDERER_OPENGL
-	return *new opengl::GLDevice(wS);
+	return *new opengl::GLDevice(settings);
 #else
 	#error "A renderer is needed to compile the engine"
 #endif

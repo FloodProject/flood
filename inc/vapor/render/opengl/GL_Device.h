@@ -23,12 +23,11 @@ class GLDevice : public Device
 {
 public:
 
-	GLDevice(WindowSettings& wS);
-
+	GLDevice(Settings& settings);
 	virtual ~GLDevice();
 
 	// Open the device
-	void open(WindowSettings& wS);
+	void open(Settings& settings);
 
 	// Close the device
 	void close();

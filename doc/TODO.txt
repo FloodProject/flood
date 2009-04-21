@@ -43,7 +43,7 @@ DONE:
 -----
 	
 	CSS-styling to the logging output
-	Implement WindowSettings class
+	Implement Settings class
 	Clean up Window abstract class
 	Add Milkshape model parser
 	Add namespaces to subsystems
