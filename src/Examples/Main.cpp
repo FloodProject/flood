@@ -10,21 +10,20 @@
 
 using namespace vapor::examples;
 
-void Example::onInit()
+#ifdef VAPOR_PLATFORM_WINDOWS
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, 
+				   LPSTR lpCmdLine, int nCmdShow)
+
+#else
+
+int main(int argc, char *argv[])
+
+#endif
 {
+	Example* example = new Example();
+	example->run();
+	delete example;
 
-
-}
-
-void Example::onRender() 
-{
-	// clear the render device
-	Device& device = getDevice();
-	
-	device.clearTarget();
-}
-
-void Example::onSetupResources() 
-{
-
+	return EXIT_SUCCESS;
 }

@@ -20,7 +20,7 @@ void info(const string &subsystem, const char* msg, ...)
 {
 	va_list args;
 	va_start(args, msg);
-	Log::getLogger()->write(Info, subsystem, msg, args);
+	Log::getLogger()->write(LogLevel::Info, subsystem, msg, args);
 	va_end(args);
 }
 
@@ -28,7 +28,7 @@ void warn(const string &subsystem, const char* msg, ...)
 {
 	va_list args;
 	va_start(args, msg);
-	Log::getLogger()->write(Warning, subsystem, msg, args);
+	Log::getLogger()->write(LogLevel::Warning, subsystem, msg, args);
 	va_end(args);
 }
 
@@ -36,7 +36,7 @@ void error(const string &subsystem, const char* msg, ...)
 {
 	va_list args;
 	va_start(args, msg);
-	Log::getLogger()->write(Error, subsystem, msg, args);
+	Log::getLogger()->write(LogLevel::Error, subsystem, msg, args);
 	va_end(args);
 }
 
@@ -80,14 +80,14 @@ void Log::close()
 	fp = NULL;
 }
 
-void Log::write(const LogLevel level, const string &subsystem, const char* msg, va_list args)
+void Log::write(const LogLevel::Enum level, const string &subsystem, const char* msg, va_list args)
 {
 	fprintf(fp, "\t\t<tr class=\"%s\">", even ? "even" : "odd");
 
 	switch(level) {	
-		case Info:		fprintf(fp, "<td class=\"%s\"></td>", "info");	break;
-		case Warning:	fprintf(fp, "<td class=\"%s\"></td>", "warn");	break;
-		case Error:		fprintf(fp, "<td class=\"%s\"></td>", "error");	break;
+		case LogLevel::Info:		fprintf(fp, "<td class=\"%s\"></td>", "info");	break;
+		case LogLevel::Warning:	fprintf(fp, "<td class=\"%s\"></td>", "warn");	break;
+		case LogLevel::Error:		fprintf(fp, "<td class=\"%s\"></td>", "error");	break;
 	}
 
 	fprintf(fp, "<td>%s</td>", ""); // date time
@@ -118,7 +118,7 @@ void Log::info(const string &subsystem, const char* msg, ...)
 {
 	va_list args;
 	va_start(args, msg);
-	write(Info, subsystem, msg, args);
+	write(LogLevel::Info, subsystem, msg, args);
 	va_end(args);
 }
 
@@ -126,7 +126,7 @@ void Log::warn(const string &subsystem, const char* msg, ...)
 {
 	va_list args;
 	va_start(args, msg);
-	write(Warning, subsystem, msg, args);
+	write(LogLevel::Warning, subsystem, msg, args);
 	va_end(args);
 }
 
@@ -134,7 +134,7 @@ void Log::error(const string &subsystem, const char* msg, ...)
 {
 	va_list args;
 	va_start(args, msg);
-	write(Error, subsystem, msg, args);
+	write(LogLevel::Error, subsystem, msg, args);
 	va_end(args);
 }
 

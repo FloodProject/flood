@@ -26,8 +26,8 @@ class BufferManager
 
 public:
 
-	BufferManager(void);
-	virtual ~BufferManager(void);
+	BufferManager();
+	virtual ~BufferManager();
 
 	//-----------------------------------//
 
@@ -37,6 +37,11 @@ public:
 	// creates a Index Buffer bound to the given data
 	virtual IndexBuffer* createIndexBuffer() = 0;
 
+	//// bind a vertex buffer (0 to unbind, non-0 to bind)
+	//virtual void bindVertexBuffer(VertexBuffer *Buffer) = 0;
+
+	//// bind an index buffer (0 to unbind, non-0 to bind)
+	//virtual void bindIndexBuffer(IndexBuffer *Buffer) = 0;
 };
 
 } } // end namespaces

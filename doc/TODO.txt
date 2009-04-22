@@ -48,4 +48,4 @@ DONE:
 	Add Milkshape model parser
 	Add namespaces to subsystems
 	Clean Visual Studio solutions
-	Organized the include directories
+	Organize the include directories

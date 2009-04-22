@@ -17,7 +17,7 @@
 namespace vapor {
 	namespace render {
 
-Device& Device::createDevice(Settings settings)
+Device& Device::createDevice(Settings& settings)
 {
 #ifdef VAPOR_RENDERER_OPENGL
 	return *new opengl::GLDevice(settings);
@@ -57,9 +57,9 @@ void Device::setRenderTarget(RenderTarget* renderTarget)
 	_activeTarget = renderTarget;
 }
 
-BufferManager* Device::getBufferManager()
+BufferManager& Device::getBufferManager()
 {
-	return _bufferManager;
+	return *_bufferManager;
 }
 
 } } // end namespaces

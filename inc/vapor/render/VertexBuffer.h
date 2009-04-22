@@ -8,57 +8,60 @@
 
 #pragma once
 
+#include "vapor/Engine.h"
+#include "vapor/render/Buffer.h"
+
 namespace vapor {
 	namespace render {
-		
-		// Same goes for IBs
-		namespace BufferAccessUsage
-		{
-			enum BufferAccessUsage
-			{
-				WRITE_ONLY = 0, // Write content only
-				READ_ONLY, // Read content only
-				READ_WRITE // Read and write content
-			};
-		};
 
-		namespace BufferCreationUsage
-		{
-			enum BufferCreationUsage
-			{
-				STREAM_DRAW, // Stream draw
-				STREAM_READ, // Stream read
-				STREAM_COPY, // Stream copy
-				STATIC_DRAW, // Static draw
-				STATIC_READ, // Static read
-				STATIC_COPY, // Static copy
-				DYNAMIC_DRAW, // Dynamic draw
-				DYNAMIC_READ, // Dynamic read
-				DYNAMIC_COPY // Dynamic copy
-			};
-		};
+// Same goes for IBs
+namespace BufferAccessUsage
+{
+	enum BufferAccessUsage
+	{
+		WRITE_ONLY = 0, // Write content only
+		READ_ONLY, // Read content only
+		READ_WRITE // Read and write content
+	};
+};
 
-		namespace VertexUsage
-		{
-			enum VertexUsage
-			{
-				NONE = 0, // No usage
-				POSITION, // Position
-				TEXCOORD, // Texture Coordinate
-				NORMAL // Normal
-			};
-		};
+namespace BufferCreationUsage
+{
+	enum BufferCreationUsage
+	{
+		STREAM_DRAW, // Stream draw
+		STREAM_READ, // Stream read
+		STREAM_COPY, // Stream copy
+		STATIC_DRAW, // Static draw
+		STATIC_READ, // Static read
+		STATIC_COPY, // Static copy
+		DYNAMIC_DRAW, // Dynamic draw
+		DYNAMIC_READ, // Dynamic read
+		DYNAMIC_COPY // Dynamic copy
+	};
+};
 
-		namespace VertexDataType
-		{
-			enum VertexDataType
-			{
-				FLOAT1, // 1 Float
-				FLOAT2, // 2 Floats (vec2)
-				FLOAT3, // 3 Floats (vec3)
-				FLOAT4 // 4 Floats (vec4)
-			};
-		};
+namespace VertexUsage
+{
+	enum VertexUsage
+	{
+		NONE = 0, // No usage
+		POSITION, // Position
+		TEXCOORD, // Texture Coordinate
+		NORMAL // Normal
+	};
+};
+
+namespace VertexDataType
+{
+	enum VertexDataType
+	{
+		FLOAT1, // 1 Float
+		FLOAT2, // 2 Floats (vec2)
+		FLOAT3, // 3 Floats (vec3)
+		FLOAT4 // 4 Floats (vec4)
+	};
+};
 
 struct VertexElement
 {
@@ -69,7 +72,7 @@ struct VertexElement
 
 #define VERTEXELEMENT_END {0, 0, VertexUsage::NONE}
 
-class VertexBuffer
+class VertexBuffer : public Buffer
 {
 public:
 	virtual ~VertexBuffer(void) {};

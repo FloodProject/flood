@@ -216,6 +216,10 @@
 			RelativePath=".\Example.h"
 			>
 		</File>
+		<File
+			RelativePath=".\Main.cpp"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

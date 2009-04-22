@@ -262,6 +262,14 @@
 					Name="Buffer"
 					>
 					<File
+						RelativePath=".\Buffer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\render\Buffer.h"
+						>
+					</File>
+					<File
 						RelativePath=".\BufferManager.cpp"
 						>
 					</File>
@@ -522,10 +530,6 @@
 					RelativePath="..\..\inc\vapor\log\LogFormat.h"
 					>
 				</File>
-				<File
-					RelativePath=".\LogHelper.cpp"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="DynLibs"
@@ -551,10 +555,10 @@
 					>
 				</File>
 			</Filter>
-		</Filter>
-		<Filter
-			Name="VFS"
-			>
+			<Filter
+				Name="VFS"
+				>
+			</Filter>
 		</Filter>
 		<File
 			RelativePath="..\..\inc\vapor\CompileOptions.h"

@@ -8,8 +8,6 @@
 
 #include <vapor/Framework.h>
 
-//#include "Dialog.h"
-
 using namespace vapor::resources;
 using namespace vapor::render;
 
@@ -19,13 +17,18 @@ namespace vapor {
 Framework::Framework()
 	: device(nullptr), window(nullptr), resourceManager(nullptr)
 {
-	init();
-	render();
+	info("framework", "Starting a vaporEngine Framework-based application");
 }
 
 Framework::~Framework()
 {
 	cleanup();
+}
+
+void Framework::run()
+{
+	init();
+	render();
 }
 
 void Framework::init()
@@ -39,26 +42,18 @@ void Framework::init()
 	// create the resource manager
 	resourceManager = new ResourceManager();
 
+	// more specific initialization
+	onInit();
+
 	// set up all the resources
-	setupResources();
-}
-
-//void Framework::ask()
-//{
-//	Dialog *dialog = new Dialog();
-//	delete dialog;
-//}
-
-void Framework::setupResources()
-{
-
+	onSetupResources();
 }
 
 void Framework::render()
 {
 	do {
-		// clear the render device
-		device->clearTarget();
+		// main rendering by app
+		onRender();
 
 		// update the active target
 		device->updateTarget();
@@ -71,7 +66,7 @@ void Framework::cleanup()
 	// free all objects
 	delete device;
 	delete resourceManager;
-	delete Log::getLogger();
+	delete log::Log::getLogger();
 }
 
 } } // end namespaces

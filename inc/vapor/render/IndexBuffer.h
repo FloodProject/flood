@@ -9,8 +9,12 @@
 #pragma once
 
 #include "vapor/Engine.h"
+#include "vapor/render/Buffer.h"
 
-class IndexBuffer
+namespace vapor {
+	namespace render {
+
+class IndexBuffer : public Buffer
 {
 public:
 	IndexBuffer(void);
@@ -22,3 +26,5 @@ private:
 
 	bool _is32bit;
 };
+
+} } // end namespaces

@@ -8,6 +8,9 @@
 
 #pragma once
 
+namespace vapor {
+	namespace log {
+
 /**
  * HTML markup used for the logging output. 
  */
@@ -377,3 +380,5 @@ static const char LOG_JS_TABLES[] =
 	"ZW9mIG9iamVjdC5sZW5ndGggPT0gIm51bWJlciIpIHsKCQkJLy8gdGhlIG9iamVjdCBpcy"
 	"BhcnJheS1saWtlCgkJCXJlc29sdmUgPSBBcnJheTsKCQl9CgkJcmVzb2x2ZS5mb3JFYWNo"
 	"KG9iamVjdCwgYmxvY2ssIGNvbnRleHQpOwoJfQp9OwoK";
+
+} } // end namespaces

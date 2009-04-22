@@ -17,11 +17,14 @@ namespace vapor {
 /**
  * Severity level of the log message
  */ 
-enum LogLevel
+namespace LogLevel 
 {
-	Info,
-	Warning,
-	Error
+	enum Enum
+	{
+		Info,
+		Warning,
+		Error
+	};
 };
 
 // Logging functions
@@ -49,7 +52,7 @@ public:
 	void error(const string &subsystem, const char* msg, ...);
 
 	// Message logging functions
-	void write(const LogLevel level, const string &subsystem, const char* msg, va_list args);
+	void write(const LogLevel::Enum level, const string &subsystem, const char* msg, va_list args);
 
 private:
 	

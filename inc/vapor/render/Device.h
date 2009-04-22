@@ -53,7 +53,7 @@ public:
 	 * Creates a new rendering device, using the rendering API specified.
 	 * TODO: add suport for passing a specific backend
 	 */
-	static Device& createDevice( Settings settings = Settings(640, 480) );
+	static Device& createDevice( Settings& settings = Settings(640, 480) );
 
 	/**
 	 * Clears the active render target.
@@ -81,27 +81,17 @@ public:
 	// get adapter information
 	virtual Adapter& getAdapter();
 
-	//// bind a vertex buffer (0 to unbind, non-0 to bind)
-	//virtual void bindVertexBuffer(VertexBuffer *Buffer) = 0;
-
-	//// bind an index buffer (0 to unbind, non-0 to bind)
-	//virtual void bindIndexBuffer(IndexBuffer *Buffer) = 0;
+	//-----------------------------------//
 
 	// draw a vertex buffer
 	//virtual void draw(unsigned long Mode, unsigned long First, unsigned long Count);
-	
-	//// create a Vertex Buffer
-	//virtual VertexBuffer* createVertexBuffer() = 0;
-
-	//// create an Index Buffer
-	//virtual IndexBuffer* createIndexBuffer() = 0;
 
 	//-----------------------------------//
 
 	/**
 	 * Gets the buffer manager.
 	 */
-	virtual BufferManager* getBufferManager();
+	virtual BufferManager& getBufferManager();
 
 protected:
 

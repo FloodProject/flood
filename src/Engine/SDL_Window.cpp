@@ -41,23 +41,26 @@ bool SDLWindow::init(void)
 {
 	display = nullptr;
 
-	info("render::window", "Initializing SDL subsystem");
+	info("render::window::sdl", "Initializing SDL subsystem");
 
 	// initialize video sub-system
 	if ( SDL_Init(SDL_INIT_VIDEO) < 0 ) {
-		error("render::window", "Failed to initialize SDL");
+		error("render::window::sdl", "Failed to initialize SDL");
 		return false;
 	}
+
+	info("render::window::sdl", "Using SDL version %d.%d.%d", 
+		SDL_MAJOR_VERSION, SDL_MINOR_VERSION, SDL_PATCHLEVEL);
 
 	return true;
 }
 
 bool SDLWindow::open()
 {
-	Uint32 flags = SDL_OPENGL;
+	Uint32 flags = SDL_OPENGL | SDL_HWPALETTE | SDL_RESIZABLE;
 
 	// check if we want fullscreen
-	if ( getSettings().fullscreen() )
+	if (getSettings().fullscreen())
 		flags |= SDL_FULLSCREEN;
 
 	//SDL_GL_SetAttribute( SDL_GL_RED_SIZE, 5 );
@@ -65,16 +68,16 @@ bool SDLWindow::open()
 	//SDL_GL_SetAttribute( SDL_GL_BLUE_SIZE, 5 );
 	//SDL_GL_SetAttribute( SDL_GL_ALPHA_SIZE, 5 );
 	//SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 16 );
-	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
+
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 	// set the video mode
 	display = SDL_SetVideoMode(getSettings().width(),
 		getSettings().height(), getSettings().bpp(), flags);
 
-	glewInit();
-
 	if ( !display ) {
-		error("render::window", "Failed to create a display");
+		error("render::window::sdl", 
+			"Failed to create a display: %s", SDL_GetError());
 		return false;
 	}
 
@@ -105,7 +108,7 @@ bool SDLWindow::pump()
 		}
 	}
 
-	SDL_Delay(1);
+	//SDL_Delay(1);
 
 	return true;
 }
@@ -113,7 +116,7 @@ bool SDLWindow::pump()
 void SDLWindow::setTitle(const string& title) const
 {
 	SDL_WM_SetCaption(title.c_str(), NULL);
-	info("render::window", "Changing window title to '%s'", title.c_str());
+	info("render::window::sdl", "Changing window title to '%s'", title.c_str());
 }
 
 void SDLWindow::setCursor(bool state) const
