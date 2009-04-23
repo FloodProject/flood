@@ -26,8 +26,8 @@ class BufferManager
 
 public:
 
-	BufferManager();
-	virtual ~BufferManager();
+	BufferManager() {};
+	virtual ~BufferManager() {};
 
 	//-----------------------------------//
 

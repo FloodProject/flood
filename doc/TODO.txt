@@ -9,7 +9,6 @@ Milestone 1:
 TODO:
 -----
 
-	Compile with MinGW GCC
 	Adapter class
 	Resource management
 	Simple scene graph	
@@ -18,10 +17,11 @@ TODO:
 Low priority:
 -------------
 	
+	Get Memory Leak Detector working
 	Implement abstract timer class
 	Color copy cons and operators
 
-Log todo:
+Log roadmap:
 ---------
 
 	Log all the engine calls
@@ -34,7 +34,6 @@ Log todo:
 Nice to have:
 -------------
 
-	
 	Virtual File System :)
 	Font handling via FreeType 2
 	Basic software device

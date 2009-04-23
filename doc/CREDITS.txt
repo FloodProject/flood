@@ -4,8 +4,6 @@ vaporEngine Team
 Programmers:
 
 	* João Matos aka triton
-	* Nuno Silva aka LittleCodingFox
-	* ersincyber
 	
 Libraries used:
 
@@ -15,6 +13,8 @@ Libraries used:
 	* GLEW
 
 Special thanks:
-
+	* Nuno Silva aka LittleCodingFox (initial VBO stubs)
 	* fnds (helped out with CSS problems)
 	* Nazgulled (some suggestions for design)
+	* Stack Overflow community (great topics)
+	* OGRE / Irrlicht / NeoEngine / 3Demon

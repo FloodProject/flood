@@ -7,6 +7,7 @@
 ************************************************************************/
 
 #include <cstdarg>
+#include <ctime>
 
 #include "vapor/log/Log.h"
 #include "vapor/log/LogFormat.h"
@@ -16,41 +17,59 @@ namespace vapor {
 
 Log * _log = new Log("vaporEngine Log", "log.html");
 
-void info(const string &subsystem, const char* msg, ...)
+//-----------------------------------//
+
+Log* Log::getLogger()
+{
+	return _log;
+}
+
+//-----------------------------------//
+
+void info(const string& subsystem, const char* msg, ...)
 {
 	va_list args;
 	va_start(args, msg);
-	Log::getLogger()->write(LogLevel::Info, subsystem, msg, args);
+		Log::getLogger()->write(LogLevel::Info, subsystem, msg, args);
 	va_end(args);
 }
+
+//-----------------------------------//
 
 void warn(const string &subsystem, const char* msg, ...)
 {
 	va_list args;
 	va_start(args, msg);
-	Log::getLogger()->write(LogLevel::Warning, subsystem, msg, args);
+		Log::getLogger()->write(LogLevel::Warning, subsystem, msg, args);
 	va_end(args);
 }
 
-void error(const string &subsystem, const char* msg, ...)
+//-----------------------------------//
+
+void error(const string& subsystem, const char* msg, ...)
 {
 	va_list args;
 	va_start(args, msg);
-	Log::getLogger()->write(LogLevel::Error, subsystem, msg, args);
+		Log::getLogger()->write(LogLevel::Error, subsystem, msg, args);
 	va_end(args);
 }
 
-Log::Log(const string &title, const string &filename)
+//-----------------------------------//
+
+Log::Log(const string& title, const string& filename)
+	: even(true)
 {
-	if(!open(filename))
+	if(!open(filename)) {
+		//error("vapor::log", "Could not open log file '%s'", filename.c_str());
 		exit(EXIT_FAILURE);
-
-	even = true;
-
+	}
+	
 	start(title);
 
 	info("log", "Creating log file '%s'", filename.c_str());
 }
+
+//-----------------------------------//
 
 Log::~Log()
 {
@@ -58,7 +77,9 @@ Log::~Log()
 	close();
 }
 
-bool Log::open(const string &filename)
+//-----------------------------------//
+
+bool Log::open(const string& filename)
 {
 	// disable Visual C++ fopen deprecation warning
 	#pragma warning(disable : 4996)
@@ -72,6 +93,8 @@ bool Log::open(const string &filename)
 	return true;
 }
 
+//-----------------------------------//
+
 void Log::close()
 {
 	if (!fp) return;
@@ -80,22 +103,28 @@ void Log::close()
 	fp = NULL;
 }
 
-void Log::write(const LogLevel::Enum level, const string &subsystem, const char* msg, va_list args)
+//-----------------------------------//
+
+void Log::write(const LogLevel::Enum level, const string& subsystem, const char* msg, va_list args)
 {
-	fprintf(fp, "\t\t<tr class=\"%s\">", even ? "even" : "odd");
+	char* s;
 
 	switch(level) {	
-		case LogLevel::Info:		fprintf(fp, "<td class=\"%s\"></td>", "info");	break;
-		case LogLevel::Warning:	fprintf(fp, "<td class=\"%s\"></td>", "warn");	break;
-		case LogLevel::Error:		fprintf(fp, "<td class=\"%s\"></td>", "error");	break;
+		case LogLevel::Info: s = "info"; break;
+		case LogLevel::Warning:	s = "warn"; break;
+		case LogLevel::Error: s = "error"; break;
 	}
 
-	fprintf(fp, "<td>%s</td>", ""); // date time
-	fprintf(fp, "<td>%s</td>", subsystem.c_str()); // subsystem
+	fprintf(fp, "\t\t<tr class=\"%s,%s\">", s, even ? "even" : "odd");
 
-	fprintf(fp, "<td>");
-	vfprintf(fp, msg, args);
-	fprintf(fp, "</td>");
+		fprintf(fp, "<td class=\"%s\"></td>", s);
+
+		fprintf(fp, "<td>%d</td>", clock()); // date time
+		fprintf(fp, "<td>%s</td>", subsystem.c_str()); // subsystem
+
+		fprintf(fp, "<td>");
+			vfprintf(fp, msg, args);
+		fprintf(fp, "</td>");
 
 	fprintf(fp, "</tr>\n");
 
@@ -104,43 +133,50 @@ void Log::write(const LogLevel::Enum level, const string &subsystem, const char*
 	even = !even;
 }
 
-void Log::start(const string &title)
+//-----------------------------------//
+
+void Log::start(const string& title)
 {		
 	fprintf(fp, LOG_HTML, title.c_str(), LOG_CSS, LOG_JS_TABLES);
 }
+
+//-----------------------------------//
 
 void Log::end()
 {
 	fprintf(fp, "\t</table>\n" "\t</div>\n" "</body>\n" "</html>\n");
 }
 
-void Log::info(const string &subsystem, const char* msg, ...)
+//-----------------------------------//
+
+void Log::info(const string& subsystem, const char* msg, ...)
 {
 	va_list args;
 	va_start(args, msg);
-	write(LogLevel::Info, subsystem, msg, args);
+		write(LogLevel::Info, subsystem, msg, args);
 	va_end(args);
 }
 
-void Log::warn(const string &subsystem, const char* msg, ...)
+//-----------------------------------//
+
+void Log::warn(const string& subsystem, const char* msg, ...)
 {
 	va_list args;
 	va_start(args, msg);
-	write(LogLevel::Warning, subsystem, msg, args);
+		write(LogLevel::Warning, subsystem, msg, args);
 	va_end(args);
 }
 
-void Log::error(const string &subsystem, const char* msg, ...)
+//-----------------------------------//
+
+void Log::error(const string& subsystem, const char* msg, ...)
 {
 	va_list args;
 	va_start(args, msg);
-	write(LogLevel::Error, subsystem, msg, args);
+		write(LogLevel::Error, subsystem, msg, args);
 	va_end(args);
 }
 
-Log* Log::getLogger()
-{
-	return _log;
-}
+//-----------------------------------//
 
 } } // end namespaces

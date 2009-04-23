@@ -12,6 +12,7 @@
 
 #include "vapor/render/opengl/GL_Device.h"
 #include "vapor/render/opengl/GL_Adapter.h"
+#include "vapor/render/opengl/GL_BufferManager.h"
 
 #ifdef VAPOR_WINDOWING_SDL
 	#include <vapor/render/sdl/SDL_Window.h>
@@ -32,9 +33,7 @@ GLDevice::GLDevice(Settings& settings)
 	checkExtensions();
 
 	_adapter = new GLAdapter();
-
-	//_bindedVB = 0;
-	//_bindedIB = 0;
+	_bufferManager = new GLBufferManager();
 }
 
 void GLDevice::close()
@@ -59,7 +58,7 @@ void GLDevice::checkExtensions()
 	GLenum err = glewInit();
 	
 	if(err == GLEW_OK)
-		info("render::opengl", "Using GLEW %s", glewGetString(GLEW_VERSION));
+		info("render::opengl", "Using GLEW version %s", glewGetString(GLEW_VERSION));
 	else
 		error("render::opengl", "Failed to initialize GLEW: %s", glewGetErrorString(err));
 }
@@ -91,94 +90,6 @@ void GLDevice::resetViewport()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
-
-//VertexBuffer *GLDevice::createVertexBuffer()
-//{
-//	GLVertexBuffer Buffer;
-//	_vertexBuffers.push_back(Buffer);
-//	return &_vertexBuffers.back();
-//};
-
-//void GLDevice::bindVertexBuffer(VertexBuffer *Buffer)
-//{
-	//if(Buffer) //If valid
-	//{
-	//	//Search for the real buffer (user may mistakenly use a non-GL buffer)
-	//	GLVertexBuffer *RealBuffer = 0;
-	//	for(std::list<GDVertexBuffer>::iterator it = _vertexBuffers.begin(); 
-	//		it != _vertexBuffers.end(); it++)
-	//	{
-	//		if(it._Ptr == Buffer)
-	//		{
-	//			RealBuffer = it._Ptr;
-	//			break;
-	//		};
-	//	};
-
-	//	if(RealBuffer == 0) //if we didnt find it, ignore this operation
-	//	{
-	//		info("render::opengl::bindvertexbuffer", 
-	//			"Invalid buffer submitted for binding");
-	//		return;
-	//	};
-
-	//	//if the previous buffer was a VBO, we have to unbind it.
-	//	if(_bindedVB && GLEW_ARB_vertex_buffer_object && glIsBufferARB(_bindedVB->ID))
-	//	{
-	//		glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
-	//	};
-
-	//	//Bind the buffer
-	//	if(GLEW_ARB_vertex_buffer_object && glIsBufferARB(RealBuffer->_ID))
-	//	{
-	//		glBindBufferARB(GL_ARRAY_BUFFER_ARB, RealBuffer->_ID);
-	//	};
-
-	//	//reference our buffer
-	//	_bindedVB = RealBuffer;
-	//}
-	//else //If we don't 
-	//{
-	//	//Unbind buffer (doesnt matter whether the last binded VB was a VBO or not)
-	//	if(GLEW_ARB_vertex_buffer_object)
-	//	{
-	//		glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
-	//	};
-
-	//	//reference our buffer
-	//	_bindedVB = 0;
-	//}
-//}
-
-//void GLDevice::bindIndexBuffer(IndexBuffer *Buffer)
-//{
-//}
-
-//void GLDevice::draw(unsigned long Mode, unsigned long First, unsigned long Count)
-//{
-//	if(_bindedVB == 0)
-//	{
-//		info("render::opengl::draw", "Invalid binded VB");
-//		return;
-//	}
-//
-//	if(_bindedVB->_elements.size() == 0)
-//	{
-//		info("render::opengl::draw", "Binded VB has no Vertex Elements");
-//		return;
-//	};
-//
-//	//Convert vaporFlag to glFlag
-//	switch(Mode)
-//	{
-//	case PrimitiveType::TRIANGLES:
-//		Mode = GL_TRIANGLES;
-//		break;
-//	case PrimitiveType::LINES:
-//		Mode = GL_LINES;
-//		break;
-//	};
-//}
 
 } } } // end namespaces
 

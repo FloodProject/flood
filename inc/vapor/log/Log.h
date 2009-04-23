@@ -14,6 +14,13 @@
 namespace vapor {
 	namespace log {
 
+// Logging functions
+void info(const string &subsystem, const char* msg, ...);
+void warn(const string &subsystem, const char* msg, ...);
+void error(const string &subsystem, const char* msg, ...);
+
+//-----------------------------------//
+
 /**
  * Severity level of the log message
  */ 
@@ -27,10 +34,7 @@ namespace LogLevel
 	};
 };
 
-// Logging functions
-void info(const string &subsystem, const char* msg, ...);
-void warn(const string &subsystem, const char* msg, ...);
-void error(const string &subsystem, const char* msg, ...);
+//-----------------------------------//
 
 /**
  * Logging class used to output useful logging and debugging information
@@ -40,19 +44,19 @@ class Log
 {
 public:
 	
-	Log(const string &title, const string &filename);
+	Log(const string& title, const string& filename);
 	~Log();
 
 	// Gets the global engine logger
 	static Log* getLogger();
 
 	// Logging functions
-	void info(const string &subsystem, const char* msg, ...);
-	void warn(const string &subsystem, const char* msg, ...);
-	void error(const string &subsystem, const char* msg, ...);
+	void info(const string& subsystem, const char* msg, ...);
+	void warn(const string& subsystem, const char* msg, ...);
+	void error(const string& subsystem, const char* msg, ...);
 
 	// Message logging functions
-	void write(const LogLevel::Enum level, const string &subsystem, const char* msg, va_list args);
+	void write(const LogLevel::Enum level, const string& subsystem, const char* msg, va_list args);
 
 private:
 	
@@ -62,7 +66,7 @@ private:
 	bool even;
 
 	// Opens/closes a log file
-	bool open(const string &filename);
+	bool open(const string& filename);
 	void close(void);
 	
 	// Writes JavaScript sorttable_v1.js
@@ -72,7 +76,7 @@ private:
 	void css();
 	
 	// Writes the boilerplate HTML tags
-	void start(const string &title);
+	void start(const string& title);
 	void end();
 };
 

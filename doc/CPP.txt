@@ -17,8 +17,8 @@ Source file structure
 
 	- Copyright notice
 	- Inclusion-guard (for header files)
-	- Internal header includes
 	- External header includes
+	- Internal header includes
 	- Declarations / definitions
 	
 Documentation
@@ -32,8 +32,9 @@ Miscellaneous
 -------------
 	
 	- nullptr is preferred to NULL (it's gonna be added in C++0x)
-	- enums shall be enclosed in a struct or namespace (transition to enum class in C++0x)
-	- Don't copy code from other projects with incompatible licenses
+	- use all the STL data structures, don't reinvent the wheel (ironic huh)
+	- enums shall be enclosed in a namespace (transition to enum class in C++0x)
+	- Don't copy code from other projects with incompatible licenses (unless you hide it :)
 
 Subversion
 ----------
@@ -41,4 +42,7 @@ Subversion
 	- vaporEngine is kept in a Subversion repository in Assembla
 	- All commits should provide a sensible commit message
 	
-	
+Libraries
+---------
+
+	- Before adding a new dependency, discuss it with triton.

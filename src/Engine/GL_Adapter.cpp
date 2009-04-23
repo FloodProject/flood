@@ -21,7 +21,8 @@ GLAdapter::GLAdapter(void)
 	_cardVendor = (const char*) glGetString(GL_VENDOR);
 	_driverVersion = (const char*) glGetString(GL_VERSION);
 
-	info("render::opengl::adapter", "%s\nSupports OpenGL %s", _cardName, _driverVersion);
+	info("render::opengl::adapter", "Graphics adapter: %s", _cardName);
+	info("render::opengl::adapter",	"Supports OpenGL %s", _driverVersion);
 }
 
 } } } // end namespaces

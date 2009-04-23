@@ -37,3 +37,9 @@
 
 //#define VAPOR_IMAGE_CODEC_DEVIL
 #define VAPOR_IMAGE_CODEC_PICOPNG
+
+//-------------------------------------------------------------------------//
+// Memory Leak analyzer
+//-------------------------------------------------------------------------//
+
+//#define VAPOR_MEM_LEAK_DETECTOR

@@ -25,5 +25,9 @@ int main(int argc, char *argv[])
 	example->run();
 	delete example;
 
+	#ifdef VAPOR_MEM_LEAK_DETECTOR
+		_CrtDumpMemoryLeaks();
+	#endif
+
 	return EXIT_SUCCESS;
 }

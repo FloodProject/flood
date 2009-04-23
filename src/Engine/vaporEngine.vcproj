@@ -42,15 +42,17 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\SDL-1.2.13\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;"
-				PreprocessorDefinitions="WIN32;___DEBUG;_WINDOWS"
+				PreprocessorDefinitions="WIN32;___DEBUG;_WINDOWS;_DEBUG"
 				MinimalRebuild="true"
+				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="2"
+				RuntimeLibrary="3"
+				DisableLanguageExtensions="false"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
-				PrecompiledHeaderThrough=""
-				WarningLevel="3"
-				WarnAsError="true"
+				PrecompiledHeaderThrough="vapor.h"
+				WarningLevel="4"
+				WarnAsError="false"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
 			/>
@@ -113,11 +115,14 @@
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\SDL-1.2.13\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				MinimalRebuild="true"
+				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
+				DisableLanguageExtensions="false"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
+				WarningLevel="4"
 				WarnAsError="true"
 				DebugInformationFormat="3"
 			/>
@@ -211,13 +216,13 @@
 		<Filter
 			Name="Render"
 			>
-			<File
-				RelativePath="..\..\inc\vapor\resources\Color.h"
-				>
-			</File>
 			<Filter
 				Name="Common"
 				>
+				<File
+					RelativePath="..\..\inc\vapor\resources\Color.h"
+					>
+				</File>
 				<File
 					RelativePath="..\..\inc\vapor\render\Target.h"
 					>
@@ -332,56 +337,64 @@
 				</Filter>
 			</Filter>
 			<Filter
-				Name="OpenGL"
+				Name="Implementations"
 				>
-				<File
-					RelativePath="..\..\inc\vapor\render\opengl\GL.h"
-					>
-				</File>
 				<Filter
-					Name="Adapter"
+					Name="OpenGL"
 					>
 					<File
-						RelativePath=".\GL_Adapter.cpp"
+						RelativePath="..\..\inc\vapor\render\opengl\GL.h"
 						>
 					</File>
+					<Filter
+						Name="Adapter"
+						>
+						<File
+							RelativePath=".\GL_Adapter.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\inc\vapor\render\opengl\GL_Adapter.h"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="Device"
+						>
+						<File
+							RelativePath=".\GL_Device.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\inc\vapor\render\opengl\GL_Device.h"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="Buffers"
+						>
+						<File
+							RelativePath=".\GL_BufferManager.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\inc\vapor\render\opengl\GL_BufferManager.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\inc\vapor\render\opengl\GL_VertexBuffer.h"
+							>
+						</File>
+					</Filter>
+				</Filter>
+				<Filter
+					Name="Software"
+					>
 					<File
-						RelativePath="..\..\inc\vapor\render\opengl\GL_Adapter.h"
+						RelativePath="..\..\inc\vapor\render\Software.h"
 						>
 					</File>
 				</Filter>
-				<Filter
-					Name="Device"
-					>
-					<File
-						RelativePath=".\GL_Device.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\inc\vapor\render\opengl\GL_Device.h"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="Buffers"
-					>
-					<File
-						RelativePath=".\GL_VertexBuffer.h"
-						>
-					</File>
-				</Filter>
-			</Filter>
-			<Filter
-				Name="Software"
-				>
-				<File
-					RelativePath="..\..\inc\vapor\render\Software.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Window"
-				>
 				<Filter
 					Name="SDL"
 					>
@@ -505,8 +518,12 @@
 			</Filter>
 		</Filter>
 		<Filter
-			Name="Core"
+			Name="Platform"
 			>
+			<File
+				RelativePath="..\..\inc\vapor\MemoryLeak.h"
+				>
+			</File>
 			<File
 				RelativePath="..\..\inc\vapor\Platform.h"
 				>
@@ -516,23 +533,7 @@
 				>
 			</File>
 			<Filter
-				Name="Logging"
-				>
-				<File
-					RelativePath=".\Log.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\log\Log.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\log\LogFormat.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="DynLibs"
+				Name="DynLib"
 				>
 				<File
 					RelativePath=".\DynamicLibrary.cpp"
@@ -555,13 +556,29 @@
 					>
 				</File>
 			</Filter>
-			<Filter
-				Name="VFS"
+		</Filter>
+		<Filter
+			Name="Logging"
+			>
+			<File
+				RelativePath=".\Log.cpp"
 				>
-			</Filter>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\log\Log.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\log\LogFormat.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath="..\..\inc\vapor\CompileOptions.h"
+			>
+		</File>
+		<File
+			RelativePath=".\Engine.cpp"
 			>
 		</File>
 		<File

@@ -46,11 +46,11 @@
 				MinimalRebuild="true"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="2"
+				RuntimeLibrary="3"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough=""
-				WarningLevel="3"
+				WarningLevel="4"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -129,7 +129,7 @@
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
+				WarningLevel="4"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -180,22 +180,6 @@
 	<References>
 	</References>
 	<Files>
-		<Filter
-			Name="Resources"
-			>
-			<File
-				RelativePath=".\icon1.ico"
-				>
-			</File>
-			<File
-				RelativePath=".\resource.h"
-				>
-			</File>
-			<File
-				RelativePath=".\vaporExamples.rc"
-				>
-			</File>
-		</Filter>
 		<Filter
 			Name="Framework"
 			>

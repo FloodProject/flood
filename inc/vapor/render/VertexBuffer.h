@@ -17,33 +17,35 @@ namespace vapor {
 // Same goes for IBs
 namespace BufferAccessUsage
 {
-	enum BufferAccessUsage
+	enum Enum
 	{
-		WRITE_ONLY = 0, // Write content only
-		READ_ONLY, // Read content only
-		READ_WRITE // Read and write content
+		WriteOnly, // Write content only
+		ReadOnly, // Read content only
+		ReadWrite // Read and write content
 	};
 };
 
 namespace BufferCreationUsage
 {
-	enum BufferCreationUsage
+	enum Enum
 	{
-		STREAM_DRAW, // Stream draw
-		STREAM_READ, // Stream read
-		STREAM_COPY, // Stream copy
-		STATIC_DRAW, // Static draw
-		STATIC_READ, // Static read
-		STATIC_COPY, // Static copy
-		DYNAMIC_DRAW, // Dynamic draw
-		DYNAMIC_READ, // Dynamic read
-		DYNAMIC_COPY // Dynamic copy
+		StreamDraw, // Stream draw
+		StreamRead, // Stream read
+		StreamCopy, // Stream copy
+
+		StaticDraw, // Static draw
+		StaticRead, // Static read
+		StaticCopy, // Static copy
+
+		DynamicDraw, // Dynamic draw
+		DynamicRead, // Dynamic read
+		DynamicCopy	 // Dynamic copy
 	};
 };
 
 namespace VertexUsage
 {
-	enum VertexUsage
+	enum Enum
 	{
 		NONE = 0, // No usage
 		POSITION, // Position
@@ -54,12 +56,12 @@ namespace VertexUsage
 
 namespace VertexDataType
 {
-	enum VertexDataType
+	enum Enum
 	{
 		FLOAT1, // 1 Float
 		FLOAT2, // 2 Floats (vec2)
 		FLOAT3, // 3 Floats (vec3)
-		FLOAT4 // 4 Floats (vec4)
+		FLOAT4  // 4 Floats (vec4)
 	};
 };
 

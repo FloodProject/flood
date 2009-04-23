@@ -7,3 +7,16 @@
 ************************************************************************/
 
 #include "vapor/render/Buffer.h"
+
+namespace vapor {
+	namespace render {
+
+Buffer::Buffer() 
+{
+}
+
+Buffer::~Buffer()
+{
+}
+
+} } // end namespaces

@@ -26,7 +26,7 @@ public:
 
 private:
 
-	map<string, Resource*> resourceMap;
+	map<string, Resource*> _resourceMap;
 };
 
 } } // end namespaces

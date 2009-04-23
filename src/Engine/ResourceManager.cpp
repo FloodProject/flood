@@ -8,34 +8,28 @@
 
 #include "vapor/resources/ResourceManager.h"
 
-#include "vapor/log/Log.h"
-
-using namespace vapor::log;
-
 namespace vapor {
 	namespace resources {
 
 ResourceManager::ResourceManager()
 {
 
-
 }
 
 ResourceManager::~ResourceManager()
 {
-
 
 }
 
 void ResourceManager::addResource(const char* name, Resource* resource)
 {
 	info("resources", "Registering resource '%s'", name);
-	resourceMap[name] = resource;
+	_resourceMap[name] = resource;
 }
 
 Resource* ResourceManager::getResource(std::string &name)
 {
-	return resourceMap[name];
+	return _resourceMap[name];
 }
 
 } } // end namespaces

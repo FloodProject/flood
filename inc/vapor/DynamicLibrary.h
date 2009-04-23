@@ -19,7 +19,7 @@ namespace vapor {
  * with platform-specific conditional blocks (#ifdefs).
  */
 
-// slightly based on OGRE 3D headers
+// based on OGRE 3D headers
 #ifdef VAPOR_PLATFORM_WINDOWS
 	#define DYNLIB_HANDLE				struct HINSTANCE__*
 	#define DYNLIB_LOAD(lib)			LoadLibraryExA(lib, NULL, LOAD_WITH_ALTERED_SEARCH_PATH)
