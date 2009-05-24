@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "vapor/Engine.h"
+#include "vapor/Platform.h"
 #include "vapor/render/Target.h"
 
 namespace vapor {
@@ -19,6 +19,7 @@ namespace vapor {
  * Settings it can handle are Bits-per-pixel, the size of the the window,
  * if it is fullscreen, and in the future, if the user wants anti-aliasing.
  */
+
 class Settings
 {
 public:
@@ -26,12 +27,19 @@ public:
 	Settings(const int width, const int height, 
 		const int bpp = 32, const bool fullscreen = false);
 
+	// Gets the width of the window
 	const int width() const { return _width; }
+	
+	// Gets the height of the window
 	const int height() const { return _height; }
+	
+	// Gets the bits-per-pixel of the window
 	const int bpp() const { return _bpp; }
+	
+	// Is this window fullscreen?
 	const bool fullscreen() const { return _fullscreen; }
 
-private:
+protected:
 
 	int _width, _height, _bpp;
 	bool _fullscreen;
@@ -44,9 +52,9 @@ private:
  * desktop, but on some platforms (consoles, for instance) this might 
  * mean the full screen, so some methods might not make much sense. 
  */
+
 class Window : public RenderTarget
 {
-
 public:
 
 	Window (Settings& settings);
@@ -64,11 +72,13 @@ public:
 	// Sets the visibility of the mouse cursor 
 	virtual void setCursor (bool state) const = 0;
 
+	// Gets the window settings
 	virtual Settings& getSettings();
 
 protected:
 
-	Settings* _settings;
+	// Holds the window settings
+	Settings* settings;
 };
 
 } } // end namespaces

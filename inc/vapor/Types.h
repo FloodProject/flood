@@ -31,4 +31,3 @@ typedef unsigned long	ulong;
 #include <map>
 
 using namespace std;
-using tr1::shared_ptr;

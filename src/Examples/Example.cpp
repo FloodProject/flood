@@ -8,9 +8,7 @@
 
 #include "Example.h"
 
-#include "vapor/render/BufferManager.h"
-
-using namespace vapor::examples;
+//-----------------------------------//
 
 void Example::onInit()
 {
@@ -19,18 +17,30 @@ void Example::onInit()
 	error("example::onInit", "Example error message!");
 }
 
-void Example::onRender() 
-{
-	// clear the render device
-	Device& device = getDevice();
-	
-	device.clearTarget();
-
-	BufferManager& buf = device.getBufferManager();
-	VertexBuffer* vb = buf.createVertexBuffer();
-}
+//-----------------------------------//
 
 void Example::onSetupResources() 
 {
-
+	ResourceManager* rm = getResourceManager();
+	
+	//vapor::vfs::File& file("data/triton.png");
+	//Resource* img = rm->addResource(file);
 }
+
+//-----------------------------------//
+
+void Example::onRender() 
+{
+	// clear the render device
+	Device* device = getDevice();
+
+	device->clearTarget();
+
+	BufferManager& buf = device->getBufferManager();
+	VertexBuffer* vb = buf.createVertexBuffer();
+}
+
+//-----------------------------------//
+
+#define VAPOR_EXAMPLE_NAME Example
+#include <vapor/Main.h>

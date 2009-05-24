@@ -2,13 +2,13 @@
 *
 * vaporEngine by triton © (2008-2009)
 *
-*	<http://www.portugal-a-programar.org/
+*	<http://www.portugal-a-programar.org>
 *
 ************************************************************************/
 
 #pragma once
 
-#include "vapor/Engine.h"
+#include "vapor/Platform.h"
 
 #include <cstdio>
 
@@ -19,36 +19,27 @@ namespace vapor {
  * Represents a file.
  */
 
-class File {
-
+class File 
+{
 public:
 
 	File (string path);
 	~File ();
 
-	/**
-	 * Closes the file.
-	 */
+
+	// Closes the file.
 	void close();
 	
-	/**
-	 * Gets the file size.
-	 */
+	// Gets the file size.
 	long getSize();
 
-	/**
-	 * Read file to buffer.
-	 */
+	// Read file into buffer.
 	long read(void* buffer, long size);
 
-	/**
-	 * Gets the path of the file.
-	 */
+	// Gets the path of the file.
 	string getPath() { return _path; }
 
-	/**
-	 * Checks if a file exists.
-	 */
+	// Checks if a file exists.
 	static bool exists(string path);
 
 private:

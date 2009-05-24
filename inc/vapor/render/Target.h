@@ -8,14 +8,13 @@
 
 #pragma once
 
-#include "vapor/render/RenderQueue.h"
+#include "vapor/render/Queue.h"
 
 namespace vapor {
 	namespace render {
 
 class RenderTarget
 {
-
 public:
 
 	RenderTarget() { }

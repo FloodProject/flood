@@ -1,28 +1,37 @@
 =================================
 vaporEngine - whats the big deal?
 =================================
-:Author: João Matos <triton@portugal-a-programar.com>
+:Author: João Matos <triton@ResourceLoader-a-programar.com>
 :Description: vaporEngine documentation
 :Info: reStructeredText format rocks.
 
 Structure
 =========
 
-So, vaporEngine is just a tiny KISS 3D engine I've been working on in the past few months.
+So, vaporEngine is just a KISS 3D engine I've been working on in the past few months.
 
-The engine is divided in a few subsystems (enclosed in namespaces):
+Features
+========
 
-	* log		(logging)
-	* vfs		(virtual file system)
+	* Cross-platform engine (Windows for now)
+	* Clean architecture using modern C++
+	* Modern (no fixed-function pipeline!)
+	* Multiple renderers (OpenGL only for now)
+	* Don't reinvent the wheel (lots of cool libs)
+
+Architecture
+============
+
+The engine is divided in a few subsystems:
+
+	* platform  (file, memory, time, dynlib, log, vfs)
 	* math		(vectors, matrices, AABBs, ...)
-	* scene		(scene graph, bvh, ...)
 	* render	(opengl, directx, software)
-	* resources	(textures, meshes, fonts, ...)
-	* input		(mouse, keyboard, ...)
-	* audio		(vorbis, mo3)
-	* video		(theora, ffmpeg)
+	* scene		(scene graph, bvh, ...)
+	* resources	(textures, meshes, fonts, audio, video)
+	* input		(mouse, keyboard)
 	* physics	(collision detection)
-
+	
 Rendering classes
 =================
 
@@ -57,8 +66,7 @@ Window
 
 	just a class that has the window we are to render. this is abstract and will
 	have a subclass for every other operating system / graphics api we are to support. 
-	right now it uses SDL for creating and managing windows but it creates a dependency 
-	and should be replaced by native code / alternative lib.
+	right now it uses SDL for creating and managing windows.
 	
 	each render target has a render queue that will be filled up by the camera 
 	once it is done with frustum culling.

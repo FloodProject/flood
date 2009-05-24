@@ -2,7 +2,7 @@
 *
 * vaporEngine by triton © (2008-2009)
 *
-*	<http://www.portugal-a-programar.org/
+*	<http://www.portugal-a-programar.org>
 *
 ************************************************************************/
 
@@ -39,7 +39,21 @@
 #define VAPOR_IMAGE_CODEC_PICOPNG
 
 //-------------------------------------------------------------------------//
-// Memory Leak analyzer
+// Mesh formats
 //-------------------------------------------------------------------------//
 
-//#define VAPOR_MEM_LEAK_DETECTOR
+#define VAPOR_MESH_MILKSHAPE3D
+
+//-------------------------------------------------------------------------//
+// Memory stuff
+//-------------------------------------------------------------------------//
+ 
+#define VAPOR_MEMORY_TR1_VENDOR
+//#define VAPOR_MEMORY_TR1_BOOST
+//#define VAPOR_MEMORY_LEAK_DETECTOR
+
+//-------------------------------------------------------------------------//
+// VFS providers
+//-------------------------------------------------------------------------//
+
+#define VAPOR_VFS_PHYSFS

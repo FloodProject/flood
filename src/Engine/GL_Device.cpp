@@ -10,13 +10,13 @@
 
 #ifdef VAPOR_RENDERER_OPENGL
 
-#include "vapor/render/opengl/GL_Device.h"
-#include "vapor/render/opengl/GL_Adapter.h"
-#include "vapor/render/opengl/GL_BufferManager.h"
+#include "vapor/render/gl/GL_Device.h"
+#include "vapor/render/gl/GL_Adapter.h"
+#include "vapor/render/gl/GL_BufferManager.h"
 
 #ifdef VAPOR_WINDOWING_SDL
 	#include <vapor/render/sdl/SDL_Window.h>
-#elif
+#else
 	#error "OpenGL renderer needs a windowing implementation"
 #endif
 
@@ -24,7 +24,9 @@ namespace vapor {
 	namespace render {
 		namespace opengl {
 
-GLDevice::GLDevice(Settings& settings)
+//-----------------------------------//
+
+GLDevice::GLDevice(Settings settings)
 {
 	info("render::opengl", "Creating OpenGL rendering device");
 
@@ -35,6 +37,14 @@ GLDevice::GLDevice(Settings& settings)
 	_adapter = new GLAdapter();
 	_bufferManager = new GLBufferManager();
 }
+
+//-----------------------------------//
+
+GLDevice::~GLDevice()
+{
+}
+
+//-----------------------------------//
 
 void GLDevice::close()
 {
@@ -48,9 +58,7 @@ void GLDevice::close()
 	//}
 }
 
-GLDevice::~GLDevice()
-{
-}
+//-----------------------------------//
 
 void GLDevice::checkExtensions()
 {
@@ -63,19 +71,29 @@ void GLDevice::checkExtensions()
 		error("render::opengl", "Failed to initialize GLEW: %s", glewGetErrorString(err));
 }
 
-void GLDevice::open(Settings &settings)
-{
-	_window = new SDLWindow(settings);
-	setRenderTarget(_window);
+//-----------------------------------//
 
+void GLDevice::open(Settings& settings)
+{
+#ifdef VAPOR_WINDOWING_SDL
+	_window = new SDLWindow(settings);
+#else
+	#error "Could not find a window implementation"
+#endif
+
+	setRenderTarget(_window);
 	resetViewport();
 }
 
+//-----------------------------------//
+
 void GLDevice::clearTarget()
 {
-	glClearColor(1.0f, 1.0f, 1.0f, 0.5f);
+	glClearColor(1.0f, 1.0f, 0.0f, 0.5f);
 	glClear(GL_COLOR_BUFFER_BIT);
 }
+
+//-----------------------------------//
 
 void GLDevice::resetViewport()
 {
@@ -83,6 +101,7 @@ void GLDevice::resetViewport()
 
 	glViewport(0, 0, s.width(), s.height());
 
+	// TODO: Take this shit out of here...
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(45.0f, (GLfloat) s.width() / (GLfloat) s.height(), 1.0f, 100.0f);
@@ -90,6 +109,8 @@ void GLDevice::resetViewport()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
+
+//-----------------------------------//
 
 } } } // end namespaces
 

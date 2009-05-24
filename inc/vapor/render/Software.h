@@ -2,7 +2,7 @@
 *
 * vaporEngine by triton © (2008-2009)
 *
-*	<http://www.portugal-a-programar.org><s
+*	<http://www.portugal-a-programar.org>
 *
 ************************************************************************/
 
@@ -13,12 +13,14 @@
 namespace vapor {
 	namespace render {
 
-class SoftwareDevice : public Device
+class Software : public Device
 {
+
+protected:
 	
-/////////////////////////////////////////////////////////////////////////////
+//-------------------------------------------------------------------------//
 // Geometry stage
-/////////////////////////////////////////////////////////////////////////////
+//-------------------------------------------------------------------------//
 	
 	// Transform coordinates from Model space to World space
 	void transformModelWorld ();
@@ -44,9 +46,9 @@ class SoftwareDevice : public Device
 	// Run Geometry stage
 	void runGeometryStage ();
 
-/////////////////////////////////////////////////////////////////////////////
+//-------------------------------------------------------------------------//
 // Rasterization stage
-/////////////////////////////////////////////////////////////////////////////
+//-------------------------------------------------------------------------//
 	
 	// Transform from Clip space to Viewport space
 	void transformClipViewport ();

@@ -27,23 +27,4 @@ Adapter::~Adapter()
 
 //-----------------------------------//
 
-const char* Adapter::getDriver()
-{
-	return _driverVersion;
-}
-
-//-----------------------------------//
-
-const char* Adapter::getVendor()
-{
-	return _cardVendor;
-}
-
-//-----------------------------------//
-
-const char* Adapter::getName()
-{
-	return _cardName;
-}
-
 } } // end namespaces

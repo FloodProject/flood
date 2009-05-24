@@ -71,6 +71,7 @@
 				IgnoreDefaultLibraryNames="libcmt.lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
+				EntryPointSymbol=""
 				TargetMachine="1"
 			/>
 			<Tool
@@ -180,28 +181,12 @@
 	<References>
 	</References>
 	<Files>
-		<Filter
-			Name="Framework"
-			>
-			<File
-				RelativePath="..\Framework\Framework.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\Framework.h"
-				>
-			</File>
-		</Filter>
 		<File
 			RelativePath=".\Example.cpp"
 			>
 		</File>
 		<File
 			RelativePath=".\Example.h"
-			>
-		</File>
-		<File
-			RelativePath=".\Main.cpp"
 			>
 		</File>
 	</Files>

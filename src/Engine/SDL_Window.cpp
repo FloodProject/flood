@@ -2,7 +2,7 @@
 *
 * vaporEngine by triton © (2008-2009)
 *
-*	<http://www.portugal-a-programar.org/
+*	<http://www.portugal-a-programar.org>
 *
 ************************************************************************/
 
@@ -11,7 +11,7 @@
 #ifdef VAPOR_WINDOWING_SDL
 
 #ifdef VAPOR_RENDERER_OPENGL
-	#include "vapor/render/opengl/GL.h"
+	#include "vapor/render/gl/GL.h"
 
 	// SDL conflicts with GLEW
 	#define NO_SDL_GLEXT
@@ -44,7 +44,7 @@ bool SDLWindow::init(void)
 	info("render::window::sdl", "Initializing SDL subsystem");
 
 	// initialize video sub-system
-	if ( SDL_Init(SDL_INIT_VIDEO) < 0 ) {
+	if ( SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE) < 0 ) {
 		error("render::window::sdl", "Failed to initialize SDL");
 		return false;
 	}
@@ -57,7 +57,11 @@ bool SDLWindow::init(void)
 
 bool SDLWindow::open()
 {
-	Uint32 flags = SDL_OPENGL | SDL_HWPALETTE | SDL_RESIZABLE;
+	Uint32 flags = SDL_HWPALETTE | SDL_RESIZABLE;
+
+	#ifdef VAPOR_RENDERER_OPENGL
+		flags |= SDL_OPENGL;
+	#endif
 
 	// check if we want fullscreen
 	if (getSettings().fullscreen())
@@ -108,7 +112,7 @@ bool SDLWindow::pump()
 		}
 	}
 
-	//SDL_Delay(1);
+	SDL_Delay(0);
 
 	return true;
 }

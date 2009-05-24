@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include "vapor/Engine.h"
+#include "vapor/Platform.h"
 
 #include "vapor/render/Window.h"
-#include "vapor/render/RenderQueue.h"
+#include "vapor/render/Queue.h"
 #include "vapor/render/Target.h"
 #include "vapor/render/Adapter.h"
 #include "vapor/render/BufferManager.h"
@@ -39,7 +39,6 @@ namespace vapor {
  * OpenGL window will be different from an DirectX window, so this is also
  * responsible for creating a new window if no window handle is passed to it.
  */
-
 class Device
 {
 public:
@@ -47,50 +46,29 @@ public:
 	Device( );
 	virtual ~Device( );
 
-	//-----------------------------------//
-
-	/**
-	 * Creates a new rendering device, using the rendering API specified.
-	 * TODO: add suport for passing a specific backend
-	 */
-	static Device& createDevice( Settings& settings = Settings(640, 480) );
-
-	/**
-	 * Clears the active render target.
-	 */
+	// Creates a new rendering device, using the rendering API specified.
+	// TODO: add suport for passing a specific backend
+	static Device* createDevice( Settings settings = Settings(640, 480) );
+	
+	// Clears the active render target.
 	virtual void clearTarget( ) = 0;
 
-	/**
-	 * Updates the target render target.
-	 */ 
+	// Updates the target render target.
 	virtual void updateTarget( );
 
-	/**
-	 * Sets the active render target.
-	 */
-	virtual void setRenderTarget( RenderTarget *renderTarget );
+	// Sets the active render target.
+	virtual void setRenderTarget( RenderTarget* renderTarget );
 
-	//-----------------------------------//
+	// Create a window if not passed a WindowHandle
+	virtual void open( Settings& settings ) = 0;
 
-	// create a window if not passed a WindowHandle
-	virtual void open( Settings& wS ) = 0;
-
-	// get window class
+	// Gets the main window 
 	virtual Window& getWindow();
 
-	// get adapter information
+	// Gets rendering adapter information
 	virtual Adapter& getAdapter();
 
-	//-----------------------------------//
-
-	// draw a vertex buffer
-	//virtual void draw(unsigned long Mode, unsigned long First, unsigned long Count);
-
-	//-----------------------------------//
-
-	/**
-	 * Gets the buffer manager.
-	 */
+	// Gets the buffer manager
 	virtual BufferManager& getBufferManager();
 
 protected:
@@ -99,7 +77,7 @@ protected:
 	RenderTarget* _activeTarget;
 
 	// list of render targets
-	//vector<RenderTarget*> _renderTargets;
+	vector<RenderTarget*> _renderTargets;
 
 	// adapter information
 	Adapter* _adapter;
@@ -112,17 +90,3 @@ protected:
 };
 
 } } // end namespaces
-
-//-----------------------------------//
-
-// get projection matrix
-//virtual const Matrix4x3 & getProjectionMatrix () const = 0;
-
-// set projection matrix
-//virtual void setProjectionMatrix (const Matrix4x3 &proj) = 0;
-
-// push projection matrix on stack
-//virtual void pushProjectionMatrix (const Matrix4x3 &proj) = 0;
-
-// pop projection matrix from stack
-//virtual void popProjectionMatrix (bool set = true) = 0;

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "vapor/Engine.h"
+#include "vapor/Platform.h"
 
 namespace vapor {
 	namespace platform {
@@ -37,12 +37,12 @@ namespace vapor {
 
 class DynamicLib
 {
-
 public:
 
 	DynamicLib( const string &name );
 	~DynamicLib();
 
+	// Gets a pointer to the given symbol
 	void* getSymbol( const string &symbol );
 
 private:

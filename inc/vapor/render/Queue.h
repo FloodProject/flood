@@ -8,25 +8,23 @@
 
 #pragma once
 
-#include "vapor/CompileOptions.h"
-
-#ifdef VAPOR_RENDERER_OPENGL
-
-#include "vapor/render/Adapter.h"
+#include "vapor/render/Renderable.h"
 
 namespace vapor {
 	namespace render {
-		namespace opengl {
 
-class GLAdapter : public render::Adapter
+class RenderQueue
 {
-
 public:
 
-	GLAdapter();
-	//virtual ~GLAdapter();
+	RenderQueue();
+	~RenderQueue();
+
+	void addRenderable(Renderable *obj);
+
+private:
+
+	list<Renderable*> listRenderables;
 };
 
-} } } // end namespaces
-
-#endif
+} } // end namespaces

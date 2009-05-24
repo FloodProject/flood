@@ -9,13 +9,16 @@
 #include <cstdarg>
 #include <ctime>
 
-#include "vapor/log/Log.h"
-#include "vapor/log/LogFormat.h"
+#include "vapor/Log.h"
+#include "vapor/LogFormat.h"
+#include "vapor/Platform.h"
 
 namespace vapor {
 	namespace log {
 
-Log * _log = new Log("vaporEngine Log", "log.html");
+//-----------------------------------//
+
+Log* Log::_log;
 
 //-----------------------------------//
 
@@ -26,9 +29,20 @@ Log* Log::getLogger()
 
 //-----------------------------------//
 
+void Log::setLogger(Log* log)
+{
+	if(_log) delete _log;
+	_log = log;
+}
+
+//-----------------------------------//
+
 void info(const string& subsystem, const char* msg, ...)
 {
+	if(!Log::getLogger()) return;
+
 	va_list args;
+	
 	va_start(args, msg);
 		Log::getLogger()->write(LogLevel::Info, subsystem, msg, args);
 	va_end(args);
@@ -38,7 +52,10 @@ void info(const string& subsystem, const char* msg, ...)
 
 void warn(const string &subsystem, const char* msg, ...)
 {
+	if(!Log::getLogger()) return;
+
 	va_list args;
+	
 	va_start(args, msg);
 		Log::getLogger()->write(LogLevel::Warning, subsystem, msg, args);
 	va_end(args);
@@ -48,7 +65,10 @@ void warn(const string &subsystem, const char* msg, ...)
 
 void error(const string& subsystem, const char* msg, ...)
 {
+	if(!Log::getLogger()) return;
+
 	va_list args;
+	
 	va_start(args, msg);
 		Log::getLogger()->write(LogLevel::Error, subsystem, msg, args);
 	va_end(args);
@@ -81,11 +101,13 @@ Log::~Log()
 
 bool Log::open(const string& filename)
 {
+#ifdef VAPOR_PLATFORM_WINDOWS
 	// disable Visual C++ fopen deprecation warning
 	#pragma warning(disable : 4996)
+#endif
 
-	if (!(fp = fopen(filename.c_str(), "w+")))
-		return false;
+	fp = fopen(filename.c_str(), "w+");
+	if (!fp) return false;
 
 	// turn off file buffering
 	setbuf(fp, NULL);
@@ -100,19 +122,26 @@ void Log::close()
 	if (!fp) return;
 	
 	fclose(fp);
-	fp = NULL;
+	fp = nullptr;
 }
 
 //-----------------------------------//
 
 void Log::write(const LogLevel::Enum level, const string& subsystem, const char* msg, va_list args)
 {
-	char* s;
+	char* s = nullptr;
 
-	switch(level) {	
-		case LogLevel::Info: s = "info"; break;
-		case LogLevel::Warning:	s = "warn"; break;
-		case LogLevel::Error: s = "error"; break;
+	switch(level)
+	{	
+		case LogLevel::Info:	
+			s = "info"; 
+			break;
+		case LogLevel::Warning:	
+			s = "warn"; 
+			break;
+		case LogLevel::Error:	
+			s = "error"; 
+			break;
 	}
 
 	fprintf(fp, "\t\t<tr class=\"%s,%s\">", s, even ? "even" : "odd");
@@ -152,6 +181,7 @@ void Log::end()
 void Log::info(const string& subsystem, const char* msg, ...)
 {
 	va_list args;
+
 	va_start(args, msg);
 		write(LogLevel::Info, subsystem, msg, args);
 	va_end(args);
@@ -162,6 +192,7 @@ void Log::info(const string& subsystem, const char* msg, ...)
 void Log::warn(const string& subsystem, const char* msg, ...)
 {
 	va_list args;
+
 	va_start(args, msg);
 		write(LogLevel::Warning, subsystem, msg, args);
 	va_end(args);
@@ -172,6 +203,7 @@ void Log::warn(const string& subsystem, const char* msg, ...)
 void Log::error(const string& subsystem, const char* msg, ...)
 {
 	va_list args;
+
 	va_start(args, msg);
 		write(LogLevel::Error, subsystem, msg, args);
 	va_end(args);

@@ -11,25 +11,59 @@
 namespace vapor {
 	namespace resources {
 
+//-----------------------------------//
+
 ResourceManager::ResourceManager()
 {
 
 }
+
+//-----------------------------------//
 
 ResourceManager::~ResourceManager()
 {
 
 }
 
-void ResourceManager::addResource(const char* name, Resource* resource)
+//-----------------------------------//
+
+void ResourceManager::addResource(File& path)
 {
-	info("resources", "Registering resource '%s'", name);
-	_resourceMap[name] = resource;
+	//info("resources", "Registering resource '%s'", resource->);
+	//resources[path] = resource;
 }
 
-Resource* ResourceManager::getResource(std::string &name)
+//-----------------------------------//
+
+Resource* ResourceManager::getResource(File& path)
 {
-	return _resourceMap[name];
+	//return resources[name];
+	return nullptr;
 }
+
+//-----------------------------------//
+
+void ResourceManager::registerResourceLoader(ResourceLoader* handler)
+{
+	list<string>& extensions = handler->getExtensions();
+
+	list<string>::iterator i = extensions.begin();
+	
+	while(i != extensions.end()) {
+		handlers[*i++] = handler;
+	}
+
+	info("resources", "Registering resource handler: %s (%s)", 
+		handler->getName().c_str(), ResourceGroup::getString(handler->getResourceGroup()));
+}
+
+//-----------------------------------//
+
+//ResourceLoader* ResourceManager::getCodec(string extension)
+//{
+//	return nullptr;
+//}
+
+//-----------------------------------//
 
 } } // end namespaces

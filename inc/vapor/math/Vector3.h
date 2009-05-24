@@ -4,14 +4,6 @@
 *
 *	<http://www.portugal-a-programar.org>
 *
-* DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-* Version 2, December 2004
-* 
-* DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-* TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
-* 
-* 0. You just DO WHAT THE FUCK YOU WANT TO.
-*
 ************************************************************************/
 
 #pragma once
@@ -19,9 +11,9 @@
 namespace vapor {
 	namespace math {
 
-/////////////////////////////////////////////////////////////////////////////
-// VECTOR CLASS TEMPLATE
-/////////////////////////////////////////////////////////////////////////////
+/**
+ * Represents a 3-dimensional vector class template.
+ */
 
 template <typename T>
 class Vector3T
@@ -87,7 +79,6 @@ public:
 	// Division by a scalar combined
 	Vector3T &operator /= (float s) 
 	{
-		//TODO: gcc fails here
 		//assert(s != 0);
 		*this *= 1.0f / s;
 		return *this;
@@ -117,7 +108,6 @@ public:
 	void zero() { x = y = z = 0.0f; }
 
 	// Gets the length of the vector
-	// TODO: std::sqrt GCC fail
 	T length() const { return sqrt(x*x + y*y + z*z); }
 	
 	// Normalize the vector
@@ -143,9 +133,9 @@ public:
 
 };
 
-/////////////////////////////////////////////////////////////////////////////
-// TYPE DEFINITIONS
-/////////////////////////////////////////////////////////////////////////////
+/**
+ * Specific types
+ */
 
 typedef Vector3T<float> Vector3;
 typedef Vector3T<double> Vector3d;

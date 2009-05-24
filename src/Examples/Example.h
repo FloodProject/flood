@@ -8,29 +8,18 @@
 
 #pragma once
 
-#include "vapor/Framework.h"
+#include <vapor/Framework.h>
 
-using namespace vapor::framework;
-
-namespace vapor {
-	namespace examples {
+using namespace vapor;
 
 class Example : public Framework
 {
-	/**
-	 * Initializes the app.
-	 */
+	// Initializes the app.
 	virtual void onInit();	
 
-	/**
-	 * Sets up all the needed resources.
-	 */
+	// Sets up all the needed resources.
 	virtual void onSetupResources();
 
-	/**
-	 * Renders the scene.
-	 */
+	// Renders the scene
 	virtual void onRender();
 };
-
-} } // end namespaces

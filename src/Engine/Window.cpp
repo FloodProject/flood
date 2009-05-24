@@ -6,7 +6,6 @@
 *
 ************************************************************************/
 
-#include "vapor/Engine.h"
 #include "vapor/render/Window.h"
 
 namespace vapor {
@@ -20,7 +19,7 @@ Settings::Settings(const int width, const int height,
 }
 
 Window::Window(Settings& settings)
-	: _settings(&settings)
+	: settings(&settings)
 {
 	info("render::window", "Creating %dx%d window",
 		getSettings().width(), getSettings().height());
@@ -33,7 +32,7 @@ Window::~Window()
 
 Settings& Window::getSettings()
 {
-	return *_settings;
+	return *settings;
 }
 
 } } // end namespaces

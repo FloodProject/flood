@@ -2,13 +2,13 @@
 *
 * vaporEngine by triton © (2008-2009)
 *
-*	<http://www.portugal-a-programar.org/
+*	<http://www.portugal-a-programar.org>
 *
 ************************************************************************/
 
 #pragma once
 
-#include "vapor/Engine.h"
+#include "vapor/Platform.h"
 
 #include "vapor/render/VertexBuffer.h"
 #include "vapor/render/IndexBuffer.h"

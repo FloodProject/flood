@@ -2,16 +2,23 @@
 *
 * vaporEngine by triton © (2008-2009)
 *
-*	<http://www.portugal-a-programar.org/
+*	<http://www.portugal-a-programar.org>
 *
 ************************************************************************/
 
 #include "vapor/render/VertexBuffer.h"
 
-VertexBuffer::VertexBuffer(void)
+namespace vapor {
+	namespace render {
+
+VertexBuffer::VertexBuffer()
 {
+
 }
 
-VertexBuffer::~VertexBuffer(void)
+VertexBuffer::~VertexBuffer()
 {
+
 }
+
+} } // end namespaces

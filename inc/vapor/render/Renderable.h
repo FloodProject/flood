@@ -2,15 +2,14 @@
 *
 * vaporEngine by triton (2008-2009)
 *
-*	<http://www.portugal-a-programar.org/
+*	<http://www.portugal-a-programar.org>
 *
 ************************************************************************/
 
 #pragma once
 
-#include "vapor/Engine.h"
+#include "vapor/Platform.h"
 
-//#include "vapor/render/Device.h"
 #include "vapor/render/VertexBuffer.h"
 #include "vapor/render/IndexBuffer.h"
 
@@ -22,10 +21,10 @@ namespace vapor {
  */
 
 namespace PrimitiveType { // GIMME enum class now!
-	enum PrimitiveType
+	enum Enum
 	{
-		TRIANGLES,
-		LINES
+		Triangles,
+		Lines
 	};
 }
 
@@ -38,17 +37,15 @@ namespace PrimitiveType { // GIMME enum class now!
 
 class Renderable
 {
-
 public:
 
 	// Render
 	//virtual void Render(Device *device) = 0;
 
-
 private:
 
 	// primitive type of vertex buffer 
-	//PrimitiveType _type;
+	PrimitiveType::Enum type;
 };
 
 } } // end namespaces

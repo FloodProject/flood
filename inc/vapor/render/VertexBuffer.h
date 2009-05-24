@@ -2,46 +2,17 @@
 *
 * vaporEngine by triton © (2008-2009)
 *
-*	<http://www.portugal-a-programar.org/
+*	<http://www.portugal-a-programar.org>
 *
 ************************************************************************/
 
 #pragma once
 
-#include "vapor/Engine.h"
+#include "vapor/Platform.h"
 #include "vapor/render/Buffer.h"
 
 namespace vapor {
 	namespace render {
-
-// Same goes for IBs
-namespace BufferAccessUsage
-{
-	enum Enum
-	{
-		WriteOnly, // Write content only
-		ReadOnly, // Read content only
-		ReadWrite // Read and write content
-	};
-};
-
-namespace BufferCreationUsage
-{
-	enum Enum
-	{
-		StreamDraw, // Stream draw
-		StreamRead, // Stream read
-		StreamCopy, // Stream copy
-
-		StaticDraw, // Static draw
-		StaticRead, // Static read
-		StaticCopy, // Static copy
-
-		DynamicDraw, // Dynamic draw
-		DynamicRead, // Dynamic read
-		DynamicCopy	 // Dynamic copy
-	};
-};
 
 namespace VertexUsage
 {
@@ -77,7 +48,9 @@ struct VertexElement
 class VertexBuffer : public Buffer
 {
 public:
-	virtual ~VertexBuffer(void) {};
+
+	VertexBuffer();
+	virtual ~VertexBuffer();
 
 	// Map a buffer
 	virtual void* map(unsigned long AccessUsage) = 0;
@@ -94,6 +67,10 @@ public:
 
 	// Set the vertex elements of a buffer
 	virtual void setVertexElements(VertexElement Elements[]) = 0;
+
+protected:
+
+	BufferCreation::Enum bufferCreation;
 };
 
 } } // end namespaces

@@ -2,13 +2,13 @@
 *
 * vaporEngine by triton © (2008-2009)
 *
-*	<http://www.portugal-a-programar.org/
+*	<http://www.portugal-a-programar.org>
 *
 ************************************************************************/
 
 #pragma once
 
-#include "vapor/Engine.h"
+#include "vapor/Platform.h"
 
 namespace vapor {
 	namespace render {
@@ -23,34 +23,22 @@ namespace vapor {
 
 class Adapter
 {
-
 public:
 
-	Adapter(void);
-	virtual ~Adapter(void);
+	Adapter() {};
+	virtual ~Adapter() {};
 
-	//-----------------------------------//
-
-	/**
-	 * Gets driver information.
-	 */
-	virtual const char* getDriver();
+	// Gets driver information
+	virtual const char* getDriver() const = 0;
 	
-	/**
-	 * Gets the graphics adapter vendor.
-	 */
-	virtual const char* getVendor();
+	// Gets the graphics adapter vendor
+	virtual const char* getVendor() const = 0;
 	
-	/**
-	 * Gets the graphics adapter name.
-	 */
-	virtual const char* getName();
+	// Gets the graphics adapter name
+	virtual const char* getName() const = 0;
 
-protected:
-
-	const char* _cardName;
-	const char* _cardVendor;
-	const char* _driverVersion;
+	// Gets the graphics adapter shading version
+	virtual const char* getShading() const = 0;
 };
 
 } } // end namespaces

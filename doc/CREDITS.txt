@@ -1,6 +1,35 @@
 vaporEngine Team
 ================
 
+General:
+	
+	* Very clean and extensible OO-design
+	* Uses modern C++ where possible
+	* Automatic resource management
+	* Easy framework for fast examples
+	* Integrates with Poco libraries
+	
+Editor:
+
+	* Based on wxWidgets cross-platform GUI library
+	* Serializes the scene structure to binary format
+	* Easy placement of entities
+
+Resources:
+
+	* Meshes (MS3D)
+	* Images (PNG loading via Pico)
+	* Fonts (TrueType and Texture-based)
+	
+Rendering:
+
+	* Viewing frustum culling
+	* Abstract renderer (with OpenGL impl.)
+	* Supports shaders via Cg library
+	* Cross-platform platform code based on SDL
+	
+--------------------
+
 Programmers:
 
 	* João Matos aka triton
@@ -9,12 +38,22 @@ Libraries used:
 
 	* SDL
 	* OpenGL
-	* FreeType
 	* GLEW
+	* DevIL
+	* FreeType
+	* Poco
+	* wxWidgets
+	* Protobufs
 
 Special thanks:
+
 	* Nuno Silva aka LittleCodingFox (initial VBO stubs)
-	* fnds (helped out with CSS problems)
-	* Nazgulled (some suggestions for design)
+	* fnds (helped out with minor CSS problems)
+	* Nazgulled (some suggestions for graphics design)
 	* Stack Overflow community (great topics)
 	* OGRE / Irrlicht / NeoEngine / 3Demon
+	
+Bands:
+
+	* Opeth
+	* Scars on Broadway
