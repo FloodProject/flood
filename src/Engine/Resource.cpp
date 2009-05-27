@@ -18,7 +18,7 @@ namespace vapor {
 
 namespace ResourceGroup
 {
-	const char* getString(Enum e) 
+	string getString(Enum e) 
 	{
 		switch(e) 
 		{

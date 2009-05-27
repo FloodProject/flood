@@ -14,17 +14,17 @@
 namespace vapor {
 	namespace resources {
 
-Milkshape3D::Milkshape3D(const string &filename)
+MS3D::MS3D(const string& filename)
 {
 	load(filename);
 }
 
-Milkshape3D::~Milkshape3D()
+MS3D::~MS3D()
 {
 
 }
 
-bool Milkshape3D::load(const string &filename)
+bool MS3D::load(const string& filename)
 {
 	// disable Visual C++ fopen deprecation warning
 	#pragma warning(disable : 4996)
@@ -52,7 +52,7 @@ cleanup:
 	return false;
 }
 
-bool Milkshape3D::read_header()
+bool MS3D::read_header()
 {
 	ms3d_header_t header;
 
@@ -67,7 +67,7 @@ bool Milkshape3D::read_header()
 	return true;
 }
 
-void Milkshape3D::read_vertices()
+void MS3D::read_vertices()
 {
 	ushort num_vertices;
 
@@ -83,7 +83,7 @@ void Milkshape3D::read_vertices()
 	}
 }
 
-void Milkshape3D::read_triangles()
+void MS3D::read_triangles()
 {
 	ushort num_triangles;
 	fread(&num_triangles, sizeof(ushort), 1, fp);

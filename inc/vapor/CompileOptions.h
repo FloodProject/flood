@@ -35,8 +35,8 @@
 // Image codecs
 //-------------------------------------------------------------------------//
 
-//#define VAPOR_IMAGE_CODEC_DEVIL
-#define VAPOR_IMAGE_CODEC_PICOPNG
+//#define VAPOR_IMAGE_DEVIL
+#define VAPOR_IMAGE_PICOPNG
 
 //-------------------------------------------------------------------------//
 // Mesh formats

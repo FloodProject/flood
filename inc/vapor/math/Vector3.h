@@ -85,7 +85,7 @@ public:
 	}
 	
 	// Unary minus
-	Vector3T operator - () const	{ return Vector3T(-x, -y, -z); }
+	Vector3T operator - () const { return Vector3T(-x, -y, -z); }
 
 	// Binary addition
 	Vector3T operator + (const Vector3T<T> &v) const { return Vector3T(x+v.x, y+v.y, z+v.z); }

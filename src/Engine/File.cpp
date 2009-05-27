@@ -21,42 +21,69 @@
 namespace vapor {
 	namespace vfs {
 
+//-----------------------------------//
+
 File::File(string path)
-	: _path(path)
+	: path(path), fp(nullptr)
 {
-	_fp = fopen(_path.c_str(), "rb");
+	fp = fopen(path.c_str(), "rb");
 }
+
+//-----------------------------------//
 
 File::~File() 
 {
 	close();
 }
 
+//-----------------------------------//
+
 void File::close()
 {
-	fclose(_fp);
+	// close the file
+	if(fp != nullptr) {
+		fclose(fp);
+	}
 }
+
+//-----------------------------------//
 
 long File::getSize()
 {
-	long curr = ftell(_fp);
+	// hold the current file position
+	long curr = ftell(fp);
 	
-	fseek(_fp, 0, SEEK_END);
-	long fileSize = ftell(_fp);
+	// seek to the end of the file and get position
+	fseek(fp, 0, SEEK_END);
+	long fileSize = ftell(fp);
 	
-	fseek(_fp, curr, SEEK_SET);
+	// seek again to the previously current position
+	fseek(fp, curr, SEEK_SET);
 
 	return fileSize;
 }
 
+//-----------------------------------//
+
 long File::read(void* buffer, long sz)
 {	
-	return fread(buffer, 1, sz, _fp);
+	return fread(buffer, 1, sz, fp);
 }
+
+//-----------------------------------//
+
+bool File::exists()
+{
+	return _access(path.c_str(), F_OK) == 0;
+}
+
+//-----------------------------------//
 
 bool File::exists(string path)
 {
-	return _access( path.c_str(), F_OK ) == 0;
+	return _access(path.c_str(), F_OK) == 0;
 }
+
+//-----------------------------------//
 
 } } // end namespaces

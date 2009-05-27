@@ -43,6 +43,9 @@ protected:
 	// Sets up all the needed resources.
 	virtual void onSetupResources() = 0;
 
+	// Updates the scene (called once per frame).
+	virtual void onUpdate() = 0;
+
 	// Renders the scene (called once per frame).
 	virtual void onRender() = 0;
 

@@ -10,7 +10,7 @@
 
 #include "vapor/CompileOptions.h"
 
-#ifdef VAPOR_IMAGE_CODEC_PICOPNG
+#ifdef VAPOR_IMAGE_PICOPNG
 
 #include "vapor/resources/ResourceLoader.h"
 #include "vapor/resources/Image.h"
@@ -30,7 +30,7 @@ public:
 	PNG_Pico_Loader();
 
 	// Decode an image file to a buffer
-	virtual Image* decode(File& image);
+	virtual Image* decode(File& file);
 
 	// Gets the name of this codec.
 	virtual string getName() { return "PICOPNG"; }

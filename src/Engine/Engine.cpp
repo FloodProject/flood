@@ -8,7 +8,7 @@
 
 #include "vapor/Engine.h"
 
-#ifdef VAPOR_IMAGE_CODEC_PICOPNG
+#ifdef VAPOR_IMAGE_PICOPNG
 	#include "vapor/resources/PNG_Loader.h"
 #endif
 
@@ -42,7 +42,7 @@ void Engine::setupDevice()
 	device = Device::createDevice();
 
 	// set the window title
-	device->getWindow().setTitle("vaporEngine Example");
+	device->getWindow()->setTitle("vaporEngine Example");
 }
 
 //-----------------------------------//
@@ -53,7 +53,7 @@ void Engine::setupResourceLoaders()
 	ResourceLoader* handler = nullptr;
 
 	// register default compiled codecs
-	#ifdef VAPOR_IMAGE_CODEC_PICOPNG
+	#ifdef VAPOR_IMAGE_PICOPNG
 		handler = new PNG_Pico_Loader();
 		rm->registerResourceLoader(handler);
 	#endif
@@ -72,7 +72,6 @@ Engine::~Engine()
 	delete device;
 	delete resourceManager;
 	delete log::Log::getLogger();
-
 }
 
 } // end namespace

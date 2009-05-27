@@ -18,6 +18,7 @@
 #include "vapor/render/VertexBuffer.h"
 
 #include "vapor/math/Matrix.h"
+#include "vapor/math/Color.h"
 
 using namespace vapor::math;
 
@@ -56,37 +57,43 @@ public:
 	// Updates the target render target.
 	virtual void updateTarget( );
 
+	// Sets the current clear color
+	virtual void setClearColor(Color c);
+
 	// Sets the active render target.
 	virtual void setRenderTarget( RenderTarget* renderTarget );
 
-	// Create a window if not passed a WindowHandle
-	virtual void open( Settings& settings ) = 0;
+	// Create a new window if not passed a window handle
+	virtual Window& createWindow( Settings& settings ) = 0;
 
 	// Gets the main window 
-	virtual Window& getWindow();
+	virtual Window* getWindow() const;
 
 	// Gets rendering adapter information
-	virtual Adapter& getAdapter();
+	virtual Adapter* getAdapter() const;
 
 	// Gets the buffer manager
-	virtual BufferManager& getBufferManager();
+	virtual BufferManager* getBufferManager() const;
 
 protected:
 
 	// active render target
-	RenderTarget* _activeTarget;
+	RenderTarget* activeTarget;
 
 	// list of render targets
-	vector<RenderTarget*> _renderTargets;
+	vector<RenderTarget*> renderTargets;
 
 	// adapter information
-	Adapter* _adapter;
+	Adapter* adapter;
 
 	// render window
-	Window* _window;
+	Window* window;
 
 	// manages all buffers
-	BufferManager* _bufferManager;
+	BufferManager* bufferManager;
+
+	// current clear color
+	Color clearColor;
 };
 
 } } // end namespaces

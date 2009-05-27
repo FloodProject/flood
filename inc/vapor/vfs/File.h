@@ -26,7 +26,6 @@ public:
 	File (string path);
 	~File ();
 
-
 	// Closes the file.
 	void close();
 	
@@ -37,15 +36,19 @@ public:
 	long read(void* buffer, long size);
 
 	// Gets the path of the file.
-	string getPath() { return _path; }
+	const string getPath() const { return path; }
 
-	// Checks if a file exists.
+	// Checks if this file exists.
+	bool exists();
+	
+	// Checks if the file in path exists.
 	static bool exists(string path);
+	
 
 private:
 
-	string	_path;
-	FILE*	_fp;
+	string	path;
+	FILE*	fp;
 };
 
 } } // end namespaces

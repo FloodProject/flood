@@ -20,7 +20,8 @@ namespace vapor {
  * Type of primitive of the renderable.
  */
 
-namespace PrimitiveType { // GIMME enum class now!
+namespace PrimitiveType
+{
 	enum Enum
 	{
 		Triangles,

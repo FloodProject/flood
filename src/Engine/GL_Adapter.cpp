@@ -22,8 +22,10 @@ GLAdapter::GLAdapter()
 	parseInfo();
 	
 	// log GL capabilities
-	info("render::opengl::adapter", "Graphics adapter: %s", getName());
-	info("render::opengl::adapter", "Supports OpenGL %s / GLSL %s", getDriver(), getShading());
+	info("render::opengl::adapter", "Graphics adapter: %s", getName().c_str());
+
+	info("render::opengl::adapter", "Supports OpenGL %s / GLSL %s (driver: %s)",
+		getVersion().c_str(), getShading().c_str(), getDriver().c_str());
 
 	// TODO: add more Adapter caps
 }
@@ -47,47 +49,71 @@ GLAdapter::~GLAdapter()
 void GLAdapter::parseInfo()
 {
 	// get the name of the card
-	_name = glGetString(GL_RENDERER);
-	if(!_name) warn("render::opengl::adapter", "Could not get GL renderer information");
-
-	// TODO: parsing and error handling...
+	name = (const char*) glGetString(GL_RENDERER);
+	if(name.empty()) {
+		warn("render::opengl::adapter", "Could not get GL renderer information");
+		return;
+	}
 	
-	_vendor = glGetString(GL_VENDOR);
-	if(!_vendor) warn("render::opengl::adapter", "Could not get GL vendor information");
+	vendor = (const char*) glGetString(GL_VENDOR);
+	if(vendor.empty()) {
+		warn("render::opengl::adapter", "Could not get GL vendor information");
+		return;
+	}
 
-	_driver = glGetString(GL_VERSION);
-	if(!_driver) warn("render::opengl::adapter", "Could not get GL version information");
+	driver = (const char*) glGetString(GL_VERSION);
+	if(driver.empty()) {
+		warn("render::opengl::adapter", "Could not get GL version information");
+		return;
+	}
 
-	_glsl = glGetString(GL_SHADING_LANGUAGE_VERSION);
-	if(!_glsl) warn("render::opengl::adapter", "Could not get GLSL version information");
+	uint ch = driver.find_first_of("-");
+	gl = driver.substr(0, ch-1);
+	driver = driver.substr(ch+1);
+
+	glsl = (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION);
+	if(glsl.empty()) {
+		warn("render::opengl::adapter", "Could not get GLSL version information");
+		return;
+	}
+
+	ch = glsl.find_first_of("-");
+	glsl = glsl.substr(0, ch-1);
 }
 
 //-----------------------------------//
 
-const char* GLAdapter::getDriver() const
+const string GLAdapter::getVersion() const
 {
-	return (const char*) _driver;
+	return gl;
 }
 
 //-----------------------------------//
 
-const char* GLAdapter::getVendor() const
+const string GLAdapter::getDriver() const
 {
-	return (const char*) _vendor;
+	return driver;
 }
 
 //-----------------------------------//
 
-const char* GLAdapter::getName() const
+const string GLAdapter::getVendor() const
 {
-	return (const char*) _name;
+	return vendor;
 }
 
 //-----------------------------------//
 
-const char* GLAdapter::getShading() const
+const string GLAdapter::getName() const
 {
-	return (const char*) _glsl;
+	return name;
+}
+
+//-----------------------------------//
+
+const string GLAdapter::getShading() const
+{
+	return glsl;
 }
 
 //-----------------------------------//

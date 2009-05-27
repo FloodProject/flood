@@ -8,7 +8,7 @@
 
 #include "vapor/CompileOptions.h"
 
-#ifdef VAPOR_IMAGE_CODEC_PICOPNG
+#ifdef VAPOR_IMAGE_PICOPNG
 
 #include "vapor/resources/PNG_Loader.h"
 
@@ -37,20 +37,24 @@ PNG_Pico_Loader::PNG_Pico_Loader()
 
 //-----------------------------------//
 
-Image* PNG_Pico_Loader::decode(File& f)
+Image* PNG_Pico_Loader::decode(File& file)
 {
 	// TODO: check if file is open
-	long size = f.getSize();
+	long size = file.getSize();
 
 	// read contents of the file into the vector
 	vector<byte> filebuf(size);
-	f.read(&filebuf[0], size);
+	file.read(&filebuf[0], size);
 
 	ulong width, height;
-	vector<byte> buffer;
-	decodePNG(buffer, width, height, &filebuf[0], (ulong) filebuf.size());
+	vector<byte> *buffer = new vector<byte>();
+	decodePNG(*buffer, width, height, &filebuf[0], (ulong) filebuf.size());
 
-	Image* image = new Image();
+	// build our image with the data. the pixel format return by picoPNG
+	// is always the same, 32bits per pixel, RGBA 8 bits per component.
+	Image* image = new Image(width, height, PixelFormat::R8G8B8A8);
+	image->setBuffer(buffer);
+
 	return image;
 }
 

@@ -29,7 +29,7 @@ public:
 	MS3D_Loader();
 
 	// Decode an .ms3d mesh file
-	virtual Milkshape3D* decode(File& mesh);
+	virtual MS3D* decode(File& file);
 
 	// Gets the name of this codec.
 	virtual string getName() { return "MS3D"; }

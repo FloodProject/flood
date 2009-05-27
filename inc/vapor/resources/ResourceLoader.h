@@ -32,7 +32,7 @@ protected:
 public:
 
 	// Decodes a given file into a resource.
-	virtual Resource* decode(File& path) = 0;
+	virtual Resource* decode(File& file) = 0;
 	
 	// Gets a list of recognized extensions by this loader.
 	virtual list<string>& getExtensions() = 0;

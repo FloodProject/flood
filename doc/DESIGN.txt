@@ -50,7 +50,7 @@ Device
 	and does not know anything about the high-level mesh/models.
 	
 	each render device will also have a list of render targets (windows or RTT).
-	and a specific Window window implementations depend on the rendering system used. 
+	and a specific Window implementations depend on the rendering system used. 
 	for example, an opengl window will be different from an directx window.
 	it is responsible for creating a new window if no window is passed to it.
 
@@ -59,15 +59,17 @@ Adapter
 	the adapter class just represents a video card entity, and holds everything
 	that has to do with it and is interesting for the other classes, like driver
 	information and the capabilities. obviously this depends on the rendering
-	device the app is using at run time, but i still have to check if i will
-	need different classes for different render devices. hopefully not. 
+	device the app is using at run time, so there is a specific derived class
+	for each rendering device supported.
 
 Window
 
-	just a class that has the window we are to render. this is abstract and will
+	just a class that has the window we are to render. this is abstract and could
 	have a subclass for every other operating system / graphics api we are to support. 
 	right now it uses SDL for creating and managing windows.
 	
+Target
+
 	each render target has a render queue that will be filled up by the camera 
 	once it is done with frustum culling.
 
@@ -99,9 +101,13 @@ Font
 
 Mesh
 
-Texture
+Image
 
 ResourceManager
 
 	this class will hold references to all the resource in use by the application.
-	these resources can be loaded at runtime using the ResourceManager interface.
+	these resources can be loaded at runtime using its interface. it holds the
+	resources in groups. one can register resource loaders at runtime to let the
+	resource manager know what can decode each type of resource. the user of the
+	engine only needs to create resources passing a path and they will be auto-
+	-matically handled by the manager.

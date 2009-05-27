@@ -115,13 +115,15 @@ struct ms3d_material_t
 	#error "Alignment for your platform is not currently supported"
 #endif
 
-class Milkshape3D : public Resource
+class MS3D : public Resource
 {
 
 public:
 
-	Milkshape3D(const string &filename);
-	virtual ~Milkshape3D();
+	MS3D(const string &filename);
+	virtual ~MS3D();
+
+	virtual ResourceGroup::Enum getResourceGroup() { return ResourceGroup::Meshes; }
 
 	//int get_num_groups() const;
 	//ms3d_group_t *get_group(int index);

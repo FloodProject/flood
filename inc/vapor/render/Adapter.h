@@ -28,17 +28,20 @@ public:
 	Adapter() {};
 	virtual ~Adapter() {};
 
+	// Gets the version of the rendering API
+	virtual const string getVersion() const = 0;
+
 	// Gets driver information
-	virtual const char* getDriver() const = 0;
+	virtual const string getDriver() const = 0;
 	
 	// Gets the graphics adapter vendor
-	virtual const char* getVendor() const = 0;
+	virtual const string getVendor() const = 0;
 	
 	// Gets the graphics adapter name
-	virtual const char* getName() const = 0;
+	virtual const string getName() const = 0;
 
 	// Gets the graphics adapter shading version
-	virtual const char* getShading() const = 0;
+	virtual const string getShading() const = 0;
 };
 
 } } // end namespaces

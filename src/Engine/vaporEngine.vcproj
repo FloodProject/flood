@@ -236,6 +236,14 @@
 			Name="Math"
 			>
 			<File
+				RelativePath=".\Color.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\math\Color.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\inc\vapor\math\Math.h"
 				>
 			</File>
@@ -267,10 +275,6 @@
 		<Filter
 			Name="Render"
 			>
-			<File
-				RelativePath="..\..\inc\vapor\resources\Color.h"
-				>
-			</File>
 			<File
 				RelativePath="..\..\inc\vapor\render\Target.h"
 				>
@@ -532,18 +536,6 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="File"
-				>
-				<File
-					RelativePath=".\File.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\vfs\File.h"
-					>
-				</File>
-			</Filter>
-			<Filter
 				Name="Logging"
 				>
 				<File
@@ -551,11 +543,23 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\inc\vapor\log\Log.h"
+					RelativePath="..\..\inc\vapor\Log.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\inc\vapor\log\LogFormat.h"
+					RelativePath="..\..\inc\vapor\LogFormat.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="VFS"
+				>
+				<File
+					RelativePath=".\File.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\vfs\File.h"
 					>
 				</File>
 			</Filter>
@@ -581,8 +585,12 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="VFS"
+			Name="Scene"
 			>
+			<File
+				RelativePath=".\SceneGraph.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Framework"

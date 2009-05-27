@@ -26,9 +26,12 @@ MS3D_Loader::MS3D_Loader()
 
 //-----------------------------------//
 
-Milkshape3D* MS3D_Loader::decode(File& mesh)
+MS3D* MS3D_Loader::decode(File& file)
 {
-	return nullptr;
+	if(!file.exists()) return nullptr;
+
+	MS3D* mesh = new MS3D(file.getPath());
+	return mesh;
 }
 
 //-----------------------------------//

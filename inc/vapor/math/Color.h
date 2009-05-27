@@ -11,29 +11,40 @@
 #include "vapor/Platform.h"
 
 namespace vapor {
-	namespace resources {
+	namespace math {
+
+/**
+ * Very simple representation of a color.
+ */
 
 struct Color
 {
-	uint r;
-	uint g;
-	uint b;
-	uint a;
+	float r, g, b, a;
 
-public:
+	Color(float r = 0.0f, float g = 0.0f, float b = 0.0f, float a = 1.0f)
+		: r(r), g(g), b(b), a(a)
+	{
+	
+	}
 
-	Color(uint red, uint green, uint blue)
-		: r(red), g(green), b(blue)
-	{ }
+	Color(const Color& c)
+	{
+		r = c.r;
+		b = c.b;
+		g = c.g;
+		a = c.a;
+	}
 };
 
-typedef struct Color Color;
+namespace Colors {
 
-/////////////////////////////////////////////////////////////////////////////
-// Color definitions
-/////////////////////////////////////////////////////////////////////////////
-
-static const Color White (255, 255, 255);
+	static const Color White(1.0f, 1.0f, 1.0f);
+	static const Color Black(0.0f, 0.0f, 0.0f);
+	static const Color Red(1.0f, 0.0f, 0.0f);
+	static const Color Green(0.0f, 1.0f, 0.0f);
+	static const Color Blue(0.0f, 0.0f, 1.0f);
+	static const Color Yellow(1.0f, 1.0f, 0.0f);
+}
 
 //ColorRGB operator+(const ColorRGB& color, const ColorRGB& color2);
 //ColorRGB operator-(const ColorRGB& color, const ColorRGB& color2);

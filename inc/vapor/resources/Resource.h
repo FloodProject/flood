@@ -13,7 +13,6 @@
 namespace vapor {
 	namespace resources {
 
-// forward decl.
 class ResourceLoader;
 
 /**
@@ -34,7 +33,7 @@ namespace ResourceGroup
 	};
 
 	// Yeah, a bit ugly, but it works.
-	const char* getString(Enum e);
+	string getString(Enum e);
 }
 
 /**
@@ -64,7 +63,7 @@ public:
 	virtual ResourceGroup::Enum getResourceGroup() = 0;
 
 	// Gets the resource loader associated with this resource.
-	//virtual ResourceLoader*	getResourceLoader() = 0;
+	//virtual ResourceLoader* getResourceLoader() = 0;
 };
 
 } } // end namespaces

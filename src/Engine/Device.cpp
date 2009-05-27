@@ -21,61 +21,68 @@ namespace vapor {
 
 Device* Device::createDevice(Settings settings)
 {
-#ifdef VAPOR_RENDERER_OPENGL
-	return new opengl::GLDevice(settings);
-#else
-	#error "A renderer is needed to compile the engine"
-#endif
+	#ifdef VAPOR_RENDERER_OPENGL
+		return new opengl::GLDevice(settings);
+	#else
+		#error "A renderer is needed to compile the engine"
+	#endif
 }
 
 //-----------------------------------//
 
 Device::Device()
+	: clearColor(Colors::White)
 {
-
 }
 
 //-----------------------------------//
 
 Device::~Device()
 {
-	delete _adapter;
-	delete _window;
+	delete adapter;
+	delete window;
 }
 
 //-----------------------------------//
 
-Window& Device::getWindow()
+Window* Device::getWindow() const
 {
-	return *_window;
+	return window;
 }
 
 //-----------------------------------//
 
-Adapter& Device::getAdapter()
+Adapter* Device::getAdapter() const
 {
-	return *_adapter;
+	return adapter;
+}
+
+//-----------------------------------//
+
+void Device::setClearColor(Color c)
+{
+	clearColor = c;
 }
 
 //-----------------------------------//
 
 void Device::updateTarget()
 {
-	_activeTarget->update();
+	activeTarget->update();
 }
 
 //-----------------------------------//
 
 void Device::setRenderTarget(RenderTarget* renderTarget)
 {
-	_activeTarget = renderTarget;
+	activeTarget = renderTarget;
 }
 
 //-----------------------------------//
 
-BufferManager& Device::getBufferManager()
+BufferManager* Device::getBufferManager() const
 {
-	return *_bufferManager;
+	return bufferManager;
 }
 
 //-----------------------------------//

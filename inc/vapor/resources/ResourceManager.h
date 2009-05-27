@@ -37,9 +37,12 @@ public:
 	ResourceManager();
 	virtual ~ResourceManager();
 
-	// Creates a new resource 
-	void addResource(File& path);
-	
+	// Creates a new resource and adds it to the manager.
+	Resource* createResource(File& file);
+
+	// Removes a resource from the manager.
+	void removeResource(Resource *res);
+
 	// Gets an existing resource by its URI (or null if it does not exist).
 	Resource* getResource(File& path);
 
@@ -50,7 +53,10 @@ public:
 	//uint getMemoryUsage(ResourceGroup::Enum group);
 
 	// Registers a resource handler.
-	void registerResourceLoader(ResourceLoader* codec);
+	void registerResourceLoader(ResourceLoader* loader);
+
+	// Watches a resource for changes and auto-reloads.
+	void watchResource(Resource* res);
 	
 	// Gets a list of all the registered resource handlers.
 	//list<ResourceLoader*> getResourceLoader(string extension);
@@ -60,9 +66,11 @@ private:
 	// maps a name to a resource
 	map<string, Resource*> resources;
 
-	// maps extensions to codec handlers
-	// TODO: resource handler list
-	map<string, ResourceLoader*> handlers;
+	// maps extensions to resource loaders
+	map<string, ResourceLoader*> resourceLoaders;
+
+	// maps each resource group to a specific budget
+	map<ResourceGroup::Enum, uint> resourceBudgets;
 };
 
 } } // end namespaces

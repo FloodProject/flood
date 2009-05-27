@@ -30,12 +30,12 @@ GLDevice::GLDevice(Settings settings)
 {
 	info("render::opengl", "Creating OpenGL rendering device");
 
-	open(settings);
+	createWindow(settings);
 
 	checkExtensions();
 
-	_adapter = new GLAdapter();
-	_bufferManager = new GLBufferManager();
+	adapter = new GLAdapter();
+	bufferManager = new GLBufferManager();
 }
 
 //-----------------------------------//
@@ -73,23 +73,25 @@ void GLDevice::checkExtensions()
 
 //-----------------------------------//
 
-void GLDevice::open(Settings& settings)
+Window& GLDevice::createWindow(Settings& settings)
 {
-#ifdef VAPOR_WINDOWING_SDL
-	_window = new SDLWindow(settings);
-#else
-	#error "Could not find a window implementation"
-#endif
+	#ifdef VAPOR_WINDOWING_SDL
+		window = new SDLWindow(settings);
+	#else
+		#error "Could not find a window implementation"
+	#endif
 
-	setRenderTarget(_window);
+	setRenderTarget(window);
 	resetViewport();
+
+	return *window;
 }
 
 //-----------------------------------//
 
 void GLDevice::clearTarget()
 {
-	glClearColor(1.0f, 1.0f, 0.0f, 0.5f);
+	glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
@@ -97,11 +99,11 @@ void GLDevice::clearTarget()
 
 void GLDevice::resetViewport()
 {
-	Settings &s = _window->getSettings();
+	Settings &s = window->getSettings();
 
 	glViewport(0, 0, s.width(), s.height());
 
-	// TODO: Take this shit out of here...
+	// TODO: Take this shit out of here... this is Camera stuff.
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(45.0f, (GLfloat) s.width() / (GLfloat) s.height(), 1.0f, 100.0f);

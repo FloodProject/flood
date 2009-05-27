@@ -65,13 +65,16 @@ void Framework::render()
 	Device* device = getDevice();
 
 	do {
+		// update time!
+		onUpdate();
+
 		// main rendering by app
 		onRender();
 
 		// update the active target
 		device->updateTarget();
 
-	} while( device->getWindow().pump() );
+	} while( device->getWindow()->pump() );
 }
 
 //-----------------------------------//
