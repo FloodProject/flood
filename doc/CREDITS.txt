@@ -7,26 +7,27 @@ General:
 	* Uses modern C++ where possible
 	* Automatic resource management
 	* Easy framework for fast examples
-	* Integrates with Poco libraries
+	(* Integrates with Poco libraries)
 	
 Editor:
 
 	* Based on wxWidgets cross-platform GUI library
 	* Serializes the scene structure to binary format
-	* Easy placement of entities
+	* Easy placement of entities with manipulators
 
 Resources:
 
-	* Meshes (MS3D)
-	* Images (PNG loading via Pico)
-	* Fonts (TrueType and Texture-based)
+	* Meshes (supports Milkshape3D format)
+	* Images (supports PNG format)
+	* Fonts (supports TrueType and texture-based)
+	* Possible to register your own resource loaders!
 	
 Rendering:
 
 	* Viewing frustum culling
 	* Abstract renderer (with OpenGL impl.)
 	* Supports shaders via Cg library
-	* Cross-platform platform code based on SDL
+	* Cross-platform windowing code based on SDL
 	
 --------------------
 
@@ -57,3 +58,12 @@ Bands:
 
 	* Opeth
 	* Scars on Broadway
+	
+And the pride of the mother, was pushing her mother's son!
+And the love from the father, wa used by the father's son!
+Aaaaw aaaw awww aaaaw awww awww awww aaaa awww!
+Overhead us talking. In a smoke of lost hope.
+The language of a parting, so clear and so true.
+Overhead us talking! <random talking noise>
+
+(Very clever, Mr. Akerfeldt)

@@ -18,8 +18,8 @@ namespace vapor {
 	namespace resources {
 
 /**
- * Resource Loader interface for classes that want to provide image
- * coding and decoding services for a given image file format.
+ * Resource Loader interface for classes that want to provide resource
+ * coding and decoding services for a given file format type.
  */
 
 class ResourceLoader

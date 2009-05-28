@@ -43,12 +43,13 @@ void Example::onRender()
 {
 	Device* device = getDevice();
 
+	// create a vertex buffer
+	BufferManager* bm = device->getBufferManager();
+	VertexBuffer* buf = bm->createVertexBuffer();
+
 	// clear the render device with white
 	device->setClearColor(Colors::White);
 	device->clearTarget();
-
-	BufferManager* buf = device->getBufferManager();
-	VertexBuffer* vb = buf->createVertexBuffer();
 }
 
 //-----------------------------------//

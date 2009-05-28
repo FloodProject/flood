@@ -28,10 +28,10 @@ public:
 	virtual ~SDLWindow();
 
 	// Swaps the buffers (updates the display)
-	void update ();
+	void update();
 
 	// Handle the window message events
-	bool pump();
+	bool pumpEvents();
 
 	// Sets the title of the window
 	void setTitle(const string& title) const;

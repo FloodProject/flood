@@ -10,6 +10,7 @@
 
 #include "vapor/Platform.h"
 
+#include "vapor/render/Buffer.h"
 #include "vapor/render/VertexBuffer.h"
 #include "vapor/render/IndexBuffer.h"
 
@@ -23,16 +24,13 @@ namespace vapor {
 
 class BufferManager
 {
-
 public:
 
 	BufferManager() {};
 	virtual ~BufferManager() {};
 
-	//-----------------------------------//
-
 	// creates a Vertex Buffer bound to the given data
-	virtual VertexBuffer* createVertexBuffer() = 0;
+	virtual VertexBuffer* createVertexBuffer(ulong numVerts, BufferUsage::Enum bue, BufferType::Enum bte) = 0;
 
 	// creates a Index Buffer bound to the given data
 	virtual IndexBuffer* createIndexBuffer() = 0;

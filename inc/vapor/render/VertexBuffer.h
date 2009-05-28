@@ -10,47 +10,21 @@
 
 #include "vapor/Platform.h"
 #include "vapor/render/Buffer.h"
+#include "vapor/render/VertexElement.h"
 
 namespace vapor {
 	namespace render {
 
-namespace VertexUsage
-{
-	enum Enum
-	{
-		NONE = 0, // No usage
-		POSITION, // Position
-		TEXCOORD, // Texture Coordinate
-		NORMAL // Normal
-	};
-};
-
-namespace VertexDataType
-{
-	enum Enum
-	{
-		FLOAT1, // 1 Float
-		FLOAT2, // 2 Floats (vec2)
-		FLOAT3, // 3 Floats (vec3)
-		FLOAT4  // 4 Floats (vec4)
-	};
-};
-
-struct VertexElement
-{
-	unsigned long Offset;
-	unsigned long DataType;
-	unsigned long Usage;
-};
-
-#define VERTEXELEMENT_END {0, 0, VertexUsage::NONE}
+/**
+ * Represents a vertex buffer.
+ */
 
 class VertexBuffer : public Buffer
 {
 public:
 
-	VertexBuffer();
-	virtual ~VertexBuffer();
+	VertexBuffer() { }
+	virtual ~VertexBuffer() { }
 
 	// Map a buffer
 	virtual void* map(unsigned long AccessUsage) = 0;
@@ -70,7 +44,7 @@ public:
 
 protected:
 
-	BufferCreation::Enum bufferCreation;
+	BufferUsage::Enum bufferCreation;
 };
 
 } } // end namespaces

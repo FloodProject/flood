@@ -14,17 +14,40 @@
 namespace vapor {
 	namespace render {
 
+/**
+ * Type of the indexes stored in this buffer.
+ */
+
+namespace IndexBufferType
+{
+	enum Enum
+	{
+		I_16bit,
+		I_32bit
+	};
+}
+
+/**
+ * Represents an index buffer.
+ */
+
 class IndexBuffer : public Buffer
 {
 public:
-	IndexBuffer(void);
-	~IndexBuffer(void);
 
-	bool is32bitIndexed();
+	IndexBuffer() { }
+	virtual ~IndexBuffer() { }
+
+	// Gets the type of indexes of this buffer.
+	IndexBufferType::Enum getIndexType() const { return indexType; }
+
+	// Gets the number of indexes stored in this buffer.
+	uint getNumIndexes() const { return numIndexes; }
 
 private:
 
-	bool _is32bit;
+	IndexBufferType::Enum indexType;
+	uint numIndexes;
 };
 
 } } // end namespaces

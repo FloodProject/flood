@@ -28,21 +28,21 @@ public:
 		const int bpp = 32, const bool fullscreen = false);
 
 	// Gets the width of the window
-	const int width() const { return _width; }
+	const int getWidth() const { return width; }
 	
 	// Gets the height of the window
-	const int height() const { return _height; }
+	const int getHeight() const { return height; }
 	
 	// Gets the bits-per-pixel of the window
-	const int bpp() const { return _bpp; }
+	const int getBpp() const { return bpp; }
 	
 	// Is this window fullscreen?
-	const bool fullscreen() const { return _fullscreen; }
+	const bool isFullscreen() const { return fullscreen; }
 
 protected:
 
-	int _width, _height, _bpp;
-	bool _fullscreen;
+	int width, height, bpp;
+	bool fullscreen;
 };
 
 /**
@@ -64,7 +64,7 @@ public:
 	virtual void update() = 0;
 
 	// Handles the event loop of the window
-	virtual bool pump () = 0;
+	virtual bool pumpEvents() = 0;
 
 	// Sets the title of the window
 	virtual void setTitle (const string& title) const = 0;

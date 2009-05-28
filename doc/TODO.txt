@@ -9,31 +9,36 @@ Milestone 1:
 TODO:
 -----
 
-	Resource management
-	Simple scene graph	
+Renderer:
+
+	Vertex and index buffers
+
+Resource management:
+
+	Case-insensitive comparisons in map
+	Font handling via FreeType 2
+	
+Scene management:
+
+	Everything! x_x
+
+Math:
+
 	Add matrix and AABB class
 	
-Low priority:
--------------
+Platform:
 	
 	Get Memory Leak Detector working
 	Implement abstract timer class
 	Color copy cons and operators
-
-Log roadmap:
----------
-
 	Log all the engine calls
 	bind/functor for logging
 	Hierarchical log system
 	Logging functions with type-safe variable arguments
 	Logging boxes for system/CPU/GPU information
 
-Nice to have:
--------------
-
-	Virtual File System :)
-	Font handling via FreeType 2
+Virtual File System :)
+	
 	Basic software device
 	wxWidgets-powered setup dialog
 	vaporEdit
@@ -42,12 +47,14 @@ Nice to have:
 DONE:
 -----
 
-	Header in the log output
-	CSS-styling to the logging output
-	Implement Settings class
-	Clean up Window abstract class
-	Add Milkshape model parser
-	Add namespaces to subsystems
-	Clean Visual Studio solutions
-	Organize the include directories
-	Adapter class
+Header in the log output
+CSS-styling to the logging output
+Implement Settings class
+Clean up Window abstract class
+Add Milkshape model parser
+Add namespaces to subsystems
+Clean Visual Studio solutions
+Organize the include directories
+Adapter class
+	
+<!-- woot this is a separator -->

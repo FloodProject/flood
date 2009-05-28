@@ -13,7 +13,7 @@
 #ifdef VAPOR_RENDERER_OPENGL
 	#include "vapor/render/gl/GL.h"
 
-	// SDL conflicts with GLEW
+	// SDL extensions conflicts with GLEW
 	#define NO_SDL_GLEXT
 	#include <SDL_opengl.h>
 #else
@@ -23,13 +23,17 @@
 namespace vapor {
 	namespace render {
 
+//-----------------------------------//
+
 SDLWindow::SDLWindow(Settings& settings)
-	:	Window(settings)
+	:	Window(settings), display(nullptr)
 {
 	if ( !init() || !open() ) {
 		exit(1);
 	}
 }
+
+//-----------------------------------//
 
 SDLWindow::~SDLWindow()
 {
@@ -37,10 +41,10 @@ SDLWindow::~SDLWindow()
 	SDL_Quit();
 }
 
+//-----------------------------------//
+
 bool SDLWindow::init(void)
 {
-	display = nullptr;
-
 	info("render::window::sdl", "Initializing SDL subsystem");
 
 	// initialize video sub-system
@@ -55,6 +59,8 @@ bool SDLWindow::init(void)
 	return true;
 }
 
+//-----------------------------------//
+
 bool SDLWindow::open()
 {
 	Uint32 flags = SDL_HWPALETTE | SDL_RESIZABLE;
@@ -64,7 +70,7 @@ bool SDLWindow::open()
 	#endif
 
 	// check if we want fullscreen
-	if (getSettings().fullscreen())
+	if (getSettings().isFullscreen())
 		flags |= SDL_FULLSCREEN;
 
 	//SDL_GL_SetAttribute( SDL_GL_RED_SIZE, 5 );
@@ -76,8 +82,8 @@ bool SDLWindow::open()
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 	// set the video mode
-	display = SDL_SetVideoMode(getSettings().width(),
-		getSettings().height(), getSettings().bpp(), flags);
+	display = SDL_SetVideoMode(getSettings().getWidth(),
+		getSettings().getHeight(), getSettings().getBpp(), flags);
 
 	if ( !display ) {
 		error("render::window::sdl", 
@@ -88,17 +94,25 @@ bool SDLWindow::open()
 	return true;
 }
 
+//-----------------------------------//
+
 void SDLWindow::update() 
 {
-	// update the screen
-	SDL_GL_SwapBuffers();
+	#ifdef VAPOR_RENDERER_OPENGL
+		// swap buffers and update window
+		SDL_GL_SwapBuffers();
+	#else
+		#error "SDL needs window buffer swapping implementation."
+	#endif
 }
 
-bool SDLWindow::pump()
+//-----------------------------------//
+
+bool SDLWindow::pumpEvents()
 {
 	SDL_Event event;
 
-	while( SDL_PollEvent(&event) )
+	while(SDL_PollEvent(&event))
 	{
 		switch ( event.type )
 		{
@@ -117,11 +131,15 @@ bool SDLWindow::pump()
 	return true;
 }
 
+//-----------------------------------//
+
 void SDLWindow::setTitle(const string& title) const
 {
 	SDL_WM_SetCaption(title.c_str(), NULL);
 	info("render::window::sdl", "Changing window title to '%s'", title.c_str());
 }
+
+//-----------------------------------//
 
 void SDLWindow::setCursor(bool state) const
 {

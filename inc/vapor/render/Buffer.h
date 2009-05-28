@@ -19,7 +19,7 @@ namespace vapor {
  * where to store the buffers, leading to better performance.
  */
 
-namespace BufferAccess
+namespace BufferUsage
 {
 	enum Enum
 	{
@@ -29,7 +29,7 @@ namespace BufferAccess
 	};
 };
 
-namespace BufferCreation
+namespace BufferType
 {
 	enum Enum
 	{
@@ -47,11 +47,10 @@ namespace BufferCreation
 
 class Buffer
 {
-
 public:
 
-	Buffer();
-	virtual ~Buffer();
+	Buffer() { }
+	virtual ~Buffer() { }
 };
 
 } } // end namespaces

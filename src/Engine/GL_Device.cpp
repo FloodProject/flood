@@ -42,6 +42,7 @@ GLDevice::GLDevice(Settings settings)
 
 GLDevice::~GLDevice()
 {
+
 }
 
 //-----------------------------------//
@@ -101,12 +102,12 @@ void GLDevice::resetViewport()
 {
 	Settings &s = window->getSettings();
 
-	glViewport(0, 0, s.width(), s.height());
+	glViewport(0, 0, s.getWidth(), s.getHeight());
 
 	// TODO: Take this shit out of here... this is Camera stuff.
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(45.0f, (GLfloat) s.width() / (GLfloat) s.height(), 1.0f, 100.0f);
+	gluPerspective(45.0f, (GLfloat) s.getWidth() / (GLfloat) s.getHeight(), 1.0f, 100.0f);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();

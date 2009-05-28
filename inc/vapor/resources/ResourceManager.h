@@ -55,7 +55,7 @@ public:
 	// Registers a resource handler.
 	void registerResourceLoader(ResourceLoader* loader);
 
-	// Watches a resource for changes and auto-reloads.
+	// Watches a resource for changes and auto-reloads it.
 	void watchResource(Resource* res);
 	
 	// Gets a list of all the registered resource handlers.

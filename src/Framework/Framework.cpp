@@ -64,7 +64,8 @@ void Framework::render()
 {
 	Device* device = getDevice();
 
-	do {
+	while(device->getWindow()->pumpEvents())
+	{
 		// update time!
 		onUpdate();
 
@@ -73,8 +74,7 @@ void Framework::render()
 
 		// update the active target
 		device->updateTarget();
-
-	} while( device->getWindow()->pump() );
+	}	
 }
 
 //-----------------------------------//

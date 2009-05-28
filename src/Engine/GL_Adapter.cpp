@@ -20,12 +20,8 @@ namespace vapor {
 GLAdapter::GLAdapter()
 {
 	parseInfo();
-	
-	// log GL capabilities
-	info("render::opengl::adapter", "Graphics adapter: %s", getName().c_str());
 
-	info("render::opengl::adapter", "Supports OpenGL %s / GLSL %s (driver: %s)",
-		getVersion().c_str(), getShading().c_str(), getDriver().c_str());
+	log();
 
 	// TODO: add more Adapter caps
 }
@@ -48,37 +44,62 @@ GLAdapter::~GLAdapter()
 
 void GLAdapter::parseInfo()
 {
+	const char* tmp = nullptr;
+	uint ch;
+
 	// get the name of the card
-	name = (const char*) glGetString(GL_RENDERER);
-	if(name.empty()) {
+	tmp = (const char*) glGetString(GL_RENDERER);
+	if(tmp == nullptr) {
 		warn("render::opengl::adapter", "Could not get GL renderer information");
-		return;
+	} else {
+		name = tmp;
 	}
 	
-	vendor = (const char*) glGetString(GL_VENDOR);
-	if(vendor.empty()) {
+	tmp = (const char*) glGetString(GL_VENDOR);
+	if(tmp == nullptr) {
 		warn("render::opengl::adapter", "Could not get GL vendor information");
-		return;
+	} else {
+		vendor = tmp;
 	}
 
-	driver = (const char*) glGetString(GL_VERSION);
-	if(driver.empty()) {
+	tmp = (const char*) glGetString(GL_VERSION);
+	if(tmp == nullptr) {
 		warn("render::opengl::adapter", "Could not get GL version information");
-		return;
+	} 
+	else {
+		gl = tmp;
+		uint ch = gl.find_first_of("-");
+		if(ch != string::npos) {
+			gl = driver.substr(0, ch-1);
+			driver = driver.substr(ch+1);
+		} else {
+			driver = "";
+		}
 	}
 
-	uint ch = driver.find_first_of("-");
-	gl = driver.substr(0, ch-1);
-	driver = driver.substr(ch+1);
-
-	glsl = (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION);
-	if(glsl.empty()) {
+	tmp = (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION);
+	if(tmp == nullptr) {
 		warn("render::opengl::adapter", "Could not get GLSL version information");
-		return;
+	} else {
+		glsl = tmp;
+		ch = glsl.find_first_of("-");
+		glsl = glsl.substr(0, ch-1);
 	}
+}
 
-	ch = glsl.find_first_of("-");
-	glsl = glsl.substr(0, ch-1);
+//-----------------------------------//
+
+void GLAdapter::log() const 
+{
+	string s = getShading();
+	string d = getDriver();
+	string g = getVersion();
+
+	// log GL stuff
+	info("render::opengl::adapter", "Graphics adapter: %s (%s%s%s)", 
+		getName().c_str(), !g.empty() ? ("OpenGL " + g).c_str() : "",
+		!s.empty() ? (" / GLSL " + s).c_str() : "",
+		!d.empty() ? (" / driver: " + d).c_str() : "");	
 }
 
 //-----------------------------------//

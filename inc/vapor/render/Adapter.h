@@ -42,6 +42,9 @@ public:
 
 	// Gets the graphics adapter shading version
 	virtual const string getShading() const = 0;
+
+	// Logs adapter version information
+	virtual void log() const = 0;
 };
 
 } } // end namespaces

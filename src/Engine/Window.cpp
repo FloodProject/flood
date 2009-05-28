@@ -11,28 +11,38 @@
 namespace vapor {
 	namespace render {
 
+//-----------------------------------//
+
 Settings::Settings(const int width, const int height,
 	const int bpp, const bool fullscreen)
-	: _width(width), _height(height), _bpp(bpp), _fullscreen(fullscreen)
+	: width(width), height(height), bpp(bpp), fullscreen(fullscreen)
 {
 
 }
+
+//-----------------------------------//
 
 Window::Window(Settings& settings)
 	: settings(&settings)
 {
 	info("render::window", "Creating %dx%d window",
-		getSettings().width(), getSettings().height());
+		getSettings().getWidth(), getSettings().getHeight());
 }
+
+//-----------------------------------//
 
 Window::~Window()
 {
-	//delete _settings;
+	//delete settings;
 }
+
+//-----------------------------------//
 
 Settings& Window::getSettings()
 {
 	return *settings;
 }
+
+//-----------------------------------//
 
 } } // end namespaces

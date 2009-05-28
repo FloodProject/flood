@@ -16,17 +16,30 @@ namespace vapor {
 	namespace render {
 		namespace opengl {
 
+//-----------------------------------//
+
 GLBufferManager::GLBufferManager() 
 {
 
 }
 
-VertexBuffer* GLBufferManager::createVertexBuffer()
+//-----------------------------------//
+
+GLBufferManager::~GLBufferManager() 
+{
+
+}
+
+//-----------------------------------//
+
+VertexBuffer* GLBufferManager::createVertexBuffer(ulong numVerts, BufferUsage::Enum bue, BufferType::Enum bte)
 {
 	GLVertexBuffer *buffer = new GLVertexBuffer();
-	_vertexBuffers.push_back(buffer);
-	return _vertexBuffers.back();
+	vertexBuffers.push_back(buffer);
+	return vertexBuffers.back();
 }
+
+//-----------------------------------//
 
 IndexBuffer* GLBufferManager::createIndexBuffer()
 {
@@ -35,6 +48,8 @@ IndexBuffer* GLBufferManager::createIndexBuffer()
 	//return &_vertexBuffers.back();
 	return nullptr;
 }
+
+//-----------------------------------//
 
 //void GLDevice::bindVertexBuffer(VertexBuffer *Buffer)
 //{

@@ -12,11 +12,11 @@
 #include "vapor/render/Device.h"
 #include "vapor/resources/ResourceManager.h"
 
+namespace vapor {
+
 using namespace vapor::render;
 using namespace vapor::resources;
 using namespace vapor::log;
-
-namespace vapor {
 
 /**
  * Main engine class. This is a utility class that instantiates all the
@@ -36,13 +36,13 @@ public:
 protected:
 
 	// Gets the device.
-	Device* getDevice() { return device; }
+	Device* getDevice() const { return device; }
 	
 	// Gets the resources manager.
-	ResourceManager* getResourceManager() { return resourceManager; }
+	ResourceManager* getResourceManager() const { return resourceManager; }
 
 	// Gets the main engine logger.
-	Log* getLog() { return log; }
+	Log* getLog() const { return log; }
 
 	// Sets up the default resource codecs.
 	void setupResourceLoaders();

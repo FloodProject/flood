@@ -291,10 +291,6 @@
 				Name="Buffers"
 				>
 				<File
-					RelativePath=".\Buffer.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\..\inc\vapor\render\Buffer.h"
 					>
 				</File>
@@ -311,11 +307,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\VertexBuffer.cpp"
+					RelativePath="..\..\inc\vapor\render\VertexBuffer.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\inc\vapor\render\VertexBuffer.h"
+					RelativePath="..\..\inc\vapor\render\VertexElement.h"
 					>
 				</File>
 			</Filter>
