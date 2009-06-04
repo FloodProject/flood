@@ -8,6 +8,8 @@
 
 #include "vapor/resources/FontManager.h"
 
+#ifdef VAPOR_FONT_FREETYPE2
+
 namespace vapor {
 	namespace resources {
 
@@ -39,3 +41,5 @@ bool FontManager::initFT()
 }
 
 } } // end namespaces
+
+#endif

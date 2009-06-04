@@ -15,6 +15,8 @@
 #include "vapor/resources/ResourceManager.h"
 #include "vapor/resources/Font.h"
 
+#ifdef VAPOR_FONT_FREETYPE2
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
@@ -39,3 +41,4 @@ private:
 
 } } // end namespaces
 
+#endif
