@@ -22,7 +22,7 @@ namespace VertexAttribute
 {
 	enum Enum
 	{
-		None = 0,
+		None,
 		Position,
 		TexCoord,
 		Normal,
@@ -54,10 +54,10 @@ namespace VertexDataType
 struct VertexElement
 {
 	ulong offset;
-	VertexDataType::Enum vertexDataType;
 	VertexAttribute::Enum vertexAttribute;
+	VertexDataType::Enum vertexDataType;
 };
 
-#define VERTEXELEMENT_END {0, 0, VertexUsage::NONE}
+typedef vector<VertexElement> VertexDeclaration;
 
 } } // end namespaces

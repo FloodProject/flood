@@ -28,6 +28,16 @@ Engine::Engine()
 
 //-----------------------------------//
 
+Engine::~Engine()
+{
+	// delete stuff
+	delete device;
+	delete resourceManager;
+	delete log::Log::getLogger();
+}
+
+//-----------------------------------//
+
 void Engine::setupLogger(string title, string file)
 {
 	log = new Log(title, file);
@@ -50,28 +60,27 @@ void Engine::setupDevice()
 void Engine::setupResourceLoaders()
 {
 	ResourceManager* rm = getResourceManager();
-	ResourceLoader* handler = nullptr;
+	vector<ResourceLoader*> loaders;
+	ResourceLoader* loader = nullptr;
 
 	// register default compiled codecs
 	#ifdef VAPOR_IMAGE_PICOPNG
-		handler = new PNG_Pico_Loader();
-		rm->registerResourceLoader(handler);
+		loader = new PNG_Pico_Loader();
+		loaders.push_back(loader);
 	#endif
 
 	#ifdef VAPOR_MESH_MILKSHAPE3D
-		handler = new MS3D_Loader();
-		rm->registerResourceLoader(handler);	
+		loader = new MS3D_Loader();
+		loaders.push_back(loader);
 	#endif
+
+	vector<ResourceLoader*>::iterator it;
+	for(it = loaders.begin(); it != loaders.end(); it++)
+	{
+		rm->registerResourceLoader(*it);
+	}
 }
 
 //-----------------------------------//
-
-Engine::~Engine()
-{
-	// delete stuff
-	delete device;
-	delete resourceManager;
-	delete log::Log::getLogger();
-}
 
 } // end namespace

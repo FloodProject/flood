@@ -206,6 +206,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\GL_VertexBuffer.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\inc\vapor\render\gl\GL_VertexBuffer.h"
 						>
 					</File>

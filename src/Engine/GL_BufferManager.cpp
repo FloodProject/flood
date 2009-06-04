@@ -32,22 +32,26 @@ GLBufferManager::~GLBufferManager()
 
 //-----------------------------------//
 
-VertexBuffer* GLBufferManager::createVertexBuffer(ulong numVerts, BufferUsage::Enum bue, BufferType::Enum bte)
+shared_ptr<VertexBuffer> GLBufferManager::createVertexBuffer(uint numElements, 
+		VertexDeclaration decl, BufferUsage::Enum bue, BufferType::Enum bte)
 {
-	GLVertexBuffer *buffer = new GLVertexBuffer();
+	GLVertexBuffer *buffer = new GLVertexBuffer(numElements, decl, bue, bte);
 	vertexBuffers.push_back(buffer);
-	return vertexBuffers.back();
+
+	shared_ptr<VertexBuffer> ptr(vertexBuffers.back());
+	return ptr;
 }
 
 //-----------------------------------//
 
-IndexBuffer* GLBufferManager::createIndexBuffer()
-{
-	//GLVertexBuffer Buffer;
-	//_vertexBuffers.push_back(Buffer);
-	//return &_vertexBuffers.back();
-	return nullptr;
-}
+//shared_ptr<IndexBuffer> GLBufferManager::createIndexBuffer()
+//{
+//	//GLVertexBuffer Buffer;
+//	//_vertexBuffers.push_back(Buffer);
+//	//return &_vertexBuffers.back();
+//	shared_ptr<IndexBuffer> ptr(nullptr);
+//	return ptr;
+//}
 
 //-----------------------------------//
 

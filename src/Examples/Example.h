@@ -13,6 +13,10 @@
 
 using namespace vapor;
 
+/**
+ * Simple example showing how to render a triangle using VBOs.
+ */
+
 class Example : public Framework
 {
 	// Initializes the app.

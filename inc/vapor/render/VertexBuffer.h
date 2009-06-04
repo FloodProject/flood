@@ -23,28 +23,31 @@ class VertexBuffer : public Buffer
 {
 public:
 
-	VertexBuffer() { }
+	VertexBuffer(uint numElems, VertexDeclaration decl, BufferUsage::Enum bu, BufferType::Enum bt)
+		: bufferUsage(bu), bufferType(bt), numElements(numElems), vertexDeclaration(decl)
+	{}
+
 	virtual ~VertexBuffer() { }
 
 	// Map a buffer
-	virtual void* map(unsigned long AccessUsage) = 0;
+	virtual void* map() = 0;
 	
 	// Unmap a buffer
 	virtual void unmap() = 0;
-	
-	// Create a buffer
-	virtual void create(const void* Content, unsigned long ContentLength, 
-		unsigned long CreationUsage) = 0;
-
-	// Destroy a buffer
-	virtual void destroy() = 0;
-
-	// Set the vertex elements of a buffer
-	virtual void setVertexElements(VertexElement Elements[]) = 0;
 
 protected:
 
-	BufferUsage::Enum bufferCreation;
+	// number of elements in this buffer
+	uint numElements;
+
+	// declaration of vertex elements
+	VertexDeclaration vertexDeclaration;
+	
+	// usage of this buffer
+	BufferUsage::Enum bufferUsage;
+	
+	// type of this buffer
+	BufferType::Enum bufferType;
 };
 
 } } // end namespaces

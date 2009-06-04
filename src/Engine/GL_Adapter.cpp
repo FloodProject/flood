@@ -39,7 +39,7 @@ GLAdapter::~GLAdapter()
  * Retrieves and parses the adapter information provided by OpenGL.
  * Some information is returned in the format: 
  *   <version number><space><vendor-specific information>		
- * so the also has to parse this to the right values.
+ * so this function also has to parse the information.
  */
 
 void GLAdapter::parseInfo()
@@ -70,8 +70,8 @@ void GLAdapter::parseInfo()
 		gl = tmp;
 		uint ch = gl.find_first_of("-");
 		if(ch != string::npos) {
-			gl = driver.substr(0, ch-1);
-			driver = driver.substr(ch+1);
+			driver = gl.substr(ch+1);
+			gl = gl.substr(0, ch-1);
 		} else {
 			driver = "";
 		}
@@ -96,10 +96,13 @@ void GLAdapter::log() const
 	string g = getVersion();
 
 	// log GL stuff
-	info("render::opengl::adapter", "Graphics adapter: %s (%s%s%s)", 
-		getName().c_str(), !g.empty() ? ("OpenGL " + g).c_str() : "",
+	info("render::opengl::adapter", "Graphics adapter: %s", 
+		getName().c_str());
+
+	info("render::opengl::adapter", "%s%s%s", 
+		!g.empty() ? ("OpenGL " + g).c_str() : "",
 		!s.empty() ? (" / GLSL " + s).c_str() : "",
-		!d.empty() ? (" / driver: " + d).c_str() : "");	
+		!d.empty() ? (" / driver: " + d).c_str() : "");
 }
 
 //-----------------------------------//

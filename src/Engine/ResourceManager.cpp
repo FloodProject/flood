@@ -64,7 +64,7 @@ Resource* ResourceManager::createResource(File& file)
 	
 	// warn that the loader could not decode our resource
 	if(res == nullptr) {
-		warn("resources", "Resource loader '%s' could not load resource '%s'", 
+		warn("resources", "Resource loader '%s' could not decode resource '%s'", 
 			ldr->getName(), file.getPath().c_str());
 		return nullptr;
 	}
@@ -78,14 +78,14 @@ Resource* ResourceManager::createResource(File& file)
 
 //-----------------------------------//
 
-Resource* ResourceManager::getResource(File& path)
+Resource* ResourceManager::getResource(File& file)
 {
 	// check if we have this resource in the map
-	if(resources.find(path.getPath()) == resources.end()) {
+	if(resources.find(file.getPath()) == resources.end()) {
 		return nullptr;
 	}
 
-	return resources[path.getPath()];
+	return resources[file.getPath()];
 }
 
 //-----------------------------------//

@@ -43,13 +43,24 @@ void Example::onRender()
 {
 	Device* device = getDevice();
 
-	// create a vertex buffer
-	BufferManager* bm = device->getBufferManager();
-	VertexBuffer* buf = bm->createVertexBuffer();
-
 	// clear the render device with white
 	device->setClearColor(Colors::White);
 	device->clearTarget();
+
+	// create a vertex buffer
+	BufferManager* bm = device->getBufferManager();
+	
+	// declare the vertex elements
+	VertexElement elms[] = {
+		{0, VertexAttribute::Position, VertexDataType::float3}
+	};
+
+	// construct a vertex declaration from the elements
+	VertexDeclaration decl(elms, elms + (sizeof(elms) / sizeof(elms[0])));
+
+	// create a static write-only vertex buffer for 10 elements
+	shared_ptr<VertexBuffer> vb = bm->createVertexBuffer(
+		10, decl, BufferUsage::Write, BufferType::Static);
 }
 
 //-----------------------------------//

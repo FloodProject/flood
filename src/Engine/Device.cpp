@@ -33,6 +33,7 @@ Device* Device::createDevice(Settings settings)
 Device::Device()
 	: clearColor(Colors::White)
 {
+
 }
 
 //-----------------------------------//

@@ -14,9 +14,9 @@ namespace vapor {
 	namespace render {
 
 /**
- * Use these enums to represent the lifetime and usage patterns
- * of a buffer. These help the engine make better decisions about
- * where to store the buffers, leading to better performance.
+ * Use these enums to represent the lifetime and usage patterns of a 
+ * buffer. These help the engine make better decisions about where to
+ * store the buffers, which leads to better rendering performance.
  */
 
 namespace BufferUsage
@@ -27,7 +27,7 @@ namespace BufferUsage
 		Read,		// Read content only
 		ReadWrite	// Read and write content
 	};
-};
+}
 
 namespace BufferType
 {
@@ -37,12 +37,13 @@ namespace BufferType
 		Stream,		// Content sometimes changes
 		Dynamic		// Content always changes
 	};
-};
+}
 
 /**
- * Represents a buffer of a data stored in memory.
- * The data can be storaged in different kinds of memory, 
- * like system RAM or video RAM.
+ * Represents a buffer of data stored in memory. They mainly store
+ * rendering data given to the render API for. The buffers can be 
+ * stored in different kinds of memory, like system RAM or video RAM,
+ * depending on the usage and type flags that they are  created with. 
  */
 
 class Buffer
