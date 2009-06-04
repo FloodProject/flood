@@ -1,7 +1,7 @@
 =================================
 vaporEngine - whats the big deal?
 =================================
-:Author: João Matos <triton@ResourceLoader-a-programar.com>
+:Author: João Matos <triton@portugal-a-programar.com>
 :Description: vaporEngine documentation
 :Info: reStructeredText format rocks.
 
