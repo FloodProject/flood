@@ -10,6 +10,8 @@
 
 #include <vapor/Framework.h>
 #include <vapor/math/Math.h>
+#include <al.h>
+#include <alc.h>
 
 using namespace vapor;
 
@@ -30,4 +32,8 @@ class Example : public Framework
 
 	// Renders the scene
 	virtual void onRender();
+
+private:
+  ALuint bufferID;            // The OpenAL sound buffer ID
+  ALuint sourceID;            // The OpenAL sound source
 };

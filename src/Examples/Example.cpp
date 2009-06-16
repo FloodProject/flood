@@ -10,6 +10,7 @@
 
 #include <vapor/resources/Image.h>
 #include <vapor/resources/MS3D.h>
+#include <vapor/resources/Sound.h>
 
 //-----------------------------------//
 
@@ -18,6 +19,26 @@ void Example::onInit()
 	warn("example::onInit", "Example warning message!");
 	info("example::onInit", "Example info message!");
 	error("example::onInit", "Example error message!");
+
+  // Initialization
+  ALCdevice* Device = alcOpenDevice(NULL); // select the "preferred device"
+  if (Device) 
+  {
+    ALCcontext* Context = alcCreateContext(Device,NULL);
+    alcMakeContextCurrent(Context);
+  }
+
+  // Check for EAX 2.0 support
+  //g_bEAX = alIsExtensionPresent("EAX2.0");
+
+  // Generate Buffers
+  alGetError(); // clear error code
+  alGenBuffers(1, &bufferID);
+  alGenSources(1, &sourceID);
+
+  // Set the source and listener to the same location
+  alListener3f(AL_POSITION, 0.0f, 0.0f, 0.0f);
+  alSource3f(sourceID, AL_POSITION, 0.0f, 0.0f, 0.0f);
 }
 
 //-----------------------------------//
@@ -35,6 +56,15 @@ void Example::onSetupResources()
 
 	file = vfs::File("media/cubo.ms3d");
 	MS3D* mesh =  static_cast<MS3D*>(rm->createResource(file));
+
+	file = vfs::File("media/stereo.ogg");
+	Sound* sound =  static_cast<Sound*>(rm->createResource(file));
+  
+  // Upload sound data to buffer
+  alBufferData(bufferID, sound->getFormat(), &sound->getBuffer()[0], static_cast < ALsizei > (sound->getBuffer().size()), sound->getFrequency());
+
+  // Attach sound buffer to source
+  alSourcei(sourceID, AL_BUFFER, bufferID);
 }
 
 //-----------------------------------//
@@ -67,7 +97,14 @@ void Example::onRender()
 
 void Example::onUpdate() 
 {
+  ALint state;                // The state of the sound source
+  alGetSourcei(sourceID, AL_SOURCE_STATE, &state);
 
+  if ( AL_INITIAL == state || AL_STOPPED == state )
+  {
+    // play the sound
+    alSourcePlay(sourceID);
+  }
 }
 
 //-----------------------------------//

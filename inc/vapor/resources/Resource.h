@@ -29,7 +29,8 @@ namespace ResourceGroup
 		Images,
 		Meshes,
 		Fonts,
-		Shaders
+		Shaders,
+    Audio
 	};
 
 	// Yeah, a bit ugly, but it works.

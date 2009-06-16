@@ -16,6 +16,10 @@
 	#include "vapor/resources/MS3D_Loader.h"
 #endif
 
+#ifdef VAPOR_AUDIO_OGG
+	#include "vapor/resources/OGG_Loader.h"
+#endif
+
 namespace vapor {
 
 //-----------------------------------//
@@ -71,6 +75,11 @@ void Engine::setupResourceLoaders()
 
 	#ifdef VAPOR_MESH_MILKSHAPE3D
 		loader = new MS3D_Loader();
+		loaders.push_back(loader);
+	#endif
+
+	#ifdef VAPOR_AUDIO_OGG
+		loader = new OGG_Loader();
 		loaders.push_back(loader);
 	#endif
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="vaporExamples"
 	ProjectGUID="{7E63C46E-4243-4806-AE6C-944A2476F29F}"
 	RootNamespace="tests"
@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\SDL-1.2.13\include&quot;;&quot;$(SolutionDir)dep\GLee&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\SDL-1.2.13\include&quot;;&quot;$(SolutionDir)dep\GLee&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;;&quot;$(SolutionDir)dep\OpenAL 1.1 SDK\include&quot;"
 				PreprocessorDefinitions="WIN32;___DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				ExceptionHandling="1"
@@ -64,10 +64,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vaporEngine.lib SDL.lib  opengl32.lib glu32.lib glew32s.lib"
+				AdditionalDependencies="vaporEngine.lib SDL.lib opengl32.lib glu32.lib glew32s.lib OpenAL32.lib vorbisfile_static_d.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-$(ConfigurationName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)dep\SDL-1.2.13\lib&quot;;&quot;$(SolutionDir)lib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)dep\glew\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)dep\SDL-1.2.13\lib&quot;;&quot;$(SolutionDir)lib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)dep\glew\lib&quot;;&quot;$(SolutionDir)dep\libvorbis-1.2.0\win32\VorbisFile_Static_Debug&quot;;&quot;$(SolutionDir)dep\OpenAL 1.1 SDK\libs\Win32&quot;"
 				IgnoreDefaultLibraryNames="libcmt.lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -123,7 +123,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\SDL-1.2.13\include&quot;;&quot;$(SolutionDir)dep\GLee&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\SDL-1.2.13\include&quot;;&quot;$(SolutionDir)dep\GLee&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;;&quot;$(SolutionDir)dep\OpenAL 1.1 SDK\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
@@ -144,10 +144,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vaporEngine.lib SDL.lib  opengl32.lib glu32.lib glew32s.lib"
+				AdditionalDependencies="vaporEngine.lib SDL.lib opengl32.lib glu32.lib glew32s.lib OpenAL32.lib vorbisfile_static.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-$(ConfigurationName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)dep\SDL-1.2.13\lib&quot;;&quot;$(SolutionDir)lib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)dep\glew\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)dep\SDL-1.2.13\lib&quot;;&quot;$(SolutionDir)lib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)dep\glew\lib&quot;;&quot;$(SolutionDir)dep\libvorbis-1.2.0\win32\VorbisFile_Static_Release&quot;;&quot;$(SolutionDir)dep\OpenAL 1.1 SDK\libs\Win32&quot;"
 				IgnoreDefaultLibraryNames="libcmt.lib"
 				GenerateDebugInformation="false"
 				SubSystem="2"

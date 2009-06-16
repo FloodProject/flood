@@ -32,6 +32,8 @@ namespace ResourceGroup
 			return "Fonts";
 		case Shaders:
 			return "Shaders";
+		case Audio:
+			return "Audio";
 		default:
 			return "Undefined";
 		}

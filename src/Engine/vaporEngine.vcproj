@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="vaporEngine"
 	ProjectGUID="{6F632FD5-78F5-4A09-A15F-3E2BF85B783F}"
 	RootNamespace="deliverance"
@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\SDL-1.2.13\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\SDL-1.2.13\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;;&quot;$(SolutionDir)dep\OpenAL 1.1 SDK\include&quot;;&quot;$(SolutionDir)dep\libogg-1.1.3\include&quot;;&quot;$(SolutionDir)dep\libvorbis-1.2.0\include&quot;"
 				PreprocessorDefinitions="WIN32;___DEBUG;_WINDOWS;_DEBUG"
 				MinimalRebuild="true"
 				ExceptionHandling="1"
@@ -67,7 +67,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				AdditionalDependencies="glew32s.lib"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)dep\glew\lib&quot;;&quot;$(SolutionDir)dep\freetype\objs&quot;"
 			/>
 			<Tool
@@ -113,7 +112,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\SDL-1.2.13\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\SDL-1.2.13\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;;&quot;$(SolutionDir)dep\OpenAL 1.1 SDK\include&quot;;&quot;$(SolutionDir)dep\libogg-1.1.3\include&quot;;&quot;$(SolutionDir)dep\libvorbis-1.2.0\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				ExceptionHandling="1"
@@ -137,7 +136,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				AdditionalDependencies="glew32s.lib freetype237ST.lib"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)dep\glew\lib&quot;;&quot;$(SolutionDir)dep\freetype\objs&quot;"
 			/>
 			<Tool
@@ -502,6 +500,26 @@
 			<Filter
 				Name="Audio"
 				>
+				<File
+					RelativePath=".\Sound.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\resources\Sound.h"
+					>
+				</File>
+				<Filter
+					Name="OGG"
+					>
+					<File
+						RelativePath=".\OGG_Loader.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\resources\OGG_Loader.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Video"
