@@ -34,6 +34,7 @@ Rendering:
 Programmers:
 
 	* João Matos aka triton
+	* Osurac
 	
 Libraries used:
 

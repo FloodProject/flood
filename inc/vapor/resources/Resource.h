@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine by triton © (2008-2009)
+* vaporEngine (2008-2009)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -30,7 +30,7 @@ namespace ResourceGroup
 		Meshes,
 		Fonts,
 		Shaders,
-    Audio
+		Audio
 	};
 
 	// Yeah, a bit ugly, but it works.

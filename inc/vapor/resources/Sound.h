@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine by triton © (2008-2009)
+* vaporEngine (2008-2009)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -11,32 +11,31 @@
 #include "vapor/Platform.h"
 #include "vapor/resources/Resource.h"
 #include "vapor/resources/ResourceManager.h"
-#include <al.h>
+
 
 namespace vapor {
 	namespace resources {
 
 /**
- * Possible pixel formats for an image.
+ * Possible formats for audio.
  */
 
 namespace SoundFormat 
 {
 	enum Enum 
 	{
-    MONO8 = AL_FORMAT_MONO8,
-    MONO16 = AL_FORMAT_MONO16,
-    STEREO8 = AL_FORMAT_STEREO8,
-    STEREO16 = AL_FORMAT_STEREO16
+		MONO8,
+		MONO16,
+		STEREO8,
+		STEREO16
 	};
 
 	string getString(Enum e);
 }
 
 /**
- * Represents a sound in the engine. A sound holds uncompressed audio
- * data that can be played back.
- *
+ * Represents a sound in the engine. 
+ * A sound holds uncompressed audio data that can be played back.
  */
 
 class Sound : public Resource
@@ -58,7 +57,7 @@ public:
 
 	void setBuffer(std::vector< char > const& data) { dataBuffer = data; }
 
-	// Return the proper Images resource group
+	// Return the proper resource group
 	virtual ResourceGroup::Enum getResourceGroup() { return ResourceGroup::Audio; }
 
 private:

@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine by triton © (2008-2009)
+* vaporEngine (2008-2009)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -10,7 +10,7 @@
 
 #include "vapor/CompileOptions.h"
 
-#ifdef VAPOR_IMAGE_PICOPNG
+#ifdef VAPOR_AUDIO_OGG
 
 #include "vapor/resources/ResourceLoader.h"
 #include "vapor/resources/Sound.h"
@@ -19,7 +19,7 @@ namespace vapor {
 	namespace resources {
 
 /**
- * 
+ * Loader for OGG vorbis files.
  */
 
 class OGG_Loader : public ResourceLoader
@@ -41,6 +41,8 @@ public:
 	virtual ResourceGroup::Enum getResourceGroup() { return ResourceGroup::Audio; }
 
 protected:
+
+	int getALFormat(SoundFormat::Enum format);
 
 	// holds all file extensions recognized by this codec
 	list<string> extensions;

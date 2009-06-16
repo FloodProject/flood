@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine by triton © (2008-2009)
+* vaporEngine (2008-2009)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -20,25 +20,25 @@ void Example::onInit()
 	info("example::onInit", "Example info message!");
 	error("example::onInit", "Example error message!");
 
-  // Initialization
-  ALCdevice* Device = alcOpenDevice(NULL); // select the "preferred device"
-  if (Device) 
-  {
-    ALCcontext* Context = alcCreateContext(Device,NULL);
-    alcMakeContextCurrent(Context);
-  }
+	// Initialization
+	ALCdevice* Device = alcOpenDevice(NULL); // select the "preferred device"
+	if (Device) 
+	{
+	ALCcontext* Context = alcCreateContext(Device,NULL);
+	alcMakeContextCurrent(Context);
+	}
 
-  // Check for EAX 2.0 support
-  //g_bEAX = alIsExtensionPresent("EAX2.0");
+	// Check for EAX 2.0 support
+	//g_bEAX = alIsExtensionPresent("EAX2.0");
 
-  // Generate Buffers
-  alGetError(); // clear error code
-  alGenBuffers(1, &bufferID);
-  alGenSources(1, &sourceID);
+	// Generate Buffers
+	alGetError(); // clear error code
+	alGenBuffers(1, &bufferID);
+	alGenSources(1, &sourceID);
 
-  // Set the source and listener to the same location
-  alListener3f(AL_POSITION, 0.0f, 0.0f, 0.0f);
-  alSource3f(sourceID, AL_POSITION, 0.0f, 0.0f, 0.0f);
+	// Set the source and listener to the same location
+	alListener3f(AL_POSITION, 0.0f, 0.0f, 0.0f);
+	alSource3f(sourceID, AL_POSITION, 0.0f, 0.0f, 0.0f);
 }
 
 //-----------------------------------//
@@ -48,11 +48,11 @@ void Example::onSetupResources()
 	ResourceManager* rm = getResourceManager();
 	
 	vfs::File file("media/triton.png");
-	Image* img =  static_cast<Image*>(rm->createResource(file));
+	//Image* img =  static_cast<Image*>(rm->createResource(file));
 
-	info("onSetupResources", "Image has pixel format '%s' and size %dx%d", 
-		PixelFormat::getString(img->getPixelFormat()).c_str(), 
-		img->getWidth(), img->getHeight());
+	//info("onSetupResources", "Image has pixel format '%s' and size %dx%d", 
+	//	PixelFormat::getString(img->getPixelFormat()).c_str(), 
+	//	img->getWidth(), img->getHeight());
 
 	file = vfs::File("media/cubo.ms3d");
 	MS3D* mesh =  static_cast<MS3D*>(rm->createResource(file));
@@ -60,11 +60,11 @@ void Example::onSetupResources()
 	file = vfs::File("media/stereo.ogg");
 	Sound* sound =  static_cast<Sound*>(rm->createResource(file));
   
-  // Upload sound data to buffer
-  alBufferData(bufferID, sound->getFormat(), &sound->getBuffer()[0], static_cast < ALsizei > (sound->getBuffer().size()), sound->getFrequency());
+	// Upload sound data to buffer
+	alBufferData(bufferID, sound->getFormat(), &sound->getBuffer()[0], static_cast < ALsizei > (sound->getBuffer().size()), sound->getFrequency());
 
-  // Attach sound buffer to source
-  alSourcei(sourceID, AL_BUFFER, bufferID);
+	// Attach sound buffer to source
+	alSourcei(sourceID, AL_BUFFER, bufferID);
 }
 
 //-----------------------------------//
@@ -97,14 +97,14 @@ void Example::onRender()
 
 void Example::onUpdate() 
 {
-  ALint state;                // The state of the sound source
-  alGetSourcei(sourceID, AL_SOURCE_STATE, &state);
+	ALint state;                // The state of the sound source
+	alGetSourcei(sourceID, AL_SOURCE_STATE, &state);
 
-  if ( AL_INITIAL == state || AL_STOPPED == state )
-  {
-    // play the sound
-    alSourcePlay(sourceID);
-  }
+	if ( AL_INITIAL == state || AL_STOPPED == state )
+	{
+		// play the sound
+		alSourcePlay(sourceID);
+	}
 }
 
 //-----------------------------------//

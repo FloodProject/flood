@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine by triton © (2008-2009)
+* vaporEngine (2008-2009)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -19,14 +19,14 @@ namespace SoundFormat
 	{
 		switch(e) 
 		{
-    case MONO8:
-      return "MONO8";
-    case MONO16:
-      return "MONO16";
-    case STEREO8:
-      return "STEREO8";
-    case STEREO16:
-      return "STEREO16";
+		case MONO8:
+		  return "MONO8";
+		case MONO16:
+		  return "MONO16";
+		case STEREO8:
+		  return "STEREO8";
+		case STEREO16:
+		  return "STEREO16";
 		default:
 			return nullptr;
 		}
@@ -47,7 +47,5 @@ Sound::~Sound()
 }
 
 //-----------------------------------//
-
-
 
 } } // end namespaces

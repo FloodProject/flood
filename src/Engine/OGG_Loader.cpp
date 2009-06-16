@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine by triton © (2008-2009)
+* vaporEngine (2008-2009)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -14,11 +14,12 @@
 
 using vapor::vfs::File;
 
-#include < vorbis/vorbisfile.h >
+#include <vorbis/vorbisfile.h>
+#include <al.h>
 
 #ifdef VAPOR_PLATFORM_WINDOWS
-// disable Visual C++ fopen deprecation warning
-#pragma warning(disable : 4996)
+	// disable Visual C++ fopen deprecation warning
+	#pragma warning(disable : 4996)
 #endif
 
 //-----------------------------------//
@@ -56,9 +57,9 @@ Sound* OGG_Loader::decode(File& file)
   SoundFormat::Enum format;
 
   // Check the number of channels... always use 16-bit samples
-  if (1 == pInfo->channels)
+  if (pInfo->channels == 1)
   {
-    format = SoundFormat::MONO16;
+	format = SoundFormat::MONO16;
   }
   else
   {
@@ -82,7 +83,7 @@ Sound* OGG_Loader::decode(File& file)
   ov_clear(&oggFile);
 
   // The frequency of the sampling rate
-	return new Sound( format, frequency, buffer );
+  return new Sound( format, frequency, buffer );
 }
 
 //-----------------------------------//
