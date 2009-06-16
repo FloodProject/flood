@@ -70,7 +70,7 @@
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)dep\SDL-1.2.13\lib&quot;;&quot;$(SolutionDir)lib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)dep\glew\lib&quot;;&quot;$(SolutionDir)dep\libvorbis-1.2.0\win32\VorbisFile_Static_Debug&quot;;&quot;$(SolutionDir)dep\OpenAL 1.1 SDK\libs\Win32&quot;"
 				IgnoreDefaultLibraryNames="libcmt.lib"
 				GenerateDebugInformation="true"
-				SubSystem="2"
+				SubSystem="1"
 				EntryPointSymbol=""
 				TargetMachine="1"
 			/>
@@ -153,6 +153,7 @@
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				EntryPointSymbol="mainCRTStartup"
 				TargetMachine="1"
 			/>
 			<Tool

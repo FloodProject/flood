@@ -42,36 +42,42 @@ Sound* OGG_Loader::decode(File& file)
   long bytes;
   const unsigned long BUFFER_SIZE( 32768 );
   char array[BUFFER_SIZE];    // Local fixed size array
-  FILE *f;
 
   // Open for binary reading
-  f = fopen(file.getPath().c_str(), "rb");
+  FILE* f( fopen(file.getPath().c_str(), "rb") );
 
-  vorbis_info *pInfo;
   OggVorbis_File oggFile;
 
   ov_open(f, &oggFile, NULL, 0);
 
   // Get some information about the OGG file
-  pInfo = ov_info(&oggFile, -1);
+  vorbis_info* pInfo( ov_info(&oggFile, -1) );
 
   SoundFormat::Enum format;
 
   // Check the number of channels... always use 16-bit samples
   if (1 == pInfo->channels)
+  {
     format = SoundFormat::MONO16;
+  }
   else
+  {
     format = SoundFormat::STEREO16;
+  }
 
-  int frequency = pInfo->rate;
+  int frequency( pInfo->rate );
   std::vector < char > buffer;
 
-  do {
+  do 
+  {
     // Read up to a buffer's worth of decoded sound data
     bytes = ov_read(&oggFile, array, BUFFER_SIZE, endian, 2, 1, &bitStream);
     // Append to end of buffer
     buffer.insert(buffer.end(), array, array + bytes);
-  } while (bytes > 0);
+  } while (0 < bytes);
+
+  // This saves some memory by freeing the unused capacity part of the vector
+  std::vector< char >( buffer ).swap( buffer );
 
   ov_clear(&oggFile);
 

@@ -50,7 +50,7 @@ public:
 	// Gets the frequency of the sound.
 	const int getFrequency() const { return frequency; }
 
-	// Returns the pixel format of the image
+	// Returns the format of the sound
 	SoundFormat::Enum getFormat() const { return format; }
 
 	// Gets a pointer to the buffer containing the data.
