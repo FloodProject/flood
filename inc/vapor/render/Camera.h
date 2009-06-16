@@ -16,10 +16,10 @@ namespace vapor {
 	namespace render {
 
 /**
- * Represents a view from a specific point in the world.
- * Has an associated projection type, like ortographic or
- * perspective and also holds a frustum that will be used
- * for performing viewing frustum culling.
+ * Represents a view from a specific point in the world. Has an associated 
+ * projection type, like ortographic or perspective and also holds a frustum 
+ * that will be used for performing viewing frustum culling. Culling helps
+ * speed up the rendering by cutting nodes that are outside of the view range.
  */
 
 class Camera

@@ -20,7 +20,6 @@ BOOL CALLBACK DialogProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	switch (msg)
 	{
 	case WM_INITDIALOG:
-
 		// sets the window title
 		SetWindowText(hWnd, TEXT("vaporEngine Framework"));
 		return TRUE;

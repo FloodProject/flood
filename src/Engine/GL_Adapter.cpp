@@ -28,7 +28,7 @@ GLAdapter::GLAdapter()
 
 	log();
 
-	// TODO: add more Adapter caps
+	// TODO: add more Adapter caps	
 }
 
 //-----------------------------------//
@@ -45,6 +45,8 @@ GLAdapter::~GLAdapter()
  * Some information is returned in the format: 
  *   <version number><space><vendor-specific information>		
  * so this function also has to parse the information.
+ *
+ * TODO: maybe use regexes for pasing?
  */
 
 void GLAdapter::parseInfo()
@@ -78,7 +80,7 @@ void GLAdapter::parseInfo()
 			driver = gl.substr(ch+1);
 			gl = gl.substr(0, ch-1);
 		} else {
-			driver = "";
+			driver.clear();
 		}
 	}
 

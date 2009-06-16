@@ -42,6 +42,13 @@ Image::~Image()
 
 //-----------------------------------//
 
+void Image::log() const
+{
+	info("Image", "Image has pixel format '%s' and size %dx%d", 
+		PixelFormat::getString(getPixelFormat()).c_str(), 
+		getWidth(), getHeight());
+}
 
+//-----------------------------------//
 
 } } // end namespaces

@@ -15,9 +15,10 @@ namespace vapor {
 	namespace render {
 
 /**
- * This is the class used to pass the Window-related information to the engine.
- * Settings it can handle are Bits-per-pixel, the size of the the window,
- * if it is fullscreen, and in the future, if the user wants anti-aliasing.
+ * Represents the information that the user wants to pass to the engine
+ * related to the creation of a new rendering window, like for example
+ * bits-per-pixel, the size of the the window, if it is fullscreen, and 
+ * in the future, anti-aliasing settings, and custom window handle hooks.
  */
 
 class Settings
@@ -46,11 +47,11 @@ protected:
 };
 
 /**
- * Represents an region on the screen that the Renderer can send
- * the final representation of the scene, or the engine's output.
+ * Represents an region on the screen that the renderer can send
+ * the final representation of the scene, the rendered output image.
  * In most platforms (PCs) this will be just a normal window on the
  * desktop, but on some platforms (consoles, for instance) this might 
- * mean the full screen, so some methods might not make much sense. 
+ * be slighty different, so some methods might not make much sense. 
  */
 
 class Window : public RenderTarget

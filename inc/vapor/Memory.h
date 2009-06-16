@@ -14,10 +14,10 @@
 // Pointer wrappers
 //-------------------------------------------------------------------------//
 
-#if defined(VAPOR_MEMORY_TR1_BOOST)
-	#include <boost/tr1/memory.hpp>
-#elif defined(VAPOR_MEMORY_TR1_VENDOR)
+#if defined(VAPOR_MEMORY_TR1_VENDOR)
 	#include <memory>
+#elif defined(VAPOR_MEMORY_TR1_BOOST)
+	#include <boost/tr1/memory.hpp>
 #endif
 
 using std::auto_ptr;
@@ -33,9 +33,8 @@ using std::tr1::bind;
 #ifdef VAPOR_MEMORY_LEAK_DETECTOR
 
 #ifdef VAPOR_PLATFORM_WINDOWS
-	// taken from 3Demon
 	#ifdef _DEBUG
-		// Visual Leak Detector 
+		// Visual Leak Detector
 		// (http://dmoulding.googlepages.com/vld)
 		//#include <vld.h>
 

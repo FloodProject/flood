@@ -278,6 +278,14 @@
 			Name="Render"
 			>
 			<File
+				RelativePath=".\Device.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\render\Device.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\inc\vapor\render\Target.h"
 				>
 			</File>
@@ -314,30 +322,6 @@
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\render\VertexElement.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Camera"
-				>
-				<File
-					RelativePath=".\Camera.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\render\Camera.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Device"
-				>
-				<File
-					RelativePath=".\Device.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\render\Device.h"
 					>
 				</File>
 			</Filter>
@@ -542,7 +526,7 @@
 				>
 			</File>
 			<Filter
-				Name="DynLib"
+				Name="Libraries"
 				>
 				<File
 					RelativePath=".\DynamicLibrary.cpp"
@@ -609,24 +593,28 @@
 				RelativePath=".\SceneGraph.cpp"
 				>
 			</File>
+			<Filter
+				Name="Camera"
+				>
+				<File
+					RelativePath=".\Camera.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\render\Camera.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
-			Name="Framework"
+			Name="Input"
 			>
 			<File
-				RelativePath="..\Examples\Dialog.h"
+				RelativePath=".\Keyboard.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\Framework\Framework.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\Framework.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\Main.h"
+				RelativePath=".\Mouse.cpp"
 				>
 			</File>
 		</Filter>
@@ -644,6 +632,10 @@
 		</File>
 		<File
 			RelativePath="..\..\inc\vapor\Engine.h"
+			>
+		</File>
+		<File
+			RelativePath=".\vapor.h"
 			>
 		</File>
 	</Files>

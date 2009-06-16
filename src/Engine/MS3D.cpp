@@ -19,10 +19,14 @@ MS3D::MS3D(const string& filename)
 	load(filename);
 }
 
+//-----------------------------------//
+
 MS3D::~MS3D()
 {
 
 }
+
+//-----------------------------------//
 
 bool MS3D::load(const string& filename)
 {
@@ -52,6 +56,8 @@ cleanup:
 	return false;
 }
 
+//-----------------------------------//
+
 bool MS3D::read_header()
 {
 	ms3d_header_t header;
@@ -66,6 +72,8 @@ bool MS3D::read_header()
 
 	return true;
 }
+
+//-----------------------------------//
 
 void MS3D::read_vertices()
 {
@@ -82,6 +90,8 @@ void MS3D::read_vertices()
 		fread(&m_vertices[i].referenceCount, sizeof(byte), 1, fp);
 	}
 }
+
+//-----------------------------------//
 
 void MS3D::read_triangles()
 {
@@ -102,6 +112,8 @@ void MS3D::read_triangles()
 		// TODO: calculate triangle normal
 	}
 }
+
+//-----------------------------------//
 
 //void Milkshape3D::read_groups()
 //{

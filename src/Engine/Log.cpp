@@ -18,21 +18,51 @@ namespace vapor {
 
 //-----------------------------------//
 
-Log* Log::_log;
+Log* Log::engineLog;
 
 //-----------------------------------//
 
 Log* Log::getLogger()
 {
-	return _log;
+	return engineLog;
 }
 
 //-----------------------------------//
 
 void Log::setLogger(Log* log)
 {
-	if(_log) delete _log;
-	_log = log;
+	if(engineLog) 
+	{
+		delete engineLog;
+	}
+	
+	engineLog = log;
+}
+
+//-----------------------------------//
+
+void Log::MessageDialog(const string& msg, const LogLevel::Enum level)
+{
+	#ifdef VAPOR_PLATFORM_WINDOWS
+		UINT style = MB_OK;
+
+		switch(level)
+		{		
+		case LogLevel::Info:	
+			style |= MB_ICONINFORMATION; 
+			break;
+		case LogLevel::Warning:	
+			style |= MB_ICONWARNING; 
+			break;
+		case LogLevel::Error:	
+			style |= MB_ICONERROR; 
+			break;
+		}
+
+		MessageBoxA(NULL, msg.c_str(), NULL, style);
+	#else
+		#error "Missing message box implementation"
+	#endif
 }
 
 //-----------------------------------//
@@ -79,8 +109,9 @@ void error(const string& subsystem, const char* msg, ...)
 Log::Log(const string& title, const string& filename)
 	: even(true)
 {
-	if(!open(filename)) {
-		//error("vapor::log", "Could not open log file '%s'", filename.c_str());
+	if(!open(filename)) 
+	{
+		//MessageDialog("Could not open log file '%s'", filename.c_str());
 		exit(EXIT_FAILURE);
 	}
 	
@@ -101,10 +132,10 @@ Log::~Log()
 
 bool Log::open(const string& filename)
 {
-#ifdef VAPOR_PLATFORM_WINDOWS
-	// disable Visual C++ fopen deprecation warning
-	#pragma warning(disable : 4996)
-#endif
+	#ifdef VAPOR_PLATFORM_WINDOWS
+		// disable Visual C++ fopen deprecation warning
+		#pragma warning(disable : 4996)
+	#endif
 
 	fp = fopen(filename.c_str(), "w+");
 	if (!fp) return false;
@@ -127,21 +158,22 @@ void Log::close()
 
 //-----------------------------------//
 
-void Log::write(const LogLevel::Enum level, const string& subsystem, const char* msg, va_list args)
+void Log::write(const LogLevel::Enum level, const string& subsystem, 
+				const char* msg, va_list args)
 {
 	char* s = nullptr;
 
 	switch(level)
-	{	
-		case LogLevel::Info:	
-			s = "info"; 
-			break;
-		case LogLevel::Warning:	
-			s = "warn"; 
-			break;
-		case LogLevel::Error:	
-			s = "error"; 
-			break;
+	{
+	case LogLevel::Info:
+		s = "info";
+		break;
+	case LogLevel::Warning:
+		s = "warn";
+		break;
+	case LogLevel::Error:
+		s = "error"; 
+		break;
 	}
 
 	fprintf(fp, "\t\t<tr class=\"%s,%s\">", s, even ? "even" : "odd");

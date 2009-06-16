@@ -61,7 +61,9 @@ public:
 	void setBuffer(void* data) { dataBuffer = data; }
 
 	// Return the proper Images resource group
-	virtual ResourceGroup::Enum getResourceGroup() { return ResourceGroup::Images; }
+	ResourceGroup::Enum getResourceGroup() { return ResourceGroup::Images; }
+
+	void log() const;
 
 private:
 

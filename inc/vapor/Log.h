@@ -51,13 +51,17 @@ public:
 	static Log* getLogger();
 	static void setLogger(Log* log);
 
+	// Spawns a new message box dialog
+	static void MessageDialog(const string& msg, const LogLevel::Enum level = LogLevel::Warning);
+
 	// Logging functions
 	void info(const string& subsystem, const char* msg, ...);
 	void warn(const string& subsystem, const char* msg, ...);
 	void error(const string& subsystem, const char* msg, ...);
 
 	// Message logging functions
-	void write(const LogLevel::Enum level, const string& subsystem, const char* msg, va_list args);
+	void write(const LogLevel::Enum level, const string& subsystem, 
+		const char* msg, va_list args);
 
 protected:
 
@@ -76,7 +80,7 @@ protected:
 	void end();
 
 	// Global engine logger
-	static Log* _log;
+	static Log* engineLog;
 
 	// File used to output logging information
 	FILE* fp;
