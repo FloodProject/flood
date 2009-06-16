@@ -21,6 +21,11 @@ GLAdapter::GLAdapter()
 {
 	parseInfo();
 
+	if(GLEW_ARB_vertex_buffer_object)
+		supportsVBO = true;
+	else
+		supportsVBO = false;
+
 	log();
 
 	// TODO: add more Adapter caps
@@ -50,21 +55,21 @@ void GLAdapter::parseInfo()
 	// get the name of the card
 	tmp = (const char*) glGetString(GL_RENDERER);
 	if(tmp == nullptr) {
-		warn("render::opengl::adapter", "Could not get GL renderer information");
+		warn("gl::adapter", "Could not get GL renderer information");
 	} else {
 		name = tmp;
 	}
 	
 	tmp = (const char*) glGetString(GL_VENDOR);
 	if(tmp == nullptr) {
-		warn("render::opengl::adapter", "Could not get GL vendor information");
+		warn("gl::adapter", "Could not get GL vendor information");
 	} else {
 		vendor = tmp;
 	}
 
 	tmp = (const char*) glGetString(GL_VERSION);
 	if(tmp == nullptr) {
-		warn("render::opengl::adapter", "Could not get GL version information");
+		warn("gl::adapter", "Could not get GL version information");
 	} 
 	else {
 		gl = tmp;
@@ -79,7 +84,7 @@ void GLAdapter::parseInfo()
 
 	tmp = (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION);
 	if(tmp == nullptr) {
-		warn("render::opengl::adapter", "Could not get GLSL version information");
+		warn("gl::adapter", "Could not get GLSL version information");
 	} else {
 		glsl = tmp;
 		ch = glsl.find_first_of("-");
@@ -96,13 +101,17 @@ void GLAdapter::log() const
 	string g = getVersion();
 
 	// log GL stuff
-	info("render::opengl::adapter", "Graphics adapter: %s", 
+	info("gl::adapter", "Graphics adapter: %s", 
 		getName().c_str());
 
 	info("render::opengl::adapter", "%s%s%s", 
 		!g.empty() ? ("OpenGL " + g).c_str() : "",
 		!s.empty() ? (" / GLSL " + s).c_str() : "",
 		!d.empty() ? (" / driver: " + d).c_str() : "");
+
+	if(!supportsVBO)
+		error("gl::adapter", "Your graphics device does not support VBOs (Vertex Buffer Objects).");
+
 }
 
 //-----------------------------------//

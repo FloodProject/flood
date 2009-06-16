@@ -15,8 +15,10 @@
 	#include <unistd.h>
 #endif
 
-// disable Visual C++ fopen deprecation warning
-#pragma warning(disable : 4996)
+#ifdef VAPOR_PLATFORM_WINDOWS
+	// disable Visual C++ fopen deprecation warning
+	#pragma warning(disable : 4996)
+#endif
 
 namespace vapor {
 	namespace vfs {

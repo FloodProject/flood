@@ -16,7 +16,11 @@
 
 //-----------------------------------//
 
-int getALFormat(SoundFormat::Enum format)
+/**
+ * Converts from an internal sound representation format
+ * to the format expected by OpenAL.
+ */
+int getALFormat(const SoundFormat::Enum format)
 {
 	switch(format)
 	{
@@ -30,6 +34,8 @@ int getALFormat(SoundFormat::Enum format)
 		return AL_FORMAT_STEREO16;
 	}
 }
+
+//-----------------------------------//
 
 void Example::onInit()
 {
@@ -95,20 +101,20 @@ void Example::onRender()
 	device->setClearColor(Colors::White);
 	device->clearTarget();
 
-	// create a vertex buffer
-	BufferManager* bm = device->getBufferManager();
-	
-	// declare the vertex elements
-	VertexElement elms[] = {
-		{0, VertexAttribute::Position, VertexDataType::float3}
-	};
+	//// create a vertex buffer
+	//BufferManager* bm = device->getBufferManager();
+	//
+	//// declare the vertex elements
+	//VertexElement elms[] = {
+	//	{0, VertexAttribute::Position, VertexDataType::float3}
+	//};
 
-	// construct a vertex declaration from the elements
-	VertexDeclaration decl(elms, elms + (sizeof(elms) / sizeof(elms[0])));
+	//// construct a vertex declaration from the elements
+	//VertexDeclaration decl(elms, elms + (sizeof(elms) / sizeof(elms[0])));
 
-	// create a static write-only vertex buffer for 10 elements
-	shared_ptr<VertexBuffer> vb = bm->createVertexBuffer(
-		10, decl, BufferUsage::Write, BufferType::Static);
+	//// create a static write-only vertex buffer for 10 elements
+	//shared_ptr<VertexBuffer> vb = bm->createVertexBuffer(
+	//	10, decl, BufferUsage::Write, BufferType::Static);
 }
 
 //-----------------------------------//

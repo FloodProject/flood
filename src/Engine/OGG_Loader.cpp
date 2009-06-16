@@ -8,7 +8,7 @@
 
 #include "vapor/CompileOptions.h"
 
-#ifdef VAPOR_IMAGE_PICOPNG
+#ifdef VAPOR_AUDIO_OGG
 
 #include "vapor/resources/OGG_Loader.h"
 
@@ -62,7 +62,7 @@ Sound* OGG_Loader::decode(File& file)
 		format = SoundFormat::STEREO16;
 
 	int frequency( pInfo->rate );
-	std::vector < char > buffer;
+	std::vector<char> buffer;
 
 	do 
 	{
@@ -71,10 +71,10 @@ Sound* OGG_Loader::decode(File& file)
 		
 		// Append to end of buffer
 		buffer.insert(buffer.end(), array, array + bytes);
-	} while (0 < bytes);
+	} while (bytes > 0);
 
 	// This saves some memory by freeing the unused capacity part of the vector
-	std::vector< char >( buffer ).swap( buffer );
+	std::vector<char>( buffer ).swap( buffer );
 
 	ov_clear(&oggFile);
 

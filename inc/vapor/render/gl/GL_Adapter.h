@@ -53,6 +53,8 @@ protected:
 	string driver;
 	string glsl;
 	string gl;
+
+	bool supportsVBO;
 };
 
 } } } // end namespaces

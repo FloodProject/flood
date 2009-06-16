@@ -26,7 +26,6 @@ GLVertexBuffer::GLVertexBuffer(uint numElems, VertexDeclaration decl, BufferUsag
 	} 
 	else 
 	{
-		error("gl::buffers", "Your graphics device does not support Vertex Buffer Objects (VBOs).");
 	}
 }
 
