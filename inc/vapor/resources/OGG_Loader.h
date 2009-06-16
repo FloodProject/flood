@@ -42,8 +42,6 @@ public:
 
 protected:
 
-	int getALFormat(SoundFormat::Enum format);
-
 	// holds all file extensions recognized by this codec
 	list<string> extensions;
 };

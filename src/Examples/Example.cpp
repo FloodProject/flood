@@ -12,7 +12,24 @@
 #include <vapor/resources/MS3D.h>
 #include <vapor/resources/Sound.h>
 
+#include <al.h>
+
 //-----------------------------------//
+
+int getALFormat(SoundFormat::Enum format)
+{
+	switch(format)
+	{
+	case SoundFormat::MONO8:
+		return AL_FORMAT_MONO8;
+	case SoundFormat::MONO16:
+		return AL_FORMAT_MONO16;
+	case SoundFormat::STEREO8:
+		return AL_FORMAT_STEREO8;
+	case SoundFormat::STEREO16:
+		return AL_FORMAT_STEREO16;
+	}
+}
 
 void Example::onInit()
 {
@@ -24,8 +41,8 @@ void Example::onInit()
 	ALCdevice* Device = alcOpenDevice(NULL); // select the "preferred device"
 	if (Device) 
 	{
-	ALCcontext* Context = alcCreateContext(Device,NULL);
-	alcMakeContextCurrent(Context);
+		ALCcontext* Context = alcCreateContext(Device,NULL);
+		alcMakeContextCurrent(Context);
 	}
 
 	// Check for EAX 2.0 support
@@ -61,7 +78,8 @@ void Example::onSetupResources()
 	Sound* sound =  static_cast<Sound*>(rm->createResource(file));
   
 	// Upload sound data to buffer
-	alBufferData(bufferID, sound->getFormat(), &sound->getBuffer()[0], static_cast < ALsizei > (sound->getBuffer().size()), sound->getFrequency());
+	alBufferData(bufferID, getALFormat(sound->getFormat()), &sound->getBuffer()[0], 
+		static_cast < ALsizei > (sound->getBuffer().size()), sound->getFrequency());
 
 	// Attach sound buffer to source
 	alSourcei(sourceID, AL_BUFFER, bufferID);
