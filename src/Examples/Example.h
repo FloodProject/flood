@@ -34,8 +34,7 @@ class Example : public Framework
 	virtual void onRender();
 
 private:
-  ALuint bufferID;            // The OpenAL sound buffer ID
-  ALuint sourceID;            // The OpenAL sound source
+
 };
 
 #define VAPOR_EXAMPLE_NAME Example

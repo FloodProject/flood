@@ -20,6 +20,7 @@ Resources:
 	* Meshes (supports Milkshape3D format)
 	* Images (supports PNG format)
 	* Fonts (supports TrueType and texture-based)
+	* Audio (supports Ogg Vorbis 3D and 2D playback)
 	* Possible to register your own resource loaders!
 	
 Rendering:

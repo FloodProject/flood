@@ -12,6 +12,8 @@
 #include "vapor/render/Device.h"
 #include "vapor/resources/ResourceManager.h"
 
+#include "vapor/audio/AL_Device.h"
+
 namespace vapor {
 
 using namespace vapor::render;
@@ -37,6 +39,9 @@ protected:
 
 	// Gets the device.
 	Device* getDevice() const { return device; }
+
+	// Gets the audio device
+	audio::AL* getAudioDevice() const { return audioDevice; }
 	
 	// Gets the resources manager.
 	ResourceManager* getResourceManager() const { return resourceManager; }
@@ -51,9 +56,12 @@ protected:
 	void setupLogger(string title, string file);
 
 	// Sets up the rendering device.
-	void setupDevice();
+	void setupDevices();
 
 private:
+
+	// Add a generic audio device
+	audio::AL* audioDevice;
 
 	// Rendering device
 	Device* device;

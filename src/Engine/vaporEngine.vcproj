@@ -233,6 +233,18 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="OpenAL"
+				>
+				<File
+					RelativePath=".\AL_Device.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\audio\AL_Device.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Math"
@@ -590,7 +602,19 @@
 			Name="Scene"
 			>
 			<File
-				RelativePath=".\SceneGraph.cpp"
+				RelativePath=".\Node.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\scene\Node.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Scene.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\scene\Scene.h"
 				>
 			</File>
 			<Filter

@@ -20,6 +20,10 @@
 	#include "vapor/resources/OGG_Loader.h"
 #endif
 
+#ifdef VAPOR_AUDIO_OPENAL
+	#include "vapor/audio/AL_Device.h"
+#endif
+
 namespace vapor {
 
 //-----------------------------------//
@@ -50,13 +54,16 @@ void Engine::setupLogger(string title, string file)
 
 //-----------------------------------//
 
-void Engine::setupDevice()
+void Engine::setupDevices()
 {
 	// create render device
 	device = Device::createDevice();
 
+	// TODO: hardcoded title...
 	// set the window title
 	device->getWindow()->setTitle("vaporEngine Example");
+
+	audioDevice = new audio::AL();
 }
 
 //-----------------------------------//

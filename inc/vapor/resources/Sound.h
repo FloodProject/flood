@@ -43,7 +43,6 @@ class Sound : public Resource
 public:
 
 	Sound(const SoundFormat::Enum format, const int frequency, std::vector< char > const& data );
-
 	virtual ~Sound();
 	
 	// Gets the frequency of the sound.
@@ -53,9 +52,9 @@ public:
 	SoundFormat::Enum getFormat() const { return format; }
 
 	// Gets a pointer to the buffer containing the data.
-	std::vector< char > const& getBuffer() const { return dataBuffer; };
+	const std::vector<char>& getBuffer() const { return dataBuffer; };
 
-	void setBuffer(std::vector< char > const& data) { dataBuffer = data; }
+	void setBuffer(const std::vector<char>& data) { dataBuffer = data; }
 
 	// Return the proper resource group
 	virtual ResourceGroup::Enum getResourceGroup() { return ResourceGroup::Audio; }
@@ -68,8 +67,8 @@ private:
 	// sound format
 	SoundFormat::Enum format;
 
-	// holds the image data
-	std::vector< char > dataBuffer;
+	// holds the sound data
+	std::vector<char> dataBuffer;
 };
 
 } } // end namespaces

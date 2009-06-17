@@ -51,8 +51,8 @@ void Framework::init()
 	// register default codecs
 	setupResourceLoaders();
 
-	// create a rendering device
-	setupDevice();
+	// create a rendering and audio device
+	setupDevices();
 
 	// set up all the resources
 	onSetupResources();
