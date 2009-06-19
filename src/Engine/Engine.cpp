@@ -21,7 +21,7 @@
 #endif
 
 #ifdef VAPOR_AUDIO_OPENAL
-	#include "vapor/audio/AL_Device.h"
+	#include "vapor/audio/al/AL_Device.h"
 #endif
 
 namespace vapor {
@@ -64,6 +64,9 @@ void Engine::setupDevices()
 	device->getWindow()->setTitle("vaporEngine Example");
 
 	audioDevice = new audio::AL();
+
+	// create the root scene node
+	sceneNode = new scene::Scene();
 }
 
 //-----------------------------------//

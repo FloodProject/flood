@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/audio/AL_Device.h"
+#include "vapor/audio/al/AL_Device.h"
 
 #ifdef VAPOR_AUDIO_OPENAL
 
@@ -23,11 +23,7 @@ AL::AL()
 	// select the "preferred device"
 	device = alcOpenDevice(nullptr); 
 	
-	if (device) 
-	{
-		context = alcCreateContext(device, nullptr);
-		alcMakeContextCurrent(context);
-	} else 
+	if(!device)  
 	{
 		warn("audio::al", "Could not create OpenAL device");
 	}
@@ -54,10 +50,16 @@ AL::~AL()
 
 //-----------------------------------//
 
+void AL::switchListener(scene::Listener* listener)
+{
+	listenerContexts[listener] = alcCreateContext(device, nullptr);
+	alcMakeContextCurrent(listenerContexts[listener]);
+}
+
+//-----------------------------------//
+
 void AL::setListener(const Vector3 position)
 {
-	listenerPosition = position;
-
 	// update OpenAL position information
 	alListener3f(AL_POSITION, position.x, position.y, position.z);
 

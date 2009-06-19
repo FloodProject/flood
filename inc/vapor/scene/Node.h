@@ -9,9 +9,6 @@
 #pragma once
 
 #include "vapor/Platform.h"
-#include "vapor/math/Matrix.h"
-
-using namespace vapor::math;
 
 namespace vapor {
 	namespace scene {

@@ -56,6 +56,9 @@ void Framework::init()
 
 	// set up all the resources
 	onSetupResources();
+
+	// set up the scene
+	onSetupScene();
 }
 
 //-----------------------------------//

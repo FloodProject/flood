@@ -9,9 +9,7 @@
 #pragma once
 
 #include "vapor/Platform.h"
-#include "vapor/scene/Node.h"
-
-using namespace vapor::math;
+#include "vapor/scene/Group.h"
 
 namespace vapor {
 	namespace scene {
@@ -24,15 +22,13 @@ namespace vapor {
  * Listener, Trigger, Billboard and maybe other that we want to later add.
  */
 
-class Scene
+class Scene : public Group
 {
 public:
 
-	Scene();
-	virtual ~Scene();
-
-	// Returns the root node of the scene tree
-	Node* getRoot();
+  void evaluate();
+    
+  //shared_ptr<Mesh> createMesh();
 
 	// Node creation methods
 	
@@ -40,11 +36,6 @@ public:
 	//Light* createLight();
 	//Listener* createListener();
 	//etc...
-
-protected:
-
-	Node* rootNode;
-
 };
 
 } } // end namespaces

@@ -43,6 +43,9 @@ protected:
 	// Sets up all the needed resources.
 	virtual void onSetupResources() = 0;
 
+	// Sets up all the scene nodes.
+	virtual void onSetupScene() = 0;
+
 	// Updates the scene (called once per frame).
 	virtual void onUpdate() = 0;
 

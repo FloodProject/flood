@@ -11,8 +11,8 @@
 #include "vapor/Platform.h"
 #include "vapor/render/Device.h"
 #include "vapor/resources/ResourceManager.h"
-
-#include "vapor/audio/AL_Device.h"
+#include "vapor/scene/Scene.h"
+#include "vapor/audio/al/AL_Device.h"
 
 namespace vapor {
 
@@ -42,6 +42,9 @@ protected:
 
 	// Gets the audio device
 	audio::AL* getAudioDevice() const { return audioDevice; }
+
+	// Gets the scene interface
+	scene::Scene* getSceneManager() const { return sceneNode; }
 	
 	// Gets the resources manager.
 	ResourceManager* getResourceManager() const { return resourceManager; }
@@ -62,6 +65,9 @@ private:
 
 	// Add a generic audio device
 	audio::AL* audioDevice;
+
+	// Scene root node
+	scene::Scene* sceneNode;
 
 	// Rendering device
 	Device* device;
