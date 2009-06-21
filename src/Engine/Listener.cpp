@@ -8,7 +8,7 @@
 
 #include "vapor/scene/Listener.h"
 
-#include "vapor/audio/al/AL_Device.h"
+#include "vapor/audio/Device.h"
 
 namespace vapor {
 	namespace scene {

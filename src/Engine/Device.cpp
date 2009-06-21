@@ -31,7 +31,7 @@ Device* Device::createDevice(Settings settings)
 //-----------------------------------//
 
 Device::Device()
-	: clearColor(Colors::White)
+	: clearColor(math::Colors::White)
 {
 
 }
@@ -60,7 +60,7 @@ Adapter* Device::getAdapter() const
 
 //-----------------------------------//
 
-void Device::setClearColor(Color c)
+void Device::setClearColor(math::Color c)
 {
 	clearColor = c;
 }

@@ -10,7 +10,7 @@
 
 #include "vapor/CompileOptions.h"
 
-#ifdef VAPOR_AUDIO_OPENAL
+//#ifdef VAPOR_AUDIO_OPENAL
 
 #include "vapor/Platform.h"
 #include "vapor/math/Vector3.h"
@@ -29,12 +29,12 @@ namespace vapor {
  * Audio device to play sound data using OpenAL as backend.
  */
 
-class AL
+class AudioDevice
 {
 public:
 
-	AL();
-	virtual ~AL();
+	AudioDevice();
+	virtual ~AudioDevice();
 
 	// Play a possibly looped 2D sound
 	void play2D(const resources::Sound* sound, bool loop = false);
@@ -70,4 +70,4 @@ private:
 
 } } // end namespaces
 
-#endif
+//#endif

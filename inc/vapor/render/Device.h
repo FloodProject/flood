@@ -20,8 +20,6 @@
 #include "vapor/math/Matrix.h"
 #include "vapor/math/Color.h"
 
-using namespace vapor::math;
-
 namespace vapor {
 	namespace render {
 
@@ -58,7 +56,7 @@ public:
 	virtual void updateTarget( );
 
 	// Sets the current clear color
-	virtual void setClearColor(Color c);
+	virtual void setClearColor(math::Color c);
 
 	// Sets the active render target.
 	virtual void setRenderTarget( RenderTarget* renderTarget );
@@ -93,7 +91,7 @@ protected:
 	BufferManager* bufferManager;
 
 	// current clear color
-	Color clearColor;
+	math::Color clearColor;
 };
 
 } } // end namespaces

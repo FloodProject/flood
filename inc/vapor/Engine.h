@@ -12,13 +12,9 @@
 #include "vapor/render/Device.h"
 #include "vapor/resources/ResourceManager.h"
 #include "vapor/scene/Scene.h"
-#include "vapor/audio/al/AL_Device.h"
+#include "vapor/audio/Device.h"
 
 namespace vapor {
-
-using namespace vapor::render;
-using namespace vapor::resources;
-using namespace vapor::log;
 
 /**
  * Main engine class. This is a utility class that instantiates all the
@@ -38,19 +34,19 @@ public:
 protected:
 
 	// Gets the device.
-	Device* getDevice() const { return device; }
+	render::Device* getRenderDevice() const { return renderDevice; }
 
 	// Gets the audio device
-	audio::AL* getAudioDevice() const { return audioDevice; }
+	audio::AudioDevice* getAudioDevice() const { return audioDevice; }
 
 	// Gets the scene interface
 	scene::Scene* getSceneManager() const { return sceneNode; }
 	
 	// Gets the resources manager.
-	ResourceManager* getResourceManager() const { return resourceManager; }
+	resources::ResourceManager* getResourceManager() const { return resourceManager; }
 
 	// Gets the main engine logger.
-	Log* getLog() const { return log; }
+	log::Log* getLog() const { return log; }
 
 	// Sets up the default resource codecs.
 	void setupResourceLoaders();
@@ -64,19 +60,19 @@ protected:
 private:
 
 	// Add a generic audio device
-	audio::AL* audioDevice;
+	audio::AudioDevice* audioDevice;
 
 	// Scene root node
 	scene::Scene* sceneNode;
 
 	// Rendering device
-	Device* device;
+	render::Device* renderDevice;
 
 	// Resource manager
-	ResourceManager* resourceManager;
+	resources::ResourceManager* resourceManager;
 
 	// Default logger
-	Log* log;
+	log::Log* log;
 };
 
 } // end namespace

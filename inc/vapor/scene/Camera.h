@@ -10,8 +10,6 @@
 
 #include "vapor/math/Vector3.h"
 
-using namespace vapor::math;
-
 namespace vapor {
 	namespace render {
 
@@ -29,7 +27,7 @@ public:
 	Camera();
 	virtual ~Camera();
 
-	void lookAt(Vector3 pos);
+	void lookAt(math::Vector3 pos);
 
 private:
 

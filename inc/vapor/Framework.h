@@ -11,9 +11,6 @@
 #include <vapor/Platform.h>
 #include <vapor/Engine.h>
 
-using namespace vapor::resources;
-using namespace vapor::render;
-
 namespace vapor {
 
  /**

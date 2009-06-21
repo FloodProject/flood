@@ -16,7 +16,11 @@
 #include <vapor/scene/Listener.h>
 
 using namespace vapor;
+using namespace vapor::render;
+using namespace vapor::audio;
 using namespace vapor::scene;
+using namespace vapor::math;
+using namespace vapor::resources;
 
 //-----------------------------------//
 
@@ -64,7 +68,7 @@ void Example::onSetupScene()
 
 void Example::onRender() 
 {
-	Device* device = getDevice();
+	Device* device = getRenderDevice();
 
 	// clear the render device with white
 	device->setClearColor(Colors::White);

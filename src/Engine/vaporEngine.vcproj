@@ -623,6 +623,22 @@
 				<File
 					RelativePath=".\Camera.cpp"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\scene\Camera.h"
@@ -661,18 +677,14 @@
 		<Filter
 			Name="Audio"
 			>
-			<Filter
-				Name="OpenAL"
+			<File
+				RelativePath=".\audio\Device.cpp"
 				>
-				<File
-					RelativePath=".\AL_Device.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\audio\al\AL_Device.h"
-					>
-				</File>
-			</Filter>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\audio\Device.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\Bin.h"
@@ -688,10 +700,6 @@
 		</File>
 		<File
 			RelativePath="..\..\inc\vapor\Engine.h"
-			>
-		</File>
-		<File
-			RelativePath=".\vapor.h"
 			>
 		</File>
 	</Files>

@@ -8,9 +8,6 @@
 
 #include <vapor/Framework.h>
 
-using namespace vapor::resources;
-using namespace vapor::render;
-
 namespace vapor {
 
 //-----------------------------------//
@@ -65,9 +62,9 @@ void Framework::init()
 
 void Framework::render()
 {
-	Device* device = getDevice();
+	render::Device* renderDevice = getRenderDevice();
 
-	while(device->getWindow()->pumpEvents())
+	while(renderDevice->getWindow()->pumpEvents())
 	{
 		// update time!
 		onUpdate();
@@ -76,7 +73,7 @@ void Framework::render()
 		onRender();
 
 		// update the active target
-		device->updateTarget();
+		renderDevice->updateTarget();
 	}	
 }
 

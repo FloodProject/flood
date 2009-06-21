@@ -6,9 +6,9 @@
 *
 ************************************************************************/
 
-#include "vapor/audio/al/AL_Device.h"
+#include "vapor/audio/Device.h"
 
-#ifdef VAPOR_AUDIO_OPENAL
+//#ifdef VAPOR_AUDIO_OPENAL
 
 using namespace vapor::resources;
 using namespace vapor::math;
@@ -18,7 +18,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-AL::AL()
+AudioDevice::AudioDevice()
 {
 	// select the "preferred device"
 	device = alcOpenDevice(nullptr); 
@@ -43,7 +43,7 @@ AL::AL()
 
 //-----------------------------------//
 
-AL::~AL()
+AudioDevice::~AudioDevice()
 {
 
 }
@@ -58,7 +58,7 @@ void AL::switchListener(scene::Listener* listener)
 
 //-----------------------------------//
 
-void AL::setListener(const Vector3 position)
+void AudioDevice::setListener(const Vector3 position)
 {
 	// update OpenAL position information
 	alListener3f(AL_POSITION, position.x, position.y, position.z);
@@ -70,7 +70,7 @@ void AL::setListener(const Vector3 position)
 
 //-----------------------------------//
 
-void AL::setVolume(float volume)
+void AudioDevice::setVolume(float volume)
 {
 	alListenerf(AL_GAIN, volume);
 
@@ -81,7 +81,7 @@ void AL::setVolume(float volume)
 
 //-----------------------------------//
 
-ALint AL::getALFormat(SoundFormat::Enum format)
+ALint AudioDevice::getALFormat(SoundFormat::Enum format)
 {
 	switch(format)
 	{
@@ -100,7 +100,7 @@ ALint AL::getALFormat(SoundFormat::Enum format)
 
 //-----------------------------------//
 
-void AL::play2D(const Sound *sound, bool loop)
+void AudioDevice::play2D(const Sound *sound, bool loop)
 {
 	ALuint buffer = prepareBuffer(sound);
 
@@ -116,7 +116,7 @@ void AL::play2D(const Sound *sound, bool loop)
 
 //-----------------------------------//
 
-ALuint AL::prepareBuffer(const Sound* sound)
+ALuint AudioDevice::prepareBuffer(const Sound* sound)
 {
 	// check if buffer with same sound already exists
 	if(soundBuffers.find(sound) != soundBuffers.end()) 
@@ -149,4 +149,4 @@ ALuint AL::prepareBuffer(const Sound* sound)
 
 } } // end namespaces
 
-#endif
+//#endif

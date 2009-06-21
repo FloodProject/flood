@@ -21,8 +21,12 @@
 #endif
 
 #ifdef VAPOR_AUDIO_OPENAL
-	#include "vapor/audio/al/AL_Device.h"
+	#include "vapor/audio/Device.h"
 #endif
+
+using namespace vapor::resources;
+using namespace vapor::render;
+using namespace vapor::log;
 
 namespace vapor {
 
@@ -39,9 +43,9 @@ Engine::Engine()
 Engine::~Engine()
 {
 	// delete stuff
-	delete device;
+	delete renderDevice;
 	delete resourceManager;
-	delete log::Log::getLogger();
+	delete Log::getLogger();
 }
 
 //-----------------------------------//
@@ -57,13 +61,13 @@ void Engine::setupLogger(string title, string file)
 void Engine::setupDevices()
 {
 	// create render device
-	device = Device::createDevice();
+	renderDevice = render::Device::createDevice();
 
 	// TODO: hardcoded title...
 	// set the window title
-	device->getWindow()->setTitle("vaporEngine Example");
+	renderDevice->getWindow()->setTitle("vaporEngine Example");
 
-	audioDevice = new audio::AL();
+	audioDevice = new audio::AudioDevice();
 
 	// create the root scene node
 	sceneNode = new scene::Scene();
