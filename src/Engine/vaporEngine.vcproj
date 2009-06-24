@@ -202,11 +202,11 @@
 			Name="Render"
 			>
 			<File
-				RelativePath=".\Device.cpp"
+				RelativePath="..\..\inc\vapor\render\Device.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\inc\vapor\render\Device.h"
+				RelativePath=".\RenderDevice.cpp"
 				>
 			</File>
 			<File
@@ -481,7 +481,7 @@
 				Name="Audio"
 				>
 				<File
-					RelativePath=".\Sound.cpp"
+					RelativePath=".\ResourceSound.cpp"
 					>
 				</File>
 				<File
@@ -610,6 +610,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Serializer.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Transform.cpp"
 				>
 			</File>
@@ -623,14 +627,6 @@
 				<File
 					RelativePath=".\Camera.cpp"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
 					<FileConfiguration
 						Name="Release|Win32"
 						ExcludedFromBuild="true"
@@ -657,6 +653,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\SceneSound.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\inc\vapor\scene\Sound.h"
 					>
 				</File>
@@ -678,7 +678,7 @@
 			Name="Audio"
 			>
 			<File
-				RelativePath=".\audio\Device.cpp"
+				RelativePath=".\AudioDevice.cpp"
 				>
 			</File>
 			<File
@@ -686,10 +686,6 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath=".\Bin.h"
-			>
-		</File>
 		<File
 			RelativePath="..\..\inc\vapor\CompileOptions.h"
 			>

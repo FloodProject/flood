@@ -8,7 +8,7 @@
 
 #include "vapor/audio/Device.h"
 
-//#ifdef VAPOR_AUDIO_OPENAL
+#ifdef VAPOR_AUDIO_OPENAL
 
 using namespace vapor::resources;
 using namespace vapor::math;
@@ -18,24 +18,24 @@ namespace vapor {
 
 //-----------------------------------//
 
-AudioDevice::AudioDevice()
+Device::Device()
+	: device(nullptr), ctx(nullptr)
 {
 	// select the "preferred device"
 	device = alcOpenDevice(nullptr); 
 	
-	if(!device)  
-	{
-		warn("audio::al", "Could not create OpenAL device");
+	if(!device || checkError()) {
+		warn("audio::al", "Could not create OpenAL device: %s", getError());
 	}
 
 	info("audio::al", "Using OpenAL %s", alGetString(AL_VERSION));
 
-	if(alGetError() != AL_NO_ERROR) {
-		warn("audio::al", "Error initializing OpenAL");
-	}
-
 	// set a default listener
 	setListener(Vector3(0.0f, 0.0f, 0.0f));
+
+	if(checkError()) {
+		warn("audio::al", "Error initializing OpenAL: %s", getError());
+	}
 
 	// set default volume
 	setVolume(1.0f);
@@ -43,14 +43,61 @@ AudioDevice::AudioDevice()
 
 //-----------------------------------//
 
-AudioDevice::~AudioDevice()
+Device::~Device()
 {
+	if(!device) return;
 
+	// TODO: check that all contexts/buffers are closed
+	
+	ALCboolean ret = alcCloseDevice(device);
+		
+	if(ret == ALC_FALSE) {
+		warn("audio::al", "Error closing OpenAL device");
+		return;
+	}
+	
+	device = nullptr;
 }
 
 //-----------------------------------//
 
-void AL::switchListener(scene::Listener* listener)
+bool Device::checkError()
+{
+	error = alGetError();
+	return (error != AL_NO_ERROR);
+}
+
+//-----------------------------------//
+
+const ALchar* Device::getError()
+{
+	const ALchar* str;
+	
+	switch (error)
+	{
+	case AL_NO_ERROR:
+		str = "No error."; 
+		break;
+	case AL_INVALID_NAME:
+		str = "Invalid name.";
+		break;
+	case AL_INVALID_ENUM:
+		str = "Invalid enum.";
+		break;
+	case AL_INVALID_VALUE:
+		str = "Invalid value.";
+		break;
+	default:
+		str = "Unknown error.";
+		break;
+	}
+	
+	return str;
+}
+
+//-----------------------------------//
+
+void Device::switchListener(scene::Listener* listener)
 {
 	listenerContexts[listener] = alcCreateContext(device, nullptr);
 	alcMakeContextCurrent(listenerContexts[listener]);
@@ -58,7 +105,7 @@ void AL::switchListener(scene::Listener* listener)
 
 //-----------------------------------//
 
-void AudioDevice::setListener(const Vector3 position)
+void Device::setListener(const Vector3& position)
 {
 	// update OpenAL position information
 	alListener3f(AL_POSITION, position.x, position.y, position.z);
@@ -70,7 +117,7 @@ void AudioDevice::setListener(const Vector3 position)
 
 //-----------------------------------//
 
-void AudioDevice::setVolume(float volume)
+void Device::setVolume(float volume)
 {
 	alListenerf(AL_GAIN, volume);
 
@@ -81,7 +128,7 @@ void AudioDevice::setVolume(float volume)
 
 //-----------------------------------//
 
-ALint AudioDevice::getALFormat(SoundFormat::Enum format)
+ALint Device::getALFormat(SoundFormat::Enum format)
 {
 	switch(format)
 	{
@@ -100,7 +147,7 @@ ALint AudioDevice::getALFormat(SoundFormat::Enum format)
 
 //-----------------------------------//
 
-void AudioDevice::play2D(const Sound *sound, bool loop)
+void Device::play2D(const Sound *sound, bool loop)
 {
 	ALuint buffer = prepareBuffer(sound);
 
@@ -116,7 +163,7 @@ void AudioDevice::play2D(const Sound *sound, bool loop)
 
 //-----------------------------------//
 
-ALuint AudioDevice::prepareBuffer(const Sound* sound)
+ALuint Device::prepareBuffer(const Sound* sound)
 {
 	// check if buffer with same sound already exists
 	if(soundBuffers.find(sound) != soundBuffers.end()) 
@@ -149,4 +196,4 @@ ALuint AudioDevice::prepareBuffer(const Sound* sound)
 
 } } // end namespaces
 
-//#endif
+#endif

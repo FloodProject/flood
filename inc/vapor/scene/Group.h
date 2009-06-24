@@ -18,25 +18,28 @@ class Group : public Node
 {
 public:
 
-  // adds child to the end of the child list
-  void add( shared_ptr<Node> child );
+  // adds child to the end of the child list.  Returns the index of
+  // the new child node that has been added.
+  virtual int add( shared_ptr<Node> child );
   
-  // inserts child after child at i'th index
-  void insert( int i, shared_ptr<Node> child );
-  
-  // removes all children matching the child pointer, if there is more 
-  // than one matching it will be removed
-  void remove( shared_ptr<Node> child );
+  // inserts child after child at i'th index.  Returns the index of
+  // the new child inserted, if there is no existing
+  // child at 'i' then -1 is returned.
+  virtual int insert( int i, shared_ptr<Node> child );
   
   // removes child at index i, if i is out of bounds returns false,
   // if i is in bounds and child was removed, returns true
-  bool remove( int i );
+  virtual bool remove( int i );
   
   // returns null pointer if cannot find index i
   shared_ptr<Node> get( int i ) const;
   
-  // returns -1 if cannot find child
-  int indexOf( shared_ptr<Node> child ) const;
+  // returns index for child with the same pointer, if child cannot
+  // be found, -1 is returned
+  int index( shared_ptr<Node> child ) const;
+  
+  // returns number of children in this group
+  int count( ) const { return children.size(); };
   
 private:
   std::vector<shared_ptr<Node>> children;

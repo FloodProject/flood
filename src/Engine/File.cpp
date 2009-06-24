@@ -33,6 +33,15 @@ File::File(string path)
 
 //-----------------------------------//
 
+File::File(const char* _path)
+	: path(_path), fp(nullptr)
+{
+	fp = fopen(path.c_str(), "rb");
+}
+
+
+//-----------------------------------//
+
 File::~File() 
 {
 	close();

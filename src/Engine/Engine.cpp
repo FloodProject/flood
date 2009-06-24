@@ -44,6 +44,7 @@ Engine::~Engine()
 {
 	// delete stuff
 	delete renderDevice;
+	delete audioDevice;
 	delete resourceManager;
 	delete Log::getLogger();
 }
@@ -67,7 +68,7 @@ void Engine::setupDevices()
 	// set the window title
 	renderDevice->getWindow()->setTitle("vaporEngine Example");
 
-	audioDevice = new audio::AudioDevice();
+	audioDevice = new audio::Device();
 
 	// create the root scene node
 	sceneNode = new scene::Scene();

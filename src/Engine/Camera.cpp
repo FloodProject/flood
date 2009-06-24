@@ -6,4 +6,4 @@
 *
 ************************************************************************/
 
-#include "vapor/render/Camera.h"
+#include "vapor/scene/Camera.h"

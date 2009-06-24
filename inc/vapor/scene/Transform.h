@@ -37,11 +37,11 @@ public:
 
 //-----------------------------------//
 
-class TransformableImplementation : public TransformInterface
+class Transformable : public Node, public TransformInterface
 {
 public:
 
-	virtual void translate( math::Vector3 const& tr );
+	virtual void translate( const math::Vector3& tr );
   
 	virtual void rotate( float xang, float yang, float zang );
   
@@ -49,19 +49,14 @@ public:
 
 protected:
 
-	TransformableImplementation();
+	Transformable();
   
 private:
 
-	//shared_ptr<Vector3> translation;
-	//shared_ptr<Matrix3x3> orientation;
+	shared_ptr<math::Vector3> translation;
+	shared_ptr<math::Matrix4> orientation;
 };
 
-//-----------------------------------//
-
-class Transformable : public Node, public TransformableImplementation
-{
-};
 
 //-----------------------------------//
 
@@ -69,14 +64,6 @@ class Transform : public Group, public TransformInterface
 {
 public:
 
-	virtual void translate( math::Vector3 const& tr );
-  
-	virtual void rotate( float xang, float yang, float zang );
-
-	// many more methods implemented here ...
-  
-private:
-	math::Matrix4 matrix; 
 };
 
 //-----------------------------------//

@@ -16,10 +16,11 @@
 #include <vapor/scene/Listener.h>
 
 using namespace vapor;
-using namespace vapor::render;
-using namespace vapor::audio;
-using namespace vapor::scene;
+using namespace vapor::vfs;
 using namespace vapor::math;
+using namespace vapor::scene;
+using namespace vapor::audio;
+using namespace vapor::render;
 using namespace vapor::resources;
 
 //-----------------------------------//
@@ -37,38 +38,41 @@ void Example::onSetupResources()
 {
 	ResourceManager* rm = getResourceManager();
 	
-	vfs::File file("media/triton.png");
-	Image* img =  static_cast<Image*>(rm->createResource(file));
+	File file("media/triton.png");
+	shared_ptr<Resource> img = rm->createResource(file);
 
-	file = vfs::File("media/cubo.ms3d");
-	MS3D* mesh =  static_cast<MS3D*>(rm->createResource(file));
+	//file = File("media/cubo.ms3d");
+	//shared_ptr<MS3D> mesh = static_cast<MS3D*>(rm->createResource(file));
 
-	file = vfs::File("media/stereo.ogg");
-	resources::Sound* sound =  static_cast<resources::Sound*>(rm->createResource(file));
+	file = File("media/stereo.ogg");
+	shared_ptr<Resource> sound = rm->createResource(file);
 
-	//getAudioDevice()->play2D(sound);
+	//getAudioDevice()->play2D(sound);	
 }
 
 //-----------------------------------//
 
 void Example::onSetupScene() 
 {
+	ResourceManager* rm = getResourceManager();
 	Scene* scene = getSceneManager();
 
 	shared_ptr<Listener> ls(new Listener());
 	ls->translate(math::Vector3(1.0f, 0.0f, 0.0f));
 	ls->makeCurrent();
-
 	scene->add(ls);
-	
-	//scene.add(new scene::
+
+	File file("media/stereo.ogg");
+	shared_ptr<Resource> res = rm->getResource(file);
+	shared_ptr<scene::Sound> snd(new scene::Sound(res));
+	scene->add(snd);
 }
 
 //-----------------------------------//
 
-void Example::onRender() 
+void Example::onRender()
 {
-	Device* device = getRenderDevice();
+	render::Device* device = getRenderDevice();
 
 	// clear the render device with white
 	device->setClearColor(Colors::White);
@@ -98,6 +102,3 @@ void Example::onUpdate()
 }
 
 //-----------------------------------//
-
-#define VAPOR_EXAMPLE_NAME Example
-#include <vapor/Main.h>

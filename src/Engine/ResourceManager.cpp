@@ -27,17 +27,17 @@ ResourceManager::~ResourceManager()
 
 //-----------------------------------//
 
-Resource* ResourceManager::createResource(File& file)
+shared_ptr<Resource> ResourceManager::createResource(File& file)
 {
 	// check if the file is already loaded
-	Resource* res = getResource(file);
+	shared_ptr<Resource> res = getResource(file);
 	if(res != nullptr) return res;
 
 	// test if the file exists
 	if(!file.exists()) {
 		warn("resources", "Requested resource '%s' not found", 
 			file.getPath().c_str());
-		return nullptr;
+		return shared_ptr<Resource>();
 	}
 	
 	// check if it has a file extension
@@ -45,7 +45,7 @@ Resource* ResourceManager::createResource(File& file)
 	if(ch == string::npos) {
 		warn("resources", "Requested resource '%s' has an invalid path",
 			file.getPath().c_str());
-		return nullptr;
+		return shared_ptr<Resource>();
 	}
 
 	// get the file extension
@@ -55,18 +55,18 @@ Resource* ResourceManager::createResource(File& file)
 	if(resourceLoaders.find(ext) == resourceLoaders.end()) {
 		warn("resources", "No resource loader found for resource '%s'",
 			file.getPath().c_str());
-		return nullptr;
+		return shared_ptr<Resource>();
 	}
 
 	// get the available resource loader to decode the file
 	ResourceLoader* ldr = resourceLoaders[ext];
-	res = ldr->decode(file);
+	res = shared_ptr<Resource>(ldr->decode(file));
 	
 	// warn that the loader could not decode our resource
 	if(res == nullptr) {
 		warn("resources", "Resource loader '%s' could not decode resource '%s'", 
 			ldr->getName(), file.getPath().c_str());
-		return nullptr;
+		return shared_ptr<Resource>();
 	}
 
 	// register the decoded resource in the map
@@ -78,11 +78,11 @@ Resource* ResourceManager::createResource(File& file)
 
 //-----------------------------------//
 
-Resource* ResourceManager::getResource(File& file)
+shared_ptr<Resource> ResourceManager::getResource(File& file)
 {
 	// check if we have this resource in the map
 	if(resources.find(file.getPath()) == resources.end()) {
-		return nullptr;
+		return shared_ptr<Resource>();
 	}
 
 	return resources[file.getPath()];
@@ -90,9 +90,9 @@ Resource* ResourceManager::getResource(File& file)
 
 //-----------------------------------//
 
-void ResourceManager::removeResource(Resource *res)
+void ResourceManager::removeResource(shared_ptr<Resource> res)
 {
-	map<string, Resource*>::iterator it = resources.begin();
+	map<string, shared_ptr<Resource>>::iterator it = resources.begin();
 	
 	// check if the resource is in the map
 	while(it != resources.end()) {

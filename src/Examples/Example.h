@@ -11,7 +11,7 @@
 #include <vapor/Framework.h>
 
 /**
- * Simple example showing how to render a triangle using VBOs.
+ * Simple example.
  */
 
 class Example : public vapor::Framework

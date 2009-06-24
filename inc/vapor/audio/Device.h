@@ -10,7 +10,7 @@
 
 #include "vapor/CompileOptions.h"
 
-//#ifdef VAPOR_AUDIO_OPENAL
+#ifdef VAPOR_AUDIO_OPENAL
 
 #include "vapor/Platform.h"
 #include "vapor/math/Vector3.h"
@@ -29,12 +29,12 @@ namespace vapor {
  * Audio device to play sound data using OpenAL as backend.
  */
 
-class AudioDevice
+class Device
 {
 public:
 
-	AudioDevice();
-	virtual ~AudioDevice();
+	Device();
+	virtual ~Device();
 
 	// Play a possibly looped 2D sound
 	void play2D(const resources::Sound* sound, bool loop = false);
@@ -48,15 +48,30 @@ public:
 protected:
 
 	// Sets the listener position
-	void setListener(const math::Vector3 position);
+	void setListener(const math::Vector3& position);
 
+	// Gets the AL format matching the engine format
 	ALint getALFormat(resources::SoundFormat::Enum format);
+	
+	// Prepares a buffer for AL usage
 	ALuint prepareBuffer(const resources::Sound* sound);
+	
+	// Return the last error as a char array
+	const ALchar* getError();
+
+	// Checks if the last operation was successful
+	bool checkError();
 	
 private:
 
 	// Audio device
 	ALCdevice* device;
+
+	// Current audio context
+	ALCcontext* ctx;
+
+	// Holds the last error
+	ALenum error;
 
 	// Maps each sound to a OpenAL sound buffer id
 	map<const resources::Sound*, ALuint> soundBuffers;
@@ -70,4 +85,4 @@ private:
 
 } } // end namespaces
 
-//#endif
+#endif

@@ -24,6 +24,7 @@ class File
 public:
 
 	File (string path);
+	File (const char* path);
 	~File ();
 
 	// Closes the file.

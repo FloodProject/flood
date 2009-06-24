@@ -13,7 +13,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-Node::Node() 
+Node::Node(shared_ptr<Node> parent)
+	: parent(parent)
 {
 
 }
@@ -23,6 +24,13 @@ Node::Node()
 Node::~Node()
 {
 
+}
+
+//-----------------------------------//
+
+void Node::setParent( shared_ptr<Node> parent )
+{
+	this->parent = parent;
 }
 
 //-----------------------------------//

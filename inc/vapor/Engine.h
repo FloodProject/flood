@@ -37,7 +37,7 @@ protected:
 	render::Device* getRenderDevice() const { return renderDevice; }
 
 	// Gets the audio device
-	audio::AudioDevice* getAudioDevice() const { return audioDevice; }
+	audio::Device* getAudioDevice() const { return audioDevice; }
 
 	// Gets the scene interface
 	scene::Scene* getSceneManager() const { return sceneNode; }
@@ -52,7 +52,7 @@ protected:
 	void setupResourceLoaders();
 
 	// Sets up the global engine logger.
-	void setupLogger(string title, string file);
+	void setupLogger(std::string title, std::string file);
 
 	// Sets up the rendering device.
 	void setupDevices();
@@ -60,7 +60,7 @@ protected:
 private:
 
 	// Add a generic audio device
-	audio::AudioDevice* audioDevice;
+	audio::Device* audioDevice;
 
 	// Scene root node
 	scene::Scene* sceneNode;

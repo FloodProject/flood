@@ -14,7 +14,7 @@
 	#error "vapor::Framework code needs you need to define VAPOR_EXAMPLE_NAME.
 #endif
 
-int main(int argc, char *argv[])
+int main()
 {
 	vapor::Framework* example = new VAPOR_EXAMPLE_NAME();
 	example->run();

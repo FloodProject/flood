@@ -53,9 +53,10 @@ class Resource
 protected:
 
 	Resource () { }
-	virtual ~Resource () { }
 
 public:
+
+	virtual ~Resource () { }
 
 	// Gets the URI that identifies this resource.
 	//virtual string getURI() = 0;

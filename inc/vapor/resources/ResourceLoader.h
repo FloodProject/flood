@@ -12,8 +12,6 @@
 #include "vapor/vfs/File.h"
 #include "vapor/resources/Resource.h"
 
-using namespace vapor::vfs;
-
 namespace vapor {
 	namespace resources {
 
@@ -32,7 +30,7 @@ protected:
 public:
 
 	// Decodes a given file into a resource.
-	virtual Resource* decode(File& file) = 0;
+	virtual Resource* decode(vfs::File& file) = 0;
 	
 	// Gets a list of recognized extensions by this loader.
 	virtual list<string>& getExtensions() = 0;

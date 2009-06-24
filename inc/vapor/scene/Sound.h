@@ -10,7 +10,8 @@
 
 #include "vapor/Platform.h"
 #include "vapor/scene/Node.h"
-#include "vapor/resources/Sound.h"
+#include "vapor/scene/Transform.h"
+#include "vapor/resources/Resource.h"
 
 namespace vapor {
 	namespace scene {
@@ -24,10 +25,9 @@ class Sound : public Transformable
 {
 public:
 
-	void setResource( shared_ptr<resources::Sound> resource );
-  
-	/* will this update current playing sounds? yes*/
-	void setVolume( float volume );
+	Sound( shared_ptr<resources::Resource> sound );
+
+	void setResource( shared_ptr<resources::Resource> sound );
 
 	void play(int count = 1);
 
@@ -35,7 +35,8 @@ public:
 
 	void pause();
 
-	void rewind();
+	/* will this update current playing sounds? yes*/
+	void setVolume( float volume );
 
 	void setPitch( float pitch );
 
@@ -43,7 +44,7 @@ public:
   
 private:
 	
-	shared_ptr<resources::Sound> resource;
+	shared_ptr<resources::Resource> resource;
 };
 
 } } // end namespaces

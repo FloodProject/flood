@@ -14,6 +14,8 @@
 #include "vapor/resources/Resource.h"
 #include "vapor/resources/ResourceLoader.h"
 
+using namespace vapor::vfs;
+
 namespace vapor {
 	namespace resources {
 
@@ -38,13 +40,13 @@ public:
 	virtual ~ResourceManager();
 
 	// Creates a new resource and adds it to the manager.
-	Resource* createResource(File& file);
+	shared_ptr<Resource> createResource(File& file);
 
 	// Removes a resource from the manager.
-	void removeResource(Resource *res);
+	void removeResource(shared_ptr<Resource> res);
 
 	// Gets an existing resource by its URI (or null if it does not exist).
-	Resource* getResource(File& path);
+	shared_ptr<Resource> getResource(File& path);
 
 	// Sets a memory budget limit for a given resource group.
 	//void setMemoryBudget(ResourceGroup::Enum group, uint memoryBudget);
@@ -64,7 +66,7 @@ public:
 private:
 
 	// maps a name to a resource
-	map<string, Resource*> resources;
+	map<string, shared_ptr<Resource>> resources;
 
 	// maps extensions to resource loaders
 	map<string, ResourceLoader*> resourceLoaders;

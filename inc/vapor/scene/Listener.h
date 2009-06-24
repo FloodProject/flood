@@ -24,7 +24,9 @@ public:
   void setVolume( float volume );
   
   void makeCurrent();
-};
 
+private:
+	//ALCcontext* context;
+};
 
 } } // end namespaces
