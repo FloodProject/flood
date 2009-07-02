@@ -8,8 +8,20 @@
 
 #include "vapor/scene/Scene.h"
 
+#include <sstream>
+
 namespace vapor {
 	namespace scene {
 
+//-----------------------------------//
+
+std::string Scene::save(int ind)
+{
+	std::ostringstream os;
+	os << "{ " << Group::save(ind);
+	return os.str();
+}
+
+//-----------------------------------//
 
 } } // end namespaces

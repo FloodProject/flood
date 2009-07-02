@@ -11,7 +11,7 @@
 #ifdef VAPOR_WINDOWING_SDL
 
 #ifdef VAPOR_RENDERER_OPENGL
-	#include "vapor/render/gl/GL.h"
+	#include "vapor/render/GL.h"
 
 	// SDL extensions conflicts with GLEW
 	#define NO_SDL_GLEXT
@@ -72,6 +72,34 @@ bool SDLWindow::open()
 	// check if we want fullscreen
 	if (getSettings().isFullscreen())
 		flags |= SDL_FULLSCREEN;
+
+	// check for an external window handle
+	if (getSettings().getCustomHandle())
+	{
+		// SDL can receive a custom window id via an 
+		// environment variable, smells like 'hack' to me :D
+
+		#define BUF_SIZE 64
+
+		#ifdef VAPOR_PLATFORM_WINDOWS
+			#define snprintf sprintf_s
+		#endif 
+		
+		char tmp[BUF_SIZE];
+		ulong handle = (ulong) getSettings().getCustomHandle();
+		snprintf(tmp, BUF_SIZE, "SDL_WINDOWID=%ul", handle);
+		
+		#ifdef VAPOR_PLATFORM_WINDOWS
+			int ret = _putenv(tmp);
+		#else
+			int ret = putenv(tmp);	
+		#endif
+
+		if(ret != 0)
+		{
+			error("render::window::sdl", "Error setting custom window handle");
+		}
+	}
 
 	//SDL_GL_SetAttribute( SDL_GL_RED_SIZE, 5 );
 	//SDL_GL_SetAttribute( SDL_GL_GREEN_SIZE, 5 );

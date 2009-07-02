@@ -57,9 +57,9 @@ Sound* OGG_Loader::decode(File& file)
 
 	// Check the number of channels... always use 16-bit samples
 	if (pInfo->channels == 1)
-		format = SoundFormat::MONO16;
+		format = SoundFormat::Mono8;
 	else
-		format = SoundFormat::STEREO16;
+		format = SoundFormat::Stereo16;
 
 	int frequency( pInfo->rate );
 	std::vector<char> buffer;
@@ -71,6 +71,7 @@ Sound* OGG_Loader::decode(File& file)
 		
 		// Append to end of buffer
 		buffer.insert(buffer.end(), array, array + bytes);
+
 	} while (bytes > 0);
 
 	// This saves some memory by freeing the unused capacity part of the vector

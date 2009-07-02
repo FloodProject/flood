@@ -8,10 +8,11 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
+#include "vapor/CompileOptions.h"
 
-namespace vapor {
-	namespace render {
+#ifdef VAPOR_RENDERER_OPENGL
+
+#include "vapor/Platform.h"
 
 /**
  * The adapter class just represents a graphics adapter (video card), and holds
@@ -21,30 +22,48 @@ namespace vapor {
  * classes for different render devices. Hopefully not. :)
  */
 
+namespace vapor {
+	namespace render {
+
 class Adapter
 {
 public:
 
-	Adapter() {};
-	virtual ~Adapter() {};
+	Adapter();
+	~Adapter();
 
 	// Gets the version of the rendering API
-	virtual const string getVersion() const = 0;
+	const std::string getVersion() const;
 
 	// Gets driver information
-	virtual const string getDriver() const = 0;
+	const std::string getDriver() const;
 	
 	// Gets the graphics adapter vendor
-	virtual const string getVendor() const = 0;
+	const std::string getVendor() const;
 	
 	// Gets the graphics adapter name
-	virtual const string getName() const = 0;
+	const std::string getName() const;
 
-	// Gets the graphics adapter shading version
-	virtual const string getShading() const = 0;
+	// Gets the GLSL version information
+	const std::string getShading() const;
 
 	// Logs adapter version information
-	virtual void log() const = 0;
+	void log() const;
+
+protected:
+
+	// Gets and parses the OpenGL information
+	void parseInfo();
+
+	std::string name;
+	std::string vendor;
+	std::string driver;
+	std::string glsl;
+	std::string gl;
+
+	bool supportsVBO;
 };
 
 } } // end namespaces
+
+#endif

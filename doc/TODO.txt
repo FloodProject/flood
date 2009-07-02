@@ -5,6 +5,13 @@ Milestone 1:
 ------------
 
 	Render Triangle using Device interface
+	
+EXAMPLES:
+---------
+
+Add a custom node to the scene graph
+Add a custom resource type
+
 
 TODO:
 -----

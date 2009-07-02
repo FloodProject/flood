@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "vapor/render/Queue.h"
-
 namespace vapor {
 	namespace render {
 
@@ -21,11 +19,6 @@ public:
 	virtual ~RenderTarget() { }
 	
 	virtual void update() = 0;
-
-private:
-
-	// manages the objects to render
-	RenderQueue* renderQueue;
 };
 
 } } // end namespaces

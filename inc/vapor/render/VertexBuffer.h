@@ -9,6 +9,7 @@
 #pragma once
 
 #include "vapor/Platform.h"
+
 #include "vapor/render/Buffer.h"
 #include "vapor/render/VertexElement.h"
 
@@ -23,17 +24,15 @@ class VertexBuffer : public Buffer
 {
 public:
 
-	VertexBuffer(uint numElems, VertexDeclaration decl, BufferUsage::Enum bu, BufferType::Enum bt)
-		: bufferUsage(bu), bufferType(bt), numElements(numElems), vertexDeclaration(decl)
-	{}
+	VertexBuffer(uint numElems, VertexDeclaration decl, BufferUsage::Enum bu, BufferType::Enum bt);
 
-	virtual ~VertexBuffer() { }
+	~VertexBuffer();
 
 	// Map a buffer
-	virtual void* map() = 0;
+	virtual void* map();
 	
 	// Unmap a buffer
-	virtual void unmap() = 0;
+	virtual void unmap();
 
 protected:
 
@@ -48,6 +47,11 @@ protected:
 	
 	// type of this buffer
 	BufferType::Enum bufferType;
+
+private:
+
+	uint id;
+	vector<byte> data;
 };
 
 } } // end namespaces

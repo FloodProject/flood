@@ -7,16 +7,16 @@
 ************************************************************************/
 
 #include "vapor/scene/Listener.h"
-#include "vapor/audio/Device.h"
 
 namespace vapor {
 	namespace scene {
 
 //-----------------------------------//
 
-Listener::Listener()
+Listener::Listener(audio::Device* device)
+	: context(nullptr)
 {
-	//context = alcCreateContext(
+	context = alcCreateContext(device->device, nullptr);
 }
 
 //-----------------------------------//

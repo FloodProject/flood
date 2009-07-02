@@ -41,13 +41,8 @@ void Example::onSetupResources()
 	File file("media/triton.png");
 	shared_ptr<Resource> img = rm->createResource(file);
 
-	//file = File("media/cubo.ms3d");
-	//shared_ptr<MS3D> mesh = static_cast<MS3D*>(rm->createResource(file));
-
 	file = File("media/stereo.ogg");
 	shared_ptr<Resource> sound = rm->createResource(file);
-
-	//getAudioDevice()->play2D(sound);	
 }
 
 //-----------------------------------//
@@ -57,15 +52,21 @@ void Example::onSetupScene()
 	ResourceManager* rm = getResourceManager();
 	Scene* scene = getSceneManager();
 
-	shared_ptr<Listener> ls(new Listener());
-	ls->translate(math::Vector3(1.0f, 0.0f, 0.0f));
-	ls->makeCurrent();
-	scene->add(ls);
+	//shared_ptr<Listener> ls(new Listener(getAudioDevice()));
+	//ls->translate(math::Vector3(1.0f, 0.0f, 0.0f));
+	//ls->makeCurrent();
+	//scene->add(ls);
 
-	File file("media/stereo.ogg");
-	shared_ptr<Resource> res = rm->getResource(file);
-	shared_ptr<scene::Sound> snd(new scene::Sound(res));
-	scene->add(snd);
+	//File file("media/stereo.ogg");
+	//shared_ptr<Resource> res = rm->getResource(file);
+	//shared_ptr<scene::Sound> snd(new scene::Sound(res));
+	//scene->add(snd);
+
+	shared_ptr<Group> grp(new Group());
+	scene->add(grp);
+
+	string example = scene->save();
+	puts(example.c_str());
 }
 
 //-----------------------------------//

@@ -19,13 +19,13 @@ namespace SoundFormat
 	{
 		switch(e) 
 		{
-		case MONO8:
+		case Mono8:
 		  return "MONO8";
-		case MONO16:
+		case Mono16:
 		  return "MONO16";
-		case STEREO8:
+		case Stereo8:
 		  return "STEREO8";
-		case STEREO16:
+		case Stereo16:
 		  return "STEREO16";
 		default:
 			return nullptr;

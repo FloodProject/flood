@@ -8,6 +8,10 @@
 
 #pragma once
 
+#include "vapor/CompileOptions.h"
+
+#ifdef VAPOR_RENDERER_OPENGL
+
 #include "vapor/Platform.h"
 
 #include "vapor/render/Buffer.h"
@@ -27,21 +31,21 @@ class BufferManager
 {
 public:
 
-	BufferManager() {};
-	virtual ~BufferManager() {};
+	BufferManager();
+	~BufferManager();
 
-	// creates a Vertex Buffer bound to the given data
-	virtual shared_ptr<VertexBuffer> createVertexBuffer(uint numElements, 
-		VertexDeclaration decl, BufferUsage::Enum bue, BufferType::Enum bte) = 0;
+	// creates a vertex buffer bound to the given data
+	std::tr1::shared_ptr<VertexBuffer> createVertexBuffer(uint numElements, 
+		VertexDeclaration decl, BufferUsage::Enum bue, BufferType::Enum bte);
 
 	// creates a Index Buffer bound to the given data
-	//virtual shared_ptr<IndexBuffer> createIndexBuffer() = 0;
+	//virtual shared_ptr<IndexBuffer> createIndexBuffer();
 
-	//// bind a vertex buffer (0 to unbind, non-0 to bind)
-	//virtual void bindVertexBuffer(VertexBuffer *Buffer) = 0;
+private:
 
-	//// bind an index buffer (0 to unbind, non-0 to bind)
-	//virtual void bindIndexBuffer(IndexBuffer *Buffer) = 0;
+	std::vector<VertexBuffer*> vertexBuffers;
 };
 
 } } // end namespaces
+
+#endif

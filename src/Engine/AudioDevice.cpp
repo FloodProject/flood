@@ -19,7 +19,7 @@ namespace vapor {
 //-----------------------------------//
 
 Device::Device()
-	: device(nullptr), ctx(nullptr)
+	: device(nullptr), ctx(nullptr), init(false)
 {
 	// select the "preferred device"
 	device = alcOpenDevice(nullptr); 
@@ -132,13 +132,13 @@ ALint Device::getALFormat(SoundFormat::Enum format)
 {
 	switch(format)
 	{
-	case SoundFormat::MONO8:
+	case SoundFormat::Mono8:
 		return AL_FORMAT_MONO8;
-	case SoundFormat::MONO16:
+	case SoundFormat::Mono16:
 		return AL_FORMAT_MONO16;
-	case SoundFormat::STEREO8:
+	case SoundFormat::Stereo8:
 		return AL_FORMAT_STEREO8;
-	case SoundFormat::STEREO16:
+	case SoundFormat::Stereo16:
 		return AL_FORMAT_STEREO16;
 	default:
 		return AL_INVALID;

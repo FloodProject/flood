@@ -14,8 +14,9 @@ namespace vapor {
 //-----------------------------------//
 
 Settings::Settings(const int width, const int height,
-	const int bpp, const bool fullscreen)
-	: width(width), height(height), bpp(bpp), fullscreen(fullscreen)
+	const int bpp, const bool fullscreen, const int customHandle)
+	: width(width), height(height), bpp(bpp), 
+	fullscreen(fullscreen), customHandle(customHandle)
 {
 
 }
@@ -26,7 +27,13 @@ Window::Window(Settings& settings)
 	: settings(&settings)
 {
 	info("render::window", "Creating %dx%d window",
-		getSettings().getWidth(), getSettings().getHeight());
+		settings.getWidth(), settings.getHeight());
+
+	if(settings.getCustomHandle())
+	{
+		info("render::window", "External window handle found: %d",
+			settings.getCustomHandle());
+	}
 }
 
 //-----------------------------------//

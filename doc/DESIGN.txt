@@ -28,7 +28,7 @@ The engine is divided in a few subsystems:
 	* math		(vectors, matrices, AABBs, ...)
 	* render	(opengl, directx, software)
 	* scene		(scene graph, bvh, ...)
-	* resources	(textures, meshes, fonts, audio, video)
+	* resources	(images, meshes, fonts, audio, video)
 	* input		(mouse, keyboard)
 	* physics	(collision detection)
 	

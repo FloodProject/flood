@@ -15,7 +15,6 @@
 #include "vapor/Platform.h"
 
 #include "vapor/render/Window.h"
-#include "vapor/render/Queue.h"
 #include "vapor/render/Target.h"
 #include "vapor/render/Adapter.h"
 #include "vapor/render/BufferManager.h"
@@ -51,7 +50,7 @@ public:
 	~Device();
 
 	// Create a new render window
-	Window& createWindow( Settings& settings = Settings(640, 480) );
+	Window& createWindow( Settings settings = Settings(640, 480) );
 
 	// Gets the main window 
 	Window* getWindow() const;
@@ -61,9 +60,6 @@ public:
 
 	// Gets the buffer manager
 	BufferManager* getBufferManager() const;
-
-	// Clears the active render target.
-	void clearTarget( ) = 0;
 
 	// Updates the target render target.
 	void updateTarget( );
@@ -77,7 +73,7 @@ public:
 	// Close the device
 	void close();
 
-	// Clear buffers
+	// Clears the active render target.
 	void clearTarget();
 
 protected:

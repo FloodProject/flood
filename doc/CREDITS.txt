@@ -12,7 +12,7 @@ General:
 Editor:
 
 	* Based on wxWidgets cross-platform GUI library
-	* Serializes the scene structure to binary format
+	* saves the scene structure to binary format
 	* Easy placement of entities with manipulators
 
 Resources:
@@ -44,7 +44,6 @@ Libraries used:
 	* GLEW
 	* DevIL
 	* FreeType
-	* Poco
 	* wxWidgets
 	* Protobufs
 

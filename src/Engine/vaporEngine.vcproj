@@ -206,6 +206,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\inc\vapor\render\GL.h"
+				>
+			</File>
+			<File
 				RelativePath=".\RenderDevice.cpp"
 				>
 			</File>
@@ -216,6 +220,10 @@
 			<Filter
 				Name="Adapter"
 				>
+				<File
+					RelativePath=".\Adapter.cpp"
+					>
+				</File>
 				<File
 					RelativePath="..\..\inc\vapor\render\Adapter.h"
 					>
@@ -241,6 +249,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\VertexBuffer.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\inc\vapor\render\VertexBuffer.h"
 					>
 				</File>
@@ -258,18 +270,6 @@
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\render\Renderable.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Queue"
-				>
-				<File
-					RelativePath=".\Queue.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\render\Queue.h"
 					>
 				</File>
 			</Filter>
@@ -296,66 +296,6 @@
 						>
 					</File>
 				</Filter>
-			</Filter>
-			<Filter
-				Name="OpenGL"
-				>
-				<File
-					RelativePath="..\..\inc\vapor\render\gl\GL.h"
-					>
-				</File>
-				<Filter
-					Name="Adapter"
-					>
-					<File
-						RelativePath=".\GL_Adapter.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\inc\vapor\render\gl\GL_Adapter.h"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="Device"
-					>
-					<File
-						RelativePath=".\GL_Device.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\inc\vapor\render\gl\GL_Device.h"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="Buffers"
-					>
-					<File
-						RelativePath=".\GL_BufferManager.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\inc\vapor\render\gl\GL_BufferManager.h"
-						>
-					</File>
-					<File
-						RelativePath=".\GL_VertexBuffer.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\inc\vapor\render\gl\GL_VertexBuffer.h"
-						>
-					</File>
-				</Filter>
-			</Filter>
-			<Filter
-				Name="Software"
-				>
-				<File
-					RelativePath="..\..\inc\vapor\render\Software.h"
-					>
-				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -607,10 +547,6 @@
 			</File>
 			<File
 				RelativePath="..\..\inc\vapor\scene\Scene.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Serializer.cpp"
 				>
 			</File>
 			<File

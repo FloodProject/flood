@@ -62,7 +62,9 @@ void Engine::setupLogger(string title, string file)
 void Engine::setupDevices()
 {
 	// create render device
-	renderDevice = render::Device::createDevice();
+	renderDevice = new render::Device();
+
+	renderDevice->createWindow();
 
 	// TODO: hardcoded title...
 	// set the window title
