@@ -41,6 +41,8 @@ public:
 	void setPitch( float pitch );
 
 	void setRollOff( float rollOff );
+
+	virtual std::string save() { return ""; }
   
 private:
 	

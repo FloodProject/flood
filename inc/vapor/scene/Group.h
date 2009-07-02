@@ -40,6 +40,10 @@ public:
   
   // returns number of children in this group
   int count( ) const { return children.size(); };
+
+  virtual std::string save(int indent = 0);
+
+  virtual std::string name() { return "group"; }
   
 private:
   std::vector<shared_ptr<Node>> children;

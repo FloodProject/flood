@@ -13,16 +13,20 @@
 #ifdef VAPOR_AUDIO_OPENAL
 
 #include "vapor/Platform.h"
+
 #include "vapor/math/Vector3.h"
 #include "vapor/resources/Sound.h"
-
-#include "vapor/scene/Listener.h"
-#include "vapor/scene/Sound.h"
 
 #include <al.h>
 #include <alc.h>
 
 namespace vapor {
+
+	namespace scene {
+		class Listener;
+		class Sound;
+	} // end namespace
+
 	namespace audio {
 
 /**
@@ -31,6 +35,9 @@ namespace vapor {
 
 class Device
 {
+	friend class vapor::scene::Listener;
+	friend class vapor::scene::Sound;
+
 public:
 
 	Device();
@@ -72,6 +79,8 @@ private:
 
 	// Holds the last error
 	ALenum error;
+
+	bool init;
 
 	// Maps each sound to a OpenAL sound buffer id
 	map<const resources::Sound*, ALuint> soundBuffers;

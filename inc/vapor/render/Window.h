@@ -26,7 +26,8 @@ class Settings
 public:
 
 	Settings(const int width, const int height, 
-		const int bpp = 32, const bool fullscreen = false);
+		const int bpp = 32, const bool fullscreen = false,
+		const int customHandle = -1);
 
 	// Gets the width of the window
 	const int getWidth() const { return width; }
@@ -36,6 +37,9 @@ public:
 	
 	// Gets the bits-per-pixel of the window
 	const int getBpp() const { return bpp; }
+
+	// Gets the custom handle of the window 
+	const int getCustomHandle() const { return customHandle; }
 	
 	// Is this window fullscreen?
 	const bool isFullscreen() const { return fullscreen; }
@@ -44,6 +48,7 @@ protected:
 
 	int width, height, bpp;
 	bool fullscreen;
+	int customHandle;
 };
 
 /**

@@ -26,9 +26,11 @@ class Scene : public Group
 {
 public:
 
-  void evaluate();
-    
-  //shared_ptr<Mesh> createMesh();
+	void evaluate();
+
+	//virtual std::string save();
+
+	//shared_ptr<Mesh> createMesh();
 
 	// Node creation methods
 	
@@ -36,6 +38,10 @@ public:
 	//Light* createLight();
 	//Listener* createListener();
 	//etc...
+
+	virtual std::string save(int indent = 0);
+
+	virtual std::string name() { return "scene"; }
 };
 
 } } // end namespaces

@@ -13,7 +13,6 @@
 namespace vapor {
 	namespace scene {
 
-
 /**
  * Represents a node, that is, an entity in the scene. 
  * The entities are divided into two main types:
@@ -36,12 +35,14 @@ public:
   
   // Gets the bounding volume of the node.
   //AABB getBoundingVolume() const;
+
+  virtual std::string save(int indent = 0) = 0;
+
+  virtual std::string name() { return "Node"; }
   
 private:
   shared_ptr<Node> parent;
   //AABB boundingVolume;
 };
-
-
 
 } } // end namespaces

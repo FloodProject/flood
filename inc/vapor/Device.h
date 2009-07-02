@@ -8,6 +8,10 @@
 
 #pragma once
 
+#include "vapor/CompileOptions.h"
+
+#ifdef VAPOR_RENDERER_OPENGL
+
 #include "vapor/Platform.h"
 
 #include "vapor/render/Window.h"
@@ -38,40 +42,43 @@ namespace vapor {
  * OpenGL window will be different from an DirectX window, so this is also
  * responsible for creating a new window if no window handle is passed to it.
  */
+
 class Device
 {
 public:
 
-	Device( );
-	virtual ~Device( );
+	Device();
+	~Device();
 
-	// Creates a new rendering device, using the rendering API specified.
-	// TODO: add suport for passing a specific backend
-	static Device* createDevice( Settings settings = Settings(640, 480) );
-	
-	// Clears the active render target.
-	virtual void clearTarget( ) = 0;
-
-	// Updates the target render target.
-	virtual void updateTarget( );
-
-	// Sets the current clear color
-	virtual void setClearColor(math::Color c);
-
-	// Sets the active render target.
-	virtual void setRenderTarget( RenderTarget* renderTarget );
-
-	// Create a new window if not passed a window handle
-	virtual Window& createWindow( Settings& settings ) = 0;
+	// Create a new render window
+	Window& createWindow( Settings& settings = Settings(640, 480) );
 
 	// Gets the main window 
-	virtual Window* getWindow() const;
+	Window* getWindow() const;
 
 	// Gets rendering adapter information
-	virtual Adapter* getAdapter() const;
+	Adapter* getAdapter() const;
 
 	// Gets the buffer manager
-	virtual BufferManager* getBufferManager() const;
+	BufferManager* getBufferManager() const;
+
+	// Clears the active render target.
+	void clearTarget( ) = 0;
+
+	// Updates the target render target.
+	void updateTarget( );
+
+	// Sets the current clear color
+	void setClearColor(math::Color c);
+
+	// Sets the active render target.
+	void setRenderTarget( RenderTarget* renderTarget );
+
+	// Close the device
+	void close();
+
+	// Clear buffers
+	void clearTarget();
 
 protected:
 
@@ -92,6 +99,14 @@ protected:
 
 	// current clear color
 	math::Color clearColor;
+
+private:
+
+	void resetViewport();
+
+	void checkExtensions();
 };
 
 } } // end namespaces
+
+#endif

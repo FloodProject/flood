@@ -24,10 +24,10 @@ namespace SoundFormat
 {
 	enum Enum 
 	{
-		MONO8,
-		MONO16,
-		STEREO8,
-		STEREO16
+		Mono8,
+		Mono16,
+		Stereo8,
+		Stereo16
 	};
 
 	string getString(Enum e);
