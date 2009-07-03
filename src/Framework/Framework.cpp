@@ -13,6 +13,7 @@ namespace vapor {
 //-----------------------------------//
 
 Framework::Framework()
+	: Engine(false)
 {
 	info("framework", "Engine framework getting into action");
 }
@@ -39,6 +40,9 @@ void Framework::run()
 
 void Framework::init()
 {
+	// create the resource manager
+	setupResourceManager();
+
 	// setup the global logger
 	setupLogger("vaporEngine Example", "vaporEngine.html");
 
@@ -50,6 +54,8 @@ void Framework::init()
 
 	// create a rendering and audio device
 	setupDevices();
+
+	setupWindow("vaporEngine Example");
 
 	// set up all the resources
 	onSetupResources();

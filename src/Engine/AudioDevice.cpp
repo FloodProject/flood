@@ -6,9 +6,14 @@
 *
 ************************************************************************/
 
-#include "vapor/audio/Device.h"
+#include "vapor/CompileOptions.h"
 
 #ifdef VAPOR_AUDIO_OPENAL
+
+#include <al.h>
+#include <alc.h>
+
+#include "vapor/audio/Device.h"
 
 using namespace vapor::resources;
 using namespace vapor::math;

@@ -17,8 +17,10 @@
 #include "vapor/math/Vector3.h"
 #include "vapor/resources/Sound.h"
 
-#include <al.h>
-#include <alc.h>
+#ifndef AL_ALC_H
+	struct ALCdevice;
+	struct ALCcontext;
+#endif
 
 namespace vapor {
 
@@ -58,13 +60,13 @@ protected:
 	void setListener(const math::Vector3& position);
 
 	// Gets the AL format matching the engine format
-	ALint getALFormat(resources::SoundFormat::Enum format);
+	int getALFormat(resources::SoundFormat::Enum format);
 	
 	// Prepares a buffer for AL usage
-	ALuint prepareBuffer(const resources::Sound* sound);
+	uint prepareBuffer(const resources::Sound* sound);
 	
 	// Return the last error as a char array
-	const ALchar* getError();
+	const char* getError();
 
 	// Checks if the last operation was successful
 	bool checkError();
@@ -78,12 +80,12 @@ private:
 	ALCcontext* ctx;
 
 	// Holds the last error
-	ALenum error;
+	int error;
 
 	bool init;
 
 	// Maps each sound to a OpenAL sound buffer id
-	map<const resources::Sound*, ALuint> soundBuffers;
+	map<const resources::Sound*, uint> soundBuffers;
 
 	// Holds the sources for a given file
 	//map<const scene::Sound*, ALuint> soundSources;

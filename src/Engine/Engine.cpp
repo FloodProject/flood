@@ -32,10 +32,16 @@ namespace vapor {
 
 //-----------------------------------//
 
-Engine::Engine()
+Engine::Engine(bool autoInit)
 {
-	// create the resource manager
-	resourceManager = new ResourceManager();
+	if(autoInit)
+	{
+		setupResourceManager();
+		setupLogger("vaporEngine", "vaporEngine.html");
+		setupResourceLoaders();
+		setupDevices();
+		setupWindow("vaporEngine");
+	}
 }
 
 //-----------------------------------//
@@ -59,17 +65,20 @@ void Engine::setupLogger(string title, string file)
 
 //-----------------------------------//
 
+void Engine::setupResourceManager()
+{
+	// create the resource manager
+	resourceManager = new ResourceManager();
+}
+
+//-----------------------------------//
+
 void Engine::setupDevices()
 {
 	// create render device
 	renderDevice = new render::Device();
 
-	renderDevice->createWindow();
-
-	// TODO: hardcoded title...
-	// set the window title
-	renderDevice->getWindow()->setTitle("vaporEngine Example");
-
+	// create the audio device
 	audioDevice = new audio::Device();
 
 	// create the root scene node
@@ -78,9 +87,21 @@ void Engine::setupDevices()
 
 //-----------------------------------//
 
+void Engine::setupWindow(string title)
+{
+	if(!renderDevice) return;
+
+	// create a window and set the title
+	renderDevice->createWindow();
+	renderDevice->getWindow()->setTitle(title);
+}
+
+//-----------------------------------//
+
 void Engine::setupResourceLoaders()
 {
-	ResourceManager* rm = getResourceManager();
+	if(!resourceManager) return;
+
 	vector<ResourceLoader*> loaders;
 	ResourceLoader* loader = nullptr;
 
@@ -103,7 +124,7 @@ void Engine::setupResourceLoaders()
 	vector<ResourceLoader*>::iterator it;
 	for(it = loaders.begin(); it != loaders.end(); it++)
 	{
-		rm->registerResourceLoader(*it);
+		resourceManager->registerResourceLoader(*it);
 	}
 }
 

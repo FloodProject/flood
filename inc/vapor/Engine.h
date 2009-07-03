@@ -28,10 +28,11 @@ class Engine
 {
 public:
 
-	Engine();
+	// If autoInit is true, then the contructor will make sure
+	// everything is properly set up when you instantiate the object,
+	// else you will have to call the methods manually, to initialize.
+	Engine(bool autoInit = true);
 	virtual ~Engine();
-
-protected:
 
 	// Gets the device.
 	render::Device* getRenderDevice() const { return renderDevice; }
@@ -51,13 +52,19 @@ protected:
 	// Sets up the default resource codecs.
 	void setupResourceLoaders();
 
+	// Sets up the resource manager
+	void setupResourceManager();
+
 	// Sets up the global engine logger.
 	void setupLogger(std::string title, std::string file);
 
 	// Sets up the rendering device.
 	void setupDevices();
 
-private:
+	// Sets up a rendering window
+	void setupWindow(std::string title);
+
+protected:
 
 	// Add a generic audio device
 	audio::Device* audioDevice;

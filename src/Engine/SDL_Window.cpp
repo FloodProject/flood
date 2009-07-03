@@ -87,7 +87,7 @@ bool SDLWindow::open()
 		
 		char tmp[BUF_SIZE];
 		ulong handle = (ulong) getSettings().getCustomHandle();
-		snprintf(tmp, BUF_SIZE, "SDL_WINDOWID=%ul", handle);
+		snprintf(tmp, BUF_SIZE, "SDL_WINDOWID=%u", handle);
 		
 		#ifdef VAPOR_PLATFORM_WINDOWS
 			int ret = _putenv(tmp);

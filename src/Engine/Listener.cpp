@@ -6,6 +6,9 @@
 *
 ************************************************************************/
 
+#include <al.h>
+#include <alc.h>
+
 #include "vapor/scene/Listener.h"
 
 namespace vapor {

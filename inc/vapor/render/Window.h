@@ -44,7 +44,7 @@ public:
 	// Is this window fullscreen?
 	const bool isFullscreen() const { return fullscreen; }
 
-protected:
+public:
 
 	int width, height, bpp;
 	bool fullscreen;
