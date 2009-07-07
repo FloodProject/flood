@@ -7,6 +7,7 @@
 ************************************************************************/
 
 #include "vaporControl.h"
+#include "vaporWindow.h"
 
 #include "vapor/render/Window.h"
 
@@ -20,29 +21,58 @@
 
 using namespace vapor;
 using namespace vapor::render;
+using namespace vapor::math;
 
-//IMPLEMENT_CLASS (vaporControl, wxControl)
+////////////////////////////////////////////////////////////
+// Event table
+////////////////////////////////////////////////////////////
+BEGIN_EVENT_TABLE(vaporControl, wxGLCanvas)
+    EVT_IDLE(vaporControl::OnIdle)
+    //EVT_PAINT(vaporControl::OnPaint)
+END_EVENT_TABLE()
 
 //-----------------------------------//
 
-vaporControl::vaporControl(wxWindow* parent, wxWindowID id,
-				const wxPoint& pos,
-				const wxSize& siz,
-				long style,
-				const wxValidator& val,
-				const wxString& name)
-	: wxControl(parent, id, pos, siz, style, val, name)
+vaporControl::vaporControl(vapor::Engine* engine, 
+					wxWindow* parent, wxWindowID id,
+					const int* attribList,
+					const wxPoint& pos,
+					const wxSize& size,
+					long style,
+					const wxString&	name,
+					const wxPalette& palette)
+	: wxGLCanvas(parent, id, attribList, pos, size, style, name),
+		engine(engine)
 {
-
-
+	initControl();
 }
-
 
 //-----------------------------------//
 
 vaporControl::~vaporControl()
 {
+	delete window;
+}
 
+//-----------------------------------//
+
+void vaporControl::OnUpdate()
+{
+	render::Device* device = engine->getRenderDevice();
+	
+	device->setRenderTarget(window);
+	device->setClearColor(Colors::Green);
+	device->clearTarget();
+}
+
+//-----------------------------------//
+
+void vaporControl::OnIdle(wxIdleEvent& WXUNUSED(event))
+{
+	OnUpdate();
+
+	window->update();
+	Refresh();
 }
 
 //-----------------------------------//
@@ -55,30 +85,27 @@ void vaporControl::initControl()
 
 	info("vaporEditor", "Creating a new wxWidgets control");
 
-	// lets get a window handle to pass to vapor
-	int handle = getHandle();
-
 	// get the control size
 	wxSize size = GetSize();
 
 	// construct a settings object to pass to vapor
-	Settings settings(size.GetX(), size.GetY(), 32, false, handle);
+	Settings settings(size.GetX(), size.GetY(), 24, false);
 
-	Window& window = device->createWindow(settings);
-	device->setRenderTarget(&window);
-	this->window = &window;
+	Window* window = new vaporWindow(settings, this);
+	device->setRenderTarget(window);
+	this->window = window;
 }
 
 //-----------------------------------//
 
-int vaporControl::getHandle()
+void* vaporControl::getHandle()
 {
-	int handle;
+	void* handle;
 
 #ifdef __WXMSW__
 	// Handle for Windows systems
 	HWND hwnd = (HWND) GetHandle();
-	handle = (int) hwnd;
+	handle = hwnd;
 #else
 	// Any other unsupported system
 	#error Not supported on this platform.

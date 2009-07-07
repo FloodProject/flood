@@ -17,6 +17,8 @@
     #include "wx/wx.h"
 #endif
 
+#include <wx/glcanvas.h> 
+
 #include <vapor/Engine.h>
 
 /**
@@ -29,31 +31,45 @@
  * if this approach works as well as I think it won't. :(
  */
 
-class vaporControl : public wxControl 
+class vaporControl : public wxGLCanvas 
 {
 public:
-	vaporControl(wxWindow* parent, wxWindowID id = wxID_ANY,
-					const wxPoint& pos = wxDefaultPosition,
+
+	vaporControl(vapor::Engine* engine, 
+					wxWindow* parent, wxWindowID id = wxID_ANY,
+					const int* attribList = nullptr,
+					const wxPoint& pos	= wxDefaultPosition,
 					const wxSize& size = wxDefaultSize,
-					long style = wxSUNKEN_BORDER | wxTRANSPARENT_WINDOW,
-					const wxValidator& val = wxDefaultValidator,
-					const wxString& name = "vaporControl");
+					long style = 0,
+					const wxString&	name = "vaporGLCanvas",
+					const wxPalette& palette = wxNullPalette); 	
 
 	virtual ~vaporControl();
+
+	// Add your frame updating code here.
+	void OnUpdate();
+
+	// Called then the app is idle. We will refresh the widget here
+	// to ensure maximum framerate is achieved.
+	void OnIdle(wxIdleEvent&);
+
+//-------//
 
 	vapor::Engine* getEngine() { return engine; }
 	void setEngine(vapor::Engine* engine) { this->engine = engine; }
 
+protected:
+
 	void initControl();
 
 	// Returns the window handle of this control
-	int getHandle();
-
-protected:
+	void* getHandle();
 
 	// window associated this control
 	vapor::render::Window* window;
 
 	// holds the main vapor engine
 	vapor::Engine* engine;
+
+	DECLARE_EVENT_TABLE()
 };

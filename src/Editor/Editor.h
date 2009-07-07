@@ -17,7 +17,8 @@
     #include "wx/wx.h"
 #endif
 
-#include <vapor/Engine.h>
+#include "vaporControl.h"
+#include "SceneTreeCtrl.h" 
 
 // Define a new application type, each program should derive a class from wxApp
 class MyApp : public wxApp
@@ -32,12 +33,15 @@ public:
     virtual bool OnInit();
 };
 
+//-----------------------------------//
+
 // Define a new frame type: this is going to be our main frame
 class MyFrame : public wxFrame
 {
 public:
     // ctor(s)
     MyFrame(const wxString& title);
+	virtual ~MyFrame();
 
     // event handlers (these functions should _not_ be virtual)
     void OnQuit(wxCommandEvent& event);
@@ -46,9 +50,10 @@ public:
 	// vaporEngine-related stuff
 	void initEngine();
 
-
 private:
 	vapor::Engine* engine;
+	SceneTreeCtrl* treeCtrl;
+	vaporControl* control;
 
     // any class wishing to process wxWidgets events must use this macro
     DECLARE_EVENT_TABLE()
@@ -69,23 +74,4 @@ enum
     // (where it is special and put into the "Apple" menu)
     Minimal_About = wxID_ABOUT
 };
-
-// ----------------------------------------------------------------------------
-// event tables and other macros for wxWidgets
-// ----------------------------------------------------------------------------
-
-// the event tables connect the wxWidgets events with the functions (event
-// handlers) which process them. It can be also done at run-time, but for the
-// simple menu events like this the static method is much simpler.
-BEGIN_EVENT_TABLE(MyFrame, wxFrame)
-    EVT_MENU(Minimal_Quit,  MyFrame::OnQuit)
-    EVT_MENU(Minimal_About, MyFrame::OnAbout)
-END_EVENT_TABLE()
-
-// Create a new application object: this macro will allow wxWidgets to create
-// the application object during program execution (it's better than using a
-// static object for many reasons) and also implements the accessor function
-// wxGetApp() which will return the reference of the right type (i.e. MyApp and
-// not wxApp)
-IMPLEMENT_APP(MyApp)
 
