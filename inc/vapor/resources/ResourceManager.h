@@ -63,7 +63,7 @@ public:
 	// Gets a list of all the registered resource handlers.
 	//list<ResourceLoader*> getResourceLoader(string extension);
 
-private:
+protected:
 
 	// maps a name to a resource
 	map<string, shared_ptr<Resource>> resources;

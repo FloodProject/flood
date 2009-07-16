@@ -20,8 +20,8 @@ int main()
 	example->run();
 	delete example;
 
-	#if defined(VAPOR_MEM_LEAK_DETECTOR) && defined(VAPOR_PLATFORM_WINDOWS)
-		_CrtDumpMemoryLeaks();
+	#if defined(VAPOR_MEMORY_LEAK_DETECTOR) && defined(VAPOR_PLATFORM_WINDOWS)
+		//_CrtDumpMemoryLeaks();
 	#endif
 
 	return EXIT_SUCCESS;

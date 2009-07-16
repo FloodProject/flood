@@ -18,6 +18,8 @@ class Group : public Node
 {
 public:
 
+  virtual ~Group() {}
+
   // adds child to the end of the child list.  Returns the index of
   // the new child node that has been added.
   virtual int add( shared_ptr<Node> child );
@@ -46,6 +48,7 @@ public:
   virtual std::string name() { return "group"; }
   
 private:
+
   std::vector<shared_ptr<Node>> children;
 };
 

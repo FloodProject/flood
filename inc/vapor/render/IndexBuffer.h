@@ -22,8 +22,8 @@ namespace IndexBufferType
 {
 	enum Enum
 	{
-		I_16bit,
-		I_32bit
+		I16bit,
+		I32bit
 	};
 }
 

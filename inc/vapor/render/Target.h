@@ -19,6 +19,8 @@ public:
 	virtual ~RenderTarget() { }
 	
 	virtual void update() = 0;
+
+	virtual void makeCurrent() = 0;
 };
 
 } } // end namespaces

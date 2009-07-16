@@ -36,11 +36,11 @@ using std::tr1::bind;
 	#ifdef _DEBUG
 		// Visual Leak Detector
 		// (http://dmoulding.googlepages.com/vld)
-		//#include <vld.h>
+		#include <vld.h>
 
-		#define _CRTDBG_MAP_ALLOC
-		#include <stdlib.h>
-		#include <crtdbg.h>
+		//#define _CRTDBG_MAP_ALLOC
+		//#include <stdlib.h>
+		//#include <crtdbg.h>
 	#endif
 #endif
 

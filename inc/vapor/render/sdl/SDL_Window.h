@@ -12,6 +12,7 @@
 
 #ifdef VAPOR_WINDOWING_SDL
 
+#define SDL_NO_COMPAT
 #include <SDL.h>
 
 #include "vapor/Platform.h"
@@ -39,10 +40,15 @@ public:
 	// Sets the cursor visibility
 	void setCursor(bool state) const;
 
+	void makeCurrent();
+
 private:
 
-	// Display surface
-	SDL_Surface	*display;			
+	// SDL window id
+	SDL_WindowID windowId;
+
+	// OpenGL context
+	SDL_GLContext context;
 
 	// Initializes SDL
 	bool init();

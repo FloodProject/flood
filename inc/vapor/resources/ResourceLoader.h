@@ -17,17 +17,15 @@ namespace vapor {
 
 /**
  * Resource Loader interface for classes that want to provide resource
- * coding and decoding services for a given file format type.
+ * encoding and decoding services for a given file format type.
  */
 
 class ResourceLoader
 {
-protected:
+public:
 
 	ResourceLoader() {}
 	virtual ~ResourceLoader() {}
-
-public:
 
 	// Decodes a given file into a resource.
 	virtual Resource* decode(vfs::File& file) = 0;

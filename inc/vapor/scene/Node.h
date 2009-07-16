@@ -24,14 +24,14 @@ class Node
 {
 public:
 
-  explicit Node( shared_ptr<Node> parent = shared_ptr<Node>() );
+  explicit Node( Node* parent = nullptr );
   virtual ~Node();
   
   // Sets the parent of the node.
-  void setParent( shared_ptr<Node> parent );
+  void setParent( Node* parent );
   
   // Gets the parent of the node.
-  shared_ptr<Node> getParent() const { return parent; }
+  Node* getParent() const { return parent; }
   
   // Gets the bounding volume of the node.
   //AABB getBoundingVolume() const;
@@ -41,7 +41,7 @@ public:
   virtual std::string name() { return "Node"; }
   
 private:
-  shared_ptr<Node> parent;
+	Node* parent;
   //AABB boundingVolume;
 };
 

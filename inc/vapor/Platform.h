@@ -22,9 +22,9 @@
 	#define VAPOR_PLATFORM_WINDOWS
 #elif defined(__APPLE__) || defined(MACOSX)
 	#define VAPOR_PLATFORM_MACOSX
-#else
-	#define VAPOR_PLATFORM_LINUX
 #elif
+	#define VAPOR_PLATFORM_LINUX
+#else
 	#error "Unknown platform (not currently supported by the engine)"
 #endif
 

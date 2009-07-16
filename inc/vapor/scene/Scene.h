@@ -26,6 +26,8 @@ class Scene : public Group
 {
 public:
 
+	virtual ~Scene() {}
+
 	void evaluate();
 
 	//virtual std::string save();
