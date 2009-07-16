@@ -1,0 +1,29 @@
+Scripting languages
+
+	NekoVM
+	
+	Python
+	
+	Ruby
+	
+	Mono (Boo / JS / C#)
+
+	JavaScript (V8)
+		
+	Monster
+		
+	Squirrel
+
+	Pawn
+
+	GameMonkey
+
+	Lua
+	
+	ChaiScript
+	
+	AngelScript
+	
+	Falcon (http://www.falconpl.org/)
+	
+http://www.ogre3d.org/wiki/index.php/Libraries#Scripting

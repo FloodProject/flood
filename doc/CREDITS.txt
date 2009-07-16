@@ -7,14 +7,7 @@ General:
 	* Uses modern C++ where possible
 	* Automatic resource management
 	* Easy framework for fast examples
-	(* Integrates with Poco libraries)
-	
-Editor:
-
-	* Based on wxWidgets cross-platform GUI library
-	* saves the scene structure to binary format
-	* Easy placement of entities with manipulators
-
+		
 Resources:
 
 	* Meshes (supports Milkshape3D format)
@@ -26,9 +19,16 @@ Resources:
 Rendering:
 
 	* Viewing frustum culling
-	* Abstract renderer (with OpenGL impl.)
+	* Cross-platform OpenGL renderer
 	* Supports shaders via Cg library
 	* Cross-platform windowing code based on SDL
+	
+Editor:
+
+	* Based on wxWidgets cross-platform GUI library
+	* Scene serialization support using the engine built-in format
+	* Easy placement of entities with manipulators
+	* Scripting support using JavaScript	
 	
 --------------------
 
@@ -45,7 +45,14 @@ Libraries used:
 	* DevIL
 	* FreeType
 	* wxWidgets
-	* Protobufs
+
+Tools used:
+
+	* wxInclude
+	
+Resources used:
+
+	* fam fam fam icons
 
 Special thanks:
 

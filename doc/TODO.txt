@@ -12,9 +12,10 @@ EXAMPLES:
 Add a custom node to the scene graph
 Add a custom resource type
 
-
 TODO:
 -----
+
+Make the engine memory-leak proof
 
 Renderer:
 
@@ -54,6 +55,7 @@ Virtual File System :)
 DONE:
 -----
 
+Make the memory leak detector work
 Header in the log output
 CSS-styling to the logging output
 Implement Settings class

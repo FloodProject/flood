@@ -1,0 +1,46 @@
+Approaches to link engine and wxWidgets:
+
+	1. vaporControl : wxControl
+	
+		vapor will create a window given an external window handle and render
+		into that, usually we use the handle from the inherited wxWindow.
+		Each control will hold an associated window pointer returned by vapor.
+		
+		This means that window implementations in vapor need all to take care
+		of checking if we have a custom window handle and implement code to
+		create a new context and render into the custom window handle provided.
+
+	2. vaporControl : wxControl, vapor::render::Window
+	
+		Each control will be a vapor render window, so you can create any
+		number of controls that you want, add them to a wxFrame or whatever,
+		and then switch render targets in vapor, and it renders in the control.
+		The render window will be implemented by wxWidgets code.
+		
+	3. vapor::render::wxWindow : vapor::render::Window    
+	   vaporControl : wxControl
+	
+		This is kind of a hybrid between approach 1. and 2., since there will
+		be a specific window implementation in vapor that uses wxWidgets, but
+		each control in wxWidgets will hold a pointer to the window. 
+		
+		This is different from approach 2. in that we will have a specific 
+		window implementation that vaporControl will create, so we won't use a
+		generic SDL, Win32 or whatever window implementation that vapor chooses 
+		for us. It also gives more control than 2, since the window impl. can
+		use wxWidgets specific code, though this may mean more work...
+		
+
+/* create a new render device */
+render::Device dev = new render::Device;
+scene::Camera cam = new Cam;
+
+/* create a new vapor control */
+vaporControl v1 = new vaporControl;
+cam.add(v1->getWindow());
+scene->render();
+
+/* render into another control */
+vaporControl v2 = new vaporControl;
+cam.add(new Viewport(v2->getWindow());
+scene->render();
