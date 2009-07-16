@@ -19,8 +19,7 @@ namespace vapor {
 
 int Group::add(shared_ptr<Node> child)
 {
-	shared_ptr<Node> ptr(this);
-	child->setParent(ptr);
+	child->setParent(this);
 	children.push_back(child);
 	return children.size()-1;
 }

@@ -91,8 +91,8 @@ void Example::onRender()
 	//VertexDeclaration decl(elms, elms + (sizeof(elms) / sizeof(elms[0])));
 
 	//// create a static write-only vertex buffer for 10 elements
-	//shared_ptr<VertexBuffer> vb = bm->createVertexBuffer(
-	//	10, decl, BufferUsage::Write, BufferType::Static);
+	//shared_ptr<VertexBuffer> vb(new VertexBuffer(
+	//	10, decl, BufferUsage::Write, BufferType::Static));
 }
 
 //-----------------------------------//

@@ -26,7 +26,7 @@ namespace vapor {
 //-----------------------------------//
 
 SDLWindow::SDLWindow(Settings& settings)
-	:	Window(settings), display(nullptr)
+	:	Window(settings)
 {
 	if ( !init() || !open() ) {
 		exit(1);
@@ -37,8 +37,16 @@ SDLWindow::SDLWindow(Settings& settings)
 
 SDLWindow::~SDLWindow()
 {
+	if(context) 
+		SDL_GL_DeleteContext(context);
+	
+	if(windowId)
+		SDL_DestroyWindow(windowId);
+
 	// shutdown SDL
-	SDL_Quit();
+	SDL_VideoQuit();
+
+	//SDL_Quit();
 }
 
 //-----------------------------------//
@@ -48,8 +56,9 @@ bool SDLWindow::init(void)
 	info("render::window::sdl", "Initializing SDL subsystem");
 
 	// initialize video sub-system
-	if ( SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE) < 0 ) {
-		error("render::window::sdl", "Failed to initialize SDL");
+	if ( SDL_VideoInit(nullptr, 0) < 0 ) {
+		error("render::window::sdl", 
+			"Failed to initialize SDL %s", SDL_GetError());
 		return false;
 	}
 
@@ -63,42 +72,37 @@ bool SDLWindow::init(void)
 
 bool SDLWindow::open()
 {
-	Uint32 flags = SDL_HWPALETTE | SDL_RESIZABLE;
+	Uint32 flags = 0;
 
 	#ifdef VAPOR_RENDERER_OPENGL
-		flags |= SDL_OPENGL;
+		flags |= SDL_WINDOW_OPENGL;
 	#endif
 
-	// check if we want fullscreen
-	if (getSettings().isFullscreen())
-		flags |= SDL_FULLSCREEN;
-
 	// check for an external window handle
-	if (getSettings().getCustomHandle())
+	if (settings.getCustomHandle() != nullptr)
 	{
-		// SDL can receive a custom window id via an 
-		// environment variable, smells like 'hack' to me :D
+		void* handle = settings.getCustomHandle();
+		windowId = SDL_CreateWindowFrom(handle);
 
-		#define BUF_SIZE 64
-
-		#ifdef VAPOR_PLATFORM_WINDOWS
-			#define snprintf sprintf_s
-		#endif 
-		
-		char tmp[BUF_SIZE];
-		ulong handle = (ulong) getSettings().getCustomHandle();
-		snprintf(tmp, BUF_SIZE, "SDL_WINDOWID=%u", handle);
-		
-		#ifdef VAPOR_PLATFORM_WINDOWS
-			int ret = _putenv(tmp);
-		#else
-			int ret = putenv(tmp);	
-		#endif
-
-		if(ret != 0)
-		{
-			error("render::window::sdl", "Error setting custom window handle");
+	}
+	else
+	{
+		if(settings.isFullscreen()) {
+			flags |= SDL_WINDOW_FULLSCREEN;
 		}
+
+		flags |= SDL_WINDOW_SHOWN;
+
+		windowId = SDL_CreateWindow("vaporEngine", 
+			SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 
+			settings.getWidth(), settings.getHeight(), flags);
+	}
+
+	if(!windowId)
+	{
+		error("render::window::sdl", 
+			"Error creating SDL window: %s", SDL_GetError());
+		return false;
 	}
 
 	//SDL_GL_SetAttribute( SDL_GL_RED_SIZE, 5 );
@@ -109,13 +113,13 @@ bool SDLWindow::open()
 
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-	// set the video mode
-	display = SDL_SetVideoMode(getSettings().getWidth(),
-		getSettings().getHeight(), getSettings().getBpp(), flags);
-
-	if ( !display ) {
+    // create OpenGL context
+    context = SDL_GL_CreateContext(windowId);
+	
+	if(!context)
+	{
 		error("render::window::sdl", 
-			"Failed to create a display: %s", SDL_GetError());
+			"Error creating OpenGL context: %s", SDL_GetError());
 		return false;
 	}
 
@@ -126,12 +130,23 @@ bool SDLWindow::open()
 
 void SDLWindow::update() 
 {
+	if(!context) return;
+
 	#ifdef VAPOR_RENDERER_OPENGL
 		// swap buffers and update window
-		SDL_GL_SwapBuffers();
+		SDL_GL_SwapWindow(windowId);
 	#else
 		#error "SDL needs window buffer swapping implementation."
 	#endif
+}
+
+//-----------------------------------//
+
+void SDLWindow::makeCurrent()
+{
+	if(!context || !windowId) return;
+
+	SDL_GL_MakeCurrent(windowId, context);
 }
 
 //-----------------------------------//
@@ -163,8 +178,10 @@ bool SDLWindow::pumpEvents()
 
 void SDLWindow::setTitle(const string& title) const
 {
-	SDL_WM_SetCaption(title.c_str(), NULL);
-	info("render::window::sdl", "Changing window title to '%s'", title.c_str());
+	SDL_SetWindowTitle(windowId, title.c_str());
+	
+	info("render::window::sdl", 
+		"Changing window title to '%s'", title.c_str());
 }
 
 //-----------------------------------//

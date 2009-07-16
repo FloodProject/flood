@@ -23,6 +23,11 @@ ResourceManager::ResourceManager()
 ResourceManager::~ResourceManager()
 {
 	// should all resources be deleted here? hmm...
+
+	// delete resource loaders
+	map<string, ResourceLoader*>::iterator it;
+	for(it = resourceLoaders.begin(); it != resourceLoaders.end(); it++)
+		delete it->second;
 }
 
 //-----------------------------------//

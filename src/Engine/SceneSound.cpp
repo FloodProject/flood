@@ -6,32 +6,24 @@
 *
 ************************************************************************/
 
-#include "vapor/scene/Node.h"
+#include "vapor/scene/Sound.h"
+#include "vapor/audio/Device.h"
+#include "vapor/resources/Sound.h"
+
+using namespace vapor::resources;
 
 namespace vapor {
 	namespace scene {
 
 //-----------------------------------//
 
-Node::Node(Node* parent)
-	: parent(parent)
+Sound::Sound(shared_ptr<Resource> sound)
+	: resource(sound) 
 {
-
 }
 
 //-----------------------------------//
 
-Node::~Node()
-{
-
-}
-
-//-----------------------------------//
-
-void Node::setParent( Node* parent )
-{
-	this->parent = parent;
-}
 
 //-----------------------------------//
 

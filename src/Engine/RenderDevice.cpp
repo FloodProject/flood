@@ -28,7 +28,8 @@ namespace vapor {
 //-----------------------------------//
 
 Device::Device()
-	: clearColor(math::Colors::White)
+	: clearColor(math::Colors::White), adapter(nullptr),
+	window(nullptr), bufferManager(nullptr)
 {
 	info("render::opengl", "Creating OpenGL rendering device");
 
@@ -42,8 +43,9 @@ Device::Device()
 
 Device::~Device()
 {
-	delete adapter;
-	delete window;
+	if(adapter) delete adapter;
+	if(window) delete window;
+	if(bufferManager) delete bufferManager;
 }
 
 //-----------------------------------//

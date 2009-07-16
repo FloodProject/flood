@@ -51,7 +51,8 @@ public:
 
 	// Called then the app is idle. We will refresh the widget here
 	// to ensure maximum framerate is achieved.
-	void OnIdle(wxIdleEvent&);
+	void OnIdle(wxIdleEvent& event);
+	void OnPaint(wxPaintEvent& event);
 
 //-------//
 

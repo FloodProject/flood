@@ -21,6 +21,8 @@ using namespace vapor::math;
 namespace vapor {
 	namespace audio {
 
+// TODO: init first context to log version
+
 //-----------------------------------//
 
 Device::Device()

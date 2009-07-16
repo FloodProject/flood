@@ -28,7 +28,7 @@ using namespace vapor::math;
 ////////////////////////////////////////////////////////////
 BEGIN_EVENT_TABLE(vaporControl, wxGLCanvas)
     EVT_IDLE(vaporControl::OnIdle)
-    //EVT_PAINT(vaporControl::OnPaint)
+    EVT_PAINT(vaporControl::OnPaint)
 END_EVENT_TABLE()
 
 //-----------------------------------//
@@ -61,8 +61,19 @@ void vaporControl::OnUpdate()
 	render::Device* device = engine->getRenderDevice();
 	
 	device->setRenderTarget(window);
-	device->setClearColor(Colors::Green);
+	device->setClearColor(Colors::White);
 	device->clearTarget();
+}
+
+//-----------------------------------//
+
+void vaporControl::OnPaint(wxPaintEvent& event)
+{
+	OnUpdate();
+
+	window->update();
+
+	wxGLCanvas::OnPaint(event);
 }
 
 //-----------------------------------//

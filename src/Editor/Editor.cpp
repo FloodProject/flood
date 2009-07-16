@@ -7,6 +7,8 @@
 ************************************************************************/
 
 #include "Editor.h"
+#include "ArtProvider.h"
+#include "toolbar_icons.h"
 
 using namespace vapor;
 using namespace vapor::math;
@@ -22,8 +24,10 @@ using namespace vapor::render;
 // handlers) which process them. It can be also done at run-time, but for the
 // simple menu events like this the static method is much simpler.
 BEGIN_EVENT_TABLE(MyFrame, wxFrame)
-    EVT_MENU(Minimal_Quit,  MyFrame::OnQuit)
-    EVT_MENU(Minimal_About, MyFrame::OnAbout)
+    EVT_MENU(Editor_Quit,  MyFrame::OnQuit)
+    EVT_MENU(Editor_About, MyFrame::OnAbout)
+
+	//EVT_COMMAND(Toolbar_ToggleScene, MyFrame::OnToolbarButtonClick)
 END_EVENT_TABLE()
 
 //-----------------------------------//
@@ -47,6 +51,9 @@ bool MyApp::OnInit()
 
 	// let's add support for PNG images
 	wxImage::AddHandler(new wxPNGHandler);
+
+	// add a new art provider for stock icosn
+	wxArtProvider::Push(new ArtProvider);
 
     // create the main application window
     MyFrame *frame = new MyFrame("vaporEditor - level editor for vapor");
@@ -72,38 +79,15 @@ MyFrame::MyFrame(const wxString& title)
     // set the frame icon
     SetIcon(wxICON(sample));
 
-#if wxUSE_MENUS
-    // create a menu bar
-    wxMenu* fileMenu = new wxMenu;
+	// create window basic widgets
+	createMenus();
+	createToolbar();
+	createStatusbar();
 
-    // the "About" item should be in the help menu
-    wxMenu* helpMenu = new wxMenu;
-    helpMenu->Append(Minimal_About, "&About...\tF1", "Show about dialog");
-
-    fileMenu->Append(Minimal_Quit, "E&xit\tAlt-X", "Quit this program");
-
-    // now append the freshly created menu to the menu bar...
-    wxMenuBar* menuBar = new wxMenuBar();
-    menuBar->Append(fileMenu, "&File");
-    menuBar->Append(helpMenu, "&Help");
-
-    // ... and attach this menu bar to the frame
-    SetMenuBar(menuBar);
-#endif // wxUSE_MENUS
-
-#if wxUSE_STATUSBAR
-    // create a status bar just for fun (by default with 1 pane only)
-    CreateStatusBar(2);
-	SetStatusText("vaporEngine (FPS: OVER 9000!)");
-#endif // wxUSE_STATUSBAR
-
-	wxToolBar* toolBar = new wxToolBar();
-	SetToolBar(toolBar);
-
-	// initialize vaporEngine
+	// initialize the engine
 	initEngine();
 
-	wxBoxSizer* sizer = new wxBoxSizer( wxHORIZONTAL );
+	sizer = new wxBoxSizer( wxHORIZONTAL );
 
 	treeCtrl = new SceneTreeCtrl(engine, this, ID_SceneTree,
 		wxDefaultPosition, wxSize(200, -1), wxTR_DEFAULT_STYLE);
@@ -136,6 +120,60 @@ void MyFrame::initEngine()
 }
 
 //-----------------------------------//
+
+void MyFrame::createStatusbar()
+{
+#if wxUSE_STATUSBAR
+    // create a status bar just for fun (by default with 1 pane only)
+    CreateStatusBar(2);
+	SetStatusText("vaporEngine (FPS: OVER 9000!)");
+#endif // wxUSE_STATUSBAR
+}
+
+//-----------------------------------//
+
+void MyFrame::createMenus()
+{
+#if wxUSE_MENUS
+    // create a menu bar
+    wxMenu* fileMenu = new wxMenu;
+	fileMenu->Append(Editor_Quit, "E&xit\tAlt-X", "Quit this program");
+
+    // the "About" item should be in the help menu
+    wxMenu* helpMenu = new wxMenu;
+    helpMenu->Append(Editor_About, "&About...\tF1", "Show about dialog");
+
+    // now append the freshly created menu to the menu bar...
+    wxMenuBar* menuBar = new wxMenuBar();
+    menuBar->Append(fileMenu, "&File");
+    menuBar->Append(helpMenu, "&Help");
+
+    // ... and attach this menu bar to the frame
+    SetMenuBar(menuBar);
+#endif // wxUSE_MENUS
+}
+
+//-----------------------------------//
+
+void MyFrame::createToolbar()
+{
+	wxToolBar* toolBar = this->CreateToolBar( wxTB_HORIZONTAL, wxID_ANY );
+	
+	toolBar->AddTool( wxID_ANY, "New", wxMEMORY_BITMAP(page) );
+	toolBar->AddTool( wxID_ANY, "Open", wxMEMORY_BITMAP(folder_explore) ); 
+	toolBar->AddTool( wxID_ANY, "Save", wxMEMORY_BITMAP(disk) );
+	
+	toolBar->AddSeparator();
+
+	toolBar->AddTool( Toolbar_ToggleScene, "Toogle Scene-tree visibility", wxMEMORY_BITMAP(application_side_tree) ); 
+
+	toolBar->Realize();	
+
+	// connect events
+	//Bind(wxEVT_COMMAND_TOOL_CLICKED, &MyFrame::OnToolbarButtonClick, wxID_ANY );
+}
+
+//-----------------------------------//
 // event handlers
 //-----------------------------------//
 
@@ -144,6 +182,24 @@ void MyFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
     // true is to force the frame to close
     Close(true);
 }
+
+//-----------------------------------//
+
+void MyFrame::OnToolbarButtonClick(wxCommandEvent& event)
+{
+	if( event.GetId() == Toolbar_ToggleScene ) {
+		if( treeCtrl->IsShown() )	
+			//treeCtrl->HideWithEffect(wxSHOW_EFFECT_SLIDE_TO_LEFT, 250);
+			treeCtrl->Hide();
+		else
+			treeCtrl->Show();
+			//treeCtrl->ShowWithEffect(wxSHOW_EFFECT_SLIDE_TO_RIGHT, 250);
+
+		Update();
+	}
+	//event.Skip();
+}
+
 
 //-----------------------------------//
 

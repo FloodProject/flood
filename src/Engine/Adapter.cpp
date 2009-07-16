@@ -98,15 +98,21 @@ void Adapter::parseInfo()
 
 void Adapter::log() const 
 {
+	if(name.empty()) return;
+
 	string s = getShading();
 	string d = getDriver();
 	string g = getVersion();
 
+	if(s.empty() 
+		|| d.empty() 
+		|| g.empty()) return;
+
 	// log GL stuff
-	info("gl::adapter", "Graphics adapter: %s", 
+	info("render::adapter", "Graphics adapter: %s", 
 		getName().c_str());
 
-	info("render::opengl::adapter", "%s%s%s", 
+	info("render::adapter", "%s%s%s", 
 		!g.empty() ? ("OpenGL " + g).c_str() : "",
 		!s.empty() ? (" / GLSL " + s).c_str() : "",
 		!d.empty() ? (" / driver: " + d).c_str() : "");

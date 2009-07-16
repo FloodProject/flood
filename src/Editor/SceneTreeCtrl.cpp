@@ -35,6 +35,8 @@ SceneTreeCtrl::SceneTreeCtrl(vapor::Engine* engine,
 	
 	initControl();
 	initIcons();
+
+	ExpandAll();
 }
 
 //-----------------------------------//
@@ -82,7 +84,6 @@ void SceneTreeCtrl::initIcons()
 	AssignImageList(imageList);
 }
 
-
 //-----------------------------------//
 
 void SceneTreeCtrl::onItemMenu(wxTreeEvent& event)
@@ -91,13 +92,12 @@ void SceneTreeCtrl::onItemMenu(wxTreeEvent& event)
     //MyTreeItemData *item = itemId.IsOk() ? (MyTreeItemData *)GetItemData(itemId)
                                          //: NULL;
     wxPoint clientpt = event.GetPoint();
-    wxPoint screenpt = ClientToScreen(clientpt);
 
 #if wxUSE_MENUS
     wxMenu menu("Scene node");
     menu.Append(ID_MenuSceneNodeDelete, "&Delete...");
 
-    PopupMenu(&menu, screenpt);
+    PopupMenu(&menu, clientpt);
 #endif // wxUSE_MENUS
 
     event.Skip();

@@ -52,6 +52,7 @@ Engine::~Engine()
 	delete renderDevice;
 	delete audioDevice;
 	delete resourceManager;
+	delete sceneNode;
 	delete Log::getLogger();
 }
 
