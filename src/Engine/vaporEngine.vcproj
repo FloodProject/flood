@@ -296,6 +296,14 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="Win32"
+					>
+					<File
+						RelativePath=".\Win32_Window.cpp"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter
@@ -618,7 +626,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Context.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\audio\Context.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\inc\vapor\audio\Device.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\audio\Source.h"
 				>
 			</File>
 		</Filter>

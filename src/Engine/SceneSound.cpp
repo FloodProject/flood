@@ -7,23 +7,31 @@
 ************************************************************************/
 
 #include "vapor/scene/Sound.h"
-#include "vapor/audio/Device.h"
-#include "vapor/resources/Sound.h"
-
-using namespace vapor::resources;
 
 namespace vapor {
 	namespace scene {
 
 //-----------------------------------//
 
-Sound::Sound(shared_ptr<Resource> sound)
-	: resource(sound) 
+Sound::Sound( shared_ptr<Listener> ls, shared_ptr<resources::Sound> sound )
+	: Source(ls.get(), sound), ls(ls)
 {
+
 }
 
 //-----------------------------------//
 
+Sound::~Sound()
+{
+
+}
+
+//-----------------------------------//
+
+std::string Sound::save(int indent)
+{
+	return "";
+}
 
 //-----------------------------------//
 

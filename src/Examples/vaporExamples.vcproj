@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\GLee&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;;&quot;$(SolutionDir)dep\OpenAL 1.1 SDK\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\GLee&quot;;&quot;$(SolutionDir)dep\vld\include&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;;&quot;$(SolutionDir)dep\OpenAL 1.1 SDK\include&quot;"
 				PreprocessorDefinitions="WIN32;___DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				ExceptionHandling="1"

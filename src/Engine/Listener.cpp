@@ -6,9 +6,6 @@
 *
 ************************************************************************/
 
-#include <al.h>
-#include <alc.h>
-
 #include "vapor/scene/Listener.h"
 
 namespace vapor {
@@ -17,16 +14,16 @@ namespace vapor {
 //-----------------------------------//
 
 Listener::Listener(audio::Device* device)
-	: context(nullptr)
+	: Context(device)
 {
-	context = alcCreateContext(device->device, nullptr);
+
 }
 
 //-----------------------------------//
 
-void Listener::makeCurrent()
+Listener::~Listener()
 {
-	
+
 }
 
 //-----------------------------------//

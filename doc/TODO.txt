@@ -36,7 +36,6 @@ Math:
 	
 Platform:
 	
-	Get Memory Leak Detector working
 	Implement abstract timer class
 	Color copy cons and operators
 	Log all the engine calls

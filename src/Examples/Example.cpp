@@ -15,6 +15,8 @@
 #include <vapor/scene/Sound.h>
 #include <vapor/scene/Listener.h>
 
+using std::tr1::static_pointer_cast;
+
 using namespace vapor;
 using namespace vapor::vfs;
 using namespace vapor::math;
@@ -51,19 +53,25 @@ void Example::onSetupScene()
 {
 	ResourceManager* rm = getResourceManager();
 	Scene* scene = getSceneManager();
-
-	//shared_ptr<Listener> ls(new Listener(getAudioDevice()));
-	//ls->translate(math::Vector3(1.0f, 0.0f, 0.0f));
-	//ls->makeCurrent();
-	//scene->add(ls);
-
-	//File file("media/stereo.ogg");
-	//shared_ptr<Resource> res = rm->getResource(file);
-	//shared_ptr<scene::Sound> snd(new scene::Sound(res));
-	//scene->add(snd);
+	audio::Device* audioDev = getAudioDevice();
 
 	shared_ptr<Group> grp(new Group());
+
+	shared_ptr<Listener> ls(new Listener(audioDev));
+	ls->translate(math::Vector3(1.0f, 0.0f, 0.0f));
+	ls->makeCurrent();
+	ls->setVolume(1.0f);
+	grp->add(ls);
+
+	File file("media/stereo.ogg");
+	shared_ptr<resources::Sound> res = 
+		static_pointer_cast<resources::Sound>(rm->getResource(file));
+	shared_ptr<scene::Sound> snd(new scene::Sound(ls, res));
+	grp->add(snd);
+
 	scene->add(grp);
+
+	snd->play();
 
 	string example = scene->save();
 	puts(example.c_str());
@@ -99,7 +107,7 @@ void Example::onRender()
 
 void Example::onUpdate() 
 {
-
+	Scene* scene = getSceneManager();
 }
 
 //-----------------------------------//

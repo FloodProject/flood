@@ -1,0 +1,85 @@
+/************************************************************************
+*
+* vaporEngine (2008-2009)
+*
+*	<http://www.portugal-a-programar.org>
+*
+************************************************************************/
+
+#pragma once
+
+#include "vapor/CompileOptions.h"
+
+#ifdef VAPOR_AUDIO_OPENAL
+
+#include "vapor/Platform.h"
+
+#include "vapor/audio/Device.h"
+#include "vapor/audio/Context.h"
+#include "vapor/resources/Sound.h"
+#include "vapor/scene/Listener.h"
+#include "vapor/math/Vector3.h"
+
+namespace vapor {
+	namespace audio {
+
+/**
+ * Wraps an OpenAL source in a class. A source in OpenAL is the object 
+ * that contains the position of the sound being played in 2D, and also 
+ * tells what audio data to play. Each source will get a shared audio
+ * buffer from the audio device. 
+ */
+
+class Source
+{
+public:
+
+	Source( audio::Context* context, shared_ptr<resources::Sound> sound );
+	~Source();
+
+	//void setResource( shared_ptr<resources::Resource> sound );
+
+	// Plays the sound buffer a number of times.
+	void play(int count = 1);
+
+	// Stops the playing of the audio. The next time you play it will start
+	// from the beginning.
+	void stop();
+
+	// Pauses the playing of the audio. The next time you play it will start
+	// from the position it had when it was paused.
+	void pause();
+
+	// Sets the volume of the source. Volume is in the range [0.0-1.0].
+	void setVolume( float volume );
+
+	// Sets the pitch of the sourc. Pitch is in the range [0.0-1.0].
+	void setPitch( float pitch );
+
+	// Sets the roll-off of the sourc. Roll-off is in the range [0.0-1.0].
+	void setRollOff( float rollOff );
+
+	// Sets the position of the source.
+	void setPosition( math::Vector3& position ); 
+  
+protected:
+
+	// Queues the buffer data in the source.
+	void queue();
+
+	// Holds a pointer to the audio device.
+	audio::Device* device;
+
+	// Holds a pointer to the audio context.
+	audio::Context* context;
+	
+	// Holds a pointer to the audio data buffer.
+	shared_ptr<resources::Sound> resource;
+
+	// Holds the source id from OpenAL.
+	ALuint sourceId;
+};
+
+} } // end namespaces
+
+#endif

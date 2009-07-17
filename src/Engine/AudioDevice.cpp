@@ -10,8 +10,7 @@
 
 #ifdef VAPOR_AUDIO_OPENAL
 
-#include <al.h>
-#include <alc.h>
+#include <sstream>
 
 #include "vapor/audio/Device.h"
 
@@ -26,26 +25,29 @@ namespace vapor {
 //-----------------------------------//
 
 Device::Device()
-	: device(nullptr), ctx(nullptr), init(false)
+	: device(nullptr), ctx(nullptr), init(false), error(AL_NO_ERROR)
 {
 	// select the "preferred device"
 	device = alcOpenDevice(nullptr); 
 	
-	if(!device || checkError()) {
+	if(!device || checkError()) 
+	{
 		warn("audio::al", "Could not create OpenAL device: %s", getError());
 	}
 
-	info("audio::al", "Using OpenAL %s", alGetString(AL_VERSION));
-
-	// set a default listener
-	setListener(Vector3(0.0f, 0.0f, 0.0f));
-
-	if(checkError()) {
-		warn("audio::al", "Error initializing OpenAL: %s", getError());
+	const ALchar* version = alGetString(AL_VERSION);
+	
+	if(!version || checkError()) 
+	{
+		warn("audio::al", "Could not get OpenAL version");
+	} else {
+		info("audio::al", "Using OpenAL version %s", version);
 	}
 
-	// set default volume
-	setVolume(1.0f);
+	if(checkError())
+	{
+		warn("audio::al", "Error initializing OpenAL: %s", getError());
+	}
 }
 
 //-----------------------------------//
@@ -58,12 +60,27 @@ Device::~Device()
 	
 	ALCboolean ret = alcCloseDevice(device);
 		
-	if(ret == ALC_FALSE) {
-		warn("audio::al", "Error closing OpenAL device");
+	if(ret != ALC_TRUE) 
+	{
+		warn("audio::al", "Error closing OpenAL device: %s", getError());
 		return;
 	}
-	
+
 	device = nullptr;
+}
+
+//-----------------------------------//
+
+string Device::getVersion() 
+{
+    std::stringstream s;
+    ALCint major = 0, minor = 0;
+    
+	alcGetIntegerv(nullptr, ALC_MAJOR_VERSION, 1, &major);
+    alcGetIntegerv(nullptr, ALC_MINOR_VERSION, 1, &minor);
+    s << major << "." << minor;
+    
+	return s.str();
 }
 
 //-----------------------------------//
@@ -85,14 +102,14 @@ const ALchar* Device::getError()
 	case AL_NO_ERROR:
 		str = "No error."; 
 		break;
-	case AL_INVALID_NAME:
-		str = "Invalid name.";
-		break;
 	case AL_INVALID_ENUM:
 		str = "Invalid enum.";
 		break;
 	case AL_INVALID_VALUE:
 		str = "Invalid value.";
+		break;
+	case AL_INVALID_NAME:
+		str = "Invalid name.";
 		break;
 	default:
 		str = "Unknown error.";
@@ -104,32 +121,14 @@ const ALchar* Device::getError()
 
 //-----------------------------------//
 
-void Device::switchListener(scene::Listener* listener)
-{
-	listenerContexts[listener] = alcCreateContext(device, nullptr);
-	alcMakeContextCurrent(listenerContexts[listener]);
-}
-
-//-----------------------------------//
-
-void Device::setListener(const Vector3& position)
-{
-	// update OpenAL position information
-	alListener3f(AL_POSITION, position.x, position.y, position.z);
-
-	if(alGetError() != AL_NO_ERROR) {
-		warn("audio::al", "Error changing listener position");
-	}
-}
-
-//-----------------------------------//
-
 void Device::setVolume(float volume)
 {
 	alListenerf(AL_GAIN, volume);
 
-	if(alGetError() != AL_NO_ERROR) {
-		warn("audio::al", "Error changing listener volume");
+	if(checkError()) 
+	{
+		warn("audio::al", "Error changing listener volume: %s",
+			getError());
 	}
 }
 
@@ -154,23 +153,47 @@ ALint Device::getALFormat(SoundFormat::Enum format)
 
 //-----------------------------------//
 
-void Device::play2D(const Sound *sound, bool loop)
+void Device::switchContext(ALCcontext* context)
 {
-	ALuint buffer = prepareBuffer(sound);
+	// if context is already current, return.
+	if(ctx && (ctx == context))
+		return;
 
-	ALuint sourceID;
+	ALCboolean ret = alcMakeContextCurrent(context);
 
-	// Generate Buffers
-	alGetError(); // clear error code
-	alGenSources(1, &sourceID);
+	if( (ret != ALC_TRUE))
+	{
+		warn("audio::al", "Could not make OpenAL context current");
+		return;
+	}
 
-	// Set the source and listener to the same location
-	alSource3f(sourceID, AL_POSITION, 0.0f, 0.0f, 0.0f);
+	this->ctx = context;
 }
 
 //-----------------------------------//
 
-ALuint Device::prepareBuffer(const Sound* sound)
+//void Device::play2D(shared_ptr<resources::Sound> sound, bool loop)
+//{
+//	ALuint buffer = prepareBuffer(sound);
+//
+//	ALuint sourceID;
+//
+//	// Generate Buffers
+//	checkError(); // clear error code
+//	alGenSources(1, &sourceID);
+//
+//	// Set the source and listener to the same location
+//	alSource3f(sourceID, AL_POSITION, 0.0f, 0.0f, 0.0f);
+//
+//	if(checkError())
+//	{
+//		warn("audio::al", "Could not set source position: %s", getError());
+//	}
+//}
+
+//-----------------------------------//
+
+ALuint Device::prepareBuffer(shared_ptr<resources::Sound> sound)
 {
 	// check if buffer with same sound already exists
 	if(soundBuffers.find(sound) != soundBuffers.end()) 
@@ -181,8 +204,10 @@ ALuint Device::prepareBuffer(const Sound* sound)
 	alGenBuffers(1, &bufferID);
 
 	// check if buffer was successfuly created
-	if(alGetError() != AL_NO_ERROR) {
-		warn("audio::al", "Error creating a sound buffer");
+	if(checkError()) 
+	{
+		warn("audio::al", "Error creating a sound buffer: %s",
+			getError());
 	}
 
 	// update buffer id in the map
@@ -192,8 +217,10 @@ ALuint Device::prepareBuffer(const Sound* sound)
 	alBufferData(bufferID, getALFormat(sound->getFormat()), &sound->getBuffer()[0], 
 		static_cast <ALsizei> (sound->getBuffer().size()), sound->getFrequency());
 	
-	if(alGetError() != AL_NO_ERROR) {
-		warn("audio::al", "Error uploading sound to buffer");
+	if(checkError())
+	{
+		warn("audio::al", "Error uploading sound to buffer: %s",
+			getError());
 	}
 
 	return bufferID;

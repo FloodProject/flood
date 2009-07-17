@@ -31,7 +31,7 @@ class Example : public vapor::Framework
 	// Renders the scene
 	virtual void onRender();
 
-private:
+protected:
 
 };
 

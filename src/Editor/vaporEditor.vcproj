@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\wxwidgets\include&quot;;&quot;$(SolutionDir)dep\wxwidgets\include\msvc&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)\dep\OpenAL 1.1 SDK\include&quot;;&quot;$(SolutionDir)dep\vld\include&quot;;&quot;$(SolutionDir)dep\wxwidgets\include&quot;;&quot;$(SolutionDir)dep\wxwidgets\include\msvc&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;__WXDEBUG__;__WXMSW__;_UNICODE;WXUSINGDLL;_WINDOWS;NOPCH;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE"
 				MinimalRebuild="true"
 				ExceptionHandling="1"

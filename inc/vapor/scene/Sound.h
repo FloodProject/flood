@@ -9,9 +9,9 @@
 #pragma once
 
 #include "vapor/Platform.h"
-#include "vapor/scene/Node.h"
 #include "vapor/scene/Transform.h"
-#include "vapor/resources/Resource.h"
+#include "vapor/audio/Source.h"
+#include "vapor/resources/Sound.h"
 
 namespace vapor {
 	namespace scene {
@@ -21,32 +21,21 @@ namespace vapor {
  * as the sound source location.
  */
 
-class Sound : public Transformable
+class Sound : public Transformable, public audio::Source
 {
 public:
 
-	Sound( shared_ptr<resources::Resource> sound );
+	Sound(shared_ptr<Listener> ls, shared_ptr<resources::Sound> sound);
+	virtual ~Sound();
 
-	void setResource( shared_ptr<resources::Resource> sound );
+	virtual std::string save(int indent = 0);
 
-	void play(int count = 1);
+protected:
 
-	void stop();
-
-	void pause();
-
-	/* will this update current playing sounds? yes*/
-	void setVolume( float volume );
-
-	void setPitch( float pitch );
-
-	void setRollOff( float rollOff );
-
-	virtual std::string save() { return ""; }
-  
-private:
-	
-	shared_ptr<resources::Resource> resource;
+	// Hold a shared_ptr so the Listener is only deleted when
+	// no other sources exist. We need the Listener to switch
+	// the context.
+	shared_ptr<Listener> ls;
 };
 
 } } // end namespaces

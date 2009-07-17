@@ -9,30 +9,20 @@
 #pragma once
 
 #include "vapor/Platform.h"
-#include "vapor/audio/Device.h"
+#include "vapor/audio/Context.h"
 #include "vapor/scene/Transform.h"
 
 namespace vapor {
 	namespace scene {
 
-class Listener : public Transformable
+class Listener : public Transformable, public audio::Context
 {
 public:
 
 	Listener(audio::Device* device);
-  
-	// Set the global volume of this listener.
-	void setVolume( float volume );
+	virtual ~Listener();
 
-	// Make this the current listener in the audio device.
-	void makeCurrent();
-
-	virtual std::string save() { return ""; }
-
-private:
-
-	// Each listener is an OpenAL context
-	ALCcontext* context;
+	virtual std::string save(int indent = 0) { return ""; }
 };
 
 } } // end namespaces
