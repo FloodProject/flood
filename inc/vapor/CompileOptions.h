@@ -12,13 +12,23 @@
 // Engine information
 //-------------------------------------------------------------------------//
 
-#define VAPOR_ENGINE_VERSION "SVN" 
+#define VAPOR_ENGINE_VERSION "SVN"
+
+//-------------------------------------------------------------------------//
+// Memory stuff
+//-------------------------------------------------------------------------//
+ 
+#define VAPOR_MEMORY_TR1_VENDOR
+//#define VAPOR_MEMORY_TR1_BOOST
+#define VAPOR_MEMORY_LEAK_DETECTOR
 
 //-------------------------------------------------------------------------//
 // Windowing APIs
 //-------------------------------------------------------------------------//
 
-#define VAPOR_WINDOWING_SDL
+// Set this to either version "12" or "13"
+#define VAPOR_WINDOWING_SDL 12
+
 //#define VAPOR_WINDOWING_SFML
 //#define VAPOR_WINDOWING_WIN32
 
@@ -61,14 +71,6 @@
 //-------------------------------------------------------------------------//
 
 //#define VAPOR_FONT_FREETYPE2
-
-//-------------------------------------------------------------------------//
-// Memory stuff
-//-------------------------------------------------------------------------//
- 
-#define VAPOR_MEMORY_TR1_VENDOR
-//#define VAPOR_MEMORY_TR1_BOOST
-#define VAPOR_MEMORY_LEAK_DETECTOR
 
 //-------------------------------------------------------------------------//
 // VFS providers

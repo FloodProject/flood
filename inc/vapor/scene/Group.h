@@ -49,7 +49,7 @@ public:
   
 private:
 
-  std::vector<shared_ptr<Node>> children;
+  std::vector< shared_ptr<Node> > children;
 };
 
 } } // end namespaces

@@ -34,7 +34,7 @@ protected:
 
 	// Hold a shared_ptr so the Listener is only deleted when
 	// no other sources exist. We need the Listener to switch
-	// the context.
+	// the context later, for deleting the sources.
 	shared_ptr<Listener> ls;
 };
 

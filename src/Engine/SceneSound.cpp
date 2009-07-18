@@ -23,7 +23,7 @@ Sound::Sound( shared_ptr<Listener> ls, shared_ptr<resources::Sound> sound )
 
 Sound::~Sound()
 {
-
+	//~audio::Source();
 }
 
 //-----------------------------------//

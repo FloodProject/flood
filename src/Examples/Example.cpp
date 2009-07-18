@@ -71,7 +71,7 @@ void Example::onSetupScene()
 
 	scene->add(grp);
 
-	snd->play();
+	snd->play(5);
 
 	string example = scene->save();
 	puts(example.c_str());

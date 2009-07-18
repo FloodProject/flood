@@ -12,7 +12,7 @@ Resources:
 
 	* Meshes (supports Milkshape3D format)
 	* Images (supports PNG format)
-	* Fonts (supports TrueType and texture-based)
+	* Fonts (supports TrueType and texture-based) (TODO)
 	* Audio (supports Ogg Vorbis 3D and 2D playback)
 	* Possible to register your own resource loaders!
 	
@@ -20,15 +20,30 @@ Rendering:
 
 	* Viewing frustum culling
 	* Cross-platform OpenGL renderer
-	* Supports shaders via Cg library
+	* 100% shader-driven via GLSL
 	* Cross-platform windowing code based on SDL
-	
+	* Material serialization format
+	* Based on VBOs for fast rendering.
+
+Scene:
+
+	* Hierarchical scene graph with BVH for fast culling
+	* Different types of nodes: 
+			* Geometry
+			* Camera
+			* Light
+			* Sound
+			* Listener
+			* Trigger
+			* Skybox (TODO)
+	* Built-in scene serialization to JSON format
+
 Editor:
 
 	* Based on wxWidgets cross-platform GUI library
-	* Scene serialization support using the engine built-in format
-	* Easy placement of entities with manipulators
-	* Scripting support using JavaScript	
+	* Scene serialization support using the engine built-in support
+	* Easy placement of entities with manipulators (TODO)
+	* Scripting support using JavaScript (TODO)
 	
 --------------------
 

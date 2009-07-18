@@ -10,9 +10,12 @@
 
 #include "vapor/CompileOptions.h"
 
-#ifdef VAPOR_WINDOWING_SDL
+//#ifdef VAPOR_WINDOWING_SDL
 
-#define SDL_NO_COMPAT
+#if VAPOR_WINDOWING_SDL == 13
+	#define SDL_NO_COMPAT
+#endif
+
 #include <SDL.h>
 
 #include "vapor/Platform.h"
@@ -44,11 +47,16 @@ public:
 
 private:
 
+#if VAPOR_WINDOWING_SDL == 12
+	// Display surface
+	SDL_Surface	*display;	
+#else
 	// SDL window id
 	SDL_WindowID windowId;
 
 	// OpenGL context
 	SDL_GLContext context;
+#endif
 
 	// Initializes SDL
 	bool init();
@@ -59,4 +67,4 @@ private:
 
 } } // end namespaces
 
-#endif
+//#endif

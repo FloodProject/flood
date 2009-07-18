@@ -65,7 +65,7 @@ ALCcontext* Context::createContext()
 	if(checkError())
 	{
 		// TODO: getError should be for context-specific
-		warn("scene::Listener", "Could not create OpenAL context: %s",
+		warn("audio::al", "Could not create OpenAL context: %s",
 			getError());
 	}
 

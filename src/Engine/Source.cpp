@@ -28,6 +28,9 @@ Source::Source(audio::Context* context, shared_ptr<resources::Sound> sound)
 		warn("audio::al", "Could not generate a new audio source: %s",
 			device->getError());
 	}
+
+	math::Vector3 zero(0.0f, 0.0f, 0.0f);
+	setPosition(zero);
 }
 
 //-----------------------------------//
