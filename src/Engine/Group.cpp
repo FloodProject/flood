@@ -17,6 +17,13 @@ namespace vapor {
 
 //-----------------------------------//
 
+Group::~Group()
+{
+
+}
+
+//-----------------------------------//
+
 int Group::add(shared_ptr<Node> child)
 {
 	child->setParent(this);

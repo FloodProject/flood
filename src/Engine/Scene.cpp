@@ -15,6 +15,13 @@ namespace vapor {
 
 //-----------------------------------//
 
+Scene::~Scene()
+{
+
+}
+
+//-----------------------------------//
+
 std::string Scene::save(int ind)
 {
 	std::ostringstream os;

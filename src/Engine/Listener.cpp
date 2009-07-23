@@ -11,6 +11,8 @@
 namespace vapor {
 	namespace scene {
 
+using std::tr1::static_pointer_cast;
+
 //-----------------------------------//
 
 Listener::Listener(audio::Device* device)
@@ -25,6 +27,17 @@ Listener::~Listener()
 {
 
 }
+
+//-----------------------------------//
+
+shared_ptr<audio::Context> Listener::getContext(shared_ptr<Listener> ls)
+{
+	shared_ptr<audio::Context> ctx = 
+		static_pointer_cast<audio::Context>(ls);
+
+	return ctx;
+}
+
 
 //-----------------------------------//
 

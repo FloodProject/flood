@@ -13,7 +13,6 @@
 #ifdef VAPOR_AUDIO_OPENAL
 
 #include "vapor/Platform.h"
-
 #include "vapor/math/Vector3.h"
 #include "vapor/resources/Sound.h"
 
@@ -36,6 +35,7 @@ class Device
 {
 	friend class Context;
 	friend class Source;
+	friend class Buffer;
 
 public:
 
@@ -57,7 +57,7 @@ protected:
 	int getALFormat(resources::SoundFormat::Enum format);
 	
 	// Prepares a buffer for AL usage
-	ALuint prepareBuffer(shared_ptr<resources::Sound> sound);
+	shared_ptr<Buffer> prepareBuffer(shared_ptr<resources::Sound> sound);
 	
 	// Return the last error as a char array
 	const char* getError();
@@ -82,7 +82,7 @@ private:
 	bool init;
 
 	// Maps each sound to a OpenAL sound buffer id
-	map<shared_ptr<resources::Sound>, ALuint> soundBuffers;
+	map<shared_ptr<resources::Sound>, shared_ptr<audio::Buffer> > soundBuffers;
 };
 
 } } // end namespaces

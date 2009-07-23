@@ -34,14 +34,13 @@ namespace vapor {
 
 Engine::Engine(bool autoInit)
 {
-	if(autoInit)
-	{
-		setupResourceManager();
-		setupLogger("vaporEngine", "vaporEngine.html");
-		setupResourceLoaders();
-		setupDevices();
-		setupWindow("vaporEngine");
-	}
+	if(!autoInit) return;
+	
+	setupResourceManager();
+	setupLogger("vaporEngine", "vaporEngine.html");
+	setupResourceLoaders();
+	setupDevices();
+	setupWindow("vaporEngine");
 }
 
 //-----------------------------------//
@@ -49,11 +48,11 @@ Engine::Engine(bool autoInit)
 Engine::~Engine()
 {
 	// delete stuff
-	delete renderDevice;
-	delete audioDevice;
 	delete resourceManager;
 	delete sceneNode;
 	delete Log::getLogger();
+	delete audioDevice;
+	delete renderDevice;
 }
 
 //-----------------------------------//

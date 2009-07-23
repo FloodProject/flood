@@ -26,7 +26,7 @@ class Scene : public Group
 {
 public:
 
-	virtual ~Scene() {}
+	virtual ~Scene();
 
 	void evaluate();
 

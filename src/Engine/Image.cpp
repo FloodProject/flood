@@ -38,9 +38,7 @@ Image::Image(const uint w, const uint h, PixelFormat::Enum pf)
 
 Image::~Image()
 {
-	if(dataBuffer) {
-		delete dataBuffer;
-	}
+	delete dataBuffer;
 }
 
 //-----------------------------------//

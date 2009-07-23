@@ -27,7 +27,7 @@ vaporWindow::vaporWindow(render::Settings& settings, wxGLCanvas* canvas)
 
 vaporWindow::~vaporWindow()
 {
-	if(context)	delete context;
+	delete context;
 }
 
 //-----------------------------------//

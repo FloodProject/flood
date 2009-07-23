@@ -31,11 +31,7 @@ Log* Log::getLogger()
 
 void Log::setLogger(Log* log)
 {
-	if(engineLog) 
-	{
-		delete engineLog;
-	}
-	
+	delete engineLog;
 	engineLog = log;
 }
 

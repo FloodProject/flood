@@ -23,6 +23,8 @@ public:
 	virtual ~Listener();
 
 	virtual std::string save(int indent = 0) { return ""; }
+
+	static shared_ptr<audio::Context> getContext(shared_ptr<Listener> ls);
 };
 
 } } // end namespaces

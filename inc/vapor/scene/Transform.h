@@ -50,11 +50,14 @@ public:
 protected:
 
 	Transformable();
+	~Transformable();
   
 private:
 
-	shared_ptr<math::Vector3> translation;
-	shared_ptr<math::Matrix4> orientation;
+	//shared_ptr<math::Vector3> translation;
+	//shared_ptr<math::Matrix4> orientation;
+	math::Vector3 translation;
+	math::Matrix4 orientation;
 };
 
 

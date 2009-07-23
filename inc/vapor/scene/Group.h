@@ -18,7 +18,7 @@ class Group : public Node
 {
 public:
 
-  virtual ~Group() {}
+  virtual ~Group();
 
   // adds child to the end of the child list.  Returns the index of
   // the new child node that has been added.

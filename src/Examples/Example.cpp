@@ -60,7 +60,7 @@ void Example::onSetupScene()
 	shared_ptr<Listener> ls(new Listener(audioDev));
 	ls->translate(math::Vector3(1.0f, 0.0f, 0.0f));
 	ls->makeCurrent();
-	ls->setVolume(1.0f);
+	ls->setVolume(0.2f);
 	grp->add(ls);
 
 	File file("media/stereo.ogg");

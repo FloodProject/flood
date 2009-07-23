@@ -16,8 +16,8 @@
 
 #include "vapor/audio/Device.h"
 #include "vapor/audio/Context.h"
+#include "vapor/audio/Buffer.h"
 #include "vapor/resources/Sound.h"
-#include "vapor/scene/Listener.h"
 #include "vapor/math/Vector3.h"
 
 namespace vapor {
@@ -34,12 +34,13 @@ class Source
 {
 public:
 
-	Source( audio::Context* context, shared_ptr<resources::Sound> sound );
+	Source( shared_ptr<audio::Context> context, shared_ptr<resources::Sound> sound );
 	~Source();
 
 	//void setResource( shared_ptr<resources::Resource> sound );
 
-	// Plays the sound buffer a number of times.
+	// Plays the sound buffer a number of times. If you paused the source
+	// then it will resume from where it was paused.
 	void play(int count = 1);
 
 	// Stops the playing of the audio. The next time you play it will start
@@ -49,6 +50,12 @@ public:
 	// Pauses the playing of the audio. The next time you play it will start
 	// from the position it had when it was paused.
 	void pause();
+
+	// Checks if the source is currently playing.
+	bool isPlaying();
+
+	// Checks if the source is currently paused.
+	bool isPaused();
 
 	// Sets the volume of the source. Volume is in the range [0.0-1.0].
 	void setVolume( float volume );
@@ -71,10 +78,10 @@ protected:
 	audio::Device* device;
 
 	// Holds a pointer to the audio context.
-	audio::Context* context;
+	shared_ptr<audio::Context> context;
 	
 	// Holds a pointer to the audio data buffer.
-	shared_ptr<resources::Sound> resource;
+	shared_ptr<Buffer> buffer;
 
 	// Holds the source id from OpenAL.
 	ALuint sourceId;

@@ -43,9 +43,9 @@ Device::Device()
 
 Device::~Device()
 {
-	if(adapter) delete adapter;
-	if(window) delete window;
-	if(bufferManager) delete bufferManager;
+	delete adapter;
+	delete window;
+	delete bufferManager;
 }
 
 //-----------------------------------//

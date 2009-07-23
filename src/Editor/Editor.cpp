@@ -105,7 +105,7 @@ MyFrame::MyFrame(const wxString& title)
 
 MyFrame::~MyFrame()
 {
-	if(engine) delete engine;
+	delete engine;
 }
 
 //-----------------------------------//

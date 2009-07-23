@@ -25,6 +25,7 @@ public:
 
 	// Default empty constructor
 	Vector3T ()
+		: x(0.0f), y(0.0f), z(0.0f)
 	{ }
 	
 	// Copy constructor

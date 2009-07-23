@@ -46,8 +46,6 @@ public:
 	// Sets the listener position
 	void setListener(const math::Vector3& position);
 
-	ALCcontext* getALContext() { return context; }
-
 protected:
 
 	Context(audio::Device* device);

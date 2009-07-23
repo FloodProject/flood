@@ -13,6 +13,7 @@
 #include <sstream>
 
 #include "vapor/audio/Device.h"
+#include "vapor/audio/Buffer.h"
 
 using namespace vapor::resources;
 using namespace vapor::math;
@@ -193,37 +194,16 @@ void Device::switchContext(ALCcontext* context)
 
 //-----------------------------------//
 
-ALuint Device::prepareBuffer(shared_ptr<resources::Sound> sound)
+shared_ptr<Buffer> Device::prepareBuffer(shared_ptr<resources::Sound> sound)
 {
-	// check if buffer with same sound already exists
+	// check if buffer with same resource already exists
 	if(soundBuffers.find(sound) != soundBuffers.end()) 
 		return soundBuffers[sound];
 
-	// if not, create a new buffer and upload sound data
-	ALuint bufferID;
-	alGenBuffers(1, &bufferID);
+	shared_ptr<Buffer> buf(new Buffer(this, sound));
+	soundBuffers[sound] = buf;
 
-	// check if buffer was successfuly created
-	if(checkError()) 
-	{
-		warn("audio::al", "Error creating a sound buffer: %s",
-			getError());
-	}
-
-	// update buffer id in the map
-	soundBuffers[sound] = bufferID;
-
-	// upload sound data to buffer
-	alBufferData(bufferID, getALFormat(sound->getFormat()), &sound->getBuffer()[0], 
-		static_cast <ALsizei> (sound->getBuffer().size()), sound->getFrequency());
-	
-	if(checkError())
-	{
-		warn("audio::al", "Error uploading sound to buffer: %s",
-			getError());
-	}
-
-	return bufferID;
+	return buf;
 }
 
 //-----------------------------------//

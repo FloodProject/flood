@@ -14,7 +14,7 @@ namespace vapor {
 //-----------------------------------//
 
 Sound::Sound( shared_ptr<Listener> ls, shared_ptr<resources::Sound> sound )
-	: Source(ls.get(), sound), ls(ls)
+	: Source(Listener::getContext(ls), sound)
 {
 
 }
@@ -23,7 +23,7 @@ Sound::Sound( shared_ptr<Listener> ls, shared_ptr<resources::Sound> sound )
 
 Sound::~Sound()
 {
-	//~audio::Source();
+
 }
 
 //-----------------------------------//

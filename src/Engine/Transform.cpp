@@ -16,22 +16,30 @@ namespace vapor {
 //-----------------------------------//
 
 Transformable::Transformable()
+	//: translation(nullptr), orientation(nullptr)
 {
+	
+}
 
+//-----------------------------------//
+
+Transformable::~Transformable()
+{
+	//delete translation;
 }
 
 //-----------------------------------//
 
 void Transformable::translate( const math::Vector3& tr )
 {
-	if(!translation) 
-	{
-		shared_ptr<Vector3> vec(new Vector3(tr));
-		translation = vec;
-		return;
-	} 
+	//if(!translation) 
+	//{
+	//	translation = shared_ptr<Vector3>(new Vector3(tr));
+	//	return;
+	//} 
 
-	*translation += tr;
+	//translation += tr;
+	translation += tr;
 }
 
 //-----------------------------------//

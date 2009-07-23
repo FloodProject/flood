@@ -622,7 +622,15 @@
 			Name="Audio"
 			>
 			<File
+				RelativePath=".\AudioBuffer.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\AudioDevice.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\audio\Buffer.h"
 				>
 			</File>
 			<File

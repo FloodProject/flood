@@ -10,6 +10,7 @@
 
 #include "vapor/Platform.h"
 #include "vapor/scene/Transform.h"
+#include "vapor/scene/Listener.h"
 #include "vapor/audio/Source.h"
 #include "vapor/resources/Sound.h"
 
@@ -29,13 +30,6 @@ public:
 	virtual ~Sound();
 
 	virtual std::string save(int indent = 0);
-
-protected:
-
-	// Hold a shared_ptr so the Listener is only deleted when
-	// no other sources exist. We need the Listener to switch
-	// the context later, for deleting the sources.
-	shared_ptr<Listener> ls;
 };
 
 } } // end namespaces
