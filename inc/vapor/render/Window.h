@@ -73,7 +73,7 @@ public:
 	virtual bool pumpEvents() = 0;
 
 	// Sets the title of the window
-	virtual void setTitle (const string& title) const = 0;
+	virtual void setTitle (const std::string& title) const = 0;
 
 	// Sets the visibility of the mouse cursor 
 	virtual void setCursor (bool state) const = 0;

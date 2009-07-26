@@ -10,7 +10,7 @@
 
 #include "vapor/CompileOptions.h"
 
-//#ifdef VAPOR_WINDOWING_SDL
+#ifdef VAPOR_WINDOWING_SDL
 
 #if VAPOR_WINDOWING_SDL == 13
 	#define SDL_NO_COMPAT
@@ -38,7 +38,7 @@ public:
 	bool pumpEvents();
 
 	// Sets the title of the window
-	void setTitle(const string& title) const;
+	void setTitle(const std::string& title) const;
 
 	// Sets the cursor visibility
 	void setCursor(bool state) const;
@@ -67,4 +67,4 @@ private:
 
 } } // end namespaces
 
-//#endif
+#endif

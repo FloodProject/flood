@@ -47,7 +47,6 @@ Engine::Engine(bool autoInit)
 
 Engine::~Engine()
 {
-	// delete stuff
 	delete resourceManager;
 	delete sceneNode;
 	delete Log::getLogger();

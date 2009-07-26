@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/render/sdl/SDL_Window.h"
+#include "vapor/render/SDL_Window.h"
 
 #ifdef VAPOR_WINDOWING_SDL
 

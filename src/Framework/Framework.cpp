@@ -22,7 +22,7 @@ Framework::Framework()
 
 Framework::~Framework()
 {
-	cleanup();
+
 }
 
 //-----------------------------------//
@@ -81,13 +81,6 @@ void Framework::render()
 		// update the active target
 		renderDevice->updateTarget();
 	}	
-}
-
-//-----------------------------------//
-
-void Framework::cleanup()
-{
-
 }
 
 //-----------------------------------//

@@ -54,9 +54,6 @@ private:
 
 	// Main rendering loop ( calls onRender() ).
 	virtual void render();
-
-	// Cleans up all the resources.
-	virtual void cleanup();
 };
 
 } // end namespace		

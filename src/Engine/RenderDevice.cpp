@@ -16,8 +16,10 @@
 
 #include "vapor/render/GL.h"
 
-#ifdef VAPOR_WINDOWING_SDL
-	#include <vapor/render/sdl/SDL_Window.h>
+#if defined(VAPOR_WINDOWING_SDL)
+	#include <vapor/render/SDL_Window.h>
+#elif defined(VAPOR_WINDOWING_WIN32)
+	#include <vapor/render/Win32_Window.h>
 #else
 	#error "OpenGL renderer needs a windowing implementation"
 #endif
@@ -121,11 +123,13 @@ void Device::checkExtensions()
 
 Window& Device::createWindow(Settings settings)
 {
-	#ifdef VAPOR_WINDOWING_SDL
-		window = new SDLWindow(settings);
-	#else
-		#error "Could not find a window implementation"
-	#endif
+#if defined(VAPOR_WINDOWING_SDL)
+	window = new SDLWindow(settings);
+#elif defined(VAPOR_WINDOWING_WIN32)
+	window = new Win32Window(settings);
+#else
+	#error "Could not find a window implementation"
+#endif
 
 	setRenderTarget(window);
 	resetViewport();

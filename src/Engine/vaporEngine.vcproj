@@ -292,7 +292,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\inc\vapor\render\sdl\SDL_Window.h"
+						RelativePath="..\..\inc\vapor\render\SDL_Window.h"
 						>
 					</File>
 				</Filter>
@@ -301,6 +301,10 @@
 					>
 					<File
 						RelativePath=".\Win32_Window.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\render\Win32_Window.h"
 						>
 					</File>
 				</Filter>
