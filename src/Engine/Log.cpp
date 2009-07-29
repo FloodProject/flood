@@ -55,7 +55,7 @@ void Log::MessageDialog(const string& msg, const LogLevel::Enum level)
 			break;
 		}
 
-		MessageBoxA(NULL, msg.c_str(), NULL, style);
+		MessageBoxA(nullptr, msg.c_str(), nullptr, style);
 	#else
 		#error "Missing message box implementation"
 	#endif
@@ -137,7 +137,7 @@ bool Log::open(const string& filename)
 	if (!fp) return false;
 
 	// turn off file buffering
-	setbuf(fp, NULL);
+	setbuf(fp, nullptr);
 
 	return true;
 }

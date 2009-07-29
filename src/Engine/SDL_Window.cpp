@@ -26,7 +26,7 @@ namespace vapor {
 //-----------------------------------//
 
 SDLWindow::SDLWindow(Settings& settings)
-	:	Window(settings),
+	: Window(settings),
 
 #if VAPOR_WINDOWING_SDL == 12
 	display(nullptr)
@@ -73,13 +73,13 @@ bool SDLWindow::init(void)
 #else
 	if ( SDL_VideoInit(nullptr, 0) < 0 ) {
 #endif
-		error("render::window::sdl", 
-			"Failed to initialize SDL %s", SDL_GetError());
+		error( "render::window::sdl", 
+			"Failed to initialize SDL %s", SDL_GetError() );
 		return false;
 	}
 
-	info("render::window::sdl", "Using SDL version %d.%d.%d", 
-		SDL_MAJOR_VERSION, SDL_MINOR_VERSION, SDL_PATCHLEVEL);
+	info( "render::window::sdl", "Using SDL version %d.%d.%d", 
+		SDL_MAJOR_VERSION, SDL_MINOR_VERSION, SDL_PATCHLEVEL );
 
 	return true;
 }

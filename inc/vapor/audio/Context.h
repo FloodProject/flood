@@ -21,14 +21,14 @@ namespace vapor {
 	namespace audio {
 
 /**
- * Wraps an OpenAL context in a class. A context in OpenAL is like a 
- * context in OpenGL, in that it's properties are independent of of 
- * other contexts. Each listener in the Scene graph will match a 
- * context in the audio device, so that we can play sounds from 
- * different positions without changing everything in a context.
+ * Wraps an OpenAL context in a class. A context in OpenAL is like a context 
+ * in OpenGL, in that it's properties are independent of of other contexts. 
+ * Each listener in the scene graph will match a context in the audio device, 
+ * so that we can play sounds from  different positions without changing 
+ * everything in a context.
  *
- * TODO: check that switching contexts is faster than switching
- * everything all the settings of a context.
+ * TODO: check that switching contexts is faster than switching everything all
+ * the settings of a context.
  */
 
 class Context

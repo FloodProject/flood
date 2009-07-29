@@ -43,7 +43,7 @@ public:
 
 	Dialog()
 	{
-		HINSTANCE hInstance = GetModuleHandle(NULL);
+		HINSTANCE hInstance = GetModuleHandle(nullptr);
 
 		HWND hDialog = CreateDialog (hInstance, MAKEINTRESOURCE(IDD_DIALOG1), NULL, DialogProc);
 

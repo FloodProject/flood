@@ -11,6 +11,11 @@
 namespace vapor {
 	namespace render {
 
+/**
+ *
+ *
+ */
+
 class RenderTarget
 {
 public:
@@ -18,8 +23,10 @@ public:
 	RenderTarget() { }
 	virtual ~RenderTarget() { }
 	
+	// Updates the render target (usually swaps buffers).
 	virtual void update() = 0;
 
+	// Sets this rendering target as the current.
 	virtual void makeCurrent() = 0;
 };
 

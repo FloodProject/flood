@@ -66,7 +66,7 @@ public:
 
 protected:
 
-	// Add a generic audio device
+	// Audio device
 	audio::Device* audioDevice;
 
 	// Scene root node

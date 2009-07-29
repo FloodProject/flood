@@ -48,7 +48,7 @@ Sound* OGG_Loader::decode(File& file)
 
 	OggVorbis_File oggFile;
 
-	ov_open(f, &oggFile, NULL, 0);
+	ov_open(f, &oggFile, nullptr, 0);
 
 	// Get some information about the OGG file
 	vorbis_info* pInfo( ov_info(&oggFile, -1) );

@@ -42,7 +42,7 @@ public:
 	Device();
 	virtual ~Device();
 
-	//// Play a possibly looped 2D sound
+	// Play a possibly looped 2D sound
 	//void play2D(shared_ptr<resources::Sound> sound, bool loop = false);
 
 	// Sets the global audio volume
@@ -82,7 +82,7 @@ private:
 	bool init;
 
 	// Maps each sound to a OpenAL sound buffer id
-	map<shared_ptr<resources::Sound>, shared_ptr<audio::Buffer> > soundBuffers;
+	map< shared_ptr<resources::Sound>, shared_ptr<audio::Buffer> > soundBuffers;
 };
 
 } } // end namespaces

@@ -56,7 +56,7 @@ shared_ptr<Resource> ResourceManager::createResource(File& file)
 	// get the file extension
 	string ext = file.getPath().substr(++ch);
 
-	// check if we have a resource loader for this resource
+	// check if we have a resource loader for this extension
 	if(resourceLoaders.find(ext) == resourceLoaders.end()) {
 		warn("resources", "No resource loader found for resource '%s'",
 			file.getPath().c_str());

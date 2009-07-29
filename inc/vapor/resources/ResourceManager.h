@@ -66,13 +66,13 @@ public:
 protected:
 
 	// maps a name to a resource
-	map<string, shared_ptr<Resource>> resources;
+	map< string, shared_ptr<Resource> > resources;
 
 	// maps extensions to resource loaders
-	map<string, ResourceLoader*> resourceLoaders;
+	map< string, ResourceLoader* > resourceLoaders;
 
 	// maps each resource group to a specific budget
-	map<ResourceGroup::Enum, uint> resourceBudgets;
+	map< ResourceGroup::Enum, uint > resourceBudgets;
 };
 
 } } // end namespaces
