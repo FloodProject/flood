@@ -9,6 +9,7 @@
 #pragma once
 
 #include "vapor/Platform.h"
+#include "vapor/vfs/VFS.h"
 #include "vapor/render/Device.h"
 #include "vapor/resources/ResourceManager.h"
 #include "vapor/scene/Scene.h"
@@ -31,16 +32,39 @@ public:
 	// If autoInit is true, then the contructor will make sure
 	// everything is properly set up when you instantiate the object,
 	// else you will have to call the methods manually, to initialize.
-	Engine(bool autoInit = true);
+	Engine(std::string app = "vaporApp", bool autoInit = true);
 	virtual ~Engine();
+
+	//-----------------------------------//
+	// Setup methods
+	//-----------------------------------//
+
+	// Initialize the engine subsystems.
+	void init();
+
+	// Sets up the global engine logger.
+	void setupLogger();
+
+	// Sets up the resource manager.
+	void setupResourceManager();
+
+	// Sets up the default resource codecs.
+	void setupResourceLoaders();
+
+	// Sets up the rendering device.
+	void setupDevices();
+
+	//-----------------------------------//
+	// Subsystem acessors
+	//-----------------------------------//
 
 	// Gets the device.
 	render::Device* getRenderDevice() const { return renderDevice; }
 
-	// Gets the audio device
+	// Gets the audio device.
 	audio::Device* getAudioDevice() const { return audioDevice; }
 
-	// Gets the scene interface
+	// Gets the scene interface.
 	scene::Scene* getSceneManager() const { return sceneNode; }
 	
 	// Gets the resources manager.
@@ -49,20 +73,8 @@ public:
 	// Gets the main engine logger.
 	log::Log* getLog() const { return log; }
 
-	// Sets up the default resource codecs.
-	void setupResourceLoaders();
-
-	// Sets up the resource manager
-	void setupResourceManager();
-
-	// Sets up the global engine logger.
-	void setupLogger(std::string title, std::string file);
-
-	// Sets up the rendering device.
-	void setupDevices();
-
-	// Sets up a rendering window
-	void setupWindow(std::string title);
+	// Gets the virtual filesystem.
+	vfs::VFS* getVFS() const { return vfs; }
 
 protected:
 
@@ -78,8 +90,14 @@ protected:
 	// Resource manager
 	resources::ResourceManager* resourceManager;
 
+	// Virtual filesystem
+	vfs::VFS* vfs;
+
 	// Default logger
 	log::Log* log;
+
+	// Application name
+	std::string app;
 };
 
 } // end namespace

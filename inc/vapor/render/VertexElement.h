@@ -58,6 +58,6 @@ struct VertexElement
 	VertexDataType::Enum vertexDataType;
 };
 
-typedef vector<VertexElement> VertexDeclaration;
+typedef std::vector<VertexElement> VertexDeclaration;
 
 } } // end namespaces

@@ -76,7 +76,7 @@ void Adapter::parseInfo()
 	else {
 		gl = tmp;
 		uint ch = gl.find_first_of("-");
-		if(ch != string::npos) {
+		if(ch != std::string::npos) {
 			driver = gl.substr(ch+1);
 			gl = gl.substr(0, ch-1);
 		} else {
@@ -100,9 +100,9 @@ void Adapter::log() const
 {
 	if(name.empty()) return;
 
-	string s = getShading();
-	string d = getDriver();
-	string g = getVersion();
+	std::string s = getShading();
+	std::string d = getDriver();
+	std::string g = getVersion();
 
 	if(s.empty() 
 		|| d.empty() 
@@ -124,35 +124,35 @@ void Adapter::log() const
 
 //-----------------------------------//
 
-const string Adapter::getVersion() const
+const std::string Adapter::getVersion() const
 {
 	return gl;
 }
 
 //-----------------------------------//
 
-const string Adapter::getDriver() const
+const std::string Adapter::getDriver() const
 {
 	return driver;
 }
 
 //-----------------------------------//
 
-const string Adapter::getVendor() const
+const std::string Adapter::getVendor() const
 {
 	return vendor;
 }
 
 //-----------------------------------//
 
-const string Adapter::getName() const
+const std::string Adapter::getName() const
 {
 	return name;
 }
 
 //-----------------------------------//
 
-const string Adapter::getShading() const
+const std::string Adapter::getShading() const
 {
 	return glsl;
 }

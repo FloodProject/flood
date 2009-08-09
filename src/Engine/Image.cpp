@@ -15,7 +15,7 @@ namespace vapor {
 
 namespace PixelFormat
 {
-	string getString(Enum e) 
+	const std::string getString(Enum e) 
 	{
 		switch(e) 
 		{

@@ -10,8 +10,9 @@
 #include <ctime>
 
 #include "vapor/Log.h"
-#include "vapor/LogFormat.h"
 #include "vapor/Platform.h"
+
+#include "LogFormat.h"
 
 namespace vapor {
 	namespace log {
@@ -19,6 +20,32 @@ namespace vapor {
 //-----------------------------------//
 
 Log* Log::engineLog;
+
+//-----------------------------------//
+
+Log::Log(const std::string& title, const std::string& filename)
+	: even(true), fp(nullptr)
+{
+	if( !open(filename) ) 
+	{
+		MessageDialog("Could not open log file '" + filename + "'");
+		return;
+	}
+	
+	start( title );
+
+	info("log", "Creating log file '%s'", filename.c_str());
+}
+
+//-----------------------------------//
+
+Log::~Log()
+{
+	if( !fp ) return;
+
+	end();
+	close();
+}
 
 //-----------------------------------//
 
@@ -37,7 +64,7 @@ void Log::setLogger(Log* log)
 
 //-----------------------------------//
 
-void Log::MessageDialog(const string& msg, const LogLevel::Enum level)
+void Log::MessageDialog(const std::string& msg, const LogLevel::Enum level)
 {
 	#ifdef VAPOR_PLATFORM_WINDOWS
 		UINT style = MB_OK;
@@ -63,7 +90,7 @@ void Log::MessageDialog(const string& msg, const LogLevel::Enum level)
 
 //-----------------------------------//
 
-void info(const string& subsystem, const char* msg, ...)
+void info(const std::string& subsystem, const char* msg, ...)
 {
 	if(!Log::getLogger()) return;
 
@@ -76,7 +103,7 @@ void info(const string& subsystem, const char* msg, ...)
 
 //-----------------------------------//
 
-void warn(const string &subsystem, const char* msg, ...)
+void warn(const std::string &subsystem, const char* msg, ...)
 {
 	if(!Log::getLogger()) return;
 
@@ -89,7 +116,7 @@ void warn(const string &subsystem, const char* msg, ...)
 
 //-----------------------------------//
 
-void error(const string& subsystem, const char* msg, ...)
+void error(const std::string& subsystem, const char* msg, ...)
 {
 	if(!Log::getLogger()) return;
 
@@ -102,31 +129,7 @@ void error(const string& subsystem, const char* msg, ...)
 
 //-----------------------------------//
 
-Log::Log(const string& title, const string& filename)
-	: even(true)
-{
-	if(!open(filename)) 
-	{
-		//MessageDialog("Could not open log file '%s'", filename.c_str());
-		exit(EXIT_FAILURE);
-	}
-	
-	start(title);
-
-	info("log", "Creating log file '%s'", filename.c_str());
-}
-
-//-----------------------------------//
-
-Log::~Log()
-{
-	end();
-	close();
-}
-
-//-----------------------------------//
-
-bool Log::open(const string& filename)
+bool Log::open(const std::string& filename)
 {
 	#ifdef VAPOR_PLATFORM_WINDOWS
 		// disable Visual C++ fopen deprecation warning
@@ -134,7 +137,8 @@ bool Log::open(const string& filename)
 	#endif
 
 	fp = fopen(filename.c_str(), "w+");
-	if (!fp) return false;
+	
+	if ( !fp ) return false;
 
 	// turn off file buffering
 	setbuf(fp, nullptr);
@@ -154,9 +158,11 @@ void Log::close()
 
 //-----------------------------------//
 
-void Log::write(const LogLevel::Enum level, const string& subsystem, 
+void Log::write(const LogLevel::Enum level, const std::string& subsystem, 
 				const char* msg, va_list args)
 {
+	if (!fp) return;
+
 	char* s = nullptr;
 
 	switch(level)
@@ -192,8 +198,10 @@ void Log::write(const LogLevel::Enum level, const string& subsystem,
 
 //-----------------------------------//
 
-void Log::start(const string& title)
-{		
+void Log::start(const std::string& title)
+{
+	if (!fp) return;
+
 	fprintf(fp, LOG_HTML, title.c_str(), LOG_CSS, LOG_JS_TABLES);
 }
 
@@ -201,13 +209,17 @@ void Log::start(const string& title)
 
 void Log::end()
 {
+	if (!fp) return;
+
 	fprintf(fp, "\t</table>\n" "\t</div>\n" "</body>\n" "</html>\n");
 }
 
 //-----------------------------------//
 
-void Log::info(const string& subsystem, const char* msg, ...)
+void Log::info(const std::string& subsystem, const char* msg, ...)
 {
+	if (!fp) return;
+
 	va_list args;
 
 	va_start(args, msg);
@@ -217,8 +229,10 @@ void Log::info(const string& subsystem, const char* msg, ...)
 
 //-----------------------------------//
 
-void Log::warn(const string& subsystem, const char* msg, ...)
+void Log::warn(const std::string& subsystem, const char* msg, ...)
 {
+	if (!fp) return;
+
 	va_list args;
 
 	va_start(args, msg);
@@ -228,8 +242,10 @@ void Log::warn(const string& subsystem, const char* msg, ...)
 
 //-----------------------------------//
 
-void Log::error(const string& subsystem, const char* msg, ...)
+void Log::error(const std::string& subsystem, const char* msg, ...)
 {
+	if (!fp) return;
+
 	va_list args;
 
 	va_start(args, msg);

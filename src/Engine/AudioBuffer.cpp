@@ -52,8 +52,8 @@ void Buffer::upload()
 {
 	// upload sound data to buffer
 	alBufferData(bufferId, 
-		device->getALFormat(resource->getFormat()), &resource->getBuffer()[0], 
-		static_cast <ALsizei> ( resource->getBuffer().size() ), resource->getFrequency());
+		device->getALFormat( resource->getFormat()), &resource->getBuffer()[0], 
+		static_cast <ALsizei> ( resource->getBuffer().size() ), resource->getFrequency() );
 	
 	if(device->checkError())
 	{

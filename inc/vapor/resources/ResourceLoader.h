@@ -31,10 +31,10 @@ public:
 	virtual Resource* decode(vfs::File& file) = 0;
 	
 	// Gets a list of recognized extensions by this loader.
-	virtual list<string>& getExtensions() = 0;
+	virtual std::list< std::string >& getExtensions() = 0;
 
 	// Gets the name of this resource loader.
-	virtual string getName() = 0;
+	virtual const std::string getName() = 0;
 
 	// Gets the resource group of this loader.
 	virtual ResourceGroup::Enum getResourceGroup() = 0;

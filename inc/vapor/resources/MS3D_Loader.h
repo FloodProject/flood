@@ -32,10 +32,10 @@ public:
 	virtual MS3D* decode(vfs::File& file);
 
 	// Gets the name of this codec.
-	virtual string getName() { return "MS3D"; }
+	virtual const std::string getName() { return "MS3D"; }
 
 	// Gets the list of extensions recognized by this resource handler.
-	virtual list<string>& getExtensions() { return extensions; }
+	virtual std::list< std::string >& getExtensions() { return extensions; }
 
 	// Returns the right resource group for this type of resource
 	virtual ResourceGroup::Enum getResourceGroup() { return ResourceGroup::Meshes; }
@@ -43,7 +43,7 @@ public:
 protected:
 
 	// holds all file extensions recognized by this codec
-	list<string> extensions;
+	std::list< std::string > extensions;
 };
 
 } } // end namespaces

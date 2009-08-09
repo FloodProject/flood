@@ -19,11 +19,6 @@
 #include <al.h>
 #include <alc.h>
 
-//#ifndef AL_ALC_H
-//	struct ALCdevice;
-//	struct ALCcontext;
-//#endif
-
 namespace vapor { 
 	namespace audio {
 
@@ -41,8 +36,8 @@ public:
 
 	Device();
 	virtual ~Device();
-
-	// Play a possibly looped 2D sound
+	
+// Play a possibly looped 2D sound
 	//void play2D(shared_ptr<resources::Sound> sound, bool loop = false);
 
 	// Sets the global audio volume
@@ -53,20 +48,20 @@ protected:
 	// Switch current audio context.
 	void switchContext(ALCcontext* context);
 
-	// Gets the AL format matching the engine format
+	// Gets the AL format matching the engine format.
 	int getALFormat(resources::SoundFormat::Enum format);
 	
-	// Prepares a buffer for AL usage
+	// Prepares a buffer for AL usage.
 	shared_ptr<Buffer> prepareBuffer(shared_ptr<resources::Sound> sound);
 	
-	// Return the last error as a char array
+	// Return the last error as a char array.
 	const char* getError();
 
-	// Checks if the last operation was successful
+	// Checks if the last operation was successful.
 	bool checkError();
 	
-	// Gets a string with the version of OpenAL
-	std::string getVersion();
+	// Gets a string with the version of OpenAL.
+	const std::string getVersion();
 	
 private:
 
@@ -82,7 +77,7 @@ private:
 	bool init;
 
 	// Maps each sound to a OpenAL sound buffer id
-	map< shared_ptr<resources::Sound>, shared_ptr<audio::Buffer> > soundBuffers;
+	std::map< shared_ptr<resources::Sound>, shared_ptr<audio::Buffer> > soundBuffers;
 };
 
 } } // end namespaces

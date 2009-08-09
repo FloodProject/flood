@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\vld\include&quot;;&quot;$(SolutionDir)dep\SDL-1.2.13\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;;&quot;$(SolutionDir)dep\OpenAL 1.1 SDK\include&quot;;&quot;$(SolutionDir)dep\libogg-1.1.3\include&quot;;&quot;$(SolutionDir)dep\libvorbis-1.2.0\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\vld\include&quot;;&quot;$(SolutionDir)dep\SDL-1.2.13\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;;&quot;$(SolutionDir)dep\OpenAL 1.1 SDK\include&quot;;&quot;$(SolutionDir)dep\libogg-1.1.3\include&quot;;&quot;$(SolutionDir)dep\physfs-2.0.0\include&quot;;&quot;$(SolutionDir)dep\libvorbis-1.2.0\include&quot;"
 				PreprocessorDefinitions="WIN32;___DEBUG;_WINDOWS;_DEBUG"
 				MinimalRebuild="true"
 				ExceptionHandling="1"
@@ -424,10 +424,6 @@
 			<Filter
 				Name="Shaders"
 				>
-				<Filter
-					Name="Cg"
-					>
-				</Filter>
 			</Filter>
 			<Filter
 				Name="Audio"
@@ -466,6 +462,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\NativeFile.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\NativeFile.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\inc\vapor\Platform.h"
 				>
 			</File>
@@ -497,19 +501,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\inc\vapor\LogFormat.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="VFS"
-				>
-				<File
-					RelativePath=".\File.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\vfs\File.h"
+					RelativePath=".\LogFormat.h"
 					>
 				</File>
 			</Filter>
@@ -655,6 +647,26 @@
 			</File>
 			<File
 				RelativePath="..\..\inc\vapor\audio\Source.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="VFS"
+			>
+			<File
+				RelativePath=".\File.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\vfs\File.h"
+				>
+			</File>
+			<File
+				RelativePath=".\VFS.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\vfs\VFS.h"
 				>
 			</File>
 		</Filter>

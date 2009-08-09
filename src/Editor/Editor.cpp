@@ -112,11 +112,9 @@ MyFrame::~MyFrame()
 
 void MyFrame::initEngine()
 {
-	engine = new vapor::Engine(false);
+	engine = new vapor::Engine("vaporEditor", false);
 
-	engine->setupResourceManager();
-	engine->setupLogger("vaporEditor", "vaporEditor.html");
-	engine->setupDevices();
+
 }
 
 //-----------------------------------//

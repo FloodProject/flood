@@ -51,7 +51,7 @@ protected:
 private:
 
 	uint id;
-	vector<byte> data;
+	std::vector<byte> data;
 };
 
 } } // end namespaces

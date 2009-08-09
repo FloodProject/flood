@@ -43,11 +43,11 @@ Image* PNG_Pico_Loader::decode(File& file)
 	long size = file.getSize();
 
 	// read contents of the file into the vector
-	vector<byte> filebuf(size);
+	std::vector<byte> filebuf(size);
 	file.read(&filebuf[0], size);
 
 	ulong width, height;
-	vector<byte>& buffer = *new vector<byte>();
+	std::vector<byte>& buffer = *new std::vector<byte>();
 	decodePNG(buffer, width, height, &filebuf[0], (ulong) filebuf.size());
 
 	// build our image with the data. the pixel format return by picoPNG

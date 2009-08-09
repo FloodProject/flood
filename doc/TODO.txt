@@ -15,7 +15,22 @@ Add a custom resource type
 TODO:
 -----
 
-Make the engine memory-leak proof
+The Log class should use the user writing directory for output
+Check the need for defining copy-constructors in all classes
+Window size changed notifications for Camera/Viewport aspect ration calculations
+Make a Localization class, potentially integrating .po files in the resource manager
+The Logger should display the date and time, and not time from launch (or at least show the date it was created)
+Make the Engine class take Window creation settings
+The Window title should be set on Window creation, so it gets set properly on the first appearance
+Make proper type-safe logger that doesn't crash with an invalid format string
+Patch PhysFS to use the proper user dir for App Data on Windows
+Check how the resource manager will handle missing resources
+Make a Timing/Ticking class and maybe a task manager with callbacks (for e.g. streaming)
+Check if/how type traits can be useful in engine
+Bitmap font file format (and converter for some freeware generator tool)
+Are std::string references faster/lighter than normal strings?
+Re-check the order of initialization of the engine subsystems (ideally filesystem errors should occur _before_ rendering init)
+Clipboard?
 
 Renderer:
 
@@ -23,12 +38,13 @@ Renderer:
 
 Resource management:
 
+	Magic header resource type detection
 	Case-insensitive comparisons in map
 	Font handling via FreeType 2
 	
 Scene management:
 
-	Everything! x_x
+	Code to the API specified in Etherpad
 
 Math:
 
@@ -45,15 +61,18 @@ Platform:
 	Logging boxes for system/CPU/GPU information
 
 Virtual File System :)
+
+	Use PhysFS 2.0
 	
-	Basic software device
-	wxWidgets-powered setup dialog
-	vaporEdit
-	vaporizer (cool pun, uh!?)
+vaporEditor
+
+	Add Resources pane with all the resource groups
 	
 DONE:
 -----
 
+Clean up the using std decls
+Make the engine memory-leak proof
 Make the memory leak detector work
 Header in the log output
 CSS-styling to the logging output
@@ -64,5 +83,3 @@ Add namespaces to subsystems
 Clean Visual Studio solutions
 Organize the include directories
 Adapter class
-	
-<!-- woot this is a separator -->

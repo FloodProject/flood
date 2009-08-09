@@ -19,6 +19,7 @@ using std::tr1::static_pointer_cast;
 
 using namespace vapor;
 using namespace vapor::vfs;
+using namespace vapor::log;
 using namespace vapor::math;
 using namespace vapor::scene;
 using namespace vapor::audio;
@@ -27,11 +28,26 @@ using namespace vapor::resources;
 
 //-----------------------------------//
 
+Example::Example()
+	: Framework("Example")
+{
+
+}
+
+//-----------------------------------//
+
 void Example::onInit()
 {
-	warn("example::onInit", "Example warning message!");
-	info("example::onInit", "Example info message!");
-	error("example::onInit", "Example error message!");
+	std::string media = "media/media.zip";
+
+	if ( !vfs->mount( media ) )
+	{
+		Log::MessageDialog( "Missing archive/directory '" + media + "'." );
+	}
+
+	//warn("example::onInit", "Example warning message!");
+	//info("example::onInit", "Example info message!");
+	//error("example::onInit", "Example error message!");
 }
 
 //-----------------------------------//
@@ -40,11 +56,8 @@ void Example::onSetupResources()
 {
 	ResourceManager* rm = getResourceManager();
 	
-	File file("media/triton.png");
-	shared_ptr<Resource> img = rm->createResource(file);
-
-	file = File("media/stereo.ogg");
-	shared_ptr<Resource> sound = rm->createResource(file);
+	shared_ptr<Resource> img = rm->createResource( "media/triton.png" );
+	shared_ptr<Resource> sound = rm->createResource( "media/stereo.ogg" );
 }
 
 //-----------------------------------//
@@ -63,9 +76,8 @@ void Example::onSetupScene()
 	ls->setVolume(0.2f);
 	grp->add(ls);
 
-	File file("media/stereo.ogg");
-	shared_ptr<resources::Sound> res = 
-		static_pointer_cast<resources::Sound>(rm->getResource(file));
+	shared_ptr<resources::Sound> res = static_pointer_cast<resources::Sound>( 
+		rm->getResource("media/stereo.ogg") );
 	shared_ptr<scene::Sound> snd(new scene::Sound(ls, res));
 	grp->add(snd);
 
@@ -73,7 +85,7 @@ void Example::onSetupScene()
 
 	snd->play(5);
 
-	string example = scene->save();
+	std::string example = scene->save();
 	puts(example.c_str());
 }
 

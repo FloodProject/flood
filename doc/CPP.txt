@@ -32,9 +32,9 @@ Miscellaneous
 -------------
 	
 	- nullptr is preferred to NULL (it's gonna be added in C++0x)
-	- use all the STL data structures, don't reinvent the wheel (ironic huh)
+	- use all the STL data structures, don't reinvent the wheel
 	- enums shall be enclosed in a namespace (transition to enum class in C++0x)
-	- Don't copy code from other projects with incompatible licenses (unless you hide it :)
+	- Don't copy/use code from other projects with incompatible licenses (unless you hide it :)
 
 Subversion
 ----------

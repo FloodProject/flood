@@ -17,9 +17,9 @@ namespace vapor {
  * Convenience functions to log in the main engine stream.
  */
 
-void info(const string& subsystem, const char* msg, ...);
-void warn(const string& subsystem, const char* msg, ...);
-void error(const string& subsystem, const char* msg, ...);
+void info(const std::string& subsystem, const char* msg, ...);
+void warn(const std::string& subsystem, const char* msg, ...);
+void error(const std::string& subsystem, const char* msg, ...);
 
 /**
  * Severity level of the log message.
@@ -44,48 +44,48 @@ class Log
 {
 public:
 	
-	Log(const string& title, const string& filename);
+	Log(const std::string& title, const std::string& filename);
 	~Log();
 
-	// Gets or sets the global engine logger
+	// Gets or sets the global engine logger.
 	static Log* getLogger();
 	static void setLogger(Log* log);
 
-	// Spawns a new message box dialog
-	static void MessageDialog(const string& msg, const LogLevel::Enum level = LogLevel::Warning);
+	// Spawns a new message box dialog.
+	static void MessageDialog(const std::string& msg, const LogLevel::Enum level = LogLevel::Warning);
+	
+	// Logging methods for each message category.
+	void info(const std::string& subsystem, const char* msg, ...);
+	void warn(const std::string& subsystem, const char* msg, ...);
+	void error(const std::string& subsystem, const char* msg, ...);
 
-	// Logging functions
-	void info(const string& subsystem, const char* msg, ...);
-	void warn(const string& subsystem, const char* msg, ...);
-	void error(const string& subsystem, const char* msg, ...);
-
-	// Message logging functions
-	void write(const LogLevel::Enum level, const string& subsystem, 
+	// Low-level logging implementation.
+	void write(const LogLevel::Enum level, const std::string& subsystem, 
 		const char* msg, va_list args);
 
 protected:
 
-	// Opens/closes a log file
-	bool open(const string& filename);
+	// Opens/closes a log file.
+	bool open(const std::string& filename);
 	void close(void);
 	
-	// Writes JavaScript sorttable_v1.js
+	// Writes JavaScript sorttable_v1.js.
 	void sorttable();
 
-	// Write CSS styling to the log file
+	// Write CSS styling to the log file.
 	void css();
 	
-	// Writes the boilerplate HTML tags
-	void start(const string& title);
+	// Writes the boilerplate HTML tags.
+	void start(const std::string& title);
 	void end();
 
-	// Global engine logger
+	// Global engine logger.
 	static Log* engineLog;
 
-	// File used to output logging information
+	// File used to output logging information.
 	FILE* fp;
 
-	// Used for zebra coloring the table
+	// Used for zebra coloring the table.
 	bool even;
 };
 

@@ -20,13 +20,19 @@
  
 #define VAPOR_MEMORY_TR1_VENDOR
 //#define VAPOR_MEMORY_TR1_BOOST
-//#define VAPOR_MEMORY_LEAK_DETECTOR
+#define VAPOR_MEMORY_LEAK_DETECTOR
+
+//-------------------------------------------------------------------------//
+// VFS providers
+//-------------------------------------------------------------------------//
+
+#define VAPOR_VFS_PHYSFS
 
 //-------------------------------------------------------------------------//
 // Windowing APIs
 //-------------------------------------------------------------------------//
 
-// Set this to either version "12" or "13"
+// Set this to either version '12' or '13'
 #define VAPOR_WINDOWING_SDL 12
 //#define VAPOR_WINDOWING_SFML
 //#define VAPOR_WINDOWING_WIN32
@@ -70,9 +76,3 @@
 //-------------------------------------------------------------------------//
 
 //#define VAPOR_FONT_FREETYPE2
-
-//-------------------------------------------------------------------------//
-// VFS providers
-//-------------------------------------------------------------------------//
-
-#define VAPOR_VFS_PHYSFS

@@ -44,6 +44,7 @@ Sound* OGG_Loader::decode(File& file)
 	char array[BUFFER_SIZE];    // Local fixed size array
 
 	// Open for binary reading
+	// TODO: Use the NativeFile/File class for I/O
 	FILE* f( fopen(file.getPath().c_str(), "rb") );
 
 	OggVorbis_File oggFile;
@@ -57,12 +58,12 @@ Sound* OGG_Loader::decode(File& file)
 
 	// Check the number of channels... always use 16-bit samples
 	if (pInfo->channels == 1)
-		format = SoundFormat::Mono8;
+		format = SoundFormat::Mono8; // TODO: Are 8-bit samples valid here?
 	else
 		format = SoundFormat::Stereo16;
 
 	int frequency( pInfo->rate );
-	std::vector<char> buffer;
+	std::vector<byte> buffer;
 
 	do 
 	{
@@ -75,7 +76,7 @@ Sound* OGG_Loader::decode(File& file)
 	} while (bytes > 0);
 
 	// This saves some memory by freeing the unused capacity part of the vector
-	std::vector<char>( buffer ).swap( buffer );
+	std::vector<byte>( buffer ).swap( buffer );
 
 	ov_clear(&oggFile);
 

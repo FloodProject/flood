@@ -109,7 +109,7 @@ void Context::makeCurrent()
 
 //-----------------------------------//
 
-const string Context::getError()
+const std::string Context::getError()
 {
 	const ALchar* str;
 	

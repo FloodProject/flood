@@ -33,8 +33,8 @@ namespace vapor {
  * abstract class. The user of the engine doesn't need to care about internal
  * details how all the rendering operations are implemented.
  *
- * This class only knows about rendering primitives (VertexBuffer and IndexBuffer)
- * and does not know anything about the high-level meshes.
+ * This class only knows about rendering primitives (Vertex/Index buffers) and
+ * Renderables. It does not know anything about high-level objects, like meshes.
  *
  * Each render device will also manage a list of render targets (Windows or RTT).
  * Window implementations depend on the rendering system used, for example, an
@@ -49,29 +49,30 @@ public:
 	Device();
 	~Device();
 
-	// Create a new render window
-	Window& createWindow( Settings settings = Settings(640, 480) );
+	// Initializes the rendering system.
+	// (Needs an an OpenGL context)
+	void init();
 
-	// Gets the main window 
+	// Create a new render window.
+	Window& createWindow( const std::string title = "vaporEngine", Settings settings = Settings(640, 480) );
+
+	// Gets the main window.
 	Window* getWindow() const;
 
-	// Gets rendering adapter information
+	// Gets rendering adapter information.
 	Adapter* getAdapter() const;
 
-	// Gets the buffer manager
+	// Gets the buffer manager.
 	BufferManager* getBufferManager() const;
 
 	// Updates the target render target.
 	void updateTarget( );
 
-	// Sets the current clear color
+	// Sets the current clear color.
 	void setClearColor(math::Color c);
 
 	// Sets the active render target.
 	void setRenderTarget( RenderTarget* renderTarget );
-
-	// Close the device
-	void close();
 
 	// Clears the active render target.
 	void clearTarget();
@@ -82,7 +83,7 @@ protected:
 	RenderTarget* activeTarget;
 
 	// list of render targets
-	vector<RenderTarget*> renderTargets;
+	std::vector<RenderTarget*> renderTargets;
 
 	// adapter information
 	Adapter* adapter;

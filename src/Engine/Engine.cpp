@@ -24,50 +24,71 @@
 	#include "vapor/audio/Device.h"
 #endif
 
+using namespace vapor::audio;
+using namespace vapor::scene;
 using namespace vapor::resources;
 using namespace vapor::render;
 using namespace vapor::log;
+using namespace vapor::vfs;
 
 namespace vapor {
 
 //-----------------------------------//
 
-Engine::Engine(bool autoInit)
+Engine::Engine(std::string app, bool autoInit)
+	: app(app)
 {
-	if(!autoInit) return;
-	
-	setupResourceManager();
-	setupLogger("vaporEngine", "vaporEngine.html");
-	setupResourceLoaders();
-	setupDevices();
-	setupWindow("vaporEngine");
+	if(autoInit)
+	{
+		init();
+	}
 }
 
 //-----------------------------------//
 
 Engine::~Engine()
 {
-	delete resourceManager;
 	delete sceneNode;
-	delete Log::getLogger();
 	delete audioDevice;
 	delete renderDevice;
+	delete resourceManager;
+	delete vfs;
+	delete Log::getLogger();
 }
 
 //-----------------------------------//
 
-void Engine::setupLogger(string title, string file)
+void Engine::init()
 {
-	log = new Log(title, file);
-	Log::setLogger(log);
-}
+	// setup the global logger
+	setupLogger();
 
-//-----------------------------------//
+	// create the virtual filesystem
+	vfs = new VFS(app);
 
-void Engine::setupResourceManager()
-{
 	// create the resource manager
 	resourceManager = new ResourceManager();
+
+	// register default codecs
+	setupResourceLoaders();
+
+	// create a rendering and audio device
+	setupDevices();
+
+	// create the root scene node
+	sceneNode = new scene::Scene();
+}
+
+//-----------------------------------//
+
+void Engine::setupLogger()
+{
+	// get a suitabfle log filename
+	std::string file = app + ".html";
+	
+	// create and set a new logger
+	log = new Log(app, file);
+	Log::setLogger(log);
 }
 
 //-----------------------------------//
@@ -77,22 +98,14 @@ void Engine::setupDevices()
 	// create render device
 	renderDevice = new render::Device();
 
+	// create a window and set the title
+	renderDevice->createWindow(app);
+
+	// init the render device now that it has a context
+	getRenderDevice()->init();
+
 	// create the audio device
 	audioDevice = new audio::Device();
-
-	// create the root scene node
-	sceneNode = new scene::Scene();
-}
-
-//-----------------------------------//
-
-void Engine::setupWindow(string title)
-{
-	if(!renderDevice) return;
-
-	// create a window and set the title
-	renderDevice->createWindow();
-	renderDevice->getWindow()->setTitle(title);
 }
 
 //-----------------------------------//
@@ -101,7 +114,7 @@ void Engine::setupResourceLoaders()
 {
 	if(!resourceManager) return;
 
-	vector<ResourceLoader*> loaders;
+	std::vector<ResourceLoader*> loaders;
 	ResourceLoader* loader = nullptr;
 
 	// register default compiled codecs
@@ -120,10 +133,10 @@ void Engine::setupResourceLoaders()
 		loaders.push_back(loader);
 	#endif
 
-	vector<ResourceLoader*>::iterator it;
+	std::vector<ResourceLoader*>::iterator it;
 	for(it = loaders.begin(); it != loaders.end(); it++)
 	{
-		resourceManager->registerResourceLoader(*it);
+		resourceManager->registerLoader(*it);
 	}
 }
 

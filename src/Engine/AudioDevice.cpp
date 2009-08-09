@@ -31,21 +31,21 @@ Device::Device()
 	// select the "preferred device"
 	device = alcOpenDevice(nullptr); 
 	
-	if(!device || checkError()) 
+	if( !device || checkError() )
 	{
 		warn("audio::al", "Could not create OpenAL device: %s", getError());
 	}
 
 	const ALchar* version = alGetString(AL_VERSION);
 	
-	if(!version || checkError()) 
+	if( !version || checkError() ) 
 	{
 		warn("audio::al", "Could not get OpenAL version");
 	} else {
 		info("audio::al", "Using OpenAL version %s", version);
 	}
 
-	if(checkError())
+	if( checkError() )
 	{
 		warn("audio::al", "Error initializing OpenAL: %s", getError());
 	}
@@ -72,7 +72,7 @@ Device::~Device()
 
 //-----------------------------------//
 
-string Device::getVersion() 
+const std::string Device::getVersion() 
 {
     std::stringstream s;
     ALCint major = 0, minor = 0;
@@ -128,8 +128,7 @@ void Device::setVolume(float volume)
 
 	if(checkError()) 
 	{
-		warn("audio::al", "Error changing listener volume: %s",
-			getError());
+		warn("audio::al", "Error changing listener volume: %s", getError());
 	}
 }
 
@@ -170,27 +169,6 @@ void Device::switchContext(ALCcontext* context)
 
 	this->ctx = context;
 }
-
-//-----------------------------------//
-
-//void Device::play2D(shared_ptr<resources::Sound> sound, bool loop)
-//{
-//	ALuint buffer = prepareBuffer(sound);
-//
-//	ALuint sourceID;
-//
-//	// Generate Buffers
-//	checkError(); // clear error code
-//	alGenSources(1, &sourceID);
-//
-//	// Set the source and listener to the same location
-//	alSource3f(sourceID, AL_POSITION, 0.0f, 0.0f, 0.0f);
-//
-//	if(checkError())
-//	{
-//		warn("audio::al", "Could not set source position: %s", getError());
-//	}
-//}
 
 //-----------------------------------//
 

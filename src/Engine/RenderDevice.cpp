@@ -33,7 +33,19 @@ Device::Device()
 	: clearColor(math::Colors::White), adapter(nullptr),
 	window(nullptr), bufferManager(nullptr)
 {
-	info("render::opengl", "Creating OpenGL rendering device");
+
+}
+
+//-----------------------------------//
+
+void Device::init()
+{
+	info( "render::gl", "Creating OpenGL rendering device" );
+
+	if( !activeTarget || !window ) 
+	{
+		warn( "render::gl", "No current OpenGL context found, stuff may fail" );
+	}
 
 	checkExtensions();
 
@@ -45,6 +57,15 @@ Device::Device()
 
 Device::~Device()
 {
+	info("render::opengl", "Closing OpenGL rendering device");
+
+	//for(std::list<GLVertexBuffer>::iterator it = _vertexBuffers.begin(); 
+	//	it != _vertexBuffers.end(); it++)
+	//{
+	//	// erase each buffer because we dont want to erase them after OpenGL is terminated (VBOs)
+	//	_vertexBuffers.erase(it);
+	//}
+
 	delete adapter;
 	delete window;
 	delete bufferManager;
@@ -94,20 +115,6 @@ BufferManager* Device::getBufferManager() const
 
 //-----------------------------------//
 
-void Device::close()
-{
-	info("render::opengl", "Closing OpenGL rendering device");
-
-	//for(std::list<GLVertexBuffer>::iterator it = _vertexBuffers.begin(); 
-	//	it != _vertexBuffers.end(); it++)
-	//{
-	//	// erase each buffer because we dont want to erase them after OpenGL is terminated (VBOs)
-	//	_vertexBuffers.erase(it);
-	//}
-}
-
-//-----------------------------------//
-
 void Device::checkExtensions()
 {
 	// init GLEW (OpenGL Extension Wrangler)
@@ -121,7 +128,7 @@ void Device::checkExtensions()
 
 //-----------------------------------//
 
-Window& Device::createWindow(Settings settings)
+Window& Device::createWindow(const std::string title, Settings settings)
 {
 #if defined(VAPOR_WINDOWING_SDL)
 	window = new SDLWindow(settings);
@@ -130,6 +137,8 @@ Window& Device::createWindow(Settings settings)
 #else
 	#error "Could not find a window implementation"
 #endif
+
+	window->setTitle(title);
 
 	setRenderTarget(window);
 	resetViewport();

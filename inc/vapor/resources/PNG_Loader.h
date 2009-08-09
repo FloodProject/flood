@@ -30,13 +30,13 @@ public:
 	PNG_Pico_Loader();
 
 	// Decode an image file to a buffer
-	virtual Image* decode(File& file);
+	virtual Image* decode(vfs::File& file);
 
 	// Gets the name of this codec.
-	virtual string getName() { return "PICOPNG"; }
+	virtual const std::string getName() { return "PICOPNG"; }
 
 	// Gets the list of extensions this codec can handle.
-	virtual list<string>& getExtensions() { return extensions; }
+	virtual std::list< std::string >& getExtensions() { return extensions; }
 
 	// Overrides this to return the right resource group.
 	virtual ResourceGroup::Enum getResourceGroup() { return ResourceGroup::Images; }
@@ -44,7 +44,7 @@ public:
 protected:
 
 	// holds all file extensions recognized by this codec
-	list<string> extensions;
+	std::list< std::string > extensions;
 };
 
 } } // end namespaces

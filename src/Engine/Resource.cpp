@@ -17,7 +17,7 @@ namespace vapor {
 
 namespace ResourceGroup
 {
-	string getString(Enum e) 
+	const std::string getString(Enum e) 
 	{
 		switch(e) 
 		{
@@ -38,6 +38,21 @@ namespace ResourceGroup
 		}
 	}
 }
+
+//-----------------------------------//
+
+Resource::Resource()
+{
+
+}
+
+//-----------------------------------//
+
+Resource::~Resource()
+{
+
+}
+
 
 //-----------------------------------//
 

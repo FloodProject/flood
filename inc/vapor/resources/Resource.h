@@ -34,13 +34,13 @@ namespace ResourceGroup
 	};
 
 	// Yeah, a bit ugly, but it works.
-	string getString(Enum e);
+	const std::string getString(Enum e);
 }
 
 /**
  * Represents a generic resource that tipically is used to hold a piece
  * of data that is used by the various systems of the engine, for example
- * mesh data, sounds, fonts, images, shaders, and other types of stuff.
+ * mesh, sounds, fonts, images, shaders, and other types of data.
  *
  * Each resource is identified by a URI (Uniform Resource Identifier),
  * that way we can add virtual resources (it could be used for various
@@ -50,22 +50,31 @@ namespace ResourceGroup
 
 class Resource
 {
-protected:
-
-	Resource () { }
-
 public:
 
-	virtual ~Resource () { }
+	virtual ~Resource();
 
-	// Gets the URI that identifies this resource.
-	//virtual string getURI() = 0;
+	// Reloads this resource.
+	// bool reload();
+
+	// Watches this resource for changes and auto-reloads it.
+	// void watch();
+
+	// Releases the contents of this resource (to save memory).
+	// void release();
+
+	// Gets the path that identifies this resource.
+	//virtual std::string getPath() = 0;
 	
 	// Gets the resource group associated with this resource.
-	virtual ResourceGroup::Enum getResourceGroup() = 0;
+	virtual ResourceGroup::Enum getResourceGroup() const = 0;
 
 	// Gets the resource loader associated with this resource.
 	//virtual ResourceLoader* getResourceLoader() = 0;
+
+protected:
+
+	Resource();
 };
 
 } } // end namespaces

@@ -10,7 +10,6 @@
 
 #include "vapor/Platform.h"
 #include "vapor/resources/Resource.h"
-#include "vapor/resources/ResourceManager.h"
 
 namespace vapor {
 	namespace resources {
@@ -26,7 +25,7 @@ namespace PixelFormat
 		R8G8B8A8,
 	};
 
-	string getString(Enum e);
+	const std::string getString(Enum e);
 }
 
 /**
@@ -55,14 +54,16 @@ public:
 	// Returns the pixel format of the image
 	PixelFormat::Enum getPixelFormat() const { return pixelFormat; }
 
-	// Gets a pointer to the buffer containing the data.
+	// Gets the buffer containing the image data.
 	std::vector<byte>&  getBuffer() const { return *dataBuffer; };
 
+	// Change the buffer containing the image data.
 	void setBuffer(std::vector<byte>& data) { dataBuffer = &data; }
 
-	// Return the proper Images resource group
-	ResourceGroup::Enum getResourceGroup() { return ResourceGroup::Images; }
+	// Return the proper resource group for this resource.
+	ResourceGroup::Enum getResourceGroup() const { return ResourceGroup::Images; }
 
+	// Prints image information to the log.
 	void log() const;
 
 private:

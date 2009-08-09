@@ -9,12 +9,9 @@
 #pragma once
 
 #include "vapor/Platform.h"
-#include "vapor/vfs/File.h"
 
 #include "vapor/resources/Resource.h"
 #include "vapor/resources/ResourceLoader.h"
-
-using namespace vapor::vfs;
 
 namespace vapor {
 	namespace resources {
@@ -40,13 +37,13 @@ public:
 	virtual ~ResourceManager();
 
 	// Creates a new resource and adds it to the manager.
-	shared_ptr<Resource> createResource(File& file);
+	shared_ptr<Resource> createResource(const std::string path);
 
 	// Removes a resource from the manager.
 	void removeResource(shared_ptr<Resource> res);
 
 	// Gets an existing resource by its URI (or null if it does not exist).
-	shared_ptr<Resource> getResource(File& path);
+	shared_ptr<Resource> getResource(const std::string path);
 
 	// Sets a memory budget limit for a given resource group.
 	//void setMemoryBudget(ResourceGroup::Enum group, uint memoryBudget);
@@ -55,7 +52,7 @@ public:
 	//uint getMemoryUsage(ResourceGroup::Enum group);
 
 	// Registers a resource handler.
-	void registerResourceLoader(ResourceLoader* loader);
+	void registerLoader(ResourceLoader* loader);
 
 	// Watches a resource for changes and auto-reloads it.
 	void watchResource(Resource* res);
@@ -66,13 +63,13 @@ public:
 protected:
 
 	// maps a name to a resource
-	map< string, shared_ptr<Resource> > resources;
+	std::map< std::string, shared_ptr<Resource> > resources;
 
 	// maps extensions to resource loaders
-	map< string, ResourceLoader* > resourceLoaders;
+	std::map< std::string, ResourceLoader* > resourceLoaders;
 
 	// maps each resource group to a specific budget
-	map< ResourceGroup::Enum, uint > resourceBudgets;
+	std::map< ResourceGroup::Enum, uint > resourceBudgets;
 };
 
 } } // end namespaces

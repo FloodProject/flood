@@ -14,17 +14,18 @@
 namespace vapor {
 
  /**
- * Simple framework to facilitate the use of the engine functionality in applications.
- * It asks for a rendering device to use, and has some virtual methods used to setup all
- * the needed resources. Applications can just derive from this class and setup the needed
- * stuff, call the run() method and everything should automagically work.
+ * Simple framework to facilitate the use of the engine functionality in
+ * applications. It asks for a rendering device to use, and has some 
+ * virtual methods used to setup all the needed resources. Applications 
+ * can just derive from this class and setup the needed stuff, call the 
+ * run() method and everything should automagically work.
  */
 
 class Framework : protected Engine
 {
 public:
 
-	Framework();
+	Framework(const std::string app);
 	virtual ~Framework();
 
 	// Kickstart the framework in action.

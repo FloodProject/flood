@@ -39,17 +39,17 @@ class DynamicLib
 {
 public:
 
-	DynamicLib( const string &name );
+	DynamicLib( const std::string& name );
 	~DynamicLib();
 
 	// Gets a pointer to the given symbol
-	void* getSymbol( const string &symbol );
+	void* getSymbol( const std::string& symbol );
 
 private:
 
 	bool load();
 	
-	string _name;
+	std::string _name;
 	DYNLIB_HANDLE _handle;
 };
 

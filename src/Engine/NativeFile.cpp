@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/vfs/File.h"
+#include "vapor/NativeFile.h"
 
 #ifdef VAPOR_PLATFORM_WINDOWS
 	#include <io.h>
@@ -21,11 +21,10 @@
 #endif
 
 namespace vapor {
-	namespace vfs {
 
 //-----------------------------------//
 
-File::File(string path)
+NativeFile::NativeFile(std::string path)
 	: path(path), fp(nullptr)
 {
 	fp = fopen(path.c_str(), "rb");
@@ -33,23 +32,22 @@ File::File(string path)
 
 //-----------------------------------//
 
-File::File(const char* _path)
+NativeFile::NativeFile(const char* _path)
 	: path(_path), fp(nullptr)
 {
-	fp = fopen(path.c_str(), "rb");
+	fp = fopen(_path, "rb");
 }
-
 
 //-----------------------------------//
 
-File::~File() 
+NativeFile::~NativeFile() 
 {
 	close();
 }
 
 //-----------------------------------//
 
-void File::close()
+void NativeFile::close()
 {
 	// close the file
 	if(fp != nullptr) {
@@ -59,7 +57,7 @@ void File::close()
 
 //-----------------------------------//
 
-long File::getSize()
+long NativeFile::getSize()
 {
 	// hold the current file position
 	long curr = ftell(fp);
@@ -76,25 +74,25 @@ long File::getSize()
 
 //-----------------------------------//
 
-long File::read(void* buffer, long sz)
+long NativeFile::read(void* buffer, long sz)
 {	
 	return fread(buffer, 1, sz, fp);
 }
 
 //-----------------------------------//
 
-bool File::exists()
+bool NativeFile::exists()
 {
 	return _access(path.c_str(), F_OK) == 0;
 }
 
 //-----------------------------------//
 
-bool File::exists(string path)
+bool NativeFile::exists(std::string path)
 {
 	return _access(path.c_str(), F_OK) == 0;
 }
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

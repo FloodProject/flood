@@ -13,9 +13,12 @@
 namespace vapor {
 	namespace resources {
 
+//-----------------------------------//
+
 FontManager::FontManager()
 {
-	if(initFT()) {
+	if(initFT()) 
+	{
 		info("resources::ttf", "Initialized FreeType %d.%d.%d", 
 			FREETYPE_MAJOR, FREETYPE_MINOR, FREETYPE_PATCH);
 	} else {
@@ -24,12 +27,17 @@ FontManager::FontManager()
 	}
 }
 
+//-----------------------------------//
+
 FontManager::~FontManager()
 {
-	if(FT_Done_FreeType(ft) != 0) {
+	if(FT_Done_FreeType(ft) != 0) 
+	{
 		warn("resources::ttf", "Failed to destroy FreeType");
 	}
 }
+
+//-----------------------------------//
 
 bool FontManager::initFT() 
 {
@@ -39,6 +47,8 @@ bool FontManager::initFT()
 	else
 		return false;
 }
+
+//-----------------------------------//
 
 } } // end namespaces
 

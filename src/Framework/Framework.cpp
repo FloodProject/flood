@@ -12,8 +12,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-Framework::Framework()
-	: Engine(false)
+Framework::Framework(const std::string app)
+	:  Engine(app, false)
 {
 	info("framework", "Engine framework getting into action");
 }
@@ -30,7 +30,7 @@ Framework::~Framework()
 void Framework::run()
 {
 	// init the engine
-	init();
+	Framework::init();
 
 	// call the render cycle
 	render();
@@ -40,22 +40,11 @@ void Framework::run()
 
 void Framework::init()
 {
-	// create the resource manager
-	setupResourceManager();
-
-	// setup the global logger
-	setupLogger("vaporEngine Example", "vaporEngine.html");
+	// init the engine
+	Engine::init();
 
 	// app-specific initialization
 	onInit();
-
-	// register default codecs
-	setupResourceLoaders();
-
-	// create a rendering and audio device
-	setupDevices();
-
-	setupWindow("vaporEngine Example");
 
 	// set up all the resources
 	onSetupResources();
@@ -70,7 +59,7 @@ void Framework::render()
 {
 	render::Device* renderDevice = getRenderDevice();
 
-	while(renderDevice->getWindow()->pumpEvents())
+	while( renderDevice->getWindow()->pumpEvents() )
 	{
 		// update time!
 		onUpdate();

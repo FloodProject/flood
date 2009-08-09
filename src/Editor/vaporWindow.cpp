@@ -79,7 +79,7 @@ bool vaporWindow::pumpEvents()
 
 //-----------------------------------//
 
-void vaporWindow::setTitle(const string& title) const
+void vaporWindow::setTitle(const std::string& title) const
 {
 
 }

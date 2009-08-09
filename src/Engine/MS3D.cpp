@@ -14,7 +14,7 @@
 namespace vapor {
 	namespace resources {
 
-MS3D::MS3D(const string& filename)
+MS3D::MS3D(const std::string& filename)
 {
 	load(filename);
 }
@@ -28,7 +28,7 @@ MS3D::~MS3D()
 
 //-----------------------------------//
 
-bool MS3D::load(const string& filename)
+bool MS3D::load(const std::string& filename)
 {
 	// disable Visual C++ fopen deprecation warning
 	#pragma warning(disable : 4996)

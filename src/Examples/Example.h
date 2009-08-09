@@ -16,6 +16,12 @@
 
 class Example : public vapor::Framework
 {
+public:
+
+	Example();
+
+protected:
+
 	// Initializes the app.
 	virtual void onInit();	
 
@@ -30,9 +36,6 @@ class Example : public vapor::Framework
 
 	// Renders the scene
 	virtual void onRender();
-
-protected:
-
 };
 
 #define VAPOR_EXAMPLE_NAME Example

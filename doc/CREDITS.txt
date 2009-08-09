@@ -28,7 +28,8 @@ Rendering:
 Scene:
 
 	* Hierarchical scene graph with BVH for fast culling
-	* Different types of nodes: 
+	* Different types of nodes:
+	
 			* Geometry
 			* Camera
 			* Light
@@ -36,6 +37,7 @@ Scene:
 			* Listener
 			* Trigger
 			* Skybox (TODO)
+			
 	* Built-in scene serialization to JSON format
 
 Editor:
@@ -60,6 +62,10 @@ Libraries used:
 	* DevIL
 	* FreeType
 	* wxWidgets
+	* PhysFS
+	* picopng
+	* OpenAL
+	* ogg / vorbis
 
 Tools used:
 
@@ -74,5 +80,5 @@ Special thanks:
 	* Nuno Silva aka LittleCodingFox (initial VBO stubs)
 	* fnds (helped out with minor CSS problems)
 	* Nazgulled (some suggestions for graphics design)
-	* Stack Overflow community (great topics)
+	* Stack Overflow community (great tips there)
 	* OGRE / Irrlicht / NeoEngine / 3Demon

@@ -15,7 +15,7 @@ namespace vapor {
 
 namespace SoundFormat
 {
-	string getString(Enum e) 
+	const std::string getString(Enum e) 
 	{
 		switch(e) 
 		{
@@ -35,8 +35,8 @@ namespace SoundFormat
 
 //-----------------------------------//
 
-Sound::Sound(const SoundFormat::Enum format_, const int frequency_, std::vector< char > const& data)
-	: frequency( frequency_ ), format(format_), dataBuffer( data )
+Sound::Sound(const SoundFormat::Enum format, const int frequency, const std::vector< byte >& data)
+	: frequency( frequency ), format(format), dataBuffer( data )
 {
 }
 

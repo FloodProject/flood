@@ -14,7 +14,14 @@
 	#error "vapor::Framework code needs you need to define VAPOR_EXAMPLE_NAME.
 #endif
 
+//#ifdef VAPOR_PLATFORM_WINDOWS
+//int APIENTRY _tWinMain(HINSTANCE hInstance,
+//                     HINSTANCE hPrevInstance,
+//                     LPTSTR    lpCmdLine,
+//                     int       nCmdShow)
+//#else
 int main()
+//#endif
 {
 	vapor::Framework* example = new VAPOR_EXAMPLE_NAME();
 	example->run();

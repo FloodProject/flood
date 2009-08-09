@@ -8,21 +8,25 @@
 
 #pragma once
 
+#include <cassert>
+
 //---------------------------------------------------------------------//
 // Basic types
 //---------------------------------------------------------------------//
 
 typedef unsigned char	byte;
-typedef unsigned int	uint;
 typedef unsigned short	ushort;
+typedef unsigned int	uint;
 typedef unsigned long	ulong;
 
+// TODO: assert all types are of the right size (sizeof ...)
+
+//assert( sizeof( byte ) == 8 );
+//assert( sizeof( ushort ) == 16 );
+//assert( sizeof( uint ) == 32 );
+//assert( sizeof( ulong ) == 32 );
+
 #include <string>
-
-using std::string;
-
-// to be added in C++0x
-#define nullptr NULL
 
 //---------------------------------------------------------------------//
 // Data structures
@@ -32,8 +36,8 @@ using std::string;
 #include <list>
 #include <map>
 
-using std::map;
-using std::list;
-using std::vector;
+//---------------------------------------------------------------------//
+// C++0x compatability macros
+//---------------------------------------------------------------------//
 
-//using namespace std;
+#define nullptr NULL

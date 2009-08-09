@@ -19,7 +19,7 @@ namespace vapor {
 	namespace resources {
 
 /**
- * Loader for OGG vorbis files.
+ * Loader for OGG Vorbis files.
  */
 
 class OGG_Loader : public ResourceLoader
@@ -29,13 +29,13 @@ public:
 	OGG_Loader();
 
 	// Decode an image file to a buffer
-	virtual Sound* decode(File& file);
+	virtual Sound* decode(vfs::File& file);
 
 	// Gets the name of this codec.
-	virtual string getName() { return "OGG"; }
+	virtual const std::string getName() { return "OGG"; }
 
 	// Gets the list of extensions this codec can handle.
-	virtual list<string>& getExtensions() { return extensions; }
+	virtual std::list< std::string >& getExtensions() { return extensions; }
 
 	// Overrides this to return the right resource group.
 	virtual ResourceGroup::Enum getResourceGroup() { return ResourceGroup::Audio; }
@@ -43,7 +43,7 @@ public:
 protected:
 
 	// holds all file extensions recognized by this codec
-	list<string> extensions;
+	std::list< std::string > extensions;
 };
 
 } } // end namespaces

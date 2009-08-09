@@ -120,10 +120,10 @@ class MS3D : public Resource
 
 public:
 
-	MS3D(const string &filename);
+	MS3D(const std::string &filename);
 	virtual ~MS3D();
 
-	virtual ResourceGroup::Enum getResourceGroup() { return ResourceGroup::Meshes; }
+	ResourceGroup::Enum getResourceGroup() const { return ResourceGroup::Meshes; }
 
 	//int get_num_groups() const;
 	//ms3d_group_t *get_group(int index);
@@ -139,7 +139,7 @@ public:
 
 private:
 
-	bool load(const string &filename);
+	bool load(const std::string &filename);
 	void clear();
 
 	bool read_header();
@@ -154,8 +154,8 @@ private:
 private:
 
 	FILE *fp;
-	vector<ms3d_vertex_t> m_vertices;
-	vector<ms3d_triangle_t> m_triangles;
+	std::vector<ms3d_vertex_t> m_vertices;
+	std::vector<ms3d_triangle_t> m_triangles;
 	//vector<ms3d_group_t> m_groups;
 	//vector<ms3d_material_t> m_materials;
 	//vector<char> m_comment;

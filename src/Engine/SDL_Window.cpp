@@ -259,7 +259,7 @@ bool SDLWindow::pumpEvents()
 
 //-----------------------------------//
 
-void SDLWindow::setTitle(const string& title) const
+void SDLWindow::setTitle(const std::string& title) const
 {
 #if VAPOR_WINDOWING_SDL == 12
 	SDL_WM_SetCaption(title.c_str(), nullptr);
