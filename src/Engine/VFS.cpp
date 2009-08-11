@@ -33,9 +33,8 @@ VFS::VFS(const std::string& app)
 		return;
 	}
 
-	log();
-
 	setDefaultConfig(app);
+	log();
 }
 
 //-----------------------------------//
@@ -96,7 +95,8 @@ void VFS::log()
 		ss << "'" << (*i)->extension << "', ";
 			// << "' (" << (*i)->description << "), ";
 	}
-
+	info("vfs", "User write folder: %s",PHYSFS_getWriteDir() );
+	
 	std::string s = ss.str();
 	s = s.substr( 0, s.find_last_of( ',' ) );
 	info( "vfs", "%s", s.c_str() );

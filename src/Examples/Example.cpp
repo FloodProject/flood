@@ -54,10 +54,24 @@ void Example::onInit()
 		}
 		std::cout << std::endl;
 	}
+	file.seek(4);
+	std::cout << file.tell() << std::endl;
+	content = file.read(file.getSize());
+	if(content.size()>0){
+		std::vector<byte>::iterator it;	
+		for(it = content.begin(); it != content.end(); it++){
+			std::cout << (char)(*it);
+		}
+		std::cout << std::endl;
+	}
 	if(!file.close())
 		error("Example:", "File failed to close: %s", file.getPath());
 	
-		
+	File file2("media/testfile2.txt", AccessMode::Write);
+	file2.write(content);
+	
+	if(!file2.close())
+	error("Example:", "File failed to close: %s", file2.getPath());
 
 	//warn("example::onInit", "Example warning message!");
 	//info("example::onInit", "Example info message!");

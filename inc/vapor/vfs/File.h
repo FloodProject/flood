@@ -61,6 +61,15 @@ public:
 	// Read file into buffer.
 	std::vector<byte> read(long size = -1);
 
+	// Write buffer into file.
+	long write (std::vector<byte> buffer, long size = -1);
+
+	//Seek to a new position within the file. The next read or write will occur at that place.
+	bool File::seek(long pos);
+
+	//Determine current position within a file.
+	long File::tell();
+
 	// Gets the path of the file.
 	const std::string getPath() const { return path; }
 
