@@ -54,7 +54,7 @@ void Example::onInit()
 		}
 		std::cout << std::endl;
 	}
-	file.seek(4);
+	file.seek(0);
 	std::cout << file.tell() << std::endl;
 	content = file.read(file.getSize());
 	if(content.size()>0){
@@ -67,7 +67,7 @@ void Example::onInit()
 	if(!file.close())
 		error("Example:", "File failed to close: %s", file.getPath());
 	
-	File file2("media/testfile2.txt", AccessMode::Write);
+	File file2("testfile2.txt", AccessMode::Write);
 	file2.write(content);
 	
 	if(!file2.close())
