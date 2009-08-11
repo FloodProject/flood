@@ -15,6 +15,7 @@ Add a custom resource type
 TODO:
 -----
 
+Check the need for copy-constructors
 The Log class should use the user writing directory for output
 Check the need for defining copy-constructors in all classes
 Window size changed notifications for Camera/Viewport aspect ration calculations

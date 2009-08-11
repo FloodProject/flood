@@ -55,10 +55,10 @@ public:
 	PixelFormat::Enum getPixelFormat() const { return pixelFormat; }
 
 	// Gets the buffer containing the image data.
-	std::vector<byte>&  getBuffer() const { return *dataBuffer; };
+	const std::vector<byte>& getBuffer() const { return buffer; };
 
 	// Change the buffer containing the image data.
-	void setBuffer(std::vector<byte>& data) { dataBuffer = &data; }
+	void setBuffer(std::vector<byte>& data) { buffer = data; }
 
 	// Return the proper resource group for this resource.
 	ResourceGroup::Enum getResourceGroup() const { return ResourceGroup::Images; }
@@ -78,7 +78,7 @@ private:
 	PixelFormat::Enum pixelFormat;
 
 	// holds the image data
-	std::vector<byte>* dataBuffer;
+	std::vector<byte> buffer;
 };
 
 } } // end namespaces

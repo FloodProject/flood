@@ -30,7 +30,7 @@ namespace PixelFormat
 //-----------------------------------//
 
 Image::Image(const uint w, const uint h, PixelFormat::Enum pf)
-	: width(w), height(h), pixelFormat(pf), dataBuffer() 
+	: width(w), height(h), pixelFormat(pf) 
 {
 }
 
@@ -38,7 +38,7 @@ Image::Image(const uint w, const uint h, PixelFormat::Enum pf)
 
 Image::~Image()
 {
-	delete dataBuffer;
+	//delete buffer;
 }
 
 //-----------------------------------//

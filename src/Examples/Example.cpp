@@ -45,34 +45,27 @@ void Example::onInit()
 	{
 		Log::MessageDialog( "Missing archive/directory '" + media + "'." );
 	}
-	File file("media/testfile.txt", AccessMode::Read);
-	std::vector<byte> content = file.read(file.getSize());
-	if(content.size()>0){
-		std::vector<byte>::iterator it;	
-		for(it = content.begin(); it != content.end(); it++){
-			std::cout << (char)(*it);
-		}
-		std::cout << std::endl;
-	}
-	file.seek(0);
-	std::cout << file.tell() << std::endl;
-	content = file.read(file.getSize());
-	if(content.size()>0){
-		std::vector<byte>::iterator it;	
-		for(it = content.begin(); it != content.end(); it++){
-			std::cout << (char)(*it);
-		}
-		std::cout << std::endl;
-	}
-	if(!file.close())
-		error("Example:", "File failed to close: %s", file.getPath());
-	
-	File file2("testfile2.txt", AccessMode::Write);
-	file2.write(content);
-	
-	if(!file2.close())
-	error("Example:", "File failed to close: %s", file2.getPath());
 
+	File file("media/testfile.txt", AccessMode::Read);
+	std::vector<byte> content = file.read( file.getSize() );
+	
+	if(content.size() > 0)
+	{
+		std::vector<byte>::iterator it;	
+		
+		for(it = content.begin(); it != content.end(); it++)
+		{
+			std::cout << (char)(*it);
+		}
+		
+		std::cout << std::endl;
+	}
+	
+	if( !file.close() )
+	{
+		error("Example:", "File failed to close: %s", file.getPath());
+	}
+	
 	//warn("example::onInit", "Example warning message!");
 	//info("example::onInit", "Example info message!");
 	//error("example::onInit", "Example error message!");

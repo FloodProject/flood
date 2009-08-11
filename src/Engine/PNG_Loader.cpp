@@ -39,15 +39,13 @@ PNG_Pico_Loader::PNG_Pico_Loader()
 
 Image* PNG_Pico_Loader::decode(File& file)
 {
-	// TODO: check if file is open
-	long size = file.getSize();
-
 	// read contents of the file into the vector
 	std::vector<byte> filebuf = file.read();
 
 	ulong width, height;
-	std::vector<byte>& buffer = *new std::vector<byte>();
-	decodePNG(buffer, width, height, &filebuf[0], (ulong) filebuf.size());
+	std::vector<byte> buffer;
+	
+	decodePNG(buffer, width, height, &filebuf[0], filebuf.size());
 
 	// build our image with the data. the pixel format return by picoPNG
 	// is always the same, 32bits per pixel, RGBA 8 bits per component.

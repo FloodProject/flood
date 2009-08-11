@@ -95,7 +95,8 @@ void VFS::log()
 		ss << "'" << (*i)->extension << "', ";
 			// << "' (" << (*i)->description << "), ";
 	}
-	info("vfs", "User write folder: %s",PHYSFS_getWriteDir() );
+
+	info( "vfs", "User write folder: %s", PHYSFS_getWriteDir() );
 	
 	std::string s = ss.str();
 	s = s.substr( 0, s.find_last_of( ',' ) );
