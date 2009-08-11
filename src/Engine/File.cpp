@@ -99,11 +99,23 @@ long File::getSize()
 
 //-----------------------------------//
 
-long File::read(void* buffer, long sz)
+std::vector<byte> File::read(long sz)
 {
-	if( !file ) return -1;
+	if(sz == -1) sz = getSize();
+	std::vector<byte> buffer(sz); 
+	if(!file || PHYSFS_eof(file)) return std::vector<byte>();
+	
+	PHYSFS_sint64 numObjs = PHYSFS_read (file, &buffer[0], 1, sz); 
+		
+	if(numObjs < 0){
+			error( "vfs::file", "Could not read from file '%s': %s",
+			path.c_str(), PHYSFS_getLastError() );
+		
+		return std::vector<byte>();	
+	}
+	return buffer;
 
-	return -1;
+	
 }
 
 //-----------------------------------//

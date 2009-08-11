@@ -46,13 +46,18 @@ Sound* OGG_Loader::decode(File& file)
 	// Open for binary reading
 	// TODO: Use the NativeFile/File class for I/O
 	FILE* f( fopen(file.getPath().c_str(), "rb") );
-
+	//check if the file was opened successfully
+	if(!f) return nullptr;
 	OggVorbis_File oggFile;
-
+    
+	
 	ov_open(f, &oggFile, nullptr, 0);
 
 	// Get some information about the OGG file
 	vorbis_info* pInfo( ov_info(&oggFile, -1) );
+	
+	//check if pinfo was assigned
+	if(!pInfo) return nullptr;
 
 	SoundFormat::Enum format;
 

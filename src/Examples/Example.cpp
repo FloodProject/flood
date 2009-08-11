@@ -14,6 +14,7 @@
 
 #include <vapor/scene/Sound.h>
 #include <vapor/scene/Listener.h>
+#include <iostream>
 
 using std::tr1::static_pointer_cast;
 
@@ -38,12 +39,25 @@ Example::Example()
 
 void Example::onInit()
 {
-	std::string media = "media/media.zip";
+	std::string media = "media";
 
 	if ( !vfs->mount( media ) )
 	{
 		Log::MessageDialog( "Missing archive/directory '" + media + "'." );
 	}
+	File file("media/testfile.txt", AccessMode::Read);
+	std::vector<byte> content = file.read(file.getSize());
+	if(content.size()>0){
+		std::vector<byte>::iterator it;	
+		for(it = content.begin(); it != content.end(); it++){
+			std::cout << (char)(*it);
+		}
+		std::cout << std::endl;
+	}
+	if(!file.close())
+		error("Example:", "File failed to close: %s", file.getPath());
+	
+		
 
 	//warn("example::onInit", "Example warning message!");
 	//info("example::onInit", "Example info message!");

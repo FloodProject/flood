@@ -59,7 +59,7 @@ public:
 	long getSize();
 
 	// Read file into buffer.
-	long read(void* buffer, long size);
+	std::vector<byte> read(long size = -1);
 
 	// Gets the path of the file.
 	const std::string getPath() const { return path; }

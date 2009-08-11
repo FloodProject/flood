@@ -43,8 +43,7 @@ Image* PNG_Pico_Loader::decode(File& file)
 	long size = file.getSize();
 
 	// read contents of the file into the vector
-	std::vector<byte> filebuf(size);
-	file.read(&filebuf[0], size);
+	std::vector<byte> filebuf = file.read();
 
 	ulong width, height;
 	std::vector<byte>& buffer = *new std::vector<byte>();
