@@ -64,10 +64,10 @@ public:
 	// Write buffer into file.
 	long write (std::vector<byte> buffer, long size = -1);
 
-	//Seek to a new position within the file. The next read or write will occur at that place.
+	// Seek to a new position within the file. The next read or write will occur at that place.
 	bool File::seek(long pos);
 
-	//Determine current position within a file.
+	// Determine current position within a file.
 	long File::tell();
 
 	// Gets the path of the file.

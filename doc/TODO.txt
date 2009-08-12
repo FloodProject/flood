@@ -61,17 +61,14 @@ Platform:
 	Logging functions with type-safe variable arguments
 	Logging boxes for system/CPU/GPU information
 
-Virtual File System :)
-
-	Use PhysFS 2.0
-	
-vaporEditor
+vaporEditor:
 
 	Add Resources pane with all the resource groups
 	
 DONE:
 -----
 
+Simple VFS (with PhysFS 2.0)
 Clean up the using std decls
 Make the engine memory-leak proof
 Make the memory leak detector work

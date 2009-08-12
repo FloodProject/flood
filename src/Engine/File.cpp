@@ -114,7 +114,7 @@ std::vector<byte> File::read(long sz)
 		return std::vector<byte>();
 	}
 
-	if( !sz )
+	if( sz == -1 )
 	{
 		sz = getSize() ;
 	} 
