@@ -117,7 +117,6 @@ void Source::pause()
 	}
 }
 
-
 //-----------------------------------//
 
 bool Source::isPlaying()

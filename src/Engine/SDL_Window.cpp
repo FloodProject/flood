@@ -7,6 +7,7 @@
 ************************************************************************/
 
 #include "vapor/render/SDL_Window.h"
+#include "vapor/Log.h"
 
 #ifdef VAPOR_WINDOWING_SDL
 
@@ -19,6 +20,8 @@
 #else
 	#error "SDL is missing a renderer implementation"
 #endif
+
+using namespace vapor::log;
 
 namespace vapor {
 	namespace render {
@@ -35,7 +38,9 @@ SDLWindow::SDLWindow(Settings& settings)
 #endif
 
 {
-	if ( !init() || !open() ) {
+	if ( !init() || !open() ) 
+	{
+		Log::MessageDialog( "Could not create render window", LogLevel::Error );
 		exit(1);
 	}
 }
@@ -48,11 +53,13 @@ SDLWindow::~SDLWindow()
 	// shutdown SDL
 	SDL_Quit();
 #else
-	if(context) {
+	if(context) 
+	{
 		SDL_GL_DeleteContext(context);
 	}
 	
-	if(windowId) {
+	if(windowId) 
+	{
 		SDL_DestroyWindow(windowId);
 	}
 

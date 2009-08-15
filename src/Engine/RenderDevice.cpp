@@ -142,8 +142,6 @@ Window& Device::createWindow(const std::string title, Settings settings)
 	#error "Could not find a window implementation"
 #endif
 
-	window->setTitle(title);
-
 	setRenderTarget(window);
 	resetViewport();
 

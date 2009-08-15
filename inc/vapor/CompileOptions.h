@@ -32,7 +32,7 @@
 // Windowing APIs
 //-------------------------------------------------------------------------//
 
-// Set this to either version '12' or '13'
+// Set this to either version '12' (1.2) or '13' (1.3)
 #define VAPOR_WINDOWING_SDL 12
 //#define VAPOR_WINDOWING_SFML
 //#define VAPOR_WINDOWING_WIN32
