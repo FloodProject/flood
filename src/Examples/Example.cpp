@@ -121,6 +121,8 @@ void Example::onRender()
 	device->setClearColor(Colors::White);
 	device->clearTarget();
 
+
+
 	//// create a vertex buffer
 	//BufferManager* bm = device->getBufferManager();
 	//

@@ -25,9 +25,10 @@ class Settings
 {
 public:
 
-	Settings(const int width, const int height, const std::string title = "Untitled",
-		const int bpp = 32, const int depthbits = 24, const int stencilbits = 8,
-		const int aalevel =2, const bool fullscreen = false,
+	Settings(const int width = 800, const int height = 600,
+		const std::string title = "Untitled", const int bpp = 32, 
+		const int depthbits = 24, const int stencilbits = 8,
+		const int aalevel = 0, const bool fullscreen = false,
 		void* customHandle = nullptr);
 
 	// Gets the width of the window
@@ -36,11 +37,14 @@ public:
 	// Gets the height of the window
 	const int getHeight() const { return height; }
 
-	// Sets the width of the window
-	void setWidth(int w) { width = w; }
+	// Gets the custom handle of the window 
+	void* getCustomHandle() const { return customHandle; }
 	
-	// Gets the height of the window
-	void setHeight(int h) { height = h; }
+	// Is this window fullscreen?
+	const bool isFullscreen() const { return fullscreen; }
+
+	// Gets the window title
+	const std::string getTitle() const { return title; }
 	
 	// Gets the bits-per-pixel of the window
 	const int getBpp() const { return bpp; }
@@ -53,6 +57,12 @@ public:
 	
 	// Gets the antialiasing level of the window
 	const int getAALevel() const { return aalevel; }
+
+	// Sets the width of the window
+	void setWidth(int w) { width = w; }
+	
+	// Gets the height of the window
+	void setHeight(int h) { height = h; }
 	
 	// Sets the size of the window's depth buffer 
 	void setDepthBits(int db) { depthbits = db; }
@@ -62,19 +72,9 @@ public:
 	
 	// Sets the antialiasing level of the window
 	void setAALevel(int aal) { aalevel = aal; }
-
-	// Gets the custom handle of the window 
-	void* getCustomHandle() const { return customHandle; }
-	
-	// Is this window fullscreen?
-	const bool isFullscreen() const { return fullscreen; }
-
-	// Gets the window title
-	const std::string getTitle() const { return title; }
 	
 	// Sets the window title
-	void setTitle(std::string str){ title = str;  }
-
+	void setTitle(std::string str) { title = str; }
 
 public:
 

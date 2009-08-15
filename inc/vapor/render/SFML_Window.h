@@ -43,16 +43,14 @@ public:
 
 private:
 
-
 	// Opens a new window
 	bool open();
 	void processResize(sf::Event event);
+	
 	sf::Window window;
 	sf::WindowSettings sfmlSettings;
 	sf::VideoMode vMode;
 	unsigned long flags;
-
-
 };
 
 } } // end namespaces

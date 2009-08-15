@@ -10,17 +10,16 @@
 
 #ifdef VAPOR_WINDOWING_SFML
 
-
 namespace vapor {
 	namespace render {
 
 //-----------------------------------//
 
 SFMLWindow::SFMLWindow(Settings& settings)
-	: Window(settings)
+	: Window(settings), flags(0)
 {
-	flags = 0;
-	if(!open()) exit(1);
+	if( !open() ) 
+		exit(1);
 }
 
 //-----------------------------------//
@@ -31,42 +30,40 @@ SFMLWindow::~SFMLWindow()
 
 //-----------------------------------//
 
-
-
-
 bool SFMLWindow::open()
 {
-		
 		sfmlSettings.DepthBits         = settings.getDepthBits(); 
 		sfmlSettings.StencilBits       = settings.getStencilBits();
 		sfmlSettings.AntialiasingLevel = settings.getAALevel();
-		if(settings.isFullscreen())
+		
+		if( settings.isFullscreen() )
 		{
 			vMode = sf::VideoMode::GetMode(0);
-			flags = sf::Style::Fullscreen;
+			flags |= sf::Style::Fullscreen;
 		}
 		else
 		{
 			vMode.Width = settings.getWidth(); 
 			vMode.Height = settings.getHeight();
 			vMode.BitsPerPixel = settings.getBpp();
-			if(!vMode.IsValid())
+			
+			if( !vMode.IsValid() )
 			{
-				error("SFMLWindow:", "Video mode not supportted.");
+				error( "render::SFMLWindow", "Video mode not supportted." );
 				return false;
 			}
-			flags = sf::Style::Resize | sf::Style::Close;			
-
+			
+			flags |= sf::Style::Resize | sf::Style::Close;			
 		}
-		window.Create(vMode, settings.getTitle(), flags, sfmlSettings);	
+		
+		window.Create( vMode, "lol", flags, sfmlSettings );	
 
 		sfmlSettings = window.GetSettings();
 		settings.setDepthBits(sfmlSettings.DepthBits);
 		settings.setStencilBits(sfmlSettings.StencilBits);
 		settings.setAALevel(sfmlSettings.AntialiasingLevel);
 		
-		return true;
-		
+		return true;	
 }
 
 
@@ -89,8 +86,11 @@ void SFMLWindow::makeCurrent()
 bool SFMLWindow::pumpEvents()
 {
 	sf::Event Event;
-	while(window.GetEvent(Event)){
-		switch(Event.Type){
+	
+	while(window.GetEvent(Event))
+	{
+		switch(Event.Type)
+		{
 			case sf::Event::Closed:
 				return false;
 			case sf::Event::Resized:
@@ -116,11 +116,9 @@ bool SFMLWindow::pumpEvents()
 			case sf::Event::JoyMoved:
 				//call input mananger to process this type of event
 				break;
-		
 		}
 
 	}
-
 
 	return true;
 }
@@ -143,10 +141,15 @@ void SFMLWindow::setCursor(bool state)
 	window.ShowMouseCursor(state);
 }
 
-void SFMLWindow::processResize(sf::Event event){
+//-----------------------------------//
+
+void SFMLWindow::processResize(sf::Event event)
+{
 	settings.setHeight(event.Size.Height);
 	settings.setWidth(event.Size.Width);
 }
+
+//-----------------------------------//
 
 } } // end namespaces
 
