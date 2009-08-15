@@ -26,7 +26,7 @@ namespace vapor {
  * Another window implementation. Uses only native Windows API calls. 
  * This will hopefully be faster than using SDL windowing for all the
  * platforms, and indeed I've noticed that SDL is a little bit unreliable
- * sometimes. SDL also doesn't provide OpenGL 3.0 support, and we might
+ * sometimes. SDL also doesn't provide OpenGL 3.0 support, and we might want
  * to play a little bit with it soon. :)
  */
 
@@ -44,10 +44,10 @@ public:
 	bool pumpEvents();
 
 	// Sets the title of the window.
-	void setTitle(const std::string& title) const;
+	void setTitle(const std::string& title);
 
 	// Sets the cursor visibility.
-	void setCursor(bool state) const;
+	void setCursor(bool state);
 
 	// Sets this context as the current.
 	void makeCurrent();

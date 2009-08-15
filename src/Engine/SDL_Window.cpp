@@ -259,7 +259,7 @@ bool SDLWindow::pumpEvents()
 
 //-----------------------------------//
 
-void SDLWindow::setTitle(const std::string& title) const
+void SDLWindow::setTitle(const std::string& title) 
 {
 #if VAPOR_WINDOWING_SDL == 12
 	SDL_WM_SetCaption(title.c_str(), nullptr);
@@ -273,7 +273,7 @@ void SDLWindow::setTitle(const std::string& title) const
 
 //-----------------------------------//
 
-void SDLWindow::setCursor(bool state) const
+void SDLWindow::setCursor(bool state) 
 {
 	SDL_ShowCursor(state);
 }

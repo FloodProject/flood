@@ -20,6 +20,8 @@
 	#include <vapor/render/SDL_Window.h>
 #elif defined(VAPOR_WINDOWING_WIN32)
 	#include <vapor/render/Win32_Window.h>
+#elif defined(VAPOR_WINDOWING_SFML)
+	#include <vapor/render/SFML_Window.h>
 #else
 	#error "OpenGL renderer needs a windowing implementation"
 #endif
@@ -134,6 +136,8 @@ Window& Device::createWindow(const std::string title, Settings settings)
 	window = new SDLWindow(settings);
 #elif defined(VAPOR_WINDOWING_WIN32)
 	window = new Win32Window(settings);
+#elif defined(VAPOR_WINDOWING_SFML)
+	window = new SFMLWindow(settings);
 #else
 	#error "Could not find a window implementation"
 #endif

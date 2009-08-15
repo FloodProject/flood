@@ -13,9 +13,11 @@ namespace vapor {
 
 //-----------------------------------//
 
-Settings::Settings(const int width, const int height,
-	const int bpp, const bool fullscreen, void* customHandle)
-	: width(width), height(height), bpp(bpp), 
+Settings::Settings(const int width, const int height, const std::string title,
+	const int bpp, const int depthbits, const int stencilbits,
+	const int aalevel,	const bool fullscreen, void* customHandle)
+	: width(width), height(height), title(title), bpp(bpp), 
+	depthbits(depthbits),  stencilbits(stencilbits), aalevel(aalevel),
 	fullscreen(fullscreen), customHandle(customHandle)
 {
 

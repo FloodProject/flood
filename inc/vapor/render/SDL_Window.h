@@ -38,10 +38,10 @@ public:
 	bool pumpEvents();
 
 	// Sets the title of the window
-	void setTitle(const std::string& title) const;
+	void setTitle(const std::string& title);
 
 	// Sets the cursor visibility
-	void setCursor(bool state) const;
+	void setCursor(bool state);
 
 	void makeCurrent();
 

@@ -209,7 +209,7 @@ bool Win32Window::pumpEvents()
 
 //-----------------------------------//
 
-void Win32Window::setTitle(const string& title) const
+void Win32Window::setTitle(const string& title)
 {
 
 }
@@ -217,7 +217,7 @@ void Win32Window::setTitle(const string& title) const
 
 //-----------------------------------//
 
-void Win32Window::setCursor(bool state) const
+void Win32Window::setCursor(bool state)
 {
 
 }

@@ -25,8 +25,9 @@ class Settings
 {
 public:
 
-	Settings(const int width, const int height, 
-		const int bpp = 32, const bool fullscreen = false,
+	Settings(const int width, const int height, const std::string title = "Untitled",
+		const int bpp = 32, const int depthbits = 24, const int stencilbits = 8,
+		const int aalevel =2, const bool fullscreen = false,
 		void* customHandle = nullptr);
 
 	// Gets the width of the window
@@ -34,9 +35,33 @@ public:
 	
 	// Gets the height of the window
 	const int getHeight() const { return height; }
+
+	// Sets the width of the window
+	void setWidth(int w) { width = w; }
+	
+	// Gets the height of the window
+	void setHeight(int h) { height = h; }
 	
 	// Gets the bits-per-pixel of the window
 	const int getBpp() const { return bpp; }
+
+	// Gets the size of the window's depth buffer 
+	const int getDepthBits() const { return depthbits; }
+	
+	// Gets the size of the window's stencil buffer 
+	const int getStencilBits() const { return stencilbits; }
+	
+	// Gets the antialiasing level of the window
+	const int getAALevel() const { return aalevel; }
+	
+	// Sets the size of the window's depth buffer 
+	void setDepthBits(int db) { depthbits = db; }
+	
+	// Sets the size of the window's stencil buffer 
+	void setStencilBits(int sb) { stencilbits = sb; }
+	
+	// Sets the antialiasing level of the window
+	void setAALevel(int aal) { aalevel = aal; }
 
 	// Gets the custom handle of the window 
 	void* getCustomHandle() const { return customHandle; }
@@ -44,11 +69,19 @@ public:
 	// Is this window fullscreen?
 	const bool isFullscreen() const { return fullscreen; }
 
+	// Gets the window title
+	const std::string getTitle() const { return title; }
+	
+	// Sets the window title
+	void setTitle(std::string str){ title = str;  }
+
+
 public:
 
-	int width, height, bpp;
+	int width, height, bpp, depthbits, stencilbits, aalevel;
 	bool fullscreen;
 	void* customHandle;
+	std::string title;
 };
 
 /**
@@ -73,10 +106,10 @@ public:
 	virtual bool pumpEvents() = 0;
 
 	// Sets the title of the window
-	virtual void setTitle (const std::string& title) const = 0;
+	virtual void setTitle (const std::string& title) = 0;
 
 	// Sets the visibility of the mouse cursor 
-	virtual void setCursor (bool state) const = 0;
+	virtual void setCursor (bool state) = 0;
 
 	// Gets the window settings
 	virtual Settings& getSettings();
