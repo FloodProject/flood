@@ -6,6 +6,10 @@
 *
 ************************************************************************/
 
+#include "vapor/CompileOptions.h"
+
+#ifdef VAPOR_AUDIO_OPENAL
+
 #include "vapor/scene/Sound.h"
 
 namespace vapor {
@@ -36,3 +40,5 @@ std::string Sound::save(int indent)
 //-----------------------------------//
 
 } } // end namespaces
+
+#endif

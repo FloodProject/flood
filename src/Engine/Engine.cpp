@@ -49,7 +49,11 @@ Engine::Engine(std::string app, bool autoInit)
 Engine::~Engine()
 {
 	delete sceneNode;
+
+#ifdef VAPOR_AUDIO_OPENAL
 	delete audioDevice;
+#endif
+
 	delete renderDevice;
 	delete resourceManager;
 	delete vfs;
@@ -104,8 +108,12 @@ void Engine::setupDevices()
 	// init the render device now that it has a context
 	getRenderDevice()->init();
 
+#ifdef VAPOR_AUDIO_OPENAL
+
 	// create the audio device
 	audioDevice = new audio::Device();
+
+#endif
 }
 
 //-----------------------------------//

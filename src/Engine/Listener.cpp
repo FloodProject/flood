@@ -6,6 +6,10 @@
 *
 ************************************************************************/
 
+#include "vapor/CompileOptions.h"
+
+#ifdef VAPOR_AUDIO_OPENAL
+
 #include "vapor/scene/Listener.h"
 
 namespace vapor {
@@ -42,3 +46,5 @@ shared_ptr<audio::Context> Listener::getContext(shared_ptr<Listener> ls)
 //-----------------------------------//
 
 } } // end namespaces
+
+#endif

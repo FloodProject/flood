@@ -17,6 +17,11 @@
 
 namespace vapor {
 
+#ifndef VAPOR_AUDIO_OPENAL
+	// declare audio namespace so using decls works...
+	namespace audio {}
+#endif
+
 /**
  * Main engine class. This is a utility class that instantiates all the
  * other engine classes and provides suitable methods to get/set them.
@@ -61,8 +66,12 @@ public:
 	// Gets the device.
 	render::Device* getRenderDevice() const { return renderDevice; }
 
+#ifdef VAPOR_AUDIO_OPENAL
+
 	// Gets the audio device.
 	audio::Device* getAudioDevice() const { return audioDevice; }
+
+#endif
 
 	// Gets the scene interface.
 	scene::Scene* getSceneManager() const { return sceneNode; }
@@ -78,8 +87,12 @@ public:
 
 protected:
 
+#ifdef VAPOR_AUDIO_OPENAL
+
 	// Audio device
 	audio::Device* audioDevice;
+
+#endif
 
 	// Scene root node
 	scene::Scene* sceneNode;

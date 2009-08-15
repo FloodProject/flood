@@ -80,7 +80,7 @@ shared_ptr<Resource> ResourceManager::createResource(const std::string path)
 	if(res == nullptr)
 	{
 		warn("resources", "Resource loader '%s' could not decode resource '%s'", 
-			ldr->getName(), path.c_str());
+			ldr->getName().c_str(), path.c_str());
 		return shared_ptr<Resource>();
 	}
 

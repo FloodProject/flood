@@ -8,6 +8,10 @@
 
 #pragma once
 
+#include "vapor/CompileOptions.h"
+
+#ifdef VAPOR_AUDIO_OPENAL
+
 #include "vapor/Platform.h"
 #include "vapor/audio/Context.h"
 #include "vapor/scene/Transform.h"
@@ -28,3 +32,5 @@ public:
 };
 
 } } // end namespaces
+
+#endif

@@ -14,6 +14,7 @@
 
 #include <vapor/scene/Sound.h>
 #include <vapor/scene/Listener.h>
+
 #include <iostream>
 
 using std::tr1::static_pointer_cast;
@@ -85,26 +86,26 @@ void Example::onSetupResources()
 
 void Example::onSetupScene() 
 {
-	ResourceManager* rm = getResourceManager();
+	//ResourceManager* rm = getResourceManager();
 	Scene* scene = getSceneManager();
-	audio::Device* audioDev = getAudioDevice();
+	////audio::Device* audioDev = getAudioDevice();
 
-	shared_ptr<Group> grp(new Group());
+	//shared_ptr<Group> grp(new Group());
 
-	shared_ptr<Listener> ls(new Listener(audioDev));
-	ls->translate(math::Vector3(1.0f, 0.0f, 0.0f));
-	ls->makeCurrent();
-	ls->setVolume(0.2f);
-	grp->add(ls);
+	//shared_ptr<Listener> ls(new Listener(audioDev));
+	//ls->translate(math::Vector3(1.0f, 0.0f, 0.0f));
+	//ls->makeCurrent();
+	//ls->setVolume(0.2f);
+	//grp->add(ls);
 
-	shared_ptr<resources::Sound> res = static_pointer_cast<resources::Sound>( 
-		rm->getResource("media/stereo.ogg") );
-	shared_ptr<scene::Sound> snd(new scene::Sound(ls, res));
-	grp->add(snd);
+	//shared_ptr<resources::Sound> res = static_pointer_cast<resources::Sound>( 
+	//	rm->getResource("media/stereo.ogg") );
+	//shared_ptr<scene::Sound> snd(new scene::Sound(ls, res));
+	//grp->add(snd);
 
-	scene->add(grp);
+	//scene->add(grp);
 
-	snd->play(5);
+	//snd->play(5);
 
 	std::string example = scene->save();
 	puts(example.c_str());
