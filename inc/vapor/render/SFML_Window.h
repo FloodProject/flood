@@ -46,6 +46,7 @@ private:
 	// Opens a new window
 	bool open();
 	void processResize(sf::Event event);
+	void createWindow();
 	
 	sf::Window window;
 	sf::WindowSettings sfmlSettings;

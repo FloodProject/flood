@@ -56,7 +56,7 @@ bool SFMLWindow::open()
 			flags |= sf::Style::Resize | sf::Style::Close;			
 		}
 		
-		window.Create( vMode, "lol", flags, sfmlSettings );	
+		createWindow();
 
 		sfmlSettings = window.GetSettings();
 		settings.setDepthBits(sfmlSettings.DepthBits);
@@ -65,8 +65,19 @@ bool SFMLWindow::open()
 		
 		return true;	
 }
+//-----------------------------------//
 
-
+void SFMLWindow::createWindow()
+{
+	if(settings.getCustomHandle())
+	{
+		window.Create(settings.getCustomHandle(), sfmlSettings);	
+	}
+	else
+	{		
+		window.Create(vMode, settings.getTitle(), flags, sfmlSettings);
+	}
+}
 //-----------------------------------//
 
 void SFMLWindow::update() 
@@ -128,7 +139,7 @@ bool SFMLWindow::pumpEvents()
 void SFMLWindow::setTitle(const std::string& title) 
 {
 	settings.setTitle(title);
-	window.Create(vMode, settings.getTitle(), flags, sfmlSettings);	
+	createWindow();
 	
 	info("render::window::sdl", 
 		"Changing window title to '%s'", title.c_str());
