@@ -626,6 +626,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Event.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\input\Event.h"
+				>
+			</File>
+			<File
 				RelativePath=".\InputManager.cpp"
 				>
 			</File>

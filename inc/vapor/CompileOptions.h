@@ -12,7 +12,7 @@
 // Engine information
 //-------------------------------------------------------------------------//
 
-#define VAPOR_ENGINE_VERSION "SVN"
+#define VAPOR_ENGINE_VERSION "development-SVN"
 
 //-------------------------------------------------------------------------//
 // Memory stuff

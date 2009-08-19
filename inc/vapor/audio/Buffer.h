@@ -34,11 +34,11 @@ public:
 	
 	Buffer( audio::Device* device, shared_ptr<resources::Sound> sound );
 	~Buffer();
+  
+protected:
 
 	// Gets the OpenAL id of this buffer
 	ALuint id();
-  
-protected:
 
 	// Queues the buffer data in the source.
 	void upload();

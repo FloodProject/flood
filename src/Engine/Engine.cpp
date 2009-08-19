@@ -67,6 +67,8 @@ void Engine::init()
 	// setup the global logger
 	setupLogger();
 
+	info( "engine", "Starting vaporEngine version '%s'", VAPOR_ENGINE_VERSION );
+
 	// create the virtual filesystem
 	vfs = new VFS(app);
 

@@ -26,6 +26,7 @@ SFMLWindow::SFMLWindow(Settings& settings)
 
 SFMLWindow::~SFMLWindow()
 {
+
 }
 
 //-----------------------------------//
@@ -49,7 +50,7 @@ bool SFMLWindow::open()
 			
 			if( !vMode.IsValid() )
 			{
-				error( "render::SFMLWindow", "Video mode not supportted." );
+				error( "render::window::sfml", "Video mode not supportted." );
 				return false;
 			}
 			
@@ -59,9 +60,9 @@ bool SFMLWindow::open()
 		createWindow();
 
 		sfmlSettings = window.GetSettings();
-		settings.setDepthBits(sfmlSettings.DepthBits);
-		settings.setStencilBits(sfmlSettings.StencilBits);
-		settings.setAALevel(sfmlSettings.AntialiasingLevel);
+		settings.setDepthBits( sfmlSettings.DepthBits );
+		settings.setStencilBits( sfmlSettings.StencilBits );
+		settings.setAALevel( sfmlSettings.AntialiasingLevel );
 		
 		return true;	
 }
@@ -98,9 +99,9 @@ bool SFMLWindow::pumpEvents()
 {
 	sf::Event Event;
 	
-	while(window.GetEvent(Event))
+	while( window.GetEvent(Event) )
 	{
-		switch(Event.Type)
+		switch( Event.Type )
 		{
 			case sf::Event::Closed:
 				return false;
@@ -141,8 +142,7 @@ void SFMLWindow::setTitle(const std::string& title)
 	settings.setTitle(title);
 	createWindow();
 	
-	info("render::window::sdl", 
-		"Changing window title to '%s'", title.c_str());
+	info( "render::window::sfml", "Changing window title to '%s'", title.c_str() );
 }
 
 //-----------------------------------//

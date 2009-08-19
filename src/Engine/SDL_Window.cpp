@@ -160,18 +160,21 @@ bool SDLWindow::open()
 			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 			// set the video mode
-			display = SDL_SetVideoMode(getSettings().getWidth(),
-				getSettings().getHeight(), getSettings().getBpp(), flags);
+			display = SDL_SetVideoMode( getSettings().getWidth(),
+				getSettings().getHeight(), getSettings().getBpp(), flags );
 
-			if ( !display ) {
+			if ( !display ) 
+			{
 				error("render::window::sdl", 
 					"Failed to create a display: %s", SDL_GetError());
 				return false;
 			}
+
+			setTitle( settings.getTitle() );
 		#else
-			windowId = SDL_CreateWindow("vaporEngine", 
+			windowId = SDL_CreateWindow( settings.getTitle(), 
 				SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 
-				settings.getWidth(), settings.getHeight(), flags);
+				settings.getWidth(), settings.getHeight(), flags );
 		#endif
 	}
 
@@ -268,14 +271,15 @@ bool SDLWindow::pumpEvents()
 
 void SDLWindow::setTitle(const std::string& title) 
 {
+	settings.setTitle( title );
+
 #if VAPOR_WINDOWING_SDL == 12
 	SDL_WM_SetCaption(title.c_str(), nullptr);
 #else
 	SDL_SetWindowTitle(windowId, title.c_str());
 #endif
 
-	info("render::window::sdl", 
-		"Changing window title to '%s'", title.c_str());
+	info("render::window::sdl", "Changing window title to '%s'", title.c_str());
 }
 
 //-----------------------------------//

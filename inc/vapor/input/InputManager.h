@@ -10,37 +10,27 @@
 
 #include "vapor/Platform.h"
 
+#include "vapor/input/Device.h"
+
 namespace vapor {
 	namespace input {
 		
+/**
+ * Manages a set of input devices.
+ */
 
-	
-
-	
 class InputManager
 {
 public:
 	
-	
+	// Gets a vector with all the known input devices.
+	const std::vector< Device >& getDevices();
+
+	void feedEvent( const Event& event );
 
 private:
-	Keyboard keyboard;
-	Mouse    mouse;
-	Joystick joystick;
 
-	virtual void keyPressed(KeyInfo keycode);
-	virtual void keyReleased(KeyInfo keycode);
-	virtual void mouseWheelMoved(int motion);
-	virtual void mouseButtonPressed(MouseButtonEvent button);
-	virtual void mouseButtonReleased(MouseButtonEvent button);
-	virtual void mouseMoved(MouseMoveEvent move);
-	virtual void mouseEntered();
-	virtual void mouseLeft();
-	virtual void joyButtonPressed(JoyButtonEvent button);
-	virtual void joyButtonReleased(JoyButtonEvent button);
-	virtual void joyMoved(JoyMoveEvent move);
+	std::vector< Device > devices;
+}
 
-}
-		
-	}
-}
+} } // end namespaces

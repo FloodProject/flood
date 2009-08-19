@@ -20,11 +20,7 @@
 	#include <boost/tr1/memory.hpp>
 #endif
 
-using std::auto_ptr;
 using std::tr1::shared_ptr;
-using std::tr1::weak_ptr;
-using std::tr1::mem_fn;
-using std::tr1::bind;
 
 //-------------------------------------------------------------------------//
 // Memory leaks analyzer

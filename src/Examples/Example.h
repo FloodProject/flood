@@ -36,6 +36,10 @@ protected:
 
 	// Renders the scene
 	virtual void onRender();
+
+private:
+
+	float r,g,b;
 };
 
 #define VAPOR_EXAMPLE_NAME Example

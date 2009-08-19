@@ -66,7 +66,9 @@ void Example::onInit()
 	{
 		error("Example:", "File failed to close: %s", file.getPath());
 	}
-	
+
+	r = b = g = 0.0f;
+
 	//warn("example::onInit", "Example warning message!");
 	//info("example::onInit", "Example info message!");
 	//error("example::onInit", "Example error message!");
@@ -118,10 +120,8 @@ void Example::onRender()
 	render::Device* device = getRenderDevice();
 
 	// clear the render device with white
-	device->setClearColor(Colors::White);
+	device->setClearColor( math::Color(r, g, b) );
 	device->clearTarget();
-
-
 
 	//// create a vertex buffer
 	//BufferManager* bm = device->getBufferManager();
@@ -144,6 +144,10 @@ void Example::onRender()
 void Example::onUpdate() 
 {
 	Scene* scene = getSceneManager();
+
+	r += 0.00001f; r = (r > 1.0f) ? 0.0f : r;
+	g += 0.00003f; b = (b > 1.0f) ? 0.0f : b;
+	b += 0.00007f; g = (g > 1.0f) ? 0.0f : g;
 }
 
 //-----------------------------------//

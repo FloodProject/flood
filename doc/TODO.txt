@@ -15,6 +15,7 @@ Add a custom resource type
 TODO:
 -----
 
+Move from #pragma error instructions to static_assert
 Debug a crash in triton's desktop with an Audigy 4 (XP BSOD in Creative's driver 'ctaud2k.sys')
 Move the rendering to a different thread than the main loop code (smooth resizing)
 Check the need for copy-constructors

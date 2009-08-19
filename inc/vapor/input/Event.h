@@ -6,4 +6,18 @@
 *
 ************************************************************************/
 
-#include "vapor/input/Device.h"
+#pragma once
+
+namespace vapor {
+	namespace input {
+
+/**
+ * Base struct for input events.
+ */
+
+struct Event
+{ 
+
+};
+
+} } // end namespaces

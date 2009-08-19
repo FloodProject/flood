@@ -23,9 +23,8 @@
 int main()
 //#endif
 {
-	vapor::Framework* example = new VAPOR_EXAMPLE_NAME();
-	example->run();
-	delete example;
+	VAPOR_EXAMPLE_NAME example;
+	example.run();
 
 	#if defined(VAPOR_MEMORY_LEAK_DETECTOR) && defined(VAPOR_PLATFORM_WINDOWS)
 		//_CrtDumpMemoryLeaks();
