@@ -15,19 +15,7 @@
 namespace vapor {
 	namespace input {
 
-/**
- * Different types of input devices.
- */
-
-namespace Type
-{
-	enum Enum
-	{
-		Keyboard,
-		Mouse,
-		Joystick
-	};
-}
+//-----------------------------------//
 
 /**
  * Input device.
@@ -37,11 +25,16 @@ class Device
 {
 public:
 
+	Device();
+	virtual ~Device();
+
 	// Processes an event.
-	virtual void processEvent( const Event& event ) = 0;
+	virtual void processEvent( const input::Event& event ) = 0;
 
 	// Gets the type of this device.
-	virtual Type::Enum& getType() = 0;
+	virtual const input::DeviceType::Enum getType() = 0;
 };
+
+//-----------------------------------//
 
 } } // end namespaces

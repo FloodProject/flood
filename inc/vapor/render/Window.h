@@ -37,14 +37,14 @@ public:
 	// Gets the height of the window
 	const int getHeight() const { return height; }
 
+	// Gets the window title
+	const std::string& getTitle() const { return title; }
+
 	// Gets the custom handle of the window 
 	void* getCustomHandle() const { return customHandle; }
 	
 	// Is this window fullscreen?
 	const bool isFullscreen() const { return fullscreen; }
-
-	// Gets the window title
-	const std::string getTitle() const { return title; }
 	
 	// Gets the bits-per-pixel of the window
 	const int getBpp() const { return bpp; }
@@ -63,6 +63,9 @@ public:
 	
 	// Gets the height of the window
 	void setHeight(int h) { height = h; }
+
+	// Sets the window title
+	void setTitle(const std::string& str) { title = str; }
 	
 	// Sets the size of the window's depth buffer 
 	void setDepthBits(int db) { depthbits = db; }
@@ -72,9 +75,6 @@ public:
 	
 	// Sets the antialiasing level of the window
 	void setAALevel(int aal) { aalevel = aal; }
-	
-	// Sets the window title
-	void setTitle(std::string str) { title = str; }
 
 public:
 
@@ -99,20 +99,23 @@ public:
 	Window (Settings& settings);
 	virtual ~Window ();
 
-	// Updates the window content
+	// Updates the window content.
 	virtual void update() = 0;
 
-	// Handles the event loop of the window
+	// Handles the event loop of the window.
 	virtual bool pumpEvents() = 0;
 
-	// Sets the title of the window
+	// Sets the title of the window.
 	virtual void setTitle (const std::string& title) = 0;
 
-	// Sets the visibility of the mouse cursor 
+	// Sets the visibility of the mouse cursor.
 	virtual void setCursor (bool state) = 0;
 
-	// Gets the window settings
+	// Gets the window settings.
 	virtual Settings& getSettings();
+
+	// Create a new render window.
+	static Window& createWindow( const Settings& settings = Settings() );
 
 protected:
 

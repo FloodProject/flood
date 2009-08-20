@@ -641,42 +641,10 @@
 				RelativePath="..\..\inc\vapor\input\InputManager.h"
 				>
 			</File>
-			<Filter
-				Name="Keyboard"
+			<File
+				RelativePath="..\..\inc\vapor\input\Type.h"
 				>
-				<File
-					RelativePath=".\Keyboard.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\input\Keyboard.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Mouse"
-				>
-				<File
-					RelativePath=".\Mouse.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\input\Mouse.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Joystick"
-				>
-				<File
-					RelativePath=".\Joystick.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\input\Joystick.h"
-					>
-				</File>
-			</Filter>
+			</File>
 			<Filter
 				Name="SFML"
 				>
@@ -688,6 +656,46 @@
 					RelativePath="..\..\inc\vapor\input\SFML_InputManager.h"
 					>
 				</File>
+			</Filter>
+			<Filter
+				Name="Devices"
+				>
+				<Filter
+					Name="Joystick"
+					>
+					<File
+						RelativePath=".\Joystick.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\input\Joystick.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Mouse"
+					>
+					<File
+						RelativePath=".\Mouse.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\input\Mouse.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Keyboard"
+					>
+					<File
+						RelativePath=".\Keyboard.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\input\Keyboard.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter

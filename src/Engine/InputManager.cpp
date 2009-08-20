@@ -8,43 +8,48 @@
 
 #include "vapor/input/InputManager.h"
 
-//namespace vapor {
-//	namespace input {
-//		void InputManager::keyPressed(KeyInfo keycode)
-//			{
-//			keycode
-//
-//			}
-//		void InputManager::keyReleased(KeyInfo keycode)
-//			{
-//			}
-//		void InputManager::mouseWheelMoved(int motion)
-//			{
-//			}
-//		void InputManager::mouseButtonPressed(MouseButtonEvent button)
-//			{
-//			}
-//		void InputManager::mouseButtonReleased(MouseButtonEvent button)
-//			{
-//			}
-//		void InputManager::mouseMoved(MouseMoveEvent move)
-//			{
-//			}
-//		void InputManager::mouseEntered()
-//			{
-//			}
-//		void InputManager::mouseLeft()
-//			{
-//			}
-//		void InputManager::joyButtonPressed(JoyButtonEvent button)
-//			{
-//			}
-//		void InputManager::joyButtonReleased(JoyButtonEvent button)
-//			{
-//			}
-//		void InputManager::joyMoved(JoyMoveEvent move)
-//			{
-//			}
-//
-//
-//		}}
+namespace vapor {
+	namespace input {
+
+//-----------------------------------//
+
+InputManager::InputManager()
+{
+
+}
+
+//-----------------------------------//
+
+InputManager::~InputManager()
+{
+
+}
+
+//-----------------------------------//
+
+void InputManager::addDevice( input::Device* device )
+{
+	if( !device )
+	{
+		warn( "input", "Tried to add an invalid input device" );
+		return;
+	}
+	
+	devices.push_back( device );
+}
+
+//-----------------------------------//
+
+void InputManager::processEvent( const input::Event& event )
+{
+	std::vector< input::Device* >::iterator it;
+	
+	for( it = devices.begin(); it != devices.end(); it++ )
+	{
+		(*it)->processEvent( event );
+	}
+}
+
+//-----------------------------------//
+
+} } // end namespaces

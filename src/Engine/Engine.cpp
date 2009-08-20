@@ -105,7 +105,7 @@ void Engine::setupDevices()
 	renderDevice = new render::Device();
 
 	// create a window and set the title
-	renderDevice->createWindow(app);
+	renderDevice->createWindow();
 
 	// init the render device now that it has a context
 	getRenderDevice()->init();

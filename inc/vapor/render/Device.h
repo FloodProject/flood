@@ -54,7 +54,7 @@ public:
 	void init();
 
 	// Create a new render window.
-	Window& createWindow( const std::string title = "vaporEngine", Settings settings = Settings(640, 480) );
+	Window& createWindow( const Settings& settings = Settings() );
 
 	// Gets the main window.
 	Window* getWindow() const;

@@ -16,16 +16,6 @@
 
 #include "vapor/render/GL.h"
 
-#if defined(VAPOR_WINDOWING_SDL)
-	#include <vapor/render/SDL_Window.h>
-#elif defined(VAPOR_WINDOWING_WIN32)
-	#include <vapor/render/Win32_Window.h>
-#elif defined(VAPOR_WINDOWING_SFML)
-	#include <vapor/render/SFML_Window.h>
-#else
-	#error "OpenGL renderer needs a windowing implementation"
-#endif
-
 namespace vapor {
 	namespace render {
 
@@ -130,22 +120,16 @@ void Device::checkExtensions()
 
 //-----------------------------------//
 
-Window& Device::createWindow(const std::string title, Settings settings)
+Window& Device::createWindow( const Settings& settings )
 {
-#if defined(VAPOR_WINDOWING_SDL)
-	window = new SDLWindow(settings);
-#elif defined(VAPOR_WINDOWING_WIN32)
-	window = new Win32Window(settings);
-#elif defined(VAPOR_WINDOWING_SFML)
-	window = new SFMLWindow(settings);
-#else
-	#error "Could not find a window implementation"
-#endif
+	Window& window = Window::createWindow( settings );
 
-	setRenderTarget(window);
+	this->window = &window;
+
+	setRenderTarget(&window);
 	resetViewport();
 
-	return *window;
+	return window;
 }
 
 //-----------------------------------//
@@ -160,6 +144,8 @@ void Device::clearTarget()
 
 void Device::resetViewport()
 {
+	if( !window ) return;
+
 	Settings &s = window->getSettings();
 
 	glViewport(0, 0, s.getWidth(), s.getHeight());
