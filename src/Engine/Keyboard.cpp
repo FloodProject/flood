@@ -44,7 +44,17 @@ void Keyboard::processEvent( const input::Event& event )
 	}
 
 	const KeyEvent& kevt = static_cast< const KeyEvent& > ( event );
-	//TODO: write rest of function
+	switch(kevt.eventType)
+		{
+		case KeyboardEvent::KeyPressed:
+			keyPressed(kevt.keyCode);
+			//TODO: Maybe add the rest of the struct's info, although it doesn't seem necessary
+			break;
+		case KeyboardEvent::KeyReleased:
+			keyReleased(kevt.keyCode);
+			break;
+
+		}
 }
 
 //-----------------------------------//

@@ -152,6 +152,7 @@ namespace Keys
 
 struct KeyEvent : public input::Event
 {
+friend class Keyboard;
 	KeyEvent(Keys::Enum keyCode, 
 		bool alt = false, bool shift = false, bool ctrl = false,  KeyboardEvent::Enum eventType = KeyboardEvent::KeyPressed);
 	

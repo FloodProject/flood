@@ -10,9 +10,12 @@
 
 #include "vapor/Platform.h"
 
+#include "vapor/input/Device.h"
+#include "vapor/input/Event.h"
+
 namespace vapor {
 	namespace input {
-		namespace Mouse
+		namespace MouseButton
 			{
 			enum Enum
 				{
@@ -25,7 +28,7 @@ namespace vapor {
 				};
 			}
 			
-		namespace MouseEvent
+		namespace MouseEventType
 			{
 			enum Enum
 				{
@@ -51,26 +54,45 @@ bool middleButton;
 bool XButton1;
 bool XButton2;
 bool inWindow;
-}
+};
 
 struct MouseEvent : public input::Event
 {
+	friend class Mouse;
+	MouseEvent(MouseEventType::Enum eventType): 
+	Event( DeviceType::Mouse ), eventType(eventType){}
+
+	
 	private:
-		MouseEvent::Enum eventType;
-}
+		MouseEventType::Enum eventType;
+};
 
 struct MouseMoveEvent : public MouseEvent
 {
-	
+
+	friend class Mouse;
+	MouseMoveEvent(int x, int y): MouseEvent(MouseEventType::MouseMove),
+			x(x), y(y) {}
 	int x;
 	int y;
 };
  
 struct MouseButtonEvent : public MouseEvent
 {
-	Mouse::Button button;
+	friend class Mouse;
+	MouseButtonEvent(int x, int y, MouseButton::Enum button, MouseEventType::Enum eventType)
+	: MouseEvent(eventType), x(x), y(y), button(button) {}
+	MouseButton::Enum button;
 	int  x;
 	int  y;
+};
+
+struct MouseWheelEvent : public MouseEvent
+{
+	friend class Mouse;
+	MouseWheelEvent(int delta, int y): MouseEvent(MouseEventType::MouseWheelMove),
+			delta(delta){}
+	int  delta;
 };
 
 
@@ -90,12 +112,15 @@ private:
 	// Return this device as a mouse.
 	virtual const input::DeviceType::Enum getType();
 
-	void mouseButtonPressed(MouseButtonEvent press);
-	void mouseButtonReleased(MouseButtonEvent release);
-	void mouseButtonMoved(MouseButtonEvent move);
+	void mouseButtonPressed(const MouseEvent& mevt);
+	void mouseButtonReleased(const MouseEvent& mevt);
+	void mouseMoved(const MouseEvent& mevt);
+	void mouseEnter();
+	void mouseExit();
+	void mouseWheelMove(const MouseEvent& mevt);
 	MouseInfo mouseinfo;
 	
-}
+};
 
 
 }}
