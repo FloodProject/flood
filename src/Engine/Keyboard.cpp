@@ -15,7 +15,7 @@ namespace vapor {
 //-----------------------------------//
 
 Keyboard::Keyboard()
-	: keyState(Keys::Pause, false)
+: keyState(Keys::Pause, false), lastKey(Keys::Space)
 {
 
 }
@@ -44,63 +44,60 @@ void Keyboard::processEvent( const input::Event& event )
 	}
 
 	const KeyEvent& kevt = static_cast< const KeyEvent& > ( event );
+	//TODO: write rest of function
 }
 
 //-----------------------------------//
 
-KeyEvent::KeyEvent(Keys::Enum keyCode, bool alt, bool shift, bool ctrl)
-	: Event( DeviceType::Keyboard ), keyCode( keyCode ), 
-		altPressed( alt ), shiftPressed( shift ), ctrlPressed( ctrl )
+KeyEvent::KeyEvent(Keys::Enum keyCode, bool alt, bool shift, bool ctrl, KeyboardEvent::Enum eventType):
+	Event( DeviceType::Keyboard ), keyCode( keyCode ), altPressed( alt ),
+		shiftPressed( shift ), ctrlPressed( ctrl ), eventType( eventType )
 {
 
 }
 
 //-----------------------------------//
 
-//Keys::Enum Keyboard::lastKeyPressed()
-//{
-//	return pressedKeys.back();
-//}
-//
-////-----------------------------------//
-//
-//KeyInfo Keyboard::infoLastKeyPressed()
-//{
-//	bool alt, shift, ctrl;
-//	alt = keyState[Keys::LAlt] || keyState[Keys::RAlt];
-//	shift = keyState[Keys::LShift] || keyState[Keys::RShift];
-//	ctrl = keyState[Keys::LControl] || keyState[Keys::RControl];
-//	KeyInfo keyinfo(pressedKeys.back(), alt, shift, ctrl);  
-//}
-//
-////-----------------------------------//
-//
-//bool Keyboard::isKeyPressed(Keys::Enum keycode)
-//{
-//	return keyState[keycode];
-//}
-//
-////-----------------------------------//
-//
-//void Keyboard::keyPressed(Keys::Enum keycode)
-//{
-//	keyState[keycode] = true;
-//	if(pressedKeys.size > 10)
-//		pressedKeys.erase(pressedKeys.begin());
-//	pressedKeys.push_back(keycode);
-//}
-//
-////-----------------------------------//
-//
-//void Keyboard::keyReleased(Keys::Enum keycode)
-//{
-//	keyState[keycode] = false;
-//	for(std::vector<Keys::Enum>::iterator it = pressedKeys.begin(); it != pressedKeys.end(); it++ )
-//		{
-//			if(*it = keycode) pressedKeys.erase(it);
-//		}
-//}	
+Keys::Enum Keyboard::lastKeyPressed()
+{
+	return lastKey;
+}
 
 //-----------------------------------//
 
-} } // end namespaces
+KeyEvent Keyboard::infoLastKeyPressed()
+{
+	bool alt, shift, ctrl;
+	alt = keyState[Keys::LAlt] || keyState[Keys::RAlt];
+	shift = keyState[Keys::LShift] || keyState[Keys::RShift];
+	ctrl = keyState[Keys::LControl] || keyState[Keys::RControl];
+	KeyEvent keyinfo(lastKey, alt, shift, ctrl);
+	return keyinfo;
+}
+
+//-----------------------------------//
+
+bool Keyboard::isKeyPressed(Keys::Enum keycode)
+{
+	return keyState[keycode];
+}
+
+//-----------------------------------//
+
+void Keyboard::keyPressed(Keys::Enum keycode)
+{
+	keyState[keycode] = true;
+	lastKey = keycode;
+}
+
+//-----------------------------------//
+
+void Keyboard::keyReleased(Keys::Enum keycode)
+{
+	keyState[keycode] = false;
+
+}	
+
+//-----------------------------------//
+	}
+} // end namespaces

@@ -24,6 +24,20 @@ namespace vapor {
 
 				};
 			}
+			
+		namespace MouseEvent
+			{
+			enum Enum
+				{
+				MouseWheelMove,
+				MouseMove,
+				MousePress,
+				MouseRelease,
+				MouseEnter,
+				MouseExit,
+
+				};
+			}
 struct MouseInfo
 {
 struct MouseInfo():x(0), y(0), leftButton(false),
@@ -38,17 +52,25 @@ bool XButton1;
 bool XButton2;
 bool inWindow;
 }
-struct MouseMoveEvent
+
+struct MouseEvent : public input::Event
 {
-  int x;
-  int y;
+	private:
+		MouseEvent::Enum eventType;
+}
+
+struct MouseMoveEvent : public MouseEvent
+{
+	
+	int x;
+	int y;
 };
  
-struct MouseButtonEvent
+struct MouseButtonEvent : public MouseEvent
 {
-  Mouse::Button button;
-  int  x;
-  int  y;
+	Mouse::Button button;
+	int  x;
+	int  y;
 };
 
 
@@ -58,13 +80,21 @@ class Mouse : public Device
 friend class InputManager;
 public:
 	Mouse();
+	virtual ~Mouse();
 	MouseInfo getMouseInfo();
 	  
 private:
-	MouseInfo mouseinfo;
+	// Processes an event (only if it's a mouse event).
+	virtual void processEvent( const input::Event& event );
+
+	// Return this device as a mouse.
+	virtual const input::DeviceType::Enum getType();
+
 	void mouseButtonPressed(MouseButtonEvent press);
 	void mouseButtonReleased(MouseButtonEvent release);
 	void mouseButtonMoved(MouseButtonEvent move);
+	MouseInfo mouseinfo;
+	
 }
 
 

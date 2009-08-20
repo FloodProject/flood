@@ -139,51 +139,63 @@ namespace Keys
 		Pause,
 	};
 }
-
-//-----------------------------------//
-
-class Keyboard : public Device
-{
-public:	
-
-	Keyboard();
-	virtual ~Keyboard();
-
-	//std::vector<Keys::Enum> getKeysPressed();
-
-	//Keys::Enum lastKeyPressed();
-
-	//KeyInfo infoLastKeyPressed();
-
-	/*bool isKeyPressed(Keys::Enum keycode);*/
-
-	// Processes an event (only if it's a keyboard event).
-	virtual void processEvent( const input::Event& event );
-
-	// Return this device as a keyboard.
-	virtual const input::DeviceType::Enum getType();
-
-private:
-
-	//void keyPressed(Keys::Enum keycode);
-
-	//void keyReleased(Keys::Enum keycode);
-
-	std::vector< bool > keyState;
-
-	//std::vector<Keys::Enum> pressedKeys;
-};
+		namespace KeyboardEvent
+			{
+			enum Enum
+				{
+				KeyPressed,
+				KeyReleased
+				};
+			}
 
 //-----------------------------------//
 
 struct KeyEvent : public input::Event
 {
 	KeyEvent(Keys::Enum keyCode, 
-		bool alt = false, bool shift = false, bool ctrl = false);
-
+		bool alt = false, bool shift = false, bool ctrl = false,  KeyboardEvent::Enum eventType = KeyboardEvent::KeyPressed);
+	
+private:
+	KeyboardEvent::Enum eventType;
+public:
 	Keys::Enum keyCode;
 	bool altPressed, shiftPressed, ctrlPressed;
+
 };
+//-----------------------------------//
+
+class Keyboard : public Device
+{
+friend class InputManager;
+public:	
+
+	Keyboard();
+	virtual ~Keyboard();
+
+	
+	Keys::Enum lastKeyPressed();
+
+	KeyEvent infoLastKeyPressed();
+
+	bool isKeyPressed(Keys::Enum keycode);
+
+
+
+private:
+	
+	// Processes an event (only if it's a keyboard event).
+	virtual void processEvent( const input::Event& event );
+
+	// Return this device as a keyboard.
+	virtual const input::DeviceType::Enum getType();
+
+	void keyPressed(Keys::Enum keycode);
+	void keyReleased(Keys::Enum keycode);
+	std::vector< bool > keyState;
+	Keys::Enum lastKey;
+};
+
+
 
 //-----------------------------------//
 
