@@ -66,6 +66,24 @@ Keyboard* InputManager::getKeyboard()
 
 //-----------------------------------//
 
+Mouse* InputManager::getMouse()
+{
+	std::vector< input::Device* >::iterator it;
+	
+	for( it = devices.begin(); it != devices.end(); it++ )
+	{
+		if( (*it)->getType() == DeviceType::Mouse )
+		{
+			Mouse* mouse = static_cast< Mouse* > ( *it );
+			return mouse;
+		}
+	}
+
+	return nullptr;
+}
+
+//-----------------------------------//
+
 void InputManager::processEvent( const input::Event& event )
 {
 	std::vector< input::Device* >::iterator it;

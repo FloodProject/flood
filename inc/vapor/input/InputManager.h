@@ -40,6 +40,9 @@ public:
 
 	// Gets a keyboard device if it exists, nullptr otherwise.
 	Keyboard* getKeyboard();
+	
+	// Gets a mouse device if it exists, nullptr otherwise.
+	Mouse* getMouse();
 
 	// Feeds an external input event to the input manager.
 	// The input will be processed to all the devices and

@@ -194,9 +194,11 @@ void Mouse::mouseWheelMove(const MouseWheelEvent& mevt)
 
 //-----------------------------------//
 
-MouseInfo::MouseInfo()
+MouseInfo::MouseInfo(): x(0), y(0),
+	leftButton(false), rightButton(false), middleButton(false),
+	XButton1(false), XButton2(false), inWindow(false)
 {
-
+ 
 }
 
 //-----------------------------------//

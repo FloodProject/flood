@@ -40,6 +40,7 @@ protected:
 private:
 
 	float r,g,b;
+	bool runLoop;
 };
 
 #define VAPOR_EXAMPLE_NAME Example

@@ -71,7 +71,7 @@ void Example::onInit()
 	}
 
 	r = b = g = 0.0f;
-
+	runLoop = false;
 	//warn("example::onInit", "Example warning message!");
 	//info("example::onInit", "Example info message!");
 	//error("example::onInit", "Example error message!");
@@ -148,9 +148,24 @@ void Example::onUpdate()
 {
 	Scene* scene = getSceneManager();
 
-	Keyboard* kbd = getInputManager()->getKeyboard();
+	/*Keyboard* kbd = getInputManager()->getKeyboard();
 
 	if( kbd && kbd->isKeyPressed( Keys::Space ) )
+	{
+		r += 0.00001f; r = (r > 1.0f) ? 0.0f : r;
+		g += 0.00003f; b = (b > 1.0f) ? 0.0f : b;
+		b += 0.00007f; g = (g > 1.0f) ? 0.0f : g;
+	}*/
+	
+	Mouse* mouse = getInputManager()->getMouse();
+	if(mouse)
+	{
+		if(mouse->getMouseInfo().rightButton)
+			runLoop = !runLoop;
+	}
+
+	
+	if( runLoop )
 	{
 		r += 0.00001f; r = (r > 1.0f) ? 0.0f : r;
 		g += 0.00003f; b = (b > 1.0f) ? 0.0f : b;
