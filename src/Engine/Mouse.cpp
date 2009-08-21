@@ -225,7 +225,7 @@ MouseButtonEvent::MouseButtonEvent(int x, int y, MouseButton::Enum button, Mouse
 
 //-----------------------------------//
 
-MouseWheelEvent::MouseWheelEvent( int delta, int y )
+MouseWheelEvent::MouseWheelEvent( int delta )
 	: MouseEvent( MouseEventType::MouseWheelMove ), delta( delta )
 {
 

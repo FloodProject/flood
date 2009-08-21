@@ -46,21 +46,28 @@ void Keyboard::processEvent( const input::Event& event )
 	
 	switch(kevt.eventType)
 	{
-	case KeyboardEventType::KeyPressed:
-		keyPressed(kevt.keyCode);
-		//TODO: Maybe add the rest of the struct's info, although it doesn't seem necessary
-		break;
-	case KeyboardEventType::KeyReleased:
-		keyReleased(kevt.keyCode);
-		break;
+		case KeyboardEventType::KeyPressed:
+		{
+			keyPressed( kevt.keyCode );
+			// TODO: Maybe add the rest of the struct's info, 
+			// although it doesn't seem necessary
+			break;
+		}
 
+		case KeyboardEventType::KeyReleased:
+		{
+			keyReleased( kevt.keyCode );
+			break;
+		}
 	}
 }
 
 //-----------------------------------//
 
-KeyEvent::KeyEvent(Keys::Enum keyCode, bool alt, bool shift, bool ctrl, KeyboardEventType::Enum eventType):
-	Event( DeviceType::Keyboard ), keyCode( keyCode ), altPressed( alt ),
+KeyEvent::KeyEvent(Keys::Enum keyCode, 
+					bool alt, bool shift, bool ctrl, 
+					KeyboardEventType::Enum eventType)
+	: Event( DeviceType::Keyboard ), keyCode( keyCode ), altPressed( alt ),
 		shiftPressed( shift ), ctrlPressed( ctrl ), eventType( eventType )
 {
 
@@ -68,20 +75,23 @@ KeyEvent::KeyEvent(Keys::Enum keyCode, bool alt, bool shift, bool ctrl, Keyboard
 
 //-----------------------------------//
 
-Keys::Enum Keyboard::lastKeyPressed()
+Keys::Enum Keyboard::getLastKeyPressed()
 {
 	return lastKey;
 }
 
 //-----------------------------------//
 
-KeyEvent Keyboard::infoLastKeyPressed()
+KeyEvent Keyboard::getLastKeyPressedInfo()
 {
 	bool alt, shift, ctrl;
+
 	alt = keyState[Keys::LAlt] || keyState[Keys::RAlt];
 	shift = keyState[Keys::LShift] || keyState[Keys::RShift];
 	ctrl = keyState[Keys::LControl] || keyState[Keys::RControl];
-	KeyEvent keyinfo(lastKey, alt, shift, ctrl);
+
+	KeyEvent keyinfo( lastKey, alt, shift, ctrl );
+
 	return keyinfo;
 }
 
@@ -98,6 +108,8 @@ void Keyboard::keyPressed(Keys::Enum keycode)
 {
 	keyState[keycode] = true;
 	lastKey = keycode;
+
+	// TODO: fire events
 }
 
 //-----------------------------------//
@@ -106,8 +118,9 @@ void Keyboard::keyReleased(Keys::Enum keycode)
 {
 	keyState[keycode] = false;
 
+	// TODO: fire events
 }	
 
 //-----------------------------------//
-	}
-} // end namespaces
+
+} } // end namespaces

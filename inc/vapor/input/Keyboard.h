@@ -204,9 +204,9 @@ public:
 	Keyboard();
 	virtual ~Keyboard();
 
-	Keys::Enum lastKeyPressed();
+	Keys::Enum getLastKeyPressed();
 
-	KeyEvent infoLastKeyPressed();
+	KeyEvent getLastKeyPressedInfo();
 
 	bool isKeyPressed(Keys::Enum keycode);
 

@@ -41,12 +41,15 @@ public:
 	void processSFMLEvent( const sf::Event& event );
 
 private:
+
 	bool isMouseEvent(sf::Event::EventType eventType);
 	bool isKeyboardEvent(sf::Event::EventType eventType);
 	bool isJoystickEvent(sf::Event::EventType eventType);
+
 	void processMouseEvent(const sf::Event& event);
 	void processKeyboardEvent(const sf::Event& event);
 	void processJoystickEvent(const sf::Event& event);
+
 	Keys::Enum convertKeyEnum(sf::Key::Code keycode);
 	MouseButton::Enum convertMouseButtonEnum(sf::Mouse::Button mouseButton);
 	JoystickAxis::Enum convertJoystickAxisEnum(sf::Joy::Axis joyAxis);
