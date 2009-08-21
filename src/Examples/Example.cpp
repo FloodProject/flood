@@ -15,6 +15,8 @@
 #include <vapor/scene/Sound.h>
 #include <vapor/scene/Listener.h>
 
+#include <vapor/input/InputManager.h>
+
 #include <iostream>
 
 using std::tr1::static_pointer_cast;
@@ -27,6 +29,7 @@ using namespace vapor::scene;
 using namespace vapor::audio;
 using namespace vapor::render;
 using namespace vapor::resources;
+using namespace vapor::input;
 
 //-----------------------------------//
 
@@ -145,9 +148,14 @@ void Example::onUpdate()
 {
 	Scene* scene = getSceneManager();
 
-	r += 0.00001f; r = (r > 1.0f) ? 0.0f : r;
-	g += 0.00003f; b = (b > 1.0f) ? 0.0f : b;
-	b += 0.00007f; g = (g > 1.0f) ? 0.0f : g;
+	Keyboard* kbd = getInputManager()->getKeyboard();
+
+	if( kbd && kbd->isKeyPressed( Keys::P ) )
+	{
+		r += 0.00001f; r = (r > 1.0f) ? 0.0f : r;
+		g += 0.00003f; b = (b > 1.0f) ? 0.0f : b;
+		b += 0.00007f; g = (g > 1.0f) ? 0.0f : g;
+	}
 }
 
 //-----------------------------------//

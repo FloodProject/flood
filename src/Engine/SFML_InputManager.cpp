@@ -181,7 +181,7 @@ void SFML_InputManager::processJoystickEvent(const sf::Event& event)
 				convertJoystickAxisEnum(event.JoyMove.Axis), 
 				event.JoyMove.Position );
 			
-			processEvent( jme) ;
+			processEvent( jme ) ;
 		}
 	}
 }

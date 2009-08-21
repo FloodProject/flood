@@ -30,6 +30,7 @@ using namespace vapor::resources;
 using namespace vapor::render;
 using namespace vapor::log;
 using namespace vapor::vfs;
+using namespace vapor::input;
 
 namespace vapor {
 
@@ -105,10 +106,16 @@ void Engine::setupDevices()
 	renderDevice = new render::Device();
 
 	// create a window and set the title
-	renderDevice->createWindow();
+	Window& window = renderDevice->createWindow();
 
 	// init the render device now that it has a context
 	renderDevice->init();
+
+	InputManager& im = window.getInputManager();
+
+	// let's register some input devices
+	im.addDevice( new input::Keyboard() );
+	im.addDevice( new input::Mouse() );
 
 #ifdef VAPOR_AUDIO_OPENAL
 

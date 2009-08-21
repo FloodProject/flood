@@ -231,7 +231,6 @@ MouseWheelEvent::MouseWheelEvent( int delta )
 
 }
 
-
 //-----------------------------------//
 
 } } // end namespaces

@@ -27,6 +27,8 @@ namespace DeviceType
 		Mouse,
 		Joystick
 	};
+
+	std::string getString( DeviceType::Enum dt );
 }
 
 //-----------------------------------//

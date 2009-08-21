@@ -15,6 +15,7 @@
 #include <SFML/Window.hpp>
 
 #include "vapor/input/InputManager.h"
+
 #include "vapor/input/Mouse.h"
 #include "vapor/input/Keyboard.h"
 #include "vapor/input/Joystick.h"

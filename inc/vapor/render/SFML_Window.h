@@ -16,6 +16,7 @@
 
 #include "vapor/Platform.h"
 #include "vapor/render/Window.h"
+
 #include "vapor/input/SFML_InputManager.h"
 
 namespace vapor {
