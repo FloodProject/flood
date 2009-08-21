@@ -135,7 +135,7 @@ bool SFML_Window::pumpEvents()
 			case sf::Event::JoyButtonReleased:
 			case sf::Event::JoyMoved:
 
-				//getInputManager().processEvent( event );
+				getInputManager().processSFMLEvent( event );
 				break;
 		}
 	}

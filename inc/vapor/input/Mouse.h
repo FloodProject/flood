@@ -14,7 +14,6 @@
 
 namespace vapor {
 	namespace input {
-
 //-----------------------------------//
 
 namespace MouseButton
@@ -151,7 +150,7 @@ struct MouseWheelEvent : public MouseEvent
 {
 	friend class Mouse;
 	
-	MouseWheelEvent( int delta, int y );
+	MouseWheelEvent( int delta );
 
 	int  delta;
 };
@@ -173,8 +172,8 @@ public:
 	// Processes an event (only if it's a mouse event).
 	virtual void processEvent( const input::Event& event );
 
-	// Return this device as a mouse.
-	virtual const input::DeviceType::Enum getType();
+		// Return this device as a mouse.
+		virtual const input::DeviceType::Enum getType();
 
 private:
 

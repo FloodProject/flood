@@ -48,7 +48,7 @@ public:
 	void makeCurrent();
 
 	// Gets the input manager.
-	input::InputManager& getInputManager() { return inputManager; }
+	input::SFML_InputManager& getInputManager() { return inputManager; }
 
 private:
 
