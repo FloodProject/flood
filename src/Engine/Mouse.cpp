@@ -45,49 +45,49 @@ void Mouse::processEvent( const input::Event& event )
 	
 	switch( mevt.eventType )
 	{
-	case MouseEventType::MousePress:
-	{
-		const MouseButtonEvent& mbe = 
-			static_cast< const MouseButtonEvent& > ( mevt );
-		mouseButtonPressed( mbe );
-		break;
-	}
-	
-	case MouseEventType::MouseRelease:
-	{
-		const MouseButtonEvent& mbe = 
-			static_cast< const MouseButtonEvent& > ( mevt );
-		mouseButtonReleased( mbe );
-		break;
-	}
-	
-	case MouseEventType::MouseMove:
-	{
-		const MouseMoveEvent& mm = 
-			static_cast< const MouseMoveEvent& > ( mevt );
-		mouseMoved( mm );
-		break;
-	}
-	
-	case MouseEventType::MouseEnter:
-	{
-		mouseEnter();
-		break;
-	}
-	
-	case MouseEventType::MouseExit:
-	{
-		mouseExit();
-		break;
-	}
-	
-	case MouseEventType::MouseWheelMove:
-	{
-		const MouseWheelEvent& mwe = 
-			static_cast< const MouseWheelEvent& > ( mevt );
-		mouseWheelMove( mwe );
-		break;
-	}
+		case MouseEventType::MousePress:
+		{
+			const MouseButtonEvent& mbe = 
+				static_cast< const MouseButtonEvent& > ( mevt );
+			mouseButtonPressed( mbe );
+			break;
+		}
+		
+		case MouseEventType::MouseRelease:
+		{
+			const MouseButtonEvent& mbe = 
+				static_cast< const MouseButtonEvent& > ( mevt );
+			mouseButtonReleased( mbe );
+			break;
+		}
+		
+		case MouseEventType::MouseMove:
+		{
+			const MouseMoveEvent& mm = 
+				static_cast< const MouseMoveEvent& > ( mevt );
+			mouseMoved( mm );
+			break;
+		}
+		
+		case MouseEventType::MouseEnter:
+		{
+			mouseEnter();
+			break;
+		}
+		
+		case MouseEventType::MouseExit:
+		{
+			mouseExit();
+			break;
+		}
+		
+		case MouseEventType::MouseWheelMove:
+		{
+			const MouseWheelEvent& mwe = 
+				static_cast< const MouseWheelEvent& > ( mevt );
+			mouseWheelMove( mwe );
+			break;
+		}
 	}
 }
 
@@ -110,25 +110,25 @@ void Mouse::mouseButtonPressed(const MouseButtonEvent& mevt)
 	
 	switch(press.button)
 	{
-	case MouseButton::Left:
-		mouseInfo.leftButton = true;
-		break;
-	
-	case MouseButton::Right:
-		mouseInfo.rightButton = true;
-		break;
-	
-	case MouseButton::Middle:
-		mouseInfo.middleButton = true;
-		break;
-	
-	case MouseButton::XButton1:
-		mouseInfo.XButton1 = true;
-		break;
-	
-	case MouseButton::XButton2:
-		mouseInfo.XButton2 = true;
-		break;
+		case MouseButton::Left:
+			mouseInfo.leftButton = true;
+			break;
+		
+		case MouseButton::Right:
+			mouseInfo.rightButton = true;
+			break;
+		
+		case MouseButton::Middle:
+			mouseInfo.middleButton = true;
+			break;
+		
+		case MouseButton::XButton1:
+			mouseInfo.XButton1 = true;
+			break;
+		
+		case MouseButton::XButton2:
+			mouseInfo.XButton2 = true;
+			break;
 	}
 }
 
@@ -141,25 +141,25 @@ void Mouse::mouseButtonReleased(const MouseButtonEvent& mbe)
 	
 	switch( mbe.button )
 	{
-	case MouseButton::Left:
-		mouseInfo.leftButton = false;
-		break;
-	
-	case MouseButton::Right:
-		mouseInfo.rightButton = false;
-		break;
-	
-	case MouseButton::Middle:
-		mouseInfo.middleButton = false;
-		break;
-	
-	case MouseButton::XButton1:
-		mouseInfo.XButton1 = false;
-		break;
-	
-	case MouseButton::XButton2:
-		mouseInfo.XButton2 = false;
-		break;
+		case MouseButton::Left:
+			mouseInfo.leftButton = false;
+			break;
+		
+		case MouseButton::Right:
+			mouseInfo.rightButton = false;
+			break;
+		
+		case MouseButton::Middle:
+			mouseInfo.middleButton = false;
+			break;
+		
+		case MouseButton::XButton1:
+			mouseInfo.XButton1 = false;
+			break;
+		
+		case MouseButton::XButton2:
+			mouseInfo.XButton2 = false;
+			break;
 	}
 }
 
@@ -217,7 +217,8 @@ MouseMoveEvent::MouseMoveEvent( int x, int y )
 
 //-----------------------------------//
 
-MouseButtonEvent::MouseButtonEvent(int x, int y, MouseButton::Enum button, MouseEventType::Enum eventType)
+MouseButtonEvent::MouseButtonEvent(int x, int y, 
+	MouseButton::Enum button, MouseEventType::Enum eventType)
 	: MouseEvent(eventType), x(x), y(y), button(button) 
 {
 

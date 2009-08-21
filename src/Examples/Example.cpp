@@ -150,7 +150,7 @@ void Example::onUpdate()
 
 	Keyboard* kbd = getInputManager()->getKeyboard();
 
-	if( kbd && kbd->isKeyPressed( Keys::P ) )
+	if( kbd && kbd->isKeyPressed( Keys::Space ) )
 	{
 		r += 0.00001f; r = (r > 1.0f) ? 0.0f : r;
 		g += 0.00003f; b = (b > 1.0f) ? 0.0f : b;

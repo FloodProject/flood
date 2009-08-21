@@ -33,17 +33,17 @@ SFML_InputManager::~SFML_InputManager()
 
 void SFML_InputManager::processSFMLEvent( const sf::Event& event )
 {
-	if( isMouseEvent(event.Type) )
+	if( isMouseEvent( event.Type ) )
 	{
-		processMouseEvent(event);
+		processMouseEvent( event );
 	}
-	else if ( isKeyboardEvent(event.Type) )
+	else if ( isKeyboardEvent( event.Type ) )
 	{
-		processKeyboardEvent(event);
+		processKeyboardEvent( event );
 	}
-	else if ( isJoystickEvent(event.Type) )
+	else if ( isJoystickEvent( event.Type ) )
 	{
-		processJoystickEvent(event);
+		processJoystickEvent( event );
 	}
 }
 
@@ -85,44 +85,53 @@ void SFML_InputManager::processMouseEvent(const sf::Event& event)
 		case sf::Event::MouseButtonPressed:
 		{
 			MouseButtonEvent mbe( event.MouseButton.X, event.MouseButton.Y, 
-				convertMouseButtonEnum(event.MouseButton.Button ), 
-				MouseEventType::MousePress);
+				convertMouseButtonEnum( event.MouseButton.Button ), 
+				MouseEventType::MousePress );
 			
 			processEvent( mbe );
+			break;
 		}	
 
 		case sf::Event::MouseButtonReleased:
 		{
 			MouseButtonEvent mbe( event.MouseButton.X, event.MouseButton.Y, 
-				convertMouseButtonEnum(event.MouseButton.Button), 
+				convertMouseButtonEnum( event.MouseButton.Button ), 
 				MouseEventType::MouseRelease );
 
 			processEvent( mbe );
+			break;
 		}
 
 		case sf::Event::MouseMoved:
 		{
 			MouseMoveEvent mme( event.MouseMove.X, event.MouseMove.Y );
-			
+
 			processEvent( mme );
+			break;
 		}
 
 		case sf::Event::MouseWheelMoved:
 		{
 			MouseWheelEvent mwe( event.MouseWheel.Delta );
 			processEvent( mwe );
+
+			break;
 		}
 
 		case sf::Event::MouseEntered:
 		{
 			MouseEvent me( MouseEventType::MouseEnter );
 			processEvent( me );
+
+			break;
 		}
 
 		case sf::Event::MouseLeft:
 		{
 			MouseEvent me( MouseEventType::MouseExit );
 			processEvent( me );
+
+			break;
 		}
 	}
 }
@@ -131,24 +140,26 @@ void SFML_InputManager::processMouseEvent(const sf::Event& event)
 
 void SFML_InputManager::processKeyboardEvent(const sf::Event& event)
 {
-	switch(event.Type)
+	switch( event.Type )
 	{
 		case sf::Event::KeyPressed:
 		{
-			KeyEvent ke( convertKeyEnum(event.Key.Code), 
+			KeyEvent ke( convertKeyEnum( event.Key.Code ), 
 				event.Key.Alt, event.Key.Shift, event.Key.Control,
 				KeyboardEventType::KeyPressed );
-
 			processEvent( ke );
+
+			break;
 		}
 		
 		case sf::Event::KeyReleased:
 		{
-			KeyEvent ke( convertKeyEnum(event.Key.Code), 
+			KeyEvent ke( convertKeyEnum( event.Key.Code ), 
 				event.Key.Alt, event.Key.Shift, event.Key.Control,
 				KeyboardEventType::KeyReleased );
-			
+
 			processEvent( ke );
+			break;
 		}
 	}
 }
@@ -157,7 +168,7 @@ void SFML_InputManager::processKeyboardEvent(const sf::Event& event)
 
 void SFML_InputManager::processJoystickEvent(const sf::Event& event)
 {
-	switch(event.Type)
+	switch( event.Type )
 	{
 		case sf::Event::JoyButtonPressed:
 		{
@@ -165,6 +176,7 @@ void SFML_InputManager::processJoystickEvent(const sf::Event& event)
 				event.JoyButton.Button, JoystickEventType::JoystickPress );
 
 			processEvent( jbe );
+			break;
 		}
 
 		case sf::Event::JoyButtonReleased:
@@ -173,22 +185,25 @@ void SFML_InputManager::processJoystickEvent(const sf::Event& event)
 				event.JoyButton.Button, JoystickEventType::JoystickRelease );
 
 			processEvent( jbe );
+			break;
 		}
 
 		case sf::Event::JoyMoved:
 		{
 			JoyMoveEvent jme( event.JoyMove.JoystickId, 
-				convertJoystickAxisEnum(event.JoyMove.Axis), 
+				convertJoystickAxisEnum( event.JoyMove.Axis ), 
 				event.JoyMove.Position );
 			
 			processEvent( jme ) ;
+			break;
 		}
 	}
 }
 
 //-----------------------------------//
 
-MouseButton::Enum SFML_InputManager::convertMouseButtonEnum(sf::Mouse::Button mouseButton)
+MouseButton::Enum SFML_InputManager::convertMouseButtonEnum(
+	sf::Mouse::Button mouseButton)
 {
 	switch(mouseButton)
 	{
@@ -208,14 +223,17 @@ MouseButton::Enum SFML_InputManager::convertMouseButtonEnum(sf::Mouse::Button mo
 			return MouseButton::XButton2;
 
 		default:
-			warn( "input", "Could not map SFML mouse button: Invalid button" );
+			warn( "input", 
+				"Could not map SFML mouse button: Invalid button" );
+			
 			return MouseButton::XButton2;
 	}
 }
 
 //-----------------------------------//
 
-JoystickAxis::Enum SFML_InputManager::convertJoystickAxisEnum(sf::Joy::Axis joyAxis)
+JoystickAxis::Enum SFML_InputManager::convertJoystickAxisEnum(
+	sf::Joy::Axis joyAxis)
 {
 	switch(joyAxis)
 	{

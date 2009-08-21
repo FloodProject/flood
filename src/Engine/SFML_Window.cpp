@@ -98,7 +98,7 @@ void SFML_Window::makeCurrent()
 bool SFML_Window::pumpEvents()
 {
 	sf::Event event;
-	
+
 	while( window.GetEvent( event ) )
 	{
 		switch( event.Type )
@@ -123,7 +123,6 @@ bool SFML_Window::pumpEvents()
 			case sf::Event::KeyPressed:
 			case sf::Event::KeyReleased:
 			
-			
 			case sf::Event::MouseButtonPressed:
 			case sf::Event::MouseButtonReleased:
 			case sf::Event::MouseMoved:
@@ -134,9 +133,10 @@ bool SFML_Window::pumpEvents()
 			case sf::Event::JoyButtonPressed:
 			case sf::Event::JoyButtonReleased:
 			case sf::Event::JoyMoved:
-
+			{
 				getInputManager().processSFMLEvent( event );
 				break;
+			}
 		}
 	}
 
