@@ -79,22 +79,22 @@ public:
 
 protected:
 
-	// active render target
+	// Active render target
 	RenderTarget* activeTarget;
 
-	// list of render targets
+	// List of render targets
 	std::vector<RenderTarget*> renderTargets;
 
-	// adapter information
+	// Adapter information
 	Adapter* adapter;
 
-	// render window
+	// Render window
 	Window* window;
 
-	// manages all buffers
+	// Manages all buffers
 	BufferManager* bufferManager;
 
-	// current clear color
+	// Current clear color
 	math::Color clearColor;
 
 private:

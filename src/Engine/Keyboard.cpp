@@ -7,7 +7,6 @@
 ************************************************************************/
 
 #include "vapor/input/Keyboard.h"
-#include "vapor/input/Type.h"
 
 namespace vapor {
 	namespace input {
@@ -44,22 +43,23 @@ void Keyboard::processEvent( const input::Event& event )
 	}
 
 	const KeyEvent& kevt = static_cast< const KeyEvent& > ( event );
+	
 	switch(kevt.eventType)
-		{
-		case KeyboardEvent::KeyPressed:
-			keyPressed(kevt.keyCode);
-			//TODO: Maybe add the rest of the struct's info, although it doesn't seem necessary
-			break;
-		case KeyboardEvent::KeyReleased:
-			keyReleased(kevt.keyCode);
-			break;
+	{
+	case KeyboardEventType::KeyPressed:
+		keyPressed(kevt.keyCode);
+		//TODO: Maybe add the rest of the struct's info, although it doesn't seem necessary
+		break;
+	case KeyboardEventType::KeyReleased:
+		keyReleased(kevt.keyCode);
+		break;
 
-		}
+	}
 }
 
 //-----------------------------------//
 
-KeyEvent::KeyEvent(Keys::Enum keyCode, bool alt, bool shift, bool ctrl, KeyboardEvent::Enum eventType):
+KeyEvent::KeyEvent(Keys::Enum keyCode, bool alt, bool shift, bool ctrl, KeyboardEventType::Enum eventType):
 	Event( DeviceType::Keyboard ), keyCode( keyCode ), altPressed( alt ),
 		shiftPressed( shift ), ctrlPressed( ctrl ), eventType( eventType )
 {

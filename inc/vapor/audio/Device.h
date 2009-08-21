@@ -37,7 +37,7 @@ public:
 	Device();
 	virtual ~Device();
 	
-// Play a possibly looped 2D sound
+	// Play a possibly looped 2D sound
 	//void play2D(shared_ptr<resources::Sound> sound, bool loop = false);
 
 	// Sets the global audio volume
@@ -82,4 +82,15 @@ private:
 
 } } // end namespaces
 
+#else
+
+// declare audio namespace so using declarations don't
+// get broken in user code.
+
+namespace vapor { 
+	namespace audio {
+
+} } // end namespaces
+
 #endif
+

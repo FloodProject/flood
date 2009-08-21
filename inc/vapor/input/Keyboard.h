@@ -11,7 +11,6 @@
 #include "vapor/Platform.h"
 
 #include "vapor/input/Device.h"
-#include "vapor/input/Event.h"
 
 namespace vapor {
 	namespace input {
@@ -19,15 +18,17 @@ namespace vapor {
 //-----------------------------------//	
 
 /**
- * Represents all the available keyboard keys with unique key code.
+ * Represents all the available keyboard keys with a unique key code.
  * When interacting with the Keyboard class you should always use
- * these values (this enumeration was taken from the SFML source).
+ * these values (this enumeration was taken from the SFML interface).
+ * TODO: How about Japanese keyboard? And Unicode?
  */
 
 namespace Keys
 {
 	enum Enum
 	{
+		// Alpha keys
 		A = 'a',
 		B = 'b',
 		C = 'c',
@@ -55,6 +56,7 @@ namespace Keys
 		Y = 'y',
 		Z = 'z',
 		
+		// Numeric keys
 		Num0 = '0',
 		Num1 = '1',
 		Num2 = '2',
@@ -66,6 +68,7 @@ namespace Keys
 		Num8 = '8',
 		Num9 = '9', 
 		
+		// Special keys
 		Escape = 256,
 		LControl,
 		LShift,
@@ -75,6 +78,7 @@ namespace Keys
 		RShift,
 		RAlt,
 		RSystem,      
+		
 		Menu,
 		LBracket,     
 		RBracket,     
@@ -99,16 +103,19 @@ namespace Keys
 		Insert,
 		Delete,
 		
+		// Numeric operations
 		Add,          
 		Subtract,     
 		Multiply,     
 		Divide,       
 		
+		// Arrows
 		Left,         
 		Right,        
 		Up,           
 		Down,         
 		
+		// Numpad numbers
 		Numpad0,
 		Numpad1,
 		Numpad2,
@@ -120,6 +127,7 @@ namespace Keys
 		Numpad8,
 		Numpad9,
 		
+		// F-keys
 		F1,
 		F2,
 		F3,
@@ -139,48 +147,68 @@ namespace Keys
 		Pause,
 	};
 }
-		namespace KeyboardEvent
-			{
-			enum Enum
-				{
-				KeyPressed,
-				KeyReleased
-				};
-			}
 
 //-----------------------------------//
+
+/**
+ * Different types of keyboard events.
+ */
+
+namespace KeyboardEventType
+{
+	enum Enum
+	{
+		// Occurs when a keyboard key is pressed
+		KeyPressed,
+		// Occurs when a keyboard key is released
+		KeyReleased
+	};
+}
+
+//-----------------------------------//
+
+/**
+ * Main keyboard event. Holds the related keycode, and whether some 
+ * special keys are pressed (handy for testing shortcuts). Finally
+ * it also needs to know if it's a key press or release event.
+ */
 
 struct KeyEvent : public input::Event
 {
-friend class Keyboard;
-	KeyEvent(Keys::Enum keyCode, 
-		bool alt = false, bool shift = false, bool ctrl = false,  KeyboardEvent::Enum eventType = KeyboardEvent::KeyPressed);
+	friend class Keyboard;
 	
-private:
-	KeyboardEvent::Enum eventType;
-public:
+	KeyEvent(Keys::Enum keyCode, 
+		bool alt = false, bool shift = false, bool ctrl = false, 
+		KeyboardEventType::Enum eventType = KeyboardEventType::KeyPressed);
+	
 	Keys::Enum keyCode;
 	bool altPressed, shiftPressed, ctrlPressed;
 
+private:
+
+	KeyboardEventType::Enum eventType;
 };
+
 //-----------------------------------//
+
+/**
+ * Keyboard device.
+ */
 
 class Keyboard : public Device
 {
-friend class InputManager;
+	//friend class InputManager;
+
 public:	
 
 	Keyboard();
 	virtual ~Keyboard();
 
-	
 	Keys::Enum lastKeyPressed();
 
 	KeyEvent infoLastKeyPressed();
 
 	bool isKeyPressed(Keys::Enum keycode);
-
-
 
 private:
 	
@@ -192,11 +220,11 @@ private:
 
 	void keyPressed(Keys::Enum keycode);
 	void keyReleased(Keys::Enum keycode);
+	
 	std::vector< bool > keyState;
+	
 	Keys::Enum lastKey;
 };
-
-
 
 //-----------------------------------//
 

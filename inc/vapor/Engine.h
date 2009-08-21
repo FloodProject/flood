@@ -14,13 +14,9 @@
 #include "vapor/resources/ResourceManager.h"
 #include "vapor/scene/Scene.h"
 #include "vapor/audio/Device.h"
+#include "vapor/input/InputManager.h"
 
 namespace vapor {
-
-#ifndef VAPOR_AUDIO_OPENAL
-	// declare audio namespace so using decls works...
-	namespace audio {}
-#endif
 
 /**
  * Main engine class. This is a utility class that instantiates all the
@@ -84,6 +80,9 @@ public:
 
 	// Gets the virtual filesystem.
 	vfs::VFS* getVFS() const { return vfs; }
+
+	// Gets the input manager.
+	input::InputManager* getInputManager() const { return &( renderDevice->getWindow()->getInputManager() ); }
 
 protected:
 

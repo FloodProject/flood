@@ -35,7 +35,7 @@ Settings::Settings(const int width, const int height, const std::string title,
 
 //-----------------------------------//
 
-Window::Window(Settings& settings)
+Window::Window(const Settings& settings)
 	: settings(settings)
 {
 	info( "render::window", "Creating %swindow (size: %dx%d, title: '%s', bits-per-pixel: %d)",
@@ -74,7 +74,7 @@ Window& Window::createWindow( const Settings& settings )
 	#elif defined(VAPOR_WINDOWING_WIN32)
 		window = new Win32Window(settings);
 	#elif defined(VAPOR_WINDOWING_SFML)
-		window = new SFMLWindow( const_cast< Settings& >( settings ) );
+		window = new SFML_Window( const_cast< Settings& >( settings ) );
 	#else
 		#error "Could not find a window implementation"
 	#endif

@@ -14,6 +14,7 @@ Resources:
 	* Images (supports PNG format)
 	* Fonts (supports TrueType and texture-based) (TODO)
 	* Audio (supports Ogg Vorbis 3D and 2D playback)
+	* Automatic resource management via reference counting
 	* Possible to register your own resource loaders!
 	
 Rendering:
@@ -21,7 +22,7 @@ Rendering:
 	* Viewing frustum culling
 	* Cross-platform OpenGL renderer
 	* 100% shader-driven via GLSL
-	* Cross-platform windowing code based on SDL
+	* Cross-platform windowing code
 	* Material serialization format
 	* Based on VBOs for fast rendering.
 
@@ -53,23 +54,26 @@ Programmers:
 
 	* João Matos aka triton
 	* Osurac
+	* vimes
 	
 Libraries used:
 
-	* SDL
+	* SDL / SFML
 	* OpenGL
+	* OpenAL
 	* GLEW
 	* DevIL
-	* FreeType
-	* wxWidgets
 	* PhysFS
+	* FreeType
 	* picopng
-	* OpenAL
 	* ogg / vorbis
-
+	* wxWidgets
+	
 Tools used:
 
 	* wxInclude
+	* Subversion
+	* Visual C++
 	
 Resources used:
 

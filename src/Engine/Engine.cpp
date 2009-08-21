@@ -108,7 +108,7 @@ void Engine::setupDevices()
 	renderDevice->createWindow();
 
 	// init the render device now that it has a context
-	getRenderDevice()->init();
+	renderDevice->init();
 
 #ifdef VAPOR_AUDIO_OPENAL
 

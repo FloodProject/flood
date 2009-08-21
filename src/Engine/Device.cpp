@@ -27,4 +27,13 @@ Device::~Device()
 
 //-----------------------------------//
 
+Event::Event( DeviceType::Enum type )
+	: deviceType( type )
+{
+
+}
+
+
+//-----------------------------------//
+
 } } // end namespaces

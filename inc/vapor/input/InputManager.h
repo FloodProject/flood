@@ -11,7 +11,6 @@
 #include "vapor/Platform.h"
 
 #include "vapor/input/Device.h"
-#include "vapor/input/Event.h"
 
 namespace vapor {
 	namespace input {
@@ -27,7 +26,7 @@ class InputManager
 public:
 
 	InputManager();
-	~InputManager();
+	virtual ~InputManager();
 
 	// Adds a new device that will be managed by this class.
 	void addDevice( input::Device* );

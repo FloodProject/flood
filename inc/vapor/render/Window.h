@@ -11,6 +11,8 @@
 #include "vapor/Platform.h"
 #include "vapor/render/Target.h"
 
+#include "vapor/input/InputManager.h"
+
 namespace vapor {
 	namespace render {
 
@@ -96,7 +98,7 @@ class Window : public RenderTarget
 {
 public:
 
-	Window (Settings& settings);
+	Window (const Settings& settings);
 	virtual ~Window ();
 
 	// Updates the window content.
@@ -113,6 +115,9 @@ public:
 
 	// Gets the window settings.
 	virtual Settings& getSettings();
+
+	// Gets the input manager.
+	virtual input::InputManager& getInputManager() = 0;
 
 	// Create a new render window.
 	static Window& createWindow( const Settings& settings = Settings() );

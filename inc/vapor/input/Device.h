@@ -10,10 +10,38 @@
 
 #include "vapor/Platform.h"
 
-#include "vapor/input/Event.h"
-
 namespace vapor {
 	namespace input {
+
+//-----------------------------------//
+
+/**
+ * Different types of input devices.
+ */
+
+namespace DeviceType
+{
+	enum Enum
+	{
+		Keyboard,
+		Mouse,
+		Joystick
+	};
+}
+
+
+//-----------------------------------//
+
+/**
+ * Base struct for input events.
+ */
+
+struct Event
+{
+	Event( DeviceType::Enum );
+
+	DeviceType::Enum deviceType;
+};
 
 //-----------------------------------//
 

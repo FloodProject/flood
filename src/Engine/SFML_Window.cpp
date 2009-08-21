@@ -15,7 +15,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-SFMLWindow::SFMLWindow(Settings& settings)
+SFML_Window::SFML_Window(const Settings& settings)
 	: Window(settings), flags(0)
 {
 	if( !open() ) 
@@ -24,51 +24,51 @@ SFMLWindow::SFMLWindow(Settings& settings)
 
 //-----------------------------------//
 
-SFMLWindow::~SFMLWindow()
+SFML_Window::~SFML_Window()
 {
 
 }
 
 //-----------------------------------//
 
-bool SFMLWindow::open()
+bool SFML_Window::open()
 {
-		sfmlSettings.DepthBits         = settings.getDepthBits(); 
-		sfmlSettings.StencilBits       = settings.getStencilBits();
-		sfmlSettings.AntialiasingLevel = settings.getAALevel();
+	sfmlSettings.DepthBits         = settings.getDepthBits(); 
+	sfmlSettings.StencilBits       = settings.getStencilBits();
+	sfmlSettings.AntialiasingLevel = settings.getAALevel();
+	
+	if( settings.isFullscreen() )
+	{
+		vMode = sf::VideoMode::GetMode(0);
+		flags |= sf::Style::Fullscreen;
+	}
+	else
+	{
+		vMode.Width = settings.getWidth(); 
+		vMode.Height = settings.getHeight();
+		vMode.BitsPerPixel = settings.getBpp();
 		
-		if( settings.isFullscreen() )
+		if( !vMode.IsValid() )
 		{
-			vMode = sf::VideoMode::GetMode(0);
-			flags |= sf::Style::Fullscreen;
-		}
-		else
-		{
-			vMode.Width = settings.getWidth(); 
-			vMode.Height = settings.getHeight();
-			vMode.BitsPerPixel = settings.getBpp();
-			
-			if( !vMode.IsValid() )
-			{
-				error( "render::window::sfml", "Video mode not supportted." );
-				return false;
-			}
-			
-			flags |= sf::Style::Resize | sf::Style::Close;			
+			error( "render::window::sfml", "Video mode not supportted." );
+			return false;
 		}
 		
-		createWindow();
+		flags |= sf::Style::Resize | sf::Style::Close;			
+	}
+	
+	createWindow();
 
-		sfmlSettings = window.GetSettings();
-		settings.setDepthBits( sfmlSettings.DepthBits );
-		settings.setStencilBits( sfmlSettings.StencilBits );
-		settings.setAALevel( sfmlSettings.AntialiasingLevel );
-		
-		return true;	
+	sfmlSettings = window.GetSettings();
+	settings.setDepthBits( sfmlSettings.DepthBits );
+	settings.setStencilBits( sfmlSettings.StencilBits );
+	settings.setAALevel( sfmlSettings.AntialiasingLevel );
+	
+	return true;	
 }
 //-----------------------------------//
 
-void SFMLWindow::createWindow()
+void SFML_Window::createWindow()
 {
 	if(settings.getCustomHandle())
 	{
@@ -81,55 +81,63 @@ void SFMLWindow::createWindow()
 }
 //-----------------------------------//
 
-void SFMLWindow::update() 
+void SFML_Window::update() 
 {
 	window.Display();
 }
 
 //-----------------------------------//
 
-void SFMLWindow::makeCurrent()
+void SFML_Window::makeCurrent()
 {
 	window.SetActive(); 
 }
 
 //-----------------------------------//
 
-bool SFMLWindow::pumpEvents()
+bool SFML_Window::pumpEvents()
 {
-	sf::Event Event;
+	sf::Event event;
 	
-	while( window.GetEvent(Event) )
+	while( window.GetEvent( event ) )
 	{
-		switch( Event.Type )
+		switch( event.Type )
 		{
 			case sf::Event::Closed:
 				return false;
+			
 			case sf::Event::Resized:
-				processResize(Event);
+				processResize( event );
 				break;
+			
 			case sf::Event::LostFocus:
 				//still to figure out 
 				break;	
+			
 			case sf::Event::GainedFocus:
 				//still to figure out
 				break;	
+			
 			case sf::Event::TextEntered:
+			
 			case sf::Event::KeyPressed:
 			case sf::Event::KeyReleased:
-			case sf::Event::MouseWheelMoved:
+			
+			
 			case sf::Event::MouseButtonPressed:
 			case sf::Event::MouseButtonReleased:
 			case sf::Event::MouseMoved:
 			case sf::Event::MouseEntered:
 			case sf::Event::MouseLeft:
+			case sf::Event::MouseWheelMoved:
+			
 			case sf::Event::JoyButtonPressed:
 			case sf::Event::JoyButtonReleased:
 			case sf::Event::JoyMoved:
-				//call input mananger to process this type of event
+
+				//getInputManager().processEvent( event );
 				break;
 		}
-
 	}
 
 	return true;
@@ -137,7 +145,7 @@ bool SFMLWindow::pumpEvents()
 
 //-----------------------------------//
 
-void SFMLWindow::setTitle(const std::string& title) 
+void SFML_Window::setTitle(const std::string& title) 
 {
 	settings.setTitle(title);
 	createWindow();
@@ -147,14 +155,14 @@ void SFMLWindow::setTitle(const std::string& title)
 
 //-----------------------------------//
 
-void SFMLWindow::setCursor(bool state)
+void SFML_Window::setCursor(bool state)
 {
 	window.ShowMouseCursor(state);
 }
 
 //-----------------------------------//
 
-void SFMLWindow::processResize(sf::Event event)
+void SFML_Window::processResize(sf::Event event)
 {
 	settings.setHeight(event.Size.Height);
 	settings.setWidth(event.Size.Width);
