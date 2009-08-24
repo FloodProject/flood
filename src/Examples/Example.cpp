@@ -79,8 +79,10 @@ void Example::onInit()
 
 	// register the key press callback
 	Keyboard* kbd = getInputManager()->getKeyboard();
+	Mouse* mouse = getInputManager()->getMouse();
 
 	kbd->onKeyPress.bind( &Example::onKeyPressed, this );
+	mouse->onMouseButtonPress.bind( &Example::onButtonPressed, this );
 }
 
 //-----------------------------------//
@@ -154,15 +156,6 @@ void Example::onUpdate()
 {
 	Scene* scene = getSceneManager();
 
-	Keyboard* kbd = getInputManager()->getKeyboard();
-	Mouse* mouse = getInputManager()->getMouse();
-
-	if( ( kbd && kbd->isKeyPressed( Keys::Space ) )
-		|| ( mouse && mouse->isButtonPressed( MouseButton::Right ) ) )
-	{
-		runLoop = !runLoop;
-	}
-		
 	if( runLoop )
 	{
 		r += 0.00001f; r = (r > 1.0f) ? 0.0f : r;
@@ -175,7 +168,18 @@ void Example::onUpdate()
 
 void Example::onKeyPressed( const KeyEvent& keyEvent )
 {
+	if( keyEvent.keyCode == Keys::Space )
+		runLoop = !runLoop;
+
 	printf( "key press: %d\n", keyEvent.keyCode );
+}
+
+//-----------------------------------//
+
+void Example::onButtonPressed( const MouseButtonEvent& btnEvent )
+{
+	if( btnEvent.button == MouseButton::Right )
+		runLoop = !runLoop;
 }
 
 //-----------------------------------//

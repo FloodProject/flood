@@ -42,6 +42,7 @@ protected:
 	virtual void onRender();
 
 	void onKeyPressed( const vapor::input::KeyEvent& );
+	void onButtonPressed( const vapor::input::MouseButtonEvent& );
 
 private:
 

@@ -28,9 +28,12 @@ class Settings
 public:
 
 	Settings(const int width = 800, const int height = 600,
-		const std::string title = "Untitled", const int bpp = 32, 
-		const int depthbits = 24, const int stencilbits = 8,
-		const int aalevel = 0, const bool fullscreen = false,
+		const bool fullscreen = false, 
+		const std::string title = "Untitled",
+		const int bpp = 32, 
+		const int depthbits = 24, 
+		const int stencilbits = 8,
+		const int aalevel = 0, 
 		void* customHandle = nullptr);
 
 	// Gets the width of the window
