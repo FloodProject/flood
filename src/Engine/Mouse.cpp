@@ -41,7 +41,8 @@ void Mouse::processEvent( const input::Event& event )
 		return;
 	}
 
-	const MouseEvent& mevt = static_cast< const MouseEvent& > ( event );
+	const MouseEvent& mevt = 
+		static_cast< const MouseEvent& > ( event );
 	
 	switch( mevt.eventType )
 	{
@@ -93,6 +94,40 @@ void Mouse::processEvent( const input::Event& event )
 
 //-----------------------------------//
 
+bool Mouse::isButtonPressed( MouseButton::Enum button )
+{
+	const MouseInfo& mouseInfo = getMouseInfo();
+
+	switch( button )
+	{
+		case MouseButton::Left:
+			return mouseInfo.leftButton;
+			break;
+		
+		case MouseButton::Right:
+			return mouseInfo.rightButton;
+			break;
+		
+		case MouseButton::Middle:
+			return mouseInfo.middleButton;
+			break;
+		
+		case MouseButton::XButton1:
+			return mouseInfo.XButton1;
+			break;
+		
+		case MouseButton::XButton2:
+			return mouseInfo.XButton2;
+			break;
+	}
+
+	warn( "input", "Could  not map enum: Invalid mouse button" );
+
+	return MouseButton::Left;
+}
+
+//-----------------------------------//
+
 const MouseInfo& Mouse::getMouseInfo()
 {
 	return mouseInfo;
@@ -100,11 +135,21 @@ const MouseInfo& Mouse::getMouseInfo()
 	
 //-----------------------------------//
 
-void Mouse::mouseButtonPressed(const MouseButtonEvent& mevt)
+void Mouse::mouseMoved(const MouseMoveEvent& mme)
+{	
+	mouseInfo.x = mme.x;
+	mouseInfo.y = mme.y;
+
+	if ( !onMouseMove.empty() )
+	{
+		onMouseMove( mme );
+	}
+}
+
+//-----------------------------------//
+
+void Mouse::mouseButtonPressed(const MouseButtonEvent& press)
 {
-	const MouseButtonEvent& press = 
-		static_cast< const MouseButtonEvent& > ( mevt );
-	
 	mouseInfo.x = press.x;
 	mouseInfo.y = press.y;
 	
@@ -129,6 +174,11 @@ void Mouse::mouseButtonPressed(const MouseButtonEvent& mevt)
 		case MouseButton::XButton2:
 			mouseInfo.XButton2 = true;
 			break;
+	}
+
+	if ( !onMouseButtonPress.empty() )
+	{
+		onMouseButtonPress( press );
 	}
 }
 
@@ -161,42 +211,52 @@ void Mouse::mouseButtonReleased(const MouseButtonEvent& mbe)
 			mouseInfo.XButton2 = false;
 			break;
 	}
-}
 
-//-----------------------------------//
-
-void Mouse::mouseMoved(const MouseMoveEvent& mme)
-{	
-	mouseInfo.x = mme.x;
-	mouseInfo.y = mme.y;
+	if ( !onMouseButtonRelease.empty() )
+	{
+		onMouseButtonRelease( mbe );
+	}
 }
 
 //-----------------------------------//
 
 void Mouse::mouseEnter()
 {
-	mouseInfo.inWindow = true;
+	mouseInfo.insideWindow = true;
+
+	if ( !onMouseEnter.empty() )
+	{
+		onMouseEnter( );
+	}
 }
 
 //-----------------------------------//
 
 void Mouse::mouseExit()
 {
-	mouseInfo.inWindow = false;
+	mouseInfo.insideWindow = false;
+
+	if ( !onMouseExit.empty() )
+	{
+		onMouseExit( );
+	}
 }
 
 //-----------------------------------//
 
 void Mouse::mouseWheelMove(const MouseWheelEvent& mevt)
 {
-
+	if ( !onMouseWheelMove.empty() )
+	{
+		onMouseWheelMove( mevt );
+	}	
 }
 
 //-----------------------------------//
 
-MouseInfo::MouseInfo(): x(0), y(0),
-	leftButton(false), rightButton(false), middleButton(false),
-	XButton1(false), XButton2(false), inWindow(false)
+MouseInfo::MouseInfo()
+	: x(0), y(0), leftButton(false), rightButton(false), middleButton(false),
+	XButton1(false), XButton2(false), insideWindow(false)
 {
  
 }

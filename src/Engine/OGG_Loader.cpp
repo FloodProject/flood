@@ -16,7 +16,7 @@ using vapor::vfs::File;
 
 #include <vorbis/vorbisfile.h>
 
-#ifdef VAPOR_PLATFORM_WINDOWS
+#ifdef VAPOR_COMPILER_MSVC
 	// disable Visual C++ fopen deprecation warning
 	#pragma warning(disable : 4996)
 #endif

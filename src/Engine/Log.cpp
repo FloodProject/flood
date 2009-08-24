@@ -131,7 +131,7 @@ void error(const std::string& subsystem, const char* msg, ...)
 
 bool Log::open(const std::string& filename)
 {
-	#ifdef VAPOR_PLATFORM_WINDOWS
+	#ifdef VAPOR_COMPILER_MSVC
 		// disable Visual C++ fopen deprecation warning
 		#pragma warning(disable : 4996)
 	#endif

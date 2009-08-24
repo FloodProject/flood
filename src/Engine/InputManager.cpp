@@ -22,11 +22,9 @@ InputManager::InputManager()
 
 InputManager::~InputManager()
 {
-	std::vector< input::Device* >::iterator it;
-	
-	for( it = devices.begin(); it != devices.end(); it++ )
+	foreach( input::Device* device, devices )
 	{
-		delete (*it);
+		delete device;
 	}
 }
 
@@ -50,14 +48,11 @@ void InputManager::addDevice( input::Device* device )
 
 Keyboard* InputManager::getKeyboard()
 {
-	std::vector< input::Device* >::iterator it;
-	
-	for( it = devices.begin(); it != devices.end(); it++ )
+	foreach( input::Device* device, devices )
 	{
-		if( (*it)->getType() == DeviceType::Keyboard )
+		if( device->getType() == DeviceType::Keyboard )
 		{
-			Keyboard* kbd = static_cast< Keyboard* > ( *it );
-			return kbd;
+			return static_cast< Keyboard* > ( device );
 		}
 	}
 
@@ -68,14 +63,11 @@ Keyboard* InputManager::getKeyboard()
 
 Mouse* InputManager::getMouse()
 {
-	std::vector< input::Device* >::iterator it;
-	
-	for( it = devices.begin(); it != devices.end(); it++ )
+	foreach( input::Device* device, devices )
 	{
-		if( (*it)->getType() == DeviceType::Mouse )
+		if( device->getType() == DeviceType::Mouse )
 		{
-			Mouse* mouse = static_cast< Mouse* > ( *it );
-			return mouse;
+			return static_cast< Mouse* > ( device );
 		}
 	}
 
@@ -86,11 +78,9 @@ Mouse* InputManager::getMouse()
 
 void InputManager::processEvent( const input::Event& event )
 {
-	std::vector< input::Device* >::iterator it;
-	
-	for( it = devices.begin(); it != devices.end(); it++ )
+	foreach( input::Device* device, devices )
 	{
-		(*it)->processEvent( event );
+		device->processEvent( event );
 	}
 }
 

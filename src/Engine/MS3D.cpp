@@ -30,9 +30,11 @@ MS3D::~MS3D()
 
 bool MS3D::load(const std::string& filename)
 {
+#ifdef VAPOR_COMPILER_MSVC
 	// disable Visual C++ fopen deprecation warning
 	#pragma warning(disable : 4996)
-	
+#endif
+
 	fp = fopen(filename.c_str(), "rb");
 	if (!fp) return false;
 	

@@ -197,18 +197,23 @@ private:
 
 class Keyboard : public Device
 {
-	//friend class InputManager;
-
 public:	
 
 	Keyboard();
 	virtual ~Keyboard();
 
-	Keys::Enum getLastKeyPressed();
+	//Keys::Enum getLastKeyPressed();
 
-	KeyEvent getLastKeyPressedInfo();
+	//const KeyEvent& getLastKeyEvent();
 
-	bool isKeyPressed(Keys::Enum keycode);
+	bool isKeyPressed( Keys::Enum keycode );
+
+	//-----------------------------------//
+	// Events
+	//-----------------------------------//
+
+	fd::delegate< void( const KeyEvent& ) > onKeyPress;
+	fd::delegate< void( const KeyEvent& ) > onKeyRelease;
 
 private:
 	
@@ -218,11 +223,16 @@ private:
 	// Return this device as a keyboard.
 	virtual const input::DeviceType::Enum getType();
 
-	void keyPressed(Keys::Enum keycode);
-	void keyReleased(Keys::Enum keycode);
+	// Handles a key press event.
+	void keyPressed( const KeyEvent& keyEvent );
 	
+	// Handles a key release event.
+	void keyReleased( const KeyEvent& keyEvent );
+	
+	// Current key state.
 	std::vector< bool > keyState;
 	
+	// Last key pressed.
 	Keys::Enum lastKey;
 };
 

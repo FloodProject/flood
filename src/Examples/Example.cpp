@@ -43,9 +43,13 @@ Example::Example()
 
 void Example::onInit()
 {
+	//-----------------------------------//
+	// Mount VFS points
+	//-----------------------------------//
+
 	std::string media = "media";
 
-	if ( !vfs->mount( media ) )
+	if ( !getVFS()->mount( media ) )
 	{
 		Log::MessageDialog( "Missing archive/directory '" + media + "'." );
 	}
@@ -53,28 +57,30 @@ void Example::onInit()
 	File file("media/testfile.txt", AccessMode::Read);
 	std::vector<byte> content = file.read( file.getSize() );
 	
-	if(content.size() > 0)
+	if( content.size() > 0 )
 	{
-		std::vector<byte>::iterator it;	
-		
-		for(it = content.begin(); it != content.end(); it++)
-		{
-			std::cout << (char)(*it);
-		}
-		
+		foreach( char c, content )
+			std::cout << c;
+	
 		std::cout << std::endl;
 	}
 	
 	if( !file.close() )
 	{
-		error("Example:", "File failed to close: %s", file.getPath());
+		error( "Example:", "Failed to close file: %s", file.getPath() );
 	}
 
 	r = b = g = 0.0f;
 	runLoop = false;
-	//warn("example::onInit", "Example warning message!");
-	//info("example::onInit", "Example info message!");
-	//error("example::onInit", "Example error message!");
+
+	//-----------------------------------//
+	// Register input devices callbacks
+	//-----------------------------------//
+
+	// register the key press callback
+	Keyboard* kbd = getInputManager()->getKeyboard();
+
+	kbd->onKeyPress.bind( &Example::onKeyPressed, this );
 }
 
 //-----------------------------------//
@@ -148,29 +154,28 @@ void Example::onUpdate()
 {
 	Scene* scene = getSceneManager();
 
-	/*Keyboard* kbd = getInputManager()->getKeyboard();
-
-	if( kbd && kbd->isKeyPressed( Keys::Space ) )
-	{
-		r += 0.00001f; r = (r > 1.0f) ? 0.0f : r;
-		g += 0.00003f; b = (b > 1.0f) ? 0.0f : b;
-		b += 0.00007f; g = (g > 1.0f) ? 0.0f : g;
-	}*/
-	
+	Keyboard* kbd = getInputManager()->getKeyboard();
 	Mouse* mouse = getInputManager()->getMouse();
-	if(mouse)
-	{
-		if(mouse->getMouseInfo().rightButton)
-			runLoop = !runLoop;
-	}
 
-	
+	if( ( kbd && kbd->isKeyPressed( Keys::Space ) )
+		|| ( mouse && mouse->isButtonPressed( MouseButton::Right ) ) )
+	{
+		runLoop = !runLoop;
+	}
+		
 	if( runLoop )
 	{
 		r += 0.00001f; r = (r > 1.0f) ? 0.0f : r;
 		g += 0.00003f; b = (b > 1.0f) ? 0.0f : b;
 		b += 0.00007f; g = (g > 1.0f) ? 0.0f : g;
 	}
+}
+
+//-----------------------------------//
+
+void Example::onKeyPressed( const KeyEvent& keyEvent )
+{
+	printf( "key press: %d\n", keyEvent.keyCode );
 }
 
 //-----------------------------------//

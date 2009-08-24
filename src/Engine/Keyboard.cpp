@@ -48,15 +48,13 @@ void Keyboard::processEvent( const input::Event& event )
 	{
 		case KeyboardEventType::KeyPressed:
 		{
-			keyPressed( kevt.keyCode );
-			// TODO: Maybe add the rest of the struct's info, 
-			// although it doesn't seem necessary
+			keyPressed( kevt );
 			break;
 		}
 
 		case KeyboardEventType::KeyReleased:
 		{
-			keyReleased( kevt.keyCode );
+			keyReleased( kevt );
 			break;
 		}
 	}
@@ -64,8 +62,7 @@ void Keyboard::processEvent( const input::Event& event )
 
 //-----------------------------------//
 
-KeyEvent::KeyEvent(Keys::Enum keyCode, 
-					bool alt, bool shift, bool ctrl, 
+KeyEvent::KeyEvent(Keys::Enum keyCode, bool alt, bool shift, bool ctrl, 
 					KeyboardEventType::Enum eventType)
 	: Event( DeviceType::Keyboard ), keyCode( keyCode ), altPressed( alt ),
 		shiftPressed( shift ), ctrlPressed( ctrl ), eventType( eventType )
@@ -75,51 +72,60 @@ KeyEvent::KeyEvent(Keys::Enum keyCode,
 
 //-----------------------------------//
 
-Keys::Enum Keyboard::getLastKeyPressed()
-{
-	return lastKey;
-}
-
-//-----------------------------------//
-
-KeyEvent Keyboard::getLastKeyPressedInfo()
-{
-	bool alt, shift, ctrl;
-
-	alt = keyState[Keys::LAlt] || keyState[Keys::RAlt];
-	shift = keyState[Keys::LShift] || keyState[Keys::RShift];
-	ctrl = keyState[Keys::LControl] || keyState[Keys::RControl];
-
-	KeyEvent keyinfo( lastKey, alt, shift, ctrl );
-
-	return keyinfo;
-}
-
-//-----------------------------------//
-
-bool Keyboard::isKeyPressed(Keys::Enum keycode)
+bool Keyboard::isKeyPressed( Keys::Enum keycode )
 {
 	return keyState[keycode];
 }
 
 //-----------------------------------//
 
-void Keyboard::keyPressed(Keys::Enum keycode)
+void Keyboard::keyPressed( const KeyEvent& keyEvent )
 {
-	keyState[keycode] = true;
-	lastKey = keycode;
+	keyState[keyEvent.keyCode] = true;
+	lastKey = keyEvent.keyCode;
 
-	// TODO: fire events
+	if( !onKeyPress.empty() )
+	{
+		// fire the public event!
+		onKeyPress( keyEvent );
+	}
 }
 
 //-----------------------------------//
 
-void Keyboard::keyReleased(Keys::Enum keycode)
+void Keyboard::keyReleased( const KeyEvent& keyEvent )
 {
-	keyState[keycode] = false;
+	keyState[keyEvent.keyCode] = false;
+	//lastKey = keycode;
 
-	// TODO: fire events
+	if( !onKeyRelease.empty() )
+	{
+		// fire the public event!
+		onKeyRelease( keyEvent );
+	}
 }	
+
+//-----------------------------------//
+
+//Keys::Enum Keyboard::getLastKeyPressed()
+//{
+//	return lastKey;
+//}
+
+//-----------------------------------//
+
+//const KeyEvent& Keyboard::getLastKeyEvent()
+//{
+//	bool alt, shift, ctrl;
+//
+//	alt = keyState[Keys::LAlt] || keyState[Keys::RAlt];
+//	shift = keyState[Keys::LShift] || keyState[Keys::RShift];
+//	ctrl = keyState[Keys::LControl] || keyState[Keys::RControl];
+//
+//	KeyEvent keyinfo( lastKey, alt, shift, ctrl );
+//
+//	return *keyinfo;
+//}
 
 //-----------------------------------//
 

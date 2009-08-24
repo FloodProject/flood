@@ -14,7 +14,12 @@
 
 namespace vapor {
 	namespace input {
+
 //-----------------------------------//
+
+/**
+ * Different types of mouse buttons.
+ */
 
 namespace MouseButton
 {
@@ -51,7 +56,7 @@ struct MouseInfo
 	bool XButton1;
 	bool XButton2;
 	
-	bool inWindow;
+	bool insideWindow;
 };
 
 //-----------------------------------//
@@ -82,11 +87,11 @@ namespace MouseEventType
 //-----------------------------------//
 
 /**
- * Generic mouse event that will be inherited by the more specific mouse 
- * event types. This will be used for public and private communication
- * between the input manager, so it has private members and then adds
- * friend acess to the event handler. That way the private data is hidden
- * to the public.
+ * Generic mouse event that will be inherited by the more specific 
+ * mouse event types. This will be used for communication between
+ * the input manager, so it has private members and then adds friend
+ * access to the Mouse class. That way the private data is hidden to
+ * the public.
  */
 
 struct MouseEvent : public input::Event
@@ -103,14 +108,13 @@ private:
 //-----------------------------------//
 
 /**
- * Mouse event that occurs when the mouse moves. It holds the new position
- * of the mouse cursor in the screen.
+ * Mouse event that occurs when the mouse is moved and provides a 
+ * new mouse position on the screen in screen-coordinates.
+ * TODO: describe the coordinates
  */
 
 struct MouseMoveEvent : public MouseEvent
 {
-	friend class Mouse;
-	
 	MouseMoveEvent( int x, int y );
 
 	int x;
@@ -127,15 +131,13 @@ struct MouseMoveEvent : public MouseEvent
 
 struct MouseButtonEvent : public MouseEvent
 {
-	friend class Mouse;
-
 	MouseButtonEvent( int x, int y, 
 		MouseButton::Enum button, MouseEventType::Enum eventType );
-	
+
+	int x;
+	int y;
+
 	MouseButton::Enum button;
-	
-	int  x;
-	int  y;
 };
 
 //-----------------------------------//
@@ -143,13 +145,11 @@ struct MouseButtonEvent : public MouseEvent
 /**
  * Mouse events that occurs when the mouse wheel is scrolled.
  * In this case the extra information is a delta value that specifies
- * the ammount of the mouse wheel that was scrolled.
+ * the relative amount of the mouse wheel that was scrolled.
  */
 
 struct MouseWheelEvent : public MouseEvent
 {
-	friend class Mouse;
-	
 	MouseWheelEvent( int delta );
 
 	int  delta;
@@ -159,8 +159,6 @@ struct MouseWheelEvent : public MouseEvent
 
 class Mouse : public Device
 {
-	//friend class InputManager;
-
 public:
 
 	Mouse();
@@ -172,8 +170,25 @@ public:
 	// Processes an event (only if it's a mouse event).
 	virtual void processEvent( const input::Event& event );
 
-		// Return this device as a mouse.
-		virtual const input::DeviceType::Enum getType();
+	// Return this device as a mouse.
+	virtual const input::DeviceType::Enum getType();
+
+	// Returns whether a given mouse button is pressed.
+	bool isButtonPressed( MouseButton::Enum button );
+
+	//-----------------------------------//
+	// Events
+	//-----------------------------------//
+
+	fd::delegate< void( const MouseMoveEvent& ) > onMouseMove;
+	
+	fd::delegate< void( const MouseButtonEvent& ) > onMouseButtonPress;
+	fd::delegate< void( const MouseButtonEvent& ) > onMouseButtonRelease;
+	
+	fd::delegate< void( const MouseWheelEvent& ) > onMouseWheelMove;
+	
+	fd::delegate< void( void ) > onMouseEnter;
+	fd::delegate< void( void ) > onMouseExit;
 
 private:
 

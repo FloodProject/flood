@@ -15,6 +15,8 @@ Add a custom resource type
 TODO:
 -----
 
+Add defines for the different compilers and switch #ifdef pragmas to those...
+Add Window events for resizing, closing, etc.
 Update all the headers to have separators between different sections
 Move from #pragma error instructions to static_assert
 Debug a crash in triton's desktop with an Audigy 4 (XP BSOD in Creative's driver 'ctaud2k.sys')

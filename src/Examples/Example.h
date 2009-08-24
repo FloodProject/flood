@@ -10,6 +10,10 @@
 
 #include <vapor/Framework.h>
 
+#include <vapor/input/Keyboard.h>
+
+//-----------------------------------//
+
 /**
  * Simple example.
  */
@@ -37,11 +41,15 @@ protected:
 	// Renders the scene
 	virtual void onRender();
 
+	void onKeyPressed( const vapor::input::KeyEvent& );
+
 private:
 
 	float r,g,b;
 	bool runLoop;
 };
+
+//-----------------------------------//
 
 #define VAPOR_EXAMPLE_NAME Example
 #include <vapor/Main.h>
