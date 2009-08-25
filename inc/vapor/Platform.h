@@ -18,9 +18,9 @@
 // Platform detection
 //---------------------------------------------------------------------//
 
-#if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+#if defined( _WIN32 ) || defined( _WIN64 ) || defined( WIN32 ) || defined( WIN64 )
 	#define VAPOR_PLATFORM_WINDOWS
-#elif defined(__APPLE__) || defined(MACOSX)
+#elif defined( __APPLE__ ) || defined( MACOSX )
 	#define VAPOR_PLATFORM_MACOSX
 #elif
 	#define VAPOR_PLATFORM_LINUX
@@ -35,6 +35,10 @@
 #ifdef _MSC_VER
 	// Microsoft Visual C++
 	#define VAPOR_COMPILER_MSVC
+#endif
+
+#if defined( _DEBUG ) || defined( ___DEBUG ) || defined( DEBUG )
+	#define VAPOR_DEBUG
 #endif
 
 //---------------------------------------------------------------------//
@@ -74,3 +78,4 @@
 using vapor::log::info;
 using vapor::log::warn;
 using vapor::log::error;
+using vapor::log::debug;

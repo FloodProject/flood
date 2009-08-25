@@ -36,7 +36,8 @@ struct Color
 	}
 };
 
-namespace Colors {
+namespace Colors 
+{
 
 	static const Color White(1.0f, 1.0f, 1.0f);
 	static const Color Black(0.0f, 0.0f, 0.0f);

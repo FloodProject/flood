@@ -31,8 +31,8 @@ namespace MouseButton
 		Middle,
 
 		// Extra mouse buttons
-		XButton1,
-		XButton2,
+		Mouse4,
+		Mouse5,
 	};
 }
 
@@ -53,8 +53,8 @@ struct MouseInfo
 	bool rightButton;
 	bool middleButton;
 	
-	bool XButton1;
-	bool XButton2;
+	bool Mouse4;
+	bool Mouse5;
 	
 	bool insideWindow;
 };
@@ -209,6 +209,9 @@ private:
 	
 	// Occurs when the mouse wheel is scrolled.
 	void mouseWheelMove(const MouseWheelEvent& mevt);
+
+	// Sets the button state in the mouse info.
+	void setMouseButton( MouseButton::Enum btn, bool state );
 	
 	// Holds the current state of the mouse.
 	MouseInfo mouseInfo;

@@ -10,6 +10,8 @@
 
 #ifdef VAPOR_WINDOWING_SFML
 
+using namespace vapor::log;
+
 namespace vapor {
 	namespace render {
 
@@ -18,8 +20,12 @@ namespace vapor {
 SFML_Window::SFML_Window(const Settings& settings)
 	: Window(settings), flags(0)
 {
-	if( !open() ) 
-		exit(1);
+	if( !open() )
+	{
+		warn( "render", "Could not create SFML render window" );
+		Log::MessageDialog( "Could not create SFML render window", LogLevel::Error );
+		exit( 1 );
+	}
 }
 
 //-----------------------------------//
@@ -33,8 +39,8 @@ SFML_Window::~SFML_Window()
 
 bool SFML_Window::open()
 {
-	sfmlSettings.DepthBits         = settings.getDepthBits(); 
-	sfmlSettings.StencilBits       = settings.getStencilBits();
+	sfmlSettings.DepthBits = settings.getDepthBits(); 
+	sfmlSettings.StencilBits = settings.getStencilBits();
 	sfmlSettings.AntialiasingLevel = settings.getAALevel();
 	
 	if( settings.isFullscreen() )
@@ -164,8 +170,10 @@ void SFML_Window::setCursor(bool state)
 
 void SFML_Window::processResize(sf::Event event)
 {
-	settings.setHeight(event.Size.Height);
-	settings.setWidth(event.Size.Width);
+	settings.setHeight( event.Size.Height );
+	settings.setWidth( event.Size.Width );
+
+	handleWindowResize();
 }
 
 //-----------------------------------//

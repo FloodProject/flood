@@ -13,6 +13,17 @@
 namespace vapor {
 	namespace log {
 
+//-----------------------------------//
+
+/**
+ * Use this to issue debug messages.
+ * Doesn't do anything on release builds.
+ */
+
+void debug(const char* msg, ...);
+
+//-----------------------------------//
+
 /**
  * Convenience functions to log in the main engine stream.
  */
@@ -20,6 +31,8 @@ namespace vapor {
 void info(const std::string& subsystem, const char* msg, ...);
 void warn(const std::string& subsystem, const char* msg, ...);
 void error(const std::string& subsystem, const char* msg, ...);
+
+//-----------------------------------//
 
 /**
  * Severity level of the log message.
@@ -34,6 +47,8 @@ namespace LogLevel
 		Error
 	};
 };
+
+//-----------------------------------//
 
 /**
  * Logging class used to output useful logging and debugging information
@@ -52,7 +67,8 @@ public:
 	static void setLogger(Log* log);
 
 	// Spawns a new message box dialog.
-	static void MessageDialog(const std::string& msg, const LogLevel::Enum level = LogLevel::Warning);
+	static void MessageDialog(const std::string& msg, 
+		const LogLevel::Enum level = LogLevel::Warning);
 	
 	// Logging methods for each message category.
 	void info(const std::string& subsystem, const char* msg, ...);
@@ -88,5 +104,7 @@ protected:
 	// Used for zebra coloring the table.
 	bool even;
 };
+
+//-----------------------------------//
 
 } } // end namespaces

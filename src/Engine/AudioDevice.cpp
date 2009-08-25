@@ -138,16 +138,20 @@ ALint Device::getALFormat(SoundFormat::Enum format)
 {
 	switch(format)
 	{
-	case SoundFormat::Mono8:
-		return AL_FORMAT_MONO8;
-	case SoundFormat::Mono16:
-		return AL_FORMAT_MONO16;
-	case SoundFormat::Stereo8:
-		return AL_FORMAT_STEREO8;
-	case SoundFormat::Stereo16:
-		return AL_FORMAT_STEREO16;
-	default:
-		return AL_INVALID;
+		case SoundFormat::Mono8:
+			return AL_FORMAT_MONO8;
+
+		case SoundFormat::Mono16:
+			return AL_FORMAT_MONO16;
+
+		case SoundFormat::Stereo8:
+			return AL_FORMAT_STEREO8;
+
+		case SoundFormat::Stereo16:
+			return AL_FORMAT_STEREO16;
+
+		default:
+			return AL_INVALID;
 	}
 }
 
@@ -156,7 +160,7 @@ ALint Device::getALFormat(SoundFormat::Enum format)
 void Device::switchContext(ALCcontext* context)
 {
 	// if context is already current, return.
-	if(ctx && (ctx == context))
+	if( ctx && (ctx == context) )
 		return;
 
 	ALCboolean ret = alcMakeContextCurrent(context);
@@ -175,7 +179,7 @@ void Device::switchContext(ALCcontext* context)
 shared_ptr<Buffer> Device::prepareBuffer(shared_ptr<resources::Sound> sound)
 {
 	// check if buffer with same resource already exists
-	if(soundBuffers.find(sound) != soundBuffers.end()) 
+	if( soundBuffers.find(sound) != soundBuffers.end() ) 
 		return soundBuffers[sound];
 
 	shared_ptr<Buffer> buf(new Buffer(this, sound));

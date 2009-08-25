@@ -217,16 +217,14 @@ MouseButton::Enum SFML_InputManager::convertMouseButtonEnum(
 			return MouseButton::Middle;
 
 		case sf::Mouse::XButton1:
-			return MouseButton::XButton1;
+			return MouseButton::Mouse4;
 
 		case sf::Mouse::XButton2:
-			return MouseButton::XButton2;
+			return MouseButton::Mouse5;
 
 		default:
-			warn( "input", 
-				"Could not map SFML mouse button: Invalid button" );
-			
-			return MouseButton::XButton2;
+			warn( "input", "Could not map SFML mouse button: Invalid button" );
+			return MouseButton::Mouse5;
 	}
 }
 

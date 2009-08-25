@@ -146,7 +146,7 @@ void Device::resetViewport()
 {
 	if( !window ) return;
 
-	Settings &s = window->getSettings();
+	const Settings &s = window->getSettings();
 
 	glViewport(0, 0, s.getWidth(), s.getHeight());
 

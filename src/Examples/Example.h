@@ -44,9 +44,12 @@ protected:
 	void onKeyPressed( const vapor::input::KeyEvent& );
 	void onButtonPressed( const vapor::input::MouseButtonEvent& );
 
+	void onWindowResize( const vapor::render::WindowResizeEvent& );
+
 private:
 
-	float r,g,b;
+	float r, g, b;
+
 	bool runLoop;
 };
 

@@ -16,6 +16,8 @@
 namespace vapor {
 	namespace render {
 
+//-----------------------------------//
+
 /**
  * Represents the information that the user wants to pass to the engine
  * related to the creation of a new rendering window, like for example
@@ -27,7 +29,7 @@ class Settings
 {
 public:
 
-	Settings(const int width = 800, const int height = 600,
+	Settings(const int width = 640, const int height = 480,
 		const bool fullscreen = false, 
 		const std::string title = "Untitled",
 		const int bpp = 32, 
@@ -89,6 +91,18 @@ public:
 	std::string title;
 };
 
+//-----------------------------------//
+
+struct WindowResizeEvent
+{
+	WindowResizeEvent(int w, int h);
+
+	int width;
+	int height;
+};
+
+//-----------------------------------//
+
 /**
  * Represents an region on the screen that the renderer can send
  * the final representation of the scene, the rendered output image.
@@ -117,7 +131,7 @@ public:
 	virtual void setCursor (bool state) = 0;
 
 	// Gets the window settings.
-	virtual Settings& getSettings();
+	virtual const Settings& getSettings();
 
 	// Gets the input manager.
 	virtual input::InputManager& getInputManager() = 0;
@@ -125,10 +139,24 @@ public:
 	// Create a new render window.
 	static Window& createWindow( const Settings& settings = Settings() );
 
+	// Event fired when the window gets resized.
+	fd::delegate< void( const WindowResizeEvent& ) > onWindowResize;
+
+	// Event fired when the window is closed.
+	fd::delegate< void( void ) > onWindowClose;
+
 protected:
+
+	// Handles the resize event.
+	void handleWindowResize();
+
+	// Handles the resize event.
+	void handleWindowClose();
 
 	// Holds the window settings
 	Settings settings;
 };
+
+//-----------------------------------//
 
 } } // end namespaces

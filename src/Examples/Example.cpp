@@ -54,7 +54,7 @@ void Example::onInit()
 		Log::MessageDialog( "Missing archive/directory '" + media + "'." );
 	}
 
-	File file("media/testfile.txt", AccessMode::Read);
+	File file( "media/testfile.txt", AccessMode::Read );
 	std::vector<byte> content = file.read( file.getSize() );
 	
 	if( content.size() > 0 )
@@ -83,6 +83,10 @@ void Example::onInit()
 
 	kbd->onKeyPress.bind( &Example::onKeyPressed, this );
 	mouse->onMouseButtonPress.bind( &Example::onButtonPressed, this );
+
+	Window* window = getRenderDevice()->getWindow();
+
+	window->onWindowResize.bind( &Example::onWindowResize, this );
 }
 
 //-----------------------------------//
@@ -171,7 +175,7 @@ void Example::onKeyPressed( const KeyEvent& keyEvent )
 	if( keyEvent.keyCode == Keys::Space )
 		runLoop = !runLoop;
 
-	printf( "key press: %d\n", keyEvent.keyCode );
+	debug( "key press: %d", keyEvent.keyCode );
 }
 
 //-----------------------------------//
@@ -180,6 +184,16 @@ void Example::onButtonPressed( const MouseButtonEvent& btnEvent )
 {
 	if( btnEvent.button == MouseButton::Right )
 		runLoop = !runLoop;
+
+	debug( "button press: %d", btnEvent.button );
+}
+
+//-----------------------------------//
+
+void Example::onWindowResize( const WindowResizeEvent& windowEvent )
+{
+	debug( "Resized window (new size: %dx%d)", 
+		windowEvent.width, windowEvent.height );
 }
 
 //-----------------------------------//

@@ -112,12 +112,12 @@ bool Mouse::isButtonPressed( MouseButton::Enum button )
 			return mouseInfo.middleButton;
 			break;
 		
-		case MouseButton::XButton1:
-			return mouseInfo.XButton1;
+		case MouseButton::Mouse4:
+			return mouseInfo.Mouse4;
 			break;
 		
-		case MouseButton::XButton2:
-			return mouseInfo.XButton2;
+		case MouseButton::Mouse5:
+			return mouseInfo.Mouse5;
 			break;
 	}
 
@@ -148,37 +148,16 @@ void Mouse::mouseMoved(const MouseMoveEvent& mme)
 
 //-----------------------------------//
 
-void Mouse::mouseButtonPressed(const MouseButtonEvent& press)
+void Mouse::mouseButtonPressed(const MouseButtonEvent& mbp)
 {
-	mouseInfo.x = press.x;
-	mouseInfo.y = press.y;
+	mouseInfo.x = mbp.x;
+	mouseInfo.y = mbp.y;
 	
-	switch(press.button)
-	{
-		case MouseButton::Left:
-			mouseInfo.leftButton = true;
-			break;
-		
-		case MouseButton::Right:
-			mouseInfo.rightButton = true;
-			break;
-		
-		case MouseButton::Middle:
-			mouseInfo.middleButton = true;
-			break;
-		
-		case MouseButton::XButton1:
-			mouseInfo.XButton1 = true;
-			break;
-		
-		case MouseButton::XButton2:
-			mouseInfo.XButton2 = true;
-			break;
-	}
+	setMouseButton( mbp.button, true );
 
 	if ( !onMouseButtonPress.empty() )
 	{
-		onMouseButtonPress( press );
+		onMouseButtonPress( mbp );
 	}
 }
 
@@ -189,28 +168,7 @@ void Mouse::mouseButtonReleased(const MouseButtonEvent& mbe)
 	mouseInfo.x = mbe.x;
 	mouseInfo.y = mbe.y;
 	
-	switch( mbe.button )
-	{
-		case MouseButton::Left:
-			mouseInfo.leftButton = false;
-			break;
-		
-		case MouseButton::Right:
-			mouseInfo.rightButton = false;
-			break;
-		
-		case MouseButton::Middle:
-			mouseInfo.middleButton = false;
-			break;
-		
-		case MouseButton::XButton1:
-			mouseInfo.XButton1 = false;
-			break;
-		
-		case MouseButton::XButton2:
-			mouseInfo.XButton2 = false;
-			break;
-	}
+	setMouseButton( mbe.button, false );
 
 	if ( !onMouseButtonRelease.empty() )
 	{
@@ -254,9 +212,37 @@ void Mouse::mouseWheelMove(const MouseWheelEvent& mevt)
 
 //-----------------------------------//
 
+void Mouse::setMouseButton( MouseButton::Enum btn, bool state )
+{
+	switch( btn )
+	{
+		case MouseButton::Left:
+			mouseInfo.leftButton = state;
+			break;
+		
+		case MouseButton::Right:
+			mouseInfo.rightButton = state;
+			break;
+		
+		case MouseButton::Middle:
+			mouseInfo.middleButton = state;
+			break;
+		
+		case MouseButton::Mouse4:
+			mouseInfo.Mouse4 = state;
+			break;
+		
+		case MouseButton::Mouse5:
+			mouseInfo.Mouse5 = state;
+			break;
+	}
+}
+
+//-----------------------------------//
+
 MouseInfo::MouseInfo()
 	: x(0), y(0), leftButton(false), rightButton(false), middleButton(false),
-	XButton1(false), XButton2(false), insideWindow(false)
+	Mouse4(false), Mouse5(false), insideWindow(false)
 {
  
 }

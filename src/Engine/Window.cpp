@@ -35,6 +35,14 @@ Settings::Settings(const int width, const int height, const bool fullscreen,
 
 //-----------------------------------//
 
+WindowResizeEvent::WindowResizeEvent( int w, int h )
+	: width( w ), height( h )
+{
+
+}
+
+//-----------------------------------//
+
 Window::Window(const Settings& settings)
 	: settings(settings)
 {
@@ -59,9 +67,37 @@ Window::~Window()
 
 //-----------------------------------//
 
-Settings& Window::getSettings()
+const Settings& Window::getSettings()
 {
 	return settings;
+}
+
+//-----------------------------------//
+
+void Window::handleWindowResize()
+{
+	if( onWindowResize.empty() )
+	{
+		return;
+	}
+
+	const Settings& s = getSettings();
+
+	WindowResizeEvent wre( s.getWidth(), s.getHeight() );
+
+	onWindowResize( wre );
+}
+
+//-----------------------------------//
+
+void Window::handleWindowClose()
+{
+	if( onWindowClose.empty() )
+	{
+		return;
+	}
+
+	onWindowClose();
 }
 
 //-----------------------------------//

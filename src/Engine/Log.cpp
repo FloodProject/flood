@@ -14,12 +14,83 @@
 
 #include "LogFormat.h"
 
+const int BUF_MAX_SIZE = 256;
+
 namespace vapor {
 	namespace log {
 
 //-----------------------------------//
 
 Log* Log::engineLog;
+
+//-----------------------------------//
+
+void debug(const char* str, ...)
+{
+#ifdef VAPOR_DEBUG
+
+	va_list args;
+	
+	va_start(args, str);
+
+	char fmt[BUF_MAX_SIZE];
+
+#ifdef VAPOR_COMPILER_MSVC
+	char msg[BUF_MAX_SIZE];
+	
+	_snprintf_s( fmt, BUF_MAX_SIZE, _TRUNCATE, "%s\n", str );
+	vsnprintf_s( msg, BUF_MAX_SIZE, _TRUNCATE, fmt, args );
+
+	// TODO: i18n issues?
+	OutputDebugStringA( msg );
+#else
+	snprintf( fmt, BUF_MAX_SIZE, "%s\n", str );
+	vfprintf( stdout, fmt, args );
+#endif
+
+	va_end(args);
+
+#endif
+}
+
+//-----------------------------------//
+
+void info(const std::string& subsystem, const char* msg, ...)
+{
+	if(!Log::getLogger()) return;
+
+	va_list args;
+	
+	va_start(args, msg);
+		Log::getLogger()->write(LogLevel::Info, subsystem, msg, args);
+	va_end(args);
+}
+
+//-----------------------------------//
+
+void warn(const std::string &subsystem, const char* msg, ...)
+{
+	if(!Log::getLogger()) return;
+
+	va_list args;
+	
+	va_start(args, msg);
+		Log::getLogger()->write(LogLevel::Warning, subsystem, msg, args);
+	va_end(args);
+}
+
+//-----------------------------------//
+
+void error(const std::string& subsystem, const char* msg, ...)
+{
+	if(!Log::getLogger()) return;
+
+	va_list args;
+	
+	va_start(args, msg);
+		Log::getLogger()->write(LogLevel::Error, subsystem, msg, args);
+	va_end(args);
+}
 
 //-----------------------------------//
 
@@ -86,45 +157,6 @@ void Log::MessageDialog(const std::string& msg, const LogLevel::Enum level)
 	#else
 		#error "Missing message box implementation"
 	#endif
-}
-
-//-----------------------------------//
-
-void info(const std::string& subsystem, const char* msg, ...)
-{
-	if(!Log::getLogger()) return;
-
-	va_list args;
-	
-	va_start(args, msg);
-		Log::getLogger()->write(LogLevel::Info, subsystem, msg, args);
-	va_end(args);
-}
-
-//-----------------------------------//
-
-void warn(const std::string &subsystem, const char* msg, ...)
-{
-	if(!Log::getLogger()) return;
-
-	va_list args;
-	
-	va_start(args, msg);
-		Log::getLogger()->write(LogLevel::Warning, subsystem, msg, args);
-	va_end(args);
-}
-
-//-----------------------------------//
-
-void error(const std::string& subsystem, const char* msg, ...)
-{
-	if(!Log::getLogger()) return;
-
-	va_list args;
-	
-	va_start(args, msg);
-		Log::getLogger()->write(LogLevel::Error, subsystem, msg, args);
-	va_end(args);
 }
 
 //-----------------------------------//

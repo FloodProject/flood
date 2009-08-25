@@ -40,8 +40,9 @@ SDLWindow::SDLWindow(Settings& settings)
 {
 	if ( !init() || !open() ) 
 	{
-		Log::MessageDialog( "Could not create render window", LogLevel::Error );
-		exit(1);
+		warn( "render", "Could not create SFML render window" );
+		Log::MessageDialog( "Could not create SDL render window", LogLevel::Error );
+		exit( 1 );
 	}
 }
 

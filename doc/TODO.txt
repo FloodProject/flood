@@ -15,8 +15,9 @@ Add a custom resource type
 TODO:
 -----
 
-Add defines for the different compilers and switch #ifdef pragmas to those...
-Add Window events for resizing, closing, etc.
+Copy-constructors?
+Add timing code for FPS calculation and timing events.
+Add Action Map class for storing input settings for the game.
 Update all the headers to have separators between different sections
 Move from #pragma error instructions to static_assert
 Debug a crash in triton's desktop with an Audigy 4 (XP BSOD in Creative's driver 'ctaud2k.sys')
@@ -74,6 +75,8 @@ vaporEditor:
 DONE:
 -----
 
+Add Window events for resizing, closing, etc.
+Add defines for the different compilers and switch #ifdef pragmas to those...
 Simple VFS (with PhysFS 2.0)
 Clean up the using std decls
 Make the engine memory-leak proof
