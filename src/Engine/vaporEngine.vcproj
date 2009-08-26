@@ -637,6 +637,14 @@
 				RelativePath="..\..\inc\vapor\input\InputManager.h"
 				>
 			</File>
+			<File
+				RelativePath=".\InputMap.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\input\InputMap.h"
+				>
+			</File>
 			<Filter
 				Name="SFML"
 				>

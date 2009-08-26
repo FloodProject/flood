@@ -46,8 +46,7 @@ namespace JoystickEventType
 
 struct JoystickEvent : public input::Event
 {
-friend class Mouse;
-
+friend class Joystick;
 JoystickEvent( JoystickEventType::Enum eventType );
 
 private:
@@ -57,10 +56,8 @@ JoystickEventType::Enum eventType;
 
 struct JoyMoveEvent: public JoystickEvent
 {
-	JoyMoveEvent(unsigned int JoystickId, JoystickAxis::Enum Axis,
-		float Position): JoystickEvent(JoystickEventType::JoystickMove),
-		JoystickId(JoystickId), Axis(Axis), Position(Position){}
-
+	JoyMoveEvent(unsigned int JoystickId, JoystickAxis::Enum Axis, float Position);
+	
 	unsigned int JoystickId;
 	JoystickAxis::Enum	 Axis;
 	float        Position;
@@ -70,20 +67,46 @@ struct JoyMoveEvent: public JoystickEvent
 
 struct JoyButtonEvent: public JoystickEvent
 {	
-	JoyButtonEvent(unsigned int JoystickId, unsigned int Button, 
-		JoystickEventType::Enum eventType): JoystickEvent(eventType),
-		JoystickId(JoystickId), Button(Button){}
+	JoyButtonEvent(unsigned int JoystickId, unsigned int Button, JoystickEventType::Enum eventType);
 
 	unsigned int JoystickId;
 	unsigned int Button;
 };
 
+
 //-----------------------------------//
 
 class Joystick : public Device
 {
-	friend class InputManager;
-	//TODO:: write class
+	Joystick();
+	virtual ~Joystick();
+	
+	// Processes an event (only if it's a joystick event).
+	virtual void processEvent( const input::Event& event );
+
+	// Return this device as a joystick.
+	virtual const input::DeviceType::Enum getType();
+
+	//-----------------------------------//
+	// Events
+	//-----------------------------------//
+
+	fd::delegate< void( const JoyMoveEvent& ) > onJoystickMove;
+	
+	fd::delegate< void( const JoyButtonEvent& ) > onJoystickButtonPress;
+	fd::delegate< void( const JoyButtonEvent& ) > onJoystickButtonRelease;
+	
+
+private:
+
+	// Occurs when a joystick button is pressed.
+	void joyButtonPressed(const JoyButtonEvent& jevt);
+	
+	// Occurs when a joystick button is released.
+	void joyButtonReleased(const JoyButtonEvent& jevt);
+	
+	// Occurs when the joystick is moved.
+	void joyMoved(const JoyMoveEvent& jevt);
 	
 };
 
