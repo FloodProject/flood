@@ -14,6 +14,11 @@
 
 #include "vapor/Platform.h"
 
+namespace vapor {
+	namespace render {
+
+//-----------------------------------//	
+
 /**
  * The adapter class just represents a graphics adapter (video card), and holds
  * data related to it that is interesting for the other classes, like driver
@@ -21,9 +26,6 @@
  * the app is using at runtime, but I still have to check if  we need different
  * classes for different render devices. Hopefully not. :)
  */
-
-namespace vapor {
-	namespace render {
 
 class Adapter
 {
@@ -63,6 +65,8 @@ protected:
 
 	bool supportsVBO;
 };
+
+//-----------------------------------//
 
 } } // end namespaces
 

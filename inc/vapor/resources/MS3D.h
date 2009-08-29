@@ -50,7 +50,10 @@ namespace vapor {
 // TODO: should be a check for compiler instead	
 #ifdef VAPOR_PLATFORM_WINDOWS
 	#include <pshpack1.h>
-#elif
+	#define VAPOR_ALIGN
+#elif defined(VAPOR_PLATFORM_LINUX)
+	#define VAPOR_ALIGN __attribute__ ((__packed__))
+#else
 	#error "Alignment for your platform is not currently supported"
 #endif
 
@@ -60,7 +63,7 @@ struct ms3d_header_t
 	long    version;
 };
 
-struct ms3d_vertex_t
+struct VAPOR_ALIGN ms3d_vertex_t
 {
 	byte	flags;
 	float	vertex[3];
@@ -72,7 +75,7 @@ struct ms3d_vertex_t
 	//float renderColor[3];
 };
 
-struct ms3d_triangle_t
+struct VAPOR_ALIGN ms3d_triangle_t
 {
 	ushort	flags;
 	ushort	vertexIndices[3];
@@ -84,7 +87,7 @@ struct ms3d_triangle_t
 	byte	groupIndex;
 };
 
-struct ms3d_group_t
+struct VAPOR_ALIGN ms3d_group_t
 {
 	unsigned char flags;
 	char name[32];
@@ -93,7 +96,7 @@ struct ms3d_group_t
 	std::vector<char> comment;
 };
 
-struct ms3d_material_t
+struct VAPOR_ALIGN ms3d_material_t
 {
 	char			name[32];
 	float			ambient[4];
@@ -111,8 +114,6 @@ struct ms3d_material_t
 
 #ifdef VAPOR_PLATFORM_WINDOWS
 	#include <poppack.h>
-#elif
-	#error "Alignment for your platform is not currently supported"
 #endif
 
 class MS3D : public Resource

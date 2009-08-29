@@ -154,6 +154,8 @@ void Log::MessageDialog(const std::string& msg, const LogLevel::Enum level)
 		}
 
 		MessageBoxA(nullptr, msg.c_str(), nullptr, style);
+	#elif defined(VAPOR_PLATFORM_LINUX)
+		getLogger()->write(level, "MessageBox", msg.c_str() );
 	#else
 		#error "Missing message box implementation"
 	#endif
@@ -195,7 +197,7 @@ void Log::write(const LogLevel::Enum level, const std::string& subsystem,
 {
 	if (!fp) return;
 
-	char* s = nullptr;
+	const char* s = nullptr;
 
 	switch(level)
 	{
@@ -226,6 +228,27 @@ void Log::write(const LogLevel::Enum level, const std::string& subsystem,
 	fflush(fp);
 
 	even = !even;
+}
+
+//-----------------------------------//
+
+void Log::write(const LogLevel::Enum level, const std::string& subsystem, 
+	const char* msg, ...)
+{
+	if(!Log::getLogger()) return;
+
+	switch(level)
+	{
+	case LogLevel::Info:
+		info(subsystem, msg);
+		break;
+	case LogLevel::Warning:
+		warn(subsystem, msg);
+		break;
+	case LogLevel::Error:
+		error(subsystem, msg);
+		break;
+	}
 }
 
 //-----------------------------------//

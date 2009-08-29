@@ -25,7 +25,7 @@ namespace vapor {
 	#define DYNLIB_LOAD(lib)			LoadLibraryExA(lib, NULL, LOAD_WITH_ALTERED_SEARCH_PATH)
 	#define DYNLIB_GETSYM(lib, sym)		GetProcAddress(lib, sym)
 	#define DYNLIB_UNLOAD(lib)			FreeLibrary(lib)
-#elif
+#else
 	#error "Support for dynamic libraries not found"
 #endif
 

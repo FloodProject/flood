@@ -17,7 +17,7 @@
 	#pragma warning( disable : 4512 )
 	#include <boost/foreach.hpp>
 	#pragma warning( pop )
-#elif
+#else
 	#include <boost/foreach.hpp>
 #endif
 
@@ -35,6 +35,6 @@
 	//#pragma warning( disable : 1296 )
 	#include <fd/delegate.hpp>
 	#pragma warning( pop )
-#elif
+#else
 	#include <fd/delegate.hpp>
 #endif

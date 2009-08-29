@@ -41,7 +41,7 @@ VFS::VFS(const std::string& app)
 
 VFS::~VFS()
 {
-	std::vector< const std::string >::iterator it;
+	std::vector< std::string >::iterator it;
 	
 	for( it = mountPoints.begin(); it != mountPoints.end(); it++)
 	{

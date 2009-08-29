@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine by triton © (2008-2009)
+* vaporEngine by triton Â© (2008-2009)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -10,13 +10,21 @@
 
 namespace vapor {
 	namespace render {
+		
+//-----------------------------------//		
 
 Buffer::Buffer() 
 {
+	
 }
+
+//-----------------------------------//
 
 Buffer::~Buffer()
 {
+
 }
+
+//-----------------------------------//
 
 } } // end namespaces

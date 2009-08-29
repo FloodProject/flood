@@ -50,8 +50,8 @@ class Buffer
 {
 public:
 
-	Buffer() { }
-	virtual ~Buffer() { }
+	Buffer();
+	virtual ~Buffer();
 };
 
 } } // end namespaces

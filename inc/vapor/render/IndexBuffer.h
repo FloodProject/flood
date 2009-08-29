@@ -35,8 +35,8 @@ class IndexBuffer : public Buffer
 {
 public:
 
-	IndexBuffer() { }
-	virtual ~IndexBuffer() { }
+	IndexBuffer();
+	virtual ~IndexBuffer();
 
 	// Gets the type of indexes of this buffer.
 	IndexBufferType::Enum getIndexType() const { return indexType; }

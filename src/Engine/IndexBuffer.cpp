@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine by triton © (2008-2009)
+* vaporEngine by triton Â© (2008-2009)
 *
 *	<http://www.portugal-a-programar.org/
 *
@@ -8,15 +8,23 @@
 
 #include "vapor/render/IndexBuffer.h"
 
+namespace vapor {
+	namespace render {
+
+//-----------------------------------//
+
 IndexBuffer::IndexBuffer(void)
 {
+	
 }
+
+//-----------------------------------//
 
 IndexBuffer::~IndexBuffer(void)
 {
+	
 }
 
-bool IndexBuffer::is32bitIndexed()
-{
-	return _is32bit;
-}
+//-----------------------------------//
+
+} } // end namespaces

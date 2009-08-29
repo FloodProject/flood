@@ -22,19 +22,24 @@
 	#define VAPOR_PLATFORM_WINDOWS
 #elif defined( __APPLE__ ) || defined( MACOSX )
 	#define VAPOR_PLATFORM_MACOSX
-#elif
+#elif defined(__LINUX) || defined(__LINUX__) || defined(LINUX)
 	#define VAPOR_PLATFORM_LINUX
 #else
 	#error "Unknown platform (not currently supported by the engine)"
 #endif
 
-//---------------------------------------------------------------------//
+//-----------Ŕ----------------------------------------------------------//
 // Compiler detection
 //---------------------------------------------------------------------//
 
 #ifdef _MSC_VER
 	// Microsoft Visual C++
 	#define VAPOR_COMPILER_MSVC
+#elif defined(__GNUG__)
+	// GCC
+	#define VAPOR_COMPILER_GCC
+#else
+	#error "Unknown compiler (not currently supported by the engine)"
 #endif
 
 #if defined( _DEBUG ) || defined( ___DEBUG ) || defined( DEBUG )

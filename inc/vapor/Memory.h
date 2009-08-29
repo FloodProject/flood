@@ -15,7 +15,11 @@
 //-------------------------------------------------------------------------//
 
 #if defined(VAPOR_MEMORY_TR1_VENDOR)
-	#include <memory>
+	#if defined(VAPOR_COMPILER_MSVC)
+		#include <memory>
+	#elif defined(VAPOR_COMPILER_GCC)
+		#include <tr1/memory>
+	#endif
 #elif defined(VAPOR_MEMORY_TR1_BOOST)
 	#include <boost/tr1/memory.hpp>
 #endif

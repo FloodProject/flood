@@ -50,7 +50,7 @@ private:
 	void setDefaultConfig(const std::string& app);
 
 	// holds the mounted archives/directories in the filesystem
-	std::vector< const std::string > mountPoints;
+	std::vector< std::string > mountPoints;
 };
 
 } } // end namespaces

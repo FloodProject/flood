@@ -41,7 +41,7 @@ void InputManager::addDevice( input::Device* device )
 	devices.push_back( device );
 
 	info( "input", "Registered a new input device ('%s')", 
-		DeviceType::getString( device->getType() ) );
+		DeviceType::getString( device->getType() ).c_str() );
 }
 
 //-----------------------------------//

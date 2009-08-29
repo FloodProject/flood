@@ -18,6 +18,8 @@
 #ifdef VAPOR_COMPILER_MSVC
 	// disable Visual C++ fopen deprecation warning
 	#pragma warning(disable : 4996)
+	
+	#define access _access
 #endif
 
 namespace vapor {
@@ -83,16 +85,18 @@ long NativeFile::read(void* buffer, long sz)
 
 bool NativeFile::exists()
 {
-	return _access(path.c_str(), F_OK) == 0;
+	return access(path.c_str(), F_OK) == 0;
 }
 
 //-----------------------------------//
 
 bool NativeFile::exists(std::string path)
 {
-	return _access(path.c_str(), F_OK) == 0;
+	return access(path.c_str(), F_OK) == 0;
 }
 
 //-----------------------------------//
 
 } // end namespace
+
+#undef access

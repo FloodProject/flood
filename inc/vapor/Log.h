@@ -12,6 +12,22 @@
 
 namespace vapor {
 	namespace log {
+		
+//-----------------------------------//
+
+/**
+ * Severity level of the log message.
+ */
+
+namespace LogLevel 
+{
+	enum Enum
+	{
+		Info,
+		Warning,
+		Error
+	};
+};
 
 //-----------------------------------//
 
@@ -31,22 +47,6 @@ void debug(const char* msg, ...);
 void info(const std::string& subsystem, const char* msg, ...);
 void warn(const std::string& subsystem, const char* msg, ...);
 void error(const std::string& subsystem, const char* msg, ...);
-
-//-----------------------------------//
-
-/**
- * Severity level of the log message.
- */
-
-namespace LogLevel 
-{
-	enum Enum
-	{
-		Info,
-		Warning,
-		Error
-	};
-};
 
 //-----------------------------------//
 
@@ -78,6 +78,8 @@ public:
 	// Low-level logging implementation.
 	void write(const LogLevel::Enum level, const std::string& subsystem, 
 		const char* msg, va_list args);
+		
+	void write(const LogLevel::Enum, const std::string&, const char*, ...);
 
 protected:
 

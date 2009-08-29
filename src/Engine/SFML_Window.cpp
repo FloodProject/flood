@@ -23,7 +23,8 @@ SFML_Window::SFML_Window(const Settings& settings)
 	if( !open() )
 	{
 		warn( "render", "Could not create SFML render window" );
-		Log::MessageDialog( "Could not create SFML render window", LogLevel::Error );
+		Log::MessageDialog( "Could not create SFML render window",
+			LogLevel::Error );
 		exit( 1 );
 	}
 }
@@ -78,11 +79,12 @@ void SFML_Window::createWindow()
 {
 	if(settings.getCustomHandle())
 	{
-		window.Create(settings.getCustomHandle(), sfmlSettings);	
+		window.Create( sf::WindowHandle( settings.getCustomHandle() ),
+			sfmlSettings );	
 	}
 	else
 	{		
-		window.Create(vMode, settings.getTitle(), flags, sfmlSettings);
+		window.Create( vMode, settings.getTitle(), flags, sfmlSettings );
 	}
 }
 //-----------------------------------//
