@@ -26,4 +26,6 @@ Scripting languages
 	
 	Falcon (http://www.falconpl.org/)
 	
+	Guile
+	
 http://www.ogre3d.org/wiki/index.php/Libraries#Scripting
