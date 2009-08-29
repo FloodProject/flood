@@ -12,8 +12,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-Framework::Framework(const std::string app)
-	:  Engine(app, false)
+Framework::Framework(const std::string app, const char** argv)
+	:  Engine(app, argv, false)
 {
 	info("framework", "Engine framework getting into action");
 }

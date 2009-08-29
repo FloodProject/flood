@@ -36,8 +36,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-Engine::Engine(std::string app, bool autoInit)
-	: app(app)
+Engine::Engine(std::string app, const char** argv, bool autoInit)
+	: app(app), argv(argv)
 {
 	if(autoInit)
 	{
@@ -71,7 +71,7 @@ void Engine::init()
 	info( "engine", "Starting vaporEngine version '%s'", VAPOR_ENGINE_VERSION );
 
 	// create the virtual filesystem
-	vfs = new VFS(app);
+	vfs = new VFS(app, argv[0]);
 
 	// create the resource manager
 	resourceManager = new ResourceManager();
@@ -150,10 +150,9 @@ void Engine::setupResourceLoaders()
 		loaders.push_back(loader);
 	#endif
 
-	std::vector<ResourceLoader*>::iterator it;
-	for(it = loaders.begin(); it != loaders.end(); it++)
+	foreach( ResourceLoader* loader, loaders )
 	{
-		resourceManager->registerLoader(*it);
+		resourceManager->registerLoader( loader );
 	}
 }
 

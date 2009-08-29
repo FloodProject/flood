@@ -33,8 +33,8 @@ using namespace vapor::input;
 
 //-----------------------------------//
 
-Example::Example()
-	: Framework("Example")
+Example::Example(const char** argv)
+	: Framework("Example", argv)
 {
 
 }
@@ -67,7 +67,7 @@ void Example::onInit()
 	
 	if( !file.close() )
 	{
-		error( "Example:", "Failed to close file: %s", file.getPath() );
+		error( "Example:", "Failed to close file: %s", file.getPath().c_str() );
 	}
 
 	r = b = g = 0.0f;

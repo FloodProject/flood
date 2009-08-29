@@ -21,9 +21,9 @@ namespace vapor {
 
 //-----------------------------------//
 
-VFS::VFS(const std::string& app)
+VFS::VFS(const std::string& app, const char* argv0 )
 {
-	int err = PHYSFS_init( nullptr );
+	int err = PHYSFS_init( argv0 );
 
 	if( err == 0 ) 
 	{

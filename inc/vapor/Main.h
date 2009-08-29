@@ -11,17 +11,21 @@
 #include <vapor/Framework.h>
 
 #ifndef VAPOR_EXAMPLE_NAME
-	#error "vapor::Framework code needs you need to define VAPOR_EXAMPLE_NAME.
+	#error "vapor::Framework code needs you need to define VAPOR_EXAMPLE_NAME."
 #endif
 
 #ifdef VAPOR_PLATFORM_WINDOWS
 int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
     LPSTR lpCmdLine, int nCmdShow)
 #else
-int main()
+int main(int argc, const char** argv)
 #endif
 {
-	VAPOR_EXAMPLE_NAME example;
+	#ifdef VAPOR_PLATFORM_WINDOWS
+		VAPOR_EXAMPLE_NAME example;
+	#else
+		VAPOR_EXAMPLE_NAME example( argv );		
+	#endif
 	example.run();
 
 	#if defined(VAPOR_MEMORY_LEAK_DETECTOR) && defined(VAPOR_PLATFORM_WINDOWS)

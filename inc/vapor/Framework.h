@@ -25,7 +25,7 @@ class Framework : protected Engine
 {
 public:
 
-	Framework(const std::string app);
+	Framework(const std::string app, const char** argv);
 	virtual ~Framework();
 
 	// Kickstart the framework in action.

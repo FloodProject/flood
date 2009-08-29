@@ -34,7 +34,9 @@ public:
 	// If autoInit is true, then the contructor will make sure
 	// everything is properly set up when you instantiate the object,
 	// else you will have to call the methods manually, to initialize.
-	Engine(std::string app = "vaporApp", bool autoInit = true);
+	Engine(std::string app = "vaporApp", const char** argv = nullptr,
+		bool autoInit = true);
+		
 	virtual ~Engine();
 
 	//-----------------------------------//
@@ -111,6 +113,9 @@ protected:
 
 	// Application name
 	std::string app;
+	
+	// Arguments
+	const char** argv;
 };
 
 } // end namespace

@@ -34,7 +34,7 @@ class VFS
 {
 public:
 
-	VFS(const std::string& app);
+	VFS( const std::string& app, const char* argv0 = nullptr );
 	~VFS();
 
 	// Mount an archive into the virtual file system point.
