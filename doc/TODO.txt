@@ -75,6 +75,7 @@ vaporEditor:
 DONE:
 -----
 
+Switch to precompiled headers (BIG GAIN!!)
 Add Window events for resizing, closing, etc.
 Add defines for the different compilers and switch #ifdef pragmas to those...
 Simple VFS (with PhysFS 2.0)

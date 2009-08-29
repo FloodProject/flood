@@ -6,6 +6,8 @@
 *
 ************************************************************************/
 
+#include "vapor/PCH.h"
+
 #include "vapor/math/Vector3.h"
 
 //namespace Math { const Vector3 Zero (0.0f, 0.0f, 0.0f); }

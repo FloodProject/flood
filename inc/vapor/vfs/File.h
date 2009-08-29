@@ -87,6 +87,8 @@ private:
 	AccessMode::Enum accessMode;
 	PHYSFS_File *file;
 	std::string	path;
+
+	bool closed;
 };
 
 } } // end namespaces

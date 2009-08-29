@@ -17,14 +17,18 @@
 #include "vapor/render/Window.h"
 #include "vapor/render/Target.h"
 #include "vapor/render/Adapter.h"
-#include "vapor/render/BufferManager.h"
-#include "vapor/render/VertexBuffer.h"
 
 #include "vapor/math/Matrix.h"
 #include "vapor/math/Color.h"
 
 namespace vapor {
 	namespace render {
+
+//-----------------------------------//
+
+class BufferManager;
+
+//-----------------------------------//
 
 /**
  * Represents the rendering device we are using. At startup the application
@@ -103,6 +107,8 @@ private:
 
 	void checkExtensions();
 };
+
+//-----------------------------------//
 
 } } // end namespaces
 

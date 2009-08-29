@@ -9,10 +9,13 @@
 #pragma once
 
 #include "vapor/Platform.h"
+
 #include "vapor/render/Buffer.h"
 
 namespace vapor {
 	namespace render {
+
+//-----------------------------------//
 
 /**
  * Type of the indexes stored in this buffer.
@@ -26,6 +29,8 @@ namespace IndexBufferType
 		I32bit
 	};
 }
+
+//-----------------------------------//
 
 /**
  * Represents an index buffer.
@@ -49,5 +54,7 @@ private:
 	IndexBufferType::Enum indexType;
 	uint numIndexes;
 };
+
+//-----------------------------------//
 
 } } // end namespaces

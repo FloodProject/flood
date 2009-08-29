@@ -6,11 +6,13 @@
 *
 ************************************************************************/
 
+#include "vapor/PCH.h"
+
+#ifdef VAPOR_RENDERER_OPENGL
+
 #include "vapor/render/Device.h"
 #include "vapor/render/Adapter.h"
 #include "vapor/render/GL.h"
-
-#ifdef VAPOR_RENDERER_OPENGL
 
 namespace vapor {
 	namespace render {

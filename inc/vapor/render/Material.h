@@ -6,22 +6,26 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#pragma once
 
-#include "vapor/resources/TTF.h"
 #include "vapor/Platform.h"
 
 namespace vapor {
-	namespace resources {
+	namespace render {
 
-TTF::TTF(const char* font)
+/**
+ * Rendering material.
+ * TODO: Serialization?
+ */
+
+class Material
 {
+public:
 
-}
+	Material();
+	~Material();
 
-TTF::~TTF()
-{
-}
-
+private:
+};
 
 } } // end namespaces

@@ -8,6 +8,8 @@
 
 // based on official Milkshape3D viewer source
 
+#include "vapor/PCH.h"
+
 #include "vapor/resources/MS3D.h"
 #include "vapor/vfs/File.h"
 
@@ -877,7 +879,5 @@ void MS3D::read_triangles()
 //	float matLocal[3][4];
 //	float matGlobal[3][4];
 //};
-
-
 
 } } // end namespaces

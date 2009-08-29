@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/CompileOptions.h"
+#include "vapor/PCH.h"
 
 #ifdef VAPOR_AUDIO_OPENAL
 

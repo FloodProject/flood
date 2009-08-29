@@ -6,6 +6,8 @@
 *
 ************************************************************************/
 
+#include "vapor/PCH.h"
+
 #include "vapor/render/SDL_Window.h"
 #include "vapor/Log.h"
 

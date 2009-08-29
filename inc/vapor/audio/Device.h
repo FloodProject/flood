@@ -13,11 +13,14 @@
 #ifdef VAPOR_AUDIO_OPENAL
 
 #include "vapor/Platform.h"
+
 #include "vapor/math/Vector3.h"
 #include "vapor/resources/Sound.h"
 
 #include <al.h>
 #include <alc.h>
+
+//-----------------------------------//
 
 namespace vapor { 
 	namespace audio {
@@ -80,7 +83,7 @@ private:
 	std::map< shared_ptr<resources::Sound>, shared_ptr<audio::Buffer> > soundBuffers;
 };
 
-} } // end namespaces
+//-----------------------------------//
 
 #else
 
@@ -90,7 +93,9 @@ private:
 namespace vapor { 
 	namespace audio {
 
-} } // end namespaces
-
 #endif
+
+//-----------------------------------//
+
+} } // end namespaces
 

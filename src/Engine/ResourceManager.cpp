@@ -6,6 +6,8 @@
 *
 ************************************************************************/
 
+#include "vapor/PCH.h"
+
 #include "vapor/resources/ResourceManager.h"
 
 #include "vapor/vfs/File.h"
@@ -29,9 +31,10 @@ ResourceManager::~ResourceManager()
 	// TODO: should all resources be deleted here? hmm...
 
 	// delete resource loaders
-	std::map< std::string, ResourceLoader* >::iterator it;
-	for(it = resourceLoaders.begin(); it != resourceLoaders.end(); it++)
-		delete it->second;
+	typedef std::pair< std::string, ResourceLoader* > pair_t;
+
+	foreach( pair_t entry, resourceLoaders )
+		delete entry.second;
 }
 
 //-----------------------------------//

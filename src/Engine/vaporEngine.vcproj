@@ -49,8 +49,8 @@
 				RuntimeLibrary="3"
 				DisableLanguageExtensions="false"
 				RuntimeTypeInfo="false"
-				UsePrecompiledHeader="0"
-				PrecompiledHeaderThrough="vapor.h"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="vapor/PCH.h"
 				WarningLevel="4"
 				WarnAsError="false"
 				Detect64BitPortabilityProblems="false"
@@ -120,7 +120,9 @@
 				EnableFunctionLevelLinking="true"
 				DisableLanguageExtensions="false"
 				RuntimeTypeInfo="false"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="PCH.h"
+				PrecompiledHeaderFile="$(IntDir)\$(TargetName).pch"
 				WarningLevel="4"
 				WarnAsError="false"
 				DebugInformationFormat="3"
@@ -207,6 +209,14 @@
 			</File>
 			<File
 				RelativePath="..\..\inc\vapor\render\GL.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Material.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\render\Material.h"
 				>
 			</File>
 			<File
@@ -486,6 +496,30 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PCH.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\PCH.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\inc\vapor\Platform.h"
 				>
 			</File>
@@ -640,6 +674,14 @@
 			<File
 				RelativePath=".\InputMap.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\inc\vapor\input\InputMap.h"

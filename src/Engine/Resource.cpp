@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#pragma once
+#include "vapor/PCH.h"
 
 #include "vapor/resources/Resource.h"
 

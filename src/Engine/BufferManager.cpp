@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/CompileOptions.h"
+#include "vapor/PCH.h"
 
 #ifdef VAPOR_RENDERER_OPENGL
 
@@ -32,15 +32,15 @@ BufferManager::~BufferManager()
 
 //-----------------------------------//
 
-shared_ptr<VertexBuffer> BufferManager::createVertexBuffer(uint numElements, 
-		VertexDeclaration decl, BufferUsage::Enum bue, BufferType::Enum bte)
-{
-	VertexBuffer *buffer = new VertexBuffer(numElements, decl, bue, bte);
-	vertexBuffers.push_back(buffer);
-
-	shared_ptr<VertexBuffer> ptr(vertexBuffers.back());
-	return ptr;
-}
+//shared_ptr<VertexBuffer> BufferManager::createVertexBuffer(uint numElements, 
+//		VertexDeclaration decl, BufferUsage::Enum bue, BufferType::Enum bte)
+//{
+//	VertexBuffer *buffer = new VertexBuffer(numElements, decl, bue, bte);
+//	vertexBuffers.push_back(buffer);
+//
+//	shared_ptr<VertexBuffer> ptr(vertexBuffers.back());
+//	return ptr;
+//}
 
 //-----------------------------------//
 

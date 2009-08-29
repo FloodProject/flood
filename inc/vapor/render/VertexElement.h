@@ -14,6 +14,8 @@
 namespace vapor {
 	namespace render {
 
+//-----------------------------------//
+
 /**
  * Attribute of a vertex element.
  */
@@ -30,6 +32,8 @@ namespace VertexAttribute
 	};
 }
 
+//-----------------------------------//
+
 /**
  * Data type of a vertex element.
  */
@@ -45,6 +49,8 @@ namespace VertexDataType
 	};
 }
 
+//-----------------------------------//
+
 /**
  * Represents a single vertex element. Vertex elements are used to form
  * a vertex format declaration, and each specify the data type and the
@@ -59,5 +65,7 @@ struct VertexElement
 };
 
 typedef std::vector<VertexElement> VertexDeclaration;
+
+//-----------------------------------//
 
 } } // end namespaces

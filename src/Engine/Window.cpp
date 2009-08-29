@@ -6,6 +6,8 @@
 *
 ************************************************************************/
 
+#include "vapor/PCH.h"
+
 #include "vapor/render/Window.h"
 
 #if defined(VAPOR_WINDOWING_SDL)

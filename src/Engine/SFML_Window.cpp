@@ -6,6 +6,8 @@
 *
 ************************************************************************/
 
+#include "vapor/PCH.h"
+
 #include "vapor/render/SFML_Window.h"
 
 #ifdef VAPOR_WINDOWING_SFML
@@ -25,7 +27,6 @@ SFML_Window::SFML_Window(const Settings& settings)
 		warn( "render", "Could not create SFML render window" );
 		Log::MessageDialog( "Could not create SFML render window",
 			LogLevel::Error );
-		exit( 1 );
 	}
 }
 
@@ -112,6 +113,7 @@ bool SFML_Window::pumpEvents()
 		switch( event.Type )
 		{
 			case sf::Event::Closed:
+				handleWindowClose();
 				return false;
 			
 			case sf::Event::Resized:

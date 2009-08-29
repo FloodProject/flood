@@ -6,6 +6,8 @@
 *
 ************************************************************************/
 
+#include "vapor/PCH.h"
+
 #include <cstdarg>
 #include <ctime>
 
@@ -28,12 +30,10 @@ Log* Log::engineLog;
 void debug(const char* str, ...)
 {
 #ifdef VAPOR_DEBUG
+	char fmt[BUF_MAX_SIZE];
 
 	va_list args;
-	
 	va_start(args, str);
-
-	char fmt[BUF_MAX_SIZE];
 
 #ifdef VAPOR_COMPILER_MSVC
 	char msg[BUF_MAX_SIZE];
@@ -49,7 +49,6 @@ void debug(const char* str, ...)
 #endif
 
 	va_end(args);
-
 #endif
 }
 

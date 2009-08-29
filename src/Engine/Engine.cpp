@@ -6,6 +6,8 @@
 *
 ************************************************************************/
 
+#include "vapor/PCH.h"
+
 #include "vapor/Engine.h"
 
 #ifdef VAPOR_IMAGE_PICOPNG
@@ -71,7 +73,7 @@ void Engine::init()
 	info( "engine", "Starting vaporEngine version '%s'", VAPOR_ENGINE_VERSION );
 
 	// create the virtual filesystem
-	vfs = new VFS(app, argv[0]);
+	vfs = new VFS(app, argv ? argv[0] : nullptr);
 
 	// create the resource manager
 	resourceManager = new ResourceManager();

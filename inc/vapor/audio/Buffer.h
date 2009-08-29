@@ -13,11 +13,14 @@
 #ifdef VAPOR_AUDIO_OPENAL
 
 #include "vapor/Platform.h"
+
 #include "vapor/resources/Sound.h"
 #include "vapor/audio/Device.h"
 
 namespace vapor {
 	namespace audio {
+
+//-----------------------------------//
 
 /**
  * Wraps an OpenAL buffer in a class. A buffer in OpenAL is the object 
@@ -52,6 +55,8 @@ protected:
 	// Holds the source id from OpenAL.
 	ALuint bufferId;
 };
+
+//-----------------------------------//
 
 } } // end namespaces
 

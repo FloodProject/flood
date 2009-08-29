@@ -6,6 +6,8 @@
 *
 ************************************************************************/
 
+#include <vapor/PCH.h>
+
 #include <vapor/Framework.h>
 
 namespace vapor {

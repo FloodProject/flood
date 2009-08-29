@@ -24,6 +24,10 @@
 	#include <boost/tr1/memory.hpp>
 #endif
 
+namespace tr1 = std::tr1;
+
+//namespace std { using tr1::shared_ptr; };
+
 using std::tr1::shared_ptr;
 
 //-------------------------------------------------------------------------//

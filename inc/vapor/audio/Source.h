@@ -23,6 +23,8 @@
 namespace vapor {
 	namespace audio {
 
+//-----------------------------------//
+
 /**
  * Wraps an OpenAL source in a class. A source in OpenAL is the object 
  * that contains the position of the sound being played in 2D, and also 
@@ -86,6 +88,8 @@ protected:
 	// Holds the source id from OpenAL.
 	ALuint sourceId;
 };
+
+//-----------------------------------//
 
 } } // end namespaces
 

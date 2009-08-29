@@ -34,9 +34,9 @@ public:
 	BufferManager();
 	~BufferManager();
 
-	// creates a vertex buffer bound to the given data
-	std::tr1::shared_ptr<VertexBuffer> createVertexBuffer(uint numElements, 
-		VertexDeclaration decl, BufferUsage::Enum bue, BufferType::Enum bte);
+	//// creates a vertex buffer bound to the given data
+	//std::tr1::shared_ptr<VertexBuffer> createVertexBuffer(uint numElements, 
+	//	VertexDeclaration decl, BufferUsage::Enum bue, BufferType::Enum bte);
 
 	// creates a Index Buffer bound to the given data
 	//virtual shared_ptr<IndexBuffer> createIndexBuffer();

@@ -9,12 +9,17 @@
 #pragma once
 
 #include "vapor/Platform.h"
+
 #include "vapor/input/Device.h"
 
 namespace vapor {
 	namespace input {
 
 //-----------------------------------//
+
+/**
+ * Different types of joystick axis.
+ */
 
 namespace JoystickAxis
 {
@@ -32,6 +37,10 @@ namespace JoystickAxis
 
 //-----------------------------------//
 
+/**
+ * Different types of joystick events.
+ */
+
 namespace JoystickEventType
 {
 	enum Enum
@@ -44,35 +53,51 @@ namespace JoystickEventType
 
 //-----------------------------------//
 
+/**
+ * Generic event for joystick actions.
+ */
+
 struct JoystickEvent : public input::Event
 {
-friend class Joystick;
-JoystickEvent( JoystickEventType::Enum eventType );
+	friend class Joystick;
+
+	JoystickEvent( JoystickEventType::Enum eventType );
 
 private:
 
-JoystickEventType::Enum eventType;
-};
-
-struct JoyMoveEvent: public JoystickEvent
-{
-	JoyMoveEvent(unsigned int JoystickId, JoystickAxis::Enum Axis, float Position);
-	
-	unsigned int JoystickId;
-	JoystickAxis::Enum	 Axis;
-	float        Position;
+	JoystickEventType::Enum eventType;
 };
 
 //-----------------------------------//
 
-struct JoyButtonEvent: public JoystickEvent
-{	
-	JoyButtonEvent(unsigned int JoystickId, unsigned int Button, JoystickEventType::Enum eventType);
+/**
+ * Event that happens when a joystick is moved.
+ */
 
-	unsigned int JoystickId;
-	unsigned int Button;
+struct JoyMoveEvent: public JoystickEvent
+{
+	JoyMoveEvent(uint JoystickId, JoystickAxis::Enum Axis, 
+		float Position);
+	
+	uint JoystickId;
+	JoystickAxis::Enum Axis;
+	float Position;
 };
 
+//-----------------------------------//
+
+/**
+ * Event that happens when a joystick button is pressed or released.
+ */
+
+struct JoyButtonEvent: public JoystickEvent
+{	
+	JoyButtonEvent(uint JoystickId, uint Button, 
+		JoystickEventType::Enum eventType);
+
+	uint JoystickId;
+	uint Button;
+};
 
 //-----------------------------------//
 
@@ -91,23 +116,22 @@ class Joystick : public Device
 	// Events
 	//-----------------------------------//
 
+	// Occurs when the joystick is moved.
 	fd::delegate< void( const JoyMoveEvent& ) > onJoystickMove;
 	
+	// Occurs when a joystick button is pressed.
 	fd::delegate< void( const JoyButtonEvent& ) > onJoystickButtonPress;
+	
+	// Occurs when a joystick button is released.
 	fd::delegate< void( const JoyButtonEvent& ) > onJoystickButtonRelease;
 	
 
 private:
 
-	// Occurs when a joystick button is pressed.
+	// Private event handlers.
 	void joyButtonPressed(const JoyButtonEvent& jevt);
-	
-	// Occurs when a joystick button is released.
 	void joyButtonReleased(const JoyButtonEvent& jevt);
-	
-	// Occurs when the joystick is moved.
 	void joyMoved(const JoyMoveEvent& jevt);
-	
 };
 
 //-----------------------------------//

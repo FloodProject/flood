@@ -46,6 +46,10 @@
 	#define VAPOR_DEBUG
 #endif
 
+#if !defined(VAPOR_DEBUG) && !defined(NDEBUG)
+	#define NDEBUG
+#endif
+
 //---------------------------------------------------------------------//
 // Platform headers
 //---------------------------------------------------------------------//

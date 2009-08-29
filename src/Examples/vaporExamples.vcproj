@@ -50,6 +50,7 @@
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough=""
+				PrecompiledHeaderFile=""
 				WarningLevel="4"
 				DebugInformationFormat="4"
 			/>
@@ -130,6 +131,8 @@
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
+				PrecompiledHeaderThrough=""
+				PrecompiledHeaderFile=""
 				WarningLevel="4"
 				DebugInformationFormat="3"
 			/>

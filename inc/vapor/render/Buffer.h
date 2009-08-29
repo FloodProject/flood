@@ -13,6 +13,8 @@
 namespace vapor {
 	namespace render {
 
+//-----------------------------------//
+
 /**
  * Use these enums to represent the lifetime and usage patterns of a 
  * buffer. These help the engine make better decisions about where to
@@ -29,6 +31,8 @@ namespace BufferUsage
 	};
 }
 
+//-----------------------------------//
+
 namespace BufferType
 {
 	enum Enum
@@ -38,6 +42,8 @@ namespace BufferType
 		Dynamic		// Content always changes
 	};
 }
+
+//-----------------------------------//
 
 /**
  * Represents a buffer of data stored in memory. They mainly store
@@ -52,6 +58,12 @@ public:
 
 	Buffer();
 	virtual ~Buffer();
+
+protected:
+
+    uint id;
 };
+
+//-----------------------------------//
 
 } } // end namespaces

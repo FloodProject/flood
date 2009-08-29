@@ -6,6 +6,8 @@
 *
 ************************************************************************/
 
+#include "vapor/PCH.h"
+
 #include "vapor/CompileOptions.h"
 
 #ifdef VAPOR_AUDIO_OGG

@@ -22,7 +22,7 @@ class Example : public vapor::Framework
 {
 public:
 
-	Example(const char** argv);
+	Example(const char** argv = nullptr);
 
 protected:
 

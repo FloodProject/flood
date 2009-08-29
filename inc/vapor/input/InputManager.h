@@ -51,8 +51,6 @@ public:
 
 private:
 
-	//std::vector< const Event& > events;
-
 	std::vector< input::Device* > devices;
 };
 

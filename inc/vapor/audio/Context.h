@@ -20,6 +20,8 @@
 namespace vapor {
 	namespace audio {
 
+//-----------------------------------//
+
 /**
  * Wraps an OpenAL context in a class. A context in OpenAL is like a context 
  * in OpenGL, in that it's properties are independent of of other contexts. 
@@ -69,6 +71,8 @@ protected:
 	// Holds the last OpenAL error code
 	int error;
 };
+
+//-----------------------------------//
 
 } } // end namespaces
 

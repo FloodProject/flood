@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/CompileOptions.h"
+#include "vapor/PCH.h"
 
 #ifdef VAPOR_VFS_PHYSFS
 
@@ -20,7 +20,7 @@ namespace vapor {
 //-----------------------------------//
 
 File::File(const std::string path, AccessMode::Enum e)
-	: accessMode(e), path(path), file( nullptr )
+	: accessMode(e), path(path), file( nullptr ), closed( false )
 {
 	open();
 }
@@ -37,8 +37,6 @@ File::File(const char* path, AccessMode::Enum e)
 
 File::~File() 
 {
-	if( !file ) return;
-
 	close();
 }
 
@@ -71,6 +69,7 @@ void File::open()
 bool File::close()
 {
 	if( !file ) return false;
+	if( closed ) return true;
 
 	// close the file and check for errors
 	int err = PHYSFS_close( file );
@@ -82,6 +81,9 @@ bool File::close()
 
 		return false;
 	}
+
+	file = nullptr;
+	closed = true;
 
 	return true;
 }
