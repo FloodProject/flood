@@ -39,6 +39,7 @@ typedef unsigned long	ulong;
 #include <vector>
 #include <list>
 #include <map>
+#include <tuple>
 
 //---------------------------------------------------------------------//
 // C++0x compatability macros

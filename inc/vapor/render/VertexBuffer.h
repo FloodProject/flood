@@ -17,9 +17,11 @@
 namespace vapor {
 	namespace render {
 
+//-----------------------------------//
+
 /**
  * Attribute of a vertex element.
- * Matches the OpenGL specification:
+ * Matches the (NVIDIA-only?) specification
  *   0 – gl_Vertex
  *   2 – gl_Normal
  *   3 – gl_Color
@@ -55,6 +57,8 @@ namespace VertexAttribute
     };
 }
 
+//-----------------------------------//
+
 namespace GLPrimitiveType
 {
     enum Enum
@@ -70,6 +74,8 @@ namespace GLPrimitiveType
     };
 }
 
+//-----------------------------------//
+
 /**
  * Represents a vertex buffer.  One limitation here is that all data is tied to the vertex
  * so if you want a normal per primitive and not per vertex you will have to duplicate
@@ -81,11 +87,31 @@ class VertexBuffer : public Buffer
 public:
 
     // Note: calls glGenBuffers (Base class Buffer, could do this)
-	VertexBuffer() : built(false) { }
+	VertexBuffer();
 
     // Note: calls glDeleteBuffers (Base class Buffer, could do this)
     virtual ~VertexBuffer();
- //   
+
+    // Updates the internal VBO with current values for vertices, 
+    // normals, colors and texture coords.  Returns false on error, true otherwise.
+    // Note: calls glBufferData
+    bool build( BufferUsage::Enum bufferUsage, BufferAccess::Enum bufferAccess );
+    
+    // This method will make the internal VBO id bound so any future
+    // glDrawXXX calls will use this VBO as its data.  Returns false on error, true
+    // otherwise.
+    // Note: calls glBindBuffer, glVertexAttribPointer, glEnableVertexAttribArray ,glEnableClientState
+    bool bind();
+    
+    // Puts opengl back into immediate mode
+    // Note: calls glBindBuffer( 0 ), glDisableVertexAttribArray 
+    bool unbind();
+    
+    // Clears this vertex buffer. All vertex data will be gone.
+    void clear();
+
+	bool set( VertexAttribute::Enum attr, const std::vector< math::Vector3 >& data );
+
  //   // these are all the possible types supported by glVertexAttrib
  //   bool set( VertexAttribute::Enum attr, std::vector< byte > const& data );
  //   //bool set( VertexAttribute::Enum attr, std::vector< ubyte > const& data );
@@ -135,76 +161,24 @@ public:
  //   //    std::vector< byte > bytev( data.size() * sizeof( math::Vector4< double >) );
  //   //    memcpy( &bytev[0], &data[0], bytev.size() );
  //   //    datamap[attr] = std::tuple( 4, PrimitiveType::DOUBLE, bytev );
- //   //}
- //   
- //   // Updates the internal VBO with current values for vertices, 
- //   // normals, colors and texture coords.  Returns false on error, true otherwise.
- //   // Note: calls glBufferData
- //   bool build( BufferUsage::Enum bufferUsage, BufferType::Enum bufferType );
- //   
- //   // This method will make the internal VBO id bound so any future
- //   // glDrawXXX calls will use this VBO as its data.  Returns false on error, true
- //   // otherwise.
- //   // Note: calls glBindBuffer, glVertexAttribPointer , glEnableVertexAttribArray ,glEnableClientState
- //   bool bind();
- //   
- //   // Puts opengl back into immediate mode
- //   // Note: calls glBindBuffer( 0 ), glDisableVertexAttribArray 
- //   bool unbind();
- //   
- //   // Clears this vertex buffer. All vertex data will be gone.
- //   void clear();
+ //   }
 
 private:
 
     bool built;
     
-    // usage of this buffer
+    // OpenGL buffer modifiers
     BufferUsage::Enum bufferUsage;
-    
-    // type of this buffer
-    BufferType::Enum bufferType;
-    
-  //  std::map< VertexAttribute::Enum attr, 
-		//tr1::tuple< int, PrimitiveType::Enum, std::vector< byte > > > datamap;
+    BufferAccess::Enum bufferAccess;
+
+	GLenum getGLBufferType( BufferUsage::Enum bU, BufferAccess::Enum bA );
+	
+	typedef tr1::tuple< int, GLPrimitiveType::Enum, std::vector< byte > > datakey;
+	typedef std::pair< const VertexAttribute::Enum, datakey > datapair;
+
+	std::map< VertexAttribute::Enum, datakey > datamap;
 };
 
-///**
-// * Represents a vertex buffer.
-// */
-//
-//class VertexBuffer : public Buffer
-//{
-//public:
-//
-//	VertexBuffer(uint numElems, VertexDeclaration decl, BufferUsage::Enum bu, BufferType::Enum bt);
-//
-//	~VertexBuffer();
-//
-//	// Map a buffer
-//	virtual void* map();
-//	
-//	// Unmap a buffer
-//	virtual void unmap();
-//
-//protected:
-//
-//	// number of elements in this buffer
-//	uint numElements;
-//
-//	// declaration of vertex elements
-//	VertexDeclaration vertexDeclaration;
-//	
-//	// usage of this buffer
-//	BufferUsage::Enum bufferUsage;
-//	
-//	// type of this buffer
-//	BufferType::Enum bufferType;
-//
-//private:
-//
-//	uint id;
-//	std::vector<byte> data;
-//};
+//-----------------------------------//
 
 } } // end namespaces

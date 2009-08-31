@@ -23,12 +23,15 @@ namespace vapor {
 
 //-----------------------------------//
 
-Log* Log::engineLog;
+Log* Log::engineLog = nullptr;
+bool Log::showDebug = false;
 
 //-----------------------------------//
 
 void debug(const char* str, ...)
 {
+	if( !Log::showDebug ) return;
+
 #ifdef VAPOR_DEBUG
 	char fmt[BUF_MAX_SIZE];
 

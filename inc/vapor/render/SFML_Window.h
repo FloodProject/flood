@@ -36,6 +36,9 @@ public:
 	// Swaps the buffers (updates the display).
 	void update();
 
+	// Shows/hides the window.
+	virtual void show( bool hide = false );
+
 	// Handle the window message events.
 	bool pumpEvents();
 

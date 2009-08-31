@@ -10,6 +10,9 @@
 
 #include <vapor/Framework.h>
 
+#include <vapor/render/VertexBuffer.h>
+#include <vapor/render/Renderable.h>
+
 #include <vapor/input/Keyboard.h>
 
 //-----------------------------------//
@@ -41,16 +44,18 @@ protected:
 	// Renders the scene
 	virtual void onRender();
 
+	// Callback functions
 	void onKeyPressed( const vapor::input::KeyEvent& );
 	void onButtonPressed( const vapor::input::MouseButtonEvent& );
-
 	void onWindowResize( const vapor::render::WindowResizeEvent& );
 
 private:
 
-	float r, g, b;
-
+	vapor::render::Renderable* rend;
+	shared_ptr< vapor::render::VertexBuffer> vb;
+	vapor::math::Color c;
 	bool runLoop;
+
 };
 
 //-----------------------------------//

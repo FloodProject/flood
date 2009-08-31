@@ -16,43 +16,115 @@
 namespace vapor {
 	namespace render {
 
-////-----------------------------------//
-//
-//VertexBuffer::VertexBuffer(uint numElems, VertexDeclaration decl, BufferUsage::Enum bu, BufferType::Enum bt)
-//		: bufferUsage(bu), bufferType(bt), numElements(numElems), vertexDeclaration(decl)
-//{
-//	if(GLEW_ARB_vertex_buffer_object)
-//	{
-//		glGenBuffersARB(1, &id);
-//		glBindBuffer(GL_ARRAY_BUFFER, id);
-//	} 
-//	else 
-//	{
-//	}
-//}
-//
-////-----------------------------------//
-//
-//VertexBuffer::~VertexBuffer()
-//{
-//
-//}
-//
-////-----------------------------------//
-//
-//void* VertexBuffer::map()
-//{
-//	return nullptr;
-//}
-//
-////-----------------------------------//
-//
-//void VertexBuffer::unmap()
-//{
-//
-//}
-//
-////-----------------------------------//
+//-----------------------------------//
+
+VertexBuffer::VertexBuffer()
+	: built( false )
+{
+	
+}
+
+//-----------------------------------//
+
+VertexBuffer::~VertexBuffer()
+{
+
+}
+
+//-----------------------------------//
+
+bool VertexBuffer::bind()
+{
+	glBindBuffer( GL_ARRAY_BUFFER, id );
+
+	if( glGetError() != GL_NO_ERROR )
+	{
+		warn( "gl::buffers", "Error binding vertex buffer" );
+		return false;
+	}
+
+	debug( "bound vertex buffer (id: '%d')", id );	
+
+	return true;
+}
+
+//-----------------------------------//
+
+bool VertexBuffer::unbind()
+{
+	glBindBuffer( GL_ARRAY_BUFFER, 0 );
+
+	if( glGetError() != GL_NO_ERROR )
+	{
+		warn( "gl::buffers", "Error unbinding vertex buffer (id: '%d')", id );	
+		return false;
+	}
+
+	return true;
+}
+
+//-----------------------------------//
+
+bool VertexBuffer::set( VertexAttribute::Enum attr, 
+		const std::vector< math::Vector3 >& data )
+{
+	std::vector< byte > bytev( data.size() * sizeof( math::Vector3 ) );
+	memcpy( &bytev[0], &data[0], bytev.size() );
+	datamap[attr] = tr1::make_tuple( 3, GLPrimitiveType::FLOAT, bytev );
+
+	return true;
+}
+
+//-----------------------------------//
+
+bool VertexBuffer::build( BufferUsage::Enum bU, BufferAccess::Enum bA )
+{
+	bind();
+
+	int totalBytes = 0;
+
+#ifdef VAPOR_COMPILER_MSVC
+	// MSVC is ghey...
+	#pragma warning (disable: 4503)
+#endif
+
+	foreach( const datapair& p, datamap )
+	{
+		totalBytes += tr1::get< 2 >( p.second ).size();
+	}
+
+	glBufferData( GL_ARRAY_BUFFER, totalBytes, nullptr, GL_STREAM_DRAW );
+
+	return true;
+}
+
+//-----------------------------------//
+
+void VertexBuffer::clear()
+{
+	datamap.clear();
+}
+
+//-----------------------------------//
+
+GLenum VertexBuffer::getGLBufferType( BufferUsage::Enum bU, BufferAccess::Enum bA )
+{
+	if( bU == BufferUsage::Stream && bA == BufferAccess::Read ) return GL_STREAM_READ;
+	if( bU == BufferUsage::Stream && bA == BufferAccess::Write ) return GL_STREAM_DRAW;
+	if( bU == BufferUsage::Stream && bA == BufferAccess::ReadWrite ) return GL_STREAM_COPY;
+
+	if( bU == BufferUsage::Static && bA == BufferAccess::Read ) return GL_STATIC_READ;
+	if( bU == BufferUsage::Static && bA == BufferAccess::Write ) return GL_STATIC_DRAW;
+	if( bU == BufferUsage::Static && bA == BufferAccess::ReadWrite ) return GL_STATIC_COPY;
+
+	if( bU == BufferUsage::Dynamic && bA == BufferAccess::Read ) return GL_DYNAMIC_READ;
+	if( bU == BufferUsage::Dynamic && bA == BufferAccess::Write ) return GL_DYNAMIC_DRAW;
+	if( bU == BufferUsage::Dynamic && bA == BufferAccess::ReadWrite ) return GL_DYNAMIC_COPY;
+
+	return GL_STREAM_READ;
+}
+
+//-----------------------------------//
 
 } } // end namespaces
 

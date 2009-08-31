@@ -106,22 +106,28 @@ void Adapter::log() const
 	std::string d = getDriver();
 	std::string g = getVersion();
 
-	if(s.empty() 
-		|| d.empty() 
-		|| g.empty()) return;
+	//if(s.empty() 
+	//	|| d.empty() 
+	//	|| g.empty()) return;
 
 	// log GL stuff
-	info("render::adapter", "Graphics adapter: %s", 
-		getName().c_str());
+	info( "render::adapter", "Graphics adapter: %s", getName().c_str() );
 
-	info("render::adapter", "%s%s%s", 
+	info( "render::adapter", "%s%s%s", 
 		!g.empty() ? ("OpenGL " + g).c_str() : "",
 		!s.empty() ? (" / GLSL " + s).c_str() : "",
-		!d.empty() ? (" / driver: " + d).c_str() : "");
+		!d.empty() ? (" / driver: " + d).c_str() : "" );
 
-	if(!supportsVBO)
-		error("gl::adapter", "Your graphics device does not support VBOs (Vertex Buffer Objects).");
+	if( !supportsVBO )
+	{
+		error("gl::adapter", 
+			"Your graphics device does not support VBOs (Vertex Buffer Objects).");
+	}
 
+	int maxAttribs;
+	glGetIntegerv( GL_MAX_VERTEX_ATTRIBS, &maxAttribs );
+	
+	debug( "render::adapter", "Max vertex attributes: %d", maxAttribs );
 }
 
 //-----------------------------------//

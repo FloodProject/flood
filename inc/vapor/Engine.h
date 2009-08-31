@@ -19,6 +19,8 @@
 
 namespace vapor {
 
+//-----------------------------------//
+
 /**
  * Main engine class. This is a utility class that instantiates all the
  * other engine classes and provides suitable methods to get/set them.
@@ -117,5 +119,7 @@ protected:
 	// Arguments
 	const char** argv;
 };
+
+//-----------------------------------//
 
 } // end namespace

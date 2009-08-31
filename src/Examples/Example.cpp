@@ -19,6 +19,8 @@
 
 #include <vapor/input/InputManager.h>
 
+#include <vapor/render/VertexBuffer.h>
+
 #include <iostream>
 
 using std::tr1::static_pointer_cast;
@@ -36,7 +38,7 @@ using namespace vapor::input;
 //-----------------------------------//
 
 Example::Example(const char** argv)
-	: Framework("Example", argv)
+	: Framework("Example", argv), runLoop( false ), c()
 {
 
 }
@@ -66,9 +68,6 @@ void Example::onInit()
 	
 		std::cout << std::endl;
 	}
-
-	r = b = g = 0.0f;
-	runLoop = false;
 
 	//-----------------------------------//
 	// Register input devices callbacks
@@ -120,6 +119,20 @@ void Example::onSetupScene()
 
 	//snd->play(5);
 
+	// Create a new VBO and upload triangle data
+	shared_ptr< VertexBuffer > vb ( new VertexBuffer() );
+	
+	std::vector< Vector3 > vec;
+	vec.push_back( Vector3( 0.0f, 0.0f, 0.0f ) );
+	vec.push_back( Vector3( 0.0f, 0.0f, 0.0f ) );
+	vec.push_back( Vector3( 0.0f, 0.0f, 0.0f ) );
+	
+	vb->set( VertexAttribute::Vertex, vec );
+	vb->build( BufferUsage::Static, BufferAccess::Write );
+
+	// Create a new Renderable from the VBO and render it
+	rend = new Renderable( PrimitiveType::Triangles, vb );
+	
 	std::string example = scene->save();
 	puts(example.c_str());
 }
@@ -131,12 +144,14 @@ void Example::onRender()
 	render::Device* device = getRenderDevice();
 
 	// clear the render device with white
-	device->setClearColor( math::Color(r, g, b) );
+	device->setClearColor( c );
 	device->clearTarget();
 
-	//// create a vertex buffer
+	// create a vertex buffer
 	//BufferManager* bm = device->getBufferManager();
-	//
+
+	rend->render( *getRenderDevice() );
+	
 	//// declare the vertex elements
 	//VertexElement elms[] = {
 	//	{0, VertexAttribute::Position, VertexDataType::float3}
@@ -145,9 +160,7 @@ void Example::onRender()
 	//// construct a vertex declaration from the elements
 	//VertexDeclaration decl(elms, elms + (sizeof(elms) / sizeof(elms[0])));
 
-	//// create a static write-only vertex buffer for 10 elements
-	//shared_ptr<VertexBuffer> vb(new VertexBuffer(
-	//	10, decl, BufferUsage::Write, BufferType::Static));
+	// create a static write-only vertex buffer for 10 elements
 }
 
 //-----------------------------------//
@@ -158,9 +171,9 @@ void Example::onUpdate()
 
 	if( runLoop )
 	{
-		r += 0.00001f; r = (r > 1.0f) ? 0.0f : r;
-		g += 0.00003f; b = (b > 1.0f) ? 0.0f : b;
-		b += 0.00007f; g = (g > 1.0f) ? 0.0f : g;
+		c.r += 0.00001f; c.r = (c.r > 1.0f) ? 0.0f : c.r;
+		c.g += 0.00003f; c.b = (c.b > 1.0f) ? 0.0f : c.b;
+		c.b += 0.00007f; c.g = (c.g > 1.0f) ? 0.0f : c.g;
 	}
 }
 
@@ -170,6 +183,9 @@ void Example::onKeyPressed( const KeyEvent& keyEvent )
 {
 	if( keyEvent.keyCode == Keys::Space )
 		runLoop = !runLoop;
+
+	if( keyEvent.keyCode == Keys::Pause )
+		Log::showDebug = !Log::showDebug;
 
 	debug( "key press: %d", keyEvent.keyCode );
 }

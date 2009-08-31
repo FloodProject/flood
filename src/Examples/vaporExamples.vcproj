@@ -185,26 +185,6 @@
 	<References>
 	</References>
 	<Files>
-		<Filter
-			Name="Framework"
-			>
-			<File
-				RelativePath=".\Dialog.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Framework\Framework.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\Framework.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\Main.h"
-				>
-			</File>
-		</Filter>
 		<File
 			RelativePath=".\Example.cpp"
 			>

@@ -20,7 +20,7 @@ namespace vapor {
 //-----------------------------------//
 
 SFML_Window::SFML_Window(const Settings& settings)
-	: Window(settings), flags(0)
+	: Window( settings ), flags( 0 )
 {
 	if( !open() )
 	{
@@ -62,7 +62,7 @@ bool SFML_Window::open()
 			return false;
 		}
 		
-		flags |= sf::Style::Resize | sf::Style::Close;			
+		flags |= sf::Style::Resize | sf::Style::Close;
 	}
 	
 	createWindow();
@@ -74,6 +74,7 @@ bool SFML_Window::open()
 	
 	return true;	
 }
+
 //-----------------------------------//
 
 void SFML_Window::createWindow()
@@ -88,11 +89,19 @@ void SFML_Window::createWindow()
 		window.Create( vMode, settings.getTitle(), flags, sfmlSettings );
 	}
 }
+
 //-----------------------------------//
 
 void SFML_Window::update() 
 {
 	window.Display();
+}
+
+//-----------------------------------//
+
+void SFML_Window::show( bool hide ) 
+{
+	window.Show( hide );
 }
 
 //-----------------------------------//

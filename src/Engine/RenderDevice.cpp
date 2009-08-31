@@ -51,13 +51,6 @@ Device::~Device()
 {
 	info("render::opengl", "Closing OpenGL rendering device");
 
-	//for(std::list<GLVertexBuffer>::iterator it = _vertexBuffers.begin(); 
-	//	it != _vertexBuffers.end(); it++)
-	//{
-	//	// erase each buffer because we dont want to erase them after OpenGL is terminated (VBOs)
-	//	_vertexBuffers.erase(it);
-	//}
-
 	delete adapter;
 	delete window;
 	delete bufferManager;
@@ -112,10 +105,24 @@ void Device::checkExtensions()
 	// init GLEW (OpenGL Extension Wrangler)
 	GLenum err = glewInit();
 	
-	if(err == GLEW_OK)
-		info("render::opengl", "Using GLEW version %s", glewGetString(GLEW_VERSION));
-	else
-		error("render::opengl", "Failed to initialize GLEW: %s", glewGetErrorString(err));
+	if( err != GLEW_OK )
+	{
+		error( "render::opengl", 
+			"Failed to initialize GLEW: %s", glewGetErrorString( err ) );
+
+		return;
+	}
+
+	info( "render::opengl", "Using GLEW version %s", 
+		glewGetString( GLEW_VERSION ) );
+
+	if( !GLEW_VERSION_2_1 )
+	{
+		log::Log::MessageDialog( "You need at least OpenGL 2.1 to run this.",
+			log::LogLevel::Error );
+		
+		// TODO: exit program in a structured manner
+	}
 }
 
 //-----------------------------------//

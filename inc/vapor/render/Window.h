@@ -121,6 +121,9 @@ public:
 	// Updates the window content.
 	virtual void update() = 0;
 
+	// Shows/hides the window.
+	virtual void show( bool hide = false ) = 0;
+
 	// Handles the event loop of the window.
 	virtual bool pumpEvents() = 0;
 
@@ -128,7 +131,7 @@ public:
 	virtual void setTitle (const std::string& title) = 0;
 
 	// Sets the visibility of the mouse cursor.
-	virtual void setCursor (bool state) = 0;
+	virtual void setCursor ( bool state ) = 0;
 
 	// Gets the window settings.
 	virtual const Settings& getSettings();

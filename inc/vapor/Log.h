@@ -81,6 +81,8 @@ public:
 		
 	void write(const LogLevel::Enum, const std::string&, const char*, ...);
 
+	static bool showDebug;
+
 protected:
 
 	// Opens/closes a log file.

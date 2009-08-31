@@ -243,6 +243,10 @@
 				Name="Buffers"
 				>
 				<File
+					RelativePath=".\Buffer.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\inc\vapor\render\Buffer.h"
 					>
 				</File>
@@ -793,6 +797,26 @@
 			</File>
 			<File
 				RelativePath="..\..\inc\vapor\vfs\VFS.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Framework"
+			>
+			<File
+				RelativePath="..\Examples\Dialog.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Framework\Framework.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\Framework.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\Main.h"
 				>
 			</File>
 		</Filter>
