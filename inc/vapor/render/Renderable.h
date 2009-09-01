@@ -65,14 +65,11 @@ class Renderable
 public:
 
     Renderable(PrimitiveType::Enum primitive, tr1::shared_ptr< VertexBuffer > vb, 
-					tr1::shared_ptr< IndexBuffer > ib, tr1::shared_ptr< Material >);
+			tr1::shared_ptr< IndexBuffer > ib, tr1::shared_ptr< Material >);
     
-    // No index buffer
+    // No index buffer, default material will be used if none passed
 	Renderable(PrimitiveType::Enum primitive, tr1::shared_ptr< VertexBuffer > vb,
-					tr1::shared_ptr< Material >);
-    
-    // No index buffer, default material will be used
-    Renderable(PrimitiveType::Enum primitive, tr1::shared_ptr< VertexBuffer > vb);
+			tr1::shared_ptr< Material > = tr1::shared_ptr< Material >( ) );   
                     
     // Render this renderable. This will bind all the necessary state like binding
     // the buffers and the materials.
@@ -92,9 +89,9 @@ private:
     // primitive type of vertex buffer 
     PrimitiveType::Enum type;
 
-    tr1::shared_ptr< VertexBuffer > vertexBuffer;
-    tr1::shared_ptr< IndexBuffer > indexBuffer;
-    tr1::shared_ptr< Material > material;
+    tr1::shared_ptr< VertexBuffer > vb;
+    tr1::shared_ptr< IndexBuffer > ib;
+    tr1::shared_ptr< Material > mat;
 };
 
 //-----------------------------------//

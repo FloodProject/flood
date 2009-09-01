@@ -167,6 +167,8 @@ private:
 
     bool built;
     
+	uint size;
+
     // OpenGL buffer modifiers
     BufferUsage::Enum bufferUsage;
     BufferAccess::Enum bufferAccess;

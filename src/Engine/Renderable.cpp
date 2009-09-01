@@ -15,34 +15,29 @@ namespace vapor {
 
 //-----------------------------------//
 
-Renderable::Renderable(PrimitiveType::Enum primitive, 
-						tr1::shared_ptr<VertexBuffer> vb, 
-						tr1::shared_ptr<IndexBuffer> ib, 
-						tr1::shared_ptr<Material>)
+Renderable::Renderable( PrimitiveType::Enum primitive, 
+						tr1::shared_ptr< VertexBuffer > vb, 
+						tr1::shared_ptr< IndexBuffer > ib, 
+						tr1::shared_ptr< Material > mat )
+	: type( primitive), vb( vb ), ib( ib ), mat( mat )
 {
 
 }
 
 //-----------------------------------//
 
-Renderable::Renderable(PrimitiveType::Enum primitive, 
-						tr1::shared_ptr<VertexBuffer> vb, 
-						tr1::shared_ptr<Material>)
+Renderable::Renderable( PrimitiveType::Enum primitive, 
+						tr1::shared_ptr< VertexBuffer > vb, 
+						tr1::shared_ptr< Material > )
+	: type( primitive), vb( vb ), mat( mat )
+
 {
 
 }
 
 //-----------------------------------//
 
-Renderable::Renderable(PrimitiveType::Enum primitive, 
-						tr1::shared_ptr<VertexBuffer> vb)
-{
-
-}
-
-//-----------------------------------//
-
-void Renderable::render(render::Device &device) const
+void Renderable::render( render::Device& device ) const
 {
 
 }
@@ -51,21 +46,21 @@ void Renderable::render(render::Device &device) const
 
 tr1::shared_ptr<VertexBuffer> Renderable::getVertexBuffer() const
 {
-	return vertexBuffer;
+	return vb;
 }
 
 //-----------------------------------//
 
 tr1::shared_ptr<IndexBuffer> Renderable::getIndexBuffer() const
 {
-	return indexBuffer;
+	return ib;
 }
 
 //-----------------------------------//
 
 tr1::shared_ptr<Material> Renderable::getMaterial() const
 {
-	return material;
+	return mat;
 }
 
 //-----------------------------------//

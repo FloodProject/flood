@@ -9,29 +9,22 @@
 #pragma once
 
 namespace vapor {
-	namespace render {
+	namespace math {
 
 //-----------------------------------//
 
 /**
- * Render target.
+ * Axis-aligned Bounding Box.
  */
 
-class RenderTarget
+class AABB
 {
 public:
 
-	RenderTarget() { }
-	virtual ~RenderTarget() { }
-	
-	// Updates the render target (usually swaps buffers).
-	virtual void update() = 0;
+    
+private:
 
-	// Sets this rendering target as the current.
-	virtual void makeCurrent() = 0;
 };
-
-typedef RenderTarget Target;
 
 //-----------------------------------//
 

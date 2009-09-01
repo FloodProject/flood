@@ -90,8 +90,8 @@ void Example::onSetupResources()
 {
 	ResourceManager* rm = getResourceManager();
 	
-	shared_ptr<Resource> img = rm->createResource( "media/triton.png" );
-	shared_ptr<Resource> sound = rm->createResource( "media/stereo.ogg" );
+	tr1::shared_ptr<Resource> img = rm->createResource( "media/triton.png" );
+	tr1::shared_ptr<Resource> sound = rm->createResource( "media/stereo.ogg" );
 }
 
 //-----------------------------------//

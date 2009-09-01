@@ -164,14 +164,6 @@
 			Name="Math"
 			>
 			<File
-				RelativePath=".\Color.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\math\Color.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\inc\vapor\math\Math.h"
 				>
 			</File>
@@ -196,6 +188,54 @@
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\math\Matrix.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Frustum"
+				>
+				<File
+					RelativePath=".\Frustum.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\math\Frustum.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Color"
+				>
+				<File
+					RelativePath=".\Color.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\math\Color.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Plane"
+				>
+				<File
+					RelativePath=".\Plane.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\math\Plane.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="AABB"
+				>
+				<File
+					RelativePath=".\AABB.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\math\AABB.h"
 					>
 				</File>
 			</Filter>
