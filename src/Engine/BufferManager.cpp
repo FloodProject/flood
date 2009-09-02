@@ -127,10 +127,10 @@ BufferManager::~BufferManager()
 //	//Convert vaporFlag to glFlag
 //	switch(Mode)
 //	{
-//	case PrimitiveType::TRIANGLES:
+//	case Primitive::TRIANGLES:
 //		Mode = GL_TRIANGLES;
 //		break;
-//	case PrimitiveType::LINES:
+//	case Primitive::LINES:
 //		Mode = GL_LINES;
 //		break;
 //	};

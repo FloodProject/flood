@@ -18,10 +18,24 @@ namespace vapor {
 
 //-----------------------------------//
 
+enum VertexBuffer::GLPrimitive
+{
+    BYTE = GL_BYTE,
+    UBYTE = GL_UNSIGNED_BYTE,
+    SHORT = GL_SHORT,
+    USHORT = GL_UNSIGNED_SHORT,
+    INT = GL_INT,
+    UINT = GL_UNSIGNED_INT,
+    FLOAT = GL_FLOAT,
+    DOUBLE = GL_DOUBLE
+};
+
+//-----------------------------------//
+
 VertexBuffer::VertexBuffer()
 	: built( false )
 {
-	
+
 }
 
 //-----------------------------------//
@@ -43,9 +57,42 @@ bool VertexBuffer::bind()
 		return false;
 	}
 
-	debug( "bound vertex buffer (id: '%d')", id );	
+	bindPointers();
 
 	return true;
+}
+
+//-----------------------------------//
+
+void VertexBuffer::bindPointers()
+{
+	if( !built ) return;
+
+	int offset = 0;
+
+	foreach( const attributePair& p, attributeMap )
+	{
+		int size = tr1::get< 0 >( p.second );
+		GLPrimitive type = tr1::get< 1 >( p.second );
+		const std::vector<byte>& vec = tr1::get< 2 >( p.second );
+
+		glEnableVertexAttribArray( p.first );
+
+		if( glGetError() != GL_NO_ERROR )
+		{
+			warn( "gl::buffers", "Error enabling vertex attrib array" );
+		}
+
+		glVertexAttribPointer( p.first, size, type, GL_FALSE, 0, (void*) offset );
+
+		// check for errors
+		if( glGetError() != GL_NO_ERROR )
+		{
+			warn( "gl::buffers", "Error binding pointers to buffer" );
+		}
+
+		offset += vec.size();
+	}
 }
 
 //-----------------------------------//
@@ -60,6 +107,14 @@ bool VertexBuffer::unbind()
 		return false;
 	}
 
+	if( built )
+	{
+		foreach( const attributePair& p, attributeMap )
+		{
+			glDisableVertexAttribArray( p.first );
+		}
+	}
+
 	return true;
 }
 
@@ -72,7 +127,7 @@ bool VertexBuffer::set( VertexAttribute::Enum attr,
 
 	std::vector< byte > bytev( data.size() * sizeof( math::Vector3 ) );
 	memcpy( &bytev[0], &data[0], bytev.size() );
-	datamap[attr] = tr1::make_tuple( 3, GLPrimitiveType::FLOAT, bytev );
+	attributeMap[attr] = tr1::make_tuple( 3, VertexBuffer::FLOAT, bytev );
 
 	return true;
 }
@@ -83,21 +138,15 @@ bool VertexBuffer::build( BufferUsage::Enum bU, BufferAccess::Enum bA )
 {
 	bind();
 
-	uint totalBytes = 0;
+	// check that all vertex attributes elements are the same size
+	// else we have to return because it doesn't make sense.
 
-#ifdef VAPOR_COMPILER_MSVC
-	// MSVC is ghey...
-	#pragma warning (disable: 4503)
-#endif
+	if( !checkSize() ) return false;
 
-	foreach( const datapair& p, datamap )
-	{
-		totalBytes += tr1::get< 2 >( p.second ).size();
-	}
+	// reserve space for all the elements
+	glBufferData( GL_ARRAY_BUFFER, getSize(), nullptr, getGLBufferType( bU, bA ) );
 
-	glBufferData( GL_ARRAY_BUFFER, totalBytes, nullptr, getGLBufferType( bU, bA ) );
-
-	debug( "buffer '%d' has size '%d'", id, totalBytes );
+	debug( "buffer '%d' has size '%d'", id, getSize() );
 
 	if( glGetError() != GL_NO_ERROR )
 	{
@@ -106,7 +155,7 @@ bool VertexBuffer::build( BufferUsage::Enum bU, BufferAccess::Enum bA )
 	}
 
 	int offset = 0;
-	foreach( const datapair& p, datamap )
+	foreach( const attributePair& p, attributeMap )
 	{
 		const std::vector<byte>& vec = tr1::get< 2 >( p.second );
 		glBufferSubData( GL_ARRAY_BUFFER, offset, vec.size(), &vec[0] );
@@ -119,7 +168,6 @@ bool VertexBuffer::build( BufferUsage::Enum bU, BufferAccess::Enum bA )
 		return false;
 	}
 
-	size = totalBytes;
 	built = true;
 
 	return true;
@@ -127,9 +175,55 @@ bool VertexBuffer::build( BufferUsage::Enum bU, BufferAccess::Enum bA )
 
 //-----------------------------------//
 
+bool VertexBuffer::checkSize()
+{
+	// TODO: should we also check each attribute has the same type?
+
+	if( attributeMap.empty() ) return false;
+
+	int first = -1;
+	
+	foreach( const attributePair& p, attributeMap )
+	{
+		int size = tr1::get< 2 >( p.second ).size();
+
+		if( first < 0 )
+		{
+			first = size;
+		}
+		else if( size != first )
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+//-----------------------------------//
+
+uint VertexBuffer::getSize()
+{
+	uint totalBytes = 0;
+
+#ifdef VAPOR_COMPILER_MSVC
+	// MSVC is ghey...
+	#pragma warning (disable: 4503)
+#endif
+
+	foreach( const attributePair& p, attributeMap )
+	{
+		totalBytes += tr1::get< 2 >( p.second ).size();
+	}
+
+	return totalBytes;
+}
+
+//-----------------------------------//
+
 void VertexBuffer::clear()
 {
-	datamap.clear();
+	attributeMap.clear();
 }
 
 //-----------------------------------//

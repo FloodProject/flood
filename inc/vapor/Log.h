@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <vapor/Types.h>
+#include "vapor/Types.h"
 
 namespace vapor {
 	namespace log {

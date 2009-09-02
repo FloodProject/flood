@@ -24,7 +24,7 @@ namespace vapor {
 //-----------------------------------//
 
 Log* Log::engineLog = nullptr;
-bool Log::showDebug = false;
+bool Log::showDebug = true;
 
 //-----------------------------------//
 

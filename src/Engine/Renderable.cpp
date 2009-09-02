@@ -15,10 +15,10 @@ namespace vapor {
 
 //-----------------------------------//
 
-Renderable::Renderable( PrimitiveType::Enum primitive, 
-						tr1::shared_ptr< VertexBuffer > vb, 
-						tr1::shared_ptr< IndexBuffer > ib, 
-						tr1::shared_ptr< Material > mat )
+Renderable::Renderable( Primitive::Enum primitive,
+						VertexBufferPtr vb, 
+						IndexBufferPtr ib, 
+						MaterialPtr mat )
 	: type( primitive), vb( vb ), ib( ib ), mat( mat )
 {
 
@@ -26,9 +26,9 @@ Renderable::Renderable( PrimitiveType::Enum primitive,
 
 //-----------------------------------//
 
-Renderable::Renderable( PrimitiveType::Enum primitive, 
-						tr1::shared_ptr< VertexBuffer > vb, 
-						tr1::shared_ptr< Material > )
+Renderable::Renderable( Primitive::Enum primitive, 
+						VertexBufferPtr vb, 
+						MaterialPtr mat )
 	: type( primitive), vb( vb ), mat( mat )
 
 {
@@ -37,28 +37,51 @@ Renderable::Renderable( PrimitiveType::Enum primitive,
 
 //-----------------------------------//
 
-void Renderable::render( render::Device& device ) const
+void Renderable::render( render::Device& device )
 {
+    vb->bind();
+    
+    if ( ib == nullptr )
+    {
+        glDrawArrays( type, 0, vb->getSize() );
 
+		// check for errors
+		if( glGetError() != GL_NO_ERROR )
+		{
+			warn( "gl::buffers", "Error drawing renderable" );
+			debug( "shit happened, debug me" );
+		}
+    }
+    //else
+    //{
+    //    ib->bind();
+    //    
+    //    GLenum type = ib->is16() ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
+    //    glDrawElements(primitiveType, ib->getNumIndices(), type, 0 );
+
+    //    ib->unbind();
+    //}
+    
+    vb->unbind();
 }
 
 //-----------------------------------//
 
-tr1::shared_ptr<VertexBuffer> Renderable::getVertexBuffer() const
+VertexBufferPtr Renderable::getVertexBuffer() const
 {
 	return vb;
 }
 
 //-----------------------------------//
 
-tr1::shared_ptr<IndexBuffer> Renderable::getIndexBuffer() const
+IndexBufferPtr Renderable::getIndexBuffer() const
 {
 	return ib;
 }
 
 //-----------------------------------//
 
-tr1::shared_ptr<Material> Renderable::getMaterial() const
+MaterialPtr Renderable::getMaterial() const
 {
 	return mat;
 }

@@ -10,10 +10,10 @@
 
 #include "vapor/Platform.h"
 
-//#include "vapor/render/Device.h"
-//#include "vapor/render/Material.h"
-//#include "vapor/render/VertexBuffer.h"
-//#include "vapor/render/IndexBuffer.h"
+#include "vapor/render/Device.h"
+#include "vapor/render/Material.h"
+#include "vapor/render/VertexBuffer.h"
+#include "vapor/render/IndexBuffer.h"
 
 #include "vapor/render/GL.h"
 
@@ -22,19 +22,12 @@ namespace vapor {
 
 //-----------------------------------//
 
-class Device;
-class Material;
-class VertexBuffer;
-class IndexBuffer;
-
-//-----------------------------------//
-
 /**
  * Type of primitive of the renderable.
  * 
  */
 
-namespace PrimitiveType
+namespace Primitive
 {
     enum Enum
     {
@@ -64,34 +57,34 @@ class Renderable
 {
 public:
 
-    Renderable(PrimitiveType::Enum primitive, tr1::shared_ptr< VertexBuffer > vb, 
-			tr1::shared_ptr< IndexBuffer > ib, tr1::shared_ptr< Material >);
+    Renderable( Primitive::Enum primitive, 
+		VertexBufferPtr vb, IndexBufferPtr ib, MaterialPtr mat );
     
     // No index buffer, default material will be used if none passed
-	Renderable(PrimitiveType::Enum primitive, tr1::shared_ptr< VertexBuffer > vb,
-			tr1::shared_ptr< Material > = tr1::shared_ptr< Material >( ) );   
+	Renderable(Primitive::Enum primitive, VertexBufferPtr vb,
+			MaterialPtr mat = MaterialPtr( ) );   
                     
     // Render this renderable. This will bind all the necessary state like binding
     // the buffers and the materials.
-	void render(render::Device& device) const;
+	void render(render::Device& device);
     
     // Gets the vertex buffer associated with the renderable.
-    tr1::shared_ptr<VertexBuffer> getVertexBuffer() const;
+    VertexBufferPtr getVertexBuffer() const;
 
     // Gets the index buffer associated with the renderable.
-    tr1::shared_ptr<IndexBuffer> getIndexBuffer() const;    
+    IndexBufferPtr getIndexBuffer() const;    
 
     // Gets the material associated with the renderable.
-    tr1::shared_ptr<Material> getMaterial() const;
+    MaterialPtr getMaterial() const;
 
 private:
 
     // primitive type of vertex buffer 
-    PrimitiveType::Enum type;
+    Primitive::Enum type;
 
-    tr1::shared_ptr< VertexBuffer > vb;
-    tr1::shared_ptr< IndexBuffer > ib;
-    tr1::shared_ptr< Material > mat;
+    VertexBufferPtr vb;
+    IndexBufferPtr ib;
+    MaterialPtr mat;
 };
 
 //-----------------------------------//

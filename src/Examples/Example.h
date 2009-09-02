@@ -47,15 +47,12 @@ protected:
 	// Callback functions
 	void onKeyPressed( const vapor::input::KeyEvent& );
 	void onButtonPressed( const vapor::input::MouseButtonEvent& );
-	void onWindowResize( const vapor::render::WindowResizeEvent& );
 
 private:
 
 	vapor::render::Renderable* rend;
-	shared_ptr< vapor::render::VertexBuffer> vb;
 	vapor::math::Color c;
 	bool runLoop;
-
 };
 
 //-----------------------------------//

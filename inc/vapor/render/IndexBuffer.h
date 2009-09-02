@@ -57,4 +57,8 @@ private:
 
 //-----------------------------------//
 
+typedef tr1::shared_ptr< IndexBuffer > IndexBufferPtr;
+
+//-----------------------------------//
+
 } } // end namespaces

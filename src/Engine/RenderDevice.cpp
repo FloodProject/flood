@@ -127,6 +127,27 @@ void Device::checkExtensions()
 
 //-----------------------------------//
 
+//RenderDevice::render( RenderQueue& queue, Matrix4x4 invCamera = Matrix4x4::Identity ) // ?
+//{
+//    // 1. sort renderables by state
+//    sortByMaterial( queue );
+//        
+//    // 2. for each node render
+//    foreach ( renderable in queue )
+//    {
+//        // change state if needed
+//        changeState( renderable );
+//        
+//        // concantenate camera and renderable matrices
+//        glLoadMatrix( renderable->second * invCamera );
+//        
+//        // render it
+//        renderable->first.render( *this );
+//    }
+//}
+
+//-----------------------------------//
+
 Window& Device::createWindow( const Settings& settings )
 {
 	Window& window = Window::createWindow( settings );

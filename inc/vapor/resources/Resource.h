@@ -13,7 +13,11 @@
 namespace vapor {
 	namespace resources {
 
+//-----------------------------------//
+
 class ResourceLoader;
+
+//-----------------------------------//
 
 /**
  * Resource groups identify the kind of data a resource holds.
@@ -36,6 +40,8 @@ namespace ResourceGroup
 	// Yeah, a bit ugly, but it works.
 	const std::string getString(Enum e);
 }
+
+//-----------------------------------//
 
 /**
  * Represents a generic resource that tipically is used to hold a piece
@@ -76,6 +82,12 @@ protected:
 
 	Resource();
 };
+
+//-----------------------------------//
+
+typedef tr1::shared_ptr< Resource > ResourcePtr;
+
+//-----------------------------------//
 
 } } // end namespaces
 

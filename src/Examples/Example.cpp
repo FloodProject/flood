@@ -21,10 +21,6 @@
 
 #include <vapor/render/VertexBuffer.h>
 
-#include <iostream>
-
-using std::tr1::static_pointer_cast;
-
 using namespace vapor;
 using namespace vapor::vfs;
 using namespace vapor::log;
@@ -38,7 +34,7 @@ using namespace vapor::input;
 //-----------------------------------//
 
 Example::Example(const char** argv)
-	: Framework("Example", argv), runLoop( false ), c()
+	: Framework("Example", argv), runLoop( false ), c( )
 {
 
 }
@@ -47,10 +43,7 @@ Example::Example(const char** argv)
 
 void Example::onInit()
 {
-	//-----------------------------------//
 	// Mount VFS points
-	//-----------------------------------//
-
 	std::string media = "media";
 
 	if ( !getVFS()->mount( media ) )
@@ -58,30 +51,12 @@ void Example::onInit()
 		Log::MessageDialog( "Missing archive/directory '" + media + "'." );
 	}
 
-	File file( "media/testfile.txt", AccessMode::Read );
-	std::vector<byte> content = file.read( file.getSize() );
-	
-	if( content.size() > 0 )
-	{
-		foreach( char c, content )
-			std::cout << c;
-	
-		std::cout << std::endl;
-	}
-
-	//-----------------------------------//
 	// Register input devices callbacks
-	//-----------------------------------//
-
 	Keyboard* kbd = getInputManager()->getKeyboard();
 	Mouse* mouse = getInputManager()->getMouse();
 
 	kbd->onKeyPress.bind( &Example::onKeyPressed, this );
 	mouse->onMouseButtonPress.bind( &Example::onButtonPressed, this );
-
-	Window* window = getRenderDevice()->getWindow();
-
-	window->onWindowResize.bind( &Example::onWindowResize, this );
 }
 
 //-----------------------------------//
@@ -90,8 +65,8 @@ void Example::onSetupResources()
 {
 	ResourceManager* rm = getResourceManager();
 	
-	tr1::shared_ptr<Resource> img = rm->createResource( "media/triton.png" );
-	tr1::shared_ptr<Resource> sound = rm->createResource( "media/stereo.ogg" );
+	ResourcePtr img = rm->createResource( "media/triton.png" );
+	ResourcePtr sound = rm->createResource( "media/stereo.ogg" );
 }
 
 //-----------------------------------//
@@ -100,41 +75,18 @@ void Example::onSetupScene()
 {
 	//ResourceManager* rm = getResourceManager();
 	Scene* scene = getSceneManager();
-	////audio::Device* audioDev = getAudioDevice();
-
-	//shared_ptr<Group> grp(new Group());
-
-	//shared_ptr<Listener> ls(new Listener(audioDev));
-	//ls->translate(math::Vector3(1.0f, 0.0f, 0.0f));
-	//ls->makeCurrent();
-	//ls->setVolume(0.2f);
-	//grp->add(ls);
-
-	//shared_ptr<resources::Sound> res = static_pointer_cast<resources::Sound>( 
-	//	rm->getResource("media/stereo.ogg") );
-	//shared_ptr<scene::Sound> snd(new scene::Sound(ls, res));
-	//grp->add(snd);
-
-	//scene->add(grp);
-
-	//snd->play(5);
 
 	// Create a new VBO and upload triangle data
-	shared_ptr< VertexBuffer > vb ( new VertexBuffer() );
-	
-	std::vector< Vector3 > vec;
-	vec.push_back( Vector3( 0.0f, 0.0f, 0.0f ) );
-	vec.push_back( Vector3( 0.0f, 0.0f, 0.0f ) );
-	vec.push_back( Vector3( 0.0f, 0.0f, 0.0f ) );
+	VertexBufferPtr vb( new VertexBuffer() );
+
+	std::vector< Vector3 > vec(3);
+	std::fill( vec.begin(), vec.end(), Vector3::Zero );
 	
 	vb->set( VertexAttribute::Vertex, vec );
 	vb->build( BufferUsage::Static, BufferAccess::Write );
 
 	// Create a new Renderable from the VBO and render it
-	rend = new Renderable( PrimitiveType::Triangles, vb );
-	
-	std::string example = scene->save();
-	puts(example.c_str());
+	rend = new Renderable( Primitive::Triangles, vb );
 }
 
 //-----------------------------------//
@@ -143,24 +95,10 @@ void Example::onRender()
 {
 	render::Device* device = getRenderDevice();
 
-	// clear the render device with white
 	device->setClearColor( c );
-	device->clearTarget();
-
-	// create a vertex buffer
-	//BufferManager* bm = device->getBufferManager();
+	//device->clearTarget();
 
 	rend->render( *getRenderDevice() );
-	
-	//// declare the vertex elements
-	//VertexElement elms[] = {
-	//	{0, VertexAttribute::Position, VertexDataType::float3}
-	//};
-
-	//// construct a vertex declaration from the elements
-	//VertexDeclaration decl(elms, elms + (sizeof(elms) / sizeof(elms[0])));
-
-	// create a static write-only vertex buffer for 10 elements
 }
 
 //-----------------------------------//
@@ -198,14 +136,6 @@ void Example::onButtonPressed( const MouseButtonEvent& btnEvent )
 		runLoop = !runLoop;
 
 	debug( "button press: %d", btnEvent.button );
-}
-
-//-----------------------------------//
-
-void Example::onWindowResize( const WindowResizeEvent& windowEvent )
-{
-	debug( "Resized window (new size: %dx%d)", 
-		windowEvent.width, windowEvent.height );
 }
 
 //-----------------------------------//

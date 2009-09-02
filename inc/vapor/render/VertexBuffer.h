@@ -22,19 +22,6 @@ namespace vapor {
 /**
  * Attribute of a vertex element.
  * Matches the (NVIDIA-only?) specification
- *   0 – gl_Vertex
- *   2 – gl_Normal
- *   3 – gl_Color
- *   4 – gl_SecondaryColor
- *   5 – gl_FogCoord
- *   8 – gl_MultiTexCoord0
- *   9 – gl_MultiTexCoord1
- *   10 – gl_MultiTexCoord2
- *   11 – gl_MultiTexCoord3
- *   12 – gl_MultiTexCoord4
- *   13 – gl_MultiTexCoord5
- *   14 – gl_MultiTexCoord6
- *   15 – gl_MultiTexCoord7
  */
 
 namespace VertexAttribute
@@ -54,23 +41,6 @@ namespace VertexAttribute
         MultiTexCoord5,
         MultiTexCoord6,
         MultiTexCoord7,                                        
-    };
-}
-
-//-----------------------------------//
-
-namespace GLPrimitiveType
-{
-    enum Enum
-    {
-        BYTE = GL_BYTE,
-        UBYTE = GL_UNSIGNED_BYTE,
-        SHORT = GL_SHORT,
-        USHORT = GL_UNSIGNED_SHORT,
-        INT = GL_INT,
-        UINT = GL_UNSIGNED_INT,
-        FLOAT = GL_FLOAT,
-        DOUBLE = GL_DOUBLE
     };
 }
 
@@ -98,9 +68,10 @@ public:
     bool build( BufferUsage::Enum bufferUsage, BufferAccess::Enum bufferAccess );
     
     // This method will make the internal VBO id bound so any future
-    // glDrawXXX calls will use this VBO as its data.  Returns false on error, true
-    // otherwise.
-    // Note: calls glBindBuffer, glVertexAttribPointer, glEnableVertexAttribArray ,glEnableClientState
+    // glDrawXXX calls will use this VBO as its data.  
+	// Returns false on error, true otherwise.
+    // Note: calls glBindBuffer, glVertexAttribPointer, glEnableVertexAttribArray,
+	// glEnableClientState
     bool bind();
     
     // Puts opengl back into immediate mode
@@ -112,6 +83,9 @@ public:
 
 	bool set( VertexAttribute::Enum attr, const std::vector< math::Vector3 >& data );
 
+	// Returns the number of vertex elements.
+	uint getSize();
+
  //   // these are all the possible types supported by glVertexAttrib
  //   bool set( VertexAttribute::Enum attr, std::vector< byte > const& data );
  //   //bool set( VertexAttribute::Enum attr, std::vector< ubyte > const& data );
@@ -120,7 +94,7 @@ public:
  //   //{
  //   //    std::vector< byte > bytev( data.size() * sizeof( ushort ) );
  //   //    memcpy( &bytev[0], &data[0], bytev.size() );
- //   //    datamap[attr] = tr1::tuple( 1, PrimitiveType::USHORT, bytev );
+ //   //    datamap[attr] = tr1::tuple( 1, Primitive::USHORT, bytev );
  //   //}
  //   //    
  //   bool set( VertexAttribute::Enum attr, std::vector< int > const& data );
@@ -160,26 +134,40 @@ public:
  //   //{
  //   //    std::vector< byte > bytev( data.size() * sizeof( math::Vector4< double >) );
  //   //    memcpy( &bytev[0], &data[0], bytev.size() );
- //   //    datamap[attr] = std::tuple( 4, PrimitiveType::DOUBLE, bytev );
+ //   //    datamap[attr] = std::tuple( 4, Primitive::DOUBLE, bytev );
  //   }
 
 private:
 
+	// Used to store specific GL types for each attribute.
+	enum GLPrimitive;
+
+	// Checks that each entry in the map has the same size.
+	bool checkSize();
+
+	// Binds all the OpenGL pointers when the buffer is built.
+	void bindPointers();
+
+	// Converts the buffer enums to the equivalent GL ones.
+	GLenum getGLBufferType( BufferUsage::Enum bU, BufferAccess::Enum bA );
+
+	// Tells us if this buffer has already been built.
     bool built;
-    
-	uint size;
 
     // OpenGL buffer modifiers
     BufferUsage::Enum bufferUsage;
     BufferAccess::Enum bufferAccess;
-
-	GLenum getGLBufferType( BufferUsage::Enum bU, BufferAccess::Enum bA );
 	
-	typedef tr1::tuple< int, GLPrimitiveType::Enum, std::vector< byte > > datakey;
-	typedef std::pair< const VertexAttribute::Enum, datakey > datapair;
+	typedef tr1::tuple< int, GLPrimitive, std::vector< byte > > attributeValue;
+	typedef std::pair< const VertexAttribute::Enum, attributeValue > attributePair;
 
-	std::map< VertexAttribute::Enum, datakey > datamap;
+	// Holds all the vertex attributes
+	std::map< VertexAttribute::Enum, attributeValue > attributeMap;
 };
+
+//-----------------------------------//
+
+typedef tr1::shared_ptr< VertexBuffer > VertexBufferPtr;
 
 //-----------------------------------//
 

@@ -127,7 +127,7 @@ void Adapter::log() const
 	int maxAttribs;
 	glGetIntegerv( GL_MAX_VERTEX_ATTRIBS, &maxAttribs );
 	
-	debug( "render::adapter", "Max vertex attributes: %d", maxAttribs );
+	info( "render::adapter", "Max vertex attributes: %d", maxAttribs );
 }
 
 //-----------------------------------//

@@ -11,6 +11,8 @@
 namespace vapor {
 	namespace math {
 
+//-----------------------------------//
+
 /**
  * Represents a 3-dimensional vector class template.
  */
@@ -18,7 +20,6 @@ namespace vapor {
 template <typename T>
 class Vector3T
 {
-
 public:
 
 	T x, y, z;
@@ -122,17 +123,18 @@ public:
 		}
 	}
 
-	// special points
-        //static const Vector3 ZERO;
-        //static const Vector3 UNIT_X;
-        //static const Vector3 UNIT_Y;
-        //static const Vector3 UNIT_Z;
-        //static const Vector3 NEGATIVE_UNIT_X;
-        //static const Vector3 NEGATIVE_UNIT_Y;
-        //static const Vector3 NEGATIVE_UNIT_Z;
-        //static const Vector3 UNIT_SCALE;
-
+	// Special points
+	static const Vector3T<float> Zero;
+    //static const Vector3 UNIT_X;
+    //static const Vector3 UNIT_Y;
+    //static const Vector3 UNIT_Z;
+    //static const Vector3 NEGATIVE_UNIT_X;
+    //static const Vector3 NEGATIVE_UNIT_Y;
+    //static const Vector3 NEGATIVE_UNIT_Z;
+    //static const Vector3 UNIT_SCALE;
 };
+
+//-----------------------------------//
 
 /**
  * Specific types
@@ -142,6 +144,10 @@ typedef Vector3T<float> Vector3;
 typedef Vector3T<double> Vector3d;
 
 typedef Vector3 Vertex;
+
+
+
+//-----------------------------------//
 
 } } // end namespaces
 

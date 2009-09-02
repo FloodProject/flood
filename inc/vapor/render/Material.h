@@ -13,6 +13,8 @@
 namespace vapor {
 	namespace render {
 
+//-----------------------------------//
+
 /**
  * Rendering material.
  * TODO: Serialization?
@@ -27,5 +29,11 @@ public:
 
 private:
 };
+
+//-----------------------------------//
+
+typedef tr1::shared_ptr< Material > MaterialPtr;
+
+//-----------------------------------//
 
 } } // end namespaces
