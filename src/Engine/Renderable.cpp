@@ -57,7 +57,7 @@ void Renderable::render( render::Device& device )
     //    ib->bind();
     //    
     //    GLenum type = ib->is16() ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
-    //    glDrawElements(primitiveType, ib->getNumIndices(), type, 0 );
+    //    glDrawElements( primitiveType, ib->getNumIndices(), type, 0 );
 
     //    ib->unbind();
     //}

@@ -28,7 +28,7 @@ class Frustum
 public:
 
     // Constructs the 6 planes making up the frustum, using the passed parameters.
-    Frustum ( float FOV, float AspectRatio, float near, float far, Matrix4 localToWorld);
+    Frustum ( float FOV, float aspectRatio, float near, float far, Matrix4 localToWorld);
     
     // Tests all the points of the AABB to check if they are inside the frustum.
     // Returns true if the aabb is inside or overlaping the frustum, false otherwise

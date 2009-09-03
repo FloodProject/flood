@@ -81,61 +81,47 @@ public:
     // Clears this vertex buffer. All vertex data will be gone.
     void clear();
 
-	bool set( VertexAttribute::Enum attr, const std::vector< math::Vector3 >& data );
-
 	// Returns the number of vertex elements.
 	uint getSize();
 
- //   // these are all the possible types supported by glVertexAttrib
- //   bool set( VertexAttribute::Enum attr, std::vector< byte > const& data );
- //   //bool set( VertexAttribute::Enum attr, std::vector< ubyte > const& data );
- //   bool set( VertexAttribute::Enum attr, std::vector< short > const& data );
- //   bool set( VertexAttribute::Enum attr, std::vector< ushort > const& data );
- //   //{
- //   //    std::vector< byte > bytev( data.size() * sizeof( ushort ) );
- //   //    memcpy( &bytev[0], &data[0], bytev.size() );
- //   //    datamap[attr] = tr1::tuple( 1, Primitive::USHORT, bytev );
- //   //}
- //   //    
- //   bool set( VertexAttribute::Enum attr, std::vector< int > const& data );
- //   bool set( VertexAttribute::Enum attr, std::vector< uint > const& data );
- //   bool set( VertexAttribute::Enum attr, std::vector< float > const& data );
- //   bool set( VertexAttribute::Enum attr, std::vector< double > const& data );
- //   
- //   // VectorX overloads do not need numComponents since the template parameter
- //   // will tell us that, for example math::Vector3 means 3 components
- //   
- //   //bool set( VertexAttribute::Enum attr, std::vector< math::Vector2< byte > > const& data );
- //   ////bool set( VertexAttribute::Enum attr, std::vector< math::Vector2< ubyte > > const& data );
- //   //bool set( VertexAttribute::Enum attr, std::vector< math::Vector2< short > > const& data );
- //   //bool set( VertexAttribute::Enum attr, std::vector< math::Vector2< ushort > > const& data );
- //   //bool set( VertexAttribute::Enum attr, std::vector< math::Vector2< int > > const& data );
- //   //bool set( VertexAttribute::Enum attr, std::vector< math::Vector2< uint > > const& data );
- //   //bool set( VertexAttribute::Enum attr, std::vector< math::Vector2< float > > const& data );
- //   //bool set( VertexAttribute::Enum attr, std::vector< math::Vector2< double > > const& data );
- //       
- //   bool set( VertexAttribute::Enum attr, std::vector< math::Vector3< byte >> const& data );
- //   bool set( VertexAttribute::Enum attr, std::vector< math::Vector3< ubyte >> const& data );
- //   bool set( VertexAttribute::Enum attr, std::vector< math::Vector3< short >> const& data );
- //   bool set( VertexAttribute::Enum attr, std::vector< math::Vector3< ushort >> const& data );
- //   bool set( VertexAttribute::Enum attr, std::vector< math::Vector3< int >> const& data );
- //   bool set( VertexAttribute::Enum attr, std::vector< math::Vector3< uint >> const& data );
- //   bool set( VertexAttribute::Enum attr, std::vector< math::Vector3< float >> const& data );
- //   bool set( VertexAttribute::Enum attr, std::vector< math::Vector3< double >> const& data );
+	// These are all the possible types supported by glVertexAttrib
+	//bool set( VertexAttribute::Enum attr, std::vector< byte > const& data );
+	//bool set( VertexAttribute::Enum attr, std::vector< ubyte > const& data );
+	//bool set( VertexAttribute::Enum attr, std::vector< short > const& data );
+	//bool set( VertexAttribute::Enum attr, std::vector< ushort > const& data );
+	//    
+	//bool set( VertexAttribute::Enum attr, std::vector< int > const& data );
+	//bool set( VertexAttribute::Enum attr, std::vector< uint > const& data );
+	//bool set( VertexAttribute::Enum attr, std::vector< float > const& data );
+	//bool set( VertexAttribute::Enum attr, std::vector< double > const& data );
 
- //   //bool set( VertexAttribute::Enum attr, std::vector< math::Vector4< byte > > const& data );
- //   ////bool set( VertexAttribute::Enum attr, std::vector< math::Vector4< ubyte > > const& data );
- //   //bool set( VertexAttribute::Enum attr, std::vector< math::Vector4< short > > const& data );
- //   //bool set( VertexAttribute::Enum attr, std::vector< math::Vector4< ushort > > const& data );
- //   //bool set( VertexAttribute::Enum attr, std::vector< math::Vector4< int > > const& data );
- //   //bool set( VertexAttribute::Enum attr, std::vector< math::Vector4< uint > > const& data );
- //   //bool set( VertexAttribute::Enum attr, std::vector< math::Vector4< float > > const& data );
- //   //bool set( VertexAttribute::Enum attr, std::vector< math::Vector4< double > > const& data )
- //   //{
- //   //    std::vector< byte > bytev( data.size() * sizeof( math::Vector4< double >) );
- //   //    memcpy( &bytev[0], &data[0], bytev.size() );
- //   //    datamap[attr] = std::tuple( 4, Primitive::DOUBLE, bytev );
- //   }
+	//bool set( VertexAttribute::Enum attr, std::vector< math::Vector2< byte > > const& data );
+	//bool set( VertexAttribute::Enum attr, std::vector< math::Vector2< ubyte > > const& data );
+	//bool set( VertexAttribute::Enum attr, std::vector< math::Vector2< short > > const& data );
+	//bool set( VertexAttribute::Enum attr, std::vector< math::Vector2< ushort > > const& data );
+	//bool set( VertexAttribute::Enum attr, std::vector< math::Vector2< int > > const& data );
+	//bool set( VertexAttribute::Enum attr, std::vector< math::Vector2< uint > > const& data );
+	//bool set( VertexAttribute::Enum attr, std::vector< math::Vector2< float > > const& data );
+	//bool set( VertexAttribute::Enum attr, std::vector< math::Vector2< double > > const& data );
+	//    	
+	//bool set( VertexAttribute::Enum attr, std::vector< math::Vector3< byte >> const& data );
+	//bool set( VertexAttribute::Enum attr, std::vector< math::Vector3< ubyte >> const& data );
+	//bool set( VertexAttribute::Enum attr, std::vector< math::Vector3< short >> const& data );
+	//bool set( VertexAttribute::Enum attr, std::vector< math::Vector3< ushort >> const& data );
+	//bool set( VertexAttribute::Enum attr, std::vector< math::Vector3< int >> const& data );
+	//bool set( VertexAttribute::Enum attr, std::vector< math::Vector3< uint >> const& data );
+	bool set( VertexAttribute::Enum attr, const std::vector< math::Vector3 >& data );
+	//bool set( VertexAttribute::Enum attr, std::vector< math::Vector3< float >> const& data );
+	//bool set( VertexAttribute::Enum attr, std::vector< math::Vector3< double >> const& data );
+
+	//bool set( VertexAttribute::Enum attr, std::vector< math::Vector4< byte > > const& data );
+	//bool set( VertexAttribute::Enum attr, std::vector< math::Vector4< ubyte > > const& data );
+	//bool set( VertexAttribute::Enum attr, std::vector< math::Vector4< short > > const& data );
+	//bool set( VertexAttribute::Enum attr, std::vector< math::Vector4< ushort > > const& data );
+	//bool set( VertexAttribute::Enum attr, std::vector< math::Vector4< int > > const& data );
+	//bool set( VertexAttribute::Enum attr, std::vector< math::Vector4< uint > > const& data );
+	//bool set( VertexAttribute::Enum attr, std::vector< math::Vector4< float > > const& data );
+	//bool set( VertexAttribute::Enum attr, std::vector< math::Vector4< double > > const& data );
 
 private:
 

@@ -22,8 +22,8 @@ namespace vapor {
 //-----------------------------------//
 
 Device::Device()
-	: clearColor(math::Colors::White), adapter(nullptr),
-	window(nullptr), bufferManager(nullptr)
+	: clearColor( math::Colors::White ), adapter( nullptr ),
+	window( nullptr ), bufferManager( nullptr ), activeTarget( nullptr )
 {
 
 }
@@ -127,6 +127,13 @@ void Device::checkExtensions()
 
 //-----------------------------------//
 
+render::Target* Device::getRenderTarget() const
+{
+	return activeTarget;
+}
+
+//-----------------------------------//
+
 //RenderDevice::render( RenderQueue& queue, Matrix4x4 invCamera = Matrix4x4::Identity ) // ?
 //{
 //    // 1. sort renderables by state
@@ -148,14 +155,13 @@ void Device::checkExtensions()
 
 //-----------------------------------//
 
-Window& Device::createWindow( const Settings& settings )
+Window& Device::createWindow( const WindowSettings& settings )
 {
 	Window& window = Window::createWindow( settings );
 
 	this->window = &window;
 
 	setRenderTarget(&window);
-	resetViewport();
 
 	return window;
 }
@@ -164,27 +170,8 @@ Window& Device::createWindow( const Settings& settings )
 
 void Device::clearTarget()
 {
-	glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
-	glClear(GL_COLOR_BUFFER_BIT);
-}
-
-//-----------------------------------//
-
-void Device::resetViewport()
-{
-	if( !window ) return;
-
-	const Settings &s = window->getSettings();
-
-	glViewport(0, 0, s.getWidth(), s.getHeight());
-
-	// TODO: Take this shit out of here... this is Camera stuff.
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(45.0f, (GLfloat) s.getWidth() / (GLfloat) s.getHeight(), 1.0f, 100.0f);
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	glClearColor( clearColor.r, clearColor.g, clearColor.b, clearColor.a );
+	glClear( GL_COLOR_BUFFER_BIT );
 }
 
 //-----------------------------------//

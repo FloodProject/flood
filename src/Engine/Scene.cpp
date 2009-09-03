@@ -24,6 +24,13 @@ Scene::~Scene()
 
 //-----------------------------------//
 
+void Scene::update()
+{
+
+}
+
+//-----------------------------------//
+
 std::string Scene::save(int ind)
 {
 	std::ostringstream os;

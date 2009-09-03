@@ -41,6 +41,8 @@ public:
 	//Listener* createListener();
 	//etc...
 
+	virtual void update();
+
 	virtual std::string save(int indent = 0);
 
 	virtual std::string name() { return "scene"; }

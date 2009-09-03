@@ -14,6 +14,7 @@
 #include <vapor/resources/MS3D.h>
 #include <vapor/resources/Sound.h>
 
+#include <vapor/scene/Camera.h>
 #include <vapor/scene/Sound.h>
 #include <vapor/scene/Listener.h>
 
@@ -76,13 +77,25 @@ void Example::onSetupScene()
 	//ResourceManager* rm = getResourceManager();
 	Scene* scene = getSceneManager();
 
+	// Create a new Camera and position it to look at origin
+	CameraPtr cam( new Camera( getRenderDevice() ) );
+	cam->translate( Vector3( 0.0f, 0.0f, 1.0f ) );
+	cam->lookAt( Vector3.Zero );
+
+	scene->add( cam );
+
 	// Create a new VBO and upload triangle data
 	VertexBufferPtr vb( new VertexBuffer() );
 
-	std::vector< Vector3 > vec(3);
-	std::fill( vec.begin(), vec.end(), Vector3::Zero );
+	std::vector< Vector3 > vertex(3);
+	std::fill( vertex.begin(), vertex.end(), Vector3::Zero );
+
+	std::vector< Vector3 > colors(3);
+	std::fill( colors.begin(), colors.end(), Vector3( 1.0f, 1.0f, 1.0f ) );
 	
-	vb->set( VertexAttribute::Vertex, vec );
+	vb->set( VertexAttribute::Vertex, vertex );
+	vb->set( VertexAttribute::Color, colors );
+
 	vb->build( BufferUsage::Static, BufferAccess::Write );
 
 	// Create a new Renderable from the VBO and render it

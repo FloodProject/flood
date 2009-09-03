@@ -37,13 +37,6 @@ namespace Projection
 
 //-----------------------------------//
 
-// This is a queue of objects that are usually returned by performing a culling
-// operation on the camera.
-typedef std::list< 
-	std::pair< shared_ptr< render::Renderable >, math::Matrix4*> > RenderQueue;
-
-//-----------------------------------//
-
 /**
  * Represents a view from a specific point in the world. Has an associated 
  * projection type, like ortographic or perspective and also holds a frustum 
@@ -55,7 +48,11 @@ class Camera : public Transformable
 {
 public:
 
-	Camera( render::Device* device );
+	Camera( render::Device* device, 
+		Projection::Enum projection = Projection::Perspective );
+
+	// Points the camera to a given point in space.
+	void lookAt( const math::Vector3& pt );
 
 	// Sets the projection type of the camera.
 	void setProjection( Projection::Enum projection );
@@ -70,50 +67,45 @@ public:
 	void setNear( float near );
 
 	// Sets a new render target in the camera.
-	void setRenderTarget( shared_ptr< render::Target > target );
+	void setRenderTarget( render::Target* target );
 
 	// Gets the frustum associated with the camera.
-	const math::Frustum& getFrustum( );
+	const math::Frustum& getFrustum( ) const;
 
 	// Gets the current render target associated with the camera.
-	shared_ptr< render::Target > getRenderTarget() const;
+	render::Target* getRenderTarget() const;
 
 	// Renders the (sub-)scene starting from the passed node to the current 
 	// render target associated in the camera.
-	void render( shared_ptr< Node > node ) const;
-	//{
-	//  RenderQueue queue;
-	//  
-	//  cull( queue, node );
-	//  
-	//  renderTarget->makeCurrent();
-	//  
-	//  renderDevice->render( queue, absoluteLocalToWorld.inverse() );
-	//}
+	void render( NodePtr node ) const;
 
 	// Renders the entire scene starting from the root node to the current 
 	// render target associated in the camera.
 	void render() const;
-	//{
-	//  shared_ptr< Node > parent( getParent() );
-	//  
-	//  while ( parent->getParent() )
-	//	  parent = parent->getParent();
-	//      
-	//  render( parent );
-	//}
 
 	// Performs hierarchical frustum culling on the nodes in the scene starting from the given node.
 	// In other words, the camera will check all the nodes and return a list of those that are
 	// inside its frustum for later rendering (and also their local to world matrices).
 	// The queue is passed as a reference to the cull method, which fills it with the data.
-	void cull( RenderQueue& queue, shared_ptr< Node > root ) const;
+	void cull( render::RenderQueue& queue, NodePtr root ) const;
+
+	virtual void update();
+
+	virtual std::string save( int indent = 0 );
+
+	virtual std::string name() const { return "Camera"; }
 
 private:
 
+	float getAspectRatio() const;
+
+	void handleTargetResize( const render::Settings& );
+
+	void setupProjection();
+
 	Projection::Enum projection;
 	
-	float FOV;
+	float fov;
 
 	// near and far are reserved keywords on MSVC.. so ghey! 
 	float near_;
@@ -121,9 +113,15 @@ private:
 	
 	math::Frustum* frustum;
 
-	shared_ptr< render::Target > target;
-	shared_ptr< render::Device > renderDevice;
+	render::Target* target;
+	render::Device* renderDevice;
+
+	int width, height;
 };
+
+//-----------------------------------//
+
+typedef tr1::shared_ptr< Camera > CameraPtr;
 
 //-----------------------------------//
 

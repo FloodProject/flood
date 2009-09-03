@@ -19,7 +19,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-SFML_Window::SFML_Window(const Settings& settings)
+SFML_Window::SFML_Window(const WindowSettings& settings)
 	: Window( settings ), flags( 0 )
 {
 	if( !open() )

@@ -252,19 +252,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Material.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\render\Material.h"
-				>
-			</File>
-			<File
 				RelativePath=".\RenderDevice.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\render\Target.h"
 				>
 			</File>
 			<Filter
@@ -374,6 +362,30 @@
 						>
 					</File>
 				</Filter>
+			</Filter>
+			<Filter
+				Name="Target"
+				>
+				<File
+					RelativePath=".\Target.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\render\Target.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Material"
+				>
+				<File
+					RelativePath=".\Material.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\render\Material.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -624,14 +636,6 @@
 			Name="Scene"
 			>
 			<File
-				RelativePath=".\Group.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\scene\Group.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Node.cpp"
 				>
 			</File>
@@ -645,14 +649,6 @@
 			</File>
 			<File
 				RelativePath="..\..\inc\vapor\scene\Scene.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Transform.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\scene\Transform.h"
 				>
 			</File>
 			<Filter
@@ -692,6 +688,30 @@
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\scene\Sound.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Transform"
+				>
+				<File
+					RelativePath=".\Transform.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\scene\Transform.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Group"
+				>
+				<File
+					RelativePath=".\Group.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\scene\Group.h"
 					>
 				</File>
 			</Filter>

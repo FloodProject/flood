@@ -25,24 +25,18 @@ namespace vapor {
  * in the future, anti-aliasing settings, and custom window handle hooks.
  */
 
-class Settings
+class WindowSettings : public Settings
 {
 public:
 
-	Settings(const int width = 640, const int height = 480,
+	WindowSettings( const int width = 640, const int height = 480,
 		const bool fullscreen = false, 
 		const std::string title = "Untitled",
 		const int bpp = 32, 
 		const int depthbits = 24, 
 		const int stencilbits = 8,
 		const int aalevel = 0, 
-		void* customHandle = nullptr);
-
-	// Gets the width of the window
-	const int getWidth() const { return width; }
-	
-	// Gets the height of the window
-	const int getHeight() const { return height; }
+		void* customHandle = nullptr );
 
 	// Gets the window title
 	const std::string& getTitle() const { return title; }
@@ -65,12 +59,6 @@ public:
 	// Gets the antialiasing level of the window
 	const int getAALevel() const { return aalevel; }
 
-	// Sets the width of the window
-	void setWidth(int w) { width = w; }
-	
-	// Gets the height of the window
-	void setHeight(int h) { height = h; }
-
 	// Sets the window title
 	void setTitle(const std::string& str) { title = str; }
 	
@@ -83,22 +71,18 @@ public:
 	// Sets the antialiasing level of the window
 	void setAALevel(int aal) { aalevel = aal; }
 
-public:
+protected:
 
-	int width, height, bpp, depthbits, stencilbits, aalevel;
+	int bpp;
+	int depthbits;
+	int stencilbits;
+	int aalevel;
+	
 	bool fullscreen;
+	
 	void* customHandle;
+	
 	std::string title;
-};
-
-//-----------------------------------//
-
-struct WindowResizeEvent
-{
-	WindowResizeEvent(int w, int h);
-
-	int width;
-	int height;
 };
 
 //-----------------------------------//
@@ -115,7 +99,7 @@ class Window : public RenderTarget
 {
 public:
 
-	Window (const Settings& settings);
+	Window (const WindowSettings& settings);
 	virtual ~Window ();
 
 	// Updates the window content.
@@ -140,10 +124,8 @@ public:
 	virtual input::InputManager& getInputManager() = 0;
 
 	// Create a new render window.
-	static Window& createWindow( const Settings& settings = Settings() );
-
-	// Event fired when the window gets resized.
-	fd::delegate< void( const WindowResizeEvent& ) > onWindowResize;
+	static Window& createWindow( 
+		const WindowSettings& settings = WindowSettings() );
 
 	// Event fired when the window is closed.
 	fd::delegate< void( void ) > onWindowClose;
@@ -157,7 +139,7 @@ protected:
 	void handleWindowClose();
 
 	// Holds the window settings
-	Settings settings;
+	WindowSettings settings;
 };
 
 //-----------------------------------//

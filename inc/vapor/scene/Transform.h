@@ -28,7 +28,7 @@ class TransformInterface
 {
 public:
 
-	virtual void translate( math::Vector3 const& tr ) = 0;
+	virtual void translate( const math::Vector3& tr ) = 0;
   
 	virtual void rotate( float xang, float yang, float zang ) = 0;
   

@@ -25,10 +25,10 @@ namespace vapor {
 
 //-----------------------------------//
 
-Settings::Settings(const int width, const int height, const bool fullscreen,
+WindowSettings::WindowSettings(const int width, const int height, const bool fullscreen,
 	const std::string title, const int bpp, const int depthbits, 
 	const int stencilbits, const int aalevel,  void* customHandle)
-	: width(width), height(height), title(title), bpp(bpp), 
+	: Settings( width, height ), title(title), bpp(bpp), 
 	depthbits(depthbits),  stencilbits(stencilbits), aalevel(aalevel),
 	fullscreen(fullscreen), customHandle(customHandle)
 {
@@ -37,16 +37,8 @@ Settings::Settings(const int width, const int height, const bool fullscreen,
 
 //-----------------------------------//
 
-WindowResizeEvent::WindowResizeEvent( int w, int h )
-	: width( w ), height( h )
-{
-
-}
-
-//-----------------------------------//
-
-Window::Window(const Settings& settings)
-	: settings(settings)
+Window::Window(const WindowSettings& settings)
+	: settings( settings )
 {
 	info( "render::window", 
 		"Creating %swindow (size: %dx%d, title: '%s', bits-per-pixel: %d)",
@@ -78,16 +70,14 @@ const Settings& Window::getSettings()
 
 void Window::handleWindowResize()
 {
-	if( onWindowResize.empty() )
+	if( onTargetResize.empty() )
 	{
 		return;
 	}
 
-	const Settings& s = getSettings();
+	const Settings& settings = getSettings();
 
-	WindowResizeEvent wre( s.getWidth(), s.getHeight() );
-
-	onWindowResize( wre );
+	onTargetResize( settings );
 }
 
 //-----------------------------------//
@@ -104,7 +94,7 @@ void Window::handleWindowClose()
 
 //-----------------------------------//
 
-Window& Window::createWindow( const Settings& settings )
+Window& Window::createWindow( const WindowSettings& settings )
 {
 	Window* window;
 
@@ -113,7 +103,7 @@ Window& Window::createWindow( const Settings& settings )
 	#elif defined(VAPOR_WINDOWING_WIN32)
 		window = new Win32Window(settings);
 	#elif defined(VAPOR_WINDOWING_SFML)
-		window = new SFML_Window( const_cast< Settings& >( settings ) );
+		window = new SFML_Window( const_cast< WindowSettings& >( settings ) );
 	#else
 		#error "Could not find a window implementation"
 	#endif

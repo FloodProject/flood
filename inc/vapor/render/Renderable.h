@@ -89,4 +89,11 @@ private:
 
 //-----------------------------------//
 
+// This is a queue of objects that are usually returned by performing a culling
+// operation on the camera.
+typedef std::list< 
+	std::pair< shared_ptr< render::Renderable >, math::Matrix4*> > RenderQueue;
+
+//-----------------------------------//
+
 } } // end namespaces

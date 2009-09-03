@@ -53,12 +53,11 @@ public:
 	Device();
 	~Device();
 
-	// Initializes the rendering system.
-	// (Needs an an OpenGL context)
+	// Initializes the rendering system. (Needs an an OpenGL context)
 	void init();
 
-	// Create a new render window.
-	Window& createWindow( const Settings& settings = Settings() );
+	// Creates a new render window.
+	Window& createWindow( const WindowSettings& settings = WindowSettings() );
 
 	// Gets the main window.
 	Window* getWindow() const;
@@ -68,6 +67,9 @@ public:
 
 	// Gets the buffer manager.
 	BufferManager* getBufferManager() const;
+
+	// Gets the current active render target.
+	render::Target* getRenderTarget() const;
 
 	// Updates the target render target.
 	void updateTarget( );
@@ -87,7 +89,7 @@ protected:
 	RenderTarget* activeTarget;
 
 	// List of render targets
-	std::vector<RenderTarget*> renderTargets;
+	std::vector< RenderTarget* > renderTargets;
 
 	// Adapter information
 	Adapter* adapter;
@@ -103,10 +105,12 @@ protected:
 
 private:
 
-	void resetViewport();
-
 	void checkExtensions();
 };
+
+//-----------------------------------//
+
+typedef tr1::shared_ptr< Device > DevicePtr;
 
 //-----------------------------------//
 

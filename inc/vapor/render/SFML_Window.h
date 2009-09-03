@@ -30,7 +30,7 @@ class SFML_Window : public Window
 {
 public:
 
-	SFML_Window(const Settings& settings);
+	SFML_Window(const WindowSettings& settings);
 	virtual ~SFML_Window();
 
 	// Swaps the buffers (updates the display).
