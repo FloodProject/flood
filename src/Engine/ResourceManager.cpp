@@ -34,7 +34,12 @@ ResourceManager::~ResourceManager()
 	typedef std::pair< std::string, ResourceLoader* > pair_t;
 
 	foreach( pair_t entry, resourceLoaders )
-		delete entry.second;
+	{
+		if( entry.second->getExtensions().size() == 1 )
+			delete entry.second;
+		else
+			entry.second->getExtensions().remove( entry.first );
+	}
 }
 
 //-----------------------------------//

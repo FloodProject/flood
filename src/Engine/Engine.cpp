@@ -22,6 +22,10 @@
 	#include "vapor/resources/OGG_Loader.h"
 #endif
 
+#ifdef VAPOR_SHADER_GLSL
+	#include "vapor/resources/GLSL_Loader.h"
+#endif
+
 #ifdef VAPOR_AUDIO_OPENAL
 	#include "vapor/audio/Device.h"
 #endif
@@ -134,22 +138,22 @@ void Engine::setupResourceLoaders()
 	if(!resourceManager) return;
 
 	std::vector<ResourceLoader*> loaders;
-	ResourceLoader* loader = nullptr;
 
 	// register default compiled codecs
 	#ifdef VAPOR_IMAGE_PICOPNG
-		loader = new PNG_Pico_Loader();
-		loaders.push_back(loader);
+		loaders.push_back( new PNG_Pico_Loader() );
 	#endif
 
 	#ifdef VAPOR_MESH_MILKSHAPE3D
-		loader = new MS3D_Loader();
-		loaders.push_back(loader);
+		loaders.push_back( new MS3D_Loader() );
 	#endif
 
 	#ifdef VAPOR_AUDIO_OGG
-		loader = new OGG_Loader();
-		loaders.push_back(loader);
+		loaders.push_back( new OGG_Loader() );
+	#endif
+
+	#ifdef VAPOR_SHADER_GLSL
+		loaders.push_back( new GLSL_Loader() );
 	#endif
 
 	foreach( ResourceLoader* loader, loaders )

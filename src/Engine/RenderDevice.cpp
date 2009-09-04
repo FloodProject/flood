@@ -43,6 +43,10 @@ void Device::init()
 
 	adapter = new Adapter();
 	bufferManager = new BufferManager();
+
+	// TODO: move this somewhere more appropriate
+	glEnableClientState( GL_VERTEX_ARRAY );
+	glEnableClientState( GL_COLOR_ARRAY );
 }
 
 //-----------------------------------//

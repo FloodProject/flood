@@ -46,6 +46,8 @@
 //#define VAPOR_RENDERER_SOFTWARE
 //#define VAPOR_RENDERER_NULL
 
+#define VAPOR_SHADER_GLSL
+
 //-------------------------------------------------------------------------//
 // Audio APIs
 //-------------------------------------------------------------------------//

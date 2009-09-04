@@ -20,6 +20,8 @@ Scripting languages
 
 	Lua
 	
+		Decoda
+	
 	ChaiScript
 	
 	AngelScript
@@ -28,4 +30,8 @@ Scripting languages
 	
 	Guile
 	
+	TinyScheme
+	
 http://www.ogre3d.org/wiki/index.php/Libraries#Scripting
+
+http://codeplea.com/game-scripting-languages

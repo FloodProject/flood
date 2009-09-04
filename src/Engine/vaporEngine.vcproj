@@ -502,6 +502,22 @@
 			<Filter
 				Name="Shaders"
 				>
+				<File
+					RelativePath=".\GLSL_Loader.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\resources\GLSL_Loader.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Shader.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\resources\Shader.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Audio"

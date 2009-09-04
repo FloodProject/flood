@@ -83,25 +83,36 @@ public:
 	// render target associated in the camera.
 	void render() const;
 
-	// Performs hierarchical frustum culling on the nodes in the scene starting from the given node.
-	// In other words, the camera will check all the nodes and return a list of those that are
-	// inside its frustum for later rendering (and also their local to world matrices).
-	// The queue is passed as a reference to the cull method, which fills it with the data.
+	// Performs hierarchical frustum culling on the nodes in the scene 
+	// starting from the given node.In other words, the camera will check 
+	// all the nodes and return a list of those that are inside its frustum
+	// for later rendering (and also their local to world matrices). 
+	// The queue is passed as a reference to the cull method, which fills 
+	// it with the data.
 	void cull( render::RenderQueue& queue, NodePtr root ) const;
 
+	// Updates this node.
 	virtual void update();
 
+	// Serializes this node.
 	virtual std::string save( int indent = 0 );
-
+	
+	// Gets the name of this node.
 	virtual std::string name() const { return "Camera"; }
 
 private:
 
+	// Gets the aspect ratio of the target.
 	float getAspectRatio() const;
 
+	// Handles target resize (must update width, height).
 	void handleTargetResize( const render::Settings& );
 
+	// Sets up the projection matrices for OpenGL.
 	void setupProjection();
+
+	// Sets up the view matrices for OpenGL.
+	void setupView();
 
 	Projection::Enum projection;
 	

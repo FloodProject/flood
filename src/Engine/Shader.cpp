@@ -8,21 +8,25 @@
 
 #include "vapor/PCH.h"
 
-#include "vapor/resources/Image.h"
+#include "vapor/resources/Shader.h"
 
 namespace vapor {
 	namespace resources {
 
 //-----------------------------------//
 
-namespace PixelFormat
+namespace ShaderType
 {
 	const std::string getString(Enum e) 
 	{
 		switch(e) 
 		{
-		case R8G8B8A8:
-			return "R8G8B8A8";
+		case Vertex:
+			return "Vertex";
+		case Fragment:
+			return "Fragment";
+		case Geometry:
+			return "Geometry";
 		default:
 			return "";
 		}
@@ -31,26 +35,6 @@ namespace PixelFormat
 
 //-----------------------------------//
 
-Image::Image(const uint w, const uint h, PixelFormat::Enum pf)
-	: width(w), height(h), pixelFormat(pf) 
-{
-}
-
-//-----------------------------------//
-
-Image::~Image()
-{
-	//delete buffer;
-}
-
-//-----------------------------------//
-
-void Image::log() const
-{
-	info("Image", "Image has pixel format '%s' and size %dx%d", 
-		PixelFormat::getString(getPixelFormat()).c_str(), 
-		getWidth(), getHeight());
-}
 
 //-----------------------------------//
 

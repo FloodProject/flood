@@ -10,6 +10,8 @@
 
 #include "vapor/scene/Camera.h"
 
+using namespace vapor::render;
+
 namespace vapor {
 	namespace scene {
 
@@ -19,10 +21,17 @@ Camera::Camera( render::Device* device, Projection::Enum projection )
 	: renderDevice( device ), projection( projection ),
 		target( device->getRenderTarget() ), near_( 0.0f ), far_( 100.0f )
 {
-	if( target ) 
-	{
-		target->onTargetResize.bind( &Camera::handleTargetResize, this );
-	}
+	if( !target ) return;
+
+	target->onTargetResize.bind( &Camera::handleTargetResize, this );
+
+	const Settings& settings = target->getSettings();
+
+	width = settings.getWidth();
+	height = settings.getHeight();
+
+	setupProjection();
+	setupView();
 }
 
 //-----------------------------------//
@@ -82,20 +91,30 @@ void Camera::handleTargetResize( const render::Settings& evt )
 void Camera::update()
 {
 	setupProjection();
+	setupView();
 }
 
 //-----------------------------------//
 
 void Camera::setupProjection()
 {
-	glMatrixMode(GL_PROJECTION);
+	glMatrixMode( GL_PROJECTION );
 	
 	glLoadIdentity();
 	gluPerspective( fov, getAspectRatio(), near_, far_ );
 
-	glMatrixMode(GL_MODELVIEW);
+	glMatrixMode( GL_MODELVIEW );
+}
+
+//-----------------------------------//
+
+void Camera::setupView()
+{
+	glMatrixMode( GL_MODELVIEW );
 	
 	glLoadIdentity();
+
+	glTranslatef( translation.x, translation.y, translation.z );
 }
 
 //-----------------------------------//

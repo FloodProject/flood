@@ -51,11 +51,13 @@ bool VertexBuffer::bind()
 {
 	glBindBuffer( GL_ARRAY_BUFFER, id );
 
+#ifdef VAPOR_DEBUG
 	if( glGetError() != GL_NO_ERROR )
 	{
 		warn( "gl::buffers", "Error binding vertex buffer" );
 		return false;
 	}
+#endif
 
 	bindPointers();
 
@@ -85,11 +87,13 @@ void VertexBuffer::bindPointers()
 
 		glVertexAttribPointer( p.first, size, type, GL_FALSE, 0, (void*) offset );
 
+#ifdef VAPOR_DEBUG
 		// check for errors
 		if( glGetError() != GL_NO_ERROR )
 		{
 			warn( "gl::buffers", "Error binding pointers to buffer" );
 		}
+#endif
 
 		offset += vec.size();
 	}
@@ -101,11 +105,13 @@ bool VertexBuffer::unbind()
 {
 	glBindBuffer( GL_ARRAY_BUFFER, 0 );
 
+#ifdef VAPOR_DEBUG
 	if( glGetError() != GL_NO_ERROR )
 	{
 		warn( "gl::buffers", "Error unbinding vertex buffer (id: '%d')", id );	
 		return false;
 	}
+#endif
 
 	if( built )
 	{
@@ -148,11 +154,13 @@ bool VertexBuffer::build( BufferUsage::Enum bU, BufferAccess::Enum bA )
 
 	debug( "buffer '%d' has size '%d'", id, getSize() );
 
+#ifdef VAPOR_DEBUG
 	if( glGetError() != GL_NO_ERROR )
 	{
 		warn( "gl:buffers", "Could not allocate storage for buffer" );
 		return false;
 	}
+#endif
 
 	int offset = 0;
 	foreach( const attributePair& p, attributeMap )
@@ -162,11 +170,13 @@ bool VertexBuffer::build( BufferUsage::Enum bU, BufferAccess::Enum bA )
 		offset += vec.size();
 	}
 
+#ifdef VAPOR_DEBUG
 	if( glGetError() != GL_NO_ERROR )
 	{
 		warn( "gl:buffers", "Could not buffer the data" );
 		return false;
 	}
+#endif
 
 	built = true;
 

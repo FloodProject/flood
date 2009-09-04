@@ -51,8 +51,6 @@ protected:
 
 	Transformable();
 	~Transformable();
-  
-private:
 
 	//shared_ptr<math::Vector3> translation;
 	//shared_ptr<math::Matrix4> orientation;

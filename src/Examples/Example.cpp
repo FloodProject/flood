@@ -79,19 +79,22 @@ void Example::onSetupScene()
 
 	// Create a new Camera and position it to look at origin
 	CameraPtr cam( new Camera( getRenderDevice() ) );
-	cam->translate( Vector3( 0.0f, 0.0f, 1.0f ) );
+	cam->translate( Vector3( 0.0f, 0.0f, -1.0f ) );
 	cam->lookAt( Vector3.Zero );
+	cam->update();
 
 	scene->add( cam );
 
 	// Create a new VBO and upload triangle data
 	VertexBufferPtr vb( new VertexBuffer() );
 
-	std::vector< Vector3 > vertex(3);
-	std::fill( vertex.begin(), vertex.end(), Vector3::Zero );
+	std::vector< Vector3 > vertex;
+	vertex.push_back( Vector3( 0.0f, 1.0f, 0.0f ) );
+	vertex.push_back( Vector3( -1.0f, -1.0f, 0.0f ) );
+	vertex.push_back( Vector3( 1.0f, -1.0f, 0.0f ) );
 
 	std::vector< Vector3 > colors(3);
-	std::fill( colors.begin(), colors.end(), Vector3( 1.0f, 1.0f, 1.0f ) );
+	std::fill( colors.begin(), colors.end(), Vector3( 1.0f, 0.0f, 0.0f ) );
 	
 	vb->set( VertexAttribute::Vertex, vertex );
 	vb->set( VertexAttribute::Color, colors );

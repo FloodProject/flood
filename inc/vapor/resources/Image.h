@@ -14,6 +14,8 @@
 namespace vapor {
 	namespace resources {
 
+//-----------------------------------//
+
 /**
  * Possible pixel formats for an image.
  */
@@ -27,6 +29,8 @@ namespace PixelFormat
 
 	const std::string getString(Enum e);
 }
+
+//-----------------------------------//
 
 /**
  * Represents an image in the engine. An image usually holds uncompressed 
@@ -80,5 +84,7 @@ private:
 	// holds the image data
 	std::vector<byte> buffer;
 };
+
+//-----------------------------------//
 
 } } // end namespaces
