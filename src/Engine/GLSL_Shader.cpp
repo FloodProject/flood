@@ -55,7 +55,11 @@ GLSL_Shader::~GLSL_Shader()
 
 bool GLSL_Shader::compile()
 {
-	upload();
+	if( !upload() )
+	{
+		log = "Shader source file is empty";
+		return false;
+	}
 
 	glCompileShader( shaderId );
 
@@ -73,6 +77,7 @@ bool GLSL_Shader::compile()
 
 	if( status != GL_TRUE ) 
 	{
+		error( "glsl", "Error compiling shader '%s'", getPath().c_str() );
 		compiled = false;
 		return false; 
 	}
@@ -110,9 +115,9 @@ void GLSL_Shader::getGLSLLog()
 	GLint size;
 	glGetShaderiv( shaderId, GL_INFO_LOG_LENGTH, &size );
 
-	if( size == 0)
+	if( size == 0 )
 	{
-		log.clear();
+		log = "Shader source file compiled with success";
 		return;
 	}
 

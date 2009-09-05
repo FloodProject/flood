@@ -40,6 +40,7 @@ typedef unsigned long	ulong;
 #include <list>
 #include <map>
 #include <tuple>
+#include <stack>
 
 //---------------------------------------------------------------------//
 // C++0x compatability macros

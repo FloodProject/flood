@@ -50,7 +50,7 @@ protected:
 
 private:
 
-	vapor::render::Renderable* rend;
+	int camIndex;
 	vapor::math::Color c;
 	bool runLoop;
 };

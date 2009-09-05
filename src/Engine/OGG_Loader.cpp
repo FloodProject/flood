@@ -87,8 +87,10 @@ Sound* OGG_Loader::decode(File& file)
 
 	ov_clear(&oggFile);
 
-	// The frequency of the sampling rate
-	return new Sound( format, frequency, buffer );
+	Sound* sound = new Sound( format, frequency, buffer );
+	sound->setPath( file.getPath() );
+
+	return sound;
 }
 
 //-----------------------------------//

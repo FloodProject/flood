@@ -55,7 +55,7 @@ Engine::Engine(std::string app, const char** argv, bool autoInit)
 
 Engine::~Engine()
 {
-	delete sceneNode;
+	//delete sceneNode;
 
 #ifdef VAPOR_AUDIO_OPENAL
 	delete audioDevice;
@@ -89,7 +89,7 @@ void Engine::init()
 	setupDevices();
 
 	// create the root scene node
-	sceneNode = new scene::Scene();
+	sceneNode.reset( new scene::Scene() );
 }
 
 //-----------------------------------//

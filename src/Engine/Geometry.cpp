@@ -8,46 +8,53 @@
 
 #include "vapor/PCH.h"
 
-#include "vapor/scene/Node.h"
+#include "vapor/scene/Geometry.h"
 
 namespace vapor {
 	namespace scene {
 
+using namespace vapor::render;
+
 //-----------------------------------//
 
-Node::Node( NodePtr parent )
-	: parent( parent )
+Geometry::Geometry( RenderablePtr rend )
+{
+	renderables.push_back( rend );
+}
+
+//-----------------------------------//
+
+Geometry::~Geometry()
 {
 
 }
 
 //-----------------------------------//
 
-Node::~Node()
+void Geometry::addRenderable( RenderablePtr rend )
+{
+	renderables.push_back( rend );
+}
+
+//-----------------------------------//
+
+void Geometry::update( )
 {
 
 }
 
 //-----------------------------------//
 
-NodePtr Node::getParent( ) const
+const std::string Geometry::save(int indent)
 {
-	NodePtr ret( parent.lock() );
-	return ret;
+	return "";
 }
 
 //-----------------------------------//
 
-void Node::setParent( NodePtr parent )
+const std::string Geometry::name() const
 {
-	this->parent = parent;
-}
-
-//-----------------------------------//
-
-const std::string Node::name() const
-{
-	return "Node";
+	return "Geometry";
 }
 
 //-----------------------------------//

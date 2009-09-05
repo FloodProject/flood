@@ -18,7 +18,7 @@ namespace vapor {
 //-----------------------------------//
 
 /**
-`* GLSL Shader.
+ * GLSL Shader.
  */
 
 class GLSL_Shader : public resources::Shader

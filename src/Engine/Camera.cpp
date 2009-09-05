@@ -99,9 +99,16 @@ void Camera::update()
 void Camera::setupProjection()
 {
 	glMatrixMode( GL_PROJECTION );
-	
 	glLoadIdentity();
-	gluPerspective( fov, getAspectRatio(), near_, far_ );
+
+	if( projection == Projection::Perspective )
+	{
+		gluPerspective( fov, getAspectRatio(), near_, far_ );
+	}
+	else
+	{
+		//glOrtho( -1.0, 1.0, -1.0, 1.0, near, far );
+	}
 
 	glMatrixMode( GL_MODELVIEW );
 }
@@ -113,6 +120,8 @@ void Camera::setupView()
 	glMatrixMode( GL_MODELVIEW );
 	
 	glLoadIdentity();
+
+	// TODO: parent matrices
 
 	glTranslatef( translation.x, translation.y, translation.z );
 }
@@ -135,27 +144,49 @@ float Camera::getAspectRatio() const
 
 void Camera::render( NodePtr node ) const
 {
-//  NodePtr parent( getParent() );
-//  
-//  while ( parent->getParent() )
-//	  parent = parent->getParent();
-//      
-//  render( parent );
+
+}
+
+//-----------------------------------//
+
+void Camera::render( ) const
+{
+	NodePtr parent = getParent();
+
+	while ( parent->getParent() )
+	  parent = parent->getParent();
+	  
+	render( parent );
 }
 
 //-----------------------------------//
 
 void Camera::cull( render::RenderQueue& queue, NodePtr root ) const
 {
-
+	
 }
 
 //-----------------------------------//
 
-std::string Camera::save( int indent )
+const std::string Camera::save( int indent )
 {
 	return "";
 }
+
+//-----------------------------------//
+
+const std::string Camera::name() const
+{
+	return "Camera"; 
+}
+
+//-----------------------------------//
+
+//tr1::shared_ptr< Camera > Group::shared_from_this()
+//{ 
+//	return tr1::static_pointer_cast< Camera >( 
+//		Node::shared_from_this() ); 
+//}
 
 //-----------------------------------//
 

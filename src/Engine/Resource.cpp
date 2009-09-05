@@ -41,7 +41,8 @@ namespace ResourceGroup
 
 //-----------------------------------//
 
-Resource::Resource()
+Resource::Resource( const std::string& uri )
+	: uri( uri )
 {
 
 }
@@ -53,6 +54,20 @@ Resource::~Resource()
 
 }
 
+
+//-----------------------------------//
+
+const std::string& Resource::getPath()
+{
+	return uri;
+}
+
+//-----------------------------------//
+
+void Resource::setPath( const std::string& uri )
+{
+	this->uri = uri;
+}
 
 //-----------------------------------//
 

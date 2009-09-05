@@ -8,36 +8,28 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
+#include "vapor/resources/Shader.h"
+
+#include "vapor/render/GL.h"
 
 namespace vapor {
 	namespace render {
 
 //-----------------------------------//
-
+		
 /**
- * Rendering material.
- * TODO: Serialization?
+ * GLSL Shader.
  */
 
-class Material
+class GLSL_Program
 {
 public:
 
-	Material();
-	~Material();
+	GLSL_Program( resources::ShaderType::Enum e, const std::string& text );
+	virtual ~GLSL_Program();
 
-private:
-
-	// Textures
-
-	// Shaders
 
 };
-
-//-----------------------------------//
-
-typedef tr1::shared_ptr< Material > MaterialPtr;
 
 //-----------------------------------//
 

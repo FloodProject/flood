@@ -70,7 +70,9 @@ public:
 	// void release();
 
 	// Gets the path that identifies this resource.
-	//virtual std::string getPath() = 0;
+	virtual const std::string& getPath();
+
+	virtual void setPath( const std::string& uri );
 	
 	// Gets the resource group associated with this resource.
 	virtual ResourceGroup::Enum getResourceGroup() const = 0;
@@ -80,7 +82,9 @@ public:
 
 protected:
 
-	Resource();
+	Resource( const std::string& uri = "" );
+
+	std::string uri;
 };
 
 //-----------------------------------//

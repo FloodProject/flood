@@ -6,38 +6,34 @@
 *
 ************************************************************************/
 
-#pragma once
+#include "vapor/PCH.h"
 
-#include "vapor/Platform.h"
+#include "vapor/resources/ResourceFile.h"
 
 namespace vapor {
-	namespace render {
+	namespace resources {
 
 //-----------------------------------//
 
-/**
- * Rendering material.
- * TODO: Serialization?
- */
-
-class Material
+ResourceFile::ResourceFile( vfs::FilePtr file )
+	: file( file )
 {
-public:
 
-	Material();
-	~Material();
-
-private:
-
-	// Textures
-
-	// Shaders
-
-};
+}
 
 //-----------------------------------//
 
-typedef tr1::shared_ptr< Material > MaterialPtr;
+ResourceFile::~ResourceFile()
+{
+
+}
+
+//-----------------------------------//
+
+const std::string& ResourceFile::getPath() const
+{
+	return file->getPath();
+}
 
 //-----------------------------------//
 

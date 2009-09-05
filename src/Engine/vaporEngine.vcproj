@@ -391,6 +391,14 @@
 				Name="Shaders"
 				>
 				<File
+					RelativePath=".\GLSL_Program.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\render\GLSL_Program.h"
+					>
+				</File>
+				<File
 					RelativePath=".\GLSL_Shader.cpp"
 					>
 				</File>
@@ -409,6 +417,14 @@
 			</File>
 			<File
 				RelativePath="..\..\inc\vapor\resources\Resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ResourceFile.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\resources\ResourceFile.h"
 				>
 			</File>
 			<File
@@ -740,6 +756,18 @@
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\scene\Group.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Geometry"
+				>
+				<File
+					RelativePath=".\Geometry.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\scene\Geometry.h"
 					>
 				</File>
 			</Filter>

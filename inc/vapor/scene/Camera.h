@@ -95,10 +95,12 @@ public:
 	virtual void update();
 
 	// Serializes this node.
-	virtual std::string save( int indent = 0 );
+	virtual const std::string save( int indent = 0 );
 	
 	// Gets the name of this node.
-	virtual std::string name() const { return "Camera"; }
+	virtual const std::string name() const;
+
+	//tr1::shared_ptr< Camera > shared_from_this();
 
 private:
 

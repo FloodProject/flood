@@ -42,7 +42,7 @@ VertexBuffer::VertexBuffer()
 
 VertexBuffer::~VertexBuffer()
 {
-
+	clear();
 }
 
 //-----------------------------------//
@@ -131,6 +131,7 @@ bool VertexBuffer::set( VertexAttribute::Enum attr,
 {
 	built = false;
 
+	// TODO: optimize this, copies twice...
 	std::vector< byte > bytev( data.size() * sizeof( math::Vector3 ) );
 	memcpy( &bytev[0], &data[0], bytev.size() );
 	attributeMap[attr] = tr1::make_tuple( 3, VertexBuffer::FLOAT, bytev );
@@ -142,6 +143,9 @@ bool VertexBuffer::set( VertexAttribute::Enum attr,
 
 bool VertexBuffer::build( BufferUsage::Enum bU, BufferAccess::Enum bA )
 {
+	bufferUsage = bU;
+	bufferAccess = bA;
+
 	bind();
 
 	// check that all vertex attributes elements are the same size

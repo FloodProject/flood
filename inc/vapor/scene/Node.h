@@ -15,6 +15,12 @@ namespace vapor {
 
 //-----------------------------------//
 
+class Node;
+
+typedef tr1::shared_ptr< Node > NodePtr;
+
+//-----------------------------------//
+
 /**
  * Represents a node, that is, an entity in the scene. 
  * The entities are divided into two main types:
@@ -22,37 +28,34 @@ namespace vapor {
  *   ~ Group (group of other entities in the scene)
  */
 
-class Node
+class Node : public tr1::enable_shared_from_this< Node >, 
+	private boost::noncopyable
 {
 public:
 
-  explicit Node( Node* parent = nullptr );
+  explicit Node( NodePtr parent = NodePtr() );
   virtual ~Node();
   
   // Sets the parent of the node.
-  void setParent( Node* parent );
+  void setParent( NodePtr parent );
   
   // Gets the parent of the node.
-  Node* getParent() const { return parent; }
+  NodePtr getParent() const;
   
   // Gets the bounding volume of the node.
   //AABB getBoundingVolume() const;
 
   virtual void update() = 0;
 
-  virtual std::string save(int indent = 0) = 0;
+  virtual const std::string save(int indent = 0) = 0;
 
-  virtual std::string name() const { return "Node"; }
+  virtual const std::string name() const;
   
 private:
 
-	Node* parent;
-  //AABB boundingVolume;
+	tr1::weak_ptr< Node > parent;
+	//AABB boundingVolume;
 };
-
-//-----------------------------------//
-
-typedef tr1::shared_ptr< Node > NodePtr;
 
 //-----------------------------------//
 

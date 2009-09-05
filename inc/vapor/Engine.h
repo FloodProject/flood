@@ -75,7 +75,7 @@ public:
 #endif
 
 	// Gets the scene interface.
-	scene::Scene* getSceneManager() const { return sceneNode; }
+	scene::ScenePtr getSceneManager() const { return sceneNode; }
 	
 	// Gets the resources manager.
 	resources::ResourceManager* getResourceManager() const { return resourceManager; }
@@ -99,7 +99,7 @@ protected:
 #endif
 
 	// Scene root node
-	scene::Scene* sceneNode;
+	scene::ScenePtr sceneNode;
 
 	// Rendering device
 	render::Device* renderDevice;

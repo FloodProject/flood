@@ -62,7 +62,11 @@ Shader* GLSL_Loader::decode(File& file)
 
 	std::string str( text.begin(), text.end() );
 
-	return new render::GLSL_Shader( type, str );
+	render::GLSL_Shader* shader;
+	shader = new render::GLSL_Shader( type, str );
+	shader->setPath( path );
+
+	return shader;
 }
 
 //-----------------------------------//

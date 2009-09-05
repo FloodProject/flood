@@ -11,8 +11,12 @@
 #include "vapor/Platform.h"
 #include "vapor/scene/Group.h"
 
+#include "vapor/math/Matrix.h"
+
 namespace vapor {
 	namespace scene {
+
+//-----------------------------------//
 
 /**
  * Scene tree that holds all the nodes attached to the scene. This is the
@@ -26,11 +30,9 @@ class Scene : public Group
 {
 public:
 
+	//Scene();
+
 	virtual ~Scene();
-
-	void evaluate();
-
-	//virtual std::string save();
 
 	//shared_ptr<Mesh> createMesh();
 
@@ -41,11 +43,22 @@ public:
 	//Listener* createListener();
 	//etc...
 
-	//virtual void update();
+	virtual void update();
 
-	virtual std::string save(int indent = 0);
+	virtual const std::string save(int indent = 0);
 
-	virtual std::string name() { return "scene"; }
+	virtual const std::string name() { return "scene"; }
+
+private:
+
+	void updateTransformAndBV( NodePtr node, 
+		std::stack< math::Matrix4 >& transformStack );
 };
+
+//-----------------------------------//
+
+typedef tr1::shared_ptr< Scene > ScenePtr;
+
+//-----------------------------------//
 
 } } // end namespaces

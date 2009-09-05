@@ -51,6 +51,7 @@ Image* PNG_Pico_Loader::decode(File& file)
 	// is always the same, 32bits per pixel, RGBA 8 bits per component.
 	Image* image = new Image(width, height, PixelFormat::R8G8B8A8);
 	image->setBuffer(buffer);
+	image->setPath( file.getPath() );
 
 	return image;
 }
