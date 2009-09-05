@@ -108,6 +108,9 @@ Log::Log(const std::string& title, const std::string& filename)
 	start( title );
 
 	info("log", "Creating log file '%s'", filename.c_str());
+
+	if( Log::getLogger() == nullptr )
+		Log::setLogger( this );
 }
 
 //-----------------------------------//
@@ -118,6 +121,9 @@ Log::~Log()
 
 	end();
 	close();
+
+	if( engineLog == this )
+		engineLog = nullptr;
 }
 
 //-----------------------------------//
@@ -131,7 +137,7 @@ Log* Log::getLogger()
 
 void Log::setLogger(Log* log)
 {
-	delete engineLog;
+	//delete engineLog;
 	engineLog = log;
 }
 

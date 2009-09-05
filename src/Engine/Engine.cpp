@@ -55,7 +55,7 @@ Engine::Engine(std::string app, const char** argv, bool autoInit)
 
 Engine::~Engine()
 {
-	//delete sceneNode;
+	sceneNode.reset();
 
 #ifdef VAPOR_AUDIO_OPENAL
 	delete audioDevice;
@@ -64,7 +64,7 @@ Engine::~Engine()
 	delete renderDevice;
 	delete resourceManager;
 	delete vfs;
-	delete Log::getLogger();
+	delete log;
 }
 
 //-----------------------------------//
@@ -101,7 +101,6 @@ void Engine::setupLogger()
 	
 	// create and set a new logger
 	log = new Log(app, file);
-	Log::setLogger(log);
 }
 
 //-----------------------------------//

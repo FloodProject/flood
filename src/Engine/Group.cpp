@@ -35,6 +35,9 @@ Group::~Group()
 
 int Group::add( NodePtr child )
 {
+	// Beware that you have to assign a new Group-derived object
+	// to a shared_ptr, else shared_from_this will return bad_weak_ptr.
+
 	child->setParent( Node::shared_from_this() );
 	children.push_back( child );
 	return children.size() - 1;
@@ -113,11 +116,11 @@ const std::string Group::save(int ind)
 
 //-----------------------------------//
 
-tr1::shared_ptr< Group > Group::shared_from_this()
-{ 
-	return tr1::static_pointer_cast< Group >( 
-		Node::shared_from_this() ); 
-}
+//tr1::shared_ptr< Group > Group::shared_from_this()
+//{ 
+//	return tr1::static_pointer_cast< Group >( 
+//		Node::shared_from_this() ); 
+//}
 
 //-----------------------------------//
 
