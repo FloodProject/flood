@@ -387,6 +387,18 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Shaders"
+				>
+				<File
+					RelativePath=".\GLSL_Shader.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\render\GLSL_Shader.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Resources"

@@ -41,7 +41,7 @@ public:
 	//Listener* createListener();
 	//etc...
 
-	virtual void update();
+	//virtual void update();
 
 	virtual std::string save(int indent = 0);
 

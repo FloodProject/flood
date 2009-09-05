@@ -42,6 +42,13 @@ File::~File()
 
 //-----------------------------------//
 
+const std::string& File::getPath() const
+{
+	return path;
+}
+
+//-----------------------------------//
+
 void File::open()
 {
 	switch( accessMode )
@@ -103,15 +110,15 @@ long File::getSize()
 
 std::vector<byte> File::read(long sz)
 {
-	if(accessMode != AccessMode::Read)
+	if( accessMode != AccessMode::Read )
 	{
 		error( "vfs::file", "Access mode violation in file '%s'", 
-			path.c_str());
+			path.c_str() );
 		
 		return std::vector<byte>();
 	}
 
-	if(!file || PHYSFS_eof(file)) 
+	if( !file || PHYSFS_eof(file) ) 
 	{
 		return std::vector<byte>();
 	}
@@ -124,8 +131,10 @@ std::vector<byte> File::read(long sz)
 	{
 		sz = getSize() - tell();
 	}
+
+	if( sz == 0 ) return std::vector<byte>();
 	
-	std::vector<byte> buffer(sz); 
+	std::vector<byte> buffer( sz ); 
 	
 	PHYSFS_sint64 numObjs = PHYSFS_read (file, &buffer[0], 1, sz); 
 
@@ -181,7 +190,8 @@ bool File::seek(long pos)
 	
 	if( (pos < 0) || (pos >= getSize()) )
 	{
-		error( "vfs::file", "Attempting to access a position out of bounds in file '%s': %d",
+		error( "vfs::file", 
+			"Attempting to access a position out of bounds in file '%s': %d",
 			path.c_str(), pos);
 		
 		return false;

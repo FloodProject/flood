@@ -157,7 +157,7 @@ bool VertexBuffer::build( BufferUsage::Enum bU, BufferAccess::Enum bA )
 #ifdef VAPOR_DEBUG
 	if( glGetError() != GL_NO_ERROR )
 	{
-		warn( "gl:buffers", "Could not allocate storage for buffer" );
+		warn( "gl::buffers", "Could not allocate storage for buffer" );
 		return false;
 	}
 #endif
@@ -173,7 +173,7 @@ bool VertexBuffer::build( BufferUsage::Enum bU, BufferAccess::Enum bA )
 #ifdef VAPOR_DEBUG
 	if( glGetError() != GL_NO_ERROR )
 	{
-		warn( "gl:buffers", "Could not buffer the data" );
+		warn( "gl::buffers", "Could not buffer the data" );
 		return false;
 	}
 #endif

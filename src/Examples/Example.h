@@ -12,7 +12,7 @@
 
 #include <vapor/render/VertexBuffer.h>
 #include <vapor/render/Renderable.h>
-
+#include <vapor/scene/Camera.h>
 #include <vapor/input/Keyboard.h>
 
 //-----------------------------------//

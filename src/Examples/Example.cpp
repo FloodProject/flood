@@ -13,6 +13,7 @@
 #include <vapor/resources/Image.h>
 #include <vapor/resources/MS3D.h>
 #include <vapor/resources/Sound.h>
+#include <vapor/resources/Shader.h>
 
 #include <vapor/scene/Camera.h>
 #include <vapor/scene/Sound.h>
@@ -68,6 +69,11 @@ void Example::onSetupResources()
 	
 	ResourcePtr img = rm->createResource( "media/triton.png" );
 	ResourcePtr sound = rm->createResource( "media/stereo.ogg" );
+
+	ShaderPtr shader = tr1::static_pointer_cast< Shader > ( 
+		rm->createResource( "media/shader.vs" ) );
+	
+	shader->compile();
 }
 
 //-----------------------------------//
@@ -112,7 +118,7 @@ void Example::onRender()
 	render::Device* device = getRenderDevice();
 
 	device->setClearColor( c );
-	//device->clearTarget();
+	device->clearTarget();
 
 	rend->render( *getRenderDevice() );
 }
@@ -122,6 +128,8 @@ void Example::onRender()
 void Example::onUpdate() 
 {
 	Scene* scene = getSceneManager();
+
+	scene->update();
 
 	if( runLoop )
 	{

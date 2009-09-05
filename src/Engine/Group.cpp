@@ -26,7 +26,7 @@ Group::~Group()
 
 //-----------------------------------//
 
-int Group::add(shared_ptr<Node> child)
+int Group::add( NodePtr child )
 {
 	child->setParent(this);
 	children.push_back(child);
@@ -35,7 +35,7 @@ int Group::add(shared_ptr<Node> child)
 
 //-----------------------------------//
 
-int Group::insert( int i, shared_ptr<Node> child )
+int Group::insert( int i, NodePtr child )
 {
 	return 1;
 }
@@ -49,6 +49,23 @@ bool Group::remove( int i )
 
 //-----------------------------------//
 
+void Group::update()
+{
+	foreach( NodePtr node, children )
+	{
+		node->update();
+	}
+}
+
+//-----------------------------------//
+
+int Group::count() const
+{
+	return children.size();
+}
+
+//-----------------------------------//
+
 std::string Group::save(int ind)
 {
 	ostringstream os; 
@@ -58,7 +75,7 @@ std::string Group::save(int ind)
 	os << space << "  " << "\"nodes\": [\n";
 
 	// do all nodes
-	foreach( shared_ptr<Node> node, children )
+	foreach( NodePtr node, children )
 		os << node->save(ind+4);
 
 	os << space << "  " << "]\n";

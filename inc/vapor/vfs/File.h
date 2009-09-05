@@ -19,6 +19,8 @@ struct PHYSFS_File;
 namespace vapor {
 	namespace vfs {
 
+//-----------------------------------//
+
 /**
  * Use these for different kinds of access to the files.
  * Check the File class description for more information.
@@ -33,6 +35,8 @@ namespace AccessMode
 		Append
 	};
 }
+
+//-----------------------------------//
 
 /**
  * Represents a virtual file in the virtual filesystem.
@@ -71,7 +75,7 @@ public:
 	long tell();
 
 	// Gets the path of the file.
-	const std::string getPath() const { return path; }
+	const std::string& getPath() const;
 
 	// Checks if this file exists.
 	bool exists();
@@ -85,11 +89,15 @@ private:
 	void open();
 
 	AccessMode::Enum accessMode;
-	PHYSFS_File *file;
+	
+	PHYSFS_File* file;
+	
 	std::string	path;
 
 	bool closed;
 };
+
+//-----------------------------------//
 
 } } // end namespaces
 

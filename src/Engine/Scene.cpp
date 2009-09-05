@@ -24,10 +24,13 @@ Scene::~Scene()
 
 //-----------------------------------//
 
-void Scene::update()
-{
-
-}
+//void Scene::update()
+//{
+//	foreach( NodePtr node, children )
+//	{
+//		node->update();
+//	}
+//}
 
 //-----------------------------------//
 

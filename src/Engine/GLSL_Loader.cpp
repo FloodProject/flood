@@ -12,6 +12,8 @@
 
 #include "vapor/resources/GLSL_Loader.h"
 
+#include "vapor/render/GLSL_Shader.h"
+
 using vapor::vfs::File;
 
 //-----------------------------------//
@@ -23,9 +25,9 @@ namespace vapor {
 
 GLSL_Loader::GLSL_Loader()
 {
-	extensions.push_back( "vp" );
-	extensions.push_back( "fp" );
-	extensions.push_back( "gp" );
+	extensions.push_back( "vs" );
+	extensions.push_back( "fs" );
+	extensions.push_back( "gs" );
 }
 
 //-----------------------------------//
@@ -34,7 +36,33 @@ Shader* GLSL_Loader::decode(File& file)
 {
 	std::vector<byte> text = file.read();
 
-	return nullptr;
+	const std::string& path = file.getPath();
+
+	// check if it has a file extension
+	uint ch = path.find_last_of( "." );
+	
+	if( ch == std::string::npos ) 
+	{
+		return nullptr;
+	}
+
+	// get the file extension
+	std::string ext = path.substr( ++ch );
+
+	ShaderType::Enum type;
+
+	if( ext == "vs" )
+		type = ShaderType::Vertex;
+	else if( ext == "fs" )
+		type = ShaderType::Fragment;
+	else if( ext == "gs" )
+		type = ShaderType::Geometry;
+	else
+		return nullptr;
+
+	std::string str( text.begin(), text.end() );
+
+	return new render::GLSL_Shader( type, str );
 }
 
 //-----------------------------------//
