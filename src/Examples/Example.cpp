@@ -85,10 +85,10 @@ void Example::onSetupScene()
 	ScenePtr scene = getSceneManager();
 
 	// Create a new Camera and position it to look at origin
-	CameraPtr cam( new Camera( getRenderDevice() ) );
+	cam.reset( new Camera( getRenderDevice() ) );
 	cam->translate( Vector3( 0.0f, 0.0f, -1.0f ) );
 	cam->lookAt( Vector3.Zero );
-	camIndex = scene->add( cam );
+	scene->add( cam );
 
 	// Create a new VBO and upload triangle data
 	VertexBufferPtr vb( new VertexBuffer() );
@@ -118,7 +118,6 @@ void Example::onSetupScene()
 void Example::onUpdate() 
 {
 	ScenePtr scene = getSceneManager();
-
 	scene->update();
 
 	if( runLoop )
@@ -134,14 +133,10 @@ void Example::onUpdate()
 void Example::onRender()
 {
 	render::Device* device = getRenderDevice();
-	ScenePtr scene = getSceneManager();
 
 	device->setClearColor( c );
 	device->clearTarget();
 	
-	CameraPtr cam = tr1::static_pointer_cast< Camera >( 
-		scene->get( camIndex ) );
-
 	cam->render();
 }
 
@@ -154,6 +149,13 @@ void Example::onKeyPressed( const KeyEvent& keyEvent )
 
 	if( keyEvent.keyCode == Keys::Pause )
 		Log::showDebug = !Log::showDebug;
+
+	if( keyEvent.keyCode == Keys::W )
+		cam->translate( Vector3( 0.0f, 0.0f, 0.05f ) );
+
+	if( keyEvent.keyCode == Keys::S )
+		cam->translate( Vector3( 0.0f, 0.0f, -0.05f ) );
+
 
 	debug( "key press: %d", keyEvent.keyCode );
 }

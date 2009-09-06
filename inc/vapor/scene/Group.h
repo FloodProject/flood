@@ -39,6 +39,9 @@ public:
 	// returns null pointer if cannot find index i
 	NodePtr get( uint i ) const;
 
+	// Gets the children of this group.
+	const std::vector< NodePtr >& getChildren() { return children; }
+
 	// returns index for child with the same pointer, if child cannot
 	// be found, -1 is returned
 	int index( NodePtr child ) const;
@@ -54,9 +57,6 @@ public:
 
 	// gets the name of this node
 	virtual const std::string name();
-
-	//tr1::shared_ptr< Group > shared_from_this();
-	//tr1::shared_ptr< Group > shared_from_this() const;
 
 protected:
 

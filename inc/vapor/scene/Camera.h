@@ -14,6 +14,7 @@
 
 #include "vapor/scene/Transform.h"
 
+#include "vapor/render/Device.h"
 #include "vapor/render/Target.h"
 #include "vapor/render/Renderable.h"
 
@@ -84,12 +85,12 @@ public:
 	void render() const;
 
 	// Performs hierarchical frustum culling on the nodes in the scene 
-	// starting from the given node.In other words, the camera will check 
+	// starting from the given node. In other words, the camera will check 
 	// all the nodes and return a list of those that are inside its frustum
 	// for later rendering (and also their local to world matrices). 
 	// The queue is passed as a reference to the cull method, which fills 
 	// it with the data.
-	void cull( render::RenderQueue& queue, NodePtr root ) const;
+	void cull( render::RenderQueue& queue, NodePtr node ) const;
 
 	// Updates this node.
 	virtual void update();
@@ -99,8 +100,6 @@ public:
 	
 	// Gets the name of this node.
 	virtual const std::string name() const;
-
-	//tr1::shared_ptr< Camera > shared_from_this();
 
 private:
 
@@ -116,17 +115,23 @@ private:
 	// Sets up the view matrices for OpenGL.
 	void setupView();
 
+	// Projection mode.
 	Projection::Enum projection;
 	
+	// Field of view of this camera.
 	float fov;
 
 	// near and far are reserved keywords on MSVC.. so ghey! 
 	float near_;
 	float far_;
 	
+	// Why do we need this?
 	math::Frustum* frustum;
 
+	// Render target that we are rendering into.
 	render::Target* target;
+
+	// Used to pass a RenderQueue for rendering.
 	render::Device* renderDevice;
 
 	int width, height;

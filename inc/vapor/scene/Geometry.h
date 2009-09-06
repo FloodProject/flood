@@ -33,6 +33,8 @@ public:
 
 	void addRenderable( render::RenderablePtr rend );
 
+	const std::vector< render::RenderablePtr >& getRenderables() { return renderables; }
+
 	virtual void update();
 
 	virtual const std::string save(int indent = 0);

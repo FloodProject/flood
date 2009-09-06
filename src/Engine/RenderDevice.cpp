@@ -104,6 +104,18 @@ BufferManager* Device::getBufferManager() const
 
 //-----------------------------------//
 
+void Device::render( RenderQueue& queue ) 
+{
+	activeTarget->makeCurrent();
+
+	foreach( RenderablePtr rend, queue )
+	{
+		rend->render( *this );
+	}
+}
+
+//-----------------------------------//
+
 void Device::checkExtensions()
 {
 	// init GLEW (OpenGL Extension Wrangler)

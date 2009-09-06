@@ -10,15 +10,20 @@
 
 #include "vapor/Platform.h"
 
-#include "vapor/render/Device.h"
 #include "vapor/render/Material.h"
 #include "vapor/render/VertexBuffer.h"
 #include "vapor/render/IndexBuffer.h"
+
+#include "vapor/math/Matrix.h"
 
 #include "vapor/render/GL.h"
 
 namespace vapor {
 	namespace render {
+
+//-----------------------------------//
+
+class Device;
 
 //-----------------------------------//
 
@@ -95,8 +100,8 @@ typedef tr1::shared_ptr< Renderable > RenderablePtr;
 
 // This is a queue of objects that are usually returned by performing a culling
 // operation on the camera.
-typedef std::list< 
-	std::pair< shared_ptr< render::Renderable >, math::Matrix4*> > RenderQueue;
+typedef std::list< RenderablePtr > RenderQueue;
+	//std::pair< RenderablePtr, math::Matrix4* > > RenderQueue;
 
 //-----------------------------------//
 

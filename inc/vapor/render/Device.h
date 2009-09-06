@@ -18,6 +18,8 @@
 #include "vapor/render/Target.h"
 #include "vapor/render/Adapter.h"
 
+#include "vapor/render/Renderable.h"
+
 #include "vapor/math/Matrix.h"
 #include "vapor/math/Color.h"
 
@@ -70,6 +72,9 @@ public:
 
 	// Gets the current active render target.
 	render::Target* getRenderTarget() const;
+
+	// Renders a list of renderables
+	void render( RenderQueue& queue );
 
 	// Updates the target render target.
 	void updateTarget( );

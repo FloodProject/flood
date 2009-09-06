@@ -69,4 +69,8 @@ public:
 
 //-----------------------------------//
 
+typedef tr1::shared_ptr< Transformable > TransformablePtr;
+
+//-----------------------------------//
+
 } } // end namespaces

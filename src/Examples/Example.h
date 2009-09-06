@@ -50,7 +50,7 @@ protected:
 
 private:
 
-	int camIndex;
+	vapor::scene::CameraPtr cam;
 	vapor::math::Color c;
 	bool runLoop;
 };

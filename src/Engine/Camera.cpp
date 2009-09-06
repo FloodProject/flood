@@ -10,6 +10,8 @@
 
 #include "vapor/scene/Camera.h"
 
+#include "vapor/scene/Geometry.h"
+
 using namespace vapor::render;
 
 namespace vapor {
@@ -144,7 +146,13 @@ float Camera::getAspectRatio() const
 
 void Camera::render( NodePtr node ) const
 {
+	// This will contain all nodes used for rendering.
+	render::RenderQueue renderQueue;
 
+	cull( renderQueue, node );
+
+	renderDevice->setRenderTarget( target );
+	renderDevice->render( renderQueue );
 }
 
 //-----------------------------------//
@@ -153,6 +161,7 @@ void Camera::render( ) const
 {
 	NodePtr parent = getParent();
 
+	// Search for the root node.
 	while ( parent->getParent() )
 	  parent = parent->getParent();
 	  
@@ -161,9 +170,38 @@ void Camera::render( ) const
 
 //-----------------------------------//
 
-void Camera::cull( render::RenderQueue& queue, NodePtr root ) const
+void Camera::cull( render::RenderQueue& queue, NodePtr node ) const
 {
+	// Let's forget culling for now. Return all renderable nodes.
+
+	// TODO: Check if dynamic_cast is faster than a string comparison.
 	
+	// Try to see if this is a Group-derived node.
+	
+	try
+	{
+		GroupPtr group( tr1::dynamic_pointer_cast< Group >( node) );
+		
+		// Yes it is.
+		const std::vector< NodePtr >& children = group->getChildren();
+
+		foreach( NodePtr node, children )
+		{
+			GeometryPtr geometry( tr1::dynamic_pointer_cast< Geometry >( node) );
+
+			if( !geometry ) continue;
+
+			foreach( RenderablePtr rend, geometry->getRenderables() )
+			{
+				queue.push_back( rend );
+			}
+		}
+	}
+	catch (const std::bad_cast& e)
+	{
+		// Nope.
+		return;
+	}    
 }
 
 //-----------------------------------//
