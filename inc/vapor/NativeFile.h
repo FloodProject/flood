@@ -14,6 +14,8 @@
 
 namespace vapor {
 
+//-----------------------------------//
+
 /**
  * Represents a native file managed by the OS.
  * This is a small utility wrapper class that will be extended as needed,
@@ -53,5 +55,7 @@ private:
 	std::string	path;
 	FILE* fp;
 };
+
+//-----------------------------------//
 
 } // end namespace

@@ -655,6 +655,18 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Timer"
+				>
+				<File
+					RelativePath=".\Timer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\Timer.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Documentation"

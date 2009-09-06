@@ -10,6 +10,8 @@
 
 #include <vapor/Framework.h>
 
+#include <vapor/Timer.h>
+
 #include <vapor/render/VertexBuffer.h>
 #include <vapor/render/Renderable.h>
 #include <vapor/scene/Camera.h>
@@ -50,6 +52,7 @@ protected:
 
 private:
 
+	vapor::Timer timer;
 	vapor::scene::CameraPtr cam;
 	vapor::math::Color c;
 	bool runLoop;

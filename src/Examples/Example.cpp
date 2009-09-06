@@ -60,6 +60,8 @@ void Example::onInit()
 
 	kbd->onKeyPress.bind( &Example::onKeyPressed, this );
 	mouse->onMouseButtonPress.bind( &Example::onButtonPressed, this );
+
+	timer.reset();
 }
 
 //-----------------------------------//
@@ -145,7 +147,7 @@ void Example::onRender()
 void Example::onKeyPressed( const KeyEvent& keyEvent )
 {
 	if( keyEvent.keyCode == Keys::Space )
-		runLoop = !runLoop;
+		debug( "time: %f", timer.getDeltaTime() );
 
 	if( keyEvent.keyCode == Keys::Pause )
 		Log::showDebug = !Log::showDebug;
@@ -156,8 +158,10 @@ void Example::onKeyPressed( const KeyEvent& keyEvent )
 	if( keyEvent.keyCode == Keys::S )
 		cam->translate( Vector3( 0.0f, 0.0f, -0.05f ) );
 
+	if( keyEvent.keyCode == Keys::R )
+		timer.reset();
 
-	debug( "key press: %d", keyEvent.keyCode );
+	//debug( "key press: %d", keyEvent.keyCode );
 }
 
 //-----------------------------------//
