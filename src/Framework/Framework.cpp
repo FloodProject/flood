@@ -10,12 +10,17 @@
 
 #include <vapor/Framework.h>
 
+#include <limits>
+
 namespace vapor {
 
 //-----------------------------------//
 
 Framework::Framework(const std::string app, const char** argv)
-	:  Engine(app, argv, false)
+	:  Engine(app, argv, false), numFrames( 0 ),
+	// written like this because conflicts with min/max of windows.h
+	minFrameTime( (std::numeric_limits< double >::max)() ), 
+	maxFrameTime( 0.0 ), sumFrameTime( 0.0 )
 {
 	info( "framework", "Engine framework getting into action" );
 }
@@ -24,7 +29,7 @@ Framework::Framework(const std::string app, const char** argv)
 
 Framework::~Framework()
 {
-
+	
 }
 
 //-----------------------------------//
@@ -66,13 +71,32 @@ void Framework::render()
 		// update time!
 		onUpdate();
 
+		frameTimer.reset();
+
 		// main rendering by app
 		onRender();
 
 		// update the active target
 		renderDevice->updateTarget();
-	}	
+
+		lastFrameTime = frameTimer.getDeltaTime();
+
+		updateFrameTimes();
+	}
 }
+
+//-----------------------------------//
+
+void Framework::updateFrameTimes()
+{
+	numFrames++;
+
+	minFrameTime = min( minFrameTime, lastFrameTime );
+	maxFrameTime = max( maxFrameTime, lastFrameTime );
+
+	sumFrameTime += lastFrameTime;
+	avgFrameTime = sumFrameTime / numFrames;
+}	
 
 //-----------------------------------//
 

@@ -52,7 +52,6 @@ protected:
 
 private:
 
-	vapor::Timer timer;
 	vapor::scene::CameraPtr cam;
 	vapor::math::Color c;
 	bool runLoop;

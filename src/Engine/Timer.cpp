@@ -67,7 +67,7 @@ void Timer::reset()
 {
 #ifdef VAPOR_PLATFORM_WINDOWS
 
-	QueryPerformanceCounter( (LARGE_INTEGER *) &lastTime );
+	QueryPerformanceCounter( (LARGE_INTEGER  *) &lastTime );
 
 #else
 	#error "Implement me pl0x"

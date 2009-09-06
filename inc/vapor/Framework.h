@@ -11,7 +11,11 @@
 #include <vapor/Platform.h>
 #include <vapor/Engine.h>
 
+#include <vapor/Timer.h>
+
 namespace vapor {
+
+//-----------------------------------//
 
  /**
  * Simple framework to facilitate the use of the engine functionality in
@@ -48,7 +52,20 @@ protected:
 	// Renders the scene (called once per frame).
 	virtual void onRender() = 0;
 
+protected:
+
+	Timer frameTimer;
+	double lastFrameTime;
+	double minFrameTime;
+	double maxFrameTime;
+	double avgFrameTime;
+	double sumFrameTime;
+	uint64 numFrames;
+
 private:
+
+	// Calculates some stats about frame times.
+	void updateFrameTimes();
 
 	// Initializes the engine.
 	virtual void init();
@@ -56,5 +73,7 @@ private:
 	// Main rendering loop ( calls onRender() ).
 	virtual void render();
 };
+
+//-----------------------------------//
 
 } // end namespace		
