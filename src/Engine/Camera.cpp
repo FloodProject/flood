@@ -21,7 +21,7 @@ namespace vapor {
 
 Camera::Camera( render::Device* device, Projection::Enum projection )
 	: renderDevice( device ), projection( projection ),
-		target( device->getRenderTarget() ), near_( 0.0f ), far_( 100.0f )
+		target( device->getRenderTarget() ), fov(45.0f), near_( 0.0f ), far_( 100.0f )
 {
 	if( !target ) return;
 
