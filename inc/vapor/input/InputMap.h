@@ -15,8 +15,8 @@
 #include "vapor/input/Keyboard.h"
 #include "vapor/input/Mouse.h"
 #include "vapor/input/Joystick.h"
+#include <boost/bimap.hpp>
 
-//#include <boost/bimap.hpp>
 
 //-----------------------------------//
 
@@ -25,42 +25,41 @@ namespace vapor {
 
 //-----------------------------------//
 
-union Action 
-{
-	Keys::Enum key;
-	MouseButton::Enum mouseButton;
 
-	//joyId joyButton;
+struct joyId
+{
+	joyId(int, int);
+	int id;
+	int button;
+	int operator<(joyId joy1, joyId, joy2);
 };
 
-//-----------------------------------//
-
-//struct joyId
-//{
-//	int id;
-//	int button;
-//};
-
-//-----------------------------------//
 
 class InputMap
 {
-	typedef std::pair< DeviceType::Enum, Action > input;
+	
 
 public:
 
-	InputMap( InputManager& manager );
+	InputMap( const InputManager& manager );
 	~InputMap();
 
-	void onKeyPress( const KeyEvent& ke );
-	void onMousePress( const MouseButtonEvent& mbe );
-	void onJoyPress( const JoyButtonEvent& jbe );
+	fd::delegate<void(void)>& registerAction(const std::string&, Keys::Enum);
+	fd::delegate<void(void)>& registerAction(const std::string&, MouseButton::Enum);
+	fd::delegate<void(void)>& registerAction(const std::string&, joyId);
+	fd::delegate<void(void)>& getFunction(const std::string&);
+	
+	void onKeyPress(const KeyEvent& ke);
+	void onMousePress(const MouseButtonEvent& mbe);
+	void onJoyPress(const JoyButtonEvent& jbe);
 
-	void operator[]( std::string action );
-
+	
 private:
-
-	//boost::bimap< std::string, input > inputMap;	
+	std::map< Keys::Enum, std::string > keymap;
+	std::map< MouseButton::Enum, std::string > mousemap;
+	std::map< joyId, std::string > joystickmap;
+	std::map< std::string, fd::delegate<void(void)> > inputMap; 
+		
 };
 
 //-----------------------------------//
