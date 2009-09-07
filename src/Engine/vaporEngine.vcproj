@@ -119,8 +119,8 @@
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				DisableLanguageExtensions="false"
-				RuntimeTypeInfo="false"
-				UsePrecompiledHeader="2"
+				RuntimeTypeInfo="true"
+				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="PCH.h"
 				PrecompiledHeaderFile="$(IntDir)\$(TargetName).pch"
 				WarningLevel="4"
@@ -386,6 +386,14 @@
 					RelativePath="..\..\inc\vapor\render\Material.h"
 					>
 				</File>
+				<File
+					RelativePath=".\Texture.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\render\Texture.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Shaders"
@@ -611,7 +619,7 @@
 					>
 					<Tool
 						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
+						UsePrecompiledHeader="0"
 					/>
 				</FileConfiguration>
 			</File>
@@ -715,7 +723,6 @@
 					>
 					<FileConfiguration
 						Name="Release|Win32"
-						ExcludedFromBuild="true"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -808,6 +815,14 @@
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool

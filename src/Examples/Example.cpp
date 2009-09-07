@@ -23,6 +23,7 @@
 #include <vapor/input/InputManager.h>
 
 #include <vapor/render/VertexBuffer.h>
+#include <vapor/render/Texture.h>
 
 using namespace vapor;
 using namespace vapor::vfs;
@@ -73,8 +74,8 @@ void Example::onSetupResources()
 
 	ShaderPtr shader = tr1::static_pointer_cast< Shader > ( 
 		rm->createResource( "media/shader.vs" ) );
-	
-	shader->compile();
+
+	tex.reset( new Texture( tr1::static_pointer_cast< Image > ( img ) ) );
 }
 
 //-----------------------------------//
@@ -86,7 +87,7 @@ void Example::onSetupScene()
 
 	// Create a new Camera and position it to look at origin
 	cam.reset( new Camera( getRenderDevice() ) );
-	cam->translate( Vector3( 0.0f, 0.0f, -1.0f ) );
+	cam->translate( Vector3( 0.0f, 0.0f, -3.0f ) );
 	cam->lookAt( Vector3.Zero );
 	scene->add( cam );
 
@@ -100,14 +101,27 @@ void Example::onSetupScene()
 
 	std::vector< Vector3 > colors(3);
 	std::fill( colors.begin(), colors.end(), Vector3( 1.0f, 0.0f, 0.0f ) );
+
+	std::vector< Vector3 > coords;
+	coords.push_back( Vector3( 0.0f, 1.0f, 0.0f ) );
+	coords.push_back( Vector3( -1.0f, -1.0f, 0.0f ) );
+	coords.push_back( Vector3( 1.0f, -1.0f, 0.0f ) );
 	
 	vb->set( VertexAttribute::Vertex, vertex );
 	vb->set( VertexAttribute::Color, colors );
+	//vb->set( VertexAttribute::MultiTexCoord0, coords );
 
 	vb->build( BufferUsage::Static, BufferAccess::Write );
 
 	// Create a new Renderable from the VBO and add it to a Geometry node
 	RenderablePtr rend( new Renderable( Primitive::Triangles, vb ) );
+	
+	// Assign the renderable a material with a custom texture
+
+	MaterialPtr mat( new Material( "SimpleMat" ) );
+	mat->addTexture( tex );
+	rend->setMaterial( mat );
+	
 	GeometryPtr geom( new Geometry( rend ) );
 	
 	scene->add( geom );

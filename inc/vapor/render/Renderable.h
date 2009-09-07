@@ -82,6 +82,9 @@ public:
     // Gets the material associated with the renderable.
     MaterialPtr getMaterial() const;
 
+	// Sets this renderable with a new material.
+	void setMaterial( MaterialPtr mat );
+
 private:
 
     // primitive type of vertex buffer 

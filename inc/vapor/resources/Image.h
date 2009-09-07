@@ -87,4 +87,8 @@ private:
 
 //-----------------------------------//
 
+typedef tr1::shared_ptr< Image > ImagePtr;
+
+//-----------------------------------//
+
 } } // end namespaces

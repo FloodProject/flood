@@ -15,7 +15,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-Material::Material()
+Material::Material( const std::string& name )
+	: name( name )
 {
 
 }
@@ -25,6 +26,20 @@ Material::Material()
 Material::~Material()
 {
 
+}
+
+//-----------------------------------//
+
+const std::string& Material::getName()
+{
+	return name;
+}
+
+//-----------------------------------//
+
+void Material::addTexture( TexturePtr tex )
+{
+	textures.push_back( tex );
 }
 
 //-----------------------------------//

@@ -93,7 +93,7 @@ shared_ptr<Resource> ResourceManager::createResource(const std::string path)
 	}
 
 	// register the decoded resource in the map
-	info("resources", "Registering resource '%s'", path.c_str());
+	info("resources", "Loading resource '%s'", path.c_str());
 	resources[path] = res;
 
 	return res;

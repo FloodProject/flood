@@ -10,6 +10,8 @@
 
 #include "vapor/Platform.h"
 
+#include "vapor/render/Texture.h"
+
 namespace vapor {
 	namespace render {
 
@@ -24,14 +26,21 @@ class Material
 {
 public:
 
-	Material();
+	Material( const std::string& name );
 	~Material();
+
+	const std::string& getName();
+
+	void addTexture( TexturePtr tex );
 
 private:
 
 	// Textures
+	std::vector< TexturePtr > textures;
 
 	// Shaders
+
+	std::string name;
 
 };
 

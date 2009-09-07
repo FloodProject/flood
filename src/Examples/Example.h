@@ -52,6 +52,7 @@ protected:
 
 private:
 
+	vapor::render::TexturePtr tex;
 	vapor::scene::CameraPtr cam;
 	vapor::math::Color c;
 	bool runLoop;

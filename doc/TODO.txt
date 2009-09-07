@@ -1,10 +1,5 @@
 WIP (work-in-progress)
 ======================
-
-Milestone 1:
-------------
-
-	Render Triangle using Device interface
 	
 EXAMPLES:
 ---------
@@ -12,14 +7,19 @@ EXAMPLES:
 Add a custom node to the scene graph
 Add a custom resource type
 
-TODO:
+SERVER:
+-------
+
+
+
+ENGINE:
 -----
 
-Switch to intrusive_ptr
-Create a ResourceFile class
-GetLoggers for each class :)
-AllocConsole
-Copy-constructors?
+Use copy-constructors or boost::non_copyable
+Switch to intrusive_ptr for all ref-counting classes
+Create a ResourceFile class (maybe stream-based - C++ streams? )
+GetLoggers for each class (could be integrated with Profiler? :)
+AllocConsole for debugging porpuses on a key press
 Add timing code for FPS calculation and timing events.
 Add Action Map class for storing input settings for the game.
 Update all the headers to have separators between different sections
@@ -37,12 +37,13 @@ The Window title should be set on Window creation, so it gets set properly on th
 Make proper type-safe logger that doesn't crash with an invalid format string
 Patch PhysFS to use the proper user dir for App Data on Windows
 Check how the resource manager will handle missing resources
-Make a Timing/Ticking class and maybe a task manager with callbacks (for e.g. streaming)
+Make a Timer class and maybe a task manager with callbacks (for e.g. streaming) 
 Check if/how type traits can be useful in engine
 Bitmap font file format (and converter for some freeware generator tool)
 Are std::string references faster/lighter than normal strings?
 Re-check the order of initialization of the engine subsystems (ideally filesystem errors should occur _before_ rendering init)
-Clipboard?
+Cross-platform Clipboard access?
+FileWatcher for resource change notification integrated with VFS
 
 Renderer:
 
@@ -53,10 +54,6 @@ Resource management:
 	Magic header resource type detection
 	Case-insensitive comparisons in map
 	Font handling via FreeType 2
-	
-Scene management:
-
-	Code to the API specified in Etherpad
 
 Math:
 
@@ -64,9 +61,9 @@ Math:
 	
 Platform:
 	
-	Implement abstract timer class
+	Implement abstract timer class (WIP)
 	Color copy cons and operators
-	Log all the engine calls
+	Log all the engine calls (WIP)
 	bind/functor for logging
 	Hierarchical log system
 	Logging functions with type-safe variable arguments

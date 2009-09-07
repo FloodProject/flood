@@ -161,6 +161,8 @@ void Camera::render( ) const
 {
 	NodePtr parent = getParent();
 
+	if( !parent ) return;
+
 	// Search for the root node.
 	while ( parent->getParent() )
 	  parent = parent->getParent();

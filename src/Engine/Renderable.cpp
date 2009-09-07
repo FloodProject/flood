@@ -88,4 +88,11 @@ MaterialPtr Renderable::getMaterial() const
 
 //-----------------------------------//
 
+void Renderable::setMaterial( MaterialPtr mat )
+{
+	this->mat = mat;
+}
+
+//-----------------------------------//
+
 } } // end namespaces
