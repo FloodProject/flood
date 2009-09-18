@@ -20,7 +20,7 @@ namespace vapor {
  * encoding and decoding services for a given file format type.
  */
 
-class ResourceLoader
+class ResourceLoader : private boost::noncopyable
 {
 public:
 

@@ -24,7 +24,7 @@ namespace vapor {
  * use with caution. ;)
  */
 
-class NativeFile 
+class NativeFile : private boost::noncopyable
 {
 public:
 

@@ -48,7 +48,7 @@ class BufferManager;
  * responsible for creating a new window if no window handle is passed to it.
  */
 
-class Device
+class Device : private boost::noncopyable
 {
 public:
 

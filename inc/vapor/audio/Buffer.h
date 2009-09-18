@@ -31,7 +31,7 @@ namespace vapor {
  * doesn't delete the audio data if it's potentially needed in the future.
  */
 
-class Buffer
+class Buffer : private boost::noncopyable
 {
 public:
 	

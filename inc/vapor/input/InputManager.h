@@ -25,7 +25,7 @@ namespace vapor {
  * Manages a set of input devices.
  */
 
-class InputManager
+class InputManager : private boost::noncopyable
 {
 public:
 

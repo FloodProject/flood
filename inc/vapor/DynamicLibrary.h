@@ -35,7 +35,7 @@ namespace vapor {
  * retrieve symbols using this class.
  */
 
-class DynamicLib
+class DynamicLib : private boost::noncopyable
 {
 public:
 

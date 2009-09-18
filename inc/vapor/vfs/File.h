@@ -48,7 +48,7 @@ namespace AccessMode
  * data in the same machine, and it will be saved in each user's directory.
  */
 
-class File 
+class File : private boost::noncopyable
 {
 public:
 

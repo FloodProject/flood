@@ -30,7 +30,7 @@ namespace vapor {
  * to the search path while mounting it in the virtual filesystem.
  */
 
-class VFS
+class VFS : private boost::noncopyable
 {
 public:
 

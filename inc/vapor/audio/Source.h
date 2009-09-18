@@ -32,7 +32,7 @@ namespace vapor {
  * buffer from the audio device. 
  */
 
-class Source
+class Source : private boost::noncopyable
 {
 public:
 

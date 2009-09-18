@@ -29,7 +29,7 @@ namespace vapor {
  * which should prove to be less error-prone in case of a corrupt resource.
  */
 
-class ResourceManager 
+class ResourceManager : private boost::noncopyable
 {
 public:
 

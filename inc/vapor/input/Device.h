@@ -37,7 +37,7 @@ namespace DeviceType
  * Base struct for input events.
  */
 
-struct Event
+struct Event : private boost::noncopyable
 {
 	Event( DeviceType::Enum );
 
@@ -50,7 +50,7 @@ struct Event
  * Input device.
  */
 
-class Device
+class Device : private boost::noncopyable
 {
 public:
 

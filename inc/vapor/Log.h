@@ -55,7 +55,7 @@ void error(const std::string& subsystem, const char* msg, ...);
  * to an output file format. Currently it outputs to XHTML.
  */
 
-class Log
+class Log : private boost::noncopyable
 {
 public:
 	

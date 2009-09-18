@@ -33,7 +33,7 @@ namespace vapor {
  * the settings of a context.
  */
 
-class Context
+class Context : private boost::noncopyable
 {
 	friend class Source;
 

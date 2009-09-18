@@ -54,7 +54,7 @@ namespace ResourceGroup
  * resource from a network connection).
  */
 
-class Resource
+class Resource : private boost::noncopyable
 {
 public:
 

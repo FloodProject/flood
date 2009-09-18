@@ -31,7 +31,7 @@ struct joyId
 
 //-----------------------------------//
 
-class InputMap
+class InputMap : private boost::noncopyable
 {
 public:
 

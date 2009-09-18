@@ -29,7 +29,7 @@ namespace vapor {
  * Audio device to play sound data using OpenAL as backend.
  */
 
-class Device
+class Device : private boost::noncopyable
 {
 	friend class Context;
 	friend class Source;
