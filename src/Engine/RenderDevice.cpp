@@ -43,12 +43,6 @@ void Device::init()
 
 	adapter = new Adapter();
 	bufferManager = new BufferManager();
-
-	// TODO: move this somewhere more appropriate
-	glEnableClientState( GL_VERTEX_ARRAY );
-	glEnableClientState( GL_COLOR_ARRAY );
-
-	glEnable( GL_TEXTURE_2D );
 }
 
 //-----------------------------------//
@@ -134,13 +128,15 @@ void Device::checkExtensions()
 	info( "render::opengl", "Using GLEW version %s", 
 		glewGetString( GLEW_VERSION ) );
 
-	if( !GLEW_VERSION_2_1 )
-	{
-		log::Log::MessageDialog( "You need at least OpenGL 2.1 to run this.",
-			log::LogLevel::Error );
-		
-		// TODO: exit program in a structured manner
-	}
+	//if( !GLEW_VERSION_2_1 )
+	//{
+	//	log::Log::MessageDialog( "You need at least OpenGL 2.1 to run this.",
+	//		log::LogLevel::Error );
+
+	//	exit( 1 );
+	//	
+	//	// TODO: exit program in a structured manner
+	//}
 }
 
 //-----------------------------------//

@@ -36,13 +36,13 @@ public:
 	void addDevice( input::Device* );
 	
 	// Gets a vector with all the known input devices.
-	const std::vector< input::Device* >& getDevices();
+	const std::vector< input::Device* >& getDevices() const;
 
 	// Gets a keyboard device if it exists, nullptr otherwise.
-	Keyboard* getKeyboard();
+	Keyboard* getKeyboard() const;
 	
 	// Gets a mouse device if it exists, nullptr otherwise.
-	Mouse* getMouse();
+	Mouse* getMouse() const;
 
 	// Feeds an external input event to the input manager.
 	// The input will be processed to all the devices and

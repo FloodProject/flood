@@ -64,7 +64,7 @@ protected:
 
 private:
 
-	// Calculates some stats about frame times.
+	// Calculates some statistics about frame times.
 	void updateFrameTimes();
 
 	// Initializes the engine.

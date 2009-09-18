@@ -57,6 +57,8 @@ bool Texture::upload()
 
 void Texture::bind()
 {
+	glEnable( GL_TEXTURE_2D );
+
 	glBindTexture( GL_TEXTURE_2D, id );
 }
 
@@ -65,6 +67,8 @@ void Texture::bind()
 void Texture::unbind()
 {
 	glBindTexture( GL_TEXTURE_2D, 0 );
+
+	glDisable( GL_TEXTURE_2D );
 }
 
 //-----------------------------------//

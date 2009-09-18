@@ -193,10 +193,6 @@
 			RelativePath=".\Example.h"
 			>
 		</File>
-		<File
-			RelativePath=".\lixo.h"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

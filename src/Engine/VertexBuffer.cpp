@@ -72,6 +72,11 @@ void VertexBuffer::bindPointers()
 
 	int offset = 0;
 
+	// TODO: move this somewhere more appropriate
+	glEnableClientState( GL_VERTEX_ARRAY );
+	glEnableClientState( GL_COLOR_ARRAY );
+	glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+
 	foreach( const attributePair& p, attributeMap )
 	{
 		int size = tr1::get< 0 >( p.second );

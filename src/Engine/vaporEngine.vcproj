@@ -596,14 +596,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\NativeFile.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\NativeFile.h"
-				>
-			</File>
-			<File
 				RelativePath=".\PCH.cpp"
 				>
 				<FileConfiguration
@@ -675,6 +667,18 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="File"
+				>
+				<File
+					RelativePath=".\NativeFile.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\NativeFile.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Documentation"
@@ -721,13 +725,6 @@
 				<File
 					RelativePath=".\Camera.cpp"
 					>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\scene\Camera.h"

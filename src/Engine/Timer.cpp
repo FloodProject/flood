@@ -10,6 +10,8 @@
 
 #include "vapor/Timer.h"
 
+using namespace vapor::log;
+
 namespace vapor {
 
 //-----------------------------------//
@@ -18,9 +20,9 @@ Timer::Timer()
 {
 	if( !checkSupport() )
 	{
-		log::Log::MessageDialog( 
+		Log::MessageDialog( 
 			"High-resolution timers are not supported",
-			log::LogLevel::Error );
+			LogLevel::Error );
 
 		// TODO: exit
 	}

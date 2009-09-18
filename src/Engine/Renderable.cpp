@@ -45,12 +45,14 @@ void Renderable::render( render::Device& device )
     {
         glDrawArrays( type, 0, vb->getSize() );
 
+#ifdef VAPOR_DEBUG
 		// check for errors
 		if( glGetError() != GL_NO_ERROR )
 		{
 			warn( "gl::buffers", "Error drawing renderable" );
 			debug( "shit happened, debug me" );
 		}
+#endif
     }
     //else
     //{

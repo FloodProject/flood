@@ -48,7 +48,7 @@ void InputManager::addDevice( input::Device* device )
 
 //-----------------------------------//
 
-Keyboard* InputManager::getKeyboard()
+Keyboard* InputManager::getKeyboard() const
 {
 	foreach( input::Device* device, devices )
 	{
@@ -63,7 +63,7 @@ Keyboard* InputManager::getKeyboard()
 
 //-----------------------------------//
 
-Mouse* InputManager::getMouse()
+Mouse* InputManager::getMouse() const
 {
 	foreach( input::Device* device, devices )
 	{
@@ -74,6 +74,13 @@ Mouse* InputManager::getMouse()
 	}
 
 	return nullptr;
+}
+
+//-----------------------------------//
+
+const std::vector< input::Device* >& InputManager::getDevices() const
+{
+	return devices;
 }
 
 //-----------------------------------//

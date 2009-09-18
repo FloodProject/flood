@@ -40,16 +40,16 @@ public:
 	
 private:
 
-	// Checks the high-resolution timers are available.
+	// Checks if high-resolution timers are available.
 	bool checkSupport();
 
-	// Holds the current time.
+	// Holds the current time (used for calculating the diff).
 	ticks_t currentTime;
 
 	// Holds the time when the last reset happened.
 	ticks_t lastTime;
 
-	// Holds the ticks per second supported.
+	// Holds the ticks per second (timer resolution).
 	ticks_t ticksPerSecond;
 };
 

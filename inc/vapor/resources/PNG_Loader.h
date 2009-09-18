@@ -29,7 +29,7 @@ public:
 
 	PNG_Pico_Loader();
 
-	// Decode an image file to a buffer
+	// Decode an image file to a buffer.
 	virtual Image* decode(vfs::File& file);
 
 	// Gets the name of this codec.
@@ -43,7 +43,7 @@ public:
 
 protected:
 
-	// holds all file extensions recognized by this codec
+	// Holds all file extensions recognized by this codec.
 	std::list< std::string > extensions;
 };
 

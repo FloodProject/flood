@@ -15,16 +15,11 @@
 #include "vapor/input/Keyboard.h"
 #include "vapor/input/Mouse.h"
 #include "vapor/input/Joystick.h"
-#include <boost/bimap.hpp>
-
-
-//-----------------------------------//
 
 namespace vapor {
 	namespace input {
 
 //-----------------------------------//
-
 
 struct joyId
 {
@@ -34,11 +29,10 @@ struct joyId
 	int operator<(joyId joy1, joyId, joy2);
 };
 
+//-----------------------------------//
 
 class InputMap
 {
-	
-
 public:
 
 	InputMap( const InputManager& manager );
@@ -53,13 +47,12 @@ public:
 	void onMousePress(const MouseButtonEvent& mbe);
 	void onJoyPress(const JoyButtonEvent& jbe);
 
-	
 private:
+
 	std::map< Keys::Enum, std::string > keymap;
 	std::map< MouseButton::Enum, std::string > mousemap;
 	std::map< joyId, std::string > joystickmap;
 	std::map< std::string, fd::delegate<void(void)> > inputMap; 
-		
 };
 
 //-----------------------------------//

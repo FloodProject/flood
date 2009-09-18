@@ -13,6 +13,14 @@
 namespace vapor {
 	namespace render {
 
+//"Static" means the data in VBO will not be changed (specified once and used
+//many times), "dynamic" means the data will be changed frequently (specified
+//and used repeatedly), and "stream" means the data will be changed every 
+//frame (specified once and used once). "Draw" means the data will be sent to
+//GPU in order to draw (application to GL), "read" means the data will be read
+//by the client's application (GL to application), and "copy" means the data
+//will be used both drawing and reading (GL to GL). 
+
 //-----------------------------------//
 
 namespace BufferUsage

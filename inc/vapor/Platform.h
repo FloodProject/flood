@@ -46,8 +46,12 @@
 	#define VAPOR_DEBUG
 #endif
 
-#if !defined(VAPOR_DEBUG) && !defined(NDEBUG)
+#if !defined( VAPOR_DEBUG ) && !defined( NDEBUG )
 	#define NDEBUG
+#endif
+
+#if defined( VAPOR_DEBUG ) && defined( NDEBUG )
+	#error
 #endif
 
 //---------------------------------------------------------------------//
@@ -56,7 +60,8 @@
 
 #ifdef VAPOR_PLATFORM_WINDOWS
 	// include the main Windows headers
-	#define WIN32_LEAN_AND_MEAN 
+	#define WIN32_LEAN_AND_MEAN
+	#define NOMINMAX
 	#include <Windows.h>	
 #endif
 

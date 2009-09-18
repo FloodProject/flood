@@ -91,8 +91,8 @@ void Framework::updateFrameTimes()
 {
 	numFrames++;
 
-	minFrameTime = min( minFrameTime, lastFrameTime );
-	maxFrameTime = max( maxFrameTime, lastFrameTime );
+	minFrameTime = std::min( minFrameTime, lastFrameTime );
+	maxFrameTime = std::max( maxFrameTime, lastFrameTime );
 
 	sumFrameTime += lastFrameTime;
 	avgFrameTime = sumFrameTime / numFrames;
