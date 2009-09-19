@@ -20,7 +20,7 @@ namespace vapor {
  * Nice plane.
  */
 
-class Plane
+class VAPOR_API Plane
 {
 public:
 

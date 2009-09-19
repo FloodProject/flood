@@ -52,7 +52,7 @@ namespace VertexAttribute
  * that normal for each vertex for now.
  */
 
-class VertexBuffer : public Buffer
+class VAPOR_API VertexBuffer : public Buffer
 {
 public:
 

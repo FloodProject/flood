@@ -13,7 +13,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-class Settings
+class VAPOR_API Settings
 {
 public:
 
@@ -44,7 +44,7 @@ protected:
  * Render target. Windows, FBOs, etc.
  */
 
-class RenderTarget
+class VAPOR_API RenderTarget
 {
 public:
 

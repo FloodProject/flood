@@ -12,9 +12,10 @@
 #include "vapor/resources/Resource.h"
 #include "vapor/resources/ResourceManager.h"
 
-
 namespace vapor {
 	namespace resources {
+
+//-----------------------------------//
 
 /**
  * Possible formats for audio.
@@ -33,12 +34,14 @@ namespace SoundFormat
 	const std::string getString(Enum e);
 }
 
+//-----------------------------------//
+
 /**
  * Represents a sound in the engine. 
  * A sound holds uncompressed audio data that can be played back.
  */
 
-class Sound : public Resource
+class VAPOR_API Sound : public Resource
 {
 public:
 
@@ -71,5 +74,7 @@ private:
 	// holds the sound data
 	std::vector<byte> dataBuffer;
 };
+
+//-----------------------------------//
 
 } } // end namespaces

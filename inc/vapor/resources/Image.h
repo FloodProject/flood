@@ -42,7 +42,7 @@ namespace PixelFormat
  * (TODO: getBuffer? does it cause any problems?)
  */
 
-class Image : public Resource
+class VAPOR_API Image : public Resource
 {
 public:
 

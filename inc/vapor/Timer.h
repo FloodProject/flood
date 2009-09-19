@@ -22,7 +22,7 @@ namespace vapor {
  * Use this to get timing information.
  */
 
-class Timer : private boost::noncopyable
+class VAPOR_API Timer : private boost::noncopyable
 {
 public:
 

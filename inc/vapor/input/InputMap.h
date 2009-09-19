@@ -31,7 +31,7 @@ struct joyId
 
 //-----------------------------------//
 
-class InputMap : private boost::noncopyable
+class VAPOR_API InputMap : private boost::noncopyable
 {
 public:
 

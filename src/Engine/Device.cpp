@@ -15,7 +15,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-std::string DeviceType::getString( DeviceType::Enum dt )
+std::string DeviceType::getString( const DeviceType::Enum dt )
 {
 	switch( dt )
 	{

@@ -18,7 +18,7 @@ namespace vapor {
  */
 
 template <typename T>
-class Vector3T
+class VAPOR_API Vector3T
 {
 public:
 

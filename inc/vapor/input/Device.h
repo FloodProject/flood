@@ -28,7 +28,7 @@ namespace DeviceType
 		Joystick
 	};
 
-	std::string getString( DeviceType::Enum dt );
+	std::string getString( const DeviceType::Enum dt );
 }
 
 //-----------------------------------//
@@ -50,7 +50,7 @@ struct Event : private boost::noncopyable
  * Input device.
  */
 
-class Device : private boost::noncopyable
+class VAPOR_API Device : private boost::noncopyable
 {
 public:
 

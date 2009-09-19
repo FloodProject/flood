@@ -24,7 +24,7 @@ namespace vapor {
  * TODO: compressed texture?
  */
 
-class Texture
+class VAPOR_API Texture
 {
 public:
 

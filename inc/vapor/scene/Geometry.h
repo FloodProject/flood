@@ -23,7 +23,7 @@ namespace vapor {
  * Renderable objects and treat it as one big piece of geometry.
  */
 
-class Geometry : public Node
+class VAPOR_API Geometry : public Node
 {
 public:
 

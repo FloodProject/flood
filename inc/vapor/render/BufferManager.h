@@ -27,7 +27,7 @@ namespace vapor {
  * You must use this class to create the buffers used for rendering!
  */
 
-class BufferManager
+class VAPOR_API BufferManager
 {
 public:
 

@@ -24,7 +24,7 @@ namespace vapor {
  * textures/shaders updating in-game due to file changes. :)
  */
 
-class ResourceFile : private boost::noncopyable
+class VAPOR_API ResourceFile : private boost::noncopyable
 {
 public:
 

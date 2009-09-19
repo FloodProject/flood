@@ -36,7 +36,7 @@ namespace IndexBufferType
  * Represents an index buffer.
  */
 
-class IndexBuffer : public Buffer
+class VAPOR_API IndexBuffer : public Buffer
 {
 public:
 

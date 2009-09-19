@@ -19,7 +19,7 @@ namespace vapor {
 // Implement a 4x3 transformation matrix.  This class can represent
 // any 3D affine transformation.
 
-class Matrix4 {
+class VAPOR_API Matrix4 {
 public:
 
 	// The values of the matrix.  Basically the upper 3x3 portion

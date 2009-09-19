@@ -49,3 +49,28 @@ using std::tr1::shared_ptr;
 #endif
 
 #endif
+
+//-------------------------------------------------------------------------//
+// API exports
+//-------------------------------------------------------------------------//
+
+#ifdef VAPOR_API_DLL
+	#ifdef VAPOR_EXPORT
+		#ifdef VAPOR_PLATFORM_WINDOWS
+			// This should work for both MSVC and GCC.
+			// For more details see:
+			// http://gcc.gnu.org/onlinedocs/gcc-4.4.0/gcc/Function-Attributes.html
+			#define VAPOR_API __declspec( dllexport )
+		#else
+			#define VAPOR_API __attribute__ ((visibility("default")))
+		#endif
+	#else
+		#ifdef VAPOR_PLATFORM_WINDOWS
+			#define VAPOR_API __declspec( dllimport )
+		#else
+			#define VAPOR_API
+		#endif
+	#endif
+#else
+	#define VAPOR_API
+#endif

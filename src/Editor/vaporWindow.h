@@ -28,19 +28,19 @@ public:
 	vaporWindow(vapor::render::Settings& settings, wxGLCanvas* canvas);
 	virtual ~vaporWindow();
 
-	// Swaps the buffers (updates the display)
+	// Swaps the buffers (updates the display).
 	void update();
 
-	// Handle the window message events
+	// Handle the window message events.
 	bool pumpEvents();
 
-	// Sets the title of the window
+	// Sets the title of the window.
 	void setTitle(const std::string& title) const;
 
-	// Sets the cursor visibility
+	// Sets the cursor visibility.
 	void setCursor(bool state) const;
 
-	// Makes this the current OpenGL context
+	// Makes this the current OpenGL context.
 	void makeCurrent();
 
 private:

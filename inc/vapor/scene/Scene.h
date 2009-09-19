@@ -26,7 +26,7 @@ namespace vapor {
  * Listener, Trigger, Billboard and maybe other that we want to later add.
  */
 
-class Scene : public Group
+class VAPOR_API Scene : public Group
 {
 public:
 

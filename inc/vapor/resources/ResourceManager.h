@@ -16,6 +16,8 @@
 namespace vapor {
 	namespace resources {
 
+//-----------------------------------//
+
 /**
  * Responsible for managing a set of resources that are added by the app.
  * It should be possible to enforce a strict memory budget, and the manager
@@ -29,7 +31,7 @@ namespace vapor {
  * which should prove to be less error-prone in case of a corrupt resource.
  */
 
-class ResourceManager : private boost::noncopyable
+class VAPOR_API ResourceManager : private boost::noncopyable
 {
 public:
 
@@ -71,5 +73,7 @@ protected:
 	// maps each resource group to a specific budget
 	std::map< ResourceGroup::Enum, uint > resourceBudgets;
 };
+
+//-----------------------------------//
 
 } } // end namespaces

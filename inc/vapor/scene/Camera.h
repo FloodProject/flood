@@ -45,7 +45,7 @@ namespace Projection
  * speed up the rendering by cutting nodes that are outside of the view range.
  */
 
-class Camera : public Transformable
+class VAPOR_API Camera : public Transformable
 {
 public:
 

@@ -15,12 +15,14 @@
 namespace vapor {
 	namespace resources {
 
+//-----------------------------------//
+
 /**
  * Resource Loader interface for classes that want to provide resource
  * encoding and decoding services for a given file format type.
  */
 
-class ResourceLoader : private boost::noncopyable
+class VAPOR_API ResourceLoader : private boost::noncopyable
 {
 public:
 
@@ -39,5 +41,7 @@ public:
 	// Gets the resource group of this loader.
 	virtual ResourceGroup::Enum getResourceGroup() = 0;
 };
+
+//-----------------------------------//
 
 } } // end namespaces

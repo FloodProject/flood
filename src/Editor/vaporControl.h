@@ -17,9 +17,9 @@
     #include "wx/wx.h"
 #endif
 
-#include <wx/glcanvas.h> 
-
 #include <vapor/Engine.h>
+
+#include <wx/glcanvas.h> 
 
 /**
  * Let's link vapor with wxWidgets. There are some different approaches

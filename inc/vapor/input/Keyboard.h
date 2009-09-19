@@ -195,7 +195,7 @@ private:
  * Keyboard device.
  */
 
-class Keyboard : public Device
+class VAPOR_API Keyboard : public Device
 {
 public:	
 

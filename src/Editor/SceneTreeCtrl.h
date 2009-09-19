@@ -63,7 +63,7 @@ protected:
 	void initIcons();
 
 	// scene associated this control
-	vapor::scene::Scene* scene;
+	vapor::scene::ScenePtr scene;
 
 	// holds the main vapor engine
 	vapor::Engine* engine;

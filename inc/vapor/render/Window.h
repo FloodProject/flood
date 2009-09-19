@@ -25,7 +25,7 @@ namespace vapor {
  * in the future, anti-aliasing settings, and custom window handle hooks.
  */
 
-class WindowSettings : public Settings
+class VAPOR_API WindowSettings : public Settings
 {
 public:
 
@@ -95,7 +95,7 @@ protected:
  * be slighty different, so some methods might not make much sense. 
  */
 
-class Window : public RenderTarget
+class VAPOR_API Window : public RenderTarget
 {
 public:
 

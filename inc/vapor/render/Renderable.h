@@ -58,7 +58,7 @@ namespace Primitive
  * type associated with them.
  */
 
-class Renderable
+class VAPOR_API Renderable
 {
 public:
 

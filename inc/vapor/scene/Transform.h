@@ -37,7 +37,7 @@ public:
 
 //-----------------------------------//
 
-class Transformable : public Node, public TransformInterface
+class VAPOR_API Transformable : public Node, public TransformInterface
 {
 public:
 
@@ -61,7 +61,7 @@ protected:
 
 //-----------------------------------//
 
-class Transform : public Group, public TransformInterface
+class VAPOR_API Transform : public Group, public TransformInterface
 {
 public:
 

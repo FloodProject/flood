@@ -157,7 +157,7 @@ struct MouseWheelEvent : public MouseEvent
 
 //-----------------------------------//
 
-class Mouse : public Device
+class VAPOR_API Mouse : public Device
 {
 public:
 

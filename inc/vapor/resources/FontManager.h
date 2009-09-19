@@ -23,7 +23,7 @@
 namespace vapor {
 	namespace resources {
 
-class FontManager : public ResourceManager
+class VAPOR_API FontManager : public ResourceManager
 {
 
 public:

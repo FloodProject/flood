@@ -14,7 +14,7 @@
 namespace vapor {
 	namespace resources {
 
-class Font : public Resource
+class VAPOR_API Font : public Resource
 {
 
 public:

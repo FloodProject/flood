@@ -29,7 +29,7 @@ namespace vapor {
  * a class like this one that instantiates everything and sets it all up.
  */
 
-class Engine : private boost::noncopyable
+class VAPOR_API Engine : private boost::noncopyable
 {
 public:
 

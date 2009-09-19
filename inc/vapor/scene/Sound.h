@@ -21,12 +21,14 @@
 namespace vapor {
 	namespace scene {
 
+//-----------------------------------//
+
 /**
  * Uses the position and orientation defined in the node 
  * as the sound source location.
  */
 
-class Sound : public Transformable, public audio::Source
+class VAPOR_API Sound : public Transformable, public audio::Source
 {
 public:
 
@@ -35,6 +37,8 @@ public:
 
 	virtual std::string save(int indent = 0);
 };
+
+//-----------------------------------//
 
 } } // end namespaces
 

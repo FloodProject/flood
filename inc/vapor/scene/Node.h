@@ -28,7 +28,7 @@ typedef tr1::shared_ptr< Node > NodePtr;
  *   ~ Group (group of other entities in the scene)
  */
 
-class Node : public tr1::enable_shared_from_this< Node >, 
+class VAPOR_API Node : public tr1::enable_shared_from_this< Node >, 
 	private boost::noncopyable
 {
 public:

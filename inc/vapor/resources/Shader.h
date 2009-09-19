@@ -38,7 +38,7 @@ namespace ShaderType
 `* Shader resource.
  */
 
-class Shader : public Resource
+class VAPOR_API Shader : public Resource
 {
 public:
 

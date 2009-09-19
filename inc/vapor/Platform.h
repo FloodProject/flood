@@ -28,7 +28,7 @@
 	#error "Unknown platform (not currently supported by the engine)"
 #endif
 
-//-----------Ŕ----------------------------------------------------------//
+//---------------------------------------------------------------------//
 // Compiler detection
 //---------------------------------------------------------------------//
 
@@ -41,6 +41,10 @@
 #else
 	#error "Unknown compiler (not currently supported by the engine)"
 #endif
+
+//---------------------------------------------------------------------//
+// Build mode
+//---------------------------------------------------------------------//
 
 #if defined( _DEBUG ) || defined( ___DEBUG ) || defined( DEBUG )
 	#define VAPOR_DEBUG

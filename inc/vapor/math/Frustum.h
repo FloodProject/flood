@@ -23,7 +23,7 @@ namespace vapor {
  * tests, the frustum also needs to be converted to world space.
  */
 
-class Frustum
+class VAPOR_API Frustum
 {
 public:
 

@@ -22,7 +22,7 @@ namespace vapor {
  * TODO: Serialization?
  */
 
-class Material
+class VAPOR_API Material
 {
 public:
 

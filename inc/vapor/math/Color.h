@@ -17,7 +17,7 @@ namespace vapor {
  * Very simple representation of a color.
  */
 
-struct Color
+struct VAPOR_API Color
 {
 	float r, g, b, a;
 

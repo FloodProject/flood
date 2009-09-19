@@ -22,14 +22,14 @@
 
 //-----------------------------------//
 
-namespace vapor { 
+namespace vapor {
 	namespace audio {
 
-/**
+/** 
  * Audio device to play sound data using OpenAL as backend.
  */
 
-class Device : private boost::noncopyable
+class VAPOR_API Device : private boost::noncopyable
 {
 	friend class Context;
 	friend class Source;

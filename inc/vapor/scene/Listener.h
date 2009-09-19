@@ -19,7 +19,9 @@
 namespace vapor {
 	namespace scene {
 
-class Listener : public Transformable, public audio::Context
+//-----------------------------------//
+
+class VAPOR_API Listener : public Transformable, public audio::Context
 {
 public:
 
@@ -30,6 +32,8 @@ public:
 
 	static shared_ptr<audio::Context> getContext(shared_ptr<Listener> ls);
 };
+
+//-----------------------------------//
 
 } } // end namespaces
 

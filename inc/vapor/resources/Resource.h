@@ -54,7 +54,7 @@ namespace ResourceGroup
  * resource from a network connection).
  */
 
-class Resource : private boost::noncopyable
+class VAPOR_API Resource : private boost::noncopyable
 {
 public:
 

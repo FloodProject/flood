@@ -27,7 +27,7 @@ namespace vapor {
  * classes for different render devices. Hopefully not. :)
  */
 
-class Adapter
+class VAPOR_API Adapter
 {
 public:
 

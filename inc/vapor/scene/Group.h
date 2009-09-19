@@ -16,7 +16,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-class Group : public Node
+class VAPOR_API Group : public Node
 {
 public:
 
