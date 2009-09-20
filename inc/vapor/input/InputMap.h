@@ -21,12 +21,19 @@ namespace vapor {
 
 //-----------------------------------//
 
+
 struct joyId
 {
 	joyId(int, int);
 	int id;
 	int button;
-	int operator<(joyId joy1, joyId, joy2);
+	
+};
+struct Compare{
+	bool operator()(joyId lhs, joyId rhs)
+	{
+		return lhs.id < rhs.id;
+	}
 };
 
 //-----------------------------------//
@@ -38,10 +45,10 @@ public:
 	InputMap( const InputManager& manager );
 	~InputMap();
 
-	fd::delegate<void(void)>& registerAction(const std::string&, Keys::Enum);
-	fd::delegate<void(void)>& registerAction(const std::string&, MouseButton::Enum);
-	fd::delegate<void(void)>& registerAction(const std::string&, joyId);
-	fd::delegate<void(void)>& getFunction(const std::string&);
+	fd::delegate<void(void)> * registerAction(const std::string&, Keys::Enum);
+	fd::delegate<void(void)> * registerAction(const std::string&, MouseButton::Enum);
+	fd::delegate<void(void)> * registerAction(const std::string&, joyId);
+	fd::delegate<void(void)> * getFunction(const std::string&);
 	
 	void onKeyPress(const KeyEvent& ke);
 	void onMousePress(const MouseButtonEvent& mbe);
@@ -51,7 +58,7 @@ private:
 
 	std::map< Keys::Enum, std::string > keymap;
 	std::map< MouseButton::Enum, std::string > mousemap;
-	std::map< joyId, std::string > joystickmap;
+	std::map< joyId, std::string, Compare> joystickmap;
 	std::map< std::string, fd::delegate<void(void)> > inputMap; 
 };
 

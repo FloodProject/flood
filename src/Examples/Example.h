@@ -13,7 +13,7 @@
 #include <vapor/render/VertexBuffer.h>
 #include <vapor/render/Renderable.h>
 #include <vapor/scene/Camera.h>
-
+#include <vapor/input/InputMap.h>
 
 //-----------------------------------//
 
@@ -47,9 +47,12 @@ protected:
 	// Callback functions
 	virtual void onKeyPressed( const vapor::input::KeyEvent& );
 	virtual void onButtonPressed( const vapor::input::MouseButtonEvent& );
+	void leap();
+	void Run();
 
 private:
 
+	vapor::input::InputMap * inputMap; 
 	vapor::render::TexturePtr tex;
 	vapor::scene::CameraPtr cam;
 	vapor::math::Color c;

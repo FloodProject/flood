@@ -20,16 +20,13 @@ joyId::joyId(int id, int button)
 
 }
 
-int joyId::operator<(joyId joy1, joyId, joy2)
-{
 
-}
 
 InputMap::InputMap(const InputManager& manager)
 {
 
-	Keyboard* kbd = manager->getKeyboard();
-	Mouse* mouse = manager->getMouse();
+	Keyboard* kbd = manager.getKeyboard();
+	Mouse* mouse = manager.getMouse();
 	
 	kbd->onKeyPress.bind( &InputMap::onKeyPress, this );
 	mouse->onMouseButtonPress.bind( &InputMap::onMousePress, this );
@@ -40,26 +37,26 @@ InputMap::~InputMap()
 
 }
 
-fd::delegate<void(void)>& InputMap::registerAction(const std::string& action, Keys::Enum keycode)
+fd::delegate<void(void)> * InputMap::registerAction(const std::string& action, Keys::Enum keycode)
 {
 	keymap[keycode] = action;
 	return &(inputMap[action]);
 }
 
-fd::delegate<void(void)>& InputMap::registerAction(const std::string& action, MouseButton::Enum button)
+fd::delegate<void(void)> * InputMap::registerAction(const std::string& action, MouseButton::Enum button)
 {
 	mousemap[button] = action;
 	return &(inputMap[action]);
 	
 }
 
-fd::delegate<void(void)>& InputMap::registerAction(const std::string& action, joyId joy)
+fd::delegate<void(void)> * InputMap::registerAction(const std::string& action, joyId joy)
 {
 	joystickmap[joy] = action;
 	return &(inputMap[action]);
 }
 
-fd::delegate<void(void)>& InputMap::getFunction(const std::string& action)
+fd::delegate<void(void)> * InputMap::getFunction(const std::string& action)
 {
 		return &(inputMap[action]);
 }

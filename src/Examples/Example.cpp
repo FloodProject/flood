@@ -25,6 +25,8 @@
 #include <vapor/render/VertexBuffer.h>
 #include <vapor/render/Texture.h>
 
+#include <iostream>
+
 using namespace vapor;
 using namespace vapor::vfs;
 using namespace vapor::log;
@@ -56,6 +58,8 @@ void Example::onInit()
 	}
 
 	//throw std::runtime_error( "" );
+
+	inputMap = new InputMap(*getInputManager()); 
 }
 
 //-----------------------------------//
@@ -71,6 +75,9 @@ void Example::onSetupResources()
 		rm->createResource( "media/shader.vs" ) );
 
 	tex.reset( new Texture( tr1::static_pointer_cast< Image > ( img ) ) );
+	(inputMap->registerAction("leap", vapor::input::Keys::Space))->bind(&Example::leap, this);
+	(inputMap->registerAction("run", vapor::input::Keys::W))->bind(&Example::Run, this);
+	inputMap->registerAction("leap", vapor::input::MouseButton::Left);
 }
 
 //-----------------------------------//
@@ -187,4 +194,13 @@ void Example::onButtonPressed( const MouseButtonEvent& btnEvent )
 	//debug( "button press: %d", btnEvent.button );
 }
 
+void Example::leap()
+{
+	debug("Leap\n");
+}
+
+void Example::Run()
+{
+	debug("Run\n");
+}
 //-----------------------------------//
