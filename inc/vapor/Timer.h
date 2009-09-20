@@ -33,7 +33,7 @@ public:
 	double getCurrentTime();
 
 	// Gets the time since the last reset.
-	double getDeltaTime();
+	double getElapsedTime();
 
 	// Resets the timer.
 	void reset();

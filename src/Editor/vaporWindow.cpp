@@ -17,10 +17,12 @@ using namespace vapor;
 
 //-----------------------------------//
 
-vaporWindow::vaporWindow(render::Settings& settings, wxGLCanvas* canvas)
+vaporWindow::vaporWindow(const render::WindowSettings& settings, wxGLCanvas* canvas)
 	:	render::Window(settings), canvas(canvas), context(nullptr)
 {
 	open();
+
+	im = new wx_InputManager();
 }
 
 //-----------------------------------//
@@ -63,6 +65,13 @@ void vaporWindow::update()
 
 //-----------------------------------//
 
+void vaporWindow::show( bool UNUSED(hide) ) 
+{
+
+}
+
+//-----------------------------------//
+
 void vaporWindow::makeCurrent()
 {
 	if(!context || !canvas) return;
@@ -79,17 +88,26 @@ bool vaporWindow::pumpEvents()
 
 //-----------------------------------//
 
-void vaporWindow::setTitle(const std::string& title) const
+void vaporWindow::setTitle(const std::string& UNUSED(title))
 {
 
 }
 
 //-----------------------------------//
 
-void vaporWindow::setCursor(bool state) const
+void vaporWindow::setCursor(bool UNUSED(state))
 {
 
 }
+
+//-----------------------------------//
+
+input::InputManager& vaporWindow::getInputManager()
+{
+	return *im;
+}
+
+//-----------------------------------//
 
 //} } // end namespaces
 

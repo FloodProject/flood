@@ -10,12 +10,10 @@
 
 #include <vapor/Framework.h>
 
-#include <vapor/Timer.h>
-
 #include <vapor/render/VertexBuffer.h>
 #include <vapor/render/Renderable.h>
 #include <vapor/scene/Camera.h>
-#include <vapor/input/Keyboard.h>
+
 
 //-----------------------------------//
 
@@ -41,14 +39,14 @@ protected:
 	virtual void onSetupScene();
 
 	// Called to update stuff
-	virtual void onUpdate();
+	virtual void onUpdate( double delta );
 
 	// Renders the scene
 	virtual void onRender();
 
 	// Callback functions
-	void onKeyPressed( const vapor::input::KeyEvent& );
-	void onButtonPressed( const vapor::input::MouseButtonEvent& );
+	virtual void onKeyPressed( const vapor::input::KeyEvent& );
+	virtual void onButtonPressed( const vapor::input::MouseButtonEvent& );
 
 private:
 

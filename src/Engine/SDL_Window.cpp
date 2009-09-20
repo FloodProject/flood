@@ -265,7 +265,7 @@ bool SDLWindow::pumpEvents()
 		}
 	}
 
-	SDL_Delay(0);
+	//SDL_Delay(0);
 
 	return true;
 }

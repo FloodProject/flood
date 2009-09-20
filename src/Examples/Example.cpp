@@ -48,19 +48,14 @@ Example::Example(const char** argv)
 void Example::onInit()
 {
 	// Mount VFS points
-	std::string media = "media";
+	const std::string& media = "media";
 
 	if ( !getVFS()->mount( media ) )
 	{
 		Log::MessageDialog( "Missing archive/directory '" + media + "'." );
 	}
 
-	// Register input devices callbacks
-	Keyboard* kbd = getInputManager()->getKeyboard();
-	Mouse* mouse = getInputManager()->getMouse();
-
-	kbd->onKeyPress.bind( &Example::onKeyPressed, this );
-	mouse->onMouseButtonPress.bind( &Example::onButtonPressed, this );
+	//throw std::runtime_error( "" );
 }
 
 //-----------------------------------//
@@ -124,21 +119,21 @@ void Example::onSetupScene()
 	
 	GeometryPtr geom( new Geometry( rend ) );
 	
-	scene->add( geom );
+	//scene->add( geom );
 }
 
 //-----------------------------------//
 
-void Example::onUpdate() 
+void Example::onUpdate( double delta ) 
 {
 	ScenePtr scene = getSceneManager();
 	scene->update();
 
 	if( runLoop )
 	{
-		c.r += 0.00001f; c.r = (c.r > 1.0f) ? 0.0f : c.r;
-		c.g += 0.00003f; c.b = (c.b > 1.0f) ? 0.0f : c.b;
-		c.b += 0.00007f; c.g = (c.g > 1.0f) ? 0.0f : c.g;
+		c.r += 0.0000001f / delta; c.r = (c.r > 1.0f) ? 0.0f : c.r;
+		c.g += 0.0000003f / delta; c.b = (c.b > 1.0f) ? 0.0f : c.b;
+		c.b += 0.0000007f / delta; c.g = (c.g > 1.0f) ? 0.0f : c.g;
 	}
 }
 

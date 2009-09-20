@@ -15,18 +15,14 @@ SERVER:
 ENGINE:
 -----
 
-Use copy-constructors or boost::non_copyable
 Switch to intrusive_ptr for all ref-counting classes
 Create a ResourceFile class (maybe stream-based - C++ streams? )
 GetLoggers for each class (could be integrated with Profiler? :)
 AllocConsole for debugging porpuses on a key press
-Add timing code for FPS calculation and timing events.
-Add Action Map class for storing input settings for the game.
 Update all the headers to have separators between different sections
 Move from #pragma error instructions to static_assert
 Debug a crash in triton's desktop with an Audigy 4 (XP BSOD in Creative's driver 'ctaud2k.sys')
 Move the rendering to a different thread than the main loop code (smooth resizing)
-Check the need for copy-constructors
 The Log class should use the user writing directory for output
 Check the need for defining copy-constructors in all classes
 Window size changed notifications for Camera/Viewport aspect ration calculations
@@ -40,7 +36,7 @@ Check how the resource manager will handle missing resources
 Make a Timer class and maybe a task manager with callbacks (for e.g. streaming) 
 Check if/how type traits can be useful in engine
 Bitmap font file format (and converter for some freeware generator tool)
-Are std::string references faster/lighter than normal strings?
+Are std::string references faster/lighter than normal strings? (Yes.)
 Re-check the order of initialization of the engine subsystems (ideally filesystem errors should occur _before_ rendering init)
 Cross-platform Clipboard access?
 FileWatcher for resource change notification integrated with VFS
@@ -62,7 +58,6 @@ Math:
 Platform:
 	
 	Implement abstract timer class (WIP)
-	Color copy cons and operators
 	Log all the engine calls (WIP)
 	bind/functor for logging
 	Hierarchical log system
@@ -76,6 +71,9 @@ vaporEditor:
 DONE:
 -----
 
+Add timing code for FPS calculation and timing events.
+Add Action Map class for storing input settings for the game.
+Use copy-constructors or boost::non_copyable
 Switch to precompiled headers (BIG GAIN!!)
 Add Window events for resizing, closing, etc.
 Add defines for the different compilers and switch #ifdef pragmas to those...

@@ -17,6 +17,7 @@ namespace vapor {
 //-----------------------------------//
 
 Timer::Timer()
+	: lastTime( 0.0 ), currentTime( 0.0 ), ticksPerSecond( 0.0 )
 {
 	if( !checkSupport() )
 	{
@@ -54,7 +55,7 @@ double Timer::getCurrentTime()
 
 //-----------------------------------//
 
-double Timer::getDeltaTime()
+double Timer::getElapsedTime()
 {
 	getCurrentTime();	
 

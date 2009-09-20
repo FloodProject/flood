@@ -100,7 +100,7 @@ void vaporControl::initControl()
 	wxSize size = GetSize();
 
 	// construct a settings object to pass to vapor
-	Settings settings(size.GetX(), size.GetY(), 24, false);
+	WindowSettings settings(size.GetX(), size.GetY());
 
 	Window* window = new vaporWindow(settings, this);
 	device->setRenderTarget(window);

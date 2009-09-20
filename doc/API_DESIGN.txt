@@ -1,0 +1,1118 @@
+SCENE TRAVERSAL
+----------------
+
+    1. update bounding volumes and transforms 
+
+    for each camera:
+    
+        2. do frustum culling based on a camera
+        3. render primitives returned by 2.
+    
+//-----------------------------------//
+
+// step 1, pseudo code
+
+void Scene::updateTransformAndBV( shared_ptr< Node > node, std::stack< Matrix4x4 >& transformStack )
+{
+    // on the way down part
+    shared_ptr< Transformable > transformable(
+      dynamic_cast< shared_ptr< Transformable > >( node) );
+    bool needsPop( false );
+    
+    // concatenate this matrix on the stack with the top most
+    // there will be at least one matrix in stack, top most is identity
+    if ( !transformable.isNull() )
+    {
+        transformStack.push( transformable.getMatrix() * transformStack.top() );
+        transformable.setAbsoluteLocalToWorld( transformStack.top() );
+        needsPop = true;
+    }
+    else
+    {
+        shared_ptr< Transform > transform(
+          dynamic_cast< shared_ptr< Transform > >( node) );
+    
+        // concatenate this matrix on the stack with the top most
+        // there will be at least one matrix in stack, top most is identity
+        if ( !transform.isNull() )
+        {
+            transformStack.push( transform.getMatrix() * transformStack.top() );
+            needsPop = true;
+        }
+    }
+    
+    for ( int i( 0 ); i < node->count(); ++i )
+    {
+        updateTransformAndBV( node->get( i ) );
+    }
+   
+    // on the way up part
+    if ( node->requiresBoundingVolumeUpdate() )
+    {
+        node->updateBoundingVolume( transformStack.top() );
+    }
+
+    node->update();
+        
+    // remove the matrix from the stack
+    if ( needsPop )
+    {
+        transformStack.pop();
+    }
+}
+
+// bounding volume update pseuso-code
+
+void Group::updateBoundingVolume( Matrix4x4 const& absoluteLocalToWorld )
+{  
+    // we need to update the bounding volume of this group to enclose
+    // all of the children bounding volumes, for hierarchical frustum cull.
+    
+    AABB newAABB;
+    
+    // calculate a new AABB with all the children AABBs combined
+    // since group child nodes already return an AABB transformed
+    // to world space, we don't need to transform the new AABB
+    // since the new computed AABB should mantain that property
+    std::vector<shared_ptr<Node>>::iterator it;
+    for( it = children.begin(); it != children.end(); ++it )
+    {
+        newAABB.expand( it->getBoundingVolume() );
+    }
+    
+    // update the current AABB with the new one
+    setBoundingVolume( newAABB );
+}
+
+//-----------------------------------//
+
+void Mesh::updateBoundingVolume( Matrix4x4 const& absoluteLocalToWorld )
+{
+    AABB newAABB;
+    
+    for ( int i( 0 ); i < resource.getNumberOfVertices(); ++i )
+    {
+        newAABB.expand( resource.getVertex( i ) );
+    }
+    
+    setBoundingVolume( newAABB.transform( absoluteLocalToWrold ) );
+}
+
+//-----------------------------------//
+    
+void LOD::updateBoundingVolume( Matrix4x4 const& absoluteLocalToWorld )
+{
+    // TODO: pending on Camera work
+}
+
+//-----------------------------------//
+
+void Framework::render()
+{
+    render::Device* renderDevice = getRenderDevice();
+
+    while(renderDevice->getWindow()->pumpEvents())
+    {
+        // update time!
+        onUpdate();
+
+        // main rendering by app
+        onRender();
+
+        // update the active target
+        renderDevice->updateTarget();
+    }    
+}
+    
+//-----------------------------------//
+// render related classes
+//-----------------------------------//
+
+Renderable
+
+  we also need something to represent the stuff we feed opengl to render stuff.
+  i suggest we use vbo's (vertex buffers) as our low level buffer storage.
+  this should also have an associated primitive type (line, triangles, quads)
+  a renderable object also needs to provide a material, that is, the rendering
+  properties of the object.
+
+Material
+
+  a material defines the appearance of the object. you can specify some textures,
+  vertex and pixel shaders, colors, etc. this will allow, for example, the same 
+  vertex data to be rendered with different appearances.
+
+//-----------------------------------//
+// resource related classes
+//-----------------------------------//
+
+MeshResource
+
+  this loads a mesh from a file or something, loads all vertices and faces and
+  should return a set of Renderable and Materials objects about the mesh.
+
+
+//-----------------------------------//
+// scene related classes
+//-----------------------------------//
+
+Geometry
+
+  this node can render different kinds of stuff. you should be able to feed it
+  a renderable object and a material and it renders the object on the screen.
+  
+//-----------------------------------//
+  
+// this is gonna get a list of renderables
+// returned by the culling phase
+RenderDevice::render( RenderQueue& queue, Matrix4x4 invCamera = Matrix4x4::Identity ) // ?
+{       
+    // 1. sort renderables by state
+    sortByMaterial( queue );
+        
+    // 2. for each node render
+    foreach ( renderable in queue )
+    {
+        // change state if needed
+        changeState( renderable );
+        
+        // concantenate camera and renderable matrices
+        glLoadMatrix( renderable->second * invCamera );
+        
+        // render it
+        renderable->first.render();
+    }
+}
+
+Renderable::render()
+{
+    vb->bind();
+    
+    if ( ib == nullptr )
+    {
+        GLenum type = ib->is16() ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
+        glDrawElements(primitiveType(), vb->getCount(), type, 0 );
+    }
+    else
+    {
+        ib->bind();
+        glDrawArrays( primitiveType(), 0, vb->getCount() );
+        ib->unbind();
+    }
+    
+    vb->unbind();
+}
+  
+//-----------------------------------//
+// use cases
+//-----------------------------------//
+  
+// 1. render a quad
+
+// construct a quad buffer
+vector< Vector3f > vert; 
+vert.push_back( Vector3f(0.0f, 0.0f, 0.0f ) );
+vert.push_back( Vector3f(0.0f, 0.0f, 0.0f ) );
+vert.push_back( Vector3f(0.0f, 0.0f, 0.0f ) );
+vert.push_back( Vector3f(0.0f, 0.0f, 0.0f ) );
+
+shared_ptr<VertexBufer> vb;
+vb->set(VertexAttribute::Vertex, vert);
+vb->build();
+
+Renderable rend(PrimitiveType::Quads, vb);
+rend.setMaterial( new Material("White") );
+
+Geometry node;
+node.addRenderable( rend );
+root.add( node );
+
+// 2. render the same quad with another material
+
+Geometry another;
+another.setRenderable( rend );
+another.setMaterial( new Material("Red") );
+another.scale( 2.0f, 2.0f, 2.0f );
+
+root.add( another );
+
+//-----------------------------------//
+
+void main()
+{      
+    Window window( "Title here" );
+    window.showFullscreen();
+        
+    InputDevice inputDevice;
+    RenderDevice renderDevice;   
+    Camera camera( renderDevice);
+    camera.setRenderTarget( window );
+    
+    Scene scene;
+    scene.add( camera );    
+    
+    Group g;
+    Geometry m;
+    g.add( m );
+    scene.add( g );    
+    
+    // pretend all boundingvolumes are ok right now, the flag is false for all
+
+    float angle( 0.0f );
+        
+    while ( window.pumpEvents() )
+    {
+        // do some aninmation
+        // cause need for new bv to be calculated for this mesh since we
+        // are using AABB for now
+        m.rotate( angle++, 1, 0, 0 );
+        
+        // get user input and move transforms as needed
+        inputDevice.read();
+        
+        // update transforms, and bounding volumes, etc
+        scene.update();
+
+        // 3D cull and render happens in here    
+        camera.render();
+
+        // pretend some HUD code goes here, overlay graphics in 2D on top
+        // of 3D rendered scene
+        
+        // now swap buffers, etc
+        window.update();
+    }
+}
+
+//----------------------------------------------------------------------------------------------------------------
+
+class RenderTarget
+{
+public:
+
+    RenderTarget() { }
+    virtual ~RenderTarget() { }
+    
+    virtual void update() = 0;
+
+    virtual void makeCurrent() = 0;
+};
+
+//----------------------------------------------------------------------------------------------------------------
+
+/**
+ * Represents a node, that is, an entity in the scene. 
+ * The entities are divided into two main types:
+ *   ~ Transformable (entities that can be placed in the scene)
+ *   ~ Group (group of other entities in the scene)
+ */
+
+class Node
+{
+public:
+
+  explicit Node( shared_ptr<Node> parent = nullptr );
+  
+  // Sets the parent of the node.
+  void setParent( shared_ptr<Node> parent );
+  
+  // Gets the parent of the node.
+  shared_ptr<Node> getParent() const;
+  
+  // Gets the bounding volume of the node.  Returns AABB in world space.
+  AABB const& getBoundingVolume() const;
+  
+  // This gets called once per traversal of the scene unconditionally
+  // in post order.
+  virtual void update() { }
+  
+protected:
+
+  // Updates the bounding volume of this node.
+  // Matrix parameter is used to transform the AABB to world space.
+  virtual void updateBoundingVolume( Matrix4x4 const& absoluteLocalToWorld ) = 0;
+  
+  // Sets the internal bounding volume to the boundingVolume parameter
+  // and also sets this node's needsBoundingVolumeUpdate flag to false.
+  void setBoundingVolume(AABB const& boundingVolume);
+
+  // This will be called by inherited classes, this will
+  // set the internal needsBoundingVolumeUpdate flag to true.
+  // This will also set all parent nodes between this node and the root
+  // Scene node's needsBoundingVolumeUpdate flag to true.
+  void boundingVolumeUpdateRequired();
+  
+  // Returns true if a new bounding volume is needed, false otherwise.
+  inline bool requiresBoundingVolumeUpdate() const { return boundingVolumeUpdateRequired; }
+  
+private:
+  shared_ptr<Node> parent;
+  AABB boundingVolume; // must always be in world space, not local
+  bool boundingVolumeUpdateRequired; // constructor should default to true
+};
+
+//----------------------------------------------------------------------------------------------------------------
+
+class Group : public Node
+{
+public:
+
+  // adds child to the end of the child list.  Returns the index of
+  // the new child node that has been added.
+  virtual int add( shared_ptr<Node> child );
+  
+  // inserts child after child at i'th index.  Returns the index of
+  // the new child inserted, if there is no existing
+  // child at 'i' then -1 is returned.
+  virtual int insert( int i, shared_ptr<Node> child );
+  
+  // removes child at index i, if i is out of bounds returns false,
+  // if i is in bounds and child was removed, returns true
+  virtual bool remove( int i );
+  
+  // returns null pointer if cannot find index i
+  shared_ptr<Node> get( int i ) const;
+  
+  // returns index for child with the same pointer, if child cannot
+  // be found, -1 is returned
+  int index( shared_ptr<Node> child ) const;
+  
+  // returns number of children in this group
+  int count( ) const { return children.size(); };
+  
+private:
+  std::vector<shared_ptr<Node>> children;
+};
+
+//----------------------------------------------------------------------------------------------------------------
+
+class Scene : protected Group
+{
+public:
+
+  Scene();
+  
+  using Group::add;
+  
+  using Group::insert;
+  
+  using Group::remove;
+  
+  using Group::get;
+  
+  using Group::index;
+  
+  using Group::count;
+  
+  using Node::getParent;
+  
+  using Node::getBoundingVolume;
+  
+  // Traverses the tree updating all child nodes bounding boxes and transform matrices.
+  virtual void update()
+  {
+    std::stack< Matrix4x4 > transformStack;
+    transformStack.push( Matrix4x4::identity() );
+        
+    updateTransformAndBV( this, transformStack );
+  }
+   
+private:
+
+  void updateTransformAndBV( shared_ptr< Node > node, std::stack< Matrix4x4 >& transformStack );
+};
+
+//----------------------------------------------------------------------------------------------------------------
+
+/*
+ * This is purely an interface, contains no data or implementation
+ */
+class TransformInterface
+{
+public:
+
+  virtual void translate( Vector3 const& tr ) = 0;
+  
+  virtual void rotate( float xang, float yang, float zang ) = 0;
+  
+  // many more methods follow here ...
+};
+
+//----------------------------------------------------------------------------------------------------------------
+
+class Transformable : public Node, public TransformInterface
+{
+public:
+
+  virtual void translate( Vector3 const& tr );
+  
+  virtual void rotate( float xang, float yang, float zang );
+  
+  // many more methods implemented here ...
+  
+  // todo: identity()
+
+  void setAbsoluteLocalToWorld( Matrix4x4 const& matrix );
+  
+  Matrix4x4 const& getAbsoluteLocalToWorld() const
+  
+protected:
+
+  Transformable();
+  
+private:
+
+  shared_ptr<Vector3> translation;
+  shared_ptr<Matrix3x3> orientation;
+  Matrix4x4 absoluteLocalToWorld;
+};
+
+
+//----------------------------------------------------------------------------------------------------------------
+
+class Transform : public Group, public TransformIInterface
+{
+public:
+
+};
+
+//----------------------------------------------------------------------------------------------------------------
+
+class Mesh : public Transformable
+{
+public:
+
+  void setResource( shared_ptr<MeshResource> resource );
+  
+private:
+  shared_ptr<MeshResource> resource;
+};
+
+//----------------------------------------------------------------------------------------------------------------
+
+class Light : public Transformable
+{
+public:
+
+  enum Type
+  {
+    Directional,
+    Point,
+    Spot
+  };
+  
+  Light();
+  
+  void on();
+  
+  void off();
+  
+  bool isOn() const;
+  
+  void enableShadowCast();
+  
+  void disableShadowCast();
+  
+  bool castsShadow() const;
+  
+  void setType( Type type );
+  
+  void setDiffuse( Color const& color );
+  
+  void setSpecular( Color const& color );
+  
+  void setEmissive( Color const& color );
+  
+  void setAmbient( Color const& color );
+  
+  void setSpotCutOffRadius( float radius );
+  
+private:
+  bool shadows;
+  Type type;
+};
+
+//----------------------------------------------------------------------------------------------------------------
+
+/**
+ * Uses the position and orientation defined in the node 
+ * as the sound source location.
+ */
+
+class Sound : public Transformable
+{
+public:
+
+  void setResource( shared_ptr<resources::Sound> resource );
+  
+  /* will this update current playing sounds? yes*/
+  void setVolume( float volume );
+  
+  void play();
+  
+  void loop( int count = 1 );
+  
+  void stop();
+  
+  void pause();
+  
+  void rewind();
+  
+  void setPitch( float pitch );
+  
+  void setRollOff( float rollOff );
+  
+private:
+
+  shared_ptr<SoundResource> resource;
+};
+
+//----------------------------------------------------------------------------------------------------------------
+
+/**
+ * Represents 
+ */
+
+class Listener : public Transformable
+{
+public:
+
+  Listener();
+  
+  //
+  void setVolume( float volume );
+  
+  void makeCurrent();
+};
+
+//----------------------------------------------------------------------------------------------------------------
+
+/**
+ * Represents a set of nodes that can have LOD (Level of detail) transitions.
+ * Each node will be shown when its distance to the camera is in the range 
+ * specified by the user. The range is in the format [min,max). That means
+ * min is inclusive, and max exclusive. If the ranges overlap, the transition
+ * will be the alpha blending of the two overlapping ranges. The methods that
+ * modify the internal state of the class will make sure you only setup the
+ * ranges with consecutive values.
+ */
+
+class LOD : protected Group
+{
+public:
+
+  // childIndex must be valid within the children member of Group. 
+  // Returns false when childIndex is out of bounds, true otherwise.
+  bool setRange( int childIndex, float min, float max );
+  
+  // Gets the LOD range of a given child node index.  
+  // Returns false when childIndex is out of bounds, true otherwise.
+  bool getRange( int childIndex, float& min, float& max ) const;
+    
+  // Adds child to the end of the child list. 
+  // Returns the index of the new child node that has been added.
+  int add( shared_ptr<Node> child, float min, float max );
+  
+  // inserts child after child at i'th index. Returns the index of
+  // the new child node that has been inserted, if there is no existing
+  // child at 'i' then -1 is returned.
+  int insert( int i, shared_ptr<Node> child, float min, float max );
+  
+  // removes child at index i, if i is out of bounds returns false,
+  // if i is in bounds and child was removed, returns true
+  // Removes associated range with this child index as well.
+  virtual bool remove( int i );
+  
+  using Group::get;
+
+  using Group::index;
+  
+  using Group::count;
+
+private:
+  std::vector<std::pair<float, float>> ranges;
+};
+
+//----------------------------------------------------------------------------------------------------------------
+
+namespace Projection 
+{
+    enum Enum
+    {
+        Orthographic,
+        Perspective
+    };
+}
+
+/***************/
+
+/**
+ * Type of primitive of the renderable.
+ */
+
+namespace PrimitiveType
+{
+    enum Enum
+    {
+        Points = GL_POINTS,
+        Lines = GL_LINES,
+        LineLoop = GL_LINE_LOOP,
+        LineStrip = GL_LINE_STRIP,
+        Triangles = GL_TRIANGLES,
+        TriangleStrip = GL_TRIANGLE_STRIP,
+        TriangleFan = GL_TRIANGLE_FAN,
+        Quads = GL_QUADS,
+        QuadStrip = GL_QUAD_STRIP,
+        Polygon = GL_POLYGON
+    };
+}
+
+/**
+ * Represents a renderable object, that is, the only rendering object
+ * the rendering Device knows and cares about. A render-able object has
+ * at least one Vertex buffer and one Index buffer, and an primitive 
+ * type associated with them.
+ */
+
+class Renderable
+{
+public:
+
+    Renderable(PrimitiveType::Enum primitive, std::shared_ptr< VertexBuffer > vb, 
+                    std::shared_ptr< IndexBuffer > ib, std::shared_ptr< Material >);
+    
+    // No index buffer
+    Renderable(PrimitiveType::Enum primitive, std::shared_ptr< VertexBuffer > vb, 
+                    std::shared_ptr< Material >);
+    
+    // No index buffer, default material will be used
+    Renderable(PrimitiveType::Enum primitive, std::shared_ptr< VertexBuffer > vb);
+                    
+    // Render this renderable. This will bind all the necessary state like binding
+    // the buffers and the materials.
+    void render(RenderDevice& device) const;
+    
+    // Gets the vertex buffer associated with the renderable.
+    std::shared_ptr<VertexBuffer> getVertexBuffer() const;
+
+    // Gets the index buffer associated with the renderable.
+    std::shared_ptr<IndexBuffer> getIndexBuffer() const;    
+
+    // Gets the material associated with the renderable.
+    std::shared_ptr<Material> getMaterial() const;
+private:
+
+    // primitive type of vertex buffer 
+    PrimitiveType::Enum type;
+    std::shared_ptr< VertexBuffer > vertexBuffer;
+    std::shared_ptr< IndexBuffer > indexBuffer;
+    std::shared_ptr< Material > material;
+};
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+
+main()
+{
+    Scene root;
+    Group g;
+    Geometry m;
+    GUI gui;
+    Window w;
+    
+    g.add( m );
+    root.add( g );
+
+    Camera camera;
+    root.add( camera );    
+
+    m.rotate( 40, 1, 0, 0 );
+    
+    // this will update all AABBs and matrices
+    root.update();
+
+    // performs frustum culling and renders everything
+    // that was inside the frustum to the target
+    camera.setRenderTarget(w);
+    camera.render( root );
+    
+    gui.render( );
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// some render pseudo code
+////////////////////////////////////////////////////////////////////////////////////////////
+
+  {
+    // rendering to target
+    renderTarget->makeCurrent();
+    
+    // setup projection matrix
+    glMatrixMode( PROJECTION );
+    glLoadIdentity();
+    
+    if ( Projection::Perspective == projection )
+        gluPerspective( FOV, target->getWidth() / target->getHeight(), near, far );
+    else
+        glOrtho( -1, 1, -1, 1, near, far );
+    
+    // clear the model view matrix stack
+    glMatrixMode( MODELVIEW );
+    
+    worldToCamera = absoluateLocalToWorld.inverse();
+    
+    // put the camera matrix on the stack
+    glLoadMatrix( worldToCamera );
+    
+    std::list< shared_ptr< MeshResource > > list( cull( root ) );
+    
+    for ( std::list< shared_ptr< MeshResource > >::const_iterator iter( list.begin() );
+          list.end() != iter;
+          ++iter )
+    {
+      // the draw method should call glPushMatrix and glMultMatrix itself to put
+      // its absoluteLocalToWorld matrix multipled by worldToCamera, then glPopMatrix
+      // before returning
+      iter->draw();
+    }
+  }
+
+//----------------------------------------------------------------------------------------------------------------
+
+// This is a queue of objects that are usually returned by performing a culling
+// operation on the camera.
+typedef std::list< std::pair< shared_ptr< Renderable >, Matrix4x4*> > RenderQueue;
+
+class Camera : public Transformable
+{
+public:
+
+  Camera( shared_ptr< RenderDevice > device );
+
+  // Sets the projection type of the camera.
+  void setProjection( Projection::Enum projection );
+
+  // Sets the field-of-view of the camera.
+  void setFOV( float fov );
+
+  // Sets the far clipping plane of the camera.
+  void setFar( float far );
+  
+  // Sets the near clipping plane of the camera.
+  void setNear( float near );
+  
+  // Sets a new render target in the camera.
+  void setRenderTarget( shared_ptr<RenderTarget> target );
+
+  // Gets the current render target associated with the camera.
+  shared_ptr<RenderTarget> getRenderTarget() const;
+  
+  // Renders the (sub-)scene starting from the passed node to the current render target
+  // associated in the camera.
+  void render( shared_ptr< Node > node ) const
+  {
+      RenderQueue queue;
+      
+      cull( queue, node );
+      
+      renderTarget->makeCurrent();
+      
+      renderDevice->render( queue, absoluteLocalToWorld.inverse() );
+  }
+  
+  // Renders the entire scene starting from the root node to the current render target 
+  // associated in the camera.
+  void render() const
+  {
+      shared_ptr< Node > parent( getParent() );
+      
+      while ( parent->getParent() )
+          parent = parent->getParent();
+          
+      render( parent );
+  }
+    
+  // Performs hierarchical frustum culling on the nodes in the scene starting from the given node.
+  // In other words, the camera will check all the nodes and return a list of those that are
+  // inside its frustum for later rendering (and also their local to world matrices).
+  // The queue is passed as a reference to the cull method, which fills it with the data.
+  void cull( RenderQueue& queue, shared_ptr< Node > root ) const;
+  
+private:
+  
+  float FOV;
+  Projection::Enum projection;
+  float near;
+  float far;
+  
+  shared_ptr<RenderTarget> target;
+  shared_ptr<RenderDevice> renderDevice;
+};
+
+//----------------------------------------------------------------------------------------------------------------
+
+class Trigger : public Transformable
+{
+public:
+
+  void setBoundingVolume( BoundingVolume bv );
+  
+private:
+
+  BoundingVolume triggerVolume;
+};
+
+//----------------------------------------------------------------------------------------------------------------
+
+class Billboard : public Transformable
+{
+public:
+
+  void setImage( shared_ptr<ImageResource> image );
+    
+private:
+  shared_ptr<ImageResource> resource;
+};
+
+//----------------------------------------------------------------------------------------------------------------
+
+/**
+ * Use these enums to represent the lifetime and usage patterns of a 
+ * buffer. These help the engine make better decisions about where to
+ * store the buffers, which leads to better rendering performance.
+ */
+
+namespace BufferUsage
+{
+    enum Enum
+    {
+        Write,       // Write content only
+        Read,        // Read content only
+        ReadWrite    // Read and write content
+    };
+}
+
+namespace BufferType
+{
+    enum Enum
+    {
+        Static,      // Content rarely changes
+        Stream,      // Content sometimes changes
+        Dynamic      // Content always changes
+    };
+}
+
+/**
+ * Represents a buffer of data stored in memory. They mainly store
+ * rendering data given to the render API for. The buffers can be 
+ * stored in different kinds of memory, like system RAM or video RAM,
+ * depending on the usage and type flags that they are  created with. 
+ */
+
+class RenderBuffer
+{
+public:
+
+    Buffer() { }
+    virtual ~Buffer() { }
+    
+protected:
+
+    uint id;
+};
+
+} } // end namespaces
+
+
+//----------------------------------------------------------------------------------------------------------------
+
+/**
+ * Attribute of a vertex element.
+ * Matches the OpenGL specification:
+ *        0 – gl_Vertex
+ *        2 – gl_Normal
+ *        3 – gl_Color
+ *        4 – gl_SecondaryColor
+ *        5 – gl_FogCoord
+ *        8 – gl_MultiTexCoord0
+ *        9 – gl_MultiTexCoord1
+ *        10 – gl_MultiTexCoord2
+ *        11 – gl_MultiTexCoord3
+ *        12 – gl_MultiTexCoord4
+ *        13 – gl_MultiTexCoord5
+ *        14 – gl_MultiTexCoord6
+ *        15 – gl_MultiTexCoord7
+ */
+
+namespace VertexAttribute
+{
+    enum Enum
+    {
+        Vertex = 0,
+        Normal = 2,
+        Color = 3,
+        SecondaryColor = 4,
+        FogCoord = 5
+        MultiTexCoord0 = 8,
+        MultiTexcoord1,
+        MultiTexCoord2,
+        MultiTexCoord3,
+        MultiTexCoord4,
+        MultiTexCoord5,
+        MultiTexCoord6,
+        MultiTexCoord7,                                        
+    };
+}
+
+/**
+ * Represents a vertex buffer.  One limitation here is that all data is tied to the vertex
+ * so if you want a normal per primitive and not per vertex you will have to duplicate
+ * that normal for each vertex for now.
+ */
+
+class VertexBuffer : public RenderBuffer
+{
+public:
+
+    // Note: calls glGenBuffers (Base class Buffer, could do this)
+    VertexBuffer() : built(false)
+
+    // Note: calls glDeleteBuffers (Base class Buffer, could do this)
+    virtual ~VertexBuffer();
+    
+    // these are all the possible types supported by glVertexAttrib
+    bool set( VertexAttribute::Enum attr, std::vector< byte > const& data );
+    bool set( VertexAttribute::Enum attr, std::vector< ubyte > const& data );
+    bool set( VertexAttribute::Enum attr, std::vector< short > const& data );
+    bool set( VertexAttribute::Enum attr, std::vector< ushort > const& data )
+    {
+        std::vector< byte > bytev( data.size() * sizeof( ushort ) );
+        memcpy( &bytev[0], &data[0], bytev.size() );
+        datamap[attr] = std::tuple( 1, PrimitiveType::USHORT, bytev );
+    }
+        
+    bool set( VertexAttribute::Enum attr, std::vector< int > const& data );
+    bool set( VertexAttribute::Enum attr, std::vector< uint > const& data );
+    bool set( VertexAttribute::Enum attr, std::vector< float > const& data );
+    bool set( VertexAttribute::Enum attr, std::vector< double > const& data );
+    
+    // VectorX overloads do not need numComponents since the template parameter
+    // will tell us that, for example Vector3 means 3 components
+    
+    bool set( VertexAttribute::Enum attr, std::vector< Vector2< byte > > const& data );
+    bool set( VertexAttribute::Enum attr, std::vector< Vector2< ubyte > > const& data );
+    bool set( VertexAttribute::Enum attr, std::vector< Vector2< short > > const& data );
+    bool set( VertexAttribute::Enum attr, std::vector< Vector2< ushort > > const& data );
+    bool set( VertexAttribute::Enum attr, std::vector< Vector2< int > > const& data );
+    bool set( VertexAttribute::Enum attr, std::vector< Vector2< uint > > const& data );
+    bool set( VertexAttribute::Enum attr, std::vector< Vector2< float > > const& data );
+    bool set( VertexAttribute::Enum attr, std::vector< Vector2< double > > const& data );
+        
+    bool set( VertexAttribute::Enum attr, std::vector< Vector3< byte > > const& data );
+    bool set( VertexAttribute::Enum attr, std::vector< Vector3< ubyte > > const& data );
+    bool set( VertexAttribute::Enum attr, std::vector< Vector3< short > > const& data );
+    bool set( VertexAttribute::Enum attr, std::vector< Vector3< ushort > > const& data );
+    bool set( VertexAttribute::Enum attr, std::vector< Vector3< int > > const& data );
+    bool set( VertexAttribute::Enum attr, std::vector< Vector3< uint > > const& data );
+    bool set( VertexAttribute::Enum attr, std::vector< Vector3< float > > const& data );
+    bool set( VertexAttribute::Enum attr, std::vector< Vector3< double > > const& data );
+
+    bool set( VertexAttribute::Enum attr, std::vector< Vector4< byte > > const& data );
+    bool set( VertexAttribute::Enum attr, std::vector< Vector4< ubyte > > const& data );
+    bool set( VertexAttribute::Enum attr, std::vector< Vector4< short > > const& data );
+    bool set( VertexAttribute::Enum attr, std::vector< Vector4< ushort > > const& data );
+    bool set( VertexAttribute::Enum attr, std::vector< Vector4< int > > const& data );
+    bool set( VertexAttribute::Enum attr, std::vector< Vector4< uint > > const& data );
+    bool set( VertexAttribute::Enum attr, std::vector< Vector4< float > > const& data );
+    bool set( VertexAttribute::Enum attr, std::vector< Vector4< double > > const& data )
+    {
+        std::vector< byte > bytev( data.size() * sizeof( Vector4< double >) );
+        memcpy( &bytev[0], &data[0], bytev.size() );
+        datamap[attr] = std::tuple( 4, PrimitiveType::DOUBLE, bytev );
+    }
+    
+    // Updates the internal VBO with current values for vertices, 
+    // normals, colors and texture coords.  Returns false on error, true otherwise.
+    // Note: calls glBufferData
+    bool build( BufferUsage::Enum bufferUsage, BufferType::Enum bufferType );
+    
+    // This method will make the internal VBO id bound so any future
+    // glDrawXXX calls will use this VBO as its data.  Returns false on error, true
+    // otherwise.
+    // Note: calls glBindBuffer, glVertexAttribPointer , glEnableVertexAttribArray ,glEnableClientState
+    bool bind();
+    
+    // Puts opengl back into immediate mode
+    // Note: calls glBindBuffer( 0 ), glDisableVertexAttribArray 
+    bool unbind();
+    
+    // Clears this vertex buffer. All vertex data will be gone.
+    void clear();
+
+private:
+
+    bool built;
+    
+    // usage of this buffer
+    BufferUsage::Enum bufferUsage;
+    
+    // type of this buffer
+    BufferType::Enum bufferType;
+        
+    namespace PrimitiveType
+    {
+        enum Enum
+        {
+            BYTE = GL_BYTE,
+            UBYTE = GL_UNSIGNED_BYTE,
+            SHORT = GL_SHORT,
+            USHORT = GL_UNSIGNED_SHORT,
+            INT = GL_INT,
+            UINT = GL_UNSIGNED_INT,
+            FLOAT = GL_FLOAT,
+            DOUBLE = GL_DOUBLE
+        };
+    }
+    
+    std::map< VertexAttribute::Enum attr, std::tuple< int, PrimitiveType::Enum, std::vector< byte > > > datamap;
+};
+
+//----------------------------------------------------------------------------------------------------------------
+
+/**
+ * Represents an index buffer.
+ */
+
+class IndexBuffer : public RenderBuffer
+{
+public:
+
+    IndexBuffer() { }
+    virtual ~IndexBuffer() { }
+    
+    // Implicitely sets the index buffer to be 16 bits type
+    bool set(std::vector< ushort > const& data);
+    
+    // Implicitely sets the index buffer to be 32 bits type
+    bool set(std::vector< ulong > const& data);
+    
+    bool build();
+    
+    bool bind();
+    
+    bool unbind();
+
+    // Are the indexes in this buffer 16 bits?
+    bool is16() const { return data16.size() != 0; }
+
+    // Gets the number of indexes stored in this buffer.
+    ulong getNumIndexes() const { return std::max( data16.size(), data32.size() ); }
+
+private:
+
+    std::vector< ushort > data16:
+    std::vector< ulong > data32;
+};
+
+//----------------------------------------------------------------------------------------------------------------
+

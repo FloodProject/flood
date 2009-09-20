@@ -37,7 +37,7 @@ Renderable::Renderable( Primitive::Enum primitive,
 
 //-----------------------------------//
 
-void Renderable::render( render::Device& device )
+void Renderable::render( render::Device& UNUSED(device) )
 {
     vb->bind();
     

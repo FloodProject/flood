@@ -11,6 +11,7 @@ Directories structure
 	- src (Sources)
 	- inc (Includes)
 	- dep (Dependencies)
+	- build (Build Systems)
 	
 Source file structure
 ---------------------

@@ -12,15 +12,16 @@
 
 #include <limits>
 
+using namespace vapor::input;
+
 namespace vapor {
 
 //-----------------------------------//
 
 Framework::Framework(const std::string app, const char** argv)
 	:  Engine(app, argv, false), numFrames( 0 ),
-	// written like this because conflicts with min/max of windows.h
-	minFrameTime( (std::numeric_limits< double >::max)() ), 
-	maxFrameTime( 0.0 ), sumFrameTime( 0.0 )
+	minFrameTime( std::numeric_limits< double >::max() ),
+	maxFrameTime( 0.0 ), sumFrameTime( 0.0 ), lastFrameTime( 0.0 )
 {
 	info( "framework", "Engine framework getting into action" );
 }
@@ -50,6 +51,9 @@ void Framework::init()
 	// init the engine
 	Engine::init();
 
+	// register input callbacks
+	registerCallbacks();
+
 	// app-specific initialization
 	onInit();
 
@@ -62,16 +66,21 @@ void Framework::init()
 
 //-----------------------------------//
 
+/**
+ * Check out this article for a detailed analysis of some possible 
+ * game loop implementations: http://dewitters.koonsolo.com/gameloop.html
+ */
+
 void Framework::render()
 {
 	render::Device* renderDevice = getRenderDevice();
 
 	while( renderDevice->getWindow()->pumpEvents() )
 	{
-		// update time!
-		onUpdate();
-
 		frameTimer.reset();
+
+		// update time!
+		onUpdate( lastFrameTime );
 
 		// main rendering by app
 		onRender();
@@ -79,10 +88,21 @@ void Framework::render()
 		// update the active target
 		renderDevice->updateTarget();
 
-		lastFrameTime = frameTimer.getDeltaTime();
+		lastFrameTime = frameTimer.getElapsedTime();
 
 		updateFrameTimes();
 	}
+}
+
+//-----------------------------------//
+
+void Framework::registerCallbacks()
+{
+	Keyboard* kbd = getInputManager()->getKeyboard();
+	Mouse* mouse = getInputManager()->getMouse();
+
+	if( kbd ) kbd->onKeyPress.bind( &Framework::onKeyPressed, this );
+	if( mouse ) mouse->onMouseButtonPress.bind( &Framework::onButtonPressed, this );
 }
 
 //-----------------------------------//
@@ -96,9 +116,22 @@ void Framework::updateFrameTimes()
 
 	sumFrameTime += lastFrameTime;
 	avgFrameTime = sumFrameTime / numFrames;
-}	
+}
+
+//-----------------------------------//
+
+void Framework::onKeyPressed( const KeyEvent& )
+{
+
+}
+
+//-----------------------------------//
+
+void Framework::onButtonPressed( const MouseButtonEvent& )
+{
+
+}
 
 //-----------------------------------//
 
 } // end namespace
-

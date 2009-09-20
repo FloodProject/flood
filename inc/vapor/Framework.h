@@ -13,6 +13,8 @@
 
 #include <vapor/Timer.h>
 
+#include <vapor/input/Keyboard.h>
+
 namespace vapor {
 
 //-----------------------------------//
@@ -25,7 +27,7 @@ namespace vapor {
  * run() method and everything should automagically work.
  */
 
-class Framework : protected Engine
+class VAPOR_API Framework : protected Engine
 {
 public:
 
@@ -47,10 +49,14 @@ protected:
 	virtual void onSetupScene() = 0;
 
 	// Updates the scene (called once per frame).
-	virtual void onUpdate() = 0;
+	virtual void onUpdate( double delta ) = 0;
 
 	// Renders the scene (called once per frame).
 	virtual void onRender() = 0;
+
+	// Input callback functions.
+	virtual void onKeyPressed( const input::KeyEvent& );
+	virtual void onButtonPressed( const input::MouseButtonEvent& );
 
 protected:
 
@@ -63,6 +69,9 @@ protected:
 	uint64 numFrames;
 
 private:
+
+	// Register input devices callbacks.
+	void registerCallbacks();
 
 	// Calculates some statistics about frame times.
 	void updateFrameTimes();

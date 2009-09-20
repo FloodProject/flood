@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include "vapor/CompileOptions.h"
-
 #include "vapor/Platform.h"
 #include "vapor/render/Window.h"
+
+#include "wx_InputManager.h"
 
 #include <wx/glcanvas.h> 
 
@@ -25,23 +25,29 @@ class vaporWindow : public vapor::render::Window
 {
 public:
 
-	vaporWindow(vapor::render::Settings& settings, wxGLCanvas* canvas);
+	vaporWindow(const vapor::render::WindowSettings& settings, wxGLCanvas* canvas);
 	virtual ~vaporWindow();
 
 	// Swaps the buffers (updates the display).
-	void update();
+	virtual void update();
+
+	// Shows/hides the window.
+	virtual void show( bool hide = false );
 
 	// Handle the window message events.
-	bool pumpEvents();
+	virtual bool pumpEvents();
 
 	// Sets the title of the window.
-	void setTitle(const std::string& title) const;
+	virtual void setTitle(const std::string& title);
 
 	// Sets the cursor visibility.
-	void setCursor(bool state) const;
+	virtual void setCursor(bool state);
+
+	// Gets the input manager.
+	virtual vapor::input::InputManager& getInputManager();
 
 	// Makes this the current OpenGL context.
-	void makeCurrent();
+	virtual void makeCurrent();
 
 private:
 
@@ -53,6 +59,9 @@ private:
 
 	// OpenGL context
 	wxGLContext* context;
+
+	// wxWidgets Input Manager
+	wx_InputManager *im;
 };
 
 //} } // end namespaces
