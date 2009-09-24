@@ -391,21 +391,33 @@
 				Name="Shaders"
 				>
 				<File
-					RelativePath=".\GLSL_Program.cpp"
+					RelativePath=".\Program.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\inc\vapor\render\GLSL_Program.h"
+					RelativePath="..\..\inc\vapor\render\Program.h"
 					>
 				</File>
-				<File
-					RelativePath=".\GLSL_Shader.cpp"
+				<Filter
+					Name="GLSL"
 					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\render\GLSL_Shader.h"
-					>
-				</File>
+					<File
+						RelativePath=".\GLSL_Program.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\render\GLSL_Program.h"
+						>
+					</File>
+					<File
+						RelativePath=".\GLSL_Shader.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\render\GLSL_Shader.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Texture"
@@ -543,14 +555,6 @@
 				Name="Shaders"
 				>
 				<File
-					RelativePath=".\GLSL_Loader.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\resources\GLSL_Loader.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Shader.cpp"
 					>
 				</File>
@@ -558,6 +562,18 @@
 					RelativePath="..\..\inc\vapor\resources\Shader.h"
 					>
 				</File>
+				<Filter
+					Name="GLSL"
+					>
+					<File
+						RelativePath=".\GLSL_Loader.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\resources\GLSL_Loader.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Audio"
@@ -796,42 +812,11 @@
 			Name="Input"
 			>
 			<File
-				RelativePath=".\Device.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\input\Device.h"
-				>
-			</File>
-			<File
 				RelativePath=".\InputManager.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\inc\vapor\input\InputManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\InputMap.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\input\InputMap.h"
 				>
 			</File>
 			<Filter
@@ -849,6 +834,14 @@
 			<Filter
 				Name="Devices"
 				>
+				<File
+					RelativePath=".\Device.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\input\Device.h"
+					>
+				</File>
 				<Filter
 					Name="Joystick"
 					>
@@ -885,6 +878,26 @@
 						>
 					</File>
 				</Filter>
+			</Filter>
+			<Filter
+				Name="Map"
+				>
+				<File
+					RelativePath=".\InputMap.cpp"
+					>
+					<FileConfiguration
+						Name="Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\input\InputMap.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -979,16 +992,24 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Engine"
+			>
+			<File
+				RelativePath=".\Engine.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\Engine.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath="..\..\inc\vapor\CompileOptions.h"
 			>
 		</File>
 		<File
-			RelativePath=".\Engine.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\inc\vapor\Engine.h"
+			RelativePath="..\..\inc\vapor\Headers.h"
 			>
 		</File>
 	</Files>

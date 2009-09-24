@@ -17,7 +17,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-Source::Source(shared_ptr<audio::Context> context, shared_ptr<resources::Sound> sound)
+Source::Source(shared_ptr<audio::Context> context, resources::SoundPtr sound)
 	: context(context), device(context->device), sourceId(0)
 {	
 	context->makeCurrent();
@@ -32,9 +32,7 @@ Source::Source(shared_ptr<audio::Context> context, shared_ptr<resources::Sound> 
 	}
 
 	buffer = device->prepareBuffer(sound);
-
-	math::Vector3 zero(0.0f, 0.0f, 0.0f);
-	setPosition(zero);
+	setPosition( math::Vector3::Zero );
 }
 
 //-----------------------------------//
@@ -65,19 +63,36 @@ Source::~Source()
 
 //-----------------------------------//
 
-void Source::play(int count)
+void Source::play( const int count )
 {
+	/**
+	 * The source could be in three different states:
+	 *
+	 *		Stopped (in which case we play it from the beginning)
+	 *		Playing (in which case we do nothing)
+	 *		Paused (in which case we play from where it was paused)
+	 * 
+	 * We'll handle each case now.
+	 */
+
 	context->makeCurrent();
 
-	if( isPlaying() ) return;
+	if( isPlaying() )
+	{
+		// Source is already playing, do nothing.
+		return;
+	}
 
 	if( !isPaused() )
 	{
-		// enqueue the buffer 'count' times
-		for(int i = 0; i < count; i++)
-			queue();
+		// Source is stopped so enqueue the buffer 'count' times
+		//for(int i = 0; i < count; i++)
+			//queue();
+
+		alSourcei(sourceId, AL_BUFFER, buffer->id());
 	}
 
+	// Also handles the Paused state implicitly.
 	alSourcePlay(sourceId);
 
 	if(device->checkError())
@@ -127,10 +142,7 @@ bool Source::isPlaying()
 
 	alGetSourcei(sourceId, AL_SOURCE_STATE, &state);
 
-	if (state == AL_PLAYING)
-	  return true;
-
-	return false;
+	return (state == AL_PLAYING);
 }
 
 //-----------------------------------//
@@ -143,10 +155,7 @@ bool Source::isPaused()
 
 	alGetSourcei(sourceId, AL_SOURCE_STATE, &state);
 
-	if (state == AL_PAUSED)
-	  return true;
-
-	return false;
+	return (state == AL_PAUSED);
 }
 
 //-----------------------------------//
@@ -170,7 +179,26 @@ void Source::queue()
 
 //-----------------------------------//
 
-void Source::setPosition( math::Vector3& pos )
+void Source::clear()
+{
+	context->makeCurrent();
+	
+	// get the OpenAL sound buffer id from the device
+	ALuint bufferId = buffer->id();
+
+	//// dequeue all buffers in the audio source
+	//alSourceUnqueueBuffers(sourceId, 1, &bufferId);
+
+	//if(device->checkError())
+	//{
+	//	warn("audio::al", "Could not queue buffer in audio source: %s",
+	//		device->getError());
+	//}
+}
+
+//-----------------------------------//
+
+void Source::setPosition( const math::Vector3& pos )
 {
 	context->makeCurrent();
 

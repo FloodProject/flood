@@ -22,6 +22,8 @@ namespace vapor {
 class VAPOR_API Matrix4 {
 public:
 
+	Matrix4() { identity(); }
+
 	// The values of the matrix.  Basically the upper 3x3 portion
 	// contains a linear transformation, and the last row is the
 	// translation portion.  See the Matrix4.cpp for more

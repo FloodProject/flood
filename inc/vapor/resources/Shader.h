@@ -56,10 +56,11 @@ public:
 
 	// Compiles the shader.
 	virtual bool compile() = 0;
+	
+	// Is this shader already compiled?
+	bool isCompiled() const;
 
 	virtual ResourceGroup::Enum getResourceGroup() const;
-
-	bool isCompiled() const;
 
 protected:
 

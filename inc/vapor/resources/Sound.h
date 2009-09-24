@@ -77,4 +77,8 @@ private:
 
 //-----------------------------------//
 
+typedef tr1::shared_ptr< Sound > SoundPtr;
+
+//-----------------------------------//
+
 } } // end namespaces

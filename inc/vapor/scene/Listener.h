@@ -28,10 +28,16 @@ public:
 	Listener(audio::Device* device);
 	virtual ~Listener();
 
-	virtual std::string save(int indent = 0) { return ""; }
+	virtual void update( );
+
+	virtual const std::string save(int indent = 0) { return ""; }
 
 	static shared_ptr<audio::Context> getContext(shared_ptr<Listener> ls);
 };
+
+//-----------------------------------//
+
+typedef tr1::shared_ptr< Listener > ListenerPtr;
 
 //-----------------------------------//
 

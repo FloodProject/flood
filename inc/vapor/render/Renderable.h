@@ -69,8 +69,8 @@ public:
 	Renderable(Primitive::Enum primitive, VertexBufferPtr vb,
 			MaterialPtr mat = MaterialPtr( ) );   
                     
-    // Render this renderable. This will bind all the necessary state like binding
-    // the buffers and the materials.
+    // Render this renderable. This will bind all the necessary state
+	// like binding the buffers and the materials.
 	void render(render::Device& device);
     
     // Gets the vertex buffer associated with the renderable.
@@ -101,8 +101,9 @@ typedef tr1::shared_ptr< Renderable > RenderablePtr;
 
 //-----------------------------------//
 
-// This is a queue of objects that are usually returned by performing a culling
-// operation on the camera.
+// This is a queue of objects that are usually returned by performing
+// a culling operation on the camera.
+
 typedef std::list< RenderablePtr > RenderQueue;
 	//std::pair< RenderablePtr, math::Matrix4* > > RenderQueue;
 

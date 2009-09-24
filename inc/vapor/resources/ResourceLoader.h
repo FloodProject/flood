@@ -33,6 +33,7 @@ public:
 	virtual Resource* decode(vfs::File& file) = 0;
 	
 	// Gets a list of recognized extensions by this loader.
+	// TODO: make this const
 	virtual std::list< std::string >& getExtensions() = 0;
 
 	// Gets the name of this resource loader.

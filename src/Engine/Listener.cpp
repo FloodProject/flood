@@ -34,7 +34,14 @@ Listener::~Listener()
 
 //-----------------------------------//
 
-shared_ptr<audio::Context> Listener::getContext(shared_ptr<Listener> ls)
+void Listener::update()
+{
+
+}
+
+//-----------------------------------//
+
+shared_ptr<audio::Context> Listener::getContext(ListenerPtr ls)
 {
 	shared_ptr<audio::Context> ctx = 
 		static_pointer_cast<audio::Context>(ls);

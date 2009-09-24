@@ -8,45 +8,41 @@
 
 #include "vapor/PCH.h"
 
-#include "vapor/render/Material.h"
+#include "vapor/render/Program.h"
+
+using namespace vapor::resources;
 
 namespace vapor {
 	namespace render {
 
 //-----------------------------------//
 
-Material::Material( const std::string& name, ProgramPtr program )
-	: name( name ), program( program )
+Program::Program( resources::ShaderPtr vs, resources::ShaderPtr ps )
+	: linked( false )
+{
+	assert( vs->getType() == ShaderType::Vertex );
+	assert( ps->getType() == ShaderType::Fragment );
+}
+
+//-----------------------------------//
+
+Program::~Program()
 {
 
 }
 
 //-----------------------------------//
 
-Material::~Material()
+bool Program::isLinked() const
 {
-
+	return linked;
 }
 
 //-----------------------------------//
 
-const std::string& Material::getName() const
+const std::string& Program::getLog() const
 {
-	return name;
-}
-
-//-----------------------------------//
-
-void Material::addTexture( TexturePtr tex )
-{
-	textures.push_back( tex );
-}
-
-//-----------------------------------//
-
-ProgramPtr Material::getProgram() const
-{
-	return program;
+	return log;
 }
 
 //-----------------------------------//

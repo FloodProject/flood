@@ -13,6 +13,7 @@
 namespace vapor {
 	namespace input {
 
+//-----------------------------------//
 
 joyId::joyId(int id, int button)
 	:id(id), button(button)
@@ -20,11 +21,10 @@ joyId::joyId(int id, int button)
 
 }
 
-
+//-----------------------------------//
 
 InputMap::InputMap(const InputManager& manager)
 {
-
 	Keyboard* kbd = manager.getKeyboard();
 	Mouse* mouse = manager.getMouse();
 	
@@ -32,16 +32,22 @@ InputMap::InputMap(const InputManager& manager)
 	mouse->onMouseButtonPress.bind( &InputMap::onMousePress, this );
 }
 
+//-----------------------------------//
+
 InputMap::~InputMap()
 {
 
 }
+
+//-----------------------------------//
 
 fd::delegate<void(void)> * InputMap::registerAction(const std::string& action, Keys::Enum keycode)
 {
 	keymap[keycode] = action;
 	return &(inputMap[action]);
 }
+
+//-----------------------------------//
 
 fd::delegate<void(void)> * InputMap::registerAction(const std::string& action, MouseButton::Enum button)
 {
@@ -50,16 +56,22 @@ fd::delegate<void(void)> * InputMap::registerAction(const std::string& action, M
 	
 }
 
+//-----------------------------------//
+
 fd::delegate<void(void)> * InputMap::registerAction(const std::string& action, joyId joy)
 {
 	joystickmap[joy] = action;
 	return &(inputMap[action]);
 }
 
+//-----------------------------------//
+
 fd::delegate<void(void)> * InputMap::getFunction(const std::string& action)
 {
 		return &(inputMap[action]);
 }
+
+//-----------------------------------//
 
 void InputMap::onKeyPress(const KeyEvent& ke)
 {
@@ -69,8 +81,9 @@ void InputMap::onKeyPress(const KeyEvent& ke)
 		if(!(inputMap[action]).empty())
 			(inputMap[action])();
 	}
-	
 }
+
+//-----------------------------------//
 
 void InputMap::onMousePress(const MouseButtonEvent& mbe)
 {
@@ -80,8 +93,9 @@ void InputMap::onMousePress(const MouseButtonEvent& mbe)
 		if(!(inputMap[action]).empty())
 			(inputMap[action])();
 	}
-
 }
+
+//-----------------------------------//
 
 void InputMap::onJoyPress(const JoyButtonEvent& jbe)
 {
@@ -94,12 +108,6 @@ void InputMap::onJoyPress(const JoyButtonEvent& jbe)
 	}
 }
 
+//-----------------------------------//
 
-
-
-
-
-
-
-	}
-}
+} } // end namespaces

@@ -51,6 +51,8 @@ Device::~Device()
 {
 	info("render::opengl", "Closing OpenGL rendering device");
 
+	// TODO: delete all OpenGL resources (shaders, textures...)
+
 	delete adapter;
 	delete window;
 	delete bufferManager;

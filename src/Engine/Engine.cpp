@@ -42,7 +42,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-Engine::Engine(std::string app, const char** argv, bool autoInit)
+Engine::Engine(const std::string& app, const char** argv, bool autoInit)
 	: app(app), argv(argv)
 {
 	if(autoInit)

@@ -40,7 +40,11 @@ Camera::Camera( render::Device* device, Projection::Enum projection )
 
 void Camera::lookAt( const math::Vector3& pt )
 {
+	glMatrixMode( GL_MODELVIEW );
 
+	gluLookAt( translation.x, translation.y, translation.z,
+				pt.x, pt.y, pt.z, 
+				0.0, -1.0, 0.0 );
 }
 
 //-----------------------------------//

@@ -40,17 +40,18 @@ Renderable::Renderable( Primitive::Enum primitive,
 void Renderable::render( render::Device& UNUSED(device) )
 {
     vb->bind();
+	mat->getProgram()->bind();
     
     if ( ib == nullptr )
     {
-        glDrawArrays( type, 0, vb->getSize() );
+		debug( "%d", vb->getNumVertices() );
+        glDrawArrays( type, 0, vb->getNumVertices() );
 
 #ifdef VAPOR_DEBUG
 		// check for errors
 		if( glGetError() != GL_NO_ERROR )
 		{
 			warn( "gl::buffers", "Error drawing renderable" );
-			debug( "shit happened, debug me" );
 		}
 #endif
     }
@@ -64,6 +65,7 @@ void Renderable::render( render::Device& UNUSED(device) )
     //    ib->unbind();
     //}
     
+	mat->getProgram()->unbind();
     vb->unbind();
 }
 

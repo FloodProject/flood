@@ -39,13 +39,29 @@ public:
 	virtual ~ResourceManager();
 
 	// Creates a new resource and adds it to the manager.
-	shared_ptr<Resource> createResource(const std::string path);
+	ResourcePtr loadResource(const std::string& path);
+
+	// Creates a new resource and returns a more derived pointer.
+	template <typename T>
+	tr1::shared_ptr<T> loadResource(const std::string& path)
+	{
+		ResourcePtr res = loadResource( path );
+		return tr1::static_pointer_cast< T >( res );
+	}
 
 	// Removes a resource from the manager.
-	void removeResource(shared_ptr<Resource> res);
+	void removeResource(ResourcePtr res);
 
 	// Gets an existing resource by its URI (or null if it does not exist).
-	shared_ptr<Resource> getResource(const std::string path);
+	ResourcePtr getResource(const std::string& path);
+
+	// Gets a specific derived pointer to a resource.
+	template <typename T>
+	tr1::shared_ptr<T> getResource(const std::string& path)
+	{
+		ResourcePtr res = getResource( path );
+		return tr1::static_pointer_cast< T >( res );
+	}
 
 	// Sets a memory budget limit for a given resource group.
 	//void setMemoryBudget(ResourceGroup::Enum group, uint memoryBudget);
@@ -57,15 +73,15 @@ public:
 	void registerLoader(ResourceLoader* loader);
 
 	// Watches a resource for changes and auto-reloads it.
-	void watchResource(Resource* res);
+	void watchResource(ResourcePtr res);
 	
 	// Gets a list of all the registered resource handlers.
-	//list<ResourceLoader*> getResourceLoader(string extension);
+	//std::list<ResourceLoader*> getResourceLoader(string extension);
 
 protected:
 
 	// maps a name to a resource
-	std::map< std::string, shared_ptr<Resource> > resources;
+	std::map< std::string, ResourcePtr > resources;
 
 	// maps extensions to resource loaders
 	std::map< std::string, ResourceLoader* > resourceLoaders;

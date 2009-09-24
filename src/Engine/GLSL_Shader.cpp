@@ -42,10 +42,12 @@ GLSL_Shader::~GLSL_Shader()
 	glDeleteShader( shaderId );
 
 #ifdef VAPOR_DEBUG
-	if( glGetError() != GL_NO_ERROR )
+	GLenum err;
+	if( ( err = glGetError() ) != GL_NO_ERROR )
 	{
 		warn( "glsl", 
-			"Could not delete shader object '%d'", shaderId );
+			"Could not delete shader object '%d': %s", 
+			shaderId, gluErrorString( err ) );
 		return;
 	}
 #endif
@@ -131,6 +133,8 @@ void GLSL_Shader::getGLSLLog()
 	log.assign( info );
 
 	delete info;
+
+	debug( "%d %s", id(), log.c_str() );
 }
 
 //-----------------------------------//
@@ -148,6 +152,13 @@ GLenum GLSL_Shader::getGLShaderType( resources::ShaderType::Enum type )
 	default:
 		return GL_VERTEX_SHADER;
 	}	
+}
+
+//-----------------------------------//
+
+uint GLSL_Shader::id()
+{
+	return shaderId;
 }
 
 //-----------------------------------//

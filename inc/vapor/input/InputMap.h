@@ -21,7 +21,6 @@ namespace vapor {
 
 //-----------------------------------//
 
-
 struct joyId
 {
 	joyId(int, int);
@@ -29,7 +28,11 @@ struct joyId
 	int button;
 	
 };
-struct Compare{
+
+//-----------------------------------//
+
+struct Compare
+{
 	bool operator()(joyId lhs, joyId rhs)
 	{
 		return lhs.id < rhs.id;
@@ -45,10 +48,10 @@ public:
 	InputMap( const InputManager& manager );
 	~InputMap();
 
-	fd::delegate<void(void)> * registerAction(const std::string&, Keys::Enum);
-	fd::delegate<void(void)> * registerAction(const std::string&, MouseButton::Enum);
-	fd::delegate<void(void)> * registerAction(const std::string&, joyId);
-	fd::delegate<void(void)> * getFunction(const std::string&);
+	fd::delegate<void(void)>* registerAction(const std::string&, Keys::Enum);
+	fd::delegate<void(void)>* registerAction(const std::string&, MouseButton::Enum);
+	fd::delegate<void(void)>* registerAction(const std::string&, joyId);
+	fd::delegate<void(void)>* getFunction(const std::string&);
 	
 	void onKeyPress(const KeyEvent& ke);
 	void onMousePress(const MouseButtonEvent& mbe);

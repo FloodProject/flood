@@ -16,6 +16,7 @@
 
 #include "vapor/resources/Sound.h"
 #include "vapor/audio/Device.h"
+#include "vapor/audio/Source.h"
 
 namespace vapor {
 	namespace audio {
@@ -33,6 +34,8 @@ namespace vapor {
 
 class VAPOR_API Buffer : private boost::noncopyable
 {
+	friend class Source;
+
 public:
 	
 	Buffer( audio::Device* device, shared_ptr<resources::Sound> sound );
@@ -50,7 +53,7 @@ protected:
 	audio::Device* device;
 	
 	// Holds a pointer to the audio data buffer.
-	shared_ptr<resources::Sound> resource;
+	resources::SoundPtr resource;
 
 	// Holds the source id from OpenAL.
 	ALuint bufferId;

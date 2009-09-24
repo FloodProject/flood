@@ -57,7 +57,7 @@ using std::tr1::shared_ptr;
 #ifdef VAPOR_API_DLL
 	#ifdef VAPOR_EXPORT
 		#ifdef VAPOR_PLATFORM_WINDOWS
-			// This should work for both MSVC and GCC.
+			// This should work for both MSVC and GCC on Windows.
 			// For more details see:
 			// http://gcc.gnu.org/onlinedocs/gcc-4.4.0/gcc/Function-Attributes.html
 			#define VAPOR_API __declspec( dllexport )

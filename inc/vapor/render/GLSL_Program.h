@@ -8,7 +8,8 @@
 
 #pragma once
 
-#include "vapor/resources/Shader.h"
+#include "vapor/render/Program.h"
+#include "vapor/render/GLSL_Shader.h"
 
 #include "vapor/render/GL.h"
 
@@ -18,17 +19,41 @@ namespace vapor {
 //-----------------------------------//
 		
 /**
- * GLSL Shader.
+ * GLSL Program.
  */
 
-class GLSL_Program
+class VAPOR_API GLSL_Program : public Program
 {
 public:
 
-	GLSL_Program( resources::ShaderType::Enum e, const std::string& text );
+	GLSL_Program( GLSL_ShaderPtr vs, GLSL_ShaderPtr ps );
 	virtual ~GLSL_Program();
 
+	// Adds a parameter to the shader.
+	virtual void addAttribute( const std::string& slot, VertexAttribute::Enum attr );
 
+	// Adds a uniform to the shader.
+	virtual void addUniform( const std::string& slot, std::vector< float > data );
+
+	// Links the program.
+	virtual bool link();
+
+	// Binds the program.
+	virtual void bind();
+
+	// Unbinds the program.
+	virtual void unbind();
+
+	//uint id();
+
+private:
+
+	void bindDefaultAttributes();
+
+	void getGLSLLog();
+
+	std::vector< GLSL_ShaderPtr > shaders;
+	GLuint id;
 };
 
 //-----------------------------------//

@@ -21,7 +21,7 @@ namespace vapor {
  * GLSL Shader.
  */
 
-class GLSL_Shader : public resources::Shader
+class VAPOR_API GLSL_Shader : public resources::Shader
 {
 public:
 
@@ -32,7 +32,7 @@ public:
 	virtual bool compile();
 
 	// Gets the OpenGL shader id.
-	uint getID();
+	uint id();
 
 private:
 
@@ -44,6 +44,10 @@ private:
 
 	GLuint shaderId;
 };
+
+//-----------------------------------//
+
+typedef tr1::shared_ptr< GLSL_Shader > GLSL_ShaderPtr;
 
 //-----------------------------------//
 

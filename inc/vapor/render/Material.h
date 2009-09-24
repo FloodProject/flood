@@ -10,7 +10,9 @@
 
 #include "vapor/Platform.h"
 
+#include "vapor/render/Program.h"
 #include "vapor/render/Texture.h"
+#include "vapor/resources/Shader.h"
 
 namespace vapor {
 	namespace render {
@@ -19,29 +21,38 @@ namespace vapor {
 
 /**
  * Rendering material.
- * TODO: Serialization?
  */
 
 class VAPOR_API Material
 {
 public:
 
-	Material( const std::string& name );
+	Material( const std::string& name, ProgramPtr program );
 	~Material();
 
-	const std::string& getName();
+	// Gets the textual name of the material.
+	const std::string& getName() const;
 
+	// Adds a texture to the material.
 	void addTexture( TexturePtr tex );
 
-private:
+	// Gets the associated program.
+	ProgramPtr getProgram() const;
+
+	// Serialization
+	//void load( const std::string& name );
+	//void save( const std::string& name );
+
+protected:
 
 	// Textures
 	std::vector< TexturePtr > textures;
 
 	// Shaders
+	ProgramPtr program;
+	//std::map< resources::ShaderPtr > shaders;
 
 	std::string name;
-
 };
 
 //-----------------------------------//

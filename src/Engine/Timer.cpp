@@ -17,7 +17,7 @@ namespace vapor {
 //-----------------------------------//
 
 Timer::Timer()
-	: lastTime( 0.0 ), currentTime( 0.0 ), ticksPerSecond( 0.0 )
+	: lastTime( 0 ), currentTime( 0 ), ticksPerSecond( 0 )
 {
 	if( !checkSupport() )
 	{
@@ -25,7 +25,7 @@ Timer::Timer()
 			"High-resolution timers are not supported",
 			LogLevel::Error );
 
-		// TODO: exit
+		// TODO: use low-precision timers
 	}
 
 	reset();
@@ -44,13 +44,13 @@ double Timer::getCurrentTime()
 {
 #ifdef VAPOR_PLATFORM_WINDOWS
 
-	QueryPerformanceCounter( (LARGE_INTEGER *) &currentTime );
+	QueryPerformanceCounter( reinterpret_cast< LARGE_INTEGER* >( &currentTime ) );
 
 #else
 	#error "Implement me pl0x"
 #endif
 
-	return (double) currentTime;
+	return static_cast< double >( currentTime );
 }
 
 //-----------------------------------//
@@ -59,9 +59,9 @@ double Timer::getElapsedTime()
 {
 	getCurrentTime();	
 
-	ticks_t diff = ( currentTime - lastTime ); /// ticksPerSecond;
+	ticks_t diff = ( currentTime - lastTime );
 
-	return double( diff ) / double( ticksPerSecond );
+	return static_cast< double >( diff ) / static_cast< double >( ticksPerSecond );
 }
 
 //-----------------------------------//
@@ -70,7 +70,7 @@ void Timer::reset()
 {
 #ifdef VAPOR_PLATFORM_WINDOWS
 
-	QueryPerformanceCounter( (LARGE_INTEGER  *) &lastTime );
+	QueryPerformanceCounter( reinterpret_cast< LARGE_INTEGER* >( &lastTime ) );
 
 #else
 	#error "Implement me pl0x"
@@ -83,7 +83,7 @@ bool Timer::checkSupport()
 {
 #ifdef VAPOR_PLATFORM_WINDOWS
 	
-	if( !QueryPerformanceFrequency( (LARGE_INTEGER *) &ticksPerSecond ) )
+	if( !QueryPerformanceFrequency( reinterpret_cast< LARGE_INTEGER* >( &ticksPerSecond ) ) )
 	{
 		return false;
 	}

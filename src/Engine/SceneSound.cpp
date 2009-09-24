@@ -17,8 +17,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-Sound::Sound( shared_ptr<Listener> ls, shared_ptr<resources::Sound> sound )
-	: Source(Listener::getContext(ls), sound)
+Sound::Sound( ListenerPtr ls, resources::SoundPtr sound )
+	: Source( Listener::getContext( ls ), sound )
 {
 
 }
@@ -32,7 +32,14 @@ Sound::~Sound()
 
 //-----------------------------------//
 
-std::string Sound::save(int indent)
+void Sound::update()
+{
+
+}
+
+//-----------------------------------//
+
+const std::string Sound::save(int indent)
 {
 	return "";
 }

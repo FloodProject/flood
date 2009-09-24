@@ -10,37 +10,10 @@
 
 #include "Example.h"
 
-#include <vapor/resources/Image.h>
-#include <vapor/resources/MS3D.h>
-#include <vapor/resources/Sound.h>
-#include <vapor/resources/Shader.h>
-
-#include <vapor/scene/Camera.h>
-#include <vapor/scene/Sound.h>
-#include <vapor/scene/Listener.h>
-#include <vapor/scene/Geometry.h>
-
-#include <vapor/input/InputManager.h>
-
-#include <vapor/render/VertexBuffer.h>
-#include <vapor/render/Texture.h>
-
-#include <iostream>
-
-using namespace vapor;
-using namespace vapor::vfs;
-using namespace vapor::log;
-using namespace vapor::math;
-using namespace vapor::scene;
-using namespace vapor::audio;
-using namespace vapor::render;
-using namespace vapor::resources;
-using namespace vapor::input;
-
 //-----------------------------------//
 
 Example::Example(const char** argv)
-	: Framework("Example", argv), runLoop( false ), c( )
+	: Framework("Example", argv), runLoop( false )
 {
 
 }
@@ -56,10 +29,6 @@ void Example::onInit()
 	{
 		Log::MessageDialog( "Missing archive/directory '" + media + "'." );
 	}
-
-	//throw std::runtime_error( "" );
-
-	inputMap = new InputMap(*getInputManager()); 
 }
 
 //-----------------------------------//
@@ -68,65 +37,87 @@ void Example::onSetupResources()
 {
 	ResourceManager* rm = getResourceManager();
 	
-	ResourcePtr img = rm->createResource( "media/triton.png" );
-	ResourcePtr sound = rm->createResource( "media/stereo.ogg" );
+	ImagePtr img = rm->loadResource< Image >( "media/triton.png" );
+	snd = rm->loadResource< resources::Sound >( "media/stereo.ogg" );
 
-	ShaderPtr shader = tr1::static_pointer_cast< Shader > ( 
-		rm->createResource( "media/shader.vs" ) );
-
-	tex.reset( new Texture( tr1::static_pointer_cast< Image > ( img ) ) );
-	(inputMap->registerAction("leap", vapor::input::Keys::Space))->bind(&Example::leap, this);
-	(inputMap->registerAction("run", vapor::input::Keys::W))->bind(&Example::Run, this);
-	inputMap->registerAction("leap", vapor::input::MouseButton::Left);
+	tex.reset( new Texture( img ) );
 }
 
 //-----------------------------------//
 
 void Example::onSetupScene() 
 {
-	//ResourceManager* rm = getResourceManager();
 	ScenePtr scene = getSceneManager();
+
+	GroupPtr grp( new Group() );
+
+	ListenerPtr ls( new Listener( getAudioDevice() ) );
+	ls->makeCurrent();
+	grp->add( ls );
+
+	sound.reset( new scene::Sound( ls, snd) );
+	grp->add( sound );
+	scene->add( grp );
 
 	// Create a new Camera and position it to look at origin
 	cam.reset( new Camera( getRenderDevice() ) );
 	cam->translate( Vector3( 0.0f, 0.0f, -3.0f ) );
-	cam->lookAt( Vector3.Zero );
+	cam->lookAt( Vector3::Zero );
 	scene->add( cam );
+
+	buildTriangle();
+}
+
+//-----------------------------------//
+
+void Example::buildTriangle()
+{
+	ResourceManager* rm = getResourceManager();
 
 	// Create a new VBO and upload triangle data
 	VertexBufferPtr vb( new VertexBuffer() );
 
+	// Vertex position data
 	std::vector< Vector3 > vertex;
 	vertex.push_back( Vector3( 0.0f, 1.0f, 0.0f ) );
 	vertex.push_back( Vector3( -1.0f, -1.0f, 0.0f ) );
 	vertex.push_back( Vector3( 1.0f, -1.0f, 0.0f ) );
 
-	std::vector< Vector3 > colors(3);
-	std::fill( colors.begin(), colors.end(), Vector3( 1.0f, 0.0f, 0.0f ) );
+	// Vertex color data
+	std::vector< Vector3 > colors;
+	colors.push_back( Vector3( 0.0f, 1.0f, 0.0f ) );
+	colors.push_back( Vector3( 0.0f, 0.0f, 1.0f ) );
+	colors.push_back( Vector3( 1.0f, 0.0f, 0.0f ) );
 
+	// Vertex tex coords data
 	std::vector< Vector3 > coords;
 	coords.push_back( Vector3( 0.0f, 1.0f, 0.0f ) );
 	coords.push_back( Vector3( -1.0f, -1.0f, 0.0f ) );
 	coords.push_back( Vector3( 1.0f, -1.0f, 0.0f ) );
-	
+
+	// Vertex buffer setup
 	vb->set( VertexAttribute::Vertex, vertex );
 	vb->set( VertexAttribute::Color, colors );
-	//vb->set( VertexAttribute::MultiTexCoord0, coords );
+	vb->set( VertexAttribute::MultiTexCoord0, coords );
 
 	vb->build( BufferUsage::Static, BufferAccess::Write );
 
-	// Create a new Renderable from the VBO and add it to a Geometry node
-	RenderablePtr rend( new Renderable( Primitive::Triangles, vb ) );
-	
-	// Assign the renderable a material with a custom texture
+	ProgramPtr program( new GLSL_Program( 
+			rm->loadResource< GLSL_Shader >( "media/shader.vs" ),
+			rm->loadResource< GLSL_Shader >( "media/shader.fs" ) ) );
 
-	MaterialPtr mat( new Material( "SimpleMat" ) );
+	program->link();
+	debug( program->getLog().c_str() );
+
+	// Assign the renderable a material with a custom texture
+	MaterialPtr mat( new Material( "SimpleMat", program ) );
 	mat->addTexture( tex );
-	rend->setMaterial( mat );
 	
+	// Create a new Renderable from the VBO and add it to a Geometry node
+	RenderablePtr rend( new Renderable( Primitive::Triangles, vb, mat ) );
+
 	GeometryPtr geom( new Geometry( rend ) );
-	
-	//scene->add( geom );
+	getSceneManager()->add( geom );
 }
 
 //-----------------------------------//
@@ -138,9 +129,9 @@ void Example::onUpdate( double delta )
 
 	if( runLoop )
 	{
-		c.r += 0.0000001f / delta; c.r = (c.r > 1.0f) ? 0.0f : c.r;
-		c.g += 0.0000003f / delta; c.b = (c.b > 1.0f) ? 0.0f : c.b;
-		c.b += 0.0000007f / delta; c.g = (c.g > 1.0f) ? 0.0f : c.g;
+		c.r += 0.0000001f / float(delta); c.r = (c.r > 1.0f) ? 0.0f : c.r;
+		c.g += 0.0000003f / float(delta); c.b = (c.b > 1.0f) ? 0.0f : c.b;
+		c.b += 0.0000007f / float(delta); c.g = (c.g > 1.0f) ? 0.0f : c.g;
 	}
 }
 
@@ -160,8 +151,9 @@ void Example::onRender()
 
 void Example::onKeyPressed( const KeyEvent& keyEvent )
 {
-	//if( keyEvent.keyCode == Keys::Space )
-	//	debug( "time: %f", timer.getDeltaTime() );
+	if( keyEvent.keyCode == Keys::Space )
+		debug( "time: %f", frameTimer.getElapsedTime
+		() );
 
 	if( keyEvent.keyCode == Keys::Pause )
 		Log::showDebug = !Log::showDebug;
@@ -181,7 +173,13 @@ void Example::onKeyPressed( const KeyEvent& keyEvent )
 					minFrameTime, avgFrameTime, maxFrameTime );
 	}
 
-	//debug( "key press: %d", keyEvent.keyCode );
+	if( keyEvent.keyCode == Keys::P )
+	{
+		if( sound->isPlaying() )
+			sound->pause();
+		else
+			sound->play();
+	}
 }
 
 //-----------------------------------//
@@ -190,17 +188,6 @@ void Example::onButtonPressed( const MouseButtonEvent& btnEvent )
 {
 	if( btnEvent.button == MouseButton::Right )
 		runLoop = !runLoop;
-
-	//debug( "button press: %d", btnEvent.button );
 }
 
-void Example::leap()
-{
-	debug("Leap\n");
-}
-
-void Example::Run()
-{
-	debug("Run\n");
-}
 //-----------------------------------//

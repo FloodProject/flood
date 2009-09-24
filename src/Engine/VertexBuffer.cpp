@@ -33,7 +33,7 @@ enum VertexBuffer::GLPrimitive
 //-----------------------------------//
 
 VertexBuffer::VertexBuffer()
-	: built( false )
+	: built( false ), numVertices( 0 )
 {
 
 }
@@ -72,25 +72,22 @@ void VertexBuffer::bindPointers()
 
 	int offset = 0;
 
-	// TODO: move this somewhere more appropriate
-	glEnableClientState( GL_VERTEX_ARRAY );
-	glEnableClientState( GL_COLOR_ARRAY );
-	glEnableClientState( GL_TEXTURE_COORD_ARRAY );
-
 	foreach( const attributePair& p, attributeMap )
 	{
-		int size = tr1::get< 0 >( p.second );
+		int components = tr1::get< 0 >( p.second );
 		GLPrimitive type = tr1::get< 1 >( p.second );
 		const std::vector<byte>& vec = tr1::get< 2 >( p.second );
 
 		glEnableVertexAttribArray( p.first );
 
+#ifdef VAPOR_DEBUG
 		if( glGetError() != GL_NO_ERROR )
 		{
 			warn( "gl::buffers", "Error enabling vertex attrib array" );
 		}
+#endif
 
-		glVertexAttribPointer( p.first, size, type, GL_FALSE, 0, (void*) offset );
+		glVertexAttribPointer( p.first, components, type, GL_FALSE, 0, (void*) offset );
 
 #ifdef VAPOR_DEBUG
 		// check for errors
@@ -209,6 +206,10 @@ bool VertexBuffer::checkSize()
 		if( first < 0 )
 		{
 			first = size;
+
+			// Update the number of vertices.
+			// Should be the same for every attribute.
+			numVertices = tr1::get< 0 >( p.second );
 		}
 		else if( size != first )
 		{
@@ -236,6 +237,20 @@ uint VertexBuffer::getSize()
 	}
 
 	return totalBytes;
+}
+
+//-----------------------------------//
+
+uint VertexBuffer::getNumAttributes()
+{
+	return attributeMap.size();
+}
+
+//-----------------------------------//
+
+uint VertexBuffer::getNumVertices()
+{
+	return numVertices;
 }
 
 //-----------------------------------//

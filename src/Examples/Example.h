@@ -10,10 +10,10 @@
 
 #include <vapor/Framework.h>
 
-#include <vapor/render/VertexBuffer.h>
-#include <vapor/render/Renderable.h>
-#include <vapor/scene/Camera.h>
-#include <vapor/input/InputMap.h>
+#define VAPOR_USE_NAMESPACES
+#include <vapor/Headers.h>
+
+#include <iostream>
 
 //-----------------------------------//
 
@@ -45,17 +45,20 @@ protected:
 	virtual void onRender();
 
 	// Callback functions
-	virtual void onKeyPressed( const vapor::input::KeyEvent& );
-	virtual void onButtonPressed( const vapor::input::MouseButtonEvent& );
-	void leap();
-	void Run();
+	virtual void onKeyPressed( const input::KeyEvent& );
+	virtual void onButtonPressed( const input::MouseButtonEvent& );
 
 private:
 
-	vapor::input::InputMap * inputMap; 
-	vapor::render::TexturePtr tex;
-	vapor::scene::CameraPtr cam;
-	vapor::math::Color c;
+	void buildTriangle();
+
+	resources::SoundPtr snd;
+	scene::SoundPtr sound;
+	input::InputMap * inputMap; 
+	render::TexturePtr tex;
+	scene::CameraPtr cam;
+	math::Color c;
+
 	bool runLoop;
 };
 

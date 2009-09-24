@@ -70,8 +70,7 @@ public:
     // This method will make the internal VBO id bound so any future
     // glDrawXXX calls will use this VBO as its data.  
 	// Returns false on error, true otherwise.
-    // Note: calls glBindBuffer, glVertexAttribPointer, glEnableVertexAttribArray,
-	// glEnableClientState
+    // Note: calls glBindBuffer, glVertexAttribPointer, glEnableVertexAttribArray
     bool bind();
     
     // Puts opengl back into immediate mode
@@ -81,8 +80,14 @@ public:
     // Clears this vertex buffer. All vertex data will be gone.
     void clear();
 
-	// Returns the number of vertex elements.
+	// Returns the total size in bytes of the buffer.
 	uint getSize();
+
+	// Returns the number of vertex attributes.
+	uint getNumAttributes();
+
+	// Returns the number of vertices in each attribute.
+	uint getNumVertices();
 
 	// These are all the possible types supported by glVertexAttrib
 	//bool set( VertexAttribute::Enum attr, std::vector< byte > const& data );
@@ -149,6 +154,8 @@ private:
 
 	// Holds all the vertex attributes
 	std::map< VertexAttribute::Enum, attributeValue > attributeMap;
+
+	uint numVertices;
 };
 
 //-----------------------------------//

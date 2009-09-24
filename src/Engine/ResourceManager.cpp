@@ -33,6 +33,9 @@ ResourceManager::~ResourceManager()
 	// delete resource loaders
 	typedef std::pair< std::string, ResourceLoader* > pair_t;
 
+	// TODO: comment the extension deleting logic,
+	// I don't remember anymore how it works...
+
 	foreach( pair_t entry, resourceLoaders )
 	{
 		if( entry.second->getExtensions().size() == 1 )
@@ -44,17 +47,17 @@ ResourceManager::~ResourceManager()
 
 //-----------------------------------//
 
-shared_ptr<Resource> ResourceManager::createResource(const std::string path)
+ResourcePtr ResourceManager::loadResource(const std::string& path)
 {
 	// check if the resource is already loaded
-	shared_ptr<Resource> res = getResource(path);
+	ResourcePtr res = getResource(path);
 	if(res != nullptr) return res;
 
 	// test if the file exists
 	if( !File::exists( path ) ) 
 	{
 		warn("resources", "Requested resource '%s' not found", path.c_str());
-		return shared_ptr<Resource>();
+		return ResourcePtr();
 	}
 	
 	// check if it has a file extension
@@ -64,7 +67,7 @@ shared_ptr<Resource> ResourceManager::createResource(const std::string path)
 	{
 		warn("resources", "Requested resource '%s' has an invalid path", 
 			path.c_str());
-		return shared_ptr<Resource>();
+		return ResourcePtr();
 	}
 
 	// get the file extension
@@ -75,21 +78,21 @@ shared_ptr<Resource> ResourceManager::createResource(const std::string path)
 	{
 		warn("resources", "No resource loader found for resource '%s'",
 			path.c_str());
-		return shared_ptr<Resource>();
+		return ResourcePtr();
 	}
 
 	// get the available resource loader to decode the file
 	ResourceLoader* ldr = resourceLoaders[ext];
 	
 	File f(path);
-	res = shared_ptr<Resource>( ldr->decode( f ) );
+	res = ResourcePtr( ldr->decode( f ) );
 	
 	// warn that the loader could not decode our resource
 	if(res == nullptr)
 	{
 		warn("resources", "Resource loader '%s' could not decode resource '%s'", 
 			ldr->getName().c_str(), path.c_str());
-		return shared_ptr<Resource>();
+		return ResourcePtr();
 	}
 
 	// register the decoded resource in the map
@@ -101,12 +104,12 @@ shared_ptr<Resource> ResourceManager::createResource(const std::string path)
 
 //-----------------------------------//
 
-shared_ptr<Resource> ResourceManager::getResource(const std::string path)
+ResourcePtr ResourceManager::getResource(const std::string& path)
 {
 	// check if we have this resource in the map
 	if(resources.find(path) == resources.end()) 
 	{
-		return shared_ptr<Resource>();
+		return ResourcePtr();
 	}
 
 	return resources[path];
@@ -114,9 +117,9 @@ shared_ptr<Resource> ResourceManager::getResource(const std::string path)
 
 //-----------------------------------//
 
-void ResourceManager::removeResource(shared_ptr<Resource> res)
+void ResourceManager::removeResource(ResourcePtr res)
 {
-	std::map< std::string, shared_ptr<Resource> >::iterator it;
+	std::map< std::string, ResourcePtr >::iterator it;
 	it = resources.begin();
 	
 	// check if the resource is in the map
