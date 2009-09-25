@@ -34,10 +34,19 @@ public:
 	const std::string& getName() const;
 
 	// Adds a texture to the material.
-	void addTexture( TexturePtr tex );
+	void addTexture( uint unit, TexturePtr tex );
 
 	// Gets the associated program.
 	ProgramPtr getProgram() const;
+
+	// Gets the textures in the material.
+	const std::map< uint, TexturePtr >& getTextures() const;
+
+	// Binds the material object.
+	void bind();
+
+	// Unbinds the material object.
+	void unbind();
 
 	// Serialization
 	//void load( const std::string& name );
@@ -46,7 +55,8 @@ public:
 protected:
 
 	// Textures
-	std::vector< TexturePtr > textures;
+	std::map< uint, TexturePtr > textures;
+	typedef std::pair< const uint, TexturePtr > texPair;
 
 	// Shaders
 	ProgramPtr program;

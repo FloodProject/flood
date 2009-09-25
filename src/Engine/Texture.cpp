@@ -18,7 +18,7 @@ namespace vapor {
 //-----------------------------------//
 
 Texture::Texture( resources::ImagePtr img )
-	: uploaded( false ), img( img )
+	: uploaded( false ), img( img ), id( 0 )
 {
 	glGenTextures( 1, &id );
 
@@ -48,8 +48,16 @@ bool Texture::upload()
 		img->getWidth(), img->getHeight(), 0,
 		GL_RGBA, GL_UNSIGNED_BYTE, &img->getBuffer()[0] );
 
-	uploaded = true;
+#ifdef VAPOR_DEBUG
+	if( glGetError() != GL_NO_ERROR )
+	{
+		warn( "gl", "Could not upload texture object '%d'", id );
+		uploaded = false;
+		return false;
+	}
+#endif
 
+	uploaded = true;
 	return true;
 }
 
@@ -57,8 +65,9 @@ bool Texture::upload()
 
 void Texture::bind()
 {
-	glEnable( GL_TEXTURE_2D );
+	//glEnable( GL_TEXTURE_2D );
 
+	glActiveTexture( GL_TEXTURE0 );
 	glBindTexture( GL_TEXTURE_2D, id );
 }
 
@@ -68,7 +77,7 @@ void Texture::unbind()
 {
 	glBindTexture( GL_TEXTURE_2D, 0 );
 
-	glDisable( GL_TEXTURE_2D );
+	//glDisable( GL_TEXTURE_2D );
 }
 
 //-----------------------------------//

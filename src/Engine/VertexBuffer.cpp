@@ -83,7 +83,8 @@ void VertexBuffer::bindPointers()
 #ifdef VAPOR_DEBUG
 		if( glGetError() != GL_NO_ERROR )
 		{
-			warn( "gl::buffers", "Error enabling vertex attrib array" );
+			warn( "gl::buffers", "Error enabling vertex attribute array" );
+			return;
 		}
 #endif
 
@@ -94,6 +95,7 @@ void VertexBuffer::bindPointers()
 		if( glGetError() != GL_NO_ERROR )
 		{
 			warn( "gl::buffers", "Error binding pointers to buffer" );
+			return;
 		}
 #endif
 

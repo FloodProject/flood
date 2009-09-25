@@ -37,7 +37,7 @@ public:
 	virtual void addAttribute( const std::string& slot, VertexAttribute::Enum attr ) = 0;
 
 	// Adds a named uniform to the program.
-	virtual void addUniform( const std::string& slot, std::vector< float > data ) = 0;
+	virtual void addUniform( const std::string& slot, int ) = 0;
 
 	// Links the program and returns if it was successful.
 	virtual bool link() = 0;

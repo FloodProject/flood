@@ -71,6 +71,10 @@ GLSL_Program::~GLSL_Program()
 
 void GLSL_Program::addAttribute( const std::string& name, VertexAttribute::Enum attr )
 {
+	//if( !isLinked() ) return;
+
+	bind();
+
 	glBindAttribLocation( id, attr, name.c_str() );
 
 #ifdef VAPOR_DEBUG
@@ -79,13 +83,29 @@ void GLSL_Program::addAttribute( const std::string& name, VertexAttribute::Enum 
 		warn( "glsl", "Could not bind attribute variable in program object '%d'", id );
 	}
 #endif
+
+	unbind();
 }
 
 //-----------------------------------//
 
-void GLSL_Program::addUniform( const std::string& slot, std::vector< float > data )
+void GLSL_Program::addUniform( const std::string& slot, int data )
 {
+	if( !isLinked() ) return;
 
+	bind();
+
+	int loc = glGetUniformLocation( id, slot.c_str() );
+
+	if( loc == -1)
+	{
+		warn( "glsl", "Could not locate uniform location in program object '%d'", id );
+		return;
+	}
+
+	glUniform1i( loc, data );
+
+	unbind();
 }
 
 //-----------------------------------//
@@ -93,7 +113,7 @@ void GLSL_Program::addUniform( const std::string& slot, std::vector< float > dat
 bool GLSL_Program::link()
 {
 	// If the program is already linked, return.
-	if( linked ) return true;
+	if( isLinked() ) return true;
 
 	// Make sure all shaders are compiled
 	foreach( GLSL_ShaderPtr shader, shaders )
@@ -125,6 +145,8 @@ bool GLSL_Program::link()
 	}
 #endif
 
+	glValidateProgram( id );
+
 	getGLSLLog();
 
 	int status;
@@ -145,6 +167,8 @@ bool GLSL_Program::link()
 
 void GLSL_Program::bind()
 {
+	if( !isLinked() ) return;
+
 	glUseProgram( id );
 
 #ifdef VAPOR_DEBUG
@@ -194,6 +218,8 @@ void GLSL_Program::getGLSLLog()
 
 	log.assign( info );
 
+	debug( log.c_str() );
+
 	delete info;
 }
 
@@ -203,6 +229,7 @@ void GLSL_Program::bindDefaultAttributes()
 {
 	addAttribute( "vp_Vertex", VertexAttribute::Vertex );
 	addAttribute( "vp_Color", VertexAttribute::Color );
+	addAttribute( "vp_MultiTexCoord0", VertexAttribute::MultiTexCoord0 );
 }
 
 //-----------------------------------//

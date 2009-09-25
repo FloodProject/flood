@@ -10,6 +10,8 @@
 
 #include "vapor/render/Material.h"
 
+#include <boost/lexical_cast.hpp>
+
 namespace vapor {
 	namespace render {
 
@@ -37,9 +39,9 @@ const std::string& Material::getName() const
 
 //-----------------------------------//
 
-void Material::addTexture( TexturePtr tex )
+void Material::addTexture( uint unit, TexturePtr tex )
 {
-	textures.push_back( tex );
+	textures[unit] = tex;
 }
 
 //-----------------------------------//
@@ -47,6 +49,48 @@ void Material::addTexture( TexturePtr tex )
 ProgramPtr Material::getProgram() const
 {
 	return program;
+}
+
+//-----------------------------------//
+
+const std::map< uint, TexturePtr >& Material::getTextures() const
+{
+	return textures;
+}
+
+//-----------------------------------//
+
+void Material::bind()
+{
+	foreach( const texPair& p, textures )
+	{
+		p.second->bind();
+	}
+
+	if( !program->isLinked() )
+	{
+		program->link();
+
+		foreach( const texPair& p, textures )
+		{
+			program->addUniform( "tex" + 
+				boost::lexical_cast< std::string >( p.first ), p.first );
+		}
+	}
+
+	program->bind();
+}
+
+//-----------------------------------//
+
+void Material::unbind()
+{
+	getProgram()->unbind();
+
+	foreach( const texPair& p, getTextures() )
+	{
+		p.second->unbind();
+	}
 }
 
 //-----------------------------------//

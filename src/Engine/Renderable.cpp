@@ -40,11 +40,10 @@ Renderable::Renderable( Primitive::Enum primitive,
 void Renderable::render( render::Device& UNUSED(device) )
 {
     vb->bind();
-	mat->getProgram()->bind();
-    
+	mat->bind();
+
     if ( ib == nullptr )
     {
-		debug( "%d", vb->getNumVertices() );
         glDrawArrays( type, 0, vb->getNumVertices() );
 
 #ifdef VAPOR_DEBUG
@@ -65,7 +64,7 @@ void Renderable::render( render::Device& UNUSED(device) )
     //    ib->unbind();
     //}
     
-	mat->getProgram()->unbind();
+	mat->unbind();
     vb->unbind();
 }
 

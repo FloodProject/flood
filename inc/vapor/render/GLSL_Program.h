@@ -33,7 +33,7 @@ public:
 	virtual void addAttribute( const std::string& slot, VertexAttribute::Enum attr );
 
 	// Adds a uniform to the shader.
-	virtual void addUniform( const std::string& slot, std::vector< float > data );
+	virtual void addUniform( const std::string& slot, int data );
 
 	// Links the program.
 	virtual bool link();

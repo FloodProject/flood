@@ -21,6 +21,7 @@ http://xania.org/200512/crt-heap-fragmentation-in-windows
 http://blog.pavlov.net/2007/11/11/windows-low-fragmentation-heap/
 http://msdn.microsoft.com/en-us/library/aa366750%28VS.85%29.aspx
 http://www.gamasutra.com/view/feature/2971/play_by_play_effective_memory_.php
+http://www.fastformat.org/
 
 Full-screen doesn't seem to work...
 group.add(ls, snd, cam, etc);

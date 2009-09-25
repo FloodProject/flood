@@ -13,7 +13,7 @@
 //-----------------------------------//
 
 Example::Example(const char** argv)
-	: Framework("Example", argv), runLoop( false )
+	: Framework("Example", argv), runLoop( false ), c( 0.3f, 0.0f, 0.8f )
 {
 
 }
@@ -106,12 +106,9 @@ void Example::buildTriangle()
 			rm->loadResource< GLSL_Shader >( "media/shader.vs" ),
 			rm->loadResource< GLSL_Shader >( "media/shader.fs" ) ) );
 
-	program->link();
-	debug( program->getLog().c_str() );
-
 	// Assign the renderable a material with a custom texture
 	MaterialPtr mat( new Material( "SimpleMat", program ) );
-	mat->addTexture( tex );
+	mat->addTexture( 0, tex );
 	
 	// Create a new Renderable from the VBO and add it to a Geometry node
 	RenderablePtr rend( new Renderable( Primitive::Triangles, vb, mat ) );
