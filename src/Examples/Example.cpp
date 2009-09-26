@@ -13,7 +13,7 @@
 //-----------------------------------//
 
 Example::Example(const char** argv)
-	: Framework("Example", argv), runLoop( false ), c( 0.3f, 0.0f, 0.8f )
+	: Framework("Example", argv), runLoop( false ), c( 0.0f, 0.10f, 0.25f )
 {
 
 }
@@ -38,7 +38,9 @@ void Example::onSetupResources()
 	ResourceManager* rm = getResourceManager();
 	
 	ImagePtr img = rm->loadResource< Image >( "media/triton.png" );
-	snd = rm->loadResource< resources::Sound >( "media/stereo.ogg" );
+	//snd = rm->loadResource< resources::Sound >( "media/stereo.ogg" );
+
+	ResourcePtr mesh = rm->loadResource( "media/cubo.ms3d" );
 
 	tex.reset( new Texture( img ) );
 }
@@ -55,8 +57,8 @@ void Example::onSetupScene()
 	ls->makeCurrent();
 	grp->add( ls );
 
-	sound.reset( new scene::Sound( ls, snd) );
-	grp->add( sound );
+	//sound.reset( new scene::Sound( ls, snd) );
+	//grp->add( sound );
 	scene->add( grp );
 
 	// Create a new Camera and position it to look at origin
@@ -65,42 +67,14 @@ void Example::onSetupScene()
 	cam->lookAt( Vector3::Zero );
 	scene->add( cam );
 
-	buildTriangle();
+	buildQuad();
 }
 
 //-----------------------------------//
 
-void Example::buildTriangle()
+void Example::buildQuad()
 {
 	ResourceManager* rm = getResourceManager();
-
-	// Create a new VBO and upload triangle data
-	VertexBufferPtr vb( new VertexBuffer() );
-
-	// Vertex position data
-	std::vector< Vector3 > vertex;
-	vertex.push_back( Vector3( 0.0f, 1.0f, 0.0f ) );
-	vertex.push_back( Vector3( -1.0f, -1.0f, 0.0f ) );
-	vertex.push_back( Vector3( 1.0f, -1.0f, 0.0f ) );
-
-	// Vertex color data
-	std::vector< Vector3 > colors;
-	colors.push_back( Vector3( 0.0f, 1.0f, 0.0f ) );
-	colors.push_back( Vector3( 0.0f, 0.0f, 1.0f ) );
-	colors.push_back( Vector3( 1.0f, 0.0f, 0.0f ) );
-
-	// Vertex tex coords data
-	std::vector< Vector3 > coords;
-	coords.push_back( Vector3( 0.0f, 1.0f, 0.0f ) );
-	coords.push_back( Vector3( -1.0f, -1.0f, 0.0f ) );
-	coords.push_back( Vector3( 1.0f, -1.0f, 0.0f ) );
-
-	// Vertex buffer setup
-	vb->set( VertexAttribute::Vertex, vertex );
-	vb->set( VertexAttribute::Color, colors );
-	vb->set( VertexAttribute::MultiTexCoord0, coords );
-
-	vb->build( BufferUsage::Static, BufferAccess::Write );
 
 	ProgramPtr program( new GLSL_Program( 
 			rm->loadResource< GLSL_Shader >( "media/shader.vs" ),
@@ -109,11 +83,20 @@ void Example::buildTriangle()
 	// Assign the renderable a material with a custom texture
 	MaterialPtr mat( new Material( "SimpleMat", program ) );
 	mat->addTexture( 0, tex );
-	
-	// Create a new Renderable from the VBO and add it to a Geometry node
-	RenderablePtr rend( new Renderable( Primitive::Triangles, vb, mat ) );
 
-	GeometryPtr geom( new Geometry( rend ) );
+	IndexBufferPtr ib( new IndexBuffer() );
+	
+	std::vector< short > ind;
+	ind.push_back( 0 );
+	ind.push_back( 1 );
+	ind.push_back( 2 );
+	ind.push_back( 3 );
+
+	ib->set( ind );
+
+	RenderablePtr quad( new Quad( mat, ib ) );
+	GeometryPtr geom( new Geometry( quad ) );
+	
 	getSceneManager()->add( geom );
 }
 
@@ -149,8 +132,7 @@ void Example::onRender()
 void Example::onKeyPressed( const KeyEvent& keyEvent )
 {
 	if( keyEvent.keyCode == Keys::Space )
-		debug( "time: %f", frameTimer.getElapsedTime
-		() );
+		debug( "time: %f", frameTimer.getElapsedTime() );
 
 	if( keyEvent.keyCode == Keys::Pause )
 		Log::showDebug = !Log::showDebug;

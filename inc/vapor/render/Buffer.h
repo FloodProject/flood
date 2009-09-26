@@ -9,6 +9,7 @@
 #pragma once
 
 #include "vapor/Platform.h"
+#include "vapor/render/GL.h"
 
 namespace vapor {
 	namespace render {
@@ -68,6 +69,9 @@ public:
 	virtual ~Buffer();
 
 protected:
+
+	// Converts the buffer enums to the equivalent GL ones.
+	GLenum getGLBufferType( BufferUsage::Enum bU, BufferAccess::Enum bA );
 
     uint id;
 };

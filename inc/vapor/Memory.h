@@ -74,3 +74,17 @@ using std::tr1::shared_ptr;
 #else
 	#define VAPOR_API
 #endif
+
+//-------------------------------------------------------------------------//
+// Alignment control
+//-------------------------------------------------------------------------//
+
+#ifdef VAPOR_COMPILER_MSVC
+	#define VAPOR_ALIGN_BEGIN( alignment ) __declspec (align( alignment ))
+	#define VAPOR_ALIGN_END( alignment )
+#elif defined(VAPOR_COMPILER_GCC)
+	#define VAPOR_ALIGN_BEGIN( alignment )
+	#define VAPOR_ALIGN_END( alignment ) __attribute__ ((aligned( alignment )))
+#else
+	#error "Alignment control for your platform is not currently supported"
+#endif

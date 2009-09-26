@@ -17,6 +17,13 @@ using namespace vapor::render;
 
 //-----------------------------------//
 
+Geometry::Geometry()
+{
+
+}
+
+//-----------------------------------//
+
 Geometry::Geometry( RenderablePtr rend )
 {
 	renderables.push_back( rend );

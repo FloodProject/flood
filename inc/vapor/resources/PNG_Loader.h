@@ -44,6 +44,10 @@ public:
 
 protected:
 
+	// Flip the Y part of the texture. OpenGL expects the origin at 
+	// bottom-left while the PNG gets decoded as origin being top-left.
+	void flip( std::vector<byte>& buffer, ulong width, ulong height );
+
 	// Holds all file extensions recognized by this codec.
 	std::list< std::string > extensions;
 };

@@ -50,7 +50,7 @@ protected:
 
 private:
 
-	void buildTriangle();
+	void buildQuad();
 
 	resources::SoundPtr snd;
 	scene::SoundPtr sound;

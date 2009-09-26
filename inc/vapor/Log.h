@@ -9,6 +9,7 @@
 #pragma once
 
 #include "vapor/Types.h"
+#include "vapor/Timer.h"
 
 namespace vapor {
 	namespace log {
@@ -104,6 +105,9 @@ protected:
 
 	// File used to output logging information.
 	FILE* fp;
+
+	// Timer used for data/time control
+	Timer timer;
 
 	// Used for zebra coloring the table.
 	bool even;

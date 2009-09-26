@@ -50,7 +50,11 @@ private:
 
 	void bindDefaultAttributes();
 
-	void getGLSLLog();
+	bool validate();
+
+	void attachShaders();
+
+	void getLogText();
 
 	std::vector< GLSL_ShaderPtr > shaders;
 	GLuint id;

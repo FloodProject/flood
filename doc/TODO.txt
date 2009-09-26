@@ -23,6 +23,7 @@ http://msdn.microsoft.com/en-us/library/aa366750%28VS.85%29.aspx
 http://www.gamasutra.com/view/feature/2971/play_by_play_effective_memory_.php
 http://www.fastformat.org/
 
+OggLoader is buggy
 Full-screen doesn't seem to work...
 group.add(ls, snd, cam, etc);
 AUDIO STREAMING? woot?

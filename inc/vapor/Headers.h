@@ -40,6 +40,7 @@
 #include <vapor/render/Renderable.h>
 #include <vapor/render/GLSL_Program.h>
 #include <vapor/render/GLSL_Shader.h>
+#include <vapor/render/Quad.h>
 
 //-------------------------------------------------------------------------//
 // Input-related Includes

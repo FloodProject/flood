@@ -67,7 +67,9 @@ public:
     
     // No index buffer, default material will be used if none passed
 	Renderable(Primitive::Enum primitive, VertexBufferPtr vb,
-			MaterialPtr mat = MaterialPtr( ) );   
+			MaterialPtr mat = MaterialPtr( ) );
+
+	virtual ~Renderable();
                     
     // Render this renderable. This will bind all the necessary state
 	// like binding the buffers and the materials.

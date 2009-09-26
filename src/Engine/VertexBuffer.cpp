@@ -211,7 +211,9 @@ bool VertexBuffer::checkSize()
 
 			// Update the number of vertices.
 			// Should be the same for every attribute.
-			numVertices = tr1::get< 0 >( p.second );
+			numVertices = size / 
+				(tr1::get< 0 >( p.second ) *
+				sizeof( tr1::get< 1 >( p.second ) ) );
 		}
 		else if( size != first )
 		{
@@ -224,7 +226,7 @@ bool VertexBuffer::checkSize()
 
 //-----------------------------------//
 
-uint VertexBuffer::getSize()
+uint VertexBuffer::getSize() const
 {
 	uint totalBytes = 0;
 
@@ -243,14 +245,14 @@ uint VertexBuffer::getSize()
 
 //-----------------------------------//
 
-uint VertexBuffer::getNumAttributes()
+uint VertexBuffer::getNumAttributes() const
 {
 	return attributeMap.size();
 }
 
 //-----------------------------------//
 
-uint VertexBuffer::getNumVertices()
+uint VertexBuffer::getNumVertices() const
 {
 	return numVertices;
 }
@@ -264,23 +266,9 @@ void VertexBuffer::clear()
 
 //-----------------------------------//
 
-GLenum VertexBuffer::getGLBufferType( BufferUsage::Enum bU, BufferAccess::Enum bA )
+bool VertexBuffer::isBuilt() const
 {
-	// TODO: is this right? -.-
-
-	if( bU == BufferUsage::Stream && bA == BufferAccess::Read ) return GL_STREAM_READ;
-	if( bU == BufferUsage::Stream && bA == BufferAccess::Write ) return GL_STREAM_DRAW;
-	if( bU == BufferUsage::Stream && bA == BufferAccess::ReadWrite ) return GL_STREAM_COPY;
-
-	if( bU == BufferUsage::Static && bA == BufferAccess::Read ) return GL_STATIC_READ;
-	if( bU == BufferUsage::Static && bA == BufferAccess::Write ) return GL_STATIC_DRAW;
-	if( bU == BufferUsage::Static && bA == BufferAccess::ReadWrite ) return GL_STATIC_COPY;
-
-	if( bU == BufferUsage::Dynamic && bA == BufferAccess::Read ) return GL_DYNAMIC_READ;
-	if( bU == BufferUsage::Dynamic && bA == BufferAccess::Write ) return GL_DYNAMIC_DRAW;
-	if( bU == BufferUsage::Dynamic && bA == BufferAccess::ReadWrite ) return GL_DYNAMIC_COPY;
-
-	return GL_STREAM_READ;
+	return built;
 }
 
 //-----------------------------------//

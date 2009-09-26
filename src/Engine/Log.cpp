@@ -14,6 +14,8 @@
 #include "vapor/Log.h"
 #include "vapor/Platform.h"
 
+#include <ctime>
+
 #include "LogFormat.h"
 
 const int BUF_MAX_SIZE = 256;
@@ -97,7 +99,7 @@ void error(const std::string& subsystem, const char* msg, ...)
 //-----------------------------------//
 
 Log::Log(const std::string& title, const std::string& filename)
-	: even(true), fp(nullptr)
+: even( true ), fp( nullptr )
 {
 	if( !open(filename) ) 
 	{
@@ -224,7 +226,7 @@ void Log::write(const LogLevel::Enum level, const std::string& subsystem,
 
 		fprintf(fp, "<td class=\"%s\"></td>", s);
 
-		fprintf(fp, "<td>%d</td>", clock()); // date time
+		fprintf(fp, "<td>%.3fs</td>", timer.getElapsedTime()); // date time
 		fprintf(fp, "<td>%s</td>", subsystem.c_str()); // subsystem
 
 		fprintf(fp, "<td>");

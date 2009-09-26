@@ -65,7 +65,11 @@ public:
     // Updates the internal VBO with current values for vertices, 
     // normals, colors and texture coords.  Returns false on error, true otherwise.
     // Note: calls glBufferData
-    bool build( BufferUsage::Enum bufferUsage, BufferAccess::Enum bufferAccess );
+	bool build( BufferUsage::Enum bufferUsage = BufferUsage::Static, 
+		BufferAccess::Enum bufferAccess = BufferAccess::Write );
+
+	// Returns true if the vertex buffer is built, false otherwhise.
+	bool isBuilt() const;
     
     // This method will make the internal VBO id bound so any future
     // glDrawXXX calls will use this VBO as its data.  
@@ -81,13 +85,13 @@ public:
     void clear();
 
 	// Returns the total size in bytes of the buffer.
-	uint getSize();
+	uint getSize() const;
 
 	// Returns the number of vertex attributes.
-	uint getNumAttributes();
+	uint getNumAttributes() const;
 
 	// Returns the number of vertices in each attribute.
-	uint getNumVertices();
+	uint getNumVertices() const;
 
 	// These are all the possible types supported by glVertexAttrib
 	//bool set( VertexAttribute::Enum attr, std::vector< byte > const& data );
@@ -138,9 +142,6 @@ private:
 
 	// Binds all the OpenGL pointers when the buffer is built.
 	void bindPointers();
-
-	// Converts the buffer enums to the equivalent GL ones.
-	GLenum getGLBufferType( BufferUsage::Enum bU, BufferAccess::Enum bA );
 
 	// Tells us if this buffer has already been built.
     bool built;

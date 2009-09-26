@@ -13,6 +13,8 @@
 #include "vapor/resources/MS3D.h"
 #include "vapor/vfs/File.h"
 
+#include "vapor/Endianness.h"
+
 namespace vapor {
 	namespace resources {
 

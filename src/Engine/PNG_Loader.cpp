@@ -47,13 +47,33 @@ Image* PNG_Pico_Loader::decode(File& file)
 	
 	decodePNG(buffer, width, height, &filebuf[0], filebuf.size());
 
-	// build our image with the data. the pixel format return by picoPNG
+	flip( buffer, width, height );
+
+	// build our image with the data. the pixel format returned by picoPNG
 	// is always the same, 32bits per pixel, RGBA 8 bits per component.
-	Image* image = new Image(width, height, PixelFormat::R8G8B8A8);
-	image->setBuffer(buffer);
+	Image* image = new Image( width, height, PixelFormat::R8G8B8A8 );
+	image->setBuffer( buffer );
 	image->setPath( file.getPath() );
 
 	return image;
+}
+
+//-----------------------------------//
+
+void PNG_Pico_Loader::flip( std::vector<byte>& buffer, ulong width, ulong height )
+{
+	// flip Y in place
+
+	for( int y = 0; y < height/2; y++)
+	{
+		int minrow = y*width*4;
+		int maxrow = width*(height-y-1)*4;
+ 
+		for( int x = 0; x < width*4; x++)
+		{
+			std::swap( buffer[minrow+x], buffer[maxrow+x] );
+		}
+	}
 }
 
 //-----------------------------------//

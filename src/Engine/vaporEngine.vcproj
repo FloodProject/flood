@@ -287,6 +287,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\IndexBuffer.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\inc\vapor\render\IndexBuffer.h"
 					>
 				</File>
@@ -306,6 +310,14 @@
 			<Filter
 				Name="Primitives"
 				>
+				<File
+					RelativePath=".\Quad.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\render\Quad.h"
+					>
+				</File>
 				<File
 					RelativePath=".\Renderable.cpp"
 					>
@@ -608,6 +620,14 @@
 			Name="Platform"
 			>
 			<File
+				RelativePath=".\Endianness.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\Endianness.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\inc\vapor\Language.h"
 				>
 			</File>
@@ -806,6 +826,10 @@
 					RelativePath="..\..\inc\vapor\scene\Geometry.h"
 					>
 				</File>
+			</Filter>
+			<Filter
+				Name="Quad"
+				>
 			</Filter>
 		</Filter>
 		<Filter

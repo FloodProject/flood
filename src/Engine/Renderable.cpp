@@ -37,10 +37,21 @@ Renderable::Renderable( Primitive::Enum primitive,
 
 //-----------------------------------//
 
+Renderable::~Renderable()
+{
+
+}
+
+//-----------------------------------//
+
 void Renderable::render( render::Device& UNUSED(device) )
 {
-    vb->bind();
 	mat->bind();
+
+	if( !vb->isBuilt() )
+		vb->build();
+
+	vb->bind();
 
     if ( ib == nullptr )
     {
@@ -54,18 +65,21 @@ void Renderable::render( render::Device& UNUSED(device) )
 		}
 #endif
     }
-    //else
-    //{
-    //    ib->bind();
-    //    
-    //    GLenum type = ib->is16() ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
-    //    glDrawElements( primitiveType, ib->getNumIndices(), type, 0 );
+    else
+    {
+		if( !ib->isBuilt() )
+			ib->build();
 
-    //    ib->unbind();
-    //}
+        ib->bind();
+        
+        GLenum gltype = ib->is16bit() ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
+        glDrawElements( type, ib->getNumIndices(), gltype, 0 );
+
+        ib->unbind();
+    }
     
-	mat->unbind();
     vb->unbind();
+	mat->unbind();
 }
 
 //-----------------------------------//

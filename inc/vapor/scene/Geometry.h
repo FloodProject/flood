@@ -27,6 +27,8 @@ class VAPOR_API Geometry : public Node
 {
 public:
 
+	Geometry();
+
 	Geometry( render::RenderablePtr rend );
 
 	virtual ~Geometry();

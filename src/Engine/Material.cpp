@@ -64,7 +64,7 @@ void Material::bind()
 {
 	foreach( const texPair& p, textures )
 	{
-		p.second->bind();
+		p.second->bind( p.first );
 	}
 
 	if( !program->isLinked() )

@@ -35,7 +35,7 @@ public:
 	bool upload();
 
 	// Binds the texture object.
-	void bind();
+	void bind( int unit = 0 );
 
 	// Unbinds the texture object.
 	void unbind();

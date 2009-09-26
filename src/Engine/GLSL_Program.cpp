@@ -110,11 +110,8 @@ void GLSL_Program::addUniform( const std::string& slot, int data )
 
 //-----------------------------------//
 
-bool GLSL_Program::link()
+void GLSL_Program::attachShaders()
 {
-	// If the program is already linked, return.
-	if( isLinked() ) return true;
-
 	// Make sure all shaders are compiled
 	foreach( GLSL_ShaderPtr shader, shaders )
 	{
@@ -123,13 +120,22 @@ bool GLSL_Program::link()
 			if( !shader->compile() )
 			{
 				linked = false;
-				return false;
 			}
 		}
 
 		// Shaders need to be attached to the program
 		glAttachShader( id, shader->id() );
 	}
+}
+
+//-----------------------------------//
+
+bool GLSL_Program::link()
+{
+	// If the program is already linked, return.
+	if( isLinked() ) return true;
+
+	attachShaders();
 
 	bindDefaultAttributes();
 
@@ -137,24 +143,25 @@ bool GLSL_Program::link()
 
 	// Check that the linking was good
 #ifdef VAPOR_DEBUG
-	if( glGetError() != GL_NO_ERROR )
+
+	GLenum err;
+	if( ( err = glGetError() ) != GL_NO_ERROR )
 	{
-		warn( "glsl", "Could not link program object '%d'", id );
+		warn( "glsl", 
+			"Could not link program object '%d': %s", id, gluErrorString( err ) );
 		linked = false;
 		return false;
 	}
 #endif
 
-	glValidateProgram( id );
-
-	getGLSLLog();
+	getLogText();
 
 	int status;
 	glGetProgramiv( id, GL_LINK_STATUS, &status );
 
 	if( status != GL_TRUE )
 	{
-		warn( "glsl", "Could not link program object '%d'", id );
+		warn( "glsl", "Could not link program object '%d': %s", id, log.c_str() );
 		linked = false;
 		return false;
 	}
@@ -162,6 +169,29 @@ bool GLSL_Program::link()
 	linked = true;
 	return true;
 }
+
+//-----------------------------------//
+
+bool GLSL_Program::validate()
+{
+	if( !isLinked() ) return false;
+	
+	glValidateProgram( id );
+	
+	int status;
+	glGetProgramiv( id, GL_VALIDATE_STATUS, &status );
+
+	if( status != GL_TRUE )
+	{
+		getLogText();
+
+		warn( "glsl", "Could not validate program object '%d': %s", id, log.c_str() );
+		return false;
+	}
+
+	return true;
+}
+
 
 //-----------------------------------//
 
@@ -197,7 +227,7 @@ void GLSL_Program::unbind()
 
 //-----------------------------------//
 
-void GLSL_Program::getGLSLLog()
+void GLSL_Program::getLogText()
 {
 	// get linking log size
 	GLint size;
