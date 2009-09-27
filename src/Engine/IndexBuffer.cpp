@@ -33,14 +33,14 @@ IndexBuffer::~IndexBuffer()
 
 //-----------------------------------//
 
-void IndexBuffer::set( const std::vector< short >& data )
+void IndexBuffer::set( const std::vector< ushort >& data )
 {
 	data16 = data;
 }
 
 //-----------------------------------//
 
-void IndexBuffer::set( const std::vector< long >& data )
+void IndexBuffer::set( const std::vector< ulong >& data )
 {
 	data32 = data;
 }
@@ -87,7 +87,7 @@ bool IndexBuffer::build( BufferUsage::Enum bU, BufferAccess::Enum bA )
 
 	// reserve space for all the elements
 	glBufferData( GL_ELEMENT_ARRAY_BUFFER, 
-		getNumIndices(), 
+		getNumIndices() * (is16bit() ? 2 : 4), 
 		/* ?*/ &data16[0] /*: &data32[0]*/, 
 		getGLBufferType( bU, bA ) );
 

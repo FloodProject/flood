@@ -50,10 +50,10 @@ public:
 	uint getNumIndices() const;
 
 	// Sets the indices for the IBO (16-bit version).
-	void set( const std::vector< short >& data );
+	void set( const std::vector< ushort >& data );
 	
 	// Sets the indices for the IBO (32-bit version).	
-	void set( const std::vector< long >& data );
+	void set( const std::vector< ulong >& data );
 
     // This method will make the internal IBO id bound.
     bool bind();
@@ -76,8 +76,8 @@ private:
 	bool built;
 	IndexBufferType::Enum indexType;
 
-	std::vector< short > data16;
-	std::vector< long > data32;
+	std::vector< ushort > data16;
+	std::vector< ulong > data32;
 };
 
 //-----------------------------------//

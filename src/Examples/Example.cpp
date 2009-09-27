@@ -86,7 +86,7 @@ void Example::buildQuad()
 
 	IndexBufferPtr ib( new IndexBuffer() );
 	
-	std::vector< short > ind;
+	std::vector< ushort > ind;
 	ind.push_back( 0 );
 	ind.push_back( 1 );
 	ind.push_back( 2 );
