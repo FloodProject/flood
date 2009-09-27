@@ -27,6 +27,7 @@ class VAPOR_API Material
 {
 public:
 
+	Material( const std::string& name );
 	Material( const std::string& name, ProgramPtr program );
 	~Material();
 
@@ -34,13 +35,16 @@ public:
 	const std::string& getName() const;
 
 	// Adds a texture to the material.
-	void addTexture( uint unit, TexturePtr tex );
+	void addTexture( uint unit, const std::string& tex );
 
 	// Gets the associated program.
 	ProgramPtr getProgram() const;
 
+	// Sets the associated program.
+	void setProgram( ProgramPtr program );
+
 	// Gets the textures in the material.
-	const std::map< uint, TexturePtr >& getTextures() const;
+	const std::map< uint, std::string >& getTextures() const;
 
 	// Binds the material object.
 	void bind();
@@ -55,8 +59,9 @@ public:
 protected:
 
 	// Textures
-	std::map< uint, TexturePtr > textures;
-	typedef std::pair< const uint, TexturePtr > texPair;
+	std::map< uint, std::string > textures;
+	typedef std::pair< const uint, std::string > texPair;
+	std::map< std::string, TexturePtr > texCache;
 
 	// Shaders
 	ProgramPtr program;

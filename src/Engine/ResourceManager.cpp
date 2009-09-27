@@ -19,9 +19,18 @@ namespace vapor {
 
 //-----------------------------------//
 
+ResourceManager* ResourceManager::rm = nullptr;
+
+ResourceManager* ResourceManager::getInstance()
+{
+	return ResourceManager::rm;
+}
+
+//-----------------------------------//
+
 ResourceManager::ResourceManager()
 {
-
+	if( !rm ) rm = this;
 }
 
 //-----------------------------------//

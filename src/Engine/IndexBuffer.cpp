@@ -87,8 +87,8 @@ bool IndexBuffer::build( BufferUsage::Enum bU, BufferAccess::Enum bA )
 
 	// reserve space for all the elements
 	glBufferData( GL_ELEMENT_ARRAY_BUFFER, 
-		getNumIndices() * (is16bit() ? 2 : 4), 
-		/* ?*/ &data16[0] /*: &data32[0]*/, 
+		getNumIndices() * (is16bit() ? sizeof(ushort) : sizeof(ulong)), 
+		is16bit() ? &data16[0] : reinterpret_cast<ushort*>(&data32[0]), 
 		getGLBufferType( bU, bA ) );
 
 	debug( "index buffer '%d' has size '%d'", id, getNumIndices() );

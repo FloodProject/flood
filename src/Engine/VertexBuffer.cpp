@@ -33,7 +33,8 @@ enum VertexBuffer::GLPrimitive
 //-----------------------------------//
 
 VertexBuffer::VertexBuffer()
-	: built( false ), numVertices( 0 )
+	: built( false ), numVertices( 0 ), 
+	bufferUsage( BufferUsage::Static ), bufferAccess( BufferAccess::Read )
 {
 
 }

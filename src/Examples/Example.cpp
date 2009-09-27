@@ -41,8 +41,6 @@ void Example::onSetupResources()
 	//snd = rm->loadResource< resources::Sound >( "media/stereo.ogg" );
 
 	ResourcePtr mesh = rm->loadResource( "media/cubo.ms3d" );
-
-	tex.reset( new Texture( img ) );
 }
 
 //-----------------------------------//
@@ -50,6 +48,7 @@ void Example::onSetupResources()
 void Example::onSetupScene() 
 {
 	ScenePtr scene = getSceneManager();
+	ResourceManager* rm = getResourceManager();
 
 	GroupPtr grp( new Group() );
 
@@ -63,18 +62,9 @@ void Example::onSetupScene()
 
 	// Create a new Camera and position it to look at origin
 	cam.reset( new Camera( getRenderDevice() ) );
-	cam->translate( Vector3( 0.0f, 0.0f, -3.0f ) );
+	cam->translate( Vector3( 0.0f, 0.0f, -10.0f ) );
 	cam->lookAt( Vector3::Zero );
 	scene->add( cam );
-
-	buildQuad();
-}
-
-//-----------------------------------//
-
-void Example::buildQuad()
-{
-	ResourceManager* rm = getResourceManager();
 
 	ProgramPtr program( new GLSL_Program( 
 			rm->loadResource< GLSL_Shader >( "media/shader.vs" ),
@@ -82,22 +72,20 @@ void Example::buildQuad()
 
 	// Assign the renderable a material with a custom texture
 	MaterialPtr mat( new Material( "SimpleMat", program ) );
-	mat->addTexture( 0, tex );
+	mat->addTexture( 0, "triton.png" );
 
-	IndexBufferPtr ib( new IndexBuffer() );
+	RenderablePtr rend ( new Quad( mat ) );
+	GeometryPtr geom( new Geometry( rend ) );
+	//scene->add( geom );
+
+	MS3DPtr mesh = rm->getResource< MS3D >( "media/cubo.ms3d" );
 	
-	std::vector< ushort > ind;
-	ind.push_back( 0 );
-	ind.push_back( 1 );
-	ind.push_back( 2 );
-	ind.push_back( 3 );
+	foreach( const RenderablePtr& rend, mesh->getRenderables() )
+	{
+		rend->getMaterial()->setProgram( program );
+	}
 
-	ib->set( ind );
-
-	RenderablePtr quad( new Quad( mat, ib ) );
-	GeometryPtr geom( new Geometry( quad ) );
-	
-	getSceneManager()->add( geom );
+	scene->add( mesh );
 }
 
 //-----------------------------------//
@@ -123,7 +111,7 @@ void Example::onRender()
 
 	device->setClearColor( c );
 	device->clearTarget();
-	
+
 	cam->render();
 }
 

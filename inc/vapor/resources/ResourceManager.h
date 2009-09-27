@@ -38,6 +38,10 @@ public:
 	ResourceManager();
 	virtual ~ResourceManager();
 
+	// Gets an instance of the resource manager.
+	static ResourceManager* getInstance();
+	//static void setInstance( ResourceManager* rm );
+
 	// Creates a new resource and adds it to the manager.
 	ResourcePtr loadResource(const std::string& path);
 
@@ -80,6 +84,8 @@ public:
 
 protected:
 
+	static ResourceManager* rm;
+
 	// maps a name to a resource
 	std::map< std::string, ResourcePtr > resources;
 
@@ -89,6 +95,10 @@ protected:
 	// maps each resource group to a specific budget
 	std::map< ResourceGroup::Enum, uint > resourceBudgets;
 };
+
+//-----------------------------------//
+
+
 
 //-----------------------------------//
 

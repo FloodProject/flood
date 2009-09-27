@@ -75,10 +75,8 @@ void Framework::render()
 {
 	render::Device* renderDevice = getRenderDevice();
 
-	while( renderDevice->getWindow()->pumpEvents() )
+	while( frameTimer.reset(), renderDevice->getWindow()->pumpEvents() )
 	{
-		frameTimer.reset();
-
 		// update time!
 		onUpdate( lastFrameTime );
 

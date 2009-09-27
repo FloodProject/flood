@@ -50,8 +50,6 @@ protected:
 
 private:
 
-	void buildQuad();
-
 	resources::SoundPtr snd;
 	scene::SoundPtr sound;
 	input::InputMap * inputMap; 

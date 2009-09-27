@@ -62,6 +62,8 @@ class VAPOR_API Renderable
 {
 public:
 
+	Renderable();
+
     Renderable( Primitive::Enum primitive, 
 		VertexBufferPtr vb, IndexBufferPtr ib, MaterialPtr mat );
     
@@ -84,10 +86,19 @@ public:
     // Gets the material associated with the renderable.
     MaterialPtr getMaterial() const;
 
+	// Sets the vertex buffer of this renderable.
+	void setVertexBuffer( VertexBufferPtr vb );
+
+	// Sets the index buffer of this renderable.
+	void setIndexBuffer( IndexBufferPtr ib );
+
 	// Sets this renderable with a new material.
 	void setMaterial( MaterialPtr mat );
 
-private:
+	// Sets the primitive type of this renderable.
+	void setType( Primitive::Enum p );
+
+protected:
 
     // primitive type of vertex buffer 
     Primitive::Enum type;

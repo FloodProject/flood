@@ -15,6 +15,13 @@ namespace vapor {
 
 //-----------------------------------//
 
+Renderable::Renderable()
+{
+
+}
+
+//-----------------------------------//
+
 Renderable::Renderable( Primitive::Enum primitive,
 						VertexBufferPtr vb, 
 						IndexBufferPtr ib, 
@@ -46,7 +53,7 @@ Renderable::~Renderable()
 
 void Renderable::render( render::Device& UNUSED(device) )
 {
-	mat->bind();
+	if( mat) mat->bind();
 
 	if( !vb->isBuilt() )
 		vb->build();
@@ -79,7 +86,7 @@ void Renderable::render( render::Device& UNUSED(device) )
     }
     
     vb->unbind();
-	mat->unbind();
+	if( mat ) mat->unbind();
 }
 
 //-----------------------------------//
@@ -108,6 +115,27 @@ MaterialPtr Renderable::getMaterial() const
 void Renderable::setMaterial( MaterialPtr mat )
 {
 	this->mat = mat;
+}
+
+//-----------------------------------//
+
+void Renderable::setType( Primitive::Enum p )
+{
+	this->type = p;
+}
+
+//-----------------------------------//
+
+void Renderable::setVertexBuffer( VertexBufferPtr vb )
+{
+	this->vb = vb;
+}
+
+//-----------------------------------//
+
+void Renderable::setIndexBuffer( IndexBufferPtr ib )
+{
+	this->ib = ib;
 }
 
 //-----------------------------------//

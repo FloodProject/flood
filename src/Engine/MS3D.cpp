@@ -13,21 +13,24 @@
 #include "vapor/resources/MS3D.h"
 #include "vapor/vfs/File.h"
 
-#include "vapor/Endianness.h"
-
 namespace vapor {
 	namespace resources {
+
+using namespace vapor::render;
+using namespace vapor::math;
+using namespace vapor::scene;
 
 MS3D::MS3D(const std::string& filename)
 {
 	load(filename);
+	build();
 }
 
 //-----------------------------------//
 
 MS3D::~MS3D()
 {
-
+	
 }
 
 //-----------------------------------//
@@ -47,8 +50,8 @@ bool MS3D::load(const std::string& filename)
 	
 	read_vertices();
 	read_triangles();
-	//read_groups();
-	//read_materials();
+	read_groups();
+	read_materials();
 	//read_animation();
 	//read_joints();
 	//read_comments();
@@ -60,6 +63,108 @@ cleanup:
 
 	fclose(fp);
 	return false;
+}
+
+//-----------------------------------//
+
+void MS3D::build()
+{
+	bool has_material = false;
+
+	foreach( const ms3d_group_t& g, m_groups )
+	{
+		// In case this group doesn't have geometry, then no need to process it.
+		if( g.triangleIndices.empty() ) continue;
+		
+		// Let's check if we have a valid material in the structure.
+		if( (g.materialIndex != -1) 
+			&& (g.materialIndex >= 0) 
+			&& (g.materialIndex < signed(m_materials.size())) )
+		{
+			has_material = true;
+		}
+		else
+		{
+			has_material = false;
+		}
+		
+		RenderablePtr rend( new Renderable() );
+
+		// MS3D meshes represent everything as triangles.
+		rend->setType( Primitive::Triangles );
+
+		// Vertex data
+		std::vector< Vector3 > vb_v;
+
+		// Tex coord data
+		std::vector< Vector3 > vb_tc;
+
+		// Let's process all the triangles of this group.
+		foreach( const ushort t_ind, g.triangleIndices )
+		{
+			const ms3d_triangle_t& t = m_triangles[t_ind];
+			
+			foreach( const ushort& v_ind, t.vertexIndices ) 
+			{
+				Vector3 vec;
+				
+				vec.x = m_vertices[v_ind].vertex[0];
+				vec.y = m_vertices[v_ind].vertex[1];
+				vec.z = m_vertices[v_ind].vertex[2];
+				
+				vb_v.push_back( vec );
+			}
+
+			for( int i = 0; i < 3; i++ )
+			{
+				Vector3 st;
+
+				st.x = t.s[i];
+				st.y = t.t[i];
+				st.z = 0;
+				
+				vb_tc.push_back( st );	
+			}
+		}
+
+		// Material
+		if( has_material )
+		{
+			const ms3d_material_t mt = m_materials[g.materialIndex];
+
+			MaterialPtr mat( new Material( mt.name ) );
+
+			if( strlen(mt.texture) > 0 )
+			{
+				mat->addTexture( 0, mt.texture );
+			}
+
+			rend->setMaterial( mat );
+		}
+
+		// Vertex buffers
+		
+		VertexBufferPtr vb( new VertexBuffer() );
+		vb->set( VertexAttribute::Vertex, vb_v );
+		vb->set( VertexAttribute::MultiTexCoord0, vb_tc );
+		
+		rend->setVertexBuffer( vb );
+
+		//// Index buffers
+		//std::vector< ushort > vb_i;
+		//foreach( const ms3d_triangle_t& t, m_triangles )
+		//{
+		//	vb_i.push_back( t.vertexIndices[0] );
+		//	vb_i.push_back( t.vertexIndices[1] );
+		//	vb_i.push_back( t.vertexIndices[2] );
+		//}
+
+		//IndexBufferPtr ib( new IndexBuffer() );
+		//ib->set( vb_i );
+		//rend->setIndexBuffer( ib );
+
+		addRenderable( rend );
+	}
 }
 
 //-----------------------------------//
@@ -102,6 +207,7 @@ void MS3D::read_vertices()
 void MS3D::read_triangles()
 {
 	ushort num_triangles;
+	
 	fread(&num_triangles, sizeof(ushort), 1, fp);
 	m_triangles.resize(num_triangles);
 	
@@ -121,55 +227,64 @@ void MS3D::read_triangles()
 
 //-----------------------------------//
 
-//void Milkshape3D::read_groups()
-//{
-//	// groups
-//	unsigned short numGroups;
-//	fread(&numGroups, sizeof(unsigned short), 1, fp);
-//	m_groups.resize(numGroups);
-//	for (i = 0; i < numGroups; i++)
-//	{
-//		fread(&m_groups[i].flags, sizeof(byte), 1, fp);
-//		fread(m_groups[i].name, sizeof(char), 32, fp);
-//
-//		unsigned short numGroupTriangles;
-//		fread(&numGroupTriangles, sizeof(unsigned short), 1, fp);
-//		m_groups[i].triangleIndices.resize(numGroupTriangles);
-//		if (numGroupTriangles > 0)
-//			fread(&m_groups[i].triangleIndices[0], sizeof(unsigned short), numGroupTriangles, fp);
-//
-//		fread(&m_groups[i].materialIndex, sizeof(char), 1, fp);
-//	}
-//}
-//
-//void Milkshape3D::read_materials()
-//{
-//	// materials
-//	unsigned short numMaterials;
-//	fread(&numMaterials, sizeof(unsigned short), 1, fp);
-//	m_materials.resize(numMaterials);
-//	for (i = 0; i < numMaterials; i++)
-//	{
-//		fread(m_materials[i].name, sizeof(char), 32, fp);
-//		fread(&m_materials[i].ambient, sizeof(float), 4, fp);
-//		fread(&m_materials[i].diffuse, sizeof(float), 4, fp);
-//		fread(&m_materials[i].specular, sizeof(float), 4, fp);
-//		fread(&m_materials[i].emissive, sizeof(float), 4, fp);
-//		fread(&m_materials[i].shininess, sizeof(float), 1, fp);
-//      fread(&m_materials[i].transparency, sizeof(float), 1, fp);
-//		fread(&m_materials[i].mode, sizeof(byte), 1, fp);
-//      fread(m_materials[i].texture, sizeof(char), MAX_TEXTURE_FILENAME_SIZE, fp);
-//      fread(m_materials[i].alphamap, sizeof(char), MAX_TEXTURE_FILENAME_SIZE, fp);
-//
-//		// set alpha
-//		m_materials[i].ambient[3] = m_materials[i].transparency;
-//		m_materials[i].diffuse[3] = m_materials[i].transparency;
-//		m_materials[i].specular[3] = m_materials[i].transparency;
-//		m_materials[i].emissive[3] = m_materials[i].transparency;
-//	}
-//}
-//
-//
+void MS3D::read_groups()
+{
+	// groups
+	ushort numGroups;
+	
+	fread(&numGroups, sizeof(ushort), 1, fp);
+	m_groups.resize(numGroups);
+	
+	for (int i = 0; i < numGroups; i++)
+	{
+		fread(&m_groups[i].flags, sizeof(byte), 1, fp);
+		fread(m_groups[i].name, sizeof(char), 32, fp);
+
+		ushort numGroupTriangles;
+		fread(&numGroupTriangles, sizeof(ushort), 1, fp);
+		m_groups[i].triangleIndices.resize(numGroupTriangles);
+		
+		if (numGroupTriangles > 0)
+		{
+			fread(&m_groups[i].triangleIndices[0], sizeof(ushort), numGroupTriangles, fp);
+		}
+
+		fread(&m_groups[i].materialIndex, sizeof(byte), 1, fp);
+	}
+}
+
+//-----------------------------------//
+
+void MS3D::read_materials()
+{
+	// materials
+	ushort numMaterials;
+	fread(&numMaterials, sizeof(ushort), 1, fp);
+	m_materials.resize(numMaterials);
+	
+	for (int i = 0; i < numMaterials; i++)
+	{
+		fread(m_materials[i].name, sizeof(char), 32, fp);
+		fread(&m_materials[i].ambient, sizeof(float), 4, fp);
+		fread(&m_materials[i].diffuse, sizeof(float), 4, fp);
+		fread(&m_materials[i].specular, sizeof(float), 4, fp);
+		fread(&m_materials[i].emissive, sizeof(float), 4, fp);
+		fread(&m_materials[i].shininess, sizeof(float), 1, fp);
+		fread(&m_materials[i].transparency, sizeof(float), 1, fp);
+		fread(&m_materials[i].mode, sizeof(byte), 1, fp);
+		fread(m_materials[i].texture, sizeof(char), MAX_TEXTURE_FILENAME_SIZE, fp);
+		fread(m_materials[i].alphamap, sizeof(char), MAX_TEXTURE_FILENAME_SIZE, fp);
+
+		// set alpha
+		m_materials[i].ambient[3] = m_materials[i].transparency;
+		m_materials[i].diffuse[3] = m_materials[i].transparency;
+		m_materials[i].specular[3] = m_materials[i].transparency;
+		m_materials[i].emissive[3] = m_materials[i].transparency;
+	}
+}
+
+//-----------------------------------//
+
 //void Milkshape3D::read_animation()
 //{
 //	// animation
@@ -184,8 +299,8 @@ void MS3D::read_triangles()
 //void Milkshape3D::read_joints()
 //{
 //	// joints
-//	unsigned short numJoints;
-//	fread(&numJoints, sizeof(unsigned short), 1, fp);
+//	ushort numJoints;
+//	fread(&numJoints, sizeof(ushort), 1, fp);
 //	m_joints.resize(numJoints);
 //	for (i = 0; i < numJoints; i++)
 //	{
@@ -195,12 +310,12 @@ void MS3D::read_triangles()
 //        fread(m_joints[i].rot, sizeof(float), 3, fp);
 //        fread(m_joints[i].pos, sizeof(float), 3, fp);
 //    
-//		unsigned short numKeyFramesRot;
-//		fread(&numKeyFramesRot, sizeof(unsigned short), 1, fp);
+//		ushort numKeyFramesRot;
+//		fread(&numKeyFramesRot, sizeof(ushort), 1, fp);
 //		m_joints[i].rotationKeys.resize(numKeyFramesRot);
 //
-//		unsigned short numKeyFramesPos;
-//		fread(&numKeyFramesPos, sizeof(unsigned short), 1, fp);
+//		ushort numKeyFramesPos;
+//		fread(&numKeyFramesPos, sizeof(ushort), 1, fp);
 //		m_joints[i].positionKeys.resize(numKeyFramesPos);
 //
 //		// the frame time is in seconds, so multiply it by the animation fps, to get the frames
