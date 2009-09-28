@@ -442,6 +442,14 @@
 					RelativePath="..\..\inc\vapor\render\Texture.h"
 					>
 				</File>
+				<File
+					RelativePath=".\TextureManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\render\TextureManager.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -664,6 +672,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\inc\vapor\Singleton.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\inc\vapor\Types.h"
 				>
 			</File>
@@ -768,6 +780,14 @@
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\scene\Camera.h"
+					>
+				</File>
+				<File
+					RelativePath=".\FirstPersonCamera.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\scene\FirstPersonCamera.h"
 					>
 				</File>
 			</Filter>

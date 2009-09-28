@@ -115,7 +115,10 @@ public:
 	virtual void setTitle (const std::string& title) = 0;
 
 	// Sets the visibility of the mouse cursor.
-	virtual void setCursor ( bool state ) = 0;
+	virtual void setCursorState( bool state ) = 0;
+
+	// Gets the visibility of the mouse cursor.
+	virtual bool getCursorState() const = 0;
 
 	// Gets the window settings.
 	virtual const Settings& getSettings();

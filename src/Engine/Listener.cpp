@@ -34,7 +34,7 @@ Listener::~Listener()
 
 //-----------------------------------//
 
-void Listener::update()
+void Listener::update( double delta )
 {
 
 }

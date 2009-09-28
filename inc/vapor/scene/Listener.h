@@ -28,7 +28,7 @@ public:
 	Listener(audio::Device* device);
 	virtual ~Listener();
 
-	virtual void update( );
+	virtual void update( double delta );
 
 	virtual const std::string save(int indent = 0) { return ""; }
 

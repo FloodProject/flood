@@ -99,8 +99,16 @@ void Framework::registerCallbacks()
 	Keyboard* kbd = getInputManager()->getKeyboard();
 	Mouse* mouse = getInputManager()->getMouse();
 
-	if( kbd ) kbd->onKeyPress.bind( &Framework::onKeyPressed, this );
-	if( mouse ) mouse->onMouseButtonPress.bind( &Framework::onButtonPressed, this );
+	if( kbd )
+	{
+		kbd->onKeyPress.bind( &Framework::onKeyPressed, this );
+	}
+	
+	if( mouse )
+	{
+		mouse->onMouseButtonPress.bind( &Framework::onButtonPressed, this );
+		mouse->onMouseButtonRelease.bind( &Framework::onButtonReleased, this );
+	}
 }
 
 //-----------------------------------//
@@ -126,6 +134,13 @@ void Framework::onKeyPressed( const KeyEvent& )
 //-----------------------------------//
 
 void Framework::onButtonPressed( const MouseButtonEvent& )
+{
+
+}
+
+//-----------------------------------//
+
+void Framework::onButtonReleased( const MouseButtonEvent& )
 {
 
 }

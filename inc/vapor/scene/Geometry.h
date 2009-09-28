@@ -37,7 +37,7 @@ public:
 
 	const std::vector< render::RenderablePtr >& getRenderables() { return renderables; }
 
-	virtual void update();
+	virtual void update( double delta );
 
 	virtual const std::string save(int indent = 0);
 

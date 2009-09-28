@@ -20,8 +20,6 @@ namespace vapor {
 Texture::Texture( resources::ImagePtr img )
 	: uploaded( false ), img( img ), id( 0 )
 {
-	//glEnable( GL_TEXTURE );
-
 	glGenTextures( 1, &id );
 
 	upload();

@@ -45,7 +45,7 @@ public:
   // Gets the bounding volume of the node.
   //AABB getBoundingVolume() const;
 
-  virtual void update() = 0;
+  virtual void update( double delta ) = 0;
 
   virtual const std::string save(int indent = 0) = 0;
 

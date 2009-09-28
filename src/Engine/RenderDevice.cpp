@@ -43,6 +43,8 @@ void Device::init()
 
 	adapter = new Adapter();
 	bufferManager = new BufferManager();
+
+	glEnable(GL_DEPTH_TEST);
 }
 
 //-----------------------------------//
@@ -102,9 +104,18 @@ BufferManager* Device::getBufferManager() const
 
 //-----------------------------------//
 
+TextureManager* Device::getTextureManager() const
+{
+	return const_cast<TextureManager*>(&textureManager);
+}
+
+//-----------------------------------//
+
 void Device::render( RenderQueue& queue ) 
 {
 	activeTarget->makeCurrent();
+
+	glClear( GL_DEPTH_BUFFER_BIT );
 
 	foreach( RenderablePtr rend, queue )
 	{

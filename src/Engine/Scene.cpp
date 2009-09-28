@@ -26,14 +26,14 @@ Scene::~Scene()
 
 //-----------------------------------//
 
-void Scene::update()
+void Scene::update( double delta )
 {
  //   std::stack< Matrix4 > transformStack;
  //   transformStack.push( Matrix4::identity() );
  //       
  //   updateTransformAndBV( this, transformStack );
 
-	Group::update();
+	Group::update( delta );
 }
 
 //-----------------------------------//

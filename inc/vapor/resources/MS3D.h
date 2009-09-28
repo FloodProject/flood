@@ -17,106 +17,15 @@ namespace vapor {
 
 //-----------------------------------//
 
-const int MAX_VERTICES				= 65534;
-const int MAX_TRIANGLES				= 65534;
-const int MAX_GROUPS				= 255;
-const int MAX_MATERIALS				= 128;
-const int MAX_JOINTS				= 128;
-const int MAX_TEXTURE_FILENAME_SIZE = 128;
-
-const int SELECTED		= 1;
-const int HIDDEN		= 2;
-const int SELECTED2		= 4;
-const int DIRTY			= 8;
-const int ISKEY			= 16;
-const int NEWLYCREATED	= 32;
-const int MARKED		= 64;
-
-const int SPHEREMAP		= 0x80;
-const int HASALPHA		= 0x40;
-const int COMBINEALPHA	= 0x20;
-
-enum TransparencyMode
-{
-	TRANSPARENCY_MODE_SIMPLE,			
-	TRANSPARENCY_MODE_DEPTHSORTEDTRIANGLES,
-	TRANSPARENCY_MODE_ALPHAREF
-};
-
-//-----------------------------------//
-
-#pragma pack( push, 1 )
-
-struct ms3d_header_t
-{
-	char    id[10];
-	long    version;
-};
-
-//-----------------------------------//
-
-struct VAPOR_ALIGN_BEGIN(1) ms3d_vertex_t
-{
-	byte	flags;
-	float	vertex[3];
-	char	boneId;
-	byte referenceCount;
-	char boneIds[3];
-	//unsigned char weights[3];
-	//unsigned int extra;
-	//float renderColor[3];
-} VAPOR_ALIGN_END(1);
-
-//-----------------------------------//
-
-struct VAPOR_ALIGN_BEGIN(1) ms3d_triangle_t
-{
-	ushort	flags;
-	ushort	vertexIndices[3];
-	float	vertexNormals[3][3];
-	float	s[3];
-	float	t[3];
-	float	normal[3];
-	byte	smoothingGroup;
-	byte	groupIndex;
-} VAPOR_ALIGN_END(1);
-
-//-----------------------------------//
-
-struct VAPOR_ALIGN_BEGIN(1) ms3d_group_t
-{
-	byte flags;
-	char name[32];
-	std::vector<ushort> triangleIndices;
-	char materialIndex;
-	std::vector<char> comment;
-} VAPOR_ALIGN_END(1);
-
-//-----------------------------------//
-
-struct VAPOR_ALIGN_BEGIN(1) ms3d_material_t
-{
-	char			name[32];
-	float			ambient[4];
-	float			diffuse[4];
-	float			specular[4];
-	float			emissive[4];
-	float			shininess;
-    float			transparency;
-	byte			mode;
-	char			texture[MAX_TEXTURE_FILENAME_SIZE];
-    char			alphamap[MAX_TEXTURE_FILENAME_SIZE];
-	byte			id;
-	std::vector<char>	comment;
-} VAPOR_ALIGN_END(1);
-
-#pragma pack( pop )
+struct ms3d_vertex_t;
+struct ms3d_triangle_t;
+struct ms3d_group_t;
+struct ms3d_material_t;
 
 //-----------------------------------//
 
 class MS3D : public Resource, public scene::Geometry
 {
-
 public:
 
 	MS3D(const std::string &filename);

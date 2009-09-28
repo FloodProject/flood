@@ -14,6 +14,8 @@
 #include "vapor/render/Texture.h"
 #include "vapor/resources/Shader.h"
 
+#include "vapor/render/TextureManager.h"
+
 namespace vapor {
 	namespace render {
 
@@ -44,7 +46,7 @@ public:
 	void setProgram( ProgramPtr program );
 
 	// Gets the textures in the material.
-	const std::map< uint, std::string >& getTextures() const;
+	const std::map< uint, TexturePtr >& getTextures() const;
 
 	// Binds the material object.
 	void bind();
@@ -59,15 +61,16 @@ public:
 protected:
 
 	// Textures
-	std::map< uint, std::string > textures;
-	typedef std::pair< const uint, std::string > texPair;
-	std::map< std::string, TexturePtr > texCache;
+	std::map< uint, TexturePtr > textures;
+	typedef std::pair< const uint, TexturePtr > texPair;
 
 	// Shaders
 	ProgramPtr program;
 	//std::map< resources::ShaderPtr > shaders;
 
 	std::string name;
+
+	TextureManager* tm;
 };
 
 //-----------------------------------//

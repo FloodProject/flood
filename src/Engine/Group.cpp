@@ -73,11 +73,11 @@ NodePtr Group::get( uint i ) const
 
 //-----------------------------------//
 
-void Group::update()
+void Group::update( double delta )
 {
 	foreach( NodePtr node, children )
 	{
-		node->update();
+		node->update( delta );
 	}
 }
 

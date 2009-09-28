@@ -14,6 +14,7 @@
 #include <vapor/Timer.h>
 
 #include <vapor/input/Keyboard.h>
+#include <vapor/input/Mouse.h>
 
 namespace vapor {
 
@@ -57,6 +58,7 @@ protected:
 	// Input callback functions.
 	virtual void onKeyPressed( const input::KeyEvent& );
 	virtual void onButtonPressed( const input::MouseButtonEvent& );
+	virtual void onButtonReleased( const input::MouseButtonEvent& );
 
 protected:
 

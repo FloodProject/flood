@@ -23,6 +23,9 @@ http://msdn.microsoft.com/en-us/library/aa366750%28VS.85%29.aspx
 http://www.gamasutra.com/view/feature/2971/play_by_play_effective_memory_.php
 http://www.fastformat.org/
 
+TextureManager
+ProgramManager
+
 OggLoader is buggy
 Full-screen doesn't seem to work...
 group.add(ls, snd, cam, etc);
@@ -33,7 +36,7 @@ Switch to intrusive_ptr for all ref-counting classes
 Create a ResourceFile class (maybe stream-based - C++ streams? )
 GetLoggers for each class (could be integrated with Profiler? :)
 AllocConsole for debugging porpuses on a key press
-Update all the headers to have separators between different sections
+
 Move from #pragma error instructions to static_assert
 Debug a crash in triton's desktop with an Audigy 4 (XP BSOD in Creative's driver 'ctaud2k.sys')
 Move the rendering to a different thread than the main loop code (smooth resizing)
@@ -57,13 +60,13 @@ FileWatcher for resource change notification integrated with VFS
 
 Renderer:
 
-	Vertex and index buffers
+	Font handling via FreeType 2
 
 Resource management:
 
 	Magic header resource type detection
 	Case-insensitive comparisons in map
-	Font handling via FreeType 2
+	
 
 Math:
 
@@ -85,6 +88,8 @@ vaporEditor:
 DONE:
 -----
 
+Vertex and index buffers
+Update all the headers to have separators between different sections
 Add timing code for FPS calculation and timing events.
 Add Action Map class for storing input settings for the game.
 Use copy-constructors or boost::non_copyable

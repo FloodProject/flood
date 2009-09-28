@@ -50,7 +50,7 @@ public:
 	int count( ) const;
 
 	// updates this group of nodes
-	virtual void update();
+	virtual void update( double delta );
 
 	// serialization
 	virtual const std::string save( int indent = 0 );

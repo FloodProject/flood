@@ -20,7 +20,7 @@ namespace vapor {
 //-----------------------------------//
 
 SFML_Window::SFML_Window(const WindowSettings& settings)
-	: Window( settings ), flags( 0 )
+	: Window( settings ), flags( 0 ), cursorState( true )
 {
 	if( !open() )
 	{
@@ -174,9 +174,17 @@ void SFML_Window::setTitle(const std::string& title)
 
 //-----------------------------------//
 
-void SFML_Window::setCursor(bool state)
+void SFML_Window::setCursorState(bool state)
 {
+	cursorState = state;
 	window.ShowMouseCursor(state);
+}
+
+//-----------------------------------//
+
+bool SFML_Window::getCursorState() const
+{
+	return cursorState;
 }
 
 //-----------------------------------//

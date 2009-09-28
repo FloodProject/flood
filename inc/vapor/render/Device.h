@@ -17,7 +17,7 @@
 #include "vapor/render/Window.h"
 #include "vapor/render/Target.h"
 #include "vapor/render/Adapter.h"
-
+#include "vapor/render/TextureManager.h"
 #include "vapor/render/Renderable.h"
 
 #include "vapor/math/Matrix.h"
@@ -67,6 +67,9 @@ public:
 	// Gets rendering adapter information.
 	Adapter* getAdapter() const;
 
+	// Gets the texture manager.
+	TextureManager* getTextureManager() const;
+
 	// Gets the buffer manager.
 	BufferManager* getBufferManager() const;
 
@@ -104,6 +107,9 @@ protected:
 
 	// Manages all buffers
 	BufferManager* bufferManager;
+
+	// Manages the textures
+	TextureManager textureManager;
 
 	// Current clear color
 	math::Color clearColor;

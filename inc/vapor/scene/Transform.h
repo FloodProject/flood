@@ -47,6 +47,10 @@ public:
   
 	// many more methods implemented here ...
 
+	virtual void yaw( float ang );
+	virtual void pitch( float ang );
+	virtual void roll( float ang );
+
 protected:
 
 	Transformable();

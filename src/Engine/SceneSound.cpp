@@ -32,7 +32,7 @@ Sound::~Sound()
 
 //-----------------------------------//
 
-void Sound::update()
+void Sound::update( double delta )
 {
 
 }

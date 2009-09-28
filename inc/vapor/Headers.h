@@ -26,6 +26,7 @@
 //-------------------------------------------------------------------------//
 
 #include <vapor/scene/Camera.h>
+#include <vapor/scene/FirstPersonCamera.h>
 #include <vapor/scene/Sound.h>
 #include <vapor/scene/Listener.h>
 #include <vapor/scene/Geometry.h>
@@ -41,6 +42,7 @@
 #include <vapor/render/GLSL_Program.h>
 #include <vapor/render/GLSL_Shader.h>
 #include <vapor/render/Quad.h>
+#include "vapor/render/TextureManager.h"
 
 //-------------------------------------------------------------------------//
 // Input-related Includes

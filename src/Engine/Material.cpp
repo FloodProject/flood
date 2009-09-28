@@ -13,19 +13,17 @@
 
 #include <boost/lexical_cast.hpp>
 
+using namespace vapor::resources;
+
 namespace vapor {
 	namespace render {
-
-//-----------------------------------//
-
-using namespace vapor::resources;
 
 //-----------------------------------//
 
 Material::Material( const std::string& name )
 	: name( name )
 {
-
+	tm = TextureManager::getInstancePtr();
 }
 
 //-----------------------------------//
@@ -52,8 +50,9 @@ const std::string& Material::getName() const
 
 //-----------------------------------//
 
-void Material::addTexture( uint unit, const std::string& tex )
+void Material::addTexture( uint unit, const std::string& name )
 {
+	TexturePtr tex = TextureManager::getInstance().getTexture( name );
 	textures[unit] = tex;
 }
 
@@ -73,7 +72,7 @@ void Material::setProgram( ProgramPtr program )
 
 //-----------------------------------//
 
-const std::map< uint, std::string >& Material::getTextures() const
+const std::map< uint, TexturePtr >& Material::getTextures() const
 {
 	return textures;
 }
@@ -84,18 +83,7 @@ void Material::bind()
 {
 	foreach( const texPair& p, textures )
 	{
-		ResourceManager* rm = ResourceManager::getInstance();
-
-		std::map<std::string, TexturePtr>::iterator it;
-
-		if( texCache.find( p.second ) == texCache.end() )
-		{
-			ImagePtr img = rm->loadResource<Image>(p.second);
-			TexturePtr tex( new Texture( img ) );
-			texCache[p.second] = tex;
-		}
-
-		texCache[p.second]->bind(p.first);
+		p.second->bind(p.first);
 	}
 
 	if( !program->isLinked() )
@@ -120,7 +108,7 @@ void Material::unbind()
 
 	foreach( const texPair& p, getTextures() )
 	{
-		texCache[p.second]->unbind();
+		p.second->unbind();
 	}
 }
 

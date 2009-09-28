@@ -42,10 +42,10 @@ public:
 	static ResourceManager* getInstance();
 	//static void setInstance( ResourceManager* rm );
 
-	// Creates a new resource and adds it to the manager.
+	// Creates a new resource and returns a generic resource.
 	ResourcePtr loadResource(const std::string& path);
 
-	// Creates a new resource and returns a more derived pointer.
+	// Creates a new resource and returns the specific resource.
 	template <typename T>
 	tr1::shared_ptr<T> loadResource(const std::string& path)
 	{
@@ -59,7 +59,7 @@ public:
 	// Gets an existing resource by its URI (or null if it does not exist).
 	ResourcePtr getResource(const std::string& path);
 
-	// Gets a specific derived pointer to a resource.
+	// Gets a specific resource given it's name (if it exists).
 	template <typename T>
 	tr1::shared_ptr<T> getResource(const std::string& path)
 	{
@@ -84,6 +84,7 @@ public:
 
 protected:
 
+	// Instance of the resource manager.
 	static ResourceManager* rm;
 
 	// maps a name to a resource

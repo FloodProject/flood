@@ -51,6 +51,7 @@ public:
 
 private:
 
+	// Holds all the input devices.
 	std::vector< input::Device* > devices;
 };
 

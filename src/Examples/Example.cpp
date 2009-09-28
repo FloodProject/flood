@@ -39,8 +39,6 @@ void Example::onSetupResources()
 	
 	ImagePtr img = rm->loadResource< Image >( "media/triton.png" );
 	//snd = rm->loadResource< resources::Sound >( "media/stereo.ogg" );
-
-	ResourcePtr mesh = rm->loadResource( "media/cubo.ms3d" );
 }
 
 //-----------------------------------//
@@ -61,8 +59,8 @@ void Example::onSetupScene()
 	scene->add( grp );
 
 	// Create a new Camera and position it to look at origin
-	cam.reset( new Camera( getRenderDevice() ) );
-	cam->translate( Vector3( 0.0f, 0.0f, -10.0f ) );
+	cam.reset( new FirstPersonCamera( getInputManager(), getRenderDevice() ) );
+	cam->translate( Vector3( 0.0f, -5.0f, -20.0f ) );
 	cam->lookAt( Vector3::Zero );
 	scene->add( cam );
 
@@ -78,7 +76,7 @@ void Example::onSetupScene()
 	GeometryPtr geom( new Geometry( rend ) );
 	//scene->add( geom );
 
-	MS3DPtr mesh = rm->getResource< MS3D >( "media/cubo.ms3d" );
+	MS3DPtr mesh = rm->loadResource< MS3D >( "media/terreno.ms3d" );
 	
 	foreach( const RenderablePtr& rend, mesh->getRenderables() )
 	{
@@ -93,13 +91,13 @@ void Example::onSetupScene()
 void Example::onUpdate( double delta ) 
 {
 	ScenePtr scene = getSceneManager();
-	scene->update();
+	scene->update( delta );
 
 	if( runLoop )
 	{
-		c.r += 0.0000001f / float(delta); c.r = (c.r > 1.0f) ? 0.0f : c.r;
-		c.g += 0.0000003f / float(delta); c.b = (c.b > 1.0f) ? 0.0f : c.b;
-		c.b += 0.0000007f / float(delta); c.g = (c.g > 1.0f) ? 0.0f : c.g;
+		c.r += 0.000001f / float(delta); c.r = (c.r > 1.0f) ? 0.0f : c.r;
+		c.g += 0.000003f / float(delta); c.b = (c.b > 1.0f) ? 0.0f : c.b;
+		c.b += 0.000007f / float(delta); c.g = (c.g > 1.0f) ? 0.0f : c.g;
 	}
 }
 
@@ -124,12 +122,6 @@ void Example::onKeyPressed( const KeyEvent& keyEvent )
 
 	if( keyEvent.keyCode == Keys::Pause )
 		Log::showDebug = !Log::showDebug;
-
-	if( keyEvent.keyCode == Keys::W )
-		cam->translate( Vector3( 0.0f, 0.0f, 0.05f ) );
-
-	if( keyEvent.keyCode == Keys::S )
-		cam->translate( Vector3( 0.0f, 0.0f, -0.05f ) );
 
 	if( keyEvent.keyCode == Keys::F )
 		debug( "fps: %d", int( 1.0f / lastFrameTime ) );

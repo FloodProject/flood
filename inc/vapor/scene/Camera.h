@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "vapor/Platform.h"
+
 #include "vapor/math/Vector3.h"
 #include "vapor/math/Matrix.h"
 #include "vapor/math/Frustum.h"
@@ -93,7 +95,7 @@ public:
 	void cull( render::RenderQueue& queue, NodePtr node ) const;
 
 	// Updates this node.
-	virtual void update();
+	virtual void update( double delta );
 
 	// Serializes this node.
 	virtual const std::string save( int indent = 0 );
@@ -101,7 +103,7 @@ public:
 	// Gets the name of this node.
 	virtual const std::string name() const;
 
-private:
+protected:
 
 	// Gets the aspect ratio of the target.
 	float getAspectRatio() const;
@@ -135,6 +137,8 @@ private:
 	render::Device* renderDevice;
 
 	int width, height;
+
+	//fd::delegate< const render::Settings& > targetResize;
 };
 
 //-----------------------------------//

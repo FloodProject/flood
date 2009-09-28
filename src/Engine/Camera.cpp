@@ -21,17 +21,9 @@ namespace vapor {
 
 Camera::Camera( render::Device* device, Projection::Enum projection )
 	: renderDevice( device ), projection( projection ),
-		target( device->getRenderTarget() ), fov(45.0f), near_( 0.0f ), far_( 100.0f )
+		target( nullptr ), fov(45.0f), near_( 1.0f ), far_( 10000.0f )
 {
-	if( !target ) return;
-
-	target->onTargetResize.bind( &Camera::handleTargetResize, this );
-
-	const Settings& settings = target->getSettings();
-
-	width = settings.getWidth();
-	height = settings.getHeight();
-
+	setRenderTarget( device->getRenderTarget() );
 	setupProjection();
 	setupView();
 }
@@ -77,9 +69,21 @@ void Camera::setFar( float far_ )
 
 //-----------------------------------//
 
-void Camera::setRenderTarget( render::Target* target )
+void Camera::setRenderTarget( render::Target* newTarget )
 {
-	this->target = target;
+	// TODO: remove only this from the delegate
+	if( target ) target->onTargetResize.clear();
+
+	target = newTarget;
+
+	if( target == nullptr ) return;
+
+	target->onTargetResize.bind( &Camera::handleTargetResize, this );
+
+	const Settings& settings = target->getSettings();
+
+	width = settings.getWidth();
+	height = settings.getHeight();
 }
 
 //-----------------------------------//
@@ -94,7 +98,7 @@ void Camera::handleTargetResize( const render::Settings& evt )
 
 //-----------------------------------//
 
-void Camera::update()
+void Camera::update( double delta )
 {
 	setupProjection();
 	setupView();

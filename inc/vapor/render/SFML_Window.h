@@ -45,8 +45,11 @@ public:
 	// Sets the title of the window.
 	void setTitle(const std::string& title);
 
-	// Sets the cursor visibility.
-	void setCursor(bool state);
+	// Sets the visibility of the mouse cursor.
+	void setCursorState(bool state);
+
+	// Gets the visibility of the mouse cursor.
+	virtual bool getCursorState() const;
 
 	// Marks this as the current context.
 	void makeCurrent();
@@ -70,6 +73,7 @@ private:
 	sf::WindowSettings sfmlSettings;
 	sf::VideoMode vMode;
 	unsigned long flags;
+	bool cursorState;
 };
 
 } } // end namespaces

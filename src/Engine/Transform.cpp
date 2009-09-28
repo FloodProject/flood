@@ -53,4 +53,25 @@ void Transformable::rotate( float xang, float yang, float zang )
 
 //-----------------------------------//
 
+void Transformable::yaw( float ang )
+{
+
+}
+
+//-----------------------------------//
+
+void Transformable::pitch( float ang )
+{
+
+}
+
+//-----------------------------------//
+
+void Transformable::roll( float ang )
+{
+
+}
+
+//-----------------------------------//
+
 } } // end namespaces

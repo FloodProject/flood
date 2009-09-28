@@ -45,7 +45,7 @@ void Geometry::addRenderable( RenderablePtr rend )
 
 //-----------------------------------//
 
-void Geometry::update( )
+void Geometry::update( double delta )
 {
 
 }
