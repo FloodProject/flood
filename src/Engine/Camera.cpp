@@ -9,9 +9,10 @@
 #include "vapor/PCH.h"
 
 #include "vapor/scene/Camera.h"
-
+#include "vapor/scene/Group.h"
 #include "vapor/scene/Geometry.h"
 
+using namespace vapor::math;
 using namespace vapor::render;
 
 namespace vapor {
@@ -25,18 +26,19 @@ Camera::Camera( render::Device* device, Projection::Enum projection )
 {
 	setRenderTarget( device->getRenderTarget() );
 	setupProjection();
-	setupView();
+	//setupView();
 }
 
 //-----------------------------------//
 
 void Camera::lookAt( const math::Vector3& pt )
 {
-	glMatrixMode( GL_MODELVIEW );
-
-	gluLookAt( translation.x, translation.y, translation.z,
-				pt.x, pt.y, pt.z, 
-				0.0, -1.0, 0.0 );
+	//gluLookAt( /*absoluteLocalToWorld.tx, 
+	//	absoluteLocalToWorld.ty, 
+	//	absoluteLocalToWorld.tz,*/
+	//	transform.tx, transform.ty, transform.tz,
+	//	pt.x, pt.y, pt.z, 
+	//	0.0, -1.0, 0.0 );
 }
 
 //-----------------------------------//
@@ -44,6 +46,13 @@ void Camera::lookAt( const math::Vector3& pt )
 void Camera::setProjection( Projection::Enum projection )
 {
 	this->projection = projection;
+}
+
+//-----------------------------------//
+
+const math::Matrix4& Camera::getProjectionMatrix()
+{
+	return Matrix4::Identity;
 }
 
 //-----------------------------------//
@@ -71,19 +80,15 @@ void Camera::setFar( float far_ )
 
 void Camera::setRenderTarget( render::Target* newTarget )
 {
+	if( !newTarget ) return;
+	
 	// TODO: remove only this from the delegate
-	if( target ) target->onTargetResize.clear();
+	//target->onTargetResize.clear();
 
 	target = newTarget;
-
-	if( target == nullptr ) return;
-
 	target->onTargetResize.bind( &Camera::handleTargetResize, this );
 
-	const Settings& settings = target->getSettings();
-
-	width = settings.getWidth();
-	height = settings.getHeight();
+	handleTargetResize( target->getSettings() );
 }
 
 //-----------------------------------//
@@ -101,7 +106,7 @@ void Camera::handleTargetResize( const render::Settings& evt )
 void Camera::update( double delta )
 {
 	setupProjection();
-	setupView();
+	//setupView();
 }
 
 //-----------------------------------//
@@ -117,30 +122,16 @@ void Camera::setupProjection()
 	}
 	else
 	{
-		//glOrtho( -1.0, 1.0, -1.0, 1.0, near, far );
+		glOrtho( -1.0, 1.0, -1.0, 1.0, near_, far_ );
 	}
-
-	glMatrixMode( GL_MODELVIEW );
-}
-
-//-----------------------------------//
-
-void Camera::setupView()
-{
-	glMatrixMode( GL_MODELVIEW );
-	
-	glLoadIdentity();
-
-	// TODO: parent matrices
-
-	glTranslatef( translation.x, translation.y, translation.z );
 }
 
 //-----------------------------------//
 
 float Camera::getAspectRatio() const
 {
-	return (float) width / height;
+	if( height == 0) return 0.0f;
+	return static_cast<float>(width) / height ;
 }
 
 //-----------------------------------//
@@ -160,7 +151,7 @@ void Camera::render( NodePtr node ) const
 	cull( renderQueue, node );
 
 	renderDevice->setRenderTarget( target );
-	renderDevice->render( renderQueue );
+	renderDevice->render( renderQueue, getAbsoluteLocalToWorld() );
 }
 
 //-----------------------------------//
@@ -173,7 +164,9 @@ void Camera::render( ) const
 
 	// Search for the root node.
 	while ( parent->getParent() )
-	  parent = parent->getParent();
+	{
+		parent = parent->getParent();
+	}
 	  
 	render( parent );
 }
@@ -183,35 +176,41 @@ void Camera::render( ) const
 void Camera::cull( render::RenderQueue& queue, NodePtr node ) const
 {
 	// Let's forget culling for now. Return all renderable nodes.
-
 	// TODO: Check if dynamic_cast is faster than a string comparison.
 	
 	// Try to see if this is a Group-derived node.
+	GroupPtr group( tr1::dynamic_pointer_cast< Group >( node) );
 	
-	try
+	// Yes it is.
+	if( group )
 	{
-		GroupPtr group( tr1::dynamic_pointer_cast< Group >( node) );
-		
-		// Yes it is.
 		const std::vector< NodePtr >& children = group->getChildren();
 
-		foreach( NodePtr node, children )
+		// Cull the children nodes recursively.
+		foreach( NodePtr child, group->getChildren() )
 		{
-			GeometryPtr geometry( tr1::dynamic_pointer_cast< Geometry >( node) );
-
-			if( !geometry ) continue;
-
-			foreach( RenderablePtr rend, geometry->getRenderables() )
-			{
-				queue.push_back( rend );
-			}
+			cull( queue, child );
 		}
 	}
-	catch (const std::bad_cast& e)
+
+	// If it is a renderable object, then we perform frustum culling
+	// and if the node is visible, then we push it to a list of things
+	// to render that will be later passed to the rendering device.
+	GeometryPtr geometry( tr1::dynamic_pointer_cast< Geometry >( node) );
+
+	if( geometry ) 
 	{
-		// Nope.
-		return;
-	}    
+		// No frustum culling is performed yet.
+		foreach( RenderablePtr rend, geometry->getRenderables() )
+		{
+			RenderState renderState;
+			
+			renderState.renderable = rend;
+			renderState.modelMatrix = geometry->getAbsoluteLocalToWorld();
+
+			queue.push_back( renderState );
+		}
+	}
 }
 
 //-----------------------------------//
@@ -227,14 +226,6 @@ const std::string Camera::name() const
 {
 	return "Camera"; 
 }
-
-//-----------------------------------//
-
-//tr1::shared_ptr< Camera > Group::shared_from_this()
-//{ 
-//	return tr1::static_pointer_cast< Camera >( 
-//		Node::shared_from_this() ); 
-//}
 
 //-----------------------------------//
 

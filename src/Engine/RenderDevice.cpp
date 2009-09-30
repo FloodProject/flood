@@ -43,6 +43,7 @@ void Device::init()
 
 	adapter = new Adapter();
 	bufferManager = new BufferManager();
+	TextureManager::getInstance();
 
 	glEnable(GL_DEPTH_TEST);
 }
@@ -106,20 +107,27 @@ BufferManager* Device::getBufferManager() const
 
 TextureManager* Device::getTextureManager() const
 {
-	return const_cast<TextureManager*>(&textureManager);
+	return const_cast<TextureManager*>( &textureManager );
 }
 
 //-----------------------------------//
 
-void Device::render( RenderQueue& queue ) 
+void Device::render( RenderQueue& queue, math::Matrix4 viewMatrix ) 
 {
 	activeTarget->makeCurrent();
 
 	glClear( GL_DEPTH_BUFFER_BIT );
 
-	foreach( RenderablePtr rend, queue )
+	foreach( RenderState state, queue )
 	{
-		rend->render( *this );
+		ProgramPtr program = state.renderable->getMaterial()->getProgram();
+
+		//program->setUniform( "vp_ProjectionMatrix", state.modelMatrix );
+		program->setUniform( "vp_ModelMatrix", state.modelMatrix );
+		program->setUniform( "vp_ViewMatrix", viewMatrix );
+		program->setUniform( "vp_ModelViewMatrix", viewMatrix * state.modelMatrix );
+
+		state.renderable->render( *this );
 	}
 }
 

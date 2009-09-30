@@ -50,31 +50,17 @@ void Example::onSetupScene()
 
 	GroupPtr grp( new Group() );
 
-	ListenerPtr ls( new Listener( getAudioDevice() ) );
-	ls->makeCurrent();
-	grp->add( ls );
-
-	//sound.reset( new scene::Sound( ls, snd) );
-	//grp->add( sound );
-	scene->add( grp );
-
 	// Create a new Camera and position it to look at origin
 	cam.reset( new FirstPersonCamera( getInputManager(), getRenderDevice() ) );
-	cam->translate( Vector3( 0.0f, -5.0f, -20.0f ) );
+	cam->translate( Vector3( 0.0f, -5.0f, -15.0f ) );
 	cam->lookAt( Vector3::Zero );
-	scene->add( cam );
+	grp->add( cam );
+
+	scene->add( grp );
 
 	ProgramPtr program( new GLSL_Program( 
 			rm->loadResource< GLSL_Shader >( "media/shader.vs" ),
 			rm->loadResource< GLSL_Shader >( "media/shader.fs" ) ) );
-
-	// Assign the renderable a material with a custom texture
-	MaterialPtr mat( new Material( "SimpleMat", program ) );
-	mat->addTexture( 0, "triton.png" );
-
-	RenderablePtr rend ( new Quad( mat ) );
-	GeometryPtr geom( new Geometry( rend ) );
-	//scene->add( geom );
 
 	MS3DPtr mesh = rm->loadResource< MS3D >( "media/terreno.ms3d" );
 	

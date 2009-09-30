@@ -12,6 +12,7 @@
 
 #include "vapor/resources/Shader.h"
 #include "vapor/render/VertexBuffer.h"
+#include "vapor/math/Matrix.h"
 
 namespace vapor {
 	namespace render {
@@ -34,10 +35,13 @@ public:
 	virtual ~Program();
 
 	// Adds a named parameter to the program.
-	virtual void addAttribute( const std::string& slot, VertexAttribute::Enum attr ) = 0;
+	virtual void setAttribute( const std::string& slot, VertexAttribute::Enum attr ) = 0;
 
-	// Adds a named uniform to the program.
-	virtual void addUniform( const std::string& slot, int ) = 0;
+	// Adds a named int uniform to the program.
+	virtual void setUniform( const std::string& slot, int ) = 0;
+
+	// Adds a named matrix uniform to the program.
+	virtual void setUniform( const std::string& slot, const math::Matrix4& ) = 0;
 
 	// Links the program and returns if it was successful.
 	virtual bool link() = 0;

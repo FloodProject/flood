@@ -31,6 +31,9 @@ public:
 		render::Device* device, 
 		Projection::Enum projection = Projection::Perspective );
 
+	// Sets the sensivity of the camera.
+	void setSensivity( float sensivity );
+
 	// Updates this node.
 	virtual void update( double delta );
 
@@ -41,6 +44,9 @@ public:
 	virtual const std::string name() const;
 
 private:
+
+	// Camera sensivity.
+	float sensivity;
 
 	input::InputManager* inputManager;
 

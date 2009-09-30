@@ -9,14 +9,14 @@
 #pragma once
 
 #include "vapor/Platform.h"
-#include "vapor/scene/Node.h"
+#include "vapor/scene/Transform.h"
 
 namespace vapor {
 	namespace scene {
 
 //-----------------------------------//
 
-class VAPOR_API Group : public Node
+class VAPOR_API Group : public Transformable
 {
 public:
 

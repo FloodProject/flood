@@ -117,8 +117,13 @@ typedef tr1::shared_ptr< Renderable > RenderablePtr;
 // This is a queue of objects that are usually returned by performing
 // a culling operation on the camera.
 
-typedef std::list< RenderablePtr > RenderQueue;
-	//std::pair< RenderablePtr, math::Matrix4* > > RenderQueue;
+struct RenderState
+{
+	RenderablePtr renderable;
+	math::Matrix4 modelMatrix;
+};
+
+typedef std::list< RenderState > RenderQueue;
 
 //-----------------------------------//
 

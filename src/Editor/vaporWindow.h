@@ -41,7 +41,10 @@ public:
 	virtual void setTitle(const std::string& title);
 
 	// Sets the cursor visibility.
-	virtual void setCursor(bool state);
+	virtual void setCursorState(bool state);
+
+	// Gets the cursor visibility.
+	virtual bool getCursorState() const;
 
 	// Gets the input manager.
 	virtual vapor::input::InputManager& getInputManager();

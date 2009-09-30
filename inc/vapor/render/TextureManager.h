@@ -13,9 +13,9 @@
 #include "vapor/Singleton.h"
 
 #include "vapor/resources/ResourceManager.h"
+#include "vapor/resources/Image.h"
 
 #include "vapor/render/Texture.h"
-#include "vapor/resources/Image.h"
 #include "vapor/render/GL.h"
 
 namespace vapor {

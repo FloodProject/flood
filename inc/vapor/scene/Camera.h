@@ -60,6 +60,9 @@ public:
 	// Sets the projection type of the camera.
 	void setProjection( Projection::Enum projection );
 
+	// Gets the projection matrix of the camera.
+	const math::Matrix4& getProjectionMatrix();
+
 	// Sets the field-of-view of the camera.
 	void setFOV( float fov );
 
@@ -115,7 +118,7 @@ protected:
 	void setupProjection();
 
 	// Sets up the view matrices for OpenGL.
-	void setupView();
+	//void setupView();
 
 	// Projection mode.
 	Projection::Enum projection;

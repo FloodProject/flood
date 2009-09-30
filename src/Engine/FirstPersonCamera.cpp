@@ -18,9 +18,9 @@ namespace vapor {
 //-----------------------------------//
 
 FirstPersonCamera::FirstPersonCamera( input::InputManager* input,
-	render::Device* device, 
-	Projection::Enum projection )
-	: Camera( device, projection ), inputManager( input ), lastMoveEvent( 0, 0 )
+	render::Device* device, Projection::Enum projection )
+	: Camera( device, projection ), inputManager( input ), 
+	lastMoveEvent( 0, 0 ), sensivity( 1.0f )
 {
 	registerCallbacks();
 }
@@ -48,6 +48,13 @@ const std::string FirstPersonCamera::save(int ind)
 
 //-----------------------------------//
 
+void FirstPersonCamera::setSensivity( float sensivity )
+{
+	this->sensivity = sensivity;
+}
+
+//-----------------------------------//
+
 void FirstPersonCamera::registerCallbacks()
 {
 	Keyboard* kbd = inputManager->getKeyboard();
@@ -70,28 +77,38 @@ void FirstPersonCamera::registerCallbacks()
 
 void FirstPersonCamera::onKeyPressed( const KeyEvent& keyEvent )
 {
-	if( keyEvent.keyCode == Keys::W )
-		translate( math::Vector3( 0.0f, 0.0f, 1.0f ) );
-
-	if( keyEvent.keyCode == Keys::S )
-		translate( math::Vector3( 0.0f, 0.0f, -1.0f ) );
-
-	if( keyEvent.keyCode == Keys::A )
-		translate( math::Vector3( 1.0f, 0.0f, 0.0f ) );
-
-	if( keyEvent.keyCode == Keys::D )
-		translate( math::Vector3( -1.0f, 0.0f, 0.0f ) );
-
-	if( keyEvent.keyCode == Keys::Q )
-		translate( math::Vector3( 0.0f, -1.0f, 0.0f ) );
-
-	if( keyEvent.keyCode == Keys::Z )
-		translate( math::Vector3( 0.0f, 1.0f, 0.0f ) );
-
-	if( keyEvent.keyCode == Keys::LControl )
+	switch( keyEvent.keyCode )
+	{
+	case Keys::W:
+		translate( math::Vector3( 0.0f, 0.0f, 1.0f * sensivity ) );
+		break;
+	case Keys::S:
+		translate( math::Vector3( 0.0f, 0.0f, -1.0f * sensivity ) );
+		break;
+	case Keys::A:
+		translate( math::Vector3( 1.0f * sensivity, 0.0f, 0.0f ) );
+		break;
+	case Keys::D:
+		translate( math::Vector3( -1.0f * sensivity, 0.0f, 0.0f ) );
+		break;
+	case Keys::Q:
+		translate( math::Vector3( 0.0f, -1.0f * sensivity, 0.0f ) );
+		break;
+	case Keys::Z:
+		translate( math::Vector3( 0.0f, 1.0f * sensivity, 0.0f ) );
+		break;
+	case Keys::LControl:
 	{
 		render::Window* window = renderDevice->getWindow();
 		window->setCursorState( !window->getCursorState() );
+		break;
+	}
+	case Keys::N:
+		setSensivity( sensivity - 0.5f );
+		break;
+	case Keys::M:
+		setSensivity( sensivity + 0.5f );
+		break;
 	}
 }
 

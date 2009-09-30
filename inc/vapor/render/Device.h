@@ -76,8 +76,8 @@ public:
 	// Gets the current active render target.
 	render::Target* getRenderTarget() const;
 
-	// Renders a list of renderables
-	void render( RenderQueue& queue );
+	// Renders a list of renderables.
+	void render( RenderQueue& queue, math::Matrix4 viewMatrix );
 
 	// Updates the target render target.
 	void updateTarget( );

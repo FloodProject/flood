@@ -9,7 +9,7 @@
 #pragma once
 
 #include "vapor/Platform.h"
-#include "vapor/scene/Node.h"
+#include "vapor/scene/Transform.h"
 
 #include "vapor/render/Renderable.h"
 
@@ -23,7 +23,7 @@ namespace vapor {
  * Renderable objects and treat it as one big piece of geometry.
  */
 
-class VAPOR_API Geometry : public Node
+class VAPOR_API Geometry : public Transformable
 {
 public:
 

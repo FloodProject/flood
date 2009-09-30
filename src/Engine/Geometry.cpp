@@ -10,10 +10,10 @@
 
 #include "vapor/scene/Geometry.h"
 
+using namespace vapor::render;
+
 namespace vapor {
 	namespace scene {
-
-using namespace vapor::render;
 
 //-----------------------------------//
 

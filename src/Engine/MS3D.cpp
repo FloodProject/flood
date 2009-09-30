@@ -278,7 +278,7 @@ void MS3D::build()
 
 			if( strlen(mt.texture) > 0 )
 			{
-				mat->addTexture( 0, mt.texture );
+				mat->setTexture( 0, mt.texture );
 			}
 
 			rend->setMaterial( mat );

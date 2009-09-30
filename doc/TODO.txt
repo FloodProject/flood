@@ -23,64 +23,82 @@ http://msdn.microsoft.com/en-us/library/aa366750%28VS.85%29.aspx
 http://www.gamasutra.com/view/feature/2971/play_by_play_effective_memory_.php
 http://www.fastformat.org/
 
-TextureManager
-ProgramManager
 
-OggLoader is buggy
-Full-screen doesn't seem to work...
-group.add(ls, snd, cam, etc);
-AUDIO STREAMING? woot?
-Background Resource Loading?
-KeyState 1024? Hmm.
-Switch to intrusive_ptr for all ref-counting classes
-Create a ResourceFile class (maybe stream-based - C++ streams? )
-GetLoggers for each class (could be integrated with Profiler? :)
-AllocConsole for debugging porpuses on a key press
+Audio:
 
-Move from #pragma error instructions to static_assert
-Debug a crash in triton's desktop with an Audigy 4 (XP BSOD in Creative's driver 'ctaud2k.sys')
-Move the rendering to a different thread than the main loop code (smooth resizing)
-The Log class should use the user writing directory for output
-Check the need for defining copy-constructors in all classes
-Window size changed notifications for Camera/Viewport aspect ration calculations
-Make a Localization class, potentially integrating .po files in the resource manager
-The Logger should display the date and time, and not time from launch (or at least show the date it was created)
-Make the Engine class take Window creation settings
-The Window title should be set on Window creation, so it gets set properly on the first appearance
-Make proper type-safe logger that doesn't crash with an invalid format string
-Patch PhysFS to use the proper user dir for App Data on Windows
-Check how the resource manager will handle missing resources
-Make a Timer class and maybe a task manager with callbacks (for e.g. streaming) 
-Check if/how type traits can be useful in engine
-Bitmap font file format (and converter for some freeware generator tool)
-Are std::string references faster/lighter than normal strings? (Yes.)
-Re-check the order of initialization of the engine subsystems (ideally filesystem errors should occur _before_ rendering init)
-Cross-platform Clipboard access?
-FileWatcher for resource change notification integrated with VFS
-
-Renderer:
-
-	Font handling via FreeType 2
-
-Resource management:
-
-	Magic header resource type detection
-	Case-insensitive comparisons in map
+	Handle audio streaming for lightweight playback without consuming lots of memory
+	Debug a crash in triton's desktop with an Audigy 4 (XP BSOD in Creative's driver 'ctaud2k.sys')
 	
+Logger:
 
-Math:
-
-	Add matrix and AABB class
-	
-Platform:
-	
-	Implement abstract timer class (WIP)
+	The Logger should display the date and time of creation (really needed?)
+	Fix format log time to handle minutes, hours and days
+	Use truncation and close file so each log entry gets commited
+	Make proper type-safe logger that doesn't crash with an invalid format string
+	The Log class should use the user writing directory for output
+	GetLoggers for each class (could be integrated with Profiler? :)
+	AllocConsole for debugging porpuses on a key press
 	Log all the engine calls (WIP)
 	bind/functor for logging
 	Hierarchical log system
 	Logging functions with type-safe variable arguments
 	Logging boxes for system/CPU/GPU information
 
+Resource Management:
+
+	Background Resource Loading?
+	Switch all the resource loaders to use the VFS layer
+	Ogg Loader is buggy (make it load from a memory buffer)
+	Make a Localization class, potentially integrating .po files
+	Check how the resource manager will handle missing resources
+	Switch to intrusive_ptr for all reference-counting classes
+	Create a ResourceFile class (maybe stream-based - C++ streams? )
+	Magic header resource type detection
+	Case-insensitive comparisons in map
+	
+Scene:
+
+	Variadiac functions for some methods - i.e., group.add(ls, snd, cam, etc)
+	Fix Camera key logic (need to cache it and test it in update time)
+
+Input:
+	
+	Resize the Keyboard KeyState to the proper size. The current 1024 is hackish.
+
+Window:
+
+	Full-screen doesn't seem to work...
+	Make the Engine class take Window creation settings
+	The Window title should be set on Window creation
+	Move the window polling to a different thread (smooth resizing)
+	Hide the window until requested.
+	
+Platform:
+
+	Move from #pragma error instructions to static_assert
+	Make an abstract Timer class
+	Task manager with callbacks (for e.g. streaming) 
+	Cross-platform Clipboard access
+	
+Rendering:
+
+	ProgramManager for handling programs and shaders.
+	Font handling via FreeType 2
+	Bitmap font file format (and converter for some freeware generator tool)
+
+VFS:
+
+	Patch PhysFS to use the proper user dir for App Data on Windows
+	FileWatcher for resource change notification integrated with VFS
+
+Engine:
+
+	Re-check the order of initialization of the engine subsystems 
+
+Math:
+
+	Add matrix and AABB class
+	
 vaporEditor:
 
 	Add Resources pane with all the resource groups
@@ -88,6 +106,9 @@ vaporEditor:
 DONE:
 -----
 
+Check the need for defining copy-constructors in all classes (boost::noncopyable for now)
+Window size changed notifications for Camera/Viewport aspect ration calculations
+TextureManager
 Vertex and index buffers
 Update all the headers to have separators between different sections
 Add timing code for FPS calculation and timing events.

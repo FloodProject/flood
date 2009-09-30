@@ -34,14 +34,9 @@ Transformable::~Transformable()
 
 void Transformable::translate( const math::Vector3& tr )
 {
-	//if(!translation) 
-	//{
-	//	translation = shared_ptr<Vector3>(new Vector3(tr));
-	//	return;
-	//} 
-
-	//translation += tr;
-	translation += tr;
+	transform.tx += tr.x;
+	transform.ty += tr.y;
+	transform.tz += tr.z;
 }
 
 //-----------------------------------//
@@ -70,6 +65,27 @@ void Transformable::pitch( float ang )
 void Transformable::roll( float ang )
 {
 
+}
+
+//-----------------------------------//
+
+void Transformable::setAbsoluteLocalToWorld( const math::Matrix4& matrix )
+{
+	absoluteLocalToWorld = matrix;
+}
+
+//-----------------------------------//
+
+const math::Matrix4& Transformable::getAbsoluteLocalToWorld() const
+{
+	return absoluteLocalToWorld;
+}
+
+//-----------------------------------//
+
+const math::Matrix4& Transformable::getLocalTransform() const
+{
+	return transform;
 }
 
 //-----------------------------------//

@@ -13,11 +13,13 @@
 namespace vapor {
 	namespace math {
 
-//---------------------------------------------------------------------------
-// class Matrix4
-//
-// Implement a 4x3 transformation matrix.  This class can represent
-// any 3D affine transformation.
+//-----------------------------------//
+
+/**
+ * Matrix4
+ * Implement a 4x3 transformation matrix.  This class can represent
+ * any 3D affine transformation.
+ */
 
 class VAPOR_API Matrix4 {
 public:
@@ -37,9 +39,14 @@ public:
 // Public operations
 
 	// Set to identity
-
 	void	identity();
+
+// Special matrices
+
+	static const Matrix4 Identity;
 };
+
+//-----------------------------------//
 
 // Operator* is used to transforms a point, and also concatonate matrices.
 // The order of multiplications from left to right is the same as
@@ -60,5 +67,7 @@ float	determinant(const Matrix4 &m);
 // Compute the inverse of a matrix
 
 Matrix4 inverse(const Matrix4 &m);
+
+//-----------------------------------//
 
 } } // end namespaces

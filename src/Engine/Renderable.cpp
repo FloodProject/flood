@@ -51,9 +51,9 @@ Renderable::~Renderable()
 
 //-----------------------------------//
 
-void Renderable::render( render::Device& UNUSED(device) )
+void Renderable::render( render::Device& device )
 {
-	if( mat) mat->bind();
+	if( mat ) mat->bind();
 
 	if( !vb->isBuilt() )
 		vb->build();

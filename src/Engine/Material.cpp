@@ -50,7 +50,7 @@ const std::string& Material::getName() const
 
 //-----------------------------------//
 
-void Material::addTexture( uint unit, const std::string& name )
+void Material::setTexture( uint unit, const std::string& name )
 {
 	TexturePtr tex = TextureManager::getInstance().getTexture( name );
 	textures[unit] = tex;
@@ -92,7 +92,7 @@ void Material::bind()
 
 		foreach( const texPair& p, textures )
 		{
-			program->addUniform( "tex" + 
+			program->setUniform( "tex" + 
 				boost::lexical_cast< std::string >( p.first ), p.first );
 		}
 	}

@@ -47,13 +47,13 @@ GLSL_Program::~GLSL_Program()
 	{
 		glDetachShader( id, shader->id() );
 
-		#ifdef VAPOR_DEBUG
-			if( glGetError() != GL_NO_ERROR )
-			{
-				warn( "glsl", "Could not detach shader object '%d'", shader->id() );
-				return;
-			}
-		#endif
+#ifdef VAPOR_DEBUG
+		if( glGetError() != GL_NO_ERROR )
+		{
+			warn( "glsl", "Could not detach shader object '%d'", shader->id() );
+			return;
+		}
+#endif
 	}
 
 	glDeleteProgram( id );
@@ -69,7 +69,7 @@ GLSL_Program::~GLSL_Program()
 
 //-----------------------------------//
 
-void GLSL_Program::addAttribute( const std::string& name, VertexAttribute::Enum attr )
+void GLSL_Program::setAttribute( const std::string& name, VertexAttribute::Enum attr )
 {
 	//if( !isLinked() ) return;
 
@@ -89,7 +89,7 @@ void GLSL_Program::addAttribute( const std::string& name, VertexAttribute::Enum 
 
 //-----------------------------------//
 
-void GLSL_Program::addUniform( const std::string& slot, int data )
+void GLSL_Program::setUniform( const std::string& slot, int data )
 {
 	if( !isLinked() ) return;
 
@@ -104,6 +104,36 @@ void GLSL_Program::addUniform( const std::string& slot, int data )
 	}
 
 	glUniform1i( loc, data );
+
+	unbind();
+}
+
+//-----------------------------------//
+
+void GLSL_Program::setUniform( const std::string& slot, const math::Matrix4& matrix )
+{
+	if( !isLinked() ) return;
+
+	bind();
+
+	int loc = glGetUniformLocation( id, slot.c_str() );
+
+	if( loc == -1)
+	{
+		warn( "glsl", "Could not locate uniform location in program object '%d'", id );
+		return;
+	}
+
+	float tmp[16];
+	tmp[0] = matrix.m11; tmp[1] = matrix.m12; tmp[2] = matrix.m13; tmp[3] = 0;
+	tmp[4] = matrix.m21; tmp[5] = matrix.m22; tmp[6] = matrix.m23; tmp[7] = 0;
+	tmp[8] = matrix.m31; tmp[9] = matrix.m32; tmp[10] = matrix.m33; tmp[11] = 0;
+	tmp[12] = matrix.tx; tmp[13] = matrix.ty; tmp[14] = matrix.tz; tmp[15] = 1;
+
+	glUniformMatrix4fv( loc, 1, false, tmp );
+	
+	//float test[16];
+	//glGetUniformfv( id, loc, test );
 
 	unbind();
 }
@@ -257,9 +287,9 @@ void GLSL_Program::getLogText()
 
 void GLSL_Program::bindDefaultAttributes()
 {
-	addAttribute( "vp_Vertex", VertexAttribute::Vertex );
-	addAttribute( "vp_Color", VertexAttribute::Color );
-	addAttribute( "vp_MultiTexCoord0", VertexAttribute::MultiTexCoord0 );
+	setAttribute( "vp_Vertex", VertexAttribute::Vertex );
+	setAttribute( "vp_Color", VertexAttribute::Color );
+	setAttribute( "vp_MultiTexCoord0", VertexAttribute::MultiTexCoord0 );
 }
 
 //-----------------------------------//

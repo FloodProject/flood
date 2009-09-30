@@ -9,6 +9,7 @@
 #include "vapor/PCH.h"
 
 #include "vapor/scene/Scene.h"
+#include "vapor/scene/Transform.h"
 
 #include <sstream>
 
@@ -28,10 +29,10 @@ Scene::~Scene()
 
 void Scene::update( double delta )
 {
- //   std::stack< Matrix4 > transformStack;
- //   transformStack.push( Matrix4::identity() );
- //       
- //   updateTransformAndBV( this, transformStack );
+	std::stack< Matrix4 > transformStack;
+	transformStack.push( Matrix4::Identity );
+	    
+	updateTransformAndBV( shared_from_this(), transformStack );
 
 	Group::update( delta );
 }
@@ -40,51 +41,49 @@ void Scene::update( double delta )
 
 void Scene::updateTransformAndBV( NodePtr node, std::stack< Matrix4 >& transformStack )
 {
-    //// on the way down part
-    //shared_ptr< Transformable > transformable(
-    //  dynamic_cast< shared_ptr< Transformable > >( node) );
-    //bool needsPop( false );
-    //
-    //// concatenate this matrix on the stack with the top most
-    //// there will be at least one matrix in stack, top most is identity
-    //if ( !transformable.isNull() )
-    //{
-    //    transformStack.push( transformable.getMatrix() * transformStack.top() );
-    //    transformable.setAbsoluteLocalToWorld( transformStack.top() );
-    //    needsPop = true;
-    //}
-    //else
-    //{
-    //    shared_ptr< Transform > transform(
-    //      dynamic_cast< shared_ptr< Transform > >( node) );
-    //
-    //    // concatenate this matrix on the stack with the top most
-    //    // there will be at least one matrix in stack, top most is identity
-    //    if ( !transform.isNull() )
-    //    {
-    //        transformStack.push( transform.getMatrix() * transformStack.top() );
-    //        needsPop = true;
-    //    }
-    //}
-    //
-    //for ( int i( 0 ); i < node->count(); ++i )
-    //{
-    //    updateTransformAndBV( node->get( i ) );
-    //}
-   
-    //// on the way up part
-    //if ( node->requiresBoundingVolumeUpdate() )
-    //{
-    //    node->updateBoundingVolume( transformStack.top() );
-    //}
- 
-    //node->update();
-    //    
-    //// remove the matrix from the stack
-    //if ( needsPop )
-    //{
-    //    transformStack.pop();
-    //}
+	// TODO: benckmark and profile this, smells slow
+
+    // on the way down part
+	TransformablePtr transformable( 
+		tr1::dynamic_pointer_cast< Transformable >( node ) );
+
+	// this is used to know if we need to pop a matrix from the
+	// stack on the way up part, because some nodes will not have
+	// pushed matrices on the stack on the way down part.
+	bool needsPop = false;
+  
+	// concatenate this matrix on the stack with the top most
+	// there will be at least one matrix in stack, top most is identity
+	if ( transformable )
+	{
+		transformStack.push( transformable->getLocalTransform() * transformStack.top() );
+		transformable->setAbsoluteLocalToWorld( transformStack.top() );
+		needsPop = true;
+	}
+
+	GroupPtr group( tr1::dynamic_pointer_cast< Group >( node ) );
+
+	if( group )
+	{
+		foreach( NodePtr gnode, group->getChildren() )
+		{
+			updateTransformAndBV( gnode, transformStack /*node->get( i )*/ );
+		}
+	}
+
+	// on the way up part
+	//if ( node->requiresBoundingVolumeUpdate() )
+	//{
+	//    node->updateBoundingVolume( transformStack.top() );
+	//}
+
+	//node->update();
+	    
+	// remove the matrix from the stack
+	if ( needsPop )
+	{
+		transformStack.pop();
+	}
 }
 
 //-----------------------------------//

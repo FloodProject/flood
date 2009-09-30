@@ -30,10 +30,13 @@ public:
 	virtual ~GLSL_Program();
 
 	// Adds a parameter to the shader.
-	virtual void addAttribute( const std::string& slot, VertexAttribute::Enum attr );
+	virtual void setAttribute( const std::string& slot, VertexAttribute::Enum attr );
 
 	// Adds a uniform to the shader.
-	virtual void addUniform( const std::string& slot, int data );
+	virtual void setUniform( const std::string& slot, int data );
+
+	// Adds a named matrix uniform to the program.
+	virtual void setUniform( const std::string& slot, const math::Matrix4& );
 
 	// Links the program.
 	virtual bool link();

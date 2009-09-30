@@ -37,7 +37,7 @@ public:
 	const std::string& getName() const;
 
 	// Adds a texture to the material.
-	void addTexture( uint unit, const std::string& tex );
+	void setTexture( uint unit, const std::string& tex );
 
 	// Gets the associated program.
 	ProgramPtr getProgram() const;

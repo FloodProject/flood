@@ -63,17 +63,22 @@
 namespace vapor {
 	namespace math {
 
+//-----------------------------------//
+
 //---------------------------------------------------------------------------
 // Matrix4::identity
 //
 // Set the matrix to identity
 
-void Matrix4::identity() {
+void Matrix4::identity() 
+{
 	m11 = 1.0f; m12 = 0.0f; m13 = 0.0f;
 	m21 = 0.0f; m22 = 1.0f; m23 = 0.0f;
 	m31 = 0.0f; m32 = 0.0f; m33 = 1.0f;
-	tx  = 0.0f; ty  = 0.0f; tz  = 1.0f;
+	tx  = 0.0f; ty  = 0.0f; tz  = 0.0f;
 }
+
+//-----------------------------------//
 
 //---------------------------------------------------------------------------
 // Vector * Matrix4
@@ -86,7 +91,8 @@ void Matrix4::identity() {
 // See 7.1.7
 
 
-Vector3	operator*(const Vector3 &p, const Matrix4 &m) {
+Vector3	operator*(const Vector3 &p, const Matrix4 &m)
+{
 
 	// Grind through the linear algebra.
 
@@ -102,6 +108,8 @@ Vector3 &operator*=(Vector3 &p, const Matrix4 &m) {
 	return p;
 }
 
+//-----------------------------------//
+
 //---------------------------------------------------------------------------
 // Matrix4 * Matrix4
 //
@@ -112,7 +120,8 @@ Vector3 &operator*=(Vector3 &p, const Matrix4 &m) {
 //
 // See 7.1.6
 
-Matrix4 operator*(const Matrix4 &a, const Matrix4 &b) {
+Matrix4 operator*(const Matrix4 &a, const Matrix4 &b) 
+{
 
 	Matrix4 r;
 
@@ -143,10 +152,15 @@ Matrix4 operator*(const Matrix4 &a, const Matrix4 &b) {
 	return r;
 }
 
-Matrix4 &operator*=(Matrix4 &a, const Matrix4 &b) {
+//-----------------------------------//
+
+Matrix4 &operator*=(Matrix4 &a, const Matrix4 &b) 
+{
 	a = a * b;
 	return a;
 }
+
+//-----------------------------------//
 
 //---------------------------------------------------------------------------
 // determinant
@@ -161,6 +175,8 @@ float	determinant(const Matrix4 &m) {
 		+ m.m12 * (m.m23*m.m31 - m.m21*m.m33)
 		+ m.m13 * (m.m21*m.m32 - m.m22*m.m31);
 }
+
+//-----------------------------------//
 
 //---------------------------------------------------------------------------
 // inverse
@@ -215,5 +231,11 @@ Matrix4 inverse(const Matrix4 &m) {
 
 	return r;
 }
+
+//-----------------------------------//
+
+const Matrix4 Matrix4::Identity;
+
+//-----------------------------------//
 
 } } // end namespaces
