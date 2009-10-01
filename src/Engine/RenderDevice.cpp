@@ -192,6 +192,8 @@ render::Target* Device::getRenderTarget() const
 
 Window& Device::createWindow( const WindowSettings& settings )
 {
+	const_cast<WindowSettings&>(settings).setAntiAliasing( 4 );
+
 	Window& window = Window::createWindow( settings );
 
 	this->window = &window;

@@ -20,25 +20,33 @@ namespace vapor {
 
 //-----------------------------------//
 
-class VAPOR_API Transformable : public Node/*, public TransformInterface*/
+class VAPOR_API Transformable : public Node
 {
 public:
 
-	virtual void translate( const math::Vector3& tr );
-	virtual void rotate( float xang, float yang, float zang );
+	// Translate this node by the given parameters.
+	void translate( const math::Vector3& tr );
+
+	// Scale this node by the given parameters.
+	void scale( float x, float y, float z );
+	void scale( float uniform );
+
+	// Rotates this node by the given parameters.
+	void rotate( float xang, float yang, float zang );
   
 	// many more methods implemented here ...
+	void rotateX( float ang );
+	void rotateY( float ang );
+	void rotateZ( float ang );
 
-	virtual void yaw( float ang );
-	virtual void pitch( float ang );
-	virtual void roll( float ang );
+	// Resets the transformations previously applied to this node.
+	void reset();
 
-  // todo: identity()
+	// Gets/sets the abolute
+	const math::Matrix4& getAbsoluteTransform() const;
+	void setAbsoluteTransform( const math::Matrix4& matrix );
 
-	void setAbsoluteLocalToWorld( const math::Matrix4& matrix );
-	const math::Matrix4& getAbsoluteLocalToWorld() const;
-
-
+	// Gets the local transformation matrix.
 	const math::Matrix4& getLocalTransform() const;
 
 protected:

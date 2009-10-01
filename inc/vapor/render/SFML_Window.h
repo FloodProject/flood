@@ -51,8 +51,11 @@ public:
 	// Gets the visibility of the mouse cursor.
 	virtual bool getCursorState() const;
 
+	// Sets the cursor position on screen.
+	virtual void setCursorPosition( int x, int y );
+
 	// Marks this as the current context.
-	void makeCurrent();
+	virtual void makeCurrent();
 
 	// Gets the input manager.
 	input::SFML_InputManager& getInputManager() { return inputManager; }
@@ -62,17 +65,23 @@ private:
 	// Opens a new window.
 	bool open();
 
+	// Processes the different kinds of events.
 	void processResize(sf::Event event);
 	void processInput(sf::Event event);
 
+	// Handles the creation of the window.
 	void createWindow();
 
+	// Holds the SFML input manager.
 	input::SFML_InputManager inputManager;
-	
+
+	// SFML structures
 	sf::Window window;
 	sf::WindowSettings sfmlSettings;
 	sf::VideoMode vMode;
 	unsigned long flags;
+	
+	// Holds the current state of the cursor.
 	bool cursorState;
 };
 

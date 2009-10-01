@@ -83,7 +83,7 @@ void Material::bind()
 {
 	foreach( const texPair& p, textures )
 	{
-		p.second->bind(p.first);
+		p.second->bind( p.first );
 	}
 
 	if( !program->isLinked() )
@@ -108,7 +108,7 @@ void Material::unbind()
 
 	foreach( const texPair& p, getTextures() )
 	{
-		p.second->unbind();
+		p.second->unbind( p.first );
 	}
 }
 

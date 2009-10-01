@@ -120,7 +120,7 @@ void GLSL_Program::setUniform( const std::string& slot, const math::Matrix4& mat
 
 	if( loc == -1)
 	{
-		warn( "glsl", "Could not locate uniform location in program object '%d'", id );
+		//warn( "glsl", "Could not locate uniform location in program object '%d'", id );
 		return;
 	}
 

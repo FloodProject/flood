@@ -78,15 +78,15 @@ bool Texture::upload()
 
 void Texture::bind( int unit )
 {
-
 	glActiveTexture( GL_TEXTURE0+unit );
 	glBindTexture( GL_TEXTURE_2D, id );
 }
 
 //-----------------------------------//
 
-void Texture::unbind()
+void Texture::unbind( int unit )
 {
+	glActiveTexture( GL_TEXTURE0+unit );
 	glBindTexture( GL_TEXTURE_2D, 0 );
 
 	//glDisable( GL_TEXTURE_2D );

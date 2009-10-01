@@ -22,23 +22,20 @@ namespace vapor {
 
 Camera::Camera( render::Device* device, Projection::Enum projection )
 	: renderDevice( device ), projection( projection ),
-		target( nullptr ), fov(45.0f), near_( 1.0f ), far_( 10000.0f )
+		target( nullptr ), fov(45.0f), near_( 1.0f ), far_( 10000.0f ),
+		lookAtVector( Vector3( 0.0f, 0.0f, 0.0f ) ), 
+		upVector( Vector3( 0.0f, 1.0f, 0.0f ) )
 {
 	setRenderTarget( device->getRenderTarget() );
 	setupProjection();
-	//setupView();
+	setupView();
 }
 
 //-----------------------------------//
 
 void Camera::lookAt( const math::Vector3& pt )
 {
-	//gluLookAt( /*absoluteLocalToWorld.tx, 
-	//	absoluteLocalToWorld.ty, 
-	//	absoluteLocalToWorld.tz,*/
-	//	transform.tx, transform.ty, transform.tz,
-	//	pt.x, pt.y, pt.z, 
-	//	0.0, -1.0, 0.0 );
+	lookAtVector = pt;
 }
 
 //-----------------------------------//
@@ -54,6 +51,14 @@ const math::Matrix4& Camera::getProjectionMatrix()
 {
 	return Matrix4::Identity;
 }
+
+//-----------------------------------//
+
+const math::Matrix4& Camera::getViewMatrix()
+{
+	return viewMatrix*transform;
+}
+
 
 //-----------------------------------//
 
@@ -106,7 +111,24 @@ void Camera::handleTargetResize( const render::Settings& evt )
 void Camera::update( double delta )
 {
 	setupProjection();
-	//setupView();
+	setupView();
+}
+
+//-----------------------------------//
+
+void Camera::setupView()
+{
+	glMatrixMode( GL_PROJECTION );
+	glLoadIdentity();
+
+	if( projection == Projection::Perspective )
+	{
+		gluPerspective( fov, getAspectRatio(), near_, far_ );
+	}
+	else
+	{
+		glOrtho( -1.0, 1.0, -1.0, 1.0, near_, far_ );
+	}
 }
 
 //-----------------------------------//
@@ -151,7 +173,7 @@ void Camera::render( NodePtr node ) const
 	cull( renderQueue, node );
 
 	renderDevice->setRenderTarget( target );
-	renderDevice->render( renderQueue, getAbsoluteLocalToWorld() );
+	renderDevice->render( renderQueue, getAbsoluteTransform() );
 }
 
 //-----------------------------------//
@@ -206,7 +228,7 @@ void Camera::cull( render::RenderQueue& queue, NodePtr node ) const
 			RenderState renderState;
 			
 			renderState.renderable = rend;
-			renderState.modelMatrix = geometry->getAbsoluteLocalToWorld();
+			renderState.modelMatrix = geometry->getAbsoluteTransform();
 
 			queue.push_back( renderState );
 		}

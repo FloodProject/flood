@@ -38,7 +38,7 @@ public:
 	void bind( int unit = 0 );
 
 	// Unbinds the texture object.
-	void unbind();
+	void unbind( int unit = 0 );
 
 private:
 

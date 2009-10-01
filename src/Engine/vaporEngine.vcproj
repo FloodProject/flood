@@ -120,8 +120,8 @@
 				EnableFunctionLevelLinking="true"
 				DisableLanguageExtensions="false"
 				RuntimeTypeInfo="true"
-				UsePrecompiledHeader="0"
-				PrecompiledHeaderThrough="PCH.h"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="vapor/PCH.h"
 				PrecompiledHeaderFile="$(IntDir)\$(TargetName).pch"
 				WarningLevel="4"
 				WarnAsError="false"
@@ -659,7 +659,7 @@
 					>
 					<Tool
 						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
+						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
 			</File>
@@ -1020,6 +1020,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\inc\vapor\Engine.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Framework\Framework.cpp"
 				>
 			</File>
@@ -1037,10 +1041,6 @@
 			>
 			<File
 				RelativePath=".\Engine.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\Engine.h"
 				>
 			</File>
 		</Filter>

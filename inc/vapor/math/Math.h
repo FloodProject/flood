@@ -14,5 +14,11 @@
 namespace vapor {
 	namespace math {
 
+//-----------------------------------//
+
+using ::cosf;
+using ::sinf;
+
+//-----------------------------------//
 
 } } // end namespaces

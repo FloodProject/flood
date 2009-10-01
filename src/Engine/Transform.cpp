@@ -10,6 +10,8 @@
 
 #include "vapor/scene/Transform.h"
 
+#include "vapor/math/Math.h"
+
 using namespace vapor::math;
 
 namespace vapor {
@@ -41,42 +43,98 @@ void Transformable::translate( const math::Vector3& tr )
 
 //-----------------------------------//
 
+void Transformable::scale( float x, float y, float z )
+{
+	transform.m11 *= x;
+	transform.m22 *= y;
+	transform.m33 *= z;
+}
+
+//-----------------------------------//
+
+void Transformable::scale( float uniform )
+{
+	scale( uniform, uniform, uniform );
+}
+
+//-----------------------------------//
+
 void Transformable::rotate( float xang, float yang, float zang )
 {
+	debug( "%f %f", xang, yang );
 
+	rotateX( xang );
+	rotateY( yang );
 }
 
 //-----------------------------------//
 
-void Transformable::yaw( float ang )
+void Transformable::rotateX( float ang )
 {
+	Matrix4 newRotation;
 
+	newRotation.m11 = 1;
+
+	newRotation.m22 = math::cosf( ang );
+	newRotation.m23 = math::sinf( ang );
+
+	newRotation.m32 = -math::sinf( ang );
+	newRotation.m33 = math::cosf( ang );
+
+	transform = transform * newRotation;
 }
 
 //-----------------------------------//
 
-void Transformable::pitch( float ang )
+void Transformable::rotateY( float ang )
 {
+	Matrix4 newRotation;
 
+	newRotation.m11 = math::cosf( ang );
+	newRotation.m13 = -math::sinf( ang );
+
+	newRotation.m22 = 1;
+
+	newRotation.m31 = math::sinf( ang );
+	newRotation.m33 = math::cosf( ang );
+
+	transform = transform * newRotation;
 }
 
 //-----------------------------------//
 
-void Transformable::roll( float ang )
+void Transformable::rotateZ( float ang )
 {
+	Matrix4 newRotation;
 
+	newRotation.m11 = math::cosf( ang );
+	newRotation.m12 = math::sinf( ang );
+
+	newRotation.m21 = -math::sinf( ang );
+	newRotation.m22 = math::cosf( ang );
+
+	newRotation.m33 = 1;
+
+	transform = transform * newRotation;
 }
 
 //-----------------------------------//
 
-void Transformable::setAbsoluteLocalToWorld( const math::Matrix4& matrix )
+void Transformable::reset( )
+{
+	transform.identity();
+}
+
+//-----------------------------------//
+
+void Transformable::setAbsoluteTransform( const math::Matrix4& matrix )
 {
 	absoluteLocalToWorld = matrix;
 }
 
 //-----------------------------------//
 
-const math::Matrix4& Transformable::getAbsoluteLocalToWorld() const
+const math::Matrix4& Transformable::getAbsoluteTransform() const
 {
 	return absoluteLocalToWorld;
 }

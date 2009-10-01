@@ -57,7 +57,7 @@ void Scene::updateTransformAndBV( NodePtr node, std::stack< Matrix4 >& transform
 	if ( transformable )
 	{
 		transformStack.push( transformable->getLocalTransform() * transformStack.top() );
-		transformable->setAbsoluteLocalToWorld( transformStack.top() );
+		transformable->setAbsoluteTransform( transformStack.top() );
 		needsPop = true;
 	}
 

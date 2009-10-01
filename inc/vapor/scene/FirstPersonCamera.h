@@ -10,9 +10,11 @@
 
 #include "vapor/scene/Camera.h"
 
-#include <vapor/input/InputManager.h>
-#include <vapor/input/Keyboard.h>
-#include <vapor/input/Mouse.h>
+#include "vapor/input/InputManager.h"
+#include "vapor/input/Keyboard.h"
+#include "vapor/input/Mouse.h"
+
+#include "vapor/math/Vector3.h"
 
 namespace vapor {
 	namespace scene {
@@ -47,19 +49,25 @@ private:
 
 	// Camera sensivity.
 	float sensivity;
+	float cameraSensivity;
 
+	// Last mouse position.
+	math::Vector3 lastPosition;
+
+	// Input manager.
 	input::InputManager* inputManager;
 
 	// Register input devices callbacks.
 	void registerCallbacks();
+
+	// Centers the cursor position on the screen.
+	void centerCursor();
 
 	// Input callback functions.
 	void onKeyPressed( const input::KeyEvent& keyEvent );
 	void onMouseMove( const input::MouseMoveEvent& moveEvent );
 	void onButtonPressed( const input::MouseButtonEvent& buttonEvent );
 	void onButtonReleased( const input::MouseButtonEvent& buttonEvent );
-
-	input::MouseMoveEvent lastMoveEvent;
 };
 
 //-----------------------------------//

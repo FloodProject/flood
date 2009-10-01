@@ -43,7 +43,7 @@ bool SFML_Window::open()
 {
 	sfmlSettings.DepthBits = settings.getDepthBits(); 
 	sfmlSettings.StencilBits = settings.getStencilBits();
-	sfmlSettings.AntialiasingLevel = settings.getAALevel();
+	sfmlSettings.AntialiasingLevel = settings.getAntiAliasing();
 	
 	if( settings.isFullscreen() )
 	{
@@ -70,7 +70,7 @@ bool SFML_Window::open()
 	sfmlSettings = window.GetSettings();
 	settings.setDepthBits( sfmlSettings.DepthBits );
 	settings.setStencilBits( sfmlSettings.StencilBits );
-	settings.setAALevel( sfmlSettings.AntialiasingLevel );
+	settings.setAntiAliasing( sfmlSettings.AntialiasingLevel );
 	
 	return true;	
 }
@@ -144,7 +144,7 @@ bool SFML_Window::pumpEvents()
 			
 			case sf::Event::MouseButtonPressed:
 			case sf::Event::MouseButtonReleased:
-			case sf::Event::MouseMoved:
+
 			case sf::Event::MouseEntered:
 			case sf::Event::MouseLeft:
 			case sf::Event::MouseWheelMoved:
@@ -152,6 +152,15 @@ bool SFML_Window::pumpEvents()
 			case sf::Event::JoyButtonPressed:
 			case sf::Event::JoyButtonReleased:
 			case sf::Event::JoyMoved:
+			{
+				getInputManager().processSFMLEvent( event );
+				break;
+			}
+
+			// If the mouse cursor is not visible, set the mouse cursor
+			// position back to the center, if not the mouse gets off
+			// the screen and won't be usable for i.e., camera rotations.
+			case sf::Event::MouseMoved:
 			{
 				getInputManager().processSFMLEvent( event );
 				break;
@@ -185,6 +194,13 @@ void SFML_Window::setCursorState(bool state)
 bool SFML_Window::getCursorState() const
 {
 	return cursorState;
+}
+
+//-----------------------------------//
+
+void SFML_Window::setCursorPosition( int x, int y )
+{
+	window.SetCursorPosition( x, y );
 }
 
 //-----------------------------------//

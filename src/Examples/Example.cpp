@@ -52,7 +52,7 @@ void Example::onSetupScene()
 
 	// Create a new Camera and position it to look at origin
 	cam.reset( new FirstPersonCamera( getInputManager(), getRenderDevice() ) );
-	cam->translate( Vector3( 0.0f, -5.0f, -15.0f ) );
+	cam->translate( Vector3( 0.0f, -5.0f, -100.0f ) );
 	cam->lookAt( Vector3::Zero );
 	grp->add( cam );
 
@@ -62,8 +62,8 @@ void Example::onSetupScene()
 			rm->loadResource< GLSL_Shader >( "media/shader.vs" ),
 			rm->loadResource< GLSL_Shader >( "media/shader.fs" ) ) );
 
-	MS3DPtr mesh = rm->loadResource< MS3D >( "media/terreno.ms3d" );
-	
+	mesh = rm->loadResource< MS3D >( "media/terreno.ms3d" );
+
 	foreach( const RenderablePtr& rend, mesh->getRenderables() )
 	{
 		rend->getMaterial()->setProgram( program );

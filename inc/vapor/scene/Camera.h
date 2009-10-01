@@ -63,6 +63,9 @@ public:
 	// Gets the projection matrix of the camera.
 	const math::Matrix4& getProjectionMatrix();
 
+	// Gets the view matrix of the camera.
+	const math::Matrix4& getViewMatrix();
+
 	// Sets the field-of-view of the camera.
 	void setFOV( float fov );
 
@@ -118,7 +121,16 @@ protected:
 	void setupProjection();
 
 	// Sets up the view matrices for OpenGL.
-	//void setupView();
+	void setupView();
+
+	// View matrix.
+	math::Matrix4 viewMatrix;
+
+	// Up vector.
+	math::Vector3 upVector;
+
+	// Look-at vector.
+	math::Vector3 lookAtVector;
 
 	// Projection mode.
 	Projection::Enum projection;
@@ -129,9 +141,6 @@ protected:
 	// near and far are reserved keywords on MSVC.. so ghey! 
 	float near_;
 	float far_;
-	
-	// Why do we need this?
-	math::Frustum* frustum;
 
 	// Render target that we are rendering into.
 	render::Target* target;
@@ -139,6 +148,7 @@ protected:
 	// Used to pass a RenderQueue for rendering.
 	render::Device* renderDevice;
 
+	// Dimensions of render target.
 	int width, height;
 
 	//fd::delegate< const render::Settings& > targetResize;

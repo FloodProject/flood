@@ -38,6 +38,12 @@ TexturePtr TextureManager::getTexture( const std::string& name )
 	if( !img )
 	{
 		// use a fallback default texture
+		// TODO: bundle fallback texture in engine
+		
+		warn( "render::textures", 
+			"Could not locate '%s': reverting to fallback texture", name.c_str() );
+
+		img = ResourceManager::getInstance()->loadResource<Image>( "media/fallback.png" );
 	}
 
 	return getTexture(img);

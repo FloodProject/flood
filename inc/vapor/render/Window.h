@@ -57,7 +57,7 @@ public:
 	const int getStencilBits() const { return stencilbits; }
 	
 	// Gets the antialiasing level of the window
-	const int getAALevel() const { return aalevel; }
+	const int getAntiAliasing() const { return aalevel; }
 
 	// Sets the window title
 	void setTitle(const std::string& str) { title = str; }
@@ -69,7 +69,7 @@ public:
 	void setStencilBits(int sb) { stencilbits = sb; }
 	
 	// Sets the antialiasing level of the window
-	void setAALevel(int aal) { aalevel = aal; }
+	void setAntiAliasing(int aal) { aalevel = aal; }
 
 protected:
 
@@ -119,6 +119,9 @@ public:
 
 	// Gets the visibility of the mouse cursor.
 	virtual bool getCursorState() const = 0;
+
+	// Sets the cursor position on screen.
+	virtual void setCursorPosition( int x, int y ) = 0;
 
 	// Gets the window settings.
 	virtual const Settings& getSettings();
