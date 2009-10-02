@@ -61,10 +61,10 @@ public:
 	void setProjection( Projection::Enum projection );
 
 	// Gets the projection matrix of the camera.
-	const math::Matrix4& getProjectionMatrix();
+	const math::Matrix4& getProjectionMatrix() const;
 
 	// Gets the view matrix of the camera.
-	const math::Matrix4& getViewMatrix();
+	const math::Matrix4& getViewMatrix() const;
 
 	// Sets the field-of-view of the camera.
 	void setFOV( float fov );

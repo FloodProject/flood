@@ -239,6 +239,18 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Angle"
+				>
+				<File
+					RelativePath=".\EulerAngles.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\math\EulerAngles.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Render"

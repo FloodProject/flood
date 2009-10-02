@@ -14,6 +14,7 @@
 
 #include "vapor/math/Matrix.h"
 #include "vapor/math/Vector3.h"
+#include "vapor/math/EulerAngles.h"
 
 namespace vapor {
 	namespace scene {
@@ -33,11 +34,6 @@ public:
 
 	// Rotates this node by the given parameters.
 	void rotate( float xang, float yang, float zang );
-  
-	// many more methods implemented here ...
-	void rotateX( float ang );
-	void rotateY( float ang );
-	void rotateZ( float ang );
 
 	// Resets the transformations previously applied to this node.
 	void reset();
@@ -47,15 +43,21 @@ public:
 	void setAbsoluteTransform( const math::Matrix4& matrix );
 
 	// Gets the local transformation matrix.
-	const math::Matrix4& getLocalTransform() const;
+	math::Matrix4 getLocalTransform() const;
 
 protected:
 
 	Transformable();
 	~Transformable();
 
-	//math::Vector3 translation;
+	math::Matrix4 getScaleMatrix( math::Vector3 v ) const;
+	math::Matrix4 getTranslationMatrix( math::Vector3 v ) const;
+
+	math::EulerAngles angles;
+	math::Vector3 v_translate;
+	math::Vector3 v_scale;
 	math::Matrix4 transform;
+
 	math::Matrix4 absoluteLocalToWorld;
 };
 

@@ -20,34 +20,37 @@ namespace vapor {
 //-----------------------------------//
 
 Transformable::Transformable()
-	//: translation(nullptr), orientation(nullptr)
+	: v_scale( 1.0f, 1.0f, 1.0f )
 {
-	
+
 }
 
 //-----------------------------------//
 
 Transformable::~Transformable()
 {
-	//delete translation;
+
 }
 
 //-----------------------------------//
 
 void Transformable::translate( const math::Vector3& tr )
 {
-	transform.tx += tr.x;
-	transform.ty += tr.y;
-	transform.tz += tr.z;
+	v_translate.x += tr.x;
+	v_translate.y += tr.y;
+	v_translate.z += tr.z;
+
+	transform = transform * getTranslationMatrix( v_translate );
+	v_translate.zero();
 }
 
 //-----------------------------------//
 
 void Transformable::scale( float x, float y, float z )
 {
-	transform.m11 *= x;
-	transform.m22 *= y;
-	transform.m33 *= z;
+	v_scale.x *= x;
+	v_scale.y *= y;
+	v_scale.z *= z;
 }
 
 //-----------------------------------//
@@ -61,68 +64,21 @@ void Transformable::scale( float uniform )
 
 void Transformable::rotate( float xang, float yang, float zang )
 {
-	debug( "%f %f", xang, yang );
+	angles.xang += xang;
+	angles.yang += yang;
+	angles.zang += zang;
 
-	rotateX( xang );
-	rotateY( yang );
-}
-
-//-----------------------------------//
-
-void Transformable::rotateX( float ang )
-{
-	Matrix4 newRotation;
-
-	newRotation.m11 = 1;
-
-	newRotation.m22 = math::cosf( ang );
-	newRotation.m23 = math::sinf( ang );
-
-	newRotation.m32 = -math::sinf( ang );
-	newRotation.m33 = math::cosf( ang );
-
-	transform = transform * newRotation;
-}
-
-//-----------------------------------//
-
-void Transformable::rotateY( float ang )
-{
-	Matrix4 newRotation;
-
-	newRotation.m11 = math::cosf( ang );
-	newRotation.m13 = -math::sinf( ang );
-
-	newRotation.m22 = 1;
-
-	newRotation.m31 = math::sinf( ang );
-	newRotation.m33 = math::cosf( ang );
-
-	transform = transform * newRotation;
-}
-
-//-----------------------------------//
-
-void Transformable::rotateZ( float ang )
-{
-	Matrix4 newRotation;
-
-	newRotation.m11 = math::cosf( ang );
-	newRotation.m12 = math::sinf( ang );
-
-	newRotation.m21 = -math::sinf( ang );
-	newRotation.m22 = math::cosf( ang );
-
-	newRotation.m33 = 1;
-
-	transform = transform * newRotation;
+	transform = transform * angles.getOrientationMatrix();
+	angles.identity();
 }
 
 //-----------------------------------//
 
 void Transformable::reset( )
 {
-	transform.identity();
+	angles.identity();
+	v_translate.zero();
+	v_scale.zero();
 }
 
 //-----------------------------------//
@@ -141,9 +97,39 @@ const math::Matrix4& Transformable::getAbsoluteTransform() const
 
 //-----------------------------------//
 
-const math::Matrix4& Transformable::getLocalTransform() const
+math::Matrix4 Transformable::getLocalTransform() const
 {
-	return transform;
+	//transform = transform * getTranslationMatrix( v_translate );
+	//transform = transform * angles.getOrientationMatrix();
+	//transform = transform * getScaleMatrix( v_scale );
+
+	return transform/* * angles.getOrientationMatrix()*/;
+}
+
+//-----------------------------------//
+
+math::Matrix4 Transformable::getScaleMatrix( math::Vector3 v ) const
+{
+	Matrix4 s;
+
+	s.m11 = v.x;
+	s.m22 = v.y;
+	s.m33 = v.z;
+
+	return s;
+}
+
+//-----------------------------------//
+
+math::Matrix4 Transformable::getTranslationMatrix( math::Vector3 v ) const
+{
+	Matrix4 s;
+
+	s.tx = v.x;
+	s.ty = v.y;
+	s.tz = v.z;
+
+	return s;
 }
 
 //-----------------------------------//

@@ -48,15 +48,11 @@ void Example::onSetupScene()
 	ScenePtr scene = getSceneManager();
 	ResourceManager* rm = getResourceManager();
 
-	GroupPtr grp( new Group() );
-
 	// Create a new Camera and position it to look at origin
 	cam.reset( new FirstPersonCamera( getInputManager(), getRenderDevice() ) );
-	cam->translate( Vector3( 0.0f, -5.0f, -100.0f ) );
-	cam->lookAt( Vector3::Zero );
-	grp->add( cam );
-
-	scene->add( grp );
+	cam->translate( Vector3( 0.0f, 0.0f, 0.0f ) );
+	//cam->lookAt( Vector3::Zero );
+	scene->add( cam );
 
 	ProgramPtr program( new GLSL_Program( 
 			rm->loadResource< GLSL_Shader >( "media/shader.vs" ),

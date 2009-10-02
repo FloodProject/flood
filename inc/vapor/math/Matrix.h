@@ -21,7 +21,8 @@ namespace vapor {
  * any 3D affine transformation.
  */
 
-class VAPOR_API Matrix4 {
+class VAPOR_API Matrix4 
+{
 public:
 
 	Matrix4() { identity(); }

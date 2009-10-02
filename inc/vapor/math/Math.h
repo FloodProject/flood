@@ -8,9 +8,6 @@
 
 #include <cmath>
 
-#include "vapor/math/Vector3.h"
-#include "vapor/math/Matrix.h"
-
 namespace vapor {
 	namespace math {
 
@@ -18,6 +15,7 @@ namespace vapor {
 
 using ::cosf;
 using ::sinf;
+using ::sqrt;
 
 //-----------------------------------//
 

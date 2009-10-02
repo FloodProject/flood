@@ -27,8 +27,6 @@ Camera::Camera( render::Device* device, Projection::Enum projection )
 		upVector( Vector3( 0.0f, 1.0f, 0.0f ) )
 {
 	setRenderTarget( device->getRenderTarget() );
-	setupProjection();
-	setupView();
 }
 
 //-----------------------------------//
@@ -47,16 +45,16 @@ void Camera::setProjection( Projection::Enum projection )
 
 //-----------------------------------//
 
-const math::Matrix4& Camera::getProjectionMatrix()
+const math::Matrix4& Camera::getProjectionMatrix() const
 {
 	return Matrix4::Identity;
 }
 
 //-----------------------------------//
 
-const math::Matrix4& Camera::getViewMatrix()
+const math::Matrix4& Camera::getViewMatrix() const
 {
-	return viewMatrix*transform;
+	return viewMatrix;
 }
 
 
@@ -116,7 +114,7 @@ void Camera::update( double delta )
 
 //-----------------------------------//
 
-void Camera::setupView()
+void Camera::setupProjection()
 {
 	glMatrixMode( GL_PROJECTION );
 	glLoadIdentity();
@@ -133,19 +131,63 @@ void Camera::setupView()
 
 //-----------------------------------//
 
-void Camera::setupProjection()
+void Camera::setupView()
 {
-	glMatrixMode( GL_PROJECTION );
-	glLoadIdentity();
+	Vector3 eye = Vector3( absoluteLocalToWorld.tx, 
+		absoluteLocalToWorld.ty, absoluteLocalToWorld.tz );
 
-	if( projection == Projection::Perspective )
-	{
-		gluPerspective( fov, getAspectRatio(), near_, far_ );
-	}
-	else
-	{
-		glOrtho( -1.0, 1.0, -1.0, 1.0, near_, far_ );
-	}
+	Vector3 zaxis = ( lookAtVector - eye ).normalize();
+	Vector3	xaxis = upVector.cross(zaxis).normalize();
+	Vector3	yaxis = zaxis.cross(xaxis);
+
+	Matrix4 m;
+	m.m11 = xaxis.x;
+	m.m12 = xaxis.y;
+	m.m13 = xaxis.z;
+
+	m.m21 = yaxis.x;
+	m.m22 = yaxis.y;
+	m.m23 = yaxis.z;
+
+	m.m31 = zaxis.x;
+	m.m32 = zaxis.y;
+	m.m33 = zaxis.z;
+
+	m.tx = -xaxis.dot(eye);
+	m.ty = -yaxis.dot(eye);
+	m.tz = -zaxis.dot(eye);
+
+	viewMatrix = m * getLocalTransform();
+
+	//glMatrixMode( GL_MODELVIEW );
+	//glLoadIdentity();
+
+	//gluLookAt( eye.x, eye.y, eye.z,
+	//	lookAtVector.x, lookAtVector.y, lookAtVector.z,
+	//	upVector.x, upVector.y, upVector.z );
+
+	//float test[16];
+	//glGetFloatv( GL_MODELVIEW_MATRIX, test );
+
+	//Matrix4 glView;
+
+	//glView.m11 = test[0];
+	//glView.m12 = test[1];
+	//glView.m13 = test[2];
+	//
+	//glView.m21 = test[4];
+	//glView.m22 = test[5];
+	//glView.m23 = test[6];
+
+	//glView.m31 = test[8];
+	//glView.m32 = test[9];
+	//glView.m33 = test[10];
+
+	//glView.tx = test[12];
+	//glView.ty = test[13];
+	//glView.tz = test[14];
+
+	viewMatrix = absoluteLocalToWorld;
 }
 
 //-----------------------------------//
@@ -173,7 +215,7 @@ void Camera::render( NodePtr node ) const
 	cull( renderQueue, node );
 
 	renderDevice->setRenderTarget( target );
-	renderDevice->render( renderQueue, getAbsoluteTransform() );
+	renderDevice->render( renderQueue, getViewMatrix() );
 }
 
 //-----------------------------------//

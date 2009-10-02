@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "vapor/math/Math.h"
+
 namespace vapor {
 	namespace math {
 
@@ -110,10 +112,10 @@ public:
 	void zero() { x = y = z = 0.0f; }
 
 	// Gets the length of the vector
-	T length() const { return sqrt(x*x + y*y + z*z); }
+	T length() const { return math::sqrt(x*x + y*y + z*z); }
 	
 	// Normalize the vector
-	void normalize() 
+	Vector3T normalize() 
 	{
 		T len = length();
 
@@ -121,14 +123,32 @@ public:
 		{
 			x /= len; y /= len; z /= len; 
 		}
+
+		return *this;
+	}
+
+	// Dot product
+	float dot( const Vector3T& v )
+	{
+		return x*v.x + y*v.y + z*v.z;
+	}
+
+	// Cross product
+	Vector3T cross( const Vector3T& v )
+	{
+		return Vector3T<T>(
+			y*v.z - z*v.y,
+			z*v.x - x*v.z,
+			x*v.y - y*v.x );
 	}
 
 	// Special points
 	static const Vector3T<float> Zero;
-    //static const Vector3 UNIT_X;
-    //static const Vector3 UNIT_Y;
-    //static const Vector3 UNIT_Z;
-    //static const Vector3 NEGATIVE_UNIT_X;
+	static const Vector3T<float> UnitX;
+    static const Vector3T<float> UnitY;
+    static const Vector3T<float> UnitZ;
+    
+	//static const Vector3 NEGATIVE_UNIT_X;
     //static const Vector3 NEGATIVE_UNIT_Y;
     //static const Vector3 NEGATIVE_UNIT_Z;
     //static const Vector3 UNIT_SCALE;
