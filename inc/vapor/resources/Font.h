@@ -14,12 +14,30 @@
 namespace vapor {
 	namespace resources {
 
+//-----------------------------------//
+
 class VAPOR_API Font : public Resource
 {
-
 public:
+
 	Font();
 	virtual ~Font();
+
+	// Gets the texture that backs this font.
+	//TexturePtr getTexture();
+
+	// Gets the renderable that backs this font.
+	//RenderablePtr getRenderable();
+
+	virtual ResourceGroup::Enum getResourceGroup() const;
+
+
+
+protected:
+
+
 };
+
+//-----------------------------------//
 
 } } // end namespaces

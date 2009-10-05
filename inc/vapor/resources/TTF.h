@@ -19,6 +19,8 @@
 namespace vapor {
 	namespace resources {
 
+//-----------------------------------//
+
 class TTF : public Font
 {
 
@@ -29,6 +31,8 @@ public:
 private:
 
 };
+
+//-----------------------------------//
 
 } } // end namespaces
 

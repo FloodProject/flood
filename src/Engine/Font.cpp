@@ -13,13 +13,27 @@
 namespace vapor {
 	namespace resources {
 
+//-----------------------------------//
+
 Font::Font()
 {
-	// still not used
+	
 }
 
-Font::~Font() {
+//-----------------------------------//
+
+Font::~Font() 
+{
 
 }
+
+//-----------------------------------//
+
+ResourceGroup::Enum Font::getResourceGroup() const
+{
+	return ResourceGroup::Fonts;
+}
+
+//-----------------------------------//
 
 } } // end namespaces

@@ -65,7 +65,7 @@ public:
 	void setBuffer(std::vector<byte>& data) { buffer = data; }
 
 	// Return the proper resource group for this resource.
-	ResourceGroup::Enum getResourceGroup() const { return ResourceGroup::Images; }
+	virtual ResourceGroup::Enum getResourceGroup() const { return ResourceGroup::Images; }
 
 	// Prints image information to the log.
 	void log() const;
