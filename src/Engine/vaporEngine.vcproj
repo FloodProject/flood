@@ -164,6 +164,10 @@
 			Name="Math"
 			>
 			<File
+				RelativePath=".\Math.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\inc\vapor\math\Math.h"
 				>
 			</File>
@@ -188,6 +192,10 @@
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\math\Matrix.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\math\Matrix4x4.h"
 					>
 				</File>
 			</Filter>
@@ -265,6 +273,10 @@
 			</File>
 			<File
 				RelativePath=".\RenderDevice.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\render\RenderQueue.h"
 				>
 			</File>
 			<Filter

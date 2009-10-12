@@ -48,15 +48,20 @@ void Example::onSetupScene()
 	ScenePtr scene = getSceneManager();
 	ResourceManager* rm = getResourceManager();
 
+	ProgramPtr program( new GLSL_Program( 
+			rm->loadResource< GLSL_Shader >( "shader.vs" ),
+			rm->loadResource< GLSL_Shader >( "shader.fs" ) ) );
+
+	MaterialPtr mat( new Material( "SimpleWhite", program ) );
+	FontPtr font = rm->loadResource< Font >( "Calibri.font" );
+	LabelPtr label( new Label("Yey", font, mat) );
+	//scene->add( label );
+
 	// Create a new Camera and position it to look at origin
 	cam.reset( new FirstPersonCamera( getInputManager(), getRenderDevice() ) );
 	cam->translate( Vector3( 0.0f, 0.0f, 0.0f ) );
 	//cam->lookAt( Vector3::Zero );
 	scene->add( cam );
-
-	ProgramPtr program( new GLSL_Program( 
-			rm->loadResource< GLSL_Shader >( "shader.vs" ),
-			rm->loadResource< GLSL_Shader >( "shader.fs" ) ) );
 
 	mesh = rm->loadResource< MS3D >( "media/terreno.ms3d" );
 
@@ -71,11 +76,7 @@ void Example::onSetupScene()
 
 	scene->add( mesh );
 
-	MaterialPtr mat( new Material( "SimpleWhite", program ) );
-	FontPtr font = rm->loadResource< Font >( "Calibri.font" );
-	LabelPtr label( new Label("Yey", font, mat) );
 
-	scene->add( label );
 }
 
 //-----------------------------------//

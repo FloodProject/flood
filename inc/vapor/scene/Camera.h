@@ -12,6 +12,7 @@
 
 #include "vapor/math/Vector3.h"
 #include "vapor/math/Matrix.h"
+#include "vapor/math/Matrix4x4.h"
 #include "vapor/math/Frustum.h"
 
 #include "vapor/scene/Transform.h"
@@ -19,6 +20,7 @@
 #include "vapor/render/Device.h"
 #include "vapor/render/Target.h"
 #include "vapor/render/Renderable.h"
+#include "vapor/render/RenderQueue.h"
 
 namespace vapor {
 	namespace scene {
@@ -61,7 +63,7 @@ public:
 	void setProjection( Projection::Enum projection );
 
 	// Gets the projection matrix of the camera.
-	const math::Matrix4& getProjectionMatrix() const;
+	const math::Matrix4x4& getProjectionMatrix() const;
 
 	// Gets the view matrix of the camera.
 	const math::Matrix4& getViewMatrix() const;
@@ -125,6 +127,9 @@ protected:
 
 	// View matrix.
 	math::Matrix4 viewMatrix;
+
+	// Projection matrix.
+	math::Matrix4x4 projectionMatrix;
 
 	// Up vector.
 	math::Vector3 upVector;

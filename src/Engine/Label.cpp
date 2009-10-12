@@ -102,7 +102,7 @@ void Label::update( double delta )
 	material->setTexture( 0, font->getTexture() );
 	quad->setMaterial( material );
 
-	addRenderable( quad );
+	addRenderable( quad, RenderGroup::Overlays );
 
 	isDirty = false;
 }

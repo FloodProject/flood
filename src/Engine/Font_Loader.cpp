@@ -76,11 +76,11 @@ Font* Font_Loader::decode(vfs::File& file)
 	int width_per_glyph = boost::lexical_cast<int>( glyphInfo[0] );
 	int height_per_glyph = boost::lexical_cast<int>( glyphInfo[1] );
 
-	int n_glyphs_row = img->getWidth() / width_per_glyph;
+	//int n_glyphs_row = img->getWidth() / width_per_glyph;
 
-	int x = 0; int y = 0;
+	uint x = 0; uint y = 0;
 
-	for( int i = 0; i < data.size(); i++ )
+	for( uint i = 0; i < data.size(); i++ )
 	{
 		Glyph glyph;
 		

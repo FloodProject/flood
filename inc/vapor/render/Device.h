@@ -19,11 +19,15 @@
 #include "vapor/render/Adapter.h"
 #include "vapor/render/TextureManager.h"
 #include "vapor/render/Renderable.h"
+#include "vapor/render/RenderQueue.h"
 
 #include "vapor/math/Matrix.h"
 #include "vapor/math/Color.h"
 
 namespace vapor {
+
+	namespace scene { class Camera; }
+
 	namespace render {
 
 //-----------------------------------//
@@ -79,7 +83,7 @@ public:
 	render::Target* getRenderTarget() const;
 
 	// Renders a list of renderables.
-	void render( RenderQueue& queue, math::Matrix4 viewMatrix );
+	void render( RenderQueue& queue, const scene::Camera* cam );
 
 	// Updates the target render target.
 	void updateTarget( );

@@ -45,9 +45,9 @@ void Camera::setProjection( Projection::Enum projection )
 
 //-----------------------------------//
 
-const math::Matrix4& Camera::getProjectionMatrix() const
+const math::Matrix4x4& Camera::getProjectionMatrix() const
 {
-	return Matrix4::Identity;
+	return projectionMatrix;
 }
 
 //-----------------------------------//
@@ -56,7 +56,6 @@ const math::Matrix4& Camera::getViewMatrix() const
 {
 	return viewMatrix;
 }
-
 
 //-----------------------------------//
 
@@ -116,12 +115,38 @@ void Camera::update( double delta )
 
 void Camera::setupProjection()
 {
-	glMatrixMode( GL_PROJECTION );
-	glLoadIdentity();
+	//glMatrixMode( GL_PROJECTION );
+	//glLoadIdentity();
+
+	//gluPerspective( fov, getAspectRatio(), near_, far_ );
+
+	//float proj[16];
+	//glGetFloatv( GL_PROJECTION_MATRIX, proj );
 
 	if( projection == Projection::Perspective )
 	{
-		gluPerspective( fov, getAspectRatio(), near_, far_ );
+		float h = 1.0f / math::tanf( math::degreeToRadian( fov ) / 2.0 );
+		float neg_depth = (near_ - far_);
+		
+		projectionMatrix.m11 = h / getAspectRatio();
+		projectionMatrix.m12 = 0;
+		projectionMatrix.m13 = 0;
+		projectionMatrix.m14 = 0;
+		
+		projectionMatrix.m21 = 0;
+		projectionMatrix.m22 = h;
+		projectionMatrix.m23 = 0;
+		projectionMatrix.m24 = 0;
+
+		projectionMatrix.m31 = 0;
+		projectionMatrix.m32 = 0;
+		projectionMatrix.m33 = (far_ + near_) / neg_depth;
+		projectionMatrix.m34 = 2.0f * (near_* far_) / neg_depth;
+
+		projectionMatrix.tx = 0;
+		projectionMatrix.ty = 0;
+		projectionMatrix.tz = -1.0;
+		projectionMatrix.tw = 0;
 	}
 	else
 	{
@@ -215,7 +240,7 @@ void Camera::render( NodePtr node ) const
 	cull( renderQueue, node );
 
 	renderDevice->setRenderTarget( target );
-	renderDevice->render( renderQueue, getViewMatrix() );
+	renderDevice->render( renderQueue, this );
 }
 
 //-----------------------------------//
@@ -265,15 +290,7 @@ void Camera::cull( render::RenderQueue& queue, NodePtr node ) const
 	if( geometry ) 
 	{
 		// No frustum culling is performed yet.
-		foreach( RenderablePtr rend, geometry->getRenderables() )
-		{
-			RenderState renderState;
-			
-			renderState.renderable = rend;
-			renderState.modelMatrix = geometry->getAbsoluteTransform();
-
-			queue.push_back( renderState );
-		}
+		geometry->appendRenderables( queue );
 	}
 }
 

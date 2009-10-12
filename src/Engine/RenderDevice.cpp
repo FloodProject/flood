@@ -13,6 +13,7 @@
 #include "vapor/render/Device.h"
 #include "vapor/render/Adapter.h"
 #include "vapor/render/BufferManager.h"
+#include "vapor/scene/Camera.h"
 
 #include "vapor/render/GL.h"
 
@@ -134,20 +135,30 @@ TextureManager* Device::getTextureManager() const
 
 //-----------------------------------//
 
-void Device::render( RenderQueue& queue, math::Matrix4 viewMatrix ) 
+bool renderSorter(const RenderState& lhs, const RenderState& rhs)
+{
+	return lhs.group < rhs.group;
+}
+
+void Device::render( RenderQueue& queue, const scene::Camera* cam ) 
 {
 	activeTarget->makeCurrent();
 
 	glClear( GL_DEPTH_BUFFER_BIT );
 
+	// sort the list by render group
+	// TODO: use a radix sorter
+	std::sort( queue.begin(), queue.end(), &renderSorter );
+
+	// render the list
 	foreach( RenderState state, queue )
 	{
 		ProgramPtr program = state.renderable->getMaterial()->getProgram();
 
-		//program->setUniform( "vp_ProjectionMatrix", state.modelMatrix );
+		program->setUniform( "vp_ProjectionMatrix", cam->getProjectionMatrix() );
 		program->setUniform( "vp_ModelMatrix", state.modelMatrix );
-		program->setUniform( "vp_ViewMatrix", viewMatrix );
-		program->setUniform( "vp_ModelViewMatrix", viewMatrix * state.modelMatrix );
+		program->setUniform( "vp_ViewMatrix", cam->getViewMatrix() );
+		program->setUniform( "vp_ModelViewMatrix", cam->getViewMatrix() * state.modelMatrix );
 
 		state.renderable->render( *this );
 	}

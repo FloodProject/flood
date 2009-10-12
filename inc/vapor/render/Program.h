@@ -13,6 +13,7 @@
 #include "vapor/resources/Shader.h"
 #include "vapor/render/VertexBuffer.h"
 #include "vapor/math/Matrix.h"
+#include "vapor/math/Matrix4x4.h"
 
 namespace vapor {
 	namespace render {
@@ -42,6 +43,9 @@ public:
 
 	// Adds a named matrix uniform to the program.
 	virtual void setUniform( const std::string& slot, const math::Matrix4& ) = 0;
+
+	// Adds a named 4x4 matrix uniform to the program.
+	virtual void setUniform( const std::string& slot, const math::Matrix4x4& ) = 0;
 
 	// Links the program and returns if it was successful.
 	virtual bool link() = 0;

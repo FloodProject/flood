@@ -26,7 +26,7 @@ Geometry::Geometry()
 
 Geometry::Geometry( RenderablePtr rend )
 {
-	renderables.push_back( rend );
+	addRenderable( rend );
 }
 
 //-----------------------------------//
@@ -38,9 +38,38 @@ Geometry::~Geometry()
 
 //-----------------------------------//
 
-void Geometry::addRenderable( RenderablePtr rend )
+void Geometry::addRenderable( RenderablePtr rend, 
+							 RenderGroup::Enum group, 
+							 uint priority )
 {
-	renderables.push_back( rend );
+	renderables[group].push_back( rend );
+}
+
+//-----------------------------------//
+
+const std::vector< render::RenderablePtr >& Geometry::getRenderables( RenderGroup::Enum group )
+{ 
+	return renderables[group]; 
+}
+
+//-----------------------------------//
+ 
+void Geometry::appendRenderables( render::RenderQueue& queue )
+{
+	foreach( const rendPair& pair, renderables )
+	{
+		foreach( RenderablePtr rend, pair.second )
+		{
+			RenderState renderState;
+			
+			renderState.renderable = rend;
+			renderState.modelMatrix = this->getAbsoluteTransform();
+			renderState.group = pair.first;
+			renderState.priority = 0;
+
+			queue.push_back( renderState );
+		}
+	}
 }
 
 //-----------------------------------//

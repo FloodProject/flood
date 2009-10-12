@@ -13,9 +13,18 @@ namespace vapor {
 
 //-----------------------------------//
 
-using ::cosf;
 using ::sinf;
+using ::cosf;
+using ::tanf;
 using ::sqrt;
+
+//-----------------------------------//
+
+const float PI = 3.141592654f;
+
+//-----------------------------------//
+
+float degreeToRadian( float degree );
 
 //-----------------------------------//
 

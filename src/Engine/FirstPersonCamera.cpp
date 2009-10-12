@@ -21,7 +21,7 @@ namespace vapor {
 FirstPersonCamera::FirstPersonCamera( input::InputManager* input,
 	render::Device* device, Projection::Enum projection )
 	: Camera( device, projection ), inputManager( input ), 
-	sensivity( 1.0f ), cameraSensivity( 0.001f )
+	sensivity( 4.0f ), cameraSensivity( 0.001f )
 {
 	registerCallbacks();	
 }
@@ -83,8 +83,6 @@ void FirstPersonCamera::setSensivity( float sensivity )
 }
 
 //-----------------------------------//
-
-#define bind_mem_fn( mem, instance ) (tr1::bind( tr1::mem_fn( (mem) ), (instance) ))
 
 void FirstPersonCamera::registerCallbacks()
 {

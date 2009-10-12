@@ -130,7 +130,41 @@ void GLSL_Program::setUniform( const std::string& slot, const math::Matrix4& mat
 	tmp[8] = matrix.m31; tmp[9] = matrix.m32; tmp[10] = matrix.m33; tmp[11] = 0;
 	tmp[12] = matrix.tx; tmp[13] = matrix.ty; tmp[14] = matrix.tz; tmp[15] = 1;
 
+	// TODO: This crashes on my Intel driver. Is it a driver bug?
+	//glUniformMatrix4x3fv( loc, 1, true, &matrix.m11 );
+
 	glUniformMatrix4fv( loc, 1, false, tmp );
+	
+	//float test[16];
+	//glGetUniformfv( id, loc, test );
+
+	unbind();
+}
+
+//-----------------------------------//
+
+void GLSL_Program::setUniform( const std::string& slot, const math::Matrix4x4& matrix )
+{
+	if( !isLinked() ) return;
+
+	bind();
+
+	int loc = glGetUniformLocation( id, slot.c_str() );
+
+	if( loc == -1)
+	{
+		//warn( "glsl", "Could not locate uniform location in program object '%d'", id );
+		return;
+	}
+
+	float tmp[16];
+	tmp[0] = matrix.m11; tmp[1] = matrix.m12; tmp[2] = matrix.m13; tmp[3] = matrix.m14;
+	tmp[4] = matrix.m21; tmp[5] = matrix.m22; tmp[6] = matrix.m23; tmp[7] = matrix.m24;
+	tmp[8] = matrix.m31; tmp[9] = matrix.m32; tmp[10] = matrix.m33; tmp[11] = matrix.m34;
+	tmp[12] = matrix.tx; tmp[13] = matrix.ty; tmp[14] = matrix.tz; tmp[15] = matrix.tw;
+
+	// the true tells opengl our matrices are in row-major order
+	glUniformMatrix4fv( loc, 1, true, tmp );
 	
 	//float test[16];
 	//glGetUniformfv( id, loc, test );

@@ -38,6 +38,9 @@ public:
 	// Adds a named matrix uniform to the program.
 	virtual void setUniform( const std::string& slot, const math::Matrix4& );
 
+	// Adds a named 4x4 matrix uniform to the program.
+	virtual void setUniform( const std::string& slot, const math::Matrix4x4& );
+
 	// Links the program.
 	virtual bool link();
 
