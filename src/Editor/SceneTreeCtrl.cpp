@@ -31,6 +31,11 @@ SceneTreeCtrl::SceneTreeCtrl(vapor::Engine* engine,
 	: wxTreeCtrl(parent, id, pos, size, style, validator, name),
 		engine(engine)
 {
+	if( !engine )
+	{
+		assert( "Invalid engine instance." );
+	}
+
 	scene = engine->getSceneManager();
 	
 	initControl();
@@ -70,10 +75,10 @@ void SceneTreeCtrl::initIcons()
 	// create a new list of all the icons
 	imageList = new wxImageList(16, 16, false, 10);
 
-	// the images we're preconverted from image files to binary data 
+	// the images were preconverted from image files to binary data 
 	// held in a regular C++ array. this way we don't need to package
 	// external image files with the executable. but we do need to
-	// convert the images from the C++ buffer to an wxBitmap.
+	// convert the images from the array to an wxBitmap.
 	imageList->Add(wxMEMORY_BITMAP(sitemap_color));
 	imageList->Add(wxMEMORY_BITMAP(camera));
 	imageList->Add(wxMEMORY_BITMAP(lightbulb_off));
@@ -89,6 +94,7 @@ void SceneTreeCtrl::initIcons()
 void SceneTreeCtrl::onItemMenu(wxTreeEvent& event)
 {
     wxTreeItemId itemId = event.GetItem();
+	//debug( "%s", itemId.IsOk() ? "true" : "false" );
     //MyTreeItemData *item = itemId.IsOk() ? (MyTreeItemData *)GetItemData(itemId)
                                          //: NULL;
     wxPoint clientpt = event.GetPoint();

@@ -63,6 +63,9 @@ private:
 	// Centers the cursor position on the screen.
 	void centerCursor();
 
+	// Checks the controls for updates.
+	void checkControls();
+
 	// Input callback functions.
 	void onKeyPressed( const input::KeyEvent& keyEvent );
 	void onMouseMove( const input::MouseMoveEvent& moveEvent );

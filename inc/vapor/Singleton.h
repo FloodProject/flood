@@ -14,7 +14,7 @@ namespace vapor {
 
 /**
  * Template that provides singleton functionality for classes.
- * (based on OGRE's Singleton template code).
+ * (based on OGRE's Singleton and CodeProject's template code).
  */
 
 template <typename T> class Singleton
@@ -35,12 +35,17 @@ public:
 	
 	static T& getInstance()
 	{	
+		//if( !m_Instance ) new T();
+
 		assert( m_Instance );
 		return ( *m_Instance );
 	}
 	
 	static T* getInstancePtr()
 	{
+		//if( !m_Instance ) new T();
+
+		assert( m_Instance );
 		return m_Instance;
 	}
 

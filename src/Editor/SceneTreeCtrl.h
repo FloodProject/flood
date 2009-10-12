@@ -65,7 +65,7 @@ protected:
 	// scene associated this control
 	vapor::scene::ScenePtr scene;
 
-	// holds the main vapor engine
+	// holds the engine instance
 	vapor::Engine* engine;
 
 	DECLARE_EVENT_TABLE()

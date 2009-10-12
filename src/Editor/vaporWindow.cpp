@@ -10,11 +10,6 @@
 
 using namespace vapor;
 
-//#ifdef VAPOR_WINDOWING_SDL
-
-//namespace vapor {
-//	namespace render {
-
 //-----------------------------------//
 
 vaporWindow::vaporWindow(const render::WindowSettings& settings, wxGLCanvas* canvas)
@@ -43,7 +38,7 @@ bool vaporWindow::open()
 	
 	if(!context)
 	{
-		error("render::window::sdl", 
+		error("window::wx", 
 			"Error creating wxWidgets OpenGL context");
 		return false;
 	}
@@ -65,9 +60,9 @@ void vaporWindow::update()
 
 //-----------------------------------//
 
-void vaporWindow::show( bool UNUSED(hide) ) 
+void vaporWindow::show( bool hide ) 
 {
-
+	canvas->Show( hide );
 }
 
 //-----------------------------------//
@@ -95,9 +90,23 @@ void vaporWindow::setTitle(const std::string& UNUSED(title))
 
 //-----------------------------------//
 
-void vaporWindow::setCursor(bool UNUSED(state))
+void vaporWindow::setCursorState(bool UNUSED(state))
 {
+	
+}
 
+//-----------------------------------//
+
+bool vaporWindow::getCursorState() const
+{
+	return false;
+}
+
+//-----------------------------------//
+
+void vaporWindow::setCursorPosition( int x, int y )
+{
+	canvas->WarpPointer( x, y );
 }
 
 //-----------------------------------//
@@ -106,9 +115,3 @@ input::InputManager& vaporWindow::getInputManager()
 {
 	return *im;
 }
-
-//-----------------------------------//
-
-//} } // end namespaces
-
-//#endif

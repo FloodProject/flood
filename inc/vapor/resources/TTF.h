@@ -9,9 +9,9 @@
 #pragma once
 
 /**
- * Represents a TTF (TrueType) font file. The class loads the file using
- * the cross-platform FreeType library, parses all the font glyphs, and
- * packs them all into a big texture (texture atlas).
+ * Represents a TTF (TrueType) font resource. Loads a TTF font using the
+ * cross-platform FreeType library. Parses all the font glyphs of a size,
+ * and packs them all into a big texture (texture atlas) for rendering.
  */
 
 #include "vapor/resources/Font.h"
@@ -23,9 +23,9 @@ namespace vapor {
 
 class TTF : public Font
 {
-
 public:
-	TTF(const char* font);
+
+	TTF(const std::string& font);
 	~TTF();
 
 private:

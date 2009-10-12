@@ -33,23 +33,23 @@ class VAPOR_API Node : public tr1::enable_shared_from_this< Node >,
 {
 public:
 
-  explicit Node( NodePtr parent = NodePtr() );
-  virtual ~Node();
-  
-  // Sets the parent of the node.
-  void setParent( NodePtr parent );
-  
-  // Gets the parent of the node.
-  NodePtr getParent() const;
-  
-  // Gets the bounding volume of the node.
-  //AABB getBoundingVolume() const;
+	explicit Node( NodePtr parent = NodePtr() );
+	virtual ~Node();
 
-  virtual void update( double delta ) = 0;
+	// Sets the parent of the node.
+	void setParent( NodePtr parent );
 
-  virtual const std::string save(int indent = 0) = 0;
+	// Gets the parent of the node.
+	NodePtr getParent() const;
 
-  virtual const std::string name() const;
+	// Gets the bounding volume of the node.
+	//AABB getBoundingVolume() const;
+
+	virtual void update( double delta ) = 0;
+
+	virtual const std::string save(int indent = 0) = 0;
+
+	virtual const std::string name() const;
   
 private:
 

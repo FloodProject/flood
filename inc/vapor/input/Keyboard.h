@@ -206,7 +206,11 @@ public:
 
 	//const KeyEvent& getLastKeyEvent();
 
-	bool isKeyPressed( Keys::Enum keycode );
+	// Returns the current state of the keys.
+	const std::vector< bool >& getKeyState();
+
+	// Checks if the given key is pressed.
+	bool isKeyPressed( Keys::Enum keyCode );
 
 	//-----------------------------------//
 	// Events

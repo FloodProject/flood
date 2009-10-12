@@ -39,6 +39,9 @@ public:
 	// Adds a texture to the material.
 	void setTexture( uint unit, const std::string& tex );
 
+	// Adds a texture to the material.
+	void setTexture( uint unit, TexturePtr tex );
+
 	// Gets the associated program.
 	ProgramPtr getProgram() const;
 
@@ -66,11 +69,7 @@ protected:
 
 	// Shaders
 	ProgramPtr program;
-	//std::map< resources::ShaderPtr > shaders;
-
 	std::string name;
-
-	TextureManager* tm;
 };
 
 //-----------------------------------//

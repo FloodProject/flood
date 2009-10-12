@@ -9,6 +9,7 @@
 #pragma once
 
 #include "vapor/Platform.h"
+#include "vapor/Singleton.h"
 
 #include "vapor/resources/Resource.h"
 #include "vapor/resources/ResourceLoader.h"
@@ -31,16 +32,13 @@ namespace vapor {
  * which should prove to be less error-prone in case of a corrupt resource.
  */
 
-class VAPOR_API ResourceManager : private boost::noncopyable
+class VAPOR_API ResourceManager 
+	: public Singleton<ResourceManager>, private boost::noncopyable
 {
 public:
 
 	ResourceManager();
 	virtual ~ResourceManager();
-
-	// Gets an instance of the resource manager.
-	static ResourceManager* getInstance();
-	//static void setInstance( ResourceManager* rm );
 
 	// Creates a new resource and returns a generic resource.
 	ResourcePtr loadResource(const std::string& path);
@@ -83,9 +81,6 @@ public:
 	//std::list<ResourceLoader*> getResourceLoader(string extension);
 
 protected:
-
-	// Instance of the resource manager.
-	static ResourceManager* rm;
 
 	// maps a name to a resource
 	std::map< std::string, ResourcePtr > resources;

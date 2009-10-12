@@ -37,8 +37,8 @@ void Example::onSetupResources()
 {
 	ResourceManager* rm = getResourceManager();
 	
-	ImagePtr img = rm->loadResource< Image >( "media/triton.png" );
-	//snd = rm->loadResource< resources::Sound >( "media/stereo.ogg" );
+	ImagePtr img = rm->loadResource< Image >( "triton.png" );
+	snd = rm->loadResource< resources::Sound >( "stereo.ogg" );
 }
 
 //-----------------------------------//
@@ -55,8 +55,8 @@ void Example::onSetupScene()
 	scene->add( cam );
 
 	ProgramPtr program( new GLSL_Program( 
-			rm->loadResource< GLSL_Shader >( "media/shader.vs" ),
-			rm->loadResource< GLSL_Shader >( "media/shader.fs" ) ) );
+			rm->loadResource< GLSL_Shader >( "shader.vs" ),
+			rm->loadResource< GLSL_Shader >( "shader.fs" ) ) );
 
 	mesh = rm->loadResource< MS3D >( "media/terreno.ms3d" );
 
@@ -65,7 +65,17 @@ void Example::onSetupScene()
 		rend->getMaterial()->setProgram( program );
 	}
 
+	ListenerPtr ls( new Listener( getAudioDevice() ) );
+	//sound.reset( new scene::Sound( ls, snd ) );
+	//scene->add( ls ); scene->add( sound );
+
 	scene->add( mesh );
+
+	MaterialPtr mat( new Material( "SimpleWhite", program ) );
+	FontPtr font = rm->loadResource< Font >( "Calibri.font" );
+	LabelPtr label( new Label("Yey", font, mat) );
+
+	scene->add( label );
 }
 
 //-----------------------------------//

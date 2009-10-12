@@ -53,7 +53,7 @@ private:
 	resources::MS3DPtr mesh;
 	resources::SoundPtr snd;
 	scene::SoundPtr sound;
-	input::InputMap * inputMap; 
+	input::InputMap* inputMap; 
 	render::TexturePtr tex;
 	scene::CameraPtr cam;
 	math::Color c;

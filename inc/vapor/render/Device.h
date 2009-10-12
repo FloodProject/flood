@@ -64,6 +64,8 @@ public:
 	// Gets the main window.
 	Window* getWindow() const;
 
+	void setWindow( Window *window );
+
 	// Gets rendering adapter information.
 	Adapter* getAdapter() const;
 

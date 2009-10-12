@@ -39,9 +39,11 @@
 	#pragma warning( disable : 4100 )
 	#pragma warning( disable : 4512 )
 	#include <fd/delegate.hpp>
+	#include <fd/delegate/bind.hpp>
 	#pragma warning( pop )
 #else
 	#include <fd/delegate.hpp>
+	#include <fd/delegate/bind.hpp>
 #endif
 
 //---------------------------------------------------------------------//

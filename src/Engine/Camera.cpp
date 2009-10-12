@@ -89,7 +89,7 @@ void Camera::setRenderTarget( render::Target* newTarget )
 	//target->onTargetResize.clear();
 
 	target = newTarget;
-	target->onTargetResize.bind( &Camera::handleTargetResize, this );
+	target->onTargetResize += fd::bind( &Camera::handleTargetResize, this );
 
 	handleTargetResize( target->getSettings() );
 }

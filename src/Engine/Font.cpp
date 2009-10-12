@@ -15,7 +15,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-Font::Font()
+Font::Font( const std::string& name, int size )
+	: name( name ), size( size )
 {
 	
 }

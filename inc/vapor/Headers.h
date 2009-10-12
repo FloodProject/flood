@@ -20,6 +20,7 @@
 #include <vapor/resources/MS3D.h>
 #include <vapor/resources/Sound.h>
 #include <vapor/resources/Shader.h>
+#include <vapor/resources/Font.h>
 
 //-------------------------------------------------------------------------//
 // Scene-related Includes
@@ -54,6 +55,12 @@
 #include <vapor/input/Mouse.h>
 
 //-------------------------------------------------------------------------//
+// GUI-related Includes
+//-------------------------------------------------------------------------//
+
+#include <vapor/gui/Label.h>
+
+//-------------------------------------------------------------------------//
 // Namespace declarations
 //-------------------------------------------------------------------------//
 
@@ -68,5 +75,6 @@ using namespace vapor::audio;
 using namespace vapor::render;
 using namespace vapor::resources;
 using namespace vapor::input;
+using namespace vapor::gui;
 
 #endif

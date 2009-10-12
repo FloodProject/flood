@@ -101,13 +101,13 @@ void Framework::registerCallbacks()
 
 	if( kbd )
 	{
-		kbd->onKeyPress.bind( &Framework::onKeyPressed, this );
+		kbd->onKeyPress += fd::bind( &Framework::onKeyPressed, this );
 	}
 	
 	if( mouse )
 	{
-		mouse->onMouseButtonPress.bind( &Framework::onButtonPressed, this );
-		mouse->onMouseButtonRelease.bind( &Framework::onButtonReleased, this );
+		mouse->onMouseButtonPress += fd::bind( &Framework::onButtonPressed, this );
+		mouse->onMouseButtonRelease += fd::bind( &Framework::onButtonReleased, this );
 	}
 }
 

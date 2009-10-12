@@ -18,7 +18,10 @@
 /**
  * Window implementation using the wxWidgets GUI framework. This will be used 
  * to integrate vapor rendering into wxWidgets-based applications, thus making
- * possible to do custom tools, like world editors, model viewers, etc.
+ * it possible to do custom tools, like world editors, model viewers, etc.
+ * This class is only the class that connects the wxWidgets widget, with the
+ * vapor engine, so there is another class, vaporControl, that handles the real
+ * hard work :).
  */
 
 class vaporWindow : public vapor::render::Window
@@ -46,6 +49,9 @@ public:
 	// Gets the cursor visibility.
 	virtual bool getCursorState() const;
 
+	// Sets the cursor position on screen.
+	virtual void setCursorPosition( int x, int y );
+
 	// Gets the input manager.
 	virtual vapor::input::InputManager& getInputManager();
 
@@ -57,7 +63,7 @@ private:
 	// Opens a new window
 	bool open();
 
-	// SDL window id
+	// OpenGL Canvas Widget
 	wxGLCanvas* canvas;
 
 	// OpenGL context
@@ -66,7 +72,3 @@ private:
 	// wxWidgets Input Manager
 	wx_InputManager *im;
 };
-
-//} } // end namespaces
-
-//#endif

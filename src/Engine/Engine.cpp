@@ -30,6 +30,8 @@
 	#include "vapor/audio/Device.h"
 #endif
 
+#include "vapor/resources/Font_Loader.h"
+
 using namespace vapor::audio;
 using namespace vapor::scene;
 using namespace vapor::resources;
@@ -45,7 +47,7 @@ namespace vapor {
 Engine::Engine(const std::string& app, const char** argv, bool autoInit)
 	: app(app), argv(argv)
 {
-	if(autoInit)
+	if( autoInit )
 	{
 		init();
 	}
@@ -69,7 +71,7 @@ Engine::~Engine()
 
 //-----------------------------------//
 
-void Engine::init()
+void Engine::init( bool createWindow )
 {
 	// setup the global logger
 	setupLogger();
@@ -86,7 +88,7 @@ void Engine::init()
 	setupResourceLoaders();
 
 	// create a rendering and audio device
-	setupDevices();
+	setupDevices( createWindow );
 
 	// create the root scene node
 	sceneNode.reset( new scene::Scene() );
@@ -105,22 +107,22 @@ void Engine::setupLogger()
 
 //-----------------------------------//
 
-void Engine::setupDevices()
+void Engine::setupDevices( bool createWindow )
 {
 	// create render device
 	renderDevice = new render::Device();
 
-	// create a window and set the title
-	Window& window = renderDevice->createWindow();
+	if( createWindow )
+	{
+		// create a window and set the title
+		renderDevice->createWindow();
 
-	// init the render device now that it has a context
-	renderDevice->init();
-
-	InputManager& im = window.getInputManager();
-
-	// let's register some input devices
-	im.addDevice( new input::Keyboard() );
-	im.addDevice( new input::Mouse() );
+		// init the render device now that it has a context
+		renderDevice->init();
+		
+		// creates the default input devices
+		setupInput();
+	}
 
 #ifdef VAPOR_AUDIO_OPENAL
 
@@ -128,6 +130,20 @@ void Engine::setupDevices()
 	audioDevice = new audio::Device();
 
 #endif
+}
+
+//-----------------------------------//
+
+void Engine::setupInput()
+{
+	Window& window = *renderDevice->getWindow();
+
+	// obtains the input manager instance
+	InputManager& im = window.getInputManager();
+
+	// let's register some input devices
+	im.addDevice( new input::Keyboard() );
+	im.addDevice( new input::Mouse() );
 }
 
 //-----------------------------------//
@@ -154,6 +170,8 @@ void Engine::setupResourceLoaders()
 	#ifdef VAPOR_SHADER_GLSL
 		loaders.push_back( new GLSL_Loader() );
 	#endif
+
+	loaders.push_back( new Font_Loader() );
 
 	foreach( ResourceLoader* loader, loaders )
 	{

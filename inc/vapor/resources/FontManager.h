@@ -23,6 +23,8 @@
 namespace vapor {
 	namespace resources {
 
+//-----------------------------------//
+
 class VAPOR_API FontManager : public ResourceManager
 {
 
@@ -38,6 +40,8 @@ private:
 	bool initFT();
 
 };
+
+//-----------------------------------//
 
 } } // end namespaces
 

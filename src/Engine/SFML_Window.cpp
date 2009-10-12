@@ -34,7 +34,7 @@ SFML_Window::SFML_Window(const WindowSettings& settings)
 
 SFML_Window::~SFML_Window()
 {
-
+	window.Close();
 }
 
 //-----------------------------------//
@@ -71,6 +71,8 @@ bool SFML_Window::open()
 	settings.setDepthBits( sfmlSettings.DepthBits );
 	settings.setStencilBits( sfmlSettings.StencilBits );
 	settings.setAntiAliasing( sfmlSettings.AntialiasingLevel );
+	
+	window.EnableKeyRepeat( false );
 	
 	return true;	
 }

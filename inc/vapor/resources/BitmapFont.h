@@ -1,0 +1,53 @@
+/************************************************************************
+*
+* vaporEngine (2008-2009)
+*
+*	<http://www.portugal-a-programar.org>
+*
+************************************************************************/
+
+#pragma once
+
+#include "vapor/resources/Font.h"
+#include "vapor/resources/Image.h"
+
+#ifdef VAPOR_FONT_BITMAP
+
+namespace vapor {
+	namespace resources {
+
+//-----------------------------------//
+
+/**
+ * Represents a bitmap font resource. A bitmap font is a pre-rendered
+ * texture, with all the glyphs packed (usually in a grid) and also
+ * normally a binary file with all the glyphs coords (UVs).
+ */
+
+class BitmapFont : public Font
+{
+public:
+
+	BitmapFont( const std::string& font, int size, 
+		ImagePtr img, std::vector<Glyph> glyphs );
+
+	~BitmapFont();
+
+	// Gets the texture that backs this font.
+	virtual render::TexturePtr getTexture();
+
+	// Gets an array with the available glyphs information.
+	virtual const std::vector<Glyph>& getGlyphInformation() const;
+
+private:
+
+	ImagePtr fontImage;
+	std::vector<Glyph> glyphData;
+};
+
+//-----------------------------------//
+
+} } // end namespaces
+
+#endif
+

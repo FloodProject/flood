@@ -29,6 +29,12 @@
  * window handle, and letting vaporEngine do all the dirty work of setting
  * up the rendering context and implementing the window class. Let's see
  * if this approach works as well as I think it won't. :(
+ * Update: SDL didn't work with external window handles, I had to patch
+ * it myself, so I ended up creating what I said above, a specific window
+ * implementation for vapor based on wxGLCanvas. Now we use SFML instead
+ * of SDL, and it has support for external window handles, so it might
+ * work well with the approach I tried first with SDL. Can't be bothered
+ * to try it now, because the wxGLCanvas-based approach is working good.
  */
 
 class vaporControl : public wxGLCanvas 

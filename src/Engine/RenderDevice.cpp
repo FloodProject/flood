@@ -30,6 +30,19 @@ Device::Device()
 
 //-----------------------------------//
 
+Device::~Device()
+{
+	info("render::opengl", "Closing OpenGL rendering device");
+
+	// TODO: delete all OpenGL resources (shaders, textures...)
+
+	delete adapter;
+	delete window;
+	delete bufferManager;
+}
+
+//-----------------------------------//
+
 void Device::init()
 {
 	info( "render::gl", "Creating OpenGL rendering device" );
@@ -50,21 +63,29 @@ void Device::init()
 
 //-----------------------------------//
 
-Device::~Device()
+Window* Device::getWindow() const
 {
-	info("render::opengl", "Closing OpenGL rendering device");
-
-	// TODO: delete all OpenGL resources (shaders, textures...)
-
-	delete adapter;
-	delete window;
-	delete bufferManager;
+	return window;
 }
 
 //-----------------------------------//
 
-Window* Device::getWindow() const
+void Device::setWindow( Window *window )
 {
+	this->window = window;;
+}
+
+//-----------------------------------//
+
+Window& Device::createWindow( const WindowSettings& settings )
+{
+	const_cast<WindowSettings&>(settings).setAntiAliasing( 4 );
+
+	Window& window = Window::createWindow( settings );
+
+	setWindow( &window );
+	setRenderTarget(&window);
+
 	return window;
 }
 
@@ -107,7 +128,8 @@ BufferManager* Device::getBufferManager() const
 
 TextureManager* Device::getTextureManager() const
 {
-	return const_cast<TextureManager*>( &textureManager );
+	//return const_cast<TextureManager*>( &textureManager );
+	return TextureManager::getInstancePtr();
 }
 
 //-----------------------------------//
@@ -187,21 +209,6 @@ render::Target* Device::getRenderTarget() const
 //        renderable->first.render( *this );
 //    }
 //}
-
-//-----------------------------------//
-
-Window& Device::createWindow( const WindowSettings& settings )
-{
-	const_cast<WindowSettings&>(settings).setAntiAliasing( 4 );
-
-	Window& window = Window::createWindow( settings );
-
-	this->window = &window;
-
-	setRenderTarget(&window);
-
-	return window;
-}
 
 //-----------------------------------//
 

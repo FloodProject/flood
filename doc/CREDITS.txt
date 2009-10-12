@@ -24,17 +24,18 @@ Rendering:
 	* 100% shader-driven via GLSL
 	* Cross-platform windowing code
 	* Material serialization format
-	* Based on VBOs for fast rendering.
+	* Based on VBOs for fast rendering
+	* Minimizes batch calls for best performance
 
 Input:
 
-	* Based on the idea of an abstract input device.
-	* Different devices: keyboard, mouse and joysticks.
-	
+	* Based on the idea of an abstract input device
+	* Different devices: keyboard, mouse and joysticks
+
 	* Two modes of interaction:
 	
-		* Event-based (callbacks)
-		* Polling-based.
+		* Event-based (callbacks / delegates)
+		* Polling-based
 
 Scene:
 

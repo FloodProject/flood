@@ -23,7 +23,7 @@ namespace vapor {
 Material::Material( const std::string& name )
 	: name( name )
 {
-	tm = TextureManager::getInstancePtr();
+
 }
 
 //-----------------------------------//
@@ -53,6 +53,13 @@ const std::string& Material::getName() const
 void Material::setTexture( uint unit, const std::string& name )
 {
 	TexturePtr tex = TextureManager::getInstance().getTexture( name );
+	textures[unit] = tex;
+}
+
+//-----------------------------------//
+
+void Material::setTexture( uint unit, TexturePtr tex )
+{
 	textures[unit] = tex;
 }
 

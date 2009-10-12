@@ -60,7 +60,8 @@ void vaporControl::OnUpdate()
 {
 	render::Device* device = engine->getRenderDevice();
 	
-	device->setRenderTarget(window);
+	window->makeCurrent();
+
 	device->setClearColor(Colors::White);
 	device->clearTarget();
 }
@@ -72,7 +73,6 @@ void vaporControl::OnPaint(wxPaintEvent& event)
 	OnUpdate();
 
 	window->update();
-
 	wxGLCanvas::OnPaint(event);
 }
 
@@ -102,9 +102,10 @@ void vaporControl::initControl()
 	// construct a settings object to pass to vapor
 	WindowSettings settings(size.GetX(), size.GetY());
 
-	Window* window = new vaporWindow(settings, this);
-	device->setRenderTarget(window);
-	this->window = window;
+	window = new vaporWindow(settings, this);
+
+	device->setWindow( window );
+	device->setRenderTarget( window );
 }
 
 //-----------------------------------//

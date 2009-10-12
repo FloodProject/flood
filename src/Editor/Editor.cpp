@@ -52,7 +52,7 @@ bool MyApp::OnInit()
 	// let's add support for PNG images
 	wxImage::AddHandler(new wxPNGHandler);
 
-	// add a new art provider for stock icosn
+	// add a new art provider for stock icons
 	wxArtProvider::Push(new ArtProvider);
 
     // create the main application window
@@ -95,7 +95,6 @@ MyFrame::MyFrame(const wxString& title)
 	sizer->Add(treeCtrl, 0, wxALL|wxEXPAND, 0 );
 
 	// add a new vaporControl in the frame
-	control = new vaporControl(engine, this);
 	sizer->Add(control, 1, wxALL|wxEXPAND, 0 );
 
 	SetSizerAndFit(sizer);
@@ -112,9 +111,15 @@ MyFrame::~MyFrame()
 
 void MyFrame::initEngine()
 {
-	engine = new vapor::Engine("vaporEditor", false);
+	engine = new vapor::Engine("vaporEditor", nullptr, false);
 
+	engine->init( false );
 
+	control = new vaporControl(engine, this);
+
+	engine->getRenderDevice()->init();
+
+	engine->setupInput();
 }
 
 //-----------------------------------//
@@ -185,7 +190,8 @@ void MyFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 
 void MyFrame::OnToolbarButtonClick(wxCommandEvent& event)
 {
-	if( event.GetId() == Toolbar_ToggleScene ) {
+	if( event.GetId() == Toolbar_ToggleScene )
+	{
 		if( treeCtrl->IsShown() )	
 			//treeCtrl->HideWithEffect(wxSHOW_EFFECT_SLIDE_TO_LEFT, 250);
 			treeCtrl->Hide();
@@ -195,7 +201,8 @@ void MyFrame::OnToolbarButtonClick(wxCommandEvent& event)
 
 		Update();
 	}
-	//event.Skip();
+
+	event.Skip();
 }
 
 
@@ -203,18 +210,16 @@ void MyFrame::OnToolbarButtonClick(wxCommandEvent& event)
 
 void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
-    wxMessageBox(wxString::Format
-                 (
-                    "Welcome to %s!\n"
-                    "\n"
-                    "This is the minimal wxWidgets sample\n"
-                    "running under %s.",
-                    wxVERSION_STRING,
-                    wxGetOsDescription()
-                 ),
-                 "About wxWidgets minimal sample",
-                 wxOK | wxICON_INFORMATION,
-                 this);
+    wxMessageBox(
+		wxString::Format( 
+			"Welcome to %s!\n\n"
+			"This is the minimal wxWidgets sample\n"
+			"running under %s.",
+			wxVERSION_STRING,
+			wxGetOsDescription() ),
+		"About wxWidgets minimal sample",
+		wxOK | wxICON_INFORMATION,
+		this);
 }
 
 //-----------------------------------//

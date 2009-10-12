@@ -43,7 +43,7 @@ public:
 
 	virtual const std::string name() const;
 
-private:
+protected:
 
 	std::vector< render::RenderablePtr > renderables;
 };

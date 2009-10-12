@@ -151,6 +151,27 @@ std::vector<byte> File::read(long sz)
 
 //-----------------------------------//
 
+std::vector<std::string> File::readLines()
+{
+	std::vector<byte> font = read();
+	std::string str( font.begin(), font.end() );
+	
+	std::vector<std::string> lines = split(str, '\n');
+	
+	// trim excess \r fat that can be left over
+	foreach( std::string& str, lines )
+	{
+		if( str[str.size()-1] == '\r' )
+		{
+			str.erase( str.size()-1 );
+		}
+	}
+	
+	return lines;
+}
+
+//-----------------------------------//
+
 long File::write(std::vector<byte> buffer, long size)
 {
 	if( (accessMode != AccessMode::Write)

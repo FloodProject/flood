@@ -172,7 +172,7 @@ MS3D::MS3D(const std::string& filename)
 
 MS3D::~MS3D()
 {
-	
+	if( fp ) fclose( fp );	
 }
 
 //-----------------------------------//

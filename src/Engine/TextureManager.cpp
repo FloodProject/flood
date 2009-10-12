@@ -33,7 +33,7 @@ TextureManager::~TextureManager()
 
 TexturePtr TextureManager::getTexture( const std::string& name )
 {
-	ImagePtr img = ResourceManager::getInstance()->loadResource<Image>( name );
+	ImagePtr img = ResourceManager::getInstancePtr()->loadResource<Image>( name );
 
 	if( !img )
 	{
@@ -43,7 +43,7 @@ TexturePtr TextureManager::getTexture( const std::string& name )
 		warn( "render::textures", 
 			"Could not locate '%s': reverting to fallback texture", name.c_str() );
 
-		img = ResourceManager::getInstance()->loadResource<Image>( "media/fallback.png" );
+		img = ResourceManager::getInstancePtr()->loadResource<Image>( "media/fallback.png" );
 	}
 
 	return getTexture(img);
@@ -62,6 +62,18 @@ TexturePtr TextureManager::getTexture( ImagePtr img )
 	TexturePtr tex( new Texture( img ) );
 	textures[img] = tex;
 	return tex;
+}
+
+//-----------------------------------//
+
+uint TextureManager::getMemoryUsage()
+{
+	uint total = 0;
+
+	foreach( texPair p, textures )
+		total += p.first->getBuffer().size();
+
+	return total;
 }
 
 //-----------------------------------//

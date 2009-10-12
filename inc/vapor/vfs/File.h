@@ -15,6 +15,7 @@
 struct PHYSFS_File;
 
 #include "vapor/Platform.h"
+#include "vapor/StringUtilities.h"
 
 namespace vapor {
 	namespace vfs {
@@ -64,6 +65,9 @@ public:
 
 	// Read file into buffer.
 	std::vector<byte> read(long size = -1);
+
+	// Read lines (assumes a text file).
+	std::vector<std::string> readLines();
 
 	// Write buffer into file.
 	long write (std::vector<byte> buffer, long size = -1);

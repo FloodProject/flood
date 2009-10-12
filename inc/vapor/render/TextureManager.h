@@ -9,7 +9,6 @@
 #pragma once
 
 #include "vapor/Platform.h"
-
 #include "vapor/Singleton.h"
 
 #include "vapor/resources/ResourceManager.h"
@@ -46,13 +45,15 @@ public:
 	// Gets a texture given an image.
 	TexturePtr getTexture( resources::ImagePtr img );
 
-	// Gets the memory usage of the textures loaded.
-	//uint getMemoryUsage();
+	// Gets the memory usage of the textures loaded (in kbytes).
+	uint getMemoryUsage();
 
 private:
 
 	// Maps the identifiers to the textures.
 	std::map< resources::ImagePtr, TexturePtr > textures;
+	typedef std::pair< resources::ImagePtr, TexturePtr > texPair;
+	
 };
 
 //-----------------------------------//

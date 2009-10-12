@@ -6,28 +6,19 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-
-#include "vapor/Platform.h"
-#include "vapor/resources/TTF.h"
+#pragma once
 
 namespace vapor {
-	namespace resources {
 
 //-----------------------------------//
 
-TTF::TTF(const std::string& font)
-	: Font( font, 2 )
-{
-
-}
+std::vector<std::string>& split(const std::string &s, char delim, 
+								std::vector<std::string> &elems);
 
 //-----------------------------------//
 
-TTF::~TTF()
-{
-}
+std::vector<std::string> split(const std::string &s, char delim);
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

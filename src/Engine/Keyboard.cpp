@@ -112,6 +112,13 @@ void Keyboard::keyReleased( const KeyEvent& keyEvent )
 
 //-----------------------------------//
 
+const std::vector< bool >& Keyboard::getKeyState()
+{
+	return keyState;
+}
+
+//-----------------------------------//
+
 //Keys::Enum Keyboard::getLastKeyPressed()
 //{
 //	return lastKey;

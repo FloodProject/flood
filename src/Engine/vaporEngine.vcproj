@@ -531,16 +531,24 @@
 					>
 				</File>
 				<File
-					RelativePath=".\FontManager.cpp"
+					RelativePath=".\Font_Loader.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\inc\vapor\resources\FontManager.h"
+					RelativePath="..\..\inc\vapor\resources\Font_Loader.h"
 					>
 				</File>
 				<Filter
 					Name="Bitmap"
 					>
+					<File
+						RelativePath=".\BitmapFont.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\resources\BitmapFont.h"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="TrueType"
@@ -685,6 +693,14 @@
 			</File>
 			<File
 				RelativePath="..\..\inc\vapor\Singleton.h"
+				>
+			</File>
+			<File
+				RelativePath=".\StringUtilities.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\StringUtilities.h"
 				>
 			</File>
 			<File
@@ -1032,10 +1048,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\inc\vapor\Engine.h"
-				>
-			</File>
-			<File
 				RelativePath="..\Framework\Framework.cpp"
 				>
 			</File>
@@ -1053,6 +1065,22 @@
 			>
 			<File
 				RelativePath=".\Engine.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\Engine.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="GUI"
+			>
+			<File
+				RelativePath=".\Label.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\gui\Label.h"
 				>
 			</File>
 		</Filter>

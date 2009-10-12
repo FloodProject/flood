@@ -46,7 +46,7 @@ public:
 	//-----------------------------------//
 
 	// Initialize the engine subsystems.
-	void init();
+	void init( bool createWindow = true );
 
 	// Sets up the global engine logger.
 	void setupLogger();
@@ -58,7 +58,10 @@ public:
 	void setupResourceLoaders();
 
 	// Sets up the rendering device.
-	void setupDevices();
+	void setupDevices( bool createWindow = true );
+
+	// Sets up the input devices.
+	void setupInput();
 
 	//-----------------------------------//
 	// Subsystem acessors

@@ -44,7 +44,7 @@ bool Texture::upload()
 
 	bind();
 
-	// TODO: check the formats more thorougly
+	// TODO: check the formats more thoroughly
 	glTexImage2D( GL_TEXTURE_2D, 0, 
 		convertInternalFormat( img->getPixelFormat() ),
 		img->getWidth(), img->getHeight(), 0,

@@ -17,6 +17,7 @@
 #if defined(VAPOR_MEMORY_TR1_VENDOR)
 	#if defined(VAPOR_COMPILER_MSVC)
 		#include <memory>
+		#include <functional>
 	#elif defined(VAPOR_COMPILER_GCC)
 		#include <tr1/memory>
 	#endif

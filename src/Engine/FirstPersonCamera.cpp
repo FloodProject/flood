@@ -21,13 +21,9 @@ namespace vapor {
 FirstPersonCamera::FirstPersonCamera( input::InputManager* input,
 	render::Device* device, Projection::Enum projection )
 	: Camera( device, projection ), inputManager( input ), 
-	sensivity( 5.0f ), cameraSensivity( 0.002f )
+	sensivity( 1.0f ), cameraSensivity( 0.001f )
 {
-	registerCallbacks();
-	
-	//const input::MouseInfo& info = input->getMouse()->getMouseInfo();
-	//lastPosition.x = info.x;
-	//lastPosition.y = info.y;
+	registerCallbacks();	
 }
 
 //-----------------------------------//
@@ -35,7 +31,34 @@ FirstPersonCamera::FirstPersonCamera( input::InputManager* input,
 void FirstPersonCamera::update( double delta )
 {
 	Camera::update( delta );
+	checkControls();
 	centerCursor();
+}
+
+//-----------------------------------//
+
+void FirstPersonCamera::checkControls()
+{
+	Keyboard* kbd = inputManager->getKeyboard();
+	const std::vector< bool >& state = kbd->getKeyState();
+
+	if( state[Keys::W] == true )
+		translate( math::Vector3( 0.0f, 0.0f, 0.1f * sensivity ) );
+
+	if( state[Keys::S] == true )
+		translate( math::Vector3( 0.0f, 0.0f, -0.1f * sensivity ) );
+	
+	if( state[Keys::A] == true )
+		translate( math::Vector3( 0.1f * sensivity, 0.0f, 0.0f ) );
+
+	if( state[Keys::D] == true )
+		translate( math::Vector3( -0.1f * sensivity, 0.0f, 0.0f ) );
+	
+	if( state[Keys::Q] == true )
+		translate( math::Vector3( 0.0f, -0.1f * sensivity, 0.0f ) );
+
+	if( state[Keys::Z] == true )
+		translate( math::Vector3( 0.0f, 0.1f * sensivity, 0.0f ) );
 }
 
 //-----------------------------------//
@@ -61,6 +84,8 @@ void FirstPersonCamera::setSensivity( float sensivity )
 
 //-----------------------------------//
 
+#define bind_mem_fn( mem, instance ) (tr1::bind( tr1::mem_fn( (mem) ), (instance) ))
+
 void FirstPersonCamera::registerCallbacks()
 {
 	Keyboard* kbd = inputManager->getKeyboard();
@@ -68,14 +93,14 @@ void FirstPersonCamera::registerCallbacks()
 
 	if( kbd )
 	{
-		kbd->onKeyPress.bind( &FirstPersonCamera::onKeyPressed, this );
+		kbd->onKeyPress += fd::bind( &FirstPersonCamera::onKeyPressed, this );
 	}
 	
 	if( mouse )
 	{
-		mouse->onMouseMove.bind( &FirstPersonCamera::onMouseMove, this );
-		mouse->onMouseButtonPress.bind( &FirstPersonCamera::onButtonPressed, this );
-		mouse->onMouseButtonRelease.bind( &FirstPersonCamera::onButtonReleased, this );
+		mouse->onMouseMove += fd::bind( &FirstPersonCamera::onMouseMove, this );
+		mouse->onMouseButtonPress += fd::bind( &FirstPersonCamera::onButtonPressed, this );
+		mouse->onMouseButtonRelease += fd::bind( &FirstPersonCamera::onButtonReleased, this );
 	}
 }
 
@@ -84,42 +109,24 @@ void FirstPersonCamera::registerCallbacks()
 void FirstPersonCamera::onKeyPressed( const KeyEvent& keyEvent )
 {
 	switch( keyEvent.keyCode )
-	{
-	
-	case Keys::W:
-		translate( math::Vector3( 0.0f, 0.0f, 1.0f * sensivity ) );
-		break;
-	case Keys::S:
-		translate( math::Vector3( 0.0f, 0.0f, -1.0f * sensivity ) );
-		break;
-	case Keys::A:
-		translate( math::Vector3( 1.0f * sensivity, 0.0f, 0.0f ) );
-		break;
-	case Keys::D:
-		translate( math::Vector3( -1.0f * sensivity, 0.0f, 0.0f ) );
-		break;
-	
-	case Keys::Q:
-		translate( math::Vector3( 0.0f, -1.0f * sensivity, 0.0f ) );
-		break;
-	case Keys::Z:
-		translate( math::Vector3( 0.0f, 1.0f * sensivity, 0.0f ) );
-		break;
-	
-	case Keys::LControl:
-	{
-		render::Window* window = renderDevice->getWindow();
-		window->setCursorState( !window->getCursorState() );
-		centerCursor();
-		break;
-	}
-	
-	case Keys::N:
-		setSensivity( sensivity - 0.5f );
-		break;
-	case Keys::M:
-		setSensivity( sensivity + 0.5f );
-		break;
+	{	
+		case Keys::LControl:
+		{
+			render::Window* window = renderDevice->getWindow();
+			window->setCursorState( !window->getCursorState() );
+			centerCursor();
+			break;
+		}
+		case Keys::N:
+		{
+			setSensivity( sensivity - 0.5f );
+			break;
+		}
+		case Keys::M:
+		{
+			setSensivity( sensivity + 0.5f );
+			break;
+		}
 	}
 }
 
@@ -127,12 +134,17 @@ void FirstPersonCamera::onKeyPressed( const KeyEvent& keyEvent )
 
 void FirstPersonCamera::onMouseMove( const MouseMoveEvent& moveEvent )
 {
-	Vector3 currentPosition( moveEvent.x, moveEvent.y, 0 );
-	
-	Vector3 delta = currentPosition - lastPosition;
-	lastPosition = currentPosition;
+	render::Window* window = renderDevice->getWindow();
 
-	rotate( delta.y * cameraSensivity, delta.x * cameraSensivity, 0 );
+	if( !window->getCursorState() )
+	{
+		Vector3 currentPosition( moveEvent.x, moveEvent.y, 0 );
+
+		Vector3 delta = currentPosition - lastPosition;
+		lastPosition = currentPosition;
+
+		rotate( delta.y * cameraSensivity, delta.x * cameraSensivity, 0 );
+	}
 }
 
 //-----------------------------------//
