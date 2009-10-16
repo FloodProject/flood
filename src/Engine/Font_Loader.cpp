@@ -88,7 +88,7 @@ Font* Font_Loader::decode(vfs::File& file)
 		glyph.y = y;
 
 		glyph.width = data[i];
-		glyph.heigth = height_per_glyph;
+		glyph.height = height_per_glyph;
 
 		glyphs.push_back( glyph );
 

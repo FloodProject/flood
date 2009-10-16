@@ -1,40 +1,7 @@
 WIP (work-in-progress)
 ======================
 
-Market Analysis
-	
-	Ver as features dos outros engines e tentar encontrar
-	problemas nelas para termos justificação para reinventarmos a roda.
-	
-	OGRE
-	
-		- bastante abstracto
-		- muito complexo
-		- demasiado versátil
-		
-	Unreal Engine
-	
-		- TOO FUCKIN EXPEN$IVE (milhões)
-		
-	Irrlicht
-	
-		- demasiado simplista
-		- pouco extensivel
-		- não tem foco principal nos shaders
-		
-	vapor
 
-		+ Motor de jogo especializado vs. motor de render genérico
-		+ Integração directa com várias APIs de rede, AI, audio
-		+ Grátis, simples e open-sauce. Qualquer um pode contribuir e usar
-		+ Extensivel para jogos multiplayer com o servidor integrável
-		+ Sistema de edição (editor) integrado com suporte às capacidades do motor.
-		+ Sistema de serialização unificado com o motor, para facilidade de criação de ferramentas.
-		+ Integração directa com aimbot e megabot, e cagabot e iotabot
-
-Requirements List
-	
-	
 	
 	
 EXAMPLES:
@@ -58,6 +25,13 @@ http://blog.pavlov.net/2007/11/11/windows-low-fragmentation-heap/
 http://msdn.microsoft.com/en-us/library/aa366750%28VS.85%29.aspx
 http://www.gamasutra.com/view/feature/2971/play_by_play_effective_memory_.php
 http://www.fastformat.org/
+
+Change ExampleFramework to use delegates
+update method in RenderDevice
+Bounding Boxes and Frustum Culling
+Overlays can be 3D too...
+Add Blending defaults (Modulate, Replace, etc)
+Think about overlays positioning (absolute and relative)
 
 Audio:
 
@@ -138,6 +112,7 @@ Engine:
 Math:
 
 	Add matrix and AABB class
+	Use column-major instead of row-major matrices
 	
 vaporEditor:
 

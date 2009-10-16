@@ -83,21 +83,21 @@ void Transformable::reset( )
 
 //-----------------------------------//
 
-void Transformable::setAbsoluteTransform( const math::Matrix4& matrix )
+void Transformable::setAbsoluteTransform( const math::Matrix4x3& matrix )
 {
 	absoluteLocalToWorld = matrix;
 }
 
 //-----------------------------------//
 
-const math::Matrix4& Transformable::getAbsoluteTransform() const
+const math::Matrix4x3& Transformable::getAbsoluteTransform() const
 {
 	return absoluteLocalToWorld;
 }
 
 //-----------------------------------//
 
-math::Matrix4 Transformable::getLocalTransform() const
+math::Matrix4x3 Transformable::getLocalTransform() const
 {
 	//transform = transform * getTranslationMatrix( v_translate );
 	//transform = transform * angles.getOrientationMatrix();
@@ -108,9 +108,9 @@ math::Matrix4 Transformable::getLocalTransform() const
 
 //-----------------------------------//
 
-math::Matrix4 Transformable::getScaleMatrix( math::Vector3 v ) const
+math::Matrix4x3 Transformable::getScaleMatrix( math::Vector3 v ) const
 {
-	Matrix4 s;
+	Matrix4x3 s;
 
 	s.m11 = v.x;
 	s.m22 = v.y;
@@ -121,9 +121,9 @@ math::Matrix4 Transformable::getScaleMatrix( math::Vector3 v ) const
 
 //-----------------------------------//
 
-math::Matrix4 Transformable::getTranslationMatrix( math::Vector3 v ) const
+math::Matrix4x3 Transformable::getTranslationMatrix( math::Vector3 v ) const
 {
-	Matrix4 s;
+	Matrix4x3 s;
 
 	s.tx = v.x;
 	s.ty = v.y;

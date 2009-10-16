@@ -17,6 +17,8 @@
 
 #include "vapor/render/GL.h"
 
+using namespace vapor::math;
+
 namespace vapor {
 	namespace render {
 
@@ -129,7 +131,6 @@ BufferManager* Device::getBufferManager() const
 
 TextureManager* Device::getTextureManager() const
 {
-	//return const_cast<TextureManager*>( &textureManager );
 	return TextureManager::getInstancePtr();
 }
 
@@ -144,6 +145,7 @@ void Device::render( RenderQueue& queue, const scene::Camera* cam )
 {
 	activeTarget->makeCurrent();
 
+	glEnable( GL_DEPTH_TEST );
 	glClear( GL_DEPTH_BUFFER_BIT );
 
 	// sort the list by render group
@@ -155,10 +157,28 @@ void Device::render( RenderQueue& queue, const scene::Camera* cam )
 	{
 		ProgramPtr program = state.renderable->getMaterial()->getProgram();
 
-		program->setUniform( "vp_ProjectionMatrix", cam->getProjectionMatrix() );
-		program->setUniform( "vp_ModelMatrix", state.modelMatrix );
-		program->setUniform( "vp_ViewMatrix", cam->getViewMatrix() );
-		program->setUniform( "vp_ModelViewMatrix", cam->getViewMatrix() * state.modelMatrix );
+		if( state.group == RenderGroup::Normal )
+		{
+			program->setUniform( "vp_ProjectionMatrix", cam->getProjectionMatrix() );
+			program->setUniform( "vp_ModelMatrix", state.modelMatrix );
+			program->setUniform( "vp_ViewMatrix", cam->getViewMatrix() );
+			program->setUniform( "vp_ModelViewMatrix", cam->getViewMatrix() * state.modelMatrix );
+		}
+		else if( state.group == RenderGroup::Overlays )
+		{
+			//glDisable( GL_DEPTH_TEST );
+
+			int w = activeTarget->getSettings().getWidth();
+			int h = activeTarget->getSettings().getHeight();
+
+			Matrix4x4 proj = Matrix4x4::createOrthographicProjection( 
+				-w/2, w/2, -h/2, h/2, -10.0, 10.0 );
+
+			program->setUniform( "vp_ProjectionMatrix", proj );
+			program->setUniform( "vp_ModelMatrix", state.modelMatrix );
+			program->setUniform( "vp_ViewMatrix", math::Matrix4x3::Identity );
+			program->setUniform( "vp_ModelViewMatrix", state.modelMatrix );
+		}
 
 		state.renderable->render( *this );
 	}

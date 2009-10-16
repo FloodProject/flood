@@ -29,8 +29,8 @@ Scene::~Scene()
 
 void Scene::update( double delta )
 {
-	std::stack< Matrix4 > transformStack;
-	transformStack.push( Matrix4::Identity );
+	std::stack< Matrix4x3 > transformStack;
+	transformStack.push( Matrix4x3::Identity );
 	    
 	updateTransformAndBV( shared_from_this(), transformStack );
 
@@ -39,7 +39,7 @@ void Scene::update( double delta )
 
 //-----------------------------------//
 
-void Scene::updateTransformAndBV( NodePtr node, std::stack< Matrix4 >& transformStack )
+void Scene::updateTransformAndBV( NodePtr node, std::stack< Matrix4x3 >& transformStack )
 {
 	// TODO: benckmark and profile this, smells slow
 

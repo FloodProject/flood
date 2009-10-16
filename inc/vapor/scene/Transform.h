@@ -12,7 +12,7 @@
 
 #include "vapor/scene/Node.h"
 
-#include "vapor/math/Matrix.h"
+#include "vapor/math/Matrix4x3.h"
 #include "vapor/math/Vector3.h"
 #include "vapor/math/EulerAngles.h"
 
@@ -39,26 +39,26 @@ public:
 	void reset();
 
 	// Gets/sets the abolute
-	const math::Matrix4& getAbsoluteTransform() const;
-	void setAbsoluteTransform( const math::Matrix4& matrix );
+	const math::Matrix4x3& getAbsoluteTransform() const;
+	void setAbsoluteTransform( const math::Matrix4x3& matrix );
 
 	// Gets the local transformation matrix.
-	math::Matrix4 getLocalTransform() const;
+	math::Matrix4x3 getLocalTransform() const;
 
 protected:
 
 	Transformable();
 	~Transformable();
 
-	math::Matrix4 getScaleMatrix( math::Vector3 v ) const;
-	math::Matrix4 getTranslationMatrix( math::Vector3 v ) const;
+	math::Matrix4x3 getScaleMatrix( math::Vector3 v ) const;
+	math::Matrix4x3 getTranslationMatrix( math::Vector3 v ) const;
 
 	math::EulerAngles angles;
 	math::Vector3 v_translate;
 	math::Vector3 v_scale;
-	math::Matrix4 transform;
+	math::Matrix4x3 transform;
 
-	math::Matrix4 absoluteLocalToWorld;
+	math::Matrix4x3 absoluteLocalToWorld;
 };
 
 //-----------------------------------//

@@ -27,7 +27,7 @@ GLSL_Shader::GLSL_Shader( ShaderType::Enum e, const std::string& text )
 	shaderId = glCreateShader( getGLShaderType(e) );
 
 #ifdef VAPOR_DEBUG
-	if( glGetError() != GL_NO_ERROR )
+	while( glGetError() != GL_NO_ERROR )
 	{
 		warn( "glsl", "Could not create a new shader object" );
 		return;
@@ -66,7 +66,7 @@ bool GLSL_Shader::compile()
 	glCompileShader( shaderId );
 
 #ifdef VAPOR_DEBUG
-	if( glGetError() != GL_NO_ERROR )
+	while( glGetError() != GL_NO_ERROR )
 	{
 		warn( "glsl", "Could not compile shader object '%d'", shaderId );
 	}
@@ -99,7 +99,7 @@ bool GLSL_Shader::upload()
 	glShaderSource( shaderId, 1, &str, nullptr );
 
 #ifdef VAPOR_DEBUG
-	if( glGetError() != GL_NO_ERROR )
+	while( glGetError() != GL_NO_ERROR )
 	{
 		warn( "glsl", "Could not upload shader text to object '%d'", shaderId );
 		return false;

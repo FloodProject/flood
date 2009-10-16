@@ -21,7 +21,8 @@ namespace vapor {
 //-----------------------------------//
 
 Material::Material( const std::string& name )
-	: name( name )
+	: name( name ), _isBlendingEnabled( false ),
+	src( BlendingOperationSource::One ), dst( BlendingOperationDestination::Zero )
 {
 
 }
@@ -29,7 +30,8 @@ Material::Material( const std::string& name )
 //-----------------------------------//
 
 Material::Material( const std::string& name, ProgramPtr program )
-	: name( name ), program( program )
+	: name( name ), program( program ), _isBlendingEnabled( false ),
+	src( BlendingOperationSource::One ), dst( BlendingOperationDestination::Zero )
 {
 
 }
@@ -61,6 +63,41 @@ void Material::setTexture( uint unit, const std::string& name )
 void Material::setTexture( uint unit, TexturePtr tex )
 {
 	textures[unit] = tex;
+}
+
+//-----------------------------------//
+
+bool Material::isBlendingEnabled()
+{
+	//return (src != BlendingOperationSource::Zero)
+		//|| (dst != BlendingOperationDestination::SourceColor);
+
+	return _isBlendingEnabled;
+}
+
+//-----------------------------------//
+
+void Material::setBlending( BlendingOperationSource::Enum src, 
+	BlendingOperationDestination::Enum dst )
+{
+	this->src = src;
+	this->dst = dst;
+	
+	_isBlendingEnabled = true;
+}
+
+//-----------------------------------//
+
+BlendingOperationSource::Enum Material::getSourceBlendingOperation()
+{
+	return src;
+}
+
+//-----------------------------------//
+
+BlendingOperationDestination::Enum Material::getDestinationBlendingOperation()
+{
+	return dst;
 }
 
 //-----------------------------------//
@@ -105,6 +142,12 @@ void Material::bind()
 	}
 
 	program->bind();
+
+	if( isBlendingEnabled() ) 
+	{
+		glEnable( GL_BLEND );
+		glBlendFunc( src, dst );
+	}
 }
 
 //-----------------------------------//
@@ -116,6 +159,11 @@ void Material::unbind()
 	foreach( const texPair& p, getTextures() )
 	{
 		p.second->unbind( p.first );
+	}
+	
+	if( isBlendingEnabled() ) 
+	{
+		glDisable( GL_BLEND );
 	}
 }
 

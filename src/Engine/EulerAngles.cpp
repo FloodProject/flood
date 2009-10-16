@@ -54,9 +54,9 @@ void EulerAngles::identity()
 
 //-----------------------------------//
 
-math::Matrix4 EulerAngles::rotateX( float ang ) const
+math::Matrix4x3 EulerAngles::rotateX( float ang ) const
 {
-	Matrix4 newRotation;
+	Matrix4x3 newRotation;
 
 	newRotation.m11 = 1;
 
@@ -71,9 +71,9 @@ math::Matrix4 EulerAngles::rotateX( float ang ) const
 
 //-----------------------------------//
 
-math::Matrix4 EulerAngles::rotateY( float ang ) const
+math::Matrix4x3 EulerAngles::rotateY( float ang ) const
 {
-	Matrix4 newRotation;
+	Matrix4x3 newRotation;
 
 	newRotation.m11 = math::cosf( ang );
 	newRotation.m13 = -math::sinf( ang );
@@ -88,9 +88,9 @@ math::Matrix4 EulerAngles::rotateY( float ang ) const
 
 //-----------------------------------//
 
-math::Matrix4 EulerAngles::rotateZ( float ang ) const
+math::Matrix4x3 EulerAngles::rotateZ( float ang ) const
 {
-	Matrix4 newRotation;
+	Matrix4x3 newRotation;
 
 	newRotation.m11 = math::cosf( ang );
 	newRotation.m12 = math::sinf( ang );
@@ -105,7 +105,7 @@ math::Matrix4 EulerAngles::rotateZ( float ang ) const
 
 //-----------------------------------//
 
-math::Matrix4 EulerAngles::getOrientationMatrix() const
+math::Matrix4x3 EulerAngles::getOrientationMatrix() const
 {
 	return rotateY( yang ) * rotateX( xang ) * rotateZ( zang );
 }

@@ -43,9 +43,18 @@ render::TexturePtr BitmapFont::getTexture()
 
 //-----------------------------------//
 
-const std::vector<Glyph>& BitmapFont::getGlyphInformation() const
+const std::vector<Glyph>& BitmapFont::getGlyphsTable() const
 {
 	return glyphData;
+}
+
+
+//-----------------------------------//
+
+const std::pair<int,int> BitmapFont::getGlyphSize() const
+{
+	// TODO: ...
+	return std::make_pair( 16, 16 );
 }
 
 //-----------------------------------//

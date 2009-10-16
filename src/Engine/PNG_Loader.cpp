@@ -47,7 +47,7 @@ Image* PNG_Pico_Loader::decode(File& file)
 	
 	decodePNG(buffer, width, height, &filebuf[0], filebuf.size());
 
-	flip( buffer, width, height );
+	//flip( buffer, width, height );
 
 	// build our image with the data. the pixel format returned by picoPNG
 	// is always the same, 32bits per pixel, RGBA 8 bits per component.

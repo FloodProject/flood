@@ -32,7 +32,7 @@ public:
 
 	virtual const std::string save(int indent = 0) { return ""; }
 
-	static shared_ptr<audio::Context> getContext(shared_ptr<Listener> ls);
+	static tr1::shared_ptr<audio::Context> getContext(tr1::shared_ptr<Listener> ls);
 };
 
 //-----------------------------------//

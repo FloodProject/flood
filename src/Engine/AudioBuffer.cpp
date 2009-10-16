@@ -18,7 +18,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-Buffer::Buffer( audio::Device* device, shared_ptr<resources::Sound> sound )
+Buffer::Buffer( audio::Device* device, tr1::shared_ptr<resources::Sound> sound )
 	: device(device), bufferId(0), resource(sound)
 {
 	alGenBuffers(1, &bufferId);

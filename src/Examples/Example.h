@@ -50,6 +50,7 @@ protected:
 
 private:
 
+	gui::LabelPtr label;
 	resources::MS3DPtr mesh;
 	resources::SoundPtr snd;
 	scene::SoundPtr sound;

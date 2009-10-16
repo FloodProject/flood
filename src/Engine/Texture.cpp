@@ -62,7 +62,7 @@ bool Texture::upload()
 	//	GL_RGBA, GL_UNSIGNED_BYTE, &img->getBuffer()[0] );
 
 #ifdef VAPOR_DEBUG
-	if( glGetError() != GL_NO_ERROR )
+	while( glGetError() != GL_NO_ERROR )
 	{
 		warn( "gl", "Could not upload texture object '%d'", id );
 		uploaded = false;
@@ -90,6 +90,13 @@ void Texture::unbind( int unit )
 	glBindTexture( GL_TEXTURE_2D, 0 );
 
 	//glDisable( GL_TEXTURE_2D );
+}
+
+//-----------------------------------//
+
+resources::ImagePtr Texture::getImage() const
+{
+	return img;
 }
 
 //-----------------------------------//

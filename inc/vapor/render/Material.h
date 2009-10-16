@@ -14,10 +14,47 @@
 #include "vapor/render/Texture.h"
 #include "vapor/resources/Shader.h"
 
+#include "vapor/render/GL.h"
+
 #include "vapor/render/TextureManager.h"
 
 namespace vapor {
 	namespace render {
+
+//-----------------------------------//
+
+namespace BlendingOperationSource
+{
+	enum Enum 
+	{ 
+		Zero = GL_ZERO,
+		One = GL_ONE,
+		DestinationColor = GL_DST_COLOR,
+		OneMinusDestinationColor = GL_ONE_MINUS_DST_COLOR,
+		SourceAlpha = GL_SRC_ALPHA,
+		OneMinusSourceAlpha = GL_ONE_MINUS_SRC_ALPHA,
+		DestinationAlpha = GL_DST_ALPHA,
+		OneMinusDestinationAlpha = GL_ONE_MINUS_DST_ALPHA,
+		SourceAlphaSaturate = GL_SRC_ALPHA_SATURATE
+	};
+}
+
+//-----------------------------------//
+
+namespace BlendingOperationDestination
+{
+	enum Enum
+	{
+		Zero = GL_ZERO,
+		One = GL_ONE,
+		SourceColor = GL_SRC_COLOR,
+		OneMinusSourceColor = GL_ONE_MINUS_SRC_COLOR,
+		SourceAlpha = GL_SRC_ALPHA,
+		OneMinusSourceAlpha = GL_ONE_MINUS_SRC_ALPHA,
+		DestinationAlpha = GL_DST_ALPHA,
+		OneMinusDestinationAlpha = GL_ONE_MINUS_DST_ALPHA,
+	};
+}
 
 //-----------------------------------//
 
@@ -48,6 +85,20 @@ public:
 	// Sets the associated program.
 	void setProgram( ProgramPtr program );
 
+	// Gets the blending options for this material.
+	BlendingOperationSource::Enum getSourceBlendingOperation();
+	
+	// Gets the blending options for this material.
+	BlendingOperationDestination::Enum getDestinationBlendingOperation();
+
+	// Is blending enabled?
+	// Blending is automatically enabled if you set a custom option.
+	bool isBlendingEnabled();
+
+	// Sets the blending options for this material.
+	void setBlending( BlendingOperationSource::Enum src, 
+		BlendingOperationDestination::Enum dst );
+
 	// Gets the textures in the material.
 	const std::map< uint, TexturePtr >& getTextures() const;
 
@@ -57,11 +108,16 @@ public:
 	// Unbinds the material object.
 	void unbind();
 
-	// Serialization
+	// Serialization.
 	//void load( const std::string& name );
 	//void save( const std::string& name );
 
 protected:
+
+	// Blending operations
+	BlendingOperationSource::Enum src;
+	BlendingOperationDestination::Enum dst;
+	bool _isBlendingEnabled;
 
 	// Textures
 	std::map< uint, TexturePtr > textures;

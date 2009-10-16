@@ -19,10 +19,9 @@ namespace vapor {
 //-----------------------------------//
 
 /**
- * Anchor points for positioning the label on the screen.
- * When you specify an alignment, the positioning of the 
- * label will be relative to the point you specified.
- * Here is some awesome ASCII art exemplifying it all:
+ * Anchor points for positioning the label on the screen. When you specify 
+ * an alignment, the positioning of the label will be relative to the point
+ * you specified. Here is some awesome ASCII art exemplifying it all:
  *		 ______________
  *		|              |
  *		| TL   TC   TR |
@@ -68,12 +67,12 @@ class Label : public scene::Geometry
 {
 public:
 
-	Label( std::string text, resources::FontPtr font,
+	Label( const std::string& text, resources::FontPtr font,
 		render::MaterialPtr mat,
 		Anchor::Enum anchor = Anchor::Unanchored );
 
-	Label( std::string text, std::string font, 
-		Anchor::Enum anchor = Anchor::Unanchored );
+	//Label( const std::string& text, std::string font, 
+		//Anchor::Enum anchor = Anchor::Unanchored );
 
 	virtual ~Label();
 
@@ -110,7 +109,7 @@ private:
 	std::string text;
 	Anchor::Enum anchor;
 	resources::FontPtr font;
-	render::MaterialPtr material;
+	render::RenderablePtr renderable;
 	bool isDirty;
 };
 

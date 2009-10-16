@@ -8,7 +8,7 @@
 
 #include "vapor/PCH.h"
 
-#include "vapor/math/Matrix.h"
+#include "vapor/math/Matrix4x3.h"
 #include "vapor/math/Vector3.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -56,7 +56,7 @@
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// Matrix4 class members
+// Matrix4x3 class members
 //
 /////////////////////////////////////////////////////////////////////////////
 
@@ -66,11 +66,11 @@ namespace vapor {
 //-----------------------------------//
 
 //---------------------------------------------------------------------------
-// Matrix4::identity
+// Matrix4x3::identity
 //
 // Set the matrix to identity
 
-void Matrix4::identity() 
+void Matrix4x3::identity() 
 {
 	m11 = 1.0f; m12 = 0.0f; m13 = 0.0f;
 	m21 = 0.0f; m22 = 1.0f; m23 = 0.0f;
@@ -81,7 +81,7 @@ void Matrix4::identity()
 //-----------------------------------//
 
 //---------------------------------------------------------------------------
-// Vector * Matrix4
+// Vector * Matrix4x3
 //
 // Transform the point.  This makes using the vector class look like it
 // does with linear algebra notation on paper.
@@ -91,7 +91,7 @@ void Matrix4::identity()
 // See 7.1.7
 
 
-Vector3	operator*(const Vector3 &p, const Matrix4 &m)
+Vector3	operator*(const Vector3 &p, const Matrix4x3 &m)
 {
 
 	// Grind through the linear algebra.
@@ -103,7 +103,7 @@ Vector3	operator*(const Vector3 &p, const Matrix4 &m)
 	);
 }
 
-Vector3 &operator*=(Vector3 &p, const Matrix4 &m) {
+Vector3 &operator*=(Vector3 &p, const Matrix4x3 &m) {
 	p = p * m;
 	return p;
 }
@@ -111,7 +111,7 @@ Vector3 &operator*=(Vector3 &p, const Matrix4 &m) {
 //-----------------------------------//
 
 //---------------------------------------------------------------------------
-// Matrix4 * Matrix4
+// Matrix4x3 * Matrix4x3
 //
 // Matrix concatenation.  This makes using the vector class look like it
 // does with linear algebra notation on paper.
@@ -120,10 +120,10 @@ Vector3 &operator*=(Vector3 &p, const Matrix4 &m) {
 //
 // See 7.1.6
 
-Matrix4 operator*(const Matrix4 &a, const Matrix4 &b) 
+Matrix4x3 operator*(const Matrix4x3 &a, const Matrix4x3 &b) 
 {
 
-	Matrix4 r;
+	Matrix4x3 r;
 
 	// Compute the upper 3x3 (linear transformation) portion
 
@@ -154,7 +154,7 @@ Matrix4 operator*(const Matrix4 &a, const Matrix4 &b)
 
 //-----------------------------------//
 
-Matrix4 &operator*=(Matrix4 &a, const Matrix4 &b) 
+Matrix4x3 &operator*=(Matrix4x3 &a, const Matrix4x3 &b) 
 {
 	a = a * b;
 	return a;
@@ -169,7 +169,7 @@ Matrix4 &operator*=(Matrix4 &a, const Matrix4 &b)
 //
 // See 9.1.1 for more info.
 
-float	determinant(const Matrix4 &m) {
+float	determinant(const Matrix4x3 &m) {
 	return
 		  m.m11 * (m.m22*m.m33 - m.m23*m.m32)
 		+ m.m12 * (m.m23*m.m31 - m.m21*m.m33)
@@ -186,7 +186,7 @@ float	determinant(const Matrix4 &m) {
 //
 // See 9.2.1 for more info.
 
-Matrix4 inverse(const Matrix4 &m) {
+Matrix4x3 inverse(const Matrix4x3 &m) {
 
 	// Compute the determinant
 
@@ -205,7 +205,7 @@ Matrix4 inverse(const Matrix4 &m) {
 	// Compute the 3x3 portion of the inverse, by
 	// dividing the adjoint by the determinant
 
-	Matrix4	r;
+	Matrix4x3	r;
 
 	r.m11 = (m.m22*m.m33 - m.m23*m.m32) * oneOverDet;
 	r.m12 = (m.m13*m.m32 - m.m12*m.m33) * oneOverDet;
@@ -234,7 +234,7 @@ Matrix4 inverse(const Matrix4 &m) {
 
 //-----------------------------------//
 
-const Matrix4 Matrix4::Identity;
+const Matrix4x3 Matrix4x3::Identity;
 
 //-----------------------------------//
 

@@ -10,6 +10,16 @@
 
 #include "Example.h"
 
+#include <boost/lexical_cast.hpp>
+
+std::string getFPS( float lastFrameTime )
+{
+	if( lastFrameTime == 0 ) return "";
+
+	std::string fps( boost::lexical_cast< std::string >( int( 1.0f / lastFrameTime ) ) );
+	return "FPS: " + fps;
+}
+
 //-----------------------------------//
 
 Example::Example(const char** argv)
@@ -54,13 +64,24 @@ void Example::onSetupScene()
 
 	MaterialPtr mat( new Material( "SimpleWhite", program ) );
 	FontPtr font = rm->loadResource< Font >( "Calibri.font" );
-	LabelPtr label( new Label("Yey", font, mat) );
-	//scene->add( label );
+	
+	label.reset( new Label( getFPS( lastFrameTime ), font, mat ) );
+
+	GroupPtr group( new Group() );
+
+	LabelPtr zero( new Label( "o zero é uma besta bestial :D", font, mat ) );
+	zero->translate( Vector3( 0.0f, -20.0f, 0.0f ) );	
+
+	group->add( zero );
+	group->add( label );
+	
+	group->translate( Vector3( -300.0f, 220.0f, 0.0f ) );
+	
+	scene->add( group );
 
 	// Create a new Camera and position it to look at origin
 	cam.reset( new FirstPersonCamera( getInputManager(), getRenderDevice() ) );
 	cam->translate( Vector3( 0.0f, 0.0f, 0.0f ) );
-	//cam->lookAt( Vector3::Zero );
 	scene->add( cam );
 
 	mesh = rm->loadResource< MS3D >( "media/terreno.ms3d" );
@@ -70,19 +91,20 @@ void Example::onSetupScene()
 		rend->getMaterial()->setProgram( program );
 	}
 
+	scene->add( mesh );
+
 	ListenerPtr ls( new Listener( getAudioDevice() ) );
 	//sound.reset( new scene::Sound( ls, snd ) );
 	//scene->add( ls ); scene->add( sound );
-
-	scene->add( mesh );
-
-
 }
 
 //-----------------------------------//
 
 void Example::onUpdate( double delta ) 
 {
+	static double time;
+	time += delta;
+
 	ScenePtr scene = getSceneManager();
 	scene->update( delta );
 
@@ -92,6 +114,13 @@ void Example::onUpdate( double delta )
 		c.g += 0.000003f / float(delta); c.b = (c.b > 1.0f) ? 0.0f : c.b;
 		c.b += 0.000007f / float(delta); c.g = (c.g > 1.0f) ? 0.0f : c.g;
 	}
+	
+	//if( time > 1.0 )
+	//{
+		//debug( "%s", getFPS( lastFrameTime ).c_str() );
+		label->setText( getFPS( lastFrameTime ) );
+		//time = 0;
+	//}
 }
 
 //-----------------------------------//
@@ -117,7 +146,7 @@ void Example::onKeyPressed( const KeyEvent& keyEvent )
 		Log::showDebug = !Log::showDebug;
 
 	if( keyEvent.keyCode == Keys::F )
-		debug( "fps: %d", int( 1.0f / lastFrameTime ) );
+		//debug( "fps: %d", int( 1.0f / lastFrameTime ) );
 
 	if( keyEvent.keyCode == Keys::G )
 	{

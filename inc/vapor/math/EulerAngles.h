@@ -9,7 +9,7 @@
 #pragma once
 
 #include "vapor/Platform.h"
-#include "vapor/math/Matrix.h"
+#include "vapor/math/Matrix4x3.h"
 #include "vapor/math/Vector3.h"
 
 namespace vapor {
@@ -40,12 +40,12 @@ public:
 	void identity();
 
 	// Gets a orientation matrix represeting the rotation angles.
-	math::Matrix4 getOrientationMatrix() const;
+	math::Matrix4x3 getOrientationMatrix() const;
 
 	// many more methods implemented here ...
-	math::Matrix4 rotateX( float ang ) const;
-	math::Matrix4 rotateY( float ang ) const;
-	math::Matrix4 rotateZ( float ang ) const;
+	math::Matrix4x3 rotateX( float ang ) const;
+	math::Matrix4x3 rotateY( float ang ) const;
+	math::Matrix4x3 rotateZ( float ang ) const;
 
 	float xang, yang, zang;
 };

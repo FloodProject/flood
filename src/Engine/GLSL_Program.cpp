@@ -27,7 +27,7 @@ GLSL_Program::GLSL_Program( GLSL_ShaderPtr vs, GLSL_ShaderPtr ps )
 	id = glCreateProgram( );
 
 #ifdef VAPOR_DEBUG
-	if( glGetError() != GL_NO_ERROR )
+	while( glGetError() != GL_NO_ERROR )
 	{
 		warn( "glsl", "Could not create a new program object" );
 		return;
@@ -48,7 +48,7 @@ GLSL_Program::~GLSL_Program()
 		glDetachShader( id, shader->id() );
 
 #ifdef VAPOR_DEBUG
-		if( glGetError() != GL_NO_ERROR )
+		while( glGetError() != GL_NO_ERROR )
 		{
 			warn( "glsl", "Could not detach shader object '%d'", shader->id() );
 			return;
@@ -59,7 +59,7 @@ GLSL_Program::~GLSL_Program()
 	glDeleteProgram( id );
 
 #ifdef VAPOR_DEBUG
-	if( glGetError() != GL_NO_ERROR )
+	while( glGetError() != GL_NO_ERROR )
 	{
 		warn( "glsl", "Could not delete program object '%d'", id );
 		return;
@@ -78,7 +78,7 @@ void GLSL_Program::setAttribute( const std::string& name, VertexAttribute::Enum 
 	glBindAttribLocation( id, attr, name.c_str() );
 
 #ifdef VAPOR_DEBUG
-	if( glGetError() != GL_NO_ERROR )
+	while( glGetError() != GL_NO_ERROR )
 	{
 		warn( "glsl", "Could not bind attribute variable in program object '%d'", id );
 	}
@@ -110,7 +110,7 @@ void GLSL_Program::setUniform( const std::string& slot, int data )
 
 //-----------------------------------//
 
-void GLSL_Program::setUniform( const std::string& slot, const math::Matrix4& matrix )
+void GLSL_Program::setUniform( const std::string& slot, const math::Matrix4x3& matrix )
 {
 	if( !isLinked() ) return;
 
@@ -266,7 +266,7 @@ void GLSL_Program::bind()
 	glUseProgram( id );
 
 #ifdef VAPOR_DEBUG
-	if( glGetError() != GL_NO_ERROR )
+	while( glGetError() != GL_NO_ERROR )
 	{
 		warn( "glsl", "Could not bind program object '%d'", id );
 		return;
@@ -281,7 +281,7 @@ void GLSL_Program::unbind()
 	glUseProgram( 0 );
 
 #ifdef VAPOR_DEBUG
-	if( glGetError() != GL_NO_ERROR )
+	while( glGetError() != GL_NO_ERROR )
 	{
 		warn( "glsl", "Could not bind program object '%d'", id );
 		return;

@@ -30,7 +30,7 @@ struct Glyph
 	int x;
 	int y;
 	int width;
-	int heigth;
+	int height;
 };
 
 //-----------------------------------//
@@ -58,7 +58,10 @@ public:
 	virtual render::TexturePtr getTexture() = 0;
 
 	// Gets an array with the available glyphs information.
-	virtual const std::vector<Glyph>& getGlyphInformation() const = 0;
+	virtual const std::vector<Glyph>& getGlyphsTable() const = 0;
+
+	// Gets the size information of a glyph.
+	virtual const std::pair<int,int> getGlyphSize() const = 0;
 
 	// Gets the resource group of the font.
 	virtual ResourceGroup::Enum getResourceGroup() const;

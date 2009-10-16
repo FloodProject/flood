@@ -41,10 +41,10 @@ void Listener::update( double delta )
 
 //-----------------------------------//
 
-shared_ptr<audio::Context> Listener::getContext(ListenerPtr ls)
+tr1::shared_ptr<audio::Context> Listener::getContext(ListenerPtr ls)
 {
-	shared_ptr<audio::Context> ctx = 
-		static_pointer_cast<audio::Context>(ls);
+	tr1::shared_ptr<audio::Context> ctx = 
+		tr1::static_pointer_cast<audio::Context>(ls);
 
 	return ctx;
 }

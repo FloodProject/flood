@@ -66,7 +66,7 @@ void Renderable::render( render::Device& device )
 
 #ifdef VAPOR_DEBUG
 		// check for errors
-		if( glGetError() != GL_NO_ERROR )
+		while( glGetError() != GL_NO_ERROR )
 		{
 			warn( "gl::buffers", "Error drawing renderable" );
 		}

@@ -14,7 +14,7 @@
 #include "vapor/render/VertexBuffer.h"
 #include "vapor/render/IndexBuffer.h"
 
-#include "vapor/math/Matrix.h"
+#include "vapor/math/Matrix4x3.h"
 
 #include "vapor/render/GL.h"
 

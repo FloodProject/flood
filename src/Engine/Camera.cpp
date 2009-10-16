@@ -52,7 +52,7 @@ const math::Matrix4x4& Camera::getProjectionMatrix() const
 
 //-----------------------------------//
 
-const math::Matrix4& Camera::getViewMatrix() const
+const math::Matrix4x3& Camera::getViewMatrix() const
 {
 	return viewMatrix;
 }
@@ -115,43 +115,25 @@ void Camera::update( double delta )
 
 void Camera::setupProjection()
 {
-	//glMatrixMode( GL_PROJECTION );
-	//glLoadIdentity();
-
-	//gluPerspective( fov, getAspectRatio(), near_, far_ );
-
-	//float proj[16];
-	//glGetFloatv( GL_PROJECTION_MATRIX, proj );
-
 	if( projection == Projection::Perspective )
 	{
-		float h = 1.0f / math::tanf( math::degreeToRadian( fov ) / 2.0 );
-		float neg_depth = (near_ - far_);
-		
-		projectionMatrix.m11 = h / getAspectRatio();
-		projectionMatrix.m12 = 0;
-		projectionMatrix.m13 = 0;
-		projectionMatrix.m14 = 0;
-		
-		projectionMatrix.m21 = 0;
-		projectionMatrix.m22 = h;
-		projectionMatrix.m23 = 0;
-		projectionMatrix.m24 = 0;
-
-		projectionMatrix.m31 = 0;
-		projectionMatrix.m32 = 0;
-		projectionMatrix.m33 = (far_ + near_) / neg_depth;
-		projectionMatrix.m34 = 2.0f * (near_* far_) / neg_depth;
-
-		projectionMatrix.tx = 0;
-		projectionMatrix.ty = 0;
-		projectionMatrix.tz = -1.0;
-		projectionMatrix.tw = 0;
+		projectionMatrix = Matrix4x4::createPerspectiveProjection( fov, getAspectRatio(), near_, far_ );
 	}
 	else
 	{
-		glOrtho( -1.0, 1.0, -1.0, 1.0, near_, far_ );
+		projectionMatrix = Matrix4x4::createOrthographicProjection( 
+			0.0, target->getSettings().getWidth(),
+			0.0, target->getSettings().getHeight(),
+			near_, far_ );
 	}
+
+	glMatrixMode( GL_PROJECTION );
+	glLoadIdentity();
+	gluOrtho2D( 0.0, target->getSettings().getWidth(), 0.0, target->getSettings().getHeight() );
+	//glOrtho( 0.0, target->getSettings().getWidth(), 0.0, target->getSettings().getHeight(), near_, far_ );
+
+	GLfloat test[16];
+	glGetFloatv( GL_PROJECTION_MATRIX, &test[0] );
 }
 
 //-----------------------------------//
@@ -165,7 +147,7 @@ void Camera::setupView()
 	Vector3	xaxis = upVector.cross(zaxis).normalize();
 	Vector3	yaxis = zaxis.cross(xaxis);
 
-	Matrix4 m;
+	Matrix4x3 m;
 	m.m11 = xaxis.x;
 	m.m12 = xaxis.y;
 	m.m13 = xaxis.z;
@@ -194,7 +176,7 @@ void Camera::setupView()
 	//float test[16];
 	//glGetFloatv( GL_MODELVIEW_MATRIX, test );
 
-	//Matrix4 glView;
+	//Matrix4x3 glView;
 
 	//glView.m11 = test[0];
 	//glView.m12 = test[1];

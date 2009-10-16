@@ -52,7 +52,7 @@ bool IndexBuffer::bind()
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, id );
 
 #ifdef VAPOR_DEBUG
-	if( glGetError() != GL_NO_ERROR )
+	while( glGetError() != GL_NO_ERROR )
 	{
 		warn( "gl::buffers", "Error binding index buffer" );
 		return false;
@@ -69,7 +69,7 @@ bool IndexBuffer::unbind()
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
 
 #ifdef VAPOR_DEBUG
-	if( glGetError() != GL_NO_ERROR )
+	while( glGetError() != GL_NO_ERROR )
 	{
 		warn( "gl::buffers", "Error unbinding index buffer" );
 		return false;
@@ -91,10 +91,10 @@ bool IndexBuffer::build( BufferUsage::Enum bU, BufferAccess::Enum bA )
 		is16bit() ? &data16[0] : reinterpret_cast<ushort*>(&data32[0]), 
 		getGLBufferType( bU, bA ) );
 
-	debug( "index buffer '%d' has size '%d'", id, getNumIndices() );
+	//debug( "index buffer '%d' has size '%d'", id, getNumIndices() );
 
 #ifdef VAPOR_DEBUG
-	if( glGetError() != GL_NO_ERROR )
+	while( glGetError() != GL_NO_ERROR )
 	{
 		warn( "gl::buffers", "Could not buffer data in index buffer" );
 		return false;

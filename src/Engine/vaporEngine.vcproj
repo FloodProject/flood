@@ -187,11 +187,15 @@
 				Name="Matrix"
 				>
 				<File
-					RelativePath=".\Matrix.cpp"
+					RelativePath=".\Matrix4x3.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\inc\vapor\math\Matrix.h"
+					RelativePath="..\..\inc\vapor\math\Matrix4x3.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Matrix4x4.cpp"
 					>
 				</File>
 				<File
@@ -660,14 +664,6 @@
 			Name="Platform"
 			>
 			<File
-				RelativePath=".\Endianness.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\Endianness.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\inc\vapor\Language.h"
 				>
 			</File>
@@ -676,43 +672,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\PCH.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\PCH.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\inc\vapor\Platform.h"
 				>
 			</File>
 			<File
 				RelativePath="..\..\inc\vapor\Singleton.h"
-				>
-			</File>
-			<File
-				RelativePath=".\StringUtilities.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\StringUtilities.h"
 				>
 			</File>
 			<File
@@ -768,6 +732,38 @@
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\NativeFile.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Utilities"
+				>
+				<File
+					RelativePath=".\Endianness.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\Endianness.h"
+					>
+				</File>
+				<File
+					RelativePath=".\StringUtilities.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\StringUtilities.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="PCH"
+				>
+				<File
+					RelativePath=".\PCH.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\PCH.h"
 					>
 				</File>
 			</Filter>
@@ -889,98 +885,6 @@
 			</Filter>
 		</Filter>
 		<Filter
-			Name="Input"
-			>
-			<File
-				RelativePath=".\InputManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\input\InputManager.h"
-				>
-			</File>
-			<Filter
-				Name="SFML"
-				>
-				<File
-					RelativePath=".\SFML_InputManager.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\input\SFML_InputManager.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Devices"
-				>
-				<File
-					RelativePath=".\Device.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\input\Device.h"
-					>
-				</File>
-				<Filter
-					Name="Joystick"
-					>
-					<File
-						RelativePath=".\Joystick.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\inc\vapor\input\Joystick.h"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="Mouse"
-					>
-					<File
-						RelativePath=".\Mouse.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\inc\vapor\input\Mouse.h"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="Keyboard"
-					>
-					<File
-						RelativePath=".\Keyboard.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\inc\vapor\input\Keyboard.h"
-						>
-					</File>
-				</Filter>
-			</Filter>
-			<Filter
-				Name="Map"
-				>
-				<File
-					RelativePath=".\InputMap.cpp"
-					>
-					<FileConfiguration
-						Name="Release|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\input\InputMap.h"
-					>
-				</File>
-			</Filter>
-		</Filter>
-		<Filter
 			Name="Audio"
 			>
 			<Filter
@@ -1083,6 +987,98 @@
 				RelativePath="..\..\inc\vapor\Engine.h"
 				>
 			</File>
+			<Filter
+				Name="Input"
+				>
+				<File
+					RelativePath=".\InputManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\input\InputManager.h"
+					>
+				</File>
+				<Filter
+					Name="SFML"
+					>
+					<File
+						RelativePath=".\SFML_InputManager.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\input\SFML_InputManager.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Devices"
+					>
+					<File
+						RelativePath=".\Device.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\input\Device.h"
+						>
+					</File>
+					<Filter
+						Name="Joystick"
+						>
+						<File
+							RelativePath=".\Joystick.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\inc\vapor\input\Joystick.h"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="Mouse"
+						>
+						<File
+							RelativePath=".\Mouse.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\inc\vapor\input\Mouse.h"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="Keyboard"
+						>
+						<File
+							RelativePath=".\Keyboard.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\inc\vapor\input\Keyboard.h"
+							>
+						</File>
+					</Filter>
+				</Filter>
+				<Filter
+					Name="Map"
+					>
+					<File
+						RelativePath=".\InputMap.cpp"
+						>
+						<FileConfiguration
+							Name="Release|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\input\InputMap.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="GUI"

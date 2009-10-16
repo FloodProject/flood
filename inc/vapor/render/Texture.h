@@ -40,6 +40,9 @@ public:
 	// Unbinds the texture object.
 	void unbind( int unit = 0 );
 
+	// Gets the associated image.
+	resources::ImagePtr getImage() const;
+
 private:
 
 	GLint convertInternalFormat( resources::PixelFormat::Enum fmt );

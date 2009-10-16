@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "vapor/math/Matrix.h"
+#include "vapor/math/Matrix4x3.h"
 #include "vapor/math/Plane.h"
 
 namespace vapor {
@@ -28,7 +28,7 @@ class VAPOR_API Frustum
 public:
 
     // Constructs the 6 planes making up the frustum, using the passed parameters.
-    Frustum ( float FOV, float aspectRatio, float near, float far, Matrix4 localToWorld);
+    Frustum ( float FOV, float aspectRatio, float near, float far, Matrix4x3 localToWorld);
     
     // Tests all the points of the AABB to check if they are inside the frustum.
     // Returns true if the aabb is inside or overlaping the frustum, false otherwise

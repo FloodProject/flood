@@ -53,7 +53,7 @@
 #include <boost/utility.hpp>
 
 //---------------------------------------------------------------------//
-// Macro for unused parameters to clean warning disease...
+// Macro for unused parameters to clean up 'The Warning Disease'
 //---------------------------------------------------------------------//
 
 #define VAPOR_UNUSED( id )

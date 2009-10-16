@@ -21,7 +21,7 @@
 #include "vapor/render/Renderable.h"
 #include "vapor/render/RenderQueue.h"
 
-#include "vapor/math/Matrix.h"
+#include "vapor/math/Matrix4x3.h"
 #include "vapor/math/Color.h"
 
 namespace vapor {

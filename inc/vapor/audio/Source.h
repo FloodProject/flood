@@ -36,7 +36,7 @@ class VAPOR_API Source : private boost::noncopyable
 {
 public:
 
-	Source( shared_ptr<audio::Context> context, resources::SoundPtr sound );
+	Source( tr1::shared_ptr<audio::Context> context, resources::SoundPtr sound );
 	~Source();
 
 	//void setResource( shared_ptr<resources::Resource> sound );
@@ -83,10 +83,10 @@ protected:
 	audio::Device* device;
 
 	// Holds a pointer to the audio context.
-	shared_ptr<audio::Context> context;
+	tr1::shared_ptr<audio::Context> context;
 	
 	// Holds a pointer to the audio data buffer.
-	shared_ptr<Buffer> buffer;
+	tr1::shared_ptr<Buffer> buffer;
 
 	// Holds the source id from OpenAL.
 	ALuint sourceId;

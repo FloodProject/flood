@@ -11,7 +11,7 @@
 #include "vapor/Platform.h"
 
 #include "vapor/math/Vector3.h"
-#include "vapor/math/Matrix.h"
+#include "vapor/math/Matrix4x3.h"
 #include "vapor/math/Matrix4x4.h"
 #include "vapor/math/Frustum.h"
 
@@ -66,7 +66,7 @@ public:
 	const math::Matrix4x4& getProjectionMatrix() const;
 
 	// Gets the view matrix of the camera.
-	const math::Matrix4& getViewMatrix() const;
+	const math::Matrix4x3& getViewMatrix() const;
 
 	// Sets the field-of-view of the camera.
 	void setFOV( float fov );
@@ -126,7 +126,7 @@ protected:
 	void setupView();
 
 	// View matrix.
-	math::Matrix4 viewMatrix;
+	math::Matrix4x3 viewMatrix;
 
 	// Projection matrix.
 	math::Matrix4x4 projectionMatrix;

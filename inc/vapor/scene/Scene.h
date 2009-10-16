@@ -11,7 +11,7 @@
 #include "vapor/Platform.h"
 #include "vapor/scene/Group.h"
 
-#include "vapor/math/Matrix.h"
+#include "vapor/math/Matrix4x3.h"
 
 namespace vapor {
 	namespace scene {
@@ -52,7 +52,7 @@ public:
 private:
 
 	void updateTransformAndBV( NodePtr node, 
-		std::stack< math::Matrix4 >& transformStack );
+		std::stack< math::Matrix4x3 >& transformStack );
 };
 
 //-----------------------------------//

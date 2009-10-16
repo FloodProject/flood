@@ -36,8 +36,11 @@ public:
 	// Gets the texture that backs this font.
 	virtual render::TexturePtr getTexture();
 
+	// Gets the size information of a glyph.
+	virtual const std::pair<int,int> getGlyphSize() const;
+
 	// Gets an array with the available glyphs information.
-	virtual const std::vector<Glyph>& getGlyphInformation() const;
+	virtual const std::vector<Glyph>& getGlyphsTable() const;
 
 private:
 

@@ -19,7 +19,10 @@ namespace vapor {
 //-----------------------------------//
 
 /**
- * Use this to get timing information.
+ * Represents a timer that can be used for timing information.
+ * Uses high-precision timers on Windows if supported, else it will use
+ * the general lower-precision timers. On POSIX platforms it'll use the
+ * most high-precision timer available.
  */
 
 class VAPOR_API Timer : private boost::noncopyable

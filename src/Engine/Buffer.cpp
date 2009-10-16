@@ -23,13 +23,13 @@ Buffer::Buffer()
 	{
 		glGenBuffers( 1, &id );
 
-		if( glGetError() != GL_NO_ERROR )
+		while( glGetError() != GL_NO_ERROR )
 		{
 			warn( "gl::buffers", "Error generating a new buffer" );
 			return;
 		}
 
-		debug( "created opengl buffer (id: '%d')", id );
+		//debug( "created opengl buffer (id: '%d')", id );
 	}
 }
 
@@ -39,13 +39,13 @@ Buffer::~Buffer()
 {
 	glDeleteBuffers( 1, &id );
 
-	if( glGetError() != GL_NO_ERROR )
+	while( glGetError() != GL_NO_ERROR )
 	{
 		warn( "gl::buffers", "Error deleting buffer (id: '%d')", id );
 		return;
 	}
 
-	debug( "deleted opengl buffer (id: '%d')", id );
+	//debug( "deleted opengl buffer (id: '%d')", id );
 }
 
 //-----------------------------------//

@@ -55,7 +55,7 @@ protected:
 	int getALFormat(resources::SoundFormat::Enum format);
 	
 	// Prepares a buffer for AL usage.
-	shared_ptr<Buffer> prepareBuffer(shared_ptr<resources::Sound> sound);
+	tr1::shared_ptr<Buffer> prepareBuffer( tr1::shared_ptr<resources::Sound> sound );
 	
 	// Return the last error as a char array.
 	const char* getError();
@@ -80,7 +80,7 @@ private:
 	bool init;
 
 	// Maps each sound to a OpenAL sound buffer id
-	std::map< shared_ptr<resources::Sound>, shared_ptr<audio::Buffer> > soundBuffers;
+	std::map< tr1::shared_ptr<resources::Sound>, tr1::shared_ptr<audio::Buffer> > soundBuffers;
 };
 
 //-----------------------------------//
