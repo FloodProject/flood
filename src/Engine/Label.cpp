@@ -23,8 +23,8 @@ namespace vapor {
 //-----------------------------------//
 
 Label::Label( const std::string& text, resources::FontPtr font, 
-			 render::MaterialPtr material, Anchor::Enum anchor )
-	: font( font ), text( text ), anchor( anchor ), x( 0 ), y( 0 ), isDirty( true ), 
+			 render::MaterialPtr material )
+	: font( font ), text( text ), isDirty( true ), 
 	renderable( new Renderable( Primitive::Quads, VertexBufferPtr( new VertexBuffer() ), material ) )
 {
 	// Add a new renderable to hold the text geometry
@@ -60,44 +60,15 @@ const std::string& Label::getText() const
 
 //-----------------------------------//
 
-void Label::setText( std::string text )
+void Label::setText( const std::string& text )
 {
-	isDirty = true;
 	this->text = text;
+	isDirty = true;
 }
 
 //-----------------------------------//
 
-Anchor::Enum Label::getAnchor() const
-{
-	return anchor;
-}
-
-//-----------------------------------//
-
-void Label::setAnchor( Anchor::Enum anchor )
-{
-	this->anchor = anchor;
-}
-
-//-----------------------------------//
-
-std::pair<int,int> Label::getPosition() const
-{
-	return std::make_pair(x, y);
-}
-
-//-----------------------------------//
-
-void Label::setPosition( int x, int y )
-{
-	this->x = x;
-	this->y = y;
-}
-
-//-----------------------------------//
-
-void Label::update( double delta )
+void Label::update( double UNUSED(delta) )
 {
 	// No need to update geometry if the label did not change.
 	if( !isDirty || text.empty() ) return;
@@ -118,18 +89,25 @@ void Label::update( double delta )
 	// Calculate the tex coords
 	std::vector<Vector3> texcoords;
 
-	int x_pos = 0;
+	int x_pos = 0; int y_pos = 0;
 	int mid_offset = font->getGlyphSize().first/2;
 
 	foreach( unsigned char c, text )
 	{
-		// We need each glyph information to calculate positions and size
+		// If we find a line break, we start a new line.
+		if( c == '\n' )
+		{
+			x_pos = 0;
+			y_pos -= font->getGlyphSize().second;
+		}
+
+		// We need each glyph information to calculate positions and size.
 		const Glyph& glyph = glyphs[c];
 
-		vertex.push_back( Vector3( x_pos + 0.0f , 0.0f, 0.0f ) );
-		vertex.push_back( Vector3( x_pos + 0.0f, -glyph.height, 0.0f ) );
-		vertex.push_back( Vector3( x_pos + glyph.width, -glyph.height, 0.0f ) );
-		vertex.push_back( Vector3( x_pos + glyph.width, 0.0f, 0.0f ) );
+		vertex.push_back( Vector3( x_pos, y_pos, 0.0f ) );
+		vertex.push_back( Vector3( x_pos, y_pos - glyph.height, 0.0f ) );
+		vertex.push_back( Vector3( x_pos + glyph.width, y_pos - glyph.height, 0.0f ) );
+		vertex.push_back( Vector3( x_pos + glyph.width, y_pos, 0.0f ) );
 	
 		int glyph_x_left = ::ceilf(glyph.x + mid_offset - glyph.width / 2);
 		int glyph_x_right = ::ceilf(glyph.x + mid_offset + glyph.width / 2);

@@ -104,7 +104,7 @@ private:
 
 //-----------------------------------//
 
-typedef tr1::shared_ptr< File > FilePtr;
+TYPEDEF_SHARED_POINTER_FROM_CLASS( File );
 
 //-----------------------------------//
 

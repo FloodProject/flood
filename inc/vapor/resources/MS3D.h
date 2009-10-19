@@ -75,7 +75,7 @@ private:
 
 //-----------------------------------//
 
-typedef tr1::shared_ptr< MS3D > MS3DPtr;
+TYPEDEF_SHARED_POINTER_FROM_CLASS( MS3D );
 
 //-----------------------------------//
 

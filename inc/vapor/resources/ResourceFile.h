@@ -55,7 +55,7 @@ protected:
 
 //-----------------------------------//
 
-typedef tr1::shared_ptr< ResourceFile > ResourceFilePtr;
+TYPEDEF_SHARED_POINTER_FROM_CLASS( ResourceFile );
 
 //-----------------------------------//
 

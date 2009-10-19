@@ -68,13 +68,16 @@ public:
 
 protected:
 
+	// Font name.
 	std::string name;
+	
+	// Font size.
 	int size;
 };
 
 //-----------------------------------//
 
-typedef tr1::shared_ptr< Font > FontPtr;
+TYPEDEF_SHARED_POINTER_FROM_CLASS( Font );
 
 //-----------------------------------//
 

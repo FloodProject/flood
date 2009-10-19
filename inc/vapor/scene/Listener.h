@@ -37,7 +37,7 @@ public:
 
 //-----------------------------------//
 
-typedef tr1::shared_ptr< Listener > ListenerPtr;
+TYPEDEF_SHARED_POINTER_FROM_CLASS( Listener );
 
 //-----------------------------------//
 

@@ -77,14 +77,14 @@ public:
 	// Sets the near clipping plane of the camera.
 	void setNear( float near );
 
+	// Gets the current render target associated with the camera.
+	render::RenderTarget* getRenderTarget() const;
+
 	// Sets a new render target in the camera.
-	void setRenderTarget( render::Target* target );
+	void setRenderTarget( render::RenderTarget* target );
 
 	// Gets the frustum associated with the camera.
 	const math::Frustum& getFrustum( ) const;
-
-	// Gets the current render target associated with the camera.
-	render::Target* getRenderTarget() const;
 
 	// Renders the (sub-)scene starting from the passed node to the current 
 	// render target associated in the camera.
@@ -148,7 +148,7 @@ protected:
 	float far_;
 
 	// Render target that we are rendering into.
-	render::Target* target;
+	render::RenderTarget* target;
 
 	// Used to pass a RenderQueue for rendering.
 	render::Device* renderDevice;
@@ -161,7 +161,7 @@ protected:
 
 //-----------------------------------//
 
-typedef tr1::shared_ptr< Camera > CameraPtr;
+TYPEDEF_SHARED_POINTER_FROM_CLASS( Camera );
 
 //-----------------------------------//
 

@@ -45,7 +45,7 @@ public:
 
 	virtual void update( double delta );
 
-	virtual const std::string save(int indent = 0);
+	virtual const std::string save( int indent = 0 );
 
 	virtual const std::string name() { return "scene"; }
 
@@ -57,7 +57,7 @@ private:
 
 //-----------------------------------//
 
-typedef tr1::shared_ptr< Scene > ScenePtr;
+TYPEDEF_SHARED_POINTER_FROM_CLASS( Scene );
 
 //-----------------------------------//
 

@@ -65,7 +65,7 @@ protected:
 
 //-----------------------------------//
 
-typedef tr1::shared_ptr< Group > GroupPtr;
+TYPEDEF_SHARED_POINTER_FROM_CLASS( Group );
 
 //-----------------------------------//
 

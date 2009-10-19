@@ -77,7 +77,7 @@ private:
 
 //-----------------------------------//
 
-typedef tr1::shared_ptr< Sound > SoundPtr;
+TYPEDEF_SHARED_POINTER_FROM_CLASS( Sound );
 
 //-----------------------------------//
 

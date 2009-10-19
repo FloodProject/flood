@@ -51,7 +51,7 @@ Renderable::~Renderable()
 
 //-----------------------------------//
 
-void Renderable::render( render::Device& device )
+void Renderable::render( render::Device& UNUSED(device) )
 {
 	if( mat ) mat->bind();
 

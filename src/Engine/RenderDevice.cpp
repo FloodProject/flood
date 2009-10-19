@@ -61,7 +61,8 @@ void Device::init()
 	bufferManager = new BufferManager();
 	TextureManager::getInstance();
 
-	glEnable(GL_DEPTH_TEST);
+	glEnable( GL_CULL_FACE );
+	glCullFace( GL_BACK );
 }
 
 //-----------------------------------//
@@ -87,7 +88,7 @@ Window& Device::createWindow( const WindowSettings& settings )
 	Window& window = Window::createWindow( settings );
 
 	setWindow( &window );
-	setRenderTarget(&window);
+	setRenderTarget( &window );
 
 	return window;
 }
@@ -157,28 +158,28 @@ void Device::render( RenderQueue& queue, const scene::Camera* cam )
 	{
 		ProgramPtr program = state.renderable->getMaterial()->getProgram();
 
-		if( state.group == RenderGroup::Normal )
+		//if( state.group == RenderGroup::Normal )
 		{
 			program->setUniform( "vp_ProjectionMatrix", cam->getProjectionMatrix() );
 			program->setUniform( "vp_ModelMatrix", state.modelMatrix );
 			program->setUniform( "vp_ViewMatrix", cam->getViewMatrix() );
-			program->setUniform( "vp_ModelViewMatrix", cam->getViewMatrix() * state.modelMatrix );
+			program->setUniform( "vp_ModelViewMatrix", state.modelMatrix * cam->getViewMatrix() );
 		}
-		else if( state.group == RenderGroup::Overlays )
-		{
-			//glDisable( GL_DEPTH_TEST );
+		//else if( state.group == RenderGroup::Overlays )
+		//{
+		//	glDisable( GL_DEPTH_TEST );
 
-			int w = activeTarget->getSettings().getWidth();
-			int h = activeTarget->getSettings().getHeight();
+		//	int w = activeTarget->getSettings().getWidth();
+		//	int h = activeTarget->getSettings().getHeight();
 
-			Matrix4x4 proj = Matrix4x4::createOrthographicProjection( 
-				-w/2, w/2, -h/2, h/2, -10.0, 10.0 );
+		//	Matrix4x4 proj = Matrix4x4::createOrthographicProjection( 
+		//		0, w, 0, h, -10.0, 10.0 );
 
-			program->setUniform( "vp_ProjectionMatrix", proj );
-			program->setUniform( "vp_ModelMatrix", state.modelMatrix );
-			program->setUniform( "vp_ViewMatrix", math::Matrix4x3::Identity );
-			program->setUniform( "vp_ModelViewMatrix", state.modelMatrix );
-		}
+		//	program->setUniform( "vp_ProjectionMatrix", proj );
+		//	program->setUniform( "vp_ModelMatrix", state.modelMatrix );
+		//	program->setUniform( "vp_ViewMatrix", math::Matrix4x4::Identity );
+		//	program->setUniform( "vp_ModelViewMatrix", state.modelMatrix );
+		//}
 
 		state.renderable->render( *this );
 	}
@@ -215,7 +216,7 @@ void Device::checkExtensions()
 
 //-----------------------------------//
 
-render::Target* Device::getRenderTarget() const
+RenderTarget* Device::getRenderTarget() const
 {
 	return activeTarget;
 }

@@ -110,7 +110,7 @@ protected:
 
 //-----------------------------------//
 
-typedef tr1::shared_ptr< Renderable > RenderablePtr;
+TYPEDEF_SHARED_POINTER_FROM_CLASS( Renderable );
 
 //-----------------------------------//
 

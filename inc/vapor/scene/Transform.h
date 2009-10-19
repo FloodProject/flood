@@ -26,20 +26,25 @@ class VAPOR_API Transformable : public Node
 public:
 
 	// Translate this node by the given parameters.
+	void translate( float x, float y, float z );
 	void translate( const math::Vector3& tr );
 
 	// Scale this node by the given parameters.
 	void scale( float x, float y, float z );
 	void scale( float uniform );
+	void scale( const math::Vector3& scale );
 
 	// Rotates this node by the given parameters.
 	void rotate( float xang, float yang, float zang );
-
+	void rotate( const math::Vector3& rot );
+	
 	// Resets the transformations previously applied to this node.
 	void reset();
 
-	// Gets/sets the abolute
+	// Gets the absolute transformation matrix.
 	const math::Matrix4x3& getAbsoluteTransform() const;
+	
+	// Sets the absolute transformation matrix.
 	void setAbsoluteTransform( const math::Matrix4x3& matrix );
 
 	// Gets the local transformation matrix.
@@ -48,22 +53,19 @@ public:
 protected:
 
 	Transformable();
-	~Transformable();
-
-	math::Matrix4x3 getScaleMatrix( math::Vector3 v ) const;
-	math::Matrix4x3 getTranslationMatrix( math::Vector3 v ) const;
+	virtual ~Transformable();
 
 	math::EulerAngles angles;
 	math::Vector3 v_translate;
 	math::Vector3 v_scale;
-	math::Matrix4x3 transform;
 
+	math::Matrix4x3 transform;
 	math::Matrix4x3 absoluteLocalToWorld;
 };
 
 //-----------------------------------//
 
-typedef tr1::shared_ptr< Transformable > TransformablePtr;
+TYPEDEF_SHARED_POINTER_FROM_CLASS( Transformable );
 
 //-----------------------------------//
 

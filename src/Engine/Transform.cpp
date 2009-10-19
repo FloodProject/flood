@@ -36,12 +36,19 @@ Transformable::~Transformable()
 
 void Transformable::translate( const math::Vector3& tr )
 {
-	v_translate.x += tr.x;
-	v_translate.y += tr.y;
-	v_translate.z += tr.z;
+	translate( tr.x, tr.y, tr.z );
+}
 
-	transform = transform * getTranslationMatrix( v_translate );
-	v_translate.zero();
+//-----------------------------------//
+
+void Transformable::translate( float x, float y, float z )
+{
+	v_translate.x += x;
+	v_translate.y += y;
+	v_translate.z += z;
+
+	//transform = transform * Matrix4x3::createTranslationMatrix( v_translate );
+	//v_translate.zero();
 }
 
 //-----------------------------------//
@@ -51,6 +58,9 @@ void Transformable::scale( float x, float y, float z )
 	v_scale.x *= x;
 	v_scale.y *= y;
 	v_scale.z *= z;
+
+	//transform = transform * Matrix4x3::createScaleMatrix( v_scale );
+	//v_scale = math::Vector3( 1.0f, 1.0f, 1.0f );
 }
 
 //-----------------------------------//
@@ -62,23 +72,37 @@ void Transformable::scale( float uniform )
 
 //-----------------------------------//
 
+void Transformable::scale( const math::Vector3& s )
+{
+	scale( s.x, s.y, s.z );
+}
+
+//-----------------------------------//
+
 void Transformable::rotate( float xang, float yang, float zang )
 {
 	angles.xang += xang;
 	angles.yang += yang;
 	angles.zang += zang;
 
-	transform = transform * angles.getOrientationMatrix();
-	angles.identity();
+	//transform = transform * angles.getOrientationMatrix();
+	//angles.identity();
+}
+
+//-----------------------------------//
+
+void Transformable::rotate( const math::Vector3& rot )
+{
+	rotate( rot.x, rot.y, rot.z );
 }
 
 //-----------------------------------//
 
 void Transformable::reset( )
 {
-	angles.identity();
 	v_translate.zero();
-	v_scale.zero();
+	v_scale = math::Vector3( 1.0f, 1.0f, 1.0f );
+	angles.identity();
 }
 
 //-----------------------------------//
@@ -99,37 +123,9 @@ const math::Matrix4x3& Transformable::getAbsoluteTransform() const
 
 math::Matrix4x3 Transformable::getLocalTransform() const
 {
-	//transform = transform * getTranslationMatrix( v_translate );
-	//transform = transform * angles.getOrientationMatrix();
-	//transform = transform * getScaleMatrix( v_scale );
-
-	return transform/* * angles.getOrientationMatrix()*/;
-}
-
-//-----------------------------------//
-
-math::Matrix4x3 Transformable::getScaleMatrix( math::Vector3 v ) const
-{
-	Matrix4x3 s;
-
-	s.m11 = v.x;
-	s.m22 = v.y;
-	s.m33 = v.z;
-
-	return s;
-}
-
-//-----------------------------------//
-
-math::Matrix4x3 Transformable::getTranslationMatrix( math::Vector3 v ) const
-{
-	Matrix4x3 s;
-
-	s.tx = v.x;
-	s.ty = v.y;
-	s.tz = v.z;
-
-	return s;
+	return Matrix4x3::createTranslationMatrix( v_translate )
+		* angles.getOrientationMatrix()
+		* Matrix4x3::createScaleMatrix( v_scale );
 }
 
 //-----------------------------------//

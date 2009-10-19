@@ -80,7 +80,7 @@ public:
 	BufferManager* getBufferManager() const;
 
 	// Gets the current active render target.
-	render::Target* getRenderTarget() const;
+	render::RenderTarget* getRenderTarget() const;
 
 	// Renders a list of renderables.
 	void render( RenderQueue& queue, const scene::Camera* cam );
@@ -127,7 +127,7 @@ private:
 
 //-----------------------------------//
 
-typedef tr1::shared_ptr< Device > DevicePtr;
+TYPEDEF_SHARED_POINTER_FROM_CLASS( Device );
 
 //-----------------------------------//
 

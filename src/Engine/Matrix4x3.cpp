@@ -65,6 +65,13 @@ namespace vapor {
 
 //-----------------------------------//
 
+Matrix4x3::Matrix4x3() 
+{
+	identity(); 
+}
+
+//-----------------------------------//
+
 //---------------------------------------------------------------------------
 // Matrix4x3::identity
 //
@@ -76,6 +83,32 @@ void Matrix4x3::identity()
 	m21 = 0.0f; m22 = 1.0f; m23 = 0.0f;
 	m31 = 0.0f; m32 = 0.0f; m33 = 1.0f;
 	tx  = 0.0f; ty  = 0.0f; tz  = 0.0f;
+}
+
+//-----------------------------------//
+
+Matrix4x3 Matrix4x3::createScaleMatrix( const Vector3& v )
+{
+	Matrix4x3 s;
+
+	s.m11 = v.x;
+	s.m22 = v.y;
+	s.m33 = v.z;
+
+	return s;
+}
+
+//-----------------------------------//
+
+Matrix4x3 Matrix4x3::createTranslationMatrix( const Vector3& v )
+{
+	Matrix4x3 s;
+
+	s.tx = v.x;
+	s.ty = v.y;
+	s.tz = v.z;
+
+	return s;
 }
 
 //-----------------------------------//

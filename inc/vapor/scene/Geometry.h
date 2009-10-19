@@ -29,7 +29,6 @@ class VAPOR_API Geometry : public Transformable
 public:
 
 	Geometry();
-
 	Geometry( render::RenderablePtr rend );
 
 	virtual ~Geometry();
@@ -64,7 +63,7 @@ protected:
 
 //-----------------------------------//
 
-typedef tr1::shared_ptr< Geometry > GeometryPtr;
+TYPEDEF_SHARED_POINTER_FROM_CLASS( Geometry );
 
 //-----------------------------------//
 

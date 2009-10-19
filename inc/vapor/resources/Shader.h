@@ -79,7 +79,7 @@ protected:
 
 //-----------------------------------//
 
-typedef tr1::shared_ptr< Shader > ShaderPtr;
+TYPEDEF_SHARED_POINTER_FROM_CLASS( Shader );
 
 //-----------------------------------//
 

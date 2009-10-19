@@ -89,7 +89,7 @@ protected:
 
 //-----------------------------------//
 
-typedef tr1::shared_ptr< Resource > ResourcePtr;
+TYPEDEF_SHARED_POINTER_FROM_CLASS( Resource );
 
 //-----------------------------------//
 

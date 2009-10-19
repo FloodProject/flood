@@ -27,7 +27,6 @@ class VAPOR_API EulerAngles
 public:
 
 	EulerAngles();
-
 	EulerAngles( float x, float y, float z );
 
 	// Adds the given angles to the existing angles.
@@ -40,12 +39,14 @@ public:
 	void identity();
 
 	// Gets a orientation matrix represeting the rotation angles.
-	math::Matrix4x3 getOrientationMatrix() const;
+	Matrix4x3 getOrientationMatrix() const;
 
 	// many more methods implemented here ...
-	math::Matrix4x3 rotateX( float ang ) const;
-	math::Matrix4x3 rotateY( float ang ) const;
-	math::Matrix4x3 rotateZ( float ang ) const;
+	Matrix4x3 rotateX( float ang ) const;
+	Matrix4x3 rotateY( float ang ) const;
+	Matrix4x3 rotateZ( float ang ) const;
+
+public:
 
 	float xang, yang, zang;
 };

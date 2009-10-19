@@ -27,6 +27,17 @@
 
 namespace tr1 = std::tr1;
 
+#if defined( VAPOR_MEMORY_SHARED_PTR )
+	#define TYPEDEF_SHARED_POINTER_FROM_CLASS( class ) \
+		typedef tr1::shared_ptr< class > class##Ptr
+#elif defined( VAPOR_MEMORY_INTRUSIVE_PTR )
+	#include "boost/intrusive_ptr.hpp"
+	#define TYPEDEF_SHARED_POINTER_FROM_CLASS( class ) \
+		typedef boost::intrusive_ptr< class > class##Ptr
+#else
+	#error "No shared pointer implementation found."
+#endif
+
 //-------------------------------------------------------------------------//
 // Memory leaks analyzer
 //-------------------------------------------------------------------------//

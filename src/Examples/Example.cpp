@@ -12,14 +12,6 @@
 
 #include <boost/lexical_cast.hpp>
 
-std::string getFPS( float lastFrameTime )
-{
-	if( lastFrameTime == 0 ) return "";
-
-	std::string fps( boost::lexical_cast< std::string >( int( 1.0f / lastFrameTime ) ) );
-	return "FPS: " + fps;
-}
-
 //-----------------------------------//
 
 Example::Example(const char** argv)
@@ -53,6 +45,16 @@ void Example::onSetupResources()
 
 //-----------------------------------//
 
+std::string getFPS( float lastFrameTime )
+{
+	if( lastFrameTime == 0 ) return "";
+
+	std::string fps( boost::lexical_cast< std::string >( int( 1.0f / lastFrameTime ) ) );
+	return "FPS: " + fps;
+}
+
+//-----------------------------------//
+
 void Example::onSetupScene() 
 {
 	ScenePtr scene = getSceneManager();
@@ -67,22 +69,33 @@ void Example::onSetupScene()
 	
 	label.reset( new Label( getFPS( lastFrameTime ), font, mat ) );
 
-	GroupPtr group( new Group() );
+	LabelPtr zero( new Label( 
+		"vaporEngine (" VAPOR_ENGINE_VERSION ")" 
+		"\nDeveloped by triton with <3",
+		font, mat ) );
 
-	LabelPtr zero( new Label( "o zero é uma besta bestial :D", font, mat ) );
-	zero->translate( Vector3( 0.0f, -20.0f, 0.0f ) );	
+	zero->translate( 0.0f, -font->getGlyphSize().second, 0.0f );
 
-	group->add( zero );
-	group->add( label );
+	scene->add( label );
+	label->scale( 0.2f );
+	//scene->add( zero );
 	
-	group->translate( Vector3( -300.0f, 220.0f, 0.0f ) );
-	
-	scene->add( group );
-
 	// Create a new Camera and position it to look at origin
 	cam.reset( new FirstPersonCamera( getInputManager(), getRenderDevice() ) );
-	cam->translate( Vector3( 0.0f, 0.0f, 0.0f ) );
+	cam->translate( 0.0f, 0.0f, 0.0f );
 	scene->add( cam );
+
+	mesh = rm->loadResource< MS3D >( "media/ct.ms3d" );
+
+	foreach( const RenderablePtr& rend, mesh->getRenderables() )
+	{
+		rend->getMaterial()->setProgram( program );
+	}
+
+	mesh->translate( 0.0f, 50.0f, 0.0f );
+	mesh->scale( 0.3f );
+
+	scene->add( mesh );
 
 	mesh = rm->loadResource< MS3D >( "media/terreno.ms3d" );
 
@@ -102,9 +115,6 @@ void Example::onSetupScene()
 
 void Example::onUpdate( double delta ) 
 {
-	static double time;
-	time += delta;
-
 	ScenePtr scene = getSceneManager();
 	scene->update( delta );
 
@@ -115,12 +125,7 @@ void Example::onUpdate( double delta )
 		c.b += 0.000007f / float(delta); c.g = (c.g > 1.0f) ? 0.0f : c.g;
 	}
 	
-	//if( time > 1.0 )
-	//{
-		//debug( "%s", getFPS( lastFrameTime ).c_str() );
-		label->setText( getFPS( lastFrameTime ) );
-		//time = 0;
-	//}
+	label->setText( getFPS( lastFrameTime ) );
 }
 
 //-----------------------------------//
@@ -161,6 +166,9 @@ void Example::onKeyPressed( const KeyEvent& keyEvent )
 		else
 			sound->play();
 	}
+
+	if( keyEvent.keyCode == Keys::V )
+		mesh->translate( 0.0f, 1.0f, 0.0f );
 }
 
 //-----------------------------------//

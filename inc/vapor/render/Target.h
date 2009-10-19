@@ -66,9 +66,7 @@ public:
 
 //-----------------------------------//
 
-typedef RenderTarget Target;
-
-typedef tr1::shared_ptr< RenderTarget > TargetPtr;
+TYPEDEF_SHARED_POINTER_FROM_CLASS( RenderTarget );
 
 //-----------------------------------//
 

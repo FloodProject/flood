@@ -12,44 +12,10 @@
 #include "vapor/resources/Font.h"
 #include "vapor/render/Material.h"
 #include "vapor/scene/Geometry.h"
+#include "vapor/gui/Overlay.h"
 
 namespace vapor {
 	namespace gui {
-
-//-----------------------------------//
-
-/**
- * Anchor points for positioning the label on the screen. When you specify 
- * an alignment, the positioning of the label will be relative to the point
- * you specified. Here is some awesome ASCII art exemplifying it all:
- *		 ______________
- *		|              |
- *		| TL   TC   TR |
- *		|              |
- *		| L    C     R |
- *		|              |
- *		| BL   BC   BR |
- *		|______________|
- *	
- * Hope you understand. :)
- */ 
-
-namespace Anchor
-{
-	enum Enum
-	{
-		TopLeft,
-		TopCenter,
-		TopRight,
-		Right,
-		BottomRight,
-		BottomCenter,
-		BottomLeft,
-		Left,
-		Center,
-		Unanchored
-	};
-}
 
 //-----------------------------------//
 
@@ -63,16 +29,13 @@ namespace Anchor
  * changes the resolution.
  */
 
-class Label : public scene::Geometry
+class VAPOR_API Label : public gui::Overlay
 {
 public:
 
-	Label( const std::string& text, resources::FontPtr font,
-		render::MaterialPtr mat,
-		Anchor::Enum anchor = Anchor::Unanchored );
+	Label( const std::string& text, resources::FontPtr font, render::MaterialPtr mat );
 
-	//Label( const std::string& text, std::string font, 
-		//Anchor::Enum anchor = Anchor::Unanchored );
+	//Label( const std::string& text, std::string font );
 
 	virtual ~Label();
 
@@ -80,42 +43,35 @@ public:
 	const std::string& getText() const;
 
 	// Sets the current text of this label.
-	void setText( std::string text );
-
-	// Gets the current anchor settings.
-	Anchor::Enum getAnchor() const;
-
-	// Sets the current anchor settings.
-	void setAnchor( Anchor::Enum anchor );
-
-	// Gets the positioning of the label.
-	std::pair<int,int> getPosition() const;
-	
-	// Sets the positioning of the label.
-	void setPosition( int x, int y );
+	void setText( const std::string& text );
 
 	// Updates the geometry to match the new text if needed.
-	virtual void update( double delta );
+	virtual void update( double UNUSED(delta) );
 
 	// Serializes this node to a stream.
-	virtual const std::string save(int indent = 0) { return ""; }
+	virtual const std::string save( int UNUSED(indent ) = 0) { return ""; }
 
 	// Returns this node name identification.
-	virtual const std::string name() const { return "Label"; }
+	//virtual const std::string name() const { return "Label"; }
 
 private:
 
-	int x, y;
+	// Contains the text of the label.
 	std::string text;
-	Anchor::Enum anchor;
+	
+	// Holds the font texture we are gonna use for rendering the glyphs.
 	resources::FontPtr font;
+	
+	// Mantains the font geometry.
 	render::RenderablePtr renderable;
+	
+	// Used to track if a label needs updating.
 	bool isDirty;
 };
 
 //-----------------------------------//
 
-typedef tr1::shared_ptr< gui::Label > LabelPtr;
+TYPEDEF_SHARED_POINTER_FROM_CLASS( Label );
 
 //-----------------------------------//
 

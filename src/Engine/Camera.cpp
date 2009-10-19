@@ -22,7 +22,7 @@ namespace vapor {
 
 Camera::Camera( render::Device* device, Projection::Enum projection )
 	: renderDevice( device ), projection( projection ),
-		target( nullptr ), fov(45.0f), near_( 1.0f ), far_( 10000.0f ),
+		target( nullptr ), fov(45.0f), near_( 0.1f ), far_( 1000.0f ),
 		lookAtVector( Vector3( 0.0f, 0.0f, 0.0f ) ), 
 		upVector( Vector3( 0.0f, 1.0f, 0.0f ) )
 {
@@ -80,7 +80,7 @@ void Camera::setFar( float far_ )
 
 //-----------------------------------//
 
-void Camera::setRenderTarget( render::Target* newTarget )
+void Camera::setRenderTarget( RenderTarget* newTarget )
 {
 	if( !newTarget ) return;
 	

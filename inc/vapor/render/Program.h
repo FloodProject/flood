@@ -76,7 +76,7 @@ protected:
 
 //-----------------------------------//
 
-typedef tr1::shared_ptr< Program > ProgramPtr;
+TYPEDEF_SHARED_POINTER_FROM_CLASS( Program );
 
 //-----------------------------------//
 

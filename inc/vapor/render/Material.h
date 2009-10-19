@@ -130,7 +130,7 @@ protected:
 
 //-----------------------------------//
 
-typedef tr1::shared_ptr< Material > MaterialPtr;
+TYPEDEF_SHARED_POINTER_FROM_CLASS( Material );
 
 //-----------------------------------//
 

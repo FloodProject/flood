@@ -82,7 +82,7 @@ private:
 
 //-----------------------------------//
 
-typedef tr1::shared_ptr< IndexBuffer > IndexBufferPtr;
+TYPEDEF_SHARED_POINTER_FROM_CLASS( IndexBuffer );
 
 //-----------------------------------//
 

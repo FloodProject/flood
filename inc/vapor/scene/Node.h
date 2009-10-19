@@ -17,7 +17,7 @@ namespace vapor {
 
 class Node;
 
-typedef tr1::shared_ptr< Node > NodePtr;
+TYPEDEF_SHARED_POINTER_FROM_CLASS( Node );
 
 //-----------------------------------//
 

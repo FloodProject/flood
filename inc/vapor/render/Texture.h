@@ -57,7 +57,7 @@ private:
 
 //-----------------------------------//
 
-typedef tr1::shared_ptr< Texture > TexturePtr;
+TYPEDEF_SHARED_POINTER_FROM_CLASS( Texture );
 
 //-----------------------------------//
 

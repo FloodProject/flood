@@ -45,7 +45,7 @@ public:
 
 //-----------------------------------//
 
-typedef tr1::shared_ptr< scene::Sound > SoundPtr;
+TYPEDEF_SHARED_POINTER_FROM_CLASS( Sound );
 
 //-----------------------------------//
 

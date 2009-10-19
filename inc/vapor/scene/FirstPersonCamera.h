@@ -75,7 +75,7 @@ private:
 
 //-----------------------------------//
 
-typedef tr1::shared_ptr< FirstPersonCamera > FirstPersonCameraPtr;
+TYPEDEF_SHARED_POINTER_FROM_CLASS( FirstPersonCamera );
 
 //-----------------------------------//
 
