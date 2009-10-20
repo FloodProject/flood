@@ -29,6 +29,12 @@ public:
 	void translate( float x, float y, float z );
 	void translate( const math::Vector3& tr );
 
+	// Gets the position of the node.
+	const math::Vector3& getPosition() const;
+
+	// Sets the position of the node.
+	void setPosition( const math::Vector3 position );
+
 	// Scale this node by the given parameters.
 	void scale( float x, float y, float z );
 	void scale( float uniform );

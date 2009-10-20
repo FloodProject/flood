@@ -9,8 +9,10 @@
 #include <vapor/PCH.h>
 
 #include "Example.h"
+#include "vapor/scene/Grid.h"
 
 #include <boost/lexical_cast.hpp>
+#include <boost/format.hpp>
 
 //-----------------------------------//
 
@@ -60,25 +62,20 @@ void Example::onSetupScene()
 	ScenePtr scene = getSceneManager();
 	ResourceManager* rm = getResourceManager();
 
-	ProgramPtr program( new GLSL_Program( 
-			rm->loadResource< GLSL_Shader >( "shader.vs" ),
-			rm->loadResource< GLSL_Shader >( "shader.fs" ) ) );
+	ProgramPtr tex( new GLSL_Program( 
+			rm->loadResource< GLSL_Shader >( "tex.vs" ),
+			rm->loadResource< GLSL_Shader >( "tex.fs" ) ) );
 
-	MaterialPtr mat( new Material( "SimpleWhite", program ) );
+	ProgramPtr diffuse( new GLSL_Program( 
+			rm->loadResource< GLSL_Shader >( "diffuse.vs" ),
+			rm->loadResource< GLSL_Shader >( "diffuse.fs" ) ) );
+
+	MaterialPtr mat( new Material( "FontMaterial", tex ) );
 	FontPtr font = rm->loadResource< Font >( "Calibri.font" );
 	
 	label.reset( new Label( getFPS( lastFrameTime ), font, mat ) );
-
-	LabelPtr zero( new Label( 
-		"vaporEngine (" VAPOR_ENGINE_VERSION ")" 
-		"\nDeveloped by triton with <3",
-		font, mat ) );
-
-	zero->translate( 0.0f, -font->getGlyphSize().second, 0.0f );
-
+	label->translate( -300.0f, 220.0f, 0.0f );
 	scene->add( label );
-	label->scale( 0.2f );
-	//scene->add( zero );
 	
 	// Create a new Camera and position it to look at origin
 	cam.reset( new FirstPersonCamera( getInputManager(), getRenderDevice() ) );
@@ -89,22 +86,29 @@ void Example::onSetupScene()
 
 	foreach( const RenderablePtr& rend, mesh->getRenderables() )
 	{
-		rend->getMaterial()->setProgram( program );
+		rend->getMaterial()->setProgram( tex );
 	}
 
-	mesh->translate( 0.0f, 50.0f, 0.0f );
-	mesh->scale( 0.3f );
+	//mesh->scale( 0.3f );
 
 	scene->add( mesh );
 
-	mesh = rm->loadResource< MS3D >( "media/terreno.ms3d" );
+	//mesh = rm->loadResource< MS3D >( "media/terreno.ms3d" );
 
-	foreach( const RenderablePtr& rend, mesh->getRenderables() )
+	//foreach( const RenderablePtr& rend, mesh->getRenderables() )
+	//{
+	//	rend->getMaterial()->setProgram( program );
+	//}
+
+	//scene->add( mesh );
+
+	GridPtr grid( new Grid( mat ) );
+	scene->add( grid );
+
+	foreach( const RenderablePtr& rend, grid->getRenderables() )
 	{
-		rend->getMaterial()->setProgram( program );
+		rend->getMaterial()->setProgram( diffuse );
 	}
-
-	scene->add( mesh );
 
 	ListenerPtr ls( new Listener( getAudioDevice() ) );
 	//sound.reset( new scene::Sound( ls, snd ) );
@@ -112,7 +116,7 @@ void Example::onSetupScene()
 }
 
 //-----------------------------------//
-
+ 
 void Example::onUpdate( double delta ) 
 {
 	ScenePtr scene = getSceneManager();
@@ -168,7 +172,7 @@ void Example::onKeyPressed( const KeyEvent& keyEvent )
 	}
 
 	if( keyEvent.keyCode == Keys::V )
-		mesh->translate( 0.0f, 1.0f, 0.0f );
+		mesh->scale( 1.1f );
 }
 
 //-----------------------------------//

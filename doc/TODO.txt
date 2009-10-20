@@ -26,6 +26,7 @@ http://msdn.microsoft.com/en-us/library/aa366750%28VS.85%29.aspx
 http://www.gamasutra.com/view/feature/2971/play_by_play_effective_memory_.php
 http://www.fastformat.org/
 
+Integrate Camera direction vectors
 Change ExampleFramework to use delegates
 update method in RenderDevice
 Bounding Boxes and Frustum Culling

@@ -314,26 +314,30 @@
 					RelativePath="..\..\inc\vapor\render\BufferManager.h"
 					>
 				</File>
-				<File
-					RelativePath=".\IndexBuffer.cpp"
+				<Filter
+					Name="Vertex"
 					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\render\IndexBuffer.h"
+					<File
+						RelativePath=".\VertexBuffer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\render\VertexBuffer.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Index"
 					>
-				</File>
-				<File
-					RelativePath=".\VertexBuffer.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\render\VertexBuffer.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\render\VertexElement.h"
-					>
-				</File>
+					<File
+						RelativePath=".\IndexBuffer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\render\IndexBuffer.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Primitives"
@@ -888,6 +892,18 @@
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\scene\Geometry.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Grid"
+				>
+				<File
+					RelativePath=".\Grid.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\scene\Grid.h"
 					>
 				</File>
 			</Filter>

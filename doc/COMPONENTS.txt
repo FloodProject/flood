@@ -1,0 +1,86 @@
+- Entity Component-based approach -
+
+Each entity represents a Game Entity so this is more flexible from the start,
+since we are not tying the scene graph to the rendering engine. Each entity can
+have different kinds of componenents depending on their needs and this a very
+clean approach for extending the entities later for doing different kinds of
+unplanned features. Scripting hooks can also be provided and also it can be
+integrated with physics and collision detection. Input support for entities
+could also be provided as a component.
+
+	- Transform (Scale/Orientation/Translation)
+	- Rendering (Geometry)
+	- Animator
+	- Physics
+	- Scripting
+	
+	Advantages:
+	
+		- Doesn't rely on inheritance.
+		- Each component can provide scripting hooks.
+		- Conceptually cleaner.
+		- Not tied to the rendering engine.
+		- Entities don't even need a Transform if they don't need it.
+		
+	Disadvantages:
+	
+		- Hierarchical transform thing maybe harder to implement
+		
+	Examples:
+	
+		Player : Entity
+		{
+			Transform,
+			Camera,
+			Listener,
+			Scripting,
+			Physics
+		}
+	
+		Camera : Entity
+		{
+			Transform,
+			Input,
+		}
+		
+- Node-based Scene Graph approach -
+
+Each node is kind of a component, because if it is a group node it can hold 
+other kinds of nodes, for example, a Camera node can have a child node 
+(Audio Listener).
+
+It can be transformed or not depending if it inherits from the Transformable
+base node. Group node concept is used for grouping different nodes (which are
+kind of components this way).
+
+To make it easier, each node could be a group node by default, and then we can 
+just add other nodes to them.
+	
+	Advantages:
+	
+		- Maybe easier to implement because it's almost half-implemented right
+		now and kind of working.
+		
+		- Group nodes could be used to form new entities, and then the child
+		nodes of those groups would become the components of them, but that
+		doesn't make the most sense. Then we would get duplicated transforms
+		in all the child nodes, in most cases with the default null transform
+		so it would just inherit the parent transform.
+	
+	Disadvantages:
+	
+		- We don't know what child nodes of a node are forming a new entity or 
+		not, because the child could be a new entity or just grouping things 
+		because it makes sense but they conceptually not the same entity.
+		
+		- Group 
+	
+	Examples:
+	
+		Camera : Transformable
+		{
+			Geometry : Transformable
+			Listener : Transformable
+		}
+		
+- Hybrid Component-based Node approach -		

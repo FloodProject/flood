@@ -127,13 +127,14 @@ void Camera::setupProjection()
 			near_, far_ );
 	}
 
-	glMatrixMode( GL_PROJECTION );
-	glLoadIdentity();
-	gluOrtho2D( 0.0, target->getSettings().getWidth(), 0.0, target->getSettings().getHeight() );
-	//glOrtho( 0.0, target->getSettings().getWidth(), 0.0, target->getSettings().getHeight(), near_, far_ );
+	//glMatrixMode( GL_PROJECTION );
+	//glLoadIdentity();
+	//glOrtho( -target->getSettings().getWidth()/16, target->getSettings().getWidth()/16, 
+	//	-target->getSettings().getHeight()/16, target->getSettings().getHeight()/16, 1.0f, 100.0f );
+	////glOrtho( 0.0, target->getSettings().getWidth(), 0.0, target->getSettings().getHeight(), near_, far_ );
 
-	GLfloat test[16];
-	glGetFloatv( GL_PROJECTION_MATRIX, &test[0] );
+	//GLfloat test[16];
+	//glGetFloatv( GL_PROJECTION_MATRIX, &test[0] );
 }
 
 //-----------------------------------//

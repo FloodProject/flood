@@ -138,7 +138,10 @@ bool VertexBuffer::set( VertexAttribute::Enum attr,
 
 	// TODO: optimize this, copies twice...
 	std::vector< byte > bytev( data.size() * sizeof( math::Vector3 ) );
-	memcpy( &bytev[0], &data[0], bytev.size() );
+	
+	if( data.size() != 0)
+		memcpy( &bytev[0], &data[0], bytev.size() );
+	
 	attributeMap[attr] = tr1::make_tuple( 3, VertexBuffer::FLOAT, bytev );
 
 	return true;

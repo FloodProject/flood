@@ -64,7 +64,7 @@ private:
 	void centerCursor();
 
 	// Checks the controls for updates.
-	void checkControls();
+	void checkControls( double delta );
 
 	// Input callback functions.
 	void onKeyPressed( const input::KeyEvent& keyEvent );

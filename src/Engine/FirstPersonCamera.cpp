@@ -21,7 +21,7 @@ namespace vapor {
 FirstPersonCamera::FirstPersonCamera( input::InputManager* input,
 	render::Device* device, Projection::Enum projection )
 	: Camera( device, projection ), inputManager( input ), 
-	sensivity( 10.0f ), cameraSensivity( 0.001f )
+	sensivity( 1.0f ), cameraSensivity( 0.001f )
 {
 	registerCallbacks();	
 }
@@ -31,34 +31,36 @@ FirstPersonCamera::FirstPersonCamera( input::InputManager* input,
 void FirstPersonCamera::update( double delta )
 {
 	Camera::update( delta );
-	checkControls();
+	checkControls( delta );
 	centerCursor();
 }
 
 //-----------------------------------//
 
-void FirstPersonCamera::checkControls()
+void FirstPersonCamera::checkControls( double delta )
 {
 	Keyboard* kbd = inputManager->getKeyboard();
 	const std::vector< bool >& state = kbd->getKeyState();
 
+	double dt = delta * 100 * sensivity;
+
 	if( state[Keys::W] == true )
-		translate( math::Vector3( 0.0f, 0.0f, 0.1f * sensivity ) );
+		translate( Vector3::UnitZ /** angles.getOrientationMatrix()*/ * dt );
 
 	if( state[Keys::S] == true )
-		translate( math::Vector3( 0.0f, 0.0f, -0.1f * sensivity ) );
+		translate( -Vector3::UnitZ * dt  );
 	
 	if( state[Keys::A] == true )
-		translate( math::Vector3( 0.1f * sensivity, 0.0f, 0.0f ) );
+		translate( Vector3::UnitX * dt );
 
 	if( state[Keys::D] == true )
-		translate( math::Vector3( -0.1f * sensivity, 0.0f, 0.0f ) );
+		translate( -Vector3::UnitX * dt );
 	
 	if( state[Keys::Q] == true )
-		translate( math::Vector3( 0.0f, -0.1f * sensivity, 0.0f ) );
+		translate( -Vector3::UnitY * dt );
 
 	if( state[Keys::Z] == true )
-		translate( math::Vector3( 0.0f, 0.1f * sensivity, 0.0f ) );
+		translate( Vector3::UnitY * dt );
 }
 
 //-----------------------------------//

@@ -53,6 +53,20 @@ void Transformable::translate( float x, float y, float z )
 
 //-----------------------------------//
 
+const math::Vector3& Transformable::getPosition() const
+{
+	return v_translate;
+}
+
+//-----------------------------------//
+
+void Transformable::setPosition( const math::Vector3 position )
+{
+	v_translate = position;
+}
+
+//-----------------------------------//
+
 void Transformable::scale( float x, float y, float z )
 {
 	v_scale.x *= x;
