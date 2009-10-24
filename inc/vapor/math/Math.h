@@ -28,4 +28,15 @@ float degreeToRadian( float degree );
 
 //-----------------------------------//
 
+template< typename T >
+void limit( T& var, const T min, const T max )
+{
+	if( var >= max )
+		var = max;
+	else if( var <= min )
+		var = min;
+}
+
+//-----------------------------------//
+
 } } // end namespaces

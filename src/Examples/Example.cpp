@@ -111,8 +111,8 @@ void Example::onSetupScene()
 	}
 
 	ListenerPtr ls( new Listener( getAudioDevice() ) );
-	//sound.reset( new scene::Sound( ls, snd ) );
-	//scene->add( ls ); scene->add( sound );
+	sound.reset( new scene::Sound( ls, snd ) );
+	scene->add( ls ); scene->add( sound );
 }
 
 //-----------------------------------//

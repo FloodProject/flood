@@ -112,6 +112,20 @@ void Transformable::rotate( const math::Vector3& rot )
 
 //-----------------------------------//
 
+const math::EulerAngles& Transformable::getRotation() const
+{
+	return angles;
+}
+
+//-----------------------------------//
+
+void Transformable::setRotation( math::EulerAngles& rot )
+{
+	this->angles = rot;
+}
+
+//-----------------------------------//
+
 void Transformable::reset( )
 {
 	v_translate.zero();

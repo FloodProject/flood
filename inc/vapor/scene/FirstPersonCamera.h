@@ -34,7 +34,8 @@ public:
 		Projection::Enum projection = Projection::Perspective );
 
 	// Sets the sensivity of the camera.
-	void setSensivity( float sensivity );
+	void setLookSensivity( float sensivity );
+	void setMoveSensivity( float sensivity );
 
 	// Updates this node.
 	virtual void update( double delta );
@@ -62,9 +63,12 @@ private:
 	void onButtonPressed( const input::MouseButtonEvent& buttonEvent );
 	void onButtonReleased( const input::MouseButtonEvent& buttonEvent );
 
+	// Restrict camera movement on the X-axis.
+	bool clampMovementX;
+
 	// Camera sensivity.
-	float sensivity;
-	float cameraSensivity;
+	float lookSensivity;
+	float moveSensivity;
 
 	// Last mouse position (last frame).
 	math::Vector3 lastPosition;

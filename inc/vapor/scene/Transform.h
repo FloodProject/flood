@@ -43,6 +43,12 @@ public:
 	// Rotates this node by the given parameters.
 	void rotate( float xang, float yang, float zang );
 	void rotate( const math::Vector3& rot );
+
+	// Gets the rotation vector of this node.
+	const math::EulerAngles& getRotation() const;
+
+	// Sets the rotation vector of this node.
+	void setRotation( math::EulerAngles& rot );
 	
 	// Resets the transformations previously applied to this node.
 	void reset();

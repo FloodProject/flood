@@ -21,7 +21,7 @@ namespace vapor {
 FirstPersonCamera::FirstPersonCamera( input::InputManager* input,
 	render::Device* device, Projection::Enum projection )
 	: Camera( device, projection ), inputManager( input ), 
-	sensivity( 1.0f ), cameraSensivity( 0.001f )
+	moveSensivity( 1.0f ), lookSensivity( 0.01f ), clampMovementX( true )
 {
 	registerCallbacks();	
 	centerCursor();
@@ -43,7 +43,7 @@ void FirstPersonCamera::checkControls( double delta )
 	Keyboard* kbd = inputManager->getKeyboard();
 	const std::vector< bool >& state = kbd->getKeyState();
 
-	double dt = delta * 100 * sensivity;
+	double dt = delta * 100 * moveSensivity;
 
 	if( state[Keys::W] == true )
 		translate( Vector3::UnitZ /** angles.getOrientationMatrix()*/ * dt );
@@ -64,14 +64,14 @@ void FirstPersonCamera::checkControls( double delta )
 		translate( Vector3::UnitY * dt );
 
 	// Check mouse movement.
+	dt = delta * 100 * lookSensivity;
 
-	if( mouseDistance.x != 0 && mouseDistance.y != 0 )
-		debug( "%f %f", mouseDistance.x, mouseDistance.y );
-	
-	rotate( mouseDistance.y * cameraSensivity, 
-		mouseDistance.x * cameraSensivity, 
-		0.0f );
-	
+	rotate( mouseDistance.y * dt, mouseDistance.x * dt, 0.0f );
+
+	// Restrict X-axis movement by 90 deegres.
+	float xlimit = degreeToRadian( 90.0f );
+	limit< float >( angles.xang, -xlimit, xlimit );
+
 	mouseDistance.zero();
 }
 
@@ -91,9 +91,16 @@ const std::string FirstPersonCamera::save(int ind)
 
 //-----------------------------------//
 
-void FirstPersonCamera::setSensivity( float sensivity )
+void FirstPersonCamera::setLookSensivity( float sensivity )
 {
-	this->sensivity = sensivity;
+	this->lookSensivity = sensivity;
+}
+
+//-----------------------------------//
+
+void FirstPersonCamera::setMoveSensivity( float sensivity )
+{
+	this->moveSensivity = sensivity;
 }
 
 //-----------------------------------//
@@ -131,12 +138,12 @@ void FirstPersonCamera::onKeyPressed( const KeyEvent& keyEvent )
 		}
 		case Keys::N:
 		{
-			setSensivity( sensivity - 0.5f );
+			setLookSensivity( lookSensivity - 0.5f );
 			break;
 		}
 		case Keys::M:
 		{
-			setSensivity( sensivity + 0.5f );
+			setLookSensivity( lookSensivity + 0.5f );
 			break;
 		}
 	}
