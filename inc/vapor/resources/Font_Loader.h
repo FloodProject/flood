@@ -37,6 +37,7 @@ namespace vapor {
  *		Calibri 12
  *		calibri-12.png
  *		calibri-12.dat
+ *		16 16
  *
  * TODO:
  *

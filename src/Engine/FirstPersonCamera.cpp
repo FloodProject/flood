@@ -24,6 +24,7 @@ FirstPersonCamera::FirstPersonCamera( input::InputManager* input,
 	sensivity( 1.0f ), cameraSensivity( 0.001f )
 {
 	registerCallbacks();	
+	centerCursor();
 }
 
 //-----------------------------------//
@@ -32,13 +33,13 @@ void FirstPersonCamera::update( double delta )
 {
 	Camera::update( delta );
 	checkControls( delta );
-	centerCursor();
 }
 
 //-----------------------------------//
 
 void FirstPersonCamera::checkControls( double delta )
 {
+	// Check keyboard movement.
 	Keyboard* kbd = inputManager->getKeyboard();
 	const std::vector< bool >& state = kbd->getKeyState();
 
@@ -48,7 +49,7 @@ void FirstPersonCamera::checkControls( double delta )
 		translate( Vector3::UnitZ /** angles.getOrientationMatrix()*/ * dt );
 
 	if( state[Keys::S] == true )
-		translate( -Vector3::UnitZ * dt  );
+		translate( -Vector3::UnitZ * dt );
 	
 	if( state[Keys::A] == true )
 		translate( Vector3::UnitX * dt );
@@ -61,6 +62,17 @@ void FirstPersonCamera::checkControls( double delta )
 
 	if( state[Keys::Z] == true )
 		translate( Vector3::UnitY * dt );
+
+	// Check mouse movement.
+
+	if( mouseDistance.x != 0 && mouseDistance.y != 0 )
+		debug( "%f %f", mouseDistance.x, mouseDistance.y );
+	
+	rotate( mouseDistance.y * cameraSensivity, 
+		mouseDistance.x * cameraSensivity, 
+		0.0f );
+	
+	mouseDistance.zero();
 }
 
 //-----------------------------------//
@@ -139,12 +151,11 @@ void FirstPersonCamera::onMouseMove( const MouseMoveEvent& moveEvent )
 	if( !window->getCursorState() )
 	{
 		Vector3 currentPosition( moveEvent.x, moveEvent.y, 0 );
-
-		Vector3 delta = currentPosition - lastPosition;
+		mouseDistance += currentPosition - lastPosition;
 		lastPosition = currentPosition;
-
-		rotate( delta.y * cameraSensivity, delta.x * cameraSensivity, 0 );
 	}
+
+	centerCursor();
 }
 
 //-----------------------------------//

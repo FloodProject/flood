@@ -71,7 +71,7 @@ void Example::onSetupScene()
 			rm->loadResource< GLSL_Shader >( "diffuse.fs" ) ) );
 
 	MaterialPtr mat( new Material( "FontMaterial", tex ) );
-	FontPtr font = rm->loadResource< Font >( "Calibri.font" );
+	FontPtr font = rm->loadResource< Font >( "Verdana.font" );
 	
 	label.reset( new Label( getFPS( lastFrameTime ), font, mat ) );
 	label->translate( -300.0f, 220.0f, 0.0f );
@@ -82,7 +82,7 @@ void Example::onSetupScene()
 	cam->translate( 0.0f, 0.0f, 0.0f );
 	scene->add( cam );
 
-	mesh = rm->loadResource< MS3D >( "media/ct.ms3d" );
+	mesh = rm->loadResource< MS3D >( "media/cubo.ms3d" );
 
 	foreach( const RenderablePtr& rend, mesh->getRenderables() )
 	{

@@ -47,16 +47,6 @@ public:
 
 private:
 
-	// Camera sensivity.
-	float sensivity;
-	float cameraSensivity;
-
-	// Last mouse position.
-	math::Vector3 lastPosition;
-
-	// Input manager.
-	input::InputManager* inputManager;
-
 	// Register input devices callbacks.
 	void registerCallbacks();
 
@@ -71,6 +61,19 @@ private:
 	void onMouseMove( const input::MouseMoveEvent& moveEvent );
 	void onButtonPressed( const input::MouseButtonEvent& buttonEvent );
 	void onButtonReleased( const input::MouseButtonEvent& buttonEvent );
+
+	// Camera sensivity.
+	float sensivity;
+	float cameraSensivity;
+
+	// Last mouse position (last frame).
+	math::Vector3 lastPosition;
+
+	// Holds the mouse distance travelled in a frame.
+	math::Vector3 mouseDistance;
+
+	// Input manager.
+	input::InputManager* inputManager;
 };
 
 //-----------------------------------//
