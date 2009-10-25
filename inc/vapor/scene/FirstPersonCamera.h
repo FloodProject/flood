@@ -59,6 +59,7 @@ private:
 
 	// Input callback functions.
 	void onKeyPressed( const input::KeyEvent& keyEvent );
+	void onKeyReleased( const input::KeyEvent& keyEvent );
 	void onMouseMove( const input::MouseMoveEvent& moveEvent );
 	void onButtonPressed( const input::MouseButtonEvent& buttonEvent );
 	void onButtonReleased( const input::MouseButtonEvent& buttonEvent );
@@ -78,6 +79,10 @@ private:
 
 	// Input manager.
 	input::InputManager* inputManager;
+
+
+	math::Vector3 rotateVectorKey;
+	bool check;
 };
 
 //-----------------------------------//
