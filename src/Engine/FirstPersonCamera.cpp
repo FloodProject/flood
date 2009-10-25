@@ -48,7 +48,7 @@ void FirstPersonCamera::checkControls( double delta )
 
 	//EulerAngles newForwardAngle( -rotateVector.x, -rotateVector.y, -rotateVector.z );
 
-	rotate( rotateVectorKey );
+	rotate( -rotateVectorKey );
 	EulerAngles newForwardAngle( rotateVectorKey.x, rotateVectorKey.y, rotateVectorKey.z );
 	
 	forwardVector *= newForwardAngle.getOrientationMatrix();
@@ -175,7 +175,7 @@ void FirstPersonCamera::onKeyPressed( const KeyEvent& keyEvent )
 		{
 			if(!check){
 				check = true;
-				rotateVectorKey = Vector3(0.0f, -0.005f, 0.0f);
+				rotateVectorKey = Vector3(0.0f, 0.005f, 0.0f);
 				break;
 			}
 		}
@@ -183,7 +183,7 @@ void FirstPersonCamera::onKeyPressed( const KeyEvent& keyEvent )
 		{
 			if(!check){
 				check = true;
-				rotateVectorKey = Vector3(0.0f, 0.005f, 0.0f);
+				rotateVectorKey = Vector3(0.0f, -0.005f, 0.0f);
 				break;
 			}
 		}
@@ -191,7 +191,7 @@ void FirstPersonCamera::onKeyPressed( const KeyEvent& keyEvent )
 		{
 			if(!check){
 				check = true;
-				rotateVectorKey = Vector3(-0.005f, 0.0f, 0.0f);
+				rotateVectorKey = Vector3(0.005f, 0.0f, 0.0f);
 				break;
 			}
 		}
@@ -199,7 +199,7 @@ void FirstPersonCamera::onKeyPressed( const KeyEvent& keyEvent )
 		{
 			if(!check){
 				check = true;
-				rotateVectorKey = Vector3(0.005f, 0.0f, 0.0f);
+				rotateVectorKey = Vector3(-0.005f, 0.0f, 0.0f);
 				break;
 			}
 		}
