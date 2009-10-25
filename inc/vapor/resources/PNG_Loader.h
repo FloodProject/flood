@@ -30,7 +30,7 @@ public:
 	PNG_Pico_Loader();
 
 	// Decode an image file to a buffer.
-	virtual Image* decode(vfs::File& file);
+	virtual Image* decode(const vfs::File& file);
 
 	// Gets the name of this codec.
 	virtual const std::string getName() { return "PICOPNG"; }

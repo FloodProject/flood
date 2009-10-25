@@ -29,7 +29,7 @@ public:
 	GLSL_Loader();
 
 	// Parses a GLSL text shader to a buffer.
-	virtual Shader* decode(vfs::File& file);
+	virtual Shader* decode(const vfs::File& file);
 
 	// Gets the name of this codec.
 	virtual const std::string getName() { return "GLSL"; }

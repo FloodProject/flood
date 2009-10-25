@@ -61,29 +61,32 @@ public:
 	bool close();
 	
 	// Gets the file size.
-	long getSize();
+	long getSize() const;
 
 	// Read file into buffer.
-	std::vector<byte> read(long size = -1);
+	std::vector<byte> read(long size = -1) const;
+
+	// Reads up to size bytes into the buffer.
+	long read(void* buffer, long size ) const;
 
 	// Read lines (assumes a text file).
-	std::vector<std::string> readLines();
+	std::vector<std::string> readLines() const;
 
 	// Write buffer into file.
-	long write (std::vector<byte> buffer, long size = -1);
+	long write(std::vector<byte> buffer, long size = -1);
 
 	// Seek to a new position within the file. 
 	// The next read or write will occur at that place.
 	bool seek(long pos);
 
 	// Determine current position within a file.
-	long tell();
+	long tell() const;
 
 	// Gets the path of the file.
 	const std::string& getPath() const;
 
 	// Checks if this file exists.
-	bool exists();
+	bool exists() const;
 	
 	// Checks if the file in path exists.
 	static bool exists(const std::string path);

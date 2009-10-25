@@ -60,7 +60,7 @@ public:
 	Font_Loader();
 
 	// Decode a font definition.
-	virtual Font* decode(vfs::File& file);
+	virtual Font* decode(const vfs::File& file);
 
 	// Gets the name of this codec.
 	virtual const std::string getName() { return "FONTS"; }

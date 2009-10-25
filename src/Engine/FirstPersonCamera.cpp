@@ -39,17 +39,42 @@ void FirstPersonCamera::update( double delta )
 
 void FirstPersonCamera::checkControls( double delta )
 {
+	// Check mouse movement.
+	double dt = delta * 100 * lookSensivity;
+
+	Vector3 rotateVector( mouseDistance.y * dt, mouseDistance.x * dt, 0.0f );
+	rotate( rotateVector );
+
+	EulerAngles newForwardAngle( -rotateVector.x, -rotateVector.y, -rotateVector.z );
+
+	forwardVector *= newForwardAngle.getOrientationMatrix();
+	//forwardVector.normalize();
+
+	if( mouseDistance.x != 0 && mouseDistance.y != 0 )
+	{
+		debug( "forangle: %f %f %f", -rotateVector.x, -rotateVector.y, -rotateVector.z );
+		debug( "forward: %f %f %f", forwardVector.x, forwardVector.y, forwardVector.z );
+	}
+
+	// Restrict X-axis movement by 90 deegres.
+	float xlimit = degreeToRadian( 90.0f );
+	limit< float >( angles.xang, -xlimit, xlimit );
+
+	mouseDistance.zero();
+
 	// Check keyboard movement.
 	Keyboard* kbd = inputManager->getKeyboard();
 	const std::vector< bool >& state = kbd->getKeyState();
 
-	double dt = delta * 100 * moveSensivity;
+
+
+	/*double*/ dt = delta * 100 * moveSensivity;
 
 	if( state[Keys::W] == true )
-		translate( Vector3::UnitZ /** angles.getOrientationMatrix()*/ * dt );
+		translate( forwardVector * dt );
 
 	if( state[Keys::S] == true )
-		translate( -Vector3::UnitZ * dt );
+		translate( -forwardVector * dt );
 	
 	if( state[Keys::A] == true )
 		translate( Vector3::UnitX * dt );
@@ -62,17 +87,6 @@ void FirstPersonCamera::checkControls( double delta )
 
 	if( state[Keys::Z] == true )
 		translate( Vector3::UnitY * dt );
-
-	// Check mouse movement.
-	dt = delta * 100 * lookSensivity;
-
-	rotate( mouseDistance.y * dt, mouseDistance.x * dt, 0.0f );
-
-	// Restrict X-axis movement by 90 deegres.
-	float xlimit = degreeToRadian( 90.0f );
-	limit< float >( angles.xang, -xlimit, xlimit );
-
-	mouseDistance.zero();
 }
 
 //-----------------------------------//

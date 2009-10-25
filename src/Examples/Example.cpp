@@ -33,6 +33,11 @@ void Example::onInit()
 	{
 		Log::MessageDialog( "Missing archive/directory '" + media + "'." );
 	}
+
+	math::EulerAngles ang( math::degreeToRadian( 90.0 ), 0.0f, 0.0f );
+	math::Vector3 vec( math::Vector3::UnitZ );
+
+	Vector3 ret = vec * ang.getOrientationMatrix();
 }
 
 //-----------------------------------//
@@ -82,7 +87,7 @@ void Example::onSetupScene()
 	cam->translate( 0.0f, 0.0f, 0.0f );
 	scene->add( cam );
 
-	mesh = rm->loadResource< MS3D >( "media/cubo.ms3d" );
+	mesh = rm->loadResource< MS3D >( "media/terreno.ms3d" );
 
 	foreach( const RenderablePtr& rend, mesh->getRenderables() )
 	{

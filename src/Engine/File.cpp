@@ -97,7 +97,7 @@ bool File::close()
 
 //-----------------------------------//
 
-long File::getSize()
+long File::getSize() const
 {
 	if( !file ) return -1;
 
@@ -108,7 +108,7 @@ long File::getSize()
 
 //-----------------------------------//
 
-std::vector<byte> File::read(long sz)
+std::vector<byte> File::read(long sz) const
 {
 	if( accessMode != AccessMode::Read )
 	{
@@ -136,9 +136,9 @@ std::vector<byte> File::read(long sz)
 	
 	std::vector<byte> buffer( sz ); 
 	
-	PHYSFS_sint64 numObjs = PHYSFS_read (file, &buffer[0], 1, sz); 
+	PHYSFS_sint64 bytesRead = PHYSFS_read (file, &buffer[0], 1, sz); 
 
-	if(numObjs < 0)
+	if(bytesRead < 0)
 	{
 		error( "vfs::file", "Could not read from file '%s': %s", 
 			path.c_str(), PHYSFS_getLastError());
@@ -151,7 +151,44 @@ std::vector<byte> File::read(long sz)
 
 //-----------------------------------//
 
-std::vector<std::string> File::readLines()
+long File::read(void* buffer, long size ) const
+{
+	if( accessMode != AccessMode::Read )
+	{
+		error( "vfs::file", "Access mode violation in file '%s'", 
+			path.c_str() );
+		
+		return -1;
+	}
+
+	if( !file || PHYSFS_eof(file) ) 
+	{
+		return 0;
+	}
+
+	if ( tell()+size > getSize() )
+	{
+		size = getSize() - tell();
+	}
+
+	if( size == 0 ) return 0;
+	
+	PHYSFS_sint64 bytesRead = PHYSFS_read (file, buffer, 1, size); 
+
+	if(bytesRead < 0)
+	{
+		error( "vfs::file", "Could not read from file '%s': %s", 
+			path.c_str(), PHYSFS_getLastError());
+
+		return -1;	
+	}
+
+	return bytesRead;
+}
+
+//-----------------------------------//
+
+std::vector<std::string> File::readLines() const
 {
 	std::vector<byte> font = read();
 	std::string str( font.begin(), font.end() );
@@ -231,7 +268,7 @@ bool File::seek(long pos)
 
 //-----------------------------------//
 
-long File::tell()
+long File::tell() const
 {
 	if(!file) return -1;
 
@@ -242,7 +279,7 @@ long File::tell()
 
 //-----------------------------------//
 
-bool File::exists()
+bool File::exists() const
 {
 	return ( file && exists( path ) );
 }

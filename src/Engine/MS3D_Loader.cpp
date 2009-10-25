@@ -26,7 +26,7 @@ MS3D_Loader::MS3D_Loader()
 
 //-----------------------------------//
 
-MS3D* MS3D_Loader::decode(File& file)
+MS3D* MS3D_Loader::decode(const File& file)
 {
 	if(!file.exists()) return nullptr;
 

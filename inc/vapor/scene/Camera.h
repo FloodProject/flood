@@ -134,6 +134,9 @@ protected:
 	// Up vector.
 	math::Vector3 upVector;
 
+	// Forward vector.
+	math::Vector3 forwardVector;
+
 	// Look-at vector.
 	math::Vector3 lookAtVector;
 

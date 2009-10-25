@@ -30,7 +30,7 @@ public:
 	virtual ~ResourceLoader() {}
 
 	// Decodes a given file into a resource.
-	virtual Resource* decode(vfs::File& file) = 0;
+	virtual Resource* decode(const vfs::File& file) = 0;
 	
 	// Gets a list of recognized extensions by this loader.
 	// TODO: make this const

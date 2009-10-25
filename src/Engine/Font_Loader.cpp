@@ -32,7 +32,7 @@ Font_Loader::Font_Loader()
 
 //-----------------------------------//
 
-Font* Font_Loader::decode(vfs::File& file)
+Font* Font_Loader::decode(const vfs::File& file)
 {
 	std::vector<std::string> lines = file.readLines();
 	std::vector<std::string> info, glyphInfo;

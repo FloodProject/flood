@@ -15,6 +15,8 @@
 #include "vapor/resources/ResourceLoader.h"
 #include "vapor/resources/Sound.h"
 
+#include <vorbis/vorbisfile.h>
+
 namespace vapor {
 	namespace resources {
 
@@ -28,8 +30,8 @@ public:
 
 	OGG_Loader();
 
-	// Decode an image file to a buffer
-	virtual Sound* decode(vfs::File& file);
+	// Decode an OGG file to a buffer.
+	virtual Sound* decode(const vfs::File& file);
 
 	// Gets the name of this codec.
 	virtual const std::string getName() { return "OGG"; }
@@ -44,6 +46,9 @@ protected:
 
 	// holds all file extensions recognized by this codec
 	std::list< std::string > extensions;
+
+	// Used for providing libvorbisfile with I/O callbacks.
+	ov_callbacks callbacks;
 };
 
 } } // end namespaces

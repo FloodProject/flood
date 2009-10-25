@@ -32,7 +32,7 @@ GLSL_Loader::GLSL_Loader()
 
 //-----------------------------------//
 
-Shader* GLSL_Loader::decode(File& file)
+Shader* GLSL_Loader::decode(const File& file)
 {
 	std::vector<byte> text = file.read();
 

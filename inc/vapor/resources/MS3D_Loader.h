@@ -29,7 +29,7 @@ public:
 	MS3D_Loader();
 
 	// Decode an .ms3d mesh file
-	virtual MS3D* decode(vfs::File& file);
+	virtual MS3D* decode(const vfs::File& file);
 
 	// Gets the name of this codec.
 	virtual const std::string getName() { return "MS3D"; }

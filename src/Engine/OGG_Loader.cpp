@@ -16,8 +16,6 @@
 
 using vapor::vfs::File;
 
-#include <vorbis/vorbisfile.h>
-
 #ifdef VAPOR_COMPILER_MSVC
 	// disable Visual C++ fopen deprecation warning
 	#pragma warning(disable : 4996)
@@ -30,31 +28,64 @@ namespace vapor {
 
 //-----------------------------------//
 
-OGG_Loader::OGG_Loader()
+size_t read_func(void *ptr, size_t size, size_t nmemb, void *datasource)
 {
-	extensions.push_back("ogg");
+	const File& file = *reinterpret_cast< File* >( datasource );
+	return file.read( ptr, size*nmemb );
 }
 
 //-----------------------------------//
 
-Sound* OGG_Loader::decode(File& file)
+int seek_func(void *datasource, ogg_int64_t offset, int whence)
+{
+	const File& file = *reinterpret_cast< File* >( datasource );
+	//return file.seek(;
+	return 0;
+}
+
+//-----------------------------------//
+
+int close_func(void *datasource)
+{
+	const File& file = *reinterpret_cast< File* >( datasource );
+	//return file.close();
+	return 0;
+}
+
+//-----------------------------------//
+
+long tell_func(void *datasource)
+{
+	const File& file = *reinterpret_cast< File* >( datasource );
+	return file.tell();
+}
+
+//-----------------------------------//
+
+OGG_Loader::OGG_Loader()
+{
+	extensions.push_back("ogg");
+
+	callbacks.read_func = read_func;
+	callbacks.seek_func = nullptr /*seek_func*/;
+	callbacks.close_func = nullptr /*close_func*/;
+	callbacks.tell_func = tell_func;
+}
+
+//-----------------------------------//
+
+Sound* OGG_Loader::decode(const File& file)
 {
 	int endian = 0;             // 0 for Little-Endian, 1 for Big-Endian
 	int bitStream;
 	long bytes;
+
 	const unsigned long BUFFER_SIZE( 32768 );
 	char array[BUFFER_SIZE];    // Local fixed size array
 
-	// Open for binary reading
-	// TODO: Use the NativeFile/File class for I/O
-	FILE* f( fopen(file.getPath().c_str(), "rb") );
-	
-	//check if the file was opened successfully
-	if(!f) return nullptr;
-	
 	OggVorbis_File oggFile;
 	
-	ov_open(f, &oggFile, nullptr, 0);
+	ov_open_callbacks((void*) &file, &oggFile, nullptr, 0, callbacks);
 
 	// Get some information about the OGG file
 	vorbis_info* pInfo( ov_info(&oggFile, -1) );

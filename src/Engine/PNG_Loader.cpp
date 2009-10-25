@@ -37,7 +37,7 @@ PNG_Pico_Loader::PNG_Pico_Loader()
 
 //-----------------------------------//
 
-Image* PNG_Pico_Loader::decode(File& file)
+Image* PNG_Pico_Loader::decode(const File& file)
 {
 	// read contents of the file into the vector
 	std::vector<byte> filebuf = file.read();

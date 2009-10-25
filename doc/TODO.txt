@@ -51,7 +51,7 @@ Logger:
 	Log all the engine calls (WIP)
 	bind/functor for logging
 	Hierarchical log system
-	Logging functions with type-safe variable arguments
+	Logging functions with type-safe variable arguments (need variadiac templates?)
 	Logging boxes for system/CPU/GPU information
 
 Resource Management:
