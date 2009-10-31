@@ -41,7 +41,7 @@ Matrix4x4 Matrix4x4::createPerspectiveProjection( float fov, float ar, float nea
 {
 	Matrix4x4 projectionMatrix;
 
-	float h = 1.0f / math::tanf( math::degreeToRadian( fov ) / 2.0 );
+	float h = 1.0f / math::tanf( math::degreeToRadian( fov ) / 2.0f );
 	float neg_depth = (near_ - far_);
 	
 	projectionMatrix.m11 = h / ar;
@@ -69,8 +69,8 @@ Matrix4x4 Matrix4x4::createPerspectiveProjection( float fov, float ar, float nea
 
 //-----------------------------------//
 
-Matrix4x4 Matrix4x4::createOrthographicProjection( double left, double right, double bottom, double top,
-		double near_, double far_)
+Matrix4x4 Matrix4x4::createOrthographicProjection( float left, float right, float bottom, float top,
+		float near_, float far_)
 {
 	Matrix4x4 projectionMatrix;
 

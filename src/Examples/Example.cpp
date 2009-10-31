@@ -77,7 +77,7 @@ void Example::onSetupResources()
 
 std::string getFPS( float lastFrameTime )
 {
-	if( lastFrameTime == 0 ) return "";
+	if( lastFrameTime == 0 ) return "FPS:";
 
 	std::string fps( boost::lexical_cast< std::string >( int( 1.0f / lastFrameTime ) ) );
 	return "FPS: " + fps;
@@ -102,14 +102,14 @@ void Example::onSetupScene()
 	FontPtr font = rm->loadResource< Font >( "Verdana.font" );
 	
 	label.reset( new Label( getFPS( lastFrameTime ), font, mat ) );
-	NodePtr fps( new Node() );
+	NodePtr fps( new Node( "FPSNode" ) );
 	fps->addComponent( TransformPtr( new Transform() ) );
 	fps->addComponent( label );
 	fps->getTransform()->translate( -300.0f, 220.0f, 0.0f );
 	scene->add( fps );
 	
 	// Create a new Camera
-	NodePtr camera( new Node() );
+	NodePtr camera( new Node( "MainCamera" ) );
 	cam.reset( new FirstPersonCamera( getInputManager(), getRenderDevice() ) );
 	camera->addComponent( TransformPtr( new Transform() ) );
 	camera->addComponent( cam );
@@ -122,7 +122,7 @@ void Example::onSetupScene()
 		rend->getMaterial()->setProgram( tex );
 	}
 
-	NodePtr terreno( new Node() );
+	NodePtr terreno( new Node( "Terreno" ) );
 	terreno->addComponent( TransformPtr( new Transform() ) );
 	terreno->addComponent( mesh );
 	terreno->getTransform()->scale( 0.3f );
@@ -160,10 +160,10 @@ void Example::onUpdate( float delta )
 	if( fpsUpdateTime <= 1.0f )
 	{
 		fpsUpdateTime += delta;
-		label->setText( getFPS( lastFrameTime ) );
 	}
 	else
 	{
+		label->setText( getFPS( lastFrameTime ) );
 		fpsUpdateTime = 0.0f;
 	}
 }

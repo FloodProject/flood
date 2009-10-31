@@ -35,8 +35,8 @@ public:
 	static Matrix4x4 createPerspectiveProjection( float fov, float ar, float near_, float far_ );
 
 	// Gets an orthographic matrix from a set of parameters.
-	static Matrix4x4 createOrthographicProjection( double left, double right, double bottom, double top,
-		double near_, double far_);
+	static Matrix4x4 createOrthographicProjection( float left, float right, float bottom, float top,
+		float near_, float far_);
 
 	// Identity matrix.
 	static const Matrix4x4 Identity;

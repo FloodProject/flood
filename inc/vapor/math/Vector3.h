@@ -134,7 +134,7 @@ public:
 	}
 
 	// Cross product
-	Vector3T cross( const Vector3T& v )
+	Vector3T cross( const Vector3T& v ) const
 	{
 		return Vector3T<T>(
 			y*v.z - z*v.y,

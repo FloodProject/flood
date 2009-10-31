@@ -13,6 +13,8 @@
 namespace vapor {
 	namespace platform {
 
+//-----------------------------------//
+
 /**
  * We set some macros up-front for all the platform dynamic-lib related functions.
  * This makes the class code more clean, since otherwise, the code would be ridden
@@ -28,6 +30,8 @@ namespace vapor {
 #else
 	#error "Support for dynamic libraries not found"
 #endif
+
+//-----------------------------------//
 
 /**
  * Represents a dynamic library that can be loaded at runtime (DLLs on Windows,
@@ -52,5 +56,7 @@ private:
 	std::string _name;
 	DYNLIB_HANDLE _handle;
 };
+
+//-----------------------------------//
 
 } } // end namespaces

@@ -103,7 +103,7 @@ long File::getSize() const
 
 	PHYSFS_sint64 sz = PHYSFS_fileLength( file );
 
-	return sz;
+	return static_cast< long >( sz );
 }
 
 //-----------------------------------//
@@ -183,7 +183,7 @@ long File::read(void* buffer, long size ) const
 		return -1;	
 	}
 
-	return bytesRead;
+	return static_cast< long >( bytesRead );
 }
 
 //-----------------------------------//
@@ -233,11 +233,9 @@ long File::write(std::vector<byte> buffer, long size)
 	{
 		error( "vfs::file", "Could not write to file '%s': %s",
 			path.c_str(), PHYSFS_getLastError() );
-
-		return numObjs;	
 	}
 
-	return numObjs;
+	return static_cast< long >( numObjs );
 }
 
 //-----------------------------------//
@@ -274,7 +272,7 @@ long File::tell() const
 
 	PHYSFS_sint64 pos = PHYSFS_tell(file);
 	
-	return pos;
+	return static_cast< long >( pos );
 }
 
 //-----------------------------------//

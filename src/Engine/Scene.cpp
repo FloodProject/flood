@@ -11,12 +11,17 @@
 #include "vapor/scene/Scene.h"
 #include "vapor/scene/Transform.h"
 
-#include <sstream>
-
 using namespace vapor::math;
 
 namespace vapor {
 	namespace scene {
+
+//-----------------------------------//
+
+Scene::Scene() : Group( "Scene" )
+{
+
+}
 
 //-----------------------------------//
 
@@ -89,9 +94,10 @@ void Scene::updateTransformAndBV( NodePtr node, std::stack< Matrix4x3 >& transfo
 
 const std::string Scene::save(int ind)
 {
-	std::ostringstream os;
-	os << "{ " << Group::save(ind);
-	return os.str();
+	//std::ostringstream os;
+	//os << "{ " << Group::save(ind);
+	//return os.str();
+	return "";
 }
 
 //-----------------------------------//

@@ -13,18 +13,25 @@
 namespace vapor {
 	namespace platform {
 
+//-----------------------------------//
+
 DynamicLib::DynamicLib(const std::string& name) 
 	: _handle(nullptr), _name(name)
 {
 	load();
 }
 
+//-----------------------------------//
+
 DynamicLib::~DynamicLib()
 {
-	if(_handle) {
+	if(_handle)
+	{
 		DYNLIB_UNLOAD(_handle);
 	}
 }
+
+//-----------------------------------//
 
 bool DynamicLib::load()
 {
@@ -37,9 +44,13 @@ bool DynamicLib::load()
 	return true;
 }
 
+//-----------------------------------//
+
 void* DynamicLib::getSymbol(const std::string& symbol)
 {
 	return (void*) DYNLIB_GETSYM(_handle, symbol.c_str()); 
 }
+
+//-----------------------------------//
 
 } } // end namespaces

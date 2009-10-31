@@ -25,10 +25,11 @@ TYPEDEF_SHARED_POINTER_FROM_CLASS( Node );
 //-----------------------------------//
 
 /**
- * Represents a node, that is, an entity in the scene. 
- * The entities are divided into two main types:
- *   ~ Transform (entities that can be placed in the scene)
- *   ~ Group (group of other entities in the scene)
+ * Represents a node, that is, an entity of the world held in the scene. 
+ * Entities will need to have components to get different properties.
+ * For example you can add a Transform component to give the entity a
+ * placement in the world. Or you can add a Physics component that will
+ * make it react to the world gravity and make it obey the physics laws.
  */
 
 class VAPOR_API Node : public std::enable_shared_from_this< Node >, 
@@ -37,6 +38,7 @@ class VAPOR_API Node : public std::enable_shared_from_this< Node >,
 public:
 
 	explicit Node();
+	explicit Node( const std::string& name );
 	virtual ~Node();
 
 	// Sets the parent of the node.
@@ -59,26 +61,40 @@ public:
 		return std::static_pointer_cast< T >( cmp );
 	}
 
+	// Updates all the components of the node.
+	virtual void update( float delta );
+
+	// Serializes the node (and its components) to a stream.
+	//virtual const std::string save(int indent = 0);
+
+	// Gets the name of the node.
+	virtual const std::string getName() const;
+
 	// Gets the bounding volume of the node.
 	//AABB getBoundingVolume() const;
 
-	virtual void update( float delta );
-
-	//virtual const std::string save(int indent = 0);
-
-	virtual const std::string name() const;
-
+	// Gets the associated transform component (if any).
 	TransformPtr getTransform();
 
+	// Gets the geometries components in the node.
 	const std::vector< GeometryPtr >& getGeometry();
   
 private:
 
+	// The name of the node.
+	std::string name;
+
+	// Holds the components of the node.
 	std::map< std::string, ComponentPtr > components;
 	typedef std::pair< const std::string, ComponentPtr > componentPair;
 
+	// Points to the parent node (if any). 
 	std::weak_ptr< Node > parent;
+	
+	// Caches the geometries nodes (for faster lookup when rendering).
 	std::vector< GeometryPtr > geometries;
+	
+	// Bounding volume used for culling.
 	//AABB boundingVolume;
 };
 

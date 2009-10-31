@@ -30,14 +30,12 @@ class VAPOR_API Scene : public Group
 {
 public:
 
-	//Scene();
-
+	Scene();
 	virtual ~Scene();
 
-	//shared_ptr<Mesh> createMesh();
-
 	// Node creation methods
-	
+
+	//MeshPtr createMesh();
 	//Camera* createCamera();
 	//Light* createLight();
 	//Listener* createListener();
@@ -46,8 +44,6 @@ public:
 	virtual void update( float delta );
 
 	virtual const std::string save( int indent = 0 );
-
-	virtual const std::string name() { return "scene"; }
 
 private:
 

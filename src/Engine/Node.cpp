@@ -15,11 +15,19 @@ namespace vapor {
 
 //-----------------------------------//
 
-Node::Node()
-	/*: parent( NodePtr )*/
+Node::Node( const std::string& name )
+	: name( name )
 {
 
 }
+
+//-----------------------------------//
+
+Node::Node()
+{
+
+}
+
 
 //-----------------------------------//
 
@@ -32,8 +40,7 @@ Node::~Node()
 
 NodePtr Node::getParent( ) const
 {
-	NodePtr ret( parent.lock() );
-	return ret;
+	return parent.lock();
 }
 
 //-----------------------------------//
@@ -47,23 +54,22 @@ void Node::setParent( NodePtr parent )
 
 bool Node::addComponent( ComponentPtr component )
 {
+	const std::string& type = component->getType();
+
 	// Searches for a component with the same type.
-	if( components.find( component->getType() ) != components.end() )
+	if( components.find( type ) != components.end() )
 	{
+		warn( "scene", "Component of type %s already exists in entity %s", type, getName() );
 		return false;
 	}
 
 	// If it doesn't exists, we add a new one.
-	components[component->getType()] = component;
+	components[type] = component;
 	component->setNode( shared_from_this() );
 
-	// Cache renderable objects
+	// Cache geometry (renderable) objects.
 	GeometryPtr geometry = std::dynamic_pointer_cast< Geometry >( component );
-
-	if( geometry )
-	{
-		geometries.push_back( geometry );
-	}
+	if( geometry ) geometries.push_back( geometry );
 
 	return true;
 }
@@ -106,9 +112,9 @@ const std::vector< GeometryPtr >& Node::getGeometry()
 
 //-----------------------------------//
 
-const std::string Node::name() const
+const std::string Node::getName() const
 {
-	return "Node";
+	return name;
 }
 
 //-----------------------------------//

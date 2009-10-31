@@ -52,6 +52,9 @@ public:
 
 	// Sets the rotation vector of this node.
 	void setRotation( math::EulerAngles& rot );
+
+	// Points to a given point in space.
+	void lookAt( const math::Vector3& lookAtVector, const math::Vector3& upVector );
 	
 	// Resets the transformations previously applied to this node.
 	void reset();

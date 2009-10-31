@@ -10,16 +10,13 @@
 
 #include "vapor/scene/Group.h"
 
-#include <sstream>
-
-using namespace std;
-
 namespace vapor {
 	namespace scene {
 
 //-----------------------------------//
 
-Group::Group()
+Group::Group( const std::string& name )
+	: Node( name )
 {
 
 }
@@ -90,28 +87,23 @@ int Group::count() const
 
 //-----------------------------------//
 
-const std::string Group::name()
-{
-	return "Group";
-}
-
-//-----------------------------------//
-
 const std::string Group::save(int ind)
 {
-	ostringstream os; 
-	string space(ind, ' ');
+	//ostringstream os; 
+	//string space(ind, ' ');
 
-	os << space << "\"" << name() << "\": {\n";
-	os << space << "  " << "\"nodes\": [\n";
+	//os << space << "\"" << name() << "\": {\n";
+	//os << space << "  " << "\"nodes\": [\n";
 
-	// do all nodes
-	//foreach( NodePtr node, children )
-	//	os << node->save(ind+4);
+	//// do all nodes
+	////foreach( NodePtr node, children )
+	////	os << node->save(ind+4);
 
-	os << space << "  " << "]\n";
-	os << space << "}\n";
-	return os.str();
+	//os << space << "  " << "]\n";
+	//os << space << "}\n";
+	//return os.str();
+
+	return "";
 }
 
 //-----------------------------------//

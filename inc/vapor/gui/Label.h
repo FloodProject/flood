@@ -50,9 +50,6 @@ public:
 	// Serializes this node to a stream.
 	virtual const std::string save( int UNUSED(indent ) = 0) { return ""; }
 
-	// Returns this node name identification.
-	//virtual const std::string name() const { return "Label"; }
-
 	// Returns this component name identification.
 	virtual const std::string& getType() const;
 

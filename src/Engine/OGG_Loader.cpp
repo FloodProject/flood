@@ -36,19 +36,19 @@ size_t read_func(void *ptr, size_t size, size_t nmemb, void *datasource)
 
 //-----------------------------------//
 
-int seek_func(void *datasource, ogg_int64_t offset, int whence)
+int seek_func(void* /*datasource*/, ogg_int64_t /*offset*/, int /*whence*/)
 {
-	const File& file = *reinterpret_cast< File* >( datasource );
-	//return file.seek(;
+	//const File& file = *reinterpret_cast< File* >( datasource );
+	////return file.seek( ... );
 	return 0;
 }
 
 //-----------------------------------//
 
-int close_func(void *datasource)
+int close_func(void* /*datasource*/)
 {
-	const File& file = *reinterpret_cast< File* >( datasource );
-	//return file.close();
+	//const File& file = *reinterpret_cast< File* >( datasource );
+	////return file.close( ... );
 	return 0;
 }
 

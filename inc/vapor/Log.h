@@ -38,7 +38,7 @@ namespace LogLevel
  * Doesn't do anything on release builds.
  */
 
-void debug(const char* msg, ...);
+VAPOR_API void debug(const char* msg, ...);
 
 //-----------------------------------//
 
@@ -46,9 +46,9 @@ void debug(const char* msg, ...);
  * Convenience functions to log in the main engine stream.
  */
 
-void info(const std::string& subsystem, const char* msg, ...);
-void warn(const std::string& subsystem, const char* msg, ...);
-void error(const std::string& subsystem, const char* msg, ...);
+VAPOR_API void info(const std::string& subsystem, const char* msg, ...);
+VAPOR_API void warn(const std::string& subsystem, const char* msg, ...);
+VAPOR_API void error(const std::string& subsystem, const char* msg, ...);
 
 //-----------------------------------//
 

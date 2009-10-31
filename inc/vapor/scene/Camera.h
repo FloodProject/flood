@@ -57,9 +57,6 @@ public:
 	Camera( render::Device* device, 
 		Projection::Enum projection = Projection::Perspective );
 
-	// Points the camera to a given point in space.
-	void lookAt( const math::Vector3& pt );
-
 	// Sets the projection type of the camera.
 	void setProjection( Projection::Enum projection );
 

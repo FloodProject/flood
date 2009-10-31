@@ -16,50 +16,55 @@ namespace vapor {
 
 //-----------------------------------//
 
+/**
+ * Groups are nodes that have the special property of being able to be
+ * attached to each other. If you attach a node to another node, they will
+ * be in a hierarchical relationship and the parent node will influence the 
+ * child node transformations.
+ */
+
 class VAPOR_API Group : public Node
 {
 public:
 
-	Group();
+	Group( const std::string& name );
 	virtual ~Group();
 
-	// adds child to the end of the child list.  Returns the index of
+	// Adds child to the end of the child list.  Returns the index of
 	// the new child node that has been added.
 	virtual int add( NodePtr child );
 
-	// inserts child after child at i'th index.  Returns the index of
+	// Inserts child after child at i'th index.  Returns the index of
 	// the new child inserted, if there is no existing
 	// child at 'i' then -1 is returned.
 	virtual int insert( int i, NodePtr child );
 
-	// removes child at index i, if i is out of bounds returns false,
+	// Removes child at index i, if i is out of bounds returns false,
 	// if i is in bounds and child was removed, returns true
 	virtual bool remove( int i );
 
-	// returns null pointer if cannot find index i
+	// Returns null pointer if cannot find index i
 	NodePtr get( uint i ) const;
 
 	// Gets the children of this group.
 	const std::vector< NodePtr >& getChildren() { return children; }
 
-	// returns index for child with the same pointer, if child cannot
+	// Returns index for child with the same pointer, if child cannot
 	// be found, -1 is returned
 	int index( NodePtr child ) const;
 
-	// returns number of children in this group
+	// Returns number of children in this group
 	int count( ) const;
 
-	// updates this group of nodes
+	// Updates this group of nodes.
 	virtual void update( float delta );
 
-	// serialization
+	// Serialization of the nodes.
 	virtual const std::string save( int indent = 0 );
-
-	// gets the name of this node
-	virtual const std::string name();
 
 protected:
 
+	// Holds a group of nodes.
 	std::vector< NodePtr > children;
 };
 
