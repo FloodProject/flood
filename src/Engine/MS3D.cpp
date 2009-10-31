@@ -22,6 +22,10 @@ namespace vapor {
 
 //-----------------------------------//
 
+const std::string& MS3D::type = "Mesh";
+
+//-----------------------------------//
+
 const int MAX_VERTICES				= 65534;
 const int MAX_TRIANGLES				= 65534;
 const int MAX_GROUPS				= 255;

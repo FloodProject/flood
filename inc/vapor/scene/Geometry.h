@@ -20,11 +20,13 @@ namespace vapor {
 //-----------------------------------//
 
 /**
- * Scene node that holds geometry data for rendering. It can holds various
- * Renderable objects and treat it as one big piece of geometry.
+ * This component holds geometry data for rendering. It can holds multiple
+ * Renderable objects, each with different materials. When the camera node
+ * traverses the scene graph, Geometry nodes are picked and passed to the
+ * rendering device for rendering.
  */
 
-class VAPOR_API Geometry : public Transformable
+class VAPOR_API Geometry : public Component
 {
 public:
 
@@ -46,19 +48,21 @@ public:
 	void appendRenderables( render::RenderQueue& queue );
 
 	// Updates the geometry if needed.
-	virtual void update( double delta );
+	virtual void update( float delta );
 
-	// Serializes this node to a stream.
+	// Serializes this component to a stream.
 	virtual const std::string save(int indent = 0);
 
-	// Returns the name of this node.
-	virtual const std::string name() const;
+	// Returns the name of this component.
+	virtual const std::string& getType() const;
 
 protected:
 
 	typedef std::vector< render::RenderablePtr > RenderableList;
 	std::map< render::RenderGroup::Enum, RenderableList > renderables;
 	typedef std::pair<const  render::RenderGroup::Enum, RenderableList > rendPair;
+
+	static const std::string& type;
 };
 
 //-----------------------------------//

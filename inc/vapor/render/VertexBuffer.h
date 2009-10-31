@@ -150,7 +150,7 @@ private:
     BufferUsage::Enum bufferUsage;
     BufferAccess::Enum bufferAccess;
 	
-	typedef tr1::tuple< int, GLPrimitive, std::vector< byte > > attributeValue;
+	typedef std::tuple< int, GLPrimitive, std::vector< byte > > attributeValue;
 	typedef std::pair< const VertexAttribute::Enum, attributeValue > attributePair;
 
 	// Holds all the vertex attributes

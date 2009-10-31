@@ -27,7 +27,7 @@ Scene::~Scene()
 
 //-----------------------------------//
 
-void Scene::update( double delta )
+void Scene::update( float delta )
 {
 	std::stack< Matrix4x3 > transformStack;
 	transformStack.push( Matrix4x3::Identity );
@@ -44,8 +44,7 @@ void Scene::updateTransformAndBV( NodePtr node, std::stack< Matrix4x3 >& transfo
 	// TODO: benckmark and profile this, smells slow
 
     // on the way down part
-	TransformablePtr transformable( 
-		tr1::dynamic_pointer_cast< Transformable >( node ) );
+	TransformPtr transform = node->getTransform();
 
 	// this is used to know if we need to pop a matrix from the
 	// stack on the way up part, because some nodes will not have
@@ -54,14 +53,14 @@ void Scene::updateTransformAndBV( NodePtr node, std::stack< Matrix4x3 >& transfo
   
 	// concatenate this matrix on the stack with the top most
 	// there will be at least one matrix in stack, top most is identity
-	if ( transformable )
+	if ( transform )
 	{
-		transformStack.push( transformable->getLocalTransform() * transformStack.top() );
-		transformable->setAbsoluteTransform( transformStack.top() );
+		transformStack.push( transform->getLocalTransform() * transformStack.top() );
+		transform->setAbsoluteTransform( transformStack.top() );
 		needsPop = true;
 	}
 
-	GroupPtr group( tr1::dynamic_pointer_cast< Group >( node ) );
+	GroupPtr group( std::dynamic_pointer_cast< Group >( node ) );
 
 	if( group )
 	{

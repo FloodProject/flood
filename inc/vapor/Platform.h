@@ -32,9 +32,18 @@
 // Compiler detection
 //---------------------------------------------------------------------//
 
+#define VAPOR_COMPILER_MSVC_2008 0x1500
+#define VAPOR_COMPILER_MSVC_2010 0x1600
+
 #ifdef _MSC_VER
 	// Microsoft Visual C++
-	#define VAPOR_COMPILER_MSVC
+	#if _MSC_VER == 1600
+		#define VAPOR_COMPILER_MSVC	VAPOR_COMPILER_MSVC_2010
+	#elif _MSC_VER == 1500
+		#define VAPOR_COMPILER_MSVC	VAPOR_COMPILER_MSVC_2008
+	#else
+		#error "Unknown Visual C++ compiler version"
+	#endif
 #elif defined(__GNUG__)
 	// GCC
 	#define VAPOR_COMPILER_GCC

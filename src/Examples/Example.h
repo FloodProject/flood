@@ -39,7 +39,7 @@ protected:
 	virtual void onSetupScene();
 
 	// Called to update stuff
-	virtual void onUpdate( double delta );
+	virtual void onUpdate( float delta );
 
 	// Renders the scene
 	virtual void onRender();
@@ -50,16 +50,16 @@ protected:
 
 private:
 
+	scene::CameraPtr cam;
 	gui::LabelPtr label;
 	resources::MS3DPtr mesh;
 	resources::SoundPtr snd;
 	scene::SoundPtr sound;
 	input::InputMap* inputMap; 
 	render::TexturePtr tex;
-	scene::CameraPtr cam;
 	math::Color c;
 
-	bool runLoop;
+	float fpsUpdateTime;
 };
 
 //-----------------------------------//

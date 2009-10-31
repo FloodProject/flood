@@ -75,9 +75,9 @@ void VertexBuffer::bindPointers()
 
 	foreach( const attributePair& p, attributeMap )
 	{
-		int components = tr1::get< 0 >( p.second );
-		GLPrimitive type = tr1::get< 1 >( p.second );
-		const std::vector<byte>& vec = tr1::get< 2 >( p.second );
+		int components = std::get< 0 >( p.second );
+		GLPrimitive type = std::get< 1 >( p.second );
+		const std::vector<byte>& vec = std::get< 2 >( p.second );
 
 		glEnableVertexAttribArray( p.first );
 
@@ -142,7 +142,7 @@ bool VertexBuffer::set( VertexAttribute::Enum attr,
 	if( data.size() != 0)
 		memcpy( &bytev[0], &data[0], bytev.size() );
 	
-	attributeMap[attr] = tr1::make_tuple( 3, VertexBuffer::FLOAT, bytev );
+	attributeMap[attr] = std::make_tuple( 3, VertexBuffer::FLOAT, bytev );
 
 	return true;
 }
@@ -177,7 +177,7 @@ bool VertexBuffer::build( BufferUsage::Enum bU, BufferAccess::Enum bA )
 	int offset = 0;
 	foreach( const attributePair& p, attributeMap )
 	{
-		const std::vector<byte>& vec = tr1::get< 2 >( p.second );
+		const std::vector<byte>& vec = std::get< 2 >( p.second );
 		glBufferSubData( GL_ARRAY_BUFFER, offset, vec.size(), &vec[0] );
 		offset += vec.size();
 	}
@@ -207,7 +207,7 @@ bool VertexBuffer::checkSize()
 	
 	foreach( const attributePair& p, attributeMap )
 	{
-		int size = tr1::get< 2 >( p.second ).size();
+		int size = std::get< 2 >( p.second ).size();
 
 		if( first < 0 )
 		{
@@ -216,8 +216,8 @@ bool VertexBuffer::checkSize()
 			// Update the number of vertices.
 			// Should be the same for every attribute.
 			numVertices = size / 
-				(tr1::get< 0 >( p.second ) *
-				sizeof( tr1::get< 1 >( p.second ) ) );
+				(std::get< 0 >( p.second ) *
+				sizeof( std::get< 1 >( p.second ) ) );
 		}
 		else if( size != first )
 		{
@@ -241,7 +241,7 @@ uint VertexBuffer::getSize() const
 
 	foreach( const attributePair& p, attributeMap )
 	{
-		totalBytes += tr1::get< 2 >( p.second ).size();
+		totalBytes += std::get< 2 >( p.second ).size();
 	}
 
 	return totalBytes;

@@ -29,27 +29,29 @@ FirstPersonCamera::FirstPersonCamera( input::InputManager* input,
 
 //-----------------------------------//
 
-void FirstPersonCamera::update( double delta )
+void FirstPersonCamera::update( float delta )
 {
 	Camera::update( delta );
 	checkControls( delta );
+	viewMatrix = getNode()->getTransform()->getAbsoluteTransform();
 }
 
 //-----------------------------------//
 
 void FirstPersonCamera::checkControls( double delta )
 {
+	TransformPtr transform = getNode()->getTransform();
 	// Check mouse movement.
 	double dt = delta * 100 * lookSensivity;
 
-	//Vector3 rotateVector( mouseDistance.y * dt, mouseDistance.x * dt, 0.0f );
-	//
-	//rotate( rotateVector );
+	Vector3 rotateVector( mouseDistance.y * dt, mouseDistance.x * dt, 0.0f );
+	
+	getNode()->getTransform()->rotate( rotateVector );
 
-	//EulerAngles newForwardAngle( -rotateVector.x, -rotateVector.y, -rotateVector.z );
+	EulerAngles newForwardAngle( -rotateVector.x, -rotateVector.y, -rotateVector.z );
 
-	rotate( -rotateVectorKey );
-	EulerAngles newForwardAngle( rotateVectorKey.x, rotateVectorKey.y, rotateVectorKey.z );
+	//rotate( -rotateVectorKey );
+	//EulerAngles newForwardAngle( rotateVectorKey.x, rotateVectorKey.y, rotateVectorKey.z );
 	
 	forwardVector *= newForwardAngle.getOrientationMatrix();
 	//forwardVector.normalize();
@@ -57,18 +59,17 @@ void FirstPersonCamera::checkControls( double delta )
 	//if( mouseDistance.x != 0 && mouseDistance.y != 0 )
 	//{
 		//debug( "forangle: %f %f %f", -rotateVector.x, -rotateVector.y, -rotateVector.z );
-	if(rotateVectorKey.x != 0 || rotateVectorKey.y != 0 || rotateVectorKey.z != 0)
-	{
-		debug( "forangle: %f %f %f", rotateVectorKey.x, rotateVectorKey.y, rotateVectorKey.z );
-		debug( "forward: %f %f %f", forwardVector.x, forwardVector.y, forwardVector.z );
-	}
+	//if(rotateVectorKey.x != 0 || rotateVectorKey.y != 0 || rotateVectorKey.z != 0)
+	//{
+	//	debug( "forangle: %f %f %f", rotateVectorKey.x, rotateVectorKey.y, rotateVectorKey.z );
+	//	debug( "forward: %f %f %f", forwardVector.x, forwardVector.y, forwardVector.z );
+	//}
 	//}
 
-
-	
 	// Restrict X-axis movement by 90 deegres.
 	float xlimit = degreeToRadian( 90.0f );
-	limit< float >( angles.xang, -xlimit, xlimit );
+	const float& xang = transform->getRotation().xang;
+	limit< float >( const_cast< float& >( xang ), -xlimit, xlimit );
 
 	mouseDistance.zero();
 
@@ -76,27 +77,25 @@ void FirstPersonCamera::checkControls( double delta )
 	Keyboard* kbd = inputManager->getKeyboard();
 	const std::vector< bool >& state = kbd->getKeyState();
 
-
-
 	/*double*/ dt = delta * 100 * moveSensivity;
 
 	if( state[Keys::W] == true )
-		translate( forwardVector * dt );
+		transform->translate( forwardVector * dt );
 
 	if( state[Keys::S] == true )
-		translate( -forwardVector * dt );
+		transform->translate( -forwardVector * dt );
 	
 	if( state[Keys::A] == true )
-		translate( Vector3::UnitX * dt );
+		transform->translate( Vector3::UnitX * dt );
 
 	if( state[Keys::D] == true )
-		translate( -Vector3::UnitX * dt );
+		transform->translate( -Vector3::UnitX * dt );
 	
 	if( state[Keys::Q] == true )
-		translate( -Vector3::UnitY * dt );
+		transform->translate( -Vector3::UnitY * dt );
 
 	if( state[Keys::Z] == true )
-		translate( Vector3::UnitY * dt );
+		transform->translate( Vector3::UnitY * dt );
 }
 
 //-----------------------------------//
@@ -171,56 +170,59 @@ void FirstPersonCamera::onKeyPressed( const KeyEvent& keyEvent )
 			setLookSensivity( lookSensivity + 0.5f );
 			break;
 		}
-		case Keys::Left:
-		{
-			if(!check){
-				check = true;
-				rotateVectorKey = Vector3(0.0f, 0.005f, 0.0f);
-				break;
-			}
-		}
-		case Keys::Right:
-		{
-			if(!check){
-				check = true;
-				rotateVectorKey = Vector3(0.0f, -0.005f, 0.0f);
-				break;
-			}
-		}
-		case Keys::Up:
-		{
-			if(!check){
-				check = true;
-				rotateVectorKey = Vector3(0.005f, 0.0f, 0.0f);
-				break;
-			}
-		}
-		case Keys::Down:
-		{
-			if(!check){
-				check = true;
-				rotateVectorKey = Vector3(-0.005f, 0.0f, 0.0f);
-				break;
-			}
-		}
+	//	case Keys::Left:
+	//	{
+	//		if(!check){
+	//			check = true;
+	//			rotateVectorKey = Vector3(0.0f, 0.005f, 0.0f);
+	//			break;
+	//		}
+	//	}
+	//	case Keys::Right:
+	//	{
+	//		if(!check){
+	//			check = true;
+	//			rotateVectorKey = Vector3(0.0f, -0.005f, 0.0f);
+	//			break;
+	//		}
+	//	}
+	//	case Keys::Up:
+	//	{
+	//		if(!check){
+	//			check = true;
+	//			rotateVectorKey = Vector3(0.005f, 0.0f, 0.0f);
+	//			break;
+	//		}
+	//	}
+	//	case Keys::Down:
+	//	{
+	//		if(!check){
+	//			check = true;
+	//			rotateVectorKey = Vector3(-0.005f, 0.0f, 0.0f);
+	//			break;
+	//		}
+	//	}
 	}
 }
 
+//-----------------------------------//
+
 void FirstPersonCamera::onKeyReleased( const KeyEvent& keyEvent )
 {
-	switch( keyEvent.keyCode )
-	{	
-		case Keys::Left:
-		case Keys::Right:
-		case Keys::Up:
-		case Keys::Down:
-		{
-			check = false;
-			rotateVectorKey.zero();
-			break;
-		}
-	}
+	//switch( keyEvent.keyCode )
+	//{	
+		//case Keys::Left:
+		//case Keys::Right:
+		//case Keys::Up:
+		//case Keys::Down:
+		//{
+		//	check = false;
+		//	rotateVectorKey.zero();
+		//	break;
+		//}
+	//}
 }
+
 //-----------------------------------//
 
 void FirstPersonCamera::onMouseMove( const MouseMoveEvent& moveEvent )

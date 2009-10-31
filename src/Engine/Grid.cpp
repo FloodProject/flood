@@ -18,7 +18,7 @@ using namespace vapor::render;
 //-----------------------------------//
 
 Grid::Grid( render::MaterialPtr mat )
-	: sizeX( 100 ), sizeZ( 100 ), divX( 10 ), divZ( 10 ), strongMainLines( true )
+	: sizeX( 500 ), sizeZ( 500 ), divX( 10 ), divZ( 10 ), strongMainLines( true )
 {
 	RenderablePtr rend( new Renderable( Primitive::Lines, getGridBuffer() ) );
 	
@@ -57,7 +57,8 @@ render::VertexBufferPtr Grid::getGridBuffer()
 		vertex.push_back( Vector3( x_pos, 0.0f, z_pos ) );
 		vertex.push_back( Vector3( -x_pos, 0.0f, z_pos ) );
 
-		if( strongMainLines && (i == (divX+1) / 2) )
+		if( strongMainLines && (i % 5 == 0) 
+			&& (i != 0) && (i != divX) )
 		{
 			colors.push_back( Vector3( 0.9f, 0.9f, 0.9f ) );
 			colors.push_back( Vector3( 0.9f, 0.9f, 0.9f ) );
@@ -80,7 +81,8 @@ render::VertexBufferPtr Grid::getGridBuffer()
 		vertex.push_back( Vector3( x_pos, 0.0f, z_pos ) );
 		vertex.push_back( Vector3( x_pos, 0.0f, -z_pos ) );
 
-		if( strongMainLines && (i == (divZ+1) / 2) )
+		if( strongMainLines && (i % 5 == 0)
+			&& (i != 0) && (i != divX) )
 		{
 			colors.push_back( Vector3( 0.9f, 0.9f, 0.9f ) );
 			colors.push_back( Vector3( 0.9f, 0.9f, 0.9f ) );

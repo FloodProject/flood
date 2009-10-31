@@ -38,7 +38,7 @@ class VAPOR_API Buffer : private boost::noncopyable
 
 public:
 	
-	Buffer( audio::Device* device, tr1::shared_ptr<resources::Sound> sound );
+	Buffer( audio::Device* device, std::shared_ptr<resources::Sound> sound );
 	~Buffer();
   
 protected:

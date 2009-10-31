@@ -25,11 +25,15 @@
 	#include <boost/tr1/memory.hpp>
 #endif
 
-namespace tr1 = std::tr1;
+#ifdef VAPOR_COMPILER_MSVC
+	#if VAPOR_COMPILER_MSVC != VAPOR_COMPILER_MSVC_2010 
+		namespace std { using namespace std::tr1; }
+	#endif
+#endif
 
 #if defined( VAPOR_MEMORY_SHARED_PTR )
 	#define TYPEDEF_SHARED_POINTER_FROM_CLASS( class ) \
-		typedef tr1::shared_ptr< class > class##Ptr
+		typedef std::shared_ptr< class > class##Ptr
 #elif defined( VAPOR_MEMORY_INTRUSIVE_PTR )
 	#include "boost/intrusive_ptr.hpp"
 	#define TYPEDEF_SHARED_POINTER_FROM_CLASS( class ) \

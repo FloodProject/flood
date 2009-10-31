@@ -26,6 +26,7 @@ int main(int argc, const char** argv)
 	#else
 		VAPOR_EXAMPLE_NAME example( argv );		
 	#endif
+
 	example.run();
 
 	#if defined(VAPOR_MEMORY_LEAK_DETECTOR) && defined(VAPOR_PLATFORM_WINDOWS)

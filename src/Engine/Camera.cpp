@@ -20,9 +20,13 @@ namespace vapor {
 
 //-----------------------------------//
 
+const std::string& Camera::type = "Camera";
+
+//-----------------------------------//
+
 Camera::Camera( render::Device* device, Projection::Enum projection )
 	: renderDevice( device ), projection( projection ),
-		target( nullptr ), fov(45.0f), near_( 0.1f ), far_( 1000.0f ),
+		target( nullptr ), fov(45.0f), near_( 0.1f ), far_( 10000.0f ),
 		lookAtVector( Vector3( 0.0f, 0.0f, 0.0f ) ), 
 		forwardVector( Vector3::UnitZ ), upVector( Vector3::UnitY )
 {
@@ -34,6 +38,63 @@ Camera::Camera( render::Device* device, Projection::Enum projection )
 void Camera::lookAt( const math::Vector3& pt )
 {
 	lookAtVector = pt;
+
+	const Matrix4x3& absoluteLocalToWorld = 
+		getNode()->getTransform()->getAbsoluteTransform();
+
+	Vector3 eye = Vector3( absoluteLocalToWorld.tx, absoluteLocalToWorld.ty, 
+		absoluteLocalToWorld.tz );
+
+	Vector3 zaxis = ( lookAtVector - eye ).normalize();
+	Vector3	xaxis = upVector.cross(zaxis).normalize();
+	Vector3	yaxis = zaxis.cross(xaxis);
+
+	Matrix4x3 m;
+	m.m11 = xaxis.x;
+	m.m12 = xaxis.y;
+	m.m13 = xaxis.z;
+
+	m.m21 = yaxis.x;
+	m.m22 = yaxis.y;
+	m.m23 = yaxis.z;
+
+	m.m31 = zaxis.x;
+	m.m32 = zaxis.y;
+	m.m33 = zaxis.z;
+
+	m.tx = -xaxis.dot(eye);
+	m.ty = -yaxis.dot(eye);
+	m.tz = -zaxis.dot(eye);
+
+	viewMatrix = m * getNode()->getTransform()->getLocalTransform();
+
+	//glMatrixMode( GL_MODELVIEW );
+	//glLoadIdentity();
+
+	//gluLookAt( eye.x, eye.y, eye.z,
+	//	lookAtVector.x, lookAtVector.y, lookAtVector.z,
+	//	upVector.x, upVector.y, upVector.z );
+
+	//float test[16];
+	//glGetFloatv( GL_MODELVIEW_MATRIX, test );
+
+	//Matrix4x3 glView;
+
+	//glView.m11 = test[0];
+	//glView.m12 = test[1];
+	//glView.m13 = test[2];
+	//
+	//glView.m21 = test[4];
+	//glView.m22 = test[5];
+	//glView.m23 = test[6];
+
+	//glView.m31 = test[8];
+	//glView.m32 = test[9];
+	//glView.m33 = test[10];
+
+	//glView.tx = test[12];
+	//glView.ty = test[13];
+	//glView.tz = test[14];
 }
 
 //-----------------------------------//
@@ -105,7 +166,7 @@ void Camera::handleTargetResize( const render::Settings& evt )
 
 //-----------------------------------//
 
-void Camera::update( double delta )
+void Camera::update( float /*delta*/ )
 {
 	setupProjection();
 	setupView();
@@ -141,61 +202,7 @@ void Camera::setupProjection()
 
 void Camera::setupView()
 {
-	Vector3 eye = Vector3( absoluteLocalToWorld.tx, 
-		absoluteLocalToWorld.ty, absoluteLocalToWorld.tz );
 
-	Vector3 zaxis = ( lookAtVector - eye ).normalize();
-	Vector3	xaxis = upVector.cross(zaxis).normalize();
-	Vector3	yaxis = zaxis.cross(xaxis);
-
-	Matrix4x3 m;
-	m.m11 = xaxis.x;
-	m.m12 = xaxis.y;
-	m.m13 = xaxis.z;
-
-	m.m21 = yaxis.x;
-	m.m22 = yaxis.y;
-	m.m23 = yaxis.z;
-
-	m.m31 = zaxis.x;
-	m.m32 = zaxis.y;
-	m.m33 = zaxis.z;
-
-	m.tx = -xaxis.dot(eye);
-	m.ty = -yaxis.dot(eye);
-	m.tz = -zaxis.dot(eye);
-
-	viewMatrix = m * getLocalTransform();
-
-	//glMatrixMode( GL_MODELVIEW );
-	//glLoadIdentity();
-
-	//gluLookAt( eye.x, eye.y, eye.z,
-	//	lookAtVector.x, lookAtVector.y, lookAtVector.z,
-	//	upVector.x, upVector.y, upVector.z );
-
-	//float test[16];
-	//glGetFloatv( GL_MODELVIEW_MATRIX, test );
-
-	//Matrix4x3 glView;
-
-	//glView.m11 = test[0];
-	//glView.m12 = test[1];
-	//glView.m13 = test[2];
-	//
-	//glView.m21 = test[4];
-	//glView.m22 = test[5];
-	//glView.m23 = test[6];
-
-	//glView.m31 = test[8];
-	//glView.m32 = test[9];
-	//glView.m33 = test[10];
-
-	//glView.tx = test[12];
-	//glView.ty = test[13];
-	//glView.tz = test[14];
-
-	viewMatrix = absoluteLocalToWorld;
 }
 
 //-----------------------------------//
@@ -230,7 +237,7 @@ void Camera::render( NodePtr node ) const
 
 void Camera::render( ) const
 {
-	NodePtr parent = getParent();
+	NodePtr parent = getNode()->getParent();
 
 	if( !parent ) return;
 
@@ -251,13 +258,11 @@ void Camera::cull( render::RenderQueue& queue, NodePtr node ) const
 	// TODO: Check if dynamic_cast is faster than a string comparison.
 	
 	// Try to see if this is a Group-derived node.
-	GroupPtr group( tr1::dynamic_pointer_cast< Group >( node) );
+	GroupPtr group( std::dynamic_pointer_cast< Group >( node ) );
 	
 	// Yes it is.
 	if( group )
 	{
-		const std::vector< NodePtr >& children = group->getChildren();
-
 		// Cull the children nodes recursively.
 		foreach( NodePtr child, group->getChildren() )
 		{
@@ -268,9 +273,9 @@ void Camera::cull( render::RenderQueue& queue, NodePtr node ) const
 	// If it is a renderable object, then we perform frustum culling
 	// and if the node is visible, then we push it to a list of things
 	// to render that will be later passed to the rendering device.
-	GeometryPtr geometry( tr1::dynamic_pointer_cast< Geometry >( node) );
+	const std::vector< GeometryPtr >& geometries = node->getGeometry();
 
-	if( geometry ) 
+	foreach( GeometryPtr geometry, geometries ) 
 	{
 		// No frustum culling is performed yet.
 		geometry->appendRenderables( queue );
@@ -279,16 +284,16 @@ void Camera::cull( render::RenderQueue& queue, NodePtr node ) const
 
 //-----------------------------------//
 
-const std::string Camera::save( int indent )
+const std::string Camera::save( int /*indent*/ )
 {
 	return "";
 }
 
 //-----------------------------------//
 
-const std::string Camera::name() const
+const std::string& Camera::getType() const
 {
-	return "Camera"; 
+	return type;
 }
 
 //-----------------------------------//

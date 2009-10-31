@@ -31,14 +31,14 @@ namespace vapor {
  * as the sound source location.
  */
 
-class VAPOR_API Sound : public Transformable, public audio::Source
+class VAPOR_API Sound : public Transform, public audio::Source
 {
 public:
 
 	Sound(ListenerPtr ls, resources::SoundPtr sound);
 	virtual ~Sound();
 
-	virtual void update( double delta );
+	virtual void update( float delta );
 
 	virtual const std::string save(int indent = 0);
 };

@@ -50,7 +50,7 @@ protected:
 	virtual void onSetupScene() = 0;
 
 	// Updates the scene (called once per frame).
-	virtual void onUpdate( double delta ) = 0;
+	virtual void onUpdate( float delta ) = 0;
 
 	// Renders the scene (called once per frame).
 	virtual void onRender() = 0;

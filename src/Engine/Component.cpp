@@ -8,44 +8,39 @@
 
 #include "vapor/PCH.h"
 
-#ifdef VAPOR_AUDIO_OPENAL
-
-#include "vapor/scene/Sound.h"
+#include "vapor/scene/Component.h"
 
 namespace vapor {
 	namespace scene {
 
 //-----------------------------------//
 
-Sound::Sound( ListenerPtr ls, resources::SoundPtr sound )
-	: Source( Listener::getContext( ls ), sound )
+Component::Component( /*const std::string& type*/ )
 {
 
 }
 
 //-----------------------------------//
 
-Sound::~Sound()
+Component::~Component()
 {
 
 }
 
 //-----------------------------------//
 
-void Sound::update( float delta )
+void Component::setNode( NodePtr node )
 {
-
+	this->node = node ;
 }
 
 //-----------------------------------//
 
-const std::string Sound::save(int indent)
+NodePtr Component::getNode() const
 {
-	return "";
+	return node.lock();
 }
 
 //-----------------------------------//
 
 } } // end namespaces
-
-#endif

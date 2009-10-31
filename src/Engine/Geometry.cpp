@@ -9,11 +9,16 @@
 #include "vapor/PCH.h"
 
 #include "vapor/scene/Geometry.h"
+#include "vapor/scene/Node.h"
 
 using namespace vapor::render;
 
 namespace vapor {
 	namespace scene {
+
+//-----------------------------------//
+
+const std::string& Geometry::type = "Geometry";
 
 //-----------------------------------//
 
@@ -56,6 +61,9 @@ const std::vector< render::RenderablePtr >& Geometry::getRenderables( RenderGrou
  
 void Geometry::appendRenderables( render::RenderQueue& queue )
 {
+	const math::Matrix4x3& absoluteTransform = 
+		getNode()->getTransform()->getAbsoluteTransform();
+	
 	foreach( const rendPair& pair, renderables )
 	{
 		foreach( RenderablePtr rend, pair.second )
@@ -63,7 +71,7 @@ void Geometry::appendRenderables( render::RenderQueue& queue )
 			RenderState renderState;
 			
 			renderState.renderable = rend;
-			renderState.modelMatrix = this->getAbsoluteTransform();
+			renderState.modelMatrix = absoluteTransform;
 			renderState.group = pair.first;
 			renderState.priority = 0;
 
@@ -74,7 +82,7 @@ void Geometry::appendRenderables( render::RenderQueue& queue )
 
 //-----------------------------------//
 
-void Geometry::update( double delta )
+void Geometry::update( float delta )
 {
 
 }
@@ -88,9 +96,9 @@ const std::string Geometry::save(int indent)
 
 //-----------------------------------//
 
-const std::string Geometry::name() const
+const std::string& Geometry::getType() const
 {
-	return "Geometry";
+	return type;
 }
 
 //-----------------------------------//

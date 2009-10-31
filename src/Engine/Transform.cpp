@@ -19,7 +19,11 @@ namespace vapor {
 
 //-----------------------------------//
 
-Transformable::Transformable()
+const std::string& Transform::type = "Transform";
+
+//-----------------------------------//
+
+Transform::Transform()
 	: v_scale( 1.0f, 1.0f, 1.0f )
 {
 
@@ -27,21 +31,21 @@ Transformable::Transformable()
 
 //-----------------------------------//
 
-Transformable::~Transformable()
+Transform::~Transform()
 {
 
 }
 
 //-----------------------------------//
 
-void Transformable::translate( const math::Vector3& tr )
+void Transform::translate( const math::Vector3& tr )
 {
 	translate( tr.x, tr.y, tr.z );
 }
 
 //-----------------------------------//
 
-void Transformable::translate( float x, float y, float z )
+void Transform::translate( float x, float y, float z )
 {
 	v_translate.x += x;
 	v_translate.y += y;
@@ -53,21 +57,21 @@ void Transformable::translate( float x, float y, float z )
 
 //-----------------------------------//
 
-const math::Vector3& Transformable::getPosition() const
+const math::Vector3& Transform::getPosition() const
 {
 	return v_translate;
 }
 
 //-----------------------------------//
 
-void Transformable::setPosition( const math::Vector3 position )
+void Transform::setPosition( const math::Vector3 position )
 {
 	v_translate = position;
 }
 
 //-----------------------------------//
 
-void Transformable::scale( float x, float y, float z )
+void Transform::scale( float x, float y, float z )
 {
 	v_scale.x *= x;
 	v_scale.y *= y;
@@ -79,21 +83,21 @@ void Transformable::scale( float x, float y, float z )
 
 //-----------------------------------//
 
-void Transformable::scale( float uniform )
+void Transform::scale( float uniform )
 {
 	scale( uniform, uniform, uniform );
 }
 
 //-----------------------------------//
 
-void Transformable::scale( const math::Vector3& s )
+void Transform::scale( const math::Vector3& s )
 {
 	scale( s.x, s.y, s.z );
 }
 
 //-----------------------------------//
 
-void Transformable::rotate( float xang, float yang, float zang )
+void Transform::rotate( float xang, float yang, float zang )
 {
 	angles.xang += xang;
 	angles.yang += yang;
@@ -105,28 +109,28 @@ void Transformable::rotate( float xang, float yang, float zang )
 
 //-----------------------------------//
 
-void Transformable::rotate( const math::Vector3& rot )
+void Transform::rotate( const math::Vector3& rot )
 {
 	rotate( rot.x, rot.y, rot.z );
 }
 
 //-----------------------------------//
 
-const math::EulerAngles& Transformable::getRotation() const
+const math::EulerAngles& Transform::getRotation() const
 {
 	return angles;
 }
 
 //-----------------------------------//
 
-void Transformable::setRotation( math::EulerAngles& rot )
+void Transform::setRotation( math::EulerAngles& rot )
 {
 	this->angles = rot;
 }
 
 //-----------------------------------//
 
-void Transformable::reset( )
+void Transform::reset( )
 {
 	v_translate.zero();
 	v_scale = math::Vector3( 1.0f, 1.0f, 1.0f );
@@ -135,25 +139,39 @@ void Transformable::reset( )
 
 //-----------------------------------//
 
-void Transformable::setAbsoluteTransform( const math::Matrix4x3& matrix )
+void Transform::setAbsoluteTransform( const math::Matrix4x3& matrix )
 {
 	absoluteLocalToWorld = matrix;
 }
 
 //-----------------------------------//
 
-const math::Matrix4x3& Transformable::getAbsoluteTransform() const
+const math::Matrix4x3& Transform::getAbsoluteTransform() const
 {
 	return absoluteLocalToWorld;
 }
 
 //-----------------------------------//
 
-math::Matrix4x3 Transformable::getLocalTransform() const
+math::Matrix4x3 Transform::getLocalTransform() const
 {
 	return Matrix4x3::createTranslationMatrix( v_translate )
 		* angles.getOrientationMatrix()
 		* Matrix4x3::createScaleMatrix( v_scale );
+}
+
+//-----------------------------------//
+
+const std::string& Transform::getType() const
+{
+	return Transform::type;
+}
+
+//-----------------------------------//
+
+void Transform::update( float /*delta*/ )
+{
+
 }
 
 //-----------------------------------//

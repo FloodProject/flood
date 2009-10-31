@@ -54,6 +54,8 @@ typedef unsigned long	ulong;
 // C++0x compatability macros
 //---------------------------------------------------------------------//
 
-#ifndef nullptr
-	#define nullptr NULL
-#endif
+// TODO: Check for VC2010
+
+//#ifndef nullptr
+//	#define nullptr NULL
+//#endif

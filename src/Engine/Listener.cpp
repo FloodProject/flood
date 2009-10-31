@@ -15,7 +15,7 @@
 namespace vapor {
 	namespace scene {
 
-using std::tr1::static_pointer_cast;
+using std::static_pointer_cast;
 
 //-----------------------------------//
 
@@ -34,17 +34,17 @@ Listener::~Listener()
 
 //-----------------------------------//
 
-void Listener::update( double delta )
+void Listener::update( float delta )
 {
 
 }
 
 //-----------------------------------//
 
-tr1::shared_ptr<audio::Context> Listener::getContext(ListenerPtr ls)
+std::shared_ptr<audio::Context> Listener::getContext(ListenerPtr ls)
 {
-	tr1::shared_ptr<audio::Context> ctx = 
-		tr1::static_pointer_cast<audio::Context>(ls);
+	std::shared_ptr<audio::Context> ctx = 
+		std::static_pointer_cast<audio::Context>(ls);
 
 	return ctx;
 }

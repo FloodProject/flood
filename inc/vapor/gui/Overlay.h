@@ -16,7 +16,6 @@ namespace vapor {
 
 //-----------------------------------//
 
-
 /**
  * Each overlay can be positioned in two different ways: Relative-mode
  * positioning and Absolute-mode positioning. In Relative-mode you can
@@ -43,14 +42,14 @@ namespace Positioning
  * When you specify an alignment, the positioning of the overlay will be
  * relative to the point you specified. Here is some awesome ASCII art 
  * exemplifying it all:
- *		 ______________
- *		|              |
- *		| TL   TC   TR |
- *		|              |
- *		| L    C     R |
- *		|              |
- *		| BL   BC   BR |
- *		|______________|
+ *		 ____________________
+ *		|                    |
+ *		| TL      TC      TR |
+ *		|                    |
+ *		| L       C        R |
+ *		|                    |
+ *		| BL      BC      BR |
+ *		|____________________|
  *	
  * Hope you understand. :)
  */ 
@@ -108,24 +107,26 @@ public:
 	//void setPosition( int x, int y );
 
 	// Updates the overlay if needed.
-	virtual void update( double delta );
+	virtual void update( float delta );
 
 	// Serializes this node to a stream.
 	virtual const std::string save( int indent = 0 );
 
-	// Returns this node name identification.
-	virtual const std::string name() const;
+	// Returns this component name identification.
+	virtual const std::string& getType() const;
 
 protected:
-
-	// Overlay position.
-	int x, y;
 
 	// Positioning mode used.
 	Positioning::Enum positioning;
 
 	// Anchoring mode used.
 	Anchor::Enum anchor;
+
+	// Overlay position.
+	int x, y;
+
+	static const std::string& type;
 };
 
 //-----------------------------------//

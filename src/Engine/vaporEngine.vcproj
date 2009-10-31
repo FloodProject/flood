@@ -915,6 +915,18 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Component"
+				>
+				<File
+					RelativePath=".\Component.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\scene\Component.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Audio"

@@ -61,3 +61,13 @@
 #ifndef UNUSED
 	#define UNUSED VAPOR_UNUSED
 #endif
+
+//---------------------------------------------------------------------//
+// nullptr replacement
+//---------------------------------------------------------------------//
+
+#ifdef VAPOR_COMPILER_MSVC
+	#if VAPOR_COMPILER_MSVC != VAPOR_COMPILER_MSVC_2010 
+		#define nullptr NULL
+	#endif
+#endif

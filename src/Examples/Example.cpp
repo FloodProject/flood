@@ -17,7 +17,8 @@
 //-----------------------------------//
 
 Example::Example(const char** argv)
-	: Framework("Example", argv), runLoop( false ), c( 0.0f, 0.10f, 0.25f )
+	: Framework("Example", argv), c( 0.0f, 0.10f, 0.25f ),
+	fpsUpdateTime( 0.0f )
 {
 
 }
@@ -34,10 +35,32 @@ void Example::onInit()
 		Log::MessageDialog( "Missing archive/directory '" + media + "'." );
 	}
 
-	math::EulerAngles ang( math::degreeToRadian( 90.0 ), 0.0f, 0.0f );
-	math::Vector3 vec( math::Vector3::UnitZ );
+	{
+		math::EulerAngles ang( math::degreeToRadian( 90.0 ), 0.0f, 0.0f );
+		math::Vector3 vec( -math::Vector3::UnitZ );
+		Vector3 ret = vec * ang.getOrientationMatrix();
+		int i = 0;
+	}
 
-	Vector3 ret = vec * ang.getOrientationMatrix();
+	{
+		math::EulerAngles ang( math::degreeToRadian( 90.0 ), 0.0f, 0.0f );
+		math::Vector3 vec( -math::Vector3::UnitZ );
+		Vector3 ret = vec * ang.getOrientationMatrix();
+
+		math::EulerAngles ang2( 0.0f, math::degreeToRadian( 90.0 ), 0.0f );
+		ret *= ang2.getOrientationMatrix();
+
+		math::EulerAngles ang3( math::degreeToRadian( -90.0 ), 0.0f, 0.0f );
+		ret *= ang3.getOrientationMatrix();
+		int i = 0;
+	}
+
+	{
+		math::EulerAngles ang( 0.0f, math::degreeToRadian( 90.0 ), 0.0f );
+		math::Vector3 vec( -math::Vector3::UnitZ );
+		Vector3 ret = vec * ang.getOrientationMatrix();
+		int i = 0;
+	}
 }
 
 //-----------------------------------//
@@ -79,13 +102,18 @@ void Example::onSetupScene()
 	FontPtr font = rm->loadResource< Font >( "Verdana.font" );
 	
 	label.reset( new Label( getFPS( lastFrameTime ), font, mat ) );
-	label->translate( -300.0f, 220.0f, 0.0f );
-	scene->add( label );
+	NodePtr fps( new Node() );
+	fps->addComponent( TransformPtr( new Transform() ) );
+	fps->addComponent( label );
+	fps->getTransform()->translate( -300.0f, 220.0f, 0.0f );
+	scene->add( fps );
 	
-	// Create a new Camera and position it to look at origin
+	// Create a new Camera
+	NodePtr camera( new Node() );
 	cam.reset( new FirstPersonCamera( getInputManager(), getRenderDevice() ) );
-	cam->translate( 0.0f, 0.0f, 0.0f );
-	scene->add( cam );
+	camera->addComponent( TransformPtr( new Transform() ) );
+	camera->addComponent( cam );
+	scene->add( camera );
 
 	mesh = rm->loadResource< MS3D >( "media/terreno.ms3d" );
 
@@ -94,9 +122,11 @@ void Example::onSetupScene()
 		rend->getMaterial()->setProgram( tex );
 	}
 
-	//mesh->scale( 0.3f );
-
-	scene->add( mesh );
+	NodePtr terreno( new Node() );
+	terreno->addComponent( TransformPtr( new Transform() ) );
+	terreno->addComponent( mesh );
+	terreno->getTransform()->scale( 0.3f );
+	scene->add( terreno );
 
 	//mesh = rm->loadResource< MS3D >( "media/terreno.ms3d" );
 
@@ -107,34 +137,35 @@ void Example::onSetupScene()
 
 	//scene->add( mesh );
 
-	GridPtr grid( new Grid( mat ) );
-	scene->add( grid );
+	//GridPtr grid( new Grid( mat ) );
+	//scene->add( grid );
 
-	foreach( const RenderablePtr& rend, grid->getRenderables() )
-	{
-		rend->getMaterial()->setProgram( diffuse );
-	}
+	//foreach( const RenderablePtr& rend, grid->getRenderables() )
+	//{
+	//	rend->getMaterial()->setProgram( diffuse );
+	//}
 
-	ListenerPtr ls( new Listener( getAudioDevice() ) );
-	sound.reset( new scene::Sound( ls, snd ) );
-	scene->add( ls ); scene->add( sound );
+	//ListenerPtr ls( new Listener( getAudioDevice() ) );
+	//sound.reset( new scene::Sound( ls, snd ) );
+	//scene->add( ls ); scene->add( sound );
 }
 
 //-----------------------------------//
  
-void Example::onUpdate( double delta ) 
+void Example::onUpdate( float delta ) 
 {
 	ScenePtr scene = getSceneManager();
 	scene->update( delta );
-
-	if( runLoop )
-	{
-		c.r += 0.000001f / float(delta); c.r = (c.r > 1.0f) ? 0.0f : c.r;
-		c.g += 0.000003f / float(delta); c.b = (c.b > 1.0f) ? 0.0f : c.b;
-		c.b += 0.000007f / float(delta); c.g = (c.g > 1.0f) ? 0.0f : c.g;
-	}
 	
-	label->setText( getFPS( lastFrameTime ) );
+	if( fpsUpdateTime <= 1.0f )
+	{
+		fpsUpdateTime += delta;
+		label->setText( getFPS( lastFrameTime ) );
+	}
+	else
+	{
+		fpsUpdateTime = 0.0f;
+	}
 }
 
 //-----------------------------------//
@@ -176,16 +207,15 @@ void Example::onKeyPressed( const KeyEvent& keyEvent )
 			sound->play();
 	}
 
-	if( keyEvent.keyCode == Keys::V )
-		mesh->scale( 1.1f );
+	//if( keyEvent.keyCode == Keys::V )
+		//mesh->scale( 1.1f );
 }
 
 //-----------------------------------//
 
 void Example::onButtonPressed( const MouseButtonEvent& btnEvent )
 {
-	if( btnEvent.button == MouseButton::Right )
-		runLoop = !runLoop;
+
 }
 
 //-----------------------------------//

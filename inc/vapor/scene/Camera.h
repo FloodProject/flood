@@ -15,6 +15,7 @@
 #include "vapor/math/Matrix4x4.h"
 #include "vapor/math/Frustum.h"
 
+#include "vapor/scene/Node.h"
 #include "vapor/scene/Transform.h"
 
 #include "vapor/render/Device.h"
@@ -49,7 +50,7 @@ namespace Projection
  * speed up the rendering by cutting nodes that are outside of the view range.
  */
 
-class VAPOR_API Camera : public Transformable
+class VAPOR_API Camera : public Component
 {
 public:
 
@@ -103,13 +104,13 @@ public:
 	void cull( render::RenderQueue& queue, NodePtr node ) const;
 
 	// Updates this node.
-	virtual void update( double delta );
+	virtual void update( float delta );
 
 	// Serializes this node.
 	virtual const std::string save( int indent = 0 );
 	
 	// Gets the name of this node.
-	virtual const std::string name() const;
+	virtual const std::string& getType() const;
 
 protected:
 
@@ -160,6 +161,8 @@ protected:
 	int width, height;
 
 	//fd::delegate< const render::Settings& > targetResize;
+
+	static const std::string& type;
 };
 
 //-----------------------------------//

@@ -45,10 +45,10 @@ public:
 
 	// Creates a new resource and returns the specific resource.
 	template <typename T>
-	tr1::shared_ptr<T> loadResource(const std::string& path)
+	std::shared_ptr<T> loadResource(const std::string& path)
 	{
 		ResourcePtr res = loadResource( path );
-		return tr1::static_pointer_cast< T >( res );
+		return std::static_pointer_cast< T >( res );
 	}
 
 	// Removes a resource from the manager.
@@ -59,10 +59,10 @@ public:
 
 	// Gets a specific resource given it's name (if it exists).
 	template <typename T>
-	tr1::shared_ptr<T> getResource(const std::string& path)
+	std::shared_ptr<T> getResource(const std::string& path)
 	{
 		ResourcePtr res = getResource( path );
-		return tr1::static_pointer_cast< T >( res );
+		return std::static_pointer_cast< T >( res );
 	}
 
 	// Sets a memory budget limit for a given resource group.

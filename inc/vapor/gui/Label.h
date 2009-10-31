@@ -34,7 +34,6 @@ class VAPOR_API Label : public gui::Overlay
 public:
 
 	Label( const std::string& text, resources::FontPtr font, render::MaterialPtr mat );
-
 	//Label( const std::string& text, std::string font );
 
 	virtual ~Label();
@@ -46,7 +45,7 @@ public:
 	void setText( const std::string& text );
 
 	// Updates the geometry to match the new text if needed.
-	virtual void update( double UNUSED(delta) );
+	virtual void update( float UNUSED(delta) );
 
 	// Serializes this node to a stream.
 	virtual const std::string save( int UNUSED(indent ) = 0) { return ""; }
@@ -54,7 +53,10 @@ public:
 	// Returns this node name identification.
 	//virtual const std::string name() const { return "Label"; }
 
-private:
+	// Returns this component name identification.
+	virtual const std::string& getType() const;
+
+protected:
 
 	// Contains the text of the label.
 	std::string text;
@@ -67,6 +69,8 @@ private:
 	
 	// Used to track if a label needs updating.
 	bool isDirty;
+
+	static const std::string& type;
 };
 
 //-----------------------------------//

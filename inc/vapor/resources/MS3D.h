@@ -71,6 +71,8 @@ private:
 	std::vector<ms3d_group_t> m_groups;
 	std::vector<ms3d_material_t> m_materials;
 	std::vector<char> m_comment;
+
+	static const std::string& type;
 };
 
 //-----------------------------------//

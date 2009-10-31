@@ -15,8 +15,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-Node::Node( NodePtr parent )
-	: parent( parent )
+Node::Node()
+	/*: parent( NodePtr )*/
 {
 
 }
@@ -41,6 +41,67 @@ NodePtr Node::getParent( ) const
 void Node::setParent( NodePtr parent )
 {
 	this->parent = parent;
+}
+
+//-----------------------------------//
+
+bool Node::addComponent( ComponentPtr component )
+{
+	// Searches for a component with the same type.
+	if( components.find( component->getType() ) != components.end() )
+	{
+		return false;
+	}
+
+	// If it doesn't exists, we add a new one.
+	components[component->getType()] = component;
+	component->setNode( shared_from_this() );
+
+	// Cache renderable objects
+	GeometryPtr geometry = std::dynamic_pointer_cast< Geometry >( component );
+
+	if( geometry )
+	{
+		geometries.push_back( geometry );
+	}
+
+	return true;
+}
+
+//-----------------------------------//
+
+ComponentPtr Node::getComponent( const std::string& type )
+{
+	if( components.find( type ) == components.end() )
+	{
+		return ComponentPtr();
+	}
+
+	return components[type];
+}
+
+//-----------------------------------//
+
+void Node::update( float delta )
+{
+	foreach( componentPair component, components )
+	{
+		component.second->update( delta );
+	}
+}
+
+//-----------------------------------//
+
+TransformPtr Node::getTransform()
+{
+	return getComponent< Transform >( "Transform" );
+}
+
+//-----------------------------------//
+
+const std::vector< GeometryPtr >& Node::getGeometry()
+{
+	return geometries;
 }
 
 //-----------------------------------//

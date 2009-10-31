@@ -10,7 +10,7 @@
 
 #include "vapor/Platform.h"
 
-#include "vapor/scene/Node.h"
+#include "vapor/scene/Component.h"
 
 #include "vapor/math/Matrix4x3.h"
 #include "vapor/math/Vector3.h"
@@ -21,9 +21,12 @@ namespace vapor {
 
 //-----------------------------------//
 
-class VAPOR_API Transformable : public Node
+class VAPOR_API Transform : public Component
 {
 public:
+
+	Transform();
+	virtual ~Transform();
 
 	// Translate this node by the given parameters.
 	void translate( float x, float y, float z );
@@ -62,10 +65,13 @@ public:
 	// Gets the local transformation matrix.
 	math::Matrix4x3 getLocalTransform() const;
 
-protected:
+	// Gets the type of this component. 
+	virtual const std::string& getType() const;
 
-	Transformable();
-	virtual ~Transformable();
+	// Called once per frame to update the component.
+	virtual void update( float delta );
+
+protected:
 
 	math::EulerAngles angles;
 	math::Vector3 v_translate;
@@ -73,11 +79,13 @@ protected:
 
 	math::Matrix4x3 transform;
 	math::Matrix4x3 absoluteLocalToWorld;
+
+	static const std::string& type;
 };
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( Transformable );
+TYPEDEF_SHARED_POINTER_FROM_CLASS( Transform );
 
 //-----------------------------------//
 

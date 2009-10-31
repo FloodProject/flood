@@ -73,7 +73,7 @@ NodePtr Group::get( uint i ) const
 
 //-----------------------------------//
 
-void Group::update( double delta )
+void Group::update( float delta )
 {
 	foreach( NodePtr node, children )
 	{
@@ -106,8 +106,8 @@ const std::string Group::save(int ind)
 	os << space << "  " << "\"nodes\": [\n";
 
 	// do all nodes
-	foreach( NodePtr node, children )
-		os << node->save(ind+4);
+	//foreach( NodePtr node, children )
+	//	os << node->save(ind+4);
 
 	os << space << "  " << "]\n";
 	os << space << "}\n";
@@ -116,17 +116,17 @@ const std::string Group::save(int ind)
 
 //-----------------------------------//
 
-//tr1::shared_ptr< Group > Group::shared_from_this()
+//std::shared_ptr< Group > Group::shared_from_this()
 //{ 
-//	return tr1::static_pointer_cast< Group >( 
+//	return std::static_pointer_cast< Group >( 
 //		Node::shared_from_this() ); 
 //}
 
 //-----------------------------------//
 
-//tr1::shared_ptr< Group > Group::shared_from_this() const
+//std::shared_ptr< Group > Group::shared_from_this() const
 //{ 
-//	return tr1::static_pointer_cast< Group >( 
+//	return std::static_pointer_cast< Group >( 
 //		Node::shared_from_this() ); 
 //}
 

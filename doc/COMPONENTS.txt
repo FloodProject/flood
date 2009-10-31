@@ -84,3 +84,28 @@ just add other nodes to them.
 		}
 		
 - Hybrid Component-based Node approach -		
+
+
+
+- Links -
+
+http://cowboyprogramming.com/2007/01/05/evolve-your-heirachy/
+http://shrt.info/post/2008/09/Improving-your-component-based-framework-Part-0%2c-Introduction.aspx
+http://www.gamearchitect.net/Articles/GameObjects1.html
+http://www.gamedev.net/community/forums/topic.asp?topic_id=551515
+http://www.gamedev.net/community/forums/topic.asp?topic_id=378753
+http://t-machine.org/index.php/2007/09/03/entity-systems-are-the-future-of-mmog-development-part-1/
+http://www.gamepoetry.com/blog/2008/05/16/an-entity-framework-for-games/
+http://gedgedev.blogspot.com/2009/09/components-systems-subsystems.html
+http://praxis.booncotter.com/?p=100
+www.bit-101.com/blog/?p=2408
+http://forum.train2game.com/showthread.php?p=18091
+http://stackoverflow.com/questions/764824/best-way-to-organize-entities-in-a-game
+http://www.purplepwny.com/blog/?p=215
+http://slick.javaunlimited.net/viewtopic.php?t=1628&postdays=0&postorder=asc&start=0&sid=bf074648143cbf9417db1b268b5a93c0
+http://www.uglybabystudios.com/?p=488
+http://brianguertin.com/2009/03/11/component-based-game-objects/
+http://blog.deanoc.com/?p=91
+http://blog.deanoc.com/?p=93
+http://www.oddrosemedia.com/wiki/index.php?title=Main_Page
+http://www.ogre3d.org/forums/viewtopic.php?f=1&t=36015&start=550

@@ -21,18 +21,18 @@ namespace vapor {
 
 //-----------------------------------//
 
-class VAPOR_API Listener : public Transformable, public audio::Context
+class VAPOR_API Listener : public Transform, public audio::Context
 {
 public:
 
 	Listener(audio::Device* device);
 	virtual ~Listener();
 
-	virtual void update( double delta );
+	virtual void update( float delta );
 
 	virtual const std::string save(int indent = 0) { return ""; }
 
-	static tr1::shared_ptr<audio::Context> getContext(tr1::shared_ptr<Listener> ls);
+	static std::shared_ptr<audio::Context> getContext(std::shared_ptr<Listener> ls);
 };
 
 //-----------------------------------//

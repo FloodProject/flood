@@ -38,7 +38,7 @@ public:
 	void setMoveSensivity( float sensivity );
 
 	// Updates this node.
-	virtual void update( double delta );
+	virtual void update( float delta );
 
 	// Serializes this node.
 	virtual const std::string save( int indent = 0 );
@@ -46,7 +46,7 @@ public:
 	// Gets the name of this node.
 	virtual const std::string name() const;
 
-private:
+protected:
 
 	// Register input devices callbacks.
 	void registerCallbacks();
@@ -80,9 +80,7 @@ private:
 	// Input manager.
 	input::InputManager* inputManager;
 
-
-	math::Vector3 rotateVectorKey;
-	bool check;
+	//math::Vector3 rotateVectorKey;
 };
 
 //-----------------------------------//

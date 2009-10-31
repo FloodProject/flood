@@ -22,6 +22,10 @@ namespace vapor {
 
 //-----------------------------------//
 
+const std::string& Label::type = "Label";
+
+//-----------------------------------//
+
 Label::Label( const std::string& text, resources::FontPtr font, 
 			 render::MaterialPtr material )
 	: font( font ), text( text ), isDirty( true ), 
@@ -68,7 +72,7 @@ void Label::setText( const std::string& text )
 
 //-----------------------------------//
 
-void Label::update( double UNUSED(delta) )
+void Label::update( float UNUSED(delta) )
 {
 	// No need to update geometry if the label did not change.
 	if( !isDirty || text.empty() ) return;
@@ -125,6 +129,13 @@ void Label::update( double UNUSED(delta) )
 
 	// No need to update geometry again until the text changes
 	isDirty = false;
+}
+
+//-----------------------------------//
+
+const std::string& Label::getType() const 
+{
+	return type; 
 }
 
 //-----------------------------------//

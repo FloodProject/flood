@@ -9,14 +9,14 @@
 #pragma once
 
 #include "vapor/Platform.h"
-#include "vapor/scene/Transform.h"
+#include "vapor/scene/Node.h"
 
 namespace vapor {
 	namespace scene {
 
 //-----------------------------------//
 
-class VAPOR_API Group : public Transformable
+class VAPOR_API Group : public Node
 {
 public:
 
@@ -50,7 +50,7 @@ public:
 	int count( ) const;
 
 	// updates this group of nodes
-	virtual void update( double delta );
+	virtual void update( float delta );
 
 	// serialization
 	virtual const std::string save( int indent = 0 );

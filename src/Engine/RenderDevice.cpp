@@ -162,6 +162,8 @@ void Device::render( RenderQueue& queue, const scene::Camera* cam )
 
 		if( state.group == RenderGroup::Normal )
 		{
+			//glDepthMask( true );
+
 			program->setUniform( "vp_ProjectionMatrix", cam->getProjectionMatrix() );
 			program->setUniform( "vp_ModelMatrix", state.modelMatrix );
 			program->setUniform( "vp_ViewMatrix", cam->getViewMatrix() );
@@ -170,6 +172,7 @@ void Device::render( RenderQueue& queue, const scene::Camera* cam )
 		else if( state.group == RenderGroup::Overlays )
 		{
 			glDisable( GL_DEPTH_TEST );
+			//glDepthMask( false );
 
 			int w = activeTarget->getSettings().getWidth();
 			int h = activeTarget->getSettings().getHeight();

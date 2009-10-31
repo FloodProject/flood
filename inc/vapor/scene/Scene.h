@@ -43,7 +43,7 @@ public:
 	//Listener* createListener();
 	//etc...
 
-	virtual void update( double delta );
+	virtual void update( float delta );
 
 	virtual const std::string save( int indent = 0 );
 

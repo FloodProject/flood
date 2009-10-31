@@ -15,6 +15,10 @@ namespace vapor {
 
 //-----------------------------------//
 
+const std::string& Overlay::type = "Overlay";
+
+//-----------------------------------//
+
 Overlay::Overlay() 
 	: anchor( Anchor::TopLeft ), positioning( Positioning::Absolute ),
 	x( 0 ), y( 0 )
@@ -74,7 +78,7 @@ void Overlay::setAnchor( Anchor::Enum anchor )
 
 //-----------------------------------//
 
-void Overlay::update( double UNUSED(delta) )
+void Overlay::update( float UNUSED(delta) )
 {
 
 }
@@ -88,9 +92,9 @@ const std::string Overlay::save( int UNUSED(indent) )
 
 //-----------------------------------//
 
-const std::string Overlay::name() const 
+const std::string& Overlay::getType() const 
 {
-	return "Overlay"; 
+	return type; 
 }
 
 //-----------------------------------//

@@ -13,7 +13,9 @@ Add a custom resource type
 SERVER:
 -------
 
+Near TODO:
 
+	Skybox
 
 ENGINE:
 -----
