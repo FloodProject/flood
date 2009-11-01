@@ -79,7 +79,9 @@ std::string getFPS( float lastFrameTime )
 {
 	if( lastFrameTime == 0 ) return "FPS:";
 
-	std::string fps( boost::lexical_cast< std::string >( int( 1.0f / lastFrameTime ) ) );
+	std::string fps( boost::lexical_cast< std::string >
+		( int( 1.0f / lastFrameTime ) ) );
+	
 	return "FPS: " + fps;
 }
 
@@ -90,6 +92,7 @@ void Example::onSetupScene()
 	ScenePtr scene = getSceneManager();
 	ResourceManager* rm = getResourceManager();
 
+	// TODO: make shaders automatically loaded?
 	ProgramPtr tex( new GLSL_Program( 
 			rm->loadResource< GLSL_Shader >( "tex.vs" ),
 			rm->loadResource< GLSL_Shader >( "tex.fs" ) ) );
@@ -98,7 +101,10 @@ void Example::onSetupScene()
 			rm->loadResource< GLSL_Shader >( "diffuse.vs" ),
 			rm->loadResource< GLSL_Shader >( "diffuse.fs" ) ) );
 
+	// Materials too?
 	MaterialPtr mat( new Material( "FontMaterial", tex ) );
+	
+	// Fonts too?
 	FontPtr font = rm->loadResource< Font >( "Verdana.font" );
 	
 	label.reset( new Label( getFPS( lastFrameTime ), font, mat ) );
@@ -128,22 +134,20 @@ void Example::onSetupScene()
 	terreno->getTransform()->scale( 0.3f );
 	scene->add( terreno );
 
-	//mesh = rm->loadResource< MS3D >( "media/terreno.ms3d" );
+	NodePtr grid( new Node( "EditorGrid" ) );
+	grid->addComponent( TransformPtr( new Transform() ) );
+	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
+	scene->add( grid );
 
-	//foreach( const RenderablePtr& rend, mesh->getRenderables() )
-	//{
-	//	rend->getMaterial()->setProgram( program );
-	//}
+	foreach( const RenderablePtr& rend, grid->getComponent<Geometry>("Grid")->getRenderables() )
+	{
+		rend->getMaterial()->setProgram( diffuse );
+	}
 
-	//scene->add( mesh );
-
-	//GridPtr grid( new Grid( mat ) );
-	//scene->add( grid );
-
-	//foreach( const RenderablePtr& rend, grid->getRenderables() )
-	//{
-	//	rend->getMaterial()->setProgram( diffuse );
-	//}
+	State* scriptState = getScriptState();
+	ScriptPtr lua = rm->loadResource< Script >( "teste.lua" );
+	lua->setState( scriptState );
+	lua->execute();
 
 	//ListenerPtr ls( new Listener( getAudioDevice() ) );
 	//sound.reset( new scene::Sound( ls, snd ) );

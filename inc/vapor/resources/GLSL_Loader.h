@@ -18,6 +18,8 @@
 namespace vapor {
 	namespace resources {
 
+//-----------------------------------//
+
 /**
  * Loads GLSL shader files.
  */
@@ -45,6 +47,8 @@ protected:
 	// holds all file extensions recognized by this codec
 	std::list< std::string > extensions;
 };
+
+//-----------------------------------//
 
 } } // end namespaces
 

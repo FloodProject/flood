@@ -30,7 +30,7 @@ ResourceFile::~ResourceFile()
 
 //-----------------------------------//
 
-const std::string& ResourceFile::getPath() const
+const std::string& ResourceFile::getURI() const
 {
 	return file->getPath();
 }

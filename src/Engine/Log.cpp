@@ -30,6 +30,13 @@ bool Log::showDebug = true;
 
 //-----------------------------------//
 
+void debug( const std::string& msg )
+{
+	log::debug( "%s", msg.c_str() );
+}
+
+//-----------------------------------//
+
 void debug(const char* str, ...)
 {
 	if( !Log::showDebug ) return;

@@ -20,10 +20,10 @@
 #include <al.h>
 #include <alc.h>
 
-//-----------------------------------//
-
 namespace vapor {
 	namespace audio {
+
+//-----------------------------------//
 
 /** 
  * Audio device to play sound data using OpenAL as backend.

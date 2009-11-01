@@ -16,8 +16,6 @@
 
 using vapor::vfs::File;
 
-//-----------------------------------//
-
 namespace vapor {
 	namespace resources {
 
@@ -64,7 +62,7 @@ Shader* GLSL_Loader::decode(const File& file)
 
 	render::GLSL_Shader* shader;
 	shader = new render::GLSL_Shader( type, str );
-	shader->setPath( path );
+	shader->setURI( path );
 
 	return shader;
 }

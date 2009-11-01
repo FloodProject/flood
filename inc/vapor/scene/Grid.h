@@ -27,7 +27,10 @@ public:
 	Grid( render::MaterialPtr mat );
 	virtual ~Grid();
 
-private:
+	// Returns the name of this component.
+	virtual const std::string& getType() const;
+
+protected:
 
 	// Returns a vertex buffer with the grid geometry.
 	render::VertexBufferPtr getGridBuffer();
@@ -40,6 +43,8 @@ private:
 
 	// Makes the main lines more visible. 
 	bool strongMainLines;
+
+	static const std::string& type;
 };
 
 //-----------------------------------//

@@ -33,6 +33,8 @@ namespace ResourceGroup
 			return "Shaders";
 		case Audio:
 			return "Audio";
+		case Scripts:
+			return "Scripts";
 		default:
 			return "Undefined";
 		}
@@ -64,7 +66,7 @@ const std::string& Resource::getPath()
 
 //-----------------------------------//
 
-void Resource::setPath( const std::string& uri )
+void Resource::setURI( const std::string& uri )
 {
 	this->uri = uri;
 }

@@ -83,9 +83,7 @@ ResourcePtr ResourceManager::loadResource(const std::string& path)
 
 	// get the available resource loader to decode the file
 	ResourceLoader* ldr = resourceLoaders[ext];
-	
-	File f(path);
-	res = ResourcePtr( ldr->decode( f ) );
+	res = ResourcePtr( ldr->decode( File(path) ) );
 	
 	// warn that the loader could not decode our resource
 	if(res == nullptr)

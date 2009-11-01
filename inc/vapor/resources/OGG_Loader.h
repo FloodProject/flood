@@ -20,6 +20,8 @@
 namespace vapor {
 	namespace resources {
 
+//-----------------------------------//
+
 /**
  * Loader for OGG Vorbis files.
  */
@@ -50,6 +52,8 @@ protected:
 	// Used for providing libvorbisfile with I/O callbacks.
 	ov_callbacks callbacks;
 };
+
+//-----------------------------------//
 
 } } // end namespaces
 

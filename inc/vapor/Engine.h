@@ -16,6 +16,7 @@
 #include "vapor/scene/Scene.h"
 #include "vapor/audio/Device.h"
 #include "vapor/input/InputManager.h"
+#include "vapor/script/State.h"
 
 namespace vapor {
 
@@ -80,6 +81,9 @@ public:
 	// Gets the scene interface.
 	scene::ScenePtr getSceneManager() const { return sceneNode; }
 	
+	// Gets the scripting state.
+	script::State* getScriptState() const { return scriptState; }
+
 	// Gets the resources manager.
 	resources::ResourceManager* getResourceManager() const { return resourceManager; }
 
@@ -115,6 +119,9 @@ protected:
 
 	// Default logger
 	log::Log* log;
+
+	// Scripting state
+	script::State* scriptState;
 
 	// Application name
 	std::string app;

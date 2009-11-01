@@ -18,6 +18,8 @@
 namespace vapor {
 	namespace resources {
 
+//-----------------------------------//
+
 /**
  * This codec provides PNG decoding services using the lightweight, 
  * thin, tiny, awesome, picoPNG library. :)
@@ -51,6 +53,8 @@ protected:
 	// Holds all file extensions recognized by this codec.
 	std::list< std::string > extensions;
 };
+
+//-----------------------------------//
 
 } } // end namespaces
 

@@ -32,7 +32,7 @@ class VAPOR_API Component :	private boost::noncopyable
 {
 public:
 
-	explicit Component( /*const std::string& type*/ );
+	explicit Component();
 	virtual ~Component();
 	
 	// Called once per frame to update the component.

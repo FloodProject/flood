@@ -15,7 +15,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-Component::Component( /*const std::string& type*/ )
+Component::Component()
 {
 
 }

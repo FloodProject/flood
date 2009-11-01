@@ -95,3 +95,9 @@
 
 #define VAPOR_FONT_FREETYPE2
 #define VAPOR_FONT_BITMAP
+
+//-------------------------------------------------------------------------//
+// Scripting languages
+//-------------------------------------------------------------------------//
+
+#define VAPOR_SCRIPTING_LUA

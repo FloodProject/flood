@@ -19,7 +19,9 @@ namespace vapor {
 
 /**
  * Resource Loader interface for classes that want to provide resource
- * encoding and decoding services for a given file format type.
+ * encoding and decoding services for a given resource format type.
+ * Each resource format will have a corresponding resource loader that
+ * decodes the file with the content and returns a a decoded resource.
  */
 
 class VAPOR_API ResourceLoader : private boost::noncopyable

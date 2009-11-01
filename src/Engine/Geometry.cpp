@@ -61,8 +61,14 @@ const std::vector< render::RenderablePtr >& Geometry::getRenderables( RenderGrou
  
 void Geometry::appendRenderables( render::RenderQueue& queue )
 {
-	const math::Matrix4x3& absoluteTransform = 
-		getNode()->getTransform()->getAbsoluteTransform();
+	TransformPtr transform = getNode()->getTransform();
+	
+	// The node should have a transform component.
+	assert( transform != nullptr );
+
+	if( !transform ) return;
+	
+	const math::Matrix4x3& absoluteTransform = transform->getAbsoluteTransform();
 	
 	foreach( const rendPair& pair, renderables )
 	{

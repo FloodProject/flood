@@ -58,7 +58,15 @@
 // GUI-related Includes
 //-------------------------------------------------------------------------//
 
+#include <vapor/gui/Overlay.h>
 #include <vapor/gui/Label.h>
+
+//-------------------------------------------------------------------------//
+// Scripting-related Includes
+//-------------------------------------------------------------------------//
+
+#include <vapor/script/State.h>
+#include <vapor/script/Script.h>
 
 //-------------------------------------------------------------------------//
 // Namespace declarations
@@ -76,5 +84,6 @@ using namespace vapor::render;
 using namespace vapor::resources;
 using namespace vapor::input;
 using namespace vapor::gui;
+using namespace vapor::script;
 
 #endif

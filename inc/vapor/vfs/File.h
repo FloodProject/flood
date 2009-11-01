@@ -15,7 +15,6 @@
 struct PHYSFS_File;
 
 #include "vapor/Platform.h"
-#include "vapor/StringUtilities.h"
 
 namespace vapor {
 	namespace vfs {

@@ -34,7 +34,8 @@ namespace ResourceGroup
 		Meshes,
 		Fonts,
 		Shaders,
-		Audio
+		Audio,
+		Scripts
 	};
 
 	// Yeah, a bit ugly, but it works.
@@ -72,7 +73,8 @@ public:
 	// Gets the path that identifies this resource.
 	virtual const std::string& getPath();
 
-	virtual void setPath( const std::string& uri );
+	// Sets the URI of the resource.
+	virtual void setURI( const std::string& uri );
 	
 	// Gets the resource group associated with this resource.
 	virtual ResourceGroup::Enum getResourceGroup() const = 0;

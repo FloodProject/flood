@@ -17,6 +17,10 @@ using namespace vapor::render;
 
 //-----------------------------------//
 
+const std::string& Grid::type = "Grid";
+
+//-----------------------------------//
+
 Grid::Grid( render::MaterialPtr mat )
 	: sizeX( 500 ), sizeZ( 500 ), divX( 10 ), divZ( 10 ), strongMainLines( true )
 {
@@ -101,6 +105,13 @@ render::VertexBufferPtr Grid::getGridBuffer()
 	vb->set( VertexAttribute::Color, colors );
 
 	return vb;
+}
+
+//-----------------------------------//
+
+const std::string& Grid::getType() const
+{
+	return type;
 }
 
 //-----------------------------------//

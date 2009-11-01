@@ -119,7 +119,7 @@ Sound* OGG_Loader::decode(const File& file)
 	ov_clear(&oggFile);
 
 	Sound* sound = new Sound( format, frequency, buffer );
-	sound->setPath( file.getPath() );
+	sound->setURI( file.getPath() );
 
 	return sound;
 }

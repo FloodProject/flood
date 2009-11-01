@@ -1,8 +1,7 @@
 WIP (work-in-progress)
 ======================
 
-
-	
+http://www.nuclex.org/downloads/developers/kits/luabind-0-8-1-binaries-and-demo
 	
 EXAMPLES:
 ---------

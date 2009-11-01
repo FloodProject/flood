@@ -26,11 +26,17 @@
 	#include "vapor/resources/GLSL_Loader.h"
 #endif
 
+#ifdef VAPOR_SCRIPTING_LUA
+	#include "vapor/resources/Lua_Loader.h"
+#endif
+
 #ifdef VAPOR_AUDIO_OPENAL
 	#include "vapor/audio/Device.h"
 #endif
 
-#include "vapor/resources/Font_Loader.h"
+#if defined(VAPOR_FONT_BITMAP) || defined(VAPOR_FONT_FREETYPE2)
+	#include "vapor/resources/Font_Loader.h"
+#endif
 
 using namespace vapor::audio;
 using namespace vapor::scene;
@@ -65,6 +71,7 @@ Engine::~Engine()
 
 	delete renderDevice;
 	delete resourceManager;
+	delete scriptState;
 	delete vfs;
 	delete log;
 }
@@ -92,6 +99,10 @@ void Engine::init( bool createWindow )
 
 	// create the root scene node
 	sceneNode.reset( new scene::Scene() );
+
+	// Initialize the scripting
+	scriptState = new script::State();
+	scriptState->bind( this );
 }
 
 //-----------------------------------//
@@ -169,6 +180,10 @@ void Engine::setupResourceLoaders()
 
 	#ifdef VAPOR_SHADER_GLSL
 		loaders.push_back( new GLSL_Loader() );
+	#endif
+
+	#ifdef VAPOR_SCRIPTING_LUA
+		loaders.push_back( new Lua_Loader() );
 	#endif
 
 	loaders.push_back( new Font_Loader() );

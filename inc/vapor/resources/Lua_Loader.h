@@ -10,10 +10,10 @@
 
 #include "vapor/CompileOptions.h"
 
-#ifdef VAPOR_MESH_MILKSHAPE3D
+#ifdef VAPOR_SCRIPTING_LUA
 
 #include "vapor/resources/ResourceLoader.h"
-#include "vapor/resources/MS3D.h"
+#include "vapor/script/Script.h"
 
 namespace vapor {
 	namespace resources {
@@ -21,26 +21,26 @@ namespace vapor {
 //-----------------------------------//
 
 /**
- * Loads a given MS3D mesh format.
+ * Loads Lua script files.
  */
 
-class MS3D_Loader : public ResourceLoader
+class Lua_Loader : public ResourceLoader
 {
 public:
 
-	MS3D_Loader();
+	Lua_Loader();
 
-	// Decode an .ms3d mesh file
-	virtual MS3D* decode(const vfs::File& file);
+	// Parses a Lua text script to a buffer.
+	virtual script::Script* decode(const vfs::File& file);
 
 	// Gets the name of this codec.
-	virtual const std::string getName() { return "MS3D"; }
+	virtual const std::string getName() { return "LUA"; }
 
-	// Gets the list of extensions recognized by this resource handler.
+	// Gets the list of extensions this codec can handle.
 	virtual std::list< std::string >& getExtensions() { return extensions; }
 
-	// Returns the right resource group for this type of resource
-	virtual ResourceGroup::Enum getResourceGroup() { return ResourceGroup::Meshes; }
+	// Overrides this to return the right resource group.
+	virtual ResourceGroup::Enum getResourceGroup() { return ResourceGroup::Scripts; }
 
 protected:
 
