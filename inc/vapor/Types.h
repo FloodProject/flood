@@ -39,6 +39,7 @@ typedef unsigned long	ulong;
 //assert( sizeof( ulong ) == 32 );
 
 #include <string>
+#include <sstream>
 
 //---------------------------------------------------------------------//
 // Data structures
@@ -51,7 +52,7 @@ typedef unsigned long	ulong;
 #include <stack>
 
 //---------------------------------------------------------------------//
-// C++0x compatability macros
+// C++0x compatibility macros
 //---------------------------------------------------------------------//
 
 // TODO: Check for VC2010

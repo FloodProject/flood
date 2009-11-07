@@ -13,6 +13,8 @@
 #include "vapor/render/Renderable.h"
 #include "vapor/render/Material.h"
 
+#include "vapor/math/Dimension.h"
+
 namespace vapor {
 	namespace render {
 
@@ -26,13 +28,15 @@ class VAPOR_API Quad : public render::Renderable
 {
 public:
 
-	Quad(  MaterialPtr mat = MaterialPtr(), IndexBufferPtr ib = IndexBufferPtr() );
+	Quad( const math::Dimension& dim = math::Dimension( 1, 1 ),
+		MaterialPtr mat = MaterialPtr(), 
+		IndexBufferPtr ib = IndexBufferPtr() );
 
 	virtual ~Quad();
 
 private:
 
-	render::VertexBufferPtr getQuadBuffer();
+	render::VertexBufferPtr getQuadBuffer( const math::Dimension& dim );
 };
 
 //-----------------------------------//

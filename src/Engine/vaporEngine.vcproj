@@ -164,11 +164,19 @@
 			Name="Math"
 			>
 			<File
+				RelativePath="..\..\inc\vapor\math\Dimension.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Math.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\inc\vapor\math\Math.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\math\Point.h"
 				>
 			</File>
 			<Filter
@@ -824,6 +832,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\inc\vapor\Doxygen.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\doc\TODO.txt"
 				>
 			</File>
@@ -1029,26 +1041,6 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Framework"
-			>
-			<File
-				RelativePath="..\Examples\Dialog.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Framework\Framework.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\Framework.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\Main.h"
-				>
-			</File>
-		</Filter>
-		<Filter
 			Name="Engine"
 			>
 			<File
@@ -1059,6 +1051,26 @@
 				RelativePath="..\..\inc\vapor\Engine.h"
 				>
 			</File>
+			<Filter
+				Name="Framework"
+				>
+				<File
+					RelativePath="..\Examples\Dialog.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Framework\Framework.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\Framework.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\Main.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="GUI"
@@ -1084,6 +1096,26 @@
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\gui\Overlay.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Console"
+				>
+				<File
+					RelativePath=".\Console.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\gui\Console.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Window"
+				>
+				<File
+					RelativePath="..\..\inc\vapor\gui\Window.h"
 					>
 				</File>
 			</Filter>
@@ -1183,6 +1215,14 @@
 		<Filter
 			Name="Scripting"
 			>
+			<File
+				RelativePath=".\State.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\script\State.h"
+				>
+			</File>
 			<Filter
 				Name="Bindings"
 				>
@@ -1200,18 +1240,6 @@
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\script\Script.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="State"
-				>
-				<File
-					RelativePath=".\State.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\script\State.h"
 					>
 				</File>
 			</Filter>

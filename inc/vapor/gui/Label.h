@@ -20,7 +20,7 @@ namespace vapor {
 //-----------------------------------//
 
 /**
- * Text label that can be rendered on the screen with a determined material.
+ * Text label that can be rendered on the screen with a chosen material.
  * It's positioned in screen-space instead of in world-space so you give
  * naturally it's positioning is resolution-dependent and you should take
  * the resolution into account when doing so. For ease of use, you can also
@@ -45,10 +45,10 @@ public:
 	void setText( const std::string& text );
 
 	// Updates the geometry to match the new text if needed.
-	virtual void update( float UNUSED(delta) );
+	virtual void update( float delta );
 
 	// Serializes this node to a stream.
-	virtual const std::string save( int UNUSED(indent ) = 0) { return ""; }
+	virtual const std::string save( int indent = 0 );
 
 	// Returns this component name identification.
 	virtual const std::string& getType() const;

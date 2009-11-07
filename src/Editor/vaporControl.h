@@ -19,7 +19,13 @@
 
 #include <vapor/Engine.h>
 
-#include <wx/glcanvas.h> 
+#include <wx/glcanvas.h>
+
+namespace vapor { namespace editor {
+
+class vaporWindow;
+
+//-----------------------------------//
 
 /**
  * Let's link vapor with wxWidgets. There are some different approaches
@@ -46,7 +52,7 @@ public:
 					const int* attribList = nullptr,
 					const wxPoint& pos	= wxDefaultPosition,
 					const wxSize& size = wxDefaultSize,
-					long style = 0,
+					long style = 0 | wxFULL_REPAINT_ON_RESIZE,
 					const wxString&	name = "vaporGLCanvas",
 					const wxPalette& palette = wxNullPalette); 	
 
@@ -59,24 +65,31 @@ public:
 	// to ensure maximum framerate is achieved.
 	void OnIdle(wxIdleEvent& event);
 	void OnPaint(wxPaintEvent& event);
+	void OnSize(wxSizeEvent& event);
 
-//-------//
-
+	// Gets the associated instance of the vaporEngine.
 	vapor::Engine* getEngine() { return engine; }
-	void setEngine(vapor::Engine* engine) { this->engine = engine; }
 
 protected:
 
+	// Sets the associated instance of the vaporEngine.
+	void setEngine(vapor::Engine* engine) { this->engine = engine; }
+
+	// Initializes the control.
 	void initControl();
 
-	// Returns the window handle of this control
+	// Returns the window handle of this control.
 	void* getHandle();
 
-	// window associated this control
-	vapor::render::Window* window;
+	// vaporEngine's Window associated with this control.
+	vaporWindow* window;
 
-	// holds the main vapor engine
+	// Holds an instance to the vaporEngine.
 	vapor::Engine* engine;
 
 	DECLARE_EVENT_TABLE()
 };
+
+//-----------------------------------//
+
+} } // end namespaces

@@ -29,15 +29,15 @@ class BitmapFont : public Font
 public:
 
 	BitmapFont( const std::string& font, int size, 
-		ImagePtr img, std::vector<Glyph> glyphs );
+		ImagePtr img, const std::vector<Glyph>& glyphs );
 
-	~BitmapFont();
+	virtual ~BitmapFont();
 
 	// Gets the texture that backs this font.
 	virtual render::TexturePtr getTexture();
 
 	// Gets the size information of a glyph.
-	virtual const std::pair<int,int> getGlyphSize() const;
+	virtual const std::pair<const ushort, const ushort> getGlyphSize() const;
 
 	// Gets an array with the available glyphs information.
 	virtual const std::vector<Glyph>& getGlyphsTable() const;

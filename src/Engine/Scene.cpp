@@ -102,4 +102,17 @@ const std::string Scene::save(int ind)
 
 //-----------------------------------//
 
+Node* Scene::getEntity( const std::string& name ) const
+{
+	foreach( NodePtr gnode, getChildren() )
+	{
+		if( gnode->getName() == name )
+			return gnode.get();
+	}
+
+	return nullptr;
+}
+
+//-----------------------------------//
+
 } } // end namespaces

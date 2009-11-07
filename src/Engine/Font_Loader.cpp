@@ -14,7 +14,15 @@
 #include "vapor/StringUtilities.h"
 #include "vapor/Endianness.h"
 
+#ifdef VAPOR_COMPILER_MSVC
+	#pragma warning(disable : 4702 )
+#endif
+
 #include "boost/lexical_cast.hpp"
+
+#ifdef VAPOR_COMPILER_MSVC
+	#pragma warning(disable : 4702 )
+#endif
 
 using vapor::vfs::File;
 
@@ -69,16 +77,25 @@ Font* Font_Loader::decode(const vfs::File& file)
 
 	std::vector<byte> fileData = glyphsFile.read();
 	std::vector<short> data; data.resize( fileData.size() / 2 );
+
+#ifdef VAPOR_COMPILER_MSVC
+	#pragma warning( disable : 4996 )
+#endif
+
 	std::copy( &fileData.front(), &fileData.front() + fileData.size(), (char*) &data.front() );
+
+#ifdef VAPOR_COMPILER_MSVC
+	#pragma warning( default : 4996 )
+#endif
 
 	std::vector<Glyph> glyphs;
 
-	int width_per_glyph = boost::lexical_cast<int>( glyphInfo[0] );
-	int height_per_glyph = boost::lexical_cast<int>( glyphInfo[1] );
+	ushort width_per_glyph = boost::lexical_cast<ushort>( glyphInfo[0] );
+	ushort height_per_glyph = boost::lexical_cast<ushort>( glyphInfo[1] );
 
 	//int n_glyphs_row = img->getWidth() / width_per_glyph;
 
-	uint x = 0; uint y = 0;
+	ushort x = 0; ushort y = 0;
 
 	for( uint i = 0; i < data.size(); i++ )
 	{

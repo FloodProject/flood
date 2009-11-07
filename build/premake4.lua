@@ -2,13 +2,19 @@
 -- Written by triton (2008-2009)
 
 solution "vapor"
-	configurations { "Debug", "Release" }
+
+	configurations { 
+		"Debug", 
+		"Release" 
+	}
 
 	configuration "Debug"
+	
 		defines { "DEBUG" }
 		flags { "Symbols" }
 
 	configuration "Release"
+	
 		defines { "NDEBUG" }
 		flags { "Optimize" }
 
@@ -16,6 +22,7 @@ solution "vapor"
 	objdir 	( _ACTION .. "/obj" )
 
 	project "vaporEngine"
+	
 		kind "StaticLib"
 		language "C++"
 
@@ -45,16 +52,12 @@ solution "vapor"
 			"../dep/SFML/include",
 		}
 
+		-- include only the Visual Leak Detector on VS builds
 		configuration "vs*"
+		
 			includedirs {
 				"../dep/vld/include",
 			}
-
-
-		-- include only on Windows
-		if os.is("windows") then
-			includedirs { "../dep/vld/include" }
-		end
 
 		-- Pre-compiled headers
 		pchheader "vapor/PCH.h"

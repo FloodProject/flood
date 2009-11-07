@@ -24,6 +24,8 @@
 namespace vapor {
 	namespace render {
 
+//-----------------------------------//
+
 class SDLWindow : public Window
 {
 public:
@@ -64,6 +66,8 @@ private:
 	// Opens a new window
 	bool open();
 };
+
+//-----------------------------------//
 
 } } // end namespaces
 

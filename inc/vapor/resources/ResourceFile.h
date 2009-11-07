@@ -21,7 +21,7 @@ namespace vapor {
  * file system layer of the engine. This file can be told to watch for 
  * changes, and it will auto-reload the resource in case that event 
  * happens. This will allow things like automatic textures/shaders 
- *updating in-game due to file changes. :)
+ * updating in-game due to file changes. :)
  */
 
 class VAPOR_API ResourceFile : private boost::noncopyable

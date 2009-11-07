@@ -34,33 +34,6 @@ void Example::onInit()
 	{
 		Log::MessageDialog( "Missing archive/directory '" + media + "'." );
 	}
-
-	{
-		math::EulerAngles ang( math::degreeToRadian( 90.0 ), 0.0f, 0.0f );
-		math::Vector3 vec( -math::Vector3::UnitZ );
-		Vector3 ret = vec * ang.getOrientationMatrix();
-		int i = 0;
-	}
-
-	{
-		math::EulerAngles ang( math::degreeToRadian( 90.0 ), 0.0f, 0.0f );
-		math::Vector3 vec( -math::Vector3::UnitZ );
-		Vector3 ret = vec * ang.getOrientationMatrix();
-
-		math::EulerAngles ang2( 0.0f, math::degreeToRadian( 90.0 ), 0.0f );
-		ret *= ang2.getOrientationMatrix();
-
-		math::EulerAngles ang3( math::degreeToRadian( -90.0 ), 0.0f, 0.0f );
-		ret *= ang3.getOrientationMatrix();
-		int i = 0;
-	}
-
-	{
-		math::EulerAngles ang( 0.0f, math::degreeToRadian( 90.0 ), 0.0f );
-		math::Vector3 vec( -math::Vector3::UnitZ );
-		Vector3 ret = vec * ang.getOrientationMatrix();
-		int i = 0;
-	}
 }
 
 //-----------------------------------//
@@ -100,19 +73,6 @@ void Example::onSetupScene()
 	ProgramPtr diffuse( new GLSL_Program( 
 			rm->loadResource< GLSL_Shader >( "diffuse.vs" ),
 			rm->loadResource< GLSL_Shader >( "diffuse.fs" ) ) );
-
-	// Materials too?
-	MaterialPtr mat( new Material( "FontMaterial", tex ) );
-	
-	// Fonts too?
-	FontPtr font = rm->loadResource< Font >( "Verdana.font" );
-	
-	label.reset( new Label( getFPS( lastFrameTime ), font, mat ) );
-	NodePtr fps( new Node( "FPSNode" ) );
-	fps->addComponent( TransformPtr( new Transform() ) );
-	fps->addComponent( label );
-	fps->getTransform()->translate( -300.0f, 220.0f, 0.0f );
-	scene->add( fps );
 	
 	// Create a new Camera
 	NodePtr camera( new Node( "MainCamera" ) );
@@ -120,19 +80,29 @@ void Example::onSetupScene()
 	camera->addComponent( TransformPtr( new Transform() ) );
 	camera->addComponent( cam );
 	scene->add( camera );
+	
+	// Materials too?
+	MaterialPtr mat( new Material( "FontMaterial", tex ) );
+	FontPtr font = rm->loadResource< Font >( "Verdana.font" );
+	label.reset( new Label( getFPS( lastFrameTime ), font, mat ) );
+	NodePtr fps( new Node( "FPSNode" ) );
+	fps->addComponent( TransformPtr( new Transform() ) );
+	fps->addComponent( label );
+	fps->getTransform()->translate( -300.0f, 220.0f, 0.0f );
+	scene->add( fps );
 
-	mesh = rm->loadResource< MS3D >( "media/terreno.ms3d" );
+	//mesh = rm->loadResource< MS3D >( "media/terreno.ms3d" );
 
-	foreach( const RenderablePtr& rend, mesh->getRenderables() )
-	{
-		rend->getMaterial()->setProgram( tex );
-	}
+	//foreach( const RenderablePtr& rend, mesh->getRenderables() )
+	//{
+	//	rend->getMaterial()->setProgram( tex );
+	//}
 
-	NodePtr terreno( new Node( "Terreno" ) );
-	terreno->addComponent( TransformPtr( new Transform() ) );
-	terreno->addComponent( mesh );
-	terreno->getTransform()->scale( 0.3f );
-	scene->add( terreno );
+	//NodePtr terreno( new Node( "Terreno" ) );
+	//terreno->addComponent( TransformPtr( new Transform() ) );
+	//terreno->addComponent( mesh );
+	//terreno->getTransform()->scale( 0.3f );
+	//scene->add( terreno );
 
 	NodePtr grid( new Node( "EditorGrid" ) );
 	grid->addComponent( TransformPtr( new Transform() ) );
@@ -144,10 +114,8 @@ void Example::onSetupScene()
 		rend->getMaterial()->setProgram( diffuse );
 	}
 
-	State* scriptState = getScriptState();
 	ScriptPtr lua = rm->loadResource< Script >( "teste.lua" );
-	lua->setState( scriptState );
-	lua->execute();
+	getScriptState()->registerScript( lua );
 
 	//ListenerPtr ls( new Listener( getAudioDevice() ) );
 	//sound.reset( new scene::Sound( ls, snd ) );

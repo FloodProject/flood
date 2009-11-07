@@ -174,8 +174,8 @@ void Device::render( RenderQueue& queue, const scene::Camera* cam )
 			glDisable( GL_DEPTH_TEST );
 			//glDepthMask( false );
 
-			int w = activeTarget->getSettings().getWidth();
-			int h = activeTarget->getSettings().getHeight();
+			const float w = activeTarget->getSettings().getWidth();
+			const float h = activeTarget->getSettings().getHeight();
 
 			Matrix4x4 proj = Matrix4x4::createOrthographicProjection( 
 				-w/2, w/2, -h/2, h/2, -10.0, 10.0 );

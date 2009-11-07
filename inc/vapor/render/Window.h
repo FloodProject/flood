@@ -29,13 +29,13 @@ class VAPOR_API WindowSettings : public Settings
 {
 public:
 
-	WindowSettings( const int width = 640, const int height = 480,
+	WindowSettings( const ushort width = 640, const ushort height = 480,
 		const bool fullscreen = false, 
 		const std::string title = "Untitled",
-		const int bpp = 32, 
-		const int depthbits = 24, 
-		const int stencilbits = 8,
-		const int aalevel = 0, 
+		const ushort bpp = 32, 
+		const ushort depthbits = 24, 
+		const ushort stencilbits = 8,
+		const ushort aalevel = 0, 
 		void* customHandle = nullptr );
 
 	// Gets the window title
@@ -48,35 +48,35 @@ public:
 	const bool isFullscreen() const { return fullscreen; }
 	
 	// Gets the bits-per-pixel of the window
-	const int getBpp() const { return bpp; }
+	const ushort getBpp() const { return bpp; }
 
 	// Gets the size of the window's depth buffer 
-	const int getDepthBits() const { return depthbits; }
+	const ushort getDepthBits() const { return depthbits; }
 	
 	// Gets the size of the window's stencil buffer 
-	const int getStencilBits() const { return stencilbits; }
+	const ushort getStencilBits() const { return stencilbits; }
 	
 	// Gets the antialiasing level of the window
-	const int getAntiAliasing() const { return aalevel; }
+	const ushort getAntiAliasing() const { return aalevel; }
 
 	// Sets the window title
 	void setTitle(const std::string& str) { title = str; }
 	
 	// Sets the size of the window's depth buffer 
-	void setDepthBits(int db) { depthbits = db; }
+	void setDepthBits(const ushort db) { depthbits = db; }
 	
 	// Sets the size of the window's stencil buffer 
-	void setStencilBits(int sb) { stencilbits = sb; }
+	void setStencilBits(const ushort sb) { stencilbits = sb; }
 	
 	// Sets the antialiasing level of the window
-	void setAntiAliasing(int aal) { aalevel = aal; }
+	void setAntiAliasing(const ushort aal) { aalevel = aal; }
 
 protected:
 
-	int bpp;
-	int depthbits;
-	int stencilbits;
-	int aalevel;
+	ushort bpp;
+	ushort depthbits;
+	ushort stencilbits;
+	ushort aalevel;
 	
 	bool fullscreen;
 	

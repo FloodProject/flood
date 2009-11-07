@@ -27,10 +27,10 @@ namespace vapor {
 
 struct Glyph
 {
-	int x;
-	int y;
-	int width;
-	int height;
+	ushort x;
+	ushort y;
+	ushort width;
+	ushort height;
 };
 
 //-----------------------------------//
@@ -61,7 +61,7 @@ public:
 	virtual const std::vector<Glyph>& getGlyphsTable() const = 0;
 
 	// Gets the size information of a glyph.
-	virtual const std::pair<int,int> getGlyphSize() const = 0;
+	virtual const std::pair<const ushort, const ushort> getGlyphSize() const = 0;
 
 	// Gets the resource group of the font.
 	virtual ResourceGroup::Enum getResourceGroup() const;

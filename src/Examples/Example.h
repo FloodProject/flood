@@ -29,22 +29,22 @@ public:
 
 protected:
 
-	// Initializes the app.
+	/// Initializes the app.
 	virtual void onInit();	
 
-	// Sets up all the needed resources.
+	/// Sets up all the needed resources.
 	virtual void onSetupResources();
 
-	// Called to set up the scene
+	/// Called to set up the scene
 	virtual void onSetupScene();
 
-	// Called to update stuff
+	/// Called to update stuff
 	virtual void onUpdate( float delta );
 
-	// Renders the scene
+	/// Renders the scene
 	virtual void onRender();
 
-	// Callback functions
+	/// Callback functions
 	virtual void onKeyPressed( const input::KeyEvent& );
 	virtual void onButtonPressed( const input::MouseButtonEvent& );
 

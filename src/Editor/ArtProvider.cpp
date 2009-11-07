@@ -17,8 +17,8 @@ wxBitmap ArtProvider::CreateBitmap(const wxArtID& id,
 {
     if ( client == wxART_TOOLBAR )
     {
-		if(id == wxART_DELETE)
-			return wxMEMORY_BITMAP(disk);
+		//if(id == wxART_DELETE)
+			//return wxMEMORY_BITMAP(disk);
     }
     return wxNullBitmap;
 }

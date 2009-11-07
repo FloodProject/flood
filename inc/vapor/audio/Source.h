@@ -23,13 +23,16 @@
 namespace vapor {
 	namespace audio {
 
+/** \addtogroup audio Audio 
+ * @{ */
+
 //-----------------------------------//
 
 /**
  * Wraps an OpenAL source in a class. A source in OpenAL is the object 
  * that contains the position of the sound being played in 2D, and also 
  * tells what audio data to play. Each source will get a shared audio
- * buffer from the audio device. 
+ * buffer from the audio device.
  */
 
 class VAPOR_API Source : private boost::noncopyable
@@ -95,5 +98,7 @@ protected:
 //-----------------------------------//
 
 } } // end namespaces
+
+/** @} */
 
 #endif

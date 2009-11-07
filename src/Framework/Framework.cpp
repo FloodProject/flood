@@ -7,10 +7,7 @@
 ************************************************************************/
 
 #include <vapor/PCH.h>
-
 #include <vapor/Framework.h>
-
-#include <limits>
 
 using namespace vapor::input;
 
@@ -77,13 +74,16 @@ void Framework::render()
 
 	while( frameTimer.reset(), renderDevice->getWindow()->pumpEvents() )
 	{
-		// update time!
+		// User update callback.
 		onUpdate( lastFrameTime );
 
-		// main rendering by app
+		// Execute all the registered scripts.
+		getScriptState()->update( lastFrameTime );
+
+		// User rendering callback.
 		onRender();
 
-		// update the active target
+		// Update the active target (swaps buffers).
 		renderDevice->updateTarget();
 
 		lastFrameTime = frameTimer.getElapsedTime();

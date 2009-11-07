@@ -21,7 +21,7 @@ namespace vapor {
 //-----------------------------------//
 
 BitmapFont::BitmapFont( const std::string& font, int size, ImagePtr img, 
-					   std::vector<Glyph> glyphs )
+					   const std::vector<Glyph>& glyphs )
 	: Font( font, size ), fontImage( img ), glyphData( glyphs )
 {
 	
@@ -51,7 +51,7 @@ const std::vector<Glyph>& BitmapFont::getGlyphsTable() const
 
 //-----------------------------------//
 
-const std::pair<int,int> BitmapFont::getGlyphSize() const
+const std::pair<const ushort, const ushort> BitmapFont::getGlyphSize() const
 {
 	// TODO: ...
 	return std::make_pair( 16, 16 );

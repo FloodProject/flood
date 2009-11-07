@@ -79,7 +79,7 @@ bool GLSL_Shader::compile()
 
 	if( status != GL_TRUE ) 
 	{
-		error( "glsl", "Error compiling shader '%s'", getPath().c_str() );
+		error( "glsl", "Error compiling shader '%s'", getURI().c_str() );
 		compiled = false;
 		return false; 
 	}

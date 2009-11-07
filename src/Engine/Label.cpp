@@ -11,7 +11,6 @@
 #include "vapor/gui/Label.h"
 
 #include "vapor/resources/ResourceManager.h"
-#include "vapor/render/Quad.h"
 
 using namespace vapor::resources;
 using namespace vapor::render;
@@ -93,8 +92,8 @@ void Label::update( float UNUSED(delta) )
 	// Calculate the tex coords
 	std::vector<Vector3> texcoords;
 
-	int x_pos = 0; int y_pos = 0;
-	int mid_offset = font->getGlyphSize().first/2;
+	ushort x_pos = 0; ushort y_pos = 0;
+	ushort mid_offset = font->getGlyphSize().first/2;
 
 	foreach( unsigned char c, text )
 	{
@@ -113,8 +112,8 @@ void Label::update( float UNUSED(delta) )
 		vertex.push_back( Vector3( x_pos + glyph.width, y_pos - glyph.height, 0.0f ) );
 		vertex.push_back( Vector3( x_pos + glyph.width, y_pos, 0.0f ) );
 	
-		int glyph_x_left = ::ceilf(glyph.x + mid_offset - glyph.width / 2);
-		int glyph_x_right = ::ceilf(glyph.x + mid_offset + glyph.width / 2);
+		float glyph_x_left = ::ceilf(glyph.x + mid_offset - glyph.width / 2);
+		float glyph_x_right = ::ceilf(glyph.x + mid_offset + glyph.width / 2);
 
 		texcoords.push_back( Vector3( glyph_x_left / width, glyph.y / height, 0.0f ) );
 		texcoords.push_back( Vector3( glyph_x_left / width, (glyph.y + glyph.height) / height, 0.0f ) );
@@ -136,6 +135,13 @@ void Label::update( float UNUSED(delta) )
 const std::string& Label::getType() const 
 {
 	return type; 
+}
+
+//-----------------------------------//
+
+const std::string Label::save( int indent )
+{
+	return ""; 
 }
 
 //-----------------------------------//

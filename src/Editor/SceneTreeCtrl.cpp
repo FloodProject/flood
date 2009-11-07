@@ -56,7 +56,7 @@ SceneTreeCtrl::~SceneTreeCtrl()
 void SceneTreeCtrl::initControl()
 {
 	// Add the root node
-	wxString str(scene->name());
+	wxString str(scene->getName());
 	wxTreeItemId root = AddRoot(str.Capitalize(), 0);
 	
 	// traverse the scene tree and add nodes
@@ -79,12 +79,12 @@ void SceneTreeCtrl::initIcons()
 	// held in a regular C++ array. this way we don't need to package
 	// external image files with the executable. but we do need to
 	// convert the images from the array to an wxBitmap.
-	imageList->Add(wxMEMORY_BITMAP(sitemap_color));
-	imageList->Add(wxMEMORY_BITMAP(camera));
-	imageList->Add(wxMEMORY_BITMAP(lightbulb_off));
-	imageList->Add(wxMEMORY_BITMAP(sound));
-	imageList->Add(wxMEMORY_BITMAP(status_online));
-	imageList->Add(wxMEMORY_BITMAP(world));
+	//imageList->Add(wxMEMORY_BITMAP(sitemap_color));
+	//imageList->Add(wxMEMORY_BITMAP(camera));
+	//imageList->Add(wxMEMORY_BITMAP(lightbulb_off));
+	//imageList->Add(wxMEMORY_BITMAP(sound));
+	//imageList->Add(wxMEMORY_BITMAP(status_online));
+	//imageList->Add(wxMEMORY_BITMAP(world));
 
 	AssignImageList(imageList);
 }

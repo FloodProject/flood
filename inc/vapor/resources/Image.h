@@ -46,14 +46,14 @@ class VAPOR_API Image : public Resource
 {
 public:
 
-	Image(const uint width, const uint height, PixelFormat::Enum pf);
+	Image(const ushort width, const ushort height, PixelFormat::Enum pf);
 	virtual ~Image();
 
 	// Gets the width of the image.	
-	const uint getWidth() const { return width; }
+	const ushort getWidth() const { return width; }
 	
 	// Gets the height of the image.
-	const uint getHeight() const { return height; }
+	const ushort getHeight() const { return height; }
 
 	// Returns the pixel format of the image
 	PixelFormat::Enum getPixelFormat() const { return pixelFormat; }
@@ -73,10 +73,10 @@ public:
 private:
 
 	// image width
-	uint width;
+	ushort width;
 
 	// image height
-	uint height;
+	ushort height;
 
 	// pixel format
 	PixelFormat::Enum pixelFormat;

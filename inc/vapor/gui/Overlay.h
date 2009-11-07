@@ -91,7 +91,7 @@ public:
 	// Gets the current positioning mode.
 	Positioning::Enum getPositioning() const;
 
-	// Sets the current  positioning mode.
+	// Sets the current positioning mode.
 	void setPositioning( Positioning::Enum positioning );
 
 	// Gets the current anchor settings.

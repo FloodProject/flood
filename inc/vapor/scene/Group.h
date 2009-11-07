@@ -47,7 +47,7 @@ public:
 	NodePtr get( uint i ) const;
 
 	// Gets the children of this group.
-	const std::vector< NodePtr >& getChildren() { return children; }
+	const std::vector< NodePtr >& getChildren() const { return children; }
 
 	// Returns index for child with the same pointer, if child cannot
 	// be found, -1 is returned

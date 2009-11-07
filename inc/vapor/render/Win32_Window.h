@@ -22,6 +22,8 @@
 namespace vapor {
 	namespace render {
 
+//-----------------------------------//
+
 /**
  * Another window implementation. Uses only native Windows API calls. 
  * This will hopefully be faster than using SDL windowing for all the
@@ -76,6 +78,8 @@ private:
 };
 
 LONG WINAPI WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam );
+
+//-----------------------------------//
 
 } } // end namespaces
 

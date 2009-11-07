@@ -22,6 +22,8 @@
 namespace vapor {
 	namespace render {
 
+//-----------------------------------//
+
 /**
  * Window implementation using the SFML library.
  */
@@ -84,6 +86,8 @@ private:
 	// Holds the current state of the cursor.
 	bool cursorState;
 };
+
+//-----------------------------------//
 
 } } // end namespaces
 

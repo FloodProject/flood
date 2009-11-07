@@ -17,8 +17,8 @@ using namespace vapor::math;
 
 //-----------------------------------//
 
-Quad::Quad( MaterialPtr mat, IndexBufferPtr ib )
-	: Renderable( Primitive::Quads, getQuadBuffer(), ib, mat )
+Quad::Quad( const math::Dimension& dim, MaterialPtr mat, IndexBufferPtr ib )
+	: Renderable( Primitive::Quads, getQuadBuffer( dim ), ib, mat )
 {
 
 }
@@ -32,17 +32,20 @@ Quad::~Quad()
 
 //-----------------------------------//
 
-render::VertexBufferPtr Quad::getQuadBuffer()
+render::VertexBufferPtr Quad::getQuadBuffer( const math::Dimension& dim )
 {
 	// Create a new VBO and upload triangle data
 	VertexBufferPtr vb( new VertexBuffer() );
 
+	const float width = static_cast< float >( dim.width );
+	const float height = static_cast< float >( dim.height );
+
 	// Vertex position data
 	std::vector< Vector3 > vertex;
-	vertex.push_back( Vector3( -1.0f, 1.0f, 0.0f ) );
-	vertex.push_back( Vector3( -1.0f, -1.0f, 0.0f ) );
-	vertex.push_back( Vector3( 1.0f, -1.0f, 0.0f ) );
-	vertex.push_back( Vector3( 1.0f, 1.0f, 0.0f ) );
+	vertex.push_back( Vector3( 0.0f, 0.0f, 0.0f ) );
+	vertex.push_back( Vector3( 0.0f, height, 0.0f ) );
+	vertex.push_back( Vector3( width, height, 0.0f ) );
+	vertex.push_back( Vector3( width, 0.0f, 0.0f ) );
 
 	// Vertex color data
 	std::vector< Vector3 > colors;

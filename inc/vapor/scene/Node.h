@@ -39,6 +39,7 @@ public:
 
 	explicit Node();
 	explicit Node( const std::string& name );
+	
 	virtual ~Node();
 
 	// Sets the parent of the node.
@@ -52,6 +53,9 @@ public:
 
 	// Gets a component from this node.
 	ComponentPtr getComponent( const std::string& type );
+
+	// Returns all the registered components in this node.
+	const std::map< std::string, ComponentPtr >& getComponents();
 
 	// Gets a component from this node.
 	template <typename T>
@@ -75,6 +79,7 @@ public:
 
 	// Gets the associated transform component (if any).
 	TransformPtr getTransform();
+	Transform* getTransformPtr();
 
 	// Gets the geometries components in the node.
 	const std::vector< GeometryPtr >& getGeometry();

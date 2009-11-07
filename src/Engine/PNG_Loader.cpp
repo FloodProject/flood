@@ -16,10 +16,7 @@ using vapor::vfs::File;
 
 //-----------------------------------//
 
-/**
- * PicoPNG decoding function declaration
- */
-
+// PicoPNG decoding function forward declaration.
 int decodePNG(std::vector<byte>& out_image_32bit, ulong& image_width, 
 			  ulong& image_height, const byte* in_png, ulong in_size);
 
@@ -63,13 +60,12 @@ Image* PNG_Pico_Loader::decode(const File& file)
 void PNG_Pico_Loader::flip( std::vector<byte>& buffer, ulong width, ulong height )
 {
 	// flip Y in place
-
-	for( int y = 0; y < height/2; y++)
+	for( uint y = 0; y < height/2; y++ )
 	{
 		int minrow = y*width*4;
 		int maxrow = width*(height-y-1)*4;
  
-		for( int x = 0; x < width*4; x++)
+		for( uint x = 0; x < width*4; x++ )
 		{
 			std::swap( buffer[minrow+x], buffer[maxrow+x] );
 		}

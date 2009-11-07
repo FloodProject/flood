@@ -16,6 +16,9 @@ struct PHYSFS_File;
 
 #include "vapor/Platform.h"
 
+/** \addtogroup virtual Virtual Filesystem 
+ * @{ */
+
 namespace vapor {
 	namespace vfs {
 
@@ -52,55 +55,67 @@ class VAPOR_API File : private boost::noncopyable
 {
 public:
 
+	/// Opens a new file given a path (defaults for reading access).
 	File (const std::string path, AccessMode::Enum e = AccessMode::Read);
+	
+	/// Opens a new file given a path (defaults for reading access).
 	File (const char* path, AccessMode::Enum e = AccessMode::Read);
+	
+	/// Closes the file.
 	~File ();
 
-	// Closes the file.
+	/// Closes the file.
 	bool close();
 	
-	// Gets the file size.
+	/// Gets the file size.
 	long getSize() const;
 
-	// Read file into buffer.
+	/// Returns the contents of the file.
 	std::vector<byte> read(long size = -1) const;
 
-	// Reads up to size bytes into the buffer.
+	/// Reads up to size bytes into the buffer.
 	long read(void* buffer, long size ) const;
 
-	// Read lines (assumes a text file).
+	/// Read lines (assumes a text file).
 	std::vector<std::string> readLines() const;
 
-	// Write buffer into file.
+	/// Write buffer into file.
 	long write(std::vector<byte> buffer, long size = -1);
 
-	// Seek to a new position within the file. 
-	// The next read or write will occur at that place.
+	/// Seek to a new position within the file. 
+	/// The next read or write will occur at that place.
 	bool seek(long pos);
 
-	// Determine current position within a file.
+	/// Determine current position within the file.
 	long tell() const;
 
-	// Gets the path of the file.
+	/// Gets the path of the file.
 	const std::string& getPath() const;
 
-	// Checks if this file exists.
+	/// Gets the full path of the file.
+	const std::string getFullPath() const;
+
+	/// Checks if this file exists.
 	bool exists() const;
 	
-	// Checks if the file in path exists.
+	/// Checks if the file in path exists.
 	static bool exists(const std::string path);
 	
 private:
 
-	// Opens the file if it exists.
+	/// Opens the file if it exists.
 	void open();
 
+	/// Allowed access mode to the file.
 	AccessMode::Enum accessMode;
 	
+	/// PhysFS handle to the file.
 	PHYSFS_File* file;
 	
+	/// Virtual path of the file.
 	std::string	path;
 
+	/// Is the file already closed?
 	bool closed;
 };
 
@@ -111,5 +126,7 @@ TYPEDEF_SHARED_POINTER_FROM_CLASS( File );
 //-----------------------------------//
 
 } } // end namespaces
+
+/** @} */
 
 #endif

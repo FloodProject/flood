@@ -14,11 +14,17 @@ SERVER:
 
 Near TODO:
 
-	Skybox
+	Skybox component
+	Console GUI widget
+	Per-script Lua state
+	Fix Overlays positioning
+	Fix Lua state closing
+	Fix the Camera behaviour
 
 ENGINE:
 -----
 
+http://dmalloc.com/releases/
 http://cmldev.net/
 http://www.introgamedev.com/general_memory.html
 http://xania.org/200512/crt-heap-fragmentation-in-windows

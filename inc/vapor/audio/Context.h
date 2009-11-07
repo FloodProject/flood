@@ -20,6 +20,9 @@
 namespace vapor {
 	namespace audio {
 
+/** \addtogroup audio Audio 
+ * @{ */
+
 //-----------------------------------//
 
 /**
@@ -75,5 +78,7 @@ protected:
 //-----------------------------------//
 
 } } // end namespaces
+
+/** @} */
 
 #endif

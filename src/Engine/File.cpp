@@ -29,7 +29,7 @@ File::File(const std::string path, AccessMode::Enum e)
 //-----------------------------------//
 
 File::File(const char* path, AccessMode::Enum e)
-	: accessMode(e), path(path), file( nullptr )
+	: accessMode(e), path(path), file( nullptr ), closed( false )
 {
 	open();
 }
@@ -39,6 +39,20 @@ File::File(const char* path, AccessMode::Enum e)
 File::~File() 
 {
 	close();
+}
+
+//-----------------------------------//
+
+const std::string File::getFullPath() const
+{
+	// Get the full file path
+	const char* realPath = PHYSFS_getRealDir( path.c_str() );
+	
+	std::string fullPath( realPath );
+	fullPath.append( PHYSFS_getDirSeparator() );
+	fullPath.append( path );
+
+	return fullPath;
 }
 
 //-----------------------------------//
@@ -69,6 +83,7 @@ void File::open()
 	{
 		error( "vfs::file", "Could not open file '%s': %s",
 			path.c_str(), PHYSFS_getLastError() );
+		return;
 	}
 }
 

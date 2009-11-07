@@ -88,6 +88,13 @@ ComponentPtr Node::getComponent( const std::string& type )
 
 //-----------------------------------//
 
+const std::map< std::string, ComponentPtr >& Node::getComponents()
+{
+	return components;
+}
+
+//-----------------------------------//
+
 void Node::update( float delta )
 {
 	foreach( componentPair component, components )
@@ -102,6 +109,14 @@ TransformPtr Node::getTransform()
 {
 	return getComponent< Transform >( "Transform" );
 }
+
+//-----------------------------------//
+
+Transform* Node::getTransformPtr()
+{
+	return getTransform().get();
+}
+
 
 //-----------------------------------//
 

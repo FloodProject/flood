@@ -30,13 +30,11 @@ script::Script* Lua_Loader::decode(const File& file)
 {
 	std::vector<byte> text = file.read();
 
-	const std::string& path = file.getPath();
-
 	std::string str( text.begin(), text.end() );
 
 	script::Script* script;
 	script = new script::Script( str );
-	script->setURI( path );
+	script->setURI( file.getFullPath() );
 
 	return script;
 }

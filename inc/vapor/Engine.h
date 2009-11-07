@@ -20,6 +20,9 @@
 
 namespace vapor {
 
+/** \addtogroup Main */
+/** @{ */
+
 //-----------------------------------//
 
 /**
@@ -39,97 +42,104 @@ public:
 	// else you will have to call the methods manually, to initialize.
 	Engine(const std::string& app = "vaporApp", const char** argv = nullptr,
 		bool autoInit = true);
-		
+	
+	/// Destructor.
 	virtual ~Engine();
 
-	//-----------------------------------//
-	// Setup methods
-	//-----------------------------------//
+	/// \name Setup methods
+	/// Use these methods to setup the engine subsystems.
+	/// @{
 
-	// Initialize the engine subsystems.
+	/// Initialize the engine subsystems.
 	void init( bool createWindow = true );
 
-	// Sets up the global engine logger.
+	/// Sets up the global engine logger.
 	void setupLogger();
 
-	// Sets up the resource manager.
+	/// Sets up the resource manager.
 	void setupResourceManager();
 
-	// Sets up the default resource codecs.
+	/// Sets up the default resource codecs.
 	void setupResourceLoaders();
 
-	// Sets up the rendering device.
+	/// Sets up the rendering device.
 	void setupDevices( bool createWindow = true );
 
-	// Sets up the input devices.
+	/// Sets up the input devices.
 	void setupInput();
 
-	//-----------------------------------//
-	// Subsystem acessors
-	//-----------------------------------//
+	/// @}
 
-	// Gets the device.
+	/// \name Subsystem acessors
+	/// Use these methods to access the engine subsystems.
+	/// @{
+
+	/// Gets the device.
 	render::Device* getRenderDevice() const { return renderDevice; }
 
 #ifdef VAPOR_AUDIO_OPENAL
 
-	// Gets the audio device.
+	/// Gets the audio device.
 	audio::Device* getAudioDevice() const { return audioDevice; }
 
 #endif
 
-	// Gets the scene interface.
+	/// Gets the scene interface.
 	scene::ScenePtr getSceneManager() const { return sceneNode; }
 	
-	// Gets the scripting state.
+	/// Gets the scripting state.
 	script::State* getScriptState() const { return scriptState; }
 
-	// Gets the resources manager.
+	/// Gets the resources manager.
 	resources::ResourceManager* getResourceManager() const { return resourceManager; }
 
-	// Gets the main engine logger.
+	/// Gets the main engine logger.
 	log::Log* getLog() const { return log; }
 
-	// Gets the virtual filesystem.
+	/// Gets the virtual filesystem.
 	vfs::VFS* getVFS() const { return vfs; }
 
-	// Gets the input manager.
+	/// Gets the input manager.
 	input::InputManager* getInputManager() const { return &( renderDevice->getWindow()->getInputManager() ); }
+
+	/// @}
 
 protected:
 
 #ifdef VAPOR_AUDIO_OPENAL
 
-	// Audio device
+	/// Audio device
 	audio::Device* audioDevice;
 
 #endif
 
-	// Scene root node
+	/// Scene root node
 	scene::ScenePtr sceneNode;
 
-	// Rendering device
+	/// Rendering device
 	render::Device* renderDevice;
 
-	// Resource manager
+	/// Resource manager
 	resources::ResourceManager* resourceManager;
 
-	// Virtual filesystem
+	/// Virtual filesystem
 	vfs::VFS* vfs;
 
-	// Default logger
+	/// Default logger
 	log::Log* log;
 
-	// Scripting state
+	/// Scripting state
 	script::State* scriptState;
 
-	// Application name
+	/// Application name
 	std::string app;
 	
-	// Arguments
+	/// Arguments
 	const char** argv;
 };
 
 //-----------------------------------//
+
+/** @} */
 
 } // end namespace

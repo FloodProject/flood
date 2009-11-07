@@ -41,12 +41,18 @@ public:
 	//Listener* createListener();
 	//etc...
 
+	/// Updates all the entities recursively.
 	virtual void update( float delta );
 
+	/// Serializes the scene to a stream.
 	virtual const std::string save( int indent = 0 );
+
+	/// Gets a pointer to the named entity.
+	Node* getEntity( const std::string& name ) const;
 
 private:
 
+	// Updates all the transforms and bounding volumes of the scene nodes.
 	void updateTransformAndBV( NodePtr node, 
 		std::stack< math::Matrix4x3 >& transformStack );
 };

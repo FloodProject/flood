@@ -9,10 +9,11 @@
 #pragma once
 
 //---------------------------------------------------------------------//
-// C++ min/max templates
+// C++ min/max templates and numeric limits
 //---------------------------------------------------------------------//
 
 #include <algorithm>
+#include <limits>
 
 //---------------------------------------------------------------------//
 // C++ foreach construct
@@ -38,6 +39,7 @@
 	#pragma warning( push )
 	#pragma warning( disable : 4100 )
 	#pragma warning( disable : 4512 )
+	#pragma warning( disable : 4702 )
 	#include <fd/delegate.hpp>
 	#include <fd/delegate/bind.hpp>
 	#pragma warning( pop )

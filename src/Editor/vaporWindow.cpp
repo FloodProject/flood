@@ -8,7 +8,7 @@
 
 #include "vaporWindow.h"
 
-using namespace vapor;
+namespace vapor { namespace editor {
 
 //-----------------------------------//
 
@@ -115,3 +115,17 @@ input::InputManager& vaporWindow::getInputManager()
 {
 	return *im;
 }
+
+//-----------------------------------//
+
+void vaporWindow::processResize(const wxSize& size)
+{
+	settings.setHeight( size.GetX() );
+	settings.setWidth( size.GetY() );
+
+	handleWindowResize();
+}
+
+//-----------------------------------//
+
+} } // end namespaces

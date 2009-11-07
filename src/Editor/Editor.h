@@ -20,8 +20,12 @@
 #include "vaporControl.h"
 #include "SceneTreeCtrl.h"
 
+namespace vapor { namespace editor {
+
+//-----------------------------------//
+
 // Define a new application type, each program should derive a class from wxApp
-class MyApp : public wxApp
+class EditorApp : public wxApp
 {
 public:
     // override base class virtuals
@@ -36,12 +40,12 @@ public:
 //-----------------------------------//
 
 // Define a new frame type: this is going to be our main frame
-class MyFrame : public wxFrame
+class EditorFrame : public wxFrame
 {
 public:
     // ctor(s)
-    MyFrame(const wxString& title);
-	virtual ~MyFrame();
+    EditorFrame(const wxString& title);
+	virtual ~EditorFrame();
 
 protected:
 
@@ -64,7 +68,7 @@ protected:
 
 	vapor::Engine* engine;
 	SceneTreeCtrl* treeCtrl;
-	vaporControl* control;
+	vapor::editor::vaporControl* control;
 	wxBoxSizer* sizer;
 
 private:
@@ -92,3 +96,6 @@ enum
 	Toolbar_ToggleScene
 };
 
+//-----------------------------------//
+
+} } // end namespaces

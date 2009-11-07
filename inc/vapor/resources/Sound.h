@@ -45,33 +45,34 @@ class VAPOR_API Sound : public Resource
 {
 public:
 
+	/// Constructor.
 	Sound(const SoundFormat::Enum format, const int frequency, const std::vector<byte>& data);
 	virtual ~Sound();
 	
-	// Gets the frequency of the sound.
+	/// Gets the frequency of the sound.
 	const int getFrequency() const { return frequency; }
 
-	// Returns the format of the sound.
+	/// Returns the format of the sound.
 	SoundFormat::Enum getFormat() const { return format; }
 
-	// Gets a pointer to the buffer containing the data.
+	/// Gets a pointer to the buffer containing the data.
 	const std::vector<byte>& getBuffer() const { return dataBuffer; };
 
-	// Change the buffer containing the audio data.
+	/// Change the buffer containing the audio data.
 	void setBuffer(const std::vector<byte>& data) { dataBuffer = data; }
 
-	// Return the proper resource group for this resource.
+	/// Return the proper resource group for this resource.
 	ResourceGroup::Enum getResourceGroup() const { return ResourceGroup::Audio; }
 
 private:
 
-	// sound frequency
+	/// Sound frequency
 	int frequency;
 
-	// sound format
+	/// Sound format
 	SoundFormat::Enum format;
 
-	// holds the sound data
+	/// Holds the sound data
 	std::vector<byte> dataBuffer;
 };
 

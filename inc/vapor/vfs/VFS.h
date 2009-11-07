@@ -15,8 +15,13 @@
 #include "vapor/Platform.h"
 #include "vapor/vfs/File.h"
 
+/** \addtogroup virtual Virtual Filesystem 
+ * @{ */
+
 namespace vapor {
 	namespace vfs {
+
+//-----------------------------------//
 
 /**
  * Represents a virtual file system that will be used by all the other
@@ -34,25 +39,30 @@ class VAPOR_API VFS : private boost::noncopyable
 {
 public:
 
+	/// Constructs a new instance of the virtual filesystem..
 	VFS( const std::string& app, const char* argv0 = nullptr );
 	~VFS();
 
-	// Mount an archive into the virtual file system point.
+	/// Mount an archive into the virtual filesystem point.
 	bool mount(const std::string& path, const std::string& mount = "",
 		bool append = true);
 
 private:
 
-	// Logs the version and supported archive types.
+	/// Logs the version and supported archive types.
 	void log();
 
-	// Sets up some sensible default mount points.
+	/// Sets up some sensible default mount points.
 	void setDefaultConfig(const std::string& app);
 
-	// holds the mounted archives/directories in the filesystem
+	/// Holds the mounted archives/directories in the filesystem.
 	std::vector< std::string > mountPoints;
 };
 
+//-----------------------------------//
+
 } } // end namespaces
+
+/** @} */
 
 #endif

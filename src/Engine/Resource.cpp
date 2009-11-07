@@ -59,7 +59,7 @@ Resource::~Resource()
 
 //-----------------------------------//
 
-const std::string& Resource::getPath()
+const std::string& Resource::getURI()
 {
 	return uri;
 }

@@ -19,16 +19,21 @@
 	#include <GL/glx.h>
 #endif
 
-using namespace vapor;
+namespace vapor { namespace editor {
+
+//-----------------------------------//
+
 using namespace vapor::render;
 using namespace vapor::math;
 
 ////////////////////////////////////////////////////////////
 // Event table
 ////////////////////////////////////////////////////////////
+
 BEGIN_EVENT_TABLE(vaporControl, wxGLCanvas)
     EVT_IDLE(vaporControl::OnIdle)
     EVT_PAINT(vaporControl::OnPaint)
+	EVT_SIZE(vaporControl::OnSize)
 END_EVENT_TABLE()
 
 //-----------------------------------//
@@ -51,39 +56,67 @@ vaporControl::vaporControl(vapor::Engine* engine,
 
 vaporControl::~vaporControl()
 {
-	delete window;
+	//delete window;
 }
 
 //-----------------------------------//
 
 void vaporControl::OnUpdate()
 {
+	static math::Color bg( Colors::Black );
+	static int i = 0;
+
 	render::Device* device = engine->getRenderDevice();
 	
 	window->makeCurrent();
 
-	device->setClearColor(Colors::White);
+	device->setClearColor(bg);
 	device->clearTarget();
+
+	bg.r += 0.0001f; 
+	bg.g += 0.0003f;
+	bg.b += 0.0005f;
+
+	if( bg.r >= 1.0f ) bg.r = 0.0f;
+	if( bg.g >= 1.0f ) bg.g = 0.0f;
+	if( bg.b >= 1.0f ) bg.b = 0.0f;
+
+	//debug( "OnUpdate called %d", i++ );
 }
 
 //-----------------------------------//
 
 void vaporControl::OnPaint(wxPaintEvent& event)
 {
+	// Same as SetCurrent(wxGLContext)
+	window->makeCurrent();
+    
+	// From the PaintEvent docs: "the application must always create
+	// a wxPaintDC object, even if you do not use it."
+	// http://docs.wxwidgets.org/trunk/classwx_paint_event.html
+	wxPaintDC dc(this);
+	
 	OnUpdate();
 
 	window->update();
-	wxGLCanvas::OnPaint(event);
 }
 
 //-----------------------------------//
 
 void vaporControl::OnIdle(wxIdleEvent& WXUNUSED(event))
 {
-	OnUpdate();
-
-	window->update();
+	//Update();
 	Refresh();
+}
+
+//-----------------------------------//
+
+void vaporControl::OnSize(wxSizeEvent& event)
+{
+	wxSize size = event.GetSize();
+	debug( "new size: %d %d", size.GetX(), size.GetY() );
+
+	window->processResize( event.GetSize() );
 }
 
 //-----------------------------------//
@@ -96,10 +129,10 @@ void vaporControl::initControl()
 
 	info("vaporEditor", "Creating a new wxWidgets control");
 
-	// get the control size
+	// Get the size of the control.
 	wxSize size = GetSize();
 
-	// construct a settings object to pass to vapor
+	// Construct a Settings object to pass to vapor.
 	WindowSettings settings(size.GetX(), size.GetY());
 
 	window = new vaporWindow(settings, this);
@@ -115,7 +148,7 @@ void* vaporControl::getHandle()
 	void* handle;
 
 #ifdef __WXMSW__
-	// Handle for Windows systems
+	// Handle for Windows systems.
 	HWND hwnd = (HWND) GetHandle();
 	handle = hwnd;
 #else
@@ -127,3 +160,5 @@ void* vaporControl::getHandle()
 }
 
 //-----------------------------------//
+
+} } // end namespaces

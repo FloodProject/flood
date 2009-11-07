@@ -47,9 +47,8 @@ namespace ResourceGroup
 /**
  * Represents a generic resource that tipically is used to hold a piece
  * of data that is used by the various systems of the engine, for example
- * mesh, sounds, fonts, images, shaders, and other types of data.
- *
- * Each resource is identified by a URI (Uniform Resource Identifier),
+ * mesh, sounds, fonts, images, shaders, and other types of resource data.
+ * Each resource is identified by an URI (Uniform Resource Identifier),
  * that way we can add virtual resources (it could be used for various
  * things, like procedural content generation and to identify streaming
  * resource from a network connection).
@@ -71,7 +70,7 @@ public:
 	// void release();
 
 	// Gets the path that identifies this resource.
-	virtual const std::string& getPath();
+	virtual const std::string& getURI();
 
 	// Sets the URI of the resource.
 	virtual void setURI( const std::string& uri );

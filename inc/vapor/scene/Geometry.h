@@ -35,25 +35,25 @@ public:
 
 	virtual ~Geometry();
 
-	// Adds a new renderable to this geometry.
+	/// Adds a new renderable to this geometry.
 	void addRenderable( render::RenderablePtr rend, 
 		render::RenderGroup::Enum group = render::RenderGroup::Normal,
 		uint priority = 0 );
 
-	// Gets all the renderables in this geometry.
+	/// Gets all the renderables in this geometry.
 	const std::vector< render::RenderablePtr >& getRenderables( 
 		render::RenderGroup::Enum group = render::RenderGroup::Normal );
 
-	// Appends all the renderables of this geometry to the queue.
+	/// Appends all the renderables of this geometry to the queue.
 	void appendRenderables( render::RenderQueue& queue );
 
-	// Updates the geometry if needed.
+	/// Updates the geometry if needed.
 	virtual void update( float delta );
 
-	// Serializes this component to a stream.
+	/// Serializes this component to a stream.
 	virtual const std::string save(int indent = 0);
 
-	// Returns the name of this component.
+	/// Returns the name of this component.
 	virtual const std::string& getType() const;
 
 protected:

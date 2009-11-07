@@ -20,12 +20,15 @@
 #include <al.h>
 #include <alc.h>
 
+/** \addtogroup audio Audio 
+ * @{ */
+
 namespace vapor {
 	namespace audio {
 
 //-----------------------------------//
 
-/** 
+/**
  * Audio device to play sound data using OpenAL as backend.
  */
 
@@ -99,3 +102,4 @@ namespace vapor {
 
 } } // end namespaces
 
+/** @} */

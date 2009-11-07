@@ -10,9 +10,21 @@
 
 #ifdef VAPOR_SCRIPTING_LUA
 
-#include "vapor/Engine.h"
+#define VAPOR_USE_NAMESPACES
+#include "vapor/Headers.h"
 
-#include <luabind/luabind.hpp>
+
+#ifdef VAPOR_COMPILER_MSVC
+	#pragma warning( push )
+	#pragma warning( disable : 4127 )
+	#pragma warning( disable : 4100 )
+	#pragma warning( disable : 4512 )
+	#include <luabind/luabind.hpp>
+	#pragma warning( pop )
+#else
+	#include <luabind/luabind.hpp>
+#endif
+
 
 using namespace luabind;
 
@@ -24,24 +36,92 @@ namespace vapor {
 
 //-----------------------------------//
 
-void bindNode( lua_State* luaState )
+void bindEntity( lua_State* luaState )
 {
 	module( luaState )
 	[
-	class_< Node >( "Node" )
+	class_< Node >( "Entity" )
 		// Constructors
 		.def( constructor<>() )
 		.def( constructor< const std::string& >() )
 		// Methods
-		.def( "addComponent", &Node::addComponent )
-		.def( "update", &Node::update )
+		.def( "AddComponent", &Node::addComponent )
+		.def( "Update", &Node::update )
+		.def( "GetName", &Node::getName )
+		.def( "GetTransform", &Node::getTransformPtr )
 		// Properties
-		.property( "name", &Node::getName )
-		.property( "parent", &Node::getParent, &Node::setParent )
+		//.property( "Components", &Node::getComponents )
+		.property( "Name", &Node::getName )
+		.property( "Parent", &Node::getParent, &Node::setParent ),
+		// Fields
+		//.def_readwrite("a", &A::a)
+		//.def_readonly("a", &A::a)
+	
+	class_< Group, Node >( "Group" )
+		// Constructors
+		.def( constructor< const std::string& >() )
+		// Methods
+		.def( "Add", &Group::add )
+		// Properties
+		.property( "Count", &Group::count )
+		.property( "Children", &Group::getChildren ),
+		// Fields
+		//.def_readwrite("a", &A::a)
+		//.def_readonly("a", &A::a)
+	
+	class_< Scene, Group >( "Scene" )
+		// Constructors
+		.def( constructor<>() )
+		// Methods
+		//.def( "AddComponent", &Node::addComponent )
+		.def( "Update", &Scene::update )
+		.def( "GetEntity", &Scene::getEntity )
+		// Properties
+		.def( "GetName", &Scene::getName )
+		//.property( "parent", &Node::getParent, &Node::setParent )
 		// Fields
 		//.def_readwrite("a", &A::a)
 		//.def_readonly("a", &A::a)
 	];
+}
+
+//-----------------------------------//
+
+void bindComponents( lua_State* luaState )
+{
+	module( luaState )
+	[
+	class_< Component >( "Component" )
+		// Constructors
+		//.def( constructor<>() )
+		// Methods
+		.def( "Update", &Component::update )
+		// Properties
+		.property( "Type", &Component::getType )
+		.property( "Node", &Component::getNode, &Component::setNode ),
+	
+	class_< Transform, Component >( "Transform" )
+		// Constructors
+		.def( constructor<>() )
+		// Methods
+		.def( "Translate", (void(Transform::*)(float,float,float)) &Transform::translate )
+		.def( "Scale", (void(Transform::*)(float,float,float)) &Transform::scale )
+		.def( "Rotate", (void(Transform::*)(float,float,float)) &Transform::rotate )
+		// Properties
+		.property( "Count", &Group::count )
+		.property( "Children", &Group::getChildren )
+		// Fields
+		//.def_readwrite("a", &A::a)
+		//.def_readonly("a", &A::a)
+	];
+}
+
+//-----------------------------------//
+
+void bindScene( lua_State* luaState )
+{
+	bindEntity( luaState );
+	bindComponents( luaState );
 }
 
 //-----------------------------------//
@@ -72,7 +152,7 @@ void bindResourceManager( lua_State* luaState )
 		// Constructors
 		.def( constructor<>() )
 		// Methods
-		.def( "load", &ResourceManager::loadResource )
+		.def( "Load", &ResourceManager::loadResource )
 		//.def( "update", &Node::update )
 		// Properties
 		//.property( "name", &Node::getName )
@@ -85,13 +165,38 @@ void bindResourceManager( lua_State* luaState )
 
 //-----------------------------------//
 
+void bindMath( lua_State* luaState )
+{
+	module( luaState )
+	[
+	class_< Vector3 >( "Vector3" )
+		// Constructors
+		.def( constructor<>() )
+		.def( constructor<const float, const float, const float>() )
+		// Methods
+		//.def( "update", &Node::update )
+		// Properties
+		//.property( "name", &Node::getName )
+		//.property( "parent", &Node::getParent, &Node::setParent )
+		// Fields
+		.def_readwrite("X", &Vector3::x)
+		.def_readwrite("Y", &Vector3::y)
+		.def_readwrite("Z", &Vector3::z)
+		//.def_readonly("a", &A::a)
+	];
+}
+
+//-----------------------------------//
+
 void bindEngine( lua_State* luaState, Engine* engine )
 {
-	bindNode( luaState );
 	bindLogger( luaState );
 	bindResourceManager( luaState );
+	bindScene( luaState );
+	bindMath( luaState );
 
 	globals(luaState)["ResourceManager"] = engine->getResourceManager();
+	globals(luaState)["Scene"] = engine->getSceneManager().get();
 }
 
 //-----------------------------------//

@@ -30,7 +30,7 @@ public:
 
 	virtual void update( float delta );
 
-	virtual const std::string save(int indent = 0) { return ""; }
+	virtual const std::string save(int UNUSED(indent) = 0) { return ""; }
 
 	static std::shared_ptr<audio::Context> getContext(std::shared_ptr<Listener> ls);
 };

@@ -26,6 +26,8 @@
 // Scene-related Includes
 //-------------------------------------------------------------------------//
 
+#include <vapor/scene/Group.h>
+#include <vapor/scene/Scene.h>
 #include <vapor/scene/Camera.h>
 #include <vapor/scene/FirstPersonCamera.h>
 #include <vapor/scene/Sound.h>
@@ -60,6 +62,8 @@
 
 #include <vapor/gui/Overlay.h>
 #include <vapor/gui/Label.h>
+#include <vapor/gui/Window.h>
+#include <vapor/gui/Console.h>
 
 //-------------------------------------------------------------------------//
 // Scripting-related Includes
@@ -67,6 +71,12 @@
 
 #include <vapor/script/State.h>
 #include <vapor/script/Script.h>
+
+//-------------------------------------------------------------------------//
+// General Includes
+//-------------------------------------------------------------------------//
+
+#include <vapor/Engine.h>
 
 //-------------------------------------------------------------------------//
 // Namespace declarations

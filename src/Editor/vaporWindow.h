@@ -15,6 +15,10 @@
 
 #include <wx/glcanvas.h> 
 
+namespace vapor { namespace editor {
+
+//-----------------------------------//
+
 /**
  * Window implementation using the wxWidgets GUI framework. This will be used 
  * to integrate vapor rendering into wxWidgets-based applications, thus making
@@ -26,6 +30,8 @@
 
 class vaporWindow : public vapor::render::Window
 {
+	friend class vaporControl;
+
 public:
 
 	vaporWindow(const vapor::render::WindowSettings& settings, wxGLCanvas* canvas);
@@ -60,6 +66,9 @@ public:
 
 private:
 
+	// Processes a window resize.
+	void processResize(const wxSize& size);
+
 	// Opens a new window
 	bool open();
 
@@ -72,3 +81,7 @@ private:
 	// wxWidgets Input Manager
 	wx_InputManager *im;
 };
+
+//-----------------------------------//
+
+} } // end namespaces

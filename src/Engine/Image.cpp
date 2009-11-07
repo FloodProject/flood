@@ -31,7 +31,7 @@ namespace PixelFormat
 
 //-----------------------------------//
 
-Image::Image(const uint w, const uint h, PixelFormat::Enum pf)
+Image::Image(const ushort w, const ushort h, PixelFormat::Enum pf)
 	: width(w), height(h), pixelFormat(pf) 
 {
 }
