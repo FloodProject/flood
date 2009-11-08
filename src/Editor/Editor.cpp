@@ -10,6 +10,9 @@
 #include "ArtProvider.h"
 #include "toolbar_icons.h"
 
+#define VAPOR_USE_NAMESPACES
+#include <vapor/Headers.h>
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//
@@ -17,6 +20,8 @@ namespace vapor { namespace editor {
 using namespace vapor;
 using namespace vapor::math;
 using namespace vapor::render;
+using namespace vapor::resources;
+using namespace vapor::scene;
 
 //-----------------------------------//
 
@@ -30,8 +35,7 @@ using namespace vapor::render;
 BEGIN_EVENT_TABLE(EditorFrame, wxFrame)
     EVT_MENU(Editor_Quit,  EditorFrame::OnQuit)
     EVT_MENU(Editor_About, EditorFrame::OnAbout)
-
-	//EVT_COMMAND(Toolbar_ToggleScene, MyFrame::OnToolbarButtonClick)
+	//EVT_COMMAND(Toolbar_ToggleScene, EditorFrame::OnToolbarButtonClick)
 END_EVENT_TABLE()
 
 //-----------------------------------//
@@ -58,7 +62,7 @@ bool EditorApp::OnInit()
 	wxImage::AddHandler(new wxPNGHandler);
 
 	// add a new art provider for stock icons
-	wxArtProvider::Push(new ArtProvider);
+	//wxArtProvider::Push(new ArtProvider);
 
     // Create the main application window, provide a default size and show it.
 	// Unlike simple controls, frames are not shown automatically when created.
@@ -86,31 +90,25 @@ EditorFrame::EditorFrame(const wxString& title)
     // set the frame icon
     SetIcon(wxICON(sample));
 
+	sizer = new wxBoxSizer( wxHORIZONTAL );
+
+	// initialize the engine
+	initEngine();	
+
 	// create window basic widgets
 	createMenus();
 	createToolbar();
 	createStatusbar();
+	createNotebook();
 
-	// initialize the engine
-	initEngine();
-
-	sizer = new wxBoxSizer( wxHORIZONTAL );
-
-	treeCtrl = new SceneTreeCtrl(engine, this, ID_SceneTree,
-		wxDefaultPosition, wxSize(200, -1), wxTR_DEFAULT_STYLE);
-	
-	sizer->Add(treeCtrl, 0, wxALL|wxEXPAND, 0 );
-
-	// add a new vaporControl in the frame
-	sizer->Add(control, 1, wxALL|wxEXPAND, 0 );
-
-	SetSizerAndFit(sizer);
+	SetSizerAndFit( sizer );
 }
 
 //-----------------------------------//
 
 EditorFrame::~EditorFrame()
 {
+	vaporCtrl->Destroy();
 	delete engine;
 }
 
@@ -121,10 +119,81 @@ void EditorFrame::initEngine()
 	engine = new vapor::Engine("vaporEditor", nullptr, false);
 	engine->init( false );
 
-	control = new vaporControl(engine, this);
+	vaporCtrl = new vaporControl(engine, this);
+
+	// add a new vaporControl in the frame
+	sizer->Add( vaporCtrl, 1, wxALL|wxEXPAND, 0 );
 
 	engine->getRenderDevice()->init();
 	engine->setupInput();
+
+	engine->getVFS()->mount( "media" );
+
+	ScenePtr scene = engine->getSceneManager();
+	ResourceManager* rm = engine->getResourceManager();
+
+	ProgramPtr diffuse( new GLSL_Program( 
+			rm->loadResource< GLSL_Shader >( "diffuse.vs" ),
+			rm->loadResource< GLSL_Shader >( "diffuse.fs" ) ) );
+
+	// Create a new Camera
+	NodePtr camera( new Node( "MainCamera" ) );
+	CameraPtr cam( new FirstPersonCamera( engine->getInputManager(), engine->getRenderDevice() ) );
+	camera->addComponent( TransformPtr( new Transform() ) );
+	camera->addComponent( cam );
+	scene->add( camera );
+
+	MaterialPtr mat( new Material( "GridMaterial", diffuse ) );
+	NodePtr grid( new Node( "EditorGrid" ) );
+	grid->addComponent( TransformPtr( new Transform() ) );
+	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
+	scene->add( grid );
+
+	foreach( const RenderablePtr& rend, grid->getComponent<Geometry>("Grid")->getRenderables() )
+	{
+		rend->getMaterial()->setProgram( diffuse );
+	}
+}
+
+//-----------------------------------//
+
+void EditorFrame::createNotebook()
+{
+	notebookCtrl = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+
+	//-----------------------------------//
+
+	wxPanel* panelScene = new wxPanel( notebookCtrl, wxID_ANY, wxDefaultPosition, 
+		wxDefaultSize, wxTAB_TRAVERSAL );
+	
+	wxBoxSizer* panelSceneSizer = new wxBoxSizer( wxVERTICAL );
+	
+	sceneTreeCtrl = new SceneTreeCtrl(engine, panelScene, ID_SceneTree,
+		wxDefaultPosition, wxSize(220, -1), wxTR_DEFAULT_STYLE);
+
+	panelSceneSizer->Add( sceneTreeCtrl, 1, wxALL|wxEXPAND, 0 );
+
+	panelScene->SetSizerAndFit( panelSceneSizer );
+
+	notebookCtrl->AddPage( panelScene, wxT("Scene"), true );
+
+	sizer->Add(notebookCtrl, 0, wxALL|wxEXPAND, 0 );
+
+	//-----------------------------------//
+
+	wxPanel* panelResources = new wxPanel( notebookCtrl, wxID_ANY, wxDefaultPosition, 
+		wxDefaultSize, wxTAB_TRAVERSAL );
+	
+	wxBoxSizer* panelResourcesSizer = new wxBoxSizer( wxVERTICAL );
+	
+	resourcesTreeCtrl = new SceneTreeCtrl(engine, panelResources, ID_SceneTree,
+		wxDefaultPosition, wxSize(220, -1), wxTR_DEFAULT_STYLE);
+
+	panelResourcesSizer->Add( resourcesTreeCtrl, 1, wxALL|wxEXPAND, 0 );
+
+	panelResources->SetSizerAndFit( panelResourcesSizer );
+
+	notebookCtrl->AddPage( panelResources, wxT("Resources"), true );
 }
 
 //-----------------------------------//
@@ -167,18 +236,18 @@ void EditorFrame::createToolbar()
 {
 	wxToolBar* toolBar = this->CreateToolBar( wxTB_HORIZONTAL, wxID_ANY );
 	
-	//toolBar->AddTool( wxID_ANY, "New", wxMEMORY_BITMAP(page) );
-	//toolBar->AddTool( wxID_ANY, "Open", wxMEMORY_BITMAP(folder_explore) ); 
-	//toolBar->AddTool( wxID_ANY, "Save", wxMEMORY_BITMAP(disk) );
+	toolBar->AddTool( wxID_ANY, "New", wxMEMORY_BITMAP(page) );
+	toolBar->AddTool( wxID_ANY, "Open", wxMEMORY_BITMAP(folder_explore) ); 
+	toolBar->AddTool( wxID_ANY, "Save", wxMEMORY_BITMAP(disk) );
 	
 	toolBar->AddSeparator();
 
-	//toolBar->AddTool( Toolbar_ToggleScene, "Toogle Scene-tree visibility", wxMEMORY_BITMAP(application_side_tree) ); 
+	toolBar->AddTool( Toolbar_ToggleScene, "Toogle Scene-tree visibility", wxMEMORY_BITMAP(application_side_tree) ); 
 
 	toolBar->Realize();	
 
 	// connect events
-	//Bind(wxEVT_COMMAND_TOOL_CLICKED, &MyFrame::OnToolbarButtonClick, wxID_ANY );
+	//Bind(wxEVT_COMMAND_TOOL_CLICKED, &EditorFrame::OnToolbarButtonClick, wxID_ANY );
 }
 
 //-----------------------------------//
@@ -195,19 +264,19 @@ void EditorFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 
 void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 {
-	if( event.GetId() == Toolbar_ToggleScene )
-	{
-		if( treeCtrl->IsShown() )	
-			//treeCtrl->HideWithEffect(wxSHOW_EFFECT_SLIDE_TO_LEFT, 250);
-			treeCtrl->Hide();
-		else
-			treeCtrl->Show();
-			//treeCtrl->ShowWithEffect(wxSHOW_EFFECT_SLIDE_TO_RIGHT, 250);
+	//if( event.GetId() == Toolbar_ToggleScene )
+	//{
+	//	if( sceneTreeCtrl->IsShown() )	
+	//		//treeCtrl->HideWithEffect(wxSHOW_EFFECT_SLIDE_TO_LEFT, 250);
+	//		treeCtrl->Hide();
+	//	else
+	//		treeCtrl->Show();
+	//		//treeCtrl->ShowWithEffect(wxSHOW_EFFECT_SLIDE_TO_RIGHT, 250);
 
-		Update();
-	}
+	//	Update();
+	//}
 
-	event.Skip();
+	//event.Skip();
 }
 
 //-----------------------------------//

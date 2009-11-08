@@ -18,8 +18,8 @@
 #endif
 
 #include <vapor/Engine.h>
-
 #include <wx/glcanvas.h>
+#include "wx_InputManager.h"
 
 namespace vapor { namespace editor {
 
@@ -61,11 +61,16 @@ public:
 	// Add your frame updating code here.
 	void OnUpdate();
 
+	// Add your frame rendering code here.
+	void OnRender();
+
 	// Called then the app is idle. We will refresh the widget here
 	// to ensure maximum framerate is achieved.
 	void OnIdle(wxIdleEvent& event);
 	void OnPaint(wxPaintEvent& event);
 	void OnSize(wxSizeEvent& event);
+	void OnKeyDown(wxKeyEvent& event);
+	void OnKeyUp(wxKeyEvent& event);
 
 	// Gets the associated instance of the vaporEngine.
 	vapor::Engine* getEngine() { return engine; }
@@ -83,6 +88,9 @@ protected:
 
 	// vaporEngine's Window associated with this control.
 	vaporWindow* window;
+
+	// Holds an instance of the input manager.
+	wx_InputManager* im;
 
 	// Holds an instance to the vaporEngine.
 	vapor::Engine* engine;

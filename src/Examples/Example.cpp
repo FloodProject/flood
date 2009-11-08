@@ -9,7 +9,6 @@
 #include <vapor/PCH.h>
 
 #include "Example.h"
-#include "vapor/scene/Grid.h"
 
 #include <boost/lexical_cast.hpp>
 #include <boost/format.hpp>

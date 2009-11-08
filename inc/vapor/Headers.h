@@ -33,6 +33,7 @@
 #include <vapor/scene/Sound.h>
 #include <vapor/scene/Listener.h>
 #include <vapor/scene/Geometry.h>
+#include "vapor/scene/Grid.h"
 
 //-------------------------------------------------------------------------//
 // Render-related Includes

@@ -15,22 +15,23 @@
 #include "wx/wx.h"
 #include "wx/mstream.h"
 
-//#define wxMEMORY_IMAGE( name ) _wxConvertMemoryToImage( name, sizeof( name ) )
-//#define wxMEMORY_IMAGEEX( name, type ) _wxConvertMemoryToImage( name, sizeof( name ), type )
-//#define wxMEMORY_BITMAP( name ) _wxConvertMemoryToBitmap( name, sizeof( name ) )
-//#define wxMEMORY_BITMAPEX( name, type ) _wxConvertMemoryToBitmap( name, sizeof( name ), type )
-//
-//inline wxImage _wxConvertMemoryToImage(const unsigned char* data, int length, long type = wxBITMAP_TYPE_ANY )
-//{
-//	wxMemoryInputStream stream( data, length );
-//	return wxImage( stream, type, -1 );
-//}
-//
-//inline wxBitmap _wxConvertMemoryToBitmap(const unsigned char* data, int length, long type = wxBITMAP_TYPE_ANY )
-//{
-//	wxMemoryInputStream stream( data, length );
-//	return wxBitmap( wxImage( stream, type, -1 ), -1 );
-//}
+#define wxMEMORY_IMAGE( name ) _wxConvertMemoryToImage( name, sizeof( name ) )
+#define wxMEMORY_IMAGEEX( name, type ) _wxConvertMemoryToImage( name, sizeof( name ), type )
+#define wxMEMORY_BITMAP( name ) _wxConvertMemoryToBitmap( name, sizeof( name ) )
+#define wxMEMORY_BITMAPEX( name, type ) _wxConvertMemoryToBitmap( name, sizeof( name ), type )
+
+inline wxBitmap _wxConvertMemoryToImage(const unsigned char* data, int length, long type = wxBITMAP_TYPE_ANY )
+{
+	wxMemoryInputStream stream( data, length );
+	return wxImage( stream );
+
+}
+
+inline wxBitmap _wxConvertMemoryToBitmap(const unsigned char* data, int length, long type = wxBITMAP_TYPE_ANY )
+{
+	wxMemoryInputStream stream( data, length );
+	return wxBitmap(wxImage(stream ), -1);
+}
 
 static unsigned char application_side_tree[] = {
 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0x00, 0x00, 

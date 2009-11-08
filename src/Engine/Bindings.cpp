@@ -75,7 +75,7 @@ void bindEntity( lua_State* luaState )
 		// Methods
 		//.def( "AddComponent", &Node::addComponent )
 		.def( "Update", &Scene::update )
-		.def( "GetEntity", &Scene::getEntity )
+		.def( "GetEntity", &Scene::getEntityPtr )
 		// Properties
 		.def( "GetName", &Scene::getName )
 		//.property( "parent", &Node::getParent, &Node::setParent )

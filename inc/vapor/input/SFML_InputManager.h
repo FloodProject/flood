@@ -38,7 +38,7 @@ public:
 	SFML_InputManager();
 	virtual ~SFML_InputManager();
 
-	// Feeds an SFML input event to the input manager.
+	/// Feeds a SFML input event to the input manager.
 	void processSFMLEvent( const sf::Event& event );
 
 private:

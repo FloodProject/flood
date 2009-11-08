@@ -102,15 +102,22 @@ const std::string Scene::save(int ind)
 
 //-----------------------------------//
 
-Node* Scene::getEntity( const std::string& name ) const
+Node* Scene::getEntityPtr( const std::string& name ) const
+{
+	return getEntity(name).get();
+}
+
+//-----------------------------------//
+
+NodePtr Scene::getEntity( const std::string& name ) const
 {
 	foreach( NodePtr gnode, getChildren() )
 	{
 		if( gnode->getName() == name )
-			return gnode.get();
+			return gnode;
 	}
 
-	return nullptr;
+	return NodePtr();
 }
 
 //-----------------------------------//

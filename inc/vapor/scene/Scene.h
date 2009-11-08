@@ -47,8 +47,11 @@ public:
 	/// Serializes the scene to a stream.
 	virtual const std::string save( int indent = 0 );
 
-	/// Gets a pointer to the named entity.
-	Node* getEntity( const std::string& name ) const;
+	/// Gets a raw pointer to the named entity.
+	Node* getEntityPtr( const std::string& name ) const;
+
+	/// Gets a shared pointer to the named entity.
+	NodePtr getEntity( const std::string& name ) const;
 
 private:
 

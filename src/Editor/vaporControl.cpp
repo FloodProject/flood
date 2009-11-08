@@ -11,6 +11,9 @@
 
 #include "vapor/render/Window.h"
 
+#define VAPOR_USE_NAMESPACES
+#include <vapor/Headers.h>
+
 #ifdef __WXGTK__
 	#include <gdk/gdk.h>
 	#include <gtk/gtk.h>
@@ -34,6 +37,8 @@ BEGIN_EVENT_TABLE(vaporControl, wxGLCanvas)
     EVT_IDLE(vaporControl::OnIdle)
     EVT_PAINT(vaporControl::OnPaint)
 	EVT_SIZE(vaporControl::OnSize)
+	EVT_KEY_DOWN(vaporControl::OnKeyDown)
+	EVT_KEY_UP(vaporControl::OnKeyUp)
 END_EVENT_TABLE()
 
 //-----------------------------------//
@@ -46,77 +51,10 @@ vaporControl::vaporControl(vapor::Engine* engine,
 					long style,
 					const wxString&	name,
 					const wxPalette& palette)
-	: wxGLCanvas(parent, id, attribList, pos, size, style, name),
-		engine(engine)
+	: wxGLCanvas(parent, id, attribList, pos, size, style, name), engine(engine)
 {
 	initControl();
-}
-
-//-----------------------------------//
-
-vaporControl::~vaporControl()
-{
-	//delete window;
-}
-
-//-----------------------------------//
-
-void vaporControl::OnUpdate()
-{
-	static math::Color bg( Colors::Black );
-	static int i = 0;
-
-	render::Device* device = engine->getRenderDevice();
-	
-	window->makeCurrent();
-
-	device->setClearColor(bg);
-	device->clearTarget();
-
-	bg.r += 0.0001f; 
-	bg.g += 0.0003f;
-	bg.b += 0.0005f;
-
-	if( bg.r >= 1.0f ) bg.r = 0.0f;
-	if( bg.g >= 1.0f ) bg.g = 0.0f;
-	if( bg.b >= 1.0f ) bg.b = 0.0f;
-
-	//debug( "OnUpdate called %d", i++ );
-}
-
-//-----------------------------------//
-
-void vaporControl::OnPaint(wxPaintEvent& event)
-{
-	// Same as SetCurrent(wxGLContext)
-	window->makeCurrent();
-    
-	// From the PaintEvent docs: "the application must always create
-	// a wxPaintDC object, even if you do not use it."
-	// http://docs.wxwidgets.org/trunk/classwx_paint_event.html
-	wxPaintDC dc(this);
-	
-	OnUpdate();
-
-	window->update();
-}
-
-//-----------------------------------//
-
-void vaporControl::OnIdle(wxIdleEvent& WXUNUSED(event))
-{
-	//Update();
-	Refresh();
-}
-
-//-----------------------------------//
-
-void vaporControl::OnSize(wxSizeEvent& event)
-{
-	wxSize size = event.GetSize();
-	debug( "new size: %d %d", size.GetX(), size.GetY() );
-
-	window->processResize( event.GetSize() );
+	im = window->im;
 }
 
 //-----------------------------------//
@@ -139,6 +77,88 @@ void vaporControl::initControl()
 
 	device->setWindow( window );
 	device->setRenderTarget( window );
+
+	window->makeCurrent();
+}
+
+//-----------------------------------//
+
+vaporControl::~vaporControl()
+{
+	//delete window;
+}
+
+//-----------------------------------//
+
+void vaporControl::OnUpdate()
+{
+	engine->getSceneManager()->update( 0.001f );
+}
+
+//-----------------------------------//
+
+void vaporControl::OnRender()
+{
+	static math::Color bg( 0.0f, 0.10f, 0.25f );
+	
+	render::Device* device = engine->getRenderDevice();
+	
+	device->setClearColor(bg);
+	device->clearTarget();
+
+	ScenePtr scene = engine->getSceneManager();
+	CameraPtr cam = scene->getEntity("MainCamera")->getComponent<Camera>("Camera");
+
+	cam->render();
+}
+
+//-----------------------------------//
+
+void vaporControl::OnPaint(wxPaintEvent& event)
+{
+	// Same as SetCurrent(wxGLContext)
+	window->makeCurrent();
+    
+	// From the PaintEvent docs: "the application must always create
+	// a wxPaintDC object, even if you do not use it."
+	// http://docs.wxwidgets.org/trunk/classwx_paint_event.html
+	wxPaintDC dc(this);
+	
+	OnRender();
+
+	window->update();
+}
+
+//-----------------------------------//
+
+void vaporControl::OnIdle(wxIdleEvent& WXUNUSED(event))
+{
+	OnUpdate();
+	Refresh();
+}
+
+//-----------------------------------//
+
+void vaporControl::OnSize(wxSizeEvent& event)
+{
+	wxSize size = event.GetSize();
+	//debug( "new size: %d %d", size.GetX(), size.GetY() );
+
+	window->processResize( event.GetSize() );
+}
+
+//-----------------------------------//
+
+void vaporControl::OnKeyDown(wxKeyEvent& event)
+{
+	im->processKeyEvent( event, true );
+}
+
+//-----------------------------------//
+
+void vaporControl::OnKeyUp(wxKeyEvent& event)
+{
+	im->processKeyEvent( event, false );
 }
 
 //-----------------------------------//

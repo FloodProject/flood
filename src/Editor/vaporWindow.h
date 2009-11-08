@@ -59,7 +59,7 @@ public:
 	virtual void setCursorPosition( int x, int y );
 
 	// Gets the input manager.
-	virtual vapor::input::InputManager& getInputManager();
+	virtual input::InputManager& getInputManager();
 
 	// Makes this the current OpenGL context.
 	virtual void makeCurrent();

@@ -25,6 +25,7 @@ vaporWindow::vaporWindow(const render::WindowSettings& settings, wxGLCanvas* can
 vaporWindow::~vaporWindow()
 {
 	delete context;
+	delete im;
 }
 
 //-----------------------------------//
@@ -38,8 +39,7 @@ bool vaporWindow::open()
 	
 	if(!context)
 	{
-		error("window::wx", 
-			"Error creating wxWidgets OpenGL context");
+		error("window::wx", "Error creating wxWidgets OpenGL context");
 		return false;
 	}
 

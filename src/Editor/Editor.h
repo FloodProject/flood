@@ -19,6 +19,7 @@
 
 #include "vaporControl.h"
 #include "SceneTreeCtrl.h"
+#include <wx/notebook.h>
 
 namespace vapor { namespace editor {
 
@@ -49,6 +50,9 @@ public:
 
 protected:
 
+	// create notebook with tabs
+	void createNotebook();
+
 	// creates and populates the menus
 	void createMenus();
 
@@ -66,9 +70,22 @@ protected:
     void OnAbout(wxCommandEvent& event);
 	void OnToolbarButtonClick(wxCommandEvent& event);
 
+	// vaporEngine instance.
 	vapor::Engine* engine;
-	SceneTreeCtrl* treeCtrl;
-	vapor::editor::vaporControl* control;
+	
+	// Manages the Scene entities.
+	SceneTreeCtrl* sceneTreeCtrl;
+
+	// Manages the Resource files.
+	SceneTreeCtrl* resourcesTreeCtrl;
+
+	// Groups the above controllers.
+	wxNotebook* notebookCtrl;
+
+	// vaporEngine's wxWidgets control.
+	vaporControl* vaporCtrl;
+
+	// Main layout sizer.
 	wxBoxSizer* sizer;
 
 private:
