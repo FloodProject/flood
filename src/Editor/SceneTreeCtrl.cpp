@@ -7,10 +7,17 @@
 ************************************************************************/
 
 #include "SceneTreeCtrl.h"
+#include "ArtProvider.h"
 #include "icons.h"
 
 using namespace vapor;
 using namespace vapor::scene;
+
+namespace vapor { namespace editor {
+
+typedef std::pair< const std::string, ComponentPtr > componentPair;
+
+//-----------------------------------//
 
 ////////////////////////////////////////////////////////////
 // Event table
@@ -38,8 +45,8 @@ SceneTreeCtrl::SceneTreeCtrl(vapor::Engine* engine,
 
 	scene = engine->getSceneManager();
 	
-	initControl();
 	initIcons();
+	InitControl();
 
 	ExpandAll();
 }
@@ -53,19 +60,34 @@ SceneTreeCtrl::~SceneTreeCtrl()
 
 //-----------------------------------//
 
-void SceneTreeCtrl::initControl()
+void SceneTreeCtrl::InitControl()
 {
 	// Add the root node
 	wxString str(scene->getName());
-	wxTreeItemId root = AddRoot(str.Capitalize(), 0);
+	root = AddRoot(str.Capitalize(), 1);
+
+	ExpandAll();
 	
+	//updateScene();
+	scene->onNodeAdded += fd::bind( &SceneTreeCtrl::onNodeAdded, this );
+	scene->onNodeRemoved += fd::bind( &SceneTreeCtrl::onNodeRemoved, this );
+}
+
+//-----------------------------------//
+
+void SceneTreeCtrl::updateScene()
+{
 	// traverse the scene tree and add nodes
-	//Node* node = scene->children;
-	AppendItem(root, "Camera", 1);
-	AppendItem(root, "Light", 2);
-	AppendItem(root, "Sound", 3);
-	AppendItem(root, "Listener", 4);
-	AppendItem(root, "Terrain", 5);
+	foreach( NodePtr node, scene->getChildren() )
+	{
+		wxTreeItemId id = AppendItem( root, node->getName(), 0 );
+
+		foreach( componentPair component, node->getComponents() )
+		{
+			const std::string& type = component.second->getType();
+			AppendItem( id, type, componentIcons[type] );
+		}
+	}
 }
 
 //-----------------------------------//
@@ -79,12 +101,16 @@ void SceneTreeCtrl::initIcons()
 	// held in a regular C++ array. this way we don't need to package
 	// external image files with the executable. but we do need to
 	// convert the images from the array to an wxBitmap.
-	imageList->Add(wxMEMORY_BITMAP(sitemap_color));
-	imageList->Add(wxMEMORY_BITMAP(camera));
-	imageList->Add(wxMEMORY_BITMAP(lightbulb_off));
-	imageList->Add(wxMEMORY_BITMAP(sound));
-	imageList->Add(wxMEMORY_BITMAP(status_online));
-	imageList->Add(wxMEMORY_BITMAP(world));
+
+	imageList->Add(wxMEMORY_BITMAP(package));
+	componentIcons["Scene"] = imageList->Add(wxMEMORY_BITMAP(sitemap_color));
+	componentIcons["Camera"] = imageList->Add(wxMEMORY_BITMAP(camera));
+	componentIcons["Light"] = imageList->Add(wxMEMORY_BITMAP(lightbulb_off));
+	componentIcons["Sound"] = imageList->Add(wxMEMORY_BITMAP(sound));
+	componentIcons["Listener"] = imageList->Add(wxMEMORY_BITMAP(status_online));
+	componentIcons["Terrain"] = imageList->Add(wxMEMORY_BITMAP(world));
+	componentIcons["Transform"] = imageList->Add(wxMEMORY_BITMAP(vector_icon));
+	componentIcons["Grid"] = imageList->Add(wxMEMORY_BITMAP(grid_icon));
 
 	AssignImageList(imageList);
 }
@@ -110,3 +136,28 @@ void SceneTreeCtrl::onItemMenu(wxTreeEvent& event)
 }
 
 //-----------------------------------//
+
+void SceneTreeCtrl::onNodeAdded( const scene::GroupEvent& event )
+{
+	wxTreeItemId id = AppendItem( root, event.node->getName(), 0 );
+
+	foreach( componentPair component, event.node->getComponents() )
+	{
+		const std::string& type = component.second->getType();
+		AppendItem( id, type, componentIcons[type] );
+	}
+
+	ExpandAllChildren( id );
+}
+
+//-----------------------------------//
+
+void SceneTreeCtrl::onNodeRemoved( const scene::GroupEvent& event )
+{
+	//const std::string& type = component.second->getType();
+	//AppendItem( id, type, componentIcons[type] );
+}
+
+//-----------------------------------//
+
+} } // end namespaces

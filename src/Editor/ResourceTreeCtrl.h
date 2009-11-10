@@ -20,6 +20,7 @@
 #include <wx/treectrl.h> 
 
 #include <vapor/Engine.h>
+#include <vapor/resources/ResourceManager.h>
 
 namespace vapor { namespace editor {
 
@@ -33,21 +34,22 @@ namespace vapor { namespace editor {
  * properties of the associated scene nodes.
  */
 
-class SceneTreeCtrl : public wxTreeCtrl 
+class ResourceTreeCtrl : public wxTreeCtrl 
 {
 public:
 
-	SceneTreeCtrl(vapor::Engine* engine, 
+	ResourceTreeCtrl(vapor::Engine* engine, 
 					wxWindow* parent, wxWindowID id = wxID_ANY,
 					const wxPoint& pos	= wxDefaultPosition,
 					const wxSize& size = wxDefaultSize,
-					long style = wxTR_DEFAULT_STYLE | wxTR_EDIT_LABELS,
+					long style = wxTR_DEFAULT_STYLE | wxTR_HIDE_ROOT,
 					const wxValidator& validator = wxDefaultValidator, 
-					const wxString&	name = "SceneTreeCtrl");
+					const wxString&	name = "ResourceTreeCtrl");
 					
-	virtual ~SceneTreeCtrl();
+	virtual ~ResourceTreeCtrl();
 
-	void updateScene();
+	// Synchronizes the tree with the resources.
+	void updateTree();
 
 	vapor::Engine* getEngine() { return engine; }
 	
@@ -58,32 +60,35 @@ protected:
 	void InitControl();
 	void initIcons();
 
-	// wxWidgets events.
 	void onItemMenu(wxTreeEvent& event);
 
-	// vapor Scene-monitoring callbacks.
-	void onNodeAdded( const scene::GroupEvent& event );
-	void onNodeRemoved( const scene::GroupEvent& event );
+	// vapor Resource-monitoring callbacks.
+	void onResourceAdded( const resources::ResourceEvent& event );
+	void onResourceRemoved( const resources::ResourceEvent& event );
 
-	// scene associated this control
-	vapor::scene::ScenePtr scene;
+	// Resource manager associated this control.
+	resources::ResourceManager* rm;
 
-	// holds the engine instance
+	// Holds an instance of the engine.
 	vapor::Engine* engine;
 
 	wxImageList* imageList;
 
 	wxTreeItemId root;
 
-	std::map< std::string, int > componentIcons;
+	//int blankImage;
+
+	std::map< resources::ResourceGroup::Enum, wxTreeItemId > resourceGroupTreeIds;
+
+	std::map< resources::ResourceGroup::Enum, int > resourceGroupIcons;
 
 	DECLARE_EVENT_TABLE()
 };
 
 enum 
 {
-	ID_SceneTree,
-	ID_MenuSceneNodeDelete = wxID_DELETE
+	ID_ResourceTree,
+	//ID_MenuSceneNodeDelete = wxID_DELETE
 };
 
 //-----------------------------------//

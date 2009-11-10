@@ -13,7 +13,7 @@ namespace vapor { namespace editor {
 //-----------------------------------//
 
 vaporWindow::vaporWindow(const render::WindowSettings& settings, wxGLCanvas* canvas)
-	:	render::Window(settings), canvas(canvas), context(nullptr)
+	:	render::Window(settings), canvas(canvas), context(nullptr), mouseCaptured( false )
 {
 	open();
 
@@ -90,16 +90,27 @@ void vaporWindow::setTitle(const std::string& UNUSED(title))
 
 //-----------------------------------//
 
-void vaporWindow::setCursorState(bool UNUSED(state))
+void vaporWindow::setCursorState(bool mouseVisible)
 {
-	
+	if( !mouseVisible )
+	{
+		mouseCaptured = true;
+		canvas->CaptureMouse();
+		canvas->SetCursor( wxCursor( wxCURSOR_BLANK ) );
+	}
+	else
+	{
+		mouseCaptured = false;
+		canvas->ReleaseMouse();
+		canvas->SetCursor( wxNullCursor );
+	}
 }
 
 //-----------------------------------//
 
 bool vaporWindow::getCursorState() const
 {
-	return false;
+	return !mouseCaptured;
 }
 
 //-----------------------------------//
@@ -120,8 +131,8 @@ input::InputManager& vaporWindow::getInputManager()
 
 void vaporWindow::processResize(const wxSize& size)
 {
-	settings.setHeight( size.GetX() );
-	settings.setWidth( size.GetY() );
+	settings.setWidth( size.GetX() );
+	settings.setHeight( size.GetY() );
 
 	handleWindowResize();
 }

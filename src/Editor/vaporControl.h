@@ -71,6 +71,8 @@ public:
 	void OnSize(wxSizeEvent& event);
 	void OnKeyDown(wxKeyEvent& event);
 	void OnKeyUp(wxKeyEvent& event);
+	void OnMouseEvent(wxMouseEvent& event);
+	void OnMouseCaptureLost(wxMouseCaptureLostEvent& event);
 
 	// Gets the associated instance of the vaporEngine.
 	vapor::Engine* getEngine() { return engine; }
@@ -81,7 +83,7 @@ protected:
 	void setEngine(vapor::Engine* engine) { this->engine = engine; }
 
 	// Initializes the control.
-	void initControl();
+	void InitControl();
 
 	// Returns the window handle of this control.
 	void* getHandle();

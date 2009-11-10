@@ -9,9 +9,12 @@
 #include "Editor.h"
 #include "ArtProvider.h"
 #include "toolbar_icons.h"
+#include "icons.h"
 
 #define VAPOR_USE_NAMESPACES
 #include <vapor/Headers.h>
+
+#include "vapor/render/Quad.h"
 
 namespace vapor { namespace editor {
 
@@ -35,6 +38,7 @@ using namespace vapor::scene;
 BEGIN_EVENT_TABLE(EditorFrame, wxFrame)
     EVT_MENU(Editor_Quit,  EditorFrame::OnQuit)
     EVT_MENU(Editor_About, EditorFrame::OnAbout)
+	EVT_MENU(Toolbar_ToogleConsole, EditorFrame::OnToolbarButtonClick)
 	//EVT_COMMAND(Toolbar_ToggleScene, EditorFrame::OnToolbarButtonClick)
 END_EVENT_TABLE()
 
@@ -88,7 +92,7 @@ EditorFrame::EditorFrame(const wxString& title)
        : wxFrame(nullptr, wxID_ANY, title), engine( nullptr )
 {
     // set the frame icon
-    SetIcon(wxICON(sample));
+    SetIcon( wxIcon( "editor" ) );
 
 	sizer = new wxBoxSizer( wxHORIZONTAL );
 
@@ -102,6 +106,10 @@ EditorFrame::EditorFrame(const wxString& title)
 	createNotebook();
 
 	SetSizerAndFit( sizer );
+
+	codeEvaluator = new ConsoleFrame( engine, this, "Lua Evaluator" );
+
+	createScene();
 }
 
 //-----------------------------------//
@@ -126,7 +134,12 @@ void EditorFrame::initEngine()
 
 	engine->getRenderDevice()->init();
 	engine->setupInput();
+}
 
+//-----------------------------------//
+
+void EditorFrame::createScene()
+{
 	engine->getVFS()->mount( "media" );
 
 	ScenePtr scene = engine->getSceneManager();
@@ -153,6 +166,21 @@ void EditorFrame::initEngine()
 	{
 		rend->getMaterial()->setProgram( diffuse );
 	}
+
+	NodePtr quad( new Node( "quad" ) );
+	quad->addComponent( TransformPtr( new Transform() ) );
+	GeometryPtr geom( new Geometry() );
+	geom->addRenderable( QuadPtr( new Quad( Dimension( 100, 100 ), mat ) ), RenderGroup::Overlays );
+	quad->addComponent( geom );
+	quad->getTransform()->translate( -300.0f, 220.0f, 0.0f );
+
+	foreach( const RenderablePtr& rend, quad->getComponent<Geometry>("Geometry")->getRenderables() )
+	{
+		rend->getMaterial()->setProgram( diffuse );
+	}
+
+	ScriptPtr lua = rm->loadResource< Script >( "teste.lua" );
+	engine->getScriptState()->registerScript( lua );
 }
 
 //-----------------------------------//
@@ -169,7 +197,7 @@ void EditorFrame::createNotebook()
 	wxBoxSizer* panelSceneSizer = new wxBoxSizer( wxVERTICAL );
 	
 	sceneTreeCtrl = new SceneTreeCtrl(engine, panelScene, ID_SceneTree,
-		wxDefaultPosition, wxSize(220, -1), wxTR_DEFAULT_STYLE);
+		wxDefaultPosition, wxSize(220, -1) );
 
 	panelSceneSizer->Add( sceneTreeCtrl, 1, wxALL|wxEXPAND, 0 );
 
@@ -186,10 +214,10 @@ void EditorFrame::createNotebook()
 	
 	wxBoxSizer* panelResourcesSizer = new wxBoxSizer( wxVERTICAL );
 	
-	resourcesTreeCtrl = new SceneTreeCtrl(engine, panelResources, ID_SceneTree,
-		wxDefaultPosition, wxSize(220, -1), wxTR_DEFAULT_STYLE);
+	resourceTreeCtrl = new ResourceTreeCtrl(engine, panelResources, ID_SceneTree,
+		wxDefaultPosition, wxSize(220, -1) );
 
-	panelResourcesSizer->Add( resourcesTreeCtrl, 1, wxALL|wxEXPAND, 0 );
+	panelResourcesSizer->Add( resourceTreeCtrl, 1, wxALL|wxEXPAND, 0 );
 
 	panelResources->SetSizerAndFit( panelResourcesSizer );
 
@@ -242,7 +270,12 @@ void EditorFrame::createToolbar()
 	
 	toolBar->AddSeparator();
 
-	toolBar->AddTool( Toolbar_ToggleScene, "Toogle Scene-tree visibility", wxMEMORY_BITMAP(application_side_tree) ); 
+	toolBar->AddTool( Toolbar_ToogleConsole, "Open Console scripting", 
+		wxMEMORY_BITMAP(application_xp_terminal) ); 
+
+	toolBar->AddSeparator();
+
+	toolBar->AddTool( wxID_ANY, "Play", wxMEMORY_BITMAP(resultset_next) );
 
 	toolBar->Realize();	
 
@@ -264,6 +297,11 @@ void EditorFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 
 void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 {
+	if( event.GetId() == Toolbar_ToogleConsole )
+	{
+		codeEvaluator->Show( !codeEvaluator->IsShown() );
+		codeEvaluator->SetFocus();
+	}
 	//if( event.GetId() == Toolbar_ToggleScene )
 	//{
 	//	if( sceneTreeCtrl->IsShown() )	

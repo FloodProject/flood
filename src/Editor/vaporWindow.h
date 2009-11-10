@@ -80,6 +80,9 @@ private:
 
 	// wxWidgets Input Manager
 	wx_InputManager *im;
+
+	// Is the mouse cursor captured?
+	bool mouseCaptured;
 };
 
 //-----------------------------------//

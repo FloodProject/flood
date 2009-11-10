@@ -39,6 +39,8 @@ BEGIN_EVENT_TABLE(vaporControl, wxGLCanvas)
 	EVT_SIZE(vaporControl::OnSize)
 	EVT_KEY_DOWN(vaporControl::OnKeyDown)
 	EVT_KEY_UP(vaporControl::OnKeyUp)
+	EVT_MOUSE_EVENTS(vaporControl::OnMouseEvent)
+	EVT_MOUSE_CAPTURE_LOST(vaporControl::OnMouseCaptureLost)
 END_EVENT_TABLE()
 
 //-----------------------------------//
@@ -50,16 +52,23 @@ vaporControl::vaporControl(vapor::Engine* engine,
 					const wxSize& size,
 					long style,
 					const wxString&	name,
-					const wxPalette& palette)
+					const wxPalette& WXUNUSED(pallete))
 	: wxGLCanvas(parent, id, attribList, pos, size, style, name), engine(engine)
 {
-	initControl();
+	InitControl();
 	im = window->im;
 }
 
 //-----------------------------------//
 
-void vaporControl::initControl()
+vaporControl::~vaporControl()
+{
+	//delete window;
+}
+
+//-----------------------------------//
+
+void vaporControl::InitControl()
 {
 	if(!engine) return;
 
@@ -83,9 +92,10 @@ void vaporControl::initControl()
 
 //-----------------------------------//
 
-vaporControl::~vaporControl()
+void vaporControl::OnMouseCaptureLost(wxMouseCaptureLostEvent& WXUNUSED(event))
 {
-	//delete window;
+	window->mouseCaptured = false;
+	SetCursor( wxNullCursor );
 }
 
 //-----------------------------------//
@@ -93,6 +103,7 @@ vaporControl::~vaporControl()
 void vaporControl::OnUpdate()
 {
 	engine->getSceneManager()->update( 0.001f );
+	engine->getScriptState()->update( 0.001f );
 }
 
 //-----------------------------------//
@@ -100,6 +111,9 @@ void vaporControl::OnUpdate()
 void vaporControl::OnRender()
 {
 	static math::Color bg( 0.0f, 0.10f, 0.25f );
+	//bg.r += 0.0001;
+	//bg.g += 0.0002;
+	//bg.b += 0.0003;
 	
 	render::Device* device = engine->getRenderDevice();
 	
@@ -114,7 +128,7 @@ void vaporControl::OnRender()
 
 //-----------------------------------//
 
-void vaporControl::OnPaint(wxPaintEvent& event)
+void vaporControl::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
 	// Same as SetCurrent(wxGLContext)
 	window->makeCurrent();
@@ -123,7 +137,7 @@ void vaporControl::OnPaint(wxPaintEvent& event)
 	// a wxPaintDC object, even if you do not use it."
 	// http://docs.wxwidgets.org/trunk/classwx_paint_event.html
 	wxPaintDC dc(this);
-	
+
 	OnRender();
 
 	window->update();
@@ -142,7 +156,7 @@ void vaporControl::OnIdle(wxIdleEvent& WXUNUSED(event))
 void vaporControl::OnSize(wxSizeEvent& event)
 {
 	wxSize size = event.GetSize();
-	//debug( "new size: %d %d", size.GetX(), size.GetY() );
+	debug( "new size: %d %d", size.GetX(), size.GetY() );
 
 	window->processResize( event.GetSize() );
 }
@@ -159,6 +173,16 @@ void vaporControl::OnKeyDown(wxKeyEvent& event)
 void vaporControl::OnKeyUp(wxKeyEvent& event)
 {
 	im->processKeyEvent( event, false );
+}
+
+//-----------------------------------//
+
+void vaporControl::OnMouseEvent(wxMouseEvent& event)
+{
+	if( event.ButtonDown( wxMOUSE_BTN_LEFT ) )
+		SetFocus();
+	
+	im->processMouseEvent( event );
 }
 
 //-----------------------------------//

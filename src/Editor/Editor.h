@@ -19,6 +19,9 @@
 
 #include "vaporControl.h"
 #include "SceneTreeCtrl.h"
+#include "ResourceTreeCtrl.h"
+#include "ConsoleFrame.h"
+
 #include <wx/notebook.h>
 
 namespace vapor { namespace editor {
@@ -50,6 +53,9 @@ public:
 
 protected:
 
+	// Create the editor Scene.
+	void createScene();
+
 	// create notebook with tabs
 	void createNotebook();
 
@@ -77,7 +83,7 @@ protected:
 	SceneTreeCtrl* sceneTreeCtrl;
 
 	// Manages the Resource files.
-	SceneTreeCtrl* resourcesTreeCtrl;
+	ResourceTreeCtrl* resourceTreeCtrl;
 
 	// Groups the above controllers.
 	wxNotebook* notebookCtrl;
@@ -87,6 +93,8 @@ protected:
 
 	// Main layout sizer.
 	wxBoxSizer* sizer;
+
+	ConsoleFrame* codeEvaluator;
 
 private:
 
@@ -109,8 +117,9 @@ enum
     // (where it is special and put into the "Apple" menu)
     Editor_About = wxID_ABOUT,
 
-	// toolbar buttons
-	Toolbar_ToggleScene
+	// Toolbar buttons
+	Toolbar_ToggleScene,
+	Toolbar_ToogleConsole
 };
 
 //-----------------------------------//

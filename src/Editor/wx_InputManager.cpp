@@ -43,6 +43,58 @@ void wx_InputManager::processKeyEvent( const wxKeyEvent& event, bool keyDown )
 
 //-----------------------------------//
 
+void wx_InputManager::processMouseEvent( const wxMouseEvent& event )
+{
+	// Mouse motion
+	if( event.Moving() )
+	{
+		MouseMoveEvent me( event.GetX(), event.GetY() );
+		processEvent( me );
+	} 
+	
+	// Mouse button
+	else if( event.IsButton() )
+	{
+		MouseButton::Enum button;
+
+		switch( event.GetButton() )
+		{
+		case wxMOUSE_BTN_LEFT:
+			button = MouseButton::Left;
+		case wxMOUSE_BTN_RIGHT:
+			button = MouseButton::Right;
+		case wxMOUSE_BTN_MIDDLE:
+			button = MouseButton::Middle;
+		case wxMOUSE_BTN_AUX1:
+			button = MouseButton::Mouse4;
+		case wxMOUSE_BTN_AUX2:
+			button = MouseButton::Mouse5;
+		}
+
+		MouseButtonEvent mb( event.GetX(), event.GetY(), button, 
+			( event.ButtonDown() ) ? MouseEventType::MousePress : MouseEventType::MouseRelease );
+		processEvent( mb );
+	}
+
+	else if( event.GetWheelRotation() != 0 )
+	{
+		MouseWheelEvent mwe( event.GetWheelRotation() );
+		processEvent( mwe );
+	}
+
+	else if( event.Entering() )
+	{
+		warn( "wx::input", "Mouse entering events still not implemented" );
+	}
+
+	else if( event.Leaving() )
+	{
+		warn( "wx::input", "Mouse leaving events still not implemented" );
+	}
+}
+
+//-----------------------------------//
+
 input::Keys::Enum wx_InputManager::convertKeyEnum( int keyCode )
 {
 	// From the wxWidgets docs:
@@ -50,10 +102,10 @@ input::Keys::Enum wx_InputManager::convertKeyEnum( int keyCode )
 	// and that the range 128 - 255 is reserved for the extended ASCII characters 
 	// (which are not really standard and thus should be avoid in portable apps!)."
 
-	if( (keyCode >= 'A') && (keyCode >= 'Z') )
+	if( (keyCode >= 'A') && (keyCode <= 'Z') )
 		return static_cast<Keys::Enum>( keyCode );
 	
-	if( (keyCode >= '1') && (keyCode >= '9') )
+	if( (keyCode >= '1') && (keyCode <= '9') )
 		return static_cast<Keys::Enum>( keyCode );
 
 	switch( keyCode )
