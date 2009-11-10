@@ -144,6 +144,7 @@ void FirstPersonCamera::registerCallbacks()
 		mouse->onMouseMove += fd::bind( &FirstPersonCamera::onMouseMove, this );
 		mouse->onMouseButtonPress += fd::bind( &FirstPersonCamera::onButtonPressed, this );
 		mouse->onMouseButtonRelease += fd::bind( &FirstPersonCamera::onButtonReleased, this );
+		mouse->onMouseWheelMove += fd::bind( &FirstPersonCamera::onMouseWheel, this );
 	}
 }
 
@@ -225,6 +226,14 @@ void FirstPersonCamera::onKeyReleased( const KeyEvent& keyEvent )
 
 //-----------------------------------//
 
+void FirstPersonCamera::onMouseWheel( const input::MouseWheelEvent& event )
+{
+	//getNode()->getTransform()	
+	//transform->translate( forwardVector * event.delta );
+}
+
+//-----------------------------------//
+
 void FirstPersonCamera::onMouseMove( const MouseMoveEvent& moveEvent )
 {
 	render::Window* window = renderDevice->getWindow();
@@ -255,7 +264,7 @@ void FirstPersonCamera::onButtonReleased( const MouseButtonEvent& buttonEvent )
 
 //-----------------------------------//
 
-void FirstPersonCamera::centerCursor()
+void FirstPersonCamera::centerCursor( )
 {
 	render::Window* window = renderDevice->getWindow();
 

@@ -98,7 +98,7 @@ State::~State()
 
 //-----------------------------------//
 
-void State::execute( Script* script )
+bool State::execute( Script* script )
 {
 	// From the Lua C API docs:
 	//	"It returns 0 if there are no errors or 1 in case of errors."
@@ -108,15 +108,27 @@ void State::execute( Script* script )
 	{
 		// An error has occured so we need to handle it.
 		handleError();
+		return false;
 	}
+
+	return true;
 }
 
 //-----------------------------------//
 
-void State::execute( const std::string& source )
+bool State::execute( const std::string& source )
 {
 	// Send the source code to Lua.
-	luaL_dostring( luaState, source.c_str() );
+	int status = luaL_dostring( luaState, source.c_str() );
+
+	if( status == 1 )
+	{
+		// An error has occured so we need to handle it.
+		handleError();
+		return false;
+	}
+
+	return true;
 }
 
 //-----------------------------------//
@@ -135,10 +147,8 @@ void State::handleError()
 	// In that case, Lua will push an error message to the stack and we 
 	// must retrieve it and correct the stack.
 
-	std::string err = lua_tostring( luaState, -1 );
+	lastError = lua_tostring( luaState, -1 );
 	lua_pop( luaState, 1 );
-
-	debug( "%s", err.c_str() );
 }
 
 //-----------------------------------//
@@ -168,6 +178,11 @@ void State::update( float deltaTime )
 	{
 		script->execute();
 	}
+}
+
+const std::string& State::getLastError() const
+{
+	return lastError;
 }
 
 //-----------------------------------//

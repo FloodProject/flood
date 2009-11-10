@@ -37,6 +37,15 @@ int Group::add( NodePtr child )
 
 	child->setParent( Node::shared_from_this() );
 	children.push_back( child );
+
+	if( !onNodeAdded.empty() )
+	{
+		GroupEvent event;
+		event.node = child;
+
+		onNodeAdded( event );
+	}
+	
 	return children.size() - 1;
 }
 
@@ -53,6 +62,15 @@ int Group::insert( int i, NodePtr child )
 bool Group::remove( int i )
 {
 	// TODO
+
+	//if( !onNodeRemoved.empty() )
+	//{
+	//	GroupEvent event;
+	//	event.node = child;
+
+	//	onNodeRemoved( event );
+	//}
+
 	return false;
 }
 

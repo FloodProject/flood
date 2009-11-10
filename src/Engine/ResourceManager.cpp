@@ -47,6 +47,13 @@ ResourceManager::~ResourceManager()
 
 //-----------------------------------//
 
+const std::map< std::string, ResourcePtr >& ResourceManager::getResources()
+{
+	return resources;
+}
+
+//-----------------------------------//
+
 ResourcePtr ResourceManager::loadResource(const std::string& path)
 {
 	// check if the resource is already loaded
@@ -93,6 +100,15 @@ ResourcePtr ResourceManager::loadResource(const std::string& path)
 		return ResourcePtr();
 	}
 
+	// Send callback notifications.
+	if( !onResourceAdded.empty() )
+	{
+		ResourceEvent event;
+		event.name = path;
+		event.resource = res;
+		onResourceAdded( event );
+	}
+
 	// register the decoded resource in the map
 	info("resources", "Loading resource '%s'", path.c_str());
 	resources[path] = res;
@@ -125,6 +141,15 @@ void ResourceManager::removeResource(ResourcePtr res)
 	{
 		if(it->second == res) 
 		{
+			// Send callback notifications.
+			if( !onResourceRemoved.empty() )
+			{
+				ResourceEvent event;
+				event.resource = res;
+				//event.name = ;
+				onResourceRemoved( event );
+			}
+
 			resources.erase(it);
 			return;
 		}
@@ -148,6 +173,12 @@ void ResourceManager::registerLoader(ResourceLoader* loader)
 	{
 		resourceLoaders[*it] = loader;
 		it++;
+	}
+
+	// Send callback notifications.
+	if( !onResourceLoaderRegistered.empty() )
+	{
+		onResourceLoaderRegistered( loader );
 	}
 
 	info( "resources", "Registering resource loader '%s'", 

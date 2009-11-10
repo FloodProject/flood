@@ -114,13 +114,14 @@ void Camera::setupProjection()
 {
 	if( projection == Projection::Perspective )
 	{
-		projectionMatrix = Matrix4x4::createPerspectiveProjection( fov, getAspectRatio(), near_, far_ );
+		projectionMatrix = Matrix4x4::createPerspectiveProjection( 
+			fov, getAspectRatio(), near_, far_ );
 	}
 	else
 	{
 		projectionMatrix = Matrix4x4::createOrthographicProjection( 
-			0.0, target->getSettings().getWidth(),
-			0.0, target->getSettings().getHeight(),
+			0.0, width,
+			0.0, height,
 			near_, far_ );
 	}
 
