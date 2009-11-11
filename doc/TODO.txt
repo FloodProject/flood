@@ -12,17 +12,41 @@ Add a custom resource type
 SERVER:
 -------
 
-Near TODO:
+EDITOR:
+-------
 
-	Skybox component
-	Console GUI widget
-	Per-script Lua state
-	Fix Overlays positioning
-	Fix Lua state closing
-	Fix the Camera behaviour
+Make the update logic smarter (no 50% CPU hog)
+See about integrating wxLua in the editor
+Hook up the renaming of Scene node labels
+Override the print method of Lua
+Console clicks should not change the insertion point
+A readline type of library would be kind of nice
+And add some highlighting to it, it's boring now.
+
+DONE:
+
+Add resource events in the ResourceManager (DONE)	
+Change scripting background to black (DONE)
+Make the scripting evaluate line-a-line (DONE)
+Add scene events in the Scene node (DONE)
+
+	
+http://wxlua.sourceforge.net/
+http://news.gmane.org/gmane.comp.lib.wxwidgets.wxlua.user
+	
+
+Near TODO:
+----------
+
+Skybox component
+Console GUI widget
+Per-script Lua state
+Fix Overlays positioning
+Fix Lua state closing
+Fix the Camera behaviour
 
 ENGINE:
------
+------
 
 http://dmalloc.com/releases/
 http://cmldev.net/
