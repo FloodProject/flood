@@ -58,11 +58,12 @@ protected:
 	void checkControls( double delta );
 
 	// Input callback functions.
-	void onKeyPressed( const input::KeyEvent& keyEvent );
-	void onKeyReleased( const input::KeyEvent& keyEvent );
-	void onMouseMove( const input::MouseMoveEvent& moveEvent );
-	void onButtonPressed( const input::MouseButtonEvent& buttonEvent );
-	void onButtonReleased( const input::MouseButtonEvent& buttonEvent );
+	void onKeyPressed( const input::KeyEvent& event );
+	void onKeyReleased( const input::KeyEvent& event );
+	void onMouseMove( const input::MouseMoveEvent& event );
+	void onMouseWheel( const input::MouseWheelEvent& event );
+	void onButtonPressed( const input::MouseButtonEvent& event );
+	void onButtonReleased( const input::MouseButtonEvent& event );
 
 	// Restrict camera movement on the X-axis.
 	bool clampMovementX;

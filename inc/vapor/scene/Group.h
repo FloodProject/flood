@@ -17,6 +17,20 @@ namespace vapor {
 //-----------------------------------//
 
 /**
+ * This event gets sent out whenever an operation that has the corresponding
+ * delegate declared in the Group class is executed. Examples of such opera-
+ * tions are adding / removing nodes from the group. This can be useful when
+ * monitoring of scene changes is needed (for example editor applications).
+ */
+
+struct GroupEvent
+{
+	NodePtr node;
+};
+
+//-----------------------------------//
+
+/**
  * Groups are nodes that have the special property of being able to be
  * attached to each other. If you attach a node to another node, they will
  * be in a hierarchical relationship and the parent node will influence the 
@@ -61,6 +75,14 @@ public:
 
 	// Serialization of the nodes.
 	virtual const std::string save( int indent = 0 );
+
+	//-----------------------------------//
+	// Events
+	//-----------------------------------//
+
+	fd::delegate< void( const GroupEvent& ) > onNodeAdded;
+	fd::delegate< void( const GroupEvent& ) > onNodeRemoved;
+	fd::delegate< void( const GroupEvent& ) > onNodeInserted;
 
 protected:
 

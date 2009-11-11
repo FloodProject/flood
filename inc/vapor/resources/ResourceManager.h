@@ -20,6 +20,20 @@ namespace vapor {
 //-----------------------------------//
 
 /**
+ * This event gets sent out whenever an operation that has the corresponding
+ * delegate declared in the Resource class is executed. This can be useful 
+ * when monitoring resource changes is (for example editor applications).
+ */
+
+struct ResourceEvent
+{
+	std::string name;
+	ResourcePtr resource;
+};
+
+//-----------------------------------//
+
+/**
  * Responsible for managing a set of resources that are added by the app.
  * It should be possible to enforce a strict memory budget, and the manager
  * will automatically load or unload the resources from memory, using for 
@@ -40,6 +54,9 @@ public:
 	ResourceManager();
 	virtual ~ResourceManager();
 
+	// Gets the registered resources.
+	const std::map< std::string, ResourcePtr >& getResources();
+ 
 	// Creates a new resource and returns a generic resource.
 	ResourcePtr loadResource(const std::string& path);
 
@@ -79,6 +96,10 @@ public:
 	
 	// Gets a list of all the registered resource handlers.
 	//std::list<ResourceLoader*> getResourceLoader(string extension);
+
+	fd::delegate< void( const ResourceEvent& ) > onResourceAdded;
+	fd::delegate< void( const ResourceEvent& ) > onResourceRemoved;
+	fd::delegate< void( ResourceLoader* ) > onResourceLoaderRegistered;
 
 protected:
 

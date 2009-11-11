@@ -83,15 +83,15 @@ public:
 
 	// Gets the geometries components in the node.
 	const std::vector< GeometryPtr >& getGeometry();
-  
+
 private:
 
 	// The name of the node.
 	std::string name;
 
 	// Holds the components of the node.
-	std::map< std::string, ComponentPtr > components;
 	typedef std::pair< const std::string, ComponentPtr > componentPair;
+	std::map< std::string, ComponentPtr > components;
 
 	// Points to the parent node (if any). 
 	std::weak_ptr< Node > parent;

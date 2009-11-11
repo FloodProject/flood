@@ -44,10 +44,10 @@ public:
 	//ScriptPtr createScript();
 
 	/// Executes a piece of source code.
-	void execute( const std::string& source );
+	bool execute( const std::string& source );
 
 	/// Executes a script resource.
-	void execute( Script* script );
+	bool execute( Script* script );
 
 	/// Bind the engine API to Lua.
 	void bind( Engine* engine );
@@ -61,6 +61,8 @@ public:
 	/// Executes all the registered scripts.
 	void update( float deltaTime );
 
+	const std::string& getLastError() const;
+
 protected:
 
 	/// Lua VM state.
@@ -69,6 +71,8 @@ protected:
 	/// Holds Lua scripts.
 	std::vector< ScriptPtr > scripts;
 	typedef std::vector< ScriptPtr >::iterator scriptsIterator;
+
+	std::string lastError;
 };
 
 //-----------------------------------//
