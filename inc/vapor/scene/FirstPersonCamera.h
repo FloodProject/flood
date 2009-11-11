@@ -22,7 +22,7 @@ namespace vapor {
 //-----------------------------------//
 
 /**
- * Implements a simple First-Person style camera.
+ * Implements a simple First-Person style camera. Needs some logic fixing.
  */
 
 class VAPOR_API FirstPersonCamera : public Camera
