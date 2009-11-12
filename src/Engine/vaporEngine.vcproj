@@ -450,6 +450,14 @@
 					RelativePath="..\..\inc\vapor\render\Program.h"
 					>
 				</File>
+				<File
+					RelativePath=".\ProgramManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\render\ProgramManager.h"
+					>
+				</File>
 				<Filter
 					Name="GLSL"
 					>

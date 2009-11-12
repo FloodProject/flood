@@ -10,6 +10,7 @@
 
 #include "vapor/render/Material.h"
 #include "vapor/resources/ResourceManager.h"
+#include "vapor/render/ProgramManager.h"
 
 #include <boost/lexical_cast.hpp>
 
@@ -20,12 +21,12 @@ namespace vapor {
 
 //-----------------------------------//
 
-Material::Material( const std::string& name )
-	: name( name ), _isBlendingEnabled( false ),
-	src( BlendingOperationSource::One ), dst( BlendingOperationDestination::Zero )
-{
-
-}
+//Material::Material( const std::string& name )
+//	: name( name ), _isBlendingEnabled( false ),
+//	src( BlendingOperationSource::One ), dst( BlendingOperationDestination::Zero )
+//{
+//
+//}
 
 //-----------------------------------//
 
@@ -34,6 +35,15 @@ Material::Material( const std::string& name, ProgramPtr program )
 	src( BlendingOperationSource::One ), dst( BlendingOperationDestination::Zero )
 {
 
+}
+
+//-----------------------------------//
+
+Material::Material( const std::string& name, const std::string& program )
+	: name( name ), _isBlendingEnabled( false ), 
+	program( ProgramManager::getInstance().getProgram( program ) ),
+	src( BlendingOperationSource::One ), dst( BlendingOperationDestination::Zero )
+{
 }
 
 //-----------------------------------//
@@ -104,6 +114,9 @@ BlendingOperationDestination::Enum Material::getDestinationBlendingOperation()
 
 ProgramPtr Material::getProgram() const
 {
+	if( !program )
+		warn( "Invalid program in material '%s'", getName().c_str() );
+	
 	return program;
 }
 
@@ -112,6 +125,14 @@ ProgramPtr Material::getProgram() const
 void Material::setProgram( ProgramPtr program )
 {
 	this->program = program;
+}
+
+//-----------------------------------//
+
+void Material::setProgram( const std::string& name )
+{
+	ProgramPtr p = ProgramManager::getInstance().getProgram( name );
+	program = p;
 }
 
 //-----------------------------------//

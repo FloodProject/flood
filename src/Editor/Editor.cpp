@@ -153,6 +153,9 @@ void EditorFrame::createScene()
 			rm->loadResource< GLSL_Shader >( "tex.vs" ),
 			rm->loadResource< GLSL_Shader >( "tex.fs" ) ) );
 
+	ProgramManager::getInstance().registerProgram( "diffuse", diffuse );
+	ProgramManager::getInstance().registerProgram( "tex", tex );
+
 	// Create a new Camera
 	NodePtr camera( new Node( "MainCamera" ) );
 	CameraPtr cam( new FirstPersonCamera( engine->getInputManager(), engine->getRenderDevice() ) );
@@ -174,14 +177,14 @@ void EditorFrame::createScene()
 	ScriptPtr lua = rm->loadResource< Script >( "teste.lua" );
 	engine->getScriptState()->registerScript( lua );
 
-	MS3DPtr mesh = rm->loadResource< MS3D >( "terreno.ms3d" );
+	MS3DPtr mesh = rm->loadResource< MS3D >( "cubo.ms3d" );
 
 	foreach( const RenderablePtr& rend, mesh->getRenderables() )
 	{
 		rend->getMaterial()->setProgram( tex );
 	}
 
-	NodePtr terreno( new Node( "Terreno" ) );
+	NodePtr terreno( new Node( "Cubo" ) );
 	terreno->addComponent( TransformPtr( new Transform() ) );
 	terreno->addComponent( mesh );
 	terreno->getTransform()->scale( 0.3f );

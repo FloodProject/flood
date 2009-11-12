@@ -60,6 +60,7 @@ void Device::init()
 	adapter = new Adapter();
 	bufferManager = new BufferManager();
 	TextureManager::getInstance();
+	ProgramManager::getInstance();
 
 	//glEnable( GL_LINE_SMOOTH );
 

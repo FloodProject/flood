@@ -233,7 +233,7 @@ void MS3D::build()
 		RenderablePtr rend( new Renderable() );
 
 		// MS3D meshes represent everything as triangles.
-		rend->setType( Primitive::Triangles );
+		rend->setPrimitiveType( Primitive::Triangles );
 
 		// Vertex data
 		std::vector< Vector3 > vb_v;

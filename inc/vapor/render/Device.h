@@ -18,6 +18,7 @@
 #include "vapor/render/Target.h"
 #include "vapor/render/Adapter.h"
 #include "vapor/render/TextureManager.h"
+#include "vapor/render/ProgramManager.h"
 #include "vapor/render/Renderable.h"
 #include "vapor/render/RenderQueue.h"
 
@@ -111,11 +112,14 @@ protected:
 	// Render window
 	Window* window;
 
-	// Manages all buffers
+	// Manages all buffers.
 	BufferManager* bufferManager;
 
-	// Manages the textures
-	TextureManager textureManager;
+	// Manages the textures.
+	//TextureManager textureManager;
+
+	// Manages the programs.
+	//ProgramManager programManager;
 
 	// Current clear color
 	math::Color clearColor;

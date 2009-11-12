@@ -47,6 +47,7 @@
 #include <vapor/render/GLSL_Shader.h>
 #include <vapor/render/Quad.h>
 #include "vapor/render/TextureManager.h"
+#include "vapor/render/ProgramManager.h"
 
 //-------------------------------------------------------------------------//
 // Input-related Includes

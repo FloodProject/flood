@@ -35,7 +35,7 @@ public:
 	
 	static T& getInstance()
 	{	
-		//if( !m_Instance ) new T();
+		if( !m_Instance ) new T();
 
 		assert( m_Instance );
 		return ( *m_Instance );
@@ -43,7 +43,7 @@ public:
 	
 	static T* getInstancePtr()
 	{
-		//if( !m_Instance ) new T();
+		if( !m_Instance ) new T();
 
 		assert( m_Instance );
 		return m_Instance;

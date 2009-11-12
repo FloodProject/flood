@@ -50,7 +50,9 @@ Geometry::~Geometry()
 void Geometry::buildBoundingRenderable()
 {
 	VertexBufferPtr vb( new VertexBuffer() );
-	bbox.reset( new Renderable( Primitive::Lines, vb ) );
+	MaterialPtr mat( new Material( "BoundBox", "diffuse" ) );
+	bbox.reset( new Renderable( Primitive::Quads, vb, mat ) );
+	bbox->setRenderMode( RenderMode::Wireframe );
 }
 
 //-----------------------------------//
@@ -120,6 +122,14 @@ const math::AABB& Geometry::getBoundingVolume() const
 
 //-----------------------------------//
 
+const float EXTRA_SPACE = 1.05f;
+
+#define ADD_BOX_FACE( a, b, c, d )								\
+	v.push_back( boundingVolume.getCorner( a ) * EXTRA_SPACE );	\
+	v.push_back( boundingVolume.getCorner( b ) * EXTRA_SPACE );	\
+	v.push_back( boundingVolume.getCorner( c ) * EXTRA_SPACE );	\
+	v.push_back( boundingVolume.getCorner( d ) * EXTRA_SPACE );
+
 void Geometry::update( float delta )
 {
 	if( !isDirty ) return;
@@ -136,12 +146,23 @@ void Geometry::update( float delta )
 	}
 
 	VertexBufferPtr vb = bbox->getVertexBuffer();
-	std::vector< Vector3 > vertices;
-	for( int i = 0; i < 8; i++ )
-	{
-		vertices.push_back( boundingVolume.getCorner( i ) );
-	}
-	vb->set( VertexAttribute::Vertex, vertices );
+
+	std::vector< Vector3 > v;
+	
+	ADD_BOX_FACE( 0, 1, 3, 2 )
+	ADD_BOX_FACE( 0, 1, 5, 4 )
+	ADD_BOX_FACE( 4, 5, 7, 6 )
+	ADD_BOX_FACE( 2, 3, 7, 6 )
+	ADD_BOX_FACE( 0, 4, 6, 2 )
+	ADD_BOX_FACE( 1, 5, 7, 3 )
+
+	
+	std::vector< Vector3 > c( 24, Vector3( 1.0f, 1.0f, 0.0f ) );
+
+	vb->set( VertexAttribute::Vertex, v );
+	vb->set( VertexAttribute::Color, c );
+
+	isDirty = false;
 }
 
 //-----------------------------------//

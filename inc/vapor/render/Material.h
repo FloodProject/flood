@@ -66,8 +66,9 @@ class VAPOR_API Material
 {
 public:
 
-	Material( const std::string& name );
+	//Material( const std::string& name );
 	Material( const std::string& name, ProgramPtr program );
+	Material( const std::string& name, const std::string& program = "diffuse" );
 	~Material();
 
 	// Gets the textual name of the material.
@@ -84,6 +85,9 @@ public:
 
 	// Sets the associated program.
 	void setProgram( ProgramPtr program );
+
+	// Sets the associated program.
+	void setProgram( const std::string& name );
 
 	// Gets the blending options for this material.
 	BlendingOperationSource::Enum getSourceBlendingOperation();
@@ -123,8 +127,10 @@ protected:
 	std::map< uint, TexturePtr > textures;
 	typedef std::pair< const uint, TexturePtr > texPair;
 
-	// Shaders
+	// Program of the material.
 	ProgramPtr program;
+
+	// Name of the material.
 	std::string name;
 };
 

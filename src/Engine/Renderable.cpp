@@ -26,7 +26,7 @@ Renderable::Renderable( Primitive::Enum primitive,
 						VertexBufferPtr vb, 
 						IndexBufferPtr ib, 
 						MaterialPtr mat )
-	: type( primitive), vb( vb ), ib( ib ), mat( mat )
+	: type( primitive), vb( vb ), ib( ib ), mat( mat ), mode( RenderMode::Solid )
 {
 
 }
@@ -36,7 +36,7 @@ Renderable::Renderable( Primitive::Enum primitive,
 Renderable::Renderable( Primitive::Enum primitive, 
 						VertexBufferPtr vb, 
 						MaterialPtr mat )
-	: type( primitive), vb( vb ), mat( mat )
+	: type( primitive), vb( vb ), mat( mat ), mode( RenderMode::Solid )
 
 {
 
@@ -59,6 +59,9 @@ void Renderable::render( render::Device& UNUSED(device) )
 		vb->build();
 
 	vb->bind();
+
+	if( mode == RenderMode::Wireframe )
+		glPolygonMode( GL_FRONT_AND_BACK, RenderMode::Wireframe );
 
     if ( ib == nullptr )
     {
@@ -84,7 +87,10 @@ void Renderable::render( render::Device& UNUSED(device) )
 
         ib->unbind();
     }
-    
+   
+	if( mode == RenderMode::Wireframe )
+		glPolygonMode( GL_FRONT_AND_BACK, RenderMode::Solid );
+
     vb->unbind();
 	if( mat ) mat->unbind();
 }
@@ -119,7 +125,7 @@ void Renderable::setMaterial( MaterialPtr mat )
 
 //-----------------------------------//
 
-void Renderable::setType( Primitive::Enum p )
+void Renderable::setPrimitiveType( Primitive::Enum p )
 {
 	this->type = p;
 }
@@ -136,6 +142,13 @@ void Renderable::setVertexBuffer( VertexBufferPtr vb )
 void Renderable::setIndexBuffer( IndexBufferPtr ib )
 {
 	this->ib = ib;
+}
+
+//-----------------------------------//
+
+void Renderable::setRenderMode( RenderMode::Enum mode )
+{
+	this->mode = mode;
 }
 
 //-----------------------------------//

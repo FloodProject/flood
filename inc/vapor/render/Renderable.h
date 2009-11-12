@@ -52,6 +52,22 @@ namespace Primitive
 //-----------------------------------//
 
 /**
+ * Type of primitive of the renderable.
+ * 
+ */
+
+namespace RenderMode
+{
+    enum Enum
+    {
+		Solid = GL_FILL,
+		Wireframe = GL_LINE
+    };
+}
+
+//-----------------------------------//
+
+/**
  * Represents a renderable object, that is, the only rendering object
  * the rendering Device knows and cares about. A render-able object has
  * at least one Vertex buffer and one Index buffer, and an primitive 
@@ -96,12 +112,18 @@ public:
 	void setMaterial( MaterialPtr mat );
 
 	// Sets the primitive type of this renderable.
-	void setType( Primitive::Enum p );
+	void setPrimitiveType( Primitive::Enum p );
+
+	// Sets the render mode of this renderable.
+	void setRenderMode( RenderMode::Enum mode );
 
 protected:
 
     // Primitive type of the vertex buffer contents.
     Primitive::Enum type;
+
+	// Rendering mode of the vertex buffer contents.
+	RenderMode::Enum mode;
 
 	// Vertex buffer with all the vertices.
     VertexBufferPtr vb;

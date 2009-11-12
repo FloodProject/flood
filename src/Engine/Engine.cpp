@@ -89,7 +89,8 @@ void Engine::init( bool createWindow )
 	vfs = new VFS(app, argv ? argv[0] : nullptr);
 
 	// create the resource manager
-	resourceManager = new ResourceManager();
+	//resourceManager = new ResourceManager();
+	resourceManager = ResourceManager::getInstancePtr();
 
 	// register default codecs
 	setupResourceLoaders();
