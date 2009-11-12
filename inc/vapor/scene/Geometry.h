@@ -14,6 +14,8 @@
 #include "vapor/render/Renderable.h"
 #include "vapor/render/RenderQueue.h"
 
+#include "vapor/math/AABB.h"
+
 namespace vapor {
 	namespace scene {
 
@@ -47,6 +49,9 @@ public:
 	/// Appends all the renderables of this geometry to the queue.
 	void appendRenderables( render::RenderQueue& queue );
 
+	/// Gets the bounding volume of this geometry.
+	const math::AABB& getBoundingVolume() const;
+
 	/// Updates the geometry if needed.
 	virtual void update( float delta );
 
@@ -56,13 +61,24 @@ public:
 	/// Returns the name of this component.
 	virtual const std::string& getType() const;
 
+	// Sets the visibility of this geometry bounding box.
+	void setBoundingBoxVisible( bool visible );
+
 protected:
+
+	void buildBoundingRenderable();
 
 	typedef std::vector< render::RenderablePtr > RenderableList;
 	std::map< render::RenderGroup::Enum, RenderableList > renderables;
 	typedef std::pair<const  render::RenderGroup::Enum, RenderableList > rendPair;
 
 	static const std::string& type;
+
+	// Bounding volume of the geometry.
+	math::AABB boundingVolume;
+	render::RenderablePtr bbox;
+	bool isDirty;
+	bool drawBoundingBox;
 };
 
 //-----------------------------------//

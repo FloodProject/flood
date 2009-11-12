@@ -878,26 +878,26 @@
 					RelativePath="..\..\inc\vapor\scene\FirstPersonCamera.h"
 					>
 				</File>
-			</Filter>
-			<Filter
-				Name="Audio"
-				>
-				<File
-					RelativePath=".\Listener.cpp"
+				<Filter
+					Name="Audio"
 					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\scene\Listener.h"
-					>
-				</File>
-				<File
-					RelativePath=".\SceneSound.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\scene\Sound.h"
-					>
-				</File>
+					<File
+						RelativePath=".\Listener.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\scene\Listener.h"
+						>
+					</File>
+					<File
+						RelativePath=".\SceneSound.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\scene\Sound.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Transform"

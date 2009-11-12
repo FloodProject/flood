@@ -47,9 +47,9 @@ namespace VertexAttribute
 //-----------------------------------//
 
 /**
- * Represents a vertex buffer.  One limitation here is that all data is tied to the vertex
- * so if you want a normal per primitive and not per vertex you will have to duplicate
- * that normal for each vertex for now.
+ * Represents a vertex buffer.  One limitation here is that all data is 
+ * tied to the vertex so if you want a normal per primitive and not per 
+ * vertex you will have to duplicate that normal for each vertex for now.
  */
 
 class VAPOR_API VertexBuffer : public Buffer
@@ -134,9 +134,6 @@ public:
 
 private:
 
-	// Used to store specific GL types for each attribute.
-	enum GLPrimitive;
-
 	// Checks that each entry in the map has the same size.
 	bool checkSize();
 
@@ -146,17 +143,38 @@ private:
 	// Tells us if this buffer has already been built.
     bool built;
 
-    // OpenGL buffer modifiers
+    // OpenGL buffer modifiers.
     BufferUsage::Enum bufferUsage;
     BufferAccess::Enum bufferAccess;
-	
+
+	// Used to store specific GL types for each attribute.
+	enum GLPrimitive;
+
 	typedef std::tuple< int, GLPrimitive, std::vector< byte > > attributeValue;
 	typedef std::pair< const VertexAttribute::Enum, attributeValue > attributePair;
 
-	// Holds all the vertex attributes
+	// Holds all the vertex attributes.
 	std::map< VertexAttribute::Enum, attributeValue > attributeMap;
 
+	// Holds the number of vertices inside.
 	uint numVertices;
+
+public:
+
+	std::vector<math::Vector3> getVertices() const
+	{
+		foreach( const attributePair& p, attributeMap )
+		{
+			if( p.first == VertexAttribute::Vertex )
+			{
+				std::vector<math::Vector3> vertices;
+				const std::vector<byte>& bytev = std::get<2>( p.second );
+				vertices.resize( std::get<2>( p.second ).size() / sizeof( math::Vector3 ) );
+				memcpy( &vertices[0], &bytev[0], bytev.size() );		
+				return vertices;
+			}
+		}
+	}
 };
 
 //-----------------------------------//

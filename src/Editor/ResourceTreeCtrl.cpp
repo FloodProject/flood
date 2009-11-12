@@ -72,7 +72,7 @@ void ResourceTreeCtrl::initIcons()
 	// create a new list of all the icons
 	imageList = new wxImageList(16, 16, false, 10);
 
-	//blankImage = imageList->Add( wxNullBitmap );
+	imageList->Add(wxMEMORY_BITMAP(bullet_blue));
 	CREATE_RESOURCE_ICON( General, package )
 	CREATE_RESOURCE_ICON( Images, image )
 	CREATE_RESOURCE_ICON( Meshes, shape_flip_horizontal )
@@ -121,8 +121,8 @@ void ResourceTreeCtrl::updateTree()
 		ResourceGroup::Enum group = res->getResourceGroup();
 
 		AppendItem( resourceGroupTreeIds[group],
-					resource.first/*,
-					resourceGroupIcons[group]*/ );
+					resource.first,
+					0 /*resourceGroupIcons[group]*/ );
 	}
 }
 
@@ -153,8 +153,8 @@ void ResourceTreeCtrl::onResourceAdded( const resources::ResourceEvent& event )
 	ResourceGroup::Enum group = event.resource->getResourceGroup();
 
 	AppendItem( resourceGroupTreeIds[group],
-				event.name/*,
-				resourceGroupIcons[group]*/ );	
+				event.name, 0
+				/*, resourceGroupIcons[group]*/ );	
 }
 
 //-----------------------------------//

@@ -111,10 +111,9 @@ void vaporControl::OnUpdate()
 void vaporControl::OnRender()
 {
 	static math::Color bg( 0.0f, 0.10f, 0.25f );
-	//bg.r += 0.0001;
-	//bg.g += 0.0002;
-	//bg.b += 0.0003;
-	
+
+	OnUpdate();
+
 	render::Device* device = engine->getRenderDevice();
 	
 	device->setClearColor(bg);

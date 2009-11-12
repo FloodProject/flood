@@ -24,6 +24,7 @@ typedef std::pair< const std::string, ComponentPtr > componentPair;
 ////////////////////////////////////////////////////////////
 BEGIN_EVENT_TABLE(SceneTreeCtrl, wxTreeCtrl)
 	EVT_TREE_ITEM_MENU(ID_SceneTree, SceneTreeCtrl::onItemMenu)
+	EVT_TREE_SEL_CHANGED(ID_SceneTree, SceneTreeCtrl::onItemChanged)
 END_EVENT_TABLE()
 
 //-----------------------------------//
@@ -45,7 +46,7 @@ SceneTreeCtrl::SceneTreeCtrl(vapor::Engine* engine,
 
 	scene = engine->getSceneManager();
 	
-	initIcons();
+	InitIcons();
 	InitControl();
 
 	ExpandAll();
@@ -92,7 +93,7 @@ void SceneTreeCtrl::updateScene()
 
 //-----------------------------------//
 
-void SceneTreeCtrl::initIcons()
+void SceneTreeCtrl::InitIcons()
 {
 	// create a new list of all the icons
 	imageList = new wxImageList(16, 16, false, 10);
@@ -111,8 +112,48 @@ void SceneTreeCtrl::initIcons()
 	componentIcons["Terrain"] = imageList->Add(wxMEMORY_BITMAP(world));
 	componentIcons["Transform"] = imageList->Add(wxMEMORY_BITMAP(vector_icon));
 	componentIcons["Grid"] = imageList->Add(wxMEMORY_BITMAP(grid_icon));
+	componentIcons["Geometry"] = imageList->Add(wxMEMORY_BITMAP(shape_flip_horizontal));
 
 	AssignImageList(imageList);
+}
+
+//-----------------------------------//
+
+void SceneTreeCtrl::setBoundingBox( wxTreeItemId id, bool state )
+{
+	assert( id.IsOk() );
+
+	std::string str( GetItemText( id ) );
+
+	NodePtr node = scene->getEntity( str );
+
+	while( !node )
+	{
+		// Search for a parent tree item.
+		id = GetItemParent( id );
+
+		// If there is none, abort.
+		if( !id.IsOk() ) return;
+		
+		node = scene->getEntity( str );
+	}
+
+	// Activate bounding box drawing for this node.
+	foreach( GeometryPtr geometry, node->getGeometry() )
+		geometry->setBoundingBoxVisible( state );
+}
+
+//-----------------------------------//
+
+void SceneTreeCtrl::onItemChanged(wxTreeEvent& event)
+{
+	// Turn off last selected tree item's bounding box.
+	wxTreeItemId old = event.GetOldItem();
+	if( old.IsOk() ) setBoundingBox( old, false );
+
+	// Turn on the new tree item's bounding box.
+	wxTreeItemId id = event.GetItem();
+	setBoundingBox( id, true );
 }
 
 //-----------------------------------//

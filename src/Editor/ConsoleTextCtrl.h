@@ -47,6 +47,8 @@ protected:
 	void OnKeyDown(wxKeyEvent& event);
 	void OnSetFocus(wxFocusEvent& event);
 
+	void AppendTextColor( const wxString& text, const wxTextAttr& attr );
+
 	void NewPromptLine();
 
 	// Holds an instance of the input manager.

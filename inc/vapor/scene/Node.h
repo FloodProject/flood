@@ -12,6 +12,7 @@
 #include "vapor/scene/Component.h"
 #include "vapor/scene/Transform.h"
 #include "vapor/scene/Geometry.h"
+#include "vapor/math/AABB.h"
 
 namespace vapor {
 	namespace scene {
@@ -98,9 +99,9 @@ private:
 	
 	// Caches the geometries nodes (for faster lookup when rendering).
 	std::vector< GeometryPtr > geometries;
-	
+
 	// Bounding volume used for culling.
-	//AABB boundingVolume;
+	math::AABB boundingVolume;
 };
 
 //-----------------------------------//

@@ -28,14 +28,14 @@ class MS3D : public Resource, public scene::Geometry
 {
 public:
 
-	MS3D(const std::string &filename);
+	MS3D(const vfs::File& file);
 	virtual ~MS3D();
 
 	ResourceGroup::Enum getResourceGroup() const { return ResourceGroup::Meshes; }
 
 private:
 
-	bool load(const std::string &filename);
+	bool load();
 	void clear();
 
 	// Builds the vertex and index buffers representing the mesh.
@@ -64,7 +64,7 @@ private:
 
 private:
 
-	FILE *fp;
+	const vfs::File& file;
 
 	std::vector<ms3d_vertex_t> m_vertices;
 	std::vector<ms3d_triangle_t> m_triangles;

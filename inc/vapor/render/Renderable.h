@@ -100,12 +100,17 @@ public:
 
 protected:
 
-    // primitive type of vertex buffer 
+    // Primitive type of the vertex buffer contents.
     Primitive::Enum type;
 
+	// Vertex buffer with all the vertices.
     VertexBufferPtr vb;
+
+	// Index buffer with all the indices.
     IndexBufferPtr ib;
-    MaterialPtr mat;
+    
+	// Material of this renderable.
+	MaterialPtr mat;
 };
 
 //-----------------------------------//

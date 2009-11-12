@@ -107,7 +107,7 @@ EditorFrame::EditorFrame(const wxString& title)
 
 	SetSizerAndFit( sizer );
 
-	codeEvaluator = new ConsoleFrame( engine, this, "Lua Evaluator" );
+	codeEvaluator = new ConsoleFrame( engine, this, "Scripting Console" );
 
 	createScene();
 }
@@ -149,6 +149,10 @@ void EditorFrame::createScene()
 			rm->loadResource< GLSL_Shader >( "diffuse.vs" ),
 			rm->loadResource< GLSL_Shader >( "diffuse.fs" ) ) );
 
+	ProgramPtr tex( new GLSL_Program( 
+			rm->loadResource< GLSL_Shader >( "tex.vs" ),
+			rm->loadResource< GLSL_Shader >( "tex.fs" ) ) );
+
 	// Create a new Camera
 	NodePtr camera( new Node( "MainCamera" ) );
 	CameraPtr cam( new FirstPersonCamera( engine->getInputManager(), engine->getRenderDevice() ) );
@@ -167,20 +171,21 @@ void EditorFrame::createScene()
 		rend->getMaterial()->setProgram( diffuse );
 	}
 
-	NodePtr quad( new Node( "quad" ) );
-	quad->addComponent( TransformPtr( new Transform() ) );
-	GeometryPtr geom( new Geometry() );
-	geom->addRenderable( QuadPtr( new Quad( Dimension( 100, 100 ), mat ) ), RenderGroup::Overlays );
-	quad->addComponent( geom );
-	quad->getTransform()->translate( -300.0f, 220.0f, 0.0f );
-
-	foreach( const RenderablePtr& rend, quad->getComponent<Geometry>("Geometry")->getRenderables() )
-	{
-		rend->getMaterial()->setProgram( diffuse );
-	}
-
 	ScriptPtr lua = rm->loadResource< Script >( "teste.lua" );
 	engine->getScriptState()->registerScript( lua );
+
+	MS3DPtr mesh = rm->loadResource< MS3D >( "terreno.ms3d" );
+
+	foreach( const RenderablePtr& rend, mesh->getRenderables() )
+	{
+		rend->getMaterial()->setProgram( tex );
+	}
+
+	NodePtr terreno( new Node( "Terreno" ) );
+	terreno->addComponent( TransformPtr( new Transform() ) );
+	terreno->addComponent( mesh );
+	terreno->getTransform()->scale( 0.3f );
+	scene->add( terreno );
 }
 
 //-----------------------------------//

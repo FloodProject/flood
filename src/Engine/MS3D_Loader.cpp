@@ -30,7 +30,7 @@ MS3D* MS3D_Loader::decode(const File& file)
 {
 	if(!file.exists()) return nullptr;
 
-	MS3D* mesh = new MS3D(file.getPath());
+	MS3D* mesh = new MS3D(file);
 	return mesh;
 }
 

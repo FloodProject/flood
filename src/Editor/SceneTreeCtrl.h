@@ -56,9 +56,12 @@ public:
 protected:
 
 	void InitControl();
-	void initIcons();
+	void InitIcons();
+
+	void setBoundingBox( wxTreeItemId id, bool state );
 
 	// wxWidgets events.
+	void onItemChanged(wxTreeEvent& event);
 	void onItemMenu(wxTreeEvent& event);
 
 	// vapor Scene-monitoring callbacks.

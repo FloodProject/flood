@@ -6,7 +6,7 @@ http://www.nuclex.org/downloads/developers/kits/luabind-0-8-1-binaries-and-demo
 EXAMPLES:
 ---------
 
-Add a custom node to the scene graph
+Add a custom node to the scene graph            
 Add a custom resource type
 
 SERVER:
@@ -21,10 +21,10 @@ Hook up the renaming of Scene node labels
 Override the print method of Lua
 Console clicks should not change the insertion point
 A readline type of library would be kind of nice
-And add some highlighting to it, it's boring now.
-
+ 
 DONE:
 
+And add some highlighting to it, it's boring now. (DONE)
 Add resource events in the ResourceManager (DONE)	
 Change scripting background to black (DONE)
 Make the scripting evaluate line-a-line (DONE)
@@ -38,6 +38,8 @@ http://news.gmane.org/gmane.comp.lib.wxwidgets.wxlua.user
 Near TODO:
 ----------
 
+Fix Bounding Boxes hierarchy
+Fix the logging file and crashing behaviour
 Skybox component
 Console GUI widget
 Per-script Lua state

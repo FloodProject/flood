@@ -166,9 +166,10 @@ struct VAPOR_ALIGN_BEGIN(1) ms3d_joint_t
 
 //-----------------------------------//
 
-MS3D::MS3D(const std::string& filename)
+MS3D::MS3D(const vfs::File& file)
+	: file(file)
 {
-	load(filename);
+	load();
 	build();
 }
 
@@ -176,21 +177,18 @@ MS3D::MS3D(const std::string& filename)
 
 MS3D::~MS3D()
 {
-	if( fp ) fclose( fp );	
+	//if( fp ) fclose( fp );	
 }
 
 //-----------------------------------//
 
-bool MS3D::load(const std::string& filename)
+bool MS3D::load()
 {
 #ifdef VAPOR_COMPILER_MSVC
 	// disable Visual C++ fopen deprecation warning
 	#pragma warning(disable : 4996)
 #endif
 
-	fp = fopen(filename.c_str(), "rb");
-	if (!fp) return false;
-	
 	if(!read_header())
 		goto cleanup;
 	
@@ -202,12 +200,10 @@ bool MS3D::load(const std::string& filename)
 	//read_joints();
 	//read_comments();
 
-	fclose(fp);
 	return true;
 
 cleanup:
 
-	fclose(fp);
 	return false;
 }
 
@@ -319,8 +315,7 @@ bool MS3D::read_header()
 {
 	ms3d_header_t header;
 
-	fread(&header, 1, sizeof(ms3d_header_t), fp);
-
+	file.read( &header, sizeof(ms3d_header_t) );
 	if (strncmp(header.id, "MS3D000000", 10) != 0) 
 		return false;
 
@@ -336,15 +331,15 @@ void MS3D::read_vertices()
 {
 	ushort num_vertices;
 
-	fread(&num_vertices, sizeof(ushort), 1, fp);
+	file.read(&num_vertices, sizeof(ushort));
 	m_vertices.resize(num_vertices);
 
 	for (int i = 0; i < num_vertices; i++)
 	{
-		fread(&m_vertices[i].flags, sizeof(byte), 1, fp);
-		fread(&m_vertices[i].vertex, sizeof(float), 3, fp);
-		fread(&m_vertices[i].boneId, sizeof(char), 1, fp);
-		fread(&m_vertices[i].referenceCount, sizeof(byte), 1, fp);
+		file.read(&m_vertices[i].flags, sizeof(byte));
+		file.read(&m_vertices[i].vertex, sizeof(float)*3);
+		file.read(&m_vertices[i].boneId, sizeof(char));
+		file.read(&m_vertices[i].referenceCount, sizeof(byte));
 	}
 }
 
@@ -354,18 +349,18 @@ void MS3D::read_triangles()
 {
 	ushort num_triangles;
 	
-	fread(&num_triangles, sizeof(ushort), 1, fp);
+	file.read(&num_triangles, sizeof(ushort));
 	m_triangles.resize(num_triangles);
 	
 	for (int i = 0; i < num_triangles; i++)
 	{
-		fread(&m_triangles[i].flags, sizeof(ushort), 1, fp);
-		fread(m_triangles[i].vertexIndices, sizeof(ushort), 3, fp);
-		fread(m_triangles[i].vertexNormals, sizeof(float), 3 * 3, fp);
-	    fread(m_triangles[i].s, sizeof(float), 3, fp);
-	    fread(m_triangles[i].t, sizeof(float), 3, fp);
-		fread(&m_triangles[i].smoothingGroup, sizeof(byte), 1, fp);
-		fread(&m_triangles[i].groupIndex, sizeof(byte), 1, fp);
+		file.read(&m_triangles[i].flags, sizeof(ushort));
+		file.read(m_triangles[i].vertexIndices, sizeof(ushort)*3);
+		file.read(m_triangles[i].vertexNormals, sizeof(float)*3*3);
+	    file.read(m_triangles[i].s, sizeof(float)*3);
+	    file.read(m_triangles[i].t, sizeof(float)*3);
+		file.read(&m_triangles[i].smoothingGroup, sizeof(byte));
+		file.read(&m_triangles[i].groupIndex, sizeof(byte));
 
 		// TODO: calculate triangle normal
 	}
@@ -378,24 +373,24 @@ void MS3D::read_groups()
 	// groups
 	ushort numGroups;
 	
-	fread(&numGroups, sizeof(ushort), 1, fp);
+	file.read(&numGroups, sizeof(ushort));
 	m_groups.resize(numGroups);
 	
 	for (int i = 0; i < numGroups; i++)
 	{
-		fread(&m_groups[i].flags, sizeof(byte), 1, fp);
-		fread(m_groups[i].name, sizeof(char), 32, fp);
+		file.read(&m_groups[i].flags, sizeof(byte));
+		file.read(m_groups[i].name, sizeof(char)*32);
 
 		ushort numGroupTriangles;
-		fread(&numGroupTriangles, sizeof(ushort), 1, fp);
+		file.read(&numGroupTriangles, sizeof(ushort));
 		m_groups[i].triangleIndices.resize(numGroupTriangles);
 		
 		if (numGroupTriangles > 0)
 		{
-			fread(&m_groups[i].triangleIndices[0], sizeof(ushort), numGroupTriangles, fp);
+			file.read(&m_groups[i].triangleIndices[0], sizeof(ushort)*numGroupTriangles);
 		}
 
-		fread(&m_groups[i].materialIndex, sizeof(byte), 1, fp);
+		file.read(&m_groups[i].materialIndex, sizeof(byte));
 	}
 }
 
@@ -405,21 +400,21 @@ void MS3D::read_materials()
 {
 	// materials
 	ushort numMaterials;
-	fread(&numMaterials, sizeof(ushort), 1, fp);
+	file.read(&numMaterials, sizeof(ushort));
 	m_materials.resize(numMaterials);
 	
 	for (int i = 0; i < numMaterials; i++)
 	{
-		fread(m_materials[i].name, sizeof(char), 32, fp);
-		fread(&m_materials[i].ambient, sizeof(float), 4, fp);
-		fread(&m_materials[i].diffuse, sizeof(float), 4, fp);
-		fread(&m_materials[i].specular, sizeof(float), 4, fp);
-		fread(&m_materials[i].emissive, sizeof(float), 4, fp);
-		fread(&m_materials[i].shininess, sizeof(float), 1, fp);
-		fread(&m_materials[i].transparency, sizeof(float), 1, fp);
-		fread(&m_materials[i].mode, sizeof(byte), 1, fp);
-		fread(m_materials[i].texture, sizeof(char), MAX_TEXTURE_FILENAME_SIZE, fp);
-		fread(m_materials[i].alphamap, sizeof(char), MAX_TEXTURE_FILENAME_SIZE, fp);
+		file.read(m_materials[i].name, sizeof(char)*32);
+		file.read(&m_materials[i].ambient, sizeof(float)*4);
+		file.read(&m_materials[i].diffuse, sizeof(float)*4);
+		file.read(&m_materials[i].specular, sizeof(float)*4);
+		file.read(&m_materials[i].emissive, sizeof(float)*4);
+		file.read(&m_materials[i].shininess, sizeof(float));
+		file.read(&m_materials[i].transparency, sizeof(float));
+		file.read(&m_materials[i].mode, sizeof(byte));
+		file.read(m_materials[i].texture, sizeof(char)*MAX_TEXTURE_FILENAME_SIZE);
+		file.read(m_materials[i].alphamap, sizeof(char)*MAX_TEXTURE_FILENAME_SIZE);
 
 		// set alpha
 		m_materials[i].ambient[3] = m_materials[i].transparency;
@@ -434,11 +429,11 @@ void MS3D::read_materials()
 //void Milkshape3D::read_animation()
 //{
 //	// animation
-//	fread(&m_animationFps, sizeof(float), 1, fp);
+//	file.read(&m_animationFps, sizeof(float), 1, fp);
 //	if (m_animationFps < 1.0f)
 //		m_animationFps = 1.0f;
-//	fread(&m_currentTime, sizeof(float), 1, fp);
-//	fread(&m_totalFrames, sizeof(int), 1, fp);
+//	file.read(&m_currentTime, sizeof(float), 1, fp);
+//	file.read(&m_totalFrames, sizeof(int), 1, fp);
 //}
 //
 //
@@ -446,38 +441,38 @@ void MS3D::read_materials()
 //{
 //	// joints
 //	ushort numJoints;
-//	fread(&numJoints, sizeof(ushort), 1, fp);
+//	file.read(&numJoints, sizeof(ushort), 1, fp);
 //	m_joints.resize(numJoints);
 //	for (i = 0; i < numJoints; i++)
 //	{
-//		fread(&m_joints[i].flags, sizeof(byte), 1, fp);
-//		fread(m_joints[i].name, sizeof(char), 32, fp);
-//		fread(m_joints[i].parentName, sizeof(char), 32, fp);
-//        fread(m_joints[i].rot, sizeof(float), 3, fp);
-//        fread(m_joints[i].pos, sizeof(float), 3, fp);
+//		file.read(&m_joints[i].flags, sizeof(byte), 1, fp);
+//		file.read(m_joints[i].name, sizeof(char), 32, fp);
+//		file.read(m_joints[i].parentName, sizeof(char), 32, fp);
+//        file.read(m_joints[i].rot, sizeof(float), 3, fp);
+//        file.read(m_joints[i].pos, sizeof(float), 3, fp);
 //    
 //		ushort numKeyFramesRot;
-//		fread(&numKeyFramesRot, sizeof(ushort), 1, fp);
+//		file.read(&numKeyFramesRot, sizeof(ushort), 1, fp);
 //		m_joints[i].rotationKeys.resize(numKeyFramesRot);
 //
 //		ushort numKeyFramesPos;
-//		fread(&numKeyFramesPos, sizeof(ushort), 1, fp);
+//		file.read(&numKeyFramesPos, sizeof(ushort), 1, fp);
 //		m_joints[i].positionKeys.resize(numKeyFramesPos);
 //
 //		// the frame time is in seconds, so multiply it by the animation fps, to get the frames
 //		// rotation channel
 //		for (j = 0; j < numKeyFramesRot; j++)
 //		{
-//			fread(&m_joints[i].rotationKeys[j].time, sizeof(float), 1, fp);
-//			fread(&m_joints[i].rotationKeys[j].key, sizeof(float), 3, fp);
+//			file.read(&m_joints[i].rotationKeys[j].time, sizeof(float), 1, fp);
+//			file.read(&m_joints[i].rotationKeys[j].key, sizeof(float), 3, fp);
 //			m_joints[i].rotationKeys[j].time *= m_animationFps;
 //		}
 //
 //		// translation channel
 //		for (j = 0; j < numKeyFramesPos; j++)
 //		{
-//			fread(&m_joints[i].positionKeys[j].time, sizeof(float), 1, fp);
-//			fread(&m_joints[i].positionKeys[j].key, sizeof(float), 3, fp);
+//			file.read(&m_joints[i].positionKeys[j].time, sizeof(float), 1, fp);
+//			file.read(&m_joints[i].positionKeys[j].key, sizeof(float), 3, fp);
 //			m_joints[i].positionKeys[j].time *= m_animationFps;
 //		}
 //	}
@@ -491,66 +486,66 @@ void MS3D::read_materials()
 //	if (filePos < fileSize)
 //	{
 //		int subVersion = 0;
-//		fread(&subVersion, sizeof(int), 1, fp);
+//		file.read(&subVersion, sizeof(int), 1, fp);
 //		if (subVersion == 1)
 //		{
 //			int numComments = 0;
 //			size_t commentSize = 0;
 //
 //			// group comments
-//			fread(&numComments, sizeof(int), 1, fp); 
+//			file.read(&numComments, sizeof(int), 1, fp); 
 //			for (i = 0; i < numComments; i++)
 //			{
 //				int index;
-//				fread(&index, sizeof(int), 1, fp);
+//				file.read(&index, sizeof(int), 1, fp);
 //				std::vector<char> comment;
-//				fread(&commentSize, sizeof(size_t), 1, fp);
+//				file.read(&commentSize, sizeof(size_t), 1, fp);
 //				comment.resize(commentSize);
 //				if (commentSize > 0)
-//					fread(&comment[0], sizeof(char), commentSize, fp);
+//					file.read(&comment[0], sizeof(char), commentSize, fp);
 //				if (index >= 0 && index < (int) m_groups.size())
 //					m_groups[index].comment = comment;
 //			}
 //
 //			// material comments
-//			fread(&numComments, sizeof(int), 1, fp); 
+//			file.read(&numComments, sizeof(int), 1, fp); 
 //			for (i = 0; i < numComments; i++)
 //			{
 //				int index;
-//				fread(&index, sizeof(int), 1, fp);
+//				file.read(&index, sizeof(int), 1, fp);
 //				std::vector<char> comment;
-//				fread(&commentSize, sizeof(size_t), 1, fp);
+//				file.read(&commentSize, sizeof(size_t), 1, fp);
 //				comment.resize(commentSize);
 //				if (commentSize > 0)
-//					fread(&comment[0], sizeof(char), commentSize, fp);
+//					file.read(&comment[0], sizeof(char), commentSize, fp);
 //				if (index >= 0 && index < (int) m_materials.size())
 //					m_materials[index].comment = comment;
 //			}
 //
 //			// joint comments
-//			fread(&numComments, sizeof(int), 1, fp); 
+//			file.read(&numComments, sizeof(int), 1, fp); 
 //			for (i = 0; i < numComments; i++)
 //			{
 //				int index;
-//				fread(&index, sizeof(int), 1, fp);
+//				file.read(&index, sizeof(int), 1, fp);
 //				std::vector<char> comment;
-//				fread(&commentSize, sizeof(size_t), 1, fp);
+//				file.read(&commentSize, sizeof(size_t), 1, fp);
 //				comment.resize(commentSize);
 //				if (commentSize > 0)
-//					fread(&comment[0], sizeof(char), commentSize, fp);
+//					file.read(&comment[0], sizeof(char), commentSize, fp);
 //				if (index >= 0 && index < (int) m_joints.size())
 //					m_joints[index].comment = comment;
 //			}
 //
 //			// model comments
-//			fread(&numComments, sizeof(int), 1, fp);
+//			file.read(&numComments, sizeof(int), 1, fp);
 //			if (numComments == 1)
 //			{
 //				std::vector<char> comment;
-//				fread(&commentSize, sizeof(size_t), 1, fp);
+//				file.read(&commentSize, sizeof(size_t), 1, fp);
 //				comment.resize(commentSize);
 //				if (commentSize > 0)
-//					fread(&comment[0], sizeof(char), commentSize, fp);
+//					file.read(&comment[0], sizeof(char), commentSize, fp);
 //				m_comment = comment;
 //			}
 //		}
@@ -569,22 +564,22 @@ void MS3D::read_materials()
 //	if (filePos < fileSize)
 //	{
 //		int subVersion = 0;
-//		fread(&subVersion, sizeof(int), 1, fp);
+//		file.read(&subVersion, sizeof(int), 1, fp);
 //		if (subVersion == 2)
 //		{
 //			for (int i = 0; i < numVertices; i++)
 //			{
-//				fread(&m_vertices[i].boneIds[0], sizeof(char), 3, fp);
-//				fread(&m_vertices[i].weights[0], sizeof(byte), 3, fp);
-//				fread(&m_vertices[i].extra, sizeof(unsigned int), 1, fp);
+//				file.read(&m_vertices[i].boneIds[0], sizeof(char), 3, fp);
+//				file.read(&m_vertices[i].weights[0], sizeof(byte), 3, fp);
+//				file.read(&m_vertices[i].extra, sizeof(unsigned int), 1, fp);
 //			}
 //		}
 //		else if (subVersion == 1)
 //		{
 //			for (int i = 0; i < numVertices; i++)
 //			{
-//				fread(&m_vertices[i].boneIds[0], sizeof(char), 3, fp);
-//				fread(&m_vertices[i].weights[0], sizeof(byte), 3, fp);
+//				file.read(&m_vertices[i].boneIds[0], sizeof(char), 3, fp);
+//				file.read(&m_vertices[i].weights[0], sizeof(byte), 3, fp);
 //			}
 //		}
 //		else
@@ -598,12 +593,12 @@ void MS3D::read_materials()
 //	if (filePos < fileSize)
 //	{
 //		int subVersion = 0;
-//		fread(&subVersion, sizeof(int), 1, fp);
+//		file.read(&subVersion, sizeof(int), 1, fp);
 //		if (subVersion == 1)
 //		{
 //			for (int i = 0; i < numJoints; i++)
 //			{
-//				fread(&m_joints[i].color, sizeof(float), 3, fp);
+//				file.read(&m_joints[i].color, sizeof(float), 3, fp);
 //			}
 //		}
 //		else
@@ -617,12 +612,12 @@ void MS3D::read_materials()
 //	if (filePos < fileSize)
 //	{
 //		int subVersion = 0;
-//		fread(&subVersion, sizeof(int), 1, fp);
+//		file.read(&subVersion, sizeof(int), 1, fp);
 //		if (subVersion == 1)
 //		{
-//			fread(&m_jointSize, sizeof(float), 1, fp);
-//			fread(&m_transparencyMode, sizeof(int), 1, fp);
-//			fread(&m_alphaRef, sizeof(float), 1, fp);
+//			file.read(&m_jointSize, sizeof(float), 1, fp);
+//			file.read(&m_transparencyMode, sizeof(int), 1, fp);
+//			file.read(&m_alphaRef, sizeof(float), 1, fp);
 //		}
 //		else
 //		{

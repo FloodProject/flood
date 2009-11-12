@@ -43,20 +43,29 @@ ConsoleTextCtrl::~ConsoleTextCtrl()
 
 //-----------------------------------//
 
+#define TEXT_COLOR wxColour( "LIGHT GREY" )
+#define ERROR_COLOR wxColour( "#C80000" )
+
 void ConsoleTextCtrl::InitControl()
 {
 	SetBackgroundColour( *wxBLACK );
-	//SetForegroundColour( *wxWHITE );
-
-	wxTextAttr style( wxColour( "LIGHT GREY" ) );
-	SetDefaultStyle( style );
+	SetForegroundColour( TEXT_COLOR );
 
 	Bind( wxEVT_SET_FOCUS, &ConsoleTextCtrl::OnSetFocus, this ); 
 
-	//Clear();
+	// The way these operations are ordered might seem stupid but
+	// any other order didn't seem to work... might be a wx bug.
 
-	/*ChangeValue( "> " ); */
-	AppendText( "> " ); 
+	AppendTextColor( 
+		wxString::Format("Welcome to vaporEditor Console [%s]\n\n", VAPOR_ENGINE_VERSION ),
+		*wxWHITE ); 
+
+	AppendTextColor( ">", *wxWHITE );
+
+	wxTextAttr style( TEXT_COLOR );
+	SetDefaultStyle( style );
+
+	AppendText( " " );
 
 	luaState = engine->getScriptState();
 }
@@ -65,8 +74,18 @@ void ConsoleTextCtrl::InitControl()
 
 void ConsoleTextCtrl::NewPromptLine()
 {
-	AppendText( "\n> " );
-	//SetStyle( 
+	AppendTextColor( "\n> ", *wxWHITE );
+}
+
+//-----------------------------------//
+
+void ConsoleTextCtrl::AppendTextColor( const wxString& text, const wxTextAttr& attr )
+{
+	const wxTextAttr oldStyle = GetDefaultStyle();
+
+	SetDefaultStyle( attr );
+	AppendText( text );
+	SetDefaultStyle( oldStyle );
 }
 
 //-----------------------------------//
@@ -100,6 +119,13 @@ void ConsoleTextCtrl::OnKeyDown(wxKeyEvent& event)
 		}
 	}
 
+	if( event.ControlDown() && key == 'L' )
+	{
+		// Ctrl-L can be used to clear the console
+		Clear();
+		NewPromptLine();
+	}
+
 	if( key == WXK_RETURN )
 	{
 		OnEnter();
@@ -130,7 +156,7 @@ void ConsoleTextCtrl::OnEnter(/*wxCommandEvent& event*/)
 	if( !luaState->execute( text.c_str() ) )
 	{
 		AppendText( "\n" );
-		AppendText( luaState->getLastError() );
+		AppendTextColor( luaState->getLastError(), ERROR_COLOR );
 	}
 
 	NewPromptLine();

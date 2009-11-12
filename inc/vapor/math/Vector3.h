@@ -36,6 +36,11 @@ public:
 		: x(v.x), y(v.y), z(v.z)
 	{ }
 
+	// Constructs a vector from 1 value
+	Vector3T (const T v)
+		: x(v), y(v), z(v)
+	{ }
+
 	// Constructs a vector from 3 values
 	Vector3T (const T a, const T b, const T c)
 		: x(a), y(b), z(c)
