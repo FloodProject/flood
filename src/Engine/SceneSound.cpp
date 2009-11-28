@@ -12,8 +12,7 @@
 
 #include "vapor/scene/Sound.h"
 
-namespace vapor {
-	namespace scene {
+namespace vapor { namespace scene {
 
 //-----------------------------------//
 

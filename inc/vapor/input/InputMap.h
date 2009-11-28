@@ -16,8 +16,7 @@
 #include "vapor/input/Mouse.h"
 #include "vapor/input/Joystick.h"
 
-namespace vapor {
-	namespace input {
+namespace vapor { namespace input {
 
 //-----------------------------------//
 

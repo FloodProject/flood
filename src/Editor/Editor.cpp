@@ -14,6 +14,7 @@
 #define VAPOR_USE_NAMESPACES
 #include <vapor/Headers.h>
 
+#include "vapor/terrain/Terrain.h"
 #include "vapor/render/Quad.h"
 
 namespace vapor { namespace editor {
@@ -127,13 +128,26 @@ void EditorFrame::initEngine()
 	engine = new vapor::Engine("vaporEditor", nullptr, false);
 	engine->init( false );
 
-	vaporCtrl = new vaporControl(engine, this);
+	int attribs[] = 
+	{
+		WX_GL_RGBA,
+		WX_GL_DOUBLEBUFFER,
+		WX_GL_DEPTH_SIZE, 32,
+		WX_GL_SAMPLE_BUFFERS, 1,
+		WX_GL_SAMPLES, 0,
+		0,
+	};
+
+	vaporCtrl = new vaporControl(engine, this/*, wxID_ANY, attribs*/ );
 
 	// add a new vaporControl in the frame
 	sizer->Add( vaporCtrl, 1, wxALL|wxEXPAND, 0 );
 
 	engine->getRenderDevice()->init();
 	engine->setupInput();
+
+	input::Mouse* mouse = engine->getInputManager()->getMouse();
+	mouse->onMouseButtonPress += fd::bind( &EditorFrame::onMouseClick, this );
 }
 
 //-----------------------------------//
@@ -161,6 +175,7 @@ void EditorFrame::createScene()
 	CameraPtr cam( new FirstPersonCamera( engine->getInputManager(), engine->getRenderDevice() ) );
 	camera->addComponent( TransformPtr( new Transform() ) );
 	camera->addComponent( cam );
+	camera->getTransform()->translate( 0.0f, -20.0f, -150.0f );
 	scene->add( camera );
 
 	MaterialPtr mat( new Material( "GridMaterial", diffuse ) );
@@ -184,10 +199,15 @@ void EditorFrame::createScene()
 		rend->getMaterial()->setProgram( tex );
 	}
 
-	NodePtr terreno( new Node( "Cubo" ) );
+	NodePtr cubo( new Node( "Cubo" ) );
+	cubo->addComponent( TransformPtr( new Transform() ) );
+	cubo->addComponent( mesh );
+	cubo->getTransform()->scale( 0.3f );
+	scene->add( cubo );
+
+	NodePtr terreno( new Node( "Terreno" ) );
 	terreno->addComponent( TransformPtr( new Transform() ) );
-	terreno->addComponent( mesh );
-	terreno->getTransform()->scale( 0.3f );
+	terreno->addComponent( TerrainPtr( new Terrain() ) );
 	scene->add( terreno );
 }
 
@@ -211,7 +231,7 @@ void EditorFrame::createNotebook()
 
 	panelScene->SetSizerAndFit( panelSceneSizer );
 
-	notebookCtrl->AddPage( panelScene, wxT("Scene"), true );
+	int scenePage = notebookCtrl->AddPage( panelScene, wxT("Scene"), true );
 
 	sizer->Add(notebookCtrl, 0, wxALL|wxEXPAND, 0 );
 
@@ -230,6 +250,8 @@ void EditorFrame::createNotebook()
 	panelResources->SetSizerAndFit( panelResourcesSizer );
 
 	notebookCtrl->AddPage( panelResources, wxT("Resources"), true );
+
+	notebookCtrl->SetSelection( scenePage );
 }
 
 //-----------------------------------//
@@ -323,6 +345,110 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 	//}
 
 	//event.Skip();
+}
+
+//-----------------------------------//
+
+void EditorFrame::onMouseClick( const MouseButtonEvent& mbe )
+{
+	// Let's do ray picking...
+	// Based on: http://www.mvps.org/directx/articles/rayproj.htm
+
+	//if( vaporCtrl->HasFocus() ) return;
+
+	// Disable all enabled bounding boxes.
+	foreach( NodePtr node, selectedNodes )
+	{
+		foreach( GeometryPtr geometry, node->getGeometry() )
+		{
+			geometry->setBoundingBoxVisible( false );
+		}
+	}
+
+	selectedNodes.clear();
+
+	// Just get all the needed classes with the data for picking.
+	ScenePtr scene = engine->getSceneManager();
+	NodePtr entity = scene->getEntity( "MainCamera" );
+	CameraPtr camera = entity->getComponent< Camera >( "Camera" );
+	RenderTarget* target = camera->getRenderTarget();
+
+	int width = target->getSettings().getWidth();
+	int height = target->getSettings().getHeight();
+
+	// Normalizing Screen Coordinates
+	float dx = (mbe.x / (width / 2.0f) - 1.0f) /*/ camera->getAspectRatio()*/;
+	float dy = 1.0f - (height - mbe.y) / (height / 2.0f);
+
+	// Scaling Coordinates to the Frustum
+	dx *= math::tanf( camera->getFOV() * 0.5f );
+	dy *= math::tanf( camera->getFOV() * 0.5f );
+
+	// Calculating the End Points of the Ray
+	float near_ = -camera->getNear();
+	float far_ = -camera->getFar();
+
+	Vector3 pNear = Vector3( dx * near_, dy * near_, near_ );
+	Vector3 pFar = Vector3( dx * far_, dy * far_, far_ );
+
+	// Generating an Inverse of the View Matrix
+	const Matrix4x3& invView = inverse( camera->getViewMatrix() );
+
+	// Converting the Ray to World Coordinates
+	pNear *= invView; 
+	pFar *= invView;
+
+	// Construct the picking Ray.
+	Ray pickRay( pNear, (pFar - pNear).normalize() );
+
+	debug( "pos: %f,%f,%f", pNear.x, pNear.y, pNear.z );
+	debug( "dir: %f,%f,%f", pickRay.getDirection().x, pickRay.getDirection().y, pickRay.getDirection().z );
+
+	//std::vector< Vector3 > vertex;
+	//vertex.push_back( pNear );
+	//vertex.push_back( pFar );
+
+	//std::vector< Vector3 > colors;
+	//colors.push_back( Vector3( 1.0f, 0.0f, 0.0f ) );
+	//colors.push_back( Vector3( 1.0f, 0.0f, 0.0f ) );
+
+	//VertexBufferPtr vb( new VertexBuffer() );
+	//vb->set( VertexAttribute::Vertex, vertex );
+	//vb->set( VertexAttribute::Color, colors );
+
+	//RenderablePtr rend( new Renderable( Primitive::Lines, vb ) );
+	//MaterialPtr mat( new Material( "LineMaterial", "diffuse" ) );
+	//rend->setMaterial( mat );
+	//GeometryPtr geom( new Geometry(rend) );
+	//NodePtr line( new Node( "line" ) );
+	//line->addComponent( TransformPtr( new Transform() ) );
+	//line->addComponent( geom );
+	//scene->add( line );
+
+	// Do some ray tracing to find a collision.
+	foreach( NodePtr node, scene->getChildren() )
+	{
+		if( node->getName() == "line" ) continue;
+
+		foreach( GeometryPtr geometry, node->getGeometry() )
+		{
+			const AABB& aabb = geometry->getBoundingBox();
+			
+			float distance;
+			if( aabb.intersects( pickRay, distance ) )
+			{
+				// We found what we want, enable its bounding box.
+				geometry->setBoundingBoxVisible( true );
+				selectedNodes.push_back( node );
+				debug( "distance: %f", distance );
+				goto pickDone;
+			}
+		}
+	}
+
+pickDone:
+
+	return;
 }
 
 //-----------------------------------//

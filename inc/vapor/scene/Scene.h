@@ -13,8 +13,7 @@
 
 #include "vapor/math/Matrix4x3.h"
 
-namespace vapor {
-	namespace scene {
+namespace vapor { namespace scene {
 
 //-----------------------------------//
 

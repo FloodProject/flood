@@ -15,8 +15,7 @@
 #include "vapor/resources/ResourceLoader.h"
 #include "vapor/resources/MS3D.h"
 
-namespace vapor {
-	namespace resources {
+namespace vapor { namespace resources {
 
 //-----------------------------------//
 

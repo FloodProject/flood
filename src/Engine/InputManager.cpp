@@ -10,8 +10,7 @@
 
 #include "vapor/input/InputManager.h"
 
-namespace vapor {
-	namespace input {
+namespace vapor { namespace input {
 
 //-----------------------------------//
 

@@ -13,7 +13,6 @@
 #define VAPOR_USE_NAMESPACES
 #include "vapor/Headers.h"
 
-
 #ifdef VAPOR_COMPILER_MSVC
 	#pragma warning( push )
 	#pragma warning( disable : 4127 )
@@ -25,14 +24,12 @@
 	#include <luabind/luabind.hpp>
 #endif
 
-
 using namespace luabind;
 
 using namespace vapor::scene;
 using namespace vapor::resources;
 
-namespace vapor {
-	namespace script {
+namespace vapor { namespace script {
 
 //-----------------------------------//
 

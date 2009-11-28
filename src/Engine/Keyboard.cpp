@@ -10,8 +10,7 @@
 
 #include "vapor/input/Keyboard.h"
 
-namespace vapor {
-	namespace input {
+namespace vapor { namespace input {
 
 //-----------------------------------//
 

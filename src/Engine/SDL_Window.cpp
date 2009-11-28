@@ -25,8 +25,7 @@
 
 using namespace vapor::log;
 
-namespace vapor {
-	namespace render {
+namespace vapor { namespace render {
 
 //-----------------------------------//
 

@@ -13,8 +13,7 @@
 #include "vapor/script/Script.h"
 #include "vapor/script/State.h"
 
-namespace vapor {
-	namespace script {
+namespace vapor { namespace script {
 
 //-----------------------------------//
 

@@ -18,8 +18,7 @@
 #include "vapor/render/VertexBuffer.h"
 #include "vapor/render/IndexBuffer.h"
 
-namespace vapor {
-	namespace render {
+namespace vapor { namespace render {
 
 /**
  * This class manages all the buffers used in the rendering system, 

@@ -10,8 +10,7 @@
 
 #include "vapor/gui/Overlay.h"
 
-namespace vapor {
-	namespace gui {
+namespace vapor { namespace gui {
 
 //-----------------------------------//
 

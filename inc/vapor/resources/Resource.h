@@ -10,8 +10,7 @@
 
 #include "vapor/Platform.h"
 
-namespace vapor {
-	namespace resources {
+namespace vapor { namespace resources {
 
 //-----------------------------------//
 

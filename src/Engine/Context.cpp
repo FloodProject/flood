@@ -17,8 +17,7 @@
 
 using namespace vapor::math;
 
-namespace vapor {
-	namespace audio {
+namespace vapor { namespace audio {
 
 //-----------------------------------//
 

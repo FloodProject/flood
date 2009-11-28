@@ -22,8 +22,7 @@
 	#include "vapor/resources/TTF.h"
 #endif
 
-namespace vapor {
-	namespace resources {
+namespace vapor { namespace resources {
 
 /**
  * Loads a font description file format that can describe both TTF and

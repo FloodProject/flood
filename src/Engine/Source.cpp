@@ -12,8 +12,7 @@
 
 #include "vapor/audio/Source.h"
 
-namespace vapor {
-	namespace audio {
+namespace vapor { namespace audio {
 
 //-----------------------------------//
 

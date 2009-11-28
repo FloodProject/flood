@@ -16,8 +16,9 @@
 
 using namespace vapor::resources;
 
-namespace vapor {
-	namespace render {
+namespace vapor { namespace render {
+
+static float DEFAULT_LINE_WIDTH = 1.0f;
 
 //-----------------------------------//
 
@@ -32,7 +33,8 @@ namespace vapor {
 
 Material::Material( const std::string& name, ProgramPtr program )
 	: name( name ), program( program ), _isBlendingEnabled( false ),
-	src( BlendingOperationSource::One ), dst( BlendingOperationDestination::Zero )
+	src( BlendingOperationSource::One ), dst( BlendingOperationDestination::Zero ),
+	lineWidth( DEFAULT_LINE_WIDTH ), lineSmooth( false )
 {
 
 }
@@ -42,7 +44,8 @@ Material::Material( const std::string& name, ProgramPtr program )
 Material::Material( const std::string& name, const std::string& program )
 	: name( name ), _isBlendingEnabled( false ), 
 	program( ProgramManager::getInstance().getProgram( program ) ),
-	src( BlendingOperationSource::One ), dst( BlendingOperationDestination::Zero )
+	src( BlendingOperationSource::One ), dst( BlendingOperationDestination::Zero ),
+	lineWidth( DEFAULT_LINE_WIDTH ), lineSmooth( false )
 {
 }
 
@@ -129,6 +132,34 @@ void Material::setProgram( ProgramPtr program )
 
 //-----------------------------------//
 
+float Material::getLineWidth() const
+{
+	return lineWidth;
+}
+
+//-----------------------------------//
+
+void Material::setLineWidth( float width )
+{
+	this->lineWidth = width;
+}
+
+//-----------------------------------//
+
+bool Material::getLineSmoothing() const
+{
+	return lineSmooth;
+}
+
+//-----------------------------------//
+
+void Material::setLineSmoothing( bool smooth )
+{
+	this->lineSmooth = smooth;
+}
+
+//-----------------------------------//
+
 void Material::setProgram( const std::string& name )
 {
 	ProgramPtr p = ProgramManager::getInstance().getProgram( name );
@@ -162,6 +193,16 @@ void Material::bind()
 		}
 	}
 
+	if( lineSmooth ) 
+	{
+		glEnable( GL_LINE_SMOOTH );
+	}
+
+	if( lineWidth != DEFAULT_LINE_WIDTH ) 
+	{
+		glLineWidth( lineWidth );
+	}
+
 	program->bind();
 
 	if( isBlendingEnabled() ) 
@@ -186,6 +227,9 @@ void Material::unbind()
 	{
 		glDisable( GL_BLEND );
 	}
+
+	glDisable( GL_LINE_SMOOTH );
+	glLineWidth( DEFAULT_LINE_WIDTH );
 }
 
 //-----------------------------------//

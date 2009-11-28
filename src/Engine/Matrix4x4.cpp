@@ -11,8 +11,7 @@
 #include "vapor/math/Matrix4x4.h"
 #include "vapor/math/Math.h"
 
-namespace vapor {
-	namespace math {
+namespace vapor { namespace math {
 
 //-----------------------------------//
 

@@ -10,8 +10,7 @@
 
 #include "vapor/resources/Font.h"
 
-namespace vapor {
-	namespace resources {
+namespace vapor { namespace resources {
 
 //-----------------------------------//
 

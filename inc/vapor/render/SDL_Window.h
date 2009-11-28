@@ -21,8 +21,7 @@
 #include "vapor/Platform.h"
 #include "vapor/render/Window.h"
 
-namespace vapor {
-	namespace render {
+namespace vapor { namespace render {
 
 //-----------------------------------//
 

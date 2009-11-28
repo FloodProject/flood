@@ -18,8 +18,7 @@
 
 #include "vapor/render/GL.h"
 
-namespace vapor {
-	namespace render {
+namespace vapor { namespace render {
 
 //-----------------------------------//
 
@@ -29,7 +28,6 @@ class Device;
 
 /**
  * Type of primitive of the renderable.
- * 
  */
 
 namespace Primitive
@@ -51,10 +49,7 @@ namespace Primitive
 
 //-----------------------------------//
 
-/**
- * Type of primitive of the renderable.
- * 
- */
+/** TODO: move this to material */
 
 namespace RenderMode
 {

@@ -11,8 +11,7 @@
 #include "vapor/Platform.h"
 #include "vapor/scene/Geometry.h"
 
-namespace vapor {
-	namespace gui {
+namespace vapor { namespace gui {
 
 //-----------------------------------//
 

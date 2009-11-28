@@ -13,8 +13,7 @@
 
 using namespace vapor::math;
 
-namespace vapor {
-	namespace scene {
+namespace vapor { namespace scene {
 
 //-----------------------------------//
 

@@ -14,8 +14,7 @@
 
 #include "vapor/Platform.h"
 
-namespace vapor {
-	namespace render {
+namespace vapor { namespace render {
 
 //-----------------------------------//	
 

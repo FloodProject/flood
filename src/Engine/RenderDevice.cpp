@@ -19,8 +19,7 @@
 
 using namespace vapor::math;
 
-namespace vapor {
-	namespace render {
+namespace vapor { namespace render {
 
 //-----------------------------------//
 
@@ -62,7 +61,7 @@ void Device::init()
 	TextureManager::getInstance();
 	ProgramManager::getInstance();
 
-	//glEnable( GL_LINE_SMOOTH );
+	glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
 
 	//glEnable( GL_CULL_FACE );
 	glCullFace( GL_BACK );

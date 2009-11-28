@@ -10,8 +10,9 @@
 
 #include "vapor/Platform.h"
 
-namespace vapor {
-	namespace math {
+namespace vapor { namespace math {
+
+//-----------------------------------//
 
 /**
  * Very simple representation of a color.
@@ -36,6 +37,8 @@ struct VAPOR_API Color
 	}
 };
 
+//-----------------------------------//
+
 namespace Colors 
 {
 
@@ -46,6 +49,8 @@ namespace Colors
 	static const Color Blue(0.0f, 0.0f, 1.0f);
 	static const Color Yellow(1.0f, 1.0f, 0.0f);
 }
+
+//-----------------------------------//
 
 //ColorRGB operator+(const ColorRGB& color, const ColorRGB& color2);
 //ColorRGB operator-(const ColorRGB& color, const ColorRGB& color2);
@@ -71,5 +76,7 @@ namespace Colors
 //static const ColorRGB RGB_Teal     (  0, 128, 128);
 //static const ColorRGB RGB_Purple   (128,   0, 128);
 //static const ColorRGB RGB_Olive    (128, 128,   0);
+
+//-----------------------------------//
 
 } } // end namespaces

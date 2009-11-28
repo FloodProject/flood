@@ -8,8 +8,7 @@
 
 #pragma once
 
-namespace vapor {
-	namespace math {
+namespace vapor { namespace math {
 
 //-----------------------------------//
 

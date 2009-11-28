@@ -13,8 +13,7 @@
 #include "vapor/audio/Buffer.h"
 #include "vapor/audio/Device.h"
 
-namespace vapor {
-	namespace audio {
+namespace vapor { namespace audio {
 
 //-----------------------------------//
 

@@ -14,8 +14,7 @@
 #include "vapor/scene/Geometry.h"
 #include "vapor/math/AABB.h"
 
-namespace vapor {
-	namespace scene {
+namespace vapor { namespace scene {
 
 //-----------------------------------//
 
@@ -73,10 +72,13 @@ public:
 	//virtual const std::string save(int indent = 0);
 
 	// Gets the name of the node.
-	virtual const std::string getName() const;
+	virtual const std::string& getName() const;
+
+	// Sets the name of the node.
+	virtual void setName( const std::string& name );
 
 	// Gets the bounding volume of the node.
-	//AABB getBoundingVolume() const;
+	//AABB& getBoundingVolume() const;
 
 	// Gets the associated transform component (if any).
 	TransformPtr getTransform();
@@ -84,6 +86,12 @@ public:
 
 	// Gets the geometries components in the node.
 	const std::vector< GeometryPtr >& getGeometry();
+
+	// Is this node visible?
+	bool getVisible() const;
+
+	// Sets the visibility of this node.
+	void setVisible( bool visible );
 
 private:
 
@@ -102,6 +110,9 @@ private:
 
 	// Bounding volume used for culling.
 	math::AABB boundingVolume;
+
+	// Visibility
+	bool isVisible;
 };
 
 //-----------------------------------//

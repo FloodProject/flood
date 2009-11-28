@@ -12,8 +12,7 @@
 #include "vapor/math/Matrix4x3.h"
 #include "vapor/math/Vector3.h"
 
-namespace vapor {
-	namespace math {
+namespace vapor { namespace math {
 
 //-----------------------------------//
 

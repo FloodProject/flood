@@ -10,8 +10,7 @@
 
 #include "vapor/scene/Group.h"
 
-namespace vapor {
-	namespace scene {
+namespace vapor { namespace scene {
 
 //-----------------------------------//
 

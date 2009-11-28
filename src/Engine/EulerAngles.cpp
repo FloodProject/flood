@@ -10,8 +10,7 @@
 
 #include "vapor/math/EulerAngles.h"
 
-namespace vapor {
-	namespace math {
+namespace vapor { namespace math {
 
 //-----------------------------------//
 

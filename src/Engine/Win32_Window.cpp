@@ -12,8 +12,7 @@
 
 #ifdef VAPOR_WINDOWING_WIN32
 
-namespace vapor {
-	namespace render {
+namespace vapor { namespace render {
 
 //-----------------------------------//
 

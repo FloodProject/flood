@@ -13,8 +13,7 @@
 #include "vapor/render/BufferManager.h"
 #include "vapor/render/GL.h"
 
-namespace vapor {
-	namespace render {
+namespace vapor { namespace render {
 
 //-----------------------------------//
 

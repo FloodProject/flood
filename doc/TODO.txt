@@ -30,7 +30,8 @@ Change scripting background to black (DONE)
 Make the scripting evaluate line-a-line (DONE)
 Add scene events in the Scene node (DONE)
 
-	
+http://www.ogre3d.org/wiki/index.php/Raycasting_to_the_polygon_level
+http://code.google.com/p/minimal-ogre-collision-toolkit/source/browse/trunk/moc.v1.0.rc1.beta.2008.10.20.src/CollisionTools.cpp
 http://wxlua.sourceforge.net/
 http://news.gmane.org/gmane.comp.lib.wxwidgets.wxlua.user
 	
@@ -38,6 +39,7 @@ http://news.gmane.org/gmane.comp.lib.wxwidgets.wxlua.user
 Near TODO:
 ----------
 
+Add hierarchical frustum culling
 Fix Bounding Boxes hierarchy
 Fix the logging file and crashing behaviour
 Skybox component
@@ -59,7 +61,7 @@ http://msdn.microsoft.com/en-us/library/aa366750%28VS.85%29.aspx
 http://www.gamasutra.com/view/feature/2971/play_by_play_effective_memory_.php
 http://www.fastformat.org/
 
-Integrate Camera direction vectors
+Fix Camera direction vectors
 Change ExampleFramework to use delegates
 update method in RenderDevice
 Bounding Boxes and Frustum Culling
@@ -148,13 +150,11 @@ Math:
 	Add matrix and AABB class
 	Use column-major instead of row-major matrices
 	
-vaporEditor:
-
-	Add Resources pane with all the resource groups
 	
 DONE:
 -----
 
+Add Resources pane with all the resource groups
 Check the need for defining copy-constructors in all classes (boost::noncopyable for now)
 Window size changed notifications for Camera/Viewport aspect ration calculations
 TextureManager

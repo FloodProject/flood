@@ -12,8 +12,7 @@
 
 #include "vapor/input/Device.h"
 
-namespace vapor {
-	namespace input {
+namespace vapor { namespace input {
 
 //-----------------------------------//	
 

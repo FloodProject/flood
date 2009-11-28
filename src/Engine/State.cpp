@@ -15,8 +15,7 @@
 #include <lua.hpp>
 #include <luabind/luabind.hpp>
 
-namespace vapor {
-	namespace script {
+namespace vapor { namespace script {
 
 //-----------------------------------//
 

@@ -10,8 +10,7 @@
 
 #include "vapor/Platform.h"
 
-namespace vapor {
-	namespace input {
+namespace vapor { namespace input {
 
 //-----------------------------------//
 

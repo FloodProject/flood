@@ -9,15 +9,14 @@
 #pragma once
 
 #include "vapor/Platform.h"
-#include "vapor/scene/Transform.h"
+#include "vapor/scene/Component.h"
 
 #include "vapor/render/Renderable.h"
 #include "vapor/render/RenderQueue.h"
 
 #include "vapor/math/AABB.h"
 
-namespace vapor {
-	namespace scene {
+namespace vapor { namespace scene {
 
 //-----------------------------------//
 
@@ -63,6 +62,9 @@ public:
 
 	// Sets the visibility of this geometry bounding box.
 	void setBoundingBoxVisible( bool visible );
+
+	// Gets the bounding box of this geometry.
+	const math::AABB& getBoundingBox() const;
 
 protected:
 

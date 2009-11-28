@@ -15,8 +15,7 @@
 #include "vapor/resources/ResourceLoader.h"
 #include "vapor/resources/Image.h"
 
-namespace vapor {
-	namespace resources {
+namespace vapor { namespace resources {
 
 //-----------------------------------//
 

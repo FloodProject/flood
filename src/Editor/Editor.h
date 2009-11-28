@@ -76,6 +76,9 @@ protected:
     void OnAbout(wxCommandEvent& event);
 	void OnToolbarButtonClick(wxCommandEvent& event);
 
+	// Handles picking of entities.
+	void onMouseClick( const vapor::input::MouseButtonEvent& mbe );
+
 	// vaporEngine instance.
 	vapor::Engine* engine;
 	
@@ -95,6 +98,8 @@ protected:
 	wxBoxSizer* sizer;
 
 	ConsoleFrame* codeEvaluator;
+
+	std::vector< scene::NodePtr > selectedNodes;
 
 private:
 

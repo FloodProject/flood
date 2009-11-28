@@ -23,8 +23,7 @@
 /** \addtogroup audio Audio 
  * @{ */
 
-namespace vapor {
-	namespace audio {
+namespace vapor { namespace audio {
 
 //-----------------------------------//
 

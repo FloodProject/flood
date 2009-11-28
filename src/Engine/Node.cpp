@@ -10,20 +10,19 @@
 
 #include "vapor/scene/Node.h"
 
-namespace vapor {
-	namespace scene {
+namespace vapor { namespace scene {
 
 //-----------------------------------//
 
 Node::Node( const std::string& name )
-	: name( name )
+	: name( name ), isVisible( true )
 {
 
 }
 
 //-----------------------------------//
 
-Node::Node()
+Node::Node() : isVisible( true )
 {
 
 }
@@ -48,6 +47,20 @@ NodePtr Node::getParent( ) const
 void Node::setParent( NodePtr parent )
 {
 	this->parent = parent;
+}
+
+//-----------------------------------//
+
+bool Node::getVisible( ) const
+{
+	return isVisible;
+}
+
+//-----------------------------------//
+
+void Node::setVisible( bool visible )
+{
+	this->isVisible = visible;
 }
 
 //-----------------------------------//
@@ -127,9 +140,16 @@ const std::vector< GeometryPtr >& Node::getGeometry()
 
 //-----------------------------------//
 
-const std::string Node::getName() const
+const std::string& Node::getName() const
 {
 	return name;
+}
+
+//-----------------------------------//
+
+void Node::setName( const std::string& name )
+{
+	this->name = name;
 }
 
 //-----------------------------------//

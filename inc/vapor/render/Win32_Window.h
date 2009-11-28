@@ -19,8 +19,7 @@
 	#error This code is Windows only. Disable VAPOR_WINDOWING_WIN32.
 #endif
 
-namespace vapor {
-	namespace render {
+namespace vapor { namespace render {
 
 //-----------------------------------//
 

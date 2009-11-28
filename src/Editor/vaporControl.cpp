@@ -11,8 +11,8 @@
 
 #include "vapor/render/Window.h"
 
-#define VAPOR_USE_NAMESPACES
-#include <vapor/Headers.h>
+#include "vapor/scene/Scene.h"
+#include "vapor/scene/Camera.h"
 
 #ifdef __WXGTK__
 	#include <gdk/gdk.h>
@@ -26,6 +26,7 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
+using namespace vapor::scene;
 using namespace vapor::render;
 using namespace vapor::math;
 
@@ -178,7 +179,7 @@ void vaporControl::OnKeyUp(wxKeyEvent& event)
 
 void vaporControl::OnMouseEvent(wxMouseEvent& event)
 {
-	if( event.ButtonDown( wxMOUSE_BTN_LEFT ) )
+	if( event.ButtonDown( wxMOUSE_BTN_LEFT ) && !HasFocus() )
 		SetFocus();
 	
 	im->processMouseEvent( event );

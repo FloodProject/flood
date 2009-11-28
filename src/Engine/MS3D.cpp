@@ -17,8 +17,7 @@ using namespace vapor::render;
 using namespace vapor::math;
 using namespace vapor::scene;
 
-namespace vapor {
-	namespace resources {
+namespace vapor { namespace resources {
 
 //-----------------------------------//
 

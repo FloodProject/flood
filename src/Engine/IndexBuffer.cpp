@@ -13,8 +13,7 @@
 #include "vapor/render/IndexBuffer.h"
 #include "vapor/render/GL.h"
 
-namespace vapor {
-	namespace render {
+namespace vapor { namespace render {
 
 //-----------------------------------//
 

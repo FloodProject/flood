@@ -16,8 +16,7 @@
 #include "vapor/audio/Context.h"
 #include "vapor/scene/Transform.h"
 
-namespace vapor {
-	namespace scene {
+namespace vapor { namespace scene {
 
 //-----------------------------------//
 

@@ -15,8 +15,7 @@
 
 #include <physfs.h>
 
-namespace vapor {
-	namespace vfs {
+namespace vapor { namespace vfs {
 
 //-----------------------------------//
 

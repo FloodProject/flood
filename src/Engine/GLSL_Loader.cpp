@@ -16,8 +16,7 @@
 
 using vapor::vfs::File;
 
-namespace vapor {
-	namespace resources {
+namespace vapor { namespace resources {
 
 //-----------------------------------//
 

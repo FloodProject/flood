@@ -12,8 +12,7 @@
 #include "vapor/resources/Resource.h"
 #include "vapor/scene/Geometry.h"
 
-namespace vapor {
-	namespace resources {
+namespace vapor { namespace resources {
 
 //-----------------------------------//
 

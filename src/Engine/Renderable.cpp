@@ -10,8 +10,7 @@
 
 #include "vapor/render/Renderable.h"
 
-namespace vapor {
-	namespace render {
+namespace vapor { namespace render {
 
 //-----------------------------------//
 

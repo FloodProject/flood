@@ -10,8 +10,7 @@
 
 #include "vapor/resources/Shader.h"
 
-namespace vapor {
-	namespace resources {
+namespace vapor { namespace resources {
 
 //-----------------------------------//
 

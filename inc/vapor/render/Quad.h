@@ -15,8 +15,7 @@
 
 #include "vapor/math/Dimension.h"
 
-namespace vapor {
-	namespace render {
+namespace vapor { namespace render {
 
 //-----------------------------------//
 

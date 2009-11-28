@@ -18,8 +18,7 @@
 /** \addtogroup virtual Virtual Filesystem 
  * @{ */
 
-namespace vapor {
-	namespace vfs {
+namespace vapor { namespace vfs {
 
 //-----------------------------------//
 

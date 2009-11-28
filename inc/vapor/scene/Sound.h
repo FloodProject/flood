@@ -18,11 +18,9 @@
 #include "vapor/scene/Listener.h"
 
 #include "vapor/audio/Source.h"
-
 #include "vapor/resources/Sound.h"
 
-namespace vapor {
-	namespace scene {
+namespace vapor { namespace scene {
 
 //-----------------------------------//
 

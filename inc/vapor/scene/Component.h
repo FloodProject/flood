@@ -10,8 +10,7 @@
 
 #include "vapor/Platform.h"
 
-namespace vapor {
-	namespace scene {
+namespace vapor { namespace scene {
 
 //-----------------------------------//
 

@@ -12,8 +12,7 @@
 #include "vapor/vfs/File.h"
 #include "vapor/resources/Resource.h"
 
-namespace vapor {
-	namespace resources {
+namespace vapor { namespace resources {
 
 //-----------------------------------//
 

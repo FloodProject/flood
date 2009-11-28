@@ -20,8 +20,7 @@
 #include "vapor/resources/Sound.h"
 #include "vapor/math/Vector3.h"
 
-namespace vapor {
-	namespace audio {
+namespace vapor { namespace audio {
 
 /** \addtogroup audio Audio 
  * @{ */

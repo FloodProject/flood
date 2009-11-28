@@ -14,8 +14,7 @@
 
 using namespace vapor::vfs;
 
-namespace vapor {
-	namespace resources {
+namespace vapor { namespace resources {
 
 //-----------------------------------//
 

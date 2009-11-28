@@ -22,8 +22,7 @@ int decodePNG(std::vector<byte>& out_image_32bit, ulong& image_width,
 
 //-----------------------------------//
 
-namespace vapor {
-	namespace resources {
+namespace vapor { namespace resources {
 
 //-----------------------------------//
 

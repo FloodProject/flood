@@ -11,11 +11,10 @@
 #include "vapor/scene/Geometry.h"
 #include "vapor/scene/Node.h"
 
+namespace vapor { namespace scene {
+
 using namespace vapor::render;
 using namespace vapor::math;
-
-namespace vapor {
-	namespace scene {
 
 //-----------------------------------//
 
@@ -51,6 +50,8 @@ void Geometry::buildBoundingRenderable()
 {
 	VertexBufferPtr vb( new VertexBuffer() );
 	MaterialPtr mat( new Material( "BoundBox", "diffuse" ) );
+	mat->setLineWidth( 1.0f );
+	mat->setLineSmoothing( true );
 	bbox.reset( new Renderable( Primitive::Quads, vb, mat ) );
 	bbox->setRenderMode( RenderMode::Wireframe );
 }
@@ -122,7 +123,7 @@ const math::AABB& Geometry::getBoundingVolume() const
 
 //-----------------------------------//
 
-const float EXTRA_SPACE = 1.05f;
+static const float EXTRA_SPACE = 1.01f;
 
 #define ADD_BOX_FACE( a, b, c, d )								\
 	v.push_back( boundingVolume.getCorner( a ) * EXTRA_SPACE );	\
@@ -163,6 +164,13 @@ void Geometry::update( float delta )
 	vb->set( VertexAttribute::Color, c );
 
 	isDirty = false;
+}
+
+//-----------------------------------//
+
+const math::AABB& Geometry::getBoundingBox() const
+{
+	return boundingVolume;
 }
 
 //-----------------------------------//

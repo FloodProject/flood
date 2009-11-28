@@ -10,8 +10,7 @@
 
 #include "vapor/input/Mouse.h"
 
-namespace vapor {
-	namespace input {
+namespace vapor { namespace input {
 
 //-----------------------------------//
 

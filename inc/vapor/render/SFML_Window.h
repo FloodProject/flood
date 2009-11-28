@@ -19,8 +19,7 @@
 
 #include "vapor/input/SFML_InputManager.h"
 
-namespace vapor {
-	namespace render {
+namespace vapor { namespace render {
 
 //-----------------------------------//
 

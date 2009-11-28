@@ -16,8 +16,7 @@
 #include "vapor/math/Vector3.h"
 #include "vapor/math/EulerAngles.h"
 
-namespace vapor {
-	namespace scene {
+namespace vapor { namespace scene {
 
 //-----------------------------------//
 

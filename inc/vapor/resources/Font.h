@@ -14,8 +14,7 @@
 #include "vapor/render/Texture.h"
 #include "vapor/render/Renderable.h"
 
-namespace vapor {
-	namespace resources {
+namespace vapor { namespace resources {
 
 //-----------------------------------//
 

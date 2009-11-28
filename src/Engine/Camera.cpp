@@ -15,8 +15,7 @@
 using namespace vapor::math;
 using namespace vapor::render;
 
-namespace vapor {
-	namespace scene {
+namespace vapor { namespace scene {
 
 //-----------------------------------//
 
@@ -42,6 +41,13 @@ void Camera::setProjection( Projection::Enum projection )
 
 //-----------------------------------//
 
+float Camera::getFOV() const
+{
+	return fov;
+}
+
+//-----------------------------------//
+
 const math::Matrix4x4& Camera::getProjectionMatrix() const
 {
 	return projectionMatrix;
@@ -52,6 +58,13 @@ const math::Matrix4x4& Camera::getProjectionMatrix() const
 const math::Matrix4x3& Camera::getViewMatrix() const
 {
 	return viewMatrix;
+}
+
+//-----------------------------------//
+
+render::RenderTarget* Camera::getRenderTarget() const
+{
+	return target;
 }
 
 //-----------------------------------//
@@ -70,10 +83,26 @@ void Camera::setNear( float near_ )
 
 //-----------------------------------//
 
+float Camera::getNear() const
+{
+	return near_;
+}
+
+
+//-----------------------------------//
+
 void Camera::setFar( float far_ )
 {
 	this->far_ = far_;
 }
+
+//-----------------------------------//
+
+float Camera::getFar() const
+{
+	return far_;
+}
+
 
 //-----------------------------------//
 
@@ -125,14 +154,16 @@ void Camera::setupProjection()
 			near_, far_ );
 	}
 
-	//glMatrixMode( GL_PROJECTION );
-	//glLoadIdentity();
+	glMatrixMode( GL_PROJECTION );
+	glLoadIdentity();
 	//glOrtho( -target->getSettings().getWidth()/16, target->getSettings().getWidth()/16, 
 	//	-target->getSettings().getHeight()/16, target->getSettings().getHeight()/16, 1.0f, 100.0f );
 	////glOrtho( 0.0, target->getSettings().getWidth(), 0.0, target->getSettings().getHeight(), near_, far_ );
 
-	//GLfloat test[16];
-	//glGetFloatv( GL_PROJECTION_MATRIX, &test[0] );
+	gluPerspective( fov, getAspectRatio(), near_, far_ );
+
+	GLfloat test[16];
+	glGetFloatv( GL_PROJECTION_MATRIX, &test[0] );
 }
 
 //-----------------------------------//
@@ -203,6 +234,7 @@ void Camera::cull( render::RenderQueue& queue, NodePtr node ) const
 		// Cull the children nodes recursively.
 		foreach( NodePtr child, group->getChildren() )
 		{
+			if( !child->getVisible() ) continue;
 			cull( queue, child );
 		}
 	}

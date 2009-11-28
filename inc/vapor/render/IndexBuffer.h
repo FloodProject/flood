@@ -12,8 +12,7 @@
 
 #include "vapor/render/Buffer.h"
 
-namespace vapor {
-	namespace render {
+namespace vapor { namespace render {
 
 //-----------------------------------//
 

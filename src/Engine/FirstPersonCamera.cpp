@@ -10,18 +10,23 @@
 
 #include "vapor/scene/FirstPersonCamera.h"
 
+namespace vapor { namespace scene {
+
 using namespace vapor::input;
 using namespace vapor::math;
 
-namespace vapor {
-	namespace scene {
+//-----------------------------------//
+
+static const float DEFAULT_MOVE_SENSIVITY = 1.1f;
+static const float DEFAULT_LOOK_SENSIVITY = 0.01f;
 
 //-----------------------------------//
 
 FirstPersonCamera::FirstPersonCamera( input::InputManager* input,
 	render::Device* device, Projection::Enum projection )
 	: Camera( device, projection ), inputManager( input ), 
-	moveSensivity( 1.0f ), lookSensivity( 0.01f ), clampMovementX( true )
+	moveSensivity( DEFAULT_MOVE_SENSIVITY ), lookSensivity( DEFAULT_LOOK_SENSIVITY ), 
+	clampMovementX( true )
 {
 	registerCallbacks();	
 	centerCursor();

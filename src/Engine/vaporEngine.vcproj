@@ -271,6 +271,18 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Ray"
+				>
+				<File
+					RelativePath=".\Ray.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\math\Ray.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Render"
@@ -886,26 +898,6 @@
 					RelativePath="..\..\inc\vapor\scene\FirstPersonCamera.h"
 					>
 				</File>
-				<Filter
-					Name="Audio"
-					>
-					<File
-						RelativePath=".\Listener.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\inc\vapor\scene\Listener.h"
-						>
-					</File>
-					<File
-						RelativePath=".\SceneSound.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\inc\vapor\scene\Sound.h"
-						>
-					</File>
-				</Filter>
 			</Filter>
 			<Filter
 				Name="Transform"
@@ -972,6 +964,26 @@
 				>
 				<File
 					RelativePath="..\..\inc\vapor\scene\Entity.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Audio"
+				>
+				<File
+					RelativePath=".\Listener.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\scene\Listener.h"
+					>
+				</File>
+				<File
+					RelativePath=".\SceneSound.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\scene\Sound.h"
 					>
 				</File>
 			</Filter>
@@ -1251,6 +1263,30 @@
 					>
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="Terrain"
+			>
+			<File
+				RelativePath="..\..\inc\vapor\terrain\Brush.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Page.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\terrain\Page.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Terrain.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\scene\Terrain.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath="..\..\inc\vapor\CompileOptions.h"

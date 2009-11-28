@@ -20,8 +20,7 @@
 	#error "OpenGL renderer needs a windowing implementation"
 #endif
 
-namespace vapor {
-	namespace render {
+namespace vapor { namespace render {
 
 //-----------------------------------//
 

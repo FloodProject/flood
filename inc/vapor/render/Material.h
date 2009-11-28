@@ -18,8 +18,7 @@
 
 #include "vapor/render/TextureManager.h"
 
-namespace vapor {
-	namespace render {
+namespace vapor { namespace render {
 
 //-----------------------------------//
 
@@ -59,6 +58,21 @@ namespace BlendingOperationDestination
 //-----------------------------------//
 
 /**
+ * Type of primitive of the renderable.
+ */
+
+namespace PolygonMode
+{
+    enum Enum
+    {
+		Solid = GL_FILL,
+		Wireframe = GL_LINE
+    };
+}
+
+//-----------------------------------//
+
+/**
  * Rendering material.
  */
 
@@ -88,6 +102,18 @@ public:
 
 	// Sets the associated program.
 	void setProgram( const std::string& name );
+
+	// Gets the line width of this material.
+	float getLineWidth() const;
+
+	// Sets the line width of this material.
+	void setLineWidth( float width );
+
+	// Gets the line smoothing of this material.
+	bool getLineSmoothing() const;
+
+	// Sets the line smoothing of this material.
+	void setLineSmoothing( bool smooth );
 
 	// Gets the blending options for this material.
 	BlendingOperationSource::Enum getSourceBlendingOperation();
@@ -130,6 +156,9 @@ protected:
 	// Program of the material.
 	ProgramPtr program;
 
+	float lineWidth;
+	bool lineSmooth;
+	
 	// Name of the material.
 	std::string name;
 };

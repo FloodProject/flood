@@ -19,8 +19,7 @@ struct PHYSFS_File;
 /** \addtogroup virtual Virtual Filesystem 
  * @{ */
 
-namespace vapor {
-	namespace vfs {
+namespace vapor { namespace vfs {
 
 //-----------------------------------//
 
@@ -74,7 +73,7 @@ public:
 	std::vector<byte> read(long size = -1) const;
 
 	/// Reads up to size bytes into the buffer.
-	long read(void* buffer, long size ) const;
+	long read(void* buffer, long size) const;
 
 	/// Read lines (assumes a text file).
 	std::vector<std::string> readLines() const;

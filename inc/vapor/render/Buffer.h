@@ -11,8 +11,7 @@
 #include "vapor/Platform.h"
 #include "vapor/render/GL.h"
 
-namespace vapor {
-	namespace render {
+namespace vapor { namespace render {
 
 //"Static" means the data in VBO will not be changed (specified once and used
 //many times), "dynamic" means the data will be changed frequently (specified

@@ -15,8 +15,7 @@
 #include "vapor/Platform.h"
 #include "vapor/resources/Resource.h"
 
-namespace vapor {
-	namespace script {
+namespace vapor { namespace script {
 
 //-----------------------------------//
 

@@ -14,8 +14,7 @@
 #include "vapor/resources/ResourceManager.h"
 #include "vapor/render/Program.h"
 
-namespace vapor {
-	namespace render {
+namespace vapor { namespace render {
 
 //-----------------------------------//
 

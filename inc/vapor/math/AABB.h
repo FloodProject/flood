@@ -9,9 +9,9 @@
 #pragma once
 
 #include "vapor/math/Vector3.h"
+#include "vapor/math/Ray.h"
 
-namespace vapor {
-	namespace math {
+namespace vapor { namespace math {
 
 //-----------------------------------//
 
@@ -47,7 +47,7 @@ public:
 	void add( const AABB& aabb );
 
 	// Intersection with a ray
-	// bool intersects( const Ray& ray, float& distance );
+	 bool intersects( const Ray& ray, float& distance ) const;
 
 public:
 

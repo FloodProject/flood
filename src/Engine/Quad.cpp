@@ -10,8 +10,7 @@
 
 #include "vapor/render/Quad.h"
 
-namespace vapor {
-	namespace render {
+namespace vapor { namespace render {
 
 using namespace vapor::math;
 

@@ -13,8 +13,7 @@
 
 #include "vapor/input/InputManager.h"
 
-namespace vapor {
-	namespace render {
+namespace vapor { namespace render {
 
 //-----------------------------------//
 

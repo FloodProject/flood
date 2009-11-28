@@ -12,8 +12,7 @@
 
 #include "vapor/scene/Listener.h"
 
-namespace vapor {
-	namespace scene {
+namespace vapor { namespace scene {
 
 using std::static_pointer_cast;
 

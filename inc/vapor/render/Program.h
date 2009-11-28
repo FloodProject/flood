@@ -15,8 +15,7 @@
 #include "vapor/math/Matrix4x3.h"
 #include "vapor/math/Matrix4x4.h"
 
-namespace vapor {
-	namespace render {
+namespace vapor { namespace render {
 
 //-----------------------------------//
 

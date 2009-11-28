@@ -12,8 +12,7 @@
 
 using namespace vapor::resources;
 
-namespace vapor {
-	namespace render {
+namespace vapor { namespace render {
 
 //-----------------------------------//
 

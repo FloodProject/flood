@@ -23,8 +23,7 @@
 #include "vapor/render/Renderable.h"
 #include "vapor/render/RenderQueue.h"
 
-namespace vapor {
-	namespace scene {
+namespace vapor { namespace scene {
 
 //-----------------------------------//
 
@@ -66,14 +65,23 @@ public:
 	// Gets the view matrix of the camera.
 	const math::Matrix4x3& getViewMatrix() const;
 
+	// Gets the field-of-view of the camera.
+	float getFOV() const;
+
 	// Sets the field-of-view of the camera.
 	void setFOV( float fov );
 
 	// Sets the far clipping plane of the camera.
 	void setFar( float far );
 
+	// Gets the far clipping plane of the camera.
+	float getFar() const;
+
 	// Sets the near clipping plane of the camera.
 	void setNear( float near );
+
+	// Gets the near clipping plane of the camera.
+	float getNear() const;
 
 	// Gets the current render target associated with the camera.
 	render::RenderTarget* getRenderTarget() const;
@@ -109,10 +117,10 @@ public:
 	// Gets the name of this node.
 	virtual const std::string& getType() const;
 
-protected:
-
 	// Gets the aspect ratio of the target.
 	float getAspectRatio() const;
+
+protected:
 
 	// Handles target resize (must update width, height).
 	void handleTargetResize( const render::Settings& );

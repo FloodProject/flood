@@ -9,8 +9,7 @@
 #include "vapor/PCH.h"
 #include "vapor/scene/Grid.h"
 
-namespace vapor {
-	namespace scene {
+namespace vapor { namespace scene {
 
 using namespace vapor::math;
 using namespace vapor::render;

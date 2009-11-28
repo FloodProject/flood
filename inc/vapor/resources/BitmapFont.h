@@ -13,8 +13,7 @@
 
 #ifdef VAPOR_FONT_BITMAP
 
-namespace vapor {
-	namespace resources {
+namespace vapor { namespace resources {
 
 //-----------------------------------//
 
