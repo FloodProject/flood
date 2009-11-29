@@ -15,6 +15,7 @@
 #include <vapor/Headers.h>
 
 #include "vapor/terrain/Terrain.h"
+#include "vapor/terrain/Page.h"
 #include "vapor/render/Quad.h"
 
 namespace vapor { namespace editor {
@@ -184,11 +185,6 @@ void EditorFrame::createScene()
 	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
 	scene->add( grid );
 
-	foreach( const RenderablePtr& rend, grid->getComponent<Geometry>("Grid")->getRenderables() )
-	{
-		rend->getMaterial()->setProgram( diffuse );
-	}
-
 	ScriptPtr lua = rm->loadResource< Script >( "teste.lua" );
 	engine->getScriptState()->registerScript( lua );
 
@@ -205,10 +201,16 @@ void EditorFrame::createScene()
 	cubo->getTransform()->scale( 0.3f );
 	scene->add( cubo );
 
+	TerrainPtr terrain( new Terrain() );
+
 	NodePtr terreno( new Node( "Terreno" ) );
 	terreno->addComponent( TransformPtr( new Transform() ) );
-	terreno->addComponent( TerrainPtr( new Terrain() ) );
+	terreno->addComponent( terrain );
 	scene->add( terreno );
+
+	Page* page = terrain->createPage( 0, 0 );
+	terrain->createPage( 1, 0 );
+	terrain->createPage( -1, 0 );
 }
 
 //-----------------------------------//

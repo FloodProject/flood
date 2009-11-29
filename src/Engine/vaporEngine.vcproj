@@ -1284,7 +1284,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\inc\vapor\scene\Terrain.h"
+				RelativePath="..\..\inc\vapor\terrain\Terrain.h"
 				>
 			</File>
 		</Filter>

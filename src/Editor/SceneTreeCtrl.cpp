@@ -190,8 +190,12 @@ void SceneTreeCtrl::onItemMenu(wxTreeEvent& event)
 	wxMenu menu("Scene node");
 
 	menu.AppendCheckItem(ID_MenuSceneNodeVisible, "&Visible");
-	menu.Check(ID_MenuSceneNodeVisible, node->getVisible() );
-	menu.Append(ID_MenuSceneNodeDelete, "&Delete...");
+	
+	if( node )
+	{
+		menu.Check(ID_MenuSceneNodeVisible, node->getVisible() );
+		menu.Append(ID_MenuSceneNodeDelete, "&Delete...");
+	}
 
 	wxPoint clientpt = event.GetPoint();
 	PopupMenu(&menu, clientpt);
@@ -300,7 +304,7 @@ void SceneTreeCtrl::onNodeMenu( wxCommandEvent& event )
 	if( event.GetId() == ID_MenuSceneNodeVisible )
 	{
 		NodePtr node = getEntity( menuItemId );
-		node->setVisible( !node->getVisible() );
+		if( node ) node->setVisible( !node->getVisible() );
 	}
 }
 
