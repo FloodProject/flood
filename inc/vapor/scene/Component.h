@@ -27,7 +27,7 @@ TYPEDEF_SHARED_POINTER_FROM_CLASS( Node );
  * A component will also be able to register methods for scripting.
  */
 
-class VAPOR_API Component :	private boost::noncopyable
+class VAPOR_API Component : private boost::noncopyable
 {
 public:
 
@@ -41,15 +41,14 @@ public:
 	// Each component should have a unique type string.
 	virtual const std::string& getType() const = 0;
 
-	// Sets the associated node of this component.
-	void setNode( NodePtr node );
-
 	// Gets the associated node of this component.
 	NodePtr getNode() const;
 
+	// Sets the associated node of this component.
+	void setNode( NodePtr node );
+
 protected:
 
-	//static std::string type;
 	std::weak_ptr< Node > node;
 };
 

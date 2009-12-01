@@ -6,6 +6,7 @@
 *
 ************************************************************************/
 
+#include "PCH.h"
 #include "ConsoleFrame.h"
 #include "ConsoleTextCtrl.h"
 

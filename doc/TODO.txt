@@ -15,6 +15,15 @@ SERVER:
 EDITOR:
 -------
 
+Terrain editing
+	Brushes interface
+	Intensity
+	
+Implement camera panning
+	
+Edit grid settings
+Add a property system like Firefox/µTorrent...
+Continuous movement bug (press D inside the world then click in the scene tree to trigger)
 Make the update logic smarter (no 50% CPU hog)
 See about integrating wxLua in the editor
 Hook up the renaming of Scene node labels
@@ -24,6 +33,7 @@ A readline type of library would be kind of nice
  
 DONE:
 
+Make a show/hide editor grid button (DONE)
 And add some highlighting to it, it's boring now. (DONE)
 Add resource events in the ResourceManager (DONE)	
 Change scripting background to black (DONE)
@@ -51,6 +61,9 @@ Fix the Camera behaviour
 
 ENGINE:
 ------
+
+Use a separate vb attribute for the terrain heights
+Static const string references (Component types)?
 
 http://dmalloc.com/releases/
 http://cmldev.net/

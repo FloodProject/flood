@@ -13,6 +13,9 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/format.hpp>
 
+#include <vapor/terrain/Terrain.h>
+#include <vapor/terrain/Page.h>
+
 //-----------------------------------//
 
 Example::Example(const char** argv)
@@ -72,6 +75,9 @@ void Example::onSetupScene()
 	ProgramPtr diffuse( new GLSL_Program( 
 			rm->loadResource< GLSL_Shader >( "diffuse.vs" ),
 			rm->loadResource< GLSL_Shader >( "diffuse.fs" ) ) );
+
+	ProgramManager::getInstance().registerProgram( "diffuse", diffuse );
+	ProgramManager::getInstance().registerProgram( "tex", tex );
 	
 	// Create a new Camera
 	NodePtr camera( new Node( "MainCamera" ) );
@@ -119,6 +125,17 @@ void Example::onSetupScene()
 	//ListenerPtr ls( new Listener( getAudioDevice() ) );
 	//sound.reset( new scene::Sound( ls, snd ) );
 	//scene->add( ls ); scene->add( sound );
+
+	TerrainPtr terrain( new Terrain() );
+
+	NodePtr terreno( new Node( "Terreno" ) );
+	terreno->addComponent( TransformPtr( new Transform() ) );
+	terreno->addComponent( terrain );
+	scene->add( terreno );
+
+	Page* page = terrain->createPage( 0, 0 );
+	terrain->createPage( 1, 0 );
+	terrain->createPage( -1, 0 );
 }
 
 //-----------------------------------//

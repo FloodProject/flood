@@ -6,6 +6,7 @@
 *
 ************************************************************************/
 
+#include "PCH.h"
 #include "vaporWindow.h"
 
 namespace vapor { namespace editor {

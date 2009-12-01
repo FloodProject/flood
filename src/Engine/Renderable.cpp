@@ -14,7 +14,8 @@ namespace vapor { namespace render {
 
 //-----------------------------------//
 
-Renderable::Renderable()
+Renderable::Renderable() 
+	: mode( RenderMode::Solid )
 {
 
 }
@@ -113,6 +114,13 @@ IndexBufferPtr Renderable::getIndexBuffer() const
 MaterialPtr Renderable::getMaterial() const
 {
 	return mat;
+}
+
+//-----------------------------------//
+
+RenderMode::Enum Renderable::getRenderMode() const
+{
+	return mode;
 }
 
 //-----------------------------------//

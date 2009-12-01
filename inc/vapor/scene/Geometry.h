@@ -51,6 +51,12 @@ public:
 	/// Gets the bounding volume of this geometry.
 	const math::AABB& getBoundingVolume() const;
 
+	/// Sets the visibility of this geometry bounding box.
+	void setBoundingBoxVisible( bool visible );
+
+	/// Gets the bounding box of this geometry.
+	const math::AABB& getBoundingBox() const;
+
 	/// Updates the geometry if needed.
 	virtual void update( float delta );
 
@@ -60,12 +66,6 @@ public:
 	/// Returns the name of this component.
 	virtual const std::string& getType() const;
 
-	// Sets the visibility of this geometry bounding box.
-	void setBoundingBoxVisible( bool visible );
-
-	// Gets the bounding box of this geometry.
-	const math::AABB& getBoundingBox() const;
-
 protected:
 
 	void buildBoundingRenderable();
@@ -74,13 +74,13 @@ protected:
 	std::map< render::RenderGroup::Enum, RenderableList > renderables;
 	typedef std::pair<const  render::RenderGroup::Enum, RenderableList > rendPair;
 
-	static const std::string& type;
-
 	// Bounding volume of the geometry.
 	math::AABB boundingVolume;
 	render::RenderablePtr bbox;
 	bool isDirty;
 	bool drawBoundingBox;
+
+	static const std::string& type;
 };
 
 //-----------------------------------//

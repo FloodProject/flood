@@ -48,8 +48,8 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="false"
-				UsePrecompiledHeader="0"
-				PrecompiledHeaderThrough=""
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="PCH.h"
 				WarningLevel="4"
 				DebugInformationFormat="4"
 			/>
@@ -284,6 +284,26 @@
 			</File>
 			<File
 				RelativePath=".\ConsoleTextCtrl.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="PCH"
+			>
+			<File
+				RelativePath=".\PCH.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\PCH.h"
 				>
 			</File>
 		</Filter>

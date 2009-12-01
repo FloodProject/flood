@@ -16,10 +16,21 @@ using ::sinf;
 using ::cosf;
 using ::tanf;
 using ::sqrt;
+using ::pow;
+using ::log;
+using ::log10;
 
 //-----------------------------------//
 
 const float PI = 3.141592654f;
+
+//-----------------------------------//
+
+float logn( float base, float value );
+
+//-----------------------------------//
+
+float random( float min, float max );
 
 //-----------------------------------//
 

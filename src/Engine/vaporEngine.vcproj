@@ -1272,11 +1272,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Page.cpp"
+				RelativePath=".\Cell.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\inc\vapor\terrain\Page.h"
+				RelativePath="..\..\inc\vapor\terrain\Cell.h"
 				>
 			</File>
 			<File

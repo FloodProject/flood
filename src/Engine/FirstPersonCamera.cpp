@@ -233,8 +233,8 @@ void FirstPersonCamera::onKeyReleased( const KeyEvent& keyEvent )
 
 void FirstPersonCamera::onMouseWheel( const input::MouseWheelEvent& event )
 {
-	//getNode()->getTransform()	
-	//transform->translate( forwardVector * event.delta );
+	TransformPtr trans = getNode()->getTransform();
+	trans->translate( Vector3::UnitY * (moveSensivity * event.delta) );
 }
 
 //-----------------------------------//

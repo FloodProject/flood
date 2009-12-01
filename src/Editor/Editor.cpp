@@ -6,29 +6,17 @@
 *
 ************************************************************************/
 
+#include "PCH.h"
 #include "Editor.h"
 #include "ArtProvider.h"
 #include "toolbar_icons.h"
 #include "icons.h"
 
-#define VAPOR_USE_NAMESPACES
-#include <vapor/Headers.h>
-
 #include "vapor/terrain/Terrain.h"
-#include "vapor/terrain/Page.h"
+#include "vapor/terrain/Cell.h"
 #include "vapor/render/Quad.h"
 
 namespace vapor { namespace editor {
-
-//-----------------------------------//
-
-using namespace vapor;
-using namespace vapor::math;
-using namespace vapor::render;
-using namespace vapor::resources;
-using namespace vapor::scene;
-
-//-----------------------------------//
 
 // ----------------------------------------------------------------------------
 // event tables and other macros for wxWidgets
@@ -40,7 +28,7 @@ using namespace vapor::scene;
 BEGIN_EVENT_TABLE(EditorFrame, wxFrame)
     EVT_MENU(Editor_Quit,  EditorFrame::OnQuit)
     EVT_MENU(Editor_About, EditorFrame::OnAbout)
-	EVT_MENU(Toolbar_ToogleConsole, EditorFrame::OnToolbarButtonClick)
+	EVT_MENU(wxID_ANY, EditorFrame::OnToolbarButtonClick)
 	//EVT_COMMAND(Toolbar_ToggleScene, EditorFrame::OnToolbarButtonClick)
 END_EVENT_TABLE()
 
@@ -199,18 +187,23 @@ void EditorFrame::createScene()
 	cubo->addComponent( TransformPtr( new Transform() ) );
 	cubo->addComponent( mesh );
 	cubo->getTransform()->scale( 0.3f );
-	scene->add( cubo );
+	//scene->add( cubo );
 
-	TerrainPtr terrain( new Terrain() );
+	TerrainSettings settings;
+	settings.CellSize = 1024;
+	settings.TileDimensions = 32;
+	settings.MaxHeight = 0;
+
+	TerrainPtr terrain( new Terrain( settings ) );
 
 	NodePtr terreno( new Node( "Terreno" ) );
 	terreno->addComponent( TransformPtr( new Transform() ) );
 	terreno->addComponent( terrain );
 	scene->add( terreno );
 
-	Page* page = terrain->createPage( 0, 0 );
-	terrain->createPage( 1, 0 );
-	terrain->createPage( -1, 0 );
+	ImagePtr heightmap = rm->loadResource< Image >( "height2.png" );
+	Cell* cell = terrain->createCell( heightmap, 0, 0 );
+	//terrain->createCell( heightmap, -1, 0 );
 }
 
 //-----------------------------------//
@@ -295,19 +288,56 @@ void EditorFrame::createMenus()
 void EditorFrame::createToolbar()
 {
 	wxToolBar* toolBar = this->CreateToolBar( wxTB_HORIZONTAL, wxID_ANY );
-	
+
+	// --------------
+	// Project tools
+	// --------------
+
 	toolBar->AddTool( wxID_ANY, "New", wxMEMORY_BITMAP(page) );
 	toolBar->AddTool( wxID_ANY, "Open", wxMEMORY_BITMAP(folder_explore) ); 
 	toolBar->AddTool( wxID_ANY, "Save", wxMEMORY_BITMAP(disk) );
 	
 	toolBar->AddSeparator();
 
-	toolBar->AddTool( Toolbar_ToogleConsole, "Open Console scripting", 
-		wxMEMORY_BITMAP(application_xp_terminal) ); 
+	toolBar->AddTool( Toolbar_ToogleConsole, "Console", 
+		wxMEMORY_BITMAP(application_xp_terminal), "Opens the scripting console"/*, wxITEM_CHECK*/ ); 
+
+	toolBar->AddTool( Toolbar_ToogleGrid, "Grid", 
+		wxMEMORY_BITMAP(grid_icon), "Toogles the editor grid", wxITEM_CHECK );
+
+	toolBar->ToggleTool( Toolbar_ToogleGrid, true );
+
+	toolBar->AddTool( wxID_ANY, "Play", wxMEMORY_BITMAP(resultset_next), "Toogles Play mode" );
+
+	// --------------
+	// Gizmo tools
+	// --------------
 
 	toolBar->AddSeparator();
 
-	toolBar->AddTool( wxID_ANY, "Play", wxMEMORY_BITMAP(resultset_next) );
+	toolBar->AddTool( wxID_ANY, "Camera", wxMEMORY_BITMAP(camera), 
+		"Selects the Camera tool", wxITEM_RADIO );
+
+	//toolBar->AddTool( wxID_ANY, "Move", wxMEMORY_BITMAP(camera), 
+	//	"Selects the Move tool", wxITEM_RADIO );
+
+	//toolBar->AddTool( wxID_ANY, "Rotate", wxMEMORY_BITMAP(rotate), 
+	//	"Selects the Rotate tool", wxITEM_RADIO );
+
+	//toolBar->AddTool( wxID_ANY, "Scale", wxMEMORY_BITMAP(scale), 
+	//	"Selects the Scale tool", wxITEM_RADIO );
+	
+	// --------------
+	// Terrain tools
+	// --------------
+
+	toolBar->AddTool( wxID_ANY, "Raise/Lower terrain", wxMEMORY_BITMAP(terrain_raise_lower), 
+		"Raises/Lowers the terrain", wxITEM_RADIO );
+
+	toolBar->AddTool( wxID_ANY, "Paint terrain", wxMEMORY_BITMAP(terrain_paint),
+		"Paints the terrain", wxITEM_RADIO );
+
+	//toolBar->AddTool( wxID_ANY, "", wxMEMORY_BITMAP(resultset_next) );
 
 	toolBar->Realize();	
 
@@ -329,11 +359,27 @@ void EditorFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 
 void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 {
-	if( event.GetId() == Toolbar_ToogleConsole )
+	switch( event.GetId() )
+	{
+	
+	case Toolbar_ToogleConsole:
 	{
 		codeEvaluator->Show( !codeEvaluator->IsShown() );
 		codeEvaluator->SetFocus();
+		break;
 	}
+	
+	case Toolbar_ToogleGrid:
+	{
+		NodePtr grid = engine->getSceneManager()->getEntity( "EditorGrid" );
+		grid->setVisible( !grid->getVisible() );
+		break;
+	}
+
+
+
+	}
+
 	//if( event.GetId() == Toolbar_ToggleScene )
 	//{
 	//	if( sceneTreeCtrl->IsShown() )	

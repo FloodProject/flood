@@ -79,7 +79,7 @@ public:
 		VertexBufferPtr vb, IndexBufferPtr ib, MaterialPtr mat );
     
     // No index buffer, default material will be used if none passed
-	Renderable(Primitive::Enum primitive, VertexBufferPtr vb,
+	Renderable(Primitive::Enum primitive, VertexBufferPtr vb = VertexBufferPtr(),
 			MaterialPtr mat = MaterialPtr( ) );
 
 	virtual ~Renderable();
@@ -96,6 +96,9 @@ public:
 
     // Gets the material associated with the renderable.
     MaterialPtr getMaterial() const;
+
+    // Gets the render mode of this renderable.
+    RenderMode::Enum getRenderMode() const;
 
 	// Sets the vertex buffer of this renderable.
 	void setVertexBuffer( VertexBufferPtr vb );

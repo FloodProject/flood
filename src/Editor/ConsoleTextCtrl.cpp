@@ -6,6 +6,7 @@
 *
 ************************************************************************/
 
+#include "PCH.h"
 #include "ConsoleTextCtrl.h"
 
 namespace vapor { namespace editor {

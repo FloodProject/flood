@@ -25,7 +25,7 @@ const std::string& Camera::type = "Camera";
 
 Camera::Camera( render::Device* device, Projection::Enum projection )
 	: renderDevice( device ), projection( projection ),
-		target( nullptr ), fov(45.0f), near_( 5.0f ), far_( 1000.0f ),
+		target( nullptr ), fov(45.0f), near_( 5.0f ), far_( 10000.0f ),
 		lookAtVector( Vector3( 0.0f, 0.0f, 0.0f ) ), 
 		forwardVector( Vector3::UnitZ ), upVector( Vector3::UnitY )
 {

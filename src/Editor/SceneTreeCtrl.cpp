@@ -6,12 +6,14 @@
 *
 ************************************************************************/
 
+#include "PCH.h"
 #include "SceneTreeCtrl.h"
 #include "ArtProvider.h"
 #include "icons.h"
 
 using namespace vapor;
 using namespace vapor::scene;
+using namespace vapor::render;
 
 namespace vapor { namespace editor {
 
@@ -189,17 +191,59 @@ void SceneTreeCtrl::onItemMenu(wxTreeEvent& event)
 #if wxUSE_MENUS
 	wxMenu menu("Scene node");
 
-	menu.AppendCheckItem(ID_MenuSceneNodeVisible, "&Visible");
-	
 	if( node )
 	{
+		menu.AppendCheckItem(ID_MenuSceneNodeVisible, "&Visible");
 		menu.Check(ID_MenuSceneNodeVisible, node->getVisible() );
-		menu.Append(ID_MenuSceneNodeDelete, "&Delete...");
+
+		const std::vector< GeometryPtr >& geo = node->getGeometry();
+		if( !geo.empty() )
+		{
+			const std::vector< RenderablePtr >& rend = geo.front()->getRenderables();
+			if( !rend.empty() )
+			{
+				bool state = (rend.front()->getRenderMode() != RenderMode::Solid);
+				menu.AppendCheckItem(ID_MenuSceneNodeWireframe, "&Wireframe");
+				menu.Check(ID_MenuSceneNodeWireframe, state );
+			}
+		}
 	}
+
+	menu.Append(ID_MenuSceneNodeDelete, "&Delete...");
 
 	wxPoint clientpt = event.GetPoint();
 	PopupMenu(&menu, clientpt);
 #endif // wxUSE_MENUS
+}
+
+//-----------------------------------//
+
+void SceneTreeCtrl::onNodeMenu( wxCommandEvent& event )
+{
+	if( event.GetId() == ID_MenuSceneNodeVisible )
+	{
+		NodePtr node = getEntity( menuItemId );
+		if( !node ) return;
+		
+		node->setVisible( !node->getVisible() );
+	}
+
+	if( event.GetId() == ID_MenuSceneNodeWireframe )
+	{
+		NodePtr node = getEntity( menuItemId );
+		if( !node ) return;
+
+		RenderMode::Enum mode = event.IsChecked()
+			? RenderMode::Wireframe : RenderMode::Solid;
+
+		foreach( GeometryPtr geo, node->getGeometry() )
+		{
+			foreach( RenderablePtr rend, geo->getRenderables() )
+			{
+				rend->setRenderMode( mode );
+			}
+		}
+	}
 }
 
 //-----------------------------------//
@@ -295,17 +339,6 @@ void SceneTreeCtrl::onMouseRightUp( wxMouseEvent& event )
 
 	PopupMenu(&menu, clientpt);
 #endif // wxUSE_MENUS
-}
-
-//-----------------------------------//
-
-void SceneTreeCtrl::onNodeMenu( wxCommandEvent& event )
-{
-	if( event.GetId() == ID_MenuSceneNodeVisible )
-	{
-		NodePtr node = getEntity( menuItemId );
-		if( node ) node->setVisible( !node->getVisible() );
-	}
 }
 
 //-----------------------------------//

@@ -6,6 +6,7 @@
 *
 ************************************************************************/
 
+#include "PCH.h"
 #include "vaporControl.h"
 #include "vaporWindow.h"
 

@@ -6,6 +6,7 @@
 *
 ************************************************************************/
 
+#include "PCH.h"
 #include "vapor/StringUtilities.h"
 #include "ResourceTreeCtrl.h"
 #include "ArtProvider.h"
