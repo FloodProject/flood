@@ -307,6 +307,18 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Terrain"
+			>
+			<File
+				RelativePath=".\TerrainPage.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TerrainPage.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\Editor.cpp"
 			>

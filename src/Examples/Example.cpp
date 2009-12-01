@@ -14,7 +14,7 @@
 #include <boost/format.hpp>
 
 #include <vapor/terrain/Terrain.h>
-#include <vapor/terrain/Page.h>
+#include <vapor/terrain/Cell.h>
 
 //-----------------------------------//
 
@@ -126,16 +126,20 @@ void Example::onSetupScene()
 	//sound.reset( new scene::Sound( ls, snd ) );
 	//scene->add( ls ); scene->add( sound );
 
-	TerrainPtr terrain( new Terrain() );
+	TerrainSettings settings;
+	settings.CellSize = 1024;
+	settings.TileDimensions = 32;
+	settings.MaxHeight = 0;
+
+	TerrainPtr terrain( new Terrain( settings ) );
 
 	NodePtr terreno( new Node( "Terreno" ) );
 	terreno->addComponent( TransformPtr( new Transform() ) );
 	terreno->addComponent( terrain );
 	scene->add( terreno );
 
-	Page* page = terrain->createPage( 0, 0 );
-	terrain->createPage( 1, 0 );
-	terrain->createPage( -1, 0 );
+	ImagePtr heightmap = rm->loadResource< Image >( "height2.png" );
+	Cell* cell = terrain->createCell( heightmap, 0, 0 );
 }
 
 //-----------------------------------//
