@@ -17,5 +17,8 @@
     #include "wx/wx.h"
 #endif
 
+#include "icons.h"
+#include "ArtProvider.h"
+
 #define VAPOR_USE_NAMESPACES
 #include <vapor/Headers.h>

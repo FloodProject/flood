@@ -12,7 +12,7 @@
 #include "SceneTreeCtrl.h"
 #include "ResourceTreeCtrl.h"
 #include "ConsoleFrame.h"
-
+#include "Viewport.h"
 #include <wx/notebook.h>
 
 namespace vapor { namespace editor {
@@ -88,6 +88,8 @@ protected:
 	// Main layout sizer.
 	wxBoxSizer* sizer;
 
+	Viewport* viewport;
+
 	ConsoleFrame* codeEvaluator;
 
 	std::vector< scene::NodePtr > selectedNodes;
@@ -105,6 +107,8 @@ private:
 // IDs for the controls and the menu commands
 enum
 {
+	Camera_Viewport,
+
     // menu items
     Editor_Quit = wxID_EXIT,
 

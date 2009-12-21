@@ -13,8 +13,6 @@
 #define VAPOR_USE_NAMESPACES
 #include <vapor/Headers.h>
 
-#include <iostream>
-
 //-----------------------------------//
 
 /**

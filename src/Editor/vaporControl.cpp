@@ -59,6 +59,7 @@ vaporControl::vaporControl(vapor::Engine* engine,
 {
 	InitControl();
 	im = window->im;
+	engine->setupInput();
 }
 
 //-----------------------------------//
@@ -112,7 +113,7 @@ void vaporControl::OnUpdate()
 
 void vaporControl::OnRender()
 {
-	static math::Color bg( 0.0f, 0.10f, 0.25f );
+	const math::Color bg( 0.0f, 0.10f, 0.25f );
 
 	OnUpdate();
 

@@ -58,6 +58,13 @@ void Geometry::buildBoundingRenderable()
 
 //-----------------------------------//
 
+void Geometry::markDirty()
+{
+	isDirty = true;
+}
+
+//-----------------------------------//
+
 void Geometry::addRenderable( RenderablePtr rend, 
 							 RenderGroup::Enum group, 
 							 uint priority )

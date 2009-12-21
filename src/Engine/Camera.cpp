@@ -12,10 +12,10 @@
 #include "vapor/scene/Group.h"
 #include "vapor/scene/Geometry.h"
 
+namespace vapor { namespace scene {
+
 using namespace vapor::math;
 using namespace vapor::render;
-
-namespace vapor { namespace scene {
 
 //-----------------------------------//
 
@@ -103,7 +103,6 @@ float Camera::getFar() const
 	return far_;
 }
 
-
 //-----------------------------------//
 
 void Camera::setRenderTarget( RenderTarget* newTarget )
@@ -131,7 +130,7 @@ void Camera::handleTargetResize( const render::Settings& evt )
 
 //-----------------------------------//
 
-void Camera::update( float /*delta*/ )
+void Camera::update( float UNUSED(delta) )
 {
 	setupProjection();
 	setupView();
@@ -149,21 +148,17 @@ void Camera::setupProjection()
 	else
 	{
 		projectionMatrix = Matrix4x4::createOrthographicProjection( 
-			0.0, width,
-			0.0, height,
-			near_, far_ );
+			0.0f, width, 0.0f, height, near_, far_ );
 	}
 
-	glMatrixMode( GL_PROJECTION );
-	glLoadIdentity();
+	//glMatrixMode( GL_PROJECTION );
+	//glLoadIdentity();
 	//glOrtho( -target->getSettings().getWidth()/16, target->getSettings().getWidth()/16, 
 	//	-target->getSettings().getHeight()/16, target->getSettings().getHeight()/16, 1.0f, 100.0f );
 	////glOrtho( 0.0, target->getSettings().getWidth(), 0.0, target->getSettings().getHeight(), near_, far_ );
-
-	gluPerspective( fov, getAspectRatio(), near_, far_ );
-
-	GLfloat test[16];
-	glGetFloatv( GL_PROJECTION_MATRIX, &test[0] );
+	//gluPerspective( fov, getAspectRatio(), near_, far_ );
+	//GLfloat test[16];
+	//glGetFloatv( GL_PROJECTION_MATRIX, &test[0] );
 }
 
 //-----------------------------------//

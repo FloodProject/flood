@@ -8,7 +8,6 @@
 
 #include "PCH.h"
 #include "ArtProvider.h"
-#include "toolbar_icons.h"
 
 //-----------------------------------//
 

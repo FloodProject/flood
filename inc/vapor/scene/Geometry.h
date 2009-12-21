@@ -68,7 +68,11 @@ public:
 
 protected:
 
+	// Builds the bounding box of the geometry.
 	void buildBoundingRenderable();
+
+	// Marks the geometry as dirty (fores AABB update).
+	void markDirty();
 
 	typedef std::vector< render::RenderablePtr > RenderableList;
 	std::map< render::RenderGroup::Enum, RenderableList > renderables;
@@ -77,6 +81,7 @@ protected:
 	// Bounding volume of the geometry.
 	math::AABB boundingVolume;
 	render::RenderablePtr bbox;
+	
 	bool isDirty;
 	bool drawBoundingBox;
 

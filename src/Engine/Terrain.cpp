@@ -66,6 +66,9 @@ Cell* Terrain::createCell( ImagePtr heightmap, int x, int y )
 	page->setMaterial( cellMaterial );
 	page->setRenderMode( RenderMode::Wireframe );
 	addRenderable( render::RenderablePtr( page ) );
+
+	// Forces AABB generation next update.
+	markDirty();
 	
 	return page;
 }
@@ -159,9 +162,9 @@ void Terrain::setHeightmap( resources::ImagePtr heightmap )
 
 //-----------------------------------//
 
-void Terrain::update( float UNUSED(delta) )
+void Terrain::update( float delta )
 {
-
+	Geometry::update( delta );
 }
 
 //-----------------------------------//

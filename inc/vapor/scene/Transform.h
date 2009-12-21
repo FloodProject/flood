@@ -73,7 +73,11 @@ public:
 	// Called once per frame to update the component.
 	virtual void update( float delta );
 
+	fd::delegate< void() > onTransform;
+
 protected:
+
+	void notify();
 
 	math::EulerAngles angles;
 	math::Vector3 v_translate;

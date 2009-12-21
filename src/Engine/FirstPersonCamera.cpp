@@ -36,6 +36,7 @@ FirstPersonCamera::FirstPersonCamera( input::InputManager* input,
 
 void FirstPersonCamera::update( float delta )
 {
+	debug( "delta %f", delta );
 	Camera::update( delta );
 	checkControls( delta );
 	viewMatrix = getNode()->getTransform()->getAbsoluteTransform();
@@ -46,12 +47,14 @@ void FirstPersonCamera::update( float delta )
 void FirstPersonCamera::checkControls( double delta )
 {
 	TransformPtr transform = getNode()->getTransform();
+	
 	// Check mouse movement.
 	double dt = delta * 100 * lookSensivity;
 
 	Vector3 rotateVector( mouseDistance.y * dt, mouseDistance.x * dt, 0.0f );
 	
-	getNode()->getTransform()->rotate( rotateVector );
+	if( rotateVector != Vector3::Zero )
+		transform->rotate( rotateVector );
 
 	EulerAngles newForwardAngle( -rotateVector.x, -rotateVector.y, -rotateVector.z );
 

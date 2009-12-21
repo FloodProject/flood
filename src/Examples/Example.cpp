@@ -85,6 +85,17 @@ void Example::onSetupScene()
 	camera->addComponent( TransformPtr( new Transform() ) );
 	camera->addComponent( cam );
 	scene->add( camera );
+
+	NodePtr ct( new Node( "ct" ) );
+	ct->addComponent( TransformPtr( new Transform() ) );
+	MS3DPtr mesh = rm->loadResource< MS3D >( "ct.ms3d" );
+	ct->addComponent( mesh );
+	scene->add(ct);
+
+	foreach( const RenderablePtr& rend, mesh->getRenderables() )
+	{
+		rend->getMaterial()->setProgram( tex );
+	}
 	
 	// Materials too?
 	MaterialPtr mat( new Material( "FontMaterial", tex ) );
@@ -96,25 +107,13 @@ void Example::onSetupScene()
 	fps->getTransform()->translate( -300.0f, 220.0f, 0.0f );
 	scene->add( fps );
 
-	//mesh = rm->loadResource< MS3D >( "media/terreno.ms3d" );
-
-	//foreach( const RenderablePtr& rend, mesh->getRenderables() )
-	//{
-	//	rend->getMaterial()->setProgram( tex );
-	//}
-
-	//NodePtr terreno( new Node( "Terreno" ) );
-	//terreno->addComponent( TransformPtr( new Transform() ) );
-	//terreno->addComponent( mesh );
-	//terreno->getTransform()->scale( 0.3f );
-	//scene->add( terreno );
-
 	NodePtr grid( new Node( "EditorGrid" ) );
 	grid->addComponent( TransformPtr( new Transform() ) );
 	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
 	scene->add( grid );
 
-	foreach( const RenderablePtr& rend, grid->getComponent<Geometry>("Grid")->getRenderables() )
+	foreach( const RenderablePtr& rend, 
+		grid->getComponent<Geometry>("Grid")->getRenderables() )
 	{
 		rend->getMaterial()->setProgram( diffuse );
 	}
@@ -129,7 +128,7 @@ void Example::onSetupScene()
 	TerrainSettings settings;
 	settings.CellSize = 1024;
 	settings.TileDimensions = 32;
-	settings.MaxHeight = 0;
+	settings.MaxHeight = 150;
 
 	TerrainPtr terrain( new Terrain( settings ) );
 
@@ -182,7 +181,7 @@ void Example::onKeyPressed( const KeyEvent& keyEvent )
 	if( keyEvent.keyCode == Keys::Pause )
 		Log::showDebug = !Log::showDebug;
 
-	if( keyEvent.keyCode == Keys::F )
+	//if( keyEvent.keyCode == Keys::F )
 		//debug( "fps: %d", int( 1.0f / lastFrameTime ) );
 
 	if( keyEvent.keyCode == Keys::G )
@@ -198,9 +197,6 @@ void Example::onKeyPressed( const KeyEvent& keyEvent )
 		else
 			sound->play();
 	}
-
-	//if( keyEvent.keyCode == Keys::V )
-		//mesh->scale( 1.1f );
 }
 
 //-----------------------------------//

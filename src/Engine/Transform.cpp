@@ -22,7 +22,7 @@ const std::string& Transform::type = "Transform";
 //-----------------------------------//
 
 Transform::Transform()
-	: v_scale( 1.0f, 1.0f, 1.0f )
+	: v_scale( 1.0f )
 {
 
 }
@@ -49,34 +49,10 @@ void Transform::translate( float x, float y, float z )
 	v_translate.y += y;
 	v_translate.z += z;
 
+	notify();
+
 	//transform = transform * Matrix4x3::createTranslationMatrix( v_translate );
 	//v_translate.zero();
-}
-
-//-----------------------------------//
-
-const math::Vector3& Transform::getPosition() const
-{
-	return v_translate;
-}
-
-//-----------------------------------//
-
-void Transform::setPosition( const math::Vector3 position )
-{
-	v_translate = position;
-}
-
-//-----------------------------------//
-
-void Transform::scale( float x, float y, float z )
-{
-	v_scale.x *= x;
-	v_scale.y *= y;
-	v_scale.z *= z;
-
-	//transform = transform * Matrix4x3::createScaleMatrix( v_scale );
-	//v_scale = math::Vector3( 1.0f, 1.0f, 1.0f );
 }
 
 //-----------------------------------//
@@ -95,14 +71,16 @@ void Transform::scale( const math::Vector3& s )
 
 //-----------------------------------//
 
-void Transform::rotate( float xang, float yang, float zang )
+void Transform::scale( float x, float y, float z )
 {
-	angles.xang += xang;
-	angles.yang += yang;
-	angles.zang += zang;
+	v_scale.x *= x;
+	v_scale.y *= y;
+	v_scale.z *= z;
 
-	//transform = transform * angles.getOrientationMatrix();
-	//angles.identity();
+	notify();
+
+	//transform = transform * Matrix4x3::createScaleMatrix( v_scale );
+	//v_scale = math::Vector3( 1.0f, 1.0f, 1.0f );
 }
 
 //-----------------------------------//
@@ -110,6 +88,20 @@ void Transform::rotate( float xang, float yang, float zang )
 void Transform::rotate( const math::Vector3& rot )
 {
 	rotate( rot.x, rot.y, rot.z );
+}
+
+//-----------------------------------//
+
+void Transform::rotate( float xang, float yang, float zang )
+{
+	angles.xang += xang;
+	angles.yang += yang;
+	angles.zang += zang;
+
+	notify();
+
+	//transform = transform * angles.getOrientationMatrix();
+	//angles.identity();
 }
 
 //-----------------------------------//
@@ -124,6 +116,22 @@ const math::EulerAngles& Transform::getRotation() const
 void Transform::setRotation( math::EulerAngles& rot )
 {
 	this->angles = rot;
+
+	notify();
+}
+
+//-----------------------------------//
+
+const math::Vector3& Transform::getPosition() const
+{
+	return v_translate;
+}
+
+//-----------------------------------//
+
+void Transform::setPosition( const math::Vector3 position )
+{
+	v_translate = position;
 }
 
 //-----------------------------------//
@@ -229,6 +237,18 @@ const std::string& Transform::getType() const
 void Transform::update( float /*delta*/ )
 {
 
+}
+
+//-----------------------------------//
+
+void Transform::notify()
+{
+	if( onTransform.empty() ) 
+	{
+		return;
+	}
+
+	onTransform();
 }
 
 //-----------------------------------//

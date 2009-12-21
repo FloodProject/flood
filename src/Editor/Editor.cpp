@@ -8,9 +8,6 @@
 
 #include "PCH.h"
 #include "Editor.h"
-#include "ArtProvider.h"
-#include "toolbar_icons.h"
-#include "icons.h"
 
 #include "vapor/terrain/Terrain.h"
 #include "vapor/terrain/Cell.h"
@@ -87,7 +84,7 @@ EditorFrame::EditorFrame(const wxString& title)
 	sizer = new wxBoxSizer( wxHORIZONTAL );
 
 	// initialize the engine
-	initEngine();	
+	initEngine();
 
 	// create window basic widgets
 	createMenus();
@@ -99,7 +96,7 @@ EditorFrame::EditorFrame(const wxString& title)
 
 	codeEvaluator = new ConsoleFrame( engine, this, "Scripting Console" );
 
-	createScene();
+	vaporCtrl->SetFocus();
 }
 
 //-----------------------------------//
@@ -117,23 +114,14 @@ void EditorFrame::initEngine()
 	engine = new vapor::Engine("vaporEditor", nullptr, false);
 	engine->init( false );
 
-	int attribs[] = 
-	{
-		WX_GL_RGBA,
-		WX_GL_DOUBLEBUFFER,
-		WX_GL_DEPTH_SIZE, 32,
-		WX_GL_SAMPLE_BUFFERS, 1,
-		WX_GL_SAMPLES, 0,
-		0,
-	};
-
-	vaporCtrl = new vaporControl(engine, this/*, wxID_ANY, attribs*/ );
-
-	// add a new vaporControl in the frame
-	sizer->Add( vaporCtrl, 1, wxALL|wxEXPAND, 0 );
+	viewport = new Viewport( engine, this );
+	sizer->Add( viewport, 1, wxEXPAND|wxALL );
 
 	engine->getRenderDevice()->init();
-	engine->setupInput();
+
+	vaporCtrl = viewport->vaporCtrl;
+
+	createScene();
 
 	input::Mouse* mouse = engine->getInputManager()->getMouse();
 	mouse->onMouseButtonPress += fd::bind( &EditorFrame::onMouseClick, this );
@@ -159,14 +147,6 @@ void EditorFrame::createScene()
 	ProgramManager::getInstance().registerProgram( "diffuse", diffuse );
 	ProgramManager::getInstance().registerProgram( "tex", tex );
 
-	// Create a new Camera
-	NodePtr camera( new Node( "MainCamera" ) );
-	CameraPtr cam( new FirstPersonCamera( engine->getInputManager(), engine->getRenderDevice() ) );
-	camera->addComponent( TransformPtr( new Transform() ) );
-	camera->addComponent( cam );
-	camera->getTransform()->translate( 0.0f, -20.0f, -150.0f );
-	scene->add( camera );
-
 	MaterialPtr mat( new Material( "GridMaterial", diffuse ) );
 	NodePtr grid( new Node( "EditorGrid" ) );
 	grid->addComponent( TransformPtr( new Transform() ) );
@@ -187,12 +167,12 @@ void EditorFrame::createScene()
 	cubo->addComponent( TransformPtr( new Transform() ) );
 	cubo->addComponent( mesh );
 	cubo->getTransform()->scale( 0.3f );
-	//scene->add( cubo );
+	scene->add( cubo );
 
 	TerrainSettings settings;
-	settings.CellSize = 1024;
+	settings.CellSize = 512;
 	settings.TileDimensions = 32;
-	settings.MaxHeight = 0;
+	settings.MaxHeight = 100;
 
 	TerrainPtr terrain( new Terrain( settings ) );
 
@@ -203,7 +183,6 @@ void EditorFrame::createScene()
 
 	ImagePtr heightmap = rm->loadResource< Image >( "height2.png" );
 	Cell* cell = terrain->createCell( heightmap, 0, 0 );
-	//terrain->createCell( heightmap, -1, 0 );
 }
 
 //-----------------------------------//
@@ -255,8 +234,8 @@ void EditorFrame::createStatusbar()
 {
 #if wxUSE_STATUSBAR
     // create a status bar just for fun (by default with 1 pane only)
-    CreateStatusBar(2);
-	SetStatusText("vaporEngine (FPS: OVER 9000!)");
+    //CreateStatusBar(2);
+	//SetStatusText("vaporEngine (FPS: OVER 9000!)");
 #endif // wxUSE_STATUSBAR
 }
 
@@ -293,21 +272,26 @@ void EditorFrame::createToolbar()
 	// Project tools
 	// --------------
 
-	toolBar->AddTool( wxID_ANY, "New", wxMEMORY_BITMAP(page) );
-	toolBar->AddTool( wxID_ANY, "Open", wxMEMORY_BITMAP(folder_explore) ); 
+	toolBar->AddTool( wxID_ANY, "New", wxMEMORY_BITMAP(page_empty) );
+	toolBar->AddTool( wxID_ANY, "Open", wxMEMORY_BITMAP(folder) ); 
 	toolBar->AddTool( wxID_ANY, "Save", wxMEMORY_BITMAP(disk) );
 	
 	toolBar->AddSeparator();
 
+	toolBar->AddTool( wxID_ANY, "Undo", wxMEMORY_BITMAP(arrow_undo) );
+	toolBar->AddTool( wxID_ANY, "Redo", wxMEMORY_BITMAP(arrow_redo) );
+
+	toolBar->AddSeparator();
+
 	toolBar->AddTool( Toolbar_ToogleConsole, "Console", 
-		wxMEMORY_BITMAP(application_xp_terminal), "Opens the scripting console"/*, wxITEM_CHECK*/ ); 
+		wxMEMORY_BITMAP(application_xp_terminal), "Open/close the scripting console"/*, wxITEM_CHECK*/ ); 
 
 	toolBar->AddTool( Toolbar_ToogleGrid, "Grid", 
-		wxMEMORY_BITMAP(grid_icon), "Toogles the editor grid", wxITEM_CHECK );
+		wxMEMORY_BITMAP(grid_icon), "Show/hide the editor grid", wxITEM_CHECK );
 
 	toolBar->ToggleTool( Toolbar_ToogleGrid, true );
 
-	toolBar->AddTool( wxID_ANY, "Play", wxMEMORY_BITMAP(resultset_next), "Toogles Play mode" );
+	toolBar->AddTool( wxID_ANY, "Play", wxMEMORY_BITMAP(resultset_next), "Enable/disable Play mode" );
 
 	// --------------
 	// Gizmo tools
@@ -315,8 +299,8 @@ void EditorFrame::createToolbar()
 
 	toolBar->AddSeparator();
 
-	toolBar->AddTool( wxID_ANY, "Camera", wxMEMORY_BITMAP(camera), 
-		"Selects the Camera tool", wxITEM_RADIO );
+	toolBar->AddTool( wxID_ANY, "Select", wxMEMORY_BITMAP(cursor), 
+		"Selects the Entity Selection tool", wxITEM_RADIO );
 
 	//toolBar->AddTool( wxID_ANY, "Move", wxMEMORY_BITMAP(camera), 
 	//	"Selects the Move tool", wxITEM_RADIO );
@@ -331,10 +315,10 @@ void EditorFrame::createToolbar()
 	// Terrain tools
 	// --------------
 
-	toolBar->AddTool( wxID_ANY, "Raise/Lower terrain", wxMEMORY_BITMAP(terrain_raise_lower), 
+	toolBar->AddTool( wxID_ANY, "Raise/Lower", wxMEMORY_BITMAP(terrain_raise_lower), 
 		"Raises/Lowers the terrain", wxITEM_RADIO );
 
-	toolBar->AddTool( wxID_ANY, "Paint terrain", wxMEMORY_BITMAP(terrain_paint),
+	toolBar->AddTool( wxID_ANY, "Paint", wxMEMORY_BITMAP(terrain_paint),
 		"Paints the terrain", wxITEM_RADIO );
 
 	//toolBar->AddTool( wxID_ANY, "", wxMEMORY_BITMAP(resultset_next) );
@@ -359,40 +343,22 @@ void EditorFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 
 void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 {
-	switch( event.GetId() )
+	switch( event.GetId() ) 
 	{
-	
-	case Toolbar_ToogleConsole:
-	{
-		codeEvaluator->Show( !codeEvaluator->IsShown() );
-		codeEvaluator->SetFocus();
-		break;
+		case Toolbar_ToogleConsole:
+		{
+			codeEvaluator->Show( !codeEvaluator->IsShown() );
+			codeEvaluator->SetFocus();
+			break;
+		}
+		
+		case Toolbar_ToogleGrid:
+		{
+			NodePtr grid = engine->getSceneManager()->getEntity( "EditorGrid" );
+			grid->setVisible( !grid->getVisible() );
+			break;
+		} 
 	}
-	
-	case Toolbar_ToogleGrid:
-	{
-		NodePtr grid = engine->getSceneManager()->getEntity( "EditorGrid" );
-		grid->setVisible( !grid->getVisible() );
-		break;
-	}
-
-
-
-	}
-
-	//if( event.GetId() == Toolbar_ToggleScene )
-	//{
-	//	if( sceneTreeCtrl->IsShown() )	
-	//		//treeCtrl->HideWithEffect(wxSHOW_EFFECT_SLIDE_TO_LEFT, 250);
-	//		treeCtrl->Hide();
-	//	else
-	//		treeCtrl->Show();
-	//		//treeCtrl->ShowWithEffect(wxSHOW_EFFECT_SLIDE_TO_RIGHT, 250);
-
-	//	Update();
-	//}
-
-	//event.Skip();
 }
 
 //-----------------------------------//
@@ -450,7 +416,8 @@ void EditorFrame::onMouseClick( const MouseButtonEvent& mbe )
 	Ray pickRay( pNear, (pFar - pNear).normalize() );
 
 	debug( "pos: %f,%f,%f", pNear.x, pNear.y, pNear.z );
-	debug( "dir: %f,%f,%f", pickRay.getDirection().x, pickRay.getDirection().y, pickRay.getDirection().z );
+	debug( "dir: %f,%f,%f", pickRay.getDirection().x, 
+		pickRay.getDirection().y, pickRay.getDirection().z );
 
 	//std::vector< Vector3 > vertex;
 	//vertex.push_back( pNear );

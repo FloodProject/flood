@@ -56,6 +56,8 @@ SceneTreeCtrl::SceneTreeCtrl(vapor::Engine* engine,
 	
 	initIcons();
 	initControl();
+
+	updateScene( root, scene );
 }
 
 //-----------------------------------//
