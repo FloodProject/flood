@@ -17,6 +17,8 @@
 #include "vapor/audio/Device.h"
 #include "vapor/input/InputManager.h"
 #include "vapor/script/State.h"
+#include "vapor/physics/Physics.h"
+
 
 namespace vapor {
 
@@ -93,6 +95,9 @@ public:
 	/// Gets the resources manager.
 	resources::ResourceManager* getResourceManager() const { return resourceManager; }
 
+	/// Gets the physics manager.
+	physics::PhysicsManager* getPhysicsManager() const { return physicsManager; }
+
 	/// Gets the main engine logger.
 	log::Log* getLog() const { return log; }
 
@@ -121,6 +126,9 @@ protected:
 
 	/// Resource manager
 	resources::ResourceManager* resourceManager;
+
+	/// Physics manager
+	physics::PhysicsManager* physicsManager;
 
 	/// Virtual filesystem
 	vfs::VFS* vfs;

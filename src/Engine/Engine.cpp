@@ -41,6 +41,7 @@
 using namespace vapor::audio;
 using namespace vapor::scene;
 using namespace vapor::resources;
+using namespace vapor::physics;
 using namespace vapor::render;
 using namespace vapor::log;
 using namespace vapor::vfs;
@@ -71,6 +72,7 @@ Engine::~Engine()
 
 	delete renderDevice;
 	delete resourceManager;
+	delete physicsManager;
 	delete scriptState;
 	delete vfs;
 	delete log;
@@ -91,6 +93,9 @@ void Engine::init( bool createWindow )
 	// create the resource manager
 	//resourceManager = new ResourceManager();
 	resourceManager = ResourceManager::getInstancePtr();
+
+	//resourceManager = new ResourceManager();
+	physicsManager = PhysicsManager::getInstancePtr();
 
 	// register default codecs
 	setupResourceLoaders();

@@ -88,7 +88,7 @@ void Example::onSetupScene()
 
 	NodePtr ct( new Node( "ct" ) );
 	ct->addComponent( TransformPtr( new Transform() ) );
-	MS3DPtr mesh = rm->loadResource< MS3D >( "ct.ms3d" );
+	MS3DPtr mesh = rm->loadResource< MS3D >( "ct.ms3dw" );
 	ct->addComponent( mesh );
 	scene->add(ct);
 
