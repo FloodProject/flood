@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <Common/Base/hkBase.h>
+
 #include "vapor/math/Vector3.h"
 #include "vapor/Singleton.h"
 
