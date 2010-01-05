@@ -19,6 +19,7 @@ using ::sqrt;
 using ::pow;
 using ::log;
 using ::log10;
+using ::acos;
 
 //-----------------------------------//
 
