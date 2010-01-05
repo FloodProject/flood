@@ -283,6 +283,18 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Quaternion"
+				>
+				<File
+					RelativePath=".\Quaternion.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\math\Quaternion.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Render"
@@ -984,6 +996,18 @@
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\scene\Sound.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Body"
+				>
+				<File
+					RelativePath=".\Body.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\scene\Body.h"
 					>
 				</File>
 			</Filter>

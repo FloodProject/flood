@@ -94,7 +94,7 @@ void Engine::init( bool createWindow )
 	//resourceManager = new ResourceManager();
 	resourceManager = ResourceManager::getInstancePtr();
 
-	//resourceManager = new ResourceManager();
+
 	physicsManager = PhysicsManager::getInstancePtr();
 
 	// register default codecs

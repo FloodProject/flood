@@ -9,13 +9,7 @@
 #include "vapor/PCH.h"
 #include "vapor/physics/Physics.h"
 
-#include <Common/Base/hkBase.h>
-#include <Common/Base/System/hkBaseSystem.h> // include for hkBaseSystem
-#include <Common/Base/Memory/Memory/Pool/hkPoolMemory.h> // hkPoolMemory
 
-#include <Physics/Dynamics/hkpDynamics.h>
-#include <Physics/Dynamics/World/hkpWorld.h>
-#include <Physics/Dynamics/World/hkpWorldCinfo.h>
 
 namespace vapor { namespace physics {
 
@@ -56,29 +50,47 @@ void PhysicsManager::createWorld()
 
 //-----------------------------------//
 
-//void PhysicsManager::createWorld(math::Vector3 gravity, float broadphaseSize,
-		//float collisionTolerance, float maxVelocity, float delta, 
-		//signed char contactpoint, SimType sim, SolvType solver)
-//{
-	//if(!worldCreated)
-	//{
-	//	hkpWorldCinfo info;
-	//	info.m_simulationType = sim;
-	//	info.m_gravity.set( gravity.x, gravity.y, gravity.z);
-	//	info.m_collisionTolerance = collisionTolerance; 
-	//	info.setBroadPhaseWorldSize( broadphaseSize );
-	//	info.setupSolverInfo( solver );
-	//	world = new hkpWorld( info );
-	//	worldCreated = true;
-	//}
-//}
+void PhysicsManager::createWorld(math::Vector3 gravity, float broadphaseSize,
+		float collisionTolerance, float maxVelocity, float delta, 
+		signed char contactpoint, hkpWorldCinfo::SimulationType sim, hkpWorldCinfo::SolverType solver)
+{
+	if(!worldCreated)
+	{
+		hkpWorldCinfo info;
+		info.m_simulationType = sim;
+		info.m_gravity.set( gravity.x, gravity.y, gravity.z);
+		info.m_collisionTolerance = collisionTolerance; 
+		info.setBroadPhaseWorldSize( broadphaseSize );
+		info.setupSolverInfo( solver );
+		world = new hkpWorld( info );
+		worldCreated = true;
+	}
+}
 
 //-----------------------------------//
 
+void PhysicsManager::update(float delta)
+{
+	if(worldCreated) world->stepDeltaTime(delta);
+}
 
 //-----------------------------------//
 
+void PhysicsManager::addEntity(hkpEntity * entity)
+{
+	if(worldCreated)
+		world->addEntity(entity);
+}
 
 //-----------------------------------//
+
+void PhysicsManager::removeEntity(hkpEntity * entity)
+{
+	if(worldCreated)
+		world->removeEntity(entity);
+}
+
+//-----------------------------------//
+
 
 } } // end namespaces
