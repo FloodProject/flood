@@ -11,8 +11,6 @@
 #include "vapor/scene/Body.h"
 #include "vapor/math/Math.h"
 
-
-
 using namespace vapor::math;
 
 namespace vapor { namespace scene {
@@ -27,9 +25,13 @@ Body::Body()
 {
 	physicsManager = physics::PhysicsManager::getInstancePtr();
 
+	// Construct a Box shape from the bounding box
 	transform = getNode()->getTransformPtr();
-	math::AABB bb = (*((getNode()->getGeometry())[0])).getBoundingVolume(); 
+	const math::AABB& bb = (*((getNode()->getGeometry())[0])).getBoundingVolume(); 
+	
 	hkpBoxShape shape = getShape(bb); 
+	
+	// 
 	hkpRigidBodyCinfo info;
 	setTransform(info);
 	hkpInertiaTensorComputer::setShapeVolumeMassProperties(&shape, info.m_mass, info);
@@ -37,7 +39,6 @@ Body::Body()
 	
 	physicsManager->addEntity(body);
 	inWorld = true;
-
 }
 
 //-----------------------------------//
@@ -51,10 +52,11 @@ Body::Body(float mass, hkpMotion::MotionType motion)
 
 Body::~Body()
 {
-	if(inWorld) physicsManager->removeEntity(body);
+	if(inWorld) 
+		physicsManager->removeEntity(body);
+
 	body->removeReference();
 }
-
 
 //-----------------------------------//
 
@@ -88,26 +90,26 @@ void Body::update( float delta )
 	m.ty = (body->getPosition())(1);
 	m.tz = (body->getPosition())(2);
 	
-	
 	transform->setAbsoluteTransform(m);
-	
-
 }
-hkpBoxShape Body::getShape(math::AABB bb)
+
+//-----------------------------------//
+
+hkpBoxShape Body::getShape(const math::AABB& bb)
 {
 	float hx, hy, hz;
 	
-	hx =(bb.getMaximum().x - bb.getMinimum().x)/2.0f;
-	hy =(bb.getMaximum().y - bb.getMinimum().y)/2.0f;
-	hz =(bb.getMaximum().z - bb.getMinimum().z)/2.0f;
+	hx = (bb.getMaximum().x - bb.getMinimum().x) / 2.0f;
+	hy = (bb.getMaximum().y - bb.getMinimum().y) / 2.0f;
+	hz = (bb.getMaximum().z - bb.getMinimum().z) / 2.0f;
 	
 	hkVector4 v(hx, hy, hz);
 	hkpBoxShape box(v);
 	
 	return box;
-
-
 }
+
+//-----------------------------------//
 
 void Body::setTransform(hkpRigidBodyCinfo& info)
 {
@@ -122,10 +124,9 @@ void Body::setTransform(hkpRigidBodyCinfo& info)
 	hkRotation rot;
 	rot.setCols(c1, c2, c3);
 	hkQuaternion rotation(rot);
-	info.m_rotation = rotation;
-
-
-	
+	info.m_rotation = rotation;	
 }
+
+//-----------------------------------//
 
 } } // end namespaces

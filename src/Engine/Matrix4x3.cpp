@@ -122,7 +122,6 @@ Matrix4x3 Matrix4x3::createTranslationMatrix( const Vector3& v )
 //
 // See 7.1.7
 
-
 Vector3	operator*(const Vector3 &p, const Matrix4x3 &m)
 {
 

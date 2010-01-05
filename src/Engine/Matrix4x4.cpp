@@ -34,8 +34,6 @@ void Matrix4x4::identity()
 	tx  = 0.0f; ty  = 0.0f; tz  = 0.0f; tw  = 1.0;
 }
 
-
-
 //-----------------------------------//
 
 Matrix4x4 Matrix4x4::createPerspectiveProjection( float fov, float ar, float near_, float far_ ) 

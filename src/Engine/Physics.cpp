@@ -9,8 +9,6 @@
 #include "vapor/PCH.h"
 #include "vapor/physics/Physics.h"
 
-
-
 namespace vapor { namespace physics {
 
 //-----------------------------------//
@@ -71,7 +69,8 @@ void PhysicsManager::createWorld(math::Vector3 gravity, float broadphaseSize,
 
 void PhysicsManager::update(float delta)
 {
-	if(worldCreated) world->stepDeltaTime(delta);
+	if(worldCreated) 
+		world->stepDeltaTime(delta);
 }
 
 //-----------------------------------//
@@ -91,6 +90,5 @@ void PhysicsManager::removeEntity(hkpEntity * entity)
 }
 
 //-----------------------------------//
-
 
 } } // end namespaces

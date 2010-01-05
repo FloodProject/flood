@@ -24,7 +24,6 @@
 #include <Physics/Collide/Shape/hkpShape.h>
 #include <Physics/Collide/Shape/Convex/Box/hkpBoxShape.h>
 
-
 #include <Physics/Dynamics/hkpDynamics.h>
 #include <Physics/Dynamics/Entity/hkpRigidBody.h>
 #include <Physics/Dynamics/Entity/hkpRigidBodyCinfo.h>
@@ -35,7 +34,7 @@ namespace vapor { namespace scene {
 
 //-----------------------------------//
 
-	class VAPOR_API Body : public Component
+class VAPOR_API Body : public Component
 {
 public:
 
@@ -49,21 +48,24 @@ public:
 	// Called once per frame to update the component.
 	virtual void update( float delta );
 
-protected:
-
-	static const std::string& type;
-
 private:
 	
 	void setTransform(hkpRigidBodyCinfo& info);
-	hkpBoxShape getShape(math::AABB bb);
-	hkpRigidBody * body;
-	Transform * transform;
+	hkpBoxShape getShape(const math::AABB& bb);
+	
+	hkpRigidBody* body;
+	Transform* transform;
 	physics::PhysicsManager* physicsManager;
 	bool inWorld;
+
+protected:
+
+	static const std::string& type;
 };
 
 //-----------------------------------//
+
+TYPEDEF_SHARED_POINTER_FROM_CLASS( Body );
 
 //-----------------------------------//
 

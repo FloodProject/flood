@@ -16,6 +16,9 @@ SERVER:
 EDITOR:
 -------
 
+Console - Write a line then go backwards and to the line again and color is white...
+Add subsystem update infrastructure in engine
+
 Ignore Entities (Layers?)
 Private editor nodes (hide in the scene tree)
 

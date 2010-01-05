@@ -20,6 +20,12 @@ namespace vapor { namespace scene {
 
 //-----------------------------------//
 
+/**
+ * Provides all scene entities with transform information. Transform are
+ * used to scale, rotate and translate nodes in the scene. They will hold
+ * all the needed matrices and will be updated by the physics manager.
+ */
+
 class VAPOR_API Transform : public Component
 {
 public:

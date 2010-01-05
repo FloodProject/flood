@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\boost_1_39_0\&quot;;&quot;$(SolutionDir)dep\fd_delegate\include&quot;;&quot;$(SolutionDir)\dep\OpenAL 1.1 SDK\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\vld\include&quot;;&quot;C:\wxWidgets-2.9.0\include&quot;;&quot;C:\wxWidgets-2.9.0\include\msvc&quot;;&quot;C:\wxWidgets-2.9.0\lib\vc_lib&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\boost_1_39_0\&quot;;&quot;$(SolutionDir)dep\fd_delegate\include&quot;;&quot;$(SolutionDir)\dep\OpenAL 1.1 SDK\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\vld\include&quot;;&quot;C:\wxWidgets-2.9.0\include&quot;;&quot;C:\wxWidgets-2.9.0\include\msvc&quot;;&quot;C:\wxWidgets-2.9.0\lib\vc_lib&quot;;&quot;$(SolutionDir)dep\havok\Source&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;__WXDEBUG__;__WXMSW__;_UNICODE;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE"
 				MinimalRebuild="true"
 				ExceptionHandling="1"
@@ -64,10 +64,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="zlib.lib physfs.lib wxmsw29ud_core.lib wxbase29ud.lib wxpngd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib wininet.lib vaporEngine.lib SDL.lib opengl32.lib glu32.lib glew32s.lib OpenAL32.lib vorbisfile_static.lib ogg_static.lib vorbis_static.lib sfml-system-s-d.lib sfml-window-s-d.lib luabindd.lib lua5.1-release.lib"
+				AdditionalDependencies="zlib.lib physfs.lib wxmsw29ud_core.lib wxbase29ud.lib wxpngd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib wininet.lib vaporEngine.lib SDL.lib opengl32.lib glu32.lib glew32s.lib OpenAL32.lib vorbisfile_static.lib ogg_static.lib vorbis_static.lib sfml-system-s-d.lib sfml-window-s-d.lib luabindd.lib lua5.1-release.lib hkBase.lib hkSerialize.lib hkSceneData.lib hkInternal.lib hkGeometryUtilities.lib hkCompat.lib hkpCollide.lib hkpConstraintSolver.lib hkpDynamics.lib hkpInternal.lib hkpUtilities.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-$(ConfigurationName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)lib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)dep\vld\lib&quot;;&quot;$(SolutionDir)dep\physfs-2.0.0\lib\release&quot;;&quot;$(SolutionDir)dep\zlib\lib&quot;;&quot;$(SolutionDir)dep\SDL-1.3\lib&quot;;&quot;$(SolutionDir)dep\SFML\lib\vc2008&quot;;&quot;$(SolutionDir)dep\glew\lib&quot;;&quot;$(SolutionDir)dep\libvorbis-1.2.0\lib&quot;;&quot;$(SolutionDir)dep\libogg-1.1.3\lib&quot;;&quot;$(SolutionDir)dep\OpenAL 1.1 SDK\libs\Win32&quot;;&quot;$(SolutionDir)dep\luabind\lib&quot;;&quot;$(SolutionDir)dep\lua\lib&quot;;&quot;C:\wxWidgets-2.9.0\lib\vc_lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)lib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)dep\vld\lib&quot;;&quot;$(SolutionDir)dep\physfs-2.0.0\lib\release&quot;;&quot;$(SolutionDir)dep\zlib\lib&quot;;&quot;$(SolutionDir)dep\SDL-1.3\lib&quot;;&quot;$(SolutionDir)dep\SFML\lib\vc2008&quot;;&quot;$(SolutionDir)dep\glew\lib&quot;;&quot;$(SolutionDir)dep\libvorbis-1.2.0\lib&quot;;&quot;$(SolutionDir)dep\libogg-1.1.3\lib&quot;;&quot;$(SolutionDir)dep\OpenAL 1.1 SDK\libs\Win32&quot;;&quot;$(SolutionDir)dep\luabind\lib&quot;;&quot;$(SolutionDir)dep\lua\lib&quot;;&quot;C:\wxWidgets-2.9.0\lib\vc_lib&quot;;&quot;$(SolutionDir)dep\havok\Lib\win32_net_9-0\hybrid_multithreaded_dll&quot;"
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"

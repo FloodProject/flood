@@ -71,7 +71,7 @@ protected:
 	// Builds the bounding box of the geometry.
 	void buildBoundingRenderable();
 
-	// Marks the geometry as dirty (fores AABB update).
+	// Marks the geometry as dirty (forces AABB update).
 	void markDirty();
 
 	typedef std::vector< render::RenderablePtr > RenderableList;

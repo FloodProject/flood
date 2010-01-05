@@ -107,6 +107,7 @@ void vaporControl::OnUpdate()
 {
 	engine->getSceneManager()->update( 0.001f );
 	engine->getScriptState()->update( 0.001f );
+	engine->getPhysicsManager()->update( 0.001f );
 }
 
 //-----------------------------------//

@@ -9,6 +9,7 @@
 #include "PCH.h"
 #include "Editor.h"
 
+#include "vapor/scene/Body.h"
 #include "vapor/terrain/Terrain.h"
 #include "vapor/terrain/Cell.h"
 #include "vapor/render/Quad.h"
@@ -121,6 +122,8 @@ void EditorFrame::initEngine()
 
 	vaporCtrl = viewport->vaporCtrl;
 
+	engine->getPhysicsManager()->createWorld();
+
 	createScene();
 
 	input::Mouse* mouse = engine->getInputManager()->getMouse();
@@ -166,6 +169,7 @@ void EditorFrame::createScene()
 	NodePtr cubo( new Node( "Cubo" ) );
 	cubo->addComponent( TransformPtr( new Transform() ) );
 	cubo->addComponent( mesh );
+	cubo->addComponent( BodyPtr( new Body() ) );
 	cubo->getTransform()->scale( 0.3f );
 	scene->add( cubo );
 
