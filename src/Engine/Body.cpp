@@ -112,9 +112,9 @@ hkpBoxShape Body::getShape(const math::AABB& bb)
 {
 	float hx, hy, hz;
 	
-	hx = (bb.getMaximum().x - bb.getMinimum().x) / 2.0f;
-	hy = (bb.getMaximum().y - bb.getMinimum().y) / 2.0f;
-	hz = (bb.getMaximum().z - bb.getMinimum().z) / 2.0f;
+	hx = ::abs((bb.getMaximum().x - bb.getMinimum().x) / 2.0f);
+	hy = ::abs((bb.getMaximum().y - bb.getMinimum().y) / 2.0f);
+	hz = ::abs((bb.getMaximum().z - bb.getMinimum().z) / 2.0f);
 	
 	hkVector4 v(hx, hy, hz);
 	hkpBoxShape box(v);
