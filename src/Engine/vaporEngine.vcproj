@@ -1095,15 +1095,15 @@
 				RelativePath="..\..\inc\vapor\Engine.h"
 				>
 			</File>
-			<File
-				RelativePath="..\Framework\Framework.cpp"
-				>
-			</File>
 			<Filter
 				Name="Framework"
 				>
 				<File
 					RelativePath="..\Examples\Dialog.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Framework\Framework.cpp"
 					>
 				</File>
 				<File

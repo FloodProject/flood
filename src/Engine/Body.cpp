@@ -25,7 +25,6 @@ Body::Body()
 {
 	physicsManager = physics::PhysicsManager::getInstancePtr();
 
-
 	inWorld = true;
 	firstUpdate = true;
 }

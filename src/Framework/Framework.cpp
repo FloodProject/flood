@@ -80,6 +80,8 @@ void Framework::render()
 		// Execute all the registered scripts.
 		getScriptState()->update( lastFrameTime );
 
+		getPhysicsManager()->update( lastFrameTime );
+
 		// User rendering callback.
 		onRender();
 

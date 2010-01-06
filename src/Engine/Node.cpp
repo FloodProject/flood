@@ -110,6 +110,10 @@ const std::map< std::string, ComponentPtr >& Node::getComponents()
 
 void Node::update( float delta )
 {
+	// Update Geometry components so bounding boxes are generated.
+	foreach( ComponentPtr comp, getGeometry() )
+		comp->update( delta );
+
 	foreach( componentPair component, components )
 	{
 		component.second->update( delta );
