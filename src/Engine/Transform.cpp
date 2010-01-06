@@ -22,7 +22,7 @@ const std::string& Transform::type = "Transform";
 //-----------------------------------//
 
 Transform::Transform()
-	: v_scale( 1.0f )
+	: v_scale( 1.0f ), isPhysicsDriven( false )
 {
 
 }

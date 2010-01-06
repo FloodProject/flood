@@ -36,7 +36,7 @@ FirstPersonCamera::FirstPersonCamera( input::InputManager* input,
 
 void FirstPersonCamera::update( float delta )
 {
-	debug( "delta %f", delta );
+	//debug( "delta %f", delta );
 	Camera::update( delta );
 	checkControls( delta );
 	viewMatrix = getNode()->getTransform()->getAbsoluteTransform();

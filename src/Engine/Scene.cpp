@@ -60,7 +60,10 @@ void Scene::updateTransformAndBV( NodePtr node, std::stack< Matrix4x3 >& transfo
 	if ( transform )
 	{
 		transformStack.push( transform->getLocalTransform() * transformStack.top() );
-		transform->setAbsoluteTransform( transformStack.top() );
+
+		if( !transform->isPhysicsDriven )
+			transform->setAbsoluteTransform( transformStack.top() );
+		
 		needsPop = true;
 	}
 

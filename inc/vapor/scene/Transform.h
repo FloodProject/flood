@@ -93,6 +93,10 @@ protected:
 	math::Matrix4x3 absoluteLocalToWorld;
 
 	static const std::string& type;
+
+public:
+
+	bool isPhysicsDriven;
 };
 
 //-----------------------------------//

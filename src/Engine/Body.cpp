@@ -47,16 +47,27 @@ Body::Body(float mass, hkpMotion::MotionType motion)
 void Body::init()
 {
 	transform = getNode()->getTransformPtr();
-	const math::AABB &bb = (*((getNode()->getGeometry())[0])).getBoundingVolume(); 
-	shape = getShape(bb); 
-	setTransform(info);
+	transform->isPhysicsDriven = true;
+
+	const math::AABB& bb = (*((getNode()->getGeometry())[0])).getBoundingVolume();
+	
+	// Get a box shape from AABB
+	shape = getShape( bb ); 
+	
+	// Send the transform of the node to Havok
+	setTransform( info );
+
 	hkpMassProperties massProperties;
+	
 	hkVector4 boxSize = shape->getHalfExtents();
 	boxSize.mul4(2);
-	hkReal boxMass = info.m_mass;
+	hkReal boxMass = 100;
+	
 	hkpInertiaTensorComputer::computeBoxVolumeMassProperties(boxSize, boxMass, massProperties);
+	
 	info.m_inertiaTensor = massProperties.m_inertiaTensor;
 	info.m_shape = shape;
+	
 	body = new hkpRigidBody(info);
 	physicsManager->addEntity(body);
 }
@@ -134,6 +145,7 @@ hkpBoxShape * Body::getShape(const math::AABB& bb)
 void Body::setTransform(hkpRigidBodyCinfo& info)
 {
 	Vector3 p = transform->getPosition();
+	
 	hkVector4 pos(p.x, p.y, p.z);
 	info.m_position = pos;
 	
@@ -141,9 +153,11 @@ void Body::setTransform(hkpRigidBodyCinfo& info)
 	hkVector4 c1(r.m11, r.m21, r.m31);
 	hkVector4 c2(r.m12, r.m22, r.m32);
 	hkVector4 c3(r.m13, r.m23, r.m33);
+	
 	hkRotation rot;
 	rot.setCols(c1, c2, c3);
 	rot.renormalize();
+	
 	hkQuaternion rotation(rot);
 	info.m_rotation = rotation;	
 }
@@ -156,40 +170,56 @@ void Body::addToWorld()
 
 }
 
+//-----------------------------------//
+
 void Body::removeFromWorld()
 {
 
 }
 
+//-----------------------------------//
 
 void Body::setLinearVelocity(const math::Vector3 &lVel)
 {
 
 }
 
+//-----------------------------------//
+
 void Body::setAngularVelocity(const math::Vector3 &aVel)
 {
 
 }
 
+//-----------------------------------//
+
 void Body::applyForce(const math::Vector3 &force)
 {
 
 }
+
+//-----------------------------------//
+
 void Body::applyTorque(const math::Vector3 &torque)
 {
 
 }
+
+//-----------------------------------//
 
 void Body::applyLinearImpulse(const math::Vector3 &imp)
 {
 
 }
 
+//-----------------------------------//
+
 hkVector4 Body::convertVector(const math::Vector3 &v)
 {
 	hkVector4 u(v.x, v.y, v.z);
 	return u;
 }
+
+//-----------------------------------//
 
 } } // end namespaces

@@ -33,7 +33,6 @@ PhysicsManager::PhysicsManager()
 		hkThreadMemory::getInstance().setStackArea( stackBuffer, stackSize);
 	}
 
-
 	worldCreated = false;
 }
 
