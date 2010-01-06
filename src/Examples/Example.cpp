@@ -39,10 +39,6 @@ void Example::onInit()
 	
 	physics::PhysicsManager * phys = physics::PhysicsManager::getInstancePtr();
 	phys->createWorld();
-
-
-
-
 }
 
 //-----------------------------------//

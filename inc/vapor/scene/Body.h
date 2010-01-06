@@ -43,6 +43,9 @@ public:
 	Body(float mass, hkpMotion::MotionType motion);
 	virtual ~Body();
 
+	// Inits the physics body.
+	void init();
+
 	// Gets the type of this component. 
 	virtual const std::string& getType() const;
 
@@ -65,7 +68,8 @@ private:
 	hkpRigidBody * body;
 	Transform * transform;
 	physics::PhysicsManager* physicsManager;
-	bool inWorld;	 
+	bool inWorld;
+	bool firstUpdate;
 
 protected:
 

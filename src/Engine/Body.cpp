@@ -25,20 +25,9 @@ Body::Body()
 {
 	physicsManager = physics::PhysicsManager::getInstancePtr();
 
-	// Construct a Box shape from the bounding box
-	transform = getNode()->getTransformPtr();
-	const math::AABB& bb = (*((getNode()->getGeometry())[0])).getBoundingVolume(); 
 
-	hkpBoxShape shape = getShape(bb); 
-	
-	// 
-	hkpRigidBodyCinfo info;
-	setTransform(info);
-	hkpInertiaTensorComputer::setShapeVolumeMassProperties(&shape, info.m_mass, info);
-	body = new hkpRigidBody(info);
-	
-	physicsManager->addEntity(body);
 	inWorld = true;
+	firstUpdate = true;
 }
 
 //-----------------------------------//
@@ -47,19 +36,23 @@ Body::Body(float mass, hkpMotion::MotionType motion)
 {
 	physicsManager = physics::PhysicsManager::getInstancePtr();
 
+	inWorld = true;
+	firstUpdate = true;
+}
+
+//-----------------------------------//
+
+void Body::init()
+{
 	transform = getNode()->getTransformPtr();
 	const math::AABB &bb = (*((getNode()->getGeometry())[0])).getBoundingVolume(); 
+
 	hkpBoxShape shape = getShape(bb); 
 	hkpRigidBodyCinfo info;
-	info.m_mass = mass;
-	info.m_motionType = motion;
 	setTransform(info);
 	hkpInertiaTensorComputer::setShapeVolumeMassProperties(&shape, info.m_mass, info);
 	body = new hkpRigidBody(info);
-	
 	physicsManager->addEntity(body);
-	inWorld = true;
-
 }
 
 //-----------------------------------//
@@ -83,6 +76,12 @@ const std::string& Body::getType() const
 
 void Body::update( float delta )
 {
+	if( firstUpdate )
+	{
+		init();
+		firstUpdate = false;
+	}
+
 	hkRotation rot;
 	rot.set(body->getRotation());
 	
