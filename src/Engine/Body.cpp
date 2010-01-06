@@ -35,7 +35,10 @@ Body::Body()
 Body::Body(float mass, hkpMotion::MotionType motion)
 {
 	physicsManager = physics::PhysicsManager::getInstancePtr();
-
+	
+	info.m_mass = mass;
+	info.m_motionType = motion;
+	
 	inWorld = true;
 	firstUpdate = true;
 }
@@ -46,11 +49,15 @@ void Body::init()
 {
 	transform = getNode()->getTransformPtr();
 	const math::AABB &bb = (*((getNode()->getGeometry())[0])).getBoundingVolume(); 
-
-	hkpBoxShape shape = getShape(bb); 
-	hkpRigidBodyCinfo info;
+	shape = getShape(bb); 
 	setTransform(info);
-	hkpInertiaTensorComputer::setShapeVolumeMassProperties(&shape, info.m_mass, info);
+	hkpMassProperties massProperties;
+	hkVector4 boxSize = shape->getHalfExtents();
+	boxSize.mul4(2);
+	hkReal boxMass = info.m_mass;
+	hkpInertiaTensorComputer::computeBoxVolumeMassProperties(boxSize, boxMass, massProperties);
+	info.m_inertiaTensor = massProperties.m_inertiaTensor;
+	info.m_shape = shape;
 	body = new hkpRigidBody(info);
 	physicsManager->addEntity(body);
 }
@@ -63,6 +70,7 @@ Body::~Body()
 		physicsManager->removeEntity(body);
 
 	body->removeReference();
+	shape->removeReference();
 }
 
 //-----------------------------------//
@@ -108,16 +116,16 @@ void Body::update( float delta )
 
 //-----------------------------------//
 
-hkpBoxShape Body::getShape(const math::AABB& bb)
+hkpBoxShape * Body::getShape(const math::AABB& bb)
 {
 	float hx, hy, hz;
 	
-	hx = ::abs((bb.getMaximum().x - bb.getMinimum().x) / 2.0f);
-	hy = ::abs((bb.getMaximum().y - bb.getMinimum().y) / 2.0f);
-	hz = ::abs((bb.getMaximum().z - bb.getMinimum().z) / 2.0f);
+	hx = ::abs(((bb.getMaximum()).x - (bb.getMinimum()).x) / 2.0f);
+	hy = ::abs(((bb.getMaximum()).y - (bb.getMinimum()).y) / 2.0f);
+	hz = ::abs(((bb.getMaximum()).z - (bb.getMinimum()).z) / 2.0f);
 	
 	hkVector4 v(hx, hy, hz);
-	hkpBoxShape box(v);
+	hkpBoxShape * box = new hkpBoxShape(v);
 	
 	return box;
 }
@@ -136,6 +144,7 @@ void Body::setTransform(hkpRigidBodyCinfo& info)
 	hkVector4 c3(r.m13, r.m23, r.m33);
 	hkRotation rot;
 	rot.setCols(c1, c2, c3);
+	rot.renormalize();
 	hkQuaternion rotation(rot);
 	info.m_rotation = rotation;	
 }

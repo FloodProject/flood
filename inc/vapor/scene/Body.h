@@ -63,13 +63,15 @@ public:
 private:
 	
 	void setTransform(hkpRigidBodyCinfo& info);
-	hkpBoxShape getShape(const math::AABB &bb);
+	hkpBoxShape * getShape(const math::AABB &bb);
 	hkVector4 convertVector(const math::Vector3 &v);
 	hkpRigidBody * body;
 	Transform * transform;
 	physics::PhysicsManager* physicsManager;
 	bool inWorld;
 	bool firstUpdate;
+	hkpRigidBodyCinfo info;
+	hkpBoxShape * shape;
 
 protected:
 

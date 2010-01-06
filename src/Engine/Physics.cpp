@@ -42,7 +42,7 @@ PhysicsManager::PhysicsManager()
 PhysicsManager::~PhysicsManager()
 {
 	hkBaseSystem::quit();
-	if(worldCreated) delete world;
+	if(worldCreated) world->removeReference();
 }
 
 //-----------------------------------//
