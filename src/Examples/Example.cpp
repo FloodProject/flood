@@ -36,6 +36,13 @@ void Example::onInit()
 	{
 		Log::MessageDialog( "Missing archive/directory '" + media + "'." );
 	}
+	
+	physics::PhysicsManager * phys = physics::PhysicsManager::getInstancePtr();
+	phys->createWorld();
+
+
+
+
 }
 
 //-----------------------------------//

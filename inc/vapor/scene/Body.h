@@ -30,6 +30,7 @@
 #include <Physics/Dynamics/Motion/hkpMotion.h>
 #include <Physics/Utilities/Dynamics/Inertia/hkpInertiaTensorComputer.h>
 
+
 namespace vapor { namespace scene {
 
 //-----------------------------------//
@@ -48,15 +49,23 @@ public:
 	// Called once per frame to update the component.
 	virtual void update( float delta );
 
+	void addToWorld();
+	void removeFromWorld();
+	void setLinearVelocity(const math::Vector3 &lVel);
+	void setAngularVelocity(const math::Vector3 &aVel); 
+	void applyForce(const math::Vector3 &force);
+	void applyTorque(const math::Vector3 &torque);
+	void applyLinearImpulse(const math::Vector3 &imp);
+
 private:
 	
 	void setTransform(hkpRigidBodyCinfo& info);
-	hkpBoxShape getShape(const math::AABB& bb);
-	
-	hkpRigidBody* body;
-	Transform* transform;
+	hkpBoxShape getShape(const math::AABB &bb);
+	hkVector4 convertVector(const math::Vector3 &v);
+	hkpRigidBody * body;
+	Transform * transform;
 	physics::PhysicsManager* physicsManager;
-	bool inWorld;
+	bool inWorld;	 
 
 protected:
 

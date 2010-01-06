@@ -9,6 +9,7 @@
 #include <Common/Base/hkBase.h>
 #include <Common/Base/System/hkBaseSystem.h> // include for hkBaseSystem
 #include <Common/Base/Memory/Memory/Pool/hkPoolMemory.h> // hkPoolMemory
+#include <Common/Base/Memory/hkThreadMemory.h>
 
 #include <Physics/Dynamics/hkpDynamics.h>
 #include <Physics/Dynamics/World/hkpWorld.h>
@@ -46,6 +47,8 @@ private:
 
 	bool worldCreated;  
 	hkpWorld* world; 
+	char* stackBuffer;
+
 };
 
 //-----------------------------------//

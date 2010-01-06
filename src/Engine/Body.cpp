@@ -28,7 +28,7 @@ Body::Body()
 	// Construct a Box shape from the bounding box
 	transform = getNode()->getTransformPtr();
 	const math::AABB& bb = (*((getNode()->getGeometry())[0])).getBoundingVolume(); 
-	
+
 	hkpBoxShape shape = getShape(bb); 
 	
 	// 
@@ -45,6 +45,20 @@ Body::Body()
 
 Body::Body(float mass, hkpMotion::MotionType motion)
 {
+	physicsManager = physics::PhysicsManager::getInstancePtr();
+
+	transform = getNode()->getTransformPtr();
+	const math::AABB &bb = (*((getNode()->getGeometry())[0])).getBoundingVolume(); 
+	hkpBoxShape shape = getShape(bb); 
+	hkpRigidBodyCinfo info;
+	info.m_mass = mass;
+	info.m_motionType = motion;
+	setTransform(info);
+	hkpInertiaTensorComputer::setShapeVolumeMassProperties(&shape, info.m_mass, info);
+	body = new hkpRigidBody(info);
+	
+	physicsManager->addEntity(body);
+	inWorld = true;
 
 }
 
@@ -128,5 +142,47 @@ void Body::setTransform(hkpRigidBodyCinfo& info)
 }
 
 //-----------------------------------//
+
+void Body::addToWorld()
+{
+
+
+}
+
+void Body::removeFromWorld()
+{
+
+}
+
+
+void Body::setLinearVelocity(const math::Vector3 &lVel)
+{
+
+}
+
+void Body::setAngularVelocity(const math::Vector3 &aVel)
+{
+
+}
+
+void Body::applyForce(const math::Vector3 &force)
+{
+
+}
+void Body::applyTorque(const math::Vector3 &torque)
+{
+
+}
+
+void Body::applyLinearImpulse(const math::Vector3 &imp)
+{
+
+}
+
+hkVector4 Body::convertVector(const math::Vector3 &v)
+{
+	hkVector4 u(v.x, v.y, v.z);
+	return u;
+}
 
 } } // end namespaces

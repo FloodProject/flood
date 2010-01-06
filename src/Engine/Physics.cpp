@@ -21,9 +21,20 @@ static void errorReportFunction(const char* str, void* errorOutputObject)
 //-----------------------------------//
 
 PhysicsManager::PhysicsManager()
-	: worldCreated(false)
 {
-	hkBaseSystem::init( new hkPoolMemory(), HK_NULL, errorReportFunction );
+	hkPoolMemory* memoryManager = new hkPoolMemory();
+	hkThreadMemory* threadMemory = new hkThreadMemory(memoryManager);
+	hkBaseSystem::init( memoryManager, threadMemory, errorReportFunction );
+	memoryManager->removeReference();
+	
+	{
+		int stackSize = 0x100000;
+		stackBuffer = hkAllocate<char>( stackSize, HK_MEMORY_CLASS_BASE);
+		hkThreadMemory::getInstance().setStackArea( stackBuffer, stackSize);
+	}
+
+
+	worldCreated = false;
 }
 
 //-----------------------------------//
@@ -41,6 +52,11 @@ void PhysicsManager::createWorld()
 	if(!worldCreated)
 	{
 		hkpWorldCinfo info;
+		info.m_simulationType = hkpWorldCinfo::SIMULATION_TYPE_DISCRETE;
+		info.m_collisionTolerance = 0.1f; 
+		info.setBroadPhaseWorldSize( 150.0f );
+		info.m_contactPointGeneration = hkpWorldCinfo::CONTACT_POINT_REJECT_DUBIOUS; 
+		info.setupSolverInfo( hkpWorldCinfo::SOLVER_TYPE_4ITERS_MEDIUM );
 		world = new hkpWorld( info );
 		worldCreated = true;
 	}
@@ -86,7 +102,7 @@ void PhysicsManager::addEntity(hkpEntity * entity)
 void PhysicsManager::removeEntity(hkpEntity * entity)
 {
 	if(worldCreated)
-		world->removeEntity(entity);
+		world->addEntity(entity);
 }
 
 //-----------------------------------//
