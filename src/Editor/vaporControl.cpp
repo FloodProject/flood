@@ -103,7 +103,7 @@ void vaporControl::OnMouseCaptureLost(wxMouseCaptureLostEvent& WXUNUSED(event))
 
 //-----------------------------------//
 
-const float DELTA = 0.005f;
+const float DELTA = 0.010f;
 
 void vaporControl::OnUpdate()
 {

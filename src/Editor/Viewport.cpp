@@ -67,7 +67,7 @@ void Viewport::createCamera()
 	camera.reset( new FirstPersonCamera( engine->getInputManager(), engine->getRenderDevice() ) );
 	cameraNode->addComponent( TransformPtr( new Transform() ) );
 	cameraNode->addComponent( camera );
-	cameraNode->getTransform()->translate( 0.0f, -20.0f, -150.0f );
+	cameraNode->getTransform()->translate( 0.0f, -200.0f, -650.0f );
 	engine->getSceneManager()->add( cameraNode );
 
 	transform = cameraNode->getTransform();
