@@ -6,20 +6,15 @@
 
 #pragma once
 
-#include <Common/Base/hkBase.h>
-#include <Common/Base/System/hkBaseSystem.h> // include for hkBaseSystem
-#include <Common/Base/Memory/Memory/Pool/hkPoolMemory.h> // hkPoolMemory
-#include <Common/Base/Memory/hkThreadMemory.h>
-
-#include <Physics/Dynamics/hkpDynamics.h>
-#include <Physics/Dynamics/World/hkpWorld.h>
-#include <Physics/Dynamics/World/hkpWorldCinfo.h>
-#include <Physics/Dynamics/Entity/hkpEntity.h>
-
 #include "vapor/math/Vector3.h"
 #include "vapor/Singleton.h"
 
+class hkVisualDebugger;
 class hkpWorld;
+class hkpWorldCinfo;
+class hkpEntity;
+//enum hkpWorldCinfo::SimulationType;
+//enum hkpWorldCinfo::SolverType;
 
 namespace vapor { namespace physics {
 
@@ -35,9 +30,9 @@ public:
 	
 	void createWorld();
 	
-	void createWorld(math::Vector3 gravity, float broadphaseSize,
-		float collisionTolerance, float maxVelocity, float delta, 
-		signed char contactpoint, hkpWorldCinfo::SimulationType sim, hkpWorldCinfo::SolverType solver);
+	//void createWorld(math::Vector3 gravity, float broadphaseSize,
+	//	float collisionTolerance, float maxVelocity, float delta, 
+	//	signed char contactpoint, hkpWorldCinfo::SimulationType sim, hkpWorldCinfo::SolverType solver);
 
 	void update(float delta);
 	void addEntity(hkpEntity * entity);
@@ -46,6 +41,7 @@ public:
 	float del;	
 private:
 
+	hkVisualDebugger* vdb;
 	bool worldCreated;  
 	hkpWorld* world; 
 	char* stackBuffer;

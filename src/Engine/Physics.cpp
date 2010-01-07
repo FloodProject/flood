@@ -9,6 +9,27 @@
 #include "vapor/PCH.h"
 #include "vapor/physics/Physics.h"
 
+#include <Common/Base/hkBase.h>
+#include <Common/Base/System/hkBaseSystem.h> // include for hkBaseSystem
+#include <Common/Base/Memory/Memory/Pool/hkPoolMemory.h> // hkPoolMemory
+#include <Common/Base/Memory/hkThreadMemory.h>
+
+#include <Physics/Dynamics/hkpDynamics.h>
+#include <Physics/Dynamics/World/hkpWorld.h>
+#include <Physics/Dynamics/World/hkpWorldCinfo.h>
+#include <Physics/Dynamics/Entity/hkpEntity.h>
+
+#include <Common/Visualize/hkVisualDebugger.h>
+#include <Physics/Utilities/VisualDebugger/hkpPhysicsContext.h>
+
+#define INCLUDE_HAVOK_PHYSICS_CLASSES
+#define HK_CLASSES_FILE "Common/Serialize/ClassList/hkClasses.h"
+#include "Common/Serialize/Util/hkBuiltinTypeRegistry.cxx"
+
+// Generate a custom list to trim memory requirements
+#define HK_COMPAT_FILE <Common/Compat/hkCompatVersions.h>
+#include <Common/Compat/hkCompat_None.cxx>
+
 namespace vapor { namespace physics {
 
 //-----------------------------------//
@@ -20,7 +41,7 @@ static void errorReportFunction(const char* str, void* errorOutputObject)
 
 //-----------------------------------//
 
-PhysicsManager::PhysicsManager()
+PhysicsManager::PhysicsManager() : worldCreated( false )
 {
 	hkPoolMemory* memoryManager = new hkPoolMemory();
 	hkThreadMemory* threadMemory = new hkThreadMemory(memoryManager);
@@ -32,8 +53,6 @@ PhysicsManager::PhysicsManager()
 		stackBuffer = hkAllocate<char>( stackSize, HK_MEMORY_CLASS_BASE);
 		hkThreadMemory::getInstance().setStackArea( stackBuffer, stackSize);
 	}
-
-	worldCreated = false;
 }
 
 //-----------------------------------//
@@ -59,34 +78,45 @@ void PhysicsManager::createWorld()
 		world = new hkpWorld( info );
 		worldCreated = true;
 	}
+
+	hkpPhysicsContext* physicsContext = new hkpPhysicsContext;
+	physicsContext->addWorld( world ); // add all worlds as you have
+	hkpPhysicsContext::registerAllPhysicsProcesses();
+	hkArray<hkProcessContext*> contexts;
+	contexts.pushBack( physicsContext );  
+	vdb = new hkVisualDebugger( contexts );
+	vdb->serve(/* optional port number */);
 }
 
 //-----------------------------------//
 
-void PhysicsManager::createWorld(math::Vector3 gravity, float broadphaseSize,
-		float collisionTolerance, float maxVelocity, float delta, 
-		signed char contactpoint, hkpWorldCinfo::SimulationType sim, hkpWorldCinfo::SolverType solver)
-{
-	if(!worldCreated)
-	{
-		hkpWorldCinfo info;
-		info.m_simulationType = sim;
-		info.m_gravity.set( gravity.x, gravity.y, gravity.z);
-		info.m_collisionTolerance = collisionTolerance; 
-		info.setBroadPhaseWorldSize( broadphaseSize );
-		info.setupSolverInfo( solver );
-		world = new hkpWorld( info );
-		worldCreated = true;
-	}
-}
+//void PhysicsManager::createWorld(math::Vector3 gravity, float broadphaseSize,
+//		float collisionTolerance, float maxVelocity, float delta, 
+//		signed char contactpoint, hkpWorldCinfo::SimulationType sim, hkpWorldCinfo::SolverType solver)
+//{
+//	if(!worldCreated)
+//	{
+//		hkpWorldCinfo info;
+//		info.m_simulationType = sim;
+//		info.m_gravity.set( gravity.x, gravity.y, gravity.z);
+//		info.m_collisionTolerance = collisionTolerance; 
+//		info.setBroadPhaseWorldSize( broadphaseSize );
+//		info.setupSolverInfo( solver );
+//		world = new hkpWorld( info );
+//		worldCreated = true;
+//	}
+//}
 
 //-----------------------------------//
 
 void PhysicsManager::update(float delta)
 {
 	del = delta;
-	if(worldCreated) 
+	if(worldCreated)
+	{
+		vdb->step( delta );
 		world->stepDeltaTime(delta);
+	}
 }
 
 //-----------------------------------//

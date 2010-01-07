@@ -61,7 +61,7 @@ void Body::init()
 	
 	hkVector4 boxSize = shape->getHalfExtents();
 	boxSize.mul4(2);
-	hkReal boxMass = 100;
+	hkReal boxMass = info.m_mass;
 	
 	hkpInertiaTensorComputer::computeBoxVolumeMassProperties(boxSize, boxMass, massProperties);
 	

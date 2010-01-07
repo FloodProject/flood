@@ -168,9 +168,10 @@ void EditorFrame::createScene()
 
 	NodePtr cubo( new Node( "Cubo" ) );
 	cubo->addComponent( TransformPtr( new Transform() ) );
+	cubo->getTransform()->translate( 0.0f, 100.0f, 0.0f );
+	cubo->getTransform()->scale( 0.1f );
 	cubo->addComponent( mesh );
 	cubo->addComponent( BodyPtr( new Body() ) );
-	cubo->getTransform()->scale( 0.3f );
 	scene->add( cubo );
 
 	TerrainSettings settings;
@@ -183,7 +184,7 @@ void EditorFrame::createScene()
 	NodePtr terreno( new Node( "Terreno" ) );
 	terreno->addComponent( TransformPtr( new Transform() ) );
 	terreno->addComponent( terrain );
-	scene->add( terreno );
+	//scene->add( terreno );
 
 	ImagePtr heightmap = rm->loadResource< Image >( "height2.png" );
 	Cell* cell = terrain->createCell( heightmap, 0, 0 );
