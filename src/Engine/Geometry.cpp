@@ -82,9 +82,9 @@ Geometry::getRenderables( RenderGroup::Enum group )
 
 //-----------------------------------//
  
-void Geometry::appendRenderables( render::RenderQueue& queue )
+void Geometry::appendRenderables( render::RenderQueue& queue, TransformPtr transform )
 {
-	TransformPtr transform = getNode()->getTransform();
+	//TransformPtr transform = getNode()->getTransform();
 	
 	// The node should have a transform component.
 	assert( transform != nullptr );

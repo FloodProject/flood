@@ -242,7 +242,8 @@ void Camera::cull( render::RenderQueue& queue, NodePtr node ) const
 	foreach( GeometryPtr geometry, geometries ) 
 	{
 		// No frustum culling is performed yet.
-		geometry->appendRenderables( queue );
+		// TODO: Hack! :D
+		geometry->appendRenderables( queue, node->getTransform() );
 	}
 }
 

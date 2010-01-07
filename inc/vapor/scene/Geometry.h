@@ -10,6 +10,7 @@
 
 #include "vapor/Platform.h"
 #include "vapor/scene/Component.h"
+#include "vapor/scene/Transform.h"
 
 #include "vapor/render/Renderable.h"
 #include "vapor/render/RenderQueue.h"
@@ -46,7 +47,7 @@ public:
 		render::RenderGroup::Enum group = render::RenderGroup::Normal );
 
 	/// Appends all the renderables of this geometry to the queue.
-	void appendRenderables( render::RenderQueue& queue );
+	void appendRenderables( render::RenderQueue& queue, TransformPtr transform );
 
 	/// Gets the bounding volume of this geometry.
 	const math::AABB& getBoundingVolume() const;

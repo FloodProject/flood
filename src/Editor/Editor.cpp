@@ -14,6 +14,8 @@
 #include "vapor/terrain/Cell.h"
 #include "vapor/render/Quad.h"
 
+#include <boost/lexical_cast.hpp>
+
 namespace vapor { namespace editor {
 
 // ----------------------------------------------------------------------------
@@ -167,13 +169,16 @@ void EditorFrame::createScene()
 		rend->getMaterial()->setProgram( tex );
 	}
 
-	NodePtr cubo( new Node( "Cubo" ) );
-	cubo->addComponent( TransformPtr( new Transform() ) );
-	cubo->getTransform()->translate( 0.0f, 100.0f, 0.0f );
-	cubo->getTransform()->scale( 0.1f );
-	cubo->addComponent( mesh );
-	cubo->addComponent( BodyPtr( new Body() ) );
-	scene->add( cubo );
+	for( int i = 1; i < 5; i++ )
+	{
+		NodePtr cubo( new Node( "Cubo"+boost::lexical_cast<std::string>(i) ) );
+		cubo->addComponent( TransformPtr( new Transform() ) );
+		cubo->getTransform()->translate( 0.0f, 150.0f*i, 0.0f );
+		cubo->getTransform()->scale( 0.1f );
+		cubo->addComponent( mesh );
+		cubo->addComponent( BodyPtr( new Body() ) );
+		scene->add( cubo );
+	}
 
 	TerrainSettings settings;
 	settings.CellSize = 512;

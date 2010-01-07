@@ -76,11 +76,11 @@ void Body::init()
 
 Body::~Body()
 {
-	if(inWorld) 
-		physicsManager->removeEntity(body);
+	//if(inWorld) 
+		//physicsManager->removeEntity(body);
 
-	body->removeReference();
-	shape->removeReference();
+	//body->removeReference();
+	//shape->removeReference();
 }
 
 //-----------------------------------//
