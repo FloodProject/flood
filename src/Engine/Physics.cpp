@@ -60,7 +60,7 @@ PhysicsManager::PhysicsManager() : worldCreated( false )
 PhysicsManager::~PhysicsManager()
 {
 	hkBaseSystem::quit();
-	if(worldCreated) world->removeReference();
+	//if(worldCreated) world->removeReference();
 }
 
 //-----------------------------------//
@@ -86,7 +86,8 @@ void PhysicsManager::createWorld()
 	hkArray<hkProcessContext*> contexts;
 	contexts.pushBack( physicsContext );  
 	vdb = new hkVisualDebugger( contexts );
-	vdb->serve(/* optional port number */);
+	vdb->capture("teste.hkm");
+	//vdb->serve(/* optional port number */);
 }
 
 //-----------------------------------//
