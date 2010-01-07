@@ -18,6 +18,7 @@
 #include <Physics/Dynamics/World/hkpWorld.h>
 #include <Physics/Dynamics/World/hkpWorldCinfo.h>
 #include <Physics/Dynamics/Entity/hkpEntity.h>
+#include <Physics/Collide/Dispatch/hkpAgentRegisterUtil.h>
 
 #include <Common/Visualize/hkVisualDebugger.h>
 #include <Physics/Utilities/VisualDebugger/hkpPhysicsContext.h>
@@ -79,6 +80,8 @@ void PhysicsManager::createWorld()
 		world = new hkpWorld( info );
 		worldCreated = true;
 	}
+
+	hkpAgentRegisterUtil::registerAllAgents( world->getCollisionDispatcher() );
 
 	hkpPhysicsContext* physicsContext = new hkpPhysicsContext;
 	physicsContext->addWorld( world ); // add all worlds as you have

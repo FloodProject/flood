@@ -154,6 +154,7 @@ void EditorFrame::createScene()
 	NodePtr grid( new Node( "EditorGrid" ) );
 	grid->addComponent( TransformPtr( new Transform() ) );
 	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
+	grid->addComponent( BodyPtr( new Body( 100.0f, hkpMotion::MOTION_FIXED ) ) );
 	scene->add( grid );
 
 	ScriptPtr lua = rm->loadResource< Script >( "teste.lua" );
