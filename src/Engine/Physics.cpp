@@ -20,8 +20,10 @@
 #include <Physics/Dynamics/Entity/hkpEntity.h>
 #include <Physics/Collide/Dispatch/hkpAgentRegisterUtil.h>
 
-#include <Common/Visualize/hkVisualDebugger.h>
-#include <Physics/Utilities/VisualDebugger/hkpPhysicsContext.h>
+#ifdef HAVOK_ENABLE_VDB
+	#include <Common/Visualize/hkVisualDebugger.h>
+	#include <Physics/Utilities/VisualDebugger/hkpPhysicsContext.h>
+#endif
 
 #define INCLUDE_HAVOK_PHYSICS_CLASSES
 #define HK_CLASSES_FILE "Common/Serialize/ClassList/hkClasses.h"
@@ -45,14 +47,15 @@ static void errorReportFunction(const char* str, void* errorOutputObject)
 PhysicsManager::PhysicsManager() : worldCreated( false )
 {
 	hkPoolMemory* memoryManager = new hkPoolMemory();
-	hkThreadMemory* threadMemory = new hkThreadMemory(memoryManager);
+	threadMemory = new hkThreadMemory(memoryManager);
+	
 	hkBaseSystem::init( memoryManager, threadMemory, errorReportFunction );
 	memoryManager->removeReference();
-	
+
 	{
 		int stackSize = 0x100000;
-		stackBuffer = hkAllocate<char>( stackSize, HK_MEMORY_CLASS_BASE);
-		hkThreadMemory::getInstance().setStackArea( stackBuffer, stackSize);
+		stackBuffer = hkAllocate<char>( stackSize, HK_MEMORY_CLASS_BASE );
+		hkThreadMemory::getInstance().setStackArea( stackBuffer, stackSize );
 	}
 }
 
@@ -60,8 +63,21 @@ PhysicsManager::PhysicsManager() : worldCreated( false )
 
 PhysicsManager::~PhysicsManager()
 {
+	if(worldCreated) 
+		world->removeReference();
+
+#ifdef HAVOK_ENABLE_VDB
+	vdb->removeReference();
+#endif
+
+	// Deallocate stack area
+	threadMemory->setStackArea( 0, 0 );
+	hkDeallocate( stackBuffer );
+
+	threadMemory->removeReference();
+
+	// Quit base system
 	hkBaseSystem::quit();
-	//if(worldCreated) world->removeReference();
 }
 
 //-----------------------------------//
@@ -83,6 +99,7 @@ void PhysicsManager::createWorld()
 
 	hkpAgentRegisterUtil::registerAllAgents( world->getCollisionDispatcher() );
 
+#ifdef HAVOK_ENABLE_VDB
 	hkpPhysicsContext* physicsContext = new hkpPhysicsContext;
 	physicsContext->addWorld( world ); // add all worlds as you have
 	hkpPhysicsContext::registerAllPhysicsProcesses();
@@ -91,6 +108,7 @@ void PhysicsManager::createWorld()
 	vdb = new hkVisualDebugger( contexts );
 	vdb->capture("teste.hkm");
 	//vdb->serve(/* optional port number */);
+#endif
 }
 
 //-----------------------------------//
@@ -119,14 +137,18 @@ void PhysicsManager::update(float delta)
 	del = delta;
 	if(worldCreated)
 	{
+
+#ifdef HAVOK_ENABLE_VDB
 		vdb->step( delta );
+#endif
+
 		world->stepDeltaTime(delta);
 	}
 }
 
 //-----------------------------------//
 
-void PhysicsManager::addEntity(hkpEntity * entity)
+void PhysicsManager::addEntity(hkpEntity* entity)
 {
 	if(worldCreated)
 		world->addEntity(entity);
@@ -134,7 +156,7 @@ void PhysicsManager::addEntity(hkpEntity * entity)
 
 //-----------------------------------//
 
-void PhysicsManager::removeEntity(hkpEntity * entity)
+void PhysicsManager::removeEntity(hkpEntity* entity)
 {
 	if(worldCreated)
 		world->addEntity(entity);
