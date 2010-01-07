@@ -43,6 +43,7 @@ public:
 	void addEntity(hkpEntity * entity);
 	void removeEntity(hkpEntity * entity);
 
+	float del;	
 private:
 
 	bool worldCreated;  

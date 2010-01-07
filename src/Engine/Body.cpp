@@ -166,35 +166,38 @@ void Body::setTransform(hkpRigidBodyCinfo& info)
 
 void Body::addToWorld()
 {
-
-
+	if(!inWorld) physicsManager->addEntity(body); 
 }
 
 //-----------------------------------//
 
 void Body::removeFromWorld()
 {
-
+	if(inWorld) physicsManager->removeEntity(body);
 }
 
 //-----------------------------------//
 
 void Body::setLinearVelocity(const math::Vector3 &lVel)
 {
-
+	hkVector4 v = convertVector(lVel);
+	body->setLinearVelocity(v);
 }
 
 //-----------------------------------//
 
 void Body::setAngularVelocity(const math::Vector3 &aVel)
 {
-
+	hkVector4 v = convertVector(aVel);
+	body->setAngularVelocity(v);
 }
 
 //-----------------------------------//
 
 void Body::applyForce(const math::Vector3 &force)
 {
+	hkVector4 f = convertVector(force);
+	body->applyForce(physicsManager->del, f);
 
 }
 
@@ -202,14 +205,16 @@ void Body::applyForce(const math::Vector3 &force)
 
 void Body::applyTorque(const math::Vector3 &torque)
 {
-
+	hkVector4 t = convertVector(torque);
+	body->applyTorque(physicsManager->del, t);
 }
 
 //-----------------------------------//
 
 void Body::applyLinearImpulse(const math::Vector3 &imp)
 {
-
+	hkVector4 i = convertVector(imp);
+	body->applyLinearImpulse(i);
 }
 
 //-----------------------------------//

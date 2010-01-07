@@ -84,6 +84,7 @@ void PhysicsManager::createWorld(math::Vector3 gravity, float broadphaseSize,
 
 void PhysicsManager::update(float delta)
 {
+	del = delta;
 	if(worldCreated) 
 		world->stepDeltaTime(delta);
 }
