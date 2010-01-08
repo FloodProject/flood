@@ -57,7 +57,7 @@ SceneTreeCtrl::SceneTreeCtrl(vapor::Engine* engine,
 	initIcons();
 	initControl();
 
-	updateScene( root, scene );
+	updateScene( root, scene.lock() );
 }
 
 //-----------------------------------//
@@ -72,14 +72,14 @@ SceneTreeCtrl::~SceneTreeCtrl()
 void SceneTreeCtrl::initControl()
 {
 	// Add the root node
-	wxString str(scene->getName());
+	wxString str(scene.lock()->getName());
 	root = AddRoot(str.Capitalize(), 1);
 
 	ExpandAll();
 	
 	//updateScene();
-	scene->onNodeAdded += fd::bind( &SceneTreeCtrl::onNodeAdded, this );
-	scene->onNodeRemoved += fd::bind( &SceneTreeCtrl::onNodeRemoved, this );
+	scene.lock()->onNodeAdded += fd::bind( &SceneTreeCtrl::onNodeAdded, this );
+	scene.lock()->onNodeRemoved += fd::bind( &SceneTreeCtrl::onNodeRemoved, this );
 }
 
 //-----------------------------------//
@@ -142,7 +142,7 @@ scene::NodePtr SceneTreeCtrl::getEntity( wxTreeItemId id )
 	assert( id.IsOk() );
 
 	std::string str( GetItemText( id ) );
-	NodePtr node = scene->getEntity( str );
+	NodePtr node = scene.lock()->getEntity( str );
 
 	while( !node )
 	{
@@ -152,7 +152,7 @@ scene::NodePtr SceneTreeCtrl::getEntity( wxTreeItemId id )
 		// If there is none, abort.
 		if( !id.IsOk() ) return NodePtr();
 		
-		node = scene->getEntity( str );
+		node = scene.lock()->getEntity( str );
 	}
 
 	return node;

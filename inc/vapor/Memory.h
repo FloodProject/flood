@@ -34,6 +34,8 @@
 #if defined( VAPOR_MEMORY_SHARED_PTR )
 	#define TYPEDEF_SHARED_POINTER_FROM_CLASS( class ) \
 		typedef std::shared_ptr< class > class##Ptr
+	#define TYPEDEF_SHARED_WEAK_POINTER_FROM_CLASS( class ) \
+		typedef std::weak_ptr< class > class##WeakPtr
 #elif defined( VAPOR_MEMORY_INTRUSIVE_PTR )
 	#include "boost/intrusive_ptr.hpp"
 	#define TYPEDEF_SHARED_POINTER_FROM_CLASS( class ) \

@@ -84,7 +84,7 @@ protected:
 	void onNodeMenu( wxCommandEvent& event );
 
 	// Scene associated this control.
-	vapor::scene::ScenePtr scene;
+	vapor::scene::SceneWeakPtr scene;
 
 	// Holds the engine instance.
 	vapor::Engine* engine;
