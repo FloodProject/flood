@@ -174,7 +174,7 @@ void EditorFrame::createScene()
 	{
 		NodePtr cubo( new Node( "Cubo"+boost::lexical_cast<std::string>(i) ) );
 		cubo->addComponent( TransformPtr( new Transform() ) );
-		cubo->getTransform()->translate( 0.0f, 150.0f*i, 0.0f );
+		cubo->getTransform()->translate( 20.0f*i, 150.0f*i, 0.0f );
 		cubo->getTransform()->scale( 0.1f );
 		cubo->addComponent( mesh );
 		cubo->addComponent( BodyPtr( new Body() ) );

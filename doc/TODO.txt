@@ -37,6 +37,7 @@ Performance optimizations
 
 	View frustum culling
 	Quadtree
+	
 Check for maximum texture unit size
 Implement camera panning
 Edit grid settings
@@ -80,6 +81,8 @@ Fix the Camera behaviour
 
 ENGINE:
 ------
+
+Geometry component is shared per node, and that causes lots of problems.
 
 WTF?! Static const string references (Component types)?
 
