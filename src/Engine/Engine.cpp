@@ -72,8 +72,7 @@ Engine::~Engine()
 
 	delete renderDevice;
 	delete resourceManager;
-	// TODO: fix Havok's leaks
-	//delete physicsManager;
+	delete physicsManager;
 	delete scriptState;
 	delete vfs;
 	delete log;

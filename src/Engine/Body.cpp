@@ -57,7 +57,10 @@ void Body::init()
 	// Send the transform of the node to Havok
 	setTransform( info );
 
+	info.m_mass = 10000.0f;
+
 	hkpMassProperties massProperties;
+	
 	
 	hkVector4 boxSize = shape->getHalfExtents();
 	boxSize.mul4(2);
@@ -76,11 +79,11 @@ void Body::init()
 
 Body::~Body()
 {
-	//if(inWorld) 
-		//physicsManager->removeEntity(body);
+	if(inWorld) 
+		physicsManager->removeEntity(body);
 
-	//body->removeReference();
-	//shape->removeReference();
+	body->removeReference();
+	shape->removeReference();
 }
 
 //-----------------------------------//

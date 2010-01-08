@@ -98,6 +98,8 @@ private:
 
     // any class wishing to process wxWidgets events must use this macro
     DECLARE_EVENT_TABLE()
+
+	void fireCube(Vector3 direction, Vector3 pos, ScenePtr scene, MS3DPtr mesh);
 };
 
 // ----------------------------------------------------------------------------

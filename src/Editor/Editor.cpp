@@ -156,6 +156,7 @@ void EditorFrame::createScene()
 	NodePtr grid( new Node( "EditorGrid" ) );
 	grid->addComponent( TransformPtr( new Transform() ) );
 	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
+	grid->getTransform()->scale( 10000.0f );
 	grid->addComponent( BodyPtr( new Body( 100.0f, hkpMotion::MOTION_FIXED ) ) );
 	scene->add( grid );
 
@@ -179,6 +180,20 @@ void EditorFrame::createScene()
 		cubo->addComponent( BodyPtr( new Body() ) );
 		scene->add( cubo );
 	}
+
+	for( int i = 1; i < 5; i++ )
+	{
+		NodePtr cubo( new Node( "Cubo2"+boost::lexical_cast<std::string>(i) ) );
+		cubo->addComponent( TransformPtr( new Transform() ) );
+		cubo->getTransform()->translate( 150.0f*(i-2), 750.0f, 0.0f );
+		cubo->getTransform()->scale( 0.1f );
+		cubo->addComponent( mesh );
+		cubo->addComponent( BodyPtr( new Body() ) );
+		scene->add( cubo );
+	}
+	
+	fireCube(Vector3(0.0f,0.0f, -100.0f), Vector3(0.0f,0.0f, 20.0f), scene, mesh);
+
 
 	TerrainSettings settings;
 	settings.CellSize = 512;
@@ -494,5 +509,20 @@ void EditorFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 }
 
 //-----------------------------------//
+void EditorFrame::fireCube(Vector3 direction, Vector3 pos, ScenePtr scene, MS3DPtr mesh)
+{
+
+	NodePtr cubo( new Node( "Cubo0" ) );
+	cubo->addComponent( TransformPtr( new Transform() ) );
+	cubo->getTransform()->translate(pos);
+	cubo->getTransform()->scale( 0.1f );
+	cubo->addComponent( mesh );
+	BodyPtr body(new Body(100.0f, hkpMotion::MOTION_KEYFRAMED));
+	cubo->addComponent( body );
+	scene->add( cubo );
+	body->setLinearVelocity(direction);
+
+}
+
 
 } } // end namespaces

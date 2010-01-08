@@ -159,7 +159,7 @@ void PhysicsManager::addEntity(hkpEntity* entity)
 void PhysicsManager::removeEntity(hkpEntity* entity)
 {
 	if(worldCreated)
-		world->addEntity(entity);
+		world->removeEntity(entity);
 }
 
 //-----------------------------------//
