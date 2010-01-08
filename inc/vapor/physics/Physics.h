@@ -18,12 +18,13 @@ class hkpWorldCinfo;
 class hkpEntity;
 class hkThreadMemory;
 
-//enum hkpWorldCinfo::SimulationType;
-//enum hkpWorldCinfo::SolverType;
-
 namespace vapor { namespace physics {
 
 //-----------------------------------//
+
+/**
+ * Global hub for physics simulations.
+ */
 
 class VAPOR_API PhysicsManager 
 	: public Singleton<PhysicsManager>, private boost::noncopyable
@@ -41,11 +42,16 @@ public:
 
 	void update( float delta );
 	void addEntity( hkpEntity* entity );
-	void removeEntity( hkpEntity * entity );
+	void removeEntity( hkpEntity* entity );
+
+	bool getSimulationEnabled();
+	void setSimulationEnabled( bool enable );
 
 	float del;
 
 private:
+
+	bool enableSimulation;
 
 	hkpWorld* world; 
 	hkThreadMemory* threadMemory;

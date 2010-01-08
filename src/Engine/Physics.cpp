@@ -44,7 +44,7 @@ static void errorReportFunction(const char* str, void* errorOutputObject)
 
 //-----------------------------------//
 
-PhysicsManager::PhysicsManager() : worldCreated( false )
+PhysicsManager::PhysicsManager() : worldCreated( false ), enableSimulation( true )
 {
 	hkPoolMemory* memoryManager = new hkPoolMemory();
 	threadMemory = new hkThreadMemory(memoryManager);
@@ -134,7 +134,11 @@ void PhysicsManager::createWorld()
 
 void PhysicsManager::update(float delta)
 {
+	if( !enableSimulation ) return;
+
+	// TODO: hack!
 	del = delta;
+
 	if(worldCreated)
 	{
 
@@ -160,6 +164,20 @@ void PhysicsManager::removeEntity(hkpEntity* entity)
 {
 	if(worldCreated)
 		world->removeEntity(entity);
+}
+
+//-----------------------------------//
+
+bool PhysicsManager::getSimulationEnabled()
+{
+	return enableSimulation;
+}
+
+//-----------------------------------//
+
+void PhysicsManager::setSimulationEnabled( bool enable )
+{
+	this->enableSimulation = enable;
 }
 
 //-----------------------------------//

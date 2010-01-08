@@ -123,6 +123,7 @@ enum
 	Toolbar_ToggleScene,
 	Toolbar_ToogleConsole,
 	Toolbar_ToogleGrid,
+	Toolbar_TooglePlay,
 };
 
 //-----------------------------------//

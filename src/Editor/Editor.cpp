@@ -9,6 +9,8 @@
 #include "PCH.h"
 #include "Editor.h"
 
+#include "vapor/physics/Physics.h"
+
 #include "vapor/scene/Body.h"
 #include "vapor/terrain/Terrain.h"
 #include "vapor/terrain/Cell.h"
@@ -125,6 +127,7 @@ void EditorFrame::initEngine()
 	vaporCtrl = viewport->vaporCtrl;
 
 	engine->getPhysicsManager()->createWorld();
+	engine->getPhysicsManager()->setSimulationEnabled( false );
 
 	createScene();
 
@@ -156,7 +159,7 @@ void EditorFrame::createScene()
 	NodePtr grid( new Node( "EditorGrid" ) );
 	grid->addComponent( TransformPtr( new Transform() ) );
 	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
-	grid->getTransform()->scale( 10000.0f );
+	//grid->getTransform()->scale( 10000.0f );
 	grid->addComponent( BodyPtr( new Body( 100.0f, hkpMotion::MOTION_FIXED ) ) );
 	scene->add( grid );
 
@@ -192,8 +195,7 @@ void EditorFrame::createScene()
 		scene->add( cubo );
 	}
 	
-	fireCube(Vector3(0.0f,0.0f, -100.0f), Vector3(0.0f,0.0f, 20.0f), scene, mesh);
-
+	//fireCube(Vector3(0.0f,0.0f, -100.0f), Vector3(0.0f,0.0f, 20.0f), scene, mesh);
 
 	TerrainSettings settings;
 	settings.CellSize = 512;
@@ -317,7 +319,8 @@ void EditorFrame::createToolbar()
 
 	toolBar->ToggleTool( Toolbar_ToogleGrid, true );
 
-	toolBar->AddTool( wxID_ANY, "Play", wxMEMORY_BITMAP(resultset_next), "Enable/disable Play mode" );
+	toolBar->AddTool( Toolbar_TooglePlay, "Play", wxMEMORY_BITMAP(resultset_next), 
+		"Enable/disable Play mode", wxITEM_CHECK );
 
 	// --------------
 	// Gizmo tools
@@ -383,7 +386,13 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 			NodePtr grid = engine->getSceneManager()->getEntity( "EditorGrid" );
 			grid->setVisible( !grid->getVisible() );
 			break;
-		} 
+		}
+
+		case Toolbar_TooglePlay:
+		{
+			physics::PhysicsManager* ph = engine->getPhysicsManager();
+			ph->setSimulationEnabled( !ph->getSimulationEnabled() );
+		}
 	}
 }
 
