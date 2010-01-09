@@ -109,7 +109,7 @@ private:
 	BodyPtr spawnCube(Vector3 pos);
 
 	bool keyPressed;
-	BodyPtr b;
+	BodyWeakPtr b;
 };
 
 // ----------------------------------------------------------------------------

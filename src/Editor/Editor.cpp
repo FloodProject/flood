@@ -167,7 +167,7 @@ void EditorFrame::createScene()
 	grid->addComponent( TransformPtr( new Transform() ) );
 	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
 	//grid->getTransform()->scale( 10000.0f );
-	grid->addComponent( BodyPtr( new Body( 100.0f, hkpMotion::MOTION_FIXED ) ) );
+	//grid->addComponent( BodyPtr( new Body( 100.0f, hkpMotion::MOTION_FIXED ) ) );
 	scene->add( grid );
 
 	ScriptPtr lua = rm->loadResource< Script >( "teste.lua" );
@@ -180,6 +180,15 @@ void EditorFrame::createScene()
 		rend->getMaterial()->setProgram( tex );
 	}
 
+	NodePtr cubo( new Node( "Plataforma" ) );
+	cubo->addComponent( TransformPtr( new Transform() ) );
+	cubo->getTransform()->translate( 0.0f, -30.0f, 0.0f );
+	cubo->getTransform()->scale(10.0f, 1.0f, 10.0f );
+	cubo->addComponent( mesh );
+	cubo->addComponent( BodyPtr( new Body() ) );
+	scene->add( cubo );
+
+
 	for( int i = 1; i < 5; i++ )
 	{
 		NodePtr cubo( new Node( "Cubo"+boost::lexical_cast<std::string>(i) ) );
@@ -191,6 +200,19 @@ void EditorFrame::createScene()
 		scene->add( cubo );
 	}
 
+	
+	for( int i = 1; i < 5; i++ )
+	{
+		NodePtr cubo( new Node( "Cubo3"+boost::lexical_cast<std::string>(i) ) );
+		cubo->addComponent( TransformPtr( new Transform() ) );
+		cubo->getTransform()->translate( 120.0f*i, 150.0f*i, 30.0f );
+		cubo->getTransform()->scale( 0.1f );
+		cubo->addComponent( mesh );
+		cubo->addComponent( BodyPtr( new Body() ) );
+		scene->add( cubo );
+	}
+
+
 	for( int i = 1; i < 5; i++ )
 	{
 		NodePtr cubo( new Node( "Cubo2"+boost::lexical_cast<std::string>(i) ) );
@@ -198,7 +220,7 @@ void EditorFrame::createScene()
 		cubo->getTransform()->translate( 150.0f*(i-2), 750.0f, 0.0f );
 		cubo->getTransform()->scale( 0.1f );
 		cubo->addComponent( mesh );
-		cubo->addComponent( BodyPtr( new Body() ) );
+		cubo->addComponent( BodyPtr( new Body(100.0f, hkpMotion::MOTION_FIXED ) ) );
 		scene->add( cubo );
 	}
 	
@@ -561,7 +583,17 @@ void EditorFrame::onKeyRelease(const KeyEvent& key)
 {
  if(key.keyCode == Keys::Space)
  {
-	 b->setLinearVelocity(Vector3(0.0f, 250.0f, 0.0f));
+	 ScenePtr scene = engine->getSceneManager();
+	 NodePtr entity = scene->getEntity( "MainCamera" );
+	 CameraPtr camera = entity->getComponent< Camera >( "Camera" );
+	 math::Matrix4x3 m = camera->getViewMatrix();
+	 Vector3 v = camera->getForwardVector();
+	 m.tx = -m.tx -v.x * 130.0f;
+	 m.ty = -m.ty -v.y * 130.0f;
+	 m.tz = -m.tz -v.z * 130.0f;
+	 b.lock()->setPositionAndRotation(m);
+	 b.lock()->setLinearVelocity(math::Vector3.Zero);
+     b.lock()->setLinearVelocity(v * -100.0f);
 	 keyPressed = false;
  }
 }

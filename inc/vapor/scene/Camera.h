@@ -120,6 +120,8 @@ public:
 	// Gets the aspect ratio of the target.
 	float getAspectRatio() const;
 
+	math::Vector3 getForwardVector(){ return forwardVector; }
+
 protected:
 
 	// Handles target resize (must update width, height).
