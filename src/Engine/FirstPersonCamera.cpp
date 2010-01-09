@@ -254,9 +254,6 @@ void FirstPersonCamera::onMouseMove( const MouseMoveEvent& moveEvent )
 	}
 
 	centerCursor();
-
-
-
 }
 
 //-----------------------------------//

@@ -166,9 +166,7 @@ void EditorFrame::createScene()
 	NodePtr grid( new Node( "EditorGrid" ) );
 	grid->addComponent( TransformPtr( new Transform() ) );
 	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
-	//grid->getTransform()->scale( 10000.0f );
-	//grid->addComponent( BodyPtr( new Body( 100.0f, hkpMotion::MOTION_FIXED ) ) );
-	scene->add( grid );
+	//scene->add( grid );
 
 	ScriptPtr lua = rm->loadResource< Script >( "teste.lua" );
 	engine->getScriptState()->registerScript( lua );
@@ -179,15 +177,6 @@ void EditorFrame::createScene()
 	{
 		rend->getMaterial()->setProgram( tex );
 	}
-
-	NodePtr cubo( new Node( "Plataforma" ) );
-	cubo->addComponent( TransformPtr( new Transform() ) );
-	cubo->getTransform()->translate( 0.0f, -30.0f, 0.0f );
-	cubo->getTransform()->scale(10.0f, 1.0f, 10.0f );
-	cubo->addComponent( mesh );
-	cubo->addComponent( BodyPtr( new Body() ) );
-	scene->add( cubo );
-
 
 	for( int i = 1; i < 5; i++ )
 	{
@@ -223,6 +212,20 @@ void EditorFrame::createScene()
 		cubo->addComponent( BodyPtr( new Body(100.0f, hkpMotion::MOTION_FIXED ) ) );
 		scene->add( cubo );
 	}
+
+	MS3DPtr plat = rm->loadResource< MS3D >( "base.ms3d" );
+
+	foreach( const RenderablePtr& rend, plat->getRenderables() )
+	{
+		rend->getMaterial()->setProgram( tex );
+	}
+
+	NodePtr base( new Node( "Platform" ) );
+	base->addComponent( TransformPtr( new Transform() ) );
+	base->addComponent( plat );
+	base->addComponent( BodyPtr( new Body( 100.0f, hkpMotion::MOTION_FIXED ) ) );
+	//base->setVisible( false );
+	scene->add( base );
 	
 	b = spawnCube(Vector3(0.0f, 900.0f, 20.0f));
 
@@ -547,6 +550,7 @@ void EditorFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 }
 
 //-----------------------------------//
+
 BodyPtr EditorFrame::spawnCube(Vector3 pos)
 {
 
@@ -563,41 +567,39 @@ BodyPtr EditorFrame::spawnCube(Vector3 pos)
 	scene->add( cubo );
 
 	return body;
-	
-
-
 }
+
+//-----------------------------------//
 
 void EditorFrame::onKeyPress(const KeyEvent& key)
 {
 	if(key.keyCode == Keys::Space && !keyPressed)
 	{
-	
-	
-	keyPressed = true;
+		keyPressed = true;
 	}
 }
 
+//-----------------------------------//
 
 void EditorFrame::onKeyRelease(const KeyEvent& key)
 {
- if(key.keyCode == Keys::Space)
- {
-	 ScenePtr scene = engine->getSceneManager();
-	 NodePtr entity = scene->getEntity( "MainCamera" );
-	 CameraPtr camera = entity->getComponent< Camera >( "Camera" );
-	 math::Matrix4x3 m = camera->getViewMatrix();
-	 Vector3 v = camera->getForwardVector();
-	 m.tx = -m.tx -v.x * 130.0f;
-	 m.ty = -m.ty -v.y * 130.0f;
-	 m.tz = -m.tz -v.z * 130.0f;
-	 b.lock()->setPositionAndRotation(m);
-	 b.lock()->setLinearVelocity(math::Vector3.Zero);
-     b.lock()->setLinearVelocity(v * -100.0f);
-	 keyPressed = false;
- }
+	if(key.keyCode == Keys::Space)
+	{
+		ScenePtr scene = engine->getSceneManager();
+		NodePtr entity = scene->getEntity( "MainCamera" );
+		CameraPtr camera = entity->getComponent< Camera >( "Camera" );
+		math::Matrix4x3 m = camera->getViewMatrix();
+		Vector3 v = camera->getForwardVector();
+		m.tx = -m.tx -v.x * 130.0f;
+		m.ty = -m.ty -v.y * 130.0f;
+		m.tz = -m.tz -v.z * 130.0f;
+		b.lock()->setPositionAndRotation(m);
+		b.lock()->setLinearVelocity(math::Vector3.Zero);
+		b.lock()->setLinearVelocity(v * -100.0f);
+		keyPressed = false;
+	}
 }
 
-
+//-----------------------------------//
 
 } } // end namespaces

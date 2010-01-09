@@ -21,6 +21,7 @@ namespace vapor { namespace scene {
 class Node;
 
 TYPEDEF_SHARED_POINTER_FROM_CLASS( Node );
+TYPEDEF_SHARED_WEAK_POINTER_FROM_CLASS( Node );
 
 //-----------------------------------//
 
@@ -103,7 +104,7 @@ private:
 	std::map< std::string, ComponentPtr > components;
 
 	// Points to the parent node (if any). 
-	std::weak_ptr< Node > parent;
+	NodeWeakPtr parent;
 	
 	// Caches the geometries nodes (for faster lookup when rendering).
 	std::vector< GeometryPtr > geometries;

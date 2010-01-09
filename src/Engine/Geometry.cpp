@@ -164,7 +164,6 @@ void Geometry::update( float delta )
 	ADD_BOX_FACE( 0, 4, 6, 2 )
 	ADD_BOX_FACE( 1, 5, 7, 3 )
 
-	
 	std::vector< Vector3 > c( 24, Vector3( 1.0f, 1.0f, 0.0f ) );
 
 	vb->set( VertexAttribute::Vertex, v );

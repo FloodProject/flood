@@ -17,6 +17,7 @@ namespace vapor { namespace scene {
 class Node;
 
 TYPEDEF_SHARED_POINTER_FROM_CLASS( Node );
+TYPEDEF_SHARED_WEAK_POINTER_FROM_CLASS( Node );
 
 //-----------------------------------//
 
@@ -49,7 +50,7 @@ public:
 
 protected:
 
-	std::weak_ptr< Node > node;
+	NodeWeakPtr node;
 };
 
 //-----------------------------------//
