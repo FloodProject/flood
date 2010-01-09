@@ -247,4 +247,33 @@ hkVector4 Body::convertVector(const math::Vector3 &v)
 
 //-----------------------------------//
 
+void  Body::setPosition (const math::Vector3 &position)
+{
+	if(initiated)
+	{
+		hkVector4 p = convertVector(position);
+		body->setPosition(p);
+	}
+}
+
+
+//-----------------------------------//
+
+void  Body::setPositionAndRotation (const math::Matrix4x3 &m)
+{
+	if(initiated)
+	{
+		hkVector4 c1(m.m11, m.m21, m.m31);
+		hkVector4 c2(m.m12, m.m22, m.m32);
+		hkVector4 c3(m.m13, m.m23, m.m33);
+		hkVector4 p(m.tx, m.ty, m.tz);
+		hkRotation rot;
+		rot.setCols(c1, c2, c3);
+		rot.renormalize();
+		hkQuaternion r(rot);
+		body->setPositionAndRotation(p, r);
+	}
+}
+
+//-----------------------------------//
 } } // end namespaces

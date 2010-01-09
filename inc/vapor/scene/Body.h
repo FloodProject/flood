@@ -61,6 +61,9 @@ public:
 	void applyLinearImpulse(const math::Vector3 &imp);
 	bool initiated;
 
+	void  setPosition (const math::Vector3 &position); 
+	void  setPositionAndRotation (const math::Matrix4x3 &m); 
+
 private:
 	
 	void setTransform(hkpRigidBodyCinfo& info);
