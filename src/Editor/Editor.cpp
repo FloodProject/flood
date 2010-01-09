@@ -10,13 +10,14 @@
 #include "Editor.h"
 
 #include "vapor/physics/Physics.h"
-
-#include "vapor/scene/Body.h"
 #include "vapor/terrain/Terrain.h"
 #include "vapor/terrain/Cell.h"
 #include "vapor/render/Quad.h"
+#include "vapor/input/keyboard.h"
 
 #include <boost/lexical_cast.hpp>
+
+using namespace vapor::input;
 
 namespace vapor { namespace editor {
 
@@ -102,6 +103,8 @@ EditorFrame::EditorFrame(const wxString& title)
 	codeEvaluator = new ConsoleFrame( engine, this, "Scripting Console" );
 
 	vaporCtrl->SetFocus();
+
+	keyPressed = false; 
 }
 
 //-----------------------------------//
@@ -133,6 +136,10 @@ void EditorFrame::initEngine()
 
 	input::Mouse* mouse = engine->getInputManager()->getMouse();
 	mouse->onMouseButtonPress += fd::bind( &EditorFrame::onMouseClick, this );
+
+	input::Keyboard * keyboard = engine->getInputManager()->getKeyboard();
+	keyboard->onKeyPress += fd::bind( &EditorFrame::onKeyPress, this );
+	keyboard->onKeyRelease += fd::bind( &EditorFrame::onKeyRelease, this );
 }
 
 //-----------------------------------//
@@ -195,7 +202,7 @@ void EditorFrame::createScene()
 		scene->add( cubo );
 	}
 	
-	//fireCube(Vector3(0.0f,0.0f, -100.0f), Vector3(0.0f,0.0f, 20.0f), scene, mesh);
+	b = spawnCube(Vector3(0.0f, 900.0f, 20.0f));
 
 	TerrainSettings settings;
 	settings.CellSize = 512;
@@ -518,20 +525,47 @@ void EditorFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 }
 
 //-----------------------------------//
-void EditorFrame::fireCube(Vector3 direction, Vector3 pos, ScenePtr scene, MS3DPtr mesh)
+BodyPtr EditorFrame::spawnCube(Vector3 pos)
 {
 
+	ScenePtr scene = engine->getSceneManager();
+	ResourceManager* rm = engine->getResourceManager();
+	MS3DPtr mesh = rm->loadResource< MS3D >( "cubo.ms3d" );
 	NodePtr cubo( new Node( "Cubo0" ) );
 	cubo->addComponent( TransformPtr( new Transform() ) );
 	cubo->getTransform()->translate(pos);
 	cubo->getTransform()->scale( 0.1f );
 	cubo->addComponent( mesh );
-	BodyPtr body(new Body(100.0f, hkpMotion::MOTION_KEYFRAMED));
+	BodyPtr body(new Body(100.0f, hkpMotion::MOTION_BOX_INERTIA));
 	cubo->addComponent( body );
 	scene->add( cubo );
-	body->setLinearVelocity(direction);
+
+	return body;
+	
+
 
 }
+
+void EditorFrame::onKeyPress(const KeyEvent& key)
+{
+	if(key.keyCode == Keys::Space && !keyPressed)
+	{
+	
+	
+	keyPressed = true;
+	}
+}
+
+
+void EditorFrame::onKeyRelease(const KeyEvent& key)
+{
+ if(key.keyCode == Keys::Space)
+ {
+	 b->setLinearVelocity(Vector3(0.0f, 250.0f, 0.0f));
+	 keyPressed = false;
+ }
+}
+
 
 
 } } // end namespaces

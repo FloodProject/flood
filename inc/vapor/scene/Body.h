@@ -59,6 +59,7 @@ public:
 	void applyForce(const math::Vector3 &force);
 	void applyTorque(const math::Vector3 &torque);
 	void applyLinearImpulse(const math::Vector3 &imp);
+	bool initiated;
 
 private:
 	
@@ -70,6 +71,7 @@ private:
 	physics::PhysicsManager* physicsManager;
 	bool inWorld;
 	bool firstUpdate;
+
 	hkpRigidBodyCinfo info;
 	hkpBoxShape * shape;
 

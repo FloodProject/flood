@@ -15,6 +15,8 @@
 #include "Viewport.h"
 #include <wx/notebook.h>
 
+#include "vapor/scene/Body.h"
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//
@@ -70,6 +72,10 @@ protected:
 	// Handles picking of entities.
 	void onMouseClick( const vapor::input::MouseButtonEvent& mbe );
 
+	void onKeyPress(const vapor::input::KeyEvent& key);
+
+	void onKeyRelease(const vapor::input::KeyEvent& key);
+
 	// vaporEngine instance.
 	vapor::Engine* engine;
 	
@@ -99,7 +105,11 @@ private:
     // any class wishing to process wxWidgets events must use this macro
     DECLARE_EVENT_TABLE()
 
-	void fireCube(Vector3 direction, Vector3 pos, ScenePtr scene, MS3DPtr mesh);
+
+	BodyPtr spawnCube(Vector3 pos);
+
+	bool keyPressed;
+	BodyPtr b;
 };
 
 // ----------------------------------------------------------------------------

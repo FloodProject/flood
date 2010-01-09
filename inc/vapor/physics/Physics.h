@@ -48,6 +48,7 @@ public:
 	void setSimulationEnabled( bool enable );
 
 	float del;
+	hkpWorld* getWorld(){ return world; }
 
 private:
 
