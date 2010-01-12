@@ -209,7 +209,7 @@ void EditorFrame::createScene()
 		cubo->getTransform()->translate( 150.0f*(i-2), 750.0f, 0.0f );
 		cubo->getTransform()->scale( 0.1f );
 		cubo->addComponent( mesh );
-		cubo->addComponent( BodyPtr( new Body(100.0f, hkpMotion::MOTION_FIXED ) ) );
+		cubo->addComponent( BodyPtr( new Body() ) );
 		scene->add( cubo );
 	}
 
@@ -219,13 +219,19 @@ void EditorFrame::createScene()
 	{
 		rend->getMaterial()->setProgram( tex );
 	}
-
-	NodePtr base( new Node( "Platform" ) );
-	base->addComponent( TransformPtr( new Transform() ) );
-	base->addComponent( plat );
-	base->addComponent( BodyPtr( new Body( 100.0f, hkpMotion::MOTION_FIXED ) ) );
-	//base->setVisible( false );
-	scene->add( base );
+	for( int j = -3; j < 4; j++ )
+	{
+		for( int i = -3; i < 4; i++ )
+		{
+			NodePtr base( new Node( "Platform" +boost::lexical_cast<std::string>(i) +boost::lexical_cast<std::string>(j) ) );
+			base->addComponent( TransformPtr( new Transform() ) );
+			base->addComponent( plat );
+			base->getTransform()->translate( i*750.0f, 0.0f, j*750.0f );
+			base->addComponent( BodyPtr( new Body( 100.0f, hkpMotion::MOTION_FIXED ) ) );
+			//base->setVisible( false );
+			scene->add( base );
+		}
+	}
 	
 	b = spawnCube(Vector3(0.0f, 900.0f, 20.0f));
 
@@ -550,8 +556,7 @@ void EditorFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 }
 
 //-----------------------------------//
-
-BodyPtr EditorFrame::spawnCube(Vector3 pos)
+BodyPtr EditorFrame::spawnCube(const math::Vector3 &pos)
 {
 
 	ScenePtr scene = engine->getSceneManager();
@@ -562,7 +567,7 @@ BodyPtr EditorFrame::spawnCube(Vector3 pos)
 	cubo->getTransform()->translate(pos);
 	cubo->getTransform()->scale( 0.1f );
 	cubo->addComponent( mesh );
-	BodyPtr body(new Body(100.0f, hkpMotion::MOTION_BOX_INERTIA));
+	BodyPtr body(new Body(100.0f, hkpMotion::MOTION_KEYFRAMED));
 	cubo->addComponent( body );
 	scene->add( cubo );
 
@@ -595,7 +600,7 @@ void EditorFrame::onKeyRelease(const KeyEvent& key)
 		m.tz = -m.tz -v.z * 130.0f;
 		b.lock()->setPositionAndRotation(m);
 		b.lock()->setLinearVelocity(math::Vector3.Zero);
-		b.lock()->setLinearVelocity(v * -100.0f);
+		b.lock()->setLinearVelocity(v * -300.0f);
 		keyPressed = false;
 	}
 }

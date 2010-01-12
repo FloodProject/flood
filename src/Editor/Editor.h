@@ -106,7 +106,7 @@ private:
     DECLARE_EVENT_TABLE()
 
 
-	BodyPtr spawnCube(Vector3 pos);
+	BodyPtr spawnCube(const math::Vector3 &pos);
 
 	bool keyPressed;
 	BodyWeakPtr b;
