@@ -13,6 +13,10 @@
 	#include "vapor/resources/PNG_Loader.h"
 #endif
 
+#ifdef VAPOR_IMAGE_STB
+	#include "vapor/resources/STB_Image_Loader.h"
+#endif
+
 #ifdef VAPOR_MESH_MILKSHAPE3D
 	#include "vapor/resources/MS3D_Loader.h"
 #endif
@@ -194,7 +198,13 @@ void Engine::setupResourceLoaders()
 		loaders.push_back( new Lua_Loader() );
 	#endif
 
-	loaders.push_back( new Font_Loader() );
+	#ifdef VAPOR_IMAGE_STB
+		loaders.push_back( new STB_Image_Loader() );
+	#endif
+	
+	#ifdef VAPOR_FONT_BITMAP
+		loaders.push_back( new Font_Loader() );
+	#endif
 
 	foreach( ResourceLoader* loader, loaders )
 	{

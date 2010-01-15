@@ -63,7 +63,6 @@ private:
 
 private:
 
-	const vfs::File& file;
 	std::vector<byte> filebuf;
 	long index;
 

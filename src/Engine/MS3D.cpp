@@ -171,7 +171,7 @@ struct VAPOR_ALIGN_BEGIN(1) ms3d_joint_t
 //-----------------------------------//
 
 MS3D::MS3D(const vfs::File& file)
-	: file(file), filebuf( file.read() ), index( 0 )
+	: filebuf( file.read() ), index( 0 )
 {
 	PROFILE;
 
@@ -222,11 +222,8 @@ cleanup:
 
 void MS3D::build()
 {
-	PROFILE;
-
 	bool has_material = false;
 	
-	{PROFILE;
 	foreach( const ms3d_group_t& g, m_groups )
 	{
 		// In case this group doesn't have geometry, then no need to process it.
@@ -244,7 +241,6 @@ void MS3D::build()
 			has_material = false;
 		}
 		
-		{PROFILE;
 		RenderablePtr rend( new Renderable() );
 
 		// MS3D meshes represent everything as triangles.
@@ -323,8 +319,6 @@ void MS3D::build()
 
 		addRenderable( rend );
 	}
-	}
-	}
 }
 
 //-----------------------------------//
@@ -354,7 +348,6 @@ bool MS3D::read_header()
 
 void MS3D::read_vertices()
 {
-	PROFILE;
 	ushort& num_vertices = FILEBUF_INDEX(ushort);
 	m_vertices.resize(num_vertices);
 
@@ -368,7 +361,6 @@ void MS3D::read_vertices()
 
 void MS3D::read_triangles()
 {
-	PROFILE;
 	ushort& num_triangles = FILEBUF_INDEX(ushort);
 	m_triangles.resize(num_triangles);
 	
@@ -386,7 +378,6 @@ void MS3D::read_triangles()
 
 void MS3D::read_groups()
 {
-	PROFILE;
 	// groups
 	ushort& numGroups = FILEBUF_INDEX(ushort);
 	m_groups.resize(numGroups);

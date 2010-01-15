@@ -24,6 +24,7 @@ namespace PixelFormat
 	enum Enum 
 	{
 		R8G8B8A8,
+		R8G8B8,
 	};
 
 	const std::string getString(Enum e);

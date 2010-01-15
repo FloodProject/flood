@@ -43,11 +43,25 @@ bool Texture::upload()
 
 	bind();
 
+	int glPixelFormat = 0;
+
+	switch( img->getPixelFormat() )
+	{
+	case PixelFormat::R8G8B8A8:
+		glPixelFormat = GL_RGBA;
+		break;
+	case PixelFormat::R8G8B8:
+		glPixelFormat = GL_RGB;
+		break;
+	default:
+		warn( "GL", "Implement support for more pixel formats" );
+	}
+
 	// TODO: check the formats more thoroughly
 	glTexImage2D( GL_TEXTURE_2D, 0, 
 		convertInternalFormat( img->getPixelFormat() ),
 		img->getWidth(), img->getHeight(), 0,
-		GL_RGBA, GL_UNSIGNED_BYTE, &img->getBuffer()[0] );
+		glPixelFormat, GL_UNSIGNED_BYTE, &img->getBuffer()[0] );
 
 	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T, GL_REPEAT);

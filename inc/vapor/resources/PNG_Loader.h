@@ -37,8 +37,7 @@ public:
 	virtual const std::string getName() { return "PICOPNG"; }
 
 	// Gets the list of extensions this codec can handle.
-	virtual 
-		std::list< std::string >& getExtensions() { return extensions; }
+	virtual std::list< std::string >& getExtensions() { return extensions; }
 
 	// Overrides this to return the right resource group.
 	virtual ResourceGroup::Enum getResourceGroup() { return ResourceGroup::Images; }
