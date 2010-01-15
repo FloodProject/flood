@@ -104,6 +104,9 @@ Overlays can be 3D too...
 Add Blending defaults (Modulate, Replace, etc)
 Think about overlays positioning (absolute and relative)
 
+Timer:
+	Multithreaded timing and timing leaps (check SFML tracker / OGRE code for more info.)
+
 Audio:
 
 	Handle audio streaming for lightweight playback without consuming lots of memory
@@ -150,7 +153,7 @@ Window:
 	Full-screen windowed mode/minimizing doesn't seem to work...
 	Make the Engine class take Window creation settings
 	The Window title should be set on Window creation
-	Move the window polling to a different thread (smooth resizing)
+	Move the window polling to a different thread (smooth resizing / maybe SFML itself will do this in 2.0)
 	Hide the window until requested.
 	http://msdn.microsoft.com/en-us/library/ms648383%28VS.85%29.aspx
 	
@@ -187,6 +190,7 @@ Math:
 DONE:
 -----
 
+Fix the Window's Focus events. Also the mouse cursor is released when focus is lost.
 Make an abstract Timer class
 Add matrix and AABB class
 Ogg Loader is buggy (make it load from a memory buffer)

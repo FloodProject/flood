@@ -17,16 +17,15 @@ namespace vapor { namespace scene {
 Node::Node( const std::string& name )
 	: name( name ), isVisible( true )
 {
-
+	//addComponent( TransformPtr( new Transform() ) );
 }
 
 //-----------------------------------//
 
 Node::Node() : isVisible( true )
 {
-
+	//addComponent( TransformPtr( new Transform() ) );
 }
-
 
 //-----------------------------------//
 

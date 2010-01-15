@@ -63,6 +63,7 @@ protected:
 	void onMouseWheel( const input::MouseWheelEvent& event );
 	void onButtonPressed( const input::MouseButtonEvent& event );
 	void onButtonReleased( const input::MouseButtonEvent& event );
+	void onWindowFocusChange( bool focusLost );
 
 	// Restrict camera movement on the X-axis.
 	bool clampMovementX;

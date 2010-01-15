@@ -135,6 +135,9 @@ public:
 	// Event fired when the window is closed.
 	fd::delegate< void( void ) > onWindowClose;
 
+	// Event fired when the window's focus changes.
+	fd::delegate< void( bool focusLost ) > onWindowFocusChange;
+
 protected:
 
 	// Handles the resize event.
@@ -142,6 +145,9 @@ protected:
 
 	// Handles the resize event.
 	void handleWindowClose();
+
+	// Handles the focus event.
+	void handleWindowFocus( bool focusLost );
 
 	// Holds the window settings
 	WindowSettings settings;

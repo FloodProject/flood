@@ -93,6 +93,18 @@ void Window::handleWindowClose()
 
 //-----------------------------------//
 
+void Window::handleWindowFocus( bool focusLost )
+{
+	if( onWindowFocusChange.empty() )
+	{
+		return;
+	}
+
+	onWindowFocusChange( focusLost );
+}
+
+//-----------------------------------//
+
 Window& Window::createWindow( const WindowSettings& settings )
 {
 	Window* window;

@@ -638,7 +638,7 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="Profile"
+				Name="Profiler"
 				>
 				<File
 					RelativePath=".\Profiler.cpp"
@@ -770,14 +770,6 @@
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\scene\Component.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Entity"
-				>
-				<File
-					RelativePath="..\..\inc\vapor\scene\Entity.h"
 					>
 				</File>
 			</Filter>

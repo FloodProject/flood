@@ -137,11 +137,11 @@ bool SFML_Window::pumpEvents()
 				break;
 			
 			case sf::Event::LostFocus:
-				// TODO: still to figure out 
+				handleWindowFocus( true );
 				break;	
 			
 			case sf::Event::GainedFocus:
-				/// TODO: still to figure out
+				handleWindowFocus( false );
 				break;	
 			
 			case sf::Event::TextEntered:

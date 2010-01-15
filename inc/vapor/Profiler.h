@@ -30,7 +30,10 @@ private:
 	std::string name;
 };
 
+//-----------------------------------//
+
 #define PROFILE Profiler p( __FUNCTION__ )
+#define PROFILE_STR(s) Profiler p( __FUNCTION__ " / " s )
 
 //-----------------------------------//
 

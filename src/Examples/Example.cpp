@@ -13,9 +13,6 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/format.hpp>
 
-#include <vapor/terrain/Terrain.h>
-#include <vapor/terrain/Cell.h>
-
 //-----------------------------------//
 
 Example::Example(const char** argv)
@@ -37,8 +34,7 @@ void Example::onInit()
 		Log::MessageDialog( "Missing archive/directory '" + media + "'." );
 	}
 	
-	physics::PhysicsManager * phys = physics::PhysicsManager::getInstancePtr();
-	phys->createWorld();
+	physicsManager->createWorld();
 }
 
 //-----------------------------------//
@@ -89,7 +85,7 @@ void Example::onSetupScene()
 	camera->addComponent( cam );
 	scene->add( camera );
 
-	MS3DPtr mesh = rm->loadResource< MS3D >( "ct.ms3d" );
+	MeshPtr mesh = rm->loadResource< MS3D >( "ct.ms3d" );
 	NodePtr ct( new Node( "ct" ) );
 	ct->addComponent( TransformPtr( new Transform() ) );
 	ct->addComponent( mesh );

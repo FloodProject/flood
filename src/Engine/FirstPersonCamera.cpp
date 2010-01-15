@@ -36,7 +36,6 @@ FirstPersonCamera::FirstPersonCamera( input::InputManager* input,
 
 void FirstPersonCamera::update( float delta )
 {
-	//debug( "delta %f", delta );
 	Camera::update( delta );
 	checkControls( delta );
 }
@@ -153,6 +152,8 @@ void FirstPersonCamera::registerCallbacks()
 		mouse->onMouseButtonRelease += fd::bind( &FirstPersonCamera::onButtonReleased, this );
 		mouse->onMouseWheelMove += fd::bind( &FirstPersonCamera::onMouseWheel, this );
 	}
+
+	renderDevice->getWindow()->onWindowFocusChange += fd::bind( &FirstPersonCamera::onWindowFocusChange, this );
 }
 
 //-----------------------------------//
@@ -285,6 +286,14 @@ void FirstPersonCamera::centerCursor( )
 		lastPosition.x = static_cast<float>( nw );
 		lastPosition.y = static_cast<float>( nh );
 	}
+}
+
+//-----------------------------------//
+
+void FirstPersonCamera::onWindowFocusChange( bool focusLost )
+{
+	if( !focusLost )
+		centerCursor();
 }
 
 //-----------------------------------//

@@ -1,5 +1,11 @@
 #include "vapor/PCH.h"
 
+// Configuration
+#define STBI_NO_STDIO
+#define STBI_NO_HDR
+#define STBI_NO_FAILURE_STRINGS
+#define STBI_NO_WRITE
+
 #ifdef VAPOR_IMAGE_STB
 
 /* stbi-1.18 - public domain JPEG/PNG reader - http://nothings.org/stb_image.c
@@ -160,13 +166,6 @@
 // not), using:
 //
 //     stbi_is_hdr(char *filename);
-
-// Configuration
-#define STBI_NO_STDIO
-#define STBI_NO_HDR
-#define STBI_NO_FAILURE_STRINGS
-#define STBI_NO_WRITE
-
 
 #ifndef STBI_NO_STDIO
 #include <stdio.h>

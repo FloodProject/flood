@@ -173,8 +173,6 @@ struct VAPOR_ALIGN_BEGIN(1) ms3d_joint_t
 MS3D::MS3D(const vfs::File& file)
 	: filebuf( file.read() ), index( 0 )
 {
-	PROFILE;
-
 	if( filebuf.empty() ) 
 		return;
 
@@ -207,6 +205,8 @@ bool MS3D::load()
 	read_triangles();
 	read_groups();
 	read_materials();
+
+	// TODO:
 	//read_animation();
 	//read_joints();
 	//read_comments();
@@ -248,23 +248,24 @@ void MS3D::build()
 
 		// Vertex data
 		std::vector< Vector3 > vb_v;
-
+		vb_v.reserve( g.triangleIndices.size() );
+		
 		// Tex coord data
 		std::vector< Vector3 > vb_tc;
+		vb_tc.reserve( g.triangleIndices.size() );
 
 		// Let's process all the triangles of this group.
 		foreach( const ushort& t_ind, g.triangleIndices )
 		{
 			const ms3d_triangle_t& t = *m_triangles[t_ind];
-			
+
 			foreach( const ushort& v_ind, t.vertexIndices ) 
 			{
-				// PROFILE; TODO: optimize this
 				Vector3 vec( 
 					m_vertices[v_ind]->vertex[0],
 					m_vertices[v_ind]->vertex[1],
 					m_vertices[v_ind]->vertex[2] 
-				);					
+				);
 				vb_v.push_back( vec );
 			}
 
@@ -304,7 +305,7 @@ void MS3D::build()
 			rend->setVertexBuffer( vb );
 		}
 
-		//// Index buffers
+		//// TODO: Use Index buffers
 		//std::vector< ushort > vb_i;
 		//foreach( const ms3d_triangle_t& t, m_triangles )
 		//{	

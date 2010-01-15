@@ -23,7 +23,7 @@ namespace vapor { namespace scene {
  * integer coordinates.
  */
 
-class VAPOR_API Cell : public render::Renderable
+class VAPOR_API Cell : public render::Renderable, private boost::noncopyable
 {
 public:
 

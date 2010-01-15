@@ -49,18 +49,6 @@ private:
 	//void read_joints();
 	//void read_comments();
 
-	//int get_num_groups() const;
-	//ms3d_group_t *get_group(int index);
-
-	//int get_num_triangles() const;
-	//ms3d_triangle_t *get_triangle(int index);
-
-	//int get_num_vertices() const;
-	//ms3d_vertex_t *get_vertex(int index);
-
-	//int get_num_materials() const;
-	//ms3d_material_t *get_material(int index);
-
 private:
 
 	std::vector<byte> filebuf;
@@ -77,7 +65,10 @@ private:
 
 //-----------------------------------//
 
+typedef MS3D Mesh;
+
 TYPEDEF_SHARED_POINTER_FROM_CLASS( MS3D );
+TYPEDEF_SHARED_POINTER_FROM_CLASS( Mesh );
 
 //-----------------------------------//
 

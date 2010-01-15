@@ -13,8 +13,6 @@
 #define VAPOR_USE_NAMESPACES
 #include <vapor/Headers.h>
 
-#include "vapor/physics/Physics.h"
-
 //-----------------------------------//
 
 /**
@@ -52,7 +50,6 @@ private:
 
 	scene::CameraPtr cam;
 	gui::LabelPtr label;
-	resources::MS3DPtr mesh;
 	resources::SoundPtr snd;
 	scene::SoundPtr sound;
 	input::InputMap* inputMap; 
