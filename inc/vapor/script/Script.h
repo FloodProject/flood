@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -10,7 +10,7 @@
 
 #include "vapor/CompileOptions.h"
 
-#ifdef VAPOR_SCRIPTING_LUA
+//#ifdef VAPOR_SCRIPTING_LUA
 
 #include "vapor/Platform.h"
 #include "vapor/resources/Resource.h"
@@ -64,4 +64,4 @@ TYPEDEF_SHARED_POINTER_FROM_CLASS( Script );
 
 } } // end namespaces
 
-#endif
+//#endif

@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -39,7 +39,6 @@ void FirstPersonCamera::update( float delta )
 	//debug( "delta %f", delta );
 	Camera::update( delta );
 	checkControls( delta );
-	viewMatrix = getNode()->getTransform()->getAbsoluteTransform();
 }
 
 //-----------------------------------//

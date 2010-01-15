@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine by triton (2008-2009)
+* vaporEngine by triton (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -20,7 +20,7 @@ namespace vapor { namespace render {
 /**
  * Use these different kinds of render groups to signal to the renderer
  * how you want your renderables to be sorted by the render device.
- * A lower number means it has a lower priority.
+ * Lower numbers render before higher numbers.
  */
 
 namespace RenderGroup
@@ -42,7 +42,7 @@ namespace RenderGroup
  * rendered to the render target that is currently active on the device.
  */
 
-struct RenderState
+struct RenderState /*: private boost::noncopyable*/
 {
 	RenderState() : group( RenderGroup::Normal ), priority( 0 ) {}
 

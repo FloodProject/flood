@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -8,7 +8,7 @@
 
 #include "vapor/PCH.h"
 
-#ifdef VAPOR_SCRIPTING_LUA
+//#ifdef VAPOR_SCRIPTING_LUA
 
 #include "vapor/script/Script.h"
 #include "vapor/script/State.h"
@@ -62,4 +62,4 @@ resources::ResourceGroup::Enum Script::getResourceGroup() const
 
 } } // end namespaces
 
-#endif
+//#endif

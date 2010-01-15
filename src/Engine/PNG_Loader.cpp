@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -35,6 +35,8 @@ PNG_Pico_Loader::PNG_Pico_Loader()
 
 Image* PNG_Pico_Loader::decode(const File& file)
 {
+	PROFILE;
+
 	// read contents of the file into the vector
 	std::vector<byte> filebuf = file.read();
 

@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -21,7 +21,7 @@
 
 #ifdef VAPOR_COMPILER_MSVC
 	#pragma warning( push )
-	#pragma warning( disable : 4512 )
+	#pragma warning( disable : 4512 4503 )
 	#include <boost/foreach.hpp>
 	#pragma warning( pop )
 #else
@@ -37,9 +37,7 @@
 
 #ifdef VAPOR_COMPILER_MSVC
 	#pragma warning( push )
-	#pragma warning( disable : 4100 )
-	#pragma warning( disable : 4512 )
-	#pragma warning( disable : 4702 )
+	#pragma warning( disable : 4100 4512 4702 )
 	#include <fd/delegate.hpp>
 	#include <fd/delegate/bind.hpp>
 	#pragma warning( pop )

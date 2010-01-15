@@ -24,6 +24,7 @@ Private editor nodes (hide in the scene tree)
 
 Camera options
 	Add a small frame below the viewport with camera options
+Textures LOD
 
 Terrain editing
 
@@ -35,8 +36,9 @@ Terrain editing
 		
 Performance optimizations
 
+	Bounding Boxes and Frustum Culling
 	View frustum culling
-	Quadtree
+	Quadtree Terrain
 	
 Check for maximum texture unit size
 Implement camera panning
@@ -98,7 +100,6 @@ http://www.fastformat.org/
 Fix Camera direction vectors
 Change ExampleFramework to use delegates
 update method in RenderDevice
-Bounding Boxes and Frustum Culling
 Overlays can be 3D too...
 Add Blending defaults (Modulate, Replace, etc)
 Think about overlays positioning (absolute and relative)

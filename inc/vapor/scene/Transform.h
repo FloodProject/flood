@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -12,6 +12,7 @@
 
 #include "vapor/scene/Component.h"
 
+#include "vapor/math/AABB.h"
 #include "vapor/math/Matrix4x3.h"
 #include "vapor/math/Vector3.h"
 #include "vapor/math/EulerAngles.h"
@@ -61,7 +62,7 @@ public:
 	// Points to a given point in space.
 	void lookAt( const math::Vector3& lookAtVector, const math::Vector3& upVector );
 	
-	// Resets the transformations previously applied to this node.
+	// Resets all the transformations in the transform.
 	void reset();
 
 	// Gets the absolute transformation matrix.
@@ -75,6 +76,15 @@ public:
 
 	// Gets the type of this component. 
 	virtual const std::string& getType() const;
+
+	// Gets the bounding volume of the node.
+	const math::AABB& getBoundingVolume() const;
+
+	// Gets the world bounding volume of the node.
+	const math::AABB& getWorldBoundingVolume() const;
+
+	// Does this node's bounding box need to be updated?
+	bool requiresBoundingVolumeUpdate() const;
 
 	// Called once per frame to update the component.
 	virtual void update( float delta );
@@ -93,6 +103,10 @@ protected:
 	math::Matrix4x3 absoluteLocalToWorld;
 
 	static const std::string& type;
+
+	// Bounding volumes used for culling.
+	math::AABB boundingVolume;
+	math::AABB worldBoundingVolume;
 
 public:
 

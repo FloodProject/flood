@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -27,7 +27,7 @@
  
 #define VAPOR_MEMORY_TR1_VENDOR
 //#define VAPOR_MEMORY_TR1_BOOST
-//#define VAPOR_MEMORY_LEAK_DETECTOR
+#define VAPOR_MEMORY_LEAK_DETECTOR
 
 #define VAPOR_MEMORY_SHARED_PTR
 //#define VAPOR_MEMORY_INTRUSIVE_PTR
@@ -100,4 +100,4 @@
 // Scripting languages
 //-------------------------------------------------------------------------//
 
-#define VAPOR_SCRIPTING_LUA
+//#define VAPOR_SCRIPTING_LUA

@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -299,7 +299,7 @@ bool File::exists() const
 
 //-----------------------------------//
 
-bool File::exists(const std::string path)
+bool File::exists(const std::string& path)
 {
 	if( PHYSFS_exists( path.c_str() ) != 0 )
 		return true;

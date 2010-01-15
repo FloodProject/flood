@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -98,7 +98,7 @@ public:
 	bool exists() const;
 	
 	/// Checks if the file in path exists.
-	static bool exists(const std::string path);
+	static bool exists(const std::string& path);
 	
 private:
 

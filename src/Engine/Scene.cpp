@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -33,7 +33,9 @@ Scene::~Scene()
 
 void Scene::update( float delta )
 {
-	std::stack< Matrix4x3 > transformStack;
+	//PROFILE;
+
+	MatrixStack transformStack;
 	transformStack.push( Matrix4x3::Identity );
 	    
 	updateTransformAndBV( shared_from_this(), transformStack );
@@ -43,7 +45,7 @@ void Scene::update( float delta )
 
 //-----------------------------------//
 
-void Scene::updateTransformAndBV( NodePtr node, std::stack< Matrix4x3 >& transformStack )
+void Scene::updateTransformAndBV( NodePtr node, MatrixStack& transformStack )
 {
 	// TODO: benckmark and profile this, smells slow
 
@@ -78,9 +80,9 @@ void Scene::updateTransformAndBV( NodePtr node, std::stack< Matrix4x3 >& transfo
 	}
 
 	// on the way up part
-	//if ( node->requiresBoundingVolumeUpdate() )
+	//if ( transform->requiresBoundingVolumeUpdate() )
 	//{
-	//    node->updateBoundingVolume( transformStack.top() );
+	//    transform->update( transformStack.top() );
 	//}
 
 	//node->update();

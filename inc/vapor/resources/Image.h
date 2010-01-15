@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -61,7 +61,7 @@ public:
 	const std::vector<byte>& getBuffer() const { return buffer; };
 
 	// Change the buffer containing the image data.
-	void setBuffer(std::vector<byte>& data) { buffer = data; }
+	void setBuffer(const std::vector<byte>& data) { buffer = data; }
 
 	// Return the proper resource group for this resource.
 	virtual ResourceGroup::Enum getResourceGroup() const { return ResourceGroup::Images; }

@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -166,6 +166,9 @@ protected:
 
 	// Dimensions of render target.
 	int width, height;
+
+	// Pointer to the camera's node transform.
+	TransformPtr transform;
 
 	//fd::delegate< const render::Settings& > targetResize;
 

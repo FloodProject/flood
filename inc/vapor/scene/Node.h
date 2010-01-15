@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -12,7 +12,6 @@
 #include "vapor/scene/Component.h"
 #include "vapor/scene/Transform.h"
 #include "vapor/scene/Geometry.h"
-#include "vapor/math/AABB.h"
 
 namespace vapor { namespace scene {
 
@@ -78,9 +77,6 @@ public:
 	// Sets the name of the node.
 	virtual void setName( const std::string& name );
 
-	// Gets the bounding volume of the node.
-	//AABB& getBoundingVolume() const;
-
 	// Gets the associated transform component (if any).
 	TransformPtr getTransform();
 	Transform* getTransformPtr();
@@ -108,9 +104,6 @@ private:
 	
 	// Caches the geometries nodes (for faster lookup when rendering).
 	std::vector< GeometryPtr > geometries;
-
-	// Bounding volume used for culling.
-	math::AABB boundingVolume;
 
 	// Visibility
 	bool isVisible;

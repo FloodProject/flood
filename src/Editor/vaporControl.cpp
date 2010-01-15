@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -103,13 +103,11 @@ void vaporControl::OnMouseCaptureLost(wxMouseCaptureLostEvent& WXUNUSED(event))
 
 //-----------------------------------//
 
-const float DELTA = 0.010f;
+const float DELTA = 0.020f;
 
 void vaporControl::OnUpdate()
 {
-	engine->getSceneManager()->update( DELTA );
-	engine->getScriptState()->update( DELTA );
-	engine->getPhysicsManager()->update( DELTA );
+	engine->update( DELTA );
 }
 
 //-----------------------------------//
@@ -118,7 +116,7 @@ void vaporControl::OnRender()
 {
 	const math::Color bg( 0.0f, 0.10f, 0.25f );
 
-	OnUpdate();
+	//OnUpdate();
 
 	render::Device* device = engine->getRenderDevice();
 	

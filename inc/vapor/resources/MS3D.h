@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -64,12 +64,14 @@ private:
 private:
 
 	const vfs::File& file;
+	std::vector<byte> filebuf;
+	long index;
 
-	std::vector<ms3d_vertex_t> m_vertices;
-	std::vector<ms3d_triangle_t> m_triangles;
+	std::vector<ms3d_vertex_t*> m_vertices;
+	std::vector<ms3d_triangle_t*> m_triangles;
 	std::vector<ms3d_group_t> m_groups;
-	std::vector<ms3d_material_t> m_materials;
-	std::vector<char> m_comment;
+	std::vector<ms3d_material_t*> m_materials;
+	char* m_comment;
 
 	static const std::string& type;
 };

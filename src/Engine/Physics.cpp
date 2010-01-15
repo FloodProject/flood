@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 ************************************************************************/
 
@@ -89,7 +89,7 @@ void PhysicsManager::createWorld()
 		hkpWorldCinfo info;
 		info.m_simulationType = hkpWorldCinfo::SIMULATION_TYPE_DISCRETE;
 		info.m_collisionTolerance = 0.1f; 
-		info.setBroadPhaseWorldSize( 52000.0f );
+		info.setBroadPhaseWorldSize( 10000.0f );
 		info.m_broadPhaseBorderBehaviour = hkpWorldCinfo::BROADPHASE_BORDER_FIX_ENTITY;
 		info.m_contactPointGeneration = hkpWorldCinfo::CONTACT_POINT_REJECT_DUBIOUS; 
 		info.setupSolverInfo( hkpWorldCinfo::SOLVER_TYPE_4ITERS_MEDIUM );
@@ -106,8 +106,8 @@ void PhysicsManager::createWorld()
 	hkArray<hkProcessContext*> contexts;
 	contexts.pushBack( physicsContext );  
 	vdb = new hkVisualDebugger( contexts );
-	vdb->capture("teste.hkm");
-	//vdb->serve(/* optional port number */);
+	//vdb->capture("teste.hkm");
+	vdb->serve(/* optional port number */);
 #endif
 }
 

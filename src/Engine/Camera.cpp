@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -132,6 +132,15 @@ void Camera::handleTargetResize( const render::Settings& evt )
 
 void Camera::update( float UNUSED(delta) )
 {
+	if( !transform )
+	{
+		assert( getNode() != nullptr );
+		assert( getNode()->getTransform() != nullptr );
+		transform = getNode()->getTransform();
+	}
+
+	// We need to update both projection and view matrices.
+	// TODO: optimize this so the projection is only updated when needed
 	setupProjection();
 	setupView();
 }
@@ -151,6 +160,7 @@ void Camera::setupProjection()
 			0.0f, width, 0.0f, height, near_, far_ );
 	}
 
+	// TODO: remove this, unit test projection methods
 	//glMatrixMode( GL_PROJECTION );
 	//glLoadIdentity();
 	//glOrtho( -target->getSettings().getWidth()/16, target->getSettings().getWidth()/16, 
@@ -165,14 +175,15 @@ void Camera::setupProjection()
 
 void Camera::setupView()
 {
-
+	// TODO: check if this is working with multiple nodes
+	viewMatrix = transform->getAbsoluteTransform();
 }
 
 //-----------------------------------//
 
 float Camera::getAspectRatio() const
 {
-	if( height == 0) return 0.0f;
+	if( height == 0 ) return 0.0f;
 	return static_cast<float>(width) / height ;
 }
 

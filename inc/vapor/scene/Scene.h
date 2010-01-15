@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -14,6 +14,10 @@
 #include "vapor/math/Matrix4x3.h"
 
 namespace vapor { namespace scene {
+
+//-----------------------------------//
+
+typedef std::stack< math::Matrix4x3 > MatrixStack;
 
 //-----------------------------------//
 
@@ -55,8 +59,7 @@ public:
 private:
 
 	// Updates all the transforms and bounding volumes of the scene nodes.
-	void updateTransformAndBV( NodePtr node, 
-		std::stack< math::Matrix4x3 >& transformStack );
+	void updateTransformAndBV( NodePtr node, MatrixStack& transformStack );
 };
 
 //-----------------------------------//

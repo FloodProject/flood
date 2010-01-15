@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -10,10 +10,7 @@
 
 #ifdef VAPOR_VFS_PHYSFS
 
-#include <sstream>
-
 #include "vapor/vfs/VFS.h"
-
 #include <physfs.h>
 
 namespace vapor { namespace vfs {
@@ -40,21 +37,18 @@ VFS::VFS(const std::string& app, const char* argv0 )
 
 VFS::~VFS()
 {
-	std::vector< std::string >::iterator it;
-	
-	for( it = mountPoints.begin(); it != mountPoints.end(); it++)
+	foreach( const std::string& point, mountPoints )
 	{
-		PHYSFS_removeFromSearchPath( (*it).c_str() );
+		PHYSFS_removeFromSearchPath( point.c_str() );
 	}
-
+	
 	mountPoints.clear();
 
 	int err = PHYSFS_deinit();
 
-	if( err == 0 ) 
+	if( err == 0 )
 	{
-		error( "vfs", 
-			"Could not clean up PhysFS: %s", PHYSFS_getLastError() );
+		error( "vfs", "Could not clean up PhysFS: %s", PHYSFS_getLastError() );
 	}
 }
 

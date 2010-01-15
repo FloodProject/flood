@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -82,7 +82,7 @@ void Body::init()
 
 Body::~Body()
 {
-	if(inWorld) 
+	if(inWorld)
 		physicsManager->removeEntity(body);
 
 	body->removeReference();

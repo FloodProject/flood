@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -162,7 +162,7 @@ void Transform::lookAt( const math::Vector3& lookAtVector, const math::Vector3& 
 	m.ty = -yaxis.dot(eye);
 	m.tz = -zaxis.dot(eye);
 
-	//viewMatrix = m * getNode()->getTransform()->getLocalTransform();
+	//viewMatrix = m * getLocalTransform();
 
 	//glMatrixMode( GL_MODELVIEW );
 	//glLoadIdentity();
@@ -198,7 +198,7 @@ void Transform::lookAt( const math::Vector3& lookAtVector, const math::Vector3& 
 void Transform::reset( )
 {
 	v_translate.zero();
-	v_scale = math::Vector3( 1.0f, 1.0f, 1.0f );
+	v_scale = math::Vector3( 1.0f );
 	angles.identity();
 }
 
@@ -234,9 +234,25 @@ const std::string& Transform::getType() const
 
 //-----------------------------------//
 
-void Transform::update( float /*delta*/ )
+void getChildrenBoundingVolume( const math::AABB& boundingVolume, NodePtr node )
 {
+	//foreach(
+}
 
+//-----------------------------------//
+
+bool Transform::requiresBoundingVolumeUpdate() const
+{
+	// TODO: optimize this
+	return true;
+}
+
+//-----------------------------------//
+
+void Transform::update( float delta )
+{
+	assert( getNode() );
+	getChildrenBoundingVolume( boundingVolume, getNode() );
 }
 
 //-----------------------------------//
@@ -249,6 +265,20 @@ void Transform::notify()
 	}
 
 	onTransform();
+}
+
+//-----------------------------------//
+
+const math::AABB& Transform::getBoundingVolume() const
+{
+	return boundingVolume;
+}
+
+//-----------------------------------//
+
+const math::AABB& Transform::getWorldBoundingVolume() const
+{
+	return worldBoundingVolume;
 }
 
 //-----------------------------------//

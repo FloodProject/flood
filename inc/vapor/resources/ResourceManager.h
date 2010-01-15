@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -111,10 +111,6 @@ protected:
 	// maps each resource group to a specific budget
 	std::map< ResourceGroup::Enum, uint > resourceBudgets;
 };
-
-//-----------------------------------//
-
-
 
 //-----------------------------------//
 

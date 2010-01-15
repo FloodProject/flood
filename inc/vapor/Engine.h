@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -88,7 +88,7 @@ public:
 
 	/// Gets the scene interface.
 	scene::ScenePtr getSceneManager() const { return sceneNode; }
-	
+
 	/// Gets the scripting state.
 	script::State* getScriptState() const { return scriptState; }
 
@@ -108,6 +108,9 @@ public:
 	input::InputManager* getInputManager() const { return &( renderDevice->getWindow()->getInputManager() ); }
 
 	/// @}
+
+	/// Updates the main subsystems.
+	void update( double delta );
 
 protected:
 

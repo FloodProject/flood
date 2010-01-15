@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -8,7 +8,7 @@
 
 #include "vapor/PCH.h"
 
-#ifdef VAPOR_SCRIPTING_LUA
+//#ifdef VAPOR_SCRIPTING_LUA
 
 #include "vapor/script/State.h"
 
@@ -134,8 +134,10 @@ bool State::execute( const std::string& source )
 
 void State::bind( Engine* engine )
 {
+#ifdef VAPOR_SCRIPTING_LUA
 	// Binds all the engine API to Lua.
 	bindEngine( luaState, engine );
+#endif
 }
 
 //-----------------------------------//
@@ -179,6 +181,8 @@ void State::update( float deltaTime )
 	}
 }
 
+//-----------------------------------//
+
 const std::string& State::getLastError() const
 {
 	return lastError;
@@ -188,4 +192,4 @@ const std::string& State::getLastError() const
 
 } } // end namespaces
 
-#endif
+//#endif

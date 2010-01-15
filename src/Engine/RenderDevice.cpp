@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -41,6 +41,8 @@ Device::~Device()
 	delete adapter;
 	delete window;
 	delete bufferManager;
+	delete TextureManager::getInstancePtr();
+	delete ProgramManager::getInstancePtr();
 }
 
 //-----------------------------------//
@@ -156,7 +158,7 @@ void Device::render( RenderQueue& queue, const scene::Camera* cam )
 	std::sort( queue.begin(), queue.end(), &renderSorter );
 
 	// render the list
-	foreach( RenderState state, queue )
+	foreach( const RenderState& state, queue )
 	{
 		ProgramPtr program = state.renderable->getMaterial()->getProgram();
 
@@ -174,8 +176,8 @@ void Device::render( RenderQueue& queue, const scene::Camera* cam )
 			glDisable( GL_DEPTH_TEST );
 			//glDepthMask( false );
 
-			const float w = activeTarget->getSettings().getWidth();
-			const float h = activeTarget->getSettings().getHeight();
+			const float w = static_cast<float>( activeTarget->getSettings().getWidth() );
+			const float h = static_cast<float>( activeTarget->getSettings().getHeight() );
 
 			Matrix4x4 proj = Matrix4x4::createOrthographicProjection( 
 				-w/2, w/2, -h/2, h/2, -10.0, 10.0 );
@@ -208,15 +210,15 @@ void Device::checkExtensions()
 	info( "render::opengl", "Using GLEW version %s", 
 		glewGetString( GLEW_VERSION ) );
 
-	//if( !GLEW_VERSION_2_1 )
-	//{
-	//	log::Log::MessageDialog( "You need at least OpenGL 2.1 to run this.",
-	//		log::LogLevel::Error );
+	if( !GLEW_VERSION_2_0 )
+	{
+		log::Log::MessageDialog( "You need at least OpenGL 2.0 to run this.",
+			log::LogLevel::Error );
 
-	//	exit( 1 );
-	//	
-	//	// TODO: exit program in a structured manner
-	//}
+		exit( -1 );
+		
+		// TODO: exit program in a structured manner
+	}
 }
 
 //-----------------------------------//
@@ -225,27 +227,6 @@ RenderTarget* Device::getRenderTarget() const
 {
 	return activeTarget;
 }
-
-//-----------------------------------//
-
-//RenderDevice::render( RenderQueue& queue, Matrix4x4 invCamera = Matrix4x4::Identity ) // ?
-//{
-//    // 1. sort renderables by state
-//    sortByMaterial( queue );
-//        
-//    // 2. for each node render
-//    foreach ( renderable in queue )
-//    {
-//        // change state if needed
-//        changeState( renderable );
-//        
-//        // concantenate camera and renderable matrices
-//        glLoadMatrix( renderable->second * invCamera );
-//        
-//        // render it
-//        renderable->first.render( *this );
-//    }
-//}
 
 //-----------------------------------//
 

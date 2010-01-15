@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -19,6 +19,8 @@
 
 #include "icons.h"
 #include "ArtProvider.h"
+
+#include <boost/lexical_cast.hpp>
 
 #define VAPOR_USE_NAMESPACES
 #include <vapor/Headers.h>

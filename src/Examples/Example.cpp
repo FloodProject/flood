@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -89,9 +89,9 @@ void Example::onSetupScene()
 	camera->addComponent( cam );
 	scene->add( camera );
 
+	MS3DPtr mesh = rm->loadResource< MS3D >( "ct.ms3d" );
 	NodePtr ct( new Node( "ct" ) );
 	ct->addComponent( TransformPtr( new Transform() ) );
-	MS3DPtr mesh = rm->loadResource< MS3D >( "ct.ms3d" );
 	ct->addComponent( mesh );
 	scene->add(ct);
 
@@ -116,32 +116,32 @@ void Example::onSetupScene()
 	scene->add( grid );
 
 	foreach( const RenderablePtr& rend, 
-		grid->getComponent<Geometry>("Grid")->getRenderables() )
+	grid->getComponent<Geometry>("Grid")->getRenderables() )
 	{
 		rend->getMaterial()->setProgram( diffuse );
 	}
 
-	ScriptPtr lua = rm->loadResource< Script >( "teste.lua" );
-	getScriptState()->registerScript( lua );
+	//ScriptPtr lua = rm->loadResource< Script >( "teste.lua" );
+	//getScriptState()->registerScript( lua );
 
 	//ListenerPtr ls( new Listener( getAudioDevice() ) );
 	//sound.reset( new scene::Sound( ls, snd ) );
 	//scene->add( ls ); scene->add( sound );
 
-	TerrainSettings settings;
-	settings.CellSize = 1024;
-	settings.TileDimensions = 32;
-	settings.MaxHeight = 150;
-
-	TerrainPtr terrain( new Terrain( settings ) );
-
-	NodePtr terreno( new Node( "Terreno" ) );
-	terreno->addComponent( TransformPtr( new Transform() ) );
-	terreno->addComponent( terrain );
-	scene->add( terreno );
-
-	ImagePtr heightmap = rm->loadResource< Image >( "height2.png" );
-	Cell* cell = terrain->createCell( heightmap, 0, 0 );
+//	TerrainSettings settings;
+//	settings.CellSize = 1024;
+//	settings.TileDimensions = 32;
+//	settings.MaxHeight = 150;
+//
+//	TerrainPtr terrain( new Terrain( settings ) );
+//
+//	NodePtr terreno( new Node( "Terreno" ) );
+//	terreno->addComponent( TransformPtr( new Transform() ) );
+//	terreno->addComponent( terrain );
+//	scene->add( terreno );
+//
+//	ImagePtr heightmap = rm->loadResource< Image >( "height2.png" );
+//	Cell* cell = terrain->createCell( heightmap, 0, 0 );
 }
 
 //-----------------------------------//

@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -97,10 +97,11 @@
 #include "vapor/Language.h"
 
 //---------------------------------------------------------------------//
-// Logging. Use and abuse it.
+// Logging and Profiling. Use and abuse it.
 //---------------------------------------------------------------------//
 
 #include "vapor/Log.h"
+#include "vapor/Profiler.h"
 
 using vapor::log::info;
 using vapor::log::warn;

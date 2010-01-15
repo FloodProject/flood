@@ -55,6 +55,7 @@
 				WarnAsError="false"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
+				DisableSpecificWarnings="4503"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -112,7 +113,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\boost_1_39_0\&quot;;&quot;$(SolutionDir)dep\vld\include&quot;;&quot;$(SolutionDir)dep\SDL-1.2.13\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;;&quot;$(SolutionDir)dep\OpenAL 1.1 SDK\include&quot;;&quot;$(SolutionDir)dep\libogg-1.1.3\include&quot;;&quot;$(SolutionDir)dep\physfs-2.0.0\include&quot;;&quot;$(SolutionDir)dep\libvorbis-1.2.0\include&quot;;&quot;$(SolutionDir)dep\SFML\include&quot;;&quot;$(SolutionDir)dep\fd_delegate\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\boost_1_39_0\&quot;;&quot;$(SolutionDir)dep\vld\include&quot;;&quot;$(SolutionDir)dep\SDL-1.2.13\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;;&quot;$(SolutionDir)dep\OpenAL 1.1 SDK\include&quot;;&quot;$(SolutionDir)dep\libogg-1.1.3\include&quot;;&quot;$(SolutionDir)dep\physfs-2.0.0\include&quot;;&quot;$(SolutionDir)dep\libvorbis-1.2.0\include&quot;;&quot;$(SolutionDir)dep\SFML\include&quot;;&quot;$(SolutionDir)dep\fd_delegate\include&quot;;&quot;$(SolutionDir)dep\lua\include&quot;;&quot;$(SolutionDir)dep\luabind\include&quot;;&quot;$(SolutionDir)dep\havok\Source&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;VAPOR_EXPORT;D_SCL_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				ExceptionHandling="1"
@@ -126,6 +127,7 @@
 				WarningLevel="4"
 				WarnAsError="false"
 				DebugInformationFormat="3"
+				DisableSpecificWarnings="4503"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -244,18 +246,6 @@
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\math\Plane.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="AABB"
-				>
-				<File
-					RelativePath=".\AABB.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\math\AABB.h"
 					>
 				</File>
 			</Filter>
@@ -525,206 +515,6 @@
 			</Filter>
 		</Filter>
 		<Filter
-			Name="Resources"
-			>
-			<File
-				RelativePath=".\Resource.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\resources\Resource.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ResourceFile.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\resources\ResourceFile.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\resources\ResourceLoader.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ResourceManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\resources\ResourceManager.h"
-				>
-			</File>
-			<Filter
-				Name="Meshes"
-				>
-				<Filter
-					Name="MS3D"
-					>
-					<File
-						RelativePath=".\MS3D.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\inc\vapor\resources\MS3D.h"
-						>
-					</File>
-					<File
-						RelativePath=".\MS3D_Loader.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\inc\vapor\resources\MS3D_Loader.h"
-						>
-					</File>
-				</Filter>
-			</Filter>
-			<Filter
-				Name="Fonts"
-				>
-				<File
-					RelativePath=".\Font.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\resources\Font.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Font_Loader.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\resources\Font_Loader.h"
-					>
-				</File>
-				<Filter
-					Name="Bitmap"
-					>
-					<File
-						RelativePath=".\BitmapFont.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\inc\vapor\resources\BitmapFont.h"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="TrueType"
-					>
-					<File
-						RelativePath=".\TTF.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\inc\vapor\resources\TTF.h"
-						>
-					</File>
-				</Filter>
-			</Filter>
-			<Filter
-				Name="Images"
-				>
-				<File
-					RelativePath=".\Image.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\resources\Image.h"
-					>
-				</File>
-				<Filter
-					Name="PNG"
-					>
-					<File
-						RelativePath="..\..\dep\picopng\picopng.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\PNG_Loader.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\inc\vapor\resources\PNG_Loader.h"
-						>
-					</File>
-				</Filter>
-			</Filter>
-			<Filter
-				Name="Shaders"
-				>
-				<File
-					RelativePath=".\Shader.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\resources\Shader.h"
-					>
-				</File>
-				<Filter
-					Name="GLSL"
-					>
-					<File
-						RelativePath=".\GLSL_Loader.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\inc\vapor\resources\GLSL_Loader.h"
-						>
-					</File>
-				</Filter>
-			</Filter>
-			<Filter
-				Name="Audio"
-				>
-				<File
-					RelativePath=".\ResourceSound.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\resources\Sound.h"
-					>
-				</File>
-				<Filter
-					Name="OGG"
-					>
-					<File
-						RelativePath=".\OGG_Loader.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\inc\vapor\resources\OGG_Loader.h"
-						>
-					</File>
-				</Filter>
-			</Filter>
-			<Filter
-				Name="Video"
-				>
-				<Filter
-					Name="Theora"
-					>
-				</Filter>
-			</Filter>
-			<Filter
-				Name="Scripts"
-				>
-				<Filter
-					Name="Lua"
-					>
-					<File
-						RelativePath=".\Lua_Loader.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\inc\vapor\resources\Lua_Loader.h"
-						>
-					</File>
-				</Filter>
-			</Filter>
-		</Filter>
-		<Filter
 			Name="Platform"
 			>
 			<File
@@ -844,6 +634,18 @@
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\PCH.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Profile"
+				>
+				<File
+					RelativePath=".\Profiler.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\Profiler.h"
 					>
 				</File>
 			</Filter>
@@ -996,18 +798,6 @@
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\scene\Sound.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Body"
-				>
-				<File
-					RelativePath=".\Body.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\scene\Body.h"
 					>
 				</File>
 			</Filter>
@@ -1255,6 +1045,18 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="AABB"
+				>
+				<File
+					RelativePath=".\AABB.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\math\AABB.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Scripting"
@@ -1273,6 +1075,13 @@
 				<File
 					RelativePath=".\Bindings.cpp"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 				</File>
 			</Filter>
 			<Filter
@@ -1323,6 +1132,218 @@
 				RelativePath="..\..\inc\vapor\physics\Physics.h"
 				>
 			</File>
+			<Filter
+				Name="Body"
+				>
+				<File
+					RelativePath=".\Body.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\scene\Body.h"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="Resources"
+			>
+			<File
+				RelativePath=".\Resource.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\resources\Resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ResourceFile.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\resources\ResourceFile.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\resources\ResourceLoader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ResourceManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\resources\ResourceManager.h"
+				>
+			</File>
+			<Filter
+				Name="Meshes"
+				>
+				<Filter
+					Name="MS3D"
+					>
+					<File
+						RelativePath=".\MS3D.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\resources\MS3D.h"
+						>
+					</File>
+					<File
+						RelativePath=".\MS3D_Loader.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\resources\MS3D_Loader.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="Fonts"
+				>
+				<File
+					RelativePath=".\Font.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\resources\Font.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Font_Loader.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\resources\Font_Loader.h"
+					>
+				</File>
+				<Filter
+					Name="Bitmap"
+					>
+					<File
+						RelativePath=".\BitmapFont.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\resources\BitmapFont.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="TrueType"
+					>
+					<File
+						RelativePath=".\TTF.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\resources\TTF.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="Images"
+				>
+				<File
+					RelativePath=".\Image.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\resources\Image.h"
+					>
+				</File>
+				<Filter
+					Name="PNG"
+					>
+					<File
+						RelativePath="..\..\dep\picopng\picopng.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\PNG_Loader.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\resources\PNG_Loader.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="Shaders"
+				>
+				<File
+					RelativePath=".\Shader.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\resources\Shader.h"
+					>
+				</File>
+				<Filter
+					Name="GLSL"
+					>
+					<File
+						RelativePath=".\GLSL_Loader.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\resources\GLSL_Loader.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="Audio"
+				>
+				<File
+					RelativePath=".\ResourceSound.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\resources\Sound.h"
+					>
+				</File>
+				<Filter
+					Name="OGG"
+					>
+					<File
+						RelativePath=".\OGG_Loader.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\resources\OGG_Loader.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="Video"
+				>
+				<Filter
+					Name="Theora"
+					>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="Scripts"
+				>
+				<Filter
+					Name="Lua"
+					>
+					<File
+						RelativePath=".\Lua_Loader.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\resources\Lua_Loader.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
 		</Filter>
 		<File
 			RelativePath="..\..\inc\vapor\CompileOptions.h"

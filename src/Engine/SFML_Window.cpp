@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -67,13 +67,19 @@ bool SFML_Window::open()
 	createWindow();
 
 	sfmlSettings = window.GetSettings();
-	settings.setDepthBits( sfmlSettings.DepthBits );
-	settings.setStencilBits( sfmlSettings.StencilBits );
-	settings.setAntiAliasing( sfmlSettings.AntialiasingLevel );
+	
+	assert( sfmlSettings.DepthBits >= 0 && sfmlSettings.DepthBits <= 32 );
+	settings.setDepthBits( static_cast<ushort>(sfmlSettings.DepthBits) );
+	
+	assert( sfmlSettings.StencilBits >= 0 && sfmlSettings.StencilBits <= 32 );
+	settings.setStencilBits( static_cast<ushort>(sfmlSettings.StencilBits) );
+	
+	assert( sfmlSettings.AntialiasingLevel >= 0 && sfmlSettings.AntialiasingLevel <= 32 );
+	settings.setAntiAliasing( static_cast<ushort>(sfmlSettings.AntialiasingLevel) );
 	
 	window.EnableKeyRepeat( false );
 	
-	return true;	
+	return true;
 }
 
 //-----------------------------------//
@@ -131,11 +137,11 @@ bool SFML_Window::pumpEvents()
 				break;
 			
 			case sf::Event::LostFocus:
-				//still to figure out 
+				// TODO: still to figure out 
 				break;	
 			
 			case sf::Event::GainedFocus:
-				//still to figure out
+				/// TODO: still to figure out
 				break;	
 			
 			case sf::Event::TextEntered:

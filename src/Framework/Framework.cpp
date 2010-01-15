@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -74,13 +74,10 @@ void Framework::render()
 
 	while( frameTimer.reset(), renderDevice->getWindow()->pumpEvents() )
 	{
+		update( lastFrameTime );
+
 		// User update callback.
 		onUpdate( lastFrameTime );
-
-		// Execute all the registered scripts.
-		getScriptState()->update( lastFrameTime );
-
-		getPhysicsManager()->update( lastFrameTime );
 
 		// User rendering callback.
 		onRender();

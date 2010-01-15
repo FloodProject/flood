@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -144,6 +144,7 @@ void ConsoleTextCtrl::OnEnter(/*wxCommandEvent& event*/)
 	//Remove( GetLastPosition(), GetLastPosition()-1 );
 	//SetInsertionPointEnd();
 
+	// NOTE:
 	// It seems PositionToXY isn't implemented in OSX, so beware when/if
 	// this someday gets ported to the Mac.
 
@@ -154,11 +155,18 @@ void ConsoleTextCtrl::OnEnter(/*wxCommandEvent& event*/)
 
 	std::string text( GetRange( XYToPosition( 2, y ), GetLastPosition() ).c_str() );
 
+#ifdef VAPOR_SCRIPTING_LUA
 	if( !luaState->execute( text.c_str() ) )
 	{
 		AppendText( "\n" );
 		AppendTextColor( luaState->getLastError(), ERROR_COLOR );
 	}
+#else
+	{
+		AppendText( "\n" );
+		AppendTextColor( "Lua scripting support is disabled", ERROR_COLOR );
+	}
+#endif
 
 	NewPromptLine();
 }

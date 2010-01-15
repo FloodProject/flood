@@ -1,13 +1,12 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/Engine.h"
 
 #ifdef VAPOR_IMAGE_PICOPNG
@@ -52,7 +51,9 @@ namespace vapor {
 //-----------------------------------//
 
 Engine::Engine(const std::string& app, const char** argv, bool autoInit)
-	: app(app), argv(argv)
+	: app(app), argv(argv), 
+	renderDevice( nullptr ), resourceManager( nullptr ), audioDevice( nullptr ),
+	physicsManager( nullptr ), vfs( nullptr ), log( nullptr ), scriptState( nullptr )
 {
 	if( autoInit )
 	{
@@ -105,9 +106,11 @@ void Engine::init( bool createWindow )
 	// create the root scene node
 	sceneNode.reset( new scene::Scene() );
 
+#ifdef VAPOR_SCRIPTING_LUA
 	// Initialize the scripting
 	scriptState = new script::State();
 	scriptState->bind( this );
+#endif
 }
 
 //-----------------------------------//
@@ -197,6 +200,19 @@ void Engine::setupResourceLoaders()
 	{
 		resourceManager->registerLoader( loader );
 	}
+}
+
+//-----------------------------------//
+
+void Engine::update( double delta )
+{
+	this->getSceneManager()->update( delta );
+
+#ifdef VAPOR_SCRIPTING_LUA
+	this->getScriptState()->update( delta );
+#endif
+
+	//this->getPhysicsManager()->update( delta );
 }
 
 //-----------------------------------//

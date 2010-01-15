@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine by triton (2008-2009)
+* vaporEngine by triton (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *

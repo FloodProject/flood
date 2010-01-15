@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine (2008-2009)
+* vaporEngine (2008-2010)
 *
 *	<http://www.portugal-a-programar.org>
 *
@@ -8,14 +8,6 @@
 
 #include "PCH.h"
 #include "Editor.h"
-
-#include "vapor/physics/Physics.h"
-#include "vapor/terrain/Terrain.h"
-#include "vapor/terrain/Cell.h"
-#include "vapor/render/Quad.h"
-#include "vapor/input/keyboard.h"
-
-#include <boost/lexical_cast.hpp>
 
 using namespace vapor::input;
 
@@ -168,8 +160,8 @@ void EditorFrame::createScene()
 	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
 	//scene->add( grid );
 
-	ScriptPtr lua = rm->loadResource< Script >( "teste.lua" );
-	engine->getScriptState()->registerScript( lua );
+	//ScriptPtr lua = rm->loadResource< Script >( "teste.lua" );
+	//engine->getScriptState()->registerScript( lua );
 
 	MS3DPtr mesh = rm->loadResource< MS3D >( "cubo.ms3d" );
 
@@ -201,7 +193,6 @@ void EditorFrame::createScene()
 		scene->add( cubo );
 	}
 
-
 	for( int i = 1; i < 5; i++ )
 	{
 		NodePtr cubo( new Node( "Cubo2"+boost::lexical_cast<std::string>(i) ) );
@@ -219,18 +210,16 @@ void EditorFrame::createScene()
 	{
 		rend->getMaterial()->setProgram( tex );
 	}
-	for( int j = -3; j < 4; j++ )
+
+	for( int i = -1; i < 2; i++ )
 	{
-		for( int i = -3; i < 4; i++ )
-		{
-			NodePtr base( new Node( "Platform" +boost::lexical_cast<std::string>(i) +boost::lexical_cast<std::string>(j) ) );
-			base->addComponent( TransformPtr( new Transform() ) );
-			base->addComponent( plat );
-			base->getTransform()->translate( i*750.0f, 0.0f, j*750.0f );
-			base->addComponent( BodyPtr( new Body( 100.0f, hkpMotion::MOTION_FIXED ) ) );
-			//base->setVisible( false );
-			scene->add( base );
-		}
+		NodePtr base( new Node( "Platform" +boost::lexical_cast<std::string>(i) ) );
+		base->addComponent( TransformPtr( new Transform() ) );
+		base->addComponent( plat );
+		base->getTransform()->translate( i*750.0f, 0.0f, 0.0f );
+		base->addComponent( BodyPtr( new Body( 100.0f, hkpMotion::MOTION_FIXED ) ) );
+		//base->setVisible( false );
+		scene->add( base );
 	}
 	
 	b = spawnCube(Vector3(0.0f, 900.0f, 20.0f));
@@ -422,7 +411,7 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 		case Toolbar_ToogleGrid:
 		{
 			NodePtr grid = engine->getSceneManager()->getEntity( "EditorGrid" );
-			grid->setVisible( !grid->getVisible() );
+			if( grid ) grid->setVisible( !grid->getVisible() );
 			break;
 		}
 
