@@ -52,8 +52,8 @@ render::VertexBufferPtr Grid::getGridBuffer()
 	std::vector< Vector3 > colors;
 	
 	// Let's make the lines perpendicular to the X-axis.
-	int x_pos = -sizeX / 2;
-	int z_pos = -sizeZ / 2;	
+	float x_pos = -sizeX / 2;
+	float z_pos = -sizeZ / 2;	
 	
 	for( int i = 0; i < divX+1; i++ )
 	{
@@ -72,7 +72,7 @@ render::VertexBufferPtr Grid::getGridBuffer()
 			colors.push_back( Vector3( 0.4f, 0.4f, 0.4f ) );
 		}
 
-		z_pos += sizeZ / divZ;
+		z_pos += sizeZ / (float)divZ;
 	}
 
 	// Now the lines perpendicular to the Z-axis.

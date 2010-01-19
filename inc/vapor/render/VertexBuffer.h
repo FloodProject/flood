@@ -173,6 +173,8 @@ public:
 				return vertices;
 			}
 		}
+
+		return std::vector<math::Vector3>();
 	}
 };
 

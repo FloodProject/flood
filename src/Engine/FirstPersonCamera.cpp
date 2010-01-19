@@ -49,7 +49,7 @@ void FirstPersonCamera::checkControls( double delta )
 	// Check mouse movement.
 	double dt = delta * 100 * lookSensivity;
 
-	Vector3 rotateVector( mouseDistance.y * dt, mouseDistance.x * dt, 0.0f );
+	Vector3 rotateVector( mouseDistance.y * (float)dt, mouseDistance.x * (float)dt, 0.0f );
 	
 	if( rotateVector != Vector3::Zero )
 		transform->rotate( rotateVector );
@@ -86,22 +86,22 @@ void FirstPersonCamera::checkControls( double delta )
 	/*double*/ dt = delta * 100 * moveSensivity;
 
 	if( state[Keys::W] == true )
-		transform->translate( forwardVector * dt );
+		transform->translate( forwardVector * (float)dt );
 
 	if( state[Keys::S] == true )
-		transform->translate( -forwardVector * dt );
+		transform->translate( -forwardVector * (float)dt );
 	
 	if( state[Keys::A] == true )
-		transform->translate( Vector3::UnitX * dt );
+		transform->translate( Vector3::UnitX * (float)dt );
 
 	if( state[Keys::D] == true )
-		transform->translate( -Vector3::UnitX * dt );
+		transform->translate( -Vector3::UnitX * (float)dt );
 	
 	if( state[Keys::Q] == true )
-		transform->translate( -Vector3::UnitY * dt );
+		transform->translate( -Vector3::UnitY * (float)dt );
 
 	if( state[Keys::Z] == true )
-		transform->translate( Vector3::UnitY * dt );
+		transform->translate( Vector3::UnitY * (float)dt );
 }
 
 //-----------------------------------//
@@ -248,7 +248,7 @@ void FirstPersonCamera::onMouseMove( const MouseMoveEvent& moveEvent )
 
 	if( !window->getCursorState() )
 	{
-		Vector3 currentPosition( moveEvent.x, moveEvent.y, 0 );
+		Vector3 currentPosition( (float)moveEvent.x, (float)moveEvent.y, 0 );
 		mouseDistance += currentPosition - lastPosition;
 		lastPosition = currentPosition;
 	}

@@ -107,16 +107,16 @@ void Label::update( float UNUSED(delta) )
 		const Glyph& glyph = glyphs[c];
 
 		vertex.push_back( Vector3( x_pos, y_pos, 0.0f ) );
-		vertex.push_back( Vector3( x_pos, y_pos - glyph.height, 0.0f ) );
-		vertex.push_back( Vector3( x_pos + glyph.width, y_pos - glyph.height, 0.0f ) );
-		vertex.push_back( Vector3( x_pos + glyph.width, y_pos, 0.0f ) );
+		vertex.push_back( Vector3( x_pos, y_pos - (float)glyph.height, 0.0f ) );
+		vertex.push_back( Vector3( x_pos + (float)glyph.width, y_pos - (float)glyph.height, 0.0f ) );
+		vertex.push_back( Vector3( x_pos + (float)glyph.width, y_pos, 0.0f ) );
 	
-		float glyph_x_left = ::ceilf(glyph.x + mid_offset - glyph.width / 2);
-		float glyph_x_right = ::ceilf(glyph.x + mid_offset + glyph.width / 2);
+		float glyph_x_left = ::ceilf(glyph.x + mid_offset - (float)glyph.width / 2);
+		float glyph_x_right = ::ceilf(glyph.x + mid_offset + (float)glyph.width / 2);
 
 		texcoords.push_back( Vector3( glyph_x_left / width, glyph.y / height, 0.0f ) );
-		texcoords.push_back( Vector3( glyph_x_left / width, (glyph.y + glyph.height) / height, 0.0f ) );
-		texcoords.push_back( Vector3( glyph_x_right / width, (glyph.y + glyph.height) / height, 0.0f ) );
+		texcoords.push_back( Vector3( glyph_x_left / width, (glyph.y + (float)glyph.height) / height, 0.0f ) );
+		texcoords.push_back( Vector3( glyph_x_right / width, (glyph.y + (float)glyph.height) / height, 0.0f ) );
 		texcoords.push_back( Vector3( glyph_x_right / width, glyph.y / height, 0.0f ) );
 
 		x_pos += glyph.width + 1;

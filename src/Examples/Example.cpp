@@ -99,7 +99,7 @@ void Example::onSetupScene()
 	// Materials too?
 	MaterialPtr mat( new Material( "FontMaterial", tex ) );
 	FontPtr font = rm->loadResource< Font >( "Verdana.font" );
-	label.reset( new Label( getFPS( lastFrameTime ), font, mat ) );
+	label.reset( new Label( getFPS( (float)lastFrameTime ), font, mat ) );
 	NodePtr fps( new Node( "FPSNode" ) );
 	fps->addComponent( TransformPtr( new Transform() ) );
 	fps->addComponent( label );
@@ -153,7 +153,7 @@ void Example::onUpdate( float delta )
 	}
 	else
 	{
-		label->setText( getFPS( lastFrameTime ) );
+		label->setText( getFPS( (float)lastFrameTime ) );
 		fpsUpdateTime = 0.0f;
 	}
 }

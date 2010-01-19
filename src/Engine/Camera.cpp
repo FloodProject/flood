@@ -157,7 +157,7 @@ void Camera::setupProjection()
 	else
 	{
 		projectionMatrix = Matrix4x4::createOrthographicProjection( 
-			0.0f, width, 0.0f, height, near_, far_ );
+			0.0f, (float)width, 0.0f, (float)height, near_, far_ );
 	}
 
 	// TODO: remove this, unit test projection methods

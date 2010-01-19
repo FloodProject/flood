@@ -53,8 +53,8 @@ void Cell::updateGeometry( )
 	const float tileWidth = (float(CellSize) / TileDimensions);
 	const float tileHeight = (float(CellSize) / TileDimensions);
 
-	float dX = x*CellSize;
-	float dZ = y*CellSize;
+	float dX = (float)x * CellSize;
+	float dZ = (float)y * CellSize;
 	
 	float height;
 

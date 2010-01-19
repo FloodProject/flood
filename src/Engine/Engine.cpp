@@ -216,7 +216,7 @@ void Engine::setupResourceLoaders()
 
 void Engine::update( double delta )
 {
-	this->getSceneManager()->update( delta );
+	this->getSceneManager()->update( (float)delta );
 
 #ifdef VAPOR_SCRIPTING_LUA
 	this->getScriptState()->update( delta );
