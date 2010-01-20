@@ -802,6 +802,18 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Light"
+				>
+				<File
+					RelativePath=".\Light.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\scene\Light.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Audio"

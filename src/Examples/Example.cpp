@@ -32,6 +32,7 @@ void Example::onInit()
 	if ( !getVFS()->mount( media ) )
 	{
 		Log::MessageDialog( "Missing archive/directory '" + media + "'." );
+		exit(1);
 	}
 	
 	//physicsManager->createWorld();
@@ -126,20 +127,20 @@ void Example::onSetupScene()
 	//sound.reset( new scene::Sound( ls, snd ) );
 	//scene->add( ls ); scene->add( sound );
 
-//	TerrainSettings settings;
-//	settings.CellSize = 1024;
-//	settings.TileDimensions = 32;
-//	settings.MaxHeight = 150;
-//
-//	TerrainPtr terrain( new Terrain( settings ) );
-//
-//	NodePtr terreno( new Node( "Terreno" ) );
-//	terreno->addComponent( TransformPtr( new Transform() ) );
-//	terreno->addComponent( terrain );
-//	scene->add( terreno );
-//
-//	ImagePtr heightmap = rm->loadResource< Image >( "height2.png" );
-//	Cell* cell = terrain->createCell( heightmap, 0, 0 );
+	TerrainSettings settings;
+	settings.CellSize = 1024;
+	settings.TileDimensions = 32;
+	settings.MaxHeight = 150;
+
+	TerrainPtr terrain( new Terrain( settings ) );
+
+	NodePtr terreno( new Node( "Terreno" ) );
+	terreno->addComponent( TransformPtr( new Transform() ) );
+	terreno->addComponent( terrain );
+	scene->add( terreno );
+
+	ImagePtr heightmap = rm->loadResource< Image >( "height2.png" );
+	Cell* cell = terrain->createCell( heightmap, 0, 0 );
 }
 
 //-----------------------------------//

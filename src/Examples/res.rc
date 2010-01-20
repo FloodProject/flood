@@ -6,7 +6,10 @@
 *
 ************************************************************************/
 
-editor ICON "editor.ico"
+#define VAPOR_USE_COMMON_CONTROLS
 
-#define wxUSE_NO_MANIFEST 1  
-#include <wx/msw/wx.rc>
+#ifdef VAPOR_USE_COMMON_CONTROLS
+	CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "vapor.manifest"
+#endif
+
+editor ICON "applications-system.ico"

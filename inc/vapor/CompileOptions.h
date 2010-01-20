@@ -21,6 +21,9 @@
 // Enable this when building target is a DLL
 //#define VAPOR_API_DLL
 
+// Enables visual styled controls on Windows
+//#define VAPOR_USE_COMMON_CONTROLS
+
 //-------------------------------------------------------------------------//
 // Memory stuff
 //-------------------------------------------------------------------------//

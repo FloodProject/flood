@@ -60,6 +60,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -192,6 +193,14 @@
 		</File>
 		<File
 			RelativePath=".\Example.h"
+			>
+		</File>
+		<File
+			RelativePath=".\res.rc"
+			>
+		</File>
+		<File
+			RelativePath=".\vapor.manifest"
 			>
 		</File>
 	</Files>

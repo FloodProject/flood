@@ -64,7 +64,7 @@ Cell* Terrain::createCell( ImagePtr heightmap, int x, int y )
 	terrainCells.push_back( page );
 
 	page->setMaterial( cellMaterial );
-	page->setRenderMode( RenderMode::Wireframe );
+	//page->setRenderMode( RenderMode::Wireframe );
 	addRenderable( render::RenderablePtr( page ) );
 
 	// Forces AABB generation next update.

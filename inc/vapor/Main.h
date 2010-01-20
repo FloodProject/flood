@@ -10,6 +10,12 @@
 
 #include <vapor/Framework.h>
 
+#if defined(VAPOR_PLATFORM_WINDOWS) && defined(USE_COMMON_CONTROLS)
+	#define SIDEBYSIDE_COMMONCONTROLS 1 
+	#include <commctrl.h>
+	#pragma comment( lib, "comctl32.lib" )
+#endif
+
 #ifndef VAPOR_EXAMPLE_NAME
 	#error "vapor::Framework code needs you need to define VAPOR_EXAMPLE_NAME."
 #endif
@@ -21,6 +27,10 @@ int WINAPI WinMain( HINSTANCE UNUSED(hInstance), HINSTANCE UNUSED(hPrevInstance)
 int main(int argc, const char** argv)
 #endif
 {
+	#if defined(VAPOR_PLATFORM_WINDOWS) && defined(USE_COMMON_CONTROLS)
+		InitCommonControls();
+	#endif
+
 	#ifdef VAPOR_PLATFORM_WINDOWS
 		VAPOR_EXAMPLE_NAME example;
 	#else
