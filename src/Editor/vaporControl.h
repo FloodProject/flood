@@ -18,6 +18,8 @@
 #endif
 
 #include <vapor/Engine.h>
+#include "vapor/scene/Camera.h"
+
 #include <wx/glcanvas.h>
 #include "wx_InputManager.h"
 
@@ -77,6 +79,9 @@ public:
 	// Gets the associated instance of the vaporEngine.
 	vapor::Engine* getEngine() { return engine; }
 
+	// Sets the associated rendering camera.
+	void setCamera(vapor::scene::CameraPtr cam) { this->cam = cam; }
+
 protected:
 
 	// Sets the associated instance of the vaporEngine.
@@ -96,6 +101,8 @@ protected:
 
 	// Holds an instance to the vaporEngine.
 	vapor::Engine* engine;
+
+	vapor::scene::CameraPtr cam;
 
 	DECLARE_EVENT_TABLE()
 };

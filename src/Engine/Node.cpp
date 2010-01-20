@@ -17,6 +17,7 @@ namespace vapor { namespace scene {
 Node::Node( const std::string& name )
 	: name( name ), isVisible( true )
 {
+	// TODO: shared_from_this doesn't work in constructors
 	//addComponent( TransformPtr( new Transform() ) );
 }
 

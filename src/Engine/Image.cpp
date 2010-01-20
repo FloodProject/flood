@@ -22,8 +22,10 @@ namespace PixelFormat
 		{
 		case R8G8B8A8:
 			return "R8G8B8A8";
+		case R8G8B8:
+			return "R8G8B8";
 		default:
-			return "";
+			return "(Unknown)";
 		}
 	}
 }

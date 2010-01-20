@@ -75,9 +75,9 @@ Engine::~Engine()
 	delete audioDevice;
 #endif
 
-	delete renderDevice;
 	delete resourceManager;
-	delete physicsManager;
+	delete renderDevice;
+	//delete physicsManager;
 	delete scriptState;
 	delete vfs;
 	delete log;
@@ -99,7 +99,7 @@ void Engine::init( bool createWindow )
 	resourceManager = ResourceManager::getInstancePtr();
 
 	// create the physics manager
-	physicsManager = PhysicsManager::getInstancePtr();
+	//physicsManager = PhysicsManager::getInstancePtr();
 
 	// register default codecs
 	setupResourceLoaders();

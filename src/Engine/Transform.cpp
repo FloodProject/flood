@@ -21,8 +21,8 @@ const std::string& Transform::type = "Transform";
 
 //-----------------------------------//
 
-Transform::Transform()
-	: v_scale( 1.0f ), isPhysicsDriven( false )
+Transform::Transform( float x, float y, float z )
+	: v_scale( 1.0f ), isPhysicsDriven( false ), v_translate( x, y, z )
 {
 
 }
@@ -244,7 +244,7 @@ void getChildrenBoundingVolume( const math::AABB& boundingVolume, NodePtr node )
 bool Transform::requiresBoundingVolumeUpdate() const
 {
 	// TODO: optimize this
-	return true;
+	return false;
 }
 
 //-----------------------------------//

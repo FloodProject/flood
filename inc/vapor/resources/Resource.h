@@ -9,6 +9,7 @@
 #pragma once
 
 #include "vapor/Platform.h"
+#include "vapor/ReferenceCounted.h"
 
 namespace vapor { namespace resources {
 
@@ -53,7 +54,7 @@ namespace ResourceGroup
  * resource from a network connection).
  */
 
-class VAPOR_API Resource : private boost::noncopyable
+class VAPOR_API Resource : public ReferenceCounted, private boost::noncopyable
 {
 public:
 
@@ -89,7 +90,19 @@ protected:
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( Resource );
+#ifdef VAPOR_MEMORY_INTRUSIVE_PTR
+		#define TYPEDEF_RESOURCE_POINTER_FROM_TYPE(T) \
+			TYPEDEF_INTRUSIVE_POINTER_FROM_CLASS(T)
+		#define RESOURCE_TYPEDECL_FROM_TYPE(T) \
+			boost::intrusive_ptr<T>
+#elif VAPOR_MEMORY_SHARED_PTR
+		#define TYPEDEF_RESOURCE_POINTER_FROM_TYPE(T) \
+			TYPEDEF_SHARED_POINTER_FROM_CLASS(T)
+		#define RESOURCE_TYPEDECL_FROM_TYPE(T) \
+			std::shared_ptr<T>
+#endif
+		
+TYPEDEF_RESOURCE_POINTER_FROM_TYPE( Resource );
 
 //-----------------------------------//
 

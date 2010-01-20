@@ -76,6 +76,10 @@ protected:
 
 //-----------------------------------//
 
+TYPEDEF_SHARED_POINTER_FROM_CLASS( Context );
+
+//-----------------------------------//
+
 } } // end namespaces
 
 /** @} */

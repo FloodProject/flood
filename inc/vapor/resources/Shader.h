@@ -78,7 +78,7 @@ protected:
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( Shader );
+TYPEDEF_RESOURCE_POINTER_FROM_TYPE( Shader );
 
 //-----------------------------------//
 

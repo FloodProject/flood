@@ -23,9 +23,9 @@ namespace vapor { namespace render {
 
 /**
  * Manages a set of textures. The rest of the engine, when needing a 
- * texture will ask the texture manager for the texture for a given class.
+ * texture will ask the texture manager for the texture for a given image.
  * This way the engine will be able to provide, for example, fallback 
- * textures for when it is not possible to load the requested image file.
+ * texture when it is not possible to load the requested image file.
  * This will be pretty useful when resource auto-loading is added, if a 
  * given file is corrupted we can safely render the scene, falling back
  * for default textures.

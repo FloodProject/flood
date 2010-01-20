@@ -38,11 +38,11 @@ Device::~Device()
 
 	// TODO: delete all OpenGL resources (shaders, textures...)
 
-	delete adapter;
-	delete window;
-	delete bufferManager;
 	delete TextureManager::getInstancePtr();
 	delete ProgramManager::getInstancePtr();
+	delete bufferManager;
+	delete adapter;
+	delete window;
 }
 
 //-----------------------------------//

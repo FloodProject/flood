@@ -175,7 +175,7 @@ void Device::switchContext(ALCcontext* context)
 
 //-----------------------------------//
 
-std::shared_ptr<Buffer> Device::prepareBuffer(std::shared_ptr<resources::Sound> sound)
+std::shared_ptr<Buffer> Device::prepareBuffer(resources::SoundPtr sound)
 {
 	// check if buffer with same resource already exists
 	if( soundBuffers.find(sound) != soundBuffers.end() ) 

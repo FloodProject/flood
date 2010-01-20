@@ -31,7 +31,7 @@ class VAPOR_API Transform : public Component
 {
 public:
 
-	Transform();
+	Transform( float x = 0.0f, float y = 0.0f, float z = 0.0f );
 	virtual ~Transform();
 
 	// Translate this node by the given parameters.

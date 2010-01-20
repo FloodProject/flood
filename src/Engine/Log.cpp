@@ -245,6 +245,16 @@ void Log::write(const LogLevel::Enum level, const std::string& subsystem,
 	fflush(fp);
 
 	even = !even;
+
+#ifdef VAPOR_DEBUG
+	switch(level)
+	{
+	case LogLevel::Warning:
+	case LogLevel::Error:
+		debug(msg);
+		break;
+	}
+#endif
 }
 
 //-----------------------------------//

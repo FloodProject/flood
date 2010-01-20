@@ -9,7 +9,6 @@
 #pragma once
 
 #include "vapor/resources/Shader.h"
-
 #include "vapor/render/GL.h"
 
 namespace vapor { namespace render {
@@ -46,7 +45,7 @@ private:
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( GLSL_Shader );
+TYPEDEF_RESOURCE_POINTER_FROM_TYPE( GLSL_Shader );
 
 //-----------------------------------//
 

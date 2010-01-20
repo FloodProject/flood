@@ -120,12 +120,12 @@ void EditorFrame::initEngine()
 	engine->getRenderDevice()->init();
 
 	vaporCtrl = viewport->vaporCtrl;
-
-	engine->getPhysicsManager()->createWorld();
-	engine->getPhysicsManager()->setSimulationEnabled( false );
+ 
+	//engine->getPhysicsManager()->createWorld();
+	//engine->getPhysicsManager()->setSimulationEnabled( false );
 
 	createScene();
-
+	
 	input::Mouse* mouse = engine->getInputManager()->getMouse();
 	mouse->onMouseButtonPress += fd::bind( &EditorFrame::onMouseClick, this );
 
@@ -158,86 +158,29 @@ void EditorFrame::createScene()
 	NodePtr grid( new Node( "EditorGrid" ) );
 	grid->addComponent( TransformPtr( new Transform() ) );
 	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
-	//scene->add( grid );
+	scene->add( grid );
 
-	//ScriptPtr lua = rm->loadResource< Script >( "teste.lua" );
-	//engine->getScriptState()->registerScript( lua );
+	//MS3DPtr mesh = rm->loadResource< MS3D >( "cubo.ms3d" );
 
-	MS3DPtr mesh = rm->loadResource< MS3D >( "cubo.ms3d" );
+	//foreach( const RenderablePtr& rend, mesh->getRenderables() )
+	//{
+	//	rend->getMaterial()->setProgram( tex );
+	//}
 
-	foreach( const RenderablePtr& rend, mesh->getRenderables() )
-	{
-		rend->getMaterial()->setProgram( tex );
-	}
+	//TerrainSettings settings;
+	//settings.CellSize = 512;
+	//settings.TileDimensions = 32;
+	//settings.MaxHeight = 100;
 
-	for( int i = 1; i < 5; i++ )
-	{
-		NodePtr cubo( new Node( "Cubo"+boost::lexical_cast<std::string>(i) ) );
-		cubo->addComponent( TransformPtr( new Transform() ) );
-		cubo->getTransform()->translate( 20.0f*i, 150.0f*i, 0.0f );
-		cubo->getTransform()->scale( 0.1f );
-		cubo->addComponent( mesh );
-		cubo->addComponent( BodyPtr( new Body() ) );
-		scene->add( cubo );
-	}
+	//TerrainPtr terrain( new Terrain( settings ) );
 
-	
-	for( int i = 1; i < 5; i++ )
-	{
-		NodePtr cubo( new Node( "Cubo3"+boost::lexical_cast<std::string>(i) ) );
-		cubo->addComponent( TransformPtr( new Transform() ) );
-		cubo->getTransform()->translate( 120.0f*i, 150.0f*i, 30.0f );
-		cubo->getTransform()->scale( 0.1f );
-		cubo->addComponent( mesh );
-		cubo->addComponent( BodyPtr( new Body() ) );
-		scene->add( cubo );
-	}
+	//NodePtr terreno( new Node( "Terreno" ) );
+	//terreno->addComponent( TransformPtr( new Transform() ) );
+	//terreno->addComponent( terrain );
+	////scene->add( terreno );
 
-	for( int i = 1; i < 5; i++ )
-	{
-		NodePtr cubo( new Node( "Cubo2"+boost::lexical_cast<std::string>(i) ) );
-		cubo->addComponent( TransformPtr( new Transform() ) );
-		cubo->getTransform()->translate( 150.0f*(i-2), 750.0f, 0.0f );
-		cubo->getTransform()->scale( 0.1f );
-		cubo->addComponent( mesh );
-		cubo->addComponent( BodyPtr( new Body() ) );
-		scene->add( cubo );
-	}
-
-	MS3DPtr plat = rm->loadResource< MS3D >( "base.ms3d" );
-
-	foreach( const RenderablePtr& rend, plat->getRenderables() )
-	{
-		rend->getMaterial()->setProgram( tex );
-	}
-
-	for( int i = -1; i < 2; i++ )
-	{
-		NodePtr base( new Node( "Platform" +boost::lexical_cast<std::string>(i) ) );
-		base->addComponent( TransformPtr( new Transform() ) );
-		base->addComponent( plat );
-		base->getTransform()->translate( i*750.0f, 0.0f, 0.0f );
-		base->addComponent( BodyPtr( new Body( 100.0f, hkpMotion::MOTION_FIXED ) ) );
-		//base->setVisible( false );
-		scene->add( base );
-	}
-	
-	b = spawnCube(Vector3(0.0f, 900.0f, 20.0f));
-
-	TerrainSettings settings;
-	settings.CellSize = 512;
-	settings.TileDimensions = 32;
-	settings.MaxHeight = 100;
-
-	TerrainPtr terrain( new Terrain( settings ) );
-
-	NodePtr terreno( new Node( "Terreno" ) );
-	terreno->addComponent( TransformPtr( new Transform() ) );
-	terreno->addComponent( terrain );
-	//scene->add( terreno );
-
-	ImagePtr heightmap = rm->loadResource< Image >( "height2.png" );
-	Cell* cell = terrain->createCell( heightmap, 0, 0 );
+	//ImagePtr heightmap = rm->loadResource< Image >( "height2.png" );
+	//Cell* cell = terrain->createCell( heightmap, 0, 0 );
 }
 
 //-----------------------------------//
@@ -417,8 +360,8 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 
 		case Toolbar_TooglePlay:
 		{
-			physics::PhysicsManager* ph = engine->getPhysicsManager();
-			ph->setSimulationEnabled( !ph->getSimulationEnabled() );
+			physics::PhysicsManager* pm = engine->getPhysicsManager();
+			if( pm ) pm->setSimulationEnabled( !pm->getSimulationEnabled() );
 		}
 	}
 }
@@ -505,7 +448,7 @@ void EditorFrame::onMouseClick( const MouseButtonEvent& mbe )
 	// Do some ray tracing to find a collision.
 	foreach( NodePtr node, scene->getChildren() )
 	{
-		if( node->getName() == "line" ) continue;
+		//if( node->getName() == "line" ) continue;
 
 		foreach( GeometryPtr geometry, node->getGeometry() )
 		{

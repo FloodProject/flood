@@ -31,7 +31,6 @@ Viewport::Viewport( vapor::Engine* engine, wxWindow* parent, wxWindowID id,
 	init();
 	build();
 	createCamera();
-	
 	onCameraTransform();
 }
 
@@ -67,8 +66,11 @@ void Viewport::createCamera()
 	camera.reset( new FirstPersonCamera( engine->getInputManager(), engine->getRenderDevice() ) );
 	cameraNode->addComponent( TransformPtr( new Transform() ) );
 	cameraNode->addComponent( camera );
+	// TODO: hardcoded camera start position...
 	cameraNode->getTransform()->translate( 0.0f, -200.0f, -650.0f );
 	engine->getSceneManager()->add( cameraNode );
+
+	vaporCtrl->setCamera( camera );
 
 	transform = cameraNode->getTransform();
 	transform->onTransform += fd::bind( &Viewport::onCameraTransform, this );
@@ -185,7 +187,6 @@ void Viewport::updatePosition()
 	float Z = lexical_cast<float>( txt_Z->GetValue() );
 
 	math::Vector3 pos( X, Y, Z );
-
 	transform->setPosition( pos );
 }
 

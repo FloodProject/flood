@@ -30,7 +30,7 @@
 #define VAPOR_MEMORY_LEAK_DETECTOR
 
 #define VAPOR_MEMORY_SHARED_PTR
-//#define VAPOR_MEMORY_INTRUSIVE_PTR
+#define VAPOR_MEMORY_INTRUSIVE_PTR
 
 //-------------------------------------------------------------------------//
 // VFS providers

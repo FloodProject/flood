@@ -84,6 +84,12 @@ Fix the Camera behaviour
 ENGINE:
 ------
 
+Textures:
+	Support DDS
+	Warn and downsample if texture size is not supported
+	Resize the sample to nearest-POT if rectangle textures not supported
+	Generate and support MIP-maps
+
 Geometry component is shared per node, and that causes lots of problems.
 
 WTF?! Static const string references (Component types)?

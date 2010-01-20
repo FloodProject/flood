@@ -7,7 +7,6 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/render/Texture.h"
 
 using namespace vapor::resources;
@@ -19,10 +18,9 @@ namespace vapor { namespace render {
 Texture::Texture( resources::ImagePtr img )
 	: uploaded( false ), img( img ), id( 0 )
 {
-	glGenTextures( 1, &id );
-
+	generate();
+	bind();
 	upload();
-
 	unbind();
 }
 
@@ -31,6 +29,47 @@ Texture::Texture( resources::ImagePtr img )
 Texture::~Texture()
 {
 	glDeleteTextures( 1, &id );
+
+#ifdef VAPOR_DEBUG
+	while( glGetError() != GL_NO_ERROR )
+	{
+		warn( "gl", "Could not delete texture object '%d'", id );
+	}
+#endif
+}
+
+//-----------------------------------//
+
+bool Texture::generate()
+{
+	glGenTextures( 1, &id );
+
+#ifdef VAPOR_DEBUG
+	while( glGetError() != GL_NO_ERROR )
+	{
+		warn( "gl", "Could not generate a new texture object '%d'", id );
+		return false;
+	}
+#endif
+
+	return true;
+}
+
+//-----------------------------------//
+
+bool Texture::check()
+{
+	GLint max_size;
+	glGetIntegerv( GL_MAX_TEXTURE_SIZE, &max_size );
+
+	if( (img->getWidth() > max_size)
+		|| (img->getHeight() > max_size) )
+	{
+		warn( "gl", "Texture size is not supported for image '%s'", img->getURI().c_str() );		
+		return false;
+	}
+
+	return true;
 }
 
 //-----------------------------------//
@@ -41,33 +80,16 @@ bool Texture::upload()
 	// can handle...
 	// TODO: check for OpenGL errors
 
-	bind();
-
-	int glPixelFormat = 0;
-
-	switch( img->getPixelFormat() )
-	{
-	case PixelFormat::R8G8B8A8:
-		glPixelFormat = GL_RGBA;
-		break;
-	case PixelFormat::R8G8B8:
-		glPixelFormat = GL_RGB;
-		break;
-	default:
-		warn( "GL", "Implement support for more pixel formats" );
-	}
+	if( !check() ) return false;
 
 	// TODO: check the formats more thoroughly
 	glTexImage2D( GL_TEXTURE_2D, 0, 
 		convertInternalFormat( img->getPixelFormat() ),
 		img->getWidth(), img->getHeight(), 0,
-		glPixelFormat, GL_UNSIGNED_BYTE, &img->getBuffer()[0] );
+		convertSourceFormat( img->getPixelFormat() ),
+		GL_UNSIGNED_BYTE, &img->getBuffer()[0] );
 
-	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	configure();
 
 	//gluBuild2DMipmaps( GL_TEXTURE_2D,
 	//	convertInternalFormat( img->getPixelFormat() ),
@@ -85,6 +107,19 @@ bool Texture::upload()
 
 	uploaded = true;
 	return true;
+}
+
+//-----------------------------------//
+
+void Texture::configure()
+{
+	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	// TODO: mipmaps and stuff
 }
 
 //-----------------------------------//
@@ -107,22 +142,41 @@ void Texture::unbind( int unit )
 
 //-----------------------------------//
 
-resources::ImagePtr Texture::getImage() const
-{
-	return img;
-}
-
-//-----------------------------------//
-
 GLint Texture::convertInternalFormat( resources::PixelFormat::Enum fmt )
 {
 	switch( fmt )
 	{
 	case PixelFormat::R8G8B8A8:
 		return GL_RGBA8;
+	case PixelFormat::R8G8B8:
+		return GL_RGB8;
 	default:
-		return GL_RGBA8;
+		warn( "GL", "Implement support for more pixel formats" );
+		return GL_RGB8;
 	}
+}
+
+//-----------------------------------//
+
+GLint Texture::convertSourceFormat( resources::PixelFormat::Enum fmt )
+{
+	switch( fmt )
+	{
+	case PixelFormat::R8G8B8A8:
+		return GL_RGBA;
+	case PixelFormat::R8G8B8:
+		return GL_RGB;
+	default:
+		warn( "GL", "Implement support for more pixel formats" );
+		return GL_RGB;
+	}
+}
+
+//-----------------------------------//
+
+resources::ImagePtr Texture::getImage() const
+{
+	return img;
 }
 
 //-----------------------------------//

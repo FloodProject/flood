@@ -17,7 +17,7 @@ namespace vapor { namespace scene {
 
 //-----------------------------------//
 
-Scene::Scene() : Group( "Scene" )
+Scene::Scene() : Group( "Scene" ), inTraversal( false )
 {
 
 }
@@ -33,14 +33,18 @@ Scene::~Scene()
 
 void Scene::update( float delta )
 {
-	//PROFILE;
+	if( inTraversal ) return;
+	else inTraversal = true;
+	
+	this->delta = delta;
 
 	MatrixStack transformStack;
 	transformStack.push( Matrix4x3::Identity );
 	    
 	updateTransformAndBV( shared_from_this(), transformStack );
 
-	Group::update( delta );
+	inTraversal = false;
+	//Group::update( delta );
 }
 
 //-----------------------------------//
@@ -63,7 +67,7 @@ void Scene::updateTransformAndBV( NodePtr node, MatrixStack& transformStack )
 	{
 		transformStack.push( transform->getLocalTransform() * transformStack.top() );
 
-		if( !transform->isPhysicsDriven )
+		//if( !transform->isPhysicsDriven )
 			transform->setAbsoluteTransform( transformStack.top() );
 		
 		needsPop = true;
@@ -75,17 +79,12 @@ void Scene::updateTransformAndBV( NodePtr node, MatrixStack& transformStack )
 	{
 		foreach( NodePtr gnode, group->getChildren() )
 		{
-			updateTransformAndBV( gnode, transformStack /*node->get( i )*/ );
+			updateTransformAndBV( gnode, transformStack );
 		}
 	}
 
 	// on the way up part
-	//if ( transform->requiresBoundingVolumeUpdate() )
-	//{
-	//    transform->update( transformStack.top() );
-	//}
-
-	//node->update();
+	node->update( delta );
 	    
 	// remove the matrix from the stack
 	if ( needsPop )

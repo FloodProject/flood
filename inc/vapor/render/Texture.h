@@ -30,6 +30,9 @@ public:
 	Texture( resources::ImagePtr );
 	~Texture();
 
+	// Generates a new texture id.
+	bool generate();
+
 	// Uploads the image data to the graphics card.
 	bool upload();
 
@@ -39,11 +42,18 @@ public:
 	// Unbinds the texture object.
 	void unbind( int unit = 0 );
 
+	// Configures the texture settings.
+	void configure();
+
+	// Checks if the texture size is supported.
+	bool check();
+
 	// Gets the associated image.
 	resources::ImagePtr getImage() const;
 
 private:
 
+	GLint convertSourceFormat( resources::PixelFormat::Enum fmt );
 	GLint convertInternalFormat( resources::PixelFormat::Enum fmt );
 
 	// OpenGL texture object id

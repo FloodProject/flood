@@ -311,7 +311,7 @@ void GLSL_Program::getLogText()
 
 	log.assign( info );
 
-	debug( log.c_str() );
+	//debug( log.c_str() );
 
 	delete info;
 }

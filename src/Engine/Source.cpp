@@ -11,6 +11,7 @@
 #ifdef VAPOR_AUDIO_OPENAL
 
 #include "vapor/audio/Source.h"
+#include "vapor/audio/Buffer.h"
 
 namespace vapor { namespace audio {
 

@@ -61,10 +61,15 @@ public:
 
 	// Creates a new resource and returns the specific resource.
 	template <typename T>
-	std::shared_ptr<T> loadResource(const std::string& path)
+	RESOURCE_TYPEDECL_FROM_TYPE(T) loadResource(const std::string& path)
 	{
 		ResourcePtr res = loadResource( path );
-		return std::static_pointer_cast< T >( res );
+
+		//#ifdef VAPOR_MEMORY_INTRUSIVE_PTR
+		//	using boost::static_pointer_cast;
+		//#endif VAPOR_MEMORY_SHARED_PTR
+
+		return boost::static_pointer_cast< T >( res );
 	}
 
 	// Removes a resource from the manager.
@@ -75,7 +80,7 @@ public:
 
 	// Gets a specific resource given it's name (if it exists).
 	template <typename T>
-	std::shared_ptr<T> getResource(const std::string& path)
+	RESOURCE_TYPEDECL_FROM_TYPE(T) getResource(const std::string& path)
 	{
 		ResourcePtr res = getResource( path );
 		return std::static_pointer_cast< T >( res );

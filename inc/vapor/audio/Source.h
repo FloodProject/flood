@@ -16,7 +16,6 @@
 
 #include "vapor/audio/Device.h"
 #include "vapor/audio/Context.h"
-#include "vapor/audio/Buffer.h"
 #include "vapor/resources/Sound.h"
 #include "vapor/math/Vector3.h"
 
@@ -33,6 +32,9 @@ namespace vapor { namespace audio {
  * tells what audio data to play. Each source will get a shared audio
  * buffer from the audio device.
  */
+
+class Buffer;
+TYPEDEF_SHARED_POINTER_FROM_CLASS( Buffer );
 
 class VAPOR_API Source : private boost::noncopyable
 {
@@ -85,14 +87,18 @@ protected:
 	audio::Device* device;
 
 	// Holds a pointer to the audio context.
-	std::shared_ptr<audio::Context> context;
+	ContextPtr context;
 	
 	// Holds a pointer to the audio data buffer.
-	std::shared_ptr<Buffer> buffer;
+	BufferPtr buffer;
 
 	// Holds the source id from OpenAL.
 	ALuint sourceId;
 };
+
+//-----------------------------------//
+
+TYPEDEF_SHARED_POINTER_FROM_CLASS( Source );
 
 //-----------------------------------//
 

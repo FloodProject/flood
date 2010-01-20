@@ -12,9 +12,6 @@
 
 #include "vapor/render/Window.h"
 
-#include "vapor/scene/Scene.h"
-#include "vapor/scene/Camera.h"
-
 #ifdef __WXGTK__
 	#include <gdk/gdk.h>
 	#include <gtk/gtk.h>
@@ -116,15 +113,10 @@ void vaporControl::OnRender()
 {
 	const math::Color bg( 0.0f, 0.10f, 0.25f );
 
-	//OnUpdate();
-
 	render::Device* device = engine->getRenderDevice();
 	
 	device->setClearColor(bg);
 	device->clearTarget();
-
-	ScenePtr scene = engine->getSceneManager();
-	CameraPtr cam = scene->getEntity("MainCamera")->getComponent<Camera>("Camera");
 
 	cam->render();
 }
@@ -159,7 +151,7 @@ void vaporControl::OnIdle(wxIdleEvent& WXUNUSED(event))
 void vaporControl::OnSize(wxSizeEvent& event)
 {
 	wxSize size = event.GetSize();
-	debug( "new size: %d %d", size.GetX(), size.GetY() );
+	//debug( "new size: %d %d", size.GetX(), size.GetY() );
 
 	window->processResize( event.GetSize() );
 }

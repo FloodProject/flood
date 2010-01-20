@@ -51,6 +51,7 @@
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="vapor/PCH.h"
+				ProgramDataBaseFileName="$(TargetDir)$(TargetName).pdb"
 				WarningLevel="4"
 				WarnAsError="false"
 				Detect64BitPortabilityProblems="false"
@@ -601,6 +602,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ReferenceCounted.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\ReferenceCounted.h"
+					>
+				</File>
+				<File
 					RelativePath=".\StringUtilities.cpp"
 					>
 				</File>
@@ -1067,25 +1076,6 @@
 				<File
 					RelativePath=".\Bindings.cpp"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-				</File>
-			</Filter>
-			<Filter
-				Name="Script"
-				>
-				<File
-					RelativePath=".\Script.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\script\Script.h"
-					>
 				</File>
 			</Filter>
 		</Filter>
@@ -1253,24 +1243,10 @@
 					<File
 						RelativePath="..\..\dep\picopng\picopng.cpp"
 						>
-						<FileConfiguration
-							Name="Debug|Win32"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
 					</File>
 					<File
 						RelativePath=".\PNG_Loader.cpp"
 						>
-						<FileConfiguration
-							Name="Debug|Win32"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
 					</File>
 					<File
 						RelativePath="..\..\inc\vapor\resources\PNG_Loader.h"
@@ -1372,6 +1348,18 @@
 						>
 					</File>
 				</Filter>
+			</Filter>
+			<Filter
+				Name="Script"
+				>
+				<File
+					RelativePath=".\Script.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\script\Script.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<File

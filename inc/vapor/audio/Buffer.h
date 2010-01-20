@@ -41,7 +41,7 @@ class VAPOR_API Buffer : private boost::noncopyable
 public:
 	
 	/// Constructor
-	Buffer( audio::Device* device, std::shared_ptr<resources::Sound> sound );
+	Buffer( audio::Device* device, resources::SoundPtr sound );
 	
 	/// Destructor
 	~Buffer();
@@ -63,6 +63,10 @@ protected:
 	/// Holds the source id from OpenAL.
 	ALuint bufferId;
 };
+
+//-----------------------------------//
+
+TYPEDEF_SHARED_POINTER_FROM_CLASS( Buffer );
 
 //-----------------------------------//
 

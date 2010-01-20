@@ -58,7 +58,7 @@ protected:
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( Script );
+TYPEDEF_RESOURCE_POINTER_FROM_TYPE( Script );
 
 //-----------------------------------//
 

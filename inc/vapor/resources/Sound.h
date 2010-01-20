@@ -77,7 +77,7 @@ private:
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( Sound );
+TYPEDEF_RESOURCE_POINTER_FROM_TYPE( Sound );
 
 //-----------------------------------//
 

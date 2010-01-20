@@ -11,6 +11,8 @@
 
 namespace vapor {
 
+//-----------------------------------//
+
 long Endianness::swap(long i)
 {
 	unsigned char b1, b2, b3, b4;
@@ -22,5 +24,7 @@ long Endianness::swap(long i)
 
 	return ((int)b1 << 24) + ((int)b2 << 16) + ((int)b3 << 8) + b4;
 }
+
+//-----------------------------------//
 
 } // end namespace

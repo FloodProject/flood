@@ -34,7 +34,7 @@ void Example::onInit()
 		Log::MessageDialog( "Missing archive/directory '" + media + "'." );
 	}
 	
-	physicsManager->createWorld();
+	//physicsManager->createWorld();
 }
 
 //-----------------------------------//
@@ -85,10 +85,11 @@ void Example::onSetupScene()
 	camera->addComponent( cam );
 	scene->add( camera );
 
-	MeshPtr mesh = rm->loadResource< MS3D >( "ct.ms3d" );
+	MeshPtr mesh = rm->loadResource< Mesh >( "cubo.ms3d" );
 	NodePtr ct( new Node( "ct" ) );
-	ct->addComponent( TransformPtr( new Transform() ) );
-	ct->addComponent( mesh );
+	ct->addComponent( TransformPtr( new Transform( 0.0f, 1000.0f, 0.0f ) ) );
+	//ct->addComponent( mesh );
+	//ct->addComponent( BodyPtr( new Body() ) );
 	scene->add(ct);
 
 	foreach( const RenderablePtr& rend, mesh->getRenderables() )
@@ -106,9 +107,10 @@ void Example::onSetupScene()
 	fps->getTransform()->translate( -300.0f, 220.0f, 0.0f );
 	scene->add( fps );
 
-	NodePtr grid( new Node( "EditorGrid" ) );
+	NodePtr grid( new Node( "Grid" ) );
 	grid->addComponent( TransformPtr( new Transform() ) );
 	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
+	//grid->addComponent( BodyPtr( new Body( 100.0f, hkpMotion::MOTION_FIXED ) ) );
 	scene->add( grid );
 
 	foreach( const RenderablePtr& rend, 

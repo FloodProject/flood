@@ -25,6 +25,7 @@ namespace PixelFormat
 	{
 		R8G8B8A8,
 		R8G8B8,
+		Unknown
 	};
 
 	const std::string getString(Enum e);
@@ -87,7 +88,7 @@ private:
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( Image );
+TYPEDEF_RESOURCE_POINTER_FROM_TYPE( Image );
 
 //-----------------------------------//
 
