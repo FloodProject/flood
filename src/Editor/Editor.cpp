@@ -498,7 +498,7 @@ BodyPtr EditorFrame::spawnCube(const math::Vector3 &pos)
 	cubo->addComponent( TransformPtr( new Transform() ) );
 	cubo->getTransform()->translate(pos);
 	cubo->getTransform()->scale( 0.1f );
-	cubo->addComponent( mesh );
+	//cubo->addComponent( mesh );
 	BodyPtr body(new Body(100.0f, hkpMotion::MOTION_KEYFRAMED));
 	cubo->addComponent( body );
 	scene->add( cubo );
