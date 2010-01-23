@@ -61,10 +61,7 @@ public:
 	virtual ~Resource();
 
 	// Reloads this resource.
-	// bool reload();
-
-	// Watches this resource for changes and auto-reloads it.
-	// void watch();
+	bool reload();
 
 	// Releases the contents of this resource (to save memory).
 	// void release();
@@ -90,16 +87,22 @@ protected:
 
 //-----------------------------------//
 
-#ifdef VAPOR_MEMORY_INTRUSIVE_PTR
+#if defined(VAPOR_MEMORY_INTRUSIVE_PTR)
 		#define TYPEDEF_RESOURCE_POINTER_FROM_TYPE(T) \
 			TYPEDEF_INTRUSIVE_POINTER_FROM_CLASS(T)
 		#define RESOURCE_TYPEDECL_FROM_TYPE(T) \
 			boost::intrusive_ptr<T>
-#elif VAPOR_MEMORY_SHARED_PTR
+		#define RESOURCE_SMART_PTR_CAST \
+			boost::static_pointer_cast
+#elif defined(VAPOR_MEMORY_SHARED_PTR)
 		#define TYPEDEF_RESOURCE_POINTER_FROM_TYPE(T) \
 			TYPEDEF_SHARED_POINTER_FROM_CLASS(T)
 		#define RESOURCE_TYPEDECL_FROM_TYPE(T) \
 			std::shared_ptr<T>
+		#define RESOURCE_SMART_PTR_CAST \
+			std::static_pointer_cast
+#else
+	#error No smart pointer implementation found
 #endif
 		
 TYPEDEF_RESOURCE_POINTER_FROM_TYPE( Resource );

@@ -130,7 +130,7 @@ void Camera::handleTargetResize( const render::Settings& evt )
 
 //-----------------------------------//
 
-void Camera::update( float UNUSED(delta) )
+void Camera::update( double UNUSED(delta) )
 {
 	if( !transform )
 	{

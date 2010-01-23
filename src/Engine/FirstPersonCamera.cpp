@@ -34,7 +34,7 @@ FirstPersonCamera::FirstPersonCamera( input::InputManager* input,
 
 //-----------------------------------//
 
-void FirstPersonCamera::update( float delta )
+void FirstPersonCamera::update( double delta )
 {
 	Camera::update( delta );
 	checkControls( delta );

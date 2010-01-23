@@ -19,6 +19,8 @@ Profiler::Profiler(const std::string& name)
 
 }
 
+//-----------------------------------//
+
 Profiler::~Profiler()
 {
 	debug("%s: took %lu ms.", name.c_str(), static_cast<ulong>(time.getElapsedTime()*1000) );

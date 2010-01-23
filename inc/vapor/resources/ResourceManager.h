@@ -8,11 +8,10 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
 #include "vapor/Singleton.h"
-
 #include "vapor/resources/Resource.h"
 #include "vapor/resources/ResourceLoader.h"
+#include "vapor/vfs/Watcher.h"
 
 namespace vapor { namespace resources {
 
@@ -21,13 +20,14 @@ namespace vapor { namespace resources {
 /**
  * This event gets sent out whenever an operation that has the corresponding
  * delegate declared in the Resource class is executed. This can be useful 
- * when monitoring resource changes is (for example editor applications).
+ * when monitoring resource changes is (for example, in editor applications).
  */
 
 struct ResourceEvent
 {
 	std::string name;
 	ResourcePtr resource;
+	ResourcePtr newResource;
 };
 
 //-----------------------------------//
@@ -64,12 +64,7 @@ public:
 	RESOURCE_TYPEDECL_FROM_TYPE(T) loadResource(const std::string& path)
 	{
 		ResourcePtr res = loadResource( path );
-
-		//#ifdef VAPOR_MEMORY_INTRUSIVE_PTR
-		//	using boost::static_pointer_cast;
-		//#endif VAPOR_MEMORY_SHARED_PTR
-
-		return boost::static_pointer_cast< T >( res );
+		return RESOURCE_SMART_PTR_CAST< T >( res );
 	}
 
 	// Removes a resource from the manager.
@@ -83,7 +78,7 @@ public:
 	RESOURCE_TYPEDECL_FROM_TYPE(T) getResource(const std::string& path)
 	{
 		ResourcePtr res = getResource( path );
-		return std::static_pointer_cast< T >( res );
+		return RESOURCE_SMART_PTR_CAST< T >( res );
 	}
 
 	// Sets a memory budget limit for a given resource group.
@@ -96,16 +91,20 @@ public:
 	void registerLoader(ResourceLoader* loader);
 
 	// Watches a resource for changes and auto-reloads it.
-	void watchResource(ResourcePtr res);
+	void handleWatchResource(const vfs::WatchEvent& evt);
 	
 	// Gets a list of all the registered resource handlers.
 	//std::list<ResourceLoader*> getResourceLoader(string extension);
 
+	// These events are sent when their correspending actions happen.
 	fd::delegate< void( const ResourceEvent& ) > onResourceAdded;
 	fd::delegate< void( const ResourceEvent& ) > onResourceRemoved;
+	fd::delegate< void( const ResourceEvent& ) > onResourceReloaded;
 	fd::delegate< void( ResourceLoader* ) > onResourceLoaderRegistered;
 
 protected:
+
+	ResourcePtr decodeResource( const std::string& path );
 
 	// maps a name to a resource
 	std::map< std::string, ResourcePtr > resources;

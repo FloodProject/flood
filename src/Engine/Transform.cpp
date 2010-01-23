@@ -249,7 +249,7 @@ bool Transform::requiresBoundingVolumeUpdate() const
 
 //-----------------------------------//
 
-void Transform::update( float delta )
+void Transform::update( double delta )
 {
 	assert( getNode() );
 	getChildrenBoundingVolume( boundingVolume, getNode() );

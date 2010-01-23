@@ -70,7 +70,7 @@ void Label::setText( const std::string& text )
 
 //-----------------------------------//
 
-void Label::update( float UNUSED(delta) )
+void Label::update( double UNUSED(delta) )
 {
 	// No need to update geometry if the label did not change.
 	if( !isDirty || text.empty() ) return;

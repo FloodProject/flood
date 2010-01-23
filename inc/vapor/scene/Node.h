@@ -66,7 +66,7 @@ public:
 	}
 
 	// Updates all the components of the node.
-	virtual void update( float delta );
+	virtual void update( double delta );
 
 	// Serializes the node (and its components) to a stream.
 	//virtual const std::string save(int indent = 0);

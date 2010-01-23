@@ -109,7 +109,7 @@ public:
 	void cull( render::RenderBlock& queue, NodePtr node ) const;
 
 	// Updates this node.
-	virtual void update( float delta );
+	virtual void update( double delta );
 
 	// Serializes this node.
 	virtual const std::string save( int indent = 0 );

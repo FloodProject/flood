@@ -8,38 +8,7 @@
 
 #include "vapor/PCH.h"
 #include "vapor/Engine.h"
-
-#ifdef VAPOR_IMAGE_PICOPNG
-	#include "vapor/resources/PNG_Loader.h"
-#endif
-
-#ifdef VAPOR_IMAGE_STB
-	#include "vapor/resources/STB_Image_Loader.h"
-#endif
-
-#ifdef VAPOR_MESH_MILKSHAPE3D
-	#include "vapor/resources/MS3D_Loader.h"
-#endif
-
-#ifdef VAPOR_AUDIO_OGG
-	#include "vapor/resources/OGG_Loader.h"
-#endif
-
-#ifdef VAPOR_SHADER_GLSL
-	#include "vapor/resources/GLSL_Loader.h"
-#endif
-
-#ifdef VAPOR_SCRIPTING_LUA
-	#include "vapor/resources/Lua_Loader.h"
-#endif
-
-#ifdef VAPOR_AUDIO_OPENAL
-	#include "vapor/audio/Device.h"
-#endif
-
-#if defined(VAPOR_FONT_BITMAP) || defined(VAPOR_FONT_FREETYPE2)
-	#include "vapor/resources/Font_Loader.h"
-#endif
+#include "ResourceLoaders.h"
 
 using namespace vapor::audio;
 using namespace vapor::scene;
@@ -71,6 +40,9 @@ Engine::~Engine()
 {
 	sceneNode.reset();
 
+	foreach( Subsystem* sub, subsystems )
+		delete sub;
+
 #ifdef VAPOR_AUDIO_OPENAL
 	delete audioDevice;
 #endif
@@ -97,6 +69,10 @@ void Engine::init( bool createWindow )
 
 	// create the resource manager
 	resourceManager = ResourceManager::getInstancePtr();
+	
+	// connect the resource manager and filesystem watcher
+	vfs->getWatcher()->onWatchEvent += 
+		fd::bind(&ResourceManager::handleWatchResource, resourceManager);
 
 	// create the physics manager
 	//physicsManager = PhysicsManager::getInstancePtr();
@@ -173,7 +149,7 @@ void Engine::setupInput()
 
 void Engine::setupResourceLoaders()
 {
-	if(!resourceManager) return;
+	assert( resourceManager != nullptr );
 
 	std::vector<ResourceLoader*> loaders;
 
@@ -216,7 +192,7 @@ void Engine::setupResourceLoaders()
 
 void Engine::update( double delta )
 {
-	this->getSceneManager()->update( (float)delta );
+	this->getSceneManager()->update( delta );
 
 #ifdef VAPOR_SCRIPTING_LUA
 	this->getScriptState()->update( delta );

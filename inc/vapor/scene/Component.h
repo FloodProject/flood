@@ -36,7 +36,7 @@ public:
 	virtual ~Component();
 	
 	// Called once per frame to update the component.
-	virtual void update( float delta ) = 0;
+	virtual void update( double delta ) = 0;
 
 	// Gets the type of this component. 
 	// Each component should have a unique type string.

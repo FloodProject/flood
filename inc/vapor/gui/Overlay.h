@@ -106,7 +106,7 @@ public:
 	//void setPosition( int x, int y );
 
 	// Updates the overlay if needed.
-	virtual void update( float delta );
+	virtual void update( double delta );
 
 	// Serializes this node to a stream.
 	virtual const std::string save( int indent = 0 );

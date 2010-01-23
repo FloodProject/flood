@@ -31,7 +31,7 @@ Sound::~Sound()
 
 //-----------------------------------//
 
-void Sound::update( float delta )
+void Sound::update( double delta )
 {
 
 }

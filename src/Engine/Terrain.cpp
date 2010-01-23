@@ -163,7 +163,7 @@ void Terrain::setHeightmap( resources::ImagePtr heightmap )
 
 //-----------------------------------//
 
-void Terrain::update( float delta )
+void Terrain::update( double delta )
 {
 	Geometry::update( delta );
 }

@@ -918,6 +918,14 @@
 				RelativePath="..\..\inc\vapor\Engine.h"
 				>
 			</File>
+			<File
+				RelativePath=".\Subsystem.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\Subsystem.h"
+				>
+			</File>
 			<Filter
 				Name="Framework"
 				>
@@ -1180,6 +1188,10 @@
 			</File>
 			<File
 				RelativePath="..\..\inc\vapor\resources\ResourceLoader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ResourceLoaders.h"
 				>
 			</File>
 			<File

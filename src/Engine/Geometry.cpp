@@ -138,7 +138,7 @@ static const float EXTRA_SPACE = 1.01f;
 	v.push_back( boundingVolume.getCorner( c ) * EXTRA_SPACE );	\
 	v.push_back( boundingVolume.getCorner( d ) * EXTRA_SPACE );
 
-void Geometry::update( float delta )
+void Geometry::update( double delta )
 {
 	if( !isDirty ) return;
 

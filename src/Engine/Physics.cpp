@@ -132,7 +132,7 @@ void PhysicsManager::createWorld()
 
 //-----------------------------------//
 
-void PhysicsManager::update(float delta)
+void PhysicsManager::update( double delta )
 {
 	if( !enableSimulation ) return;
 

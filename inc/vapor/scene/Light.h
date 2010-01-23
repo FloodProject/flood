@@ -77,7 +77,7 @@ public:
 	void setSpotCutOffRadius( float radius );
 
 	// Called once per frame to update the component.
-	virtual void update( float delta );
+	virtual void update( double delta );
 
 	// Gets the type of this component. 
 	virtual const std::string& getType() const;

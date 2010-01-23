@@ -50,7 +50,7 @@ public:
 	virtual const std::string& getType() const;
 
 	// Called once per frame to update the component.
-	virtual void update( float delta );
+	virtual void update( double delta );
 
 	void addToWorld();
 	void removeFromWorld();

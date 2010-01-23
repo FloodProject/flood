@@ -4,12 +4,6 @@ WIP (work-in-progress)
 http://www.nuclex.org/downloads/developers/kits/luabind-0-8-1-binaries-and-demo
 http://oldhome.schmorp.de/marc/liblzf.html
 
-EXAMPLES:
----------
-
-Add a custom node to the scene graph            
-Add a custom resource type
-
 SERVER:
 -------
 

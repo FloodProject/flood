@@ -10,7 +10,6 @@
 
 #include "vapor/Platform.h"
 #include "vapor/scene/Group.h"
-
 #include "vapor/math/Matrix4x3.h"
 
 namespace vapor { namespace scene {
@@ -45,7 +44,7 @@ public:
 	//etc...
 
 	/// Updates all the entities recursively.
-	virtual void update( float delta );
+	virtual void update( double delta );
 
 	/// Serializes the scene to a stream.
 	virtual const std::string save( int indent = 0 );
@@ -58,7 +57,7 @@ public:
 
 private:
 
-	float delta;
+	double delta;
 	bool inTraversal;
 
 	// Updates all the transforms and bounding volumes of the scene nodes.

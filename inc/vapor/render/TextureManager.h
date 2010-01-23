@@ -38,6 +38,9 @@ public:
 	TextureManager();
 	~TextureManager();
 
+	// Reloads a texture when the image file changes.
+	void onReload( const resources::ResourceEvent& evt );
+
 	// Gets a texture given a name identifier.
 	TexturePtr getTexture( const std::string& tex );
 

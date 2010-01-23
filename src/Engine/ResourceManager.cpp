@@ -7,10 +7,9 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/resources/ResourceManager.h"
-
 #include "vapor/vfs/File.h"
+#include "vapor/StringUtilities.h"
 
 using namespace vapor::vfs;
 
@@ -59,6 +58,29 @@ ResourcePtr ResourceManager::loadResource(const std::string& path)
 	ResourcePtr res = getResource(path);
 	if(res != nullptr) return res;
 
+	// register the decoded resource in the map
+	info("resources", "Loading resource '%s'", path.c_str());
+
+	res = decodeResource(path);
+	if( !res ) return res;
+
+	// Send callback notifications.
+	if( !onResourceAdded.empty() )
+	{
+		ResourceEvent event;
+		event.name = path;
+		event.resource = res;
+		onResourceAdded( event );
+	}
+
+	resources[path] = res;
+	return res;
+}
+
+//-----------------------------------//
+
+ResourcePtr ResourceManager::decodeResource( const std::string& path )
+{
 	// test if the file exists
 	if( !File::exists( path ) ) 
 	{
@@ -89,7 +111,7 @@ ResourcePtr ResourceManager::loadResource(const std::string& path)
 
 	// get the available resource loader to decode the file
 	ResourceLoader* ldr = resourceLoaders[ext];
-	res = ResourcePtr( ldr->decode( File(path) ) );
+	ResourcePtr res = ResourcePtr( ldr->decode( File(path) ) );
 	
 	// warn that the loader could not decode our resource
 	if(res == nullptr)
@@ -98,19 +120,6 @@ ResourcePtr ResourceManager::loadResource(const std::string& path)
 			ldr->getName().c_str(), path.c_str());
 		return ResourcePtr();
 	}
-
-	// Send callback notifications.
-	if( !onResourceAdded.empty() )
-	{
-		ResourceEvent event;
-		event.name = path;
-		event.resource = res;
-		onResourceAdded( event );
-	}
-
-	// register the decoded resource in the map
-	info("resources", "Loading resource '%s'", path.c_str());
-	resources[path] = res;
 
 	return res;
 }
@@ -183,6 +192,45 @@ void ResourceManager::registerLoader(ResourceLoader* loader)
 	info( "resources", "Registering resource loader '%s'", 
 		loader->getName().c_str(), 
 		ResourceGroup::getString( loader->getResourceGroup() ).c_str() );
+}
+
+//-----------------------------------//
+
+void ResourceManager::handleWatchResource(const vfs::WatchEvent& evt)
+{
+	// Check if the filename maps to a known resource
+	std::string file = wstrtostr( evt.filename );
+
+	if( resources.find(file) == resources.end() )
+		return; // Resource is not known
+
+	ResourcePtr res = resources[file];
+
+	// Reload the resource if it was modified
+	if( evt.action != Actions::Modified )
+	{
+		// TODO: handle renames
+		debug( "Resource was renamed - handle this" );
+		return;
+	}
+
+	// register the decoded resource in the map
+	info("resources", "Reloading resource '%s'", file.c_str());
+
+	ResourcePtr newResource = decodeResource( file );
+	if( !newResource ) return;
+
+	// Replace the old resource with the new one
+	resources[file] = newResource;
+
+	if( !onResourceReloaded.empty() )
+	{
+		ResourceEvent re;
+		re.name = file;
+		re.resource = res;
+		re.newResource = newResource;
+		onResourceReloaded( re );
+	}
 }
 
 //-----------------------------------//

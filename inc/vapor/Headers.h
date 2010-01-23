@@ -11,6 +11,9 @@
 //-------------------------------------------------------------------------//
 
 #include <vapor/audio/Device.h>
+#include <vapor/audio/Buffer.h>
+#include <vapor/audio/Context.h>
+#include <vapor/audio/Source.h>
 
 //-------------------------------------------------------------------------//
 // Math-related Includes
@@ -96,21 +99,23 @@
 // Physics-related Includes
 //-------------------------------------------------------------------------//
 
-#include "vapor/physics/Physics.h"
-#include "vapor/scene/Body.h"
+#include <vapor/physics/Physics.h>
+#include <vapor/scene/Body.h>
 
 //-------------------------------------------------------------------------//
 // Terrain-related Includes
 //-------------------------------------------------------------------------//
 
-#include "vapor/terrain/Terrain.h"
-#include "vapor/terrain/Cell.h"
+#include <vapor/terrain/Terrain.h>
+#include <vapor/terrain/Cell.h>
 
 //-------------------------------------------------------------------------//
 // General Includes
 //-------------------------------------------------------------------------//
 
 #include <vapor/Engine.h>
+#include <vapor/Log.h>
+#include <vapor/Profiler.h>
 
 //-------------------------------------------------------------------------//
 // Namespace declarations

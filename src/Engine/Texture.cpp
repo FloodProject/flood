@@ -181,4 +181,11 @@ resources::ImagePtr Texture::getImage() const
 
 //-----------------------------------//
 
+void Texture::setImage( const resources::ImagePtr& image )
+{
+	img = image;
+}
+
+//-----------------------------------//
+
 } } // end namespaces

@@ -10,10 +10,8 @@
 
 #include "vapor/Types.h"
 #include "vapor/Timer.h"
-#include "vapor/NativeFile.h"
 
-namespace vapor {
-	namespace log {
+namespace vapor { namespace log {
 		
 //-----------------------------------//
 

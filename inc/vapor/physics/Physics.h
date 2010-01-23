@@ -40,7 +40,7 @@ public:
 	//	float collisionTolerance, float maxVelocity, float delta, 
 	//	signed char contactpoint, hkpWorldCinfo::SimulationType sim, hkpWorldCinfo::SolverType solver);
 
-	void update( float delta );
+	void update( double delta );
 	void addEntity( hkpEntity* entity );
 	void removeEntity( hkpEntity* entity );
 

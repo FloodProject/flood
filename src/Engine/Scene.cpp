@@ -7,7 +7,6 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/scene/Scene.h"
 #include "vapor/scene/Transform.h"
 
@@ -31,7 +30,7 @@ Scene::~Scene()
 
 //-----------------------------------//
 
-void Scene::update( float delta )
+void Scene::update( double delta )
 {
 	if( inTraversal ) return;
 	else inTraversal = true;

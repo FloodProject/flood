@@ -91,7 +91,7 @@ public:
 	void setHeightmap( resources::ImagePtr heightmap );
 
 	// Updates the terrain geometry if needed.
-	virtual void update( float delta );
+	virtual void update( double delta );
 
 	// Returns the name of this component.
 	virtual const std::string& getType() const;

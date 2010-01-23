@@ -33,7 +33,7 @@ Listener::~Listener()
 
 //-----------------------------------//
 
-void Listener::update( float delta )
+void Listener::update( double delta )
 {
 
 }

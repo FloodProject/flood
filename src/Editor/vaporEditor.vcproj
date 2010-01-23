@@ -40,6 +40,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="-Zm110"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\boost_1_39_0\&quot;;&quot;$(SolutionDir)dep\fd_delegate\include&quot;;&quot;$(SolutionDir)\dep\OpenAL 1.1 SDK\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\vld\include&quot;;&quot;C:\wxWidgets-2.9.0\include&quot;;&quot;C:\wxWidgets-2.9.0\include\msvc&quot;;&quot;C:\wxWidgets-2.9.0\lib\vc_lib&quot;;&quot;$(SolutionDir)dep\havok\Source&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;__WXDEBUG__;__WXMSW__;_UNICODE;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE"
@@ -53,6 +54,7 @@
 				ProgramDataBaseFileName="$(TargetDir)$(TargetName).pdb"
 				WarningLevel="4"
 				DebugInformationFormat="3"
+				ShowIncludes="false"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"

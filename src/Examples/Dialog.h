@@ -15,6 +15,8 @@
 using namespace vapor::resources;
 using namespace vapor::render;
 
+//-----------------------------------//
+
 BOOL CALLBACK DialogProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)
@@ -35,6 +37,8 @@ BOOL CALLBACK DialogProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 	return FALSE;
 }
+
+//-----------------------------------//
 
 class Dialog
 {
@@ -61,3 +65,5 @@ public:
 		}
 	}
 };
+
+//-----------------------------------//

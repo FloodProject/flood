@@ -59,7 +59,7 @@ public:
 	const math::AABB& getBoundingBox() const;
 
 	/// Updates the geometry if needed.
-	virtual void update( float delta );
+	virtual void update( double delta );
 
 	/// Serializes this component to a stream.
 	virtual const std::string save(int indent = 0);

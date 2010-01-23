@@ -51,6 +51,9 @@ public:
 	// Gets the associated image.
 	resources::ImagePtr getImage() const;
 
+	// Sets the associated image.
+	void setImage( const resources::ImagePtr& image );
+
 private:
 
 	GLint convertSourceFormat( resources::PixelFormat::Enum fmt );

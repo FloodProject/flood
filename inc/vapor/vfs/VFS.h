@@ -13,6 +13,7 @@
 #ifdef VAPOR_VFS_PHYSFS
 
 #include "vapor/Platform.h"
+#include "vapor/Subsystem.h"
 #include "vapor/vfs/File.h"
 #include "vapor/vfs/Watcher.h"
 
@@ -35,7 +36,7 @@ namespace vapor { namespace vfs {
  * to the search path while mounting it in the virtual filesystem.
  */
 
-class VAPOR_API VFS : private boost::noncopyable
+class VAPOR_API VFS : public Subsystem
 {
 public:
 
@@ -55,7 +56,7 @@ public:
 
 private:
 
-	/// Watch notifications for file events
+	/// Watch notifications for file events.
 	Watcher* watcher;
 
 	/// Logs the version and supported archive types.

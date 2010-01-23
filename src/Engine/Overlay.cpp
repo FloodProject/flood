@@ -77,7 +77,7 @@ void Overlay::setAnchor( Anchor::Enum anchor )
 
 //-----------------------------------//
 
-void Overlay::update( float UNUSED(delta) )
+void Overlay::update( double UNUSED(delta) )
 {
 
 }

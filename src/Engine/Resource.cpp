@@ -35,7 +35,7 @@ namespace ResourceGroup
 		case Scripts:
 			return "Scripts";
 		default:
-			return "Undefined";
+			return "(unknown)";
 		}
 	}
 }
@@ -55,7 +55,6 @@ Resource::~Resource()
 
 }
 
-
 //-----------------------------------//
 
 const std::string& Resource::getURI()
@@ -68,6 +67,13 @@ const std::string& Resource::getURI()
 void Resource::setURI( const std::string& uri )
 {
 	this->uri = uri;
+}
+
+//-----------------------------------//
+
+bool Resource::reload( )
+{
+	return true;
 }
 
 //-----------------------------------//

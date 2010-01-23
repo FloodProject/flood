@@ -1,0 +1,15 @@
+/************************************************************************
+*
+* vaporEngine (2008-2010)
+*
+*	<http://www.portugal-a-programar.org>
+*
+************************************************************************/
+
+#define VAPOR_USE_COMMON_CONTROLS
+
+#ifdef VAPOR_USE_COMMON_CONTROLS
+	CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "Example.manifest"
+#endif
+
+editor ICON "applications-system.ico"

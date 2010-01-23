@@ -118,7 +118,7 @@ void Light::setSpotCutOffRadius( float radius )
 
 //-----------------------------------//
 
-void Light::update( float delta )
+void Light::update( double delta )
 {
 }
 

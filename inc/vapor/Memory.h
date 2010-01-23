@@ -36,16 +36,12 @@
 		typedef std::shared_ptr< class > class##Ptr
 	#define TYPEDEF_SHARED_WEAK_POINTER_FROM_CLASS( class ) \
 		typedef std::weak_ptr< class > class##WeakPtr
-#endif
-
-#if defined( VAPOR_MEMORY_INTRUSIVE_PTR )
+#elif defined( VAPOR_MEMORY_INTRUSIVE_PTR )
 	#include "boost/intrusive_ptr.hpp"
 	#define TYPEDEF_INTRUSIVE_POINTER_FROM_CLASS( class ) \
 		typedef boost::intrusive_ptr< class > class##Ptr
 	using boost::static_pointer_cast;
-#endif
-
-#if !defined( VAPOR_MEMORY_SHARED_PTR ) || !defined( VAPOR_MEMORY_INTRUSIVE_PTR )
+#else
 	#error "No shared pointer implementation found."
 #endif
 
@@ -54,9 +50,7 @@
 //-------------------------------------------------------------------------//
 
 #ifdef VAPOR_MEMORY_LEAK_DETECTOR
-
-#ifdef VAPOR_PLATFORM_WINDOWS
-	#ifdef _DEBUG
+	#if defined(VAPOR_PLATFORM_WINDOWS) && defined(VAPOR_DEBUG)
 		// Visual Leak Detector
 		// (http://dmoulding.googlepages.com/vld)
 		#include <vld.h>
@@ -65,8 +59,6 @@
 		//#include <stdlib.h>
 		//#include <crtdbg.h>
 	#endif
-#endif
-
 #endif
 
 //-------------------------------------------------------------------------//

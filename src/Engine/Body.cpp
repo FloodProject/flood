@@ -98,7 +98,7 @@ const std::string& Body::getType() const
 
 //-----------------------------------//
 
-void Body::update( float delta )
+void Body::update( double delta )
 {
 	if( firstUpdate )
 	{

@@ -74,7 +74,7 @@ typedef Actions::Enum Action;
  * live updating, so when an asset changes it will be reloaded.
  */
 
-struct WatchEvent : private boost::noncopyable
+struct VAPOR_API WatchEvent : private boost::noncopyable
 {
 	WatchEvent( Actions::Enum a, 
 		WatchID w, const std::string& d, const std::wstring& f )
@@ -94,7 +94,7 @@ struct WatchEvent : private boost::noncopyable
  * to notify the parent program of the changes.
  */
 
-class Watcher : private boost::noncopyable
+class VAPOR_API Watcher : private boost::noncopyable
 {
 public:
 

@@ -18,7 +18,8 @@ namespace vapor { namespace render {
 
 TextureManager::TextureManager()
 {
-
+	ResourceManager::getInstance().onResourceReloaded +=
+		fd::bind( &TextureManager::onReload, this );
 }
 
 //-----------------------------------//
@@ -26,6 +27,33 @@ TextureManager::TextureManager()
 TextureManager::~TextureManager()
 {
 
+}
+
+//-----------------------------------//
+
+void TextureManager::onReload( const ResourceEvent& evt )
+{
+	if( evt.resource->getResourceGroup() != ResourceGroup::Images )
+		return;
+
+	ImagePtr currImage = RESOURCE_SMART_PTR_CAST<Image>( evt.resource );
+	ImagePtr newImage = RESOURCE_SMART_PTR_CAST<Image>( evt.newResource );
+
+	if( textures.find( currImage ) == textures.end() )
+		return;
+
+	TexturePtr texture = textures[currImage];
+
+	texture->setImage(newImage);
+	texture->bind();
+	texture->upload();
+	texture->unbind();
+
+	textures.erase( currImage );
+	textures[newImage] = texture;
+
+	// Reload the texture.
+	debug( "Reloading texture" );
 }
 
 //-----------------------------------//

@@ -13,15 +13,11 @@
 
 #include "vapor/Log.h"
 #include "vapor/Platform.h"
-
-#include <ctime>
-
 #include "LogFormat.h"
 
 const int BUF_MAX_SIZE = 256;
 
-namespace vapor {
-	namespace log {
+namespace vapor { namespace log {
 
 //-----------------------------------//
 

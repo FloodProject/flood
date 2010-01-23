@@ -160,12 +160,17 @@ void EditorFrame::createScene()
 	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
 	scene->add( grid );
 
-	//MS3DPtr mesh = rm->loadResource< MS3D >( "cubo.ms3d" );
+	MS3DPtr mesh = rm->loadResource< MS3D >( "cubo.ms3d" );
 
-	//foreach( const RenderablePtr& rend, mesh->getRenderables() )
-	//{
-	//	rend->getMaterial()->setProgram( tex );
-	//}
+	foreach( const RenderablePtr& rend, mesh->getRenderables() )
+	{
+		rend->getMaterial()->setProgram( tex );
+	}
+
+	NodePtr ct( new Node( "ct" ) );
+	ct->addComponent( TransformPtr( new Transform( 0.0f, 50.0f, 0.0f ) ) );
+	ct->addComponent( mesh );
+	scene->add(ct);
 
 	//TerrainSettings settings;
 	//settings.CellSize = 512;

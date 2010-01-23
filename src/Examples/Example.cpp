@@ -25,14 +25,6 @@ Example::Example(const char** argv)
 
 //-----------------------------------//
 
-void onWatchEvent( const WatchEvent& we )
-{
-	debug( "File %s was %s", wstrtostr(we.filename).c_str(), 
-		Actions::getString( we.action ).c_str() ); 
-}
-
-//-----------------------------------//
-
 void Example::onInit()
 {
 	// Mount VFS points
@@ -43,9 +35,6 @@ void Example::onInit()
 		Log::MessageDialog( "Missing archive/directory '" + media + "'." );
 		exit(1);
 	}
-	
-	Watcher* watcher = getVFS()->getWatcher();
-	watcher->onWatchEvent += &onWatchEvent;
 
 	//physicsManager->createWorld();
 }
@@ -105,8 +94,8 @@ void Example::onSetupScene()
 
 	MeshPtr mesh = rm->loadResource< Mesh >( "cubo.ms3d" );
 	NodePtr ct( new Node( "ct" ) );
-	ct->addComponent( TransformPtr( new Transform( 0.0f, 1000.0f, 0.0f ) ) );
-	//ct->addComponent( mesh );
+	ct->addComponent( TransformPtr( new Transform( 0.0f, 50.0f, 0.0f ) ) );
+	ct->addComponent( mesh );
 	//ct->addComponent( BodyPtr( new Body() ) );
 	scene->add(ct);
 
@@ -162,7 +151,7 @@ void Example::onSetupScene()
 
 //-----------------------------------//
  
-void Example::onUpdate( float delta ) 
+void Example::onUpdate( double delta ) 
 {
 	ScenePtr scene = getSceneManager();
 	scene->update( delta );

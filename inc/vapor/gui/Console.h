@@ -35,7 +35,7 @@ public:
 	virtual ~Console();
 
 	// Updates the console geometry if needed.
-	virtual void update( float delta );
+	virtual void update( double delta );
 
 	// Serializes this node to a stream.
 	virtual const std::string save( int indent = 0 );

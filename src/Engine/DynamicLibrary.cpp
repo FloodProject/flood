@@ -7,11 +7,9 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/DynamicLibrary.h"
 
-namespace vapor {
-	namespace platform {
+namespace vapor { namespace platform {
 
 //-----------------------------------//
 

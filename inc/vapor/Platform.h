@@ -95,15 +95,3 @@
 //---------------------------------------------------------------------//
 
 #include "vapor/Language.h"
-
-//---------------------------------------------------------------------//
-// Logging and Profiling. Use and abuse it.
-//---------------------------------------------------------------------//
-
-#include "vapor/Log.h"
-#include "vapor/Profiler.h"
-
-using vapor::log::info;
-using vapor::log::warn;
-using vapor::log::error;
-using vapor::log::debug;

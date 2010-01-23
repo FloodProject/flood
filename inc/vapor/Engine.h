@@ -10,6 +10,7 @@
 
 #include "vapor/Platform.h"
 
+#include "vapor/Log.h"
 #include "vapor/vfs/VFS.h"
 #include "vapor/render/Device.h"
 #include "vapor/resources/ResourceManager.h"
@@ -112,6 +113,9 @@ public:
 	void update( double delta );
 
 protected:
+
+	// Subsystems
+	std::vector< Subsystem* > subsystems;
 
 #ifdef VAPOR_AUDIO_OPENAL
 
