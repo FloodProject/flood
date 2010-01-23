@@ -13,6 +13,9 @@
 #include "vapor/render/Renderable.h"
 #include "vapor/math/Matrix4x3.h"
 
+#include "vapor/scene/Transform.h"
+#include "vapor/scene/Light.h"
+
 namespace vapor { namespace render {
 
 //-----------------------------------//
@@ -52,6 +55,16 @@ struct RenderState /*: private boost::noncopyable*/
 	int priority;
 };
 
+/**
+ * Light properties that will be passed down to the renderer.
+ */
+
+struct LightState
+{
+	scene::LightPtr light;
+	scene::TransformPtr transform;
+};
+
 //-----------------------------------//
 
 /**
@@ -62,6 +75,15 @@ struct RenderState /*: private boost::noncopyable*/
  */
 
 typedef std::vector<RenderState> RenderQueue;
+typedef std::vector<LightState> LightQueue;
+
+//-----------------------------------//
+
+struct RenderBlock
+{
+	RenderQueue renderables;
+	LightQueue lights;
+};
 
 //-----------------------------------//
 

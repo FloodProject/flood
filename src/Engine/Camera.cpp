@@ -199,12 +199,12 @@ float Camera::getAspectRatio() const
 void Camera::render( NodePtr node ) const
 {
 	// This will contain all nodes used for rendering.
-	render::RenderQueue renderQueue;
+	render::RenderBlock renderBlock;
 
-	cull( renderQueue, node );
+	cull( renderBlock, node );
 
 	renderDevice->setRenderTarget( target );
-	renderDevice->render( renderQueue, this );
+	renderDevice->render( renderBlock, this );
 }
 
 //-----------------------------------//
@@ -226,7 +226,7 @@ void Camera::render( ) const
 
 //-----------------------------------//
 
-void Camera::cull( render::RenderQueue& queue, NodePtr node ) const
+void Camera::cull( render::RenderBlock& block, NodePtr node ) const
 {
 	// Let's forget culling for now. Return all renderable nodes.
 	// TODO: Check if dynamic_cast is faster than a string comparison.
@@ -241,7 +241,7 @@ void Camera::cull( render::RenderQueue& queue, NodePtr node ) const
 		foreach( NodePtr child, group->getChildren() )
 		{
 			if( !child->getVisible() ) continue;
-			cull( queue, child );
+			cull( block, child );
 		}
 	}
 
@@ -254,7 +254,18 @@ void Camera::cull( render::RenderQueue& queue, NodePtr node ) const
 	{
 		// No frustum culling is performed yet.
 		// TODO: Hack! :D
-		geometry->appendRenderables( queue, node->getTransform() );
+		geometry->appendRenderables( block.renderables, node->getTransform() );
+	}
+
+	LightPtr light = node->getComponent<Light>("Light");
+	
+	if( light ) 
+	{
+		LightState ls;
+		ls.light = light;
+		ls.transform = node->getTransform();
+	
+		block.lights.push_back( ls );
 	}
 }
 

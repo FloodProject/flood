@@ -14,6 +14,7 @@
 
 #include "vapor/Platform.h"
 #include "vapor/vfs/File.h"
+#include "vapor/vfs/Watcher.h"
 
 /** \addtogroup virtual Virtual Filesystem 
  * @{ */
@@ -46,7 +47,16 @@ public:
 	bool mount(const std::string& path, const std::string& mount = "",
 		bool append = true);
 
+	/// Gets all the mount points in the VFS.
+	const std::vector< std::string >& getMountPoints() const;
+
+	/// Gets a reference to the notification watcher.
+	Watcher* getWatcher() const;
+
 private:
+
+	/// Watch notifications for file events
+	Watcher* watcher;
 
 	/// Logs the version and supported archive types.
 	void log();

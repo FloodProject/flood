@@ -75,8 +75,14 @@ public:
 	void setAmbient( const math::Color& color );
 
 	void setSpotCutOffRadius( float radius );
+
+	// Called once per frame to update the component.
+	virtual void update( float delta );
+
+	// Gets the type of this component. 
+	virtual const std::string& getType() const;
   
-private:
+public:
 
 	// Light type and colors
 	LightType::Enum lightType;
@@ -89,6 +95,8 @@ private:
 	// Cutoff Radius for Spotlights
 	float cutoffRadius;
 
+protected:
+
 	// Light state
 	bool isLightOn;
 	bool castsShadows;
@@ -96,6 +104,10 @@ private:
 	// Component type
 	static const std::string& type;
 };
+
+//-----------------------------------//
+
+TYPEDEF_SHARED_POINTER_FROM_CLASS( Light );
 
 //-----------------------------------//
 

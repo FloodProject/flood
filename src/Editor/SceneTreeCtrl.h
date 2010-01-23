@@ -110,6 +110,7 @@ enum
 	ID_MenuSceneNodeDelete = wxID_DELETE,
 	ID_MenuSceneNodeVisible,
 	ID_MenuSceneNodeWireframe,
+	ID_MenuSceneNodeAddMesh,
 };
 
 //-----------------------------------//

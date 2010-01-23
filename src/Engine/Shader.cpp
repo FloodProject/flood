@@ -35,7 +35,7 @@ namespace ShaderType
 //-----------------------------------//
 
 Shader::Shader( ShaderType::Enum e, const std::string& text )
-	: type( e ), compiled( false ), text( text )
+	: type( e ), compiled( false ), text( text ), compileErrors_( false )
 {
 
 }
@@ -73,6 +73,13 @@ const std::string& Shader::getLog() const
 bool Shader::isCompiled() const
 {
 	return compiled;
+}
+
+//-----------------------------------//
+
+bool Shader::compileErrors() const
+{
+	return compileErrors_;
 }
 
 //-----------------------------------//

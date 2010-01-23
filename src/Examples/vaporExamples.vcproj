@@ -196,11 +196,11 @@
 			>
 		</File>
 		<File
-			RelativePath=".\res.rc"
+			RelativePath=".\Example.manifest"
 			>
 		</File>
 		<File
-			RelativePath=".\vapor.manifest"
+			RelativePath=".\Example.rc"
 			>
 		</File>
 	</Files>

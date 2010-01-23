@@ -182,7 +182,7 @@ Rendering:
 VFS:
 
 	Patch PhysFS to use the proper user dir for App Data on Windows
-	FileWatcher for resource change notification integrated with VFS
+	Watcher for resource change notification integrated with VFS
 
 Engine:
 

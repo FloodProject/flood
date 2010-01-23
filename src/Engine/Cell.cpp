@@ -44,6 +44,7 @@ void Cell::updateGeometry( )
 	// Vertex data
 	std::vector< Vector3 > vertex;
 	std::vector< Vector3 > colors;
+	std::vector< Vector3 > normals;
 	std::vector< Vector3 > texCoords;
 
 	const short CellSize = settings.CellSize;
@@ -92,23 +93,43 @@ void Cell::updateGeometry( )
 			colors.push_back( Vector3( 1.0f, 1.0f, 1.0f ) );
 			colors.push_back( Vector3( 1.0f, 1.0f, 1.0f ) );
 
-			// Second triangle
-			vertex.push_back( pt2 );
-			vertex.push_back( pt3 );
-			vertex.push_back( pt4 );
+			normals.push_back( calculateTriangleNormal( pt1, pt2, pt3 ) );
+			normals.push_back( calculateTriangleNormal( pt1, pt2, pt3 ) );
+			normals.push_back( calculateTriangleNormal( pt1, pt2, pt3 ) );
 
+			// Second triangle
+			vertex.push_back( pt3 );
+			vertex.push_back( pt2 );
+			vertex.push_back( pt4 );
+			
 			colors.push_back( Vector3( 1.0f, 1.0f, 1.0f ) );
 			colors.push_back( Vector3( 1.0f, 1.0f, 1.0f ) );
 			colors.push_back( Vector3( 1.0f, 1.0f, 1.0f ) );
+
+			normals.push_back( calculateTriangleNormal( pt3, pt2, pt4 ) );
+			normals.push_back( calculateTriangleNormal( pt3, pt2, pt4 ) );
+			normals.push_back( calculateTriangleNormal( pt3, pt2, pt4 ) );
 		}
 	}
 
 	// Vertex buffer setup
 	vb->set( VertexAttribute::Vertex, vertex );
 	vb->set( VertexAttribute::Color, colors );
+	vb->set( VertexAttribute::Normal, normals );
 	//vb->set( VertexAttribute::MultiTexCoord0, texCoords );
 
 	setVertexBuffer( vb );
+}
+
+//-----------------------------------//
+
+Vector3 Cell::calculateTriangleNormal( const Vector3& v1, const Vector3& v2, const Vector3& v3 )
+{
+	Vector3 vec1 = v2 - v1;
+	Vector3 vec2 = v3 - v1;
+	Vector3 normal = vec1.cross(vec2);
+	
+	return normal.normalize();
 }
 
 //-----------------------------------//

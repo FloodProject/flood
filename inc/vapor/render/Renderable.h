@@ -64,8 +64,8 @@ namespace RenderMode
 
 /**
  * Represents a renderable object, that is, the only rendering object
- * the rendering Device knows and cares about. A render-able object has
- * at least one Vertex buffer and one Index buffer, and an primitive 
+ * the rendering device knows and cares about. A renderable object has
+ * at least one vertex buffer and one index buffer, and a primitive 
  * type associated with them.
  */
 

@@ -34,6 +34,18 @@ public:
 	// Adds a uniform to the shader.
 	virtual void setUniform( const std::string& slot, int data );
 
+	// Adds a named float array uniform to the program.
+	//virtual void setUniform( const std::string& slot, const std::vector<float> vec ) = 0;
+
+	// Adds a named Vector3 array uniform to the program.
+	virtual void setUniform( const std::string& slot, const std::vector<math::Vector3> vec );
+
+	// Adds a named color array uniform to the program.
+	virtual void setUniform( const std::string& slot, const std::vector<math::Color> vec );
+
+	// Adds a named vector uniform to the program.
+	virtual void setUniform( const std::string& slot, const math::Vector3& vec );
+
 	// Adds a named matrix uniform to the program.
 	virtual void setUniform( const std::string& slot, const math::Matrix4x3& );
 
@@ -61,6 +73,7 @@ private:
 
 	void getLogText();
 
+	bool linkError;
 	std::vector< GLSL_ShaderPtr > shaders;
 	GLuint id;
 };

@@ -14,6 +14,7 @@
 #include "vapor/render/VertexBuffer.h"
 #include "vapor/math/Matrix4x3.h"
 #include "vapor/math/Matrix4x4.h"
+#include "vapor/math/Color.h"
 
 namespace vapor { namespace render {
 
@@ -27,7 +28,7 @@ namespace vapor { namespace render {
  * to have more information about these.
  */
 
-class VAPOR_API Program
+class VAPOR_API Program : public ReferenceCounted
 {
 public:
 
@@ -38,13 +39,25 @@ public:
 	virtual void setAttribute( const std::string& slot, VertexAttribute::Enum attr ) = 0;
 
 	// Adds a named int uniform to the program.
-	virtual void setUniform( const std::string& slot, int ) = 0;
+	virtual void setUniform( const std::string& slot, int value ) = 0;
+
+	// Adds a named float array uniform to the program.
+	//virtual void setUniform( const std::string& slot, const std::vector<float> vec ) = 0;
+
+	// Adds a named Vector3 array uniform to the program.
+	virtual void setUniform( const std::string& slot, const std::vector<math::Vector3> vec ) = 0;
+
+	// Adds a named color array uniform to the program.
+	virtual void setUniform( const std::string& slot, const std::vector<math::Color> vec ) = 0;
+
+	// Adds a named vector uniform to the program.
+	virtual void setUniform( const std::string& slot, const math::Vector3& vec ) = 0;
 
 	// Adds a named matrix uniform to the program.
-	virtual void setUniform( const std::string& slot, const math::Matrix4x3& ) = 0;
+	virtual void setUniform( const std::string& slot, const math::Matrix4x3& mat ) = 0;
 
 	// Adds a named 4x4 matrix uniform to the program.
-	virtual void setUniform( const std::string& slot, const math::Matrix4x4& ) = 0;
+	virtual void setUniform( const std::string& slot, const math::Matrix4x4& mat ) = 0;
 
 	// Links the program and returns if it was successful.
 	virtual bool link() = 0;
@@ -75,7 +88,7 @@ protected:
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( Program );
+TYPEDEF_INTRUSIVE_POINTER_FROM_CLASS( Program );
 
 //-----------------------------------//
 

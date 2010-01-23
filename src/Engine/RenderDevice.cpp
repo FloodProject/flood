@@ -146,7 +146,7 @@ bool renderSorter(const RenderState& lhs, const RenderState& rhs)
 	return lhs.group < rhs.group;
 }
 
-void Device::render( RenderQueue& queue, const scene::Camera* cam ) 
+void Device::render( RenderBlock& queue, const scene::Camera* cam ) 
 {
 	activeTarget->makeCurrent();
 
@@ -155,10 +155,10 @@ void Device::render( RenderQueue& queue, const scene::Camera* cam )
 
 	// sort the list by render group
 	// TODO: use a radix sorter
-	std::sort( queue.begin(), queue.end(), &renderSorter );
+	std::sort( queue.renderables.begin(), queue.renderables.end(), &renderSorter );
 
 	// render the list
-	foreach( const RenderState& state, queue )
+	foreach( const RenderState& state, queue.renderables )
 	{
 		ProgramPtr program = state.renderable->getMaterial()->getProgram();
 
@@ -170,6 +170,21 @@ void Device::render( RenderQueue& queue, const scene::Camera* cam )
 			program->setUniform( "vp_ModelMatrix", state.modelMatrix );
 			program->setUniform( "vp_ViewMatrix", cam->getViewMatrix() );
 			program->setUniform( "vp_ModelViewMatrix", state.modelMatrix * cam->getViewMatrix() );
+
+			if( queue.lights.size() > 0 )
+			{
+				std::vector<math::Color> lightColors;
+				lightColors.push_back( queue.lights[0].light->diffuseColor );
+				lightColors.push_back( queue.lights[0].light->specularColor );
+				lightColors.push_back( queue.lights[0].light->emissiveColor );
+				lightColors.push_back( queue.lights[0].light->ambientColor );
+
+				{
+					//PROFILE;
+					program->setUniform( "vp_LightColors", lightColors );
+					program->setUniform( "vp_LightDirection", Vector3(0.5f, 0.8f, 0.0f)/*queue.lights[0].transform->get*/ );
+				}
+			}
 		}
 		else if( state.group == RenderGroup::Overlays )
 		{

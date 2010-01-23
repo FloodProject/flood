@@ -38,6 +38,7 @@ Terrain::Terrain( const TerrainSettings& settings )
 	: settings( settings )
 {
 	cellMaterial.reset( new Material( "PageMaterial" ) );
+	cellMaterial->setProgram( "toon" );
 }
 
 //-----------------------------------//

@@ -222,6 +222,9 @@ void Engine::update( double delta )
 	this->getScriptState()->update( delta );
 #endif
 
+	// Update the Watcher once in a while...
+	getVFS()->getWatcher()->update();
+
 	//this->getPhysicsManager()->update( delta );
 }
 

@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\stb\&quot;;&quot;$(SolutionDir)dep\boost_1_39_0\&quot;;&quot;$(SolutionDir)dep\vld\include&quot;;&quot;$(SolutionDir)dep\SDL-1.2.13\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;;&quot;$(SolutionDir)dep\OpenAL 1.1 SDK\include&quot;;&quot;$(SolutionDir)dep\libogg-1.1.3\include&quot;;&quot;$(SolutionDir)dep\physfs-2.0.0\include&quot;;&quot;$(SolutionDir)dep\libvorbis-1.2.0\include&quot;;&quot;$(SolutionDir)dep\SFML\include&quot;;&quot;$(SolutionDir)dep\fd_delegate\include&quot;;&quot;$(SolutionDir)dep\lua\include&quot;;&quot;$(SolutionDir)dep\luabind\include&quot;;&quot;$(SolutionDir)dep\havok\Source&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\stb\&quot;;&quot;$(SolutionDir)dep\boost_1_39_0\&quot;;&quot;$(SolutionDir)dep\vld\include&quot;;&quot;$(SolutionDir)dep\SDL-1.2.13\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;;&quot;$(SolutionDir)dep\OpenAL 1.1 SDK\include&quot;;&quot;$(SolutionDir)dep\libogg-1.1.3\include&quot;;&quot;$(SolutionDir)dep\physfs-2.0.0\include&quot;;&quot;$(SolutionDir)dep\libvorbis-1.2.0\include&quot;;&quot;$(SolutionDir)dep\SFML\include&quot;;&quot;$(SolutionDir)dep\fd_delegate\include&quot;;&quot;$(SolutionDir)dep\lua\include&quot;;&quot;$(SolutionDir)dep\luabind\include&quot;;&quot;$(SolutionDir)dep\havok\Source&quot;;&quot;$(SolutionDir)dep\FileWatcher\includes&quot;"
 				PreprocessorDefinitions="WIN32;___DEBUG;_WINDOWS;_DEBUG;VAPOR_EXPORT;D_SCL_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				ExceptionHandling="1"
@@ -886,6 +886,26 @@
 				RelativePath="..\..\inc\vapor\vfs\VFS.h"
 				>
 			</File>
+			<File
+				RelativePath=".\Watcher.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\vfs\Watcher.h"
+				>
+			</File>
+			<Filter
+				Name="Impl"
+				>
+				<File
+					RelativePath=".\WatcherWin32.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\vfs\WatcherWin32.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Engine"

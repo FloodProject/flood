@@ -84,7 +84,7 @@ public:
 	render::RenderTarget* getRenderTarget() const;
 
 	// Renders a list of renderables.
-	void render( RenderQueue& queue, const scene::Camera* cam );
+	void render( RenderBlock& queue, const scene::Camera* cam );
 
 	// Updates the target render target.
 	void updateTarget( );

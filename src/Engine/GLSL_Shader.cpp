@@ -133,7 +133,7 @@ void GLSL_Shader::getGLSLLog()
 
 	delete[] info;
 
-	//debug( "%d %s", id(), log.c_str() );
+	debug( "%d %s", id(), log.c_str() );
 }
 
 //-----------------------------------//

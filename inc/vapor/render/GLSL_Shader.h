@@ -35,7 +35,6 @@ public:
 private:
 
 	bool upload();
-
 	void getGLSLLog();
 
 	GLenum getGLShaderType( resources::ShaderType::Enum type );

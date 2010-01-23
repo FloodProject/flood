@@ -118,4 +118,17 @@ void Light::setSpotCutOffRadius( float radius )
 
 //-----------------------------------//
 
+void Light::update( float delta )
+{
+}
+
+//-----------------------------------//
+
+const std::string& Light::getType() const
+{
+	return Light::type;
+}
+
+//-----------------------------------//
+
 } } // end namespaces

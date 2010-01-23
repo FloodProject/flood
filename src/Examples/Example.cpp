@@ -10,6 +10,7 @@
 
 #include "Example.h"
 
+#include "vapor/StringUtilities.h"
 #include <boost/lexical_cast.hpp>
 #include <boost/format.hpp>
 
@@ -20,6 +21,14 @@ Example::Example(const char** argv)
 	fpsUpdateTime( 0.0f )
 {
 
+}
+
+//-----------------------------------//
+
+void onWatchEvent( const WatchEvent& we )
+{
+	debug( "File %s was %s", wstrtostr(we.filename).c_str(), 
+		Actions::getString( we.action ).c_str() ); 
 }
 
 //-----------------------------------//
@@ -35,6 +44,9 @@ void Example::onInit()
 		exit(1);
 	}
 	
+	Watcher* watcher = getVFS()->getWatcher();
+	watcher->onWatchEvent += &onWatchEvent;
+
 	//physicsManager->createWorld();
 }
 
@@ -76,8 +88,13 @@ void Example::onSetupScene()
 			rm->loadResource< GLSL_Shader >( "diffuse.vs" ),
 			rm->loadResource< GLSL_Shader >( "diffuse.fs" ) ) );
 
+	ProgramPtr toon( new GLSL_Program( 
+			rm->loadResource< GLSL_Shader >( "toon.vs" ),
+			rm->loadResource< GLSL_Shader >( "toon.fs" ) ) );
+
 	ProgramManager::getInstance().registerProgram( "diffuse", diffuse );
 	ProgramManager::getInstance().registerProgram( "tex", tex );
+	ProgramManager::getInstance().registerProgram( "toon", toon );
 	
 	// Create a new Camera
 	NodePtr camera( new Node( "MainCamera" ) );
@@ -120,12 +137,12 @@ void Example::onSetupScene()
 		rend->getMaterial()->setProgram( diffuse );
 	}
 
-	//ScriptPtr lua = rm->loadResource< Script >( "teste.lua" );
-	//getScriptState()->registerScript( lua );
-
-	//ListenerPtr ls( new Listener( getAudioDevice() ) );
-	//sound.reset( new scene::Sound( ls, snd ) );
-	//scene->add( ls ); scene->add( sound );
+	NodePtr lnode( new Node( "Light" ) );
+	LightPtr light( new Light( LightType::Point ) );
+	light->diffuseColor = Colors::Red;
+	light->ambientColor = Colors::Yellow;
+	lnode->addComponent( light );
+	scene->add( lnode );
 
 	TerrainSettings settings;
 	settings.CellSize = 1024;

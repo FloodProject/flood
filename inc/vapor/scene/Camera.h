@@ -106,7 +106,7 @@ public:
 	// for later rendering (and also their local to world matrices). 
 	// The queue is passed as a reference to the cull method, which fills 
 	// it with the data.
-	void cull( render::RenderQueue& queue, NodePtr node ) const;
+	void cull( render::RenderBlock& queue, NodePtr node ) const;
 
 	// Updates this node.
 	virtual void update( float delta );

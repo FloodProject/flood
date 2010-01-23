@@ -35,7 +35,7 @@ STB_Image_Loader::STB_Image_Loader()
 
 Image* STB_Image_Loader::decode(const File& file)
 {
-	PROFILE;
+	//PROFILE;
 
 	// read contents of the file into the vector
 	std::vector<byte> filebuf = file.read();

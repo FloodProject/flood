@@ -19,7 +19,6 @@
 #include "vapor/script/State.h"
 #include "vapor/physics/Physics.h"
 
-
 namespace vapor {
 
 /** \addtogroup Main */

@@ -43,6 +43,7 @@
 #include <vapor/scene/Listener.h>
 #include <vapor/scene/Geometry.h>
 #include "vapor/scene/Grid.h"
+#include "vapor/scene/Light.h"
 
 //-------------------------------------------------------------------------//
 // Render-related Includes
@@ -66,6 +67,14 @@
 #include <vapor/input/InputMap.h>
 #include <vapor/input/Keyboard.h>
 #include <vapor/input/Mouse.h>
+
+//-------------------------------------------------------------------------//
+// VFS-related Includes
+//-------------------------------------------------------------------------//
+
+#include <vapor/vfs/VFS.h>
+#include <vapor/vfs/File.h>
+#include <vapor/vfs/Watcher.h>
 
 //-------------------------------------------------------------------------//
 // GUI-related Includes

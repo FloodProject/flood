@@ -7,6 +7,7 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
+#include "vapor/vfs/WatcherWin32.h"
 
 #ifdef VAPOR_VFS_PHYSFS
 
@@ -31,6 +32,10 @@ VFS::VFS(const std::string& app, const char* argv0 )
 
 	setDefaultConfig(app);
 	log();
+
+#ifdef VAPOR_PLATFORM_WINDOWS
+	watcher = new WatcherWin32();
+#endif
 }
 
 //-----------------------------------//
@@ -50,6 +55,8 @@ VFS::~VFS()
 	{
 		error( "vfs", "Could not clean up PhysFS: %s", PHYSFS_getLastError() );
 	}
+
+	delete watcher;
 }
 
 //-----------------------------------//
@@ -98,8 +105,7 @@ void VFS::log()
 
 //-----------------------------------//
 
-bool VFS::mount(const std::string& path, const std::string& mount, 
-				bool append )
+bool VFS::mount(const std::string& path, const std::string& mount, bool append )
 {
 	int err = PHYSFS_mount( path.c_str(), mount.c_str(), append ? 1 : 0 );
 
@@ -116,7 +122,23 @@ bool VFS::mount(const std::string& path, const std::string& mount,
 	info( "vfs", "Mounted '%s' in mount point '%s'",
 		path.c_str(), mount.empty() ? "/" : mount.c_str() );
 
+	watcher->addWatch( path );
+
 	return true;
+}
+
+//-----------------------------------//
+
+const std::vector< std::string >& VFS::getMountPoints() const
+{
+	return mountPoints;
+}
+
+//-----------------------------------//
+
+Watcher* VFS::getWatcher() const
+{
+	return watcher;
 }
 
 //-----------------------------------//

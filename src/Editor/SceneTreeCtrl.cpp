@@ -211,6 +211,18 @@ void SceneTreeCtrl::onItemMenu(wxTreeEvent& event)
 			}
 		}
 	}
+	else
+	{
+		menu.AppendSeparator();
+
+		menu.Append(ID_MenuSceneNodeAddMesh, "&Add Mesh");
+		//menu.Append(ID_MenuSceneNodeAddLight, "&Add Light");
+		//menu.Append(ID_MenuSceneNodeAddCamera, "&Add Camera");
+		//menu.Append(ID_MenuSceneNodeAddSource, "&Add Audio Source");
+		//menu.Append(ID_MenuSceneNodeAddTransform, "&Add Transform");
+		//menu.Append(ID_MenuSceneNodeAddTrigger, "&Add Trigger");
+		//menu.Append(ID_MenuSceneNodeAddSkybox, "&Add Skybox");
+	}
 
 	menu.Append(ID_MenuSceneNodeDelete, "&Delete...");
 
@@ -245,6 +257,21 @@ void SceneTreeCtrl::onNodeMenu( wxCommandEvent& event )
 			{
 				rend->setRenderMode( mode );
 			}
+		}
+	}
+
+	if( event.GetId() == ID_MenuSceneNodeAddMesh )
+	{
+		wxFileDialog fd( this, wxFileSelectorPromptStr, wxEmptyString, wxEmptyString,
+			"Mesh files (*.ms3d)|*.ms3d", wxFD_DEFAULT_STYLE|wxFD_FILE_MUST_EXIST );
+
+		if( fd.ShowModal() == wxID_OK )
+		{
+			wxString filename = fd.GetFilename();
+			NodePtr node = getEntity( menuItemId );
+			
+			//MeshPtr( new Mesh( 
+			//node->
 		}
 	}
 }

@@ -74,9 +74,6 @@ public:
 	// Gets the local transformation matrix.
 	math::Matrix4x3 getLocalTransform() const;
 
-	// Gets the type of this component. 
-	virtual const std::string& getType() const;
-
 	// Gets the bounding volume of the node.
 	const math::AABB& getBoundingVolume() const;
 
@@ -88,6 +85,9 @@ public:
 
 	// Called once per frame to update the component.
 	virtual void update( float delta );
+
+	// Gets the type of this component. 
+	virtual const std::string& getType() const;
 
 	fd::delegate< void() > onTransform;
 

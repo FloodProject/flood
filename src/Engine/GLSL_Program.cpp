@@ -11,7 +11,6 @@
 #ifdef VAPOR_SHADER_GLSL
 
 #include "vapor/render/GLSL_Program.h"
-
 #include "vapor/render/GL.h"
 
 using namespace vapor::resources;
@@ -21,7 +20,7 @@ namespace vapor { namespace render {
 //-----------------------------------//
 
 GLSL_Program::GLSL_Program( GLSL_ShaderPtr vs, GLSL_ShaderPtr ps )
-	: Program( vs, ps )
+	: Program( vs, ps ), linkError( false )
 {
 	id = glCreateProgram( );
 
@@ -35,6 +34,8 @@ GLSL_Program::GLSL_Program( GLSL_ShaderPtr vs, GLSL_ShaderPtr ps )
 
 	shaders.push_back( vs );
 	shaders.push_back( ps );
+
+	attachShaders();
 }
 
 //-----------------------------------//
@@ -105,6 +106,73 @@ void GLSL_Program::setUniform( const std::string& slot, int data )
 	glUniform1i( loc, data );
 
 	unbind();
+}
+
+//-----------------------------------//
+
+void GLSL_Program::setUniform( const std::string& slot, const std::vector<math::Vector3> vec )
+{
+	if( !isLinked() ) return;
+
+	assert( sizeof(vec[0]) == 3*sizeof(float) );
+
+	bind();
+
+	int loc = glGetUniformLocation( id, slot.c_str() );
+
+	if( loc == -1)
+	{
+		warn( "glsl", "Could not locate uniform location in program object '%d'", id );
+		return;
+	}
+
+	glUniform3fv( loc, vec.size(), reinterpret_cast<const float*>(&vec[0]) );
+
+	unbind();	
+}
+
+//-----------------------------------//
+
+void GLSL_Program::setUniform( const std::string& slot, const std::vector<math::Color> vec )
+{
+	if( !isLinked() ) return;
+
+	assert( sizeof(vec[0]) == 4*sizeof(float) );
+
+	bind();
+
+	int loc = glGetUniformLocation( id, slot.c_str() );
+
+	if( loc == -1)
+	{
+		//warn( "glsl", "Could not locate uniform location in program object '%d'", id );
+		return;
+	}
+
+	glUniform4fv( loc, vec.size(), reinterpret_cast<const float*>(&vec[0]) );
+
+	unbind();	
+}
+
+//-----------------------------------//
+
+void GLSL_Program::setUniform( const std::string& slot, const math::Vector3& vec )
+{
+	if( !isLinked() ) return;
+
+	bind();
+
+	int loc = glGetUniformLocation( id, slot.c_str() );
+
+	if( loc == -1)
+	{
+		//warn( "glsl", "Could not locate uniform location in program object '%d'", id );
+		return;
+	}
+
+	glUniform3f( loc, vec.x, vec.y, vec.z );
+
+	unbind();	
 }
 
 //-----------------------------------//
@@ -197,8 +265,10 @@ bool GLSL_Program::link()
 {
 	// If the program is already linked, return.
 	if( isLinked() ) return true;
-
-	attachShaders();
+	
+	// If the shaders aren't compiled, don't try to link.
+	foreach( ShaderPtr shader, shaders )
+		if( !shader->isCompiled() ) return false;
 
 	bindDefaultAttributes();
 
@@ -206,7 +276,6 @@ bool GLSL_Program::link()
 
 	// Check that the linking was good
 #ifdef VAPOR_DEBUG
-
 	GLenum err;
 	if( ( err = glGetError() ) != GL_NO_ERROR )
 	{
@@ -298,7 +367,7 @@ void GLSL_Program::getLogText()
 
 	if( size == 0 )
 	{
-		log = "Program linked with success";
+		log = "(no log message)";
 		return;
 	}
 
@@ -310,9 +379,6 @@ void GLSL_Program::getLogText()
 	glGetProgramInfoLog( id, size, &length, info );
 
 	log.assign( info );
-
-	//debug( log.c_str() );
-
 	delete info;
 }
 
@@ -321,6 +387,7 @@ void GLSL_Program::getLogText()
 void GLSL_Program::bindDefaultAttributes()
 {
 	setAttribute( "vp_Vertex", VertexAttribute::Vertex );
+	setAttribute( "vp_Normal", VertexAttribute::Normal );
 	setAttribute( "vp_Color", VertexAttribute::Color );
 	setAttribute( "vp_MultiTexCoord0", VertexAttribute::MultiTexCoord0 );
 }
