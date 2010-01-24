@@ -8,9 +8,6 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
-#include "vapor/input/InputManager.h"
-
 #include <wx/event.h> 
 
 namespace vapor { namespace editor {

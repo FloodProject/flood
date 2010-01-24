@@ -8,6 +8,7 @@
 
 #include "PCH.h"
 #include "Viewport.h"
+#include "EditorIcons.h"
 
 #include <boost/lexical_cast.hpp>
 

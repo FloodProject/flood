@@ -15,8 +15,6 @@
 #include "Viewport.h"
 #include <wx/notebook.h>
 
-#include "vapor/scene/Body.h"
-
 namespace vapor { namespace editor {
 
 //-----------------------------------//

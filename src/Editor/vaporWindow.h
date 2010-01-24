@@ -8,11 +8,7 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
-#include "vapor/render/Window.h"
-
 #include "wx_InputManager.h"
-
 #include <wx/glcanvas.h> 
 
 namespace vapor { namespace editor {

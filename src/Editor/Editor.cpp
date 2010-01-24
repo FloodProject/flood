@@ -8,6 +8,7 @@
 
 #include "PCH.h"
 #include "Editor.h"
+#include "EditorIcons.h"
 
 using namespace vapor::input;
 
@@ -320,11 +321,11 @@ void EditorFrame::createToolbar()
 	toolBar->AddTool( wxID_ANY, "Select", wxMEMORY_BITMAP(cursor), 
 		"Selects the Entity Selection tool", wxITEM_RADIO );
 
-	//toolBar->AddTool( wxID_ANY, "Move", wxMEMORY_BITMAP(camera), 
-	//	"Selects the Move tool", wxITEM_RADIO );
+	toolBar->AddTool( wxID_ANY, "Move", wxMEMORY_BITMAP(move), 
+		"Selects the Move tool", wxITEM_RADIO );
 
-	//toolBar->AddTool( wxID_ANY, "Rotate", wxMEMORY_BITMAP(rotate), 
-	//	"Selects the Rotate tool", wxITEM_RADIO );
+	toolBar->AddTool( wxID_ANY, "Rotate", wxMEMORY_BITMAP(rotate2), 
+		"Selects the Rotate tool", wxITEM_RADIO );
 
 	//toolBar->AddTool( wxID_ANY, "Scale", wxMEMORY_BITMAP(scale), 
 	//	"Selects the Scale tool", wxITEM_RADIO );

@@ -8,8 +8,7 @@
 
 #include "PCH.h"
 #include "SceneTreeCtrl.h"
-#include "ArtProvider.h"
-#include "icons.h"
+#include "EditorIcons.h"
 
 using namespace vapor;
 using namespace vapor::scene;

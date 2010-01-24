@@ -9,8 +9,7 @@
 #include "PCH.h"
 #include "vapor/StringUtilities.h"
 #include "ResourceTreeCtrl.h"
-#include "ArtProvider.h"
-#include "icons.h"
+#include "EditorIcons.h"
 
 using namespace vapor;
 using namespace vapor::resources;

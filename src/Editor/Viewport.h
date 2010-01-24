@@ -10,7 +10,6 @@
 
 #include <wx/statline.h>
 #include "vaporControl.h"
-#include <vapor/scene/Camera.h>
 
 namespace vapor { namespace editor {
 

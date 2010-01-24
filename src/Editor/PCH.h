@@ -17,10 +17,8 @@
     #include "wx/wx.h"
 #endif
 
-#include "icons.h"
-#include "ArtProvider.h"
-
-#include <boost/lexical_cast.hpp>
-
 #define VAPOR_USE_NAMESPACES
 #include <vapor/Headers.h>
+
+#include <wx/glcanvas.h>
+#include "ArtProvider.h"

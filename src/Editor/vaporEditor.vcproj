@@ -238,12 +238,8 @@
 				RelativePath=".\ArtProvider.h"
 				>
 			</File>
-		</Filter>
-		<Filter
-			Name="Media"
-			>
 			<File
-				RelativePath="..\..\bin\utils\icons.h"
+				RelativePath=".\EditorIcons.h"
 				>
 			</File>
 		</Filter>
