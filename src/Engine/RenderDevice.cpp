@@ -65,7 +65,7 @@ void Device::init()
 
 	glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
 
-	//glEnable( GL_CULL_FACE );
+	glEnable( GL_CULL_FACE );
 	glCullFace( GL_BACK );
 }
 

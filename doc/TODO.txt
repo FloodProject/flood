@@ -1,12 +1,6 @@
 WIP (work-in-progress)
 ======================
 
-http://www.nuclex.org/downloads/developers/kits/luabind-0-8-1-binaries-and-demo
-http://oldhome.schmorp.de/marc/liblzf.html
-
-SERVER:
--------
-
 EDITOR:
 -------
 
@@ -45,21 +39,6 @@ Hook up the renaming of Scene node labels
 Override the print method of Lua
 Console clicks should not change the insertion point
 A readline type of library would be kind of nice
- 
-DONE:
------
-
-Make a show/hide editor grid button
-And add some highlighting to it, it's boring now
-Add resource events in the ResourceManager
-Change scripting background to black
-Make the scripting evaluate line-a-line
-Add scene events in the Scene node
-
-http://wxlua.sourceforge.net/
-http://news.gmane.org/gmane.comp.lib.wxwidgets.wxlua.user
-http://www.ogre3d.org/wiki/index.php/Raycasting_to_the_polygon_level
-http://code.google.com/p/minimal-ogre-collision-toolkit/source/browse/trunk/moc.v1.0.rc1.beta.2008.10.20.src/CollisionTools.cpp
 	
 
 Near TODO:
@@ -87,15 +66,6 @@ Textures:
 Geometry component is shared per node, and that causes lots of problems.
 
 WTF?! Static const string references (Component types)?
-
-http://dmalloc.com/releases/
-http://cmldev.net/
-http://www.introgamedev.com/general_memory.html
-http://xania.org/200512/crt-heap-fragmentation-in-windows
-http://blog.pavlov.net/2007/11/11/windows-low-fragmentation-heap/
-http://msdn.microsoft.com/en-us/library/aa366750%28VS.85%29.aspx
-http://www.gamasutra.com/view/feature/2971/play_by_play_effective_memory_.php
-http://www.fastformat.org/
 
 Fix Camera direction vectors
 Change ExampleFramework to use delegates
@@ -134,7 +104,6 @@ Resource Management:
 	Switch all the resource loaders to use the VFS layer
 	Make a Localization class, potentially integrating .po files
 	Check how the resource manager will handle missing resources
-	Switch to intrusive_ptr for all reference-counting classes
 	Create a ResourceFile class (maybe stream-based - C++ streams? )
 	Magic header resource type detection
 	Case-insensitive comparisons in map
@@ -176,7 +145,6 @@ Rendering:
 VFS:
 
 	Patch PhysFS to use the proper user dir for App Data on Windows
-	Watcher for resource change notification integrated with VFS
 
 Engine:
 
@@ -190,6 +158,8 @@ Math:
 DONE:
 -----
 
+Watcher for resource change notification integrated with VFS
+Switch to intrusive_ptr for all reference-counting classes
 Fix the Window's Focus events. Also the mouse cursor is released when focus is lost.
 Make an abstract Timer class
 Add matrix and AABB class
@@ -219,3 +189,18 @@ Add namespaces to subsystems
 Clean Visual Studio solutions
 Organize the include directories
 Adapter class
+
+http://www.nuclex.org/downloads/developers/kits/luabind-0-8-1-binaries-and-demo
+http://oldhome.schmorp.de/marc/liblzf.html
+http://wxlua.sourceforge.net/
+http://news.gmane.org/gmane.comp.lib.wxwidgets.wxlua.user
+http://www.ogre3d.org/wiki/index.php/Raycasting_to_the_polygon_level
+http://code.google.com/p/minimal-ogre-collision-toolkit/source/browse/trunk/moc.v1.0.rc1.beta.2008.10.20.src/CollisionTools.cpp
+http://dmalloc.com/releases/
+http://cmldev.net/
+http://www.introgamedev.com/general_memory.html
+http://xania.org/200512/crt-heap-fragmentation-in-windows
+http://blog.pavlov.net/2007/11/11/windows-low-fragmentation-heap/
+http://msdn.microsoft.com/en-us/library/aa366750%28VS.85%29.aspx
+http://www.gamasutra.com/view/feature/2971/play_by_play_effective_memory_.php
+http://www.fastformat.org/

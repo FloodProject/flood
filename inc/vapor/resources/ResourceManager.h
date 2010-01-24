@@ -100,7 +100,7 @@ public:
 	fd::delegate< void( const ResourceEvent& ) > onResourceAdded;
 	fd::delegate< void( const ResourceEvent& ) > onResourceRemoved;
 	fd::delegate< void( const ResourceEvent& ) > onResourceReloaded;
-	fd::delegate< void( ResourceLoader* ) > onResourceLoaderRegistered;
+	fd::delegate< void( const ResourceLoader& ) > onResourceLoaderRegistered;
 
 protected:
 

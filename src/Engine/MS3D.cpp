@@ -9,19 +9,13 @@
 // based on official Milkshape3D viewer source
 
 #include "vapor/PCH.h"
-
 #include "vapor/resources/MS3D.h"
-#include "vapor/vfs/File.h"
 
 using namespace vapor::render;
 using namespace vapor::math;
 using namespace vapor::scene;
 
 namespace vapor { namespace resources {
-
-//-----------------------------------//
-
-const std::string& MS3D::type = "Mesh";
 
 //-----------------------------------//
 
@@ -171,7 +165,7 @@ struct VAPOR_ALIGN_BEGIN(1) ms3d_joint_t
 //-----------------------------------//
 
 MS3D::MS3D(const vfs::File& file)
-	: filebuf( file.read() ), index( 0 )
+	: filebuf( file.read() ), index( 0 ), geometry( new scene::Geometry() )
 {
 	if( filebuf.empty() ) 
 		return;
@@ -318,8 +312,15 @@ void MS3D::build()
 		//ib->set( vb_i );
 		//rend->setIndexBuffer( ib );
 
-		addRenderable( rend );
+		geometry->addRenderable( rend );
 	}
+}
+
+//-----------------------------------//
+
+scene::GeometryPtr MS3D::getGeometry()
+{
+	return geometry;
 }
 
 //-----------------------------------//

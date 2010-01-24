@@ -75,6 +75,8 @@
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
+				GenerateMapFile="false"
+				MapFileName="$(TargetDir)$(TargetName)-symbols.map"
 				SubSystem="2"
 				EntryPointSymbol=""
 				TargetMachine="1"

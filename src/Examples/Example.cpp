@@ -92,14 +92,14 @@ void Example::onSetupScene()
 	camera->addComponent( cam );
 	scene->add( camera );
 
-	MeshPtr mesh = rm->loadResource< Mesh >( "cubo.ms3d" );
+	MeshPtr mesh = rm->loadResource<Mesh>( "ct.ms3d" );
 	NodePtr ct( new Node( "ct" ) );
 	ct->addComponent( TransformPtr( new Transform( 0.0f, 50.0f, 0.0f ) ) );
-	ct->addComponent( mesh );
+	ct->addComponent( mesh->getGeometry() );
 	//ct->addComponent( BodyPtr( new Body() ) );
 	scene->add(ct);
 
-	foreach( const RenderablePtr& rend, mesh->getRenderables() )
+	foreach( const RenderablePtr& rend, mesh->getGeometry()->getRenderables() )
 	{
 		rend->getMaterial()->setProgram( tex );
 	}
@@ -107,7 +107,7 @@ void Example::onSetupScene()
 	// Materials too?
 	MaterialPtr mat( new Material( "FontMaterial", tex ) );
 	FontPtr font = rm->loadResource< Font >( "Verdana.font" );
-	label.reset( new Label( getFPS( (float)lastFrameTime ), font, mat ) );
+	label.reset( new Label( getFPS( lastFrameTime ), font, mat ) );
 	NodePtr fps( new Node( "FPSNode" ) );
 	fps->addComponent( TransformPtr( new Transform() ) );
 	fps->addComponent( label );
@@ -117,7 +117,6 @@ void Example::onSetupScene()
 	NodePtr grid( new Node( "Grid" ) );
 	grid->addComponent( TransformPtr( new Transform() ) );
 	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
-	//grid->addComponent( BodyPtr( new Body( 100.0f, hkpMotion::MOTION_FIXED ) ) );
 	scene->add( grid );
 
 	foreach( const RenderablePtr& rend, 

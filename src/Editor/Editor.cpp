@@ -14,6 +14,30 @@ using namespace vapor::input;
 namespace vapor { namespace editor {
 
 // ----------------------------------------------------------------------------
+// constants
+// ----------------------------------------------------------------------------
+
+// IDs for the controls and the menu commands
+enum
+{
+	Camera_Viewport,
+
+    // menu items
+    Editor_Quit = wxID_EXIT,
+
+    // it is important for the id corresponding to the "About" command to have
+    // this standard value as otherwise it won't be handled properly under Mac
+    // (where it is special and put into the "Apple" menu)
+    Editor_About = wxID_ABOUT,
+
+	// Toolbar buttons
+	Toolbar_ToggleScene,
+	Toolbar_ToogleConsole,
+	Toolbar_ToogleGrid,
+	Toolbar_TooglePlay,
+};
+
+// ----------------------------------------------------------------------------
 // event tables and other macros for wxWidgets
 // ----------------------------------------------------------------------------
 
@@ -89,14 +113,10 @@ EditorFrame::EditorFrame(const wxString& title)
 	createToolbar();
 	createStatusbar();
 	createNotebook();
+	createScene();
 
 	SetSizerAndFit( sizer );
-
-	codeEvaluator = new ConsoleFrame( engine, this, "Scripting Console" );
-
 	vaporCtrl->SetFocus();
-
-	keyPressed = false; 
 }
 
 //-----------------------------------//
@@ -123,15 +143,9 @@ void EditorFrame::initEngine()
  
 	//engine->getPhysicsManager()->createWorld();
 	//engine->getPhysicsManager()->setSimulationEnabled( false );
-
-	createScene();
 	
 	input::Mouse* mouse = engine->getInputManager()->getMouse();
 	mouse->onMouseButtonPress += fd::bind( &EditorFrame::onMouseClick, this );
-
-	input::Keyboard * keyboard = engine->getInputManager()->getKeyboard();
-	keyboard->onKeyPress += fd::bind( &EditorFrame::onKeyPress, this );
-	keyboard->onKeyRelease += fd::bind( &EditorFrame::onKeyRelease, this );
 }
 
 //-----------------------------------//
@@ -160,16 +174,16 @@ void EditorFrame::createScene()
 	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
 	scene->add( grid );
 
-	MS3DPtr mesh = rm->loadResource< MS3D >( "cubo.ms3d" );
+	MeshPtr mesh = rm->loadResource<Mesh>( "cubo.ms3d" );
 
-	foreach( const RenderablePtr& rend, mesh->getRenderables() )
+	foreach( const RenderablePtr& rend, mesh->getGeometry()->getRenderables() )
 	{
 		rend->getMaterial()->setProgram( tex );
 	}
 
 	NodePtr ct( new Node( "ct" ) );
 	ct->addComponent( TransformPtr( new Transform( 0.0f, 50.0f, 0.0f ) ) );
-	ct->addComponent( mesh );
+	ct->addComponent( mesh->getGeometry() );
 	scene->add(ct);
 
 	//TerrainSettings settings;
@@ -331,6 +345,8 @@ void EditorFrame::createToolbar()
 
 	// connect events
 	//Bind(wxEVT_COMMAND_TOOL_CLICKED, &EditorFrame::OnToolbarButtonClick, wxID_ANY );
+
+	codeEvaluator = new ConsoleFrame( engine, this, "Scripting Console" );
 }
 
 //-----------------------------------//
@@ -490,56 +506,6 @@ void EditorFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 		"About vaporEditor",
 		wxOK | wxICON_INFORMATION,
 		this);
-}
-
-//-----------------------------------//
-BodyPtr EditorFrame::spawnCube(const math::Vector3 &pos)
-{
-
-	ScenePtr scene = engine->getSceneManager();
-	ResourceManager* rm = engine->getResourceManager();
-	MS3DPtr mesh = rm->loadResource< MS3D >( "cubo.ms3d" );
-	NodePtr cubo( new Node( "Cubo0" ) );
-	cubo->addComponent( TransformPtr( new Transform() ) );
-	cubo->getTransform()->translate(pos);
-	cubo->getTransform()->scale( 0.1f );
-	//cubo->addComponent( mesh );
-	BodyPtr body(new Body(100.0f, hkpMotion::MOTION_KEYFRAMED));
-	cubo->addComponent( body );
-	scene->add( cubo );
-
-	return body;
-}
-
-//-----------------------------------//
-
-void EditorFrame::onKeyPress(const KeyEvent& key)
-{
-	if(key.keyCode == Keys::Space && !keyPressed)
-	{
-		keyPressed = true;
-	}
-}
-
-//-----------------------------------//
-
-void EditorFrame::onKeyRelease(const KeyEvent& key)
-{
-	if(key.keyCode == Keys::Space)
-	{
-		ScenePtr scene = engine->getSceneManager();
-		NodePtr entity = scene->getEntity( "MainCamera" );
-		CameraPtr camera = entity->getComponent< Camera >( "Camera" );
-		math::Matrix4x3 m = camera->getViewMatrix();
-		Vector3 v = camera->getForwardVector();
-		m.tx = -m.tx -v.x * 130.0f;
-		m.ty = -m.ty -v.y * 130.0f;
-		m.tz = -m.tz -v.z * 130.0f;
-		b.lock()->setPositionAndRotation(m);
-		b.lock()->setLinearVelocity(math::Vector3.Zero);
-		b.lock()->setLinearVelocity(v * -300.0f);
-		keyPressed = false;
-	}
 }
 
 //-----------------------------------//

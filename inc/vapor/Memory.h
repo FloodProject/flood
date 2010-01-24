@@ -36,12 +36,16 @@
 		typedef std::shared_ptr< class > class##Ptr
 	#define TYPEDEF_SHARED_WEAK_POINTER_FROM_CLASS( class ) \
 		typedef std::weak_ptr< class > class##WeakPtr
-#elif defined( VAPOR_MEMORY_INTRUSIVE_PTR )
+#endif
+
+#if defined( VAPOR_MEMORY_INTRUSIVE_PTR )
 	#include "boost/intrusive_ptr.hpp"
 	#define TYPEDEF_INTRUSIVE_POINTER_FROM_CLASS( class ) \
 		typedef boost::intrusive_ptr< class > class##Ptr
 	using boost::static_pointer_cast;
-#else
+#endif
+
+#if !defined( VAPOR_MEMORY_SHARED_PTR ) && !defined( VAPOR_MEMORY_INTRUSIVE_PTR ) 
 	#error "No shared pointer implementation found."
 #endif
 

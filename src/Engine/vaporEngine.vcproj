@@ -286,6 +286,18 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="AABB"
+				>
+				<File
+					RelativePath=".\AABB.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\math\AABB.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Render"
@@ -1086,18 +1098,6 @@
 					>
 				</File>
 			</Filter>
-			<Filter
-				Name="AABB"
-				>
-				<File
-					RelativePath=".\AABB.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\math\AABB.h"
-					>
-				</File>
-			</Filter>
 		</Filter>
 		<Filter
 			Name="Scripting"
@@ -1205,6 +1205,14 @@
 			<Filter
 				Name="Meshes"
 				>
+				<File
+					RelativePath=".\Mesh.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\resources\Mesh.h"
+					>
+				</File>
 				<Filter
 					Name="MS3D"
 					>

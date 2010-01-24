@@ -186,7 +186,7 @@ void ResourceManager::registerLoader(ResourceLoader* loader)
 	// Send callback notifications.
 	if( !onResourceLoaderRegistered.empty() )
 	{
-		onResourceLoaderRegistered( loader );
+		onResourceLoaderRegistered( *loader );
 	}
 
 	info( "resources", "Registering resource loader '%s'", 
