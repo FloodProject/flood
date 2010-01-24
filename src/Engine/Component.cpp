@@ -27,6 +27,13 @@ Component::~Component()
 
 //-----------------------------------//
 
+void Component::appendDebugGeometry( /*render::RenderQueue& queue*/ )
+{
+
+}
+
+//-----------------------------------//
+
 void Component::setNode( NodePtr node )
 {
 	this->node = node ;

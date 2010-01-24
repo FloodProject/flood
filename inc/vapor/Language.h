@@ -71,3 +71,18 @@
 		#define nullptr NULL
 	#endif
 #endif
+
+//---------------------------------------------------------------------//
+// Forward-declaration Helpers
+//---------------------------------------------------------------------//
+
+#define FWD_DECL(N, T)				\
+	namespace vapor { namespace N {	\
+		class T;					\
+	} } // end namespaces
+
+//---------------------------------------------------------------------//
+// Array Helpers
+//---------------------------------------------------------------------//
+
+#define VAPOR_ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))

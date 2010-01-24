@@ -9,7 +9,6 @@
 #pragma once
 
 #include "vapor/Platform.h"
-
 #include "vapor/scene/Component.h"
 
 #include "vapor/math/AABB.h"

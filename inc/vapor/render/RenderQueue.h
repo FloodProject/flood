@@ -55,6 +55,8 @@ struct RenderState /*: private boost::noncopyable*/
 	int priority;
 };
 
+//-----------------------------------//
+
 /**
  * Light properties that will be passed down to the renderer.
  */

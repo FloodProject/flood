@@ -10,16 +10,6 @@
 #include "vaporControl.h"
 #include "vaporWindow.h"
 
-#include "vapor/render/Window.h"
-
-#ifdef __WXGTK__
-	#include <gdk/gdk.h>
-	#include <gtk/gtk.h>
-	#include <gdk/gdkx.h>
-	#include <wx/gtk/win_gtk.h>
-	#include <GL/glx.h>
-#endif
-
 namespace vapor { namespace editor {
 
 //-----------------------------------//

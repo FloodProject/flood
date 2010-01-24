@@ -10,6 +10,7 @@
 
 #include "vapor/Platform.h"
 
+
 namespace vapor { namespace scene {
 
 //-----------------------------------//
@@ -41,6 +42,8 @@ public:
 	// Gets the type of this component. 
 	// Each component should have a unique type string.
 	virtual const std::string& getType() const = 0;
+
+	virtual void appendDebugGeometry( /*render::RenderQueue& queue*/ );
 
 	// Gets the associated node of this component.
 	NodePtr getNode() const;

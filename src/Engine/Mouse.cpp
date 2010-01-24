@@ -7,7 +7,6 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/input/Mouse.h"
 
 namespace vapor { namespace input {
@@ -258,7 +257,7 @@ MouseEvent::MouseEvent( MouseEventType::Enum eventType )
 
 //-----------------------------------//
 
-MouseMoveEvent::MouseMoveEvent( int x, int y )
+MouseMoveEvent::MouseMoveEvent( short x, short y )
 	: MouseEvent( MouseEventType::MouseMove ), x( x ), y( y ) 
 {
 
@@ -266,7 +265,7 @@ MouseMoveEvent::MouseMoveEvent( int x, int y )
 
 //-----------------------------------//
 
-MouseButtonEvent::MouseButtonEvent(int x, int y, 
+MouseButtonEvent::MouseButtonEvent(short x, short y, 
 	MouseButton::Enum button, MouseEventType::Enum eventType)
 	: MouseEvent(eventType), x(x), y(y), button(button) 
 {

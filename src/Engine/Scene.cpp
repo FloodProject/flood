@@ -94,7 +94,7 @@ void Scene::updateTransformAndBV( NodePtr node, MatrixStack& transformStack )
 
 //-----------------------------------//
 
-const std::string Scene::save(int ind)
+const std::string Scene::save(int UNUSED(ind))
 {
 	//std::ostringstream os;
 	//os << "{ " << Group::save(ind);

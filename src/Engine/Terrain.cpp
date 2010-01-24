@@ -32,8 +32,6 @@ const std::string& Terrain::type = "Terrain";
 
 //-----------------------------------//
 
-#define VAPOR_ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))
-
 Terrain::Terrain( const TerrainSettings& settings )
 	: settings( settings )
 {
@@ -69,7 +67,7 @@ Cell* Terrain::createCell( ImagePtr heightmap, int x, int y )
 	addRenderable( render::RenderablePtr( page ) );
 
 	// Forces AABB generation next update.
-	markDirty();
+	//markDirty();
 	
 	return page;
 }

@@ -1,6 +1,22 @@
 WIP (work-in-progress)
 ======================
 
+Near TODO:
+----------
+
+Bounding Boxes and Frustum Culling
+View frustum culling
+Quadtree Terrain
+Add hierarchical frustum culling
+Fix Bounding Boxes hierarchy
+Fix the logging file and crashing behaviour
+Skybox component
+Console GUI widget
+Per-script Lua state
+Fix Overlays positioning
+Fix Lua state closing
+Fix the Camera behaviour
+
 EDITOR:
 -------
 
@@ -21,14 +37,7 @@ Terrain editing
 	Intensity sliders
 	Use a separate VB attribute for the terrain heights
 	Center the terrain origin
-		
-Performance optimizations
-
-	Bounding Boxes and Frustum Culling
-	View frustum culling
-	Quadtree Terrain
-	
-Check for maximum texture unit size
+			
 Implement camera panning
 Edit grid settings
 Add a property system like Firefox/µTorrent...
@@ -39,20 +48,6 @@ Hook up the renaming of Scene node labels
 Override the print method of Lua
 Console clicks should not change the insertion point
 A readline type of library would be kind of nice
-	
-
-Near TODO:
-----------
-
-Add hierarchical frustum culling
-Fix Bounding Boxes hierarchy
-Fix the logging file and crashing behaviour
-Skybox component
-Console GUI widget
-Per-script Lua state
-Fix Overlays positioning
-Fix Lua state closing
-Fix the Camera behaviour
 
 ENGINE:
 ------
@@ -101,7 +96,6 @@ Logger:
 Resource Management:
 
 	Background Resource Loading?
-	Switch all the resource loaders to use the VFS layer
 	Make a Localization class, potentially integrating .po files
 	Check how the resource manager will handle missing resources
 	Create a ResourceFile class (maybe stream-based - C++ streams? )
@@ -158,6 +152,8 @@ Math:
 DONE:
 -----
 
+Switch all the resource loaders to use the VFS layer
+Check for maximum texture unit size
 Watcher for resource change notification integrated with VFS
 Switch to intrusive_ptr for all reference-counting classes
 Fix the Window's Focus events. Also the mouse cursor is released when focus is lost.

@@ -79,11 +79,14 @@ bool SFML_InputManager::isJoystickEvent(sf::Event::EventType eventType)
 
 void SFML_InputManager::processMouseEvent(const sf::Event& event)
 {
+	short mbX = static_cast<short>(event.MouseButton.X); 
+	short mbY = static_cast<short>(event.MouseButton.Y);
+
 	switch(event.Type)
 	{
 		case sf::Event::MouseButtonPressed:
 		{
-			MouseButtonEvent mbe( event.MouseButton.X, event.MouseButton.Y, 
+			MouseButtonEvent mbe( mbX, mbY, 
 				convertMouseButtonEnum( event.MouseButton.Button ), 
 				MouseEventType::MousePress );
 			
@@ -93,7 +96,7 @@ void SFML_InputManager::processMouseEvent(const sf::Event& event)
 
 		case sf::Event::MouseButtonReleased:
 		{
-			MouseButtonEvent mbe( event.MouseButton.X, event.MouseButton.Y, 
+			MouseButtonEvent mbe( mbX, mbY, 
 				convertMouseButtonEnum( event.MouseButton.Button ), 
 				MouseEventType::MouseRelease );
 
@@ -103,7 +106,10 @@ void SFML_InputManager::processMouseEvent(const sf::Event& event)
 
 		case sf::Event::MouseMoved:
 		{
-			MouseMoveEvent mme( event.MouseMove.X, event.MouseMove.Y );
+			short mmX = static_cast<short>(event.MouseMove.X);
+			short mmY = static_cast<short>(event.MouseMove.Y);
+			
+			MouseMoveEvent mme( mmX, mmY );
 
 			processEvent( mme );
 			break;

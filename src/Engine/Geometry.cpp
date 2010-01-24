@@ -23,18 +23,14 @@ const std::string& Geometry::type = "Geometry";
 //-----------------------------------//
 
 Geometry::Geometry() 
-	: isDirty( true ), drawBoundingBox( false )
 {
-	buildBoundingRenderable();
 }
 
 //-----------------------------------//
 
 Geometry::Geometry( RenderablePtr rend )
-	: isDirty( true ), drawBoundingBox( false )
 {
 	addRenderable( rend );
-	buildBoundingRenderable();
 }
 
 //-----------------------------------//
@@ -42,25 +38,6 @@ Geometry::Geometry( RenderablePtr rend )
 Geometry::~Geometry()
 {
 
-}
-
-//-----------------------------------//
-
-void Geometry::buildBoundingRenderable()
-{
-	VertexBufferPtr vb( new VertexBuffer() );
-	MaterialPtr mat( new Material( "BoundBox", "diffuse" ) );
-	mat->setLineWidth( 1.0f );
-	mat->setLineSmoothing( true );
-	bbox.reset( new Renderable( Primitive::Quads, vb, mat ) );
-	bbox->setRenderMode( RenderMode::Wireframe );
-}
-
-//-----------------------------------//
-
-void Geometry::markDirty()
-{
-	isDirty = true;
 }
 
 //-----------------------------------//
@@ -107,83 +84,13 @@ void Geometry::appendRenderables( render::RenderQueue& queue, TransformPtr trans
 			queue.push_back( renderState );
 		}
 	}
-
-	if( drawBoundingBox )
-	{
-		RenderState renderState;
-		
-		renderState.renderable = bbox;
-		renderState.modelMatrix = absoluteTransform;
-		renderState.group = RenderGroup::Normal;
-		renderState.priority = 0;
-
-		queue.push_back( renderState );
-	}
 }
 
 //-----------------------------------//
-
-const math::AABB& Geometry::getBoundingVolume() const
-{
-	return boundingVolume;
-}
-
-//-----------------------------------//
-
-static const float EXTRA_SPACE = 1.01f;
-
-#define ADD_BOX_FACE( a, b, c, d )								\
-	v.push_back( boundingVolume.getCorner( a ) * EXTRA_SPACE );	\
-	v.push_back( boundingVolume.getCorner( b ) * EXTRA_SPACE );	\
-	v.push_back( boundingVolume.getCorner( c ) * EXTRA_SPACE );	\
-	v.push_back( boundingVolume.getCorner( d ) * EXTRA_SPACE );
 
 void Geometry::update( double delta )
 {
-	if( !isDirty ) return;
 
-	boundingVolume.reset();
-
-	// Update the bounding box to accomodate new geometry.
-	foreach( RenderablePtr rend, renderables[RenderGroup::Normal] )
-	{
-		std::vector<math::Vector3> vertices = rend->getVertexBuffer()->getVertices();
-		
-		foreach( const Vector3& v, vertices )
-			boundingVolume.add( v );
-	}
-
-	VertexBufferPtr vb = bbox->getVertexBuffer();
-
-	std::vector< Vector3 > v;
-	
-	ADD_BOX_FACE( 0, 1, 3, 2 )
-	ADD_BOX_FACE( 0, 1, 5, 4 )
-	ADD_BOX_FACE( 4, 5, 7, 6 )
-	ADD_BOX_FACE( 2, 3, 7, 6 )
-	ADD_BOX_FACE( 0, 4, 6, 2 )
-	ADD_BOX_FACE( 1, 5, 7, 3 )
-
-	std::vector< Vector3 > c( 24, Vector3( 1.0f, 1.0f, 0.0f ) );
-
-	vb->set( VertexAttribute::Vertex, v );
-	vb->set( VertexAttribute::Color, c );
-
-	isDirty = false;
-}
-
-//-----------------------------------//
-
-const math::AABB& Geometry::getBoundingBox() const
-{
-	return boundingVolume;
-}
-
-//-----------------------------------//
-
-void Geometry::setBoundingBoxVisible( bool visible )
-{
-	drawBoundingBox = visible;
 }
 
 //-----------------------------------//

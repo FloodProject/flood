@@ -7,7 +7,6 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/scene/Camera.h"
 #include "vapor/scene/Group.h"
 #include "vapor/scene/Geometry.h"

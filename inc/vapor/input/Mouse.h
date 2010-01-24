@@ -9,7 +9,6 @@
 #pragma once
 
 #include "vapor/Platform.h"
-
 #include "vapor/input/Device.h"
 
 namespace vapor { namespace input {
@@ -45,8 +44,8 @@ struct MouseInfo
 {
 	MouseInfo();
 
-	int x;
-	int y;
+	short x;
+	short y;
 	
 	bool leftButton;
 	bool rightButton;
@@ -99,7 +98,7 @@ struct MouseEvent : public input::Event
 	
 	MouseEvent( MouseEventType::Enum eventType );
 
-private:
+protected:
 
 	MouseEventType::Enum eventType;
 };
@@ -114,10 +113,10 @@ private:
 
 struct MouseMoveEvent : public MouseEvent
 {
-	MouseMoveEvent( int x, int y );
+	MouseMoveEvent( short x, short y );
 
-	int x;
-	int y;
+	short x;
+	short y;
 };
 
 //-----------------------------------//
@@ -130,11 +129,11 @@ struct MouseMoveEvent : public MouseEvent
 
 struct MouseButtonEvent : public MouseEvent
 {
-	MouseButtonEvent( int x, int y, 
+	MouseButtonEvent( short x, short y, 
 		MouseButton::Enum button, MouseEventType::Enum eventType );
 
-	int x;
-	int y;
+	short x;
+	short y;
 
 	MouseButton::Enum button;
 };
@@ -151,7 +150,7 @@ struct MouseWheelEvent : public MouseEvent
 {
 	MouseWheelEvent( int delta );
 
-	int  delta;
+	int delta;
 };
 
 //-----------------------------------//

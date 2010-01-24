@@ -167,8 +167,8 @@ void SceneTreeCtrl::setBoundingBox( const wxTreeItemId& id, bool state )
 	if( !node ) return;
 
 	// Activate bounding box drawing for this node.
-	foreach( GeometryPtr geometry, node->getGeometry() )
-		geometry->setBoundingBoxVisible( state );
+	//foreach( GeometryPtr geometry, node->getGeometry() )
+		//geometry->setBoundingBoxVisible( state );
 }
 
 //-----------------------------------//

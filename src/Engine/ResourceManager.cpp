@@ -73,6 +73,7 @@ ResourcePtr ResourceManager::loadResource(const std::string& path)
 		onResourceAdded( event );
 	}
 
+	res->setURI( path );
 	resources[path] = res;
 	return res;
 }

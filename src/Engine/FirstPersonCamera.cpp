@@ -7,7 +7,6 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/scene/FirstPersonCamera.h"
 
 namespace vapor { namespace scene {
@@ -248,7 +247,7 @@ void FirstPersonCamera::onMouseMove( const MouseMoveEvent& moveEvent )
 
 	if( !window->getCursorState() )
 	{
-		Vector3 currentPosition( (float)moveEvent.x, (float)moveEvent.y, 0 );
+		Vector3 currentPosition( moveEvent.x, moveEvent.y, 0 );
 		mouseDistance += currentPosition - lastPosition;
 		lastPosition = currentPosition;
 	}

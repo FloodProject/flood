@@ -48,34 +48,33 @@ Body::Body(float mass, hkpMotion::MotionType motion)
 
 void Body::init()
 {
+	//initiated = true;
+	//transform = getNode()->getTransformPtr();
+	//transform->isPhysicsDriven = true;
 
-	initiated = true;
-	transform = getNode()->getTransformPtr();
-	transform->isPhysicsDriven = true;
+	//const math::AABB& bb = (*((getNode()->getGeometry())[0])).getBoundingVolume();
+	//
+	//// Get a box shape from AABB
+	//shape = getShape( bb ); 
+	//
+	//// Send the transform of the node to Havok
+	//setTransform( info );
 
-	const math::AABB& bb = (*((getNode()->getGeometry())[0])).getBoundingVolume();
-	
-	// Get a box shape from AABB
-	shape = getShape( bb ); 
-	
-	// Send the transform of the node to Havok
-	setTransform( info );
+	//hkpMassProperties massProperties;
 
-	hkpMassProperties massProperties;
-
-	info.m_centerOfMass = convertVector(transform->getPosition());
-	
-	hkVector4 boxSize = shape->getHalfExtents();
-	boxSize.mul4(2);
-	hkReal boxMass = info.m_mass;
-	
-	hkpInertiaTensorComputer::computeBoxVolumeMassProperties(boxSize, boxMass, massProperties);
-	
-	info.m_inertiaTensor = massProperties.m_inertiaTensor;
-	info.m_shape = shape;
-	
-	body = new hkpRigidBody(info);
-	physicsManager->addEntity(body);
+	//info.m_centerOfMass = convertVector(transform->getPosition());
+	//
+	//hkVector4 boxSize = shape->getHalfExtents();
+	//boxSize.mul4(2);
+	//hkReal boxMass = info.m_mass;
+	//
+	//hkpInertiaTensorComputer::computeBoxVolumeMassProperties(boxSize, boxMass, massProperties);
+	//
+	//info.m_inertiaTensor = massProperties.m_inertiaTensor;
+	//info.m_shape = shape;
+	//
+	//body = new hkpRigidBody(info);
+	//physicsManager->addEntity(body);
 }
 
 //-----------------------------------//

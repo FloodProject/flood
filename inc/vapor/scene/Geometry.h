@@ -22,7 +22,7 @@ namespace vapor { namespace scene {
 //-----------------------------------//
 
 /**
- * This component holds geometry data for rendering. It can holds multiple
+ * This component holds geometry data for rendering. It can hold multiple
  * Renderable objects, each with different materials. When the camera node
  * traverses the scene graph, Geometry nodes are picked and passed to the
  * rendering device for rendering.
@@ -49,15 +49,6 @@ public:
 	/// Appends all the renderables of this geometry to the queue.
 	void appendRenderables( render::RenderQueue& queue, TransformPtr transform );
 
-	/// Gets the bounding volume of this geometry.
-	const math::AABB& getBoundingVolume() const;
-
-	/// Sets the visibility of this geometry bounding box.
-	void setBoundingBoxVisible( bool visible );
-
-	/// Gets the bounding box of this geometry.
-	const math::AABB& getBoundingBox() const;
-
 	/// Updates the geometry if needed.
 	virtual void update( double delta );
 
@@ -69,22 +60,9 @@ public:
 
 protected:
 
-	// Builds the bounding box of the geometry.
-	void buildBoundingRenderable();
-
-	// Marks the geometry as dirty (forces AABB update).
-	void markDirty();
-
 	typedef std::vector< render::RenderablePtr > RenderableList;
 	std::map< render::RenderGroup::Enum, RenderableList > renderables;
 	typedef std::pair<const  render::RenderGroup::Enum, RenderableList > rendPair;
-
-	// Bounding volume of the geometry.
-	math::AABB boundingVolume;
-	render::RenderablePtr bbox;
-	
-	bool isDirty;
-	bool drawBoundingBox;
 
 	static const std::string& type;
 };

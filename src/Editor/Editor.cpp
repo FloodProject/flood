@@ -401,7 +401,7 @@ void EditorFrame::onMouseClick( const MouseButtonEvent& mbe )
 	{
 		foreach( GeometryPtr geometry, node->getGeometry() )
 		{
-			geometry->setBoundingBoxVisible( false );
+			//geometry->setBoundingBoxVisible( false );
 		}
 	}
 
@@ -473,17 +473,17 @@ void EditorFrame::onMouseClick( const MouseButtonEvent& mbe )
 
 		foreach( GeometryPtr geometry, node->getGeometry() )
 		{
-			const AABB& aabb = geometry->getBoundingBox();
+			//const AABB& aabb = geometry->getBoundingBox();
 			
-			float distance;
-			if( aabb.intersects( pickRay, distance ) )
-			{
-				// We found what we want, enable its bounding box.
-				geometry->setBoundingBoxVisible( true );
-				selectedNodes.push_back( node );
-				debug( "distance: %f", distance );
-				goto pickDone;
-			}
+			//float distance;
+			//if( aabb.intersects( pickRay, distance ) )
+			//{
+			//	// We found what we want, enable its bounding box.
+			//	geometry->setBoundingBoxVisible( true );
+			//	selectedNodes.push_back( node );
+			//	debug( "distance: %f", distance );
+			//	goto pickDone;
+			//}
 		}
 	}
 
