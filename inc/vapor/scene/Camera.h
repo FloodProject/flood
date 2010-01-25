@@ -92,6 +92,9 @@ public:
 	// Gets the frustum associated with the camera.
 	const math::Frustum& getFrustum( ) const;
 
+	// Picks a ray (via casting) and returns a list of entities.
+	math::Ray getRay( float scrx, float scry );
+
 	// Renders the (sub-)scene starting from the passed node to the current 
 	// render target associated in the camera.
 	void render( NodePtr node ) const;

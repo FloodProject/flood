@@ -33,73 +33,41 @@ Camera::Camera( render::Device* device, Projection::Enum projection )
 
 //-----------------------------------//
 
-void Camera::setProjection( Projection::Enum projection )
+math::Ray Camera::getRay( float scrx, float scry )
 {
-	this->projection = projection;
-}
+	// Let's do ray picking...
+	// Based on: http://www.mvps.org/directx/articles/rayproj.htm
 
-//-----------------------------------//
+	// Normalizing Screen Coordinates
+	float dx = (scrx / (width / 2.0f) - 1.0f) /*/ getAspectRatio()*/;
+	float dy = 1.0f - (height - scry) / (height / 2.0f);
 
-float Camera::getFOV() const
-{
-	return fov;
-}
+	// Scaling Coordinates to the Frustum
+	dx *= math::tanf( getFOV() * 0.5f );
+	dy *= math::tanf( getFOV() * 0.5f );
 
-//-----------------------------------//
+	// Calculating the End Points of the Ray
+	float near_ = -getNear();
+	float far_ = -getFar();
 
-const math::Matrix4x4& Camera::getProjectionMatrix() const
-{
-	return projectionMatrix;
-}
+	Vector3 pNear = Vector3( dx * near_, dy * near_, near_ );
+	Vector3 pFar = Vector3( dx * far_, dy * far_, far_ );
 
-//-----------------------------------//
+	// Generating an Inverse of the View Matrix
+	const Matrix4x3& invView = inverse( getViewMatrix() );
 
-const math::Matrix4x3& Camera::getViewMatrix() const
-{
-	return viewMatrix;
-}
+	// Converting the Ray to World Coordinates
+	pNear *= invView; 
+	pFar *= invView;
 
-//-----------------------------------//
+	// Construct the picking Ray.
+	Ray pickRay( pNear, (pFar - pNear).normalize() );
 
-render::RenderTarget* Camera::getRenderTarget() const
-{
-	return target;
-}
+	debug( "pos: %f,%f,%f", pNear.x, pNear.y, pNear.z );
+	debug( "dir: %f,%f,%f", pickRay.getDirection().x, 
+		pickRay.getDirection().y, pickRay.getDirection().z );
 
-//-----------------------------------//
-
-void Camera::setFOV( float fov )
-{
-	this->fov = fov;
-}
-
-//-----------------------------------//
-
-void Camera::setNear( float near_ )
-{
-	this->near_ = near_;
-}
-
-//-----------------------------------//
-
-float Camera::getNear() const
-{
-	return near_;
-}
-
-
-//-----------------------------------//
-
-void Camera::setFar( float far_ )
-{
-	this->far_ = far_;
-}
-
-//-----------------------------------//
-
-float Camera::getFar() const
-{
-	return far_;
+	return pickRay;
 }
 
 //-----------------------------------//
@@ -280,6 +248,75 @@ const std::string Camera::save( int /*indent*/ )
 const std::string& Camera::getType() const
 {
 	return type;
+}
+
+void Camera::setProjection( Projection::Enum projection )
+{
+	this->projection = projection;
+}
+
+//-----------------------------------//
+
+float Camera::getFOV() const
+{
+	return fov;
+}
+
+//-----------------------------------//
+
+const math::Matrix4x4& Camera::getProjectionMatrix() const
+{
+	return projectionMatrix;
+}
+
+//-----------------------------------//
+
+const math::Matrix4x3& Camera::getViewMatrix() const
+{
+	return viewMatrix;
+}
+
+//-----------------------------------//
+
+render::RenderTarget* Camera::getRenderTarget() const
+{
+	return target;
+}
+
+//-----------------------------------//
+
+void Camera::setFOV( float fov )
+{
+	this->fov = fov;
+}
+
+//-----------------------------------//
+
+void Camera::setNear( float near_ )
+{
+	this->near_ = near_;
+}
+
+//-----------------------------------//
+
+float Camera::getNear() const
+{
+	return near_;
+}
+
+
+//-----------------------------------//
+
+void Camera::setFar( float far_ )
+{
+	this->far_ = far_;
+}
+
+//-----------------------------------//
+
+float Camera::getFar() const
+{
+	return far_;
 }
 
 //-----------------------------------//

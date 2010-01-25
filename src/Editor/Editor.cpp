@@ -327,8 +327,8 @@ void EditorFrame::createToolbar()
 	toolBar->AddTool( wxID_ANY, "Rotate", wxMEMORY_BITMAP(rotate2), 
 		"Selects the Rotate tool", wxITEM_RADIO );
 
-	//toolBar->AddTool( wxID_ANY, "Scale", wxMEMORY_BITMAP(scale), 
-	//	"Selects the Scale tool", wxITEM_RADIO );
+	toolBar->AddTool( wxID_ANY, "Scale", wxMEMORY_BITMAP(scale), 
+		"Selects the Scale tool", wxITEM_RADIO );
 	
 	// --------------
 	// Terrain tools
@@ -409,42 +409,7 @@ void EditorFrame::onMouseClick( const MouseButtonEvent& mbe )
 	selectedNodes.clear();
 
 	// Just get all the needed classes with the data for picking.
-	ScenePtr scene = engine->getSceneManager();
-	NodePtr entity = scene->getEntity( "MainCamera" );
-	CameraPtr camera = entity->getComponent< Camera >( "Camera" );
-	RenderTarget* target = camera->getRenderTarget();
-
-	int width = target->getSettings().getWidth();
-	int height = target->getSettings().getHeight();
-
-	// Normalizing Screen Coordinates
-	float dx = (mbe.x / (width / 2.0f) - 1.0f) /*/ camera->getAspectRatio()*/;
-	float dy = 1.0f - (height - mbe.y) / (height / 2.0f);
-
-	// Scaling Coordinates to the Frustum
-	dx *= math::tanf( camera->getFOV() * 0.5f );
-	dy *= math::tanf( camera->getFOV() * 0.5f );
-
-	// Calculating the End Points of the Ray
-	float near_ = -camera->getNear();
-	float far_ = -camera->getFar();
-
-	Vector3 pNear = Vector3( dx * near_, dy * near_, near_ );
-	Vector3 pFar = Vector3( dx * far_, dy * far_, far_ );
-
-	// Generating an Inverse of the View Matrix
-	const Matrix4x3& invView = inverse( camera->getViewMatrix() );
-
-	// Converting the Ray to World Coordinates
-	pNear *= invView; 
-	pFar *= invView;
-
-	// Construct the picking Ray.
-	Ray pickRay( pNear, (pFar - pNear).normalize() );
-
-	debug( "pos: %f,%f,%f", pNear.x, pNear.y, pNear.z );
-	debug( "dir: %f,%f,%f", pickRay.getDirection().x, 
-		pickRay.getDirection().y, pickRay.getDirection().z );
+	Ray pickRay = viewport->camera->getRay( mbe.x, mbe.y );
 
 	//std::vector< Vector3 > vertex;
 	//vertex.push_back( pNear );
@@ -466,6 +431,8 @@ void EditorFrame::onMouseClick( const MouseButtonEvent& mbe )
 	//line->addComponent( TransformPtr( new Transform() ) );
 	//line->addComponent( geom );
 	//scene->add( line );
+
+	ScenePtr scene = engine->getSceneManager();
 
 	// Do some ray tracing to find a collision.
 	foreach( NodePtr node, scene->getChildren() )
