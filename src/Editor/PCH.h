@@ -21,4 +21,7 @@
 #include <vapor/Headers.h>
 
 #include <wx/glcanvas.h>
+#include <wx/hyperlink.h>
+#include <wx/treectrl.h> 
+
 #include "ArtProvider.h"

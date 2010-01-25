@@ -100,7 +100,7 @@ void SceneTreeCtrl::initIcons()
 	componentIcons["Sound"] = imageList->Add(wxMEMORY_BITMAP(sound));
 	componentIcons["Listener"] = imageList->Add(wxMEMORY_BITMAP(status_online));
 	componentIcons["Terrain"] = imageList->Add(wxMEMORY_BITMAP(world));
-	componentIcons["Transform"] = imageList->Add(wxMEMORY_BITMAP(move_axis));
+	componentIcons["Transform"] = imageList->Add(wxMEMORY_BITMAP(chart_line));
 	componentIcons["Grid"] = imageList->Add(wxMEMORY_BITMAP(grid_icon_white_bg));
 	componentIcons["Geometry"] = imageList->Add(wxMEMORY_BITMAP(shape_flip_horizontal));
 	componentIcons["Body"] = imageList->Add(wxMEMORY_BITMAP(link));

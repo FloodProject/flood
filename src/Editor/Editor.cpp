@@ -392,9 +392,6 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 
 void EditorFrame::onMouseClick( const MouseButtonEvent& mbe )
 {
-	// Let's do ray picking...
-	// Based on: http://www.mvps.org/directx/articles/rayproj.htm
-
 	//if( vaporCtrl->HasFocus() ) return;
 
 	// Disable all enabled bounding boxes.
@@ -464,16 +461,54 @@ pickDone:
 
 void EditorFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
-    wxMessageBox(
-		wxString::Format( 
-			"Welcome to %s!\n\n"
-			"This is vaporEditor\n"
-			"running under %s.",
-			wxVERSION_STRING,
-			wxGetOsDescription() ),
-		"About vaporEditor",
-		wxOK | wxICON_INFORMATION,
-		this);
+	wxFrame* about = new wxFrame(this, wxID_ANY, "About vapor3D Editor", wxDefaultPosition, wxSize(487,246), 
+		wxCAPTION|wxCLOSE_BOX|wxFRAME_FLOAT_ON_PARENT|wxFRAME_TOOL_WINDOW|wxSYSTEM_MENU|wxTAB_TRAVERSAL );
+
+	wxBoxSizer* bSizer1 = new wxBoxSizer( wxVERTICAL );
+	wxBoxSizer* bSizer2 = new wxBoxSizer( wxVERTICAL );
+
+	wxPanel* m_panel1 = new wxPanel( about );
+
+	wxStaticBitmap* m_bitmap1 = new wxStaticBitmap( m_panel1, wxID_ANY, wxMEMORY_BITMAP(::about) );
+	bSizer2->Add( m_bitmap1, 0, wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5 );
+
+	wxString aboutText( "This software is © 2009-2010 João Matos and the rest of the vapor3D Team.\n\n"
+		"vapor3D Editor uses some free software packages: wxWidgets (wxWidgets.org), Lua (lua.org),\n"
+		"Bullet (bulletphysics.com), Boost (boost.org), zlib (zlib.org) and the list goes on.\n\n"
+		"Check the documentation provided with the software to see a full list of libraries used." );
+
+	wxStaticText* m_staticText2 = new wxStaticText( m_panel1, wxID_ANY, aboutText );
+	m_staticText2->Wrap( -1 );
+	bSizer2->Add( m_staticText2, 0, wxEXPAND|wxALL, 5 );
+	
+	wxBoxSizer* bSizer3 = new wxBoxSizer( wxHORIZONTAL );
+	
+	wxStaticLine* m_staticline1 = new wxStaticLine( m_panel1, wxID_ANY );
+	bSizer3->Add( m_staticline1, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	//wxHyperlinkCtrl* m_hyperlink1 = new wxHyperlinkCtrl( m_panel1, wxID_ANY,
+		//"vapor3D Editor Website", "http://www.vapor3d.org" );
+	//bSizer3->Add( m_hyperlink1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+	wxStaticText* m_hyperlink1 = new wxStaticText( m_panel1, wxID_ANY,
+		"http://www.vapor3d.org" );
+	bSizer3->Add( m_hyperlink1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	wxStaticLine* m_staticline2 = new wxStaticLine( m_panel1, wxID_ANY );
+	bSizer3->Add( m_staticline2, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	bSizer2->Add( bSizer3, 1, wxEXPAND, 5 );
+	
+	m_panel1->SetSizer( bSizer2 );
+	m_panel1->Layout();
+
+	bSizer2->Fit( m_panel1 );
+	bSizer1->Add( m_panel1, 1, wxEXPAND, 5 );
+	
+	about->SetSizer( bSizer1 );
+	about->Layout();
+
+	about->Show(true);
 }
 
 //-----------------------------------//
