@@ -20,7 +20,7 @@ namespace vapor {
  * Please beware that this is not thread-safe.
  */
 
-class ReferenceCounted
+class VAPOR_API ReferenceCounted
 {
 protected:
 	

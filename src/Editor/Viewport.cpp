@@ -10,12 +10,7 @@
 #include "Viewport.h"
 #include "EditorIcons.h"
 
-#include <boost/lexical_cast.hpp>
-
 namespace vapor { namespace editor {
-
-using namespace vapor::scene;
-using boost::lexical_cast;
 
 //-----------------------------------//
 
@@ -183,6 +178,8 @@ void Viewport::onCameraTransform()
 
 void Viewport::updatePosition()
 {
+	using boost::lexical_cast;
+
 	float X = lexical_cast<float>( txt_X->GetValue() );
 	float Y = lexical_cast<float>( txt_Y->GetValue() );
 	float Z = lexical_cast<float>( txt_Z->GetValue() );

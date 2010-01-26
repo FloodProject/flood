@@ -36,20 +36,14 @@ END_EVENT_TABLE()
 
 //-----------------------------------//
 
-SceneTreeCtrl::SceneTreeCtrl(vapor::Engine* engine, 
-					wxWindow* parent, wxWindowID id,
-					const wxPoint& pos,
-					const wxSize& size,
-					long style,
-					const wxValidator& validator, 
-					const wxString&	name)
+SceneTreeCtrl::SceneTreeCtrl( vapor::Engine* engine, wxWindow* parent, wxWindowID id,
+	const wxPoint& pos, const wxSize& size, long style, const wxValidator& validator, 
+	const wxString&	name )
 	: wxTreeCtrl(parent, id, pos, size, style, validator, name),
-		engine(engine), activated(false)
+	engine(engine), activated(false)
 {
-	if( !engine )
-	{
+	if( !engine ) 
 		assert( "Invalid engine instance." );
-	}
 
 	scene = engine->getSceneManager();
 	
@@ -70,13 +64,12 @@ SceneTreeCtrl::~SceneTreeCtrl()
 
 void SceneTreeCtrl::initControl()
 {
-	// Add the root node
-	wxString str(scene.lock()->getName());
+	// Add the root node.
+	wxString str( scene.lock()->getName() );
 	root = AddRoot(str.Capitalize(), 1);
 
 	ExpandAll();
-	
-	//updateScene();
+
 	scene.lock()->onNodeAdded += fd::bind( &SceneTreeCtrl::onNodeAdded, this );
 	scene.lock()->onNodeRemoved += fd::bind( &SceneTreeCtrl::onNodeRemoved, this );
 }
@@ -85,7 +78,7 @@ void SceneTreeCtrl::initControl()
 
 void SceneTreeCtrl::initIcons()
 {
-	// create a new list of all the icons
+	// create a new list of all the icons.
 	imageList = new wxImageList(16, 16, false, 10);
 
 	// the images were preconverted from image files to binary data 

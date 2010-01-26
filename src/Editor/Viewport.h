@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include <wx/statline.h>
 #include "vaporControl.h"
 
 namespace vapor { namespace editor {

@@ -8,8 +8,6 @@
 
 #pragma once
  
-#include <wx/choicebk.h> 
-
 namespace vapor { namespace editor {
 
 //-----------------------------------//
@@ -18,32 +16,33 @@ namespace vapor { namespace editor {
  * Notebook tab that manages terrains.
  */
 
-class TerrainPage : public wxChoicebook 
+class TerrainPage : public wxPanel 
 {
-	public:
+public:
 
-		TerrainPage( wxWindow* parent, wxWindowID id = wxID_ANY, 
-			const wxPoint& pos = wxDefaultPosition, 
-			const wxSize& size = wxSize( 251,454 ), 
-			long style = wxCHB_DEFAULT );
-		
-		~TerrainPage();
+	TerrainPage( wxWindow* parent, wxWindowID id = wxID_ANY, 
+		const wxPoint& pos = wxDefaultPosition, 
+		const wxSize& size = wxDefaultSize, 
+		long style = wxTAB_TRAVERSAL );
 	
-	protected:
-		//wxStaticText* m_staticText1;
-		//wxComboBox* toolChoice;
-		//wxStaticLine* m_staticline1;
-		//wxStaticText* m_staticText2;
-		//wxChoice* brushChoice;
-		//wxStaticText* m_staticText31;
-		//wxSlider* m_slider11;
-		//wxTextCtrl* m_textCtrl11;
-		//wxStaticText* m_staticText3;
-		//wxSlider* m_slider1;
-		//wxTextCtrl* m_textCtrl1;
-		
-		// Virtual event handlers, overide them in your derived class
-		virtual void OnToolChoice( wxCommandEvent& event ){ event.Skip(); }
+	//~TerrainPage();
+
+protected:
+
+	wxChoicebook* m_cbTerrainTool;
+	wxPanel* m_panelBrush;
+	wxStaticLine* m_staticline5;
+	wxStaticText* m_staticText2;
+	wxChoice* m_choiceBrush;
+	wxStaticText* m_staticText31;
+	wxSlider* m_sliderSize;
+	wxTextCtrl* m_textCtrlSize;
+	wxStaticText* m_staticText3;
+	wxSlider* m_sliderStrength;
+	wxTextCtrl* m_textCtrlStrength;
+	
+	// Virtual event handlers, overide them in your derived class
+	virtual void OnToolChoice( wxCommandEvent& event ){ event.Skip(); }
 
 	DECLARE_EVENT_TABLE()
 };
@@ -52,10 +51,7 @@ class TerrainPage : public wxChoicebook
 
 enum 
 {
-	ID_SceneTree,
-	ID_MenuSceneNodeDelete = wxID_DELETE,
-	ID_MenuSceneNodeVisible,
-	ID_MenuSceneNodeWireframe,
+
 };
 
 //-----------------------------------//

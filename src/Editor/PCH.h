@@ -23,5 +23,10 @@
 #include <wx/glcanvas.h>
 #include <wx/hyperlink.h>
 #include <wx/treectrl.h> 
+#include <wx/choicebk.h>
+#include <wx/notebook.h>
+#include <wx/statline.h>
 
 #include "ArtProvider.h"
+
+#include <boost/lexical_cast.hpp>

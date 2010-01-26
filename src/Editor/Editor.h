@@ -13,7 +13,7 @@
 #include "ResourceTreeCtrl.h"
 #include "ConsoleFrame.h"
 #include "Viewport.h"
-#include <wx/notebook.h>
+#include "TerrainPage.h"
 
 namespace vapor { namespace editor {
 
@@ -69,22 +69,11 @@ protected:
 
 	// Handles picking of entities.
 	void onMouseClick( const vapor::input::MouseButtonEvent& mbe );
-
 	void onKeyPress(const vapor::input::KeyEvent& key);
-
 	void onKeyRelease(const vapor::input::KeyEvent& key);
 
 	// vaporEngine instance.
 	vapor::Engine* engine;
-	
-	// Manages the Scene entities.
-	SceneTreeCtrl* sceneTreeCtrl;
-
-	// Manages the Resource files.
-	ResourceTreeCtrl* resourceTreeCtrl;
-
-	// Groups the above controllers.
-	wxNotebook* notebookCtrl;
 
 	// vaporEngine's wxWidgets control.
 	vaporControl* vaporCtrl;
@@ -92,9 +81,18 @@ protected:
 	// Main layout sizer.
 	wxBoxSizer* sizer;
 
-	Viewport* viewport;
+	// Groups the above controllers.
+	wxNotebook* notebookCtrl;
+	
+	// Manages the Scene entities.
+	SceneTreeCtrl* sceneTreeCtrl;
 
+	// Manages the Resource files.
+	ResourceTreeCtrl* resourceTreeCtrl;
+
+	Viewport* viewport;
 	ConsoleFrame* codeEvaluator;
+	TerrainPage* terrainPage;
 
 	std::vector< scene::NodePtr > selectedNodes;
 

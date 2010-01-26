@@ -55,4 +55,18 @@ void Console::update( double UNUSED(delta) )
 
 //-----------------------------------//
 
+const std::string& Console::getType() const 
+{
+	return type; 
+}
+
+//-----------------------------------//
+
+const std::string Console::save( int indent )
+{
+	return ""; 
+}
+
+//-----------------------------------//
+
 } } // end namespaces

@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include <wx/treectrl.h> 
-
 namespace vapor { namespace editor {
 
 //-----------------------------------//

@@ -10,8 +10,6 @@
 #include "Editor.h"
 #include "EditorIcons.h"
 
-using namespace vapor::input;
-
 namespace vapor { namespace editor {
 
 // ----------------------------------------------------------------------------
@@ -49,7 +47,6 @@ BEGIN_EVENT_TABLE(EditorFrame, wxFrame)
     EVT_MENU(Editor_Quit,  EditorFrame::OnQuit)
     EVT_MENU(Editor_About, EditorFrame::OnAbout)
 	EVT_MENU(wxID_ANY, EditorFrame::OnToolbarButtonClick)
-	//EVT_COMMAND(Toolbar_ToggleScene, EditorFrame::OnToolbarButtonClick)
 END_EVENT_TABLE()
 
 //-----------------------------------//
@@ -153,7 +150,8 @@ void EditorFrame::initEngine()
 
 void EditorFrame::createScene()
 {
-	engine->getVFS()->mount( "media" );
+	if( !engine->getVFS()->mount( "media" ) )
+		return;
 
 	ScenePtr scene = engine->getSceneManager();
 	ResourceManager* rm = engine->getResourceManager();
@@ -244,6 +242,11 @@ void EditorFrame::createNotebook()
 	notebookCtrl->AddPage( panelResources, wxT("Resources"), true );
 
 	notebookCtrl->SetSelection( scenePage );
+
+	//-----------------------------------//
+
+	terrainPage = new TerrainPage( notebookCtrl );
+	notebookCtrl->AddPage( terrainPage, "Terrains", true );
 }
 
 //-----------------------------------//
@@ -384,6 +387,7 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 		{
 			physics::PhysicsManager* pm = engine->getPhysicsManager();
 			if( pm ) pm->setSimulationEnabled( !pm->getSimulationEnabled() );
+			break;
 		}
 	}
 }
@@ -461,7 +465,7 @@ pickDone:
 
 void EditorFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
-	wxFrame* about = new wxFrame(this, wxID_ANY, "About vapor3D Editor", wxDefaultPosition, wxSize(487,246), 
+	wxFrame* about = new wxFrame(this, wxID_ANY, "About vapor3D Editor", wxDefaultPosition, wxDefaultSize/*wxSize(487,246)*/, 
 		wxCAPTION|wxCLOSE_BOX|wxFRAME_FLOAT_ON_PARENT|wxFRAME_TOOL_WINDOW|wxSYSTEM_MENU|wxTAB_TRAVERSAL );
 
 	wxBoxSizer* bSizer1 = new wxBoxSizer( wxVERTICAL );
@@ -475,7 +479,7 @@ void EditorFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 	wxString aboutText( "This software is © 2009-2010 João Matos and the rest of the vapor3D Team.\n\n"
 		"vapor3D Editor uses some free software packages: wxWidgets (wxWidgets.org), Lua (lua.org),\n"
 		"Bullet (bulletphysics.com), Boost (boost.org), zlib (zlib.org) and the list goes on.\n\n"
-		"Check the documentation provided with the software to see a full list of libraries used." );
+		"Check the documentation provided with the software for more details." );
 
 	wxStaticText* m_staticText2 = new wxStaticText( m_panel1, wxID_ANY, aboutText );
 	m_staticText2->Wrap( -1 );
@@ -487,7 +491,7 @@ void EditorFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 	bSizer3->Add( m_staticline1, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	//wxHyperlinkCtrl* m_hyperlink1 = new wxHyperlinkCtrl( m_panel1, wxID_ANY,
-		//"vapor3D Editor Website", "http://www.vapor3d.org" );
+	//	"vapor3D Editor Website", "http://www.vapor3d.org" );
 	//bSizer3->Add( m_hyperlink1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	wxStaticText* m_hyperlink1 = new wxStaticText( m_panel1, wxID_ANY,
