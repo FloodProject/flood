@@ -9,14 +9,14 @@
 #include "vapor/PCH.h"
 
 #include "vapor/render/Material.h"
-#include "vapor/resources/ResourceManager.h"
 #include "vapor/render/ProgramManager.h"
-
-#include <boost/lexical_cast.hpp>
+#include "vapor/Utilities.h"
 
 using namespace vapor::resources;
 
 namespace vapor { namespace render {
+
+//-----------------------------------//
 
 static float DEFAULT_LINE_WIDTH = 1.0f;
 
@@ -188,8 +188,7 @@ void Material::bind()
 
 		foreach( const texPair& p, textures )
 		{
-			program->setUniform( "tex" + 
-				boost::lexical_cast< std::string >( p.first ), p.first );
+			program->setUniform( "tex" + num_to_str(p.first), p.first );
 		}
 	}
 

@@ -82,7 +82,9 @@
 	} } // end namespaces
 
 //---------------------------------------------------------------------//
-// Array Helpers
+// Array and Conversion Helpers
 //---------------------------------------------------------------------//
 
 #define VAPOR_ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))
+
+#include "vapor/Utilities.h"

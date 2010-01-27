@@ -7,7 +7,6 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/NativeFile.h"
 
 #ifdef VAPOR_PLATFORM_WINDOWS

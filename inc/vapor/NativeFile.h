@@ -8,9 +8,8 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
-
 #include <cstdio>
+#include "vapor/Platform.h"
 
 namespace vapor {
 

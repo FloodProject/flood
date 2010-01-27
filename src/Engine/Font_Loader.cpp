@@ -7,26 +7,10 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/resources/Font_Loader.h"
-
-#include "vapor/resources/ResourceManager.h"
-#include "vapor/StringUtilities.h"
-#include "vapor/Endianness.h"
-
-#ifdef VAPOR_COMPILER_MSVC
-	#pragma warning(disable : 4702 )
-#endif
-
-#include "boost/lexical_cast.hpp"
-
-#ifdef VAPOR_COMPILER_MSVC
-	#pragma warning(disable : 4702 )
-#endif
+#include "vapor/Utilities.h"
 
 using vapor::vfs::File;
-
-//-----------------------------------//
 
 namespace vapor { namespace resources {
 
@@ -89,13 +73,10 @@ Font* Font_Loader::decode(const vfs::File& file)
 
 	std::vector<Glyph> glyphs;
 
-	ushort width_per_glyph = boost::lexical_cast<ushort>( glyphInfo[0] );
-	ushort height_per_glyph = boost::lexical_cast<ushort>( glyphInfo[1] );
-
-	//int n_glyphs_row = img->getWidth() / width_per_glyph;
+	ushort width_per_glyph = str_to_num<ushort>( glyphInfo[0] );
+	ushort height_per_glyph = str_to_num<ushort>( glyphInfo[1] );
 
 	ushort x = 0; ushort y = 0;
-
 	for( uint i = 0; i < data.size(); i++ )
 	{
 		Glyph glyph;
@@ -119,7 +100,7 @@ Font* Font_Loader::decode(const vfs::File& file)
 		}
 	}
 	
-	return new BitmapFont( info[0], boost::lexical_cast<int>(info[1]), img, glyphs );
+	return new BitmapFont( info[0], str_to_num<int>(info[1]), img, glyphs );
 }
 
 //-----------------------------------//

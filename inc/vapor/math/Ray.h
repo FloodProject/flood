@@ -18,11 +18,12 @@ namespace vapor { namespace math {
  * Ray class.
  */
 
-class VAPOR_API Ray
+class VAPOR_API Ray : private boost::noncopyable
 {
 public:
 
 	Ray( Vector3 origin, Vector3 direction );
+	Ray( const Ray& ray );
 
 	// Gets a point with the origin of the ray.
 	const Vector3& getOrigin() const;

@@ -486,18 +486,6 @@
 					>
 				</File>
 				<Filter
-					Name="SDL"
-					>
-					<File
-						RelativePath=".\SDL_Window.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\inc\vapor\render\SDL_Window.h"
-						>
-					</File>
-				</Filter>
-				<Filter
 					Name="Win32"
 					>
 					<File
@@ -686,14 +674,6 @@
 				Name="Utilities"
 				>
 				<File
-					RelativePath=".\Endianness.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\Endianness.h"
-					>
-				</File>
-				<File
 					RelativePath=".\ReferenceCounted.cpp"
 					>
 				</File>
@@ -702,11 +682,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\StringUtilities.cpp"
+					RelativePath=".\Utilities.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\inc\vapor\StringUtilities.h"
+					RelativePath="..\..\inc\vapor\Utilities.h"
 					>
 				</File>
 			</Filter>

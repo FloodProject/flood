@@ -28,5 +28,3 @@
 #include <wx/statline.h>
 
 #include "ArtProvider.h"
-
-#include <boost/lexical_cast.hpp>

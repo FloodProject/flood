@@ -8,9 +8,34 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
-
 namespace vapor {
+
+//-----------------------------------//
+
+// Swaps the endianness of a long.
+long endian_swap(long i);
+
+//-----------------------------------//
+
+template< typename T >
+T str_to_num(const std::string& s)
+{
+	std::stringstream ss(s);
+	T num; ss >> num; 
+	assert(!ss.fail());
+	return num;
+}
+
+//-----------------------------------//
+
+template< typename T >
+std::string num_to_str(const T& t)
+{
+	std::ostringstream oss;
+	oss << t; 
+	assert(!oss.fail());
+	return oss.str();
+}
 
 //-----------------------------------//
 

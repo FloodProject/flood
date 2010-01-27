@@ -28,7 +28,6 @@
 */
 
 #pragma once
-
 #include "vapor/Platform.h"
 
 namespace vapor { namespace vfs {
@@ -102,7 +101,7 @@ public:
 	virtual ~Watcher();
 
 	/// Add a directory watch
-	/// @exception FileNotFoundException Thrown when the requested directory does not exist
+	/// TODO: @exception FileNotFoundException Thrown when the requested directory does not exist
 	virtual WatchID addWatch(const std::string& directory) = 0;
 
 	/// Remove a directory watch. This is a brute force search O(nlogn).

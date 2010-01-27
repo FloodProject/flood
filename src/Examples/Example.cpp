@@ -7,12 +7,7 @@
 ************************************************************************/
 
 #include <vapor/PCH.h>
-
 #include "Example.h"
-
-#include "vapor/StringUtilities.h"
-#include <boost/lexical_cast.hpp>
-#include <boost/format.hpp>
 
 //-----------------------------------//
 
@@ -53,12 +48,10 @@ void Example::onSetupResources()
 
 std::string getFPS( float lastFrameTime )
 {
-	if( lastFrameTime == 0 ) return "FPS:";
-
-	std::string fps( boost::lexical_cast< std::string >
-		( int( 1.0f / lastFrameTime ) ) );
-	
-	return "FPS: " + fps;
+	std::string str = "FPS: ";
+	if( lastFrameTime == 0 ) return str;
+	std::string fps( num_to_str(int( 1.0f / lastFrameTime ) ) );
+	return str + fps;
 }
 
 //-----------------------------------//
@@ -84,27 +77,27 @@ void Example::onSetupScene()
 	ProgramManager::getInstance().registerProgram( "diffuse", diffuse );
 	ProgramManager::getInstance().registerProgram( "tex", tex );
 	ProgramManager::getInstance().registerProgram( "toon", toon );
-	
-	// Create a new Camera
+	//
+	//// Create a new Camera
 	NodePtr camera( new Node( "MainCamera" ) );
 	cam.reset( new FirstPersonCamera( getInputManager(), getRenderDevice() ) );
 	camera->addComponent( TransformPtr( new Transform() ) );
 	camera->addComponent( cam );
 	scene->add( camera );
 
-	MeshPtr mesh = rm->loadResource<Mesh>( "ct.ms3d" );
-	NodePtr ct( new Node( "ct" ) );
-	ct->addComponent( TransformPtr( new Transform( 0.0f, 50.0f, 0.0f ) ) );
-	ct->addComponent( mesh->getGeometry() );
-	//ct->addComponent( BodyPtr( new Body() ) );
-	scene->add(ct);
+	//MeshPtr mesh = rm->loadResource<Mesh>( "ct.ms3d" );
+	//NodePtr ct( new Node( "ct" ) );
+	//ct->addComponent( TransformPtr( new Transform( 0.0f, 50.0f, 0.0f ) ) );
+	//ct->addComponent( mesh->getGeometry() );
+	////ct->addComponent( BodyPtr( new Body() ) );
+	//scene->add(ct);
 
-	foreach( const RenderablePtr& rend, mesh->getGeometry()->getRenderables() )
-	{
-		rend->getMaterial()->setProgram( tex );
-	}
-	
-	// Materials too?
+	//foreach( const RenderablePtr& rend, mesh->getGeometry()->getRenderables() )
+	//{
+	//	rend->getMaterial()->setProgram( tex );
+	//}
+	//
+	//// Materials too?
 	MaterialPtr mat( new Material( "FontMaterial", tex ) );
 	FontPtr font = rm->loadResource< Font >( "Verdana.font" );
 	label.reset( new Label( getFPS( lastFrameTime ), font, mat ) );
@@ -114,44 +107,46 @@ void Example::onSetupScene()
 	fps->getTransform()->translate( -300.0f, 220.0f, 0.0f );
 	scene->add( fps );
 
-	NodePtr grid( new Node( "Grid" ) );
-	grid->addComponent( TransformPtr( new Transform() ) );
-	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
-	scene->add( grid );
+	//NodePtr grid( new Node( "Grid" ) );
+	//grid->addComponent( TransformPtr( new Transform() ) );
+	//grid->addComponent( ComponentPtr( new Grid( mat ) ) );
+	//scene->add( grid );
 
-	foreach( const RenderablePtr& rend, 
-	grid->getComponent<Geometry>("Grid")->getRenderables() )
-	{
-		rend->getMaterial()->setProgram( diffuse );
-	}
+	//foreach( const RenderablePtr& rend, 
+	//grid->getComponent<Geometry>("Grid")->getRenderables() )
+	//{
+	//	rend->getMaterial()->setProgram( diffuse );
+	//}
 
-	NodePtr lnode( new Node( "Light" ) );
-	LightPtr light( new Light( LightType::Point ) );
-	light->diffuseColor = Colors::Red;
-	light->ambientColor = Colors::Yellow;
-	lnode->addComponent( light );
-	scene->add( lnode );
+	//NodePtr lnode( new Node( "Light" ) );
+	//LightPtr light( new Light( LightType::Point ) );
+	//light->diffuseColor = Colors::Red;
+	//light->ambientColor = Colors::Yellow;
+	//lnode->addComponent( light );
+	//scene->add( lnode );
 
-	TerrainSettings settings;
-	settings.CellSize = 1024;
-	settings.TileDimensions = 32;
-	settings.MaxHeight = 150;
+	//TerrainSettings settings;
+	//settings.CellSize = 1024;
+	//settings.TileDimensions = 32;
+	//settings.MaxHeight = 150;
 
-	TerrainPtr terrain( new Terrain( settings ) );
+	//TerrainPtr terrain( new Terrain( settings ) );
 
-	NodePtr terreno( new Node( "Terreno" ) );
-	terreno->addComponent( TransformPtr( new Transform() ) );
-	terreno->addComponent( terrain );
-	scene->add( terreno );
+	//NodePtr terreno( new Node( "Terreno" ) );
+	//terreno->addComponent( TransformPtr( new Transform() ) );
+	//terreno->addComponent( terrain );
+	//scene->add( terreno );
 
-	ImagePtr heightmap = rm->loadResource< Image >( "height2.png" );
-	Cell* cell = terrain->createCell( heightmap, 0, 0 );
+	//ImagePtr heightmap = rm->loadResource< Image >( "height2.png" );
+	//Cell* cell = terrain->createCell( heightmap, 0, 0 );
 }
 
 //-----------------------------------//
  
 void Example::onUpdate( double delta ) 
 {
+	PROFILE;
+
 	ScenePtr scene = getSceneManager();
 	scene->update( delta );
 	
@@ -188,29 +183,14 @@ void Example::onKeyPressed( const KeyEvent& keyEvent )
 	if( keyEvent.keyCode == Keys::Pause )
 		Log::showDebug = !Log::showDebug;
 
-	//if( keyEvent.keyCode == Keys::F )
-		//debug( "fps: %d", int( 1.0f / lastFrameTime ) );
+	if( keyEvent.keyCode == Keys::F )
+		debug( "fps: %d", int( 1.0f / lastFrameTime ) );
 
 	if( keyEvent.keyCode == Keys::G )
 	{
 		debug( "min/avg/max: %f / %f / %f", 
 					minFrameTime, avgFrameTime, maxFrameTime );
 	}
-
-	if( keyEvent.keyCode == Keys::P )
-	{
-		if( sound->isPlaying() )
-			sound->pause();
-		else
-			sound->play();
-	}
-}
-
-//-----------------------------------//
-
-void Example::onButtonPressed( const MouseButtonEvent& btnEvent )
-{
-
 }
 
 //-----------------------------------//

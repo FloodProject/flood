@@ -26,9 +26,6 @@
 
 using namespace luabind;
 
-using namespace vapor::scene;
-using namespace vapor::resources;
-
 namespace vapor { namespace script {
 
 //-----------------------------------//

@@ -9,6 +9,7 @@
 #include "PCH.h"
 #include "Viewport.h"
 #include "EditorIcons.h"
+#include <vapor/Utilities.h>
 
 namespace vapor { namespace editor {
 
@@ -178,11 +179,14 @@ void Viewport::onCameraTransform()
 
 void Viewport::updatePosition()
 {
-	using boost::lexical_cast;
-
-	float X = lexical_cast<float>( txt_X->GetValue() );
-	float Y = lexical_cast<float>( txt_Y->GetValue() );
-	float Z = lexical_cast<float>( txt_Z->GetValue() );
+	std::string str( txt_X->GetValue() );
+	float X = str_to_num<float>( str );
+	
+	str.assign( txt_Y->GetValue() );
+	float Y = str_to_num<float>( str );
+	
+	str.assign( txt_Z->GetValue() );
+	float Z = str_to_num<float>( str );
 
 	math::Vector3 pos( X, Y, Z );
 	transform->setPosition( pos );

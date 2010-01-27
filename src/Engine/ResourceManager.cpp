@@ -9,7 +9,7 @@
 #include "vapor/PCH.h"
 #include "vapor/resources/ResourceManager.h"
 #include "vapor/vfs/File.h"
-#include "vapor/StringUtilities.h"
+#include "vapor/Utilities.h"
 
 using namespace vapor::vfs;
 

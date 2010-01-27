@@ -10,9 +10,7 @@
 
 #include <vapor/Platform.h>
 #include <vapor/Engine.h>
-
 #include <vapor/Timer.h>
-
 #include <vapor/input/Keyboard.h>
 #include <vapor/input/Mouse.h>
 
@@ -28,7 +26,7 @@ namespace vapor {
  * run() method and everything should automagically work.
  */
 
-class VAPOR_API Framework : protected Engine
+class VAPOR_API Framework : public Engine
 {
 public:
 

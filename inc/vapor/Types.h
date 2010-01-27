@@ -50,13 +50,3 @@ typedef unsigned long	ulong;
 #include <map>
 #include <tuple>
 #include <stack>
-
-//---------------------------------------------------------------------//
-// C++0x compatibility macros
-//---------------------------------------------------------------------//
-
-// TODO: Check for VC2010
-
-//#ifndef nullptr
-//	#define nullptr NULL
-//#endif

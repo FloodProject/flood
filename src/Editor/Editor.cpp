@@ -34,6 +34,7 @@ enum
 	Toolbar_ToogleConsole,
 	Toolbar_ToogleGrid,
 	Toolbar_TooglePlay,
+	Toolbar_ToogleSidebar,
 };
 
 // ----------------------------------------------------------------------------
@@ -294,7 +295,7 @@ void EditorFrame::createToolbar()
 	// --------------
 
 	toolBar->AddTool( wxID_ANY, "New", wxMEMORY_BITMAP(page_empty) );
-	toolBar->AddTool( wxID_ANY, "Open", wxMEMORY_BITMAP(folder) ); 
+	toolBar->AddTool( wxID_ANY, "Open", wxMEMORY_BITMAP(folder_explore) ); 
 	toolBar->AddTool( wxID_ANY, "Save", wxMEMORY_BITMAP(disk) );
 	
 	toolBar->AddSeparator();
@@ -345,6 +346,15 @@ void EditorFrame::createToolbar()
 
 	//toolBar->AddTool( wxID_ANY, "", wxMEMORY_BITMAP(resultset_next) );
 
+	// --------------
+	// Terrain tools
+	// --------------
+
+	toolBar->AddSeparator();
+
+	toolBar->AddTool( Toolbar_ToogleSidebar, "Show/hide sidebar", 
+		wxMEMORY_BITMAP(application_side_tree_right), "Shows/hides the sidebar" ); 
+
 	toolBar->Realize();	
 
 	// connect events
@@ -388,6 +398,26 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 			physics::PhysicsManager* pm = engine->getPhysicsManager();
 			if( pm ) pm->setSimulationEnabled( !pm->getSimulationEnabled() );
 			break;
+		}
+
+		case Toolbar_ToogleSidebar:
+		{
+			wxSize szNew = GetClientSize();
+			const wxSize& szNB = notebookCtrl->GetClientSize();
+
+			if( notebookCtrl->IsShown() )
+			{
+				notebookCtrl->Hide();
+				szNew.SetWidth( szNew.GetWidth()-szNB.GetWidth() );
+			}
+			else
+			{
+				notebookCtrl->Show();
+				szNew.SetWidth( szNew.GetWidth()+szNB.GetWidth() );
+			}
+
+			SetClientSize( szNew );
+			Layout();
 		}
 	}
 }
@@ -474,7 +504,7 @@ void EditorFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 	wxPanel* m_panel1 = new wxPanel( about );
 
 	wxStaticBitmap* m_bitmap1 = new wxStaticBitmap( m_panel1, wxID_ANY, wxMEMORY_BITMAP(::about) );
-	bSizer2->Add( m_bitmap1, 0, wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5 );
+	bSizer2->Add( m_bitmap1, 0, wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 0 );
 
 	wxString aboutText( "This software is © 2009-2010 João Matos and the rest of the vapor3D Team.\n\n"
 		"vapor3D Editor uses some free software packages: wxWidgets (wxWidgets.org), Lua (lua.org),\n"
@@ -483,23 +513,23 @@ void EditorFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 
 	wxStaticText* m_staticText2 = new wxStaticText( m_panel1, wxID_ANY, aboutText );
 	m_staticText2->Wrap( -1 );
-	bSizer2->Add( m_staticText2, 0, wxEXPAND|wxALL, 5 );
+	bSizer2->Add( m_staticText2, 0, wxEXPAND|wxTOP|wxBOTTOM, 5 );
 	
 	wxBoxSizer* bSizer3 = new wxBoxSizer( wxHORIZONTAL );
 	
 	wxStaticLine* m_staticline1 = new wxStaticLine( m_panel1, wxID_ANY );
-	bSizer3->Add( m_staticline1, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer3->Add( m_staticline1, 1, wxALL|wxALIGN_CENTER_VERTICAL, 10 );
 	
-	//wxHyperlinkCtrl* m_hyperlink1 = new wxHyperlinkCtrl( m_panel1, wxID_ANY,
-	//	"vapor3D Editor Website", "http://www.vapor3d.org" );
-	//bSizer3->Add( m_hyperlink1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-
-	wxStaticText* m_hyperlink1 = new wxStaticText( m_panel1, wxID_ANY,
-		"http://www.vapor3d.org" );
+	wxHyperlinkCtrl* m_hyperlink1 = new wxHyperlinkCtrl( m_panel1, wxID_ANY,
+		"vapor3D Editor Website", "http://www.vapor3d.org" );
 	bSizer3->Add( m_hyperlink1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+	//wxStaticText* m_hyperlink1 = new wxStaticText( m_panel1, wxID_ANY,
+	//	"http://www.vapor3d.org" );
+	//bSizer3->Add( m_hyperlink1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	wxStaticLine* m_staticline2 = new wxStaticLine( m_panel1, wxID_ANY );
-	bSizer3->Add( m_staticline2, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer3->Add( m_staticline2, 1, wxALL|wxALIGN_CENTER_VERTICAL, 10 );
 	
 	bSizer2->Add( bSizer3, 1, wxEXPAND, 5 );
 	
@@ -511,6 +541,7 @@ void EditorFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 	
 	about->SetSizer( bSizer1 );
 	about->Layout();
+	bSizer1->Fit( about );
 
 	about->Show(true);
 }

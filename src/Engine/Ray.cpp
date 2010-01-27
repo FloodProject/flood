@@ -21,6 +21,14 @@ Ray::Ray( Vector3 origin, Vector3 direction )
 
 //-----------------------------------//
 
+Ray::Ray( const Ray& ray )
+	: origin( ray.origin ), direction( ray.direction )
+{
+
+}
+
+//-----------------------------------//
+
 const Vector3& Ray::getOrigin() const
 {
 	return origin;

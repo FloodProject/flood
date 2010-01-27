@@ -65,24 +65,6 @@ public:
 	// Gets the view matrix of the camera.
 	const math::Matrix4x3& getViewMatrix() const;
 
-	// Gets the field-of-view of the camera.
-	float getFOV() const;
-
-	// Sets the field-of-view of the camera.
-	void setFOV( float fov );
-
-	// Sets the far clipping plane of the camera.
-	void setFar( float far );
-
-	// Gets the far clipping plane of the camera.
-	float getFar() const;
-
-	// Sets the near clipping plane of the camera.
-	void setNear( float near );
-
-	// Gets the near clipping plane of the camera.
-	float getNear() const;
-
 	// Gets the current render target associated with the camera.
 	render::RenderTarget* getRenderTarget() const;
 
@@ -122,6 +104,24 @@ public:
 
 	// Gets the aspect ratio of the target.
 	float getAspectRatio() const;
+
+	// Gets the field-of-view of the camera.
+	float getFOV() const;
+
+	// Sets the field-of-view of the camera.
+	void setFOV( float fov );
+
+	// Sets the far clipping plane of the camera.
+	void setFar( float far );
+
+	// Gets the far clipping plane of the camera.
+	float getFar() const;
+
+	// Sets the near clipping plane of the camera.
+	void setNear( float near );
+
+	// Gets the near clipping plane of the camera.
+	float getNear() const;
 
 	math::Vector3 getForwardVector(){ return forwardVector; }
 

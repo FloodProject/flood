@@ -13,7 +13,7 @@
 #include "vapor/script/State.h"
 
 #include <lua.hpp>
-#include <luabind/luabind.hpp>
+//#include <luabind/luabind.hpp>
 
 namespace vapor { namespace script {
 
@@ -77,10 +77,10 @@ State::State()
 	luaL_openlibs( luaState );
 
 	// Pass the newly created Lua state to Luabind.
-	luabind::open( luaState );
+	//luabind::open( luaState );
 
 	// Set our own error handling function for Luabind.
-	luabind::set_pcall_callback( &handle_error );
+	//luabind::set_pcall_callback( &handle_error );
 }
 
 //-----------------------------------//

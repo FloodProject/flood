@@ -11,7 +11,7 @@
 #ifdef VAPOR_VFS_PHYSFS
 
 #include "vapor/vfs/File.h"
-#include "vapor/StringUtilities.h"
+#include "vapor/Utilities.h"
 
 #include <physfs.h>
 
