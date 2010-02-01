@@ -21,7 +21,7 @@ const std::string& Grid::type = "Grid";
 //-----------------------------------//
 
 Grid::Grid( render::MaterialPtr mat )
-	: sizeX( 5000 ), sizeZ( 5000 ), divX( 20 ), divZ( 20 ), strongMainLines( true )
+	: sizeX( 500 ), sizeZ( 500 ), divX( 20 ), divZ( 20 ), strongMainLines( true )
 {
 	RenderablePtr rend( new Renderable( Primitive::Lines, getGridBuffer() ) );
 	

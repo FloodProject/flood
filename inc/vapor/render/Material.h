@@ -7,16 +7,12 @@
 ************************************************************************/
 
 #pragma once
-
 #include "vapor/Platform.h"
-
 #include "vapor/render/Program.h"
 #include "vapor/render/Texture.h"
 #include "vapor/resources/Shader.h"
-
-#include "vapor/render/GL.h"
-
 #include "vapor/render/TextureManager.h"
+#include "vapor/render/GL.h"
 
 namespace vapor { namespace render {
 
@@ -58,25 +54,10 @@ namespace BlendingOperationDestination
 //-----------------------------------//
 
 /**
- * Type of primitive of the renderable.
- */
-
-namespace PolygonMode
-{
-    enum Enum
-    {
-		Solid = GL_FILL,
-		Wireframe = GL_LINE
-    };
-}
-
-//-----------------------------------//
-
-/**
  * Rendering material.
  */
 
-class VAPOR_API Material
+class VAPOR_API Material : public ReferenceCounted
 {
 public:
 
@@ -165,7 +146,7 @@ protected:
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( Material );
+TYPEDEF_INTRUSIVE_POINTER_FROM_CLASS( Material );
 
 //-----------------------------------//
 

@@ -60,7 +60,7 @@ namespace BufferAccess
  * depending on the usage and type flags that they are  created with. 
  */
 
-class VAPOR_API Buffer
+class VAPOR_API Buffer : public ReferenceCounted
 {
 public:
 

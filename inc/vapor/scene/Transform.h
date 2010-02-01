@@ -10,11 +10,8 @@
 
 #include "vapor/Platform.h"
 #include "vapor/scene/Component.h"
-
-#include "vapor/math/AABB.h"
-#include "vapor/math/Matrix4x3.h"
-#include "vapor/math/Vector3.h"
 #include "vapor/math/EulerAngles.h"
+#include "vapor/math/AABB.h"
 
 namespace vapor { namespace scene {
 
@@ -41,11 +38,11 @@ public:
 	const math::Vector3& getPosition() const;
 
 	// Sets the position of the node.
-	void setPosition( const math::Vector3 position );
+	void setPosition( const math::Vector3& position );
 
 	// Scale this node by the given parameters.
-	void scale( float x, float y, float z );
 	void scale( float uniform );
+	void scale( float x, float y, float z );
 	void scale( const math::Vector3& scale );
 
 	// Rotates this node by the given parameters.
@@ -59,7 +56,7 @@ public:
 	void setRotation( math::EulerAngles& rot );
 
 	// Points to a given point in space.
-	void lookAt( const math::Vector3& lookAtVector, const math::Vector3& upVector );
+	math::Matrix4x3 lookAt( const math::Vector3& lookAtVector, const math::Vector3& upVector );
 	
 	// Resets all the transformations in the transform.
 	void reset();
@@ -85,10 +82,14 @@ public:
 	// Called once per frame to update the component.
 	virtual void update( double delta );
 
+	// Gets fired when the transform is changed.
+	fd::delegate< void() > onTransform;
+
 	// Gets the type of this component. 
 	virtual const std::string& getType() const;
 
-	fd::delegate< void() > onTransform;
+	// Use this to render some debug bounding boxes.
+	virtual render::RenderablePtr getDebugRenderable() const;
 
 protected:
 
@@ -101,11 +102,14 @@ protected:
 	math::Matrix4x3 transform;
 	math::Matrix4x3 absoluteLocalToWorld;
 
-	static const std::string& type;
-
 	// Bounding volumes used for culling.
 	math::AABB boundingVolume;
 	math::AABB worldBoundingVolume;
+
+	bool aabbNeedsUpdate;
+	render::RenderablePtr aabbRenderable;
+
+	static const std::string& type;
 
 public:
 

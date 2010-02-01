@@ -180,7 +180,7 @@ public:
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( VertexBuffer );
+TYPEDEF_INTRUSIVE_POINTER_FROM_CLASS( VertexBuffer );
 
 //-----------------------------------//
 

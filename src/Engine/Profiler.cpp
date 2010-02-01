@@ -23,7 +23,8 @@ Profiler::Profiler(const std::string& name)
 
 Profiler::~Profiler()
 {
-	debug("%s: took %lu ms.", name.c_str(), static_cast<ulong>(time.getElapsedTime()*1000) );
+	warn("profile", "%s: took %lu ms / %.5lf ns.", name.c_str(), 
+		static_cast<ulong>(time.getElapsedTime()*1000), time.getElapsedTime());
 };
 
 //-----------------------------------//

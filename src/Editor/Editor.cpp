@@ -182,7 +182,7 @@ void EditorFrame::createScene()
 	}
 
 	NodePtr ct( new Node( "ct" ) );
-	ct->addComponent( TransformPtr( new Transform( 0.0f, 50.0f, 0.0f ) ) );
+	ct->addComponent( TransformPtr( new Transform() ) );
 	ct->addComponent( mesh->getGeometry() );
 	scene->add(ct);
 
@@ -402,13 +402,13 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 
 		case Toolbar_ToogleSidebar:
 		{
-			wxSize szNew = GetClientSize();
+			wxSize szNew = viewport->GetClientSize();
 			const wxSize& szNB = notebookCtrl->GetClientSize();
 
 			if( notebookCtrl->IsShown() )
 			{
 				notebookCtrl->Hide();
-				szNew.SetWidth( szNew.GetWidth()-szNB.GetWidth() );
+				//szNew.SetWidth( szNew.GetWidth()-szNB.GetWidth() );
 			}
 			else
 			{
@@ -426,63 +426,56 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 
 void EditorFrame::onMouseClick( const MouseButtonEvent& mbe )
 {
-	//if( vaporCtrl->HasFocus() ) return;
+	ScenePtr scene = engine->getSceneManager();
 
 	// Disable all enabled bounding boxes.
-	foreach( NodePtr node, selectedNodes )
+	foreach( const NodePtr& node, selectedNodes )
 	{
-		foreach( GeometryPtr geometry, node->getGeometry() )
-		{
-			//geometry->setBoundingBoxVisible( false );
-		}
+		node->getTransform()->setDebugRenderableVisible( false );
 	}
 
 	selectedNodes.clear();
 
 	// Just get all the needed classes with the data for picking.
-	Ray pickRay = viewport->camera->getRay( mbe.x, mbe.y );
+	Vector3 outFar;
+	Ray pickRay = viewport->camera->getRay( mbe.x, mbe.y, &outFar );
 
-	//std::vector< Vector3 > vertex;
-	//vertex.push_back( pNear );
-	//vertex.push_back( pFar );
+	std::vector< Vector3 > vertex;
+	vertex.push_back( pickRay.origin );
+	vertex.push_back( outFar );
 
-	//std::vector< Vector3 > colors;
-	//colors.push_back( Vector3( 1.0f, 0.0f, 0.0f ) );
-	//colors.push_back( Vector3( 1.0f, 0.0f, 0.0f ) );
+	std::vector< Vector3 > colors;
+	colors.push_back( Vector3( 1.0f, 0.0f, 0.0f ) );
+	colors.push_back( Vector3( 1.0f, 0.0f, 0.0f ) );
 
-	//VertexBufferPtr vb( new VertexBuffer() );
-	//vb->set( VertexAttribute::Vertex, vertex );
-	//vb->set( VertexAttribute::Color, colors );
+	VertexBufferPtr vb( new VertexBuffer() );
+	vb->set( VertexAttribute::Vertex, vertex );
+	vb->set( VertexAttribute::Color, colors );
 
-	//RenderablePtr rend( new Renderable( Primitive::Lines, vb ) );
-	//MaterialPtr mat( new Material( "LineMaterial", "diffuse" ) );
-	//rend->setMaterial( mat );
-	//GeometryPtr geom( new Geometry(rend) );
-	//NodePtr line( new Node( "line" ) );
-	//line->addComponent( TransformPtr( new Transform() ) );
-	//line->addComponent( geom );
-	//scene->add( line );
-
-	ScenePtr scene = engine->getSceneManager();
+	RenderablePtr rend( new Renderable( Primitive::Lines, vb ) );
+	MaterialPtr mat( new Material( "LineMaterial", "diffuse" ) );
+	rend->setMaterial( mat );
+	GeometryPtr geom( new Geometry(rend) );
+	NodePtr line( new Node( "line" ) );
+	line->addComponent( TransformPtr( new Transform() ) );
+	line->addComponent( geom );
+	scene->add( line );
 
 	// Do some ray tracing to find a collision.
-	foreach( NodePtr node, scene->getChildren() )
+	foreach( const NodePtr& node, scene->getChildren() )
 	{
-		//if( node->getName() == "line" ) continue;
+		if( node->getName() == "line" ) continue;
 
-		foreach( GeometryPtr geometry, node->getGeometry() )
-		{
-			//const AABB& aabb = geometry->getBoundingBox();
+		const AABB& aabb = node->getTransform()->getBoundingVolume();
 			
-			//float distance;
-			//if( aabb.intersects( pickRay, distance ) )
-			//{
-			//	// We found what we want, enable its bounding box.
-			//	geometry->setBoundingBoxVisible( true );
-			//	selectedNodes.push_back( node );
-			//	debug( "distance: %f", distance );
-			//	goto pickDone;
-			//}
+		float distance;
+		if( aabb.intersects( Ray( -pickRay.origin, pickRay.direction ), distance ) )
+		{
+			// We found what we want, enable its bounding box.
+			node->getTransform()->setDebugRenderableVisible( true );
+			selectedNodes.push_back( node );
+			debug( "distance: %f", distance );
+			//goto pickDone;
 		}
 	}
 

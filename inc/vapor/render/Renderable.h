@@ -9,14 +9,11 @@
 #pragma once
 
 #include "vapor/Platform.h"
-
 #include "vapor/render/Material.h"
 #include "vapor/render/VertexBuffer.h"
 #include "vapor/render/IndexBuffer.h"
-
-#include "vapor/math/Matrix4x3.h"
-
 #include "vapor/render/GL.h"
+#include "vapor/math/Matrix4x3.h"
 
 namespace vapor { namespace render {
 
@@ -49,14 +46,17 @@ namespace Primitive
 
 //-----------------------------------//
 
-/** TODO: move this to material */
+/**
+ * Type of primitive of the renderable.
+ */
 
-namespace RenderMode
+namespace PolygonMode
 {
     enum Enum
     {
 		Solid = GL_FILL,
-		Wireframe = GL_LINE
+		Wireframe = GL_LINE,
+		Point = GL_POINT
     };
 }
 
@@ -69,7 +69,7 @@ namespace RenderMode
  * type associated with them.
  */
 
-class VAPOR_API Renderable
+class VAPOR_API Renderable : public ReferenceCounted
 {
 public:
 
@@ -98,7 +98,7 @@ public:
     MaterialPtr getMaterial() const;
 
     // Gets the render mode of this renderable.
-    RenderMode::Enum getRenderMode() const;
+    PolygonMode::Enum getPolygonMode() const;
 
 	// Sets the vertex buffer of this renderable.
 	void setVertexBuffer( VertexBufferPtr vb );
@@ -113,7 +113,7 @@ public:
 	void setPrimitiveType( Primitive::Enum p );
 
 	// Sets the render mode of this renderable.
-	void setRenderMode( RenderMode::Enum mode );
+	void setPolygonMode( PolygonMode::Enum mode );
 
 protected:
 
@@ -121,7 +121,7 @@ protected:
     Primitive::Enum type;
 
 	// Rendering mode of the vertex buffer contents.
-	RenderMode::Enum mode;
+	PolygonMode::Enum mode;
 
 	// Vertex buffer with all the vertices.
     VertexBufferPtr vb;
@@ -135,7 +135,7 @@ protected:
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( Renderable );
+TYPEDEF_INTRUSIVE_POINTER_FROM_CLASS( Renderable );
 
 //-----------------------------------//
 

@@ -7,7 +7,6 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/scene/Node.h"
 
 namespace vapor { namespace scene {
@@ -17,15 +16,12 @@ namespace vapor { namespace scene {
 Node::Node( const std::string& name )
 	: name( name ), isVisible( true )
 {
-	// TODO: shared_from_this doesn't work in constructors
-	//addComponent( TransformPtr( new Transform() ) );
 }
 
 //-----------------------------------//
 
 Node::Node() : isVisible( true )
 {
-	//addComponent( TransformPtr( new Transform() ) );
 }
 
 //-----------------------------------//
@@ -67,6 +63,8 @@ void Node::setVisible( bool visible )
 
 bool Node::addComponent( ComponentPtr component )
 {
+	assert( component != nullptr );
+
 	const std::string& type = component->getType();
 
 	// Searches for a component with the same type.
@@ -76,13 +74,13 @@ bool Node::addComponent( ComponentPtr component )
 		return false;
 	}
 
-	// If it doesn't exists, we add a new one.
-	components[type] = component;
-	component->setNode( shared_from_this() );
-
 	// Cache geometry (renderable) objects.
 	GeometryPtr geometry = std::dynamic_pointer_cast< Geometry >( component );
 	if( geometry ) geometries.push_back( geometry );
+
+	// If it doesn't exists, we add a new one.
+	components[type] = component;
+	component->setNode( shared_from_this() );
 
 	return true;
 }
@@ -101,7 +99,7 @@ ComponentPtr Node::getComponent( const std::string& type )
 
 //-----------------------------------//
 
-const std::map< std::string, ComponentPtr >& Node::getComponents()
+const ComponentMap& Node::getComponents()
 {
 	return components;
 }
@@ -110,12 +108,19 @@ const std::map< std::string, ComponentPtr >& Node::getComponents()
 
 void Node::update( double delta )
 {
-	// Update Geometry components so bounding boxes are generated.
-	foreach( ComponentPtr comp, getGeometry() )
-		comp->update( delta );
+	// Update all geometry bounding boxes first
+	foreach( const GeometryPtr& geom, getGeometry() )
+		geom->update( delta );
 
-	foreach( componentPair component, components )
+	// Update transform (info may be needed by other components)
+	getTransform()->update( delta );
+
+	// Update everything else
+	foreach( const componentPair& component, components )
 	{
+		if(component.second->getType() == "Transform")
+			return;
+
 		component.second->update( delta );
 	}
 }

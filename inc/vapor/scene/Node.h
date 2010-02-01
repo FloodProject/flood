@@ -22,6 +22,9 @@ class Node;
 TYPEDEF_SHARED_POINTER_FROM_CLASS( Node );
 TYPEDEF_SHARED_WEAK_POINTER_FROM_CLASS( Node );
 
+typedef std::map< std::string, ComponentPtr > ComponentMap;
+typedef std::pair< const std::string, ComponentPtr > componentPair;
+
 //-----------------------------------//
 
 /**
@@ -55,7 +58,7 @@ public:
 	ComponentPtr getComponent( const std::string& type );
 
 	// Returns all the registered components in this node.
-	const std::map< std::string, ComponentPtr >& getComponents();
+	const ComponentMap& getComponents();
 
 	// Gets a component from this node.
 	template <typename T>
@@ -96,8 +99,7 @@ private:
 	std::string name;
 
 	// Holds the components of the node.
-	typedef std::pair< const std::string, ComponentPtr > componentPair;
-	std::map< std::string, ComponentPtr > components;
+	ComponentMap components;
 
 	// Points to the parent node (if any). 
 	NodeWeakPtr parent;

@@ -13,7 +13,7 @@ namespace vapor { namespace scene {
 
 //-----------------------------------//
 
-Component::Component()
+Component::Component() : drawDebugRenderable( false )
 {
 
 }
@@ -27,9 +27,23 @@ Component::~Component()
 
 //-----------------------------------//
 
-void Component::appendDebugGeometry( /*render::RenderQueue& queue*/ )
+void Component::setDebugRenderableVisible( bool draw )
 {
+	drawDebugRenderable = draw;
+}
 
+//-----------------------------------//
+
+bool Component::isDebugRenderableVisible() const
+{
+	return drawDebugRenderable;
+}
+
+//-----------------------------------//
+
+render::RenderablePtr Component::getDebugRenderable() const
+{
+	return render::RenderablePtr();
 }
 
 //-----------------------------------//

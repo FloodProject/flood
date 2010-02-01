@@ -124,9 +124,6 @@ Matrix4x3 Matrix4x3::createTranslationMatrix( const Vector3& v )
 
 Vector3	operator*(const Vector3 &p, const Matrix4x3 &m)
 {
-
-	// Grind through the linear algebra.
-
 	return Vector3(
 		p.x*m.m11 + p.y*m.m21 + p.z*m.m31 + m.tx,
 		p.x*m.m12 + p.y*m.m22 + p.z*m.m32 + m.ty,
@@ -134,7 +131,8 @@ Vector3	operator*(const Vector3 &p, const Matrix4x3 &m)
 	);
 }
 
-Vector3 &operator*=(Vector3 &p, const Matrix4x3 &m) {
+Vector3 &operator*=(Vector3 &p, const Matrix4x3 &m)
+{
 	p = p * m;
 	return p;
 }

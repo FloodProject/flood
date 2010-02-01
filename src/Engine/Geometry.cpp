@@ -7,7 +7,6 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/scene/Geometry.h"
 #include "vapor/scene/Node.h"
 
@@ -22,13 +21,15 @@ const std::string& Geometry::type = "Geometry";
 
 //-----------------------------------//
 
-Geometry::Geometry() 
+Geometry::Geometry() : isDirty( true )
 {
+
 }
 
 //-----------------------------------//
 
 Geometry::Geometry( RenderablePtr rend )
+	: isDirty( true )
 {
 	addRenderable( rend );
 }
@@ -88,9 +89,29 @@ void Geometry::appendRenderables( render::RenderQueue& queue, TransformPtr trans
 
 //-----------------------------------//
 
+const math::AABB& Geometry::getBoundingVolume() const
+{
+	return boundingVolume;
+}
+
+//-----------------------------------//
+
 void Geometry::update( double delta )
 {
+	if( !isDirty ) return;
 
+	boundingVolume.reset();
+
+	// Update the bounding box to accomodate new geometry.
+	foreach( RenderablePtr rend, renderables[RenderGroup::Normal] )
+	{
+		std::vector<math::Vector3> vertices = rend->getVertexBuffer()->getVertices();
+		
+		foreach( const Vector3& v, vertices )
+			boundingVolume.add( v );
+	}
+
+	isDirty = false;
 }
 
 //-----------------------------------//

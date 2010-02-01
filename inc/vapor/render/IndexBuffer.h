@@ -81,7 +81,7 @@ private:
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( IndexBuffer );
+TYPEDEF_INTRUSIVE_POINTER_FROM_CLASS( IndexBuffer );
 
 //-----------------------------------//
 

@@ -57,9 +57,6 @@ public:
 
 private:
 
-	double delta;
-	bool inTraversal;
-
 	// Updates all the transforms and bounding volumes of the scene nodes.
 	void updateTransformAndBV( NodePtr node, MatrixStack& transformStack );
 };

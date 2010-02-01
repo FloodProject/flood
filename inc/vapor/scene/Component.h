@@ -9,7 +9,7 @@
 #pragma once
 
 #include "vapor/Platform.h"
-
+#include "vapor/render/Renderable.h"
 
 namespace vapor { namespace scene {
 
@@ -36,6 +36,12 @@ public:
 	explicit Component();
 	virtual ~Component();
 	
+	// Gets the associated node of this component.
+	NodePtr getNode() const;
+
+	// Sets the associated node of this component.
+	void setNode( NodePtr node );
+
 	// Called once per frame to update the component.
 	virtual void update( double delta ) = 0;
 
@@ -43,17 +49,15 @@ public:
 	// Each component should have a unique type string.
 	virtual const std::string& getType() const = 0;
 
-	virtual void appendDebugGeometry( /*render::RenderQueue& queue*/ );
-
-	// Gets the associated node of this component.
-	NodePtr getNode() const;
-
-	// Sets the associated node of this component.
-	void setNode( NodePtr node );
+	// Use this to render some debug geometry.
+	virtual bool isDebugRenderableVisible() const;
+	virtual void setDebugRenderableVisible( bool draw );
+	virtual render::RenderablePtr getDebugRenderable() const;
 
 protected:
 
 	NodeWeakPtr node;
+	bool drawDebugRenderable;
 };
 
 //-----------------------------------//

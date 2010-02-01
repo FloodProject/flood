@@ -8,6 +8,7 @@
 
 #include "vapor/PCH.h"
 #include "vapor/scene/FirstPersonCamera.h"
+#include "vapor/scene/Node.h"
 
 namespace vapor { namespace scene {
 
@@ -16,8 +17,13 @@ using namespace vapor::math;
 
 //-----------------------------------//
 
-static const float DEFAULT_MOVE_SENSIVITY = 1.1f;
-static const float DEFAULT_LOOK_SENSIVITY = 0.01f;
+static const float DEFAULT_MOVE_SENSIVITY = 0.5f;
+static const float DEFAULT_LOOK_SENSIVITY = 0.005f;
+static const float DEFAULT_LIMIT_XAXIS = degreeToRadian( 89.0f );
+
+//-----------------------------------//
+
+const std::string& FirstPersonCamera::type = "FirstPersonCamera";
 
 //-----------------------------------//
 
@@ -43,38 +49,15 @@ void FirstPersonCamera::update( double delta )
 
 void FirstPersonCamera::checkControls( double delta )
 {
-	TransformPtr transform = getNode()->getTransform();
-	
 	// Check mouse movement.
-	double dt = delta * 100 * lookSensivity;
+	float dt = delta * 100.0f * lookSensivity;
 
-	Vector3 rotateVector( mouseDistance.y * (float)dt, mouseDistance.x * (float)dt, 0.0f );
-	
-	if( rotateVector != Vector3::Zero )
-		transform->rotate( rotateVector );
+	Vector3 rotateVector( mouseDistance.y * dt, -mouseDistance.x * dt, 0.0f );
+	transform->rotate( rotateVector );
 
-	EulerAngles newForwardAngle( -rotateVector.x, -rotateVector.y, -rotateVector.z );
-
-	//rotate( -rotateVectorKey );
-	//EulerAngles newForwardAngle( rotateVectorKey.x, rotateVectorKey.y, rotateVectorKey.z );
-	
-	forwardVector *= newForwardAngle.getOrientationMatrix();
-	//forwardVector.normalize();
-
-	//if( mouseDistance.x != 0 && mouseDistance.y != 0 )
-	//{
-		//debug( "forangle: %f %f %f", -rotateVector.x, -rotateVector.y, -rotateVector.z );
-	//if(rotateVectorKey.x != 0 || rotateVectorKey.y != 0 || rotateVectorKey.z != 0)
-	//{
-	//	debug( "forangle: %f %f %f", rotateVectorKey.x, rotateVectorKey.y, rotateVectorKey.z );
-	//	debug( "forward: %f %f %f", forwardVector.x, forwardVector.y, forwardVector.z );
-	//}
-	//}
-
-	// Restrict X-axis movement by 90 deegres.
-	float xlimit = degreeToRadian( 90.0f );
-	const float& xang = transform->getRotation().xang;
-	limit< float >( const_cast< float& >( xang ), -xlimit, xlimit );
+	//// Restrict X-axis movement by some deegres.
+	float& xang = const_cast< float& >( transform->getRotation().xang );
+	limit< float >( xang, -DEFAULT_LIMIT_XAXIS, DEFAULT_LIMIT_XAXIS );
 
 	mouseDistance.zero();
 
@@ -82,39 +65,74 @@ void FirstPersonCamera::checkControls( double delta )
 	Keyboard* kbd = inputManager->getKeyboard();
 	const std::vector< bool >& state = kbd->getKeyState();
 
-	/*double*/ dt = delta * 100 * moveSensivity;
+	dt = delta * 100.0f * moveSensivity;
+
+	Vector3 moveVector;
 
 	if( state[Keys::W] == true )
-		transform->translate( forwardVector * (float)dt );
+		moveVector+=( Vector3::UnitZ );
 
-	if( state[Keys::S] == true )
-		transform->translate( -forwardVector * (float)dt );
+	if( state[Keys::S] )
+		moveVector+=( -Vector3::UnitZ );
 	
-	if( state[Keys::A] == true )
-		transform->translate( Vector3::UnitX * (float)dt );
+	if( state[Keys::A] )
+		moveVector+=( Vector3::UnitX );
 
-	if( state[Keys::D] == true )
-		transform->translate( -Vector3::UnitX * (float)dt );
+	if( state[Keys::D] )
+		moveVector+=( -Vector3::UnitX );
 	
-	if( state[Keys::Q] == true )
-		transform->translate( -Vector3::UnitY * (float)dt );
+	if( state[Keys::Q] )
+		moveVector+=( Vector3::UnitY );
 
-	if( state[Keys::Z] == true )
-		transform->translate( Vector3::UnitY * (float)dt );
+	if( state[Keys::Z] )
+		moveVector+=( -Vector3::UnitY );
+
+	if( state[Keys::I] )
+		transform->rotate( -0.01f, 0.0f, 0.0f );
+
+	if( state[Keys::K] )
+		transform->rotate( 0.01f, 0.0f, 0.0f );
+    
+	if( state[Keys::J] )
+		transform->rotate( 0.0f, 0.01f, 0.0f );
+
+	if( state[Keys::L] )
+		transform->rotate( 0.0f, -0.01f, 0.0f );	
+
+	Matrix4x3 t = EulerAngles(30.0f,20.0f,0.0f).getOrientationMatrix();
+	Vector3 fuck = Vector3(10.0f, 20.0f, 30.0f)*t;
+
+	moveVector = moveVector * dt;
+	EulerAngles& rotAng =  const_cast< EulerAngles& >(transform->getRotation());
+	transform->translate( moveVector*rotAng.getOrientationMatrix() );
+	
+	{
+		Vector3 transformedReference = Vector3::UnitZ * rotAng.getOrientationMatrix();
+		Vector3 cameraLookAt = transform->getPosition() + transformedReference;
+		viewMatrix = transform->lookAt( cameraLookAt, Vector3::UnitY );
+
+
+		debug( "ang: %f, %f, %f", rotAng.xang, rotAng.yang, rotAng.zang );
+		debug( "lookAt: %f, %f, %f", transformedReference.x, transformedReference.y, transformedReference.z );
+	}
+
+	rotAng.canonize();
+
+	//viewMatrix = transform->lookAt( Vector3::UnitZ, Vector3::UnitY );
 }
 
 //-----------------------------------//
 
-const std::string FirstPersonCamera::name() const
+const std::string& FirstPersonCamera::getType() const
 {
-	return "FPCamera";
+	return FirstPersonCamera::type;
 }
 
 //-----------------------------------//
 
 const std::string FirstPersonCamera::save(int ind)
 {
-	return "camera";
+	return "";
 }
 
 //-----------------------------------//
@@ -147,8 +165,6 @@ void FirstPersonCamera::registerCallbacks()
 	if( mouse )
 	{
 		mouse->onMouseMove += fd::bind( &FirstPersonCamera::onMouseMove, this );
-		mouse->onMouseButtonPress += fd::bind( &FirstPersonCamera::onButtonPressed, this );
-		mouse->onMouseButtonRelease += fd::bind( &FirstPersonCamera::onButtonReleased, this );
 		mouse->onMouseWheelMove += fd::bind( &FirstPersonCamera::onMouseWheel, this );
 	}
 
@@ -217,18 +233,18 @@ void FirstPersonCamera::onKeyPressed( const KeyEvent& keyEvent )
 
 void FirstPersonCamera::onKeyReleased( const KeyEvent& keyEvent )
 {
-	//switch( keyEvent.keyCode )
-	//{	
-		//case Keys::Left:
-		//case Keys::Right:
-		//case Keys::Up:
-		//case Keys::Down:
-		//{
-		//	check = false;
-		//	rotateVectorKey.zero();
-		//	break;
-		//}
-	//}
+	switch( keyEvent.keyCode )
+	{	
+		case Keys::Left:
+		case Keys::Right:
+		case Keys::Up:
+		case Keys::Down:
+		{
+			//check = false;
+			//rotateVectorKey.zero();
+			//break;
+		}
+	}
 }
 
 //-----------------------------------//
@@ -253,20 +269,6 @@ void FirstPersonCamera::onMouseMove( const MouseMoveEvent& moveEvent )
 	}
 
 	centerCursor();
-}
-
-//-----------------------------------//
-
-void FirstPersonCamera::onButtonPressed( const MouseButtonEvent& buttonEvent )
-{
-
-}
-
-//-----------------------------------//
-
-void FirstPersonCamera::onButtonReleased( const MouseButtonEvent& buttonEvent )
-{
-
 }
 
 //-----------------------------------//

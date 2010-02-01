@@ -7,11 +7,12 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/scene/Transform.h"
+#include "vapor/scene/Node.h"
 #include "vapor/math/Math.h"
 
 using namespace vapor::math;
+using namespace vapor::render;
 
 namespace vapor { namespace scene {
 
@@ -22,7 +23,8 @@ const std::string& Transform::type = "Transform";
 //-----------------------------------//
 
 Transform::Transform( float x, float y, float z )
-	: v_scale( 1.0f ), isPhysicsDriven( false ), v_translate( x, y, z )
+	: v_scale( 1.0f ), isPhysicsDriven( false ), v_translate( x, y, z ),
+	aabbNeedsUpdate( true )
 {
 
 }
@@ -50,9 +52,6 @@ void Transform::translate( float x, float y, float z )
 	v_translate.z += z;
 
 	notify();
-
-	//transform = transform * Matrix4x3::createTranslationMatrix( v_translate );
-	//v_translate.zero();
 }
 
 //-----------------------------------//
@@ -78,9 +77,6 @@ void Transform::scale( float x, float y, float z )
 	v_scale.z *= z;
 
 	notify();
-
-	//transform = transform * Matrix4x3::createScaleMatrix( v_scale );
-	//v_scale = math::Vector3( 1.0f, 1.0f, 1.0f );
 }
 
 //-----------------------------------//
@@ -99,9 +95,6 @@ void Transform::rotate( float xang, float yang, float zang )
 	angles.zang += zang;
 
 	notify();
-
-	//transform = transform * angles.getOrientationMatrix();
-	//angles.identity();
 }
 
 //-----------------------------------//
@@ -129,68 +122,39 @@ const math::Vector3& Transform::getPosition() const
 
 //-----------------------------------//
 
-void Transform::setPosition( const math::Vector3 position )
+void Transform::setPosition( const math::Vector3& position )
 {
 	v_translate = position;
 }
 
 //-----------------------------------//
 
-void Transform::lookAt( const math::Vector3& lookAtVector, const math::Vector3& upVector )
+math::Matrix4x3 Transform::lookAt( const math::Vector3& lookAtVector, const math::Vector3& upVector )
 {
-	Vector3 eye = Vector3( absoluteLocalToWorld.tx, absoluteLocalToWorld.ty, 
-		absoluteLocalToWorld.tz );
+	const Vector3& eye = v_translate;
 
-	Vector3 zaxis = ( lookAtVector - eye ).normalize();
+	Vector3 zaxis = ( eye - lookAtVector ).normalize();
 	Vector3	xaxis = upVector.cross(zaxis).normalize();
 	Vector3	yaxis = zaxis.cross(xaxis);
 
 	Matrix4x3 m;
 	m.m11 = xaxis.x;
-	m.m12 = xaxis.y;
-	m.m13 = xaxis.z;
+	m.m12 = yaxis.x;
+	m.m13 = zaxis.x;
 
-	m.m21 = yaxis.x;
+	m.m21 = xaxis.y;
 	m.m22 = yaxis.y;
-	m.m23 = yaxis.z;
+	m.m23 = zaxis.y;
 
-	m.m31 = zaxis.x;
-	m.m32 = zaxis.y;
+	m.m31 = xaxis.z;
+	m.m32 = yaxis.z;
 	m.m33 = zaxis.z;
 
 	m.tx = -xaxis.dot(eye);
 	m.ty = -yaxis.dot(eye);
 	m.tz = -zaxis.dot(eye);
-
-	//viewMatrix = m * getLocalTransform();
-
-	//glMatrixMode( GL_MODELVIEW );
-	//glLoadIdentity();
-
-	//gluLookAt( eye.x, eye.y, eye.z,
-	//	lookAtVector.x, lookAtVector.y, lookAtVector.z,
-	//	upVector.x, upVector.y, upVector.z );
-
-	//float test[16];
-	//glGetFloatv( GL_MODELVIEW_MATRIX, test );
-
-	//Matrix4x3 glView;
-
-	//glView.m11 = test[0];
-	//glView.m12 = test[1];
-	//glView.m13 = test[2];
-	//
-	//glView.m21 = test[4];
-	//glView.m22 = test[5];
-	//glView.m23 = test[6];
-
-	//glView.m31 = test[8];
-	//glView.m32 = test[9];
-	//glView.m33 = test[10];
-
-	//glView.tx = test[12];
-	//glView.ty = test[13];
-	//glView.tz = test[14];
+	
+	return m;
 }
 
 //-----------------------------------//
@@ -200,6 +164,8 @@ void Transform::reset( )
 	v_translate.zero();
 	v_scale = math::Vector3( 1.0f );
 	angles.identity();
+	
+	notify();
 }
 
 //-----------------------------------//
@@ -234,25 +200,73 @@ const std::string& Transform::getType() const
 
 //-----------------------------------//
 
-void getChildrenBoundingVolume( const math::AABB& boundingVolume, NodePtr node )
+bool Transform::requiresBoundingVolumeUpdate() const
 {
-	//foreach(
+	// TODO: optimize this
+	return aabbNeedsUpdate;
 }
 
 //-----------------------------------//
 
-bool Transform::requiresBoundingVolumeUpdate() const
+static const float EXTRA_SPACE = 1.01f;
+
+#define ADD_BOX_FACE( a, b, c, d )						\
+	v.push_back( aabb.getCorner( a ) * EXTRA_SPACE );	\
+	v.push_back( aabb.getCorner( b ) * EXTRA_SPACE );	\
+	v.push_back( aabb.getCorner( c ) * EXTRA_SPACE );	\
+	v.push_back( aabb.getCorner( d ) * EXTRA_SPACE );
+
+RenderablePtr buildBoundingRenderable( const math::AABB& aabb )
 {
-	// TODO: optimize this
-	return false;
+	VertexBufferPtr vb( new VertexBuffer() );
+
+	std::vector< Vector3 > v;
+	
+	ADD_BOX_FACE( 0, 2, 3, 1 ) // Front
+	ADD_BOX_FACE( 0, 1, 5, 4 ) // Bottom
+	ADD_BOX_FACE( 4, 5, 7, 6 ) // Back
+	ADD_BOX_FACE( 2, 6, 7, 3 ) // Top
+	ADD_BOX_FACE( 0, 4, 6, 2 ) // Left
+	ADD_BOX_FACE( 1, 3, 7, 5 ) // Right
+
+	std::vector< Vector3 > c( 6/*faces*/*4/*vertices*/, Vector3( 1.0f, 1.0f, 0.0f ) );
+
+	vb->set( VertexAttribute::Vertex, v );
+	vb->set( VertexAttribute::Color, c );
+
+	MaterialPtr mat( new Material( "BoundBox", "diffuse" ) );
+	mat->setLineWidth( 1.0f );
+	mat->setLineSmoothing( true );
+
+	RenderablePtr bbox( new Renderable( Primitive::Quads, vb, mat ) );
+	bbox->setPolygonMode( PolygonMode::Wireframe );
+
+	return bbox;
 }
 
 //-----------------------------------//
 
 void Transform::update( double delta )
 {
+	absoluteLocalToWorld = getLocalTransform();
+
+	if( !requiresBoundingVolumeUpdate() )
+		return;
+
 	assert( getNode() );
-	getChildrenBoundingVolume( boundingVolume, getNode() );
+	NodePtr node = getNode();
+
+	boundingVolume.reset();
+
+	foreach( const GeometryPtr& geometry, node->getGeometry() )
+	{
+		boundingVolume.add( geometry->getBoundingVolume() );
+	}
+	
+	aabbNeedsUpdate = false;
+
+	// Update debug renderable
+	aabbRenderable = buildBoundingRenderable( boundingVolume );
 }
 
 //-----------------------------------//
@@ -279,6 +293,13 @@ const math::AABB& Transform::getBoundingVolume() const
 const math::AABB& Transform::getWorldBoundingVolume() const
 {
 	return worldBoundingVolume;
+}
+
+//-----------------------------------//
+
+render::RenderablePtr Transform::getDebugRenderable() const
+{
+	return aabbRenderable;
 }
 
 //-----------------------------------//

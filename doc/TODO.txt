@@ -4,18 +4,17 @@ WIP (work-in-progress)
 Near TODO:
 ----------
 
-Bounding Boxes and Frustum Culling
+Fix Picking
+Skybox component
 View frustum culling
 Quadtree Terrain
-Add hierarchical frustum culling
-Fix Bounding Boxes hierarchy
-Fix the logging file and crashing behaviour
-Skybox component
-Console GUI widget
+Fix the Camera behaviour
+Add Z-bias to the AABB Renderables
 Per-script Lua state
 Fix Overlays positioning
 Fix Lua state closing
-Fix the Camera behaviour
+Console GUI widget
+Typesafe logging
 
 EDITOR:
 -------
@@ -27,7 +26,7 @@ Ignore Entities (Layers?)
 Private editor nodes (hide in the scene tree)
 
 Camera options
-	Add a small frame below the viewport with camera options
+	Add a small frame below the viewport with camera options (WIP)
 Textures LOD
 
 Terrain editing
@@ -57,6 +56,9 @@ Textures:
 	Warn and downsample if texture size is not supported
 	Resize the sample to nearest-POT if rectangle textures not supported
 	Generate and support MIP-maps
+	Generate and support normal maps
+	Combine and support cubemaps / skybox textures
+	Check squish and NVIDIA Texture Tools libraries
 
 Geometry component is shared per node, and that causes lots of problems.
 
@@ -152,6 +154,7 @@ Math:
 DONE:
 -----
 
+Bounding Boxes
 Switch all the resource loaders to use the VFS layer
 Check for maximum texture unit size
 Watcher for resource change notification integrated with VFS

@@ -64,7 +64,7 @@ void Viewport::createCamera()
 	cameraNode->addComponent( TransformPtr( new Transform() ) );
 	cameraNode->addComponent( camera );
 	// TODO: hardcoded camera start position...
-	cameraNode->getTransform()->translate( 0.0f, -200.0f, -650.0f );
+	cameraNode->getTransform()->translate( 0.0f, 20.0f, -65.0f );
 	engine->getSceneManager()->add( cameraNode );
 
 	vaporCtrl->setCamera( camera );
@@ -74,6 +74,8 @@ void Viewport::createCamera()
 }
 
 //-----------------------------------//
+
+const short BAR_HEIGHT = 19;
 
 void Viewport::build()
 {
@@ -87,7 +89,7 @@ void Viewport::build()
 
 	wxTextValidator validatorX(wxFILTER_INCLUDE_CHAR_LIST, &X);
 	validatorX.SetCharIncludes( includes );
-	txt_X = new wxTextCtrl( this, wxID_ANY, wxT("0.0"), wxDefaultPosition, wxSize( 50, -1 ), wxTE_CENTRE | wxTE_PROCESS_ENTER,
+	txt_X = new wxTextCtrl( this, wxID_ANY, wxT("0.0"), wxDefaultPosition, wxSize( 50, BAR_HEIGHT ), wxTE_CENTRE | wxTE_PROCESS_ENTER,
 		validatorX);
 	
 	txt_X->Bind(wxEVT_COMMAND_TEXT_UPDATED, &Viewport::onText, this);
@@ -102,7 +104,7 @@ void Viewport::build()
 	
 	wxTextValidator validatorY(wxFILTER_INCLUDE_CHAR_LIST, &Y);
 	validatorY.SetCharIncludes( includes );
-	txt_Y = new wxTextCtrl( this, wxID_ANY, wxT("0.0"), wxDefaultPosition, wxSize( 50, -1 ), wxTE_CENTRE | wxTE_PROCESS_ENTER,
+	txt_Y = new wxTextCtrl( this, wxID_ANY, wxT("0.0"), wxDefaultPosition, wxSize( 50, BAR_HEIGHT ), wxTE_CENTRE | wxTE_PROCESS_ENTER,
 		validatorY);
 	
 	txt_Y->Bind(wxEVT_COMMAND_TEXT_UPDATED, &Viewport::onText, this);
@@ -117,7 +119,7 @@ void Viewport::build()
 	
 	wxTextValidator validatorZ(wxFILTER_INCLUDE_CHAR_LIST, &Z);
 	validatorZ.SetCharIncludes( includes );
-	txt_Z = new wxTextCtrl( this, wxID_ANY, wxT("0.0"), wxDefaultPosition, wxSize( 50, -1 ), wxTE_CENTRE | wxTE_PROCESS_ENTER,
+	txt_Z = new wxTextCtrl( this, wxID_ANY, wxT("0.0"), wxDefaultPosition, wxSize( 50, BAR_HEIGHT ), wxTE_CENTRE | wxTE_PROCESS_ENTER,
 		validatorZ);
 	
 	txt_Z->Bind(wxEVT_COMMAND_TEXT_UPDATED, &Viewport::onText, this);
@@ -130,8 +132,8 @@ void Viewport::build()
 	sizer->Add( m_staticline2, 0, wxEXPAND|wxALL, 5 );
 	
 	wxString choice_ViewChoices[] = { "Free", wxT("Top"), wxT("Down"), wxT("Left"), wxT("Right") };
-	int choice_ViewNChoices = sizeof( choice_ViewChoices ) / sizeof( wxString );
-	choice_View = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, choice_ViewNChoices, choice_ViewChoices, 0 );
+	choice_View = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxSize( -1, BAR_HEIGHT ), 
+		VAPOR_ARRAY_SIZE(choice_ViewChoices), choice_ViewChoices, 0 );
 	choice_View->SetSelection( 0 );
 	sizer->Add( choice_View, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxLEFT, 5 );
 	

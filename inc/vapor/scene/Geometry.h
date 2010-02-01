@@ -8,13 +8,8 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
-#include "vapor/scene/Component.h"
 #include "vapor/scene/Transform.h"
-
-#include "vapor/render/Renderable.h"
 #include "vapor/render/RenderQueue.h"
-
 #include "vapor/math/AABB.h"
 
 namespace vapor { namespace scene {
@@ -55,15 +50,26 @@ public:
 	/// Serializes this component to a stream.
 	virtual const std::string save(int indent = 0);
 
+	/// Gets the bounding volume of this geometry.
+	const math::AABB& getBoundingVolume() const;
+
+	// Marks the geometry as dirty (forces AABB update).
+	void markDirty();
+
 	/// Returns the name of this component.
 	virtual const std::string& getType() const;
 
 protected:
 
-	typedef std::vector< render::RenderablePtr > RenderableList;
-	std::map< render::RenderGroup::Enum, RenderableList > renderables;
-	typedef std::pair<const  render::RenderGroup::Enum, RenderableList > rendPair;
+	// Bounding volume of the geometry.
+	math::AABB boundingVolume;
+	bool isDirty;
 
+	typedef std::vector< render::RenderablePtr > RenderableList;
+	typedef std::pair<const  render::RenderGroup::Enum, RenderableList > rendPair;
+	
+	std::map< render::RenderGroup::Enum, RenderableList > renderables;
+	
 	static const std::string& type;
 };
 

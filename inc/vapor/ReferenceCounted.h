@@ -7,7 +7,6 @@
 ************************************************************************/
 
 #pragma once
-#include "vapor/Platform.h"
 
 namespace vapor {
 

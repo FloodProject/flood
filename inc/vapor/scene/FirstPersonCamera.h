@@ -14,8 +14,6 @@
 #include "vapor/input/Keyboard.h"
 #include "vapor/input/Mouse.h"
 
-#include "vapor/math/Vector3.h"
-
 namespace vapor { namespace scene {
 
 //-----------------------------------//
@@ -43,7 +41,7 @@ public:
 	virtual const std::string save( int indent = 0 );
 	
 	// Gets the name of this node.
-	virtual const std::string name() const;
+	virtual const std::string& getType() const;
 
 protected:
 
@@ -61,8 +59,6 @@ protected:
 	void onKeyReleased( const input::KeyEvent& event );
 	void onMouseMove( const input::MouseMoveEvent& event );
 	void onMouseWheel( const input::MouseWheelEvent& event );
-	void onButtonPressed( const input::MouseButtonEvent& event );
-	void onButtonReleased( const input::MouseButtonEvent& event );
 	void onWindowFocusChange( bool focusLost );
 
 	// Restrict camera movement on the X-axis.
@@ -81,7 +77,7 @@ protected:
 	// Input manager.
 	input::InputManager* inputManager;
 
-	//math::Vector3 rotateVectorKey;
+	static const std::string& type;
 };
 
 //-----------------------------------//

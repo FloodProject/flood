@@ -79,7 +79,7 @@ void SceneTreeCtrl::initControl()
 void SceneTreeCtrl::initIcons()
 {
 	// create a new list of all the icons.
-	imageList = new wxImageList(16, 16, false, 10);
+	imageList = new wxImageList(16, 16, false, 12);
 
 	// the images were preconverted from image files to binary data 
 	// held in a regular C++ array. this way we don't need to package
@@ -89,6 +89,7 @@ void SceneTreeCtrl::initIcons()
 	imageList->Add(wxMEMORY_BITMAP(package));
 	componentIcons["Scene"] = imageList->Add(wxMEMORY_BITMAP(sitemap_color));
 	componentIcons["Camera"] = imageList->Add(wxMEMORY_BITMAP(camera));
+	componentIcons["FirstPersonCamera"] = imageList->Add(wxMEMORY_BITMAP(camera));
 	componentIcons["Light"] = imageList->Add(wxMEMORY_BITMAP(lightbulb_off));
 	componentIcons["Sound"] = imageList->Add(wxMEMORY_BITMAP(sound));
 	componentIcons["Listener"] = imageList->Add(wxMEMORY_BITMAP(status_online));
@@ -112,14 +113,14 @@ void SceneTreeCtrl::updateScene( wxTreeItemId id, NodePtr node )
 	if( group )
 	{
 		// Traverse the tree and add the nodes to the control.
-		foreach( NodePtr child, group->getChildren() )
+		foreach( const NodePtr& child, group->getChildren() )
 		{
 			wxTreeItemId new_id = AppendItem( id, child->getName(), 0 );
 			updateScene( new_id, child );
 		}
 	}
 
-	foreach( componentPair component, node->getComponents() )
+	foreach( const componentPair& component, node->getComponents() )
 	{
 		const std::string& type = component.second->getType();
 		AppendItem( id, type, componentIcons[type] );
@@ -133,7 +134,7 @@ scene::NodePtr SceneTreeCtrl::getEntity( wxTreeItemId id )
 {
 	assert( id.IsOk() );
 
-	std::string str( GetItemText( id ) );
+	const std::string str( GetItemText( id ) );
 	NodePtr node = scene.lock()->getEntity( str );
 
 	while( !node )
@@ -154,13 +155,12 @@ scene::NodePtr SceneTreeCtrl::getEntity( wxTreeItemId id )
 
 void SceneTreeCtrl::setBoundingBox( const wxTreeItemId& id, bool state )
 {
-	NodePtr node = getEntity( id );
+	const NodePtr& node = getEntity( id );
 
 	if( !node ) return;
 
 	// Activate bounding box drawing for this node.
-	//foreach( GeometryPtr geometry, node->getGeometry() )
-		//geometry->setBoundingBoxVisible( state );
+	node->getTransform()->setDebugRenderableVisible( state );
 }
 
 //-----------------------------------//
@@ -181,7 +181,7 @@ void SceneTreeCtrl::onItemChanged(wxTreeEvent& event)
 void SceneTreeCtrl::onItemMenu(wxTreeEvent& event)
 {
 	menuItemId = event.GetItem();
-	NodePtr node = getEntity( menuItemId );
+	const NodePtr& node = getEntity( menuItemId );
 
 #if wxUSE_MENUS
 	wxMenu menu("Scene node");
@@ -197,7 +197,7 @@ void SceneTreeCtrl::onItemMenu(wxTreeEvent& event)
 			const std::vector< RenderablePtr >& rend = geo.front()->getRenderables();
 			if( !rend.empty() )
 			{
-				bool state = (rend.front()->getRenderMode() != RenderMode::Solid);
+				bool state = (rend.front()->getPolygonMode() != PolygonMode::Solid);
 				menu.AppendCheckItem(ID_MenuSceneNodeWireframe, "&Wireframe");
 				menu.Check(ID_MenuSceneNodeWireframe, state );
 			}
@@ -229,7 +229,7 @@ void SceneTreeCtrl::onNodeMenu( wxCommandEvent& event )
 {
 	if( event.GetId() == ID_MenuSceneNodeVisible )
 	{
-		NodePtr node = getEntity( menuItemId );
+		const NodePtr& node = getEntity( menuItemId );
 		if( !node ) return;
 		
 		node->setVisible( !node->getVisible() );
@@ -237,17 +237,17 @@ void SceneTreeCtrl::onNodeMenu( wxCommandEvent& event )
 
 	if( event.GetId() == ID_MenuSceneNodeWireframe )
 	{
-		NodePtr node = getEntity( menuItemId );
+		const NodePtr& node = getEntity( menuItemId );
 		if( !node ) return;
 
-		RenderMode::Enum mode = event.IsChecked()
-			? RenderMode::Wireframe : RenderMode::Solid;
+		PolygonMode::Enum mode = event.IsChecked()
+			? PolygonMode::Wireframe : PolygonMode::Solid;
 
-		foreach( GeometryPtr geo, node->getGeometry() )
+		foreach( const GeometryPtr& geo, node->getGeometry() )
 		{
 			foreach( RenderablePtr rend, geo->getRenderables() )
 			{
-				rend->setRenderMode( mode );
+				rend->setPolygonMode( mode );
 			}
 		}
 	}
@@ -274,7 +274,7 @@ void SceneTreeCtrl::onNodeAdded( const scene::GroupEvent& event )
 {
 	wxTreeItemId id = AppendItem( root, event.node->getName(), 0 );
 
-	foreach( componentPair component, event.node->getComponents() )
+	foreach( const componentPair& component, event.node->getComponents() )
 	{
 		const std::string& type = component.second->getType();
 		AppendItem( id, type, componentIcons[type] );
@@ -333,8 +333,8 @@ void SceneTreeCtrl::onDragEnd( wxTreeEvent& event )
 	// then we've got nothing to do here, move along...
 	if( !drag_id.IsOk() ) return;
 
-	NodePtr src = getEntity( dragItemId );
-	NodePtr dest = getEntity( drag_id );
+	const NodePtr& src = getEntity( dragItemId );
+	const NodePtr& dest = getEntity( drag_id );
 
 	if( src && dest ) // It is a node, just re-parent it.
 	{

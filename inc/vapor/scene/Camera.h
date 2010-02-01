@@ -8,20 +8,11 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
-
-#include "vapor/math/Vector3.h"
 #include "vapor/math/Matrix4x3.h"
 #include "vapor/math/Matrix4x4.h"
 #include "vapor/math/Frustum.h"
-
-#include "vapor/scene/Node.h"
 #include "vapor/scene/Transform.h"
-
 #include "vapor/render/Device.h"
-#include "vapor/render/Target.h"
-#include "vapor/render/Renderable.h"
-#include "vapor/render/RenderQueue.h"
 
 namespace vapor { namespace scene {
 
@@ -75,11 +66,11 @@ public:
 	const math::Frustum& getFrustum( ) const;
 
 	// Picks a ray (via casting) and returns a list of entities.
-	math::Ray getRay( float scrx, float scry );
+	math::Ray getRay( float scrx, float scry, math::Vector3* outFar = nullptr ) const;
 
 	// Renders the (sub-)scene starting from the passed node to the current 
 	// render target associated in the camera.
-	void render( NodePtr node ) const;
+	void render( const NodePtr& node ) const;
 
 	// Renders the entire scene starting from the root node to the current 
 	// render target associated in the camera.
@@ -91,7 +82,7 @@ public:
 	// for later rendering (and also their local to world matrices). 
 	// The queue is passed as a reference to the cull method, which fills 
 	// it with the data.
-	void cull( render::RenderBlock& queue, NodePtr node ) const;
+	void cull( render::RenderBlock& queue, const NodePtr& node ) const;
 
 	// Updates this node.
 	virtual void update( double delta );
@@ -123,7 +114,7 @@ public:
 	// Gets the near clipping plane of the camera.
 	float getNear() const;
 
-	math::Vector3 getForwardVector(){ return forwardVector; }
+	math::Vector3 getForwardVector() { return forwardVector; }
 
 protected:
 

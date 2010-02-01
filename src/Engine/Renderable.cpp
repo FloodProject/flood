@@ -15,7 +15,7 @@ namespace vapor { namespace render {
 //-----------------------------------//
 
 Renderable::Renderable() 
-	: mode( RenderMode::Solid )
+	: mode( PolygonMode::Solid )
 {
 
 }
@@ -26,7 +26,7 @@ Renderable::Renderable( Primitive::Enum primitive,
 						VertexBufferPtr vb, 
 						IndexBufferPtr ib, 
 						MaterialPtr mat )
-	: type( primitive), vb( vb ), ib( ib ), mat( mat ), mode( RenderMode::Solid )
+	: type( primitive), vb( vb ), ib( ib ), mat( mat ), mode( PolygonMode::Solid )
 {
 
 }
@@ -36,7 +36,7 @@ Renderable::Renderable( Primitive::Enum primitive,
 Renderable::Renderable( Primitive::Enum primitive, 
 						VertexBufferPtr vb, 
 						MaterialPtr mat )
-	: type( primitive), vb( vb ), mat( mat ), mode( RenderMode::Solid )
+	: type( primitive), vb( vb ), mat( mat ), mode( PolygonMode::Solid )
 
 {
 
@@ -60,8 +60,8 @@ void Renderable::render( render::Device& UNUSED(device) )
 
 	vb->bind();
 
-	if( mode == RenderMode::Wireframe )
-		glPolygonMode( GL_FRONT_AND_BACK, RenderMode::Wireframe );
+	if( mode == PolygonMode::Wireframe )
+		glPolygonMode( GL_FRONT_AND_BACK, PolygonMode::Wireframe );
 
     if ( ib == nullptr )
     {
@@ -88,8 +88,8 @@ void Renderable::render( render::Device& UNUSED(device) )
         ib->unbind();
     }
    
-	if( mode == RenderMode::Wireframe )
-		glPolygonMode( GL_FRONT_AND_BACK, RenderMode::Solid );
+	if( mode == PolygonMode::Wireframe )
+		glPolygonMode( GL_FRONT_AND_BACK, PolygonMode::Solid );
 
     vb->unbind();
 	if( mat ) mat->unbind();
@@ -118,7 +118,7 @@ MaterialPtr Renderable::getMaterial() const
 
 //-----------------------------------//
 
-RenderMode::Enum Renderable::getRenderMode() const
+PolygonMode::Enum Renderable::getPolygonMode() const
 {
 	return mode;
 }
@@ -153,7 +153,7 @@ void Renderable::setIndexBuffer( IndexBufferPtr ib )
 
 //-----------------------------------//
 
-void Renderable::setRenderMode( RenderMode::Enum mode )
+void Renderable::setPolygonMode( PolygonMode::Enum mode )
 {
 	this->mode = mode;
 }

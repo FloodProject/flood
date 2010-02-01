@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/scene/Group.h"
+#define VAPOR_GROUP_USE_FOREACH
 
 namespace vapor { namespace scene {
 
@@ -89,10 +89,21 @@ NodePtr Group::get( uint i ) const
 
 void Group::update( double delta )
 {
-	foreach( NodePtr node, children )
+#ifdef VAPOR_GROUP_USE_FOREACH
+	foreach( const NodePtr& node, children )
 	{
 		node->update( delta );
 	}
+#else
+	typedef std::vector<NodePtr>::const_iterator vec_it;
+	vec_it it = children.begin();
+	vec_it end = children.end();
+	
+	while( ++it != end )
+	{
+		(*it)->update( delta );
+	}
+#endif
 }
 
 //-----------------------------------//

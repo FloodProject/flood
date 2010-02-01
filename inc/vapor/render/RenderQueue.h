@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
-
 #include "vapor/render/Renderable.h"
 #include "vapor/math/Matrix4x3.h"
 

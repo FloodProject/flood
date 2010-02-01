@@ -80,11 +80,11 @@ void AABB::add( const Vector3& v )
 void AABB::add( const AABB& aabb )
 {
 	if( aabb.min.x < min.x ) min.x = aabb.min.x;
-	if( aabb.min.x > max.x ) max.x = aabb.min.x;
+	if( aabb.max.x > max.x ) max.x = aabb.max.x;
 	if( aabb.min.y < min.y ) min.y = aabb.min.y;
-	if( aabb.min.y > max.y ) max.y = aabb.min.y;
+	if( aabb.max.y > max.y ) max.y = aabb.max.y;
 	if( aabb.min.z < min.z ) min.z = aabb.min.z;
-	if( aabb.min.z > max.z ) max.z = aabb.min.z;
+	if( aabb.max.z > max.z ) max.z = aabb.max.z;
 }
 
 //-----------------------------------//

@@ -38,6 +38,10 @@ void Matrix4x4::identity()
 
 Matrix4x4 Matrix4x4::createPerspectiveProjection( float fov, float ar, float near_, float far_ ) 
 {
+	assert( near_ > 0 );
+	assert( far_  > 0 );
+	assert( near_ < far_ );
+
 	Matrix4x4 projectionMatrix;
 
 	float h = 1.0f / math::tanf( math::degreeToRadian( fov ) / 2.0f );

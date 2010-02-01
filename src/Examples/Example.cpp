@@ -85,18 +85,15 @@ void Example::onSetupScene()
 	camera->addComponent( cam );
 	scene->add( camera );
 
-	//MeshPtr mesh = rm->loadResource<Mesh>( "ct.ms3d" );
-	//NodePtr ct( new Node( "ct" ) );
-	//ct->addComponent( TransformPtr( new Transform( 0.0f, 50.0f, 0.0f ) ) );
-	//ct->addComponent( mesh->getGeometry() );
-	////ct->addComponent( BodyPtr( new Body() ) );
-	//scene->add(ct);
+	MeshPtr mesh = rm->loadResource<Mesh>( "ct.ms3d" );
+	foreach( const RenderablePtr& rend, mesh->getGeometry()->getRenderables() )
+		rend->getMaterial()->setProgram( tex );
 
-	//foreach( const RenderablePtr& rend, mesh->getGeometry()->getRenderables() )
-	//{
-	//	rend->getMaterial()->setProgram( tex );
-	//}
-	//
+	NodePtr ct( new Node( "ct" ) );
+	ct->addComponent( TransformPtr( new Transform( 0.0f, 50.0f, 0.0f ) ) );
+	ct->addComponent( mesh->getGeometry() );
+	scene->add(ct);
+	
 	//// Materials too?
 	MaterialPtr mat( new Material( "FontMaterial", tex ) );
 	FontPtr font = rm->loadResource< Font >( "Verdana.font" );
@@ -147,9 +144,6 @@ void Example::onUpdate( double delta )
 {
 	PROFILE;
 
-	ScenePtr scene = getSceneManager();
-	scene->update( delta );
-	
 	if( fpsUpdateTime <= 1.0f )
 	{
 		fpsUpdateTime += delta;
@@ -170,7 +164,7 @@ void Example::onRender()
 	device->setClearColor( c );
 	device->clearTarget();
 
-	cam->render();
+	//cam->render();
 }
 
 //-----------------------------------//
