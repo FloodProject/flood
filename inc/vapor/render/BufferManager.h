@@ -8,11 +8,7 @@
 
 #pragma once
 
-#include "vapor/CompileOptions.h"
-
 #ifdef VAPOR_RENDERER_OPENGL
-
-#include "vapor/Platform.h"
 
 #include "vapor/render/Buffer.h"
 #include "vapor/render/VertexBuffer.h"

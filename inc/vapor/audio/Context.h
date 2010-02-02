@@ -8,11 +8,7 @@
 
 #pragma once
 
-#include "vapor/CompileOptions.h"
-
 #ifdef VAPOR_AUDIO_OPENAL
-
-#include "vapor/Platform.h"
 
 #include "vapor/audio/Device.h"
 #include "vapor/math/Vector3.h"

@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
 #include "vapor/input/Device.h"
 
 namespace vapor { namespace input {

@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
 #include "vapor/resources/Mesh.h"
 
 namespace vapor { namespace resources {

@@ -8,13 +8,10 @@
 
 #pragma once
 
-#include "vapor/CompileOptions.h"
-
 //#ifdef VAPOR_SCRIPTING_LUA
 
 struct lua_State;
 
-#include "vapor/Platform.h"
 #include "vapor/script/Script.h"
 
 namespace vapor {

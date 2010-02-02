@@ -168,6 +168,12 @@ void EditorFrame::createScene()
 	ProgramManager::getInstance().registerProgram( "diffuse", diffuse );
 	ProgramManager::getInstance().registerProgram( "tex", tex );
 
+	ProgramPtr toon( new GLSL_Program( 
+			rm->loadResource< GLSL_Shader >( "toon.vs" ),
+			rm->loadResource< GLSL_Shader >( "toon.fs" ) ) );
+
+	ProgramManager::getInstance().registerProgram( "toon", toon );
+
 	MaterialPtr mat( new Material( "GridMaterial", diffuse ) );
 	NodePtr grid( new Node( "EditorGrid" ) );
 	grid->addComponent( TransformPtr( new Transform() ) );
@@ -186,20 +192,28 @@ void EditorFrame::createScene()
 	ct->addComponent( mesh->getGeometry() );
 	scene->add(ct);
 
-	//TerrainSettings settings;
-	//settings.CellSize = 512;
-	//settings.TileDimensions = 32;
-	//settings.MaxHeight = 100;
+	NodePtr lnode( new Node( "Light" ) );
+	lnode->addComponent( TransformPtr( new Transform() ) );
+	LightPtr light( new Light( LightType::Point ) );
+	light->diffuseColor = Colors::Red;
+	light->ambientColor = Colors::Yellow;
+	lnode->addComponent( light );
+	scene->add( lnode );
 
-	//TerrainPtr terrain( new Terrain( settings ) );
+	TerrainSettings settings;
+	settings.CellSize = 512;
+	settings.TileDimensions = 32;
+	settings.MaxHeight = 100;
 
-	//NodePtr terreno( new Node( "Terreno" ) );
-	//terreno->addComponent( TransformPtr( new Transform() ) );
-	//terreno->addComponent( terrain );
-	////scene->add( terreno );
+	TerrainPtr terrain( new Terrain( settings ) );
 
-	//ImagePtr heightmap = rm->loadResource< Image >( "height2.png" );
-	//Cell* cell = terrain->createCell( heightmap, 0, 0 );
+	NodePtr terreno( new Node( "Terreno" ) );
+	terreno->addComponent( TransformPtr( new Transform() ) );
+	terreno->addComponent( terrain );
+	scene->add( terreno );
+
+	ImagePtr heightmap = rm->loadResource< Image >( "height2.png" );
+	const CellPtr& cell = terrain->createCell( heightmap, 0, 0 );
 }
 
 //-----------------------------------//
@@ -389,7 +403,7 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 		case Toolbar_ToogleGrid:
 		{
 			NodePtr grid = engine->getSceneManager()->getEntity( "EditorGrid" );
-			if( grid ) grid->setVisible( !grid->getVisible() );
+			if( grid ) grid->setVisible( !grid->isVisible() );
 			break;
 		}
 

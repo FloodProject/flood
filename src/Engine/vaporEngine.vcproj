@@ -603,19 +603,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\inc\vapor\Memory.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\inc\vapor\Platform.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\Singleton.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\Types.h"
 				>
 			</File>
 			<Filter
@@ -679,6 +667,10 @@
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\ReferenceCounted.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\Singleton.h"
 					>
 				</File>
 				<File

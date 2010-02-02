@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
 #include "vapor/render/Renderable.h"
 
 namespace vapor { namespace scene {
@@ -19,6 +18,14 @@ class Node;
 
 TYPEDEF_SHARED_POINTER_FROM_CLASS( Node );
 TYPEDEF_SHARED_WEAK_POINTER_FROM_CLASS( Node );
+
+//-----------------------------------//
+
+#define DECLARE_COMPONENT_TYPE				\
+	static const std::string& id;
+
+#define IMPLEMENT_COMPONENT_TYPE(type,str)	\
+	const std::string& type::id = str;
 
 //-----------------------------------//
 
@@ -40,19 +47,23 @@ public:
 	NodePtr getNode() const;
 
 	// Sets the associated node of this component.
-	void setNode( NodePtr node );
+	void setNode( const NodePtr& node );
 
 	// Called once per frame to update the component.
 	virtual void update( double delta ) = 0;
 
+	// Gets if the debug renderable is visible.
+	virtual bool isDebugRenderableVisible() const;
+	
+	// Sets the debug renderable as visible.
+	virtual void setDebugRenderableVisible( bool draw );
+	
+	// Gets the debug renderable of this component.
+	virtual render::RenderablePtr getDebugRenderable() const;
+
 	// Gets the type of this component. 
 	// Each component should have a unique type string.
 	virtual const std::string& getType() const = 0;
-
-	// Use this to render some debug geometry.
-	virtual bool isDebugRenderableVisible() const;
-	virtual void setDebugRenderableVisible( bool draw );
-	virtual render::RenderablePtr getDebugRenderable() const;
 
 protected:
 

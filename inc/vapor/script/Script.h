@@ -8,11 +8,8 @@
 
 #pragma once
 
-#include "vapor/CompileOptions.h"
-
 //#ifdef VAPOR_SCRIPTING_LUA
 
-#include "vapor/Platform.h"
 #include "vapor/resources/Resource.h"
 
 namespace vapor { namespace script {

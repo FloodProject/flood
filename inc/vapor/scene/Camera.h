@@ -114,8 +114,6 @@ public:
 	// Gets the near clipping plane of the camera.
 	float getNear() const;
 
-	math::Vector3 getForwardVector() { return forwardVector; }
-
 protected:
 
 	// Handles target resize (must update width, height).
@@ -132,15 +130,6 @@ protected:
 
 	// Projection matrix.
 	math::Matrix4x4 projectionMatrix;
-
-	// Up vector.
-	math::Vector3 upVector;
-
-	// Forward vector.
-	math::Vector3 forwardVector;
-
-	// Look-at vector.
-	math::Vector3 lookAtVector;
 
 	// Projection mode.
 	Projection::Enum projection;

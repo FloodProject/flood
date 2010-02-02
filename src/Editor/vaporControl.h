@@ -7,6 +7,8 @@
 ************************************************************************/
 
 #pragma once
+
+#include <wx/glcanvas.h>
 #include "wx_InputManager.h"
 
 namespace vapor { namespace editor {

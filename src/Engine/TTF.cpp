@@ -7,8 +7,6 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
-#include "vapor/Platform.h"
 #include "vapor/resources/TTF.h"
 
 namespace vapor { namespace resources {

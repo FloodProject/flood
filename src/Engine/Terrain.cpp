@@ -8,7 +8,6 @@
 
 #include "vapor/PCH.h"
 #include "vapor/terrain/Terrain.h"
-#include "vapor/terrain/Cell.h"
 #include "vapor/math/Math.h"
 
 namespace vapor { namespace scene {
@@ -43,13 +42,13 @@ Terrain::Terrain( const TerrainSettings& settings )
 
 Terrain::~Terrain()
 {
-	foreach( Cell* cell, terrainCells )
-		delete cell;
+	//foreach( Cell* cell, terrainCells )
+	//	delete cell;
 }
 
 //-----------------------------------//
 
-Cell* Terrain::createCell( ImagePtr heightmap, int x, int y )
+CellPtr Terrain::createCell( ImagePtr heightmap, int x, int y )
 {
 	if( !validateHeightmap( heightmap ) )
 	{
@@ -59,14 +58,13 @@ Cell* Terrain::createCell( ImagePtr heightmap, int x, int y )
 	std::vector<float> heights;
 	convertHeightmap( heightmap, heights );
 
-	Cell* page = new Cell( settings, heights, x, y );
-	terrainCells.push_back( page );
+	CellPtr page( new Cell( settings, heights, x, y ) );
 
 	page->setMaterial( cellMaterial );
-	addRenderable( render::RenderablePtr( page ) );
+	addRenderable( page );
 
 	// Forces AABB generation next update.
-	markDirty();
+	isDirty = true;
 	
 	return page;
 }

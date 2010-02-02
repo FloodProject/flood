@@ -6,8 +6,6 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
-
 #include "vapor/scene/Component.h"
 #include "vapor/scene/Transform.h"
 #include "vapor/scene/node.h"

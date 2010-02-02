@@ -9,12 +9,6 @@
 #pragma once
 
 //---------------------------------------------------------------------//
-// Compile-time options
-//---------------------------------------------------------------------//
-
-#include "vapor/CompileOptions.h"
-
-//---------------------------------------------------------------------//
 // Platform detection
 //---------------------------------------------------------------------//
 
@@ -77,20 +71,53 @@
 	#include <Windows.h>	
 #endif
 
-//---------------------------------------------------------------------//
-// Portable types
-//---------------------------------------------------------------------//
+//-------------------------------------------------------------------------//
+// Memory leaks analyzer
+//-------------------------------------------------------------------------//
 
-#include "vapor/Types.h"
+#ifdef VAPOR_MEMORY_LEAK_DETECTOR
+	#if defined(VAPOR_PLATFORM_WINDOWS) && defined(VAPOR_DEBUG)
+		// Visual Leak Detector
+		// (http://dmoulding.googlepages.com/vld)
+		#include <vld.h>
+	#endif
+#endif
 
-//---------------------------------------------------------------------//
-// Memory stuff
-//---------------------------------------------------------------------//
+//-------------------------------------------------------------------------//
+// API exports
+//-------------------------------------------------------------------------//
 
-#include "vapor/Memory.h"
+#ifdef VAPOR_API_DLL
+	#ifdef VAPOR_EXPORT
+		#ifdef VAPOR_PLATFORM_WINDOWS
+			// This should work for both MSVC and GCC on Windows.
+			// For more details see:
+			// http://gcc.gnu.org/onlinedocs/gcc-4.4.0/gcc/Function-Attributes.html
+			#define VAPOR_API __declspec( dllexport )
+		#else
+			#define VAPOR_API __attribute__ ((visibility("default")))
+		#endif
+	#else
+		#ifdef VAPOR_PLATFORM_WINDOWS
+			#define VAPOR_API __declspec( dllimport )
+		#else
+			#define VAPOR_API
+		#endif
+	#endif
+#else
+	#define VAPOR_API
+#endif
 
-//---------------------------------------------------------------------//
-// Language features (C++)
-//---------------------------------------------------------------------//
+//-------------------------------------------------------------------------//
+// Alignment control
+//-------------------------------------------------------------------------//
 
-#include "vapor/Language.h"
+#ifdef VAPOR_COMPILER_MSVC
+	#define VAPOR_ALIGN_BEGIN( alignment ) __declspec (align( alignment ))
+	#define VAPOR_ALIGN_END( alignment )
+#elif defined(VAPOR_COMPILER_GCC)
+	#define VAPOR_ALIGN_BEGIN( alignment )
+	#define VAPOR_ALIGN_END( alignment ) __attribute__ ((aligned( alignment )))
+#else
+	#error "Alignment control for your platform is not currently supported"
+#endif

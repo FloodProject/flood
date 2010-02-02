@@ -8,9 +8,6 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
-#include "vapor/Singleton.h"
-
 #include "vapor/resources/ResourceManager.h"
 #include "vapor/render/Program.h"
 

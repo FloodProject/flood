@@ -41,7 +41,7 @@ void Scene::update( double delta )
 
 //-----------------------------------//
 
-void Scene::updateTransformAndBV( NodePtr node, MatrixStack& transformStack )
+void Scene::updateTransformAndBV( NodePtr /*node*/, MatrixStack& /*transformStack*/ )
 {
 	// TODO: benckmark and profile this, smells slow
 	//PROFILE;

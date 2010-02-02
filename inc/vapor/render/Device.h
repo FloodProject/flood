@@ -8,11 +8,7 @@
 
 #pragma once
 
-#include "vapor/CompileOptions.h"
-
 #ifdef VAPOR_RENDERER_OPENGL
-
-#include "vapor/Platform.h"
 
 #include "vapor/render/Window.h"
 #include "vapor/render/Target.h"

@@ -91,7 +91,7 @@ void vaporWindow::setTitle(const std::string& UNUSED(title))
 
 //-----------------------------------//
 
-void vaporWindow::setCursorState(bool mouseVisible)
+void vaporWindow::setCursorVisible(bool mouseVisible)
 {
 	if( !mouseVisible )
 	{
@@ -109,7 +109,7 @@ void vaporWindow::setCursorState(bool mouseVisible)
 
 //-----------------------------------//
 
-bool vaporWindow::getCursorState() const
+bool vaporWindow::isCursorVisible() const
 {
 	return !mouseCaptured;
 }

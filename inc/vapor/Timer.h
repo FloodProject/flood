@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
-
 #ifdef VAPOR_PLATFORM_WINDOWS
 	#define ticks_t int64
 #endif

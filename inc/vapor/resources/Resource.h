@@ -8,9 +8,6 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
-#include "vapor/ReferenceCounted.h"
-
 namespace vapor { namespace resources {
 
 //-----------------------------------//

@@ -8,15 +8,10 @@
 
 #pragma once
 
-#include "vapor/CompileOptions.h"
-
 #ifdef VAPOR_WINDOWING_SFML
 
 #include <SFML/Window.hpp>
-
-#include "vapor/Platform.h"
 #include "vapor/render/Window.h"
-
 #include "vapor/input/SFML_InputManager.h"
 
 namespace vapor { namespace render {
@@ -47,10 +42,10 @@ public:
 	void setTitle(const std::string& title);
 
 	// Sets the visibility of the mouse cursor.
-	void setCursorState(bool state);
+	void setCursorVisible(bool state);
 
 	// Gets the visibility of the mouse cursor.
-	virtual bool getCursorState() const;
+	virtual bool isCursorVisible() const;
 
 	// Sets the cursor position on screen.
 	virtual void setCursorPosition( int x, int y );

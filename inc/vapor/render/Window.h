@@ -8,9 +8,7 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
 #include "vapor/render/Target.h"
-
 #include "vapor/input/InputManager.h"
 
 namespace vapor { namespace render {
@@ -114,10 +112,10 @@ public:
 	virtual void setTitle (const std::string& title) = 0;
 
 	// Sets the visibility of the mouse cursor.
-	virtual void setCursorState( bool state ) = 0;
+	virtual void setCursorVisible( bool state ) = 0;
 
 	// Gets the visibility of the mouse cursor.
-	virtual bool getCursorState() const = 0;
+	virtual bool isCursorVisible() const = 0;
 
 	// Sets the cursor position on screen.
 	virtual void setCursorPosition( int x, int y ) = 0;

@@ -8,13 +8,9 @@
 
 #pragma once
 
-#include "vapor/CompileOptions.h"
-
 #ifdef VAPOR_VFS_PHYSFS
 
 struct PHYSFS_File;
-
-#include "vapor/Platform.h"
 
 /** \addtogroup virtual Virtual Filesystem 
  * @{ */

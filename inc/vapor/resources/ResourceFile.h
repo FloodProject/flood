@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
 #include "vapor/vfs/File.h"
 
 namespace vapor { namespace resources {

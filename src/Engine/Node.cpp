@@ -14,13 +14,13 @@ namespace vapor { namespace scene {
 //-----------------------------------//
 
 Node::Node( const std::string& name )
-	: name( name ), isVisible( true )
+	: name( name ), _isVisible( true )
 {
 }
 
 //-----------------------------------//
 
-Node::Node() : isVisible( true )
+Node::Node() : _isVisible( true )
 {
 }
 
@@ -47,21 +47,21 @@ void Node::setParent( NodePtr parent )
 
 //-----------------------------------//
 
-bool Node::getVisible( ) const
+bool Node::isVisible( ) const
 {
-	return isVisible;
+	return _isVisible;
 }
 
 //-----------------------------------//
 
 void Node::setVisible( bool visible )
 {
-	this->isVisible = visible;
+	_isVisible = visible;
 }
 
 //-----------------------------------//
 
-bool Node::addComponent( ComponentPtr component )
+bool Node::addComponent( const ComponentPtr& component )
 {
 	assert( component != nullptr );
 
@@ -116,7 +116,7 @@ void Node::update( double delta )
 	getTransform()->update( delta );
 
 	// Update everything else
-	foreach( const componentPair& component, components )
+	foreach( const ComponentMapPair& component, components )
 	{
 		if(component.second->getType() == "Transform")
 			return;
@@ -131,14 +131,6 @@ TransformPtr Node::getTransform()
 {
 	return getComponent< Transform >( "Transform" );
 }
-
-//-----------------------------------//
-
-Transform* Node::getTransformPtr()
-{
-	return getTransform().get();
-}
-
 
 //-----------------------------------//
 

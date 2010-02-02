@@ -8,15 +8,12 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
 #include "vapor/scene/Geometry.h"
 #include "vapor/resources/Image.h"
-
+#include "vapor/terrain/Cell.h"
 #include "vapor/terrain/Brush.h"
 
 namespace vapor { namespace scene {
-
-	class Cell;
 
 //-----------------------------------//
 
@@ -67,7 +64,7 @@ public:
 	virtual ~Terrain();
 
 	// Creates a new page of terrain.
-	Cell* createCell( resources::ImagePtr heightmap, int x, int y );
+	CellPtr createCell( resources::ImagePtr heightmap, int x, int y );
 
 	// Converts the heightmap to a vector of heights.
 	void convertHeightmap( resources::ImagePtr heightmap, std::vector<float>& heights );

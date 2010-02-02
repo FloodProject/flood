@@ -10,13 +10,7 @@
 #include "SceneTreeCtrl.h"
 #include "EditorIcons.h"
 
-using namespace vapor;
-using namespace vapor::scene;
-using namespace vapor::render;
-
 namespace vapor { namespace editor {
-
-typedef std::pair< const std::string, ComponentPtr > componentPair;
 
 //-----------------------------------//
 
@@ -120,7 +114,7 @@ void SceneTreeCtrl::updateScene( wxTreeItemId id, NodePtr node )
 		}
 	}
 
-	foreach( const componentPair& component, node->getComponents() )
+	foreach( const ComponentMapPair& component, node->getComponents() )
 	{
 		const std::string& type = component.second->getType();
 		AppendItem( id, type, componentIcons[type] );
@@ -189,7 +183,7 @@ void SceneTreeCtrl::onItemMenu(wxTreeEvent& event)
 	if( node )
 	{
 		menu.AppendCheckItem(ID_MenuSceneNodeVisible, "&Visible");
-		menu.Check(ID_MenuSceneNodeVisible, node->getVisible() );
+		menu.Check(ID_MenuSceneNodeVisible, node->isVisible() );
 
 		const std::vector< GeometryPtr >& geo = node->getGeometry();
 		if( !geo.empty() )
@@ -232,7 +226,7 @@ void SceneTreeCtrl::onNodeMenu( wxCommandEvent& event )
 		const NodePtr& node = getEntity( menuItemId );
 		if( !node ) return;
 		
-		node->setVisible( !node->getVisible() );
+		node->setVisible( !node->isVisible() );
 	}
 
 	if( event.GetId() == ID_MenuSceneNodeWireframe )
@@ -274,7 +268,7 @@ void SceneTreeCtrl::onNodeAdded( const scene::GroupEvent& event )
 {
 	wxTreeItemId id = AppendItem( root, event.node->getName(), 0 );
 
-	foreach( const componentPair& component, event.node->getComponents() )
+	foreach( const ComponentMapPair& component, event.node->getComponents() )
 	{
 		const std::string& type = component.second->getType();
 		AppendItem( id, type, componentIcons[type] );

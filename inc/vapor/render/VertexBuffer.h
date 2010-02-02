@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
-
 #include "vapor/math/Vector3.h"
 #include "vapor/render/Buffer.h"
 #include "vapor/render/GL.h"

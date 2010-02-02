@@ -16,7 +16,7 @@ using namespace vapor::resources;
 
 namespace vapor { namespace editor {
 
-//typedef std::pair< const std::string, ComponentPtr > componentPair;
+//typedef std::pair< const std::string, ComponentPtr > ComponentMapPair;
 
 //-----------------------------------//
 

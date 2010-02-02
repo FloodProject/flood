@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
 #include "vapor/vfs/File.h"
 #include "vapor/resources/Resource.h"
 

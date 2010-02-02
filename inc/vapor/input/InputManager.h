@@ -8,10 +8,7 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
-
 #include "vapor/input/Device.h"
-
 #include "vapor/input/Keyboard.h"
 #include "vapor/input/Mouse.h"
 #include "vapor/input/Joystick.h"

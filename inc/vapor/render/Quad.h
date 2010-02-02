@@ -8,11 +8,8 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
-
 #include "vapor/render/Renderable.h"
 #include "vapor/render/Material.h"
-
 #include "vapor/math/Dimension.h"
 
 namespace vapor { namespace render {

@@ -8,11 +8,8 @@
 
 #pragma once
 
-#include "vapor/CompileOptions.h"
-
 #ifdef VAPOR_VFS_PHYSFS
 
-#include "vapor/Platform.h"
 #include "vapor/Subsystem.h"
 #include "vapor/vfs/File.h"
 #include "vapor/vfs/Watcher.h"

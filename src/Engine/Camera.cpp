@@ -24,8 +24,7 @@ const std::string& Camera::type = "Camera";
 
 Camera::Camera( render::Device* device, Projection::Enum projection )
 	: renderDevice( device ), projection( projection ), target( nullptr ),
-	fov(45.0f), near_( 1.0f ), far_( 500.0f ), lookAtVector( Vector3::UnitZ ),
-	forwardVector( -Vector3::UnitZ ), upVector( Vector3::UnitY )
+	fov(45.0f), near_( 1.0f ), far_( 1000.0f )
 {
 	setRenderTarget( device->getRenderTarget() );
 }
@@ -197,7 +196,7 @@ void Camera::cull( render::RenderBlock& block, const NodePtr& node ) const
 		// Cull the children nodes recursively.
 		foreach( NodePtr child, group->getChildren() )
 		{
-			if( !child->getVisible() ) continue;
+			if( !child->isVisible() ) continue;
 			cull( block, child );
 		}
 	}
@@ -227,7 +226,7 @@ void Camera::cull( render::RenderBlock& block, const NodePtr& node ) const
 		block.lights.push_back( ls );
 	}
 
-	foreach( const componentPair& cmp, node->getComponents() )
+	foreach( const ComponentMapPair& cmp, node->getComponents() )
 	{
 		if( !cmp.second->isDebugRenderableVisible() )
 			continue;

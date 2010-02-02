@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
 #include "vapor/render/GL.h"
 
 namespace vapor { namespace render {

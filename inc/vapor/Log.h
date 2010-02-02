@@ -7,8 +7,6 @@
 ************************************************************************/
 
 #pragma once
-
-#include "vapor/Types.h"
 #include "vapor/Timer.h"
 
 namespace vapor { namespace log {

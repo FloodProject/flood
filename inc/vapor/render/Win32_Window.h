@@ -8,11 +8,8 @@
 
 #pragma once
 
-#include "vapor/CompileOptions.h"
-
 #ifdef VAPOR_WINDOWING_WIN32
 
-#include "vapor/Platform.h"
 #include "vapor/render/Window.h"
 
 #ifndef VAPOR_PLATFORM_WINDOWS

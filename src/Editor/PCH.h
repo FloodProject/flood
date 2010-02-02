@@ -8,6 +8,10 @@
 
 #pragma once
 
+//---------------------------------------------------------------------//
+// wxWidgets headers
+//---------------------------------------------------------------------//
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include "wx/wxprec.h"
  
@@ -17,14 +21,24 @@
     #include "wx/wx.h"
 #endif
 
-#define VAPOR_USE_NAMESPACES
-#include <vapor/Headers.h>
-
-#include <wx/glcanvas.h>
+#include "wx/mstream.h"
 #include <wx/hyperlink.h>
 #include <wx/treectrl.h> 
 #include <wx/choicebk.h>
 #include <wx/notebook.h>
 #include <wx/statline.h>
+#include <wx/spinctrl.h>
 
-#include "ArtProvider.h"
+//---------------------------------------------------------------------//
+// Image Utilities
+//---------------------------------------------------------------------//
+
+#include "ImageUtils.h"
+
+//---------------------------------------------------------------------//
+// vapor3D Engine
+//---------------------------------------------------------------------//
+
+#define VAPOR_USE_NAMESPACES
+#include <vapor/Headers.h>
+

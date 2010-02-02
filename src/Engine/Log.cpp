@@ -7,12 +7,7 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
-#include <cstdarg>
-#include <ctime>
-
 #include "vapor/Log.h"
-#include "vapor/Platform.h"
 #include "LogFormat.h"
 
 const int BUF_MAX_SIZE = 256;

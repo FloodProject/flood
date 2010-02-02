@@ -48,7 +48,7 @@ render::RenderablePtr Component::getDebugRenderable() const
 
 //-----------------------------------//
 
-void Component::setNode( NodePtr node )
+void Component::setNode( const NodePtr& node )
 {
 	this->node = node ;
 }

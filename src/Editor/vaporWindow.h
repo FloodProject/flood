@@ -46,10 +46,10 @@ public:
 	virtual void setTitle(const std::string& title);
 
 	// Sets the cursor visibility.
-	virtual void setCursorState(bool state);
+	virtual void setCursorVisible(bool state);
 
 	// Gets the cursor visibility.
-	virtual bool getCursorState() const;
+	virtual bool isCursorVisible() const;
 
 	// Sets the cursor position on screen.
 	virtual void setCursorPosition( int x, int y );

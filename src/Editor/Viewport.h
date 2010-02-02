@@ -22,7 +22,9 @@ class Viewport : public wxPanel
 {
 public:
 
-	Viewport( vapor::Engine* engine, wxWindow* parent, wxWindowID id = wxID_ANY, 
+	Viewport( vapor::Engine* engine,
+		wxWindow* parent, 
+		wxWindowID id = wxID_ANY, 
 		const wxPoint& pos = wxDefaultPosition, 
 		const wxSize& size = wxDefaultSize, 
 		long style = wxTAB_TRAVERSAL );
@@ -54,13 +56,9 @@ protected:
 	wxString Y;
 	wxString Z;
 
-	wxStaticText* lbl_X;
 	wxTextCtrl* txt_X;
-	wxStaticText* lbl_Y;
 	wxTextCtrl* txt_Y;
-	wxStaticText* lbl_Z;
 	wxTextCtrl* txt_Z;
-	wxStaticLine* m_staticline2;
 	wxChoice* choice_View;
 	wxBitmapButton* btn_Wireframe;
 	wxBitmapButton* btn_Textures;

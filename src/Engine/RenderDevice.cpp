@@ -160,7 +160,9 @@ void Device::render( RenderBlock& queue, const scene::Camera* cam )
 	// render the list
 	foreach( const RenderState& state, queue.renderables )
 	{
-		ProgramPtr program = state.renderable->getMaterial()->getProgram();
+		const ProgramPtr& program = state.renderable->getMaterial()->getProgram();
+
+		if( !program ) continue;
 
 		if( state.group == RenderGroup::Normal )
 		{

@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
 #include "vapor/scene/Component.h"
 #include "vapor/scene/Transform.h"
 #include "vapor/scene/Geometry.h"
@@ -23,7 +22,7 @@ TYPEDEF_SHARED_POINTER_FROM_CLASS( Node );
 TYPEDEF_SHARED_WEAK_POINTER_FROM_CLASS( Node );
 
 typedef std::map< std::string, ComponentPtr > ComponentMap;
-typedef std::pair< const std::string, ComponentPtr > componentPair;
+typedef std::pair< const std::string, ComponentPtr > ComponentMapPair;
 
 //-----------------------------------//
 
@@ -52,7 +51,7 @@ public:
 	NodePtr getParent() const;
 
 	// Adds a component to this node.
-	bool addComponent( ComponentPtr component );
+	bool addComponent( const ComponentPtr& component );
 
 	// Gets a component from this node.
 	ComponentPtr getComponent( const std::string& type );
@@ -82,13 +81,12 @@ public:
 
 	// Gets the associated transform component (if any).
 	TransformPtr getTransform();
-	Transform* getTransformPtr();
 
 	// Gets the geometries components in the node.
 	const std::vector< GeometryPtr >& getGeometry();
 
 	// Is this node visible?
-	bool getVisible() const;
+	bool isVisible() const;
 
 	// Sets the visibility of this node.
 	void setVisible( bool visible );
@@ -108,7 +106,7 @@ private:
 	std::vector< GeometryPtr > geometries;
 
 	// Visibility
-	bool isVisible;
+	bool _isVisible;
 };
 
 //-----------------------------------//

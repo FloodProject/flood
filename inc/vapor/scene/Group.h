@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
 #include "vapor/scene/Node.h"
 
 namespace vapor { namespace scene {

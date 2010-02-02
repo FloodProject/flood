@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
-
 #include "vapor/resources/Image.h"
 #include "vapor/render/GL.h"
 

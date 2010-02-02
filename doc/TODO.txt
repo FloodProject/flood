@@ -8,7 +8,6 @@ Fix Picking
 Skybox component
 View frustum culling
 Quadtree Terrain
-Fix the Camera behaviour
 Add Z-bias to the AABB Renderables
 Per-script Lua state
 Fix Overlays positioning
@@ -154,6 +153,7 @@ Math:
 DONE:
 -----
 
+Fix the Camera behaviour
 Bounding Boxes
 Switch all the resource loaders to use the VFS layer
 Check for maximum texture unit size

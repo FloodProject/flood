@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #pragma once
-#include "vapor/Platform.h"
+
 #include "vapor/render/Program.h"
 #include "vapor/render/Texture.h"
 #include "vapor/resources/Shader.h"

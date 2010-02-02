@@ -63,25 +63,24 @@ void Viewport::createCamera()
 	camera.reset( new FirstPersonCamera( engine->getInputManager(), engine->getRenderDevice() ) );
 	cameraNode->addComponent( TransformPtr( new Transform() ) );
 	cameraNode->addComponent( camera );
-	// TODO: hardcoded camera start position...
-	cameraNode->getTransform()->translate( 0.0f, 20.0f, -65.0f );
 	engine->getSceneManager()->add( cameraNode );
+	
+	transform = cameraNode->getTransform();
+	transform->translate( 0.0f, 20.0f, -65.0f );	
+	transform->onTransform += fd::bind( &Viewport::onCameraTransform, this );
 
 	vaporCtrl->setCamera( camera );
-
-	transform = cameraNode->getTransform();
-	transform->onTransform += fd::bind( &Viewport::onCameraTransform, this );
 }
 
 //-----------------------------------//
 
-const short BAR_HEIGHT = 19;
+const short BAR_HEIGHT = 20;
 
 void Viewport::build()
 {
 	wxBoxSizer* sizer = new wxBoxSizer( wxHORIZONTAL );
 	
-	lbl_X = new wxStaticText( this, wxID_ANY, wxT("X:"), wxDefaultPosition, wxDefaultSize, 0 );
+	wxStaticText* lbl_X = new wxStaticText( this, wxID_ANY, wxT("X:"), wxDefaultPosition, wxDefaultSize, 0 );
 	lbl_X->Wrap( -1 );
 	sizer->Add( lbl_X, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxLEFT, 5 );
 	
@@ -89,60 +88,61 @@ void Viewport::build()
 
 	wxTextValidator validatorX(wxFILTER_INCLUDE_CHAR_LIST, &X);
 	validatorX.SetCharIncludes( includes );
-	txt_X = new wxTextCtrl( this, wxID_ANY, wxT("0.0"), wxDefaultPosition, wxSize( 50, BAR_HEIGHT ), wxTE_CENTRE | wxTE_PROCESS_ENTER,
-		validatorX);
-	
-	txt_X->Bind(wxEVT_COMMAND_TEXT_UPDATED, &Viewport::onText, this);
+	txt_X = new wxTextCtrl( this, wxID_ANY, wxT("0.0"), wxDefaultPosition, wxSize( 50, BAR_HEIGHT ),
+		wxTE_CENTRE | wxTE_PROCESS_ENTER, validatorX);
+
 	txt_X->Bind(wxEVT_KILL_FOCUS, &Viewport::onKillFocus, this);
 	txt_X->Bind(wxEVT_COMMAND_TEXT_ENTER, &Viewport::onTextEnter, this);
-
 	sizer->Add( txt_X, 0, wxALIGN_CENTER_VERTICAL, 5 );
 	
-	lbl_Y = new wxStaticText( this, wxID_ANY, wxT("Y:"), wxDefaultPosition, wxDefaultSize, 0 );
+	wxStaticText* lbl_Y = new wxStaticText( this, wxID_ANY, wxT("Y:"), wxDefaultPosition, wxDefaultSize, 0 );
 	lbl_Y->Wrap( -1 );
 	sizer->Add( lbl_Y, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxLEFT, 5 );
-	
+
 	wxTextValidator validatorY(wxFILTER_INCLUDE_CHAR_LIST, &Y);
 	validatorY.SetCharIncludes( includes );
-	txt_Y = new wxTextCtrl( this, wxID_ANY, wxT("0.0"), wxDefaultPosition, wxSize( 50, BAR_HEIGHT ), wxTE_CENTRE | wxTE_PROCESS_ENTER,
-		validatorY);
-	
-	txt_Y->Bind(wxEVT_COMMAND_TEXT_UPDATED, &Viewport::onText, this);
+	txt_Y = new wxTextCtrl( this, wxID_ANY, wxT("0.0"), wxDefaultPosition, wxSize( 50, BAR_HEIGHT ), 
+		wxTE_CENTRE | wxTE_PROCESS_ENTER, validatorY);
+
 	txt_Y->Bind(wxEVT_KILL_FOCUS, &Viewport::onKillFocus, this);
 	txt_Y->Bind(wxEVT_COMMAND_TEXT_ENTER, &Viewport::onTextEnter, this);
-
 	sizer->Add( txt_Y, 0, wxALIGN_CENTER_VERTICAL, 5 );
 	
-	lbl_Z = new wxStaticText( this, wxID_ANY, wxT("Z:"), wxDefaultPosition, wxDefaultSize, 0 );
+	wxStaticText* lbl_Z = new wxStaticText( this, wxID_ANY, wxT("Z:"), wxDefaultPosition, wxDefaultSize, 0 );
 	lbl_Z->Wrap( -1 );
 	sizer->Add( lbl_Z, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxLEFT, 5 );
 	
 	wxTextValidator validatorZ(wxFILTER_INCLUDE_CHAR_LIST, &Z);
 	validatorZ.SetCharIncludes( includes );
-	txt_Z = new wxTextCtrl( this, wxID_ANY, wxT("0.0"), wxDefaultPosition, wxSize( 50, BAR_HEIGHT ), wxTE_CENTRE | wxTE_PROCESS_ENTER,
-		validatorZ);
-	
-	txt_Z->Bind(wxEVT_COMMAND_TEXT_UPDATED, &Viewport::onText, this);
+	txt_Z = new wxTextCtrl( this, wxID_ANY, wxT("0.0"), wxDefaultPosition, wxSize( 50, BAR_HEIGHT ), 
+		wxTE_CENTRE | wxTE_PROCESS_ENTER | wxBORDER_THEME, validatorZ);
+
 	txt_Z->Bind(wxEVT_KILL_FOCUS, &Viewport::onKillFocus, this);
 	txt_Z->Bind(wxEVT_COMMAND_TEXT_ENTER, &Viewport::onTextEnter, this);
-
 	sizer->Add( txt_Z, 0, wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_staticline2 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
+	wxStaticLine* m_staticline2 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
 	sizer->Add( m_staticline2, 0, wxEXPAND|wxALL, 5 );
 	
-	wxString choice_ViewChoices[] = { "Free", wxT("Top"), wxT("Down"), wxT("Left"), wxT("Right") };
-	choice_View = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxSize( -1, BAR_HEIGHT ), 
-		VAPOR_ARRAY_SIZE(choice_ViewChoices), choice_ViewChoices, 0 );
-	choice_View->SetSelection( 0 );
-	sizer->Add( choice_View, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxLEFT, 5 );
+	//wxString choice_ViewChoices[] = { "Free", wxT("Top"), wxT("Down"), wxT("Left"), wxT("Right") };
+	//choice_View = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxSize( -1, BAR_HEIGHT-1 ), 
+	//	VAPOR_ARRAY_SIZE(choice_ViewChoices), choice_ViewChoices, 0 );
+	//choice_View->SetSelection( 0 );
+	//sizer->Add( choice_View, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxLEFT, 5 );
+
+	wxStaticText* lbl_Speed = new wxStaticText( this, wxID_ANY, wxT("Speed:") );
+	lbl_Speed->Wrap( -1 );
+	sizer->Add( lbl_Speed, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT, 5 );
+
+	wxSpinCtrlDouble* spn_CameraSpeed = new wxSpinCtrlDouble( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 60, BAR_HEIGHT ) );
+	sizer->Add( spn_CameraSpeed, 0, wxALIGN_CENTER_VERTICAL, 5 );
+
+	btn_Wireframe = new wxBitmapButton( this, wxID_ANY, wxMEMORY_BITMAP(grid_icon_small), wxDefaultPosition, wxSize( -1, BAR_HEIGHT-1 ), wxBU_AUTODRAW );
+	sizer->Add( btn_Wireframe, 0, wxALIGN_CENTER_VERTICAL|wxLEFT, 5 );
 	
-	btn_Wireframe = new wxBitmapButton( this, wxID_ANY, wxMEMORY_BITMAP(grid_icon_small), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW );
-	sizer->Add( btn_Wireframe, 0, wxALIGN_CENTER_VERTICAL, 5 );
-	
-	btn_Textures = new wxBitmapButton( this, wxID_ANY, wxMEMORY_BITMAP(map_small), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW );
+	btn_Textures = new wxBitmapButton( this, wxID_ANY, wxMEMORY_BITMAP(map_small), wxDefaultPosition, wxSize( -1, BAR_HEIGHT-1 ), wxBU_AUTODRAW );
 	sizer->Add( btn_Textures, 0, wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	wxBoxSizer* mainSizer;
 	mainSizer = new wxBoxSizer( wxVERTICAL );
 
@@ -155,11 +155,11 @@ void Viewport::build()
 
 //-----------------------------------//
 
+const byte CAM_STR_PRECISION = 2;
+
 #define CONVERT_STR(n)												\
 	sprintf( str, "%#.*f", CAM_STR_PRECISION, n );					\
 	while((c = strchr(str, ','))) *c = '.';							\
-
-const byte CAM_STR_PRECISION = 2;
 
 void Viewport::onCameraTransform()
 {
@@ -192,13 +192,6 @@ void Viewport::updatePosition()
 
 	math::Vector3 pos( X, Y, Z );
 	transform->setPosition( pos );
-}
-
-//-----------------------------------//
-
-void Viewport::onText( wxCommandEvent& event )
-{
-
 }
 
 //-----------------------------------//

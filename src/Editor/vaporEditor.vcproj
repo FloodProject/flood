@@ -279,7 +279,7 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Control"
+			Name="Window"
 			>
 			<File
 				RelativePath=".\vaporControl.cpp"
@@ -289,10 +289,6 @@
 				RelativePath=".\vaporControl.h"
 				>
 			</File>
-		</Filter>
-		<Filter
-			Name="Window"
-			>
 			<File
 				RelativePath=".\vaporWindow.cpp"
 				>
@@ -315,18 +311,14 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Art"
+			Name="Icons"
 			>
 			<File
-				RelativePath=".\ArtProvider.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ArtProvider.h"
-				>
-			</File>
-			<File
 				RelativePath=".\EditorIcons.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ImageUtils.h"
 				>
 			</File>
 		</Filter>

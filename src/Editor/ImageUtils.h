@@ -8,9 +8,6 @@
 
 #pragma once
 
-#include "wx/mstream.h"
-#include <wx/artprov.h>
-
 //-----------------------------------//
 
 #define wxMEMORY_IMAGE( name ) _wxConvertMemoryToImage( name, sizeof( name ) )
@@ -31,21 +28,5 @@ inline wxBitmap _wxConvertMemoryToBitmap(const unsigned char* data, int length, 
 	wxMemoryInputStream stream( data, length );
 	return wxBitmap( wxImage( stream ), -1 );
 }
-
-//-----------------------------------//
-
-class ArtProvider : public wxArtProvider
-{
-protected:
-
-	wxBitmap CreateBitmap(const wxArtID& id,
-						  const wxArtClient& client,
-						  const wxSize& size);
-
-	// optionally override this one as well
-	//wxIconBundle CreateIconBundle(const wxArtID& id,
-								  //const wxArtClient& client)
-	//{ }
-};
 
 //-----------------------------------//

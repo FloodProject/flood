@@ -73,7 +73,7 @@ void Geometry::appendRenderables( render::RenderQueue& queue, TransformPtr trans
 	
 	foreach( const rendPair& pair, renderables )
 	{
-		foreach( RenderablePtr rend, pair.second )
+		foreach( const RenderablePtr& rend, pair.second )
 		{
 			RenderState renderState;
 			

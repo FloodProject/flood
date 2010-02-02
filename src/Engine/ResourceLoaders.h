@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
-
 #ifdef VAPOR_IMAGE_PICOPNG
 	#include "vapor/resources/PNG_Loader.h"
 #endif

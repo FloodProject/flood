@@ -12,12 +12,6 @@
 
 namespace vapor { namespace editor {
 
-//-----------------------------------//
-
-using namespace vapor::scene;
-using namespace vapor::render;
-using namespace vapor::math;
-
 ////////////////////////////////////////////////////////////
 // Event table
 ////////////////////////////////////////////////////////////

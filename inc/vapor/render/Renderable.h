@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
 #include "vapor/render/Material.h"
 #include "vapor/render/VertexBuffer.h"
 #include "vapor/render/IndexBuffer.h"

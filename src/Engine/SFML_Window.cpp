@@ -190,7 +190,7 @@ void SFML_Window::setTitle(const std::string& title)
 
 //-----------------------------------//
 
-void SFML_Window::setCursorState(bool state)
+void SFML_Window::setCursorVisible(bool state)
 {
 	cursorState = state;
 	window.ShowMouseCursor(state);
@@ -198,7 +198,7 @@ void SFML_Window::setCursorState(bool state)
 
 //-----------------------------------//
 
-bool SFML_Window::getCursorState() const
+bool SFML_Window::isCursorVisible() const
 {
 	return cursorState;
 }

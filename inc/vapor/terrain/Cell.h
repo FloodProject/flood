@@ -8,11 +8,11 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
 #include "vapor/render/Renderable.h"
-#include "vapor/terrain/Terrain.h"
 
 namespace vapor { namespace scene {
+
+struct TerrainSettings;
 
 //-----------------------------------//
 
@@ -62,7 +62,7 @@ protected:
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( Cell );
+TYPEDEF_INTRUSIVE_POINTER_FROM_CLASS( Cell );
 
 //-----------------------------------//
 

@@ -17,9 +17,9 @@ using namespace vapor::math;
 
 //-----------------------------------//
 
-static const float DEFAULT_MOVE_SENSIVITY = 0.5f;
-static const float DEFAULT_LOOK_SENSIVITY = 0.005f;
-static const float DEFAULT_LIMIT_XAXIS = degreeToRadian( 89.0f );
+static const float DEFAULT_MOVE_SENSIVITY = 50.0f;
+static const float DEFAULT_LOOK_SENSIVITY = 0.5f;
+static const float DEFAULT_LIMIT_XAXIS = degreeToRadian( 89.999f );
 
 //-----------------------------------//
 
@@ -50,12 +50,10 @@ void FirstPersonCamera::update( double delta )
 void FirstPersonCamera::checkControls( double delta )
 {
 	// Check mouse movement.
-	float dt = delta * 100.0f * lookSensivity;
+	Vector3 rotate( mouseDistance.y, -mouseDistance.x, 0.0f );
+	transform->rotate( rotate * (delta * lookSensivity) );
 
-	Vector3 rotateVector( mouseDistance.y * dt, -mouseDistance.x * dt, 0.0f );
-	transform->rotate( rotateVector );
-
-	//// Restrict X-axis movement by some deegres.
+	// Restrict X-axis movement by some deegres.
 	float& xang = const_cast< float& >( transform->getRotation().xang );
 	limit< float >( xang, -DEFAULT_LIMIT_XAXIS, DEFAULT_LIMIT_XAXIS );
 
@@ -65,13 +63,10 @@ void FirstPersonCamera::checkControls( double delta )
 	Keyboard* kbd = inputManager->getKeyboard();
 	const std::vector< bool >& state = kbd->getKeyState();
 
-	dt = delta * 100.0f * moveSensivity;
-
 	Vector3 moveVector;
-
-	if( state[Keys::W] == true )
+	if( state[Keys::W] )
 		moveVector+=( Vector3::UnitZ );
-
+	
 	if( state[Keys::S] )
 		moveVector+=( -Vector3::UnitZ );
 	
@@ -87,52 +82,113 @@ void FirstPersonCamera::checkControls( double delta )
 	if( state[Keys::Z] )
 		moveVector+=( -Vector3::UnitY );
 
-	if( state[Keys::I] )
+/*	if( state[Keys::Up] )
 		transform->rotate( -0.01f, 0.0f, 0.0f );
 
-	if( state[Keys::K] )
+	if( state[Keys::Down] )
 		transform->rotate( 0.01f, 0.0f, 0.0f );
     
-	if( state[Keys::J] )
+	if( state[Keys::Left] )
 		transform->rotate( 0.0f, 0.01f, 0.0f );
 
-	if( state[Keys::L] )
-		transform->rotate( 0.0f, -0.01f, 0.0f );	
+	if( state[Keys::Right] )
+		transform->rotate( 0.0f, -0.01f, 0.0f );*/	
 
-	Matrix4x3 t = EulerAngles(30.0f,20.0f,0.0f).getOrientationMatrix();
-	Vector3 fuck = Vector3(10.0f, 20.0f, 30.0f)*t;
-
-	moveVector = moveVector * dt;
+	moveVector = moveVector * (delta * moveSensivity);
 	EulerAngles& rotAng =  const_cast< EulerAngles& >(transform->getRotation());
 	transform->translate( moveVector*rotAng.getOrientationMatrix() );
 	
-	{
-		Vector3 transformedReference = Vector3::UnitZ * rotAng.getOrientationMatrix();
-		Vector3 cameraLookAt = transform->getPosition() + transformedReference;
-		viewMatrix = transform->lookAt( cameraLookAt, Vector3::UnitY );
+	Vector3 transformedReference = Vector3::UnitZ * rotAng.getOrientationMatrix();
+	Vector3 cameraLookAt = transform->getPosition() + transformedReference;
+	viewMatrix = transform->lookAt( cameraLookAt, Vector3::UnitY );
+}
 
+//-----------------------------------//
 
-		debug( "ang: %f, %f, %f", rotAng.xang, rotAng.yang, rotAng.zang );
-		debug( "lookAt: %f, %f, %f", transformedReference.x, transformedReference.y, transformedReference.z );
+void FirstPersonCamera::registerCallbacks()
+{
+	Keyboard* kbd = inputManager->getKeyboard();
+	Mouse* mouse = inputManager->getMouse();
+
+	assert( kbd != nullptr );
+	assert( mouse != nullptr );
+	
+	kbd->onKeyPress += fd::bind( &FirstPersonCamera::onKeyPressed, this );
+	mouse->onMouseMove += fd::bind( &FirstPersonCamera::onMouseMove, this );
+	mouse->onMouseWheelMove += fd::bind( &FirstPersonCamera::onMouseWheel, this );
+
+	render::Window* window = renderDevice->getWindow();
+	window->onWindowFocusChange += fd::bind( &FirstPersonCamera::onWindowFocusChange, this );
+}
+
+//-----------------------------------//
+
+void FirstPersonCamera::onKeyPressed( const KeyEvent& keyEvent )
+{
+	switch( keyEvent.keyCode )
+	{	
+		case Keys::LControl:
+		{
+			render::Window* window = renderDevice->getWindow();
+			window->setCursorVisible( !window->isCursorVisible() );
+			centerCursor();
+			break;
+		}
+		case Keys::N:
+		{
+			setLookSensivity( lookSensivity - 0.5f );
+			break;
+		}
+		case Keys::M:
+		{
+			setLookSensivity( lookSensivity + 0.5f );
+			break;
+		}
 	}
-
-	rotAng.canonize();
-
-	//viewMatrix = transform->lookAt( Vector3::UnitZ, Vector3::UnitY );
 }
 
 //-----------------------------------//
 
-const std::string& FirstPersonCamera::getType() const
+void FirstPersonCamera::onMouseWheel( const input::MouseWheelEvent& event )
 {
-	return FirstPersonCamera::type;
+	transform->translate( Vector3::UnitY * (moveSensivity * event.delta) );
 }
 
 //-----------------------------------//
 
-const std::string FirstPersonCamera::save(int ind)
+void FirstPersonCamera::onMouseMove( const MouseMoveEvent& moveEvent )
 {
-	return "";
+	render::Window* window = renderDevice->getWindow();
+
+	if( window->isCursorVisible() ) return;
+		
+	Vector3 currentPosition( moveEvent.x, moveEvent.y, 0 );
+	mouseDistance += currentPosition - lastPosition;
+	lastPosition = currentPosition;
+
+	centerCursor();
+}
+
+//-----------------------------------//
+
+void FirstPersonCamera::centerCursor( )
+{
+	render::Window* window = renderDevice->getWindow();
+
+	if( window->isCursorVisible() ) return;
+	
+	lastPosition.x = window->getSettings().getWidth() / 2;
+	lastPosition.y = window->getSettings().getHeight() / 2;
+	
+	window->setCursorPosition( lastPosition.x, lastPosition.y );
+}
+
+//-----------------------------------//
+
+void FirstPersonCamera::onWindowFocusChange( bool focusLost )
+{
+	if( !focusLost )
+		centerCursor();
 }
 
 //-----------------------------------//
@@ -151,150 +207,16 @@ void FirstPersonCamera::setMoveSensivity( float sensivity )
 
 //-----------------------------------//
 
-void FirstPersonCamera::registerCallbacks()
+const std::string& FirstPersonCamera::getType() const
 {
-	Keyboard* kbd = inputManager->getKeyboard();
-	Mouse* mouse = inputManager->getMouse();
-
-	if( kbd )
-	{
-		kbd->onKeyPress += fd::bind( &FirstPersonCamera::onKeyPressed, this );
-		kbd->onKeyRelease += fd::bind( &FirstPersonCamera::onKeyReleased, this );
-	}
-	
-	if( mouse )
-	{
-		mouse->onMouseMove += fd::bind( &FirstPersonCamera::onMouseMove, this );
-		mouse->onMouseWheelMove += fd::bind( &FirstPersonCamera::onMouseWheel, this );
-	}
-
-	renderDevice->getWindow()->onWindowFocusChange += fd::bind( &FirstPersonCamera::onWindowFocusChange, this );
+	return FirstPersonCamera::type;
 }
 
 //-----------------------------------//
 
-void FirstPersonCamera::onKeyPressed( const KeyEvent& keyEvent )
+const std::string FirstPersonCamera::save(int ind)
 {
-	switch( keyEvent.keyCode )
-	{	
-		case Keys::LControl:
-		{
-			render::Window* window = renderDevice->getWindow();
-			window->setCursorState( !window->getCursorState() );
-			centerCursor();
-			break;
-		}
-		case Keys::N:
-		{
-			setLookSensivity( lookSensivity - 0.5f );
-			break;
-		}
-		case Keys::M:
-		{
-			setLookSensivity( lookSensivity + 0.5f );
-			break;
-		}
-	//	case Keys::Left:
-	//	{
-	//		if(!check){
-	//			check = true;
-	//			rotateVectorKey = Vector3(0.0f, 0.005f, 0.0f);
-	//			break;
-	//		}
-	//	}
-	//	case Keys::Right:
-	//	{
-	//		if(!check){
-	//			check = true;
-	//			rotateVectorKey = Vector3(0.0f, -0.005f, 0.0f);
-	//			break;
-	//		}
-	//	}
-	//	case Keys::Up:
-	//	{
-	//		if(!check){
-	//			check = true;
-	//			rotateVectorKey = Vector3(0.005f, 0.0f, 0.0f);
-	//			break;
-	//		}
-	//	}
-	//	case Keys::Down:
-	//	{
-	//		if(!check){
-	//			check = true;
-	//			rotateVectorKey = Vector3(-0.005f, 0.0f, 0.0f);
-	//			break;
-	//		}
-	//	}
-	}
-}
-
-//-----------------------------------//
-
-void FirstPersonCamera::onKeyReleased( const KeyEvent& keyEvent )
-{
-	switch( keyEvent.keyCode )
-	{	
-		case Keys::Left:
-		case Keys::Right:
-		case Keys::Up:
-		case Keys::Down:
-		{
-			//check = false;
-			//rotateVectorKey.zero();
-			//break;
-		}
-	}
-}
-
-//-----------------------------------//
-
-void FirstPersonCamera::onMouseWheel( const input::MouseWheelEvent& event )
-{
-	TransformPtr trans = getNode()->getTransform();
-	trans->translate( Vector3::UnitY * (moveSensivity * event.delta) );
-}
-
-//-----------------------------------//
-
-void FirstPersonCamera::onMouseMove( const MouseMoveEvent& moveEvent )
-{
-	render::Window* window = renderDevice->getWindow();
-
-	if( !window->getCursorState() )
-	{
-		Vector3 currentPosition( moveEvent.x, moveEvent.y, 0 );
-		mouseDistance += currentPosition - lastPosition;
-		lastPosition = currentPosition;
-	}
-
-	centerCursor();
-}
-
-//-----------------------------------//
-
-void FirstPersonCamera::centerCursor( )
-{
-	render::Window* window = renderDevice->getWindow();
-
-	if( !window->getCursorState() )
-	{
-		int nw = window->getSettings().getWidth() / 2;
-		int nh = window->getSettings().getHeight() / 2;
-		
-		window->setCursorPosition( nw, nh );
-
-		lastPosition.x = static_cast<float>( nw );
-		lastPosition.y = static_cast<float>( nh );
-	}
-}
-
-//-----------------------------------//
-
-void FirstPersonCamera::onWindowFocusChange( bool focusLost )
-{
-	if( !focusLost )
-		centerCursor();
+	return "";
 }
 
 //-----------------------------------//

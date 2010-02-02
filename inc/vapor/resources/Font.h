@@ -8,9 +8,7 @@
 
 #pragma once
 
-#include "vapor/Platform.h"
 #include "vapor/resources/Resource.h"
-
 #include "vapor/render/Texture.h"
 #include "vapor/render/Renderable.h"
 
