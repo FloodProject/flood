@@ -89,6 +89,8 @@ void Framework::render()
 
 		updateFrameTimes();
 	}
+
+	Timer::sleep( 0 );
 }
 
 //-----------------------------------//

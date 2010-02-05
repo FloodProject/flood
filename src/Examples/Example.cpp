@@ -6,7 +6,6 @@
 *
 ************************************************************************/
 
-#include <vapor/PCH.h>
 #include "Example.h"
 
 //-----------------------------------//
@@ -77,11 +76,11 @@ void Example::onSetupScene()
 	ProgramManager::getInstance().registerProgram( "diffuse", diffuse );
 	ProgramManager::getInstance().registerProgram( "tex", tex );
 	ProgramManager::getInstance().registerProgram( "toon", toon );
-	//
-	//// Create a new Camera
+
+	// Create a new Camera
 	NodePtr camera( new Node( "MainCamera" ) );
 	cam.reset( new FirstPersonCamera( getInputManager(), getRenderDevice() ) );
-	camera->addComponent( TransformPtr( new Transform() ) );
+	camera->addComponent( TransformPtr( new Transform( 0.0f, 20.0f, -65.0f ) ) );
 	camera->addComponent( cam );
 	scene->add( camera );
 
@@ -90,67 +89,66 @@ void Example::onSetupScene()
 		rend->getMaterial()->setProgram( tex );
 
 	NodePtr ct( new Node( "ct" ) );
-	ct->addComponent( TransformPtr( new Transform( 0.0f, 50.0f, 0.0f ) ) );
+	ct->addComponent( TransformPtr( new Transform() ) );
 	ct->addComponent( mesh->getGeometry() );
 	scene->add(ct);
 	
-	//// Materials too?
-	MaterialPtr mat( new Material( "FontMaterial", tex ) );
+	// Materials too?
+	MaterialPtr mat2( new Material( "FontMaterial", tex ) );
 	FontPtr font = rm->loadResource< Font >( "Verdana.font" );
-	label.reset( new Label( getFPS( lastFrameTime ), font, mat ) );
+	label.reset( new Label( getFPS( lastFrameTime ), font, mat2 ) );
 	NodePtr fps( new Node( "FPSNode" ) );
 	fps->addComponent( TransformPtr( new Transform() ) );
 	fps->addComponent( label );
 	fps->getTransform()->translate( -300.0f, 220.0f, 0.0f );
 	scene->add( fps );
 
-	//NodePtr grid( new Node( "Grid" ) );
-	//grid->addComponent( TransformPtr( new Transform() ) );
-	//grid->addComponent( ComponentPtr( new Grid( mat ) ) );
-	//scene->add( grid );
+	MaterialPtr mat( new Material( "GridMaterial", diffuse ) );
+	NodePtr grid( new Node( "Grid" ) );
+	grid->addComponent( TransformPtr( new Transform() ) );
+	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
+	scene->add( grid );
 
-	//foreach( const RenderablePtr& rend, 
-	//grid->getComponent<Geometry>("Grid")->getRenderables() )
-	//{
-	//	rend->getMaterial()->setProgram( diffuse );
-	//}
+	foreach( const RenderablePtr& rend, 
+	grid->getComponent<Geometry>("Grid")->getRenderables() )
+	{
+		rend->getMaterial()->setProgram( diffuse );
+	}
 
-	//NodePtr lnode( new Node( "Light" ) );
-	//LightPtr light( new Light( LightType::Point ) );
-	//light->diffuseColor = Colors::Red;
-	//light->ambientColor = Colors::Yellow;
-	//lnode->addComponent( light );
-	//scene->add( lnode );
+	NodePtr lnode( new Node( "Light" ) );
+	LightPtr light( new Light( LightType::Point ) );
+	light->diffuseColor = Colors::Red;
+	light->ambientColor = Colors::Yellow;
+	lnode->addComponent( light );
+	scene->add( lnode );
 
-	//TerrainSettings settings;
-	//settings.CellSize = 1024;
-	//settings.TileDimensions = 32;
-	//settings.MaxHeight = 150;
+	TerrainSettings settings;
+	settings.CellSize = 1024;
+	settings.TileDimensions = 32;
+	settings.MaxHeight = 150;
 
-	//TerrainPtr terrain( new Terrain( settings ) );
+	TerrainPtr terrain( new Terrain( settings ) );
 
-	//NodePtr terreno( new Node( "Terreno" ) );
-	//terreno->addComponent( TransformPtr( new Transform() ) );
-	//terreno->addComponent( terrain );
-	//scene->add( terreno );
+	NodePtr terreno( new Node( "Terreno" ) );
+	terreno->addComponent( TransformPtr( new Transform() ) );
+	terreno->addComponent( terrain );
+	scene->add( terreno );
 
-	//ImagePtr heightmap = rm->loadResource< Image >( "height2.png" );
-	//Cell* cell = terrain->createCell( heightmap, 0, 0 );
+	ImagePtr heightmap = rm->loadResource< Image >( "height2.png" );
+	CellPtr cell = terrain->createCell( heightmap, 0, 0 );
 }
 
 //-----------------------------------//
  
 void Example::onUpdate( double delta ) 
 {
-	PROFILE;
-
 	if( fpsUpdateTime <= 1.0f )
 	{
 		fpsUpdateTime += delta;
 	}
 	else
 	{
-		label->setText( getFPS( (float)lastFrameTime ) );
+		label->setText( getFPS(lastFrameTime) );
 		fpsUpdateTime = 0.0f;
 	}
 }
@@ -164,7 +162,7 @@ void Example::onRender()
 	device->setClearColor( c );
 	device->clearTarget();
 
-	//cam->render();
+	cam->render();
 }
 
 //-----------------------------------//

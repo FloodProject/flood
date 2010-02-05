@@ -147,9 +147,9 @@ struct MouseButtonEvent : public MouseEvent
 
 struct MouseWheelEvent : public MouseEvent
 {
-	MouseWheelEvent( int delta );
+	MouseWheelEvent( short delta );
 
-	int delta;
+	short delta;
 };
 
 //-----------------------------------//

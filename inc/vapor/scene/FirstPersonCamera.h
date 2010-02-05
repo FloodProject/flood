@@ -68,6 +68,9 @@ protected:
 	float lookSensivity;
 	float moveSensivity;
 
+	// Queued movement.
+	math::Vector3 queuedMovement;
+
 	// Last mouse position (last frame).
 	math::Vector3 lastPosition;
 

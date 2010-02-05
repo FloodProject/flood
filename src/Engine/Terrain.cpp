@@ -20,9 +20,9 @@ using namespace vapor::render;
 // Range of valid dimensions for heightmaps.
 static const short validDimensions[] =
 {
-	2, 3, 5, 9, 17, 
-	33, 65, 129, 257, 513, 
-	1025, 2049, 4097,
+	2,    3,    5,    9, 
+	17,   33,   65,   129,
+	257,  513,  1025, 2049
 };
 
 //-----------------------------------//
@@ -35,20 +35,20 @@ Terrain::Terrain( const TerrainSettings& settings )
 	: settings( settings )
 {
 	cellMaterial.reset( new Material( "PageMaterial" ) );
-	cellMaterial->setProgram( "toon" );
+	cellMaterial->setTexture( 0, "PineTrunk.png" );
+	cellMaterial->setProgram( "tex_toon" );
 }
 
 //-----------------------------------//
 
 Terrain::~Terrain()
 {
-	//foreach( Cell* cell, terrainCells )
-	//	delete cell;
+
 }
 
 //-----------------------------------//
 
-CellPtr Terrain::createCell( ImagePtr heightmap, int x, int y )
+CellPtr Terrain::createCell( const ImagePtr& heightmap, ushort x, ushort y )
 {
 	if( !validateHeightmap( heightmap ) )
 	{
@@ -71,7 +71,7 @@ CellPtr Terrain::createCell( ImagePtr heightmap, int x, int y )
 
 //-----------------------------------//
 
-void Terrain::convertHeightmap( resources::ImagePtr heightmap, std::vector<float>& heights )
+void Terrain::convertHeightmap( const resources::ImagePtr& heightmap, std::vector<float>& heights )
 {
 	// TODO: Can't handle any other pixel format right now...
 	assert( heightmap->getPixelFormat() == PixelFormat::R8G8B8A8 );
@@ -93,21 +93,21 @@ void Terrain::convertHeightmap( resources::ImagePtr heightmap, std::vector<float
 
 //-----------------------------------//
 
-bool Terrain::validateHeightmap( ImagePtr heightmap )
+bool Terrain::validateHeightmap( const ImagePtr& heightmap )
 {
 	const ushort width = heightmap->getWidth();
 	const ushort height = heightmap->getHeight();
 
 	// Check the heightmap for the right dimensions.
-	// First condition: equal values.
+	// First condition: width and height should be the same.
 	if( width != height )
 	{
 		warn( "terrain", "Invalid heightmap (width != height)" );
 		return false;
 	}
 
-	// That means that they have 2^n+1 dimensions.
-	// We built a table previously with the valid dimensions.
+	// The dimension should obey the formula 2^n+1.
+	// Check an embedded LUT with the valid dimensions.
 	
 	bool valid = false;
 	for( int i = 0; i < VAPOR_ARRAY_SIZE(validDimensions); i++ )
@@ -137,7 +137,7 @@ render::MaterialPtr Terrain::getMaterial() const
 
 //-----------------------------------//
 
-void Terrain::setMaterial( render::MaterialPtr material )
+void Terrain::setMaterial( const render::MaterialPtr& material )
 {
 	this->cellMaterial = material;
 }
@@ -151,7 +151,7 @@ resources::ImagePtr Terrain::getHeightmap() const
 
 //-----------------------------------//
 
-void Terrain::setHeightmap( resources::ImagePtr heightmap )
+void Terrain::setHeightmap( const resources::ImagePtr& heightmap )
 {
 	this->heightmap = heightmap;
 }

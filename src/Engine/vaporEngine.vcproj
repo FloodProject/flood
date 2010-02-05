@@ -886,6 +886,18 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Sky"
+				>
+				<File
+					RelativePath=".\Skydome.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\scene\Skydome.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Audio"

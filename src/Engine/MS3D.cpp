@@ -286,6 +286,15 @@ void MS3D::build()
 				mat->setTexture( 0, mt.texture );
 			}
 
+			if( mt.mode & HASALPHA )
+			{
+				// TODO: We can use Alpha Rejection here instead if the 
+				// alpha values are only opaque or fully transparent.
+
+				mat->setBlending( BlendingOperationSource::SourceAlpha,
+					BlendingOperationDestination::OneMinusSourceAlpha );
+			}
+
 			rend->setMaterial( mat );
 		}
 

@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/Timer.h"
+#include "vapor/Platform.h"
 
 using namespace vapor::log;
 
@@ -93,6 +93,17 @@ bool Timer::checkSupport()
 #endif
 
 	return true;
+}
+
+//-----------------------------------//
+
+void Timer::sleep( double time )
+{
+#if defined(VAPOR_PLATFORM_WINDOWS)
+	::Sleep( static_cast<DWORD>( time ) );
+#elif
+	#error Implement sleeping support for your platform
+#endif
 }
 
 //-----------------------------------//

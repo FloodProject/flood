@@ -9,6 +9,7 @@
 #include "vapor/PCH.h"
 #include "vapor/scene/FirstPersonCamera.h"
 #include "vapor/scene/Node.h"
+#include "vapor/math/Math.h"
 
 namespace vapor { namespace scene {
 
@@ -17,7 +18,7 @@ using namespace vapor::math;
 
 //-----------------------------------//
 
-static const float DEFAULT_MOVE_SENSIVITY = 50.0f;
+static const float DEFAULT_MOVE_SENSIVITY = 100.0f;
 static const float DEFAULT_LOOK_SENSIVITY = 0.5f;
 static const float DEFAULT_LIMIT_XAXIS = degreeToRadian( 89.999f );
 
@@ -51,7 +52,7 @@ void FirstPersonCamera::checkControls( double delta )
 {
 	// Check mouse movement.
 	Vector3 rotate( mouseDistance.y, -mouseDistance.x, 0.0f );
-	transform->rotate( rotate * (delta * lookSensivity) );
+	transform->rotate( rotate * (float(delta) * lookSensivity) );
 
 	// Restrict X-axis movement by some deegres.
 	float& xang = const_cast< float& >( transform->getRotation().xang );
@@ -94,7 +95,11 @@ void FirstPersonCamera::checkControls( double delta )
 	if( state[Keys::Right] )
 		transform->rotate( 0.0f, -0.01f, 0.0f );*/	
 
-	moveVector = moveVector * (delta * moveSensivity);
+	// Handle the queued movement from mouse wheel
+	moveVector += queuedMovement;
+	queuedMovement.zero();
+
+	moveVector *= (float(delta) * moveSensivity);
 	EulerAngles& rotAng =  const_cast< EulerAngles& >(transform->getRotation());
 	transform->translate( moveVector*rotAng.getOrientationMatrix() );
 	
@@ -136,12 +141,12 @@ void FirstPersonCamera::onKeyPressed( const KeyEvent& keyEvent )
 		}
 		case Keys::N:
 		{
-			setLookSensivity( lookSensivity - 0.5f );
+			setMoveSensivity( moveSensivity - 5.0f );
 			break;
 		}
 		case Keys::M:
 		{
-			setLookSensivity( lookSensivity + 0.5f );
+			setMoveSensivity( moveSensivity + 5.0f );
 			break;
 		}
 	}
@@ -151,7 +156,15 @@ void FirstPersonCamera::onKeyPressed( const KeyEvent& keyEvent )
 
 void FirstPersonCamera::onMouseWheel( const input::MouseWheelEvent& event )
 {
-	transform->translate( Vector3::UnitY * (moveSensivity * event.delta) );
+	if( !transform ) return;
+
+	// Mouse deltas in Windows seem to be pretty high,
+	// so we clamp them down to a reasonable value.
+	queuedMovement += Vector3::UnitY * (-event.delta / 100);
+
+#ifndef VAPOR_PLATFORM_WINDOWS
+	assert( "Check mouse delta values" );
+#endif
 }
 
 //-----------------------------------//
@@ -176,11 +189,14 @@ void FirstPersonCamera::centerCursor( )
 	render::Window* window = renderDevice->getWindow();
 
 	if( window->isCursorVisible() ) return;
+
+	int x = window->getSettings().getWidth() / 2;
+	int y = window->getSettings().getHeight() / 2;
 	
-	lastPosition.x = window->getSettings().getWidth() / 2;
-	lastPosition.y = window->getSettings().getHeight() / 2;
+	lastPosition.x = x;
+	lastPosition.y = y;
 	
-	window->setCursorPosition( lastPosition.x, lastPosition.y );
+	window->setCursorPosition( x, y );
 }
 
 //-----------------------------------//
@@ -195,14 +211,14 @@ void FirstPersonCamera::onWindowFocusChange( bool focusLost )
 
 void FirstPersonCamera::setLookSensivity( float sensivity )
 {
-	this->lookSensivity = sensivity;
+	lookSensivity = sensivity;
 }
 
 //-----------------------------------//
 
 void FirstPersonCamera::setMoveSensivity( float sensivity )
 {
-	this->moveSensivity = sensivity;
+	moveSensivity = sensivity;
 }
 
 //-----------------------------------//

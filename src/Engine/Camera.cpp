@@ -10,6 +10,7 @@
 #include "vapor/scene/Camera.h"
 #include "vapor/scene/Group.h"
 #include "vapor/scene/Geometry.h"
+#include "vapor/math/Math.h"
 
 namespace vapor { namespace scene {
 
@@ -24,7 +25,7 @@ const std::string& Camera::type = "Camera";
 
 Camera::Camera( render::Device* device, Projection::Enum projection )
 	: renderDevice( device ), projection( projection ), target( nullptr ),
-	fov(45.0f), near_( 1.0f ), far_( 1000.0f )
+	fov(45.0f), near_( 1.0f ), far_( 5000.0f )
 {
 	setRenderTarget( device->getRenderTarget() );
 }

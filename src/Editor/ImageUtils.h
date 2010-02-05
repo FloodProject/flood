@@ -11,19 +11,19 @@
 //-----------------------------------//
 
 #define wxMEMORY_IMAGE( name ) _wxConvertMemoryToImage( name, sizeof( name ) )
-#define wxMEMORY_IMAGEEX( name, type ) _wxConvertMemoryToImage( name, sizeof( name ), type )
+#define wxMEMORY_IMAGEEX( name, type ) _wxConvertMemoryToImage( name, sizeof( name ) )
 #define wxMEMORY_BITMAP( name ) _wxConvertMemoryToBitmap( name, sizeof( name ) )
-#define wxMEMORY_BITMAPEX( name, type ) _wxConvertMemoryToBitmap( name, sizeof( name ), type )
+#define wxMEMORY_BITMAPEX( name, type ) _wxConvertMemoryToBitmap( name, sizeof( name ) )
 
 //-----------------------------------//
 
-inline wxImage _wxConvertMemoryToImage(const unsigned char* data, int length, long type = wxBITMAP_TYPE_ANY )
+inline wxImage _wxConvertMemoryToImage(const unsigned char* data, int length )
 {
 	wxMemoryInputStream stream( data, length );
 	return wxImage( stream );
 }
 
-inline wxBitmap _wxConvertMemoryToBitmap(const unsigned char* data, int length, long type = wxBITMAP_TYPE_ANY )
+inline wxBitmap _wxConvertMemoryToBitmap(const unsigned char* data, int length )
 {
 	wxMemoryInputStream stream( data, length );
 	return wxBitmap( wxImage( stream ), -1 );

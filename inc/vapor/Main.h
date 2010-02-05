@@ -39,9 +39,5 @@ int main(int argc, const char** argv)
 
 	example.run();
 
-	#if defined(VAPOR_MEMORY_LEAK_DETECTOR) && defined(VAPOR_PLATFORM_WINDOWS)
-		//_CrtDumpMemoryLeaks();
-	#endif
-
 	return EXIT_SUCCESS;
 }

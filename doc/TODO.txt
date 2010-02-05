@@ -4,6 +4,7 @@ WIP (work-in-progress)
 Near TODO:
 ----------
 
+Average terrain normals
 Fix Picking
 Skybox component
 View frustum culling
@@ -14,6 +15,7 @@ Fix Overlays positioning
 Fix Lua state closing
 Console GUI widget
 Typesafe logging
+Switch Skydome geometry to triangle strips
 
 EDITOR:
 -------

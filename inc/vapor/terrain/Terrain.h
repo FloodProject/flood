@@ -28,13 +28,13 @@ struct TerrainSettings
 	{ }
 
 	// Cell size in world units.
-	short CellSize;
+	ushort CellSize;
 
-	// Number of chunks per row/column.
-	short TileDimensions;
+	// Number of tiles per row/column.
+	ushort TileDimensions;
 
 	// Scales the terrain to this maximum height.
-	short MaxHeight;
+	ushort MaxHeight;
 
 	// Material for each cell.
 	//render::MaterialPtr CellMaterial;
@@ -64,13 +64,13 @@ public:
 	virtual ~Terrain();
 
 	// Creates a new page of terrain.
-	CellPtr createCell( resources::ImagePtr heightmap, int x, int y );
+	CellPtr createCell( const resources::ImagePtr& heightmap, ushort x, ushort y );
 
 	// Converts the heightmap to a vector of heights.
-	void convertHeightmap( resources::ImagePtr heightmap, std::vector<float>& heights );
+	void convertHeightmap( const resources::ImagePtr& heightmap, std::vector<float>& heights );
 
 	// Valides the heightmap (checks if it has valid dimensions).
-	bool validateHeightmap( resources::ImagePtr heightmap );
+	bool validateHeightmap( const resources::ImagePtr& heightmap );
 
 	// Applies a brush operation in a specified region.
 	//void applyBrush( const Brush& brush, const Region& region );
@@ -79,13 +79,13 @@ public:
 	render::MaterialPtr getMaterial() const;
 
 	// Sets the material of the terrain.
-	void setMaterial( render::MaterialPtr material );
+	void setMaterial( const render::MaterialPtr& material );
 
 	// Gets the heightmap of the terrain.
 	resources::ImagePtr getHeightmap() const;
 
 	// Sets the heightmap of the terrain.
-	void setHeightmap( resources::ImagePtr heightmap );
+	void setHeightmap( const resources::ImagePtr& heightmap );
 
 	// Updates the terrain geometry if needed.
 	virtual void update( double delta );

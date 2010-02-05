@@ -70,7 +70,8 @@ bool Node::addComponent( const ComponentPtr& component )
 	// Searches for a component with the same type.
 	if( components.find( type ) != components.end() )
 	{
-		warn( "scene", "Component of type %s already exists in entity %s", type, getName() );
+		warn( "scene", "Component of type %s already exists in entity %s",
+			type.c_str(), getName().c_str() );
 		return false;
 	}
 
@@ -108,18 +109,20 @@ const ComponentMap& Node::getComponents()
 
 void Node::update( double delta )
 {
+	const TransformPtr& transform = getTransform();
+
 	// Update all geometry bounding boxes first
 	foreach( const GeometryPtr& geom, getGeometry() )
 		geom->update( delta );
 
 	// Update transform (info may be needed by other components)
-	getTransform()->update( delta );
+	if( transform ) transform->update( delta );
 
 	// Update everything else
 	foreach( const ComponentMapPair& component, components )
 	{
-		if(component.second->getType() == "Transform")
-			return;
+		if( component.second == transform ) 
+			continue;
 
 		component.second->update( delta );
 	}

@@ -274,7 +274,7 @@ MouseButtonEvent::MouseButtonEvent(short x, short y,
 
 //-----------------------------------//
 
-MouseWheelEvent::MouseWheelEvent( int delta )
+MouseWheelEvent::MouseWheelEvent( short delta )
 	: MouseEvent( MouseEventType::MouseWheelMove ), delta( delta )
 {
 

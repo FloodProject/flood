@@ -41,7 +41,7 @@ public:
 	TexturePtr getTexture( const std::string& tex );
 
 	// Gets a texture given an image.
-	TexturePtr getTexture( resources::ImagePtr img );
+	TexturePtr getTexture( const resources::ImagePtr& img );
 
 	// Gets the memory usage of the textures loaded (in kbytes).
 	uint getMemoryUsage();

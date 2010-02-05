@@ -49,6 +49,7 @@
 #include <vapor/scene/Geometry.h>
 #include "vapor/scene/Grid.h"
 #include "vapor/scene/Light.h"
+#include "vapor/scene/Skydome.h"
 
 //-------------------------------------------------------------------------//
 // Render-related Includes

@@ -22,19 +22,10 @@ static float DEFAULT_LINE_WIDTH = 1.0f;
 
 //-----------------------------------//
 
-//Material::Material( const std::string& name )
-//	: name( name ), _isBlendingEnabled( false ),
-//	src( BlendingOperationSource::One ), dst( BlendingOperationDestination::Zero )
-//{
-//
-//}
-
-//-----------------------------------//
-
 Material::Material( const std::string& name, ProgramPtr program )
 	: name( name ), program( program ), _isBlendingEnabled( false ),
 	src( BlendingOperationSource::One ), dst( BlendingOperationDestination::Zero ),
-	lineWidth( DEFAULT_LINE_WIDTH ), lineSmooth( false )
+	lineWidth( DEFAULT_LINE_WIDTH ), lineSmooth( false ), cullBackfaces( true )
 {
 
 }
@@ -82,9 +73,6 @@ void Material::setTexture( uint unit, TexturePtr tex )
 
 bool Material::isBlendingEnabled()
 {
-	//return (src != BlendingOperationSource::Zero)
-		//|| (dst != BlendingOperationDestination::SourceColor);
-
 	return _isBlendingEnabled;
 }
 
@@ -112,6 +100,21 @@ BlendingOperationDestination::Enum Material::getDestinationBlendingOperation()
 {
 	return dst;
 }
+
+//-----------------------------------//
+
+bool Material::getBackfaceCulling()
+{
+	return cullBackfaces;
+}
+
+//-----------------------------------//
+
+void Material::setBackfaceCulling( bool cull )
+{
+	cullBackfaces = cull;
+}
+
 
 //-----------------------------------//
 
@@ -202,6 +205,11 @@ void Material::bind()
 		glLineWidth( lineWidth );
 	}
 
+	if( !cullBackfaces )
+	{
+		glDisable( GL_CULL_FACE );
+	}
+
 	program->bind();
 
 	if( isBlendingEnabled() ) 
@@ -225,6 +233,11 @@ void Material::unbind()
 	if( isBlendingEnabled() ) 
 	{
 		glDisable( GL_BLEND );
+	}
+
+	if( !cullBackfaces )
+	{
+		glEnable( GL_CULL_FACE );
 	}
 
 	glDisable( GL_LINE_SMOOTH );

@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "vapor/math/Math.h"
-
 namespace vapor { namespace math {
 
 //-----------------------------------//

@@ -36,4 +36,15 @@ float degreeToRadian( float degree )
 
 //-----------------------------------//
 
+Vector3 calculateTriangleNormal( const Vector3& v1, const Vector3& v2, const Vector3& v3 )
+{
+	Vector3 vec1 = v2 - v1;
+	Vector3 vec2 = v3 - v1;
+	Vector3 normal = vec1.cross(vec2);
+	
+	return normal.normalize();
+}
+
+//-----------------------------------//
+
 } } // end namespaces

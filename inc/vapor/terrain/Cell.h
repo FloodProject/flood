@@ -28,7 +28,7 @@ class VAPOR_API Cell : public render::Renderable, private boost::noncopyable
 public:
 
 	Cell( const TerrainSettings& settings, 
-		const std::vector<float>& heights, int x, int y );
+		const std::vector<float>& heights, ushort x, ushort y );
 	
 	~Cell();
 
@@ -41,17 +41,13 @@ public:
 	// Generates the terrain grid geometry.
 	void updateGeometry();
 
-	// Calculate the normal from a triangle vertices.
-	math::Vector3 calculateTriangleNormal( const math::Vector3& v1, 
-		const math::Vector3& v2, const math::Vector3& v3 );
-
 	// Calculate the normals of the geometry.
 	// void calculateNormals();
 
 protected:
 
 	// Coordinates of this cell of terrain.
-	int x, y;
+	ushort x, y;
 
 	// Stores the heights of this cell of terrain.
 	std::vector<float> heights;

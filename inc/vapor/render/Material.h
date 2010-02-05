@@ -84,6 +84,12 @@ public:
 	// Sets the associated program.
 	void setProgram( const std::string& name );
 
+	// Gets the backface culling settings.
+	bool getBackfaceCulling();
+
+	// Sets the backface culling settings.
+	void setBackfaceCulling( bool cullFaces );
+
 	// Gets the line width of this material.
 	float getLineWidth() const;
 
@@ -130,15 +136,19 @@ protected:
 	BlendingOperationDestination::Enum dst;
 	bool _isBlendingEnabled;
 
+	// Backface culling
+	bool cullBackfaces;
+
+	// Line settings
+	bool lineSmooth;
+	float lineWidth;
+	
 	// Textures
 	std::map< uint, TexturePtr > textures;
 	typedef std::pair< const uint, TexturePtr > texPair;
 
 	// Program of the material.
 	ProgramPtr program;
-
-	float lineWidth;
-	bool lineSmooth;
 	
 	// Name of the material.
 	std::string name;

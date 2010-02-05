@@ -8,6 +8,7 @@
 
 #include "vapor/PCH.h"
 #include "vapor/terrain/Cell.h"
+#include "vapor/math/Math.h"
 #include "vapor/math/Color.h"
 #include "vapor/terrain/Terrain.h"
 
@@ -20,7 +21,7 @@ using namespace vapor::render;
 //-----------------------------------//
 
 Cell::Cell( const TerrainSettings& settings, 
-		   const std::vector<float>& heights, int x, int y ) 
+		   const std::vector<float>& heights, ushort x, ushort y ) 
 	: Renderable( Primitive::Triangles ), heights( heights ),
 	x( x ), y( y ), settings( settings )
 {
@@ -47,25 +48,28 @@ void Cell::updateGeometry( )
 	std::vector< Vector3 > normals;
 	std::vector< Vector3 > texCoords;
 
-	const short CellSize = settings.CellSize;
-	const short TileDimensions = settings.TileDimensions;
-	const short MaxHeight = settings.MaxHeight;
+	const ushort CellSize = settings.CellSize;
+	const ushort TileDimensions = settings.TileDimensions;
+	const ushort MaxHeight = settings.MaxHeight;
 
 	const float tileWidth = (float(CellSize) / TileDimensions);
 	const float tileHeight = (float(CellSize) / TileDimensions);
 
-	float dX = (float)x * CellSize;
-	float dZ = (float)y * CellSize;
+	float dX = x * CellSize;
+	float dZ = y * CellSize;
 	
 	float height;
 
-	// For each row of the Cell
+	// Per-face normals. We'll use these to compute the proper averaged normals.
+	std::vector< Vector3 > faceNormals;
+
+	// For each row of the cell
 	for( short rowX = 0; rowX < TileDimensions; rowX++ )
 	{
-		// For each cell of the row
+		// For each tile of the row
 		for( short rowZ = 0; rowZ < TileDimensions; rowZ++ )
 		{
-			// Draw two triangles per cell.
+			// Draw two triangles per tile.
 			//
 			//			1 3
 			//			|/|
@@ -93,9 +97,11 @@ void Cell::updateGeometry( )
 			colors.push_back( Vector3( 1.0f, 1.0f, 1.0f ) );
 			colors.push_back( Vector3( 1.0f, 1.0f, 1.0f ) );
 
-			normals.push_back( calculateTriangleNormal( pt1, pt2, pt3 ) );
-			normals.push_back( calculateTriangleNormal( pt1, pt2, pt3 ) );
-			normals.push_back( calculateTriangleNormal( pt1, pt2, pt3 ) );
+			faceNormals.push_back( calculateTriangleNormal( pt1, pt2, pt3 ) );
+
+			texCoords.push_back( Vector3( pt1.x / CellSize, pt1.z / CellSize, 0.0f ) );
+			texCoords.push_back( Vector3( pt2.x / CellSize, pt2.z / CellSize, 0.0f ) );
+			texCoords.push_back( Vector3( pt3.x / CellSize, pt3.z / CellSize, 0.0f ) );
 
 			// Second triangle
 			vertex.push_back( pt3 );
@@ -106,9 +112,95 @@ void Cell::updateGeometry( )
 			colors.push_back( Vector3( 1.0f, 1.0f, 1.0f ) );
 			colors.push_back( Vector3( 1.0f, 1.0f, 1.0f ) );
 
-			normals.push_back( calculateTriangleNormal( pt3, pt2, pt4 ) );
-			normals.push_back( calculateTriangleNormal( pt3, pt2, pt4 ) );
-			normals.push_back( calculateTriangleNormal( pt3, pt2, pt4 ) );
+			faceNormals.push_back( calculateTriangleNormal( pt3, pt2, pt4 ) );
+
+			texCoords.push_back( Vector3( pt3.x / CellSize, pt3.z / CellSize, 0.0f ) );
+			texCoords.push_back( Vector3( pt2.x / CellSize, pt2.z / CellSize, 0.0f ) );
+			texCoords.push_back( Vector3( pt4.x / CellSize, pt4.z / CellSize, 0.0f ) );
+		}
+	}
+
+	// Calculate averaged normals per-vertex.
+
+	// For each row of the cell
+	for( short rowX = 0; rowX < TileDimensions*3; rowX++ )
+	{
+		// For each tile of the row
+		for( short rowZ = 0; rowZ < TileDimensions*2; rowZ++ )
+		{
+			//// Left and top-most vertex, just one face.
+			//if( rowX == 0 && rowZ == 0 )
+			//{
+			//	normals.push_back( faceNormals[0] );
+			//	continue;
+			//}
+
+			//// Left and top-most vertex, just one face.
+			//if( rowX == 0 && rowZ == TileDimensions )
+			//{
+			//	normals.push_back( faceNormals[TileDimensions*2] );
+			//	continue;
+			//}
+
+			//// Left-most vertex, average three faces.
+			//if( rowX == 0 && rowZ < TileDimensions-1 )
+			//{
+			//	Vector3 average;
+			//	
+			//	int index = (2/*triangles per row*/*(rowZ)*TileDimensions);
+			//	
+			//	average += faceNormals[index];
+			//	average += faceNormals[index+1];
+			//	average += faceNormals[index+(2*TileDimensions)];
+
+			//	normals.push_back( (average / 3).normalize() );
+			//	continue;
+			//}
+
+			// Left-most vertex, average three faces.
+			if( (rowX > 0) && (rowX < TileDimensions-1) && (rowZ > 0) && (rowZ < TileDimensions-1) )
+			{
+				Vector3 average;
+				
+				int index = (2/*triangles per row*/*(rowZ-1)*TileDimensions)+rowX;
+				
+				average += faceNormals[index-1];
+				average += faceNormals[index];
+				average += faceNormals[index+1];
+
+				index = (2/*triangles per row*/*(rowZ+1)*TileDimensions)+rowX;
+
+				average += faceNormals[index-1];
+				average += faceNormals[index];
+				average += faceNormals[index+1];
+
+				normals.push_back( (average / 6).normalize() );
+				continue;
+			}
+
+			//// Right-most vertex, average three faces.
+			//if( rowX == TileDimensions-1 && rowZ < TileDimensions-1 )
+			//{
+			//	Vector3 average;
+			//	
+			//	int index = (2/*triangles per row*/*rowZ*TileDimensions);
+			//	
+			//	average += faceNormals[index];
+			//	average += faceNormals[index+1];
+			//	average += faceNormals[index+(2*TileDimensions)];
+
+			//	normals.push_back( (average / 3).normalize() );
+			//	continue;
+			//}
+
+			//// Left and top-most vertex, just one face.
+			//if( rowX == TileDimensions-1 && rowZ == TileDimensions-1 )
+			//{
+			//	normals.push_back( faceNormals[faceNormals.size()-1] );
+			//	continue;
+			//}
+
+			normals.push_back( Vector3::Zero );
 		}
 	}
 
@@ -116,20 +208,9 @@ void Cell::updateGeometry( )
 	vb->set( VertexAttribute::Vertex, vertex );
 	vb->set( VertexAttribute::Color, colors );
 	vb->set( VertexAttribute::Normal, normals );
-	//vb->set( VertexAttribute::MultiTexCoord0, texCoords );
+	vb->set( VertexAttribute::MultiTexCoord0, texCoords );
 
 	setVertexBuffer( vb );
-}
-
-//-----------------------------------//
-
-Vector3 Cell::calculateTriangleNormal( const Vector3& v1, const Vector3& v2, const Vector3& v3 )
-{
-	Vector3 vec1 = v2 - v1;
-	Vector3 vec2 = v3 - v1;
-	Vector3 normal = vec1.cross(vec2);
-	
-	return normal.normalize();
 }
 
 //-----------------------------------//

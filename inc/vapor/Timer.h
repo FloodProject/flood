@@ -38,6 +38,8 @@ public:
 
 	// Resets the timer.
 	void reset();
+
+	static void sleep( double time );
 	
 private:
 

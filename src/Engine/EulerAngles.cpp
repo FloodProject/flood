@@ -8,6 +8,7 @@
 
 #include "vapor/PCH.h"
 #include "vapor/math/EulerAngles.h"
+#include "vapor/math/Math.h"
 
 namespace vapor { namespace math {
 

@@ -174,20 +174,32 @@ void EditorFrame::createScene()
 
 	ProgramManager::getInstance().registerProgram( "toon", toon );
 
+	ProgramPtr tex_toon( new GLSL_Program( 
+			rm->loadResource< GLSL_Shader >( "tex_toon.vs" ),
+			rm->loadResource< GLSL_Shader >( "tex_toon.fs" ) ) );
+	
+	ProgramManager::getInstance().registerProgram( "tex_toon", tex_toon );
+
 	MaterialPtr mat( new Material( "GridMaterial", diffuse ) );
 	NodePtr grid( new Node( "EditorGrid" ) );
 	grid->addComponent( TransformPtr( new Transform() ) );
 	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
 	scene->add( grid );
 
-	MeshPtr mesh = rm->loadResource<Mesh>( "cubo.ms3d" );
+	NodePtr sky( new Node( "Sky" ) );
+	sky->addComponent( TransformPtr( new Transform() ) );
+	sky->addComponent( ComponentPtr( new Skydome( mat ) ) );
+	sky->getTransform()->translate( 0.0f, -50.0f, 0.0f );
+	scene->add( sky );
+
+	MeshPtr mesh = rm->loadResource<Mesh>( "TreeSnowPine_1.ms3d" );
 
 	foreach( const RenderablePtr& rend, mesh->getGeometry()->getRenderables() )
 	{
 		rend->getMaterial()->setProgram( tex );
 	}
 
-	NodePtr ct( new Node( "ct" ) );
+	NodePtr ct( new Node( "Tree" ) );
 	ct->addComponent( TransformPtr( new Transform() ) );
 	ct->addComponent( mesh->getGeometry() );
 	scene->add(ct);
@@ -211,6 +223,8 @@ void EditorFrame::createScene()
 	terreno->addComponent( TransformPtr( new Transform() ) );
 	terreno->addComponent( terrain );
 	scene->add( terreno );
+
+
 
 	ImagePtr heightmap = rm->loadResource< Image >( "height2.png" );
 	const CellPtr& cell = terrain->createCell( heightmap, 0, 0 );
@@ -336,6 +350,9 @@ void EditorFrame::createToolbar()
 
 	toolBar->AddSeparator();
 
+	toolBar->AddTool( wxID_ANY, "Camera", wxMEMORY_BITMAP(camera), 
+		"Selects the Camera View tool", wxITEM_RADIO );
+
 	toolBar->AddTool( wxID_ANY, "Select", wxMEMORY_BITMAP(cursor), 
 		"Selects the Entity Selection tool", wxITEM_RADIO );
 
@@ -440,6 +457,8 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 
 void EditorFrame::onMouseClick( const MouseButtonEvent& mbe )
 {
+	return;
+
 	ScenePtr scene = engine->getSceneManager();
 
 	// Disable all enabled bounding boxes.
