@@ -17,17 +17,11 @@
 
 #include "vapor/physics/Physics.h"
 
-#include <Common/Base/hkBase.h>
-#include <Common/Base/Math/Matrix/hkRotation.h>
-#include <Physics/Collide/Shape/hkpShape.h>
-#include <Physics/Collide/Shape/Convex/Box/hkpBoxShape.h>
-
-#include <Physics/Dynamics/hkpDynamics.h>
-#include <Physics/Dynamics/Entity/hkpRigidBody.h>
-#include <Physics/Dynamics/Entity/hkpRigidBodyCinfo.h>
-#include <Physics/Dynamics/Motion/hkpMotion.h>
-#include <Physics/Utilities/Dynamics/Inertia/hkpInertiaTensorComputer.h>
-
+class hkpRigidBodyCinfo;
+class hkpBoxShape;
+class hkVector4;
+class hkpRigidBody;
+namespace hkpMotion { enum MotionType; }
 
 namespace vapor { namespace scene {
 
@@ -65,16 +59,16 @@ public:
 private:
 	
 	void setTransform(hkpRigidBodyCinfo& info);
-	hkpBoxShape * getShape(const math::AABB &bb);
+	hkpBoxShape* getShape(const math::AABB &bb);
 	hkVector4 convertVector(const math::Vector3 &v);
 	hkpRigidBody * body;
-	Transform * transform;
+	Transform* transform;
 	physics::PhysicsManager* physicsManager;
 	bool inWorld;
 	bool firstUpdate;
 
-	hkpRigidBodyCinfo info;
-	hkpBoxShape * shape;
+	hkpRigidBodyCinfo* info;
+	hkpBoxShape* shape;
 
 protected:
 
@@ -85,7 +79,6 @@ protected:
 
 TYPEDEF_SHARED_POINTER_FROM_CLASS( Body );
 TYPEDEF_SHARED_WEAK_POINTER_FROM_CLASS( Body );
-
 
 //-----------------------------------//
 

@@ -58,11 +58,11 @@ ResourcePtr ResourceManager::loadResource(const std::string& path)
 	ResourcePtr res = getResource(path);
 	if(res != nullptr) return res;
 
-	// register the decoded resource in the map
-	info("resources", "Loading resource '%s'", path.c_str());
-
 	res = decodeResource(path);
 	if( !res ) return res;
+
+	// register the decoded resource in the map
+	info("resources", "Loaded resource '%s'", path.c_str());
 
 	// Send callback notifications.
 	if( !onResourceAdded.empty() )

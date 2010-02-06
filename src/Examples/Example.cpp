@@ -109,8 +109,7 @@ void Example::onSetupScene()
 	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
 	scene->add( grid );
 
-	foreach( const RenderablePtr& rend, 
-	grid->getComponent<Geometry>("Grid")->getRenderables() )
+	foreach( const RenderablePtr& rend, grid->getComponent<Geometry>("Grid")->getRenderables() )
 	{
 		rend->getMaterial()->setProgram( diffuse );
 	}

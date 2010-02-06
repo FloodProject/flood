@@ -1219,25 +1219,37 @@
 			Name="Physics"
 			>
 			<File
+				RelativePath=".\Body.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\scene\Body.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Physics.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\inc\vapor\physics\Physics.h"
 				>
 			</File>
-			<Filter
-				Name="Body"
-				>
-				<File
-					RelativePath=".\Body.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\scene\Body.h"
-					>
-				</File>
-			</Filter>
 		</Filter>
 		<Filter
 			Name="Resources"

@@ -427,7 +427,7 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 		case Toolbar_TooglePlay:
 		{
 			physics::PhysicsManager* pm = engine->getPhysicsManager();
-			if( pm ) pm->setSimulationEnabled( !pm->getSimulationEnabled() );
+			//if( pm ) pm->setSimulationEnabled( !pm->getSimulationEnabled() );
 			break;
 		}
 

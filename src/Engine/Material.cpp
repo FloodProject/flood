@@ -120,9 +120,6 @@ void Material::setBackfaceCulling( bool cull )
 
 ProgramPtr Material::getProgram() const
 {
-	if( !program )
-		warn( "Invalid program in material '%s'", getName().c_str() );
-	
 	return program;
 }
 

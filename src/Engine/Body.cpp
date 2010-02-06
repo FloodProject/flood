@@ -7,9 +7,19 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/scene/Body.h"
 #include "vapor/math/Math.h"
+
+#include <Common/Base/hkBase.h>
+#include <Common/Base/Math/Matrix/hkRotation.h>
+
+#include <Physics/Collide/Shape/hkpShape.h>
+#include <Physics/Collide/Shape/Convex/Box/hkpBoxShape.h>
+#include <Physics/Dynamics/hkpDynamics.h>
+#include <Physics/Dynamics/Entity/hkpRigidBody.h>
+#include <Physics/Dynamics/Entity/hkpRigidBodyCinfo.h>
+#include <Physics/Dynamics/Motion/hkpMotion.h>
+#include <Physics/Utilities/Dynamics/Inertia/hkpInertiaTensorComputer.h>
 
 using namespace vapor::math;
 
