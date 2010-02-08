@@ -35,7 +35,7 @@ public:
 	// Gets a program given a name identifier.
 	ProgramPtr getProgram( const std::string& program );
 
-	void registerProgram( const std::string& name, ProgramPtr program );
+	void registerProgram( const std::string& name, const ProgramPtr& program );
 
 private:
 

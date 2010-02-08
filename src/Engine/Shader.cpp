@@ -7,7 +7,6 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/resources/Shader.h"
 
 namespace vapor { namespace resources {
@@ -35,7 +34,7 @@ namespace ShaderType
 //-----------------------------------//
 
 Shader::Shader( ShaderType::Enum e, const std::string& text )
-	: type( e ), compiled( false ), text( text ), compileErrors_( false )
+	: type( e ), compiled( false ), text( text ), compileErrors( false )
 {
 
 }
@@ -77,9 +76,9 @@ bool Shader::isCompiled() const
 
 //-----------------------------------//
 
-bool Shader::compileErrors() const
+bool Shader::gotCompileErrors() const
 {
-	return compileErrors_;
+	return compileErrors;
 }
 
 //-----------------------------------//

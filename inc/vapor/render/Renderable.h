@@ -75,17 +75,17 @@ public:
 	Renderable();
 
     Renderable( Primitive::Enum primitive, 
-		VertexBufferPtr vb, IndexBufferPtr ib, MaterialPtr mat );
+		const VertexBufferPtr& vb, const IndexBufferPtr& ib, const MaterialPtr& mat );
     
     // No index buffer, default material will be used if none passed
-	Renderable(Primitive::Enum primitive, VertexBufferPtr vb = VertexBufferPtr(),
-			MaterialPtr mat = MaterialPtr( ) );
+	Renderable(Primitive::Enum primitive, const VertexBufferPtr& vb = VertexBufferPtr(),
+			const MaterialPtr& mat = MaterialPtr( ) );
 
 	virtual ~Renderable();
                     
     // Render this renderable. This will bind all the necessary state
 	// like binding the buffers and the materials.
-	void render(render::Device& device);
+	void render(const render::Device& device);
     
     // Gets the vertex buffer associated with the renderable.
     VertexBufferPtr getVertexBuffer() const;

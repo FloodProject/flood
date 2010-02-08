@@ -186,31 +186,31 @@ void EditorFrame::createScene()
 	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
 	scene->add( grid );
 
-	NodePtr sky( new Node( "Sky" ) );
-	sky->addComponent( TransformPtr( new Transform() ) );
-	sky->addComponent( ComponentPtr( new Skydome( mat ) ) );
-	sky->getTransform()->translate( 0.0f, -50.0f, 0.0f );
-	scene->add( sky );
+	//NodePtr sky( new Node( "Sky" ) );
+	//sky->addComponent( TransformPtr( new Transform() ) );
+	//sky->addComponent( ComponentPtr( new Skydome( mat ) ) );
+	//sky->getTransform()->translate( 0.0f, -50.0f, 0.0f );
+	//scene->add( sky );
 
-	MeshPtr mesh = rm->loadResource<Mesh>( "TreeSnowPine_1.ms3d" );
+	//MeshPtr mesh = rm->loadResource<Mesh>( "TreeSnowPine_1.ms3d" );
 
-	foreach( const RenderablePtr& rend, mesh->getGeometry()->getRenderables() )
-	{
-		rend->getMaterial()->setProgram( tex );
-	}
+	//foreach( const RenderablePtr& rend, mesh->getGeometry()->getRenderables() )
+	//{
+	//	rend->getMaterial()->setProgram( tex );
+	//}
 
-	NodePtr ct( new Node( "Tree" ) );
-	ct->addComponent( TransformPtr( new Transform() ) );
-	ct->addComponent( mesh->getGeometry() );
-	scene->add(ct);
+	//NodePtr ct( new Node( "Tree" ) );
+	//ct->addComponent( TransformPtr( new Transform() ) );
+	//ct->addComponent( mesh->getGeometry() );
+	//scene->add(ct);
 
-	NodePtr lnode( new Node( "Light" ) );
-	lnode->addComponent( TransformPtr( new Transform() ) );
-	LightPtr light( new Light( LightType::Point ) );
-	light->diffuseColor = Colors::Red;
-	light->ambientColor = Colors::Yellow;
-	lnode->addComponent( light );
-	scene->add( lnode );
+	//NodePtr lnode( new Node( "Light" ) );
+	//lnode->addComponent( TransformPtr( new Transform() ) );
+	//LightPtr light( new Light( LightType::Point ) );
+	//light->diffuseColor = Colors::Red;
+	//light->ambientColor = Colors::Yellow;
+	//lnode->addComponent( light );
+	//scene->add( lnode );
 
 	TerrainSettings settings;
 	settings.CellSize = 512;
@@ -223,8 +223,6 @@ void EditorFrame::createScene()
 	terreno->addComponent( TransformPtr( new Transform() ) );
 	terreno->addComponent( terrain );
 	scene->add( terreno );
-
-
 
 	ImagePtr heightmap = rm->loadResource< Image >( "height2.png" );
 	const CellPtr& cell = terrain->createCell( heightmap, 0, 0 );

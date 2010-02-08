@@ -7,7 +7,6 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/render/Renderable.h"
 
 namespace vapor { namespace render {
@@ -23,9 +22,9 @@ Renderable::Renderable()
 //-----------------------------------//
 
 Renderable::Renderable( Primitive::Enum primitive,
-						VertexBufferPtr vb, 
-						IndexBufferPtr ib, 
-						MaterialPtr mat )
+						const VertexBufferPtr& vb, 
+						const IndexBufferPtr& ib, 
+						const MaterialPtr& mat )
 	: type( primitive), vb( vb ), ib( ib ), mat( mat ), mode( PolygonMode::Solid )
 {
 
@@ -34,8 +33,8 @@ Renderable::Renderable( Primitive::Enum primitive,
 //-----------------------------------//
 
 Renderable::Renderable( Primitive::Enum primitive, 
-						VertexBufferPtr vb, 
-						MaterialPtr mat )
+						const VertexBufferPtr& vb, 
+						const MaterialPtr& mat )
 	: type( primitive), vb( vb ), mat( mat ), mode( PolygonMode::Solid )
 
 {
@@ -51,7 +50,7 @@ Renderable::~Renderable()
 
 //-----------------------------------//
 
-void Renderable::render( render::Device& UNUSED(device) )
+void Renderable::render( const render::Device& UNUSED(device) )
 {
 	if( mat ) mat->bind();
 

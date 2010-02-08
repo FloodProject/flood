@@ -73,9 +73,14 @@ void Example::onSetupScene()
 			rm->loadResource< GLSL_Shader >( "toon.vs" ),
 			rm->loadResource< GLSL_Shader >( "toon.fs" ) ) );
 
+	ProgramPtr tex_toon( new GLSL_Program( 
+			rm->loadResource< GLSL_Shader >( "tex_toon.vs" ),
+			rm->loadResource< GLSL_Shader >( "tex_toon.fs" ) ) );
+
 	ProgramManager::getInstance().registerProgram( "diffuse", diffuse );
 	ProgramManager::getInstance().registerProgram( "tex", tex );
 	ProgramManager::getInstance().registerProgram( "toon", toon );
+	ProgramManager::getInstance().registerProgram( "tex_toon", tex_toon );
 
 	// Create a new Camera
 	NodePtr camera( new Node( "MainCamera" ) );
@@ -84,14 +89,14 @@ void Example::onSetupScene()
 	camera->addComponent( cam );
 	scene->add( camera );
 
-	MeshPtr mesh = rm->loadResource<Mesh>( "ct.ms3d" );
-	foreach( const RenderablePtr& rend, mesh->getGeometry()->getRenderables() )
-		rend->getMaterial()->setProgram( tex );
+	//MeshPtr mesh = rm->loadResource<Mesh>( "ct.ms3d" );
+	//foreach( const RenderablePtr& rend, mesh->getGeometry()->getRenderables() )
+	//	rend->getMaterial()->setProgram( tex );
 
-	NodePtr ct( new Node( "ct" ) );
-	ct->addComponent( TransformPtr( new Transform() ) );
-	ct->addComponent( mesh->getGeometry() );
-	scene->add(ct);
+	//NodePtr ct( new Node( "ct" ) );
+	//ct->addComponent( TransformPtr( new Transform() ) );
+	//ct->addComponent( mesh->getGeometry() );
+	//scene->add(ct);
 	
 	// Materials too?
 	MaterialPtr mat2( new Material( "FontMaterial", tex ) );
@@ -114,27 +119,27 @@ void Example::onSetupScene()
 		rend->getMaterial()->setProgram( diffuse );
 	}
 
-	NodePtr lnode( new Node( "Light" ) );
-	LightPtr light( new Light( LightType::Point ) );
-	light->diffuseColor = Colors::Red;
-	light->ambientColor = Colors::Yellow;
-	lnode->addComponent( light );
-	scene->add( lnode );
+	//NodePtr lnode( new Node( "Light" ) );
+	//LightPtr light( new Light( LightType::Point ) );
+	//light->diffuseColor = Colors::Red;
+	//light->ambientColor = Colors::Yellow;
+	//lnode->addComponent( light );
+	//scene->add( lnode );
 
-	TerrainSettings settings;
-	settings.CellSize = 1024;
-	settings.TileDimensions = 32;
-	settings.MaxHeight = 150;
+	//TerrainSettings settings;
+	//settings.CellSize = 1024;
+	//settings.TileDimensions = 32;
+	//settings.MaxHeight = 150;
 
-	TerrainPtr terrain( new Terrain( settings ) );
+	//TerrainPtr terrain( new Terrain( settings ) );
 
-	NodePtr terreno( new Node( "Terreno" ) );
-	terreno->addComponent( TransformPtr( new Transform() ) );
-	terreno->addComponent( terrain );
-	scene->add( terreno );
+	//NodePtr terreno( new Node( "Terreno" ) );
+	//terreno->addComponent( TransformPtr( new Transform() ) );
+	//terreno->addComponent( terrain );
+	//scene->add( terreno );
 
-	ImagePtr heightmap = rm->loadResource< Image >( "height2.png" );
-	CellPtr cell = terrain->createCell( heightmap, 0, 0 );
+	//ImagePtr heightmap = rm->loadResource< Image >( "height2.png" );
+	//CellPtr cell = terrain->createCell( heightmap, 0, 0 );
 }
 
 //-----------------------------------//

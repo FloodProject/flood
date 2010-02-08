@@ -7,7 +7,6 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/render/ProgramManager.h"
 
 using namespace vapor::resources;
@@ -32,7 +31,7 @@ ProgramManager::~ProgramManager()
 
 ProgramPtr ProgramManager::getProgram( const std::string& name )
 {
-	ProgramPtr program = programs[name];
+	const ProgramPtr& program = programs[name];
 
 	if( !program )
 	{
@@ -48,7 +47,7 @@ ProgramPtr ProgramManager::getProgram( const std::string& name )
 
 //-----------------------------------//
 
-void ProgramManager::registerProgram( const std::string& name, ProgramPtr program )
+void ProgramManager::registerProgram( const std::string& name, const ProgramPtr& program )
 {
 	// TODO: error handling
 	programs[name] = program;
@@ -60,7 +59,7 @@ void ProgramManager::registerProgram( const std::string& name, ProgramPtr progra
 //{
 //	uint total = 0;
 //
-//	foreach( texPair p, textures )
+//	foreach( const texPair& p, textures )
 //		total += p.first->getBuffer().size();
 //
 //	return total;

@@ -10,7 +10,6 @@
 
 #include "vapor/render/Program.h"
 #include "vapor/render/GLSL_Shader.h"
-
 #include "vapor/render/GL.h"
 
 namespace vapor { namespace render {
@@ -25,7 +24,7 @@ class VAPOR_API GLSL_Program : public Program
 {
 public:
 
-	GLSL_Program( GLSL_ShaderPtr vs, GLSL_ShaderPtr ps );
+	GLSL_Program( const GLSL_ShaderPtr& vs, const GLSL_ShaderPtr& ps );
 	virtual ~GLSL_Program();
 
 	// Adds a parameter to the shader.

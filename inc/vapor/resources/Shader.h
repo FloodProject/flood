@@ -59,7 +59,7 @@ public:
 	bool isCompiled() const;
 
 	// Did this shader throw compile errors?
-	bool compileErrors() const;
+	bool gotCompileErrors() const;
 
 	virtual ResourceGroup::Enum getResourceGroup() const;
 
@@ -76,7 +76,7 @@ protected:
 	
 	// Is this shader already compiled?	
 	bool compiled;
-	bool compileErrors_;
+	bool compileErrors;
 };
 
 //-----------------------------------//

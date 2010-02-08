@@ -19,7 +19,7 @@ namespace vapor { namespace render {
 
 //-----------------------------------//
 
-GLSL_Program::GLSL_Program( GLSL_ShaderPtr vs, GLSL_ShaderPtr ps )
+GLSL_Program::GLSL_Program( const GLSL_ShaderPtr& vs, const GLSL_ShaderPtr& ps )
 	: Program( vs, ps ), linkError( false )
 {
 	id = glCreateProgram( );
@@ -32,8 +32,8 @@ GLSL_Program::GLSL_Program( GLSL_ShaderPtr vs, GLSL_ShaderPtr ps )
 	}
 #endif
 
-	shaders.push_back( vs );
-	shaders.push_back( ps );
+	if( vs ) shaders.push_back( vs );
+	if( ps ) shaders.push_back( ps );
 
 	attachShaders();
 }
@@ -43,7 +43,7 @@ GLSL_Program::GLSL_Program( GLSL_ShaderPtr vs, GLSL_ShaderPtr ps )
 GLSL_Program::~GLSL_Program()
 {
 	// Detach shaders
-	foreach( GLSL_ShaderPtr shader, shaders )
+	foreach( const GLSL_ShaderPtr& shader, shaders )
 	{
 		glDetachShader( id, shader->id() );
 
@@ -224,14 +224,8 @@ void GLSL_Program::setUniform( const std::string& slot, const math::Matrix4x4& m
 		return;
 	}
 
-	float tmp[16];
-	tmp[0] = matrix.m11; tmp[1] = matrix.m12; tmp[2] = matrix.m13; tmp[3] = matrix.m14;
-	tmp[4] = matrix.m21; tmp[5] = matrix.m22; tmp[6] = matrix.m23; tmp[7] = matrix.m24;
-	tmp[8] = matrix.m31; tmp[9] = matrix.m32; tmp[10] = matrix.m33; tmp[11] = matrix.m34;
-	tmp[12] = matrix.tx; tmp[13] = matrix.ty; tmp[14] = matrix.tz; tmp[15] = matrix.tw;
-
-	// the true tells opengl our matrices are in row-major order
-	glUniformMatrix4fv( loc, 1, true, tmp );
+	// TODO: Is this right? Might be related to the ortographic trouble we had earlier.
+	glUniformMatrix4fv( loc, 1, false, &matrix.m11 );
 	
 	//float test[16];
 	//glGetUniformfv( id, loc, test );
@@ -244,7 +238,7 @@ void GLSL_Program::setUniform( const std::string& slot, const math::Matrix4x4& m
 void GLSL_Program::attachShaders()
 {
 	// Make sure all shaders are compiled
-	foreach( GLSL_ShaderPtr shader, shaders )
+	foreach( const GLSL_ShaderPtr& shader, shaders )
 	{
 		if( !shader->isCompiled() )
 		{
@@ -265,12 +259,17 @@ bool GLSL_Program::link()
 {
 	// If the program is already linked, return.
 	if( isLinked() ) return true;
-	
-	// If the shaders aren't compiled, don't try to link.
-	foreach( ShaderPtr shader, shaders )
-		if( !shader->isCompiled() ) return false;
 
-	bindDefaultAttributes();
+	// If we already tried to link and were not succesful, 
+	// don't try to link again until the program is updated.
+	if( linkError ) return false;
+
+	// If the shaders aren't compiled, don't try to link.
+	foreach( const ShaderPtr& shader, shaders )
+	{
+		if( !shader->isCompiled() ) 
+			return false;
+	}
 
 	glLinkProgram( id );
 
@@ -279,9 +278,9 @@ bool GLSL_Program::link()
 	GLenum err;
 	if( ( err = glGetError() ) != GL_NO_ERROR )
 	{
-		warn( "glsl", 
-			"Could not link program object '%d': %s", id, gluErrorString( err ) );
+		warn( "glsl", "Could not link program object '%d': %s", id );
 		linked = false;
+		linkError = true;
 		return false;
 	}
 #endif
@@ -295,10 +294,15 @@ bool GLSL_Program::link()
 	{
 		warn( "glsl", "Could not link program object '%d': %s", id, log.c_str() );
 		linked = false;
+		linkError = true;
 		return false;
 	}
 
+	bindDefaultAttributes();
+
 	linked = true;
+	linkError = false;
+
 	return true;
 }
 

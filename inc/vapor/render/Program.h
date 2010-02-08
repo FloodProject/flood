@@ -30,7 +30,7 @@ class VAPOR_API Program : public ReferenceCounted
 {
 public:
 
-	Program( resources::ShaderPtr vs, resources::ShaderPtr ps );
+	Program( const resources::ShaderPtr& vs, const resources::ShaderPtr& ps );
 	virtual ~Program();
 
 	// Adds a named parameter to the program.

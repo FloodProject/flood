@@ -23,7 +23,7 @@ class VAPOR_API GLSL_Shader : public resources::Shader
 {
 public:
 
-	GLSL_Shader( resources::ShaderType::Enum e, const std::string& text );
+	GLSL_Shader( resources::ShaderType::Enum type, const std::string& text );
 	virtual ~GLSL_Shader();
 
 	// Compiles the shader.

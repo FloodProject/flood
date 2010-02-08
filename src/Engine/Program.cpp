@@ -16,9 +16,11 @@ namespace vapor { namespace render {
 
 //-----------------------------------//
 
-Program::Program( resources::ShaderPtr vs, resources::ShaderPtr ps )
+Program::Program( const ShaderPtr& vs, const ShaderPtr& ps )
 	: linked( false )
 {
+	if( !vs || !ps ) return;
+
 	assert( vs->getType() == ShaderType::Vertex );
 	assert( ps->getType() == ShaderType::Fragment );
 }
