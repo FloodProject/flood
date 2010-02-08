@@ -1,0 +1,16 @@
+{
+  "program": {
+    "type" : "glsl",
+    "vertex-shader": {
+		"source": "shader.vs",
+		"params": [
+		  { "type": "world_view_proj", "name": "worldViewMatrix" }
+          { "type": "world_proj", "name": "worldMatrix" }
+ 		  { "type": "view_proj", "name": "viewMatrix" }
+		]
+	},
+    "pixel-shader": {
+		"source": "shader.ps",
+	}
+  }
+} 
