@@ -4,6 +4,9 @@ WIP (work-in-progress)
 Near TODO:
 ----------
 
+	if( !program )
+		warn( "Invalid program in material '%s'", getName().c_str() );
+
 Average terrain normals
 Fix Picking
 Skybox component

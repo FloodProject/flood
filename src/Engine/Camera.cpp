@@ -168,7 +168,7 @@ void Camera::render( const NodePtr& node ) const
 
 void Camera::render( ) const
 {
-	NodePtr parent = getNode()->getParent();
+	NodePtr& parent = getNode()->getParent();
 
 	if( !parent ) return;
 

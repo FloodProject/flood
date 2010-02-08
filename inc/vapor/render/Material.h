@@ -142,6 +142,8 @@ protected:
 	// Line settings
 	bool lineSmooth;
 	float lineWidth;
+
+	float polygonOffset;
 	
 	// Textures
 	std::map< uint, TexturePtr > textures;

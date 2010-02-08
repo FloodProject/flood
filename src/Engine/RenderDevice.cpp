@@ -148,7 +148,8 @@ bool renderSorter(const RenderState& lhs, const RenderState& rhs)
 
 void Device::render( RenderBlock& queue, const scene::Camera* cam ) 
 {
-	activeTarget->makeCurrent();
+	// TODO: Very slow in NVIDIA drivers.
+	//activeTarget->makeCurrent();
 
 	glEnable( GL_DEPTH_TEST );
 	glClear( GL_DEPTH_BUFFER_BIT );
@@ -156,6 +157,7 @@ void Device::render( RenderBlock& queue, const scene::Camera* cam )
 	// sort the list by render group
 	// TODO: use a radix sorter
 	std::sort( queue.renderables.begin(), queue.renderables.end(), &renderSorter );
+
 
 	// render the list
 	foreach( const RenderState& state, queue.renderables )

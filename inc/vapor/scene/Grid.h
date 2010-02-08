@@ -22,7 +22,7 @@ class Grid : public scene::Geometry
 {
 public:
 
-	Grid( render::MaterialPtr mat );
+	Grid( const render::MaterialPtr& mat );
 	virtual ~Grid();
 
 	// Returns the name of this component.

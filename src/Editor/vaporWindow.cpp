@@ -53,8 +53,6 @@ void vaporWindow::update()
 {
 	if(!context) return;
 
-	makeCurrent();
-
 	// swap buffers and update window
 	canvas->SwapBuffers();
 }

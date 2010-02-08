@@ -110,7 +110,7 @@ void vaporControl::OnRender()
 void vaporControl::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
 	// Same as SetCurrent(wxGLContext)
-	window->makeCurrent();
+	//window->makeCurrent();
     
 	// From the PaintEvent docs: "the application must always create
 	// a wxPaintDC object, even if you do not use it."

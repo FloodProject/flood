@@ -20,13 +20,14 @@ const std::string& Grid::type = "Grid";
 
 //-----------------------------------//
 
-Grid::Grid( render::MaterialPtr mat )
+Grid::Grid( const render::MaterialPtr& )
 	: sizeX( 500 ), sizeZ( 500 ), divX( 20 ), divZ( 20 ), strongMainLines( true )
 {
 	RenderablePtr rend( new Renderable( Primitive::Lines, getGridBuffer() ) );
 	
-	MaterialPtr grid( new Material( "GridSimple" ) );
-	rend->setMaterial( grid );
+	MaterialPtr mat( new Material( "Grid" ) );
+	//mat->setPolygonOffset( 0.01f );
+	rend->setMaterial( mat );
 
 	addRenderable( rend );
 }
