@@ -237,6 +237,7 @@ RenderablePtr buildBoundingRenderable( const math::AABB& aabb )
 	MaterialPtr mat( new Material( "BoundBox", "diffuse" ) );
 	mat->setLineWidth( 1.0f );
 	mat->setLineSmoothing( true );
+	mat->setBackfaceCulling( false );
 
 	RenderablePtr bbox( new Renderable( Primitive::Quads, vb, mat ) );
 	bbox->setPolygonMode( PolygonMode::Wireframe );

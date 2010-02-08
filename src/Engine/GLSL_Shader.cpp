@@ -116,12 +116,6 @@ void GLSL_Shader::getGLSLLog()
 	GLint size;
 	glGetShaderiv( shaderId, GL_INFO_LOG_LENGTH, &size );
 
-	if( size == 0 )
-	{
-		log = "Shader source file compiled with success";
-		return;
-	}
-
 	// TODO: move directly to string...
 
 	GLchar* info = new char[size];
@@ -133,7 +127,10 @@ void GLSL_Shader::getGLSLLog()
 
 	delete[] info;
 
-	debug( "%d %s", id(), log.c_str() );
+	if( log.empty() )
+	{
+		log = "Shader source compiled with success";
+	}
 }
 
 //-----------------------------------//

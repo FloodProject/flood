@@ -24,13 +24,8 @@ GLSL_Program::GLSL_Program( const GLSL_ShaderPtr& vs, const GLSL_ShaderPtr& ps )
 {
 	id = glCreateProgram( );
 
-#ifdef VAPOR_DEBUG
-	while( glGetError() != GL_NO_ERROR )
-	{
-		warn( "glsl", "Could not create a new program object" );
+	if( glHasError( "Could not create a new program object" ) )
 		return;
-	}
-#endif
 
 	if( vs ) shaders.push_back( vs );
 	if( ps ) shaders.push_back( ps );
@@ -271,6 +266,8 @@ bool GLSL_Program::link()
 			return false;
 	}
 
+	bindDefaultAttributes();
+
 	glLinkProgram( id );
 
 	// Check that the linking was good
@@ -297,8 +294,6 @@ bool GLSL_Program::link()
 		linkError = true;
 		return false;
 	}
-
-	bindDefaultAttributes();
 
 	linked = true;
 	linkError = false;

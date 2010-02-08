@@ -387,6 +387,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GL.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\inc\vapor\render\GL.h"
 				>
 			</File>
