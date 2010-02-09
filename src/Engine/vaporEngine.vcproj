@@ -477,6 +477,14 @@
 					RelativePath="..\..\inc\vapor\render\Renderable.h"
 					>
 				</File>
+				<File
+					RelativePath=".\Sphere.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\render\Sphere.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Window"

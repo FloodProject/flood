@@ -231,7 +231,7 @@ RenderablePtr buildBoundingRenderable( const math::AABB& aabb )
 
 	std::vector< Vector3 > c( 6/*faces*/*4/*vertices*/, Vector3( 1.0f, 1.0f, 0.0f ) );
 
-	vb->set( VertexAttribute::Vertex, v );
+	vb->set( VertexAttribute::Position, v );
 	vb->set( VertexAttribute::Color, c );
 
 	MaterialPtr mat( new Material( "BoundBox", "diffuse" ) );

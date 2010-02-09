@@ -28,7 +28,7 @@ public:
 					wxWindow* parent, wxWindowID id = wxID_ANY,
 					const wxPoint& pos	= wxDefaultPosition,
 					const wxSize& size = wxDefaultSize,
-					long style = wxTR_DEFAULT_STYLE | wxTR_EDIT_LABELS | wxTR_NO_BUTTONS | wxTR_SINGLE,
+					long style = wxTR_DEFAULT_STYLE | wxTR_EDIT_LABELS | wxTR_NO_BUTTONS | wxTR_SINGLE | wxTR_HIDE_ROOT,
 					const wxValidator& validator = wxDefaultValidator, 
 					const wxString&	name = "SceneTreeCtrl");
 					

@@ -9,7 +9,7 @@
 #pragma once
 
 #include <wx/glcanvas.h>
-#include "wx_InputManager.h"
+#include "vaporInputManager.h"
 
 namespace vapor { namespace editor {
 
@@ -65,15 +65,15 @@ public:
 	void OnMouseCaptureLost(wxMouseCaptureLostEvent& event);
 
 	// Gets the associated instance of the vaporEngine.
-	vapor::Engine* getEngine() { return engine; }
+	Engine* getEngine();
 
 	// Sets the associated rendering camera.
-	void setCamera(vapor::scene::CameraPtr cam) { this->cam = cam; }
+	void setCamera(const scene::CameraPtr& cam);
 
 protected:
 
 	// Sets the associated instance of the engine.
-	void setEngine(vapor::Engine* engine) { this->engine = engine; }
+	void setEngine(Engine* engine);
 
 	// Initializes the control.
 	void InitControl();
@@ -81,16 +81,16 @@ protected:
 	// Returns the window handle of this control.
 	void* getHandle();
 
-	// vaporEngine's Window associated with this control.
+	// Holds an instance to the vaporEngine.
+	Engine* engine;
+
+	// Window associated with this control.
 	vaporWindow* window;
 
 	// Holds an instance of the input manager.
-	wx_InputManager* im;
+	vaporInputManager* im;
 
-	// Holds an instance to the vaporEngine.
-	vapor::Engine* engine;
-
-	vapor::scene::CameraPtr cam;
+	scene::CameraPtr cam;
 
 	DECLARE_EVENT_TABLE()
 };

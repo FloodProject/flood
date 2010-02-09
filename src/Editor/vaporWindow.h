@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "wx_InputManager.h"
 #include <wx/glcanvas.h> 
+#include "vaporInputManager.h"
 
 namespace vapor { namespace editor {
 
@@ -75,7 +75,7 @@ private:
 	wxGLContext* context;
 
 	// wxWidgets Input Manager
-	wx_InputManager *im;
+	vaporInputManager *im;
 
 	// Is the mouse cursor captured?
 	bool mouseCaptured;

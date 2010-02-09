@@ -7,7 +7,6 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/render/Quad.h"
 
 namespace vapor { namespace render {
@@ -61,7 +60,7 @@ render::VertexBufferPtr Quad::getQuadBuffer( const math::Dimension& dim )
 	coords.push_back( Vector3( 1.0f, 1.0f, 0.0f ) );
 
 	// Vertex buffer setup
-	vb->set( VertexAttribute::Vertex, vertex );
+	vb->set( VertexAttribute::Position, vertex );
 	vb->set( VertexAttribute::Color, colors );
 	vb->set( VertexAttribute::MultiTexCoord0, coords );
 

@@ -385,7 +385,7 @@ void GLSL_Program::getLogText()
 
 void GLSL_Program::bindDefaultAttributes()
 {
-	setAttribute( "vp_Vertex", VertexAttribute::Vertex );
+	setAttribute( "vp_Vertex", VertexAttribute::Position );
 	setAttribute( "vp_Normal", VertexAttribute::Normal );
 	setAttribute( "vp_Color", VertexAttribute::Color );
 	setAttribute( "vp_MultiTexCoord0", VertexAttribute::MultiTexCoord0 );

@@ -18,7 +18,7 @@ vaporWindow::vaporWindow(const render::WindowSettings& settings, wxGLCanvas* can
 {
 	open();
 
-	im = new wx_InputManager();
+	im = new vaporInputManager();
 }
 
 //-----------------------------------//

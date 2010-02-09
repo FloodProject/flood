@@ -163,7 +163,7 @@ bool VertexBuffer::build( BufferUsage::Enum bU, BufferAccess::Enum bA )
 	// reserve space for all the elements
 	glBufferData( GL_ARRAY_BUFFER, getSize(), nullptr, getGLBufferType( bU, bA ) );
 
-	//debug( "buffer '%d' has size '%d'", id, getSize() );
+	debug( "buffer '%d' has size '%d'", id, getSize() );
 
 #ifdef VAPOR_DEBUG
 	while( glGetError() != GL_NO_ERROR )
@@ -207,6 +207,8 @@ bool VertexBuffer::checkSize()
 	foreach( const attributePair& p, attributeMap )
 	{
 		int size = std::get< 2 >( p.second ).size();
+
+		if( size == 0 ) return false;
 
 		if( first < 0 )
 		{

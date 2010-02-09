@@ -302,7 +302,7 @@ void MS3D::build()
 			// Vertex buffers
 			
 			VertexBufferPtr vb( new VertexBuffer() );
-			vb->set( VertexAttribute::Vertex, vb_v );
+			vb->set( VertexAttribute::Position, vb_v );
 			vb->set( VertexAttribute::MultiTexCoord0, vb_tc );
 			
 			rend->setVertexBuffer( vb );

@@ -122,7 +122,7 @@ void Label::update( double UNUSED(delta) )
 		x_pos += glyph.width + 1;
 	}
 
-	vb->set( VertexAttribute::Vertex, vertex );
+	vb->set( VertexAttribute::Position, vertex );
 	vb->set( VertexAttribute::MultiTexCoord0, texcoords );
 
 	// No need to update geometry again until the text changes

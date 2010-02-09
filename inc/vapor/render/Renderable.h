@@ -100,16 +100,16 @@ public:
     PolygonMode::Enum getPolygonMode() const;
 
 	// Sets the vertex buffer of this renderable.
-	void setVertexBuffer( VertexBufferPtr vb );
+	void setVertexBuffer( const VertexBufferPtr& vb );
 
 	// Sets the index buffer of this renderable.
-	void setIndexBuffer( IndexBufferPtr ib );
+	void setIndexBuffer( const IndexBufferPtr& ib );
 
 	// Sets this renderable with a new material.
-	void setMaterial( MaterialPtr mat );
+	void setMaterial( const MaterialPtr& mat );
 
 	// Sets the primitive type of this renderable.
-	void setPrimitiveType( Primitive::Enum p );
+	void setPrimitiveType( Primitive::Enum primitive );
 
 	// Sets the render mode of this renderable.
 	void setPolygonMode( PolygonMode::Enum mode );

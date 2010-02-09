@@ -19,12 +19,12 @@ namespace vapor { namespace editor {
  * TODO: does nothing for now.
  */
 
-class wx_InputManager : public vapor::input::InputManager
+class vaporInputManager : public vapor::input::InputManager
 {
 public:
 
-	wx_InputManager();
-	virtual ~wx_InputManager();
+	vaporInputManager();
+	virtual ~vaporInputManager();
 
 	/// Feeds a wxWidgets Keyboard input event to the input manager.
 	void processKeyEvent( const wxKeyEvent& event, bool keyDown );

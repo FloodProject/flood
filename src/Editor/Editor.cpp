@@ -184,12 +184,13 @@ void EditorFrame::createScene()
 	NodePtr grid( new Node( "EditorGrid" ) );
 	grid->addComponent( TransformPtr( new Transform() ) );
 	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
-	scene->add( grid );
+	//scene->add( grid );
 
 	NodePtr sky( new Node( "Sky" ) );
 	sky->addComponent( TransformPtr( new Transform() ) );
 	sky->addComponent( ComponentPtr( new Skydome( mat ) ) );
-	sky->getTransform()->translate( 0.0f, -50.0f, 0.0f );
+	//sky->getTransform()->translate( 0.0f, -50.0f, 0.0f );
+	sky->getTransform()->scale( 120.0f );
 	scene->add( sky );
 
 	MeshPtr mesh = rm->loadResource<Mesh>( "TreePine_1.ms3d" );
@@ -202,7 +203,7 @@ void EditorFrame::createScene()
 	NodePtr ct( new Node( "Tree" ) );
 	ct->addComponent( TransformPtr( new Transform() ) );
 	ct->addComponent( mesh->getGeometry() );
-	scene->add(ct);
+	//scene->add(ct);
 
 	NodePtr lnode( new Node( "Light" ) );
 	lnode->addComponent( TransformPtr( new Transform() ) );
@@ -222,7 +223,7 @@ void EditorFrame::createScene()
 	NodePtr terreno( new Node( "Terreno" ) );
 	terreno->addComponent( TransformPtr( new Transform() ) );
 	terreno->addComponent( terrain );
-	scene->add( terreno );
+	//scene->add( terreno );
 
 	ImagePtr heightmap = rm->loadResource< Image >( "height2.png" );
 	const CellPtr& cell = terrain->createCell( heightmap, 0, 0 );
@@ -232,7 +233,13 @@ void EditorFrame::createScene()
 
 void EditorFrame::createNotebook()
 {
+	wxImageList* img = new wxImageList(16, 16, false, 5);
+	img->Add(wxMEMORY_BITMAP(sitemap_color));
+	img->Add(wxMEMORY_BITMAP(package));
+	img->Add(wxMEMORY_BITMAP(world));
+
 	notebookCtrl = new wxNotebook( this, wxID_ANY );
+	notebookCtrl->AssignImageList( img );
 
 	//-----------------------------------//
 
@@ -247,7 +254,7 @@ void EditorFrame::createNotebook()
 
 	panelScene->SetSizerAndFit( panelSceneSizer );
 
-	int scenePage = notebookCtrl->AddPage( panelScene, wxT("Scene"), true );
+	int scenePage = notebookCtrl->AddPage( panelScene, wxT("Scene"), true, 0 );
 
 	sizer->Add(notebookCtrl, 0, wxALL|wxEXPAND, 0 );
 
@@ -264,14 +271,16 @@ void EditorFrame::createNotebook()
 
 	panelResources->SetSizerAndFit( panelResourcesSizer );
 
-	notebookCtrl->AddPage( panelResources, wxT("Resources"), true );
+	notebookCtrl->AddPage( panelResources, wxT("Resources"), true, 1 );
 
 	notebookCtrl->SetSelection( scenePage );
 
 	//-----------------------------------//
 
 	terrainPage = new TerrainPage( notebookCtrl );
-	notebookCtrl->AddPage( terrainPage, "Terrains", true );
+	notebookCtrl->AddPage( terrainPage, "Terrains", true, 2 );
+
+	notebookCtrl->ChangeSelection( scenePage );
 }
 
 //-----------------------------------//
@@ -478,7 +487,7 @@ void EditorFrame::onMouseClick( const MouseButtonEvent& mbe )
 	colors.push_back( Vector3( 1.0f, 0.0f, 0.0f ) );
 
 	VertexBufferPtr vb( new VertexBuffer() );
-	vb->set( VertexAttribute::Vertex, vertex );
+	vb->set( VertexAttribute::Position, vertex );
 	vb->set( VertexAttribute::Color, colors );
 
 	RenderablePtr rend( new Renderable( Primitive::Lines, vb ) );
@@ -517,7 +526,7 @@ pickDone:
 
 void EditorFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
-	wxFrame* about = new wxFrame(this, wxID_ANY, "About vapor3D Editor", wxDefaultPosition, wxDefaultSize/*wxSize(487,246)*/, 
+	wxFrame* about = new wxFrame(this, wxID_ANY, "About vapor3D Editor", wxDefaultPosition, wxDefaultSize, 
 		wxCAPTION|wxCLOSE_BOX|wxFRAME_FLOAT_ON_PARENT|wxFRAME_TOOL_WINDOW|wxSYSTEM_MENU|wxTAB_TRAVERSAL );
 
 	wxBoxSizer* bSizer1 = new wxBoxSizer( wxVERTICAL );

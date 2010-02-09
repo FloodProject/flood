@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "PCH.h"
-#include "wx_InputManager.h"
+#include "vaporInputManager.h"
 
 namespace vapor { namespace editor {
 
@@ -15,21 +15,21 @@ using namespace vapor::input;
 
 //-----------------------------------//
 
-wx_InputManager::wx_InputManager()
+vaporInputManager::vaporInputManager()
 {
 
 }
 
 //-----------------------------------//
 
-wx_InputManager::~wx_InputManager()
+vaporInputManager::~vaporInputManager()
 {
 
 }
 
 //-----------------------------------//
 
-void wx_InputManager::processKeyEvent( const wxKeyEvent& event, bool keyDown )
+void vaporInputManager::processKeyEvent( const wxKeyEvent& event, bool keyDown )
 {
 	// Convert from the wxWidgets events to the vaporEngine events.
 	KeyEvent ke( 
@@ -44,7 +44,7 @@ void wx_InputManager::processKeyEvent( const wxKeyEvent& event, bool keyDown )
 
 //-----------------------------------//
 
-void wx_InputManager::processMouseEvent( const wxMouseEvent& event )
+void vaporInputManager::processMouseEvent( const wxMouseEvent& event )
 {
 	// Mouse motion
 	if( event.Moving() )
@@ -96,7 +96,7 @@ void wx_InputManager::processMouseEvent( const wxMouseEvent& event )
 
 //-----------------------------------//
 
-input::Keys::Enum wx_InputManager::convertKeyEnum( int keyCode )
+input::Keys::Enum vaporInputManager::convertKeyEnum( int keyCode )
 {
 	// From the wxWidgets docs:
 	// "Note that the range 33 - 126 is reserved for the standard ASCII characters 

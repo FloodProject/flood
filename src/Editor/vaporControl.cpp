@@ -184,4 +184,25 @@ void* vaporControl::getHandle()
 
 //-----------------------------------//
 
+Engine* vaporControl::getEngine()
+{
+	return engine;
+}
+
+//-----------------------------------//
+
+void vaporControl::setCamera(const scene::CameraPtr& cam)
+{
+	this->cam = cam;
+}
+
+//-----------------------------------//
+
+void vaporControl::setEngine(Engine* engine)
+{
+	this->engine = engine;
+}
+
+//-----------------------------------//
+
 } } // end namespaces

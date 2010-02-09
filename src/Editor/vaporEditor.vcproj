@@ -326,11 +326,11 @@
 			Name="Input"
 			>
 			<File
-				RelativePath=".\wx_InputManager.cpp"
+				RelativePath=".\vaporInputManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\wx_InputManager.h"
+				RelativePath=".\vaporInputManager.h"
 				>
 			</File>
 		</Filter>

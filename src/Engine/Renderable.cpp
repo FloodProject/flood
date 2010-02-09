@@ -124,28 +124,28 @@ PolygonMode::Enum Renderable::getPolygonMode() const
 
 //-----------------------------------//
 
-void Renderable::setMaterial( MaterialPtr mat )
+void Renderable::setMaterial( const MaterialPtr& mat )
 {
 	this->mat = mat;
 }
 
 //-----------------------------------//
 
-void Renderable::setPrimitiveType( Primitive::Enum p )
+void Renderable::setPrimitiveType( Primitive::Enum primitive )
 {
-	this->type = p;
+	this->type = primitive;
 }
 
 //-----------------------------------//
 
-void Renderable::setVertexBuffer( VertexBufferPtr vb )
+void Renderable::setVertexBuffer( const VertexBufferPtr& vb )
 {
 	this->vb = vb;
 }
 
 //-----------------------------------//
 
-void Renderable::setIndexBuffer( IndexBufferPtr ib )
+void Renderable::setIndexBuffer( const IndexBufferPtr& ib )
 {
 	this->ib = ib;
 }

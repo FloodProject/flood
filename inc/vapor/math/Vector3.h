@@ -150,7 +150,7 @@ public:
 	//-----------------------------------//
 
 	// Gets the length of the vector
-	T length() const { return math::sqrt(x*x + y*y + z*z); }
+	T length() const { return sqrt(x*x + y*y + z*z); }
 
 	//-----------------------------------//
 	

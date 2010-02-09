@@ -18,14 +18,14 @@ namespace vapor { namespace render {
 
 /**
  * Attribute of a vertex element.
- * Matches the (NVIDIA-only?) specification
+ * Matches the (NVIDIA-only?) specification.
  */
 
 namespace VertexAttribute
 {
     enum Enum
     {
-        Vertex = 0,
+        Position = 0,
         Normal = 2,
         Color = 3,
         SecondaryColor = 4,
@@ -162,7 +162,7 @@ public:
 	{
 		foreach( const attributePair& p, attributeMap )
 		{
-			if( p.first == VertexAttribute::Vertex )
+			if( p.first == VertexAttribute::Position )
 			{
 				std::vector<math::Vector3> vertices;
 				const std::vector<byte>& bytev = std::get<2>( p.second );

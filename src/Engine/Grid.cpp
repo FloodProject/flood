@@ -101,7 +101,7 @@ render::VertexBufferPtr Grid::getGridBuffer()
 	}
 
 	// Vertex buffer setup
-	vb->set( VertexAttribute::Vertex, vertex );
+	vb->set( VertexAttribute::Position, vertex );
 	vb->set( VertexAttribute::Color, colors );
 
 	return vb;
