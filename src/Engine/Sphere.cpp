@@ -80,11 +80,11 @@ Sphere::Sphere( ) : i( 0 )
 
 	vb->set( VertexAttribute::Position, pos );
 	vb->set( VertexAttribute::Color, colors );
-	ib->set( ind );
+	//ib->set( ind );
 
 	pos.clear();
 	colors.clear();
-	ind.clear();
+	//ind.clear();
 }
 
 //-----------------------------------//
@@ -93,13 +93,13 @@ void Sphere::subdivide(const Vector3& v1, const Vector3& v2, const Vector3& v3, 
 {
 	if (depth == 0)
 	{
-		pos.push_back( v1 ); colors.push_back( Vector3::UnitX );
-		pos.push_back( v2 ); colors.push_back( Vector3::UnitY );
-		pos.push_back( v3 ); colors.push_back( Vector3::UnitZ );
+		pos.push_back( v1 ); colors.push_back( Vector3( 0.509f, 0.705f, 0.988f ) );
+		pos.push_back( v2 ); colors.push_back( Vector3( 0.509f, 0.705f, 0.988f ) );
+		pos.push_back( v3 ); colors.push_back( Vector3( 0.509f, 0.705f, 0.988f ) );
 
-		ind.push_back( i++ );
-		ind.push_back( i++ );
-		ind.push_back( i++ );
+		//ind.push_back( i++ );
+		//ind.push_back( i++ );
+		//ind.push_back( i++ );
 		
 		return;
 	}
@@ -119,7 +119,7 @@ void Sphere::subdivide(const Vector3& v1, const Vector3& v2, const Vector3& v3, 
 void Sphere::generateSphere( )
 {
 	vb = new VertexBuffer();
-	ib = new IndexBuffer();
+	//ib = new IndexBuffer();
 
 	foreach( const byte* i, indices )
 	{
