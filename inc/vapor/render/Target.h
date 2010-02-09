@@ -16,25 +16,25 @@ class VAPOR_API Settings
 {
 public:
 
-	Settings( const int width = 640, const int height = 480 )
+	Settings( const ushort width = 640, const ushort height = 480 )
 		: width( width ), height( height )
 	{ }
 
 	// Gets the width of the target.
-	const int getWidth() const { return width; }
+	const ushort getWidth() const { return width; }
 	
 	// Gets the height of the target.
-	const int getHeight() const { return height; }
+	const ushort getHeight() const { return height; }
 
 	// Sets the width of the target.
-	void setWidth(int w) { width = w; }
+	void setWidth(ushort w) { width = w; }
 	
 	// Gets the height of the target.
-	void setHeight(int h) { height = h; }
+	void setHeight(ushort h) { height = h; }
 
 protected:
 
-	int width, height;
+	ushort width, height;
 };
 
 //-----------------------------------//

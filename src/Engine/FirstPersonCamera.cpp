@@ -19,8 +19,8 @@ using namespace vapor::math;
 //-----------------------------------//
 
 static const float DEFAULT_MOVE_SENSIVITY = 100.0f;
-static const float DEFAULT_LOOK_SENSIVITY = 0.5f;
-static const float DEFAULT_LIMIT_XAXIS = degreeToRadian( 89.999f );
+static const float DEFAULT_LOOK_SENSIVITY = 20.0f;
+static const float DEFAULT_LIMIT_XAXIS = 89.999f;
 
 //-----------------------------------//
 
@@ -30,11 +30,12 @@ const std::string& FirstPersonCamera::type = "FirstPersonCamera";
 
 FirstPersonCamera::FirstPersonCamera( input::InputManager* input,
 	render::Device* device, Projection::Enum projection )
-	: Camera( device, projection ), inputManager( input ), 
-	moveSensivity( DEFAULT_MOVE_SENSIVITY ), lookSensivity( DEFAULT_LOOK_SENSIVITY ), 
+	: Camera( device, projection ), inputManager( input ),
+	moveSensivity( DEFAULT_MOVE_SENSIVITY ),
+	lookSensivity( DEFAULT_LOOK_SENSIVITY ),
 	clampMovementX( true )
 {
-	registerCallbacks();	
+	registerCallbacks();
 	centerCursor();
 }
 
@@ -100,7 +101,7 @@ void FirstPersonCamera::checkControls( double delta )
 	queuedMovement.zero();
 
 	moveVector *= (float(delta) * moveSensivity);
-	EulerAngles& rotAng =  const_cast< EulerAngles& >(transform->getRotation());
+	const EulerAngles& rotAng =  transform->getRotation();
 	transform->translate( moveVector*rotAng.getOrientationMatrix() );
 	
 	Vector3 transformedReference = Vector3::UnitZ * rotAng.getOrientationMatrix();
@@ -183,8 +184,8 @@ void FirstPersonCamera::centerCursor( )
 
 	if( window->isCursorVisible() ) return;
 
-	int x = window->getSettings().getWidth() / 2;
-	int y = window->getSettings().getHeight() / 2;
+	ushort x = window->getSettings().getWidth() / 2;
+	ushort y = window->getSettings().getHeight() / 2;
 	
 	lastPosition.x = x;
 	lastPosition.y = y;

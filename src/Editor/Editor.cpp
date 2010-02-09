@@ -190,6 +190,7 @@ void EditorFrame::createScene()
 	sky->addComponent( TransformPtr( new Transform() ) );
 	sky->addComponent( ComponentPtr( new Skydome( mat ) ) );
 	//sky->getTransform()->translate( 0.0f, -50.0f, 0.0f );
+	sky->getTransform()->rotate( -30.0f, 0.0f, 0.0f );
 	sky->getTransform()->scale( 1000.0f );
 	scene->add( sky );
 

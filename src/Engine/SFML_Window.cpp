@@ -214,8 +214,8 @@ void SFML_Window::setCursorPosition( int x, int y )
 
 void SFML_Window::processResize(sf::Event event)
 {
-	settings.setHeight( event.Size.Height );
-	settings.setWidth( event.Size.Width );
+	settings.setHeight( (ushort) event.Size.Height );
+	settings.setWidth( (ushort) event.Size.Width );
 
 	handleWindowResize();
 }
