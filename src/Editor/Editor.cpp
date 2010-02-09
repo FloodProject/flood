@@ -184,13 +184,13 @@ void EditorFrame::createScene()
 	NodePtr grid( new Node( "EditorGrid" ) );
 	grid->addComponent( TransformPtr( new Transform() ) );
 	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
-	//scene->add( grid );
+	scene->add( grid );
 
 	NodePtr sky( new Node( "Sky" ) );
 	sky->addComponent( TransformPtr( new Transform() ) );
 	sky->addComponent( ComponentPtr( new Skydome( mat ) ) );
 	//sky->getTransform()->translate( 0.0f, -50.0f, 0.0f );
-	sky->getTransform()->scale( 120.0f );
+	sky->getTransform()->scale( 1000.0f );
 	scene->add( sky );
 
 	MeshPtr mesh = rm->loadResource<Mesh>( "TreePine_1.ms3d" );
@@ -223,7 +223,7 @@ void EditorFrame::createScene()
 	NodePtr terreno( new Node( "Terreno" ) );
 	terreno->addComponent( TransformPtr( new Transform() ) );
 	terreno->addComponent( terrain );
-	//scene->add( terreno );
+	scene->add( terreno );
 
 	ImagePtr heightmap = rm->loadResource< Image >( "height2.png" );
 	const CellPtr& cell = terrain->createCell( heightmap, 0, 0 );

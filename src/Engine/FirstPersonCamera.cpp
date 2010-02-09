@@ -157,14 +157,7 @@ void FirstPersonCamera::onKeyPressed( const KeyEvent& keyEvent )
 void FirstPersonCamera::onMouseWheel( const input::MouseWheelEvent& event )
 {
 	if( !transform ) return;
-
-	// Mouse deltas in Windows seem to be pretty high,
-	// so we clamp them down to a reasonable value.
-	queuedMovement += Vector3::UnitZ * (event.delta / 100);
-
-#ifndef VAPOR_PLATFORM_WINDOWS
-	assert( "Check mouse delta values" );
-#endif
+	queuedMovement += Vector3::UnitZ * event.delta * 100;
 }
 
 //-----------------------------------//

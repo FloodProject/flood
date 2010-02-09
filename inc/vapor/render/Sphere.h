@@ -22,14 +22,14 @@ class Sphere : public render::Renderable
 {
 public:
 
-	Sphere( );
+	Sphere();
 	//virtual ~Sphere();
 
 protected:
 
 	// Subdivides a triangle into 4 sub-triangles.
-	void subdivide(const math::Vector3& v1, 
-		const math::Vector3& v2, const math::Vector3& v3);
+	void subdivide(const math::Vector3& v1, const math::Vector3& v2,
+		const math::Vector3& v3, byte depth = 1);
 
 	// Generates the sphere.
 	void generateSphere();
@@ -38,6 +38,7 @@ protected:
 	std::vector<math::Vector3> pos;
 	std::vector<math::Vector3> colors;
 	std::vector<ushort> ind;
+	ushort i;
 };
 
 //-----------------------------------//

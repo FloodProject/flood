@@ -79,7 +79,9 @@ void vaporInputManager::processMouseEvent( const wxMouseEvent& event )
 
 	else if( event.GetWheelRotation() != 0 )
 	{
-		MouseWheelEvent mwe( event.GetWheelRotation() );
+		// wxWidgets reports a very big value for wheel rotation,
+		// so we clamp it down to be uniform with other platforms.
+		MouseWheelEvent mwe( event.GetWheelRotation() / 120 );
 		processEvent( mwe );
 	}
 
