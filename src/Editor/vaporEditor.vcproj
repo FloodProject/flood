@@ -435,24 +435,8 @@
 			>
 		</File>
 		<File
-			RelativePath=".\res.rc"
+			RelativePath=".\Editor.rc"
 			>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCResourceCompilerTool"
-					AdditionalIncludeDirectories="&quot;C:\wxWidgets-2.9.0\include&quot;"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="DLL Debug|Win32"
-				>
-				<Tool
-					Name="VCResourceCompilerTool"
-					AdditionalIncludeDirectories="&quot;C:\wxWidgets-2.9.0\include&quot;"
-				/>
-			</FileConfiguration>
 		</File>
 	</Files>
 	<Globals>

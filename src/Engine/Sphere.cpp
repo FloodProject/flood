@@ -1,8 +1,8 @@
 /************************************************************************
 *
-* vaporEngine (2008-2010)
+* vapor3D Engine © (2008-2010)
 *
-*	<http://www.portugal-a-programar.org>
+*	<http://www.vapor3d.org>
 *
 ************************************************************************/
 
@@ -15,76 +15,69 @@ namespace vapor { namespace render {
 using namespace vapor::math;
 
 //-----------------------------------//
-// Icosahedron coordinates. Check out the following URLs more information:
+// Declare icosahedron base coordinates. We'll subdivide these
+// starting coordinates to get a more detailed sphere model.
+// Check out the following URLs more information:
 // http://en.wikipedia.org/wiki/Icosahedron#Cartesian_coordinates
 // http://www.geometrictools.com/Documentation/PlatonicSolids.pdf
 // Code is also based from OpenGL Red Book example 2-4.
 
-static const float t = (1 + math::sqrt(5.0f)) / 2;
-static const float s = math::sqrt(1 + math::pow(t, 2));
-static const float T = t / s;
-static const float O = 1.0f / s;
+//static const float t = (1 + math::sqrt(5.0f)) / 2;
+//static const float s = math::sqrt(1 + math::pow(t, 2));
 
-//static const float X = .525731112119133606f;
-//static const float Z = .850650808352039932f;
+static const float T = .850650808352039932f; // t / s;
+static const float O = .525731112119133606f; // 1.0f / s;
 
-//static float vertices[12][3] =
-//{
-//	{-X, .0, Z}, {X, 0.0, Z}, {-X, .0, -Z}, {X, 0.0, -Z},
-//	{0.0, Z, X}, {.0, Z, -X}, {0.0, -Z, X}, {.0, -Z, -X},
-//	{Z, X, 0.0}, {-Z, X, .0}, {Z, -X, 0.0}, {-Z, -X, .0}
-//};
-//
-//static byte indices[20][3] =
-//{ 
-//	{0,4,1},  {0,9,4},  {9,5,4},  {4,5,8},  {4,8,1},
-//	{8,10,1}, {8,3,10}, {5,3,8},  {5,2,3},  {2,7,3},
-//	{7,10,3}, {7,6,10}, {7,11,6}, {11,0,6}, {0,1,6},
-//	{6,1,10}, {9,0,11}, {9,11,2}, {9,2,5},  {7,2,11}
-//};
-
-static float vertices[12][3] =
+static float IcoVertices[][3] =
 {
 	{T, O, 0.0}, {-T, O, 0.0}, {T, -O, 0.0}, {-T, -O, 0.0},
 	{O, 0.0, T}, {O, 0.0, -T}, {-O, 0.0, T}, {-O, 0.0, -T},
 	{0.0, T, O}, {0.0, -T, O}, {0.0, T, -O}, {0.0, -T, -O}
 };
 
-static byte indices[20][3] =
-{ 
+static byte IcoDomeIndices[][3] =
+{
 	{0, 8, 4}, {0, 5, 10}, {2, 4, 9}, /*{2, 11, 5},*/ {1, 6, 8},
 	{1, 10, 7}, {3, 9, 6}, /*{3, 7, 11},*/ {0, 10, 8}, {1, 8, 10},
 	/*{2, 9, 11},*/ /*{3, 11, 9},*/ {4, 2, 0}, {5, 0, 2}, {6, 1, 3},
 	{7, 3, 1}, {8, 6, 4}, {9, 4, 6}, {10, 5, 7}, /*{11, 7, 5},*/
 };
 
-//static float vertices[6][3] =
-//{
-//	{1.0, 0.0, 0.0}, {-1.0, 0.0, 0.0}, {0.0, 1.0, 0.0},
-//	{0.0, -1.0, 0.0}, {0.0, 0.0, 1.0}, {0.0, 0.0, -1.0},
-//};
-//
-//static byte indices[20][3] =
-//{ 
-//	{4,0,2}, {4,2,1}, /*{4,1,3}, {4,3,0},*/
-//	{5,2,0}, {5,1,2}, /*{5,3,1}, {5,0,3},*/
-//};
+static byte IcoSphereIndices[][3] =
+{
+	{2, 11, 5}, {3, 7, 11}, {2, 9, 11}, {3, 11, 9},
+	{11, 7, 5},
+};
 
+//-----------------------------------//
+// Octahedron coordinates.
+
+static float OctaVertices[][3] =
+{
+	{1.0, 0.0, 0.0}, {-1.0, 0.0, 0.0}, {0.0, 1.0, 0.0},
+	{0.0, -1.0, 0.0}, {0.0, 0.0, 1.0}, {0.0, 0.0, -1.0},
+};
+
+static byte OctaDomeIndices[][3] =
+{
+	{4,0,2}, {4,2,1}, {5,2,0}, {5,1,2},
+};
+
+static byte OctaSphereIndices[][3] =
+{
+	{4,1,3}, {4,3,0}, {5,3,1}, {5,0,3},
+};
 
 //-----------------------------------//
 
-Sphere::Sphere( ) : i( 0 )
+Sphere::Sphere( bool fullSphere, byte numSubDiv )
 {
 	setPrimitiveType( Primitive::Triangles );
-	generateSphere();
-
+	setPolygonMode( PolygonMode::Wireframe );
+	
+	generateSphere( fullSphere, numSubDiv );
 	vb->set( VertexAttribute::Position, pos );
-	vb->set( VertexAttribute::Color, colors );
-	//ib->set( ind );
-
 	pos.clear();
-	colors.clear();
-	//ind.clear();
 }
 
 //-----------------------------------//
@@ -93,13 +86,9 @@ void Sphere::subdivide(const Vector3& v1, const Vector3& v2, const Vector3& v3, 
 {
 	if (depth == 0)
 	{
-		pos.push_back( v1 ); colors.push_back( Vector3( 0.509f, 0.705f, 0.988f ) );
-		pos.push_back( v2 ); colors.push_back( Vector3( 0.509f, 0.705f, 0.988f ) );
-		pos.push_back( v3 ); colors.push_back( Vector3( 0.509f, 0.705f, 0.988f ) );
-
-		//ind.push_back( i++ );
-		//ind.push_back( i++ );
-		//ind.push_back( i++ );
+		pos.push_back( v1 );
+		pos.push_back( v2 );
+		pos.push_back( v3 );
 		
 		return;
 	}
@@ -116,18 +105,28 @@ void Sphere::subdivide(const Vector3& v1, const Vector3& v2, const Vector3& v3, 
 
 //-----------------------------------//
 
-void Sphere::generateSphere( )
+void Sphere::generateSphere( bool fullSphere, byte numSubDiv )
 {
 	vb = new VertexBuffer();
-	//ib = new IndexBuffer();
 
-	foreach( const byte* i, indices )
+	foreach( const byte* i, IcoDomeIndices )
 	{
-		Vector3 v1( vertices[i[0]][0], vertices[i[0]][1], vertices[i[0]][2] );
-		Vector3 v2( vertices[i[1]][0], vertices[i[1]][1], vertices[i[1]][2] );
-		Vector3 v3( vertices[i[2]][0], vertices[i[2]][1], vertices[i[2]][2] );
+		Vector3 v1( IcoVertices[i[0]][0], IcoVertices[i[0]][1], IcoVertices[i[0]][2] );
+		Vector3 v2( IcoVertices[i[1]][0], IcoVertices[i[1]][1], IcoVertices[i[1]][2] );
+		Vector3 v3( IcoVertices[i[2]][0], IcoVertices[i[2]][1], IcoVertices[i[2]][2] );
 
-		subdivide( v1, v2, v3, 1 );
+		subdivide( v1, v2, v3, numSubDiv );
+	}
+
+	if( !fullSphere ) return;
+
+	foreach( const byte* i, IcoSphereIndices )
+	{
+		Vector3 v1( IcoVertices[i[0]][0], IcoVertices[i[0]][1], IcoVertices[i[0]][2] );
+		Vector3 v2( IcoVertices[i[1]][0], IcoVertices[i[1]][1], IcoVertices[i[1]][2] );
+		Vector3 v3( IcoVertices[i[2]][0], IcoVertices[i[2]][1], IcoVertices[i[2]][2] );
+
+		subdivide( v1, v2, v3, numSubDiv );
 	}
 }
 

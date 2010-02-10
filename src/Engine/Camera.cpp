@@ -1,8 +1,8 @@
 /************************************************************************
 *
-* vaporEngine (2008-2010)
+* vapor3D Engine © (2008-2010)
 *
-*	<http://www.portugal-a-programar.org>
+*	<http://www.vapor3d.org>
 *
 ************************************************************************/
 
@@ -168,7 +168,7 @@ void Camera::render( const NodePtr& node ) const
 
 void Camera::render( ) const
 {
-	NodePtr& parent = getNode()->getParent();
+	NodePtr parent = getNode()->getParent();
 
 	if( !parent ) return;
 

@@ -1,8 +1,8 @@
 /************************************************************************
 *
-* vaporEngine (2008-2010)
+* vapor3D Engine © (2008-2010)
 *
-*	<http://www.portugal-a-programar.org>
+*	<http://www.vapor3d.org>
 *
 ************************************************************************/
 
@@ -15,35 +15,34 @@ namespace vapor { namespace render {
 //-----------------------------------//
 
 /**
- * Generates a sphere by subdividing a icosahedron.
+ * Generates a sphere by subdividing a platonic solid, or what's known
+ * as a geodesic sphere. It can also optionally generate a dome, which
+ * has less faces than a full sphere and is suitable to simulate skies.
+ * See http://en.wikipedia.org/wiki/Geodesic_dome for more details.
  */
 
 class Sphere : public render::Renderable
 {
 public:
 
-	Sphere();
-	//virtual ~Sphere();
+	Sphere( bool fullSphere = true, byte numSubDiv = 0 );
 
 protected:
 
 	// Subdivides a triangle into 4 sub-triangles.
-	void subdivide(const math::Vector3& v1, const math::Vector3& v2,
-		const math::Vector3& v3, byte depth = 1);
+	void subdivide( const math::Vector3& v1, const math::Vector3& v2,
+		const math::Vector3& v3, byte depth );
 
 	// Generates the sphere.
-	void generateSphere();
+	void generateSphere( bool fullSphere, byte numSubDiv );
 
 	// Vertex data.
 	std::vector<math::Vector3> pos;
-	std::vector<math::Vector3> colors;
-	std::vector<ushort> ind;
-	ushort i;
 };
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( Sphere );
+TYPEDEF_INTRUSIVE_POINTER_FROM_CLASS( Sphere );
 
 //-----------------------------------//
 
