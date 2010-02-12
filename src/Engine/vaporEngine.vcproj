@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\stb\&quot;;&quot;$(SolutionDir)dep\boost_1_39_0\&quot;;&quot;$(SolutionDir)dep\vld\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;;&quot;$(SolutionDir)dep\OpenAL 1.1 SDK\include&quot;;&quot;$(SolutionDir)dep\libogg-1.1.3\include&quot;;&quot;$(SolutionDir)dep\physfs-2.0.0\include&quot;;&quot;$(SolutionDir)dep\libvorbis-1.2.0\include&quot;;&quot;$(SolutionDir)dep\SFML\include&quot;;&quot;$(SolutionDir)dep\fd_delegate\include&quot;;&quot;$(SolutionDir)dep\lua\include&quot;;&quot;$(SolutionDir)dep\havok\Source&quot;"
-				PreprocessorDefinitions="WIN32;___DEBUG;_WINDOWS;_DEBUG;VAPOR_EXPORT;D_SCL_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;___DEBUG;_WINDOWS;_DEBUG;VAPOR_EXPORT;_SECURE_SCL 0;_HAS_ITERATOR_DEBUGGING 0"
 				MinimalRebuild="true"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
@@ -1241,6 +1241,14 @@
 						Name="VCCLCompilerTool"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\inc\vapor\scene\Body.h"
@@ -1251,6 +1259,14 @@
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool

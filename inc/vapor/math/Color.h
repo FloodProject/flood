@@ -13,26 +13,18 @@ namespace vapor { namespace math {
 //-----------------------------------//
 
 /**
- * Very simple representation of a color.
+ * Representation of colors in RGBA format.
  */
 
-struct VAPOR_API Color
+class VAPOR_API Color
 {
+public:
+
+	Color(float r = 0.0f, float g = 0.0f, float b = 0.0f, float a = 1.0f);
+	Color(int r, int g, int b, int a = 255);
+	Color(const Color& c);
+
 	float r, g, b, a;
-
-	Color(float r = 0.0f, float g = 0.0f, float b = 0.0f, float a = 1.0f)
-		: r(r), g(g), b(b), a(a)
-	{
-	
-	}
-
-	Color(const Color& c)
-	{
-		r = c.r;
-		b = c.b;
-		g = c.g;
-		a = c.a;
-	}
 };
 
 //-----------------------------------//
