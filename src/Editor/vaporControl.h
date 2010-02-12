@@ -92,6 +92,9 @@ protected:
 
 	scene::CameraPtr cam;
 
+	Timer frameTimer;
+	double lastFrameTime;
+
 	DECLARE_EVENT_TABLE()
 };
 

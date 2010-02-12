@@ -36,6 +36,13 @@ float degreeToRadian( float degree )
 
 //-----------------------------------//
 
+float radianToDegree( float radian )
+{
+	return radian * 180.0f / PI;
+}
+
+//-----------------------------------//
+
 Vector3 calculateTriangleNormal( const Vector3& v1, const Vector3& v2, const Vector3& v3 )
 {
 	Vector3 vec1 = v2 - v1;

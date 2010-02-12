@@ -84,11 +84,9 @@ void vaporControl::OnMouseCaptureLost(wxMouseCaptureLostEvent& WXUNUSED(event))
 
 //-----------------------------------//
 
-const float DELTA = 0.020f;
-
 void vaporControl::OnUpdate()
 {
-	engine->update( DELTA );
+	engine->update( lastFrameTime );
 }
 
 //-----------------------------------//
@@ -108,10 +106,7 @@ void vaporControl::OnRender()
 //-----------------------------------//
 
 void vaporControl::OnPaint(wxPaintEvent& WXUNUSED(event))
-{
-	// Same as SetCurrent(wxGLContext)
-	//window->makeCurrent();
-    
+{   
 	// From the PaintEvent docs: "the application must always create
 	// a wxPaintDC object, even if you do not use it."
 	// http://docs.wxwidgets.org/trunk/classwx_paint_event.html
@@ -119,6 +114,7 @@ void vaporControl::OnPaint(wxPaintEvent& WXUNUSED(event))
 
 	OnRender();
 
+	// Swaps the front and back buffers.
 	window->update();
 }
 
@@ -126,6 +122,8 @@ void vaporControl::OnPaint(wxPaintEvent& WXUNUSED(event))
 
 void vaporControl::OnIdle(wxIdleEvent& WXUNUSED(event))
 {
+	lastFrameTime = frameTimer.getElapsedTime();
+	frameTimer.reset();
 	OnUpdate();
 	Refresh();
 }

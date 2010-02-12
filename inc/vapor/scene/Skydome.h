@@ -9,6 +9,8 @@
 #pragma once
 
 #include "vapor/scene/Geometry.h"
+#include "vapor/render/Sphere.h"
+#include "vapor/math/Color.h"
 
 namespace vapor { namespace scene {
 
@@ -27,16 +29,37 @@ class Skydome : public scene::Geometry
 {
 public:
 
-	Skydome( render::MaterialPtr mat );
+	Skydome( const render::MaterialPtr& mat );
 	virtual ~Skydome();
 
 	// Returns the name of this component.
 	virtual const std::string& getType() const;
 
+	// SKY
+
+	// Sets the sky to a fixed color.
+	void setSkyColor( const math::Color& color );
+
+	// Sets the sky to a linear color gradient.
+	void setSkyLinearGradient( const math::Color& c1, const math::Color& c2 );
+
+	// CELESTIAL BODIES (Sun, Moon, Stars)
+	
+	// Celestial bodies.
+	//void setStarsVisible( bool enable );
+
 protected:
 
-	// Returns a vertex buffer with the sphere geometry.
-	render::VertexBufferPtr generateSphere();
+	// Gets the sky color at the vertice at a given time of day.
+	math::Color getSkyVertexColor( const math::Vector3& vertex );
+
+	// Scales the Y vertex value into a [0,1] range.
+	float scale( float number );
+
+	// Dome geometry that will be rendered as the sky.
+	render::SpherePtr dome;
+	math::Vector3 colorTop, colorBottom;
+	float yMin, yMax;
 
 	static const std::string& type;
 };

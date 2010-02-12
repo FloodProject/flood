@@ -249,17 +249,19 @@ void SceneTreeCtrl::onNodeMenu( wxCommandEvent& event )
 
 	if( event.GetId() == ID_MenuSceneNodeAddMesh )
 	{
-		wxFileDialog fd( this, wxFileSelectorPromptStr, wxEmptyString, wxEmptyString,
-			"Mesh files (*.ms3d)|*.ms3d", wxFD_DEFAULT_STYLE|wxFD_FILE_MUST_EXIST );
+		wxFileDialog* fd= new wxFileDialog( this, wxFileSelectorPromptStr, wxEmptyString, wxEmptyString,
+			"Mesh files (*.ms3d)|*.ms3d", wxFD_DEFAULT_STYLE|wxFD_FILE_MUST_EXIST, wxPoint( 0, 0 ) );
 
-		if( fd.ShowModal() == wxID_OK )
+		if( fd->ShowModal() == wxID_OK )
 		{
-			wxString filename = fd.GetFilename();
-			NodePtr node = getEntity( menuItemId );
+			wxString filename = fd->GetFilename();
+			const NodePtr& node = getEntity( menuItemId );
 			
 			//MeshPtr( new Mesh( 
 			//node->
 		}
+
+		//delete fd;
 	}
 }
 

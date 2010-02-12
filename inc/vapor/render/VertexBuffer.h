@@ -88,7 +88,7 @@ public:
 	uint getNumAttributes() const;
 
 	// Returns the number of vertices in each attribute.
-	uint getNumVertices() const;
+	uint getNumVertices();
 
 	// These are all the possible types supported by glVertexAttrib
 	//bool set( VertexAttribute::Enum attr, std::vector< byte > const& data );

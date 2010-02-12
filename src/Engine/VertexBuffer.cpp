@@ -257,8 +257,9 @@ uint VertexBuffer::getNumAttributes() const
 
 //-----------------------------------//
 
-uint VertexBuffer::getNumVertices() const
+uint VertexBuffer::getNumVertices()
 {
+	checkSize();
 	return numVertices;
 }
 

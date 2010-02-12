@@ -23,6 +23,7 @@ using ::pow;
 using ::log;
 using ::log10;
 using ::acos;
+using ::atan2;
 
 //-----------------------------------//
 
@@ -39,6 +40,7 @@ float random( float min, float max );
 //-----------------------------------//
 
 float degreeToRadian( float degree );
+float radianToDegree( float radian );
 
 //-----------------------------------//
 

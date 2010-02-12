@@ -9,6 +9,7 @@
 #include "vapor/PCH.h"
 #include "vapor/render/Sphere.h"
 #include "vapor/math/Math.h"
+#include "vapor/math/EulerAngles.h"
 
 namespace vapor { namespace render {
 
@@ -28,14 +29,14 @@ using namespace vapor::math;
 static const float T = .850650808352039932f; // t / s;
 static const float O = .525731112119133606f; // 1.0f / s;
 
-static float IcoVertices[][3] =
+static const float IcoVertices[][3] =
 {
 	{T, O, 0.0}, {-T, O, 0.0}, {T, -O, 0.0}, {-T, -O, 0.0},
 	{O, 0.0, T}, {O, 0.0, -T}, {-O, 0.0, T}, {-O, 0.0, -T},
 	{0.0, T, O}, {0.0, -T, O}, {0.0, T, -O}, {0.0, -T, -O}
 };
 
-static byte IcoDomeIndices[][3] =
+static const byte IcoDomeIndices[][3] =
 {
 	{0, 8, 4}, {0, 5, 10}, {2, 4, 9}, /*{2, 11, 5},*/ {1, 6, 8},
 	{1, 10, 7}, {3, 9, 6}, /*{3, 7, 11},*/ {0, 10, 8}, {1, 8, 10},
@@ -43,7 +44,7 @@ static byte IcoDomeIndices[][3] =
 	{7, 3, 1}, {8, 6, 4}, {9, 4, 6}, {10, 5, 7}, /*{11, 7, 5},*/
 };
 
-static byte IcoSphereIndices[][3] =
+static const byte IcoSphereIndices[][3] =
 {
 	{2, 11, 5}, {3, 7, 11}, {2, 9, 11}, {3, 11, 9},
 	{11, 7, 5},
@@ -52,18 +53,18 @@ static byte IcoSphereIndices[][3] =
 //-----------------------------------//
 // Octahedron coordinates.
 
-static float OctaVertices[][3] =
+static const float OctaVertices[][3] =
 {
 	{1.0, 0.0, 0.0}, {-1.0, 0.0, 0.0}, {0.0, 1.0, 0.0},
 	{0.0, -1.0, 0.0}, {0.0, 0.0, 1.0}, {0.0, 0.0, -1.0},
 };
 
-static byte OctaDomeIndices[][3] =
+static const byte OctaDomeIndices[][3] =
 {
 	{4,0,2}, {4,2,1}, {5,2,0}, {5,1,2},
 };
 
-static byte OctaSphereIndices[][3] =
+static const byte OctaSphereIndices[][3] =
 {
 	{4,1,3}, {4,3,0}, {5,3,1}, {5,0,3},
 };
@@ -109,13 +110,15 @@ void Sphere::generateSphere( bool fullSphere, byte numSubDiv )
 {
 	vb = new VertexBuffer();
 
+	Matrix4x3 rot( EulerAngles( -30.0f, 0.0f, 0.0f ).getOrientationMatrix() );
+
 	foreach( const byte* i, IcoDomeIndices )
 	{
 		Vector3 v1( IcoVertices[i[0]][0], IcoVertices[i[0]][1], IcoVertices[i[0]][2] );
 		Vector3 v2( IcoVertices[i[1]][0], IcoVertices[i[1]][1], IcoVertices[i[1]][2] );
 		Vector3 v3( IcoVertices[i[2]][0], IcoVertices[i[2]][1], IcoVertices[i[2]][2] );
 
-		subdivide( v1, v2, v3, numSubDiv );
+		subdivide( v1*rot, v2*rot, v3*rot, numSubDiv );
 	}
 
 	if( !fullSphere ) return;
@@ -126,7 +129,7 @@ void Sphere::generateSphere( bool fullSphere, byte numSubDiv )
 		Vector3 v2( IcoVertices[i[1]][0], IcoVertices[i[1]][1], IcoVertices[i[1]][2] );
 		Vector3 v3( IcoVertices[i[2]][0], IcoVertices[i[2]][1], IcoVertices[i[2]][2] );
 
-		subdivide( v1, v2, v3, numSubDiv );
+		subdivide( v1*rot, v2*rot, v3*rot, numSubDiv );
 	}
 }
 

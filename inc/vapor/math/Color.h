@@ -39,12 +39,12 @@ struct VAPOR_API Color
 
 namespace Colors 
 {
-
 	static const Color White(1.0f, 1.0f, 1.0f);
 	static const Color Black(0.0f, 0.0f, 0.0f);
 	static const Color Red(1.0f, 0.0f, 0.0f);
 	static const Color Green(0.0f, 1.0f, 0.0f);
 	static const Color Blue(0.0f, 0.0f, 1.0f);
+	static const Color SkyBlue(0.5f, 0.7f, 1.0f);
 	static const Color Yellow(1.0f, 1.0f, 0.0f);
 }
 
