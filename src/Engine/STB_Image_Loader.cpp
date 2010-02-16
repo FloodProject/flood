@@ -40,6 +40,9 @@ Image* STB_Image_Loader::decode(const File& file)
 	// read contents of the file into the vector
 	std::vector<byte> filebuf = file.read();
 
+	if( filebuf.size() == 0 ) 
+		return nullptr;
+
 	// TODO: error handling
 	int width, height, comp;
 	byte* data = stbi_load_from_memory( &filebuf[0], filebuf.size(), 

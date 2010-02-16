@@ -7,7 +7,6 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/gui/Console.h"
 #include "vapor/render/Quad.h"
 

@@ -99,7 +99,7 @@ void SceneTreeCtrl::initIcons()
 
 //-----------------------------------//
 
-void SceneTreeCtrl::updateScene( wxTreeItemId id, NodePtr node )
+void SceneTreeCtrl::updateScene( wxTreeItemId id, const NodePtr& node )
 {
 	// TODO: fix it
 
@@ -164,11 +164,16 @@ void SceneTreeCtrl::onItemChanged(wxTreeEvent& event)
 {
 	// Turn off last selected tree item's bounding box.
 	wxTreeItemId old = event.GetOldItem();
-	if( old.IsOk() ) setBoundingBox( old, false );
+	wxTreeItemId id = event.GetItem();
+
+	//if( old.IsOk() ) 
+	//	setBoundingBox( old, false );
+
+	if( !onItemSelected.empty() )
+		onItemSelected( old, id );
 
 	// Turn on the new tree item's bounding box.
-	wxTreeItemId id = event.GetItem();
-	setBoundingBox( id, true );
+	//setBoundingBox( id, true );
 }
 
 //-----------------------------------//
@@ -235,8 +240,8 @@ void SceneTreeCtrl::onNodeMenu( wxCommandEvent& event )
 		const NodePtr& node = getEntity( menuItemId );
 		if( !node ) return;
 
-		PolygonMode::Enum mode = event.IsChecked()
-			? PolygonMode::Wireframe : PolygonMode::Solid;
+		PolygonMode::Enum mode = event.IsChecked() ?
+			PolygonMode::Wireframe : PolygonMode::Solid;
 
 		foreach( const GeometryPtr& geo, node->getGeometry() )
 		{
@@ -249,19 +254,15 @@ void SceneTreeCtrl::onNodeMenu( wxCommandEvent& event )
 
 	if( event.GetId() == ID_MenuSceneNodeAddMesh )
 	{
-		wxFileDialog* fd= new wxFileDialog( this, wxFileSelectorPromptStr, wxEmptyString, wxEmptyString,
-			"Mesh files (*.ms3d)|*.ms3d", wxFD_DEFAULT_STYLE|wxFD_FILE_MUST_EXIST, wxPoint( 0, 0 ) );
+		wxFileDialog fd( this, wxFileSelectorPromptStr,
+			wxEmptyString, wxEmptyString, "Mesh files (*.ms3d)|*.ms3d",
+			wxFD_DEFAULT_STYLE|wxFD_FILE_MUST_EXIST, wxPoint( 0, 0 ) );
 
-		if( fd->ShowModal() == wxID_OK )
+		if( fd.ShowModal() == wxID_OK )
 		{
-			wxString filename = fd->GetFilename();
+			wxString filename = fd.GetFilename();
 			const NodePtr& node = getEntity( menuItemId );
-			
-			//MeshPtr( new Mesh( 
-			//node->
 		}
-
-		//delete fd;
 	}
 }
 

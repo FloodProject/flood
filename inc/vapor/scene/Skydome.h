@@ -44,6 +44,8 @@ public:
 	void setSkyLinearGradient( const math::Color& c1, const math::Color& c2 );
 
 	// CELESTIAL BODIES (Sun, Moon, Stars)
+
+	math::Vector3 getSunPosition();
 	
 	// Celestial bodies.
 	//void setStarsVisible( bool enable );
@@ -53,6 +55,9 @@ protected:
 	// Gets the sky color at the vertice at a given time of day.
 	math::Color getSkyVertexColor( const math::Vector3& vertex );
 
+	void generateDome();
+	void generateSun();
+
 	// Scales the Y vertex value into a [0,1] range.
 	float scale( float number );
 
@@ -60,6 +65,9 @@ protected:
 	render::SpherePtr dome;
 	math::Vector3 colorTop, colorBottom;
 	float yMin, yMax;
+
+	// Celestial bodies geometry.
+	render::RenderablePtr sun;
 
 	static const std::string& type;
 };

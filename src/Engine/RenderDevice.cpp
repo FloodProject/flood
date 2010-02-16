@@ -71,20 +71,6 @@ void Device::init()
 
 //-----------------------------------//
 
-Window* Device::getWindow() const
-{
-	return window;
-}
-
-//-----------------------------------//
-
-void Device::setWindow( Window *window )
-{
-	this->window = window;;
-}
-
-//-----------------------------------//
-
 Window& Device::createWindow( const WindowSettings& settings )
 {
 	//const_cast<WindowSettings&>(settings).setAntiAliasing( 4 );
@@ -95,41 +81,6 @@ Window& Device::createWindow( const WindowSettings& settings )
 	setRenderTarget( &window );
 
 	return window;
-}
-
-//-----------------------------------//
-
-Adapter* Device::getAdapter() const
-{
-	return adapter;
-}
-
-//-----------------------------------//
-
-void Device::setClearColor(math::Color c)
-{
-	clearColor = c;
-}
-
-//-----------------------------------//
-
-void Device::updateTarget()
-{
-	activeTarget->update();
-}
-
-//-----------------------------------//
-
-void Device::setRenderTarget(RenderTarget* renderTarget)
-{
-	activeTarget = renderTarget;
-}
-
-//-----------------------------------//
-
-BufferManager* Device::getBufferManager() const
-{
-	return bufferManager;
 }
 
 //-----------------------------------//
@@ -162,8 +113,12 @@ void Device::render( RenderBlock& queue, const scene::Camera* cam )
 	// render the list
 	foreach( const RenderState& state, queue.renderables )
 	{
-		const ProgramPtr& program = state.renderable->getMaterial()->getProgram();
+		const MaterialPtr& material = state.renderable->getMaterial();
+		assert( material != nullptr );
+		if( !material ) continue;
 
+		const ProgramPtr& program = material->getProgram();
+		assert( program != nullptr );
 		if( !program ) continue;
 
 		if( state.group == RenderGroup::Normal )
@@ -186,7 +141,7 @@ void Device::render( RenderBlock& queue, const scene::Camera* cam )
 				{
 					//PROFILE;
 					program->setUniform( "vp_LightColors", lightColors );
-					program->setUniform( "vp_LightDirection", Vector3(0.5f, 0.8f, 0.0f)/*queue.lights[0].transform->get*/ );
+					program->setUniform( "vp_LightDirection", Vector3(0.5f, 0.8f, 0.0f)/*queue.lights[0].transform->get*/ ); // TODO
 				}
 			}
 		}
@@ -245,6 +200,55 @@ void Device::checkExtensions()
 RenderTarget* Device::getRenderTarget() const
 {
 	return activeTarget;
+}
+
+//-----------------------------------//
+
+Window* Device::getWindow() const
+{
+	return window;
+}
+
+//-----------------------------------//
+
+void Device::setWindow( Window *window )
+{
+	this->window = window;;
+}
+
+//-----------------------------------//
+
+Adapter* Device::getAdapter() const
+{
+	return adapter;
+}
+
+//-----------------------------------//
+
+void Device::setClearColor(math::Color c)
+{
+	clearColor = c;
+}
+
+//-----------------------------------//
+
+void Device::updateTarget()
+{
+	activeTarget->update();
+}
+
+//-----------------------------------//
+
+void Device::setRenderTarget(RenderTarget* renderTarget)
+{
+	activeTarget = renderTarget;
+}
+
+//-----------------------------------//
+
+BufferManager* Device::getBufferManager() const
+{
+	return bufferManager;
 }
 
 //-----------------------------------//

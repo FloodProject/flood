@@ -15,28 +15,18 @@ using namespace vapor::math;
 
 //-----------------------------------//
 
-Quad::Quad( const math::Dimension& dim, MaterialPtr mat, IndexBufferPtr ib )
-	: Renderable( Primitive::Quads, getQuadBuffer( dim ), ib, mat )
+Quad::Quad( float width, float height )
+	: Renderable( Primitive::Quads, getQuadBuffer( width, height ) )
 {
 
 }
 
 //-----------------------------------//
 
-Quad::~Quad()
-{
-
-}
-
-//-----------------------------------//
-
-render::VertexBufferPtr Quad::getQuadBuffer( const math::Dimension& dim )
+render::VertexBufferPtr Quad::getQuadBuffer( float width, float height )
 {
 	// Create a new VBO and upload triangle data
 	VertexBufferPtr vb( new VertexBuffer() );
-
-	const float width = static_cast< float >( dim.width );
-	const float height = static_cast< float >( dim.height );
 
 	// Vertex position data
 	std::vector< Vector3 > vertex;

@@ -7,9 +7,7 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/gui/Label.h"
-
 #include "vapor/resources/ResourceManager.h"
 
 using namespace vapor::resources;

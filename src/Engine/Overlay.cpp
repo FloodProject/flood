@@ -7,7 +7,6 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/gui/Overlay.h"
 
 namespace vapor { namespace gui {

@@ -66,6 +66,8 @@ protected:
     void OnQuit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
 	void OnToolbarButtonClick(wxCommandEvent& event);
+	void OnKeyDown(wxKeyEvent& event);
+	void OnNodeSelected(wxTreeItemId old, wxTreeItemId id);
 
 	// Handles picking of entities.
 	void onMouseClick( const vapor::input::MouseButtonEvent& mbe );

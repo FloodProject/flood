@@ -9,6 +9,7 @@
 #include "PCH.h"
 #include "Editor.h"
 #include "EditorIcons.h"
+#include "Gizmo.h"
 
 namespace vapor { namespace editor {
 
@@ -48,6 +49,7 @@ BEGIN_EVENT_TABLE(EditorFrame, wxFrame)
     EVT_MENU(Editor_Quit,  EditorFrame::OnQuit)
     EVT_MENU(Editor_About, EditorFrame::OnAbout)
 	EVT_MENU(wxID_ANY, EditorFrame::OnToolbarButtonClick)
+	EVT_KEY_DOWN(EditorFrame::OnKeyDown)
 END_EVENT_TABLE()
 
 //-----------------------------------//
@@ -72,9 +74,6 @@ bool EditorApp::OnInit()
 
 	// Register a PNG image handler (so toolbars icons can be decoded).
 	wxImage::AddHandler(new wxPNGHandler);
-
-	// add a new art provider for stock icons
-	//wxArtProvider::Push(new ArtProvider);
 
     // Create the main application window, provide a default size and show it.
 	// Unlike simple controls, frames are not shown automatically when created.
@@ -189,7 +188,6 @@ void EditorFrame::createScene()
 	NodePtr sky( new Node( "Sky" ) );
 	sky->addComponent( TransformPtr( new Transform() ) );
 	sky->addComponent( ComponentPtr( new Skydome( mat ) ) );
-	sky->getTransform()->scale( 1000.0f );
 	scene->add( sky );
 
 	MeshPtr mesh = rm->loadResource<Mesh>( "TreePine_1.ms3d" );
@@ -248,6 +246,8 @@ void EditorFrame::createNotebook()
 	
 	sceneTreeCtrl = new SceneTreeCtrl(engine, panelScene, ID_SceneTree,
 		wxDefaultPosition, wxSize(220, -1) );
+
+	sceneTreeCtrl->onItemSelected += fd::bind( &EditorFrame::OnNodeSelected, this );
 
 	panelSceneSizer->Add( sceneTreeCtrl, 1, wxALL|wxEXPAND, 0 );
 
@@ -338,7 +338,7 @@ void EditorFrame::createToolbar()
 	toolBar->AddSeparator();
 
 	toolBar->AddTool( Toolbar_ToogleConsole, "Console", 
-		wxMEMORY_BITMAP(application_xp_terminal), "Open/close the scripting console"/*, wxITEM_CHECK*/ ); 
+		wxMEMORY_BITMAP(application_xp_terminal), "Open/close the scripting console" ); 
 
 	toolBar->AddTool( Toolbar_ToogleGrid, "Grid", 
 		wxMEMORY_BITMAP(grid_icon), "Show/hide the editor grid", wxITEM_CHECK );
@@ -402,6 +402,24 @@ void EditorFrame::createToolbar()
 // event handlers
 //-----------------------------------//
 
+void EditorFrame::OnNodeSelected(wxTreeItemId old, wxTreeItemId id)
+{
+	if( old )
+	{
+		// Remove the Gizmo component.
+		// ...
+		const NodePtr& node = sceneTreeCtrl->getEntity( old );
+	}
+
+	const NodePtr& node = sceneTreeCtrl->getEntity( id );
+	if( !node ) return;
+
+	GeometryPtr gizmo( new Geometry( RenderablePtr( new Gizmo() ) ) ); 	
+	node->addComponent(gizmo);
+}
+
+//-----------------------------------//
+
 void EditorFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 {
     // true is to force the frame to close
@@ -410,10 +428,24 @@ void EditorFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 
 //-----------------------------------//
 
+void EditorFrame::OnKeyDown(wxKeyEvent& event)
+{
+	const ScenePtr& scene = engine->getSceneManager();
+	
+	if( event.GetKeyCode() == 'g' )
+	{
+		const NodePtr& grid = scene->getEntity( "EditorGrid" );
+		if( !grid ) return;
+		grid->setVisible( !grid->isVisible() );
+	}
+}
+
+//-----------------------------------//
+
 void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 {
 	switch( event.GetId() ) 
-	{
+	{ 
 		case Toolbar_ToogleConsole:
 		{
 			codeEvaluator->Show( !codeEvaluator->IsShown() );
@@ -443,12 +475,11 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 			if( notebookCtrl->IsShown() )
 			{
 				notebookCtrl->Hide();
-				//szNew.SetWidth( szNew.GetWidth()-szNB.GetWidth() );
 			}
 			else
 			{
 				notebookCtrl->Show();
-				szNew.SetWidth( szNew.GetWidth()+szNB.GetWidth() );
+				szNew.SetWidth( szNew.GetWidth() + szNB.GetWidth() );
 			}
 
 			SetClientSize( szNew );

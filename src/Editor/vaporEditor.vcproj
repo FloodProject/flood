@@ -426,6 +426,18 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Gizmo"
+			>
+			<File
+				RelativePath=".\Gizmo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Gizmo.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\Editor.cpp"
 			>

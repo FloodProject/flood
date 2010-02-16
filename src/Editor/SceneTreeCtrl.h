@@ -24,30 +24,34 @@ class SceneTreeCtrl : public wxTreeCtrl
 {
 public:
 
-	SceneTreeCtrl(vapor::Engine* engine, 
+	SceneTreeCtrl( vapor::Engine* engine, 
 					wxWindow* parent, wxWindowID id = wxID_ANY,
 					const wxPoint& pos	= wxDefaultPosition,
 					const wxSize& size = wxDefaultSize,
-					long style = wxTR_DEFAULT_STYLE | wxTR_EDIT_LABELS | wxTR_NO_BUTTONS | wxTR_SINGLE | wxTR_HIDE_ROOT,
+					long style = wxTR_DEFAULT_STYLE | wxTR_EDIT_LABELS 
+					| wxTR_NO_BUTTONS | wxTR_SINGLE | wxTR_HIDE_ROOT,
 					const wxValidator& validator = wxDefaultValidator, 
-					const wxString&	name = "SceneTreeCtrl");
+					const wxString&	name = "SceneTreeCtrl" );
 					
 	virtual ~SceneTreeCtrl();
 
 	// Refreshes the tree control with the scene contents.
-	void updateScene( wxTreeItemId id, scene::NodePtr node );
-
-protected:
-
-	// Initializes the control and icons.
-	void initControl();
-	void initIcons();
+	void updateScene( wxTreeItemId id, const NodePtr& node );
 
 	// Gets the entity represented by the tree item.
 	scene::NodePtr getEntity( wxTreeItemId id );
 
 	// Sets the bounding box of a tree item to a given state.
 	void setBoundingBox( const wxTreeItemId& id, bool state );
+
+
+	fd::delegate<void (wxTreeItemId, wxTreeItemId)> onItemSelected;
+
+protected:
+
+	// Initializes the control and icons.
+	void initControl();
+	void initIcons();
 
 	// wxWidgets events.
 	void onItemChanged(wxTreeEvent& event);
@@ -80,7 +84,7 @@ protected:
 	wxTreeItemId root;
 
 	std::map< std::string, int > componentIcons;
-	std::vector< scene::NodePtr > selectedNodes;
+	std::vector< NodePtr > selectedNodes;
 
 	wxTreeItemId menuItemId;
 	wxTreeItemId dragItemId;

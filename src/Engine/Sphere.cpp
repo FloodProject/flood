@@ -71,19 +71,20 @@ static const byte OctaSphereIndices[][3] =
 
 //-----------------------------------//
 
-Sphere::Sphere( bool fullSphere, byte numSubDiv )
+Sphere::Sphere( bool fullSphere, byte numSubDiv, float dim )
 {
 	setPrimitiveType( Primitive::Triangles );
 	setPolygonMode( PolygonMode::Wireframe );
 	
-	generateSphere( fullSphere, numSubDiv );
+	VertexData pos;
+	generateSphere( fullSphere, numSubDiv, pos, dim );
 	vb->set( VertexAttribute::Position, pos );
 	pos.clear();
 }
 
 //-----------------------------------//
 
-void Sphere::subdivide(const Vector3& v1, const Vector3& v2, const Vector3& v3, byte depth)
+void Sphere::subdivide(const Vector3& v1, const Vector3& v2, const Vector3& v3, byte depth, VertexData& pos)
 {
 	if (depth == 0)
 	{
@@ -98,18 +99,19 @@ void Sphere::subdivide(const Vector3& v1, const Vector3& v2, const Vector3& v3, 
 	Vector3 v23 = (v2+v3).normalize();
 	Vector3 v31 = (v3+v1).normalize();
 
-	subdivide(v1, v12, v31, depth-1);
-	subdivide(v2, v23, v12, depth-1);
-	subdivide(v3, v31, v23, depth-1);
-	subdivide(v12, v23, v31, depth-1);
+	subdivide(v1, v12, v31, depth-1, pos);
+	subdivide(v2, v23, v12, depth-1, pos);
+	subdivide(v3, v31, v23, depth-1, pos);
+	subdivide(v12, v23, v31, depth-1, pos);
 }
 
 //-----------------------------------//
 
-void Sphere::generateSphere( bool fullSphere, byte numSubDiv )
+void Sphere::generateSphere( bool fullSphere, byte numSubDiv, VertexData& pos, float dim)
 {
 	vb = new VertexBuffer();
 
+	// We rotate the vertices by 30 degrees, else the sphere is not properly aligned.
 	Matrix4x3 rot( EulerAngles( -30.0f, 0.0f, 0.0f ).getOrientationMatrix() );
 
 	foreach( const byte* i, IcoDomeIndices )
@@ -118,18 +120,27 @@ void Sphere::generateSphere( bool fullSphere, byte numSubDiv )
 		Vector3 v2( IcoVertices[i[1]][0], IcoVertices[i[1]][1], IcoVertices[i[1]][2] );
 		Vector3 v3( IcoVertices[i[2]][0], IcoVertices[i[2]][1], IcoVertices[i[2]][2] );
 
-		subdivide( v1*rot, v2*rot, v3*rot, numSubDiv );
+		subdivide( v1*rot, v2*rot, v3*rot, numSubDiv, pos );
 	}
 
-	if( !fullSphere ) return;
-
-	foreach( const byte* i, IcoSphereIndices )
+	// If we don't want a full sphere, we return here.
+	if( fullSphere )
 	{
-		Vector3 v1( IcoVertices[i[0]][0], IcoVertices[i[0]][1], IcoVertices[i[0]][2] );
-		Vector3 v2( IcoVertices[i[1]][0], IcoVertices[i[1]][1], IcoVertices[i[1]][2] );
-		Vector3 v3( IcoVertices[i[2]][0], IcoVertices[i[2]][1], IcoVertices[i[2]][2] );
+		// These indices are the bottom of the sphere.
+		foreach( const byte* i, IcoSphereIndices )
+		{
+			Vector3 v1( IcoVertices[i[0]][0], IcoVertices[i[0]][1], IcoVertices[i[0]][2] );
+			Vector3 v2( IcoVertices[i[1]][0], IcoVertices[i[1]][1], IcoVertices[i[1]][2] );
+			Vector3 v3( IcoVertices[i[2]][0], IcoVertices[i[2]][1], IcoVertices[i[2]][2] );
 
-		subdivide( v1*rot, v2*rot, v3*rot, numSubDiv );
+			subdivide( v1*rot, v2*rot, v3*rot, numSubDiv, pos );
+		}
+	}
+
+	// Scale all the vertices.
+	foreach( Vector3& vec, pos )
+	{
+		vec *= dim;
 	}
 }
 

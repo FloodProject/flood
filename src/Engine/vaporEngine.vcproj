@@ -910,6 +910,18 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Billboard"
+				>
+				<File
+					RelativePath=".\Billboard.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\scene\Billboard.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Audio"
@@ -1046,6 +1058,14 @@
 		<Filter
 			Name="GUI"
 			>
+			<File
+				RelativePath=".\Atlas.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\gui\Atlas.h"
+				>
+			</File>
 			<Filter
 				Name="Label"
 				>

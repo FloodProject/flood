@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "vapor/math/Vector3.h"
+
 namespace vapor { namespace math {
 
 //-----------------------------------//
@@ -23,6 +25,11 @@ public:
 	Color(float r = 0.0f, float g = 0.0f, float b = 0.0f, float a = 1.0f);
 	Color(int r, int g, int b, int a = 255);
 	Color(const Color& c);
+	
+	operator Vector3 () const
+	{
+		return Vector3( r, g, b );
+	}
 
 	float r, g, b, a;
 };

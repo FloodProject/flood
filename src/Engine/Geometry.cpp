@@ -103,11 +103,12 @@ void Geometry::update( double delta )
 	boundingVolume.reset();
 
 	// Update the bounding box to accomodate new geometry.
-	foreach( RenderablePtr rend, renderables[RenderGroup::Normal] )
+	foreach( const RenderablePtr& rend, renderables[RenderGroup::Normal] )
 	{
-		std::vector<math::Vector3> vertices = rend->getVertexBuffer()->getVertices();
-		
-		foreach( const Vector3& v, vertices )
+		const VertexBufferPtr& vb = rend->getVertexBuffer();
+		if( !vb ) continue;
+
+		foreach( const Vector3& v, vb->getVertices() )
 			boundingVolume.add( v );
 	}
 
