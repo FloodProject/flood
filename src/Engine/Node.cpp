@@ -88,6 +88,37 @@ bool Node::addComponent( const ComponentPtr& component )
 
 //-----------------------------------//
 
+bool Node::removeComponent( const std::string& type )
+{
+	assert( !type.empty() );
+
+	if( type.empty() ) return false;
+
+	// Searches for a component with the same type.
+	ComponentMap::iterator it = components.find( type );
+	if( it == components.end() )
+		return false;
+	
+	ComponentPtr component = components[type];
+	components.erase( it );
+
+	// Check if we cached the component...
+	GeometryPtr geometry = std::dynamic_pointer_cast< Geometry >( component );
+	if( geometry ) 
+	{
+		std::vector< GeometryPtr >::iterator it;
+		it = std::find( geometries.begin(), geometries.end(), geometry );
+
+		if( it != geometries.end() )
+			geometries.erase( it );
+
+	}
+
+	return true;
+}
+
+//-----------------------------------//
+
 ComponentPtr Node::getComponent( const std::string& type )
 {
 	if( components.find( type ) == components.end() )

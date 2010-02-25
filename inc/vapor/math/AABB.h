@@ -31,6 +31,9 @@ public:
 	// Resets the bounding box.
 	void reset();
 
+	// Gets the center point of the bounding box.
+	Vector3 getCenter() const;
+
 	// Gets the minimum corner of the bounding box.
 	const Vector3& getMinimum() const;
 

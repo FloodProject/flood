@@ -407,14 +407,23 @@ void EditorFrame::OnNodeSelected(wxTreeItemId old, wxTreeItemId id)
 	if( old )
 	{
 		// Remove the Gizmo component.
-		// ...
 		const NodePtr& node = sceneTreeCtrl->getEntity( old );
+		
+		if( node )
+		{
+			const TransformPtr& tr = node->getTransform();
+			tr->setDebugRenderableVisible( false );
+			node->removeComponent( "Gizmo" );
+		}
+
 	}
 
 	const NodePtr& node = sceneTreeCtrl->getEntity( id );
 	if( !node ) return;
 
-	GeometryPtr gizmo( new Geometry( RenderablePtr( new Gizmo() ) ) ); 	
+	const TransformPtr& tr = node->getTransform();
+	tr->setDebugRenderableVisible( true );
+	GeometryPtr gizmo( new Gizmo( tr->getBoundingVolume().getCenter() ) ); 	
 	node->addComponent(gizmo);
 }
 

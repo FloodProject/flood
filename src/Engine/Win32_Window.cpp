@@ -7,7 +7,6 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/render/Win32_Window.h"
 
 #ifdef VAPOR_WINDOWING_WIN32

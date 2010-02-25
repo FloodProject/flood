@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "vapor/scene/Geometry.h"
 #include "vapor/render/Renderable.h"
 #include "vapor/render/Material.h"
 
@@ -27,15 +28,19 @@ namespace vapor { namespace editor {
  * complex and have a set of circles in different orientations.
  */
 
-class VAPOR_API Gizmo : public render::Renderable
+class VAPOR_API Gizmo : public scene::Geometry
 {
 public:
 
-	Gizmo();
+	Gizmo( const math::Vector3 midPoint = math::Vector3::Zero );
 
-private:
+	// Returns the name of this component.
+	virtual const std::string& getType() const;
 
-	render::VertexBufferPtr getVB();
+protected:
+
+	render::VertexBufferPtr getVB( const math::Vector3& midPoint );
+	static const std::string& type;
 };
 
 //-----------------------------------//

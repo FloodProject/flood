@@ -11,7 +11,6 @@
 #ifdef VAPOR_SHADER_GLSL
 
 #include "vapor/render/GLSL_Shader.h"
-
 #include "vapor/render/GL.h"
 
 using namespace vapor::resources;
@@ -78,7 +77,7 @@ bool GLSL_Shader::compile()
 
 	if( status != GL_TRUE ) 
 	{
-		error( "glsl", "Error compiling shader '%s'", getURI().c_str() );
+		error( "glsl", "Error compiling shader '%s': %s", getURI().c_str(), log.c_str() );
 		compiled = false;
 		return false; 
 	}

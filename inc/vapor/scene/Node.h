@@ -67,6 +67,9 @@ public:
 		return std::static_pointer_cast< T >( cmp );
 	}
 
+	// Removes a component from this node.
+	bool removeComponent( const std::string& name );
+
 	// Updates all the components of the node.
 	virtual void update( double delta );
 

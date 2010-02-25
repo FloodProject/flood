@@ -262,7 +262,7 @@ void WatcherWin32::update()
 
 //-----------------------------------//
 
-void WatcherWin32::handleAction(WatchStruct* watch, const std::wstring& filename, unsigned long action)
+void WatcherWin32::handleAction(WatchStruct* watch, const std::wstring& filename, ulong action)
 {
 	Action fwAction = Actions::Added;
 

@@ -7,7 +7,6 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/render/Buffer.h"
 #include "vapor/render/GL.h"
 

@@ -7,7 +7,6 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/render/Material.h"
 #include "vapor/render/ProgramManager.h"
 #include "vapor/Utilities.h"

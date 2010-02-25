@@ -28,9 +28,9 @@ namespace vapor { namespace vfs {
 
 //-----------------------------------//
 
-const std::string Actions::getString( Actions::Enum a )
+const std::string Actions::getString( Actions::Enum action )
 {
-	switch( a )
+	switch(action)
 	{
 	case Actions::Added:
 		return "Added";

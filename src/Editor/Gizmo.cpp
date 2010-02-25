@@ -15,18 +15,27 @@ using namespace vapor::math;
 
 //-----------------------------------//
 
-Gizmo::Gizmo()
-	: Renderable( Primitive::Lines, getVB() )
+const std::string& Gizmo::type = "Gizmo";
+
+//-----------------------------------//
+
+Gizmo::Gizmo( const math::Vector3 midPoint )
 {
+	RenderablePtr rend( new Renderable(
+		Primitive::Lines, getVB( midPoint ) ) );
+	
 	MaterialPtr mat( new Material( "Gizmo" ) );
 	mat->setLineWidth( 5.0f );
+	mat->setBackfaceCulling( false );
 	mat->setProgram( "diffuse" );
-	setMaterial( mat );
+	rend->setMaterial( mat );
+	
+	addRenderable( rend );
 }
 
 //-----------------------------------//
 
-render::VertexBufferPtr Gizmo::getVB()
+render::VertexBufferPtr Gizmo::getVB( const math::Vector3& midPoint )
 {
 	static float S = 100.0;
 
@@ -40,20 +49,20 @@ render::VertexBufferPtr Gizmo::getVB()
 	std::vector< Vector3 > colors;
 
 	// X axis (red)
-	pos.push_back( Vector3::Zero );
-	pos.push_back( Vector3::UnitX*S );
+	pos.push_back( midPoint + Vector3::Zero );
+	pos.push_back( midPoint + Vector3::UnitX*S );
 	colors.push_back( Colors::Red );
 	colors.push_back( Colors::Red );
 
 	// Y axis (green)
-	pos.push_back( Vector3::Zero );
-	pos.push_back( Vector3::UnitY*S );
+	pos.push_back( midPoint + Vector3::Zero );
+	pos.push_back( midPoint + Vector3::UnitY*S );
 	colors.push_back( Colors::Green );
 	colors.push_back( Colors::Green );
 
 	// Z axis (blue)
-	pos.push_back( Vector3::Zero );
-	pos.push_back( Vector3::UnitZ*S );
+	pos.push_back( midPoint + Vector3::Zero );
+	pos.push_back( midPoint + Vector3::UnitZ*S );
 	colors.push_back( Colors::Blue );
 	colors.push_back( Colors::Blue );
 
@@ -62,6 +71,13 @@ render::VertexBufferPtr Gizmo::getVB()
 	vb->set( VertexAttribute::Color, colors );
 
 	return vb;
+}
+
+//-----------------------------------//
+
+const std::string& Gizmo::getType() const
+{
+	return type;
 }
 
 //-----------------------------------//

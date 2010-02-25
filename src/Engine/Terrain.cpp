@@ -160,7 +160,7 @@ void Terrain::setHeightmap( const resources::ImagePtr& heightmap )
 
 void Terrain::update( double delta )
 {
-	debug( "%lf", delta );
+	//debug( "%lf", delta );
 	Geometry::update( delta );
 }
 

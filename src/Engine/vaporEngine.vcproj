@@ -526,6 +526,14 @@
 				Name="Target"
 				>
 				<File
+					RelativePath=".\FBO.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\render\FBO.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Target.cpp"
 					>
 				</File>
@@ -771,6 +779,14 @@
 			Name="Scene"
 			>
 			<File
+				RelativePath=".\Component.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\scene\Component.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Node.cpp"
 				>
 			</File>
@@ -851,18 +867,6 @@
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\scene\Grid.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Component"
-				>
-				<File
-					RelativePath=".\Component.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\scene\Component.h"
 					>
 				</File>
 			</Filter>

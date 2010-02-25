@@ -25,7 +25,10 @@ namespace vapor {
 
 Engine::Engine(const std::string& app, const char** argv, bool autoInit)
 	: app(app), argv(argv), 
-	renderDevice( nullptr ), resourceManager( nullptr ), audioDevice( nullptr ),
+	renderDevice( nullptr ), resourceManager( nullptr ),
+#ifdef VAPOR_AUDIO_OPENAL
+	audioDevice( nullptr ),
+#endif
 	physicsManager( nullptr ), vfs( nullptr ), log( nullptr ), scriptState( nullptr )
 {
 	if( autoInit )

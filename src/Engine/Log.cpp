@@ -242,7 +242,7 @@ void Log::write(const LogLevel::Enum level, const std::string& subsystem,
 	{
 	case LogLevel::Warning:
 	case LogLevel::Error:
-		char buf[512];
+		char buf[2048];
 		int err = vsprintf(buf, msg, args);
 		assert(err >= 0);
 		debug("%s",buf);

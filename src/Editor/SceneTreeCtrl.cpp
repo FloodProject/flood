@@ -93,6 +93,7 @@ void SceneTreeCtrl::initIcons()
 	componentIcons["Geometry"] = imageList->Add(wxMEMORY_BITMAP(shape_flip_horizontal));
 	componentIcons["Body"] = imageList->Add(wxMEMORY_BITMAP(link));
 	componentIcons["Skydome"] = imageList->Add(wxMEMORY_BITMAP(skydome));
+	componentIcons["Gizmo"] = imageList->Add(wxMEMORY_BITMAP(vector_icon));
 
 	AssignImageList(imageList);
 }
