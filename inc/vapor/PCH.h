@@ -56,6 +56,11 @@ using vapor::log::debug;
 #define FWD_DECL(N, T)								\
 	namespace vapor { namespace N {					\
 		class T;									\
+	} } // end namespaces
+
+#define FWD_DECL_TYPEDEF_INT(N, T)					\
+	namespace vapor { namespace N {					\
+		class T;									\
 		TYPEDEF_INTRUSIVE_POINTER_FROM_CLASS( T );	\
 	} } // end namespaces
 

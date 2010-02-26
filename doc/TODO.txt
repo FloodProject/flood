@@ -4,21 +4,22 @@ WIP (work-in-progress)
 Near TODO:
 ----------
 
-	if( !program )
-		warn( "Invalid program in material '%s'", getName().c_str() );
-
 Average terrain normals
+	Have to take neighbours into account
+
 Fix Picking
 Skybox component
 View frustum culling
-Quadtree Terrain
-Add Z-bias to the AABB Renderables
-Per-script Lua state
-Fix Overlays positioning
+Add Z-bias to the AABB renderables
+Fix Overlays positioning (might be related to ortographic projection)
 Fix Lua state closing
 Console GUI widget
-Typesafe logging
+Typesafe logging (FastFormat API)
 Switch Skydome geometry to triangle strips
+
+
+	if( !program )
+		warn( "Invalid program in material '%s'", getName().c_str() );
 
 EDITOR:
 -------
@@ -54,6 +55,9 @@ A readline type of library would be kind of nice
 
 ENGINE:
 ------
+
+Quadtree Terrain
+Per-script Lua state
 
 Textures:
 	Support DDS

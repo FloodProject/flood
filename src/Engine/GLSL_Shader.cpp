@@ -45,7 +45,7 @@ GLSL_Shader::~GLSL_Shader()
 	{
 		warn( "glsl", 
 			"Could not delete shader object '%d': %s", 
-			shaderId, gluErrorString( err ) );
+			shaderId, /*gluErrorString( err )*/"" );
 		return;
 	}
 #endif

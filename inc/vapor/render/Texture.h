@@ -25,6 +25,7 @@ class VAPOR_API Texture
 {
 public:
 
+	Texture( ushort width, ushort height );
 	Texture( resources::ImagePtr );
 	~Texture();
 
@@ -46,6 +47,9 @@ public:
 	// Checks if the texture size is supported.
 	bool check();
 
+	// Gets the associated identifier.
+	uint id() const;
+
 	// Gets the associated image.
 	resources::ImagePtr getImage() const;
 
@@ -54,12 +58,15 @@ public:
 
 private:
 
+	void init();
+
 	GLint convertSourceFormat( resources::PixelFormat::Enum fmt );
 	GLint convertInternalFormat( resources::PixelFormat::Enum fmt );
 
 	// OpenGL texture object id
-	GLuint id;
+	GLuint _id;
 
+	uint width, height;
 	resources::ImagePtr img;
 
 	bool uploaded;

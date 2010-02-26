@@ -55,6 +55,7 @@
 // Render-related Includes
 //-------------------------------------------------------------------------//
 
+#include <vapor/render/Target.h>
 #include <vapor/render/VertexBuffer.h>
 #include <vapor/render/Texture.h>
 #include <vapor/render/Program.h>
@@ -64,6 +65,7 @@
 #include <vapor/render/Quad.h>
 #include "vapor/render/TextureManager.h"
 #include "vapor/render/ProgramManager.h"
+#include "vapor/render/FBO.h"
 
 //-------------------------------------------------------------------------//
 // Input-related Includes

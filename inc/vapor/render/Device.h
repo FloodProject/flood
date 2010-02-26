@@ -21,15 +21,10 @@
 #include "vapor/math/Matrix4x3.h"
 #include "vapor/math/Color.h"
 
-namespace vapor {
+FWD_DECL(scene, Camera);
+FWD_DECL(render, BufferManager);
 
-	namespace scene { class Camera; }
-
-	namespace render {
-
-//-----------------------------------//
-
-class BufferManager;
+namespace vapor { namespace render { 
 
 //-----------------------------------//
 
@@ -67,6 +62,8 @@ public:
 
 	void setWindow( Window *window );
 
+	void setWindowActiveTarget();
+
 	// Gets rendering adapter information.
 	Adapter* getAdapter() const;
 
@@ -82,7 +79,7 @@ public:
 	// Renders a list of renderables.
 	void render( RenderBlock& queue, const scene::Camera* cam );
 
-	// Updates the target render target.
+	// Updates the render target.
 	void updateTarget( );
 
 	// Sets the current clear color.

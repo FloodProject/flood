@@ -32,7 +32,7 @@ public:
 	// Gets the height of the target.
 	void setHeight(ushort h) { height = h; }
 
-protected:
+public:
 
 	ushort width, height;
 };

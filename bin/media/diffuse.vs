@@ -13,11 +13,14 @@ void main()
 	gl_Position = vp_ProjectionMatrix * vp_ModelViewMatrix * vec4(vp_Vertex, 1.0);
 	
 	const float LOG2 = 1.442695;
+	const float DENSITY = 5.0;
+	
 	gl_FogFragCoord = length(vp_ModelViewMatrix * vec4(vp_Vertex, 1.0));
-	fogFactor = exp2( -gl_Fog.density * 
-					   gl_Fog.density * 
-					   gl_FogFragCoord * 
-					   gl_FogFragCoord * 
+	float z = vp_Vertex.z / 5000.0f;
+	fogFactor = exp2( -DENSITY * 
+					   DENSITY * 
+					   z * 
+					   z * 
 					   LOG2 );
 	fogFactor = clamp(fogFactor, 0.0, 1.0);
 } 

@@ -50,7 +50,8 @@ private:
 	scene::CameraPtr cam;
 	gui::LabelPtr label;
 	resources::SoundPtr snd;
-	scene::SoundPtr sound;
+	render::FBO* fbo;
+	//scene::SoundPtr sound;
 	input::InputMap* inputMap; 
 	render::TexturePtr tex;
 	math::Color c;

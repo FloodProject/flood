@@ -26,7 +26,7 @@ void Example::onInit()
 
 	if ( !getVFS()->mount( media ) )
 	{
-		Log::MessageDialog( "Missing archive/directory '" + media + "'." );
+		Log::MessageDialog( "Missing archive/directory '" + media );
 		exit(1);
 	}
 
@@ -82,6 +82,22 @@ void Example::onSetupScene()
 	ProgramManager::getInstance().registerProgram( "toon", toon );
 	ProgramManager::getInstance().registerProgram( "tex_toon", tex_toon );
 
+	Settings settings;
+	TexturePtr fbo_tex( new Texture( settings.width, settings.height ) );
+	fbo = new FBO( settings );
+	fbo->attachTexture( fbo_tex );
+
+	MaterialPtr fbo_mat( new Material( "FBO1", tex ) );
+	fbo_mat->setTexture( 0, fbo_tex );
+	
+	RenderablePtr quad( new Quad() );
+	quad->setMaterial( fbo_mat );
+
+	NodePtr fbo_node( new Node( "FBOquad" ) );
+	fbo_node->addComponent( TransformPtr( new Transform() ) );
+	fbo_node->addComponent( GeometryPtr( new Geometry( quad ) ) );
+	fbo->unbind();
+
 	// Create a new Camera
 	NodePtr camera( new Node( "MainCamera" ) );
 	cam.reset( new FirstPersonCamera( getInputManager(), getRenderDevice() ) );
@@ -114,7 +130,8 @@ void Example::onSetupScene()
 	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
 	scene->add( grid );
 
-	foreach( const RenderablePtr& rend, grid->getComponent<Geometry>("Grid")->getRenderables() )
+	foreach( const RenderablePtr& rend, 
+		grid->getComponent<Geometry>("Grid")->getRenderables() )
 	{
 		rend->getMaterial()->setProgram( diffuse );
 	}
@@ -163,9 +180,18 @@ void Example::onRender()
 {
 	render::Device* device = getRenderDevice();
 
+	// Render into the FBO first
+	device->setRenderTarget( fbo );
+	fbo->bind();
 	device->setClearColor( c );
 	device->clearTarget();
+	cam->render();
+	fbo->unbind();
 
+	// Render the scene
+	device->setWindowActiveTarget();
+	device->setClearColor( c );
+	device->clearTarget();
 	cam->render();
 }
 

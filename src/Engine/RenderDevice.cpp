@@ -14,7 +14,6 @@
 #include "vapor/render/Adapter.h"
 #include "vapor/render/BufferManager.h"
 #include "vapor/scene/Camera.h"
-
 #include "vapor/render/GL.h"
 
 using namespace vapor::math;
@@ -53,7 +52,7 @@ void Device::init()
 
 	if( !activeTarget || !window ) 
 	{
-		warn( "render::gl", "No current OpenGL context found, stuff may fail" );
+		error( "render::gl", "No current OpenGL context found, stuff may fail" );
 	}
 
 	checkExtensions();
@@ -67,14 +66,16 @@ void Device::init()
 
 	glEnable( GL_CULL_FACE );
 	glCullFace( GL_BACK );
+
+	glEnable(GL_FOG);
+	//glFogfv(GL_FOG_COLOR, g_fogColor);
+	//glFogf(GL_FOG_DENSITY, g_fogDensity);
 }
 
 //-----------------------------------//
 
 Window& Device::createWindow( const WindowSettings& settings )
 {
-	//const_cast<WindowSettings&>(settings).setAntiAliasing( 4 );
-
 	Window& window = Window::createWindow( settings );
 
 	setWindow( &window );
@@ -99,16 +100,12 @@ bool renderSorter(const RenderState& lhs, const RenderState& rhs)
 
 void Device::render( RenderBlock& queue, const scene::Camera* cam ) 
 {
-	// TODO: Very slow in NVIDIA drivers.
-	//activeTarget->makeCurrent();
-
 	glEnable( GL_DEPTH_TEST );
 	glClear( GL_DEPTH_BUFFER_BIT );
 
 	// sort the list by render group
 	// TODO: use a radix sorter
 	std::sort( queue.renderables.begin(), queue.renderables.end(), &renderSorter );
-
 
 	// render the list
 	foreach( const RenderState& state, queue.renderables )
@@ -193,6 +190,13 @@ void Device::checkExtensions()
 		
 		// TODO: exit program in a structured manner
 	}
+}
+
+//-----------------------------------//
+
+void Device::setWindowActiveTarget()
+{
+	setRenderTarget( window );
 }
 
 //-----------------------------------//
