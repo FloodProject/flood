@@ -96,6 +96,7 @@ void Example::onSetupScene()
 	NodePtr fbo_node( new Node( "FBOquad" ) );
 	fbo_node->addComponent( TransformPtr( new Transform() ) );
 	fbo_node->addComponent( GeometryPtr( new Geometry( quad ) ) );
+	scene->add( fbo_node );
 	fbo->unbind();
 
 	// Create a new Camera
@@ -183,7 +184,7 @@ void Example::onRender()
 	// Render into the FBO first
 	device->setRenderTarget( fbo );
 	fbo->bind();
-	device->setClearColor( c );
+	device->setClearColor( Colors::Red );
 	device->clearTarget();
 	cam->render();
 	fbo->unbind();
