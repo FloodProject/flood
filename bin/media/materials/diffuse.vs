@@ -16,7 +16,7 @@ void main()
 	const float DENSITY = 5.0;
 	
 	gl_FogFragCoord = length(vp_ModelViewMatrix * vec4(vp_Vertex, 1.0));
-	float z = vp_Vertex.z / 5000.0f;
+	float z = vp_Vertex.z / 5000.0;
 	fogFactor = exp2( -DENSITY * 
 					   DENSITY * 
 					   z * 
