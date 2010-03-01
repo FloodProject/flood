@@ -23,7 +23,7 @@ Texture::Texture( ushort width, ushort height )
 
 //-----------------------------------//
 
-Texture::Texture( resources::ImagePtr img )
+Texture::Texture( const resources::ImagePtr img )
 	: img( img )
 {
 	if( !img ) return;

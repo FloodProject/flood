@@ -192,14 +192,14 @@ void EditorFrame::createScene()
 
 	MeshPtr mesh = rm->loadResource<Mesh>( "TreePine_1.ms3d" );
 
-	foreach( const RenderablePtr& rend, mesh->getGeometry()->getRenderables() )
-	{
-		rend->getMaterial()->setProgram( tex );
-	}
+	//foreach( const RenderablePtr& rend, mesh->getGeometry()->getRenderables() )
+	//{
+	//	rend->getMaterial()->setProgram( tex );
+	//}
 
 	NodePtr ct( new Node( "Tree" ) );
 	ct->addComponent( TransformPtr( new Transform() ) );
-	ct->addComponent( mesh->getGeometry() );
+	//ct->addComponent( mesh->getGeometry() );
 	//scene->add(ct);
 
 	NodePtr lnode( new Node( "Light" ) );
@@ -245,7 +245,7 @@ void EditorFrame::createNotebook()
 	wxBoxSizer* panelSceneSizer = new wxBoxSizer( wxVERTICAL );
 	
 	sceneTreeCtrl = new SceneTreeCtrl(engine, panelScene, ID_SceneTree,
-		wxDefaultPosition, wxSize(220, -1) );
+		wxDefaultPosition, wxSize(230, -1) );
 
 	sceneTreeCtrl->onItemSelected += fd::bind( &EditorFrame::OnNodeSelected, this );
 
@@ -590,9 +590,9 @@ void EditorFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 	wxStaticLine* m_staticline1 = new wxStaticLine( m_panel1, wxID_ANY );
 	bSizer3->Add( m_staticline1, 1, wxALL|wxALIGN_CENTER_VERTICAL, 10 );
 	
-	wxHyperlinkCtrl* m_hyperlink1 = new wxHyperlinkCtrl( m_panel1, wxID_ANY,
-		"vapor3D Editor Website", "http://www.vapor3d.org" );
-	bSizer3->Add( m_hyperlink1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	//wxHyperlinkCtrl* m_hyperlink1 = new wxHyperlinkCtrl( m_panel1, wxID_ANY,
+		//"vapor3D Editor Website", "http://www.vapor3d.org" );
+	//bSizer3->Add( m_hyperlink1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	//wxStaticText* m_hyperlink1 = new wxStaticText( m_panel1, wxID_ANY,
 	//	"http://www.vapor3d.org" );

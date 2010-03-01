@@ -46,7 +46,7 @@ public:
 
 protected:
 
-	ResourceFile( vfs::FilePtr file );
+	ResourceFile( const vfs::FilePtr file );
 
 	vfs::FilePtr file;
 };

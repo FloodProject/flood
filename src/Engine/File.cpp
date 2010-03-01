@@ -255,6 +255,14 @@ long File::write(std::vector<byte> buffer, long size)
 
 //-----------------------------------//
 
+long File::write(std::string text)
+{
+	std::vector<byte> data( text.begin(), text.end() );
+	return write( data );
+}
+
+//-----------------------------------//
+
 bool File::seek(long pos)
 {
 	if(!file) return false;

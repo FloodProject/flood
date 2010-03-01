@@ -20,7 +20,7 @@ namespace vapor { namespace math {
  * transformed into and back in a rotation matrix and quaternions.
  */
 
-class VAPOR_API EulerAngles
+	class VAPOR_API EulerAngles : public Vector3
 {
 public:
 
@@ -43,10 +43,6 @@ public:
 	Matrix4x3 rotateX( float ang ) const;
 	Matrix4x3 rotateY( float ang ) const;
 	Matrix4x3 rotateZ( float ang ) const;
-
-public:
-
-	float xang, yang, zang;
 };
 
 //-----------------------------------//

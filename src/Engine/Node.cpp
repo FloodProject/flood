@@ -33,34 +33,6 @@ Node::~Node()
 
 //-----------------------------------//
 
-NodePtr Node::getParent( ) const
-{
-	return parent.lock();
-}
-
-//-----------------------------------//
-
-void Node::setParent( NodePtr parent )
-{
-	this->parent = parent;
-}
-
-//-----------------------------------//
-
-bool Node::isVisible( ) const
-{
-	return _isVisible;
-}
-
-//-----------------------------------//
-
-void Node::setVisible( bool visible )
-{
-	_isVisible = visible;
-}
-
-//-----------------------------------//
-
 bool Node::addComponent( const ComponentPtr& component )
 {
 	assert( component != nullptr );
@@ -185,6 +157,48 @@ const std::string& Node::getName() const
 void Node::setName( const std::string& name )
 {
 	this->name = name;
+}
+
+//-----------------------------------//
+
+NodePtr Node::getParent( ) const
+{
+	return parent.lock();
+}
+
+//-----------------------------------//
+
+void Node::setParent( NodePtr parent )
+{
+	this->parent = parent;
+}
+
+//-----------------------------------//
+
+bool Node::isVisible( ) const
+{
+	return _isVisible;
+}
+
+//-----------------------------------//
+
+void Node::setVisible( bool visible )
+{
+	_isVisible = visible;
+}
+
+//-----------------------------------//
+
+void Node::serialize( Json::Value& value )
+{
+	//value["name"] = getName();
+	if( !isVisible() ) value["visible"] = isVisible();
+
+	foreach( const ComponentMapPair& pair, components )
+	{
+		const ComponentPtr& c = pair.second;
+		c->serialize( value["components"][c->getType()] );
+	}
 }
 
 //-----------------------------------//

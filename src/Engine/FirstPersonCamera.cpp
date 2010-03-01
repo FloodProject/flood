@@ -56,7 +56,7 @@ void FirstPersonCamera::checkControls( double delta )
 	transform->rotate( rotate * (float(delta) * lookSensivity) );
 
 	// Restrict X-axis movement by some deegres.
-	float& xang = const_cast< float& >( transform->getRotation().xang );
+	float& xang = const_cast< float& >( transform->getRotation().x );
 	limit< float >( xang, -DEFAULT_LIMIT_XAXIS, DEFAULT_LIMIT_XAXIS );
 
 	mouseDistance.zero();
@@ -224,9 +224,14 @@ const std::string& FirstPersonCamera::getType() const
 
 //-----------------------------------//
 
-const std::string FirstPersonCamera::save(int ind)
+void FirstPersonCamera::serialize( Json::Value& value )
 {
-	return "";
+	Camera::serialize( value );
+
+	value["lookSensivity"] = lookSensivity;
+	value["moveSensivity"] = moveSensivity;
+	value["lookAt"] = toJson(lookAtVector);
+	value["forward"] = toJson(forwardVector);
 }
 
 //-----------------------------------//

@@ -9,6 +9,7 @@
 #pragma once
 
 #include "vapor/render/Renderable.h"
+#include "vapor/Serialization.h"
 
 namespace vapor { namespace scene {
 
@@ -36,7 +37,7 @@ TYPEDEF_SHARED_WEAK_POINTER_FROM_CLASS( Node );
  * A component will also be able to register methods for scripting.
  */
 
-class VAPOR_API Component : private boost::noncopyable
+class VAPOR_API Component : public Serializable, private boost::noncopyable
 {
 public:
 
@@ -64,6 +65,8 @@ public:
 	// Gets the type of this component. 
 	// Each component should have a unique type string.
 	virtual const std::string& getType() const = 0;
+
+	DECLARE_SERIALIZABLE();
 
 protected:
 

@@ -35,7 +35,7 @@ typedef std::pair< const std::string, ComponentPtr > ComponentMapPair;
  */
 
 class VAPOR_API Node : public std::enable_shared_from_this< Node >, 
-	private boost::noncopyable
+	private boost::noncopyable, public Serializable
 {
 public:
 
@@ -73,9 +73,6 @@ public:
 	// Updates all the components of the node.
 	virtual void update( double delta );
 
-	// Serializes the node (and its components) to a stream.
-	//virtual const std::string save(int indent = 0);
-
 	// Gets the name of the node.
 	virtual const std::string& getName() const;
 
@@ -93,6 +90,8 @@ public:
 
 	// Sets the visibility of this node.
 	void setVisible( bool visible );
+
+	DECLARE_SERIALIZABLE();
 
 private:
 

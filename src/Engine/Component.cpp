@@ -62,4 +62,15 @@ NodePtr Component::getNode() const
 
 //-----------------------------------//
 
+void Component::serialize( Json::Value& value )
+{
+	//value["type"] = getType();
+	
+	// No need to clutter the serialization with default values.
+	if( drawDebugRenderable != false )
+		value["drawDebugRenderable"] = drawDebugRenderable;
+}
+
+//-----------------------------------//
+
 } } // end namespaces

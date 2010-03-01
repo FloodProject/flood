@@ -90,9 +90,9 @@ void Transform::rotate( const math::Vector3& rot )
 
 void Transform::rotate( float xang, float yang, float zang )
 {
-	angles.xang += xang;
-	angles.yang += yang;
-	angles.zang += zang;
+	angles.x += xang;
+	angles.y += yang;
+	angles.z += zang;
 
 	notify();
 }
@@ -301,6 +301,15 @@ const math::AABB& Transform::getWorldBoundingVolume() const
 render::RenderablePtr Transform::getDebugRenderable() const
 {
 	return aabbRenderable;
+}
+
+//-----------------------------------//
+
+void Transform::serialize( Json::Value& value )
+{
+	value["position"] = toJson(v_translate);
+	value["rotation"] = toJson(angles);
+	value["scale"] = toJson(v_scale);
 }
 
 //-----------------------------------//

@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "vapor/CompileOptions.h"
-
 #ifdef VAPOR_RENDERER_OPENGL
 
 #define GLEW_STATIC
@@ -21,6 +19,10 @@ namespace vapor { namespace render {
 
 // Handles OpenGL error states.
 bool glHasError( const std::string& msg );
+
+// Gets a string given an OpenGL error code.
+// Adapted from the Mesa GLU implementation.
+const char* gluErrorString(GLenum errorCode);
 
 //-----------------------------------//
 

@@ -71,8 +71,7 @@ public:
 	// Updates this group of nodes.
 	virtual void update( double delta );
 
-	// Serialization of the nodes.
-	virtual const std::string save( int indent = 0 );
+	DECLARE_SERIALIZABLE();
 
 	//-----------------------------------//
 	// Events

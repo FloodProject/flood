@@ -29,6 +29,8 @@ namespace Projection
         Orthographic,
         Perspective
     };
+
+	const std::string toString(Enum e);
 }
 
 //-----------------------------------//
@@ -113,6 +115,8 @@ public:
 
 	// Gets the near clipping plane of the camera.
 	float getNear() const;
+
+	DECLARE_SERIALIZABLE();
 
 protected:
 

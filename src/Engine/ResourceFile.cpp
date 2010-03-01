@@ -7,14 +7,13 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/resources/ResourceFile.h"
 
 namespace vapor { namespace resources {
 
 //-----------------------------------//
 
-ResourceFile::ResourceFile( vfs::FilePtr file )
+ResourceFile::ResourceFile( const vfs::FilePtr file )
 	: file( file )
 {
 

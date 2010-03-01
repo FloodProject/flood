@@ -36,6 +36,8 @@ VFS::VFS(const std::string& app, const char* argv0 )
 #ifdef VAPOR_PLATFORM_WINDOWS
 	watcher = new WatcherWin32();
 #endif
+
+	mountDefaultLocations();
 }
 
 //-----------------------------------//
@@ -125,6 +127,30 @@ bool VFS::mount(const std::string& path, const std::string& mount, bool append )
 	watcher->addWatch( path );
 
 	return true;
+}
+
+//-----------------------------------//
+
+void VFS::mountDefaultLocations()
+{
+	// Default VFS mount points
+	const std::string& media = "media/";
+
+	std::string dirs[] = 
+	{
+		"fonts",
+		"images",
+		"materials",
+		"meshes",
+		"scripts",
+		"sounds"
+	};
+
+	if ( !mount( media ) )
+		return;
+
+	foreach( const std::string& dir, dirs )
+		mount(media+dir);
 }
 
 //-----------------------------------//

@@ -59,6 +59,8 @@ public:
 	/// Returns the name of this component.
 	virtual const std::string& getType() const;
 
+	DECLARE_SERIALIZABLE();
+
 protected:
 
 	// Bounding volume of the geometry.

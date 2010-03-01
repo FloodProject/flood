@@ -26,8 +26,7 @@ class VAPOR_API FirstPersonCamera : public Camera
 {
 public:
 
-	FirstPersonCamera( input::InputManager* input,
-		render::Device* device, 
+	FirstPersonCamera( input::InputManager* input, render::Device* device, 
 		Projection::Enum projection = Projection::Perspective );
 
 	// Sets the sensivity of the camera.
@@ -37,11 +36,10 @@ public:
 	// Updates this node.
 	virtual void update( double delta );
 
-	// Serializes this node.
-	virtual const std::string save( int indent = 0 );
-	
 	// Gets the name of this node.
 	virtual const std::string& getType() const;
+
+	DECLARE_SERIALIZABLE();
 
 protected:
 

@@ -90,6 +90,8 @@ public:
 	// Use this to render some debug bounding boxes.
 	virtual render::RenderablePtr getDebugRenderable() const;
 
+	DECLARE_SERIALIZABLE();
+
 protected:
 
 	void notify();

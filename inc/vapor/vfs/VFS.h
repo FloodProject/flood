@@ -48,6 +48,8 @@ public:
 	/// Gets all the mount points in the VFS.
 	const std::vector< std::string >& getMountPoints() const;
 
+	void mountDefaultLocations();
+
 	/// Gets a reference to the notification watcher.
 	Watcher* getWatcher() const;
 

@@ -115,40 +115,13 @@ int Group::count() const
 
 //-----------------------------------//
 
-const std::string Group::save(int ind)
+void Group::serialize( Json::Value& value )
 {
-	//ostringstream os; 
-	//string space(ind, ' ');
+	value["name"] = getName();
 
-	//os << space << "\"" << name() << "\": {\n";
-	//os << space << "  " << "\"nodes\": [\n";
-
-	//// do all nodes
-	////foreach( NodePtr node, children )
-	////	os << node->save(ind+4);
-
-	//os << space << "  " << "]\n";
-	//os << space << "}\n";
-	//return os.str();
-
-	return "";
+	foreach( const NodePtr& node, children )
+		node->serialize( value["nodes"][node->getName()] );
 }
-
-//-----------------------------------//
-
-//std::shared_ptr< Group > Group::shared_from_this()
-//{ 
-//	return std::static_pointer_cast< Group >( 
-//		Node::shared_from_this() ); 
-//}
-
-//-----------------------------------//
-
-//std::shared_ptr< Group > Group::shared_from_this() const
-//{ 
-//	return std::static_pointer_cast< Group >( 
-//		Node::shared_from_this() ); 
-//}
 
 //-----------------------------------//
 

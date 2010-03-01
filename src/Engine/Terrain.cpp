@@ -95,6 +95,8 @@ void Terrain::convertHeightmap( const resources::ImagePtr& heightmap, std::vecto
 
 bool Terrain::validateHeightmap( const ImagePtr& heightmap )
 {
+	if( !heightmap ) return false;
+
 	const ushort width = heightmap->getWidth();
 	const ushort height = heightmap->getHeight();
 

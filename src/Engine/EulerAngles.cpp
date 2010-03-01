@@ -15,7 +15,6 @@ namespace vapor { namespace math {
 //-----------------------------------//
 
 EulerAngles::EulerAngles()
-	: xang( 0.0f ), yang( 0.0f ), zang( 0.0f )
 {
 
 }
@@ -23,7 +22,7 @@ EulerAngles::EulerAngles()
 //-----------------------------------//
 
 EulerAngles::EulerAngles( float x, float y, float z )
-	: xang( x ), yang( y ), zang( z )
+	: Vector3( x, y, z )
 {
 
 }
@@ -32,9 +31,9 @@ EulerAngles::EulerAngles( float x, float y, float z )
 
 void EulerAngles::rotate( float x, float y, float z )
 {
-	xang += x;
-	yang += y;
-	zang += z;
+	x += x;
+	y += y;
+	z += z;
 }
 
 //-----------------------------------//
@@ -43,14 +42,14 @@ void EulerAngles::canonize()
 {
 	//const float LIMIT = math::degreeToRadian( 90.0f );
 
-	//if( xang >= LIMIT ) xang -= LIMIT;
-	//if( xang <= -LIMIT ) xang += LIMIT;
+	//if( x >= LIMIT ) x -= LIMIT;
+	//if( x <= -LIMIT ) x += LIMIT;
 	//
-	//if( yang >= LIMIT ) yang -= LIMIT;
-	//if( yang <= -LIMIT ) yang += LIMIT;
+	//if( y >= LIMIT ) y -= LIMIT;
+	//if( y <= -LIMIT ) y += LIMIT;
 
-	//if( zang >= LIMIT ) zang -= LIMIT;
-	//if( zang <= -LIMIT ) zang += LIMIT;
+	//if( z >= LIMIT ) z -= LIMIT;
+	//if( z <= -LIMIT ) z += LIMIT;
 
 	// First, wrap pitch in range -pi ... pi
 
@@ -97,7 +96,7 @@ void EulerAngles::canonize()
 
 void EulerAngles::identity()
 {
-	xang = yang = zang = 0;
+	x = y = z = 0;
 }
 
 //-----------------------------------//
@@ -164,7 +163,7 @@ math::Matrix4x3 EulerAngles::rotateZ( float ang ) const
 
 math::Matrix4x3 EulerAngles::getOrientationMatrix() const
 {
-	return rotateX( xang ) * rotateY( yang ) * rotateZ( zang );
+	return rotateX( x ) * rotateY( y ) * rotateZ( z );
 }
 
 //-----------------------------------//

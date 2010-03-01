@@ -13,15 +13,15 @@ namespace vapor { namespace math {
 //-----------------------------------//
 
 /**
- * Simple struct to hold positions.
+ * Simple struct to hold 2-dimensional stuff.
  */
 
 template< typename T >
-struct PointT
+struct Vector2T
 {
 public:
 
-	PointT( T x, T y ) : x(x), y(y) {}
+	Vector2T( T x, T y ) : x(x), y(y) {}
 	
 	// X-coordinate of the point.
 	T x;
@@ -32,7 +32,7 @@ public:
 
 //-----------------------------------//
 
-typedef PointT< int > Point;
+typedef Vector2T<int> Vector2;
 
 //-----------------------------------//
 

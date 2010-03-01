@@ -54,9 +54,9 @@ public:
 	{
 		Quaternion qx, qy, qz;
 		
-		qx.setToRotateAboutX(angles.xang);
-		qy.setToRotateAboutY(angles.yang);
-		qz.setToRotateAboutZ(angles.zang);
+		qx.setToRotateAboutX(angles.x);
+		qy.setToRotateAboutY(angles.y);
+		qz.setToRotateAboutZ(angles.z);
 		
 		*this = qy*qx*qz;
 		

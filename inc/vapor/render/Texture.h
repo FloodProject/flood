@@ -26,7 +26,7 @@ class VAPOR_API Texture
 public:
 
 	Texture( ushort width, ushort height );
-	Texture( resources::ImagePtr );
+	Texture( const resources::ImagePtr );
 	~Texture();
 
 	// Generates a new texture id.

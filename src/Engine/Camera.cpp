@@ -19,6 +19,24 @@ using namespace vapor::render;
 
 //-----------------------------------//
 
+namespace Projection
+{
+	const std::string toString(Enum e) 
+	{
+		switch(e) 
+		{
+		case Orthographic:
+			return "Orthographic";
+		case Perspective:
+			return "Perspective";
+		default:
+			return "(unknown)";
+		}
+	}
+}
+
+//-----------------------------------//
+
 const std::string& Camera::type = "Camera";
 
 //-----------------------------------//
@@ -326,6 +344,16 @@ void Camera::setFar( float far_ )
 float Camera::getFar() const
 {
 	return far_;
+}
+
+//-----------------------------------//
+
+void Camera::serialize( Json::Value& value )
+{
+	value["projection"] = Projection::toString( projection );
+	value["fov"] = fov;
+	value["near"] = near_;
+	value["far"] = far_;
 }
 
 //-----------------------------------//

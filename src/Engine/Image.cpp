@@ -55,4 +55,11 @@ void Image::log() const
 
 //-----------------------------------//
 
+ResourceGroup::Enum Image::getResourceGroup() const
+{
+	return ResourceGroup::Images;
+}
+
+//-----------------------------------//
+
 } } // end namespaces

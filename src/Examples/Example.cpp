@@ -21,15 +21,6 @@ Example::Example(const char** argv)
 
 void Example::onInit()
 {
-	// Mount VFS points
-	const std::string& media = "media";
-
-	if ( !getVFS()->mount( media ) )
-	{
-		Log::MessageDialog( "Missing archive/directory '" + media );
-		exit(1);
-	}
-
 	//physicsManager->createWorld();
 }
 
@@ -158,6 +149,11 @@ void Example::onSetupScene()
 
 	//ImagePtr heightmap = rm->loadResource< Image >( "height2.png" );
 	//CellPtr cell = terrain->createCell( heightmap, 0, 0 );
+
+	Json::Value sc;
+	scene->serialize( sc );
+	File file( "Example.scene", AccessMode::Write );
+	file.write( sc.toStyledString() );
 }
 
 //-----------------------------------//
@@ -182,12 +178,12 @@ void Example::onRender()
 	render::Device* device = getRenderDevice();
 
 	// Render into the FBO first
-	device->setRenderTarget( fbo );
-	fbo->bind();
-	device->setClearColor( Colors::Red );
-	device->clearTarget();
-	cam->render();
-	fbo->unbind();
+	//device->setRenderTarget( fbo );
+	//fbo->bind();
+	//device->setClearColor( Colors::Red );
+	//device->clearTarget();
+	//cam->render();
+	//fbo->unbind();
 
 	// Render the scene
 	device->setWindowActiveTarget();
