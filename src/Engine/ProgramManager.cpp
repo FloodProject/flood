@@ -55,16 +55,4 @@ void ProgramManager::registerProgram( const std::string& name, const ProgramPtr&
 
 //-----------------------------------//
 
-//uint TextureManager::getMemoryUsage()
-//{
-//	uint total = 0;
-//
-//	foreach( const texPair& p, textures )
-//		total += p.first->getBuffer().size();
-//
-//	return total;
-//}
-
-//-----------------------------------//
-
 } } // end namespaces

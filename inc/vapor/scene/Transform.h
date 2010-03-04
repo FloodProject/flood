@@ -110,6 +110,8 @@ protected:
 	bool aabbNeedsUpdate;
 	render::RenderablePtr aabbRenderable;
 
+	bool externalUpdate;
+
 	static const std::string& type;
 
 public:

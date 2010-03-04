@@ -10,6 +10,45 @@
 
 namespace vapor {
 
+//---------------------------------------------------------------------//
+// Macro for unused parameters to clean up 'The Warning Disease'
+//---------------------------------------------------------------------//
+
+#define VAPOR_UNUSED( id )
+
+#ifndef UNUSED
+	#define UNUSED VAPOR_UNUSED
+#endif
+
+//---------------------------------------------------------------------//
+// Array and Conversion Helpers
+//---------------------------------------------------------------------//
+
+#define VAPOR_ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))
+
+//---------------------------------------------------------------------//
+// Forward-declaration Helpers
+//---------------------------------------------------------------------//
+
+#define FWD_DECL(N, T)								\
+	namespace vapor { namespace N {					\
+		class T;									\
+	} } // end namespaces
+
+#define FWD_DECL_TYPEDEF_INT(N, T)					\
+	namespace vapor { namespace N {					\
+		class T;									\
+		TYPEDEF_INTRUSIVE_POINTER_FROM_CLASS( T );	\
+	} } // end namespaces
+
+//---------------------------------------------------------------------//
+// Acessors
+//---------------------------------------------------------------------//
+
+#define IMPLEMENT_ACESSOR(name, type, var)		\
+	type get##name() const { return var; } 		\
+	void set##name(type v) { var = v; }
+
 //-----------------------------------//
 
 // Swaps the endianness of a long.

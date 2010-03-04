@@ -105,9 +105,8 @@ protected:
 //-----------------------------------//
 
 /**
- * Mouse event that occurs when the mouse is moved and provides a 
- * new mouse position on the screen in screen-coordinates.
- * TODO: describe the coordinates
+ * Mouse event that occurs when the mouse is moved and provides the
+ * current mouse position on the screen in screen-coordinates.
  */
 
 struct MouseMoveEvent : public MouseEvent

@@ -47,9 +47,6 @@ public:
 	/// Updates the geometry if needed.
 	virtual void update( double delta );
 
-	/// Serializes this component to a stream.
-	virtual const std::string save(int indent = 0);
-
 	/// Gets the bounding volume of this geometry.
 	const math::AABB& getBoundingVolume() const;
 

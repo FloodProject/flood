@@ -25,14 +25,18 @@ const std::string& Label::type = "Label";
 Label::Label( const std::string& text, resources::FontPtr font, 
 			 render::MaterialPtr material )
 	: font( font ), text( text ), isDirty( true ), 
-	renderable( new Renderable( Primitive::Quads, VertexBufferPtr( new VertexBuffer() ), material ) )
+	renderable( new Renderable( Primitive::Quads, 
+		VertexBufferPtr( new VertexBuffer() ), material ) )
 {
 	// Add a new renderable to hold the text geometry
 	addRenderable( renderable, RenderGroup::Overlays );
+
+	if( !font ) return;
 	
 	// Setup the material to have the texture font and enable blending
 	material->setTexture( 0, font->getTexture() );
-	material->setBlending( BlendingOperationSource::SourceAlpha, BlendingOperationDestination::One );
+	material->setBlending( BlendingOperationSource::SourceAlpha,
+		BlendingOperationDestination::One );
 }
 
 //-----------------------------------//
@@ -132,13 +136,6 @@ void Label::update( double UNUSED(delta) )
 const std::string& Label::getType() const 
 {
 	return type; 
-}
-
-//-----------------------------------//
-
-const std::string Label::save( int indent )
-{
-	return ""; 
 }
 
 //-----------------------------------//

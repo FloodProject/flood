@@ -135,21 +135,3 @@ typedef unsigned long	ulong;
 #if !defined( VAPOR_MEMORY_SHARED_PTR ) && !defined( VAPOR_MEMORY_INTRUSIVE_PTR ) 
 	#error "No shared pointer implementation found."
 #endif
-
-//---------------------------------------------------------------------//
-// Macro for unused parameters to clean up 'The Warning Disease'
-//---------------------------------------------------------------------//
-
-#define VAPOR_UNUSED( id )
-
-#ifndef UNUSED
-	#define UNUSED VAPOR_UNUSED
-#endif
-
-//---------------------------------------------------------------------//
-// Array and Conversion Helpers
-//---------------------------------------------------------------------//
-
-#define VAPOR_ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))
-
-#include "vapor/Utilities.h"

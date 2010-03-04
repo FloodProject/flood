@@ -149,7 +149,9 @@ private:
 
 	typedef std::tuple< int, GLPrimitive, std::vector< byte > > attributeValue;
 	typedef std::pair< const VertexAttribute::Enum, attributeValue > attributePair;
-
+	typedef std::map< VertexAttribute::Enum, attributeValue >::iterator attributeIterator;
+	typedef std::map< VertexAttribute::Enum, attributeValue >::const_iterator attributeConstIterator;
+	
 	// Holds all the vertex attributes.
 	std::map< VertexAttribute::Enum, attributeValue > attributeMap;
 
@@ -160,19 +162,21 @@ public:
 
 	std::vector<math::Vector3> getVertices() const
 	{
-		foreach( const attributePair& p, attributeMap )
-		{
-			if( p.first == VertexAttribute::Position )
-			{
-				std::vector<math::Vector3> vertices;
-				const std::vector<byte>& bytev = std::get<2>( p.second );
-				vertices.resize( std::get<2>( p.second ).size() / sizeof( math::Vector3 ) );
-				memcpy( &vertices[0], &bytev[0], bytev.size() );		
-				return vertices;
-			}
-		}
+		attributeConstIterator it = attributeMap.find(VertexAttribute::Position);
 
-		return std::vector<math::Vector3>();
+		if( it == attributeMap.end() )
+			return std::vector<math::Vector3>();
+		
+		const attributeValue& p = (*it).second;
+		const std::vector<byte>& arr = std::get<2>(p);
+
+		if( arr.size() == 0 )
+			return std::vector<math::Vector3>();
+
+		std::vector<math::Vector3> vertices;
+		vertices.resize( arr.size() / sizeof( math::Vector3 ) );
+		memcpy( &vertices[0], &arr[0], arr.size() );		
+		return vertices;
 	}
 };
 

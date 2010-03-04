@@ -49,15 +49,19 @@ VertexBuffer::~VertexBuffer()
 
 bool VertexBuffer::bind()
 {
+	// Check that we have a valid buffer
+	if( !glIsBuffer( id ) )
+	{
+		warn( "gl::buffers", "Vertex buffer is not valid" );
+		return false;		
+	}
+
 	glBindBuffer( GL_ARRAY_BUFFER, id );
 
-#ifdef VAPOR_DEBUG
-	while( glGetError() != GL_NO_ERROR )
+	if( !glHasError( "Error binding vertex buffer" ) )
 	{
-		warn( "gl::buffers", "Error binding vertex buffer" );
 		return false;
 	}
-#endif
 
 	bindPointers();
 

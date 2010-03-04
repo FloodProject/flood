@@ -119,7 +119,7 @@ bool VFS::mount(const std::string& path, const std::string& mount, bool append )
 		return false;
 	}
 
-	mountPoints.push_back( path );
+	//mountPoints.push_back( path );
 
 	info( "vfs", "Mounted '%s' in mount point '%s'",
 		path.c_str(), mount.empty() ? "/" : mount.c_str() );
@@ -134,7 +134,7 @@ bool VFS::mount(const std::string& path, const std::string& mount, bool append )
 void VFS::mountDefaultLocations()
 {
 	// Default VFS mount points
-	const std::string& media = "media/";
+	const std::string media( "media/" );
 
 	std::string dirs[] = 
 	{

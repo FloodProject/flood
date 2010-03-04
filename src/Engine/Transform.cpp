@@ -24,7 +24,7 @@ const std::string& Transform::type = "Transform";
 
 Transform::Transform( float x, float y, float z )
 	: v_scale( 1.0f ), isPhysicsDriven( false ), v_translate( x, y, z ),
-	aabbNeedsUpdate( true )
+	aabbNeedsUpdate( true ), externalUpdate( false )
 {
 
 }
@@ -172,6 +172,7 @@ void Transform::reset( )
 
 void Transform::setAbsoluteTransform( const math::Matrix4x3& matrix )
 {
+	externalUpdate = true;
 	absoluteLocalToWorld = matrix;
 }
 
@@ -249,25 +250,28 @@ RenderablePtr buildBoundingRenderable( const math::AABB& aabb )
 
 void Transform::update( double delta )
 {
-	absoluteLocalToWorld = getLocalTransform();
+	if( !externalUpdate )
+		absoluteLocalToWorld = getLocalTransform();
 
-	if( !requiresBoundingVolumeUpdate() )
-		return;
-
-	assert( getNode() );
-	NodePtr node = getNode();
-
-	boundingVolume.reset();
-
-	foreach( const GeometryPtr& geometry, node->getGeometry() )
+	if( requiresBoundingVolumeUpdate() )
 	{
-		boundingVolume.add( geometry->getBoundingVolume() );
-	}
-	
-	aabbNeedsUpdate = false;
+		assert( getNode() );
+		NodePtr node = getNode();
 
-	// Update debug renderable
-	aabbRenderable = buildBoundingRenderable( boundingVolume );
+		boundingVolume.reset();
+
+		foreach( const GeometryPtr& geometry, node->getGeometry() )
+		{
+			boundingVolume.add( geometry->getBoundingVolume() );
+		}
+		
+		aabbNeedsUpdate = false;
+
+		// Update debug renderable
+		aabbRenderable = buildBoundingRenderable( boundingVolume );
+	}
+
+	externalUpdate = false;
 }
 
 //-----------------------------------//

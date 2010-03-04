@@ -38,6 +38,7 @@ public:
 // Serialization Helpers             // 
 //-----------------------------------//
 
+void serializeToFile( Json::Value& root, const std::string& name );
 Json::Value toJson( const math::Vector3& vec );
 
 //-----------------------------------//

@@ -88,16 +88,6 @@ void Scene::updateTransformAndBV( NodePtr /*node*/, MatrixStack& /*transformStac
 
 //-----------------------------------//
 
-const std::string Scene::save(int UNUSED(ind))
-{
-	//std::ostringstream os;
-	//os << "{ " << Group::save(ind);
-	//return os.str();
-	return "";
-}
-
-//-----------------------------------//
-
 Node* Scene::getEntityPtr( const std::string& name ) const
 {
 	return getEntity(name).get();

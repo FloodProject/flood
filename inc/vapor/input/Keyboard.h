@@ -70,11 +70,11 @@ namespace Keys
 		LControl,
 		LShift,
 		LAlt,
-		LSystem,      
+		LSuper,      
 		RControl,
 		RShift,
 		RAlt,
-		RSystem,      
+		RSuper,      
 		
 		Menu,
 		LBracket,     

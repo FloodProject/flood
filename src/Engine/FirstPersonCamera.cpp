@@ -20,7 +20,7 @@ using namespace vapor::math;
 
 static const float DEFAULT_MOVE_SENSIVITY = 100.0f;
 static const float DEFAULT_LOOK_SENSIVITY = 20.0f;
-static const float DEFAULT_LIMIT_XAXIS = 89.999f;
+static const float DEFAULT_LIMIT_XAXIS = 89.9999f;
 
 //-----------------------------------//
 
@@ -56,6 +56,7 @@ void FirstPersonCamera::checkControls( double delta )
 	transform->rotate( rotate * (float(delta) * lookSensivity) );
 
 	// Restrict X-axis movement by some deegres.
+	// TODO: this screws the movement when we are looking down
 	float& xang = const_cast< float& >( transform->getRotation().x );
 	limit< float >( xang, -DEFAULT_LIMIT_XAXIS, DEFAULT_LIMIT_XAXIS );
 
@@ -103,9 +104,9 @@ void FirstPersonCamera::checkControls( double delta )
 	moveVector *= (float(delta) * moveSensivity);
 	const EulerAngles& rotAng =  transform->getRotation();
 	transform->translate( moveVector*rotAng.getOrientationMatrix() );
-	
-	Vector3 transformedReference = Vector3::UnitZ * rotAng.getOrientationMatrix();
-	Vector3 cameraLookAt = transform->getPosition() + transformedReference;
+
+	forwardVector = Vector3::UnitZ * rotAng.getOrientationMatrix();
+	Vector3 cameraLookAt = transform->getPosition() + forwardVector;
 	viewMatrix = transform->lookAt( cameraLookAt, Vector3::UnitY );
 }
 

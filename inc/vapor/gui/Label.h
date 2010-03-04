@@ -45,9 +45,6 @@ public:
 	// Updates the geometry to match the new text if needed.
 	virtual void update( double delta );
 
-	// Serializes this node to a stream.
-	virtual const std::string save( int indent = 0 );
-
 	// Returns this component name identification.
 	virtual const std::string& getType() const;
 

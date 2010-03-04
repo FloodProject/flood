@@ -70,6 +70,8 @@ void vaporInputManager::processMouseEvent( const wxMouseEvent& event )
 			button = MouseButton::Mouse4;
 		case wxMOUSE_BTN_AUX2:
 			button = MouseButton::Mouse5;
+		default:
+			button = MouseButton::Middle;
 		}
 
 		MouseButtonEvent mb( event.GetX(), event.GetY(), button, 
@@ -87,12 +89,16 @@ void vaporInputManager::processMouseEvent( const wxMouseEvent& event )
 
 	else if( event.Entering() )
 	{
-		warn( "wx::input", "Mouse entering events still not implemented" );
+		MouseEvent me( MouseEventType::MouseEnter );
+		processEvent( me );
+		//warn( "wx::input", "Mouse entering events still not implemented" );
 	}
 
 	else if( event.Leaving() )
 	{
-		warn( "wx::input", "Mouse leaving events still not implemented" );
+		MouseEvent me( MouseEventType::MouseRelease );
+		processEvent( me );
+		//warn( "wx::input", "Mouse leaving events still not implemented" );
 	}
 }
 
@@ -134,6 +140,9 @@ input::Keys::Enum vaporInputManager::convertKeyEnum( int keyCode )
 	//	return Keys::RSystem;
 	case WXK_MENU:
 		return Keys::Menu;
+
+	case WXK_WINDOWS_MENU:
+		return Keys::LSuper;
 
 	//case sf::Key::LBracket:
 	//	return Keys::LBracket;

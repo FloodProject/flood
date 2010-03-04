@@ -45,10 +45,14 @@ public:
 
 	// CELESTIAL BODIES (Sun, Moon, Stars)
 
+	void setSunNode( const NodePtr& sun );
 	math::Vector3 getSunPosition();
 	
 	// Celestial bodies.
 	//void setStarsVisible( bool enable );
+
+	// Gets called each cycle to update the component.
+	void update( double delta );
 
 protected:
 
@@ -56,18 +60,21 @@ protected:
 	math::Color getSkyVertexColor( const math::Vector3& vertex );
 
 	void generateDome();
-	void generateSun();
+	void generateBodies();
+
+	// Keeps track of the current walltime
+	double currentTime;
 
 	// Scales the Y vertex value into a [0,1] range.
 	float scale( float number );
 
 	// Dome geometry that will be rendered as the sky.
+	float yMin, yMax;
 	render::SpherePtr dome;
 	math::Vector3 colorTop, colorBottom;
-	float yMin, yMax;
 
 	// Celestial bodies geometry.
-	render::RenderablePtr sun;
+	TransformPtr sun;
 
 	static const std::string& type;
 };

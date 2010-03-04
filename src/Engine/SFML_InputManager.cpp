@@ -117,7 +117,7 @@ void SFML_InputManager::processMouseEvent(const sf::Event& event)
 
 		case sf::Event::MouseWheelMoved:
 		{
-			MouseWheelEvent mwe( event.MouseWheel.Delta );
+			MouseWheelEvent mwe( short(event.MouseWheel.Delta) );
 			processEvent( mwe );
 
 			break;
@@ -357,7 +357,7 @@ Keys::Enum SFML_InputManager::convertKeyEnum(sf::Key::Code keycode)
 		case sf::Key::LAlt:
 			return Keys::LAlt;
 		case sf::Key::LSystem:
-			return Keys::LSystem;
+			return Keys::LSuper;
 		case sf::Key::RControl:
 			return Keys::RControl;
 		case sf::Key::RShift:
@@ -365,7 +365,7 @@ Keys::Enum SFML_InputManager::convertKeyEnum(sf::Key::Code keycode)
 		case sf::Key::RAlt:
 			return Keys::RAlt;
 		case sf::Key::RSystem:
-			return Keys::RSystem;
+			return Keys::RSuper;
 		case sf::Key::Menu:
 			return Keys::Menu;
 

@@ -95,6 +95,8 @@ protected:
 	Timer frameTimer;
 	double lastFrameTime;
 
+	bool updatedOnce;
+
 	DECLARE_EVENT_TABLE()
 };
 

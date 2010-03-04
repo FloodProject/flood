@@ -78,9 +78,6 @@ protected:
 	// Input manager.
 	input::InputManager* inputManager;
 
-	// Forward vector.
-	math::Vector3 forwardVector;
-
 	// Look-at vector.
 	math::Vector3 lookAtVector;
 

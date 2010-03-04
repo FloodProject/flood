@@ -20,8 +20,6 @@ namespace vapor { namespace editor {
 // IDs for the controls and the menu commands
 enum
 {
-	Camera_Viewport,
-
     // menu items
     Editor_Quit = wxID_EXIT,
 
@@ -31,6 +29,7 @@ enum
     Editor_About = wxID_ABOUT,
 
 	// Toolbar buttons
+	Toolbar_Save,
 	Toolbar_ToggleScene,
 	Toolbar_ToogleConsole,
 	Toolbar_ToogleGrid,
@@ -100,11 +99,12 @@ EditorFrame::EditorFrame(const wxString& title)
 {
     // set the frame icon
     SetIcon( wxIcon( "editor" ) );
-
-	sizer = new wxBoxSizer( wxHORIZONTAL );
-
+	
 	// initialize the engine
 	initEngine();
+
+	sizer = new wxBoxSizer( wxHORIZONTAL );
+	sizer->Add( viewport, 1, wxEXPAND|wxALL );
 
 	// create window basic widgets
 	createMenus();
@@ -133,15 +133,11 @@ void EditorFrame::initEngine()
 	engine->init( false );
 
 	viewport = new Viewport( engine, this );
-	sizer->Add( viewport, 1, wxEXPAND|wxALL );
+	vaporCtrl = viewport->vaporCtrl;
 
 	engine->getRenderDevice()->init();
+	engine->getVFS()->mountDefaultLocations();
 
-	vaporCtrl = viewport->vaporCtrl;
- 
-	//engine->getPhysicsManager()->createWorld();
-	//engine->getPhysicsManager()->setSimulationEnabled( false );
-	
 	input::Mouse* mouse = engine->getInputManager()->getMouse();
 	mouse->onMouseButtonPress += fd::bind( &EditorFrame::onMouseClick, this );
 }
@@ -150,9 +146,6 @@ void EditorFrame::initEngine()
 
 void EditorFrame::createScene()
 {
-	if( !engine->getVFS()->mount( "media" ) )
-		return;
-
 	ScenePtr scene = engine->getSceneManager();
 	ResourceManager* rm = engine->getResourceManager();
 
@@ -184,23 +177,33 @@ void EditorFrame::createScene()
 	grid->addComponent( TransformPtr( new Transform() ) );
 	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
 	scene->add( grid );
+	
+	MaterialPtr matSun( new Material( "SunBlend" ) );
+	matSun->setProgram( "tex" );
+	matSun->setTexture( 0, "moon.png" );
+	matSun->setBlending( BlendingOperationSource::SourceAlpha,
+		BlendingOperationDestination::OneMinusSourceAlpha );
+	matSun->setBackfaceCulling( false );
+	
+	RenderablePtr sunQuad( new render::Quad( 100.0f, 100.0f ) );
+	sunQuad->setMaterial( matSun );
+
+	GeometryPtr geom( new Geometry() );
+	geom->addRenderable( sunQuad, RenderGroup::Transparency );
+
+	NodePtr sun( new Node( "Sun" ) );
+	sun->addComponent( TransformPtr( new Transform() ) );
+	sun->addComponent( geom );
+	sun->addComponent( BillboardPtr( new Billboard( viewport->camera ) ) );
+	scene->add( sun );
+
+	SkydomePtr skydome( new Skydome( mat ) );
+	skydome->setSunNode( sun );
 
 	NodePtr sky( new Node( "Sky" ) );
-	sky->addComponent( TransformPtr( new Transform() ) );
-	sky->addComponent( ComponentPtr( new Skydome( mat ) ) );
+	sky->addComponent( TransformPtr( new Transform() ) );	
+	sky->addComponent( skydome );
 	scene->add( sky );
-
-	MeshPtr mesh = rm->loadResource<Mesh>( "TreePine_1.ms3d" );
-
-	//foreach( const RenderablePtr& rend, mesh->getGeometry()->getRenderables() )
-	//{
-	//	rend->getMaterial()->setProgram( tex );
-	//}
-
-	NodePtr ct( new Node( "Tree" ) );
-	ct->addComponent( TransformPtr( new Transform() ) );
-	//ct->addComponent( mesh->getGeometry() );
-	//scene->add(ct);
 
 	NodePtr lnode( new Node( "Light" ) );
 	lnode->addComponent( TransformPtr( new Transform() ) );
@@ -328,7 +331,7 @@ void EditorFrame::createToolbar()
 
 	toolBar->AddTool( wxID_ANY, "New", wxMEMORY_BITMAP(page_empty) );
 	toolBar->AddTool( wxID_ANY, "Open", wxMEMORY_BITMAP(folder_explore) ); 
-	toolBar->AddTool( wxID_ANY, "Save", wxMEMORY_BITMAP(disk) );
+	toolBar->AddTool( Toolbar_Save, "Save", wxMEMORY_BITMAP(disk) );
 	
 	toolBar->AddSeparator();
 
@@ -392,9 +395,6 @@ void EditorFrame::createToolbar()
 
 	toolBar->Realize();	
 
-	// connect events
-	//Bind(wxEVT_COMMAND_TOOL_CLICKED, &EditorFrame::OnToolbarButtonClick, wxID_ANY );
-
 	codeEvaluator = new ConsoleFrame( engine, this, "Scripting Console" );
 }
 
@@ -415,7 +415,6 @@ void EditorFrame::OnNodeSelected(wxTreeItemId old, wxTreeItemId id)
 			tr->setDebugRenderableVisible( false );
 			node->removeComponent( "Gizmo" );
 		}
-
 	}
 
 	const NodePtr& node = sceneTreeCtrl->getEntity( id );
@@ -431,7 +430,7 @@ void EditorFrame::OnNodeSelected(wxTreeItemId old, wxTreeItemId id)
 
 void EditorFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 {
-    // true is to force the frame to close
+    // true forces the frame to close.
     Close(true);
 }
 
@@ -455,45 +454,64 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 {
 	switch( event.GetId() ) 
 	{ 
-		case Toolbar_ToogleConsole:
-		{
-			codeEvaluator->Show( !codeEvaluator->IsShown() );
-			codeEvaluator->SetFocus();
-			break;
-		}
+	case Toolbar_Save:
+	{
+		// Ask for file name to save as.
+		wxFileDialog fc( this, wxFileSelectorPromptStr, wxEmptyString,
+			wxEmptyString, "Scene files (*.scene)|*.scene", wxFC_SAVE );
 		
-		case Toolbar_ToogleGrid:
+		if( fc.ShowModal() != wxID_OK )
+			return;
+
+		// Serialize scene to JSON.
+		Json::Value scene;
+		engine->getSceneManager()->serialize( scene );
+
+		// Save it to a file.
+		std::string fn( fc.GetFilename() );
+		serializeToFile( scene, fn );
+		break;
+	}
+
+	case Toolbar_ToogleConsole:
+	{
+		codeEvaluator->Show( !codeEvaluator->IsShown() );
+		codeEvaluator->SetFocus();
+		break;
+	}
+	
+	case Toolbar_ToogleGrid:
+	{
+		NodePtr grid = engine->getSceneManager()->getEntity( "EditorGrid" );
+		if( grid ) grid->setVisible( !grid->isVisible() );
+		break;
+	}
+
+	case Toolbar_TooglePlay:
+	{
+		physics::PhysicsManager* pm = engine->getPhysicsManager();
+		//if( pm ) pm->setSimulationEnabled( !pm->getSimulationEnabled() );
+		break;
+	}
+
+	case Toolbar_ToogleSidebar:
+	{
+		wxSize szNew = viewport->GetClientSize();
+		const wxSize& szNB = notebookCtrl->GetClientSize();
+
+		if( notebookCtrl->IsShown() )
 		{
-			NodePtr grid = engine->getSceneManager()->getEntity( "EditorGrid" );
-			if( grid ) grid->setVisible( !grid->isVisible() );
-			break;
+			notebookCtrl->Hide();
+		}
+		else
+		{
+			notebookCtrl->Show();
+			szNew.SetWidth( szNew.GetWidth() + szNB.GetWidth() );
 		}
 
-		case Toolbar_TooglePlay:
-		{
-			physics::PhysicsManager* pm = engine->getPhysicsManager();
-			//if( pm ) pm->setSimulationEnabled( !pm->getSimulationEnabled() );
-			break;
-		}
-
-		case Toolbar_ToogleSidebar:
-		{
-			wxSize szNew = viewport->GetClientSize();
-			const wxSize& szNB = notebookCtrl->GetClientSize();
-
-			if( notebookCtrl->IsShown() )
-			{
-				notebookCtrl->Hide();
-			}
-			else
-			{
-				notebookCtrl->Show();
-				szNew.SetWidth( szNew.GetWidth() + szNB.GetWidth() );
-			}
-
-			SetClientSize( szNew );
-			Layout();
-		}
+		SetClientSize( szNew );
+		Layout();
+	}
 	}
 }
 

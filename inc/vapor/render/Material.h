@@ -75,32 +75,8 @@ public:
 	// Adds a texture to the material.
 	void setTexture( uint unit, TexturePtr tex );
 
-	// Gets the associated program.
-	ProgramPtr getProgram() const;
-
-	// Sets the associated program.
-	void setProgram( ProgramPtr program );
-
 	// Sets the associated program.
 	void setProgram( const std::string& name );
-
-	// Gets the backface culling settings.
-	bool getBackfaceCulling();
-
-	// Sets the backface culling settings.
-	void setBackfaceCulling( bool cullFaces );
-
-	// Gets the line width of this material.
-	float getLineWidth() const;
-
-	// Sets the line width of this material.
-	void setLineWidth( float width );
-
-	// Gets the line smoothing of this material.
-	bool getLineSmoothing() const;
-
-	// Sets the line smoothing of this material.
-	void setLineSmoothing( bool smooth );
 
 	// Gets the blending options for this material.
 	BlendingOperationSource::Enum getSourceBlendingOperation();
@@ -126,34 +102,38 @@ public:
 	void unbind();
 
 	// Serialization.
-	//void load( const std::string& name );
-	//void save( const std::string& name );
+	//void serialize( Json::Value value );
+
+	IMPLEMENT_ACESSOR(DepthTest, bool, depthTest)
+	IMPLEMENT_ACESSOR(LineWidth, float, lineWidth)
+	IMPLEMENT_ACESSOR(LineSmoothing, bool, lineSmooth)
+	IMPLEMENT_ACESSOR(BackfaceCulling, bool, cullBackfaces)
+	IMPLEMENT_ACESSOR(Program, ProgramPtr, program)
 
 protected:
 
-	// Blending operations
-	BlendingOperationSource::Enum src;
-	BlendingOperationDestination::Enum dst;
-	bool _isBlendingEnabled;
+	// Name of the material.
+	std::string name;
+
+	// Program of the material.
+	ProgramPtr program;
+
+	// Textures
+	std::map< uint, TexturePtr > textures;
+	typedef std::pair< const uint, TexturePtr > texPair;
 
 	// Backface culling
 	bool cullBackfaces;
+	bool depthTest;
 
 	// Line settings
 	bool lineSmooth;
 	float lineWidth;
 
-	float polygonOffset;
-	
-	// Textures
-	std::map< uint, TexturePtr > textures;
-	typedef std::pair< const uint, TexturePtr > texPair;
-
-	// Program of the material.
-	ProgramPtr program;
-	
-	// Name of the material.
-	std::string name;
+	// Blending operations
+	BlendingOperationSource::Enum src;
+	BlendingOperationDestination::Enum dst;
+	bool _isBlendingEnabled;
 };
 
 //-----------------------------------//

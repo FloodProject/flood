@@ -56,6 +56,8 @@ void vaporControl::InitControl()
 {
 	if(!engine) return;
 
+	updatedOnce = false;
+
 	render::Device* device = engine->getRenderDevice();
 
 	info("vaporEditor", "Creating a new wxWidgets control");
@@ -86,6 +88,7 @@ void vaporControl::OnMouseCaptureLost(wxMouseCaptureLostEvent& WXUNUSED(event))
 
 void vaporControl::OnUpdate()
 {
+	updatedOnce = true;
 	engine->update( lastFrameTime );
 }
 
@@ -93,6 +96,9 @@ void vaporControl::OnUpdate()
 
 void vaporControl::OnRender()
 {
+	// Prevent rendering without updating the scene once.
+	if( !updatedOnce ) return;
+
 	const math::Color bg( 0.0f, 0.10f, 0.25f );
 
 	render::Device* device = engine->getRenderDevice();

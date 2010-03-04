@@ -38,8 +38,6 @@ protected:
 
 	// Generates the sphere.
 	void generateSphere( bool fullSphere, byte numSubDiv, VertexData& pos, float dim );
-
-
 };
 
 //-----------------------------------//

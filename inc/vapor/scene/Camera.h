@@ -67,7 +67,7 @@ public:
 	// Gets the frustum associated with the camera.
 	const math::Frustum& getFrustum( ) const;
 
-	// Picks a ray (via casting) and returns a list of entities.
+	// Gets a ray given the screen coordinates of the mouse.
 	math::Ray getRay( float scrx, float scry, math::Vector3* outFar = nullptr ) const;
 
 	// Renders the (sub-)scene starting from the passed node to the current 
@@ -88,9 +88,6 @@ public:
 
 	// Updates this node.
 	virtual void update( double delta );
-
-	// Serializes this node.
-	virtual const std::string save( int indent = 0 );
 	
 	// Gets the name of this node.
 	virtual const std::string& getType() const;
@@ -115,6 +112,9 @@ public:
 
 	// Gets the near clipping plane of the camera.
 	float getNear() const;
+
+	// Gets the forward vector of the camera.
+	const math::Vector3& getForwardVector() const;
 
 	DECLARE_SERIALIZABLE();
 
@@ -156,6 +156,9 @@ protected:
 
 	// Pointer to the camera's node transform.
 	TransformPtr transform;
+
+	// Forward vector.
+	math::Vector3 forwardVector;
 
 	//fd::delegate< const render::Settings& > targetResize;
 

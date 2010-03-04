@@ -11,6 +11,7 @@
 #include "vapor/scene/Component.h"
 #include "vapor/scene/Transform.h"
 #include "vapor/scene/Camera.h"
+#include "vapor/render/Renderable.h"
 
 namespace vapor { namespace scene {
 
@@ -23,8 +24,8 @@ namespace vapor { namespace scene {
  * arbitrary axis to face the camera, thus they are useful for clouds
  * and other distant objects. Axis aligned billboards can rotate only
  * with respect to a given axis. These are most useful to represent
- * trees, since you don't want trees to rotate to face the camera
- * for example, when you fly over them.
+ * trees. You don't want trees to rotate to face the camera when you
+ * fly over them, since that would break the illusion.
  */
 
 namespace BillboardType
@@ -47,13 +48,24 @@ class Billboard : public Component
 {
 public:
 
-	Billboard( BillboardType::Enum type );
-	~Billboard();
-  
-public:
+	Billboard( const CameraPtr& cam, BillboardType::Enum type =
+		BillboardType::WorldAligned );
+	virtual ~Billboard();
 
-	// Billboard type and colors
+	void update( double delta );
+
+	const std::string& getType() const;
+
+	render::RenderablePtr getDebugRenderable() const;
+  
+private:
+
+	// Billboard type
 	BillboardType::Enum billboardType;
+
+	TransformPtr transform;
+	CameraPtr camera;
+	render::RenderablePtr rend;
 
 	// Component type
 	static const std::string& type;

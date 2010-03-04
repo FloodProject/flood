@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9,00"
 	Name="vaporEngine"
-	ProjectGUID="{6F632FD5-78F5-4A09-A15F-3E2BF85B783F}"
+	ProjectGUID="{998D7B99-03DC-954C-A2A1-B83E1F0E2772}"
 	RootNamespace="deliverance"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
@@ -422,37 +422,21 @@
 					>
 				</File>
 				<File
-					RelativePath=".\BufferManager.cpp"
+					RelativePath=".\IndexBuffer.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\inc\vapor\render\BufferManager.h"
+					RelativePath="..\..\inc\vapor\render\IndexBuffer.h"
 					>
 				</File>
-				<Filter
-					Name="Vertex"
+				<File
+					RelativePath=".\VertexBuffer.cpp"
 					>
-					<File
-						RelativePath=".\VertexBuffer.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\inc\vapor\render\VertexBuffer.h"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="Index"
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\render\VertexBuffer.h"
 					>
-					<File
-						RelativePath=".\IndexBuffer.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\inc\vapor\render\IndexBuffer.h"
-						>
-					</File>
-				</Filter>
+				</File>
 			</Filter>
 			<Filter
 				Name="Primitives"
@@ -1029,6 +1013,14 @@
 			<File
 				RelativePath=".\Engine.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						DisableSpecificWarnings="4244"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\inc\vapor\Engine.h"
@@ -1481,6 +1473,30 @@
 					<File
 						RelativePath="..\..\dep\stb\stb_image.cpp"
 						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								DisableSpecificWarnings="4244;4100;4245;4505"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								DisableSpecificWarnings="4244"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="DLL Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								DisableSpecificWarnings="4244"
+							/>
+						</FileConfiguration>
 					</File>
 					<File
 						RelativePath=".\STB_Image_Loader.cpp"

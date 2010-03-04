@@ -12,7 +12,6 @@
 
 #include "vapor/render/Device.h"
 #include "vapor/render/Adapter.h"
-#include "vapor/render/BufferManager.h"
 #include "vapor/scene/Camera.h"
 #include "vapor/render/GL.h"
 
@@ -39,7 +38,6 @@ Device::~Device()
 
 	delete TextureManager::getInstancePtr();
 	delete ProgramManager::getInstancePtr();
-	delete bufferManager;
 	delete adapter;
 	delete window;
 }
@@ -58,16 +56,16 @@ void Device::init()
 	checkExtensions();
 
 	adapter = new Adapter();
-	bufferManager = new BufferManager();
 	TextureManager::getInstance();
 	ProgramManager::getInstance();
 
-	glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
+	//glEnable( GL_LINE_SMOOTH );
+	//glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
 
 	glEnable( GL_CULL_FACE );
 	glCullFace( GL_BACK );
 
-	glEnable(GL_FOG);
+	//glEnable(GL_FOG);
 	//glFogfv(GL_FOG_COLOR, g_fogColor);
 	//glFogf(GL_FOG_DENSITY, g_fogDensity);
 }
@@ -101,7 +99,6 @@ bool renderSorter(const RenderState& lhs, const RenderState& rhs)
 void Device::render( RenderBlock& queue, const scene::Camera* cam ) 
 {
 	glEnable( GL_DEPTH_TEST );
-	glClear( GL_DEPTH_BUFFER_BIT );
 
 	// sort the list by render group
 	// TODO: use a radix sorter
@@ -118,7 +115,8 @@ void Device::render( RenderBlock& queue, const scene::Camera* cam )
 		assert( program != nullptr );
 		if( !program ) continue;
 
-		if( state.group == RenderGroup::Normal )
+		// TODO: this needs some refactoring
+		if( state.group != RenderGroup::Overlays )
 		{
 			//glDepthMask( true );
 
@@ -260,7 +258,7 @@ BufferManager* Device::getBufferManager() const
 void Device::clearTarget()
 {
 	glClearColor( clearColor.r, clearColor.g, clearColor.b, clearColor.a );
-	glClear( GL_COLOR_BUFFER_BIT );
+	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 }
 
 //-----------------------------------//

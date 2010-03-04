@@ -24,7 +24,8 @@ static float DEFAULT_LINE_WIDTH = 1.0f;
 Material::Material( const std::string& name, ProgramPtr program )
 	: name( name ), program( program ), _isBlendingEnabled( false ),
 	src( BlendingOperationSource::One ), dst( BlendingOperationDestination::Zero ),
-	lineWidth( DEFAULT_LINE_WIDTH ), lineSmooth( false ), cullBackfaces( true )
+	lineWidth( DEFAULT_LINE_WIDTH ), lineSmooth( false ), cullBackfaces( true ),
+	depthTest( true )
 {
 
 }
@@ -35,7 +36,8 @@ Material::Material( const std::string& name, const std::string& program )
 	: name( name ), _isBlendingEnabled( false ), 
 	program( ProgramManager::getInstance().getProgram( program ) ),
 	src( BlendingOperationSource::One ), dst( BlendingOperationDestination::Zero ),
-	lineWidth( DEFAULT_LINE_WIDTH ), lineSmooth( false )
+	lineWidth( DEFAULT_LINE_WIDTH ), lineSmooth( false ), cullBackfaces( true ),
+	depthTest( true )
 {
 }
 
@@ -102,63 +104,6 @@ BlendingOperationDestination::Enum Material::getDestinationBlendingOperation()
 
 //-----------------------------------//
 
-bool Material::getBackfaceCulling()
-{
-	return cullBackfaces;
-}
-
-//-----------------------------------//
-
-void Material::setBackfaceCulling( bool cull )
-{
-	cullBackfaces = cull;
-}
-
-
-//-----------------------------------//
-
-ProgramPtr Material::getProgram() const
-{
-	return program;
-}
-
-//-----------------------------------//
-
-void Material::setProgram( ProgramPtr program )
-{
-	this->program = program;
-}
-
-//-----------------------------------//
-
-float Material::getLineWidth() const
-{
-	return lineWidth;
-}
-
-//-----------------------------------//
-
-void Material::setLineWidth( float width )
-{
-	this->lineWidth = width;
-}
-
-//-----------------------------------//
-
-bool Material::getLineSmoothing() const
-{
-	return lineSmooth;
-}
-
-//-----------------------------------//
-
-void Material::setLineSmoothing( bool smooth )
-{
-	this->lineSmooth = smooth;
-}
-
-//-----------------------------------//
-
 void Material::setProgram( const std::string& name )
 {
 	ProgramPtr p = ProgramManager::getInstance().getProgram( name );
@@ -206,13 +151,18 @@ void Material::bind()
 		glDisable( GL_CULL_FACE );
 	}
 
-	program->bind();
+	if( !depthTest )
+	{
+		glDisable( GL_DEPTH_TEST );
+	}
 
 	if( isBlendingEnabled() ) 
 	{
 		glEnable( GL_BLEND );
 		glBlendFunc( src, dst );
 	}
+
+	program->bind();
 }
 
 //-----------------------------------//
@@ -236,8 +186,20 @@ void Material::unbind()
 		glEnable( GL_CULL_FACE );
 	}
 
-	glDisable( GL_LINE_SMOOTH );
-	glLineWidth( DEFAULT_LINE_WIDTH );
+	if( !depthTest )
+	{
+		glEnable( GL_DEPTH_TEST );
+	}
+
+	if( lineSmooth )
+	{
+		glDisable( GL_LINE_SMOOTH );
+	}
+
+	if( lineWidth != DEFAULT_LINE_WIDTH ) 
+	{
+		glLineWidth( DEFAULT_LINE_WIDTH );
+	} 
 }
 
 //-----------------------------------//

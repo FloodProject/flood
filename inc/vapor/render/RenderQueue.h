@@ -29,6 +29,7 @@ namespace RenderGroup
 	enum Enum
 	{
 		Normal = 0,
+		Transparency = 5,
 		Overlays = 10
 	};
 }

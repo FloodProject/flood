@@ -39,7 +39,17 @@ public:
 
 protected:
 
-	render::VertexBufferPtr getVB( const math::Vector3& midPoint );
+	// Generates all the cone geometries in a single vertex buffer.
+	render::RenderablePtr generateCones();
+
+	// Generates solid cone geometry for the gizmo arrows.
+	void generateSolidCone( double base, double height, uint slices,
+		std::vector<Vector3>& pos );
+	
+	render::VertexBufferPtr generateLines();
+
+	math::Vector3 midPoint;
+
 	static const std::string& type;
 };
 

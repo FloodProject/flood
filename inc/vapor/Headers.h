@@ -47,9 +47,10 @@
 #include <vapor/scene/Sound.h>
 #include <vapor/scene/Listener.h>
 #include <vapor/scene/Geometry.h>
-#include "vapor/scene/Grid.h"
-#include "vapor/scene/Light.h"
-#include "vapor/scene/Skydome.h"
+#include <vapor/scene/Grid.h>
+#include <vapor/scene/Light.h>
+#include <vapor/scene/Skydome.h>
+#include <vapor/scene/Billboard.h>
 
 //-------------------------------------------------------------------------//
 // Render-related Includes
@@ -63,9 +64,9 @@
 #include <vapor/render/GLSL_Program.h>
 #include <vapor/render/GLSL_Shader.h>
 #include <vapor/render/Quad.h>
-#include "vapor/render/TextureManager.h"
-#include "vapor/render/ProgramManager.h"
-#include "vapor/render/FBO.h"
+#include <vapor/render/TextureManager.h>
+#include <vapor/render/ProgramManager.h>
+#include <vapor/render/FBO.h>
 
 //-------------------------------------------------------------------------//
 // Input-related Includes

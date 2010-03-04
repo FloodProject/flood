@@ -115,13 +115,6 @@ void Geometry::update( double delta )
 
 //-----------------------------------//
 
-const std::string Geometry::save(int indent)
-{
-	return "";
-}
-
-//-----------------------------------//
-
 const std::string& Geometry::getType() const
 {
 	return type;

@@ -263,13 +263,6 @@ void Camera::cull( render::RenderBlock& block, const NodePtr& node ) const
 
 //-----------------------------------//
 
-const std::string Camera::save( int /*indent*/ )
-{
-	return "";
-}
-
-//-----------------------------------//
-
 const std::string& Camera::getType() const
 {
 	return type;
@@ -331,7 +324,6 @@ float Camera::getNear() const
 	return near_;
 }
 
-
 //-----------------------------------//
 
 void Camera::setFar( float far_ )
@@ -344,6 +336,11 @@ void Camera::setFar( float far_ )
 float Camera::getFar() const
 {
 	return far_;
+}
+
+const Vector3& Camera::getForwardVector() const
+{
+	return forwardVector;
 }
 
 //-----------------------------------//

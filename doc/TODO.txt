@@ -127,7 +127,7 @@ Window:
 	Make the Engine class take Window creation settings
 	The Window title should be set on Window creation
 	Move the window polling to a different thread (smooth resizing / maybe SFML itself will do this in 2.0)
-	Hide the window until requested.
+	Hide the window until show is requested.
 	http://msdn.microsoft.com/en-us/library/ms648383%28VS.85%29.aspx
 	
 	
@@ -141,7 +141,7 @@ Platform:
 	
 Rendering:
 
-	ProgramManager for handling programs and shaders.
+
 	Font handling via FreeType 2
 	Signed distance fonts
 	Bitmap font file format (and converter for some freeware generator tool)
@@ -149,10 +149,6 @@ Rendering:
 VFS:
 
 	Patch PhysFS to use the proper user dir for App Data on Windows
-
-Engine:
-
-	Re-check the order of initialization of the engine subsystems 
 
 Math:
 
@@ -162,6 +158,7 @@ Math:
 DONE:
 -----
 
+ProgramManager for handling programs and shaders.
 Fix the Camera behaviour
 Bounding Boxes
 Switch all the resource loaders to use the VFS layer

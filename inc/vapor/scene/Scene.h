@@ -45,9 +45,6 @@ public:
 	/// Updates all the entities recursively.
 	virtual void update( double delta );
 
-	/// Serializes the scene to a stream.
-	virtual const std::string save( int indent = 0 );
-
 	/// Gets a raw pointer to the named entity.
 	Node* getEntityPtr( const std::string& name ) const;
 
