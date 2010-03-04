@@ -25,6 +25,22 @@ AABB::AABB()
 
 //-----------------------------------//
 
+AABB::AABB( const Vector3& min, const Vector3& max )
+	: min( min ), max( max )
+{
+
+}
+
+//-----------------------------------//
+
+AABB::AABB( const AABB& box )
+	: min( box.min ), max( box.max )
+{
+
+}
+
+//-----------------------------------//
+
 Vector3 AABB::getCorner( int i ) const
 {
 	assert(i >= 0);
@@ -93,6 +109,34 @@ void AABB::add( const AABB& aabb )
 	if( aabb.max.y > max.y ) max.y = aabb.max.y;
 	if( aabb.min.z < min.z ) min.z = aabb.min.z;
 	if( aabb.max.z > max.z ) max.z = aabb.max.z;
+}
+
+//-----------------------------------//
+
+AABB AABB::transform( const Matrix4x3& mat ) const
+{
+	//Vector3 nmin( mat.tx, mat.ty, mat.tz );
+	//Vector3 nmax( min );
+
+	//for ( uint i = 0; i < 3; i++ )
+	//{
+	//	for ( uint j = 0; j < 3; j++ )
+	//	{
+	//		float av = mat.element(i, j) * min[j];
+	//		float bv = mat.element(i, j) * max[j];
+
+	//		if (av < bv)
+	//		{
+	//			nmin[i] += av;
+	//			nmax[i] += bv;
+	//		} else {
+	//			nmin[i] += bv;
+	//			nmax[i] += av;
+	//		}
+	//	}
+	//}
+
+	return  AABB( min*mat, max*mat );
 }
 
 //-----------------------------------//

@@ -50,15 +50,15 @@ VertexBuffer::~VertexBuffer()
 bool VertexBuffer::bind()
 {
 	// Check that we have a valid buffer
-	if( !glIsBuffer( id ) )
-	{
-		warn( "gl::buffers", "Vertex buffer is not valid" );
-		return false;		
-	}
+	//if( !glIsBuffer( id ) )
+	//{
+	//	warn( "gl::buffers", "Vertex buffer is not valid" );
+	//	return false;		
+	//}
 
 	glBindBuffer( GL_ARRAY_BUFFER, id );
 
-	if( !glHasError( "Error binding vertex buffer" ) )
+	if( glHasError( "Error binding vertex buffer" ) )
 	{
 		return false;
 	}

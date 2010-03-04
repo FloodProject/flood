@@ -39,6 +39,7 @@ solution "vapor"
 		-- Include directories
 		includedirs {
 			"../inc",
+			"../dep/jsoncpp",
 			"../dep/boost_1_39_0",
 			"../dep/fd_delegate/include",
 			"../dep/freetype/include",

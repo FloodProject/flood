@@ -52,7 +52,7 @@ public:
 	const math::EulerAngles& getRotation() const;
 
 	// Sets the rotation vector of this node.
-	void setRotation( math::EulerAngles& rot );
+	void setRotation( const math::EulerAngles& rot );
 
 	// Points to a given point in space.
 	math::Matrix4x3 lookAt( const math::Vector3& lookAtVector, const math::Vector3& upVector );
@@ -73,7 +73,7 @@ public:
 	const math::AABB& getBoundingVolume() const;
 
 	// Gets the world bounding volume of the node.
-	const math::AABB& getWorldBoundingVolume() const;
+	math::AABB getWorldBoundingVolume() const;
 
 	// Does this node's bounding box need to be updated?
 	bool requiresBoundingVolumeUpdate() const;
@@ -105,11 +105,13 @@ protected:
 
 	// Bounding volumes used for culling.
 	math::AABB boundingVolume;
-	math::AABB worldBoundingVolume;
+	//math::AABB worldBoundingVolume;
 
 	bool aabbNeedsUpdate;
 	render::RenderablePtr aabbRenderable;
 
+	// If an external update occurs (the matrix is changed) then we
+	// don't want to override that when the transform is updated.
 	bool externalUpdate;
 
 	static const std::string& type;

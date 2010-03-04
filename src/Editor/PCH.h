@@ -21,7 +21,7 @@
     #include "wx/wx.h"
 #endif
 
-#include "wx/mstream.h"
+#include <wx/mstream.h>
 #include <wx/hyperlink.h>
 #include <wx/treectrl.h> 
 #include <wx/choicebk.h>
@@ -31,15 +31,14 @@
 #include <wx/filectrl.h>
 
 //---------------------------------------------------------------------//
-// Image Utilities
-//---------------------------------------------------------------------//
-
-#include "ImageUtils.h"
-
-//---------------------------------------------------------------------//
 // vapor3D Engine
 //---------------------------------------------------------------------//
 
 #define VAPOR_USE_NAMESPACES
 #include <vapor/Headers.h>
 
+//---------------------------------------------------------------------//
+// Image Utilities
+//---------------------------------------------------------------------//
+
+#include "ImageUtils.h"

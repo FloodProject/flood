@@ -40,7 +40,7 @@ private:
 
 inline void intrusive_ptr_add_ref(ReferenceCounted* ptr)
 {
-	// increment reference count of object *p
+	// increment reference count of object
 	++(ptr->references);
 }
 

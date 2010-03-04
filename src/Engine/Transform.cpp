@@ -106,9 +106,9 @@ const math::EulerAngles& Transform::getRotation() const
 
 //-----------------------------------//
 
-void Transform::setRotation( math::EulerAngles& rot )
+void Transform::setRotation( const math::EulerAngles& rot )
 {
-	this->angles = rot;
+	angles = rot;
 
 	notify();
 }
@@ -248,7 +248,7 @@ RenderablePtr buildBoundingRenderable( const math::AABB& aabb )
 
 //-----------------------------------//
 
-void Transform::update( double delta )
+void Transform::update( double UNUSED(delta) )
 {
 	if( !externalUpdate )
 		absoluteLocalToWorld = getLocalTransform();
@@ -295,9 +295,9 @@ const math::AABB& Transform::getBoundingVolume() const
 
 //-----------------------------------//
 
-const math::AABB& Transform::getWorldBoundingVolume() const
+math::AABB Transform::getWorldBoundingVolume() const
 {
-	return worldBoundingVolume;
+	return boundingVolume.transform( getAbsoluteTransform() );
 }
 
 //-----------------------------------//

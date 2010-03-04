@@ -9,6 +9,7 @@
 #pragma once
 
 #include "vapor/math/Vector3.h"
+#include "vapor/math/Matrix4x3.h"
 #include "vapor/math/Ray.h"
 
 namespace vapor { namespace math {
@@ -24,6 +25,8 @@ class VAPOR_API AABB : private boost::noncopyable
 public:
 
 	AABB();
+	AABB( const Vector3& min, const Vector3& max );
+	AABB( const AABB& box );
 
 	// Gets the chosen corner vertice.
 	Vector3 getCorner( int index ) const;
@@ -50,7 +53,10 @@ public:
 	void add( const AABB& aabb );
 
 	// Intersection with a ray
-	 bool intersects( const Ray& ray, float& distance ) const;
+	bool intersects( const Ray& ray, float& distance ) const;
+	
+	// Transforms the AABB by a matrix.
+	AABB transform( const Matrix4x3& mat ) const;
 
 public:
 

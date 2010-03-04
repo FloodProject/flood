@@ -36,8 +36,6 @@ VFS::VFS(const std::string& app, const char* argv0 )
 #ifdef VAPOR_PLATFORM_WINDOWS
 	watcher = new WatcherWin32();
 #endif
-
-	mountDefaultLocations();
 }
 
 //-----------------------------------//

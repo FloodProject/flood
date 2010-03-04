@@ -519,8 +519,6 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 
 void EditorFrame::onMouseClick( const MouseButtonEvent& mbe )
 {
-	return;
-
 	ScenePtr scene = engine->getSceneManager();
 
 	// Disable all enabled bounding boxes.
@@ -549,7 +547,7 @@ void EditorFrame::onMouseClick( const MouseButtonEvent& mbe )
 
 	RenderablePtr rend( new Renderable( Primitive::Lines, vb ) );
 	MaterialPtr mat( new Material( "LineMaterial", "diffuse" ) );
-	rend->setMaterial( mat );
+	rend->setMaterial( mat );	
 	GeometryPtr geom( new Geometry(rend) );
 	NodePtr line( new Node( "line" ) );
 	line->addComponent( TransformPtr( new Transform() ) );
@@ -561,16 +559,16 @@ void EditorFrame::onMouseClick( const MouseButtonEvent& mbe )
 	{
 		if( node->getName() == "line" ) continue;
 
-		const AABB& aabb = node->getTransform()->getBoundingVolume();
+		const AABB& aabb = node->getTransform()->getWorldBoundingVolume();
 			
 		float distance;
-		if( aabb.intersects( Ray( -pickRay.origin, pickRay.direction ), distance ) )
+		if( aabb.intersects( pickRay, distance ) )
 		{
 			// We found what we want, enable its bounding box.
 			node->getTransform()->setDebugRenderableVisible( true );
 			selectedNodes.push_back( node );
 			debug( "distance: %f", distance );
-			//goto pickDone;
+			goto pickDone;
 		}
 	}
 
