@@ -99,6 +99,9 @@ public:
     // Gets the render mode of this renderable.
     PolygonMode::Enum getPolygonMode() const;
 
+	// Gets the primitive type of this renderable.
+	Primitive::Enum getPrimitiveType() const;
+
 	// Sets the vertex buffer of this renderable.
 	void setVertexBuffer( const VertexBufferPtr& vb );
 

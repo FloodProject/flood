@@ -489,7 +489,7 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 
 	case Toolbar_TooglePlay:
 	{
-		physics::PhysicsManager* pm = engine->getPhysicsManager();
+		//physics::PhysicsManager* pm = engine->getPhysicsManager();
 		//if( pm ) pm->setSimulationEnabled( !pm->getSimulationEnabled() );
 		break;
 	}
@@ -519,7 +519,7 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 
 void EditorFrame::onMouseClick( const MouseButtonEvent& mbe )
 {
-	ScenePtr scene = engine->getSceneManager();
+	const ScenePtr& scene = engine->getSceneManager();
 
 	// Disable all enabled bounding boxes.
 	foreach( const NodePtr& node, selectedNodes )
@@ -529,52 +529,20 @@ void EditorFrame::onMouseClick( const MouseButtonEvent& mbe )
 
 	selectedNodes.clear();
 
-	// Just get all the needed classes with the data for picking.
-	Vector3 outFar;
-	Ray pickRay = viewport->camera->getRay( mbe.x, mbe.y, &outFar );
+	// Get a ray given the screen location clicked.
+	const Ray& pickRay = viewport->camera->getRay( mbe.x, mbe.y );
 
-	std::vector< Vector3 > vertex;
-	vertex.push_back( pickRay.origin );
-	vertex.push_back( outFar );
+	// Perform ray casting to find the nodes.
+	RayBoxQueryList list;
+	scene->doRayBoxQuery( pickRay, list );
 
-	std::vector< Vector3 > colors;
-	colors.push_back( Vector3( 1.0f, 0.0f, 0.0f ) );
-	colors.push_back( Vector3( 1.0f, 0.0f, 0.0f ) );
-
-	VertexBufferPtr vb( new VertexBuffer() );
-	vb->set( VertexAttribute::Position, vertex );
-	vb->set( VertexAttribute::Color, colors );
-
-	RenderablePtr rend( new Renderable( Primitive::Lines, vb ) );
-	MaterialPtr mat( new Material( "LineMaterial", "diffuse" ) );
-	rend->setMaterial( mat );	
-	GeometryPtr geom( new Geometry(rend) );
-	NodePtr line( new Node( "line" ) );
-	line->addComponent( TransformPtr( new Transform() ) );
-	line->addComponent( geom );
-	scene->add( line );
-
-	// Do some ray tracing to find a collision.
-	foreach( const NodePtr& node, scene->getChildren() )
+	foreach( const RayBoxQueryResult& res, list )
 	{
-		if( node->getName() == "line" ) continue;
+		const NodePtr& node = res.node;
 
-		const AABB& aabb = node->getTransform()->getWorldBoundingVolume();
-			
-		float distance;
-		if( aabb.intersects( pickRay, distance ) )
-		{
-			// We found what we want, enable its bounding box.
-			node->getTransform()->setDebugRenderableVisible( true );
-			selectedNodes.push_back( node );
-			debug( "distance: %f", distance );
-			goto pickDone;
-		}
+		node->getTransform()->setDebugRenderableVisible( true );
+		selectedNodes.push_back( node );
 	}
-
-pickDone:
-
-	return;
 }
 
 //-----------------------------------//

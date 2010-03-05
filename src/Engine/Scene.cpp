@@ -11,6 +11,7 @@
 #include "vapor/scene/Transform.h"
 
 using namespace vapor::math;
+using namespace vapor::render;
 
 namespace vapor { namespace scene {
 
@@ -30,6 +31,95 @@ Scene::~Scene()
 
 //-----------------------------------//
 
+bool Scene::doRayBoxQuery( const Ray& ray, RayBoxQueryList& list ) const
+{
+	// Do some ray tracing to find a collision.
+	foreach( const NodePtr& node, getChildren() )
+	{
+		const AABB& aabb = node->getTransform()->getWorldBoundingVolume();
+			
+		float distance;
+		if( aabb.intersects( ray, distance ) )
+		{
+			RayBoxQueryResult res;
+			res.node = node;
+			res.distance = distance;
+
+			list.push_back( res );
+		}
+	}
+
+	return !list.empty();
+}
+
+//-----------------------------------//
+
+bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res ) const
+{
+	// Perform ray casting to find the nodes.
+	RayBoxQueryList list;
+	doRayBoxQuery( ray, list );
+
+	foreach( const RayBoxQueryResult& query, list )
+	{
+		if( doRayTriangleQuery( ray, res, query.node ) )
+			return true;
+	}
+
+	return false;
+}
+
+//-----------------------------------//
+
+bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, const NodePtr& node ) const
+{
+	// Down to triangle picking.	
+	foreach( const GeometryPtr& geo, node->getGeometry() )
+	{
+		if( !geo ) continue;
+
+		foreach( const RenderablePtr& rend, geo->getRenderables() )
+		{
+			// This picking method only works on triangles.
+			if( !rend ) continue;
+			if( rend->getPrimitiveType() != Primitive::Triangles) continue;
+
+			const VertexBufferPtr& vb = rend->getVertexBuffer();
+			if( !vb ) continue;
+
+			const std::vector<Vector3>& vertices = vb->getVertices();
+			if( vertices.size() < 3 ) continue;
+
+			assert( !rend->getIndexBuffer() );
+
+			for( uint i = 0; i < vertices.size(); i += 3 )
+			{
+				Vector3 tri[3];
+				tri[0] = vertices[i];
+				tri[1] = vertices[i+1];
+				tri[2] = vertices[i+2];
+
+				Vector3 to; float n;
+				if( ray.intersects( tri, to, n ) )
+				{
+					res.geometry = geo;
+					
+					for( byte i = 0; i < 3; i++ )
+						res.triangle[i] = tri[i];
+					
+					res.distance = n;
+
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
+//-----------------------------------//
+
 void Scene::update( double delta )
 {
 	Group::update( delta );
@@ -41,8 +131,8 @@ void Scene::update( double delta )
 
 //-----------------------------------//
 
-void Scene::updateTransformAndBV( NodePtr /*node*/, MatrixStack& /*transformStack*/ )
-{
+//void Scene::updateTransformAndBV( NodePtr /*node*/, MatrixStack& /*transformStack*/ )
+//{
 	// TODO: benckmark and profile this, smells slow
 	//PROFILE;
 
@@ -84,7 +174,7 @@ void Scene::updateTransformAndBV( NodePtr /*node*/, MatrixStack& /*transformStac
 	//{
 	//	transformStack.pop();
 	//}
-}
+//}
 
 //-----------------------------------//
 

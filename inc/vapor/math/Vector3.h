@@ -170,7 +170,7 @@ public:
 	//-----------------------------------//
 
 	// Dot product
-	float dot( const Vector3T& v )
+	float dot( const Vector3T& v ) const
 	{
 		return x*v.x + y*v.y + z*v.z;
 	}

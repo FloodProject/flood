@@ -124,6 +124,13 @@ PolygonMode::Enum Renderable::getPolygonMode() const
 
 //-----------------------------------//
 
+Primitive::Enum Renderable::getPrimitiveType() const
+{
+	return type;
+}
+
+//-----------------------------------//
+
 void Renderable::setMaterial( const MaterialPtr& mat )
 {
 	this->mat = mat;

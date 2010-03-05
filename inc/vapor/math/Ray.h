@@ -31,6 +31,10 @@ public:
 	// Gets a vector with the direction of the ray.
 	const Vector3& getDirection() const;
 
+	// Intersects the ray with a triangle.
+	bool intersects( const Vector3 tri[3], 
+		Vector3& intersectionPoint, float& t ) const;
+
 public:
 
 	// Point representing the origin of the ray.

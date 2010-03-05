@@ -10,12 +10,29 @@
 
 #include "vapor/scene/Group.h"
 #include "vapor/math/Matrix4x3.h"
+#include "vapor/math/Ray.h"
 
 namespace vapor { namespace scene {
 
 //-----------------------------------//
 
-typedef std::stack< math::Matrix4x3 > MatrixStack;
+struct RayBoxQueryResult
+{
+	// Bounding-box based intersection
+	NodePtr node;
+	float distance;
+};
+
+struct RayTriangleQueryResult
+{
+	// Triangle based intersection
+	GeometryPtr geometry;
+	math::Vector3 intersection;
+	math::Vector3 triangle[3];
+	float distance;
+};
+
+typedef std::vector<RayBoxQueryResult> RayBoxQueryList;
 
 //-----------------------------------//
 
@@ -34,14 +51,6 @@ public:
 	Scene();
 	virtual ~Scene();
 
-	// Node creation methods
-
-	//MeshPtr createMesh();
-	//Camera* createCamera();
-	//Light* createLight();
-	//Listener* createListener();
-	//etc...
-
 	/// Updates all the entities recursively.
 	virtual void update( double delta );
 
@@ -51,10 +60,16 @@ public:
 	/// Gets a shared pointer to the named entity.
 	NodePtr getEntity( const std::string& name ) const;
 
-private:
+	/// Ray-casts a ray through the scene testing for collisions.
+	bool doRayBoxQuery( const math::Ray& ray, RayBoxQueryList& list ) const;
+	bool doRayBoxQuery( const math::Ray& ray, RayBoxQueryResult& res ) const;
+	bool doRayTriangleQuery( const math::Ray& ray, RayTriangleQueryResult& res ) const;
+	bool doRayTriangleQuery( const math::Ray& ray, RayTriangleQueryResult& res, const NodePtr& node ) const;
 
-	// Updates all the transforms and bounding volumes of the scene nodes.
-	void updateTransformAndBV( NodePtr node, MatrixStack& transformStack );
+private:	
+
+	/// Updates all the transforms and bounding volumes of the scene nodes.
+	//void updateTransformAndBV( NodePtr node, MatrixStack& transformStack );
 };
 
 //-----------------------------------//

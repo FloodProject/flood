@@ -43,7 +43,7 @@ Texture::~Texture()
 #ifdef VAPOR_DEBUG
 	while( glGetError() != GL_NO_ERROR )
 	{
-		warn( "gl", "Could not delete texture object '%d'", _id );
+		warn( "gl", "Could not delete texture object '%ud'", _id );
 	}
 #endif
 }

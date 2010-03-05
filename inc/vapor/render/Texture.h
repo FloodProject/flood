@@ -21,7 +21,7 @@ namespace vapor { namespace render {
  * TODO: compressed texture?
  */
 
-class VAPOR_API Texture
+class VAPOR_API Texture : public ReferenceCounted
 {
 public:
 
@@ -74,7 +74,7 @@ private:
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( Texture );
+TYPEDEF_INTRUSIVE_POINTER_FROM_CLASS( Texture );
 
 //-----------------------------------//
 
