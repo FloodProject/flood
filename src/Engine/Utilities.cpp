@@ -26,6 +26,17 @@ long endian_swap(long i)
 
 //-----------------------------------//
 
+void float_to_str( char* str, float n, byte precision = 2 )
+{
+//#ifdef VAPOR_PLATFORM_WINDOWS
+//	sprintf_s( sprintf( str, 32, "%#.*f", precision, n );
+//#else
+	sprintf( str, "%#.*f", precision, n );
+//#endif
+}
+
+//-----------------------------------//
+
 #ifdef VAPOR_PLATFORM_WINDOWS
 
 std::string wstrtostr(const std::wstring &wstr)

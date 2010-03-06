@@ -22,6 +22,7 @@ Example::Example(const char** argv)
 void Example::onInit()
 {
 	//physicsManager->createWorld();
+	getVFS()->mountDefaultLocations();
 }
 
 //-----------------------------------//

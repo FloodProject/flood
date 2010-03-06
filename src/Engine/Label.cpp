@@ -77,6 +77,8 @@ void Label::update( double UNUSED(delta) )
 	// No need to update geometry if the label did not change.
 	if( !isDirty || text.empty() ) return;
 
+	if( !font ) return;
+
 	std::vector<Glyph> glyphs = font->getGlyphsTable();
 
 	const float width = font->getTexture()->getImage()->getWidth();

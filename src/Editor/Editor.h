@@ -8,12 +8,14 @@
 
 #pragma once
  
-#include "vaporControl.h"
+#include "Mode.h"
+#include "Operation.h"
+
+#include "Viewport.h"
 #include "SceneTreeCtrl.h"
 #include "ResourceTreeCtrl.h"
-#include "ConsoleFrame.h"
-#include "Viewport.h"
 #include "TerrainPage.h"
+#include "ConsoleFrame.h"
 
 namespace vapor { namespace editor {
 
@@ -38,29 +40,9 @@ public:
 class EditorFrame : public wxFrame
 {
 public:
-    // ctor(s)
+
     EditorFrame(const wxString& title);
 	virtual ~EditorFrame();
-
-protected:
-
-	// Create the editor Scene.
-	void createScene();
-
-	// create notebook with tabs
-	void createNotebook();
-
-	// creates and populates the menus
-	void createMenus();
-
-	// creates and populates the main toolbar
-	void createToolbar();
-
-	// creates the statusbar
-	void createStatusbar();
-
-	// vaporEngine-related stuff
-	void initEngine();
 
     // event handlers (these functions should _not_ be virtual)
     void OnQuit(wxCommandEvent& event);
@@ -69,34 +51,53 @@ protected:
 	void OnKeyDown(wxKeyEvent& event);
 	void OnNodeSelected(wxTreeItemId old, wxTreeItemId id);
 
-	// Handles picking of entities.
-	void onMouseClick( const vapor::input::MouseButtonEvent& mbe );
-	void onKeyPress(const vapor::input::KeyEvent& key);
-	void onKeyRelease(const vapor::input::KeyEvent& key);
+	void onMouseClick( const input::MouseButtonEvent& mbe );
+	void onKeyPress(const input::KeyEvent& key);
+	void onKeyRelease(const input::KeyEvent& key);
+
+protected:
+
+	// Creates the layout of the editor.
+	void createScene();
+	void createNotebook();
+	void createMenus();
+	void createToolbar();
+	void createStatusbar();
+
+	// Initializes vapor3D engine.
+	void initEngine();
+
+private:
 
 	// vaporEngine instance.
 	vapor::Engine* engine;
 
-	// vaporEngine's wxWidgets control.
-	vaporControl* vaporCtrl;
-
 	// Main layout sizer.
 	wxBoxSizer* sizer;
 
-	// Groups the above controllers.
-	wxNotebook* notebookCtrl;
-	
-	// Manages the Scene entities.
-	SceneTreeCtrl* sceneTreeCtrl;
-
-	// Manages the Resource files.
-	ResourceTreeCtrl* resourceTreeCtrl;
-
+	// Outputs vapor rendering.
 	Viewport* viewport;
-	ConsoleFrame* codeEvaluator;
-	TerrainPage* terrainPage;
+	vaporControl* vaporCtrl;
 
-	std::vector< scene::NodePtr > selectedNodes;
+	// Sidebar controls.
+	wxNotebook* notebookCtrl;
+	SceneTreeCtrl* sceneTreeCtrl;
+	ResourceTreeCtrl* resourceTreeCtrl;
+	TerrainPage* terrainPage;
+	
+	// Lua evaluator.
+	ConsoleFrame* codeEvaluator;
+	
+	// Editor modes
+	Mode* currentMode;
+	std::vector<Mode*> editorModes;
+
+	// Nodes
+	std::vector<NodePtr> selectedNodes;
+
+	// Saves all the operations in a stack so you can undo
+	// any editing operation you've done while editing.
+	std::stack<Operation*> operations;
 
 private:
 

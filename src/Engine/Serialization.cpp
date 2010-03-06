@@ -30,13 +30,10 @@ void serializeToFile( Json::Value& root, const std::string& name )
 {
 	// Always use the platform independent "C" locale when writing JSON,
 	// jsoncpp assumes this and will write wrong data with another locale.
-
-	char *current_locale = setlocale(LC_NUMERIC, "C");
+	SwitchNeutralLocale c;
 
 	vfs::File file( name, vfs::AccessMode::Write );
 	file.write( root.toStyledString() );
-
-	setlocale(LC_NUMERIC, current_locale);
 }
 
 //-----------------------------------//

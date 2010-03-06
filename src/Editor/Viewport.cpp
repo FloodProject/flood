@@ -9,7 +9,6 @@
 #include "PCH.h"
 #include "Viewport.h"
 #include "EditorIcons.h"
-#include <vapor/Utilities.h>
 
 namespace vapor { namespace editor {
 
@@ -42,16 +41,6 @@ Viewport::~Viewport()
 
 void Viewport::init()
 {
-	int attribs[] = 
-	{
-		WX_GL_RGBA,
-		WX_GL_DOUBLEBUFFER,
-		WX_GL_DEPTH_SIZE, 32,
-		WX_GL_SAMPLE_BUFFERS, 1,
-		WX_GL_SAMPLES, 0,
-		0,
-	};
-
 	vaporCtrl = new vaporControl( engine, this/*, wxID_ANY, attribs*/ );
 }
 
@@ -155,25 +144,20 @@ void Viewport::build()
 
 //-----------------------------------//
 
-const byte CAM_STR_PRECISION = 2;
-
-#define CONVERT_STR(n)												\
-	sprintf( str, "%#.*f", CAM_STR_PRECISION, n );					\
-	while((c = strchr(str, ','))) *c = '.';							\
-
 void Viewport::onCameraTransform()
 {
-	const math::Vector3& pos = transform->getPosition();
+	SwitchNeutralLocale c;
 	
-	char str[20]; char* c;
-	
-	CONVERT_STR( pos.x )
+	const Vector3& pos = transform->getPosition();
+	char str[32];
+
+	float_to_str( str, pos.x );
 	txt_X->ChangeValue( str );
 	
-	CONVERT_STR( pos.y )
+	float_to_str( str, pos.y );
 	txt_Y->ChangeValue( str );
 	
-	CONVERT_STR( pos.z )
+	float_to_str( str, pos.z );
 	txt_Z->ChangeValue( str );
 }
 
@@ -196,7 +180,7 @@ void Viewport::updatePosition()
 
 //-----------------------------------//
 
-void Viewport::onTextEnter( wxCommandEvent& event )
+void Viewport::onTextEnter( wxCommandEvent& WXUNUSED(event) )
 {
 	updatePosition();
 }

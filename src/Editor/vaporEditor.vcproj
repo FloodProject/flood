@@ -438,6 +438,30 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Modes"
+			>
+			<File
+				RelativePath=".\Mode.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Mode.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Operation"
+			>
+			<File
+				RelativePath=".\Operation.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Operation.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\Editor.cpp"
 			>
@@ -448,14 +472,6 @@
 		</File>
 		<File
 			RelativePath=".\Editor.rc"
-			>
-		</File>
-		<File
-			RelativePath=".\Operation.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\Operation.h"
 			>
 		</File>
 	</Files>

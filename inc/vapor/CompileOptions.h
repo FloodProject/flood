@@ -12,7 +12,7 @@
 // Engine information
 //-------------------------------------------------------------------------//
 
-#define VAPOR_ENGINE_VERSION "development-SVN"
+#define VAPOR_ENGINE_VERSION "vapor3D-SVN"
 
 //-------------------------------------------------------------------------//
 // API building information

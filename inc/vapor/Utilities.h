@@ -78,6 +78,10 @@ std::string num_to_str(const T& t)
 
 //-----------------------------------//
 
+void float_to_str( char* str, float n, byte precision = 2 );
+
+//-----------------------------------//
+
 std::string wstrtostr(const std::wstring &wstr);
 
 //-----------------------------------//
@@ -92,6 +96,27 @@ std::vector<std::string>& split(const std::string& s, char delim,
 //-----------------------------------//
 
 std::vector<std::string> split(const std::string& s, char delim);
+
+//-----------------------------------//
+
+struct SwitchNeutralLocale
+{
+public:
+
+	SwitchNeutralLocale()
+	{
+		cur = setlocale(LC_NUMERIC, "C");
+	}
+
+	~SwitchNeutralLocale()
+	{
+		setlocale(LC_NUMERIC, cur);
+	}
+
+private:
+
+	char* cur;
+};
 
 //-----------------------------------//
 

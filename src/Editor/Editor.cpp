@@ -106,6 +106,10 @@ EditorFrame::EditorFrame(const wxString& title)
 	sizer = new wxBoxSizer( wxHORIZONTAL );
 	sizer->Add( viewport, 1, wxEXPAND|wxALL );
 
+	//editorModes.push_back( new CameraMode() );
+	//editorModes.push_back( new GizmoMode() );
+	//editorModes.push_back( new TerrainMode() );
+
 	// create window basic widgets
 	createMenus();
 	createToolbar();
@@ -121,6 +125,7 @@ EditorFrame::EditorFrame(const wxString& title)
 
 EditorFrame::~EditorFrame()
 {
+	selectedNodes.clear();
 	vaporCtrl->Destroy();
 	delete engine;
 }

@@ -8,9 +8,9 @@
 
 #include "vapor/PCH.h"
 #include "vapor/terrain/Cell.h"
+#include "vapor/terrain/Terrain.h"
 #include "vapor/math/Math.h"
 #include "vapor/math/Color.h"
-#include "vapor/terrain/Terrain.h"
 
 namespace vapor { namespace scene {
 

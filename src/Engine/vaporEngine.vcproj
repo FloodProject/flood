@@ -1549,6 +1549,14 @@
 					<File
 						RelativePath=".\OGG_Loader.cpp"
 						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								DisableSpecificWarnings="4244"
+							/>
+						</FileConfiguration>
 					</File>
 					<File
 						RelativePath="..\..\inc\vapor\resources\OGG_Loader.h"
