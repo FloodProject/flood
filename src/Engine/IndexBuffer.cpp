@@ -46,6 +46,20 @@ void IndexBuffer::set( const std::vector< ulong >& data )
 
 //-----------------------------------//
 
+std::vector<ushort>& IndexBuffer::getIndices16()
+{
+	return data16;
+}
+
+//-----------------------------------//
+
+std::vector<ulong>& IndexBuffer::getIndices32()
+{
+	return data32;
+}
+
+//-----------------------------------//
+
 bool IndexBuffer::bind()
 {
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, id );
@@ -84,6 +98,8 @@ bool IndexBuffer::build( BufferUsage::Enum bU, BufferAccess::Enum bA )
 {
 	bind();
 
+	if( data16.empty() && data32.empty() ) return false;
+
 	// reserve space for all the elements
 	glBufferData( GL_ELEMENT_ARRAY_BUFFER, 
 		getNumIndices() * (is16bit() ? sizeof(ushort) : sizeof(ulong)), 
@@ -92,13 +108,8 @@ bool IndexBuffer::build( BufferUsage::Enum bU, BufferAccess::Enum bA )
 
 	//debug( "index buffer '%d' has size '%d'", id, getNumIndices() );
 
-#ifdef VAPOR_DEBUG
-	while( glGetError() != GL_NO_ERROR )
-	{
-		warn( "gl::buffers", "Could not buffer data in index buffer" );
+	if( glHasError("Could not buffer data in index buffer") )
 		return false;
-	}
-#endif
 
 	built = true;
 	return true;

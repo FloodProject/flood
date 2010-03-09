@@ -52,7 +52,7 @@ public:
 	// Expands the bounding box to contain the bounding box.
 	void add( const AABB& aabb );
 
-	// Intersection with a ray
+	// Intersection with a ray.
 	bool intersects( const Ray& ray, float& distance ) const;
 	
 	// Transforms the AABB by a matrix.

@@ -56,19 +56,19 @@ render::VertexBufferPtr Gizmo::generateLines()
 	// X axis (red)
 	pos.push_back( midPoint );
 	pos.push_back( midPoint + Vector3::UnitX*S );
-	colors.push_back( Colors::Red );
+	colors.push_back( Color( 0.6f, 0.0f, 0.0f ) );
 	colors.push_back( Colors::Red );
 
 	// Y axis (green)
 	pos.push_back( midPoint + Vector3::UnitY*0.01f );
 	pos.push_back( midPoint + Vector3::UnitY*S );
-	colors.push_back( Colors::Green );
+	colors.push_back(Color( 0.0f, 0.4f, 0.0f ) );
 	colors.push_back( Colors::Green );
 
 	// Z axis (blue)
 	pos.push_back( midPoint );
 	pos.push_back( midPoint + Vector3::UnitZ*S );
-	colors.push_back( Colors::Blue );
+	colors.push_back( Color( 0.0f, 0.0f, 0.6f ) );
 	colors.push_back( Colors::Blue );
 
 	// Vertex buffer setup
@@ -80,10 +80,12 @@ render::VertexBufferPtr Gizmo::generateLines()
 
 //-----------------------------------//
 
-#define CONE( tr, color )					\
+#define CONE( tr, c1, c2 )					\
 	foreach( const Vector3& v, cone ) {		\
-		pos.push_back( v*tr );				\
-		colors.push_back( color );	}
+		pos.push_back( v*tr ); }			\
+	generateColors( SLICES, colors, c1, c2 );
+
+const static byte SLICES = 5;
 
 render::RenderablePtr Gizmo::generateCones()
 {
@@ -91,7 +93,7 @@ render::RenderablePtr Gizmo::generateCones()
 
 	// Unit cone vertex data
 	std::vector< Vector3 > cone;
-	generateSolidCone( 5.0, 10.0, 10, cone );
+	generateSolidCone( 5.0, 10.0, SLICES, cone );
 
 	// Vertex data
 	std::vector< Vector3 > pos;
@@ -103,14 +105,14 @@ render::RenderablePtr Gizmo::generateCones()
 
 	tr = EulerAngles( 0.0, 0.0, -90.0 ).getOrientationMatrix();
 	tr = tr*Matrix4x3::createTranslationMatrix( midPoint+Vector3::UnitX*S );
-	CONE( tr, Colors::Red );
+	CONE( tr, Color( 0.6f, 0.0f, 0.0f ), Colors::Red );
 
 	tr = Matrix4x3::createTranslationMatrix( midPoint+Vector3::UnitY*S );
-	CONE( tr, Colors::Green );
+	CONE( tr, Color( 0.0f, 0.4f, 0.0f ), Colors::Green );
 
 	tr = EulerAngles( 90.0, 0.0, 0.0 ).getOrientationMatrix();
 	tr = tr*Matrix4x3::createTranslationMatrix( midPoint+Vector3::UnitZ*S );
-	CONE( tr, Colors::Blue );
+	CONE( tr, Color( 0.0f, 0.0f, 0.6f ), Colors::Blue );
 
 	// Vertex buffer setup
 	vb->set( VertexAttribute::Position, pos );
@@ -118,7 +120,7 @@ render::RenderablePtr Gizmo::generateCones()
 
 	MaterialPtr mat( new Material( "ConeDiffuse", "diffuse" ) );
 	mat->setBackfaceCulling( false );
-	mat->setDepthTest( false );
+	//mat->setDepthTest( false );
 
 	RenderablePtr rend( new Renderable( Primitive::Triangles, vb, mat ) );
 	return rend;
@@ -126,17 +128,47 @@ render::RenderablePtr Gizmo::generateCones()
 
 //-----------------------------------//
 
+void Gizmo::generateColors( uint slices, std::vector<Vector3>& colors,
+						   const Color& c1, const Color& c2 )
+{
+	// Darkens the color a bit.
+	Vector3 baseColor = Vector3(c1);
+	baseColor -= baseColor * 0.2f;
+	
+	for( uint i = 0; i < slices; i++ )
+	{
+		// Generate the base colors
+		colors.push_back( baseColor);
+		colors.push_back( baseColor );
+		colors.push_back( baseColor );
+	}
+
+	for( uint i = 0; i < slices; i++ )
+	{
+		// Generate the top colors
+		colors.push_back( c1 );
+		colors.push_back( c1 );
+		colors.push_back( c2 );
+	}
+}
+
+//-----------------------------------//
+
 void Gizmo::generateSolidCone( double base, double height, uint slices,
 							  std::vector<Vector3>& pos )
 {
-	// Generate the base
 	float r = 2*PI / slices;
+	
 	for( uint i = 0; i < slices; i++ )
 	{
+		// Generate the base
 		pos.push_back( Vector3::Zero );
 		pos.push_back( Vector3( cos(i*r), 0, sin(i*r) )*base );
 		pos.push_back( Vector3( cos((i+1)*r), 0, sin((i+1)*r) )*base );
+	}
 
+	for( uint i = 0; i < slices; i++ )
+	{
 		// Generate the top of the cone
 		pos.push_back( Vector3( cos(i*r), 0, sin(i*r) )*base );
 		pos.push_back( Vector3( cos((i+1)*r), 0, sin((i+1)*r) )*base );

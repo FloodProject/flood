@@ -46,6 +46,10 @@ public:
 	// Gets the number of indexes stored in this buffer.
 	uint getNumIndices() const;
 
+	// Gets a reference to the vector with the indices.
+	std::vector<ushort>& getIndices16();
+	std::vector<ulong>& getIndices32();
+
 	// Sets the indices for the IBO (16-bit version).
 	void set( const std::vector< ushort >& data );
 	

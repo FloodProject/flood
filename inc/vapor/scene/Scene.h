@@ -27,6 +27,7 @@ struct RayTriangleQueryResult
 {
 	// Triangle based intersection
 	GeometryPtr geometry;
+	render::RenderablePtr renderable;
 	math::Vector3 intersection;
 	math::Vector3 triangle[3];
 	float distance;

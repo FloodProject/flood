@@ -363,16 +363,32 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="AABB"
+				Name="BVs"
 				>
-				<File
-					RelativePath=".\AABB.cpp"
+				<Filter
+					Name="AABB"
 					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\math\AABB.h"
+					<File
+						RelativePath=".\AABB.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\math\AABB.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Sphere"
 					>
-				</File>
+					<File
+						RelativePath=".\BoundingSphere.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\math\BoundingSphere.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter

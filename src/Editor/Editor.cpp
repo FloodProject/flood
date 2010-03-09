@@ -11,6 +11,10 @@
 #include "EditorIcons.h"
 #include "Gizmo.h"
 
+// Editor modes
+#include "GizmoMode.h"
+#include "TerrainMode.h"
+
 namespace vapor { namespace editor {
 
 // ----------------------------------------------------------------------------
@@ -29,7 +33,7 @@ enum
     Editor_About = wxID_ABOUT,
 
 	// Toolbar buttons
-	Toolbar_Save,
+	Toolbar_Save = 12879,
 	Toolbar_ToggleScene,
 	Toolbar_ToogleConsole,
 	Toolbar_ToogleGrid,
@@ -95,28 +99,27 @@ bool EditorApp::OnInit()
 
 // frame constructor
 EditorFrame::EditorFrame(const wxString& title)
-       : wxFrame(nullptr, wxID_ANY, title), engine( nullptr )
+       : wxFrame(nullptr, wxID_ANY, title), engine( nullptr ), 
+	   currentMode( nullptr )
 {
     // set the frame icon
     SetIcon( wxIcon( "editor" ) );
 	
 	// initialize the engine
 	initEngine();
-
+	
 	sizer = new wxBoxSizer( wxHORIZONTAL );
 	sizer->Add( viewport, 1, wxEXPAND|wxALL );
 
-	//editorModes.push_back( new CameraMode() );
-	//editorModes.push_back( new GizmoMode() );
-	//editorModes.push_back( new TerrainMode() );
-
 	// create window basic widgets
+	createModes();
 	createMenus();
 	createToolbar();
 	createStatusbar();
 	createNotebook();
 	createScene();
 
+	toolBar->Realize();
 	SetSizerAndFit( sizer );
 	vaporCtrl->SetFocus();
 }
@@ -125,7 +128,9 @@ EditorFrame::EditorFrame(const wxString& title)
 
 EditorFrame::~EditorFrame()
 {
-	selectedNodes.clear();
+	foreach( const Mode* mode, editorModes )
+		delete mode;
+
 	vaporCtrl->Destroy();
 	delete engine;
 }
@@ -145,6 +150,14 @@ void EditorFrame::initEngine()
 
 	input::Mouse* mouse = engine->getInputManager()->getMouse();
 	mouse->onMouseButtonPress += fd::bind( &EditorFrame::onMouseClick, this );
+}
+
+//-----------------------------------//
+
+void EditorFrame::createModes()
+{
+	editorModes.push_back( new GizmoMode(this) );
+	editorModes.push_back( new TerrainMode(this) );
 }
 
 //-----------------------------------//
@@ -218,10 +231,15 @@ void EditorFrame::createScene()
 	lnode->addComponent( light );
 	scene->add( lnode );
 
+	MaterialPtr cellMaterial( new Material("CellMaterial") );
+	cellMaterial->setTexture( 0, "PineTrunk.png" );
+	cellMaterial->setProgram( "tex_toon" );
+
 	TerrainSettings settings;
 	settings.CellSize = 512;
-	settings.TileDimensions = 32;
+	settings.NumberTiles = 32;
 	settings.MaxHeight = 100;
+	settings.Material = cellMaterial;
 
 	TerrainPtr terrain( new Terrain( settings ) );
 
@@ -328,7 +346,7 @@ void EditorFrame::createMenus()
 
 void EditorFrame::createToolbar()
 {
-	wxToolBar* toolBar = this->CreateToolBar( wxTB_HORIZONTAL, wxID_ANY );
+	toolBar = CreateToolBar( wxTB_HORIZONTAL, wxID_ANY );
 
 	// --------------
 	// Project tools
@@ -356,49 +374,23 @@ void EditorFrame::createToolbar()
 	toolBar->AddTool( Toolbar_TooglePlay, "Play", wxMEMORY_BITMAP(resultset_next), 
 		"Enable/disable Play mode", wxITEM_CHECK );
 
-	// --------------
-	// Gizmo tools
-	// --------------
+	// --------------------
+	// Mode-specific tools
+	// --------------------
 
-	toolBar->AddSeparator();
-
-	toolBar->AddTool( wxID_ANY, "Camera", wxMEMORY_BITMAP(camera), 
-		"Selects the Camera View tool", wxITEM_RADIO );
-
-	toolBar->AddTool( wxID_ANY, "Select", wxMEMORY_BITMAP(cursor), 
-		"Selects the Entity Selection tool", wxITEM_RADIO );
-
-	toolBar->AddTool( wxID_ANY, "Move", wxMEMORY_BITMAP(move), 
-		"Selects the Move tool", wxITEM_RADIO );
-
-	toolBar->AddTool( wxID_ANY, "Rotate", wxMEMORY_BITMAP(rotate2), 
-		"Selects the Rotate tool", wxITEM_RADIO );
-
-	toolBar->AddTool( wxID_ANY, "Scale", wxMEMORY_BITMAP(scale), 
-		"Selects the Scale tool", wxITEM_RADIO );
-	
-	// --------------
-	// Terrain tools
-	// --------------
-
-	toolBar->AddTool( wxID_ANY, "Raise/Lower", wxMEMORY_BITMAP(terrain_raise_lower), 
-		"Raises/Lowers the terrain", wxITEM_RADIO );
-
-	toolBar->AddTool( wxID_ANY, "Paint", wxMEMORY_BITMAP(terrain_paint),
-		"Paints the terrain", wxITEM_RADIO );
-
-	//toolBar->AddTool( wxID_ANY, "", wxMEMORY_BITMAP(resultset_next) );
+	foreach( Mode* mode, editorModes )
+	{
+		mode->onModeInit( toolBar, modeIds );
+	}
 
 	// --------------
-	// Terrain tools
+	// UI tools
 	// --------------
 
 	toolBar->AddSeparator();
 
 	toolBar->AddTool( Toolbar_ToogleSidebar, "Show/hide sidebar", 
 		wxMEMORY_BITMAP(application_side_tree_right), "Shows/hides the sidebar" ); 
-
-	toolBar->Realize();	
 
 	codeEvaluator = new ConsoleFrame( engine, this, "Scripting Console" );
 }
@@ -457,7 +449,16 @@ void EditorFrame::OnKeyDown(wxKeyEvent& event)
 
 void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 {
-	switch( event.GetId() ) 
+	int id = event.GetId();
+
+	// If the id is registered to a mode, then switch mode...
+	if( modeIds.find(id) != modeIds.end() )
+	{
+		onModeSwitch( modeIds[id], id );
+		return;
+	}
+
+	switch(id) 
 	{ 
 	case Toolbar_Save:
 	{
@@ -522,32 +523,23 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 
 //-----------------------------------//
 
+void EditorFrame::onModeSwitch( Mode* newMode, int id )
+{
+	if( !newMode ) return;
+
+	if( currentMode )
+		currentMode->onModeExit();
+	
+	currentMode = newMode;
+	currentMode->onModeEnter( id );
+}
+
+//-----------------------------------//
+
 void EditorFrame::onMouseClick( const MouseButtonEvent& mbe )
 {
-	const ScenePtr& scene = engine->getSceneManager();
-
-	// Disable all enabled bounding boxes.
-	foreach( const NodePtr& node, selectedNodes )
-	{
-		node->getTransform()->setDebugRenderableVisible( false );
-	}
-
-	selectedNodes.clear();
-
-	// Get a ray given the screen location clicked.
-	const Ray& pickRay = viewport->camera->getRay( mbe.x, mbe.y );
-
-	// Perform ray casting to find the nodes.
-	RayBoxQueryList list;
-	scene->doRayBoxQuery( pickRay, list );
-
-	foreach( const RayBoxQueryResult& res, list )
-	{
-		const NodePtr& node = res.node;
-
-		node->getTransform()->setDebugRenderableVisible( true );
-		selectedNodes.push_back( node );
-	}
+	if( !currentMode ) return;
+	currentMode->onMouseClick( mbe.x, mbe.y );
 }
 
 //-----------------------------------//
@@ -579,9 +571,9 @@ void EditorFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 	wxStaticLine* m_staticline1 = new wxStaticLine( m_panel1, wxID_ANY );
 	bSizer3->Add( m_staticline1, 1, wxALL|wxALIGN_CENTER_VERTICAL, 10 );
 	
-	//wxHyperlinkCtrl* m_hyperlink1 = new wxHyperlinkCtrl( m_panel1, wxID_ANY,
-		//"vapor3D Editor Website", "http://www.vapor3d.org" );
-	//bSizer3->Add( m_hyperlink1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	wxHyperlinkCtrl* m_hyperlink1 = new wxHyperlinkCtrl( m_panel1, wxID_ANY,
+		"vapor3D (http://www.vapor3d.org)", "http://www.vapor3d.org" );
+	bSizer3->Add( m_hyperlink1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	//wxStaticText* m_hyperlink1 = new wxStaticText( m_panel1, wxID_ANY,
 	//	"http://www.vapor3d.org" );

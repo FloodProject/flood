@@ -4,6 +4,8 @@ WIP (work-in-progress)
 Near TODO:
 ----------
 
+Optimize ray-triangle queries
+
 Average terrain normals
 	Have to take neighbours into account
 Skybox component

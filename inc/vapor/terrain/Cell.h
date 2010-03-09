@@ -29,8 +29,7 @@ public:
 
 	Cell( const TerrainSettings& settings, 
 		const std::vector<float>& heights, ushort x, ushort y );
-	
-	~Cell();
+	//virtual ~Cell();
 
 	// Gets the heights of this Cell of terrain.
 	const std::vector<float>& getHeights();
@@ -42,7 +41,10 @@ public:
 	void updateGeometry();
 
 	// Calculate the normals of the geometry.
-	// void calculateNormals();
+	void calculateNormals( const std::vector<math::Vector3>& vertices );
+
+	// Given an indice, gets the neighbour vertices.
+	std::vector<uint> getNeighborVertices( uint index );
 
 protected:
 

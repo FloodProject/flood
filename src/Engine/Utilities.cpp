@@ -26,7 +26,7 @@ long endian_swap(long i)
 
 //-----------------------------------//
 
-void float_to_str( char* str, float n, byte precision = 2 )
+void float_to_str( char* str, float n, byte precision )
 {
 //#ifdef VAPOR_PLATFORM_WINDOWS
 //	sprintf_s( sprintf( str, 32, "%#.*f", precision, n );

@@ -24,20 +24,20 @@ namespace vapor { namespace scene {
 struct TerrainSettings
 {
 	TerrainSettings()
-		:	CellSize( 500 ), TileDimensions( 16 )
+		:	CellSize( 500 ), NumberTiles( 16 )
 	{ }
 
 	// Cell size in world units.
 	ushort CellSize;
 
 	// Number of tiles per row/column.
-	ushort TileDimensions;
+	ushort NumberTiles;
 
 	// Scales the terrain to this maximum height.
 	ushort MaxHeight;
 
 	// Material for each cell.
-	//render::MaterialPtr CellMaterial;
+	render::MaterialPtr Material;
 };
 
 //-----------------------------------//
@@ -53,7 +53,7 @@ struct TerrainSettings
  * smooth transitions (using texture splatting). Cells are aligned like
  * in an horizontal grid and are identified by integer coordinates.
  * An heightmap has to have valid dimensions, which are given by (2^n)+1
- * for any integer n value that you give.
+ * for any integer value n.
  */
 
 class VAPOR_API Terrain : public Geometry
@@ -61,7 +61,7 @@ class VAPOR_API Terrain : public Geometry
 public:
 
 	Terrain( const TerrainSettings& settings );
-	virtual ~Terrain();
+	//virtual ~Terrain();
 
 	// Creates a new page of terrain.
 	CellPtr createCell( const resources::ImagePtr& heightmap, ushort x, ushort y );
@@ -75,17 +75,11 @@ public:
 	// Applies a brush operation in a specified region.
 	//void applyBrush( const Brush& brush, const Region& region );
 
-	// Gets the material of the terrain.
-	render::MaterialPtr getMaterial() const;
+	// Gets/sets the material of the terrain.
+	IMPLEMENT_ACESSOR(Material, render::MaterialPtr, cellMaterial)
 
-	// Sets the material of the terrain.
-	void setMaterial( const render::MaterialPtr& material );
-
-	// Gets the heightmap of the terrain.
-	resources::ImagePtr getHeightmap() const;
-
-	// Sets the heightmap of the terrain.
-	void setHeightmap( const resources::ImagePtr& heightmap );
+	// Gets/sets the heightmap of the terrain.
+	IMPLEMENT_ACESSOR(Heightmap, resources::ImagePtr, heightmap)
 
 	// Updates the terrain geometry if needed.
 	virtual void update( double delta );
@@ -99,7 +93,7 @@ protected:
 	resources::ImagePtr heightmap;
 
 	// Pages of the terrain.
-	std::vector< Cell* > terrainCells;
+	std::vector<Cell*> terrainCells;
 
 	// Material for this terrain.
 	render::MaterialPtr cellMaterial;

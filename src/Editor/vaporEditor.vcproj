@@ -406,6 +406,14 @@
 			Name="Terrain"
 			>
 			<File
+				RelativePath=".\TerrainMode.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TerrainMode.h"
+				>
+			</File>
+			<File
 				RelativePath=".\TerrainPage.cpp"
 				>
 			</File>
@@ -435,6 +443,14 @@
 			</File>
 			<File
 				RelativePath=".\Gizmo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GizmoMode.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GizmoMode.h"
 				>
 			</File>
 		</Filter>

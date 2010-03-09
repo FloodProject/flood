@@ -54,16 +54,16 @@ public:
 	bool addComponent( const ComponentPtr& component );
 
 	// Gets a component from this node.
-	ComponentPtr getComponent( const std::string& type );
+	ComponentPtr getComponent( const std::string& type ) const;
 
 	// Returns all the registered components in this node.
-	const ComponentMap& getComponents();
+	const ComponentMap& getComponents() const;
 
 	// Gets a component from this node.
 	template <typename T>
-	std::shared_ptr<T> getComponent( const std::string& type )
+	std::shared_ptr<T> getComponent( const std::string& type ) const
 	{
-		ComponentPtr cmp = getComponent( type );
+		const ComponentPtr& cmp = getComponent( type );
 		return std::static_pointer_cast< T >( cmp );
 	}
 
@@ -80,10 +80,10 @@ public:
 	virtual void setName( const std::string& name );
 
 	// Gets the associated transform component (if any).
-	TransformPtr getTransform();
+	TransformPtr getTransform() const;
 
 	// Gets the geometries components in the node.
-	const std::vector< GeometryPtr >& getGeometry();
+	const std::vector< GeometryPtr >& getGeometry() const;
 
 	// Is this node visible?
 	bool isVisible() const;

@@ -34,16 +34,7 @@ const std::string& Terrain::type = "Terrain";
 Terrain::Terrain( const TerrainSettings& settings )
 	: settings( settings )
 {
-	cellMaterial.reset( new Material( "PageMaterial" ) );
-	cellMaterial->setTexture( 0, "PineTrunk.png" );
-	cellMaterial->setProgram( "tex_toon" );
-}
-
-//-----------------------------------//
-
-Terrain::~Terrain()
-{
-
+	cellMaterial = settings.Material;
 }
 
 //-----------------------------------//
@@ -132,37 +123,8 @@ bool Terrain::validateHeightmap( const ImagePtr& heightmap )
 
 //-----------------------------------//
 
-render::MaterialPtr Terrain::getMaterial() const
-{
-	return cellMaterial;
-}
-
-//-----------------------------------//
-
-void Terrain::setMaterial( const render::MaterialPtr& material )
-{
-	this->cellMaterial = material;
-}
-
-//-----------------------------------//
-
-resources::ImagePtr Terrain::getHeightmap() const
-{
-	return heightmap;
-}
-
-//-----------------------------------//
-
-void Terrain::setHeightmap( const resources::ImagePtr& heightmap )
-{
-	this->heightmap = heightmap;
-}
-
-//-----------------------------------//
-
 void Terrain::update( double delta )
 {
-	//debug( "%lf", delta );
 	Geometry::update( delta );
 }
 

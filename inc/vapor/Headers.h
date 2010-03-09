@@ -23,8 +23,9 @@
 
 #include <vapor/math/Math.h>
 #include <vapor/math/Vector3.h>
-#include <vapor/math/AABB.h>
 #include <vapor/math/Ray.h>
+#include <vapor/math/AABB.h>
+#include <vapor/math/BoundingSphere.h>
 
 //-------------------------------------------------------------------------//
 // Resource-related Includes

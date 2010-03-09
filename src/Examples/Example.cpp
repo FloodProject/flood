@@ -138,7 +138,7 @@ void Example::onSetupScene()
 
 	//TerrainSettings settings;
 	//settings.CellSize = 1024;
-	//settings.TileDimensions = 32;
+	//settings.NumberTiles = 32;
 	//settings.MaxHeight = 150;
 
 	//TerrainPtr terrain( new Terrain( settings ) );

@@ -153,6 +153,11 @@ public:
 	T length() const { return sqrt(x*x + y*y + z*z); }
 
 	//-----------------------------------//
+
+	// Gets the length of the vector squared
+	T lengthSquared() const { return length()*length(); }
+
+	//-----------------------------------//
 	
 	// Normalize the vector
 	Vector3T normalize() 

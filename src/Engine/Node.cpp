@@ -91,19 +91,20 @@ bool Node::removeComponent( const std::string& type )
 
 //-----------------------------------//
 
-ComponentPtr Node::getComponent( const std::string& type )
+ComponentPtr Node::getComponent( const std::string& type ) const
 {
-	if( components.find( type ) == components.end() )
+	ComponentMap::const_iterator it = components.find(type);
+	if( it == components.end() )
 	{
 		return ComponentPtr();
 	}
 
-	return components[type];
+	return (*it).second;
 }
 
 //-----------------------------------//
 
-const ComponentMap& Node::getComponents()
+const ComponentMap& Node::getComponents() const
 {
 	return components;
 }
@@ -133,14 +134,14 @@ void Node::update( double delta )
 
 //-----------------------------------//
 
-TransformPtr Node::getTransform()
+TransformPtr Node::getTransform() const
 {
 	return getComponent< Transform >( "Transform" );
 }
 
 //-----------------------------------//
 
-const std::vector< GeometryPtr >& Node::getGeometry()
+const std::vector< GeometryPtr >& Node::getGeometry() const
 {
 	return geometries;
 }

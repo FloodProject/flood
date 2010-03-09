@@ -88,26 +88,34 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, con
 			if( !vb ) continue;
 
 			const std::vector<Vector3>& vertices = vb->getVertices();
-			if( vertices.size() < 3 ) continue;
+			uint size = vertices.size();
+			
+			IndexBufferPtr ib = rend->getIndexBuffer();
+			std::vector<ushort> indices;
 
-			assert( !rend->getIndexBuffer() );
+			if( ib )
+			{
+				indices = ib->getIndices16();
+				size = indices.size();
+			}
 
-			for( uint i = 0; i < vertices.size(); i += 3 )
+			for( uint i = 0; i < size; i += 3 )
 			{
 				Vector3 tri[3];
-				tri[0] = vertices[i];
-				tri[1] = vertices[i+1];
-				tri[2] = vertices[i+2];
+				tri[0] = ib ? vertices[indices[i]] : vertices[i];
+				tri[1] = ib ? vertices[indices[i+1]] : vertices[i];
+				tri[2] = ib ? vertices[indices[i+2]] : vertices[i];
 
 				Vector3 to; float n;
 				if( ray.intersects( tri, to, n ) )
-				{
-					res.geometry = geo;
-					
+				{					
 					for( byte i = 0; i < 3; i++ )
-						res.triangle[i] = tri[i];
-					
+						res.triangle[i] = tri[i];					
+				
+					res.intersection = to;
 					res.distance = n;
+					res.geometry = geo;
+					res.renderable = rend;
 
 					return true;
 				}

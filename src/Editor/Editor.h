@@ -39,6 +39,8 @@ public:
 // Define a new frame type: this is going to be our main frame
 class EditorFrame : public wxFrame
 {
+	friend class Mode;
+
 public:
 
     EditorFrame(const wxString& title);
@@ -55,6 +57,8 @@ public:
 	void onKeyPress(const input::KeyEvent& key);
 	void onKeyRelease(const input::KeyEvent& key);
 
+	void onModeSwitch( Mode* newMode, int id );
+
 protected:
 
 	// Creates the layout of the editor.
@@ -63,17 +67,19 @@ protected:
 	void createMenus();
 	void createToolbar();
 	void createStatusbar();
+	void createModes();
 
 	// Initializes vapor3D engine.
 	void initEngine();
 
-private:
+public:
 
-	// vaporEngine instance.
-	vapor::Engine* engine;
+	// 3D engine instance.
+	Engine* engine;
 
 	// Main layout sizer.
 	wxBoxSizer* sizer;
+	wxToolBar* toolBar;
 
 	// Outputs vapor rendering.
 	Viewport* viewport;
@@ -90,10 +96,8 @@ private:
 	
 	// Editor modes
 	Mode* currentMode;
+	std::map<int, Mode*> modeIds;
 	std::vector<Mode*> editorModes;
-
-	// Nodes
-	std::vector<NodePtr> selectedNodes;
 
 	// Saves all the operations in a stack so you can undo
 	// any editing operation you've done while editing.
