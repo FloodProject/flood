@@ -75,10 +75,10 @@ public:
 	std::vector<std::string> readLines() const;
 
 	/// Write buffer into file.
-	long write(std::vector<byte> buffer, long size = -1);
+	long write(const std::vector<byte>& buffer, long size = -1);
 
 	/// Write text into file.
-	long write(std::string text);
+	long write(const std::string& text);
 
 	/// Seek to a new position within the file. 
 	/// The next read or write will occur at that place.

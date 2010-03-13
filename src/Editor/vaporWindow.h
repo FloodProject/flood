@@ -75,7 +75,7 @@ private:
 	wxGLContext* context;
 
 	// wxWidgets Input Manager
-	vaporInputManager *im;
+	vaporInputManager* im;
 
 	// Is the mouse cursor captured?
 	bool mouseCaptured;

@@ -35,6 +35,9 @@ public:
 	bool intersects( const Vector3 tri[3], 
 		Vector3& intersectionPoint, float& t ) const;
 
+	bool intersectsSlow( const Vector3 tri[3],
+		Vector3& intersectionPoint, float& t ) const;
+
 public:
 
 	// Point representing the origin of the ray.

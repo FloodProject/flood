@@ -57,20 +57,6 @@ Resource::~Resource()
 
 //-----------------------------------//
 
-const std::string& Resource::getURI()
-{
-	return uri;
-}
-
-//-----------------------------------//
-
-void Resource::setURI( const std::string& uri )
-{
-	this->uri = uri;
-}
-
-//-----------------------------------//
-
 bool Resource::reload( )
 {
 	return true;

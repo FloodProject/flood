@@ -53,7 +53,8 @@ private:
 	ticks_t lastTime;
 
 	// Holds the ticks per second (timer resolution).
-	ticks_t ticksPerSecond;
+	static bool checked;
+	static ticks_t ticksPerSecond;
 };
 
 //-----------------------------------//

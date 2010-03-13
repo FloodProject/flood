@@ -56,12 +56,17 @@ math::Ray Camera::getRay( float scrx, float scry, math::Vector3* outFar ) const
 	// Method based on: http://www.mvps.org/directx/articles/rayproj.htm
 	
 	// Normalizing Screen Coordinates
-	float dx = (scrx / (width / 2.0f) - 1.0f) / getAspectRatio();
-	float dy = 1.0f - (height - scry) / (height / 2.0f);
+	float x = width - scrx;
+	float y = height - scry;
+
+	float dx = (x / (width * 0.5f) - 1.0f) / getAspectRatio();
+	float dy = 1.0f - y / (height * 0.5f);
 
 	// Scaling Coordinates to the Frustum
-	dx *= math::tanf( getFOV() * 0.5f );
-	dy *= math::tanf( getFOV() * 0.5f );
+	float fov_s = math::degreeToRadian(getFOV()) * 0.5f;
+	float s = math::tanf( fov_s );
+	dx *= s; 
+	dy *= s;
 
 	// Calculating the End Points of the Ray
 	Vector3 pNear( dx * -near_, dy * -near_, -near_ );
@@ -71,14 +76,11 @@ math::Ray Camera::getRay( float scrx, float scry, math::Vector3* outFar ) const
 	const Matrix4x3& invView = inverse( getViewMatrix() );
 
 	// Converting the Ray to World Coordinates
-	pNear *= invView; pFar *= invView;
+	pNear *= invView;
+	pFar *= invView;
 
 	// Construct the picking Ray.
-	// TODO: try with Vector3 pos( -transform->getPosition() );
 	Ray pickRay( pNear, (pFar - pNear).normalize() );
-
-	//debug( "pos: %f,%f,%f", pickRay.origin.x, pickRay.origin.y, pickRay.origin.z );
-	//debug( "dir: %f,%f,%f", pickRay.getDirection().x, pickRay.getDirection().y, pickRay.getDirection().z );
 
 	if( outFar )
 		*outFar = pFar;
@@ -125,7 +127,6 @@ void Camera::update( double UNUSED(delta) )
 	// We need to update both projection and view matrices.
 	// TODO: optimize this so the projection is only updated when needed
 	setupProjection();
-	setupView();
 }
 
 //-----------------------------------//
@@ -144,14 +145,6 @@ void Camera::setupProjection()
 	}
 
 	// TODO: unit test projection methods
-}
-
-//-----------------------------------//
-
-void Camera::setupView()
-{
-	// TODO: check if this is working with multiple nodes
-	//viewMatrix = transform->getAbsoluteTransform();
 }
 
 //-----------------------------------//
@@ -259,88 +252,6 @@ void Camera::cull( render::RenderBlock& block, const NodePtr& node ) const
 
 		block.renderables.push_back( renderState );
 	}
-}
-
-//-----------------------------------//
-
-const std::string& Camera::getType() const
-{
-	return type;
-}
-
-//-----------------------------------//
-
-void Camera::setProjection( Projection::Enum projection )
-{
-	this->projection = projection;
-}
-
-//-----------------------------------//
-
-float Camera::getFOV() const
-{
-	return fov;
-}
-
-//-----------------------------------//
-
-const math::Matrix4x4& Camera::getProjectionMatrix() const
-{
-	return projectionMatrix;
-}
-
-//-----------------------------------//
-
-const math::Matrix4x3& Camera::getViewMatrix() const
-{
-	return viewMatrix;
-}
-
-//-----------------------------------//
-
-render::RenderTarget* Camera::getRenderTarget() const
-{
-	return target;
-}
-
-//-----------------------------------//
-
-void Camera::setFOV( float fov )
-{
-	this->fov = fov;
-}
-
-//-----------------------------------//
-
-void Camera::setNear( float near_ )
-{
-	this->near_ = near_;
-}
-
-//-----------------------------------//
-
-float Camera::getNear() const
-{
-	return near_;
-}
-
-//-----------------------------------//
-
-void Camera::setFar( float far_ )
-{
-	this->far_ = far_;
-}
-
-//-----------------------------------//
-
-float Camera::getFar() const
-{
-	return far_;
-}
-
-const Vector3& Camera::getForwardVector() const
-{
-	return forwardVector;
 }
 
 //-----------------------------------//

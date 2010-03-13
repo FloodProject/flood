@@ -70,6 +70,8 @@ namespace MouseEventType
 		MouseWheelMove,
 		// Occurs when the mouse is moved
 		MouseMove,
+		// Occurs when the mouse is dragged
+		MouseDrag,
 		// Occurs when a mouse button is pressed
 		MousePress,
 		// Occurs when a mouse button is released
@@ -115,6 +117,22 @@ struct MouseMoveEvent : public MouseEvent
 
 	short x;
 	short y;
+};
+
+//-----------------------------------//
+
+/**
+ * Mouse event that occurs when the mouse is dragged. Use MouseInfo
+ * to get more information about which mouse buttons are pressed.
+ */
+
+struct MouseDragEvent : public MouseEvent
+{
+	MouseDragEvent( short x, short y, const MouseInfo& info );
+
+	short x;
+	short y;
+	const MouseInfo& info;
 };
 
 //-----------------------------------//
@@ -177,6 +195,7 @@ public:
 	//-----------------------------------//
 
 	fd::delegate< void( const MouseMoveEvent& ) > onMouseMove;
+	fd::delegate< void( const MouseDragEvent& ) > onMouseDrag;
 	
 	fd::delegate< void( const MouseButtonEvent& ) > onMouseButtonPress;
 	fd::delegate< void( const MouseButtonEvent& ) > onMouseButtonRelease;
@@ -196,6 +215,9 @@ private:
 	
 	// Occurs when the mouse is moved.
 	void mouseMoved(const MouseMoveEvent& mevt);
+
+	// Occurs when the mouse is dragged.
+	void mouseDragged(const MouseDragEvent& mevt);
 	
 	// Occurs when the mouse cursor enters the window.
 	void mouseEnter();

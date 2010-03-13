@@ -155,7 +155,7 @@ public:
 	//-----------------------------------//
 
 	// Gets the length of the vector squared
-	T lengthSquared() const { return length()*length(); }
+	T lengthSquared() const { return x*x + y*y + z*z; }
 
 	//-----------------------------------//
 	

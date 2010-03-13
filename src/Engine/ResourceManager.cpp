@@ -200,7 +200,7 @@ void ResourceManager::registerLoader(ResourceLoader* loader)
 void ResourceManager::handleWatchResource(const vfs::WatchEvent& evt)
 {
 	// Check if the filename maps to a known resource
-	std::string file = wstrtostr( evt.filename );
+	std::string file = wstr_to_str( evt.filename );
 
 	if( resources.find(file) == resources.end() )
 		return; // Resource is not known

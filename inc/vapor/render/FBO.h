@@ -34,18 +34,17 @@ namespace RenderBufferType
 //-----------------------------------//
 
 /**
- * Framebuffer objects (FBOs), are render targets that you can ask the
- * engine to render to. There are 2 types of framebuffer render targets
- * you can attach, textures - also known as render-to-texture or RTT -
- * and render buffers, commonly called offscreen rendering. When you
- * use RBs you need to specify it's use type. You can render color,
- * depth or even use it as a stencil buffer. There is also another
- * technique called MRTs (multiple render targets) which allows you
- * to render into multiple FBOs at the same time.
- * FBOs have many uses: when you want to render from another viewpoint
- * and combine the contents in the main render target or even render
- * the scene and apply custom post-processing effects. They can also
- * be used to implement regular shadow mapping.
+ * Framebuffer objects (FBOs), are render targets that you ask the engine
+ * to render content into. There are 2 types of framebuffer render targets
+ * you can attach, textures - also known as render-to-texture or RTT - and
+ * render buffers, commonly called offscreen rendering. When you use RBs
+ * you need to specify it's use type. You can render color, depth or even 
+ * use it as a stencil buffer. There is also another technique called MRTs
+ * (multiple render targets) which allows you to render into multiple FBOs
+ * at the same time. FBOs have many uses: when you want to render from
+ * another viewpoint and combine the contents in the main render target or
+ * even render the scene and apply custom post-processing effects. 
+ * They can also be used to implement regular shadow mapping.
  */
 
 class VAPOR_API FBO : public RenderTarget, public ReferenceCounted

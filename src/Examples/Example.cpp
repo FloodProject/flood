@@ -214,3 +214,10 @@ void Example::onKeyPressed( const KeyEvent& keyEvent )
 }
 
 //-----------------------------------//
+
+void Example::onButtonPressed( const input::MouseButtonEvent& event )
+{
+	debug( "%hd,%hd", event.x, event.y );
+}
+
+//-----------------------------------//

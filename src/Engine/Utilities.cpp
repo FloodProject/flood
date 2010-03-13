@@ -39,7 +39,7 @@ void float_to_str( char* str, float n, byte precision )
 
 #ifdef VAPOR_PLATFORM_WINDOWS
 
-std::string wstrtostr(const std::wstring &wstr)
+std::string wstr_to_str(const std::wstring &wstr)
 {
     // Convert a Unicode string to an ASCII string
     std::string strTo;
@@ -57,7 +57,7 @@ std::string wstrtostr(const std::wstring &wstr)
 
 #ifdef VAPOR_PLATFORM_WINDOWS
 
-std::wstring strtowstr(const std::string &str)
+std::wstring str_to_wstr(const std::string &str)
 {
     // Convert an ASCII string to a Unicode String
     std::wstring wstrTo;
@@ -73,7 +73,7 @@ std::wstring strtowstr(const std::string &str)
 
 //-----------------------------------//
 
-std::vector<std::string>& split(const std::string &s, char delim, 
+std::vector<std::string>& str_split(const std::string &s, char delim, 
 								std::vector<std::string> &elems)
 {
     std::stringstream ss(s);
@@ -89,10 +89,10 @@ std::vector<std::string>& split(const std::string &s, char delim,
 
 //-----------------------------------//
 
-std::vector<std::string> split(const std::string &s, char delim)
+std::vector<std::string> str_split(const std::string &s, char delim)
 {
     std::vector<std::string> elems;
-    return split(s, delim, elems);
+    return str_split(s, delim, elems);
 }
 
 //-----------------------------------//

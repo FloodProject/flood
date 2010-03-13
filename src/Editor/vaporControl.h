@@ -46,8 +46,6 @@ public:
 					const wxString&	name = "vaporGLCanvas",
 					const wxPalette& palette = wxNullPalette); 	
 
-	virtual ~vaporControl();
-
 	// Add your frame updating code here.
 	void OnUpdate();
 
@@ -57,6 +55,7 @@ public:
 	// Called then the app is idle. We will refresh the widget here
 	// to ensure maximum framerate is achieved.
 	void OnIdle(wxIdleEvent& event);
+
 	void OnPaint(wxPaintEvent& event);
 	void OnSize(wxSizeEvent& event);
 	void OnKeyDown(wxKeyEvent& event);
@@ -64,16 +63,13 @@ public:
 	void OnMouseEvent(wxMouseEvent& event);
 	void OnMouseCaptureLost(wxMouseCaptureLostEvent& event);
 
-	// Gets the associated instance of the vaporEngine.
-	Engine* getEngine();
+	// Gets/sets the associated instance of the vaporEngine.
+	IMPLEMENT_ACESSOR(Engine, Engine*, engine);
 
-	// Sets the associated rendering camera.
-	void setCamera(const scene::CameraPtr& cam);
+	// Gets/sets the associated rendering camera.
+	IMPLEMENT_ACESSOR(Camera, CameraPtr, cam);
 
 protected:
-
-	// Sets the associated instance of the engine.
-	void setEngine(Engine* engine);
 
 	// Initializes the control.
 	void InitControl();
@@ -88,7 +84,7 @@ protected:
 	vaporWindow* window;
 
 	// Holds an instance of the input manager.
-	vaporInputManager* im;
+	vaporInputManager* inputManager;
 
 	scene::CameraPtr cam;
 

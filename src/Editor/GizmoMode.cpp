@@ -63,28 +63,6 @@ void GizmoMode::onModeInit(wxToolBar* toolBar, ModeIdMap& map)
 void GizmoMode::onModeEnter( int id )
 {
 	currentTool = id;
-
-	switch(currentTool)
-	{
-	case Gizmo_Camera:
-
-		break;
-	case Gizmo_Select:
-
-		break;
-	case Gizmo_Translate:
-
-		break;
-	case Gizmo_Rotate:
-
-		break;
-	case Gizmo_Scale:
-
-		break;
-	default:
-		warn( "editor", "Invalid tool id in gizmo mode" );
-		break;
-	}
 }
 
 //-----------------------------------//
@@ -96,27 +74,105 @@ void GizmoMode::onModeExit()
 
 //-----------------------------------//
 
-void GizmoMode::onMouseClick(short x, short y)
+void GizmoMode::drawGizmo( NodePtr old, NodePtr new_ )
 {
-	const ScenePtr& scene = engine->getSceneManager();
+	if( currentTool != Gizmo_Translate ) return;
 
+	if( old )
+	{
+		const TransformPtr& tr = old->getTransform();
+		tr->setDebugRenderableVisible( false );
+		old->removeComponent( "Gizmo" );
+	}
+
+	if( !new_ ) return;
+
+	const TransformPtr& tr = new_->getTransform();
+	tr->setDebugRenderableVisible( true );
+	GeometryPtr gizmo( new Gizmo( tr->getBoundingVolume().getCenter() ) ); 	
+	new_->addComponent(gizmo);
+}
+
+//-----------------------------------//
+
+void GizmoMode::onNodeSelected( NodePtr old, NodePtr new_ )
+{
 	disableSelectedNodes();
 
-	// Get a ray given the screen location clicked.
+	if( !new_ ) return;
+
+	switch(currentTool)
+	{
+	case Gizmo_Camera:
+		break;
+	case Gizmo_Select:
+		new_->getTransform()->setDebugRenderableVisible( true );
+		selectedNodes.push_back( new_ );
+		break;
+	case Gizmo_Translate:
+	case Gizmo_Rotate:
+	case Gizmo_Scale:
+		drawGizmo( old, new_ );
+		break;
+	default:
+		warn( "editor", "Invalid tool id in gizmo mode" );
+		break;
+	}
+}
+
+//-----------------------------------//
+
+NodePtr buildRay( const Ray& pickRay, const Vector3& outFar )
+{
+	std::vector< Vector3 > vertex;
+	vertex.push_back( pickRay.origin );
+	vertex.push_back( outFar );
+
+	std::vector< Vector3 > colors;
+	colors.push_back( Vector3( 1.0f, 0.0f, 0.0f ) );
+	colors.push_back( Vector3( 1.0f, 0.0f, 0.0f ) );
+
+	VertexBufferPtr vb( new VertexBuffer() );
+	vb->set( VertexAttribute::Position, vertex );
+	vb->set( VertexAttribute::Color, colors );
+
+	MaterialPtr mat( new Material( "LineMaterial", "diffuse" ) );
+	
+	RenderablePtr rend( new Renderable( Primitive::Lines, vb ) );
+	rend->setMaterial( mat );	
+	
+	GeometryPtr geom( new Geometry(rend) );
+	
+	NodePtr line( new Node( "line" ) );
+	line->addComponent( TransformPtr( new Transform() ) );
+	line->addComponent( geom );
+	line->setTag( Tags::NonPickable, true );
+	line->setTag( EditorTags::EditorOnly, true );
+	
+	return line;
+}
+
+//-----------------------------------//
+
+void GizmoMode::onMouseButtonPress( const MouseButtonEvent& mbe )
+{
+	const ScenePtr& scene = engine->getSceneManager();
 	Viewport* viewport = editor->viewport;
-	const Ray& pickRay = viewport->camera->getRay( x, y );
+
+	// Get a ray given the screen location clicked.
+	Vector3 outFar;
+	const Ray& pickRay = viewport->camera->getRay( mbe.x, mbe.y, &outFar );
+
+#if 1 // Enable this to draw debugging lines
+	NodePtr line = buildRay( pickRay, outFar );
+	scene->add( line );
+#endif
 
 	// Perform ray casting to find the nodes.
-	RayBoxQueryList list;
-	scene->doRayBoxQuery( pickRay, list );
+	RayBoxQueryResult res;
+	scene->doRayBoxQuery( pickRay, res );
 
-	foreach( const RayBoxQueryResult& res, list )
-	{
-		const NodePtr& node = res.node;
-
-		node->getTransform()->setDebugRenderableVisible( true );
-		selectedNodes.push_back( node );
-	}
+	onNodeSelected( NodePtr(), res.node );
 }
 
 //-----------------------------------//

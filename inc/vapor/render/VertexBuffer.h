@@ -67,6 +67,9 @@ public:
 
 	// Returns true if the vertex buffer is built, false otherwhise.
 	bool isBuilt() const;
+
+	// Forces a rebuild of the vertex buffer the next update.
+	void forceRebuild();
     
     // This method will make the internal VBO id bound so any future
     // glDrawXXX calls will use this VBO as its data.  
@@ -160,23 +163,18 @@ private:
 
 public:
 
-	std::vector<math::Vector3> getVertices() const
+	std::vector<math::Vector3>& getVertices()
 	{
-		attributeConstIterator it = attributeMap.find(VertexAttribute::Position);
+		attributeIterator it = attributeMap.find(VertexAttribute::Position);
 
 		if( it == attributeMap.end() )
-			return std::vector<math::Vector3>();
+			assert( "Can't return null reference" );
+			/*return std::vector<math::Vector3>();*/
 		
-		const attributeValue& p = (*it).second;
-		const std::vector<byte>& arr = std::get<2>(p);
+		attributeValue& p = (*it).second;
+		std::vector<byte>& arr = std::get<2>(p);
 
-		if( arr.size() == 0 )
-			return std::vector<math::Vector3>();
-
-		std::vector<math::Vector3> vertices;
-		vertices.resize( arr.size() / sizeof( math::Vector3 ) );
-		memcpy( &vertices[0], &arr[0], arr.size() );		
-		return vertices;
+		return (std::vector<math::Vector3>&)(arr);
 	}
 };
 

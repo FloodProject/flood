@@ -63,11 +63,8 @@ public:
 	// Releases the contents of this resource (to save memory).
 	// void release();
 
-	// Gets the path that identifies this resource.
-	virtual const std::string& getURI();
-
-	// Sets the URI of the resource.
-	virtual void setURI( const std::string& uri );
+	// Gets/sets the path that identifies this resource.
+	IMPLEMENT_ACESSOR(URI, const std::string&, uri)
 	
 	// Gets the resource group associated with this resource.
 	virtual ResourceGroup::Enum getResourceGroup() const = 0;

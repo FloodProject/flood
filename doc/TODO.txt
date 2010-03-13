@@ -210,3 +210,21 @@ http://blog.pavlov.net/2007/11/11/windows-low-fragmentation-heap/
 http://msdn.microsoft.com/en-us/library/aa366750%28VS.85%29.aspx
 http://www.gamasutra.com/view/feature/2971/play_by_play_effective_memory_.php
 http://www.fastformat.org/
+
+SNIPPETS
+========
+
+	//// Perform ray casting to find the nodes.
+	//RayBoxQueryList list;
+	//scene->doRayBoxQuery( pickRay, list );
+
+	//NodePtr node; TerrainPtr terrain;
+	//foreach( const RayBoxQueryResult& res, list )
+	//{
+	//	node = res.node;
+
+	//	// Search for nodes with terrains...
+	//	terrain = node->getComponent<Terrain>("Terrain");
+	//
+	//	if( terrain ) break;
+	//}

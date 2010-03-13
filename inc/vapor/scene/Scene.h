@@ -50,7 +50,7 @@ class VAPOR_API Scene : public Group
 public:
 
 	Scene();
-	virtual ~Scene();
+	//virtual ~Scene();
 
 	/// Updates all the entities recursively.
 	virtual void update( double delta );
@@ -62,10 +62,12 @@ public:
 	NodePtr getEntity( const std::string& name ) const;
 
 	/// Ray-casts a ray through the scene testing for collisions.
-	bool doRayBoxQuery( const math::Ray& ray, RayBoxQueryList& list ) const;
 	bool doRayBoxQuery( const math::Ray& ray, RayBoxQueryResult& res ) const;
+	bool doRayBoxQuery( const math::Ray& ray, RayBoxQueryList& list, bool all = true ) const;
+	
 	bool doRayTriangleQuery( const math::Ray& ray, RayTriangleQueryResult& res ) const;
-	bool doRayTriangleQuery( const math::Ray& ray, RayTriangleQueryResult& res, const NodePtr& node ) const;
+	bool doRayTriangleQuery( const math::Ray& ray, RayTriangleQueryResult& res, 
+		const NodePtr& node, bool slowPath = false ) const;
 
 private:	
 

@@ -9,32 +9,55 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vaporExample", "src\Example
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vaporEditor", "src\Editor\vaporEditor.vcproj", "{68C71437-26B5-46EE-87B6-F225EA16396D}"
-	ProjectSection(ProjectDependencies) = postProject
-		{998D7B99-03DC-954C-A2A1-B83E1F0E2772} = {998D7B99-03DC-954C-A2A1-B83E1F0E2772}
-	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vaporWeb", "src\Web\vaporWeb.vcproj", "{D6FD9F7E-59C0-4E8D-82C6-947A241D0FAC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
 		DLL Debug|Win32 = DLL Debug|Win32
+		MinSizeRel|Win32 = MinSizeRel|Win32
 		Release|Win32 = Release|Win32
+		RelWithDebInfo|Win32 = RelWithDebInfo|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{998D7B99-03DC-954C-A2A1-B83E1F0E2772}.Debug|Win32.ActiveCfg = Debug|Win32
 		{998D7B99-03DC-954C-A2A1-B83E1F0E2772}.DLL Debug|Win32.ActiveCfg = DLL Debug|Win32
 		{998D7B99-03DC-954C-A2A1-B83E1F0E2772}.DLL Debug|Win32.Build.0 = DLL Debug|Win32
+		{998D7B99-03DC-954C-A2A1-B83E1F0E2772}.MinSizeRel|Win32.ActiveCfg = DLL Debug|Win32
+		{998D7B99-03DC-954C-A2A1-B83E1F0E2772}.MinSizeRel|Win32.Build.0 = DLL Debug|Win32
 		{998D7B99-03DC-954C-A2A1-B83E1F0E2772}.Release|Win32.ActiveCfg = Release|Win32
 		{998D7B99-03DC-954C-A2A1-B83E1F0E2772}.Release|Win32.Build.0 = Release|Win32
+		{998D7B99-03DC-954C-A2A1-B83E1F0E2772}.RelWithDebInfo|Win32.ActiveCfg = Release|Win32
+		{998D7B99-03DC-954C-A2A1-B83E1F0E2772}.RelWithDebInfo|Win32.Build.0 = Release|Win32
 		{7E63C46E-4243-4806-AE6C-944A2476F29F}.Debug|Win32.ActiveCfg = Debug|Win32
 		{7E63C46E-4243-4806-AE6C-944A2476F29F}.DLL Debug|Win32.ActiveCfg = DLL Debug|Win32
 		{7E63C46E-4243-4806-AE6C-944A2476F29F}.DLL Debug|Win32.Build.0 = DLL Debug|Win32
+		{7E63C46E-4243-4806-AE6C-944A2476F29F}.MinSizeRel|Win32.ActiveCfg = DLL Debug|Win32
+		{7E63C46E-4243-4806-AE6C-944A2476F29F}.MinSizeRel|Win32.Build.0 = DLL Debug|Win32
 		{7E63C46E-4243-4806-AE6C-944A2476F29F}.Release|Win32.ActiveCfg = Release|Win32
 		{7E63C46E-4243-4806-AE6C-944A2476F29F}.Release|Win32.Build.0 = Release|Win32
+		{7E63C46E-4243-4806-AE6C-944A2476F29F}.RelWithDebInfo|Win32.ActiveCfg = Release|Win32
+		{7E63C46E-4243-4806-AE6C-944A2476F29F}.RelWithDebInfo|Win32.Build.0 = Release|Win32
 		{68C71437-26B5-46EE-87B6-F225EA16396D}.Debug|Win32.ActiveCfg = Debug|Win32
 		{68C71437-26B5-46EE-87B6-F225EA16396D}.DLL Debug|Win32.ActiveCfg = DLL Debug|Win32
 		{68C71437-26B5-46EE-87B6-F225EA16396D}.DLL Debug|Win32.Build.0 = DLL Debug|Win32
+		{68C71437-26B5-46EE-87B6-F225EA16396D}.MinSizeRel|Win32.ActiveCfg = DLL Debug|Win32
+		{68C71437-26B5-46EE-87B6-F225EA16396D}.MinSizeRel|Win32.Build.0 = DLL Debug|Win32
 		{68C71437-26B5-46EE-87B6-F225EA16396D}.Release|Win32.ActiveCfg = Release|Win32
 		{68C71437-26B5-46EE-87B6-F225EA16396D}.Release|Win32.Build.0 = Release|Win32
+		{68C71437-26B5-46EE-87B6-F225EA16396D}.RelWithDebInfo|Win32.ActiveCfg = Release|Win32
+		{68C71437-26B5-46EE-87B6-F225EA16396D}.RelWithDebInfo|Win32.Build.0 = Release|Win32
+		{D6FD9F7E-59C0-4E8D-82C6-947A241D0FAC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D6FD9F7E-59C0-4E8D-82C6-947A241D0FAC}.Debug|Win32.Build.0 = Debug|Win32
+		{D6FD9F7E-59C0-4E8D-82C6-947A241D0FAC}.DLL Debug|Win32.ActiveCfg = Debug|Win32
+		{D6FD9F7E-59C0-4E8D-82C6-947A241D0FAC}.DLL Debug|Win32.Build.0 = Debug|Win32
+		{D6FD9F7E-59C0-4E8D-82C6-947A241D0FAC}.MinSizeRel|Win32.ActiveCfg = MinSizeRel|Win32
+		{D6FD9F7E-59C0-4E8D-82C6-947A241D0FAC}.MinSizeRel|Win32.Build.0 = MinSizeRel|Win32
+		{D6FD9F7E-59C0-4E8D-82C6-947A241D0FAC}.Release|Win32.ActiveCfg = Release|Win32
+		{D6FD9F7E-59C0-4E8D-82C6-947A241D0FAC}.Release|Win32.Build.0 = Release|Win32
+		{D6FD9F7E-59C0-4E8D-82C6-947A241D0FAC}.RelWithDebInfo|Win32.ActiveCfg = RelWithDebInfo|Win32
+		{D6FD9F7E-59C0-4E8D-82C6-947A241D0FAC}.RelWithDebInfo|Win32.Build.0 = RelWithDebInfo|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

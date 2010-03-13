@@ -24,6 +24,7 @@ TYPEDEF_SHARED_WEAK_POINTER_FROM_CLASS( Node );
 typedef std::map< std::string, ComponentPtr > ComponentMap;
 typedef std::pair< const std::string, ComponentPtr > ComponentMapPair;
 
+
 //-----------------------------------//
 
 /**
@@ -42,13 +43,11 @@ public:
 	explicit Node();
 	explicit Node( const std::string& name );
 	
-	virtual ~Node();
-
-	// Sets the parent of the node.
-	void setParent( NodePtr parent );
-
 	// Gets the parent of the node.
 	NodePtr getParent() const;
+
+	// Sets the parent of the node.
+	IMPLEMENT_SETTER(Parent, NodePtr, parent)
 
 	// Adds a component to this node.
 	bool addComponent( const ComponentPtr& component );
@@ -57,7 +56,7 @@ public:
 	ComponentPtr getComponent( const std::string& type ) const;
 
 	// Returns all the registered components in this node.
-	const ComponentMap& getComponents() const;
+	IMPLEMENT_GETTER(Components, const ComponentMap&, components)
 
 	// Gets a component from this node.
 	template <typename T>
@@ -73,23 +72,24 @@ public:
 	// Updates all the components of the node.
 	virtual void update( double delta );
 
-	// Gets the name of the node.
-	virtual const std::string& getName() const;
-
-	// Sets the name of the node.
-	virtual void setName( const std::string& name );
+	// Gets/sets the name of the node.
+	IMPLEMENT_ACESSOR(Name, const std::string&, name);
 
 	// Gets the associated transform component (if any).
 	TransformPtr getTransform() const;
 
 	// Gets the geometries components in the node.
-	const std::vector< GeometryPtr >& getGeometry() const;
+	IMPLEMENT_GETTER(Geometry, const std::vector<GeometryPtr>&, geometries)
 
 	// Is this node visible?
 	bool isVisible() const;
 
 	// Sets the visibility of this node.
-	void setVisible( bool visible );
+	IMPLEMENT_ACESSOR(Visible, bool, _isVisible);
+
+	// Gets/sets the node's tag state.
+	bool getTag( int index );
+	void setTag( int index, bool state );
 
 	DECLARE_SERIALIZABLE();
 
@@ -105,10 +105,13 @@ private:
 	NodeWeakPtr parent;
 	
 	// Caches the geometries nodes (for faster lookup when rendering).
-	std::vector< GeometryPtr > geometries;
+	std::vector<GeometryPtr> geometries;
 
 	// Visibility
 	bool _isVisible;
+
+	// Bitset used to store useful information about the node.
+	std::bitset<32> tag;
 };
 
 //-----------------------------------//

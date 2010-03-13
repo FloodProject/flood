@@ -35,9 +35,15 @@ public:
 	virtual void onModeEnter( int = -1 ) {}
 	virtual void onModeExit() {}
 
-	virtual void onNodeSelected() {}
+	virtual void onNodeSelected( NodePtr, NodePtr ) {}
 
-	virtual void onMouseClick(short, short) {}
+	virtual void onMouseMove( const MouseMoveEvent& ) {}
+	virtual void onMouseDrag( const MouseDragEvent& ) {}
+	virtual void onMouseButtonPress( const MouseButtonEvent& ) {}
+	virtual void onMouseButtonRelease( const MouseButtonEvent& ) {}
+	virtual void onMouseEnter() {}
+	virtual void onMouseLeave() {}
+	
 	virtual void onKeyPress() {}
 
 protected:

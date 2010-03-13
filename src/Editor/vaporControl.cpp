@@ -17,7 +17,7 @@ namespace vapor { namespace editor {
 ////////////////////////////////////////////////////////////
 
 BEGIN_EVENT_TABLE(vaporControl, wxGLCanvas)
-    EVT_IDLE(vaporControl::OnIdle)
+	EVT_IDLE(vaporControl::OnIdle)
     EVT_PAINT(vaporControl::OnPaint)
 	EVT_SIZE(vaporControl::OnSize)
 	EVT_KEY_DOWN(vaporControl::OnKeyDown)
@@ -36,18 +36,10 @@ vaporControl::vaporControl(vapor::Engine* engine,
 					long style,
 					const wxString&	name,
 					const wxPalette& WXUNUSED(pallete))
-	: wxGLCanvas(parent, id, attribList, pos, size, style, name), engine(engine)
+	: wxGLCanvas(parent, id, attribList, pos, size, style, name),
+	engine(engine), updatedOnce( false )
 {
 	InitControl();
-	im = window->im;
-	engine->setupInput();
-}
-
-//-----------------------------------//
-
-vaporControl::~vaporControl()
-{
-	//delete window;
 }
 
 //-----------------------------------//
@@ -55,40 +47,49 @@ vaporControl::~vaporControl()
 void vaporControl::InitControl()
 {
 	if(!engine) return;
-
-	updatedOnce = false;
-
-	render::Device* device = engine->getRenderDevice();
+	render::Device* const device = engine->getRenderDevice();
 
 	info("vaporEditor", "Creating a new wxWidgets control");
 
-	// Get the size of the control.
+	// Create a new vapor3D window.
 	wxSize size = GetSize();
-
-	// Construct a Settings object to pass to vapor.
 	WindowSettings settings(size.GetX(), size.GetY());
-
 	window = new vaporWindow(settings, this);
 
+	// Setup the window as our main render target.
 	device->setWindow( window );
 	device->setRenderTarget( window );
-
 	window->makeCurrent();
+
+	// Setup input in the engine.
+	inputManager = window->im;
+	engine->setupInput();
 }
 
 //-----------------------------------//
 
-void vaporControl::OnMouseCaptureLost(wxMouseCaptureLostEvent& WXUNUSED(event))
+void vaporControl::OnIdle(wxIdleEvent& event)
 {
-	window->mouseCaptured = false;
-	SetCursor( wxNullCursor );
+	//OnUpdate();
+
+	// Asks wxWidgets to send more idle events.
+	//event.RequestMore( true );
 }
 
 //-----------------------------------//
 
 void vaporControl::OnUpdate()
 {
+	static int i = 0;
+	if( i < 10 ) debug( "Update %d", i++ );
+
 	updatedOnce = true;
+
+	// Keep track of the frame times.
+	lastFrameTime = frameTimer.getElapsedTime();
+	frameTimer.reset();
+
+	// Update the engine with the last frame time.
 	engine->update( lastFrameTime );
 }
 
@@ -98,6 +99,9 @@ void vaporControl::OnRender()
 {
 	// Prevent rendering without updating the scene once.
 	if( !updatedOnce ) return;
+
+	static int i = 0;
+	if( i < 10 ) debug( "Render %d", i++ );
 
 	const math::Color bg( 0.0f, 0.10f, 0.25f );
 
@@ -126,21 +130,9 @@ void vaporControl::OnPaint(wxPaintEvent& WXUNUSED(event))
 
 //-----------------------------------//
 
-void vaporControl::OnIdle(wxIdleEvent& WXUNUSED(event))
-{
-	lastFrameTime = frameTimer.getElapsedTime();
-	frameTimer.reset();
-	OnUpdate();
-	Refresh();
-}
-
-//-----------------------------------//
-
 void vaporControl::OnSize(wxSizeEvent& event)
 {
 	wxSize size = event.GetSize();
-	//debug( "new size: %d %d", size.GetX(), size.GetY() );
-
 	window->processResize( event.GetSize() );
 }
 
@@ -148,14 +140,14 @@ void vaporControl::OnSize(wxSizeEvent& event)
 
 void vaporControl::OnKeyDown(wxKeyEvent& event)
 {
-	im->processKeyEvent( event, true );
+	inputManager->processKeyEvent( event, true );
 }
 
 //-----------------------------------//
 
 void vaporControl::OnKeyUp(wxKeyEvent& event)
 {
-	im->processKeyEvent( event, false );
+	inputManager->processKeyEvent( event, false );
 }
 
 //-----------------------------------//
@@ -165,7 +157,15 @@ void vaporControl::OnMouseEvent(wxMouseEvent& event)
 	if( event.ButtonDown( wxMOUSE_BTN_LEFT ) && !HasFocus() )
 		SetFocus();
 	
-	im->processMouseEvent( event );
+	inputManager->processMouseEvent( event );
+}
+
+//-----------------------------------//
+
+void vaporControl::OnMouseCaptureLost(wxMouseCaptureLostEvent&)
+{
+	window->mouseCaptured = false;
+	SetCursor( wxNullCursor );
 }
 
 //-----------------------------------//
@@ -184,27 +184,6 @@ void* vaporControl::getHandle()
 #endif
 
 	return handle;
-}
-
-//-----------------------------------//
-
-Engine* vaporControl::getEngine()
-{
-	return engine;
-}
-
-//-----------------------------------//
-
-void vaporControl::setCamera(const scene::CameraPtr& cam)
-{
-	this->cam = cam;
-}
-
-//-----------------------------------//
-
-void vaporControl::setEngine(Engine* engine)
-{
-	this->engine = engine;
 }
 
 //-----------------------------------//

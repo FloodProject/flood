@@ -52,6 +52,7 @@
 #include <vapor/scene/Light.h>
 #include <vapor/scene/Skydome.h>
 #include <vapor/scene/Billboard.h>
+#include <vapor/scene/Tags.h>
 
 //-------------------------------------------------------------------------//
 // Render-related Includes

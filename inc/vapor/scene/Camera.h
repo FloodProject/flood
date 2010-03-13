@@ -49,18 +49,18 @@ public:
 	Camera( render::Device* device, 
 		Projection::Enum projection = Projection::Perspective );
 
-	// Sets the projection type of the camera.
-	void setProjection( Projection::Enum projection );
+	// Gets/sets the projection type of the camera.
+	IMPLEMENT_ACESSOR(Projection, Projection::Enum, projection)
 
 	// Gets the projection matrix of the camera.
-	const math::Matrix4x4& getProjectionMatrix() const;
+	IMPLEMENT_GETTER(ProjectionMatrix, const math::Matrix4x4&, projectionMatrix)
 
 	// Gets the view matrix of the camera.
-	const math::Matrix4x3& getViewMatrix() const;
+	IMPLEMENT_GETTER(ViewMatrix, const math::Matrix4x3&, viewMatrix)
 
 	// Gets the current render target associated with the camera.
-	render::RenderTarget* getRenderTarget() const;
-
+	IMPLEMENT_GETTER(RenderTarget, render::RenderTarget*, target)
+	
 	// Sets a new render target in the camera.
 	void setRenderTarget( render::RenderTarget* target );
 
@@ -89,32 +89,23 @@ public:
 	// Updates this node.
 	virtual void update( double delta );
 	
-	// Gets the name of this node.
-	virtual const std::string& getType() const;
+	// Gets the type of this node.
+	IMPLEMENT_GETTER(Type, const std::string&, type)
 
 	// Gets the aspect ratio of the target.
 	float getAspectRatio() const;
 
-	// Gets the field-of-view of the camera.
-	float getFOV() const;
+	// Gets/sets the field-of-view of the camera.
+	IMPLEMENT_ACESSOR(FOV, float, fov);
 
-	// Sets the field-of-view of the camera.
-	void setFOV( float fov );
+	// Gets/sets the far clipping plane of the camera.
+	IMPLEMENT_ACESSOR(Far, float, far_);
 
-	// Sets the far clipping plane of the camera.
-	void setFar( float far );
-
-	// Gets the far clipping plane of the camera.
-	float getFar() const;
-
-	// Sets the near clipping plane of the camera.
-	void setNear( float near );
-
-	// Gets the near clipping plane of the camera.
-	float getNear() const;
+	// Gets/sets the near clipping plane of the camera.
+	IMPLEMENT_ACESSOR(Near, float, near_);
 
 	// Gets the forward vector of the camera.
-	const math::Vector3& getForwardVector() const;
+	IMPLEMENT_GETTER(ForwardVector, const math::Vector3&, forwardVector)
 
 	DECLARE_SERIALIZABLE();
 
@@ -125,9 +116,6 @@ protected:
 
 	// Sets up the projection matrices for OpenGL.
 	void setupProjection();
-
-	// Sets up the view matrices for OpenGL.
-	void setupView();
 
 	// View matrix.
 	math::Matrix4x3 viewMatrix;
@@ -141,7 +129,7 @@ protected:
 	// Field of view of this camera.
 	float fov;
 
-	// near and far are reserved keywords on MSVC.. so ghey! 
+	// near and far are reserved keywords on MSVC. 
 	float near_;
 	float far_;
 

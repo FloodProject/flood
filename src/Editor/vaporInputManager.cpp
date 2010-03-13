@@ -11,22 +11,6 @@
 
 namespace vapor { namespace editor {
 
-using namespace vapor::input;
-
-//-----------------------------------//
-
-vaporInputManager::vaporInputManager()
-{
-
-}
-
-//-----------------------------------//
-
-vaporInputManager::~vaporInputManager()
-{
-
-}
-
 //-----------------------------------//
 
 void vaporInputManager::processKeyEvent( const wxKeyEvent& event, bool keyDown )
@@ -51,6 +35,14 @@ void vaporInputManager::processMouseEvent( const wxMouseEvent& event )
 	{
 		MouseMoveEvent me( event.GetX(), event.GetY() );
 		processEvent( me );
+	}
+
+	// Mouse dragged
+	if( event.Dragging() )
+	{
+		Mouse* mouse = getMouse();
+		MouseDragEvent me( event.GetX(), event.GetY(), mouse->getMouseInfo() );
+		processEvent( me );
 	} 
 	
 	// Mouse button
@@ -62,15 +54,21 @@ void vaporInputManager::processMouseEvent( const wxMouseEvent& event )
 		{
 		case wxMOUSE_BTN_LEFT:
 			button = MouseButton::Left;
+			break;
 		case wxMOUSE_BTN_RIGHT:
 			button = MouseButton::Right;
+			break;
 		case wxMOUSE_BTN_MIDDLE:
 			button = MouseButton::Middle;
+			break;
 		case wxMOUSE_BTN_AUX1:
 			button = MouseButton::Mouse4;
+			break;
 		case wxMOUSE_BTN_AUX2:
 			button = MouseButton::Mouse5;
+			break;
 		default:
+			assert( "Unreachable code" );
 			button = MouseButton::Middle;
 		}
 
@@ -96,7 +94,7 @@ void vaporInputManager::processMouseEvent( const wxMouseEvent& event )
 
 	else if( event.Leaving() )
 	{
-		MouseEvent me( MouseEventType::MouseRelease );
+		MouseEvent me( MouseEventType::MouseExit );
 		processEvent( me );
 		//warn( "wx::input", "Mouse leaving events still not implemented" );
 	}

@@ -22,14 +22,15 @@ class Operation
 {
 public:
 
-	Operation();
-	virtual ~Operation();
+	Operation() : doneOnce( false ) { } 
+	//virtual ~Operation();
 
-	virtual void do_() = 0;
+	virtual void redo() = 0;
 	virtual void undo() = 0;
 
 protected:
 
+	bool doneOnce;
 };
 
 //-----------------------------------//

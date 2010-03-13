@@ -81,41 +81,24 @@ public:
 	Renderable(Primitive::Enum primitive, const VertexBufferPtr& vb = VertexBufferPtr(),
 			const MaterialPtr& mat = MaterialPtr( ) );
 
-	virtual ~Renderable();
-                    
     // Render this renderable. This will bind all the necessary state
 	// like binding the buffers and the materials.
 	void render(const render::Device& device);
     
-    // Gets the vertex buffer associated with the renderable.
-    VertexBufferPtr getVertexBuffer() const;
+    // Gets/sets the vertex buffer associated with the renderable.
+	IMPLEMENT_ACESSOR(VertexBuffer, VertexBufferPtr, vb) 
+   
+    // Gets/sets the index buffer associated with the renderable.
+	IMPLEMENT_ACESSOR(IndexBuffer, IndexBufferPtr, ib)
 
-    // Gets the index buffer associated with the renderable.
-    IndexBufferPtr getIndexBuffer() const;    
+    // Gets/sets the material associated with the renderable.
+    IMPLEMENT_ACESSOR(Material, MaterialPtr, mat)
 
-    // Gets the material associated with the renderable.
-    MaterialPtr getMaterial() const;
+    // Gets/sets the render mode of this renderable.
+	IMPLEMENT_ACESSOR(PolygonMode, PolygonMode::Enum, mode)
 
-    // Gets the render mode of this renderable.
-    PolygonMode::Enum getPolygonMode() const;
-
-	// Gets the primitive type of this renderable.
-	Primitive::Enum getPrimitiveType() const;
-
-	// Sets the vertex buffer of this renderable.
-	void setVertexBuffer( const VertexBufferPtr& vb );
-
-	// Sets the index buffer of this renderable.
-	void setIndexBuffer( const IndexBufferPtr& ib );
-
-	// Sets this renderable with a new material.
-	void setMaterial( const MaterialPtr& mat );
-
-	// Sets the primitive type of this renderable.
-	void setPrimitiveType( Primitive::Enum primitive );
-
-	// Sets the render mode of this renderable.
-	void setPolygonMode( PolygonMode::Enum mode );
+	// Gets/sets the primitive type of this renderable.
+	IMPLEMENT_ACESSOR(PrimitiveType, Primitive::Enum, type)
 
 protected:
 

@@ -40,6 +40,7 @@ typedef unsigned long	ulong;
 #include <list>
 #include <map>
 #include <tuple>
+#include <bitset>
 #include <stack>
 #include <string>
 #include <sstream>
@@ -134,4 +135,14 @@ typedef unsigned long	ulong;
 
 #if !defined( VAPOR_MEMORY_SHARED_PTR ) && !defined( VAPOR_MEMORY_INTRUSIVE_PTR ) 
 	#error "No shared pointer implementation found."
+#endif
+
+//-------------------------------------------------------------------------//
+// Iterator Debugging
+//-------------------------------------------------------------------------//
+
+#ifdef VAPOR_COMPILER_MSVC
+	#define	D_SCL_SECURE_NO_WARNINGS
+	#define _SECURE_SCL 0
+	#define _HAS_ITERATOR_DEBUGGING 0
 #endif

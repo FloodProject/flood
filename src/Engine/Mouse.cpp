@@ -69,6 +69,14 @@ void Mouse::processEvent( const input::Event& event )
 			mouseMoved( mm );
 			break;
 		}
+
+		case MouseEventType::MouseDrag:
+		{
+			const MouseDragEvent& mm = 
+				static_cast< const MouseDragEvent& > ( mevt );
+			mouseDragged( mm );
+			break;
+		}
 		
 		case MouseEventType::MouseEnter:
 		{
@@ -143,6 +151,19 @@ void Mouse::mouseMoved(const MouseMoveEvent& mme)
 	if ( !onMouseMove.empty() )
 	{
 		onMouseMove( mme );
+	}
+}
+
+//-----------------------------------//
+
+void Mouse::mouseDragged(const MouseDragEvent& mde)
+{	
+	mouseInfo.x = mde.x;
+	mouseInfo.y = mde.y;
+
+	if ( !onMouseDrag.empty() )
+	{
+		onMouseDrag( mde );
 	}
 }
 
@@ -259,6 +280,14 @@ MouseEvent::MouseEvent( MouseEventType::Enum eventType )
 
 MouseMoveEvent::MouseMoveEvent( short x, short y )
 	: MouseEvent( MouseEventType::MouseMove ), x( x ), y( y ) 
+{
+
+}
+
+//-----------------------------------//
+
+MouseDragEvent::MouseDragEvent( short x, short y, const MouseInfo& info )
+	: MouseEvent( MouseEventType::MouseDrag ), x( x ), y( y ), info( info )
 {
 
 }

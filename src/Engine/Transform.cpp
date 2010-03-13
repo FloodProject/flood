@@ -23,15 +23,8 @@ const std::string& Transform::type = "Transform";
 //-----------------------------------//
 
 Transform::Transform( float x, float y, float z )
-	: v_scale( 1.0f ), isPhysicsDriven( false ), v_translate( x, y, z ),
+	: v_scale( 1.0f ), v_translate( x, y, z ), needsNotify( false ),
 	aabbNeedsUpdate( true ), externalUpdate( false )
-{
-
-}
-
-//-----------------------------------//
-
-Transform::~Transform()
 {
 
 }
@@ -51,7 +44,7 @@ void Transform::translate( float x, float y, float z )
 	v_translate.y += y;
 	v_translate.z += z;
 
-	notify();
+	needsNotify = true;
 }
 
 //-----------------------------------//
@@ -76,7 +69,7 @@ void Transform::scale( float x, float y, float z )
 	v_scale.y *= y;
 	v_scale.z *= z;
 
-	notify();
+	needsNotify = true;
 }
 
 //-----------------------------------//
@@ -94,14 +87,7 @@ void Transform::rotate( float xang, float yang, float zang )
 	angles.y += yang;
 	angles.z += zang;
 
-	notify();
-}
-
-//-----------------------------------//
-
-const math::EulerAngles& Transform::getRotation() const
-{
-	return angles;
+	needsNotify = true;
 }
 
 //-----------------------------------//
@@ -109,15 +95,7 @@ const math::EulerAngles& Transform::getRotation() const
 void Transform::setRotation( const math::EulerAngles& rot )
 {
 	angles = rot;
-
-	notify();
-}
-
-//-----------------------------------//
-
-const math::Vector3& Transform::getPosition() const
-{
-	return v_translate;
+	needsNotify = true;
 }
 
 //-----------------------------------//
@@ -125,6 +103,7 @@ const math::Vector3& Transform::getPosition() const
 void Transform::setPosition( const math::Vector3& position )
 {
 	v_translate = position;
+	needsNotify = true;
 }
 
 //-----------------------------------//
@@ -133,7 +112,7 @@ math::Matrix4x3 Transform::lookAt( const math::Vector3& lookAtVector, const math
 {
 	const Vector3& eye = v_translate;
 
-	Vector3 zaxis = ( eye - lookAtVector ).normalize();
+	Vector3 zaxis = (eye - lookAtVector).normalize();
 	Vector3	xaxis = upVector.cross(zaxis).normalize();
 	Vector3	yaxis = zaxis.cross(xaxis);
 
@@ -153,7 +132,8 @@ math::Matrix4x3 Transform::lookAt( const math::Vector3& lookAtVector, const math
 	m.tx = -xaxis.dot(eye);
 	m.ty = -yaxis.dot(eye);
 	m.tz = -zaxis.dot(eye);
-	
+
+	needsNotify = true;
 	return m;
 }
 
@@ -165,7 +145,7 @@ void Transform::reset( )
 	v_scale = math::Vector3( 1.0f );
 	angles.identity();
 	
-	notify();
+	needsNotify = true;
 }
 
 //-----------------------------------//
@@ -174,13 +154,7 @@ void Transform::setAbsoluteTransform( const math::Matrix4x3& matrix )
 {
 	externalUpdate = true;
 	absoluteLocalToWorld = matrix;
-}
-
-//-----------------------------------//
-
-const math::Matrix4x3& Transform::getAbsoluteTransform() const
-{
-	return absoluteLocalToWorld;
+	needsNotify = true;
 }
 
 //-----------------------------------//
@@ -190,13 +164,6 @@ math::Matrix4x3 Transform::getLocalTransform() const
 	return Matrix4x3::createTranslationMatrix( v_translate )
 		* angles.getOrientationMatrix()
 		* Matrix4x3::createScaleMatrix( v_scale );
-}
-
-//-----------------------------------//
-
-const std::string& Transform::getType() const
-{
-	return Transform::type;
 }
 
 //-----------------------------------//
@@ -222,7 +189,6 @@ RenderablePtr buildBoundingRenderable( const math::AABB& aabb )
 	VertexBufferPtr vb( new VertexBuffer() );
 
 	std::vector< Vector3 > v;
-	
 	ADD_BOX_FACE( 0, 2, 3, 1 ) // Front
 	ADD_BOX_FACE( 0, 1, 5, 4 ) // Bottom
 	ADD_BOX_FACE( 4, 5, 7, 6 ) // Back
@@ -231,7 +197,6 @@ RenderablePtr buildBoundingRenderable( const math::AABB& aabb )
 	ADD_BOX_FACE( 1, 3, 7, 5 ) // Right
 
 	std::vector< Vector3 > c( 6/*faces*/*4/*vertices*/, Vector3( 1.0f, 1.0f, 0.0f ) );
-
 	vb->set( VertexAttribute::Position, v );
 	vb->set( VertexAttribute::Color, c );
 
@@ -271,6 +236,12 @@ void Transform::update( double UNUSED(delta) )
 		aabbRenderable = buildBoundingRenderable( boundingVolume );
 	}
 
+	if( needsNotify )
+	{
+		notify();
+		needsNotify = false;
+	}
+
 	externalUpdate = false;
 }
 
@@ -288,23 +259,9 @@ void Transform::notify()
 
 //-----------------------------------//
 
-const math::AABB& Transform::getBoundingVolume() const
-{
-	return boundingVolume;
-}
-
-//-----------------------------------//
-
 math::AABB Transform::getWorldBoundingVolume() const
 {
 	return boundingVolume.transform( getAbsoluteTransform() );
-}
-
-//-----------------------------------//
-
-render::RenderablePtr Transform::getDebugRenderable() const
-{
-	return aabbRenderable;
 }
 
 //-----------------------------------//
@@ -314,6 +271,13 @@ void Transform::serialize( Json::Value& value )
 	value["position"] = toJson(v_translate);
 	value["rotation"] = toJson(angles);
 	value["scale"] = toJson(v_scale);
+}
+
+//-----------------------------------//
+
+const std::string& Transform::getType() const
+{
+	return Transform::type;
 }
 
 //-----------------------------------//

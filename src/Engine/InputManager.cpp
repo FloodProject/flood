@@ -7,7 +7,6 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/input/InputManager.h"
 
 namespace vapor { namespace input {
@@ -86,7 +85,7 @@ const std::vector< input::Device* >& InputManager::getDevices() const
 
 void InputManager::processEvent( const input::Event& event )
 {
-	foreach( input::Device* device, devices )
+	foreach( input::Device* const device, devices )
 	{
 		device->processEvent( event );
 	}

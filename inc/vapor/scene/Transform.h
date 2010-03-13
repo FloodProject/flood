@@ -27,17 +27,10 @@ class VAPOR_API Transform : public Component
 public:
 
 	Transform( float x = 0.0f, float y = 0.0f, float z = 0.0f );
-	virtual ~Transform();
 
 	// Translate this node by the given parameters.
 	void translate( float x, float y, float z );
 	void translate( const math::Vector3& tr );
-
-	// Gets the position of the node.
-	const math::Vector3& getPosition() const;
-
-	// Sets the position of the node.
-	void setPosition( const math::Vector3& position );
 
 	// Scale this node by the given parameters.
 	void scale( float uniform );
@@ -48,20 +41,27 @@ public:
 	void rotate( float xang, float yang, float zang );
 	void rotate( const math::Vector3& rot );
 
+	// Resets all the transformations in the transform.
+	void reset();
+
+	// Gets the position of the node.
+	IMPLEMENT_GETTER(Position, const math::Vector3&, v_translate)
+
+	// Sets the position of the node.
+	void setPosition( const math::Vector3& position );
+
 	// Gets the rotation vector of this node.
-	const math::EulerAngles& getRotation() const;
+	IMPLEMENT_GETTER(Rotation, const math::EulerAngles&, angles)
 
 	// Sets the rotation vector of this node.
 	void setRotation( const math::EulerAngles& rot );
 
 	// Points to a given point in space.
-	math::Matrix4x3 lookAt( const math::Vector3& lookAtVector, const math::Vector3& upVector );
-	
-	// Resets all the transformations in the transform.
-	void reset();
+	math::Matrix4x3 lookAt( const math::Vector3& lookAtVector,
+		const math::Vector3& upVector );
 
 	// Gets the absolute transformation matrix.
-	const math::Matrix4x3& getAbsoluteTransform() const;
+	IMPLEMENT_GETTER(AbsoluteTransform, const math::Matrix4x3&, absoluteLocalToWorld)
 	
 	// Sets the absolute transformation matrix.
 	void setAbsoluteTransform( const math::Matrix4x3& matrix );
@@ -70,7 +70,7 @@ public:
 	math::Matrix4x3 getLocalTransform() const;
 
 	// Gets the bounding volume of the node.
-	const math::AABB& getBoundingVolume() const;
+	IMPLEMENT_GETTER(BoundingVolume, const math::AABB&, boundingVolume)
 
 	// Gets the world bounding volume of the node.
 	math::AABB getWorldBoundingVolume() const;
@@ -78,22 +78,23 @@ public:
 	// Does this node's bounding box need to be updated?
 	bool requiresBoundingVolumeUpdate() const;
 
+	// Use this to render some debug bounding boxes.
+	IMPLEMENT_GETTER(DebugRenderable, render::RenderablePtr, aabbRenderable)
+
 	// Called once per frame to update the component.
 	virtual void update( double delta );
 
 	// Gets fired when the transform is changed.
-	fd::delegate< void() > onTransform;
+	fd::delegate<void()> onTransform;
 
 	// Gets the type of this component. 
 	virtual const std::string& getType() const;
-
-	// Use this to render some debug bounding boxes.
-	virtual render::RenderablePtr getDebugRenderable() const;
 
 	DECLARE_SERIALIZABLE();
 
 protected:
 
+	bool needsNotify;
 	void notify();
 
 	math::EulerAngles angles;
@@ -105,8 +106,6 @@ protected:
 
 	// Bounding volumes used for culling.
 	math::AABB boundingVolume;
-	//math::AABB worldBoundingVolume;
-
 	bool aabbNeedsUpdate;
 	render::RenderablePtr aabbRenderable;
 
@@ -115,10 +114,6 @@ protected:
 	bool externalUpdate;
 
 	static const std::string& type;
-
-public:
-
-	bool isPhysicsDriven;
 };
 
 //-----------------------------------//

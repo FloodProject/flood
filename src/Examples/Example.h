@@ -44,6 +44,7 @@ protected:
 
 	/// Callback functions
 	virtual void onKeyPressed( const input::KeyEvent& );
+	virtual void onButtonPressed( const input::MouseButtonEvent& );
 
 private:
 

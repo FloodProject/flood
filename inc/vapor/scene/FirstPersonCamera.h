@@ -9,7 +9,6 @@
 #pragma once
 
 #include "vapor/scene/Camera.h"
-
 #include "vapor/input/InputManager.h"
 #include "vapor/input/Keyboard.h"
 #include "vapor/input/Mouse.h"
@@ -29,9 +28,9 @@ public:
 	FirstPersonCamera( input::InputManager* input, render::Device* device, 
 		Projection::Enum projection = Projection::Perspective );
 
-	// Sets the sensivity of the camera.
-	void setLookSensivity( float sensivity );
-	void setMoveSensivity( float sensivity );
+	// Gets/sets the sensivity of the camera.
+	IMPLEMENT_ACESSOR(LookSensivity, float, lookSensivity);
+	IMPLEMENT_ACESSOR(MoveSensivity, float, moveSensivity);
 
 	// Updates this node.
 	virtual void update( double delta );
@@ -56,30 +55,27 @@ protected:
 	void onKeyPressed( const input::KeyEvent& event );
 	void onKeyReleased( const input::KeyEvent& event );
 	void onMouseMove( const input::MouseMoveEvent& event );
+	void onMouseDrag( const input::MouseDragEvent& event );
 	void onMouseWheel( const input::MouseWheelEvent& event );
 	void onWindowFocusChange( bool focusLost );
 
 	// Restrict camera movement on the X-axis.
 	bool clampMovementX;
+	bool viewChanged;
 
 	// Camera sensivity.
 	float lookSensivity;
 	float moveSensivity;
 
-	// Queued movement.
-	math::Vector3 queuedMovement;
-
-	// Last mouse position (last frame).
+	// Mouse movement.
 	math::Vector3 lastPosition;
-
-	// Holds the mouse distance travelled in a frame.
+	math::Vector3 wheelMovement;
 	math::Vector3 mouseDistance;
-
-	// Input manager.
-	input::InputManager* inputManager;
 
 	// Look-at vector.
 	math::Vector3 lookAtVector;
+
+	input::InputManager* inputManager;
 
 	static const std::string& type;
 };

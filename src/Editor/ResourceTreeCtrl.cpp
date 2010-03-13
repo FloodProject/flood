@@ -159,7 +159,7 @@ void ResourceTreeCtrl::onResourceAdded( const resources::ResourceEvent& event )
 
 //-----------------------------------//
 
-void ResourceTreeCtrl::onResourceRemoved( const resources::ResourceEvent& event )
+void ResourceTreeCtrl::onResourceRemoved( const ResourceEvent& /*event*/ )
 {
 
 }

@@ -254,6 +254,13 @@ uint VertexBuffer::getSize() const
 
 //-----------------------------------//
 
+void VertexBuffer::forceRebuild()
+{
+	built = false;
+}
+
+//-----------------------------------//
+
 uint VertexBuffer::getNumAttributes() const
 {
 	return attributeMap.size();

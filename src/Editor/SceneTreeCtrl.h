@@ -33,17 +33,13 @@ public:
 					const wxValidator& validator = wxDefaultValidator, 
 					const wxString&	name = "SceneTreeCtrl" );
 					
-	virtual ~SceneTreeCtrl();
+	//virtual ~SceneTreeCtrl();
 
 	// Refreshes the tree control with the scene contents.
 	void updateScene( wxTreeItemId id, const NodePtr& node );
 
 	// Gets the entity represented by the tree item.
 	scene::NodePtr getEntity( wxTreeItemId id );
-
-	// Sets the bounding box of a tree item to a given state.
-	void setBoundingBox( const wxTreeItemId& id, bool state );
-
 
 	fd::delegate<void (wxTreeItemId, wxTreeItemId)> onItemSelected;
 
@@ -84,7 +80,6 @@ protected:
 	wxTreeItemId root;
 
 	std::map< std::string, int > componentIcons;
-	std::vector< NodePtr > selectedNodes;
 
 	wxTreeItemId menuItemId;
 	wxTreeItemId dragItemId;

@@ -10,7 +10,6 @@
  
 #include "Mode.h"
 #include "Operation.h"
-
 #include "Viewport.h"
 #include "SceneTreeCtrl.h"
 #include "ResourceTreeCtrl.h"
@@ -19,17 +18,40 @@
 
 namespace vapor { namespace editor {
 
+// ----------------------------------------------------------------------------
+// constants
+// ----------------------------------------------------------------------------
+
+// IDs for the controls and the menu commands
+enum
+{
+    // menu items
+    Editor_Quit = wxID_EXIT,
+
+    // it is important for the id corresponding to the "About" command to have
+    // this standard value as otherwise it won't be handled properly under Mac
+    // (where it is special and put into the "Apple" menu)
+    Editor_About = wxID_ABOUT,
+
+	// Toolbar buttons
+	Toolbar_Save = 12879,
+	Toolbar_ToggleScene,
+	Toolbar_ToogleConsole,
+	Toolbar_ToogleGrid,
+	Toolbar_TooglePlay,
+	Toolbar_ToogleSidebar,
+
+	Toolbar_Undo,
+	Toolbar_Redo
+};
+
 //-----------------------------------//
 
 // Define a new application type, each program should derive a class from wxApp
 class EditorApp : public wxApp
 {
 public:
-    // override base class virtuals
-    // ----------------------------
 
-    // this one is called on application startup and is a good place for the app
-    // initialization (doing it here and not in the ctor allows to have an error
     // return: if OnInit() returns false, the application terminates)
     virtual bool OnInit();
 };
@@ -46,18 +68,32 @@ public:
     EditorFrame(const wxString& title);
 	virtual ~EditorFrame();
 
-    // event handlers (these functions should _not_ be virtual)
+    // wxWidgets events
+	void OnIdle(wxIdleEvent& event);
     void OnQuit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
 	void OnToolbarButtonClick(wxCommandEvent& event);
 	void OnKeyDown(wxKeyEvent& event);
 	void OnNodeSelected(wxTreeItemId old, wxTreeItemId id);
 
-	void onMouseClick( const input::MouseButtonEvent& mbe );
-	void onKeyPress(const input::KeyEvent& key);
-	void onKeyRelease(const input::KeyEvent& key);
+	// Mouse events
+	void onMouseMove( const input::MouseMoveEvent& mve );
+	void onMouseDrag( const input::MouseDragEvent& mde );
+	void onMousePress( const input::MouseButtonEvent& mbe );
+	void onMouseRelease( const input::MouseButtonEvent& mbe );
+	void onMouseEnter();
+	void onMouseLeave();
 
+	// Keyboard events
+	void onKeyPress( const input::KeyEvent& key );
+	void onKeyRelease( const input::KeyEvent& key );
+
+	// Mode/Undo stuff
 	void onModeSwitch( Mode* newMode, int id );
+	void registerOperation( Operation* const op );
+
+	void onCameraTransform();
+	void RefreshCanvas();
 
 protected:
 
@@ -77,24 +113,7 @@ public:
 	// 3D engine instance.
 	Engine* engine;
 
-	// Main layout sizer.
-	wxBoxSizer* sizer;
-	wxToolBar* toolBar;
-
-	// Outputs vapor rendering.
-	Viewport* viewport;
-	vaporControl* vaporCtrl;
-
-	// Sidebar controls.
-	wxNotebook* notebookCtrl;
-	SceneTreeCtrl* sceneTreeCtrl;
-	ResourceTreeCtrl* resourceTreeCtrl;
-	TerrainPage* terrainPage;
-	
-	// Lua evaluator.
-	ConsoleFrame* codeEvaluator;
-	
-	// Editor modes
+	// Editor modes.
 	Mode* currentMode;
 	std::map<int, Mode*> modeIds;
 	std::vector<Mode*> editorModes;
@@ -102,6 +121,23 @@ public:
 	// Saves all the operations in a stack so you can undo
 	// any editing operation you've done while editing.
 	std::stack<Operation*> operations;
+
+	// Main UI widgets.
+	wxBoxSizer* sizer;
+	wxToolBar* toolBar;
+
+	// Rendering UI controls.
+	Viewport* viewport;
+	vaporControl* vaporCtrl;
+
+	// Property controls.
+	wxNotebook* notebookCtrl;
+	SceneTreeCtrl* sceneTreeCtrl;
+	ResourceTreeCtrl* resourceTreeCtrl;
+	TerrainPage* terrainPage;
+	ConsoleFrame* codeEvaluator;
+	
+	bool needsRedraw;
 
 private:
 

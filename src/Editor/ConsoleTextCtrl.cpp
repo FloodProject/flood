@@ -57,8 +57,8 @@ void ConsoleTextCtrl::InitControl()
 	// The way these operations are ordered might seem stupid but
 	// any other order didn't seem to work... might be a wx bug.
 
-	AppendTextColor( 
-		wxString::Format("Welcome to vaporEditor Console [%s]\n\n", VAPOR_ENGINE_VERSION ),
+	AppendTextColor( wxString::Format(
+		"Welcome to " VAPOR_EDITOR_NAME " Console [%s]\n\n", VAPOR_ENGINE_VERSION ),
 		*wxWHITE ); 
 
 	AppendTextColor( ">", *wxWHITE );

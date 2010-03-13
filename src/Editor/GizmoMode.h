@@ -19,14 +19,18 @@ class GizmoMode : public Mode
 public:
 
 	GizmoMode( EditorFrame* frame );
-	//virtual ~GizmoMode();
+	
 	virtual void onModeInit(wxToolBar* toolbar, ModeIdMap& map);	
 	virtual void onModeEnter( int id );
 	virtual void onModeExit();
 
-	virtual void onMouseClick(short x, short y);
+	virtual void onNodeSelected( NodePtr old, NodePtr new_ );
+
+	virtual void onMouseButtonPress( const MouseButtonEvent& mbe );
 
 protected:
+
+	void drawGizmo( NodePtr old, NodePtr new_ );
 
 	void disableSelectedNodes();
 

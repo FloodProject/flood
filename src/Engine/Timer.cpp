@@ -8,24 +8,29 @@
 
 #include "vapor/PCH.h"
 #include "vapor/Timer.h"
-#include "vapor/Platform.h"
 
 using namespace vapor::log;
 
 namespace vapor {
 
+bool Timer::checked = false;
+ticks_t Timer::ticksPerSecond = 0;
+
 //-----------------------------------//
 
 Timer::Timer()
-	: lastTime( 0 ), currentTime( 0 ), ticksPerSecond( 0 )
+	: lastTime( 0 ), currentTime( 0 )
 {
-	if( !checkSupport() )
+	if( !checked )
 	{
-		Log::MessageDialog( 
-			"High-resolution timers are not supported",
-			LogLevel::Error );
+		if( !checkSupport() )
+		{
+			Log::MessageDialog( 
+				"High-resolution timers are not supported",
+				LogLevel::Error );
 
-		// TODO: use low-precision timers
+			// TODO: use low-precision timers
+		}
 	}
 
 	reset();
@@ -87,6 +92,8 @@ bool Timer::checkSupport()
 	{
 		return false;
 	}
+
+	checked = true;
 	
 #else
 	#error "Implement me pl0x"

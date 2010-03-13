@@ -26,13 +26,6 @@ Node::Node() : _isVisible( true )
 
 //-----------------------------------//
 
-Node::~Node()
-{
-
-}
-
-//-----------------------------------//
-
 bool Node::addComponent( const ComponentPtr& component )
 {
 	assert( component != nullptr );
@@ -104,13 +97,6 @@ ComponentPtr Node::getComponent( const std::string& type ) const
 
 //-----------------------------------//
 
-const ComponentMap& Node::getComponents() const
-{
-	return components;
-}
-
-//-----------------------------------//
-
 void Node::update( double delta )
 {
 	const TransformPtr& transform = getTransform();
@@ -118,9 +104,6 @@ void Node::update( double delta )
 	// Update all geometry bounding boxes first
 	foreach( const GeometryPtr& geom, getGeometry() )
 		geom->update( delta );
-
-	// Update transform (info may be needed by other components)
-	if( transform ) transform->update( delta );
 
 	// Update everything else
 	foreach( const ComponentMapPair& component, components )
@@ -130,6 +113,9 @@ void Node::update( double delta )
 
 		component.second->update( delta );
 	}
+
+	// Update transform (info may be needed by other components)
+	if( transform ) transform->update( delta );
 }
 
 //-----------------------------------//
@@ -141,37 +127,9 @@ TransformPtr Node::getTransform() const
 
 //-----------------------------------//
 
-const std::vector< GeometryPtr >& Node::getGeometry() const
-{
-	return geometries;
-}
-
-//-----------------------------------//
-
-const std::string& Node::getName() const
-{
-	return name;
-}
-
-//-----------------------------------//
-
-void Node::setName( const std::string& name )
-{
-	this->name = name;
-}
-
-//-----------------------------------//
-
 NodePtr Node::getParent( ) const
 {
 	return parent.lock();
-}
-
-//-----------------------------------//
-
-void Node::setParent( NodePtr parent )
-{
-	this->parent = parent;
 }
 
 //-----------------------------------//
@@ -183,9 +141,16 @@ bool Node::isVisible( ) const
 
 //-----------------------------------//
 
-void Node::setVisible( bool visible )
+bool Node::getTag( int index )
 {
-	_isVisible = visible;
+	return tag[index];
+}
+
+//-----------------------------------//
+
+void Node::setTag( int index, bool state )
+{
+	tag[index] = state;
 }
 
 //-----------------------------------//
@@ -194,6 +159,7 @@ void Node::serialize( Json::Value& value )
 {
 	//value["name"] = getName();
 	if( !isVisible() ) value["visible"] = isVisible();
+	if( tag.any() ) value["tags"] = tag.to_string();
 
 	foreach( const ComponentMapPair& pair, components )
 	{

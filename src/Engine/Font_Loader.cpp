@@ -30,8 +30,8 @@ Font* Font_Loader::decode(const vfs::File& file)
 	
 	if( lines.size() == 4 )
 	{
-		info = split(lines[0], ' ');
-		glyphInfo = split(lines[3], ' ');
+		info = str_split(lines[0], ' ');
+		glyphInfo = str_split(lines[3], ' ');
 	}
 
 	// validate input

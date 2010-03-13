@@ -12,8 +12,6 @@
 
 namespace vapor { namespace editor {
 
-//-----------------------------------//
-
 ////////////////////////////////////////////////////////////
 // Event table
 ////////////////////////////////////////////////////////////
@@ -44,13 +42,6 @@ SceneTreeCtrl::SceneTreeCtrl( vapor::Engine* engine, wxWindow* parent, wxWindowI
 	initControl();
 
 	updateScene( root, scene.lock() );
-}
-
-//-----------------------------------//
-
-SceneTreeCtrl::~SceneTreeCtrl()
-{
-
 }
 
 //-----------------------------------//
@@ -110,6 +101,9 @@ void SceneTreeCtrl::updateScene( wxTreeItemId id, const NodePtr& node )
 		// Traverse the tree and add the nodes to the control.
 		foreach( const NodePtr& child, group->getChildren() )
 		{
+			if( child->getTag( EditorTags::EditorOnly ) )
+				continue;
+
 			wxTreeItemId new_id = AppendItem( id, child->getName(), 0 );
 			updateScene( new_id, child );
 		}
@@ -127,7 +121,7 @@ void SceneTreeCtrl::updateScene( wxTreeItemId id, const NodePtr& node )
 
 scene::NodePtr SceneTreeCtrl::getEntity( wxTreeItemId id )
 {
-	assert( id.IsOk() );
+	if( !id ) return NodePtr();
 
 	const std::string str( GetItemText( id ) );
 	NodePtr node = scene.lock()->getEntity( str );
@@ -144,18 +138,6 @@ scene::NodePtr SceneTreeCtrl::getEntity( wxTreeItemId id )
 	}
 
 	return node;
-}
-
-//-----------------------------------//
-
-void SceneTreeCtrl::setBoundingBox( const wxTreeItemId& id, bool state )
-{
-	const NodePtr& node = getEntity( id );
-
-	if( !node ) return;
-
-	// Activate bounding box drawing for this node.
-	node->getTransform()->setDebugRenderableVisible( state );
 }
 
 //-----------------------------------//
@@ -270,6 +252,9 @@ void SceneTreeCtrl::onNodeMenu( wxCommandEvent& event )
 
 void SceneTreeCtrl::onNodeAdded( const scene::GroupEvent& event )
 {
+	if( event.node->getTag( EditorTags::EditorOnly ) )
+		return;
+
 	wxTreeItemId id = AppendItem( root, event.node->getName(), 0 );
 
 	foreach( const ComponentMapPair& component, event.node->getComponents() )
@@ -281,7 +266,7 @@ void SceneTreeCtrl::onNodeAdded( const scene::GroupEvent& event )
 
 //-----------------------------------//
 
-void SceneTreeCtrl::onNodeRemoved( const scene::GroupEvent& event )
+void SceneTreeCtrl::onNodeRemoved( const scene::GroupEvent& /*event*/ )
 {
 	//const std::string& type = component.second->getType();
 	//AppendItem( id, type, componentIcons[type] );
@@ -298,7 +283,7 @@ void SceneTreeCtrl::onLabelEdit( wxTreeEvent& event )
 
 //-----------------------------------//
 
-void SceneTreeCtrl::onActivate( wxFocusEvent& event )
+void SceneTreeCtrl::onActivate( wxFocusEvent& /*event*/ )
 {
 	if( !activated )
 	{

@@ -46,10 +46,18 @@ namespace vapor {
 //---------------------------------------------------------------------//
 
 #define IMPLEMENT_ACESSOR(name, type, var)		\
-	type get##name() const { return var; } 		\
+	type get##name() const { return var; }		\
 	void set##name(type v) { var = v; }
 
-//-----------------------------------//
+#define IMPLEMENT_GETTER(name, type, var)		\
+	type get##name() const { return var; }
+
+#define IMPLEMENT_SETTER(name, type, var)		\
+	void set##name(type v) { var = v; }
+
+//---------------------------------------------------------------------//
+// Conversions
+//---------------------------------------------------------------------//
 
 // Swaps the endianness of a long.
 long endian_swap(long i);
@@ -82,22 +90,19 @@ void float_to_str( char* str, float n, byte precision = 2 );
 
 //-----------------------------------//
 
-std::string wstrtostr(const std::wstring &wstr);
+std::string wstr_to_str(const std::wstring &wstr);
+std::wstring str_to_wstr(const std::string &str);
 
 //-----------------------------------//
 
-std::wstring strtowstr(const std::string &str);
-
-//-----------------------------------//
-
-std::vector<std::string>& split(const std::string& s, char delim, 
+std::vector<std::string>& str_split(const std::string& s, char delim, 
 								std::vector<std::string>& elems);
 
-//-----------------------------------//
+std::vector<std::string> str_split(const std::string& s, char delim);
 
-std::vector<std::string> split(const std::string& s, char delim);
-
-//-----------------------------------//
+//---------------------------------------------------------------------//
+// Locales
+//---------------------------------------------------------------------//
 
 struct SwitchNeutralLocale
 {

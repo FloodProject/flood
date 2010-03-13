@@ -208,7 +208,7 @@ std::vector<std::string> File::readLines() const
 	std::vector<byte> font = read();
 	std::string str( font.begin(), font.end() );
 	
-	std::vector<std::string> lines = split(str, '\n');
+	std::vector<std::string> lines = str_split(str, '\n');
 	
 	// trim excess \r fat that can be left over
 	foreach( std::string& str, lines )
@@ -224,7 +224,7 @@ std::vector<std::string> File::readLines() const
 
 //-----------------------------------//
 
-long File::write(std::vector<byte> buffer, long size)
+long File::write(const std::vector<byte>& buffer, long size)
 {
 	if( (accessMode != AccessMode::Write)
 		&& (accessMode != AccessMode::Append) ) 
@@ -255,7 +255,7 @@ long File::write(std::vector<byte> buffer, long size)
 
 //-----------------------------------//
 
-long File::write(std::string text)
+long File::write(const std::string& text)
 {
 	std::vector<byte> data( text.begin(), text.end() );
 	return write( data );

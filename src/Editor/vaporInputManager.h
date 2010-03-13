@@ -8,23 +8,20 @@
 
 #pragma once
 
-#include <wx/event.h> 
-
 namespace vapor { namespace editor {
 
 //-----------------------------------//
 
 /**
  * Input manager implementation using wxWidgets.
- * TODO: does nothing for now.
  */
 
-class vaporInputManager : public vapor::input::InputManager
+class vaporInputManager : public input::InputManager
 {
 public:
 
-	vaporInputManager();
-	virtual ~vaporInputManager();
+	//vaporInputManager();
+	//virtual ~vaporInputManager();
 
 	/// Feeds a wxWidgets Keyboard input event to the input manager.
 	void processKeyEvent( const wxKeyEvent& event, bool keyDown );
