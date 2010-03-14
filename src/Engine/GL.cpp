@@ -21,7 +21,8 @@ bool glHasError( const std::string& msg )
 	bool err = false;
 
 #ifdef VAPOR_DEBUG
-	while( glGetError() != GL_NO_ERROR )
+	int glErr;
+	while( (glErr = glGetError()) != GL_NO_ERROR )
 	{
 		warn( "gl", msg.c_str() );
 		err = true;

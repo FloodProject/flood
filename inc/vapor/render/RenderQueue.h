@@ -46,7 +46,14 @@ namespace RenderGroup
 
 struct RenderState /*: private boost::noncopyable*/
 {
-	RenderState() : group( RenderGroup::Normal ), priority( 0 ) {}
+	RenderState()
+		: group( RenderGroup::Normal ), priority( 0 ) 
+	{}
+	
+	RenderState( const RenderState& rhs )
+		: renderable( rhs.renderable ), group( rhs.group ),
+		modelMatrix( rhs.modelMatrix ), priority( rhs.priority )
+	{}
 
 	RenderablePtr renderable;
 	math::Matrix4x3 modelMatrix;

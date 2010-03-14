@@ -36,13 +36,6 @@ Geometry::Geometry( RenderablePtr rend )
 
 //-----------------------------------//
 
-Geometry::~Geometry()
-{
-
-}
-
-//-----------------------------------//
-
 void Geometry::addRenderable( RenderablePtr rend, 
 							 RenderGroup::Enum group, 
 							 uint priority )
@@ -62,9 +55,6 @@ Geometry::getRenderables( RenderGroup::Enum group )
  
 void Geometry::appendRenderables( render::RenderQueue& queue, TransformPtr transform )
 {
-	// The node should have a transform component.
-	assert( transform != nullptr );
-
 	if( !transform ) return;
 	
 	const math::Matrix4x3& absoluteTransform = transform->getAbsoluteTransform();
@@ -87,13 +77,6 @@ void Geometry::appendRenderables( render::RenderQueue& queue, TransformPtr trans
 
 //-----------------------------------//
 
-const math::AABB& Geometry::getBoundingVolume() const
-{
-	return boundingVolume;
-}
-
-//-----------------------------------//
-
 void Geometry::update( double delta )
 {
 	if( !isDirty ) return;
@@ -111,13 +94,6 @@ void Geometry::update( double delta )
 	}
 
 	isDirty = false;
-}
-
-//-----------------------------------//
-
-const std::string& Geometry::getType() const
-{
-	return type;
 }
 
 //-----------------------------------//

@@ -38,7 +38,6 @@ class VAPOR_API IndexBuffer : public Buffer
 public:
 
 	IndexBuffer( IndexBufferType::Enum indexType = IndexBufferType::I16bit );
-	virtual ~IndexBuffer();
 
 	// Gets the type of indexes of this buffer.
 	IndexBufferType::Enum getIndexType() const { return indexType; }
@@ -47,20 +46,18 @@ public:
 	uint getNumIndices() const;
 
 	// Gets a reference to the vector with the indices.
-	std::vector<ushort>& getIndices16();
-	std::vector<ulong>& getIndices32();
+	IMPLEMENT_GETTER(Indices16, const std::vector<ushort>&, data16)
+	IMPLEMENT_GETTER(Indices32, const std::vector<ulong>&, data32)
 
 	// Sets the indices for the IBO (16-bit version).
-	void set( const std::vector< ushort >& data );
+	void set( const std::vector<ushort>& data );
 	
 	// Sets the indices for the IBO (32-bit version).	
-	void set( const std::vector< ulong >& data );
+	void set( const std::vector<ulong>& data );
 
-    // This method will make the internal IBO id bound.
-    bool bind();
-
-	// Unbinds the IBO from the OpenGL state.
-    bool unbind();
+	// Binds/unbinds the index buffer from the OpenGL state.
+	bool bind();
+	bool unbind();
 
     // Updates the internal IBO with current values for indices.
 	bool build( BufferUsage::Enum bufferUsage = BufferUsage::Static, 

@@ -30,8 +30,6 @@ public:
 	Geometry();
 	Geometry( render::RenderablePtr rend );
 
-	virtual ~Geometry();
-
 	/// Adds a new renderable to this geometry.
 	void addRenderable( render::RenderablePtr rend, 
 		render::RenderGroup::Enum group = render::RenderGroup::Normal,
@@ -48,13 +46,13 @@ public:
 	virtual void update( double delta );
 
 	/// Gets the bounding volume of this geometry.
-	const math::AABB& getBoundingVolume() const;
+	IMPLEMENT_GETTER(BoundingVolume, const math::AABB&, boundingVolume)
 
 	// Marks the geometry as dirty (forces AABB update).
 	void markDirty();
 
 	/// Returns the name of this component.
-	virtual const std::string& getType() const;
+	IMPLEMENT_GETTER(Type, const std::string&, type)
 
 	DECLARE_SERIALIZABLE();
 

@@ -45,43 +45,64 @@ Renderable::Renderable( Primitive::Enum primitive,
 
 //-----------------------------------//
 
-void Renderable::render( const render::Device& UNUSED(device) )
+void Renderable::bind()
 {
-	if( mat ) mat->bind();
+	if( !mat || !vb ) return;
+
+	mat->bind();
 
 	if( !vb->isBuilt() )
 		vb->build();
 
 	vb->bind();
 
-	if( mode == PolygonMode::Wireframe )
-		glPolygonMode( GL_FRONT_AND_BACK, PolygonMode::Wireframe );
-
-    if ( ib == nullptr )
-    {
-        glDrawArrays( type, 0, vb->getNumVertices() );
-
-		if( glHasError("Error drawing renderable") )
-			return;
-    }
-    else
-    {
+	if( ib )
+	{
 		if( !ib->isBuilt() )
 			ib->build();
 
         ib->bind();
-        
+	}
+}
+
+//-----------------------------------//
+
+void Renderable::unbind()
+{
+	if( !mat || !vb ) return;
+
+	if( ib )
+		ib->unbind();
+    
+	vb->unbind();
+	mat->unbind();
+}
+
+//-----------------------------------//
+
+void Renderable::render( const render::Device& UNUSED(device) )
+{
+	if( mode == PolygonMode::Wireframe )
+		glPolygonMode( GL_FRONT_AND_BACK, PolygonMode::Wireframe );
+
+    if( !ib )
+    {
+        glDrawArrays( type, 0, vb->getNumVertices() );
+
+		if( glHasError("Error drawing vertex buffer") )
+			return;
+    }
+    else
+    {
         GLenum gltype = ib->is16bit() ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
         glDrawElements( type, ib->getNumIndices(), gltype, 0 );
 
-        ib->unbind();
+		if( glHasError("Error drawing index buffer") )
+			return;
     }
    
 	if( mode == PolygonMode::Wireframe )
 		glPolygonMode( GL_FRONT_AND_BACK, PolygonMode::Solid );
-
-    vb->unbind();
-	if( mat ) mat->unbind();
 }
 
 //-----------------------------------//

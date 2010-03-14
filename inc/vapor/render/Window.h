@@ -10,6 +10,7 @@
 
 #include "vapor/render/Target.h"
 #include "vapor/input/InputManager.h"
+#include "vapor/math/Vector2.h"
 
 namespace vapor { namespace render {
 
@@ -27,59 +28,43 @@ class VAPOR_API WindowSettings : public Settings
 public:
 
 	WindowSettings( const ushort width = 640, const ushort height = 480,
-		const bool fullscreen = false, 
-		const std::string title = "Untitled",
-		const ushort bpp = 32, 
-		const ushort depthbits = 24, 
-		const ushort stencilbits = 8,
-		const ushort aalevel = 0, 
+		const bool fullscreen = false, const std::string title = "Untitled",
+		const ushort stencilbits = 8, const ushort bpp = 32, 
+		const ushort depthbits = 24, const ushort aalevel = 0, 
 		void* customHandle = nullptr );
 
-	// Gets the window title
-	const std::string& getTitle() const { return title; }
+	// Gets/sets the window title.
+	IMPLEMENT_ACESSOR(Title, const std::string&, title)
 
-	// Gets the custom handle of the window 
-	void* getCustomHandle() const { return customHandle; }
-	
+	// Gets/sets the custom handle of the window.
+	IMPLEMENT_ACESSOR(CustomHandle, void*, customHandle)
+
+	// Gets/sets the bits-per-pixel of the window.
+	IMPLEMENT_ACESSOR(Bpp, const ushort, bpp)
+
+	// Gets/sets the size of the window's depth buffer.
+	IMPLEMENT_ACESSOR(DepthBits, const ushort, depthbits)
+
+	// Gets/sets the size of the window's stencil buffer.
+	IMPLEMENT_ACESSOR(StencilBits, const ushort, stencilbits)
+
+	// Gets/sets the antialiasing level of the window.
+	IMPLEMENT_ACESSOR(AntiAliasing, const ushort, aalevel)
+
 	// Is this window fullscreen?
 	const bool isFullscreen() const { return fullscreen; }
-	
-	// Gets the bits-per-pixel of the window
-	const ushort getBpp() const { return bpp; }
-
-	// Gets the size of the window's depth buffer 
-	const ushort getDepthBits() const { return depthbits; }
-	
-	// Gets the size of the window's stencil buffer 
-	const ushort getStencilBits() const { return stencilbits; }
-	
-	// Gets the antialiasing level of the window
-	const ushort getAntiAliasing() const { return aalevel; }
-
-	// Sets the window title
-	void setTitle(const std::string& str) { title = str; }
-	
-	// Sets the size of the window's depth buffer 
-	void setDepthBits(const ushort db) { depthbits = db; }
-	
-	// Sets the size of the window's stencil buffer 
-	void setStencilBits(const ushort sb) { stencilbits = sb; }
-	
-	// Sets the antialiasing level of the window
-	void setAntiAliasing(const ushort aal) { aalevel = aal; }
 
 protected:
+
+	std::string title;
+	bool fullscreen;
 
 	ushort bpp;
 	ushort depthbits;
 	ushort stencilbits;
 	ushort aalevel;
 	
-	bool fullscreen;
-	
 	void* customHandle;
-	
-	std::string title;
 };
 
 //-----------------------------------//
@@ -117,6 +102,9 @@ public:
 	// Gets the visibility of the mouse cursor.
 	virtual bool isCursorVisible() const = 0;
 
+	// Gets the cursor position on screen.
+	virtual math::Vector2i getCursorPosition() const = 0;
+
 	// Sets the cursor position on screen.
 	virtual void setCursorPosition( int x, int y ) = 0;
 
@@ -131,7 +119,7 @@ public:
 		const WindowSettings& settings = WindowSettings() );
 
 	// Event fired when the window is closed.
-	fd::delegate< void( void ) > onWindowClose;
+	fd::delegate< void() > onWindowClose;
 
 	// Event fired when the window's focus changes.
 	fd::delegate< void( bool focusLost ) > onWindowFocusChange;

@@ -51,6 +51,9 @@ public:
 	// Gets the cursor visibility.
 	virtual bool isCursorVisible() const;
 
+	// Gets the cursor position on screen.
+	virtual math::Vector2i getCursorPosition() const;
+
 	// Sets the cursor position on screen.
 	virtual void setCursorPosition( int x, int y );
 
@@ -76,9 +79,6 @@ private:
 
 	// wxWidgets Input Manager
 	vaporInputManager* im;
-
-	// Is the mouse cursor captured?
-	bool mouseCaptured;
 };
 
 //-----------------------------------//

@@ -158,13 +158,9 @@ std::vector<uint> Cell::getNeighborVertices( uint i )
 
 void Cell::calculateNormals( const std::vector<Vector3>& vs )
 {
-	VertexBufferPtr vb = getVertexBuffer();
-	if( !vb ) return;
+	if( !vb || !ib ) return;
 
-	IndexBufferPtr ib = getIndexBuffer();
-	if( !ib ) return;
-
-	std::vector<ushort>& ind = ib->getIndices16();
+	const std::vector<ushort>& ind = ib->getIndices16();
 
 	// Calculate all face normals.
 	std::vector<Vector3> faceNormals;

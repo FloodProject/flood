@@ -20,7 +20,8 @@ template< typename T >
 struct Vector2T
 {
 public:
-
+	
+	Vector2T() {}
 	Vector2T( T x, T y ) : x(x), y(y) {}
 	
 	// X-coordinate of the point.
@@ -33,6 +34,7 @@ public:
 //-----------------------------------//
 
 typedef Vector2T<int> Vector2;
+typedef Vector2T<int> Vector2i;
 
 //-----------------------------------//
 

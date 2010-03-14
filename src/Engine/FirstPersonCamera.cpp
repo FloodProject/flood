@@ -150,9 +150,20 @@ void FirstPersonCamera::onKeyPressed( const KeyEvent& keyEvent )
 
 	case Keys::LControl:
 	{
-		render::Window* window = renderDevice->getWindow();
-		window->setCursorVisible( !window->isCursorVisible() );
-		centerCursor();
+		render::Window* const window = renderDevice->getWindow();
+
+		if( window->isCursorVisible() )
+		{
+			oldMousePosition = window->getCursorPosition();
+			centerCursor();
+			window->setCursorVisible( false );
+		}
+		else
+		{
+			window->setCursorPosition( oldMousePosition.x, oldMousePosition.y );
+			window->setCursorVisible( true );
+		}
+
 		break;
 	}
 

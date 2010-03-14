@@ -25,16 +25,10 @@ IndexBuffer::IndexBuffer( IndexBufferType::Enum indexType )
 
 //-----------------------------------//
 
-IndexBuffer::~IndexBuffer()
-{
-	//clear();
-}
-
-//-----------------------------------//
-
 void IndexBuffer::set( const std::vector< ushort >& data )
 {
 	data16 = data;
+	built = false;
 }
 
 //-----------------------------------//
@@ -42,20 +36,7 @@ void IndexBuffer::set( const std::vector< ushort >& data )
 void IndexBuffer::set( const std::vector< ulong >& data )
 {
 	data32 = data;
-}
-
-//-----------------------------------//
-
-std::vector<ushort>& IndexBuffer::getIndices16()
-{
-	return data16;
-}
-
-//-----------------------------------//
-
-std::vector<ulong>& IndexBuffer::getIndices32()
-{
-	return data32;
+	built = false;
 }
 
 //-----------------------------------//
@@ -64,13 +45,8 @@ bool IndexBuffer::bind()
 {
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, id );
 
-#ifdef VAPOR_DEBUG
-	while( glGetError() != GL_NO_ERROR )
-	{
-		warn( "gl::buffers", "Error binding index buffer" );
+	if( glHasError( "Error binding index buffer" ) )
 		return false;
-	}
-#endif
 
 	return true;
 }
@@ -81,13 +57,8 @@ bool IndexBuffer::unbind()
 {
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
 
-#ifdef VAPOR_DEBUG
-	while( glGetError() != GL_NO_ERROR )
-	{
-		warn( "gl::buffers", "Error unbinding index buffer" );
+	if( glHasError( "Error unbinding index buffer" ) )
 		return false;
-	}
-#endif
 
 	return true;
 }

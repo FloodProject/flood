@@ -216,11 +216,8 @@ void Camera::cull( render::RenderBlock& block, const NodePtr& node ) const
 	// If it is a renderable object, then we perform frustum culling
 	// and if the node is visible, then we push it to a list of things
 	// to render that will be later passed to the rendering device.
-	const std::vector< GeometryPtr >& geometries = node->getGeometry();
-
-	TransformPtr transform = node->getTransform();
-
-	foreach( const GeometryPtr& geometry, geometries ) 
+	const TransformPtr& transform = node->getTransform();
+	foreach( const GeometryPtr& geometry, node->getGeometry() ) 
 	{
 		// No frustum culling is performed yet.
 		// TODO: Hack! :D

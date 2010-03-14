@@ -32,13 +32,6 @@ Viewport::Viewport( vapor::Engine* engine, wxWindow* parent, wxWindowID id,
 
 //-----------------------------------//
 
-Viewport::~Viewport()
-{
-
-}
-
-//-----------------------------------//
-
 void Viewport::init()
 {
 	vaporCtrl = new vaporControl( engine, this/*, wxID_ANY, attribs*/ );

@@ -18,7 +18,7 @@ namespace vapor { namespace editor {
 void EditorFrame::RefreshCanvas()
 {
 	static int i = 0;
-	debug( "Refresh %d", i++ );
+	//debug( "Refresh %d", i++ );
 	vaporCtrl->OnUpdate();
 	vaporCtrl->Refresh();
 }
@@ -32,6 +32,9 @@ void EditorFrame::OnIdle(wxIdleEvent& /*event*/)
 		RefreshCanvas();
 		needsRedraw = false;
 	}
+
+	//if( viewport.camera
+	//viewport->cameraNode->update( 0.1f );
 }
 
 //-----------------------------------//
@@ -98,7 +101,8 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 		Operation* op = operations.top();
 		operations.pop();
 
-		op->undo();
+		assert( op != nullptr );
+		if( op ) op->undo();
 
 		if( operations.empty() )
 			toolBar->EnableTool( Toolbar_Undo, false );

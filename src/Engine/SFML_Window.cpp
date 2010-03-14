@@ -211,6 +211,14 @@ void SFML_Window::setCursorPosition( int x, int y )
 
 //-----------------------------------//
 
+math::Vector2i SFML_Window::getCursorPosition() const
+{
+	return math::Vector2i( window.GetInput().GetMouseX(),
+		window.GetInput().GetMouseY() );
+}
+
+//-----------------------------------//
+
 void SFML_Window::processResize(sf::Event event)
 {
 	settings.setHeight( (ushort) event.Size.Height );

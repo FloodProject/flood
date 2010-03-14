@@ -16,6 +16,10 @@
 
 namespace vapor { namespace render {
 
+typedef std::map< uint, TexturePtr > TextureMap;
+typedef std::pair< const uint, TexturePtr > TextureMapPair;
+
+
 //-----------------------------------//
 
 namespace BlendingOperationSource
@@ -64,10 +68,9 @@ public:
 	//Material( const std::string& name );
 	Material( const std::string& name, ProgramPtr program );
 	Material( const std::string& name, const std::string& program = "diffuse" );
-	~Material();
 
 	// Gets the textual name of the material.
-	const std::string& getName() const;
+	IMPLEMENT_GETTER(Name, const std::string&, name);
 
 	// Adds a texture to the material.
 	void setTexture( uint unit, const std::string& tex );
@@ -79,21 +82,20 @@ public:
 	void setProgram( const std::string& name );
 
 	// Gets the blending options for this material.
-	BlendingOperationSource::Enum getSourceBlendingOperation();
+	IMPLEMENT_GETTER(SourceBlendingOperation, BlendingOperationSource::Enum, src)
 	
 	// Gets the blending options for this material.
-	BlendingOperationDestination::Enum getDestinationBlendingOperation();
+	IMPLEMENT_GETTER(DestinationBlendingOperation, BlendingOperationDestination::Enum, dst)
 
 	// Is blending enabled?
 	// Blending is automatically enabled if you set a custom option.
 	bool isBlendingEnabled();
 
 	// Sets the blending options for this material.
-	void setBlending( BlendingOperationSource::Enum src, 
-		BlendingOperationDestination::Enum dst );
+	void setBlending( BlendingOperationSource::Enum src, BlendingOperationDestination::Enum dst );
 
 	// Gets the textures in the material.
-	const std::map< uint, TexturePtr >& getTextures() const;
+	IMPLEMENT_GETTER(Textures, const TextureMap&, textures)
 
 	// Binds the material object.
 	void bind();
@@ -119,8 +121,7 @@ protected:
 	ProgramPtr program;
 
 	// Textures
-	std::map< uint, TexturePtr > textures;
-	typedef std::pair< const uint, TexturePtr > texPair;
+	TextureMap textures;
 
 	// Backface culling
 	bool cullBackfaces;

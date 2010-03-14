@@ -96,7 +96,11 @@ EditorFrame::~EditorFrame()
 	foreach( Operation* const op, operations._Get_container() )
 		delete op;
 
-	vaporCtrl->Destroy();
+	// Make sure to delete viewport explicitly since it holds some 
+	// reference-counting pointers, and if they are not destroyed
+	// they will make some things try to call OpenGL functions
+	// after the window context is already destroyed.
+	delete viewport;
 	delete engine;
 }
 

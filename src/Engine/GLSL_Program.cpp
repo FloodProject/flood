@@ -42,24 +42,14 @@ GLSL_Program::~GLSL_Program()
 	{
 		glDetachShader( id, shader->id() );
 
-#ifdef VAPOR_DEBUG
-		while( glGetError() != GL_NO_ERROR )
-		{
-			warn( "glsl", "Could not detach shader object '%d'", shader->id() );
-			return;
-		}
-#endif
+		if( glHasError("Could not detach shader object") )
+			continue;
 	}
 
 	glDeleteProgram( id );
 
-#ifdef VAPOR_DEBUG
-	while( glGetError() != GL_NO_ERROR )
-	{
-		warn( "glsl", "Could not delete program object '%d'", id );
+	if( glHasError("Could not delete program object") )
 		return;
-	}
-#endif
 }
 
 //-----------------------------------//
@@ -68,18 +58,14 @@ void GLSL_Program::setAttribute( const std::string& name, VertexAttribute::Enum 
 {
 	//if( !isLinked() ) return;
 
-	bind();
+	//bind();
 
 	glBindAttribLocation( id, attr, name.c_str() );
 
-#ifdef VAPOR_DEBUG
-	while( glGetError() != GL_NO_ERROR )
-	{
-		warn( "glsl", "Could not bind attribute variable in program object '%d'", id );
-	}
-#endif
+	if( glHasError("Could not bind attribute variable") )
+		return;
 
-	unbind();
+	//unbind();
 }
 
 //-----------------------------------//
@@ -88,7 +74,7 @@ void GLSL_Program::setUniform( const std::string& slot, int data )
 {
 	if( !isLinked() ) return;
 
-	bind();
+	//bind();
 
 	int loc = glGetUniformLocation( id, slot.c_str() );
 
@@ -100,7 +86,7 @@ void GLSL_Program::setUniform( const std::string& slot, int data )
 
 	glUniform1i( loc, data );
 
-	unbind();
+	//unbind();
 }
 
 //-----------------------------------//
@@ -111,7 +97,7 @@ void GLSL_Program::setUniform( const std::string& slot, const std::vector<math::
 
 	assert( sizeof(vec[0]) == 3*sizeof(float) );
 
-	bind();
+	//bind();
 
 	int loc = glGetUniformLocation( id, slot.c_str() );
 
@@ -123,7 +109,7 @@ void GLSL_Program::setUniform( const std::string& slot, const std::vector<math::
 
 	glUniform3fv( loc, vec.size(), reinterpret_cast<const float*>(&vec[0]) );
 
-	unbind();	
+	//unbind();
 }
 
 //-----------------------------------//
@@ -134,7 +120,7 @@ void GLSL_Program::setUniform( const std::string& slot, const std::vector<math::
 
 	assert( sizeof(vec[0]) == 4*sizeof(float) );
 
-	bind();
+	//bind();
 
 	int loc = glGetUniformLocation( id, slot.c_str() );
 
@@ -146,7 +132,7 @@ void GLSL_Program::setUniform( const std::string& slot, const std::vector<math::
 
 	glUniform4fv( loc, vec.size(), reinterpret_cast<const float*>(&vec[0]) );
 
-	unbind();	
+	//unbind();
 }
 
 //-----------------------------------//
@@ -155,7 +141,7 @@ void GLSL_Program::setUniform( const std::string& slot, const math::Vector3& vec
 {
 	if( !isLinked() ) return;
 
-	bind();
+	//bind();
 
 	int loc = glGetUniformLocation( id, slot.c_str() );
 
@@ -167,7 +153,7 @@ void GLSL_Program::setUniform( const std::string& slot, const math::Vector3& vec
 
 	glUniform3f( loc, vec.x, vec.y, vec.z );
 
-	unbind();	
+	//unbind();
 }
 
 //-----------------------------------//
@@ -176,7 +162,7 @@ void GLSL_Program::setUniform( const std::string& slot, const math::Matrix4x3& m
 {
 	if( !isLinked() ) return;
 
-	bind();
+	//bind();
 
 	int loc = glGetUniformLocation( id, slot.c_str() );
 
@@ -200,7 +186,7 @@ void GLSL_Program::setUniform( const std::string& slot, const math::Matrix4x3& m
 	//float test[16];
 	//glGetUniformfv( id, loc, test );
 
-	unbind();
+	//unbind();
 }
 
 //-----------------------------------//
@@ -209,7 +195,7 @@ void GLSL_Program::setUniform( const std::string& slot, const math::Matrix4x4& m
 {
 	if( !isLinked() ) return;
 
-	bind();
+	//bind();
 
 	int loc = glGetUniformLocation( id, slot.c_str() );
 
@@ -225,7 +211,7 @@ void GLSL_Program::setUniform( const std::string& slot, const math::Matrix4x4& m
 	//float test[16];
 	//glGetUniformfv( id, loc, test );
 
-	unbind();
+	//unbind();
 }
 
 //-----------------------------------//
@@ -271,16 +257,12 @@ bool GLSL_Program::link()
 	glLinkProgram( id );
 
 	// Check that the linking was good
-#ifdef VAPOR_DEBUG
-	GLenum err;
-	if( ( err = glGetError() ) != GL_NO_ERROR )
+	if( glHasError("Could not link program object") )
 	{
-		warn( "glsl", "Could not link program object '%d': %s", id );
 		linked = false;
 		linkError = true;
 		return false;
 	}
-#endif
 
 	getLogText();
 
@@ -332,13 +314,8 @@ void GLSL_Program::bind()
 
 	glUseProgram( id );
 
-#ifdef VAPOR_DEBUG
-	while( glGetError() != GL_NO_ERROR )
-	{
-		warn( "glsl", "Could not bind program object '%d'", id );
+	if( glHasError("Could not bind program object") )
 		return;
-	}
-#endif	
 }
 
 //-----------------------------------//
@@ -347,13 +324,8 @@ void GLSL_Program::unbind()
 {
 	glUseProgram( 0 );
 
-#ifdef VAPOR_DEBUG
-	while( glGetError() != GL_NO_ERROR )
-	{
-		warn( "glsl", "Could not bind program object '%d'", id );
+	if( glHasError("Could not unbind program object") )
 		return;
-	}
-#endif	
 }
 
 //-----------------------------------//
@@ -390,13 +362,6 @@ void GLSL_Program::bindDefaultAttributes()
 	setAttribute( "vp_Color", VertexAttribute::Color );
 	setAttribute( "vp_MultiTexCoord0", VertexAttribute::MultiTexCoord0 );
 }
-
-//-----------------------------------//
-
-//uint GLSL_Program::id()
-//{
-//	return id;
-//}
 
 //-----------------------------------//
 

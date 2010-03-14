@@ -27,7 +27,6 @@ Material::Material( const std::string& name, ProgramPtr program )
 	lineWidth( DEFAULT_LINE_WIDTH ), lineSmooth( false ), cullBackfaces( true ),
 	depthTest( true )
 {
-
 }
 
 //-----------------------------------//
@@ -39,20 +38,6 @@ Material::Material( const std::string& name, const std::string& program )
 	lineWidth( DEFAULT_LINE_WIDTH ), lineSmooth( false ), cullBackfaces( true ),
 	depthTest( true )
 {
-}
-
-//-----------------------------------//
-
-Material::~Material()
-{
-
-}
-
-//-----------------------------------//
-
-const std::string& Material::getName() const
-{
-	return name;
 }
 
 //-----------------------------------//
@@ -90,20 +75,6 @@ void Material::setBlending( BlendingOperationSource::Enum src,
 
 //-----------------------------------//
 
-BlendingOperationSource::Enum Material::getSourceBlendingOperation()
-{
-	return src;
-}
-
-//-----------------------------------//
-
-BlendingOperationDestination::Enum Material::getDestinationBlendingOperation()
-{
-	return dst;
-}
-
-//-----------------------------------//
-
 void Material::setProgram( const std::string& name )
 {
 	ProgramPtr p = ProgramManager::getInstance().getProgram( name );
@@ -112,28 +83,21 @@ void Material::setProgram( const std::string& name )
 
 //-----------------------------------//
 
-const std::map< uint, TexturePtr >& Material::getTextures() const
-{
-	return textures;
-}
-
-//-----------------------------------//
-
 void Material::bind()
 {
-	foreach( const texPair& p, textures )
+	foreach( const TextureMapPair& p, textures )
 	{
 		p.second->bind( p.first );
 	}
 
 	if( !program->isLinked() )
-	{
 		program->link();
 
-		foreach( const texPair& p, textures )
-		{
-			program->setUniform( "tex" + num_to_str(p.first), p.first );
-		}
+	program->bind();
+
+	foreach( const TextureMapPair& p, textures )
+	{
+		program->setUniform( "tex" + num_to_str(p.first), p.first );
 	}
 
 	if( lineSmooth ) 
@@ -161,21 +125,12 @@ void Material::bind()
 		glEnable( GL_BLEND );
 		glBlendFunc( src, dst );
 	}
-
-	program->bind();
 }
 
 //-----------------------------------//
 
 void Material::unbind()
 {
-	getProgram()->unbind();
-
-	foreach( const texPair& p, getTextures() )
-	{
-		p.second->unbind( p.first );
-	}
-	
 	if( isBlendingEnabled() ) 
 	{
 		glDisable( GL_BLEND );
@@ -200,6 +155,13 @@ void Material::unbind()
 	{
 		glLineWidth( DEFAULT_LINE_WIDTH );
 	} 
+
+	program->unbind();
+
+	foreach( const TextureMapPair& p, getTextures() )
+	{
+		p.second->unbind( p.first );
+	}
 }
 
 //-----------------------------------//

@@ -81,6 +81,10 @@ public:
 	Renderable(Primitive::Enum primitive, const VertexBufferPtr& vb = VertexBufferPtr(),
 			const MaterialPtr& mat = MaterialPtr( ) );
 
+	// Bind/unbind all the state needed to draw the renderable.
+	void bind();
+	void unbind();
+
     // Render this renderable. This will bind all the necessary state
 	// like binding the buffers and the materials.
 	void render(const render::Device& device);

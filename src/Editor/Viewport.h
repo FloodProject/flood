@@ -28,8 +28,6 @@ public:
 		const wxPoint& pos = wxDefaultPosition, 
 		const wxSize& size = wxDefaultSize, 
 		long style = wxTAB_TRAVERSAL );
-
-	~Viewport();
 		
 	scene::NodePtr cameraNode;
 	scene::CameraPtr camera;

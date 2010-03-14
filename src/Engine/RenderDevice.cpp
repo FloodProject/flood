@@ -107,13 +107,16 @@ void Device::render( RenderBlock& queue, const scene::Camera* cam )
 	// render the list
 	foreach( const RenderState& state, queue.renderables )
 	{
-		const MaterialPtr& material = state.renderable->getMaterial();
-		assert( material != nullptr );
+		const RenderablePtr& rend = state.renderable;
+		if( !rend ) continue;
+
+		const MaterialPtr& material = rend->getMaterial();;
 		if( !material ) continue;
 
 		const ProgramPtr& program = material->getProgram();
-		assert( program != nullptr );
 		if( !program ) continue;
+
+		rend->bind();
 
 		// TODO: this needs some refactoring
 		if( state.group != RenderGroup::Overlays )
@@ -158,6 +161,8 @@ void Device::render( RenderBlock& queue, const scene::Camera* cam )
 		}
 
 		state.renderable->render( *this );
+
+		rend->unbind();
 	}
 }
 

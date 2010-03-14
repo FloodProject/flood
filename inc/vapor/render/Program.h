@@ -79,7 +79,6 @@ public:
 
 protected:
 
-	std::vector< resources::ShaderPtr > shaders;
 	std::string log;
 	bool linked;
 };

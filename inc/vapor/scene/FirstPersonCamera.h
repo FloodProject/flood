@@ -12,6 +12,7 @@
 #include "vapor/input/InputManager.h"
 #include "vapor/input/Keyboard.h"
 #include "vapor/input/Mouse.h"
+#include "vapor/math/Vector2.h"
 
 namespace vapor { namespace scene {
 
@@ -71,6 +72,7 @@ protected:
 	math::Vector3 lastPosition;
 	math::Vector3 wheelMovement;
 	math::Vector3 mouseDistance;
+	math::Vector2i oldMousePosition;
 
 	// Look-at vector.
 	math::Vector3 lookAtVector;

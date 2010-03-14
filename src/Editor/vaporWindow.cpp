@@ -14,7 +14,7 @@ namespace vapor { namespace editor {
 //-----------------------------------//
 
 vaporWindow::vaporWindow(const render::WindowSettings& settings, wxGLCanvas* canvas)
-	:	render::Window(settings), canvas(canvas), context(nullptr), mouseCaptured( false )
+	:	render::Window(settings), canvas(canvas), context(nullptr)
 {
 	open();
 
@@ -93,15 +93,13 @@ void vaporWindow::setCursorVisible(bool mouseVisible)
 {
 	if( !mouseVisible )
 	{
-		mouseCaptured = true;
-		canvas->CaptureMouse();
 		canvas->SetCursor( wxCursor( wxCURSOR_BLANK ) );
+		canvas->CaptureMouse();
 	}
 	else
 	{
-		mouseCaptured = false;
-		canvas->ReleaseMouse();
 		canvas->SetCursor( wxNullCursor );
+		canvas->ReleaseMouse();
 	}
 }
 
@@ -109,7 +107,20 @@ void vaporWindow::setCursorVisible(bool mouseVisible)
 
 bool vaporWindow::isCursorVisible() const
 {
-	return !mouseCaptured;
+	return !canvas->HasCapture();
+}
+
+//-----------------------------------//
+
+math::Vector2i vaporWindow::getCursorPosition() const
+{
+	const wxMouseState& mouseState = wxGetMouseState();
+	
+	int x = mouseState.GetX();
+	int y = mouseState.GetY();
+	canvas->ScreenToClient( &x, &y );
+	
+	return math::Vector2i(x, y);
 }
 
 //-----------------------------------//

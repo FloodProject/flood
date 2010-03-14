@@ -70,7 +70,7 @@ void vaporControl::InitControl()
 
 void vaporControl::OnIdle(wxIdleEvent& event)
 {
-	//OnUpdate();
+	OnUpdate();
 
 	// Asks wxWidgets to send more idle events.
 	//event.RequestMore( true );
@@ -81,7 +81,7 @@ void vaporControl::OnIdle(wxIdleEvent& event)
 void vaporControl::OnUpdate()
 {
 	static int i = 0;
-	if( i < 10 ) debug( "Update %d", i++ );
+	//if( i < 10 ) debug( "Update %d", i++ );
 
 	updatedOnce = true;
 
@@ -101,7 +101,7 @@ void vaporControl::OnRender()
 	if( !updatedOnce ) return;
 
 	static int i = 0;
-	if( i < 10 ) debug( "Render %d", i++ );
+	//if( i < 10 ) debug( "Render %d", i++ );
 
 	const math::Color bg( 0.0f, 0.10f, 0.25f );
 
@@ -141,6 +141,8 @@ void vaporControl::OnSize(wxSizeEvent& event)
 void vaporControl::OnKeyDown(wxKeyEvent& event)
 {
 	inputManager->processKeyEvent( event, true );
+
+	debug( "key down: %d", event.GetKeyCode() );
 }
 
 //-----------------------------------//
@@ -164,7 +166,6 @@ void vaporControl::OnMouseEvent(wxMouseEvent& event)
 
 void vaporControl::OnMouseCaptureLost(wxMouseCaptureLostEvent&)
 {
-	window->mouseCaptured = false;
 	SetCursor( wxNullCursor );
 }
 
