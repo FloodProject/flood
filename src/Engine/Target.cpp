@@ -8,3 +8,16 @@
 
 #include "vapor/PCH.h"
 #include "vapor/render/Target.h"
+
+namespace vapor { namespace render {
+
+//-----------------------------------//
+
+math::Vector2i Settings::getSize() const
+{
+	return math::Vector2i(width, height);
+}
+
+//-----------------------------------//
+
+} } // end namespaces

@@ -22,34 +22,32 @@ class Viewport : public wxPanel
 {
 public:
 
-	Viewport( vapor::Engine* engine,
-		wxWindow* parent, 
-		wxWindowID id = wxID_ANY, 
-		const wxPoint& pos = wxDefaultPosition, 
-		const wxSize& size = wxDefaultSize, 
-		long style = wxTAB_TRAVERSAL );
-		
-	scene::NodePtr cameraNode;
-	scene::CameraPtr camera;
-	scene::TransformPtr transform;
+	Viewport( vapor::Engine* engine, wxWindow* parent, 
+		wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition,
+		const wxSize& size = wxDefaultSize, long style = wxTAB_TRAVERSAL );
 
-	// vaporEngine's wxWidgets control.
+	// Each viewport has an associated camera.
+	CameraPtr camera;
+	NodePtr cameraNode;
+	TransformPtr cameraTransform;
+	
+	// Control where the scene will be drawn.
 	vaporControl* vaporCtrl;
 
 protected:
 
 	void build();
-	void init();
-	void createCamera();
+	void createCamera( Engine* );
 	void updatePosition();
 
-	// Event handlers
+	// Event handlers.
 	void OnToolChoice( wxCommandEvent& event );
 	void onCameraTransform();
 	void onText( wxCommandEvent& event );
 	void onTextEnter( wxCommandEvent& event );
 	void onKillFocus( wxFocusEvent& event );
 
+	// UI controls.
 	wxString X;
 	wxString Y;
 	wxString Z;
@@ -57,11 +55,12 @@ protected:
 	wxTextCtrl* txt_X;
 	wxTextCtrl* txt_Y;
 	wxTextCtrl* txt_Z;
+
 	wxChoice* choice_View;
 	wxBitmapButton* btn_Wireframe;
 	wxBitmapButton* btn_Textures;
 
-	vapor::Engine* engine;
+private:
 
 	DECLARE_EVENT_TABLE()
 };

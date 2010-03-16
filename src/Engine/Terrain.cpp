@@ -62,7 +62,8 @@ CellPtr Terrain::createCell( const ImagePtr& heightmap, ushort x, ushort y )
 
 //-----------------------------------//
 
-void Terrain::convertHeightmap( const resources::ImagePtr& heightmap, std::vector<float>& heights )
+void Terrain::convertHeightmap( const resources::ImagePtr& heightmap,
+							   std::vector<float>& heights )
 {
 	// TODO: Can't handle any other pixel format right now...
 	assert( heightmap->getPixelFormat() == PixelFormat::R8G8B8A8 );

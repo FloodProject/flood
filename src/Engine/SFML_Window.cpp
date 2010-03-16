@@ -41,7 +41,7 @@ bool SFML_Window::open()
 {
 	sfmlSettings.DepthBits = settings.getDepthBits(); 
 	sfmlSettings.StencilBits = settings.getStencilBits();
-	sfmlSettings.AntialiasingLevel = settings.getAntiAliasing();
+	sfmlSettings.AntialiasingLevel = settings.getAntialiasing();
 	
 	if( settings.isFullscreen() )
 	{
@@ -74,7 +74,7 @@ bool SFML_Window::open()
 	settings.setStencilBits( static_cast<ushort>(sfmlSettings.StencilBits) );
 	
 	assert( sfmlSettings.AntialiasingLevel >= 0 && sfmlSettings.AntialiasingLevel <= 32 );
-	settings.setAntiAliasing( static_cast<ushort>(sfmlSettings.AntialiasingLevel) );
+	settings.setAntialiasing( static_cast<ushort>(sfmlSettings.AntialiasingLevel) );
 	
 	window.EnableKeyRepeat( false );
 	
@@ -159,7 +159,7 @@ bool SFML_Window::pumpEvents()
 			case sf::Event::JoyButtonReleased:
 			case sf::Event::JoyMoved:
 			{
-				getInputManager().processSFMLEvent( event );
+				inputManager.processSFMLEvent( event );
 				break;
 			}
 
@@ -168,7 +168,7 @@ bool SFML_Window::pumpEvents()
 			// the screen and won't be usable for i.e., camera rotations.
 			case sf::Event::MouseMoved:
 			{
-				getInputManager().processSFMLEvent( event );
+				inputManager.processSFMLEvent( event );
 				break;
 			}
 		}

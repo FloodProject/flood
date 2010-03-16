@@ -29,8 +29,8 @@ Json::Value toJson( const math::Vector3& vec )
 void serializeToFile( Json::Value& root, const std::string& name )
 {
 	// Always use the platform independent "C" locale when writing JSON,
-	// jsoncpp assumes this and will write wrong data with another locale.
-	SwitchNeutralLocale c;
+	// json-cpp assumes this and will write wrong data with another locale.
+	LocaleSaveRestore c;
 
 	vfs::File file( name, vfs::AccessMode::Write );
 	file.write( root.toStyledString() );

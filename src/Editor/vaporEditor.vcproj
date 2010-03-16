@@ -296,18 +296,18 @@
 				RelativePath=".\vaporWindow.h"
 				>
 			</File>
-		</Filter>
-		<Filter
-			Name="Scene"
-			>
-			<File
-				RelativePath=".\SceneTreeCtrl.cpp"
+			<Filter
+				Name="Input"
 				>
-			</File>
-			<File
-				RelativePath=".\SceneTreeCtrl.h"
-				>
-			</File>
+				<File
+					RelativePath=".\vaporInputManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\vaporInputManager.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Icons"
@@ -318,30 +318,6 @@
 			</File>
 			<File
 				RelativePath=".\ImageUtils.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Input"
-			>
-			<File
-				RelativePath=".\vaporInputManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\vaporInputManager.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Resources"
-			>
-			<File
-				RelativePath=".\ResourceTreeCtrl.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ResourceTreeCtrl.h"
 				>
 			</File>
 		</Filter>
@@ -474,6 +450,30 @@
 			</File>
 			<File
 				RelativePath=".\Operation.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Scene"
+			>
+			<File
+				RelativePath=".\SceneTreeCtrl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SceneTreeCtrl.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Resources"
+			>
+			<File
+				RelativePath=".\ResourceTreeCtrl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ResourceTreeCtrl.h"
 				>
 			</File>
 		</Filter>

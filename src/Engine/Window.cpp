@@ -23,12 +23,22 @@ namespace vapor { namespace render {
 
 //-----------------------------------//
 
-WindowSettings::WindowSettings(const ushort width, const ushort height, const bool fullscreen,
-	const std::string title, const ushort bpp, const ushort depthbits, 
-	const ushort stencilbits, const ushort aalevel,  void* customHandle)
-	: Settings( width, height ), title(title), bpp(bpp), 
-	depthbits(depthbits),  stencilbits(stencilbits), aalevel(aalevel),
-	fullscreen(fullscreen), customHandle(customHandle)
+WindowSettings::WindowSettings( const ushort width, const ushort height, 
+	const std::string& title, const bool fullscreen )
+	: Settings( width, height ), title(title), fullScreen(fullscreen), 
+	bitsPerPixel(32), stencilBits(8), depthBits(24), antialiasLevel(0),
+	customHandle(nullptr)
+{
+
+}
+
+//-----------------------------------//
+
+WindowSettings::WindowSettings( const WindowSettings& s )
+	: Settings( s ), title(s.title), fullScreen(s.fullScreen), 
+	bitsPerPixel(s.bitsPerPixel), stencilBits(s.stencilBits),
+	depthBits(s.depthBits), antialiasLevel(s.antialiasLevel),
+	customHandle(s.customHandle)
 {
 
 }
@@ -52,30 +62,12 @@ Window::Window(const WindowSettings& settings)
 
 //-----------------------------------//
 
-Window::~Window()
-{
-	//delete settings;
-}
-
-//-----------------------------------//
-
-const Settings& Window::getSettings()
-{
-	return settings;
-}
-
-//-----------------------------------//
-
 void Window::handleWindowResize()
 {
 	if( onTargetResize.empty() )
-	{
 		return;
-	}
 
-	const Settings& settings = getSettings();
-
-	onTargetResize( settings );
+	onTargetResize( getSettings() );
 }
 
 //-----------------------------------//
@@ -83,9 +75,7 @@ void Window::handleWindowResize()
 void Window::handleWindowClose()
 {
 	if( onWindowClose.empty() )
-	{
 		return;
-	}
 
 	onWindowClose();
 }
@@ -95,9 +85,7 @@ void Window::handleWindowClose()
 void Window::handleWindowFocus( bool focusLost )
 {
 	if( onWindowFocusChange.empty() )
-	{
 		return;
-	}
 
 	onWindowFocusChange( focusLost );
 }

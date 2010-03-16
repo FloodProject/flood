@@ -19,7 +19,7 @@ namespace vapor { namespace scene {
 //-----------------------------------//
 
 /**
- * Implements a simple First-Person style camera. Needs some logic fixing.
+ * Implements a simple First-Person style camera.
  */
 
 class VAPOR_API FirstPersonCamera : public Camera
@@ -62,17 +62,16 @@ protected:
 
 	// Restrict camera movement on the X-axis.
 	bool clampMovementX;
-	bool viewChanged;
 
 	// Camera sensivity.
 	float lookSensivity;
 	float moveSensivity;
 
 	// Mouse movement.
-	math::Vector3 lastPosition;
-	math::Vector3 wheelMovement;
-	math::Vector3 mouseDistance;
+	math::Vector2i lastPosition;
+	math::Vector2i mouseDistance;
 	math::Vector2i oldMousePosition;
+	math::Vector3 wheelMovement;
 
 	// Look-at vector.
 	math::Vector3 lookAtVector;

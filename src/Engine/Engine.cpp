@@ -138,12 +138,10 @@ void Engine::setupDevices( bool createWindow )
 
 void Engine::setupInput()
 {
-	Window& window = *renderDevice->getWindow();
-
-	// obtains the input manager instance
+	Window& window = renderDevice->getWindow();
 	InputManager& im = window.getInputManager();
 
-	// let's register some input devices
+	// Let's register some input devices.
 	im.addDevice( new input::Keyboard() );
 	im.addDevice( new input::Mouse() );
 }

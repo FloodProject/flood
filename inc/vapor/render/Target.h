@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "vapor/math/Vector2.h"
+
 namespace vapor { namespace render {
 
 //-----------------------------------//
@@ -20,17 +22,18 @@ public:
 		: width( width ), height( height )
 	{ }
 
-	// Gets the width of the target.
-	const ushort getWidth() const { return width; }
-	
-	// Gets the height of the target.
-	const ushort getHeight() const { return height; }
+	Settings( const Settings& s )
+		: width( s.width ), height( s.height )
+	{ }
 
-	// Sets the width of the target.
-	void setWidth(ushort w) { width = w; }
-	
-	// Gets the height of the target.
-	void setHeight(ushort h) { height = h; }
+	// Gets/sets the width of the target.
+	IMPLEMENT_ACESSOR(Width, const ushort, width)
+
+	// Gets/sets the height of the target.
+	IMPLEMENT_ACESSOR(Height, const ushort, height)
+
+	// Gets the size of the target.
+	math::Vector2i getSize() const;
 
 public:
 
@@ -43,7 +46,7 @@ public:
  * Render target. Windows, FBOs, etc.
  */
 
-class VAPOR_API RenderTarget
+class VAPOR_API RenderTarget : private boost::noncopyable
 {
 public:
 
@@ -57,15 +60,11 @@ public:
 	virtual void makeCurrent() = 0;
 
 	// Gets the settings of this render target.
-	virtual const Settings& getSettings() = 0;
+	virtual const Settings& getSettings() const = 0;
 
 	// Event fired when the target gets resized.
 	fd::delegate< void( const Settings& ) > onTargetResize;
 };
-
-//-----------------------------------//
-
-TYPEDEF_SHARED_POINTER_FROM_CLASS( RenderTarget );
 
 //-----------------------------------//
 

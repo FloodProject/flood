@@ -15,11 +15,11 @@ namespace vapor { namespace render {
 //-----------------------------------//	
 
 /**
- * The adapter class just represents a graphics adapter (video card), and holds
- * data related to it that is interesting for the other classes, like driver
- * information and capabilities. Obviously this depends on the rendering API
- * the app is using at runtime, but I still have to check if  we need different
- * classes for different render devices. Hopefully not. :)
+ * The adapter class just represents a graphics adapter (video card), 
+ * and holds data related to it that is interesting for the other classes,
+ * like driver information and capabilities. Obviously this depends on the
+ * rendering API the app is using at runtime, but I still have to check if
+ * we need different classes for different render devices. Hopefully not. :)
  */
 
 class VAPOR_API Adapter
@@ -27,22 +27,21 @@ class VAPOR_API Adapter
 public:
 
 	Adapter();
-	~Adapter();
 
-	// Gets the version of the rendering API
-	const std::string getVersion() const;
+	// Gets the version of the rendering API.
+	IMPLEMENT_GETTER(Version, const std::string&, gl)
 
-	// Gets driver information
-	const std::string getDriver() const;
+	// Gets driver information.
+	IMPLEMENT_GETTER(Driver, const std::string&, driver)
 	
-	// Gets the graphics adapter vendor
-	const std::string getVendor() const;
+	// Gets the graphics adapter vendor.
+	IMPLEMENT_GETTER(Vendor, const std::string&, vendor)
 	
-	// Gets the graphics adapter name
-	const std::string getName() const;
+	// Gets the graphics adapter name.
+	IMPLEMENT_GETTER(Name, const std::string&, name)
 
-	// Gets the GLSL version information
-	const std::string getShading() const;
+	// Gets the GLSL version information.
+	IMPLEMENT_GETTER(Shading, const std::string&, glsl)
 
 	// Logs adapter version information
 	void log() const;

@@ -15,15 +15,16 @@
 #include "vapor/scene/Camera.h"
 #include "vapor/render/GL.h"
 
-using namespace vapor::math;
-
 namespace vapor { namespace render {
+
+using namespace vapor::math;
+using namespace vapor::log;
 
 //-----------------------------------//
 
 Device::Device()
 	: clearColor( math::Colors::White ), adapter( nullptr ),
-	window( nullptr ), bufferManager( nullptr ), activeTarget( nullptr )
+	window( nullptr ), activeTarget( nullptr )
 {
 
 }
@@ -68,25 +69,6 @@ void Device::init()
 	//glEnable(GL_FOG);
 	//glFogfv(GL_FOG_COLOR, g_fogColor);
 	//glFogf(GL_FOG_DENSITY, g_fogDensity);
-}
-
-//-----------------------------------//
-
-Window& Device::createWindow( const WindowSettings& settings )
-{
-	Window& window = Window::createWindow( settings );
-
-	setWindow( &window );
-	setRenderTarget( &window );
-
-	return window;
-}
-
-//-----------------------------------//
-
-TextureManager* Device::getTextureManager() const
-{
-	return TextureManager::getInstancePtr();
 }
 
 //-----------------------------------//
@@ -170,71 +152,25 @@ void Device::render( RenderBlock& queue, const scene::Camera* cam )
 
 void Device::checkExtensions()
 {
-	// init GLEW (OpenGL Extension Wrangler)
+	// Initialize GLEW (OpenGL Extension Wrangler) and check that
+	// the user supports the minimum required OpenGL version.
 	GLenum err = glewInit();
 	
 	if( err != GLEW_OK )
 	{
-		error( "render::opengl", 
-			"Failed to initialize GLEW: %s", glewGetErrorString( err ) );
-
+		const GLubyte* str = glewGetErrorString(err);
+		error( "render", "Failed to initialize GLEW: %s", str );
 		return;
 	}
 
-	info( "render::opengl", "Using GLEW version %s", 
-		glewGetString( GLEW_VERSION ) );
+	info( "render", "Using GLEW version %s", glewGetString(GLEW_VERSION) );
 
 	if( !GLEW_VERSION_2_0 )
 	{
-		log::Log::MessageDialog( "You need at least OpenGL 2.0 to run this.",
-			log::LogLevel::Error );
-
-		exit( -1 );
-		
-		// TODO: exit program in a structured manner
+		const char* str = "You need at least OpenGL 2.0 to run this.";
+		Log::MessageDialog( str, log::LogLevel::Error );
+		exit( -1 ); // TODO: exit program in a structured manner
 	}
-}
-
-//-----------------------------------//
-
-void Device::setWindowActiveTarget()
-{
-	setRenderTarget( window );
-}
-
-//-----------------------------------//
-
-RenderTarget* Device::getRenderTarget() const
-{
-	return activeTarget;
-}
-
-//-----------------------------------//
-
-Window* Device::getWindow() const
-{
-	return window;
-}
-
-//-----------------------------------//
-
-void Device::setWindow( Window *window )
-{
-	this->window = window;;
-}
-
-//-----------------------------------//
-
-Adapter* Device::getAdapter() const
-{
-	return adapter;
-}
-
-//-----------------------------------//
-
-void Device::setClearColor(math::Color c)
-{
-	clearColor = c;
 }
 
 //-----------------------------------//
@@ -246,24 +182,29 @@ void Device::updateTarget()
 
 //-----------------------------------//
 
-void Device::setRenderTarget(RenderTarget* renderTarget)
-{
-	activeTarget = renderTarget;
-}
-
-//-----------------------------------//
-
-BufferManager* Device::getBufferManager() const
-{
-	return bufferManager;
-}
-
-//-----------------------------------//
-
 void Device::clearTarget()
 {
 	glClearColor( clearColor.r, clearColor.g, clearColor.b, clearColor.a );
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+}
+
+//-----------------------------------//
+
+void Device::setWindowActiveTarget()
+{
+	setRenderTarget( *window );
+}
+
+//-----------------------------------//
+
+Window& Device::createWindow( const WindowSettings& settings )
+{
+	Window& window = Window::createWindow( settings );
+
+	setWindow( window );
+	setRenderTarget( window );
+
+	return window;
 }
 
 //-----------------------------------//

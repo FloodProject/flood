@@ -14,29 +14,6 @@
 
 namespace vapor { namespace scene {
 
-//-----------------------------------//
-
-struct RayBoxQueryResult
-{
-	// Bounding-box based intersection
-	NodePtr node;
-	float distance;
-};
-
-struct RayTriangleQueryResult
-{
-	// Triangle based intersection
-	GeometryPtr geometry;
-	render::RenderablePtr renderable;
-	math::Vector3 intersection;
-	math::Vector3 triangle[3];
-	float distance;
-};
-
-typedef std::vector<RayBoxQueryResult> RayBoxQueryList;
-
-//-----------------------------------//
-
 /**
  * Scene tree that holds all the nodes attached to the scene. This is the
  * main interface that the engine programmer will use to attach/detach all
@@ -50,7 +27,6 @@ class VAPOR_API Scene : public Group
 public:
 
 	Scene();
-	//virtual ~Scene();
 
 	/// Updates all the entities recursively.
 	virtual void update( double delta );
@@ -66,8 +42,8 @@ public:
 	bool doRayBoxQuery( const math::Ray& ray, RayBoxQueryList& list, bool all = true ) const;
 	
 	bool doRayTriangleQuery( const math::Ray& ray, RayTriangleQueryResult& res ) const;
-	bool doRayTriangleQuery( const math::Ray& ray, RayTriangleQueryResult& res,
-		const NodePtr& node ) const;
+	bool doRayTriangleQuery( const math::Ray& ray, RayTriangleQueryResult& res, 
+		const NodePtr& node, bool slowPath = false ) const;
 
 private:	
 

@@ -16,21 +16,21 @@ namespace vapor { namespace editor {
 //-----------------------------------//
 
 /**
- * Window implementation using the wxWidgets GUI framework. This will be used 
- * to integrate vapor rendering into wxWidgets-based applications, thus making
- * it possible to do custom tools, like world editors, model viewers, etc.
- * This class is only the class that connects the wxWidgets widget, with the
- * vapor engine, so there is another class, vaporControl, that handles the real
- * hard work :).
+ * Window implementation using the wxWidgets GUI framework (wxGLCanvas).
+ * This will be used to integrate vapor rendering into wxWidgets-based
+ * applications, thus making it possible to do custom tools, like world
+ * editors, model viewers, etc. This class only implements the Window
+ * interface on the engine side. There is another class, vaporControl,
+ * that handles the rest of the work.
  */
 
-class vaporWindow : public vapor::render::Window
+class vaporWindow : public render::Window
 {
 	friend class vaporControl;
 
 public:
 
-	vaporWindow(const vapor::render::WindowSettings& settings, wxGLCanvas* canvas);
+	vaporWindow(const WindowSettings&, wxGLCanvas* const);
 	virtual ~vaporWindow();
 
 	// Swaps the buffers (updates the display).
@@ -58,7 +58,7 @@ public:
 	virtual void setCursorPosition( int x, int y );
 
 	// Gets the input manager.
-	virtual input::InputManager& getInputManager();
+	InputManager& getInputManager() { return *im; }
 
 	// Makes this the current OpenGL context.
 	virtual void makeCurrent();
@@ -68,16 +68,16 @@ private:
 	// Processes a window resize.
 	void processResize(const wxSize& size);
 
-	// Opens a new window
-	bool open();
+	// Creates a new OpenGL context.
+	bool createContext();
 
-	// OpenGL Canvas Widget
+	// OpenGL Canvas Widget.
 	wxGLCanvas* canvas;
 
-	// OpenGL context
+	// OpenGL context.
 	wxGLContext* context;
 
-	// wxWidgets Input Manager
+	// wxWidgets Input Manager.
 	vaporInputManager* im;
 };
 

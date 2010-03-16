@@ -8,8 +8,11 @@ Optimize ray-triangle queries
 
 Average terrain normals
 	Have to take neighbours into account
+
 Skybox component
+
 View frustum culling
+
 Add Z-bias to the AABB renderables
 Fix Overlays positioning (might be related to ortographic projection)
 Fix Lua state closing
@@ -24,10 +27,10 @@ EDITOR:
 -------
 
 Console - Write a line then go backwards and to the line again and color is white...
-Add subsystem update infrastructure in engine
+Add subsystem update infrastructure in engine (WIP)
 
 Ignore Entities (Layers?)
-Private editor nodes (hide in the scene tree)
+Private editor nodes (hide in the scene tree) (DONE)
 
 Camera options
 	Add a small frame below the viewport with camera options (WIP)

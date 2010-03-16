@@ -16,12 +16,12 @@
 
 namespace vapor { namespace editor {
 
-// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------
 // event tables and other macros for wxWidgets
-// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------
 
 BEGIN_EVENT_TABLE(EditorFrame, wxFrame)
-	EVT_IDLE(EditorFrame::OnIdle)
+	//EVT_IDLE(EditorFrame::OnIdle)
     EVT_MENU(Editor_Quit,  EditorFrame::OnQuit)
     EVT_MENU(Editor_About, EditorFrame::OnAbout)
 	EVT_MENU(wxID_ANY, EditorFrame::OnToolbarButtonClick)
@@ -61,14 +61,14 @@ bool EditorApp::OnInit()
 // frame constructor
 EditorFrame::EditorFrame(const wxString& title)
        : wxFrame(nullptr, wxID_ANY, title), engine( nullptr ), 
-	   currentMode( nullptr ), needsRedraw( true )
+	   currentMode( nullptr )
 {
     // Set the editor icon.
     SetIcon( wxIcon( "editor" ) );
 	
 	// Initialize the engine.
 	initEngine();
-	
+
 	sizer = new wxBoxSizer( wxHORIZONTAL );
 	sizer->Add( viewport, 1, wxEXPAND|wxALL );
 
@@ -78,19 +78,19 @@ EditorFrame::EditorFrame(const wxString& title)
 	createStatusbar();
 	createNotebook();
 	createScene();
+	createEditorScene();
 
 	toolBar->Realize();
 	SetSizerAndFit( sizer );
 	
-	vaporCtrl->SetFocus();
-	//RefreshCanvas();
+	viewport->vaporCtrl->SetFocus();
 }
 
 //-----------------------------------//
 
 EditorFrame::~EditorFrame()
 {
-	foreach( const Mode* mode, editorModes )
+	foreach( const Mode* mode, modes )
 		delete mode;
 
 	foreach( Operation* const op, operations._Get_container() )
@@ -100,6 +100,7 @@ EditorFrame::~EditorFrame()
 	// reference-counting pointers, and if they are not destroyed
 	// they will make some things try to call OpenGL functions
 	// after the window context is already destroyed.
+	editorScene.reset();
 	delete viewport;
 	delete engine;
 }
@@ -112,13 +113,18 @@ void EditorFrame::initEngine()
 	engine->init( false );
 
 	viewport = new Viewport( engine, this );
-	vaporCtrl = viewport->vaporCtrl;
+	
+	viewport->vaporCtrl->onRender 
+		+= fd::bind( &EditorFrame::onRender, this );
+
+	viewport->vaporCtrl->onUpdate 
+		+= fd::bind( &EditorFrame::onUpdate, this );
 
 	engine->getRenderDevice()->init();
 	engine->getVFS()->mountDefaultLocations();
 
+	// Register all the mouse events.
 	Mouse* const mouse = engine->getInputManager()->getMouse();
-	
 	mouse->onMouseMove += fd::bind( &EditorFrame::onMouseMove, this );
 	mouse->onMouseDrag += fd::bind( &EditorFrame::onMouseDrag, this );
 	mouse->onMouseButtonPress += fd::bind( &EditorFrame::onMousePress, this );
@@ -126,7 +132,7 @@ void EditorFrame::initEngine()
 	mouse->onMouseEnter	+= fd::bind( &EditorFrame::onMouseEnter, this );
 	mouse->onMouseExit += fd::bind( &EditorFrame::onMouseLeave, this );
 
-	const TransformPtr& cameraTransform = viewport->transform;
+	const TransformPtr& cameraTransform = viewport->cameraTransform;
 	cameraTransform->onTransform += fd::bind( &EditorFrame::onCameraTransform, this );
 }
 
@@ -134,11 +140,11 @@ void EditorFrame::initEngine()
 
 void EditorFrame::createModes()
 {
-	editorModes.push_back( new GizmoMode(this) );
-	editorModes.push_back( new TerrainMode(this) );
+	modes.push_back( new GizmoMode(this) );
+	modes.push_back( new TerrainMode(this) );
 
 	// TODO: hack
-	onModeSwitch( editorModes.front(), 18237 );
+	onModeSwitch( modes.front(), 18237 );
 }
 
 //-----------------------------------//
@@ -266,9 +272,9 @@ void EditorFrame::createToolbar()
 	// Mode-specific tools
 	// --------------------
 
-	foreach( Mode* const mode, editorModes )
+	foreach( Mode* const mode, modes )
 	{
-		mode->onModeInit( toolBar, modeIds );
+		mode->onModeInit( toolBar, modesMap );
 	}
 
 	// --------------

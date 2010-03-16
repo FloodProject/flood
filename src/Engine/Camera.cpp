@@ -43,7 +43,7 @@ const std::string& Camera::type = "Camera";
 
 Camera::Camera( render::Device* device, Projection::Enum projection )
 	: renderDevice( device ), projection( projection ), target( nullptr ),
-	fov(45.0f), near_( 1.0f ), far_( 5000.0f )
+	fov(45.0f), near_( 1.0f ), far_( 5000.0f ), viewChanged( true )
 {
 	setRenderTarget( device->getRenderTarget() );
 }
@@ -90,16 +90,13 @@ math::Ray Camera::getRay( float scrx, float scry, math::Vector3* outFar ) const
 
 //-----------------------------------//
 
-void Camera::setRenderTarget( RenderTarget* newTarget )
+void Camera::setRenderTarget( RenderTarget& newTarget )
 {
-	if( !newTarget ) return;
-	
 	// TODO: remove only this from the delegate
 	//target->onTargetResize.clear();
 
-	target = newTarget;
+	target = &newTarget;
 	target->onTargetResize += fd::bind( &Camera::handleTargetResize, this );
-
 	handleTargetResize( target->getSettings() );
 }
 
@@ -111,6 +108,8 @@ void Camera::handleTargetResize( const render::Settings& evt )
 	height = evt.getHeight();
 
 	glViewport( 0, 0, width, height );
+
+	// TODO: update matrices
 }
 
 //-----------------------------------//
@@ -157,13 +156,6 @@ float Camera::getAspectRatio() const
 
 //-----------------------------------//
 
-//const math::Frustum& Camera::getFrustum( ) const
-//{
-//	return new math::Frustum( );
-//}
-
-//-----------------------------------//
-
 void Camera::render( const NodePtr& node ) const
 {
 	// This will contain all nodes used for rendering.
@@ -171,7 +163,7 @@ void Camera::render( const NodePtr& node ) const
 
 	cull( renderBlock, node );
 
-	renderDevice->setRenderTarget( target );
+	renderDevice->setRenderTarget( *target );
 	renderDevice->render( renderBlock, this );
 }
 

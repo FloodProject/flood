@@ -91,7 +91,7 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res ) co
 
 //-----------------------------------//
 
-bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, const NodePtr& node, bool slowPath ) const
+bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, const NodePtr& node ) const
 {
 	// Down to triangle picking.	
 	foreach( const GeometryPtr& geo, node->getGeometry() )
@@ -102,7 +102,7 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, con
 		{
 			// This picking method only works on triangles.
 			if( !rend ) continue;
-			if( rend->getPrimitiveType() != Primitive::Triangles) continue;
+			if( rend->getPrimitiveType() != Primitive::Triangles ) continue;
 
 			const VertexBufferPtr& vb = rend->getVertexBuffer();
 			if( !vb ) continue;
@@ -110,7 +110,7 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, con
 			const std::vector<Vector3>& vertices = vb->getVertices();
 			uint size = vertices.size();
 			
-			IndexBufferPtr ib = rend->getIndexBuffer();
+			const IndexBufferPtr& ib = rend->getIndexBuffer();
 			std::vector<ushort> indices;
 
 			if( ib )
@@ -122,14 +122,12 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, con
 			for( uint i = 0; i < size; i += 3 )
 			{
 				Vector3 tri[3];
-				tri[0] = ib ? vertices[indices[i]] : vertices[i];
-				tri[1] = ib ? vertices[indices[i+1]] : vertices[i];
-				tri[2] = ib ? vertices[indices[i+2]] : vertices[i];
+				tri[0] = ib ? vertices[indices[i+0]] : vertices[i+0];
+				tri[1] = ib ? vertices[indices[i+1]] : vertices[i+1];
+				tri[2] = ib ? vertices[indices[i+2]] : vertices[i+2];
 
 				Vector3 to; float n;
-				bool rn = slowPath ? ray.intersectsSlow( tri, to, n ) :
-							ray.intersects( tri, to, n );
-				if( rn )
+				if( ray.intersects( tri, to, n ) )
 				{					
 					for( byte i = 0; i < 3; i++ )
 						res.triangle[i] = tri[i];					

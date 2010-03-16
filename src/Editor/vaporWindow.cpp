@@ -13,11 +13,11 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-vaporWindow::vaporWindow(const render::WindowSettings& settings, wxGLCanvas* canvas)
-	:	render::Window(settings), canvas(canvas), context(nullptr)
+vaporWindow::vaporWindow(const WindowSettings& settings,
+						 wxGLCanvas* const canvas)
+	: render::Window(settings), canvas(canvas), context(nullptr)
 {
-	open();
-
+	createContext();
 	im = new vaporInputManager();
 }
 
@@ -31,7 +31,7 @@ vaporWindow::~vaporWindow()
 
 //-----------------------------------//
 
-bool vaporWindow::open()
+bool vaporWindow::createContext()
 {
 	if(!canvas) return false;
 
@@ -40,7 +40,7 @@ bool vaporWindow::open()
 	
 	if(!context)
 	{
-		error("window::wx", "Error creating wxWidgets OpenGL context");
+		error("wx", "Error creating wxGLCanvas context");
 		return false;
 	}
 
@@ -53,7 +53,7 @@ void vaporWindow::update()
 {
 	if(!context) return;
 
-	// swap buffers and update window
+	// Swap buffers and update window content.
 	canvas->SwapBuffers();
 }
 
@@ -71,43 +71,6 @@ void vaporWindow::makeCurrent()
 	if(!context || !canvas) return;
 
 	context->SetCurrent(*canvas);
-}
-
-//-----------------------------------//
-
-bool vaporWindow::pumpEvents()
-{
-	return true;
-}
-
-//-----------------------------------//
-
-void vaporWindow::setTitle(const std::string& UNUSED(title))
-{
-
-}
-
-//-----------------------------------//
-
-void vaporWindow::setCursorVisible(bool mouseVisible)
-{
-	if( !mouseVisible )
-	{
-		canvas->SetCursor( wxCursor( wxCURSOR_BLANK ) );
-		canvas->CaptureMouse();
-	}
-	else
-	{
-		canvas->SetCursor( wxNullCursor );
-		canvas->ReleaseMouse();
-	}
-}
-
-//-----------------------------------//
-
-bool vaporWindow::isCursorVisible() const
-{
-	return !canvas->HasCapture();
 }
 
 //-----------------------------------//
@@ -132,9 +95,25 @@ void vaporWindow::setCursorPosition( int x, int y )
 
 //-----------------------------------//
 
-input::InputManager& vaporWindow::getInputManager()
+bool vaporWindow::isCursorVisible() const
 {
-	return *im;
+	return !canvas->HasCapture();
+}
+
+//-----------------------------------//
+
+void vaporWindow::setCursorVisible(bool mouseVisible)
+{
+	if( !mouseVisible )
+	{
+		canvas->SetCursor( wxCursor( wxCURSOR_BLANK ) );
+		canvas->CaptureMouse();
+	}
+	else
+	{
+		canvas->SetCursor( wxNullCursor );
+		canvas->ReleaseMouse();
+	}
 }
 
 //-----------------------------------//
@@ -145,6 +124,20 @@ void vaporWindow::processResize(const wxSize& size)
 	settings.setHeight( size.GetY() );
 
 	handleWindowResize();
+}
+
+//-----------------------------------//
+
+bool vaporWindow::pumpEvents()
+{
+	return true;
+}
+
+//-----------------------------------//
+
+void vaporWindow::setTitle(const std::string& UNUSED(title))
+{
+
 }
 
 //-----------------------------------//

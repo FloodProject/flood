@@ -62,10 +62,10 @@ public:
 	IMPLEMENT_GETTER(RenderTarget, render::RenderTarget*, target)
 	
 	// Sets a new render target in the camera.
-	void setRenderTarget( render::RenderTarget* target );
+	void setRenderTarget( render::RenderTarget& target );
 
 	// Gets the frustum associated with the camera.
-	const math::Frustum& getFrustum( ) const;
+	//const math::Frustum& getFrustum() const;
 
 	// Gets a ray given the screen coordinates of the mouse.
 	math::Ray getRay( float scrx, float scry, math::Vector3* outFar = nullptr ) const;
@@ -116,6 +116,9 @@ protected:
 
 	// Sets up the projection matrices for OpenGL.
 	void setupProjection();
+
+	// Tracks if the view has changed since the last frame.
+	bool viewChanged;
 
 	// View matrix.
 	math::Matrix4x3 viewMatrix;

@@ -72,7 +72,7 @@ void Framework::render()
 {
 	render::Device* renderDevice = getRenderDevice();
 
-	while( frameTimer.reset(), renderDevice->getWindow()->pumpEvents() )
+	while( frameTimer.reset(), renderDevice->getWindow().pumpEvents() )
 	{
 		update( lastFrameTime );
 

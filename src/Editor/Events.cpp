@@ -18,38 +18,41 @@ namespace vapor { namespace editor {
 void EditorFrame::RefreshCanvas()
 {
 	static int i = 0;
-	//debug( "Refresh %d", i++ );
-	vaporCtrl->OnUpdate();
-	vaporCtrl->Refresh();
+	debug( "Refresh %d", i++ );
+	viewport->vaporCtrl->needsRedraw = true;
 }
 
 //-----------------------------------//
 
-void EditorFrame::OnIdle(wxIdleEvent& /*event*/)
+void EditorFrame::onRender()
 {
-	if( needsRedraw )
-	{
-		RefreshCanvas();
-		needsRedraw = false;
-	}
+	static int i = 0;
+	debug( "Render %d", i++ );
 
-	//if( viewport.camera
-	//viewport->cameraNode->update( 0.1f );
+	render::Device* const device = engine->getRenderDevice();
+	
+	const math::Color bg( 0.0f, 0.10f, 0.25f );
+	device->setClearColor(bg);
+	device->clearTarget();
+
+	viewport->camera->render( editorScene );
+	viewport->camera->render( engine->getSceneManager() );
+}
+
+//-----------------------------------//
+
+void EditorFrame::onUpdate()
+{
+	if( !editorScene ) return;
+
+	editorScene->update( 0.01f );
 }
 
 //-----------------------------------//
 
 void EditorFrame::onCameraTransform()
 {
-	needsRedraw = true;
-}
-
-//-----------------------------------//
-
-void EditorFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
-{
-    // true forces the frame to close.
-    Close(true);
+	RefreshCanvas();
 }
 
 //-----------------------------------//
@@ -67,11 +70,9 @@ void EditorFrame::OnNodeSelected(wxTreeItemId old, wxTreeItemId id)
 
 void EditorFrame::OnKeyDown(wxKeyEvent& event)
 {
-	const ScenePtr& scene = engine->getSceneManager();
-	
 	if( event.GetKeyCode() == 'g' )
 	{
-		const NodePtr& grid = scene->getEntity( "EditorGrid" );
+		const NodePtr& grid = editorScene->getEntity( "EditorGrid" );
 		if( !grid ) return;
 		grid->setVisible( !grid->isVisible() );
 	}
@@ -84,9 +85,9 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 	const int id = event.GetId();
 
 	// If the id is registered to a mode, then switch mode...
-	if( modeIds.find(id) != modeIds.end() )
+	if( modesMap.find(id) != modesMap.end() )
 	{
-		onModeSwitch( modeIds[id], id );
+		onModeSwitch( modesMap[id], id );
 		return;
 	}
 
@@ -138,7 +139,7 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 	
 	case Toolbar_ToogleGrid:
 	{
-		NodePtr grid = engine->getSceneManager()->getEntity( "EditorGrid" );
+		const NodePtr& grid = editorScene->getEntity( "EditorGrid" );
 		if( grid ) grid->setVisible( !grid->isVisible() );
 		RefreshCanvas();
 		break;
@@ -184,6 +185,130 @@ void EditorFrame::onModeSwitch( Mode* newMode, int id )
 	
 	currentMode = newMode;
 	currentMode->onModeEnter( id );
+}
+
+//-----------------------------------//
+
+void EditorFrame::registerOperation( Operation* const op )
+{
+	operations.push( op );
+
+	if( !toolBar->GetToolEnabled( Toolbar_Undo ) )
+	{
+		toolBar->EnableTool( Toolbar_Undo, true );
+	}
+}
+
+//-----------------------------------//
+
+void EditorFrame::createEditorScene()
+{
+	// Create a scene node with editor stuff only.
+	editorScene.reset( new Scene() );
+
+	// Get the main viewport camera and add it to the scene.
+	const NodePtr& camera = viewport->cameraNode;
+	camera->getTransform()->translate( 0.0f, 20.0f, -65.0f );
+	editorScene->add( camera );
+
+	// Create a nice grid for the editor.
+	MaterialPtr mat( new Material("GridMaterial") );
+	NodePtr grid( new Node("EditorGrid") );
+	grid->addComponent( TransformPtr( new Transform() ) );
+	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
+	grid->setTag( Tags::NonPickable, true );
+	grid->setTag( EditorTags::EditorOnly, true );
+	editorScene->add( grid );
+
+	// Update at least once before rendering.
+	onUpdate();
+}
+
+//-----------------------------------//
+
+void EditorFrame::createScene()
+{
+	const ScenePtr& scene = engine->getSceneManager();
+	ResourceManager* const rm = engine->getResourceManager();
+
+	ProgramPtr diffuse( new GLSL_Program( 
+			rm->loadResource< GLSL_Shader >( "diffuse.vs" ),
+			rm->loadResource< GLSL_Shader >( "diffuse.fs" ) ) );
+
+	ProgramPtr tex( new GLSL_Program( 
+			rm->loadResource< GLSL_Shader >( "tex.vs" ),
+			rm->loadResource< GLSL_Shader >( "tex.fs" ) ) );
+
+	ProgramManager::getInstance().registerProgram( "diffuse", diffuse );
+	ProgramManager::getInstance().registerProgram( "tex", tex );
+
+	ProgramPtr toon( new GLSL_Program( 
+			rm->loadResource< GLSL_Shader >( "toon.vs" ),
+			rm->loadResource< GLSL_Shader >( "toon.fs" ) ) );
+
+	ProgramManager::getInstance().registerProgram( "toon", toon );
+
+	ProgramPtr tex_toon( new GLSL_Program( 
+			rm->loadResource< GLSL_Shader >( "tex_toon.vs" ),
+			rm->loadResource< GLSL_Shader >( "tex_toon.fs" ) ) );
+	
+	ProgramManager::getInstance().registerProgram( "tex_toon", tex_toon );
+	
+	MaterialPtr matSun( new Material("SunBlend") );
+	matSun->setProgram( "tex" );
+	matSun->setTexture( 0, "moon.png" );
+	matSun->setBlending( BlendingOperationSource::SourceAlpha,
+		BlendingOperationDestination::OneMinusSourceAlpha );
+	matSun->setBackfaceCulling( false );
+	
+	RenderablePtr sunQuad( new render::Quad( 100.0f, 100.0f ) );
+	sunQuad->setMaterial( matSun );
+
+	GeometryPtr geom( new Geometry() );
+	geom->addRenderable( sunQuad, RenderGroup::Transparency );
+
+	NodePtr sun( new Node("Sun") );
+	sun->addComponent( TransformPtr( new Transform() ) );
+	sun->addComponent( geom );
+	sun->addComponent( BillboardPtr( new Billboard( viewport->camera ) ) );
+	scene->add( sun );
+
+	MaterialPtr mat( new Material("SkyMaterial") );
+	SkydomePtr skydome( new Skydome( mat ) );
+	skydome->setSunNode( sun );
+
+	NodePtr sky( new Node("Sky") );
+	sky->addComponent( TransformPtr( new Transform() ) );	
+	sky->addComponent( skydome );
+	scene->add( sky );
+
+	NodePtr lnode( new Node("Light") );
+	lnode->addComponent( TransformPtr( new Transform() ) );
+	LightPtr light( new Light( LightType::Point ) );
+	light->diffuseColor = Colors::Red;
+	light->ambientColor = Colors::Yellow;
+	lnode->addComponent( light );
+	scene->add( lnode );
+
+	MaterialPtr cellMaterial( new Material("CellMaterial") );
+	cellMaterial->setTexture( 0, "PineTrunk.png" );
+	cellMaterial->setProgram( "tex_toon" );
+
+	TerrainSettings settings;
+	settings.CellSize = 512;
+	settings.NumberTiles = 32;
+	settings.MaxHeight = 100;
+	settings.Material = cellMaterial;
+
+	TerrainPtr terrain( new Terrain( settings ) );
+
+	NodePtr terreno( new Node( "Terreno" ) );
+	terreno->addComponent( TransformPtr( new Transform() ) );
+	terreno->addComponent( terrain );
+	scene->add( terreno );
+
+	const ImagePtr& heightmap = rm->loadResource< Image >( "height2.png" );
+	/*const CellPtr& cell = */terrain->createCell( heightmap, 0, 0 );
 }
 
 //-----------------------------------//
@@ -236,108 +361,10 @@ void EditorFrame::onMouseLeave()
 
 //-----------------------------------//
 
-void EditorFrame::registerOperation( Operation* const op )
+void EditorFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 {
-	operations.push( op );
-
-	if( !toolBar->GetToolEnabled( Toolbar_Undo ) )
-	{
-		toolBar->EnableTool( Toolbar_Undo, true );
-	}
-}
-
-//-----------------------------------//
-
-void EditorFrame::createScene()
-{
-	ScenePtr scene = engine->getSceneManager();
-	ResourceManager* rm = engine->getResourceManager();
-
-	ProgramPtr diffuse( new GLSL_Program( 
-			rm->loadResource< GLSL_Shader >( "diffuse.vs" ),
-			rm->loadResource< GLSL_Shader >( "diffuse.fs" ) ) );
-
-	ProgramPtr tex( new GLSL_Program( 
-			rm->loadResource< GLSL_Shader >( "tex.vs" ),
-			rm->loadResource< GLSL_Shader >( "tex.fs" ) ) );
-
-	ProgramManager::getInstance().registerProgram( "diffuse", diffuse );
-	ProgramManager::getInstance().registerProgram( "tex", tex );
-
-	ProgramPtr toon( new GLSL_Program( 
-			rm->loadResource< GLSL_Shader >( "toon.vs" ),
-			rm->loadResource< GLSL_Shader >( "toon.fs" ) ) );
-
-	ProgramManager::getInstance().registerProgram( "toon", toon );
-
-	ProgramPtr tex_toon( new GLSL_Program( 
-			rm->loadResource< GLSL_Shader >( "tex_toon.vs" ),
-			rm->loadResource< GLSL_Shader >( "tex_toon.fs" ) ) );
-	
-	ProgramManager::getInstance().registerProgram( "tex_toon", tex_toon );
-
-	MaterialPtr mat( new Material( "GridMaterial", diffuse ) );
-	NodePtr grid( new Node( "EditorGrid" ) );
-	grid->addComponent( TransformPtr( new Transform() ) );
-	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
-	grid->setTag( Tags::NonPickable, true );
-	grid->setTag( EditorTags::EditorOnly, true );
-	scene->add( grid );
-	
-	MaterialPtr matSun( new Material( "SunBlend" ) );
-	matSun->setProgram( "tex" );
-	matSun->setTexture( 0, "moon.png" );
-	matSun->setBlending( BlendingOperationSource::SourceAlpha,
-		BlendingOperationDestination::OneMinusSourceAlpha );
-	matSun->setBackfaceCulling( false );
-	
-	RenderablePtr sunQuad( new render::Quad( 100.0f, 100.0f ) );
-	sunQuad->setMaterial( matSun );
-
-	GeometryPtr geom( new Geometry() );
-	geom->addRenderable( sunQuad, RenderGroup::Transparency );
-
-	NodePtr sun( new Node( "Sun" ) );
-	sun->addComponent( TransformPtr( new Transform() ) );
-	sun->addComponent( geom );
-	sun->addComponent( BillboardPtr( new Billboard( viewport->camera ) ) );
-	scene->add( sun );
-
-	SkydomePtr skydome( new Skydome( mat ) );
-	skydome->setSunNode( sun );
-
-	NodePtr sky( new Node( "Sky" ) );
-	sky->addComponent( TransformPtr( new Transform() ) );	
-	sky->addComponent( skydome );
-	scene->add( sky );
-
-	NodePtr lnode( new Node( "Light" ) );
-	lnode->addComponent( TransformPtr( new Transform() ) );
-	LightPtr light( new Light( LightType::Point ) );
-	light->diffuseColor = Colors::Red;
-	light->ambientColor = Colors::Yellow;
-	lnode->addComponent( light );
-	scene->add( lnode );
-
-	MaterialPtr cellMaterial( new Material("CellMaterial") );
-	cellMaterial->setTexture( 0, "PineTrunk.png" );
-	cellMaterial->setProgram( "tex_toon" );
-
-	TerrainSettings settings;
-	settings.CellSize = 512;
-	settings.NumberTiles = 32;
-	settings.MaxHeight = 100;
-	settings.Material = cellMaterial;
-
-	TerrainPtr terrain( new Terrain( settings ) );
-
-	NodePtr terreno( new Node( "Terreno" ) );
-	terreno->addComponent( TransformPtr( new Transform() ) );
-	terreno->addComponent( terrain );
-	scene->add( terreno );
-
-	ImagePtr heightmap = rm->loadResource< Image >( "height2.png" );
-	/*const CellPtr& cell = */terrain->createCell( heightmap, 0, 0 );
+    // true forces the frame to close.
+    Close(true);
 }
 
 //-----------------------------------//

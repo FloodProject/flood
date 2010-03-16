@@ -33,7 +33,7 @@ public:
 	//-----------------------------------//
 	
 	// Copy constructor
-	Vector3T (const Vector3T<T> &v)
+	Vector3T (const Vector3T<T>& v)
 		: x(v.x), y(v.y), z(v.z)
 	{ }
 
@@ -54,7 +54,7 @@ public:
 	//-----------------------------------//
 	
 	// Assignment
-	Vector3T &operator = (const Vector3T<T> &v)
+	Vector3T &operator = (const Vector3T<T>& v)
 	{
 		x = v.x; y = v.y; z = v.z;
 		return *this;
@@ -63,7 +63,7 @@ public:
 	//-----------------------------------//
 
 	// Equality
-	bool operator == (const Vector3T<T> &v) const
+	bool operator == (const Vector3T<T>& v) const
 	{
 		return (x == v.x) && (y == v.y) && (z == v.z); 
 	}
@@ -71,7 +71,7 @@ public:
 	//-----------------------------------//
 
 	// Inequality
-    bool operator != (const Vector3T<T> &v) const
+    bool operator != (const Vector3T<T>& v) const
 	{
 		return (x != v.x) || (y != v.y) || (z != v.z);
 	}
@@ -79,7 +79,7 @@ public:
 	//-----------------------------------//
 
 	// Addition combined
-	Vector3T &operator += (const Vector3T<T> &v)
+	Vector3T &operator += (const Vector3T<T>& v)
 	{
 		x += v.x; y += v.y; z += v.z;
 		return *this;
@@ -88,7 +88,7 @@ public:
 	//-----------------------------------//
 
 	// Subtraction combined
-	Vector3T &operator -= (const Vector3T<T> &v) 
+	Vector3T &operator -= (const Vector3T<T>& v) 
 	{
 		x -= v.x; y -= v.y;	z -= v.z;
 		return *this;
@@ -120,12 +120,12 @@ public:
 	//-----------------------------------//
 
 	// Binary addition
-	Vector3T operator + (const Vector3T<T> &v) const { return Vector3T(x+v.x, y+v.y, z+v.z); }
+	Vector3T operator + (const Vector3T<T>& v) const { return Vector3T(x+v.x, y+v.y, z+v.z); }
 
 	//-----------------------------------//
 
 	// Binary subtraction
-	Vector3T operator - (const Vector3T<T> &v) const { return Vector3T(x-v.x, y-v.y, z-v.z); }
+	Vector3T operator - (const Vector3T<T>& v) const { return Vector3T(x-v.x, y-v.y, z-v.z); }
 
 	//-----------------------------------//
 	
@@ -205,7 +205,6 @@ public:
 		return (x > rhs.x) && (y > rhs.y) && (z > rhs.z);
 	}
 
-
 	//-----------------------------------//
 
 	// Special points
@@ -222,6 +221,7 @@ public:
  */
 
 typedef Vector3T<float> Vector3;
+typedef Vector3T<int> Vector3i;
 typedef Vector3T<double> Vector3d;
 typedef Vector3 Point3;
 

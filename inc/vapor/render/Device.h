@@ -17,7 +17,6 @@
 #include "vapor/render/ProgramManager.h"
 #include "vapor/render/Renderable.h"
 #include "vapor/render/RenderQueue.h"
-
 #include "vapor/math/Matrix4x3.h"
 #include "vapor/math/Color.h"
 
@@ -51,45 +50,39 @@ public:
 	Device();
 	~Device();
 
-	// Initializes the rendering system. (Needs an an OpenGL context)
+	// Initializes the rendering system.
+	// Note: Needs an active OpenGL context.
 	void init();
-
-	// Creates a new render window.
-	Window& createWindow( const WindowSettings& settings = WindowSettings() );
-
-	// Gets the main window.
-	Window* getWindow() const;
-
-	void setWindow( Window *window );
-
-	void setWindowActiveTarget();
-
-	// Gets rendering adapter information.
-	Adapter* getAdapter() const;
-
-	// Gets the texture manager.
-	TextureManager* getTextureManager() const;
-
-	// Gets the buffer manager.
-	BufferManager* getBufferManager() const;
-
-	// Gets the current active render target.
-	render::RenderTarget* getRenderTarget() const;
 
 	// Renders a list of renderables.
 	void render( RenderBlock& queue, const scene::Camera* cam );
 
 	// Updates the render target.
-	void updateTarget( );
-
-	// Sets the current clear color.
-	void setClearColor(math::Color c);
-
-	// Sets the active render target.
-	void setRenderTarget( RenderTarget* renderTarget );
+	void updateTarget();
 
 	// Clears the active render target.
 	void clearTarget();
+
+	// Sets the window as the active rendering target.
+	void setWindowActiveTarget();
+
+	// Gets/sets the current active render target.
+	IMPLEMENT_ACESSOR_PTR(RenderTarget, RenderTarget&, activeTarget)
+
+	// Gets/sets the main rendering window.
+	IMPLEMENT_ACESSOR_PTR(Window, Window&, window)
+
+	// Gets rendering adapter information.
+	IMPLEMENT_GETTER(Adapter, Adapter&, *adapter)
+
+	// Sets the current clear color.
+	IMPLEMENT_SETTER(ClearColor, const math::Color&, clearColor)
+
+	// Gets the texture manager.
+	IMPLEMENT_GETTER(TextureManager, TextureManager&, TextureManager::getInstance())
+
+	// Creates a new rendering window.
+	Window& createWindow( const WindowSettings& settings = WindowSettings() );
 
 protected:
 
@@ -105,15 +98,6 @@ protected:
 	// Render window
 	Window* window;
 
-	// Manages all buffers.
-	BufferManager* bufferManager;
-
-	// Manages the textures.
-	//TextureManager textureManager;
-
-	// Manages the programs.
-	//ProgramManager programManager;
-
 	// Current clear color
 	math::Color clearColor;
 
@@ -121,10 +105,6 @@ private:
 
 	void checkExtensions();
 };
-
-//-----------------------------------//
-
-TYPEDEF_SHARED_POINTER_FROM_CLASS( Device );
 
 //-----------------------------------//
 

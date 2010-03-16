@@ -166,7 +166,8 @@ void TerrainMode::deformTerrain( const MouseButtonEvent& mb )
 
 //-----------------------------------//
 
-bool TerrainMode::pickTerrain( const MouseButtonEvent& mb, RayTriangleQueryResult& res )
+bool TerrainMode::pickTerrain( const MouseButtonEvent& mb, 
+							  RayTriangleQueryResult& res )
 {
 	const ScenePtr& scene = engine->getSceneManager();
 

@@ -61,11 +61,4 @@ const std::string& Console::getType() const
 
 //-----------------------------------//
 
-const std::string Console::save( int indent )
-{
-	return ""; 
-}
-
-//-----------------------------------//
-
 } } // end namespaces

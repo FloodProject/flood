@@ -37,14 +37,7 @@ vaporControl::vaporControl(vapor::Engine* engine,
 					const wxString&	name,
 					const wxPalette& WXUNUSED(pallete))
 	: wxGLCanvas(parent, id, attribList, pos, size, style, name),
-	engine(engine), updatedOnce( false )
-{
-	InitControl();
-}
-
-//-----------------------------------//
-
-void vaporControl::InitControl()
+	needsRedraw( false )
 {
 	if(!engine) return;
 	render::Device* const device = engine->getRenderDevice();
@@ -52,13 +45,15 @@ void vaporControl::InitControl()
 	info("vaporEditor", "Creating a new wxWidgets control");
 
 	// Create a new vapor3D window.
-	wxSize size = GetSize();
-	WindowSettings settings(size.GetX(), size.GetY());
+	const wxSize& sz = GetSize();
+	WindowSettings settings(sz.GetX(), sz.GetY());
+	
+	// Note: This will be deleted by the engine.
 	window = new vaporWindow(settings, this);
 
 	// Setup the window as our main render target.
-	device->setWindow( window );
-	device->setRenderTarget( window );
+	device->setWindow( *window );
+	device->setRenderTarget( *window );
 	window->makeCurrent();
 
 	// Setup input in the engine.
@@ -68,49 +63,24 @@ void vaporControl::InitControl()
 
 //-----------------------------------//
 
+void vaporControl::doUpdate()
+{
+	if( !onUpdate.empty() )
+		onUpdate();
+
+	if( needsRedraw )
+	{
+		Refresh();
+		needsRedraw = false;
+	}
+}
+
+//-----------------------------------//
+
 void vaporControl::OnIdle(wxIdleEvent& event)
 {
-	OnUpdate();
-
-	// Asks wxWidgets to send more idle events.
+	doUpdate();
 	//event.RequestMore( true );
-}
-
-//-----------------------------------//
-
-void vaporControl::OnUpdate()
-{
-	static int i = 0;
-	//if( i < 10 ) debug( "Update %d", i++ );
-
-	updatedOnce = true;
-
-	// Keep track of the frame times.
-	lastFrameTime = frameTimer.getElapsedTime();
-	frameTimer.reset();
-
-	// Update the engine with the last frame time.
-	engine->update( lastFrameTime );
-}
-
-//-----------------------------------//
-
-void vaporControl::OnRender()
-{
-	// Prevent rendering without updating the scene once.
-	if( !updatedOnce ) return;
-
-	static int i = 0;
-	//if( i < 10 ) debug( "Render %d", i++ );
-
-	const math::Color bg( 0.0f, 0.10f, 0.25f );
-
-	render::Device* device = engine->getRenderDevice();
-	
-	device->setClearColor(bg);
-	device->clearTarget();
-
-	cam->render();
 }
 
 //-----------------------------------//
@@ -122,7 +92,8 @@ void vaporControl::OnPaint(wxPaintEvent& WXUNUSED(event))
 	// http://docs.wxwidgets.org/trunk/classwx_paint_event.html
 	wxPaintDC dc(this);
 
-	OnRender();
+	if( !onRender.empty() )
+		onRender();
 
 	// Swaps the front and back buffers.
 	window->update();
@@ -132,8 +103,8 @@ void vaporControl::OnPaint(wxPaintEvent& WXUNUSED(event))
 
 void vaporControl::OnSize(wxSizeEvent& event)
 {
-	wxSize size = event.GetSize();
 	window->processResize( event.GetSize() );
+	needsRedraw = true;
 }
 
 //-----------------------------------//
@@ -141,7 +112,6 @@ void vaporControl::OnSize(wxSizeEvent& event)
 void vaporControl::OnKeyDown(wxKeyEvent& event)
 {
 	inputManager->processKeyEvent( event, true );
-
 	debug( "key down: %d", event.GetKeyCode() );
 }
 
@@ -156,7 +126,7 @@ void vaporControl::OnKeyUp(wxKeyEvent& event)
 
 void vaporControl::OnMouseEvent(wxMouseEvent& event)
 {
-	if( event.ButtonDown( wxMOUSE_BTN_LEFT ) && !HasFocus() )
+	if( event.ButtonDown(wxMOUSE_BTN_LEFT) && !HasFocus() )
 		SetFocus();
 	
 	inputManager->processMouseEvent( event );
@@ -167,24 +137,6 @@ void vaporControl::OnMouseEvent(wxMouseEvent& event)
 void vaporControl::OnMouseCaptureLost(wxMouseCaptureLostEvent&)
 {
 	SetCursor( wxNullCursor );
-}
-
-//-----------------------------------//
-
-void* vaporControl::getHandle()
-{
-	void* handle;
-
-#ifdef __WXMSW__
-	// Handle for Windows systems.
-	HWND hwnd = (HWND) GetHandle();
-	handle = hwnd;
-#else
-	// Any other unsupported system
-	#error Not supported on this platform.
-#endif
-
-	return handle;
 }
 
 //-----------------------------------//

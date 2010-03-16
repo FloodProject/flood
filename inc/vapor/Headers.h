@@ -22,6 +22,7 @@
 //-------------------------------------------------------------------------//
 
 #include <vapor/math/Math.h>
+#include <vapor/math/Vector2.h>
 #include <vapor/math/Vector3.h>
 #include <vapor/math/Ray.h>
 #include <vapor/math/AABB.h>

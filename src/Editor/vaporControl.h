@@ -23,14 +23,12 @@ class vaporWindow;
  * create a custom wxWidgets window impementation in vapor, for example,
  * but this class approaches the problem by getting just an OS-specific
  * window handle, and letting vaporEngine do all the dirty work of setting
- * up the rendering context and implementing the window class. Let's see
- * if this approach works as well as I think it won't. :(
- * Update: SDL didn't work with external window handles, I had to patch
- * it myself, so I ended up creating what I said above, a specific window
+ * up the rendering context and implementing the window class.
+ * UPDATE: SDL didn't work with external window handles, I had to patch
+ * it myself. I ended up creating what I said above, a specific window
  * implementation for vapor based on wxGLCanvas. Now we use SFML instead
  * of SDL, and it has support for external window handles, so it might
- * work well with the approach I tried first with SDL. Can't be bothered
- * to try it now, because the wxGLCanvas-based approach is working good.
+ * work well with the window handle approach.
  */
 
 class vaporControl : public wxGLCanvas 
@@ -47,35 +45,31 @@ public:
 					const wxPalette& palette = wxNullPalette); 	
 
 	// Add your frame updating code here.
-	void OnUpdate();
+	fd::delegate<void()> onUpdate;
 
 	// Add your frame rendering code here.
-	void OnRender();
+	fd::delegate<void()> onRender;
 
-	// Called then the app is idle. We will refresh the widget here
-	// to ensure maximum framerate is achieved.
+	// Gets/sets the associated instance of the engine.
+	IMPLEMENT_ACESSOR(Engine, Engine*, engine);
+
+	bool needsRedraw;
+
+protected:
+
+	// Handles the update and redraw logic.
+	void doUpdate();
+
+	// Window events.
 	void OnIdle(wxIdleEvent& event);
-
 	void OnPaint(wxPaintEvent& event);
 	void OnSize(wxSizeEvent& event);
+	
+	// Input events.
 	void OnKeyDown(wxKeyEvent& event);
 	void OnKeyUp(wxKeyEvent& event);
 	void OnMouseEvent(wxMouseEvent& event);
 	void OnMouseCaptureLost(wxMouseCaptureLostEvent& event);
-
-	// Gets/sets the associated instance of the vaporEngine.
-	IMPLEMENT_ACESSOR(Engine, Engine*, engine);
-
-	// Gets/sets the associated rendering camera.
-	IMPLEMENT_ACESSOR(Camera, CameraPtr, cam);
-
-protected:
-
-	// Initializes the control.
-	void InitControl();
-
-	// Returns the window handle of this control.
-	void* getHandle();
 
 	// Holds an instance to the vaporEngine.
 	Engine* engine;
@@ -85,13 +79,6 @@ protected:
 
 	// Holds an instance of the input manager.
 	vaporInputManager* inputManager;
-
-	scene::CameraPtr cam;
-
-	Timer frameTimer;
-	double lastFrameTime;
-
-	bool updatedOnce;
 
 	DECLARE_EVENT_TABLE()
 };

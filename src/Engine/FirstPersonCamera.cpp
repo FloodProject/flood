@@ -30,7 +30,7 @@ FirstPersonCamera::FirstPersonCamera( input::InputManager* input,
 	render::Device* device, Projection::Enum projection )
 	: Camera( device, projection ), inputManager( input ),
 	clampMovementX( true ), moveSensivity( DEFAULT_MOVE_SENSIVITY ), 
-	lookSensivity( DEFAULT_LOOK_SENSIVITY ), viewChanged( true )
+	lookSensivity( DEFAULT_LOOK_SENSIVITY )
 {
 	registerCallbacks();
 	centerCursor();
@@ -54,9 +54,9 @@ void FirstPersonCamera::checkControls( double delta )
 	EulerAngles rotation = transform->getRotation();
 
 	// Check mouse movement.
-	if( mouseDistance != Vector3::Zero )
+	if( mouseDistance != Vector2i::Zero )
 	{
-		Vector3 rotate( mouseDistance.y, -mouseDistance.x, 0.0f );
+		Vector3 rotate( float(mouseDistance.y), float(-mouseDistance.x), 0.0f );
 		rotation += rotate * (float(delta) * lookSensivity);
 
 		// Restrict X-axis movement by some deegres.
@@ -69,7 +69,7 @@ void FirstPersonCamera::checkControls( double delta )
 	}
 
 	// Check mouse wheel movement.
-	if( wheelMovement != Vector3::Zero )
+	if( wheelMovement != Vector2i::Zero )
 	{
 		moveVector += wheelMovement;
 		wheelMovement.zero();
@@ -80,11 +80,8 @@ void FirstPersonCamera::checkControls( double delta )
 	const std::vector< bool >& state = kbd->getKeyState();
 
 	if( state[Keys::W] )
-	{
-		debug( "W pressed on FPSCam" );
 		moveVector +=  Vector3::UnitZ;
-	}
-	
+
 	if( state[Keys::S] )
 		moveVector += -Vector3::UnitZ;
 	
@@ -137,8 +134,8 @@ void FirstPersonCamera::registerCallbacks()
 	mouse->onMouseDrag += fd::bind( &FirstPersonCamera::onMouseDrag, this );
 	mouse->onMouseWheelMove += fd::bind( &FirstPersonCamera::onMouseWheel, this );
 
-	render::Window* const window = renderDevice->getWindow();
-	window->onWindowFocusChange += fd::bind( &FirstPersonCamera::onWindowFocusChange, this );
+	render::Window& window = renderDevice->getWindow();
+	window.onWindowFocusChange += fd::bind( &FirstPersonCamera::onWindowFocusChange, this );
 }
 
 //-----------------------------------//
@@ -150,18 +147,19 @@ void FirstPersonCamera::onKeyPressed( const KeyEvent& keyEvent )
 
 	case Keys::LControl:
 	{
-		render::Window* const window = renderDevice->getWindow();
+		render::Window& window = renderDevice->getWindow();
 
-		if( window->isCursorVisible() )
+		if( window.isCursorVisible() )
 		{
-			oldMousePosition = window->getCursorPosition();
+			oldMousePosition = window.getCursorPosition();
+			lastPosition = oldMousePosition;
 			centerCursor();
-			window->setCursorVisible( false );
+			window.setCursorVisible( false );
 		}
 		else
 		{
-			window->setCursorPosition( oldMousePosition.x, oldMousePosition.y );
-			window->setCursorVisible( true );
+			window.setCursorPosition( oldMousePosition.x, oldMousePosition.y );
+			window.setCursorVisible( true );
 		}
 
 		break;
@@ -194,11 +192,11 @@ void FirstPersonCamera::onMouseWheel( const input::MouseWheelEvent& event )
 
 void FirstPersonCamera::onMouseMove( const MouseMoveEvent& moveEvent )
 {
-	render::Window* const window = renderDevice->getWindow();
+	const render::Window& window = renderDevice->getWindow();
 
-	if( window->isCursorVisible() ) return;
+	if( window.isCursorVisible() ) return;
 		
-	Vector3 currentPosition( moveEvent.x, moveEvent.y, 0 );
+	Vector2i currentPosition( moveEvent.x, moveEvent.y );
 	mouseDistance += currentPosition - lastPosition;
 	lastPosition = currentPosition;
 
@@ -217,17 +215,10 @@ void FirstPersonCamera::onMouseDrag( const MouseDragEvent& event )
 
 void FirstPersonCamera::centerCursor( )
 {
-	render::Window* const window = renderDevice->getWindow();
-
-	if( window->isCursorVisible() ) return;
-
-	const ushort x = window->getSettings().getWidth() / 2;
-	const ushort y = window->getSettings().getHeight() / 2;
-	
-	lastPosition.x = x;
-	lastPosition.y = y;
-	
-	window->setCursorPosition( x, y );
+	render::Window& window = renderDevice->getWindow();
+	if( window.isCursorVisible() ) return;
+	lastPosition = window.getSettings().getSize();
+	window.setCursorPosition( lastPosition.x, lastPosition.y );
 }
 
 //-----------------------------------//

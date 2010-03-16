@@ -157,15 +157,15 @@ NodePtr buildRay( const Ray& pickRay, const Vector3& outFar )
 void GizmoMode::onMouseButtonPress( const MouseButtonEvent& mbe )
 {
 	const ScenePtr& scene = engine->getSceneManager();
-	Viewport* viewport = editor->viewport;
+	Viewport* const viewport = editor->viewport;
 
 	// Get a ray given the screen location clicked.
 	Vector3 outFar;
 	const Ray& pickRay = viewport->camera->getRay( mbe.x, mbe.y, &outFar );
 
 #if 1 // Enable this to draw debugging lines
-	NodePtr line = buildRay( pickRay, outFar );
-	scene->add( line );
+	const NodePtr& line = buildRay( pickRay, outFar );
+	editor->editorScene->add( line );
 #endif
 
 	// Perform ray casting to find the nodes.

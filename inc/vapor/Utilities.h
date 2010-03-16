@@ -49,6 +49,10 @@ namespace vapor {
 	type get##name() const { return var; }		\
 	void set##name(type v) { var = v; }
 
+#define IMPLEMENT_ACESSOR_PTR(name, type, var)	\
+	type get##name() const { return *var; }		\
+	void set##name(type v) { var = &v; }
+
 #define IMPLEMENT_GETTER(name, type, var)		\
 	type get##name() const { return var; }
 
@@ -104,16 +108,16 @@ std::vector<std::string> str_split(const std::string& s, char delim);
 // Locales
 //---------------------------------------------------------------------//
 
-struct SwitchNeutralLocale
+struct LocaleSaveRestore
 {
 public:
 
-	SwitchNeutralLocale()
+	LocaleSaveRestore()
 	{
 		cur = setlocale(LC_NUMERIC, "C");
 	}
 
-	~SwitchNeutralLocale()
+	~LocaleSaveRestore()
 	{
 		setlocale(LC_NUMERIC, cur);
 	}

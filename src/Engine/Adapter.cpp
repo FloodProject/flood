@@ -34,20 +34,11 @@ Adapter::Adapter()
 
 //-----------------------------------//
 
-Adapter::~Adapter()
-{
-
-}
-
-//-----------------------------------//
-
 /**
  * Retrieves and parses the adapter information provided by OpenGL.
  * Some information is returned in the format: 
  *   <version number><space><vendor-specific information>		
  * so this function also has to parse the information.
- *
- * TODO: maybe use regexes for pasing?
  */
 
 void Adapter::parseInfo()
@@ -101,13 +92,9 @@ void Adapter::log() const
 {
 	if(name.empty()) return;
 
-	std::string s = getShading();
-	std::string d = getDriver();
-	std::string g = getVersion();
-
-	//if(s.empty() 
-	//	|| d.empty() 
-	//	|| g.empty()) return;
+	const std::string& s = getShading();
+	const std::string& d = getDriver();
+	const std::string& g = getVersion();
 
 	// log GL stuff
 	info( "render::adapter", "Graphics adapter: %s", getName().c_str() );
@@ -127,41 +114,6 @@ void Adapter::log() const
 	glGetIntegerv( GL_MAX_VERTEX_ATTRIBS, &maxAttribs );
 	
 	info( "render::adapter", "Max vertex attributes: %d", maxAttribs );
-}
-
-//-----------------------------------//
-
-const std::string Adapter::getVersion() const
-{
-	return gl;
-}
-
-//-----------------------------------//
-
-const std::string Adapter::getDriver() const
-{
-	return driver;
-}
-
-//-----------------------------------//
-
-const std::string Adapter::getVendor() const
-{
-	return vendor;
-}
-
-//-----------------------------------//
-
-const std::string Adapter::getName() const
-{
-	return name;
-}
-
-//-----------------------------------//
-
-const std::string Adapter::getShading() const
-{
-	return glsl;
 }
 
 //-----------------------------------//

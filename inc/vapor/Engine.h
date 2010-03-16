@@ -102,7 +102,8 @@ public:
 	vfs::VFS* getVFS() const { return vfs; }
 
 	/// Gets the input manager.
-	input::InputManager* getInputManager() const { return &( renderDevice->getWindow()->getInputManager() ); }
+	IMPLEMENT_GETTER(InputManager, 
+		input::InputManager*, &(renderDevice->getWindow().getInputManager()) )
 
 	/// @}
 

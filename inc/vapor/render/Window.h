@@ -28,42 +28,39 @@ class VAPOR_API WindowSettings : public Settings
 public:
 
 	WindowSettings( const ushort width = 640, const ushort height = 480,
-		const bool fullscreen = false, const std::string title = "Untitled",
-		const ushort stencilbits = 8, const ushort bpp = 32, 
-		const ushort depthbits = 24, const ushort aalevel = 0, 
-		void* customHandle = nullptr );
+		const std::string& title = "Untitled", const bool fullscreen = false );
+
+	WindowSettings( const WindowSettings& settings );
 
 	// Gets/sets the window title.
 	IMPLEMENT_ACESSOR(Title, const std::string&, title)
 
+	// Gets/sets the bits-per-pixel of the window.
+	IMPLEMENT_ACESSOR(Bpp, const ushort, bitsPerPixel)
+
+	// Gets/sets the size of the window's depth buffer.
+	IMPLEMENT_ACESSOR(DepthBits, const ushort, depthBits)
+
+	// Gets/sets the size of the window's stencil buffer.
+	IMPLEMENT_ACESSOR(StencilBits, const ushort, stencilBits)
+
+	// Gets/sets the antialiasing level of the window.
+	IMPLEMENT_ACESSOR(Antialiasing, const ushort, antialiasLevel)
+
 	// Gets/sets the custom handle of the window.
 	IMPLEMENT_ACESSOR(CustomHandle, void*, customHandle)
 
-	// Gets/sets the bits-per-pixel of the window.
-	IMPLEMENT_ACESSOR(Bpp, const ushort, bpp)
-
-	// Gets/sets the size of the window's depth buffer.
-	IMPLEMENT_ACESSOR(DepthBits, const ushort, depthbits)
-
-	// Gets/sets the size of the window's stencil buffer.
-	IMPLEMENT_ACESSOR(StencilBits, const ushort, stencilbits)
-
-	// Gets/sets the antialiasing level of the window.
-	IMPLEMENT_ACESSOR(AntiAliasing, const ushort, aalevel)
-
 	// Is this window fullscreen?
-	const bool isFullscreen() const { return fullscreen; }
+	const bool isFullscreen() const { return fullScreen; }
 
 protected:
 
 	std::string title;
-	bool fullscreen;
-
-	ushort bpp;
-	ushort depthbits;
-	ushort stencilbits;
-	ushort aalevel;
-	
+	bool fullScreen;
+	ushort bitsPerPixel;
+	ushort depthBits;
+	ushort stencilBits;
+	ushort antialiasLevel;
 	void* customHandle;
 };
 
@@ -82,7 +79,6 @@ class VAPOR_API Window : public RenderTarget
 public:
 
 	Window (const WindowSettings& settings);
-	virtual ~Window ();
 
 	// Updates the window content.
 	virtual void update() = 0;
@@ -109,7 +105,7 @@ public:
 	virtual void setCursorPosition( int x, int y ) = 0;
 
 	// Gets the window settings.
-	virtual const Settings& getSettings();
+	IMPLEMENT_GETTER(Settings, const Settings&, settings)
 
 	// Gets the input manager.
 	virtual input::InputManager& getInputManager() = 0;
