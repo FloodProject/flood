@@ -18,20 +18,21 @@ namespace vapor { namespace editor {
  * that the engine provides should be provided using this type.
  */
 
-class Operation
+class Operation : public ReferenceCounted
 {
 public:
 
-	Operation() : doneOnce( false ) { } 
-	//virtual ~Operation();
+	Operation()
+	{ } 
+	
+	virtual ~Operation() 
+	{ }
 
 	virtual void redo() = 0;
 	virtual void undo() = 0;
-
-protected:
-
-	bool doneOnce;
 };
+
+TYPEDEF_INTRUSIVE_POINTER_FROM_CLASS(Operation);
 
 //-----------------------------------//
 

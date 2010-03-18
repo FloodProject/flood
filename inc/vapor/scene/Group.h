@@ -40,30 +40,29 @@ class VAPOR_API Group : public Node
 public:
 
 	Group( const std::string& name );
-	virtual ~Group();
 
 	// Adds child to the end of the child list.  Returns the index of
 	// the new child node that has been added.
-	virtual int add( NodePtr child );
+	virtual int add( const NodePtr& child );
 
 	// Inserts child after child at i'th index.  Returns the index of
 	// the new child inserted, if there is no existing
 	// child at 'i' then -1 is returned.
-	virtual int insert( int i, NodePtr child );
+	virtual int insert( uint i, const NodePtr& child );
 
 	// Removes child at index i, if i is out of bounds returns false,
 	// if i is in bounds and child was removed, returns true
-	virtual bool remove( int i );
+	virtual bool remove( uint i );
 
 	// Returns null pointer if cannot find index i
 	NodePtr get( uint i ) const;
 
 	// Gets the children of this group.
-	const std::vector< NodePtr >& getChildren() const { return children; }
+	IMPLEMENT_GETTER(Children, const std::vector<NodePtr>&, children)
 
 	// Returns index for child with the same pointer, if child cannot
 	// be found, -1 is returned
-	int index( NodePtr child ) const;
+	int index( const NodePtr& child ) const;
 
 	// Returns number of children in this group
 	int count( ) const;

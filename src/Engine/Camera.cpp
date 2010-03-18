@@ -43,7 +43,7 @@ const std::string& Camera::type = "Camera";
 
 Camera::Camera( render::Device* device, Projection::Enum projection )
 	: renderDevice( device ), projection( projection ), target( nullptr ),
-	fov(45.0f), near_( 1.0f ), far_( 5000.0f ), viewChanged( true )
+	fov(45.0f), near_( 1.0f ), far_( 5000.0f ), lookAtVector( Vector3::UnitZ )
 {
 	setRenderTarget( device->getRenderTarget() );
 }
@@ -55,6 +55,9 @@ math::Ray Camera::getRay( float scrx, float scry, math::Vector3* outFar ) const
 	// Let's do ray picking...
 	// Method based on: http://www.mvps.org/directx/articles/rayproj.htm
 	
+	int width = targetSize.x;
+	int height = targetSize.y;
+
 	// Normalizing Screen Coordinates
 	float x = width - scrx;
 	float y = height - scry;
@@ -104,28 +107,27 @@ void Camera::setRenderTarget( RenderTarget& newTarget )
 
 void Camera::handleTargetResize( const render::Settings& evt )
 {
-	width = evt.getWidth();
-	height = evt.getHeight();
-
-	glViewport( 0, 0, width, height );
-
-	// TODO: update matrices
+	targetSize = evt.getSize();
+	
+	glViewport( 0, 0, targetSize.x, targetSize.y );
+	setupProjection();
 }
 
 //-----------------------------------//
 
 void Camera::update( double UNUSED(delta) )
 {
-	if( !transform )
-	{
-		assert( getNode() != nullptr );
-		assert( getNode()->getTransform() != nullptr );
-		transform = getNode()->getTransform();
-	}
+	if( transform ) return;
 
-	// We need to update both projection and view matrices.
-	// TODO: optimize this so the projection is only updated when needed
+	assert( getNode() != nullptr );
+	assert( getNode()->getTransform() != nullptr );
+		
+	transform = getNode()->getTransform();
+	transform->onTransform += fd::bind( &Camera::onTransform, this );
+
+	// Update the projection matrix the first update.
 	setupProjection();
+	setupView();
 }
 
 //-----------------------------------//
@@ -140,18 +142,40 @@ void Camera::setupProjection()
 	else
 	{
 		projectionMatrix = Matrix4x4::createOrthographicProjection( 
-			0.0f, (float)width, 0.0f, (float)height, near_, far_ );
+			0.0f, (float)targetSize.x, 0.0f, (float)targetSize.y,
+			near_, far_ );
 	}
+}
 
-	// TODO: unit test projection methods
+//-----------------------------------//
+
+void Camera::setupView()
+{
+	const Vector3& position = transform->getPosition();
+	const EulerAngles& rotation = transform->getRotation();
+	
+	// Update the lookAt vector.
+	Vector3 forward = Vector3::UnitZ * rotation.getOrientationMatrix();
+	lookAtVector = position + forward;
+	
+	// Update the view matrix.
+	viewMatrix = transform->lookAt( lookAtVector, Vector3::UnitY );
+}
+
+//-----------------------------------//
+
+void Camera::onTransform()
+{
+	assert( transform != nullptr );
+	setupView();
 }
 
 //-----------------------------------//
 
 float Camera::getAspectRatio() const
 {
-	if( height == 0 ) return 0.0f;
-	return static_cast<float>(width) / height ;
+	if( targetSize.y == 0 ) return 0.0f;
+	return float(targetSize.x) / targetSize.y;
 }
 
 //-----------------------------------//
@@ -192,13 +216,13 @@ void Camera::cull( render::RenderBlock& block, const NodePtr& node ) const
 	// TODO: Check if dynamic_cast is faster than a string comparison.
 	
 	// Try to see if this is a Group-derived node.
-	GroupPtr group( std::dynamic_pointer_cast< Group >( node ) );
+	const GroupPtr& group( std::dynamic_pointer_cast< Group >( node ) );
 	
 	// Yes it is.
 	if( group )
 	{
 		// Cull the children nodes recursively.
-		foreach( NodePtr child, group->getChildren() )
+		foreach( const NodePtr& child, group->getChildren() )
 		{
 			if( !child->isVisible() ) continue;
 			cull( block, child );
@@ -251,6 +275,7 @@ void Camera::serialize( Json::Value& value )
 	value["fov"] = fov;
 	value["near"] = near_;
 	value["far"] = far_;
+	value["lookAt"] = toJson(lookAtVector);
 }
 
 //-----------------------------------//

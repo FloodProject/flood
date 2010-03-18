@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "vapor/scene/Component.h"
 #include "vapor/math/EulerAngles.h"
 #include "vapor/math/AABB.h"
+#include "vapor/scene/Component.h"
 
 namespace vapor { namespace scene {
 
@@ -45,13 +45,13 @@ public:
 	void reset();
 
 	// Gets the position of the node.
-	IMPLEMENT_GETTER(Position, const math::Vector3&, v_translate)
+	IMPLEMENT_GETTER(Position, const math::Vector3&, translation)
 
 	// Sets the position of the node.
 	void setPosition( const math::Vector3& position );
 
 	// Gets the rotation vector of this node.
-	IMPLEMENT_GETTER(Rotation, const math::EulerAngles&, angles)
+	IMPLEMENT_GETTER(Rotation, const math::EulerAngles&, rotation)
 
 	// Sets the rotation vector of this node.
 	void setRotation( const math::EulerAngles& rot );
@@ -61,7 +61,7 @@ public:
 		const math::Vector3& upVector );
 
 	// Gets the absolute transformation matrix.
-	IMPLEMENT_GETTER(AbsoluteTransform, const math::Matrix4x3&, absoluteLocalToWorld)
+	IMPLEMENT_GETTER(AbsoluteTransform, const math::Matrix4x3&, transform)
 	
 	// Sets the absolute transformation matrix.
 	void setAbsoluteTransform( const math::Matrix4x3& matrix );
@@ -75,11 +75,14 @@ public:
 	// Gets the world bounding volume of the node.
 	math::AABB getWorldBoundingVolume() const;
 
+	// Updates the bounding volume geometry.
+	void updateBoundingVolume();
+
 	// Does this node's bounding box need to be updated?
 	bool requiresBoundingVolumeUpdate() const;
 
 	// Use this to render some debug bounding boxes.
-	IMPLEMENT_GETTER(DebugRenderable, render::RenderablePtr, aabbRenderable)
+	IMPLEMENT_GETTER(DebugRenderable, render::RenderablePtr, boundingVolumeRenderable)
 
 	// Called once per frame to update the component.
 	virtual void update( double delta );
@@ -87,27 +90,30 @@ public:
 	// Gets fired when the transform is changed.
 	fd::delegate<void()> onTransform;
 
-	// Gets the type of this component. 
-	virtual const std::string& getType() const;
+	// Gets the type of this component.
+	IMPLEMENT_GETTER(Type, const std::string&, Transform::type)
 
 	DECLARE_SERIALIZABLE();
 
 protected:
 
+	// Tracks if the transform has been changed.
 	bool needsNotify;
+
+	// Sends notifications when the transform has changed.
 	void notify();
 
-	math::EulerAngles angles;
-	math::Vector3 v_translate;
-	math::Vector3 v_scale;
-
+	math::Vector3 translation;
+	math::EulerAngles rotation;
+	math::Vector3 _scale;
+	
+	// Local transform
 	math::Matrix4x3 transform;
-	math::Matrix4x3 absoluteLocalToWorld;
 
 	// Bounding volumes used for culling.
+	bool needsVolumeUpdate;
 	math::AABB boundingVolume;
-	bool aabbNeedsUpdate;
-	render::RenderablePtr aabbRenderable;
+	render::RenderablePtr boundingVolumeRenderable;
 
 	// If an external update occurs (the matrix is changed) then we
 	// don't want to override that when the transform is updated.

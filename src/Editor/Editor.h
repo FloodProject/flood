@@ -62,13 +62,16 @@ public:
 	void onKeyRelease( const input::KeyEvent& key );
 
 	// Mode/Undo stuff
-	void onModeSwitch( Mode* newMode, int id );
+	void onModeSwitch( Mode* const mode, int id );
 	void registerOperation( Operation* const op );
-
-	void onUpdate();
+	void updateUndoRedoUI();
+	
+	void onUpdate( double delta );
 	void onRender();
-	void onCameraTransform();
-	void RefreshCanvas();
+	void RefreshViewport();
+
+	IMPLEMENT_GETTER(MainViewport, Viewport* const, viewport)
+	IMPLEMENT_GETTER(Engine, Engine* const, engine)
 
 protected:
 
@@ -84,19 +87,18 @@ protected:
 	// Initializes vapor3D engine.
 	void initEngine();
 
-public:
-
 	Engine* engine;
 	ScenePtr editorScene;
-	CameraPtr editorCamera;
-	
+
 	// Editor modes.
 	Mode* currentMode;
 	std::vector<Mode*> modes;
 	std::map<int, Mode*> modesMap;
 
-	// Undo/redo stack.
-	std::stack<Operation*> operations;
+	// Undo/redo operations.
+	typedef std::deque<Operation*> Operations;
+	Operations undoOperations;
+	Operations redoOperations;
 
 	// UI widgets.
 	wxBoxSizer* sizer;

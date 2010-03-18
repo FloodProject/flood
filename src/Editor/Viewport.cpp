@@ -24,7 +24,7 @@ Viewport::Viewport( vapor::Engine* engine, wxWindow* parent, wxWindowID id,
 				   const wxPoint& pos, const wxSize& size, long style ) 
 	: wxPanel( parent, id, pos, size, style )
 {
-	vaporCtrl = new vaporControl( engine, this );
+	control = new vaporControl( engine, this );
 
 	build();
 	createCamera( engine );
@@ -79,6 +79,8 @@ void Viewport::onCameraTransform()
 	
 	float_to_str( str, pos.z );
 	txt_Z->ChangeValue( str );
+
+	control->flagRedraw();
 }
 
 //-----------------------------------//
@@ -107,14 +109,6 @@ void Viewport::onTextEnter( wxCommandEvent& )
 
 //-----------------------------------//
 
-void Viewport::onKillFocus( wxFocusEvent& event )
-{
-	updatePosition();
-	event.Skip();
-}
-
-//-----------------------------------//
-
 const short BAR_HEIGHT = 20;
 
 void Viewport::build()
@@ -134,7 +128,6 @@ void Viewport::build()
 		wxDefaultPosition, wxSize( 50, BAR_HEIGHT ),
 		wxTE_CENTRE | wxTE_PROCESS_ENTER, validatorX);
 
-	txt_X->Bind(wxEVT_KILL_FOCUS, &Viewport::onKillFocus, this);
 	txt_X->Bind(wxEVT_COMMAND_TEXT_ENTER, &Viewport::onTextEnter, this);
 	sizer->Add( txt_X, 0, wxALIGN_CENTER_VERTICAL, 5 );
 
@@ -149,7 +142,6 @@ void Viewport::build()
 		wxDefaultPosition, wxSize( 50, BAR_HEIGHT ),
 		wxTE_CENTRE | wxTE_PROCESS_ENTER, validatorY);
 
-	txt_Y->Bind(wxEVT_KILL_FOCUS, &Viewport::onKillFocus, this);
 	txt_Y->Bind(wxEVT_COMMAND_TEXT_ENTER, &Viewport::onTextEnter, this);
 	sizer->Add( txt_Y, 0, wxALIGN_CENTER_VERTICAL, 5 );
 	
@@ -164,7 +156,6 @@ void Viewport::build()
 		wxSize( 50, BAR_HEIGHT ), wxTE_CENTRE | wxTE_PROCESS_ENTER | wxBORDER_THEME,
 		validatorZ);
 
-	txt_Z->Bind(wxEVT_KILL_FOCUS, &Viewport::onKillFocus, this);
 	txt_Z->Bind(wxEVT_COMMAND_TEXT_ENTER, &Viewport::onTextEnter, this);
 	sizer->Add( txt_Z, 0, wxALIGN_CENTER_VERTICAL, 5 );
 	
@@ -199,7 +190,7 @@ void Viewport::build()
 	wxBoxSizer* mainSizer;
 	mainSizer = new wxBoxSizer( wxVERTICAL );
 
-	mainSizer->Add( vaporCtrl, 1, wxEXPAND|wxALL );
+	mainSizer->Add( control, 1, wxEXPAND|wxALL );
 	mainSizer->Add( sizer, 0, wxEXPAND|wxALL );
 
 	this->SetSizer( mainSizer );

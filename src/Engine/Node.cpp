@@ -8,6 +8,7 @@
 
 #include "vapor/PCH.h"
 #include "vapor/scene/Node.h"
+#include "vapor/scene/Tags.h"
 
 namespace vapor { namespace scene {
 
@@ -41,10 +42,12 @@ bool Node::addComponent( const ComponentPtr& component )
 	}
 
 	// Cache geometry (renderable) objects.
-	GeometryPtr geometry = std::dynamic_pointer_cast< Geometry >( component );
+	const GeometryPtr& geometry = 
+		std::dynamic_pointer_cast<Geometry>( component );
+	
 	if( geometry ) geometries.push_back( geometry );
 
-	// If it doesn't exists, we add a new one.
+	// If it doesn't exist yet, add it in the map.
 	components[type] = component;
 	component->setNode( shared_from_this() );
 
@@ -64,11 +67,11 @@ bool Node::removeComponent( const std::string& type )
 	if( it == components.end() )
 		return false;
 	
-	ComponentPtr component = components[type];
+	const ComponentPtr& component = components[type];
 	components.erase( it );
 
 	// Check if we cached the component...
-	GeometryPtr geometry = std::dynamic_pointer_cast< Geometry >( component );
+	const GeometryPtr& geometry = std::dynamic_pointer_cast< Geometry >( component );
 	if( geometry ) 
 	{
 		std::vector< GeometryPtr >::iterator it;
@@ -76,7 +79,6 @@ bool Node::removeComponent( const std::string& type )
 
 		if( it != geometries.end() )
 			geometries.erase( it );
-
 	}
 
 	return true;

@@ -7,9 +7,10 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/scene/Transform.h"
-#include "vapor/scene/Node.h"
 #include "vapor/math/Math.h"
+#include "vapor/scene/Node.h"
+#include "vapor/scene/Transform.h"
+#include "vapor/render/DebugGeometry.h"
 
 using namespace vapor::math;
 using namespace vapor::render;
@@ -23,8 +24,8 @@ const std::string& Transform::type = "Transform";
 //-----------------------------------//
 
 Transform::Transform( float x, float y, float z )
-	: v_scale( 1.0f ), v_translate( x, y, z ), needsNotify( false ),
-	aabbNeedsUpdate( true ), externalUpdate( false )
+	: _scale( 1.0f ), translation( x, y, z ), needsNotify( false ),
+	needsVolumeUpdate( true ), externalUpdate( false )
 {
 
 }
@@ -40,11 +41,11 @@ void Transform::translate( const math::Vector3& tr )
 
 void Transform::translate( float x, float y, float z )
 {
-	v_translate.x += x;
-	v_translate.y += y;
-	v_translate.z += z;
-
 	needsNotify = true;
+
+	translation.x += x;
+	translation.y += y;
+	translation.z += z;
 }
 
 //-----------------------------------//
@@ -65,11 +66,11 @@ void Transform::scale( const math::Vector3& s )
 
 void Transform::scale( float x, float y, float z )
 {
-	v_scale.x *= x;
-	v_scale.y *= y;
-	v_scale.z *= z;
-
 	needsNotify = true;
+
+	_scale.x *= x;
+	_scale.y *= y;
+	_scale.z *= z;
 }
 
 //-----------------------------------//
@@ -83,34 +84,34 @@ void Transform::rotate( const math::Vector3& rot )
 
 void Transform::rotate( float xang, float yang, float zang )
 {
-	angles.x += xang;
-	angles.y += yang;
-	angles.z += zang;
-
 	needsNotify = true;
+
+	rotation.x += xang;
+	rotation.y += yang;
+	rotation.z += zang;
 }
 
 //-----------------------------------//
 
 void Transform::setRotation( const math::EulerAngles& rot )
 {
-	angles = rot;
 	needsNotify = true;
+	rotation = rot;
 }
 
 //-----------------------------------//
 
 void Transform::setPosition( const math::Vector3& position )
 {
-	v_translate = position;
 	needsNotify = true;
+	translation = position;
 }
 
 //-----------------------------------//
 
 math::Matrix4x3 Transform::lookAt( const math::Vector3& lookAtVector, const math::Vector3& upVector )
 {
-	const Vector3& eye = v_translate;
+	const Vector3& eye = translation;
 
 	Vector3 zaxis = (eye - lookAtVector).normalize();
 	Vector3	xaxis = upVector.cross(zaxis).normalize();
@@ -133,7 +134,6 @@ math::Matrix4x3 Transform::lookAt( const math::Vector3& lookAtVector, const math
 	m.ty = -yaxis.dot(eye);
 	m.tz = -zaxis.dot(eye);
 
-	needsNotify = true;
 	return m;
 }
 
@@ -141,29 +141,29 @@ math::Matrix4x3 Transform::lookAt( const math::Vector3& lookAtVector, const math
 
 void Transform::reset( )
 {
-	v_translate.zero();
-	v_scale = math::Vector3( 1.0f );
-	angles.identity();
-	
 	needsNotify = true;
+
+	translation.zero();
+	_scale = math::Vector3( 1.0f );
+	rotation.identity();
 }
 
 //-----------------------------------//
 
 void Transform::setAbsoluteTransform( const math::Matrix4x3& matrix )
 {
-	externalUpdate = true;
-	absoluteLocalToWorld = matrix;
 	needsNotify = true;
+	externalUpdate = true;
+	transform = matrix;
 }
 
 //-----------------------------------//
 
 math::Matrix4x3 Transform::getLocalTransform() const
 {
-	return Matrix4x3::createTranslationMatrix( v_translate )
-		* angles.getOrientationMatrix()
-		* Matrix4x3::createScaleMatrix( v_scale );
+	return Matrix4x3::createTranslationMatrix( translation )
+		* rotation.getOrientationMatrix()
+		* Matrix4x3::createScaleMatrix( _scale );
 }
 
 //-----------------------------------//
@@ -171,44 +171,26 @@ math::Matrix4x3 Transform::getLocalTransform() const
 bool Transform::requiresBoundingVolumeUpdate() const
 {
 	// TODO: optimize this
-	return aabbNeedsUpdate;
+	return needsVolumeUpdate;
 }
 
 //-----------------------------------//
 
-static const float EXTRA_SPACE = 1.01f;
-
-#define ADD_BOX_FACE( a, b, c, d )						\
-	v.push_back( aabb.getCorner( a ) * EXTRA_SPACE );	\
-	v.push_back( aabb.getCorner( b ) * EXTRA_SPACE );	\
-	v.push_back( aabb.getCorner( c ) * EXTRA_SPACE );	\
-	v.push_back( aabb.getCorner( d ) * EXTRA_SPACE );
-
-RenderablePtr buildBoundingRenderable( const math::AABB& aabb )
+void Transform::updateBoundingVolume()
 {
-	VertexBufferPtr vb( new VertexBuffer() );
+	const NodePtr& node = getNode();
+	if( !node ) return;
 
-	std::vector< Vector3 > v;
-	ADD_BOX_FACE( 0, 2, 3, 1 ) // Front
-	ADD_BOX_FACE( 0, 1, 5, 4 ) // Bottom
-	ADD_BOX_FACE( 4, 5, 7, 6 ) // Back
-	ADD_BOX_FACE( 2, 6, 7, 3 ) // Top
-	ADD_BOX_FACE( 0, 4, 6, 2 ) // Left
-	ADD_BOX_FACE( 1, 3, 7, 5 ) // Right
+	boundingVolume.reset();
 
-	std::vector< Vector3 > c( 6/*faces*/*4/*vertices*/, Vector3( 1.0f, 1.0f, 0.0f ) );
-	vb->set( VertexAttribute::Position, v );
-	vb->set( VertexAttribute::Color, c );
-
-	MaterialPtr mat( new Material( "BoundBox", "diffuse" ) );
-	mat->setLineWidth( 1.0f );
-	mat->setLineSmoothing( true );
-	mat->setBackfaceCulling( false );
-
-	RenderablePtr bbox( new Renderable( Primitive::Quads, vb, mat ) );
-	bbox->setPolygonMode( PolygonMode::Wireframe );
-
-	return bbox;
+	foreach( const GeometryPtr& geometry, node->getGeometry() )
+	{
+		boundingVolume.add( geometry->getBoundingVolume() );
+	}
+	
+	// Update debug renderable.
+	boundingVolumeRenderable = buildBoundingRenderable( boundingVolume );
+	needsVolumeUpdate = false;
 }
 
 //-----------------------------------//
@@ -216,25 +198,10 @@ RenderablePtr buildBoundingRenderable( const math::AABB& aabb )
 void Transform::update( double UNUSED(delta) )
 {
 	if( !externalUpdate )
-		absoluteLocalToWorld = getLocalTransform();
+		transform = getLocalTransform();
 
 	if( requiresBoundingVolumeUpdate() )
-	{
-		assert( getNode() );
-		NodePtr node = getNode();
-
-		boundingVolume.reset();
-
-		foreach( const GeometryPtr& geometry, node->getGeometry() )
-		{
-			boundingVolume.add( geometry->getBoundingVolume() );
-		}
-		
-		aabbNeedsUpdate = false;
-
-		// Update debug renderable
-		aabbRenderable = buildBoundingRenderable( boundingVolume );
-	}
+		updateBoundingVolume();
 
 	if( needsNotify )
 	{
@@ -268,16 +235,9 @@ math::AABB Transform::getWorldBoundingVolume() const
 
 void Transform::serialize( Json::Value& value )
 {
-	value["position"] = toJson(v_translate);
-	value["rotation"] = toJson(angles);
-	value["scale"] = toJson(v_scale);
-}
-
-//-----------------------------------//
-
-const std::string& Transform::getType() const
-{
-	return Transform::type;
+	value["position"] = toJson(translation);
+	value["rotation"] = toJson(rotation);
+	value["scale"] = toJson(_scale);
 }
 
 //-----------------------------------//

@@ -15,44 +15,37 @@ namespace vapor { namespace editor {
 // event handlers
 //-----------------------------------//
 
-void EditorFrame::RefreshCanvas()
+void EditorFrame::RefreshViewport()
 {
-	static int i = 0;
-	debug( "Refresh %d", i++ );
-	viewport->vaporCtrl->needsRedraw = true;
+	viewport->getControl()->flagRedraw();
 }
 
 //-----------------------------------//
 
 void EditorFrame::onRender()
 {
-	static int i = 0;
-	debug( "Render %d", i++ );
-
 	render::Device* const device = engine->getRenderDevice();
 	
 	const math::Color bg( 0.0f, 0.10f, 0.25f );
 	device->setClearColor(bg);
 	device->clearTarget();
 
-	viewport->camera->render( editorScene );
-	viewport->camera->render( engine->getSceneManager() );
+	const CameraPtr& camera = viewport->getCamera();
+
+	camera->render( editorScene );
+	camera->render( engine->getSceneManager() );
 }
 
 //-----------------------------------//
 
-void EditorFrame::onUpdate()
+void EditorFrame::onUpdate( double delta )
 {
 	if( !editorScene ) return;
-
-	editorScene->update( 0.01f );
-}
-
-//-----------------------------------//
-
-void EditorFrame::onCameraTransform()
-{
-	RefreshCanvas();
+	editorScene->update( delta );
+	
+	const ScenePtr& scene = engine->getSceneManager();
+	if( !scene ) return;
+	scene->update( delta );
 }
 
 //-----------------------------------//
@@ -72,7 +65,8 @@ void EditorFrame::OnKeyDown(wxKeyEvent& event)
 {
 	if( event.GetKeyCode() == 'g' )
 	{
-		const NodePtr& grid = editorScene->getEntity( "EditorGrid" );
+		const NodePtr& grid = editorScene->getEntity( "Grid" );
+		
 		if( !grid ) return;
 		grid->setVisible( !grid->isVisible() );
 	}
@@ -93,24 +87,39 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 
 	switch(id) 
 	{
-	
+	//-----------------------------------//
 	case Toolbar_Undo:
 	{
-		if( operations.empty() )
-			break;
+		if( undoOperations.empty() )
+			return;
 
-		Operation* op = operations.top();
-		operations.pop();
+		Operation* op = undoOperations.back();
+		undoOperations.pop_back();
+		redoOperations.push_back(op);
 
-		assert( op != nullptr );
 		if( op ) op->undo();
 
-		if( operations.empty() )
-			toolBar->EnableTool( Toolbar_Undo, false );
-
-		break;
+		updateUndoRedoUI();
+		RefreshViewport();
+		return;
 	}
+	//-----------------------------------//
+	case Toolbar_Redo:
+	{
+		if( redoOperations.empty() )
+			return;
 
+		Operation* op = redoOperations.back();
+		redoOperations.pop_back();
+		undoOperations.push_back(op);
+
+		if( op ) op->redo();
+
+		updateUndoRedoUI();
+		RefreshViewport();
+		return;
+	}
+	//-----------------------------------//
 	case Toolbar_Save:
 	{
 		// Ask for file name to save as.
@@ -127,31 +136,32 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 		// Save it to a file.
 		std::string fn( fc.GetFilename() );
 		serializeToFile( scene, fn );
-		break;
+		return;
 	}
-
+	//-----------------------------------//
 	case Toolbar_ToogleConsole:
 	{
 		codeEvaluator->Show( !codeEvaluator->IsShown() );
 		codeEvaluator->SetFocus();
-		break;
+		return;
 	}
-	
+	//-----------------------------------//
 	case Toolbar_ToogleGrid:
 	{
-		const NodePtr& grid = editorScene->getEntity( "EditorGrid" );
+		const NodePtr& grid = editorScene->getEntity( "Grid" );
 		if( grid ) grid->setVisible( !grid->isVisible() );
-		RefreshCanvas();
-		break;
+		RefreshViewport();
+		return;
 	}
-
+	//-----------------------------------//
 	case Toolbar_TooglePlay:
 	{
+		// Enable all simulations.
 		//physics::PhysicsManager* pm = engine->getPhysicsManager();
 		//if( pm ) pm->setSimulationEnabled( !pm->getSimulationEnabled() );
-		break;
+		return;
 	}
-
+	//-----------------------------------//
 	case Toolbar_ToogleSidebar:
 	{
 		wxSize szNew = viewport->GetClientSize();
@@ -169,19 +179,23 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 
 		SetClientSize( szNew );
 		Layout();
+		
+		return;
 	}
-
+	//-----------------------------------//
 	} // end switch
 }
 
 //-----------------------------------//
 
-void EditorFrame::onModeSwitch( Mode* newMode, int id )
+void EditorFrame::onModeSwitch( Mode* const newMode, int id )
 {
 	if( !newMode ) return;
 
 	if( currentMode )
 		currentMode->onModeExit();
+	
+	RefreshViewport();
 	
 	currentMode = newMode;
 	currentMode->onModeEnter( id );
@@ -191,12 +205,25 @@ void EditorFrame::onModeSwitch( Mode* newMode, int id )
 
 void EditorFrame::registerOperation( Operation* const op )
 {
-	operations.push( op );
+	undoOperations.push_back( op );
 
-	if( !toolBar->GetToolEnabled( Toolbar_Undo ) )
-	{
-		toolBar->EnableTool( Toolbar_Undo, true );
-	}
+	foreach( Operation* const op, redoOperations )
+		delete op;
+
+	redoOperations.clear();
+
+	updateUndoRedoUI();
+}
+
+//-----------------------------------//
+
+void EditorFrame::updateUndoRedoUI()
+{
+	bool u = undoOperations.empty();
+	toolBar->EnableTool( Toolbar_Undo, u ? false : true );
+		
+	bool r = redoOperations.empty();
+	toolBar->EnableTool( Toolbar_Redo, r ? false : true );
 }
 
 //-----------------------------------//
@@ -207,21 +234,22 @@ void EditorFrame::createEditorScene()
 	editorScene.reset( new Scene() );
 
 	// Get the main viewport camera and add it to the scene.
-	const NodePtr& camera = viewport->cameraNode;
-	camera->getTransform()->translate( 0.0f, 20.0f, -65.0f );
+	const NodePtr& camera = viewport->getCamera()->getNode();
+	camera->setTag( Tags::NonPickable, true );
 	editorScene->add( camera );
+
+	camera->getTransform()->translate( 0.0f, 20.0f, -65.0f );
 
 	// Create a nice grid for the editor.
 	MaterialPtr mat( new Material("GridMaterial") );
-	NodePtr grid( new Node("EditorGrid") );
+	NodePtr grid( new Node("Grid") );
 	grid->addComponent( TransformPtr( new Transform() ) );
 	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
 	grid->setTag( Tags::NonPickable, true );
-	grid->setTag( EditorTags::EditorOnly, true );
 	editorScene->add( grid );
 
 	// Update at least once before rendering.
-	onUpdate();
+	onUpdate( 0.0f );
 }
 
 //-----------------------------------//
@@ -270,7 +298,7 @@ void EditorFrame::createScene()
 	NodePtr sun( new Node("Sun") );
 	sun->addComponent( TransformPtr( new Transform() ) );
 	sun->addComponent( geom );
-	sun->addComponent( BillboardPtr( new Billboard( viewport->camera ) ) );
+	sun->addComponent( BillboardPtr( new Billboard( viewport->getCamera() ) ) );
 	scene->add( sun );
 
 	MaterialPtr mat( new Material("SkyMaterial") );
@@ -309,6 +337,8 @@ void EditorFrame::createScene()
 
 	const ImagePtr& heightmap = rm->loadResource< Image >( "height2.png" );
 	/*const CellPtr& cell = */terrain->createCell( heightmap, 0, 0 );
+
+	scene->update( 0.1f );
 }
 
 //-----------------------------------//

@@ -29,15 +29,17 @@ public:
 	FirstPersonCamera( input::InputManager* input, render::Device* device, 
 		Projection::Enum projection = Projection::Perspective );
 
-	// Gets/sets the sensivity of the camera.
-	IMPLEMENT_ACESSOR(LookSensivity, float, lookSensivity);
-	IMPLEMENT_ACESSOR(MoveSensivity, float, moveSensivity);
-
 	// Updates this node.
 	virtual void update( double delta );
 
-	// Gets the name of this node.
-	virtual const std::string& getType() const;
+	// Gets/sets the look sensivity of the camera.
+	IMPLEMENT_ACESSOR(LookSensivity, float, lookSensivity);
+	
+	// Gets/sets the move sensivity of the camera.
+	IMPLEMENT_ACESSOR(MoveSensivity, float, moveSensivity);
+
+	// Gets the type of this node.
+	IMPLEMENT_GETTER(Type, const std::string&, FirstPersonCamera::type)
 
 	DECLARE_SERIALIZABLE();
 
@@ -68,13 +70,10 @@ protected:
 	float moveSensivity;
 
 	// Mouse movement.
+	math::Vector2i oldMousePosition;
 	math::Vector2i lastPosition;
 	math::Vector2i mouseDistance;
-	math::Vector2i oldMousePosition;
-	math::Vector3 wheelMovement;
-
-	// Look-at vector.
-	math::Vector3 lookAtVector;
+	int mouseWheel;
 
 	input::InputManager* inputManager;
 

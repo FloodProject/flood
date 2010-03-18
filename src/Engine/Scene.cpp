@@ -91,12 +91,23 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res ) co
 
 //-----------------------------------//
 
-bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, const NodePtr& node ) const
+bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res,
+							   const NodePtr& node ) const
 {
 	// Down to triangle picking.	
 	foreach( const GeometryPtr& geo, node->getGeometry() )
 	{
 		if( !geo ) continue;
+
+		// Let's do a rough bounding volume level intersection test on each
+		// individual geometry of the node. This helps cut the number of 
+		// collisions tests in nodes with lots of geometry components.
+
+		const AABB& bv = geo->getBoundingVolume();
+
+		float distance;
+		if( !bv.intersects(ray, distance) )
+			continue;
 
 		foreach( const RenderablePtr& rend, geo->getRenderables() )
 		{

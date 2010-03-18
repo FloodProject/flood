@@ -22,14 +22,7 @@ Group::Group( const std::string& name )
 
 //-----------------------------------//
 
-Group::~Group()
-{
-
-}
-
-//-----------------------------------//
-
-int Group::add( NodePtr child )
+int Group::add( const NodePtr& child )
 {
 	// Beware that you have to assign a new Group-derived object
 	// to a shared_ptr, else shared_from_this will return bad_weak_ptr.
@@ -50,7 +43,7 @@ int Group::add( NodePtr child )
 
 //-----------------------------------//
 
-int Group::insert( int i, NodePtr child )
+int Group::insert( uint i, const NodePtr& child )
 {
 	// TODO
 	return 1;
@@ -58,7 +51,7 @@ int Group::insert( int i, NodePtr child )
 
 //-----------------------------------//
 
-bool Group::remove( int i )
+bool Group::remove( uint i )
 {
 	// TODO
 

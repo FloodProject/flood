@@ -26,13 +26,11 @@ public:
 		wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition,
 		const wxSize& size = wxDefaultSize, long style = wxTAB_TRAVERSAL );
 
-	// Each viewport has an associated camera.
-	CameraPtr camera;
-	NodePtr cameraNode;
-	TransformPtr cameraTransform;
-	
-	// Control where the scene will be drawn.
-	vaporControl* vaporCtrl;
+	// Gets the associated camera.
+	IMPLEMENT_GETTER(Camera, const CameraPtr&, camera)
+
+	// Flags the backing control to be redrawn.
+	IMPLEMENT_GETTER(Control, vaporControl*, control)
 
 protected:
 
@@ -45,7 +43,14 @@ protected:
 	void onCameraTransform();
 	void onText( wxCommandEvent& event );
 	void onTextEnter( wxCommandEvent& event );
-	void onKillFocus( wxFocusEvent& event );
+	
+	// Each viewport has an associated camera.
+	NodePtr cameraNode;
+	TransformPtr cameraTransform;
+	CameraPtr camera;
+	
+	// Control where the scene will be drawn.
+	vaporControl* control;
 
 	// UI controls.
 	wxString X;

@@ -87,7 +87,7 @@ render::RenderablePtr Billboard::getDebugRenderable() const
 	colors.push_back( Vector3::Zero );
 	colors.push_back( Vector3::Zero );
 	
-	Vector3 up = camera->getForwardVector().cross( Vector3::UnitY );
+	Vector3 up = camera->getLookAtVector().cross( Vector3::UnitY );
 
 	pos.push_back( up );
 	pos.push_back( up*3 );

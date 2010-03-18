@@ -83,7 +83,7 @@ EditorFrame::EditorFrame(const wxString& title)
 	toolBar->Realize();
 	SetSizerAndFit( sizer );
 	
-	viewport->vaporCtrl->SetFocus();
+	viewport->getControl()->SetFocus();
 }
 
 //-----------------------------------//
@@ -93,7 +93,10 @@ EditorFrame::~EditorFrame()
 	foreach( const Mode* mode, modes )
 		delete mode;
 
-	foreach( Operation* const op, operations._Get_container() )
+	foreach( Operation* const op, undoOperations )
+		delete op;
+
+	foreach( Operation* const op, redoOperations )
 		delete op;
 
 	// Make sure to delete viewport explicitly since it holds some 
@@ -114,11 +117,10 @@ void EditorFrame::initEngine()
 
 	viewport = new Viewport( engine, this );
 	
-	viewport->vaporCtrl->onRender 
-		+= fd::bind( &EditorFrame::onRender, this );
-
-	viewport->vaporCtrl->onUpdate 
-		+= fd::bind( &EditorFrame::onUpdate, this );
+	vaporControl* control = viewport->getControl();
+	
+	control->onRender += fd::bind( &EditorFrame::onRender, this );
+	control->onUpdate += fd::bind( &EditorFrame::onUpdate, this );
 
 	engine->getRenderDevice()->init();
 	engine->getVFS()->mountDefaultLocations();
@@ -131,9 +133,6 @@ void EditorFrame::initEngine()
 	mouse->onMouseButtonRelease += fd::bind( &EditorFrame::onMouseRelease, this );
 	mouse->onMouseEnter	+= fd::bind( &EditorFrame::onMouseEnter, this );
 	mouse->onMouseExit += fd::bind( &EditorFrame::onMouseLeave, this );
-
-	const TransformPtr& cameraTransform = viewport->cameraTransform;
-	cameraTransform->onTransform += fd::bind( &EditorFrame::onCameraTransform, this );
 }
 
 //-----------------------------------//
@@ -252,8 +251,7 @@ void EditorFrame::createToolbar()
 	toolBar->AddTool( Toolbar_Undo, "Undo", wxMEMORY_BITMAP(arrow_undo) );
 	toolBar->AddTool( Toolbar_Redo, "Redo", wxMEMORY_BITMAP(arrow_redo) );
 
-	toolBar->EnableTool( Toolbar_Undo, false );
-	toolBar->EnableTool( Toolbar_Redo, false );
+	updateUndoRedoUI();
 
 	toolBar->AddSeparator();
 

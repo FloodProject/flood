@@ -103,6 +103,7 @@ public:
 
 	// Sets the cursor position on screen.
 	virtual void setCursorPosition( int x, int y ) = 0;
+	void setCursorPosition( const math::Vector2i& pos );
 
 	// Gets the window settings.
 	IMPLEMENT_GETTER(Settings, const Settings&, settings)

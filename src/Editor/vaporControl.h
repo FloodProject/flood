@@ -45,20 +45,19 @@ public:
 					const wxPalette& palette = wxNullPalette); 	
 
 	// Add your frame updating code here.
-	fd::delegate<void()> onUpdate;
+	fd::delegate<void(double)> onUpdate;
 
 	// Add your frame rendering code here.
 	fd::delegate<void()> onRender;
 
-	// Gets/sets the associated instance of the engine.
-	IMPLEMENT_ACESSOR(Engine, Engine*, engine);
-
-	bool needsRedraw;
+	// Flag this control to be redrawn.
+	void flagRedraw();
 
 protected:
 
 	// Handles the update and redraw logic.
-	void doUpdate();
+	void doUpdate(wxTimerEvent&);
+	void doRender(wxTimerEvent&);
 
 	// Window events.
 	void OnIdle(wxIdleEvent& event);
@@ -71,6 +70,10 @@ protected:
 	void OnMouseEvent(wxMouseEvent& event);
 	void OnMouseCaptureLost(wxMouseCaptureLostEvent& event);
 
+	// Frame timers.
+	wxTimer frameUpdateTimer;
+	wxTimer frameRenderTimer;
+
 	// Holds an instance to the vaporEngine.
 	Engine* engine;
 
@@ -79,6 +82,9 @@ protected:
 
 	// Holds an instance of the input manager.
 	vaporInputManager* inputManager;
+
+	// Tracks if the control needs to be redrawn.
+	bool needsRedraw;
 
 	DECLARE_EVENT_TABLE()
 };

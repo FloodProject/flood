@@ -53,7 +53,7 @@ public:
 	//-----------------------------------//
 
 	// Assignment
-	Vector2T &operator = (const Vector2T<T>& v)
+	Vector2T& operator = (const Vector2T<T>& v)
 	{
 		x = v.x; y = v.y;
 		return *this;
@@ -78,7 +78,7 @@ public:
 	//-----------------------------------//
 
 	// Addition combined
-	Vector2T &operator += (const Vector2T<T>& v)
+	Vector2T& operator += (const Vector2T<T>& v)
 	{
 		x += v.x; y += v.y;
 		return *this;
@@ -87,7 +87,7 @@ public:
 	//-----------------------------------//
 
 	// Subtraction combined
-	Vector2T &operator -= (const Vector2T<T>& v) 
+	Vector2T& operator -= (const Vector2T<T>& v) 
 	{
 		x -= v.x; y -= v.y;
 		return *this;
@@ -112,6 +112,11 @@ public:
 	
 	// Multiplication by a scalar
 	Vector2T operator * (float s) const { return Vector2T(x*s, y*s); }
+
+	//-----------------------------------//
+	
+	// Division by a scalar
+	Vector2T operator / (int s) const { return Vector2T(x/s, y/s); }
 
 	//-----------------------------------//
 	

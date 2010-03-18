@@ -10,6 +10,7 @@
 
 #include "vapor/math/Matrix4x3.h"
 #include "vapor/math/Matrix4x4.h"
+#include "vapor/math/Vector2.h"
 #include "vapor/math/Frustum.h"
 #include "vapor/scene/Transform.h"
 #include "vapor/render/Device.h"
@@ -49,27 +50,6 @@ public:
 	Camera( render::Device* device, 
 		Projection::Enum projection = Projection::Perspective );
 
-	// Gets/sets the projection type of the camera.
-	IMPLEMENT_ACESSOR(Projection, Projection::Enum, projection)
-
-	// Gets the projection matrix of the camera.
-	IMPLEMENT_GETTER(ProjectionMatrix, const math::Matrix4x4&, projectionMatrix)
-
-	// Gets the view matrix of the camera.
-	IMPLEMENT_GETTER(ViewMatrix, const math::Matrix4x3&, viewMatrix)
-
-	// Gets the current render target associated with the camera.
-	IMPLEMENT_GETTER(RenderTarget, render::RenderTarget*, target)
-	
-	// Sets a new render target in the camera.
-	void setRenderTarget( render::RenderTarget& target );
-
-	// Gets the frustum associated with the camera.
-	//const math::Frustum& getFrustum() const;
-
-	// Gets a ray given the screen coordinates of the mouse.
-	math::Ray getRay( float scrx, float scry, math::Vector3* outFar = nullptr ) const;
-
 	// Renders the (sub-)scene starting from the passed node to the current 
 	// render target associated in the camera.
 	void render( const NodePtr& node ) const;
@@ -86,11 +66,14 @@ public:
 	// it with the data.
 	void cull( render::RenderBlock& queue, const NodePtr& node ) const;
 
+	// Gets a ray given the screen coordinates of the mouse.
+	math::Ray getRay( float scrx, float scry, math::Vector3* outFar = nullptr ) const;
+
 	// Updates this node.
 	virtual void update( double delta );
-	
-	// Gets the type of this node.
-	IMPLEMENT_GETTER(Type, const std::string&, type)
+
+	// Gets/sets the projection type of the camera.
+	IMPLEMENT_ACESSOR(Projection, Projection::Enum, projection)
 
 	// Gets the aspect ratio of the target.
 	float getAspectRatio() const;
@@ -104,8 +87,26 @@ public:
 	// Gets/sets the near clipping plane of the camera.
 	IMPLEMENT_ACESSOR(Near, float, near_);
 
-	// Gets the forward vector of the camera.
-	IMPLEMENT_GETTER(ForwardVector, const math::Vector3&, forwardVector)
+	// Gets the look-at vector of the camera.
+	IMPLEMENT_GETTER(LookAtVector, const math::Vector3&, lookAtVector)
+
+	// Gets the projection matrix of the camera.
+	IMPLEMENT_GETTER(ProjectionMatrix, const math::Matrix4x4&, projectionMatrix)
+
+	// Gets the view matrix of the camera.
+	IMPLEMENT_GETTER(ViewMatrix, const math::Matrix4x3&, viewMatrix)
+
+	// Gets the current render target associated with the camera.
+	IMPLEMENT_GETTER(RenderTarget, render::RenderTarget*, target)
+	
+	// Sets a new render target in the camera.
+	void setRenderTarget( render::RenderTarget& target );
+
+	// Gets the frustum associated with the camera.
+	//const math::Frustum& getFrustum() const;
+	
+	// Gets the type of this node.
+	IMPLEMENT_GETTER(Type, const std::string&, type)
 
 	DECLARE_SERIALIZABLE();
 
@@ -114,11 +115,14 @@ protected:
 	// Handles target resize (must update width, height).
 	void handleTargetResize( const render::Settings& );
 
-	// Sets up the projection matrices for OpenGL.
+	// Sets up the projection matrix.
 	void setupProjection();
 
-	// Tracks if the view has changed since the last frame.
-	bool viewChanged;
+	// Sets up the view matrix.
+	void setupView();
+
+	// Handles the transform notification.
+	void onTransform();
 
 	// View matrix.
 	math::Matrix4x3 viewMatrix;
@@ -132,26 +136,25 @@ protected:
 	// Field of view of this camera.
 	float fov;
 
-	// near and far are reserved keywords on MSVC. 
+	// Near and far clipping planes values.
+	// Note: near and far are reserved keywords on MSVC. 
 	float near_;
 	float far_;
 
 	// Render target that we are rendering into.
 	render::RenderTarget* target;
 
+	// Dimensions of render target.
+	math::Vector2i targetSize;
+
 	// Used to pass a RenderQueue for rendering.
 	render::Device* renderDevice;
-
-	// Dimensions of render target.
-	int width, height;
 
 	// Pointer to the camera's node transform.
 	TransformPtr transform;
 
-	// Forward vector.
-	math::Vector3 forwardVector;
-
-	//fd::delegate< const render::Settings& > targetResize;
+	// Look-at vector.
+	math::Vector3 lookAtVector;
 
 	static const std::string& type;
 };

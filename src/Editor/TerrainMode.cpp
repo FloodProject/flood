@@ -66,8 +66,8 @@ void TerrainMode::onTimer( wxTimerEvent& /*event*/ )
 			return;
 		}
 
-		op->redo();
-		editor->RefreshCanvas();
+		op->applyTerrainTool();
+		editor->RefreshViewport();
 	}
 }
 
@@ -80,13 +80,9 @@ void TerrainMode::onMouseDrag( const MouseDragEvent& mde )
 	MouseButtonEvent mbe( mde.x, mde.y,
 		MouseButton::Left, MouseEventType::MousePress );
 
-	// We need to handle the case where the user clicks but
-	// doesn't move the mouse anymore. As we don't receive
-	// further events in this case, we need to check if the
-	// mouse is still pressed.
-
-	if( !op )
-		createOperation();
+	// We need to handle the case where the user clicks but doesn't move
+	// the mouse anymore. As we don't receive further events in this case,
+	// we need to check if the mouse is still pressed.
 
 	deformTerrain( mbe );
 }
@@ -95,9 +91,6 @@ void TerrainMode::onMouseDrag( const MouseDragEvent& mde )
 
 void TerrainMode::onMouseButtonPress( const MouseButtonEvent& mbe )
 {
-	if( !op ) 
-		createOperation();
-
 	deformTerrain( mbe );
 }
 
@@ -116,24 +109,24 @@ void TerrainMode::onMouseLeave()
 	// dragging in the middle of a terrain operation. If that isn't
 	// the case, then we've got nothing to do here.
 	if( !op ) return;
-	
+
 	registerEvent();
 }
 
 //-----------------------------------//
 
-void TerrainMode::createOperation()
+void TerrainMode::createOperation( const RayTriangleQueryResult& res )
 {
 	if( op ) return;
 
 	// If the left Shift is held down, then lower.
 	Keyboard* kbd = engine->getInputManager()->getKeyboard();
 	bool raise = !kbd->isKeyPressed( Keys::LShift );	
-	
+
 	TerrainTool::Enum tool = 
 		raise ? TerrainTool::Raise : TerrainTool::Lower;
 
-	op = new TerrainOperation( tool );
+	op = new TerrainOperation( tool, res );
 	op->size = 50;
 	op->strength = 2;
 }
@@ -142,9 +135,12 @@ void TerrainMode::createOperation()
 
 void TerrainMode::registerEvent()
 {
+	if( !op ) return;
+
 	timer.Stop();
 
 	// Register the operation in the stack so it can be undone later.
+	op->ready();
 	editor->registerOperation( op );
 
 	op = nullptr;
@@ -154,13 +150,18 @@ void TerrainMode::registerEvent()
 
 void TerrainMode::deformTerrain( const MouseButtonEvent& mb )
 {
-	if( !pickTerrain( mb, op->res ) )
+	RayTriangleQueryResult res;
+	if( !pickTerrain( mb, res ) )
 		return;
 
-	// Perform operation!
-	op->redo();
-	editor->RefreshCanvas();
-	
+	if( !op )
+		createOperation( res );
+	else
+		op->res = res;
+
+	op->applyTerrainTool();
+
+	editor->RefreshViewport();
 	timer.Start( TERRAIN_TIMER_MS );
 }
 
@@ -172,7 +173,7 @@ bool TerrainMode::pickTerrain( const MouseButtonEvent& mb,
 	const ScenePtr& scene = engine->getSceneManager();
 
 	// Get a ray given the screen location clicked.
-	const CameraPtr& camera = editor->viewport->camera;
+	const CameraPtr& camera = viewport->getCamera(); 
 	const Ray& pickRay = camera->getRay( mb.x, mb.y );
 
 	RayBoxQueryResult query;
@@ -193,23 +194,25 @@ bool TerrainMode::pickTerrain( const MouseButtonEvent& mb,
 
 //-----------------------------------//
 
-TerrainOperation::TerrainOperation( TerrainTool::Enum tool )
-	: size( 0.0f ), strength( 0.0f ), savedState( false ),
-	tool( tool )
+TerrainOperation::TerrainOperation( TerrainTool::Enum tool,
+								   const RayTriangleQueryResult& res )
+	: size( 0.0f ), strength( 0.0f ), tool( tool ), res( res )
 {
-	size = 50;
-	strength = 2;
+	processState( beforeHeights, true );
+}
+
+//-----------------------------------//
+
+void TerrainOperation::ready()
+{
+	processState( afterHeights, true );
 }
 
 //-----------------------------------//
 
 void TerrainOperation::undo()
 {
-	if( savedState )
-	{
-		processState( false );
-		return;
-	}
+	processState( beforeHeights, false );
 }
 
 //-----------------------------------//
@@ -219,15 +222,13 @@ void TerrainOperation::redo()
 	// If the operation can't be undone with an algorithm, 
 	// then our best option is to save the state of the terrain.
 
-	if( !savedState )
-		processState( true );
-
-	applyTerrainTool();
+	processState( afterHeights, false );
 }
 
 //-----------------------------------//
 
-void TerrainOperation::processState( bool save )
+void TerrainOperation::processState( std::vector<float>& heights,
+									bool save )
 {	
 	RenderablePtr rend = res.renderable;
 	if( !rend ) return;
@@ -240,8 +241,6 @@ void TerrainOperation::processState( bool save )
 		// No need to waste memory, let's save only what we need.
 		foreach( const Vector3& v, vb->getVertices() )
 			heights.push_back( v.y );
-
-		savedState = true;
 	}
 	else
 	{

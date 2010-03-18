@@ -16,8 +16,15 @@ namespace vapor { namespace editor {
 // Event table
 ////////////////////////////////////////////////////////////
 
+enum Timers
+{
+	UPDATE_TIMER = 5976,
+	RENDER_TIMER
+};
+
 BEGIN_EVENT_TABLE(vaporControl, wxGLCanvas)
-	EVT_IDLE(vaporControl::OnIdle)
+	EVT_TIMER(UPDATE_TIMER, vaporControl::doUpdate)
+	EVT_TIMER(RENDER_TIMER, vaporControl::doRender)
     EVT_PAINT(vaporControl::OnPaint)
 	EVT_SIZE(vaporControl::OnSize)
 	EVT_KEY_DOWN(vaporControl::OnKeyDown)
@@ -25,6 +32,9 @@ BEGIN_EVENT_TABLE(vaporControl, wxGLCanvas)
 	EVT_MOUSE_EVENTS(vaporControl::OnMouseEvent)
 	EVT_MOUSE_CAPTURE_LOST(vaporControl::OnMouseCaptureLost)
 END_EVENT_TABLE()
+
+const double MAX_RATE_UPDATE = 1.0f / 25;
+const double MAX_RATE_RENDER = 1.0f / 60;
 
 //-----------------------------------//
 
@@ -37,7 +47,9 @@ vaporControl::vaporControl(vapor::Engine* engine,
 					const wxString&	name,
 					const wxPalette& WXUNUSED(pallete))
 	: wxGLCanvas(parent, id, attribList, pos, size, style, name),
-	needsRedraw( false )
+	needsRedraw( false ), frameUpdateTimer(this, UPDATE_TIMER),
+	frameRenderTimer(this, RENDER_TIMER)
+
 {
 	if(!engine) return;
 	render::Device* const device = engine->getRenderDevice();
@@ -59,28 +71,35 @@ vaporControl::vaporControl(vapor::Engine* engine,
 	// Setup input in the engine.
 	inputManager = window->im;
 	engine->setupInput();
+
+	frameUpdateTimer.Start(MAX_RATE_UPDATE);
+	frameRenderTimer.Start(MAX_RATE_RENDER);
 }
 
 //-----------------------------------//
 
-void vaporControl::doUpdate()
+void vaporControl::doUpdate(wxTimerEvent&)
 {
 	if( !onUpdate.empty() )
-		onUpdate();
+		onUpdate( MAX_RATE_UPDATE );
+}
 
+//-----------------------------------//
+
+void vaporControl::doRender(wxTimerEvent&)
+{
 	if( needsRedraw )
 	{
 		Refresh();
 		needsRedraw = false;
-	}
+	}	
 }
 
 //-----------------------------------//
 
-void vaporControl::OnIdle(wxIdleEvent& event)
+void vaporControl::flagRedraw()
 {
-	doUpdate();
-	//event.RequestMore( true );
+	needsRedraw = true;
 }
 
 //-----------------------------------//
@@ -104,7 +123,7 @@ void vaporControl::OnPaint(wxPaintEvent& WXUNUSED(event))
 void vaporControl::OnSize(wxSizeEvent& event)
 {
 	window->processResize( event.GetSize() );
-	needsRedraw = true;
+	flagRedraw();
 }
 
 //-----------------------------------//
@@ -112,7 +131,6 @@ void vaporControl::OnSize(wxSizeEvent& event)
 void vaporControl::OnKeyDown(wxKeyEvent& event)
 {
 	inputManager->processKeyEvent( event, true );
-	debug( "key down: %d", event.GetKeyCode() );
 }
 
 //-----------------------------------//

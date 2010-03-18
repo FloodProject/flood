@@ -13,15 +13,17 @@ namespace vapor { namespace scene {
 //-----------------------------------//
 
 /**
- * Default tags that you can use.
+ * We define some default tags that we need and/or find useful.
+ * Note that position 24 to 31 are reserved for internal engine use.
  */
 
 namespace Tags
 {
 	enum Bitfield
 	{
-		NonPickable = 0,
-		NonCollidable
+		NonPickable = 24,
+		NonCollidable,
+		UpdateTransformsOnly
 	};
 }
 

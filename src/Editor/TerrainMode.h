@@ -32,24 +32,23 @@ class TerrainOperation : public Operation
 {
 public:
 
-	TerrainOperation( TerrainTool::Enum tool );
-
-	void redo();
+	TerrainOperation( TerrainTool::Enum tool,
+		const RayTriangleQueryResult& res );
+	
 	void undo();
+	void redo();
+	void ready();
+
+	void processState( std::vector<float>& state, bool save );
+	void applyTerrainTool();
 
 	float size;
 	float strength;
 	TerrainTool::Enum tool;
-	
 	RayTriangleQueryResult res;
 
-	std::vector<float> heights;
-	bool savedState;
-
-protected:
-
-	void processState( bool save );
-	void applyTerrainTool();
+	std::vector<float> beforeHeights;
+	std::vector<float> afterHeights;
 };
 
 //-----------------------------------//
@@ -77,7 +76,7 @@ public:
 	void deformTerrain( const MouseButtonEvent& mb );
 
 	// Creates a new operation if there is none currently.
-	void createOperation();
+	void createOperation( const RayTriangleQueryResult& res );
 
 	// Finishes the operation and registers the event in the history stack.
 	void registerEvent();

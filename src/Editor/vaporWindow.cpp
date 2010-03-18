@@ -135,9 +135,11 @@ bool vaporWindow::pumpEvents()
 
 //-----------------------------------//
 
-void vaporWindow::setTitle(const std::string& UNUSED(title))
+void vaporWindow::setTitle(const std::string& title)
 {
-
+	// Our canvas has no title to set, the best we can do is to
+	// set the title as the help text of the wxWidgets control.
+	canvas->SetHelpText( title );
 }
 
 //-----------------------------------//
