@@ -18,7 +18,7 @@ namespace vapor { namespace scene {
 
 class Node;
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( Node );
+TYPEDEF_SHARED_POINTER_FROM_TYPE( Node );
 TYPEDEF_SHARED_WEAK_POINTER_FROM_CLASS( Node );
 
 typedef std::map< std::string, ComponentPtr > ComponentMap;

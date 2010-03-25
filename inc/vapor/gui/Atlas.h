@@ -113,7 +113,7 @@ private:
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( Atlas );
+TYPEDEF_SHARED_POINTER_FROM_TYPE( Atlas );
 
 //-----------------------------------//
 

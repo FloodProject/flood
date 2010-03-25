@@ -1,50 +1,52 @@
 WIP (work-in-progress)
 ======================
 
-Near TODO:
-----------
+SERIALIZATION FORMATS:
+----------------------
 
-Optimize ray-triangle queries
+http://bsonspec.org
+http://code.google.com/p/protobuf/
+http://msgpack.sourceforge.net/
+http://hadoop.apache.org/avro/docs/current/
 
-Average terrain normals
-	Have to take neighbours into account
-
-Skybox component
-
-View frustum culling
-
-Add Z-bias to the AABB renderables
-Fix Overlays positioning (might be related to ortographic projection)
-Fix Lua state closing
-Console GUI widget
-Typesafe logging (FastFormat API)
-Switch Skydome geometry to triangle strips
-
-	if( !program )
-		warn( "Invalid program in material '%s'", getName().c_str() );
 
 EDITOR:
 -------
 
-Console - Write a line then go backwards and to the line again and color is white...
-Add subsystem update infrastructure in engine (WIP)
+Gizmo
+	Picking when the mouse moves
+	Change gizmo color when user picks axis
+	Add drag event and change the Transform
 
-Ignore Entities (Layers?)
-Private editor nodes (hide in the scene tree) (DONE)
+Terrain editing
+	Brushes interface (wxWidgets)
+	Intensity sliders (DONE)
+	Use a separate VB attribute for the terrain heights
+	Projectors/Decals for terrain
+	Brush interface for editing
+	Generic paging interface
+	Streaming of terrain chunks and textures
+	Randomized Perlin noise terrain generation
+	Average terrain normals
+
+View frustum culling
+	Plane math class
+	Frustum-Plane intersection
+	Integrate in Camera::cull
+
+Skybox component
+	Add texture layers for clouds
+	Fix sun and moon update logic
+	Switch to triangle strips
+
+Console 
+	Clicks should not change the insertion point
+	readline type of library would be kind of nice
+	Write a line then go backwards and to the line again and color is white...
 
 Camera options
 	Add a small frame below the viewport with camera options (WIP)
-Textures LOD
-
-Terrain editing
-
-	Ray-casting to the polygon level (DONE)
-	Fix Picking (DONE)
-	
-	Brushes interface (wxWidgets)
-	Intensity sliders
-	Use a separate VB attribute for the terrain heights
-	Center the terrain origin
+	Integrate speed and the other buttons to do anything
 			
 Implement camera panning
 Edit grid settings
@@ -54,11 +56,17 @@ Make the update logic smarter (no 50% CPU hog)
 See about integrating wxLua in the editor
 Hook up the renaming of Scene node labels
 Override the print method of Lua
-Console clicks should not change the insertion point
-A readline type of library would be kind of nice
 
 ENGINE:
-------
+-------
+
+Add Z-bias to the AABB renderables
+Fix Overlays positioning (might be related to ortographic projection)
+Fix Lua state closing
+Typesafe logging (FastFormat API)
+Ignore Entities (Layers?) (WIP - Tags)
+Add subsystem update infrastructure in engine (WIP)
+Private editor nodes (hide in the scene tree) (DONE)
 
 Quadtree Terrain
 Per-script Lua state
@@ -73,15 +81,18 @@ Textures:
 	Check squish and NVIDIA Texture Tools libraries
 
 Geometry component is shared per node, and that causes some problems.
+Add Z-bias to the AABB renderables
+Fix Lua state closing
+Typesafe logging (FastFormat API)
 
-WTF?! Static const string references (Component types)?
+Add subsystem update infrastructure in engine (WIP)
 
-Fix Camera limiting logic (screws Camera when X-axis reaches 90 degrees)
-Change ExampleFramework to use delegates
-update method in RenderDevice
-Overlays can be 3D too...
+Overlays
+	Can be 3D too...
+	Think about overlays positioning (absolute and relative)
+
 Add Blending defaults (Modulate, Replace, etc)
-Think about overlays positioning (absolute and relative)
+
 
 Timer:
 	Multithreaded timing and timing leaps (check SFML tracker / OGRE code for more info.)
@@ -133,8 +144,7 @@ Window:
 	Move the window polling to a different thread (smooth resizing / maybe SFML itself will do this in 2.0)
 	Hide the window until show is requested.
 	http://msdn.microsoft.com/en-us/library/ms648383%28VS.85%29.aspx
-	
-	
+
 Platform:
 
 	We need a crash handler!!! :)
@@ -145,7 +155,6 @@ Platform:
 	
 Rendering:
 
-
 	Font handling via FreeType 2
 	Signed distance fonts
 	Bitmap font file format (and converter for some freeware generator tool)
@@ -154,14 +163,12 @@ VFS:
 
 	Patch PhysFS to use the proper user dir for App Data on Windows
 
-Math:
-
-	Use column-major instead of row-major matrices (Why?)
-	
 	
 DONE:
 -----
 
+Private editor nodes (hide in the scene tree)
+Fix Camera limiting logic (screws Camera when X-axis reaches 90 degrees)
 ProgramManager for handling programs and shaders.
 Fix the Camera behaviour
 Bounding Boxes

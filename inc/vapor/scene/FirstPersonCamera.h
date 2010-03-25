@@ -82,7 +82,7 @@ protected:
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( FirstPersonCamera );
+TYPEDEF_SHARED_POINTER_FROM_TYPE( FirstPersonCamera );
 
 //-----------------------------------//
 

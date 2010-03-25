@@ -70,6 +70,8 @@ public:
 	void onRender();
 	void RefreshViewport();
 
+	void onTaskEvent( const TaskEvent& event );
+
 	IMPLEMENT_GETTER(MainViewport, Viewport* const, viewport)
 	IMPLEMENT_GETTER(Engine, Engine* const, engine)
 

@@ -21,7 +21,6 @@ namespace vapor { namespace editor {
 // ----------------------------------------------------------------------
 
 BEGIN_EVENT_TABLE(EditorFrame, wxFrame)
-	//EVT_IDLE(EditorFrame::OnIdle)
     EVT_MENU(Editor_Quit,  EditorFrame::OnQuit)
     EVT_MENU(Editor_About, EditorFrame::OnAbout)
 	EVT_MENU(wxID_ANY, EditorFrame::OnToolbarButtonClick)
@@ -125,6 +124,9 @@ void EditorFrame::initEngine()
 	engine->getRenderDevice()->init();
 	engine->getVFS()->mountDefaultLocations();
 
+	TaskManager* tm = engine->getTaskManager();
+	tm->onTaskEvent += fd::bind( &EditorFrame::onTaskEvent, this );
+
 	// Register all the mouse events.
 	Mouse* const mouse = engine->getInputManager()->getMouse();
 	mouse->onMouseMove += fd::bind( &EditorFrame::onMouseMove, this );
@@ -196,7 +198,7 @@ void EditorFrame::createNotebook()
 
 	//-----------------------------------//
 
-	terrainPage = new TerrainPage( notebookCtrl );
+	terrainPage = new TerrainPage( engine, notebookCtrl );
 	notebookCtrl->AddPage( terrainPage, "Terrains", true, 2 );
 
 	notebookCtrl->ChangeSelection( scenePage );

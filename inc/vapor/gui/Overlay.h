@@ -129,7 +129,7 @@ protected:
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( Overlay );
+TYPEDEF_SHARED_POINTER_FROM_TYPE( Overlay );
 
 //-----------------------------------//
 

@@ -153,16 +153,9 @@ void VFS::mountDefaultLocations()
 
 //-----------------------------------//
 
-const std::vector< std::string >& VFS::getMountPoints() const
+void VFS::update( double )
 {
-	return mountPoints;
-}
-
-//-----------------------------------//
-
-Watcher* VFS::getWatcher() const
-{
-	return watcher;
+	watcher->update();
 }
 
 //-----------------------------------//

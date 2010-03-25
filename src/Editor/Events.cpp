@@ -43,9 +43,27 @@ void EditorFrame::onUpdate( double delta )
 	if( !editorScene ) return;
 	editorScene->update( delta );
 	
-	const ScenePtr& scene = engine->getSceneManager();
-	if( !scene ) return;
-	scene->update( delta );
+	//const ScenePtr& scene = engine->getSceneManager();
+	//if( !scene ) return;
+	engine->update( delta );
+}
+
+//-----------------------------------//
+
+void EditorFrame::onTaskEvent( const TaskEvent& te )
+{
+	switch(te.event)
+	{
+	case TaskEvent::Added:
+		debug( "Task added" );
+		break;
+	case TaskEvent::Started:
+		debug( "Task started" );
+		break;
+	case TaskEvent::Finished:
+		debug( "Task finished" );
+		break;
+	}
 }
 
 //-----------------------------------//
@@ -154,8 +172,17 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 		return;
 	}
 	//-----------------------------------//
+	class LogTask : public Task
+	{
+		void run()
+		{
+			debug("Task is logging!");
+		}
+	};
 	case Toolbar_TooglePlay:
 	{
+		TaskManager* tm = engine->getTaskManager();
+		tm->addTask( TaskPtr( new LogTask() ) );
 		// Enable all simulations.
 		//physics::PhysicsManager* pm = engine->getPhysicsManager();
 		//if( pm ) pm->setSimulationEnabled( !pm->getSimulationEnabled() );

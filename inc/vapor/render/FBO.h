@@ -87,7 +87,7 @@ protected:
 
 //-----------------------------------//
 
-TYPEDEF_INTRUSIVE_POINTER_FROM_CLASS( FBO );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( FBO );
 
 //-----------------------------------//
 

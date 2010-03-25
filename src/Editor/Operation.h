@@ -32,7 +32,7 @@ public:
 	virtual void undo() = 0;
 };
 
-TYPEDEF_INTRUSIVE_POINTER_FROM_CLASS(Operation);
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(Operation);
 
 //-----------------------------------//
 

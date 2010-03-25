@@ -80,7 +80,7 @@ private:
 
 //-----------------------------------//
 
-TYPEDEF_INTRUSIVE_POINTER_FROM_CLASS( IndexBuffer );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( IndexBuffer );
 
 //-----------------------------------//
 

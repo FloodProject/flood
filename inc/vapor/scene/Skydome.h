@@ -81,7 +81,7 @@ protected:
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( Skydome );
+TYPEDEF_SHARED_POINTER_FROM_TYPE( Skydome );
 
 //-----------------------------------//
 

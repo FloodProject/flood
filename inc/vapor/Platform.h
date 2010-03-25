@@ -12,7 +12,7 @@
 // Platform detection
 //---------------------------------------------------------------------//
 
-#if defined( _WIN32 ) || defined( _WIN64 ) || defined( WIN32 ) || defined( WIN64 )
+#if defined( _WIN32 ) || defined( WIN32 ) || defined( _WIN64 ) ||  defined( WIN64 )
 	#define VAPOR_PLATFORM_WINDOWS
 #elif defined( __APPLE__ ) || defined( MACOSX )
 	#define VAPOR_PLATFORM_MACOSX

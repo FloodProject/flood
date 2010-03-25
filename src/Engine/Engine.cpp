@@ -41,7 +41,7 @@ Engine::Engine(const std::string& app, const char** argv, bool autoInit)
 
 Engine::~Engine()
 {
-	sceneNode.reset();
+	sceneManager.reset();
 
 	foreach( Subsystem* sub, subsystems )
 		delete sub;
@@ -77,6 +77,9 @@ void Engine::init( bool createWindow )
 	vfs->getWatcher()->onWatchEvent += 
 		fd::bind(&ResourceManager::handleWatchResource, resourceManager);
 
+	taskManager = new TaskManager();
+	subsystems.push_back( taskManager );
+
 	// create the physics manager
 	//physicsManager = PhysicsManager::getInstancePtr();
 
@@ -87,7 +90,7 @@ void Engine::init( bool createWindow )
 	setupDevices( createWindow );
 
 	// create the root scene node
-	sceneNode.reset( new scene::Scene() );
+	sceneManager.reset( new scene::Scene() );
 
 #ifdef VAPOR_SCRIPTING_LUA
 	// Initialize the scripting
@@ -193,14 +196,14 @@ void Engine::setupResourceLoaders()
 
 void Engine::update( double delta )
 {
-	this->getSceneManager()->update( delta );
+	foreach( Subsystem* subsystem, subsystems )
+		subsystem->update( delta );
+
+	sceneManager->update( delta );
 
 #ifdef VAPOR_SCRIPTING_LUA
 	this->getScriptState()->update( delta );
 #endif
-
-	// Update the Watcher once in a while...
-	getVFS()->getWatcher()->update();
 
 	//this->getPhysicsManager()->update( delta );
 }

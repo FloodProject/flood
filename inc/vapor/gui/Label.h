@@ -67,7 +67,7 @@ protected:
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( Label );
+TYPEDEF_SHARED_POINTER_FROM_TYPE( Label );
 
 //-----------------------------------//
 

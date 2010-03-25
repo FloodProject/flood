@@ -38,7 +38,7 @@ namespace vapor {
 #define FWD_DECL_TYPEDEF_INT(N, T)					\
 	namespace vapor { namespace N {					\
 		class T;									\
-		TYPEDEF_INTRUSIVE_POINTER_FROM_CLASS( T );	\
+		TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( T );	\
 	} } // end namespaces
 
 //---------------------------------------------------------------------//

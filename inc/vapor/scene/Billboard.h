@@ -73,7 +73,7 @@ private:
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( Billboard );
+TYPEDEF_SHARED_POINTER_FROM_TYPE( Billboard );
 
 //-----------------------------------//
 

@@ -139,7 +139,7 @@ protected:
 
 //-----------------------------------//
 
-TYPEDEF_INTRUSIVE_POINTER_FROM_CLASS( Material );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Material );
 
 //-----------------------------------//
 

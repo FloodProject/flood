@@ -74,7 +74,7 @@ private:
 
 //-----------------------------------//
 
-TYPEDEF_INTRUSIVE_POINTER_FROM_CLASS( Texture );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Texture );
 
 //-----------------------------------//
 

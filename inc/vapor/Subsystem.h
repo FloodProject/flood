@@ -27,7 +27,7 @@ protected:
 	Subsystem() { }
 	virtual ~Subsystem() { }
 	
-	virtual void update( double ) { }
+	virtual void update( double ) = 0;
 };
 
 //-----------------------------------//

@@ -16,6 +16,7 @@
 #include "vapor/input/InputManager.h"
 #include "vapor/script/State.h"
 #include "vapor/physics/Physics.h"
+#include "vapor/TaskManager.h"
 
 namespace vapor {
 
@@ -74,36 +75,36 @@ public:
 	/// @{
 
 	/// Gets the device.
-	render::Device* getRenderDevice() const { return renderDevice; }
-
-#ifdef VAPOR_AUDIO_OPENAL
+	IMPLEMENT_GETTER(RenderDevice, render::Device*, renderDevice)
 
 	/// Gets the audio device.
-	audio::Device* getAudioDevice() const { return audioDevice; }
-
+#ifdef VAPOR_AUDIO_OPENAL
+	IMPLEMENT_GETTER(AudioDevice, audio::Device*, audioDevice)
 #endif
 
 	/// Gets the scene interface.
-	scene::ScenePtr getSceneManager() const { return sceneNode; }
+	IMPLEMENT_GETTER(SceneManager, scene::ScenePtr, sceneManager)
+
+	/// Gets the device.
+	IMPLEMENT_GETTER(TaskManager, TaskManager*, taskManager)
 
 	/// Gets the scripting state.
-	script::State* getScriptState() const { return scriptState; }
+	IMPLEMENT_GETTER(ScriptState, script::State*, scriptState)
 
 	/// Gets the resources manager.
-	resources::ResourceManager* getResourceManager() const { return resourceManager; }
+	IMPLEMENT_GETTER(ResourceManager, resources::ResourceManager*, resourceManager)
 
 	/// Gets the physics manager.
-	physics::PhysicsManager* getPhysicsManager() const { return physicsManager; }
+	IMPLEMENT_GETTER(PhysicsManager, physics::PhysicsManager*, physicsManager)
 
 	/// Gets the main engine logger.
-	log::Log* getLog() const { return log; }
+	IMPLEMENT_GETTER(Log, log::Log*, log)
 
 	/// Gets the virtual filesystem.
-	vfs::VFS* getVFS() const { return vfs; }
+	IMPLEMENT_GETTER(VFS, vfs::VFS*, vfs)
 
 	/// Gets the input manager.
-	IMPLEMENT_GETTER(InputManager, 
-		input::InputManager*, &(renderDevice->getWindow().getInputManager()) )
+	IMPLEMENT_GETTER(InputManager, input::InputManager*, &(renderDevice->getWindow().getInputManager()) )
 
 	/// @}
 
@@ -122,8 +123,10 @@ protected:
 
 #endif
 
+	TaskManager* taskManager;
+
 	/// Scene root node
-	scene::ScenePtr sceneNode;
+	scene::ScenePtr sceneManager;
 
 	/// Rendering device
 	render::Device* renderDevice;

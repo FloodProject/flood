@@ -39,19 +39,23 @@ public:
 
 	/// Constructs a new instance of the virtual filesystem..
 	VFS( const std::string& app, const char* argv0 = nullptr );
-	~VFS();
+	virtual ~VFS();
 
 	/// Mount an archive into the virtual filesystem point.
 	bool mount(const std::string& path, const std::string& mount = "",
 		bool append = true);
 
 	/// Gets all the mount points in the VFS.
-	const std::vector< std::string >& getMountPoints() const;
+	IMPLEMENT_GETTER(MountPoints, const std::vector< std::string >&, mountPoints)
 
+	/// Mounts all the default resource locations.
 	void mountDefaultLocations();
 
 	/// Gets a reference to the notification watcher.
-	Watcher* getWatcher() const;
+	IMPLEMENT_GETTER(Watcher, Watcher*, watcher)
+
+	/// Updates the watcher with new notifications.
+	virtual void update( double );
 
 private:
 

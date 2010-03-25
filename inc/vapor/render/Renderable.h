@@ -124,7 +124,7 @@ protected:
 
 //-----------------------------------//
 
-TYPEDEF_INTRUSIVE_POINTER_FROM_CLASS( Renderable );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Renderable );
 
 //-----------------------------------//
 

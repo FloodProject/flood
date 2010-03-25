@@ -21,22 +21,15 @@ const std::string& Grid::type = "Grid";
 //-----------------------------------//
 
 Grid::Grid( const render::MaterialPtr& )
-	: sizeX( 500 ), sizeZ( 500 ), divX( 20 ), divZ( 20 ), strongMainLines( true )
+	: sizeX( 500 ), sizeZ( 500 ), divX( 20 ), divZ( 20 ), 
+	strongMainLines( true )
 {
 	RenderablePtr rend( new Renderable( Primitive::Lines, getGridBuffer() ) );
 	
 	MaterialPtr mat( new Material( "Grid" ) );
-	//mat->setPolygonOffset( 0.01f );
 	rend->setMaterial( mat );
 
 	addRenderable( rend );
-}
-
-//-----------------------------------//
-
-Grid::~Grid()
-{
-
 }
 
 //-----------------------------------//
@@ -105,13 +98,6 @@ render::VertexBufferPtr Grid::getGridBuffer()
 	vb->set( VertexAttribute::Color, colors );
 
 	return vb;
-}
-
-//-----------------------------------//
-
-const std::string& Grid::getType() const
-{
-	return type;
 }
 
 //-----------------------------------//

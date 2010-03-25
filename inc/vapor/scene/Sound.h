@@ -39,7 +39,7 @@ public:
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( Sound );
+TYPEDEF_SHARED_POINTER_FROM_TYPE( Sound );
 
 //-----------------------------------//
 

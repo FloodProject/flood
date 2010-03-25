@@ -79,7 +79,7 @@ protected:
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( Body );
+TYPEDEF_SHARED_POINTER_FROM_TYPE( Body );
 TYPEDEF_SHARED_WEAK_POINTER_FROM_CLASS( Body );
 
 //-----------------------------------//

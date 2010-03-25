@@ -72,7 +72,7 @@ protected:
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( Geometry );
+TYPEDEF_SHARED_POINTER_FROM_TYPE( Geometry );
 
 //-----------------------------------//
 

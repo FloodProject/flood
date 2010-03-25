@@ -125,6 +125,7 @@
 #include <vapor/Engine.h>
 #include <vapor/Log.h>
 #include <vapor/Profiler.h>
+#include <vapor/TaskManager.h>
 
 //-------------------------------------------------------------------------//
 // Namespace declarations

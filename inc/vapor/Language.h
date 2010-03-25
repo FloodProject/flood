@@ -25,6 +25,8 @@ typedef unsigned long	ulong;
 	typedef unsigned long long uint64;
 #endif
 
+#define forever for(;;)
+
 // TODO: assert all types are of the right size
 
 //assert( sizeof( byte ) == 8 );
@@ -39,9 +41,11 @@ typedef unsigned long	ulong;
 #include <vector>
 #include <list>
 #include <map>
+#include <deque>
+#include <stack>
+#include <queue>
 #include <tuple>
 #include <bitset>
-#include <stack>
 #include <string>
 #include <sstream>
 
@@ -55,7 +59,7 @@ typedef unsigned long	ulong;
 #include <cassert>
 #include <algorithm>
 #include <limits>
-#include <boost/utility.hpp>
+#include <boost/noncopyable.hpp>
 
 //---------------------------------------------------------------------//
 // nullptr replacement
@@ -98,6 +102,24 @@ typedef unsigned long	ulong;
 	#include <fd/delegate/bind.hpp>
 #endif
 
+//---------------------------------------------------------------------//
+// Threads
+//---------------------------------------------------------------------//
+
+#define BOOST_THREAD_NO_LIB
+
+#ifdef VAPOR_COMPILER_MSVC
+	#pragma warning( push )
+	#pragma warning( disable : 4512 4244 )
+	#include <boost/thread.hpp>
+	#pragma warning( pop )
+#else
+	#include <boost/thread.hpp>
+#endif
+
+typedef boost::thread Thread;
+typedef boost::thread* ThreadPtr;
+
 //-------------------------------------------------------------------------//
 // Pointer wrappers
 //-------------------------------------------------------------------------//
@@ -120,7 +142,7 @@ typedef unsigned long	ulong;
 #endif
 
 #if defined( VAPOR_MEMORY_SHARED_PTR )
-	#define TYPEDEF_SHARED_POINTER_FROM_CLASS( class ) \
+	#define TYPEDEF_SHARED_POINTER_FROM_TYPE( class ) \
 		typedef std::shared_ptr< class > class##Ptr
 	#define TYPEDEF_SHARED_WEAK_POINTER_FROM_CLASS( class ) \
 		typedef std::weak_ptr< class > class##WeakPtr
@@ -128,7 +150,7 @@ typedef unsigned long	ulong;
 
 #if defined( VAPOR_MEMORY_INTRUSIVE_PTR )
 	#include "boost/intrusive_ptr.hpp"
-	#define TYPEDEF_INTRUSIVE_POINTER_FROM_CLASS( class ) \
+	#define TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( class ) \
 		typedef boost::intrusive_ptr< class > class##Ptr
 	using boost::static_pointer_cast;
 #endif

@@ -23,10 +23,9 @@ class Grid : public scene::Geometry
 public:
 
 	Grid( const render::MaterialPtr& mat );
-	virtual ~Grid();
 
-	// Returns the name of this component.
-	virtual const std::string& getType() const;
+	// Returns the type of this component.
+	IMPLEMENT_GETTER(Type, const std::string&, Grid::type)
 
 protected:
 
@@ -47,7 +46,7 @@ protected:
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( Grid );
+TYPEDEF_SHARED_POINTER_FROM_TYPE( Grid );
 
 //-----------------------------------//
 

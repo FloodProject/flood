@@ -88,7 +88,7 @@ protected:
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( Group );
+TYPEDEF_SHARED_POINTER_FROM_TYPE( Group );
 
 //-----------------------------------//
 

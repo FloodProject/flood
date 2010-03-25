@@ -72,7 +72,7 @@ protected:
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( Context );
+TYPEDEF_SHARED_POINTER_FROM_TYPE( Context );
 
 //-----------------------------------//
 

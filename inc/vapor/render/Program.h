@@ -85,7 +85,7 @@ protected:
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( Program );
+TYPEDEF_SHARED_POINTER_FROM_TYPE( Program );
 
 //-----------------------------------//
 

@@ -94,7 +94,7 @@ public:
 	void handleWatchResource(const vfs::WatchEvent& evt);
 	
 	// Gets a list of all the registered resource handlers.
-	//std::list<ResourceLoader*> getResourceLoader(string extension);
+	//std::list<ResourceLoader*> getResourceLoader(std::string extension);
 
 	// These events are sent when their correspending actions happen.
 	fd::delegate< void( const ResourceEvent& ) > onResourceAdded;

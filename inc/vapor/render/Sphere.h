@@ -42,7 +42,7 @@ protected:
 
 //-----------------------------------//
 
-TYPEDEF_INTRUSIVE_POINTER_FROM_CLASS( Sphere );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Sphere );
 
 //-----------------------------------//
 

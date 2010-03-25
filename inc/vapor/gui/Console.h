@@ -52,7 +52,7 @@ protected:
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( Console );
+TYPEDEF_SHARED_POINTER_FROM_TYPE( Console );
 
 //-----------------------------------//
 

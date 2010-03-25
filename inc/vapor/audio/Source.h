@@ -30,7 +30,7 @@ namespace vapor { namespace audio {
  */
 
 class Buffer;
-TYPEDEF_SHARED_POINTER_FROM_CLASS( Buffer );
+TYPEDEF_SHARED_POINTER_FROM_TYPE( Buffer );
 
 class VAPOR_API Source : private boost::noncopyable
 {
@@ -94,7 +94,7 @@ protected:
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_CLASS( Source );
+TYPEDEF_SHARED_POINTER_FROM_TYPE( Source );
 
 //-----------------------------------//
 
