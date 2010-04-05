@@ -8,10 +8,12 @@
 
 #include <vapor/PCH.h>
 #include <vapor/Framework.h>
-
-using namespace vapor::input;
+#include <vapor/render/Device.h>
+#include <vapor/input/InputManager.h>
 
 namespace vapor {
+
+using namespace vapor::input;
 
 //-----------------------------------//
 
@@ -21,13 +23,6 @@ Framework::Framework(const std::string app, const char** argv)
 	maxFrameTime( 0.0 ), sumFrameTime( 0.0 ), lastFrameTime( 0.0 )
 {
 	info( "framework", "Engine framework getting into action" );
-}
-
-//-----------------------------------//
-
-Framework::~Framework()
-{
-	
 }
 
 //-----------------------------------//

@@ -41,6 +41,12 @@ namespace vapor {
 		TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( T );	\
 	} } // end namespaces
 
+#define FWD_DECL_TYPEDEF_SHARED(N, T)				\
+	namespace vapor { namespace N {					\
+		class T;									\
+		TYPEDEF_SHARED_POINTER_FROM_TYPE( T );	\
+	} } // end namespaces
+
 //---------------------------------------------------------------------//
 // Acessors
 //---------------------------------------------------------------------//

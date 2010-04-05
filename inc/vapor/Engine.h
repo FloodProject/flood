@@ -8,22 +8,22 @@
 
 #pragma once
 
-#include "vapor/vfs/VFS.h"
-#include "vapor/render/Device.h"
-#include "vapor/resources/ResourceManager.h"
-#include "vapor/scene/Scene.h"
-#include "vapor/audio/Device.h"
-#include "vapor/input/InputManager.h"
-#include "vapor/script/State.h"
-#include "vapor/physics/Physics.h"
-#include "vapor/TaskManager.h"
+FWD_DECL(vfs, VFS)
+FWD_DECL(script, State)
+FWD_DECL(render, Device)
+FWD_DECL(audio, Device)
+FWD_DECL(input, InputManager)
+FWD_DECL(physics, PhysicsManager)
+FWD_DECL(resources, ResourceManager)
+FWD_DECL_TYPEDEF_SHARED(scene, Scene)
 
 namespace vapor {
 
+class TaskManager;
+class Subsystem;
+
 /** \addtogroup Main */
 /** @{ */
-
-//-----------------------------------//
 
 /**
  * Main engine class. This is a utility class that instantiates all the
@@ -104,7 +104,7 @@ public:
 	IMPLEMENT_GETTER(VFS, vfs::VFS*, vfs)
 
 	/// Gets the input manager.
-	IMPLEMENT_GETTER(InputManager, input::InputManager*, &(renderDevice->getWindow().getInputManager()) )
+	input::InputManager* const getInputManager() const;
 
 	/// @}
 
@@ -123,33 +123,34 @@ protected:
 
 #endif
 
+	/// Manages background tasks.
 	TaskManager* taskManager;
 
-	/// Scene root node
+	/// Scene root node.
 	scene::ScenePtr sceneManager;
 
-	/// Rendering device
+	/// Rendering device.
 	render::Device* renderDevice;
 
-	/// Resource manager
+	/// Resource manager.
 	resources::ResourceManager* resourceManager;
 
-	/// Physics manager
+	/// Physics manager.
 	physics::PhysicsManager* physicsManager;
 
-	/// Virtual filesystem
+	/// Virtual filesystem.
 	vfs::VFS* vfs;
 
-	/// Default logger
+	/// Default logger.
 	log::Log* log;
 
-	/// Scripting state
+	/// Scripting state.
 	script::State* scriptState;
 
-	/// Application name
+	/// Application name.
 	std::string app;
 	
-	/// Arguments
+	/// Arguments.
 	const char** argv;
 };
 

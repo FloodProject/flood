@@ -74,6 +74,31 @@ void TaskManager::addTask( const TaskPtr& task )
 
 //-----------------------------------//
 
+class DelegateTask : Task
+{
+public:
+
+	TaskDelegate task;
+
+	void run()
+	{
+		if( !task.empty() )
+		{
+			task();
+		}
+	}
+};
+
+void TaskManager::addTask( const TaskDelegate& td )
+{
+	DelegateTask* dt = new DelegateTask();
+	dt->task = td;
+
+	addTask( TaskPtr(dt) );
+}
+
+//-----------------------------------//
+
 void TaskManager::runWorker()
 {
 	forever

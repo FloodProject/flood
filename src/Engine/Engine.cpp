@@ -10,6 +10,16 @@
 #include "vapor/Engine.h"
 #include "ResourceLoaders.h"
 
+#include "vapor/vfs/VFS.h"
+#include "vapor/render/Device.h"
+#include "vapor/resources/ResourceManager.h"
+#include "vapor/scene/Scene.h"
+#include "vapor/audio/Device.h"
+#include "vapor/input/InputManager.h"
+#include "vapor/script/State.h"
+#include "vapor/physics/Physics.h"
+#include "vapor/TaskManager.h"
+
 using namespace vapor::audio;
 using namespace vapor::scene;
 using namespace vapor::resources;
@@ -79,6 +89,7 @@ void Engine::init( bool createWindow )
 
 	taskManager = new TaskManager();
 	subsystems.push_back( taskManager );
+	resourceManager->setTaskManager( taskManager );
 
 	// create the physics manager
 	//physicsManager = PhysicsManager::getInstancePtr();
@@ -206,6 +217,13 @@ void Engine::update( double delta )
 #endif
 
 	//this->getPhysicsManager()->update( delta );
+}
+
+//-----------------------------------//
+
+input::InputManager* const Engine::getInputManager() const
+{
+	return &(renderDevice->getWindow().getInputManager());
 }
 
 //-----------------------------------//

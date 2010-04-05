@@ -24,54 +24,54 @@ class concurrent_queue
 {
 public:
 
-    void push(const T& T)
-    {
-        boost::mutex::scoped_lock lock(mutex);
-        queue.push_back(T);
-        lock.unlock();
-        cond_var.notify_one();
-    }
+	void push(const T& T)
+	{
+		boost::mutex::scoped_lock lock(mutex);
+		queue.push_back(T);
+		lock.unlock();
+		cond_var.notify_one();
+	}
 
 	//-----------------------------------//
 
-    bool empty() const
-    {
-        boost::mutex::scoped_lock lock(mutex);
-        return queue.empty();
-    }
+	bool empty() const
+	{
+		boost::mutex::scoped_lock lock(mutex);
+		return queue.empty();
+	}
 
 	//-----------------------------------//
 
-    bool try_pop(T& popped_value)
-    {
-        boost::mutex::scoped_lock lock(mutex);
-        
+	bool try_pop(T& popped_value)
+	{
+		boost::mutex::scoped_lock lock(mutex);
+	    
 		if( queue.empty() )
-            return false;
-        
-        popped_value = queue.front();
-        queue.pop_front();
-        return true;
-    }
+			return false;
+	    
+		popped_value = queue.front();
+		queue.pop_front();
+		return true;
+	}
 
 	//-----------------------------------//
 
-    void wait_and_pop(T& popped_value)
-    {
-        boost::mutex::scoped_lock lock(mutex);
-        
+	void wait_and_pop(T& popped_value)
+	{
+		boost::mutex::scoped_lock lock(mutex);
+	    
 		while( queue.empty() )
-            cond_var.wait(lock);
-        
-        popped_value = queue.front();
-        queue.pop_front();
-    }
+			cond_var.wait(lock);
+	    
+		popped_value = queue.front();
+		queue.pop_front();
+	}
 
 	//-----------------------------------//
 
-    bool find(const T& value)
-    {
-        boost::mutex::scoped_lock lock(mutex);
+	bool find(const T& value)
+	{
+		boost::mutex::scoped_lock lock(mutex);
 
 		std::deque<T>::const_iterator it;
 		it = std::find(queue.begin(), queue.end(), value);
@@ -80,15 +80,15 @@ public:
 			return true;
 
 		return false;
-    }
+	}
 
 	//-----------------------------------//
 
-private:
+	private:
 
-    std::deque<T> queue;
-    mutable boost::mutex mutex;
-    boost::condition_variable cond_var;
+	std::deque<T> queue;
+	mutable boost::mutex mutex;
+	boost::condition_variable cond_var;
 };
 
 //-----------------------------------//

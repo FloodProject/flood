@@ -7,7 +7,6 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/render/TextureManager.h"
 
 using namespace vapor::resources;

@@ -1,6 +1,9 @@
 WIP (work-in-progress)
 ======================
 
+Ask the engine to load resource
+Resource Manager returns ResourceHandle
+
 SERIALIZATION FORMATS:
 ----------------------
 
@@ -238,3 +241,17 @@ SNIPPETS
 	//
 	//	if( terrain ) break;
 	//}
+	
+	ResourceManager stuff.
+	
+	// Sets a memory budget limit for a given resource group.
+	//void setMemoryBudget(ResourceGroup::Enum group, uint memoryBudget);
+	
+	// Gets the memory usage for a given resource group.
+	//uint getMemoryUsage(ResourceGroup::Enum group);
+
+	// Gets a list of all the registered resource handlers.
+	//std::list<ResourceLoader*> getResourceLoader(std::string extension);
+	
+	// maps each resource group to a specific budget.
+	//std::map< ResourceGroup::Enum, uint > resourceBudgets;	

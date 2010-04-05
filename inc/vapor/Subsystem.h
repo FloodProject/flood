@@ -22,12 +22,14 @@ class VAPOR_API Subsystem : private boost::noncopyable
 {
 	friend class Engine;
 
+public:
+
+	virtual void update( double ) { }
+
 protected:
 
 	Subsystem() { }
 	virtual ~Subsystem() { }
-	
-	virtual void update( double ) = 0;
 };
 
 //-----------------------------------//

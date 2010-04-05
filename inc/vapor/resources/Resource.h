@@ -10,9 +10,26 @@
 
 namespace vapor { namespace resources {
 
+class ResourceLoader;
+
 //-----------------------------------//
 
-class ResourceLoader;
+/**
+ * Resources can be loaded in a background task. In that case the caller
+ * will still receive a resource but it won't be fully loaded. It will
+ * only be fully loaded when the resource status changes to loaded.
+ */
+
+namespace ResourceStatus
+{
+	enum Enum
+	{
+		Unloaded = 0,
+		Loading,
+		Loaded
+	};
+}
+
 
 //-----------------------------------//
 
@@ -26,7 +43,7 @@ namespace ResourceGroup
 {
 	enum Enum
 	{
-		General,
+		General = 0,
 		Images,
 		Meshes,
 		Fonts,
@@ -55,7 +72,7 @@ class VAPOR_API Resource : public ReferenceCounted, private boost::noncopyable
 {
 public:
 
-	virtual ~Resource();
+	virtual ~Resource() {}
 
 	// Reloads this resource.
 	bool reload();
@@ -76,24 +93,25 @@ protected:
 
 	Resource( const std::string& uri = "" );
 
+	// Uniform Resource Identifier.
 	std::string uri;
 };
 
 //-----------------------------------//
 
 #if defined(VAPOR_MEMORY_INTRUSIVE_PTR)
-	#define TYPEDEF_RESOURCE_POINTER_FROM_TYPE(T) \
+	#define TYPEDEF_RESOURCE_POINTER_FROM_TYPE(T)	\
 		TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(T)
-	#define RESOURCE_TYPEDECL_FROM_TYPE(T) \
+	#define RESOURCE_TYPEDECL_FROM_TYPE(T)			\
 		boost::intrusive_ptr<T>
-	#define RESOURCE_SMART_PTR_CAST \
+	#define RESOURCE_SMART_PTR_CAST					\
 		boost::static_pointer_cast
 #elif defined(VAPOR_MEMORY_SHARED_PTR)
-	#define TYPEDEF_RESOURCE_POINTER_FROM_TYPE(T) \
+	#define TYPEDEF_RESOURCE_POINTER_FROM_TYPE(T)	\
 		TYPEDEF_SHARED_POINTER_FROM_TYPE(T)
-	#define RESOURCE_TYPEDECL_FROM_TYPE(T) \
+	#define RESOURCE_TYPEDECL_FROM_TYPE(T)			\
 		std::shared_ptr<T>
-	#define RESOURCE_SMART_PTR_CAST \
+	#define RESOURCE_SMART_PTR_CAST					\
 		std::static_pointer_cast
 #else
 	#error No smart pointer implementation found

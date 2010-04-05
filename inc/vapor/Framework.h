@@ -8,9 +8,10 @@
 
 #pragma once
 
-#include <vapor/PCH.h>
 #include <vapor/Engine.h>
 #include <vapor/Timer.h>
+#include <vapor/input/Mouse.h>
+#include <vapor/input/Keyboard.h>
 
 namespace vapor {
 
@@ -29,7 +30,7 @@ class VAPOR_API Framework : public Engine
 public:
 
 	Framework(const std::string app, const char** argv);
-	virtual ~Framework();
+	virtual ~Framework() { }
 
 	// Kickstart the framework in action.
 	void run();

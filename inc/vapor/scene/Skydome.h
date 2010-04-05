@@ -30,7 +30,7 @@ class Skydome : public scene::Geometry
 public:
 
 	Skydome( const render::MaterialPtr& mat );
-	virtual ~Skydome();
+	//virtual ~Skydome();
 
 	// Returns the name of this component.
 	virtual const std::string& getType() const;

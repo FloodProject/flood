@@ -36,6 +36,25 @@
 #define VAPOR_MEMORY_INTRUSIVE_PTR
 
 //-------------------------------------------------------------------------//
+// Threading stuff
+//-------------------------------------------------------------------------//
+
+#define VAPOR_THREADING
+
+#define VAPOR_THREADING_BOOST
+//#define VAPOR_THREADING_STD
+
+//#if defined(VAPOR_THREADING)
+//	#if !defined(VAPOR_THREADING_BOOST) || !defined(VAPOR_THREADING_STD)
+//		#error Choose a threading implementation
+//	#endif
+//
+//	#if defined(VAPOR_THREADING_BOOST) && defined(VAPOR_THREADING_STD)
+//		#error Only one threading implementation allowed
+//	#endif
+//#endif
+
+//-------------------------------------------------------------------------//
 // VFS providers
 //-------------------------------------------------------------------------//
 
