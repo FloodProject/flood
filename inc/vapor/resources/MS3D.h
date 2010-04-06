@@ -22,7 +22,7 @@ struct ms3d_material_t;
 //-----------------------------------//
 
 /**
- * Represents MilkShape3D meshes. These can hold vertex, animation, and 
+ * Represents Milkshape 3D meshes. These can hold vertex, animation, and 
  * material data, are relatively easy to parse and use, and are quite
  * well documented and lightweight.
  */
@@ -31,15 +31,18 @@ class MS3D : public Mesh
 {
 public:
 
-	MS3D(const vfs::File& file);
+	MS3D();
 	virtual ~MS3D();
 
 	// Gets the geometry for this mesh resource.
 	virtual scene::GeometryPtr getGeometry();
 
+	// Loads the geometry data into the mesh.
+	bool load(const vfs::File& file);
+
 protected:
 
-	bool load();
+	bool read(const vfs::File& file);
 	void clear();
 
 	// Builds the vertex and index buffers representing the mesh.

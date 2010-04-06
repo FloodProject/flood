@@ -17,15 +17,6 @@ namespace vapor { class TaskManager; }
 
 namespace vapor { namespace resources {
 
-/**
- * When you request a resource, you will be given a resource handle that
- * you can later use to query the resource manager for the real pointer.
- * Never store the dumb pointers, because if the resource is updated it
- * might have a different pointer.
- */
-
-typedef int	ResourceHandle;
-
 //-----------------------------------//
 
 /**
@@ -66,10 +57,10 @@ public:
 	ResourceManager();
 	virtual ~ResourceManager();
  
-	// Creates a new resource and returns a generic resource.
+	// Creates a new resource and returns an handle to the resource.
 	ResourcePtr loadResource(const std::string& path);
 
-	// Creates a new resource and returns the specific resource.
+	// Creates a new resource and returns the specific resource type.
 	template <typename T>
 	RESOURCE_TYPEDECL_FROM_TYPE(T) loadResource(const std::string& path)
 	{

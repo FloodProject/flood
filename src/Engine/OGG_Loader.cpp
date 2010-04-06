@@ -7,21 +7,13 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
-#include "vapor/CompileOptions.h"
+#include "vapor/Utilities.h"
 
 #ifdef VAPOR_AUDIO_OGG
 
 #include "vapor/resources/OGG_Loader.h"
 
 using vapor::vfs::File;
-
-#ifdef VAPOR_COMPILER_MSVC
-	// disable Visual C++ fopen deprecation warning
-	#pragma warning(disable : 4996)
-#endif
-
-//-----------------------------------//
 
 namespace vapor { namespace resources {
 
@@ -75,52 +67,54 @@ OGG_Loader::OGG_Loader()
 
 Sound* OGG_Loader::decode(const File& file)
 {
-	int endian = 0;             // 0 for Little-Endian, 1 for Big-Endian
-	int bitStream;
-	long bytes;
-
-	const unsigned long BUFFER_SIZE( 32768 );
-	char array[BUFFER_SIZE];    // Local fixed size array
-
 	OggVorbis_File oggFile;
-	
 	ov_open_callbacks((void*) &file, &oggFile, nullptr, 0, callbacks);
 
-	// Get some information about the OGG file
+	// Get some information about the OGG file.
 	vorbis_info* pInfo( ov_info(&oggFile, -1) );
 	
-	if(!pInfo) return nullptr;
+	// If the OGG could not be opened, return a null resource.
+	if(!pInfo)
+		return nullptr;
 
-	SoundFormat::Enum format;
-
-	// Check the number of channels... always use 16-bit samples
-	if (pInfo->channels == 1)
-		format = SoundFormat::Mono8; // TODO: Are 8-bit samples valid here?
-	else
-		format = SoundFormat::Stereo16;
-
-	int frequency( pInfo->rate );
+	// Decode the sound into a buffer now.
 	std::vector<byte> buffer;
-
-	do 
-	{
-		// Read up to a buffer's worth of decoded sound data
-		bytes = ov_read(&oggFile, array, BUFFER_SIZE, endian, 2, 1, &bitStream);
-		
-		// Append to end of buffer
-		buffer.insert(buffer.end(), array, array + bytes);
-
-	} while (bytes > 0);
-
-	// This saves some memory by freeing the unused capacity part of the vector
+	decodeOgg( &oggFile, buffer );
 	std::vector<byte>( buffer ).swap( buffer );
 
 	ov_clear(&oggFile);
 
-	Sound* sound = new Sound( format, frequency, buffer );
-	sound->setURI( file.getPath() );
+	Sound* sound = new Sound();
+	sound->setChannels( pInfo->channels );
+	sound->setFrequency( pInfo->rate );
+	sound->setBuffer( buffer );
 
 	return sound;
+}
+
+//-----------------------------------//
+
+void OGG_Loader::decodeOgg( OggVorbis_File* oggFile, std::vector<byte>& buffer )
+{
+	// Decode the sound into a buffer now.
+	const uint BUFFER_SIZE( 32768 );
+	int bytes, bitStream;
+
+	do 
+	{
+		byte array[BUFFER_SIZE];
+
+		// Read up to a buffer's worth of decoded sound data.
+		bytes = ov_read(oggFile, (char*) array, BUFFER_SIZE, 
+			isLittleEndian() ? 0 : 1, // 0 for Little-Endian, 1 for Big-Endian
+			2, // 1 for 8-bit samples, or 2 or 16-bit samples
+			1, // 0 for unsigned, 1 for signed
+			&bitStream);
+		
+		// Append to end of buffer.
+		buffer.insert(buffer.end(), array, array + bytes);
+
+	} while (bytes > 0);
 }
 
 //-----------------------------------//

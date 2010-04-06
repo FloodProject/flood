@@ -7,7 +7,6 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/resources/Image.h"
 
 namespace vapor { namespace resources {
@@ -32,32 +31,11 @@ namespace PixelFormat
 
 //-----------------------------------//
 
-Image::Image(const ushort w, const ushort h, PixelFormat::Enum pf)
-	: width(w), height(h), pixelFormat(pf) 
-{
-}
-
-//-----------------------------------//
-
-Image::~Image()
-{
-	//delete buffer;
-}
-
-//-----------------------------------//
-
 void Image::log() const
 {
 	info("Image", "Image has pixel format '%s' and size %dx%d", 
 		PixelFormat::getString(getPixelFormat()).c_str(), 
 		getWidth(), getHeight());
-}
-
-//-----------------------------------//
-
-ResourceGroup::Enum Image::getResourceGroup() const
-{
-	return ResourceGroup::Images;
 }
 
 //-----------------------------------//

@@ -16,25 +16,6 @@ namespace vapor { namespace resources {
 //-----------------------------------//
 
 /**
- * Possible formats for audio.
- */
-
-namespace SoundFormat 
-{
-	enum Enum 
-	{
-		Mono8,
-		Mono16,
-		Stereo8,
-		Stereo16
-	};
-
-	const std::string getString(Enum e);
-}
-
-//-----------------------------------//
-
-/**
  * Represents a sound in the engine. 
  * A sound holds uncompressed audio data that can be played back.
  */
@@ -43,32 +24,25 @@ class VAPOR_API Sound : public Resource
 {
 public:
 
-	/// Constructor.
-	Sound(const SoundFormat::Enum format, const int frequency, const std::vector<byte>& data);
-	virtual ~Sound();
-	
-	/// Gets the frequency of the sound.
-	const int getFrequency() const { return frequency; }
+	/// Gets/sets the frequency of the sound.
+	IMPLEMENT_ACESSOR(Frequency, const int, frequency)
 
-	/// Returns the format of the sound.
-	SoundFormat::Enum getFormat() const { return format; }
+	/// Gets/sets the audio channels.
+	IMPLEMENT_ACESSOR(Channels, byte, channels)
 
-	/// Gets a pointer to the buffer containing the data.
-	const std::vector<byte>& getBuffer() const { return dataBuffer; };
-
-	/// Change the buffer containing the audio data.
-	void setBuffer(const std::vector<byte>& data) { dataBuffer = data; }
+	/// Gets/sets the buffer containing the data.
+	IMPLEMENT_ACESSOR(Buffer, const std::vector<byte>&, dataBuffer)
 
 	/// Return the proper resource group for this resource.
-	ResourceGroup::Enum getResourceGroup() const { return ResourceGroup::Audio; }
+	IMPLEMENT_GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Audio)
 
 private:
 
 	/// Sound frequency
 	int frequency;
 
-	/// Sound format
-	SoundFormat::Enum format;
+	/// Sound channels
+	byte channels;
 
 	/// Holds the sound data
 	std::vector<byte> dataBuffer;

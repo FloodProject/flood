@@ -16,7 +16,7 @@ namespace vapor { namespace resources {
 //-----------------------------------//
 
 /**
- * Mesh resources contain 3D data used to show objects in the world.
+ * Mesh resources contain 3D geometry data.
  */
 
 class Mesh : public Resource
@@ -24,7 +24,7 @@ class Mesh : public Resource
 public:
 	
 	// Gets the resource group of this resource.
-	ResourceGroup::Enum getResourceGroup() const;
+	IMPLEMENT_GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Meshes)
 
 	// Gets the geometry for this mesh resource.
 	virtual scene::GeometryPtr getGeometry() = 0;

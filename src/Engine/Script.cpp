@@ -17,45 +17,9 @@ namespace vapor { namespace script {
 
 //-----------------------------------//
 
-Script::Script( const std::string& text )
-	: text( text )
-{
-
-}
-
-//-----------------------------------//
-
-Script::~Script()
-{
-
-}
-
-//-----------------------------------//
-
-const std::string& Script::getSource()
-{
-	return text; 
-}
-
-//-----------------------------------//
-
-void Script::setState( State* state )
-{
-	this->state = state;
-}
-
-//-----------------------------------//
-
 void Script::execute()
 {
 	state->execute( this );
-}
-
-//-----------------------------------//
-
-resources::ResourceGroup::Enum Script::getResourceGroup() const
-{
-	return resources::ResourceGroup::Scripts; 
 }
 
 //-----------------------------------//

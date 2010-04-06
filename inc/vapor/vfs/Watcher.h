@@ -74,15 +74,15 @@ typedef Actions::Enum Action;
 
 struct VAPOR_API WatchEvent : private boost::noncopyable
 {
-	WatchEvent( Actions::Enum a, 
-		WatchID w, const std::string& d, const std::wstring& f )
-		: action( a ), watchid( w ), dir( d ), filename( f )
+	WatchEvent( Actions::Enum a, WatchID w,
+		const std::string& d, const std::string& f )
+	: action( a ), watchid( w ), dir( d ), filename( f )
 	{ }
 
 	Actions::Enum action;
 	WatchID watchid;
 	const std::string& dir;
-	const std::wstring& filename;
+	const std::string& filename;
 };
 
 //-----------------------------------//
@@ -96,8 +96,7 @@ class VAPOR_API Watcher : private boost::noncopyable
 {
 public:
 
-	Watcher();
-	virtual ~Watcher();
+	virtual ~Watcher() { }
 
 	/// Add a directory watch
 	/// TODO: @exception FileNotFoundException Thrown when the requested directory does not exist

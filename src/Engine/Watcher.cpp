@@ -47,16 +47,4 @@ const std::string Actions::getString( Actions::Enum action )
 
 //-----------------------------------//
 
-Watcher::Watcher()
-{
-}
-
-//-----------------------------------//
-
-Watcher::~Watcher()
-{
-}
-
-//-----------------------------------//
-
 } } // end namespaces

@@ -164,16 +164,10 @@ struct VAPOR_ALIGN_BEGIN(1) ms3d_joint_t
 
 //-----------------------------------//
 
-MS3D::MS3D(const vfs::File& file)
-	: filebuf( file.read() ), index( 0 ), geometry( new scene::Geometry() )
+MS3D::MS3D()
+	: index( 0 ), geometry( new scene::Geometry() )
 {
-	if( filebuf.empty() ) 
-		return;
 
-	load();
-	build();
-
-	filebuf.clear();
 }
 
 //-----------------------------------//
@@ -185,12 +179,24 @@ MS3D::~MS3D()
 
 //-----------------------------------//
 
-bool MS3D::load()
+bool MS3D::load(const vfs::File& file)
 {
-#ifdef VAPOR_COMPILER_MSVC
-	// disable Visual C++ fopen deprecation warning
-	#pragma warning(disable : 4996)
-#endif
+	if( !read(file) )
+		return false;
+
+	build();
+
+	return true;
+}
+
+//-----------------------------------//
+
+bool MS3D::read(const vfs::File& file)
+{
+	filebuf = file.read();
+
+	if( filebuf.empty() ) 
+		return false;
 
 	if(!read_header())
 		goto cleanup;
@@ -205,10 +211,12 @@ bool MS3D::load()
 	//read_joints();
 	//read_comments();
 
+	filebuf.clear();
 	return true;
 
 cleanup:
 
+	filebuf.clear();
 	return false;
 }
 

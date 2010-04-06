@@ -42,7 +42,7 @@ namespace ResourceGroup
 //-----------------------------------//
 
 Resource::Resource( const std::string& uri )
-	: uri( uri )/*, status( ResourceStatus::Unloaded )*/
+	: uri( uri ), status( ResourceStatus::Unloaded )
 {
 
 }

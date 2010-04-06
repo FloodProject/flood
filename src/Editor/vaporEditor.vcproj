@@ -354,6 +354,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						UsePrecompiledHeader="1"
+						DisableSpecificWarnings="4800;4100"
 					/>
 				</FileConfiguration>
 				<FileConfiguration

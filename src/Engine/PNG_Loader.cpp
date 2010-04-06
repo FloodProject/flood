@@ -47,9 +47,11 @@ Image* PNG_Pico_Loader::decode(const File& file)
 
 	// build our image with the data. the pixel format returned by picoPNG
 	// is always the same, 32bits per pixel, RGBA 8 bits per component.
-	Image* image = new Image( width, height, PixelFormat::R8G8B8A8 );
+	Image* image = new Image();
+	image->setWidth( width );
+	image->setHeight( height );
+	image->setPixelFormat( PixelFormat::R8G8B8A8 );
 	image->setBuffer( buffer );
-	image->setURI( file.getPath() );
 
 	return image;
 }

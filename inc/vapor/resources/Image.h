@@ -46,26 +46,20 @@ class VAPOR_API Image : public Resource
 {
 public:
 
-	Image(const ushort width, const ushort height, PixelFormat::Enum pf);
-	virtual ~Image();
-
-	// Gets the width of the image.	
-	const ushort getWidth() const { return width; }
+	// Gets/sets the width of the image.
+	IMPLEMENT_ACESSOR(Width, const ushort, width)
 	
-	// Gets the height of the image.
-	const ushort getHeight() const { return height; }
+	// Gets/sets the height of the image.
+	IMPLEMENT_ACESSOR(Height, const ushort, height)
 
-	// Returns the pixel format of the image
-	PixelFormat::Enum getPixelFormat() const { return pixelFormat; }
+	// Gets/sets the pixel format of the image.
+	IMPLEMENT_ACESSOR(PixelFormat, PixelFormat::Enum, pixelFormat)
 
-	// Gets the buffer containing the image data.
-	const std::vector<byte>& getBuffer() const { return buffer; };
-
-	// Change the buffer containing the image data.
-	void setBuffer(const std::vector<byte>& data) { buffer = data; }
+	// Gets/sets the buffer containing the image data.
+	IMPLEMENT_ACESSOR(Buffer, const std::vector<byte>&, buffer)
 
 	// Return the proper resource group for this resource.
-	virtual ResourceGroup::Enum getResourceGroup() const;
+	IMPLEMENT_GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Images)
 
 	// Prints image information to the log.
 	void log() const;

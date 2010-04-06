@@ -23,6 +23,7 @@
 
 #include "vapor/PCH.h"
 #include "vapor/vfs/WatcherWin32.h"
+#include "vapor/Utilities.h"
 
 #ifdef VAPOR_PLATFORM_WINDOWS
 
@@ -91,7 +92,7 @@ void CALLBACK WatchCallback(DWORD dwErrorCode, DWORD dwNumberOfBytesTransfered, 
 			{
 				int count = WideCharToMultiByte(CP_ACP, 0, pNotify->FileName,
 					pNotify->FileNameLength / sizeof(WCHAR),
-					szFile, MAX_PATH - 1, NULL, NULL);
+					szFile, MAX_PATH - 1, nullptr, nullptr);
 				szFile[count] = TEXT('\0');
 			}
 			#endif
@@ -115,7 +116,7 @@ bool RefreshWatch(WatchStruct* pWatch, bool _clear)
 {
 	return ReadDirectoryChangesW(
 		pWatch->mDirHandle, pWatch->mBuffer, sizeof(pWatch->mBuffer), FALSE,
-		pWatch->mNotifyFilter, NULL, &pWatch->mOverlapped, _clear ? 0 : WatchCallback) != 0;
+		pWatch->mNotifyFilter, nullptr, &pWatch->mOverlapped, _clear ? 0 : WatchCallback) != 0;
 }
 
 //-----------------------------------//
@@ -145,7 +146,6 @@ void DestroyWatch(WatchStruct* pWatch)
 
 //-----------------------------------//
 
-
 /// Starts monitoring a directory.
 WatchStruct* CreateWatch(LPCTSTR szDirectory, DWORD mNotifyFilter)
 {
@@ -154,12 +154,12 @@ WatchStruct* CreateWatch(LPCTSTR szDirectory, DWORD mNotifyFilter)
 	pWatch = static_cast<WatchStruct*>(HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, ptrsize));
 
 	pWatch->mDirHandle = CreateFile(szDirectory, FILE_LIST_DIRECTORY,
-		FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, 
-		OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OVERLAPPED, NULL);
+		FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, nullptr, 
+		OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OVERLAPPED, nullptr);
 
 	if (pWatch->mDirHandle != INVALID_HANDLE_VALUE)
 	{
-		pWatch->mOverlapped.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+		pWatch->mOverlapped.hEvent = CreateEvent(nullptr, TRUE, FALSE, nullptr);
 		pWatch->mNotifyFilter = mNotifyFilter;
 
 		if (RefreshWatch(pWatch))
@@ -174,7 +174,7 @@ WatchStruct* CreateWatch(LPCTSTR szDirectory, DWORD mNotifyFilter)
 	}
 
 	HeapFree(GetProcessHeap(), 0, pWatch);
-	return NULL;
+	return nullptr;
 }
 
 #pragma endregion
@@ -257,14 +257,14 @@ void WatcherWin32::removeWatch(WatchID watchid)
 
 void WatcherWin32::update()
 {
-	MsgWaitForMultipleObjectsEx(0, NULL, 0, QS_ALLINPUT, MWMO_ALERTABLE);
+	MsgWaitForMultipleObjectsEx(0, nullptr, 0, QS_ALLINPUT, MWMO_ALERTABLE);
 }
 
 //-----------------------------------//
 
 void WatcherWin32::handleAction(WatchStruct* watch, const std::wstring& filename, ulong action)
 {
-	Action fwAction = Actions::Added;
+	Action fwAction;
 
 	switch(action)
 	{
@@ -281,9 +281,16 @@ void WatcherWin32::handleAction(WatchStruct* watch, const std::wstring& filename
 	case FILE_ACTION_RENAMED_OLD_NAME:
 		fwAction = Actions::Renamed;
 		break;
+	default:
+		assert( nullptr /* This should not be reached */ );
+		fwAction = Actions::Added;
 	};
 
-	WatchEvent we( fwAction, watch->mWatchid, watch->mDirName, filename );
+	// Convert wide string to regular string.
+	// TODO: handle Unicode properly.
+	const std::string& file = wstr_to_str(filename);
+
+	WatchEvent we( fwAction, watch->mWatchid, watch->mDirName, file);
 	onWatchEvent( we );
 }
 

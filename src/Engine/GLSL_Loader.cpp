@@ -11,7 +11,6 @@
 #ifdef VAPOR_SHADER_GLSL
 
 #include "vapor/resources/GLSL_Loader.h"
-
 #include "vapor/render/GLSL_Shader.h"
 
 using vapor::vfs::File;
@@ -32,22 +31,18 @@ GLSL_Loader::GLSL_Loader()
 Shader* GLSL_Loader::decode(const File& file)
 {
 	std::vector<byte> text = file.read();
-
 	const std::string& path = file.getPath();
 
-	// check if it has a file extension
+	// Check if it has a file extension.
 	uint ch = path.find_last_of( "." );
-	
-	if( ch == std::string::npos ) 
-	{
-		return nullptr;
-	}
 
-	// get the file extension
+	if( ch == std::string::npos ) 
+		return nullptr;
+
+	// Get the file extension.
 	std::string ext = path.substr( ++ch );
 
 	ShaderType::Enum type;
-
 	if( ext == "vs" )
 		type = ShaderType::Vertex;
 	else if( ext == "fs" )
@@ -59,9 +54,9 @@ Shader* GLSL_Loader::decode(const File& file)
 
 	std::string str( text.begin(), text.end() );
 
-	render::GLSL_Shader* shader;
-	shader = new render::GLSL_Shader( type, str );
-	shader->setURI( path );
+	render::GLSL_Shader* shader = new render::GLSL_Shader();
+	shader->setText( str );
+	shader->setType( type );
 
 	return shader;
 }

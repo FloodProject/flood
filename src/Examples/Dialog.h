@@ -49,13 +49,13 @@ public:
 	{
 		HINSTANCE hInstance = GetModuleHandle(nullptr);
 
-		HWND hDialog = CreateDialog (hInstance, MAKEINTRESOURCE(IDD_DIALOG1), NULL, DialogProc);
+		HWND hDialog = CreateDialog (hInstance, MAKEINTRESOURCE(IDD_DIALOG1), nullptr, DialogProc);
 
 		ShowWindow(hDialog, SW_SHOW); 
 
 		MSG msg;
 
-		while(GetMessage(&msg, NULL, 0, 0) > 0)
+		while(GetMessage(&msg, nullptr, 0, 0) > 0)
 		{
 			if(!IsDialogMessage(hDialog, &msg))
 			{

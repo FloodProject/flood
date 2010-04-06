@@ -14,8 +14,6 @@
 
 namespace vapor { namespace script {
 
-//-----------------------------------//
-
 class State;
 
 //-----------------------------------//
@@ -29,20 +27,18 @@ class VAPOR_API Script : public resources::Resource
 {
 public:
 
-	Script( const std::string& text );
-	virtual ~Script();
-
 	// Execute the script.
 	void execute();
 
 	// Gets the source code of the script.
-	const std::string& getSource();
+	IMPLEMENT_ACESSOR(Source, const std::string&, text)
 
 	// Sets the state where the script will execute.
-	void setState( State* state );
+	IMPLEMENT_ACESSOR(State, State* const, state)
 
 	// Gets the associated resource group.
-	virtual resources::ResourceGroup::Enum getResourceGroup() const;
+	IMPLEMENT_GETTER(ResourceGroup, resources::ResourceGroup::Enum,
+		resources::ResourceGroup::Scripts)
 
 protected:
 

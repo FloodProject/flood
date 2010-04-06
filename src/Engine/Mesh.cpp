@@ -17,11 +17,4 @@ const std::string& Mesh::type = "Mesh";
 
 //-----------------------------------//
 
-ResourceGroup::Enum Mesh::getResourceGroup() const
-{
-	return ResourceGroup::Meshes;
-}
-
-//-----------------------------------//
-
 } } // end namespaces

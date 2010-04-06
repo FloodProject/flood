@@ -49,7 +49,7 @@ ResourcePtr ResourceManager::loadResource(const std::string& path)
 {
 	// Check if the resource is already loaded.
 	ResourcePtr res = getResource(path);
-	if(res != nullptr) return res;
+	if( res ) return res;
 
 	res = decodeResource(path);
 	if( !res ) return res;
@@ -105,7 +105,8 @@ ResourcePtr ResourceManager::decodeResource( const std::string& path )
 
 	// Get the available resource loader to decode the file.
 	ResourceLoader* const ldr = resourceLoaders[ext];
-	const ResourcePtr& res = ResourcePtr( ldr->decode(path) );
+	ResourcePtr res = ResourcePtr( ldr->decode(path) );
+	res->setURI( path );
 	
 	// Warn that the loader could not decode our resource.
 	if( !res )
@@ -186,7 +187,7 @@ void ResourceManager::registerLoader(ResourceLoader* const loader)
 void ResourceManager::handleWatchResource(const vfs::WatchEvent& evt)
 {
 	// Check if the filename maps to a known resource.
-	const std::string& file = wstr_to_str( evt.filename );
+	const std::string& file = evt.filename;
 
 	if( resources.find(file) == resources.end() )
 		return; // Resource is not known.

@@ -79,7 +79,7 @@ void Label::update( double UNUSED(delta) )
 
 	if( !font ) return;
 
-	std::vector<Glyph> glyphs = font->getGlyphsTable();
+	const std::vector<Glyph>& glyphs = font->getGlyphs();
 
 	const float width = font->getTexture()->getImage()->getWidth();
 	const float height = font->getTexture()->getImage()->getHeight();

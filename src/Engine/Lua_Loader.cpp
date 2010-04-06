@@ -31,8 +31,8 @@ script::Script* Lua_Loader::decode(const File& file)
 
 	std::string str( text.begin(), text.end() );
 
-	script::Script* script;
-	script = new script::Script( str );
+	script::Script* script = new script::Script();
+	script->setSource( str );
 	script->setURI( file.getFullPath() );
 
 	return script;

@@ -33,38 +33,10 @@ namespace ShaderType
 
 //-----------------------------------//
 
-Shader::Shader( ShaderType::Enum e, const std::string& text )
-	: type( e ), compiled( false ), text( text ), compileErrors( false )
+Shader::Shader()
+	: compiled( false ), compileErrors( false )
 {
 
-}
-
-//-----------------------------------//
-
-Shader::~Shader()
-{
-
-}
-
-//-----------------------------------//
-
-ShaderType::Enum Shader::getType() const
-{
-	return type;
-}
-
-//-----------------------------------//
-
-const std::string& Shader::getText() const
-{
-	return text;
-}
-
-//-----------------------------------//
-
-const std::string& Shader::getLog() const
-{
-	return log;
 }
 
 //-----------------------------------//
@@ -79,13 +51,6 @@ bool Shader::isCompiled() const
 bool Shader::gotCompileErrors() const
 {
 	return compileErrors;
-}
-
-//-----------------------------------//
-
-ResourceGroup::Enum Shader::getResourceGroup() const
-{
-	return ResourceGroup::Shaders; 
 }
 
 //-----------------------------------//

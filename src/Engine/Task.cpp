@@ -10,7 +10,3 @@
 
 #include "vapor/PCH.h"
 #include "vapor/Task.h"
-
-namespace vapor {
-
-} // end namespace

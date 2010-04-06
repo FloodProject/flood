@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "vapor/CompileOptions.h"
-
 #ifdef VAPOR_AUDIO_OGG
 
 #include "vapor/resources/ResourceLoader.h"
@@ -44,6 +42,8 @@ public:
 	virtual ResourceGroup::Enum getResourceGroup() { return ResourceGroup::Audio; }
 
 protected:
+
+	void decodeOgg( OggVorbis_File* vf, std::vector<byte>& buffer );
 
 	// holds all file extensions recognized by this codec
 	std::list< std::string > extensions;

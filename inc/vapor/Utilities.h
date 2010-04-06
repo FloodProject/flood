@@ -69,6 +69,8 @@ namespace vapor {
 // Conversions
 //---------------------------------------------------------------------//
 
+bool isLittleEndian();
+
 // Swaps the endianness of a long.
 long endian_swap(long i);
 
@@ -132,6 +134,19 @@ private:
 
 	char* cur;
 };
+
+//---------------------------------------------------------------------//
+// Threading
+//---------------------------------------------------------------------//
+
+// Sets the thread name in Windows. Helps with debugging.
+
+//#ifdef VAPOR_PLATFORM_WINDOWS
+//
+//ulong GetThreadId(HANDLE Thread);
+//void SetThreadName( ulong dwThreadID, const std::string& threadName );
+//
+//#endif
 
 //-----------------------------------//
 

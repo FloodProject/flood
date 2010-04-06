@@ -759,6 +759,7 @@
 						<Tool
 							Name="VCCLCompilerTool"
 							UsePrecompiledHeader="1"
+							DisableSpecificWarnings="4800; 4244; 4100"
 						/>
 					</FileConfiguration>
 					<FileConfiguration
@@ -1384,30 +1385,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ResourceFile.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="DLL Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\resources\ResourceFile.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\inc\vapor\resources\ResourceLoader.h"
 				>
 			</File>
@@ -1440,6 +1417,14 @@
 					<File
 						RelativePath=".\MS3D.cpp"
 						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								DisableSpecificWarnings="4996"
+							/>
+						</FileConfiguration>
 					</File>
 					<File
 						RelativePath="..\..\inc\vapor\resources\MS3D.h"
@@ -1627,7 +1612,7 @@
 							>
 							<Tool
 								Name="VCCLCompilerTool"
-								DisableSpecificWarnings="4244"
+								DisableSpecificWarnings="4244; 4996"
 							/>
 						</FileConfiguration>
 					</File>
@@ -1648,6 +1633,14 @@
 			<Filter
 				Name="Scripts"
 				>
+				<File
+					RelativePath=".\Script.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\script\Script.h"
+					>
+				</File>
 				<Filter
 					Name="Lua"
 					>
@@ -1660,18 +1653,6 @@
 						>
 					</File>
 				</Filter>
-			</Filter>
-			<Filter
-				Name="Script"
-				>
-				<File
-					RelativePath=".\Script.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\script\Script.h"
-					>
-				</File>
 			</Filter>
 		</Filter>
 		<Filter

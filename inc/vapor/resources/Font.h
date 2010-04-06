@@ -48,20 +48,23 @@ class VAPOR_API Font : public Resource
 {
 public:
 
-	Font( const std::string& name, int size );
-	virtual ~Font();
-
 	// Gets the texture that backs this font.
 	virtual render::TexturePtr getTexture() = 0;
 
 	// Gets an array with the available glyphs information.
-	virtual const std::vector<Glyph>& getGlyphsTable() const = 0;
+	virtual const std::vector<Glyph>& getGlyphs() const = 0;
 
 	// Gets the size information of a glyph.
 	virtual const std::pair<const ushort, const ushort> getGlyphSize() const = 0;
 
+	// Gets/sets the font name.
+	IMPLEMENT_ACESSOR(Name, std::string, name)
+
+	// Gets/sets the font size.
+	IMPLEMENT_ACESSOR(Size, int, size)
+
 	// Gets the resource group of the font.
-	virtual ResourceGroup::Enum getResourceGroup() const;
+	IMPLEMENT_GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Fonts)
 
 protected:
 

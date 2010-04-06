@@ -100,7 +100,13 @@ Font* Font_Loader::decode(const vfs::File& file)
 		}
 	}
 	
-	return new BitmapFont( info[0], str_to_num<int>(info[1]), img, glyphs );
+	BitmapFont* font = new BitmapFont();
+	font->setName( info[0] );
+	font->setSize( str_to_num<int>(info[1]) );
+	font->setImage( img );
+	font->setGlyphs( glyphs );
+	
+	return font;
 }
 
 //-----------------------------------//

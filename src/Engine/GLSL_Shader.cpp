@@ -19,22 +19,6 @@ namespace vapor { namespace render {
 
 //-----------------------------------//
 
-GLSL_Shader::GLSL_Shader( ShaderType::Enum e, const std::string& text )
-	: Shader( e, text )
-{
-	shaderId = glCreateShader( getGLShaderType(e) );
-
-#ifdef VAPOR_DEBUG
-	while( glGetError() != GL_NO_ERROR )
-	{
-		warn( "glsl", "Could not create a new shader object" );
-		return;
-	}
-#endif
-}
-
-//-----------------------------------//
-
 GLSL_Shader::~GLSL_Shader()
 {
 	glDeleteShader( shaderId );
@@ -53,8 +37,23 @@ GLSL_Shader::~GLSL_Shader()
 
 //-----------------------------------//
 
+bool GLSL_Shader::load()
+{
+	shaderId = glCreateShader( getGLShaderType(type) );
+
+	if( glHasError( "Could not create a new shader object" ) )
+		return false;
+
+	return true;
+}
+
+//-----------------------------------//
+
+
 bool GLSL_Shader::compile()
 {
+	load();
+
 	if( !upload() )
 	{
 		log = "Shader source file is empty";

@@ -35,8 +35,6 @@ STB_Image_Loader::STB_Image_Loader()
 
 Image* STB_Image_Loader::decode(const File& file)
 {
-	//PROFILE;
-
 	// read contents of the file into the vector
 	std::vector<byte> filebuf = file.read();
 
@@ -48,7 +46,7 @@ Image* STB_Image_Loader::decode(const File& file)
 	byte* data = stbi_load_from_memory( &filebuf[0], filebuf.size(), 
 		&width, &height, &comp, 0 /* 0=auto-detect, 3=RGB, 4=RGBA */ );
 
-	// build our image with the data. the pixel format returned by stb_image
+	// Build our image with the pixel data returned by stb_image.
 
 	PixelFormat::Enum pf = PixelFormat::Unknown;
 	switch( comp )
@@ -64,19 +62,18 @@ Image* STB_Image_Loader::decode(const File& file)
 		pf = PixelFormat::R8G8B8A8;
 		break;
 	}
-
-	Image* image = new Image( static_cast<ushort>(width), 
-		static_cast<ushort>(height), pf );
 	
 	std::vector<byte> buffer;
 	int sz = width*height*comp; 
 	buffer.resize(sz);
 	memcpy(&buffer[0], data, sz);
-
 	free(data);
 
+	Image* image = new Image();
+	image->setWidth( width );
+	image->setHeight( height );
+	image->setPixelFormat( pf );
 	image->setBuffer( buffer );
-	image->setURI( file.getPath() );
 
 	return image;
 }

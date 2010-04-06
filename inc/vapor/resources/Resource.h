@@ -15,6 +15,17 @@ class ResourceLoader;
 //-----------------------------------//
 
 /**
+ * When you request a resource, you will be given a resource handle that
+ * you can later use to query the resource manager for the real pointer.
+ * Never store the dumb pointers, because if the resource is updated it
+ * might have a different pointer.
+ */
+
+typedef int	ResourceHandle;
+
+//-----------------------------------//
+
+/**
  * Resources can be loaded in a background task. In that case the caller
  * will still receive a resource but it won't be fully loaded. It will
  * only be fully loaded when the resource status changes to loaded.
@@ -29,7 +40,6 @@ namespace ResourceStatus
 		Loaded
 	};
 }
-
 
 //-----------------------------------//
 
@@ -70,6 +80,8 @@ namespace ResourceGroup
 
 class VAPOR_API Resource : public ReferenceCounted, private boost::noncopyable
 {
+	static const ResourceHandle NotFound = -1;
+
 public:
 
 	virtual ~Resource() {}
@@ -89,12 +101,18 @@ public:
 	// Gets the resource loader associated with this resource.
 	//virtual ResourceLoader* getResourceLoader() = 0;
 
+	// Gets/sets the resource loading status.
+	IMPLEMENT_GETTER(Status, ResourceStatus::Enum, status)
+
 protected:
 
 	Resource( const std::string& uri = "" );
 
 	// Uniform Resource Identifier.
 	std::string uri;
+
+	// Status of the resource.
+	ResourceStatus::Enum status;
 };
 
 //-----------------------------------//

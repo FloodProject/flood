@@ -133,7 +133,7 @@ void ResourceTreeCtrl::onItemMenu(wxTreeEvent& WXUNUSED(event))
 //    wxTreeItemId itemId = event.GetItem();
 //	//debug( "%s", itemId.IsOk() ? "true" : "false" );
 //    //MyTreeItemData *item = itemId.IsOk() ? (MyTreeItemData *)GetItemData(itemId)
-//                                         //: NULL;
+//                                         //: nullptr;
 //    wxPoint clientpt = event.GetPoint();
 //
 //#if wxUSE_MENUS

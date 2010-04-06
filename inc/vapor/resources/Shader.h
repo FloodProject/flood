@@ -40,17 +40,19 @@ class VAPOR_API Shader : public Resource
 {
 public:
 
-	Shader( ShaderType::Enum e, const std::string& text );
-	virtual ~Shader();
+	Shader();
 
 	// Gets the shader type.
-	ShaderType::Enum getType() const;
+	IMPLEMENT_ACESSOR(Type, ShaderType::Enum, type)
 
 	// Gets the shader text.
-	const std::string& getText() const;
+	IMPLEMENT_ACESSOR(Text, const std::string&, text)
 
 	// Gets the compilation log.
-	const std::string& getLog() const;
+	IMPLEMENT_GETTER(Log, const std::string&, log)
+
+	// Creates and loads the shader.
+	virtual bool load() = 0;
 
 	// Compiles the shader.
 	virtual bool compile() = 0;
@@ -61,7 +63,8 @@ public:
 	// Did this shader throw compile errors?
 	bool gotCompileErrors() const;
 
-	virtual ResourceGroup::Enum getResourceGroup() const;
+	// Gets the associated resource group.
+	IMPLEMENT_GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Shaders)
 
 protected:
 

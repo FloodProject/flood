@@ -10,6 +10,7 @@
 
 #include "vapor/PCH.h"
 #include "vapor/TaskManager.h"
+#include "vapor/Utilities.h"
 
 namespace vapor {
 
@@ -19,6 +20,8 @@ using namespace boost;
 
 TaskManager::TaskManager( int poolSize )
 {
+	static int i = 0;
+
 	if( poolSize < 0 )
 	{
 		// By default use (numberOfCores-1) threads.
@@ -37,6 +40,13 @@ TaskManager::TaskManager( int poolSize )
 	foreach( ThreadPtr& thread, threadPool )
 	{
 		thread = new Thread(&TaskManager::runWorker, this);
+
+		//#ifdef VAPOR_PLATFORM_WINDOWS
+		//{
+		//	HANDLE th = thread->native_handle();
+		//	SetThreadName( GetThreadId(th), "Task " + num_to_str(i++) );
+		//}
+		//#endif
 	}
 
 	info( "tasks", "Creating thread pool with %d threads", poolSize );

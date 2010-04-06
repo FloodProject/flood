@@ -14,7 +14,6 @@ namespace vapor { namespace resources {
 //-----------------------------------//
 
 TTF::TTF(const std::string& font)
-	: Font( font, 2 )
 {
 
 }
