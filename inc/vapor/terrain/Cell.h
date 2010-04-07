@@ -29,7 +29,6 @@ public:
 
 	Cell( const TerrainSettings& settings, 
 		const std::vector<float>& heights, ushort x, ushort y );
-	//virtual ~Cell();
 
 	// Gets the heights of this Cell of terrain.
 	const std::vector<float>& getHeights();

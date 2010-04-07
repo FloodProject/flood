@@ -23,9 +23,10 @@ class VAPOR_API GLSL_Shader : public resources::Shader
 {
 public:
 
+	GLSL_Shader();
 	virtual ~GLSL_Shader();
 
-	virtual bool load();
+	virtual bool create();
 
 	// Compiles the shader.
 	virtual bool compile();
@@ -41,6 +42,7 @@ private:
 	GLenum getGLShaderType( resources::ShaderType::Enum type );
 
 	GLuint shaderId;
+	bool created;
 };
 
 //-----------------------------------//

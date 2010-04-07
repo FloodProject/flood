@@ -13,6 +13,9 @@
 
 namespace vapor { namespace resources {
 
+#define IMPLEMENT_PREPARE(T) \
+	virtual Resource* prepare(const vfs::File&) { return new T(); }
+
 //-----------------------------------//
 
 /**
@@ -29,18 +32,21 @@ public:
 	ResourceLoader() {}
 	virtual ~ResourceLoader() {}
 
+	// Creates the resource with no data.
+	virtual Resource* prepare(const vfs::File&) = 0;
+
 	// Decodes a given file into a resource.
-	virtual Resource* decode(const vfs::File& file) = 0;
+	virtual bool decode(const vfs::File&, Resource*) = 0;
 
 	// Gets a list of recognized extensions by this loader.
-	// TODO: make this const
-	virtual std::list< std::string >& getExtensions() = 0;
+	typedef std::list< std::string > ExtensionList;
+	virtual ExtensionList& getExtensions() const = 0;
 
 	// Gets the name of this resource loader.
-	virtual const std::string getName() = 0;
+	virtual const std::string getName() const = 0;
 
 	// Gets the resource group of this loader.
-	virtual ResourceGroup::Enum getResourceGroup() = 0;
+	virtual ResourceGroup::Enum getResourceGroup() const = 0;
 };
 
 //-----------------------------------//

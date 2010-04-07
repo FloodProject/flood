@@ -29,22 +29,25 @@ public:
 
 	Lua_Loader();
 
+	// Creates the resource with no data.
+	IMPLEMENT_PREPARE(script::Script)
+
 	// Parses a Lua text script to a buffer.
-	virtual script::Script* decode(const vfs::File& file);
+	virtual bool decode(const vfs::File&, Resource* res);
 
 	// Gets the name of this codec.
-	virtual const std::string getName() { return "LUA"; }
+	IMPLEMENT_GETTER(Name, const std::string, "LUA")
 
 	// Gets the list of extensions this codec can handle.
-	virtual std::list< std::string >& getExtensions() { return extensions; }
+	IMPLEMENT_GETTER(Extensions, ExtensionList&, extensions)
 
 	// Overrides this to return the right resource group.
-	virtual ResourceGroup::Enum getResourceGroup() { return ResourceGroup::Scripts; }
+	IMPLEMENT_GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Scripts)
 
 protected:
 
 	// holds all file extensions recognized by this codec
-	std::list< std::string > extensions;
+	ExtensionList extensions;
 };
 
 //-----------------------------------//

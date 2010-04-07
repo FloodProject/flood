@@ -34,7 +34,8 @@ namespace ShaderType
 //-----------------------------------//
 
 Shader::Shader()
-	: compiled( false ), compileErrors( false )
+	: compiled( false ), compileErrors( false ),
+	type( ShaderType::Vertex )
 {
 
 }

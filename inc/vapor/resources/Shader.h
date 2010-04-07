@@ -52,7 +52,7 @@ public:
 	IMPLEMENT_GETTER(Log, const std::string&, log)
 
 	// Creates and loads the shader.
-	virtual bool load() = 0;
+	virtual bool create() = 0;
 
 	// Compiles the shader.
 	virtual bool compile() = 0;

@@ -96,6 +96,7 @@ public:
 
 	// These events are sent when their correspending actions happen.
 	fd::delegate< void( const ResourceEvent& ) > onResourceAdded;
+	fd::delegate< void( const ResourceEvent& ) > onResourceLoaded;
 	fd::delegate< void( const ResourceEvent& ) > onResourceRemoved;
 	fd::delegate< void( const ResourceEvent& ) > onResourceReloaded;
 	fd::delegate< void( const ResourceLoader& ) > onResourceLoaderRegistered;

@@ -56,9 +56,16 @@ const std::string File::getFullPath() const
 
 //-----------------------------------//
 
-const std::string& File::getPath() const
+const std::string File::getExtension() const
 {
-	return path;
+	// Check if it has a file extension.
+	uint ch = path.find_last_of( "." );
+
+	if( ch == std::string::npos ) 
+		return "";
+
+	// Return the file extension.
+	return path.substr( ++ch );
 }
 
 //-----------------------------------//

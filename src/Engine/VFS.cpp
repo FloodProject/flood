@@ -24,9 +24,7 @@ VFS::VFS(const std::string& app, const char* argv0 )
 
 	if( err == 0 ) 
 	{
-		error( "vfs",
-			"Could not initialize PhysFS: %s", PHYSFS_getLastError() );
-		
+		logError("Could not initialize PhysFS");	
 		return;
 	}
 
@@ -43,18 +41,14 @@ VFS::VFS(const std::string& app, const char* argv0 )
 VFS::~VFS()
 {
 	foreach( const std::string& point, mountPoints )
-	{
 		PHYSFS_removeFromSearchPath( point.c_str() );
-	}
 	
 	mountPoints.clear();
 
 	int err = PHYSFS_deinit();
 
 	if( err == 0 )
-	{
-		error( "vfs", "Could not clean up PhysFS: %s", PHYSFS_getLastError() );
-	}
+		logError( "Could not clean up PhysFS" );
 
 	delete watcher;
 }
@@ -65,13 +59,20 @@ void VFS::setDefaultConfig(const std::string& app)
 {
 	int err = PHYSFS_setSaneConfig("vapor", app.c_str(), nullptr, 0, 0);
 
-	if( err == 0 ) 
+	if( err == 0 )
 	{
-		error( "vfs",
-			"Could not set a sane config: %s", PHYSFS_getLastError() );
+		logError( "Could not set a sane config" );
+		return;
 	}
 
 	info( "vfs", "Mounted '%s' in mount point '/'", PHYSFS_getBaseDir() );
+}
+
+//-----------------------------------/
+
+void VFS::logError( const std::string& msg )
+{
+	error( "vfs", "%s: %s", msg.c_str(), PHYSFS_getLastError() );
 }
 
 //-----------------------------------//
@@ -111,9 +112,7 @@ bool VFS::mount(const std::string& path, const std::string& mount, bool append )
 
 	if( err == 0 ) 
 	{
-		error( "vfs", "Could not mount '%s': %s", 
-			path.c_str(), PHYSFS_getLastError() );
-
+		logError( "Could not mount '" + path + "'" );
 		return false;
 	}
 

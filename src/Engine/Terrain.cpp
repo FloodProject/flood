@@ -39,25 +39,32 @@ Terrain::Terrain( const TerrainSettings& settings )
 
 //-----------------------------------//
 
+void Terrain::addCell( const ImagePtr& heightmap, ushort x, ushort y )
+{
+	requestsQueue.push_back( std::make_tuple(heightmap, x, y) );
+}
+
+//-----------------------------------//
+
 CellPtr Terrain::createCell( const ImagePtr& heightmap, ushort x, ushort y )
 {
-	if( !validateHeightmap( heightmap ) )
-	{
+	if( !heightmap->isLoaded() )
 		return nullptr;
-	}
+
+	if( !validateHeightmap( heightmap ) )
+		return nullptr;
 
 	std::vector<float> heights;
 	convertHeightmap( heightmap, heights );
 
-	CellPtr page( new Cell( settings, heights, x, y ) );
-
-	page->setMaterial( cellMaterial );
-	addRenderable( page );
+	CellPtr cell( new Cell( settings, heights, x, y ) );
+	cell->setMaterial( cellMaterial );
+	addRenderable( cell );
 
 	// Forces AABB generation next update.
 	isDirty = true;
 	
-	return page;
+	return cell;
 }
 
 //-----------------------------------//
@@ -87,7 +94,10 @@ void Terrain::convertHeightmap( const resources::ImagePtr& heightmap,
 
 bool Terrain::validateHeightmap( const ImagePtr& heightmap )
 {
-	if( !heightmap ) return false;
+	if( !heightmap )
+		return false;
+	
+	assert( heightmap->isLoaded() );
 
 	const ushort width = heightmap->getWidth();
 	const ushort height = heightmap->getHeight();
@@ -126,14 +136,29 @@ bool Terrain::validateHeightmap( const ImagePtr& heightmap )
 
 void Terrain::update( double delta )
 {
+	std::list<CellRequest>::iterator it;
+	it = requestsQueue.begin();
+
+	while( it != requestsQueue.end() )
+	{
+		const CellRequest& req = (*it);
+		
+		const ImagePtr& heightmap = std::get<0>(req);
+		ushort x = std::get<1>(req);
+		ushort y = std::get<2>(req);
+		
+		if( heightmap->isLoaded() )
+		{
+			createCell( heightmap, x, y );
+			it = requestsQueue.erase(it);
+		}
+		else
+		{
+			it++;
+		}
+	}
+
 	Geometry::update( delta );
-}
-
-//-----------------------------------//
-
-const std::string& Terrain::getType() const
-{
-	return type;
 }
 
 //-----------------------------------//

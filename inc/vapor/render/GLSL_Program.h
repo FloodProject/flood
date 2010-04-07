@@ -27,6 +27,9 @@ public:
 	GLSL_Program( const GLSL_ShaderPtr& vs, const GLSL_ShaderPtr& ps );
 	virtual ~GLSL_Program();
 
+	// Creates the program.
+	virtual bool create();
+
 	// Adds a parameter to the shader.
 	virtual void setAttribute( const std::string& slot, VertexAttribute::Enum attr );
 
@@ -68,7 +71,7 @@ private:
 
 	bool validate();
 
-	void attachShaders();
+	bool attachShaders();
 
 	void getLogText();
 

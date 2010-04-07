@@ -109,7 +109,7 @@ void Transform::setPosition( const math::Vector3& position )
 
 //-----------------------------------//
 
-math::Matrix4x3 Transform::lookAt( const math::Vector3& lookAtVector, const math::Vector3& upVector )
+Matrix4x3 Transform::lookAt( const Vector3& lookAtVector, const Vector3& upVector )
 {
 	const Vector3& eye = translation;
 

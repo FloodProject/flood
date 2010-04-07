@@ -65,6 +65,9 @@ private:
 	/// Logs the version and supported archive types.
 	void log();
 
+	/// Logs the VFS-related errors.
+	void logError( const std::string& );
+
 	/// Sets up some sensible default mount points.
 	void setDefaultConfig(const std::string& app);
 

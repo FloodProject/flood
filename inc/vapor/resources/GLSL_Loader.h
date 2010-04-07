@@ -13,7 +13,6 @@
 #ifdef VAPOR_SHADER_GLSL
 
 #include "vapor/resources/ResourceLoader.h"
-#include "vapor/resources/Shader.h"
 
 namespace vapor { namespace resources {
 
@@ -29,22 +28,25 @@ public:
 
 	GLSL_Loader();
 
+	// Creates the resource with no data.
+	virtual Resource* prepare(const vfs::File& file);
+
 	// Parses a GLSL text shader to a buffer.
-	virtual Shader* decode(const vfs::File& file);
+	virtual bool decode(const vfs::File&, Resource* res);
 
 	// Gets the name of this codec.
-	virtual const std::string getName() { return "GLSL"; }
+	IMPLEMENT_GETTER(Name, const std::string, "GLSL")
 
 	// Gets the list of extensions this codec can handle.
-	virtual std::list< std::string >& getExtensions() { return extensions; }
+	IMPLEMENT_GETTER(Extensions, ExtensionList&, extensions)
 
 	// Overrides this to return the right resource group.
-	virtual ResourceGroup::Enum getResourceGroup() { return ResourceGroup::Shaders; }
+	IMPLEMENT_GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Shaders)
 
 protected:
 
 	// holds all file extensions recognized by this codec
-	std::list< std::string > extensions;
+	mutable ExtensionList extensions;
 };
 
 //-----------------------------------//

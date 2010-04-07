@@ -87,8 +87,11 @@ public:
 	/// Determine current position within the file.
 	long tell() const;
 
+	/// Gets the extension of the file (if there is one).
+	const std::string getExtension() const;
+
 	/// Gets the path of the file.
-	const std::string& getPath() const;
+	IMPLEMENT_GETTER(Path, const std::string&, path)
 
 	/// Gets the full path of the file.
 	const std::string getFullPath() const;

@@ -52,18 +52,18 @@ void EditorFrame::onUpdate( double delta )
 
 void EditorFrame::onTaskEvent( const TaskEvent& te )
 {
-	switch(te.event)
-	{
-	case TaskEvent::Added:
-		debug( "Task added" );
-		break;
-	case TaskEvent::Started:
-		debug( "Task started" );
-		break;
-	case TaskEvent::Finished:
-		debug( "Task finished" );
-		break;
-	}
+	//switch(te.event)
+	//{
+	//case TaskEvent::Added:
+	//	debug( "Task added" );
+	//	break;
+	//case TaskEvent::Started:
+	//	debug( "Task started" );
+	//	break;
+	//case TaskEvent::Finished:
+	//	debug( "Task finished" );
+	//	break;
+	//}
 }
 
 //-----------------------------------//
@@ -362,8 +362,8 @@ void EditorFrame::createScene()
 	terreno->addComponent( terrain );
 	scene->add( terreno );
 
-	const ImagePtr& heightmap = rm->loadResource< Image >( "height2.png" );
-	/*const CellPtr& cell = */terrain->createCell( heightmap, 0, 0 );
+	const ImagePtr& heightmap = rm->loadResource<Image>( "height2.png" );
+	terrain->addCell( heightmap, 0, 0 );
 
 	scene->update( 0.1f );
 }

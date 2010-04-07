@@ -29,22 +29,25 @@ public:
 
 	MS3D_Loader();
 
-	// Decode an .ms3d mesh file
-	virtual MS3D* decode(const vfs::File& file);
+	// Creates the resource with no data.
+	IMPLEMENT_PREPARE(MS3D)
+
+	// Decodes a Milkshape3D mesh.
+	virtual bool decode(const vfs::File&, Resource* res);
 
 	// Gets the name of this codec.
-	virtual const std::string getName() { return "MS3D"; }
+	IMPLEMENT_GETTER(Name, const std::string, "MS3D")
 
 	// Gets the list of extensions recognized by this resource handler.
-	virtual std::list< std::string >& getExtensions() { return extensions; }
+	IMPLEMENT_GETTER(Extensions, ExtensionList&, extensions)
 
-	// Returns the right resource group for this type of resource
-	virtual ResourceGroup::Enum getResourceGroup() { return ResourceGroup::Meshes; }
+	// Overrides this to return the right resource group.
+	IMPLEMENT_GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Meshes)
 
 protected:
 
 	// holds all file extensions recognized by this codec
-	std::list< std::string > extensions;
+	mutable ExtensionList extensions;
 };
 
 //-----------------------------------//

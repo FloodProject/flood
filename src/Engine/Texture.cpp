@@ -100,8 +100,6 @@ bool Texture::check()
 
 bool Texture::upload()
 {
-	// TODO: check for maximum texture size the implementation
-	// can handle...
 	// TODO: check for OpenGL errors
 
 	if( !check() ) return false;
@@ -201,20 +199,6 @@ GLint Texture::convertSourceFormat( resources::PixelFormat::Enum fmt )
 		warn( "GL", "Implement support for more pixel formats" );
 		return GL_RGB;
 	}
-}
-
-//-----------------------------------//
-
-resources::ImagePtr Texture::getImage() const
-{
-	return img;
-}
-
-//-----------------------------------//
-
-void Texture::setImage( const resources::ImagePtr& image )
-{
-	img = image;
 }
 
 //-----------------------------------//

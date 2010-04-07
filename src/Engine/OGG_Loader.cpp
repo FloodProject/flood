@@ -65,7 +65,7 @@ OGG_Loader::OGG_Loader()
 
 //-----------------------------------//
 
-Sound* OGG_Loader::decode(const File& file)
+bool OGG_Loader::decode(const File& file, Resource* res)
 {
 	OggVorbis_File oggFile;
 	ov_open_callbacks((void*) &file, &oggFile, nullptr, 0, callbacks);
@@ -75,7 +75,7 @@ Sound* OGG_Loader::decode(const File& file)
 	
 	// If the OGG could not be opened, return a null resource.
 	if(!pInfo)
-		return nullptr;
+		return false;
 
 	// Decode the sound into a buffer now.
 	std::vector<byte> buffer;
@@ -84,12 +84,12 @@ Sound* OGG_Loader::decode(const File& file)
 
 	ov_clear(&oggFile);
 
-	Sound* sound = new Sound();
+	Sound* sound = static_cast<Sound*>( res );
 	sound->setChannels( pInfo->channels );
 	sound->setFrequency( pInfo->rate );
 	sound->setBuffer( buffer );
 
-	return sound;
+	return true;
 }
 
 //-----------------------------------//

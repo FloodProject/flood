@@ -61,10 +61,9 @@ class VAPOR_API Terrain : public Geometry
 public:
 
 	Terrain( const TerrainSettings& settings );
-	//virtual ~Terrain();
 
-	// Creates a new page of terrain.
-	CellPtr createCell( const resources::ImagePtr& heightmap, ushort x, ushort y );
+	// Adds a new cell of terrain (this will be deferred if the heightmap is not loaded).
+	void addCell( const resources::ImagePtr& heightmap, ushort x, ushort y );
 
 	// Converts the heightmap to a vector of heights.
 	void convertHeightmap( const resources::ImagePtr& heightmap, std::vector<float>& heights );
@@ -85,9 +84,12 @@ public:
 	virtual void update( double delta );
 
 	// Returns the name of this component.
-	virtual const std::string& getType() const;
+	IMPLEMENT_GETTER(Type, const std::string&, type)
 
 protected:
+
+	// Creates a new cell of terrain (this will be deferred if the heightmap is not loaded).
+	CellPtr createCell( const resources::ImagePtr& heightmap, ushort x, ushort y );
 
 	// Provides the heights of the terrain.
 	resources::ImagePtr heightmap;
@@ -97,6 +99,9 @@ protected:
 
 	// Material for this terrain.
 	render::MaterialPtr cellMaterial;
+
+	typedef std::tuple< resources::ImagePtr, ushort, ushort > CellRequest;
+	std::list<CellRequest> requestsQueue;
 
 	// Terrain settings.
 	TerrainSettings settings;

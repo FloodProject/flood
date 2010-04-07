@@ -32,7 +32,6 @@ class VAPOR_API TextureManager : public Singleton<TextureManager>
 public:
 
 	TextureManager();
-	~TextureManager();
 
 	// Reloads a texture when the image file changes.
 	void onReload( const resources::ResourceEvent& evt );

@@ -49,7 +49,7 @@ TaskManager::TaskManager( int poolSize )
 		//#endif
 	}
 
-	info( "tasks", "Creating thread pool with %d threads", poolSize );
+	info( "tasks", "Creating thread pool with %d thread(s)", poolSize );
 }
 
 //-----------------------------------//

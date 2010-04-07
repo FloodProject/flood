@@ -35,7 +35,8 @@ namespace ResourceStatus
 {
 	enum Enum
 	{
-		Unloaded = 0,
+		Error = 0,
+		Unloaded,
 		Loading,
 		Loaded
 	};
@@ -98,15 +99,15 @@ public:
 	// Gets the resource group associated with this resource.
 	virtual ResourceGroup::Enum getResourceGroup() const = 0;
 
-	// Gets the resource loader associated with this resource.
-	//virtual ResourceLoader* getResourceLoader() = 0;
-
 	// Gets/sets the resource loading status.
-	IMPLEMENT_GETTER(Status, ResourceStatus::Enum, status)
+	IMPLEMENT_ACESSOR(Status, ResourceStatus::Enum, status)
+
+	// Gets if the resource is fully loaded.
+	bool isLoaded() const;
 
 protected:
 
-	Resource( const std::string& uri = "" );
+	Resource();
 
 	// Uniform Resource Identifier.
 	std::string uri;

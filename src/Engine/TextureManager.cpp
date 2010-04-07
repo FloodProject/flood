@@ -23,13 +23,6 @@ TextureManager::TextureManager()
 
 //-----------------------------------//
 
-TextureManager::~TextureManager()
-{
-
-}
-
-//-----------------------------------//
-
 void TextureManager::onReload( const ResourceEvent& evt )
 {
 	if( evt.resource->getResourceGroup() != ResourceGroup::Images )
@@ -59,7 +52,8 @@ void TextureManager::onReload( const ResourceEvent& evt )
 
 TexturePtr TextureManager::getTexture( const std::string& name )
 {
-	ImagePtr img = ResourceManager::getInstancePtr()->loadResource<Image>( name );
+	ResourceManager* rm = ResourceManager::getInstancePtr();
+	ImagePtr img = rm->loadResource<Image>( name );
 
 	if( !img )
 	{
@@ -69,7 +63,7 @@ TexturePtr TextureManager::getTexture( const std::string& name )
 		warn( "render::textures", 
 			"Could not locate '%s': reverting to fallback texture", name.c_str() );
 
-		img = ResourceManager::getInstancePtr()->loadResource<Image>( "fallback.png" );
+		img = rm->loadResource<Image>( "fallback.png" );
 	}
 
 	return getTexture(img);
@@ -81,7 +75,7 @@ TexturePtr TextureManager::getTexture( const ImagePtr& img )
 {
  	if( textures.find( img ) != textures.end() )
 	{
-		// we have already a texture for this image
+		// Already have a texture for this image.
 		return textures[img];
 	}
 

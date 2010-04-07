@@ -1454,6 +1454,14 @@
 				<File
 					RelativePath=".\Font_Loader.cpp"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							DisableSpecificWarnings="4996"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\resources\Font_Loader.h"

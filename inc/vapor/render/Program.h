@@ -57,6 +57,9 @@ public:
 	// Adds a named 4x4 matrix uniform to the program.
 	virtual void setUniform( const std::string& slot, const math::Matrix4x4& mat ) = 0;
 
+	// Creates the program.
+	virtual bool create() = 0;
+
 	// Links the program and returns if it was successful.
 	virtual bool link() = 0;
 

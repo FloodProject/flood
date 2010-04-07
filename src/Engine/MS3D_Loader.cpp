@@ -25,17 +25,17 @@ MS3D_Loader::MS3D_Loader()
 
 //-----------------------------------//
 
-MS3D* MS3D_Loader::decode(const File& file)
+bool MS3D_Loader::decode(const File& file, Resource* res)
 {
 	if( !file.exists() ) 
-		return nullptr;
+		return false;
 
-	MS3D* mesh = new MS3D();
+	MS3D* mesh = static_cast<MS3D*>( res );
 	
 	if( !mesh->load(file) )
-		return nullptr;
+		return false;
 	
-	return mesh;
+	return true;
 }
 
 //-----------------------------------//

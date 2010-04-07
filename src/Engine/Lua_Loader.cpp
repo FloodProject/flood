@@ -25,17 +25,17 @@ Lua_Loader::Lua_Loader()
 
 //-----------------------------------//
 
-script::Script* Lua_Loader::decode(const File& file)
+bool Lua_Loader::decode(const File& file, Resource* res)
 {
 	std::vector<byte> text = file.read();
 
 	std::string str( text.begin(), text.end() );
 
-	script::Script* script = new script::Script();
+	script::Script* script = static_cast<script::Script*>( res );
 	script->setSource( str );
 	script->setURI( file.getFullPath() );
 
-	return script;
+	return true;
 }
 
 //-----------------------------------//

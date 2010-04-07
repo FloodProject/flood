@@ -66,55 +66,77 @@ ResourcePtr ResourceManager::loadResource(const std::string& path)
 		onResourceAdded( event );
 	}
 
-	res->setURI( path );
 	resources[path] = res;
 	return res;
 }
 
 //-----------------------------------//
 
+class ResourceTask : public Task
+{
+public:
+
+	void run()
+	{
+		if( loader->decode( res->getURI(), res ) )
+			res->setStatus( ResourceStatus::Loaded );
+		else
+			res->setStatus( ResourceStatus::Error );
+
+		// Warn that the loader could not decode our resource.
+		if( res->getStatus() == ResourceStatus::Error )
+		{
+			warn("resources", "Resource loader '%s' could not decode resource '%s'",
+				loader->getName().c_str(), res->getURI().c_str());
+		}
+	}
+
+	ResourceLoader* loader;
+	Resource* res;
+};
+
+//-----------------------------------//
+
 ResourcePtr ResourceManager::decodeResource( const std::string& path )
 {
-	// Test if the file exists.
-	if( !File::exists( path ) )
-	{
-		warn("resources", "Requested resource '%s' not found", path.c_str());
-		return ResourcePtr();
-	}
-	
-	// Check if it has a file extension.
-	uint ch = path.find_last_of(".");
-	
-	if(ch == std::string::npos)
-	{
-		warn("resources", "Requested resource '%s' has an invalid path", 
-			path.c_str());
-		return ResourcePtr();
-	}
+	File file( path );
 
-	// Get the file extension.
-	const std::string& ext = path.substr(++ch);
+	if( !file.exists() )
+	{
+		warn( "resources", "Requested resource '%s' not found", path.c_str() );
+		return ResourcePtr();
+	}
+	
+	std::string ext = file.getExtension();
+	
+	if( ext.empty() )
+	{
+		warn( "resources", "Requested resource '%s' has an invalid path", path.c_str() );
+		return ResourcePtr();
+	}
 
 	// Check if we have a resource loader for this extension.
-	if(resourceLoaders.find(ext) == resourceLoaders.end())
+	if( resourceLoaders.find(ext) == resourceLoaders.end() )
 	{
-		warn("resources", "No resource loader found for resource '%s'",
-			path.c_str());
+		warn( "resources", "No resource loader found for resource '%s'", path.c_str() );
 		return ResourcePtr();
 	}
 
-	// Get the available resource loader to decode the file.
+	// Get the available resource loader and prepare the resource.
 	ResourceLoader* const ldr = resourceLoaders[ext];
-	ResourcePtr res = ResourcePtr( ldr->decode(path) );
+
+	ResourcePtr res( ldr->prepare(path) );
+	res->setStatus( ResourceStatus::Loading );
 	res->setURI( path );
-	
-	// Warn that the loader could not decode our resource.
-	if( !res )
-	{
-		warn("resources", "Resource loader '%s' could not decode resource '%s'",
-			ldr->getName().c_str(), path.c_str());
-		return ResourcePtr();
-	}
+
+	ResourceTask* task = new ResourceTask();
+	task->res = res.get();
+	task->loader = ldr;
+
+	if( taskManager )
+		taskManager->addTask( TaskPtr(task) );
+	else
+		task->run();
 
 	return res;
 }

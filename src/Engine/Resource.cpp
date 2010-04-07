@@ -41,8 +41,8 @@ namespace ResourceGroup
 
 //-----------------------------------//
 
-Resource::Resource( const std::string& uri )
-	: uri( uri ), status( ResourceStatus::Unloaded )
+Resource::Resource()
+: status( ResourceStatus::Unloaded )
 {
 
 }
@@ -52,6 +52,13 @@ Resource::Resource( const std::string& uri )
 bool Resource::reload( )
 {
 	return true;
+}
+
+//-----------------------------------//
+
+bool Resource::isLoaded() const
+{
+	return getStatus() == ResourceStatus::Loaded;
 }
 
 //-----------------------------------//

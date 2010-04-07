@@ -58,23 +58,25 @@ public:
 
 	Font_Loader();
 
+	// Creates the resource with no data.
+	IMPLEMENT_PREPARE(BitmapFont)
+
 	// Decode a font definition.
-	virtual Font* decode(const vfs::File& file);
+	virtual bool decode(const vfs::File&, Resource* res);
 
 	// Gets the name of this codec.
-	virtual const std::string getName() { return "FONTS"; }
+	IMPLEMENT_GETTER(Name, const std::string, "FONTS")
 
 	// Gets the list of extensions this codec can handle.
-	virtual 
-		std::list< std::string >& getExtensions() { return extensions; }
+	IMPLEMENT_GETTER(Extensions, ExtensionList&, extensions)
 
 	// Overrides this to return the right resource group.
-	virtual ResourceGroup::Enum getResourceGroup() { return ResourceGroup::Fonts; }
+	IMPLEMENT_GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Fonts)
 
 protected:
 
 	// Holds all file extensions recognized by this codec.
-	std::list< std::string > extensions;
+	mutable ExtensionList extensions;
 };
 
 } } // end namespaces

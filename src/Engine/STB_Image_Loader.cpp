@@ -17,8 +17,6 @@
 
 using vapor::vfs::File;
 
-//-----------------------------------//
-
 namespace vapor { namespace resources {
 
 //-----------------------------------//
@@ -33,13 +31,13 @@ STB_Image_Loader::STB_Image_Loader()
 
 //-----------------------------------//
 
-Image* STB_Image_Loader::decode(const File& file)
+bool STB_Image_Loader::decode(const File& file, Resource* res)
 {
 	// read contents of the file into the vector
 	std::vector<byte> filebuf = file.read();
 
 	if( filebuf.size() == 0 ) 
-		return nullptr;
+		return false;
 
 	// TODO: error handling
 	int width, height, comp;
@@ -54,7 +52,7 @@ Image* STB_Image_Loader::decode(const File& file)
 	case 0:
 	case 1:
 		error( "STB_Image", "Implement support for more pixel formats" );
-		return nullptr;
+		return false;
 	case 3:
 		pf = PixelFormat::R8G8B8;
 		break;
@@ -69,7 +67,7 @@ Image* STB_Image_Loader::decode(const File& file)
 	memcpy(&buffer[0], data, sz);
 	free(data);
 
-	Image* image = new Image();
+	Image* image = static_cast<Image*>( res );
 	image->setWidth( width );
 	image->setHeight( height );
 	image->setPixelFormat( pf );

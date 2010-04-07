@@ -19,6 +19,13 @@ namespace vapor { namespace render {
 
 //-----------------------------------//
 
+GLSL_Shader::GLSL_Shader() 
+	: shaderId( 0 ), created( false )
+{
+}
+
+//-----------------------------------//
+
 GLSL_Shader::~GLSL_Shader()
 {
 	glDeleteShader( shaderId );
@@ -37,13 +44,19 @@ GLSL_Shader::~GLSL_Shader()
 
 //-----------------------------------//
 
-bool GLSL_Shader::load()
+bool GLSL_Shader::create()
 {
+	if( created ) return true;
+
 	shaderId = glCreateShader( getGLShaderType(type) );
 
 	if( glHasError( "Could not create a new shader object" ) )
+	{
+		created = false;
 		return false;
+	}
 
+	created = true;
 	return true;
 }
 
@@ -52,7 +65,8 @@ bool GLSL_Shader::load()
 
 bool GLSL_Shader::compile()
 {
-	load();
+	if( !create() )
+		return false;
 
 	if( !upload() )
 	{
@@ -144,6 +158,7 @@ GLenum GLSL_Shader::getGLShaderType( resources::ShaderType::Enum type )
 	case ShaderType::Geometry:
 		return GL_GEOMETRY_SHADER_EXT;
 	default:
+		assert( true ); // Should not be reached.
 		return GL_VERTEX_SHADER;
 	}	
 }

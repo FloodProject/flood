@@ -29,22 +29,25 @@ public:
 
 	STB_Image_Loader();
 
+	// Creates the resource with no data.
+	IMPLEMENT_PREPARE(Image)
+
 	// Decode an image file to a buffer.
-	virtual Image* decode(const vfs::File& file);
+	virtual bool decode(const vfs::File&, Resource* res);
 
 	// Gets the name of this codec.
-	virtual const std::string getName() { return "STB_IMAGE"; }
+	IMPLEMENT_GETTER(Name, const std::string, "STB_IMAGE")
 
 	// Gets the list of extensions this codec can handle.
-	virtual std::list< std::string >& getExtensions() { return extensions; }
+	IMPLEMENT_GETTER(Extensions, ExtensionList&, extensions)
 
 	// Overrides this to return the right resource group.
-	virtual ResourceGroup::Enum getResourceGroup() { return ResourceGroup::Images; }
+	IMPLEMENT_GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Images)
 
 protected:
 
 	// Holds all file extensions recognized by this codec.
-	std::list< std::string > extensions;
+	mutable ExtensionList extensions;
 };
 
 //-----------------------------------//

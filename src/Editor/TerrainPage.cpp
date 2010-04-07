@@ -32,9 +32,8 @@ TerrainPage::TerrainPage( Engine* engine, wxWindow* parent, wxWindowID id,
 	m_cbTerrainTool->AddPage( m_panelBrush, "Raise or Lower", true );
 
 	ResourceManager* rm = engine->getResourceManager();
-	const ImagePtr& image = rm->loadResource<Image>("brushes/default.png");
-
-	m_choiceBrush->addImage( "Brush01", image );
+	//const ImagePtr& image = rm->loadResource<Image>("brushes/default.png");
+	//m_choiceBrush->addImage( "Brush01", image );
 }
 
 //-----------------------------------//

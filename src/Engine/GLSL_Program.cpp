@@ -22,22 +22,17 @@ namespace vapor { namespace render {
 GLSL_Program::GLSL_Program( const GLSL_ShaderPtr& vs, const GLSL_ShaderPtr& ps )
 	: Program( vs, ps ), linkError( false )
 {
-	id = glCreateProgram( );
-
-	if( glHasError( "Could not create a new program object" ) )
-		return;
+	create();
 
 	if( vs ) shaders.push_back( vs );
 	if( ps ) shaders.push_back( ps );
-
-	attachShaders();
 }
 
 //-----------------------------------//
 
 GLSL_Program::~GLSL_Program()
 {
-	// Detach shaders
+	// Detach shaders.
 	foreach( const GLSL_ShaderPtr& shader, shaders )
 	{
 		glDetachShader( id, shader->id() );
@@ -50,6 +45,174 @@ GLSL_Program::~GLSL_Program()
 
 	if( glHasError("Could not delete program object") )
 		return;
+}
+
+//-----------------------------------//
+
+bool GLSL_Program::create()
+{
+	id = glCreateProgram( );
+
+	if( glHasError( "Could not create a new program object" ) )
+		return false;
+
+	return true;
+}
+
+//-----------------------------------//
+
+bool GLSL_Program::attachShaders()
+{
+	// Make sure all shaders are compiled.
+	foreach( const GLSL_ShaderPtr& shader, shaders )
+	{
+		assert( shader->isLoaded() );
+
+		if( !shader->isCompiled() )
+		{
+			if( !shader->compile() )
+			{
+				linked = false;
+				return false;
+			}
+		}
+
+		// Shaders need to be attached to the program
+		glAttachShader( id, shader->id() );
+	}
+
+	return true;
+}
+
+//-----------------------------------//
+
+bool GLSL_Program::link()
+{
+	// If the program is already linked, return.
+	if( isLinked() ) return true;
+
+	// If we already tried to link and were not succesful, 
+	// don't try to link again until the program is updated.
+	if( linkError ) return false;
+
+	// If the shaders aren't loaded, don't try to link.
+	foreach( const ShaderPtr& shader, shaders )
+	{
+		if( !shader->isLoaded() ) 
+			return false;
+	}
+
+	if( !attachShaders() )
+		return false;
+
+	bindDefaultAttributes();
+
+	glLinkProgram( id );
+
+	// Check that the linking was good
+	if( glHasError("Could not link program object") )
+	{
+		linked = false;
+		linkError = true;
+		return false;
+	}
+
+	getLogText();
+
+	int status;
+	glGetProgramiv( id, GL_LINK_STATUS, &status );
+
+	if( status != GL_TRUE )
+	{
+		warn( "glsl", "Could not link program object '%d': %s", id, log.c_str() );
+		linked = false;
+		linkError = true;
+		return false;
+	}
+
+	linked = true;
+	linkError = false;
+
+	return true;
+}
+
+//-----------------------------------//
+
+bool GLSL_Program::validate()
+{
+	if( !isLinked() ) return false;
+	
+	glValidateProgram( id );
+	
+	int status;
+	glGetProgramiv( id, GL_VALIDATE_STATUS, &status );
+
+	if( status != GL_TRUE )
+	{
+		getLogText();
+
+		warn( "glsl", "Could not validate program object '%d': %s", id, log.c_str() );
+		return false;
+	}
+
+	return true;
+}
+
+//-----------------------------------//
+
+void GLSL_Program::bind()
+{
+	if( !isLinked() ) return;
+
+	glUseProgram( id );
+
+	if( glHasError("Could not bind program object") )
+		return;
+}
+
+//-----------------------------------//
+
+void GLSL_Program::unbind()
+{
+	glUseProgram( 0 );
+
+	if( glHasError("Could not unbind program object") )
+		return;
+}
+
+//-----------------------------------//
+
+void GLSL_Program::getLogText()
+{
+	// get linking log size
+	GLint size;
+	glGetProgramiv( id, GL_INFO_LOG_LENGTH, &size );
+
+	if( size == 0 )
+	{
+		log = "(no log message)";
+		return;
+	}
+
+	// TODO: move directly to string...
+
+	GLchar* info = new char[size];
+	GLsizei length;
+
+	glGetProgramInfoLog( id, size, &length, info );
+
+	log.assign( info );
+	delete info;
+}
+
+//-----------------------------------//
+
+void GLSL_Program::bindDefaultAttributes()
+{
+	setAttribute( "vp_Vertex", VertexAttribute::Position );
+	setAttribute( "vp_Normal", VertexAttribute::Normal );
+	setAttribute( "vp_Color", VertexAttribute::Color );
+	setAttribute( "vp_MultiTexCoord0", VertexAttribute::MultiTexCoord0 );
 }
 
 //-----------------------------------//
@@ -212,155 +375,6 @@ void GLSL_Program::setUniform( const std::string& slot, const math::Matrix4x4& m
 	//glGetUniformfv( id, loc, test );
 
 	//unbind();
-}
-
-//-----------------------------------//
-
-void GLSL_Program::attachShaders()
-{
-	// Make sure all shaders are compiled
-	foreach( const GLSL_ShaderPtr& shader, shaders )
-	{
-		if( !shader->isCompiled() )
-		{
-			if( !shader->compile() )
-			{
-				linked = false;
-			}
-		}
-
-		// Shaders need to be attached to the program
-		glAttachShader( id, shader->id() );
-	}
-}
-
-//-----------------------------------//
-
-bool GLSL_Program::link()
-{
-	// If the program is already linked, return.
-	if( isLinked() ) return true;
-
-	// If we already tried to link and were not succesful, 
-	// don't try to link again until the program is updated.
-	if( linkError ) return false;
-
-	// If the shaders aren't compiled, don't try to link.
-	foreach( const ShaderPtr& shader, shaders )
-	{
-		if( !shader->isCompiled() ) 
-			return false;
-	}
-
-	bindDefaultAttributes();
-
-	glLinkProgram( id );
-
-	// Check that the linking was good
-	if( glHasError("Could not link program object") )
-	{
-		linked = false;
-		linkError = true;
-		return false;
-	}
-
-	getLogText();
-
-	int status;
-	glGetProgramiv( id, GL_LINK_STATUS, &status );
-
-	if( status != GL_TRUE )
-	{
-		warn( "glsl", "Could not link program object '%d': %s", id, log.c_str() );
-		linked = false;
-		linkError = true;
-		return false;
-	}
-
-	linked = true;
-	linkError = false;
-
-	return true;
-}
-
-//-----------------------------------//
-
-bool GLSL_Program::validate()
-{
-	if( !isLinked() ) return false;
-	
-	glValidateProgram( id );
-	
-	int status;
-	glGetProgramiv( id, GL_VALIDATE_STATUS, &status );
-
-	if( status != GL_TRUE )
-	{
-		getLogText();
-
-		warn( "glsl", "Could not validate program object '%d': %s", id, log.c_str() );
-		return false;
-	}
-
-	return true;
-}
-
-
-//-----------------------------------//
-
-void GLSL_Program::bind()
-{
-	if( !isLinked() ) return;
-
-	glUseProgram( id );
-
-	if( glHasError("Could not bind program object") )
-		return;
-}
-
-//-----------------------------------//
-
-void GLSL_Program::unbind()
-{
-	glUseProgram( 0 );
-
-	if( glHasError("Could not unbind program object") )
-		return;
-}
-
-//-----------------------------------//
-
-void GLSL_Program::getLogText()
-{
-	// get linking log size
-	GLint size;
-	glGetProgramiv( id, GL_INFO_LOG_LENGTH, &size );
-
-	if( size == 0 )
-	{
-		log = "(no log message)";
-		return;
-	}
-
-	// TODO: move directly to string...
-
-	GLchar* info = new char[size];
-	GLsizei length;
-
-	glGetProgramInfoLog( id, size, &length, info );
-
-	log.assign( info );
-	delete info;
-}
-
-//-----------------------------------//
-
-void GLSL_Program::bindDefaultAttributes()
-{
-	setAttribute( "vp_Vertex", VertexAttribute::Position );
-	setAttribute( "vp_Normal", VertexAttribute::Normal );
-	setAttribute( "vp_Color", VertexAttribute::Color );
-	setAttribute( "vp_MultiTexCoord0", VertexAttribute::MultiTexCoord0 );
 }
 
 //-----------------------------------//

@@ -29,18 +29,21 @@ class PNG_Pico_Loader : public ResourceLoader
 public:
 
 	PNG_Pico_Loader();
+	
+	// Creates the resource with no data.
+	IMPLEMENT_PREPARE(Image)
 
 	// Decode an image file to a buffer.
-	virtual Image* decode(const vfs::File& file);
+	virtual bool decode(const vfs::File&, Resource* res);
 
 	// Gets the name of this codec.
-	virtual const std::string getName() { return "PICOPNG"; }
+	IMPLEMENT_GETTER(Name, const std::string, "PICOPNG")
 
 	// Gets the list of extensions this codec can handle.
-	virtual std::list< std::string >& getExtensions() { return extensions; }
+	IMPLEMENT_GETTER(Extensions, ExtensionList&, extensions)
 
 	// Overrides this to return the right resource group.
-	virtual ResourceGroup::Enum getResourceGroup() { return ResourceGroup::Images; }
+	IMPLEMENT_GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Images)
 
 protected:
 
@@ -49,7 +52,7 @@ protected:
 	void flip( std::vector<byte>& buffer, ulong width, ulong height );
 
 	// Holds all file extensions recognized by this codec.
-	std::list< std::string > extensions;
+	mutable ExtensionList extensions;
 };
 
 //-----------------------------------//

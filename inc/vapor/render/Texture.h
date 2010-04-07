@@ -50,11 +50,8 @@ public:
 	// Gets the associated identifier.
 	uint id() const;
 
-	// Gets the associated image.
-	resources::ImagePtr getImage() const;
-
-	// Sets the associated image.
-	void setImage( const resources::ImagePtr& image );
+	// Gets/sets the associated image.
+	IMPLEMENT_ACESSOR(Image, resources::ImagePtr, img)
 
 private:
 

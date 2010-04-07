@@ -23,7 +23,7 @@ Font_Loader::Font_Loader()
 
 //-----------------------------------//
 
-Font* Font_Loader::decode(const vfs::File& file)
+bool Font_Loader::decode(const vfs::File& file, Resource* res)
 {
 	std::vector<std::string> lines = file.readLines();
 	std::vector<std::string> info, glyphInfo;
@@ -38,7 +38,7 @@ Font* Font_Loader::decode(const vfs::File& file)
 	if( lines.size() != 4 || info.size() != 2 || glyphInfo.size() != 2 )
 	{
 		warn( "font", "Font description file format is invalid" );
-		return nullptr;
+		return false;
 	}
 
 	// only bitmap fonts for now
@@ -47,34 +47,25 @@ Font* Font_Loader::decode(const vfs::File& file)
 	if( !img )
 	{
 		warn( "font", "Could not find the texture font file: %s", lines[1].c_str() );
-		return nullptr;
+		return false;
 	}
 
 	if( !File::exists( lines[2] ) )
 	{
 		warn( "font", "Could not find the glyphs definition file: %s", lines[2].c_str() );
-		return nullptr;		
+		return false;		
 	}
 	
-	vfs::File glyphsFile( lines[2] );
+	File glyphsFile( lines[2] );
 
 	std::vector<byte> fileData = glyphsFile.read();
 	std::vector<short> data; data.resize( fileData.size() / 2 );
-
-#ifdef VAPOR_COMPILER_MSVC
-	#pragma warning( disable : 4996 )
-#endif
-
 	std::copy( &fileData.front(), &fileData.front() + fileData.size(), (char*) &data.front() );
-
-#ifdef VAPOR_COMPILER_MSVC
-	#pragma warning( default : 4996 )
-#endif
-
-	std::vector<Glyph> glyphs;
-
+	
 	ushort width_per_glyph = str_to_num<ushort>( glyphInfo[0] );
 	ushort height_per_glyph = str_to_num<ushort>( glyphInfo[1] );
+
+	std::vector<Glyph> glyphs;
 
 	ushort x = 0; ushort y = 0;
 	for( uint i = 0; i < data.size(); i++ )
@@ -100,13 +91,13 @@ Font* Font_Loader::decode(const vfs::File& file)
 		}
 	}
 	
-	BitmapFont* font = new BitmapFont();
+	BitmapFont* font = static_cast<BitmapFont*>( res );
 	font->setName( info[0] );
 	font->setSize( str_to_num<int>(info[1]) );
 	font->setImage( img );
 	font->setGlyphs( glyphs );
 	
-	return font;
+	return true;
 }
 
 //-----------------------------------//
