@@ -51,7 +51,8 @@ public:
 	uint id() const;
 
 	// Gets/sets the associated image.
-	IMPLEMENT_ACESSOR(Image, resources::ImagePtr, img)
+	IMPLEMENT_GETTER(Image, resources::ImagePtr, img)
+	void setImage( const resources::ImagePtr& );
 
 private:
 

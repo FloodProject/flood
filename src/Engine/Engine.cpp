@@ -87,9 +87,8 @@ void Engine::init( bool createWindow )
 	vfs->getWatcher()->onWatchEvent += 
 		fd::bind(&ResourceManager::handleWatchResource, resourceManager);
 
-	taskManager = new TaskManager();
+	taskManager = TaskManager::getInstancePtr();
 	subsystems.push_back( taskManager );
-	resourceManager->setTaskManager( taskManager );
 
 	// create the physics manager
 	//physicsManager = PhysicsManager::getInstancePtr();
@@ -210,6 +209,7 @@ void Engine::update( double delta )
 	foreach( Subsystem* subsystem, subsystems )
 		subsystem->update( delta );
 
+	resourceManager->update( delta );
 	sceneManager->update( delta );
 
 #ifdef VAPOR_SCRIPTING_LUA

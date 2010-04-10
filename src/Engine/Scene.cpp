@@ -54,7 +54,7 @@ bool Scene::doRayBoxQuery( const Ray& ray, RayBoxQueryList& list, bool all ) con
 		const AABB& aabb = node->getTransform()->getWorldBoundingVolume();
 			
 		float distance;
-		if( aabb.intersects( ray, distance ) )
+		if( aabb.intersects(ray, distance) )
 		{
 			RayBoxQueryResult res;
 			res.node = node;

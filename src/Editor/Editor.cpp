@@ -83,6 +83,12 @@ EditorFrame::EditorFrame(const wxString& title)
 	SetSizerAndFit( sizer );
 	
 	viewport->getControl()->SetFocus();
+
+	ResourceManager* const rm = engine->getResourceManager();
+	rm->waitUntilQueuedResourcesLoad();
+
+	// Update at least once before rendering.
+	onUpdate( 0.0f );
 }
 
 //-----------------------------------//

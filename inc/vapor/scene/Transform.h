@@ -78,6 +78,9 @@ public:
 	// Updates the bounding volume geometry.
 	void updateBoundingVolume();
 
+	// Marks the bounding volume as needing an update.
+	void markBoundingVolumeDirty();
+
 	// Does this node's bounding box need to be updated?
 	bool requiresBoundingVolumeUpdate() const;
 

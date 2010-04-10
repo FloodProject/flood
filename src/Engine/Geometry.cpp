@@ -93,6 +93,9 @@ void Geometry::update( double delta )
 			boundingVolume.add( v );
 	}
 
+	const NodePtr& node = getNode();
+	node->getTransform()->markBoundingVolumeDirty();
+
 	isDirty = false;
 }
 

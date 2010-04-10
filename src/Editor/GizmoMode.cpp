@@ -97,8 +97,6 @@ void GizmoMode::drawGizmo( NodePtr old, NodePtr new_ )
 
 void GizmoMode::onNodeSelected( NodePtr old, NodePtr new_ )
 {
-	disableSelectedNodes();
-
 	if( !new_ ) return;
 
 	switch(currentTool)
@@ -156,6 +154,8 @@ NodePtr buildRay( const Ray& pickRay, const Vector3& outFar )
 
 void GizmoMode::onMouseButtonPress( const MouseButtonEvent& mbe )
 {
+	disableSelectedNodes();
+
 	const ScenePtr& scene = engine->getSceneManager();
 	const CameraPtr& camera = viewport->getCamera();
 
@@ -165,14 +165,14 @@ void GizmoMode::onMouseButtonPress( const MouseButtonEvent& mbe )
 
 #if 0 // Enable this to draw debugging lines
 	const NodePtr& line = buildRay( pickRay, outFar );
-	editor->editorScene->add( line );
+	editor->getEditorScene()->add( line );
 #endif
 
 	// Perform ray casting to find the nodes.
 	RayBoxQueryResult res;
-	scene->doRayBoxQuery( pickRay, res );
-
-	onNodeSelected( NodePtr(), res.node );
+	
+	if( scene->doRayBoxQuery( pickRay, res ) )
+		onNodeSelected( NodePtr(), res.node );
 }
 
 //-----------------------------------//

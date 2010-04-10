@@ -1,9 +1,6 @@
 WIP (work-in-progress)
 ======================
 
-Ask the engine to load resource
-Resource Manager returns ResourceHandle
-
 SERIALIZATION FORMATS:
 ----------------------
 
@@ -88,7 +85,6 @@ Add Z-bias to the AABB renderables
 Fix Lua state closing
 Typesafe logging (FastFormat API)
 
-Add subsystem update infrastructure in engine (WIP)
 
 Overlays
 	Can be 3D too...
@@ -123,7 +119,6 @@ Logger:
 
 Resource Management:
 
-	Background Resource Loading?
 	Make a Localization class, potentially integrating .po files
 	Check how the resource manager will handle missing resources
 	Create a ResourceFile class (maybe stream-based - C++ streams? )
@@ -153,7 +148,6 @@ Platform:
 	We need a crash handler!!! :)
 	http://www.codeproject.com/KB/cpp/PrivateAssemblyProjects.aspx
 	Move from #pragma error instructions to static_assert
-	Task manager with callbacks (for e.g. streaming) 
 	Cross-platform Clipboard access
 	
 Rendering:
@@ -170,6 +164,9 @@ VFS:
 DONE:
 -----
 
+Background Resource Loading
+Add subsystem update infrastructure in engine
+Task manager with callbacks (for e.g. streaming) 
 Private editor nodes (hide in the scene tree)
 Fix Camera limiting logic (screws Camera when X-axis reaches 90 degrees)
 ProgramManager for handling programs and shaders.

@@ -168,9 +168,15 @@ math::Matrix4x3 Transform::getLocalTransform() const
 
 //-----------------------------------//
 
+void Transform::markBoundingVolumeDirty()
+{
+	needsVolumeUpdate = true;
+}
+
+//-----------------------------------//
+
 bool Transform::requiresBoundingVolumeUpdate() const
 {
-	// TODO: optimize this
 	return needsVolumeUpdate;
 }
 

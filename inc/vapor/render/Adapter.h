@@ -10,6 +10,8 @@
 
 #ifdef VAPOR_RENDERER_OPENGL
 
+#include "vapor/Singleton.h"
+
 namespace vapor { namespace render {
 
 //-----------------------------------//	
@@ -22,7 +24,7 @@ namespace vapor { namespace render {
  * we need different classes for different render devices. Hopefully not. :)
  */
 
-class VAPOR_API Adapter
+class VAPOR_API Adapter : public Singleton<Adapter> 
 {
 public:
 
@@ -43,6 +45,9 @@ public:
 	// Gets the GLSL version information.
 	IMPLEMENT_GETTER(Shading, const std::string&, glsl)
 
+	// Gets the maximum texture size.
+	IMPLEMENT_GETTER(MaxTextureSize, int, maxTextureSize)
+
 	// Logs adapter version information
 	void log() const;
 
@@ -57,6 +62,9 @@ protected:
 	std::string glsl;
 	std::string gl;
 
+	int maxTextureSize;
+	int maxAttribs;
+	
 	bool supportsVBO;
 };
 

@@ -9,6 +9,7 @@
 #pragma once
 
 #include "vapor/Subsystem.h"
+#include "vapor/Singleton.h"
 #include "vapor/Task.h"
 #include "vapor/ConcurrentQueue.h"
 
@@ -61,7 +62,7 @@ const int DEFAULT_THREAD_POOL_SIZE = -1;
 
 typedef fd::delegate<void()> TaskDelegate;
 
-class VAPOR_API TaskManager : public Subsystem
+class VAPOR_API TaskManager : public Singleton<TaskManager>, public Subsystem
 {
 public:
 

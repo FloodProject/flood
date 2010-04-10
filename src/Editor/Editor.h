@@ -74,6 +74,7 @@ public:
 
 	IMPLEMENT_GETTER(MainViewport, Viewport* const, viewport)
 	IMPLEMENT_GETTER(Engine, Engine* const, engine)
+	IMPLEMENT_GETTER(EditorScene, ScenePtr, editorScene)
 
 protected:
 

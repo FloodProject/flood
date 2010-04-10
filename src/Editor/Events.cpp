@@ -40,12 +40,12 @@ void EditorFrame::onRender()
 
 void EditorFrame::onUpdate( double delta )
 {
-	if( !editorScene ) return;
+	assert( editorScene != nullptr );
 	editorScene->update( delta );
-	
-	//const ScenePtr& scene = engine->getSceneManager();
-	//if( !scene ) return;
+
 	engine->update( delta );
+
+	RefreshViewport();
 }
 
 //-----------------------------------//
@@ -274,9 +274,6 @@ void EditorFrame::createEditorScene()
 	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
 	grid->setTag( Tags::NonPickable, true );
 	editorScene->add( grid );
-
-	// Update at least once before rendering.
-	onUpdate( 0.0f );
 }
 
 //-----------------------------------//

@@ -16,9 +16,74 @@ namespace vapor { namespace render {
 //-----------------------------------//
 
 TextureManager::TextureManager()
+	: rm( ResourceManager::getInstancePtr() )
 {
-	ResourceManager::getInstance().onResourceReloaded +=
-		fd::bind( &TextureManager::onReload, this );
+	assert( rm != nullptr );
+	
+	rm->onResourceLoaded += fd::bind( &TextureManager::onLoad, this );
+	rm->onResourceReloaded += fd::bind( &TextureManager::onReload, this );
+}
+
+//-----------------------------------//
+
+const byte TEX_SIZE = 64;
+
+TexturePtr TextureManager::getTexture( const std::string& name )
+{
+	ImagePtr img = rm->loadResource<Image>(name);
+	return getTexture(img);
+}
+
+//-----------------------------------//
+
+TexturePtr TextureManager::getTexture( const ImagePtr& img )
+{
+	// Image not found.
+	if( !img ) 
+	{
+		warn( "render", "Reverting to fallback texture" );
+		return TexturePtr( new Texture(TEX_SIZE, TEX_SIZE) );
+	}
+
+	// Image already has texture.
+	else if( textures.find(img) != textures.end() )
+	{
+		return textures[img];
+	}
+
+	// Image not loaded yet.
+	else if( !img->isLoaded() ) 
+	{
+		TexturePtr tex( new Texture(TEX_SIZE, TEX_SIZE) );
+		textures[img] = tex;
+		return tex;
+	}
+
+	// Create a new texture from image.
+	else
+	{
+		TexturePtr tex( new Texture(img) );
+		textures[img] = tex;
+		return tex;
+	}
+}
+
+//-----------------------------------//
+
+void TextureManager::onLoad( const ResourceEvent& evt )
+{
+	if( evt.resource->getResourceGroup() != ResourceGroup::Images )
+		return;
+	
+	const ImagePtr& image = RESOURCE_SMART_PTR_CAST<Image>( evt.resource );
+
+	if( textures.find(image) == textures.end() )
+		return;
+
+	TexturePtr texture = textures[image];
+	texture->setImage(image);
+
+	debug( "Uploading loaded texture" );
 }
 
 //-----------------------------------//
@@ -28,21 +93,13 @@ void TextureManager::onReload( const ResourceEvent& evt )
 	if( evt.resource->getResourceGroup() != ResourceGroup::Images )
 		return;
 
-	ImagePtr currImage = RESOURCE_SMART_PTR_CAST<Image>( evt.resource );
-	ImagePtr newImage = RESOURCE_SMART_PTR_CAST<Image>( evt.newResource );
+	const ImagePtr& currImage = RESOURCE_SMART_PTR_CAST<Image>( evt.resource );
+	const ImagePtr& newImage = RESOURCE_SMART_PTR_CAST<Image>( evt.newResource );
 
-	if( textures.find( currImage ) == textures.end() )
+	if( textures.find(currImage) == textures.end() )
 		return;
 
-	TexturePtr texture = textures[currImage];
-
-	texture->setImage(newImage);
-	texture->bind();
-	texture->upload();
-	texture->unbind();
-
-	textures.erase( currImage );
-	textures[newImage] = texture;
+	switchImage( currImage, newImage );
 
 	// Reload the texture.
 	debug( "Reloading texture" );
@@ -50,38 +107,13 @@ void TextureManager::onReload( const ResourceEvent& evt )
 
 //-----------------------------------//
 
-TexturePtr TextureManager::getTexture( const std::string& name )
+void TextureManager::switchImage( const ImagePtr& curr, const ImagePtr& new_ )
 {
-	ResourceManager* rm = ResourceManager::getInstancePtr();
-	ImagePtr img = rm->loadResource<Image>( name );
-
-	if( !img )
-	{
-		// use a fallback default texture
-		// TODO: bundle fallback texture in engine
-		
-		warn( "render::textures", 
-			"Could not locate '%s': reverting to fallback texture", name.c_str() );
-
-		img = rm->loadResource<Image>( "fallback.png" );
-	}
-
-	return getTexture(img);
-}
-
-//-----------------------------------//
-
-TexturePtr TextureManager::getTexture( const ImagePtr& img )
-{
- 	if( textures.find( img ) != textures.end() )
-	{
-		// Already have a texture for this image.
-		return textures[img];
-	}
-
-	TexturePtr tex( new Texture( img ) );
-	textures[img] = tex;
-	return tex;
+	TexturePtr texture = textures[curr];
+	texture->setImage(new_);
+	
+	textures.erase(curr);
+	textures[new_] = texture;
 }
 
 //-----------------------------------//

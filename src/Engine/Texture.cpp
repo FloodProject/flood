@@ -8,6 +8,7 @@
 
 #include "vapor/PCH.h"
 #include "vapor/render/Texture.h"
+#include "vapor/render/Adapter.h"
 
 using namespace vapor::resources;
 
@@ -23,15 +24,13 @@ Texture::Texture( ushort width, ushort height )
 
 //-----------------------------------//
 
-Texture::Texture( const resources::ImagePtr img )
-	: img( img )
+Texture::Texture( const resources::ImagePtr image )
+	: img( nullptr )
 {
-	if( !img ) return;
-
-	width = img->getWidth();
-	height = img->getHeight();
-
+	assert( image != nullptr );
+	
 	init();
+	setImage( image );
 }
 
 //-----------------------------------//
@@ -39,13 +38,9 @@ Texture::Texture( const resources::ImagePtr img )
 Texture::~Texture()
 {
 	glDeleteTextures( 1, &_id );
-
-#ifdef VAPOR_DEBUG
-	while( glGetError() != GL_NO_ERROR )
-	{
-		warn( "gl", "Could not delete texture object '%u'", _id );
-	}
-#endif
+	
+	if( glHasError("Could not delete texture object") )
+		return;
 }
 
 //-----------------------------------//
@@ -56,9 +51,6 @@ void Texture::init()
 	_id = 0;
 
 	generate();
-	bind();
-	upload();
-	unbind();
 }
 
 //-----------------------------------//
@@ -67,13 +59,8 @@ bool Texture::generate()
 {
 	glGenTextures( 1, &_id );
 
-#ifdef VAPOR_DEBUG
-	while( glGetError() != GL_NO_ERROR )
-	{
-		warn( "gl", "Could not generate a new texture object '%d'", _id );
+	if( glHasError("Could not generate a new texture object") )
 		return false;
-	}
-#endif
 
 	return true;
 }
@@ -82,10 +69,8 @@ bool Texture::generate()
 
 bool Texture::check()
 {
-	GLint gl_max;
-	glGetIntegerv( GL_MAX_TEXTURE_SIZE, &gl_max );
+	uint max_size = Adapter::getInstancePtr()->getMaxTextureSize();
 
-	uint max_size = gl_max;
 	if( (width > max_size) || (height > max_size) )
 	{
 		warn( "gl", "Texture size is not supported (max: %dx%d)",
@@ -100,6 +85,8 @@ bool Texture::check()
 
 bool Texture::upload()
 {
+	bind();
+
 	// TODO: check for OpenGL errors
 
 	if( !check() ) return false;
@@ -113,19 +100,13 @@ bool Texture::upload()
 
 	configure();
 
-	//gluBuild2DMipmaps( GL_TEXTURE_2D,
-	//	convertInternalFormat( img->getPixelFormat() ),
-	//	img->getWidth(), img->getHeight(),
-	//	GL_RGBA, GL_UNSIGNED_BYTE, &img->getBuffer()[0] );
-
-#ifdef VAPOR_DEBUG
-	while( glGetError() != GL_NO_ERROR )
+	if( glHasError("Could not upload texture object") )
 	{
-		warn( "gl", "Could not upload texture object '%d'", _id );
 		uploaded = false;
 		return false;
 	}
-#endif
+
+	unbind();
 
 	uploaded = true;
 	return true;
@@ -146,6 +127,20 @@ void Texture::configure()
 
 //-----------------------------------//
 
+void Texture::setImage( const resources::ImagePtr& image )
+{
+	assert( image != nullptr );
+
+	img = image;
+
+	width = img->getWidth();
+	height = img->getHeight();
+
+	upload();
+}
+
+//-----------------------------------//
+
 void Texture::bind( int unit )
 {
 	glActiveTexture( GL_TEXTURE0+unit );
@@ -158,8 +153,6 @@ void Texture::unbind( int unit )
 {
 	glActiveTexture( GL_TEXTURE0+unit );
 	glBindTexture( GL_TEXTURE_2D, 0 );
-
-	//glDisable( GL_TEXTURE_2D );
 }
 
 //-----------------------------------//

@@ -19,9 +19,10 @@ namespace vapor { namespace resources {
 //-----------------------------------//
 
 ResourceManager::ResourceManager()
-	: taskManager( nullptr )
+	: taskManager( TaskManager::getInstancePtr() ),
+	numResourcesQueuedLoad(0)
 {
-
+	assert( taskManager != nullptr );
 }
 
 //-----------------------------------//
@@ -45,13 +46,13 @@ ResourceManager::~ResourceManager()
 
 //-----------------------------------//
 
-ResourcePtr ResourceManager::loadResource(const std::string& path)
+ResourcePtr ResourceManager::loadResource(const std::string& path, bool async)
 {
 	// Check if the resource is already loaded.
 	ResourcePtr res = getResource(path);
 	if( res ) return res;
 
-	res = decodeResource(path);
+	res = decodeResource(path, async);
 	if( !res ) return res;
 
 	// Register the decoded resource in the map.
@@ -83,11 +84,25 @@ public:
 		else
 			res->setStatus( ResourceStatus::Error );
 
-		// Warn that the loader could not decode our resource.
 		if( res->getStatus() == ResourceStatus::Error )
 		{
 			warn("resources", "Resource loader '%s' could not decode resource '%s'",
 				loader->getName().c_str(), res->getURI().c_str());
+			return;
+		}
+
+		ResourceEvent event;
+		event.resource = res;
+		
+		ResourceManager* const rm = ResourceManager::getInstancePtr();
+		rm->loadEvents.push(event);
+
+		{
+			//boost::unique_lock<boost::mutex> lock(
+				//rm->resourceFinishLoadMutex);
+			
+			rm->numResourcesQueuedLoad--;
+			rm->resourceFinishLoad.notify_one();
 		}
 	}
 
@@ -97,7 +112,7 @@ public:
 
 //-----------------------------------//
 
-ResourcePtr ResourceManager::decodeResource( const std::string& path )
+ResourcePtr ResourceManager::decodeResource( const std::string& path, bool async )
 {
 	File file( path );
 
@@ -133,8 +148,11 @@ ResourcePtr ResourceManager::decodeResource( const std::string& path )
 	task->res = res.get();
 	task->loader = ldr;
 
-	if( taskManager )
+	if( taskManager && async )
+	{
+		numResourcesQueuedLoad++;
 		taskManager->addTask( TaskPtr(task) );
+	}
 	else
 		task->run();
 
@@ -143,15 +161,43 @@ ResourcePtr ResourceManager::decodeResource( const std::string& path )
 
 //-----------------------------------//
 
+void ResourceManager::waitUntilQueuedResourcesLoad()
+{
+	boost::unique_lock<boost::mutex> lock(resourceFinishLoadMutex);
+
+	while( numResourcesQueuedLoad > 0 )
+	{
+		// TODO: use a timed_wait and notify the observers
+		// to let them implement things like progress bars
+		// on loading screens.
+		resourceFinishLoad.wait(lock);
+	}
+}
+
+//-----------------------------------//
+
 ResourcePtr ResourceManager::getResource(const std::string& path)
 {
 	// Check if we have this resource in the map.
-	if(resources.find(path) == resources.end()) 
+	if( resources.find(path) == resources.end() ) 
 	{
 		return ResourcePtr();
 	}
 
 	return resources[path];
+}
+
+//-----------------------------------//
+
+void ResourceManager::update( double )
+{
+	ResourceEvent event;
+	
+	while( loadEvents.try_pop(event) )
+	{
+		if( !onResourceLoaded.empty() )
+			onResourceLoaded( event );	
+	}
 }
 
 //-----------------------------------//
@@ -173,11 +219,13 @@ void ResourceManager::removeResource(const ResourcePtr& res)
 				onResourceRemoved( event );
 			}
 
-			resources.erase(it);
+			it = resources.erase(it);
 			return;
 		}
-
-		it++;
+		else
+		{
+			it++;
+		}
 	}
 }
 
@@ -245,13 +293,16 @@ void ResourceManager::handleWatchResource(const vfs::WatchEvent& evt)
 
 //-----------------------------------//
 
-void ResourceManager::setTaskManager( TaskManager* const tm )
-{
-	if( !tm ) return;
-	taskManager = tm;
-
-	//taskManager->onTaskEvent
-}
+//void ResourceManager::setTaskManager( TaskManager* const taskManager_ )
+//{
+//	assert( taskManager_ != nullptr );
+//
+//	taskManager = taskManager_;
+//	
+//	// We'll use this to know when the background tasks have finished.
+//	//taskManager->onTaskFinish +=
+//		//fd::bind( &ResourceManager::handleTaskFinish, this );
+//}
 
 //-----------------------------------//
 

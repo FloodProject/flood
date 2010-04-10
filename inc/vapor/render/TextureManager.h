@@ -36,6 +36,9 @@ public:
 	// Reloads a texture when the image file changes.
 	void onReload( const resources::ResourceEvent& evt );
 
+	// Populates a texture when the image is loaded.
+	void onLoad( const resources::ResourceEvent& evt );
+
 	// Gets a texture given a name identifier.
 	TexturePtr getTexture( const std::string& tex );
 
@@ -47,10 +50,13 @@ public:
 
 private:
 
+	void switchImage( const resources::ImagePtr&, const resources::ImagePtr& );
+
 	// Maps the identifiers to the textures.
 	std::map< resources::ImagePtr, TexturePtr > textures;
 	typedef std::pair< resources::ImagePtr, TexturePtr > texPair;
 	
+	resources::ResourceManager* rm;
 };
 
 //-----------------------------------//

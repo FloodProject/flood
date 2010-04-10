@@ -9,9 +9,11 @@
 #pragma once
 
 #include "vapor/Singleton.h"
+#include "vapor/Subsystem.h"
 #include "vapor/resources/Resource.h"
 #include "vapor/resources/ResourceLoader.h"
 #include "vapor/vfs/Watcher.h"
+#include "vapor/ConcurrentQueue.h"
 
 namespace vapor { class TaskManager; }
 
@@ -49,8 +51,8 @@ typedef std::map< std::string, ResourcePtr > ResourceMap;
  * which should prove to be less error-prone in case of a corrupt resource.
  */
 
-class VAPOR_API ResourceManager 
-	: public Singleton<ResourceManager>, private boost::noncopyable
+class VAPOR_API ResourceManager
+	: public Singleton<ResourceManager>, public Subsystem
 {
 public:
 
@@ -58,13 +60,13 @@ public:
 	virtual ~ResourceManager();
  
 	// Creates a new resource and returns an handle to the resource.
-	ResourcePtr loadResource(const std::string& path);
+	ResourcePtr loadResource(const std::string& path, bool async = true);
 
 	// Creates a new resource and returns the specific resource type.
 	template <typename T>
-	RESOURCE_TYPEDECL_FROM_TYPE(T) loadResource(const std::string& path)
+	RESOURCE_TYPEDECL_FROM_TYPE(T) loadResource(const std::string& path, bool async = true)
 	{
-		ResourcePtr res = loadResource( path );
+		ResourcePtr res = loadResource( path, async );
 		return RESOURCE_SMART_PTR_CAST< T >( res );
 	}
 
@@ -82,8 +84,8 @@ public:
 	// Removes a resource from the manager.
 	void removeResource(const ResourcePtr& res);
 
-	// Gets the registered resources.
-	IMPLEMENT_GETTER(Resources, const ResourceMap&, resources)
+	// Finishes until all queued resources are loaded.
+	void waitUntilQueuedResourcesLoad();
 
 	// Registers a resource handler.
 	void registerLoader(ResourceLoader* const loader);
@@ -91,8 +93,11 @@ public:
 	// Watches a resource for changes and auto-reloads it.
 	void handleWatchResource(const vfs::WatchEvent& evt);
 
-	// Sets the task manager instance that the resource manager will use.
-	void setTaskManager( TaskManager* const );
+	// Sends resource events to the subscribers.
+	void update( double );
+
+	// Gets the registered resources.
+	IMPLEMENT_GETTER(Resources, const ResourceMap&, resources)
 
 	// These events are sent when their correspending actions happen.
 	fd::delegate< void( const ResourceEvent& ) > onResourceAdded;
@@ -101,9 +106,16 @@ public:
 	fd::delegate< void( const ResourceEvent& ) > onResourceReloaded;
 	fd::delegate< void( const ResourceLoader& ) > onResourceLoaderRegistered;
 
+	// When tasks finish, they queue a loaded event into the queue.
+	concurrent_queue<ResourceEvent> loadEvents;
+
+	boost::atomic_int numResourcesQueuedLoad;
+	boost::mutex resourceFinishLoadMutex;
+	boost::condition_variable resourceFinishLoad;
+
 protected:
 
-	ResourcePtr decodeResource( const std::string& path );
+	ResourcePtr decodeResource( const std::string& path, bool async = true );
 
 	// Maps a name to a resource.
 	ResourceMap resources;

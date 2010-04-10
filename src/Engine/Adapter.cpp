@@ -27,9 +27,10 @@ Adapter::Adapter()
 	else
 		supportsVBO = false;
 
-	log();
+	glGetIntegerv( GL_MAX_TEXTURE_SIZE, &maxTextureSize );
+	glGetIntegerv( GL_MAX_VERTEX_ATTRIBS, &maxAttribs );
 
-	// TODO: add more Adapter caps	
+	log();
 }
 
 //-----------------------------------//
@@ -110,10 +111,10 @@ void Adapter::log() const
 			"Your graphics device does not support VBOs (Vertex Buffer Objects).");
 	}
 
-	int maxAttribs;
-	glGetIntegerv( GL_MAX_VERTEX_ATTRIBS, &maxAttribs );
-	
+	info( "render::adapter", "Max texture size: %dx%d", maxTextureSize );
 	info( "render::adapter", "Max vertex attributes: %d", maxAttribs );
+
+
 }
 
 //-----------------------------------//
