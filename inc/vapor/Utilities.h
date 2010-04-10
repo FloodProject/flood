@@ -51,19 +51,23 @@ namespace vapor {
 // Acessors
 //---------------------------------------------------------------------//
 
-#define IMPLEMENT_ACESSOR(name, type, var)		\
-	type get##name() const { return var; }		\
-	void set##name(type v) { var = v; }
-
-#define IMPLEMENT_ACESSOR_PTR(name, type, var)	\
-	type get##name() const { return *var; }		\
-	void set##name(type v) { var = &v; }
-
 #define IMPLEMENT_GETTER(name, type, var)		\
 	type get##name() const { return var; }
 
 #define IMPLEMENT_SETTER(name, type, var)		\
 	void set##name(type v) { var = v; }
+
+#define IMPLEMENT_ACESSOR(name, type, var)		\
+	IMPLEMENT_GETTER(name, type, var)			\
+	IMPLEMENT_SETTER(name, type, var)
+
+#define IMPLEMENT_ACESSOR_PTR(name, type, var)	\
+	type get##name() const { return *var; }		\
+	void set##name(type v) { var = &v; }
+
+#define IMPLEMENT_STATIC_ACESSOR(name, type, var)	\
+	static type get##name() { return var; }			\
+	static void set##name(type v) { var = v; }
 
 //---------------------------------------------------------------------//
 // Conversions

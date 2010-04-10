@@ -209,6 +209,7 @@ void Engine::update( double delta )
 	foreach( Subsystem* subsystem, subsystems )
 		subsystem->update( delta );
 
+	vfs->update( delta );
 	resourceManager->update( delta );
 	sceneManager->update( delta );
 

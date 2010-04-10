@@ -13,6 +13,23 @@ namespace vapor {
 //-----------------------------------//
 
 /**
+ * Use these for different kinds of access to the files.
+ * Check the File class description for more information.
+ */
+
+namespace AccessMode
+{
+	enum Enum
+	{
+		Read,
+		Write,
+		Append
+	};
+}
+
+//-----------------------------------//
+
+/**
  * Represents a native file managed by the OS.
  * This is a small utility wrapper class that will be extended as needed,
  * but usually you should use the File class of the  virtual filesystem 
@@ -24,9 +41,12 @@ class VAPOR_API NativeFile : private boost::noncopyable
 {
 public:
 
-	NativeFile (std::string path);
-	NativeFile (const char* path);
+	NativeFile (const std::string& path, AccessMode::Enum mode = AccessMode::Read );
+	NativeFile (const char* path, AccessMode::Enum mode = AccessMode::Read);
 	~NativeFile ();
+
+	// Opens the file.
+	bool open();
 
 	// Closes the file.
 	void close();
@@ -37,8 +57,11 @@ public:
 	// Read file into buffer.
 	long read(void* buffer, long size);
 
+	// Sets if the file should be buffered.
+	void setBuffering( bool state );
+
 	// Gets the path of the file.
-	const std::string getPath() const { return path; }
+	IMPLEMENT_GETTER(Path, const std::string, path)
 
 	// Checks if this file exists.
 	bool exists();
@@ -46,8 +69,9 @@ public:
 	// Checks if the file in path exists.
 	static bool exists(std::string path);
 	
-private:
+protected:
 
+	AccessMode::Enum mode;
 	std::string	path;
 	FILE* fp;
 };

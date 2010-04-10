@@ -29,14 +29,13 @@ namespace vapor { namespace resources {
 
 struct ResourceEvent
 {
-	std::string name;
 	ResourcePtr resource;
-	ResourcePtr newResource;
 };
 
 //-----------------------------------//
 
 typedef std::map< std::string, ResourcePtr > ResourceMap;
+typedef std::map< std::string, ResourceLoader* > ResourceLoaderMap;
 
 /**
  * Responsible for managing a set of resources that are added by the app.
@@ -93,11 +92,17 @@ public:
 	// Watches a resource for changes and auto-reloads it.
 	void handleWatchResource(const vfs::WatchEvent& evt);
 
+	// Gets a registered resource loader for the given extension.
+	ResourceLoader* const getResourceLoader(const std::string& ext);
+
 	// Sends resource events to the subscribers.
 	void update( double );
 
 	// Gets the registered resources.
 	IMPLEMENT_GETTER(Resources, const ResourceMap&, resources)
+
+	// Gets the registered resource loaders.
+	IMPLEMENT_GETTER(ResourceLoaders, const ResourceLoaderMap&, resourceLoaders)
 
 	// These events are sent when their correspending actions happen.
 	fd::delegate< void( const ResourceEvent& ) > onResourceAdded;
@@ -115,13 +120,19 @@ public:
 
 protected:
 
-	ResourcePtr decodeResource( const std::string& path, bool async = true );
+	// Validates that the resource exists and there is a loader for it.
+	bool validateResource( const vfs::File& file );
+
+	// Returns a new resource ready to be processed by a loader.
+	ResourcePtr prepareResource( const std::string& path );
+
+	// Processes the resource with the right resource loader.
+	void decodeResource( ResourcePtr res, bool async = true );
 
 	// Maps a name to a resource.
 	ResourceMap resources;
 
 	// Maps extensions to resource loaders.
-	typedef std::map< std::string, ResourceLoader* > ResourceLoaderMap;
 	ResourceLoaderMap resourceLoaders;
 
 	// Manages all background loading tasks.

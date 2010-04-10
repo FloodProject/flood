@@ -153,7 +153,7 @@ void ResourceTreeCtrl::onResourceAdded( const resources::ResourceEvent& event )
 	ResourceGroup::Enum group = event.resource->getResourceGroup();
 
 	AppendItem( resourceGroupTreeIds[group],
-				event.name, 0
+				event.resource->getURI(), 0
 				/*, resourceGroupIcons[group]*/ );	
 }
 

@@ -17,9 +17,6 @@
 #endif
 
 #ifdef VAPOR_COMPILER_MSVC
-	// disable Visual C++ fopen deprecation warning
-	#pragma warning(disable : 4996)
-	
 	#define access _access
 #endif
 
@@ -27,18 +24,18 @@ namespace vapor {
 
 //-----------------------------------//
 
-NativeFile::NativeFile(std::string path)
-	: path(path), fp(nullptr)
+NativeFile::NativeFile(const std::string& path, AccessMode::Enum mode)
+	: path(path), fp(nullptr), mode(mode)
 {
 	fp = fopen(path.c_str(), "rb");
 }
 
 //-----------------------------------//
 
-NativeFile::NativeFile(const char* _path)
-	: path(_path), fp(nullptr)
+NativeFile::NativeFile(const char* _path, AccessMode::Enum mode)
+	: path(_path), fp(nullptr), mode(mode)
 {
-	fp = fopen(_path, "rb");
+
 }
 
 //-----------------------------------//
@@ -50,11 +47,43 @@ NativeFile::~NativeFile()
 
 //-----------------------------------//
 
+bool NativeFile::open()
+{
+	char* mode_ = nullptr;
+
+	if( mode == AccessMode::Read )
+		mode_ = "r";
+	else if( mode == AccessMode::Write )
+		mode_ = "w";
+	else if( mode == AccessMode::Append )
+		mode_ = "a";
+
+	fp = fopen(path.c_str(), mode_);
+	if ( !fp ) return false;
+
+	return true;
+}
+
+//-----------------------------------//
+
 void NativeFile::close()
 {
 	// close the file
-	if(fp != nullptr) {
+	if(fp != nullptr)
+	{
 		fclose(fp);
+		fp = nullptr;
+	}
+}
+
+//-----------------------------------//
+
+void NativeFile::setBuffering( bool state )
+{
+	if( !state )
+	{
+		// turn off file buffering
+		setbuf(fp, nullptr);
 	}
 }
 

@@ -52,8 +52,10 @@ ResourcePtr ResourceManager::loadResource(const std::string& path, bool async)
 	ResourcePtr res = getResource(path);
 	if( res ) return res;
 
-	res = decodeResource(path, async);
+	res = prepareResource(path);
 	if( !res ) return res;
+
+	decodeResource(res, async);
 
 	// Register the decoded resource in the map.
 	info("resources", "Loaded resource '%s'", path.c_str());
@@ -62,7 +64,6 @@ ResourcePtr ResourceManager::loadResource(const std::string& path, bool async)
 	if( !onResourceAdded.empty() )
 	{
 		ResourceEvent event;
-		event.name = path;
 		event.resource = res;
 		onResourceAdded( event );
 	}
@@ -73,13 +74,41 @@ ResourcePtr ResourceManager::loadResource(const std::string& path, bool async)
 
 //-----------------------------------//
 
+ResourceLoader* const ResourceManager::getResourceLoader(const std::string& ext)
+{
+	// Check if we have a resource loader for this extension.
+	if( resourceLoaders.find(ext) == resourceLoaders.end() )
+		return nullptr;
+
+	ResourceLoader* const loader = resourceLoaders[ext];
+	return loader;
+}
+
+//-----------------------------------//
+
 class ResourceTask : public Task
 {
 public:
 
 	void run()
 	{
-		if( loader->decode( res->getURI(), res ) )
+		ResourceManager* const rm = ResourceManager::getInstancePtr();
+
+		const std::string& path = res->getURI();
+		
+		File file( path );
+		const std::string& ext = file.getExtension();
+		
+		ResourceLoader* const loader = rm->getResourceLoader(ext);
+
+		if( !loader )
+		{
+			warn( "resources", "No resource loader found for resource '%s'",
+				file.getPath().c_str() );
+			return;
+		}
+		
+		if( loader->decode(file, res) )
 			res->setStatus( ResourceStatus::Loaded );
 		else
 			res->setStatus( ResourceStatus::Error );
@@ -93,60 +122,63 @@ public:
 
 		ResourceEvent event;
 		event.resource = res;
-		
-		ResourceManager* const rm = ResourceManager::getInstancePtr();
 		rm->loadEvents.push(event);
 
-		{
-			//boost::unique_lock<boost::mutex> lock(
-				//rm->resourceFinishLoadMutex);
-			
-			rm->numResourcesQueuedLoad--;
-			rm->resourceFinishLoad.notify_one();
-		}
+		rm->numResourcesQueuedLoad--;
+		rm->resourceFinishLoad.notify_one();
 	}
 
-	ResourceLoader* loader;
 	Resource* res;
 };
 
 //-----------------------------------//
 
-ResourcePtr ResourceManager::decodeResource( const std::string& path, bool async )
+bool ResourceManager::validateResource( const File& file )
 {
-	File file( path );
+	const std::string& path = file.getPath();
 
 	if( !file.exists() )
 	{
 		warn( "resources", "Requested resource '%s' not found", path.c_str() );
-		return ResourcePtr();
+		return false;
 	}
-	
+
 	std::string ext = file.getExtension();
 	
 	if( ext.empty() )
 	{
 		warn( "resources", "Requested resource '%s' has an invalid path", path.c_str() );
-		return ResourcePtr();
+		return false;
 	}
 
-	// Check if we have a resource loader for this extension.
-	if( resourceLoaders.find(ext) == resourceLoaders.end() )
-	{
-		warn( "resources", "No resource loader found for resource '%s'", path.c_str() );
+	return true;
+}
+
+//-----------------------------------//
+
+ResourcePtr ResourceManager::prepareResource( const std::string& path )
+{
+	File file(path);
+
+	if( !validateResource(file) )
 		return ResourcePtr();
-	}
 
 	// Get the available resource loader and prepare the resource.
-	ResourceLoader* const ldr = resourceLoaders[ext];
+	ResourceLoader* const ldr = resourceLoaders[file.getExtension()];
 
-	ResourcePtr res( ldr->prepare(path) );
+	ResourcePtr res( ldr->prepare(file) );
 	res->setStatus( ResourceStatus::Loading );
 	res->setURI( path );
 
+	return res;
+}
+
+//-----------------------------------//
+
+void ResourceManager::decodeResource( ResourcePtr res, bool async )
+{
 	ResourceTask* task = new ResourceTask();
 	task->res = res.get();
-	task->loader = ldr;
 
 	if( taskManager && async )
 	{
@@ -155,8 +187,6 @@ ResourcePtr ResourceManager::decodeResource( const std::string& path, bool async
 	}
 	else
 		task->run();
-
-	return res;
 }
 
 //-----------------------------------//
@@ -275,18 +305,12 @@ void ResourceManager::handleWatchResource(const vfs::WatchEvent& evt)
 	// Register the decoded resource in the map.
 	info("resources", "Reloading resource '%s'", file.c_str());
 
-	const ResourcePtr& newResource = decodeResource( file );
-	if( !newResource ) return;
-
-	// Replace the old resource with the new one.
-	resources[file] = newResource;
+	decodeResource( res );
 
 	if( !onResourceReloaded.empty() )
 	{
 		ResourceEvent re;
-		re.name = file;
 		re.resource = res;
-		re.newResource = newResource;
 		onResourceReloaded( re );
 	}
 }

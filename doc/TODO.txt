@@ -13,6 +13,8 @@ http://hadoop.apache.org/avro/docs/current/
 EDITOR:
 -------
 
+Redraw when a new resource gets loaded (texture changes etc)
+
 Gizmo
 	Picking when the mouse moves
 	Change gizmo color when user picks axis

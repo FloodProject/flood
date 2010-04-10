@@ -7,6 +7,8 @@
 ************************************************************************/
 
 #pragma once
+
+#include "vapor/NativeFile.h"
 #include "vapor/Timer.h"
 
 namespace vapor { namespace log {
@@ -51,23 +53,15 @@ VAPOR_API void error(const std::string& subsystem, const char* msg, ...);
 
 /**
  * Logging class used to output useful logging and debugging information
- * to an output file format. Currently it outputs to XHTML.
+ * to an output file format. Currently it outputs to HTML.
  */
 
-class VAPOR_API Log : private boost::noncopyable
+class VAPOR_API Log : public NativeFile
 {
 public:
 	
 	Log(const std::string& title, const std::string& filename);
 	~Log();
-
-	// Gets or sets the global engine logger.
-	static Log* getLogger();
-	static void setLogger(Log* log);
-
-	// Spawns a new message box dialog.
-	static void MessageDialog(const std::string& msg, 
-		const LogLevel::Enum level = LogLevel::Warning);
 	
 	// Logging methods for each message category.
 	void info(const std::string& subsystem, const char* msg, ...);
@@ -80,13 +74,22 @@ public:
 		
 	void write(const LogLevel::Enum, const std::string&, const char*, ...);
 
+	// Gets/sets the global engine logger.
+	IMPLEMENT_STATIC_ACESSOR(Logger, Log*, engineLog)
+
+	// Spawns a new message box dialog.
+	static void MessageDialog(const std::string& msg, 
+		const LogLevel::Enum level = LogLevel::Warning);
+
+	//-----------------------------------//
+
+	// This controls if debug is output.
 	static bool showDebug;
 
-protected:
+	// Global engine logger.
+	static Log* engineLog;
 
-	// Opens/closes a log file.
-	bool open(const std::string& filename);
-	void close(void);
+protected:
 	
 	// Writes JavaScript sorttable_v1.js.
 	void sorttable();
@@ -98,17 +101,15 @@ protected:
 	void start(const std::string& title);
 	void end();
 
-	// Global engine logger.
-	static Log* engineLog;
-
-	// File used to output logging information.
-	FILE* fp;
-
 	// Timer used for data/time control
 	Timer timer;
 
 	// Used for zebra coloring the table.
 	bool even;
+
+#ifdef VAPOR_THREADING
+	boost::mutex mut;
+#endif
 };
 
 //-----------------------------------//

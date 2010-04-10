@@ -93,13 +93,16 @@ void TextureManager::onReload( const ResourceEvent& evt )
 	if( evt.resource->getResourceGroup() != ResourceGroup::Images )
 		return;
 
-	const ImagePtr& currImage = RESOURCE_SMART_PTR_CAST<Image>( evt.resource );
-	const ImagePtr& newImage = RESOURCE_SMART_PTR_CAST<Image>( evt.newResource );
+	const ImagePtr& img = RESOURCE_SMART_PTR_CAST<Image>( evt.resource );
+	//const ImagePtr& newImage = RESOURCE_SMART_PTR_CAST<Image>( evt.newResource );
 
-	if( textures.find(currImage) == textures.end() )
+	if( textures.find(img) == textures.end() )
 		return;
 
-	switchImage( currImage, newImage );
+	TexturePtr tex = textures[img];
+	tex->setImage(img);
+
+	//switchImage( currImage, newImage );
 
 	// Reload the texture.
 	debug( "Reloading texture" );

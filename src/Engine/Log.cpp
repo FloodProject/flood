@@ -96,18 +96,21 @@ void error(const std::string& subsystem, const char* msg, ...)
 
 //-----------------------------------//
 
-Log::Log(const std::string& title, const std::string& filename)
-: even( true ), fp( nullptr )
+Log::Log(const std::string& title, const std::string& fn)
+	: NativeFile(fn, AccessMode::Write), even(true)
 {
-	if( !open(filename) ) 
+	if( !open() ) 
 	{
-		MessageDialog("Could not open log file '" + filename + "'");
+		MessageDialog("Could not open log file '" + fn + "'");
 		return;
 	}
+
+	// Turn off file buffering.
+	setBuffering( false );
 	
 	start( title );
 
-	info("log", "Creating log file '%s'", filename.c_str());
+	info("log", "Creating log file '%s'", fn.c_str());
 
 	if( Log::getLogger() == nullptr )
 		Log::setLogger( this );
@@ -117,10 +120,7 @@ Log::Log(const std::string& title, const std::string& filename)
 
 Log::~Log()
 {
-	if( !fp ) return;
-
 	end();
-	close();
 
 	if( engineLog == this )
 		engineLog = nullptr;
@@ -128,74 +128,30 @@ Log::~Log()
 
 //-----------------------------------//
 
-Log* Log::getLogger()
-{
-	return engineLog;
-}
-
-//-----------------------------------//
-
-void Log::setLogger(Log* log)
-{
-	//delete engineLog;
-	engineLog = log;
-}
-
-//-----------------------------------//
-
 void Log::MessageDialog(const std::string& msg, const LogLevel::Enum level)
 {
-	#ifdef VAPOR_PLATFORM_WINDOWS
-		UINT style = MB_OK;
+#ifdef VAPOR_PLATFORM_WINDOWS
+	UINT style = MB_OK;
 
-		switch(level)
-		{		
-		case LogLevel::Info:	
-			style |= MB_ICONINFORMATION; 
-			break;
-		case LogLevel::Warning:	
-			style |= MB_ICONWARNING; 
-			break;
-		case LogLevel::Error:	
-			style |= MB_ICONERROR; 
-			break;
-		}
+	switch(level)
+	{		
+	case LogLevel::Info:	
+		style |= MB_ICONINFORMATION; 
+		break;
+	case LogLevel::Warning:	
+		style |= MB_ICONWARNING; 
+		break;
+	case LogLevel::Error:	
+		style |= MB_ICONERROR; 
+		break;
+	}
 
-		MessageBoxA(nullptr, msg.c_str(), nullptr, style);
-	#elif defined(VAPOR_PLATFORM_LINUX)
-		getLogger()->write(level, "MessageBox", msg.c_str() );
-	#else
-		#error "Missing message box implementation"
-	#endif
-}
-
-//-----------------------------------//
-
-bool Log::open(const std::string& filename)
-{
-	#ifdef VAPOR_COMPILER_MSVC
-		// disable Visual C++ fopen deprecation warning
-		#pragma warning(disable : 4996)
-	#endif
-
-	fp = fopen(filename.c_str(), "w+");
-	
-	if ( !fp ) return false;
-
-	// turn off file buffering
-	setbuf(fp, nullptr);
-
-	return true;
-}
-
-//-----------------------------------//
-
-void Log::close()
-{
-	if (!fp) return;
-	
-	fclose(fp);
-	fp = nullptr;
+	MessageBoxA(nullptr, msg.c_str(), nullptr, style);
+#elif defined(VAPOR_PLATFORM_LINUX)
+	getLogger()->write(level, "MessageBox", msg.c_str() );
+#else
+	#error "Missing message box implementation"
+#endif
 }
 
 //-----------------------------------//
@@ -204,7 +160,6 @@ void Log::write(const LogLevel::Enum level, const std::string& subsystem,
 				const char* msg, va_list args)
 {
 	if (!fp) return;
-
 	const char* s = nullptr;
 
 	switch(level)
@@ -220,35 +175,34 @@ void Log::write(const LogLevel::Enum level, const std::string& subsystem,
 		break;
 	}
 
-	fprintf(fp, "\t\t<tr class=\"%s,%s\">", s, even ? "even" : "odd");
-
-		fprintf(fp, "<td class=\"%s\"></td>", s);
-
-		fprintf(fp, "<td>%.3fs</td>", timer.getElapsedTime()); // date time
-		fprintf(fp, "<td>%s</td>", subsystem.c_str()); // subsystem
-
-		fprintf(fp, "<td>");
-			vfprintf(fp, msg, args);
-		fprintf(fp, "</td>");
-
-	fprintf(fp, "</tr>\n");
-
-	fflush(fp);
-
-	even = !even;
-
-#ifdef VAPOR_DEBUG
-	switch(level)
 	{
-	case LogLevel::Warning:
-	case LogLevel::Error:
-		char buf[2048];
-		int err = vsprintf(buf, msg, args);
-		assert(err >= 0);
-		debug("%s",buf);
-		break;
+		boost::lock_guard<boost::mutex> lock(mut);
+
+		fprintf(fp, "\t\t<tr class=\"%s,%s\">", s, even ? "even" : "odd");
+			fprintf(fp, "<td class=\"%s\"></td>", s);
+			fprintf(fp, "<td>%.3fs</td>", timer.getElapsedTime()); // date time
+			fprintf(fp, "<td>%s</td>", subsystem.c_str()); // subsystem
+			fprintf(fp, "<td>");
+				vfprintf(fp, msg, args);
+			fprintf(fp, "</td>");
+		fprintf(fp, "</tr>\n");
+
+		fflush(fp);
+		even = !even;
+
+	#ifdef VAPOR_DEBUG
+		switch(level)
+		{
+		case LogLevel::Warning:
+		case LogLevel::Error:
+			char buf[2048];
+			int err = vsprintf(buf, msg, args);
+			assert(err >= 0);
+			debug("%s",buf);
+			break;
+		}
+	#endif
 	}
-#endif
 }
 
 //-----------------------------------//
@@ -256,7 +210,7 @@ void Log::write(const LogLevel::Enum level, const std::string& subsystem,
 void Log::write(const LogLevel::Enum level, const std::string& subsystem, 
 	const char* msg, ...)
 {
-	if(!Log::getLogger()) return;
+	if( !Log::getLogger() ) return;
 
 	switch(level)
 	{
@@ -294,8 +248,6 @@ void Log::end()
 
 void Log::info(const std::string& subsystem, const char* msg, ...)
 {
-	if (!fp) return;
-
 	va_list args;
 
 	va_start(args, msg);
@@ -307,8 +259,6 @@ void Log::info(const std::string& subsystem, const char* msg, ...)
 
 void Log::warn(const std::string& subsystem, const char* msg, ...)
 {
-	if (!fp) return;
-
 	va_list args;
 
 	va_start(args, msg);
@@ -320,8 +270,6 @@ void Log::warn(const std::string& subsystem, const char* msg, ...)
 
 void Log::error(const std::string& subsystem, const char* msg, ...)
 {
-	if (!fp) return;
-
 	va_list args;
 
 	va_start(args, msg);
