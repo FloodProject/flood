@@ -186,7 +186,10 @@ void ResourceManager::decodeResource( ResourcePtr res, bool async )
 		taskManager->addTask( TaskPtr(task) );
 	}
 	else
+	{
 		task->run();
+		delete task;
+	}
 }
 
 //-----------------------------------//

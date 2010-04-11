@@ -152,6 +152,28 @@ NodePtr buildRay( const Ray& pickRay, const Vector3& outFar )
 
 //-----------------------------------//
 
+void GizmoMode::onMouseMove( const MouseMoveEvent& me )
+{
+	if( (currentTool != Gizmo_Translate) 
+		&& (currentTool != Gizmo_Rotate)
+		&& (currentTool != Gizmo_Scale) ) return;
+
+	const CameraPtr& camera = viewport->getCamera();
+	const ScenePtr& editorScene = editor->getEditorScene();
+
+	// Get a ray given the screen location clicked.
+	Vector3 outFar;
+	const Ray& pickRay = camera->getRay( me.x, me.y, &outFar );
+
+	// Perform ray casting to find the nodes.
+	RayBoxQueryResult res;
+	
+	if( !editorScene->doRayBoxQuery(pickRay, res) )
+		return;
+}
+
+//-----------------------------------//
+
 void GizmoMode::onMouseButtonPress( const MouseButtonEvent& mbe )
 {
 	disableSelectedNodes();
@@ -170,7 +192,7 @@ void GizmoMode::onMouseButtonPress( const MouseButtonEvent& mbe )
 
 	// Perform ray casting to find the nodes.
 	RayBoxQueryResult res;
-	
+
 	if( scene->doRayBoxQuery( pickRay, res ) )
 		onNodeSelected( NodePtr(), res.node );
 }

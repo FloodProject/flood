@@ -111,7 +111,7 @@ void Adapter::log() const
 			"Your graphics device does not support VBOs (Vertex Buffer Objects).");
 	}
 
-	info( "render::adapter", "Max texture size: %dx%d", maxTextureSize );
+	info( "render::adapter", "Max texture size: %dx%d", maxTextureSize, maxTextureSize );
 	info( "render::adapter", "Max vertex attributes: %d", maxAttribs );
 
 

@@ -110,6 +110,7 @@ EditorFrame::~EditorFrame()
 	// after the window context is already destroyed.
 	editorScene.reset();
 	delete viewport;
+	//viewport->Destroy();
 	delete engine;
 }
 

@@ -22,8 +22,7 @@ namespace vapor { namespace render {
  * A program is a collection of shaders (at least a vertex shader 
  * and a pixel shader). When it is linked it is ready to be used
  * by the renderer. A program will have some parameters automatically
- * bound, like world matrices and such. Refer to the documentation
- * to have more information about these.
+ * bound, like world matrices and such.
  */
 
 class VAPOR_API Program : public ReferenceCounted

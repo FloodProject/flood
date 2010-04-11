@@ -24,8 +24,13 @@ GLSL_Program::GLSL_Program( const GLSL_ShaderPtr& vs, const GLSL_ShaderPtr& ps )
 {
 	create();
 
-	if( vs ) shaders.push_back( vs );
-	if( ps ) shaders.push_back( ps );
+	assert( vs && ps );
+
+	shaders.push_back( vs );
+	attached[vs] = false;
+
+	shaders.push_back( ps );
+	attached[ps] = false;
 }
 
 //-----------------------------------//
@@ -35,7 +40,8 @@ GLSL_Program::~GLSL_Program()
 	// Detach shaders.
 	foreach( const GLSL_ShaderPtr& shader, shaders )
 	{
-		glDetachShader( id, shader->id() );
+		if( attached[shader] )
+			glDetachShader( id, shader->id() );
 
 		if( glHasError("Could not detach shader object") )
 			continue;
@@ -77,8 +83,9 @@ bool GLSL_Program::attachShaders()
 			}
 		}
 
-		// Shaders need to be attached to the program
+		// Shaders need to be attached to the program.
 		glAttachShader( id, shader->id() );
+		attached[shader] = true;
 	}
 
 	return true;
@@ -209,6 +216,8 @@ void GLSL_Program::getLogText()
 
 void GLSL_Program::bindDefaultAttributes()
 {
+	// TODO: don't try to bind if user didn't use in shader.
+
 	setAttribute( "vp_Vertex", VertexAttribute::Position );
 	setAttribute( "vp_Normal", VertexAttribute::Normal );
 	setAttribute( "vp_Color", VertexAttribute::Color );

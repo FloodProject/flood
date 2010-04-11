@@ -82,8 +82,6 @@ void TextureManager::onLoad( const ResourceEvent& evt )
 
 	TexturePtr texture = textures[image];
 	texture->setImage(image);
-
-	debug( "Uploading loaded texture" );
 }
 
 //-----------------------------------//

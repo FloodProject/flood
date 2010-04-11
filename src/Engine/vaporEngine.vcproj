@@ -1156,6 +1156,10 @@
 				RelativePath="..\..\inc\vapor\gui\Atlas.h"
 				>
 			</File>
+			<File
+				RelativePath=".\FontManager.cpp"
+				>
+			</File>
 			<Filter
 				Name="Label"
 				>

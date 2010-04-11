@@ -26,6 +26,7 @@ public:
 
 	virtual void onNodeSelected( NodePtr old, NodePtr new_ );
 
+	virtual void onMouseMove( const MouseMoveEvent& me );
 	virtual void onMouseButtonPress( const MouseButtonEvent& mbe );
 
 protected:

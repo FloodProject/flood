@@ -70,7 +70,7 @@ const std::string File::getExtension() const
 
 //-----------------------------------//
 
-void File::open()
+bool File::open()
 {
 	switch( accessMode )
 	{
@@ -89,8 +89,10 @@ void File::open()
 	{
 		error( "vfs::file", "Could not open file '%s': %s",
 			path.c_str(), PHYSFS_getLastError() );
-		return;
+		return false;
 	}
+
+	return true;
 }
 
 //-----------------------------------//

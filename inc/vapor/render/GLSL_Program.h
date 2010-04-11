@@ -63,20 +63,24 @@ public:
 	// Unbinds the program.
 	virtual void unbind();
 
-	//uint id();
-
 private:
 
+	// Binds the default engine attributes to the program.
 	void bindDefaultAttributes();
 
+	// Validates that the program is well-formed.
 	bool validate();
 
+	// Compiles (if needed) and attaches all shaders to the program.
 	bool attachShaders();
 
+	// Gets the linking log of the program.
 	void getLogText();
 
-	bool linkError;
 	std::vector< GLSL_ShaderPtr > shaders;
+	std::map< GLSL_ShaderPtr, bool > attached;
+
+	bool linkError;
 	GLuint id;
 };
 

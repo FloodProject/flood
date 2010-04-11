@@ -193,8 +193,8 @@ void Viewport::build()
 	mainSizer->Add( control, 1, wxEXPAND|wxALL );
 	mainSizer->Add( sizer, 0, wxEXPAND|wxALL );
 
-	this->SetSizer( mainSizer );
-	this->Layout();
+	SetSizer( mainSizer );
+	Layout();
 }
 
 //-----------------------------------//

@@ -27,8 +27,10 @@ public:
 	void push(const T& T)
 	{
 		boost::mutex::scoped_lock lock(mutex);
+		
 		queue.push_back(T);
 		lock.unlock();
+
 		cond_var.notify_one();
 	}
 
@@ -37,6 +39,7 @@ public:
 	bool empty() const
 	{
 		boost::mutex::scoped_lock lock(mutex);
+		
 		return queue.empty();
 	}
 
@@ -51,6 +54,7 @@ public:
 	    
 		popped_value = queue.front();
 		queue.pop_front();
+		
 		return true;
 	}
 
@@ -84,7 +88,7 @@ public:
 
 	//-----------------------------------//
 
-	private:
+private:
 
 	std::deque<T> queue;
 	mutable boost::mutex mutex;

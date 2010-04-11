@@ -28,8 +28,8 @@
 // Memory stuff
 //-------------------------------------------------------------------------//
  
-#define VAPOR_MEMORY_TR1_VENDOR
-//#define VAPOR_MEMORY_TR1_BOOST
+//#define VAPOR_MEMORY_TR1_VENDOR
+#define VAPOR_MEMORY_TR1_BOOST
 //#define VAPOR_MEMORY_LEAK_DETECTOR
 
 #define VAPOR_MEMORY_SHARED_PTR

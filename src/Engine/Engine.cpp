@@ -80,15 +80,15 @@ void Engine::init( bool createWindow )
 	// create the virtual filesystem
 	vfs = new VFS(app, argv ? argv[0] : nullptr);
 
+	taskManager = TaskManager::getInstancePtr();
+	subsystems.push_back( taskManager );
+
 	// create the resource manager
 	resourceManager = ResourceManager::getInstancePtr();
 	
 	// connect the resource manager and filesystem watcher
 	vfs->getWatcher()->onWatchEvent += 
 		fd::bind(&ResourceManager::handleWatchResource, resourceManager);
-
-	taskManager = TaskManager::getInstancePtr();
-	subsystems.push_back( taskManager );
 
 	// create the physics manager
 	//physicsManager = PhysicsManager::getInstancePtr();

@@ -176,6 +176,7 @@ void Log::write(const LogLevel::Enum level, const std::string& subsystem,
 	}
 
 	{
+		LocaleSaveRestore c;
 		boost::lock_guard<boost::mutex> lock(mut);
 
 		fprintf(fp, "\t\t<tr class=\"%s,%s\">", s, even ? "even" : "odd");

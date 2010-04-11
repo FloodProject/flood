@@ -105,7 +105,7 @@ public:
 private:
 
 	/// Opens the file if it exists.
-	void open();
+	bool open();
 
 	/// Allowed access mode to the file.
 	AccessMode::Enum accessMode;

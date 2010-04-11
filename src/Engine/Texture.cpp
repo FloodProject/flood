@@ -157,13 +157,6 @@ void Texture::unbind( int unit )
 
 //-----------------------------------//
 
-uint Texture::id() const
-{
-	return _id;
-}
-
-//-----------------------------------//
-
 GLint Texture::convertInternalFormat( resources::PixelFormat::Enum fmt )
 {
 	switch( fmt )
@@ -192,6 +185,13 @@ GLint Texture::convertSourceFormat( resources::PixelFormat::Enum fmt )
 		warn( "GL", "Implement support for more pixel formats" );
 		return GL_RGB;
 	}
+}
+
+//-----------------------------------//
+
+uint Texture::id() const
+{
+	return _id;
 }
 
 //-----------------------------------//

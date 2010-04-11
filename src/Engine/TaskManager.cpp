@@ -20,8 +20,6 @@ using namespace boost;
 
 TaskManager::TaskManager( int poolSize )
 {
-	static int i = 0;
-
 	if( poolSize < 0 )
 	{
 		// By default use (numberOfCores-1) threads.
@@ -43,6 +41,7 @@ TaskManager::TaskManager( int poolSize )
 
 		//#ifdef VAPOR_PLATFORM_WINDOWS
 		//{
+		//	static int i = 0;
 		//	HANDLE th = thread->native_handle();
 		//	SetThreadName( GetThreadId(th), "Task " + num_to_str(i++) );
 		//}
