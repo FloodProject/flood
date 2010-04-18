@@ -201,7 +201,7 @@ void Transform::updateBoundingVolume()
 
 //-----------------------------------//
 
-void Transform::update( double UNUSED(delta) )
+void Transform::update( double VAPOR_UNUSED(delta) )
 {
 	if( !externalUpdate )
 		transform = getLocalTransform();

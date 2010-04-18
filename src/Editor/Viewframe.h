@@ -18,24 +18,30 @@ namespace vapor { namespace editor {
  * Viewport with camera control.
  */
 
-class Viewport : public wxPanel
+class Viewframe : public wxPanel
 {
 public:
 
-	Viewport( vapor::Engine* engine, wxWindow* parent, 
-		wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition,
-		const wxSize& size = wxDefaultSize, long style = wxTAB_TRAVERSAL );
+	Viewframe( wxWindow* parent, wxWindowID id = wxID_ANY, 
+		const wxPoint& pos = wxDefaultPosition,
+		const wxSize& size = wxDefaultSize,
+		long style = wxTAB_TRAVERSAL );
+
+	// Creates and adds a new viewport to the viewframe.
+	Viewport* createViewport( NodePtr node );
 
 	// Gets the associated camera.
-	IMPLEMENT_GETTER(Camera, const CameraPtr&, camera)
+	IMPLEMENT_GETTER(Camera, const CameraPtr, viewport->getCamera())
 
-	// Flags the backing control to be redrawn.
+	// Gets the associated control.
 	IMPLEMENT_GETTER(Control, vaporControl*, control)
+
+	// Gets the associated viewport.
+	IMPLEMENT_GETTER(Viewport, ViewportPtr, viewport)
 
 protected:
 
 	void build();
-	void createCamera( Engine* );
 	void updatePosition();
 
 	// Event handlers.
@@ -44,13 +50,11 @@ protected:
 	void onText( wxCommandEvent& event );
 	void onTextEnter( wxCommandEvent& event );
 	
-	// Each viewport has an associated camera.
-	NodePtr cameraNode;
-	TransformPtr cameraTransform;
-	CameraPtr camera;
-	
 	// Control where the scene will be drawn.
 	vaporControl* control;
+
+	// Viewport associated with the control.
+	ViewportPtr viewport;
 
 	// UI controls.
 	wxString X;

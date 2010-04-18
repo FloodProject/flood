@@ -9,7 +9,6 @@
 #include "PCH.h"
 #include "EditorIcons.h"
 #include "GizmoMode.h"
-#include "Gizmo.h"
 #include "Editor.h"
 
 namespace vapor { namespace editor {
@@ -26,8 +25,9 @@ enum
 //-----------------------------------//
 
 GizmoMode::GizmoMode( EditorFrame* frame )
-	: Mode( frame )
+	: Mode( frame ), editorScene( frame->getEditorScene() )
 {
+	assert( editorScene != nullptr );
 }
 
 //-----------------------------------//
@@ -74,23 +74,59 @@ void GizmoMode::onModeExit()
 
 //-----------------------------------//
 
+void GizmoMode::enableBoundingGizmo( const NodePtr& node )
+{
+	static int i = 0;
+	assert( node != nullptr );
+
+	const TransformPtr& tr = node->getTransform();
+	tr->setDebugRenderableVisible( true );
+
+	assert( gizmos.find(node) == gizmos.end() );
+
+	std::string str( "Gizmo"+num_to_str(i) );
+	NodePtr gizNode( new Node(str) );
+	gizNode->addTransform();
+
+	Vector3 center( tr->getBoundingVolume().getCenter() );
+	GeometryPtr gizmo( new Gizmo(center ) ); 	
+	gizNode->addComponent(gizmo);
+	
+	editorScene->add( gizNode );
+	gizmos[node] = gizNode;
+}
+
+//-----------------------------------//
+
+void GizmoMode::disableBoundingGizmo( const NodePtr& node )
+{
+	assert( node != nullptr );
+
+	const TransformPtr& tr = node->getTransform();
+	tr->setDebugRenderableVisible( false );
+
+	GizmoNodeMap::iterator it = gizmos.find(node);
+	
+	if( it == gizmos.end() )
+		return;
+
+	const NodePtr& gizNode = gizmos[node];
+	
+	editorScene->remove(gizNode);
+	gizmos.erase(it);
+}
+
+//-----------------------------------//
+
 void GizmoMode::drawGizmo( NodePtr old, NodePtr new_ )
 {
 	if( currentTool != Gizmo_Translate ) return;
 
 	if( old )
-	{
-		const TransformPtr& tr = old->getTransform();
-		tr->setDebugRenderableVisible( false );
-		old->removeComponent( "Gizmo" );
-	}
+		disableBoundingGizmo( old );
 
-	if( !new_ ) return;
-
-	const TransformPtr& tr = new_->getTransform();
-	tr->setDebugRenderableVisible( true );
-	GeometryPtr gizmo( new Gizmo( tr->getBoundingVolume().getCenter() ) ); 	
-	new_->addComponent(gizmo);
+	if( new_ && (gizmos.find(new_) == gizmos.end()) )
+		enableBoundingGizmo( new_ );
 }
 
 //-----------------------------------//
@@ -142,7 +178,7 @@ NodePtr buildRay( const Ray& pickRay, const Vector3& outFar )
 	GeometryPtr geom( new Geometry(rend) );
 	
 	NodePtr line( new Node( "line" ) );
-	line->addComponent( TransformPtr( new Transform() ) );
+	line->addTransform();
 	line->addComponent( geom );
 	line->setTag( Tags::NonPickable, true );
 	line->setTag( EditorTags::EditorOnly, true );
@@ -158,8 +194,7 @@ void GizmoMode::onMouseMove( const MouseMoveEvent& me )
 		&& (currentTool != Gizmo_Rotate)
 		&& (currentTool != Gizmo_Scale) ) return;
 
-	const CameraPtr& camera = viewport->getCamera();
-	const ScenePtr& editorScene = editor->getEditorScene();
+	const CameraPtr& camera = viewframe->getCamera();
 
 	// Get a ray given the screen location clicked.
 	Vector3 outFar;
@@ -170,6 +205,14 @@ void GizmoMode::onMouseMove( const MouseMoveEvent& me )
 	
 	if( !editorScene->doRayBoxQuery(pickRay, res) )
 		return;
+
+	// Find out if we picked a gizmo...
+	GizmoPtr gizmo = res.node->getComponent<Gizmo>("Gizmo");
+	
+	if( !gizmo )
+		return;
+
+	//gizmo->
 }
 
 //-----------------------------------//
@@ -179,7 +222,7 @@ void GizmoMode::onMouseButtonPress( const MouseButtonEvent& mbe )
 	disableSelectedNodes();
 
 	const ScenePtr& scene = engine->getSceneManager();
-	const CameraPtr& camera = viewport->getCamera();
+	const CameraPtr& camera = viewframe->getCamera();
 
 	// Get a ray given the screen location clicked.
 	Vector3 outFar;
@@ -203,9 +246,7 @@ void GizmoMode::disableSelectedNodes()
 {
 	// Disable all enabled bounding boxes.
 	foreach( const NodePtr& node, selectedNodes )
-	{
-		node->getTransform()->setDebugRenderableVisible( false );
-	}
+		disableBoundingGizmo( node );
 
 	selectedNodes.clear();
 }

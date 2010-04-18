@@ -31,14 +31,7 @@ Billboard::Billboard( const CameraPtr& cam, BillboardType::Enum type )
 
 //-----------------------------------//
 
-Billboard::~Billboard( )
-{
-
-}
-
-//-----------------------------------//
-
-void Billboard::update( double UNUSED(delta) )
+void Billboard::update( double VAPOR_UNUSED(delta) )
 {
 	// If this is the first update loop, we need to get the transform.
 	if( !transform ) transform = getNode()->getTransform();

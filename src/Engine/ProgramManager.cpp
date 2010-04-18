@@ -49,6 +49,7 @@ ProgramPtr ProgramManager::getProgram( const std::string& name )
 
 void ProgramManager::registerProgram( const std::string& name, const ProgramPtr& program )
 {
+	if( !program ) return;
 	// TODO: error handling
 	programs[name] = program;
 }

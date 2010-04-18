@@ -17,53 +17,36 @@ namespace vapor { namespace editor {
 
 void EditorFrame::RefreshViewport()
 {
-	viewport->getControl()->flagRedraw();
+	viewframe->getControl()->flagRedraw();
 }
 
 //-----------------------------------//
 
 void EditorFrame::onRender()
 {
-	render::Device* const device = engine->getRenderDevice();
+	ViewportPtr view = viewframe->getViewport();
 	
-	const math::Color bg( 0.0f, 0.10f, 0.25f );
-	device->setClearColor(bg);
-	device->clearTarget();
-
-	const CameraPtr& camera = viewport->getCamera();
+	const CameraPtr& camera = view->getCamera();
+	camera->setViewport( view );
 
 	camera->render( editorScene );
 	camera->render( engine->getSceneManager() );
+
+	view->getRenderTarget()->update();
 }
 
 //-----------------------------------//
 
 void EditorFrame::onUpdate( double delta )
 {
+	if( !editorScene ) return;
+
 	assert( editorScene != nullptr );
 	editorScene->update( delta );
 
 	engine->update( delta );
 
 	RefreshViewport();
-}
-
-//-----------------------------------//
-
-void EditorFrame::onTaskEvent( const TaskEvent& te )
-{
-	//switch(te.event)
-	//{
-	//case TaskEvent::Added:
-	//	debug( "Task added" );
-	//	break;
-	//case TaskEvent::Started:
-	//	debug( "Task started" );
-	//	break;
-	//case TaskEvent::Finished:
-	//	debug( "Task finished" );
-	//	break;
-	//}
 }
 
 //-----------------------------------//
@@ -172,17 +155,8 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 		return;
 	}
 	//-----------------------------------//
-	class LogTask : public Task
-	{
-		void run()
-		{
-			debug("Task is logging!");
-		}
-	};
 	case Toolbar_TooglePlay:
 	{
-		TaskManager* tm = engine->getTaskManager();
-		tm->addTask( TaskPtr( new LogTask() ) );
 		// Enable all simulations.
 		//physics::PhysicsManager* pm = engine->getPhysicsManager();
 		//if( pm ) pm->setSimulationEnabled( !pm->getSimulationEnabled() );
@@ -191,7 +165,7 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 	//-----------------------------------//
 	case Toolbar_ToogleSidebar:
 	{
-		wxSize szNew = viewport->GetClientSize();
+		wxSize szNew = viewframe->GetClientSize();
 		const wxSize& szNB = notebookCtrl->GetClientSize();
 
 		if( notebookCtrl->IsShown() )
@@ -257,21 +231,10 @@ void EditorFrame::updateUndoRedoUI()
 
 void EditorFrame::createEditorScene()
 {
-	// Create a scene node with editor stuff only.
-	editorScene.reset( new Scene() );
-
-	// Get the main viewport camera and add it to the scene.
-	const NodePtr& camera = viewport->getCamera()->getNode();
-	camera->setTag( Tags::NonPickable, true );
-	editorScene->add( camera );
-
-	camera->getTransform()->translate( 0.0f, 20.0f, -65.0f );
-
 	// Create a nice grid for the editor.
-	MaterialPtr mat( new Material("GridMaterial") );
 	NodePtr grid( new Node("Grid") );
-	grid->addComponent( TransformPtr( new Transform() ) );
-	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
+	grid->addTransform();
+	grid->addComponent( ComponentPtr( new Grid() ) );
 	grid->setTag( Tags::NonPickable, true );
 	editorScene->add( grid );
 }
@@ -281,7 +244,9 @@ void EditorFrame::createEditorScene()
 void EditorFrame::createScene()
 {
 	const ScenePtr& scene = engine->getSceneManager();
-	ResourceManager* const rm = engine->getResourceManager();
+	ResourceManagerPtr const rm = engine->getResourceManager();
+	render::DevicePtr const rd = engine->getRenderDevice();
+	ProgramManagerPtr const pm = rd->getProgramManager();
 
 	ProgramPtr diffuse( new GLSL_Program( 
 			rm->loadResource< GLSL_Shader >( "diffuse.vs" ),
@@ -291,26 +256,25 @@ void EditorFrame::createScene()
 			rm->loadResource< GLSL_Shader >( "tex.vs" ),
 			rm->loadResource< GLSL_Shader >( "tex.fs" ) ) );
 
-	ProgramManager::getInstance().registerProgram( "diffuse", diffuse );
-	ProgramManager::getInstance().registerProgram( "tex", tex );
+	pm->registerProgram( "diffuse", diffuse );
+	pm->registerProgram( "tex", tex );
 
 	ProgramPtr toon( new GLSL_Program( 
 			rm->loadResource< GLSL_Shader >( "toon.vs" ),
 			rm->loadResource< GLSL_Shader >( "toon.fs" ) ) );
 
-	ProgramManager::getInstance().registerProgram( "toon", toon );
+	pm->registerProgram( "toon", toon );
 
 	ProgramPtr tex_toon( new GLSL_Program( 
 			rm->loadResource< GLSL_Shader >( "tex_toon.vs" ),
 			rm->loadResource< GLSL_Shader >( "tex_toon.fs" ) ) );
 	
-	ProgramManager::getInstance().registerProgram( "tex_toon", tex_toon );
+	pm->registerProgram( "tex_toon", tex_toon );
 	
 	MaterialPtr matSun( new Material("SunBlend") );
 	matSun->setProgram( "tex" );
 	matSun->setTexture( 0, "moon.png" );
-	matSun->setBlending( BlendingOperationSource::SourceAlpha,
-		BlendingOperationDestination::OneMinusSourceAlpha );
+	matSun->setBlending( BlendingSource::SourceAlpha, BlendingDestination::OneMinusSourceAlpha );
 	matSun->setBackfaceCulling( false );
 	
 	RenderablePtr sunQuad( new render::Quad( 100.0f, 100.0f ) );
@@ -320,22 +284,21 @@ void EditorFrame::createScene()
 	geom->addRenderable( sunQuad, RenderGroup::Transparency );
 
 	NodePtr sun( new Node("Sun") );
-	sun->addComponent( TransformPtr( new Transform() ) );
+	sun->addTransform();
 	sun->addComponent( geom );
-	sun->addComponent( BillboardPtr( new Billboard( viewport->getCamera() ) ) );
+	sun->addComponent( BillboardPtr( new Billboard( viewframe->getCamera() ) ) );
 	scene->add( sun );
 
-	MaterialPtr mat( new Material("SkyMaterial") );
-	SkydomePtr skydome( new Skydome( mat ) );
+	SkydomePtr skydome( new Skydome() );
 	skydome->setSunNode( sun );
 
 	NodePtr sky( new Node("Sky") );
-	sky->addComponent( TransformPtr( new Transform() ) );	
+	sky->addTransform();	
 	sky->addComponent( skydome );
 	scene->add( sky );
 
 	NodePtr lnode( new Node("Light") );
-	lnode->addComponent( TransformPtr( new Transform() ) );
+	lnode->addTransform();
 	LightPtr light( new Light( LightType::Point ) );
 	light->diffuseColor = Colors::Red;
 	light->ambientColor = Colors::Yellow;
@@ -355,7 +318,7 @@ void EditorFrame::createScene()
 	TerrainPtr terrain( new Terrain( settings ) );
 
 	NodePtr terreno( new Node( "Terreno" ) );
-	terreno->addComponent( TransformPtr( new Transform() ) );
+	terreno->addTransform();
 	terreno->addComponent( terrain );
 	scene->add( terreno );
 

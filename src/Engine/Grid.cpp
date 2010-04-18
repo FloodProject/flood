@@ -20,7 +20,7 @@ const std::string& Grid::type = "Grid";
 
 //-----------------------------------//
 
-Grid::Grid( const render::MaterialPtr& )
+Grid::Grid( /*const render::MaterialPtr&*/ )
 	: sizeX( 500 ), sizeZ( 500 ), divX( 20 ), divZ( 20 ), 
 	strongMainLines( true )
 {

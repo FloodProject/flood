@@ -22,7 +22,7 @@ class Grid : public scene::Geometry
 {
 public:
 
-	Grid( const render::MaterialPtr& mat );
+	Grid( /*const render::MaterialPtr& mat*/ );
 
 	// Returns the type of this component.
 	IMPLEMENT_GETTER(Type, const std::string&, Grid::type)

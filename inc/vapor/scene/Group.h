@@ -50,6 +50,9 @@ public:
 	// child at 'i' then -1 is returned.
 	virtual int insert( uint i, const NodePtr& child );
 
+	// Removes node from the group.
+	virtual bool remove( const NodePtr& );
+
 	// Removes child at index i, if i is out of bounds returns false,
 	// if i is in bounds and child was removed, returns true
 	virtual bool remove( uint i );
@@ -83,7 +86,8 @@ public:
 protected:
 
 	// Holds a group of nodes.
-	std::vector< NodePtr > children;
+	typedef std::vector<NodePtr> NodeVector;
+	NodeVector children;
 };
 
 //-----------------------------------//

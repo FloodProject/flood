@@ -15,6 +15,7 @@ namespace vapor { namespace scene {
 
 using namespace vapor::input;
 using namespace vapor::math;
+using namespace vapor::render;
 
 //-----------------------------------//
 
@@ -127,8 +128,10 @@ void FirstPersonCamera::registerCallbacks()
 	mouse->onMouseDrag += fd::bind( &FirstPersonCamera::onMouseDrag, this );
 	mouse->onMouseWheelMove += fd::bind( &FirstPersonCamera::onMouseWheel, this );
 
-	render::Window& window = renderDevice->getWindow();
-	window.onWindowFocusChange += fd::bind( &FirstPersonCamera::onWindowFocusChange, this );
+	WindowPtr window = renderDevice->getWindow();
+	assert( window != nullptr );
+
+	window->onWindowFocusChange += fd::bind( &FirstPersonCamera::onWindowFocusChange, this );
 }
 
 //-----------------------------------//
@@ -140,18 +143,19 @@ void FirstPersonCamera::onKeyPressed( const KeyEvent& keyEvent )
 
 	case Keys::LControl:
 	{
-		render::Window& window = renderDevice->getWindow();
+		WindowPtr window = renderDevice->getWindow();
+		assert( window != nullptr );
 
-		if( window.isCursorVisible() )
+		if( window->isCursorVisible() )
 		{
-			oldMousePosition = window.getCursorPosition();
-			window.setCursorVisible( false );
+			oldMousePosition = window->getCursorPosition();
+			window->setCursorVisible( false );
 			centerCursor();
 		}
 		else
 		{
-			window.setCursorPosition( oldMousePosition );
-			window.setCursorVisible( true );
+			window->setCursorPosition( oldMousePosition );
+			window->setCursorVisible( true );
 		}
 
 		break;
@@ -183,8 +187,8 @@ void FirstPersonCamera::onMouseWheel( const input::MouseWheelEvent& event )
 
 void FirstPersonCamera::onMouseMove( const MouseMoveEvent& moveEvent )
 {
-	const render::Window& window = renderDevice->getWindow();
-	if( window.isCursorVisible() ) return;
+	const WindowPtr window = renderDevice->getWindow();
+	if( window->isCursorVisible() ) return;
 		
 	Vector2i currentPosition( moveEvent.x, moveEvent.y );
 	mouseDistance += currentPosition - lastPosition;
@@ -204,9 +208,9 @@ void FirstPersonCamera::onMouseDrag( const MouseDragEvent& event )
 
 void FirstPersonCamera::centerCursor( )
 {
-	render::Window& window = renderDevice->getWindow();
-	lastPosition = window.getSettings().getSize() / 2;
-	window.setCursorPosition( lastPosition );
+	WindowPtr window = renderDevice->getWindow();
+	lastPosition = window->getSettings().getSize() / 2;
+	window->setCursorPosition( lastPosition );
 }
 
 //-----------------------------------//

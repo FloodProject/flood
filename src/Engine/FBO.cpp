@@ -142,9 +142,21 @@ void FBO::createRenderBuffer( int bufferComponents )
 
 //-----------------------------------//
 
-void FBO::attachTexture(const TexturePtr& tex)
+TexturePtr FBO::createRenderTexture()
+{
+	TexturePtr tex( new Texture(settings) );
+	attachRenderTexture(tex);
+	return tex;
+}
+
+//-----------------------------------//
+
+void FBO::attachRenderTexture(const TexturePtr& tex)
 {
 	bind();
+
+	// Ensure texture has been allocated.
+	tex->upload();
 
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,
 		GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, tex->id(), 0);
@@ -157,13 +169,6 @@ void FBO::attachTexture(const TexturePtr& tex)
 
 void FBO::update()
 {
-}
-
-//-----------------------------------//
-
-const Settings& FBO::getSettings()
-{
-	return settings;
 }
 
 //-----------------------------------//

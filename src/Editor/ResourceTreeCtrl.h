@@ -31,16 +31,10 @@ public:
 					long style = wxTR_DEFAULT_STYLE | wxTR_HIDE_ROOT,
 					const wxValidator& validator = wxDefaultValidator, 
 					const wxString&	name = "ResourceTreeCtrl");
-					
-	virtual ~ResourceTreeCtrl();
 
 	// Synchronizes the tree with the resources.
 	void updateTree();
 
-	vapor::Engine* getEngine() { return engine; }
-	
-	void setEngine(vapor::Engine* engine) { this->engine = engine; }
-	
 protected:
 
 	void InitControl();
@@ -48,33 +42,21 @@ protected:
 
 	void onItemMenu(wxTreeEvent& event);
 
-	// vapor Resource-monitoring callbacks.
+	// Resource-monitoring callbacks.
 	void onResourceAdded( const resources::ResourceEvent& event );
 	void onResourceRemoved( const resources::ResourceEvent& event );
 
-	// Resource manager associated this control.
-	resources::ResourceManager* rm;
-
-	// Holds an instance of the engine.
-	vapor::Engine* engine;
+	Engine* engine;
+	ResourceManagerPtr rm;
 
 	wxImageList* imageList;
 
 	wxTreeItemId root;
 
-	//int blankImage;
-
 	std::map< resources::ResourceGroup::Enum, wxTreeItemId > resourceGroupTreeIds;
-
 	std::map< resources::ResourceGroup::Enum, int > resourceGroupIcons;
 
 	DECLARE_EVENT_TABLE()
-};
-
-enum 
-{
-	ID_ResourceTree,
-	//ID_MenuSceneNodeDelete = wxID_DELETE
 };
 
 //-----------------------------------//

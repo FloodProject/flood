@@ -11,8 +11,7 @@
 //-----------------------------------//
 
 Example::Example(const char** argv)
-	: Framework("Example", argv), c( 0.0f, 0.10f, 0.25f ),
-	fpsUpdateTime( 0.0f )
+	: Framework("Example", argv), fpsUpdateTime( 0.0f )
 {
 
 }
@@ -29,7 +28,7 @@ void Example::onInit()
 
 void Example::onSetupResources() 
 {
-	ResourceManager* rm = getResourceManager();
+	ResourceManagerPtr rm = getResourceManager();
 	
 	ImagePtr img = rm->loadResource< Image >( "triton.png" );
 	snd = rm->loadResource< resources::Sound >( "stereo.ogg" );
@@ -50,7 +49,9 @@ std::string getFPS( float lastFrameTime )
 void Example::onSetupScene() 
 {
 	ScenePtr scene = getSceneManager();
-	ResourceManager* rm = getResourceManager();
+	ResourceManagerPtr const rm = getResourceManager();
+	render::DevicePtr const rd = getRenderDevice();
+	ProgramManagerPtr const pm = rd->getProgramManager();
 
 	// TODO: make shaders automatically loaded?
 	ProgramPtr tex( new GLSL_Program( 
@@ -69,27 +70,10 @@ void Example::onSetupScene()
 			rm->loadResource< GLSL_Shader >( "tex_toon.vs" ),
 			rm->loadResource< GLSL_Shader >( "tex_toon.fs" ) ) );
 
-	ProgramManager::getInstance().registerProgram( "diffuse", diffuse );
-	ProgramManager::getInstance().registerProgram( "tex", tex );
-	ProgramManager::getInstance().registerProgram( "toon", toon );
-	ProgramManager::getInstance().registerProgram( "tex_toon", tex_toon );
-
-	Settings settings;
-	TexturePtr fbo_tex( new Texture( settings.width, settings.height ) );
-	fbo = new FBO( settings );
-	fbo->attachTexture( fbo_tex );
-
-	MaterialPtr fbo_mat( new Material( "FBO1", tex ) );
-	fbo_mat->setTexture( 0, fbo_tex );
-	
-	RenderablePtr quad( new Quad() );
-	quad->setMaterial( fbo_mat );
-
-	NodePtr fbo_node( new Node( "FBOquad" ) );
-	fbo_node->addComponent( TransformPtr( new Transform() ) );
-	fbo_node->addComponent( GeometryPtr( new Geometry( quad ) ) );
-	scene->add( fbo_node );
-	fbo->unbind();
+	pm->registerProgram( "diffuse", diffuse );
+	pm->registerProgram( "tex", tex );
+	pm->registerProgram( "toon", toon );
+	pm->registerProgram( "tex_toon", tex_toon );
 
 	// Create a new Camera
 	NodePtr camera( new Node( "MainCamera" ) );
@@ -98,12 +82,30 @@ void Example::onSetupScene()
 	camera->addComponent( cam );
 	scene->add( camera );
 
+	fbo = new FBO( Settings() );
+	TexturePtr fbo_tex = fbo->createRenderTexture();
+	
+	viewport2 = fbo->addViewport(cam);
+	viewport2->setClearColor( Colors::Green );
+
+	MaterialPtr fbo_mat( new Material( "FBO1", tex ) );
+	fbo_mat->setTexture( 0, fbo_tex );
+
+	RenderablePtr quad( new Quad(100.0f, 100.0f) );
+	quad->setMaterial( fbo_mat );
+
+	NodePtr fbo_node( new Node( "FBOquad" ) );
+	fbo_node->addTransform();
+	fbo_node->addComponent( GeometryPtr( new Geometry(quad) ) );
+	fbo_node->getTransform()->rotate( 90.0f, 0.0f, 0.0f );
+	scene->add( fbo_node );
+
 	//MeshPtr mesh = rm->loadResource<Mesh>( "ct.ms3d" );
 	//foreach( const RenderablePtr& rend, mesh->getGeometry()->getRenderables() )
 	//	rend->getMaterial()->setProgram( tex );
 
 	//NodePtr ct( new Node( "ct" ) );
-	//ct->addComponent( TransformPtr( new Transform() ) );
+	//ct->addTransform();
 	//ct->addComponent( mesh->getGeometry() );
 	//scene->add(ct);
 	
@@ -112,14 +114,14 @@ void Example::onSetupScene()
 	FontPtr font = rm->loadResource< Font >( "Verdana.font" );
 	label.reset( new Label( getFPS( lastFrameTime ), font, mat2 ) );
 	NodePtr fps( new Node( "FPSNode" ) );
-	fps->addComponent( TransformPtr( new Transform() ) );
+	fps->addTransform();
 	fps->addComponent( label );
 	fps->getTransform()->translate( -300.0f, 220.0f, 0.0f );
 	scene->add( fps );
 
 	MaterialPtr mat( new Material( "GridMaterial", diffuse ) );
 	NodePtr grid( new Node( "Grid" ) );
-	grid->addComponent( TransformPtr( new Transform() ) );
+	grid->addTransform();
 	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
 	scene->add( grid );
 
@@ -129,32 +131,37 @@ void Example::onSetupScene()
 		rend->getMaterial()->setProgram( diffuse );
 	}
 
-	//NodePtr lnode( new Node( "Light" ) );
-	//LightPtr light( new Light( LightType::Point ) );
-	//light->diffuseColor = Colors::Red;
-	//light->ambientColor = Colors::Yellow;
-	//lnode->addComponent( light );
-	//scene->add( lnode );
+	NodePtr lnode( new Node("Light") );
+	lnode->addTransform();
+	LightPtr light( new Light( LightType::Point ) );
+	light->diffuseColor = Colors::Red;
+	light->ambientColor = Colors::Yellow;
+	lnode->addComponent( light );
+	scene->add( lnode );
 
-	//TerrainSettings settings;
-	//settings.CellSize = 1024;
-	//settings.NumberTiles = 32;
-	//settings.MaxHeight = 150;
+	MaterialPtr cellMaterial( new Material("CellMaterial") );
+	cellMaterial->setTexture( 0, "PineTrunk.png" );
+	cellMaterial->setProgram( "tex_toon" );
 
-	//TerrainPtr terrain( new Terrain( settings ) );
+	TerrainSettings settings;
+	settings.CellSize = 512;
+	settings.NumberTiles = 32;
+	settings.MaxHeight = 100;
+	settings.Material = cellMaterial;
 
-	//NodePtr terreno( new Node( "Terreno" ) );
-	//terreno->addComponent( TransformPtr( new Transform() ) );
-	//terreno->addComponent( terrain );
-	//scene->add( terreno );
+	TerrainPtr terrain( new Terrain( settings ) );
 
-	//ImagePtr heightmap = rm->loadResource< Image >( "height2.png" );
-	//CellPtr cell = terrain->createCell( heightmap, 0, 0 );
+	NodePtr terreno( new Node( "Terreno" ) );
+	terreno->addTransform();
+	terreno->addComponent( terrain );
+	scene->add( terreno );
 
-	Json::Value sc;
-	scene->serialize( sc );
-	File file( "Example.scene", AccessMode::Write );
-	file.write( sc.toStyledString() );
+	const ImagePtr& heightmap = rm->loadResource<Image>( "height2.png" );
+	terrain->addCell( heightmap, 0, 0 );
+
+	window = rd->getRenderWindow();
+	viewport = window->addViewport(cam);
+	viewport->setClearColor( Color(0.0f, 0.10f, 0.25f) );
 }
 
 //-----------------------------------//
@@ -176,21 +183,15 @@ void Example::onUpdate( double delta )
 
 void Example::onRender()
 {
-	render::Device* device = getRenderDevice();
-
 	// Render into the FBO first
-	//device->setRenderTarget( fbo );
-	//fbo->bind();
-	//device->setClearColor( Colors::Red );
-	//device->clearTarget();
-	//cam->render();
-	//fbo->unbind();
+	fbo->bind();
+	viewport2->update();
+	fbo->unbind();
 
 	// Render the scene
-	device->setWindowActiveTarget();
-	device->setClearColor( c );
-	device->clearTarget();
-	cam->render();
+	viewport->getRenderTarget()->makeCurrent();
+	viewport->update();
+	window->update();
 }
 
 //-----------------------------------//
@@ -210,6 +211,14 @@ void Example::onKeyPressed( const KeyEvent& keyEvent )
 	{
 		debug( "min/avg/max: %f / %f / %f", 
 					minFrameTime, avgFrameTime, maxFrameTime );
+	}
+
+	if( keyEvent.keyCode == Keys::J )
+	{
+		Json::Value sc;
+		getSceneManager()->serialize( sc );
+		File file( "Example.scene", vfs::AccessMode::Write );
+		file.write( sc.toStyledString() );
 	}
 }
 

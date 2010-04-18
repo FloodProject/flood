@@ -173,7 +173,7 @@ bool TerrainMode::pickTerrain( const MouseButtonEvent& mb,
 	const ScenePtr& scene = engine->getSceneManager();
 
 	// Get a ray given the screen location clicked.
-	const CameraPtr& camera = viewport->getCamera(); 
+	const CameraPtr& camera = viewframe->getCamera(); 
 	const Ray& pickRay = camera->getRay( mb.x, mb.y );
 
 	RayBoxQueryResult query;

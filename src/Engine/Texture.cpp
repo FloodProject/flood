@@ -16,6 +16,14 @@ namespace vapor { namespace render {
 
 //-----------------------------------//
 
+Texture::Texture( const Settings& settings )
+	: width(settings.width), height(settings.height)
+{
+	init();
+}
+
+//-----------------------------------//
+
 Texture::Texture( ushort width, ushort height )
 	: width( width ), height( height )
 {

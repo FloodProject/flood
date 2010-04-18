@@ -17,35 +17,16 @@ namespace vapor { namespace scene {
 using namespace vapor::math;
 using namespace vapor::render;
 
-//-----------------------------------//
-
-namespace Projection
-{
-	const std::string toString(Enum e) 
-	{
-		switch(e) 
-		{
-		case Orthographic:
-			return "Orthographic";
-		case Perspective:
-			return "Perspective";
-		default:
-			return "(unknown)";
-		}
-	}
-}
-
-//-----------------------------------//
-
 const std::string& Camera::type = "Camera";
 
 //-----------------------------------//
 
-Camera::Camera( render::Device* device, Projection::Enum projection )
-	: renderDevice( device ), projection( projection ), target( nullptr ),
-	fov(45.0f), near_( 1.0f ), far_( 5000.0f ), lookAtVector( Vector3::UnitZ )
+Camera::Camera( render::Device* device, Projection::Enum proj )
+	: renderDevice( device ), projection( proj ), fov(45.0f),
+	near_(1.0f), far_(5000.0f), lookAtVector(Vector3::UnitZ),
+	currViewport(nullptr)
 {
-	setRenderTarget( device->getRenderTarget() );
+	assert( device != nullptr );
 }
 
 //-----------------------------------//
@@ -54,6 +35,11 @@ math::Ray Camera::getRay( float scrx, float scry, math::Vector3* outFar ) const
 {
 	// Let's do ray picking...
 	// Method based on: http://www.mvps.org/directx/articles/rayproj.htm
+
+	assert( currViewport != nullptr );
+
+	// TODO: This doesn't seem right.
+	Vector2i targetSize = currViewport->getSize();
 	
 	int width = targetSize.x;
 	int height = targetSize.y;
@@ -62,7 +48,7 @@ math::Ray Camera::getRay( float scrx, float scry, math::Vector3* outFar ) const
 	float x = width - scrx;
 	float y = height - scry;
 
-	float dx = (x / (width * 0.5f) - 1.0f) / getAspectRatio();
+	float dx = (x / (width * 0.5f) - 1.0f) / currViewport->getAspectRatio();
 	float dy = 1.0f - y / (height * 0.5f);
 
 	// Scaling Coordinates to the Frustum
@@ -93,30 +79,9 @@ math::Ray Camera::getRay( float scrx, float scry, math::Vector3* outFar ) const
 
 //-----------------------------------//
 
-void Camera::setRenderTarget( RenderTarget& newTarget )
+void Camera::update( double VAPOR_UNUSED(delta) )
 {
-	// TODO: remove only this from the delegate
-	//target->onTargetResize.clear();
-
-	target = &newTarget;
-	target->onTargetResize += fd::bind( &Camera::handleTargetResize, this );
-	handleTargetResize( target->getSettings() );
-}
-
-//-----------------------------------//
-
-void Camera::handleTargetResize( const render::Settings& evt )
-{
-	targetSize = evt.getSize();
-	
-	glViewport( 0, 0, targetSize.x, targetSize.y );
-	setupProjection();
-}
-
-//-----------------------------------//
-
-void Camera::update( double UNUSED(delta) )
-{
+	// Only run the following code once.
 	if( transform ) return;
 
 	assert( getNode() != nullptr );
@@ -125,8 +90,8 @@ void Camera::update( double UNUSED(delta) )
 	transform = getNode()->getTransform();
 	transform->onTransform += fd::bind( &Camera::onTransform, this );
 
-	// Update the projection matrix the first update.
-	setupProjection();
+	// Update the view matrix the first update.
+	/*setupProjection();*/
 	setupView();
 }
 
@@ -134,10 +99,15 @@ void Camera::update( double UNUSED(delta) )
 
 void Camera::setupProjection()
 {
+	assert( currViewport != nullptr );
+
+	// TODO: This doesn't seem right.
+	Vector2i targetSize = currViewport->getSize();
+
 	if( projection == Projection::Perspective )
 	{
 		projectionMatrix = Matrix4x4::createPerspectiveProjection( 
-			fov, getAspectRatio(), near_, far_ );
+			fov, currViewport->getAspectRatio(), near_, far_ );
 	}
 	else
 	{
@@ -145,6 +115,8 @@ void Camera::setupProjection()
 			0.0f, (float)targetSize.x, 0.0f, (float)targetSize.y,
 			near_, far_ );
 	}
+
+	renderDevice->setViewport( Vector2i::Zero, targetSize );
 }
 
 //-----------------------------------//
@@ -164,6 +136,17 @@ void Camera::setupView()
 
 //-----------------------------------//
 
+void Camera::setViewport( ViewportPtr viewport )
+{
+	if( currViewport == viewport )
+		return;
+
+	currViewport = viewport;
+	setupProjection();
+}
+
+//-----------------------------------//
+
 void Camera::onTransform()
 {
 	assert( transform != nullptr );
@@ -172,22 +155,18 @@ void Camera::onTransform()
 
 //-----------------------------------//
 
-float Camera::getAspectRatio() const
-{
-	if( targetSize.y == 0 ) return 0.0f;
-	return float(targetSize.x) / targetSize.y;
-}
-
-//-----------------------------------//
-
 void Camera::render( const NodePtr& node ) const
 {
+	if( !currViewport ) return;
+
 	// This will contain all nodes used for rendering.
 	render::RenderBlock renderBlock;
 
 	cull( renderBlock, node );
 
-	renderDevice->setRenderTarget( *target );
+	renderDevice->setClearColor( currViewport->getClearColor() );
+	renderDevice->clearTarget();
+
 	renderDevice->render( renderBlock, this );
 }
 
@@ -271,7 +250,8 @@ void Camera::cull( render::RenderBlock& block, const NodePtr& node ) const
 
 void Camera::serialize( Json::Value& value )
 {
-	value["projection"] = Projection::toString( projection );
+	value["projection"] = projection == Projection::Orthographic ?
+		"Orthographic" : "Perspective"; /*Projection::toString( projection );*/
 	value["fov"] = fov;
 	value["near"] = near_;
 	value["far"] = far_;

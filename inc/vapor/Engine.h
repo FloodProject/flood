@@ -8,19 +8,20 @@
 
 #pragma once
 
+#include "vapor/PCH.h"
+
 FWD_DECL(vfs, VFS)
-FWD_DECL(script, State)
-FWD_DECL(render, Device)
 FWD_DECL(audio, Device)
+FWD_DECL(script, State)
 FWD_DECL(input, InputManager)
+FWD_DECL_TYPEDEF_PTR(Subsystem)
+FWD_DECL_TYPEDEF_PTR(TaskManager)
 FWD_DECL(physics, PhysicsManager)
-FWD_DECL(resources, ResourceManager)
-FWD_DECL_TYPEDEF_SHARED(scene, Scene)
+FWD_DECL_NS_TYPEDEF_PTR(render, Device)
+FWD_DECL_NS_TYPEDEF_SHARED(scene, Scene)
+FWD_DECL_NS_TYPEDEF_PTR(resources, ResourceManager)
 
 namespace vapor {
-
-class TaskManager;
-class Subsystem;
 
 /** \addtogroup Main */
 /** @{ */
@@ -75,7 +76,7 @@ public:
 	/// @{
 
 	/// Gets the device.
-	IMPLEMENT_GETTER(RenderDevice, render::Device*, renderDevice)
+	IMPLEMENT_GETTER(RenderDevice, render::DevicePtr, renderDevice)
 
 	/// Gets the audio device.
 #ifdef VAPOR_AUDIO_OPENAL
@@ -86,13 +87,13 @@ public:
 	IMPLEMENT_GETTER(SceneManager, scene::ScenePtr, sceneManager)
 
 	/// Gets the device.
-	IMPLEMENT_GETTER(TaskManager, TaskManager*, taskManager)
+	IMPLEMENT_GETTER(TaskManager, TaskManagerPtr, taskManager)
 
 	/// Gets the scripting state.
 	IMPLEMENT_GETTER(ScriptState, script::State*, scriptState)
 
 	/// Gets the resources manager.
-	IMPLEMENT_GETTER(ResourceManager, resources::ResourceManager*, resourceManager)
+	IMPLEMENT_GETTER(ResourceManager, resources::ResourceManagerPtr, resourceManager)
 
 	/// Gets the physics manager.
 	IMPLEMENT_GETTER(PhysicsManager, physics::PhysicsManager*, physicsManager)
@@ -114,26 +115,26 @@ public:
 protected:
 
 	// Subsystems
-	std::vector< Subsystem* > subsystems;
+	std::vector< SubsystemPtr > subsystems;
 
 #ifdef VAPOR_AUDIO_OPENAL
-
 	/// Audio device
 	audio::Device* audioDevice;
-
+#else
+	void* audioDevice;
 #endif
 
 	/// Manages background tasks.
-	TaskManager* taskManager;
+	TaskManagerPtr taskManager;
 
 	/// Scene root node.
 	scene::ScenePtr sceneManager;
 
 	/// Rendering device.
-	render::Device* renderDevice;
+	render::DevicePtr renderDevice;
 
 	/// Resource manager.
-	resources::ResourceManager* resourceManager;
+	resources::ResourceManagerPtr resourceManager;
 
 	/// Physics manager.
 	physics::PhysicsManager* physicsManager;

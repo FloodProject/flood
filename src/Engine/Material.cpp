@@ -22,22 +22,40 @@ static float DEFAULT_LINE_WIDTH = 1.0f;
 //-----------------------------------//
 
 Material::Material( const std::string& name, ProgramPtr program )
-	: name( name ), program( program ), _isBlendingEnabled( false ),
-	src( BlendingOperationSource::One ), dst( BlendingOperationDestination::Zero ),
-	lineWidth( DEFAULT_LINE_WIDTH ), lineSmooth( false ), cullBackfaces( true ),
-	depthTest( true )
+	: name( name ), program( program )
 {
+	init();
 }
 
 //-----------------------------------//
 
 Material::Material( const std::string& name, const std::string& program )
-	: name( name ), _isBlendingEnabled( false ), 
-	program( ProgramManager::getInstance().getProgram( program ) ),
-	src( BlendingOperationSource::One ), dst( BlendingOperationDestination::Zero ),
-	lineWidth( DEFAULT_LINE_WIDTH ), lineSmooth( false ), cullBackfaces( true ),
-	depthTest( true )
+	: name( name ),
+	program( ProgramManager::getInstance().getProgram(program) )
 {
+	init();
+}
+
+//-----------------------------------//
+
+Material::~Material()
+{
+
+}
+
+//-----------------------------------//
+
+void Material::init()
+{
+	_isBlendingEnabled = false;
+	src = BlendingSource::One;
+	dst = BlendingDestination::Zero;
+	
+	lineWidth = DEFAULT_LINE_WIDTH;
+	lineSmooth = false;
+
+	cullBackfaces = true;
+	depthTest = true;
 }
 
 //-----------------------------------//
@@ -50,22 +68,22 @@ void Material::setTexture( uint unit, const std::string& name )
 
 //-----------------------------------//
 
-void Material::setTexture( uint unit, TexturePtr tex )
+void Material::setTexture( uint unit, const TexturePtr& tex )
 {
 	textures[unit] = tex;
 }
 
 //-----------------------------------//
 
-bool Material::isBlendingEnabled()
+bool Material::isBlendingEnabled() const
 {
 	return _isBlendingEnabled;
 }
 
 //-----------------------------------//
 
-void Material::setBlending( BlendingOperationSource::Enum src, 
-	BlendingOperationDestination::Enum dst )
+void Material::setBlending( BlendingSource::Enum src, 
+	BlendingDestination::Enum dst )
 {
 	this->src = src;
 	this->dst = dst;

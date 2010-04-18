@@ -50,7 +50,6 @@ public:
 
 	Billboard( const CameraPtr& cam, BillboardType::Enum type =
 		BillboardType::WorldAligned );
-	virtual ~Billboard();
 
 	void update( double delta );
 

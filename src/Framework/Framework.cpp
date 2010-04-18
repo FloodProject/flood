@@ -41,7 +41,7 @@ void Framework::run()
 void Framework::init()
 {
 	// init the engine
-	Engine::init();
+	Engine::init( true );
 
 	// register input callbacks
 	registerCallbacks();
@@ -66,8 +66,9 @@ void Framework::init()
 void Framework::render()
 {
 	render::Device* renderDevice = getRenderDevice();
+	render::WindowPtr window = renderDevice->getWindow();
 
-	while( frameTimer.reset(), renderDevice->getWindow().pumpEvents() )
+	while( frameTimer.reset(), window->pumpEvents() )
 	{
 		update( lastFrameTime );
 

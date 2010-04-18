@@ -120,9 +120,15 @@ typedef unsigned long	ulong;
 typedef boost::thread Thread;
 typedef boost::thread* ThreadPtr;
 
-//-------------------------------------------------------------------------//
+//---------------------------------------------------------------------//
 // Pointer wrappers
-//-------------------------------------------------------------------------//
+//---------------------------------------------------------------------//
+
+#define TYPEDEF_PTR(type)		\
+	typedef type* type##Ptr;
+
+#define TYPEDEF_AUTO_PTR(type)	\
+	typedef std::auto_ptr<type> type##Ptr;
 
 #if defined(VAPOR_MEMORY_TR1_VENDOR)
 	#if defined(VAPOR_COMPILER_MSVC)
@@ -144,7 +150,7 @@ typedef boost::thread* ThreadPtr;
 #if defined( VAPOR_MEMORY_SHARED_PTR )
 	#define TYPEDEF_SHARED_POINTER_FROM_TYPE( class ) \
 		typedef std::shared_ptr< class > class##Ptr
-	#define TYPEDEF_SHARED_WEAK_POINTER_FROM_CLASS( class ) \
+	#define TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( class ) \
 		typedef std::weak_ptr< class > class##WeakPtr
 #endif
 
@@ -159,9 +165,9 @@ typedef boost::thread* ThreadPtr;
 	#error "No shared pointer implementation found."
 #endif
 
-//-------------------------------------------------------------------------//
+//---------------------------------------------------------------------//
 // Iterator Debugging
-//-------------------------------------------------------------------------//
+//---------------------------------------------------------------------//
 
 #ifdef VAPOR_COMPILER_MSVC
 	#ifndef D_SCL_SECURE_NO_WARNINGS

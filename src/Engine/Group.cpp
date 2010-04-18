@@ -68,6 +68,29 @@ bool Group::remove( uint i )
 
 //-----------------------------------//
 
+bool Group::remove( const NodePtr& node )
+{
+	NodeVector::iterator it =
+		std::find(children.begin(), children.end(), node );
+
+	if( it == children.end() )
+		return false;
+
+	children.erase(it);
+
+	if( !onNodeRemoved.empty() )
+	{
+		GroupEvent event;
+		event.node = node;
+
+		onNodeRemoved( event );
+	}
+
+	return true;
+}
+
+//-----------------------------------//
+
 NodePtr Group::get( uint i ) const
 {
 	if( i >= children.size() )

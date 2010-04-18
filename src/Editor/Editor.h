@@ -10,7 +10,7 @@
  
 #include "Mode.h"
 #include "Operation.h"
-#include "Viewport.h"
+#include "Viewframe.h"
 #include "SceneTreeCtrl.h"
 #include "ResourceTreeCtrl.h"
 #include "TerrainPage.h"
@@ -70,26 +70,31 @@ public:
 	void onRender();
 	void RefreshViewport();
 
-	void onTaskEvent( const TaskEvent& event );
-
-	IMPLEMENT_GETTER(MainViewport, Viewport* const, viewport)
+	IMPLEMENT_GETTER(MainViewframe, Viewframe* const, viewframe)
 	IMPLEMENT_GETTER(Engine, Engine* const, engine)
 	IMPLEMENT_GETTER(EditorScene, ScenePtr, editorScene)
 
 protected:
 
+	// Initializes the engine and editor.
+	void initEngine();
+	void waitFinishLoad();
+
 	// Creates the layout of the editor.
-	void createEditorScene();
-	void createScene();
 	void createNotebook();
 	void createMenus();
 	void createToolbar();
 	void createStatusbar();
 	void createModes();
 
-	// Initializes vapor3D engine.
-	void initEngine();
+	// Creates the default scenes.
+	void createEditorScene();
+	void createScene();
 
+	NodePtr createCamera();
+	void createMainViewframe();
+
+	// Main engine instance.
 	Engine* engine;
 	ScenePtr editorScene;
 
@@ -106,7 +111,7 @@ protected:
 	// UI widgets.
 	wxBoxSizer* sizer;
 	wxToolBar* toolBar;
-	Viewport* viewport;
+	Viewframe* viewframe;
 	wxNotebook* notebookCtrl;
 	SceneTreeCtrl* sceneTreeCtrl;
 	ResourceTreeCtrl* resourceTreeCtrl;

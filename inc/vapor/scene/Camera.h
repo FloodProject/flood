@@ -12,8 +12,9 @@
 #include "vapor/math/Matrix4x4.h"
 #include "vapor/math/Vector2.h"
 #include "vapor/math/Frustum.h"
-#include "vapor/scene/Transform.h"
 #include "vapor/render/Device.h"
+#include "vapor/render/Viewport.h"
+#include "vapor/scene/Transform.h"
 
 namespace vapor { namespace scene {
 
@@ -30,8 +31,6 @@ namespace Projection
         Orthographic,
         Perspective
     };
-
-	const std::string toString(Enum e);
 }
 
 //-----------------------------------//
@@ -75,9 +74,6 @@ public:
 	// Gets/sets the projection type of the camera.
 	IMPLEMENT_ACESSOR(Projection, Projection::Enum, projection)
 
-	// Gets the aspect ratio of the target.
-	float getAspectRatio() const;
-
 	// Gets/sets the field-of-view of the camera.
 	IMPLEMENT_ACESSOR(FOV, float, fov);
 
@@ -95,15 +91,13 @@ public:
 
 	// Gets the view matrix of the camera.
 	IMPLEMENT_GETTER(ViewMatrix, const math::Matrix4x3&, viewMatrix)
-
-	// Gets the current render target associated with the camera.
-	IMPLEMENT_GETTER(RenderTarget, render::RenderTarget*, target)
 	
-	// Sets a new render target in the camera.
-	void setRenderTarget( render::RenderTarget& target );
+	// Gets/sets the current viewport associated with the camera.
+	IMPLEMENT_GETTER(Viewport, render::ViewportPtr, currViewport)
+	DECLARE_SETTER(Viewport, render::ViewportPtr)
 
 	// Gets the frustum associated with the camera.
-	//const math::Frustum& getFrustum() const;
+	//IMPLEMENT_GETTER(Frustum, const math::Frustum&, frustum)
 	
 	// Gets the type of this node.
 	IMPLEMENT_GETTER(Type, const std::string&, type)
@@ -111,9 +105,6 @@ public:
 	DECLARE_SERIALIZABLE();
 
 protected:
-
-	// Handles target resize (must update width, height).
-	void handleTargetResize( const render::Settings& );
 
 	// Sets up the projection matrix.
 	void setupProjection();
@@ -141,14 +132,11 @@ protected:
 	float near_;
 	float far_;
 
-	// Render target that we are rendering into.
-	render::RenderTarget* target;
-
-	// Dimensions of render target.
-	math::Vector2i targetSize;
-
 	// Used to pass a RenderQueue for rendering.
 	render::Device* renderDevice;
+
+	// Last viewport the camera rendered into.
+	render::ViewportPtr currViewport;
 
 	// Pointer to the camera's node transform.
 	TransformPtr transform;

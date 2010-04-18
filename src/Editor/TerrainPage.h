@@ -32,27 +32,22 @@ public:
 
 protected:
 
+	void createBrush();
+	void createCell();
+
 	wxChoicebook* m_cbTerrainTool;
+	
 	wxPanel* m_panelBrush;
-	wxStaticLine* m_staticline5;
-	wxStaticText* m_staticText2;
+	wxPanel* m_panelCell;
+	
 	wxImageComboBox* m_choiceBrush;
-	wxStaticText* m_staticText31;
 	wxSliderCtrl* m_sliderSize;
-	wxStaticText* m_staticText3;
 	wxSliderCtrl* m_sliderStrength;
 	
 	// Virtual event handlers, overide them in your derived class
 	virtual void OnToolChoice( wxCommandEvent& event ){ event.Skip(); }
 
 	DECLARE_EVENT_TABLE()
-};
-
-//-----------------------------------//
-
-enum 
-{
-
 };
 
 //-----------------------------------//

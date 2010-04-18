@@ -24,13 +24,19 @@ GLSL_Program::GLSL_Program( const GLSL_ShaderPtr& vs, const GLSL_ShaderPtr& ps )
 {
 	create();
 
-	assert( vs && ps );
+	//assert( vs && ps );
 
-	shaders.push_back( vs );
-	attached[vs] = false;
+	if(vs)
+	{
+		shaders.push_back( vs );
+		attached[vs] = false;
+	}
 
-	shaders.push_back( ps );
-	attached[ps] = false;
+	if(ps)
+	{
+		shaders.push_back( ps );
+		attached[ps] = false;
+	}
 }
 
 //-----------------------------------//
@@ -101,6 +107,9 @@ bool GLSL_Program::link()
 	// If we already tried to link and were not succesful, 
 	// don't try to link again until the program is updated.
 	if( linkError ) return false;
+
+	// No shaders, don't try to link.
+	if( shaders.empty() ) return false;
 
 	// If the shaders aren't loaded, don't try to link.
 	foreach( const ShaderPtr& shader, shaders )
@@ -248,9 +257,9 @@ void GLSL_Program::setUniform( const std::string& slot, int data )
 
 	//bind();
 
-	int loc = glGetUniformLocation( id, slot.c_str() );
+	GLint loc = glGetUniformLocation( id, slot.c_str() );
 
-	if( loc == -1)
+	if( loc == -1 )
 	{
 		warn( "glsl", "Could not locate uniform location in program object '%d'", id );
 		return;
@@ -271,9 +280,9 @@ void GLSL_Program::setUniform( const std::string& slot, const std::vector<math::
 
 	//bind();
 
-	int loc = glGetUniformLocation( id, slot.c_str() );
+	GLint loc = glGetUniformLocation( id, slot.c_str() );
 
-	if( loc == -1)
+	if( loc == -1 )
 	{
 		warn( "glsl", "Could not locate uniform location in program object '%d'", id );
 		return;
@@ -294,9 +303,9 @@ void GLSL_Program::setUniform( const std::string& slot, const std::vector<math::
 
 	//bind();
 
-	int loc = glGetUniformLocation( id, slot.c_str() );
+	GLint loc = glGetUniformLocation( id, slot.c_str() );
 
-	if( loc == -1)
+	if( loc == -1 )
 	{
 		//warn( "glsl", "Could not locate uniform location in program object '%d'", id );
 		return;
@@ -315,9 +324,9 @@ void GLSL_Program::setUniform( const std::string& slot, const math::Vector3& vec
 
 	//bind();
 
-	int loc = glGetUniformLocation( id, slot.c_str() );
+	GLint loc = glGetUniformLocation( id, slot.c_str() );
 
-	if( loc == -1)
+	if( loc == -1 )
 	{
 		//warn( "glsl", "Could not locate uniform location in program object '%d'", id );
 		return;
@@ -336,9 +345,9 @@ void GLSL_Program::setUniform( const std::string& slot, const math::Matrix4x3& m
 
 	//bind();
 
-	int loc = glGetUniformLocation( id, slot.c_str() );
+	GLint loc = glGetUniformLocation( id, slot.c_str() );
 
-	if( loc == -1)
+	if( loc == -1 )
 	{
 		//warn( "glsl", "Could not locate uniform location in program object '%d'", id );
 		return;
@@ -369,9 +378,9 @@ void GLSL_Program::setUniform( const std::string& slot, const math::Matrix4x4& m
 
 	//bind();
 
-	int loc = glGetUniformLocation( id, slot.c_str() );
+	GLint loc = glGetUniformLocation( id, slot.c_str() );
 
-	if( loc == -1)
+	if( loc == -1 )
 	{
 		//warn( "glsl", "Could not locate uniform location in program object '%d'", id );
 		return;

@@ -39,7 +39,7 @@ public:
 	IMPLEMENT_ACESSOR(MoveSensivity, float, moveSensivity);
 
 	// Gets the type of this node.
-	IMPLEMENT_GETTER(Type, const std::string&, FirstPersonCamera::type)
+	IMPLEMENT_GETTER(Type, const std::string&, Camera::type)
 
 	DECLARE_SERIALIZABLE();
 

@@ -8,9 +8,9 @@
 
 #pragma once
 
+#include "vapor/math/Color.h"
 #include "vapor/scene/Geometry.h"
 #include "vapor/render/Sphere.h"
-#include "vapor/math/Color.h"
 
 namespace vapor { namespace scene {
 
@@ -29,11 +29,10 @@ class Skydome : public scene::Geometry
 {
 public:
 
-	Skydome( const render::MaterialPtr& mat );
-	//virtual ~Skydome();
+	Skydome( /*const render::MaterialPtr& mat*/ );
 
 	// Returns the name of this component.
-	virtual const std::string& getType() const;
+	IMPLEMENT_GETTER(Type, const std::string&, type)
 
 	// SKY
 
@@ -48,7 +47,6 @@ public:
 	void setSunNode( const NodePtr& sun );
 	math::Vector3 getSunPosition();
 	
-	// Celestial bodies.
 	//void setStarsVisible( bool enable );
 
 	// Gets called each cycle to update the component.

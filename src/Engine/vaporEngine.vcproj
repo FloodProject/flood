@@ -415,6 +415,14 @@
 				RelativePath="..\..\inc\vapor\render\RenderQueue.h"
 				>
 			</File>
+			<File
+				RelativePath=".\Viewport.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\render\Viewport.h"
+				>
+			</File>
 			<Filter
 				Name="Adapter"
 				>
@@ -1159,6 +1167,14 @@
 			<File
 				RelativePath=".\FontManager.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<Filter
 				Name="Label"

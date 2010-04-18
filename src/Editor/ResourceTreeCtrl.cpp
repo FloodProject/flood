@@ -11,18 +11,18 @@
 #include "ResourceTreeCtrl.h"
 #include "EditorIcons.h"
 
-using namespace vapor;
-using namespace vapor::resources;
-
 namespace vapor { namespace editor {
-
-//typedef std::pair< const std::string, ComponentPtr > ComponentMapPair;
-
-//-----------------------------------//
 
 ////////////////////////////////////////////////////////////
 // Event table
 ////////////////////////////////////////////////////////////
+
+enum 
+{
+	ID_ResourceTree,
+	//ID_MenuSceneNodeDelete = wxID_DELETE
+};
+
 BEGIN_EVENT_TABLE(ResourceTreeCtrl, wxTreeCtrl)
 	//EVT_TREE_ITEM_MENU(ID_SceneTree, ResourceTreeCtrl::onItemMenu)
 END_EVENT_TABLE()
@@ -39,24 +39,13 @@ ResourceTreeCtrl::ResourceTreeCtrl(vapor::Engine* engine,
 	: wxTreeCtrl(parent, id, pos, size, style, validator, name),
 		engine(engine), rm( nullptr )
 {
-	if( !engine )
-	{
-		assert( "Invalid engine instance." );
-	}
-
+	assert( engine != nullptr );
 	rm = engine->getResourceManager();
 	
 	initIcons();
 	InitControl();
 
 	ExpandAll();
-}
-
-//-----------------------------------//
-
-ResourceTreeCtrl::~ResourceTreeCtrl()
-{
-
 }
 
 //-----------------------------------//
@@ -112,17 +101,15 @@ void ResourceTreeCtrl::InitControl()
 
 void ResourceTreeCtrl::updateTree()
 {
-	typedef std::pair< const std::string, ResourcePtr > resourceMapPair;
-
 	// traverse each resource and add nodes
-	foreach( resourceMapPair resource, rm->getResources() )
+	foreach( const ResourceMapPair& resource, rm->getResources() )
 	{
-		ResourcePtr res = resource.second;
+		const ResourcePtr& res = resource.second;
 		ResourceGroup::Enum group = res->getResourceGroup();
 
 		AppendItem( resourceGroupTreeIds[group],
-					resource.first,
-					0 /*resourceGroupIcons[group]*/ );
+					resource.first, 0
+					/*resourceGroupIcons[group]*/ );
 	}
 }
 
@@ -150,11 +137,12 @@ void ResourceTreeCtrl::onItemMenu(wxTreeEvent& WXUNUSED(event))
 
 void ResourceTreeCtrl::onResourceAdded( const resources::ResourceEvent& event )
 {
-	ResourceGroup::Enum group = event.resource->getResourceGroup();
+	const ResourcePtr& res = event.resource;
+	ResourceGroup::Enum group = res->getResourceGroup();
 
 	AppendItem( resourceGroupTreeIds[group],
-				event.resource->getURI(), 0
-				/*, resourceGroupIcons[group]*/ );	
+				res->getURI(), 0
+				/*resourceGroupIcons[group]*/ );
 }
 
 //-----------------------------------//

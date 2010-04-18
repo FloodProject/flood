@@ -102,9 +102,9 @@ void Window::setCursorPosition( const math::Vector2i& pos )
 
 //-----------------------------------//
 
-Window& Window::createWindow( const WindowSettings& settings )
+WindowPtr Window::createWindow( const WindowSettings& settings )
 {
-	Window* window;
+	WindowPtr window;
 
 	#if defined(VAPOR_WINDOWING_SDL)
 		window = new SDLWindow(settings);
@@ -116,7 +116,7 @@ Window& Window::createWindow( const WindowSettings& settings )
 		#error "Could not find a window implementation"
 	#endif
 
-	return *window;
+	return window;
 }
 
 //-----------------------------------//

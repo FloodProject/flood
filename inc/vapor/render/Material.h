@@ -16,13 +16,9 @@
 
 namespace vapor { namespace render {
 
-typedef std::map< uint, TexturePtr > TextureMap;
-typedef std::pair< const uint, TexturePtr > TextureMapPair;
-
-
 //-----------------------------------//
 
-namespace BlendingOperationSource
+namespace BlendingSource
 {
 	enum Enum 
 	{ 
@@ -40,7 +36,7 @@ namespace BlendingOperationSource
 
 //-----------------------------------//
 
-namespace BlendingOperationDestination
+namespace BlendingDestination
 {
 	enum Enum
 	{
@@ -57,6 +53,9 @@ namespace BlendingOperationDestination
 
 //-----------------------------------//
 
+typedef std::map< uint, TexturePtr > TextureMap;
+typedef std::pair< const uint, TexturePtr > TextureMapPair;
+
 /**
  * Rendering material.
  */
@@ -68,6 +67,7 @@ public:
 	//Material( const std::string& name );
 	Material( const std::string& name, ProgramPtr program );
 	Material( const std::string& name, const std::string& program = "diffuse" );
+	~Material();
 
 	// Gets the textual name of the material.
 	IMPLEMENT_GETTER(Name, const std::string&, name);
@@ -76,23 +76,23 @@ public:
 	void setTexture( uint unit, const std::string& tex );
 
 	// Adds a texture to the material.
-	void setTexture( uint unit, TexturePtr tex );
+	void setTexture( uint unit, const TexturePtr& tex );
 
 	// Sets the associated program.
 	void setProgram( const std::string& name );
 
 	// Gets the blending options for this material.
-	IMPLEMENT_GETTER(SourceBlendingOperation, BlendingOperationSource::Enum, src)
+	IMPLEMENT_GETTER(SourceBlendingOperation, BlendingSource::Enum, src)
 	
 	// Gets the blending options for this material.
-	IMPLEMENT_GETTER(DestinationBlendingOperation, BlendingOperationDestination::Enum, dst)
+	IMPLEMENT_GETTER(DestinationBlendingOperation, BlendingDestination::Enum, dst)
 
 	// Is blending enabled?
 	// Blending is automatically enabled if you set a custom option.
-	bool isBlendingEnabled();
+	bool isBlendingEnabled() const;
 
 	// Sets the blending options for this material.
-	void setBlending( BlendingOperationSource::Enum src, BlendingOperationDestination::Enum dst );
+	void setBlending( BlendingSource::Enum src, BlendingDestination::Enum dst );
 
 	// Gets the textures in the material.
 	IMPLEMENT_GETTER(Textures, const TextureMap&, textures)
@@ -114,6 +114,9 @@ public:
 
 protected:
 
+	// Common material initialization.
+	void init();
+
 	// Name of the material.
 	std::string name;
 
@@ -132,8 +135,8 @@ protected:
 	float lineWidth;
 
 	// Blending operations
-	BlendingOperationSource::Enum src;
-	BlendingOperationDestination::Enum dst;
+	BlendingSource::Enum src;
+	BlendingDestination::Enum dst;
 	bool _isBlendingEnabled;
 };
 

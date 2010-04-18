@@ -32,6 +32,7 @@ class VAPOR_API TextureManager : public Singleton<TextureManager>
 public:
 
 	TextureManager();
+	~TextureManager();
 
 	// Reloads a texture when the image file changes.
 	void onReload( const resources::ResourceEvent& evt );
@@ -53,10 +54,11 @@ private:
 	void switchImage( const resources::ImagePtr&, const resources::ImagePtr& );
 
 	// Maps the identifiers to the textures.
-	std::map< resources::ImagePtr, TexturePtr > textures;
-	typedef std::pair< resources::ImagePtr, TexturePtr > texPair;
+	typedef std::map< resources::ImagePtr, TexturePtr > TextureMap;
+	typedef std::pair< resources::ImagePtr, TexturePtr > TextureMapPair;
+	TextureMap textures;
 	
-	resources::ResourceManager* rm;
+	resources::ResourceManagerPtr rm;
 };
 
 //-----------------------------------//

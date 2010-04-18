@@ -16,6 +16,18 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
+class GizmoAxis
+{
+	enum Enum
+	{
+		AxisX,
+		AxisY,
+		AxisZ,
+	};
+};
+
+//-----------------------------------//
+
 /**
  * Gizmos (also called manipulators) are used to manipulate the spatial
  * properties of scene objects. You can translate, rotate and scale in
@@ -35,7 +47,7 @@ public:
 	Gizmo( const math::Vector3 midPoint = math::Vector3::Zero );
 
 	// Returns the name of this component.
-	virtual const std::string& getType() const;
+	IMPLEMENT_GETTER(Type, const std::string&, type)
 
 protected:
 
@@ -46,10 +58,11 @@ protected:
 	void generateSolidCone( double base, double height, uint slices,
 		std::vector<Vector3>& pos );
 
-	// Generate nice colors for our gizmo.
+	// Generate nice colors for the gizmo.
 	void generateColors( uint slices, std::vector<Vector3>& colors,
 		const math::Color& c1, const math::Color& c2 );
 	
+	// Generates the lines geometry for the gizmo.
 	render::VertexBufferPtr generateLines();
 
 	math::Vector3 midPoint;

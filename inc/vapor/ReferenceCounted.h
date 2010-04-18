@@ -24,12 +24,14 @@ namespace vapor {
 
 class VAPOR_API ReferenceCounted
 {
+public:
+
+	int getReferenceCount() { return references; }
+
 protected:
 	
 	ReferenceCounted() : references(0) { }
 	virtual ~ReferenceCounted() { }
-
-	int getReferenceCount() { return references; }
 
 private:
 

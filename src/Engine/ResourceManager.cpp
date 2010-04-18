@@ -29,19 +29,19 @@ ResourceManager::ResourceManager()
 
 ResourceManager::~ResourceManager()
 {
-	// TODO: Maybe this should force all resources to be deleted.
-
 	// Delete resource loaders.
-	typedef std::pair< std::string, ResourceLoader* > pair_t;
-
 	// TODO: comment the extension deleting logic.
-	foreach( const pair_t& entry, resourceLoaders )
+	foreach( const ResourceLoaderMapPair& entry, resourceLoaders )
 	{
 		if( entry.second->getExtensions().size() == 1 )
 			delete entry.second;
 		else
 			entry.second->getExtensions().remove( entry.first );
 	}
+
+	// Check that all resources will be deleted.
+	foreach( const ResourceMapPair& p, resources )
+		assert( p.second->getReferenceCount() == 1 );
 }
 
 //-----------------------------------//
@@ -74,13 +74,13 @@ ResourcePtr ResourceManager::loadResource(const std::string& path, bool async)
 
 //-----------------------------------//
 
-ResourceLoader* const ResourceManager::getResourceLoader(const std::string& ext)
+ResourceLoaderPtr const ResourceManager::getResourceLoader(const std::string& ext)
 {
 	// Check if we have a resource loader for this extension.
 	if( resourceLoaders.find(ext) == resourceLoaders.end() )
 		return nullptr;
 
-	ResourceLoader* const loader = resourceLoaders[ext];
+	ResourceLoaderPtr const loader = resourceLoaders[ext];
 	return loader;
 }
 
@@ -92,14 +92,14 @@ public:
 
 	void run()
 	{
-		ResourceManager* const rm = ResourceManager::getInstancePtr();
+		ResourceManagerPtr const rm = ResourceManager::getInstancePtr();
 
 		const std::string& path = res->getURI();
 		
 		File file( path );
 		const std::string& ext = file.getExtension();
 		
-		ResourceLoader* const loader = rm->getResourceLoader(ext);
+		ResourceLoaderPtr const loader = rm->getResourceLoader(ext);
 
 		if( !loader )
 		{
@@ -164,7 +164,7 @@ ResourcePtr ResourceManager::prepareResource( const std::string& path )
 		return ResourcePtr();
 
 	// Get the available resource loader and prepare the resource.
-	ResourceLoader* const ldr = resourceLoaders[file.getExtension()];
+	ResourceLoaderPtr const ldr = resourceLoaders[file.getExtension()];
 
 	ResourcePtr res( ldr->prepare(file) );
 	res->setStatus( ResourceStatus::Loading );
@@ -264,7 +264,7 @@ void ResourceManager::removeResource(const ResourcePtr& res)
 
 //-----------------------------------//
 
-void ResourceManager::registerLoader(ResourceLoader* const loader)
+void ResourceManager::registerLoader(ResourceLoaderPtr const loader)
 {
 	// TODO: check if the loader is already registered?
 
@@ -320,7 +320,7 @@ void ResourceManager::handleWatchResource(const vfs::WatchEvent& evt)
 
 //-----------------------------------//
 
-//void ResourceManager::setTaskManager( TaskManager* const taskManager_ )
+//void ResourceManager::setTaskManager( TaskManagerPtr const taskManager_ )
 //{
 //	assert( taskManager_ != nullptr );
 //

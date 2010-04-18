@@ -9,6 +9,7 @@
 #pragma once
 
 #include "Mode.h"
+#include "Gizmo.h"
 
 namespace vapor { namespace editor {
 
@@ -32,11 +33,19 @@ public:
 protected:
 
 	void drawGizmo( NodePtr old, NodePtr new_ );
+	
+	void enableBoundingGizmo( const NodePtr& node );
+	void disableBoundingGizmo( const NodePtr& node );
 
 	void disableSelectedNodes();
 
-	// Nodes
+	ScenePtr editorScene;
+	GizmoPtr gizmo;
+
 	std::vector<NodePtr> selectedNodes;
+
+	typedef std::map<NodePtr, NodePtr> GizmoNodeMap;
+	GizmoNodeMap gizmos;
 
 	int currentTool;
 };

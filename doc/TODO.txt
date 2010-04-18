@@ -13,12 +13,19 @@ http://hadoop.apache.org/avro/docs/current/
 EDITOR:
 -------
 
+Viewframe Border is not perfect
+Resize is not working well (glViewport)
+Delete issues (again...)
+
+Remove all the singleton (add Engine instead)
+Shaders live updating
 Redraw when a new resource gets loaded (texture changes etc)
 
 Gizmo
-	Picking when the mouse moves
+	Picking when the mouse moves (DONE)
 	Change gizmo color when user picks axis
 	Add drag event and change the Transform
+	Only use when Gizmo instance...
 
 Terrain editing
 	Brushes interface (wxWidgets)
@@ -250,7 +257,7 @@ SNIPPETS
 	//uint getMemoryUsage(ResourceGroup::Enum group);
 
 	// Gets a list of all the registered resource handlers.
-	//std::list<ResourceLoader*> getResourceLoader(std::string extension);
+	//std::list<ResourceLoaderPtr> getResourceLoader(std::string extension);
 	
 	// maps each resource group to a specific budget.
 	//std::map< ResourceGroup::Enum, uint > resourceBudgets;	

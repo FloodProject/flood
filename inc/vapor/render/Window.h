@@ -66,6 +66,9 @@ protected:
 
 //-----------------------------------//
 
+class Window;
+TYPEDEF_PTR(Window)
+
 /**
  * Represents an region on the screen that the renderer can send
  * the final representation of the scene, the rendered output image.
@@ -112,8 +115,7 @@ public:
 	virtual input::InputManager& getInputManager() = 0;
 
 	// Create a new render window.
-	static Window& createWindow( 
-		const WindowSettings& settings = WindowSettings() );
+	static WindowPtr createWindow( const WindowSettings& = WindowSettings() );
 
 	// Event fired when the window is closed.
 	fd::delegate< void() > onWindowClose;

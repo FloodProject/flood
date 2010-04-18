@@ -11,9 +11,11 @@
 #ifdef VAPOR_RENDERER_OPENGL
 
 #include "vapor/render/Device.h"
-#include "vapor/render/Adapter.h"
-#include "vapor/scene/Camera.h"
 #include "vapor/render/GL.h"
+#include "vapor/render/Adapter.h"
+#include "vapor/render/TextureManager.h"
+#include "vapor/render/ProgramManager.h"
+#include "vapor/scene/Camera.h"
 
 namespace vapor { namespace render {
 
@@ -23,10 +25,9 @@ using namespace vapor::log;
 //-----------------------------------//
 
 Device::Device()
-	: clearColor( math::Colors::White ), adapter( nullptr ),
-	window( nullptr ), activeTarget( nullptr )
+	: adapter(nullptr), window(nullptr), activeTarget(nullptr),
+	programManager(nullptr), textureManager(nullptr)
 {
-
 }
 
 //-----------------------------------//
@@ -36,9 +37,10 @@ Device::~Device()
 	info("render::opengl", "Closing OpenGL rendering device");
 
 	// TODO: delete all OpenGL resources (shaders, textures...)
+	// Or make sure they are all deleted once we delete the OpenGL context.
 
-	delete TextureManager::getInstancePtr();
-	delete ProgramManager::getInstancePtr();
+	delete textureManager;
+	delete programManager;
 	delete adapter;
 	delete window;
 }
@@ -56,15 +58,17 @@ void Device::init()
 
 	checkExtensions();
 
-	adapter = new Adapter();
-	TextureManager::getInstance();
-	ProgramManager::getInstance();
+	adapter = Adapter::getInstancePtr();
+	textureManager = TextureManager::getInstancePtr();
+	programManager = ProgramManager::getInstancePtr();
 
 	//glEnable( GL_LINE_SMOOTH );
 	//glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
 
 	glEnable( GL_CULL_FACE );
 	glCullFace( GL_BACK );
+
+	setClearColor( Colors::White );
 
 	//glEnable(GL_FOG);
 	//glFogfv(GL_FOG_COLOR, g_fogColor);
@@ -150,6 +154,60 @@ void Device::render( RenderBlock& queue, const scene::Camera* cam )
 
 //-----------------------------------//
 
+void Device::updateTarget()
+{
+	activeTarget->update();
+}
+
+//-----------------------------------//
+
+void Device::setClearColor(const math::Color& newColor)
+{
+	if( newColor == color )
+		return;
+
+	color = newColor;
+	glClearColor( color.r, color.g, color.b, color.a );
+}
+
+//-----------------------------------//
+
+void Device::clearTarget()
+{
+	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+}
+
+//-----------------------------------//
+
+void Device::setRenderTarget(RenderTargetPtr target)
+{
+	activeTarget = target;
+	activeTarget->makeCurrent();
+}
+
+//-----------------------------------//
+
+void Device::setWindowActiveTarget()
+{
+	setRenderTarget( window );
+}
+
+//-----------------------------------//
+
+void Device::setViewport( const Vector2i& vpLeft,const Vector2i& vpSize )
+{
+	if( (viewportLeft == vpLeft) && (viewportSize == vpSize) )
+		return;
+
+	viewportLeft = vpLeft;
+	viewportSize = vpSize;
+
+	glViewport( viewportLeft.x, viewportLeft.y,
+		viewportSize.x, viewportSize.y );
+}
+
+//-----------------------------------//
+
 void Device::checkExtensions()
 {
 	// Initialize GLEW (OpenGL Extension Wrangler) and check that
@@ -175,31 +233,9 @@ void Device::checkExtensions()
 
 //-----------------------------------//
 
-void Device::updateTarget()
+WindowPtr Device::createWindow( const WindowSettings& settings )
 {
-	activeTarget->update();
-}
-
-//-----------------------------------//
-
-void Device::clearTarget()
-{
-	glClearColor( clearColor.r, clearColor.g, clearColor.b, clearColor.a );
-	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-}
-
-//-----------------------------------//
-
-void Device::setWindowActiveTarget()
-{
-	setRenderTarget( *window );
-}
-
-//-----------------------------------//
-
-Window& Device::createWindow( const WindowSettings& settings )
-{
-	Window& window = Window::createWindow( settings );
+	WindowPtr window = Window::createWindow( settings );
 
 	setWindow( window );
 	setRenderTarget( window );

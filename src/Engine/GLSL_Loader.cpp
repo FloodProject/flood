@@ -35,7 +35,8 @@ Resource* GLSL_Loader::prepare(const File& file)
 
 	std::string ext = file.getExtension();
 
-	ShaderType::Enum type;
+	ShaderType::Enum type = ShaderType::Vertex;
+
 	if( ext == "vs" )
 		type = ShaderType::Vertex;
 	else if( ext == "fs" )

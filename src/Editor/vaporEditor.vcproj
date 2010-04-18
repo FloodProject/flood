@@ -400,14 +400,14 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Viewport"
+			Name="Viewframe"
 			>
 			<File
-				RelativePath=".\Viewport.cpp"
+				RelativePath=".\Viewframe.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Viewport.h"
+				RelativePath=".\Viewframe.h"
 				>
 			</File>
 		</Filter>

@@ -44,7 +44,7 @@ void Console::buildGeometry()
 
 //-----------------------------------//
 
-void Console::update( double UNUSED(delta) )
+void Console::update( double VAPOR_UNUSED(delta) )
 {
 	// No need to update geometry if the label did not change.
 	if( !isDirty ) return;

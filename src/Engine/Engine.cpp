@@ -34,17 +34,12 @@ namespace vapor {
 //-----------------------------------//
 
 Engine::Engine(const std::string& app, const char** argv, bool autoInit)
-	: app(app), argv(argv), 
-	renderDevice( nullptr ), resourceManager( nullptr ),
-#ifdef VAPOR_AUDIO_OPENAL
-	audioDevice( nullptr ),
-#endif
-	physicsManager( nullptr ), vfs( nullptr ), log( nullptr ), scriptState( nullptr )
+	: app(app), argv(argv), renderDevice(nullptr), vfs(nullptr),
+	resourceManager(nullptr), physicsManager(nullptr), log(nullptr),
+	scriptState(nullptr), audioDevice(nullptr)
 {
 	if( autoInit )
-	{
 		init();
-	}
 }
 
 //-----------------------------------//
@@ -53,16 +48,13 @@ Engine::~Engine()
 {
 	sceneManager.reset();
 
-	foreach( Subsystem* sub, subsystems )
+	foreach( SubsystemPtr sub, subsystems )
 		delete sub;
 
-#ifdef VAPOR_AUDIO_OPENAL
 	delete audioDevice;
-#endif
-
 	delete resourceManager;
 	delete renderDevice;
-	//delete physicsManager;
+	delete physicsManager;
 	delete scriptState;
 	delete vfs;
 	delete log;
@@ -151,8 +143,8 @@ void Engine::setupDevices( bool createWindow )
 
 void Engine::setupInput()
 {
-	Window& window = renderDevice->getWindow();
-	InputManager& im = window.getInputManager();
+	WindowPtr window = renderDevice->getWindow();
+	InputManager& im = window->getInputManager();
 
 	// Let's register some input devices.
 	im.addDevice( new input::Keyboard() );
@@ -165,7 +157,7 @@ void Engine::setupResourceLoaders()
 {
 	assert( resourceManager != nullptr );
 
-	std::vector<ResourceLoader*> loaders;
+	std::vector<ResourceLoaderPtr> loaders;
 
 	// register default compiled codecs
 	#ifdef VAPOR_IMAGE_PICOPNG
@@ -196,7 +188,7 @@ void Engine::setupResourceLoaders()
 		loaders.push_back( new Font_Loader() );
 	#endif
 
-	foreach( ResourceLoader* loader, loaders )
+	foreach( const ResourceLoaderPtr& loader, loaders )
 	{
 		resourceManager->registerLoader( loader );
 	}
@@ -222,9 +214,9 @@ void Engine::update( double delta )
 
 //-----------------------------------//
 
-input::InputManager* const Engine::getInputManager() const
+InputManager* const Engine::getInputManager() const
 {
-	return &(renderDevice->getWindow().getInputManager());
+	return &(renderDevice->getWindow()->getInputManager());
 }
 
 //-----------------------------------//

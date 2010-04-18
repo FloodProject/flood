@@ -12,9 +12,7 @@
 
 namespace vapor { namespace editor {
 
-////////////////////////////////////////////////////////////
-// Event table
-////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 enum Timers
 {
@@ -38,22 +36,15 @@ const double MAX_RATE_RENDER = 1.0f / 60;
 
 //-----------------------------------//
 
-vaporControl::vaporControl(vapor::Engine* engine, 
-					wxWindow* parent, wxWindowID id,
-					const int* attribList,
-					const wxPoint& pos,
-					const wxSize& size,
-					long style,
-					const wxString&	name,
-					const wxPalette& WXUNUSED(pallete))
+vaporControl::vaporControl(	wxWindow* parent, wxWindowID id,
+	const int* attribList, const wxPoint& pos, const wxSize& size,
+	long style,	const wxString&	name, const wxPalette& )
+
 	: wxGLCanvas(parent, id, attribList, pos, size, style, name),
 	needsRedraw( false ), frameUpdateTimer(this, UPDATE_TIMER),
 	frameRenderTimer(this, RENDER_TIMER)
 
 {
-	if(!engine) return;
-	render::Device* const device = engine->getRenderDevice();
-
 	info("vaporEditor", "Creating a new wxWidgets control");
 
 	// Create a new vapor3D window.
@@ -63,15 +54,14 @@ vaporControl::vaporControl(vapor::Engine* engine,
 	// Note: This will be deleted by the engine.
 	window = new vaporWindow(settings, this);
 
-	// Setup the window as our main render target.
-	device->setWindow( *window );
-	device->setRenderTarget( *window );
-	window->makeCurrent();
-
 	// Setup input in the engine.
 	inputManager = window->im;
-	engine->setupInput();
+}
 
+//-----------------------------------//
+
+void vaporControl::startFrameLoop()
+{
 	frameUpdateTimer.Start(MAX_RATE_UPDATE);
 	frameRenderTimer.Start(MAX_RATE_RENDER);
 }

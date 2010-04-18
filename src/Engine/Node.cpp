@@ -122,6 +122,14 @@ void Node::update( double delta )
 
 //-----------------------------------//
 
+bool Node::addTransform()
+{
+	return addComponent(
+		TransformPtr( new Transform() ) );
+}
+
+//-----------------------------------//
+
 TransformPtr Node::getTransform() const
 {
 	return getComponent< Transform >( "Transform" );

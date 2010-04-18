@@ -10,6 +10,9 @@
 
 #include "vapor/math/Vector2.h"
 
+FWD_DECL_NS_TYPEDEF_SHARED(scene, Camera)
+FWD_DECL_NS_TYPEDEF_PTR(render, Viewport)
+
 namespace vapor { namespace render {
 
 //-----------------------------------//
@@ -42,8 +45,13 @@ public:
 
 //-----------------------------------//
 
+typedef std::vector<ViewportPtr> ViewportList;
+
 /**
- * Render target. Windows, FBOs, etc.
+ * Render targets are surfaces where the rendered images can be stored
+ * and/or displayed. The most common use is windows, but there are also
+ * FBOs, which are basically offscreen buffers where you can render to.
+ * Each render target mantains a list of viewports 
  */
 
 class VAPOR_API RenderTarget : private boost::noncopyable
@@ -51,7 +59,7 @@ class VAPOR_API RenderTarget : private boost::noncopyable
 public:
 
 	RenderTarget() { }
-	virtual ~RenderTarget() { }
+	virtual ~RenderTarget();
 	
 	// Updates the render target (usually swaps buffers).
 	virtual void update() = 0;
@@ -59,12 +67,24 @@ public:
 	// Sets this rendering target as the current.
 	virtual void makeCurrent() = 0;
 
+	// Gets the list of viewports associated with the render target.
+	IMPLEMENT_GETTER(Viewports, const ViewportList&, viewports)
+
+	// Adds a new viewport to this target.
+	ViewportPtr addViewport( scene::CameraPtr camera );
+
 	// Gets the settings of this render target.
 	virtual const Settings& getSettings() const = 0;
 
 	// Event fired when the target gets resized.
 	fd::delegate< void( const Settings& ) > onTargetResize;
+
+private:
+
+	ViewportList viewports;
 };
+
+TYPEDEF_PTR(RenderTarget)
 
 //-----------------------------------//
 

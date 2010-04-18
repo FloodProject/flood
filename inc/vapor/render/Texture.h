@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "vapor/render/Target.h"
 #include "vapor/resources/Image.h"
 #include "vapor/render/GL.h"
 
@@ -24,7 +25,8 @@ namespace vapor { namespace render {
 class VAPOR_API Texture : public ReferenceCounted
 {
 public:
-
+	
+	Texture( const Settings& settings );
 	Texture( ushort width, ushort height );
 	Texture( const resources::ImagePtr );
 	~Texture();

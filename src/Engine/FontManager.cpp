@@ -7,13 +7,11 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/resources/FontManager.h"
 
 #ifdef VAPOR_FONT_FREETYPE2
 
-namespace vapor {
-	namespace resources {
+namespace vapor { namespace resources {
 
 //-----------------------------------//
 

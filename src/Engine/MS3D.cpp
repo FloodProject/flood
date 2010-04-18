@@ -299,8 +299,8 @@ void MS3D::build()
 				// TODO: We can use Alpha Rejection here instead if the 
 				// alpha values are only opaque or fully transparent.
 
-				mat->setBlending( BlendingOperationSource::SourceAlpha,
-					BlendingOperationDestination::OneMinusSourceAlpha );
+				mat->setBlending( BlendingSource::SourceAlpha,
+					BlendingDestination::OneMinusSourceAlpha );
 			}
 
 			rend->setMaterial( mat );

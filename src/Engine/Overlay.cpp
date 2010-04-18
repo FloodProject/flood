@@ -76,14 +76,14 @@ void Overlay::setAnchor( Anchor::Enum anchor )
 
 //-----------------------------------//
 
-void Overlay::update( double UNUSED(delta) )
+void Overlay::update( double VAPOR_UNUSED(delta) )
 {
 
 }
 
 //-----------------------------------//
 
-const std::string Overlay::save( int UNUSED(indent) )
+const std::string Overlay::save( int VAPOR_UNUSED(indent) )
 {
 	return ""; 
 }

@@ -40,4 +40,12 @@ Color::Color(const Color& c)
 
 //-----------------------------------//
 
+bool Color::operator == (const Color& c) const
+{
+	return (r == c.r) && (g == c.g) 
+		&& (b == c.b) && (a == c.a); 
+}
+
+//-----------------------------------//
+
 } } // end namespaces

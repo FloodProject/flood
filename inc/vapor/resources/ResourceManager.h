@@ -15,7 +15,7 @@
 #include "vapor/vfs/Watcher.h"
 #include "vapor/ConcurrentQueue.h"
 
-namespace vapor { class TaskManager; }
+FWD_DECL_TYPEDEF_PTR(TaskManager)
 
 namespace vapor { namespace resources {
 
@@ -35,8 +35,10 @@ struct ResourceEvent
 //-----------------------------------//
 
 typedef std::map< std::string, ResourcePtr > ResourceMap;
-typedef std::map< std::string, ResourceLoader* > ResourceLoaderMap;
+typedef std::pair< const std::string, ResourcePtr > ResourceMapPair;
 
+typedef std::map< std::string, ResourceLoaderPtr > ResourceLoaderMap;
+typedef std::pair< std::string, ResourceLoaderPtr > ResourceLoaderMapPair;
 /**
  * Responsible for managing a set of resources that are added by the app.
  * It should be possible to enforce a strict memory budget, and the manager
@@ -87,13 +89,13 @@ public:
 	void waitUntilQueuedResourcesLoad();
 
 	// Registers a resource handler.
-	void registerLoader(ResourceLoader* const loader);
+	void registerLoader(ResourceLoaderPtr const loader);
 
 	// Watches a resource for changes and auto-reloads it.
 	void handleWatchResource(const vfs::WatchEvent& evt);
 
 	// Gets a registered resource loader for the given extension.
-	ResourceLoader* const getResourceLoader(const std::string& ext);
+	ResourceLoaderPtr const getResourceLoader(const std::string& ext);
 
 	// Sends resource events to the subscribers.
 	void update( double );
@@ -136,8 +138,10 @@ protected:
 	ResourceLoaderMap resourceLoaders;
 
 	// Manages all background loading tasks.
-	TaskManager* taskManager;
+	TaskManagerPtr taskManager;
 };
+
+TYPEDEF_PTR(ResourceManager)
 
 //-----------------------------------//
 

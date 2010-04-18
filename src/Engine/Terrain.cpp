@@ -41,6 +41,12 @@ Terrain::Terrain( const TerrainSettings& settings )
 
 void Terrain::addCell( const ImagePtr& heightmap, ushort x, ushort y )
 {
+	if( !heightmap )
+	{
+		warn("terrain", "Cannot create terrain cell: Heightmap is invalid");
+		return;
+	}
+
 	requestsQueue.push_back( std::make_tuple(heightmap, x, y) );
 }
 
@@ -48,6 +54,9 @@ void Terrain::addCell( const ImagePtr& heightmap, ushort x, ushort y )
 
 CellPtr Terrain::createCell( const ImagePtr& heightmap, ushort x, ushort y )
 {
+	if( !heightmap )
+		return nullptr;
+
 	if( !heightmap->isLoaded() )
 		return nullptr;
 
@@ -144,6 +153,8 @@ void Terrain::update( double delta )
 		const CellRequest& req = (*it);
 		
 		const ImagePtr& heightmap = std::get<0>(req);
+		assert( heightmap != nullptr );
+
 		ushort x = std::get<1>(req);
 		ushort y = std::get<2>(req);
 		

@@ -49,13 +49,17 @@ protected:
 private:
 
 	scene::CameraPtr cam;
+
+	render::WindowPtr window;
+	render::ViewportPtr viewport;
+	render::ViewportPtr viewport2;
+
 	gui::LabelPtr label;
 	resources::SoundPtr snd;
 	render::FBO* fbo;
 	//scene::SoundPtr sound;
 	input::InputMap* inputMap; 
 	render::TexturePtr tex;
-	math::Color c;
 
 	float fpsUpdateTime;
 };

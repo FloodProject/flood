@@ -42,8 +42,9 @@ private:
 	// Maps the identifiers to the programs.
 	std::map< std::string, ProgramPtr > programs;
 	typedef std::pair< const std::string&, ProgramPtr > programPair;
-	
 };
+
+TYPEDEF_PTR(ProgramManager)
 
 //-----------------------------------//
 

@@ -20,7 +20,7 @@ Mode::Mode( EditorFrame* frame )
 	assert( editor != nullptr );
 
 	engine = editor->engine;
-	viewport = editor->viewport;
+	viewframe = editor->viewframe;
 }
 
 //-----------------------------------//

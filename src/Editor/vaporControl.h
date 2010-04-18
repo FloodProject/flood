@@ -35,14 +35,13 @@ class vaporControl : public wxGLCanvas
 {
 public:
 
-	vaporControl(vapor::Engine* engine, 
-					wxWindow* parent, wxWindowID id = wxID_ANY,
+	vaporControl( 	wxWindow* parent, wxWindowID id = wxID_ANY,
 					const int* attribList = nullptr,
 					const wxPoint& pos	= wxDefaultPosition,
 					const wxSize& size = wxDefaultSize,
-					long style = 0 | wxFULL_REPAINT_ON_RESIZE,
+					long style = 0 | wxFULL_REPAINT_ON_RESIZE | wxSTATIC_BORDER,
 					const wxString&	name = "vaporGLCanvas",
-					const wxPalette& palette = wxNullPalette); 	
+					const wxPalette& palette = wxNullPalette ); 	
 
 	// Add your frame updating code here.
 	fd::delegate<void(double)> onUpdate;
@@ -52,6 +51,12 @@ public:
 
 	// Flag this control to be redrawn.
 	void flagRedraw();
+
+	// Starts firing the update and render frame timers.
+	void startFrameLoop();
+
+	// Gets the associated window.
+	IMPLEMENT_GETTER(RenderWindow, vaporWindow*, window)
 
 protected:
 

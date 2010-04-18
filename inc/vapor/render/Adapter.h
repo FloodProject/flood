@@ -68,6 +68,8 @@ protected:
 	bool supportsVBO;
 };
 
+TYPEDEF_PTR(Adapter)
+
 //-----------------------------------//
 
 } } // end namespaces

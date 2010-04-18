@@ -7,68 +7,62 @@
 ************************************************************************/
 
 #include "PCH.h"
-#include "Viewport.h"
+#include "Viewframe.h"
 #include "EditorIcons.h"
+#include "vaporWindow.h"
 
 namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-BEGIN_EVENT_TABLE(Viewport, wxPanel)
+BEGIN_EVENT_TABLE(Viewframe, wxPanel)
 	// Don't remove this or you'll get undefined references.
 END_EVENT_TABLE()
 
 //-----------------------------------//
 
-Viewport::Viewport( vapor::Engine* engine, wxWindow* parent, wxWindowID id,
+Viewframe::Viewframe( wxWindow* parent, wxWindowID id,
 				   const wxPoint& pos, const wxSize& size, long style ) 
 	: wxPanel( parent, id, pos, size, style )
 {
-	control = new vaporControl( engine, this );
-
+	control = new vaporControl( this );
 	build();
-	createCamera( engine );
-	onCameraTransform();
 }
 
 //-----------------------------------//
 
-void Viewport::createCamera( Engine* engine )
+Viewport* Viewframe::createViewport( NodePtr node )
 {
-	// Each camera will have in unique name.
-	static int i = 0;
+	assert( node != nullptr );
 
-	InputManager* const im = engine->getInputManager();
-	render::Device* const rd = engine->getRenderDevice();
-	
-	// Create a new first-person camera for our viewport.
-	// By default it will be in perspective projection.
-	camera.reset( new FirstPersonCamera(im, rd) );
-	cameraTransform.reset( new Transform() );
+	// Add a new viewport to the window.
+	CameraPtr camera = node->getComponent<Camera>("Camera");
+	assert( camera != nullptr );
 
-	// Generate a new unique name and increment it.
-	std::string name( "EditorCamera" + num_to_str(i++) );
+	WindowPtr window = control->getRenderWindow();
+	viewport = window->addViewport( camera );
+
+	// Subscribe to the camera transform events.
+	TransformPtr transform = node->getTransform();
+	transform->onTransform += fd::bind( &Viewframe::onCameraTransform, this );
+	onCameraTransform();
 	
-	cameraNode.reset( new Node(name) );
-	cameraNode->addComponent( cameraTransform );
-	cameraNode->addComponent( camera );
-	cameraNode->setTag( EditorTags::EditorOnly, true );
-	
-	// Subscribe to the transform events.
-	cameraTransform->onTransform +=
-		fd::bind( &Viewport::onCameraTransform, this );
+	return viewport;
 }
 
 //-----------------------------------//
 
-void Viewport::onCameraTransform()
+void Viewframe::onCameraTransform()
 {
 	// We need to switch to a neutral locale or else the text
 	// conversion will lead to different results depending on
 	// each machine due to different locale settings.
 	LocaleSaveRestore c;
 	
-	const Vector3& pos = cameraTransform->getPosition();
+	NodePtr camera( viewport->getCamera()->getNode() );
+	TransformPtr transform = camera->getTransform();
+	
+	const Vector3& pos = transform->getPosition();
 	char str[32];
 
 	float_to_str( str, pos.x );
@@ -85,7 +79,7 @@ void Viewport::onCameraTransform()
 
 //-----------------------------------//
 
-void Viewport::updatePosition()
+void Viewframe::updatePosition()
 {
 	std::string str( txt_X->GetValue() );
 	float X = str_to_num<float>( str );
@@ -96,13 +90,14 @@ void Viewport::updatePosition()
 	str.assign( txt_Z->GetValue() );
 	float Z = str_to_num<float>( str );
 
-	math::Vector3 pos( X, Y, Z );
-	cameraTransform->setPosition( pos );
+	NodePtr camera( viewport->getCamera()->getNode() );
+	TransformPtr transform = camera->getTransform();
+	transform->setPosition( math::Vector3(X, Y, Z) );
 }
 
 //-----------------------------------//
 
-void Viewport::onTextEnter( wxCommandEvent& )
+void Viewframe::onTextEnter( wxCommandEvent& )
 {
 	updatePosition();
 }
@@ -111,11 +106,13 @@ void Viewport::onTextEnter( wxCommandEvent& )
 
 const short BAR_HEIGHT = 20;
 
-void Viewport::build()
+void Viewframe::build()
 {
+	wxPanel* panel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+
 	wxBoxSizer* sizer = new wxBoxSizer( wxHORIZONTAL );
 	
-	wxStaticText* lbl_X = new wxStaticText( this, wxID_ANY, wxT("X:"),
+	wxStaticText* lbl_X = new wxStaticText( panel, wxID_ANY, wxT("X:"),
 		wxDefaultPosition, wxDefaultSize, 0 );
 	lbl_X->Wrap( -1 );
 	sizer->Add( lbl_X, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxLEFT, 5 );
@@ -124,76 +121,78 @@ void Viewport::build()
 
 	wxTextValidator validatorX(wxFILTER_INCLUDE_CHAR_LIST, &X);
 	validatorX.SetCharIncludes( includes );
-	txt_X = new wxTextCtrl( this, wxID_ANY, wxT("0.0"),
+	txt_X = new wxTextCtrl( panel, wxID_ANY, wxT("0.0"),
 		wxDefaultPosition, wxSize( 50, BAR_HEIGHT ),
 		wxTE_CENTRE | wxTE_PROCESS_ENTER, validatorX);
 
-	txt_X->Bind(wxEVT_COMMAND_TEXT_ENTER, &Viewport::onTextEnter, this);
+	txt_X->Bind(wxEVT_COMMAND_TEXT_ENTER, &Viewframe::onTextEnter, this);
 	sizer->Add( txt_X, 0, wxALIGN_CENTER_VERTICAL, 5 );
 
-	wxStaticText* lbl_Y = new wxStaticText( this, wxID_ANY, wxT("Y:"),
+	wxStaticText* lbl_Y = new wxStaticText( panel, wxID_ANY, wxT("Y:"),
 		wxDefaultPosition, wxDefaultSize, 0 );
 	lbl_Y->Wrap( -1 );
 	sizer->Add( lbl_Y, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxLEFT, 5 );
 
 	wxTextValidator validatorY(wxFILTER_INCLUDE_CHAR_LIST, &Y);
 	validatorY.SetCharIncludes( includes );
-	txt_Y = new wxTextCtrl( this, wxID_ANY, wxT("0.0"),
+	txt_Y = new wxTextCtrl( panel, wxID_ANY, wxT("0.0"),
 		wxDefaultPosition, wxSize( 50, BAR_HEIGHT ),
 		wxTE_CENTRE | wxTE_PROCESS_ENTER, validatorY);
 
-	txt_Y->Bind(wxEVT_COMMAND_TEXT_ENTER, &Viewport::onTextEnter, this);
+	txt_Y->Bind(wxEVT_COMMAND_TEXT_ENTER, &Viewframe::onTextEnter, this);
 	sizer->Add( txt_Y, 0, wxALIGN_CENTER_VERTICAL, 5 );
 	
-	wxStaticText* lbl_Z = new wxStaticText( this, wxID_ANY, wxT("Z:"),
+	wxStaticText* lbl_Z = new wxStaticText( panel, wxID_ANY, wxT("Z:"),
 		wxDefaultPosition, wxDefaultSize, 0 );
 	lbl_Z->Wrap( -1 );
 	sizer->Add( lbl_Z, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxLEFT, 5 );
 	
 	wxTextValidator validatorZ(wxFILTER_INCLUDE_CHAR_LIST, &Z);
 	validatorZ.SetCharIncludes( includes );
-	txt_Z = new wxTextCtrl( this, wxID_ANY, wxT("0.0"), wxDefaultPosition,
+	txt_Z = new wxTextCtrl( panel, wxID_ANY, wxT("0.0"), wxDefaultPosition,
 		wxSize( 50, BAR_HEIGHT ), wxTE_CENTRE | wxTE_PROCESS_ENTER | wxBORDER_THEME,
 		validatorZ);
 
-	txt_Z->Bind(wxEVT_COMMAND_TEXT_ENTER, &Viewport::onTextEnter, this);
+	txt_Z->Bind(wxEVT_COMMAND_TEXT_ENTER, &Viewframe::onTextEnter, this);
 	sizer->Add( txt_Z, 0, wxALIGN_CENTER_VERTICAL, 5 );
 	
 	wxStaticLine* m_staticline2 = new wxStaticLine( 
-		this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
+		panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
 	sizer->Add( m_staticline2, 0, wxEXPAND|wxALL, 5 );
 	
 	//wxString choice_ViewChoices[] = 
 	// { "Free", wxT("Top"), wxT("Down"), wxT("Left"), wxT("Right") };
-	//choice_View = new wxChoice( this, wxID_ANY, wxDefaultPosition,
+	//choice_View = new wxChoice( panel, wxID_ANY, wxDefaultPosition,
 	// wxSize( -1, BAR_HEIGHT-1 ), 
 	//	VAPOR_ARRAY_SIZE(choice_ViewChoices), choice_ViewChoices, 0 );
 	//choice_View->SetSelection( 0 );
 	//sizer->Add( choice_View, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxLEFT, 5 );
 
-	wxStaticText* lbl_Speed = new wxStaticText( this, wxID_ANY, wxT("Speed:") );
+	wxStaticText* lbl_Speed = new wxStaticText( panel, wxID_ANY, wxT("Speed:") );
 	lbl_Speed->Wrap( -1 );
 	sizer->Add( lbl_Speed, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT, 5 );
 
-	wxSpinCtrlDouble* spn_CameraSpeed = new wxSpinCtrlDouble( this, wxID_ANY,
+	wxSpinCtrlDouble* spn_CameraSpeed = new wxSpinCtrlDouble( panel, wxID_ANY,
 		wxEmptyString, wxDefaultPosition, wxSize( 60, BAR_HEIGHT ) );
 	sizer->Add( spn_CameraSpeed, 0, wxALIGN_CENTER_VERTICAL, 5 );
 
-	btn_Wireframe = new wxBitmapButton( this, wxID_ANY, wxMEMORY_BITMAP(grid_icon_small),
+	btn_Wireframe = new wxBitmapButton( panel, wxID_ANY, wxMEMORY_BITMAP(grid_icon_small),
 		wxDefaultPosition, wxSize( -1, BAR_HEIGHT-1 ), wxBU_AUTODRAW );
 	sizer->Add( btn_Wireframe, 0, wxALIGN_CENTER_VERTICAL|wxLEFT, 5 );
 	
-	btn_Textures = new wxBitmapButton( this, wxID_ANY, wxMEMORY_BITMAP(map_small),
+	btn_Textures = new wxBitmapButton( panel, wxID_ANY, wxMEMORY_BITMAP(map_small),
 		wxDefaultPosition, wxSize( -1, BAR_HEIGHT-1 ), wxBU_AUTODRAW );
 	sizer->Add( btn_Textures, 0, wxALIGN_CENTER_VERTICAL, 5 );
 
 	wxBoxSizer* mainSizer;
 	mainSizer = new wxBoxSizer( wxVERTICAL );
 
-	mainSizer->Add( control, 1, wxEXPAND|wxALL );
-	mainSizer->Add( sizer, 0, wxEXPAND|wxALL );
+	panel->SetSizerAndFit( sizer );
 
-	SetSizer( mainSizer );
+	mainSizer->Add( control, 1, wxEXPAND );
+	mainSizer->Add( panel, 0, wxEXPAND|wxTOP, 2 );
+
+	SetSizerAndFit( mainSizer );
 	Layout();
 }
 

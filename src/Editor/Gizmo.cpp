@@ -56,19 +56,22 @@ render::VertexBufferPtr Gizmo::generateLines()
 	// X axis (red)
 	pos.push_back( midPoint );
 	pos.push_back( midPoint + Vector3::UnitX*S );
-	colors.push_back( Color( 0.6f, 0.0f, 0.0f ) );
+	//colors.push_back( Color( 0.6f, 0.0f, 0.0f ) );
+	colors.push_back( Colors::Red );
 	colors.push_back( Colors::Red );
 
 	// Y axis (green)
 	pos.push_back( midPoint + Vector3::UnitY*0.01f );
 	pos.push_back( midPoint + Vector3::UnitY*S );
-	colors.push_back(Color( 0.0f, 0.4f, 0.0f ) );
+	//colors.push_back(Color( 0.0f, 0.4f, 0.0f ) );
+	colors.push_back( Colors::Green );
 	colors.push_back( Colors::Green );
 
 	// Z axis (blue)
 	pos.push_back( midPoint );
 	pos.push_back( midPoint + Vector3::UnitZ*S );
-	colors.push_back( Color( 0.0f, 0.0f, 0.6f ) );
+	//colors.push_back( Color( 0.0f, 0.0f, 0.6f ) );
+	colors.push_back( Colors::Blue );
 	colors.push_back( Colors::Blue );
 
 	// Vertex buffer setup
@@ -85,7 +88,7 @@ render::VertexBufferPtr Gizmo::generateLines()
 		pos.push_back( v*tr ); }			\
 	generateColors( SLICES, colors, c1, c2 );
 
-const static byte SLICES = 5;
+const static byte SLICES = 10;
 
 render::RenderablePtr Gizmo::generateCones()
 {
@@ -105,14 +108,14 @@ render::RenderablePtr Gizmo::generateCones()
 
 	tr = EulerAngles( 0.0, 0.0, -90.0 ).getOrientationMatrix();
 	tr = tr*Matrix4x3::createTranslationMatrix( midPoint+Vector3::UnitX*S );
-	CONE( tr, Color( 0.6f, 0.0f, 0.0f ), Colors::Red );
+	CONE( tr, Colors::Red, Color( 0.6f, 0.0f, 0.0f ) );
 
 	tr = Matrix4x3::createTranslationMatrix( midPoint+Vector3::UnitY*S );
-	CONE( tr, Color( 0.0f, 0.4f, 0.0f ), Colors::Green );
+	CONE( tr, Colors::Green, Color( 0.0f, 0.4f, 0.0f ) );
 
 	tr = EulerAngles( 90.0, 0.0, 0.0 ).getOrientationMatrix();
 	tr = tr*Matrix4x3::createTranslationMatrix( midPoint+Vector3::UnitZ*S );
-	CONE( tr, Color( 0.0f, 0.0f, 0.6f ), Colors::Blue );
+	CONE( tr, Colors::Blue, Color( 0.0f, 0.0f, 0.6f ) );
 
 	// Vertex buffer setup
 	vb->set( VertexAttribute::Position, pos );
@@ -132,7 +135,7 @@ void Gizmo::generateColors( uint slices, std::vector<Vector3>& colors,
 						   const Color& c1, const Color& c2 )
 {
 	// Darkens the color a bit.
-	Vector3 baseColor = Vector3(c1);
+	Vector3 baseColor = Vector3(c2);
 	baseColor -= baseColor * 0.2f;
 	
 	for( uint i = 0; i < slices; i++ )
@@ -174,13 +177,6 @@ void Gizmo::generateSolidCone( double base, double height, uint slices,
 		pos.push_back( Vector3( cos((i+1)*r), 0, sin((i+1)*r) )*base );
 		pos.push_back( Vector3::UnitY*height );
 	}
-}
-
-//-----------------------------------//
-
-const std::string& Gizmo::getType() const
-{
-	return type;
 }
 
 //-----------------------------------//

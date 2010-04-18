@@ -11,14 +11,10 @@
 namespace vapor {
 
 //---------------------------------------------------------------------//
-// Macro for unused parameters to clean up 'The Warning Disease'
+// Macro for unused parameters to clean up compiler warnings
 //---------------------------------------------------------------------//
 
 #define VAPOR_UNUSED( id )
-
-#ifndef UNUSED
-	#define UNUSED VAPOR_UNUSED
-#endif
 
 //---------------------------------------------------------------------//
 // Array and Conversion Helpers
@@ -35,21 +31,39 @@ namespace vapor {
 		class T;									\
 	} } // end namespaces
 
-#define FWD_DECL_TYPEDEF_INT(N, T)					\
+#define FWD_DECL_TYPEDEF_PTR(T)						\
+	namespace vapor {								\
+		class T;									\
+		TYPEDEF_PTR( T );							\
+	} // end namespace
+
+#define FWD_DECL_NS_TYPEDEF_PTR(N, T)				\
+	namespace vapor { namespace N {					\
+		class T;									\
+		TYPEDEF_PTR( T );							\
+	} } // end namespaces
+
+#define FWD_DECL_NS_TYPEDEF_INT(N, T)				\
 	namespace vapor { namespace N {					\
 		class T;									\
 		TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( T );	\
 	} } // end namespaces
 
-#define FWD_DECL_TYPEDEF_SHARED(N, T)				\
+#define FWD_DECL_NS_TYPEDEF_SHARED(N, T)			\
 	namespace vapor { namespace N {					\
 		class T;									\
-		TYPEDEF_SHARED_POINTER_FROM_TYPE( T );	\
+		TYPEDEF_SHARED_POINTER_FROM_TYPE( T );		\
 	} } // end namespaces
 
 //---------------------------------------------------------------------//
 // Acessors
 //---------------------------------------------------------------------//
+
+#define DECLARE_GETTER(name, type)	\
+	type get##name() const;
+
+#define DECLARE_SETTER(name, type)	\
+	void set##name(type v);
 
 #define IMPLEMENT_GETTER(name, type, var)		\
 	type get##name() const { return var; }
@@ -57,22 +71,29 @@ namespace vapor {
 #define IMPLEMENT_SETTER(name, type, var)		\
 	void set##name(type v) { var = v; }
 
+#define IMPLEMENT_GETTER_PTR(name, type, var)	\
+	type get##name() const { return *var; }
+
+#define IMPLEMENT_SETTER_PTR(name, type, var)	\
+	void set##name(type v) { var = &v; }
+
 #define IMPLEMENT_ACESSOR(name, type, var)		\
 	IMPLEMENT_GETTER(name, type, var)			\
 	IMPLEMENT_SETTER(name, type, var)
 
 #define IMPLEMENT_ACESSOR_PTR(name, type, var)	\
-	type get##name() const { return *var; }		\
-	void set##name(type v) { var = &v; }
+	IMPLEMENT_GETTER_PTR(name, type, var)		\
+	IMPLEMENT_SETTER_PTR(name, type, var)
 
 #define IMPLEMENT_STATIC_ACESSOR(name, type, var)	\
 	static type get##name() { return var; }			\
-	static void set##name(type v) { var = v; }
+	static IMPLEMENT_SETTER(name, type, var)
 
 //---------------------------------------------------------------------//
 // Conversions
 //---------------------------------------------------------------------//
 
+// Returns if the system is little-endian.
 bool isLittleEndian();
 
 // Swaps the endianness of a long.

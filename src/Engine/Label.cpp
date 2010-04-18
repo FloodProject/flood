@@ -35,8 +35,8 @@ Label::Label( const std::string& text, resources::FontPtr font,
 	
 	// Setup the material to have the texture font and enable blending
 	material->setTexture( 0, font->getTexture() );
-	material->setBlending( BlendingOperationSource::SourceAlpha,
-		BlendingOperationDestination::One );
+	material->setBlending( BlendingSource::SourceAlpha,
+		BlendingDestination::One );
 }
 
 //-----------------------------------//
@@ -72,19 +72,20 @@ void Label::setText( const std::string& text )
 
 //-----------------------------------//
 
-void Label::update( double UNUSED(delta) )
+void Label::update( double VAPOR_UNUSED(delta) )
 {
 	// No need to update geometry if the label did not change.
 	if( !isDirty || text.empty() ) return;
 
-	if( !font ) return;
+	if( !font || !font->getTexture() || !font->getTexture()->getImage() ) 
+		return;
 
 	const std::vector<Glyph>& glyphs = font->getGlyphs();
 
 	const float width = font->getTexture()->getImage()->getWidth();
 	const float height = font->getTexture()->getImage()->getHeight();
 
-	VertexBufferPtr vb = renderable->getVertexBuffer();
+	const VertexBufferPtr& vb = renderable->getVertexBuffer();
 
 	// Invalidate the existing vertex buffer contents
 	vb->clear();

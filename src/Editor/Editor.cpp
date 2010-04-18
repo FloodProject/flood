@@ -68,27 +68,19 @@ EditorFrame::EditorFrame(const wxString& title)
 	// Initialize the engine.
 	initEngine();
 
-	sizer = new wxBoxSizer( wxHORIZONTAL );
-	sizer->Add( viewport, 1, wxEXPAND|wxALL );
-
-	createModes();
 	createMenus();
 	createToolbar();
 	createStatusbar();
 	createNotebook();
+	createModes();
+
 	createScene();
 	createEditorScene();
 
 	toolBar->Realize();
 	SetSizerAndFit( sizer );
-	
-	viewport->getControl()->SetFocus();
 
-	ResourceManager* const rm = engine->getResourceManager();
-	rm->waitUntilQueuedResourcesLoad();
-
-	// Update at least once before rendering.
-	onUpdate( 0.0f );
+	waitFinishLoad();
 }
 
 //-----------------------------------//
@@ -109,8 +101,7 @@ EditorFrame::~EditorFrame()
 	// they will make some things try to call OpenGL functions
 	// after the window context is already destroyed.
 	editorScene.reset();
-	delete viewport;
-	//viewport->Destroy();
+	delete viewframe;
 	delete engine;
 }
 
@@ -121,18 +112,12 @@ void EditorFrame::initEngine()
 	engine = new vapor::Engine(VAPOR_EDITOR_NAME, nullptr, false);
 	engine->init( false );
 
-	viewport = new Viewport( engine, this );
-	
-	vaporControl* control = viewport->getControl();
-	
-	control->onRender += fd::bind( &EditorFrame::onRender, this );
-	control->onUpdate += fd::bind( &EditorFrame::onUpdate, this );
+	// Create a scene node with editor stuff only.
+	editorScene.reset( new Scene() );
+
+	createMainViewframe();
 
 	engine->getRenderDevice()->init();
-	engine->getVFS()->mountDefaultLocations();
-
-	TaskManager* tm = engine->getTaskManager();
-	tm->onTaskEvent += fd::bind( &EditorFrame::onTaskEvent, this );
 
 	// Register all the mouse events.
 	Mouse* const mouse = engine->getInputManager()->getMouse();
@@ -142,6 +127,80 @@ void EditorFrame::initEngine()
 	mouse->onMouseButtonRelease += fd::bind( &EditorFrame::onMouseRelease, this );
 	mouse->onMouseEnter	+= fd::bind( &EditorFrame::onMouseEnter, this );
 	mouse->onMouseExit += fd::bind( &EditorFrame::onMouseLeave, this );
+
+	// Mount the editor default media VFS directories.
+	engine->getVFS()->mountDefaultLocations();
+}
+
+//-----------------------------------//
+
+void EditorFrame::waitFinishLoad()
+{
+	ResourceManagerPtr const rm = engine->getResourceManager();
+	rm->waitUntilQueuedResourcesLoad();
+
+	// Update at least once before rendering.
+	onUpdate( 0.0f );
+
+	vaporControl* control = viewframe->getControl();
+	control->startFrameLoop();
+}
+
+//-----------------------------------//
+
+void EditorFrame::createMainViewframe()
+{
+	viewframe = new Viewframe( this );
+
+	vaporControl* control = viewframe->getControl();
+	control->onRender += fd::bind( &EditorFrame::onRender, this );
+	control->onUpdate += fd::bind( &EditorFrame::onUpdate, this );
+	control->SetFocus();
+
+	WindowPtr window = (WindowPtr) control->getRenderWindow(); 
+	window->makeCurrent();
+
+	render::DevicePtr device = engine->getRenderDevice();
+	device->setWindow( window );
+
+	engine->setupInput();
+
+	NodePtr camera( createCamera() );	
+	editorScene->add( camera );
+
+	viewframe->createViewport( camera );
+
+	TransformPtr transform( camera->getTransform() );
+	transform->translate( 0.0f, 20.0f, -65.0f );
+
+	sizer = new wxBoxSizer( wxHORIZONTAL );
+	sizer->Add( viewframe, 1, wxEXPAND|wxALL );
+}
+
+//-----------------------------------//
+
+NodePtr EditorFrame::createCamera()
+{
+	// So each camera will have unique names.
+	static byte i = 0;
+
+	InputManager* const im = engine->getInputManager();
+	render::Device* const rd = engine->getRenderDevice();
+	
+	// Create a new first-person camera for our viewport.
+	// By default it will be in perspective projection.
+	CameraPtr camera( new FirstPersonCamera(im, rd) );
+
+	// Generate a new unique name.
+	std::string name( "EditorCamera" + num_to_str(i++) );
+
+	NodePtr cameraNode( new Node(name) );
+	cameraNode->addTransform();
+	cameraNode->addComponent( camera );
+	cameraNode->setTag( Tags::NonPickable, true );
+	cameraNode->setTag( EditorTags::EditorOnly, true );
+
+	return cameraNode;
 }
 
 //-----------------------------------//
@@ -150,6 +209,15 @@ void EditorFrame::createModes()
 {
 	modes.push_back( new GizmoMode(this) );
 	modes.push_back( new TerrainMode(this) );
+
+	// --------------------
+	// Mode-specific tools
+	// --------------------
+
+	foreach( Mode* const mode, modes )
+	{
+		mode->onModeInit( toolBar, modesMap );
+	}
 
 	// TODO: hack
 	onModeSwitch( modes.front(), 18237 );
@@ -274,15 +342,6 @@ void EditorFrame::createToolbar()
 
 	toolBar->AddTool( Toolbar_TooglePlay, "Play", wxMEMORY_BITMAP(resultset_next), 
 		"Enable/disable Play mode", wxITEM_CHECK );
-
-	// --------------------
-	// Mode-specific tools
-	// --------------------
-
-	foreach( Mode* const mode, modes )
-	{
-		mode->onModeInit( toolBar, modesMap );
-	}
 
 	// --------------
 	// UI tools

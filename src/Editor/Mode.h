@@ -12,7 +12,7 @@ namespace vapor { namespace editor {
 
 class EditorFrame;
 class Mode;
-class Viewport;
+class Viewframe;
 
 typedef std::map<int, Mode*> ModeIdMap;
 
@@ -51,7 +51,7 @@ protected:
 
 	Engine* engine;
 	EditorFrame* editor;
-	Viewport* viewport;
+	Viewframe* viewframe;
 };
 
 //-----------------------------------//

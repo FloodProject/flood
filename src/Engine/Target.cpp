@@ -8,14 +8,34 @@
 
 #include "vapor/PCH.h"
 #include "vapor/render/Target.h"
+#include "vapor/render/Viewport.h"
 
 namespace vapor { namespace render {
 
+using namespace vapor::math;
+
 //-----------------------------------//
 
-math::Vector2i Settings::getSize() const
+RenderTarget::~RenderTarget()
+{
+	foreach( ViewportPtr viewport, viewports )
+		delete viewport;
+}
+
+//-----------------------------------//
+
+Vector2i Settings::getSize() const
 {
 	return math::Vector2i(width, height);
+}
+
+//-----------------------------------//
+
+ViewportPtr RenderTarget::addViewport( scene::CameraPtr camera )
+{
+	ViewportPtr viewport = new Viewport(camera, this);
+	viewports.push_back( viewport );
+	return viewport;
 }
 
 //-----------------------------------//

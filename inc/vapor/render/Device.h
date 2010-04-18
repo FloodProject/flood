@@ -12,16 +12,17 @@
 
 #include "vapor/render/Window.h"
 #include "vapor/render/Target.h"
-#include "vapor/render/Adapter.h"
-#include "vapor/render/TextureManager.h"
-#include "vapor/render/ProgramManager.h"
 #include "vapor/render/Renderable.h"
 #include "vapor/render/RenderQueue.h"
 #include "vapor/math/Matrix4x3.h"
+#include "vapor/math/Vector2.h"
 #include "vapor/math/Color.h"
 
 FWD_DECL(scene, Camera);
 FWD_DECL(render, BufferManager);
+FWD_DECL_NS_TYPEDEF_PTR(render, ProgramManager)
+FWD_DECL_NS_TYPEDEF_PTR(render, TextureManager)
+FWD_DECL_NS_TYPEDEF_PTR(render, Adapter)
 
 namespace vapor { namespace render { 
 
@@ -66,45 +67,66 @@ public:
 	// Sets the window as the active rendering target.
 	void setWindowActiveTarget();
 
+	// Gets the main render window.
+	IMPLEMENT_GETTER(RenderWindow, WindowPtr, window)
+
 	// Gets/sets the current active render target.
-	IMPLEMENT_ACESSOR_PTR(RenderTarget, RenderTarget&, activeTarget)
+	IMPLEMENT_GETTER(RenderTarget, RenderTargetPtr, activeTarget)
+	void setRenderTarget(RenderTargetPtr target);
 
 	// Gets/sets the main rendering window.
-	IMPLEMENT_ACESSOR_PTR(Window, Window&, window)
+	IMPLEMENT_ACESSOR(Window, WindowPtr, window)
 
 	// Gets rendering adapter information.
-	IMPLEMENT_GETTER(Adapter, Adapter&, *adapter)
+	IMPLEMENT_GETTER(Adapter, AdapterPtr, adapter)
 
-	// Sets the current clear color.
-	IMPLEMENT_SETTER(ClearColor, const math::Color&, clearColor)
+	// Gets/sets the current clear color.
+	IMPLEMENT_GETTER(ClearColor, const math::Color&, color)
+	void setClearColor(const math::Color& color);
+
+	// Sets the OpenGL viewport dimensions.
+	void setViewport( const math::Vector2i& lowerLeft, const math::Vector2i& size );
+
+	// Gets the program manager.
+	IMPLEMENT_GETTER(ProgramManager, ProgramManagerPtr, programManager)
 
 	// Gets the texture manager.
-	IMPLEMENT_GETTER(TextureManager, TextureManager&, TextureManager::getInstance())
+	IMPLEMENT_GETTER(TextureManager, TextureManagerPtr, textureManager)
 
 	// Creates a new rendering window.
-	Window& createWindow( const WindowSettings& settings = WindowSettings() );
+	WindowPtr createWindow( const WindowSettings& = WindowSettings() );
 
 protected:
 
+	// Manages all the shaders.
+	TextureManagerPtr textureManager;
+
+	// Manages all the shaders.
+	ProgramManagerPtr programManager;
+
 	// Active render target
-	RenderTarget* activeTarget;
+	RenderTargetPtr activeTarget;
 
 	// List of render targets
-	std::vector< RenderTarget* > renderTargets;
+	std::vector< RenderTargetPtr > renderTargets;
 
 	// Adapter information
-	Adapter* adapter;
+	AdapterPtr adapter;
 
 	// Render window
-	Window* window;
+	WindowPtr window;
 
 	// Current clear color
-	math::Color clearColor;
+	math::Color color;
+
+	math::Vector2i viewportLeft, viewportSize;
 
 private:
 
 	void checkExtensions();
 };
+
+TYPEDEF_PTR(Device)
 
 //-----------------------------------//
 

@@ -54,8 +54,8 @@ public:
 	FBO(const Settings& settings);
 	virtual ~FBO();
 
+	// Binds/unbinds the FBO.
 	void bind();
-
 	void unbind();
 
 	// Updates the render target (usually swaps buffers).
@@ -64,13 +64,18 @@ public:
 	// Sets this rendering target as the current.
 	virtual void makeCurrent();
 
+	// Creates a new render buffer with the given components.
 	void createRenderBuffer( int bufferComponents = 
 		RenderBufferType::Color | RenderBufferType::Depth );
 
-	void attachTexture(const TexturePtr& tex);
+	// Creates a render texture to this FBO.
+	TexturePtr createRenderTexture();
+
+	// Attaches a render texture to this FBO.
+	void attachRenderTexture(const TexturePtr& tex);
 
 	// Gets the settings of this render target.
-	virtual const Settings& getSettings();
+	IMPLEMENT_GETTER(Settings, const Settings&, settings)
 
 protected:
 

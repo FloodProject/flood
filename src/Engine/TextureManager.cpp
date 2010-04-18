@@ -26,6 +26,15 @@ TextureManager::TextureManager()
 
 //-----------------------------------//
 
+TextureManager::~TextureManager()
+{
+	foreach( const TextureMapPair& p, textures )
+		assert( p.second->getReferenceCount() == 1 );
+}
+
+
+//-----------------------------------//
+
 const byte TEX_SIZE = 64;
 
 TexturePtr TextureManager::getTexture( const std::string& name )
@@ -123,7 +132,7 @@ uint TextureManager::getMemoryUsage()
 {
 	uint total = 0;
 
-	foreach( const texPair& p, textures )
+	foreach( const TextureMapPair& p, textures )
 		total += p.first->getBuffer().size();
 
 	return total;

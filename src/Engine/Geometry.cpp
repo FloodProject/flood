@@ -94,8 +94,12 @@ void Geometry::update( double delta )
 	}
 
 	const NodePtr& node = getNode();
-	node->getTransform()->markBoundingVolumeDirty();
+	assert( node != nullptr );
 
+	const TransformPtr& transform = node->getTransform();
+	assert( transform != nullptr );
+
+	transform->markBoundingVolumeDirty();
 	isDirty = false;
 }
 

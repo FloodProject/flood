@@ -19,7 +19,7 @@ namespace vapor { namespace scene {
 class Node;
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Node );
-TYPEDEF_SHARED_WEAK_POINTER_FROM_CLASS( Node );
+TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( Node );
 
 typedef std::map< std::string, ComponentPtr > ComponentMap;
 typedef std::pair< const std::string, ComponentPtr > ComponentMapPair;
@@ -51,6 +51,9 @@ public:
 
 	// Adds a component to this node.
 	bool addComponent( const ComponentPtr& component );
+
+	// Adds a transform component to this node.
+	bool addTransform();
 
 	// Gets a component from this node.
 	ComponentPtr getComponent( const std::string& type ) const;
