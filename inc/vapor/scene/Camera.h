@@ -51,7 +51,7 @@ public:
 
 	// Renders the (sub-)scene starting from the passed node to the current 
 	// render target associated in the camera.
-	void render( const NodePtr& node ) const;
+	void render( const NodePtr& node, bool clearView = true ) const;
 
 	// Renders the entire scene starting from the root node to the current 
 	// render target associated in the camera.

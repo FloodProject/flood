@@ -23,6 +23,7 @@ FWD_DECL(render, BufferManager);
 FWD_DECL_NS_TYPEDEF_PTR(render, ProgramManager)
 FWD_DECL_NS_TYPEDEF_PTR(render, TextureManager)
 FWD_DECL_NS_TYPEDEF_PTR(render, Adapter)
+FWD_DECL(scene, Camera)
 
 namespace vapor { namespace render { 
 
@@ -97,6 +98,11 @@ public:
 	WindowPtr createWindow( const WindowSettings& = WindowSettings() );
 
 protected:
+
+	// Render state management.
+	bool setupRenderState( const RenderState&, const scene::Camera* );
+	bool setupRenderStateLight( const RenderState&, const LightQueue& );
+	bool setupRenderStateOverlay( const RenderState& );
 
 	// Manages all the shaders.
 	TextureManagerPtr textureManager;

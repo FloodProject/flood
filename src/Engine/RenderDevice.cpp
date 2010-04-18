@@ -19,8 +19,9 @@
 
 namespace vapor { namespace render {
 
-using namespace vapor::math;
 using namespace vapor::log;
+using namespace vapor::math;
+using namespace vapor::scene;
 
 //-----------------------------------//
 
@@ -51,7 +52,7 @@ void Device::init()
 {
 	info( "render::gl", "Creating OpenGL rendering device" );
 
-	if( !activeTarget || !window ) 
+	if( !window ) 
 	{
 		error( "render::gl", "No current OpenGL context found, stuff may fail" );
 	}
@@ -62,33 +63,29 @@ void Device::init()
 	textureManager = TextureManager::getInstancePtr();
 	programManager = ProgramManager::getInstancePtr();
 
-	//glEnable( GL_LINE_SMOOTH );
-	//glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
-
-	glEnable( GL_CULL_FACE );
-	glCullFace( GL_BACK );
 
 	setClearColor( Colors::White );
 
-	//glEnable(GL_FOG);
-	//glFogfv(GL_FOG_COLOR, g_fogColor);
-	//glFogf(GL_FOG_DENSITY, g_fogDensity);
+	glEnable( GL_CULL_FACE );
+	glCullFace( GL_BACK );
+	//glEnable( GL_LINE_SMOOTH );
+	//glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
 }
 
 //-----------------------------------//
 
-bool renderSorter(const RenderState& lhs, const RenderState& rhs)
+bool stateSorter(const RenderState& lhs, const RenderState& rhs)
 {
 	return lhs.group < rhs.group;
 }
 
-void Device::render( RenderBlock& queue, const scene::Camera* cam ) 
+void Device::render( RenderBlock& queue, const Camera* cam ) 
 {
 	glEnable( GL_DEPTH_TEST );
 
 	// sort the list by render group
 	// TODO: use a radix sorter
-	std::sort( queue.renderables.begin(), queue.renderables.end(), &renderSorter );
+	std::sort( queue.renderables.begin(), queue.renderables.end(), &stateSorter );
 
 	// render the list
 	foreach( const RenderState& state, queue.renderables )
@@ -96,7 +93,7 @@ void Device::render( RenderBlock& queue, const scene::Camera* cam )
 		const RenderablePtr& rend = state.renderable;
 		if( !rend ) continue;
 
-		const MaterialPtr& material = rend->getMaterial();;
+		const MaterialPtr& material = rend->getMaterial();
 		if( !material ) continue;
 
 		const ProgramPtr& program = material->getProgram();
@@ -107,49 +104,94 @@ void Device::render( RenderBlock& queue, const scene::Camera* cam )
 		// TODO: this needs some refactoring
 		if( state.group != RenderGroup::Overlays )
 		{
-			//glDepthMask( true );
+			if( !setupRenderState(state, cam) )
+				continue;
 
-			program->setUniform( "vp_ProjectionMatrix", cam->getProjectionMatrix() );
-			program->setUniform( "vp_ModelMatrix", state.modelMatrix );
-			program->setUniform( "vp_ViewMatrix", cam->getViewMatrix() );
-			program->setUniform( "vp_ModelViewMatrix", state.modelMatrix * cam->getViewMatrix() );
-
-			if( queue.lights.size() > 0 )
-			{
-				std::vector<math::Color> lightColors;
-				lightColors.push_back( queue.lights[0].light->diffuseColor );
-				lightColors.push_back( queue.lights[0].light->specularColor );
-				lightColors.push_back( queue.lights[0].light->emissiveColor );
-				lightColors.push_back( queue.lights[0].light->ambientColor );
-
-				{
-					//PROFILE;
-					program->setUniform( "vp_LightColors", lightColors );
-					program->setUniform( "vp_LightDirection", Vector3(0.5f, 0.8f, 0.0f)/*queue.lights[0].transform->get*/ ); // TODO
-				}
-			}
+			if( !setupRenderStateLight(state, queue.lights) )
+				continue;
 		}
 		else if( state.group == RenderGroup::Overlays )
 		{
-			glDisable( GL_DEPTH_TEST );
-			//glDepthMask( false );
-
-			const float w = static_cast<float>( activeTarget->getSettings().getWidth() );
-			const float h = static_cast<float>( activeTarget->getSettings().getHeight() );
-
-			Matrix4x4 proj = Matrix4x4::createOrthographicProjection( 
-				-w/2, w/2, -h/2, h/2, -10.0, 10.0 );
-
-			program->setUniform( "vp_ProjectionMatrix", proj );
-			program->setUniform( "vp_ModelMatrix", state.modelMatrix );
-			program->setUniform( "vp_ViewMatrix", math::Matrix4x4::Identity );
-			program->setUniform( "vp_ModelViewMatrix", state.modelMatrix );
+			if( !setupRenderStateOverlay(state) )
+				continue;
 		}
 
 		state.renderable->render( *this );
 
 		rend->unbind();
 	}
+}
+
+//-----------------------------------//
+
+bool Device::setupRenderState( const RenderState& state, const Camera* cam )
+{
+	const RenderablePtr& rend = state.renderable;
+	const MaterialPtr& material = rend->getMaterial();
+	const ProgramPtr& program = material->getProgram();
+
+	program->setUniform( "vp_ProjectionMatrix", cam->getProjectionMatrix() );
+	program->setUniform( "vp_ModelMatrix", state.modelMatrix );
+	program->setUniform( "vp_ViewMatrix", cam->getViewMatrix() );
+	program->setUniform( "vp_ModelViewMatrix", state.modelMatrix * cam->getViewMatrix() );
+
+	return true;
+}
+
+//-----------------------------------//
+
+bool Device::setupRenderStateLight( const RenderState& state, const LightQueue& lights )
+{
+	const RenderablePtr& rend = state.renderable;
+	const MaterialPtr& material = rend->getMaterial();
+	const ProgramPtr& program = material->getProgram();
+
+	if( lights.empty() ) return false;
+
+	std::vector< Color > colors;
+	foreach( const LightState& state, lights )
+	{
+		colors.push_back( state.light->diffuseColor );
+		colors.push_back( state.light->specularColor );
+		colors.push_back( state.light->emissiveColor );
+		colors.push_back( state.light->ambientColor );
+	}
+
+	// TODO: fix the lighting stuff
+	program->setUniform( "vp_LightColors", colors );
+	program->setUniform( "vp_LightDirection", Vector3(0.5f, 0.8f, 0.0f) );
+
+	return true;
+}
+
+//-----------------------------------//
+
+bool Device::setupRenderStateOverlay( const RenderState& state )
+{
+	const RenderablePtr& rend = state.renderable;
+	if( !rend ) return false;
+
+	const MaterialPtr& material = rend->getMaterial();
+	if( !material ) return false;
+
+	const ProgramPtr& program = material->getProgram();
+	if( !program ) return false;
+
+	glDisable( GL_DEPTH_TEST );
+	//glDepthMask( false );
+
+	const float w = 0.0f /*(float) activeTarget->getSettings().getWidth()*/;
+	const float h = 0.0f /*(float) activeTarget->getSettings().getHeight()*/;
+
+	Matrix4x4 proj = Matrix4x4::createOrthographicProjection( 
+		-w/2, w/2, -h/2, h/2, -10.0, 10.0 );
+
+	program->setUniform( "vp_ProjectionMatrix", proj );
+	program->setUniform( "vp_ModelMatrix", state.modelMatrix );
+	program->setUniform( "vp_ViewMatrix", math::Matrix4x4::Identity );
+	program->setUniform( "vp_ModelViewMatrix", state.modelMatrix );
+
+	return true;
 }
 
 //-----------------------------------//

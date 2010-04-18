@@ -24,24 +24,20 @@ void EditorFrame::RefreshViewport()
 
 void EditorFrame::onRender()
 {
-	ViewportPtr view = viewframe->getViewport();
+	ViewportPtr viewport = viewframe->getViewport();
 	
-	const CameraPtr& camera = view->getCamera();
-	camera->setViewport( view );
+	const CameraPtr& camera = viewport->getCamera();
+	camera->setViewport( viewport );
 
 	camera->render( editorScene );
-	camera->render( engine->getSceneManager() );
+	camera->render( engine->getSceneManager(), false );
 }
 
 //-----------------------------------//
 
 void EditorFrame::onUpdate( double delta )
 {
-	if( !editorScene ) return;
-
-	assert( editorScene != nullptr );
 	editorScene->update( delta );
-
 	engine->update( delta );
 }
 

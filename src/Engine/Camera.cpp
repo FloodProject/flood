@@ -153,7 +153,7 @@ void Camera::onTransform()
 
 //-----------------------------------//
 
-void Camera::render( const NodePtr& node ) const
+void Camera::render( const NodePtr& node, bool clearView ) const
 {
 	if( !viewport ) return;
 
@@ -162,8 +162,11 @@ void Camera::render( const NodePtr& node ) const
 
 	cull( renderBlock, node );
 
-	renderDevice->setClearColor( viewport->getClearColor() );
-	renderDevice->clearTarget();
+	if( clearView )
+	{
+		renderDevice->setClearColor( viewport->getClearColor() );
+		renderDevice->clearTarget();
+	}
 
 	renderDevice->render( renderBlock, this );
 }

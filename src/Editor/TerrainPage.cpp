@@ -43,7 +43,7 @@ void TerrainPage::createBrush()
 	m_panelBrush = new wxPanel( m_cbTerrainTool, wxID_ANY, 
 		wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 
-	wxStaticLine* m_staticline5 = new wxStaticLine( m_panelBrush, wxID_ANY, 
+	new wxStaticLine( m_panelBrush, wxID_ANY, 
 		wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 
 	wxFlexGridSizer* fgSizer2;

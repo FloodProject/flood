@@ -168,7 +168,8 @@ void EditorFrame::createMainViewframe()
 	NodePtr camera( createCamera() );	
 	editorScene->add( camera );
 
-	viewframe->createViewport( camera );
+	ViewportPtr viewport = viewframe->createViewport( camera );
+	viewport->setClearColor( Color(0.0f, 0.10f, 0.25f) );
 
 	TransformPtr transform( camera->getTransform() );
 	transform->translate( 0.0f, 20.0f, -65.0f );
