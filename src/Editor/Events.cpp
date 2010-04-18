@@ -31,8 +31,6 @@ void EditorFrame::onRender()
 
 	camera->render( editorScene );
 	camera->render( engine->getSceneManager() );
-
-	view->getRenderTarget()->update();
 }
 
 //-----------------------------------//
@@ -45,8 +43,6 @@ void EditorFrame::onUpdate( double delta )
 	editorScene->update( delta );
 
 	engine->update( delta );
-
-	RefreshViewport();
 }
 
 //-----------------------------------//

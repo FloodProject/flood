@@ -194,16 +194,15 @@ void Device::setWindowActiveTarget()
 
 //-----------------------------------//
 
-void Device::setViewport( const Vector2i& vpLeft,const Vector2i& vpSize )
+void Device::setViewport( const Vector2i& left,const Vector2i& size )
 {
-	if( (viewportLeft == vpLeft) && (viewportSize == vpSize) )
+	if( (viewportLeft == left) && (viewportSize == size) )
 		return;
 
-	viewportLeft = vpLeft;
-	viewportSize = vpSize;
+	viewportLeft = left;
+	viewportSize = size;
 
-	glViewport( viewportLeft.x, viewportLeft.y,
-		viewportSize.x, viewportSize.y );
+	glViewport( viewportLeft.x, viewportLeft.y, viewportSize.x, viewportSize.y );
 }
 
 //-----------------------------------//

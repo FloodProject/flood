@@ -93,7 +93,7 @@ public:
 	IMPLEMENT_GETTER(ViewMatrix, const math::Matrix4x3&, viewMatrix)
 	
 	// Gets/sets the current viewport associated with the camera.
-	IMPLEMENT_GETTER(Viewport, render::ViewportPtr, currViewport)
+	IMPLEMENT_GETTER(Viewport, render::ViewportPtr, viewport)
 	DECLARE_SETTER(Viewport, render::ViewportPtr)
 
 	// Gets the frustum associated with the camera.
@@ -107,7 +107,7 @@ public:
 protected:
 
 	// Sets up the projection matrix.
-	void setupProjection();
+	void setupProjection( const math::Vector2i& size );
 
 	// Sets up the view matrix.
 	void setupView();
@@ -136,7 +136,8 @@ protected:
 	render::Device* renderDevice;
 
 	// Last viewport the camera rendered into.
-	render::ViewportPtr currViewport;
+	render::ViewportPtr viewport;
+	math::Vector2i viewSize;
 
 	// Pointer to the camera's node transform.
 	TransformPtr transform;

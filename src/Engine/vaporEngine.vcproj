@@ -415,14 +415,6 @@
 				RelativePath="..\..\inc\vapor\render\RenderQueue.h"
 				>
 			</File>
-			<File
-				RelativePath=".\Viewport.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\render\Viewport.h"
-				>
-			</File>
 			<Filter
 				Name="Adapter"
 				>
@@ -624,6 +616,18 @@
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\render\TextureManager.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Viewport"
+				>
+				<File
+					RelativePath=".\Viewport.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\render\Viewport.h"
 					>
 				</File>
 			</Filter>
