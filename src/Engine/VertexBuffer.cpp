@@ -15,25 +15,28 @@
 
 namespace vapor { namespace render {
 
+using namespace vapor::math;
+
 //-----------------------------------//
 
 enum VertexBuffer::GLPrimitive
 {
-    BYTE = GL_BYTE,
-    UBYTE = GL_UNSIGNED_BYTE,
-    SHORT = GL_SHORT,
-    USHORT = GL_UNSIGNED_SHORT,
-    INT = GL_INT,
-    UINT = GL_UNSIGNED_INT,
-    FLOAT = GL_FLOAT,
-    DOUBLE = GL_DOUBLE
+    BYTE	= GL_BYTE,
+    UBYTE	= GL_UNSIGNED_BYTE,
+    SHORT	= GL_SHORT,
+    USHORT	= GL_UNSIGNED_SHORT,
+    INT		= GL_INT,
+    UINT	= GL_UNSIGNED_INT,
+    FLOAT	= GL_FLOAT,
+    DOUBLE	= GL_DOUBLE
 };
 
 //-----------------------------------//
 
 VertexBuffer::VertexBuffer()
 	: built( false ), numVertices( 0 ), 
-	bufferUsage( BufferUsage::Static ), bufferAccess( BufferAccess::Read )
+	bufferUsage( BufferUsage::Static ),
+	bufferAccess( BufferAccess::Read )
 {
 
 }
@@ -49,21 +52,26 @@ VertexBuffer::~VertexBuffer()
 
 bool VertexBuffer::bind()
 {
-	// Check that we have a valid buffer
-	//if( !glIsBuffer( id ) )
-	//{
-	//	warn( "gl::buffers", "Vertex buffer is not valid" );
-	//	return false;		
-	//}
-
 	glBindBuffer( GL_ARRAY_BUFFER, id );
 
 	if( glHasError( "Error binding vertex buffer" ) )
-	{
 		return false;
-	}
 
 	bindPointers();
+
+	return true;
+}
+
+//-----------------------------------//
+
+bool VertexBuffer::isValid()
+{
+	// Check that we have a valid buffer
+	if( !glIsBuffer( id ) )
+	{
+		warn( "gl::buffers", "Vertex buffer is not valid" );
+		return false;		
+	}
 
 	return true;
 }
@@ -76,7 +84,7 @@ void VertexBuffer::bindPointers()
 
 	int offset = 0;
 
-	foreach( const attributePair& p, attributeMap )
+	foreach( const AttributeMapPair& p, attributeMap )
 	{
 		int components = std::get< 0 >( p.second );
 		GLPrimitive type = std::get< 1 >( p.second );
@@ -123,7 +131,7 @@ bool VertexBuffer::unbind()
 
 	if( built )
 	{
-		foreach( const attributePair& p, attributeMap )
+		foreach( const AttributeMapPair& p, attributeMap )
 		{
 			glDisableVertexAttribArray( p.first );
 		}
@@ -178,7 +186,7 @@ bool VertexBuffer::build( BufferUsage::Enum bU, BufferAccess::Enum bA )
 #endif
 
 	int offset = 0;
-	foreach( const attributePair& p, attributeMap )
+	foreach( const AttributeMapPair& p, attributeMap )
 	{
 		const std::vector<byte>& vec = std::get< 2 >( p.second );
 		glBufferSubData( GL_ARRAY_BUFFER, offset, vec.size(), &vec[0] );
@@ -208,7 +216,7 @@ bool VertexBuffer::checkSize()
 
 	int first = -1;
 	
-	foreach( const attributePair& p, attributeMap )
+	foreach( const AttributeMapPair& p, attributeMap )
 	{
 		int size = std::get< 2 >( p.second ).size();
 
@@ -239,17 +247,36 @@ uint VertexBuffer::getSize() const
 {
 	uint totalBytes = 0;
 
-#ifdef VAPOR_COMPILER_MSVC
-	// MSVC is ghey...
-	#pragma warning (disable: 4503)
-#endif
-
-	foreach( const attributePair& p, attributeMap )
+	foreach( const AttributeMapPair& p, attributeMap )
 	{
 		totalBytes += std::get< 2 >( p.second ).size();
 	}
 
 	return totalBytes;
+}
+
+//-----------------------------------//
+
+std::vector<Vector3>& VertexBuffer::getVertices() const
+{
+	return getAttribute( VertexAttribute::Position );
+}
+
+//-----------------------------------//
+
+std::vector<Vector3>&
+VertexBuffer::getAttribute( VertexAttribute::Enum attr ) const
+{
+	AttributeMap::iterator it;
+	it = attributeMap.find( attr );
+
+	if( it == attributeMap.end() )
+		assert( "Can't return null reference" );
+	
+	Attribute& p = (*it).second;
+	std::vector<byte>& arr = std::get<2>(p);
+
+	return (std::vector<Vector3>&)(arr);
 }
 
 //-----------------------------------//

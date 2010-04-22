@@ -19,35 +19,44 @@ class GizmoMode : public Mode
 {
 public:
 
-	GizmoMode( EditorFrame* frame );
+	GizmoMode( EditorFrame* );
 	
-	virtual void onModeInit(wxToolBar* toolbar, ModeIdMap& map);	
-	virtual void onModeEnter( int id );
+	virtual void onModeInit(wxToolBar*, ModeIdMap& );	
+	virtual void onModeEnter( int );
 	virtual void onModeExit();
 
-	virtual void onNodeSelected( NodePtr old, NodePtr new_ );
+	virtual void onMouseMove( const MouseMoveEvent& );
+	virtual void onMouseDrag( const MouseDragEvent& );
+	virtual void onMouseButtonPress( const MouseButtonEvent& );
 
-	virtual void onMouseMove( const MouseMoveEvent& me );
-	virtual void onMouseButtonPress( const MouseButtonEvent& mbe );
+	virtual void onNodeSelected( NodePtr, NodePtr );
 
 protected:
 
-	void drawGizmo( NodePtr old, NodePtr new_ );
+	void drawGizmo( NodePtr, NodePtr );
 	
-	void enableBoundingGizmo( const NodePtr& node );
-	void disableBoundingGizmo( const NodePtr& node );
+	void enableBoundingGizmo( const NodePtr& );
+	void disableBoundingGizmo( const NodePtr& );
 
+	bool pickBoundingTest( const MouseMoveEvent& );
+	bool pickImageTest( const MouseMoveEvent&, GizmoAxis::Enum& );
+	
 	void disableSelectedNodes();
+	
+	//FBOPtr fbo;
+	//ViewportPtr view;
+	//TexturePtr tex;
 
+	int tool;
 	ScenePtr editorScene;
-	GizmoPtr gizmo;
+	MouseMoveEvent oldMouseEvent;
 
-	std::vector<NodePtr> selectedNodes;
+	GizmoPtr gizmo;
+	GizmoAxis::Enum axis;
 
 	typedef std::map<NodePtr, NodePtr> GizmoNodeMap;
 	GizmoNodeMap gizmos;
-
-	int currentTool;
+	std::vector<NodePtr> selected;
 };
 
 //-----------------------------------//

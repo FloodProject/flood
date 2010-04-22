@@ -14,6 +14,8 @@
 #include "vapor/render/TextureManager.h"
 #include "vapor/render/GL.h"
 
+FWD_DECL(render, Device)
+
 namespace vapor { namespace render {
 
 //-----------------------------------//
@@ -62,6 +64,8 @@ typedef std::pair< const uint, TexturePtr > TextureMapPair;
 
 class VAPOR_API Material : public ReferenceCounted
 {
+	friend class render::Device;
+
 public:
 
 	//Material( const std::string& name );
@@ -82,10 +86,10 @@ public:
 	void setProgram( const std::string& name );
 
 	// Gets the blending options for this material.
-	IMPLEMENT_GETTER(SourceBlendingOperation, BlendingSource::Enum, src)
+	IMPLEMENT_GETTER(BlendingSource, BlendingSource::Enum, src)
 	
 	// Gets the blending options for this material.
-	IMPLEMENT_GETTER(DestinationBlendingOperation, BlendingDestination::Enum, dst)
+	IMPLEMENT_GETTER(BlendingDestination, BlendingDestination::Enum, dst)
 
 	// Is blending enabled?
 	// Blending is automatically enabled if you set a custom option.
@@ -106,6 +110,7 @@ public:
 	// Serialization.
 	//void serialize( Json::Value value );
 
+	IMPLEMENT_ACESSOR(DepthWrite, bool, depthWrite)
 	IMPLEMENT_ACESSOR(DepthTest, bool, depthTest)
 	IMPLEMENT_ACESSOR(LineWidth, float, lineWidth)
 	IMPLEMENT_ACESSOR(LineSmoothing, bool, lineSmooth)
@@ -128,7 +133,9 @@ protected:
 
 	// Backface culling
 	bool cullBackfaces;
+	
 	bool depthTest;
+	bool depthWrite;
 
 	// Line settings
 	bool lineSmooth;
@@ -138,6 +145,9 @@ protected:
 	BlendingSource::Enum src;
 	BlendingDestination::Enum dst;
 	bool _isBlendingEnabled;
+
+	// Default Line Width.
+	static float DefaultLineWidth;
 };
 
 //-----------------------------------//

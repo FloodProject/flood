@@ -16,7 +16,7 @@
 #elif defined(VAPOR_WINDOWING_SFML)
 	#include <vapor/render/SFML_Window.h>
 #else
-	#error "OpenGL renderer needs a windowing implementation"
+	//#error "OpenGL renderer needs a windowing implementation"
 #endif
 
 namespace vapor { namespace render {
@@ -104,7 +104,7 @@ void Window::setCursorPosition( const math::Vector2i& pos )
 
 WindowPtr Window::createWindow( const WindowSettings& settings )
 {
-	WindowPtr window;
+	WindowPtr window = nullptr;
 
 	#if defined(VAPOR_WINDOWING_SDL)
 		window = new SDLWindow(settings);
@@ -113,7 +113,7 @@ WindowPtr Window::createWindow( const WindowSettings& settings )
 	#elif defined(VAPOR_WINDOWING_SFML)
 		window = new SFML_Window(settings);
 	#else
-		#error "Could not find a window implementation"
+		//#error "Could not find a window implementation"
 	#endif
 
 	return window;

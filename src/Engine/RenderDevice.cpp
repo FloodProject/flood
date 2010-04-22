@@ -63,8 +63,10 @@ void Device::init()
 	textureManager = TextureManager::getInstancePtr();
 	programManager = ProgramManager::getInstancePtr();
 
-
 	setClearColor( Colors::White );
+
+	glEnable( GL_DEPTH_TEST );
+	glDepthMask( GL_TRUE );
 
 	glEnable( GL_CULL_FACE );
 	glCullFace( GL_BACK );
@@ -81,13 +83,10 @@ bool stateSorter(const RenderState& lhs, const RenderState& rhs)
 
 void Device::render( RenderBlock& queue, const Camera* cam ) 
 {
-	glEnable( GL_DEPTH_TEST );
-
-	// sort the list by render group
-	// TODO: use a radix sorter
+	// Sort the renderables by render group (TODO: use a radix sorter).
 	std::sort( queue.renderables.begin(), queue.renderables.end(), &stateSorter );
 
-	// render the list
+	// Render all the renderables in the queue.
 	foreach( const RenderState& state, queue.renderables )
 	{
 		const RenderablePtr& rend = state.renderable;
@@ -100,8 +99,8 @@ void Device::render( RenderBlock& queue, const Camera* cam )
 		if( !program ) continue;
 
 		rend->bind();
+		setupRenderStateMaterial(material);
 
-		// TODO: this needs some refactoring
 		if( state.group != RenderGroup::Overlays )
 		{
 			if( !setupRenderState(state, cam) )
@@ -117,7 +116,8 @@ void Device::render( RenderBlock& queue, const Camera* cam )
 		}
 
 		state.renderable->render( *this );
-
+		
+		undoRenderStateMaterial(material);
 		rend->unbind();
 	}
 }
@@ -146,15 +146,15 @@ bool Device::setupRenderStateLight( const RenderState& state, const LightQueue& 
 	const MaterialPtr& material = rend->getMaterial();
 	const ProgramPtr& program = material->getProgram();
 
-	if( lights.empty() ) return false;
+	if( lights.empty() ) return true;
 
 	std::vector< Color > colors;
 	foreach( const LightState& state, lights )
 	{
-		colors.push_back( state.light->diffuseColor );
-		colors.push_back( state.light->specularColor );
-		colors.push_back( state.light->emissiveColor );
-		colors.push_back( state.light->ambientColor );
+		colors.push_back( state.light->getDiffuseColor() );
+		colors.push_back( state.light->getSpecularColor() );
+		colors.push_back( state.light->getEmissiveColor() );
+		colors.push_back( state.light->getAmbientColor() );
 	}
 
 	// TODO: fix the lighting stuff
@@ -196,6 +196,55 @@ bool Device::setupRenderStateOverlay( const RenderState& state )
 
 //-----------------------------------//
 
+void Device::setupRenderStateMaterial( const MaterialPtr& mat )
+{
+	if( mat->lineSmooth )
+		glEnable( GL_LINE_SMOOTH );
+	
+	if( mat->lineWidth != Material::DefaultLineWidth )
+		glLineWidth( mat->getLineWidth() );
+
+	if( !mat->cullBackfaces )
+		glDisable( GL_CULL_FACE );
+
+	if( !mat->depthTest )
+		glDisable( GL_DEPTH_TEST );
+
+	if( !mat->depthWrite )
+		glDepthMask( GL_FALSE );
+
+	if( mat->isBlendingEnabled() ) 
+	{
+		glEnable( GL_BLEND );
+		glBlendFunc( mat->getBlendingSource(), mat->getBlendingDestination() );
+	}
+}
+
+//-----------------------------------//
+
+void Device::undoRenderStateMaterial( const MaterialPtr& mat )
+{
+	if( mat->isBlendingEnabled() ) 
+		glDisable( GL_BLEND );
+
+	if( !mat->cullBackfaces )
+		glEnable( GL_CULL_FACE );
+
+	if( !mat->depthTest )
+		glEnable( GL_DEPTH_TEST );
+
+	if( !mat->depthWrite )
+		glDepthMask( GL_TRUE );
+
+	if( mat->lineSmooth )
+		glDisable( GL_LINE_SMOOTH );
+
+	if( mat->lineWidth != Material::DefaultLineWidth ) 
+		glLineWidth( Material::DefaultLineWidth );
+}
+
+//-----------------------------------//
+
 void Device::updateTarget()
 {
 	activeTarget->update();
@@ -217,6 +266,7 @@ void Device::setClearColor(const math::Color& newColor)
 void Device::clearTarget()
 {
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+	glHasError("Could not clear the render target");
 }
 
 //-----------------------------------//

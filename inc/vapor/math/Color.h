@@ -30,6 +30,14 @@ public:
 
 	// Equality
 	bool operator == (const Color& v) const;
+
+	//-----------------------------------//
+
+	// Multiplication by a scalar
+	Color operator * (float s) const
+	{
+		return Color(r*s, g*s, b*s, a); 
+	}
 	
 	//-----------------------------------//
 

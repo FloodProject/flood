@@ -63,15 +63,17 @@ protected:
 	bool isDirty;
 
 	typedef std::vector< render::RenderablePtr > RenderableList;
-	typedef std::pair<const  render::RenderGroup::Enum, RenderableList > rendPair;
+	typedef std::pair<const render::RenderGroup::Enum, RenderableList > RenderableMapPair;
+	typedef std::map< render::RenderGroup::Enum, RenderableList > RenderableMap;
 	
-	std::map< render::RenderGroup::Enum, RenderableList > renderables;
+	RenderableMap renderables;
 	
 	static const std::string& type;
 };
 
 //-----------------------------------//
 
+TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( Geometry );
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Geometry );
 
 //-----------------------------------//

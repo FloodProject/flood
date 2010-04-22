@@ -24,12 +24,11 @@ END_EVENT_TABLE()
 
 //-----------------------------------//
 
-ConsoleFrame::ConsoleFrame( vapor::Engine* engine, 
-					wxWindow* parent, 
-					const wxString&	name )
+ConsoleFrame::ConsoleFrame( vapor::Engine* engine, wxWindow* parent, 
+						   const wxString& name )
 	: wxFrame( parent, wxID_ANY, name, wxDefaultPosition, wxDefaultSize,
-		wxDEFAULT_FRAME_STYLE | wxFRAME_TOOL_WINDOW | wxFRAME_FLOAT_ON_PARENT | wxBORDER_NONE ),
-		engine( engine )
+		wxDEFAULT_FRAME_STYLE | wxFRAME_TOOL_WINDOW | wxFRAME_FLOAT_ON_PARENT
+		| wxBORDER_NONE ), engine( engine )
 {
 	InitControl();
 }
@@ -61,7 +60,7 @@ void ConsoleFrame::OnClose(wxCloseEvent& event)
         return;   
     }
 
-    Destroy();  // you may also do:  event.Skip();
+    Destroy();  // you may also do: event.Skip();
 }
 
 //-----------------------------------//

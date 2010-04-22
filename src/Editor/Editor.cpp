@@ -68,14 +68,18 @@ EditorFrame::EditorFrame(const wxString& title)
 	// Initialize the engine.
 	initEngine();
 
+	createScene();
+	createEditorScene();
+
 	createMenus();
 	createToolbar();
 	createStatusbar();
 	createNotebook();
-	createModes();
 
-	createScene();
-	createEditorScene();
+	ViewportPtr viewport = viewframe->getViewport();
+	viewport->getRenderTarget()->makeCurrent();
+
+	createModes();
 
 	toolBar->Realize();
 	SetSizerAndFit( sizer );
@@ -96,12 +100,9 @@ EditorFrame::~EditorFrame()
 	foreach( Operation* const op, redoOperations )
 		delete op;
 
-	// Make sure to delete viewport explicitly since it holds some 
-	// reference-counting pointers, and if they are not destroyed
-	// they will make some things try to call OpenGL functions
-	// after the window context is already destroyed.
+	// Stop the frame events.
+	viewframe->Destroy();
 	editorScene.reset();
-	delete viewframe;
 	delete engine;
 }
 
@@ -157,11 +158,11 @@ void EditorFrame::createMainViewframe()
 	control->onUpdate += fd::bind( &EditorFrame::onUpdate, this );
 	control->SetFocus();
 
-	WindowPtr window = (WindowPtr) control->getRenderWindow(); 
-	window->makeCurrent();
-
 	render::DevicePtr device = engine->getRenderDevice();
+	WindowPtr window = (WindowPtr) control->getRenderWindow(); 
+
 	device->setWindow( window );
+	device->setRenderTarget( window );
 
 	engine->setupInput();
 

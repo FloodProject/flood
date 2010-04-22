@@ -11,6 +11,12 @@
 
 namespace vapor { namespace math {
 
+bool fcmp(float a, float b)
+{
+	return fabs(a - b) < 
+		std::numeric_limits<float>::epsilon();
+}
+
 //-----------------------------------//
 
 float logn( float base, float value )

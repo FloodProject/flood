@@ -31,6 +31,14 @@ Viewframe::Viewframe( wxWindow* parent, wxWindowID id,
 
 //-----------------------------------//
 
+Viewframe::~Viewframe()
+{
+	control->stopFrameLoop();
+	control->Destroy();
+}
+
+//-----------------------------------//
+
 Viewport* Viewframe::createViewport( NodePtr node )
 {
 	assert( node != nullptr );
@@ -48,6 +56,13 @@ Viewport* Viewframe::createViewport( NodePtr node )
 	onCameraTransform();
 	
 	return viewport;
+}
+
+//-----------------------------------//
+
+void Viewframe::flagRedraw()
+{
+	control->flagRedraw();
 }
 
 //-----------------------------------//

@@ -36,7 +36,7 @@ GLSL_Shader::~GLSL_Shader()
 	{
 		warn( "glsl", 
 			"Could not delete shader object '%d': %s", 
-			shaderId, /*gluErrorString( err )*/"" );
+			shaderId, /*glErrorString( err )*/"" );
 		return;
 	}
 #endif
@@ -50,7 +50,7 @@ bool GLSL_Shader::create()
 
 	shaderId = glCreateShader( getGLShaderType(type) );
 
-	if( glHasError( "Could not create a new shader object" ) )
+	if( glHasError("Could not create a new shader object") )
 	{
 		created = false;
 		return false;

@@ -114,7 +114,7 @@ public:
 	fd::delegate< void( const ResourceLoader& ) > onResourceLoaderRegistered;
 
 	// When tasks finish, they queue a loaded event into the queue.
-	concurrent_queue<ResourceEvent> loadEvents;
+	concurrent_queue<ResourceEvent> resourceTaskEvents;
 
 	boost::atomic_int numResourcesQueuedLoad;
 	boost::mutex resourceFinishLoadMutex;

@@ -67,7 +67,7 @@ protected:
 	std::vector<ms3d_material_t*> m_materials;
 	char* m_comment;
 
-	scene::GeometryPtr geometry;
+	scene::GeometryWeakPtr weakGeometry;
 };
 
 //-----------------------------------//

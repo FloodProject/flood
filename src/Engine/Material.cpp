@@ -11,13 +11,11 @@
 #include "vapor/render/ProgramManager.h"
 #include "vapor/Utilities.h"
 
-using namespace vapor::resources;
-
 namespace vapor { namespace render {
 
-//-----------------------------------//
+using namespace vapor::resources;
 
-static float DEFAULT_LINE_WIDTH = 1.0f;
+float Material::DefaultLineWidth = 1.0f;
 
 //-----------------------------------//
 
@@ -51,11 +49,13 @@ void Material::init()
 	src = BlendingSource::One;
 	dst = BlendingDestination::Zero;
 	
-	lineWidth = DEFAULT_LINE_WIDTH;
+	lineWidth = DefaultLineWidth;
 	lineSmooth = false;
 
-	cullBackfaces = true;
 	depthTest = true;
+	depthWrite = true;
+
+	cullBackfaces = true;
 }
 
 //-----------------------------------//
@@ -109,7 +109,9 @@ void Material::bind()
 	}
 
 	if( !program->isLinked() )
+	{
 		program->link();
+	}
 
 	program->bind();
 
@@ -117,63 +119,12 @@ void Material::bind()
 	{
 		program->setUniform( "tex" + num_to_str(p.first), p.first );
 	}
-
-	if( lineSmooth ) 
-	{
-		glEnable( GL_LINE_SMOOTH );
-	}
-
-	if( lineWidth != DEFAULT_LINE_WIDTH ) 
-	{
-		glLineWidth( lineWidth );
-	}
-
-	if( !cullBackfaces )
-	{
-		glDisable( GL_CULL_FACE );
-	}
-
-	if( !depthTest )
-	{
-		glDisable( GL_DEPTH_TEST );
-	}
-
-	if( isBlendingEnabled() ) 
-	{
-		glEnable( GL_BLEND );
-		glBlendFunc( src, dst );
-	}
 }
 
 //-----------------------------------//
 
 void Material::unbind()
 {
-	if( isBlendingEnabled() ) 
-	{
-		glDisable( GL_BLEND );
-	}
-
-	if( !cullBackfaces )
-	{
-		glEnable( GL_CULL_FACE );
-	}
-
-	if( !depthTest )
-	{
-		glEnable( GL_DEPTH_TEST );
-	}
-
-	if( lineSmooth )
-	{
-		glDisable( GL_LINE_SMOOTH );
-	}
-
-	if( lineWidth != DEFAULT_LINE_WIDTH ) 
-	{
-		glLineWidth( DEFAULT_LINE_WIDTH );
-	} 
-
 	program->unbind();
 
 	foreach( const TextureMapPair& p, getTextures() )

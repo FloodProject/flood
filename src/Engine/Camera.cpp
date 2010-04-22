@@ -173,7 +173,7 @@ void Camera::render( const NodePtr& node, bool clearView ) const
 
 //-----------------------------------//
 
-void Camera::render( ) const
+void Camera::render() const
 {
 	NodePtr parent = getNode()->getParent();
 

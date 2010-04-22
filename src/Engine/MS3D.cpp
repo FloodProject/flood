@@ -165,9 +165,10 @@ struct VAPOR_ALIGN_BEGIN(1) ms3d_joint_t
 //-----------------------------------//
 
 MS3D::MS3D()
-	: index( 0 ), geometry( new scene::Geometry() )
+	: index(0)
 {
-
+	GeometryPtr geometry( new scene::Geometry() );
+	weakGeometry = geometry;
 }
 
 //-----------------------------------//
@@ -329,7 +330,7 @@ void MS3D::build()
 		//ib->set( vb_i );
 		//rend->setIndexBuffer( ib );
 
-		geometry->addRenderable( rend );
+		getGeometry()->addRenderable( rend );
 	}
 }
 
@@ -337,7 +338,7 @@ void MS3D::build()
 
 scene::GeometryPtr MS3D::getGeometry()
 {
-	return geometry;
+	return weakGeometry.lock();
 }
 
 //-----------------------------------//

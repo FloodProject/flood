@@ -62,8 +62,8 @@ public:
     // Updates the internal VBO with current values for vertices, 
     // normals, colors and texture coords.  Returns false on error, true otherwise.
     // Note: calls glBufferData
-	bool build( BufferUsage::Enum bufferUsage = BufferUsage::Static, 
-		BufferAccess::Enum bufferAccess = BufferAccess::Write );
+	bool build( BufferUsage::Enum = BufferUsage::Static,
+				BufferAccess::Enum = BufferAccess::Write );
 
 	// Returns true if the vertex buffer is built, false otherwhise.
 	bool isBuilt() const;
@@ -81,8 +81,17 @@ public:
     // Note: calls glBindBuffer( 0 ), glDisableVertexAttribArray 
     bool unbind();
     
+	// Returns if the this buffer is valid.
+	bool isValid();
+
     // Clears this vertex buffer. All vertex data will be gone.
     void clear();
+
+	// Returns an attribute data in the vertex buffer.
+	std::vector<math::Vector3>& getAttribute( VertexAttribute::Enum ) const;
+
+	// Returns the vertices attribute in the vertex buffer.
+	std::vector<math::Vector3>& getVertices() const;
 
 	// Returns the total size in bytes of the buffer.
 	uint getSize() const;
@@ -150,32 +159,15 @@ private:
 	// Used to store specific GL types for each attribute.
 	enum GLPrimitive;
 
-	typedef std::tuple< int, GLPrimitive, std::vector< byte > > attributeValue;
-	typedef std::pair< const VertexAttribute::Enum, attributeValue > attributePair;
-	typedef std::map< VertexAttribute::Enum, attributeValue >::iterator attributeIterator;
-	typedef std::map< VertexAttribute::Enum, attributeValue >::const_iterator attributeConstIterator;
+	typedef std::tuple< int, GLPrimitive, std::vector< byte > > Attribute;
+	typedef std::map< VertexAttribute::Enum, Attribute > AttributeMap;
+	typedef std::pair< const VertexAttribute::Enum, Attribute > AttributeMapPair;
 	
 	// Holds all the vertex attributes.
-	std::map< VertexAttribute::Enum, attributeValue > attributeMap;
+	mutable AttributeMap attributeMap;
 
 	// Holds the number of vertices inside.
 	uint numVertices;
-
-public:
-
-	std::vector<math::Vector3>& getVertices()
-	{
-		attributeIterator it = attributeMap.find(VertexAttribute::Position);
-
-		if( it == attributeMap.end() )
-			assert( "Can't return null reference" );
-			/*return std::vector<math::Vector3>();*/
-		
-		attributeValue& p = (*it).second;
-		std::vector<byte>& arr = std::get<2>(p);
-
-		return (std::vector<math::Vector3>&)(arr);
-	}
 };
 
 //-----------------------------------//

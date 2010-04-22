@@ -77,12 +77,11 @@ bool Texture::generate()
 
 bool Texture::check()
 {
-	uint max_size = Adapter::getInstancePtr()->getMaxTextureSize();
+	uint max = Adapter::getInstancePtr()->getMaxTextureSize();
 
-	if( (width > max_size) || (height > max_size) )
+	if( (width > max) || (height > max) )
 	{
-		warn( "gl", "Texture size is not supported (max: %dx%d)",
-			max_size, max_size );		
+		warn( "gl", "Texture size is not supported (max: %dx%d)", max, max );		
 		return false;
 	}
 
@@ -93,11 +92,11 @@ bool Texture::check()
 
 bool Texture::upload()
 {
+	if( !check() )
+		return false;
+
 	bind();
-
-	// TODO: check for OpenGL errors
-
-	if( !check() ) return false;
+	configure();
 
 	// TODO: check the formats more thoroughly
 	glTexImage2D( GL_TEXTURE_2D, 0, 
@@ -106,15 +105,11 @@ bool Texture::upload()
 		img ? convertSourceFormat( img->getPixelFormat() ) : GL_RGBA,
 		GL_UNSIGNED_BYTE, img ? &img->getBuffer()[0] : nullptr );
 
-	configure();
-
 	if( glHasError("Could not upload texture object") )
 	{
 		uploaded = false;
 		return false;
 	}
-
-	unbind();
 
 	uploaded = true;
 	return true;

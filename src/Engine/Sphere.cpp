@@ -84,7 +84,8 @@ Sphere::Sphere( bool fullSphere, byte numSubDiv, float dim )
 
 //-----------------------------------//
 
-void Sphere::subdivide(const Vector3& v1, const Vector3& v2, const Vector3& v3, byte depth, VertexData& pos)
+void Sphere::subdivide(const Vector3& v1, const Vector3& v2, 
+					   const Vector3& v3, byte depth, VertexData& pos)
 {
 	if (depth == 0)
 	{
@@ -107,18 +108,19 @@ void Sphere::subdivide(const Vector3& v1, const Vector3& v2, const Vector3& v3, 
 
 //-----------------------------------//
 
-void Sphere::generateSphere( bool fullSphere, byte numSubDiv, VertexData& pos, float dim)
+void Sphere::generateSphere( bool fullSphere, byte numSubDiv, 
+							VertexData& pos, float dim)
 {
 	vb = new VertexBuffer();
 
-	// We rotate the vertices by 30 degrees, else the sphere is not properly aligned.
-	Matrix4x3 rot( EulerAngles( -30.0f, 0.0f, 0.0f ).getOrientationMatrix() );
+	// Rotate the vertices, else the sphere is not properly aligned.
+	Matrix4x3 rot( EulerAngles( -60.0f, 0.0f, 0.0f ).getOrientationMatrix() );
 
 	foreach( const byte* i, IcoDomeIndices )
 	{
-		Vector3 v1( IcoVertices[i[0]][0], IcoVertices[i[0]][1], IcoVertices[i[0]][2] );
-		Vector3 v2( IcoVertices[i[1]][0], IcoVertices[i[1]][1], IcoVertices[i[1]][2] );
-		Vector3 v3( IcoVertices[i[2]][0], IcoVertices[i[2]][1], IcoVertices[i[2]][2] );
+		Vector3 v1( IcoVertices[i[0]][0], IcoVertices[i[0]][2], IcoVertices[i[0]][1] );
+		Vector3 v2( IcoVertices[i[1]][0], IcoVertices[i[1]][2], IcoVertices[i[1]][1] );
+		Vector3 v3( IcoVertices[i[2]][0], IcoVertices[i[2]][2], IcoVertices[i[2]][1] );
 
 		subdivide( v1*rot, v2*rot, v3*rot, numSubDiv, pos );
 	}
@@ -129,9 +131,9 @@ void Sphere::generateSphere( bool fullSphere, byte numSubDiv, VertexData& pos, f
 		// These indices are the bottom of the sphere.
 		foreach( const byte* i, IcoSphereIndices )
 		{
-			Vector3 v1( IcoVertices[i[0]][0], IcoVertices[i[0]][1], IcoVertices[i[0]][2] );
-			Vector3 v2( IcoVertices[i[1]][0], IcoVertices[i[1]][1], IcoVertices[i[1]][2] );
-			Vector3 v3( IcoVertices[i[2]][0], IcoVertices[i[2]][1], IcoVertices[i[2]][2] );
+			Vector3 v1( IcoVertices[i[0]][0], IcoVertices[i[0]][2], IcoVertices[i[0]][1] );
+			Vector3 v2( IcoVertices[i[1]][0], IcoVertices[i[1]][2], IcoVertices[i[1]][1] );
+			Vector3 v3( IcoVertices[i[2]][0], IcoVertices[i[2]][2], IcoVertices[i[2]][1] );
 
 			subdivide( v1*rot, v2*rot, v3*rot, numSubDiv, pos );
 		}

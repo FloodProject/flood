@@ -22,7 +22,7 @@ bool glHasError( const std::string& msg );
 
 // Gets a string given an OpenGL error code.
 // Adapted from the Mesa GLU implementation.
-const char* gluErrorString(GLenum errorCode);
+const char* glErrorString(GLenum errorCode);
 
 //-----------------------------------//
 

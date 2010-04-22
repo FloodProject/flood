@@ -11,8 +11,6 @@
 #include "vapor/scene/Component.h"
 #include "vapor/math/Color.h"
 
-//-----------------------------------//
-
 namespace vapor { namespace scene {
 
 //-----------------------------------//
@@ -49,39 +47,38 @@ class Light : public Component
 public:
 
 	Light( LightType::Enum type );
-	~Light();
 
-	void on();
+	// Gets/sets the type of this light source.
+	IMPLEMENT_ACESSOR(LightType, LightType::Enum, lightType)
 
-	void off();
+	// Gets/sets if this light source is active (powered on).
+	IMPLEMENT_ACESSOR(Active, bool, isLightOn)
 
-	bool isOn() const;
+	// Gets/sets if this light source casts shadows.
+	IMPLEMENT_ACESSOR(CastsShadows, bool, castsShadows)
 
-	void enableShadowCast();
+	// Gets/sets the diffuse color of the light.
+	IMPLEMENT_ACESSOR(DiffuseColor, const math::Color&, diffuseColor)
+	
+	// Gets/sets the specular color of the light.
+	IMPLEMENT_ACESSOR(SpecularColor, const math::Color&, diffuseColor)
 
-	void disableShadowCast();
+	// Gets/sets the emissive color of the light.
+	IMPLEMENT_ACESSOR(EmissiveColor, const math::Color&, emissiveColor)
 
-	bool castsShadow() const;
+	// Gets/sets the ambient color of the light.
+	IMPLEMENT_ACESSOR(AmbientColor, const math::Color&, ambientColor)
 
-	void setType( LightType::Enum type );
+	// Gets/sets the cut-off radius of the light.
+	IMPLEMENT_ACESSOR(CutOffRadius, float, cutoffRadius)
 
-	void setDiffuse( const math::Color& color );
-
-	void setSpecular( const math::Color& color );
-
-	void setEmissive( const math::Color& color );
-
-	void setAmbient( const math::Color& color );
-
-	void setSpotCutOffRadius( float radius );
+	// Gets the type of this component. 
+	IMPLEMENT_GETTER(Type, const std::string&, Light::type)
 
 	// Called once per frame to update the component.
 	virtual void update( double delta );
-
-	// Gets the type of this component. 
-	virtual const std::string& getType() const;
   
-public:
+protected:
 
 	// Light type and colors
 	LightType::Enum lightType;
@@ -94,8 +91,6 @@ public:
 	// Cutoff Radius for Spotlights
 	float cutoffRadius;
 
-protected:
-
 	// Light state
 	bool isLightOn;
 	bool castsShadows;
@@ -103,8 +98,6 @@ protected:
 	// Component type
 	static const std::string& type;
 };
-
-//-----------------------------------//
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Light );
 

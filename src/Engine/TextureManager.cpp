@@ -28,8 +28,14 @@ TextureManager::TextureManager()
 
 TextureManager::~TextureManager()
 {
+	//if( rm )
+	//{
+	//	rm->onResourceLoaded -= fd::bind( &TextureManager::onLoad, this );
+	//	rm->onResourceReloaded -= fd::bind( &TextureManager::onReload, this );
+	//}
+
 	foreach( const TextureMapPair& p, textures )
-		assert( p.second->getReferenceCount() == 1 );
+		assert( p.second->getReferenceCount() == 2 );
 }
 
 

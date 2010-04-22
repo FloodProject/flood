@@ -45,11 +45,6 @@ void FBO::makeCurrent()
 
 void FBO::bind()
 {
-	if( !valid ) 
-	{
-		check();
-	}
-
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, id);
 	glHasError( "Could not bind framebuffer object" );
 }
@@ -59,7 +54,7 @@ void FBO::bind()
 void FBO::unbind()
 {
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-	glHasError( "Could not unbind framebuffer object" );	
+	glHasError( "Could not unbind framebuffer object" );
 }
 
 //-----------------------------------//
@@ -69,8 +64,9 @@ bool FBO::check()
 	GLenum status;
 	status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
 
-	if( status == GL_FRAMEBUFFER_UNSUPPORTED_EXT )
+	if( status != GL_FRAMEBUFFER_COMPLETE_EXT )
 	{
+		warn("fbo", "FBO error: %s", glErrorString(status) );
 		return false;
 	}
 	
@@ -80,9 +76,34 @@ bool FBO::check()
 
 //-----------------------------------//
 
+TexturePtr FBO::createRenderTexture()
+{
+	TexturePtr tex( new Texture(settings) );
+	attachRenderTexture(tex);
+	return tex;
+}
+
+//-----------------------------------//
+
+void FBO::attachRenderTexture(const TexturePtr& tex)
+{
+	bind();
+
+	// Ensure texture has been allocated.
+	tex->upload();
+
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
+		GL_TEXTURE_2D, tex->id(), 0);
+	glHasError( "Could not attach texture into framebuffer object" );
+
+	textureBuffers.push_back( tex->id() );
+}
+
+//-----------------------------------//
+
 void FBO::createRenderBuffer( int bufferComponents )
 {
-	// Render buffers are used are just objects which are used to support
+	// Render buffers are just objects which are used to support
 	// offscreen rendering, often for sections of the framebuffer which 
 	// don’t have a texture format associated with them.
 
@@ -138,31 +159,8 @@ void FBO::createRenderBuffer( int bufferComponents )
 			GL_RENDERBUFFER_EXT, renderBuffer);
 		glHasError( "Could not attach renderbuffer into framebuffer object" );
 	}
-}
 
-//-----------------------------------//
-
-TexturePtr FBO::createRenderTexture()
-{
-	TexturePtr tex( new Texture(settings) );
-	attachRenderTexture(tex);
-	return tex;
-}
-
-//-----------------------------------//
-
-void FBO::attachRenderTexture(const TexturePtr& tex)
-{
-	bind();
-
-	// Ensure texture has been allocated.
-	tex->upload();
-
-	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,
-		GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, tex->id(), 0);
-	glHasError( "Could not attach texture into framebuffer object" );
-
-	textureBuffers.push_back( tex->id() );
+	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
 }
 
 //-----------------------------------//

@@ -1,34 +1,30 @@
 WIP (work-in-progress)
 ======================
 
-SERIALIZATION FORMATS:
-----------------------
-
-http://bsonspec.org
-http://code.google.com/p/protobuf/
-http://msgpack.sourceforge.net/
-http://hadoop.apache.org/avro/docs/current/
-
-
 EDITOR:
 -------
 
-Viewframe Border is not perfect
-Resize is not working well (glViewport)
-Delete issues (again...)
+Shadows
 
-Remove all the singleton (add Engine instead)
-Shaders live updating
-Redraw when a new resource gets loaded (texture changes etc)
+Input Events
+	Rework input system so modes get events always
+	instead of just when the mouse is over a viewframe.
 
 Gizmo
 	Picking when the mouse moves (DONE)
-	Change gizmo color when user picks axis
-	Add drag event and change the Transform
-	Only use when Gizmo instance...
+	Change gizmo color when user picks axis (DONE)
+	Add drag event and change the Transform (DONE)
+	Fix cone backface culling (DONE)
+	When the Camera moves, mouse should be tested
 
+Viewframe
+	Fix the control border
+	Wire the camera speed behaviour
+	Wire the camera render mode buttons
+	Redraw when a new resource gets loaded (texture changes etc)
+	
 Terrain editing
-	Brushes interface (wxWidgets)
+	Brushes interface
 	Intensity sliders (DONE)
 	Use a separate VB attribute for the terrain heights
 	Projectors/Decals for terrain
@@ -43,7 +39,8 @@ View frustum culling
 	Frustum-Plane intersection
 	Integrate in Camera::cull
 
-Skybox component
+Skydome component
+	Fix backfaces culling (DONE)
 	Add texture layers for clouds
 	Fix sun and moon update logic
 	Switch to triangle strips
@@ -61,13 +58,16 @@ Implement camera panning
 Edit grid settings
 Add a property system like Firefox/µTorrent...
 Continuous movement bug (press D inside the world then click in the scene tree to trigger)
-Make the update logic smarter (no 50% CPU hog)
+Make the update logic smarter (no 50% CPU hog) (DONE?)
 See about integrating wxLua in the editor
 Hook up the renaming of Scene node labels
 Override the print method of Lua
 
 ENGINE:
 -------
+
+Remove all the singleton (add Engine instead)
+Shaders live updating
 
 Add Z-bias to the AABB renderables
 Fix Overlays positioning (might be related to ortographic projection)
@@ -169,7 +169,7 @@ VFS:
 
 	Patch PhysFS to use the proper user dir for App Data on Windows
 
-	
+
 DONE:
 -----
 
@@ -233,21 +233,6 @@ http://www.fastformat.org/
 SNIPPETS
 ========
 
-	//// Perform ray casting to find the nodes.
-	//RayBoxQueryList list;
-	//scene->doRayBoxQuery( pickRay, list );
-
-	//NodePtr node; TerrainPtr terrain;
-	//foreach( const RayBoxQueryResult& res, list )
-	//{
-	//	node = res.node;
-
-	//	// Search for nodes with terrains...
-	//	terrain = node->getComponent<Terrain>("Terrain");
-	//
-	//	if( terrain ) break;
-	//}
-	
 	ResourceManager stuff.
 	
 	// Sets a memory budget limit for a given resource group.
@@ -260,4 +245,55 @@ SNIPPETS
 	//std::list<ResourceLoaderPtr> getResourceLoader(std::string extension);
 	
 	// maps each resource group to a specific budget.
-	//std::map< ResourceGroup::Enum, uint > resourceBudgets;	
+	//std::map< ResourceGroup::Enum, uint > resourceBudgets;
+	
+	
+	//PROFILE;
+
+	if( !gizmo ) 
+		return false;
+	
+	NodePtr node = gizmo->getNode();
+
+	//MaterialPtr mat( new Material("Picking") );
+	//mat->setBackfaceCulling( false );
+	//mat->setDepthTest( false );
+	//mat->setProgram( "pick" );
+
+	//debug( "fbo" );
+
+	//fbo->bind();
+	
+	//CameraPtr camera = view->getCamera();
+	//camera->setViewport( view );
+
+	//render::Device* device = engine->getRenderDevice();
+	//device->setViewport(Vector2i::Zero, Vector2i(PICK_TARGET_SIZE, PICK_TARGET_SIZE));
+	//camera->render( node );
+	//editor->getMainViewframe()->getControl()->getRenderWindow()->update();
+
+	ViewportPtr viewport = viewframe->getViewport();
+	Vector2i size = viewport->getSize();
+	//int m_x = me.x*(PICK_TARGET_SIZE/float(size.x));
+	//int m_y = (size.y-me.y)*(PICK_TARGET_SIZE/float(size.y));
+
+	//debug( "pick: %d, %d", m_x, m_y );
+
+	int m_x = me.x;
+	int m_y = size.y-me.y;
+
+	Color pick;
+	glReadPixels(m_x, m_y, 1, 1, GL_BGR, GL_FLOAT, &pick);
+	debug( "%f,%f,%f", pick.r, pick.g, pick.b, pick.a );
+
+	//fbo->unbind();
+
+	return false;
+	
+SERIALIZATION FORMATS:
+----------------------
+
+http://bsonspec.org
+http://code.google.com/p/protobuf/
+http://msgpack.sourceforge.net/
+http://hadoop.apache.org/avro/docs/current/

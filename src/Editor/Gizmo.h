@@ -16,13 +16,14 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-class GizmoAxis
+namespace GizmoAxis
 {
 	enum Enum
 	{
-		AxisX,
-		AxisY,
-		AxisZ,
+		X = 0,
+		Y = 2,
+		Z = 4,
+		None
 	};
 };
 
@@ -44,15 +45,39 @@ class VAPOR_API Gizmo : public scene::Geometry
 {
 public:
 
-	Gizmo( const math::Vector3 midPoint = math::Vector3::Zero );
+	Gizmo( const NodePtr& );
+
+	// Gets the 
+	IMPLEMENT_GETTER(NodeAttachment, const NodePtr&, node)
+
+	// Converts a color to a specific gizmo axis.
+	static GizmoAxis::Enum getAxis(Color&);
+
+	// Converts an axis enum to a unit vector.
+	static Vector3 getUnitVector( GizmoAxis::Enum );
+
+	// Returns if any axis is currently selected in the gizmo.
+	bool isAnyAxisSelected() const;
+
+	// Deselects all axis of the gizmo.
+	void deselectAxis();
+
+	// Selects an axis of the gizmo.
+	void selectAxis( GizmoAxis::Enum );
+
+	// Gets the selected axis in the gizmo.
+	IMPLEMENT_GETTER(AxisSelected, GizmoAxis::Enum, selectedAxis)
 
 	// Returns the name of this component.
 	IMPLEMENT_GETTER(Type, const std::string&, type)
 
 protected:
 
-	// Generates all the cone geometries in a single vertex buffer.
-	render::RenderablePtr generateCones();
+	// Generates the cone geometry.
+	VertexBufferPtr generateCones();
+
+	// Generates the lines geometry.
+	VertexBufferPtr generateLines();
 
 	// Generates solid cone geometry for the gizmo arrows.
 	void generateSolidCone( double base, double height, uint slices,
@@ -61,11 +86,14 @@ protected:
 	// Generate nice colors for the gizmo.
 	void generateColors( uint slices, std::vector<Vector3>& colors,
 		const math::Color& c1, const math::Color& c2 );
-	
-	// Generates the lines geometry for the gizmo.
-	render::VertexBufferPtr generateLines();
 
-	math::Vector3 midPoint;
+	NodePtr node;
+
+	VertexBufferPtr lines;
+	VertexBufferPtr cones;
+
+	GizmoAxis::Enum selectedAxis;
+	Vector3 midPoint;
 
 	static const std::string& type;
 };

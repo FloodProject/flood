@@ -58,7 +58,7 @@ public:
 	virtual void processEvent( const input::Event& event ) = 0;
 
 	// Gets the type of this device.
-	virtual const input::DeviceType::Enum getType() = 0;
+	virtual const input::DeviceType::Enum getType() const = 0;
 };
 
 //-----------------------------------//

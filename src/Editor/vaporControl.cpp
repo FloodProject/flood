@@ -68,6 +68,15 @@ void vaporControl::startFrameLoop()
 
 //-----------------------------------//
 
+void vaporControl::stopFrameLoop()
+{
+	frameUpdateTimer.Stop();
+	frameRenderTimer.Stop();
+}
+
+
+//-----------------------------------//
+
 void vaporControl::doUpdate(wxTimerEvent&)
 {
 	if( !onUpdate.empty() )
@@ -78,11 +87,11 @@ void vaporControl::doUpdate(wxTimerEvent&)
 
 void vaporControl::doRender(wxTimerEvent&)
 {
-	if( needsRedraw )
-	{
-		Refresh();
-		needsRedraw = false;
-	}	
+	if( !needsRedraw )
+		return;
+
+	Refresh();
+	needsRedraw = false;
 }
 
 //-----------------------------------//

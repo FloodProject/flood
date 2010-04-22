@@ -10,10 +10,13 @@
 #include "EditorIcons.h"
 #include "GizmoMode.h"
 #include "Editor.h"
+#include "vaporWindow.h"
 
 namespace vapor { namespace editor {
 
-enum
+//-----------------------------------//
+
+enum GizmoTools
 {
 	Gizmo_Camera = 18237,
 	Gizmo_Select,
@@ -22,12 +25,26 @@ enum
 	Gizmo_Scale
 };
 
+static const int PICK_TARGET_SIZE = 256;
+
 //-----------------------------------//
 
 GizmoMode::GizmoMode( EditorFrame* frame )
-	: Mode( frame ), editorScene( frame->getEditorScene() )
+	: Mode( frame ), editorScene( frame->getEditorScene() ),
+	oldMouseEvent(0, 0)
 {
 	assert( editorScene != nullptr );
+
+	//fbo = new FBO( Settings(PICK_TARGET_SIZE, PICK_TARGET_SIZE) );
+	//tex = fbo->createRenderTexture();
+	//fbo->check();
+	//fbo->unbind();
+
+	//Viewframe* viewframe = editor->getMainViewframe();
+	//CameraPtr camera = viewframe->getCamera();
+
+	//view = fbo->addViewport( camera );
+	//view->setClearColor(Colors::Black);
 }
 
 //-----------------------------------//
@@ -62,7 +79,7 @@ void GizmoMode::onModeInit(wxToolBar* toolBar, ModeIdMap& map)
 
 void GizmoMode::onModeEnter( int id )
 {
-	currentTool = id;
+	tool = id;
 }
 
 //-----------------------------------//
@@ -76,20 +93,18 @@ void GizmoMode::onModeExit()
 
 void GizmoMode::enableBoundingGizmo( const NodePtr& node )
 {
-	static int i = 0;
 	assert( node != nullptr );
+	assert( gizmos.find(node) == gizmos.end() );
 
 	const TransformPtr& tr = node->getTransform();
 	tr->setDebugRenderableVisible( true );
 
-	assert( gizmos.find(node) == gizmos.end() );
-
-	std::string str( "Gizmo"+num_to_str(i) );
+	static int i = 0;
+	std::string str( "Gizmo"+num_to_str(i++) );
 	NodePtr gizNode( new Node(str) );
 	gizNode->addTransform();
 
-	Vector3 center( tr->getBoundingVolume().getCenter() );
-	GeometryPtr gizmo( new Gizmo(center ) ); 	
+	gizmo.reset( new Gizmo(node) ); 	
 	gizNode->addComponent(gizmo);
 	
 	editorScene->add( gizNode );
@@ -120,38 +135,191 @@ void GizmoMode::disableBoundingGizmo( const NodePtr& node )
 
 void GizmoMode::drawGizmo( NodePtr old, NodePtr new_ )
 {
-	if( currentTool != Gizmo_Translate ) return;
+	if( tool != Gizmo_Translate )
+		return;
 
 	if( old )
 		disableBoundingGizmo( old );
 
-	if( new_ && (gizmos.find(new_) == gizmos.end()) )
+	if( new_ && ( gizmos.find(new_) == gizmos.end() ) )
 		enableBoundingGizmo( new_ );
+
+	viewframe->flagRedraw();
 }
 
 //-----------------------------------//
 
 void GizmoMode::onNodeSelected( NodePtr old, NodePtr new_ )
 {
-	if( !new_ ) return;
+	assert( new_ != nullptr );  
 
-	switch(currentTool)
-	{
-	case Gizmo_Camera:
-		break;
-	case Gizmo_Select:
-		new_->getTransform()->setDebugRenderableVisible( true );
-		selectedNodes.push_back( new_ );
-		break;
-	case Gizmo_Translate:
-	case Gizmo_Rotate:
-	case Gizmo_Scale:
-		drawGizmo( old, new_ );
-		break;
-	default:
-		warn( "editor", "Invalid tool id in gizmo mode" );
-		break;
+	switch(tool) 
+	{	
+		case Gizmo_Select:
+		{
+			TransformPtr transform = new_->getTransform();
+			transform->setDebugRenderableVisible( true );
+			break;
+		}
+
+		case Gizmo_Translate:
+		case Gizmo_Rotate:
+		case Gizmo_Scale:
+		{
+			drawGizmo( old, new_ );
+			break;
+		} 
 	}
+
+	selected.push_back( new_ );
+}
+
+//-----------------------------------//
+
+bool GizmoMode::pickImageTest( const MouseMoveEvent& me, GizmoAxis::Enum& axis )
+{
+	ViewportPtr viewport = viewframe->getViewport();
+	Vector2i size = viewport->getSize();
+
+	// We need to flip the Y-axis due to a mismatch between the 
+	// OpenGL and wxWidgets coordinate-system origin conventions.
+	int m_x = me.x;
+	int m_y = size.y-me.y;
+
+	Color pick;
+	glReadPixels(m_x, m_y, 1, 1, GL_RGB, GL_FLOAT, &pick);
+	
+	if( glHasError("Error reading pixels from framebuffer") )
+		return false;
+
+	axis = Gizmo::getAxis(pick);
+	
+	return ( axis != GizmoAxis::None );
+}
+
+//-----------------------------------//
+
+bool GizmoMode::pickBoundingTest( const MouseMoveEvent& me )
+{
+	const CameraPtr& camera = viewframe->getCamera();
+
+	// Get a ray given the screen location clicked.
+	Vector3 outFar;
+	const Ray& pickRay = camera->getRay( me.x, me.y, &outFar );
+
+	// Perform ray casting to find the nodes.
+	RayBoxQueryResult res;
+	
+	if( !editorScene->doRayBoxQuery(pickRay, res) )
+		return false;
+
+	// Find out if we picked a gizmo...
+	gizmo = res.node->getComponent<Gizmo>("Gizmo");
+	
+	return (gizmo != nullptr);
+}
+
+//-----------------------------------//
+
+void GizmoMode::onMouseMove( const MouseMoveEvent& me )
+{
+	if( ((tool != Gizmo_Translate) 
+		&& (tool != Gizmo_Rotate)
+		&& (tool != Gizmo_Scale))
+		|| !gizmo )
+	{
+		return;
+	}
+
+	// To check if the user picked a gizmo we use two hit tests.
+	// The first will be based on bounding volumes and will be
+	// a conservative but not very accurate first result.
+	// If it hits, then we will test with a more accurate
+	// (but also more expensive) image based picking technique.
+
+	//if( !pickBoundingTest(me) )
+	//{
+	//	gizmo->setAxisDefault();
+	//	return;
+	//}
+
+	if( !pickImageTest(me, axis) )
+	{
+		gizmo->deselectAxis();
+		viewframe->flagRedraw();
+		return;
+	}
+
+	gizmo->selectAxis(axis);
+	viewframe->flagRedraw();
+}
+
+//-----------------------------------//
+
+void GizmoMode::onMouseDrag( const MouseDragEvent& de )
+{
+	if( !gizmo || !gizmo->isAnyAxisSelected() )
+		return;
+
+	Vector3 unit = Gizmo::getUnitVector(axis);
+
+	if( axis == GizmoAxis::X )
+		unit *= de.dx;
+	else if( axis == GizmoAxis::Y )
+		unit *= de.dy;
+	else if( axis == GizmoAxis::Z )
+		unit *= de.dx;
+	
+	const NodePtr& node = gizmo->getNodeAttachment();
+	const TransformPtr& transform = node->getTransform();
+	transform->translate( unit );
+	
+	const NodePtr& giz_node = gizmo->getNode();
+	const TransformPtr& giz_tr = giz_node->getTransform();
+	giz_tr->translate( unit );
+
+	viewframe->flagRedraw();
+}
+
+//-----------------------------------//
+
+void GizmoMode::onMouseButtonPress( const MouseButtonEvent& mbe )
+{
+	const ScenePtr& scene = engine->getSceneManager();
+	const CameraPtr& camera = viewframe->getCamera();
+
+	// Get a ray given the screen location clicked.
+	Vector3 outFar;
+	const Ray& pickRay = camera->getRay( mbe.x, mbe.y, &outFar );
+
+#if 0 // Enable this to draw debugging lines
+	const NodePtr& line = buildRay( pickRay, outFar );
+	editor->getEditorScene()->add( line );
+#endif
+
+	// Perform ray casting to find the nodes.
+	RayBoxQueryResult res;
+
+	if( scene->doRayBoxQuery( pickRay, res ) )
+	{
+		onNodeSelected( NodePtr(), res.node );
+	}
+	else
+	{
+		disableSelectedNodes();
+	}
+}
+
+//-----------------------------------//
+
+void GizmoMode::disableSelectedNodes()
+{
+	// Disable all enabled bounding boxes.
+	foreach( const NodePtr& node, selected )
+		disableBoundingGizmo( node );
+
+	selected.clear();
+	viewframe->flagRedraw();
 }
 
 //-----------------------------------//
@@ -170,7 +338,7 @@ NodePtr buildRay( const Ray& pickRay, const Vector3& outFar )
 	vb->set( VertexAttribute::Position, vertex );
 	vb->set( VertexAttribute::Color, colors );
 
-	MaterialPtr mat( new Material( "LineMaterial", "diffuse" ) );
+	MaterialPtr mat( new Material("LineMaterial") );
 	
 	RenderablePtr rend( new Renderable( Primitive::Lines, vb ) );
 	rend->setMaterial( mat );	
@@ -184,71 +352,6 @@ NodePtr buildRay( const Ray& pickRay, const Vector3& outFar )
 	line->setTag( EditorTags::EditorOnly, true );
 	
 	return line;
-}
-
-//-----------------------------------//
-
-void GizmoMode::onMouseMove( const MouseMoveEvent& me )
-{
-	if( (currentTool != Gizmo_Translate) 
-		&& (currentTool != Gizmo_Rotate)
-		&& (currentTool != Gizmo_Scale) ) return;
-
-	const CameraPtr& camera = viewframe->getCamera();
-
-	// Get a ray given the screen location clicked.
-	Vector3 outFar;
-	const Ray& pickRay = camera->getRay( me.x, me.y, &outFar );
-
-	// Perform ray casting to find the nodes.
-	RayBoxQueryResult res;
-	
-	if( !editorScene->doRayBoxQuery(pickRay, res) )
-		return;
-
-	// Find out if we picked a gizmo...
-	GizmoPtr gizmo = res.node->getComponent<Gizmo>("Gizmo");
-	
-	if( !gizmo )
-		return;
-
-	//gizmo->
-}
-
-//-----------------------------------//
-
-void GizmoMode::onMouseButtonPress( const MouseButtonEvent& mbe )
-{
-	disableSelectedNodes();
-
-	const ScenePtr& scene = engine->getSceneManager();
-	const CameraPtr& camera = viewframe->getCamera();
-
-	// Get a ray given the screen location clicked.
-	Vector3 outFar;
-	const Ray& pickRay = camera->getRay( mbe.x, mbe.y, &outFar );
-
-#if 0 // Enable this to draw debugging lines
-	const NodePtr& line = buildRay( pickRay, outFar );
-	editor->getEditorScene()->add( line );
-#endif
-
-	// Perform ray casting to find the nodes.
-	RayBoxQueryResult res;
-
-	if( scene->doRayBoxQuery( pickRay, res ) )
-		onNodeSelected( NodePtr(), res.node );
-}
-
-//-----------------------------------//
-
-void GizmoMode::disableSelectedNodes()
-{
-	// Disable all enabled bounding boxes.
-	foreach( const NodePtr& node, selectedNodes )
-		disableBoundingGizmo( node );
-
-	selectedNodes.clear();
 }
 
 //-----------------------------------//

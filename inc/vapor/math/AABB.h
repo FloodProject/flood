@@ -38,10 +38,10 @@ public:
 	Vector3 getCenter() const;
 
 	// Gets the minimum corner of the bounding box.
-	const Vector3& getMinimum() const;
+	IMPLEMENT_GETTER(Minimum, const Vector3&, min)
 
 	// Gets the maximum corner of the bounding box.
-	const Vector3& getMaximum() const;
+	IMPLEMENT_GETTER(Maximum, const Vector3&, max)
     
 	// Gets the size of the bounding box.
 	//Vector3 getSize() const;

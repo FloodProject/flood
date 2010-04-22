@@ -27,8 +27,13 @@ public:
 		const wxSize& size = wxDefaultSize,
 		long style = wxTAB_TRAVERSAL );
 
+	~Viewframe();
+
 	// Creates and adds a new viewport to the viewframe.
 	Viewport* createViewport( NodePtr node );
+
+	// Flags the backing control for redraw.
+	void flagRedraw();
 
 	// Gets the associated camera.
 	IMPLEMENT_GETTER(Camera, const CameraPtr, viewport->getCamera())

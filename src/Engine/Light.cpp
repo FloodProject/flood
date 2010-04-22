@@ -11,7 +11,7 @@
 
 namespace vapor { namespace scene {
 
-//using namespace vapor::math;
+using namespace vapor::math;
 
 //-----------------------------------//
 
@@ -27,106 +27,8 @@ Light::Light( LightType::Enum type )
 
 //-----------------------------------//
 
-Light::~Light( )
-{
-
-}
-
-//-----------------------------------//
-
-void Light::on()
-{
-
-}
-
-//-----------------------------------//
-
-void Light::off()
-{
-
-}
-
-//-----------------------------------//
-
-bool Light::isOn() const
-{
-	return isLightOn;
-}
-
-//-----------------------------------//
-
-void Light::enableShadowCast()
-{
-	
-}
-
-//-----------------------------------//
-
-void Light::disableShadowCast()
-{
-
-}
-
-//-----------------------------------//
-
-bool Light::castsShadow() const
-{
-	return castsShadows;
-}
-
-//-----------------------------------//
-
-void Light::setType( LightType::Enum type )
-{
-
-}
-
-//-----------------------------------//
-
-void Light::setDiffuse( const math::Color& color )
-{
-
-}
-
-//-----------------------------------//
-
-void Light::setSpecular( const math::Color& color )
-{
-
-}
-
-//-----------------------------------//
-
-void Light::setEmissive( const math::Color& color )
-{
-
-}
-
-//-----------------------------------//
-
-void Light::setAmbient( const math::Color& color )
-{
-
-}
-
-//-----------------------------------//
-
-void Light::setSpotCutOffRadius( float radius )
-{
-
-}
-
-//-----------------------------------//
-
 void Light::update( double delta )
 {
-}
-
-//-----------------------------------//
-
-const std::string& Light::getType() const
-{
-	return Light::type;
 }
 
 //-----------------------------------//

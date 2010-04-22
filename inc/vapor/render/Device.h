@@ -103,6 +103,8 @@ protected:
 	bool setupRenderState( const RenderState&, const scene::Camera* );
 	bool setupRenderStateLight( const RenderState&, const LightQueue& );
 	bool setupRenderStateOverlay( const RenderState& );
+	void setupRenderStateMaterial( const MaterialPtr& );
+	void undoRenderStateMaterial( const MaterialPtr& );
 
 	// Manages all the shaders.
 	TextureManagerPtr textureManager;

@@ -59,7 +59,7 @@ void Geometry::appendRenderables( render::RenderQueue& queue, TransformPtr trans
 	
 	const math::Matrix4x3& absoluteTransform = transform->getAbsoluteTransform();
 	
-	foreach( const rendPair& pair, renderables )
+	foreach( const RenderableMapPair& pair, renderables )
 	{
 		foreach( const RenderablePtr& rend, pair.second )
 		{

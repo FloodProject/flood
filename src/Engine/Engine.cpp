@@ -52,10 +52,10 @@ Engine::~Engine()
 		delete sub;
 
 	delete audioDevice;
-	delete resourceManager;
-	delete renderDevice;
 	delete physicsManager;
 	delete scriptState;
+	delete resourceManager;
+	delete renderDevice;
 	delete vfs;
 	delete log;
 }

@@ -13,68 +13,50 @@ namespace vapor { namespace input {
 
 //-----------------------------------//
 
-Mouse::Mouse()
-{
-
-}
-
-//-----------------------------------//
-
-Mouse::~Mouse()
-{
-
-}
-
-//-----------------------------------//
-
-const input::DeviceType::Enum Mouse::getType()
-{
-	return input::DeviceType::Mouse; 
-}
-
-//-----------------------------------//
+#define CAST_EVENT(type, var, evt)		\
+	type var = static_cast<type>(evt);
 
 void Mouse::processEvent( const input::Event& event )
 {
 	if( event.deviceType != DeviceType::Mouse )
-	{
 		return;
-	}
 
-	const MouseEvent& mevt = 
-		static_cast< const MouseEvent& > ( event );
+	CAST_EVENT(const MouseEvent&, mevt, event)
 	
 	switch( mevt.eventType )
 	{
 		case MouseEventType::MousePress:
 		{
-			const MouseButtonEvent& mbe = 
-				static_cast< const MouseButtonEvent& > ( mevt );
+			CAST_EVENT(const MouseButtonEvent&, mbe, mevt)
 			mouseButtonPressed( mbe );
 			break;
 		}
 		
 		case MouseEventType::MouseRelease:
 		{
-			const MouseButtonEvent& mbe = 
-				static_cast< const MouseButtonEvent& > ( mevt );
+			CAST_EVENT(const MouseButtonEvent&, mbe, mevt)
 			mouseButtonReleased( mbe );
 			break;
 		}
 		
 		case MouseEventType::MouseMove:
 		{
-			const MouseMoveEvent& mm = 
-				static_cast< const MouseMoveEvent& > ( mevt );
+			CAST_EVENT(const MouseMoveEvent&, mm, mevt)
 			mouseMoved( mm );
 			break;
 		}
 
 		case MouseEventType::MouseDrag:
 		{
-			const MouseDragEvent& mm = 
-				static_cast< const MouseDragEvent& > ( mevt );
-			mouseDragged( mm );
+			CAST_EVENT(const MouseDragEvent&, mde, mevt)			
+			mouseDragged( mde );
+			break;
+		}
+
+		case MouseEventType::MouseWheelMove:
+		{
+			CAST_EVENT(const MouseWheelEvent&, mwe, mevt)
+			mouseWheelMove( mwe );
 			break;
 		}
 		
@@ -89,20 +71,12 @@ void Mouse::processEvent( const input::Event& event )
 			mouseExit();
 			break;
 		}
-		
-		case MouseEventType::MouseWheelMove:
-		{
-			const MouseWheelEvent& mwe = 
-				static_cast< const MouseWheelEvent& > ( mevt );
-			mouseWheelMove( mwe );
-			break;
-		}
 	}
 }
 
 //-----------------------------------//
 
-bool Mouse::isButtonPressed( MouseButton::Enum button )
+bool Mouse::isButtonPressed( MouseButton::Enum button ) const
 {
 	const MouseInfo& mouseInfo = getMouseInfo();
 
@@ -129,16 +103,9 @@ bool Mouse::isButtonPressed( MouseButton::Enum button )
 			break;
 	}
 
-	warn( "input", "Could  not map enum: Invalid mouse button" );
+	warn( "input", "Could not map enum: Invalid mouse button" );
 
 	return MouseButton::Left;
-}
-
-//-----------------------------------//
-
-const MouseInfo& Mouse::getMouseInfo()
-{
-	return mouseInfo;
 }
 	
 //-----------------------------------//
@@ -157,7 +124,12 @@ void Mouse::mouseMoved(const MouseMoveEvent& mme)
 //-----------------------------------//
 
 void Mouse::mouseDragged(const MouseDragEvent& mde)
-{	
+{
+	MouseDragEvent& me = const_cast<MouseDragEvent&>(mde);
+
+	me.dx = mouseInfo.x - mde.x;
+	me.dy = mouseInfo.y - mde.y;
+
 	mouseInfo.x = mde.x;
 	mouseInfo.y = mde.y;
 

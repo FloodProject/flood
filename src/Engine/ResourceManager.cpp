@@ -29,6 +29,8 @@ ResourceManager::ResourceManager()
 
 ResourceManager::~ResourceManager()
 {
+	assert( resourceTaskEvents.empty() );
+
 	// Delete resource loaders.
 	// TODO: comment the extension deleting logic.
 	foreach( const ResourceLoaderMapPair& entry, resourceLoaders )
@@ -40,8 +42,8 @@ ResourceManager::~ResourceManager()
 	}
 
 	// Check that all resources will be deleted.
-	foreach( const ResourceMapPair& p, resources )
-		assert( p.second->getReferenceCount() == 1 );
+	//foreach( const ResourceMapPair& p, resources )
+		//assert( p.second->getReferenceCount() == 1 );
 }
 
 //-----------------------------------//
@@ -122,7 +124,7 @@ public:
 
 		ResourceEvent event;
 		event.resource = res;
-		rm->loadEvents.push(event);
+		rm->resourceTaskEvents.push(event);
 
 		rm->numResourcesQueuedLoad--;
 		rm->resourceFinishLoad.notify_one();
@@ -226,7 +228,7 @@ void ResourceManager::update( double )
 {
 	ResourceEvent event;
 	
-	while( loadEvents.try_pop(event) )
+	while( resourceTaskEvents.try_pop(event) )
 	{
 		if( !onResourceLoaded.empty() )
 			onResourceLoaded( event );	
@@ -317,19 +319,6 @@ void ResourceManager::handleWatchResource(const vfs::WatchEvent& evt)
 		onResourceReloaded( re );
 	}
 }
-
-//-----------------------------------//
-
-//void ResourceManager::setTaskManager( TaskManagerPtr const taskManager_ )
-//{
-//	assert( taskManager_ != nullptr );
-//
-//	taskManager = taskManager_;
-//	
-//	// We'll use this to know when the background tasks have finished.
-//	//taskManager->onTaskFinish +=
-//		//fd::bind( &ResourceManager::handleTaskFinish, this );
-//}
 
 //-----------------------------------//
 

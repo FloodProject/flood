@@ -33,8 +33,7 @@ SceneTreeCtrl::SceneTreeCtrl( vapor::Engine* engine, wxWindow* parent, wxWindowI
 	: wxTreeCtrl(parent, id, pos, size, style, validator, name),
 	engine(engine), activated(false)
 {
-	if( !engine ) 
-		assert( "Invalid engine instance." );
+	assert( engine != nullptr );
 
 	scene = engine->getSceneManager();
 	

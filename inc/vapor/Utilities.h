@@ -55,6 +55,12 @@ namespace vapor {
 		TYPEDEF_SHARED_POINTER_FROM_TYPE( T );		\
 	} } // end namespaces
 
+#define FWD_DECL_NS_TYPEDEF_SHARED_WEAK(N, T)			\
+	namespace vapor { namespace N {						\
+		class T;										\
+		TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( T );		\
+	} } // end namespaces
+
 //---------------------------------------------------------------------//
 // Acessors
 //---------------------------------------------------------------------//

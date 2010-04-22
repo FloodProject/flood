@@ -149,15 +149,15 @@ typedef boost::thread* ThreadPtr;
 
 #if defined( VAPOR_MEMORY_SHARED_PTR )
 	#define TYPEDEF_SHARED_POINTER_FROM_TYPE( class ) \
-		typedef std::shared_ptr< class > class##Ptr
+		typedef std::shared_ptr< class > class##Ptr;
 	#define TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( class ) \
-		typedef std::weak_ptr< class > class##WeakPtr
+		typedef std::weak_ptr< class > class##WeakPtr;
 #endif
 
 #if defined( VAPOR_MEMORY_INTRUSIVE_PTR )
 	#include "boost/intrusive_ptr.hpp"
 	#define TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( class ) \
-		typedef boost::intrusive_ptr< class > class##Ptr
+		typedef boost::intrusive_ptr< class > class##Ptr;
 	using boost::static_pointer_cast;
 #endif
 

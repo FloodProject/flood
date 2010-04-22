@@ -61,7 +61,7 @@ public:
 		const math::Vector3& upVector );
 
 	// Gets the absolute transformation matrix.
-	IMPLEMENT_GETTER(AbsoluteTransform, const math::Matrix4x3&, transform)
+	IMPLEMENT_GETTER(AbsoluteTransform, const math::Matrix4x3, getLocalTransform())
 	
 	// Sets the absolute transformation matrix.
 	void setAbsoluteTransform( const math::Matrix4x3& matrix );

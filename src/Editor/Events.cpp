@@ -25,12 +25,12 @@ void EditorFrame::RefreshViewport()
 void EditorFrame::onRender()
 {
 	ViewportPtr viewport = viewframe->getViewport();
-	
+
 	const CameraPtr& camera = viewport->getCamera();
 	camera->setViewport( viewport );
-
-	camera->render( editorScene );
-	camera->render( engine->getSceneManager(), false );
+	
+	camera->render( engine->getSceneManager() );
+	camera->render( editorScene, false );
 }
 
 //-----------------------------------//
@@ -39,6 +39,8 @@ void EditorFrame::onUpdate( double delta )
 {
 	editorScene->update( delta );
 	engine->update( delta );
+
+	//viewframe->getControl()->flagRedraw();
 }
 
 //-----------------------------------//

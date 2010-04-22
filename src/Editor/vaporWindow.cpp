@@ -68,7 +68,8 @@ void vaporWindow::show( bool hide )
 
 void vaporWindow::makeCurrent()
 {
-	if(!context || !canvas) return;
+	if(!context || !canvas) 
+		return;
 
 	context->SetCurrent(*canvas);
 }

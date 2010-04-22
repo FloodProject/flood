@@ -58,6 +58,9 @@ public:
 	void bind();
 	void unbind();
 
+	// Checks if the FBO is complete.
+	bool check();
+
 	// Updates the render target (usually swaps buffers).
 	virtual void update();
 
@@ -78,8 +81,6 @@ public:
 	IMPLEMENT_GETTER(Settings, const Settings&, settings)
 
 protected:
-
-	bool check();
 
 	uint id;
 	std::vector< uint > renderBuffers;

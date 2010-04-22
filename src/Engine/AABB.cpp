@@ -56,8 +56,11 @@ Vector3 AABB::getCorner( int i ) const
 
 Vector3 AABB::getCenter() const
 {
-	return Vector3( (max.x-min.x)/2,
-		(max.y-min.y)/2, (max.z-min.z)/2 );
+	int mid_x = min.x+(max.x-min.x)/2;
+	int mid_y = min.y+(max.y-min.y)/2;
+	int mid_z = min.z+(max.z-min.z)/2;
+	
+	return Vector3( mid_x, mid_y, mid_z );
 }
 
 //-----------------------------------//
@@ -71,20 +74,6 @@ void AABB::reset()
 	max.x = f_min;
 	max.y = f_min;
 	max.z = f_min;
-}
-
-//-----------------------------------//
-
-const Vector3& AABB::getMinimum() const
-{
-	return min;
-}
-
-//-----------------------------------//
-
-const Vector3& AABB::getMaximum() const
-{
-	return max;
 }
 
 //-----------------------------------//

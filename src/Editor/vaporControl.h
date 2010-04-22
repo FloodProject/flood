@@ -55,6 +55,9 @@ public:
 	// Starts firing the update and render frame timers.
 	void startFrameLoop();
 
+	// Starts firing the update and render frame timers.
+	void stopFrameLoop();
+
 	// Gets the associated window.
 	IMPLEMENT_GETTER(RenderWindow, vaporWindow*, window)
 

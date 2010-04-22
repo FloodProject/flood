@@ -86,6 +86,9 @@ public:
 	// Updates the window content.
 	virtual void update() = 0;
 
+	// Sets this rendering target as the current.
+	virtual void makeCurrent() = 0;
+
 	// Shows/hides the window.
 	virtual void show( bool hide = false ) = 0;
 
