@@ -27,6 +27,9 @@ struct TerrainSettings
 		:	CellSize( 500 ), NumberTiles( 16 )
 	{ }
 
+	// Material for each cell.
+	render::MaterialPtr Material;
+
 	// Cell size in world units.
 	ushort CellSize;
 
@@ -35,9 +38,6 @@ struct TerrainSettings
 
 	// Scales the terrain to this maximum height.
 	ushort MaxHeight;
-
-	// Material for each cell.
-	render::MaterialPtr Material;
 };
 
 //-----------------------------------//

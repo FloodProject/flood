@@ -16,6 +16,12 @@
 
 namespace vapor { namespace editor {
 
+enum 
+{
+	ID_SceneTreeCtrl = 7843,
+	ID_ResourceTreeCtrl
+};
+
 // ----------------------------------------------------------------------
 // event tables and other macros for wxWidgets
 // ----------------------------------------------------------------------
@@ -25,6 +31,8 @@ BEGIN_EVENT_TABLE(EditorFrame, wxFrame)
     EVT_MENU(Editor_About, EditorFrame::OnAbout)
 	EVT_MENU(wxID_ANY, EditorFrame::OnToolbarButtonClick)
 	EVT_KEY_DOWN(EditorFrame::OnKeyDown)
+	EVT_KEY_UP(EditorFrame::OnKeyUp)
+	EVT_MOUSE_EVENTS(EditorFrame::OnMouseEvent)
 END_EVENT_TABLE()
 
 IMPLEMENT_APP(EditorApp)
@@ -85,6 +93,8 @@ EditorFrame::EditorFrame(const wxString& title)
 	SetSizerAndFit( sizer );
 
 	waitFinishLoad();
+
+	//SetFocusIgnoringChildren();
 }
 
 //-----------------------------------//
@@ -118,7 +128,14 @@ void EditorFrame::initEngine()
 
 	createMainViewframe();
 
-	engine->getRenderDevice()->init();
+	render::DevicePtr device = engine->getRenderDevice();
+	device->init();
+
+	//rb = device->createRenderBuffer( Settings() );
+	//rb->createRenderBuffer( RenderBufferType::Depth | RenderBufferType::Color );
+	//depthViewport = rb->addViewport( viewframe->getCamera() );
+	//depthViewport->setSize( rb->getSettings().getSize() );
+	//rb->unbind();
 
 	// Register all the mouse events.
 	Mouse* const mouse = engine->getInputManager()->getMouse();
@@ -165,6 +182,8 @@ void EditorFrame::createMainViewframe()
 	device->setRenderTarget( window );
 
 	engine->setupInput();
+	im = control->getInputManager();
+	//cb += fd::bind( &EditorFrame::onInputEvent, this );
 
 	NodePtr camera( createCamera() );	
 	editorScene->add( camera );
@@ -243,8 +262,7 @@ void EditorFrame::createNotebook()
 	
 	wxBoxSizer* panelSceneSizer = new wxBoxSizer( wxVERTICAL );
 	
-	sceneTreeCtrl = new SceneTreeCtrl(engine, panelScene, ID_SceneTree,
-		wxDefaultPosition, wxSize(230, -1) );
+	sceneTreeCtrl = new SceneTreeCtrl( this, engine, panelScene, ID_SceneTreeCtrl );
 
 	sceneTreeCtrl->onItemSelected += fd::bind( &EditorFrame::OnNodeSelected, this );
 
@@ -262,7 +280,7 @@ void EditorFrame::createNotebook()
 	
 	wxBoxSizer* panelResourcesSizer = new wxBoxSizer( wxVERTICAL );
 	
-	resourceTreeCtrl = new ResourceTreeCtrl(engine, panelResources, ID_SceneTree,
+	resourceTreeCtrl = new ResourceTreeCtrl(engine, panelResources, ID_ResourceTreeCtrl,
 		wxDefaultPosition, wxSize(220, -1) );
 
 	panelResourcesSizer->Add( resourceTreeCtrl, 1, wxALL|wxEXPAND, 0 );

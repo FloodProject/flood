@@ -13,7 +13,28 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
+vaporInputManager::vaporInputManager()
+{
+	cb += fd::bind( &vaporInputManager::processEvent, this );
+}
+
+//-----------------------------------//
+
 void vaporInputManager::processKeyEvent( const wxKeyEvent& event, bool keyDown )
+{
+	doKeyEvent(cb, event, keyDown);
+}
+
+//-----------------------------------//
+
+void vaporInputManager::processMouseEvent( const wxMouseEvent& event )
+{
+	doMouseEvent(cb, event);	
+}
+
+//-----------------------------------//
+
+void vaporInputManager::doKeyEvent( InputProcessCallback cb, const wxKeyEvent& event, bool keyDown )
 {
 	// Convert from the wxWidgets events to the vaporEngine events.
 	KeyEvent ke( 
@@ -23,26 +44,29 @@ void vaporInputManager::processKeyEvent( const wxKeyEvent& event, bool keyDown )
 		event.ControlDown(),
 		(keyDown) ? KeyboardEventType::KeyPressed : KeyboardEventType::KeyReleased  );
 
-	processEvent( ke );	
+	cb( ke );
 }
 
 //-----------------------------------//
 
-void vaporInputManager::processMouseEvent( const wxMouseEvent& event )
+void vaporInputManager::doMouseEvent( InputProcessCallback cb, const wxMouseEvent& event )
 {
 	// Mouse motion
 	if( event.Moving() )
 	{
-		MouseMoveEvent me( event.GetX(), event.GetY() );
-		processEvent( me );
+		MouseMoveEvent me;
+		me.x = event.GetX();
+		me.y = event.GetY();
+		cb( me );
 	}
 
 	// Mouse dragged
 	if( event.Dragging() )
 	{
-		Mouse* mouse = getMouse();
-		MouseDragEvent me( event.GetX(), event.GetY(), mouse->getMouseInfo() );
-		processEvent( me );
+		MouseDragEvent me;
+		me.x = event.GetX();
+		me.y = event.GetY();
+		cb( me );
 	} 
 	
 	// Mouse button
@@ -68,41 +92,44 @@ void vaporInputManager::processMouseEvent( const wxMouseEvent& event )
 			button = MouseButton::Mouse5;
 			break;
 		default:
-			assert( "Unreachable code" );
+			assert( 0 && "This should not be reachable" );
 			button = MouseButton::Middle;
 		}
 
-		MouseButtonEvent mb( event.GetX(), event.GetY(), button, 
-			( event.ButtonDown() ) ? MouseEventType::MousePress : MouseEventType::MouseRelease );
-		processEvent( mb );
+		MouseEventType::Enum type = event.ButtonDown() ?
+			MouseEventType::MousePress : MouseEventType::MouseRelease;
+
+		MouseButtonEvent mb(type);
+		mb.x = event.GetX();
+		mb.y = event.GetY();
+		cb( mb );
 	}
 
 	else if( event.GetWheelRotation() != 0 )
 	{
 		// wxWidgets reports a very big value for wheel rotation,
 		// so we clamp it down to be uniform with other platforms.
-		MouseWheelEvent mwe( event.GetWheelRotation() / 120 );
-		processEvent( mwe );
+		MouseWheelEvent mwe;
+		mwe.delta = ( event.GetWheelRotation() / 120 );
+		cb( mwe );
 	}
 
 	else if( event.Entering() )
 	{
 		MouseEvent me( MouseEventType::MouseEnter );
-		processEvent( me );
-		//warn( "wx::input", "Mouse entering events still not implemented" );
+		cb( me );
 	}
 
 	else if( event.Leaving() )
 	{
 		MouseEvent me( MouseEventType::MouseExit );
-		processEvent( me );
-		//warn( "wx::input", "Mouse leaving events still not implemented" );
+		cb( me );
 	}
 }
 
 //-----------------------------------//
 
-input::Keys::Enum vaporInputManager::convertKeyEnum( int keyCode )
+Keys::Enum vaporInputManager::convertKeyEnum( int keyCode )
 {
 	// From the wxWidgets docs:
 	// "Note that the range 33 - 126 is reserved for the standard ASCII characters 
@@ -126,7 +153,7 @@ input::Keys::Enum vaporInputManager::convertKeyEnum( int keyCode )
 		return Keys::LShift;
 	case WXK_ALT:
 		return Keys::LAlt;
-	//case case WXK_SYSTEM:
+	//case WXK_SYSTEM:
 		//return Keys::LSystem;
 	//case sf::Key::RControl:
 	//	return Keys::RControl;
@@ -141,6 +168,8 @@ input::Keys::Enum vaporInputManager::convertKeyEnum( int keyCode )
 
 	case WXK_WINDOWS_MENU:
 		return Keys::LSuper;
+	case WXK_WINDOWS_RIGHT:
+		return Keys::RSuper;
 
 	//case sf::Key::LBracket:
 	//	return Keys::LBracket;

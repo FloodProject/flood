@@ -51,7 +51,12 @@ bool Scene::doRayBoxQuery( const Ray& ray, RayBoxQueryList& list, bool all ) con
 		if( !node->isVisible() || node->getTag(Tags::NonPickable) )
 			continue;
 
-		const AABB& aabb = node->getTransform()->getWorldBoundingVolume();
+		const TransformPtr& transform = node->getTransform();
+		
+		if( !transform )
+			continue;
+
+		const AABB& aabb = transform->getWorldBoundingVolume();
 			
 		float distance;
 		if( aabb.intersects(ray, distance) )

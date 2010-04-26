@@ -9,9 +9,9 @@
 #include "vapor/PCH.h"
 #include "vapor/render/TextureManager.h"
 
-using namespace vapor::resources;
-
 namespace vapor { namespace render {
+
+using namespace vapor::resources;
 
 //-----------------------------------//
 
@@ -38,7 +38,6 @@ TextureManager::~TextureManager()
 		assert( p.second->getReferenceCount() == 2 );
 }
 
-
 //-----------------------------------//
 
 const byte TEX_SIZE = 64;
@@ -57,7 +56,7 @@ TexturePtr TextureManager::getTexture( const ImagePtr& img )
 	if( !img ) 
 	{
 		warn( "render", "Reverting to fallback texture" );
-		return TexturePtr( new Texture(TEX_SIZE, TEX_SIZE) );
+		return TexturePtr( new Texture( Settings(TEX_SIZE, TEX_SIZE) ) );
 	}
 
 	// Image already has texture.
@@ -69,7 +68,7 @@ TexturePtr TextureManager::getTexture( const ImagePtr& img )
 	// Image not loaded yet.
 	else if( !img->isLoaded() ) 
 	{
-		TexturePtr tex( new Texture(TEX_SIZE, TEX_SIZE) );
+		TexturePtr tex( new Texture( Settings(TEX_SIZE, TEX_SIZE) ) );
 		textures[img] = tex;
 		return tex;
 	}

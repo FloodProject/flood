@@ -12,6 +12,7 @@
 
 #include "vapor/render/Device.h"
 #include "vapor/render/GL.h"
+#include "vapor/render/FBO.h"
 #include "vapor/render/Adapter.h"
 #include "vapor/render/TextureManager.h"
 #include "vapor/render/ProgramManager.h"
@@ -65,13 +66,39 @@ void Device::init()
 
 	setClearColor( Colors::White );
 
-	glEnable( GL_DEPTH_TEST );
-	glDepthMask( GL_TRUE );
+	//glEnable( GL_DEPTH_TEST );
+	//glDepthMask( GL_TRUE );
 
 	glEnable( GL_CULL_FACE );
 	glCullFace( GL_BACK );
+	glDisable( GL_BLEND );
 	//glEnable( GL_LINE_SMOOTH );
 	//glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
+}
+
+//-----------------------------------//
+
+void Device::checkExtensions()
+{
+	// Initialize GLEW (OpenGL Extension Wrangler) and check that
+	// the user supports the minimum required OpenGL version.
+	GLenum err = glewInit();
+	
+	if( err != GLEW_OK )
+	{
+		const GLubyte* str = glewGetErrorString(err);
+		error( "render", "Failed to initialize GLEW: %s", str );
+		return;
+	}
+
+	info( "render", "Using GLEW version %s", glewGetString(GLEW_VERSION) );
+
+	if( !GLEW_VERSION_2_0 )
+	{
+		const char* str = "You need at least OpenGL 2.0 to run this.";
+		Log::MessageDialog( str, log::LogLevel::Error );
+		exit( -1 ); // TODO: exit program in a structured manner
+	}
 }
 
 //-----------------------------------//
@@ -134,6 +161,8 @@ bool Device::setupRenderState( const RenderState& state, const Camera* cam )
 	program->setUniform( "vp_ModelMatrix", state.modelMatrix );
 	program->setUniform( "vp_ViewMatrix", cam->getViewMatrix() );
 	program->setUniform( "vp_ModelViewMatrix", state.modelMatrix * cam->getViewMatrix() );
+
+	glEnable( GL_DEPTH_TEST );
 
 	return true;
 }
@@ -245,13 +274,6 @@ void Device::undoRenderStateMaterial( const MaterialPtr& mat )
 
 //-----------------------------------//
 
-void Device::updateTarget()
-{
-	activeTarget->update();
-}
-
-//-----------------------------------//
-
 void Device::setClearColor(const math::Color& newColor)
 {
 	if( newColor == color )
@@ -259,6 +281,19 @@ void Device::setClearColor(const math::Color& newColor)
 
 	color = newColor;
 	glClearColor( color.r, color.g, color.b, color.a );
+}
+
+//-----------------------------------//
+
+void Device::setViewport( const Vector2i& newLeft, const Vector2i& newSize )
+{
+	if( (viewportLeft == newLeft) && (viewportSize == newSize) )
+		return;
+
+	viewportLeft = newLeft;
+	viewportSize = newSize;
+
+	glViewport( viewportLeft.x, viewportLeft.y, viewportSize.x, viewportSize.y );
 }
 
 //-----------------------------------//
@@ -286,40 +321,12 @@ void Device::setWindowActiveTarget()
 
 //-----------------------------------//
 
-void Device::setViewport( const Vector2i& left,const Vector2i& size )
+RenderBufferPtr Device::createRenderBuffer( const Settings& settings )
 {
-	if( (viewportLeft == left) && (viewportSize == size) )
-		return;
-
-	viewportLeft = left;
-	viewportSize = size;
-
-	glViewport( viewportLeft.x, viewportLeft.y, viewportSize.x, viewportSize.y );
-}
-
-//-----------------------------------//
-
-void Device::checkExtensions()
-{
-	// Initialize GLEW (OpenGL Extension Wrangler) and check that
-	// the user supports the minimum required OpenGL version.
-	GLenum err = glewInit();
+	RenderBufferPtr buffer( new FBO(settings) );
+	renderTargets.push_back( buffer );
 	
-	if( err != GLEW_OK )
-	{
-		const GLubyte* str = glewGetErrorString(err);
-		error( "render", "Failed to initialize GLEW: %s", str );
-		return;
-	}
-
-	info( "render", "Using GLEW version %s", glewGetString(GLEW_VERSION) );
-
-	if( !GLEW_VERSION_2_0 )
-	{
-		const char* str = "You need at least OpenGL 2.0 to run this.";
-		Log::MessageDialog( str, log::LogLevel::Error );
-		exit( -1 ); // TODO: exit program in a structured manner
-	}
+	return buffer;
 }
 
 //-----------------------------------//

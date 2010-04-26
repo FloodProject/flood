@@ -15,6 +15,7 @@ namespace vapor { namespace math {
 //-----------------------------------//
 
 EulerAngles::EulerAngles()
+	: Vector3( 0.0f, 0.0f, 0.0f )
 {
 
 }

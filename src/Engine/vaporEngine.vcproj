@@ -451,6 +451,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\RenderBuffer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\render\RenderBuffer.h"
+					>
+				</File>
+				<File
 					RelativePath=".\VertexBuffer.cpp"
 					>
 					<FileConfiguration

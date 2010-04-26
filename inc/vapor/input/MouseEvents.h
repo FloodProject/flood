@@ -90,7 +90,7 @@ protected:
 
 struct MouseMoveEvent : public MouseEvent
 {
-	MouseMoveEvent( short x, short y );
+	MouseMoveEvent();
 
 	short x;
 	short y;
@@ -105,15 +105,13 @@ struct MouseMoveEvent : public MouseEvent
 
 struct MouseDragEvent : public MouseEvent
 {
-	MouseDragEvent( short x, short y, const MouseInfo& info );
+	MouseDragEvent();
 
 	short dx;
 	short dy;
 
 	short x;
 	short y;
-
-	const MouseInfo& info;
 };
 
 //-----------------------------------//
@@ -126,8 +124,7 @@ struct MouseDragEvent : public MouseEvent
 
 struct MouseButtonEvent : public MouseEvent
 {
-	MouseButtonEvent( short x, short y, 
-		MouseButton::Enum button, MouseEventType::Enum eventType );
+	MouseButtonEvent( MouseEventType::Enum eventType );
 
 	short x;
 	short y;
@@ -145,7 +142,7 @@ struct MouseButtonEvent : public MouseEvent
 
 struct MouseWheelEvent : public MouseEvent
 {
-	MouseWheelEvent( short delta );
+	MouseWheelEvent();
 
 	short delta;
 };

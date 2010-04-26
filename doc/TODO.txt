@@ -5,23 +5,27 @@ EDITOR:
 -------
 
 Shadows
+	Render to depth texture (DONE)
+	Render from Light viewpoint
 
 Input Events
 	Rework input system so modes get events always
-	instead of just when the mouse is over a viewframe.
+	instead of just when the mouse is over a viewframe. (WIP)
 
 Gizmo
 	Picking when the mouse moves (DONE)
 	Change gizmo color when user picks axis (DONE)
 	Add drag event and change the Transform (DONE)
 	Fix cone backface culling (DONE)
+	Get picking working properly with multiple gizmos
+	Scale the gizmo properly in relation to the camera distance
 	When the Camera moves, mouse should be tested
 
 Viewframe
 	Fix the control border
 	Wire the camera speed behaviour
 	Wire the camera render mode buttons
-	Redraw when a new resource gets loaded (texture changes etc)
+	Redraw when a resource gets updated
 	
 Terrain editing
 	Brushes interface

@@ -113,6 +113,14 @@ long NativeFile::read(void* buffer, long sz)
 
 //-----------------------------------//
 
+long NativeFile::write(const std::string& text)
+{
+	std::vector<byte> data( text.begin(), text.end() );
+	return fwrite(&data[0], data.size(), 1, fp);  
+}
+
+//-----------------------------------//
+
 bool NativeFile::exists()
 {
 	return access(path.c_str(), F_OK) == 0;

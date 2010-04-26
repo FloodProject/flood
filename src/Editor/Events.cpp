@@ -17,7 +17,7 @@ namespace vapor { namespace editor {
 
 void EditorFrame::RefreshViewport()
 {
-	viewframe->getControl()->flagRedraw();
+	viewframe->flagRedraw();
 }
 
 //-----------------------------------//
@@ -31,6 +31,10 @@ void EditorFrame::onRender()
 	
 	camera->render( engine->getSceneManager() );
 	camera->render( editorScene, false );
+
+	//rb->bind();
+	//depthViewport->update();
+	//rb->unbind();
 }
 
 //-----------------------------------//
@@ -50,21 +54,11 @@ void EditorFrame::OnNodeSelected(wxTreeItemId old, wxTreeItemId id)
 	const NodePtr& n_old = sceneTreeCtrl->getEntity( old );
 	const NodePtr& n_new = sceneTreeCtrl->getEntity( id );
 	
+	if( !n_new )
+		return;
+
 	if( currentMode )
 		currentMode->onNodeSelected( n_old, n_new );
-}
-
-//-----------------------------------//
-
-void EditorFrame::OnKeyDown(wxKeyEvent& event)
-{
-	if( event.GetKeyCode() == 'g' )
-	{
-		const NodePtr& grid = editorScene->getEntity( "Grid" );
-		
-		if( !grid ) return;
-		grid->setVisible( !grid->isVisible() );
-	}
 }
 
 //-----------------------------------//
@@ -82,7 +76,6 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 
 	switch(id) 
 	{
-	//-----------------------------------//
 	case Toolbar_Undo:
 	{
 		if( undoOperations.empty() )
@@ -129,7 +122,7 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 		engine->getSceneManager()->serialize( scene );
 
 		// Save it to a file.
-		std::string fn( fc.GetFilename() );
+		std::string fn( fc.GetPath() );
 		serializeToFile( scene, fn );
 		return;
 	}
@@ -177,7 +170,6 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 		
 		return;
 	}
-	//-----------------------------------//
 	} // end switch
 }
 
@@ -294,8 +286,8 @@ void EditorFrame::createScene()
 	NodePtr lnode( new Node("Light") );
 	lnode->addTransform();
 	LightPtr light( new Light( LightType::Point ) );
-	light->diffuseColor = Colors::Red;
-	light->ambientColor = Colors::Yellow;
+	light->setDiffuseColor( Colors::Red );
+	light->setAmbientColor( Colors::Yellow );
 	lnode->addComponent( light );
 	scene->add( lnode );
 
@@ -376,6 +368,27 @@ void EditorFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 {
     // true forces the frame to close.
     Close(true);
+}
+
+//-----------------------------------//
+
+void EditorFrame::OnKeyDown(wxKeyEvent& event)
+{
+	im->processKeyEvent(event, true);
+}
+
+//-----------------------------------//
+
+void EditorFrame::OnKeyUp(wxKeyEvent& event)
+{
+	im->processKeyEvent(event, false);
+}
+
+//-----------------------------------//
+
+void EditorFrame::OnMouseEvent(wxMouseEvent& event)
+{
+	im->processMouseEvent(event);
 }
 
 //-----------------------------------//

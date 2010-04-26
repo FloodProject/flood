@@ -74,9 +74,8 @@ protected:
 	bool drawDebugRenderable;
 };
 
-//-----------------------------------//
-
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Component );
+TYPEDEF_SHARED_POINTER_FROM_TYPE( Component )
+TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( Component )
 
 //-----------------------------------//
 

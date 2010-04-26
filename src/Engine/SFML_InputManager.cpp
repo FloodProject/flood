@@ -86,9 +86,11 @@ void SFML_InputManager::processMouseEvent(const sf::Event& event)
 	{
 		case sf::Event::MouseButtonPressed:
 		{
-			MouseButtonEvent mbe( mbX, mbY, 
-				convertMouseButtonEnum( event.MouseButton.Button ), 
-				MouseEventType::MousePress );
+			MouseButtonEvent mbe( MouseEventType::MousePress );
+			
+			mbe.x = mbX;
+			mbe.y = mbY;
+			mbe.button = convertMouseButtonEnum( event.MouseButton.Button );
 			
 			processEvent( mbe );
 			break;
@@ -96,9 +98,11 @@ void SFML_InputManager::processMouseEvent(const sf::Event& event)
 
 		case sf::Event::MouseButtonReleased:
 		{
-			MouseButtonEvent mbe( mbX, mbY, 
-				convertMouseButtonEnum( event.MouseButton.Button ), 
-				MouseEventType::MouseRelease );
+			MouseButtonEvent mbe( MouseEventType::MouseRelease );
+			
+			mbe.x = mbX;
+			mbe.y = mbY;
+			mbe.button = convertMouseButtonEnum( event.MouseButton.Button );
 
 			processEvent( mbe );
 			break;
@@ -109,7 +113,9 @@ void SFML_InputManager::processMouseEvent(const sf::Event& event)
 			short mmX = static_cast<short>(event.MouseMove.X);
 			short mmY = static_cast<short>(event.MouseMove.Y);
 			
-			MouseMoveEvent mme( mmX, mmY );
+			MouseMoveEvent mme;
+			mme.x = mmX;
+			mme.y = mmY;
 
 			processEvent( mme );
 			break;
@@ -117,7 +123,8 @@ void SFML_InputManager::processMouseEvent(const sf::Event& event)
 
 		case sf::Event::MouseWheelMoved:
 		{
-			MouseWheelEvent mwe( short(event.MouseWheel.Delta) );
+			MouseWheelEvent mwe;
+			mwe.delta = short(event.MouseWheel.Delta);
 			processEvent( mwe );
 
 			break;

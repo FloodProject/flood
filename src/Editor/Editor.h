@@ -41,27 +41,29 @@ public:
     EditorFrame(const wxString& title);
 	virtual ~EditorFrame();
 
-    // wxWidgets events
+    // wxWidgets events.
 	void OnIdle(wxIdleEvent& event);
     void OnQuit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
 	void OnToolbarButtonClick(wxCommandEvent& event);
-	void OnKeyDown(wxKeyEvent& event);
 	void OnNodeSelected(wxTreeItemId old, wxTreeItemId id);
 
-	// Mouse events
-	void onMouseMove( const input::MouseMoveEvent& mve );
-	void onMouseDrag( const input::MouseDragEvent& mde );
-	void onMousePress( const input::MouseButtonEvent& mbe );
-	void onMouseRelease( const input::MouseButtonEvent& mbe );
+	// wxWidgets Input events.
+	void OnKeyDown(wxKeyEvent& event);
+	void OnKeyUp(wxKeyEvent& event);
+	void OnMouseEvent(wxMouseEvent& event);
+
+	// Engine Input events.
+	void onMouseMove( const MouseMoveEvent& );
+	void onMouseDrag( const MouseDragEvent& );
+	void onMousePress( const MouseButtonEvent& );
+	void onMouseRelease( const MouseButtonEvent& );
 	void onMouseEnter();
 	void onMouseLeave();
+	void onKeyPress( const KeyEvent& );
+	void onKeyRelease( const KeyEvent& );
 
-	// Keyboard events
-	void onKeyPress( const input::KeyEvent& key );
-	void onKeyRelease( const input::KeyEvent& key );
-
-	// Mode/Undo stuff
+	// Misc stuff.
 	void onModeSwitch( Mode* const mode, int id );
 	void registerOperation( Operation* const op );
 	void updateUndoRedoUI();
@@ -75,6 +77,10 @@ public:
 	IMPLEMENT_GETTER(EditorScene, ScenePtr, editorScene)
 
 protected:
+
+	RenderBufferPtr rb;
+	TexturePtr depthTexture;
+	ViewportPtr depthViewport;
 
 	// Initializes the engine and editor.
 	void initEngine();
@@ -97,6 +103,11 @@ protected:
 	// Main engine instance.
 	Engine* engine;
 	ScenePtr editorScene;
+
+	// Input Management
+	vaporInputManager* im;
+	//InputProcessCallback cb;
+	//void onInputEvent( input::Event& );
 
 	// Editor modes.
 	Mode* currentMode;

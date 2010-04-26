@@ -8,50 +8,21 @@
 
 #pragma once
 
-#include "vapor/render/Target.h"
-#include "vapor/render/Texture.h"
+#include "vapor/render/RenderBuffer.h"
 
 namespace vapor { namespace render {
 
 //-----------------------------------//
 
 /**
- * Render buffers need to have renderable attachments. These attachments
- * can be of different types depending on your needs. This enum works
- * like a bitmask, so you can combine more than one type when attaching.
+ * FBOs are framebuffers object, an implementation of render buffers.
  */
 
-namespace RenderBufferType
-{
-	enum Enum
-	{
-		Color = 1 << 0,
-		Depth = 1 << 1,
-		Stencil = 1 << 2
-	};
-}
-
-//-----------------------------------//
-
-/**
- * Framebuffer objects (FBOs), are render targets that you ask the engine
- * to render content into. There are 2 types of framebuffer render targets
- * you can attach, textures - also known as render-to-texture or RTT - and
- * render buffers, commonly called offscreen rendering. When you use RBs
- * you need to specify it's use type. You can render color, depth or even 
- * use it as a stencil buffer. There is also another technique called MRTs
- * (multiple render targets) which allows you to render into multiple FBOs
- * at the same time. FBOs have many uses: when you want to render from
- * another viewpoint and combine the contents in the main render target or
- * even render the scene and apply custom post-processing effects. 
- * They can also be used to implement regular shadow mapping.
- */
-
-class VAPOR_API FBO : public RenderTarget, public ReferenceCounted
+class VAPOR_API FBO : public RenderBuffer
 {
 public:
 
-	FBO(const Settings& settings);
+	FBO(const Settings&);
 	virtual ~FBO();
 
 	// Binds/unbinds the FBO.
@@ -64,15 +35,11 @@ public:
 	// Updates the render target (usually swaps buffers).
 	virtual void update();
 
-	// Sets this rendering target as the current.
-	virtual void makeCurrent();
-
 	// Creates a new render buffer with the given components.
-	void createRenderBuffer( int bufferComponents = 
-		RenderBufferType::Color | RenderBufferType::Depth );
+	void createRenderBuffer( int bufferComponents = RenderBufferType::Color | RenderBufferType::Depth );
 
 	// Creates a render texture to this FBO.
-	TexturePtr createRenderTexture();
+	TexturePtr createRenderTexture( RenderBufferType::Enum = RenderBufferType::Color );
 
 	// Attaches a render texture to this FBO.
 	void attachRenderTexture(const TexturePtr& tex);
@@ -82,18 +49,20 @@ public:
 
 protected:
 
+	void createRenderBufferStorage(int buffer, int type, int attachment);
+	void setBufferState();
+	bool checkSize();
+
 	uint id;
 	std::vector< uint > renderBuffers;
-	std::vector< uint > textureBuffers;
-	bool valid;
+	std::vector< TexturePtr > textureBuffers;
 
-	// Holds the window settings
-	Settings settings;
+	bool bound;
+	bool valid;
+	bool colorAttach;
 };
 
-//-----------------------------------//
-
-TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( FBO );
+TYPEDEF_PTR( FBO );
 
 //-----------------------------------//
 

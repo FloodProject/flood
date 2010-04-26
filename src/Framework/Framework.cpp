@@ -79,7 +79,7 @@ void Framework::render()
 		onRender();
 
 		// Update the active target (swaps buffers).
-		renderDevice->updateTarget();
+		window->update();
 
 		lastFrameTime = frameTimer.getElapsedTime();
 

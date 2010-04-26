@@ -84,27 +84,17 @@ bool Mouse::isButtonPressed( MouseButton::Enum button ) const
 	{
 		case MouseButton::Left:
 			return mouseInfo.leftButton;
-			break;
-		
 		case MouseButton::Right:
 			return mouseInfo.rightButton;
-			break;
-		
 		case MouseButton::Middle:
 			return mouseInfo.middleButton;
-			break;
-		
 		case MouseButton::Mouse4:
 			return mouseInfo.Mouse4;
-			break;
-		
 		case MouseButton::Mouse5:
 			return mouseInfo.Mouse5;
-			break;
 	}
 
 	warn( "input", "Could not map enum: Invalid mouse button" );
-
 	return MouseButton::Left;
 }
 	
@@ -234,52 +224,40 @@ void Mouse::setMouseButton( MouseButton::Enum btn, bool state )
 //-----------------------------------//
 
 MouseInfo::MouseInfo()
-	: x(0), y(0), leftButton(false), rightButton(false), middleButton(false),
+	: x(0), y(0), 
+	leftButton(false), rightButton(false), middleButton(false),
 	Mouse4(false), Mouse5(false), insideWindow(false)
-{
- 
-}
+{ }
 
 //-----------------------------------//
 
 MouseEvent::MouseEvent( MouseEventType::Enum eventType )
 	: Event( DeviceType::Mouse ), eventType( eventType )
-{
-
-}
+{ }
 
 //-----------------------------------//
 
-MouseMoveEvent::MouseMoveEvent( short x, short y )
-	: MouseEvent( MouseEventType::MouseMove ), x( x ), y( y ) 
-{
-
-}
+MouseMoveEvent::MouseMoveEvent()
+	: MouseEvent( MouseEventType::MouseMove )
+{ }
 
 //-----------------------------------//
 
-MouseDragEvent::MouseDragEvent( short x, short y, const MouseInfo& info )
-	: MouseEvent( MouseEventType::MouseDrag ), x( x ), y( y ), info( info )
-{
-
-}
+MouseDragEvent::MouseDragEvent()
+	: MouseEvent( MouseEventType::MouseDrag )
+{ }
 
 //-----------------------------------//
 
-MouseButtonEvent::MouseButtonEvent(short x, short y, 
-	MouseButton::Enum button, MouseEventType::Enum eventType)
-	: MouseEvent(eventType), x(x), y(y), button(button) 
-{
-
-}
+MouseButtonEvent::MouseButtonEvent( MouseEventType::Enum eventType )
+	: MouseEvent(eventType)
+{ }
 
 //-----------------------------------//
 
-MouseWheelEvent::MouseWheelEvent( short delta )
-	: MouseEvent( MouseEventType::MouseWheelMove ), delta( delta )
-{
-
-}
+MouseWheelEvent::MouseWheelEvent()
+	: MouseEvent( MouseEventType::MouseWheelMove )
+{ }
 
 //-----------------------------------//
 

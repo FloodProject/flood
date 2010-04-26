@@ -54,6 +54,7 @@
 				ProgramDataBaseFileName="$(TargetDir)$(TargetName).pdb"
 				WarningLevel="4"
 				DebugInformationFormat="3"
+				DisableSpecificWarnings="4510;4610"
 				ShowIncludes="false"
 			/>
 			<Tool
@@ -303,6 +304,14 @@
 				<File
 					RelativePath=".\vaporInputManager.cpp"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							DisableSpecificWarnings="4510;4610"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\vaporInputManager.h"
@@ -354,7 +363,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						UsePrecompiledHeader="1"
-						DisableSpecificWarnings="4800;4100"
+						DisableSpecificWarnings="4800;4100;4510;4610"
 					/>
 				</FileConfiguration>
 				<FileConfiguration

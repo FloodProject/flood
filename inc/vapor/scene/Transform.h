@@ -44,16 +44,22 @@ public:
 	// Resets all the transformations in the transform.
 	void reset();
 
-	// Gets the position of the node.
+	// Gets the position of the transform.
 	IMPLEMENT_GETTER(Position, const math::Vector3&, translation)
 
-	// Sets the position of the node.
+	// Sets the position of the transform.
 	void setPosition( const math::Vector3& position );
 
-	// Gets the rotation vector of this node.
+	// Gets the scale of the transform.
+	IMPLEMENT_GETTER(Scale, const math::Vector3&, _scale)
+
+	// Sets the scale of the transform.
+	void setScale( const math::Vector3& scale );
+
+	// Gets the rotation vector of the transform.
 	IMPLEMENT_GETTER(Rotation, const math::EulerAngles&, rotation)
 
-	// Sets the rotation vector of this node.
+	// Sets the rotation vector of the transform.
 	void setRotation( const math::EulerAngles& rot );
 
 	// Points to a given point in space.
@@ -69,10 +75,10 @@ public:
 	// Gets the local transformation matrix.
 	math::Matrix4x3 getLocalTransform() const;
 
-	// Gets the bounding volume of the node.
+	// Gets the bounding volume of the transform.
 	IMPLEMENT_GETTER(BoundingVolume, const math::AABB&, boundingVolume)
 
-	// Gets the world bounding volume of the node.
+	// Gets the world bounding volume of the transform.
 	math::AABB getWorldBoundingVolume() const;
 
 	// Updates the bounding volume geometry.
@@ -81,7 +87,7 @@ public:
 	// Marks the bounding volume as needing an update.
 	void markBoundingVolumeDirty();
 
-	// Does this node's bounding box need to be updated?
+	// Does this transform's bounding box need to be updated?
 	bool requiresBoundingVolumeUpdate() const;
 
 	// Use this to render some debug bounding boxes.

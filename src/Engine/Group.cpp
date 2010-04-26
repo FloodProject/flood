@@ -91,6 +91,19 @@ bool Group::remove( const NodePtr& node )
 
 //-----------------------------------//
 
+int Group::index( const NodePtr& child ) const
+{
+	NodeVector::const_iterator it;
+	it = std::find( children.begin(), children.end(), child );
+
+	if( it == children.end() )
+		return -1;
+
+	return std::distance(children.begin(), it);
+}
+
+//-----------------------------------//
+
 NodePtr Group::get( uint i ) const
 {
 	if( i >= children.size() )

@@ -9,13 +9,16 @@
 #pragma once
 
 #include "vapor/math/AABB.h"
-#include "vapor/render/Renderable.h"
+
+FWD_DECL_NS_TYPEDEF_INT(render, Renderable)
+FWD_DECL_NS_TYPEDEF_SHARED(scene, Node)
 
 namespace vapor { namespace render {
 
 //-----------------------------------//
 
 RenderablePtr buildBoundingRenderable( const math::AABB& aabb );
+scene::NodePtr buildRay( const math::Ray& pickRay, const math::Vector3& outFar );
 
 //-----------------------------------//
 

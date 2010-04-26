@@ -17,8 +17,6 @@ using namespace vapor::render;
 
 namespace vapor { namespace scene {
 
-//-----------------------------------//
-
 const std::string& Transform::type = "Transform";
 
 //-----------------------------------//
@@ -93,6 +91,14 @@ void Transform::rotate( float xang, float yang, float zang )
 
 //-----------------------------------//
 
+void Transform::setPosition( const math::Vector3& position )
+{
+	needsNotify = true;
+	translation = position;
+}
+
+//-----------------------------------//
+
 void Transform::setRotation( const math::EulerAngles& rot )
 {
 	needsNotify = true;
@@ -101,10 +107,10 @@ void Transform::setRotation( const math::EulerAngles& rot )
 
 //-----------------------------------//
 
-void Transform::setPosition( const math::Vector3& position )
+void Transform::setScale( const math::Vector3& scale )
 {
 	needsNotify = true;
-	translation = position;
+	_scale = scale;
 }
 
 //-----------------------------------//

@@ -40,6 +40,7 @@ public:
 
 	// Gets the size of the viewport.
 	DECLARE_GETTER(Size, math::Vector2i)
+	IMPLEMENT_SETTER(Size, math::Vector2i, size)
 
 	// Gets/sets the clear color of the viewport.
 	IMPLEMENT_ACESSOR(ClearColor, const math::Color&, clearColor)
@@ -68,7 +69,7 @@ private:
 	RenderTargetPtr target;
 	
 	// Dimensions of render target.
-	math::Vector2i targetDimensions;
+	math::Vector2i size;
 
 	// Background color.
 	math::Color clearColor;

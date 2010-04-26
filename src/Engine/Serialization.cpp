@@ -26,13 +26,29 @@ Json::Value toJson( const math::Vector3& vec )
 
 //-----------------------------------//
 
+Json::Value toJson( const math::Color& c )
+{
+	Json::Value v;
+	v[0u] = c.r;
+	v[1u] = c.g;
+	v[2u] = c.b;
+	v[3u] = c.a;
+	return v;
+}
+
+//-----------------------------------//
+
 void serializeToFile( Json::Value& root, const std::string& name )
 {
 	// Always use the platform independent "C" locale when writing JSON,
 	// json-cpp assumes this and will write wrong data with another locale.
 	LocaleSaveRestore c;
 
-	vfs::File file( name, vfs::AccessMode::Write );
+	NativeFile file( name, AccessMode::Write );
+
+	if( !file.open() )
+		return;
+
 	file.write( root.toStyledString() );
 }
 

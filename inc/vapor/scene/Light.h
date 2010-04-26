@@ -32,6 +32,8 @@ namespace LightType
 		Point,
 		Spot
 	};
+
+	static std::string toString(LightType::Enum);
 }
 
 //-----------------------------------//
@@ -77,6 +79,8 @@ public:
 
 	// Called once per frame to update the component.
 	virtual void update( double delta );
+
+	DECLARE_SERIALIZABLE();
   
 protected:
 

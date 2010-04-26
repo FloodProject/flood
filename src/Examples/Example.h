@@ -56,7 +56,8 @@ private:
 
 	gui::LabelPtr label;
 	resources::SoundPtr snd;
-	render::FBO* fbo;
+	render::RenderBufferPtr fbo;
+	scene::NodePtr fbo_node;
 	//scene::SoundPtr sound;
 	input::InputMap* inputMap; 
 	render::TexturePtr tex;

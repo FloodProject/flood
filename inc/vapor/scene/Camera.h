@@ -65,6 +65,9 @@ public:
 	// it with the data.
 	void cull( render::RenderBlock& queue, const NodePtr& node ) const;
 
+	// Unprojects the vector.
+	math::Vector3 Unproject( math::Vector3 vector ) const;
+
 	// Gets a ray given the screen coordinates of the mouse.
 	math::Ray getRay( float scrx, float scry, math::Vector3* outFar = nullptr ) const;
 

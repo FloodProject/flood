@@ -57,6 +57,9 @@ public:
 	// Read file into buffer.
 	long read(void* buffer, long size);
 
+	// Write text into file.
+	long write(const std::string& text);
+
 	// Sets if the file should be buffered.
 	void setBuffering( bool state );
 

@@ -10,10 +10,15 @@
 
 #include "vapor/PCH.h"
 #include "vapor/render/DebugGeometry.h"
+#include "vapor/render/Renderable.h"
+#include "vapor/scene/Node.h"
+#include "vapor/scene/Geometry.h"
+#include "vapor/scene/Tags.h"
 
 namespace vapor { namespace render {
 
 using namespace vapor::math;
+using namespace vapor::scene;
 
 //-----------------------------------//
 
@@ -45,11 +50,43 @@ RenderablePtr buildBoundingRenderable( const math::AABB& aabb )
 	mat->setLineWidth( 1.0f );
 	mat->setLineSmoothing( true );
 	mat->setBackfaceCulling( false );
+	mat->setDepthTest( false );
 
-	RenderablePtr bbox( new Renderable( Primitive::Quads, vb, mat ) );
+	RenderablePtr bbox( new Renderable(Primitive::Quads, vb, mat) );
 	bbox->setPolygonMode( PolygonMode::Wireframe );
 
 	return bbox;
+}
+
+//-----------------------------------//
+
+NodePtr buildRay( const Ray& pickRay, const Vector3& outFar )
+{
+	std::vector< Vector3 > vertex;
+	vertex.push_back( pickRay.origin );
+	vertex.push_back( outFar );
+
+	std::vector< Vector3 > colors;
+	colors.push_back( Vector3(1.0f, 0.0f, 0.0f) );
+	colors.push_back( Vector3(1.0f, 0.0f, 0.0f) );
+
+	VertexBufferPtr vb( new VertexBuffer() );
+	vb->set( VertexAttribute::Position, vertex );
+	vb->set( VertexAttribute::Color, colors );
+
+	MaterialPtr mat( new Material("LineMaterial") );
+	
+	RenderablePtr rend( new Renderable(Primitive::Lines, vb) );
+	rend->setMaterial( mat );	
+	
+	GeometryPtr geom( new Geometry(rend) );
+	
+	NodePtr line( new Node("line") );
+	line->addTransform();
+	line->addComponent( geom );
+	line->setTag( Tags::NonPickable, true );
+	
+	return line;
 }
 
 //-----------------------------------//

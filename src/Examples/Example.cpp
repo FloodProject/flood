@@ -82,11 +82,13 @@ void Example::onSetupScene()
 	camera->addComponent( cam );
 	scene->add( camera );
 
-	fbo = new FBO( Settings() );
-	TexturePtr fbo_tex = fbo->createRenderTexture();
-	
+	fbo = rd->createRenderBuffer( Settings() );
+	TexturePtr fbo_tex = fbo->createRenderTexture( RenderBufferType::Depth );
+	fbo->createRenderBuffer( RenderBufferType::Color );
+	fbo->check();
+
 	viewport2 = fbo->addViewport(cam);
-	viewport2->setClearColor( Colors::Green );
+	viewport2->setClearColor( Color(1.0f, 0.0f, 0.0f, 1.0f) );
 
 	MaterialPtr fbo_mat( new Material( "FBO1", tex ) );
 	fbo_mat->setTexture( 0, fbo_tex );
@@ -94,10 +96,10 @@ void Example::onSetupScene()
 	RenderablePtr quad( new Quad(100.0f, 100.0f) );
 	quad->setMaterial( fbo_mat );
 
-	NodePtr fbo_node( new Node( "FBOquad" ) );
+	fbo_node.reset( new Node( "FBOquad" ) );
 	fbo_node->addTransform();
 	fbo_node->addComponent( GeometryPtr( new Geometry(quad) ) );
-	fbo_node->getTransform()->rotate( 90.0f, 0.0f, 0.0f );
+	//fbo_node->getTransform()->rotate( 90.0f, 0.0f, 0.0f );
 	scene->add( fbo_node );
 
 	//MeshPtr mesh = rm->loadResource<Mesh>( "ct.ms3d" );
@@ -122,7 +124,7 @@ void Example::onSetupScene()
 	MaterialPtr mat( new Material( "GridMaterial", diffuse ) );
 	NodePtr grid( new Node( "Grid" ) );
 	grid->addTransform();
-	grid->addComponent( ComponentPtr( new Grid( mat ) ) );
+	grid->addComponent( GridPtr( new Grid() ) );
 	scene->add( grid );
 
 	foreach( const RenderablePtr& rend, 
@@ -134,8 +136,8 @@ void Example::onSetupScene()
 	NodePtr lnode( new Node("Light") );
 	lnode->addTransform();
 	LightPtr light( new Light( LightType::Point ) );
-	light->diffuseColor = Colors::Red;
-	light->ambientColor = Colors::Yellow;
+	light->setDiffuseColor( Colors::Red );
+	light->setAmbientColor( Colors::Yellow );
 	lnode->addComponent( light );
 	scene->add( lnode );
 
@@ -185,11 +187,12 @@ void Example::onRender()
 {
 	// Render into the FBO first
 	fbo->bind();
+	fbo_node->setVisible(false);
 	viewport2->update();
+	fbo_node->setVisible(true);
 	fbo->unbind();
 
 	// Render the scene
-	viewport->getRenderTarget()->makeCurrent();
 	viewport->update();
 	window->update();
 }

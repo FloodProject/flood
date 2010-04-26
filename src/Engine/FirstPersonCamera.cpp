@@ -200,7 +200,10 @@ void FirstPersonCamera::onMouseMove( const MouseMoveEvent& moveEvent )
 
 void FirstPersonCamera::onMouseDrag( const MouseDragEvent& event )
 {
-	MouseMoveEvent me( event.x, event.y );
+	MouseMoveEvent me;
+	me.x = event.x;
+	me.y = event.y;
+
 	onMouseMove( me );
 }
 

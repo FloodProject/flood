@@ -16,30 +16,26 @@ namespace vapor { namespace render {
 
 //-----------------------------------//
 
-Texture::Texture( const Settings& settings )
-	: width(settings.width), height(settings.height)
+Texture::Texture( const resources::ImagePtr& _image )
+	: image( nullptr )
 {
-	init();
-}
-
-//-----------------------------------//
-
-Texture::Texture( ushort width, ushort height )
-	: width( width ), height( height )
-{
-	init();
-}
-
-//-----------------------------------//
-
-Texture::Texture( const resources::ImagePtr image )
-	: img( nullptr )
-{
-	assert( image != nullptr );
+	assert( _image != nullptr );
 	
 	init();
-	setImage( image );
+	setImage( _image );
+	configure();
 }
+
+//-----------------------------------//
+
+Texture::Texture( const Settings& settings, PixelFormat::Enum format )
+	: width(settings.width), height(settings.height), format(format)
+{
+	init();
+	upload();
+	configure();
+}
+
 
 //-----------------------------------//
 
@@ -96,16 +92,12 @@ bool Texture::upload()
 		return false;
 
 	bind();
-	configure();
 
-	// TODO: check the formats more thoroughly
-	glTexImage2D( GL_TEXTURE_2D, 0, 
-		img ? convertInternalFormat( img->getPixelFormat() ) : GL_RGBA8,
-		width, height, 0,
-		img ? convertSourceFormat( img->getPixelFormat() ) : GL_RGBA,
-		GL_UNSIGNED_BYTE, img ? &img->getBuffer()[0] : nullptr );
+	glTexImage2D( GL_TEXTURE_2D, 0, convertInternalFormat(format),
+		width, height, 0, convertSourceFormat(format),
+		GL_UNSIGNED_BYTE, image ? &image->getBuffer()[0] : nullptr );
 
-	if( glHasError("Could not upload texture object") )
+	if( glHasError("Could not upload pixel data to texture object") )
 	{
 		uploaded = false;
 		return false;
@@ -119,25 +111,25 @@ bool Texture::upload()
 
 void Texture::configure()
 {
-	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T, GL_CLAMP);
 
-	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
 	// TODO: mipmaps and stuff
 }
 
 //-----------------------------------//
 
-void Texture::setImage( const resources::ImagePtr& image )
+void Texture::setImage( const resources::ImagePtr& _image )
 {
-	assert( image != nullptr );
+	assert( _image != nullptr );
 
-	img = image;
-
-	width = img->getWidth();
-	height = img->getHeight();
+	image = _image;
+	width = image->getWidth();
+	height = image->getHeight();
+	format = image->getPixelFormat();
 
 	upload();
 }
@@ -160,34 +152,38 @@ void Texture::unbind( int unit )
 
 //-----------------------------------//
 
-GLint Texture::convertInternalFormat( resources::PixelFormat::Enum fmt )
+GLint Texture::convertInternalFormat( PixelFormat::Enum format )
 {
-	switch( fmt )
+	switch( format )
 	{
 	case PixelFormat::R8G8B8A8:
 		return GL_RGBA8;
 	case PixelFormat::R8G8B8:
 		return GL_RGB8;
-	default:
-		warn( "GL", "Implement support for more pixel formats" );
-		return GL_RGB8;
+	case PixelFormat::Depth:
+		return GL_DEPTH_COMPONENT;
 	}
+
+	assert( 0 && "Implement support for more pixel formats" );
+	return 0;
 }
 
 //-----------------------------------//
 
-GLint Texture::convertSourceFormat( resources::PixelFormat::Enum fmt )
+GLint Texture::convertSourceFormat( PixelFormat::Enum format )
 {
-	switch( fmt )
+	switch( format )
 	{
 	case PixelFormat::R8G8B8A8:
 		return GL_RGBA;
 	case PixelFormat::R8G8B8:
 		return GL_RGB;
-	default:
-		warn( "GL", "Implement support for more pixel formats" );
-		return GL_RGB;
+	case PixelFormat::Depth:
+		return GL_DEPTH_COMPONENT;
 	}
+
+	assert( 0 && "Implement support for more pixel formats" );
+	return 0;
 }
 
 //-----------------------------------//

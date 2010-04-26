@@ -11,11 +11,11 @@
 #include "vapor/PCH.h"
 #include "vapor/resources/MS3D.h"
 
+namespace vapor { namespace resources {
+
 using namespace vapor::render;
 using namespace vapor::math;
 using namespace vapor::scene;
-
-namespace vapor { namespace resources {
 
 //-----------------------------------//
 
@@ -165,9 +165,9 @@ struct VAPOR_ALIGN_BEGIN(1) ms3d_joint_t
 //-----------------------------------//
 
 MS3D::MS3D()
-	: index(0)
+	: index(0), geometry( new scene::Geometry() )
 {
-	GeometryPtr geometry( new scene::Geometry() );
+	//GeometryPtr geometry( new scene::Geometry() );
 	weakGeometry = geometry;
 }
 
@@ -288,10 +288,11 @@ void MS3D::build()
 		{
 			const ms3d_material_t& mt = *m_materials[g.materialIndex];
 
-			MaterialPtr mat( new Material( mt.name ) );
+			MaterialPtr mat( new Material(mt.name) );
 
 			if( strlen(mt.texture) > 0 )
 			{
+				mat->setProgram( "tex" );
 				mat->setTexture( 0, mt.texture );
 			}
 

@@ -26,7 +26,7 @@ RenderTarget::~RenderTarget()
 
 Vector2i Settings::getSize() const
 {
-	return math::Vector2i(width, height);
+	return Vector2i(width, height);
 }
 
 //-----------------------------------//

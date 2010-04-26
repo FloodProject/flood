@@ -353,21 +353,16 @@ void GLSL_Program::setUniform( const std::string& slot, const math::Matrix4x3& m
 		return;
 	}
 
-	float tmp[16];
-	tmp[0] = matrix.m11; tmp[1] = matrix.m12; tmp[2] = matrix.m13; tmp[3] = 0;
-	tmp[4] = matrix.m21; tmp[5] = matrix.m22; tmp[6] = matrix.m23; tmp[7] = 0;
-	tmp[8] = matrix.m31; tmp[9] = matrix.m32; tmp[10] = matrix.m33; tmp[11] = 0;
-	tmp[12] = matrix.tx; tmp[13] = matrix.ty; tmp[14] = matrix.tz; tmp[15] = 1;
-
-	// TODO: This crashes on my Intel driver. Is it a driver bug?
-	//glUniformMatrix4x3fv( loc, 1, true, &matrix.m11 );
-
-	glUniformMatrix4fv( loc, 1, false, tmp );
-	
-	//float test[16];
-	//glGetUniformfv( id, loc, test );
-
-	//unbind();
+	if(glUniformMatrix4x3fv)
+	{
+		assert( 0 && "Untested, make sure it works!" );
+		glUniformMatrix4x3fv( loc, 1, true, &matrix.m11 );
+	}
+	else
+	{
+		math::Matrix4x4 mat( matrix );
+		glUniformMatrix4fv( loc, 1, true, &mat.m11 );
+	}
 }
 
 //-----------------------------------//
@@ -387,7 +382,7 @@ void GLSL_Program::setUniform( const std::string& slot, const math::Matrix4x4& m
 	}
 
 	// TODO: Is this right? Might be related to the ortographic trouble we had earlier.
-	glUniformMatrix4fv( loc, 1, false, &matrix.m11 );
+	glUniformMatrix4fv( loc, 1, true, &matrix.m11 );
 	
 	//float test[16];
 	//glGetUniformfv( id, loc, test );

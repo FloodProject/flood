@@ -31,48 +31,109 @@ Camera::Camera( render::Device* device, Projection::Enum proj )
 
 //-----------------------------------//
 
-math::Ray Camera::getRay( float scrx, float scry, math::Vector3* outFar ) const
+math::Ray Camera::getRay( float screenX, float screenY, math::Vector3* outFar ) const
 {
-	// Let's do ray picking...
-	// Method based on: http://www.mvps.org/directx/articles/rayproj.htm
-
 	assert( viewport != nullptr );
 
-	// TODO: This doesn't seem right.
-	Vector2i targetSize = viewport->getSize();
+	Matrix4x4 view4( viewMatrix );
+	Matrix4x4 inverseVP = (view4*projectionMatrix).inverse();
 	
-	int width = targetSize.x;
-	int height = targetSize.y;
+	Vector2i size = viewport->getSize();
 
-	// Normalizing Screen Coordinates
-	float x = width - scrx;
-	float y = height - scry;
+	//screenX = screenX / size.x;
+	//screenY = screenY / size.y;
 
-	float dx = (x / (width * 0.5f) - 1.0f) / viewport->getAspectRatio();
-	float dy = 1.0f - y / (height * 0.5f);
+	float nx = (2.0f * screenX) - 1.0f;
+	float ny = 1.0f - (2.0f * screenY);
 
-	// Scaling Coordinates to the Frustum
-	float fov_s = math::degreeToRadian(getFOV()) * 0.5f;
-	float s = math::tanf( fov_s );
-	dx *= s; 
-	dy *= s;
+	Vector3 nearPoint(nx, ny, -1.f);
+	// Use midPoint rather than far point
+	Vector3 midPoint (nx, ny,  0.0f);
 
-	// Calculating the End Points of the Ray
-	Vector3 pNear( dx * -near_, dy * -near_, -near_ );
-	Vector3 pFar( dx * -far_, dy * -far_, -far_ );
+	// Get ray origin and ray target on near plane in world space
+	Vector3 rayOrigin, rayTarget;
+	
+	rayOrigin = inverseVP * nearPoint;
+	rayTarget = inverseVP * midPoint;
 
-	// Generating an Inverse of the View Matrix
-	const Matrix4x3& invView = inverse( getViewMatrix() );
+	Vector3 rayDirection = rayTarget - rayOrigin;
+	rayDirection.normalize();
 
-	// Converting the Ray to World Coordinates
-	pNear *= invView;
-	pFar *= invView;
-
-	// Construct the picking Ray.
-	Ray pickRay( pNear, (pFar - pNear).normalize() );
+	//Ray pickRay(rayOrigin, rayDirection);
 
 	if( outFar )
-		*outFar = pFar;
+		*outFar = midPoint;
+
+	double m[16];
+	m[0] = viewMatrix.m11;
+	m[1] = viewMatrix.m21;
+	m[2] = viewMatrix.m31;
+	m[3] = viewMatrix.tx;
+
+	m[4] = viewMatrix.m12;
+	m[5] = viewMatrix.m22;
+	m[6] = viewMatrix.m32;
+	m[7] = viewMatrix.ty;
+
+	m[8] = viewMatrix.m13;
+	m[9] = viewMatrix.m23;
+	m[10] = viewMatrix.m33;
+	m[11] = viewMatrix.tz;
+
+	m[12] = 0;
+	m[13] = 0;
+	m[14] = 1;
+	m[15] = 0;
+
+	double p[16];
+	p[0] = projectionMatrix.m11;
+	p[1] = projectionMatrix.m21;
+	p[2] = projectionMatrix.m31;
+	p[3] = projectionMatrix.tx;
+
+	p[4] = projectionMatrix.m12;
+	p[5] = projectionMatrix.m22;
+	p[6] = projectionMatrix.m32;
+	p[7] = projectionMatrix.ty;
+
+	p[8] = projectionMatrix.m13;
+	p[9] = projectionMatrix.m23;
+	p[10] = projectionMatrix.m33;
+	p[11] = projectionMatrix.tz;
+
+	p[12] = projectionMatrix.m14;
+	p[13] = projectionMatrix.m24;
+	p[14] = projectionMatrix.m34;
+	p[15] = projectionMatrix.tw;
+
+	int v[] = { 0, 0, size.x, size.y };
+
+	Vector3d n, f;
+	gluUnProject(screenX, screenY, 0.0, m, p, v, &n.x, &n.y, &n.z );
+	gluUnProject(screenX, screenY, 1.0, m, p, v, &f.x, &f.y, &f.z );
+
+	Vector3d d = f - n;
+	d.normalize();
+
+	Vector3 nf;
+	nf.x = (float) n.x;
+	nf.y = (float) n.y;
+	nf.z = (float) n.z;
+
+	Vector3 ff;
+	ff.x = (float) f.x;
+	ff.y = (float) f.y;
+	ff.z = (float) f.z;
+
+	Vector3 df;
+	df.x = (float) d.x;
+	df.y = (float) d.y;
+	df.z = (float) d.z;
+
+	Ray pickRay(nf, df);
+
+	if( outFar )
+		*outFar = ff;
 
 	return pickRay;
 }

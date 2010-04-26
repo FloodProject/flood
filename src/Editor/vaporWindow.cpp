@@ -51,7 +51,7 @@ bool vaporWindow::createContext()
 
 void vaporWindow::update() 
 {
-	if(!context) return;
+	assert( context != nullptr );
 
 	// Swap buffers and update window content.
 	canvas->SwapBuffers();

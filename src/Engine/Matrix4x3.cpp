@@ -110,8 +110,6 @@ Matrix4x3 Matrix4x3::createTranslationMatrix( const Vector3& v )
 	return s;
 }
 
-//-----------------------------------//
-
 //---------------------------------------------------------------------------
 // Vector * Matrix4x3
 //
@@ -131,13 +129,13 @@ Vector3	operator*(const Vector3 &p, const Matrix4x3 &m)
 	);
 }
 
+//-----------------------------------//
+
 Vector3 &operator*=(Vector3 &p, const Matrix4x3 &m)
 {
 	p = p * m;
 	return p;
 }
-
-//-----------------------------------//
 
 //---------------------------------------------------------------------------
 // Matrix4x3 * Matrix4x3
@@ -189,9 +187,6 @@ Matrix4x3 &operator*=(Matrix4x3 &a, const Matrix4x3 &b)
 	return a;
 }
 
-//-----------------------------------//
-
-
 //---------------------------------------------------------------------------
 // determinant
 //
@@ -199,14 +194,13 @@ Matrix4x3 &operator*=(Matrix4x3 &a, const Matrix4x3 &b)
 //
 // See 9.1.1 for more info.
 
-float	determinant(const Matrix4x3 &m) {
+float determinant(const Matrix4x3 &m)
+{
 	return
 		  m.m11 * (m.m22*m.m33 - m.m23*m.m32)
 		+ m.m12 * (m.m23*m.m31 - m.m21*m.m33)
 		+ m.m13 * (m.m21*m.m32 - m.m22*m.m31);
 }
-
-//-----------------------------------//
 
 //---------------------------------------------------------------------------
 // inverse

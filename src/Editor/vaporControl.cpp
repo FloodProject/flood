@@ -145,7 +145,7 @@ void vaporControl::OnMouseEvent(wxMouseEvent& event)
 {
 	if( event.ButtonDown(wxMOUSE_BTN_LEFT) && !HasFocus() )
 		SetFocus();
-	
+
 	inputManager->processMouseEvent( event );
 }
 

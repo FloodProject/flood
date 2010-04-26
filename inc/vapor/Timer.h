@@ -28,7 +28,6 @@ class VAPOR_API Timer : private boost::noncopyable
 public:
 
 	Timer();
-	~Timer ();
 
 	// Gets the current time.
 	double getCurrentTime();

@@ -9,13 +9,17 @@
 #include "vapor/PCH.h"
 #include "vapor/render/FBO.h"
 #include "vapor/render/GL.h"
+#include "vapor/resources/Image.h"
 
 namespace vapor { namespace render {
+
+using namespace vapor::resources;
 
 //-----------------------------------//
 
 FBO::FBO(const Settings& settings) 
-	: settings( settings ), valid( false )
+	: RenderBuffer(settings), bound(false), valid(false),
+	colorAttach( false )
 {
 	glGenFramebuffersEXT(1, &id);
 	glHasError( "Could not create framebuffer object" );
@@ -36,17 +40,15 @@ FBO::~FBO()
 
 //-----------------------------------//
 
-void FBO::makeCurrent()
-{
-	bind();
-}
-
-//-----------------------------------//
-
 void FBO::bind()
 {
+	if(bound) return;
+
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, id);
 	glHasError( "Could not bind framebuffer object" );
+
+	setBufferState();
+	bound = true;
 }
 
 //-----------------------------------//
@@ -55,12 +57,20 @@ void FBO::unbind()
 {
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 	glHasError( "Could not unbind framebuffer object" );
+	
+	glDrawBuffer(GL_BACK);
+	glReadBuffer(GL_BACK);
+
+	bound = false;
 }
 
 //-----------------------------------//
 
 bool FBO::check()
 {
+	bind();
+	setBufferState();
+
 	GLenum status;
 	status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
 
@@ -76,10 +86,37 @@ bool FBO::check()
 
 //-----------------------------------//
 
-TexturePtr FBO::createRenderTexture()
+void FBO::setBufferState()
 {
-	TexturePtr tex( new Texture(settings) );
+	if(!colorAttach)
+	{
+		// In case there is only a depth attachment in the FBO,
+		// then we need to setup the following OpenGL state.
+
+		glDrawBuffer(GL_NONE);
+		glReadBuffer(GL_NONE);
+	}
+}
+
+//-----------------------------------//
+
+TexturePtr FBO::createRenderTexture( RenderBufferType::Enum type )
+{
+	PixelFormat::Enum format;
+
+	if( type == RenderBufferType::Depth )
+	{
+		format = PixelFormat::Depth;
+	}
+	else
+	{
+		format = PixelFormat::R8G8B8A8;
+		colorAttach = true;
+	}
+
+	TexturePtr tex( new Texture(settings, format) );
 	attachRenderTexture(tex);
+	
 	return tex;
 }
 
@@ -89,14 +126,16 @@ void FBO::attachRenderTexture(const TexturePtr& tex)
 {
 	bind();
 
-	// Ensure texture has been allocated.
-	tex->upload();
+	GLint attach = GL_COLOR_ATTACHMENT0_EXT;
 
-	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
-		GL_TEXTURE_2D, tex->id(), 0);
+	if( tex->getPixelFormat() == PixelFormat::Depth )
+		attach = GL_DEPTH_ATTACHMENT_EXT;
+
+	glFramebufferTexture2DEXT(
+		GL_FRAMEBUFFER_EXT, attach, GL_TEXTURE_2D, tex->id(), 0);
 	glHasError( "Could not attach texture into framebuffer object" );
-
-	textureBuffers.push_back( tex->id() );
+	
+	textureBuffers.push_back( tex );
 }
 
 //-----------------------------------//
@@ -107,57 +146,36 @@ void FBO::createRenderBuffer( int bufferComponents )
 	// offscreen rendering, often for sections of the framebuffer which 
 	// don’t have a texture format associated with them.
 
-	uint w = settings.getWidth();
-	uint h = settings.getHeight();
+	if( !checkSize() )
+		return;
 
-	uint renderBuffer;
+	GLuint renderBuffer;
 	glGenRenderbuffersEXT(1, &renderBuffer);
 	glHasError( "Could not generate renderbuffer object" );
 
-	renderBuffers.push_back( renderBuffer );
-
 	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, renderBuffer);
 	glHasError( "Could not bind renderbuffer object" );
-
-	// Check if the FBO sizes respect the maximum defined by OpenGL.
-
-	uint maxSize = GL_MAX_RENDERBUFFER_SIZE_EXT;
-	if( (w > maxSize) || (h > maxSize) )
-	{
-		warn( "gl", "Invalid FBO dimensions (OpenGL max: %d,%d)",
-			GL_MAX_RENDERBUFFER_SIZE_EXT );
-	}
 
 	bind();
 
 	if( bufferComponents & RenderBufferType::Color )
 	{
-		glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_RGBA, w, h);
-		glHasError( "Could not create renderbuffer object storage" );
-
-		glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, 
-			GL_COLOR_ATTACHMENT0_EXT, GL_RENDERBUFFER_EXT, renderBuffer);
-		glHasError( "Could not attach renderbuffer into framebuffer object" );
+		createRenderBufferStorage(renderBuffer,
+			GL_RGBA, GL_COLOR_ATTACHMENT0_EXT);
+		colorAttach = true;
 	}
 
 	if( bufferComponents & RenderBufferType::Depth )
 	{
-		glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT, w, h);
-		glHasError( "Could not create renderbuffer object storage" );
-
-		glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, 
-			GL_RENDERBUFFER_EXT, renderBuffer);
-		glHasError( "Could not attach renderbuffer into framebuffer object" );
+		createRenderBufferStorage(renderBuffer,
+			GL_DEPTH_COMPONENT, GL_DEPTH_ATTACHMENT_EXT);
 	}
 
 	if( bufferComponents & RenderBufferType::Stencil )
 	{
-		glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_STENCIL_INDEX, w, h);
-		glHasError( "Could not create renderbuffer object storage" );
-
-		glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_STENCIL_ATTACHMENT_EXT, 
-			GL_RENDERBUFFER_EXT, renderBuffer);
-		glHasError( "Could not attach renderbuffer into framebuffer object" );
+		createRenderBufferStorage(renderBuffer,
+			GL_STENCIL_INDEX, GL_STENCIL_ATTACHMENT_EXT);
+		colorAttach = true;
 	}
 
 	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
@@ -165,8 +183,43 @@ void FBO::createRenderBuffer( int bufferComponents )
 
 //-----------------------------------//
 
+void FBO::createRenderBufferStorage(int buffer, int type, int attachment)
+{
+	uint w = settings.getWidth();
+	uint h = settings.getHeight();
+
+	glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, type, w, h);
+	glHasError( "Could not create renderbuffer object storage" );
+
+	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, 
+			attachment, GL_RENDERBUFFER_EXT, buffer);
+	glHasError( "Could not attach renderbuffer into framebuffer object" );
+}
+
+//-----------------------------------//
+
+bool FBO::checkSize()
+{
+	// Check if the FBO respect the maximum size defined by OpenGL.
+	uint width = settings.getWidth();
+	uint height = settings.getHeight();
+	uint maxSize = GL_MAX_RENDERBUFFER_SIZE_EXT;
+
+	if( (width > maxSize) || (height > maxSize) )
+	{
+		warn( "gl", "Invalid FBO dimensions (OpenGL max: %d,%d)",
+			maxSize, maxSize );
+		return false;
+	}
+
+	return true;
+}
+
+//-----------------------------------//
+
 void FBO::update()
 {
+
 }
 
 //-----------------------------------//

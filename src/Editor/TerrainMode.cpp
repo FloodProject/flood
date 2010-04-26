@@ -75,10 +75,12 @@ void TerrainMode::onTimer( wxTimerEvent& /*event*/ )
 
 void TerrainMode::onMouseDrag( const MouseDragEvent& mde )
 {
-	if( !mde.info.leftButton ) return;
+	//if( !mde.info.leftButton ) return;
 
-	MouseButtonEvent mbe( mde.x, mde.y,
-		MouseButton::Left, MouseEventType::MousePress );
+	MouseButtonEvent mbe( MouseEventType::MousePress );
+	mbe.x = mde.x;
+	mbe.y = mde.y;
+	mbe.button = MouseButton::Left;
 
 	// We need to handle the case where the user clicks but doesn't move
 	// the mouse anymore. As we don't receive further events in this case,

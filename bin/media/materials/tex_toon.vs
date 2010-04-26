@@ -24,5 +24,5 @@ void main()
 	//lightColors = vp_LightColors;
 	gl_FrontColor = vec4(vp_Color, 1.0);
 	vp_TexCoord = vp_MultiTexCoord0.st;
-	gl_Position = vp_ProjectionMatrix * vp_ModelViewMatrix * vec4(vp_Vertex, 1.0);
+	gl_Position = vec4(vp_Vertex, 1.0) * vp_ModelViewMatrix * vp_ProjectionMatrix;
 } 

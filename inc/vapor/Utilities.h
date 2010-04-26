@@ -71,6 +71,10 @@ namespace vapor {
 #define DECLARE_SETTER(name, type)	\
 	void set##name(type v);
 
+#define DECLARE_ACESSOR(name, type)	\
+	DECLARE_GETTER(name, type)		\
+	DECLARE_SETTER(name, type)
+
 #define IMPLEMENT_GETTER(name, type, var)		\
 	type get##name() const { return var; }
 

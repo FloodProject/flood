@@ -10,8 +10,49 @@
 
 #include "Mode.h"
 #include "Gizmo.h"
+#include "Operation.h"
 
 namespace vapor { namespace editor {
+
+//-----------------------------------//
+
+namespace GizmoTool
+{
+	enum Enum
+	{
+		Camera = 18237,
+		Select,
+		Translate,
+		Rotate,
+		Scale
+	};
+}
+
+//-----------------------------------//
+
+class GizmoOperation : public Operation
+{
+public:
+
+	GizmoOperation();
+	
+	void undo();
+	void redo();
+	void process( bool undo );
+
+	NodeWeakPtr weakNode;
+	GizmoTool::Enum tool;
+	GizmoAxis::Enum axis;
+	GizmoPtr gizmo;
+
+	Vector3 orig_translation;
+	Vector3 orig_scale;
+	EulerAngles orig_rotation;
+
+	Vector3 translation;
+	Vector3 scale;
+	EulerAngles rotation;
+};
 
 //-----------------------------------//
 
@@ -21,18 +62,20 @@ public:
 
 	GizmoMode( EditorFrame* );
 	
-	virtual void onModeInit(wxToolBar*, ModeIdMap& );	
+	virtual void onModeInit( wxToolBar*, ModeIdMap& );	
 	virtual void onModeEnter( int );
 	virtual void onModeExit();
 
 	virtual void onMouseMove( const MouseMoveEvent& );
 	virtual void onMouseDrag( const MouseDragEvent& );
 	virtual void onMouseButtonPress( const MouseButtonEvent& );
+	virtual void onMouseButtonRelease( const MouseButtonEvent& );
 
 	virtual void onNodeSelected( NodePtr, NodePtr );
 
 protected:
 
+	void createOperation();
 	void drawGizmo( NodePtr, NodePtr );
 	
 	void enableBoundingGizmo( const NodePtr& );
@@ -42,14 +85,9 @@ protected:
 	bool pickImageTest( const MouseMoveEvent&, GizmoAxis::Enum& );
 	
 	void disableSelectedNodes();
-	
-	//FBOPtr fbo;
-	//ViewportPtr view;
-	//TexturePtr tex;
 
-	int tool;
+	GizmoTool::Enum tool;
 	ScenePtr editorScene;
-	MouseMoveEvent oldMouseEvent;
 
 	GizmoPtr gizmo;
 	GizmoAxis::Enum axis;
@@ -57,6 +95,9 @@ protected:
 	typedef std::map<NodePtr, NodePtr> GizmoNodeMap;
 	GizmoNodeMap gizmos;
 	std::vector<NodePtr> selected;
+
+	// Holds the current gizmo operation.
+	GizmoOperation* op;
 };
 
 //-----------------------------------//

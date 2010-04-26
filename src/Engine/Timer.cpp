@@ -38,13 +38,6 @@ Timer::Timer()
 
 //-----------------------------------//
 
-Timer::~Timer()
-{
-
-}
-
-//-----------------------------------//
-
 double Timer::getCurrentTime()
 {
 #ifdef VAPOR_PLATFORM_WINDOWS

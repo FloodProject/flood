@@ -13,14 +13,32 @@ namespace vapor { namespace scene {
 
 using namespace vapor::math;
 
-//-----------------------------------//
-
 const std::string& Light::type = "Light";
 
 //-----------------------------------//
 
+namespace LightType
+{
+	std::string toString(LightType::Enum e)
+	{
+		switch(e)
+		{
+		case LightType::Directional:
+			return "Directional";
+		case LightType::Spot:
+			return "Spot";
+		case LightType::Point:
+			return "Point";
+		}
+
+		return "(unknown)";
+	}
+}
+
+//-----------------------------------//
+
 Light::Light( LightType::Enum type )
-	: lightType( type )
+	: lightType(type), cutoffRadius(0.0f)
 {
 	//updateGeometry();
 }
@@ -29,6 +47,20 @@ Light::Light( LightType::Enum type )
 
 void Light::update( double delta )
 {
+}
+
+//-----------------------------------//
+
+void Light::serialize( Json::Value& value )
+{
+	value["lightType"] = LightType::toString(lightType);
+	value["diffuseColor"] = toJson(diffuseColor);
+	value["specularColor"] = toJson(specularColor);
+	value["emissiveColor"] = toJson(emissiveColor);
+	value["ambientColor"] = toJson(ambientColor);
+	value["cutoffRadius"] = cutoffRadius;
+	value["isLightOn"] = isLightOn;
+	value["castsShadows"] = castsShadows;
 }
 
 //-----------------------------------//

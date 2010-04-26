@@ -23,7 +23,7 @@ FWD_DECL(render, BufferManager);
 FWD_DECL_NS_TYPEDEF_PTR(render, ProgramManager)
 FWD_DECL_NS_TYPEDEF_PTR(render, TextureManager)
 FWD_DECL_NS_TYPEDEF_PTR(render, Adapter)
-FWD_DECL(scene, Camera)
+FWD_DECL_NS_TYPEDEF_PTR(render, RenderBuffer)
 
 namespace vapor { namespace render { 
 
@@ -39,7 +39,7 @@ namespace vapor { namespace render {
  * This class only knows about rendering primitives (Vertex/Index buffers) and
  * Renderables. It does not know anything about high-level objects, like meshes.
  *
- * Each render device will also manage a list of render targets (Windows or RTT).
+ * Each render device will also manage a list of render targets (Windows, FBOs).
  * Window implementations depend on the rendering system used, for example, an
  * OpenGL window will be different from an DirectX window, so this is also
  * responsible for creating a new window if no window handle is passed to it.
@@ -59,14 +59,20 @@ public:
 	// Renders a list of renderables.
 	void render( RenderBlock& queue, const scene::Camera* cam );
 
-	// Updates the render target.
-	void updateTarget();
+	// Renders and updates into all render targets.
+	void updateRenderTargets();
 
 	// Clears the active render target.
 	void clearTarget();
 
 	// Sets the window as the active rendering target.
 	void setWindowActiveTarget();
+
+	// Creates a new render buffer (offscreen render target).
+	RenderBufferPtr createRenderBuffer( const Settings& );
+
+	// Creates a new rendering window.
+	WindowPtr createWindow( const WindowSettings& = WindowSettings() );
 
 	// Gets the main render window.
 	IMPLEMENT_GETTER(RenderWindow, WindowPtr, window)
@@ -78,24 +84,21 @@ public:
 	// Gets/sets the main rendering window.
 	IMPLEMENT_ACESSOR(Window, WindowPtr, window)
 
-	// Gets rendering adapter information.
-	IMPLEMENT_GETTER(Adapter, AdapterPtr, adapter)
-
 	// Gets/sets the current clear color.
 	IMPLEMENT_GETTER(ClearColor, const math::Color&, color)
 	void setClearColor(const math::Color& color);
 
 	// Sets the OpenGL viewport dimensions.
-	void setViewport( const math::Vector2i& lowerLeft, const math::Vector2i& size );
+	void setViewport( const math::Vector2i&, const math::Vector2i& );
+
+	// Gets rendering adapter information.
+	IMPLEMENT_GETTER(Adapter, AdapterPtr, adapter)
 
 	// Gets the program manager.
 	IMPLEMENT_GETTER(ProgramManager, ProgramManagerPtr, programManager)
 
 	// Gets the texture manager.
 	IMPLEMENT_GETTER(TextureManager, TextureManagerPtr, textureManager)
-
-	// Creates a new rendering window.
-	WindowPtr createWindow( const WindowSettings& = WindowSettings() );
 
 protected:
 
@@ -116,7 +119,7 @@ protected:
 	RenderTargetPtr activeTarget;
 
 	// List of render targets
-	std::vector< RenderTargetPtr > renderTargets;
+	std::vector<RenderTargetPtr> renderTargets;
 
 	// Adapter information
 	AdapterPtr adapter;

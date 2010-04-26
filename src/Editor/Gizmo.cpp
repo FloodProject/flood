@@ -16,7 +16,7 @@ namespace vapor { namespace editor {
 const std::string& Gizmo::type = "Gizmo";
 
 // Gizmo scaling factor.
-static const float S = 50.0f;
+static const float S = 25.0f;
 
 // Gizmo cone base color.
 static const float BASE_FACTOR = 0.8f;
@@ -28,7 +28,7 @@ static const Color& Z = Colors::Blue;
 //-----------------------------------//
 
 Gizmo::Gizmo( const NodePtr& node )
-	: node( node )
+	: node( node ), selectedAxis( GizmoAxis::None )
 {	
 	assert( node != nullptr );
 
@@ -37,8 +37,8 @@ Gizmo::Gizmo( const NodePtr& node )
 	midPoint = boundingVolume.getCenter();
 
 	// Generate the gizmo lines.
-	MaterialPtr mat( new Material( "Gizmo" ) );
-	mat->setLineWidth( 5.0f );
+	MaterialPtr mat( new Material("Gizmo") );
+	mat->setLineWidth( 2.0f );
 	mat->setProgram( "diffuse" );
 	mat->setDepthTest( false );
 
@@ -80,8 +80,6 @@ void Gizmo::deselectAxis()
 	if( selectedAxis == GizmoAxis::None )
 		return;
 
-	//-----------------------------------//
-
 	std::vector<Vector3>& lines_colors
 		= lines->getAttribute(VertexAttribute::Color);
 
@@ -100,8 +98,6 @@ void Gizmo::deselectAxis()
 	lines_colors.push_back( Z );
 
 	lines->forceRebuild();
-
-	//-----------------------------------//
 
 	selectedAxis = GizmoAxis::None;
 }
@@ -206,7 +202,7 @@ VertexBufferPtr Gizmo::generateCones()
 
 	// Unit cone vertex data
 	std::vector< Vector3 > cone;
-	generateSolidCone( 5.0, 10.0, SLICES, cone );
+	generateSolidCone( 3.0, 10.0, SLICES, cone );
 
 	// Vertex data
 	std::vector< Vector3 > pos;

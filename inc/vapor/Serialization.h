@@ -11,6 +11,7 @@
 #include <json/json.h>
 #include "vapor/math/Vector3.h"
 #include "vapor/math/EulerAngles.h"
+#include "vapor/math/Color.h"
 
 namespace Json { class Value; }
 
@@ -40,6 +41,7 @@ public:
 
 void serializeToFile( Json::Value& root, const std::string& name );
 Json::Value toJson( const math::Vector3& vec );
+Json::Value toJson( const math::Color& c );
 
 //-----------------------------------//
 
