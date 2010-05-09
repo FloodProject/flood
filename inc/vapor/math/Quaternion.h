@@ -19,7 +19,6 @@ namespace vapor { namespace math {
  * Represents a 3-dimensional vector class template.
  */
 
-
 class VAPOR_API Quaternion
 {
 public:

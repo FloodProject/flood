@@ -17,13 +17,13 @@
 #include "vapor/audio/Device.h"
 #include "vapor/input/InputManager.h"
 #include "vapor/script/State.h"
-#include "vapor/physics/Physics.h"
+//#include "vapor/physics/Physics.h"
 #include "vapor/TaskManager.h"
 
 using namespace vapor::audio;
 using namespace vapor::scene;
 using namespace vapor::resources;
-using namespace vapor::physics;
+//using namespace vapor::physics;
 using namespace vapor::render;
 using namespace vapor::log;
 using namespace vapor::vfs;
@@ -33,11 +33,23 @@ namespace vapor {
 
 //-----------------------------------//
 
-Engine::Engine(const std::string& app, const char** argv, bool autoInit)
-	: app(app), argv(argv), renderDevice(nullptr), vfs(nullptr),
-	resourceManager(nullptr), physicsManager(nullptr), log(nullptr),
-	scriptState(nullptr), audioDevice(nullptr)
+Engine::Engine()
+	: renderDevice(nullptr),
+	vfs(nullptr),
+	resourceManager(nullptr),
+	/*physicsManager(nullptr),*/
+	log(nullptr),
+	scriptState(nullptr),
+	audioDevice(nullptr)
+{ }
+
+//-----------------------------------//
+
+void Engine::create(const std::string& _app, const char** _argv, bool autoInit)
 {
+	app = _app;
+	argv = _argv;
+
 	if( autoInit )
 		init();
 }
@@ -52,10 +64,10 @@ Engine::~Engine()
 		delete sub;
 
 	delete audioDevice;
-	delete physicsManager;
+	//delete physicsManager;
 	delete scriptState;
-	delete resourceManager;
 	delete renderDevice;
+	delete resourceManager;
 	delete vfs;
 	delete log;
 }
@@ -72,11 +84,11 @@ void Engine::init( bool createWindow )
 	// create the virtual filesystem
 	vfs = new VFS(app, argv ? argv[0] : nullptr);
 
-	taskManager = TaskManager::getInstancePtr();
+	taskManager = new TaskManager();
 	subsystems.push_back( taskManager );
 
 	// create the resource manager
-	resourceManager = ResourceManager::getInstancePtr();
+	resourceManager = new ResourceManager();
 	
 	// connect the resource manager and filesystem watcher
 	vfs->getWatcher()->onWatchEvent += 

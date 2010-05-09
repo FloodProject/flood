@@ -18,7 +18,7 @@ namespace vapor { namespace scene {
  * Simple grid component. Can be used for editor applications.
  */
 
-class Grid : public scene::Geometry
+class VAPOR_API Grid : public scene::Geometry
 {
 public:
 

@@ -15,18 +15,41 @@ namespace vapor { namespace math {
 //-----------------------------------//
 
 EulerAngles::EulerAngles()
-	: Vector3( 0.0f, 0.0f, 0.0f )
-{
-
-}
+	: x(0.0f),
+	y(0.0f),
+	z(0.0f)
+{ }
 
 //-----------------------------------//
 
 EulerAngles::EulerAngles( float x, float y, float z )
-	: Vector3( x, y, z )
-{
+	: x(x),
+	y(y),
+	z(z)
+{ }
 
+//-----------------------------------//
+
+EulerAngles::EulerAngles( const EulerAngles& ang )
+	: x(ang.x), y(ang.y), z(ang.z)
+{ }
+
+//-----------------------------------//
+
+EulerAngles& EulerAngles::operator += (const EulerAngles& ang)
+{
+	x += ang.x; y += ang.y; z += ang.z;
+	return *this;
 }
+
+//-----------------------------------//
+
+EulerAngles& EulerAngles::operator += (const Vector3& v)
+{
+	x += v.x; y += v.y; z += v.z;
+	return *this;
+}
+
 
 //-----------------------------------//
 
@@ -41,7 +64,7 @@ void EulerAngles::rotate( float x, float y, float z )
 
 void EulerAngles::canonize()
 {
-	//const float LIMIT = math::degreeToRadian( 90.0f );
+	//const float LIMIT = degreeToRadian( 90.0f );
 
 	//if( x >= LIMIT ) x -= LIMIT;
 	//if( x <= -LIMIT ) x += LIMIT;
@@ -102,10 +125,10 @@ void EulerAngles::identity()
 
 //-----------------------------------//
 
-math::Matrix4x3 EulerAngles::rotateX( float ang ) const
+Matrix4x3 EulerAngles::rotateX( float ang ) const
 {
-	const float cos = math::cosf( degreeToRadian(ang) );
-	const float sin = math::sinf( degreeToRadian(ang) );
+	const float cos = cosf( degreeToRadian(ang) );
+	const float sin = sinf( degreeToRadian(ang) );
 
 	Matrix4x3 newRotation;
 
@@ -122,10 +145,10 @@ math::Matrix4x3 EulerAngles::rotateX( float ang ) const
 
 //-----------------------------------//
 
-math::Matrix4x3 EulerAngles::rotateY( float ang ) const
+Matrix4x3 EulerAngles::rotateY( float ang ) const
 {
-	const float cos = math::cosf( degreeToRadian(ang) );
-	const float sin = math::sinf( degreeToRadian(ang) );
+	const float cos = cosf( degreeToRadian(ang) );
+	const float sin = sinf( degreeToRadian(ang) );
 
 	Matrix4x3 newRotation;
 
@@ -142,10 +165,10 @@ math::Matrix4x3 EulerAngles::rotateY( float ang ) const
 
 //-----------------------------------//
 
-math::Matrix4x3 EulerAngles::rotateZ( float ang ) const
+Matrix4x3 EulerAngles::rotateZ( float ang ) const
 {
-	const float cos = math::cosf( degreeToRadian(ang) );
-	const float sin = math::sinf( degreeToRadian(ang) );
+	const float cos = cosf( degreeToRadian(ang) );
+	const float sin = sinf( degreeToRadian(ang) );
 
 	Matrix4x3 newRotation;
 
@@ -162,7 +185,7 @@ math::Matrix4x3 EulerAngles::rotateZ( float ang ) const
 
 //-----------------------------------//
 
-math::Matrix4x3 EulerAngles::getOrientationMatrix() const
+Matrix4x3 EulerAngles::getOrientationMatrix() const
 {
 	return rotateX( x ) * rotateY( y ) * rotateZ( z );
 }

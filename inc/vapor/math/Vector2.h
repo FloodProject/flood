@@ -134,15 +134,15 @@ public:
 	//-----------------------------------//
 
 	// Special points
-	static const Vector2T<int> Zero;
-	static const Vector2T<int> UnitX;
-	static const Vector2T<int> UnitY;
+	static VAPOR_API const Vector2T<int> Zero;
+	static VAPOR_API const Vector2T<int> UnitX;
+	static VAPOR_API const Vector2T<int> UnitY;
 };
 
 //-----------------------------------//
 
-typedef Vector2T<float> Vector2;
-typedef Vector2T<int> Vector2i;
+typedef VAPOR_API Vector2T<float> Vector2;
+typedef VAPOR_API Vector2T<int> Vector2i;
 
 //-----------------------------------//
 

@@ -7,7 +7,6 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/Utilities.h"
 
 #ifdef VAPOR_AUDIO_OGG
 
@@ -106,7 +105,7 @@ void OGG_Loader::decodeOgg( OggVorbis_File* oggFile, std::vector<byte>& buffer )
 
 		// Read up to a buffer's worth of decoded sound data.
 		bytes = ov_read(oggFile, (char*) array, BUFFER_SIZE, 
-			isLittleEndian() ? 0 : 1, // 0 for Little-Endian, 1 for Big-Endian
+			System::isLittleEndian() ? 0 : 1, // 0 for Little-Endian, 1 for Big-Endian
 			2, // 1 for 8-bit samples, or 2 or 16-bit samples
 			1, // 0 for unsigned, 1 for signed
 			&bitStream);

@@ -27,6 +27,7 @@ class VAPOR_API Transform : public Component
 public:
 
 	Transform( float x = 0.0f, float y = 0.0f, float z = 0.0f );
+	Transform( const Transform& rhs );
 
 	// Translate this node by the given parameters.
 	void translate( float x, float y, float z );

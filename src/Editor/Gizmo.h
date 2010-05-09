@@ -41,7 +41,7 @@ namespace GizmoAxis
  * complex and have a set of circles in different orientations.
  */
 
-class VAPOR_API Gizmo : public scene::Geometry
+class Gizmo : public scene::Geometry
 {
 public:
 

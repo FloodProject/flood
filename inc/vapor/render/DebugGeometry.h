@@ -17,8 +17,8 @@ namespace vapor { namespace render {
 
 //-----------------------------------//
 
-RenderablePtr buildBoundingRenderable( const math::AABB& aabb );
-scene::NodePtr buildRay( const math::Ray& pickRay, const math::Vector3& outFar );
+RenderablePtr VAPOR_API buildBoundingRenderable( const math::AABB& aabb );
+scene::NodePtr VAPOR_API buildRay( const math::Ray& pickRay, const math::Vector3& outFar );
 
 //-----------------------------------//
 

@@ -18,11 +18,14 @@ using namespace vapor::input;
 //-----------------------------------//
 
 Framework::Framework(const std::string app, const char** argv)
-	:  Engine(app, argv, false), numFrames( 0 ),
-	minFrameTime( std::numeric_limits< double >::max() ),
-	maxFrameTime( 0.0 ), sumFrameTime( 0.0 ), lastFrameTime( 0.0 )
+	: numFrames( 0 ),
+	minFrameTime( std::numeric_limits<double>::max() ),
+	maxFrameTime( 0.0 ),
+	sumFrameTime( 0.0 ),
+	lastFrameTime( 0.0 )
 {
 	info( "framework", "Engine framework getting into action" );
+	Engine::create(app, argv, false);
 }
 
 //-----------------------------------//

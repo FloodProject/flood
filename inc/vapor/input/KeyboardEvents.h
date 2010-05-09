@@ -168,7 +168,7 @@ namespace KeyboardEventType
  * it also needs to know if it's a key press or release event.
  */
 
-struct KeyEvent : public input::Event
+struct VAPOR_API KeyEvent : public input::Event
 {
 	friend class Keyboard;
 	

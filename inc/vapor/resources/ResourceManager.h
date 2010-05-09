@@ -8,16 +8,17 @@
 
 #pragma once
 
-#include "vapor/Singleton.h"
 #include "vapor/Subsystem.h"
+#include "vapor/ConcurrentQueue.h"
 #include "vapor/resources/Resource.h"
 #include "vapor/resources/ResourceLoader.h"
 #include "vapor/vfs/Watcher.h"
-#include "vapor/ConcurrentQueue.h"
 
 FWD_DECL_TYPEDEF_PTR(TaskManager)
 
 namespace vapor { namespace resources {
+
+class ResourceTask;
 
 //-----------------------------------//
 
@@ -52,9 +53,10 @@ typedef std::pair< std::string, ResourceLoaderPtr > ResourceLoaderMapPair;
  * which should prove to be less error-prone in case of a corrupt resource.
  */
 
-class VAPOR_API ResourceManager
-	: public Singleton<ResourceManager>, public Subsystem
+class VAPOR_API ResourceManager : public Subsystem
 {
+	friend class ResourceTask;
+
 public:
 
 	ResourceManager();
@@ -106,20 +108,6 @@ public:
 	// Gets the registered resource loaders.
 	IMPLEMENT_GETTER(ResourceLoaders, const ResourceLoaderMap&, resourceLoaders)
 
-	// These events are sent when their correspending actions happen.
-	fd::delegate< void( const ResourceEvent& ) > onResourceAdded;
-	fd::delegate< void( const ResourceEvent& ) > onResourceLoaded;
-	fd::delegate< void( const ResourceEvent& ) > onResourceRemoved;
-	fd::delegate< void( const ResourceEvent& ) > onResourceReloaded;
-	fd::delegate< void( const ResourceLoader& ) > onResourceLoaderRegistered;
-
-	// When tasks finish, they queue a loaded event into the queue.
-	concurrent_queue<ResourceEvent> resourceTaskEvents;
-
-	boost::atomic_int numResourcesQueuedLoad;
-	boost::mutex resourceFinishLoadMutex;
-	boost::condition_variable resourceFinishLoad;
-
 protected:
 
 	// Validates that the resource exists and there is a loader for it.
@@ -139,6 +127,24 @@ protected:
 
 	// Manages all background loading tasks.
 	TaskManagerPtr taskManager;
+
+	// When tasks finish, they queue a loaded event into the queue.
+	concurrent_queue<ResourceEvent> resourceTaskEvents;
+	atomic_int numResourcesQueuedLoad;
+
+#ifdef VAPOR_THREADING
+	boost::mutex resourceFinishLoadMutex;
+	boost::condition_variable resourceFinishLoad;
+#endif
+
+public:
+
+	// These events are sent when their correspending actions happen.
+	fd::delegate< void( const ResourceEvent& ) > onResourceAdded;
+	fd::delegate< void( const ResourceEvent& ) > onResourceLoaded;
+	fd::delegate< void( const ResourceEvent& ) > onResourceRemoved;
+	fd::delegate< void( const ResourceEvent& ) > onResourceReloaded;
+	fd::delegate< void( const ResourceLoader& ) > onResourceLoaderRegistered;
 };
 
 TYPEDEF_PTR(ResourceManager)

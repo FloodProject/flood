@@ -9,7 +9,8 @@
 #include "vapor/PCH.h"
 #include "vapor/render/Material.h"
 #include "vapor/render/ProgramManager.h"
-#include "vapor/Utilities.h"
+#include "vapor/render/Device.h"
+#include "vapor/Engine.h"
 
 namespace vapor { namespace render {
 
@@ -27,18 +28,14 @@ Material::Material( const std::string& name, ProgramPtr program )
 
 //-----------------------------------//
 
-Material::Material( const std::string& name, const std::string& program )
-	: name( name ),
-	program( ProgramManager::getInstance().getProgram(program) )
+Material::Material( const std::string& _name, const std::string& _program )
+	: name( _name )
 {
 	init();
-}
 
-//-----------------------------------//
-
-Material::~Material()
-{
-
+	// TODO: refactor
+	ProgramManagerPtr pm = Engine::getInstance().getRenderDevice()->getProgramManager();
+	program = pm->getProgram(_program);
 }
 
 //-----------------------------------//
@@ -62,7 +59,19 @@ void Material::init()
 
 void Material::setTexture( uint unit, const std::string& name )
 {
-	TexturePtr tex = TextureManager::getInstance().getTexture( name );
+	// TODO: refactor
+	TextureManagerPtr tm = Engine::getInstance().getRenderDevice()->getTextureManager();
+	TexturePtr tex = tm->getTexture( name );
+	textures[unit] = tex;
+}
+
+//-----------------------------------//
+
+void Material::setTexture( uint unit, const ImagePtr& img )
+{
+	// TODO: refactor
+	TextureManagerPtr tm = Engine::getInstance().getRenderDevice()->getTextureManager();
+	TexturePtr tex = tm->getTexture( img );
 	textures[unit] = tex;
 }
 
@@ -95,7 +104,8 @@ void Material::setBlending( BlendingSource::Enum src,
 
 void Material::setProgram( const std::string& name )
 {
-	ProgramPtr p = ProgramManager::getInstance().getProgram( name );
+	ProgramManagerPtr pm = Engine::getInstance().getRenderDevice()->getProgramManager();
+	ProgramPtr p = pm->getProgram( name );
 	program = p;
 }
 

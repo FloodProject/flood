@@ -9,6 +9,7 @@
 #pragma once
 
 #include "vapor/math/Vector3.h"
+#include "vapor/math/Matrix4x4.h"
 
 namespace vapor { namespace math {
 
@@ -58,21 +59,22 @@ public:
 // The order of multiplications from left to right is the same as
 // the order of transformations
 
-Vector3		operator*(const Vector3 &p, const Matrix4x3 &m);
-Matrix4x3	operator*(const Matrix4x3 &a, const Matrix4x3 &b);
+Vector3		VAPOR_API operator*(const Vector3 &p, const Matrix4x3 &m);
+Matrix4x3	VAPOR_API operator*(const Matrix4x3 &a, const Matrix4x3 &b);
+Matrix4x4	VAPOR_API operator*(const Matrix4x3 &a, const Matrix4x4 &b);
 
 // Operator *= for conformance to C++ standards
 
-Vector3		&operator*=(Vector3 &p, const Matrix4x3 &m);
-Matrix4x3	&operator*=(const Matrix4x3 &a, const Matrix4x3 &m);
+VAPOR_API Vector3& operator*=(Vector3 &p, const Matrix4x3 &m);
+VAPOR_API Matrix4x3& operator*=(const Matrix4x3 &a, const Matrix4x3 &m);
 
 // Compute the determinant of the 3x3 portion of the matrix
 
-float	determinant(const Matrix4x3 &m);
+float	VAPOR_API determinant(const Matrix4x3 &m);
 
 // Compute the inverse of a matrix
 
-Matrix4x3 inverse(const Matrix4x3 &m);
+Matrix4x3 VAPOR_API inverse(const Matrix4x3 &m);
 
 //-----------------------------------//
 

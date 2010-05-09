@@ -44,7 +44,7 @@ namespace BillboardType
  * Billboards always face the direction of the camera.
  */
 
-class Billboard : public Component
+class VAPOR_API Billboard : public Component
 {
 public:
 

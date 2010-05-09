@@ -1,12 +1,29 @@
 WIP (work-in-progress)
 ======================
 
+Engine Modularization/Simplification Work
+
+	Compile as DLL (WIP)
+	Remove namespaces
+	Remove Singletons from the codebase (WIP)
+	Implement ResourceLoaders as (static) plugins	
+	Rename Timer into Stopwatch
+	
+	Refactor core code into its own static library (DONE)
+	Make Singleton code thread-safe (double check pattern)
+
 EDITOR:
 -------
 
+Add Light debug display in editor
+
+Scene Tree
+	Don't allow label editing on components
+	Hook up the renaming of Scene node labels
+
 Shadows
 	Render to depth texture (DONE)
-	Render from Light viewpoint
+	Render from Light viewpoint (WIP)
 
 Input Events
 	Rework input system so modes get events always
@@ -64,11 +81,14 @@ Add a property system like Firefox/µTorrent...
 Continuous movement bug (press D inside the world then click in the scene tree to trigger)
 Make the update logic smarter (no 50% CPU hog) (DONE?)
 See about integrating wxLua in the editor
-Hook up the renaming of Scene node labels
 Override the print method of Lua
 
 ENGINE:
 -------
+
+Add a Frustum class
+	Make Camera subclass it
+	Maybe Light too?
 
 Remove all the singleton (add Engine instead)
 Shaders live updating
@@ -301,3 +321,47 @@ http://bsonspec.org
 http://code.google.com/p/protobuf/
 http://msgpack.sourceforge.net/
 http://hadoop.apache.org/avro/docs/current/
+//-----------------------------------//
+
+bool WasLaunchedInNTDebugger()
+{
+	bool ret = false;
+
+	// When some debug flags are set on the heap, NT clears
+	// the allocated memory with 0xbaadf00d, so we check
+	// this to see if we were launched in a debugger
+	long* data = (long*) HeapAlloc(GetProcessHeap(), 0, 8);
+
+	if( *data == 0xbaadf00d )
+		ret = true;
+
+	HeapFree(GetProcessHeap(), 0, data);
+	return ret;
+}
+
+//-----------------------------------//
+
+void disableRtlHeapChecking(HANDLE heap) 
+{	
+	// This is dependent on the current implementation
+	// of the XP (and 2K and NT?) heap which stores a
+	// number of flags 16 bytes into the heap, and
+	// checks the bitmask 0x7D030F60 when deciding
+	// whether or not to clear the memory with 0xbaadf00d,
+	// so, we're clearing all of the bits that may cause
+	// the clearing to happen
+
+	if (WasLaunchedInNTDebugger())
+	{
+		// This assert is basically because these 2
+		// values are the only valuse I saw, if there
+		// are any values for these flags, they might
+		// mean something special (or a different OS)
+		// and we should take a closer look to see if
+		// we're clearing anything important. 
+		assert(*((long*)heap + 4) == 0x40000061 ||
+			*((long*)heap + 4) == 0x40000060);
+		// Clear the bad bits!
+		*((long*)heap + 4) &= ~0x7D030F60;
+	}
+}

@@ -20,21 +20,6 @@ JoystickEvent::JoystickEvent( JoystickEventType::Enum eventType )
 
 }
 
-
-//-----------------------------------//
-
-Joystick::Joystick()
-{
-
-}
-
-//-----------------------------------//
-
-Joystick::~Joystick()
-{
-
-}
-
 //-----------------------------------//
 
 const input::DeviceType::Enum Joystick::getType()

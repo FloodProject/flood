@@ -21,9 +21,9 @@ static const float S = 25.0f;
 // Gizmo cone base color.
 static const float BASE_FACTOR = 0.8f;
 
-static const Color& X = Colors::Red;
-static const Color& Y = Colors::Green;
-static const Color& Z = Colors::Blue;
+static const Color& X = Color::Red;
+static const Color& Y = Color::Green;
+static const Color& Z = Color::Blue;
 
 //-----------------------------------//
 
@@ -67,8 +67,8 @@ void Gizmo::selectAxis( GizmoAxis::Enum axis )
 	assert( colors.size() == 3*2 );
 
 	uint i = axis;
-	colors[i] += Colors::White*0.5f;
-	colors[i+1] += Colors::White*0.5f;
+	colors[i] += Color::White*0.5f;
+	colors[i+1] += Color::White*0.5f;
 
 	lines->forceRebuild();
 }

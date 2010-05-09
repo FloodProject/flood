@@ -140,7 +140,7 @@ bool GLSL_Program::link()
 
 	if( status != GL_TRUE )
 	{
-		warn( "glsl", "Could not link program object '%d': %s", id, log.c_str() );
+		// warn( "glsl", "Could not link program object '%d': %s", id, log.c_str() );
 		linked = false;
 		linkError = true;
 		return false;
@@ -167,7 +167,7 @@ bool GLSL_Program::validate()
 	{
 		getLogText();
 
-		warn( "glsl", "Could not validate program object '%d': %s", id, log.c_str() );
+		// warn( "glsl", "Could not validate program object '%d': %s", id, log.c_str() );
 		return false;
 	}
 
@@ -261,7 +261,7 @@ void GLSL_Program::setUniform( const std::string& slot, int data )
 
 	if( loc == -1 )
 	{
-		warn( "glsl", "Could not locate uniform location in program object '%d'", id );
+		// warn( "glsl", "Could not locate uniform location in program object '%d'", id );
 		return;
 	}
 
@@ -284,7 +284,7 @@ void GLSL_Program::setUniform( const std::string& slot, const std::vector<math::
 
 	if( loc == -1 )
 	{
-		warn( "glsl", "Could not locate uniform location in program object '%d'", id );
+		// warn( "glsl", "Could not locate uniform location in program object '%d'", id );
 		return;
 	}
 
@@ -307,7 +307,7 @@ void GLSL_Program::setUniform( const std::string& slot, const std::vector<math::
 
 	if( loc == -1 )
 	{
-		//warn( "glsl", "Could not locate uniform location in program object '%d'", id );
+		//// warn( "glsl", "Could not locate uniform location in program object '%d'", id );
 		return;
 	}
 
@@ -328,7 +328,7 @@ void GLSL_Program::setUniform( const std::string& slot, const math::Vector3& vec
 
 	if( loc == -1 )
 	{
-		//warn( "glsl", "Could not locate uniform location in program object '%d'", id );
+		//// warn( "glsl", "Could not locate uniform location in program object '%d'", id );
 		return;
 	}
 
@@ -349,13 +349,12 @@ void GLSL_Program::setUniform( const std::string& slot, const math::Matrix4x3& m
 
 	if( loc == -1 )
 	{
-		//warn( "glsl", "Could not locate uniform location in program object '%d'", id );
+		//// warn( "glsl", "Could not locate uniform location in program object '%d'", id );
 		return;
 	}
 
 	if(glUniformMatrix4x3fv)
 	{
-		assert( 0 && "Untested, make sure it works!" );
 		glUniformMatrix4x3fv( loc, 1, true, &matrix.m11 );
 	}
 	else
@@ -377,7 +376,7 @@ void GLSL_Program::setUniform( const std::string& slot, const math::Matrix4x4& m
 
 	if( loc == -1 )
 	{
-		//warn( "glsl", "Could not locate uniform location in program object '%d'", id );
+		//// warn( "glsl", "Could not locate uniform location in program object '%d'", id );
 		return;
 	}
 

@@ -198,13 +198,12 @@ void SceneTreeCtrl::initScene( wxTreeItemId id, const NodePtr& node )
 	// Traverse the tree and add the nodes to the control.
 	foreach( const NodePtr& child, group->getChildren() )
 	{
-		if( child->getTag( EditorTags::EditorOnly ) )
+		if( child->getTag(EditorTags::EditorOnly) )
 			continue;
 
 		initScene( id, child );
 	}
 }
-
 
 //-----------------------------------//
 
@@ -248,7 +247,6 @@ void SceneTreeCtrl::onItemMenu(wxTreeEvent& event)
 	menuItemId = event.GetItem();
 	const NodePtr& node = getEntity( menuItemId );
 
-#if wxUSE_MENUS
 	wxMenu menu("Scene node");
 
 	if( !node )
@@ -281,7 +279,6 @@ void SceneTreeCtrl::onItemMenu(wxTreeEvent& event)
 
 	wxPoint clientpt = event.GetPoint();
 	PopupMenu(&menu, clientpt);
-#endif // wxUSE_MENUS
 }
 
 //-----------------------------------//
@@ -536,12 +533,10 @@ void SceneTreeCtrl::onMouseRightUp( wxContextMenuEvent& event )
 {
 	wxPoint clientpt = event.GetPosition();
 
-#if wxUSE_MENUS
 	wxMenu menu("Scene");
 	//menu.Append(ID_MenuSceneNodeDelete, "&Delete...");
 
 	PopupMenu(&menu, clientpt);
-#endif // wxUSE_MENUS
 }
 
 //-----------------------------------//

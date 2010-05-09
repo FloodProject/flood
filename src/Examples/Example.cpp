@@ -83,9 +83,10 @@ void Example::onSetupScene()
 	scene->add( camera );
 
 	fbo = rd->createRenderBuffer( Settings() );
-	TexturePtr fbo_tex = fbo->createRenderTexture( RenderBufferType::Depth );
-	fbo->createRenderBuffer( RenderBufferType::Color );
+	//fbo_tex = fbo->createRenderTexture( RenderBufferType::Color );
+	fbo_tex = fbo->createRenderTexture( RenderBufferType::Depth );
 	fbo->check();
+	fbo->unbind();
 
 	viewport2 = fbo->addViewport(cam);
 	viewport2->setClearColor( Color(1.0f, 0.0f, 0.0f, 1.0f) );
@@ -112,32 +113,32 @@ void Example::onSetupScene()
 	//scene->add(ct);
 	
 	// Materials too?
-	MaterialPtr mat2( new Material( "FontMaterial", tex ) );
-	FontPtr font = rm->loadResource< Font >( "Verdana.font" );
-	label.reset( new Label( getFPS( lastFrameTime ), font, mat2 ) );
-	NodePtr fps( new Node( "FPSNode" ) );
-	fps->addTransform();
-	fps->addComponent( label );
-	fps->getTransform()->translate( -300.0f, 220.0f, 0.0f );
-	scene->add( fps );
+	//MaterialPtr mat2( new Material( "FontMaterial", tex ) );
+	//FontPtr font = rm->loadResource< Font >( "Verdana.font" );
+	//label.reset( new Label( getFPS( lastFrameTime ), font, mat2 ) );
+	//NodePtr fps( new Node( "FPSNode" ) );
+	//fps->addTransform();
+	//fps->addComponent( label );
+	//fps->getTransform()->translate( -300.0f, 220.0f, 0.0f );
+	//scene->add( fps );
 
-	MaterialPtr mat( new Material( "GridMaterial", diffuse ) );
-	NodePtr grid( new Node( "Grid" ) );
-	grid->addTransform();
-	grid->addComponent( GridPtr( new Grid() ) );
-	scene->add( grid );
+	//MaterialPtr mat( new Material( "GridMaterial", diffuse ) );
+	//NodePtr grid( new Node( "Grid" ) );
+	//grid->addTransform();
+	//grid->addComponent( GridPtr( new Grid() ) );
+	//scene->add( grid );
 
-	foreach( const RenderablePtr& rend, 
-		grid->getComponent<Geometry>("Grid")->getRenderables() )
-	{
-		rend->getMaterial()->setProgram( diffuse );
-	}
+	//foreach( const RenderablePtr& rend, 
+	//	grid->getComponent<Geometry>("Grid")->getRenderables() )
+	//{
+	//	rend->getMaterial()->setProgram( diffuse );
+	//}
 
 	NodePtr lnode( new Node("Light") );
 	lnode->addTransform();
-	LightPtr light( new Light( LightType::Point ) );
-	light->setDiffuseColor( Colors::Red );
-	light->setAmbientColor( Colors::Yellow );
+	LightPtr light( new Light( LightType::Directional ) );
+	light->setDiffuseColor( Color::Red );
+	light->setAmbientColor( Color::Yellow );
 	lnode->addComponent( light );
 	scene->add( lnode );
 
@@ -153,13 +154,13 @@ void Example::onSetupScene()
 
 	TerrainPtr terrain( new Terrain( settings ) );
 
+	const ImagePtr& heightmap = rm->loadResource<Image>( "height2.png" );
+	terrain->addCell( heightmap, 0, 0 );
+
 	NodePtr terreno( new Node( "Terreno" ) );
 	terreno->addTransform();
 	terreno->addComponent( terrain );
 	scene->add( terreno );
-
-	const ImagePtr& heightmap = rm->loadResource<Image>( "height2.png" );
-	terrain->addCell( heightmap, 0, 0 );
 
 	window = rd->getRenderWindow();
 	viewport = window->addViewport(cam);
@@ -176,7 +177,7 @@ void Example::onUpdate( double delta )
 	}
 	else
 	{
-		label->setText( getFPS(lastFrameTime) );
+		//label->setText( getFPS(lastFrameTime) );
 		fpsUpdateTime = 0.0f;
 	}
 }
@@ -187,6 +188,7 @@ void Example::onRender()
 {
 	// Render into the FBO first
 	fbo->bind();
+	fbo_tex->bind();
 	fbo_node->setVisible(false);
 	viewport2->update();
 	fbo_node->setVisible(true);
@@ -194,7 +196,6 @@ void Example::onRender()
 
 	// Render the scene
 	viewport->update();
-	window->update();
 }
 
 //-----------------------------------//
@@ -207,10 +208,17 @@ void Example::onKeyPressed( const KeyEvent& keyEvent )
 	if( keyEvent.keyCode == Keys::Pause )
 		Log::showDebug = !Log::showDebug;
 
+	if( keyEvent.keyCode == Keys::G )
+	{
+		fbo->bind();
+		fbo_tex->readImage()->save("depth.png");
+		fbo->unbind();
+	}
+
 	if( keyEvent.keyCode == Keys::F )
 		debug( "fps: %d", int( 1.0f / lastFrameTime ) );
 
-	if( keyEvent.keyCode == Keys::G )
+	if( keyEvent.keyCode == Keys::M )
 	{
 		debug( "min/avg/max: %f / %f / %f", 
 					minFrameTime, avgFrameTime, maxFrameTime );

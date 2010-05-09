@@ -15,7 +15,7 @@ namespace vapor {
 // Check for mode details about endianness-related tricks and issues:
 // http://www.gamedev.net/reference/articles/article2091.asp
 
-	bool isLittleEndian()
+bool System::isLittleEndian()
 {
 	byte EndianTest[2] = { 1, 0 };
 	short x;
@@ -26,7 +26,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-long endian_swap(long i)
+long System::swapEndian(long i)
 {
 	unsigned char b1, b2, b3, b4;
 
@@ -53,7 +53,7 @@ void float_to_str( char* str, float n, byte precision )
 
 #ifdef VAPOR_PLATFORM_WINDOWS
 
-std::string wstr_to_str(const std::wstring &wstr)
+std::string String::fromWideString(const std::wstring &wstr)
 {
     // Convert a Unicode string to an ASCII string
     std::string strTo;
@@ -72,7 +72,7 @@ std::string wstr_to_str(const std::wstring &wstr)
 
 #ifdef VAPOR_PLATFORM_WINDOWS
 
-std::wstring str_to_wstr(const std::string &str)
+std::wstring String::toWideString(const std::string &str)
 {
     // Convert an ASCII string to a Unicode String
     std::wstring wstrTo;
@@ -89,7 +89,7 @@ std::wstring str_to_wstr(const std::string &str)
 
 //-----------------------------------//
 
-std::vector<std::string>& str_split(const std::string &s, char delim, 
+std::vector<std::string>& String::split(const std::string &s, char delim, 
 								std::vector<std::string> &elems)
 {
     std::stringstream ss(s);
@@ -105,10 +105,10 @@ std::vector<std::string>& str_split(const std::string &s, char delim,
 
 //-----------------------------------//
 
-std::vector<std::string> str_split(const std::string &s, char delim)
+std::vector<std::string> String::split(const std::string &s, char delim)
 {
     std::vector<std::string> elems;
-    return str_split(s, delim, elems);
+	return String::split(s, delim, elems);
 }
 
 ////-----------------------------------//

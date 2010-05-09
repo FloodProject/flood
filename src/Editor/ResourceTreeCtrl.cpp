@@ -7,7 +7,6 @@
 ************************************************************************/
 
 #include "PCH.h"
-#include "vapor/Utilities.h"
 #include "ResourceTreeCtrl.h"
 #include "EditorIcons.h"
 

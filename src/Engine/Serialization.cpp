@@ -26,6 +26,17 @@ Json::Value toJson( const math::Vector3& vec )
 
 //-----------------------------------//
 
+Json::Value toJson( const math::EulerAngles& ang )
+{
+	Json::Value v;
+	v[0u] = ang.x;
+	v[1u] = ang.y;
+	v[2u] = ang.z;
+	return v;
+}
+
+//-----------------------------------//
+
 Json::Value toJson( const math::Color& c )
 {
 	Json::Value v;

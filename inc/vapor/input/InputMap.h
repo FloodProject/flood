@@ -29,7 +29,7 @@ struct joyId
 
 struct Compare
 {
-	bool operator()(joyId lhs, joyId rhs)
+	bool operator()(joyId lhs, joyId rhs) const
 	{
 		return lhs.id < rhs.id;
 	}

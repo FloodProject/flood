@@ -7,10 +7,10 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/resources/ResourceManager.h"
 #include "vapor/TaskManager.h"
+#include "vapor/resources/ResourceManager.h"
 #include "vapor/vfs/File.h"
-#include "vapor/Utilities.h"
+#include "vapor/Engine.h"
 
 using namespace vapor::vfs;
 
@@ -19,9 +19,9 @@ namespace vapor { namespace resources {
 //-----------------------------------//
 
 ResourceManager::ResourceManager()
-	: taskManager( TaskManager::getInstancePtr() ),
-	numResourcesQueuedLoad(0)
+	: numResourcesQueuedLoad(0), taskManager(nullptr)
 {
+	taskManager = Engine::getInstance().getTaskManager();
 	assert( taskManager != nullptr );
 }
 
@@ -94,7 +94,7 @@ public:
 
 	void run()
 	{
-		ResourceManagerPtr const rm = ResourceManager::getInstancePtr();
+		assert( rm != nullptr );
 
 		const std::string& path = res->getURI();
 		
@@ -127,10 +127,11 @@ public:
 		rm->resourceTaskEvents.push(event);
 
 		rm->numResourcesQueuedLoad--;
-		rm->resourceFinishLoad.notify_one();
+		THREAD( rm->resourceFinishLoad.notify_one(); )
 	}
 
 	Resource* res;
+	ResourceManagerPtr rm;
 };
 
 //-----------------------------------//
@@ -149,7 +150,7 @@ bool ResourceManager::validateResource( const File& file )
 	
 	if( ext.empty() )
 	{
-		warn( "resources", "Requested resource '%s' has an invalid path", path.c_str() );
+		warn( "resources", "Requested resource '%s' has an unknown extension", path.c_str() );
 		return false;
 	}
 
@@ -181,6 +182,7 @@ void ResourceManager::decodeResource( ResourcePtr res, bool async )
 {
 	ResourceTask* task = new ResourceTask();
 	task->res = res.get();
+	task->rm = this;
 
 	if( taskManager && async )
 	{
@@ -198,14 +200,15 @@ void ResourceManager::decodeResource( ResourcePtr res, bool async )
 
 void ResourceManager::waitUntilQueuedResourcesLoad()
 {
-	boost::unique_lock<boost::mutex> lock(resourceFinishLoadMutex);
+	THREAD( boost::unique_lock<boost::mutex> lock(resourceFinishLoadMutex); )
 
 	while( numResourcesQueuedLoad > 0 )
 	{
 		// TODO: use a timed_wait and notify the observers
 		// to let them implement things like progress bars
 		// on loading screens.
-		resourceFinishLoad.wait(lock);
+		THREAD( resourceFinishLoad.wait(lock); )
+		Timer::sleep( 0.01f );
 	}
 }
 

@@ -24,7 +24,7 @@ Architecture
 
 The engine is divided in a few subsystems:
 
-	* platform  (file, memory, time, dynlib, log, vfs)
+	* core		(file, memory, time, dynlib, log)
 	* math		(vectors, matrices, AABBs, ...)
 	* render	(opengl, directx, software)
 	* scene		(scene graph, bvh, ...)

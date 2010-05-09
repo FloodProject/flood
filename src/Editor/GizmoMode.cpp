@@ -302,8 +302,8 @@ bool GizmoMode::pickImageTest( const MouseMoveEvent& me, GizmoAxis::Enum& axis )
 	Color pick;
 	glReadPixels(m_x, m_y, 1, 1, GL_RGB, GL_FLOAT, &pick);
 	
-	if( glHasError("Error reading pixels from framebuffer") )
-		return false;
+	//if( glHasError("Error reading pixels from framebuffer") )
+		//return false;
 
 	axis = Gizmo::getAxis(pick);
 	

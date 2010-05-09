@@ -8,10 +8,11 @@
 
 #pragma once
 
-#include "vapor/resources/ResourceManager.h"
 #include "vapor/resources/Image.h"
 #include "vapor/render/Texture.h"
-#include "vapor/render/GL.h"
+#include "vapor/resources/ResourceManager.h"
+
+FWD_DECL_NS_TYPEDEF_PTR(resources, ResourceManager)
 
 namespace vapor { namespace render {
 
@@ -27,7 +28,7 @@ namespace vapor { namespace render {
  * for default textures.
  */
 
-class VAPOR_API TextureManager : public Singleton<TextureManager>
+class VAPOR_API TextureManager
 {
 public:
 

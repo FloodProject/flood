@@ -46,7 +46,8 @@ static void errorReportFunction(const char* str, void* errorOutputObject)
 
 //-----------------------------------//
 
-PhysicsManager::PhysicsManager() : worldCreated( false ), enableSimulation( true )
+PhysicsManager::PhysicsManager()
+	: worldCreated( false ), enableSimulation( true )
 {
 	hkPoolMemory* memoryManager = new hkPoolMemory();
 	threadMemory = new hkThreadMemory(memoryManager);

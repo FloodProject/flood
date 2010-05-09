@@ -16,19 +16,26 @@
 #include "vapor/render/Adapter.h"
 #include "vapor/render/TextureManager.h"
 #include "vapor/render/ProgramManager.h"
+
 #include "vapor/scene/Camera.h"
+#include "vapor/scene/Node.h"
 
 namespace vapor { namespace render {
 
 using namespace vapor::log;
 using namespace vapor::math;
 using namespace vapor::scene;
+using namespace vapor::resources;
 
 //-----------------------------------//
 
-Device::Device()
-	: adapter(nullptr), window(nullptr), activeTarget(nullptr),
-	programManager(nullptr), textureManager(nullptr)
+Device::Device():
+	adapter(nullptr),
+	window(nullptr),
+	activeTarget(nullptr),
+	programManager(nullptr),
+	textureManager(nullptr),
+	shadowDepthBuffer(nullptr)
 {
 }
 
@@ -60,11 +67,11 @@ void Device::init()
 
 	checkExtensions();
 
-	adapter = Adapter::getInstancePtr();
-	textureManager = TextureManager::getInstancePtr();
-	programManager = ProgramManager::getInstancePtr();
+	adapter = new Adapter();
+	textureManager = new TextureManager();
+	programManager = new ProgramManager();
 
-	setClearColor( Colors::White );
+	setClearColor( Color::White );
 
 	//glEnable( GL_DEPTH_TEST );
 	//glDepthMask( GL_TRUE );
@@ -110,6 +117,11 @@ bool stateSorter(const RenderState& lhs, const RenderState& rhs)
 
 void Device::render( RenderBlock& queue, const Camera* cam ) 
 {
+	assert( cam != nullptr );
+	camera = cam;
+
+	//setupRenderStateShadow( queue.lights );
+
 	// Sort the renderables by render group (TODO: use a radix sorter).
 	std::sort( queue.renderables.begin(), queue.renderables.end(), &stateSorter );
 
@@ -169,6 +181,78 @@ bool Device::setupRenderState( const RenderState& state, const Camera* cam )
 
 //-----------------------------------//
 
+void Device::updateLightDepth( LightState& state )
+{
+	const LightPtr& light = state.light;
+	assert( light->getLightType() == LightType::Directional );
+
+	TexturePtr shadowDepthTexture;
+	
+	if( !shadowDepthBuffer )
+	{
+		shadowDepthBuffer = createRenderBuffer( Settings(512, 512) );
+	}
+
+	if( shadowTextures.find(light) == shadowTextures.end() )
+	{
+		shadowDepthTexture = shadowDepthBuffer->createRenderTexture();
+		shadowTextures[light] = shadowDepthTexture;
+	}
+	else
+	{
+		shadowDepthTexture = shadowTextures[light];
+	}
+
+	CameraPtr lightCamera( new Camera(*camera) );
+	TransformPtr lightTransform( new Transform(*state.transform.get()) );
+	
+	NodePtr lightCameraNode( new Node("ShadowCamera") );
+	lightCameraNode->addTransform(); /*Component( lightTransform );*/
+	lightCameraNode->addComponent( lightCamera );
+
+	ViewportPtr lightView = new Viewport(lightCamera, shadowDepthBuffer);
+
+	if( !shadowDepthBuffer->check() )
+		return;
+
+	// TODO: turn off color writes (glColorMask?)
+	lightView->update();
+	shadowDepthBuffer->unbind();
+
+	Matrix4x4 bias; bias.identity();
+	bias.m11 = 0.5f;
+	bias.m22 = 0.5f;
+	bias.m33 = 0.5f;
+	bias.tx  = 0.5f;
+	bias.ty  = 0.5f;
+	bias.tz  = 0.5f;
+
+	state.projection = lightCamera->getViewMatrix()
+		* lightCamera->getProjectionMatrix() * bias;
+}
+
+//-----------------------------------//
+
+bool Device::setupRenderStateShadow( LightQueue& lights )
+{
+	if( lights.empty() ) 
+		return true;
+
+	foreach( LightState& state, lights )
+	{
+		const LightPtr& light = state.light;
+
+		if( !light->getCastsShadows() )
+			continue;
+
+		updateLightDepth( state );
+	}
+
+	return true;
+}
+
+//-----------------------------------//
+
 bool Device::setupRenderStateLight( const RenderState& state, const LightQueue& lights )
 {
 	const RenderablePtr& rend = state.renderable;
@@ -177,18 +261,29 @@ bool Device::setupRenderStateLight( const RenderState& state, const LightQueue& 
 
 	if( lights.empty() ) return true;
 
-	std::vector< Color > colors;
-	foreach( const LightState& state, lights )
+	foreach( const LightState& lightState, lights )
 	{
-		colors.push_back( state.light->getDiffuseColor() );
-		colors.push_back( state.light->getSpecularColor() );
-		colors.push_back( state.light->getEmissiveColor() );
-		colors.push_back( state.light->getAmbientColor() );
-	}
+		const LightPtr& light = lightState.light;
 
-	// TODO: fix the lighting stuff
-	program->setUniform( "vp_LightColors", colors );
-	program->setUniform( "vp_LightDirection", Vector3(0.5f, 0.8f, 0.0f) );
+		//TexturePtr shadowDepthTexture;
+		//shadowDepthTexture = shadowTextures[light];
+		//assert( shadowDepthTexture != nullptr );
+
+		std::vector< Color > colors;
+		colors.push_back( light->getDiffuseColor() );
+		colors.push_back( light->getSpecularColor() );
+		colors.push_back( light->getEmissiveColor() );
+		colors.push_back( light->getAmbientColor() );
+
+		//const TransformPtr& transform = lightState.transform;
+		//assert( transform != nullptr );
+
+		// TODO: fix the lighting stuff
+		program->setUniform( "vp_LightColors", colors );
+		program->setUniform( "vp_LightDirection", -Vector3::UnitY/*transform->getRotation()*/ );
+		//program->setUniform( "vp_ShadowMap", shadowDepthTexture->id() );
+		//program->setUniform( "vp_CameraProj", state.modelMatrix * lightState.projection );
+	}
 
 	return true;
 }
@@ -209,11 +304,11 @@ bool Device::setupRenderStateOverlay( const RenderState& state )
 	glDisable( GL_DEPTH_TEST );
 	//glDepthMask( false );
 
-	const float w = 0.0f /*(float) activeTarget->getSettings().getWidth()*/;
-	const float h = 0.0f /*(float) activeTarget->getSettings().getHeight()*/;
+	const float w = (float) activeTarget->getSettings().getWidth();
+	const float h = (float) activeTarget->getSettings().getHeight();
 
 	Matrix4x4 proj = Matrix4x4::createOrthographicProjection( 
-		-w/2, w/2, -h/2, h/2, -10.0, 10.0 );
+		0, w, 0, h, -10.0, 10.0 );
 
 	program->setUniform( "vp_ProjectionMatrix", proj );
 	program->setUniform( "vp_ModelMatrix", state.modelMatrix );

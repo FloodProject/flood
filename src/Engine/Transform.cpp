@@ -30,6 +30,16 @@ Transform::Transform( float x, float y, float z )
 
 //-----------------------------------//
 
+Transform::Transform( const Transform& rhs )
+	: _scale( rhs._scale ), translation( rhs.translation ),
+	rotation( rhs.rotation ), needsVolumeUpdate( false ),
+	needsNotify( false ), externalUpdate( false )
+{
+
+}
+
+//-----------------------------------//
+
 void Transform::translate( const math::Vector3& tr )
 {
 	translate( tr.x, tr.y, tr.z );

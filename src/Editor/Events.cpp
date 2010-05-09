@@ -32,9 +32,9 @@ void EditorFrame::onRender()
 	camera->render( engine->getSceneManager() );
 	camera->render( editorScene, false );
 
-	//rb->bind();
-	//depthViewport->update();
-	//rb->unbind();
+	//TexturePtr depth = engine->getRenderDevice()->getShadowTextures()[light];
+	//ImagePtr depthImage = depth->readImage();
+	//depthImage->save( "shadowDepth.png" );
 }
 
 //-----------------------------------//
@@ -284,10 +284,12 @@ void EditorFrame::createScene()
 	scene->add( sky );
 
 	NodePtr lnode( new Node("Light") );
-	lnode->addTransform();
-	LightPtr light( new Light( LightType::Point ) );
-	light->setDiffuseColor( Colors::Red );
-	light->setAmbientColor( Colors::Yellow );
+	TransformPtr lt( new Transform(0.0f, 100.0f, 0.0f) );
+	lt->rotate(45.0f, 0.0f, 0.0f);
+	lnode->addComponent( lt );
+	light.reset( new Light( LightType::Directional ) );
+	light->setDiffuseColor( Color::Red );
+	light->setAmbientColor( Color::Yellow );
 	lnode->addComponent( light );
 	scene->add( lnode );
 

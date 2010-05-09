@@ -8,6 +8,9 @@
 
 #include "vapor/PCH.h"
 #include "vapor/render/TextureManager.h"
+#include "vapor/resources/ResourceManager.h"
+#include "vapor/render/GL.h"
+#include "vapor/Engine.h"
 
 namespace vapor { namespace render {
 
@@ -16,7 +19,7 @@ using namespace vapor::resources;
 //-----------------------------------//
 
 TextureManager::TextureManager()
-	: rm( ResourceManager::getInstancePtr() )
+	: rm( Engine::getInstance().getResourceManager() )
 {
 	assert( rm != nullptr );
 	
@@ -28,11 +31,11 @@ TextureManager::TextureManager()
 
 TextureManager::~TextureManager()
 {
-	//if( rm )
-	//{
-	//	rm->onResourceLoaded -= fd::bind( &TextureManager::onLoad, this );
-	//	rm->onResourceReloaded -= fd::bind( &TextureManager::onReload, this );
-	//}
+	if( rm )
+	{
+		rm->onResourceLoaded -= fd::bind( &TextureManager::onLoad, this );
+		rm->onResourceReloaded -= fd::bind( &TextureManager::onReload, this );
+	}
 
 	foreach( const TextureMapPair& p, textures )
 		assert( p.second->getReferenceCount() == 2 );
@@ -45,6 +48,10 @@ const byte TEX_SIZE = 64;
 TexturePtr TextureManager::getTexture( const std::string& name )
 {
 	ImagePtr img = rm->loadResource<Image>(name);
+
+	if( !img )
+		warn( "render", "Could not find image: '%s'", name.c_str() );
+
 	return getTexture(img);
 }
 

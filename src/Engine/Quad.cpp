@@ -37,17 +37,17 @@ render::VertexBufferPtr Quad::getQuadBuffer( float width, float height )
 
 	// Vertex color data
 	std::vector< Vector3 > colors;
-	colors.push_back( Vector3( 0.0f, 1.0f, 0.0f ) );
-	colors.push_back( Vector3( 0.0f, 0.0f, 1.0f ) );
-	colors.push_back( Vector3( 1.0f, 0.0f, 0.0f ) );
-	colors.push_back( Vector3( 1.0f, 0.0f, 0.0f ) );
+	colors.push_back( Color::White );
+	colors.push_back( Color::White );
+	colors.push_back( Color::White );
+	colors.push_back( Color::White );
 
 	// Vertex tex coords data
 	std::vector< Vector3 > coords;
-	coords.push_back( Vector3( 0.0f, 1.0f, 0.0f ) );
 	coords.push_back( Vector3( 0.0f, 0.0f, 0.0f ) );
-	coords.push_back( Vector3( 1.0f, 0.0f, 0.0f ) );
+	coords.push_back( Vector3( 0.0f, 1.0f, 0.0f ) );
 	coords.push_back( Vector3( 1.0f, 1.0f, 0.0f ) );
+	coords.push_back( Vector3( 1.0f, 0.0f, 0.0f ) );
 
 	// Vertex buffer setup
 	vb->set( VertexAttribute::Position, vertex );

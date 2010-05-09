@@ -71,7 +71,6 @@ public:
 	//Material( const std::string& name );
 	Material( const std::string& name, ProgramPtr program );
 	Material( const std::string& name, const std::string& program = "diffuse" );
-	~Material();
 
 	// Gets the textual name of the material.
 	IMPLEMENT_GETTER(Name, const std::string&, name);
@@ -81,6 +80,9 @@ public:
 
 	// Adds a texture to the material.
 	void setTexture( uint unit, const TexturePtr& tex );
+
+	// Adds an image as texture to the material.
+	void setTexture( uint unit, const resources::ImagePtr& tex );
 
 	// Sets the associated program.
 	void setProgram( const std::string& name );

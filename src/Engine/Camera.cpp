@@ -22,11 +22,30 @@ const std::string& Camera::type = "Camera";
 //-----------------------------------//
 
 Camera::Camera( render::Device* device, Projection::Enum proj )
-	: renderDevice( device ), projection( proj ), fov(45.0f),
-	near_(1.0f), far_(5000.0f), lookAtVector(Vector3::UnitZ),
+	: renderDevice( device ), projection( proj ), fov(60.0f),
+	near_(5.0f), far_(1000.0f), lookAtVector(Vector3::UnitZ),
 	viewport(nullptr), viewSize(Vector2i::Zero)
 {
 	assert( device != nullptr );
+}
+
+//-----------------------------------//
+
+Camera::Camera( const Camera& rhs )
+	: renderDevice( rhs.renderDevice ), projection( rhs.projection ),
+	fov( rhs.fov ), near_( rhs.near_ ), far_( rhs.far_ )
+{
+}
+
+//-----------------------------------//
+
+Camera::~Camera()
+{
+	if( transform )
+	{
+		transform->onTransform -=
+			fd::bind( &Camera::onTransform, this );
+	}
 }
 
 //-----------------------------------//
@@ -106,11 +125,11 @@ math::Ray Camera::getRay( float screenX, float screenY, math::Vector3* outFar ) 
 	p[14] = projectionMatrix.m34;
 	p[15] = projectionMatrix.tw;
 
-	int v[] = { 0, 0, size.x, size.y };
+	//int v[] = { 0, 0, size.x, size.y };
 
 	Vector3d n, f;
-	gluUnProject(screenX, screenY, 0.0, m, p, v, &n.x, &n.y, &n.z );
-	gluUnProject(screenX, screenY, 1.0, m, p, v, &f.x, &f.y, &f.z );
+	//gluUnProject(screenX, screenY, 0.0, m, p, v, &n.x, &n.y, &n.z );
+	//gluUnProject(screenX, screenY, 1.0, m, p, v, &f.x, &f.y, &f.z );
 
 	Vector3d d = f - n;
 	d.normalize();
@@ -236,17 +255,16 @@ void Camera::render( const NodePtr& node, bool clearView ) const
 
 void Camera::render() const
 {
-	NodePtr parent = getNode()->getParent();
-
-	if( !parent ) return;
+	NodePtr node = getNode();
+	assert( node != nullptr );
 
 	// Search for the root node.
-	while ( parent->getParent() )
+	while ( node->getParent() )
 	{
-		parent = parent->getParent();
+		node = node->getParent();
 	}
 	  
-	render( parent );
+	render( node );
 }
 
 //-----------------------------------//

@@ -19,7 +19,7 @@ namespace vapor { namespace input {
  * Holds all the mouse state.
  */
 
-struct MouseInfo
+struct VAPOR_API MouseInfo
 {
 	MouseInfo();
 

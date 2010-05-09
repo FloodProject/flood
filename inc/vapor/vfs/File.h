@@ -53,9 +53,6 @@ public:
 	/// Opens a new file given a path (defaults for reading access).
 	File (const std::string path, AccessMode::Enum e = AccessMode::Read);
 	
-	/// Opens a new file given a path (defaults for reading access).
-	File (const char* path, AccessMode::Enum e = AccessMode::Read);
-	
 	/// Closes the file.
 	~File ();
 

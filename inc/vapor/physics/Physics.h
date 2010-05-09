@@ -9,7 +9,6 @@
 #pragma once
 
 #include "vapor/math/Vector3.h"
-#include "vapor/Singleton.h"
 
 // Uncomment this to enable the Havok Visual Debugger
 #define HAVOK_ENABLE_VDB
@@ -28,8 +27,7 @@ namespace vapor { namespace physics {
  * Global hub for physics simulations.
  */
 
-class VAPOR_API PhysicsManager 
-	: public Singleton<PhysicsManager>, private boost::noncopyable
+class VAPOR_API PhysicsManager : private boost::noncopyable
 {
 public:
 

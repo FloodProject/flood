@@ -60,6 +60,9 @@ public:
 	// Write text into file.
 	long write(const std::string& text);
 
+	// Write buffer into file.
+	long write(const std::vector<byte>& buf);
+
 	// Sets if the file should be buffered.
 	void setBuffering( bool state );
 

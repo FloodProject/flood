@@ -13,7 +13,7 @@ namespace vapor { namespace math {
 
 //-----------------------------------//
 
-Ray::Ray( Vector3 origin, Vector3 direction ) 
+Ray::Ray( const Vector3& origin, const Vector3& direction ) 
 	: origin( origin ), direction( direction )
 {
 

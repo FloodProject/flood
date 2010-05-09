@@ -34,7 +34,7 @@ namespace DeviceType
  * Base struct for input events.
  */
 
-struct Event : private boost::noncopyable
+struct VAPOR_API Event : private boost::noncopyable
 {
 	Event( DeviceType::Enum );
 

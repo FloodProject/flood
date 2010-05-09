@@ -25,7 +25,7 @@ namespace vapor { namespace render {
  * to default programs.
  */
 
-class VAPOR_API ProgramManager : public Singleton<ProgramManager>
+class VAPOR_API ProgramManager : public boost::noncopyable
 {
 public:
 

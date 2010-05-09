@@ -8,11 +8,12 @@
 
 #include "vapor/PCH.h"
 #include "vapor/math/Matrix4x4.h"
+#include "vapor/math/Matrix4x3.h"
 #include "vapor/math/Math.h"
 
 namespace vapor { namespace math {
 
-const Matrix4x4 Matrix4x4::Identity;
+const VAPOR_API Matrix4x4 Matrix4x4::Identity;
 
 //-----------------------------------//
 
@@ -153,7 +154,7 @@ Matrix4x4 Matrix4x4::inverse() const
         // check for singular matrix
         if (pivot == 0.0f)
         {
-            warn("math", "Matrix is singular and cannot be inverted.");
+			log::warn("math", "Matrix is singular and cannot be inverted.");
             return *this;
         }
   

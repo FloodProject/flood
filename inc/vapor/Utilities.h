@@ -100,16 +100,21 @@ namespace vapor {
 	static IMPLEMENT_SETTER(name, type, var)
 
 //---------------------------------------------------------------------//
-// Conversions
+// System Information
 //---------------------------------------------------------------------//
 
-// Returns if the system is little-endian.
-bool isLittleEndian();
+namespace System
+{
+	// Returns if the system is little-endian.
+	bool isLittleEndian();
 
-// Swaps the endianness of a long.
-long endian_swap(long i);
+	// Swaps the endianness of a long.
+	long swapEndian(long i);
+}
 
-//-----------------------------------//
+//---------------------------------------------------------------------//
+// Conversions
+//---------------------------------------------------------------------//
 
 template< typename T >
 T str_to_num(const std::string& s)
@@ -137,15 +142,21 @@ void float_to_str( char* str, float n, byte precision = 2 );
 
 //-----------------------------------//
 
-std::string wstr_to_str(const std::wstring &wstr);
-std::wstring str_to_wstr(const std::string &str);
-
-//-----------------------------------//
-
-std::vector<std::string>& str_split(const std::string& s, char delim, 
+namespace String
+{
+	// Splits a string (tokenizes) into sub-string separated by given elements.
+	VAPOR_API std::vector<std::string>& split(const std::string& s, char delim, 
 								std::vector<std::string>& elems);
 
-std::vector<std::string> str_split(const std::string& s, char delim);
+	// Splits a string (tokenizes) into sub-string separated by given elements.
+	VAPOR_API std::vector<std::string> split(const std::string& s, char delim);
+
+	// Converts a wide string to a regular string.
+	VAPOR_API std::string fromWideString(const std::wstring &wstr);
+	
+	// Converts a regular string into a wide string.
+	VAPOR_API std::wstring toWideString(const std::string &str);
+}
 
 //---------------------------------------------------------------------//
 // Locales

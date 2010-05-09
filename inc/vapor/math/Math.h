@@ -31,20 +31,20 @@ const float PI = 3.141592654f;
 
 //-----------------------------------//
 
-bool fcmp(float a, float b);
+bool VAPOR_API fcmp(float a, float b);
 
 //-----------------------------------//
 
-float logn( float base, float value );
+float VAPOR_API logn( float base, float value );
 
 //-----------------------------------//
 
-float random( float min, float max );
+float VAPOR_API random( float min, float max );
 
 //-----------------------------------//
 
-float degreeToRadian( float degree );
-float radianToDegree( float radian );
+float VAPOR_API degreeToRadian( float degree );
+float VAPOR_API radianToDegree( float radian );
 
 //-----------------------------------//
 
@@ -60,7 +60,7 @@ void limit( T& var, const T min, const T max )
 //-----------------------------------//
 
 // Calculate the normal from a triangle vertices.
-Vector3 calculateTriangleNormal( const Vector3& v1, 
+Vector3 VAPOR_API calculateTriangleNormal( const Vector3& v1, 
 	const Vector3& v2, const Vector3& v3 );
 
 //-----------------------------------//

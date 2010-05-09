@@ -9,6 +9,7 @@
 #pragma once
 
 #include "vapor/PCH.h"
+#include "vapor/Singleton.h"
 
 FWD_DECL(vfs, VFS)
 FWD_DECL(audio, Device)
@@ -16,7 +17,7 @@ FWD_DECL(script, State)
 FWD_DECL(input, InputManager)
 FWD_DECL_TYPEDEF_PTR(Subsystem)
 FWD_DECL_TYPEDEF_PTR(TaskManager)
-FWD_DECL(physics, PhysicsManager)
+//FWD_DECL(physics, PhysicsManager)
 FWD_DECL_NS_TYPEDEF_PTR(render, Device)
 FWD_DECL_NS_TYPEDEF_SHARED(scene, Scene)
 FWD_DECL_NS_TYPEDEF_PTR(resources, ResourceManager)
@@ -34,22 +35,24 @@ namespace vapor {
  * a class like this one that instantiates everything and sets it all up.
  */
 
-class VAPOR_API Engine : private boost::noncopyable
+class VAPOR_API Engine : public Singleton<Engine>
 {
-public:
+	friend class Singleton<Engine>;
 
-	// If autoInit is true, then the contructor will make sure
-	// everything is properly set up when you instantiate the object,
-	// else you will have to call the methods manually, to initialize.
-	Engine(const std::string& app = "vaporApp", const char** argv = nullptr,
-		bool autoInit = true);
+public:
 	
 	/// Destructor.
-	virtual ~Engine();
+	~Engine();
 
 	/// \name Setup methods
 	/// Use these methods to setup the engine subsystems.
 	/// @{
+
+	// If autoInit is true, then the method will make sure everything 
+	// is properly set up when you instantiate the object, else you will
+	// have to call the init methods manually.
+	void create(const std::string& app = "vaporApp", 
+		const char** argv = nullptr, bool autoInit = true);
 
 	/// Initialize the engine subsystems.
 	void init( bool createWindow = true );
@@ -96,7 +99,7 @@ public:
 	IMPLEMENT_GETTER(ResourceManager, resources::ResourceManagerPtr, resourceManager)
 
 	/// Gets the physics manager.
-	IMPLEMENT_GETTER(PhysicsManager, physics::PhysicsManager*, physicsManager)
+	//IMPLEMENT_GETTER(PhysicsManager, physics::PhysicsManager*, physicsManager)
 
 	/// Gets the main engine logger.
 	IMPLEMENT_GETTER(Log, log::Log*, log)
@@ -113,6 +116,8 @@ public:
 	void update( double delta );
 
 protected:
+
+	Engine();
 
 	// Subsystems
 	std::vector< SubsystemPtr > subsystems;
@@ -137,7 +142,7 @@ protected:
 	resources::ResourceManagerPtr resourceManager;
 
 	/// Physics manager.
-	physics::PhysicsManager* physicsManager;
+	//physics::PhysicsManager* physicsManager;
 
 	/// Virtual filesystem.
 	vfs::VFS* vfs;

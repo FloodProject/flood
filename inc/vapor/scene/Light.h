@@ -44,7 +44,7 @@ namespace LightType
  * component. Just rotate it to change the direction.
  */
 
-class Light : public Component
+class VAPOR_API Light : public Component
 {
 public:
 

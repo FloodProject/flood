@@ -9,8 +9,7 @@
 #pragma once
 
 #include "vapor/resources/Resource.h"
-#include "vapor/render/Texture.h"
-#include "vapor/render/Renderable.h"
+#include "vapor/resources/Image.h"
 
 namespace vapor { namespace resources {
 
@@ -49,7 +48,7 @@ class VAPOR_API Font : public Resource
 public:
 
 	// Gets the texture that backs this font.
-	virtual render::TexturePtr getTexture() = 0;
+	virtual const ImagePtr& getImage() const = 0;
 
 	// Gets an array with the available glyphs information.
 	virtual const std::vector<Glyph>& getGlyphs() const = 0;
@@ -58,7 +57,7 @@ public:
 	virtual const std::pair<const ushort, const ushort> getGlyphSize() const = 0;
 
 	// Gets/sets the font name.
-	IMPLEMENT_ACESSOR(Name, std::string, name)
+	IMPLEMENT_ACESSOR(Name, const std::string&, name)
 
 	// Gets/sets the font size.
 	IMPLEMENT_ACESSOR(Size, int, size)

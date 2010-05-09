@@ -8,7 +8,6 @@
 
 #include "vapor/PCH.h"
 #include "vapor/resources/Font_Loader.h"
-#include "vapor/Utilities.h"
 
 using vapor::vfs::File;
 
@@ -30,8 +29,8 @@ bool Font_Loader::decode(const vfs::File& file, Resource* res)
 	
 	if( lines.size() == 4 )
 	{
-		info = str_split(lines[0], ' ');
-		glyphInfo = str_split(lines[3], ' ');
+		info = String::split(lines[0], ' ');
+		glyphInfo = String::split(lines[3], ' ');
 	}
 
 	// validate input
@@ -42,7 +41,8 @@ bool Font_Loader::decode(const vfs::File& file, Resource* res)
 	}
 
 	// only bitmap fonts for now
-	ImagePtr img = ResourceManager::getInstancePtr()->loadResource< Image >( lines[1] );
+	//ImagePtr img = Engine::getResourceManager()->loadResource< Image >( lines[1] );
+	ImagePtr img;
 
 	if( !img )
 	{

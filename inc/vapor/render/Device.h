@@ -45,6 +45,8 @@ namespace vapor { namespace render {
  * responsible for creating a new window if no window handle is passed to it.
  */
 
+typedef std::map<scene::LightPtr, TexturePtr> ShadowTextureMap;
+
 class VAPOR_API Device : private boost::noncopyable
 {
 public:
@@ -100,10 +102,17 @@ public:
 	// Gets the texture manager.
 	IMPLEMENT_GETTER(TextureManager, TextureManagerPtr, textureManager)
 
+	// Gets the texture manager.
+	IMPLEMENT_GETTER(ShadowTextures, ShadowTextureMap, shadowTextures)
+
 protected:
+
+	// Checks that all needed OpenGL extensions are available.
+	void checkExtensions();
 
 	// Render state management.
 	bool setupRenderState( const RenderState&, const scene::Camera* );
+	bool setupRenderStateShadow( LightQueue& lights );
 	bool setupRenderStateLight( const RenderState&, const LightQueue& );
 	bool setupRenderStateOverlay( const RenderState& );
 	void setupRenderStateMaterial( const MaterialPtr& );
@@ -130,11 +139,14 @@ protected:
 	// Current clear color
 	math::Color color;
 
+	// Current viewport dimensions.
 	math::Vector2i viewportLeft, viewportSize;
 
-private:
+	ShadowTextureMap shadowTextures;
+	RenderBufferPtr shadowDepthBuffer;
+	const scene::Camera* camera;
 
-	void checkExtensions();
+	void updateLightDepth( LightState& state );
 };
 
 TYPEDEF_PTR(Device)

@@ -10,7 +10,6 @@
 
 #include "vapor/render/Target.h"
 #include "vapor/resources/Image.h"
-#include "vapor/render/GL.h"
 
 namespace vapor { namespace render {
 
@@ -38,10 +37,10 @@ public:
 	bool upload();
 
 	// Binds the texture object.
-	void bind( int unit = 0 );
+	void bind( int unit = 0 ) const;
 
 	// Unbinds the texture object.
-	void unbind( int unit = 0 );
+	void unbind( int unit = 0 ) const;
 
 	// Configures the texture settings.
 	void configure();
@@ -52,6 +51,11 @@ public:
 	// Gets the associated identifier.
 	uint id() const;
 
+	// Reads the texture as an image.
+	resources::ImagePtr readImage() const;
+
+	uint getExpectedSize() const;
+
 	// Gets/sets the associated image.
 	IMPLEMENT_GETTER(Image, resources::ImagePtr, image)
 	void setImage( const resources::ImagePtr& );
@@ -59,16 +63,17 @@ public:
 	// Gets the associated pixel format.
 	IMPLEMENT_GETTER(PixelFormat, resources::PixelFormat::Enum, format)
 
-
 protected:
 
 	void init();
 
-	GLint convertSourceFormat( resources::PixelFormat::Enum );
-	GLint convertInternalFormat( resources::PixelFormat::Enum );
+	int convertSourceFormat( resources::PixelFormat::Enum ) const;
+	int convertInternalFormat( resources::PixelFormat::Enum ) const;
+	int convertGetFormat( resources::PixelFormat::Enum ) const;
 
 	// OpenGL texture object id
-	GLuint _id;
+	uint _id;
+	uint target;
 
 	uint width, height;
 	resources::ImagePtr image;
@@ -76,8 +81,6 @@ protected:
 
 	bool uploaded;
 };
-
-//-----------------------------------//
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Texture );
 

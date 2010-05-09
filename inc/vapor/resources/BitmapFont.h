@@ -9,7 +9,6 @@
 #pragma once
 
 #include "vapor/resources/Font.h"
-#include "vapor/resources/Image.h"
 
 #ifdef VAPOR_FONT_BITMAP
 
@@ -27,14 +26,11 @@ class BitmapFont : public Font
 {
 public:
 
-	// Gets the texture that backs this font.
-	virtual render::TexturePtr getTexture();
-
 	// Gets the size information of a glyph.
 	virtual const std::pair<const ushort, const ushort> getGlyphSize() const;
 
 	// Sets the font image.
-	IMPLEMENT_SETTER(Image, const ImagePtr&, fontImage)
+	IMPLEMENT_ACESSOR(Image, const ImagePtr&, fontImage)
 
 	// Gets/sets the font glyphs.
 	IMPLEMENT_ACESSOR(Glyphs, const std::vector<Glyph>&, glyphs)

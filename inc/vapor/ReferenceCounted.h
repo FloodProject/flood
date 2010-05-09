@@ -10,6 +10,9 @@
 
 #ifdef VAPOR_THREADING
 	#include <boost/atomic.hpp>
+	#define atomic_int boost::atomic<int>
+#else
+	#define atomic_int int
 #endif
 
 namespace vapor {

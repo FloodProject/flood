@@ -9,7 +9,6 @@
 #pragma once
 
 #include "vapor/render/Renderable.h"
-#include "vapor/Serialization.h"
 
 namespace vapor { namespace scene {
 

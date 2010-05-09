@@ -23,7 +23,6 @@
 
 #include "vapor/PCH.h"
 #include "vapor/vfs/WatcherWin32.h"
-#include "vapor/Utilities.h"
 
 #ifdef VAPOR_PLATFORM_WINDOWS
 
@@ -288,7 +287,7 @@ void WatcherWin32::handleAction(WatchStruct* watch, const std::wstring& filename
 
 	// Convert wide string to regular string.
 	// TODO: handle Unicode properly.
-	const std::string& file = wstr_to_str(filename);
+	const std::string& file = String::fromWideString(filename);
 
 	WatchEvent we( fwAction, watch->mWatchid, watch->mDirName, file);
 	onWatchEvent( we );

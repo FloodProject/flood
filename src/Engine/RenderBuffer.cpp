@@ -7,22 +7,25 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/resources/BitmapFont.h"
+#include "vapor/render/RenderBuffer.h"
 
-#ifdef VAPOR_FONT_BITMAP
-
-namespace vapor { namespace resources {
+namespace vapor { namespace render {
 
 //-----------------------------------//
 
-const std::pair<const ushort, const ushort> BitmapFont::getGlyphSize() const
+RenderBuffer::RenderBuffer(const Settings& settings)
+	: settings( settings )
 {
-	// TODO: ...
-	return std::make_pair( 16, 16 );
+
+}
+
+//-----------------------------------//
+
+void RenderBuffer::makeCurrent()
+{
+	bind();
 }
 
 //-----------------------------------//
 
 } } // end namespaces
-
-#endif

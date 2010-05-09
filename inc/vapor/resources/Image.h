@@ -22,7 +22,7 @@ namespace PixelFormat
 {
 	enum Enum 
 	{
-		R8G8B8A8,
+		R8G8B8A8 = 0,
 		R8G8B8,
 		Depth,
 		Unknown
@@ -47,6 +47,8 @@ class VAPOR_API Image : public Resource
 {
 public:
 
+	Image();
+
 	// Gets/sets the width of the image.
 	IMPLEMENT_ACESSOR(Width, const ushort, width)
 	
@@ -61,6 +63,9 @@ public:
 
 	// Return the proper resource group for this resource.
 	IMPLEMENT_GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Images)
+
+	// Saves the image contents to a file.
+	void save( const std::string& filename );
 
 	// Prints image information to the log.
 	void log() const;

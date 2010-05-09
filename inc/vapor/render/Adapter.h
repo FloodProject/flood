@@ -10,8 +10,6 @@
 
 #ifdef VAPOR_RENDERER_OPENGL
 
-#include "vapor/Singleton.h"
-
 namespace vapor { namespace render {
 
 //-----------------------------------//	
@@ -24,7 +22,7 @@ namespace vapor { namespace render {
  * we need different classes for different render devices. Hopefully not. :)
  */
 
-class VAPOR_API Adapter : public Singleton<Adapter> 
+class VAPOR_API Adapter
 {
 public:
 

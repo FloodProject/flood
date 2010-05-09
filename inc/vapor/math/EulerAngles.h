@@ -20,12 +20,21 @@ namespace vapor { namespace math {
  * transformed into and back in a rotation matrix and quaternions.
  */
 
-class VAPOR_API EulerAngles : public Vector3
+class VAPOR_API EulerAngles
 {
 public:
 
 	EulerAngles();
 	EulerAngles( float x, float y, float z );
+
+	// Copy constructor
+	EulerAngles(const EulerAngles&);
+
+	// Addition combined
+	EulerAngles& operator += (const EulerAngles&);
+
+	// Addition combined
+	EulerAngles& operator += (const Vector3&);
 
 	// Adds the given angles to the existing angles.
 	void rotate( float x, float y, float z );
@@ -43,6 +52,10 @@ public:
 	Matrix4x3 rotateX( float ang ) const;
 	Matrix4x3 rotateY( float ang ) const;
 	Matrix4x3 rotateZ( float ang ) const;
+
+public:
+
+	float x, y, z;
 };
 
 //-----------------------------------//

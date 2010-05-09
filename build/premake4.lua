@@ -1,5 +1,5 @@
 -- vapor Build Settings (Premake)
--- Written by triton (2008-2009)
+-- Written by triton (2008-2010)
 
 solution "vapor"
 
@@ -7,6 +7,8 @@ solution "vapor"
 		"Debug", 
 		"Release" 
 	}
+	
+	buildoptions { "-std=c++0x" }
 
 	configuration "Debug"
 	
@@ -20,6 +22,26 @@ solution "vapor"
 
 	location ( _ACTION )
 	objdir 	( _ACTION .. "/obj" )
+	
+	project "vaporCore"
+	
+		kind "StaticLib"
+		language "C++"	
+	
+		-- Source files
+		files {
+			"../inc/vapor/core/*.h",
+			"../src/core/**.h",
+			"../src/core/**.cpp",
+		}
+
+		-- Include directories
+		includedirs {
+			"../inc",
+			"../dep/jsoncpp/include",
+			"../dep/boost_1_39_0",
+			"../dep/fd_delegate/include",
+		}	
 
 	project "vaporEngine"
 	
@@ -35,11 +57,13 @@ solution "vapor"
 			"../src/Engine/**.h",
 			"../src/Engine/**.cpp",
 		}
+		
+		excludes { "Body.*", "Physics.*" }
 
 		-- Include directories
 		includedirs {
 			"../inc",
-			"../dep/jsoncpp",
+			"../dep/jsoncpp/include",
 			"../dep/boost_1_39_0",
 			"../dep/fd_delegate/include",
 			"../dep/freetype/include",

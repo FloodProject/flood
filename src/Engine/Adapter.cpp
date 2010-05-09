@@ -10,7 +10,6 @@
 
 #ifdef VAPOR_RENDERER_OPENGL
 
-#include "vapor/render/Device.h"
 #include "vapor/render/Adapter.h"
 #include "vapor/render/GL.h"
 
@@ -113,8 +112,6 @@ void Adapter::log() const
 
 	info( "render::adapter", "Max texture size: %dx%d", maxTextureSize, maxTextureSize );
 	info( "render::adapter", "Max vertex attributes: %d", maxAttribs );
-
-
 }
 
 //-----------------------------------//

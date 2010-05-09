@@ -11,8 +11,6 @@
 #ifdef VAPOR_VFS_PHYSFS
 
 #include "vapor/vfs/File.h"
-#include "vapor/Utilities.h"
-
 #include <physfs.h>
 
 namespace vapor { namespace vfs {
@@ -20,15 +18,10 @@ namespace vapor { namespace vfs {
 //-----------------------------------//
 
 File::File(const std::string path, AccessMode::Enum e)
-	: accessMode(e), path(path), file( nullptr ), closed( false )
-{
-	open();
-}
-
-//-----------------------------------//
-
-File::File(const char* path, AccessMode::Enum e)
-	: accessMode(e), path(path), file( nullptr ), closed( false )
+	: path(path),
+	accessMode(e),
+	file(nullptr),
+	closed(false)
 {
 	open();
 }
@@ -217,9 +210,9 @@ std::vector<std::string> File::readLines() const
 	std::vector<byte> font = read();
 	std::string str( font.begin(), font.end() );
 	
-	std::vector<std::string> lines = str_split(str, '\n');
+	std::vector<std::string> lines = String::split(str, '\n');
 	
-	// trim excess \r fat that can be left over
+	// Trim excess \r fat that can be left over.
 	foreach( std::string& str, lines )
 	{
 		if( str[str.size()-1] == '\r' )

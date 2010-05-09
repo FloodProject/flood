@@ -70,7 +70,7 @@ namespace MouseEventType
  * the public.
  */
 
-struct MouseEvent : public input::Event
+struct VAPOR_API MouseEvent : public input::Event
 {
 	friend class Mouse;
 	
@@ -88,7 +88,7 @@ protected:
  * current mouse position on the screen in screen-coordinates.
  */
 
-struct MouseMoveEvent : public MouseEvent
+struct VAPOR_API MouseMoveEvent : public MouseEvent
 {
 	MouseMoveEvent();
 
@@ -103,7 +103,7 @@ struct MouseMoveEvent : public MouseEvent
  * to get more information about which mouse buttons are pressed.
  */
 
-struct MouseDragEvent : public MouseEvent
+struct VAPOR_API MouseDragEvent : public MouseEvent
 {
 	MouseDragEvent();
 
@@ -122,7 +122,7 @@ struct MouseDragEvent : public MouseEvent
  * mouse in the window at the time of the click.
  */
 
-struct MouseButtonEvent : public MouseEvent
+struct VAPOR_API MouseButtonEvent : public MouseEvent
 {
 	MouseButtonEvent( MouseEventType::Enum eventType );
 
@@ -140,7 +140,7 @@ struct MouseButtonEvent : public MouseEvent
  * the relative amount of the mouse wheel that was scrolled.
  */
 
-struct MouseWheelEvent : public MouseEvent
+struct VAPOR_API MouseWheelEvent : public MouseEvent
 {
 	MouseWheelEvent();
 

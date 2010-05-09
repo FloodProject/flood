@@ -47,7 +47,7 @@ namespace RenderGroup
 struct RenderState /*: private boost::noncopyable*/
 {
 	RenderState()
-		: group( RenderGroup::Normal ), priority( 0 ) 
+		: group( RenderGroup::Normal ), priority(0) 
 	{}
 	
 	RenderState( const RenderState& rhs )
@@ -71,6 +71,8 @@ struct LightState
 {
 	scene::LightPtr light;
 	scene::TransformPtr transform;
+	render::TexturePtr depth;
+	math::Matrix4x4 projection;
 };
 
 //-----------------------------------//

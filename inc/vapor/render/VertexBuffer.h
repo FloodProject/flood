@@ -16,6 +16,23 @@ namespace vapor { namespace render {
 
 //-----------------------------------//
 
+namespace GLPrimitive
+{
+	enum Enum
+	{
+		BYTE	= GL_BYTE,
+		UBYTE	= GL_UNSIGNED_BYTE,
+		SHORT	= GL_SHORT,
+		USHORT	= GL_UNSIGNED_SHORT,
+		INT		= GL_INT,
+		UINT	= GL_UNSIGNED_INT,
+		FLOAT	= GL_FLOAT,
+		DOUBLE	= GL_DOUBLE
+	};
+}
+
+//-----------------------------------//
+
 /**
  * Attribute of a vertex element.
  * Matches the (NVIDIA-only?) specification.
@@ -157,9 +174,7 @@ private:
     BufferAccess::Enum bufferAccess;
 
 	// Used to store specific GL types for each attribute.
-	enum GLPrimitive;
-
-	typedef std::tuple< int, GLPrimitive, std::vector< byte > > Attribute;
+	typedef std::tuple< int, GLPrimitive::Enum, std::vector< byte > > Attribute;
 	typedef std::map< VertexAttribute::Enum, Attribute > AttributeMap;
 	typedef std::pair< const VertexAttribute::Enum, Attribute > AttributeMapPair;
 	

@@ -54,3 +54,11 @@ using vapor::log::debug;
 //---------------------------------------------------------------------//
 
 #include "vapor/ReferenceCounted.h"
+
+#include "vapor/Serialization.h"
+
+#ifdef VAPOR_THREADING
+	#define THREAD( code ) code
+#else
+	#define THREAD( code )
+#endif

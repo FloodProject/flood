@@ -48,6 +48,8 @@ public:
 
 	Camera( render::Device* device, 
 		Projection::Enum projection = Projection::Perspective );
+	Camera( const Camera& rhs );
+	~Camera();
 
 	// Renders the (sub-)scene starting from the passed node to the current 
 	// render target associated in the camera.

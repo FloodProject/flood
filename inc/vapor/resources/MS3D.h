@@ -71,8 +71,6 @@ protected:
 	scene::GeometryWeakPtr weakGeometry;
 };
 
-//-----------------------------------//
-
 TYPEDEF_RESOURCE_POINTER_FROM_TYPE( MS3D );
 
 //-----------------------------------//

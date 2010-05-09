@@ -78,10 +78,6 @@ public:
 
 protected:
 
-	RenderBufferPtr rb;
-	TexturePtr depthTexture;
-	ViewportPtr depthViewport;
-
 	// Initializes the engine and editor.
 	void initEngine();
 	void waitFinishLoad();
@@ -128,6 +124,8 @@ protected:
 	ResourceTreeCtrl* resourceTreeCtrl;
 	TerrainPage* terrainPage;
 	ConsoleFrame* codeEvaluator;
+
+	LightPtr light;
 
 private:
 

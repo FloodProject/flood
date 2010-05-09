@@ -120,7 +120,8 @@ EditorFrame::~EditorFrame()
 
 void EditorFrame::initEngine()
 {
-	engine = new vapor::Engine(VAPOR_EDITOR_NAME, nullptr, false);
+	engine = Engine::getInstancePtr();
+	engine->create( VAPOR_EDITOR_NAME, nullptr, false );
 	engine->init( false );
 
 	// Create a scene node with editor stuff only.

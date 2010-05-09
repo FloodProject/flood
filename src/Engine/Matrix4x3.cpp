@@ -9,7 +9,6 @@
 #include "vapor/PCH.h"
 
 #include "vapor/math/Matrix4x3.h"
-#include "vapor/math/Vector3.h"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -68,8 +67,6 @@ Matrix4x3::Matrix4x3()
 {
 	identity(); 
 }
-
-//-----------------------------------//
 
 //---------------------------------------------------------------------------
 // Matrix4x3::identity
@@ -177,6 +174,13 @@ Matrix4x3 operator*(const Matrix4x3 &a, const Matrix4x3 &b)
 	// result where we want it...
 
 	return r;
+}
+
+//-----------------------------------//
+
+Matrix4x4 operator*(const Matrix4x3 &a, const Matrix4x4 &b) 
+{
+	return Matrix4x4(a)*b;
 }
 
 //-----------------------------------//

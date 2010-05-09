@@ -116,7 +116,19 @@ long NativeFile::read(void* buffer, long sz)
 long NativeFile::write(const std::string& text)
 {
 	std::vector<byte> data( text.begin(), text.end() );
-	return fwrite(&data[0], data.size(), 1, fp);  
+	return write(data);  
+}
+
+//-----------------------------------//
+
+long NativeFile::write(const std::vector<byte>& buf)
+{
+	assert( !buf.empty() );
+
+	if( buf.empty() )
+		return -1;
+
+	return fwrite(&buf.front(), buf.size(), 1, fp);  
 }
 
 //-----------------------------------//

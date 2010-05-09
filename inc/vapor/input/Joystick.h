@@ -98,11 +98,8 @@ struct JoyButtonEvent: public JoystickEvent
 
 //-----------------------------------//
 
-class Joystick : public Device
+class VAPOR_API Joystick : public Device
 {
-	Joystick();
-	virtual ~Joystick();
-	
 	// Processes an event (only if it's a joystick event).
 	virtual void processEvent( const input::Event& event );
 

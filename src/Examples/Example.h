@@ -61,6 +61,7 @@ private:
 	//scene::SoundPtr sound;
 	input::InputMap* inputMap; 
 	render::TexturePtr tex;
+	render::TexturePtr fbo_tex;
 
 	float fpsUpdateTime;
 };

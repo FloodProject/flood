@@ -19,20 +19,6 @@ using namespace vapor::math;
 
 //-----------------------------------//
 
-enum VertexBuffer::GLPrimitive
-{
-    BYTE	= GL_BYTE,
-    UBYTE	= GL_UNSIGNED_BYTE,
-    SHORT	= GL_SHORT,
-    USHORT	= GL_UNSIGNED_SHORT,
-    INT		= GL_INT,
-    UINT	= GL_UNSIGNED_INT,
-    FLOAT	= GL_FLOAT,
-    DOUBLE	= GL_DOUBLE
-};
-
-//-----------------------------------//
-
 VertexBuffer::VertexBuffer()
 	: built( false ), numVertices( 0 ), 
 	bufferUsage( BufferUsage::Static ),
@@ -87,7 +73,7 @@ void VertexBuffer::bindPointers()
 	foreach( const AttributeMapPair& p, attributeMap )
 	{
 		int components = std::get< 0 >( p.second );
-		GLPrimitive type = std::get< 1 >( p.second );
+		GLPrimitive::Enum type = std::get< 1 >( p.second );
 		const std::vector<byte>& vec = std::get< 2 >( p.second );
 
 		glEnableVertexAttribArray( p.first );
@@ -153,7 +139,7 @@ bool VertexBuffer::set( VertexAttribute::Enum attr,
 	if( data.size() != 0)
 		memcpy( &bytev[0], &data[0], bytev.size() );
 	
-	attributeMap[attr] = std::make_tuple( 3, VertexBuffer::FLOAT, bytev );
+	attributeMap[attr] = std::make_tuple( 3, GLPrimitive::FLOAT, bytev );
 
 	return true;
 }

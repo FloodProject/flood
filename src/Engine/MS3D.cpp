@@ -63,8 +63,8 @@ struct VAPOR_ALIGN_BEGIN(1) ms3d_vertex_t
 {
 	byte	flags;
 	float	vertex[3];
-	char	boneId;
-	byte referenceCount;
+	byte	boneId;
+	byte	referenceCount;
 	//char boneIds[3];
 	//unsigned char weights[3];
 	//unsigned int extra;

@@ -17,7 +17,7 @@ namespace vapor { namespace math {
  */
 
 template <typename T>
-class VAPOR_API Vector3T
+class Vector3T
 {
 public:
 
@@ -208,10 +208,10 @@ public:
 	//-----------------------------------//
 
 	// Special points
-	static const Vector3T<float> Zero;
-	static const Vector3T<float> UnitX;
-    static const Vector3T<float> UnitY;
-    static const Vector3T<float> UnitZ;  
+	static VAPOR_API const Vector3T<float> Zero;
+	static VAPOR_API const Vector3T<float> UnitX;
+    static VAPOR_API const Vector3T<float> UnitY;
+    static VAPOR_API const Vector3T<float> UnitZ;  
 };
 
 //-----------------------------------//
@@ -220,10 +220,10 @@ public:
  * Specific types
  */
 
-typedef Vector3T<float> Vector3;
-typedef Vector3T<int> Vector3i;
-typedef Vector3T<double> Vector3d;
-typedef Vector3 Point3;
+typedef VAPOR_API Vector3T<float> Vector3;
+typedef VAPOR_API Vector3T<int> Vector3i;
+typedef VAPOR_API Vector3T<double> Vector3d;
+typedef VAPOR_API Vector3 Point3;
 
 //-----------------------------------//
 

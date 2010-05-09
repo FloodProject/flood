@@ -25,7 +25,7 @@ namespace vapor { namespace scene {
  * system can be implemented on top of this class if needed.
  */
 
-class Skydome : public scene::Geometry
+class VAPOR_API Skydome : public scene::Geometry
 {
 public:
 

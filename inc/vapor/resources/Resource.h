@@ -64,7 +64,7 @@ namespace ResourceGroup
 	};
 
 	// Yeah, a bit ugly, but it works.
-	const std::string getString(Enum e);
+	const std::string VAPOR_API getString(Enum e);
 }
 
 //-----------------------------------//

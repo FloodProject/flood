@@ -7,8 +7,11 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
+#include "vapor/render/GL.h"
 #include "vapor/render/Texture.h"
 #include "vapor/render/Adapter.h"
+#include "vapor/render/Device.h"
+#include "vapor/Engine.h"
 
 using namespace vapor::resources;
 
@@ -53,6 +56,7 @@ void Texture::init()
 {
 	uploaded = false;
 	_id = 0;
+	target = GL_TEXTURE_2D;
 
 	generate();
 }
@@ -73,7 +77,9 @@ bool Texture::generate()
 
 bool Texture::check()
 {
-	uint max = Adapter::getInstancePtr()->getMaxTextureSize();
+	// TODO: refactor
+	AdapterPtr adapter = Engine::getInstance().getRenderDevice()->getAdapter();
+	uint max = adapter->getMaxTextureSize();
 
 	if( (width > max) || (height > max) )
 	{
@@ -93,9 +99,9 @@ bool Texture::upload()
 
 	bind();
 
-	glTexImage2D( GL_TEXTURE_2D, 0, convertInternalFormat(format),
+	glTexImage2D( target, 0, convertInternalFormat(format),
 		width, height, 0, convertSourceFormat(format),
-		GL_UNSIGNED_BYTE, image ? &image->getBuffer()[0] : nullptr );
+		format == PixelFormat::Depth ? GL_FLOAT : GL_UNSIGNED_BYTE, image ? &image->getBuffer()[0] : nullptr );
 
 	if( glHasError("Could not upload pixel data to texture object") )
 	{
@@ -111,11 +117,22 @@ bool Texture::upload()
 
 void Texture::configure()
 {
-	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T, GL_CLAMP);
+	glTexParameterf(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameterf(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameterf(target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameterf(target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	// Three next lines are necessary if we wan to use the convenient shadow2DProj function in the shader.
+	// Otherwise we have to rely on texture2DProj
+	 
+	// TODO: OpenGL 3 name: COMPARE_REF_TO_TEXTURE
+	//glTexParameteri(target, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
+	//glTexParameteri(target, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+	//glTexParameteri(target, GL_DEPTH_TEXTURE_MODE, GL_INTENSITY);
+
+	//glTexParameterf(target,GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+	//glTexParameterf(target,GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 
 	// TODO: mipmaps and stuff
 }
@@ -136,23 +153,94 @@ void Texture::setImage( const resources::ImagePtr& _image )
 
 //-----------------------------------//
 
-void Texture::bind( int unit )
+void Texture::bind( int unit ) const
 {
 	glActiveTexture( GL_TEXTURE0+unit );
-	glBindTexture( GL_TEXTURE_2D, _id );
+	glBindTexture( target, _id );
 }
 
 //-----------------------------------//
 
-void Texture::unbind( int unit )
+void Texture::unbind( int unit ) const
 {
 	glActiveTexture( GL_TEXTURE0+unit );
-	glBindTexture( GL_TEXTURE_2D, 0 );
+	glBindTexture( target, 0 );
 }
 
 //-----------------------------------//
 
-GLint Texture::convertInternalFormat( PixelFormat::Enum format )
+ImagePtr Texture::readImage() const
+{
+	std::vector<float> tmp;
+	tmp.resize( getExpectedSize() );
+
+	bind();
+	
+	glGetTexImage( target, 0 /* base mipmap level */,
+		convertGetFormat(format), GL_FLOAT, &tmp[0] );
+	
+	if( glHasError("Could not read texture data") )
+		return ImagePtr();
+
+	unbind();
+
+	std::vector<byte> data;
+	data.reserve( getExpectedSize() );
+	
+	foreach( float& f, tmp )
+		data.push_back( f*255 );
+	
+	ImagePtr image( new Image() );
+	image->setWidth( width );
+	image->setHeight( height );
+	image->setPixelFormat( format );
+	image->setBuffer( data );
+	image->setStatus( ResourceStatus::Loaded );
+
+	return image;
+}
+
+//-----------------------------------//
+
+uint Texture::getExpectedSize() const
+{
+	uint size = width*height;
+
+	switch( format )
+	{
+	case PixelFormat::R8G8B8A8:
+		return size*4;
+	case PixelFormat::R8G8B8:
+		return size*3;
+	case PixelFormat::Depth:
+		return size;
+	}
+
+	assert( 0 && "Implement support for more pixel formats" );
+	return 0;
+}
+
+//-----------------------------------//
+
+GLint Texture::convertGetFormat( PixelFormat::Enum format ) const
+{
+	switch( format )
+	{
+	case PixelFormat::R8G8B8A8:
+		return GL_RGBA;
+	case PixelFormat::R8G8B8:
+		return GL_RGB;
+	case PixelFormat::Depth:
+		return GL_DEPTH_COMPONENT;
+	}
+
+	assert( 0 && "Implement support for more pixel formats" );
+	return 0;
+}
+
+//-----------------------------------//
+
+GLint Texture::convertInternalFormat( PixelFormat::Enum format ) const
 {
 	switch( format )
 	{
@@ -170,7 +258,7 @@ GLint Texture::convertInternalFormat( PixelFormat::Enum format )
 
 //-----------------------------------//
 
-GLint Texture::convertSourceFormat( PixelFormat::Enum format )
+GLint Texture::convertSourceFormat( PixelFormat::Enum format ) const
 {
 	switch( format )
 	{

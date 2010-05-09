@@ -22,7 +22,7 @@ class VAPOR_API Ray : private boost::noncopyable
 {
 public:
 
-	Ray( Vector3 origin, Vector3 direction );
+	Ray( const Vector3& origin, const Vector3& direction );
 	Ray( const Ray& ray );
 
 	// Gets a point with the origin of the ray.

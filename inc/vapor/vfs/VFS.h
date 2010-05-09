@@ -72,7 +72,7 @@ private:
 	void setDefaultConfig(const std::string& app);
 
 	/// Holds the mounted archives/directories in the filesystem.
-	std::vector< std::string > mountPoints;
+	std::vector<std::string> mountPoints;
 };
 
 //-----------------------------------//
