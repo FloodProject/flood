@@ -32,7 +32,8 @@ enum
 BEGIN_EVENT_TABLE(SceneTreeCtrl, wxPanel)
 	EVT_TREE_ITEM_MENU(ID_SceneTree, SceneTreeCtrl::onItemMenu)
 	EVT_TREE_SEL_CHANGED(ID_SceneTree, SceneTreeCtrl::onItemChanged)
-	EVT_TREE_END_LABEL_EDIT(ID_SceneTree, SceneTreeCtrl::onLabelEdit)
+	EVT_TREE_BEGIN_LABEL_EDIT(ID_SceneTree, SceneTreeCtrl::onLabelEditBegin)
+	EVT_TREE_END_LABEL_EDIT(ID_SceneTree, SceneTreeCtrl::onLabelEditEnd)
 	EVT_TREE_BEGIN_DRAG(ID_SceneTree, SceneTreeCtrl::onDragBegin)
 	EVT_TREE_END_DRAG(ID_SceneTree, SceneTreeCtrl::onDragEnd)
 	EVT_CONTEXT_MENU(SceneTreeCtrl::onMouseRightUp)
@@ -453,7 +454,20 @@ void SceneTreeCtrl::onNodeRemoved( const scene::GroupEvent& /*event*/ )
 
 //-----------------------------------//
 
-void SceneTreeCtrl::onLabelEdit( wxTreeEvent& event )
+void SceneTreeCtrl::onLabelEditBegin( wxTreeEvent& event )
+{
+	wxTreeItemId item = event.GetItem();
+	NodePtr node = getEntity( item );
+	
+	if( !node )
+	{
+		event.Veto();
+	}
+}
+
+//-----------------------------------//
+
+void SceneTreeCtrl::onLabelEditEnd( wxTreeEvent& event )
 {
 	ScenePtr scene( weakScene );
 	wxTreeItemId item = event.GetItem();
@@ -473,7 +487,9 @@ void SceneTreeCtrl::onLabelEdit( wxTreeEvent& event )
 	}
 
 	NodePtr node = getEntity( item );
-	node->setName( std::string(label.c_str()) );
+	assert( node != nullptr );
+
+	node->setName( std::string( label.c_str() ) );
 }
 
 //-----------------------------------//

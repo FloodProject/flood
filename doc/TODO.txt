@@ -20,10 +20,6 @@ EDITOR:
 
 Add Light debug display in editor
 
-Scene Tree
-	Don't allow label editing on components
-	Hook up the renaming of Scene node labels
-
 Input Events
 	Rework input system so modes get events always
 	instead of just when the mouse is over a viewframe. (WIP)
@@ -33,6 +29,7 @@ Gizmo
 	Change gizmo color when user picks axis (DONE)
 	Add drag event and change the Transform (DONE)
 	Fix cone backface culling (DONE)
+	Make the Gizmo node transform a proxy of the original
 	Get picking working properly with multiple gizmos
 	Scale the gizmo properly in relation to the camera distance
 	When the Camera moves, mouse should be tested
@@ -72,12 +69,11 @@ Console
 
 Camera options
 	Add a small frame below the viewport with camera options (WIP)
-	Integrate speed and the other buttons to do anything
+	Integrate speed and the other buttons to do anything (WIP)
 			
 Implement camera panning
 Edit grid settings
 Add a property system like Firefox/µTorrent...
-Make the update logic smarter (no 50% CPU hog) (DONE?)
 See about integrating wxLua in the editor
 Override the print method of Lua
 
@@ -99,6 +95,8 @@ Add subsystem update infrastructure in engine (WIP)
 
 Quadtree Terrain
 Per-script Lua state
+
+Make the engine memory-leak proof
 
 Textures:
 	Support DDS
@@ -193,6 +191,9 @@ VFS:
 DONE:
 -----
 
+Don't allow label editing on components
+Hook up the renaming of Scene node labels
+Make the update logic smarter (no 50% CPU hog)
 Continuous movement bug
 Private editor nodes (hide in the scene tree)
 Remove all the singleton (add Engine instead)
@@ -226,7 +227,6 @@ Add Window events for resizing, closing, etc.
 Add defines for the different compilers and switch #ifdef pragmas to those...
 Simple VFS (with PhysFS 2.0)
 Clean up the using std decls
-Make the engine memory-leak proof
 Make the memory leak detector work
 Header in the log output
 CSS-styling to the logging output

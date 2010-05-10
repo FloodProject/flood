@@ -45,7 +45,8 @@ protected:
 	// wxWidgets events.
 	void onItemChanged( wxTreeEvent& );
 	void onItemMenu( wxTreeEvent& );
-	void onLabelEdit( wxTreeEvent& );
+	void onLabelEditBegin( wxTreeEvent& );
+	void onLabelEditEnd( wxTreeEvent& );
 	void onActivate( wxFocusEvent& );
 	void onDragBegin( wxTreeEvent& );
 	void onDragEnd( wxTreeEvent& );

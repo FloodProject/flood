@@ -376,6 +376,8 @@ void GizmoOperation::redo()
 
 void GizmoOperation::process( bool undo )
 {
+	assert( tool == GizmoTool::Translate );
+
 	NodePtr node( weakNode );
 
 	// This can happen if the node gets deleted between
@@ -385,17 +387,21 @@ void GizmoOperation::process( bool undo )
 
 	TransformPtr transform = node->getTransform();
 
+	const Vector3& tr = undo ?
+		orig_translation : translation;
+
+	transform->setPosition( tr );
+
+	// Modify the gizmo if it still exists.
 	NodePtr giz_node( gizmo->getNode() );
+	
+	if( !giz_node )
+		return;
+
 	TransformPtr giz_tr = giz_node->getTransform();
 
-	if( tool == GizmoTool::Translate )
-	{
-		const Vector3& tr = undo ?
-			orig_translation : translation;
-		
-		transform->setPosition( tr );
+	if( giz_tr )
 		giz_tr->setPosition( tr );
-	}
 }
 
 //-----------------------------------//
