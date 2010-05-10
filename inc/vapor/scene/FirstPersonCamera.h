@@ -75,6 +75,9 @@ protected:
 	math::Vector2i mouseDistance;
 	int mouseWheel;
 
+	// Focus state
+	bool hasFocus;
+
 	input::InputManager* inputManager;
 
 	static const std::string& type;

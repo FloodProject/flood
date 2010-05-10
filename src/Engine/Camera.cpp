@@ -23,7 +23,7 @@ const std::string& Camera::type = "Camera";
 
 Camera::Camera( render::Device* device, Projection::Enum proj )
 	: renderDevice( device ), projection( proj ), fov(60.0f),
-	near_(5.0f), far_(1000.0f), lookAtVector(Vector3::UnitZ),
+	near_(5.0f), far_(5000.0f), lookAtVector(Vector3::UnitZ),
 	viewport(nullptr), viewSize(Vector2i::Zero)
 {
 	assert( device != nullptr );

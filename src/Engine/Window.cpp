@@ -21,6 +21,8 @@
 
 namespace vapor { namespace render {
 
+using namespace vapor::input;
+
 //-----------------------------------//
 
 WindowSettings::WindowSettings( const ushort width, const ushort height, 
@@ -87,6 +89,18 @@ void Window::handleWindowClose()
 
 void Window::handleWindowFocus( bool focusLost )
 {
+	if( focusLost )
+	{
+		// Workaround for resetting the pressed keys when the window
+		// loses focus. This could lead to problems when the user
+		// unfocus the main control. In that case the key events
+		// might not be properly handled by the input implementation.
+		Keyboard* kbd = getInputManager().getKeyboard();
+
+		if(kbd)
+			kbd->resetKeys();
+	}
+
 	if( onWindowFocusChange.empty() )
 		return;
 

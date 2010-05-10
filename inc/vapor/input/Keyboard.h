@@ -31,6 +31,9 @@ public:
 	// Checks if the given key is pressed.
 	bool isKeyPressed( Keys::Enum keyCode ) const;
 
+	// Resets the keys state.
+	void resetKeys();
+
 	//-----------------------------------//
 	// Events
 	//-----------------------------------//

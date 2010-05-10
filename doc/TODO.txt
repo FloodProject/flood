@@ -2,15 +2,18 @@ WIP (work-in-progress)
 ======================
 
 Engine Modularization/Simplification Work
-
-	Compile as DLL (WIP)
-	Remove namespaces
-	Remove Singletons from the codebase (WIP)
+	
+	Compile as DLL (Reverted)
+	Remove namespaces (TODO)
+	Remove Singletons from the codebase (DONE)
 	Implement ResourceLoaders as (static) plugins	
 	Rename Timer into Stopwatch
-	
-	Refactor core code into its own static library (DONE)
-	Make Singleton code thread-safe (double check pattern)
+	Refactor core code into its own static library (Reverted)
+	Make Singleton code thread-safe (double check pattern?)
+
+Shadows
+	Render to depth texture (DONE)
+	Render from Light viewpoint (WIP)
 
 EDITOR:
 -------
@@ -20,10 +23,6 @@ Add Light debug display in editor
 Scene Tree
 	Don't allow label editing on components
 	Hook up the renaming of Scene node labels
-
-Shadows
-	Render to depth texture (DONE)
-	Render from Light viewpoint (WIP)
 
 Input Events
 	Rework input system so modes get events always
@@ -78,7 +77,6 @@ Camera options
 Implement camera panning
 Edit grid settings
 Add a property system like Firefox/µTorrent...
-Continuous movement bug (press D inside the world then click in the scene tree to trigger)
 Make the update logic smarter (no 50% CPU hog) (DONE?)
 See about integrating wxLua in the editor
 Override the print method of Lua
@@ -90,7 +88,6 @@ Add a Frustum class
 	Make Camera subclass it
 	Maybe Light too?
 
-Remove all the singleton (add Engine instead)
 Shaders live updating
 
 Add Z-bias to the AABB renderables
@@ -99,7 +96,6 @@ Fix Lua state closing
 Typesafe logging (FastFormat API)
 Ignore Entities (Layers?) (WIP - Tags)
 Add subsystem update infrastructure in engine (WIP)
-Private editor nodes (hide in the scene tree) (DONE)
 
 Quadtree Terrain
 Per-script Lua state
@@ -197,6 +193,9 @@ VFS:
 DONE:
 -----
 
+Continuous movement bug
+Private editor nodes (hide in the scene tree)
+Remove all the singleton (add Engine instead)
 Background Resource Loading
 Add subsystem update infrastructure in engine
 Task manager with callbacks (for e.g. streaming) 

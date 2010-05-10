@@ -41,7 +41,9 @@ FirstPersonCamera::FirstPersonCamera( input::InputManager* input,
 void FirstPersonCamera::update( double delta )
 {
 	Camera::update( delta );
-	checkControls( delta );
+
+	if( hasFocus )
+		checkControls( delta );
 }
 
 //-----------------------------------//
@@ -220,7 +222,11 @@ void FirstPersonCamera::centerCursor( )
 
 void FirstPersonCamera::onWindowFocusChange( bool focusLost )
 {
-	if( !focusLost )
+	hasFocus = !focusLost;
+
+	WindowPtr window = renderDevice->getWindow();
+	
+	if( hasFocus && !window->isCursorVisible() )
 		centerCursor();
 }
 

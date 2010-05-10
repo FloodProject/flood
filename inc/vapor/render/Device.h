@@ -61,6 +61,11 @@ public:
 	// Renders a list of renderables.
 	void render( RenderBlock& queue, const scene::Camera* cam );
 
+	// Gets the framebuffer color in the given pixel location.
+	// Note: it follows OpenGL 2D axis conventions, so the point
+	// (0,0) is located in the top left corner of the screen.
+	math::Color getPixel(ushort x, ushort y) const;
+
 	// Renders and updates into all render targets.
 	void updateRenderTargets();
 

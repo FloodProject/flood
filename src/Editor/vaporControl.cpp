@@ -25,6 +25,8 @@ BEGIN_EVENT_TABLE(vaporControl, wxGLCanvas)
 	EVT_TIMER(RENDER_TIMER, vaporControl::doRender)
     EVT_PAINT(vaporControl::OnPaint)
 	EVT_SIZE(vaporControl::OnSize)
+	EVT_SET_FOCUS(vaporControl::OnFocusSet)
+	EVT_KILL_FOCUS(vaporControl::OnFocusKill)
 	EVT_KEY_DOWN(vaporControl::OnKeyDown)
 	EVT_KEY_UP(vaporControl::OnKeyUp)
 	EVT_MOUSE_EVENTS(vaporControl::OnMouseEvent)
@@ -123,6 +125,20 @@ void vaporControl::OnSize(wxSizeEvent& event)
 {
 	window->processResize( event.GetSize() );
 	flagRedraw();
+}
+
+//-----------------------------------//
+
+void vaporControl::OnFocusSet(wxFocusEvent& event)
+{
+	window->handleWindowFocus(false);
+}
+
+//-----------------------------------//
+
+void vaporControl::OnFocusKill(wxFocusEvent& event)
+{
+	window->handleWindowFocus(true);
 }
 
 //-----------------------------------//

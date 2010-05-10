@@ -369,6 +369,20 @@ void Device::undoRenderStateMaterial( const MaterialPtr& mat )
 
 //-----------------------------------//
 
+Color Device::getPixel(ushort x, ushort y) const
+{
+	Color pick;
+	
+	glReadPixels(x, y, 1, 1, GL_RGBA, GL_FLOAT, &pick);
+
+	if( glHasError("Error reading pixels from framebuffer") )
+		return Color::White;
+	
+	return pick;
+}
+
+//-----------------------------------//
+
 void Device::setClearColor(const math::Color& newColor)
 {
 	if( newColor == color )
@@ -404,7 +418,9 @@ void Device::clearTarget()
 void Device::setRenderTarget(RenderTargetPtr target)
 {
 	activeTarget = target;
-	activeTarget->makeCurrent();
+
+	if(activeTarget)
+		activeTarget->makeCurrent();
 }
 
 //-----------------------------------//
@@ -429,6 +445,7 @@ RenderBufferPtr Device::createRenderBuffer( const Settings& settings )
 WindowPtr Device::createWindow( const WindowSettings& settings )
 {
 	WindowPtr window = Window::createWindow( settings );
+	assert( window != nullptr );
 
 	setWindow( window );
 	setRenderTarget( window );

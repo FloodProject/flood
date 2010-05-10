@@ -74,7 +74,9 @@ protected:
 	void OnIdle(wxIdleEvent& event);
 	void OnPaint(wxPaintEvent& event);
 	void OnSize(wxSizeEvent& event);
-	
+	void OnFocusSet(wxFocusEvent& event);
+	void OnFocusKill(wxFocusEvent& event);
+
 	// Input events.
 	void OnKeyDown(wxKeyEvent& event);
 	void OnKeyUp(wxKeyEvent& event);

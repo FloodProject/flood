@@ -14,12 +14,20 @@ namespace vapor { namespace input {
 //-----------------------------------//
 
 Keyboard::Keyboard()
-: keyState(1024, false), lastKey(Keys::Space)
+	: keyState(1024, false),
+	lastKey(Keys::Space)
 // TODO: keyState size hack! previous solution, assigning it to Keys::Pause
 // was causing a heap overflow, probably was off-by-1 error, but assigning
 // a bigger size, like 1024 is probably safer...
 {
 	
+}
+
+//-----------------------------------//
+
+void Keyboard::resetKeys()
+{
+	std::fill(keyState.begin(), keyState.end(), false);
 }
 
 //-----------------------------------//
