@@ -21,7 +21,7 @@ class ResourceLoader;
  * might have a different pointer.
  */
 
-typedef int	ResourceHandle;
+typedef int	ResourceHandle; // Note: unused for now.
 
 //-----------------------------------//
 
@@ -81,8 +81,6 @@ namespace ResourceGroup
 
 class VAPOR_API Resource : public ReferenceCounted, private boost::noncopyable
 {
-	static const ResourceHandle NotFound = -1;
-
 public:
 
 	virtual ~Resource() {}
@@ -95,15 +93,18 @@ public:
 
 	// Gets/sets the path that identifies this resource.
 	IMPLEMENT_ACESSOR(URI, const std::string&, uri)
-	
-	// Gets the resource group associated with this resource.
-	virtual ResourceGroup::Enum getResourceGroup() const = 0;
 
+	// Returns the base part of the URI.
+	std::string getBaseURI() const;
+	
 	// Gets/sets the resource loading status.
 	IMPLEMENT_ACESSOR(Status, ResourceStatus::Enum, status)
 
 	// Gets if the resource is fully loaded.
 	bool isLoaded() const;
+
+	// Gets the resource group associated with this resource.
+	virtual ResourceGroup::Enum getResourceGroup() const = 0;
 
 protected:
 

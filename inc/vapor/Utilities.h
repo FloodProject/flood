@@ -152,10 +152,16 @@ namespace String
 	VAPOR_API std::vector<std::string> split(const std::string& s, char delim);
 
 	// Converts a wide string to a regular string.
-	VAPOR_API std::string fromWideString(const std::wstring &wstr);
+	VAPOR_API std::string fromWideString(const std::wstring& wstr);
 	
 	// Converts a regular string into a wide string.
-	VAPOR_API std::wstring toWideString(const std::string &str);
+	VAPOR_API std::wstring toWideString(const std::string& str);
+
+	// Converts a regular string to lower case.
+	VAPOR_API std::string toLowerCase(const std::string& str);
+
+	// Converts a regular string to upper case.
+	VAPOR_API std::string toUpperCase(const std::string& str);
 }
 
 //---------------------------------------------------------------------//

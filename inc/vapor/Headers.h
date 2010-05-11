@@ -35,7 +35,6 @@
 #include <vapor/resources/Image.h>
 #include <vapor/resources/MS3D.h>
 #include <vapor/resources/Sound.h>
-#include <vapor/resources/Shader.h>
 #include <vapor/resources/Font.h>
 
 //---------------------------------------------------------------------//
@@ -65,8 +64,7 @@
 #include <vapor/render/Texture.h>
 #include <vapor/render/Program.h>
 #include <vapor/render/Renderable.h>
-#include <vapor/render/GLSL_Program.h>
-#include <vapor/render/GLSL_Shader.h>
+#include <vapor/render/Shader.h>
 #include <vapor/render/Quad.h>
 #include <vapor/render/TextureManager.h>
 #include <vapor/render/ProgramManager.h>

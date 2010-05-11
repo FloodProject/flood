@@ -20,9 +20,9 @@ namespace vapor { namespace render {
 //-----------------------------------//
 
 GLSL_Shader::GLSL_Shader() 
-	: shaderId( 0 ), created( false )
-{
-}
+	: shaderId(0),
+	created(false)
+{ }
 
 //-----------------------------------//
 
@@ -31,13 +31,11 @@ GLSL_Shader::~GLSL_Shader()
 	glDeleteShader( shaderId );
 
 #ifdef VAPOR_DEBUG
-	GLenum err;
-	if( ( err = glGetError() ) != GL_NO_ERROR )
+	GLenum err = glGetError();
+	if( err != GL_NO_ERROR )
 	{
-		warn( "glsl", 
-			"Could not delete shader object '%d': %s", 
+		warn( "glsl", "Could not delete shader object '%d': %s", 
 			shaderId, /*glErrorString( err )*/"" );
-		return;
 	}
 #endif
 }
@@ -62,7 +60,6 @@ bool GLSL_Shader::create()
 
 //-----------------------------------//
 
-
 bool GLSL_Shader::compile()
 {
 	if( !create() )
@@ -76,12 +73,11 @@ bool GLSL_Shader::compile()
 
 	glCompileShader( shaderId );
 
-#ifdef VAPOR_DEBUG
-	while( glGetError() != GL_NO_ERROR )
+	if( glHasError("Error compiling shader object") )
 	{
-		warn( "glsl", "Could not compile shader object '%d'", shaderId );
+		compiled = false;
+		return false;
 	}
-#endif
 
 	getGLSLLog();
 
@@ -90,7 +86,6 @@ bool GLSL_Shader::compile()
 
 	if( status != GL_TRUE ) 
 	{
-		error( "glsl", "Error compiling shader '%s': %s", getURI().c_str(), log.c_str() );
 		compiled = false;
 		return false; 
 	}
@@ -103,19 +98,14 @@ bool GLSL_Shader::compile()
 
 bool GLSL_Shader::upload()
 {
-	if( text.empty() ) return false;
+	if( text.empty() ) 
+		return false;
 
 	const char* str = text.c_str();
-
 	glShaderSource( shaderId, 1, &str, nullptr );
 
-#ifdef VAPOR_DEBUG
-	while( glGetError() != GL_NO_ERROR )
-	{
-		warn( "glsl", "Could not upload shader text to object '%d'", shaderId );
+	if( glHasError("Error uploading shader text to object") )
 		return false;
-	}
-#endif
 
 	return true;
 }
@@ -147,7 +137,7 @@ void GLSL_Shader::getGLSLLog()
 
 //-----------------------------------//
 
-GLenum GLSL_Shader::getGLShaderType( resources::ShaderType::Enum type )
+GLenum GLSL_Shader::getGLShaderType( ShaderType::Enum type )
 {
 	switch( type )
 	{

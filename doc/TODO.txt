@@ -1,16 +1,6 @@
 WIP (work-in-progress)
 ======================
 
-Engine Modularization/Simplification Work
-	
-	Compile as DLL (Reverted)
-	Remove namespaces (TODO)
-	Remove Singletons from the codebase (DONE)
-	Implement ResourceLoaders as (static) plugins	
-	Rename Timer into Stopwatch
-	Refactor core code into its own static library (Reverted)
-	Make Singleton code thread-safe (double check pattern?)
-
 Shadows
 	Render to depth texture (DONE)
 	Render from Light viewpoint (WIP)
@@ -85,6 +75,16 @@ Add a Frustum class
 	Maybe Light too?
 
 Shaders live updating
+
+Engine Modularization/Simplification Work
+	
+	Compile as DLL (Reverted)
+	Remove namespaces (TODO)
+	Remove Singletons from the codebase (DONE)
+	Implement ResourceLoaders as (static) plugins	
+	Rename Timer into Stopwatch
+	Refactor core code into its own static library (Reverted)
+	Make Singleton code thread-safe (double check pattern?)
 
 Add Z-bias to the AABB renderables
 Fix Overlays positioning (might be related to ortographic projection)

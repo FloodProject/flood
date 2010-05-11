@@ -11,43 +11,24 @@
 #ifdef VAPOR_SHADER_GLSL
 
 #include "vapor/resources/GLSL_Loader.h"
-#include "vapor/render/GLSL_Shader.h"
-
-using vapor::vfs::File;
-using namespace vapor::render;
+#include "vapor/resources/GLSL_Text.h"
 
 namespace vapor { namespace resources {
+
+using vapor::vfs::File;
 
 //-----------------------------------//
 
 GLSL_Loader::GLSL_Loader()
 {
-	extensions.push_back( "vs" );
-	extensions.push_back( "fs" );
-	extensions.push_back( "gs" );
+	extensions.push_back( "glsl" );
 }
 
 //-----------------------------------//
 
 Resource* GLSL_Loader::prepare(const File& file)
 {
-	GLSL_Shader* shader = new GLSL_Shader();
-
-	std::string ext = file.getExtension();
-
-	ShaderType::Enum type = ShaderType::Vertex;
-
-	if( ext == "vs" )
-		type = ShaderType::Vertex;
-	else if( ext == "fs" )
-		type = ShaderType::Fragment;
-	else if( ext == "gs" )
-		type = ShaderType::Geometry;
-	else
-		assert( false ); // This should not be reachable
-	
-	shader->setType( type );
-
+	GLSL_Text* shader = new GLSL_Text;
 	return shader;
 }
 
@@ -58,8 +39,9 @@ bool GLSL_Loader::decode(const File& file, Resource* res)
 	std::vector<byte> text = file.read();
 	std::string str( text.begin(), text.end() );
 
-	GLSL_Shader* shader = static_cast<GLSL_Shader*>( res );
+	GLSL_Text* shader = static_cast<GLSL_Text*>(res);
 	shader->setText( str );
+	shader->parse();
 
 	return true;
 }

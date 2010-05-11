@@ -12,6 +12,8 @@
 #include "vapor/render/GLSL_Shader.h"
 #include "vapor/render/GL.h"
 
+FWD_DECL_NS_TYPEDEF_INT(resources, GLSL_Text)
+
 namespace vapor { namespace render {
 
 //-----------------------------------//
@@ -63,7 +65,10 @@ public:
 	// Unbinds the program.
 	virtual void unbind();
 
-private:
+	// Gets/sets the resource text that backs this shader.
+	IMPLEMENT_ACESSOR(Text, const resources::GLSL_TextPtr&, text)
+
+protected:
 
 	// Binds the default engine attributes to the program.
 	void bindDefaultAttributes();
@@ -77,12 +82,16 @@ private:
 	// Gets the linking log of the program.
 	void getLogText();
 
+	resources::GLSL_TextPtr text;
+
 	std::vector< GLSL_ShaderPtr > shaders;
 	std::map< GLSL_ShaderPtr, bool > attached;
 
 	bool linkError;
 	GLuint id;
 };
+
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( GLSL_Program );
 
 //-----------------------------------//
 

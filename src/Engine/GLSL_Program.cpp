@@ -12,15 +12,17 @@
 
 #include "vapor/render/GLSL_Program.h"
 #include "vapor/render/GL.h"
-
-using namespace vapor::resources;
+#include "vapor/resources/GLSL_Text.h"
 
 namespace vapor { namespace render {
+
+using namespace vapor::resources;
 
 //-----------------------------------//
 
 GLSL_Program::GLSL_Program( const GLSL_ShaderPtr& vs, const GLSL_ShaderPtr& ps )
-	: Program( vs, ps ), linkError( false )
+	: Program( vs, ps ),
+	linkError( false )
 {
 	create();
 
@@ -78,15 +80,20 @@ bool GLSL_Program::attachShaders()
 	// Make sure all shaders are compiled.
 	foreach( const GLSL_ShaderPtr& shader, shaders )
 	{
-		assert( shader->isLoaded() );
-
-		if( !shader->isCompiled() )
+		if( !shader->isCompiled() && !shader->compile() )
 		{
-			if( !shader->compile() )
-			{
-				linked = false;
-				return false;
-			}
+			assert( text != nullptr );
+
+			std::string type = String::toLowerCase(
+				ShaderType::getString( shader->getType() ) );
+
+			error( "glsl", "Error compiling %s shader '%s': %s",
+				type.c_str(), text->getBaseURI().c_str(),
+				shader->getLog().c_str() );
+
+			linkError = true;
+			linked = false;
+			return false;
 		}
 
 		// Shaders need to be attached to the program.
@@ -102,21 +109,17 @@ bool GLSL_Program::attachShaders()
 bool GLSL_Program::link()
 {
 	// If the program is already linked, return.
-	if( isLinked() ) return true;
+	if( isLinked() ) 
+		return true;
 
 	// If we already tried to link and were not succesful, 
 	// don't try to link again until the program is updated.
-	if( linkError ) return false;
+	if( linkError ) 
+		return false;
 
 	// No shaders, don't try to link.
-	if( shaders.empty() ) return false;
-
-	// If the shaders aren't loaded, don't try to link.
-	foreach( const ShaderPtr& shader, shaders )
-	{
-		if( !shader->isLoaded() ) 
-			return false;
-	}
+	if( shaders.empty() ) 
+		return false;
 
 	if( !attachShaders() )
 		return false;
@@ -140,7 +143,7 @@ bool GLSL_Program::link()
 
 	if( status != GL_TRUE )
 	{
-		// warn( "glsl", "Could not link program object '%d': %s", id, log.c_str() );
+		warn( "glsl", "Could not link program object '%d': %s", id, log.c_str() );
 		linked = false;
 		linkError = true;
 		return false;
@@ -167,7 +170,7 @@ bool GLSL_Program::validate()
 	{
 		getLogText();
 
-		// warn( "glsl", "Could not validate program object '%d': %s", id, log.c_str() );
+		 warn( "glsl", "Could not validate program object '%d': %s", id, log.c_str() );
 		return false;
 	}
 

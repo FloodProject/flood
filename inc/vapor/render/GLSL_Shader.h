@@ -8,8 +8,7 @@
 
 #pragma once
 
-#include "vapor/resources/Shader.h"
-#include "vapor/render/GL.h"
+#include "vapor/render/Shader.h"
 
 namespace vapor { namespace render {
 
@@ -19,7 +18,7 @@ namespace vapor { namespace render {
  * GLSL Shader.
  */
 
-class VAPOR_API GLSL_Shader : public resources::Shader
+class VAPOR_API GLSL_Shader : public Shader
 {
 public:
 
@@ -37,17 +36,15 @@ public:
 private:
 
 	bool upload();
+
 	void getGLSLLog();
+	uint getGLShaderType( ShaderType::Enum type );
 
-	GLenum getGLShaderType( resources::ShaderType::Enum type );
-
-	GLuint shaderId;
+	uint shaderId;
 	bool created;
 };
 
-//-----------------------------------//
-
-TYPEDEF_RESOURCE_POINTER_FROM_TYPE( GLSL_Shader );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( GLSL_Shader );
 
 //-----------------------------------//
 

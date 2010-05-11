@@ -32,12 +32,14 @@ public:
 					const wxValidator& validator = wxDefaultValidator, 
 					const wxString&	name = "ResourceTreeCtrl");
 
+	~ResourceTreeCtrl();
+
 	// Synchronizes the tree with the resources.
 	void updateTree();
 
 protected:
 
-	void InitControl();
+	void initControl();
 	void initIcons();
 
 	void onItemMenu(wxTreeEvent& event);

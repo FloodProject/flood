@@ -11,6 +11,8 @@
 #include "vapor/resources/ResourceManager.h"
 #include "vapor/render/Program.h"
 
+FWD_DECL_NS_TYPEDEF_INT(resources, Text)
+
 namespace vapor { namespace render {
 
 //-----------------------------------//
@@ -35,13 +37,25 @@ public:
 	// Gets a program given a name identifier.
 	ProgramPtr getProgram( const std::string& program );
 
-	void registerProgram( const std::string& name, const ProgramPtr& program );
-
 private:
+
+	// Registers a new program in the manager.
+	bool registerProgram( const std::string& name, const ProgramPtr& program );
+
+	// Creates the shaders given their source text.
+	void createShaders( const resources::TextPtr& );
+
+	// Populates a shader when the text file is loaded.
+	void onLoad( const resources::ResourceEvent& evt );
+
+	// Reloads a shader when the text file changes.
+	void onReload( const resources::ResourceEvent& evt );
 
 	// Maps the identifiers to the programs.
 	std::map< std::string, ProgramPtr > programs;
 	typedef std::pair< const std::string&, ProgramPtr > programPair;
+
+	resources::ResourceManagerPtr rm;
 };
 
 TYPEDEF_PTR(ProgramManager)

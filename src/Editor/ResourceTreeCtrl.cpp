@@ -28,23 +28,33 @@ END_EVENT_TABLE()
 
 //-----------------------------------//
 
-ResourceTreeCtrl::ResourceTreeCtrl(vapor::Engine* engine, 
+ResourceTreeCtrl::ResourceTreeCtrl(vapor::Engine* engine,
 					wxWindow* parent, wxWindowID id,
-					const wxPoint& pos,
-					const wxSize& size,
-					long style,
-					const wxValidator& validator, 
+					const wxPoint& pos, const wxSize& size,
+					long style, const wxValidator& validator, 
 					const wxString&	name)
 	: wxTreeCtrl(parent, id, pos, size, style, validator, name),
-		engine(engine), rm( nullptr )
+	rm( engine->getResourceManager() )
 {
-	assert( engine != nullptr );
-	rm = engine->getResourceManager();
-	
+	assert( rm != nullptr );
+
+	rm->onResourceAdded += fd::bind( &ResourceTreeCtrl::onResourceAdded, this );
+	rm->onResourceRemoved += fd::bind( &ResourceTreeCtrl::onResourceRemoved, this );
+
 	initIcons();
-	InitControl();
+	initControl();
 
 	ExpandAll();
+}
+
+//-----------------------------------//
+
+ResourceTreeCtrl::~ResourceTreeCtrl()
+{
+	assert( rm != nullptr );
+
+	//rm->onResourceAdded -= fd::bind( &ResourceTreeCtrl::onResourceAdded, this );
+	//rm->onResourceRemoved -= fd::bind( &ResourceTreeCtrl::onResourceRemoved, this );
 }
 
 //-----------------------------------//
@@ -79,7 +89,7 @@ void ResourceTreeCtrl::initIcons()
 		ResourceGroup::getString(RG(T)),			\
 		resourceGroupIcons[RG(T)] );
 
-void ResourceTreeCtrl::InitControl()
+void ResourceTreeCtrl::initControl()
 {
 	root = AddRoot( "Resources", resourceGroupIcons[RG(General)] );
 
@@ -91,9 +101,6 @@ void ResourceTreeCtrl::InitControl()
 	CREATE_RESOURCE_NODE( Shaders )
 	CREATE_RESOURCE_NODE( Audio )
 	CREATE_RESOURCE_NODE( Scripts )
-
-	rm->onResourceAdded += fd::bind( &ResourceTreeCtrl::onResourceAdded, this );
-	rm->onResourceRemoved += fd::bind( &ResourceTreeCtrl::onResourceRemoved, this );
 }
 
 //-----------------------------------//
@@ -114,6 +121,25 @@ void ResourceTreeCtrl::updateTree()
 
 //-----------------------------------//
 
+void ResourceTreeCtrl::onResourceAdded( const ResourceEvent& event )
+{
+	const ResourcePtr& res = event.resource;
+	ResourceGroup::Enum group = res->getResourceGroup();
+
+	AppendItem( resourceGroupTreeIds[group],
+				res->getURI(), 0
+				/*resourceGroupIcons[group]*/ );
+}
+
+//-----------------------------------//
+
+void ResourceTreeCtrl::onResourceRemoved( const ResourceEvent& event )
+{
+
+}
+
+//-----------------------------------//
+
 void ResourceTreeCtrl::onItemMenu(wxTreeEvent& WXUNUSED(event))
 {
 //    wxTreeItemId itemId = event.GetItem();
@@ -130,25 +156,6 @@ void ResourceTreeCtrl::onItemMenu(wxTreeEvent& WXUNUSED(event))
 //#endif // wxUSE_MENUS
 //
 //    event.Skip();
-}
-
-//-----------------------------------//
-
-void ResourceTreeCtrl::onResourceAdded( const resources::ResourceEvent& event )
-{
-	const ResourcePtr& res = event.resource;
-	ResourceGroup::Enum group = res->getResourceGroup();
-
-	AppendItem( resourceGroupTreeIds[group],
-				res->getURI(), 0
-				/*resourceGroupIcons[group]*/ );
-}
-
-//-----------------------------------//
-
-void ResourceTreeCtrl::onResourceRemoved( const ResourceEvent& /*event*/ )
-{
-
 }
 
 //-----------------------------------//

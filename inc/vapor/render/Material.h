@@ -10,7 +10,7 @@
 
 #include "vapor/render/Program.h"
 #include "vapor/render/Texture.h"
-#include "vapor/resources/Shader.h"
+#include "vapor/render/Shader.h"
 #include "vapor/render/TextureManager.h"
 #include "vapor/render/GL.h"
 
@@ -69,7 +69,6 @@ class VAPOR_API Material : public ReferenceCounted
 public:
 
 	//Material( const std::string& name );
-	Material( const std::string& name, ProgramPtr program );
 	Material( const std::string& name, const std::string& program = "diffuse" );
 
 	// Gets the textual name of the material.
@@ -84,21 +83,37 @@ public:
 	// Adds an image as texture to the material.
 	void setTexture( uint unit, const resources::ImagePtr& tex );
 
-	// Sets the associated program.
-	void setProgram( const std::string& name );
+	// Gets/sets the associated program.
+	ProgramPtr Material::getProgram();
+	IMPLEMENT_ACESSOR(Program, const std::string&, program)
+
+	// Gets/sets the depth writing of the material.
+	IMPLEMENT_ACESSOR(DepthWrite, bool, depthWrite)
+
+	// Gets/sets the depth testing of the material.
+	IMPLEMENT_ACESSOR(DepthTest, bool, depthTest)
+
+	// Gets/sets the line width of the material.
+	IMPLEMENT_ACESSOR(LineWidth, float, lineWidth)
+
+	// Gets/sets the line smoothing of the material.
+	IMPLEMENT_ACESSOR(LineSmoothing, bool, lineSmooth)
+
+	// Gets/sets the backface culling of the material.
+	IMPLEMENT_ACESSOR(BackfaceCulling, bool, cullBackfaces)
 
 	// Gets the blending options for this material.
-	IMPLEMENT_GETTER(BlendingSource, BlendingSource::Enum, src)
+	IMPLEMENT_GETTER(BlendingSource, BlendingSource::Enum, source)
 	
 	// Gets the blending options for this material.
-	IMPLEMENT_GETTER(BlendingDestination, BlendingDestination::Enum, dst)
+	IMPLEMENT_GETTER(BlendingDestination, BlendingDestination::Enum, destination)
 
 	// Is blending enabled?
 	// Blending is automatically enabled if you set a custom option.
 	bool isBlendingEnabled() const;
 
 	// Sets the blending options for this material.
-	void setBlending( BlendingSource::Enum src, BlendingDestination::Enum dst );
+	void setBlending( BlendingSource::Enum, BlendingDestination::Enum );
 
 	// Gets the textures in the material.
 	IMPLEMENT_GETTER(Textures, const TextureMap&, textures)
@@ -112,13 +127,6 @@ public:
 	// Serialization.
 	//void serialize( Json::Value value );
 
-	IMPLEMENT_ACESSOR(DepthWrite, bool, depthWrite)
-	IMPLEMENT_ACESSOR(DepthTest, bool, depthTest)
-	IMPLEMENT_ACESSOR(LineWidth, float, lineWidth)
-	IMPLEMENT_ACESSOR(LineSmoothing, bool, lineSmooth)
-	IMPLEMENT_ACESSOR(BackfaceCulling, bool, cullBackfaces)
-	IMPLEMENT_ACESSOR(Program, ProgramPtr, program)
-
 protected:
 
 	// Common material initialization.
@@ -128,7 +136,7 @@ protected:
 	std::string name;
 
 	// Program of the material.
-	ProgramPtr program;
+	std::string program;
 
 	// Textures
 	TextureMap textures;
@@ -144,8 +152,8 @@ protected:
 	float lineWidth;
 
 	// Blending operations
-	BlendingSource::Enum src;
-	BlendingDestination::Enum dst;
+	BlendingSource::Enum source;
+	BlendingDestination::Enum destination;
 	bool _isBlendingEnabled;
 
 	// Default Line Width.

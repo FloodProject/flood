@@ -42,14 +42,12 @@ namespace ResourceGroup
 //-----------------------------------//
 
 Resource::Resource()
-: status( ResourceStatus::Unloaded )
-{
-
-}
+	: status( ResourceStatus::Unloaded )
+{ }
 
 //-----------------------------------//
 
-bool Resource::reload( )
+bool Resource::reload()
 {
 	return true;
 }
@@ -59,6 +57,18 @@ bool Resource::reload( )
 bool Resource::isLoaded() const
 {
 	return getStatus() == ResourceStatus::Loaded;
+}
+
+//-----------------------------------//
+
+std::string Resource::getBaseURI() const
+{
+	assert( !uri.empty() );
+
+	size_t n = uri.find_last_of(".");
+	assert( n != std::string::npos );
+
+	return uri.substr( 0, n);
 }
 
 //-----------------------------------//

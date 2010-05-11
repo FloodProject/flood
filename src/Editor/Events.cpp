@@ -231,32 +231,12 @@ void EditorFrame::createScene()
 {
 	const ScenePtr& scene = engine->getSceneManager();
 	ResourceManagerPtr const rm = engine->getResourceManager();
-	render::DevicePtr const rd = engine->getRenderDevice();
-	ProgramManagerPtr const pm = rd->getProgramManager();
 
-	ProgramPtr diffuse( new GLSL_Program( 
-			rm->loadResource< GLSL_Shader >( "diffuse.vs" ),
-			rm->loadResource< GLSL_Shader >( "diffuse.fs" ) ) );
+	rm->loadResource("Diffuse.glsl");
+	rm->loadResource("Tex.glsl");
+	rm->loadResource("Toon.glsl");
+	rm->loadResource("Tex_Toon.glsl");
 
-	ProgramPtr tex( new GLSL_Program( 
-			rm->loadResource< GLSL_Shader >( "tex.vs" ),
-			rm->loadResource< GLSL_Shader >( "tex.fs" ) ) );
-
-	pm->registerProgram( "diffuse", diffuse );
-	pm->registerProgram( "tex", tex );
-
-	ProgramPtr toon( new GLSL_Program( 
-			rm->loadResource< GLSL_Shader >( "toon.vs" ),
-			rm->loadResource< GLSL_Shader >( "toon.fs" ) ) );
-
-	pm->registerProgram( "toon", toon );
-
-	ProgramPtr tex_toon( new GLSL_Program( 
-			rm->loadResource< GLSL_Shader >( "tex_toon.vs" ),
-			rm->loadResource< GLSL_Shader >( "tex_toon.fs" ) ) );
-	
-	pm->registerProgram( "tex_toon", tex_toon );
-	
 	MaterialPtr matSun( new Material("SunBlend") );
 	matSun->setProgram( "tex" );
 	matSun->setTexture( 0, "moon.png" );

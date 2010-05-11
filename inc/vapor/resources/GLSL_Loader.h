@@ -19,7 +19,7 @@ namespace vapor { namespace resources {
 //-----------------------------------//
 
 /**
- * Loads GLSL shader files.
+ * Loads GLSL shaders as text files.
  */
 
 class GLSL_Loader : public ResourceLoader

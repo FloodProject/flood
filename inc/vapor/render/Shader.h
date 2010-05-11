@@ -10,12 +10,15 @@
 
 #include "vapor/resources/Resource.h"
 
-namespace vapor { namespace resources {
+namespace vapor { namespace render {
 
 //-----------------------------------//
 
 /**
- * Possible shader types.
+ * Shaders can be of different types, depending on what they deal with.
+ *  - Vertex shaders manipulate vertex properties such as position.
+ *  - Pixel shaders calculate the color of individual pixels (fragments).
+ *  - Geometry shaders can be used to generate geometry procedurally.
  */
 
 namespace ShaderType
@@ -33,14 +36,16 @@ namespace ShaderType
 //-----------------------------------//
 
 /**
-`* Shader resource.
+ * Shaders are used to program the GPU programmable rendering pipeline.
+ * It is a set of software instructions that instruct how to calculate
+ * each vertex and each pixel processed by the graphics card. We only
+ * deal with high-level shaders in the engine, which are compiled to
+ * low-level assembly code by the graphics driver.
  */
 
-class VAPOR_API Shader : public Resource
+class VAPOR_API Shader : public ReferenceCounted
 {
 public:
-
-	Shader();
 
 	// Gets the shader type.
 	IMPLEMENT_ACESSOR(Type, ShaderType::Enum, type)
@@ -63,10 +68,9 @@ public:
 	// Did this shader throw compile errors?
 	bool gotCompileErrors() const;
 
-	// Gets the associated resource group.
-	IMPLEMENT_GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Shaders)
-
 protected:
+
+	Shader();
 
 	// Shader type.
 	ShaderType::Enum type;
@@ -82,9 +86,7 @@ protected:
 	bool compileErrors;
 };
 
-//-----------------------------------//
-
-TYPEDEF_RESOURCE_POINTER_FROM_TYPE( Shader );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Shader );
 
 //-----------------------------------//
 

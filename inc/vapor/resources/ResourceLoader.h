@@ -33,6 +33,7 @@ public:
 	virtual ~ResourceLoader() {}
 
 	// Creates the resource with no data.
+	// Note: File I/O should be done in 'decode'.
 	virtual Resource* prepare(const vfs::File&) = 0;
 
 	// Decodes a given file into a resource.

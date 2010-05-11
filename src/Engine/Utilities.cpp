@@ -111,6 +111,26 @@ std::vector<std::string> String::split(const std::string &s, char delim)
 	return String::split(s, delim, elems);
 }
 
+//-----------------------------------//
+
+std::string String::toLowerCase(const std::string& str)
+{
+	std::string data(str);
+	std::transform(data.begin(), data.end(), data.begin(), ::tolower);
+	
+	return data;
+}
+
+//-----------------------------------//
+
+std::string String::toUpperCase(const std::string& str)
+{
+	std::string data(str);
+	std::transform(data.begin(), data.end(), data.begin(), ::toupper);
+	
+	return data;
+}
+
 ////-----------------------------------//
 //
 //#ifdef VAPOR_PLATFORM_WINDOWS

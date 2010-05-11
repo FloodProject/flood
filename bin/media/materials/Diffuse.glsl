@@ -1,3 +1,5 @@
+[vertex]
+
 attribute vec3 vp_Vertex;
 attribute vec3 vp_Color;
 
@@ -8,7 +10,14 @@ void main()
 {
 	gl_FrontColor = vec4(vp_Color, 1.0);
 	gl_Position = vec4(vp_Vertex, 1.0) * vp_ModelViewMatrix * vp_ProjectionMatrix;
-	
-	const float LOG2 = 1.442695;
-	const float DENSITY = 5.0;
-} 
+}
+
+[fragment]
+//uniform sampler2D vp_ShadowMap;
+
+void main(void)
+{
+    //vec4 shadowSample = texture2D(vp_ShadowMap, vec2(0.0,0.0));
+	//gl_FragColor = mix(vec4(0.2, 0.2, 0.2, 1.0), gl_Color, fogFactor );
+    gl_FragColor = gl_Color;
+}

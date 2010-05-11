@@ -20,22 +20,11 @@ float Material::DefaultLineWidth = 1.0f;
 
 //-----------------------------------//
 
-Material::Material( const std::string& name, ProgramPtr program )
-	: name( name ), program( program )
-{
-	init();
-}
-
-//-----------------------------------//
-
 Material::Material( const std::string& _name, const std::string& _program )
-	: name( _name )
+	: name( _name ),
+	program( _program )
 {
 	init();
-
-	// TODO: refactor
-	ProgramManagerPtr pm = Engine::getInstance().getRenderDevice()->getProgramManager();
-	program = pm->getProgram(_program);
 }
 
 //-----------------------------------//
@@ -43,8 +32,8 @@ Material::Material( const std::string& _name, const std::string& _program )
 void Material::init()
 {
 	_isBlendingEnabled = false;
-	src = BlendingSource::One;
-	dst = BlendingDestination::Zero;
+	source = BlendingSource::One;
+	destination = BlendingDestination::Zero;
 	
 	lineWidth = DefaultLineWidth;
 	lineSmooth = false;
@@ -91,28 +80,31 @@ bool Material::isBlendingEnabled() const
 
 //-----------------------------------//
 
-void Material::setBlending( BlendingSource::Enum src, 
-	BlendingDestination::Enum dst )
+void Material::setBlending( BlendingSource::Enum _source, 
+	BlendingDestination::Enum _destination )
 {
-	this->src = src;
-	this->dst = dst;
+	source = _source;
+	destination = _destination;
 	
 	_isBlendingEnabled = true;
 }
 
 //-----------------------------------//
 
-void Material::setProgram( const std::string& name )
+ProgramPtr Material::getProgram()
 {
-	ProgramManagerPtr pm = Engine::getInstance().getRenderDevice()->getProgramManager();
-	ProgramPtr p = pm->getProgram( name );
-	program = p;
+	render::DevicePtr device = Engine::getInstance().getRenderDevice();
+	ProgramManagerPtr pm = device->getProgramManager();
+
+	return pm->getProgram( program );
 }
 
 //-----------------------------------//
 
 void Material::bind()
 {
+	ProgramPtr program = getProgram();
+
 	foreach( const TextureMapPair& p, textures )
 	{
 		p.second->bind( p.first );
@@ -135,6 +127,8 @@ void Material::bind()
 
 void Material::unbind()
 {
+	ProgramPtr program = getProgram();
+
 	program->unbind();
 
 	foreach( const TextureMapPair& p, getTextures() )

@@ -598,6 +598,14 @@
 					RelativePath="..\..\inc\vapor\render\ProgramManager.h"
 					>
 				</File>
+				<File
+					RelativePath=".\Shader.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\render\Shader.h"
+					>
+				</File>
 				<Filter
 					Name="GLSL"
 					>
@@ -1444,14 +1452,6 @@
 			<Filter
 				Name="Shaders"
 				>
-				<File
-					RelativePath=".\Shader.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\resources\Shader.h"
-					>
-				</File>
 				<Filter
 					Name="GLSL"
 					>
@@ -1461,6 +1461,14 @@
 					</File>
 					<File
 						RelativePath="..\..\inc\vapor\resources\GLSL_Loader.h"
+						>
+					</File>
+					<File
+						RelativePath=".\GLSL_Text.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\resources\GLSL_Text.h"
 						>
 					</File>
 				</Filter>
@@ -1528,6 +1536,18 @@
 						>
 					</File>
 				</Filter>
+			</Filter>
+			<Filter
+				Name="Text"
+				>
+				<File
+					RelativePath=".\Text.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\resources\Text.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter

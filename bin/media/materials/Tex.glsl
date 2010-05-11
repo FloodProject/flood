@@ -1,3 +1,5 @@
+[vertex]
+
 attribute vec3 vp_Vertex;
 attribute vec3 vp_MultiTexCoord0;
 
@@ -13,3 +15,16 @@ void main()
 	vp_TexCoord = vp_MultiTexCoord0.st;
 	gl_Position = vec4(vp_Vertex, 1.0) * vp_ModelViewMatrix * vp_ProjectionMatrix;
 } 
+
+[fragment]
+
+uniform sampler2D tex0;
+uniform sampler2D vp_ShadowMap;
+varying vec2 vp_TexCoord;
+
+void main(void)
+{
+    vec4 shadowSample = texture2D(vp_ShadowMap, vec2(0.0,0.0));
+	vec4 color = texture2D(tex0, vp_TexCoord);
+    gl_FragColor = color;
+}

@@ -52,7 +52,7 @@ const std::string File::getFullPath() const
 const std::string File::getExtension() const
 {
 	// Check if it has a file extension.
-	uint ch = path.find_last_of( "." );
+	size_t ch = path.find_last_of( "." );
 
 	if( ch == std::string::npos ) 
 		return "";

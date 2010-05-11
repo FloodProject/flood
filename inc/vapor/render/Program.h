@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "vapor/resources/Shader.h"
+#include "vapor/render/Shader.h"
 #include "vapor/render/VertexBuffer.h"
 #include "vapor/math/Matrix4x3.h"
 #include "vapor/math/Matrix4x4.h"
@@ -19,17 +19,17 @@ namespace vapor { namespace render {
 //-----------------------------------//
 
 /**
- * A program is a collection of shaders (at least a vertex shader 
- * and a pixel shader). When it is linked it is ready to be used
- * by the renderer. A program will have some parameters automatically
- * bound, like world matrices and such.
+ * A program is a collection of shaders (though it has to have at least
+ * a vertex shader and a pixel shader). When it is linked it is ready to
+ * be used by the renderer. To be useful, a program needs to have some 
+ * engine parameters bound, like world matrices and lighting information.
  */
 
 class VAPOR_API Program : public ReferenceCounted
 {
 public:
 
-	Program( const resources::ShaderPtr& vs, const resources::ShaderPtr& ps );
+	Program( const ShaderPtr& vs, const ShaderPtr& ps );
 	virtual ~Program();
 
 	// Adds a named parameter to the program.
@@ -85,9 +85,7 @@ protected:
 	bool linked;
 };
 
-//-----------------------------------//
-
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Program );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Program );
 
 //-----------------------------------//
 

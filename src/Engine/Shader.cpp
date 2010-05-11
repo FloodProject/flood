@@ -7,9 +7,9 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/resources/Shader.h"
+#include "vapor/render/Shader.h"
 
-namespace vapor { namespace resources {
+namespace vapor { namespace render {
 
 //-----------------------------------//
 

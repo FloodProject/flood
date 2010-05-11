@@ -1,21 +1,20 @@
+[vertex]
+
 attribute vec3 vp_Vertex;
 attribute vec3 vp_Color;
-attribute vec3 vp_MultiTexCoord0;
 attribute vec3 vp_Normal;
 
 uniform mat4 vp_ProjectionMatrix;
+uniform mat4 vp_ModelMatrix;
+uniform mat4 vp_ViewMatrix;
 uniform mat4 vp_ModelViewMatrix;
 
 uniform vec4 vp_LightColors[];
 uniform vec3 vp_LightDirection;
-uniform mat4 vp_CameraProj;
 
 varying vec3 normal;
 varying vec3 lightDirection;
 varying vec4 lightColors[];
-
-varying vec4 shadowCoords;
-varying vec2 vp_TexCoord;
 
 void main()
 {
@@ -23,9 +22,25 @@ void main()
 	lightDirection = vp_LightDirection;
 	//lightColors = vp_LightColors;
 
-	shadowCoords = vp_CameraProj * vec4(vp_Vertex, 1.0);
-
 	gl_FrontColor = vec4(vp_Color, 1.0);
-	vp_TexCoord = vp_MultiTexCoord0.st;
 	gl_Position = vec4(vp_Vertex, 1.0) * vp_ModelViewMatrix * vp_ProjectionMatrix;
-} 
+}
+
+[fragment]
+
+uniform sampler2D vp_ShadowMap;
+
+varying vec3 normal;
+varying vec3 lightDirection;
+varying vec4 lightColors[];
+
+void main(void)
+{
+    vec4 shadowSample = texture2D(vp_ShadowMap, vec2(0.0f,0.0f));
+	float intensity = dot(lightDirection, normalize(normal));
+
+	vec4 color = vec4( gl_Color.r*intensity, gl_Color.g*intensity, 
+		gl_Color.b*intensity, gl_Color.a );
+
+    gl_FragColor = /*gl_Color*/color;
+}
