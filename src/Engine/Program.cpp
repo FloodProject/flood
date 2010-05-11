@@ -9,26 +9,33 @@
 #include "vapor/PCH.h"
 #include "vapor/render/Program.h"
 
-using namespace vapor::resources;
-
 namespace vapor { namespace render {
+
+using namespace vapor::resources;
 
 //-----------------------------------//
 
-Program::Program( const ShaderPtr& vs, const ShaderPtr& ps )
+Program::Program()
 	: linked( false )
 {
-	if( !vs || !ps ) return;
 
-	assert( vs->getType() == ShaderType::Vertex );
-	assert( ps->getType() == ShaderType::Fragment );
 }
 
 //-----------------------------------//
 
-Program::~Program()
+bool Program::validateShaders() const
 {
+	const ShaderPtr& vs = getVertexShader();
+	
+	if( vs->getType() != ShaderType::Vertex )
+		return false;
 
+	const ShaderPtr& fs = getFragmentShader();
+	
+	if( fs->getType() != ShaderType::Fragment )
+		return false;
+
+	return true;
 }
 
 //-----------------------------------//

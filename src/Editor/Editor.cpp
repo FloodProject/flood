@@ -76,13 +76,13 @@ EditorFrame::EditorFrame(const wxString& title)
 	// Initialize the engine.
 	initEngine();
 
-	createScene();
-	createEditorScene();
-
 	createMenus();
 	createToolbar();
 	createStatusbar();
 	createNotebook();
+
+	createScene();
+	createEditorScene();
 
 	ViewportPtr viewport = viewframe->getViewport();
 	viewport->getRenderTarget()->makeCurrent();

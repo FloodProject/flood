@@ -51,29 +51,11 @@ void Example::onSetupScene()
 	ScenePtr scene = getSceneManager();
 	ResourceManagerPtr const rm = getResourceManager();
 	render::DevicePtr const rd = getRenderDevice();
-	ProgramManagerPtr const pm = rd->getProgramManager();
 
-	// TODO: make shaders automatically loaded?
-	ProgramPtr tex( new GLSL_Program( 
-			rm->loadResource< GLSL_Shader >( "tex.vs" ),
-			rm->loadResource< GLSL_Shader >( "tex.fs" ) ) );
-
-	ProgramPtr diffuse( new GLSL_Program( 
-			rm->loadResource< GLSL_Shader >( "diffuse.vs" ),
-			rm->loadResource< GLSL_Shader >( "diffuse.fs" ) ) );
-
-	ProgramPtr toon( new GLSL_Program( 
-			rm->loadResource< GLSL_Shader >( "toon.vs" ),
-			rm->loadResource< GLSL_Shader >( "toon.fs" ) ) );
-
-	ProgramPtr tex_toon( new GLSL_Program( 
-			rm->loadResource< GLSL_Shader >( "tex_toon.vs" ),
-			rm->loadResource< GLSL_Shader >( "tex_toon.fs" ) ) );
-
-	pm->registerProgram( "diffuse", diffuse );
-	pm->registerProgram( "tex", tex );
-	pm->registerProgram( "toon", toon );
-	pm->registerProgram( "tex_toon", tex_toon );
+	rm->loadResource("Diffuse.glsl");
+	rm->loadResource("Tex.glsl");
+	rm->loadResource("Toon.glsl");
+	rm->loadResource("Tex_Toon.glsl");
 
 	// Create a new Camera
 	NodePtr camera( new Node( "MainCamera" ) );
@@ -89,9 +71,9 @@ void Example::onSetupScene()
 	fbo->unbind();
 
 	viewport2 = fbo->addViewport(cam);
-	viewport2->setClearColor( Color(1.0f, 0.0f, 0.0f, 1.0f) );
+	viewport2->setClearColor( Color::Red );
 
-	MaterialPtr fbo_mat( new Material( "FBO1", tex ) );
+	MaterialPtr fbo_mat( new Material( "FBO1", "Tex" ) );
 	fbo_mat->setTexture( 0, fbo_tex );
 
 	RenderablePtr quad( new Quad(100.0f, 100.0f) );

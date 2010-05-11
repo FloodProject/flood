@@ -122,9 +122,13 @@ public:
 			return;
 		}
 
-		ResourceEvent event;
-		event.resource = res;
-		rm->resourceTaskEvents.push(event);
+		if( notify )
+		{
+			ResourceEvent event;
+			event.resource = res;
+
+			rm->resourceTaskEvents.push(event);
+		}
 
 		rm->numResourcesQueuedLoad--;
 		THREAD( rm->resourceFinishLoad.notify_one(); )
@@ -132,6 +136,7 @@ public:
 
 	Resource* res;
 	ResourceManagerPtr rm;
+	bool notify;
 };
 
 //-----------------------------------//
@@ -178,11 +183,12 @@ ResourcePtr ResourceManager::prepareResource( const std::string& path )
 
 //-----------------------------------//
 
-void ResourceManager::decodeResource( ResourcePtr res, bool async )
+void ResourceManager::decodeResource( ResourcePtr res, bool async, bool notify )
 {
 	ResourceTask* task = new ResourceTask();
 	task->res = res.get();
 	task->rm = this;
+	task->notify = notify;
 
 	if( taskManager && async )
 	{
@@ -313,7 +319,7 @@ void ResourceManager::handleWatchResource(const vfs::WatchEvent& evt)
 	// Register the decoded resource in the map.
 	info("resources", "Reloading resource '%s'", file.c_str());
 
-	decodeResource( res );
+	decodeResource( res, true, false );
 
 	if( !onResourceReloaded.empty() )
 	{

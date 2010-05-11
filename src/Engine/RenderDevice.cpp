@@ -129,16 +129,25 @@ void Device::render( RenderBlock& queue, const Camera* cam )
 	foreach( const RenderState& state, queue.renderables )
 	{
 		const RenderablePtr& rend = state.renderable;
-		if( !rend ) continue;
+		
+		if( !rend ) 
+			continue;
 
 		const MaterialPtr& material = rend->getMaterial();
-		if( !material ) continue;
 
-		const ProgramPtr& program = material->getProgram();
-		if( !program ) continue;
+		if( !material )
+			continue;
 
 		rend->bind();
 		setupRenderStateMaterial(material);
+
+		const ProgramPtr& program = material->getProgram();
+
+		if( !program )
+			continue;
+
+		if( !program->isLinked() )
+			continue;
 
 		if( state.group != RenderGroup::Overlays )
 		{

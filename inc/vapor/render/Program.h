@@ -29,9 +29,6 @@ class VAPOR_API Program : public ReferenceCounted
 {
 public:
 
-	Program( const ShaderPtr& vs, const ShaderPtr& ps );
-	virtual ~Program();
-
 	// Adds a named parameter to the program.
 	virtual void setAttribute( const std::string& slot, VertexAttribute::Enum attr ) = 0;
 
@@ -59,6 +56,12 @@ public:
 	// Creates the program.
 	virtual bool create() = 0;
 
+	// Creates the shaders and adds them to the program.
+	virtual void createShaders() = 0;
+
+	// Updates the shader's text with the program text.
+	virtual void updateShadersText() = 0;
+
 	// Links the program and returns if it was successful.
 	virtual bool link() = 0;
 
@@ -74,12 +77,26 @@ public:
 	// Gets the linking log.
 	const std::string& getLog() const;
 
-	// Serialization
+	// Validates that the program contains valid shaders.
+	bool validateShaders() const;
 
+	// Gets the different types of shaders.
+	IMPLEMENT_GETTER(VertexShader, const ShaderPtr&, vertex)
+	IMPLEMENT_GETTER(FragmentShader, const ShaderPtr&, fragment)
+	//IMPLEMENT_GETTER(GeometryShader, const ShaderPtr&, geometry)
+
+	// Serialization.
 	//virtual void load( const std::string& name ) = 0;
 	//virtual void save( const std::string& name ) = 0;
 
 protected:
+
+	Program();
+	virtual ~Program() {}
+
+	ShaderPtr vertex;
+	ShaderPtr fragment;
+	//ShaderPtr geometry;
 
 	std::string log;
 	bool linked;

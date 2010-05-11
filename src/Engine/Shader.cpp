@@ -42,6 +42,13 @@ Shader::Shader()
 
 //-----------------------------------//
 
+void Shader::forceRecompile()
+{
+	compiled = false;
+}
+
+//-----------------------------------//
+
 bool Shader::isCompiled() const
 {
 	return compiled;

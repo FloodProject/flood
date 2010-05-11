@@ -44,7 +44,8 @@ GLSL_Shader::~GLSL_Shader()
 
 bool GLSL_Shader::create()
 {
-	if( created ) return true;
+	if( created )
+		return true;
 
 	shaderId = glCreateShader( getGLShaderType(type) );
 

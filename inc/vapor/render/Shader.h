@@ -61,6 +61,9 @@ public:
 
 	// Compiles the shader.
 	virtual bool compile() = 0;
+
+	// Forces the shader to be recompiled.
+	virtual void forceRecompile();
 	
 	// Is this shader already compiled?
 	bool isCompiled() const;

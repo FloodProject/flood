@@ -20,25 +20,14 @@ using namespace vapor::resources;
 
 //-----------------------------------//
 
-GLSL_Program::GLSL_Program( const GLSL_ShaderPtr& vs, const GLSL_ShaderPtr& ps )
-	: Program( vs, ps ),
-	linkError( false )
+GLSL_Program::GLSL_Program( const GLSL_TextPtr& text )
+	: linkError( false ), text( text )
 {
+	assert( text != nullptr );
+	
 	create();
-
-	//assert( vs && ps );
-
-	if(vs)
-	{
-		shaders.push_back( vs );
-		attached[vs] = false;
-	}
-
-	if(ps)
-	{
-		shaders.push_back( ps );
-		attached[ps] = false;
-	}
+	createShaders();
+	updateShadersText();
 }
 
 //-----------------------------------//
@@ -75,6 +64,69 @@ bool GLSL_Program::create()
 
 //-----------------------------------//
 
+void GLSL_Program::addShader( const GLSL_ShaderPtr& shader )
+{
+	ShaderVector::iterator it =
+		std::find(shaders.begin(), shaders.end(), shader);
+
+	if( it == shaders.end() )
+	{
+		shaders.push_back( shader );
+	}
+
+	if( !attached[shader] )
+	{
+		glAttachShader( id, shader->id() );
+
+		if( glHasError("Could not attach shader") )
+			return;
+
+		attached[shader] = true;
+	}
+}
+
+//-----------------------------------//
+
+void GLSL_Program::createShaders()
+{
+	if( !text )
+		return;
+
+	const GLSL_ShaderPtr& gl_vertex = new GLSL_Shader();
+	vertex = gl_vertex;
+	vertex->setType( ShaderType::Vertex );
+	vertex->create();
+	
+	const GLSL_ShaderPtr& gl_fragment = new GLSL_Shader();
+	fragment = gl_fragment;
+	fragment->setType( ShaderType::Fragment );
+	fragment->create();
+
+	addShader( gl_vertex );
+	addShader( gl_fragment );
+}
+
+//-----------------------------------//
+
+void GLSL_Program::updateShadersText()
+{
+	assert( text != nullptr );
+	
+	assert( vertex != nullptr );
+	vertex->setText( text->getVertexSource() );
+	
+	assert( fragment != nullptr );
+	fragment->setText( text->getFragmentSource() );
+
+	foreach( const ShaderPtr& shader, shaders )
+		shader->forceRecompile();
+
+	linkError = false;
+	linked = false;
+}
+
+//-----------------------------------//
+
 bool GLSL_Program::attachShaders()
 {
 	// Make sure all shaders are compiled.
@@ -95,10 +147,6 @@ bool GLSL_Program::attachShaders()
 			linked = false;
 			return false;
 		}
-
-		// Shaders need to be attached to the program.
-		glAttachShader( id, shader->id() );
-		attached[shader] = true;
 	}
 
 	return true;

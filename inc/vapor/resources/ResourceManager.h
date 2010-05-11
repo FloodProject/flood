@@ -117,7 +117,7 @@ protected:
 	ResourcePtr prepareResource( const std::string& path );
 
 	// Processes the resource with the right resource loader.
-	void decodeResource( ResourcePtr res, bool async = true );
+	void decodeResource( ResourcePtr res, bool async = true, bool notify = true );
 
 	// Maps a name to a resource.
 	ResourceMap resources;

@@ -26,7 +26,7 @@ class VAPOR_API GLSL_Program : public Program
 {
 public:
 
-	GLSL_Program( const GLSL_ShaderPtr& vs, const GLSL_ShaderPtr& ps );
+	GLSL_Program( const resources::GLSL_TextPtr& );
 	virtual ~GLSL_Program();
 
 	// Creates the program.
@@ -65,10 +65,19 @@ public:
 	// Unbinds the program.
 	virtual void unbind();
 
+	// Creates the shaders and adds them to the program.
+	virtual void createShaders();
+
+	// Updates the shader's text with the program text.
+	virtual void updateShadersText();
+
 	// Gets/sets the resource text that backs this shader.
 	IMPLEMENT_ACESSOR(Text, const resources::GLSL_TextPtr&, text)
 
 protected:
+
+	// Adds a shader to the program.
+	void addShader( const GLSL_ShaderPtr& );
 
 	// Binds the default engine attributes to the program.
 	void bindDefaultAttributes();
@@ -84,8 +93,11 @@ protected:
 
 	resources::GLSL_TextPtr text;
 
-	std::vector< GLSL_ShaderPtr > shaders;
-	std::map< GLSL_ShaderPtr, bool > attached;
+	typedef std::vector< GLSL_ShaderPtr > ShaderVector;
+	ShaderVector shaders;
+
+	typedef std::map< GLSL_ShaderPtr, bool > ShaderAttachMap;
+	ShaderAttachMap attached;
 
 	bool linkError;
 	GLuint id;

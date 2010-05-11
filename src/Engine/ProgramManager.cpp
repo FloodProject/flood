@@ -43,17 +43,14 @@ ProgramPtr ProgramManager::getProgram( const std::string& name )
 {
 	std::string lower( String::toLowerCase(name) );
 
-	const ProgramPtr& program = programs[lower];
-
-	if( !program )
+	if( programs.find(lower) == programs.end() )
 	{
-		// use a fallback default program
-		// TODO: bundle fallback program in engine
-		
+		// TODO: use fallback program.
 		warn( "program", "Could not locate '%s'", name.c_str() );
+		return ProgramPtr();
 	}
 
-	return program;
+	return programs[lower];
 }
 
 //-----------------------------------//
@@ -77,34 +74,16 @@ bool ProgramManager::registerProgram( const std::string& name, const ProgramPtr&
 
 //-----------------------------------//
 
-void ProgramManager::createShaders( const TextPtr& text )
-{
-	const GLSL_TextPtr& glsl = RESOURCE_SMART_PTR_CAST<GLSL_Text>( text );
-
-	const GLSL_ShaderPtr& vertex = new GLSL_Shader();
-	vertex->setType( ShaderType::Vertex );
-	vertex->setText( glsl->getVertexSource() );
-
-	const GLSL_ShaderPtr& fragment = new GLSL_Shader();
-	fragment->setType( ShaderType::Fragment );
-	fragment->setText( glsl->getFragmentSource() );
-
-	const GLSL_ProgramPtr program = new GLSL_Program( vertex, fragment );
-	program->setText( glsl );
-	
-	registerProgram( glsl->getBaseURI(), program );
-}
-
-//-----------------------------------//
-
 void ProgramManager::onLoad( const ResourceEvent& evt )
 {
 	if( evt.resource->getResourceGroup() != ResourceGroup::Shaders )
 		return;
 	
 	const TextPtr& text = RESOURCE_SMART_PTR_CAST<Text>( evt.resource );
-
-	createShaders( text );
+	const GLSL_TextPtr& glsl = RESOURCE_SMART_PTR_CAST<GLSL_Text>( text );
+	
+	const GLSL_ProgramPtr program = new GLSL_Program(glsl);
+	registerProgram( glsl->getBaseURI(), program );
 }
 
 //-----------------------------------//
@@ -113,6 +92,14 @@ void ProgramManager::onReload( const ResourceEvent& evt )
 {
 	if( evt.resource->getResourceGroup() != ResourceGroup::Shaders )
 		return;
+
+	const TextPtr& text = RESOURCE_SMART_PTR_CAST<Text>( evt.resource );
+	std::string base( String::toLowerCase( text->getBaseURI() ) );
+
+	assert( programs.find(base) != programs.end() );
+
+	ProgramPtr program = programs[base];
+	program->updateShadersText();
 }
 
 //-----------------------------------//

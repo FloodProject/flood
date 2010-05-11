@@ -35,7 +35,7 @@ Terrain editing
 	Intensity sliders (DONE)
 	Use a separate VB attribute for the terrain heights
 	Projectors/Decals for terrain
-	Brush interface for editing
+	Brush interface for editing (WIP)
 	Generic paging interface
 	Streaming of terrain chunks and textures
 	Randomized Perlin noise terrain generation
