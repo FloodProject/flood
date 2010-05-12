@@ -9,6 +9,7 @@
 #include "PCH.h"
 #include "ResourceTreeCtrl.h"
 #include "EditorIcons.h"
+#include "Editor.h"
 
 namespace vapor { namespace editor {
 
@@ -34,12 +35,17 @@ ResourceTreeCtrl::ResourceTreeCtrl(vapor::Engine* engine,
 					long style, const wxValidator& validator, 
 					const wxString&	name)
 	: wxTreeCtrl(parent, id, pos, size, style, validator, name),
-	rm( engine->getResourceManager() )
+	rm( engine->getResourceManager() ),
+	editor( (EditorFrame*) parent )
 {
+	assert( editor != nullptr );
 	assert( rm != nullptr );
 
 	rm->onResourceAdded += fd::bind( &ResourceTreeCtrl::onResourceAdded, this );
 	rm->onResourceRemoved += fd::bind( &ResourceTreeCtrl::onResourceRemoved, this );
+	
+	rm->onResourceLoaded += fd::bind( &ResourceTreeCtrl::onResourceReloaded, this );
+	rm->onResourceReloaded += fd::bind( &ResourceTreeCtrl::onResourceReloaded, this );
 
 	initIcons();
 	initControl();
@@ -55,6 +61,71 @@ ResourceTreeCtrl::~ResourceTreeCtrl()
 
 	//rm->onResourceAdded -= fd::bind( &ResourceTreeCtrl::onResourceAdded, this );
 	//rm->onResourceRemoved -= fd::bind( &ResourceTreeCtrl::onResourceRemoved, this );
+	
+	//rm->onResourceLoaded -= fd::bind( &ResourceTreeCtrl::onResourceReloaded, this );
+	//rm->onResourceReloaded -= fd::bind( &ResourceTreeCtrl::onResourceReloaded, this );
+}
+
+//-----------------------------------//
+
+void ResourceTreeCtrl::updateTree()
+{
+	// traverse each resource and add nodes
+	foreach( const ResourceMapPair& resource, rm->getResources() )
+	{
+		const ResourcePtr& res = resource.second;
+		ResourceGroup::Enum group = res->getResourceGroup();
+
+		AppendItem( resourceGroupTreeIds[group],
+					resource.first, 0
+					/*resourceGroupIcons[group]*/ );
+	}
+}
+
+//-----------------------------------//
+
+void ResourceTreeCtrl::onResourceAdded( const ResourceEvent& event )
+{
+	const ResourcePtr& res = event.resource;
+	ResourceGroup::Enum group = res->getResourceGroup();
+
+	AppendItem( resourceGroupTreeIds[group],
+				res->getURI(), 0
+				/*resourceGroupIcons[group]*/ );
+}
+
+//-----------------------------------//
+
+void ResourceTreeCtrl::onResourceRemoved( const ResourceEvent& event )
+{
+}
+
+//-----------------------------------//
+
+void ResourceTreeCtrl::onResourceReloaded( const ResourceEvent& event )
+{
+	// Update the view when resources get reloaded.
+	editor->RefreshViewport();
+}
+
+//-----------------------------------//
+
+void ResourceTreeCtrl::onItemMenu(wxTreeEvent& WXUNUSED(event))
+{
+//    wxTreeItemId itemId = event.GetItem();
+//	//debug( "%s", itemId.IsOk() ? "true" : "false" );
+//    //MyTreeItemData *item = itemId.IsOk() ? (MyTreeItemData *)GetItemData(itemId)
+//                                         //: nullptr;
+//    wxPoint clientpt = event.GetPoint();
+//
+//#if wxUSE_MENUS
+//    wxMenu menu("Scene node");
+//    menu.Append(ID_MenuSceneNodeDelete, "&Delete...");
+//
+//    PopupMenu(&menu, clientpt);
+//#endif // wxUSE_MENUS
+//
+//    event.Skip();
 }
 
 //-----------------------------------//
@@ -101,61 +172,6 @@ void ResourceTreeCtrl::initControl()
 	CREATE_RESOURCE_NODE( Shaders )
 	CREATE_RESOURCE_NODE( Audio )
 	CREATE_RESOURCE_NODE( Scripts )
-}
-
-//-----------------------------------//
-
-void ResourceTreeCtrl::updateTree()
-{
-	// traverse each resource and add nodes
-	foreach( const ResourceMapPair& resource, rm->getResources() )
-	{
-		const ResourcePtr& res = resource.second;
-		ResourceGroup::Enum group = res->getResourceGroup();
-
-		AppendItem( resourceGroupTreeIds[group],
-					resource.first, 0
-					/*resourceGroupIcons[group]*/ );
-	}
-}
-
-//-----------------------------------//
-
-void ResourceTreeCtrl::onResourceAdded( const ResourceEvent& event )
-{
-	const ResourcePtr& res = event.resource;
-	ResourceGroup::Enum group = res->getResourceGroup();
-
-	AppendItem( resourceGroupTreeIds[group],
-				res->getURI(), 0
-				/*resourceGroupIcons[group]*/ );
-}
-
-//-----------------------------------//
-
-void ResourceTreeCtrl::onResourceRemoved( const ResourceEvent& event )
-{
-
-}
-
-//-----------------------------------//
-
-void ResourceTreeCtrl::onItemMenu(wxTreeEvent& WXUNUSED(event))
-{
-//    wxTreeItemId itemId = event.GetItem();
-//	//debug( "%s", itemId.IsOk() ? "true" : "false" );
-//    //MyTreeItemData *item = itemId.IsOk() ? (MyTreeItemData *)GetItemData(itemId)
-//                                         //: nullptr;
-//    wxPoint clientpt = event.GetPoint();
-//
-//#if wxUSE_MENUS
-//    wxMenu menu("Scene node");
-//    menu.Append(ID_MenuSceneNodeDelete, "&Delete...");
-//
-//    PopupMenu(&menu, clientpt);
-//#endif // wxUSE_MENUS
-//
-//    event.Skip();
 }
 
 //-----------------------------------//

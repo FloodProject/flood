@@ -10,6 +10,8 @@
 
 namespace vapor { namespace editor {
 
+class EditorFrame;
+
 //-----------------------------------//
 
 /**
@@ -47,7 +49,9 @@ protected:
 	// Resource-monitoring callbacks.
 	void onResourceAdded( const resources::ResourceEvent& event );
 	void onResourceRemoved( const resources::ResourceEvent& event );
+	void onResourceReloaded( const resources::ResourceEvent& event );
 
+	EditorFrame* editor;
 	Engine* engine;
 	ResourceManagerPtr rm;
 
@@ -57,6 +61,8 @@ protected:
 
 	std::map< resources::ResourceGroup::Enum, wxTreeItemId > resourceGroupTreeIds;
 	std::map< resources::ResourceGroup::Enum, int > resourceGroupIcons;
+
+private:
 
 	DECLARE_EVENT_TABLE()
 };

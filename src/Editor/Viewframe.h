@@ -54,6 +54,7 @@ protected:
 	void onCameraTransform();
 	void onText( wxCommandEvent& event );
 	void onTextEnter( wxCommandEvent& event );
+	void onCameraSpeedSpin( wxSpinDoubleEvent& event );
 	
 	// Control where the scene will be drawn.
 	vaporControl* control;
@@ -70,9 +71,12 @@ protected:
 	wxTextCtrl* txt_Y;
 	wxTextCtrl* txt_Z;
 
-	wxChoice* choice_View;
+	wxSpinCtrlDouble* spn_CameraSpeed;
+	
 	wxBitmapButton* btn_Wireframe;
 	wxBitmapButton* btn_Textures;
+	
+	wxChoice* choice_View;
 
 private:
 

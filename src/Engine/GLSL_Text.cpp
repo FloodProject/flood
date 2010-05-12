@@ -20,21 +20,27 @@ void GLSL_Text::parse()
 {
 	// Get the vertex and pixel shader block indicies.
 	size_t v = text.find(VertexBlock);
+	size_t p = text.find(FragmentBlock);
 
 	if( v == std::string::npos )
 	{
 		warn( "glsl", "No vertex shader found in '%s'", uri.c_str() );
+		vertex.clear();
 	}
-
-	size_t p = text.find(FragmentBlock);
+	else
+	{
+		vertex = text.substr(v+VertexBlock.size(), p-v-FragmentBlock.size());
+	}
 
 	if( p == std::string::npos )
 	{
-		warn( "glsl", "No pixel shader found in '%s'", uri.c_str() );
+		warn( "glsl", "No fragment shader found in '%s'", uri.c_str() );
+		pixel.clear();
 	}
-
-	vertex = text.substr(v+VertexBlock.size(), p-v-FragmentBlock.size());
-	pixel = text.substr(p+FragmentBlock.size(), std::string::npos);
+	else
+	{
+		pixel = text.substr(p+FragmentBlock.size(), std::string::npos);
+	}
 }
 
 //-----------------------------------//

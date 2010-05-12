@@ -70,7 +70,9 @@ bool OGG_Loader::decode(const File& file, Resource* res)
 	ov_open_callbacks((void*) &file, &oggFile, nullptr, 0, callbacks);
 
 	// Get some information about the OGG file.
-	vorbis_info* pInfo( ov_info(&oggFile, -1) );
+	// To retrieve the vorbis_info struct for the current bitstream,
+	// the second parameter should be set to -1.
+	vorbis_info* pInfo = ov_info(&oggFile, -1);
 	
 	// If the OGG could not be opened, return a null resource.
 	if(!pInfo)
@@ -81,12 +83,12 @@ bool OGG_Loader::decode(const File& file, Resource* res)
 	decodeOgg( &oggFile, buffer );
 	std::vector<byte>( buffer ).swap( buffer );
 
-	ov_clear(&oggFile);
-
 	Sound* sound = static_cast<Sound*>( res );
 	sound->setChannels( pInfo->channels );
 	sound->setFrequency( pInfo->rate );
 	sound->setBuffer( buffer );
+
+	ov_clear(&oggFile);
 
 	return true;
 }

@@ -26,8 +26,8 @@ Gizmo
 
 Viewframe
 	Fix the control border
-	Wire the camera speed behaviour
 	Wire the camera render mode buttons
+	Wire the camera speed behaviour
 	Redraw when a resource gets updated
 	
 Terrain editing
@@ -70,21 +70,11 @@ Override the print method of Lua
 ENGINE:
 -------
 
+Fix Watcher (sends more notifications than it should).
+
 Add a Frustum class
 	Make Camera subclass it
 	Maybe Light too?
-
-Shaders live updating
-
-Engine Modularization/Simplification Work
-	
-	Compile as DLL (Reverted)
-	Remove namespaces (TODO)
-	Remove Singletons from the codebase (DONE)
-	Implement ResourceLoaders as (static) plugins	
-	Rename Timer into Stopwatch
-	Refactor core code into its own static library (Reverted)
-	Make Singleton code thread-safe (double check pattern?)
 
 Add Z-bias to the AABB renderables
 Fix Overlays positioning (might be related to ortographic projection)
@@ -113,7 +103,7 @@ Fix Lua state closing
 Typesafe logging (FastFormat API)
 
 
-Overlays
+Overlays:
 	Can be 3D too...
 	Think about overlays positioning (absolute and relative)
 
@@ -187,10 +177,21 @@ VFS:
 
 	Patch PhysFS to use the proper user dir for App Data on Windows
 
+Engine Modularization/Simplification Work
+	
+	Compile as DLL (Reverted)
+	Remove namespaces (TODO)
+	Remove Singletons from the codebase (DONE)
+	Implement ResourceLoaders as (static) plugins	
+	Rename Timer into Stopwatch
+	Refactor core code into its own static library (Reverted)
+	Make Singleton code thread-safe (double check pattern?)
+
 
 DONE:
 -----
 
+Shaders live updating
 Don't allow label editing on components
 Hook up the renaming of Scene node labels
 Make the update logic smarter (no 50% CPU hog)
@@ -256,111 +257,16 @@ http://www.fastformat.org/
 SNIPPETS
 ========
 
-	ResourceManager stuff.
-	
-	// Sets a memory budget limit for a given resource group.
-	//void setMemoryBudget(ResourceGroup::Enum group, uint memoryBudget);
-	
-	// Gets the memory usage for a given resource group.
-	//uint getMemoryUsage(ResourceGroup::Enum group);
+ResourceManager stuff.
 
-	// Gets a list of all the registered resource handlers.
-	//std::list<ResourceLoaderPtr> getResourceLoader(std::string extension);
-	
-	// maps each resource group to a specific budget.
-	//std::map< ResourceGroup::Enum, uint > resourceBudgets;
-	
-	
-	//PROFILE;
+// Sets a memory budget limit for a given resource group.
+//void setMemoryBudget(ResourceGroup::Enum group, uint memoryBudget);
 
-	if( !gizmo ) 
-		return false;
-	
-	NodePtr node = gizmo->getNode();
+// Gets the memory usage for a given resource group.
+//uint getMemoryUsage(ResourceGroup::Enum group);
 
-	//MaterialPtr mat( new Material("Picking") );
-	//mat->setBackfaceCulling( false );
-	//mat->setDepthTest( false );
-	//mat->setProgram( "pick" );
+// Gets a list of all the registered resource handlers.
+//std::list<ResourceLoaderPtr> getResourceLoader(std::string extension);
 
-	//debug( "fbo" );
-
-	//fbo->bind();
-	
-	//CameraPtr camera = view->getCamera();
-	//camera->setViewport( view );
-
-	//render::Device* device = engine->getRenderDevice();
-	//device->setViewport(Vector2i::Zero, Vector2i(PICK_TARGET_SIZE, PICK_TARGET_SIZE));
-	//camera->render( node );
-	//editor->getMainViewframe()->getControl()->getRenderWindow()->update();
-
-	ViewportPtr viewport = viewframe->getViewport();
-	Vector2i size = viewport->getSize();
-	//int m_x = me.x*(PICK_TARGET_SIZE/float(size.x));
-	//int m_y = (size.y-me.y)*(PICK_TARGET_SIZE/float(size.y));
-
-	//debug( "pick: %d, %d", m_x, m_y );
-
-	int m_x = me.x;
-	int m_y = size.y-me.y;
-
-	Color pick;
-	glReadPixels(m_x, m_y, 1, 1, GL_BGR, GL_FLOAT, &pick);
-	debug( "%f,%f,%f", pick.r, pick.g, pick.b, pick.a );
-
-	//fbo->unbind();
-
-	return false;
-	
-SERIALIZATION FORMATS:
-----------------------
-
-http://bsonspec.org
-http://code.google.com/p/protobuf/
-http://msgpack.sourceforge.net/
-http://hadoop.apache.org/avro/docs/current/
-//-----------------------------------//
-
-bool WasLaunchedInNTDebugger()
-{
-	bool ret = false;
-
-	// When some debug flags are set on the heap, NT clears
-	// the allocated memory with 0xbaadf00d, so we check
-	// this to see if we were launched in a debugger
-	long* data = (long*) HeapAlloc(GetProcessHeap(), 0, 8);
-
-	if( *data == 0xbaadf00d )
-		ret = true;
-
-	HeapFree(GetProcessHeap(), 0, data);
-	return ret;
-}
-
-//-----------------------------------//
-
-void disableRtlHeapChecking(HANDLE heap) 
-{	
-	// This is dependent on the current implementation
-	// of the XP (and 2K and NT?) heap which stores a
-	// number of flags 16 bytes into the heap, and
-	// checks the bitmask 0x7D030F60 when deciding
-	// whether or not to clear the memory with 0xbaadf00d,
-	// so, we're clearing all of the bits that may cause
-	// the clearing to happen
-
-	if (WasLaunchedInNTDebugger())
-	{
-		// This assert is basically because these 2
-		// values are the only valuse I saw, if there
-		// are any values for these flags, they might
-		// mean something special (or a different OS)
-		// and we should take a closer look to see if
-		// we're clearing anything important. 
-		assert(*((long*)heap + 4) == 0x40000061 ||
-			*((long*)heap + 4) == 0x40000060);
-		// Clear the bad bits!
-		*((long*)heap + 4) &= ~0x7D030F60;
-	}
-}
+// maps each resource group to a specific budget.
+//std::map< ResourceGroup::Enum, uint > resourceBudgets;

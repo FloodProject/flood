@@ -55,6 +55,8 @@ void Framework::init()
 	// set up all the resources
 	onSetupResources();
 
+	resourceManager->waitUntilQueuedResourcesLoad();
+
 	// set up the scene
 	onSetupScene();
 }

@@ -17,7 +17,8 @@ namespace vapor { namespace editor {
 
 void EditorFrame::RefreshViewport()
 {
-	viewframe->flagRedraw();
+	if( viewframe )
+		viewframe->flagRedraw();
 }
 
 //-----------------------------------//

@@ -24,6 +24,8 @@ class VAPOR_API Sound : public Resource
 {
 public:
 
+	Sound();
+
 	/// Gets/sets the frequency of the sound.
 	IMPLEMENT_ACESSOR(Frequency, const int, frequency)
 

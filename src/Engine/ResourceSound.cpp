@@ -8,3 +8,16 @@
 
 #include "vapor/PCH.h"
 #include "vapor/resources/Sound.h"
+
+namespace vapor { namespace resources {
+
+//-----------------------------------//
+
+Sound::Sound()
+	: frequency(-1),
+	channels(0)
+{ }
+
+//-----------------------------------//
+
+} } // end namespaces

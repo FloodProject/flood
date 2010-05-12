@@ -32,6 +32,11 @@ void Example::onSetupResources()
 	
 	ImagePtr img = rm->loadResource< Image >( "triton.png" );
 	snd = rm->loadResource< resources::Sound >( "stereo.ogg" );
+
+	rm->loadResource("Diffuse.glsl");
+	rm->loadResource("Tex.glsl");
+	rm->loadResource("Toon.glsl");
+	rm->loadResource("Tex_Toon.glsl");
 }
 
 //-----------------------------------//
@@ -51,11 +56,6 @@ void Example::onSetupScene()
 	ScenePtr scene = getSceneManager();
 	ResourceManagerPtr const rm = getResourceManager();
 	render::DevicePtr const rd = getRenderDevice();
-
-	rm->loadResource("Diffuse.glsl");
-	rm->loadResource("Tex.glsl");
-	rm->loadResource("Toon.glsl");
-	rm->loadResource("Tex_Toon.glsl");
 
 	// Create a new Camera
 	NodePtr camera( new Node( "MainCamera" ) );
@@ -95,26 +95,19 @@ void Example::onSetupScene()
 	//scene->add(ct);
 	
 	// Materials too?
-	//MaterialPtr mat2( new Material( "FontMaterial", tex ) );
-	//FontPtr font = rm->loadResource< Font >( "Verdana.font" );
-	//label.reset( new Label( getFPS( lastFrameTime ), font, mat2 ) );
-	//NodePtr fps( new Node( "FPSNode" ) );
-	//fps->addTransform();
-	//fps->addComponent( label );
-	//fps->getTransform()->translate( -300.0f, 220.0f, 0.0f );
-	//scene->add( fps );
+	MaterialPtr mat2( new Material("FontMaterial", "tex") );
+	FontPtr font = rm->loadResource<Font>( "Verdana.font" );
+	label.reset( new Label( getFPS( lastFrameTime ), font, mat2 ) );
+	NodePtr fps( new Node("FPSNode") );
+	fps->addTransform();
+	fps->addComponent( label );
+	fps->getTransform()->translate( -300.0f, 220.0f, 0.0f );
+	scene->add( fps );
 
-	//MaterialPtr mat( new Material( "GridMaterial", diffuse ) );
-	//NodePtr grid( new Node( "Grid" ) );
-	//grid->addTransform();
-	//grid->addComponent( GridPtr( new Grid() ) );
-	//scene->add( grid );
-
-	//foreach( const RenderablePtr& rend, 
-	//	grid->getComponent<Geometry>("Grid")->getRenderables() )
-	//{
-	//	rend->getMaterial()->setProgram( diffuse );
-	//}
+	NodePtr grid( new Node( "Grid" ) );
+	grid->addTransform();
+	grid->addComponent( GridPtr( new Grid() ) );
+	scene->add( grid );
 
 	NodePtr lnode( new Node("Light") );
 	lnode->addTransform();
@@ -159,7 +152,7 @@ void Example::onUpdate( double delta )
 	}
 	else
 	{
-		//label->setText( getFPS(lastFrameTime) );
+		label->setText( getFPS(lastFrameTime) );
 		fpsUpdateTime = 0.0f;
 	}
 }

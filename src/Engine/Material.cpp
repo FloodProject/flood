@@ -104,6 +104,7 @@ ProgramPtr Material::getProgram()
 void Material::bind()
 {
 	ProgramPtr program = getProgram();
+	assert( program != nullptr );
 
 	foreach( const TextureMapPair& p, textures )
 	{
