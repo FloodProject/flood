@@ -23,10 +23,8 @@ namespace vapor { namespace resources {
 
 /**
  * Loads a font description file format that can describe both TTF and
- * bitmap fonts. The format is very simple for now, it only supports two
- * lines of text. The first should be the name of the texture font file
- * and the second the glyph definition format. This will be changed later
- * to be based on JSON.
+ * bitmap fonts. The format is very simple for now. This will be changed
+ * later to be based on JSON.
  *
  * Example:
  *
@@ -71,6 +69,25 @@ public:
 	IMPLEMENT_GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Fonts)
 
 protected:
+
+	// Validates that the bitmap font format is okay.
+	bool validateFont();
+
+	// Parses the glyphs definition file.
+	void parseGlyphs();
+
+	BitmapFont* font;
+	ImagePtr image;
+	std::vector<Glyph> glyphs;
+
+	std::vector<std::string> fontNameSizeInfo;
+	std::vector<std::string> glyphSizeInfo;
+	std::string imageFilename;
+	std::string glyphsFilename;
+
+	std::vector<std::string> lines;
+
+	std::vector<byte> data;
 
 	// Holds all file extensions recognized by this codec.
 	mutable ExtensionList extensions;

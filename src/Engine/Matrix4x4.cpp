@@ -234,8 +234,8 @@ Matrix4x4 Matrix4x4::createPerspectiveProjection( float fov, float ar, float nea
 
 //-----------------------------------//
 
-Matrix4x4 Matrix4x4::createOrthographicProjection( float left, float right, float bottom, float top,
-		float near_, float far_)
+Matrix4x4 Matrix4x4::createOrthographicProjection( float left, float right,
+		float bottom, float top, float near_, float far_)
 {
 	Matrix4x4 proj;
 
@@ -249,9 +249,9 @@ Matrix4x4 Matrix4x4::createOrthographicProjection( float left, float right, floa
 	proj.m23 = 0;
 	proj.m24 = 0;
 
-	proj.ty = 0;
-	proj.tz = 0;
-	proj.tw = -2.0f / (far_ - near_);
+	proj.m31 = 0;
+	proj.m32 = 0;
+	proj.m33 = -2.0f / (far_ - near_);
 	proj.m34 = 0;
 
 	proj.tx = -(right + left) / (right - left);

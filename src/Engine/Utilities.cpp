@@ -7,6 +7,7 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
+#include "vapor/Utilities.h"
 
 namespace vapor {
 
@@ -86,6 +87,40 @@ std::wstring String::toWideString(const std::string &str)
 }
 
 #endif
+
+//-----------------------------------//
+
+std::string String::format(const char* str, ...)
+{
+	va_list args;
+	va_start(args, str);
+
+	std::string fmt = format(str, args);
+
+	va_end(args);
+
+	return fmt;
+}
+
+//-----------------------------------//
+
+std::string String::format(const char* str, va_list args)
+{
+	const int BUF_MAX_SIZE = 512;
+
+	char buf[BUF_MAX_SIZE];
+
+	#ifdef VAPOR_COMPILER_MSVC
+		int n = vsnprintf_s( buf, BUF_MAX_SIZE, _TRUNCATE, str, args );
+	#else
+		int n = vsnprintf( &fmt[0], fmt.size(), str, args );
+	#endif
+
+	assert( n >= 0 ); // check for output error
+	assert( n < BUF_MAX_SIZE ); // check for truncation
+
+	return std::string(buf);
+}
 
 //-----------------------------------//
 

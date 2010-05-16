@@ -107,7 +107,7 @@ long NativeFile::getSize()
 //-----------------------------------//
 
 long NativeFile::read(void* buffer, long sz)
-{	
+{
 	return fread(buffer, 1, sz, fp);
 }
 

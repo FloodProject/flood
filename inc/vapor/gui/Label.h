@@ -8,10 +8,11 @@
 
 #pragma once
 
-#include "vapor/resources/Font.h"
-#include "vapor/render/Material.h"
-#include "vapor/scene/Geometry.h"
 #include "vapor/gui/Overlay.h"
+
+FWD_DECL_NS_TYPEDEF_INT(resources, Font)
+FWD_DECL_NS_TYPEDEF_INT(render, Material)
+FWD_DECL_NS_TYPEDEF_SHARED(scene, Geometry)
 
 namespace vapor { namespace gui {
 
@@ -32,12 +33,10 @@ class VAPOR_API Label : public gui::Overlay
 public:
 
 	Label( const std::string& text, resources::FontPtr font, render::MaterialPtr mat );
-	//Label( const std::string& text, std::string font );
-
-	virtual ~Label();
+	Label( const std::string& text, const std::string& font );
 
 	// Gets the current text of this label.
-	const std::string& getText() const;
+	IMPLEMENT_GETTER(Text, const std::string&, text)
 
 	// Sets the current text of this label.
 	void setText( const std::string& text );
@@ -46,9 +45,15 @@ public:
 	virtual void update( double delta );
 
 	// Returns this component name identification.
-	virtual const std::string& getType() const;
+	IMPLEMENT_GETTER(Type, const std::string&, type)
 
 protected:
+
+	// Initializes the label.
+	void init();
+
+	// Initializes the label once the font is loaded.
+	void setupState();
 
 	// Contains the text of the label.
 	std::string text;
@@ -56,11 +61,16 @@ protected:
 	// Holds the font texture we are gonna use for rendering the glyphs.
 	resources::FontPtr font;
 	
-	// Mantains the font geometry.
+	// Font geometry.
 	render::RenderablePtr renderable;
+
+	// Font material.
+	render::MaterialPtr material;
 	
 	// Used to track if a label needs updating.
 	bool isDirty;
+
+	bool setupDone;
 
 	static const std::string& type;
 };

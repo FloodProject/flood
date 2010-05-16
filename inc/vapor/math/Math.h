@@ -24,6 +24,7 @@ using ::log;
 using ::log10;
 using ::acos;
 using ::atan2;
+using ::ceil;
 
 //-----------------------------------//
 

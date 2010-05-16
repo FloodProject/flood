@@ -27,6 +27,9 @@ namespace LogLevel
 		Warning,
 		Error
 	};
+
+	// Gets an error string
+	std::string toString( LogLevel::Enum );
 };
 
 //-----------------------------------//
@@ -71,8 +74,6 @@ public:
 	// Low-level logging implementation.
 	void write(const LogLevel::Enum level, const std::string& subsystem, 
 		const char* msg, va_list args);
-		
-	void write(const LogLevel::Enum, const std::string&, const char*, ...);
 
 	// Gets/sets the global engine logger.
 	IMPLEMENT_STATIC_ACESSOR(Logger, Log*, engineLog)
@@ -90,16 +91,16 @@ public:
 	static Log* engineLog;
 
 protected:
-	
-	// Writes JavaScript sorttable_v1.js.
-	void sorttable();
-
-	// Write CSS styling to the log file.
-	void css();
-	
-	// Writes the boilerplate HTML tags.
+		
+	// Writes the header and footer to the log.
 	void start(const std::string& title);
 	void end();
+
+	// Writes some code to allow table sorting.
+	void sorttable();
+
+	// Write CSS styling to the log.
+	void css();
 
 	// Timer used for data/time control
 	Timer timer;

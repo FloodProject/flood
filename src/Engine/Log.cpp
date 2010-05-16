@@ -8,9 +8,10 @@
 
 #include "vapor/PCH.h"
 #include "vapor/Log.h"
+#include "vapor/Utilities.h"
 #include "LogFormat.h"
 
-const int BUF_MAX_SIZE = 256;
+static const int BUF_MAX_SIZE = 256;
 
 namespace vapor { namespace log {
 
@@ -21,50 +22,62 @@ bool Log::showDebug = true;
 
 //-----------------------------------//
 
+std::string LogLevel::toString( LogLevel::Enum level )
+{
+	switch(level)
+	{
+	case LogLevel::Info:
+		return "Info";
+	case LogLevel::Warning:
+		return "Warning";
+	case LogLevel::Error:
+		return "Error";
+	default:
+		return "(undefined)";
+	}
+}
+
+//-----------------------------------//
+
 void debug( const std::string& msg )
 {
-	log::debug( "%s", msg.c_str() );
+	debug( "%s", msg.c_str() );
 }
 
 //-----------------------------------//
 
 void debug(const char* str, ...)
 {
-	if( !Log::showDebug ) return;
-
-#ifdef VAPOR_DEBUG
-	char fmt[BUF_MAX_SIZE];
+	if( !Log::showDebug )
+		return;
 
 	va_list args;
 	va_start(args, str);
 
-#ifdef VAPOR_COMPILER_MSVC
-	char msg[BUF_MAX_SIZE];
-	
-	_snprintf_s( fmt, BUF_MAX_SIZE, _TRUNCATE, "%s\n", str );
-	vsnprintf_s( msg, BUF_MAX_SIZE, _TRUNCATE, fmt, args );
+	std::string msg = String::format(str, args);
+	msg.append("\n");
 
-	// TODO: i18n issues?
-	OutputDebugStringA( msg );
-#else
-	snprintf( fmt, BUF_MAX_SIZE, "%s\n", str );
-	vfprintf( stdout, fmt, args );
+#ifdef VAPOR_COMPILER_MSVC
+	// TODO: i18n
+	OutputDebugStringA( msg.c_str() );
 #endif
 
 	va_end(args);
-#endif
 }
 
 //-----------------------------------//
 
 void info(const std::string& subsystem, const char* msg, ...)
 {
-	if(!Log::getLogger()) return;
+	if( !Log::getLogger() )
+		return;
 
 	va_list args;
-	
 	va_start(args, msg);
-		Log::getLogger()->write(LogLevel::Info, subsystem, msg, args);
+
+		Log* log = Log::getLogger();
+		log->write(LogLevel::Info, subsystem, msg, args);
+	
 	va_end(args);
 }
 
@@ -72,12 +85,18 @@ void info(const std::string& subsystem, const char* msg, ...)
 
 void warn(const std::string &subsystem, const char* msg, ...)
 {
-	if(!Log::getLogger()) return;
+	if( !Log::getLogger() )
+		return;
 
 	va_list args;
-	
 	va_start(args, msg);
-		Log::getLogger()->write(LogLevel::Warning, subsystem, msg, args);
+
+		Log* log = Log::getLogger();
+		log->write(LogLevel::Warning, subsystem, msg, args);
+	
+		std::string buf = String::format(msg, args);
+		debug( "%s", buf.c_str() );
+
 	va_end(args);
 }
 
@@ -85,12 +104,15 @@ void warn(const std::string &subsystem, const char* msg, ...)
 
 void error(const std::string& subsystem, const char* msg, ...)
 {
-	if(!Log::getLogger()) return;
-
 	va_list args;
-	
 	va_start(args, msg);
-		Log::getLogger()->write(LogLevel::Error, subsystem, msg, args);
+
+		Log* log = Log::getLogger();
+		log->write(LogLevel::Error, subsystem, msg, args);
+	
+		std::string buf = String::format(msg, args);
+		debug( "%s", buf.c_str() );
+
 	va_end(args);
 }
 
@@ -134,7 +156,7 @@ void Log::MessageDialog(const std::string& msg, const LogLevel::Enum level)
 	UINT style = MB_OK;
 
 	switch(level)
-	{		
+	{
 	case LogLevel::Info:	
 		style |= MB_ICONINFORMATION; 
 		break;
@@ -159,79 +181,33 @@ void Log::MessageDialog(const std::string& msg, const LogLevel::Enum level)
 void Log::write(const LogLevel::Enum level, const std::string& subsystem, 
 				const char* msg, va_list args)
 {
-	if (!fp) return;
-	const char* s = nullptr;
+	if (!fp)
+		return;
 
-	switch(level)
-	{
-	case LogLevel::Info:
-		s = "info";
-		break;
-	case LogLevel::Warning:
-		s = "warn";
-		break;
-	case LogLevel::Error:
-		s = "error"; 
-		break;
-	}
+	const char* s = 
+		String::toLowerCase( LogLevel::toString(level) ).c_str();
 
-	{
-		LocaleSaveRestore c;
-		boost::lock_guard<boost::mutex> lock(mut);
+	LocaleSaveRestore c;
+	boost::lock_guard<boost::mutex> lock(mut);
 
-		fprintf(fp, "\t\t<tr class=\"%s,%s\">", s, even ? "even" : "odd");
-			fprintf(fp, "<td class=\"%s\"></td>", s);
-			fprintf(fp, "<td>%.3fs</td>", timer.getElapsedTime()); // date time
-			fprintf(fp, "<td>%s</td>", subsystem.c_str()); // subsystem
-			fprintf(fp, "<td>");
-				vfprintf(fp, msg, args);
-			fprintf(fp, "</td>");
-		fprintf(fp, "</tr>\n");
+	fprintf(fp, "\t\t<tr class=\"%s,%s\">", s, even ? "even" : "odd");
+		fprintf(fp, "<td class=\"%s\"></td>", s);
+		fprintf(fp, "<td>%.3fs</td>", timer.getElapsedTime()); // date time
+		fprintf(fp, "<td>%s</td>", subsystem.c_str()); // subsystem
+		fprintf(fp, "<td>");
+			vfprintf(fp, msg, args);
+		fprintf(fp, "</td>");
+	fprintf(fp, "</tr>\n");
 
-		fflush(fp);
-		even = !even;
-
-	#ifdef VAPOR_DEBUG
-		switch(level)
-		{
-		case LogLevel::Warning:
-		case LogLevel::Error:
-			char buf[2048];
-			int err = vsprintf(buf, msg, args);
-			assert(err >= 0);
-			debug("%s",buf);
-			break;
-		}
-	#endif
-	}
-}
-
-//-----------------------------------//
-
-void Log::write(const LogLevel::Enum level, const std::string& subsystem, 
-	const char* msg, ...)
-{
-	if( !Log::getLogger() ) return;
-
-	switch(level)
-	{
-	case LogLevel::Info:
-		info(subsystem, msg);
-		break;
-	case LogLevel::Warning:
-		warn(subsystem, msg);
-		break;
-	case LogLevel::Error:
-		error(subsystem, msg);
-		break;
-	}
+	fflush(fp);
+	even = !even;
 }
 
 //-----------------------------------//
 
 void Log::start(const std::string& title)
 {
-	if (!fp) return;
+	assert( fp != nullptr );
 
 	fprintf(fp, LOG_HTML, title.c_str(), LOG_CSS, LOG_JS_TABLES);
 }
@@ -240,7 +216,7 @@ void Log::start(const std::string& title)
 
 void Log::end()
 {
-	if (!fp) return;
+	assert( fp != nullptr );
 
 	fprintf(fp, "\t</table>\n" "\t</div>\n" "</body>\n" "</html>\n");
 }

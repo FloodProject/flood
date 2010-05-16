@@ -27,17 +27,17 @@ class BitmapFont : public Font
 public:
 
 	// Gets the size information of a glyph.
-	virtual const std::pair<const ushort, const ushort> getGlyphSize() const;
+	virtual const math::Vector2i getGlyphSize() const;
 
-	// Sets the font image.
-	IMPLEMENT_ACESSOR(Image, const ImagePtr&, fontImage)
+	// Gets/sets the font image.
+	IMPLEMENT_ACESSOR(Image, const ImagePtr&, image)
 
 	// Gets/sets the font glyphs.
 	IMPLEMENT_ACESSOR(Glyphs, const std::vector<Glyph>&, glyphs)
 
 private:
 
-	ImagePtr fontImage;
+	ImagePtr image;
 	std::vector<Glyph> glyphs;
 };
 

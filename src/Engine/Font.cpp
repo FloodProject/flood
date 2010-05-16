@@ -8,3 +8,15 @@
 
 #include "vapor/PCH.h"
 #include "vapor/resources/Font.h"
+
+namespace vapor { namespace resources {
+
+//-----------------------------------//
+
+Font::Font()
+	: size(0)
+{ }
+
+//-----------------------------------//
+
+} } // end namespaces

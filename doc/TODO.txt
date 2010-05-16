@@ -1,6 +1,8 @@
 WIP (work-in-progress)
 ======================
 
+Check messy Logger code
+
 Shadows
 	Render to depth texture (DONE)
 	Render from Light viewpoint (WIP)

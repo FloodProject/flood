@@ -138,13 +138,13 @@ void Device::render( RenderBlock& queue, const Camera* cam )
 		if( !material )
 			continue;
 
-		rend->bind();
-		setupRenderStateMaterial(material);
-
 		const ProgramPtr& program = material->getProgram();
 
 		if( !program )
 			continue;
+
+		rend->bind();
+		setupRenderStateMaterial(material);
 
 		if( !program->isLinked() )
 			continue;
@@ -301,27 +301,20 @@ bool Device::setupRenderStateLight( const RenderState& state, const LightQueue& 
 
 bool Device::setupRenderStateOverlay( const RenderState& state )
 {
-	const RenderablePtr& rend = state.renderable;
-	if( !rend ) return false;
-
-	const MaterialPtr& material = rend->getMaterial();
-	if( !material ) return false;
-
-	const ProgramPtr& program = material->getProgram();
-	if( !program ) return false;
-
+	const ProgramPtr& program =
+		state.renderable->getMaterial()->getProgram();
+	
 	glDisable( GL_DEPTH_TEST );
 	//glDepthMask( false );
 
-	const float w = (float) activeTarget->getSettings().getWidth();
-	const float h = (float) activeTarget->getSettings().getHeight();
+	Vector2i size = activeTarget->getSettings().getSize();
 
 	Matrix4x4 proj = Matrix4x4::createOrthographicProjection( 
-		0, w, 0, h, -10.0, 10.0 );
+		0, size.x, 0, size.y, -10.0, 10.0 );
 
 	program->setUniform( "vp_ProjectionMatrix", proj );
 	program->setUniform( "vp_ModelMatrix", state.modelMatrix );
-	program->setUniform( "vp_ViewMatrix", math::Matrix4x4::Identity );
+	program->setUniform( "vp_ViewMatrix", Matrix4x4::Identity );
 	program->setUniform( "vp_ModelViewMatrix", state.modelMatrix );
 
 	return true;

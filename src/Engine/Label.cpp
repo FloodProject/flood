@@ -8,77 +8,95 @@
 
 #include "vapor/PCH.h"
 #include "vapor/gui/Label.h"
-#include "vapor/resources/ResourceManager.h"
+#include "vapor/resources/Font.h"
+#include "vapor/render/Material.h"
+#include "vapor/scene/Geometry.h"
+#include "vapor/Engine.h"
+
+namespace vapor { namespace gui {
 
 using namespace vapor::resources;
 using namespace vapor::render;
 using namespace vapor::math;
 
-namespace vapor { namespace gui {
-
-//-----------------------------------//
-
 const std::string& Label::type = "Label";
 
 //-----------------------------------//
 
-Label::Label( const std::string& text, resources::FontPtr font, 
-			 render::MaterialPtr material )
-	: font( font ), text( text ), isDirty( true ), 
-	renderable( new Renderable( Primitive::Quads, 
-		VertexBufferPtr( new VertexBuffer() ), material ) )
+Label::Label( const std::string& text, FontPtr font, MaterialPtr material )
+	: font(font), text(text), material(material)
 {
+	init();
+}
+
+//-----------------------------------//
+
+Label::Label( const std::string& text, const std::string& uri )
+	: text(text)
+{
+	static int i = 0;
+
+	material = new Material("FontMaterial" + num_to_str(i++), "Tex");
+	
+	ResourceManagerPtr rm = Engine::getInstance().getResourceManager();
+	font = rm->loadResource<Font>(uri);
+
+	init();
+}
+
+//-----------------------------------//
+
+void Label::init()
+{
+	isDirty = true;
+	setupDone = false;
+
+	VertexBufferPtr vb( new VertexBuffer() );
+	renderable = new Renderable( Primitive::Quads, vb, material );
+
 	// Add a new renderable to hold the text geometry
 	addRenderable( renderable, RenderGroup::Overlays );
+}
 
-	if( !font ) return;
-	
+//-----------------------------------//
+
+void Label::setText( const std::string& _text )
+{
+	text = _text;
+	isDirty = true;
+}
+
+//-----------------------------------//
+
+void Label::setupState()
+{
+	if( setupDone )
+		return;
+
+	assert( font );
+	assert( font->isLoaded() );
+	assert( font->getImage() );
+
+	MaterialPtr material( renderable->getMaterial() );
+
 	// Setup the material to have the texture font and enable blending
 	material->setTexture( 0, font->getImage() );
-	material->setBlending( BlendingSource::SourceAlpha,
-		BlendingDestination::One );
-}
+	material->setBlending( BlendingSource::SourceAlpha, BlendingDestination::One );
 
-//-----------------------------------//
-
-//Label::Label( std::string text, std::string name, Anchor::Enum anchor )
-//	: text( text ), anchor( anchor ), x( 0 ), y( 0 ),
-//	font( ResourceManager::getInstance().loadResource<Font>(name) )
-//{
-//
-//}
-
-//-----------------------------------//
-
-Label::~Label()
-{
-
-}
-
-//-----------------------------------//
-
-const std::string& Label::getText() const
-{
-	return text;
-}
-
-//-----------------------------------//
-
-void Label::setText( const std::string& text )
-{
-	this->text = text;
-	isDirty = true;
+	setupDone = true;
 }
 
 //-----------------------------------//
 
 void Label::update( double VAPOR_UNUSED(delta) )
 {
+	if( !font->isLoaded() )
+		return;
+
+	setupState();
+
 	// No need to update geometry if the label did not change.
 	if( !isDirty || text.empty() ) return;
-
-	if( !font || !font->getImage() ) 
-		return;
 
 	const std::vector<Glyph>& glyphs = font->getGlyphs();
 
@@ -97,7 +115,7 @@ void Label::update( double VAPOR_UNUSED(delta) )
 	std::vector<Vector3> texcoords;
 
 	ushort x_pos = 0; ushort y_pos = 0;
-	ushort mid_offset = font->getGlyphSize().first/2;
+	ushort mid_offset = font->getGlyphSize().x /2;
 
 	foreach( unsigned char c, text )
 	{
@@ -105,7 +123,7 @@ void Label::update( double VAPOR_UNUSED(delta) )
 		if( c == '\n' )
 		{
 			x_pos = 0;
-			y_pos -= font->getGlyphSize().second;
+			y_pos -= font->getGlyphSize().y;
 		}
 
 		// We need each glyph information to calculate positions and size.
@@ -132,13 +150,6 @@ void Label::update( double VAPOR_UNUSED(delta) )
 
 	// No need to update geometry again until the text changes
 	isDirty = false;
-}
-
-//-----------------------------------//
-
-const std::string& Label::getType() const 
-{
-	return type; 
 }
 
 //-----------------------------------//

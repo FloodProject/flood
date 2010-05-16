@@ -8,10 +8,15 @@
 
 #include "vapor/PCH.h"
 #include "vapor/resources/Font_Loader.h"
+#include "vapor/math/Math.h"
 
-using vapor::vfs::File;
+#include "vapor/resources/ResourceManager.h"
+#include "vapor/Engine.h"
 
 namespace vapor { namespace resources {
+
+using vapor::vfs::File;
+using namespace vapor::math;
 
 //-----------------------------------//
 
@@ -22,81 +27,116 @@ Font_Loader::Font_Loader()
 
 //-----------------------------------//
 
-bool Font_Loader::decode(const vfs::File& file, Resource* res)
+bool Font_Loader::decode(const File& file, Resource* res)
 {
-	std::vector<std::string> lines = file.readLines();
-	std::vector<std::string> info, glyphInfo;
-	
-	if( lines.size() == 4 )
-	{
-		info = String::split(lines[0], ' ');
-		glyphInfo = String::split(lines[3], ' ');
-	}
+	lines = file.readLines();
 
-	// validate input
-	if( lines.size() != 4 || info.size() != 2 || glyphInfo.size() != 2 )
-	{
-		warn( "font", "Font description file format is invalid" );
+	if( !validateFont() )
 		return false;
-	}
 
-	// only bitmap fonts for now
-	//ImagePtr img = Engine::getResourceManager()->loadResource< Image >( lines[1] );
-	ImagePtr img;
+	// TODO: ugly.
+	ResourceManager* rm = Engine::getInstance().getResourceManager();
+	image = rm->loadResource<Image>( imageFilename, false );
 
-	if( !img )
-	{
-		warn( "font", "Could not find the texture font file: %s", lines[1].c_str() );
+	if( !image )
 		return false;
-	}
 
-	if( !File::exists( lines[2] ) )
-	{
-		warn( "font", "Could not find the glyphs definition file: %s", lines[2].c_str() );
-		return false;		
-	}
-	
-	File glyphsFile( lines[2] );
+	File glyphsFile( glyphsFilename );
+	data = glyphsFile.read();
 
-	std::vector<byte> fileData = glyphsFile.read();
-	std::vector<short> data; data.resize( fileData.size() / 2 );
-	std::copy( &fileData.front(), &fileData.front() + fileData.size(), (char*) &data.front() );
-	
-	ushort width_per_glyph = str_to_num<ushort>( glyphInfo[0] );
-	ushort height_per_glyph = str_to_num<ushort>( glyphInfo[1] );
+	parseGlyphs();
 
-	std::vector<Glyph> glyphs;
+	font = static_cast<BitmapFont*>( res );
+	font->setName( fontNameSizeInfo[0] );
+	font->setSize( str_to_num<int>( fontNameSizeInfo[1] ) );
+	font->setImage( image );
+	font->setGlyphs( glyphs );
+
+	return true;
+}
+
+//-----------------------------------//
+
+void Font_Loader::parseGlyphs()
+{
+	ushort glyph_width = str_to_num<ushort>( glyphSizeInfo[0] );
+	ushort glyph_height = str_to_num<ushort>( glyphSizeInfo[1] );
+
+	ushort image_width = image->getWidth();
+	//ushort image_height = image->getHeight();
+
+	glyphs.clear();
 
 	ushort x = 0; ushort y = 0;
-	for( uint i = 0; i < data.size(); i++ )
+	for( uint i = 0; i < data.size(); i+=2 )
 	{
 		Glyph glyph;
 		
 		glyph.x = x;
 		glyph.y = y;
 
-		glyph.width = data[i];
-		glyph.height = height_per_glyph;
+		short* w = (short*) &data[i]; 
+
+		glyph.width = *w;
+		glyph.height = glyph_height;
 
 		glyphs.push_back( glyph );
 
-		if( x == img->getWidth()-width_per_glyph )
+		if( x == image_width-glyph_width )
 		{
 			x = 0;
-			y += height_per_glyph;
+			y += glyph_height;
 		} 
 		else
 		{
-			x += width_per_glyph;
+			x += glyph_width;
 		}
 	}
-	
-	BitmapFont* font = static_cast<BitmapFont*>( res );
-	font->setName( info[0] );
-	font->setSize( str_to_num<int>(info[1]) );
-	font->setImage( img );
-	font->setGlyphs( glyphs );
-	
+}
+
+//-----------------------------------//
+
+bool Font_Loader::validateFont()
+{
+	// Validate file length.
+	if( lines.size() != 4 )
+	{
+		warn( "font", "Font description has invalid size" );
+		return false;
+	}
+		
+	fontNameSizeInfo = String::split(lines[0], ' ');
+
+	if( fontNameSizeInfo.size() != 2 )
+	{
+		warn( "font", "Font description file format is invalid (font name and size)" );
+		return false;
+	}
+
+	imageFilename = lines[1];
+
+	if( !File::exists(imageFilename) )
+	{
+		warn( "font", "Could not find the font image '%s'", imageFilename.c_str() );
+		return false;
+	}
+
+	glyphsFilename = lines[2];
+
+	if( !File::exists(glyphsFilename) )
+	{
+		warn( "font", "Could not find the glyphs definition file '%s'", glyphsFilename.c_str() );
+		return false;
+	}
+
+	glyphSizeInfo = String::split(lines[3], ' ');
+
+	if( glyphSizeInfo.size() != 2 )
+	{
+		warn( "font", "Font description file format is invalid (glyph size)" );
+		return false;
+	}
+
 	return true;
 }
 

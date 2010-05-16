@@ -13,6 +13,7 @@ void main()
 }
 
 [fragment]
+
 //uniform sampler2D vp_ShadowMap;
 
 void main(void)

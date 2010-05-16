@@ -94,17 +94,13 @@ void Example::onSetupScene()
 	//ct->addComponent( mesh->getGeometry() );
 	//scene->add(ct);
 	
-	// Materials too?
-	MaterialPtr mat2( new Material("FontMaterial", "tex") );
-	FontPtr font = rm->loadResource<Font>( "Verdana.font" );
-	label.reset( new Label( getFPS( lastFrameTime ), font, mat2 ) );
+	label.reset( new Label( "", "Verdana.font") );
 	NodePtr fps( new Node("FPSNode") );
 	fps->addTransform();
 	fps->addComponent( label );
-	fps->getTransform()->translate( -300.0f, 220.0f, 0.0f );
 	scene->add( fps );
 
-	NodePtr grid( new Node( "Grid" ) );
+	NodePtr grid( new Node("Grid") );
 	grid->addTransform();
 	grid->addComponent( GridPtr( new Grid() ) );
 	scene->add( grid );
@@ -127,7 +123,7 @@ void Example::onSetupScene()
 	settings.MaxHeight = 100;
 	settings.Material = cellMaterial;
 
-	TerrainPtr terrain( new Terrain( settings ) );
+	TerrainPtr terrain( new Terrain(settings) );
 
 	const ImagePtr& heightmap = rm->loadResource<Image>( "height2.png" );
 	terrain->addCell( heightmap, 0, 0 );

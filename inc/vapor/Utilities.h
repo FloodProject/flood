@@ -144,6 +144,11 @@ void float_to_str( char* str, float n, byte precision = 2 );
 
 namespace String
 {
+	// Formats the string according to the 'printf' style format string.
+	// Note: This is not type-safe so be careful.
+	VAPOR_API std::string format(const char* str, ...);
+	VAPOR_API std::string format(const char* str, va_list args);
+
 	// Splits a string (tokenizes) into sub-string separated by given elements.
 	VAPOR_API std::vector<std::string>& split(const std::string& s, char delim, 
 								std::vector<std::string>& elems);

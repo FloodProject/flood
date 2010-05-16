@@ -10,6 +10,7 @@
 
 #include "vapor/resources/Resource.h"
 #include "vapor/resources/Image.h"
+#include "vapor/math/Vector2.h"
 
 namespace vapor { namespace resources {
 
@@ -54,7 +55,7 @@ public:
 	virtual const std::vector<Glyph>& getGlyphs() const = 0;
 
 	// Gets the size information of a glyph.
-	virtual const std::pair<const ushort, const ushort> getGlyphSize() const = 0;
+	virtual const math::Vector2i getGlyphSize() const = 0;
 
 	// Gets/sets the font name.
 	IMPLEMENT_ACESSOR(Name, const std::string&, name)
@@ -66,6 +67,8 @@ public:
 	IMPLEMENT_GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Fonts)
 
 protected:
+
+	Font();
 
 	// Font name.
 	std::string name;

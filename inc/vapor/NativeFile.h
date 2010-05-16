@@ -33,8 +33,7 @@ namespace AccessMode
  * Represents a native file managed by the OS.
  * This is a small utility wrapper class that will be extended as needed,
  * but usually you should use the File class of the  virtual filesystem 
- * (VFS) provided by the engine. This class was not properly tested, so 
- * use with caution. ;)
+ * (VFS) provided by the engine.
  */
 
 class VAPOR_API NativeFile : private boost::noncopyable

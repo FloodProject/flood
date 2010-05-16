@@ -9,6 +9,7 @@
 #pragma once
 
 #include "vapor/scene/Geometry.h"
+#include "vapor/math/Vector2.h"
 
 namespace vapor { namespace gui {
 
@@ -75,8 +76,7 @@ namespace Anchor
  * all kinds of visual elements on the screen, for example GUI widgets.
  * Each overlay can be positioned in two different ways: Relative-mode
  * positioning and Absolute-mode positioning. For mode information on
- * these different positioning modes, please check out the docs on the
- * Positioning enum.
+ * these different positioning modes, please check out the docs above.
  */
 
 class VAPOR_API Overlay : public virtual scene::Geometry
@@ -84,34 +84,24 @@ class VAPOR_API Overlay : public virtual scene::Geometry
 public:
 
 	Overlay();
-	virtual ~Overlay();
 
-	// Gets the current positioning mode.
-	Positioning::Enum getPositioning() const;
+	// Gets/sets the current positioning mode.
+	IMPLEMENT_ACESSOR(Positioning, Positioning::Enum, positioning) 
 
-	// Sets the current positioning mode.
-	void setPositioning( Positioning::Enum positioning );
+	// Gets/sets the current anchor settings.
+	IMPLEMENT_ACESSOR(Anchor, Anchor::Enum, anchor)
 
-	// Gets the current anchor settings.
-	Anchor::Enum getAnchor() const;
-
-	// Sets the current anchor settings.
-	void setAnchor( Anchor::Enum anchor );
-
-	// Gets the positioning of the label.
-	//std::pair<int,int> getPosition() const;
+	// Gets/sets the positioning of the label.
+	IMPLEMENT_ACESSOR(Position, const math::Vector2i&, position)
 
 	// Sets the position of the overlay.
-	//void setPosition( int x, int y );
+	void setPosition( int x, int y );
 
 	// Updates the overlay if needed.
 	virtual void update( double delta );
 
-	// Serializes this node to a stream.
-	virtual const std::string save( int indent = 0 );
-
 	// Returns this component name identification.
-	virtual const std::string& getType() const;
+	IMPLEMENT_GETTER(Type, const std::string&, type)
 
 protected:
 
@@ -122,7 +112,7 @@ protected:
 	Anchor::Enum anchor;
 
 	// Overlay position.
-	int x, y;
+	math::Vector2i position;
 
 	static const std::string& type;
 };

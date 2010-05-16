@@ -13,12 +13,14 @@
 
 namespace vapor { namespace resources {
 
+using namespace vapor::math;
+
 //-----------------------------------//
 
-const std::pair<const ushort, const ushort> BitmapFont::getGlyphSize() const
+const math::Vector2i BitmapFont::getGlyphSize() const
 {
 	// TODO: ...
-	return std::make_pair( 16, 16 );
+	return math::Vector2i(16, 16);
 }
 
 //-----------------------------------//

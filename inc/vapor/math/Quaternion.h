@@ -341,7 +341,6 @@ public:
 		);
 	}
 
-    
 	// dotProduct
 	float dotProduct(const Quaternion &a) {
 		return a.w*w + a.x*x + a.y*y + a.z*z;
