@@ -15,9 +15,7 @@ namespace vapor { namespace render {
 
 Renderable::Renderable() 
 	: mode( PolygonMode::Solid )
-{
-
-}
+{ }
 
 //-----------------------------------//
 
@@ -25,29 +23,27 @@ Renderable::Renderable( Primitive::Enum primitive,
 						const VertexBufferPtr& vb, 
 						const IndexBufferPtr& ib, 
 						const MaterialPtr& mat )
-	: type( primitive), vb( vb ), ib( ib ), mat( mat ),
+	: type( primitive), 
+	vb( vb ), ib( ib ), mat( mat ),
 	mode( PolygonMode::Solid )
-{
-
-}
+{ }
 
 //-----------------------------------//
 
 Renderable::Renderable( Primitive::Enum primitive, 
 						const VertexBufferPtr& vb, 
 						const MaterialPtr& mat )
-	: type( primitive), vb( vb ), mat( mat ),
+	: type( primitive),
+	vb( vb ), mat( mat ),
 	mode( PolygonMode::Solid )
-
-{
-
-}
+{ }
 
 //-----------------------------------//
 
 void Renderable::bind()
 {
-	if( !mat || !vb ) return;
+	if( !mat || !vb )
+		return;
 
 	mat->bind();
 
@@ -69,7 +65,8 @@ void Renderable::bind()
 
 void Renderable::unbind()
 {
-	if( !mat || !vb ) return;
+	if( !mat || !vb )
+		return;
 
 	if( ib )
 		ib->unbind();
@@ -89,7 +86,7 @@ void Renderable::render( const render::Device& VAPOR_UNUSED(device) )
     {
         glDrawArrays( type, 0, vb->getNumVertices() );
 
-		if( glHasError("Error drawing vertex buffer") )
+ 		if( glHasError("Error drawing vertex buffer") )
 			return;
     }
     else

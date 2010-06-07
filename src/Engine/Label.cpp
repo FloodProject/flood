@@ -24,7 +24,9 @@ const std::string& Label::type = "Label";
 //-----------------------------------//
 
 Label::Label( const std::string& text, FontPtr font, MaterialPtr material )
-	: font(font), text(text), material(material)
+	: text(text),
+	font(font),
+	material(material)
 {
 	init();
 }
@@ -90,13 +92,17 @@ void Label::setupState()
 
 void Label::update( double VAPOR_UNUSED(delta) )
 {
+	if( !font )
+		return;
+
 	if( !font->isLoaded() )
 		return;
 
 	setupState();
 
 	// No need to update geometry if the label did not change.
-	if( !isDirty || text.empty() ) return;
+	if( !isDirty || text.empty() )
+		return;
 
 	const std::vector<Glyph>& glyphs = font->getGlyphs();
 

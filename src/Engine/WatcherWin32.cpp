@@ -281,7 +281,7 @@ void WatcherWin32::handleAction(WatchStruct* watch, const std::wstring& filename
 		fwAction = Actions::Renamed;
 		break;
 	default:
-		assert( nullptr /* This should not be reached */ );
+		assert( 0 && "This should not be reached" );
 		fwAction = Actions::Added;
 	};
 
