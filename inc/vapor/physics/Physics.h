@@ -36,7 +36,7 @@ public:
 	
 	void createWorld();
 	
-	//void createWorld(math::Vector3 gravity, float broadphaseSize,
+	//void createWorld(Vector3 gravity, float broadphaseSize,
 	//	float collisionTolerance, float maxVelocity, float delta, 
 	//	signed char contactpoint, hkpWorldCinfo::SimulationType sim, hkpWorldCinfo::SolverType solver);
 

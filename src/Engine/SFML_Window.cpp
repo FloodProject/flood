@@ -11,8 +11,6 @@
 
 #ifdef VAPOR_WINDOWING_SFML
 
-using namespace vapor::log;
-
 namespace vapor { namespace render {
 
 //-----------------------------------//
@@ -22,9 +20,7 @@ SFML_Window::SFML_Window(const WindowSettings& settings)
 {
 	if( !open() )
 	{
-		warn( "render", "Could not create SFML render window" );
-		Log::MessageDialog( "Could not create SFML render window",
-			LogLevel::Error );
+		error( "render", "Could not create SFML render window" );
 	}
 }
 
@@ -211,9 +207,9 @@ void SFML_Window::setCursorPosition( int x, int y )
 
 //-----------------------------------//
 
-math::Vector2i SFML_Window::getCursorPosition() const
+Vector2i SFML_Window::getCursorPosition() const
 {
-	return math::Vector2i( window.GetInput().GetMouseX(),
+	return Vector2i( window.GetInput().GetMouseX(),
 		window.GetInput().GetMouseY() );
 }
 

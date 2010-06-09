@@ -14,7 +14,6 @@
 
 namespace vapor { namespace scene {
 
-using namespace vapor::math;
 using namespace vapor::render;
 
 const std::string& Camera::type = "Camera";
@@ -50,7 +49,7 @@ Camera::~Camera()
 
 //-----------------------------------//
 
-math::Ray Camera::getRay( float screenX, float screenY, math::Vector3* outFar ) const
+Ray Camera::getRay( float screenX, float screenY, Vector3* outFar ) const
 {
 	assert( viewport != nullptr );
 

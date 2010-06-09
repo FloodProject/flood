@@ -9,7 +9,8 @@
 #pragma once
 
 #include "vapor/resources/Resource.h"
-#include "vapor/scene/Geometry.h"
+
+FWD_DECL_NS_TYPEDEF_INT(render, Renderable)
 
 namespace vapor { namespace resources {
 
@@ -22,19 +23,22 @@ namespace vapor { namespace resources {
 class Mesh : public Resource
 {
 public:
+
+	// Builds the geometry of the mesh.
+	virtual void build( std::vector<render::RenderablePtr>& renderables ) = 0;
 	
+	// Gets if the mesh is built.
+	bool isBuilt() const;
+
 	// Gets the resource group of this resource.
 	IMPLEMENT_GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Meshes)
 
-	// Gets the geometry for this mesh resource.
-	virtual scene::GeometryPtr getGeometry() = 0;
+protected:
 
-private:
+	Mesh();
 
-	static const std::string& type;
+	bool built;
 };
-
-//-----------------------------------//
 
 TYPEDEF_RESOURCE_POINTER_FROM_TYPE( Mesh );
 

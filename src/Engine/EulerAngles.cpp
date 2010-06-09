@@ -10,7 +10,7 @@
 #include "vapor/math/EulerAngles.h"
 #include "vapor/math/Math.h"
 
-namespace vapor { namespace math {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -192,4 +192,4 @@ Matrix4x3 EulerAngles::getOrientationMatrix() const
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

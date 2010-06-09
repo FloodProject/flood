@@ -17,7 +17,6 @@
 
 namespace vapor { namespace render {
 
-using namespace vapor::math;
 using namespace vapor::scene;
 
 //-----------------------------------//
@@ -30,7 +29,7 @@ static const float EXTRA_SPACE = 1.01f;
 	v.push_back( aabb.getCorner( c ) * EXTRA_SPACE );	\
 	v.push_back( aabb.getCorner( d ) * EXTRA_SPACE );
 
-RenderablePtr buildBoundingRenderable( const math::AABB& aabb )
+RenderablePtr buildBoundingRenderable( const AABB& aabb )
 {
 	VertexBufferPtr vb( new VertexBuffer() );
 

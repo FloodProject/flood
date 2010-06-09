@@ -22,7 +22,7 @@ END_EVENT_TABLE()
 
 //-----------------------------------//
 
-wxImageComboBox::wxImageComboBox( wxWindow *parent, wxWindowID id )
+wxImageComboBox::wxImageComboBox( wxWindow* parent, wxWindowID id )
 	: wxOwnerDrawnComboBox( parent, id, wxEmptyString, wxDefaultPosition, 
 	wxSize(-1, 128), 0, nullptr, wxCC_STD_BUTTON/*|wxCB_READONLY*/ )
 {
@@ -36,7 +36,7 @@ void wxImageComboBox::addImage( const wxString& item, const ImagePtr& image )
 {
 	assert( image != nullptr );
 
-	int i = Append( wxEmptyString );
+	Append( wxEmptyString );
 	images.push_back(image);
 }
 
@@ -44,12 +44,13 @@ void wxImageComboBox::addImage( const wxString& item, const ImagePtr& image )
 
 wxBitmap* wxImageComboBox::convertToBitmap( const ImagePtr& image ) const
 {
-	if( !image ) return nullptr;
+	if( !image )
+		return nullptr;
+
 	assert( image->getPixelFormat() == PixelFormat::R8G8B8 );
 	
 	byte* buf = const_cast<byte*>(&image->getBuffer()[0]);
-	wxImage img( image->getWidth(), image->getHeight(),
-		buf, true /* don't free data */);
+	wxImage img( image->getWidth(), image->getHeight(), buf, true /* don't free data */);
 
 	const wxSize& size = GetSize();
 	if( img.GetWidth() > size.GetWidth() || img.GetHeight() > size.GetHeight() )

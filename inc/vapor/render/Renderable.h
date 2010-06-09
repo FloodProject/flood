@@ -8,15 +8,16 @@
 
 #pragma once
 
-#include "vapor/render/Material.h"
 #include "vapor/render/VertexBuffer.h"
 #include "vapor/render/IndexBuffer.h"
+#include "vapor/render/Material.h"
 #include "vapor/render/GL.h"
-#include "vapor/math/Matrix4x3.h"
+
+FWD_DECL_NS_TYPEDEF_INT(render, Material)
+FWD_DECL_NS_TYPEDEF_INT(render, VertexBuffer)
+FWD_DECL_NS_TYPEDEF_INT(render, IndexBuffer)
 
 namespace vapor { namespace render {
-
-//-----------------------------------//
 
 class Device;
 
@@ -79,7 +80,7 @@ public:
     
     // No index buffer, default material will be used if none passed
 	Renderable(Primitive::Enum primitive, const VertexBufferPtr& vb = VertexBufferPtr(),
-			const MaterialPtr& mat = MaterialPtr( ) );
+			const MaterialPtr& mat = MaterialPtr() );
 
 	// Bind/unbind all the state needed to draw the renderable.
 	void bind();
@@ -121,8 +122,6 @@ protected:
 	// Material of this renderable.
 	MaterialPtr mat;
 };
-
-//-----------------------------------//
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Renderable );
 

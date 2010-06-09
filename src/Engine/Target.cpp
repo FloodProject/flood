@@ -12,8 +12,6 @@
 
 namespace vapor { namespace render {
 
-using namespace vapor::math;
-
 //-----------------------------------//
 
 RenderTarget::~RenderTarget()

@@ -69,7 +69,7 @@ public:
 	void setRollOff( const float rollOff );
 
 	// Sets the position of the source.
-	void setPosition( const math::Vector3& position ); 
+	void setPosition( const Vector3& position ); 
   
 protected:
 

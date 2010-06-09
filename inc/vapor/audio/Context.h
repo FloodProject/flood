@@ -44,7 +44,7 @@ public:
 	void makeCurrent();
 
 	// Sets the listener position
-	void setListener(const math::Vector3& position);
+	void setListener(const Vector3& position);
 
 protected:
 

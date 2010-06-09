@@ -412,6 +412,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\RenderQueue.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\inc\vapor\render\RenderQueue.h"
 				>
 			</File>
@@ -836,6 +840,18 @@
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\scene\Billboard.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Model"
+				>
+				<File
+					RelativePath=".\Model.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\scene\Model.h"
 					>
 				</File>
 			</Filter>

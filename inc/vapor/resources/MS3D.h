@@ -9,6 +9,7 @@
 #pragma once
 
 #include "vapor/resources/Mesh.h"
+#include "vapor/vfs/File.h"
 
 namespace vapor { namespace resources {
 
@@ -32,10 +33,6 @@ class MS3D : public Mesh
 public:
 
 	MS3D();
-	virtual ~MS3D();
-
-	// Gets the geometry for this mesh resource.
-	virtual scene::GeometryPtr getGeometry();
 
 	// Loads the geometry data into the mesh.
 	bool load(const vfs::File& file);
@@ -46,7 +43,8 @@ protected:
 	void clear();
 
 	// Builds the vertex and index buffers representing the mesh.
-	void build();
+	void build( std::vector<render::RenderablePtr>& renderables );
+	bool hasMaterial( const ms3d_group_t& g );
 
 	// Reads and parses the MilkShape3D meshes structures.
 	bool read_header();
@@ -66,9 +64,6 @@ protected:
 	std::vector<ms3d_group_t> m_groups;
 	std::vector<ms3d_material_t*> m_materials;
 	char* m_comment;
-
-	scene::GeometryPtr geometry;
-	scene::GeometryWeakPtr weakGeometry;
 };
 
 TYPEDEF_RESOURCE_POINTER_FROM_TYPE( MS3D );

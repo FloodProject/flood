@@ -62,7 +62,7 @@ void Body::init()
 	//transform = getNode()->getTransformPtr();
 	//transform->isPhysicsDriven = true;
 
-	//const math::AABB& bb = (*((getNode()->getGeometry())[0])).getBoundingVolume();
+	//const AABB& bb = (*((getNode()->getGeometry())[0])).getBoundingVolume();
 	//
 	//// Get a box shape from AABB
 	//shape = getShape( bb ); 
@@ -118,7 +118,7 @@ void Body::update( double delta )
 	hkRotation rot;
 	rot.set(body->getRotation());
 	
-	math::Matrix4x3 m;
+	Matrix4x3 m;
 	
 	m.m11 = (rot.getColumn(0))(0);
 	m.m21 = (rot.getColumn(0))(1);
@@ -141,7 +141,7 @@ void Body::update( double delta )
 
 //-----------------------------------//
 
-hkpBoxShape * Body::getShape(const math::AABB& bb)
+hkpBoxShape * Body::getShape(const AABB& bb)
 {
 	float hx, hy, hz;
 	
@@ -193,7 +193,7 @@ void Body::removeFromWorld()
 
 //-----------------------------------//
 
-void Body::setLinearVelocity(const math::Vector3 &lVel)
+void Body::setLinearVelocity(const Vector3 &lVel)
 {
 	if(initiated)
 	{
@@ -204,7 +204,7 @@ void Body::setLinearVelocity(const math::Vector3 &lVel)
 
 //-----------------------------------//
 
-void Body::setAngularVelocity(const math::Vector3 &aVel)
+void Body::setAngularVelocity(const Vector3 &aVel)
 {
 	if(initiated)
 	{
@@ -215,7 +215,7 @@ void Body::setAngularVelocity(const math::Vector3 &aVel)
 
 //-----------------------------------//
 
-void Body::applyForce(const math::Vector3 &force)
+void Body::applyForce(const Vector3 &force)
 {
 	if(initiated)
 	{
@@ -226,7 +226,7 @@ void Body::applyForce(const math::Vector3 &force)
 
 //-----------------------------------//
 
-void Body::applyTorque(const math::Vector3 &torque)
+void Body::applyTorque(const Vector3 &torque)
 {
 	if(initiated)
 	{
@@ -237,7 +237,7 @@ void Body::applyTorque(const math::Vector3 &torque)
 
 //-----------------------------------//
 
-void Body::applyLinearImpulse(const math::Vector3 &imp)
+void Body::applyLinearImpulse(const Vector3 &imp)
 {
 	if(initiated)
 	{
@@ -248,7 +248,7 @@ void Body::applyLinearImpulse(const math::Vector3 &imp)
 
 //-----------------------------------//
 
-hkVector4 Body::convertVector(const math::Vector3 &v)
+hkVector4 Body::convertVector(const Vector3 &v)
 {
 	hkVector4 u(v.x, v.y, v.z);
 	return u;
@@ -256,7 +256,7 @@ hkVector4 Body::convertVector(const math::Vector3 &v)
 
 //-----------------------------------//
 
-void  Body::setPosition (const math::Vector3 &position)
+void  Body::setPosition (const Vector3 &position)
 {
 	if(initiated)
 	{
@@ -268,7 +268,7 @@ void  Body::setPosition (const math::Vector3 &position)
 
 //-----------------------------------//
 
-void  Body::setPositionAndRotation (const math::Matrix4x3 &m)
+void  Body::setPositionAndRotation (const Matrix4x3 &m)
 {
 	if(initiated)
 	{

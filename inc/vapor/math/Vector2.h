@@ -10,7 +10,7 @@
 
 #include "vapor/math/Vector3.h"
 
-namespace vapor { namespace math {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -146,5 +146,5 @@ typedef VAPOR_API Vector2T<int> Vector2i;
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 

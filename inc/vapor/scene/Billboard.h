@@ -48,13 +48,16 @@ class VAPOR_API Billboard : public Component
 {
 public:
 
-	Billboard( const CameraPtr& cam, BillboardType::Enum type =
-		BillboardType::WorldAligned );
+	Billboard( const CameraPtr& cam,
+		BillboardType::Enum type = BillboardType::WorldAligned );
 
+	// Updates the component.
 	void update( double delta );
 
-	const std::string& getType() const;
+	// Gets the type of this component.
+	IMPLEMENT_GETTER(Type, const std::string&, type)
 
+	// Gets the debug renderable of the component.
 	render::RenderablePtr getDebugRenderable() const;
   
 private:

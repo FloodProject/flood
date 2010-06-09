@@ -21,7 +21,7 @@ namespace vapor { namespace render {
  * See http://en.wikipedia.org/wiki/Geodesic_dome for more details.
  */
 
-class Sphere : public render::Renderable
+class Sphere : public Renderable
 {
 public:
 
@@ -30,11 +30,11 @@ public:
 protected:
 
 	// Vertex data.
-	typedef std::vector<math::Vector3> VertexData;
+	typedef std::vector<Vector3> VertexData;
 
 	// Subdivides a triangle into 4 sub-triangles.
-	void subdivide( const math::Vector3& v1, const math::Vector3& v2,
-		const math::Vector3& v3, byte depth, VertexData& pos );
+	void subdivide( const Vector3& v1, const Vector3& v2,
+		const Vector3& v3, byte depth, VertexData& pos );
 
 	// Generates the sphere.
 	void generateSphere( bool fullSphere, byte numSubDiv, VertexData& pos, float dim );

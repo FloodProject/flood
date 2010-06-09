@@ -11,7 +11,7 @@
 #include "vapor/math/Matrix4x3.h"
 #include "vapor/math/Math.h"
 
-namespace vapor { namespace math {
+namespace vapor {
 
 const VAPOR_API Matrix4x4 Matrix4x4::Identity;
 
@@ -76,14 +76,9 @@ Vector3 Matrix4x4::operator *( const Vector3 &v ) const
 {
     Vector3 r;
 
-	r.x = v.x * m11 + v.y * m21 +
-		v.z * m31 + tx;
-
-	r.y = v.x * m12 + v.y * m22 +
-		v.z * m32 + ty;
-
-	r.z = v.x * m13 + v.y * m23 +
-		v.z * m33 + tz;
+	r.x = v.x * m11 + v.y * m21 + v.z * m31 + tx;
+	r.y = v.x * m12 + v.y * m22 + v.z * m32 + ty;
+	r.z = v.x * m13 + v.y * m23 + v.z * m33 + tz;
 
     return r;
 }
@@ -154,7 +149,7 @@ Matrix4x4 Matrix4x4::inverse() const
         // check for singular matrix
         if (pivot == 0.0f)
         {
-			log::warn("math", "Matrix is singular and cannot be inverted.");
+			warn("math", "Matrix is singular and cannot be inverted.");
             return *this;
         }
   
@@ -206,7 +201,7 @@ Matrix4x4 Matrix4x4::createPerspectiveProjection( float fov, float ar, float nea
 
 	Matrix4x4 proj;
 
-	float h = 1.0f / math::tanf( degreeToRadian(fov) * 0.5f );
+	float h = 1.0f / tanf( degreeToRadian(fov) * 0.5f );
 	float neg_depth = (near_ - far_);
 	
 	proj.m11 = h / ar;
@@ -264,4 +259,4 @@ Matrix4x4 Matrix4x4::createOrthographicProjection( float left, float right,
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

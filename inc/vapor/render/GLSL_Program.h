@@ -9,6 +9,7 @@
 #pragma once
 
 #include "vapor/render/Program.h"
+#include "vapor/render/VertexBuffer.h"
 #include "vapor/render/GLSL_Shader.h"
 #include "vapor/render/GL.h"
 
@@ -42,19 +43,19 @@ public:
 	//virtual void setUniform( const std::string& slot, const std::vector<float> vec ) = 0;
 
 	// Adds a named Vector3 array uniform to the program.
-	virtual void setUniform( const std::string& slot, const std::vector<math::Vector3> vec );
+	virtual void setUniform( const std::string& slot, const std::vector<Vector3> vec );
 
 	// Adds a named color array uniform to the program.
-	virtual void setUniform( const std::string& slot, const std::vector<math::Color> vec );
+	virtual void setUniform( const std::string& slot, const std::vector<Color> vec );
 
 	// Adds a named vector uniform to the program.
-	virtual void setUniform( const std::string& slot, const math::Vector3& vec );
+	virtual void setUniform( const std::string& slot, const Vector3& vec );
 
 	// Adds a named matrix uniform to the program.
-	virtual void setUniform( const std::string& slot, const math::Matrix4x3& );
+	virtual void setUniform( const std::string& slot, const Matrix4x3& );
 
 	// Adds a named 4x4 matrix uniform to the program.
-	virtual void setUniform( const std::string& slot, const math::Matrix4x4& );
+	virtual void setUniform( const std::string& slot, const Matrix4x4& );
 
 	// Links the program.
 	virtual bool link();

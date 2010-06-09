@@ -48,7 +48,7 @@ public:
 	virtual bool isCursorVisible() const;
 
 	// Gets the cursor position on screen.
-	virtual math::Vector2i getCursorPosition() const;
+	virtual Vector2i getCursorPosition() const;
 
 	// Sets the cursor position on screen.
 	virtual void setCursorPosition( int x, int y );

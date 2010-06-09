@@ -122,7 +122,7 @@ void bindScene( lua_State* luaState )
 
 void debug( const std::string& msg )
 {
-	log::debug( msg );
+	debug( msg );
 }
 
 void bindLogger( lua_State* luaState )
@@ -130,9 +130,9 @@ void bindLogger( lua_State* luaState )
 	module( luaState, "log" )
 	[
 		def( "debug", &debug )
-		//def( "info", &log::info ),
-		//def( "warn", &log::warn ),
-		//def( "error", &log::error )
+		//def( "info", &info ),
+		//def( "warn", &warn ),
+		//def( "error", &error )
 	];
 }
 

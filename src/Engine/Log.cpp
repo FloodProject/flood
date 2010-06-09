@@ -11,11 +11,11 @@
 #include "vapor/Utilities.h"
 #include "LogFormat.h"
 
-static const int BUF_MAX_SIZE = 256;
-
-namespace vapor { namespace log {
+namespace vapor {
 
 //-----------------------------------//
+
+static const int BUF_MAX_SIZE = 256;
 
 Log* Log::engineLog = nullptr;
 bool Log::showDebug = true;
@@ -33,6 +33,7 @@ std::string LogLevel::toString( LogLevel::Enum level )
 	case LogLevel::Error:
 		return "Error";
 	default:
+		assert( 0 && "This should not be reached" );
 		return "(undefined)";
 	}
 }
@@ -60,6 +61,8 @@ void debug(const char* str, ...)
 #ifdef VAPOR_COMPILER_MSVC
 	// TODO: i18n
 	OutputDebugStringA( msg.c_str() );
+#else
+	printf( "%s", msg.c_str() );
 #endif
 
 	va_end(args);
@@ -75,7 +78,7 @@ void info(const std::string& subsystem, const char* msg, ...)
 	va_list args;
 	va_start(args, msg);
 
-		Log* log = Log::getLogger();
+		Log* const log = Log::getLogger();
 		log->write(LogLevel::Info, subsystem, msg, args);
 	
 	va_end(args);
@@ -91,7 +94,7 @@ void warn(const std::string &subsystem, const char* msg, ...)
 	va_list args;
 	va_start(args, msg);
 
-		Log* log = Log::getLogger();
+		Log* const log = Log::getLogger();
 		log->write(LogLevel::Warning, subsystem, msg, args);
 	
 		std::string buf = String::format(msg, args);
@@ -107,7 +110,7 @@ void error(const std::string& subsystem, const char* msg, ...)
 	va_list args;
 	va_start(args, msg);
 
-		Log* log = Log::getLogger();
+		Log* const log = Log::getLogger();
 		log->write(LogLevel::Error, subsystem, msg, args);
 	
 		std::string buf = String::format(msg, args);
@@ -123,26 +126,27 @@ Log::Log(const std::string& title, const std::string& fn)
 {
 	if( !open() ) 
 	{
-		MessageDialog("Could not open log file '" + fn + "'");
+		std::string msg = String::format("Could not open log file '%s'", fn.c_str() );
+		createMessageDialog(msg);
 		return;
 	}
 
 	// Turn off file buffering.
 	setBuffering( false );
 	
-	start( title );
+	writeHeader( title );
 
 	info("log", "Creating log file '%s'", fn.c_str());
 
-	if( Log::getLogger() == nullptr )
-		Log::setLogger( this );
+	if( !getLogger() == nullptr )
+		setLogger( this );
 }
 
 //-----------------------------------//
 
 Log::~Log()
 {
-	end();
+	writeFooter();
 
 	if( engineLog == this )
 		engineLog = nullptr;
@@ -150,7 +154,7 @@ Log::~Log()
 
 //-----------------------------------//
 
-void Log::MessageDialog(const std::string& msg, const LogLevel::Enum level)
+void Log::createMessageDialog(const std::string& msg, const LogLevel::Enum level)
 {
 #ifdef VAPOR_PLATFORM_WINDOWS
 	UINT style = MB_OK;
@@ -170,7 +174,8 @@ void Log::MessageDialog(const std::string& msg, const LogLevel::Enum level)
 
 	MessageBoxA(nullptr, msg.c_str(), nullptr, style);
 #elif defined(VAPOR_PLATFORM_LINUX)
-	getLogger()->write(level, "MessageBox", msg.c_str() );
+	Log* log = getLogger();
+	log->write(level, "MessageBox", msg.c_str() );
 #else
 	#error "Missing message box implementation"
 #endif
@@ -181,14 +186,15 @@ void Log::MessageDialog(const std::string& msg, const LogLevel::Enum level)
 void Log::write(const LogLevel::Enum level, const std::string& subsystem, 
 				const char* msg, va_list args)
 {
-	if (!fp)
-		return;
+	assert( fp != nullptr );
 
-	const char* s = 
-		String::toLowerCase( LogLevel::toString(level) ).c_str();
+	const char* s = String::toLowerCase( LogLevel::toString(level) ).c_str();
 
 	LocaleSaveRestore c;
+
+#ifdef VAPOR_THREADING
 	boost::lock_guard<boost::mutex> lock(mut);
+#endif
 
 	fprintf(fp, "\t\t<tr class=\"%s,%s\">", s, even ? "even" : "odd");
 		fprintf(fp, "<td class=\"%s\"></td>", s);
@@ -205,16 +211,16 @@ void Log::write(const LogLevel::Enum level, const std::string& subsystem,
 
 //-----------------------------------//
 
-void Log::start(const std::string& title)
+void Log::writeHeader(const std::string& title)
 {
 	assert( fp != nullptr );
 
-	fprintf(fp, LOG_HTML, title.c_str(), LOG_CSS, LOG_JS_TABLES);
+	fprintf(fp, LOG_HTML, title.c_str(), LOG_CSS );
 }
 
 //-----------------------------------//
 
-void Log::end()
+void Log::writeFooter()
 {
 	assert( fp != nullptr );
 
@@ -256,4 +262,4 @@ void Log::error(const std::string& subsystem, const char* msg, ...)
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

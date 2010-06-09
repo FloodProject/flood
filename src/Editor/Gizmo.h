@@ -85,7 +85,7 @@ protected:
 
 	// Generate nice colors for the gizmo.
 	void generateColors( uint slices, std::vector<Vector3>& colors,
-		const math::Color& c1, const math::Color& c2 );
+		const Color& c1, const Color& c2 );
 
 	NodePtr node;
 

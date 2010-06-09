@@ -40,9 +40,9 @@ public:
 //-----------------------------------//
 
 void serializeToFile( Json::Value& root, const std::string& name );
-Json::Value toJson( const math::Vector3& vec );
-Json::Value toJson( const math::EulerAngles& ang );
-Json::Value toJson( const math::Color& c );
+Json::Value toJson( const Vector3& vec );
+Json::Value toJson( const EulerAngles& ang );
+Json::Value toJson( const Color& c );
 
 //-----------------------------------//
 

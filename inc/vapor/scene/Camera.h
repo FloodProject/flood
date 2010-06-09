@@ -68,10 +68,10 @@ public:
 	void cull( render::RenderBlock& queue, const NodePtr& node ) const;
 
 	// Unprojects the vector.
-	math::Vector3 Unproject( math::Vector3 vector ) const;
+	Vector3 Unproject( Vector3 vector ) const;
 
 	// Gets a ray given the screen coordinates of the mouse.
-	math::Ray getRay( float scrx, float scry, math::Vector3* outFar = nullptr ) const;
+	Ray getRay( float scrx, float scry, Vector3* outFar = nullptr ) const;
 
 	// Updates this node.
 	virtual void update( double delta );
@@ -89,20 +89,20 @@ public:
 	IMPLEMENT_ACESSOR(Near, float, near_);
 
 	// Gets the look-at vector of the camera.
-	IMPLEMENT_GETTER(LookAtVector, const math::Vector3&, lookAtVector)
+	IMPLEMENT_GETTER(LookAtVector, const Vector3&, lookAtVector)
 
 	// Gets the projection matrix of the camera.
-	IMPLEMENT_GETTER(ProjectionMatrix, const math::Matrix4x4&, projectionMatrix)
+	IMPLEMENT_GETTER(ProjectionMatrix, const Matrix4x4&, projectionMatrix)
 
 	// Gets the view matrix of the camera.
-	IMPLEMENT_GETTER(ViewMatrix, const math::Matrix4x3&, viewMatrix)
+	IMPLEMENT_GETTER(ViewMatrix, const Matrix4x3&, viewMatrix)
 	
 	// Gets/sets the current viewport associated with the camera.
 	IMPLEMENT_GETTER(Viewport, render::ViewportPtr, viewport)
 	DECLARE_SETTER(Viewport, render::ViewportPtr)
 
 	// Gets the frustum associated with the camera.
-	//IMPLEMENT_GETTER(Frustum, const math::Frustum&, frustum)
+	//IMPLEMENT_GETTER(Frustum, const Frustum&, frustum)
 	
 	// Gets the type of this node.
 	IMPLEMENT_GETTER(Type, const std::string&, type)
@@ -112,7 +112,7 @@ public:
 protected:
 
 	// Sets up the projection matrix.
-	void setupProjection( const math::Vector2i& size );
+	void setupProjection( const Vector2i& size );
 
 	// Sets up the view matrix.
 	void setupView();
@@ -121,10 +121,10 @@ protected:
 	void onTransform();
 
 	// View matrix.
-	math::Matrix4x3 viewMatrix;
+	Matrix4x3 viewMatrix;
 
 	// Projection matrix.
-	math::Matrix4x4 projectionMatrix;
+	Matrix4x4 projectionMatrix;
 
 	// Projection mode.
 	Projection::Enum projection;
@@ -142,13 +142,13 @@ protected:
 
 	// Last viewport the camera rendered into.
 	render::ViewportPtr viewport;
-	math::Vector2i viewSize;
+	Vector2i viewSize;
 
 	// Pointer to the camera's node transform.
 	TransformPtr transform;
 
 	// Look-at vector.
-	math::Vector3 lookAtVector;
+	Vector3 lookAtVector;
 
 	static const std::string& type;
 };

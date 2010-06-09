@@ -13,7 +13,6 @@
 
 namespace vapor { namespace render {
 
-using namespace vapor::math;
 using namespace vapor::scene;
 
 //-----------------------------------//
@@ -49,7 +48,7 @@ float Viewport::getAspectRatio() const
 
 //-----------------------------------//
 
-math::Vector2i Viewport::getSize() const
+Vector2i Viewport::getSize() const
 {
 	if( size == Vector2i(-1, -1) )
 		return target->getSettings().getSize();

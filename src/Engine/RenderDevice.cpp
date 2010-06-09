@@ -22,22 +22,19 @@
 
 namespace vapor { namespace render {
 
-using namespace vapor::log;
-using namespace vapor::math;
 using namespace vapor::scene;
 using namespace vapor::resources;
 
 //-----------------------------------//
 
-Device::Device():
-	adapter(nullptr),
+Device::Device()
+	: adapter(nullptr),
 	window(nullptr),
 	activeTarget(nullptr),
 	programManager(nullptr),
 	textureManager(nullptr),
 	shadowDepthBuffer(nullptr)
-{
-}
+{ }
 
 //-----------------------------------//
 
@@ -103,7 +100,7 @@ void Device::checkExtensions()
 	if( !GLEW_VERSION_2_0 )
 	{
 		const char* str = "You need at least OpenGL 2.0 to run this.";
-		Log::MessageDialog( str, log::LogLevel::Error );
+		Log::createMessageDialog( str, LogLevel::Error );
 		exit( -1 ); // TODO: exit program in a structured manner
 	}
 }
@@ -310,7 +307,7 @@ bool Device::setupRenderStateOverlay( const RenderState& state )
 	Vector2i size = activeTarget->getSettings().getSize();
 
 	Matrix4x4 proj = Matrix4x4::createOrthographicProjection( 
-		0, size.x, 0, size.y, -10.0, 10.0 );
+		0, 1, 0, 1, -10.0, 10.0 );
 
 	program->setUniform( "vp_ProjectionMatrix", proj );
 	program->setUniform( "vp_ModelMatrix", state.modelMatrix );
@@ -385,7 +382,7 @@ Color Device::getPixel(ushort x, ushort y) const
 
 //-----------------------------------//
 
-void Device::setClearColor(const math::Color& newColor)
+void Device::setClearColor(const Color& newColor)
 {
 	if( newColor == color )
 		return;

@@ -11,8 +11,6 @@
 
 namespace vapor { namespace scene {
 
-using namespace vapor::math;
-
 const std::string& Light::type = "Light";
 
 //-----------------------------------//

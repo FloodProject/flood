@@ -48,21 +48,21 @@ public:
 
 	void addToWorld();
 	void removeFromWorld();
-	void setLinearVelocity(const math::Vector3 &lVel);
-	void setAngularVelocity(const math::Vector3 &aVel); 
-	void applyForce(const math::Vector3 &force);
-	void applyTorque(const math::Vector3 &torque);
-	void applyLinearImpulse(const math::Vector3 &imp);
+	void setLinearVelocity(const Vector3 &lVel);
+	void setAngularVelocity(const Vector3 &aVel); 
+	void applyForce(const Vector3 &force);
+	void applyTorque(const Vector3 &torque);
+	void applyLinearImpulse(const Vector3 &imp);
 	bool initiated;
 
-	void  setPosition (const math::Vector3 &position); 
-	void  setPositionAndRotation (const math::Matrix4x3 &m); 
+	void  setPosition (const Vector3 &position); 
+	void  setPositionAndRotation (const Matrix4x3 &m); 
 
 private:
 	
 	void setTransform(hkpRigidBodyCinfo& info);
-	hkpBoxShape* getShape(const math::AABB &bb);
-	hkVector4 convertVector(const math::Vector3 &v);
+	hkpBoxShape* getShape(const AABB &bb);
+	hkVector4 convertVector(const Vector3 &v);
 	hkpRigidBody * body;
 	Transform* transform;
 	physics::PhysicsManager* physicsManager;

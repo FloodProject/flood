@@ -70,9 +70,9 @@ protected:
 	float moveSensivity;
 
 	// Mouse movement.
-	math::Vector2i oldMousePosition;
-	math::Vector2i lastPosition;
-	math::Vector2i mouseDistance;
+	Vector2i oldMousePosition;
+	Vector2i lastPosition;
+	Vector2i mouseDistance;
 	int mouseWheel;
 
 	// Focus state

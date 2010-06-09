@@ -109,7 +109,7 @@ void Window::handleWindowFocus( bool focusLost )
 
 //-----------------------------------//
 
-void Window::setCursorPosition( const math::Vector2i& pos )
+void Window::setCursorPosition( const Vector2i& pos )
 {
 	setCursorPosition( pos.x, pos.y );
 }

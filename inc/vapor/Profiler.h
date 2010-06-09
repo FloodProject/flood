@@ -26,7 +26,7 @@ public:
 
 private:
 
-	Timer time;
+	Timer timer;
 	std::string name;
 };
 

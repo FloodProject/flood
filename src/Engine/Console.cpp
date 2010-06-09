@@ -12,7 +12,6 @@
 
 using namespace vapor::resources;
 using namespace vapor::render;
-using namespace vapor::math;
 
 namespace vapor { namespace gui {
 

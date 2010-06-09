@@ -38,11 +38,6 @@
 
 #include "vapor/Log.h"
 
-using vapor::log::info;
-using vapor::log::warn;
-using vapor::log::error;
-using vapor::log::debug;
-
 //---------------------------------------------------------------------//
 // Profiling
 //---------------------------------------------------------------------//

@@ -76,7 +76,7 @@ void vaporWindow::makeCurrent()
 
 //-----------------------------------//
 
-math::Vector2i vaporWindow::getCursorPosition() const
+Vector2i vaporWindow::getCursorPosition() const
 {
 	const wxMouseState& mouseState = wxGetMouseState();
 	
@@ -84,7 +84,7 @@ math::Vector2i vaporWindow::getCursorPosition() const
 	int y = mouseState.GetY();
 	canvas->ScreenToClient( &x, &y );
 	
-	return math::Vector2i(x, y);
+	return Vector2i(x, y);
 }
 
 //-----------------------------------//

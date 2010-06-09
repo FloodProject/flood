@@ -9,13 +9,12 @@
 #include "vapor/PCH.h"
 #include "vapor/Serialization.h"
 #include "vapor/vfs/File.h"
-#include <clocale>
 
 namespace vapor {
 
 //-----------------------------------//
 
-Json::Value toJson( const math::Vector3& vec )
+Json::Value toJson( const Vector3& vec )
 {
 	Json::Value v;
 	v[0u] = vec.x;
@@ -26,7 +25,7 @@ Json::Value toJson( const math::Vector3& vec )
 
 //-----------------------------------//
 
-Json::Value toJson( const math::EulerAngles& ang )
+Json::Value toJson( const EulerAngles& ang )
 {
 	Json::Value v;
 	v[0u] = ang.x;
@@ -37,7 +36,7 @@ Json::Value toJson( const math::EulerAngles& ang )
 
 //-----------------------------------//
 
-Json::Value toJson( const math::Color& c )
+Json::Value toJson( const Color& c )
 {
 	Json::Value v;
 	v[0u] = c.r;

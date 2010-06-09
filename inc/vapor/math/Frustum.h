@@ -11,7 +11,7 @@
 #include "vapor/math/Matrix4x3.h"
 #include "vapor/math/Plane.h"
 
-namespace vapor { namespace math {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -42,4 +42,4 @@ private:
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

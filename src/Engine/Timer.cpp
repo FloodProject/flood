@@ -9,29 +9,22 @@
 #include "vapor/PCH.h"
 #include "vapor/Timer.h"
 
-using namespace vapor::log;
-
 namespace vapor {
 
-bool Timer::checked = false;
+//-----------------------------------//
+
 ticks_t Timer::ticksPerSecond = 0;
+
+bool Timer::checked = false;
+bool Timer::highResolutionSupport = false;
 
 //-----------------------------------//
 
 Timer::Timer()
-	: lastTime( 0 ), currentTime( 0 )
+	: currentTime(0), lastTime(0)
 {
-	if( !checked )
-	{
-		if( !checkSupport() )
-		{
-			Log::MessageDialog( 
-				"High-resolution timers are not supported",
-				LogLevel::Error );
-
-			// TODO: use low-precision timers
-		}
-	}
+	if( !checked && !checkHighResolutionTimers() )
+		error( "timer", "High-resolution timers are not supported" );
 
 	reset();
 }
@@ -40,15 +33,9 @@ Timer::Timer()
 
 double Timer::getCurrentTime()
 {
-#ifdef VAPOR_PLATFORM_WINDOWS
-
-	QueryPerformanceCounter( reinterpret_cast< LARGE_INTEGER* >( &currentTime ) );
-
-#else
-	#error "Implement me pl0x"
-#endif
-
-	return static_cast< double >( currentTime );
+	storeTime(currentTime);
+	
+	return static_cast<double>( currentTime );
 }
 
 //-----------------------------------//
@@ -57,39 +44,50 @@ double Timer::getElapsedTime()
 {
 	getCurrentTime();	
 
-	ticks_t diff = ( currentTime - lastTime );
+	ticks_t diff = currentTime - lastTime;
 
-	return static_cast< double >( diff ) / static_cast< double >( ticksPerSecond );
+	return (double) diff / (double) ticksPerSecond;
 }
 
 //-----------------------------------//
 
 void Timer::reset()
 {
+	storeTime(lastTime);
+}
+
+//-----------------------------------//
+
+void Timer::storeTime( ticks_t& var )
+{
 #ifdef VAPOR_PLATFORM_WINDOWS
 
-	QueryPerformanceCounter( reinterpret_cast< LARGE_INTEGER* >( &lastTime ) );
+	LARGE_INTEGER* time = nullptr;
+	time = reinterpret_cast<LARGE_INTEGER*>( &var );
+	
+	QueryPerformanceCounter( time );
 
 #else
-	#error "Implement me pl0x"
+	#error "Implementation is missing"
 #endif
 }
 
 //-----------------------------------//
 
-bool Timer::checkSupport()
+bool Timer::checkHighResolutionTimers()
 {
-#ifdef VAPOR_PLATFORM_WINDOWS
-	
-	if( !QueryPerformanceFrequency( reinterpret_cast< LARGE_INTEGER* >( &ticksPerSecond ) ) )
-	{
-		return false;
-	}
-
 	checked = true;
+
+#ifdef VAPOR_PLATFORM_WINDOWS
+
+	LARGE_INTEGER* freq = nullptr;
+	freq = reinterpret_cast<LARGE_INTEGER*>( &ticksPerSecond );
 	
+	if( !QueryPerformanceFrequency(freq) )
+		return false;
+
 #else
-	#error "Implement me pl0x"
+	#error "Implementation is missing"
 #endif
 
 	return true;
@@ -99,10 +97,10 @@ bool Timer::checkSupport()
 
 void Timer::sleep( double time )
 {
-#if defined(VAPOR_PLATFORM_WINDOWS)
-	::Sleep( static_cast<DWORD>( time ) );
-#elif
-	#error Implement sleeping support for your platform
+#ifdef VAPOR_PLATFORM_WINDOWS
+	::Sleep( static_cast<DWORD>(time) );
+#else
+	#error "Implementation is missing"
 #endif
 }
 

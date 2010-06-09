@@ -9,12 +9,13 @@
 #pragma once
 
 #include "vapor/render/Shader.h"
-#include "vapor/render/VertexBuffer.h"
 #include "vapor/math/Matrix4x3.h"
 #include "vapor/math/Matrix4x4.h"
 #include "vapor/math/Color.h"
 
 namespace vapor { namespace render {
+
+namespace VertexAttribute { enum Enum; }
 
 //-----------------------------------//
 
@@ -39,19 +40,19 @@ public:
 	//virtual void setUniform( const std::string& slot, const std::vector<float> vec ) = 0;
 
 	// Adds a named Vector3 array uniform to the program.
-	virtual void setUniform( const std::string& slot, const std::vector<math::Vector3> vec ) = 0;
+	virtual void setUniform( const std::string& slot, const std::vector<Vector3> vec ) = 0;
 
 	// Adds a named color array uniform to the program.
-	virtual void setUniform( const std::string& slot, const std::vector<math::Color> vec ) = 0;
+	virtual void setUniform( const std::string& slot, const std::vector<Color> vec ) = 0;
 
 	// Adds a named vector uniform to the program.
-	virtual void setUniform( const std::string& slot, const math::Vector3& vec ) = 0;
+	virtual void setUniform( const std::string& slot, const Vector3& vec ) = 0;
 
 	// Adds a named matrix uniform to the program.
-	virtual void setUniform( const std::string& slot, const math::Matrix4x3& mat ) = 0;
+	virtual void setUniform( const std::string& slot, const Matrix4x3& mat ) = 0;
 
 	// Adds a named 4x4 matrix uniform to the program.
-	virtual void setUniform( const std::string& slot, const math::Matrix4x4& mat ) = 0;
+	virtual void setUniform( const std::string& slot, const Matrix4x4& mat ) = 0;
 
 	// Creates the program.
 	virtual bool create() = 0;

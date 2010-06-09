@@ -14,7 +14,6 @@
 namespace vapor { namespace scene {
 
 using namespace vapor::input;
-using namespace vapor::math;
 using namespace vapor::render;
 
 //-----------------------------------//

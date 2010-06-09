@@ -8,15 +8,19 @@
 
 #include "vapor/PCH.h"
 #include "vapor/gui/Overlay.h"
+#include "vapor/scene/Node.h"
+#include "vapor/scene/Transform.h"
 
 namespace vapor { namespace gui {
+
+using namespace vapor::scene;
 
 const std::string& Overlay::type = "Overlay";
 
 //-----------------------------------//
 
 Overlay::Overlay() 
-	: positioning( Positioning::Absolute ),
+	: positioning( Positioning::Relative ),
 	anchor( Anchor::TopLeft )
 { }
 
@@ -24,7 +28,21 @@ Overlay::Overlay()
 
 void Overlay::update( double VAPOR_UNUSED(delta) )
 {
+	TransformPtr transform = getNode()->getTransform();
+	assert( transform );
+	transform->reset();
+	
+	Vector3 move;
 
+	switch(anchor)
+	{
+	case Anchor::TopLeft:
+		move.x = 0.5f;
+		move.y = 0.5f;
+		break;
+	}
+
+	transform->translate(move);
 }
 
 //-----------------------------------//

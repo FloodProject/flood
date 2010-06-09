@@ -10,7 +10,7 @@
 
 #include "vapor/math/Vector3.h"
 
-namespace vapor { namespace math {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -49,5 +49,5 @@ public:
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 

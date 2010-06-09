@@ -12,7 +12,6 @@
 #include "vapor/scene/Transform.h"
 #include "vapor/render/DebugGeometry.h"
 
-using namespace vapor::math;
 using namespace vapor::render;
 
 namespace vapor { namespace scene {
@@ -40,7 +39,7 @@ Transform::Transform( const Transform& rhs )
 
 //-----------------------------------//
 
-void Transform::translate( const math::Vector3& tr )
+void Transform::translate( const Vector3& tr )
 {
 	translate( tr.x, tr.y, tr.z );
 }
@@ -65,7 +64,7 @@ void Transform::scale( float uniform )
 
 //-----------------------------------//
 
-void Transform::scale( const math::Vector3& s )
+void Transform::scale( const Vector3& s )
 {
 	scale( s.x, s.y, s.z );
 }
@@ -83,7 +82,7 @@ void Transform::scale( float x, float y, float z )
 
 //-----------------------------------//
 
-void Transform::rotate( const math::Vector3& rot )
+void Transform::rotate( const Vector3& rot )
 {
 	rotate( rot.x, rot.y, rot.z );
 }
@@ -101,7 +100,7 @@ void Transform::rotate( float xang, float yang, float zang )
 
 //-----------------------------------//
 
-void Transform::setPosition( const math::Vector3& position )
+void Transform::setPosition( const Vector3& position )
 {
 	needsNotify = true;
 	translation = position;
@@ -109,7 +108,7 @@ void Transform::setPosition( const math::Vector3& position )
 
 //-----------------------------------//
 
-void Transform::setRotation( const math::EulerAngles& rot )
+void Transform::setRotation( const EulerAngles& rot )
 {
 	needsNotify = true;
 	rotation = rot;
@@ -117,7 +116,7 @@ void Transform::setRotation( const math::EulerAngles& rot )
 
 //-----------------------------------//
 
-void Transform::setScale( const math::Vector3& scale )
+void Transform::setScale( const Vector3& scale )
 {
 	needsNotify = true;
 	_scale = scale;
@@ -160,13 +159,13 @@ void Transform::reset( )
 	needsNotify = true;
 
 	translation.zero();
-	_scale = math::Vector3( 1.0f );
+	_scale = Vector3( 1.0f );
 	rotation.identity();
 }
 
 //-----------------------------------//
 
-void Transform::setAbsoluteTransform( const math::Matrix4x3& matrix )
+void Transform::setAbsoluteTransform( const Matrix4x3& matrix )
 {
 	needsNotify = true;
 	externalUpdate = true;
@@ -175,7 +174,7 @@ void Transform::setAbsoluteTransform( const math::Matrix4x3& matrix )
 
 //-----------------------------------//
 
-math::Matrix4x3 Transform::getLocalTransform() const
+Matrix4x3 Transform::getLocalTransform() const
 {
 	return Matrix4x3::createTranslationMatrix( translation )
 		* rotation.getOrientationMatrix()
@@ -248,7 +247,7 @@ void Transform::notify()
 
 //-----------------------------------//
 
-math::AABB Transform::getWorldBoundingVolume() const
+AABB Transform::getWorldBoundingVolume() const
 {
 	return boundingVolume.transform( getAbsoluteTransform() );
 }

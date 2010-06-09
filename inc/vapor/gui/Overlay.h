@@ -92,7 +92,7 @@ public:
 	IMPLEMENT_ACESSOR(Anchor, Anchor::Enum, anchor)
 
 	// Gets/sets the positioning of the label.
-	IMPLEMENT_ACESSOR(Position, const math::Vector2i&, position)
+	IMPLEMENT_ACESSOR(Position, const Vector2i&, position)
 
 	// Sets the position of the overlay.
 	void setPosition( int x, int y );
@@ -112,7 +112,7 @@ protected:
 	Anchor::Enum anchor;
 
 	// Overlay position.
-	math::Vector2i position;
+	Vector2i position;
 
 	static const std::string& type;
 };

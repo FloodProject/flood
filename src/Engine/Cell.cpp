@@ -15,15 +15,16 @@
 namespace vapor { namespace scene {
 
 using namespace vapor::resources;
-using namespace vapor::math;
 using namespace vapor::render;
 
 //-----------------------------------//
 
 Cell::Cell( const TerrainSettings& settings, 
 		   const std::vector<float>& heights, ushort x, ushort y ) 
-	: Renderable( Primitive::Triangles ), heights( heights ),
-	x( x ), y( y ), settings( settings )
+	: Renderable( Primitive::Triangles ),
+	settings( settings ),
+	heights( heights ),
+	x(x), y(y)
 {
 	updateGeometry();
 }

@@ -10,7 +10,7 @@
 
 #include "vapor/math/Vector3.h"
 
-namespace vapor { namespace math {
+namespace vapor {
 
 class Matrix4x3;
 
@@ -65,4 +65,4 @@ public:
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

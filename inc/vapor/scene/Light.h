@@ -60,16 +60,16 @@ public:
 	IMPLEMENT_ACESSOR(CastsShadows, bool, castsShadows)
 
 	// Gets/sets the diffuse color of the light.
-	IMPLEMENT_ACESSOR(DiffuseColor, const math::Color&, diffuseColor)
+	IMPLEMENT_ACESSOR(DiffuseColor, const Color&, diffuseColor)
 	
 	// Gets/sets the specular color of the light.
-	IMPLEMENT_ACESSOR(SpecularColor, const math::Color&, diffuseColor)
+	IMPLEMENT_ACESSOR(SpecularColor, const Color&, diffuseColor)
 
 	// Gets/sets the emissive color of the light.
-	IMPLEMENT_ACESSOR(EmissiveColor, const math::Color&, emissiveColor)
+	IMPLEMENT_ACESSOR(EmissiveColor, const Color&, emissiveColor)
 
 	// Gets/sets the ambient color of the light.
-	IMPLEMENT_ACESSOR(AmbientColor, const math::Color&, ambientColor)
+	IMPLEMENT_ACESSOR(AmbientColor, const Color&, ambientColor)
 
 	// Gets/sets the cut-off radius of the light.
 	IMPLEMENT_ACESSOR(CutOffRadius, float, cutoffRadius)
@@ -87,10 +87,10 @@ protected:
 	// Light type and colors
 	LightType::Enum lightType;
 
-	math::Color diffuseColor;
-	math::Color specularColor;
-	math::Color emissiveColor;
-	math::Color ambientColor;
+	Color diffuseColor;
+	Color specularColor;
+	Color emissiveColor;
+	Color ambientColor;
 
 	// Cutoff Radius for Spotlights
 	float cutoffRadius;

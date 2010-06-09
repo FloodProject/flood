@@ -9,7 +9,7 @@
 #include "vapor/PCH.h"
 #include "vapor/math/Color.h"
 
-namespace vapor { namespace math {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -60,4 +60,4 @@ const VAPOR_API Color Color::Yellow(1.0f, 1.0f, 0.0f);
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

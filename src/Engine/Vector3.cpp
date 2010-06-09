@@ -10,7 +10,7 @@
 #include "vapor/math/Vector2.h"
 #include "vapor/math/Vector3.h"
 
-namespace vapor { namespace math {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -27,4 +27,4 @@ const VAPOR_API Vector2i Vector2i::UnitY( 0, 1 );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

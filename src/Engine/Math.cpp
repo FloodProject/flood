@@ -9,7 +9,7 @@
 #include "vapor/PCH.h"
 #include "vapor/math/Math.h"
 
-namespace vapor { namespace math {
+namespace vapor {
 
 bool fcmp(float a, float b)
 {
@@ -60,4 +60,4 @@ Vector3 calculateTriangleNormal( const Vector3& v1, const Vector3& v2, const Vec
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

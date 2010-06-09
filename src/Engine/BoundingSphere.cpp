@@ -9,7 +9,7 @@
 #include "vapor/PCH.h"
 #include "vapor/math/BoundingSphere.h"
 
-namespace vapor { namespace math {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -70,4 +70,4 @@ bool BoundingSphere::intersects( const Vector3& pt ) const
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

@@ -10,6 +10,7 @@
 #include <vapor/Framework.h>
 #include <vapor/render/Device.h>
 #include <vapor/input/InputManager.h>
+#include <vapor/resources/ResourceManager.h>
 
 namespace vapor {
 

@@ -11,19 +11,15 @@
 
 namespace vapor { namespace render {
 
-using namespace vapor::math;
-
 //-----------------------------------//
 
 Quad::Quad( float width, float height )
 	: Renderable( Primitive::Quads, getQuadBuffer( width, height ) )
-{
-
-}
+{ }
 
 //-----------------------------------//
 
-render::VertexBufferPtr Quad::getQuadBuffer( float width, float height )
+VertexBufferPtr Quad::getQuadBuffer( float width, float height )
 {
 	// Create a new VBO and upload triangle data
 	VertexBufferPtr vb( new VertexBuffer() );

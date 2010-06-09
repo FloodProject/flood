@@ -102,7 +102,7 @@ public:
 	//IMPLEMENT_GETTER(PhysicsManager, physics::PhysicsManager*, physicsManager)
 
 	/// Gets the main engine logger.
-	IMPLEMENT_GETTER(Log, log::Log*, log)
+	IMPLEMENT_GETTER(Log, Log*, log)
 
 	/// Gets the virtual filesystem.
 	IMPLEMENT_GETTER(VFS, vfs::VFS*, vfs)
@@ -148,7 +148,7 @@ protected:
 	vfs::VFS* vfs;
 
 	/// Default logger.
-	log::Log* log;
+	Log* log;
 
 	/// Scripting state.
 	script::State* scriptState;

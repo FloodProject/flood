@@ -67,7 +67,7 @@ struct ComponentEntry
 
 static ComponentEntry components[] = {
 	{ true, ID_MenuSceneNodeTransform, "Transform", BMP(chart_line) },
-	{ true, ID_MenuSceneNodeMesh, "Mesh", BMP(shape_flip_horizontal) },
+	{ true, ID_MenuSceneNodeMesh, "Model", BMP(shape_flip_horizontal) },
 	{ true, ID_MenuSceneNodeCamera, "Camera", BMP(camera) },
 	{ true, ID_MenuSceneNodeFirstPersonCamera, "FirstPersonCamera", BMP(camera) },
 	{ true, wxID_ANY, "Light", BMP(lightbulb_off) },
@@ -382,9 +382,11 @@ void SceneTreeCtrl::onComponentAdd(wxCommandEvent& event )
 			if( !mesh )
 				return;
 
+			ModelPtr model( new Model(mesh) );
+
 			const NodePtr& node = getEntity( menuItemId );
-			node->addComponent( mesh->getGeometry() );
-			addComponent( menuItemId, mesh->getGeometry() );
+			node->addComponent( model );
+			addComponent( menuItemId, model );
 		}
 	}
 

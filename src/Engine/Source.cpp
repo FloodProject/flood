@@ -32,7 +32,7 @@ Source::Source(std::shared_ptr<audio::Context> context, resources::SoundPtr soun
 	}
 
 	buffer = device->prepareBuffer(sound);
-	setPosition( math::Vector3::Zero );
+	setPosition( Vector3::Zero );
 }
 
 //-----------------------------------//
@@ -198,7 +198,7 @@ void Source::clear()
 
 //-----------------------------------//
 
-void Source::setPosition( const math::Vector3& pos )
+void Source::setPosition( const Vector3& pos )
 {
 	context->makeCurrent();
 

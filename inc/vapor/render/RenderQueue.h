@@ -9,8 +9,6 @@
 #pragma once
 
 #include "vapor/render/Renderable.h"
-#include "vapor/math/Matrix4x3.h"
-
 #include "vapor/scene/Transform.h"
 #include "vapor/scene/Light.h"
 
@@ -56,7 +54,7 @@ struct RenderState /*: private boost::noncopyable*/
 	{}
 
 	RenderablePtr renderable;
-	math::Matrix4x3 modelMatrix;
+	Matrix4x3 modelMatrix;
 	RenderGroup::Enum group;
 	int priority;
 };
@@ -72,7 +70,7 @@ struct LightState
 	scene::LightPtr light;
 	scene::TransformPtr transform;
 	render::TexturePtr depth;
-	math::Matrix4x4 projection;
+	Matrix4x4 projection;
 };
 
 //-----------------------------------//

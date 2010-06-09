@@ -36,7 +36,7 @@ public:
 	IMPLEMENT_ACESSOR(Height, const ushort, height)
 
 	// Gets the size of the target.
-	math::Vector2i getSize() const;
+	Vector2i getSize() const;
 
 public:
 

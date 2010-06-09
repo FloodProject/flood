@@ -323,7 +323,7 @@ void GLSL_Program::setUniform( const std::string& slot, int data )
 
 //-----------------------------------//
 
-void GLSL_Program::setUniform( const std::string& slot, const std::vector<math::Vector3> vec )
+void GLSL_Program::setUniform( const std::string& slot, const std::vector<Vector3> vec )
 {
 	if( !isLinked() ) return;
 
@@ -346,7 +346,7 @@ void GLSL_Program::setUniform( const std::string& slot, const std::vector<math::
 
 //-----------------------------------//
 
-void GLSL_Program::setUniform( const std::string& slot, const std::vector<math::Color> vec )
+void GLSL_Program::setUniform( const std::string& slot, const std::vector<Color> vec )
 {
 	if( !isLinked() ) return;
 
@@ -369,7 +369,7 @@ void GLSL_Program::setUniform( const std::string& slot, const std::vector<math::
 
 //-----------------------------------//
 
-void GLSL_Program::setUniform( const std::string& slot, const math::Vector3& vec )
+void GLSL_Program::setUniform( const std::string& slot, const Vector3& vec )
 {
 	if( !isLinked() ) return;
 
@@ -390,7 +390,7 @@ void GLSL_Program::setUniform( const std::string& slot, const math::Vector3& vec
 
 //-----------------------------------//
 
-void GLSL_Program::setUniform( const std::string& slot, const math::Matrix4x3& matrix )
+void GLSL_Program::setUniform( const std::string& slot, const Matrix4x3& matrix )
 {
 	if( !isLinked() ) return;
 
@@ -410,14 +410,14 @@ void GLSL_Program::setUniform( const std::string& slot, const math::Matrix4x3& m
 	}
 	else
 	{
-		math::Matrix4x4 mat( matrix );
+		Matrix4x4 mat( matrix );
 		glUniformMatrix4fv( loc, 1, true, &mat.m11 );
 	}
 }
 
 //-----------------------------------//
 
-void GLSL_Program::setUniform( const std::string& slot, const math::Matrix4x4& matrix )
+void GLSL_Program::setUniform( const std::string& slot, const Matrix4x4& matrix )
 {
 	if( !isLinked() ) return;
 

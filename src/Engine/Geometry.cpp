@@ -13,9 +13,6 @@
 namespace vapor { namespace scene {
 
 using namespace vapor::render;
-using namespace vapor::math;
-
-//-----------------------------------//
 
 const std::string& Geometry::type = "Geometry";
 
@@ -57,7 +54,7 @@ void Geometry::appendRenderables( render::RenderQueue& queue, TransformPtr trans
 {
 	if( !transform ) return;
 	
-	const math::Matrix4x3& absoluteTransform = transform->getAbsoluteTransform();
+	const Matrix4x3& absoluteTransform = transform->getAbsoluteTransform();
 	
 	foreach( const RenderableMapPair& pair, renderables )
 	{

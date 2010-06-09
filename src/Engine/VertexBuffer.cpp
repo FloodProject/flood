@@ -15,8 +15,6 @@
 
 namespace vapor { namespace render {
 
-using namespace vapor::math;
-
 //-----------------------------------//
 
 VertexBuffer::VertexBuffer()
@@ -129,12 +127,12 @@ bool VertexBuffer::unbind()
 //-----------------------------------//
 
 bool VertexBuffer::set( VertexAttribute::Enum attr, 
-		const std::vector< math::Vector3 >& data )
+		const std::vector< Vector3 >& data )
 {
 	built = false;
 
 	// TODO: optimize this, copies twice...
-	std::vector< byte > bytev( data.size() * sizeof( math::Vector3 ) );
+	std::vector< byte > bytev( data.size() * sizeof( Vector3 ) );
 	
 	if( data.size() != 0)
 		memcpy( &bytev[0], &data[0], bytev.size() );

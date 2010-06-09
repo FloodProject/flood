@@ -40,7 +40,7 @@ public:
 	void updateGeometry();
 
 	// Calculate the normals of the geometry.
-	void calculateNormals( const std::vector<math::Vector3>& vertices );
+	void calculateNormals( const std::vector<Vector3>& vertices );
 
 	// Given an indice, gets the neighbour vertices.
 	std::vector<uint> getNeighborVertices( uint index );

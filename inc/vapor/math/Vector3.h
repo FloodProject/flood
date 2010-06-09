@@ -8,7 +8,7 @@
 
 #pragma once
 
-namespace vapor { namespace math {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -227,6 +227,6 @@ typedef VAPOR_API Vector3 Point3;
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 

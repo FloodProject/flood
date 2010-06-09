@@ -9,7 +9,7 @@
 #include "vapor/PCH.h"
 #include "vapor/math/Ray.h"
 
-namespace vapor { namespace math {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -161,4 +161,4 @@ bool Ray::intersectsSlow( const Vector3 tri[3], Vector3& intersectionPoint, floa
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

@@ -12,7 +12,7 @@
 #include "vapor/math/Matrix4x3.h"
 #include "vapor/math/Ray.h"
 
-namespace vapor { namespace math {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -51,4 +51,4 @@ public:
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

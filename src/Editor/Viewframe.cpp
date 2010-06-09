@@ -137,7 +137,7 @@ void Viewframe::updatePosition()
 
 	NodePtr camera( viewport->getCamera()->getNode() );
 	TransformPtr transform = camera->getTransform();
-	transform->setPosition( math::Vector3(X, Y, Z) );
+	transform->setPosition( Vector3(X, Y, Z) );
 }
 
 //-----------------------------------//

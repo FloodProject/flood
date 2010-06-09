@@ -46,7 +46,7 @@ public:
 	virtual void update( double delta );
 
 	/// Gets the bounding volume of this geometry.
-	IMPLEMENT_GETTER(BoundingVolume, const math::AABB&, boundingVolume)
+	IMPLEMENT_GETTER(BoundingVolume, const AABB&, boundingVolume)
 
 	// Marks the geometry as dirty (forces AABB update).
 	void markDirty();
@@ -59,7 +59,7 @@ public:
 protected:
 
 	// Bounding volume of the geometry.
-	math::AABB boundingVolume;
+	AABB boundingVolume;
 	bool isDirty;
 
 	typedef std::vector< render::RenderablePtr > RenderableList;

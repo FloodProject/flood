@@ -2,6 +2,7 @@ WIP (work-in-progress)
 ======================
 
 Check messy Logger code
+	Doesn't work good with truncation
 
 Shadows
 	Render to depth texture (DONE)

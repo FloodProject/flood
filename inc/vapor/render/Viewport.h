@@ -39,11 +39,11 @@ public:
 	IMPLEMENT_GETTER(RenderTarget, RenderTargetPtr, target)
 
 	// Gets the size of the viewport.
-	DECLARE_GETTER(Size, math::Vector2i)
-	IMPLEMENT_SETTER(Size, math::Vector2i, size)
+	DECLARE_GETTER(Size, Vector2i)
+	IMPLEMENT_SETTER(Size, Vector2i, size)
 
 	// Gets/sets the clear color of the viewport.
-	IMPLEMENT_ACESSOR(ClearColor, const math::Color&, clearColor)
+	IMPLEMENT_ACESSOR(ClearColor, const Color&, clearColor)
 
 	// Gets the aspect ratio of the viewport.
 	float getAspectRatio() const;
@@ -69,10 +69,10 @@ private:
 	RenderTargetPtr target;
 	
 	// Dimensions of render target.
-	math::Vector2i size;
+	Vector2i size;
 
 	// Background color.
-	math::Color clearColor;
+	Color clearColor;
 
 	// Z-order priority.
 	int zPriority;

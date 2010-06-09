@@ -37,15 +37,15 @@ public:
 	// SKY
 
 	// Sets the sky to a fixed color.
-	void setSkyColor( const math::Color& color );
+	void setSkyColor( const Color& color );
 
 	// Sets the sky to a linear color gradient.
-	void setSkyLinearGradient( const math::Color& c1, const math::Color& c2 );
+	void setSkyLinearGradient( const Color& c1, const Color& c2 );
 
 	// CELESTIAL BODIES (Sun, Moon, Stars)
 
 	void setSunNode( const NodePtr& sun );
-	math::Vector3 getSunPosition();
+	Vector3 getSunPosition();
 	
 	//void setStarsVisible( bool enable );
 
@@ -55,7 +55,7 @@ public:
 protected:
 
 	// Gets the sky color at the vertice at a given time of day.
-	math::Color getSkyVertexColor( const math::Vector3& vertex );
+	Color getSkyVertexColor( const Vector3& vertex );
 
 	void generateDome();
 	void generateBodies();
@@ -69,7 +69,7 @@ protected:
 	// Dome geometry that will be rendered as the sky.
 	float yMin, yMax;
 	render::SpherePtr dome;
-	math::Vector3 colorTop, colorBottom;
+	Vector3 colorTop, colorBottom;
 
 	// Celestial bodies geometry.
 	TransformPtr sun;

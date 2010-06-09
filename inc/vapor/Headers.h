@@ -48,6 +48,7 @@
 #include <vapor/scene/Sound.h>
 #include <vapor/scene/Listener.h>
 #include <vapor/scene/Geometry.h>
+#include <vapor/scene/Model.h>
 #include <vapor/scene/Grid.h>
 #include <vapor/scene/Light.h>
 #include <vapor/scene/Skydome.h>
@@ -134,8 +135,6 @@
 
 using namespace vapor;
 using namespace vapor::vfs;
-using namespace vapor::log;
-using namespace vapor::math;
 using namespace vapor::scene;
 using namespace vapor::audio;
 using namespace vapor::render;

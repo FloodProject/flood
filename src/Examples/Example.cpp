@@ -82,17 +82,13 @@ void Example::onSetupScene()
 	//fbo_node.reset( new Node( "FBOquad" ) );
 	//fbo_node->addTransform();
 	//fbo_node->addComponent( GeometryPtr( new Geometry(quad) ) );
-	////fbo_node->getTransform()->rotate( 90.0f, 0.0f, 0.0f );
 	//scene->add( fbo_node );
 
-	//MeshPtr mesh = rm->loadResource<Mesh>( "ct.ms3d" );
-	//foreach( const RenderablePtr& rend, mesh->getGeometry()->getRenderables() )
-	//	rend->getMaterial()->setProgram( tex );
-
-	//NodePtr ct( new Node( "ct" ) );
-	//ct->addTransform();
-	//ct->addComponent( mesh->getGeometry() );
-	//scene->add(ct);
+	MeshPtr mesh = rm->loadResource<Mesh>("ct.ms3d");
+	NodePtr ct( new Node("ct") );
+	ct->addTransform();
+	ct->addComponent( ModelPtr( new Model(mesh) ) );
+	scene->add(ct);
 	
 	label.reset( new Label( "", "Verdana.font") );
 	NodePtr fps( new Node("FPSNode") );
@@ -158,7 +154,7 @@ void Example::onUpdate( double delta )
 
 void Example::onRender()
 {
-	// Render into the FBO first
+	//// Render into the FBO first
 	//fbo->bind();
 	//fbo_tex->bind();
 	//fbo_node->setVisible(false);
@@ -178,7 +174,7 @@ void Example::onKeyPressed( const KeyEvent& keyEvent )
 		debug( "time: %f", frameTimer.getElapsedTime() );
 
 	if( keyEvent.keyCode == Keys::Pause )
-		Log::showDebug = !Log::showDebug;
+		showDebug = !showDebug;
 
 	if( keyEvent.keyCode == Keys::G )
 	{

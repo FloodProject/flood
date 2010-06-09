@@ -13,8 +13,6 @@
 
 namespace vapor { namespace render {
 
-using namespace vapor::math;
-
 //-----------------------------------//
 // Declare icosahedron base coordinates. We'll subdivide these
 // starting coordinates to get a more detailed sphere model.
@@ -23,8 +21,8 @@ using namespace vapor::math;
 // http://www.geometrictools.com/Documentation/PlatonicSolids.pdf
 // Code is also based from OpenGL Red Book example 2-4.
 
-//static const float t = (1 + math::sqrt(5.0f)) / 2;
-//static const float s = math::sqrt(1 + math::pow(t, 2));
+//static const float t = (1 + sqrt(5.0f)) / 2;
+//static const float s = sqrt(1 + pow(t, 2));
 
 static const float T = .850650808352039932f; // t / s;
 static const float O = .525731112119133606f; // 1.0f / s;

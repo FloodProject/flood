@@ -11,7 +11,6 @@
 #include "vapor/render/Program.h"
 #include "vapor/render/Texture.h"
 #include "vapor/render/Shader.h"
-#include "vapor/render/TextureManager.h"
 #include "vapor/render/GL.h"
 
 FWD_DECL(render, Device)
@@ -84,8 +83,10 @@ public:
 	void setTexture( uint unit, const resources::ImagePtr& tex );
 
 	// Gets/sets the associated program.
-	ProgramPtr Material::getProgram();
 	IMPLEMENT_ACESSOR(Program, const std::string&, program)
+	
+	// Gets the associated program.	
+	ProgramPtr getProgram();
 
 	// Gets/sets the depth writing of the material.
 	IMPLEMENT_ACESSOR(DepthWrite, bool, depthWrite)
@@ -159,8 +160,6 @@ protected:
 	// Default Line Width.
 	static float DefaultLineWidth;
 };
-
-//-----------------------------------//
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Material );
 

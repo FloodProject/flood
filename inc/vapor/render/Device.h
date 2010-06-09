@@ -64,7 +64,7 @@ public:
 	// Gets the framebuffer color in the given pixel location.
 	// Note: it follows OpenGL 2D axis conventions, so the point
 	// (0,0) is located in the top left corner of the screen.
-	math::Color getPixel(ushort x, ushort y) const;
+	Color getPixel(ushort x, ushort y) const;
 
 	// Renders and updates into all render targets.
 	void updateRenderTargets();
@@ -92,11 +92,11 @@ public:
 	IMPLEMENT_ACESSOR(Window, WindowPtr, window)
 
 	// Gets/sets the current clear color.
-	IMPLEMENT_GETTER(ClearColor, const math::Color&, color)
-	void setClearColor(const math::Color& color);
+	IMPLEMENT_GETTER(ClearColor, const Color&, color)
+	void setClearColor(const Color& color);
 
 	// Sets the OpenGL viewport dimensions.
-	void setViewport( const math::Vector2i&, const math::Vector2i& );
+	void setViewport( const Vector2i&, const Vector2i& );
 
 	// Gets rendering adapter information.
 	IMPLEMENT_GETTER(Adapter, AdapterPtr, adapter)
@@ -142,10 +142,10 @@ protected:
 	WindowPtr window;
 
 	// Current clear color
-	math::Color color;
+	Color color;
 
 	// Current viewport dimensions.
-	math::Vector2i viewportLeft, viewportSize;
+	Vector2i viewportLeft, viewportSize;
 
 	ShadowTextureMap shadowTextures;
 	RenderBufferPtr shadowDepthBuffer;

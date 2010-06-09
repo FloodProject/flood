@@ -10,11 +10,11 @@
 
 #include "vapor/PCH.h"
 #include "vapor/resources/MS3D.h"
+#include "vapor/render/Renderable.h"
 
 namespace vapor { namespace resources {
 
 using namespace vapor::render;
-using namespace vapor::math;
 using namespace vapor::scene;
 
 //-----------------------------------//
@@ -165,18 +165,8 @@ struct VAPOR_ALIGN_BEGIN(1) ms3d_joint_t
 //-----------------------------------//
 
 MS3D::MS3D()
-	: index(0), geometry( new scene::Geometry() )
-{
-	//GeometryPtr geometry( new scene::Geometry() );
-	weakGeometry = geometry;
-}
-
-//-----------------------------------//
-
-MS3D::~MS3D()
-{
-
-}
+	: index(0)
+{ }
 
 //-----------------------------------//
 
@@ -184,8 +174,6 @@ bool MS3D::load(const vfs::File& file)
 {
 	if( !read(file) )
 		return false;
-
-	build();
 
 	return true;
 }
@@ -223,37 +211,26 @@ cleanup:
 
 //-----------------------------------//
 
-void MS3D::build()
+void MS3D::build( std::vector<RenderablePtr>& renderables )
 {
-	bool has_material = false;
+	if(built)
+		return;
+
+	built = true;
 	
 	foreach( const ms3d_group_t& g, m_groups )
 	{
 		// In case this group doesn't have geometry, then no need to process it.
-		if( g.triangleIndices.empty() ) continue;
-		
-		// Let's check if we have a valid material in the structure.
-		if( (g.materialIndex != -1) 
-			&& (g.materialIndex >= 0) 
-			&& (g.materialIndex < signed(m_materials.size())) )
-		{
-			has_material = true;
-		}
-		else
-		{
-			has_material = false;
-		}
-		
-		RenderablePtr rend( new Renderable() );
+		if( g.triangleIndices.empty() )
+			continue;
 
-		// MS3D meshes represent everything as triangles.
-		rend->setPrimitiveType( Primitive::Triangles );
-
+		RenderablePtr rend( new Renderable(Primitive::Triangles) );
+		
 		// Vertex data
-		std::vector< Vector3 > vb_v;
+		std::vector<Vector3> vb_v;
 		vb_v.reserve( g.triangleIndices.size() );
 		
-		// Tex coord data
+		// Texture coords data
 		std::vector< Vector3 > vb_tc;
 		vb_tc.reserve( g.triangleIndices.size() );
 
@@ -267,24 +244,19 @@ void MS3D::build()
 				Vector3 vec( 
 					m_vertices[v_ind]->vertex[0],
 					m_vertices[v_ind]->vertex[1],
-					m_vertices[v_ind]->vertex[2] 
-				);
+					m_vertices[v_ind]->vertex[2] );
 				vb_v.push_back( vec );
 			}
 
 			for( int i = 0; i < 3; i++ )
 			{
-				Vector3 st(
-					t.s[i],
-					t.t[i],
-					0
-				);
+				Vector2 st( t.s[i], t.t[i] );
 				vb_tc.push_back( st );	
 			}
 		}
 
 		// Material
-		if( has_material )
+		if( hasMaterial(g) )
 		{
 			const ms3d_material_t& mt = *m_materials[g.materialIndex];
 
@@ -292,7 +264,7 @@ void MS3D::build()
 
 			if( strlen(mt.texture) > 0 )
 			{
-				mat->setProgram( "tex" );
+				mat->setProgram( "Tex" );
 				mat->setTexture( 0, mt.texture );
 			}
 
@@ -308,15 +280,15 @@ void MS3D::build()
 			rend->setMaterial( mat );
 		}
 
-		{
-			// Vertex buffers
-			
-			VertexBufferPtr vb( new VertexBuffer() );
-			vb->set( VertexAttribute::Position, vb_v );
-			vb->set( VertexAttribute::MultiTexCoord0, vb_tc );
-			
-			rend->setVertexBuffer( vb );
-		}
+		// Vertex buffers
+
+		VertexBufferPtr vb( new VertexBuffer() );
+		vb->set( VertexAttribute::Position, vb_v );
+		vb->set( VertexAttribute::MultiTexCoord0, vb_tc );
+
+		rend->setVertexBuffer( vb );
+
+		renderables.push_back( rend );
 
 		//// TODO: Use Index buffers
 		//std::vector< ushort > vb_i;
@@ -330,16 +302,17 @@ void MS3D::build()
 		//IndexBufferPtr ib( new IndexBuffer() );
 		//ib->set( vb_i );
 		//rend->setIndexBuffer( ib );
-
-		getGeometry()->addRenderable( rend );
 	}
 }
 
 //-----------------------------------//
 
-scene::GeometryPtr MS3D::getGeometry()
+bool MS3D::hasMaterial( const ms3d_group_t& g )
 {
-	return weakGeometry.lock();
+	// Let's check if we have a valid material in the structure.
+	return (g.materialIndex != -1) 
+		&& (g.materialIndex >= 0) 
+		&& (g.materialIndex < signed(m_materials.size()));
 }
 
 //-----------------------------------//
@@ -1115,9 +1088,6 @@ void MS3D::read_materials()
 //	}
 //}
 
-
-
-
-
+//-----------------------------------//
 
 } } // end namespaces

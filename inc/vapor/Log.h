@@ -11,26 +11,7 @@
 #include "vapor/NativeFile.h"
 #include "vapor/Timer.h"
 
-namespace vapor { namespace log {
-		
-//-----------------------------------//
-
-/**
- * Severity level of the log message.
- */
-
-namespace LogLevel 
-{
-	enum Enum
-	{
-		Info,
-		Warning,
-		Error
-	};
-
-	// Gets an error string
-	std::string toString( LogLevel::Enum );
-};
+namespace vapor {
 
 //-----------------------------------//
 
@@ -51,6 +32,25 @@ VAPOR_API void debug( const std::string& msg );
 VAPOR_API void info(const std::string& subsystem, const char* msg, ...);
 VAPOR_API void warn(const std::string& subsystem, const char* msg, ...);
 VAPOR_API void error(const std::string& subsystem, const char* msg, ...);
+		
+//-----------------------------------//
+
+/**
+ * Severity level of the log message.
+ */
+
+namespace LogLevel 
+{
+	enum Enum
+	{
+		Info,
+		Warning,
+		Error
+	};
+
+	// Gets an error string
+	std::string toString( LogLevel::Enum );
+};
 
 //-----------------------------------//
 
@@ -79,7 +79,7 @@ public:
 	IMPLEMENT_STATIC_ACESSOR(Logger, Log*, engineLog)
 
 	// Spawns a new message box dialog.
-	static void MessageDialog(const std::string& msg, 
+	static void createMessageDialog(const std::string& msg, 
 		const LogLevel::Enum level = LogLevel::Warning);
 
 	//-----------------------------------//
@@ -93,14 +93,8 @@ public:
 protected:
 		
 	// Writes the header and footer to the log.
-	void start(const std::string& title);
-	void end();
-
-	// Writes some code to allow table sorting.
-	void sorttable();
-
-	// Write CSS styling to the log.
-	void css();
+	void writeHeader(const std::string& title);
+	void writeFooter();
 
 	// Timer used for data/time control
 	Timer timer;
@@ -115,4 +109,4 @@ protected:
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

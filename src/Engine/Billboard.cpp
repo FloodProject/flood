@@ -13,21 +13,16 @@
 
 namespace vapor { namespace scene {
 
-using namespace vapor::math;
 using namespace vapor::render;
-
-//-----------------------------------//
 
 const std::string& Billboard::type = "Billboard";
 
 //-----------------------------------//
 
 Billboard::Billboard( const CameraPtr& cam, BillboardType::Enum type )
-	: camera( cam ), billboardType( type ), 
+	: camera(cam), billboardType(type), 
 	rend( new Renderable(Primitive::Lines) )
-{
-
-}
+{ }
 
 //-----------------------------------//
 
@@ -64,7 +59,8 @@ void Billboard::update( double VAPOR_UNUSED(delta) )
 
 render::RenderablePtr Billboard::getDebugRenderable() const
 {
-	if( rend->getVertexBuffer() ) return rend;
+	if( rend->getVertexBuffer() )
+		return rend;
 
 	VertexBufferPtr vb( new VertexBuffer() );
 	
@@ -91,19 +87,12 @@ render::RenderablePtr Billboard::getDebugRenderable() const
 	vb->set( VertexAttribute::Position, pos );
 	vb->set( VertexAttribute::Color, colors );
 	
-	MaterialPtr mat( new Material( "YeahMat", "diffuse" ) );
+	MaterialPtr mat( new Material( "", "diffuse" ) );
 
 	rend->setVertexBuffer( vb );
 	rend->setMaterial( mat );
 
 	return rend;
-}
-
-//-----------------------------------//
-
-const std::string& Billboard::getType() const
-{
-	return Billboard::type;
 }
 
 //-----------------------------------//

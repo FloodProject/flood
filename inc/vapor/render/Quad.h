@@ -9,7 +9,6 @@
 #pragma once
 
 #include "vapor/render/Renderable.h"
-#include "vapor/render/Material.h"
 
 namespace vapor { namespace render {
 
@@ -19,7 +18,7 @@ namespace vapor { namespace render {
  * Vertex buffer with a quad.
  */
 
-class VAPOR_API Quad : public render::Renderable
+class VAPOR_API Quad : public Renderable
 {
 public:
 
@@ -27,12 +26,10 @@ public:
 
 private:
 
-	render::VertexBufferPtr getQuadBuffer( float width, float height );
+	VertexBufferPtr getQuadBuffer( float width, float height );
 };
 
-//-----------------------------------//
-
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Quad );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Quad );
 
 //-----------------------------------//
 

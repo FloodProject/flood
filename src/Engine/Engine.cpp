@@ -25,7 +25,6 @@ using namespace vapor::scene;
 using namespace vapor::resources;
 //using namespace vapor::physics;
 using namespace vapor::render;
-using namespace vapor::log;
 using namespace vapor::vfs;
 using namespace vapor::input;
 

@@ -28,8 +28,8 @@ struct RayTriangleQueryResult
 	// Triangle based intersection
 	GeometryPtr geometry;
 	render::RenderablePtr renderable;
-	math::Vector3 intersection;
-	math::Vector3 triangle[3];
+	Vector3 intersection;
+	Vector3 triangle[3];
 	float distance;
 };
 
@@ -62,11 +62,11 @@ public:
 	NodePtr getEntity( const std::string& name ) const;
 
 	/// Ray-casts a ray through the scene testing for collisions.
-	bool doRayBoxQuery( const math::Ray& ray, RayBoxQueryResult& res ) const;
-	bool doRayBoxQuery( const math::Ray& ray, RayBoxQueryList& list, bool all = true ) const;
+	bool doRayBoxQuery( const Ray& ray, RayBoxQueryResult& res ) const;
+	bool doRayBoxQuery( const Ray& ray, RayBoxQueryList& list, bool all = true ) const;
 	
-	bool doRayTriangleQuery( const math::Ray& ray, RayTriangleQueryResult& res ) const;
-	bool doRayTriangleQuery( const math::Ray& ray, RayTriangleQueryResult& res,
+	bool doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res ) const;
+	bool doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res,
 		const NodePtr& node ) const;
 
 private:	

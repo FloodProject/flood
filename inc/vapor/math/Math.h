@@ -9,7 +9,7 @@
 #include "vapor/math/Vector3.h"
 #include <cmath>
 
-namespace vapor { namespace math {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -66,4 +66,4 @@ Vector3 VAPOR_API calculateTriangleNormal( const Vector3& v1,
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

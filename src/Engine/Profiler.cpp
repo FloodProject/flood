@@ -15,16 +15,16 @@ namespace vapor {
 
 Profiler::Profiler(const std::string& name)
 	: name( name )
-{
-
-}
+{ }
 
 //-----------------------------------//
 
 Profiler::~Profiler()
 {
+	ulong time = static_cast<ulong>(timer.getElapsedTime());
+
 	debug( "%s: took %lu ms / %.5lf µs.", name.c_str(), 
-		static_cast<ulong>(time.getElapsedTime()*1000), time.getElapsedTime() );
+		time*1000, timer.getElapsedTime() );
 };
 
 //-----------------------------------//

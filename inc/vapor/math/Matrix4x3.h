@@ -11,7 +11,7 @@
 #include "vapor/math/Vector3.h"
 #include "vapor/math/Matrix4x4.h"
 
-namespace vapor { namespace math {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -78,4 +78,4 @@ Matrix4x3 VAPOR_API inverse(const Matrix4x3 &m);
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

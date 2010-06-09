@@ -117,11 +117,11 @@ bool Texture::upload()
 
 void Texture::configure()
 {
-	glTexParameterf(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameterf(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	//glTexParameterf(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	//glTexParameterf(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-	glTexParameterf(target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameterf(target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	//glTexParameterf(target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	//glTexParameterf(target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
 	// Three next lines are necessary if we wan to use the convenient shadow2DProj function in the shader.
 	// Otherwise we have to rely on texture2DProj
@@ -131,8 +131,8 @@ void Texture::configure()
 	//glTexParameteri(target, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
 	//glTexParameteri(target, GL_DEPTH_TEXTURE_MODE, GL_INTENSITY);
 
-	//glTexParameterf(target,GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-	//glTexParameterf(target,GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+	glTexParameterf(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+	glTexParameterf(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 
 	// TODO: mipmaps and stuff
 }

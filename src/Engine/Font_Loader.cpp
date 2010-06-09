@@ -16,7 +16,6 @@
 namespace vapor { namespace resources {
 
 using vapor::vfs::File;
-using namespace vapor::math;
 
 //-----------------------------------//
 

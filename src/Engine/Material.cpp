@@ -8,8 +8,10 @@
 
 #include "vapor/PCH.h"
 #include "vapor/render/Material.h"
-#include "vapor/render/ProgramManager.h"
 #include "vapor/render/Device.h"
+
+#include "vapor/render/TextureManager.h"
+#include "vapor/render/ProgramManager.h"
 #include "vapor/Engine.h"
 
 namespace vapor { namespace render {

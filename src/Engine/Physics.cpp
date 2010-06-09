@@ -116,7 +116,7 @@ void PhysicsManager::createWorld()
 
 //-----------------------------------//
 
-//void PhysicsManager::createWorld(math::Vector3 gravity, float broadphaseSize,
+//void PhysicsManager::createWorld(Vector3 gravity, float broadphaseSize,
 //		float collisionTolerance, float maxVelocity, float delta, 
 //		signed char contactpoint, hkpWorldCinfo::SimulationType sim, hkpWorldCinfo::SolverType solver)
 //{

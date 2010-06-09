@@ -11,13 +11,13 @@
 #include "vapor/resources/Font.h"
 #include "vapor/render/Material.h"
 #include "vapor/scene/Geometry.h"
+#include "vapor/resources/ResourceManager.h"
 #include "vapor/Engine.h"
 
 namespace vapor { namespace gui {
 
 using namespace vapor::resources;
 using namespace vapor::render;
-using namespace vapor::math;
 
 const std::string& Label::type = "Label";
 
@@ -90,7 +90,7 @@ void Label::setupState()
 
 //-----------------------------------//
 
-void Label::update( double VAPOR_UNUSED(delta) )
+void Label::update( double delta )
 {
 	if( !font )
 		return;
@@ -101,7 +101,17 @@ void Label::update( double VAPOR_UNUSED(delta) )
 	setupState();
 
 	// No need to update geometry if the label did not change.
-	if( !isDirty || text.empty() )
+	if( isDirty )
+		buildGeometry();
+
+	Overlay::update( delta );
+}
+
+//-----------------------------------//
+
+void Label::buildGeometry()
+{
+	if( text.empty() )
 		return;
 
 	const std::vector<Glyph>& glyphs = font->getGlyphs();

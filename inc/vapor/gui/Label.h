@@ -52,6 +52,9 @@ protected:
 	// Initializes the label.
 	void init();
 
+	// Builds the label geometry.
+	void buildGeometry();
+
 	// Initializes the label once the font is loaded.
 	void setupState();
 

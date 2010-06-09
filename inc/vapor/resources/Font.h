@@ -55,7 +55,7 @@ public:
 	virtual const std::vector<Glyph>& getGlyphs() const = 0;
 
 	// Gets the size information of a glyph.
-	virtual const math::Vector2i getGlyphSize() const = 0;
+	virtual const Vector2i getGlyphSize() const = 0;
 
 	// Gets/sets the font name.
 	IMPLEMENT_ACESSOR(Name, const std::string&, name)

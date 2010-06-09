@@ -11,7 +11,7 @@
 #include "vapor/math/Math.h"
 #include "vapor/math/EulerAngles.h"
 
-namespace vapor { namespace math {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -49,7 +49,7 @@ public:
 	
 	}
 
-	Quaternion(const math::EulerAngles& angles)
+	Quaternion(const EulerAngles& angles)
 	{
 		Quaternion qx, qy, qz;
 		
@@ -162,7 +162,7 @@ public:
 
 	
 	// Gets the magnitude of the quaternion
-	float magnitude() const { return math::sqrt(x*x + y*y + z*z + w*w); }
+	float magnitude() const { return sqrt(x*x + y*y + z*z + w*w); }
 
 	
 	//---------------------------------------------------------------------------
@@ -214,8 +214,8 @@ public:
 
 		// Set the values
 
-		w = math::cosf(thetaOver2);
-		x = math::sinf(thetaOver2);
+		w = cosf(thetaOver2);
+		x = sinf(thetaOver2);
 		y = 0.0f;
 		z = 0.0f;
 	}
@@ -228,9 +228,9 @@ public:
 
 		// Set the values
 
-		w = math::cosf(thetaOver2);
+		w = cosf(thetaOver2);
 		x = 0.0f;
-		y = math::sinf(thetaOver2);
+		y = sinf(thetaOver2);
 		z = 0.0f;
 	}
 
@@ -242,10 +242,10 @@ public:
 
 		// Set the values
 
-		w = math::cosf(thetaOver2);
+		w = cosf(thetaOver2);
 		x = 0.0f;
 		y = 0.0f;
-		z = math::sinf(thetaOver2);
+		z = sinf(thetaOver2);
 	}
 
 	void setToRotateAboutAxis(Vector3 &axis, float theta) {
@@ -257,7 +257,7 @@ public:
 		// Compute the half angle and its sin
 
 		float	thetaOver2 = theta * .5f;
-		float	sinThetaOver2 = math::sinf(thetaOver2);
+		float	sinThetaOver2 = sinf(thetaOver2);
 
 		// Set the values
 
@@ -279,7 +279,7 @@ public:
 		// Check limit conditions
 
 		if (x <= -1.0f) {
-			return math::PI;
+			return PI;
 		}
 		if (x >= 1.0f) {
 			return 0.0f;
@@ -347,4 +347,4 @@ public:
 	}
 };
 
-} } // end namespaces
+} // end namespace

@@ -9,7 +9,7 @@
 #include "vapor/PCH.h"
 #include "vapor/math/AABB.h"
 
-namespace vapor { namespace math {
+namespace vapor {
 
 static const float f_inf = std::numeric_limits<float>::infinity();
 static const float f_min = std::numeric_limits<float>::min();
@@ -261,4 +261,4 @@ bool AABB::intersects( const Ray& ray, float& distance ) const
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

@@ -10,6 +10,8 @@
 
 #ifdef VAPOR_PLATFORM_WINDOWS
 	#define ticks_t int64
+#else
+	#error "Implementation is missing"
 #endif
 
 namespace vapor {
@@ -38,12 +40,16 @@ public:
 	// Resets the timer.
 	void reset();
 
+	// Sleeps for a specified ammount of time.
 	static void sleep( double time );
 	
 private:
 
 	// Checks if high-resolution timers are available.
-	bool checkSupport();
+	bool checkHighResolutionTimers();
+
+	// Stores the current time in the variable.
+	void storeTime( ticks_t& var );
 
 	// Holds the current time (used for calculating the diff).
 	ticks_t currentTime;
@@ -52,8 +58,13 @@ private:
 	ticks_t lastTime;
 
 	// Holds the ticks per second (timer resolution).
-	static bool checked;
 	static ticks_t ticksPerSecond;
+
+	// Holds if we have checked for high resolution timers.
+	static bool checked;
+
+	// Holds if high resolution timers are supported.
+	static bool highResolutionSupport;
 };
 
 //-----------------------------------//

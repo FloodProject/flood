@@ -31,56 +31,56 @@ public:
 
 	// Translate this node by the given parameters.
 	void translate( float x, float y, float z );
-	void translate( const math::Vector3& tr );
+	void translate( const Vector3& tr );
 
 	// Scale this node by the given parameters.
 	void scale( float uniform );
 	void scale( float x, float y, float z );
-	void scale( const math::Vector3& scale );
+	void scale( const Vector3& scale );
 
 	// Rotates this node by the given parameters.
 	void rotate( float xang, float yang, float zang );
-	void rotate( const math::Vector3& rot );
+	void rotate( const Vector3& rot );
 
 	// Resets all the transformations in the transform.
 	void reset();
 
 	// Gets the position of the transform.
-	IMPLEMENT_GETTER(Position, const math::Vector3&, translation)
+	IMPLEMENT_GETTER(Position, const Vector3&, translation)
 
 	// Sets the position of the transform.
-	void setPosition( const math::Vector3& position );
+	void setPosition( const Vector3& position );
 
 	// Gets the scale of the transform.
-	IMPLEMENT_GETTER(Scale, const math::Vector3&, _scale)
+	IMPLEMENT_GETTER(Scale, const Vector3&, _scale)
 
 	// Sets the scale of the transform.
-	void setScale( const math::Vector3& scale );
+	void setScale( const Vector3& scale );
 
 	// Gets the rotation vector of the transform.
-	IMPLEMENT_GETTER(Rotation, const math::EulerAngles&, rotation)
+	IMPLEMENT_GETTER(Rotation, const EulerAngles&, rotation)
 
 	// Sets the rotation vector of the transform.
-	void setRotation( const math::EulerAngles& rot );
+	void setRotation( const EulerAngles& rot );
 
 	// Points to a given point in space.
-	math::Matrix4x3 lookAt( const math::Vector3& lookAtVector,
-		const math::Vector3& upVector );
+	Matrix4x3 lookAt( const Vector3& lookAtVector,
+		const Vector3& upVector );
 
 	// Gets the absolute transformation matrix.
-	IMPLEMENT_GETTER(AbsoluteTransform, const math::Matrix4x3, getLocalTransform())
+	IMPLEMENT_GETTER(AbsoluteTransform, const Matrix4x3, getLocalTransform())
 	
 	// Sets the absolute transformation matrix.
-	void setAbsoluteTransform( const math::Matrix4x3& matrix );
+	void setAbsoluteTransform( const Matrix4x3& matrix );
 
 	// Gets the local transformation matrix.
-	math::Matrix4x3 getLocalTransform() const;
+	Matrix4x3 getLocalTransform() const;
 
 	// Gets the bounding volume of the transform.
-	IMPLEMENT_GETTER(BoundingVolume, const math::AABB&, boundingVolume)
+	IMPLEMENT_GETTER(BoundingVolume, const AABB&, boundingVolume)
 
 	// Gets the world bounding volume of the transform.
-	math::AABB getWorldBoundingVolume() const;
+	AABB getWorldBoundingVolume() const;
 
 	// Updates the bounding volume geometry.
 	void updateBoundingVolume();
@@ -113,16 +113,16 @@ protected:
 	// Sends notifications when the transform has changed.
 	void notify();
 
-	math::Vector3 translation;
-	math::EulerAngles rotation;
-	math::Vector3 _scale;
+	Vector3 translation;
+	EulerAngles rotation;
+	Vector3 _scale;
 	
 	// Local transform
-	math::Matrix4x3 transform;
+	Matrix4x3 transform;
 
 	// Bounding volumes used for culling.
 	bool needsVolumeUpdate;
-	math::AABB boundingVolume;
+	AABB boundingVolume;
 	render::RenderablePtr boundingVolumeRenderable;
 
 	// If an external update occurs (the matrix is changed) then we

@@ -11,7 +11,6 @@
 #include "vapor/scene/Transform.h"
 #include "vapor/scene/Tags.h"
 
-using namespace vapor::math;
 using namespace vapor::render;
 
 namespace vapor { namespace scene {

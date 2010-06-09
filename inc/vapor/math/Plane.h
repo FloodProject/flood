@@ -11,7 +11,7 @@
 #include "vapor/math/Vector3.h"
 #include "vapor/math/AABB.h"
 
-namespace vapor { namespace math {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -50,4 +50,4 @@ private:
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

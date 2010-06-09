@@ -8,12 +8,22 @@
 
 #include "vapor/PCH.h"
 #include "vapor/resources/Mesh.h"
+#include "vapor/render/Renderable.h"
 
 namespace vapor { namespace resources {
 
 //-----------------------------------//
 
-const std::string& Mesh::type = "Mesh";
+Mesh::Mesh()
+	: built(false)
+{ }
+
+//-----------------------------------//
+
+bool Mesh::isBuilt() const
+{
+	return built;
+}
 
 //-----------------------------------//
 
