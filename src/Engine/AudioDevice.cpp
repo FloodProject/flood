@@ -15,9 +15,6 @@
 #include "vapor/audio/Device.h"
 #include "vapor/audio/Buffer.h"
 
-using namespace vapor::resources;
-using namespace vapor::math;
-
 namespace vapor { namespace audio {
 
 // TODO: init first context to log version
@@ -175,7 +172,7 @@ void Device::switchContext(ALCcontext* context)
 
 //-----------------------------------//
 
-std::shared_ptr<Buffer> Device::prepareBuffer(resources::SoundPtr sound)
+std::shared_ptr<Buffer> Device::prepareBuffer(SoundPtr sound)
 {
 	// check if buffer with same resource already exists
 	if( soundBuffers.find(sound) != soundBuffers.end() ) 

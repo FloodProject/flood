@@ -103,7 +103,7 @@ protected:
 	// Input Management
 	vaporInputManager* im;
 	//InputProcessCallback cb;
-	//void onInputEvent( input::Event& );
+	//void onInputEvent( Event& );
 
 	// Editor modes.
 	Mode* currentMode;

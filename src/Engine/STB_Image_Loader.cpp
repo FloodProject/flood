@@ -15,9 +15,9 @@
 #define STBI_HEADER_FILE_ONLY
 #include "stb_image.cpp"
 
-using vapor::vfs::File;
+using vapor::File;
 
-namespace vapor { namespace resources {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -78,6 +78,6 @@ bool STB_Image_Loader::decode(const File& file, Resource* res)
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

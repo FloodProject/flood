@@ -10,7 +10,6 @@
 #include "vapor/gui/Console.h"
 #include "vapor/render/Quad.h"
 
-using namespace vapor::resources;
 using namespace vapor::render;
 
 namespace vapor { namespace gui {
@@ -24,13 +23,6 @@ const std::string& Console::type = "Console";
 Console::Console()
 {
 	buildGeometry();
-}
-
-//-----------------------------------//
-
-Console::~Console()
-{
-
 }
 
 //-----------------------------------//

@@ -16,8 +16,6 @@
 
 namespace vapor { namespace render {
 
-using namespace vapor::resources;
-
 float Material::DefaultLineWidth = 1.0f;
 
 //-----------------------------------//

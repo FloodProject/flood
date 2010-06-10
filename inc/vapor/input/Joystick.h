@@ -10,7 +10,7 @@
 
 #include "vapor/input/Device.h"
 
-namespace vapor { namespace input {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -54,7 +54,7 @@ namespace JoystickEventType
  * Generic event for joystick actions.
  */
 
-struct JoystickEvent : public input::Event
+struct JoystickEvent : public Event
 {
 	friend class Joystick;
 
@@ -101,10 +101,10 @@ struct JoyButtonEvent: public JoystickEvent
 class VAPOR_API Joystick : public Device
 {
 	// Processes an event (only if it's a joystick event).
-	virtual void processEvent( const input::Event& event );
+	virtual void processEvent( const Event& event );
 
 	// Return this device as a joystick.
-	virtual const input::DeviceType::Enum getType();
+	virtual const DeviceType::Enum getType();
 
 	//-----------------------------------//
 	// Events
@@ -130,4 +130,4 @@ private:
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

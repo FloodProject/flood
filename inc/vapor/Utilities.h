@@ -20,7 +20,7 @@ namespace vapor {
 // Array and Conversion Helpers
 //---------------------------------------------------------------------//
 
-#define VAPOR_ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))
+#define VAPOR_ARRAY_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))
 
 //---------------------------------------------------------------------//
 // Forward-declaration Helpers
@@ -42,6 +42,13 @@ namespace vapor {
 		class T;									\
 		TYPEDEF_PTR( T );							\
 	} } // end namespaces
+
+
+#define FWD_DECL_TYPEDEF_INT(T)						\
+	namespace vapor {								\
+		class T;									\
+		TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( T );	\
+	} // end namespace
 
 #define FWD_DECL_NS_TYPEDEF_INT(N, T)				\
 	namespace vapor { namespace N {					\

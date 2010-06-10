@@ -11,7 +11,7 @@
 #include "vapor/resources/Mesh.h"
 #include "vapor/vfs/File.h"
 
-namespace vapor { namespace resources {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -35,11 +35,11 @@ public:
 	MS3D();
 
 	// Loads the geometry data into the mesh.
-	bool load(const vfs::File& file);
+	bool load(const File& file);
 
 protected:
 
-	bool read(const vfs::File& file);
+	bool read(const File& file);
 	void clear();
 
 	// Builds the vertex and index buffers representing the mesh.
@@ -70,4 +70,4 @@ TYPEDEF_RESOURCE_POINTER_FROM_TYPE( MS3D );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

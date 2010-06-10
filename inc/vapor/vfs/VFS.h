@@ -17,7 +17,7 @@
 /** \addtogroup virtual Virtual Filesystem 
  * @{ */
 
-namespace vapor { namespace vfs {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -77,7 +77,7 @@ private:
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 /** @} */
 

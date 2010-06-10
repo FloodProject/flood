@@ -16,7 +16,7 @@
 
 FWD_DECL_TYPEDEF_PTR(TaskManager)
 
-namespace vapor { namespace resources {
+namespace vapor {
 
 class ResourceTask;
 
@@ -94,7 +94,7 @@ public:
 	void registerLoader(ResourceLoaderPtr const loader);
 
 	// Watches a resource for changes and auto-reloads it.
-	void handleWatchResource(const vfs::WatchEvent& evt);
+	void handleWatchResource(const WatchEvent& evt);
 
 	// Gets a registered resource loader for the given extension.
 	ResourceLoaderPtr const getResourceLoader(const std::string& ext);
@@ -111,7 +111,7 @@ public:
 protected:
 
 	// Validates that the resource exists and there is a loader for it.
-	bool validateResource( const vfs::File& file );
+	bool validateResource( const File& file );
 
 	// Returns a new resource ready to be processed by a loader.
 	ResourcePtr prepareResource( const std::string& path );
@@ -151,4 +151,4 @@ TYPEDEF_PTR(ResourceManager)
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

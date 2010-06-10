@@ -14,7 +14,7 @@
 #include "vapor/vfs/VFS.h"
 #include <physfs.h>
 
-namespace vapor { namespace vfs {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -159,6 +159,6 @@ void VFS::update( double )
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

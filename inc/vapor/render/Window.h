@@ -115,7 +115,7 @@ public:
 	IMPLEMENT_GETTER(Settings, const Settings&, settings)
 
 	// Gets the input manager.
-	virtual input::InputManager& getInputManager() = 0;
+	virtual InputManager& getInputManager() = 0;
 
 	// Create a new render window.
 	static WindowPtr createWindow( const WindowSettings& = WindowSettings() );

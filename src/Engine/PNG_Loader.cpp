@@ -12,7 +12,7 @@
 
 #include "vapor/resources/PNG_Loader.h"
 
-using vapor::vfs::File;
+using vapor::File;
 
 //-----------------------------------//
 
@@ -22,7 +22,7 @@ int decodePNG(std::vector<byte>& out_image_32bit, ulong& image_width,
 
 //-----------------------------------//
 
-namespace vapor { namespace resources {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -75,6 +75,6 @@ void PNG_Pico_Loader::flip( std::vector<byte>& buffer, ulong width, ulong height
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

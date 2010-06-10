@@ -8,7 +8,7 @@
 
 #pragma once
 
-namespace vapor { namespace input {
+namespace vapor {
 
 struct MouseInfo;
 
@@ -70,7 +70,7 @@ namespace MouseEventType
  * the public.
  */
 
-struct VAPOR_API MouseEvent : public input::Event
+struct VAPOR_API MouseEvent : public Event
 {
 	friend class Mouse;
 	
@@ -149,4 +149,4 @@ struct VAPOR_API MouseWheelEvent : public MouseEvent
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

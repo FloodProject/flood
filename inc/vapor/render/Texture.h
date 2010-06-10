@@ -26,8 +26,8 @@ class VAPOR_API Texture : public ReferenceCounted
 {
 public:
 	
-	Texture( const resources::ImagePtr& );
-	Texture( const Settings&, resources::PixelFormat::Enum = resources::PixelFormat::R8G8B8A8 );
+	Texture( const ImagePtr& );
+	Texture( const Settings&, PixelFormat::Enum = PixelFormat::R8G8B8A8 );
 	~Texture();
 
 	// Generates a new texture id.
@@ -52,32 +52,32 @@ public:
 	uint id() const;
 
 	// Reads the texture as an image.
-	resources::ImagePtr readImage() const;
+	ImagePtr readImage() const;
 
 	uint getExpectedSize() const;
 
 	// Gets/sets the associated image.
-	IMPLEMENT_GETTER(Image, resources::ImagePtr, image)
-	void setImage( const resources::ImagePtr& );
+	IMPLEMENT_GETTER(Image, ImagePtr, image)
+	void setImage( const ImagePtr& );
 
 	// Gets the associated pixel format.
-	IMPLEMENT_GETTER(PixelFormat, resources::PixelFormat::Enum, format)
+	IMPLEMENT_GETTER(PixelFormat, PixelFormat::Enum, format)
 
 protected:
 
 	void init();
 
-	int convertSourceFormat( resources::PixelFormat::Enum ) const;
-	int convertInternalFormat( resources::PixelFormat::Enum ) const;
-	int convertGetFormat( resources::PixelFormat::Enum ) const;
+	int convertSourceFormat( PixelFormat::Enum ) const;
+	int convertInternalFormat( PixelFormat::Enum ) const;
+	int convertGetFormat( PixelFormat::Enum ) const;
 
 	// OpenGL texture object id
 	uint _id;
 	uint target;
 
 	uint width, height;
-	resources::ImagePtr image;
-	resources::PixelFormat::Enum format;
+	ImagePtr image;
+	PixelFormat::Enum format;
 
 	bool uploaded;
 };

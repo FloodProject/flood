@@ -39,7 +39,7 @@ public:
 	virtual ~Device();
 	
 	// Play a possibly looped 2D sound
-	//void play2D(shared_ptr<resources::Sound> sound, bool loop = false);
+	//void play2D(shared_ptr<Sound> sound, bool loop = false);
 
 	// Sets the global audio volume
 	void setVolume(float volume);
@@ -50,10 +50,10 @@ protected:
 	void switchContext(ALCcontext* context);
 
 	// Gets the AL format matching the engine format.
-	int getALFormat(resources::SoundFormat::Enum format);
+	int getALFormat(SoundFormat::Enum format);
 	
 	// Prepares a buffer for AL usage.
-	std::shared_ptr<Buffer> prepareBuffer( resources::SoundPtr sound );
+	std::shared_ptr<Buffer> prepareBuffer( SoundPtr sound );
 	
 	// Return the last error as a char array.
 	const char* getError();
@@ -78,7 +78,7 @@ private:
 	bool init;
 
 	// Maps each sound to a OpenAL sound buffer id
-	std::map< resources::SoundPtr, std::shared_ptr<audio::Buffer> > soundBuffers;
+	std::map< SoundPtr, std::shared_ptr<audio::Buffer> > soundBuffers;
 };
 
 //-----------------------------------//

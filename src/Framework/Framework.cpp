@@ -14,11 +14,9 @@
 
 namespace vapor {
 
-using namespace vapor::input;
-
 //-----------------------------------//
 
-Framework::Framework(const std::string app, const char** argv)
+Framework::Framework(const std::string& app, const char** argv)
 	: numFrames( 0 ),
 	minFrameTime( std::numeric_limits<double>::max() ),
 	maxFrameTime( 0.0 ),

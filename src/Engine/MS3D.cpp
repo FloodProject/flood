@@ -12,7 +12,7 @@
 #include "vapor/resources/MS3D.h"
 #include "vapor/render/Renderable.h"
 
-namespace vapor { namespace resources {
+namespace vapor {
 
 using namespace vapor::render;
 using namespace vapor::scene;
@@ -170,7 +170,7 @@ MS3D::MS3D()
 
 //-----------------------------------//
 
-bool MS3D::load(const vfs::File& file)
+bool MS3D::load(const File& file)
 {
 	if( !read(file) )
 		return false;
@@ -180,7 +180,7 @@ bool MS3D::load(const vfs::File& file)
 
 //-----------------------------------//
 
-bool MS3D::read(const vfs::File& file)
+bool MS3D::read(const File& file)
 {
 	filebuf = file.read();
 
@@ -1090,4 +1090,4 @@ void MS3D::read_materials()
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

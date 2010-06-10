@@ -14,15 +14,18 @@
 FWD_DECL(vfs, VFS)
 FWD_DECL(audio, Device)
 FWD_DECL(script, State)
-FWD_DECL(input, InputManager)
+//FWD_DECL(InputManager)
 FWD_DECL_TYPEDEF_PTR(Subsystem)
 FWD_DECL_TYPEDEF_PTR(TaskManager)
 //FWD_DECL(physics, PhysicsManager)
 FWD_DECL_NS_TYPEDEF_PTR(render, Device)
 FWD_DECL_NS_TYPEDEF_SHARED(scene, Scene)
-FWD_DECL_NS_TYPEDEF_PTR(resources, ResourceManager)
+FWD_DECL_TYPEDEF_PTR(ResourceManager)
 
 namespace vapor {
+
+class InputManager;
+class VFS;
 
 /** \addtogroup Main */
 /** @{ */
@@ -96,7 +99,7 @@ public:
 	IMPLEMENT_GETTER(ScriptState, script::State*, scriptState)
 
 	/// Gets the resources manager.
-	IMPLEMENT_GETTER(ResourceManager, resources::ResourceManagerPtr, resourceManager)
+	IMPLEMENT_GETTER(ResourceManager, ResourceManagerPtr, resourceManager)
 
 	/// Gets the physics manager.
 	//IMPLEMENT_GETTER(PhysicsManager, physics::PhysicsManager*, physicsManager)
@@ -105,10 +108,10 @@ public:
 	IMPLEMENT_GETTER(Log, Log*, log)
 
 	/// Gets the virtual filesystem.
-	IMPLEMENT_GETTER(VFS, vfs::VFS*, vfs)
+	IMPLEMENT_GETTER(VFS, VFS*, vfs)
 
 	/// Gets the input manager.
-	input::InputManager* const getInputManager() const;
+	InputManager* const getInputManager() const;
 
 	/// @}
 
@@ -139,13 +142,13 @@ protected:
 	render::DevicePtr renderDevice;
 
 	/// Resource manager.
-	resources::ResourceManagerPtr resourceManager;
+	ResourceManagerPtr resourceManager;
 
 	/// Physics manager.
 	//physics::PhysicsManager* physicsManager;
 
 	/// Virtual filesystem.
-	vfs::VFS* vfs;
+	VFS* vfs;
 
 	/// Default logger.
 	Log* log;

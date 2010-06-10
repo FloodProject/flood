@@ -37,7 +37,7 @@ class VAPOR_API Buffer : private boost::noncopyable
 public:
 	
 	/// Constructor
-	Buffer( audio::Device* device, resources::SoundPtr sound );
+	Buffer( audio::Device* device, SoundPtr sound );
 	
 	/// Destructor
 	~Buffer();
@@ -54,7 +54,7 @@ protected:
 	audio::Device* device;
 	
 	/// Holds a pointer to the audio data buffer.
-	resources::SoundPtr resource;
+	SoundPtr resource;
 
 	/// Holds the source id from OpenAL.
 	ALuint bufferId;

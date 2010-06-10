@@ -22,11 +22,8 @@
 
 using namespace vapor::audio;
 using namespace vapor::scene;
-using namespace vapor::resources;
 //using namespace vapor::physics;
 using namespace vapor::render;
-using namespace vapor::vfs;
-using namespace vapor::input;
 
 namespace vapor {
 
@@ -158,8 +155,8 @@ void Engine::setupInput()
 	InputManager& im = window->getInputManager();
 
 	// Let's register some input devices.
-	im.addDevice( new input::Keyboard() );
-	im.addDevice( new input::Mouse() );
+	im.addDevice( new Keyboard() );
+	im.addDevice( new Mouse() );
 }
 
 //-----------------------------------//

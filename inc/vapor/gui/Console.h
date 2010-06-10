@@ -31,7 +31,6 @@ class VAPOR_API Console : public gui::Overlay
 public:
 
 	Console();
-	virtual ~Console();
 
 	// Updates the console geometry if needed.
 	virtual void update( double delta );

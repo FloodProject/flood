@@ -16,7 +16,6 @@
 
 namespace vapor { namespace gui {
 
-using namespace vapor::resources;
 using namespace vapor::render;
 
 const std::string& Label::type = "Label";

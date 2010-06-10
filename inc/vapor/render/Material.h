@@ -80,7 +80,7 @@ public:
 	void setTexture( uint unit, const TexturePtr& tex );
 
 	// Adds an image as texture to the material.
-	void setTexture( uint unit, const resources::ImagePtr& tex );
+	void setTexture( uint unit, const ImagePtr& tex );
 
 	// Gets/sets the associated program.
 	IMPLEMENT_ACESSOR(Program, const std::string&, program)

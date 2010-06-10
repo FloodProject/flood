@@ -14,7 +14,7 @@
 
 using namespace vapor::vfs;
 
-namespace vapor { namespace resources {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -298,7 +298,7 @@ void ResourceManager::registerLoader(ResourceLoaderPtr const loader)
 
 //-----------------------------------//
 
-void ResourceManager::handleWatchResource(const vfs::WatchEvent& evt)
+void ResourceManager::handleWatchResource(const WatchEvent& evt)
 {
 	// Check if the filename maps to a known resource.
 	const std::string& file = evt.filename;
@@ -331,4 +331,4 @@ void ResourceManager::handleWatchResource(const vfs::WatchEvent& evt)
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

@@ -15,7 +15,7 @@
 #include "vapor/resources/ResourceLoader.h"
 #include "vapor/resources/Image.h"
 
-namespace vapor { namespace resources {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -34,7 +34,7 @@ public:
 	IMPLEMENT_PREPARE(Image)
 
 	// Decode an image file to a buffer.
-	virtual bool decode(const vfs::File&, Resource* res);
+	virtual bool decode(const File&, Resource* res);
 
 	// Gets the name of this codec.
 	IMPLEMENT_GETTER(Name, const std::string, "PICOPNG")
@@ -57,6 +57,6 @@ protected:
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

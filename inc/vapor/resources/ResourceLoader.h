@@ -11,10 +11,10 @@
 #include "vapor/vfs/File.h"
 #include "vapor/resources/Resource.h"
 
-namespace vapor { namespace resources {
+namespace vapor {
 
 #define IMPLEMENT_PREPARE(T) \
-	virtual Resource* prepare(const vfs::File&) { return new T(); }
+	virtual Resource* prepare(const File&) { return new T(); }
 
 //-----------------------------------//
 
@@ -34,10 +34,10 @@ public:
 
 	// Creates the resource with no data.
 	// Note: File I/O should be done in 'decode'.
-	virtual Resource* prepare(const vfs::File&) = 0;
+	virtual Resource* prepare(const File&) = 0;
 
 	// Decodes a given file into a resource.
-	virtual bool decode(const vfs::File&, Resource*) = 0;
+	virtual bool decode(const File&, Resource*) = 0;
 
 	// Gets a list of recognized extensions by this loader.
 	typedef std::list< std::string > ExtensionList;
@@ -54,4 +54,4 @@ TYPEDEF_PTR(ResourceLoader)
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

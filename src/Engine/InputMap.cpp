@@ -10,7 +10,7 @@
 #include "vapor/PCH.h"
 #include "vapor/input/InputMap.h"
 
-namespace vapor { namespace input {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -109,4 +109,4 @@ void InputMap::onJoyPress(const JoyButtonEvent& jbe)
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

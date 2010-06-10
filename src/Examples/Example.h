@@ -43,8 +43,8 @@ protected:
 	virtual void onRender();
 
 	/// Callback functions
-	virtual void onKeyPressed( const input::KeyEvent& );
-	virtual void onButtonPressed( const input::MouseButtonEvent& );
+	virtual void onKeyPressed( const KeyEvent& );
+	virtual void onButtonPressed( const MouseButtonEvent& );
 
 private:
 
@@ -55,11 +55,11 @@ private:
 	render::ViewportPtr viewport2;
 
 	gui::LabelPtr label;
-	resources::SoundPtr snd;
+	SoundPtr snd;
 	render::RenderBufferPtr fbo;
 	scene::NodePtr fbo_node;
 	//scene::SoundPtr sound;
-	input::InputMap* inputMap; 
+	InputMap* inputMap; 
 	render::TexturePtr tex;
 	render::TexturePtr fbo_tex;
 

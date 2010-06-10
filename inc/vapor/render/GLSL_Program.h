@@ -13,7 +13,7 @@
 #include "vapor/render/GLSL_Shader.h"
 #include "vapor/render/GL.h"
 
-FWD_DECL_NS_TYPEDEF_INT(resources, GLSL_Text)
+FWD_DECL_TYPEDEF_INT(GLSL_Text)
 
 namespace vapor { namespace render {
 
@@ -27,7 +27,7 @@ class VAPOR_API GLSL_Program : public Program
 {
 public:
 
-	GLSL_Program( const resources::GLSL_TextPtr& );
+	GLSL_Program( const GLSL_TextPtr& );
 	virtual ~GLSL_Program();
 
 	// Creates the program.
@@ -73,7 +73,7 @@ public:
 	virtual void updateShadersText();
 
 	// Gets/sets the resource text that backs this shader.
-	IMPLEMENT_ACESSOR(Text, const resources::GLSL_TextPtr&, text)
+	IMPLEMENT_ACESSOR(Text, const GLSL_TextPtr&, text)
 
 protected:
 
@@ -92,7 +92,7 @@ protected:
 	// Gets the linking log of the program.
 	void getLogText();
 
-	resources::GLSL_TextPtr text;
+	GLSL_TextPtr text;
 
 	typedef std::vector< GLSL_ShaderPtr > ShaderVector;
 	ShaderVector shaders;

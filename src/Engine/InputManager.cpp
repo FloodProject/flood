@@ -9,20 +9,13 @@
 #include "vapor/PCH.h"
 #include "vapor/input/InputManager.h"
 
-namespace vapor { namespace input {
-
-//-----------------------------------//
-
-InputManager::InputManager()
-{
-
-}
+namespace vapor {
 
 //-----------------------------------//
 
 InputManager::~InputManager()
 {
-	foreach( input::Device* device, devices )
+	foreach( Device* device, devices )
 	{
 		delete device;
 	}
@@ -30,7 +23,7 @@ InputManager::~InputManager()
 
 //-----------------------------------//
 
-void InputManager::addDevice( input::Device* device )
+void InputManager::addDevice( Device* device )
 {
 	if( !device )
 	{
@@ -48,7 +41,7 @@ void InputManager::addDevice( input::Device* device )
 
 Keyboard* InputManager::getKeyboard() const
 {
-	foreach( input::Device* device, devices )
+	foreach( Device* device, devices )
 	{
 		if( device->getType() == DeviceType::Keyboard )
 		{
@@ -63,7 +56,7 @@ Keyboard* InputManager::getKeyboard() const
 
 Mouse* InputManager::getMouse() const
 {
-	foreach( input::Device* device, devices )
+	foreach( Device* device, devices )
 	{
 		if( device->getType() == DeviceType::Mouse )
 		{
@@ -76,16 +69,16 @@ Mouse* InputManager::getMouse() const
 
 //-----------------------------------//
 
-const std::vector< input::Device* >& InputManager::getDevices() const
+const std::vector< Device* >& InputManager::getDevices() const
 {
 	return devices;
 }
 
 //-----------------------------------//
 
-void InputManager::processEvent( const input::Event& event )
+void InputManager::processEvent( const Event& event )
 {
-	foreach( input::Device* const device, devices )
+	foreach( Device* const device, devices )
 	{
 		device->processEvent( event );
 	}
@@ -93,4 +86,4 @@ void InputManager::processEvent( const input::Event& event )
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

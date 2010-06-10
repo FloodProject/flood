@@ -9,7 +9,7 @@
 #include "vapor/PCH.h"
 #include "vapor/resources/TTF.h"
 
-namespace vapor { namespace resources {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -26,4 +26,4 @@ TTF::~TTF()
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

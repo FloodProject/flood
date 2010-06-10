@@ -10,7 +10,7 @@
 
 #include "vapor/input/Device.h"
 
-namespace vapor { namespace input {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -54,4 +54,4 @@ Event::Event( DeviceType::Enum type )
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

@@ -12,7 +12,7 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-typedef fd::delegate<void(input::Event&)> InputProcessCallback;
+typedef fd::delegate<void(Event&)> InputProcessCallback;
 
 /**
  * Input manager implementation using wxWidgets.

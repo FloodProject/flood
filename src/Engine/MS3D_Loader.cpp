@@ -12,9 +12,9 @@
 
 #include "vapor/resources/MS3D_Loader.h"
 
-using vapor::vfs::File;
+using vapor::File;
 
-namespace vapor { namespace resources {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -40,6 +40,6 @@ bool MS3D_Loader::decode(const File& file, Resource* res)
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

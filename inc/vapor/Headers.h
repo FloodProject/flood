@@ -138,8 +138,6 @@ using namespace vapor::vfs;
 using namespace vapor::scene;
 using namespace vapor::audio;
 using namespace vapor::render;
-using namespace vapor::resources;
-using namespace vapor::input;
 using namespace vapor::gui;
 using namespace vapor::script;
 

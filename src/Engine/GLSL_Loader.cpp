@@ -13,9 +13,9 @@
 #include "vapor/resources/GLSL_Loader.h"
 #include "vapor/resources/GLSL_Text.h"
 
-namespace vapor { namespace resources {
+namespace vapor {
 
-using vapor::vfs::File;
+using vapor::File;
 
 //-----------------------------------//
 
@@ -48,6 +48,6 @@ bool GLSL_Loader::decode(const File& file, Resource* res)
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

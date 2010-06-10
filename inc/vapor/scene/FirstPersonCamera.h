@@ -26,7 +26,7 @@ class VAPOR_API FirstPersonCamera : public Camera
 {
 public:
 
-	FirstPersonCamera( input::InputManager* input, render::Device* device, 
+	FirstPersonCamera( InputManager* input, render::Device* device, 
 		Projection::Enum projection = Projection::Perspective );
 
 	// Updates this node.
@@ -55,11 +55,11 @@ protected:
 	void checkControls( double delta );
 
 	// Input callback functions.
-	void onKeyPressed( const input::KeyEvent& event );
-	void onKeyReleased( const input::KeyEvent& event );
-	void onMouseMove( const input::MouseMoveEvent& event );
-	void onMouseDrag( const input::MouseDragEvent& event );
-	void onMouseWheel( const input::MouseWheelEvent& event );
+	void onKeyPressed( const KeyEvent& event );
+	void onKeyReleased( const KeyEvent& event );
+	void onMouseMove( const MouseMoveEvent& event );
+	void onMouseDrag( const MouseDragEvent& event );
+	void onMouseWheel( const MouseWheelEvent& event );
 	void onWindowFocusChange( bool focusLost );
 
 	// Restrict camera movement on the X-axis.
@@ -78,7 +78,7 @@ protected:
 	// Focus state
 	bool hasFocus;
 
-	input::InputManager* inputManager;
+	InputManager* inputManager;
 
 	static const std::string& type;
 };

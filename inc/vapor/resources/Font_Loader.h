@@ -19,7 +19,7 @@
 	#include "vapor/resources/TTF.h"
 #endif
 
-namespace vapor { namespace resources {
+namespace vapor {
 
 /**
  * Loads a font description file format that can describe both TTF and
@@ -57,7 +57,7 @@ public:
 	IMPLEMENT_PREPARE(BitmapFont)
 
 	// Decode a font definition.
-	virtual bool decode(const vfs::File&, Resource* res);
+	virtual bool decode(const File&, Resource* res);
 
 	// Gets the name of this codec.
 	IMPLEMENT_GETTER(Name, const std::string, "FONTS")
@@ -93,4 +93,4 @@ protected:
 	mutable ExtensionList extensions;
 };
 
-} } // end namespaces
+} // end namespace

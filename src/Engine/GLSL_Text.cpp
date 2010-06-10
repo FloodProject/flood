@@ -9,7 +9,7 @@
 #include "vapor/PCH.h"
 #include "vapor/resources/GLSL_Text.h"
 
-namespace vapor { namespace resources {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -45,4 +45,4 @@ void GLSL_Text::parse()
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

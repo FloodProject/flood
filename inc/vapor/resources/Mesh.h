@@ -12,7 +12,7 @@
 
 FWD_DECL_NS_TYPEDEF_INT(render, Renderable)
 
-namespace vapor { namespace resources {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -44,4 +44,4 @@ TYPEDEF_RESOURCE_POINTER_FROM_TYPE( Mesh );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

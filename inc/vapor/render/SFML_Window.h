@@ -57,7 +57,7 @@ public:
 	virtual void makeCurrent();
 
 	// Gets the input manager.
-	input::InputManager& getInputManager() { return inputManager; }
+	InputManager& getInputManager() { return inputManager; }
 
 private:
 
@@ -72,7 +72,7 @@ private:
 	void createWindow();
 
 	// Holds the SFML input manager.
-	input::SFML_InputManager inputManager;
+	SFML_InputManager inputManager;
 
 	// SFML structures
 	sf::Window window;

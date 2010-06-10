@@ -15,7 +15,7 @@
 #include "vapor/resources/ResourceLoader.h"
 #include "vapor/script/Script.h"
 
-namespace vapor { namespace resources {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -33,7 +33,7 @@ public:
 	IMPLEMENT_PREPARE(script::Script)
 
 	// Parses a Lua text script to a buffer.
-	virtual bool decode(const vfs::File&, Resource* res);
+	virtual bool decode(const File&, Resource* res);
 
 	// Gets the name of this codec.
 	IMPLEMENT_GETTER(Name, const std::string, "LUA")
@@ -52,6 +52,6 @@ protected:
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

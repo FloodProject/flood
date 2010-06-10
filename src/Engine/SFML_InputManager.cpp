@@ -12,7 +12,7 @@
 
 #include "vapor/input/SFML_InputManager.h"
 
-namespace vapor { namespace input {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -502,6 +502,6 @@ Keys::Enum SFML_InputManager::convertKeyEnum(sf::Key::Code keycode)
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

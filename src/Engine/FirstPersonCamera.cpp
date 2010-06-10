@@ -13,7 +13,6 @@
 
 namespace vapor { namespace scene {
 
-using namespace vapor::input;
 using namespace vapor::render;
 
 //-----------------------------------//
@@ -26,7 +25,7 @@ const std::string& FirstPersonCamera::type = "FirstPersonCamera";
 
 //-----------------------------------//
 
-FirstPersonCamera::FirstPersonCamera( input::InputManager* input,
+FirstPersonCamera::FirstPersonCamera( InputManager* input,
 	render::Device* device, Projection::Enum projection )
 	: Camera( device, projection ), inputManager( input ),
 	clampMovementX( true ), moveSensivity( DEFAULT_MOVE_SENSIVITY ), 
@@ -179,7 +178,7 @@ void FirstPersonCamera::onKeyPressed( const KeyEvent& keyEvent )
 
 //-----------------------------------//
 
-void FirstPersonCamera::onMouseWheel( const input::MouseWheelEvent& event )
+void FirstPersonCamera::onMouseWheel( const MouseWheelEvent& event )
 {
 	mouseWheel += event.delta;
 }

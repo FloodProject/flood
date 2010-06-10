@@ -9,7 +9,7 @@
 #include "vapor/PCH.h"
 #include "vapor/resources/Sound.h"
 
-namespace vapor { namespace resources {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -20,4 +20,4 @@ Sound::Sound()
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

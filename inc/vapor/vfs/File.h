@@ -15,24 +15,7 @@ struct PHYSFS_File;
 /** \addtogroup virtual Virtual Filesystem 
  * @{ */
 
-namespace vapor { namespace vfs {
-
-//-----------------------------------//
-
-/**
- * Use these for different kinds of access to the files.
- * Check the File class description for more information.
- */
-
-namespace AccessMode
-{
-	enum Enum
-	{
-		Read,
-		Write,
-		Append
-	};
-}
+namespace vapor {
 
 //-----------------------------------//
 
@@ -117,13 +100,11 @@ private:
 	bool closed;
 };
 
-//-----------------------------------//
-
 TYPEDEF_SHARED_POINTER_FROM_TYPE( File );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 /** @} */
 

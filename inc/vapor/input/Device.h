@@ -8,7 +8,7 @@
 
 #pragma once
 
-namespace vapor { namespace input {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -55,12 +55,12 @@ public:
 	virtual ~Device();
 
 	// Processes an event.
-	virtual void processEvent( const input::Event& event ) = 0;
+	virtual void processEvent( const Event& event ) = 0;
 
 	// Gets the type of this device.
-	virtual const input::DeviceType::Enum getType() const = 0;
+	virtual const DeviceType::Enum getType() const = 0;
 };
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

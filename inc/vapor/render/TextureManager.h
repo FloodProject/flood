@@ -39,7 +39,7 @@ public:
 	TexturePtr getTexture( const std::string& tex );
 
 	// Gets a texture given an image.
-	TexturePtr getTexture( const resources::ImagePtr& img );
+	TexturePtr getTexture( const ImagePtr& img );
 
 	// Gets the memory usage of the textures loaded (in kbytes).
 	uint getMemoryUsage();
@@ -47,20 +47,20 @@ public:
 private:
 
 	// Populates a texture when the image is loaded.
-	void onLoad( const resources::ResourceEvent& evt );
+	void onLoad( const ResourceEvent& evt );
 
 	// Reloads a texture when the image file changes.
-	void onReload( const resources::ResourceEvent& evt );
+	void onReload( const ResourceEvent& evt );
 
 	// Switches the image of the texture backed by the first image.
-	void switchImage( const resources::ImagePtr&, const resources::ImagePtr& );
+	void switchImage( const ImagePtr&, const ImagePtr& );
 
 	// Maps the identifiers to the textures.
-	typedef std::map< resources::ImagePtr, TexturePtr > TextureMap;
-	typedef std::pair< resources::ImagePtr, TexturePtr > TextureMapPair;
+	typedef std::map< ImagePtr, TexturePtr > TextureMap;
+	typedef std::pair< ImagePtr, TexturePtr > TextureMapPair;
 	TextureMap textures;
 	
-	resources::ResourceManagerPtr rm;
+	ResourceManagerPtr rm;
 };
 
 //-----------------------------------//

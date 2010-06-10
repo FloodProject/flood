@@ -10,7 +10,7 @@
 
 #include "vapor/resources/Text.h"
 
-namespace vapor { namespace resources {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -48,6 +48,6 @@ TYPEDEF_RESOURCE_POINTER_FROM_TYPE( GLSL_Text );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 //#endif

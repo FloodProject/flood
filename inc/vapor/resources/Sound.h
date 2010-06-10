@@ -11,7 +11,7 @@
 #include "vapor/resources/Resource.h"
 #include "vapor/resources/ResourceManager.h"
 
-namespace vapor { namespace resources {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -56,4 +56,4 @@ TYPEDEF_RESOURCE_POINTER_FROM_TYPE( Sound );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

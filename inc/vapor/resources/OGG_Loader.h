@@ -15,7 +15,7 @@
 
 #include <vorbis/vorbisfile.h>
 
-namespace vapor { namespace resources {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -33,7 +33,7 @@ public:
 	IMPLEMENT_PREPARE(Sound)
 
 	// Decode an OGG file to a buffer.
-	virtual bool decode(const vfs::File&, Resource* res);
+	virtual bool decode(const File&, Resource* res);
 
 	// Gets the name of this codec.
 	IMPLEMENT_GETTER(Name, const std::string, "OGG")
@@ -57,6 +57,6 @@ protected:
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

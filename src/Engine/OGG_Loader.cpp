@@ -12,9 +12,9 @@
 
 #include "vapor/resources/OGG_Loader.h"
 
-using vapor::vfs::File;
+using vapor::File;
 
-namespace vapor { namespace resources {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -120,6 +120,6 @@ void OGG_Loader::decodeOgg( OggVorbis_File* oggFile, std::vector<byte>& buffer )
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

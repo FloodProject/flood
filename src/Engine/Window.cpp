@@ -21,8 +21,6 @@
 
 namespace vapor { namespace render {
 
-using namespace vapor::input;
-
 //-----------------------------------//
 
 WindowSettings::WindowSettings( const ushort width, const ushort height, 

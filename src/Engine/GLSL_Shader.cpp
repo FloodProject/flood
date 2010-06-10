@@ -13,8 +13,6 @@
 #include "vapor/render/GLSL_Shader.h"
 #include "vapor/render/GL.h"
 
-using namespace vapor::resources;
-
 namespace vapor { namespace render {
 
 //-----------------------------------//

@@ -29,7 +29,7 @@ class VAPOR_API Framework : public Engine
 {
 public:
 
-	Framework(const std::string app, const char** argv);
+	Framework(const std::string& app, const char** argv);
 	virtual ~Framework() { }
 
 	// Kickstart the framework in action.
@@ -53,9 +53,9 @@ protected:
 	virtual void onRender() = 0;
 
 	// Input callback functions.
-	virtual void onKeyPressed( const input::KeyEvent& );
-	virtual void onButtonPressed( const input::MouseButtonEvent& );
-	virtual void onButtonReleased( const input::MouseButtonEvent& );
+	virtual void onKeyPressed( const KeyEvent& );
+	virtual void onButtonPressed( const MouseButtonEvent& );
+	virtual void onButtonReleased( const MouseButtonEvent& );
 
 protected:
 

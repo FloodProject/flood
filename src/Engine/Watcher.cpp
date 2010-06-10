@@ -24,7 +24,7 @@
 #include "vapor/PCH.h"
 #include "vapor/vfs/Watcher.h"
 
-namespace vapor { namespace vfs {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -47,4 +47,4 @@ const std::string Actions::getString( Actions::Enum action )
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

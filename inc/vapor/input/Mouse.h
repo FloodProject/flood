@@ -11,7 +11,7 @@
 #include "vapor/input/Device.h"
 #include "vapor/input/MouseEvents.h"
 
-namespace vapor { namespace input {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -46,7 +46,7 @@ public:
 	bool isButtonPressed( MouseButton::Enum button ) const;
 
 	// Processes an event (only if it's a mouse event).
-	virtual void processEvent( const input::Event& event );
+	virtual void processEvent( const Event& event );
 
 	// Gets a structure with the current mouse state.
 	IMPLEMENT_GETTER(MouseInfo, const MouseInfo&, mouseInfo)
@@ -101,4 +101,4 @@ private:
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

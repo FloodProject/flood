@@ -23,7 +23,6 @@
 namespace vapor { namespace render {
 
 using namespace vapor::scene;
-using namespace vapor::resources;
 
 //-----------------------------------//
 

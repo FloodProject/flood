@@ -12,7 +12,6 @@
 
 namespace vapor { namespace scene {
 
-using namespace vapor::resources;
 using namespace vapor::render;
 
 //-----------------------------------//
@@ -78,7 +77,7 @@ CellPtr Terrain::createCell( const ImagePtr& heightmap, ushort x, ushort y )
 
 //-----------------------------------//
 
-void Terrain::convertHeightmap( const resources::ImagePtr& heightmap,
+void Terrain::convertHeightmap( const ImagePtr& heightmap,
 							   std::vector<float>& heights )
 {
 	// TODO: Can't handle any other pixel format right now...

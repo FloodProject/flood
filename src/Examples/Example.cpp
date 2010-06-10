@@ -31,7 +31,7 @@ void Example::onSetupResources()
 	ResourceManagerPtr rm = getResourceManager();
 	
 	ImagePtr img = rm->loadResource< Image >( "triton.png" );
-	snd = rm->loadResource< resources::Sound >( "stereo.ogg" );
+	snd = rm->loadResource< Sound >( "stereo.ogg" );
 
 	rm->loadResource("Diffuse.glsl");
 	rm->loadResource("Tex.glsl");
@@ -196,14 +196,14 @@ void Example::onKeyPressed( const KeyEvent& keyEvent )
 	{
 		Json::Value sc;
 		getSceneManager()->serialize( sc );
-		File file( "Example.scene", vfs::AccessMode::Write );
+		File file( "Example.scene", AccessMode::Write );
 		file.write( sc.toStyledString() );
 	}
 }
 
 //-----------------------------------//
 
-void Example::onButtonPressed( const input::MouseButtonEvent& event )
+void Example::onButtonPressed( const MouseButtonEvent& event )
 {
 	debug( "%hd,%hd", event.x, event.y );
 }

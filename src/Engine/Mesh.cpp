@@ -1,4 +1,4 @@
-	/************************************************************************
+/************************************************************************
 *
 * vapor3D Engine © (2008-2010)
 *
@@ -10,7 +10,7 @@
 #include "vapor/resources/Mesh.h"
 #include "vapor/render/Renderable.h"
 
-namespace vapor { namespace resources {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -27,4 +27,4 @@ bool Mesh::isBuilt() const
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

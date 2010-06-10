@@ -9,7 +9,7 @@
 #include "vapor/PCH.h"
 #include "vapor/resources/Resource.h"
 
-namespace vapor { namespace resources {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -73,4 +73,4 @@ std::string Resource::getBaseURI() const
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

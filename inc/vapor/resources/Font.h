@@ -12,7 +12,7 @@
 #include "vapor/resources/Image.h"
 #include "vapor/math/Vector2.h"
 
-namespace vapor { namespace resources {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -83,4 +83,4 @@ TYPEDEF_RESOURCE_POINTER_FROM_TYPE( Font );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

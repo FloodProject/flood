@@ -9,7 +9,7 @@
 #include "vapor/PCH.h"
 #include "vapor/input/Keyboard.h"
 
-namespace vapor { namespace input {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -32,7 +32,7 @@ void Keyboard::resetKeys()
 
 //-----------------------------------//
 
-void Keyboard::processEvent( const input::Event& event )
+void Keyboard::processEvent( const Event& event )
 {
 	if( event.deviceType != DeviceType::Keyboard )
 		return;
@@ -101,4 +101,4 @@ bool Keyboard::isKeyPressed( Keys::Enum keycode ) const
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

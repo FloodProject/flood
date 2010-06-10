@@ -13,9 +13,9 @@
 #include "vapor/resources/ResourceManager.h"
 #include "vapor/Engine.h"
 
-namespace vapor { namespace resources {
+namespace vapor {
 
-using vapor::vfs::File;
+using vapor::File;
 
 //-----------------------------------//
 
@@ -141,4 +141,4 @@ bool Font_Loader::validateFont()
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

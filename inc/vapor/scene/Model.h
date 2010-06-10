@@ -26,7 +26,7 @@ class VAPOR_API Model : public Geometry
 {
 public:
 
-	Model( resources::MeshPtr mesh );
+	Model( MeshPtr mesh );
 
 	// Builds the mesh when it is fully loaded.
 	void update( double delta );
@@ -36,7 +36,7 @@ public:
   
 private:
 
-	resources::MeshPtr mesh;
+	MeshPtr mesh;
 
 	// Component type
 	static const std::string& type;

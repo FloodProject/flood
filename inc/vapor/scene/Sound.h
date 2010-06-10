@@ -29,7 +29,7 @@ class VAPOR_API Sound : public Transform, public audio::Source
 {
 public:
 
-	Sound(ListenerPtr ls, resources::SoundPtr sound);
+	Sound(ListenerPtr ls, SoundPtr sound);
 	virtual ~Sound();
 
 	virtual void update( double delta );

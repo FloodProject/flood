@@ -10,7 +10,7 @@
 
 #include "vapor/gui/Overlay.h"
 
-FWD_DECL_NS_TYPEDEF_INT(resources, Font)
+FWD_DECL_TYPEDEF_INT(Font)
 FWD_DECL_NS_TYPEDEF_INT(render, Material)
 FWD_DECL_NS_TYPEDEF_SHARED(scene, Geometry)
 
@@ -32,7 +32,7 @@ class VAPOR_API Label : public gui::Overlay
 {
 public:
 
-	Label( const std::string& text, resources::FontPtr font, render::MaterialPtr mat );
+	Label( const std::string& text, FontPtr font, render::MaterialPtr mat );
 	Label( const std::string& text, const std::string& font );
 
 	// Gets the current text of this label.
@@ -62,7 +62,7 @@ protected:
 	std::string text;
 	
 	// Holds the font texture we are gonna use for rendering the glyphs.
-	resources::FontPtr font;
+	FontPtr font;
 	
 	// Font geometry.
 	render::RenderablePtr renderable;

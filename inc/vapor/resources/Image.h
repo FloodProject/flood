@@ -10,7 +10,7 @@
 
 #include "vapor/resources/Resource.h"
 
-namespace vapor { namespace resources {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -91,4 +91,4 @@ TYPEDEF_RESOURCE_POINTER_FROM_TYPE( Image );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

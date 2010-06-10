@@ -8,7 +8,7 @@
 
 #pragma once
 
-namespace vapor { namespace input {
+namespace vapor {
 
 //-----------------------------------//	
 
@@ -168,7 +168,7 @@ namespace KeyboardEventType
  * it also needs to know if it's a key press or release event.
  */
 
-struct VAPOR_API KeyEvent : public input::Event
+struct VAPOR_API KeyEvent : public Event
 {
 	friend class Keyboard;
 	
@@ -186,4 +186,4 @@ private:
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

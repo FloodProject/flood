@@ -13,13 +13,11 @@
 #include "vapor/render/Device.h"
 #include "vapor/Engine.h"
 
-using namespace vapor::resources;
-
 namespace vapor { namespace render {
 
 //-----------------------------------//
 
-Texture::Texture( const resources::ImagePtr& _image )
+Texture::Texture( const ImagePtr& _image )
 	: image( nullptr )
 {
 	assert( _image != nullptr );
@@ -139,7 +137,7 @@ void Texture::configure()
 
 //-----------------------------------//
 
-void Texture::setImage( const resources::ImagePtr& _image )
+void Texture::setImage( const ImagePtr& _image )
 {
 	assert( _image != nullptr );
 

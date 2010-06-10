@@ -35,7 +35,7 @@
 	#pragma warning (disable: 4996)
 #endif
 
-namespace vapor { namespace vfs {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -295,6 +295,6 @@ void WatcherWin32::handleAction(WatchStruct* watch, const std::wstring& filename
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

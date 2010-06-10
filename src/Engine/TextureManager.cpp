@@ -14,8 +14,6 @@
 
 namespace vapor { namespace render {
 
-using namespace vapor::resources;
-
 //-----------------------------------//
 
 TextureManager::TextureManager()

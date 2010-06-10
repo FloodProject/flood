@@ -16,8 +16,6 @@
 
 namespace vapor { namespace render {
 
-using namespace vapor::resources;
-
 //-----------------------------------//
 
 GLSL_Program::GLSL_Program( const GLSL_TextPtr& text )

@@ -11,7 +11,7 @@
 #include "vapor/input/Device.h"
 #include "vapor/input/KeyboardEvents.h"
 
-namespace vapor { namespace input {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -44,7 +44,7 @@ public:
 private:
 	
 	// Processes an event (only if it's a keyboard event).
-	virtual void processEvent( const input::Event& event );
+	virtual void processEvent( const Event& event );
 
 	// Return this device as a keyboard.
 	IMPLEMENT_GETTER(Type, const DeviceType::Enum, DeviceType::Keyboard)
@@ -64,4 +64,4 @@ private:
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

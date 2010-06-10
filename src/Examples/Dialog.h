@@ -12,7 +12,6 @@
 
 #include "resource.h"
 
-using namespace vapor::resources;
 using namespace vapor::render;
 
 //-----------------------------------//

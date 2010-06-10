@@ -10,7 +10,7 @@
 
 #include "vapor/input/Joystick.h"
 
-namespace vapor { namespace input {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -22,14 +22,14 @@ JoystickEvent::JoystickEvent( JoystickEventType::Enum eventType )
 
 //-----------------------------------//
 
-const input::DeviceType::Enum Joystick::getType()
+const DeviceType::Enum Joystick::getType()
 {
-	return input::DeviceType::Joystick; 
+	return DeviceType::Joystick; 
 }
 
 //-----------------------------------//
 
-void Joystick::processEvent( const input::Event& event )
+void Joystick::processEvent( const Event& event )
 {
 	if( event.deviceType != DeviceType::Joystick )
 	{
@@ -127,4 +127,4 @@ JoyButtonEvent::JoyButtonEvent(unsigned int JoystickId, unsigned int Button,
 
 
 
-} } // end namespaces
+} // end namespace

@@ -12,7 +12,7 @@
 
 #ifdef VAPOR_FONT_BITMAP
 
-namespace vapor { namespace resources {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -43,7 +43,7 @@ private:
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif
 

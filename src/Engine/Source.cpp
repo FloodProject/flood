@@ -17,7 +17,7 @@ namespace vapor { namespace audio {
 
 //-----------------------------------//
 
-Source::Source(std::shared_ptr<audio::Context> context, resources::SoundPtr sound)
+Source::Source(std::shared_ptr<audio::Context> context, SoundPtr sound)
 	: context(context), device(context->device), sourceId(0)
 {	
 	context->makeCurrent();

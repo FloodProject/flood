@@ -36,10 +36,10 @@ class VAPOR_API Source : private boost::noncopyable
 {
 public:
 
-	Source( std::shared_ptr<audio::Context> context, resources::SoundPtr sound );
+	Source( std::shared_ptr<audio::Context> context, SoundPtr sound );
 	~Source();
 
-	//void setResource( shared_ptr<resources::Resource> sound );
+	//void setResource( shared_ptr<Resource> sound );
 
 	// Plays the sound buffer a number of times. If you paused the source
 	// then it will resume from where it was paused.

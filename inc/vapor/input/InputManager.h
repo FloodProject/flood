@@ -13,7 +13,7 @@
 #include "vapor/input/Mouse.h"
 #include "vapor/input/Joystick.h"
 
-namespace vapor { namespace input {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -25,14 +25,13 @@ class VAPOR_API InputManager : private boost::noncopyable
 {
 public:
 
-	InputManager();
 	virtual ~InputManager();
 
 	// Adds a new device that will be managed by this class.
-	void addDevice( input::Device* );
+	void addDevice( Device* );
 	
 	// Gets a vector with all the known input devices.
-	const std::vector< input::Device* >& getDevices() const;
+	const std::vector< Device* >& getDevices() const;
 
 	// Gets a keyboard device if it exists, nullptr otherwise.
 	Keyboard* getKeyboard() const;
@@ -43,14 +42,14 @@ public:
 	// Feeds an external input event to the input manager.
 	// The input will be processed to all the devices and
 	// each device will only process the ones they want.
-	void processEvent( const input::Event& event );
+	void processEvent( const Event& event );
 
 private:
 
 	// Holds all the input devices.
-	std::vector< input::Device* > devices;
+	std::vector< Device* > devices;
 };
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

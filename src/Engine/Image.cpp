@@ -10,7 +10,7 @@
 #include "vapor/resources/Image.h"
 #include "lodepng.h"
 
-namespace vapor { namespace resources {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -99,4 +99,4 @@ void Image::log() const
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

@@ -63,13 +63,13 @@ public:
 	Terrain( const TerrainSettings& settings );
 
 	// Adds a new cell of terrain (this will be deferred if the heightmap is not loaded).
-	void addCell( const resources::ImagePtr& heightmap, ushort x, ushort y );
+	void addCell( const ImagePtr& heightmap, ushort x, ushort y );
 
 	// Converts the heightmap to a vector of heights.
-	void convertHeightmap( const resources::ImagePtr& heightmap, std::vector<float>& heights );
+	void convertHeightmap( const ImagePtr& heightmap, std::vector<float>& heights );
 
 	// Valides the heightmap (checks if it has valid dimensions).
-	bool validateHeightmap( const resources::ImagePtr& heightmap );
+	bool validateHeightmap( const ImagePtr& heightmap );
 
 	// Applies a brush operation in a specified region.
 	//void applyBrush( const Brush& brush, const Region& region );
@@ -78,7 +78,7 @@ public:
 	IMPLEMENT_ACESSOR(Material, render::MaterialPtr, cellMaterial)
 
 	// Gets/sets the heightmap of the terrain.
-	IMPLEMENT_ACESSOR(Heightmap, resources::ImagePtr, heightmap)
+	IMPLEMENT_ACESSOR(Heightmap, ImagePtr, heightmap)
 
 	// Updates the terrain geometry if needed.
 	virtual void update( double delta );
@@ -89,10 +89,10 @@ public:
 protected:
 
 	// Creates a new cell of terrain (this will be deferred if the heightmap is not loaded).
-	CellPtr createCell( const resources::ImagePtr& heightmap, ushort x, ushort y );
+	CellPtr createCell( const ImagePtr& heightmap, ushort x, ushort y );
 
 	// Provides the heights of the terrain.
-	resources::ImagePtr heightmap;
+	ImagePtr heightmap;
 
 	// Pages of the terrain.
 	std::vector<Cell*> terrainCells;
@@ -100,7 +100,7 @@ protected:
 	// Material for this terrain.
 	render::MaterialPtr cellMaterial;
 
-	typedef std::tuple< resources::ImagePtr, ushort, ushort > CellRequest;
+	typedef std::tuple< ImagePtr, ushort, ushort > CellRequest;
 	std::list<CellRequest> requestsQueue;
 
 	// Terrain settings.

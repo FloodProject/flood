@@ -9,14 +9,14 @@
 #include "vapor/PCH.h"
 #include "vapor/input/Mouse.h"
 
-namespace vapor { namespace input {
+namespace vapor {
 
 //-----------------------------------//
 
 #define CAST_EVENT(type, var, evt)		\
 	type var = static_cast<type>(evt);
 
-void Mouse::processEvent( const input::Event& event )
+void Mouse::processEvent( const Event& event )
 {
 	if( event.deviceType != DeviceType::Mouse )
 		return;
@@ -261,4 +261,4 @@ MouseWheelEvent::MouseWheelEvent()
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

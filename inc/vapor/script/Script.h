@@ -23,7 +23,7 @@ class State;
  * represents a Lua interpreter state.
  */
 
-class VAPOR_API Script : public resources::Resource
+class VAPOR_API Script : public Resource
 {
 public:
 
@@ -37,8 +37,8 @@ public:
 	IMPLEMENT_ACESSOR(State, State* const, state)
 
 	// Gets the associated resource group.
-	IMPLEMENT_GETTER(ResourceGroup, resources::ResourceGroup::Enum,
-		resources::ResourceGroup::Scripts)
+	IMPLEMENT_GETTER(ResourceGroup, ResourceGroup::Enum,
+		ResourceGroup::Scripts)
 
 protected:
 

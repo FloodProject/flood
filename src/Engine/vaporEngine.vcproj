@@ -1396,6 +1396,14 @@
 					<File
 						RelativePath="..\..\dep\picopng\lodepng.cpp"
 						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								DisableSpecificWarnings="4996;4706"
+							/>
+						</FileConfiguration>
 					</File>
 					<File
 						RelativePath="..\..\dep\picopng\picopng.cpp"

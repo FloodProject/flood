@@ -10,7 +10,7 @@
 
 #include "vapor/resources/Font.h"
 
-namespace vapor { namespace resources {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -33,5 +33,5 @@ private:
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 

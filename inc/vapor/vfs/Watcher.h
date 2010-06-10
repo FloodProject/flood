@@ -29,7 +29,7 @@
 
 #pragma once
 
-namespace vapor { namespace vfs {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -117,4 +117,4 @@ public:
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

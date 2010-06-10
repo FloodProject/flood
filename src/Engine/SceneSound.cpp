@@ -16,7 +16,7 @@ namespace vapor { namespace scene {
 
 //-----------------------------------//
 
-Sound::Sound( ListenerPtr ls, resources::SoundPtr sound )
+Sound::Sound( ListenerPtr ls, SoundPtr sound )
 	: Source( Listener::getContext( ls ), sound )
 {
 

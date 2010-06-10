@@ -18,7 +18,8 @@ const std::string& Geometry::type = "Geometry";
 
 //-----------------------------------//
 
-Geometry::Geometry() : isDirty( true )
+Geometry::Geometry()
+	: isDirty( true )
 {
 
 }

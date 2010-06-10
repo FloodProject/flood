@@ -11,7 +11,7 @@
 
 #ifdef VAPOR_FONT_FREETYPE2
 
-namespace vapor { namespace resources {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -19,10 +19,10 @@ FontManager::FontManager()
 {
 	if(initFT()) 
 	{
-		info("resources::ttf", "Initialized FreeType %d.%d.%d", 
+		info("ttf", "Initialized FreeType %d.%d.%d", 
 			FREETYPE_MAJOR, FREETYPE_MINOR, FREETYPE_PATCH);
 	} else {
-		error("resources::ttf", "Failed to initialize FreeType");
+		error("ttf", "Failed to initialize FreeType");
 		exit(EXIT_FAILURE);
 	}
 }
@@ -33,7 +33,7 @@ FontManager::~FontManager()
 {
 	if(FT_Done_FreeType(ft) != 0) 
 	{
-		warn("resources::ttf", "Failed to destroy FreeType");
+		warn("ttf", "Failed to destroy FreeType");
 	}
 }
 
@@ -50,6 +50,6 @@ bool FontManager::initFT()
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

@@ -8,7 +8,7 @@
 
 #pragma once
 
-namespace vapor { namespace resources {
+namespace vapor {
 
 class ResourceLoader;
 
@@ -141,6 +141,6 @@ TYPEDEF_RESOURCE_POINTER_FROM_TYPE( Resource );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 

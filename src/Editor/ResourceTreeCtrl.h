@@ -47,9 +47,9 @@ protected:
 	void onItemMenu(wxTreeEvent& event);
 
 	// Resource-monitoring callbacks.
-	void onResourceAdded( const resources::ResourceEvent& event );
-	void onResourceRemoved( const resources::ResourceEvent& event );
-	void onResourceReloaded( const resources::ResourceEvent& event );
+	void onResourceAdded( const ResourceEvent& event );
+	void onResourceRemoved( const ResourceEvent& event );
+	void onResourceReloaded( const ResourceEvent& event );
 
 	EditorFrame* editor;
 	Engine* engine;
@@ -59,8 +59,8 @@ protected:
 
 	wxTreeItemId root;
 
-	std::map< resources::ResourceGroup::Enum, wxTreeItemId > resourceGroupTreeIds;
-	std::map< resources::ResourceGroup::Enum, int > resourceGroupIcons;
+	std::map< ResourceGroup::Enum, wxTreeItemId > resourceGroupTreeIds;
+	std::map< ResourceGroup::Enum, int > resourceGroupIcons;
 
 private:
 

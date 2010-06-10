@@ -20,7 +20,7 @@
 #include "vapor/input/Keyboard.h"
 #include "vapor/input/Joystick.h"
 
-namespace vapor { namespace input {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -57,6 +57,6 @@ private:
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

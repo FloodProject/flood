@@ -13,7 +13,7 @@
 #include "vapor/vfs/File.h"
 #include <physfs.h>
 
-namespace vapor { namespace vfs {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -80,7 +80,7 @@ bool File::open()
 
 	if ( file == nullptr )
 	{
-		error( "vfs::file", "Could not open file '%s': %s",
+		error( "file", "Could not open file '%s': %s",
 			path.c_str(), PHYSFS_getLastError() );
 		return false;
 	}
@@ -100,7 +100,7 @@ bool File::close()
 
 	if( err == 0 ) 
 	{
-		error( "vfs::file", "Could not close file '%s': %s",
+		error( "file", "Could not close file '%s': %s",
 			path.c_str(), PHYSFS_getLastError() );
 
 		return false;
@@ -129,7 +129,7 @@ std::vector<byte> File::read(long sz) const
 {
 	if( accessMode != AccessMode::Read )
 	{
-		error( "vfs::file", "Access mode violation in file '%s'", 
+		error( "file", "Access mode violation in file '%s'", 
 			path.c_str() );
 		
 		return std::vector<byte>();
@@ -157,7 +157,7 @@ std::vector<byte> File::read(long sz) const
 
 	if(bytesRead < 0)
 	{
-		error( "vfs::file", "Could not read from file '%s': %s", 
+		error( "file", "Could not read from file '%s': %s", 
 			path.c_str(), PHYSFS_getLastError());
 
 		return std::vector<byte>();	
@@ -172,7 +172,7 @@ long File::read(void* buffer, long size ) const
 {
 	if( accessMode != AccessMode::Read )
 	{
-		error( "vfs::file", "Access mode violation in file '%s'", 
+		error( "file", "Access mode violation in file '%s'", 
 			path.c_str() );
 		
 		return -1;
@@ -194,7 +194,7 @@ long File::read(void* buffer, long size ) const
 
 	if(bytesRead < 0)
 	{
-		error( "vfs::file", "Could not read from file '%s': %s", 
+		error( "file", "Could not read from file '%s': %s", 
 			path.c_str(), PHYSFS_getLastError());
 
 		return -1;	
@@ -231,7 +231,7 @@ long File::write(const std::vector<byte>& buffer, long size)
 	if( (accessMode != AccessMode::Write)
 		&& (accessMode != AccessMode::Append) ) 
 	{
-		error( "vfs::file", "Access mode violation in file '%s'", 
+		error( "file", "Access mode violation in file '%s'", 
 			path.c_str());
 
 		return -1;
@@ -248,7 +248,7 @@ long File::write(const std::vector<byte>& buffer, long size)
 	
 	if(numObjs < 0)
 	{
-		error( "vfs::file", "Could not write to file '%s': %s",
+		error( "file", "Could not write to file '%s': %s",
 			path.c_str(), PHYSFS_getLastError() );
 	}
 
@@ -271,7 +271,7 @@ bool File::seek(long pos)
 	
 	if( (pos < 0) || (pos >= getSize()) )
 	{
-		error( "vfs::file", 
+		error( "file", 
 			"Attempting to access a position out of bounds in file '%s': %d",
 			path.c_str(), pos);
 		
@@ -282,7 +282,7 @@ bool File::seek(long pos)
 	
 	if(err == 0)
 	{
-		error( "vfs::file", "Failure to seek in file '%s': %s", 
+		error( "file", "Failure to seek in file '%s': %s", 
 			path.c_str(), PHYSFS_getLastError() );
 	}
 
@@ -319,6 +319,6 @@ bool File::exists(const std::string& path)
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

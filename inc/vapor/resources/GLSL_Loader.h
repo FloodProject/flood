@@ -14,7 +14,7 @@
 
 #include "vapor/resources/ResourceLoader.h"
 
-namespace vapor { namespace resources {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -29,10 +29,10 @@ public:
 	GLSL_Loader();
 
 	// Creates the resource with no data.
-	virtual Resource* prepare(const vfs::File& file);
+	virtual Resource* prepare(const File& file);
 
 	// Parses a GLSL text shader to a buffer.
-	virtual bool decode(const vfs::File&, Resource* res);
+	virtual bool decode(const File&, Resource* res);
 
 	// Gets the name of this codec.
 	IMPLEMENT_GETTER(Name, const std::string, "GLSL")
@@ -51,6 +51,6 @@ protected:
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif
