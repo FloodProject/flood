@@ -12,7 +12,7 @@
 #include "vapor/ConcurrentQueue.h"
 #include "vapor/resources/Resource.h"
 #include "vapor/resources/ResourceLoader.h"
-#include "vapor/vfs/Watcher.h"
+#include "vapor/vfs/FileWatcher.h"
 
 FWD_DECL_TYPEDEF_PTR(TaskManager)
 

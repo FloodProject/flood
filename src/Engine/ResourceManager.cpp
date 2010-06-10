@@ -12,8 +12,6 @@
 #include "vapor/vfs/File.h"
 #include "vapor/Engine.h"
 
-using namespace vapor::vfs;
-
 namespace vapor {
 
 //-----------------------------------//

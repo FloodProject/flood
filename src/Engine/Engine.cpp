@@ -10,7 +10,7 @@
 #include "vapor/Engine.h"
 #include "ResourceLoaders.h"
 
-#include "vapor/vfs/VFS.h"
+#include "vapor/vfs/FileSystem.h"
 #include "vapor/render/Device.h"
 #include "vapor/resources/ResourceManager.h"
 #include "vapor/scene/Scene.h"
@@ -31,7 +31,7 @@ namespace vapor {
 
 Engine::Engine()
 	: renderDevice(nullptr),
-	vfs(nullptr),
+	fileSystem(nullptr),
 	resourceManager(nullptr),
 	/*physicsManager(nullptr),*/
 	log(nullptr),
@@ -64,7 +64,7 @@ Engine::~Engine()
 	delete scriptState;
 	delete renderDevice;
 	delete resourceManager;
-	delete vfs;
+	delete fileSystem;
 	delete log;
 }
 
@@ -78,7 +78,7 @@ void Engine::init( bool createWindow )
 	info( "engine", "Starting vaporEngine version '%s'", VAPOR_ENGINE_VERSION );
 
 	// create the virtual filesystem
-	vfs = new VFS(app, argv ? argv[0] : nullptr);
+	fileSystem = new FileSystem(app, argv ? argv[0] : nullptr);
 
 	taskManager = new TaskManager();
 	subsystems.push_back( taskManager );
@@ -87,7 +87,7 @@ void Engine::init( bool createWindow )
 	resourceManager = new ResourceManager();
 	
 	// connect the resource manager and filesystem watcher
-	vfs->getWatcher()->onWatchEvent += 
+	fileSystem->getFileWatcher()->onWatchEvent += 
 		fd::bind(&ResourceManager::handleWatchResource, resourceManager);
 
 	// create the physics manager
@@ -209,7 +209,7 @@ void Engine::update( double delta )
 	foreach( Subsystem* subsystem, subsystems )
 		subsystem->update( delta );
 
-	vfs->update( delta );
+	fileSystem->update( delta );
 	resourceManager->update( delta );
 	sceneManager->update( delta );
 

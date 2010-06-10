@@ -1,5 +1,5 @@
 /**
-	Main header for the Watcher class. Declares all implementation
+	Main header for the FileWatcher class. Declares all implementation
 	classes to reduce compilation overhead.
 
 	@author James Wynn
@@ -67,7 +67,7 @@ typedef Actions::Enum Action;
 
 /**
  * This data will be sent when a file notification is sent from the
- * OS back to the engine. You can hook the delegate in the Watcher
+ * OS back to the engine. You can hook the delegate in the FileWatcher
  * class to get these events. These can be used to implement assets
  * live updating, so when an asset changes it will be reloaded.
  */
@@ -92,11 +92,11 @@ struct VAPOR_API WatchEvent : private boost::noncopyable
  * to notify the parent program of the changes.
  */
 
-class VAPOR_API Watcher : private boost::noncopyable
+class VAPOR_API FileWatcher : private boost::noncopyable
 {
 public:
 
-	virtual ~Watcher() { }
+	virtual ~FileWatcher() { }
 
 	/// Add a directory watch
 	/// TODO: @exception FileNotFoundException Thrown when the requested directory does not exist

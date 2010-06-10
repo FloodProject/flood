@@ -909,7 +909,7 @@
 			</Filter>
 		</Filter>
 		<Filter
-			Name="VFS"
+			Name="FileSystem"
 			>
 			<File
 				RelativePath=".\File.cpp"
@@ -920,30 +920,30 @@
 				>
 			</File>
 			<File
-				RelativePath=".\VFS.cpp"
+				RelativePath=".\FileSystem.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\inc\vapor\vfs\VFS.h"
+				RelativePath="..\..\inc\vapor\vfs\FileSystem.h"
 				>
 			</File>
 			<Filter
 				Name="Watcher"
 				>
 				<File
-					RelativePath=".\Watcher.cpp"
+					RelativePath=".\FileWatcher.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\inc\vapor\vfs\Watcher.h"
+					RelativePath="..\..\inc\vapor\vfs\FileWatcher.h"
 					>
 				</File>
 				<File
-					RelativePath=".\WatcherWin32.cpp"
+					RelativePath=".\FileWatcherWin32.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\inc\vapor\vfs\WatcherWin32.h"
+					RelativePath=".\FileWatcherWin32.h"
 					>
 				</File>
 			</Filter>

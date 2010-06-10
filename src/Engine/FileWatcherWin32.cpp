@@ -22,7 +22,7 @@
 */
 
 #include "vapor/PCH.h"
-#include "vapor/vfs/WatcherWin32.h"
+#include "FileWatcherWin32.h"
 
 #ifdef VAPOR_PLATFORM_WINDOWS
 
@@ -39,7 +39,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-class WatcherWin32;
+class FileWatcherWin32;
 
 /// Internal watch data
 struct WatchStruct
@@ -50,7 +50,7 @@ struct WatchStruct
 	LPARAM lParam;
 	DWORD mNotifyFilter;
 	bool mStopNow;
-	WatcherWin32* mWatcher;
+	FileWatcherWin32* mWatcher;
 	char* mDirName;
 	WatchID mWatchid;
 };
@@ -180,14 +180,14 @@ WatchStruct* CreateWatch(LPCTSTR szDirectory, DWORD mNotifyFilter)
 
 //-----------------------------------//
 
-WatcherWin32::WatcherWin32()
+FileWatcherWin32::FileWatcherWin32()
 	: mLastWatchID(0)
 {
 }
 
 //-----------------------------------//
 
-WatcherWin32::~WatcherWin32()
+FileWatcherWin32::~FileWatcherWin32()
 {
 	WatchMap::iterator iter = mWatches.begin();
 	WatchMap::iterator end = mWatches.end();
@@ -200,7 +200,7 @@ WatcherWin32::~WatcherWin32()
 
 //-----------------------------------//
 
-WatchID WatcherWin32::addWatch(const std::string& directory)
+WatchID FileWatcherWin32::addWatch(const std::string& directory)
 {
 	WatchID watchid = ++mLastWatchID;
 
@@ -223,7 +223,7 @@ WatchID WatcherWin32::addWatch(const std::string& directory)
 
 //-----------------------------------//
 
-void WatcherWin32::removeWatch(const std::string& directory)
+void FileWatcherWin32::removeWatch(const std::string& directory)
 {
 	WatchMap::iterator iter = mWatches.begin();
 	WatchMap::iterator end = mWatches.end();
@@ -239,7 +239,7 @@ void WatcherWin32::removeWatch(const std::string& directory)
 
 //-----------------------------------//
 
-void WatcherWin32::removeWatch(WatchID watchid)
+void FileWatcherWin32::removeWatch(WatchID watchid)
 {
 	WatchMap::iterator iter = mWatches.find(watchid);
 
@@ -254,14 +254,14 @@ void WatcherWin32::removeWatch(WatchID watchid)
 
 //-----------------------------------//
 
-void WatcherWin32::update()
+void FileWatcherWin32::update()
 {
 	MsgWaitForMultipleObjectsEx(0, nullptr, 0, QS_ALLINPUT, MWMO_ALERTABLE);
 }
 
 //-----------------------------------//
 
-void WatcherWin32::handleAction(WatchStruct* watch, const std::wstring& filename, ulong action)
+void FileWatcherWin32::handleAction(WatchStruct* watch, const std::wstring& filename, ulong action)
 {
 	Action fwAction;
 

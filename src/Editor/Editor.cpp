@@ -148,7 +148,7 @@ void EditorFrame::initEngine()
 	mouse->onMouseExit += fd::bind( &EditorFrame::onMouseLeave, this );
 
 	// Mount the editor default media VFS directories.
-	engine->getVFS()->mountDefaultLocations();
+	engine->getFileSystem()->mountDefaultLocations();
 }
 
 //-----------------------------------//

@@ -12,7 +12,7 @@
 
 #include "vapor/Subsystem.h"
 #include "vapor/vfs/File.h"
-#include "vapor/vfs/Watcher.h"
+#include "vapor/vfs/FileWatcher.h"
 
 /** \addtogroup virtual Virtual Filesystem 
  * @{ */
@@ -33,26 +33,26 @@ namespace vapor {
  * to the search path while mounting it in the virtual filesystem.
  */
 
-class VAPOR_API VFS : public Subsystem
+class VAPOR_API FileSystem : public Subsystem
 {
 public:
 
 	/// Constructs a new instance of the virtual filesystem..
-	VFS( const std::string& app, const char* argv0 = nullptr );
-	virtual ~VFS();
+	FileSystem( const std::string& app, const char* argv0 = nullptr );
+	virtual ~FileSystem();
 
 	/// Mount an archive into the virtual filesystem point.
 	bool mount(const std::string& path, const std::string& mount = "",
 		bool append = true);
 
-	/// Gets all the mount points in the VFS.
+	/// Gets all the mount points in the FileSystem.
 	IMPLEMENT_GETTER(MountPoints, const std::vector< std::string >&, mountPoints)
 
 	/// Mounts all the default resource locations.
 	void mountDefaultLocations();
 
 	/// Gets a reference to the notification watcher.
-	IMPLEMENT_GETTER(Watcher, Watcher*, watcher)
+	IMPLEMENT_GETTER(FileWatcher, FileWatcher*, watcher)
 
 	/// Updates the watcher with new notifications.
 	virtual void update( double );
@@ -60,12 +60,12 @@ public:
 private:
 
 	/// Watch notifications for file events.
-	Watcher* watcher;
+	FileWatcher* watcher;
 
 	/// Logs the version and supported archive types.
 	void log();
 
-	/// Logs the VFS-related errors.
+	/// Logs the FileSystem-related errors.
 	void logError( const std::string& );
 
 	/// Sets up some sensible default mount points.

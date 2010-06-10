@@ -84,7 +84,7 @@
 // VFS-related Includes
 //---------------------------------------------------------------------//
 
-#include <vapor/vfs/VFS.h>
+#include <vapor/vfs/FileSystem.h>
 #include <vapor/vfs/File.h>
 #include <vapor/vfs/Watcher.h>
 
@@ -134,7 +134,6 @@
 #ifdef VAPOR_USE_NAMESPACES
 
 using namespace vapor;
-using namespace vapor::vfs;
 using namespace vapor::scene;
 using namespace vapor::audio;
 using namespace vapor::render;

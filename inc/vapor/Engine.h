@@ -11,10 +11,8 @@
 #include "vapor/PCH.h"
 #include "vapor/Singleton.h"
 
-FWD_DECL(vfs, VFS)
 FWD_DECL(audio, Device)
 FWD_DECL(script, State)
-//FWD_DECL(InputManager)
 FWD_DECL_TYPEDEF_PTR(Subsystem)
 FWD_DECL_TYPEDEF_PTR(TaskManager)
 //FWD_DECL(physics, PhysicsManager)
@@ -25,7 +23,7 @@ FWD_DECL_TYPEDEF_PTR(ResourceManager)
 namespace vapor {
 
 class InputManager;
-class VFS;
+class FileSystem;
 
 /** \addtogroup Main */
 /** @{ */
@@ -108,7 +106,7 @@ public:
 	IMPLEMENT_GETTER(Log, Log*, log)
 
 	/// Gets the virtual filesystem.
-	IMPLEMENT_GETTER(VFS, VFS*, vfs)
+	IMPLEMENT_GETTER(FileSystem, FileSystem*, fileSystem)
 
 	/// Gets the input manager.
 	InputManager* const getInputManager() const;
@@ -148,7 +146,7 @@ protected:
 	//physics::PhysicsManager* physicsManager;
 
 	/// Virtual filesystem.
-	VFS* vfs;
+	FileSystem* fileSystem;
 
 	/// Default logger.
 	Log* log;

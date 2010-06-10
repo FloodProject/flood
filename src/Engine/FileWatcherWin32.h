@@ -31,7 +31,7 @@
 
 #ifdef VAPOR_PLATFORM_WINDOWS
 
-#include "Watcher.h"
+#include "vapor/vfs/FileWatcher.h"
 
 namespace vapor {
 
@@ -45,13 +45,13 @@ typedef std::map<WatchID, WatchStruct*> WatchMap;
 //-----------------------------------//
 
 /// Implementation for Win32 based on ReadDirectoryChangesW.
-/// @class WatcherWin32
-class WatcherWin32 : public Watcher
+/// @class FileWatcherWin32
+class FileWatcherWin32 : public FileWatcher
 {
 public:
 
-	WatcherWin32();
-	virtual ~WatcherWin32();
+	FileWatcherWin32();
+	virtual ~FileWatcherWin32();
 
 	/// Add a directory watch
 	/// @exception FileNotFoundException Thrown when the requested directory does not exist
