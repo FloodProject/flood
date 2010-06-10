@@ -11,16 +11,13 @@
 #include "vapor/scene/Transform.h"
 #include "vapor/scene/Tags.h"
 
-using namespace vapor::render;
-
-namespace vapor { namespace scene {
+namespace vapor {
 
 //-----------------------------------//
 
-Scene::Scene() : Group( "Scene" )
-{
-
-}
+Scene::Scene()
+	: Group( "Scene" )
+{ }
 
 //-----------------------------------//
 
@@ -192,4 +189,4 @@ NodePtr Scene::getEntity( const std::string& name ) const
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

@@ -11,7 +11,7 @@
 #include "vapor/scene/Component.h"
 #include "vapor/math/Color.h"
 
-namespace vapor { namespace scene {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -107,4 +107,4 @@ TYPEDEF_SHARED_POINTER_FROM_TYPE( Light );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

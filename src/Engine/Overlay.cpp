@@ -11,9 +11,7 @@
 #include "vapor/scene/Node.h"
 #include "vapor/scene/Transform.h"
 
-namespace vapor { namespace gui {
-
-using namespace vapor::scene;
+namespace vapor {
 
 const std::string& Overlay::type = "Overlay";
 
@@ -55,4 +53,4 @@ void Overlay::setPosition( int x, int y )
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

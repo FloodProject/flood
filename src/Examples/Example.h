@@ -48,20 +48,20 @@ protected:
 
 private:
 
-	scene::CameraPtr cam;
+	CameraPtr cam;
 
-	render::WindowPtr window;
-	render::ViewportPtr viewport;
-	render::ViewportPtr viewport2;
+	WindowPtr window;
+	ViewportPtr viewport;
+	ViewportPtr viewport2;
 
-	gui::LabelPtr label;
+	LabelPtr label;
 	SoundPtr snd;
-	render::RenderBufferPtr fbo;
-	scene::NodePtr fbo_node;
-	//scene::SoundPtr sound;
+	RenderBufferPtr fbo;
+	NodePtr fbo_node;
+	//SoundPtr sound;
 	InputMap* inputMap; 
-	render::TexturePtr tex;
-	render::TexturePtr fbo_tex;
+	TexturePtr tex;
+	TexturePtr fbo_tex;
 
 	float fpsUpdateTime;
 };

@@ -10,7 +10,7 @@
 
 #include "vapor/render/Renderable.h"
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -33,4 +33,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Quad );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

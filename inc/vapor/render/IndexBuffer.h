@@ -10,7 +10,7 @@
 
 #include "vapor/render/Buffer.h"
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -84,4 +84,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( IndexBuffer );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

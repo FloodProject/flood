@@ -12,7 +12,7 @@
 #include "vapor/scene/Geometry.h"
 #include "vapor/render/Sphere.h"
 
-namespace vapor { namespace scene {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -25,11 +25,11 @@ namespace vapor { namespace scene {
  * system can be implemented on top of this class if needed.
  */
 
-class VAPOR_API Skydome : public scene::Geometry
+class VAPOR_API Skydome : public Geometry
 {
 public:
 
-	Skydome( /*const render::MaterialPtr& mat*/ );
+	Skydome( /*const MaterialPtr& mat*/ );
 
 	// Returns the name of this component.
 	IMPLEMENT_GETTER(Type, const std::string&, type)
@@ -68,7 +68,7 @@ protected:
 
 	// Dome geometry that will be rendered as the sky.
 	float yMin, yMax;
-	render::SpherePtr dome;
+	SpherePtr dome;
 	Vector3 colorTop, colorBottom;
 
 	// Celestial bodies geometry.
@@ -83,4 +83,4 @@ TYPEDEF_SHARED_POINTER_FROM_TYPE( Skydome );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

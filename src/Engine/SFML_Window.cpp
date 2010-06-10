@@ -11,12 +11,13 @@
 
 #ifdef VAPOR_WINDOWING_SFML
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
 SFML_Window::SFML_Window(const WindowSettings& settings)
-	: Window( settings ), flags( 0 ), cursorState( true )
+	: Window( settings ),
+	flags( 0 ), cursorState( true )
 {
 	if( !open() )
 	{
@@ -52,7 +53,7 @@ bool SFML_Window::open()
 		
 		if( !vMode.IsValid() )
 		{
-			error( "render::window::sfml", "Video mode not supportted." );
+			error( "window::sfml", "Video mode not supportted." );
 			return false;
 		}
 		
@@ -180,7 +181,7 @@ void SFML_Window::setTitle(const std::string& title)
 	settings.setTitle(title);
 	createWindow();
 	
-	info( "render::window::sfml", "Changing window title to '%s'", title.c_str() );
+	info( "window::sfml", "Changing window title to '%s'", title.c_str() );
 }
 
 //-----------------------------------//
@@ -225,6 +226,6 @@ void SFML_Window::processResize(sf::Event event)
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

@@ -13,7 +13,7 @@
 #include "vapor/math/Matrix4x4.h"
 #include "vapor/math/Color.h"
 
-namespace vapor { namespace render {
+namespace vapor {
 
 namespace VertexAttribute { enum Enum; }
 
@@ -107,4 +107,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Program );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

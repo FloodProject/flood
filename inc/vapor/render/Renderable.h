@@ -13,13 +13,12 @@
 #include "vapor/render/Material.h"
 #include "vapor/render/GL.h"
 
-FWD_DECL_NS_TYPEDEF_INT(render, Material)
-FWD_DECL_NS_TYPEDEF_INT(render, VertexBuffer)
-FWD_DECL_NS_TYPEDEF_INT(render, IndexBuffer)
+FWD_DECL_TYPEDEF_PTR(RenderDevice)
+//FWD_DECL_TYPEDEF_INT(Material)
+//FWD_DECL_TYPEDEF_INT(VertexBuffer)
+//FWD_DECL_TYPEDEF_INT(IndexBuffer)
 
-namespace vapor { namespace render {
-
-class Device;
+namespace vapor {
 
 //-----------------------------------//
 
@@ -75,8 +74,8 @@ public:
 
 	Renderable();
 
-    Renderable( Primitive::Enum primitive, 
-		const VertexBufferPtr& vb, const IndexBufferPtr& ib, const MaterialPtr& mat );
+    Renderable( Primitive::Enum primitive, const VertexBufferPtr& vb,
+		const IndexBufferPtr& ib, const MaterialPtr& mat );
     
     // No index buffer, default material will be used if none passed
 	Renderable(Primitive::Enum primitive, const VertexBufferPtr& vb = VertexBufferPtr(),
@@ -88,7 +87,7 @@ public:
 
     // Render this renderable. This will bind all the necessary state
 	// like binding the buffers and the materials.
-	void render(const render::Device& device);
+	void render(const RenderDevicePtr& device);
     
     // Gets/sets the vertex buffer associated with the renderable.
 	IMPLEMENT_ACESSOR(VertexBuffer, VertexBufferPtr, vb) 
@@ -127,4 +126,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Renderable );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

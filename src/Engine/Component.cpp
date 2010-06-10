@@ -10,21 +10,18 @@
 #include "vapor/scene/Component.h"
 #include "vapor/render/Renderable.h"
 
-namespace vapor { namespace scene {
+namespace vapor {
 
 //-----------------------------------//
 
-Component::Component() : drawDebugRenderable( false )
-{
-
-}
+Component::Component()
+	: drawDebugRenderable( false )
+{ }
 
 //-----------------------------------//
 
 Component::~Component()
-{
-
-}
+{ }
 
 //-----------------------------------//
 
@@ -42,9 +39,9 @@ bool Component::isDebugRenderableVisible() const
 
 //-----------------------------------//
 
-render::RenderablePtr Component::getDebugRenderable() const
+RenderablePtr Component::getDebugRenderable() const
 {
-	return render::RenderablePtr();
+	return RenderablePtr();
 }
 
 //-----------------------------------//
@@ -74,4 +71,4 @@ void Component::serialize( Json::Value& value )
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

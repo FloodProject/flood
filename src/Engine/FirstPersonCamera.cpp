@@ -11,9 +11,7 @@
 #include "vapor/scene/Node.h"
 #include "vapor/math/Math.h"
 
-namespace vapor { namespace scene {
-
-using namespace vapor::render;
+namespace vapor {
 
 //-----------------------------------//
 
@@ -26,7 +24,7 @@ const std::string& FirstPersonCamera::type = "FirstPersonCamera";
 //-----------------------------------//
 
 FirstPersonCamera::FirstPersonCamera( InputManager* input,
-	render::Device* device, Projection::Enum projection )
+	RenderDevicePtr device, Projection::Enum projection )
 	: Camera( device, projection ), inputManager( input ),
 	clampMovementX( true ), moveSensivity( DEFAULT_MOVE_SENSIVITY ), 
 	lookSensivity( DEFAULT_LOOK_SENSIVITY ), mouseWheel(0)
@@ -240,4 +238,4 @@ void FirstPersonCamera::serialize( Json::Value& value )
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

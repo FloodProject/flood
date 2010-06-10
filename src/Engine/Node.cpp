@@ -10,7 +10,7 @@
 #include "vapor/scene/Node.h"
 #include "vapor/scene/Tags.h"
 
-namespace vapor { namespace scene {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -180,4 +180,4 @@ void Node::serialize( Json::Value& value )
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

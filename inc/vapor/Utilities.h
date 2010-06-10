@@ -29,7 +29,7 @@ namespace vapor {
 #define FWD_DECL(N, T)								\
 	namespace vapor { namespace N {					\
 		class T;									\
-	} } // end namespaces
+	} } // end namespace
 
 #define FWD_DECL_TYPEDEF_PTR(T)						\
 	namespace vapor {								\
@@ -37,36 +37,47 @@ namespace vapor {
 		TYPEDEF_PTR( T );							\
 	} // end namespace
 
-#define FWD_DECL_NS_TYPEDEF_PTR(N, T)				\
-	namespace vapor { namespace N {					\
-		class T;									\
-		TYPEDEF_PTR( T );							\
-	} } // end namespaces
-
-
 #define FWD_DECL_TYPEDEF_INT(T)						\
 	namespace vapor {								\
 		class T;									\
 		TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( T );	\
+	} // end namespace
+	
+#define FWD_DECL_TYPEDEF_SHARED(T)					\
+	namespace vapor {								\
+		class T;									\
+		TYPEDEF_SHARED_POINTER_FROM_TYPE( T );		\
+	} // end namespace
+
+#define FWD_DECL_TYPEDEF_SHARED_WEAK(T)			\
+	namespace vapor {								\
+		class T;									\
+		TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( T );	\
+	} // end namespace
+
+#define FWD_DECL_NS_TYPEDEF_PTR(N, T)				\
+	namespace vapor { namespace N {					\
+		class T;									\
+		TYPEDEF_PTR( T );							\
 	} // end namespace
 
 #define FWD_DECL_NS_TYPEDEF_INT(N, T)				\
 	namespace vapor { namespace N {					\
 		class T;									\
 		TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( T );	\
-	} } // end namespaces
+	} // end namespace
 
 #define FWD_DECL_NS_TYPEDEF_SHARED(N, T)			\
 	namespace vapor { namespace N {					\
 		class T;									\
 		TYPEDEF_SHARED_POINTER_FROM_TYPE( T );		\
-	} } // end namespaces
+	} // end namespace
 
 #define FWD_DECL_NS_TYPEDEF_SHARED_WEAK(N, T)			\
 	namespace vapor { namespace N {						\
 		class T;										\
 		TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( T );		\
-	} } // end namespaces
+	} // end namespace
 
 //---------------------------------------------------------------------//
 // Acessors

@@ -9,7 +9,7 @@
 #include "vapor/PCH.h"
 #include "vapor/DynamicLibrary.h"
 
-namespace vapor { namespace platform {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -51,4 +51,4 @@ void* DynamicLib::getSymbol(const std::string& symbol)
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

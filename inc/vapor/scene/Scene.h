@@ -12,7 +12,7 @@
 #include "vapor/math/Matrix4x3.h"
 #include "vapor/math/Ray.h"
 
-namespace vapor { namespace scene {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -27,7 +27,7 @@ struct RayTriangleQueryResult
 {
 	// Triangle based intersection
 	GeometryPtr geometry;
-	render::RenderablePtr renderable;
+	RenderablePtr renderable;
 	Vector3 intersection;
 	Vector3 triangle[3];
 	float distance;
@@ -82,4 +82,4 @@ TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( Scene );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

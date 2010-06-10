@@ -19,7 +19,7 @@
 	//#error "OpenGL renderer needs a windowing implementation"
 #endif
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -48,14 +48,14 @@ WindowSettings::WindowSettings( const WindowSettings& s )
 Window::Window(const WindowSettings& settings)
 	: settings( settings )
 {
-	info( "render::window", 
+	info( "window", 
 		"Creating %swindow (size: %dx%d, title: '%s', bits-per-pixel: %d)",
 		settings.isFullscreen() ? "fullscreen " : "", settings.getWidth(), 
 		settings.getHeight(), settings.getTitle().c_str(), settings.getBpp() );
 
 	if( settings.getCustomHandle() )
 	{
-		info("render::window", "External window handle found: %d",
+		info("window", "External window handle found: %d",
 			settings.getCustomHandle());
 	}
 }
@@ -64,7 +64,7 @@ Window::Window(const WindowSettings& settings)
 
 void Window::handleWindowResize()
 {
-	info("render::window", "Resizing window (new size: %dx%d)",
+	info("window", "Resizing window (new size: %dx%d)",
 		settings.getWidth(), settings.getHeight() );
 
 	if( onTargetResize.empty() )
@@ -123,7 +123,7 @@ WindowPtr Window::createWindow( const WindowSettings& settings )
 	#elif defined(VAPOR_WINDOWING_WIN32)
 		window = new Win32Window(settings);
 	#elif defined(VAPOR_WINDOWING_SFML)
-		window = new SFML_Window(settings);
+		window = (WindowPtr) new SFML_Window(settings);
 	#else
 		//#error "Could not find a window implementation"
 	#endif
@@ -133,4 +133,4 @@ WindowPtr Window::createWindow( const WindowSettings& settings )
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

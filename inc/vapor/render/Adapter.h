@@ -10,7 +10,7 @@
 
 #ifdef VAPOR_RENDERER_OPENGL
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//	
 
@@ -70,6 +70,6 @@ TYPEDEF_PTR(Adapter)
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

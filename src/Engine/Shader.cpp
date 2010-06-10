@@ -9,7 +9,7 @@
 #include "vapor/PCH.h"
 #include "vapor/render/Shader.h"
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -63,4 +63,4 @@ bool Shader::gotCompileErrors() const
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

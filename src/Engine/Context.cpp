@@ -10,31 +10,31 @@
 
 #ifdef VAPOR_AUDIO_OPENAL
 
-#include <al.h>
-#include <alc.h>
-
 #include "vapor/audio/Context.h"
 
-using namespace vapor::math;
+#include <al.h>
+#include <alc.h>
 
 namespace vapor { namespace audio {
 
 //-----------------------------------//
 
 Context::Context(audio::Device* device)
-	: context(nullptr), error(ALC_NO_ERROR), device(device)
+	: device(device),
+	context(nullptr),
+	error(ALC_NO_ERROR),
 {
 	if(!device)
 	{
 		warn("audio::al", "Could not create a new context \
-						  because of an invalid device pointer.");
+						  because the device is invalid.");
 		return;
 	}
 
 	context = createContext();
 
 	// set a default listener
-	setListener(Vector3(0.0f, 0.0f, 0.0f));
+	setListener(Vector3::Zero);
 
 	// set default volume
 	setVolume(1.0f);

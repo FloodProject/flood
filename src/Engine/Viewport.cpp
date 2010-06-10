@@ -8,17 +8,17 @@
 
 #include "vapor/PCH.h"
 #include "vapor/render/Viewport.h"
-#include "vapor/scene/Camera.h"
 #include "vapor/render/Target.h"
+#include "vapor/scene/Camera.h"
 
-namespace vapor { namespace render {
-
-using namespace vapor::scene;
+namespace vapor {
 
 //-----------------------------------//
 
 Viewport::Viewport( CameraPtr camera, RenderTargetPtr rt )
-	: weakCamera( camera ), target( rt ), size( Vector2i(-1,-1) )
+	: weakCamera( camera ),
+	target( rt ),
+	size( Vector2i(-1,-1) )
 {
 	setClearColor( Color::White );
 	setRenderTarget( target );
@@ -74,4 +74,4 @@ void Viewport::update()
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

@@ -13,7 +13,7 @@
 #include "vapor/render/VertexBuffer.h"
 #include "vapor/render/GL.h"
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -301,6 +301,6 @@ bool VertexBuffer::isBuilt() const
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

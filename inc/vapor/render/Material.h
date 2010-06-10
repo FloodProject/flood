@@ -13,9 +13,7 @@
 #include "vapor/render/Shader.h"
 #include "vapor/render/GL.h"
 
-FWD_DECL(render, Device)
-
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -63,7 +61,7 @@ typedef std::pair< const uint, TexturePtr > TextureMapPair;
 
 class VAPOR_API Material : public ReferenceCounted
 {
-	friend class render::Device;
+	friend class RenderDevice;
 
 public:
 
@@ -165,4 +163,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Material );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

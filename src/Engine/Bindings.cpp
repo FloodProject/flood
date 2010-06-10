@@ -26,7 +26,7 @@
 
 using namespace luabind;
 
-namespace vapor { namespace script {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -195,6 +195,6 @@ void bindEngine( lua_State* luaState, Engine* engine )
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

@@ -85,8 +85,8 @@
 //---------------------------------------------------------------------//
 
 #include <vapor/vfs/FileSystem.h>
+#include <vapor/vfs/FileWatcher.h>
 #include <vapor/vfs/File.h>
-#include <vapor/vfs/Watcher.h>
 
 //---------------------------------------------------------------------//
 // GUI-related Includes
@@ -134,10 +134,6 @@
 #ifdef VAPOR_USE_NAMESPACES
 
 using namespace vapor;
-using namespace vapor::scene;
 using namespace vapor::audio;
-using namespace vapor::render;
-using namespace vapor::gui;
-using namespace vapor::script;
 
 #endif

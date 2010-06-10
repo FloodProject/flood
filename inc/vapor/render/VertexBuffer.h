@@ -12,7 +12,7 @@
 #include "vapor/render/Buffer.h"
 #include "vapor/render/GL.h"
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -191,4 +191,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( VertexBuffer );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

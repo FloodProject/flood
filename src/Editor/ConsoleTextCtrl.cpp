@@ -11,10 +11,6 @@
 
 namespace vapor { namespace editor {
 
-//-----------------------------------//
-
-using namespace vapor::script;
-
 ////////////////////////////////////////////////////////////
 // Event table
 ////////////////////////////////////////////////////////////
@@ -33,13 +29,6 @@ ConsoleTextCtrl::ConsoleTextCtrl( vapor::Engine* engine, wxWindow* parent,
 		: wxTextCtrl( parent, id, name, pos, size, style ), engine( engine )
 {
 	InitControl();
-}
-
-//-----------------------------------//
-
-ConsoleTextCtrl::~ConsoleTextCtrl()
-{
-
 }
 
 //-----------------------------------//

@@ -12,7 +12,7 @@
 #include "vapor/math/AABB.h"
 #include "vapor/scene/Component.h"
 
-namespace vapor { namespace scene {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -92,7 +92,7 @@ public:
 	bool requiresBoundingVolumeUpdate() const;
 
 	// Use this to render some debug bounding boxes.
-	IMPLEMENT_GETTER(DebugRenderable, render::RenderablePtr, boundingVolumeRenderable)
+	IMPLEMENT_GETTER(DebugRenderable, RenderablePtr, boundingVolumeRenderable)
 
 	// Called once per frame to update the component.
 	virtual void update( double delta );
@@ -123,7 +123,7 @@ protected:
 	// Bounding volumes used for culling.
 	bool needsVolumeUpdate;
 	AABB boundingVolume;
-	render::RenderablePtr boundingVolumeRenderable;
+	RenderablePtr boundingVolumeRenderable;
 
 	// If an external update occurs (the matrix is changed) then we
 	// don't want to override that when the transform is updated.
@@ -138,4 +138,4 @@ TYPEDEF_SHARED_POINTER_FROM_TYPE( Transform );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

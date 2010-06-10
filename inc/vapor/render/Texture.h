@@ -11,7 +11,7 @@
 #include "vapor/render/Target.h"
 #include "vapor/resources/Image.h"
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -54,6 +54,7 @@ public:
 	// Reads the texture as an image.
 	ImagePtr readImage() const;
 
+	// Gets the expected size of the image.
 	uint getExpectedSize() const;
 
 	// Gets/sets the associated image.
@@ -86,4 +87,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Texture );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

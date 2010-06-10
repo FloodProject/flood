@@ -9,11 +9,11 @@
 #include "vapor/PCH.h"
 #include "vapor/gui/Atlas.h"
 
-namespace vapor { namespace gui {
+namespace vapor {
 
 //-----------------------------------//
 
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

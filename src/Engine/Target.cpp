@@ -10,7 +10,7 @@
 #include "vapor/render/Target.h"
 #include "vapor/render/Viewport.h"
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -29,7 +29,7 @@ Vector2i Settings::getSize() const
 
 //-----------------------------------//
 
-ViewportPtr RenderTarget::addViewport( scene::CameraPtr camera )
+ViewportPtr RenderTarget::addViewport( CameraPtr camera )
 {
 	ViewportPtr viewport = new Viewport(camera, this);
 	viewports.push_back( viewport );
@@ -38,4 +38,4 @@ ViewportPtr RenderTarget::addViewport( scene::CameraPtr camera )
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

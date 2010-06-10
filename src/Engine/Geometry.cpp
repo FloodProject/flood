@@ -10,9 +10,7 @@
 #include "vapor/scene/Geometry.h"
 #include "vapor/scene/Node.h"
 
-namespace vapor { namespace scene {
-
-using namespace vapor::render;
+namespace vapor {
 
 const std::string& Geometry::type = "Geometry";
 
@@ -43,7 +41,7 @@ void Geometry::addRenderable( RenderablePtr rend,
 
 //-----------------------------------//
 
-const std::vector< render::RenderablePtr >& 
+const std::vector< RenderablePtr >& 
 Geometry::getRenderables( RenderGroup::Enum group )
 { 
 	return renderables[group]; 
@@ -51,7 +49,7 @@ Geometry::getRenderables( RenderGroup::Enum group )
 
 //-----------------------------------//
  
-void Geometry::appendRenderables( render::RenderQueue& queue, TransformPtr transform )
+void Geometry::appendRenderables( RenderQueue& queue, TransformPtr transform )
 {
 	if( !transform ) return;
 	
@@ -110,4 +108,4 @@ void Geometry::serialize( Json::Value& value )
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

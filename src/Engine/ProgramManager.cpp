@@ -12,7 +12,7 @@
 #include "vapor/resources/GLSL_Text.h"
 #include "vapor/Engine.h"
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -102,4 +102,4 @@ void ProgramManager::onReload( const ResourceEvent& evt )
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

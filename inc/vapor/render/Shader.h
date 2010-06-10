@@ -10,7 +10,7 @@
 
 #include "vapor/resources/Resource.h"
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -93,4 +93,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Shader );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

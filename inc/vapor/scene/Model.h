@@ -11,7 +11,7 @@
 #include "vapor/scene/Geometry.h"
 #include "vapor/resources/Mesh.h"
 
-namespace vapor { namespace scene {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -46,4 +46,4 @@ TYPEDEF_SHARED_POINTER_FROM_TYPE( Model );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

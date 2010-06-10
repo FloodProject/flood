@@ -8,11 +8,13 @@
 
 #pragma once
 
+#include "vapor/math/Vector2.h"
 #include "vapor/render/Target.h"
 #include "vapor/input/InputManager.h"
-#include "vapor/math/Vector2.h"
 
-namespace vapor { namespace render {
+FWD_DECL_TYPEDEF_PTR(Window)
+
+namespace vapor {
 
 //-----------------------------------//
 
@@ -66,9 +68,6 @@ protected:
 
 //-----------------------------------//
 
-class Window;
-TYPEDEF_PTR(Window)
-
 /**
  * Represents an region on the screen that the renderer can send
  * the final representation of the scene, the rendered output image.
@@ -117,14 +116,14 @@ public:
 	// Gets the input manager.
 	virtual InputManager& getInputManager() = 0;
 
-	// Create a new render window.
-	static WindowPtr createWindow( const WindowSettings& = WindowSettings() );
-
 	// Event fired when the window is closed.
 	fd::delegate< void() > onWindowClose;
 
 	// Event fired when the window's focus changes.
 	fd::delegate< void( bool focusLost ) > onWindowFocusChange;
+
+	// Create a new render window.
+	static WindowPtr createWindow( const WindowSettings& = WindowSettings() );
 
 protected:
 
@@ -141,6 +140,8 @@ protected:
 	WindowSettings settings;
 };
 
+TYPEDEF_PTR(Window)
+
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

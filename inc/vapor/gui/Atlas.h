@@ -10,7 +10,7 @@
 
 #include "vapor/scene/Geometry.h"
 
-namespace vapor { namespace gui {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -117,6 +117,6 @@ TYPEDEF_SHARED_POINTER_FROM_TYPE( Atlas );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 

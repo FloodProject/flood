@@ -12,7 +12,7 @@
 #include "vapor/scene/Transform.h"
 #include "vapor/scene/Geometry.h"
 
-namespace vapor { namespace scene {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -119,4 +119,4 @@ private:
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

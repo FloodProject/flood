@@ -12,9 +12,7 @@
 #include "vapor/scene/Transform.h"
 #include "vapor/render/DebugGeometry.h"
 
-using namespace vapor::render;
-
-namespace vapor { namespace scene {
+namespace vapor {
 
 const std::string& Transform::type = "Transform";
 
@@ -23,9 +21,7 @@ const std::string& Transform::type = "Transform";
 Transform::Transform( float x, float y, float z )
 	: _scale( 1.0f ), translation( x, y, z ), needsNotify( false ),
 	needsVolumeUpdate( true ), externalUpdate( false )
-{
-
-}
+{ }
 
 //-----------------------------------//
 
@@ -33,9 +29,7 @@ Transform::Transform( const Transform& rhs )
 	: _scale( rhs._scale ), translation( rhs.translation ),
 	rotation( rhs.rotation ), needsVolumeUpdate( false ),
 	needsNotify( false ), externalUpdate( false )
-{
-
-}
+{ }
 
 //-----------------------------------//
 
@@ -263,4 +257,4 @@ void Transform::serialize( Json::Value& value )
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

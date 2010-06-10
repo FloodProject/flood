@@ -11,7 +11,7 @@
 #include "vapor/math/Math.h"
 #include "vapor/math/EulerAngles.h"
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 // Declare icosahedron base coordinates. We'll subdivide these
@@ -146,4 +146,4 @@ void Sphere::generateSphere( bool fullSphere, byte numSubDiv,
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

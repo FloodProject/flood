@@ -25,7 +25,7 @@ class hkVector4;
 class hkpRigidBody;
 namespace hkpMotion { enum MotionType; }
 
-namespace vapor { namespace scene {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -84,4 +84,4 @@ TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( Body );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

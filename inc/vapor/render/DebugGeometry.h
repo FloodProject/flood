@@ -10,16 +10,16 @@
 
 #include "vapor/math/AABB.h"
 
-FWD_DECL_NS_TYPEDEF_INT(render, Renderable)
-FWD_DECL_NS_TYPEDEF_SHARED(scene, Node)
+FWD_DECL_TYPEDEF_INT(Renderable)
+FWD_DECL_TYPEDEF_SHARED(Node)
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
 RenderablePtr VAPOR_API buildBoundingRenderable( const AABB& aabb );
-scene::NodePtr VAPOR_API buildRay( const Ray& pickRay, const Vector3& outFar );
+NodePtr VAPOR_API buildRay( const Ray& pickRay, const Vector3& outFar );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

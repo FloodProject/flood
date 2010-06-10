@@ -299,7 +299,7 @@ bool GizmoMode::pickImageTest( const MouseMoveEvent& me, GizmoAxis::Enum& axis )
 	int m_x = me.x;
 	int m_y = size.y-me.y;
 
-	const render::DevicePtr& device = engine->getRenderDevice();
+	const RenderDevicePtr& device = engine->getRenderDevice();
 	Color pick = device->getPixel(m_x, m_y);
 	
 	axis = Gizmo::getAxis(pick);

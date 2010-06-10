@@ -30,7 +30,7 @@ public:
 	Lua_Loader();
 
 	// Creates the resource with no data.
-	IMPLEMENT_PREPARE(script::Script)
+	IMPLEMENT_PREPARE(Script)
 
 	// Parses a Lua text script to a buffer.
 	virtual bool decode(const File&, Resource* res);

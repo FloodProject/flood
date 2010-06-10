@@ -21,9 +21,7 @@
 #include "vapor/TaskManager.h"
 
 using namespace vapor::audio;
-using namespace vapor::scene;
 //using namespace vapor::physics;
-using namespace vapor::render;
 
 namespace vapor {
 
@@ -100,11 +98,11 @@ void Engine::init( bool createWindow )
 	setupDevices( createWindow );
 
 	// create the root scene node
-	sceneManager.reset( new scene::Scene() );
+	sceneManager.reset( new Scene() );
 
 #ifdef VAPOR_SCRIPTING_LUA
 	// Initialize the scripting
-	scriptState = new script::State();
+	scriptState = new State();
 	scriptState->bind( this );
 #endif
 }
@@ -125,7 +123,7 @@ void Engine::setupLogger()
 void Engine::setupDevices( bool createWindow )
 {
 	// create render device
-	renderDevice = new render::Device();
+	renderDevice = new RenderDevice();
 
 	if( createWindow )
 	{

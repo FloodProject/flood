@@ -12,22 +12,14 @@
 
 #include "vapor/scene/Sound.h"
 
-namespace vapor { namespace scene {
+namespace vapor {
 
 //-----------------------------------//
 
 Sound::Sound( ListenerPtr ls, SoundPtr sound )
-	: Source( Listener::getContext( ls ), sound )
-{
+	: Source( Listener::getContext(ls), sound )
+{ }
 
-}
-
-//-----------------------------------//
-
-Sound::~Sound()
-{
-
-}
 
 //-----------------------------------//
 
@@ -45,6 +37,6 @@ const std::string Sound::save(int indent)
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

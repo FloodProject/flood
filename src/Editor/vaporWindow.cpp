@@ -15,7 +15,7 @@ namespace vapor { namespace editor {
 
 vaporWindow::vaporWindow(const WindowSettings& settings,
 						 wxGLCanvas* const canvas)
-	: render::Window(settings), canvas(canvas), context(nullptr)
+	: Window(settings), canvas(canvas), context(nullptr)
 {
 	createContext();
 	im = new vaporInputManager();

@@ -10,7 +10,7 @@
 
 #include "vapor/render/RenderBuffer.h"
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -66,4 +66,4 @@ TYPEDEF_PTR( FBO );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

@@ -10,7 +10,7 @@
 
 #include "vapor/render/Renderable.h"
 
-namespace vapor { namespace scene {
+namespace vapor {
 
 struct TerrainSettings;
 
@@ -23,7 +23,7 @@ struct TerrainSettings;
  * integer coordinates.
  */
 
-class VAPOR_API Cell : public render::Renderable, private boost::noncopyable
+class VAPOR_API Cell : public Renderable, private boost::noncopyable
 {
 public:
 
@@ -63,4 +63,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Cell );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

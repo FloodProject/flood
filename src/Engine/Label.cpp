@@ -14,9 +14,7 @@
 #include "vapor/resources/ResourceManager.h"
 #include "vapor/Engine.h"
 
-namespace vapor { namespace gui {
-
-using namespace vapor::render;
+namespace vapor {
 
 const std::string& Label::type = "Label";
 
@@ -169,4 +167,4 @@ void Label::buildGeometry()
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

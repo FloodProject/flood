@@ -10,7 +10,7 @@
 
 #include "vapor/resources/Resource.h"
 
-FWD_DECL_NS_TYPEDEF_INT(render, Renderable)
+FWD_DECL_TYPEDEF_INT(Renderable)
 
 namespace vapor {
 
@@ -25,7 +25,7 @@ class Mesh : public Resource
 public:
 
 	// Builds the geometry of the mesh.
-	virtual void build( std::vector<render::RenderablePtr>& renderables ) = 0;
+	virtual void build( std::vector<RenderablePtr>& renderables ) = 0;
 	
 	// Gets if the mesh is built.
 	bool isBuilt() const;

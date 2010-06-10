@@ -12,18 +12,17 @@
 #include "vapor/Singleton.h"
 
 FWD_DECL(audio, Device)
-FWD_DECL(script, State)
 FWD_DECL_TYPEDEF_PTR(Subsystem)
 FWD_DECL_TYPEDEF_PTR(TaskManager)
-//FWD_DECL(physics, PhysicsManager)
-FWD_DECL_NS_TYPEDEF_PTR(render, Device)
-FWD_DECL_NS_TYPEDEF_SHARED(scene, Scene)
 FWD_DECL_TYPEDEF_PTR(ResourceManager)
+FWD_DECL_TYPEDEF_PTR(RenderDevice)
+FWD_DECL_TYPEDEF_SHARED(Scene)
 
 namespace vapor {
 
 class InputManager;
 class FileSystem;
+class State;
 
 /** \addtogroup Main */
 /** @{ */
@@ -42,7 +41,6 @@ class VAPOR_API Engine : public Singleton<Engine>
 
 public:
 	
-	/// Destructor.
 	~Engine();
 
 	/// \name Setup methods
@@ -80,7 +78,7 @@ public:
 	/// @{
 
 	/// Gets the device.
-	IMPLEMENT_GETTER(RenderDevice, render::DevicePtr, renderDevice)
+	IMPLEMENT_GETTER(RenderDevice, RenderDevicePtr, renderDevice)
 
 	/// Gets the audio device.
 #ifdef VAPOR_AUDIO_OPENAL
@@ -88,13 +86,13 @@ public:
 #endif
 
 	/// Gets the scene interface.
-	IMPLEMENT_GETTER(SceneManager, scene::ScenePtr, sceneManager)
+	IMPLEMENT_GETTER(SceneManager, ScenePtr, sceneManager)
 
 	/// Gets the device.
 	IMPLEMENT_GETTER(TaskManager, TaskManagerPtr, taskManager)
 
 	/// Gets the scripting state.
-	IMPLEMENT_GETTER(ScriptState, script::State*, scriptState)
+	IMPLEMENT_GETTER(ScriptState, State*, scriptState)
 
 	/// Gets the resources manager.
 	IMPLEMENT_GETTER(ResourceManager, ResourceManagerPtr, resourceManager)
@@ -134,10 +132,10 @@ protected:
 	TaskManagerPtr taskManager;
 
 	/// Scene root node.
-	scene::ScenePtr sceneManager;
+	ScenePtr sceneManager;
 
 	/// Rendering device.
-	render::DevicePtr renderDevice;
+	RenderDevicePtr renderDevice;
 
 	/// Resource manager.
 	ResourceManagerPtr resourceManager;
@@ -152,7 +150,7 @@ protected:
 	Log* log;
 
 	/// Scripting state.
-	script::State* scriptState;
+	State* scriptState;
 
 	/// Application name.
 	std::string app;

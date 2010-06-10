@@ -10,7 +10,7 @@
 
 #include "vapor/render/Renderable.h"
 
-namespace vapor { namespace scene {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -59,7 +59,7 @@ public:
 	virtual void setDebugRenderableVisible( bool draw );
 	
 	// Gets the debug renderable of this component.
-	virtual render::RenderablePtr getDebugRenderable() const;
+	virtual RenderablePtr getDebugRenderable() const;
 
 	// Gets the type of this component. 
 	// Each component should have a unique type string.
@@ -78,4 +78,4 @@ TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( Component )
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

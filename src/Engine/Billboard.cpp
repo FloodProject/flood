@@ -11,9 +11,7 @@
 #include "vapor/render/Material.h"
 #include "vapor/scene/Node.h"
 
-namespace vapor { namespace scene {
-
-using namespace vapor::render;
+namespace vapor {
 
 const std::string& Billboard::type = "Billboard";
 
@@ -57,7 +55,7 @@ void Billboard::update( double VAPOR_UNUSED(delta) )
 
 //-----------------------------------//
 
-render::RenderablePtr Billboard::getDebugRenderable() const
+RenderablePtr Billboard::getDebugRenderable() const
 {
 	if( rend->getVertexBuffer() )
 		return rend;
@@ -97,4 +95,4 @@ render::RenderablePtr Billboard::getDebugRenderable() const
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

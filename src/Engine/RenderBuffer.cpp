@@ -9,7 +9,7 @@
 #include "vapor/PCH.h"
 #include "vapor/render/RenderBuffer.h"
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -28,4 +28,4 @@ void RenderBuffer::makeCurrent()
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

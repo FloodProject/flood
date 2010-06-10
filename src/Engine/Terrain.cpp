@@ -10,9 +10,7 @@
 #include "vapor/terrain/Terrain.h"
 #include "vapor/math/Math.h"
 
-namespace vapor { namespace scene {
-
-using namespace vapor::render;
+namespace vapor {
 
 //-----------------------------------//
 
@@ -173,4 +171,4 @@ void Terrain::update( double delta )
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

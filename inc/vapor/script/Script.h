@@ -12,7 +12,7 @@
 
 #include "vapor/resources/Resource.h"
 
-namespace vapor { namespace script {
+namespace vapor {
 
 class State;
 
@@ -49,12 +49,10 @@ protected:
 	State* state;
 };
 
-//-----------------------------------//
-
 TYPEDEF_RESOURCE_POINTER_FROM_TYPE( Script );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 //#endif

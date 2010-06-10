@@ -63,8 +63,6 @@ protected:
 	
 	// Gets a string with the version of OpenAL.
 	const std::string getVersion();
-	
-private:
 
 	// Audio device
 	ALCdevice* device;
@@ -83,18 +81,8 @@ private:
 
 //-----------------------------------//
 
-#else
-
-// declare audio namespace so using declarations don't
-// get broken in user code.
-
-namespace vapor { 
-	namespace audio {
-
-#endif
-
-//-----------------------------------//
-
 } } // end namespaces
 
 /** @} */
+
+#endif

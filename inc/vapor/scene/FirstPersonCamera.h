@@ -14,7 +14,7 @@
 #include "vapor/input/Mouse.h"
 #include "vapor/math/Vector2.h"
 
-namespace vapor { namespace scene {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -26,7 +26,7 @@ class VAPOR_API FirstPersonCamera : public Camera
 {
 public:
 
-	FirstPersonCamera( InputManager* input, render::Device* device, 
+	FirstPersonCamera( InputManager* input, RenderDevicePtr device, 
 		Projection::Enum projection = Projection::Perspective );
 
 	// Updates this node.
@@ -89,4 +89,4 @@ TYPEDEF_SHARED_POINTER_FROM_TYPE( FirstPersonCamera );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

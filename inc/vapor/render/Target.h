@@ -10,10 +10,10 @@
 
 #include "vapor/math/Vector2.h"
 
-FWD_DECL_NS_TYPEDEF_SHARED(scene, Camera)
-FWD_DECL_NS_TYPEDEF_PTR(render, Viewport)
+FWD_DECL_TYPEDEF_SHARED(Camera)
+FWD_DECL_TYPEDEF_PTR(Viewport)
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -71,7 +71,7 @@ public:
 	IMPLEMENT_GETTER(Viewports, const ViewportList&, viewports)
 
 	// Adds a new viewport to this target.
-	ViewportPtr addViewport( scene::CameraPtr camera );
+	ViewportPtr addViewport( CameraPtr camera );
 
 	// Gets the settings of this render target.
 	virtual const Settings& getSettings() const = 0;
@@ -88,4 +88,4 @@ TYPEDEF_PTR(RenderTarget)
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

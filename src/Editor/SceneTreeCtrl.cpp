@@ -438,7 +438,7 @@ wxTreeItemId SceneTreeCtrl::addNode( const NodePtr& node )
 
 //-----------------------------------//
 
-void SceneTreeCtrl::onNodeAdded( const scene::GroupEvent& event )
+void SceneTreeCtrl::onNodeAdded( const GroupEvent& event )
 {
 	if( event.node->getTag(EditorTags::EditorOnly) )
 		return;
@@ -448,7 +448,7 @@ void SceneTreeCtrl::onNodeAdded( const scene::GroupEvent& event )
 
 //-----------------------------------//
 
-void SceneTreeCtrl::onNodeRemoved( const scene::GroupEvent& /*event*/ )
+void SceneTreeCtrl::onNodeRemoved( const GroupEvent& /*event*/ )
 {
 	//const std::string& type = component.second->getType();
 	//AppendItem( id, type, icons[type] );

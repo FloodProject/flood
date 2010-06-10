@@ -8,7 +8,7 @@
 
 #pragma once
 
-namespace vapor { namespace scene {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -30,4 +30,4 @@ namespace Tags
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

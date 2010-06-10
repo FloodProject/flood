@@ -12,7 +12,7 @@
 #include "vapor/render/RenderQueue.h"
 #include "vapor/math/AABB.h"
 
-namespace vapor { namespace scene {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -28,19 +28,19 @@ class VAPOR_API Geometry : public Component
 public:
 
 	Geometry();
-	Geometry( render::RenderablePtr rend );
+	Geometry( RenderablePtr rend );
 
 	/// Adds a new renderable to this geometry.
-	void addRenderable( render::RenderablePtr rend, 
-		render::RenderGroup::Enum group = render::RenderGroup::Normal,
+	void addRenderable( RenderablePtr rend, 
+		RenderGroup::Enum group = RenderGroup::Normal,
 		uint priority = 0 );
 
 	/// Gets all the renderables in this geometry.
-	const std::vector< render::RenderablePtr >& getRenderables( 
-		render::RenderGroup::Enum group = render::RenderGroup::Normal );
+	const std::vector< RenderablePtr >& getRenderables( 
+		RenderGroup::Enum group = RenderGroup::Normal );
 
 	/// Appends all the renderables of this geometry to the queue.
-	void appendRenderables( render::RenderQueue& queue, TransformPtr transform );
+	void appendRenderables( RenderQueue& queue, TransformPtr transform );
 
 	/// Updates the geometry if needed.
 	virtual void update( double delta );
@@ -62,9 +62,9 @@ protected:
 	AABB boundingVolume;
 	bool isDirty;
 
-	typedef std::vector< render::RenderablePtr > RenderableList;
-	typedef std::pair<const render::RenderGroup::Enum, RenderableList > RenderableMapPair;
-	typedef std::map< render::RenderGroup::Enum, RenderableList > RenderableMap;
+	typedef std::vector< RenderablePtr > RenderableList;
+	typedef std::pair<const RenderGroup::Enum, RenderableList > RenderableMapPair;
+	typedef std::map< RenderGroup::Enum, RenderableList > RenderableMap;
 	
 	RenderableMap renderables;
 	
@@ -78,4 +78,4 @@ TYPEDEF_SHARED_POINTER_FROM_TYPE( Geometry );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

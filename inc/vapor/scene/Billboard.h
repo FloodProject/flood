@@ -13,7 +13,7 @@
 #include "vapor/scene/Camera.h"
 #include "vapor/render/Renderable.h"
 
-namespace vapor { namespace scene {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -58,7 +58,7 @@ public:
 	IMPLEMENT_GETTER(Type, const std::string&, type)
 
 	// Gets the debug renderable of the component.
-	render::RenderablePtr getDebugRenderable() const;
+	RenderablePtr getDebugRenderable() const;
   
 private:
 
@@ -67,7 +67,7 @@ private:
 
 	TransformPtr transform;
 	CameraPtr camera;
-	render::RenderablePtr rend;
+	RenderablePtr rend;
 
 	// Component type
 	static const std::string& type;
@@ -79,4 +79,4 @@ TYPEDEF_SHARED_POINTER_FROM_TYPE( Billboard );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

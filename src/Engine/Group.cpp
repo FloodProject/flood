@@ -10,7 +10,7 @@
 #include "vapor/scene/Group.h"
 #define VAPOR_GROUP_USE_FOREACH
 
-namespace vapor { namespace scene {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -154,4 +154,4 @@ void Group::serialize( Json::Value& value )
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

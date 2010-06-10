@@ -66,8 +66,8 @@ protected:
 	void addComponent( wxTreeItemId id, ComponentPtr  );
 
 	// Scene-monitoring callbacks.
-	void onNodeAdded( const scene::GroupEvent& );
-	void onNodeRemoved( const scene::GroupEvent& );
+	void onNodeAdded( const GroupEvent& );
+	void onNodeRemoved( const GroupEvent& );
 
 	wxImageList* imageList;
 	std::map<std::string, int> icons;

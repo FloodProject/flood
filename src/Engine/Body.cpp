@@ -23,7 +23,7 @@
 
 using namespace vapor::math;
 
-namespace vapor { namespace scene {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -285,4 +285,4 @@ void  Body::setPositionAndRotation (const Matrix4x3 &m)
 }
 
 //-----------------------------------//
-} } // end namespaces
+} // end namespace

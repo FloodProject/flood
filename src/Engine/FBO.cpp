@@ -11,7 +11,7 @@
 #include "vapor/render/GL.h"
 #include "vapor/resources/Image.h"
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -222,4 +222,4 @@ void FBO::update()
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

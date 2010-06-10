@@ -9,12 +9,11 @@
 #include "vapor/PCH.h"
 #include "vapor/render/Material.h"
 #include "vapor/render/Device.h"
-
 #include "vapor/render/TextureManager.h"
 #include "vapor/render/ProgramManager.h"
 #include "vapor/Engine.h"
 
-namespace vapor { namespace render {
+namespace vapor {
 
 float Material::DefaultLineWidth = 1.0f;
 
@@ -93,7 +92,7 @@ void Material::setBlending( BlendingSource::Enum _source,
 
 ProgramPtr Material::getProgram()
 {
-	render::DevicePtr device = Engine::getInstance().getRenderDevice();
+	RenderDevicePtr device = Engine::getInstance().getRenderDevice();
 	ProgramManagerPtr pm = device->getProgramManager();
 
 	return pm->getProgram( program );
@@ -140,4 +139,4 @@ void Material::unbind()
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

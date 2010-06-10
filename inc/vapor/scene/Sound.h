@@ -16,7 +16,7 @@
 #include "vapor/audio/Source.h"
 #include "vapor/resources/Sound.h"
 
-namespace vapor { namespace scene {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -25,24 +25,22 @@ namespace vapor { namespace scene {
  * as the sound source location.
  */
 
-class VAPOR_API Sound : public Transform, public audio::Source
+class VAPOR_API Sound : public audio::Source, public Transform, 
 {
 public:
 
 	Sound(ListenerPtr ls, SoundPtr sound);
-	virtual ~Sound();
+	virtual ~Sound() { }
 
 	virtual void update( double delta );
 
 	virtual const std::string save(int indent = 0);
 };
 
-//-----------------------------------//
-
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Sound );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Sound );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

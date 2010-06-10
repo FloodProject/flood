@@ -16,17 +16,16 @@
 #include "vapor/render/Adapter.h"
 #include "vapor/render/TextureManager.h"
 #include "vapor/render/ProgramManager.h"
+#include "vapor/render/Window.h"
 
 #include "vapor/scene/Camera.h"
 #include "vapor/scene/Node.h"
 
-namespace vapor { namespace render {
-
-using namespace vapor::scene;
+namespace vapor {
 
 //-----------------------------------//
 
-Device::Device()
+RenderDevice::RenderDevice()
 	: adapter(nullptr),
 	window(nullptr),
 	activeTarget(nullptr),
@@ -37,9 +36,9 @@ Device::Device()
 
 //-----------------------------------//
 
-Device::~Device()
+RenderDevice::~RenderDevice()
 {
-	info("render::opengl", "Closing OpenGL rendering device");
+	info("opengl", "Closing OpenGL rendering device");
 
 	// TODO: delete all OpenGL resources (shaders, textures...)
 	// Or make sure they are all deleted once we delete the OpenGL context.
@@ -47,18 +46,18 @@ Device::~Device()
 	delete textureManager;
 	delete programManager;
 	delete adapter;
-	delete window;
+	//delete window;
 }
 
 //-----------------------------------//
 
-void Device::init()
+void RenderDevice::init()
 {
-	info( "render::gl", "Creating OpenGL rendering device" );
+	info( "gl", "Creating OpenGL rendering device" );
 
 	if( !window ) 
 	{
-		error( "render::gl", "No current OpenGL context found, stuff may fail" );
+		error( "gl", "No current OpenGL context found, stuff may fail" );
 	}
 
 	checkExtensions();
@@ -81,7 +80,7 @@ void Device::init()
 
 //-----------------------------------//
 
-void Device::checkExtensions()
+void RenderDevice::checkExtensions()
 {
 	// Initialize GLEW (OpenGL Extension Wrangler) and check that
 	// the user supports the minimum required OpenGL version.
@@ -111,7 +110,7 @@ bool stateSorter(const RenderState& lhs, const RenderState& rhs)
 	return lhs.group < rhs.group;
 }
 
-void Device::render( RenderBlock& queue, const Camera* cam ) 
+void RenderDevice::render( RenderBlock& queue, const Camera* cam ) 
 {
 	assert( cam != nullptr );
 	camera = cam;
@@ -159,7 +158,7 @@ void Device::render( RenderBlock& queue, const Camera* cam )
 				continue;
 		}
 
-		state.renderable->render( *this );
+		state.renderable->render( this );
 		
 		undoRenderStateMaterial(material);
 		rend->unbind();
@@ -168,7 +167,7 @@ void Device::render( RenderBlock& queue, const Camera* cam )
 
 //-----------------------------------//
 
-bool Device::setupRenderState( const RenderState& state, const Camera* cam )
+bool RenderDevice::setupRenderState( const RenderState& state, const Camera* cam )
 {
 	const RenderablePtr& rend = state.renderable;
 	const MaterialPtr& material = rend->getMaterial();
@@ -186,7 +185,7 @@ bool Device::setupRenderState( const RenderState& state, const Camera* cam )
 
 //-----------------------------------//
 
-void Device::updateLightDepth( LightState& state )
+void RenderDevice::updateLightDepth( LightState& state )
 {
 	const LightPtr& light = state.light;
 	assert( light->getLightType() == LightType::Directional );
@@ -238,7 +237,7 @@ void Device::updateLightDepth( LightState& state )
 
 //-----------------------------------//
 
-bool Device::setupRenderStateShadow( LightQueue& lights )
+bool RenderDevice::setupRenderStateShadow( LightQueue& lights )
 {
 	if( lights.empty() ) 
 		return true;
@@ -258,7 +257,7 @@ bool Device::setupRenderStateShadow( LightQueue& lights )
 
 //-----------------------------------//
 
-bool Device::setupRenderStateLight( const RenderState& state, const LightQueue& lights )
+bool RenderDevice::setupRenderStateLight( const RenderState& state, const LightQueue& lights )
 {
 	const RenderablePtr& rend = state.renderable;
 	const MaterialPtr& material = rend->getMaterial();
@@ -295,7 +294,7 @@ bool Device::setupRenderStateLight( const RenderState& state, const LightQueue& 
 
 //-----------------------------------//
 
-bool Device::setupRenderStateOverlay( const RenderState& state )
+bool RenderDevice::setupRenderStateOverlay( const RenderState& state )
 {
 	const ProgramPtr& program =
 		state.renderable->getMaterial()->getProgram();
@@ -318,7 +317,7 @@ bool Device::setupRenderStateOverlay( const RenderState& state )
 
 //-----------------------------------//
 
-void Device::setupRenderStateMaterial( const MaterialPtr& mat )
+void RenderDevice::setupRenderStateMaterial( const MaterialPtr& mat )
 {
 	if( mat->lineSmooth )
 		glEnable( GL_LINE_SMOOTH );
@@ -344,7 +343,7 @@ void Device::setupRenderStateMaterial( const MaterialPtr& mat )
 
 //-----------------------------------//
 
-void Device::undoRenderStateMaterial( const MaterialPtr& mat )
+void RenderDevice::undoRenderStateMaterial( const MaterialPtr& mat )
 {
 	if( mat->isBlendingEnabled() ) 
 		glDisable( GL_BLEND );
@@ -367,7 +366,7 @@ void Device::undoRenderStateMaterial( const MaterialPtr& mat )
 
 //-----------------------------------//
 
-Color Device::getPixel(ushort x, ushort y) const
+Color RenderDevice::getPixel(ushort x, ushort y) const
 {
 	Color pick;
 	
@@ -381,7 +380,7 @@ Color Device::getPixel(ushort x, ushort y) const
 
 //-----------------------------------//
 
-void Device::setClearColor(const Color& newColor)
+void RenderDevice::setClearColor(const Color& newColor)
 {
 	if( newColor == color )
 		return;
@@ -392,7 +391,7 @@ void Device::setClearColor(const Color& newColor)
 
 //-----------------------------------//
 
-void Device::setViewport( const Vector2i& newLeft, const Vector2i& newSize )
+void RenderDevice::setViewport( const Vector2i& newLeft, const Vector2i& newSize )
 {
 	if( (viewportLeft == newLeft) && (viewportSize == newSize) )
 		return;
@@ -405,7 +404,7 @@ void Device::setViewport( const Vector2i& newLeft, const Vector2i& newSize )
 
 //-----------------------------------//
 
-void Device::clearTarget()
+void RenderDevice::clearTarget()
 {
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	glHasError("Could not clear the render target");
@@ -413,7 +412,7 @@ void Device::clearTarget()
 
 //-----------------------------------//
 
-void Device::setRenderTarget(RenderTargetPtr target)
+void RenderDevice::setRenderTarget(RenderTargetPtr target)
 {
 	activeTarget = target;
 
@@ -423,14 +422,14 @@ void Device::setRenderTarget(RenderTargetPtr target)
 
 //-----------------------------------//
 
-void Device::setWindowActiveTarget()
+void RenderDevice::setWindowActiveTarget()
 {
 	setRenderTarget( window );
 }
 
 //-----------------------------------//
 
-RenderBufferPtr Device::createRenderBuffer( const Settings& settings )
+RenderBufferPtr RenderDevice::createRenderBuffer( const Settings& settings )
 {
 	RenderBufferPtr buffer( new FBO(settings) );
 	renderTargets.push_back( buffer );
@@ -440,7 +439,7 @@ RenderBufferPtr Device::createRenderBuffer( const Settings& settings )
 
 //-----------------------------------//
 
-WindowPtr Device::createWindow( const WindowSettings& settings )
+WindowPtr RenderDevice::createWindow( const WindowSettings& settings )
 {
 	WindowPtr window = Window::createWindow( settings );
 	assert( window != nullptr );
@@ -453,6 +452,6 @@ WindowPtr Device::createWindow( const WindowSettings& settings )
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

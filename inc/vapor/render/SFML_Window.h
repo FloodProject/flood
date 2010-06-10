@@ -10,11 +10,11 @@
 
 #ifdef VAPOR_WINDOWING_SFML
 
-#include <SFML/Window.hpp>
 #include "vapor/render/Window.h"
 #include "vapor/input/SFML_InputManager.h"
+#include <SFML/Window.hpp>
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -78,7 +78,7 @@ private:
 	sf::Window window;
 	sf::WindowSettings sfmlSettings;
 	sf::VideoMode vMode;
-	unsigned long flags;
+	ulong flags;
 	
 	// Holds the current state of the cursor.
 	bool cursorState;
@@ -86,6 +86,6 @@ private:
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

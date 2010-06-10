@@ -31,7 +31,7 @@ bool Lua_Loader::decode(const File& file, Resource* res)
 
 	std::string str( text.begin(), text.end() );
 
-	script::Script* script = static_cast<script::Script*>( res );
+	Script* script = static_cast<Script*>( res );
 	script->setSource( str );
 	script->setURI( file.getFullPath() );
 

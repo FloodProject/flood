@@ -13,7 +13,7 @@
 
 FWD_DECL_TYPEDEF_INT(Text)
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -62,4 +62,4 @@ TYPEDEF_PTR(ProgramManager)
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

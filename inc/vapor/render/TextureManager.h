@@ -12,9 +12,9 @@
 #include "vapor/render/Texture.h"
 #include "vapor/resources/ResourceManager.h"
 
-FWD_DECL_NS_TYPEDEF_PTR(resources, ResourceManager)
+FWD_DECL_TYPEDEF_PTR(ResourceManager)
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -65,4 +65,4 @@ private:
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

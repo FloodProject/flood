@@ -12,7 +12,7 @@
 
 #include "vapor/render/GL.h"
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -74,6 +74,6 @@ const char* glErrorString(GLenum errorCode)
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

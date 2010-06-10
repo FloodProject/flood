@@ -18,14 +18,15 @@
 #include "vapor/math/Vector2.h"
 #include "vapor/math/Color.h"
 
-FWD_DECL(scene, Camera);
-FWD_DECL(render, BufferManager);
-FWD_DECL_NS_TYPEDEF_PTR(render, ProgramManager)
-FWD_DECL_NS_TYPEDEF_PTR(render, TextureManager)
-FWD_DECL_NS_TYPEDEF_PTR(render, Adapter)
-FWD_DECL_NS_TYPEDEF_PTR(render, RenderBuffer)
+FWD_DECL_TYPEDEF_PTR(ProgramManager)
+FWD_DECL_TYPEDEF_PTR(TextureManager)
+FWD_DECL_TYPEDEF_PTR(Adapter)
+FWD_DECL_TYPEDEF_PTR(RenderBuffer)
 
-namespace vapor { namespace render { 
+namespace vapor { 
+
+class Camera;
+class BufferManager;
 
 //-----------------------------------//
 
@@ -45,25 +46,25 @@ namespace vapor { namespace render {
  * responsible for creating a new window if no window handle is passed to it.
  */
 
-typedef std::map<scene::LightPtr, TexturePtr> ShadowTextureMap;
+typedef std::map<LightPtr, TexturePtr> ShadowTextureMap;
 
-class VAPOR_API Device : private boost::noncopyable
+class VAPOR_API RenderDevice : private boost::noncopyable
 {
 public:
 
-	Device();
-	~Device();
+	RenderDevice();
+	~RenderDevice();
 
 	// Initializes the rendering system.
 	// Note: Needs an active OpenGL context.
 	void init();
 
 	// Renders a list of renderables.
-	void render( RenderBlock& queue, const scene::Camera* cam );
+	void render( RenderBlock& queue, const Camera* cam );
 
 	// Gets the framebuffer color in the given pixel location.
-	// Note: it follows OpenGL 2D axis conventions, so the point
-	// (0,0) is located in the top left corner of the screen.
+	// Note: it follows OpenGL 2D axis conventions, so the point (0,0)
+	// is located in the top left corner of the screen.
 	Color getPixel(ushort x, ushort y) const;
 
 	// Renders and updates into all render targets.
@@ -116,7 +117,7 @@ protected:
 	void checkExtensions();
 
 	// Render state management.
-	bool setupRenderState( const RenderState&, const scene::Camera* );
+	bool setupRenderState( const RenderState&, const Camera* );
 	bool setupRenderStateShadow( LightQueue& lights );
 	bool setupRenderStateLight( const RenderState&, const LightQueue& );
 	bool setupRenderStateOverlay( const RenderState& );
@@ -149,15 +150,15 @@ protected:
 
 	ShadowTextureMap shadowTextures;
 	RenderBufferPtr shadowDepthBuffer;
-	const scene::Camera* camera;
+	const Camera* camera;
 
 	void updateLightDepth( LightState& state );
 };
 
-TYPEDEF_PTR(Device)
+TYPEDEF_PTR(RenderDevice)
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

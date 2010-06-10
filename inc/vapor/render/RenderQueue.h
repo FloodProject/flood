@@ -12,7 +12,7 @@
 #include "vapor/scene/Transform.h"
 #include "vapor/scene/Light.h"
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -67,9 +67,9 @@ struct RenderState /*: private boost::noncopyable*/
 
 struct LightState
 {
-	scene::LightPtr light;
-	scene::TransformPtr transform;
-	render::TexturePtr depth;
+	LightPtr light;
+	TransformPtr transform;
+	TexturePtr depth;
 	Matrix4x4 projection;
 };
 
@@ -95,4 +95,4 @@ struct RenderBlock
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

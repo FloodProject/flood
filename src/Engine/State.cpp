@@ -13,9 +13,8 @@
 #include "vapor/script/State.h"
 
 #include <lua.hpp>
-//#include <luabind/luabind.hpp>
 
-namespace vapor { namespace script {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -69,9 +68,9 @@ State::State()
 
 	// Check for proper initialization of the Lua state.
 	if( luaState != nullptr )
-		info( "script::lua", "Initialized %s", LUA_RELEASE );
+		info( "lua", "Initialized %s", LUA_RELEASE );
 	else
-		error( "script::lua", "Error initializing %s", LUA_RELEASE );
+		error( "lua", "Error initializing %s", LUA_RELEASE );
 
 	// Initialize the standard libraries (we want to disallow I/O though).
 	luaL_openlibs( luaState );
@@ -87,7 +86,7 @@ State::State()
 
 State::~State()
 {
-	info("script::lua", "Cleaning up the Lua state");
+	info("lua", "Cleaning up the Lua state");
 
 	scripts.clear();
 
@@ -97,7 +96,7 @@ State::~State()
 
 //-----------------------------------//
 
-bool State::execute( Script* script )
+bool State::execute( const ScriptPtr& script )
 {
 	// From the Lua C API docs:
 	//	"It returns 0 if there are no errors or 1 in case of errors."
@@ -132,7 +131,7 @@ bool State::execute( const std::string& source )
 
 //-----------------------------------//
 
-void State::bind( Engine* engine )
+void State::bind( Engine* const engine )
 {
 #ifdef VAPOR_SCRIPTING_LUA
 	// Binds all the engine API to Lua.
@@ -154,7 +153,7 @@ void State::handleError()
 
 //-----------------------------------//
 
-void State::registerScript( ScriptPtr script )
+void State::registerScript( const ScriptPtr& script )
 {
 	// Check if the script is already in the database.
 	scriptsIterator it = std::find( scripts.begin(), scripts.end(), script );
@@ -175,7 +174,7 @@ void State::registerScript( ScriptPtr script )
 void State::update( float deltaTime )
 {
 	// Execute all scripts.
-	foreach( ScriptPtr script, scripts )
+	foreach( const ScriptPtr& script, scripts )
 	{
 		script->execute();
 	}
@@ -183,13 +182,6 @@ void State::update( float deltaTime )
 
 //-----------------------------------//
 
-const std::string& State::getLastError() const
-{
-	return lastError;
-}
-
-//-----------------------------------//
-
-} } // end namespaces
+} // end namespace
 
 //#endif

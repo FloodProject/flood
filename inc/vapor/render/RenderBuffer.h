@@ -11,7 +11,7 @@
 #include "vapor/render/Target.h"
 #include "vapor/render/Texture.h"
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -87,4 +87,4 @@ TYPEDEF_PTR( RenderBuffer );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

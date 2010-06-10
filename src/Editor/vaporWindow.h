@@ -24,7 +24,7 @@ namespace vapor { namespace editor {
  * that handles the rest of the work.
  */
 
-class vaporWindow : public render::Window
+class vaporWindow : public Window
 {
 	friend class vaporControl;
 

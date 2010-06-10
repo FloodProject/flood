@@ -11,13 +11,12 @@
 #include "vapor/math/Color.h"
 #include "vapor/math/Vector2.h"
 
-FWD_DECL_NS_TYPEDEF_PTR(render, RenderTarget)
+FWD_DECL_TYPEDEF_PTR(RenderTarget)
+FWD_DECL_TYPEDEF_SHARED(Node)
+FWD_DECL_TYPEDEF_SHARED(Camera)
+FWD_DECL_TYPEDEF_SHARED_WEAK(Camera)
 
-FWD_DECL_NS_TYPEDEF_SHARED(scene, Node)
-FWD_DECL_NS_TYPEDEF_SHARED(scene, Camera)
-FWD_DECL_NS_TYPEDEF_SHARED_WEAK(scene, Camera)
-
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -30,10 +29,10 @@ class VAPOR_API Viewport : private boost::noncopyable
 {
 public:
 
-	Viewport( scene::CameraPtr, RenderTargetPtr );
+	Viewport( CameraPtr, RenderTargetPtr );
 
 	// Gets the camera of the viewport.
-	IMPLEMENT_GETTER(Camera, scene::CameraPtr, weakCamera.lock())
+	IMPLEMENT_GETTER(Camera, CameraPtr, weakCamera.lock())
 
 	// Gets the render target of the viewport.
 	IMPLEMENT_GETTER(RenderTarget, RenderTargetPtr, target)
@@ -63,7 +62,7 @@ private:
 	void setRenderTarget( RenderTargetPtr target );
 
 	// Camera that will render into this viewport.
-	scene::CameraWeakPtr weakCamera;
+	CameraWeakPtr weakCamera;
 
 	// Render target that we are rendering into.
 	RenderTargetPtr target;
@@ -82,4 +81,4 @@ TYPEDEF_PTR(Viewport)
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

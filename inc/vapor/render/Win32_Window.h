@@ -16,7 +16,7 @@
 	#error This code is Windows only. Disable VAPOR_WINDOWING_WIN32.
 #endif
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -77,6 +77,6 @@ LONG WINAPI WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

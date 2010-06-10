@@ -7,13 +7,14 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/render/GL.h"
 #include "vapor/render/Texture.h"
+#include "vapor/render/GL.h"
 #include "vapor/render/Adapter.h"
 #include "vapor/render/Device.h"
-#include "vapor/Engine.h"
 
-namespace vapor { namespace render {
+//#include "vapor/Engine.h"
+
+namespace vapor {
 
 //-----------------------------------//
 
@@ -76,14 +77,14 @@ bool Texture::generate()
 bool Texture::check()
 {
 	// TODO: refactor
-	AdapterPtr adapter = Engine::getInstance().getRenderDevice()->getAdapter();
-	uint max = adapter->getMaxTextureSize();
+	//AdapterPtr adapter = Engine::getInstance().getRenderDevice()->getAdapter();
+	//uint max = adapter->getMaxTextureSize();
 
-	if( (width > max) || (height > max) )
-	{
-		warn( "gl", "Texture size is not supported (max: %dx%d)", max, max );		
-		return false;
-	}
+	//if( (width > max) || (height > max) )
+	//{
+		//warn( "gl", "Texture size is not supported (max: %dx%d)", max, max );		
+		//return false;
+	//}
 
 	return true;
 }
@@ -281,4 +282,4 @@ uint Texture::id() const
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

@@ -13,7 +13,7 @@
 #include "vapor/scene/Geometry.h"
 #include "vapor/gui/Overlay.h"
 
-namespace vapor { namespace gui {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -26,7 +26,7 @@ namespace vapor { namespace gui {
  * to its environment.
  */
 
-class VAPOR_API Console : public gui::Overlay
+class VAPOR_API Console : public Overlay
 {
 public:
 
@@ -55,4 +55,4 @@ TYPEDEF_SHARED_POINTER_FROM_TYPE( Console );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

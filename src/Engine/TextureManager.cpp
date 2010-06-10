@@ -12,7 +12,7 @@
 #include "vapor/render/GL.h"
 #include "vapor/Engine.h"
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -149,4 +149,4 @@ uint TextureManager::getMemoryUsage()
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

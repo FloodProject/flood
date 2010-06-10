@@ -26,8 +26,8 @@ namespace vapor { namespace audio {
  * that contains the audio data. This will hold the id to the data and
  * delete it when no other source needs it.
  *
- * TODO: Streaming audio and maybe have some caching strategy so it
- * doesn't delete the audio data if it's potentially needed in the future.
+ * TODO: Add streaming audio and have some caching strategy so it does
+ * not delete the audio data if it's potentially needed in the future.
  */
 
 class VAPOR_API Buffer : private boost::noncopyable
@@ -59,8 +59,6 @@ protected:
 	/// Holds the source id from OpenAL.
 	ALuint bufferId;
 };
-
-//-----------------------------------//
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Buffer );
 

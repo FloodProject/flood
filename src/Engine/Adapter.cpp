@@ -13,7 +13,7 @@
 #include "vapor/render/Adapter.h"
 #include "vapor/render/GL.h"
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -97,9 +97,9 @@ void Adapter::log() const
 	const std::string& g = getVersion();
 
 	// log GL stuff
-	info( "render::adapter", "Graphics adapter: %s", getName().c_str() );
+	info( "adapter", "Graphics adapter: %s", getName().c_str() );
 
-	info( "render::adapter", "%s%s%s", 
+	info( "adapter", "%s%s%s", 
 		!g.empty() ? ("OpenGL " + g).c_str() : "",
 		!s.empty() ? (" / GLSL " + s).c_str() : "",
 		!d.empty() ? (" / driver: " + d).c_str() : "" );
@@ -110,12 +110,12 @@ void Adapter::log() const
 			"Your graphics device does not support VBOs (Vertex Buffer Objects).");
 	}
 
-	info( "render::adapter", "Max texture size: %dx%d", maxTextureSize, maxTextureSize );
-	info( "render::adapter", "Max vertex attributes: %d", maxAttribs );
+	info( "adapter", "Max texture size: %dx%d", maxTextureSize, maxTextureSize );
+	info( "adapter", "Max vertex attributes: %d", maxAttribs );
 }
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

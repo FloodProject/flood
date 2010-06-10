@@ -12,9 +12,7 @@
 #include "vapor/math/Math.h"
 #include "vapor/math/Color.h"
 
-namespace vapor { namespace scene {
-
-using namespace vapor::render;
+namespace vapor {
 
 //-----------------------------------//
 
@@ -196,4 +194,4 @@ void Cell::calculateNormals( const std::vector<Vector3>& vs )
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

@@ -129,7 +129,7 @@ void EditorFrame::initEngine()
 
 	createMainViewframe();
 
-	render::DevicePtr device = engine->getRenderDevice();
+	RenderDevicePtr device = engine->getRenderDevice();
 	device->init();
 
 	//rb = device->createRenderBuffer( Settings() );
@@ -176,7 +176,7 @@ void EditorFrame::createMainViewframe()
 	control->onUpdate += fd::bind( &EditorFrame::onUpdate, this );
 	control->SetFocus();
 
-	render::DevicePtr device = engine->getRenderDevice();
+	RenderDevicePtr device = engine->getRenderDevice();
 	WindowPtr window = (WindowPtr) control->getRenderWindow(); 
 
 	device->setWindow( window );
@@ -207,11 +207,11 @@ NodePtr EditorFrame::createCamera()
 	static byte i = 0;
 
 	InputManager* const im = engine->getInputManager();
-	render::Device* const rd = engine->getRenderDevice();
+	RenderDevicePtr device = engine->getRenderDevice();
 	
 	// Create a new first-person camera for our viewport.
 	// By default it will be in perspective projection.
-	CameraPtr camera( new FirstPersonCamera(im, rd) );
+	CameraPtr camera( new FirstPersonCamera(im, device) );
 
 	// Generate a new unique name.
 	std::string name( "EditorCamera" + num_to_str(i++) );

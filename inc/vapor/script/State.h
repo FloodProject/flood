@@ -16,15 +16,13 @@ struct lua_State;
 
 namespace vapor {
 
-	class Engine;
-
-	namespace script {
+class Engine;
 
 //-----------------------------------//
 
 /**
- * Scripting context that can be used to execute scripts. Currently this
- * represents a Lua interpreter state. Executes a collection of scripts.
+ * Scripting context that can be used to execute scripts. 
+ * Currently this represents a Lua interpreter state. 
  */
 
 class VAPOR_API State : private boost::noncopyable
@@ -44,13 +42,13 @@ public:
 	bool execute( const std::string& source );
 
 	/// Executes a script resource.
-	bool execute( Script* script );
+	bool execute( const ScriptPtr& script );
 
 	/// Bind the engine API to Lua.
-	void bind( Engine* engine );
+	void bind( Engine* const engine );
 
 	/// Registers a script into this state.
-	void registerScript( ScriptPtr script );
+	void registerScript( const ScriptPtr& script );
 
 	/// Handles the Lua error states.
 	void handleError();
@@ -58,7 +56,8 @@ public:
 	/// Executes all the registered scripts.
 	void update( float deltaTime );
 
-	const std::string& getLastError() const;
+	// Gets the last error.
+	IMPLEMENT_GETTER(LastError, const std::string&, lastError)
 
 protected:
 
@@ -74,10 +73,6 @@ protected:
 
 //-----------------------------------//
 
-//TYPEDEF_SHARED_POINTER_FROM_TYPE( Context );
-
-//-----------------------------------//
-
-} } // end namespaces
+} // end namespace
 
 //#endif

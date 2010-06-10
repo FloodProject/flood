@@ -14,9 +14,6 @@
 
 namespace vapor {
 
-using namespace vapor::render;
-using namespace vapor::scene;
-
 //-----------------------------------//
 
 const int MAX_VERTICES				= 65534;

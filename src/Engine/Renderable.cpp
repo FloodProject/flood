@@ -9,7 +9,7 @@
 #include "vapor/PCH.h"
 #include "vapor/render/Renderable.h"
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -77,7 +77,7 @@ void Renderable::unbind()
 
 //-----------------------------------//
 
-void Renderable::render( const render::Device& VAPOR_UNUSED(device) )
+void Renderable::render( const RenderDevicePtr& VAPOR_UNUSED(device) )
 {
 	if( mode == PolygonMode::Wireframe )
 		glPolygonMode( GL_FRONT_AND_BACK, PolygonMode::Wireframe );
@@ -104,4 +104,4 @@ void Renderable::render( const render::Device& VAPOR_UNUSED(device) )
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

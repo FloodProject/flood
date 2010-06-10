@@ -15,7 +15,7 @@
 
 FWD_DECL_TYPEDEF_INT(GLSL_Text)
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 		
@@ -108,4 +108,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( GLSL_Program );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

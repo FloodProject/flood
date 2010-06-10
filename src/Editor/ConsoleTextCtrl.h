@@ -22,7 +22,7 @@ public:
 		const wxSize& size = wxDefaultSize, 
 		long style = 0 | wxTE_MULTILINE | wxTE_NOHIDESEL | wxTE_RICH2 );
 
-	virtual ~ConsoleTextCtrl();
+	virtual ~ConsoleTextCtrl() { }
 
 protected:
 
@@ -38,7 +38,7 @@ protected:
 	void NewPromptLine();
 
 	// Holds an instance of the input manager.
-	script::State* luaState;
+	State* luaState;
 
 	// Holds an instance to the vaporEngine.
 	vapor::Engine* engine;

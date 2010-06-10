@@ -14,7 +14,7 @@
 #include "vapor/render/GL.h"
 #include "vapor/resources/GLSL_Text.h"
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -440,6 +440,6 @@ void GLSL_Program::setUniform( const std::string& slot, const Matrix4x4& matrix 
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

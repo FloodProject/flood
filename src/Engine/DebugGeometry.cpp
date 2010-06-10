@@ -15,9 +15,7 @@
 #include "vapor/scene/Geometry.h"
 #include "vapor/scene/Tags.h"
 
-namespace vapor { namespace render {
-
-using namespace vapor::scene;
+namespace vapor {
 
 //-----------------------------------//
 
@@ -90,4 +88,4 @@ NodePtr buildRay( const Ray& pickRay, const Vector3& outFar )
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

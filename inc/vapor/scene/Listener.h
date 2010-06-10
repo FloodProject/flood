@@ -13,7 +13,7 @@
 #include "vapor/audio/Context.h"
 #include "vapor/scene/Transform.h"
 
-namespace vapor { namespace scene {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -37,6 +37,6 @@ TYPEDEF_SHARED_POINTER_FROM_TYPE( Listener );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

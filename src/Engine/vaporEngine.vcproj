@@ -328,7 +328,7 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="Angle"
+				Name="Angles"
 				>
 				<File
 					RelativePath=".\EulerAngles.cpp"
@@ -364,7 +364,7 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="BVs"
+				Name="Bounding Volumes"
 				>
 				<Filter
 					Name="AABB"
@@ -1498,7 +1498,7 @@
 				</Filter>
 			</Filter>
 			<Filter
-				Name="Audio"
+				Name="Sounds"
 				>
 				<File
 					RelativePath=".\ResourceSound.cpp"

@@ -12,15 +12,13 @@
 #include "vapor/scene/Geometry.h"
 #include "vapor/math/Math.h"
 
-namespace vapor { namespace scene {
-
-using namespace vapor::render;
+namespace vapor {
 
 const std::string& Camera::type = "Camera";
 
 //-----------------------------------//
 
-Camera::Camera( render::Device* device, Projection::Enum proj )
+Camera::Camera( RenderDevicePtr device, Projection::Enum proj )
 	: renderDevice( device ), projection( proj ), fov(60.0f),
 	near_(5.0f), far_(5000.0f), lookAtVector(Vector3::UnitZ),
 	viewport(nullptr), viewSize(Vector2i::Zero)
@@ -33,8 +31,7 @@ Camera::Camera( render::Device* device, Projection::Enum proj )
 Camera::Camera( const Camera& rhs )
 	: renderDevice( rhs.renderDevice ), projection( rhs.projection ),
 	fov( rhs.fov ), near_( rhs.near_ ), far_( rhs.far_ )
-{
-}
+{ }
 
 //-----------------------------------//
 
@@ -237,7 +234,7 @@ void Camera::render( const NodePtr& node, bool clearView ) const
 	if( !viewport ) return;
 
 	// This will contain all nodes used for rendering.
-	render::RenderBlock renderBlock;
+	RenderBlock renderBlock;
 
 	cull( renderBlock, node );
 
@@ -268,7 +265,7 @@ void Camera::render() const
 
 //-----------------------------------//
 
-void Camera::cull( render::RenderBlock& block, const NodePtr& node ) const
+void Camera::cull( RenderBlock& block, const NodePtr& node ) const
 {
 	// Let's forget culling for now. Return all renderable nodes.
 	// TODO: Check if dynamic_cast is faster than a string comparison.
@@ -339,4 +336,4 @@ void Camera::serialize( Json::Value& value )
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

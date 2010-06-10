@@ -11,7 +11,7 @@
 #include "vapor/scene/Geometry.h"
 #include "vapor/math/Vector2.h"
 
-namespace vapor { namespace gui {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -79,7 +79,7 @@ namespace Anchor
  * these different positioning modes, please check out the docs above.
  */
 
-class VAPOR_API Overlay : public virtual scene::Geometry
+class VAPOR_API Overlay : public virtual Geometry
 {
 public:
 
@@ -117,10 +117,8 @@ protected:
 	static const std::string& type;
 };
 
-//-----------------------------------//
-
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Overlay );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

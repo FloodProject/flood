@@ -9,7 +9,7 @@
 #include "vapor/PCH.h"
 #include "vapor/render/Quad.h"
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -55,4 +55,4 @@ VertexBufferPtr Quad::getQuadBuffer( float width, float height )
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

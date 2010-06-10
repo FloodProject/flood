@@ -8,7 +8,7 @@
 
 #pragma once
 
-namespace vapor { namespace platform {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -56,4 +56,4 @@ private:
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

@@ -12,7 +12,7 @@
 
 #include "vapor/scene/Listener.h"
 
-namespace vapor { namespace scene {
+namespace vapor {
 
 using std::static_pointer_cast;
 
@@ -51,6 +51,6 @@ std::shared_ptr<audio::Context> Listener::getContext(ListenerPtr ls)
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

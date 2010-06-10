@@ -11,7 +11,7 @@
 
 #ifdef VAPOR_WINDOWING_WIN32
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -23,7 +23,7 @@ Win32Window::Win32Window(Settings& settings)
 
 	if ( !registerClass() || !createWindow() ) 
 	{
-		error("render::window", "Could not open a Win32 window");
+		error("window", "Could not open a Win32 window");
 		//exit(1);
 	}
 }
@@ -56,7 +56,7 @@ bool Win32Window::registerClass()
 
 	if (!RegisterClass(&wc)) 
 	{
-		error( "render::window", "RegisterClass() failed: %s", getErrorMessage().c_str() );
+		error( "window", "RegisterClass() failed: %s", getErrorMessage().c_str() );
 		return false;
 	}
 
@@ -80,7 +80,7 @@ bool Win32Window::createWindow()
 	// AdjustWindowRectEx corrects the size of the client area of the window
 	if (!AdjustWindowRectEx( &windowRect, style, false, exStyle ))
 	{
-		error( "render::window", "AdjustWindowRectEx() failed: %s", getErrorMessage().c_str() );
+		error( "window", "AdjustWindowRectEx() failed: %s", getErrorMessage().c_str() );
 	}
 
 	HWND hWnd = CreateWindowEx( exStyle, TEXT("vapor_Window"), TEXT("vaporEngine"), 
@@ -90,7 +90,7 @@ bool Win32Window::createWindow()
 
 	if (!hWnd) 
 	{
-		error( "render::window", "CreateWindowEx() failed: %s", getErrorMessage().c_str() );
+		error( "window", "CreateWindowEx() failed: %s", getErrorMessage().c_str() );
 		return false;
 	}
 
@@ -112,7 +112,7 @@ bool Win32Window::createContext()
 
 	if( !hDC )
 	{
-		error( "render::window", "GetDC() failed: %s", getErrorMessage().c_str() );
+		error( "window", "GetDC() failed: %s", getErrorMessage().c_str() );
 		return false;
 	}
 
@@ -131,26 +131,26 @@ bool Win32Window::createContext()
 
 	if ( !pf ) 
 	{
-		error( "render::window", "ChoosePixelFormat() failed: %s", getErrorMessage().c_str() );
+		error( "window", "ChoosePixelFormat() failed: %s", getErrorMessage().c_str() );
 	}
 
 	if ( !SetPixelFormat( hDC, pf, &pfd ) ) 
 	{
-		error( "render::window", "SetPixelFormat() failed: %s", getErrorMessage().c_str() );
+		error( "window", "SetPixelFormat() failed: %s", getErrorMessage().c_str() );
 	} 
 
 	//DescribePixelFormat( hDC, pf, sizeof ( PIXELFORMATDESCRIPTOR ), &pfd );
 
 	//if ( pfd.dwFlags & PFD_NEED_PALETTE || pfd.dwFlags & PFD_NEED_SYSTEM_PALETTE )
 	//{
-	//	error( "render::window", "Requested format requires a palette");
+	//	error( "window", "Requested format requires a palette");
 	//}
 
 	hRC = wglCreateContext( hDC );
 
 	if( !hRC )
 	{
-		error( "render::window", "wglCreateContext() failed: %s", getErrorMessage().c_str() );
+		error( "window", "wglCreateContext() failed: %s", getErrorMessage().c_str() );
 		return false;
 	}
 
@@ -232,7 +232,7 @@ void Win32Window::makeCurrent()
 
 	if( !wglMakeCurrent( hDC, hRC ) ) 
 	{
-		error( "render::window", 
+		error( "window", 
 			"wglMakeCurrent() failed: %s", getErrorMessage().c_str() );
 	}
 }
@@ -295,6 +295,6 @@ LONG WINAPI WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

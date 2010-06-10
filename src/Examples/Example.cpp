@@ -21,7 +21,7 @@ Example::Example(const char** argv)
 void Example::onInit()
 {
 	//physicsManager->createWorld();
-	getVFS()->mountDefaultLocations();
+	getFileSystem()->mountDefaultLocations();
 }
 
 //-----------------------------------//
@@ -55,7 +55,7 @@ void Example::onSetupScene()
 {
 	ScenePtr scene = getSceneManager();
 	ResourceManagerPtr const rm = getResourceManager();
-	render::DevicePtr const rd = getRenderDevice();
+	RenderDevicePtr const rd = getRenderDevice();
 
 	// Create a new Camera
 	NodePtr camera( new Node( "MainCamera" ) );
@@ -174,7 +174,7 @@ void Example::onKeyPressed( const KeyEvent& keyEvent )
 		debug( "time: %f", frameTimer.getElapsedTime() );
 
 	if( keyEvent.keyCode == Keys::Pause )
-		showDebug = !showDebug;
+		Log::showDebug = !Log::showDebug;
 
 	if( keyEvent.keyCode == Keys::G )
 	{

@@ -9,7 +9,7 @@
 #include "vapor/PCH.h"
 #include "vapor/render/Program.h"
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -52,4 +52,4 @@ const std::string& Program::getLog() const
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

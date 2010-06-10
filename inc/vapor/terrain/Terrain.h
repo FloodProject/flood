@@ -13,7 +13,7 @@
 #include "vapor/terrain/Cell.h"
 #include "vapor/terrain/Brush.h"
 
-namespace vapor { namespace scene {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -28,7 +28,7 @@ struct TerrainSettings
 	{ }
 
 	// Material for each cell.
-	render::MaterialPtr Material;
+	MaterialPtr Material;
 
 	// Cell size in world units.
 	ushort CellSize;
@@ -75,7 +75,7 @@ public:
 	//void applyBrush( const Brush& brush, const Region& region );
 
 	// Gets/sets the material of the terrain.
-	IMPLEMENT_ACESSOR(Material, render::MaterialPtr, cellMaterial)
+	IMPLEMENT_ACESSOR(Material, MaterialPtr, cellMaterial)
 
 	// Gets/sets the heightmap of the terrain.
 	IMPLEMENT_ACESSOR(Heightmap, ImagePtr, heightmap)
@@ -98,7 +98,7 @@ protected:
 	std::vector<Cell*> terrainCells;
 
 	// Material for this terrain.
-	render::MaterialPtr cellMaterial;
+	MaterialPtr cellMaterial;
 
 	typedef std::tuple< ImagePtr, ushort, ushort > CellRequest;
 	std::list<CellRequest> requestsQueue;
@@ -110,10 +110,8 @@ protected:
 	static const std::string& type;
 };
 
-//-----------------------------------//
-
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Terrain );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

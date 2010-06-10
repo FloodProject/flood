@@ -10,7 +10,7 @@
 
 #include "vapor/scene/Geometry.h"
 
-namespace vapor { namespace scene {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -18,11 +18,11 @@ namespace vapor { namespace scene {
  * Simple grid component. Can be used for editor applications.
  */
 
-class VAPOR_API Grid : public scene::Geometry
+class VAPOR_API Grid : public Geometry
 {
 public:
 
-	Grid( /*const render::MaterialPtr& mat*/ );
+	Grid( /*const MaterialPtr& mat*/ );
 
 	// Returns the type of this component.
 	IMPLEMENT_GETTER(Type, const std::string&, Grid::type)
@@ -30,7 +30,7 @@ public:
 protected:
 
 	// Returns a vertex buffer with the grid geometry.
-	render::VertexBufferPtr getGridBuffer();
+	VertexBufferPtr getGridBuffer();
 
 	// Grid size in the X and Z axis.
 	float sizeX, sizeZ;
@@ -50,4 +50,4 @@ TYPEDEF_SHARED_POINTER_FROM_TYPE( Grid );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

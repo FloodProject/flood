@@ -10,7 +10,7 @@
 
 #include "vapor/scene/Node.h"
 
-namespace vapor { namespace scene {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -96,4 +96,4 @@ TYPEDEF_SHARED_POINTER_FROM_TYPE( Group );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

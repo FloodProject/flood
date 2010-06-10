@@ -69,8 +69,8 @@ void Framework::init()
 
 void Framework::render()
 {
-	render::Device* renderDevice = getRenderDevice();
-	render::WindowPtr window = renderDevice->getWindow();
+	RenderDevicePtr renderDevice = getRenderDevice();
+	WindowPtr window = renderDevice->getWindow();
 
 	while( frameTimer.reset(), window->pumpEvents() )
 	{

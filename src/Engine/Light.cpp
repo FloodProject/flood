@@ -9,7 +9,7 @@
 #include "vapor/PCH.h"
 #include "vapor/scene/Light.h"
 
-namespace vapor { namespace scene {
+namespace vapor {
 
 const std::string& Light::type = "Light";
 
@@ -63,4 +63,4 @@ void Light::serialize( Json::Value& value )
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

@@ -11,10 +11,10 @@
 #include "vapor/gui/Overlay.h"
 
 FWD_DECL_TYPEDEF_INT(Font)
-FWD_DECL_NS_TYPEDEF_INT(render, Material)
-FWD_DECL_NS_TYPEDEF_SHARED(scene, Geometry)
+FWD_DECL_TYPEDEF_INT(Material)
+FWD_DECL_TYPEDEF_SHARED(Geometry)
 
-namespace vapor { namespace gui {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -28,11 +28,11 @@ namespace vapor { namespace gui {
  * changes the resolution.
  */
 
-class VAPOR_API Label : public gui::Overlay
+class VAPOR_API Label : public Overlay
 {
 public:
 
-	Label( const std::string& text, FontPtr font, render::MaterialPtr mat );
+	Label( const std::string& text, FontPtr font, MaterialPtr mat );
 	Label( const std::string& text, const std::string& font );
 
 	// Gets the current text of this label.
@@ -65,10 +65,10 @@ protected:
 	FontPtr font;
 	
 	// Font geometry.
-	render::RenderablePtr renderable;
+	RenderablePtr renderable;
 
 	// Font material.
-	render::MaterialPtr material;
+	MaterialPtr material;
 	
 	// Used to track if a label needs updating.
 	bool isDirty;
@@ -84,4 +84,4 @@ TYPEDEF_SHARED_POINTER_FROM_TYPE( Label );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

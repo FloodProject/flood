@@ -244,7 +244,7 @@ void EditorFrame::createScene()
 	matSun->setBlending( BlendingSource::SourceAlpha, BlendingDestination::OneMinusSourceAlpha );
 	matSun->setBackfaceCulling( false );
 	
-	RenderablePtr sunQuad( new render::Quad( 100.0f, 100.0f ) );
+	RenderablePtr sunQuad( new Quad( 100.0f, 100.0f ) );
 	sunQuad->setMaterial( matSun );
 
 	GeometryPtr geom( new Geometry() );

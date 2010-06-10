@@ -9,9 +9,7 @@
 #include "vapor/PCH.h"
 #include "vapor/scene/Grid.h"
 
-namespace vapor { namespace scene {
-
-using namespace vapor::render;
+namespace vapor {
 
 //-----------------------------------//
 
@@ -19,7 +17,7 @@ const std::string& Grid::type = "Grid";
 
 //-----------------------------------//
 
-Grid::Grid( /*const render::MaterialPtr&*/ )
+Grid::Grid( /*const MaterialPtr&*/ )
 	: sizeX( 500 ), sizeZ( 500 ), divX( 20 ), divZ( 20 ), 
 	strongMainLines( true )
 {
@@ -33,7 +31,7 @@ Grid::Grid( /*const render::MaterialPtr&*/ )
 
 //-----------------------------------//
 
-render::VertexBufferPtr Grid::getGridBuffer()
+VertexBufferPtr Grid::getGridBuffer()
 {
 	// Create a new VBO and upload triangle data
 	VertexBufferPtr vb( new VertexBuffer() );
@@ -101,4 +99,4 @@ render::VertexBufferPtr Grid::getGridBuffer()
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

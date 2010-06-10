@@ -16,7 +16,7 @@
 #include "vapor/render/Viewport.h"
 #include "vapor/scene/Transform.h"
 
-namespace vapor { namespace scene {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -46,8 +46,7 @@ class VAPOR_API Camera : public Component
 {
 public:
 
-	Camera( render::Device* device, 
-		Projection::Enum projection = Projection::Perspective );
+	Camera( RenderDevicePtr, Projection::Enum = Projection::Perspective );
 	Camera( const Camera& rhs );
 	~Camera();
 
@@ -65,7 +64,7 @@ public:
 	// for later rendering (and also their local to world matrices). 
 	// The queue is passed as a reference to the cull method, which fills 
 	// it with the data.
-	void cull( render::RenderBlock& queue, const NodePtr& node ) const;
+	void cull( RenderBlock& queue, const NodePtr& node ) const;
 
 	// Unprojects the vector.
 	Vector3 Unproject( Vector3 vector ) const;
@@ -98,8 +97,8 @@ public:
 	IMPLEMENT_GETTER(ViewMatrix, const Matrix4x3&, viewMatrix)
 	
 	// Gets/sets the current viewport associated with the camera.
-	IMPLEMENT_GETTER(Viewport, render::ViewportPtr, viewport)
-	DECLARE_SETTER(Viewport, render::ViewportPtr)
+	IMPLEMENT_GETTER(Viewport, ViewportPtr, viewport)
+	DECLARE_SETTER(Viewport, ViewportPtr)
 
 	// Gets the frustum associated with the camera.
 	//IMPLEMENT_GETTER(Frustum, const Frustum&, frustum)
@@ -138,10 +137,10 @@ protected:
 	float far_;
 
 	// Used to pass a RenderQueue for rendering.
-	render::Device* renderDevice;
+	RenderDevicePtr renderDevice;
 
 	// Last viewport the camera rendered into.
-	render::ViewportPtr viewport;
+	ViewportPtr viewport;
 	Vector2i viewSize;
 
 	// Pointer to the camera's node transform.
@@ -160,4 +159,4 @@ TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( Camera );
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

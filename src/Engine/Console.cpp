@@ -10,9 +10,7 @@
 #include "vapor/gui/Console.h"
 #include "vapor/render/Quad.h"
 
-using namespace vapor::render;
-
-namespace vapor { namespace gui {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -52,4 +50,4 @@ const std::string& Console::getType() const
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

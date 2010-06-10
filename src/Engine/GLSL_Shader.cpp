@@ -13,7 +13,7 @@
 #include "vapor/render/GLSL_Shader.h"
 #include "vapor/render/GL.h"
 
-namespace vapor { namespace render {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -161,6 +161,6 @@ uint GLSL_Shader::id()
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif
