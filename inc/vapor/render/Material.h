@@ -69,7 +69,7 @@ public:
 	Material( const std::string& name, const std::string& program = "diffuse" );
 
 	// Gets the textual name of the material.
-	IMPLEMENT_GETTER(Name, const std::string&, name);
+	GETTER(Name, const std::string&, name);
 
 	// Adds a texture to the material.
 	void setTexture( uint unit, const std::string& tex );
@@ -81,31 +81,31 @@ public:
 	void setTexture( uint unit, const ImagePtr& tex );
 
 	// Gets/sets the associated program.
-	IMPLEMENT_ACESSOR(Program, const std::string&, program)
+	ACESSOR(Program, const std::string&, program)
 	
 	// Gets the associated program.	
 	ProgramPtr getProgram();
 
 	// Gets/sets the depth writing of the material.
-	IMPLEMENT_ACESSOR(DepthWrite, bool, depthWrite)
+	ACESSOR(DepthWrite, bool, depthWrite)
 
 	// Gets/sets the depth testing of the material.
-	IMPLEMENT_ACESSOR(DepthTest, bool, depthTest)
+	ACESSOR(DepthTest, bool, depthTest)
 
 	// Gets/sets the line width of the material.
-	IMPLEMENT_ACESSOR(LineWidth, float, lineWidth)
+	ACESSOR(LineWidth, float, lineWidth)
 
 	// Gets/sets the line smoothing of the material.
-	IMPLEMENT_ACESSOR(LineSmoothing, bool, lineSmooth)
+	ACESSOR(LineSmoothing, bool, lineSmooth)
 
 	// Gets/sets the backface culling of the material.
-	IMPLEMENT_ACESSOR(BackfaceCulling, bool, cullBackfaces)
+	ACESSOR(BackfaceCulling, bool, cullBackfaces)
 
 	// Gets the blending options for this material.
-	IMPLEMENT_GETTER(BlendingSource, BlendingSource::Enum, source)
+	GETTER(BlendingSource, BlendingSource::Enum, source)
 	
 	// Gets the blending options for this material.
-	IMPLEMENT_GETTER(BlendingDestination, BlendingDestination::Enum, destination)
+	GETTER(BlendingDestination, BlendingDestination::Enum, destination)
 
 	// Is blending enabled?
 	// Blending is automatically enabled if you set a custom option.
@@ -115,7 +115,7 @@ public:
 	void setBlending( BlendingSource::Enum, BlendingDestination::Enum );
 
 	// Gets the textures in the material.
-	IMPLEMENT_GETTER(Textures, const TextureMap&, textures)
+	GETTER(Textures, const TextureMap&, textures)
 
 	// Binds the material object.
 	void bind();

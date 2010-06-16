@@ -31,19 +31,19 @@ public:
 	PNG_Pico_Loader();
 	
 	// Creates the resource with no data.
-	IMPLEMENT_PREPARE(Image)
+	PREPARE(Image)
 
 	// Decode an image file to a buffer.
 	virtual bool decode(const File&, Resource* res);
 
 	// Gets the name of this codec.
-	IMPLEMENT_GETTER(Name, const std::string, "PICOPNG")
+	GETTER(Name, const std::string, "PICOPNG")
 
 	// Gets the list of extensions this codec can handle.
-	IMPLEMENT_GETTER(Extensions, ExtensionList&, extensions)
+	GETTER(Extensions, ExtensionList&, extensions)
 
 	// Overrides this to return the right resource group.
-	IMPLEMENT_GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Images)
+	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Images)
 
 protected:
 

@@ -103,10 +103,10 @@ public:
 	void update( double );
 
 	// Gets the registered resources.
-	IMPLEMENT_GETTER(Resources, const ResourceMap&, resources)
+	GETTER(Resources, const ResourceMap&, resources)
 
 	// Gets the registered resource loaders.
-	IMPLEMENT_GETTER(ResourceLoaders, const ResourceLoaderMap&, resourceLoaders)
+	GETTER(ResourceLoaders, const ResourceLoaderMap&, resourceLoaders)
 
 protected:
 

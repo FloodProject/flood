@@ -30,10 +30,10 @@ public:
 	virtual const Vector2i getGlyphSize() const;
 
 	// Gets/sets the font image.
-	IMPLEMENT_ACESSOR(Image, const ImagePtr&, image)
+	ACESSOR(Image, const ImagePtr&, image)
 
 	// Gets/sets the font glyphs.
-	IMPLEMENT_ACESSOR(Glyphs, const std::vector<Glyph>&, glyphs)
+	ACESSOR(Glyphs, const std::vector<Glyph>&, glyphs)
 
 private:
 

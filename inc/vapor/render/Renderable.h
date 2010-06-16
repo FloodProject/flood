@@ -90,19 +90,19 @@ public:
 	void render(const RenderDevicePtr& device);
     
     // Gets/sets the vertex buffer associated with the renderable.
-	IMPLEMENT_ACESSOR(VertexBuffer, VertexBufferPtr, vb) 
+	ACESSOR(VertexBuffer, VertexBufferPtr, vb) 
    
     // Gets/sets the index buffer associated with the renderable.
-	IMPLEMENT_ACESSOR(IndexBuffer, IndexBufferPtr, ib)
+	ACESSOR(IndexBuffer, IndexBufferPtr, ib)
 
     // Gets/sets the material associated with the renderable.
-    IMPLEMENT_ACESSOR(Material, MaterialPtr, mat)
+    ACESSOR(Material, MaterialPtr, mat)
 
     // Gets/sets the render mode of this renderable.
-	IMPLEMENT_ACESSOR(PolygonMode, PolygonMode::Enum, mode)
+	ACESSOR(PolygonMode, PolygonMode::Enum, mode)
 
 	// Gets/sets the primitive type of this renderable.
-	IMPLEMENT_ACESSOR(PrimitiveType, Primitive::Enum, type)
+	ACESSOR(PrimitiveType, Primitive::Enum, type)
 
 protected:
 

@@ -26,7 +26,7 @@ public:
 	Keyboard();
 
 	// Returns the current state of the keys.
-	IMPLEMENT_GETTER(KeyState, const std::vector< bool >&, keyState)
+	GETTER(KeyState, const std::vector< bool >&, keyState)
 
 	// Checks if the given key is pressed.
 	bool isKeyPressed( Keys::Enum keyCode ) const;
@@ -47,7 +47,7 @@ private:
 	virtual void processEvent( const Event& event );
 
 	// Return this device as a keyboard.
-	IMPLEMENT_GETTER(Type, const DeviceType::Enum, DeviceType::Keyboard)
+	GETTER(Type, const DeviceType::Enum, DeviceType::Keyboard)
 
 	// Handles a key press event.
 	void keyPressed( const KeyEvent& keyEvent );
@@ -61,6 +61,8 @@ private:
 	// Last key pressed.
 	Keys::Enum lastKey;
 };
+
+TYPEDEF_PTR(Keyboard)
 
 //-----------------------------------//
 

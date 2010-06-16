@@ -94,7 +94,7 @@ protected:
 	void pushEvent( TaskEvent::Enum event, const TaskPtr& task,
 		bool sendEvent = false );
 
-	// Runs the worker thread and performs task.
+	// Runs the worker threads and executes the tasks.
 	void runWorker();
 
 	typedef std::vector<ThreadPtr> ThreadQueue;

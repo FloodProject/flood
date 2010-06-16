@@ -46,19 +46,19 @@ public:
 	void reset();
 
 	// Gets the position of the transform.
-	IMPLEMENT_GETTER(Position, const Vector3&, translation)
+	GETTER(Position, const Vector3&, translation)
 
 	// Sets the position of the transform.
 	void setPosition( const Vector3& position );
 
 	// Gets the scale of the transform.
-	IMPLEMENT_GETTER(Scale, const Vector3&, _scale)
+	GETTER(Scale, const Vector3&, _scale)
 
 	// Sets the scale of the transform.
 	void setScale( const Vector3& scale );
 
 	// Gets the rotation vector of the transform.
-	IMPLEMENT_GETTER(Rotation, const EulerAngles&, rotation)
+	GETTER(Rotation, const EulerAngles&, rotation)
 
 	// Sets the rotation vector of the transform.
 	void setRotation( const EulerAngles& rot );
@@ -68,7 +68,7 @@ public:
 		const Vector3& upVector );
 
 	// Gets the absolute transformation matrix.
-	IMPLEMENT_GETTER(AbsoluteTransform, const Matrix4x3, getLocalTransform())
+	GETTER(AbsoluteTransform, const Matrix4x3, getLocalTransform())
 	
 	// Sets the absolute transformation matrix.
 	void setAbsoluteTransform( const Matrix4x3& matrix );
@@ -77,7 +77,7 @@ public:
 	Matrix4x3 getLocalTransform() const;
 
 	// Gets the bounding volume of the transform.
-	IMPLEMENT_GETTER(BoundingVolume, const AABB&, boundingVolume)
+	GETTER(BoundingVolume, const AABB&, boundingVolume)
 
 	// Gets the world bounding volume of the transform.
 	AABB getWorldBoundingVolume() const;
@@ -92,7 +92,7 @@ public:
 	bool requiresBoundingVolumeUpdate() const;
 
 	// Use this to render some debug bounding boxes.
-	IMPLEMENT_GETTER(DebugRenderable, RenderablePtr, boundingVolumeRenderable)
+	GETTER(DebugRenderable, RenderablePtr, boundingVolumeRenderable)
 
 	// Called once per frame to update the component.
 	virtual void update( double delta );
@@ -101,7 +101,7 @@ public:
 	fd::delegate<void()> onTransform;
 
 	// Gets the type of this component.
-	IMPLEMENT_GETTER(Type, const std::string&, Transform::type)
+	GETTER(Type, const std::string&, Transform::type)
 
 	DECLARE_SERIALIZABLE();
 

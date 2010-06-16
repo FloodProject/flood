@@ -106,9 +106,9 @@ void Gizmo::deselectAxis()
 
 GizmoAxis::Enum Gizmo::getAxis(Color& c)
 {
-	limit<float>(c.r, 0.0f, 1.0f);
-	limit<float>(c.g, 0.0f, 1.0f);
-	limit<float>(c.b, 0.0f, 1.0f);
+	clamp<float>(c.r, 0.0f, 1.0f);
+	clamp<float>(c.g, 0.0f, 1.0f);
+	clamp<float>(c.b, 0.0f, 1.0f);
 
 	if( fcmp(c.r, X.r) || fcmp(c.r, X.r*BASE_FACTOR) )
 		return GizmoAxis::X;

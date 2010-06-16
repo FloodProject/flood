@@ -32,23 +32,23 @@ public:
 	Viewport( CameraPtr, RenderTargetPtr );
 
 	// Gets the camera of the viewport.
-	IMPLEMENT_GETTER(Camera, CameraPtr, weakCamera.lock())
+	GETTER(Camera, CameraPtr, weakCamera.lock())
 
 	// Gets the render target of the viewport.
-	IMPLEMENT_GETTER(RenderTarget, RenderTargetPtr, target)
+	GETTER(RenderTarget, RenderTargetPtr, target)
 
 	// Gets the size of the viewport.
 	DECLARE_GETTER(Size, Vector2i)
-	IMPLEMENT_SETTER(Size, Vector2i, size)
+	SETTER(Size, Vector2i, size)
 
 	// Gets/sets the clear color of the viewport.
-	IMPLEMENT_ACESSOR(ClearColor, const Color&, clearColor)
+	ACESSOR(ClearColor, const Color&, clearColor)
 
 	// Gets the aspect ratio of the viewport.
 	float getAspectRatio() const;
 
 	// Gets/sets the Z-order priority of the viewport.
-	IMPLEMENT_ACESSOR(Priority, int, zPriority)
+	ACESSOR(Priority, int, zPriority)
 
 	// Updates the viewport.
 	void update();

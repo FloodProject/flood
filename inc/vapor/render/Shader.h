@@ -48,13 +48,13 @@ class VAPOR_API Shader : public ReferenceCounted
 public:
 
 	// Gets the shader type.
-	IMPLEMENT_ACESSOR(Type, ShaderType::Enum, type)
+	ACESSOR(Type, ShaderType::Enum, type)
 
 	// Gets the shader text.
-	IMPLEMENT_ACESSOR(Text, const std::string&, text)
+	ACESSOR(Text, const std::string&, text)
 
 	// Gets the compilation log.
-	IMPLEMENT_GETTER(Log, const std::string&, log)
+	GETTER(Log, const std::string&, log)
 
 	// Creates and loads the shader.
 	virtual bool create() = 0;

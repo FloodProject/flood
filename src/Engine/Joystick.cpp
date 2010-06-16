@@ -7,7 +7,6 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/input/Joystick.h"
 
 namespace vapor {
@@ -15,10 +14,9 @@ namespace vapor {
 //-----------------------------------//
 
 JoystickEvent::JoystickEvent( JoystickEventType::Enum eventType )
-	: Event( DeviceType::Joystick ), eventType( eventType )
-{
-
-}
+	: Event( DeviceType::Joystick ),
+	eventType( eventType )
+{ }
 
 //-----------------------------------//
 
@@ -32,12 +30,9 @@ const DeviceType::Enum Joystick::getType()
 void Joystick::processEvent( const Event& event )
 {
 	if( event.deviceType != DeviceType::Joystick )
-	{
 		return;
-	}
 
-	const JoystickEvent& jevt = 
-		static_cast< const JoystickEvent& > ( event );
+	const JoystickEvent& jevt = static_cast< const JoystickEvent& > ( event );
 	
 	switch( jevt.eventType )
 	{
@@ -48,7 +43,6 @@ void Joystick::processEvent( const Event& event )
 			joyButtonPressed( jbe );
 			break;
 		}
-		
 		case JoystickEventType::JoystickRelease:
 		{
 			const JoyButtonEvent& jbe = 
@@ -56,7 +50,6 @@ void Joystick::processEvent( const Event& event )
 			joyButtonReleased( jbe );
 			break;
 		}
-		
 		case JoystickEventType::JoystickMove:
 		{
 			const JoyMoveEvent& jm = 
@@ -64,16 +57,13 @@ void Joystick::processEvent( const Event& event )
 			joyMoved( jm );
 			break;
 		}
-		
 	}
 }
-
 	
 //-----------------------------------//
 
 void Joystick::joyMoved(const JoyMoveEvent& jme)
-{	
-
+{
 	if ( !onJoystickMove.empty() )
 	{
 		onJoystickMove( jme );
@@ -84,7 +74,6 @@ void Joystick::joyMoved(const JoyMoveEvent& jme)
 
 void Joystick::joyButtonPressed(const JoyButtonEvent& jbp)
 {
-
 	if ( !onJoystickButtonPress.empty() )
 	{
 		onJoystickButtonPress( jbp );
@@ -95,7 +84,6 @@ void Joystick::joyButtonPressed(const JoyButtonEvent& jbp)
 
 void Joystick::joyButtonReleased(const JoyButtonEvent& jbe)
 {
-
 	if ( !onJoystickButtonRelease.empty() )
 	{
 		onJoystickButtonRelease( jbe );
@@ -104,12 +92,12 @@ void Joystick::joyButtonReleased(const JoyButtonEvent& jbe)
 
 //-----------------------------------//
 
-JoyMoveEvent::JoyMoveEvent(unsigned int JoystickId, JoystickAxis::Enum Axis,
-		float Position): JoystickEvent(JoystickEventType::JoystickMove),
-		JoystickId(JoystickId), Axis(Axis), Position(Position)
-{
-
-}
+JoyMoveEvent::JoyMoveEvent(uint id, JoystickAxis::Enum axis, float pos)
+	: JoystickEvent(JoystickEventType::JoystickMove),
+	JoystickId(id),
+	Axis(axis),
+	Position(pos)
+{ }
 
 //-----------------------------------//
 
@@ -120,11 +108,6 @@ JoyButtonEvent::JoyButtonEvent(unsigned int JoystickId, unsigned int Button,
 
 }
 
-
-
-
 //-----------------------------------//
-
-
 
 } // end namespace

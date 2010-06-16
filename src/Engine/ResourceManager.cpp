@@ -27,6 +27,7 @@ ResourceManager::ResourceManager()
 
 ResourceManager::~ResourceManager()
 {
+	waitUntilQueuedResourcesLoad();
 	assert( resourceTaskEvents.empty() );
 
 	// Delete resource loaders.
@@ -188,9 +189,10 @@ void ResourceManager::decodeResource( ResourcePtr res, bool async, bool notify )
 	task->rm = this;
 	task->notify = notify;
 
+	numResourcesQueuedLoad++;
+
 	if( taskManager && async )
 	{
-		numResourcesQueuedLoad++;
 		taskManager->addTask( TaskPtr(task) );
 	}
 	else
@@ -214,6 +216,8 @@ void ResourceManager::waitUntilQueuedResourcesLoad()
 		THREAD( resourceFinishLoad.wait(lock); )
 		Timer::sleep( 0.01f );
 	}
+
+	assert( numResourcesQueuedLoad == 0 );
 }
 
 //-----------------------------------//

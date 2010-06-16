@@ -36,7 +36,7 @@ public:
 	Label( const std::string& text, const std::string& font );
 
 	// Gets the current text of this label.
-	IMPLEMENT_GETTER(Text, const std::string&, text)
+	GETTER(Text, const std::string&, text)
 
 	// Sets the current text of this label.
 	void setText( const std::string& text );
@@ -45,15 +45,15 @@ public:
 	virtual void update( double delta );
 
 	// Returns this component name identification.
-	IMPLEMENT_GETTER(Type, const std::string&, type)
+	GETTER(Type, const std::string&, type)
 
 protected:
 
 	// Initializes the label.
 	void init();
 
-	// Builds the label geometry.
-	void buildGeometry();
+	// Rebuilds the label geometry.
+	void rebuildGeometry();
 
 	// Initializes the label once the font is loaded.
 	void setupState();

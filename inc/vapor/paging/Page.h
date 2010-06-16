@@ -6,23 +6,28 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "vapor/render/RenderBuffer.h"
+#pragma once
 
 namespace vapor {
 
 //-----------------------------------//
 
-RenderBuffer::RenderBuffer(const Settings& settings)
-	: settings( settings )
-{ }
+/**
+ * Pages define regions of space that can be streamed out.
+ */
 
-//-----------------------------------//
-
-void RenderBuffer::makeCurrent()
+class VAPOR_API Page : private boost::noncopyable
 {
-	bind();
-}
+public:
+
+	Page();
+
+protected:
+
+
+};
+
+TYPEDEF_PTR(Page)
 
 //-----------------------------------//
 

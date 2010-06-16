@@ -46,13 +46,13 @@ public:
 	virtual void update( double delta );
 
 	/// Gets the bounding volume of this geometry.
-	IMPLEMENT_GETTER(BoundingVolume, const AABB&, boundingVolume)
+	GETTER(BoundingVolume, const AABB&, boundingVolume)
 
 	// Marks the geometry as dirty (forces AABB update).
 	void markDirty();
 
 	/// Returns the name of this component.
-	IMPLEMENT_GETTER(Type, const std::string&, type)
+	GETTER(Type, const std::string&, type)
 
 	DECLARE_SERIALIZABLE();
 

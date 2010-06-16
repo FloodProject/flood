@@ -92,13 +92,13 @@ public:
 	// void release();
 
 	// Gets/sets the path that identifies this resource.
-	IMPLEMENT_ACESSOR(URI, const std::string&, uri)
+	ACESSOR(URI, const std::string&, uri)
 
 	// Returns the base part of the URI.
 	std::string getBaseURI() const;
 	
 	// Gets/sets the resource loading status.
-	IMPLEMENT_ACESSOR(Status, ResourceStatus::Enum, status)
+	ACESSOR(Status, ResourceStatus::Enum, status)
 
 	// Gets if the resource is fully loaded.
 	bool isLoaded() const;

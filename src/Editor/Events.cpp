@@ -291,8 +291,8 @@ void EditorFrame::createScene()
 	terreno->addComponent( terrain );
 	scene->add( terreno );
 
-	const ImagePtr& heightmap = rm->loadResource<Image>( "height2.png" );
-	terrain->addCell( heightmap, 0, 0 );
+	const ImagePtr& heightMap = rm->loadResource<Image>( "height2.png" );
+	terrain->addCell( heightMap, 0, 0 );
 
 	scene->update( 0.1f );
 }

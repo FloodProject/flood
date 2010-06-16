@@ -33,11 +33,11 @@ struct TerrainSettings
 	// Cell size in world units.
 	ushort CellSize;
 
-	// Number of tiles per row/column.
-	ushort NumberTiles;
-
 	// Scales the terrain to this maximum height.
 	ushort MaxHeight;
+
+	// Number of tiles per row/column.
+	ushort NumberTiles;
 };
 
 //-----------------------------------//
@@ -75,16 +75,16 @@ public:
 	//void applyBrush( const Brush& brush, const Region& region );
 
 	// Gets/sets the material of the terrain.
-	IMPLEMENT_ACESSOR(Material, MaterialPtr, cellMaterial)
+	ACESSOR(Material, MaterialPtr, cellMaterial)
 
 	// Gets/sets the heightmap of the terrain.
-	IMPLEMENT_ACESSOR(Heightmap, ImagePtr, heightmap)
+	ACESSOR(Heightmap, ImagePtr, heightmap)
 
 	// Updates the terrain geometry if needed.
 	virtual void update( double delta );
 
 	// Returns the name of this component.
-	IMPLEMENT_GETTER(Type, const std::string&, type)
+	GETTER(Type, const std::string&, type)
 
 protected:
 

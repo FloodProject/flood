@@ -49,73 +49,49 @@ namespace vapor {
 		TYPEDEF_SHARED_POINTER_FROM_TYPE( T );		\
 	} // end namespace
 
-#define FWD_DECL_TYPEDEF_SHARED_WEAK(T)			\
+#define FWD_DECL_TYPEDEF_SHARED_WEAK(T)				\
 	namespace vapor {								\
 		class T;									\
 		TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( T );	\
-	} // end namespace
-
-#define FWD_DECL_NS_TYPEDEF_PTR(N, T)				\
-	namespace vapor { namespace N {					\
-		class T;									\
-		TYPEDEF_PTR( T );							\
-	} // end namespace
-
-#define FWD_DECL_NS_TYPEDEF_INT(N, T)				\
-	namespace vapor { namespace N {					\
-		class T;									\
-		TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( T );	\
-	} // end namespace
-
-#define FWD_DECL_NS_TYPEDEF_SHARED(N, T)			\
-	namespace vapor { namespace N {					\
-		class T;									\
-		TYPEDEF_SHARED_POINTER_FROM_TYPE( T );		\
-	} // end namespace
-
-#define FWD_DECL_NS_TYPEDEF_SHARED_WEAK(N, T)			\
-	namespace vapor { namespace N {						\
-		class T;										\
-		TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( T );		\
 	} // end namespace
 
 //---------------------------------------------------------------------//
 // Acessors
 //---------------------------------------------------------------------//
 
-#define DECLARE_GETTER(name, type)	\
+#define DECLARE_GETTER(name, type)				\
 	type get##name() const;
 
-#define DECLARE_SETTER(name, type)	\
+#define DECLARE_SETTER(name, type)				\
 	void set##name(type v);
 
-#define DECLARE_ACESSOR(name, type)	\
-	DECLARE_GETTER(name, type)		\
+#define DECLARE_ACESSOR(name, type)				\
+	DECLARE_GETTER(name, type)					\
 	DECLARE_SETTER(name, type)
 
-#define IMPLEMENT_GETTER(name, type, var)		\
+#define GETTER(name, type, var)					\
 	type get##name() const { return var; }
 
-#define IMPLEMENT_SETTER(name, type, var)		\
+#define SETTER(name, type, var)					\
 	void set##name(type v) { var = v; }
 
-#define IMPLEMENT_GETTER_PTR(name, type, var)	\
+#define GETTER_PTR(name, type, var)				\
 	type get##name() const { return *var; }
 
-#define IMPLEMENT_SETTER_PTR(name, type, var)	\
+#define SETTER_PTR(name, type, var)				\
 	void set##name(type v) { var = &v; }
 
-#define IMPLEMENT_ACESSOR(name, type, var)		\
-	IMPLEMENT_GETTER(name, type, var)			\
-	IMPLEMENT_SETTER(name, type, var)
+#define ACESSOR(name, type, var)				\
+	GETTER(name, type, var)			\
+	SETTER(name, type, var)
 
-#define IMPLEMENT_ACESSOR_PTR(name, type, var)	\
-	IMPLEMENT_GETTER_PTR(name, type, var)		\
-	IMPLEMENT_SETTER_PTR(name, type, var)
+#define ACESSOR_PTR(name, type, var)			\
+	GETTER_PTR(name, type, var)		\
+	SETTER_PTR(name, type, var)
 
-#define IMPLEMENT_STATIC_ACESSOR(name, type, var)	\
-	static type get##name() { return var; }			\
-	static IMPLEMENT_SETTER(name, type, var)
+#define STATIC_ACESSOR(name, type, var)			\
+	static type get##name() { return var; }		\
+	static SETTER(name, type, var)
 
 //---------------------------------------------------------------------//
 // System Information

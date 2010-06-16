@@ -240,7 +240,7 @@ Matrix4x4 Matrix4x4::createOrthographicProjection( float left, float right,
 	proj.m14 = 0;
 	
 	proj.m21 = 0;
-	proj.m22 = 2.0f / (top - bottom) ;
+	proj.m22 = 2.0f / (top - bottom);
 	proj.m23 = 0;
 	proj.m24 = 0;
 

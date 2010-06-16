@@ -83,33 +83,33 @@ public:
 	WindowPtr createWindow( const WindowSettings& = WindowSettings() );
 
 	// Gets the main render window.
-	IMPLEMENT_GETTER(RenderWindow, WindowPtr, window)
+	GETTER(RenderWindow, WindowPtr, window)
 
 	// Gets/sets the current active render target.
-	IMPLEMENT_GETTER(RenderTarget, RenderTargetPtr, activeTarget)
+	GETTER(RenderTarget, RenderTargetPtr, activeTarget)
 	void setRenderTarget(RenderTargetPtr target);
 
 	// Gets/sets the main rendering window.
-	IMPLEMENT_ACESSOR(Window, WindowPtr, window)
+	ACESSOR(Window, WindowPtr, window)
 
 	// Gets/sets the current clear color.
-	IMPLEMENT_GETTER(ClearColor, const Color&, color)
+	GETTER(ClearColor, const Color&, color)
 	void setClearColor(const Color& color);
 
 	// Sets the OpenGL viewport dimensions.
 	void setViewport( const Vector2i&, const Vector2i& );
 
 	// Gets rendering adapter information.
-	IMPLEMENT_GETTER(Adapter, AdapterPtr, adapter)
+	GETTER(Adapter, AdapterPtr, adapter)
 
 	// Gets the program manager.
-	IMPLEMENT_GETTER(ProgramManager, ProgramManagerPtr, programManager)
+	GETTER(ProgramManager, ProgramManagerPtr, programManager)
 
 	// Gets the texture manager.
-	IMPLEMENT_GETTER(TextureManager, TextureManagerPtr, textureManager)
+	GETTER(TextureManager, TextureManagerPtr, textureManager)
 
 	// Gets the texture manager.
-	IMPLEMENT_GETTER(ShadowTextures, ShadowTextureMap, shadowTextures)
+	GETTER(ShadowTextures, ShadowTextureMap, shadowTextures)
 
 protected:
 

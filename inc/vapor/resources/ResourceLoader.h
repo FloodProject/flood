@@ -13,7 +13,7 @@
 
 namespace vapor {
 
-#define IMPLEMENT_PREPARE(T) \
+#define PREPARE(T) \
 	virtual Resource* prepare(const File&) { return new T(); }
 
 //-----------------------------------//

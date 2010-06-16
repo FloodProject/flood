@@ -50,12 +50,22 @@ float VAPOR_API radianToDegree( float radian );
 //-----------------------------------//
 
 template< typename T >
-void limit( T& var, const T min, const T max )
+bool clamp( T& var, const T min, const T max )
 {
+	// Equivalent to: max(min, min(var, max))
+
 	if( var >= max )
+	{
 		var = max;
+		return true;
+	}
 	else if( var <= min )
+	{
 		var = min;
+		return true;
+	}
+
+	return false;
 }
 
 //-----------------------------------//

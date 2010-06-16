@@ -81,6 +81,7 @@ void Label::setupState()
 	// Setup the material to have the texture font and enable blending
 	material->setTexture( 0, font->getImage() );
 	material->setBlending( BlendingSource::SourceAlpha, BlendingDestination::One );
+	material->setProgram( "Tex" );
 
 	setupDone = true;
 }
@@ -99,18 +100,15 @@ void Label::update( double delta )
 
 	// No need to update geometry if the label did not change.
 	if( isDirty )
-		buildGeometry();
+		rebuildGeometry();
 
 	Overlay::update( delta );
 }
 
 //-----------------------------------//
 
-void Label::buildGeometry()
+void Label::rebuildGeometry()
 {
-	if( text.empty() )
-		return;
-
 	const std::vector<Glyph>& glyphs = font->getGlyphs();
 
 	const float width = font->getImage()->getWidth();
@@ -127,7 +125,9 @@ void Label::buildGeometry()
 	// Calculate the tex coords
 	std::vector<Vector3> texcoords;
 
-	ushort x_pos = 0; ushort y_pos = 0;
+	ushort x_pos = 0;
+	ushort y_pos = 0;
+
 	ushort mid_offset = font->getGlyphSize().x /2;
 
 	foreach( unsigned char c, text )
@@ -142,18 +142,18 @@ void Label::buildGeometry()
 		// We need each glyph information to calculate positions and size.
 		const Glyph& glyph = glyphs[c];
 
-		vertex.push_back( Vector3( x_pos, y_pos, 0.0f ) );
-		vertex.push_back( Vector3( x_pos, y_pos - (float)glyph.height, 0.0f ) );
-		vertex.push_back( Vector3( x_pos + (float)glyph.width, y_pos - (float)glyph.height, 0.0f ) );
-		vertex.push_back( Vector3( x_pos + (float)glyph.width, y_pos, 0.0f ) );
+		vertex.push_back( Vector2( x_pos, y_pos ) );
+		vertex.push_back( Vector2( x_pos, y_pos - glyph.height ) );
+		vertex.push_back( Vector2( x_pos + glyph.width, y_pos - glyph.height ) );
+		vertex.push_back( Vector2( x_pos + glyph.width, y_pos ) );
 	
-		float glyph_x_left = ::ceilf(glyph.x + mid_offset - (float)glyph.width / 2);
-		float glyph_x_right = ::ceilf(glyph.x + mid_offset + (float)glyph.width / 2);
+		float glyph_x_left = ::ceilf(glyph.x + mid_offset - glyph.width / 2);
+		float glyph_x_right = ::ceilf(glyph.x + mid_offset + glyph.width / 2);
 
-		texcoords.push_back( Vector3( glyph_x_left / width, glyph.y / height, 0.0f ) );
-		texcoords.push_back( Vector3( glyph_x_left / width, (glyph.y + (float)glyph.height) / height, 0.0f ) );
-		texcoords.push_back( Vector3( glyph_x_right / width, (glyph.y + (float)glyph.height) / height, 0.0f ) );
-		texcoords.push_back( Vector3( glyph_x_right / width, glyph.y / height, 0.0f ) );
+		texcoords.push_back( Vector2( glyph_x_left / width, glyph.y / height ) );
+		texcoords.push_back( Vector2( glyph_x_left / width, (glyph.y + glyph.height) / height ) );
+		texcoords.push_back( Vector2( glyph_x_right / width, (glyph.y + glyph.height) / height ) );
+		texcoords.push_back( Vector2( glyph_x_right / width, glyph.y / height ) );
 
 		x_pos += glyph.width + 1;
 	}

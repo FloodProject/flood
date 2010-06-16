@@ -26,13 +26,13 @@ class VAPOR_API Model : public Geometry
 {
 public:
 
-	Model( MeshPtr mesh );
+	Model( const MeshPtr& mesh );
 
 	// Builds the mesh when it is fully loaded.
 	void update( double delta );
 
 	// Gets the type of this component.
-	IMPLEMENT_GETTER(Type, const std::string&, type)
+	GETTER(Type, const std::string&, type)
   
 private:
 

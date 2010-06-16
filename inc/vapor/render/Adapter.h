@@ -29,22 +29,22 @@ public:
 	Adapter();
 
 	// Gets the version of the rendering API.
-	IMPLEMENT_GETTER(Version, const std::string&, gl)
+	GETTER(Version, const std::string&, gl)
 
 	// Gets driver information.
-	IMPLEMENT_GETTER(Driver, const std::string&, driver)
+	GETTER(Driver, const std::string&, driver)
 	
 	// Gets the graphics adapter vendor.
-	IMPLEMENT_GETTER(Vendor, const std::string&, vendor)
+	GETTER(Vendor, const std::string&, vendor)
 	
 	// Gets the graphics adapter name.
-	IMPLEMENT_GETTER(Name, const std::string&, name)
+	GETTER(Name, const std::string&, name)
 
 	// Gets the GLSL version information.
-	IMPLEMENT_GETTER(Shading, const std::string&, glsl)
+	GETTER(Shading, const std::string&, glsl)
 
 	// Gets the maximum texture size.
-	IMPLEMENT_GETTER(MaxTextureSize, int, maxTextureSize)
+	GETTER(MaxTextureSize, int, maxTextureSize)
 
 	// Logs adapter version information
 	void log() const;

@@ -11,6 +11,7 @@
 #include "vapor/render/Shader.h"
 #include "vapor/math/Matrix4x3.h"
 #include "vapor/math/Matrix4x4.h"
+#include "vapor/math/EulerAngles.h"
 #include "vapor/math/Color.h"
 
 namespace vapor {
@@ -29,30 +30,6 @@ namespace VertexAttribute { enum Enum; }
 class VAPOR_API Program : public ReferenceCounted
 {
 public:
-
-	// Adds a named parameter to the program.
-	virtual void setAttribute( const std::string& slot, VertexAttribute::Enum attr ) = 0;
-
-	// Adds a named int uniform to the program.
-	virtual void setUniform( const std::string& slot, int value ) = 0;
-
-	// Adds a named float array uniform to the program.
-	//virtual void setUniform( const std::string& slot, const std::vector<float> vec ) = 0;
-
-	// Adds a named Vector3 array uniform to the program.
-	virtual void setUniform( const std::string& slot, const std::vector<Vector3> vec ) = 0;
-
-	// Adds a named color array uniform to the program.
-	virtual void setUniform( const std::string& slot, const std::vector<Color> vec ) = 0;
-
-	// Adds a named vector uniform to the program.
-	virtual void setUniform( const std::string& slot, const Vector3& vec ) = 0;
-
-	// Adds a named matrix uniform to the program.
-	virtual void setUniform( const std::string& slot, const Matrix4x3& mat ) = 0;
-
-	// Adds a named 4x4 matrix uniform to the program.
-	virtual void setUniform( const std::string& slot, const Matrix4x4& mat ) = 0;
 
 	// Creates the program.
 	virtual bool create() = 0;
@@ -82,9 +59,36 @@ public:
 	bool validateShaders() const;
 
 	// Gets the different types of shaders.
-	IMPLEMENT_GETTER(VertexShader, const ShaderPtr&, vertex)
-	IMPLEMENT_GETTER(FragmentShader, const ShaderPtr&, fragment)
-	//IMPLEMENT_GETTER(GeometryShader, const ShaderPtr&, geometry)
+	GETTER(VertexShader, const ShaderPtr&, vertex)
+	GETTER(FragmentShader, const ShaderPtr&, fragment)
+	//GETTER(GeometryShader, const ShaderPtr&, geometry)
+
+	// Adds a named parameter to the program.
+	virtual void setAttribute( const std::string& slot, VertexAttribute::Enum attr ) = 0;
+
+	// Adds a named int uniform to the program.
+	virtual void setUniform( const std::string& slot, int value ) = 0;
+
+	// Adds a named float array uniform to the program.
+	//virtual void setUniform( const std::string& slot, const std::vector<float> vec ) = 0;
+
+	// Adds a named Vector3 array uniform to the program.
+	virtual void setUniform( const std::string& slot, const std::vector<Vector3> vec ) = 0;
+
+	// Adds a named color array uniform to the program.
+	virtual void setUniform( const std::string& slot, const std::vector<Color> vec ) = 0;
+
+	// Adds a named vector uniform to the program.
+	virtual void setUniform( const std::string& slot, const Vector3& vec ) = 0;
+
+	// Adds a named angles vector uniform to the program.
+	virtual void setUniform( const std::string& slot, const EulerAngles& vec ) = 0;
+
+	// Adds a named matrix uniform to the program.
+	virtual void setUniform( const std::string& slot, const Matrix4x3& mat ) = 0;
+
+	// Adds a named 4x4 matrix uniform to the program.
+	virtual void setUniform( const std::string& slot, const Matrix4x4& mat ) = 0;
 
 	// Serialization.
 	//virtual void load( const std::string& name ) = 0;

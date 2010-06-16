@@ -28,16 +28,16 @@ public:
 	virtual ~InputManager();
 
 	// Adds a new device that will be managed by this class.
-	void addDevice( Device* );
+	void addDevice( DevicePtr device );
 	
 	// Gets a vector with all the known input devices.
-	const std::vector< Device* >& getDevices() const;
+	GETTER(Devices, const std::vector<DevicePtr>&, devices)
 
 	// Gets a keyboard device if it exists, nullptr otherwise.
-	Keyboard* getKeyboard() const;
+	KeyboardPtr getKeyboard() const;
 	
 	// Gets a mouse device if it exists, nullptr otherwise.
-	Mouse* getMouse() const;
+	MousePtr getMouse() const;
 
 	// Feeds an external input event to the input manager.
 	// The input will be processed to all the devices and
@@ -47,7 +47,7 @@ public:
 private:
 
 	// Holds all the input devices.
-	std::vector< Device* > devices;
+	std::vector< DevicePtr > devices;
 };
 
 //-----------------------------------//

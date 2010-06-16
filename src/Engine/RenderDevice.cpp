@@ -46,7 +46,7 @@ RenderDevice::~RenderDevice()
 	delete textureManager;
 	delete programManager;
 	delete adapter;
-	//delete window;
+	delete window;
 }
 
 //-----------------------------------//
@@ -110,10 +110,10 @@ bool stateSorter(const RenderState& lhs, const RenderState& rhs)
 	return lhs.group < rhs.group;
 }
 
-void RenderDevice::render( RenderBlock& queue, const Camera* cam ) 
+void RenderDevice::render( RenderBlock& queue, const Camera* _camera ) 
 {
-	assert( cam != nullptr );
-	camera = cam;
+	assert( _camera != nullptr );
+	camera = _camera;
 
 	//setupRenderStateShadow( queue.lights );
 
@@ -146,7 +146,7 @@ void RenderDevice::render( RenderBlock& queue, const Camera* cam )
 
 		if( state.group != RenderGroup::Overlays )
 		{
-			if( !setupRenderState(state, cam) )
+			if( !setupRenderState(state, camera) )
 				continue;
 
 			if( !setupRenderStateLight(state, queue.lights) )
@@ -263,8 +263,6 @@ bool RenderDevice::setupRenderStateLight( const RenderState& state, const LightQ
 	const MaterialPtr& material = rend->getMaterial();
 	const ProgramPtr& program = material->getProgram();
 
-	if( lights.empty() ) return true;
-
 	foreach( const LightState& lightState, lights )
 	{
 		const LightPtr& light = lightState.light;
@@ -279,12 +277,12 @@ bool RenderDevice::setupRenderStateLight( const RenderState& state, const LightQ
 		colors.push_back( light->getEmissiveColor() );
 		colors.push_back( light->getAmbientColor() );
 
-		//const TransformPtr& transform = lightState.transform;
-		//assert( transform != nullptr );
+		const TransformPtr& transform = lightState.transform;
+		assert( transform != nullptr );
 
 		// TODO: fix the lighting stuff
 		program->setUniform( "vp_LightColors", colors );
-		program->setUniform( "vp_LightDirection", -Vector3::UnitY/*transform->getRotation()*/ );
+		program->setUniform( "vp_LightDirection", transform->getRotation() );
 		//program->setUniform( "vp_ShadowMap", shadowDepthTexture->id() );
 		//program->setUniform( "vp_CameraProj", state.modelMatrix * lightState.projection );
 	}
@@ -296,8 +294,7 @@ bool RenderDevice::setupRenderStateLight( const RenderState& state, const LightQ
 
 bool RenderDevice::setupRenderStateOverlay( const RenderState& state )
 {
-	const ProgramPtr& program =
-		state.renderable->getMaterial()->getProgram();
+	const ProgramPtr& program = state.renderable->getMaterial()->getProgram();
 	
 	glDisable( GL_DEPTH_TEST );
 	//glDepthMask( false );
@@ -305,7 +302,7 @@ bool RenderDevice::setupRenderStateOverlay( const RenderState& state )
 	Vector2i size = activeTarget->getSettings().getSize();
 
 	Matrix4x4 proj = Matrix4x4::createOrthographicProjection( 
-		0, 1, 0, 1, -10.0, 10.0 );
+		0, size.x, 0, size.y, -1.0, 1.0 );
 
 	program->setUniform( "vp_ProjectionMatrix", proj );
 	program->setUniform( "vp_ModelMatrix", state.modelMatrix );

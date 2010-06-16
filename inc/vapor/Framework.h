@@ -10,8 +10,9 @@
 
 #include <vapor/PCH.h>
 #include <vapor/Engine.h>
-#include <vapor/input/Mouse.h>
-#include <vapor/input/Keyboard.h>
+#include <vapor/input/MouseEvents.h>
+#include <vapor/input/KeyboardEvents.h>
+#include <vapor/render/FrameStatistics.h>
 
 namespace vapor {
 
@@ -57,15 +58,8 @@ protected:
 	virtual void onButtonPressed( const MouseButtonEvent& );
 	virtual void onButtonReleased( const MouseButtonEvent& );
 
-protected:
-
 	Timer frameTimer;
-	double lastFrameTime;
-	double minFrameTime;
-	double maxFrameTime;
-	double avgFrameTime;
-	double sumFrameTime;
-	uint64 numFrames;
+	FrameStatistics frameStats;
 
 private:
 

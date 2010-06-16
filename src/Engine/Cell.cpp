@@ -17,111 +17,140 @@ namespace vapor {
 //-----------------------------------//
 
 Cell::Cell( const TerrainSettings& settings, 
-		   const std::vector<float>& heights, ushort x, ushort y ) 
+			const std::vector<float>& heights, ushort x, ushort y )
 	: Renderable( Primitive::Triangles ),
 	settings( settings ),
 	heights( heights ),
 	x(x), y(y)
 {
-	updateGeometry();
-}
-
-//-----------------------------------//
-
-void Cell::updateGeometry( )
-{
 	// Create a new VBO and upload triangle data
 	VertexBufferPtr vb( new VertexBuffer() );
 	IndexBufferPtr ib( new IndexBuffer() );
 
+	setVertexBuffer( vb );
+	setIndexBuffer( ib );
+
+	{
+		Profiler p( "terrain build" );
+
+		rebuildGeometry();
+		rebuildFaceNormals();
+		rebuildAveragedNormals();
+	}
+}
+
+//-----------------------------------//
+
+void Cell::rebuildGeometry()
+{
+	info( "cell", "Rebuilding geometry of cell (%hu, %hu)", x, y );
+
+	rebuildVertices();
+	rebuildIndices();
+}
+
+//-----------------------------------//
+
+void Cell::rebuildVertices()
+{
+	assert( vb != nullptr );
+
 	// Vertex data
 	std::vector<Vector3> vertex;
-	std::vector<Vector3> colors;
 	std::vector<Vector3> texCoords;
+
+	const ushort numTiles = settings.NumberTiles;
+	const ushort sizeCell = settings.CellSize;
+
+	float offsetX = x * sizeCell;
+	float offsetZ = y * sizeCell;
+
+	const float tileSize = sizeCell / numTiles;
+	const ushort numExpectedVertices = (numTiles+1)*(numTiles+1);
+
+	for( uint i = 0; i < numExpectedVertices; i++ )
+	{
+		uint row = i % (numTiles+1);
+		uint col = i / (numTiles+1);
+
+		float X = offsetX + tileSize*row;
+		float Z = offsetZ + tileSize*col;
+		float Y = heights[i] * settings.MaxHeight;
+		
+		vertex.push_back( Vector3(X, Y, Z) );
+		texCoords.push_back( Vector2(X/sizeCell, Z/sizeCell) );
+	}
+
+	assert( vertex.size() == numExpectedVertices );
+	assert( texCoords.size() == numExpectedVertices );
+
+	// Vertex buffer setup.
+	vb->set( VertexAttribute::Position, vertex );
+	vb->set( VertexAttribute::MultiTexCoord0, texCoords );
+}
+
+//-----------------------------------//
+
+void Cell::rebuildIndices()
+{
+	assert( ib != nullptr );
+
+	// Vertex data
 	std::vector<ushort> indices;
 
-	const ushort CellSize = settings.CellSize;
-	const ushort NumberTiles = settings.NumberTiles;
-	const ushort MaxHeight = settings.MaxHeight;
-
-	const float tileWidth = (float(CellSize) / NumberTiles);
-	const float tileHeight = (float(CellSize) / NumberTiles);
-
-	float dX = float(x * CellSize);
-	float dZ = float(y * CellSize);
+	const ushort numTiles = settings.NumberTiles;
 	
-	float height;
-
-	// Keeps track of the indices.
-	ushort i = 0;
-
-	// For each row of the cell
-	for( short rowX = 0; rowX < NumberTiles; rowX++ )
+	for( short col = 0; col < numTiles; col++ )
 	{
-		// For each tile of the row
-		for( short rowZ = 0; rowZ < NumberTiles; rowZ++ )
+		for( short row = 0; row < numTiles; row++ )
 		{
-			// Draw two triangles per tile.
-			//
-			//			1 3
-			//			|/|
-			//			2 4
-
-			// Calculate the coordinates of the cell's triangles vertices.
-			height = heights[(rowX)*(NumberTiles+1)+rowZ]*MaxHeight;
-			Vector3 pt1( dX+(rowZ*tileWidth), height, dZ+rowX*tileHeight );
-			
-			height = heights[(rowX+1)*(NumberTiles+1)+rowZ]*MaxHeight;
-			Vector3 pt2( dX+(rowZ*tileWidth), height, dZ+(rowX+1)*tileHeight );
-			
-			height = heights[(rowX)*(NumberTiles+1)+(rowZ+1)]*MaxHeight;
-			Vector3 pt3( dX+(rowZ+1)*tileWidth, height, dZ+rowX*tileHeight );
-			
-			height = heights[(rowX+1)*(NumberTiles+1)+(rowZ+1)]*MaxHeight;
-			Vector3 pt4( dX+(rowZ+1)*tileWidth, height, dZ+(rowX+1)*tileHeight );
-
-			vertex.push_back( pt1 );
-			vertex.push_back( pt2 );
-			vertex.push_back( pt3 );
-			vertex.push_back( pt4 );
-
-			colors.push_back( Vector3( 1.0f, 1.0f, 1.0f ) );
-			colors.push_back( Vector3( 1.0f, 1.0f, 1.0f ) );
-			colors.push_back( Vector3( 1.0f, 1.0f, 1.0f ) );
-			colors.push_back( Vector3( 1.0f, 1.0f, 1.0f ) );
-
-			texCoords.push_back( Vector3( pt1.x / CellSize, pt1.z / CellSize, 0.0f ) );
-			texCoords.push_back( Vector3( pt2.x / CellSize, pt2.z / CellSize, 0.0f ) );
-			texCoords.push_back( Vector3( pt3.x / CellSize, pt3.z / CellSize, 0.0f ) );
-			texCoords.push_back( Vector3( pt4.x / CellSize, pt4.z / CellSize, 0.0f ) );
+			uint i = col*(numTiles+1)+row;
 
 			// First triangle
 			indices.push_back( i) ;
+			indices.push_back( i+(numTiles+1) );
 			indices.push_back( i+1 );
-			indices.push_back( i+2 );
 
 			// Second triangle
-			indices.push_back( i+2 ) ;
 			indices.push_back( i+1 );
-			indices.push_back( i+3 );
-
-			i += 4;
+			indices.push_back( i+(numTiles+1) ) ;
+			indices.push_back( i+(numTiles+2) );
 		}
 	}
 
-	// Vertex buffer setup
-	vb->set( VertexAttribute::Position, vertex );
-	vb->set( VertexAttribute::Color, colors );
-	vb->set( VertexAttribute::MultiTexCoord0, texCoords );
-	setVertexBuffer( vb );
-
+	// Index buffer setup.
 	ib->set( indices );
-	setIndexBuffer( ib );
-
-	// Update all the terrain normals.
-	calculateNormals( vertex );
 }
 
+//-----------------------------------//
+
+void Cell::rebuildFaceNormals()
+{
+	assert( vb && ib );
+
+	const std::vector<Vector3>& vs = vb->getVertices();
+	assert( !vs.empty() );
+
+	const std::vector<ushort>& ind = ib->getIndices16();
+	assert( !ind.empty() );
+
+	faceNormals.clear();
+
+	info( "cell", "Rebuilding face normals of cell (%hu, %hu)", x, y );
+
+	for( uint i = 0; i < ind.size(); i += 3 )
+	{
+		Vector3 v1 = vs[ind[i]];
+		Vector3 v2 = vs[ind[i+1]];
+		Vector3 v3 = vs[ind[i+2]];
+
+		Vector3 normal = calculateTriangleNormal(v1, v2, v3);
+		faceNormals.push_back( normal );
+	}
+
+	const uint numTiles = settings.NumberTiles;
+	assert( faceNormals.size() == numTiles*numTiles*2 );
+}
 
 //-----------------------------------//
 
@@ -129,66 +158,72 @@ void Cell::updateGeometry( )
 // http://www.gamedev.net/community/forums/topic.asp?topic_id=163625
 // http://www.gamedev.net/reference/articles/article2264.asp
 //
-//#define tileToMat(x,y) ( (rowX)*(NumberTiles+1)+rowZ )
-//#define matToTile(x,y) ( (rowX)*(NumberTiles+1)+rowZ )
 
-#define N(i) n.push_back(i);
+#define isRegular(x,y) ((x>=1) && (x<=(numTiles-1)) \
+						&& (y>=1) && (y<=(numTiles-1)))
 
-std::vector<uint> Cell::getNeighborVertices( uint i )
+std::vector<uint> Cell::getNeighborFaces( uint i )
 {
-	const ushort NumberTiles = settings.NumberTiles;
 	std::vector<uint> n;
 
-	//  0-------4
-	//  |/|/|/|/|
-	//  5-------9
-	//  |/|/|/|/|
-	// 10-------14
-	//  |/|/|/|/|
-	// 15-------19
-	//  |/|/|/|/|
-	// 20-------24
+	const ushort numTiles = settings.NumberTiles;
+	uint facesPerRow = numTiles*2;
+	
+	uint row = i / (numTiles+1);
+	uint col = i % (numTiles+1);
+	
+	if( isRegular(col, row) )
+	{
+		uint startFace = (row-1)*facesPerRow+(col*2);
+
+		n.push_back(startFace-1);
+		n.push_back(startFace);
+		n.push_back(startFace+1);
+
+		n.push_back(startFace+facesPerRow-2);
+		n.push_back(startFace+facesPerRow-1);
+		n.push_back(startFace+facesPerRow);
+	}
+	else
+	{
+		n.push_back(0);
+	}
 
 	return n;
 }
 
 //-----------------------------------//
 
-void Cell::calculateNormals( const std::vector<Vector3>& vs )
+void Cell::rebuildAveragedNormals()
 {
-	if( !vb || !ib ) return;
+	assert( vb && ib );
+
+	const std::vector<Vector3>& vs = vb->getVertices();
+	assert( !vs.empty() );
 
 	const std::vector<ushort>& ind = ib->getIndices16();
-
-	// Calculate all face normals.
-	std::vector<Vector3> faceNormals;
-
-	for( uint i = 0; i < ind.size(); i += 3 )
-	{
-		Vector3 normal( calculateTriangleNormal(
-			vs[ind[i]], vs[ind[i+1]], vs[ind[i+2]] ) );
-		faceNormals.push_back( normal );
-	}
+	assert( !ind.empty() );
 
 	// Averaged per-vertex normals.
 	std::vector<Vector3> normals;
+
+	info( "cell", "Rebuilding average per-vertex normals of cell (%hu, %hu)", x, y );
 	
-	//uint i = 0;
-	foreach( const Vector3& v, vs )
+	for(uint i = 0; i < vs.size(); i++)
 	{
-	//	std::vector<int> ns = getNeighborVertices(i);
+		std::vector<uint> ns = getNeighborFaces(i);
 
-	//	Vector3 average = v;
-	//	foreach( const Vector3& n, ns )
-	//		average += n;
+		Vector3 average;
+		foreach( const uint& n, ns )
+			average += faceNormals[n];
 
-	//	average /= ns.size()+1;
-	//	average.normalize();
+		average /= ns.size();
+		average.normalize();
 
-		normals.push_back( Vector3::UnitY );
-	//	normals.push_back( average );
+		normals.push_back( average );
 	}
 
+	assert( normals.size() == vs.size() );
 	vb->set( VertexAttribute::Normal, normals );
 }
 

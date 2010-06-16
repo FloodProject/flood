@@ -24,7 +24,7 @@ class VAPOR_API Subsystem : private boost::noncopyable
 
 public:
 
-	virtual void update( double ) { }
+	virtual void update( double delta ) { }
 
 protected:
 

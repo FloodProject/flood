@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "vapor/input/Device.h"
+
 namespace vapor {
 
 struct MouseInfo;

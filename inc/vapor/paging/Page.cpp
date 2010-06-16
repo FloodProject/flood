@@ -7,22 +7,14 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/render/RenderBuffer.h"
+#include "vapor/paging/Page.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-RenderBuffer::RenderBuffer(const Settings& settings)
-	: settings( settings )
+Page::Page()
 { }
-
-//-----------------------------------//
-
-void RenderBuffer::makeCurrent()
-{
-	bind();
-}
 
 //-----------------------------------//
 

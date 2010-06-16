@@ -30,19 +30,19 @@ public:
 	MS3D_Loader();
 
 	// Creates the resource with no data.
-	IMPLEMENT_PREPARE(MS3D)
+	PREPARE(MS3D)
 
 	// Decodes a Milkshape3D mesh.
 	virtual bool decode(const File&, Resource* res);
 
 	// Gets the name of this codec.
-	IMPLEMENT_GETTER(Name, const std::string, "MS3D")
+	GETTER(Name, const std::string, "MS3D")
 
 	// Gets the list of extensions recognized by this resource handler.
-	IMPLEMENT_GETTER(Extensions, ExtensionList&, extensions)
+	GETTER(Extensions, ExtensionList&, extensions)
 
 	// Overrides this to return the right resource group.
-	IMPLEMENT_GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Meshes)
+	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Meshes)
 
 protected:
 

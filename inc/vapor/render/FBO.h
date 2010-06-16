@@ -45,7 +45,7 @@ public:
 	void attachRenderTexture(const TexturePtr& tex);
 
 	// Gets the settings of this render target.
-	IMPLEMENT_GETTER(Settings, const Settings&, settings)
+	GETTER(Settings, const Settings&, settings)
 
 protected:
 

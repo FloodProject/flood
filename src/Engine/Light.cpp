@@ -36,7 +36,8 @@ namespace LightType
 //-----------------------------------//
 
 Light::Light( LightType::Enum type )
-	: lightType(type), cutoffRadius(0.0f)
+	: lightType(type),
+	cutoffRadius(0.0f)
 {
 	//updateGeometry();
 }
@@ -44,8 +45,7 @@ Light::Light( LightType::Enum type )
 //-----------------------------------//
 
 void Light::update( double delta )
-{
-}
+{ }
 
 //-----------------------------------//
 

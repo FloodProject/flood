@@ -32,7 +32,7 @@ public:
 	Skydome( /*const MaterialPtr& mat*/ );
 
 	// Returns the name of this component.
-	IMPLEMENT_GETTER(Type, const std::string&, type)
+	GETTER(Type, const std::string&, type)
 
 	// SKY
 

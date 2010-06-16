@@ -73,8 +73,7 @@ private:
 
 struct JoyMoveEvent: public JoystickEvent
 {
-	JoyMoveEvent(uint JoystickId, JoystickAxis::Enum Axis, 
-		float Position);
+	JoyMoveEvent(uint id, JoystickAxis::Enum axis, float pos);
 	
 	uint JoystickId;
 	JoystickAxis::Enum Axis;
@@ -118,7 +117,6 @@ class VAPOR_API Joystick : public Device
 	
 	// Occurs when a joystick button is released.
 	fd::delegate< void( const JoyButtonEvent& ) > onJoystickButtonRelease;
-	
 
 private:
 

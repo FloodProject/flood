@@ -70,6 +70,7 @@
 #include <vapor/render/TextureManager.h>
 #include <vapor/render/ProgramManager.h>
 #include <vapor/render/FBO.h>
+#include <vapor/render/FrameStatistics.h>
 
 //---------------------------------------------------------------------//
 // Input-related Includes
@@ -126,14 +127,3 @@
 #include <vapor/Log.h>
 #include <vapor/Profiler.h>
 #include <vapor/TaskManager.h>
-
-//---------------------------------------------------------------------//
-// Namespace declarations
-//---------------------------------------------------------------------//
-
-#ifdef VAPOR_USE_NAMESPACES
-
-using namespace vapor;
-using namespace vapor::audio;
-
-#endif

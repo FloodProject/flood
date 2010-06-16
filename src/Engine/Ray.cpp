@@ -116,7 +116,7 @@ bool Ray::intersects( const Vector3 tri[3], Vector3& intersectionPoint, float& t
 	
 	intersectionPoint = origin + (direction * t);
 
-    return true;
+	return true;
 }
 
 //-----------------------------------//
@@ -156,7 +156,7 @@ bool Ray::intersectsSlow( const Vector3 tri[3], Vector3& intersectionPoint, floa
 	t = edge2.dot(qvec) * inv_det;
 	intersectionPoint = origin + (direction * t);
 
-    return true;
+	return true;
 }
 
 //-----------------------------------//

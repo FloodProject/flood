@@ -563,6 +563,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\FrameStatistics.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\render\FrameStatistics.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Target.cpp"
 					>
 				</File>
@@ -1577,6 +1585,22 @@
 		<Filter
 			Name="Paging"
 			>
+			<File
+				RelativePath="..\..\inc\vapor\paging\Page.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\paging\Page.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\paging\PageManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\paging\PageManager.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Platform"

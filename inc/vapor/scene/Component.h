@@ -24,7 +24,7 @@ TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( Node );
 #define DECLARE_COMPONENT_TYPE				\
 	static const std::string& id;
 
-#define IMPLEMENT_COMPONENT_TYPE(type,str)	\
+#define COMPONENT_TYPE(type,str)	\
 	const std::string& type::id = str;
 
 //-----------------------------------//

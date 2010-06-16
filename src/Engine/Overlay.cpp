@@ -27,7 +27,7 @@ Overlay::Overlay()
 void Overlay::update( double VAPOR_UNUSED(delta) )
 {
 	TransformPtr transform = getNode()->getTransform();
-	assert( transform );
+	assert( transform != nullptr );
 	transform->reset();
 	
 	Vector3 move;
@@ -35,8 +35,8 @@ void Overlay::update( double VAPOR_UNUSED(delta) )
 	switch(anchor)
 	{
 	case Anchor::TopLeft:
-		move.x = 0.5f;
-		move.y = 0.5f;
+		move.x = 20.0f;
+		move.y = 20.0f;
 		break;
 	}
 

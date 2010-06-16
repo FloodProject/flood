@@ -138,8 +138,8 @@ Log::Log(const std::string& title, const std::string& fn)
 
 	info("log", "Creating log file '%s'", fn.c_str());
 
-	if( !getLogger() == nullptr )
-		setLogger( this );
+	if( !getLogger() )
+		setLogger(this);
 }
 
 //-----------------------------------//

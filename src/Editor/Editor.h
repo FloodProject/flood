@@ -72,9 +72,9 @@ public:
 	void onRender();
 	void RefreshViewport();
 
-	IMPLEMENT_GETTER(MainViewframe, Viewframe* const, viewframe)
-	IMPLEMENT_GETTER(Engine, Engine* const, engine)
-	IMPLEMENT_GETTER(EditorScene, ScenePtr, editorScene)
+	GETTER(MainViewframe, Viewframe* const, viewframe)
+	GETTER(Engine, Engine* const, engine)
+	GETTER(EditorScene, ScenePtr, editorScene)
 
 protected:
 

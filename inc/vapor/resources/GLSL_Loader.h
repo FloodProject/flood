@@ -35,13 +35,13 @@ public:
 	virtual bool decode(const File&, Resource* res);
 
 	// Gets the name of this codec.
-	IMPLEMENT_GETTER(Name, const std::string, "GLSL")
+	GETTER(Name, const std::string, "GLSL")
 
 	// Gets the list of extensions this codec can handle.
-	IMPLEMENT_GETTER(Extensions, ExtensionList&, extensions)
+	GETTER(Extensions, ExtensionList&, extensions)
 
 	// Overrides this to return the right resource group.
-	IMPLEMENT_GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Shaders)
+	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Shaders)
 
 protected:
 

@@ -15,7 +15,7 @@ namespace vapor {
 
 InputManager::~InputManager()
 {
-	foreach( Device* device, devices )
+	foreach( DevicePtr device, devices )
 	{
 		delete device;
 	}
@@ -23,7 +23,7 @@ InputManager::~InputManager()
 
 //-----------------------------------//
 
-void InputManager::addDevice( Device* device )
+void InputManager::addDevice( DevicePtr device )
 {
 	if( !device )
 	{
@@ -41,7 +41,7 @@ void InputManager::addDevice( Device* device )
 
 Keyboard* InputManager::getKeyboard() const
 {
-	foreach( Device* device, devices )
+	foreach( DevicePtr device, devices )
 	{
 		if( device->getType() == DeviceType::Keyboard )
 		{
@@ -56,7 +56,7 @@ Keyboard* InputManager::getKeyboard() const
 
 Mouse* InputManager::getMouse() const
 {
-	foreach( Device* device, devices )
+	foreach( DevicePtr device, devices )
 	{
 		if( device->getType() == DeviceType::Mouse )
 		{
@@ -67,18 +67,12 @@ Mouse* InputManager::getMouse() const
 	return nullptr;
 }
 
-//-----------------------------------//
-
-const std::vector< Device* >& InputManager::getDevices() const
-{
-	return devices;
-}
 
 //-----------------------------------//
 
 void InputManager::processEvent( const Event& event )
 {
-	foreach( Device* const device, devices )
+	foreach( DevicePtr const device, devices )
 	{
 		device->processEvent( event );
 	}

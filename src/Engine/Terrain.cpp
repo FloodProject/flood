@@ -17,9 +17,9 @@ namespace vapor {
 // Range of valid dimensions for heightmaps.
 static const short validDimensions[] =
 {
-	2,    3,    5,    9, 
-	17,   33,   65,   129,
-	257,  513,  1025, 2049
+	2,		3,		5,		9,
+	17,		33,		65,		129,
+	257,	513,	1025,	2049
 };
 
 //-----------------------------------//
@@ -60,6 +60,8 @@ CellPtr Terrain::createCell( const ImagePtr& heightmap, ushort x, ushort y )
 	if( !validateHeightmap( heightmap ) )
 		return nullptr;
 
+	settings.NumberTiles = heightmap->getWidth() - 1;
+
 	std::vector<float> heights;
 	convertHeightmap( heightmap, heights );
 
@@ -76,7 +78,7 @@ CellPtr Terrain::createCell( const ImagePtr& heightmap, ushort x, ushort y )
 //-----------------------------------//
 
 void Terrain::convertHeightmap( const ImagePtr& heightmap,
-							   std::vector<float>& heights )
+								std::vector<float>& heights )
 {
 	// TODO: Can't handle any other pixel format right now...
 	assert( heightmap->getPixelFormat() == PixelFormat::R8G8B8A8 );

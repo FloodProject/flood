@@ -11,18 +11,13 @@
 //-----------------------------------//
 
 Example::Example(const char** argv)
-	: Framework("Example", argv), fpsUpdateTime( 0.0f )
-{
-
-}
+	: Framework("Example", argv)
+{ }
 
 //-----------------------------------//
 
 void Example::onInit()
-{
-	//physicsManager->createWorld();
-	getFileSystem()->mountDefaultLocations();
-}
+{ }
 
 //-----------------------------------//
 
@@ -30,23 +25,11 @@ void Example::onSetupResources()
 {
 	ResourceManagerPtr rm = getResourceManager();
 	
-	ImagePtr img = rm->loadResource< Image >( "triton.png" );
-	snd = rm->loadResource< Sound >( "stereo.ogg" );
-
+	rm->loadResource<Image>( "triton.png" );
 	rm->loadResource("Diffuse.glsl");
 	rm->loadResource("Tex.glsl");
 	rm->loadResource("Toon.glsl");
 	rm->loadResource("Tex_Toon.glsl");
-}
-
-//-----------------------------------//
-
-std::string getFPS( float lastFrameTime )
-{
-	std::string str = "FPS: ";
-	if( lastFrameTime == 0 ) return str;
-	std::string fps( num_to_str(int( 1.0f / lastFrameTime ) ) );
-	return str + fps;
 }
 
 //-----------------------------------//
@@ -58,11 +41,11 @@ void Example::onSetupScene()
 	RenderDevicePtr const rd = getRenderDevice();
 
 	// Create a new Camera
-	NodePtr camera( new Node( "MainCamera" ) );
-	cam.reset( new FirstPersonCamera( getInputManager(), getRenderDevice() ) );
-	camera->addComponent( TransformPtr( new Transform( 0.0f, 20.0f, -65.0f ) ) );
-	camera->addComponent( cam );
-	scene->add( camera );
+	NodePtr nodeCamera( new Node( "MainCamera" ) );
+	camera.reset( new FirstPersonCamera( getInputManager(), getRenderDevice() ) );
+	nodeCamera->addComponent( TransformPtr( new Transform( 0.0f, 20.0f, -65.0f ) ) );
+	nodeCamera->addComponent( camera );
+	scene->add( nodeCamera );
 
 	//fbo = rd->createRenderBuffer( Settings() );
 	////fbo_tex = fbo->createRenderTexture( RenderBufferType::Color );
@@ -101,37 +84,37 @@ void Example::onSetupScene()
 	grid->addComponent( GridPtr( new Grid() ) );
 	scene->add( grid );
 
-	NodePtr lnode( new Node("Light") );
-	lnode->addTransform();
 	LightPtr light( new Light( LightType::Directional ) );
 	light->setDiffuseColor( Color::Red );
 	light->setAmbientColor( Color::Yellow );
-	lnode->addComponent( light );
-	scene->add( lnode );
+	
+	NodePtr nodeLight( new Node("Light") );
+	nodeLight->addTransform();
+	nodeLight->addComponent( light );
+	scene->add( nodeLight );
 
-	MaterialPtr cellMaterial( new Material("CellMaterial") );
-	cellMaterial->setTexture( 0, "PineTrunk.png" );
-	cellMaterial->setProgram( "tex_toon" );
+	MaterialPtr materialCell( new Material("CellMaterial") );
+	materialCell->setTexture( 0, "dirt.png" );
+	materialCell->setProgram( "tex_toon" );
 
 	TerrainSettings settings;
 	settings.CellSize = 512;
-	settings.NumberTiles = 32;
 	settings.MaxHeight = 100;
-	settings.Material = cellMaterial;
+	settings.Material = materialCell;
 
 	TerrainPtr terrain( new Terrain(settings) );
 
-	const ImagePtr& heightmap = rm->loadResource<Image>( "height2.png" );
-	terrain->addCell( heightmap, 0, 0 );
+	const ImagePtr& heightMap = rm->loadResource<Image>( "height2.png" );
+	terrain->addCell( heightMap, 0, 0 );
 
-	NodePtr terreno( new Node( "Terreno" ) );
-	terreno->addTransform();
-	terreno->addComponent( terrain );
-	scene->add( terreno );
+	NodePtr nodeTerrain( new Node("Terreno") );
+	nodeTerrain->addTransform();
+	nodeTerrain->addComponent( terrain );
+	scene->add( nodeTerrain );
 
 	window = rd->getRenderWindow();
 	window->makeCurrent();
-	viewport = window->addViewport(cam);
+	viewport = window->addViewport(camera);
 	viewport->setClearColor( Color(0.0f, 0.10f, 0.25f) );
 }
 
@@ -139,15 +122,18 @@ void Example::onSetupScene()
  
 void Example::onUpdate( double delta ) 
 {
-	if( fpsUpdateTime <= 1.0f )
-	{
-		fpsUpdateTime += delta;
-	}
-	else
-	{
-		label->setText( getFPS(lastFrameTime) );
-		fpsUpdateTime = 0.0f;
-	}
+	static double deltaPassed = 0.0f;
+	
+	deltaPassed += delta;
+	bool clamped = clamp<double>(deltaPassed, 0, 1);
+
+	if(!clamped)
+		return;
+
+	double fps = frameStats.getLastFPS();
+	std::string newLabel = String::format("FPS: %d", int(fps));
+
+	label->setText(newLabel);
 }
 
 //-----------------------------------//
@@ -179,17 +165,19 @@ void Example::onKeyPressed( const KeyEvent& keyEvent )
 	if( keyEvent.keyCode == Keys::G )
 	{
 		fbo->bind();
-		fbo_tex->readImage()->save("depth.png");
+		textureFBO->readImage()->save("depth.png");
 		fbo->unbind();
 	}
 
 	if( keyEvent.keyCode == Keys::F )
-		debug( "fps: %d", int( 1.0f / lastFrameTime ) );
+		debug( "fps: %d", int(frameStats.getLastFPS()));
 
 	if( keyEvent.keyCode == Keys::M )
 	{
 		debug( "min/avg/max: %f / %f / %f", 
-					minFrameTime, avgFrameTime, maxFrameTime );
+					frameStats.minFrameTime,
+					frameStats.avgFrameTime,
+					frameStats.maxFrameTime );
 	}
 
 	if( keyEvent.keyCode == Keys::J )

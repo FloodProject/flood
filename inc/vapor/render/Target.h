@@ -30,10 +30,10 @@ public:
 	{ }
 
 	// Gets/sets the width of the target.
-	IMPLEMENT_ACESSOR(Width, const ushort, width)
+	ACESSOR(Width, const ushort, width)
 
 	// Gets/sets the height of the target.
-	IMPLEMENT_ACESSOR(Height, const ushort, height)
+	ACESSOR(Height, const ushort, height)
 
 	// Gets the size of the target.
 	Vector2i getSize() const;
@@ -68,7 +68,7 @@ public:
 	virtual void makeCurrent() = 0;
 
 	// Gets the list of viewports associated with the render target.
-	IMPLEMENT_GETTER(Viewports, const ViewportList&, viewports)
+	GETTER(Viewports, const ViewportList&, viewports)
 
 	// Adds a new viewport to this target.
 	ViewportPtr addViewport( CameraPtr camera );

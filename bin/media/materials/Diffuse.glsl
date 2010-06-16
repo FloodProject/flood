@@ -14,8 +14,6 @@ void main()
 
 [fragment]
 
-//uniform sampler2D vp_ShadowMap;
-
 void main(void)
 {
     //vec4 shadowSample = texture2D(vp_ShadowMap, vec2(0.0,0.0));

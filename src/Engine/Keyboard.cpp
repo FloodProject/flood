@@ -19,9 +19,7 @@ Keyboard::Keyboard()
 // TODO: keyState size hack! previous solution, assigning it to Keys::Pause
 // was causing a heap overflow, probably was off-by-1 error, but assigning
 // a bigger size, like 1024 is probably safer...
-{
-	
-}
+{ }
 
 //-----------------------------------//
 
@@ -88,9 +86,7 @@ KeyEvent::KeyEvent(Keys::Enum keyCode,
 	: Event(DeviceType::Keyboard), keyCode(keyCode),
 	altPressed(alt), shiftPressed(shift), ctrlPressed(ctrl),
 	eventType( eventType )
-{
-
-}
+{ }
 
 //-----------------------------------//
 

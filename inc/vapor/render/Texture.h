@@ -58,11 +58,11 @@ public:
 	uint getExpectedSize() const;
 
 	// Gets/sets the associated image.
-	IMPLEMENT_GETTER(Image, ImagePtr, image)
+	GETTER(Image, ImagePtr, image)
 	void setImage( const ImagePtr& );
 
 	// Gets the associated pixel format.
-	IMPLEMENT_GETTER(PixelFormat, PixelFormat::Enum, format)
+	GETTER(PixelFormat, PixelFormat::Enum, format)
 
 protected:
 

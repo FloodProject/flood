@@ -45,22 +45,22 @@ public:
 	bool mount(const std::string& path, const std::string& mount = "",
 		bool append = true);
 
-	/// Gets all the mount points in the FileSystem.
-	IMPLEMENT_GETTER(MountPoints, const std::vector< std::string >&, mountPoints)
-
 	/// Mounts all the default resource locations.
 	void mountDefaultLocations();
 
+	/// Gets all the mount points in the FileSystem.
+	GETTER(MountPoints, const std::vector< std::string >&, mountPoints)
+
 	/// Gets a reference to the notification watcher.
-	IMPLEMENT_GETTER(FileWatcher, FileWatcher*, watcher)
+	GETTER(FileWatcher, FileWatcher*, watcher)
 
 	/// Updates the watcher with new notifications.
 	virtual void update( double );
 
-private:
+protected:
 
-	/// Watch notifications for file events.
-	FileWatcher* watcher;
+/// Sets up some sensible default mount points.
+	void setDefaultConfig(const std::string& app);
 
 	/// Logs the version and supported archive types.
 	void log();
@@ -68,8 +68,8 @@ private:
 	/// Logs the FileSystem-related errors.
 	void logError( const std::string& );
 
-	/// Sets up some sensible default mount points.
-	void setDefaultConfig(const std::string& app);
+	/// Watch notifications for file events.
+	FileWatcher* watcher;
 
 	/// Holds the mounted archives/directories in the filesystem.
 	std::vector<std::string> mountPoints;

@@ -375,9 +375,12 @@ void SceneTreeCtrl::onComponentAdd(wxCommandEvent& event )
 		if( fd.ShowModal() == wxID_OK )
 		{
 			ResourceManagerPtr rm = engine->getResourceManager();
+			
+			FileSystem* fs = engine->getFileSystem();
+			//fs->
 
-			std::string filename( "meshes/cubo.ms3d" /*fd.GetPath()*/ );
-			MS3DPtr mesh = rm->loadResource<MS3D>(filename, false);
+			std::string filename( fd.GetPath() );
+			MeshPtr mesh = rm->loadResource<Mesh>(filename);
 
 			if( !mesh )
 				return;

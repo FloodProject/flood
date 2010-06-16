@@ -37,15 +37,24 @@ public:
 	void setHeights( const std::vector<float>& heights );
 
 	// Generates the terrain grid geometry.
-	void updateGeometry();
+	void rebuildGeometry();
 
-	// Calculate the normals of the geometry.
-	void calculateNormals( const std::vector<Vector3>& vertices );
+	// Calculate the face normals of the geometry.
+	void rebuildFaceNormals();
+
+	// Calculate the averaged normals of the geometry.
+	void rebuildAveragedNormals();
 
 	// Given an indice, gets the neighbour vertices.
-	std::vector<uint> getNeighborVertices( uint index );
+	std::vector<uint> getNeighborFaces( uint index );
 
 protected:
+
+	// Calculate the vertices of the geometry.
+	void rebuildVertices();
+
+	// Calculate the indices of the geometry.
+	void rebuildIndices();
 
 	// Coordinates of this cell of terrain.
 	ushort x, y;
@@ -53,6 +62,9 @@ protected:
 	// Stores the heights of this cell of terrain.
 	std::vector<float> heights;
 	
+	// Stores the triangle face normals.
+	std::vector<Vector3> faceNormals;
+
 	// Terrain settings.
 	const TerrainSettings& settings;
 };

@@ -78,33 +78,33 @@ public:
 	/// @{
 
 	/// Gets the device.
-	IMPLEMENT_GETTER(RenderDevice, RenderDevicePtr, renderDevice)
+	GETTER(RenderDevice, RenderDevicePtr, renderDevice)
 
 	/// Gets the audio device.
 #ifdef VAPOR_AUDIO_OPENAL
-	IMPLEMENT_GETTER(AudioDevice, audio::Device*, audioDevice)
+	GETTER(AudioDevice, audio::Device*, audioDevice)
 #endif
 
 	/// Gets the scene interface.
-	IMPLEMENT_GETTER(SceneManager, ScenePtr, sceneManager)
+	GETTER(SceneManager, ScenePtr, sceneManager)
 
 	/// Gets the device.
-	IMPLEMENT_GETTER(TaskManager, TaskManagerPtr, taskManager)
+	GETTER(TaskManager, TaskManagerPtr, taskManager)
 
 	/// Gets the scripting state.
-	IMPLEMENT_GETTER(ScriptState, State*, scriptState)
+	GETTER(ScriptState, State*, scriptState)
 
 	/// Gets the resources manager.
-	IMPLEMENT_GETTER(ResourceManager, ResourceManagerPtr, resourceManager)
+	GETTER(ResourceManager, ResourceManagerPtr, resourceManager)
 
 	/// Gets the physics manager.
-	//IMPLEMENT_GETTER(PhysicsManager, physics::PhysicsManager*, physicsManager)
+	//GETTER(PhysicsManager, physics::PhysicsManager*, physicsManager)
 
 	/// Gets the main engine logger.
-	IMPLEMENT_GETTER(Log, Log*, log)
+	GETTER(Log, Log*, log)
 
 	/// Gets the virtual filesystem.
-	IMPLEMENT_GETTER(FileSystem, FileSystem*, fileSystem)
+	GETTER(FileSystem, FileSystem*, fileSystem)
 
 	/// Gets the input manager.
 	InputManager* const getInputManager() const;

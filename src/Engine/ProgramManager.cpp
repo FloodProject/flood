@@ -96,6 +96,8 @@ void ProgramManager::onReload( const ResourceEvent& evt )
 
 	assert( programs.find(base) != programs.end() );
 
+	debug( "Reloading shader '%s'", evt.resource->getURI().c_str() );
+
 	ProgramPtr program = programs[base];
 	program->updateShadersText();
 }

@@ -25,16 +25,16 @@ class VAPOR_API GLSL_Text : public Text
 public:
 
 	// Returns the vertex shader source code.
-	IMPLEMENT_GETTER(VertexSource, const std::string&, vertex)
+	GETTER(VertexSource, const std::string&, vertex)
 
 	// Returns the fragment shader source code.
-	IMPLEMENT_GETTER(FragmentSource, const std::string&, pixel)
+	GETTER(FragmentSource, const std::string&, pixel)
 
 	// Returns the geometry shader source code.
-	//IMPLEMENT_GETTER(GeometrySource, const std::string&, geometry)
+	//GETTER(GeometrySource, const std::string&, geometry)
 
 	// Returns the proper resource group for the shader.
-	IMPLEMENT_GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Shaders)
+	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Shaders)
 
 	void parse();
 

@@ -47,7 +47,7 @@ public:
 	NodePtr getParent() const;
 
 	// Sets the parent of the node.
-	IMPLEMENT_SETTER(Parent, NodePtr, parent)
+	SETTER(Parent, const NodePtr&, parent)
 
 	// Adds a component to this node.
 	bool addComponent( const ComponentPtr& component );
@@ -59,7 +59,7 @@ public:
 	ComponentPtr getComponent( const std::string& type ) const;
 
 	// Returns all the registered components in this node.
-	IMPLEMENT_GETTER(Components, const ComponentMap&, components)
+	GETTER(Components, const ComponentMap&, components)
 
 	// Gets a component from this node.
 	template <typename T>
@@ -76,19 +76,19 @@ public:
 	virtual void update( double delta );
 
 	// Gets/sets the name of the node.
-	IMPLEMENT_ACESSOR(Name, const std::string&, name);
+	ACESSOR(Name, const std::string&, name);
 
 	// Gets the associated transform component (if any).
 	TransformPtr getTransform() const;
 
 	// Gets the geometries components in the node.
-	IMPLEMENT_GETTER(Geometry, const std::vector<GeometryPtr>&, geometries)
+	GETTER(Geometry, const std::vector<GeometryPtr>&, geometries)
 
 	// Is this node visible?
 	bool isVisible() const;
 
 	// Sets the visibility of this node.
-	IMPLEMENT_ACESSOR(Visible, bool, _isVisible);
+	ACESSOR(Visible, bool, _isVisible);
 
 	// Gets/sets the node's tag state.
 	bool getTag( int index );

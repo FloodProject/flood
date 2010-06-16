@@ -35,22 +35,22 @@ public:
 	WindowSettings( const WindowSettings& settings );
 
 	// Gets/sets the window title.
-	IMPLEMENT_ACESSOR(Title, const std::string&, title)
+	ACESSOR(Title, const std::string&, title)
 
 	// Gets/sets the bits-per-pixel of the window.
-	IMPLEMENT_ACESSOR(Bpp, const ushort, bitsPerPixel)
+	ACESSOR(Bpp, const ushort, bitsPerPixel)
 
 	// Gets/sets the size of the window's depth buffer.
-	IMPLEMENT_ACESSOR(DepthBits, const ushort, depthBits)
+	ACESSOR(DepthBits, const ushort, depthBits)
 
 	// Gets/sets the size of the window's stencil buffer.
-	IMPLEMENT_ACESSOR(StencilBits, const ushort, stencilBits)
+	ACESSOR(StencilBits, const ushort, stencilBits)
 
 	// Gets/sets the antialiasing level of the window.
-	IMPLEMENT_ACESSOR(Antialiasing, const ushort, antialiasLevel)
+	ACESSOR(Antialiasing, const ushort, antialiasLevel)
 
 	// Gets/sets the custom handle of the window.
-	IMPLEMENT_ACESSOR(CustomHandle, void*, customHandle)
+	ACESSOR(CustomHandle, void*, customHandle)
 
 	// Is this window fullscreen?
 	const bool isFullscreen() const { return fullScreen; }
@@ -111,7 +111,7 @@ public:
 	void setCursorPosition( const Vector2i& pos );
 
 	// Gets the window settings.
-	IMPLEMENT_GETTER(Settings, const Settings&, settings)
+	GETTER(Settings, const Settings&, settings)
 
 	// Gets the input manager.
 	virtual InputManager& getInputManager() = 0;

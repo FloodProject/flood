@@ -21,9 +21,7 @@ VertexBuffer::VertexBuffer()
 	: built( false ), numVertices( 0 ), 
 	bufferUsage( BufferUsage::Static ),
 	bufferAccess( BufferAccess::Read )
-{
-
-}
+{ }
 
 //-----------------------------------//
 
@@ -54,7 +52,7 @@ bool VertexBuffer::isValid()
 	if( !glIsBuffer( id ) )
 	{
 		warn( "gl::buffers", "Vertex buffer is not valid" );
-		return false;		
+		return false;
 	}
 
 	return true;
@@ -64,7 +62,8 @@ bool VertexBuffer::isValid()
 
 void VertexBuffer::bindPointers()
 {
-	if( !built ) return;
+	if( !built )
+		return;
 
 	int offset = 0;
 

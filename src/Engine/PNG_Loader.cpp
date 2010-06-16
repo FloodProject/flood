@@ -38,6 +38,9 @@ bool PNG_Pico_Loader::decode(const File& file, Resource* res)
 	// read contents of the file into the vector
 	std::vector<byte> filebuf = file.read();
 
+	if( filebuf.empty() )
+		return false;
+
 	ulong width, height;
 	std::vector<byte> buffer;
 	

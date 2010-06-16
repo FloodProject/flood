@@ -86,13 +86,13 @@ public:
 	Overlay();
 
 	// Gets/sets the current positioning mode.
-	IMPLEMENT_ACESSOR(Positioning, Positioning::Enum, positioning) 
+	ACESSOR(Positioning, Positioning::Enum, positioning) 
 
 	// Gets/sets the current anchor settings.
-	IMPLEMENT_ACESSOR(Anchor, Anchor::Enum, anchor)
+	ACESSOR(Anchor, Anchor::Enum, anchor)
 
 	// Gets/sets the positioning of the label.
-	IMPLEMENT_ACESSOR(Position, const Vector2i&, position)
+	ACESSOR(Position, const Vector2i&, position)
 
 	// Sets the position of the overlay.
 	void setPosition( int x, int y );
@@ -101,7 +101,7 @@ public:
 	virtual void update( double delta );
 
 	// Returns this component name identification.
-	IMPLEMENT_GETTER(Type, const std::string&, type)
+	GETTER(Type, const std::string&, type)
 
 protected:
 

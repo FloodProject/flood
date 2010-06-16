@@ -27,16 +27,16 @@ public:
 	Sound();
 
 	/// Gets/sets the frequency of the sound.
-	IMPLEMENT_ACESSOR(Frequency, const int, frequency)
+	ACESSOR(Frequency, const int, frequency)
 
 	/// Gets/sets the audio channels.
-	IMPLEMENT_ACESSOR(Channels, byte, channels)
+	ACESSOR(Channels, byte, channels)
 
 	/// Gets/sets the buffer containing the data.
-	IMPLEMENT_ACESSOR(Buffer, const std::vector<byte>&, dataBuffer)
+	ACESSOR(Buffer, const std::vector<byte>&, dataBuffer)
 
 	/// Return the proper resource group for this resource.
-	IMPLEMENT_GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Audio)
+	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Audio)
 
 private:
 

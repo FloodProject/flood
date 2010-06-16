@@ -9,15 +9,11 @@
 #pragma once
 
 #include <vapor/Framework.h>
-
-#define VAPOR_USE_NAMESPACES
 #include <vapor/Headers.h>
 
-//-----------------------------------//
+using namespace vapor;
 
-/**
- * Simple example.
- */
+//-----------------------------------//
 
 class Example : public vapor::Framework
 {
@@ -33,37 +29,32 @@ protected:
 	/// Sets up all the needed resources.
 	virtual void onSetupResources();
 
-	/// Called to set up the scene
+	/// Called to set up the scene.
 	virtual void onSetupScene();
 
-	/// Called to update stuff
+	/// Called to update stuff.
 	virtual void onUpdate( double delta );
 
-	/// Renders the scene
+	/// Renders the scene.
 	virtual void onRender();
 
-	/// Callback functions
+	/// Callback functions.
 	virtual void onKeyPressed( const KeyEvent& );
 	virtual void onButtonPressed( const MouseButtonEvent& );
 
 private:
-
-	CameraPtr cam;
-
+	
 	WindowPtr window;
+	InputMap* inputMap; 
+	
+	CameraPtr camera;
 	ViewportPtr viewport;
 	ViewportPtr viewport2;
-
+	
 	LabelPtr label;
-	SoundPtr snd;
+	NodePtr nodeFBO;
+	TexturePtr textureFBO;
 	RenderBufferPtr fbo;
-	NodePtr fbo_node;
-	//SoundPtr sound;
-	InputMap* inputMap; 
-	TexturePtr tex;
-	TexturePtr fbo_tex;
-
-	float fpsUpdateTime;
 };
 
 //-----------------------------------//

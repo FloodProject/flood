@@ -76,7 +76,7 @@ public:
 		const char* msg, va_list args);
 
 	// Gets/sets the global engine logger.
-	IMPLEMENT_STATIC_ACESSOR(Logger, Log*, engineLog)
+	STATIC_ACESSOR(Logger, Log*, engineLog)
 
 	// Spawns a new message box dialog.
 	static void createMessageDialog(const std::string& msg, 

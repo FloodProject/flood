@@ -76,35 +76,35 @@ public:
 	virtual void update( double delta );
 
 	// Gets/sets the projection type of the camera.
-	IMPLEMENT_ACESSOR(Projection, Projection::Enum, projection)
+	ACESSOR(Projection, Projection::Enum, projection)
 
 	// Gets/sets the field-of-view of the camera.
-	IMPLEMENT_ACESSOR(FOV, float, fov);
+	ACESSOR(FOV, float, fov);
 
 	// Gets/sets the far clipping plane of the camera.
-	IMPLEMENT_ACESSOR(Far, float, far_);
+	ACESSOR(Far, float, far_);
 
 	// Gets/sets the near clipping plane of the camera.
-	IMPLEMENT_ACESSOR(Near, float, near_);
+	ACESSOR(Near, float, near_);
 
 	// Gets the look-at vector of the camera.
-	IMPLEMENT_GETTER(LookAtVector, const Vector3&, lookAtVector)
+	GETTER(LookAtVector, const Vector3&, lookAtVector)
 
 	// Gets the projection matrix of the camera.
-	IMPLEMENT_GETTER(ProjectionMatrix, const Matrix4x4&, projectionMatrix)
+	GETTER(ProjectionMatrix, const Matrix4x4&, projectionMatrix)
 
 	// Gets the view matrix of the camera.
-	IMPLEMENT_GETTER(ViewMatrix, const Matrix4x3&, viewMatrix)
+	GETTER(ViewMatrix, const Matrix4x3&, viewMatrix)
 	
 	// Gets/sets the current viewport associated with the camera.
-	IMPLEMENT_GETTER(Viewport, ViewportPtr, viewport)
+	GETTER(Viewport, ViewportPtr, viewport)
 	DECLARE_SETTER(Viewport, ViewportPtr)
 
 	// Gets the frustum associated with the camera.
-	//IMPLEMENT_GETTER(Frustum, const Frustum&, frustum)
+	//GETTER(Frustum, const Frustum&, frustum)
 	
 	// Gets the type of this node.
-	IMPLEMENT_GETTER(Type, const std::string&, type)
+	GETTER(Type, const std::string&, type)
 
 	DECLARE_SERIALIZABLE();
 

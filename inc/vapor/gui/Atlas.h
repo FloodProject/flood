@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "vapor/scene/Geometry.h"
-
 namespace vapor {
 
 //-----------------------------------//
@@ -111,9 +109,7 @@ private:
     std::vector<int>  roots;
 };
 
-//-----------------------------------//
-
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Atlas );
+TYPEDEF_PTR( Atlas );
 
 //-----------------------------------//
 

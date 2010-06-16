@@ -33,13 +33,13 @@ public:
 	virtual void update( double delta );
 
 	// Gets/sets the look sensivity of the camera.
-	IMPLEMENT_ACESSOR(LookSensivity, float, lookSensivity);
+	ACESSOR(LookSensivity, float, lookSensivity);
 	
 	// Gets/sets the move sensivity of the camera.
-	IMPLEMENT_ACESSOR(MoveSensivity, float, moveSensivity);
+	ACESSOR(MoveSensivity, float, moveSensivity);
 
 	// Gets the type of this node.
-	IMPLEMENT_GETTER(Type, const std::string&, Camera::type)
+	GETTER(Type, const std::string&, Camera::type)
 
 	DECLARE_SERIALIZABLE();
 

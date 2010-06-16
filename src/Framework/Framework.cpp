@@ -9,6 +9,7 @@
 #include <vapor/PCH.h>
 #include <vapor/Framework.h>
 #include <vapor/render/Device.h>
+#include <vapor/vfs/FileSystem.h>
 #include <vapor/input/InputManager.h>
 #include <vapor/resources/ResourceManager.h>
 
@@ -17,11 +18,6 @@ namespace vapor {
 //-----------------------------------//
 
 Framework::Framework(const std::string& app, const char** argv)
-	: numFrames( 0 ),
-	minFrameTime( std::numeric_limits<double>::max() ),
-	maxFrameTime( 0.0 ),
-	sumFrameTime( 0.0 ),
-	lastFrameTime( 0.0 )
 {
 	info( "framework", "Engine framework getting into action" );
 	Engine::create(app, argv, false);
@@ -42,22 +38,27 @@ void Framework::run()
 
 void Framework::init()
 {
-	// init the engine
+	// Init the engine.
 	Engine::init( true );
 
-	// register input callbacks
+	// Register input callbacks.
 	registerCallbacks();
 
-	// app-specific initialization
+	// Register default locations.
+	FileSystem* fs = getFileSystem();
+	fs->mountDefaultLocations();
+
+	// User init callback.
 	onInit();
 
-	// set up all the resources
+	// User resources setup callback.
 	onSetupResources();
 
-	resourceManager->waitUntilQueuedResourcesLoad();
-
-	// set up the scene
+	// User scene setup callback.
 	onSetupScene();
+
+	// Wait until all resources are loaded.
+	resourceManager->waitUntilQueuedResourcesLoad();
 }
 
 //-----------------------------------//
@@ -74,18 +75,16 @@ void Framework::render()
 
 	while( frameTimer.reset(), window->pumpEvents() )
 	{
-		update( lastFrameTime );
+		update( frameStats.lastFrameTime );
 
 		// User update callback.
-		onUpdate( lastFrameTime );
+		onUpdate( frameStats.lastFrameTime );
 
 		// User rendering callback.
 		onRender();
 
 		// Update the active target (swaps buffers).
 		window->update();
-
-		lastFrameTime = frameTimer.getElapsedTime();
 
 		updateFrameTimes();
 	}
@@ -116,13 +115,15 @@ void Framework::registerCallbacks()
 
 void Framework::updateFrameTimes()
 {
-	numFrames++;
+	frameStats.lastFrameTime = frameTimer.getElapsedTime();
 
-	minFrameTime = std::min( minFrameTime, lastFrameTime );
-	maxFrameTime = std::max( maxFrameTime, lastFrameTime );
+	frameStats.numFrames++;
 
-	sumFrameTime += lastFrameTime;
-	avgFrameTime = sumFrameTime / numFrames;
+	frameStats.minFrameTime = std::min( frameStats.minFrameTime, frameStats.lastFrameTime );
+	frameStats.maxFrameTime = std::max( frameStats.maxFrameTime, frameStats.lastFrameTime );
+
+	frameStats.sumFrameTime += frameStats.lastFrameTime;
+	frameStats.avgFrameTime = frameStats.sumFrameTime / frameStats.numFrames;
 }
 
 //-----------------------------------//

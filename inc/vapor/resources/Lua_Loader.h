@@ -30,19 +30,19 @@ public:
 	Lua_Loader();
 
 	// Creates the resource with no data.
-	IMPLEMENT_PREPARE(Script)
+	PREPARE(Script)
 
 	// Parses a Lua text script to a buffer.
 	virtual bool decode(const File&, Resource* res);
 
 	// Gets the name of this codec.
-	IMPLEMENT_GETTER(Name, const std::string, "LUA")
+	GETTER(Name, const std::string, "LUA")
 
 	// Gets the list of extensions this codec can handle.
-	IMPLEMENT_GETTER(Extensions, ExtensionList&, extensions)
+	GETTER(Extensions, ExtensionList&, extensions)
 
 	// Overrides this to return the right resource group.
-	IMPLEMENT_GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Scripts)
+	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Scripts)
 
 protected:
 

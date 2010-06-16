@@ -71,7 +71,7 @@ public:
 	const std::string getExtension() const;
 
 	/// Gets the path of the file.
-	IMPLEMENT_GETTER(Path, const std::string&, path)
+	GETTER(Path, const std::string&, path)
 
 	/// Gets the full path of the file.
 	const std::string getFullPath() const;

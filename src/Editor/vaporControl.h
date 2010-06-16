@@ -59,10 +59,10 @@ public:
 	void stopFrameLoop();
 
 	// Gets the associated window.
-	IMPLEMENT_GETTER(RenderWindow, vaporWindow*, window)
+	GETTER(RenderWindow, vaporWindow*, window)
 
 	// Gets the associated input manager.
-	IMPLEMENT_GETTER(InputManager, vaporInputManager*, inputManager)
+	GETTER(InputManager, vaporInputManager*, inputManager)
 
 protected:
 

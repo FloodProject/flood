@@ -36,13 +36,13 @@ public:
 	void flagRedraw();
 
 	// Gets the associated camera.
-	IMPLEMENT_GETTER(Camera, const CameraPtr, viewport->getCamera())
+	GETTER(Camera, const CameraPtr, viewport->getCamera())
 
 	// Gets the associated control.
-	IMPLEMENT_GETTER(Control, vaporControl*, control)
+	GETTER(Control, vaporControl*, control)
 
 	// Gets the associated viewport.
-	IMPLEMENT_GETTER(Viewport, ViewportPtr, viewport)
+	GETTER(Viewport, ViewportPtr, viewport)
 
 protected:
 

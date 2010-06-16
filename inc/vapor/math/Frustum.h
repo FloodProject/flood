@@ -33,10 +33,10 @@ public:
     // Returns true if the aabb is inside or overlaping the frustum, false otherwise
     bool intersect ( const AABB& aabb ) const;
 
-private:
+protected:
     
-    // Stores the planes that make up the frustum like this:
-    //     near, far, left, right, top, bottom
+    // Stores the planes that make up the frustum in the order:
+    //		near, far, left, right, top, bottom.
     Plane planes[6];
 };
 

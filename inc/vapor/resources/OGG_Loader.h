@@ -30,19 +30,19 @@ public:
 	OGG_Loader();
 
 	// Creates the resource with no data.
-	IMPLEMENT_PREPARE(Sound)
+	PREPARE(Sound)
 
 	// Decode an OGG file to a buffer.
 	virtual bool decode(const File&, Resource* res);
 
 	// Gets the name of this codec.
-	IMPLEMENT_GETTER(Name, const std::string, "OGG")
+	GETTER(Name, const std::string, "OGG")
 
 	// Gets the list of extensions this codec can handle.
-	IMPLEMENT_GETTER(Extensions, ExtensionList&, extensions)
+	GETTER(Extensions, ExtensionList&, extensions)
 
 	// Overrides this to return the right resource group.
-	IMPLEMENT_GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Audio)
+	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Audio)
 
 protected:
 

@@ -48,7 +48,7 @@ public:
 	Gizmo( const NodePtr& );
 
 	// Gets the 
-	IMPLEMENT_GETTER(NodeAttachment, const NodePtr&, node)
+	GETTER(NodeAttachment, const NodePtr&, node)
 
 	// Converts a color to a specific gizmo axis.
 	static GizmoAxis::Enum getAxis(Color&);
@@ -66,10 +66,10 @@ public:
 	void selectAxis( GizmoAxis::Enum );
 
 	// Gets the selected axis in the gizmo.
-	IMPLEMENT_GETTER(AxisSelected, GizmoAxis::Enum, selectedAxis)
+	GETTER(AxisSelected, GizmoAxis::Enum, selectedAxis)
 
 	// Returns the name of this component.
-	IMPLEMENT_GETTER(Type, const std::string&, type)
+	GETTER(Type, const std::string&, type)
 
 protected:
 

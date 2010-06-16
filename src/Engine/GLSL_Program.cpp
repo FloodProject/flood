@@ -11,15 +11,15 @@
 #ifdef VAPOR_SHADER_GLSL
 
 #include "vapor/render/GLSL_Program.h"
-#include "vapor/render/GL.h"
 #include "vapor/resources/GLSL_Text.h"
+#include "vapor/render/GL.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
 GLSL_Program::GLSL_Program( const GLSL_TextPtr& text )
-	: linkError( false ), text( text )
+	: text(text), linkError(false)
 {
 	assert( text != nullptr );
 	
@@ -130,12 +130,15 @@ bool GLSL_Program::attachShaders()
 	// Make sure all shaders are compiled.
 	foreach( const GLSL_ShaderPtr& shader, shaders )
 	{
-		if( !shader->isCompiled() && !shader->compile() )
+		if( shader->isCompiled() )
+			 continue;
+		
+		if( !shader->compile() )
 		{
 			assert( text != nullptr );
 
-			std::string type = String::toLowerCase(
-				ShaderType::getString( shader->getType() ) );
+			std::string id = ShaderType::getString( shader->getType() );
+			std::string type = String::toLowerCase( id );
 
 			error( "glsl", "Error compiling %s shader '%s': %s",
 				type.c_str(), text->getBaseURI().c_str(),
@@ -143,6 +146,7 @@ bool GLSL_Program::attachShaders()
 
 			linkError = true;
 			linked = false;
+
 			return false;
 		}
 	}
@@ -216,7 +220,8 @@ bool GLSL_Program::validate()
 	{
 		getLogText();
 
-		 warn( "glsl", "Could not validate program object '%d': %s", id, log.c_str() );
+		warn( "glsl", "Could not validate program object '%d': %s", 
+					  id, log.c_str() );
 		return false;
 	}
 
@@ -255,7 +260,7 @@ void GLSL_Program::getLogText()
 
 	if( size == 0 )
 	{
-		log = "(no log message)";
+		log = "(no message)";
 		return;
 	}
 
@@ -384,6 +389,14 @@ void GLSL_Program::setUniform( const std::string& slot, const Vector3& vec )
 	glUniform3f( loc, vec.x, vec.y, vec.z );
 
 	//unbind();
+}
+
+//-----------------------------------//
+
+void GLSL_Program::setUniform( const std::string& slot, const EulerAngles& ang )
+{
+	Vector3 vec( ang.x, ang.y, ang.z );
+	setUniform(slot, vec);
 }
 
 //-----------------------------------//

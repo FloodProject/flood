@@ -25,7 +25,7 @@ public:
 	Grid( /*const MaterialPtr& mat*/ );
 
 	// Returns the type of this component.
-	IMPLEMENT_GETTER(Type, const std::string&, Grid::type)
+	GETTER(Type, const std::string&, Grid::type)
 
 protected:
 

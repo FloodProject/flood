@@ -31,13 +31,13 @@ public:
 	void execute();
 
 	// Gets the source code of the script.
-	IMPLEMENT_ACESSOR(Source, const std::string&, text)
+	ACESSOR(Source, const std::string&, text)
 
 	// Sets the state where the script will execute.
-	IMPLEMENT_ACESSOR(State, State* const, state)
+	ACESSOR(State, State* const, state)
 
 	// Gets the associated resource group.
-	IMPLEMENT_GETTER(ResourceGroup, ResourceGroup::Enum,
+	GETTER(ResourceGroup, ResourceGroup::Enum,
 		ResourceGroup::Scripts)
 
 protected:

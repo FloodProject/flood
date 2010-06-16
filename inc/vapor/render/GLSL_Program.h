@@ -33,6 +33,24 @@ public:
 	// Creates the program.
 	virtual bool create();
 
+	// Links the program.
+	virtual bool link();
+
+	// Binds the program.
+	virtual void bind();
+
+	// Unbinds the program.
+	virtual void unbind();
+
+	// Creates the shaders and adds them to the program.
+	virtual void createShaders();
+
+	// Updates the shader's text with the program text.
+	virtual void updateShadersText();
+
+	// Gets/sets the resource text that backs this shader.
+	ACESSOR(Text, const GLSL_TextPtr&, text)
+
 	// Adds a parameter to the shader.
 	virtual void setAttribute( const std::string& slot, VertexAttribute::Enum attr );
 
@@ -51,29 +69,14 @@ public:
 	// Adds a named vector uniform to the program.
 	virtual void setUniform( const std::string& slot, const Vector3& vec );
 
+	// Adds a named angles vector uniform to the program.
+	virtual void setUniform( const std::string& slot, const EulerAngles& vec );
+
 	// Adds a named matrix uniform to the program.
 	virtual void setUniform( const std::string& slot, const Matrix4x3& );
 
 	// Adds a named 4x4 matrix uniform to the program.
 	virtual void setUniform( const std::string& slot, const Matrix4x4& );
-
-	// Links the program.
-	virtual bool link();
-
-	// Binds the program.
-	virtual void bind();
-
-	// Unbinds the program.
-	virtual void unbind();
-
-	// Creates the shaders and adds them to the program.
-	virtual void createShaders();
-
-	// Updates the shader's text with the program text.
-	virtual void updateShadersText();
-
-	// Gets/sets the resource text that backs this shader.
-	IMPLEMENT_ACESSOR(Text, const GLSL_TextPtr&, text)
 
 protected:
 
@@ -92,16 +95,16 @@ protected:
 	// Gets the linking log of the program.
 	void getLogText();
 
+	GLuint id;
+
 	GLSL_TextPtr text;
+	bool linkError;
 
 	typedef std::vector< GLSL_ShaderPtr > ShaderVector;
 	ShaderVector shaders;
 
 	typedef std::map< GLSL_ShaderPtr, bool > ShaderAttachMap;
 	ShaderAttachMap attached;
-
-	bool linkError;
-	GLuint id;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( GLSL_Program );

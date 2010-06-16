@@ -74,6 +74,7 @@ ENGINE:
 -------
 
 Fix Watcher (sends more notifications than it should).
+	- It's doing the right thing.
 
 Add a Frustum class
 	Make Camera subclass it

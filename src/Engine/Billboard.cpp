@@ -18,7 +18,8 @@ const std::string& Billboard::type = "Billboard";
 //-----------------------------------//
 
 Billboard::Billboard( const CameraPtr& cam, BillboardType::Enum type )
-	: camera(cam), billboardType(type), 
+	: camera(cam),
+	billboardType(type), 
 	rend( new Renderable(Primitive::Lines) )
 { }
 

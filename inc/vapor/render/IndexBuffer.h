@@ -46,8 +46,8 @@ public:
 	uint getNumIndices() const;
 
 	// Gets a reference to the vector with the indices.
-	IMPLEMENT_GETTER(Indices16, const std::vector<ushort>&, data16)
-	IMPLEMENT_GETTER(Indices32, const std::vector<ulong>&, data32)
+	GETTER(Indices16, const std::vector<ushort>&, data16)
+	GETTER(Indices32, const std::vector<ulong>&, data32)
 
 	// Sets the indices for the IBO (16-bit version).
 	void set( const std::vector<ushort>& data );
@@ -59,7 +59,7 @@ public:
 	bool bind();
 	bool unbind();
 
-    // Updates the internal IBO with current values for indices.
+	// Updates the internal IBO with current values for indices.
 	bool build( BufferUsage::Enum bufferUsage = BufferUsage::Static, 
 		BufferAccess::Enum bufferAccess = BufferAccess::Write );
 
@@ -77,8 +77,6 @@ private:
 	std::vector< ushort > data16;
 	std::vector< ulong > data32;
 };
-
-//-----------------------------------//
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( IndexBuffer );
 

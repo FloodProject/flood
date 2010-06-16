@@ -61,6 +61,8 @@ public:
 	virtual const DeviceType::Enum getType() const = 0;
 };
 
+TYPEDEF_PTR(Device)
+
 //-----------------------------------//
 
 } // end namespace

@@ -153,8 +153,8 @@ WatchStruct* CreateWatch(LPCTSTR szDirectory, DWORD mNotifyFilter)
 	pWatch = static_cast<WatchStruct*>(HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, ptrsize));
 
 	pWatch->mDirHandle = CreateFile(szDirectory, FILE_LIST_DIRECTORY,
-		FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, nullptr, 
-		OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OVERLAPPED, nullptr);
+		FILE_SHARE_READ, nullptr, OPEN_EXISTING,
+		FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OVERLAPPED, nullptr);
 
 	if (pWatch->mDirHandle != INVALID_HANDLE_VALUE)
 	{
@@ -181,9 +181,8 @@ WatchStruct* CreateWatch(LPCTSTR szDirectory, DWORD mNotifyFilter)
 //-----------------------------------//
 
 FileWatcherWin32::FileWatcherWin32()
-	: mLastWatchID(0)
-{
-}
+	: mLastWatchID(1)
+{ }
 
 //-----------------------------------//
 
@@ -191,10 +190,12 @@ FileWatcherWin32::~FileWatcherWin32()
 {
 	WatchMap::iterator iter = mWatches.begin();
 	WatchMap::iterator end = mWatches.end();
+	
 	for(; iter != end; ++iter)
 	{
 		DestroyWatch(iter->second);
 	}
+
 	mWatches.clear();
 }
 
@@ -207,9 +208,12 @@ WatchID FileWatcherWin32::addWatch(const std::string& directory)
 	std::wstring wdir( directory.begin(), directory.end() );
 	WatchStruct* watch = CreateWatch( wdir.c_str(),
 		FILE_NOTIFY_CHANGE_LAST_WRITE | FILE_NOTIFY_CHANGE_SIZE | FILE_NOTIFY_CHANGE_FILE_NAME);
-
-	assert( watch != nullptr );
-	if(!watch) warn( "vfs", "Could not watch directory %s", directory.c_str() );
+	
+	if(!watch)
+	{
+		warn( "vfs", "Could not watch directory %s", directory.c_str() );
+		return 0;
+	}
 
 	watch->mWatchid = watchid;
 	watch->mWatcher = this;

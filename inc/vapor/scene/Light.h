@@ -51,31 +51,31 @@ public:
 	Light( LightType::Enum type );
 
 	// Gets/sets the type of this light source.
-	IMPLEMENT_ACESSOR(LightType, LightType::Enum, lightType)
+	ACESSOR(LightType, LightType::Enum, lightType)
 
 	// Gets/sets if this light source is active (powered on).
-	IMPLEMENT_ACESSOR(Active, bool, isLightOn)
+	ACESSOR(Active, bool, isLightOn)
 
 	// Gets/sets if this light source casts shadows.
-	IMPLEMENT_ACESSOR(CastsShadows, bool, castsShadows)
+	ACESSOR(CastsShadows, bool, castsShadows)
 
 	// Gets/sets the diffuse color of the light.
-	IMPLEMENT_ACESSOR(DiffuseColor, const Color&, diffuseColor)
+	ACESSOR(DiffuseColor, const Color&, diffuseColor)
 	
 	// Gets/sets the specular color of the light.
-	IMPLEMENT_ACESSOR(SpecularColor, const Color&, diffuseColor)
+	ACESSOR(SpecularColor, const Color&, diffuseColor)
 
 	// Gets/sets the emissive color of the light.
-	IMPLEMENT_ACESSOR(EmissiveColor, const Color&, emissiveColor)
+	ACESSOR(EmissiveColor, const Color&, emissiveColor)
 
 	// Gets/sets the ambient color of the light.
-	IMPLEMENT_ACESSOR(AmbientColor, const Color&, ambientColor)
+	ACESSOR(AmbientColor, const Color&, ambientColor)
 
 	// Gets/sets the cut-off radius of the light.
-	IMPLEMENT_ACESSOR(CutOffRadius, float, cutoffRadius)
+	ACESSOR(CutOffRadius, float, cutoffRadius)
 
 	// Gets the type of this component. 
-	IMPLEMENT_GETTER(Type, const std::string&, Light::type)
+	GETTER(Type, const std::string&, Light::type)
 
 	// Called once per frame to update the component.
 	virtual void update( double delta );
@@ -92,7 +92,7 @@ protected:
 	Color emissiveColor;
 	Color ambientColor;
 
-	// Cutoff Radius for Spotlights
+	// Cutoff Radius (for Spotlights).
 	float cutoffRadius;
 
 	// Light state

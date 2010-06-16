@@ -31,7 +31,7 @@ public:
 	bool isBuilt() const;
 
 	// Gets the resource group of this resource.
-	IMPLEMENT_GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Meshes)
+	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Meshes)
 
 protected:
 

@@ -49,10 +49,10 @@ public:
 	virtual void processEvent( const Event& event );
 
 	// Gets a structure with the current mouse state.
-	IMPLEMENT_GETTER(MouseInfo, const MouseInfo&, mouseInfo)
+	GETTER(MouseInfo, const MouseInfo&, mouseInfo)
 
 	// Return this device as a mouse.
-	IMPLEMENT_GETTER(Type, const DeviceType::Enum, DeviceType::Mouse)
+	GETTER(Type, const DeviceType::Enum, DeviceType::Mouse)
 
 	//-----------------------------------//
 	// Events
@@ -98,6 +98,8 @@ private:
 	// Holds the current state of the mouse.
 	MouseInfo mouseInfo;
 };
+
+TYPEDEF_PTR(Mouse)
 
 //-----------------------------------//
 

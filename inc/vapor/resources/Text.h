@@ -24,11 +24,11 @@ class VAPOR_API Text : public Resource
 public:
 
 	// Gets the text.
-	IMPLEMENT_ACESSOR(Text, const std::string&, text)
+	ACESSOR(Text, const std::string&, text)
 
 	virtual void parse() {}
 
-	IMPLEMENT_GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::General)
+	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::General)
 
 protected:
 

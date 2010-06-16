@@ -50,19 +50,19 @@ public:
 	Image();
 
 	// Gets/sets the width of the image.
-	IMPLEMENT_ACESSOR(Width, const ushort, width)
+	ACESSOR(Width, const ushort, width)
 	
 	// Gets/sets the height of the image.
-	IMPLEMENT_ACESSOR(Height, const ushort, height)
+	ACESSOR(Height, const ushort, height)
 
 	// Gets/sets the pixel format of the image.
-	IMPLEMENT_ACESSOR(PixelFormat, PixelFormat::Enum, pixelFormat)
+	ACESSOR(PixelFormat, PixelFormat::Enum, pixelFormat)
 
 	// Gets/sets the buffer containing the image data.
-	IMPLEMENT_ACESSOR(Buffer, const std::vector<byte>&, buffer)
+	ACESSOR(Buffer, const std::vector<byte>&, buffer)
 
 	// Return the proper resource group for this resource.
-	IMPLEMENT_GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Images)
+	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Images)
 
 	// Saves the image contents to a file.
 	void save( const std::string& filename );

@@ -7,21 +7,22 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/render/RenderBuffer.h"
+#include "vapor/paging/PageManager.h"
+#include "vapor/scene/Camera.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-RenderBuffer::RenderBuffer(const Settings& settings)
-	: settings( settings )
+PageManager::PageManager( const CameraWeakPtr& weakCamera )
+	: camera(weakCamera)
 { }
 
 //-----------------------------------//
 
-void RenderBuffer::makeCurrent()
+void PageManager::update( double delta )
 {
-	bind();
+
 }
 
 //-----------------------------------//

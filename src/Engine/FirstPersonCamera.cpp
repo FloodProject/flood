@@ -25,9 +25,12 @@ const std::string& FirstPersonCamera::type = "FirstPersonCamera";
 
 FirstPersonCamera::FirstPersonCamera( InputManager* input,
 	RenderDevicePtr device, Projection::Enum projection )
-	: Camera( device, projection ), inputManager( input ),
-	clampMovementX( true ), moveSensivity( DEFAULT_MOVE_SENSIVITY ), 
-	lookSensivity( DEFAULT_LOOK_SENSIVITY ), mouseWheel(0)
+	: Camera( device, projection ),
+	inputManager( input ),
+	clampMovementX( true ),
+	moveSensivity( DEFAULT_MOVE_SENSIVITY ), 
+	lookSensivity( DEFAULT_LOOK_SENSIVITY ),
+	mouseWheel(0)
 {
 	registerCallbacks();
 }
@@ -61,7 +64,7 @@ void FirstPersonCamera::checkControls( double delta )
 		// Restrict X-axis movement by some deegres.
 		// TODO: this screws the movement when we are looking down
 		float& xang = rotation.x;
-		limit<float>( xang, -DEFAULT_LIMIT_XAXIS, DEFAULT_LIMIT_XAXIS );
+		clamp<float>( xang, -DEFAULT_LIMIT_XAXIS, DEFAULT_LIMIT_XAXIS );
 
 		mouseDistance.zero();
 		viewChanged = true;

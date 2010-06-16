@@ -55,7 +55,7 @@ public:
 	void update( double delta );
 
 	// Gets the type of this component.
-	IMPLEMENT_GETTER(Type, const std::string&, type)
+	GETTER(Type, const std::string&, type)
 
 	// Gets the debug renderable of the component.
 	RenderablePtr getDebugRenderable() const;

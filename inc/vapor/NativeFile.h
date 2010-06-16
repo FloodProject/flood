@@ -66,7 +66,7 @@ public:
 	void setBuffering( bool state );
 
 	// Gets the path of the file.
-	IMPLEMENT_GETTER(Path, const std::string, path)
+	GETTER(Path, const std::string, path)
 
 	// Checks if this file exists.
 	bool exists();

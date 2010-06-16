@@ -57,7 +57,7 @@ public:
 	void update( float deltaTime );
 
 	// Gets the last error.
-	IMPLEMENT_GETTER(LastError, const std::string&, lastError)
+	GETTER(LastError, const std::string&, lastError)
 
 protected:
 
