@@ -28,7 +28,7 @@ class VAPOR_API Cell : public Renderable, private boost::noncopyable
 public:
 
 	Cell( const TerrainSettings& settings, 
-		const std::vector<float>& heights, ushort x, ushort y );
+		const std::vector<float>& heights, short x, short y );
 
 	// Gets the heights of this Cell of terrain.
 	const std::vector<float>& getHeights();
@@ -57,7 +57,7 @@ protected:
 	void rebuildIndices();
 
 	// Coordinates of this cell of terrain.
-	ushort x, y;
+	short x, y;
 
 	// Stores the heights of this cell of terrain.
 	std::vector<float> heights;

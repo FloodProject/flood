@@ -9,9 +9,12 @@
 #pragma once
 
 #include "vapor/Subsystem.h"
+#include "vapor/math/Vector2.h"
+#include "vapor/math/Vector3.h"
 
-FWD_DECL_TYPEDEF_SHARED_WEAK(Camera)
 FWD_DECL_TYPEDEF_PTR(Page)
+FWD_DECL_TYPEDEF_SHARED(Camera)
+FWD_DECL_TYPEDEF_SHARED_WEAK(Camera)
 
 namespace vapor {
 
@@ -19,7 +22,8 @@ namespace vapor {
 
 struct PageEvent
 {
-	
+	PagePtr page;
+	Vector2i pos;
 };
 
 //-----------------------------------//
@@ -32,23 +36,44 @@ class VAPOR_API PageManager : public Subsystem
 {
 public:
 
-	PageManager( const CameraWeakPtr& camera );
+	PageManager( uint pageSize );
+	PageManager( uint pageSize, CameraWeakPtr weakCamera );
+	~PageManager();
 
-	// Checks if paging is neeed.
+	// Loads a given page.
+	PagePtr loadPage( uint x, uint y );
+
+	// Sets the current camera. 
+	SETTER(Camera, const CameraPtr&, weakCamera)
+
+	// Checks if paging is needed.
 	virtual void update( double delta );
 
-	// Paging is needed.
-	fd::delegate<void(const PageEvent&)> PageLoading;
-	fd::delegate<void(const PageEvent&)> PageLoaded;
-	fd::delegate<void(const PageEvent&)> PageRemoved;
+	// Paging events.
+	fd::delegate<void(const PageEvent&)> onPageSwitch;
+	fd::delegate<void(const PageEvent&)> onPageLoading;
+	fd::delegate<void(const PageEvent&)> onPageLoaded;
+	fd::delegate<void(const PageEvent&)> onPageRemoved;
 
 protected:
 
-	CameraWeakPtr camera;
+	// Current page.
+	Vector2i page;
+
+	// Converts world coords to page location.
+	Vector2i convertWorldToPage(const Vector3& pos);
+
+	// Holds the size of pages.
+	uint pageSize;
+
+	// Current camera.
+	CameraWeakPtr weakCamera;
+
+	// Holds the loaded pages.
 	std::vector<PagePtr> pages;
 };
 
-TYPEDEF_PTR(Page)
+TYPEDEF_PTR(PageManager)
 
 //-----------------------------------//
 

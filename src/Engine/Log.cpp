@@ -188,7 +188,7 @@ void Log::write(const LogLevel::Enum level, const std::string& subsystem,
 {
 	assert( fp != nullptr );
 
-	const char* s = String::toLowerCase( LogLevel::toString(level) ).c_str();
+	std::string s = String::toLowerCase( LogLevel::toString(level) );
 
 	LocaleSaveRestore c;
 
@@ -196,8 +196,8 @@ void Log::write(const LogLevel::Enum level, const std::string& subsystem,
 	boost::lock_guard<boost::mutex> lock(mut);
 #endif
 
-	fprintf(fp, "\t\t<tr class=\"%s,%s\">", s, even ? "even" : "odd");
-		fprintf(fp, "<td class=\"%s\"></td>", s);
+	fprintf(fp, "\t\t<tr class=\"%s,%s\">", s.c_str(), even ? "even" : "odd");
+		fprintf(fp, "<td class=\"%s\"></td>", s.c_str());
 		fprintf(fp, "<td>%.3fs</td>", timer.getElapsedTime()); // date time
 		fprintf(fp, "<td>%s</td>", subsystem.c_str()); // subsystem
 		fprintf(fp, "<td>");

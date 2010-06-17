@@ -17,7 +17,7 @@ namespace vapor {
 //-----------------------------------//
 
 Cell::Cell( const TerrainSettings& settings, 
-			const std::vector<float>& heights, ushort x, ushort y )
+			const std::vector<float>& heights, short x, short y )
 	: Renderable( Primitive::Triangles ),
 	settings( settings ),
 	heights( heights ),
@@ -31,7 +31,7 @@ Cell::Cell( const TerrainSettings& settings,
 	setIndexBuffer( ib );
 
 	{
-		Profiler p( "terrain build" );
+		//Profiler p( "terrain build" );
 
 		rebuildGeometry();
 		rebuildFaceNormals();

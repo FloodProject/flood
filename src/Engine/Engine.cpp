@@ -14,6 +14,7 @@
 #include "vapor/render/Device.h"
 #include "vapor/resources/ResourceManager.h"
 #include "vapor/scene/Scene.h"
+#include "vapor/paging/PageManager.h"
 #include "vapor/audio/Device.h"
 #include "vapor/input/InputManager.h"
 #include "vapor/script/State.h"
@@ -21,7 +22,6 @@
 #include "vapor/TaskManager.h"
 
 using namespace vapor::audio;
-//using namespace vapor::physics;
 
 namespace vapor {
 
@@ -39,7 +39,8 @@ Engine::Engine()
 
 //-----------------------------------//
 
-void Engine::create(const std::string& _app, const char** _argv, bool autoInit)
+void Engine::create(const std::string& _app, 
+					const char** _argv, bool autoInit)
 {
 	app = _app;
 	argv = _argv;
@@ -54,7 +55,7 @@ Engine::~Engine()
 {
 	sceneManager.reset();
 
-	foreach( SubsystemPtr sub, subsystems )
+	foreach( const SubsystemPtr& sub, subsystems )
 		delete sub;
 
 	delete audioDevice;
@@ -64,6 +65,15 @@ Engine::~Engine()
 	delete resourceManager;
 	delete fileSystem;
 	delete log;
+}
+
+//-----------------------------------//
+
+void Engine::addSubsystem( const SubsystemPtr& subsystem )
+{
+	info( "engine", "Registering new engine subsystem" );
+	
+	subsystems.push_back( subsystem );
 }
 
 //-----------------------------------//
@@ -79,14 +89,10 @@ void Engine::init( bool createWindow )
 	fileSystem = new FileSystem(app, argv ? argv[0] : nullptr);
 
 	taskManager = new TaskManager();
-	subsystems.push_back( taskManager );
+	addSubsystem( taskManager );
 
 	// create the resource manager
 	resourceManager = new ResourceManager();
-	
-	// connect the resource manager and filesystem watcher
-	fileSystem->getFileWatcher()->onWatchEvent += 
-		fd::bind(&ResourceManager::handleWatchResource, resourceManager);
 
 	// create the physics manager
 	//physicsManager = PhysicsManager::getInstancePtr();

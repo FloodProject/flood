@@ -14,6 +14,7 @@
 FWD_DECL(audio, Device)
 FWD_DECL_TYPEDEF_PTR(Subsystem)
 FWD_DECL_TYPEDEF_PTR(TaskManager)
+FWD_DECL_TYPEDEF_PTR(PageManager)
 FWD_DECL_TYPEDEF_PTR(ResourceManager)
 FWD_DECL_TYPEDEF_PTR(RenderDevice)
 FWD_DECL_TYPEDEF_SHARED(Scene)
@@ -55,6 +56,9 @@ public:
 
 	/// Initialize the engine subsystems.
 	void init( bool createWindow = true );
+
+	// Adds a subsystem to be managed by the engine.
+	void addSubsystem( const SubsystemPtr& subsystem );
 
 	/// Sets up the global engine logger.
 	void setupLogger();
@@ -141,7 +145,7 @@ protected:
 	ResourceManagerPtr resourceManager;
 
 	/// Physics manager.
-	//physics::PhysicsManager* physicsManager;
+	//PhysicsManager* physicsManager;
 
 	/// Virtual filesystem.
 	FileSystem* fileSystem;

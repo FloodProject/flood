@@ -63,7 +63,7 @@ public:
 	Terrain( const TerrainSettings& settings );
 
 	// Adds a new cell of terrain (this will be deferred if the heightmap is not loaded).
-	void addCell( const ImagePtr& heightmap, ushort x, ushort y );
+	void addCell( const ImagePtr& heightmap, short x, short y );
 
 	// Converts the heightmap to a vector of heights.
 	void convertHeightmap( const ImagePtr& heightmap, std::vector<float>& heights );
@@ -89,7 +89,7 @@ public:
 protected:
 
 	// Creates a new cell of terrain (this will be deferred if the heightmap is not loaded).
-	CellPtr createCell( const ImagePtr& heightmap, ushort x, ushort y );
+	CellPtr createCell( const ImagePtr& heightmap, short x, short y );
 
 	// Provides the heights of the terrain.
 	ImagePtr heightmap;

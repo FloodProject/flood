@@ -21,6 +21,8 @@ public:
 
 	Example(const char** argv = nullptr);
 
+	void onPageLoading(const PageEvent& event);
+
 protected:
 
 	/// Initializes the app.
@@ -50,7 +52,9 @@ private:
 	CameraPtr camera;
 	ViewportPtr viewport;
 	ViewportPtr viewport2;
-	
+
+	TerrainPtr terrain;
+
 	LabelPtr label;
 	NodePtr nodeFBO;
 	TexturePtr textureFBO;

@@ -17,7 +17,25 @@ Example::Example(const char** argv)
 //-----------------------------------//
 
 void Example::onInit()
-{ }
+{
+	camera.reset( new FirstPersonCamera( getInputManager(), getRenderDevice() ) );
+
+	PageManager* pageManager = new PageManager( 512, camera );
+	pageManager->onPageLoading += fd::bind(&Example::onPageLoading, this);
+
+	addSubsystem(pageManager);
+}
+
+//-----------------------------------//
+
+void Example::onPageLoading(const PageEvent& event)
+{
+	debug("%d,%d", event.pos.x, event.pos.y );
+
+	ResourceManagerPtr rm = getResourceManager();
+	const ImagePtr& heightMap = rm->loadResource<Image>( "height4.png" );
+	terrain->addCell( heightMap, event.pos.x, event.pos.y );
+}
 
 //-----------------------------------//
 
@@ -25,7 +43,6 @@ void Example::onSetupResources()
 {
 	ResourceManagerPtr rm = getResourceManager();
 	
-	rm->loadResource<Image>( "triton.png" );
 	rm->loadResource("Diffuse.glsl");
 	rm->loadResource("Tex.glsl");
 	rm->loadResource("Toon.glsl");
@@ -42,7 +59,6 @@ void Example::onSetupScene()
 
 	// Create a new Camera
 	NodePtr nodeCamera( new Node( "MainCamera" ) );
-	camera.reset( new FirstPersonCamera( getInputManager(), getRenderDevice() ) );
 	nodeCamera->addComponent( TransformPtr( new Transform( 0.0f, 20.0f, -65.0f ) ) );
 	nodeCamera->addComponent( camera );
 	scene->add( nodeCamera );
@@ -102,10 +118,7 @@ void Example::onSetupScene()
 	settings.MaxHeight = 100;
 	settings.Material = materialCell;
 
-	TerrainPtr terrain( new Terrain(settings) );
-
-	const ImagePtr& heightMap = rm->loadResource<Image>( "height2.png" );
-	terrain->addCell( heightMap, 0, 0 );
+	terrain.reset( new Terrain(settings) );
 
 	NodePtr nodeTerrain( new Node("Terreno") );
 	nodeTerrain->addTransform();

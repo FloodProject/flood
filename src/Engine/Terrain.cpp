@@ -36,7 +36,7 @@ Terrain::Terrain( const TerrainSettings& settings )
 
 //-----------------------------------//
 
-void Terrain::addCell( const ImagePtr& heightmap, ushort x, ushort y )
+void Terrain::addCell( const ImagePtr& heightmap, short x, short y )
 {
 	if( !heightmap )
 	{
@@ -49,7 +49,7 @@ void Terrain::addCell( const ImagePtr& heightmap, ushort x, ushort y )
 
 //-----------------------------------//
 
-CellPtr Terrain::createCell( const ImagePtr& heightmap, ushort x, ushort y )
+CellPtr Terrain::createCell( const ImagePtr& heightmap, short x, short y )
 {
 	if( !heightmap )
 		return nullptr;

@@ -7,10 +7,12 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/TaskManager.h"
 #include "vapor/resources/ResourceManager.h"
-#include "vapor/vfs/File.h"
+
 #include "vapor/Engine.h"
+#include "vapor/vfs/File.h"
+#include "vapor/vfs/FileSystem.h"
+#include "vapor/TaskManager.h"
 
 namespace vapor {
 
@@ -19,8 +21,15 @@ namespace vapor {
 ResourceManager::ResourceManager()
 	: numResourcesQueuedLoad(0), taskManager(nullptr)
 {
-	taskManager = Engine::getInstance().getTaskManager();
+	Engine* engine = Engine::getInstancePtr();
+
+	taskManager = engine->getTaskManager();
 	assert( taskManager != nullptr );
+
+	// connect the resource manager and filesystem watcher
+	FileSystem* fs = engine->getFileSystem();
+	fs->getFileWatcher()->onWatchEvent += 
+		fd::bind(&ResourceManager::handleWatchResource, this);
 }
 
 //-----------------------------------//
