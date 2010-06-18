@@ -415,11 +415,11 @@ void GLSL_Program::setUniform( const std::string& slot, const Matrix4x3& matrix 
 		return;
 	}
 
-	if(glUniformMatrix4x3fv)
-	{
-		glUniformMatrix4x3fv( loc, 1, true, &matrix.m11 );
-	}
-	else
+	//if(glUniformMatrix4x3fv)
+	//{
+	//	glUniformMatrix4x3fv( loc, 1, true, &matrix.m11 );
+	//}
+	//else
 	{
 		Matrix4x4 mat( matrix );
 		glUniformMatrix4fv( loc, 1, true, &mat.m11 );

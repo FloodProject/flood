@@ -38,7 +38,7 @@ struct VAPOR_API MouseInfo
 
 //-----------------------------------//
 
-class VAPOR_API Mouse : public Device
+class VAPOR_API Mouse : public InputDevice
 {
 public:
 	  
@@ -46,13 +46,13 @@ public:
 	bool isButtonPressed( MouseButton::Enum button ) const;
 
 	// Processes an event (only if it's a mouse event).
-	virtual void processEvent( const Event& event );
+	virtual void processEvent( const InputEvent& event );
 
 	// Gets a structure with the current mouse state.
 	GETTER(MouseInfo, const MouseInfo&, mouseInfo)
 
 	// Return this device as a mouse.
-	GETTER(Type, const DeviceType::Enum, DeviceType::Mouse)
+	GETTER(Type, const InputDeviceType::Enum, InputDeviceType::Mouse)
 
 	//-----------------------------------//
 	// Events
@@ -98,8 +98,6 @@ private:
 	// Holds the current state of the mouse.
 	MouseInfo mouseInfo;
 };
-
-TYPEDEF_PTR(Mouse)
 
 //-----------------------------------//
 

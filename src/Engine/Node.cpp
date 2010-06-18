@@ -15,15 +15,15 @@ namespace vapor {
 //-----------------------------------//
 
 Node::Node( const std::string& name )
-	: name( name ), _isVisible( true )
-{
-}
+	: name( name ),
+	_isVisible( true )
+{ }
 
 //-----------------------------------//
 
-Node::Node() : _isVisible( true )
-{
-}
+Node::Node()
+	: _isVisible( true )
+{ }
 
 //-----------------------------------//
 
@@ -103,11 +103,11 @@ void Node::update( double delta )
 {
 	const TransformPtr& transform = getTransform();
 
-	// Update all geometry bounding boxes first
+	// Update all geometry bounding boxes first.
 	foreach( const GeometryPtr& geom, getGeometry() )
 		geom->update( delta );
 
-	// Update everything else
+	// Update everything else.
 	foreach( const ComponentMapPair& component, components )
 	{
 		if( component.second == transform ) 

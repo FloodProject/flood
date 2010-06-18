@@ -28,14 +28,16 @@ GLSL_Shader::~GLSL_Shader()
 {
 	glDeleteShader( shaderId );
 
-#ifdef VAPOR_DEBUG
-	GLenum err = glGetError();
-	if( err != GL_NO_ERROR )
-	{
-		warn( "glsl", "Could not delete shader object '%d': %s", 
-			shaderId, /*glErrorString( err )*/"" );
-	}
-#endif
+	glHasError("Could not delete shader object");
+
+//#ifdef VAPOR_DEBUG
+//	GLenum err = glGetError();
+//	if( err != GL_NO_ERROR )
+//	{
+//		warn( "glsl", "Could not delete shader object '%d': %s", 
+//			shaderId, /*glErrorString( err )*/"" );
+//	}
+//#endif
 }
 
 //-----------------------------------//

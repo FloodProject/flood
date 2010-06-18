@@ -8,12 +8,16 @@
 
 #pragma once
 
-#include "vapor/input/Device.h"
-#include "vapor/input/Keyboard.h"
-#include "vapor/input/Mouse.h"
-#include "vapor/input/Joystick.h"
-
 namespace vapor {
+
+//-----------------------------------//
+
+class InputDevice;
+struct InputEvent;
+
+class Keyboard;
+class Mouse;
+class Joystick;
 
 //-----------------------------------//
 
@@ -28,26 +32,27 @@ public:
 	virtual ~InputManager();
 
 	// Adds a new device that will be managed by this class.
-	void addDevice( DevicePtr device );
+	void addDevice( InputDevice* device );
 	
 	// Gets a vector with all the known input devices.
-	GETTER(Devices, const std::vector<DevicePtr>&, devices)
+	GETTER(Devices, const std::vector<InputDevice*>&, devices)
 
-	// Gets a keyboard device if it exists, nullptr otherwise.
-	KeyboardPtr getKeyboard() const;
+	// Gets a keyboard device if it exists.
+	Keyboard* getKeyboard() const;
 	
-	// Gets a mouse device if it exists, nullptr otherwise.
-	MousePtr getMouse() const;
+	// Gets a mouse device if it exists.
+	Mouse* getMouse() const;
 
 	// Feeds an external input event to the input manager.
-	// The input will be processed to all the devices and
-	// each device will only process the ones they want.
-	void processEvent( const Event& event );
+	void processEvent( const InputEvent& event );
 
-private:
+	// Creates the default input devices.
+	void createDefaultDevices();
+
+protected:
 
 	// Holds all the input devices.
-	std::vector< DevicePtr > devices;
+	std::vector< InputDevice* > devices;
 };
 
 //-----------------------------------//

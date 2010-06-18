@@ -25,13 +25,14 @@ namespace vapor {
 
 //-----------------------------------//
 
-RenderDevice::RenderDevice()
+RenderDevice::RenderDevice( ResourceManager* rm )
 	: adapter(nullptr),
 	window(nullptr),
 	activeTarget(nullptr),
 	programManager(nullptr),
 	textureManager(nullptr),
-	shadowDepthBuffer(nullptr)
+	shadowDepthBuffer(nullptr),
+	resourceManager(rm)
 { }
 
 //-----------------------------------//
@@ -63,8 +64,8 @@ void RenderDevice::init()
 	checkExtensions();
 
 	adapter = new Adapter();
-	textureManager = new TextureManager();
-	programManager = new ProgramManager();
+	textureManager = new TextureManager(resourceManager);
+	programManager = new ProgramManager(resourceManager);
 
 	setClearColor( Color::White );
 

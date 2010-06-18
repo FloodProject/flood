@@ -16,9 +16,9 @@ namespace vapor {
 #define CAST_EVENT(type, var, evt)		\
 	type var = static_cast<type>(evt);
 
-void Mouse::processEvent( const Event& event )
+void Mouse::processEvent( const InputEvent& event )
 {
-	if( event.deviceType != DeviceType::Mouse )
+	if( event.deviceType != InputDeviceType::Mouse )
 		return;
 
 	CAST_EVENT(const MouseEvent&, mevt, event)
@@ -232,7 +232,7 @@ MouseInfo::MouseInfo()
 //-----------------------------------//
 
 MouseEvent::MouseEvent( MouseEventType::Enum eventType )
-	: Event( DeviceType::Mouse ), eventType( eventType )
+	: InputEvent( InputDeviceType::Mouse ), eventType( eventType )
 { }
 
 //-----------------------------------//

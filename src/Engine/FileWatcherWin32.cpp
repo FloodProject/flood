@@ -293,8 +293,8 @@ void FileWatcherWin32::handleAction(WatchStruct* watch, const std::wstring& file
 	// TODO: handle Unicode properly.
 	const std::string& file = String::fromWideString(filename);
 
-	WatchEvent we( fwAction, watch->mWatchid, watch->mDirName, file);
-	onWatchEvent( we );
+	FileWatchEvent we( fwAction, watch->mWatchid, watch->mDirName, file);
+	onFileWatchEvent( we );
 }
 
 //-----------------------------------//

@@ -10,9 +10,9 @@
 
 #ifdef VAPOR_THREADING
 	#include <boost/atomic.hpp>
-	#define atomic_int boost::atomic<int>
+	typedef boost::atomic<int> atomic_int;
 #else
-	#define atomic_int int
+	typedef int atomic_int;
 #endif
 
 namespace vapor {
@@ -29,12 +29,16 @@ class VAPOR_API ReferenceCounted
 {
 public:
 
-	int getReferenceCount() { return references; }
+	GETTER(ReferenceCount, int, references)
 
 protected:
 	
-	ReferenceCounted() : references(0) { }
-	virtual ~ReferenceCounted() { }
+	ReferenceCounted() 
+		: references(0) 
+	{ }
+
+	virtual ~ReferenceCounted()
+	{ }
 
 private:
 

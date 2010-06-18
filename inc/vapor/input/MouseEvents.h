@@ -72,7 +72,7 @@ namespace MouseEventType
  * the public.
  */
 
-struct VAPOR_API MouseEvent : public Event
+struct VAPOR_API MouseEvent : public InputEvent
 {
 	friend class Mouse;
 	

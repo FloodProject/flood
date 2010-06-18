@@ -29,7 +29,7 @@ std::string LogLevel::toString( LogLevel::Enum level )
 	case LogLevel::Info:
 		return "Info";
 	case LogLevel::Warning:
-		return "Warning";
+		return "Warn";
 	case LogLevel::Error:
 		return "Error";
 	default:

@@ -53,7 +53,7 @@ public:
 	virtual bool isLinked() const;
 
 	// Gets the linking log.
-	const std::string& getLog() const;
+	GETTER(Log, const std::string&, log)
 
 	// Validates that the program contains valid shaders.
 	bool validateShaders() const;

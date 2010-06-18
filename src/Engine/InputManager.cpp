@@ -8,6 +8,10 @@
 
 #include "vapor/PCH.h"
 #include "vapor/input/InputManager.h"
+#include "vapor/input/Device.h"
+#include "vapor/input/Keyboard.h"
+#include "vapor/input/Mouse.h"
+#include "vapor/input/Joystick.h"
 
 namespace vapor {
 
@@ -15,7 +19,7 @@ namespace vapor {
 
 InputManager::~InputManager()
 {
-	foreach( DevicePtr device, devices )
+	foreach( InputDevice* const device, devices )
 	{
 		delete device;
 	}
@@ -23,7 +27,7 @@ InputManager::~InputManager()
 
 //-----------------------------------//
 
-void InputManager::addDevice( DevicePtr device )
+void InputManager::addDevice( InputDevice* device )
 {
 	if( !device )
 	{
@@ -34,16 +38,16 @@ void InputManager::addDevice( DevicePtr device )
 	devices.push_back( device );
 
 	info( "input", "Registered a new input device: '%s'", 
-		DeviceType::getString( device->getType() ).c_str() );
+		InputDeviceType::getString( device->getType() ).c_str() );
 }
 
 //-----------------------------------//
 
 Keyboard* InputManager::getKeyboard() const
 {
-	foreach( DevicePtr device, devices )
+	foreach( InputDevice* device, devices )
 	{
-		if( device->getType() == DeviceType::Keyboard )
+		if( device->getType() == InputDeviceType::Keyboard )
 		{
 			return static_cast< Keyboard* > ( device );
 		}
@@ -56,9 +60,9 @@ Keyboard* InputManager::getKeyboard() const
 
 Mouse* InputManager::getMouse() const
 {
-	foreach( DevicePtr device, devices )
+	foreach( InputDevice* device, devices )
 	{
-		if( device->getType() == DeviceType::Mouse )
+		if( device->getType() == InputDeviceType::Mouse )
 		{
 			return static_cast< Mouse* > ( device );
 		}
@@ -67,12 +71,11 @@ Mouse* InputManager::getMouse() const
 	return nullptr;
 }
 
-
 //-----------------------------------//
 
-void InputManager::processEvent( const Event& event )
+void InputManager::processEvent( const InputEvent& event )
 {
-	foreach( DevicePtr const device, devices )
+	foreach( InputDevice* const device, devices )
 	{
 		device->processEvent( event );
 	}
@@ -80,4 +83,13 @@ void InputManager::processEvent( const Event& event )
 
 //-----------------------------------//
 
+void InputManager::createDefaultDevices()
+{
+	addDevice( new Keyboard() );
+	addDevice( new Mouse() );
+}
+
+//-----------------------------------//
+
 } // end namespace
+

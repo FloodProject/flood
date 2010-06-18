@@ -27,8 +27,6 @@ protected:
 
 };
 
-TYPEDEF_PTR(Page)
-
 //-----------------------------------//
 
 } // end namespace

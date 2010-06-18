@@ -109,8 +109,6 @@ private:
     std::vector<int>  roots;
 };
 
-TYPEDEF_PTR( Atlas );
-
 //-----------------------------------//
 
 } // end namespace

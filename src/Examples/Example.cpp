@@ -32,7 +32,7 @@ void Example::onPageLoading(const PageEvent& event)
 {
 	debug("%d,%d", event.pos.x, event.pos.y );
 
-	ResourceManagerPtr rm = getResourceManager();
+	ResourceManager* rm = getResourceManager();
 	const ImagePtr& heightMap = rm->loadResource<Image>( "height4.png" );
 	terrain->addCell( heightMap, event.pos.x, event.pos.y );
 }
@@ -41,7 +41,7 @@ void Example::onPageLoading(const PageEvent& event)
 
 void Example::onSetupResources() 
 {
-	ResourceManagerPtr rm = getResourceManager();
+	ResourceManager* rm = getResourceManager();
 	
 	rm->loadResource("Diffuse.glsl");
 	rm->loadResource("Tex.glsl");
@@ -54,8 +54,8 @@ void Example::onSetupResources()
 void Example::onSetupScene() 
 {
 	ScenePtr scene = getSceneManager();
-	ResourceManagerPtr const rm = getResourceManager();
-	RenderDevicePtr const rd = getRenderDevice();
+	ResourceManager* const rm = getResourceManager();
+	RenderDevice* const rd = getRenderDevice();
 
 	// Create a new Camera
 	NodePtr nodeCamera( new Node( "MainCamera" ) );
@@ -124,6 +124,13 @@ void Example::onSetupScene()
 	nodeTerrain->addTransform();
 	nodeTerrain->addComponent( terrain );
 	scene->add( nodeTerrain );
+
+	SkydomePtr skydome( new Skydome() );
+
+	NodePtr sky( new Node("Sky") );
+	sky->addTransform();	
+	sky->addComponent( skydome );
+	scene->add( sky );
 
 	window = rd->getRenderWindow();
 	window->makeCurrent();

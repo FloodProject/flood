@@ -35,9 +35,7 @@ namespace PixelFormat
 Image::Image()
 	: pixelFormat( PixelFormat::Unknown ),
 	width(0), height(0)
-{
-
-}
+{ }
 
 //-----------------------------------//
 

@@ -34,7 +34,7 @@ PageManager::PageManager( uint pageSize, CameraWeakPtr weakCamera )
 
 PageManager::~PageManager()
 {
-	foreach( const PagePtr& page, pages )
+	foreach( Page* const page, pages )
 		delete page;
 }
 

@@ -72,9 +72,9 @@ typedef Actions::Enum Action;
  * live updating, so when an asset changes it will be reloaded.
  */
 
-struct VAPOR_API WatchEvent : private boost::noncopyable
+struct VAPOR_API FileWatchEvent : private boost::noncopyable
 {
-	WatchEvent( Actions::Enum a, WatchID w,
+	FileWatchEvent( Actions::Enum a, WatchID w,
 		const std::string& d, const std::string& f )
 	: action( a ), watchid( w ), dir( d ), filename( f )
 	{ }
@@ -112,7 +112,7 @@ public:
 	virtual void update() = 0;
 
 	/// Fired up when the watcher gets notified by the OS.
-	fd::delegate<void(const WatchEvent&)> onWatchEvent;
+	fd::delegate<void(const FileWatchEvent&)> onFileWatchEvent;
 };
 
 //-----------------------------------//

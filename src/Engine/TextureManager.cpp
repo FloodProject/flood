@@ -10,14 +10,13 @@
 #include "vapor/render/TextureManager.h"
 #include "vapor/resources/ResourceManager.h"
 #include "vapor/render/GL.h"
-#include "vapor/Engine.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-TextureManager::TextureManager()
-	: rm( Engine::getInstance().getResourceManager() )
+TextureManager::TextureManager( ResourceManager* resourceManager )
+	: rm( resourceManager )
 {
 	assert( rm != nullptr );
 	
@@ -29,8 +28,6 @@ TextureManager::TextureManager()
 
 TextureManager::~TextureManager()
 {
-	assert( rm != nullptr );
-	
 	rm->onResourceLoaded -= fd::bind( &TextureManager::onLoad, this );
 	rm->onResourceReloaded -= fd::bind( &TextureManager::onReload, this );
 

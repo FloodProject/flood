@@ -10,8 +10,8 @@
 
 #include <vapor/PCH.h>
 #include <vapor/Engine.h>
-#include <vapor/input/MouseEvents.h>
-#include <vapor/input/KeyboardEvents.h>
+#include <vapor/input/Mouse.h>
+#include <vapor/input/Keyboard.h>
 #include <vapor/render/FrameStatistics.h>
 
 namespace vapor {

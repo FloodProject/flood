@@ -19,7 +19,7 @@ namespace vapor {
  * Keyboard device.
  */
 
-class VAPOR_API Keyboard : public Device
+class VAPOR_API Keyboard : public InputDevice
 {
 public:	
 
@@ -44,10 +44,10 @@ public:
 private:
 	
 	// Processes an event (only if it's a keyboard event).
-	virtual void processEvent( const Event& event );
+	virtual void processEvent( const InputEvent& event );
 
 	// Return this device as a keyboard.
-	GETTER(Type, const DeviceType::Enum, DeviceType::Keyboard)
+	GETTER(Type, const InputDeviceType::Enum, InputDeviceType::Keyboard)
 
 	// Handles a key press event.
 	void keyPressed( const KeyEvent& keyEvent );
@@ -61,8 +61,6 @@ private:
 	// Last key pressed.
 	Keys::Enum lastKey;
 };
-
-TYPEDEF_PTR(Keyboard)
 
 //-----------------------------------//
 

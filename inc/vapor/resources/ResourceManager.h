@@ -11,13 +11,16 @@
 #include "vapor/Subsystem.h"
 #include "vapor/ConcurrentQueue.h"
 #include "vapor/resources/Resource.h"
-#include "vapor/resources/ResourceLoader.h"
-#include "vapor/vfs/FileWatcher.h"
-
-FWD_DECL_TYPEDEF_PTR(TaskManager)
 
 namespace vapor {
 
+class TaskManager;
+
+class File;
+class FileWatcher;
+struct FileWatchEvent;
+
+class ResourceLoader;
 class ResourceTask;
 
 //-----------------------------------//
@@ -38,8 +41,8 @@ struct ResourceEvent
 typedef std::map< std::string, ResourcePtr > ResourceMap;
 typedef std::pair< const std::string, ResourcePtr > ResourceMapPair;
 
-typedef std::map< std::string, ResourceLoaderPtr > ResourceLoaderMap;
-typedef std::pair< std::string, ResourceLoaderPtr > ResourceLoaderMapPair;
+typedef std::map< std::string, ResourceLoader* > ResourceLoaderMap;
+typedef std::pair< std::string, ResourceLoader* > ResourceLoaderMapPair;
 /**
  * Responsible for managing a set of resources that are added by the app.
  * It should be possible to enforce a strict memory budget, and the manager
@@ -59,7 +62,7 @@ class VAPOR_API ResourceManager : public Subsystem
 
 public:
 
-	ResourceManager();
+	ResourceManager( FileWatcher* fileWatcher, TaskManager* tm );
 	virtual ~ResourceManager();
  
 	// Creates a new resource and returns an handle to the resource.
@@ -91,13 +94,13 @@ public:
 	void waitUntilQueuedResourcesLoad();
 
 	// Registers a resource handler.
-	void registerLoader(ResourceLoaderPtr const loader);
+	void registerLoader(ResourceLoader* const loader);
 
 	// Watches a resource for changes and auto-reloads it.
-	void handleWatchResource(const WatchEvent& evt);
+	void handleWatchResource(const FileWatchEvent& evt);
 
 	// Gets a registered resource loader for the given extension.
-	ResourceLoaderPtr const getResourceLoader(const std::string& ext);
+	ResourceLoader* const getResourceLoader(const std::string& ext);
 
 	// Sends resource events to the subscribers.
 	void update( double );
@@ -126,7 +129,7 @@ protected:
 	ResourceLoaderMap resourceLoaders;
 
 	// Manages all background loading tasks.
-	TaskManagerPtr taskManager;
+	TaskManager* taskManager;
 
 	// When tasks finish, they queue a loaded event into the queue.
 	concurrent_queue<ResourceEvent> resourceTaskEvents;
@@ -146,8 +149,6 @@ public:
 	fd::delegate< void( const ResourceEvent& ) > onResourceReloaded;
 	fd::delegate< void( const ResourceLoader& ) > onResourceLoaderRegistered;
 };
-
-TYPEDEF_PTR(ResourceManager)
 
 //-----------------------------------//
 

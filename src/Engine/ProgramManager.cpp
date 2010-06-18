@@ -10,14 +10,14 @@
 #include "vapor/render/ProgramManager.h"
 #include "vapor/render/GLSL_Program.h"
 #include "vapor/resources/GLSL_Text.h"
-#include "vapor/Engine.h"
+#include "vapor/resources/ResourceManager.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-ProgramManager::ProgramManager()
-	: rm( Engine::getInstance().getResourceManager() )
+ProgramManager::ProgramManager( ResourceManager* resourceManager )
+	: rm( resourceManager )
 {
 	assert( rm != nullptr );
 	

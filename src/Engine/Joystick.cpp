@@ -14,22 +14,22 @@ namespace vapor {
 //-----------------------------------//
 
 JoystickEvent::JoystickEvent( JoystickEventType::Enum eventType )
-	: Event( DeviceType::Joystick ),
+	: InputEvent( InputDeviceType::Joystick ),
 	eventType( eventType )
 { }
 
 //-----------------------------------//
 
-const DeviceType::Enum Joystick::getType()
+const InputDeviceType::Enum Joystick::getType()
 {
-	return DeviceType::Joystick; 
+	return InputDeviceType::Joystick; 
 }
 
 //-----------------------------------//
 
-void Joystick::processEvent( const Event& event )
+void Joystick::processEvent( const InputEvent& event )
 {
-	if( event.deviceType != DeviceType::Joystick )
+	if( event.deviceType != InputDeviceType::Joystick )
 		return;
 
 	const JoystickEvent& jevt = static_cast< const JoystickEvent& > ( event );

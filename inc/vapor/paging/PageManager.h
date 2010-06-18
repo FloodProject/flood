@@ -12,17 +12,18 @@
 #include "vapor/math/Vector2.h"
 #include "vapor/math/Vector3.h"
 
-FWD_DECL_TYPEDEF_PTR(Page)
 FWD_DECL_TYPEDEF_SHARED(Camera)
 FWD_DECL_TYPEDEF_SHARED_WEAK(Camera)
 
 namespace vapor {
 
+class Page;
+
 //-----------------------------------//
 
 struct PageEvent
 {
-	PagePtr page;
+	Page* page;
 	Vector2i pos;
 };
 
@@ -41,7 +42,7 @@ public:
 	~PageManager();
 
 	// Loads a given page.
-	PagePtr loadPage( uint x, uint y );
+	Page* loadPage( uint x, uint y );
 
 	// Sets the current camera. 
 	SETTER(Camera, const CameraPtr&, weakCamera)
@@ -70,10 +71,8 @@ protected:
 	CameraWeakPtr weakCamera;
 
 	// Holds the loaded pages.
-	std::vector<PagePtr> pages;
+	std::vector<Page*> pages;
 };
-
-TYPEDEF_PTR(PageManager)
 
 //-----------------------------------//
 

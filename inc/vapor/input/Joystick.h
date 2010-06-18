@@ -54,7 +54,7 @@ namespace JoystickEventType
  * Generic event for joystick actions.
  */
 
-struct JoystickEvent : public Event
+struct JoystickEvent : public InputEvent
 {
 	friend class Joystick;
 
@@ -97,13 +97,13 @@ struct JoyButtonEvent: public JoystickEvent
 
 //-----------------------------------//
 
-class VAPOR_API Joystick : public Device
+class VAPOR_API Joystick : public InputDevice
 {
 	// Processes an event (only if it's a joystick event).
-	virtual void processEvent( const Event& event );
+	virtual void processEvent( const InputEvent& event );
 
 	// Return this device as a joystick.
-	virtual const DeviceType::Enum getType();
+	virtual const InputDeviceType::Enum getType();
 
 	//-----------------------------------//
 	// Events

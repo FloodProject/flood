@@ -15,9 +15,7 @@ namespace vapor {
 
 Program::Program()
 	: linked( false )
-{
-
-}
+{ }
 
 //-----------------------------------//
 
@@ -41,13 +39,6 @@ bool Program::validateShaders() const
 bool Program::isLinked() const
 {
 	return linked;
-}
-
-//-----------------------------------//
-
-const std::string& Program::getLog() const
-{
-	return log;
 }
 
 //-----------------------------------//

@@ -17,44 +17,48 @@ namespace vapor {
  * (based on OGRE's Singleton and CodeProject's template code).
  */
 
-template <typename T> class Singleton
+template<typename T>
+class Singleton
 {
 public:
 
 	Singleton()
 	{
-		assert( !m_Instance );
-		m_Instance = static_cast< T* >( this );
+		assert( !instance );
+		instance = static_cast<T*>( this );
 	}
 
 	~Singleton()
 	{  
-		assert( m_Instance );
-		m_Instance = 0; 
+		assert( instance );
+		instance = nullptr; 
 	}
 	
 	static T& getInstance()
 	{	
-		if( !m_Instance ) new T();
+		if( !instance )
+			new T();
 
-		assert( m_Instance );
-		return ( *m_Instance );
+		assert( instance );
+		return *instance;
 	}
 	
 	static T* getInstancePtr()
 	{
-		if( !m_Instance ) new T();
+		if( !instance )
+			new T();
 
-		assert( m_Instance );
-		return m_Instance;
+		assert( instance );
+		return instance;
 	}
 
 protected:
 
-	static T* m_Instance;
+	static T* instance;
 };
 
-template <typename T> T* Singleton<T>::m_Instance = nullptr;
+template<typename T>
+T* Singleton<T>::instance = nullptr;
 
 //-----------------------------------//
 

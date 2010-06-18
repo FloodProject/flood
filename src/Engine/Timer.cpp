@@ -14,14 +14,14 @@ namespace vapor {
 //-----------------------------------//
 
 ticks_t Timer::ticksPerSecond = 0;
-
 bool Timer::checked = false;
 bool Timer::highResolutionSupport = false;
 
 //-----------------------------------//
 
 Timer::Timer()
-	: currentTime(0), lastTime(0)
+	: currentTime(0),
+	lastTime(0)
 {
 	if( !checked && !checkHighResolutionTimers() )
 		error( "timer", "High-resolution timers are not supported" );
@@ -46,7 +46,8 @@ double Timer::getElapsedTime()
 
 	ticks_t diff = currentTime - lastTime;
 
-	return (double) diff / (double) ticksPerSecond;
+	return static_cast<double>(diff) 
+		/ static_cast<double>(ticksPerSecond);
 }
 
 //-----------------------------------//

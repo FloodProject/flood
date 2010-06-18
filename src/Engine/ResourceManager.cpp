@@ -8,28 +8,26 @@
 
 #include "vapor/PCH.h"
 #include "vapor/resources/ResourceManager.h"
+#include "vapor/resources/ResourceLoader.h"
 
-#include "vapor/Engine.h"
-#include "vapor/vfs/File.h"
-#include "vapor/vfs/FileSystem.h"
 #include "vapor/TaskManager.h"
+#include "vapor/vfs/File.h"
+#include "vapor/vfs/FileWatcher.h"
+#include "vapor/vfs/FileSystem.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-ResourceManager::ResourceManager()
-	: numResourcesQueuedLoad(0), taskManager(nullptr)
+ResourceManager::ResourceManager( FileWatcher* fileWatcher, TaskManager* tm )
+	: taskManager(tm),
+	numResourcesQueuedLoad(0)
 {
-	Engine* engine = Engine::getInstancePtr();
+	assert( taskManager );
+	assert( fileWatcher );
 
-	taskManager = engine->getTaskManager();
-	assert( taskManager != nullptr );
-
-	// connect the resource manager and filesystem watcher
-	FileSystem* fs = engine->getFileSystem();
-	fs->getFileWatcher()->onWatchEvent += 
-		fd::bind(&ResourceManager::handleWatchResource, this);
+	fileWatcher->onFileWatchEvent 
+		+= fd::bind(&ResourceManager::handleWatchResource, this);
 }
 
 //-----------------------------------//
@@ -84,13 +82,13 @@ ResourcePtr ResourceManager::loadResource(const std::string& path, bool async)
 
 //-----------------------------------//
 
-ResourceLoaderPtr const ResourceManager::getResourceLoader(const std::string& ext)
+ResourceLoader* const ResourceManager::getResourceLoader(const std::string& ext)
 {
 	// Check if we have a resource loader for this extension.
 	if( resourceLoaders.find(ext) == resourceLoaders.end() )
 		return nullptr;
 
-	ResourceLoaderPtr const loader = resourceLoaders[ext];
+	ResourceLoader* const loader = resourceLoaders[ext];
 	return loader;
 }
 
@@ -109,7 +107,7 @@ public:
 		File file( path );
 		const std::string& ext = file.getExtension();
 		
-		ResourceLoaderPtr const loader = rm->getResourceLoader(ext);
+		ResourceLoader* const loader = rm->getResourceLoader(ext);
 
 		if( !loader )
 		{
@@ -143,7 +141,7 @@ public:
 	}
 
 	Resource* res;
-	ResourceManagerPtr rm;
+	ResourceManager* rm;
 	bool notify;
 };
 
@@ -180,7 +178,7 @@ ResourcePtr ResourceManager::prepareResource( const std::string& path )
 		return ResourcePtr();
 
 	// Get the available resource loader and prepare the resource.
-	ResourceLoaderPtr const ldr = resourceLoaders[file.getExtension()];
+	ResourceLoader* const ldr = resourceLoaders[file.getExtension()];
 
 	ResourcePtr res( ldr->prepare(file) );
 	res->setStatus( ResourceStatus::Loading );
@@ -286,7 +284,7 @@ void ResourceManager::removeResource(const ResourcePtr& res)
 
 //-----------------------------------//
 
-void ResourceManager::registerLoader(ResourceLoaderPtr const loader)
+void ResourceManager::registerLoader(ResourceLoader* const loader)
 {
 	// TODO: check if the loader is already registered?
 
@@ -309,7 +307,7 @@ void ResourceManager::registerLoader(ResourceLoaderPtr const loader)
 
 //-----------------------------------//
 
-void ResourceManager::handleWatchResource(const WatchEvent& evt)
+void ResourceManager::handleWatchResource(const FileWatchEvent& evt)
 {
 	// Check if the filename maps to a known resource.
 	const std::string& file = evt.filename;

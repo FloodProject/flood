@@ -30,9 +30,9 @@ void Keyboard::resetKeys()
 
 //-----------------------------------//
 
-void Keyboard::processEvent( const Event& event )
+void Keyboard::processEvent( const InputEvent& event )
 {
-	if( event.deviceType != DeviceType::Keyboard )
+	if( event.deviceType != InputDeviceType::Keyboard )
 		return;
 
 	const KeyEvent& kevt = static_cast< const KeyEvent& > ( event );
@@ -83,7 +83,7 @@ void Keyboard::keyReleased( const KeyEvent& keyEvent )
 KeyEvent::KeyEvent(Keys::Enum keyCode, 
 					bool alt, bool shift, bool ctrl,
 					KeyboardEventType::Enum eventType)
-	: Event(DeviceType::Keyboard), keyCode(keyCode),
+	: InputEvent(InputDeviceType::Keyboard), keyCode(keyCode),
 	altPressed(alt), shiftPressed(shift), ctrlPressed(ctrl),
 	eventType( eventType )
 { }

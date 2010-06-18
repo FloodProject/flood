@@ -8,12 +8,14 @@
 
 #pragma once
 
-#include "vapor/resources/ResourceManager.h"
 #include "vapor/render/Program.h"
 
 FWD_DECL_TYPEDEF_INT(Text)
 
 namespace vapor {
+
+class ResourceManager;
+struct ResourceEvent;
 
 //-----------------------------------//
 
@@ -31,7 +33,7 @@ class VAPOR_API ProgramManager : public boost::noncopyable
 {
 public:
 
-	ProgramManager();
+	ProgramManager( ResourceManager* );
 	~ProgramManager();
 
 	// Gets a program given a name identifier.
@@ -55,10 +57,8 @@ private:
 	std::map< std::string, ProgramPtr > programs;
 	typedef std::pair< const std::string&, ProgramPtr > programPair;
 
-	ResourceManagerPtr rm;
+	ResourceManager* rm;
 };
-
-TYPEDEF_PTR(ProgramManager)
 
 //-----------------------------------//
 

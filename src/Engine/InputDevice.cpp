@@ -7,22 +7,21 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/input/Device.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-std::string DeviceType::getString( const DeviceType::Enum dt )
+std::string InputDeviceType::getString( const InputDeviceType::Enum dt )
 {
 	switch( dt )
 	{
-	case DeviceType::Keyboard:
+	case InputDeviceType::Keyboard:
 		return "Keyboard";
-	case DeviceType::Mouse:
+	case InputDeviceType::Mouse:
 		return "Mouse";
-	case DeviceType::Joystick:
+	case InputDeviceType::Joystick:
 		return "Joystick";
 	default:
 		return "(Unknown)";
@@ -31,26 +30,9 @@ std::string DeviceType::getString( const DeviceType::Enum dt )
 
 //-----------------------------------//
 
-Device::Device()
-{
-
-}
-
-//-----------------------------------//
-
-Device::~Device()
-{
-
-}
-
-//-----------------------------------//
-
-Event::Event( DeviceType::Enum type )
+InputEvent::InputEvent( InputDeviceType::Enum type )
 	: deviceType( type )
-{
-
-}
-
+{ }
 
 //-----------------------------------//
 

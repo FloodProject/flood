@@ -270,7 +270,7 @@ ResourceManager stuff.
 //uint getMemoryUsage(ResourceGroup::Enum group);
 
 // Gets a list of all the registered resource handlers.
-//std::list<ResourceLoaderPtr> getResourceLoader(std::string extension);
+//std::list<ResourceLoader*> getResourceLoader(std::string extension);
 
 // maps each resource group to a specific budget.
 //std::map< ResourceGroup::Enum, uint > resourceBudgets;

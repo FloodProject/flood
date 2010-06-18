@@ -16,7 +16,7 @@ namespace vapor {
  * Different types of input devices.
  */
 
-namespace DeviceType
+namespace InputDeviceType
 {
 	enum Enum
 	{
@@ -25,7 +25,7 @@ namespace DeviceType
 		Joystick
 	};
 
-	std::string getString( const DeviceType::Enum dt );
+	std::string getString( const InputDeviceType::Enum dt );
 }
 
 //-----------------------------------//
@@ -34,11 +34,11 @@ namespace DeviceType
  * Base struct for input events.
  */
 
-struct VAPOR_API Event : private boost::noncopyable
+struct VAPOR_API InputEvent : private boost::noncopyable
 {
-	Event( DeviceType::Enum );
+	InputEvent( InputDeviceType::Enum );
 
-	DeviceType::Enum deviceType;
+	InputDeviceType::Enum deviceType;
 };
 
 //-----------------------------------//
@@ -47,21 +47,18 @@ struct VAPOR_API Event : private boost::noncopyable
  * Input device.
  */
 
-class VAPOR_API Device : private boost::noncopyable
+class VAPOR_API InputDevice : private boost::noncopyable
 {
 public:
 
-	Device();
-	virtual ~Device();
+	virtual ~InputDevice() {}
 
 	// Processes an event.
-	virtual void processEvent( const Event& event ) = 0;
+	virtual void processEvent( const InputEvent& event ) = 0;
 
 	// Gets the type of this device.
-	virtual const DeviceType::Enum getType() const = 0;
+	virtual const InputDeviceType::Enum getType() const = 0;
 };
-
-TYPEDEF_PTR(Device)
 
 //-----------------------------------//
 

@@ -4,9 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vaporEngine", "src\Engine\vaporEngine.vcproj", "{998D7B99-03DC-954C-A2A1-B83E1F0E2772}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vaporExample", "src\Examples\vaporExamples.vcproj", "{7E63C46E-4243-4806-AE6C-944A2476F29F}"
-	ProjectSection(ProjectDependencies) = postProject
-		{998D7B99-03DC-954C-A2A1-B83E1F0E2772} = {998D7B99-03DC-954C-A2A1-B83E1F0E2772}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vaporEditor", "src\Editor\vaporEditor.vcproj", "{68C71437-26B5-46EE-87B6-F225EA16396D}"
 EndProject

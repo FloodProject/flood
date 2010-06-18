@@ -8,13 +8,15 @@
 
 #pragma once
 
+namespace vapor {
+
+//-----------------------------------//
+
 #ifdef VAPOR_PLATFORM_WINDOWS
-	#define ticks_t int64
+	typedef int64 ticks_t;
 #else
 	#error "Implementation is missing"
 #endif
-
-namespace vapor {
 
 //-----------------------------------//
 

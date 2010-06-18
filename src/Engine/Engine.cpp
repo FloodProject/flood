@@ -10,31 +10,30 @@
 #include "vapor/Engine.h"
 #include "ResourceLoaders.h"
 
-#include "vapor/vfs/FileSystem.h"
-#include "vapor/render/Device.h"
-#include "vapor/resources/ResourceManager.h"
-#include "vapor/scene/Scene.h"
-#include "vapor/paging/PageManager.h"
-#include "vapor/audio/Device.h"
-#include "vapor/input/InputManager.h"
-#include "vapor/script/State.h"
-//#include "vapor/physics/Physics.h"
 #include "vapor/TaskManager.h"
+#include "vapor/vfs/FileSystem.h"
+#include "vapor/resources/ResourceManager.h"
 
-using namespace vapor::audio;
+#include "vapor/render/Device.h"
+#include "vapor/input/InputManager.h"
+#include "vapor/audio/Device.h"
+#include "vapor/script/State.h"
+#include "vapor/scene/Scene.h"
+#include "vapor/physics/Physics.h"
+#include "vapor/paging/PageManager.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
 Engine::Engine()
-	: renderDevice(nullptr),
+	: log(nullptr),
 	fileSystem(nullptr),
 	resourceManager(nullptr),
-	/*physicsManager(nullptr),*/
-	log(nullptr),
-	scriptState(nullptr),
-	audioDevice(nullptr)
+	renderDevice(nullptr),
+	audioDevice(nullptr),
+	physicsManager(nullptr),
+	scriptState(nullptr)
 { }
 
 //-----------------------------------//
@@ -55,10 +54,11 @@ Engine::~Engine()
 {
 	sceneManager.reset();
 
-	foreach( const SubsystemPtr& sub, subsystems )
+	foreach( Subsystem* const sub, subsystems )
 		delete sub;
-
-	delete audioDevice;
+	
+	delete taskManager;
+	//delete audioDevice;
 	//delete physicsManager;
 	delete scriptState;
 	delete renderDevice;
@@ -69,7 +69,7 @@ Engine::~Engine()
 
 //-----------------------------------//
 
-void Engine::addSubsystem( const SubsystemPtr& subsystem )
+void Engine::addSubsystem( Subsystem* const subsystem )
 {
 	info( "engine", "Registering new engine subsystem" );
 	
@@ -86,13 +86,13 @@ void Engine::init( bool createWindow )
 	info( "engine", "Starting vaporEngine version '%s'", VAPOR_ENGINE_VERSION );
 
 	// create the virtual filesystem
-	fileSystem = new FileSystem(app, argv ? argv[0] : nullptr);
+	fileSystem = new FileSystem( app, argv ? argv[0] : nullptr );
 
 	taskManager = new TaskManager();
-	addSubsystem( taskManager );
 
 	// create the resource manager
-	resourceManager = new ResourceManager();
+	FileWatcher* fw = fileSystem->getFileWatcher();
+	resourceManager = new ResourceManager( fw, taskManager );
 
 	// create the physics manager
 	//physicsManager = PhysicsManager::getInstancePtr();
@@ -129,7 +129,7 @@ void Engine::setupLogger()
 void Engine::setupDevices( bool createWindow )
 {
 	// create render device
-	renderDevice = new RenderDevice();
+	renderDevice = new RenderDevice( resourceManager );
 
 	if( createWindow )
 	{
@@ -155,12 +155,9 @@ void Engine::setupDevices( bool createWindow )
 
 void Engine::setupInput()
 {
-	WindowPtr window = renderDevice->getWindow();
+	Window* window = renderDevice->getWindow();
 	InputManager& im = window->getInputManager();
-
-	// Let's register some input devices.
-	im.addDevice( new Keyboard() );
-	im.addDevice( new Mouse() );
+	im.createDefaultDevices(); 
 }
 
 //-----------------------------------//
@@ -169,7 +166,7 @@ void Engine::setupResourceLoaders()
 {
 	assert( resourceManager != nullptr );
 
-	std::vector<ResourceLoaderPtr> loaders;
+	std::vector<ResourceLoader*> loaders;
 
 	// register default compiled codecs
 	#ifdef VAPOR_IMAGE_PICOPNG
@@ -200,7 +197,7 @@ void Engine::setupResourceLoaders()
 		loaders.push_back( new Font_Loader() );
 	#endif
 
-	foreach( const ResourceLoaderPtr& loader, loaders )
+	foreach( ResourceLoader* const loader, loaders )
 	{
 		resourceManager->registerLoader( loader );
 	}

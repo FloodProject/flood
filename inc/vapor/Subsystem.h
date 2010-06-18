@@ -32,8 +32,6 @@ protected:
 	virtual ~Subsystem() { }
 };
 
-TYPEDEF_PTR(Subsystem)
-
 //-----------------------------------//
 
 } // end namespace

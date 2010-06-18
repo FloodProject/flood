@@ -10,11 +10,11 @@
 
 #include "vapor/resources/Image.h"
 #include "vapor/render/Texture.h"
-#include "vapor/resources/ResourceManager.h"
-
-FWD_DECL_TYPEDEF_PTR(ResourceManager)
 
 namespace vapor {
+
+class ResourceManager;
+struct ResourceEvent;
 
 //-----------------------------------//
 
@@ -32,7 +32,7 @@ class VAPOR_API TextureManager
 {
 public:
 
-	TextureManager();
+	TextureManager( ResourceManager* );
 	~TextureManager();
 
 	// Gets a texture given a name identifier.
@@ -60,7 +60,7 @@ private:
 	typedef std::pair< ImagePtr, TexturePtr > TextureMapPair;
 	TextureMap textures;
 	
-	ResourceManagerPtr rm;
+	ResourceManager* rm;
 };
 
 //-----------------------------------//

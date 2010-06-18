@@ -16,9 +16,7 @@ namespace vapor {
 
 Group::Group( const std::string& name )
 	: Node( name )
-{
-
-}
+{ }
 
 //-----------------------------------//
 

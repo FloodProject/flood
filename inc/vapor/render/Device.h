@@ -27,6 +27,11 @@ namespace vapor {
 
 class Camera;
 class BufferManager;
+class ResourceManager;
+class ProgramManager;
+class TextureManager;
+class Adapter;
+class RenderBuffer;
 
 //-----------------------------------//
 
@@ -52,7 +57,7 @@ class VAPOR_API RenderDevice : private boost::noncopyable
 {
 public:
 
-	RenderDevice();
+	RenderDevice( ResourceManager* );
 	~RenderDevice();
 
 	// Initializes the rendering system.
@@ -123,6 +128,8 @@ protected:
 	bool setupRenderStateOverlay( const RenderState& );
 	void setupRenderStateMaterial( const MaterialPtr& );
 	void undoRenderStateMaterial( const MaterialPtr& );
+
+	ResourceManager* resourceManager;
 
 	// Manages all the shaders.
 	TextureManagerPtr textureManager;
