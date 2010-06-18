@@ -24,10 +24,12 @@ ResourceManager::ResourceManager( FileWatcher* fileWatcher, TaskManager* tm )
 	numResourcesQueuedLoad(0)
 {
 	assert( taskManager );
-	assert( fileWatcher );
 
-	fileWatcher->onFileWatchEvent 
-		+= fd::bind(&ResourceManager::handleWatchResource, this);
+	if( fileWatcher )
+	{
+		fileWatcher->onFileWatchEvent 
+			+= fd::bind(&ResourceManager::handleWatchResource, this);
+	}
 }
 
 //-----------------------------------//

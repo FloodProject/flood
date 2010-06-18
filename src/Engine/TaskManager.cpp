@@ -12,10 +12,6 @@
 #include "vapor/TaskManager.h"
 #include "vapor/Utilities.h"
 
-#if defined(VAPOR_PLATFORM_WINDOWS) && defined(VAPOR_THREADING_BOOST)
-	extern "C" void tss_cleanup_implemented() { }
-#endif
-
 namespace vapor {
 
 using namespace boost;

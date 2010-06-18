@@ -139,6 +139,7 @@ typedef boost::thread* ThreadPtr;
 	#endif
 #elif defined(VAPOR_MEMORY_TR1_BOOST)
 	#include <boost/tr1/memory.hpp>
+	#include <boost/tr1/tuple.hpp>
 #endif
 
 #ifdef VAPOR_COMPILER_MSVC

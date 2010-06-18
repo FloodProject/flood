@@ -122,7 +122,7 @@ void Texture::configure()
 	//glTexParameterf(target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	//glTexParameterf(target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-	// Three next lines are necessary if we wan to use the convenient shadow2DProj function in the shader.
+	// Three next lines are necessary if we want to use the convenient shadow2DProj function in the shader.
 	// Otherwise we have to rely on texture2DProj
 	 
 	// TODO: OpenGL 3 name: COMPARE_REF_TO_TEXTURE
@@ -170,30 +170,30 @@ void Texture::unbind( int unit ) const
 
 ImagePtr Texture::readImage() const
 {
-	std::vector<float> tmp;
+	std::vector<byte> tmp;
 	tmp.resize( getExpectedSize() );
 
 	bind();
 	
 	glGetTexImage( target, 0 /* base mipmap level */,
-		convertGetFormat(format), GL_FLOAT, &tmp[0] );
+		convertGetFormat(format), GL_UNSIGNED_BYTE, &tmp[0] );
 	
 	if( glHasError("Could not read texture data") )
 		return ImagePtr();
 
 	unbind();
 
-	std::vector<byte> data;
-	data.reserve( getExpectedSize() );
+	//std::vector<byte> data;
+	//data.reserve( getExpectedSize() );
 	
-	foreach( float& f, tmp )
-		data.push_back( f*255 );
+	//foreach( float& f, tmp )
+	//	data.push_back( f*255 );
 	
 	ImagePtr image( new Image() );
 	image->setWidth( width );
 	image->setHeight( height );
 	image->setPixelFormat( format );
-	image->setBuffer( data );
+	image->setBuffer( /*data*/tmp );
 	image->setStatus( ResourceStatus::Loaded );
 
 	return image;

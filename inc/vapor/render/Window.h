@@ -123,7 +123,7 @@ public:
 	fd::delegate< void( bool focusLost ) > onWindowFocusChange;
 
 	// Create a new render window.
-	static WindowPtr createWindow( const WindowSettings& = WindowSettings() );
+	static Window* createWindow( const WindowSettings& = WindowSettings() );
 
 protected:
 

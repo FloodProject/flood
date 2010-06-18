@@ -41,12 +41,12 @@ void Framework::init()
 	// Init the engine.
 	Engine::init( true );
 
-	// Register input callbacks.
-	registerCallbacks();
-
-	// Register default locations.
+	// Register default media locations.
 	FileSystem* fs = getFileSystem();
 	fs->mountDefaultLocations();
+
+	// Register input callbacks.
+	registerCallbacks();
 
 	// User init callback.
 	onInit();
@@ -58,7 +58,8 @@ void Framework::init()
 	onSetupScene();
 
 	// Wait until all resources are loaded.
-	resourceManager->waitUntilQueuedResourcesLoad();
+	ResourceManager* rm = getResourceManager();
+	rm->waitUntilQueuedResourcesLoad();
 }
 
 //-----------------------------------//
@@ -70,44 +71,58 @@ void Framework::init()
 
 void Framework::render()
 {
-	RenderDevicePtr renderDevice = getRenderDevice();
-	WindowPtr window = renderDevice->getWindow();
+	RenderDevice* renderDevice = getRenderDevice();
+	Window* window = renderDevice->getWindow();
 
 	while( frameTimer.reset(), window->pumpEvents() )
 	{
-		update( frameStats.lastFrameTime );
+		{
+			PROFILE_STR("Engine update");
+			update( frameStats.lastFrameTime );
+		}
 
 		// User update callback.
 		onUpdate( frameStats.lastFrameTime );
 
-		// User rendering callback.
-		onRender();
+		{
+			PROFILE_STR("Engine render");
+			// User rendering callback.
+			onRender();
+		}
 
 		// Update the active target (swaps buffers).
 		window->update();
 
+		// Calculates the new frame times.
 		updateFrameTimes();
 	}
 
-	Timer::sleep( 0 );
+	Timer::sleep(0);
 }
 
 //-----------------------------------//
 
 void Framework::registerCallbacks()
 {
-	Keyboard* kbd = getInputManager()->getKeyboard();
-	Mouse* mouse = getInputManager()->getMouse();
+	InputManager* im = getInputManager();
 
-	if( kbd )
+	Keyboard* keyboard = im->getKeyboard();
+
+	if( keyboard )
 	{
-		kbd->onKeyPress += fd::bind( &Framework::onKeyPressed, this );
+		keyboard->onKeyPress +=
+			fd::bind( &Framework::onKeyPressed, this );
 	}
 	
+	Mouse* mouse = im->getMouse();
+
 	if( mouse )
 	{
-		mouse->onMouseButtonPress += fd::bind( &Framework::onButtonPressed, this );
-		mouse->onMouseButtonRelease += fd::bind( &Framework::onButtonReleased, this );
+		mouse->onMouseButtonPress +=
+			fd::bind( &Framework::onButtonPressed, this );
+		
+		mouse->onMouseButtonRelease +=
+			fd::bind( &Framework::onButtonReleased, this );
 	}
 }
 
@@ -117,13 +132,10 @@ void Framework::updateFrameTimes()
 {
 	frameStats.lastFrameTime = frameTimer.getElapsedTime();
 
-	frameStats.numFrames++;
+	if(frameStats.lastFrameTime > 0.1)
+		debug("HOTSPOT! %lf", frameStats.lastFrameTime);
 
-	frameStats.minFrameTime = std::min( frameStats.minFrameTime, frameStats.lastFrameTime );
-	frameStats.maxFrameTime = std::max( frameStats.maxFrameTime, frameStats.lastFrameTime );
-
-	frameStats.sumFrameTime += frameStats.lastFrameTime;
-	frameStats.avgFrameTime = frameStats.sumFrameTime / frameStats.numFrames;
+	frameStats.frameStep();
 }
 
 //-----------------------------------//

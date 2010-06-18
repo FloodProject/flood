@@ -40,8 +40,12 @@ class VAPOR_API NativeFile : private boost::noncopyable
 {
 public:
 
-	NativeFile (const std::string& path, AccessMode::Enum mode = AccessMode::Read );
-	NativeFile (const char* path, AccessMode::Enum mode = AccessMode::Read);
+	NativeFile (const std::string& path, 
+		AccessMode::Enum mode = AccessMode::Read );
+
+	NativeFile (const char* path,
+		AccessMode::Enum mode = AccessMode::Read);
+	
 	~NativeFile ();
 
 	// Opens the file.
@@ -72,12 +76,13 @@ public:
 	bool exists();
 	
 	// Checks if the file in path exists.
-	static bool exists(std::string path);
+	static bool exists(const std::string& path);
 	
 protected:
 
-	AccessMode::Enum mode;
 	std::string	path;
+	AccessMode::Enum mode;
+
 	FILE* fp;
 };
 

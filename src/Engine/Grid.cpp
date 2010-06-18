@@ -17,13 +17,15 @@ const std::string& Grid::type = "Grid";
 
 //-----------------------------------//
 
-Grid::Grid( /*const MaterialPtr&*/ )
-	: sizeX( 500 ), sizeZ( 500 ), divX( 20 ), divZ( 20 ), 
+Grid::Grid()
+	: sizeX(500), sizeZ(500), divX(20), divZ(20),
 	strongMainLines( true )
 {
-	RenderablePtr rend( new Renderable( Primitive::Lines, getGridBuffer() ) );
+	MaterialPtr mat( new Material("Grid") );
+	mat->setDepthTest(false);
 	
-	MaterialPtr mat( new Material( "Grid" ) );
+	RenderablePtr rend( new Renderable( Primitive::Lines ) );
+	rend->setVertexBuffer( getGridBuffer() );
 	rend->setMaterial( mat );
 
 	addRenderable( rend );

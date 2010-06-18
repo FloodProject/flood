@@ -13,21 +13,6 @@ namespace vapor {
 
 //-----------------------------------//
 
-using ::sinf;
-using ::asinf;
-using ::cosf;
-using ::acosf;
-using ::tanf;
-using ::sqrt;
-using ::pow;
-using ::log;
-using ::log10;
-using ::acos;
-using ::atan2;
-using ::ceil;
-
-//-----------------------------------//
-
 const float PI = 3.141592654f;
 
 //-----------------------------------//

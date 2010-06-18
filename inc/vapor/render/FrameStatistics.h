@@ -22,6 +22,9 @@ public:
 
 	FrameStatistics();
 
+	// Updates the statistics for a new frame.
+	void frameStep();
+
 	// Gets the frames-per-second of the last frame.
 	double getLastFPS() const;
 

@@ -26,7 +26,7 @@ class VAPOR_API FirstPersonCamera : public Camera
 {
 public:
 
-	FirstPersonCamera( InputManager* input, RenderDevicePtr device, 
+	FirstPersonCamera( InputManager* input, RenderDevice* device, 
 		Projection::Enum projection = Projection::Perspective );
 
 	// Updates this node.

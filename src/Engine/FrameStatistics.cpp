@@ -24,6 +24,19 @@ FrameStatistics::FrameStatistics()
 
 //-----------------------------------//
 
+void FrameStatistics::frameStep()
+{
+	numFrames++;
+
+	minFrameTime = std::min( minFrameTime, lastFrameTime );
+	maxFrameTime = std::max( maxFrameTime, lastFrameTime );
+
+	sumFrameTime += lastFrameTime;
+	avgFrameTime = sumFrameTime / numFrames;
+}
+
+//-----------------------------------//
+
 double FrameStatistics::getLastFPS() const
 {
 	if(lastFrameTime == 0)

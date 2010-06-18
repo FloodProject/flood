@@ -46,7 +46,7 @@ protected:
 
 private:
 	
-	WindowPtr window;
+	Window* window;
 	InputMap* inputMap; 
 	
 	CameraPtr camera;

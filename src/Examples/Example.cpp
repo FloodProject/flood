@@ -58,30 +58,30 @@ void Example::onSetupScene()
 	RenderDevice* const rd = getRenderDevice();
 
 	// Create a new Camera
-	NodePtr nodeCamera( new Node( "MainCamera" ) );
+	NodePtr nodeCamera( new Node("MainCamera") );
 	nodeCamera->addComponent( TransformPtr( new Transform( 0.0f, 20.0f, -65.0f ) ) );
 	nodeCamera->addComponent( camera );
 	scene->add( nodeCamera );
 
-	//fbo = rd->createRenderBuffer( Settings() );
-	////fbo_tex = fbo->createRenderTexture( RenderBufferType::Color );
-	//fbo_tex = fbo->createRenderTexture( RenderBufferType::Depth );
-	//fbo->check();
-	//fbo->unbind();
+	fbo = rd->createRenderBuffer( Settings() );
+	//textureFBO = fbo->createRenderTexture( RenderBufferType::Color );
+	textureFBO = fbo->createRenderTexture( RenderBufferType::Depth );
+	fbo->check();
+	fbo->unbind();
 
-	//viewport2 = fbo->addViewport(cam);
-	//viewport2->setClearColor( Color::Red );
+	viewport2 = fbo->addViewport(camera);
+	viewport2->setClearColor( Color::Red );
 
-	//MaterialPtr fbo_mat( new Material( "FBO1", "Tex" ) );
-	//fbo_mat->setTexture( 0, fbo_tex );
+	MaterialPtr materialFBO( new Material( "FBO1", "Tex" ) );
+	materialFBO->setTexture( 0, textureFBO );
 
-	//RenderablePtr quad( new Quad(100.0f, 100.0f) );
-	//quad->setMaterial( fbo_mat );
+	RenderablePtr quad( new Quad(100.0f, 100.0f) );
+	quad->setMaterial( materialFBO );
 
-	//fbo_node.reset( new Node( "FBOquad" ) );
-	//fbo_node->addTransform();
-	//fbo_node->addComponent( GeometryPtr( new Geometry(quad) ) );
-	//scene->add( fbo_node );
+	nodeFBO.reset( new Node( "FBOquad" ) );
+	nodeFBO->addTransform();
+	nodeFBO->addComponent( GeometryPtr( new Geometry(quad) ) );
+	scene->add( nodeFBO );
 
 	MeshPtr mesh = rm->loadResource<Mesh>("ct.ms3d");
 	NodePtr ct( new Node("ct") );
@@ -161,12 +161,12 @@ void Example::onUpdate( double delta )
 void Example::onRender()
 {
 	//// Render into the FBO first
-	//fbo->bind();
-	//fbo_tex->bind();
-	//fbo_node->setVisible(false);
-	//viewport2->update();
-	//fbo_node->setVisible(true);
-	//fbo->unbind();
+	fbo->bind();
+	textureFBO->bind();
+	nodeFBO->setVisible(false);
+	viewport2->update();
+	nodeFBO->setVisible(true);
+	fbo->unbind();
 
 	// Render the scene
 	viewport->update();

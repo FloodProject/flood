@@ -18,15 +18,15 @@ const std::string& Camera::type = "Camera";
 
 //-----------------------------------//
 
-Camera::Camera( RenderDevicePtr device, Projection::Enum proj )
-	: renderDevice(device),
+Camera::Camera( RenderDevice* device, Projection::Enum proj )
+	: lookAtVector(Vector3::UnitZ),
 	projection(proj),
-	fov(60.0f),
+	fov(45.0f),
 	near_(1.0f),
 	far_(5000.0f),
-	lookAtVector(Vector3::UnitZ),
 	viewport(nullptr),
-	viewSize(Vector2i::Zero)
+	viewSize(Vector2i::Zero),
+	renderDevice(device)
 {
 	assert( device != nullptr );
 }
@@ -34,8 +34,11 @@ Camera::Camera( RenderDevicePtr device, Projection::Enum proj )
 //-----------------------------------//
 
 Camera::Camera( const Camera& rhs )
-	: renderDevice( rhs.renderDevice ), projection( rhs.projection ),
-	fov( rhs.fov ), near_( rhs.near_ ), far_( rhs.far_ )
+	: renderDevice( rhs.renderDevice ),
+	projection( rhs.projection ),
+	fov( rhs.fov ),
+	near_( rhs.near_ ),
+	far_( rhs.far_ )
 { }
 
 //-----------------------------------//

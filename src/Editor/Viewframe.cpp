@@ -54,7 +54,7 @@ Viewport* Viewframe::createViewport( NodePtr node )
 	CameraPtr camera = node->getComponent<Camera>("Camera");
 	assert( camera != nullptr );
 
-	WindowPtr window = control->getRenderWindow();
+	Window* window = control->getRenderWindow();
 	viewport = window->addViewport( camera );
 
 	// Subscribe to the camera transform events.

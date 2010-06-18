@@ -85,17 +85,17 @@ public:
 	RenderBufferPtr createRenderBuffer( const Settings& );
 
 	// Creates a new rendering window.
-	WindowPtr createWindow( const WindowSettings& = WindowSettings() );
+	Window* createWindow( const WindowSettings& = WindowSettings() );
 
 	// Gets the main render window.
-	GETTER(RenderWindow, WindowPtr, window)
+	GETTER(RenderWindow, Window*, window)
 
 	// Gets/sets the current active render target.
 	GETTER(RenderTarget, RenderTargetPtr, activeTarget)
 	void setRenderTarget(RenderTargetPtr target);
 
 	// Gets/sets the main rendering window.
-	ACESSOR(Window, WindowPtr, window)
+	ACESSOR(Window, Window*, window)
 
 	// Gets/sets the current clear color.
 	GETTER(ClearColor, const Color&, color)
@@ -147,7 +147,7 @@ protected:
 	AdapterPtr adapter;
 
 	// Render window
-	WindowPtr window;
+	Window* window;
 
 	// Current clear color
 	Color color;

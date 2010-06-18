@@ -437,9 +437,9 @@ RenderBufferPtr RenderDevice::createRenderBuffer( const Settings& settings )
 
 //-----------------------------------//
 
-WindowPtr RenderDevice::createWindow( const WindowSettings& settings )
+Window* RenderDevice::createWindow( const WindowSettings& settings )
 {
-	WindowPtr window = Window::createWindow( settings );
+	Window* window = Window::createWindow( settings );
 	assert( window != nullptr );
 
 	setWindow( window );

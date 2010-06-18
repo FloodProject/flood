@@ -21,10 +21,10 @@ Profiler::Profiler(const std::string& name)
 
 Profiler::~Profiler()
 {
-	ulong time = static_cast<ulong>(timer.getElapsedTime());
+	double time = timer.getElapsedTime();
 
 	debug( "%s: took %lu ms / %.5lf µs.", name.c_str(), 
-		time*1000, timer.getElapsedTime() );
+		(ulong)(time*1000), time );
 };
 
 //-----------------------------------//

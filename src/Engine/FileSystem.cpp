@@ -7,11 +7,11 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "FileWatcherWin32.h"
 
 #ifdef VAPOR_VFS_PHYSFS
 
 #include "vapor/vfs/FileSystem.h"
+#include "FileWatcherWin32.h"
 #include <physfs.h>
 
 namespace vapor {
@@ -19,6 +19,7 @@ namespace vapor {
 //-----------------------------------//
 
 FileSystem::FileSystem(const std::string& app, const char* argv0 )
+	: fileWatcher(nullptr)
 {
 	int err = PHYSFS_init( argv0 );
 
@@ -31,8 +32,10 @@ FileSystem::FileSystem(const std::string& app, const char* argv0 )
 	setDefaultConfig(app);
 	log();
 
-#ifdef VAPOR_PLATFORM_WINDOWS
-	watcher = new FileWatcherWin32();
+#ifdef VAPOR_VFS_FILEWATCHER
+	#ifdef VAPOR_PLATFORM_WINDOWS
+		fileWatcher = new FileWatcherWin32();
+	#endif
 #endif
 }
 
@@ -50,7 +53,7 @@ FileSystem::~FileSystem()
 	if( err == 0 )
 		logError( "Could not clean up PhysFS" );
 
-	delete watcher;
+	delete fileWatcher;
 }
 
 //-----------------------------------//
@@ -85,7 +88,8 @@ bool FileSystem::mount(const std::string& path, const std::string& mount, bool a
 	info( "vfs", "Mounted '%s' in mount point '%s'",
 		path.c_str(), mount.empty() ? "/" : mount.c_str() );
 
-	watcher->addWatch( path );
+	if( fileWatcher )
+		fileWatcher->addWatch( path );
 
 	return true;
 }
@@ -118,7 +122,8 @@ void FileSystem::mountDefaultLocations()
 
 void FileSystem::update( double )
 {
-	watcher->update();
+	if( fileWatcher )
+		fileWatcher->update();
 }
 
 //-----------------------------------/

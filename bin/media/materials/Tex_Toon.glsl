@@ -35,7 +35,7 @@ varying vec3 normal;
 
 void main(void)
 {
-	float intensity = dot(vec3(1,1,0), normal);
+	float intensity = dot(vec3(0,1,0), normal);
 
 	vec4 tex = texture2D(tex0, vp_TexCoord);
 	gl_FragColor = tex*intensity; //vec4(normal,1.0); //

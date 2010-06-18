@@ -58,10 +58,7 @@ protected:
 	virtual void onButtonPressed( const MouseButtonEvent& );
 	virtual void onButtonReleased( const MouseButtonEvent& );
 
-	Timer frameTimer;
-	FrameStatistics frameStats;
-
-private:
+protected:
 
 	// Register input devices callbacks.
 	void registerCallbacks();
@@ -74,6 +71,12 @@ private:
 
 	// Main rendering loop ( calls onRender() ).
 	virtual void render();
+
+	// Frame loop timer.
+	Timer frameTimer;
+
+	// Holds frame statistics.
+	FrameStatistics frameStats;
 };
 
 //-----------------------------------//

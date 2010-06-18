@@ -55,7 +55,7 @@ void Image::save( const std::string& filename )
 	switch( pixelFormat )
 	{
 	case PixelFormat::Depth:
-		png.colorType = 2;
+		png.colorType = 0;
 		raw.colorType = 0;
 		break;
 	case PixelFormat::R8G8B8:
@@ -69,12 +69,13 @@ void Image::save( const std::string& filename )
 	default:
 		assert( 0 && "Pixel format is not supported" );
 	}
-	
+
+	raw.bitDepth = 8;
 	encoder.encode(output, buffer, width, height);
 
 	if( encoder.hasError() )
 	{
-		warn("image", "Could not write PNG: '%s'", filename.c_str() );
+		error("image", "Could not write PNG: '%s'", filename.c_str() );
 		return;
 	}
 

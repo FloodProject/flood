@@ -46,7 +46,7 @@ class VAPOR_API Camera : public Component
 {
 public:
 
-	Camera( RenderDevicePtr, Projection::Enum = Projection::Perspective );
+	Camera( RenderDevice*, Projection::Enum = Projection::Perspective );
 	Camera( const Camera& rhs );
 	~Camera();
 
@@ -119,6 +119,9 @@ protected:
 	// Handles the transform notification.
 	void onTransform();
 
+	// Look-at vector.
+	Vector3 lookAtVector;
+
 	// View matrix.
 	Matrix4x3 viewMatrix;
 
@@ -136,9 +139,6 @@ protected:
 	float near_;
 	float far_;
 
-	// Used to pass a RenderQueue for rendering.
-	RenderDevicePtr renderDevice;
-
 	// Last viewport the camera rendered into.
 	ViewportPtr viewport;
 	Vector2i viewSize;
@@ -146,8 +146,8 @@ protected:
 	// Pointer to the camera's node transform.
 	TransformPtr transform;
 
-	// Look-at vector.
-	Vector3 lookAtVector;
+	// Used to pass a RenderQueue for rendering.
+	RenderDevicePtr renderDevice;
 
 	static const std::string& type;
 };

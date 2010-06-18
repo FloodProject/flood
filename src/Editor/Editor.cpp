@@ -177,7 +177,7 @@ void EditorFrame::createMainViewframe()
 	control->SetFocus();
 
 	RenderDevicePtr device = engine->getRenderDevice();
-	WindowPtr window = (WindowPtr) control->getRenderWindow(); 
+	Window* window = (Window*) control->getRenderWindow(); 
 
 	device->setWindow( window );
 	device->setRenderTarget( window );

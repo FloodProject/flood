@@ -21,13 +21,14 @@ namespace vapor {
 class VAPOR_API Profiler
 {
 public:
+
 	Profiler(const std::string& name);
 	~Profiler();
 
-private:
+protected:
 
-	Timer timer;
 	std::string name;
+	Timer timer;
 };
 
 //-----------------------------------//

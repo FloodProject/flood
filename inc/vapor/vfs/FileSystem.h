@@ -14,9 +14,6 @@
 #include "vapor/vfs/File.h"
 #include "vapor/vfs/FileWatcher.h"
 
-/** \addtogroup virtual Virtual Filesystem 
- * @{ */
-
 namespace vapor {
 
 //-----------------------------------//
@@ -37,48 +34,46 @@ class VAPOR_API FileSystem : public Subsystem
 {
 public:
 
-	/// Constructs a new instance of the virtual filesystem..
+	// Constructs a new instance of the virtual filesystem..
 	FileSystem( const std::string& app, const char* argv0 = nullptr );
 	virtual ~FileSystem();
 
-	/// Mount an archive into the virtual filesystem point.
+	// Mount an archive into the virtual filesystem point.
 	bool mount(const std::string& path, const std::string& mount = "",
 		bool append = true);
 
-	/// Mounts all the default resource locations.
+	// Mounts all the default resource locations.
 	void mountDefaultLocations();
 
-	/// Gets all the mount points in the FileSystem.
+	// Gets all the mount points in the FileSystem.
 	GETTER(MountPoints, const std::vector< std::string >&, mountPoints)
 
-	/// Gets a reference to the notification watcher.
-	GETTER(FileWatcher, FileWatcher*, watcher)
+	// Gets a reference to the notification watcher.
+	GETTER(FileWatcher, FileWatcher*, fileWatcher)
 
-	/// Updates the watcher with new notifications.
+	// Updates the watcher with new notifications.
 	virtual void update( double );
 
 protected:
 
-/// Sets up some sensible default mount points.
+// Sets up some sensible default mount points.
 	void setDefaultConfig(const std::string& app);
 
-	/// Logs the version and supported archive types.
+	// Logs the version and supported archive types.
 	void log();
 
-	/// Logs the FileSystem-related errors.
+	// Logs the FileSystem-related errors.
 	void logError( const std::string& );
 
-	/// Watch notifications for file events.
-	FileWatcher* watcher;
+	// Watch notifications for file events.
+	FileWatcher* fileWatcher;
 
-	/// Holds the mounted archives/directories in the filesystem.
+	// Holds the mounted archives/directories in the filesystem.
 	std::vector<std::string> mountPoints;
 };
 
 //-----------------------------------//
 
 } // end namespace
-
-/** @} */
 
 #endif

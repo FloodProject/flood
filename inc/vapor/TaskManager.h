@@ -13,13 +13,6 @@
 #include "vapor/Task.h"
 #include "vapor/ConcurrentQueue.h"
 
-// Workaround for a problem with boost::threads and UPX.
-// https://svn.boost.org/trac/boost/ticket/1848
-
-#if defined(VAPOR_PLATFORM_WINDOWS) && defined(VAPOR_THREADING_BOOST)
-	extern "C" void tss_cleanup_implemented();
-#endif
-
 namespace vapor {
 
 //-----------------------------------//
@@ -69,7 +62,7 @@ const int DEFAULT_THREAD_POOL_SIZE = -1;
 
 typedef fd::delegate<void()> TaskDelegate;
 
-class VAPOR_API TaskManager : public Singleton<TaskManager>, public Subsystem
+class VAPOR_API TaskManager : public Subsystem
 {
 public:
 
@@ -106,8 +99,6 @@ protected:
 	typedef concurrent_queue<TaskEvent> EventQueue;
 	EventQueue events;
 };
-
-TYPEDEF_PTR(TaskManager)
 
 //-----------------------------------//
 

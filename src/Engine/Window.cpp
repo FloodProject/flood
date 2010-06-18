@@ -114,16 +114,16 @@ void Window::setCursorPosition( const Vector2i& pos )
 
 //-----------------------------------//
 
-WindowPtr Window::createWindow( const WindowSettings& settings )
+Window* Window::createWindow( const WindowSettings& settings )
 {
-	WindowPtr window = nullptr;
+	Window* window = nullptr;
 
 	#if defined(VAPOR_WINDOWING_SDL)
 		window = new SDLWindow(settings);
 	#elif defined(VAPOR_WINDOWING_WIN32)
 		window = new Win32Window(settings);
 	#elif defined(VAPOR_WINDOWING_SFML)
-		window = (WindowPtr) new SFML_Window(settings);
+		window = (Window*) new SFML_Window(settings);
 	#else
 		//#error "Could not find a window implementation"
 	#endif
