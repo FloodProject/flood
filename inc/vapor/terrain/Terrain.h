@@ -42,6 +42,15 @@ struct TerrainSettings
 
 //-----------------------------------//
 
+struct CellRequest
+{
+	ImagePtr image;
+	short x;
+	short y;
+};
+
+//-----------------------------------//
+
 /**
  * A terrain is a piece of geometry that is represented by an heightmap,
  * a small bitmap that has the height in each vertice. A terrain is divided
@@ -100,7 +109,6 @@ protected:
 	// Material for this terrain.
 	MaterialPtr cellMaterial;
 
-	typedef std::tuple< ImagePtr, ushort, ushort > CellRequest;
 	std::list<CellRequest> requestsQueue;
 
 	// Terrain settings.

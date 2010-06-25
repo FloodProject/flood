@@ -110,13 +110,13 @@ void Viewframe::onCameraTransform()
 	const Vector3& pos = transform->getPosition();
 	char str[32];
 
-	float_to_str( str, pos.x );
+	String::fromFloat( str, pos.x );
 	txt_X->ChangeValue( str );
 	
-	float_to_str( str, pos.y );
+	String::fromFloat( str, pos.y );
 	txt_Y->ChangeValue( str );
 	
-	float_to_str( str, pos.z );
+	String::fromFloat( str, pos.z );
 	txt_Z->ChangeValue( str );
 
 	control->flagRedraw();
@@ -127,13 +127,13 @@ void Viewframe::onCameraTransform()
 void Viewframe::updatePosition()
 {
 	std::string str( txt_X->GetValue() );
-	float X = str_to_num<float>( str );
+	float X = String::toNumber<float>( str );
 	
 	str.assign( txt_Y->GetValue() );
-	float Y = str_to_num<float>( str );
+	float Y = String::toNumber<float>( str );
 	
 	str.assign( txt_Z->GetValue() );
-	float Z = str_to_num<float>( str );
+	float Z = String::toNumber<float>( str );
 
 	NodePtr camera( viewport->getCamera()->getNode() );
 	TransformPtr transform = camera->getTransform();

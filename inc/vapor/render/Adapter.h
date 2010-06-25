@@ -64,6 +64,7 @@ protected:
 	int maxAttribs;
 	
 	bool supportsVBO;
+	bool supportsAnisotropic;
 };
 
 TYPEDEF_PTR(Adapter)

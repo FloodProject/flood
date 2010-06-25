@@ -40,10 +40,10 @@ class VAPOR_API NativeFile : private boost::noncopyable
 {
 public:
 
-	NativeFile (const std::string& path, 
-		AccessMode::Enum mode = AccessMode::Read );
+	NativeFile(const std::string& path, 
+		AccessMode::Enum mode = AccessMode::Read);
 
-	NativeFile (const char* path,
+	NativeFile(const char* path,
 		AccessMode::Enum mode = AccessMode::Read);
 	
 	~NativeFile ();
@@ -53,9 +53,6 @@ public:
 
 	// Closes the file.
 	void close();
-	
-	// Gets the file size.
-	long getSize();
 
 	// Read file into buffer.
 	long read(void* buffer, long size);
@@ -66,11 +63,14 @@ public:
 	// Write buffer into file.
 	long write(const std::vector<byte>& buf);
 
-	// Sets if the file should be buffered.
-	void setBuffering( bool state );
+	// Gets the file size.
+	long getSize();
 
 	// Gets the path of the file.
 	GETTER(Path, const std::string, path)
+
+	// Sets if the file should be buffered.
+	void setBuffering(bool state);
 
 	// Checks if this file exists.
 	bool exists();

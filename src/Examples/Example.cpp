@@ -18,7 +18,7 @@ Example::Example(const char** argv)
 
 void Example::onInit()
 {
-	camera.reset( new FirstPersonCamera( getInputManager(), getRenderDevice() ) );
+	camera.reset( new FirstPersonCamera(renderDevice) );
 
 	PageManager* pageManager = new PageManager( 512, camera );
 	pageManager->onPageLoading += fd::bind(&Example::onPageLoading, this);
@@ -28,7 +28,7 @@ void Example::onInit()
 
 //-----------------------------------//
 
-void Example::onPageLoading(const PageEvent& event)
+void Example::onPageLoading( const PageEvent& event )
 {
 	debug("%d,%d", event.pos.x, event.pos.y );
 
@@ -53,9 +53,7 @@ void Example::onSetupResources()
 
 void Example::onSetupScene() 
 {
-	ScenePtr scene = getSceneManager();
-	ResourceManager* const rm = getResourceManager();
-	RenderDevice* const rd = getRenderDevice();
+	ResourceManager* rm = getResourceManager();
 
 	// Create a new Camera
 	NodePtr nodeCamera( new Node("MainCamera") );
@@ -63,42 +61,43 @@ void Example::onSetupScene()
 	nodeCamera->addComponent( camera );
 	scene->add( nodeCamera );
 
-	fbo = rd->createRenderBuffer( Settings() );
-	//textureFBO = fbo->createRenderTexture( RenderBufferType::Color );
-	textureFBO = fbo->createRenderTexture( RenderBufferType::Depth );
-	fbo->check();
-	fbo->unbind();
+	//bufferFBO = rd->createRenderBuffer( Settings() );
+	////textureFBO = fbo->createRenderTexture( RenderBufferType::Color );
+	//textureFBO = fbo->createRenderTexture( RenderBufferType::Depth );
+	//fbo->check();
+	//fbo->unbind();
 
-	viewport2 = fbo->addViewport(camera);
-	viewport2->setClearColor( Color::Red );
+	//viewportFBO = fbo->addViewport(camera);
+	//viewportFBO->setClearColor( Color::Red );
 
-	MaterialPtr materialFBO( new Material( "FBO1", "Tex" ) );
-	materialFBO->setTexture( 0, textureFBO );
+	//MaterialPtr materialFBO( new Material( "FBO1", "Tex" ) );
+	//materialFBO->setTexture( 0, textureFBO );
 
-	RenderablePtr quad( new Quad(100.0f, 100.0f) );
-	quad->setMaterial( materialFBO );
+	//RenderablePtr quad( new Quad(100.0f, 100.0f) );
+	//quad->setMaterial( materialFBO );
 
-	nodeFBO.reset( new Node( "FBOquad" ) );
-	nodeFBO->addTransform();
-	nodeFBO->addComponent( GeometryPtr( new Geometry(quad) ) );
-	scene->add( nodeFBO );
+	//nodeFBO.reset( new Node( "FBOquad" ) );
+	//nodeFBO->addTransform();
+	//nodeFBO->addComponent( GeometryPtr( new Geometry(quad) ) );
+	//scene->add( nodeFBO );
 
-	MeshPtr mesh = rm->loadResource<Mesh>("ct.ms3d");
-	NodePtr ct( new Node("ct") );
-	ct->addTransform();
-	ct->addComponent( ModelPtr( new Model(mesh) ) );
-	scene->add(ct);
+	MeshPtr meshCT = rm->loadResource<Mesh>("ct.ms3d");
+	NodePtr nodeCT( new Node("ct") );
+	nodeCT->addTransform();
+	nodeCT->addComponent( ModelPtr( new Model(meshCT) ) );
+	scene->add(nodeCT);
 	
-	label.reset( new Label( "", "Verdana.font") );
-	NodePtr fps( new Node("FPSNode") );
-	fps->addTransform();
-	fps->addComponent( label );
-	scene->add( fps );
+	labelFPS.reset( new Label( "", "Verdana.font") );
+	
+	NodePtr nodeFPS( new Node("LabelFPS") );
+	nodeFPS->addTransform();
+	nodeFPS->addComponent( labelFPS );
+	scene->add( nodeFPS );
 
 	NodePtr grid( new Node("Grid") );
 	grid->addTransform();
 	grid->addComponent( GridPtr( new Grid() ) );
-	scene->add( grid );
+	//scene->add( grid );
 
 	LightPtr light( new Light( LightType::Directional ) );
 	light->setDiffuseColor( Color::Red );
@@ -110,7 +109,7 @@ void Example::onSetupScene()
 	scene->add( nodeLight );
 
 	MaterialPtr materialCell( new Material("CellMaterial") );
-	materialCell->setTexture( 0, "dirt.png" );
+	materialCell->setTexture( 0, "sand.png" );
 	materialCell->setProgram( "tex_toon" );
 
 	TerrainSettings settings;
@@ -132,8 +131,9 @@ void Example::onSetupScene()
 	sky->addComponent( skydome );
 	scene->add( sky );
 
-	window = rd->getRenderWindow();
+	window = getRenderDevice()->getRenderWindow();
 	window->makeCurrent();
+
 	viewport = window->addViewport(camera);
 	viewport->setClearColor( Color(0.0f, 0.10f, 0.25f) );
 }
@@ -151,22 +151,22 @@ void Example::onUpdate( double delta )
 		return;
 
 	double fps = frameStats.getLastFPS();
-	std::string newLabel = String::format("FPS: %d", int(fps));
+	std::string newFPS = String::format("FPS: %d", int(fps));
 
-	label->setText(newLabel);
+	labelFPS->setText(newFPS);
 }
 
 //-----------------------------------//
 
 void Example::onRender()
 {
-	//// Render into the FBO first
-	fbo->bind();
-	textureFBO->bind();
-	nodeFBO->setVisible(false);
-	viewport2->update();
-	nodeFBO->setVisible(true);
-	fbo->unbind();
+	// Render into the FBO first
+	//fbo->bind();
+	//textureFBO->bind();
+	//nodeFBO->setVisible(false);
+	//viewport2->update();
+	//nodeFBO->setVisible(true);
+	//fbo->unbind();
 
 	// Render the scene
 	viewport->update();
@@ -177,24 +177,24 @@ void Example::onRender()
 void Example::onKeyPressed( const KeyEvent& keyEvent )
 {
 	if( keyEvent.keyCode == Keys::Space )
-		debug( "time: %f", frameTimer.getElapsedTime() );
+		debug( "time: %lf", frameTimer.getElapsedTime() );
 
 	if( keyEvent.keyCode == Keys::Pause )
 		Log::showDebug = !Log::showDebug;
 
 	if( keyEvent.keyCode == Keys::G )
 	{
-		fbo->bind();
+		bufferFBO->bind();
 		textureFBO->readImage()->save("depth.png");
-		fbo->unbind();
+		bufferFBO->unbind();
 	}
 
 	if( keyEvent.keyCode == Keys::F )
-		debug( "fps: %d", int(frameStats.getLastFPS()));
+		debug( "FPS: %d", int(frameStats.getLastFPS()));
 
 	if( keyEvent.keyCode == Keys::M )
 	{
-		debug( "min/avg/max: %f / %f / %f", 
+		debug( "min/avg/max: %lf / %lf / %lf", 
 					frameStats.minFrameTime,
 					frameStats.avgFrameTime,
 					frameStats.maxFrameTime );
@@ -203,7 +203,8 @@ void Example::onKeyPressed( const KeyEvent& keyEvent )
 	if( keyEvent.keyCode == Keys::J )
 	{
 		Json::Value sc;
-		getSceneManager()->serialize( sc );
+		scene->serialize( sc );
+		
 		File file( "Example.scene", AccessMode::Write );
 		file.write( sc.toStyledString() );
 	}

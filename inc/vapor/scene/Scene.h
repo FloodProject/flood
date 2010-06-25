@@ -16,16 +16,16 @@ namespace vapor {
 
 //-----------------------------------//
 
+// Bounding-box based intersection
 struct RayBoxQueryResult
 {
-	// Bounding-box based intersection
 	NodePtr node;
 	float distance;
 };
 
+// Triangle based intersection
 struct RayTriangleQueryResult
 {
-	// Triangle based intersection
 	GeometryPtr geometry;
 	RenderablePtr renderable;
 	Vector3 intersection;
@@ -50,32 +50,29 @@ class VAPOR_API Scene : public Group
 public:
 
 	Scene();
-	//virtual ~Scene();
 
-	/// Updates all the entities recursively.
+	// Updates all the entities recursively.
 	virtual void update( double delta );
 
-	/// Gets a raw pointer to the named entity.
-	Node* getEntityPtr( const std::string& name ) const;
-
-	/// Gets a shared pointer to the named entity.
+	// Gets a shared pointer to the named entity.
 	NodePtr getEntity( const std::string& name ) const;
 
-	/// Ray-casts a ray through the scene testing for collisions.
+	// Gets a raw pointer to the named entity.
+	Node* getEntityPtr( const std::string& name ) const;
+
+	// Checks for collision via ray-AABB tests.
 	bool doRayBoxQuery( const Ray& ray, RayBoxQueryResult& res ) const;
 	bool doRayBoxQuery( const Ray& ray, RayBoxQueryList& list, bool all = true ) const;
 	
+	// Checks for collision via ray-triangle tests.
 	bool doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res ) const;
-	bool doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res,
-		const NodePtr& node ) const;
+	bool doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, const NodePtr& node ) const;
 
 private:	
 
 	/// Updates all the transforms and bounding volumes of the scene nodes.
 	//void updateTransformAndBV( NodePtr node, MatrixStack& transformStack );
 };
-
-//-----------------------------------//
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Scene );
 TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( Scene );

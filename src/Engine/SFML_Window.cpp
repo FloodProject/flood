@@ -16,13 +16,12 @@ namespace vapor {
 //-----------------------------------//
 
 SFML_Window::SFML_Window(const WindowSettings& settings)
-	: Window( settings ),
-	flags( 0 ), cursorState( true )
+	: Window(settings),
+	cursorState( true ),
+	flags(0)
 {
 	if( !open() )
-	{
 		error( "render", "Could not create SFML render window" );
-	}
 }
 
 //-----------------------------------//
@@ -84,8 +83,7 @@ void SFML_Window::createWindow()
 {
 	if(settings.getCustomHandle())
 	{
-		window.Create( sf::WindowHandle( settings.getCustomHandle() ),
-			sfmlSettings );	
+		window.Create( sf::WindowHandle( settings.getCustomHandle() ), sfmlSettings );
 	}
 	else
 	{		

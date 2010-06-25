@@ -176,8 +176,6 @@ Node* Scene::getEntityPtr( const std::string& name ) const
 
 NodePtr Scene::getEntity( const std::string& name ) const
 {
-	//if( getName() == name ) return shared_from_this();
-
 	foreach( const NodePtr& node, getChildren() )
 	{
 		if( node->getName() == name )

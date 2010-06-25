@@ -97,8 +97,8 @@ public:
 	GETTER(ViewMatrix, const Matrix4x3&, viewMatrix)
 	
 	// Gets/sets the current viewport associated with the camera.
-	GETTER(Viewport, ViewportPtr, viewport)
-	DECLARE_SETTER(Viewport, ViewportPtr)
+	GETTER(Viewport, Viewport*, viewport)
+	DECLARE_SETTER(Viewport, Viewport*)
 
 	// Gets the frustum associated with the camera.
 	//GETTER(Frustum, const Frustum&, frustum)
@@ -140,19 +140,17 @@ protected:
 	float far_;
 
 	// Last viewport the camera rendered into.
-	ViewportPtr viewport;
+	Viewport* viewport;
 	Vector2i viewSize;
 
 	// Pointer to the camera's node transform.
 	TransformPtr transform;
 
 	// Used to pass a RenderQueue for rendering.
-	RenderDevicePtr renderDevice;
+	RenderDevice* renderDevice;
 
 	static const std::string& type;
 };
-
-//-----------------------------------//
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Camera );
 TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( Camera );

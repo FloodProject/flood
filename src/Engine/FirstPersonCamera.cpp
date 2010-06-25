@@ -23,15 +23,17 @@ const std::string& FirstPersonCamera::type = "FirstPersonCamera";
 
 //-----------------------------------//
 
-FirstPersonCamera::FirstPersonCamera( InputManager* input,
-	RenderDevice* device, Projection::Enum projection )
+FirstPersonCamera::FirstPersonCamera( RenderDevice* device,
+									  Projection::Enum projection )
 	: Camera( device, projection ),
-	inputManager( input ),
 	clampMovementX( true ),
 	moveSensivity( DEFAULT_MOVE_SENSIVITY ), 
 	lookSensivity( DEFAULT_LOOK_SENSIVITY ),
 	mouseWheel(0)
 {
+	Window* window = device->getWindow();
+	inputManager = window->getInputManager();
+
 	registerCallbacks();
 }
 

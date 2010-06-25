@@ -8,6 +8,7 @@
 
 #include "vapor/PCH.h"
 #include "vapor/scene/Model.h"
+#include "vapor/resources/Mesh.h"
 
 namespace vapor {
 

@@ -21,7 +21,7 @@ Buffer::Buffer()
 	{
 		glGenBuffers( 1, &id );
 
-		if( glHasError( "Error generating a new buffer" ) )
+		if( glHasError("Error generating a new buffer") )
 			return;
 	}
 }
@@ -32,7 +32,7 @@ Buffer::~Buffer()
 {
 	glDeleteBuffers( 1, &id );
 
-	if( glHasError( "Error deleting buffer" ) )
+	if( glHasError("Error deleting buffer") )
 		return;
 }
 

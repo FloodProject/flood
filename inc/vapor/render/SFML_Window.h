@@ -57,7 +57,7 @@ public:
 	virtual void makeCurrent();
 
 	// Gets the input manager.
-	InputManager& getInputManager() { return inputManager; }
+	InputManager* getInputManager() { return &inputManager; }
 
 private:
 

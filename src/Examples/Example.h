@@ -25,40 +25,38 @@ public:
 
 protected:
 
-	/// Initializes the app.
+	// Initializes the app.
 	virtual void onInit();	
 
-	/// Sets up all the needed resources.
+	// Sets up all the needed resources.
 	virtual void onSetupResources();
 
-	/// Called to set up the scene.
+	// Called to set up the scene.
 	virtual void onSetupScene();
 
-	/// Called to update stuff.
+	// Called to update stuff.
 	virtual void onUpdate( double delta );
 
-	/// Renders the scene.
+	// Renders the scene.
 	virtual void onRender();
 
-	/// Callback functions.
+	// Callback functions.
 	virtual void onKeyPressed( const KeyEvent& );
 	virtual void onButtonPressed( const MouseButtonEvent& );
 
 private:
 	
 	Window* window;
-	InputMap* inputMap; 
-	
+	Viewport* viewport;
 	CameraPtr camera;
-	ViewportPtr viewport;
-	ViewportPtr viewport2;
 
+	LabelPtr labelFPS;
 	TerrainPtr terrain;
 
-	LabelPtr label;
 	NodePtr nodeFBO;
+	Viewport* viewportFBO;
 	TexturePtr textureFBO;
-	RenderBufferPtr fbo;
+	RenderBuffer* bufferFBO;
 };
 
 //-----------------------------------//

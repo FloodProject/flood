@@ -8,21 +8,14 @@
 
 #pragma once
 
-#ifdef VAPOR_THREADING
-	#include <boost/atomic.hpp>
-	typedef boost::atomic<int> atomic_int;
-#else
-	typedef int atomic_int;
-#endif
-
 namespace vapor {
 
 //-----------------------------------//
 
 /**
  * Inherit from this class to be able to use reference counting semantics.
- * Currently this is implemented using intrusive_ptr's which are faster but
- * also less full featured than the better known shared_ptr's (no weak_ptr).
+ * Currently this is implemented using intrusive_ptr from boost which are
+ * faster but have less features than shared_ptr (no weak references).
  */
 
 class VAPOR_API ReferenceCounted
@@ -42,15 +35,7 @@ protected:
 
 private:
 
-#if !defined(VAPOR_THREADING)
-	int references;
-#elif defined(VAPOR_THREADING) && defined(VAPOR_THREADING_BOOST)
-	boost::atomic<int> references;
-#elif defined(VAPOR_THREADING) && defined(VAPOR_THREADING_STD)
-	std::atomic<int> references;
-#else
-	#error
-#endif
+	atomic_int references;
 
 	friend void intrusive_ptr_add_ref(ReferenceCounted* const ptr);
 	friend void intrusive_ptr_release(ReferenceCounted* const ptr);

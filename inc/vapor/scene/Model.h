@@ -9,7 +9,8 @@
 #pragma once
 
 #include "vapor/scene/Geometry.h"
-#include "vapor/resources/Mesh.h"
+
+FWD_DECL_INTRUSIVE(Mesh)
 
 namespace vapor {
 
@@ -38,7 +39,7 @@ private:
 
 	MeshPtr mesh;
 
-	// Component type
+	// Component type.
 	static const std::string& type;
 };
 

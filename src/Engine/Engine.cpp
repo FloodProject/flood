@@ -8,12 +8,9 @@
 
 #include "vapor/PCH.h"
 #include "vapor/Engine.h"
-#include "ResourceLoaders.h"
 
 #include "vapor/TaskManager.h"
 #include "vapor/vfs/FileSystem.h"
-#include "vapor/resources/ResourceManager.h"
-
 #include "vapor/render/Device.h"
 #include "vapor/input/InputManager.h"
 #include "vapor/audio/Device.h"
@@ -21,6 +18,8 @@
 #include "vapor/scene/Scene.h"
 #include "vapor/physics/Physics.h"
 #include "vapor/paging/PageManager.h"
+#include "vapor/resources/ResourceManager.h"
+#include "ResourceLoaders.h"
 
 namespace vapor {
 
@@ -52,7 +51,7 @@ void Engine::create(const std::string& _app,
 
 Engine::~Engine()
 {
-	sceneManager.reset();
+	scene.reset();
 
 	foreach( Subsystem* const sub, subsystems )
 		delete sub;
@@ -104,7 +103,7 @@ void Engine::init( bool createWindow )
 	setupDevices( createWindow );
 
 	// create the root scene node
-	sceneManager.reset( new Scene() );
+	scene.reset( new Scene() );
 
 #ifdef VAPOR_SCRIPTING_LUA
 	// Initialize the scripting
@@ -156,8 +155,8 @@ void Engine::setupDevices( bool createWindow )
 void Engine::setupInput()
 {
 	Window* window = renderDevice->getWindow();
-	InputManager& im = window->getInputManager();
-	im.createDefaultDevices(); 
+	InputManager* im = window->getInputManager();
+	im->createDefaultDevices(); 
 }
 
 //-----------------------------------//
@@ -212,7 +211,7 @@ void Engine::update( double delta )
 
 	fileSystem->update( delta );
 	resourceManager->update( delta );
-	sceneManager->update( delta );
+	scene->update( delta );
 
 #ifdef VAPOR_SCRIPTING_LUA
 	this->getScriptState()->update( delta );
@@ -225,7 +224,8 @@ void Engine::update( double delta )
 
 InputManager* const Engine::getInputManager() const
 {
-	return &(renderDevice->getWindow()->getInputManager());
+	Window* window = renderDevice->getWindow();
+	return window->getInputManager();
 }
 
 //-----------------------------------//

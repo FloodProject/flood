@@ -69,8 +69,6 @@ protected:
 	const TerrainSettings& settings;
 };
 
-//-----------------------------------//
-
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Cell );
 
 //-----------------------------------//

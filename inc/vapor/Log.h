@@ -21,7 +21,7 @@ namespace vapor {
  */
 
 VAPOR_API void debug(const char* msg, ...);
-VAPOR_API void debug( const std::string& msg );
+VAPOR_API void debug(const std::string& msg);
 
 //-----------------------------------//
 

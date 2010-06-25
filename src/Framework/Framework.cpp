@@ -77,7 +77,7 @@ void Framework::render()
 	while( frameTimer.reset(), window->pumpEvents() )
 	{
 		{
-			PROFILE_STR("Engine update");
+			//PROFILE_STR("Engine update");
 			update( frameStats.lastFrameTime );
 		}
 
@@ -85,7 +85,7 @@ void Framework::render()
 		onUpdate( frameStats.lastFrameTime );
 
 		{
-			PROFILE_STR("Engine render");
+			//PROFILE_STR("Engine render");
 			// User rendering callback.
 			onRender();
 		}

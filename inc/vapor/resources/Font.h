@@ -26,6 +26,7 @@ struct Glyph
 {
 	ushort x;
 	ushort y;
+
 	ushort width;
 	ushort height;
 };
@@ -76,8 +77,6 @@ protected:
 	// Font size.
 	int size;
 };
-
-//-----------------------------------//
 
 TYPEDEF_RESOURCE_POINTER_FROM_TYPE( Font );
 

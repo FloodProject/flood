@@ -10,11 +10,14 @@
 
 namespace vapor {
 
+//-----------------------------------//
+
 #ifdef VAPOR_PLATFORM_WINDOWS
 	typedef struct HINSTANCE__* DynLibHandle;
 #else
 	#error "Support for dynamic libraries not found"
 #endif
+
 //-----------------------------------//
 
 /**
@@ -30,11 +33,12 @@ public:
 	DynamicLib( const std::string& name );
 	~DynamicLib();
 
-	// Gets a pointer to the given symbol
+	// Gets a pointer to the given symbol.
 	void* getSymbol( const std::string& symbol );
 
 private:
 
+	// Loads the dynamic library.
 	bool load();
 	
 	std::string _name;

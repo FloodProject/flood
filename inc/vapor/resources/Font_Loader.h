@@ -10,16 +10,12 @@
 
 #include "vapor/resources/ResourceLoader.h"	
 #include "vapor/resources/Font.h"
-
-#ifdef VAPOR_FONT_BITMAP
-	#include "vapor/resources/BitmapFont.h"
-#endif
-
-#ifdef VAPOR_FONT_FREETYPE2
-	#include "vapor/resources/TTF.h"
-#endif
+#include "vapor/resources/BitmapFont.h"
+#include "vapor/resources/TTF.h"
 
 namespace vapor {
+
+//-----------------------------------//
 
 /**
  * Loads a font description file format that can describe both TTF and
@@ -47,7 +43,7 @@ namespace vapor {
  *		}   
  */
 
-class Font_Loader : public ResourceLoader
+class VAPOR_API Font_Loader : public ResourceLoader
 {
 public:
 
@@ -92,5 +88,7 @@ protected:
 	// Holds all file extensions recognized by this codec.
 	mutable ExtensionList extensions;
 };
+
+//-----------------------------------//
 
 } // end namespace

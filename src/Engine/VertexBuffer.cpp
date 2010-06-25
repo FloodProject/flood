@@ -18,7 +18,8 @@ namespace vapor {
 //-----------------------------------//
 
 VertexBuffer::VertexBuffer()
-	: built( false ), numVertices( 0 ), 
+	: built( false ),
+	numVertices( 0 ), 
 	bufferUsage( BufferUsage::Static ),
 	bufferAccess( BufferAccess::Read )
 { }
@@ -46,13 +47,19 @@ bool VertexBuffer::bind()
 
 //-----------------------------------//
 
-bool VertexBuffer::isValid()
+bool VertexBuffer::unbind()
 {
-	// Check that we have a valid buffer
-	if( !glIsBuffer( id ) )
-	{
-		warn( "gl::buffers", "Vertex buffer is not valid" );
+	glBindBuffer( GL_ARRAY_BUFFER, 0 );
+
+	if( glHasError("Error unbinding vertex buffer") )
 		return false;
+
+	if( !built )
+		return true;
+
+	foreach( const AttributeMapPair& p, attributes )
+	{
+		glDisableVertexAttribArray( p.first );
 	}
 
 	return true;
@@ -67,50 +74,34 @@ void VertexBuffer::bindPointers()
 
 	int offset = 0;
 
-	foreach( const AttributeMapPair& p, attributeMap )
+	foreach( const AttributeMapPair& p, attributes )
 	{
-		int components = std::get< 0 >( p.second );
-		GLPrimitive::Enum type = std::get< 1 >( p.second );
-		const std::vector<byte>& vec = std::get< 2 >( p.second );
+		const Attribute& attr = p.second;
 
 		glEnableVertexAttribArray( p.first );
 
 		if( glHasError("Error enabling vertex attribute array") )
 			return;
 
-		glVertexAttribPointer( p.first, components, type, GL_FALSE, 0, (void*) offset );
+		glVertexAttribPointer( p.first, attr.components,
+			GL_FLOAT, GL_FALSE, 0, (void*) offset );
 
 		if( glHasError("Error binding pointers to buffer") )
 			return;
 
-		offset += vec.size();
+		offset += attr.data.size();
 	}
 }
 
 //-----------------------------------//
 
-bool VertexBuffer::unbind()
+bool VertexBuffer::isValid() const
 {
-	glBindBuffer( GL_ARRAY_BUFFER, 0 );
-
-
-	if( glHasError("Error unbinding vertex buffer") )
-		return false;
-
-//#ifdef VAPOR_DEBUG
-//	while( glGetError() != GL_NO_ERROR )
-//	{
-//		warn( "gl::buffers", "Error unbinding vertex buffer (id: '%d')", id );	
-//		return false;
-//	}
-//#endif
-
-	if( built )
+	// Check that we have a valid buffer.
+	if( !glIsBuffer(id) )
 	{
-		foreach( const AttributeMapPair& p, attributeMap )
-		{
-			glDisableVertexAttribArray( p.first );
-		}
+		warn( "glbuffers", "Vertex buffer is not valid" );
+		return false;
 	}
 
 	return true;
@@ -118,90 +109,85 @@ bool VertexBuffer::unbind()
 
 //-----------------------------------//
 
-bool VertexBuffer::set( VertexAttribute::Enum attr, 
-		const std::vector< Vector3 >& data )
+bool VertexBuffer::set( VertexAttribute::Enum num,
+					    const std::vector<Vector3>& data )
 {
 	built = false;
 
-	// TODO: optimize this, copies twice...
-	std::vector< byte > bytev( data.size() * sizeof( Vector3 ) );
+	Attribute attr;
+	attr.components = 3;
+	attr.size = sizeof(float);
+	attr.data.resize( data.size() * sizeof(Vector3) );
 	
 	if( data.size() != 0)
-		memcpy( &bytev[0], &data[0], bytev.size() );
+		memcpy( &attr.data[0], &data[0], attr.data.size() );
 	
-	attributeMap[attr] = std::make_tuple( 3, GLPrimitive::FLOAT, bytev );
-
+	attributes[num] = attr;
 	return true;
 }
 
 //-----------------------------------//
 
-bool VertexBuffer::build( BufferUsage::Enum bU, BufferAccess::Enum bA )
+bool VertexBuffer::build( BufferUsage::Enum bu, BufferAccess::Enum ba )
 {
-	bufferUsage = bU;
-	bufferAccess = bA;
+	bufferUsage = bu;
+	bufferAccess = ba;
 
 	bind();
 
-	// check that all vertex attributes elements are the same size
-	// else we have to return because it doesn't make sense.
+	// Check that all vertex attributes elements are the same size.
+	if( !checkSize() )
+		return false;
 
-	if( !checkSize() ) return false;
-
-	// reserve space for all the elements
-	glBufferData( GL_ARRAY_BUFFER, getSize(), nullptr, getGLBufferType( bU, bA ) );
-
-	//debug( "buffer '%d' has size '%d'", id, getSize() );
+	// Reserve space for all the vertex elements.
+	GLenum bufferType = getGLBufferType( bufferUsage, bufferAccess );
+	glBufferData( GL_ARRAY_BUFFER, getSize(), nullptr, bufferType );
 
 	if( glHasError("Could not allocate storage for buffer") )
 		return false;
 
 	int offset = 0;
-	foreach( const AttributeMapPair& p, attributeMap )
+	foreach( const AttributeMapPair& p, attributes )
 	{
-		const std::vector<byte>& vec = std::get< 2 >( p.second );
+		const std::vector<byte>& vec = p.second.data;
+
 		glBufferSubData( GL_ARRAY_BUFFER, offset, vec.size(), &vec[0] );
+
+		if( glHasError("Could not buffer the data") )
+			return false;
+
 		offset += vec.size();
 	}
 
-	if( glHasError("Could not buffer the data") )
-		return false;
-
 	built = true;
-
 	return true;
 }
 
 //-----------------------------------//
 
-bool VertexBuffer::checkSize()
+bool VertexBuffer::checkSize() const
 {
-	// TODO: should we also check each attribute has the same type?
+	if( attributes.empty() )
+		return false;
 
-	if( attributeMap.empty() ) return false;
+	int initialSize = 0;
 
-	int first = -1;
-	
-	foreach( const AttributeMapPair& p, attributeMap )
+	foreach( const AttributeMapPair& p, attributes )
 	{
-		int size = std::get< 2 >( p.second ).size();
+		const Attribute& attr = p.second;
+		int size = attr.data.size();
 
-		if( size == 0 ) return false;
-
-		if( first < 0 )
-		{
-			first = size;
-
-			// Update the number of vertices.
-			// Should be the same for every attribute.
-			numVertices = size / 
-				(std::get< 0 >( p.second ) *
-				sizeof( std::get< 1 >( p.second ) ) );
-		}
-		else if( size != first )
-		{
+		if( size == 0 )
 			return false;
+
+		if( !initialSize )
+		{
+			initialSize = size;
+			numVertices = size / (attr.components * attr.size);
 		}
+
+		if(size != initialSize)
+			return false;
 	}
 
 	return true;
@@ -213,10 +199,8 @@ uint VertexBuffer::getSize() const
 {
 	uint totalBytes = 0;
 
-	foreach( const AttributeMapPair& p, attributeMap )
-	{
-		totalBytes += std::get< 2 >( p.second ).size();
-	}
+	foreach( const AttributeMapPair& p, attributes )
+		totalBytes += p.second.data.size();
 
 	return totalBytes;
 }
@@ -234,13 +218,13 @@ std::vector<Vector3>&
 VertexBuffer::getAttribute( VertexAttribute::Enum attr ) const
 {
 	AttributeMap::iterator it;
-	it = attributeMap.find( attr );
+	it = attributes.find( attr );
 
-	if( it == attributeMap.end() )
+	if( it == attributes.end() )
 		assert( "Can't return null reference" );
 	
 	Attribute& p = (*it).second;
-	std::vector<byte>& arr = std::get<2>(p);
+	std::vector<byte>& arr = p.data;
 
 	return (std::vector<Vector3>&)(arr);
 }
@@ -256,12 +240,12 @@ void VertexBuffer::forceRebuild()
 
 uint VertexBuffer::getNumAttributes() const
 {
-	return attributeMap.size();
+	return attributes.size();
 }
 
 //-----------------------------------//
 
-uint VertexBuffer::getNumVertices()
+uint VertexBuffer::getNumVertices() const
 {
 	checkSize();
 	return numVertices;
@@ -271,7 +255,7 @@ uint VertexBuffer::getNumVertices()
 
 void VertexBuffer::clear()
 {
-	attributeMap.clear();
+	attributes.clear();
 }
 
 //-----------------------------------//

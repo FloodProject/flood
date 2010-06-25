@@ -10,8 +10,8 @@
 
 #include "vapor/math/AABB.h"
 
-FWD_DECL_TYPEDEF_INT(Renderable)
-FWD_DECL_TYPEDEF_SHARED(Node)
+FWD_DECL_INTRUSIVE(Renderable)
+FWD_DECL_SHARED(Node)
 
 namespace vapor {
 

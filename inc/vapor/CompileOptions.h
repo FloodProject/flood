@@ -31,29 +31,18 @@
 //#define VAPOR_MEMORY_TR1_VENDOR
 #define VAPOR_MEMORY_TR1_BOOST
 
-//#define VAPOR_MEMORY_LEAK_DETECTOR
-
 #define VAPOR_MEMORY_SHARED_PTR
 #define VAPOR_MEMORY_INTRUSIVE_PTR
+
+//#define VAPOR_MEMORY_LEAK_DETECTOR
 
 //---------------------------------------------------------------------//
 // Threading stuff
 //---------------------------------------------------------------------//
 
 #define VAPOR_THREADING
-
-#define VAPOR_THREADING_BOOST
-//#define VAPOR_THREADING_STD
-
-//#if defined(VAPOR_THREADING)
-//	#if !defined(VAPOR_THREADING_BOOST) || !defined(VAPOR_THREADING_STD)
-//		#error Choose a threading implementation
-//	#endif
-//
-//	#if defined(VAPOR_THREADING_BOOST) && defined(VAPOR_THREADING_STD)
-//		#error Only one threading implementation allowed
-//	#endif
-//#endif
+	#define VAPOR_THREADING_BOOST
+	//#define VAPOR_THREADING_STD
 
 //---------------------------------------------------------------------//
 // VFS providers
@@ -67,9 +56,6 @@
 //---------------------------------------------------------------------//
 
 #define VAPOR_WINDOWING_SFML
-
-// Set this to either version '12' (1.2) or '13' (1.3)
-//#define VAPOR_WINDOWING_SDL 12
 //#define VAPOR_WINDOWING_WIN32
 
 //---------------------------------------------------------------------//

@@ -8,6 +8,8 @@
 
 #pragma once
 
+#ifdef VAPOR_FONT_FREETYPE2
+
 #include "vapor/resources/Font.h"
 
 namespace vapor {
@@ -34,4 +36,6 @@ private:
 //-----------------------------------//
 
 } // end namespace
+
+#endif
 

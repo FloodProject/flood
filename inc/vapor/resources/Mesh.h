@@ -10,7 +10,7 @@
 
 #include "vapor/resources/Resource.h"
 
-FWD_DECL_TYPEDEF_INT(Renderable)
+FWD_DECL_INTRUSIVE(Renderable)
 
 namespace vapor {
 

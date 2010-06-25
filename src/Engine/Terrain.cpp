@@ -44,7 +44,12 @@ void Terrain::addCell( const ImagePtr& heightmap, short x, short y )
 		return;
 	}
 
-	requestsQueue.push_back( std::make_tuple(heightmap, x, y) );
+	CellRequest request;
+	request.image = heightmap;
+	request.x = x;
+	request.y = y;
+
+	requestsQueue.push_back( request );
 }
 
 //-----------------------------------//
@@ -149,13 +154,13 @@ void Terrain::update( double delta )
 
 	while( it != requestsQueue.end() )
 	{
-		const CellRequest& req = (*it);
+		const CellRequest& request = (*it);
 		
-		const ImagePtr& heightmap = std::get<0>(req);
+		const ImagePtr& heightmap = request.image;
 		assert( heightmap != nullptr );
 
-		ushort x = std::get<1>(req);
-		ushort y = std::get<2>(req);
+		short x = request.x;
+		short y = request.y;
 		
 		if( heightmap->isLoaded() )
 		{

@@ -70,12 +70,11 @@ bool NativeFile::open()
 
 void NativeFile::close()
 {
-	// close the file
-	if(fp != nullptr)
-	{
-		fclose(fp);
-		fp = nullptr;
-	}
+	if(!fp)
+		return;
+	
+	fclose(fp);
+	fp = nullptr;
 }
 
 //-----------------------------------//
@@ -84,8 +83,12 @@ void NativeFile::setBuffering( bool state )
 {
 	if( !state )
 	{
-		// turn off file buffering
+		// Turn off file buffering.
 		setbuf(fp, nullptr);
+	}
+	else
+	{
+		assert( 0 && "Not implemented" );
 	}
 }
 
@@ -93,24 +96,24 @@ void NativeFile::setBuffering( bool state )
 
 long NativeFile::getSize()
 {
-	// hold the current file position
+	// Hold the current file position.
 	long curr = ftell(fp);
 	
-	// seek to the end of the file and get position
+	// Seek to the end of the file and get position.
 	fseek(fp, 0, SEEK_END);
-	long fileSize = ftell(fp);
+	long size = ftell(fp);
 	
-	// seek again to the previously current position
+	// Seek again to the previously current position.
 	fseek(fp, curr, SEEK_SET);
 
-	return fileSize;
+	return size;
 }
 
 //-----------------------------------//
 
-long NativeFile::read(void* buffer, long sz)
+long NativeFile::read(void* buffer, long size)
 {
-	return fread(buffer, 1, sz, fp);
+	return fread(buffer, 1, size, fp);
 }
 
 //-----------------------------------//

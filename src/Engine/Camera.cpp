@@ -212,7 +212,7 @@ void Camera::setupView()
 
 //-----------------------------------//
 
-void Camera::setViewport( ViewportPtr newViewport )
+void Camera::setViewport( Viewport* newViewport )
 {
 	assert( newViewport != nullptr );
 

@@ -159,8 +159,8 @@ void Cell::rebuildFaceNormals()
 // http://www.gamedev.net/reference/articles/article2264.asp
 //
 
-#define isRegular(x,y) ((x>=1) && (x<=(numTiles-1)) \
-						&& (y>=1) && (y<=(numTiles-1)))
+#define isRegular(x,y) ((x>=1u) && (x<=(numTiles-1u)) \
+						&& (y>=1u) && (y<=(numTiles-1u)))
 
 std::vector<uint> Cell::getNeighborFaces( uint i )
 {

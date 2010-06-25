@@ -10,28 +10,26 @@
 
 #ifdef VAPOR_RENDERER_OPENGL
 
+#include "vapor/math/Color.h"
+#include "vapor/math/Vector2.h"
+#include "vapor/math/Matrix4x3.h"
+
 #include "vapor/render/Window.h"
 #include "vapor/render/Target.h"
 #include "vapor/render/Renderable.h"
 #include "vapor/render/RenderQueue.h"
-#include "vapor/math/Matrix4x3.h"
-#include "vapor/math/Vector2.h"
-#include "vapor/math/Color.h"
 
-FWD_DECL_TYPEDEF_PTR(ProgramManager)
-FWD_DECL_TYPEDEF_PTR(TextureManager)
-FWD_DECL_TYPEDEF_PTR(Adapter)
-FWD_DECL_TYPEDEF_PTR(RenderBuffer)
+namespace vapor {
 
-namespace vapor { 
+//-----------------------------------//
 
 class Camera;
+class Adapter;
+class RenderBuffer;
 class BufferManager;
 class ResourceManager;
 class ProgramManager;
 class TextureManager;
-class Adapter;
-class RenderBuffer;
 
 //-----------------------------------//
 
@@ -82,7 +80,7 @@ public:
 	void setWindowActiveTarget();
 
 	// Creates a new render buffer (offscreen render target).
-	RenderBufferPtr createRenderBuffer( const Settings& );
+	RenderBuffer* createRenderBuffer( const Settings& );
 
 	// Creates a new rendering window.
 	Window* createWindow( const WindowSettings& = WindowSettings() );
@@ -91,8 +89,8 @@ public:
 	GETTER(RenderWindow, Window*, window)
 
 	// Gets/sets the current active render target.
-	GETTER(RenderTarget, RenderTargetPtr, activeTarget)
-	void setRenderTarget(RenderTargetPtr target);
+	GETTER(RenderTarget, RenderTarget*, activeTarget)
+	void setRenderTarget(RenderTarget* target);
 
 	// Gets/sets the main rendering window.
 	ACESSOR(Window, Window*, window)
@@ -105,13 +103,13 @@ public:
 	void setViewport( const Vector2i&, const Vector2i& );
 
 	// Gets rendering adapter information.
-	GETTER(Adapter, AdapterPtr, adapter)
+	GETTER(Adapter, Adapter*, adapter)
 
 	// Gets the program manager.
-	GETTER(ProgramManager, ProgramManagerPtr, programManager)
+	GETTER(ProgramManager, ProgramManager*, programManager)
 
 	// Gets the texture manager.
-	GETTER(TextureManager, TextureManagerPtr, textureManager)
+	GETTER(TextureManager, TextureManager*, textureManager)
 
 	// Gets the texture manager.
 	GETTER(ShadowTextures, ShadowTextureMap, shadowTextures)
@@ -132,19 +130,19 @@ protected:
 	ResourceManager* resourceManager;
 
 	// Manages all the shaders.
-	TextureManagerPtr textureManager;
+	TextureManager* textureManager;
 
 	// Manages all the shaders.
-	ProgramManagerPtr programManager;
+	ProgramManager* programManager;
 
 	// Active render target
-	RenderTargetPtr activeTarget;
+	RenderTarget* activeTarget;
 
 	// List of render targets
-	std::vector<RenderTargetPtr> renderTargets;
+	std::vector<RenderTarget*> renderTargets;
 
 	// Adapter information
-	AdapterPtr adapter;
+	Adapter* adapter;
 
 	// Render window
 	Window* window;
@@ -156,13 +154,11 @@ protected:
 	Vector2i viewportLeft, viewportSize;
 
 	ShadowTextureMap shadowTextures;
-	RenderBufferPtr shadowDepthBuffer;
+	RenderBuffer* shadowDepthBuffer;
 	const Camera* camera;
 
 	void updateLightDepth( LightState& state );
 };
-
-TYPEDEF_PTR(RenderDevice)
 
 //-----------------------------------//
 

@@ -26,20 +26,20 @@ namespace vapor {
 //-----------------------------------//
 
 RenderDevice::RenderDevice( ResourceManager* rm )
-	: adapter(nullptr),
-	window(nullptr),
-	activeTarget(nullptr),
-	programManager(nullptr),
-	textureManager(nullptr),
-	shadowDepthBuffer(nullptr),
-	resourceManager(rm)
+	: adapter(nullptr)
+	, window(nullptr)
+	, activeTarget(nullptr)
+	, programManager(nullptr)
+	, textureManager(nullptr)
+	, shadowDepthBuffer(nullptr)
+	, resourceManager(rm)
 { }
 
 //-----------------------------------//
 
 RenderDevice::~RenderDevice()
 {
-	info("opengl", "Closing OpenGL rendering device");
+	info("gl", "Closing OpenGL rendering device");
 
 	// TODO: delete all OpenGL resources (shaders, textures...)
 	// Or make sure they are all deleted once we delete the OpenGL context.
@@ -57,10 +57,8 @@ void RenderDevice::init()
 	info( "gl", "Creating OpenGL rendering device" );
 
 	if( !window ) 
-	{
 		error( "gl", "No current OpenGL context found, stuff may fail" );
-	}
-
+	
 	checkExtensions();
 
 	adapter = new Adapter();
@@ -215,7 +213,7 @@ void RenderDevice::updateLightDepth( LightState& state )
 	lightCameraNode->addTransform(); /*Component( lightTransform );*/
 	lightCameraNode->addComponent( lightCamera );
 
-	ViewportPtr lightView = new Viewport(lightCamera, shadowDepthBuffer);
+	Viewport* lightView = new Viewport(lightCamera, shadowDepthBuffer);
 
 	if( !shadowDepthBuffer->check() )
 		return;
@@ -410,7 +408,7 @@ void RenderDevice::clearTarget()
 
 //-----------------------------------//
 
-void RenderDevice::setRenderTarget(RenderTargetPtr target)
+void RenderDevice::setRenderTarget(RenderTarget* target)
 {
 	activeTarget = target;
 
@@ -427,9 +425,9 @@ void RenderDevice::setWindowActiveTarget()
 
 //-----------------------------------//
 
-RenderBufferPtr RenderDevice::createRenderBuffer( const Settings& settings )
+RenderBuffer* RenderDevice::createRenderBuffer( const Settings& settings )
 {
-	RenderBufferPtr buffer( new FBO(settings) );
+	RenderBuffer* buffer( new FBO(settings) );
 	renderTargets.push_back( buffer );
 	
 	return buffer;

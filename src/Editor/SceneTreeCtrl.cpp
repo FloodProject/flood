@@ -287,7 +287,7 @@ void SceneTreeCtrl::onItemMenu(wxTreeEvent& event)
 void SceneTreeCtrl::onButtonNodeAdd(wxCommandEvent&)
 {
 	static int i = 0;
-	std::string name( "SceneNode"+num_to_str(i++) );
+	std::string name( "SceneNode"+String::fromNumber(i++) );
 	NodePtr node( new Node(name) );
 	node->addTransform();
 	

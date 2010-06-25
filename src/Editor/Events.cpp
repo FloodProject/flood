@@ -25,7 +25,7 @@ void EditorFrame::RefreshViewport()
 
 void EditorFrame::onRender()
 {
-	ViewportPtr viewport = viewframe->getViewport();
+	Viewport* viewport = viewframe->getViewport();
 
 	const CameraPtr& camera = viewport->getCamera();
 	camera->setViewport( viewport );
@@ -52,14 +52,14 @@ void EditorFrame::onUpdate( double delta )
 
 void EditorFrame::OnNodeSelected(wxTreeItemId old, wxTreeItemId id)
 {
-	const NodePtr& n_old = sceneTreeCtrl->getEntity( old );
-	const NodePtr& n_new = sceneTreeCtrl->getEntity( id );
+	const NodePtr& nodeOld = sceneTreeCtrl->getEntity( old );
+	const NodePtr& nodeNew = sceneTreeCtrl->getEntity( id );
 	
-	if( !n_new )
+	if( !nodeNew )
 		return;
 
 	if( currentMode )
-		currentMode->onNodeSelected( n_old, n_new );
+		currentMode->onNodeSelected( nodeOld, nodeNew );
 }
 
 //-----------------------------------//

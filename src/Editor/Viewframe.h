@@ -42,7 +42,7 @@ public:
 	GETTER(Control, vaporControl*, control)
 
 	// Gets the associated viewport.
-	GETTER(Viewport, ViewportPtr, viewport)
+	GETTER(Viewport, Viewport*, viewport)
 
 protected:
 
@@ -60,7 +60,7 @@ protected:
 	vaporControl* control;
 
 	// Viewport associated with the control.
-	ViewportPtr viewport;
+	Viewport* viewport;
 
 	// UI controls.
 	wxString X;

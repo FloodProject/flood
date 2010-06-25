@@ -35,7 +35,7 @@ Label::Label( const std::string& text, const std::string& uri )
 {
 	static int i = 0;
 
-	material = new Material("FontMaterial" + num_to_str(i++), "Tex");
+	material = new Material("FontMaterial" + String::fromNumber(i++), "Tex");
 	
 	ResourceManager* rm = Engine::getInstance().getResourceManager();
 	font = rm->loadResource<Font>(uri);
@@ -59,9 +59,9 @@ void Label::init()
 
 //-----------------------------------//
 
-void Label::setText( const std::string& _text )
+void Label::setText( const std::string& newText )
 {
-	text = _text;
+	text = newText;
 	isDirty = true;
 }
 

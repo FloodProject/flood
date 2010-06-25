@@ -12,8 +12,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-class VAPOR_API Task : public ReferenceCounted,
-	private boost::noncopyable
+class VAPOR_API Task : public ReferenceCounted, private boost::noncopyable
 {
 public:
 

@@ -53,6 +53,7 @@
 #include <vapor/scene/Light.h>
 #include <vapor/scene/Skydome.h>
 #include <vapor/scene/Billboard.h>
+#include <vapor/scene/Body.h>
 #include <vapor/scene/Tags.h>
 
 //---------------------------------------------------------------------//
@@ -110,7 +111,6 @@
 //---------------------------------------------------------------------//
 
 #include <vapor/physics/Physics.h>
-#include <vapor/scene/Body.h>
 
 //---------------------------------------------------------------------//
 // Terrain-related Includes

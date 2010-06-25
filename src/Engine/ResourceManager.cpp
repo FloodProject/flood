@@ -43,10 +43,15 @@ ResourceManager::~ResourceManager()
 	// TODO: comment the extension deleting logic.
 	foreach( const ResourceLoaderMapPair& entry, resourceLoaders )
 	{
-		if( entry.second->getExtensions().size() == 1 )
-			delete entry.second;
+		ResourceLoader* loader = entry.second;
+
+		if( !loader )
+			continue;
+
+		if( loader->getExtensions().size() == 1 )
+			delete loader;
 		else
-			entry.second->getExtensions().remove( entry.first );
+			loader->getExtensions().remove( entry.first );
 	}
 
 	// Check that all resources will be deleted.
@@ -60,10 +65,14 @@ ResourcePtr ResourceManager::loadResource(const std::string& path, bool async)
 {
 	// Check if the resource is already loaded.
 	ResourcePtr res = getResource(path);
-	if( res ) return res;
+	
+	if( res )
+		return res;
 
 	res = prepareResource(path);
-	if( !res ) return res;
+	
+	if( !res )
+		return res;
 
 	decodeResource(res, async);
 
@@ -177,12 +186,15 @@ ResourcePtr ResourceManager::prepareResource( const std::string& path )
 	File file(path);
 
 	if( !validateResource(file) )
-		return ResourcePtr();
+		return nullptr;
 
 	// Get the available resource loader and prepare the resource.
-	ResourceLoader* const ldr = resourceLoaders[file.getExtension()];
+	ResourceLoader* loader = resourceLoaders[file.getExtension()];
 
-	ResourcePtr res( ldr->prepare(file) );
+	if( !loader )
+		return nullptr;
+
+	ResourcePtr res( loader->prepare(file) );
 	res->setStatus( ResourceStatus::Loading );
 	res->setURI( path );
 

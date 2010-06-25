@@ -12,8 +12,6 @@
 #include "vapor/render/Target.h"
 #include "vapor/input/InputManager.h"
 
-FWD_DECL_TYPEDEF_PTR(Window)
-
 namespace vapor {
 
 //-----------------------------------//
@@ -97,6 +95,9 @@ public:
 	// Sets the title of the window.
 	virtual void setTitle (const std::string& title) = 0;
 
+	// Gets the input manager.
+	virtual InputManager* getInputManager() = 0;
+
 	// Sets the visibility of the mouse cursor.
 	virtual void setCursorVisible( bool state ) = 0;
 
@@ -113,13 +114,10 @@ public:
 	// Gets the window settings.
 	GETTER(Settings, const Settings&, settings)
 
-	// Gets the input manager.
-	virtual InputManager& getInputManager() = 0;
-
 	// Event fired when the window is closed.
 	fd::delegate< void() > onWindowClose;
 
-	// Event fired when the window's focus changes.
+	// Event fired when the window focus changes.
 	fd::delegate< void( bool focusLost ) > onWindowFocusChange;
 
 	// Create a new render window.
@@ -136,11 +134,9 @@ protected:
 	// Handles the focus event.
 	void handleWindowFocus( bool focusLost );
 
-	// Holds the window settings
+	// Holds the window settings.
 	WindowSettings settings;
 };
-
-TYPEDEF_PTR(Window)
 
 //-----------------------------------//
 

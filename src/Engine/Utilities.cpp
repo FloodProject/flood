@@ -41,13 +41,9 @@ long System::swapEndian(long i)
 
 //-----------------------------------//
 
-void float_to_str( char* str, float n, byte precision )
+void String::fromFloat( char* str, float n, byte precision )
 {
-//#ifdef VAPOR_PLATFORM_WINDOWS
-//	sprintf_s( sprintf( str, 32, "%#.*f", precision, n );
-//#else
 	sprintf( str, "%#.*f", precision, n );
-//#endif
 }
 
 //-----------------------------------//
@@ -165,106 +161,6 @@ std::string String::toUpperCase(const std::string& str)
 	
 	return data;
 }
-
-////-----------------------------------//
-//
-//#ifdef VAPOR_PLATFORM_WINDOWS
-//
-//#define MS_VC_EXCEPTION 0x406D1388
-//
-//VAPOR_ALIGN_BEGIN(8) struct tagTHREADNAME_INFO
-//{
-//	DWORD dwType;	// Must be 0x1000.
-//	LPCSTR szName;	// Pointer to name (in user addr space).
-//	DWORD dwThreadID;// Thread ID (-1 = caller thread).
-//	DWORD dwFlags;	// Reserved for future use, must be zero.
-//} VAPOR_ALIGN_END(8);
-//
-//typedef struct tagTHREADNAME_INFO THREADNAME_INFO;
-//
-//void SetThreadName( ulong dwThreadID, const std::string& threadName )
-//{
-//   Sleep(10);
-//   THREADNAME_INFO info;
-//   info.dwType = 0x1000;
-//   info.szName = threadName.c_str();
-//   info.dwThreadID = (DWORD) dwThreadID;
-//   info.dwFlags = 0;
-//
-//   __try
-//   {
-//      RaiseException( MS_VC_EXCEPTION, 0, 
-//		  sizeof(info)/sizeof(ULONG_PTR), (ULONG_PTR*)&info );
-//   }
-//   __except(EXCEPTION_EXECUTE_HANDLER)
-//   {
-//   }
-//}
-//
-////-----------------------------------//
-//
-//typedef struct CLIENT_ID
-//{
-//	PVOID UniqueProcess;
-//	PVOID UniqueThread;
-//} CLIENT_ID;
-//
-//typedef LONG    NTSTATUS;
-//typedef LONG    KPRIORITY;
-//
-//typedef struct _THREAD_BASIC_INFORMATION
-//{
-//	NTSTATUS	ExitStatus;
-//	PVOID		TebBaseAddress;
-//	CLIENT_ID	ClientId;
-//	KAFFINITY	AffinityMask;
-//	KPRIORITY	Priority;
-//	KPRIORITY	BasePriority;
-//} THREAD_BASIC_INFORMATION;
-//
-//typedef enum _THREAD_INFORMATION_CLASS 
-//{
-//    ThreadBasicInformation,
-//    ThreadTimes,
-//    ThreadPriority,
-//    ThreadBasePriority,
-//    ThreadAffinityMask,
-//    ThreadImpersonationToken,
-//    ThreadDescriptorTableEntry,
-//    ThreadEnableAlignmentFaultFixup,
-//    ThreadEventPair,
-//    ThreadQuerySetWin32StartAddress,
-//    ThreadZeroTlsCell,
-//    ThreadPerformanceCount,
-//    ThreadAmILastThread,
-//    ThreadIdealProcessor,
-//    ThreadPriorityBoost,
-//    ThreadSetTlsArrayAddress,
-//    ThreadIsIoPending,
-//    ThreadHideFromDebugger
-//} THREAD_INFORMATION_CLASS, *PTHREAD_INFORMATION_CLASS;
-//
-//NTSTATUS NTSYSAPI NTAPI NtQueryInformationThread(
-//  IN HANDLE               ThreadHandle,
-//  IN THREAD_INFORMATION_CLASS ThreadInformationClass,
-//  OUT PVOID               ThreadInformation,
-//  IN ULONG                ThreadInformationLength,
-//  OUT PULONG              ReturnLength OPTIONAL );
-//
-//ulong GetThreadId(HANDLE Thread)
-//{
-//    THREAD_BASIC_INFORMATION tbi;
-//    NTSTATUS status;
-//
-//    status = NtQueryInformationThread(Thread, ThreadBasicInformation, &tbi,
-//                                      sizeof(tbi), nullptr);
-//    if (status)
-//		error( "thread::GetThreadId", "NtQueryInformationThread error" );
-//
-//    return HandleToULong(tbi.ClientId.UniqueThread);
-//}
-//
-//#endif
 
 //-----------------------------------//
 

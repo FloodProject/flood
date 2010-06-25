@@ -25,7 +25,7 @@ Profiler::~Profiler()
 
 	debug( "%s: took %lu ms / %.5lf µs.", name.c_str(), 
 		(ulong)(time*1000), time );
-};
+}
 
 //-----------------------------------//
 

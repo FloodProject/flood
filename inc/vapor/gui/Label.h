@@ -10,9 +10,9 @@
 
 #include "vapor/gui/Overlay.h"
 
-FWD_DECL_TYPEDEF_INT(Font)
-FWD_DECL_TYPEDEF_INT(Material)
-FWD_DECL_TYPEDEF_SHARED(Geometry)
+FWD_DECL_INTRUSIVE(Font)
+FWD_DECL_INTRUSIVE(Material)
+FWD_DECL_SHARED(Geometry)
 
 namespace vapor {
 

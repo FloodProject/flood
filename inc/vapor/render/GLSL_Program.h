@@ -13,7 +13,7 @@
 #include "vapor/render/GLSL_Shader.h"
 #include "vapor/render/GL.h"
 
-FWD_DECL_TYPEDEF_INT(GLSL_Text)
+FWD_DECL_INTRUSIVE(GLSL_Text)
 
 namespace vapor {
 

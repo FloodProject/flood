@@ -18,9 +18,7 @@ const std::string& Geometry::type = "Geometry";
 
 Geometry::Geometry()
 	: isDirty( true )
-{
-
-}
+{ }
 
 //-----------------------------------//
 
@@ -32,9 +30,8 @@ Geometry::Geometry( RenderablePtr rend )
 
 //-----------------------------------//
 
-void Geometry::addRenderable( RenderablePtr rend, 
-							 RenderGroup::Enum group, 
-							 uint priority )
+void Geometry::addRenderable( RenderablePtr rend, RenderGroup::Enum group, 
+							  uint priority )
 {
 	renderables[group].push_back( rend );
 }
@@ -51,7 +48,8 @@ Geometry::getRenderables( RenderGroup::Enum group )
  
 void Geometry::appendRenderables( RenderQueue& queue, TransformPtr transform )
 {
-	if( !transform ) return;
+	if( !transform )
+		return;
 	
 	const Matrix4x3& absoluteTransform = transform->getAbsoluteTransform();
 	
@@ -75,7 +73,8 @@ void Geometry::appendRenderables( RenderQueue& queue, TransformPtr transform )
 
 void Geometry::update( double delta )
 {
-	if( !isDirty ) return;
+	if( !isDirty )
+		return;
 
 	boundingVolume.reset();
 
@@ -83,7 +82,9 @@ void Geometry::update( double delta )
 	foreach( const RenderablePtr& rend, renderables[RenderGroup::Normal] )
 	{
 		const VertexBufferPtr& vb = rend->getVertexBuffer();
-		if( !vb ) continue;
+		
+		if( !vb )
+			continue;
 
 		foreach( const Vector3& v, vb->getVertices() )
 			boundingVolume.add( v );

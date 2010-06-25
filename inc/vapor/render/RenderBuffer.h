@@ -62,8 +62,8 @@ public:
 	virtual void update() = 0;
 
 	// Creates a new render buffer with the given components.
-	virtual void createRenderBuffer( int bufferComponents = 
-		RenderBufferType::Color | RenderBufferType::Depth ) = 0;
+	virtual void createRenderBuffer( int bufferComponents
+		= RenderBufferType::Color | RenderBufferType::Depth ) = 0;
 
 	// Creates a render texture.
 	virtual TexturePtr createRenderTexture( 
@@ -82,8 +82,6 @@ protected:
 	// Holds the window settings
 	Settings settings;
 };
-
-TYPEDEF_PTR( RenderBuffer );
 
 //-----------------------------------//
 

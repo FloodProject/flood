@@ -21,10 +21,8 @@ Adapter::Adapter()
 {
 	parseInfo();
 
-	if(GLEW_ARB_vertex_buffer_object)
-		supportsVBO = true;
-	else
-		supportsVBO = false;
+	supportsVBO = !! GLEW_ARB_vertex_buffer_object;
+	supportsVBO = !! GLEW_EXT_texture_filter_anisotropic;
 
 	glGetIntegerv( GL_MAX_TEXTURE_SIZE, &maxTextureSize );
 	glGetIntegerv( GL_MAX_VERTEX_ATTRIBS, &maxAttribs );
@@ -49,21 +47,21 @@ void Adapter::parseInfo()
 	// get the name of the card
 	tmp = (const char*) glGetString(GL_RENDERER);
 	if(tmp == nullptr) {
-		warn("gl::adapter", "Could not get GL renderer information");
+		warn("gl", "Could not get GL renderer information");
 	} else {
 		name = tmp;
 	}
 	
 	tmp = (const char*) glGetString(GL_VENDOR);
 	if(tmp == nullptr) {
-		warn("gl::adapter", "Could not get GL vendor information");
+		warn("gl", "Could not get GL vendor information");
 	} else {
 		vendor = tmp;
 	}
 
 	tmp = (const char*) glGetString(GL_VERSION);
 	if(tmp == nullptr) {
-		warn("gl::adapter", "Could not get GL version information");
+		warn("gl", "Could not get GL version information");
 	} 
 	else {
 		gl = tmp;
@@ -78,7 +76,7 @@ void Adapter::parseInfo()
 
 	tmp = (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION);
 	if(tmp == nullptr) {
-		warn("gl::adapter", "Could not get GLSL version information");
+		warn("gl", "Could not get GLSL version information");
 	} else {
 		glsl = tmp;
 		ch = glsl.find_first_of("-");
@@ -90,7 +88,8 @@ void Adapter::parseInfo()
 
 void Adapter::log() const 
 {
-	if(name.empty()) return;
+	if( name.empty() )
+		return;
 
 	const std::string& s = getShading();
 	const std::string& d = getDriver();
@@ -105,10 +104,7 @@ void Adapter::log() const
 		!d.empty() ? (" / driver: " + d).c_str() : "" );
 
 	if( !supportsVBO )
-	{
-		error("gl::adapter", 
-			"Your graphics device does not support VBOs (Vertex Buffer Objects).");
-	}
+		error("gl", "Your graphics device does not support VBOs");
 
 	info( "adapter", "Max texture size: %dx%d", maxTextureSize, maxTextureSize );
 	info( "adapter", "Max vertex attributes: %d", maxAttribs );

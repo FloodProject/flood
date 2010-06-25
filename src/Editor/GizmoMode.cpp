@@ -77,7 +77,7 @@ void GizmoMode::enableBoundingGizmo( const NodePtr& node )
 	tr->setDebugRenderableVisible( true );
 
 	static int i = 0;
-	std::string str( "Gizmo"+num_to_str(i++) );
+	std::string str( "Gizmo"+String::fromNumber(i++) );
 	NodePtr gizNode( new Node(str) );
 	gizNode->addTransform();
 
@@ -291,7 +291,7 @@ void GizmoMode::onMouseButtonRelease( const MouseButtonEvent& mbe )
 
 bool GizmoMode::pickImageTest( const MouseMoveEvent& me, GizmoAxis::Enum& axis )
 {
-	ViewportPtr viewport = viewframe->getViewport();
+	Viewport* viewport = viewframe->getViewport();
 	Vector2i size = viewport->getSize();
 
 	// We need to flip the Y-axis due to a mismatch between the 

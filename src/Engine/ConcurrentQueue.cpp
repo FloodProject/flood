@@ -10,7 +10,3 @@
 
 #include "vapor/PCH.h"
 #include "vapor/ConcurrentQueue.h"
-
-namespace vapor {
-
-} // end namespace

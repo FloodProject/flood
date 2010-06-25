@@ -11,7 +11,7 @@
 #include "vapor/PCH.h"
 #include "vapor/Singleton.h"
 
-FWD_DECL_TYPEDEF_SHARED(Scene)
+FWD_DECL_SHARED(Scene)
 
 namespace vapor {
 
@@ -81,7 +81,7 @@ public:
 	//GETTER(AudioDevice, AudioDevice*, audioDevice)
 
 	// Gets the scene interface.
-	GETTER(SceneManager, ScenePtr, sceneManager)
+	GETTER(SceneManager, ScenePtr, scene)
 
 	// Gets the device.
 	GETTER(TaskManager, TaskManager*, taskManager)
@@ -118,7 +118,7 @@ protected:
 	TaskManager* taskManager;
 
 	// Scene root node.
-	ScenePtr sceneManager;
+	ScenePtr scene;
 
 	// Rendering device.
 	RenderDevice* renderDevice;

@@ -12,8 +12,8 @@
 #include "vapor/math/Vector2.h"
 #include "vapor/math/Vector3.h"
 
-FWD_DECL_TYPEDEF_SHARED(Camera)
-FWD_DECL_TYPEDEF_SHARED_WEAK(Camera)
+FWD_DECL_SHARED(Camera)
+FWD_DECL_SHARED_WEAK(Camera)
 
 namespace vapor {
 

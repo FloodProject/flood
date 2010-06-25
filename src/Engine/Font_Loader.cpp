@@ -47,7 +47,7 @@ bool Font_Loader::decode(const File& file, Resource* res)
 
 	font = static_cast<BitmapFont*>( res );
 	font->setName( fontNameSizeInfo[0] );
-	font->setSize( str_to_num<int>( fontNameSizeInfo[1] ) );
+	font->setSize( String::toNumber<int>(fontNameSizeInfo[1]) );
 	font->setImage( image );
 	font->setGlyphs( glyphs );
 
@@ -58,8 +58,8 @@ bool Font_Loader::decode(const File& file, Resource* res)
 
 void Font_Loader::parseGlyphs()
 {
-	ushort glyph_width = str_to_num<ushort>( glyphSizeInfo[0] );
-	ushort glyph_height = str_to_num<ushort>( glyphSizeInfo[1] );
+	ushort glyph_width = String::toNumber<ushort>( glyphSizeInfo[0] );
+	ushort glyph_height = String::toNumber<ushort>( glyphSizeInfo[1] );
 
 	ushort image_width = image->getWidth();
 	//ushort image_height = image->getHeight();

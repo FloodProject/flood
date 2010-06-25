@@ -11,12 +11,13 @@
 #include "vapor/math/Color.h"
 #include "vapor/math/Vector2.h"
 
-FWD_DECL_TYPEDEF_PTR(RenderTarget)
-FWD_DECL_TYPEDEF_SHARED(Node)
-FWD_DECL_TYPEDEF_SHARED(Camera)
-FWD_DECL_TYPEDEF_SHARED_WEAK(Camera)
+FWD_DECL_SHARED(Node)
+FWD_DECL_SHARED(Camera)
+FWD_DECL_SHARED_WEAK(Camera)
 
 namespace vapor {
+
+class RenderTarget;
 
 //-----------------------------------//
 
@@ -29,13 +30,13 @@ class VAPOR_API Viewport : private boost::noncopyable
 {
 public:
 
-	Viewport( CameraPtr, RenderTargetPtr );
+	Viewport( CameraPtr, RenderTarget* );
 
 	// Gets the camera of the viewport.
 	GETTER(Camera, CameraPtr, weakCamera.lock())
 
 	// Gets the render target of the viewport.
-	GETTER(RenderTarget, RenderTargetPtr, target)
+	GETTER(RenderTarget, RenderTarget*, target)
 
 	// Gets the size of the viewport.
 	DECLARE_GETTER(Size, Vector2i)
@@ -59,13 +60,13 @@ public:
 private:
 
 	// Sets a new render target in the camera.
-	void setRenderTarget( RenderTargetPtr target );
+	void setRenderTarget( RenderTarget* target );
 
 	// Camera that will render into this viewport.
 	CameraWeakPtr weakCamera;
 
 	// Render target that we are rendering into.
-	RenderTargetPtr target;
+	RenderTarget* target;
 	
 	// Dimensions of render target.
 	Vector2i size;
@@ -76,8 +77,6 @@ private:
 	// Z-order priority.
 	int zPriority;
 };
-
-TYPEDEF_PTR(Viewport)
 
 //-----------------------------------//
 

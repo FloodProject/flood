@@ -77,7 +77,7 @@ void Renderable::unbind()
 
 //-----------------------------------//
 
-void Renderable::render( const RenderDevicePtr& VAPOR_UNUSED(device) )
+void Renderable::render( RenderDevice* )
 {
 	if( mode == PolygonMode::Wireframe )
 		glPolygonMode( GL_FRONT_AND_BACK, PolygonMode::Wireframe );

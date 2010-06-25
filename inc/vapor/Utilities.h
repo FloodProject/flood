@@ -26,30 +26,19 @@ namespace vapor {
 // Forward-declaration Helpers
 //---------------------------------------------------------------------//
 
-#define FWD_DECL(N, T)								\
-	namespace vapor { namespace N {					\
-		class T;									\
-	} } // end namespace
-
-#define FWD_DECL_TYPEDEF_PTR(T)						\
-	namespace vapor {								\
-		class T;									\
-		TYPEDEF_PTR( T );							\
-	} // end namespace
-
-#define FWD_DECL_TYPEDEF_INT(T)						\
+#define FWD_DECL_INTRUSIVE(T)						\
 	namespace vapor {								\
 		class T;									\
 		TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( T );	\
 	} // end namespace
 	
-#define FWD_DECL_TYPEDEF_SHARED(T)					\
+#define FWD_DECL_SHARED(T)							\
 	namespace vapor {								\
 		class T;									\
 		TYPEDEF_SHARED_POINTER_FROM_TYPE( T );		\
 	} // end namespace
 
-#define FWD_DECL_TYPEDEF_SHARED_WEAK(T)				\
+#define FWD_DECL_SHARED_WEAK(T)						\
 	namespace vapor {								\
 		class T;									\
 		TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( T );	\
@@ -82,11 +71,11 @@ namespace vapor {
 	void set##name(type v) { var = &v; }
 
 #define ACESSOR(name, type, var)				\
-	GETTER(name, type, var)			\
+	GETTER(name, type, var)						\
 	SETTER(name, type, var)
 
 #define ACESSOR_PTR(name, type, var)			\
-	GETTER_PTR(name, type, var)		\
+	GETTER_PTR(name, type, var)					\
 	SETTER_PTR(name, type, var)
 
 #define STATIC_ACESSOR(name, type, var)			\
@@ -109,32 +98,6 @@ namespace System
 //---------------------------------------------------------------------//
 // Conversions
 //---------------------------------------------------------------------//
-
-template< typename T >
-T str_to_num(const std::string& s)
-{
-	std::stringstream ss(s);
-	T num; ss >> num; 
-	assert(!ss.fail());
-	return num;
-}
-
-//-----------------------------------//
-
-template< typename T >
-std::string num_to_str(const T& t)
-{
-	std::ostringstream oss;
-	oss << t; 
-	assert(!oss.fail());
-	return oss.str();
-}
-
-//-----------------------------------//
-
-void float_to_str( char* str, float n, byte precision = 2 );
-
-//-----------------------------------//
 
 namespace String
 {
@@ -161,6 +124,34 @@ namespace String
 
 	// Converts a regular string to upper case.
 	VAPOR_API std::string toUpperCase(const std::string& str);
+
+	// Converts a number to a string.
+	template< typename T >
+	std::string fromNumber(const T& t)
+	{
+		std::ostringstream oss;
+		
+		oss << t;
+		assert( !oss.fail() );
+		
+		return oss.str();
+	}
+
+	// Converts a string to a number.
+	template< typename T >
+	T toNumber(const std::string& s)
+	{
+		std::stringstream ss(s);
+		
+		T num;
+		ss >> num; 
+		assert( !ss.fail() );
+
+		return num;
+	}
+
+	// Converts a float to a string.
+	void fromFloat( char* str, float n, byte precision = 2 );
 }
 
 //---------------------------------------------------------------------//
@@ -185,19 +176,6 @@ private:
 
 	char* cur;
 };
-
-//---------------------------------------------------------------------//
-// Threading
-//---------------------------------------------------------------------//
-
-// Sets the thread name in Windows. Helps with debugging.
-
-//#ifdef VAPOR_PLATFORM_WINDOWS
-//
-//ulong GetThreadId(HANDLE Thread);
-//void SetThreadName( ulong dwThreadID, const std::string& threadName );
-//
-//#endif
 
 //-----------------------------------//
 

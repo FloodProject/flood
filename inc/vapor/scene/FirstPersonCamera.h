@@ -26,7 +26,7 @@ class VAPOR_API FirstPersonCamera : public Camera
 {
 public:
 
-	FirstPersonCamera( InputManager* input, RenderDevice* device, 
+	FirstPersonCamera( RenderDevice* device,
 		Projection::Enum projection = Projection::Perspective );
 
 	// Updates this node.
@@ -82,8 +82,6 @@ protected:
 
 	static const std::string& type;
 };
-
-//-----------------------------------//
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( FirstPersonCamera );
 

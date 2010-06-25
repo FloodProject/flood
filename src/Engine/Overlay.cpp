@@ -24,7 +24,7 @@ Overlay::Overlay()
 
 //-----------------------------------//
 
-void Overlay::update( double VAPOR_UNUSED(delta) )
+void Overlay::update( double )
 {
 	TransformPtr transform = getNode()->getTransform();
 	assert( transform != nullptr );

@@ -14,14 +14,6 @@ namespace vapor {
 
 //-----------------------------------//
 
-RenderTarget::~RenderTarget()
-{
-	foreach( ViewportPtr viewport, viewports )
-		delete viewport;
-}
-
-//-----------------------------------//
-
 Vector2i Settings::getSize() const
 {
 	return Vector2i(width, height);
@@ -29,9 +21,17 @@ Vector2i Settings::getSize() const
 
 //-----------------------------------//
 
-ViewportPtr RenderTarget::addViewport( CameraPtr camera )
+RenderTarget::~RenderTarget()
 {
-	ViewportPtr viewport = new Viewport(camera, this);
+	foreach( Viewport* viewport, viewports )
+		delete viewport;
+}
+
+//-----------------------------------//
+
+Viewport* RenderTarget::addViewport( const CameraPtr& camera )
+{
+	Viewport* viewport = new Viewport(camera, this);
 	viewports.push_back( viewport );
 	return viewport;
 }

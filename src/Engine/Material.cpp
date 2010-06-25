@@ -19,9 +19,9 @@ float Material::DefaultLineWidth = 1.0f;
 
 //-----------------------------------//
 
-Material::Material( const std::string& _name, const std::string& _program )
-	: name( _name ),
-	program( _program )
+Material::Material( const std::string& name, const std::string& program )
+	: name( name ),
+	program( program )
 {
 	init();
 }
@@ -30,17 +30,14 @@ Material::Material( const std::string& _name, const std::string& _program )
 
 void Material::init()
 {
+	depthTest = true;
+	depthWrite = true;
+	lineSmooth = false;
+	cullBackfaces = true;
+	lineWidth = DefaultLineWidth;
 	_isBlendingEnabled = false;
 	source = BlendingSource::One;
 	destination = BlendingDestination::Zero;
-	
-	lineWidth = DefaultLineWidth;
-	lineSmooth = false;
-
-	depthTest = true;
-	depthWrite = true;
-
-	cullBackfaces = true;
 }
 
 //-----------------------------------//
@@ -48,7 +45,7 @@ void Material::init()
 void Material::setTexture( uint unit, const std::string& name )
 {
 	// TODO: refactor
-	TextureManagerPtr tm = Engine::getInstance().getRenderDevice()->getTextureManager();
+	TextureManager* tm = Engine::getInstance().getRenderDevice()->getTextureManager();
 	TexturePtr tex = tm->getTexture( name );
 	textures[unit] = tex;
 }
@@ -58,7 +55,7 @@ void Material::setTexture( uint unit, const std::string& name )
 void Material::setTexture( uint unit, const ImagePtr& img )
 {
 	// TODO: refactor
-	TextureManagerPtr tm = Engine::getInstance().getRenderDevice()->getTextureManager();
+	TextureManager* tm = Engine::getInstance().getRenderDevice()->getTextureManager();
 	TexturePtr tex = tm->getTexture( img );
 	textures[unit] = tex;
 }
@@ -92,8 +89,8 @@ void Material::setBlending( BlendingSource::Enum _source,
 
 ProgramPtr Material::getProgram()
 {
-	RenderDevicePtr device = Engine::getInstance().getRenderDevice();
-	ProgramManagerPtr pm = device->getProgramManager();
+	RenderDevice* device = Engine::getInstance().getRenderDevice();
+	ProgramManager* pm = device->getProgramManager();
 
 	return pm->getProgram( program );
 }
@@ -119,7 +116,8 @@ void Material::bind()
 
 	foreach( const TextureMapPair& p, textures )
 	{
-		program->setUniform( "tex" + num_to_str(p.first), p.first );
+		std::string name = "tex"+String::fromNumber(p.first);
+		program->setUniform( name, p.first );
 	}
 }
 

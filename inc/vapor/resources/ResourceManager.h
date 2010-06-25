@@ -43,6 +43,7 @@ typedef std::pair< const std::string, ResourcePtr > ResourceMapPair;
 
 typedef std::map< std::string, ResourceLoader* > ResourceLoaderMap;
 typedef std::pair< std::string, ResourceLoader* > ResourceLoaderMapPair;
+
 /**
  * Responsible for managing a set of resources that are added by the app.
  * It should be possible to enforce a strict memory budget, and the manager
@@ -62,7 +63,7 @@ class VAPOR_API ResourceManager : public Subsystem
 
 public:
 
-	ResourceManager( FileWatcher* fileWatcher, TaskManager* tm );
+	ResourceManager( FileWatcher* fileWatcher, TaskManager* );
 	virtual ~ResourceManager();
  
 	// Creates a new resource and returns an handle to the resource.

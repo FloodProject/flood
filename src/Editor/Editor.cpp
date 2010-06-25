@@ -84,7 +84,7 @@ EditorFrame::EditorFrame(const wxString& title)
 	createScene();
 	createEditorScene();
 
-	ViewportPtr viewport = viewframe->getViewport();
+	Viewport* viewport = viewframe->getViewport();
 	viewport->getRenderTarget()->makeCurrent();
 
 	createModes();
@@ -189,7 +189,7 @@ void EditorFrame::createMainViewframe()
 	NodePtr camera( createCamera() );	
 	editorScene->add( camera );
 
-	ViewportPtr viewport = viewframe->createViewport( camera );
+	Viewport* viewport = viewframe->createViewport( camera );
 	viewport->setClearColor( Color(0.0f, 0.10f, 0.25f) );
 
 	TransformPtr transform( camera->getTransform() );
@@ -214,7 +214,7 @@ NodePtr EditorFrame::createCamera()
 	CameraPtr camera( new FirstPersonCamera(im, device) );
 
 	// Generate a new unique name.
-	std::string name( "EditorCamera" + num_to_str(i++) );
+	std::string name( "EditorCamera"+String::fromNumber(i++) );
 
 	NodePtr cameraNode( new Node(name) );
 	cameraNode->addTransform();

@@ -15,7 +15,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-Viewport::Viewport( CameraPtr camera, RenderTargetPtr rt )
+Viewport::Viewport( CameraPtr camera, RenderTarget* rt )
 	: weakCamera( camera ),
 	target( rt ),
 	size( Vector2i(-1,-1) )
@@ -26,7 +26,7 @@ Viewport::Viewport( CameraPtr camera, RenderTargetPtr rt )
 
 //-----------------------------------//
 
-void Viewport::setRenderTarget( RenderTargetPtr newTarget )
+void Viewport::setRenderTarget( RenderTarget* newTarget )
 {
 	//if( target ) // Remove the old target resize notification.
 	//	target->onTargetResize -= fd::bind( &Viewport::handleTargetResize, this );

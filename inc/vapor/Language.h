@@ -25,8 +25,6 @@ typedef unsigned long	ulong;
 	typedef unsigned long long uint64;
 #endif
 
-#define forever for(;;)
-
 // TODO: assert all types are of the right size
 
 //assert( sizeof( byte ) == 8 );
@@ -44,7 +42,6 @@ typedef unsigned long	ulong;
 #include <deque>
 #include <stack>
 #include <queue>
-#include <tuple>
 #include <bitset>
 #include <string>
 #include <sstream>
@@ -120,6 +117,17 @@ typedef unsigned long	ulong;
 typedef boost::thread Thread;
 typedef boost::thread* ThreadPtr;
 
+#if !defined(VAPOR_THREADING)
+	typedef int atomic_int;
+#elif defined(VAPOR_THREADING) && defined(VAPOR_THREADING_BOOST)
+	#include <boost/atomic.hpp>
+	typedef boost::atomic<int> atomic_int;
+#elif defined(VAPOR_THREADING) && defined(VAPOR_THREADING_STD)
+	typedef std::atomic<int> atomic_int;
+#else
+	#error
+#endif
+
 //---------------------------------------------------------------------//
 // Pointer wrappers
 //---------------------------------------------------------------------//
@@ -139,7 +147,6 @@ typedef boost::thread* ThreadPtr;
 	#endif
 #elif defined(VAPOR_MEMORY_TR1_BOOST)
 	#include <boost/tr1/memory.hpp>
-	#include <boost/tr1/tuple.hpp>
 #endif
 
 #ifdef VAPOR_COMPILER_MSVC

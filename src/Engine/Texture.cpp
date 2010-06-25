@@ -8,36 +8,33 @@
 
 #include "vapor/PCH.h"
 #include "vapor/render/Texture.h"
-#include "vapor/render/GL.h"
 #include "vapor/render/Adapter.h"
 #include "vapor/render/Device.h"
-
-//#include "vapor/Engine.h"
+#include "vapor/render/GL.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-Texture::Texture( const ImagePtr& _image )
-	: image( nullptr )
+Texture::Texture( const ImagePtr& newImage )
+	: image(nullptr)
 {
-	assert( _image != nullptr );
-	
 	init();
-	setImage( _image );
+	setImage( newImage );
 	configure();
 }
 
 //-----------------------------------//
 
 Texture::Texture( const Settings& settings, PixelFormat::Enum format )
-	: width(settings.width), height(settings.height), format(format)
+	: width(settings.width),
+	height(settings.height),
+	format(format)
 {
 	init();
 	upload();
 	configure();
 }
-
 
 //-----------------------------------//
 
@@ -53,9 +50,13 @@ Texture::~Texture()
 
 void Texture::init()
 {
-	uploaded = false;
 	_id = 0;
 	target = GL_TEXTURE_2D;
+	uploaded = false;
+
+	minFilter = TextureFiltering::Linear;
+	maxFilter = TextureFiltering::Linear;
+	anisotropicFilter = 1.0f;
 
 	generate();
 }
@@ -76,15 +77,16 @@ bool Texture::generate()
 
 bool Texture::check()
 {
-	// TODO: refactor
-	//AdapterPtr adapter = Engine::getInstance().getRenderDevice()->getAdapter();
-	//uint max = adapter->getMaxTextureSize();
-
-	//if( (width > max) || (height > max) )
-	//{
-		//warn( "gl", "Texture size is not supported (max: %dx%d)", max, max );		
-		//return false;
-	//}
+	uint maxTextureSize;
+	glGetIntegerv( GL_MAX_TEXTURE_SIZE, (GLint*) &maxTextureSize );
+	
+	if( (width > maxTextureSize) || (height > maxTextureSize) )
+	{
+		warn( "gl", "Texture size is not supported (max: %dx%d)",
+			maxTextureSize, maxTextureSize );		
+		
+		return false;
+	}
 
 	return true;
 }
@@ -98,9 +100,12 @@ bool Texture::upload()
 
 	bind();
 
-	glTexImage2D( target, 0, convertInternalFormat(format),
-		width, height, 0, convertSourceFormat(format),
-		format == PixelFormat::Depth ? GL_FLOAT : GL_UNSIGNED_BYTE, image ? &image->getBuffer()[0] : nullptr );
+	glTexImage2D( target, 0, 
+		convertInternalFormat(format),
+		width, height, 0,
+		convertSourceFormat(format),
+		(format == PixelFormat::Depth) ? GL_FLOAT : GL_UNSIGNED_BYTE,
+		(image) ? &image->getBuffer()[0] : nullptr );
 
 	if( glHasError("Could not upload pixel data to texture object") )
 	{
@@ -116,11 +121,14 @@ bool Texture::upload()
 
 void Texture::configure()
 {
+	if(GLEW_EXT_texture_filter_anisotropic)
+		glTexParameterf( target, GL_TEXTURE_MAX_ANISOTROPY_EXT, anisotropicFilter );
+
+	glTexParameterf( target, GL_TEXTURE_MIN_FILTER, convertFilterFormat(minFilter) );
+	glTexParameterf( target, GL_TEXTURE_MAG_FILTER, convertFilterFormat(maxFilter) );
+
 	//glTexParameterf(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	//glTexParameterf(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-	//glTexParameterf(target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	//glTexParameterf(target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
 	// Three next lines are necessary if we want to use the convenient shadow2DProj function in the shader.
 	// Otherwise we have to rely on texture2DProj
@@ -130,19 +138,16 @@ void Texture::configure()
 	//glTexParameteri(target, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
 	//glTexParameteri(target, GL_DEPTH_TEXTURE_MODE, GL_INTENSITY);
 
-	glTexParameterf(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-	glTexParameterf(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-
-	// TODO: mipmaps and stuff
+	// TODO: mipmaps
 }
 
 //-----------------------------------//
 
-void Texture::setImage( const ImagePtr& _image )
+void Texture::setImage( const ImagePtr& newImage )
 {
-	assert( _image != nullptr );
+	assert( newImage != nullptr );
 
-	image = _image;
+	image = newImage;
 	width = image->getWidth();
 	height = image->getHeight();
 	format = image->getPixelFormat();
@@ -176,19 +181,13 @@ ImagePtr Texture::readImage() const
 	bind();
 	
 	glGetTexImage( target, 0 /* base mipmap level */,
-		convertGetFormat(format), GL_UNSIGNED_BYTE, &tmp[0] );
+		convertSourceFormat(format), GL_UNSIGNED_BYTE, &tmp[0] );
 	
 	if( glHasError("Could not read texture data") )
 		return ImagePtr();
 
 	unbind();
 
-	//std::vector<byte> data;
-	//data.reserve( getExpectedSize() );
-	
-	//foreach( float& f, tmp )
-	//	data.push_back( f*255 );
-	
 	ImagePtr image( new Image() );
 	image->setWidth( width );
 	image->setHeight( height );
@@ -215,25 +214,23 @@ uint Texture::getExpectedSize() const
 		return size;
 	}
 
-	assert( 0 && "Implement support for more pixel formats" );
+	assert( 0 && "This should not be reached" );
 	return 0;
 }
 
 //-----------------------------------//
 
-GLint Texture::convertGetFormat( PixelFormat::Enum format ) const
+int Texture::convertFilterFormat( TextureFiltering::Enum format ) const
 {
 	switch( format )
 	{
-	case PixelFormat::R8G8B8A8:
-		return GL_RGBA;
-	case PixelFormat::R8G8B8:
-		return GL_RGB;
-	case PixelFormat::Depth:
-		return GL_DEPTH_COMPONENT;
+	case TextureFiltering::Nearest:
+		return GL_NEAREST;
+	case TextureFiltering::Linear:
+		return GL_LINEAR;
 	}
 
-	assert( 0 && "Implement support for more pixel formats" );
+	assert( 0 && "This should not be reached" );
 	return 0;
 }
 
@@ -251,7 +248,7 @@ GLint Texture::convertInternalFormat( PixelFormat::Enum format ) const
 		return GL_DEPTH_COMPONENT;
 	}
 
-	assert( 0 && "Implement support for more pixel formats" );
+	assert( 0 && "This should not be reached" );
 	return 0;
 }
 
@@ -269,15 +266,8 @@ GLint Texture::convertSourceFormat( PixelFormat::Enum format ) const
 		return GL_DEPTH_COMPONENT;
 	}
 
-	assert( 0 && "Implement support for more pixel formats" );
+	assert( 0 && "This should not be reached" );
 	return 0;
-}
-
-//-----------------------------------//
-
-uint Texture::id() const
-{
-	return _id;
 }
 
 //-----------------------------------//

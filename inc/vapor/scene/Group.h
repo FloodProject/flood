@@ -90,8 +90,6 @@ protected:
 	NodeVector children;
 };
 
-//-----------------------------------//
-
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Group );
 
 //-----------------------------------//

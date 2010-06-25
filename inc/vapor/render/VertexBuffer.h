@@ -10,32 +10,13 @@
 
 #include "vapor/math/Vector3.h"
 #include "vapor/render/Buffer.h"
-#include "vapor/render/GL.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-namespace GLPrimitive
-{
-	enum Enum
-	{
-		BYTE	= GL_BYTE,
-		UBYTE	= GL_UNSIGNED_BYTE,
-		SHORT	= GL_SHORT,
-		USHORT	= GL_UNSIGNED_SHORT,
-		INT		= GL_INT,
-		UINT	= GL_UNSIGNED_INT,
-		FLOAT	= GL_FLOAT,
-		DOUBLE	= GL_DOUBLE
-	};
-}
-
-//-----------------------------------//
-
 /**
  * Attribute of a vertex element.
- * Matches the (NVIDIA-only?) specification.
  */
 
 namespace VertexAttribute
@@ -60,6 +41,24 @@ namespace VertexAttribute
 
 //-----------------------------------//
 
+struct Attribute
+{
+	Attribute()
+	{ }
+
+	Attribute(const Attribute& rhs)
+		: components(rhs.components),
+		size(rhs.size),
+		data(rhs.data)
+	{ }
+
+	int components;
+	int size;
+	std::vector<byte> data;
+};
+
+//-----------------------------------//
+
 /**
  * Represents a vertex buffer. One limitation here is that all data is 
  * tied to the vertex so if you want a normal per primitive and not per 
@@ -70,17 +69,15 @@ class VAPOR_API VertexBuffer : public Buffer
 {
 public:
 
-	// Note: calls glGenBuffers (Base class Buffer, could do this)
 	VertexBuffer();
-
-	// Note: calls glDeleteBuffers (Base class Buffer, could do this)
 	virtual ~VertexBuffer();
 
-	// Updates the internal VBO with current values for vertices, 
-	// normals, colors and texture coords.  Returns false on error, true otherwise.
-	// Note: calls glBufferData
+	// Updates the internal buffer with current attributes.
 	bool build( BufferUsage::Enum = BufferUsage::Static,
 				BufferAccess::Enum = BufferAccess::Write );
+
+	// Returns if the this buffer is valid.
+	bool isValid() const;
 
 	// Returns true if the vertex buffer is built, false otherwhise.
 	bool isBuilt() const;
@@ -88,19 +85,12 @@ public:
 	// Forces a rebuild of the vertex buffer the next update.
 	void forceRebuild();
 	
-	// This method will make the internal VBO id bound so any future
-	// glDrawXXX calls will use this VBO as its data.  
-	// Returns false on error, true otherwise.
-	// Note: calls glBindBuffer, glVertexAttribPointer, glEnableVertexAttribArray
+	// Binds the vertex buffer.
 	bool bind();
 	
-	// Puts opengl back into immediate mode
-	// Note: calls glBindBuffer( 0 ), glDisableVertexAttribArray 
+	// Unbinds the vertex buffer.
 	bool unbind();
 	
-	// Returns if the this buffer is valid.
-	bool isValid();
-
 	// Clears this vertex buffer. All vertex data will be gone.
 	void clear();
 
@@ -117,51 +107,15 @@ public:
 	uint getNumAttributes() const;
 
 	// Returns the number of vertices in each attribute.
-	uint getNumVertices();
+	uint getNumVertices() const;
 
-	// These are all the possible types supported by glVertexAttrib
-	//bool set( VertexAttribute::Enum attr, std::vector< byte > const& data );
-	//bool set( VertexAttribute::Enum attr, std::vector< ubyte > const& data );
-	//bool set( VertexAttribute::Enum attr, std::vector< short > const& data );
-	//bool set( VertexAttribute::Enum attr, std::vector< ushort > const& data );
-	//
-	//bool set( VertexAttribute::Enum attr, std::vector< int > const& data );
-	//bool set( VertexAttribute::Enum attr, std::vector< uint > const& data );
-	//bool set( VertexAttribute::Enum attr, std::vector< float > const& data );
-	//bool set( VertexAttribute::Enum attr, std::vector< double > const& data );
-
-	//bool set( VertexAttribute::Enum attr, std::vector< Vector2< byte > > const& data );
-	//bool set( VertexAttribute::Enum attr, std::vector< Vector2< ubyte > > const& data );
-	//bool set( VertexAttribute::Enum attr, std::vector< Vector2< short > > const& data );
-	//bool set( VertexAttribute::Enum attr, std::vector< Vector2< ushort > > const& data );
-	//bool set( VertexAttribute::Enum attr, std::vector< Vector2< int > > const& data );
-	//bool set( VertexAttribute::Enum attr, std::vector< Vector2< uint > > const& data );
-	//bool set( VertexAttribute::Enum attr, std::vector< Vector2< float > > const& data );
-	//bool set( VertexAttribute::Enum attr, std::vector< Vector2< double > > const& data );
-	//
-	//bool set( VertexAttribute::Enum attr, std::vector< Vector3< byte >> const& data );
-	//bool set( VertexAttribute::Enum attr, std::vector< Vector3< ubyte >> const& data );
-	//bool set( VertexAttribute::Enum attr, std::vector< Vector3< short >> const& data );
-	//bool set( VertexAttribute::Enum attr, std::vector< Vector3< ushort >> const& data );
-	//bool set( VertexAttribute::Enum attr, std::vector< Vector3< int >> const& data );
-	//bool set( VertexAttribute::Enum attr, std::vector< Vector3< uint >> const& data );
+	// Sets the attribute data.
 	bool set( VertexAttribute::Enum attr, const std::vector< Vector3 >& data );
-	//bool set( VertexAttribute::Enum attr, std::vector< Vector3< float >> const& data );
-	//bool set( VertexAttribute::Enum attr, std::vector< Vector3< double >> const& data );
-
-	//bool set( VertexAttribute::Enum attr, std::vector< Vector4< byte > > const& data );
-	//bool set( VertexAttribute::Enum attr, std::vector< Vector4< ubyte > > const& data );
-	//bool set( VertexAttribute::Enum attr, std::vector< Vector4< short > > const& data );
-	//bool set( VertexAttribute::Enum attr, std::vector< Vector4< ushort > > const& data );
-	//bool set( VertexAttribute::Enum attr, std::vector< Vector4< int > > const& data );
-	//bool set( VertexAttribute::Enum attr, std::vector< Vector4< uint > > const& data );
-	//bool set( VertexAttribute::Enum attr, std::vector< Vector4< float > > const& data );
-	//bool set( VertexAttribute::Enum attr, std::vector< Vector4< double > > const& data );
 
 private:
 
 	// Checks that each entry in the map has the same size.
-	bool checkSize();
+	bool checkSize() const;
 
 	// Binds all the OpenGL pointers when the buffer is built.
 	void bindPointers();
@@ -174,15 +128,14 @@ private:
 	BufferAccess::Enum bufferAccess;
 
 	// Used to store specific GL types for each attribute.
-	typedef std::tuple< int, GLPrimitive::Enum, std::vector< byte > > Attribute;
 	typedef std::map< VertexAttribute::Enum, Attribute > AttributeMap;
 	typedef std::pair< const VertexAttribute::Enum, Attribute > AttributeMapPair;
 	
 	// Holds all the vertex attributes.
-	mutable AttributeMap attributeMap;
+	mutable AttributeMap attributes;
 
 	// Holds the number of vertices inside.
-	uint numVertices;
+	mutable uint numVertices;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( VertexBuffer );

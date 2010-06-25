@@ -42,21 +42,25 @@ namespace RenderGroup
  * rendered to the render target that is currently active on the device.
  */
 
-struct RenderState /*: private boost::noncopyable*/
+struct RenderState
 {
 	RenderState()
-		: group( RenderGroup::Normal ), priority(0) 
+		: group( RenderGroup::Normal ),
+		priority(0) 
 	{}
 	
 	RenderState( const RenderState& rhs )
-		: renderable( rhs.renderable ), group( rhs.group ),
-		modelMatrix( rhs.modelMatrix ), priority( rhs.priority )
+		: group( rhs.group ),
+		priority( rhs.priority ),
+		renderable( rhs.renderable ),
+		modelMatrix( rhs.modelMatrix )
 	{}
+
+	RenderGroup::Enum group;
+	int priority;
 
 	RenderablePtr renderable;
 	Matrix4x3 modelMatrix;
-	RenderGroup::Enum group;
-	int priority;
 };
 
 //-----------------------------------//
@@ -84,8 +88,6 @@ struct LightState
 
 typedef std::vector<RenderState> RenderQueue;
 typedef std::vector<LightState> LightQueue;
-
-//-----------------------------------//
 
 struct RenderBlock
 {

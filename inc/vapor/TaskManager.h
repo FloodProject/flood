@@ -60,8 +60,6 @@ const int DEFAULT_THREAD_POOL_SIZE = -1;
  * known as "Thread-pool pattern".
  */
 
-typedef fd::delegate<void()> TaskDelegate;
-
 class VAPOR_API TaskManager : public Subsystem
 {
 public:
@@ -72,16 +70,16 @@ public:
 	// Adds a new task to be run by the sheduler.
 	void addTask( const TaskPtr& task );
 
-	// Adds a new task to be run by the sheduler.
-	void addTask( const TaskDelegate& task );	
-
 	// Sends the events to the observers.
-	void update( double );
+	void update( double delta );
 
 	// Notifies the observers of a given task event.
 	fd::delegate< void(const TaskEvent&) > onTaskEvent;
 	
 protected:
+
+	// Creates the thread pool.
+	void createThreadPool( int poolSize );
 
 	// Pushes a new event in the event queue.
 	void pushEvent( TaskEvent::Enum event, const TaskPtr& task,

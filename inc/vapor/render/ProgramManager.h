@@ -10,7 +10,7 @@
 
 #include "vapor/render/Program.h"
 
-FWD_DECL_TYPEDEF_INT(Text)
+FWD_DECL_INTRUSIVE(Text)
 
 namespace vapor {
 

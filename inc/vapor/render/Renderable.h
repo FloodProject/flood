@@ -13,12 +13,9 @@
 #include "vapor/render/Material.h"
 #include "vapor/render/GL.h"
 
-FWD_DECL_TYPEDEF_PTR(RenderDevice)
-//FWD_DECL_TYPEDEF_INT(Material)
-//FWD_DECL_TYPEDEF_INT(VertexBuffer)
-//FWD_DECL_TYPEDEF_INT(IndexBuffer)
-
 namespace vapor {
+
+class RenderDevice;
 
 //-----------------------------------//
 
@@ -53,9 +50,9 @@ namespace PolygonMode
 {
     enum Enum
     {
-		Solid = GL_FILL,
-		Wireframe = GL_LINE,
-		Point = GL_POINT
+		Solid		= GL_FILL,
+		Wireframe	= GL_LINE,
+		Point		= GL_POINT
     };
 }
 
@@ -77,17 +74,16 @@ public:
     Renderable( Primitive::Enum primitive, const VertexBufferPtr& vb,
 		const IndexBufferPtr& ib, const MaterialPtr& mat );
     
-    // No index buffer, default material will be used if none passed
+    // No index buffer, default material will be used if none passed.
 	Renderable(Primitive::Enum primitive, const VertexBufferPtr& vb = VertexBufferPtr(),
-			const MaterialPtr& mat = MaterialPtr() );
+			const MaterialPtr& mat = nullptr );
 
 	// Bind/unbind all the state needed to draw the renderable.
 	void bind();
 	void unbind();
 
-    // Render this renderable. This will bind all the necessary state
-	// like binding the buffers and the materials.
-	void render(const RenderDevicePtr& device);
+    // Render this renderable.
+	void render(RenderDevice* device);
     
     // Gets/sets the vertex buffer associated with the renderable.
 	ACESSOR(VertexBuffer, VertexBufferPtr, vb) 
