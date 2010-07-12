@@ -20,20 +20,13 @@ namespace vapor {
  * Bounding Sphere.
  */
 
-class VAPOR_API BoundingSphere : private boost::noncopyable
+class VAPOR_API BoundingSphere
 {
 public:
 
 	BoundingSphere();
-	//BoundingSphere( const std::vector<Vector3>& vertices );
 	BoundingSphere( const Vector3& center, float radius );
 	BoundingSphere( const BoundingSphere& bs );
-
-	// Gets the minimum corner of the bounding box.
-	const Vector3& getCenter() const;
-
-	// Gets the maximum corner of the bounding box.
-	float getRadius() const;
 
 	//void add( const Vector3& vertex );
 

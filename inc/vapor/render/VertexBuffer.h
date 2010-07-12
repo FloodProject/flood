@@ -47,9 +47,9 @@ struct Attribute
 	{ }
 
 	Attribute(const Attribute& rhs)
-		: components(rhs.components),
-		size(rhs.size),
-		data(rhs.data)
+	  : components(rhs.components)
+	  , size(rhs.size)
+	  , data(rhs.data)
 	{ }
 
 	int components;

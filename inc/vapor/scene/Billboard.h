@@ -73,8 +73,6 @@ private:
 	static const std::string& type;
 };
 
-//-----------------------------------//
-
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Billboard );
 
 //-----------------------------------//

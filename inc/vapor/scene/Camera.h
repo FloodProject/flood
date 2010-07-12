@@ -31,6 +31,8 @@ namespace Projection
         Orthographic,
         Perspective
     };
+
+	std::string toString( Projection::Enum );
 }
 
 //-----------------------------------//

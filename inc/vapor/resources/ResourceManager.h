@@ -14,14 +14,13 @@
 
 namespace vapor {
 
-class TaskManager;
-
 class File;
 class FileWatcher;
 struct FileWatchEvent;
 
-class ResourceLoader;
+class TaskManager;
 class ResourceTask;
+class ResourceLoader;
 
 //-----------------------------------//
 

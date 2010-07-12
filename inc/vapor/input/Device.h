@@ -25,7 +25,7 @@ namespace InputDeviceType
 		Joystick
 	};
 
-	std::string getString( const InputDeviceType::Enum dt );
+	std::string getString( InputDeviceType::Enum );
 }
 
 //-----------------------------------//

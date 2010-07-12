@@ -66,7 +66,7 @@ protected:
 	char* m_comment;
 };
 
-TYPEDEF_RESOURCE_POINTER_FROM_TYPE( MS3D );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( MS3D );
 
 //-----------------------------------//
 

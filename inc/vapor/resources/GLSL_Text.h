@@ -44,7 +44,7 @@ protected:
 	std::string pixel;
 };
 
-TYPEDEF_RESOURCE_POINTER_FROM_TYPE( GLSL_Text );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( GLSL_Text );
 
 //-----------------------------------//
 

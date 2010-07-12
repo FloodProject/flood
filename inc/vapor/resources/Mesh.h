@@ -40,7 +40,7 @@ protected:
 	bool built;
 };
 
-TYPEDEF_RESOURCE_POINTER_FROM_TYPE( Mesh );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Mesh );
 
 //-----------------------------------//
 

@@ -26,30 +26,16 @@ public:
 	Color(int r, int g, int b, int a = 255);
 	Color(const Color& c);
 
-	//-----------------------------------//
-
-	// Equality
+	// Equality.
 	bool operator == (const Color& v) const;
 
-	//-----------------------------------//
-
-	// Multiplication by a scalar
-	Color operator * (float s) const
-	{
-		return Color(r*s, g*s, b*s, a); 
-	}
+	// Multiplication by a scalar.
+	Color operator * (float s) const;
 	
-	//-----------------------------------//
+	// Conversion Operators.
+	operator Vector3 () const;
 
-	// Conversion Operators
-	operator Vector3 () const
-	{
-		return Vector3( r, g, b );
-	}
-
-	//-----------------------------------//
-	
-	// Special colors
+	// Special colors.
 	static const Color White;
 	static const Color Black;
 	static const Color Red;

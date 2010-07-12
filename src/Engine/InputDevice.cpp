@@ -13,9 +13,9 @@ namespace vapor {
 
 //-----------------------------------//
 
-std::string InputDeviceType::getString( const InputDeviceType::Enum dt )
+std::string InputDeviceType::getString( InputDeviceType::Enum type )
 {
-	switch( dt )
+	switch(type)
 	{
 	case InputDeviceType::Keyboard:
 		return "Keyboard";
@@ -24,7 +24,7 @@ std::string InputDeviceType::getString( const InputDeviceType::Enum dt )
 	case InputDeviceType::Joystick:
 		return "Joystick";
 	default:
-		return "(Unknown)";
+		assert( false && "This should not be reached" );
 	}
 }
 

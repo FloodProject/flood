@@ -18,33 +18,29 @@ static const float f_max = std::numeric_limits<float>::max();
 //-----------------------------------//
 
 AABB::AABB()
-	: min( f_max ), max( f_min )
-{
-
-}
+	: min( f_max )
+	, max( f_min )
+{ }
 
 //-----------------------------------//
 
 AABB::AABB( const Vector3& min, const Vector3& max )
-	: min( min ), max( max )
-{
-
-}
+	: min( min )
+	, max( max )
+{ }
 
 //-----------------------------------//
 
 AABB::AABB( const AABB& box )
-	: min( box.min ), max( box.max )
-{
-
-}
+	: min( box.min )
+	, max( box.max )
+{ }
 
 //-----------------------------------//
 
 Vector3 AABB::getCorner( int i ) const
 {
-	assert(i >= 0);
-	assert(i <= 7);
+	assert(i >= 0 && i <= 7);
 
 	return Vector3(
 		(i & 1) ? max.x : min.x,
@@ -56,9 +52,9 @@ Vector3 AABB::getCorner( int i ) const
 
 Vector3 AABB::getCenter() const
 {
-	int mid_x = min.x+(max.x-min.x)/2;
-	int mid_y = min.y+(max.y-min.y)/2;
-	int mid_z = min.z+(max.z-min.z)/2;
+	int mid_x = min.x + (max.x-min.x) / 2;
+	int mid_y = min.y + (max.y-min.y) / 2;
+	int mid_z = min.z + (max.z-min.z) / 2;
 	
 	return Vector3( mid_x, mid_y, mid_z );
 }
@@ -104,28 +100,7 @@ void AABB::add( const AABB& aabb )
 
 AABB AABB::transform( const Matrix4x3& mat ) const
 {
-	//Vector3 nmin( mat.tx, mat.ty, mat.tz );
-	//Vector3 nmax( min );
-
-	//for ( uint i = 0; i < 3; i++ )
-	//{
-	//	for ( uint j = 0; j < 3; j++ )
-	//	{
-	//		float av = mat.element(i, j) * min[j];
-	//		float bv = mat.element(i, j) * max[j];
-
-	//		if (av < bv)
-	//		{
-	//			nmin[i] += av;
-	//			nmax[i] += bv;
-	//		} else {
-	//			nmin[i] += bv;
-	//			nmax[i] += av;
-	//		}
-	//	}
-	//}
-
-	return  AABB( min*mat, max*mat );
+	return AABB( min*mat, max*mat );
 }
 
 //-----------------------------------//
@@ -141,11 +116,8 @@ bool AABB::intersects( const Ray& ray, float& distance ) const
 	bool hit = false;
 	Vector3 hitpoint;
 
-	const Vector3& rayorig = ray.getOrigin();
-	const Vector3& raydir = ray.getDirection();
-
 	// Check origin inside first
-	if ( rayorig > min && rayorig < max )
+	if ( ray.origin > min && ray.origin < max )
 	{
 		distance = 0;
 		return true;
@@ -153,13 +125,13 @@ bool AABB::intersects( const Ray& ray, float& distance ) const
 
 	// Check each face in turn, only check closest 3
 	// Min x
-	if (rayorig.x <= min.x && raydir.x > 0)
+	if (ray.origin.x <= min.x && ray.direction.x > 0)
 	{
-		t = (min.x - rayorig.x) / raydir.x;
+		t = (min.x - ray.origin.x) / ray.direction.x;
 		if (t >= 0)
 		{
 			// Substitute t back into ray and check bounds and dist
-			hitpoint = rayorig + raydir * t;
+			hitpoint = ray.origin + ray.direction * t;
 			if (hitpoint.y >= min.y && hitpoint.y <= max.y &&
 				hitpoint.z >= min.z && hitpoint.z <= max.z &&
 				(!hit || t < lowt))
@@ -170,13 +142,13 @@ bool AABB::intersects( const Ray& ray, float& distance ) const
 		}
 	}
 	// Max x
-	if (rayorig.x >= max.x && raydir.x < 0)
+	if (ray.origin.x >= max.x && ray.direction.x < 0)
 	{
-		t = (max.x - rayorig.x) / raydir.x;
+		t = (max.x - ray.origin.x) / ray.direction.x;
 		if (t >= 0)
 		{
 			// Substitute t back into ray and check bounds and dist
-			hitpoint = rayorig + raydir * t;
+			hitpoint = ray.origin + ray.direction * t;
 			if (hitpoint.y >= min.y && hitpoint.y <= max.y &&
 				hitpoint.z >= min.z && hitpoint.z <= max.z &&
 				(!hit || t < lowt))
@@ -187,13 +159,13 @@ bool AABB::intersects( const Ray& ray, float& distance ) const
 		}
 	}
 	// Min y
-	if (rayorig.y <= min.y && raydir.y > 0)
+	if (ray.origin.y <= min.y && ray.direction.y > 0)
 	{
-		t = (min.y - rayorig.y) / raydir.y;
+		t = (min.y - ray.origin.y) / ray.direction.y;
 		if (t >= 0)
 		{
 			// Substitute t back into ray and check bounds and dist
-			hitpoint = rayorig + raydir * t;
+			hitpoint = ray.origin + ray.direction * t;
 			if (hitpoint.x >= min.x && hitpoint.x <= max.x &&
 				hitpoint.z >= min.z && hitpoint.z <= max.z &&
 				(!hit || t < lowt))
@@ -204,13 +176,13 @@ bool AABB::intersects( const Ray& ray, float& distance ) const
 		}
 	}
 	// Max y
-	if (rayorig.y >= max.y && raydir.y < 0)
+	if (ray.origin.y >= max.y && ray.direction.y < 0)
 	{
-		t = (max.y - rayorig.y) / raydir.y;
+		t = (max.y - ray.origin.y) / ray.direction.y;
 		if (t >= 0)
 		{
 			// Substitute t back into ray and check bounds and dist
-			hitpoint = rayorig + raydir * t;
+			hitpoint = ray.origin + ray.direction * t;
 			if (hitpoint.x >= min.x && hitpoint.x <= max.x &&
 				hitpoint.z >= min.z && hitpoint.z <= max.z &&
 				(!hit || t < lowt))
@@ -221,13 +193,13 @@ bool AABB::intersects( const Ray& ray, float& distance ) const
 		}
 	}
 	// Min z
-	if (rayorig.z <= min.z && raydir.z > 0)
+	if (ray.origin.z <= min.z && ray.direction.z > 0)
 	{
-		t = (min.z - rayorig.z) / raydir.z;
+		t = (min.z - ray.origin.z) / ray.direction.z;
 		if (t >= 0)
 		{
 			// Substitute t back into ray and check bounds and dist
-			hitpoint = rayorig + raydir * t;
+			hitpoint = ray.origin + ray.direction * t;
 			if (hitpoint.x >= min.x && hitpoint.x <= max.x &&
 				hitpoint.y >= min.y && hitpoint.y <= max.y &&
 				(!hit || t < lowt))
@@ -238,13 +210,13 @@ bool AABB::intersects( const Ray& ray, float& distance ) const
 		}
 	}
 	// Max z
-	if (rayorig.z >= max.z && raydir.z < 0)
+	if (ray.origin.z >= max.z && ray.direction.z < 0)
 	{
-		t = (max.z - rayorig.z) / raydir.z;
+		t = (max.z - ray.origin.z) / ray.direction.z;
 		if (t >= 0)
 		{
 			// Substitute t back into ray and check bounds and dist
-			hitpoint = rayorig + raydir * t;
+			hitpoint = ray.origin + ray.direction * t;
 			if (hitpoint.x >= min.x && hitpoint.x <= max.x &&
 				hitpoint.y >= min.y && hitpoint.y <= max.y &&
 				(!hit || t < lowt))

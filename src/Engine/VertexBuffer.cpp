@@ -37,7 +37,7 @@ bool VertexBuffer::bind()
 {
 	glBindBuffer( GL_ARRAY_BUFFER, id );
 
-	if( glHasError( "Error binding vertex buffer" ) )
+	if( glHasError("Error binding vertex buffer") )
 		return false;
 
 	bindPointers();
@@ -100,7 +100,7 @@ bool VertexBuffer::isValid() const
 	// Check that we have a valid buffer.
 	if( !glIsBuffer(id) )
 	{
-		warn( "glbuffers", "Vertex buffer is not valid" );
+		warn( "gl", "Vertex buffer is not valid" );
 		return false;
 	}
 
@@ -221,7 +221,7 @@ VertexBuffer::getAttribute( VertexAttribute::Enum attr ) const
 	it = attributes.find( attr );
 
 	if( it == attributes.end() )
-		assert( "Can't return null reference" );
+		assert( 0 && "Can't return null reference" );
 	
 	Attribute& p = (*it).second;
 	std::vector<byte>& arr = p.data;

@@ -18,10 +18,10 @@ namespace vapor {
 
 Cell::Cell( const TerrainSettings& settings, 
 			const std::vector<float>& heights, short x, short y )
-	: Renderable( Primitive::Triangles ),
-	settings( settings ),
-	heights( heights ),
-	x(x), y(y)
+	: Renderable( Primitive::Triangles )
+	, settings( settings )
+	, heights( heights )
+	, x(x), y(y)
 {
 	// Create a new VBO and upload triangle data
 	VertexBufferPtr vb( new VertexBuffer() );

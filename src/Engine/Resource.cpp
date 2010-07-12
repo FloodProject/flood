@@ -34,7 +34,7 @@ namespace ResourceGroup
 		case Scripts:
 			return "Scripts";
 		default:
-			return "(unknown)";
+			assert( false );
 		}
 	}
 }
@@ -68,7 +68,7 @@ std::string Resource::getBaseURI() const
 	size_t n = uri.find_last_of(".");
 	assert( n != std::string::npos );
 
-	return uri.substr( 0, n);
+	return uri.substr(0, n);
 }
 
 //-----------------------------------//

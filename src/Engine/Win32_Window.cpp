@@ -16,10 +16,13 @@ namespace vapor {
 //-----------------------------------//
 
 Win32Window::Win32Window(Settings& settings)
-	: Window(settings), 
-	hInstance(nullptr), hDC(nullptr), hWnd(nullptr), hRC(nullptr)
+	: Window(settings)
+	, hInstance(nullptr)
+	, hDC(nullptr)
+	, hWnd(nullptr)
+	, hRC(nullptr)
 {
-	hInstance = GetModuleHandle( nullptr );
+	hInstance = GetModuleHandle(nullptr);
 
 	if ( !registerClass() || !createWindow() ) 
 	{
@@ -95,6 +98,7 @@ bool Win32Window::createWindow()
 	}
 
 	createContext();
+	makeCurrent();
 
 	ShowWindow( hWnd, SW_SHOW );
 	//SetForegroundWindow( hWnd );	// Slightly Higher Priority
@@ -153,13 +157,6 @@ bool Win32Window::createContext()
 		error( "window", "wglCreateContext() failed: %s", getErrorMessage().c_str() );
 		return false;
 	}
-
-	makeCurrent();
-
-	ShowWindow( hWnd, SW_SHOW );
-	SetForegroundWindow( hWnd );	// Slightly Higher Priority
-	SetFocus( hWnd );
-	UpdateWindow( hWnd );
 
 	return true;
 }
@@ -227,13 +224,12 @@ void Win32Window::setCursor(bool state)
 
 void Win32Window::makeCurrent()
 {
-	if( wglGetCurrentContext() == hRC) 
+	if( wglGetCurrentContext() == hRC ) 
 		return;
 
-	if( !wglMakeCurrent( hDC, hRC ) ) 
+	if( !wglMakeCurrent(hDC, hRC) ) 
 	{
-		error( "window", 
-			"wglMakeCurrent() failed: %s", getErrorMessage().c_str() );
+		error( "window", "wglMakeCurrent() failed: %s", getErrorMessage().c_str() );
 	}
 }
 

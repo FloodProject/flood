@@ -23,9 +23,11 @@ Renderable::Renderable( Primitive::Enum primitive,
 						const VertexBufferPtr& vb, 
 						const IndexBufferPtr& ib, 
 						const MaterialPtr& mat )
-	: type( primitive), 
-	vb( vb ), ib( ib ), mat( mat ),
-	mode( PolygonMode::Solid )
+	: type( primitive )
+	, vb( vb )
+	, ib( ib )
+	, mat( mat )
+	, mode( PolygonMode::Solid )
 { }
 
 //-----------------------------------//
@@ -33,9 +35,10 @@ Renderable::Renderable( Primitive::Enum primitive,
 Renderable::Renderable( Primitive::Enum primitive, 
 						const VertexBufferPtr& vb, 
 						const MaterialPtr& mat )
-	: type( primitive),
-	vb( vb ), mat( mat ),
-	mode( PolygonMode::Solid )
+	: type( primitive )
+	, vb( vb )
+	, mat( mat )
+	, mode( PolygonMode::Solid )
 { }
 
 //-----------------------------------//

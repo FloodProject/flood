@@ -28,6 +28,7 @@ namespace PlaneIntersection
 class VAPOR_API Plane
 {
 public:
+
     // Build a plane based on 3 non-colinear points.
 	// Note: Right hand rule will be applied when computing normal.
     Plane( Vector3 const& p1, Vector3 const& p2, Vector3 const& p3 );
@@ -41,10 +42,10 @@ public:
 	// Returns if the plane intersects with bounding box.
     bool intersect( AABB const& aabb ) const;
     
-protected:
+public:
 
     Vector3 normal;
-    float offset;    
+    float offset;
 };
 
 //-----------------------------------//

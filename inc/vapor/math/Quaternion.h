@@ -23,31 +23,24 @@ class VAPOR_API Quaternion
 {
 public:
 
-	float x, y, z, w;
-	//-----------------------------------//
-
 	// Default empty constructor
 	Quaternion ()
 		: x(0.0f), y(0.0f), z(0.0f), w(0.0f)
-	{
-	}
+	{ }
 
 	//-----------------------------------//
 	
 	// Copy constructor
 	Quaternion (const Quaternion &q)
 		: x(q.x), y(q.y), z(q.z), w(q.w)
-	{ 
-	}
+	{ }
 
 	//-----------------------------------//
 
 	// Constructs a quaternion from 1 value
 	Quaternion (const float u)
 		: x(u), y(u), z(u), w(u)
-	{
-	
-	}
+	{ }
 
 	Quaternion(const EulerAngles& angles)
 	{
@@ -58,17 +51,14 @@ public:
 		qz.setToRotateAboutZ(angles.z);
 		
 		*this = qy*qx*qz;
-		
 	}
-
 
 	//-----------------------------------//
 
 	// Constructs a quaternion from 4 values
 	Quaternion (const float a, const float b, const float c, const float d)
 		: x(a), y(b), z(c), w(d)
-	{ 
-	}
+	{ }
 
 	//-----------------------------------//
 	
@@ -88,15 +78,12 @@ public:
 	}
 
 	//-----------------------------------//
-	
-
 
 	// Inequality
     bool operator != (Quaternion &q) const
 	{
 		return (x != q.x) || (y != q.y) || (z != q.z) || (w != q.w);
 	}
-
 
 	//---------------------------------------------------------------------------
 	// conjugate
@@ -159,12 +146,9 @@ public:
 		return *this;
 	}
 
-
-	
 	// Gets the magnitude of the quaternion
 	float magnitude() const { return sqrt(x*x + y*y + z*z + w*w); }
 
-	
 	//---------------------------------------------------------------------------
 	// Quaternion::normalize
 	//
@@ -345,6 +329,12 @@ public:
 	float dotProduct(const Quaternion &a) {
 		return a.w*w + a.x*x + a.y*y + a.z*z;
 	}
+
+public:
+
+	float x, y, z, w;
 };
+
+//-----------------------------------//
 
 } // end namespace

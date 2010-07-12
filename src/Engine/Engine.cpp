@@ -26,13 +26,13 @@ namespace vapor {
 //-----------------------------------//
 
 Engine::Engine()
-	: log(nullptr),
-	fileSystem(nullptr),
-	resourceManager(nullptr),
-	renderDevice(nullptr),
-	audioDevice(nullptr),
-	physicsManager(nullptr),
-	scriptState(nullptr)
+	: log(nullptr)
+	, fileSystem(nullptr)
+	, resourceManager(nullptr)
+	, renderDevice(nullptr)
+	, audioDevice(nullptr)
+	, physicsManager(nullptr)
+	, scriptState(nullptr)
 { }
 
 //-----------------------------------//

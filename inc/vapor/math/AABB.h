@@ -38,15 +38,6 @@ public:
 	// Gets the center point of the bounding box.
 	Vector3 getCenter() const;
 
-	// Gets the minimum corner of the bounding box.
-	GETTER(Minimum, const Vector3&, min)
-
-	// Gets the maximum corner of the bounding box.
-	GETTER(Maximum, const Vector3&, max)
-    
-	// Gets the size of the bounding box.
-	//Vector3 getSize() const;
-
 	// Expands the bounding box to contain the vertex.
 	void add( const Vector3& vertex );
 

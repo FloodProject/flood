@@ -10,8 +10,8 @@
 
 #ifdef VAPOR_AUDIO_OPENAL
 
-#include "vapor/math/Vector3.h"
 #include "vapor/resources/Sound.h"
+#include "vapor/math/Vector3.h"
 
 #include <al.h>
 #include <alc.h>

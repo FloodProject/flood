@@ -117,27 +117,15 @@ protected:
 	ResourceStatus::Enum status;
 };
 
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Resource );
+
 //-----------------------------------//
 
-#if defined(VAPOR_MEMORY_INTRUSIVE_PTR)
-	#define TYPEDEF_RESOURCE_POINTER_FROM_TYPE(T)	\
-		TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(T)
-	#define RESOURCE_TYPEDECL_FROM_TYPE(T)			\
-		boost::intrusive_ptr<T>
-	#define RESOURCE_SMART_PTR_CAST					\
-		boost::static_pointer_cast
-#elif defined(VAPOR_MEMORY_SHARED_PTR)
-	#define TYPEDEF_RESOURCE_POINTER_FROM_TYPE(T)	\
-		TYPEDEF_SHARED_POINTER_FROM_TYPE(T)
-	#define RESOURCE_TYPEDECL_FROM_TYPE(T)			\
-		std::shared_ptr<T>
-	#define RESOURCE_SMART_PTR_CAST					\
-		std::static_pointer_cast
-#else
-	#error No smart pointer implementation found
-#endif
-		
-TYPEDEF_RESOURCE_POINTER_FROM_TYPE( Resource );
+#define RESOURCE_TYPEDECL_FROM_TYPE(T)			\
+	boost::intrusive_ptr<T>
+
+#define RESOURCE_SMART_PTR_CAST					\
+	boost::static_pointer_cast
 
 //-----------------------------------//
 

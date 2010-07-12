@@ -15,39 +15,21 @@ namespace vapor {
 
 BoundingSphere::BoundingSphere()
 	: radius( 0.0f )
-{
-
-}
+{ }
 
 //-----------------------------------//
 
 BoundingSphere::BoundingSphere( const Vector3& center, float radius )
-	: center( center ), radius( radius )
-{
-
-}
+	: center( center )
+	, radius( radius )
+{ }
 
 //-----------------------------------//
 
 BoundingSphere::BoundingSphere( const BoundingSphere& bs )
-	: center( bs.center ), radius( bs.radius )
-{
-
-}
-
-//-----------------------------------//
-
-const Vector3& BoundingSphere::getCenter() const
-{
-	return center;
-}
-
-//-----------------------------------//
-
-float BoundingSphere::getRadius() const
-{
-	return radius;
-}
+	: center( bs.center )
+	, radius( bs.radius )
+{ }
 
 //-----------------------------------//
 

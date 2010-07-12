@@ -50,7 +50,7 @@ private:
 	std::vector<byte> dataBuffer;
 };
 
-TYPEDEF_RESOURCE_POINTER_FROM_TYPE( Sound );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Sound );
 
 //-----------------------------------//
 

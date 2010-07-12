@@ -15,30 +15,35 @@ namespace vapor {
 //-----------------------------------//
 
 EulerAngles::EulerAngles()
-	: x(0.0f),
-	y(0.0f),
-	z(0.0f)
+	: x(0.0f)
+	, y(0.0f)
+	, z(0.0f)
 { }
 
 //-----------------------------------//
 
 EulerAngles::EulerAngles( float x, float y, float z )
-	: x(x),
-	y(y),
-	z(z)
+	: x(x)
+	, y(y)
+	, z(z)
 { }
 
 //-----------------------------------//
 
 EulerAngles::EulerAngles( const EulerAngles& ang )
-	: x(ang.x), y(ang.y), z(ang.z)
+	: x(ang.x)
+	, y(ang.y)
+	, z(ang.z)
 { }
 
 //-----------------------------------//
 
 EulerAngles& EulerAngles::operator += (const EulerAngles& ang)
 {
-	x += ang.x; y += ang.y; z += ang.z;
+	x += ang.x;
+	y += ang.y;
+	z += ang.z;
+
 	return *this;
 }
 
@@ -46,7 +51,10 @@ EulerAngles& EulerAngles::operator += (const EulerAngles& ang)
 
 EulerAngles& EulerAngles::operator += (const Vector3& v)
 {
-	x += v.x; y += v.y; z += v.z;
+	x += v.x;
+	y += v.y;
+	z += v.z;
+
 	return *this;
 }
 
@@ -187,7 +195,7 @@ Matrix4x3 EulerAngles::rotateZ( float ang ) const
 
 Matrix4x3 EulerAngles::getOrientationMatrix() const
 {
-	return rotateX( x ) * rotateY( y ) * rotateZ( z );
+	return rotateX(x) * rotateY(y) * rotateZ(z);
 }
 
 //-----------------------------------//

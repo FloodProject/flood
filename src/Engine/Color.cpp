@@ -14,28 +14,28 @@ namespace vapor {
 //-----------------------------------//
 
 Color::Color(float r, float g, float b, float a)
-	: r(r),
-	g(g),
-	b(b),
-	a(a)
+	: r(r)
+	, g(g)
+	, b(b)
+	, a(a)
 { }
 
 //-----------------------------------//
 
-Color::Color(int _r, int _g, int _b, int _a)
-	: r(float(_r/255.0f)),
-	g(float(_g/255.0f)),
-	b(float(_b/255.0f)),
-	a(float(_a/255.0f))
+Color::Color(int r, int g, int b, int a)
+	: r(r/255.0f)
+	, g(g/255.0f)
+	, b(b/255.0f)
+	, a(a/255.0f)
 { }
 
 //-----------------------------------//
 
 Color::Color(const Color& c)
-	: r(c.r),
-	b (c.b),
-	g (c.g),
-	a (c.a)
+	: r(c.r)
+	, b (c.b)
+	, g (c.g)
+	, a (c.a)
 { }
 
 //-----------------------------------//
@@ -46,6 +46,20 @@ bool Color::operator == (const Color& c) const
 		&& (g == c.g)
 		&& (b == c.b)
 		&& (a == c.a); 
+}
+
+//-----------------------------------//
+
+Color Color::operator * (float s) const
+{
+	return Color(r*s, g*s, b*s, a); 
+}
+
+//-----------------------------------//
+
+Color::operator Vector3 () const
+{
+	return Vector3( r, g, b );
 }
 
 //-----------------------------------//

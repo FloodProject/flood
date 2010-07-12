@@ -19,16 +19,22 @@ const std::string& Transform::type = "Transform";
 //-----------------------------------//
 
 Transform::Transform( float x, float y, float z )
-	: _scale( 1.0f ), translation( x, y, z ), needsNotify( false ),
-	needsVolumeUpdate( true ), externalUpdate( false )
+	: _scale( 1.0f )
+	, translation( x, y, z )
+	, needsNotify( false )
+	, needsVolumeUpdate( true )
+	, externalUpdate( false )
 { }
 
 //-----------------------------------//
 
 Transform::Transform( const Transform& rhs )
-	: _scale( rhs._scale ), translation( rhs.translation ),
-	rotation( rhs.rotation ), needsVolumeUpdate( false ),
-	needsNotify( false ), externalUpdate( false )
+	: _scale( rhs._scale )
+	, translation( rhs.translation )
+	, rotation( rhs.rotation )
+	, needsVolumeUpdate( false )
+	, needsNotify( false )
+	, externalUpdate( false )
 { }
 
 //-----------------------------------//

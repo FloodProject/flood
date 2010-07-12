@@ -36,7 +36,7 @@ protected:
 	std::string text;
 };
 
-TYPEDEF_RESOURCE_POINTER_FROM_TYPE( Text );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Text );
 
 //-----------------------------------//
 

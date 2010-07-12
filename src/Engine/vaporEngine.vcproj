@@ -734,6 +734,14 @@
 				<File
 					RelativePath=".\Camera.cpp"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							DisableSpecificWarnings="4715"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\scene\Camera.h"
@@ -994,6 +1002,14 @@
 				<File
 					RelativePath="..\Framework\Framework.cpp"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							DisableSpecificWarnings="4127"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\Framework.h"
@@ -1283,6 +1299,14 @@
 			<File
 				RelativePath=".\Resource.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						DisableSpecificWarnings="4715"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\inc\vapor\resources\Resource.h"
@@ -1704,6 +1728,14 @@
 				<File
 					RelativePath=".\TaskManager.cpp"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							DisableSpecificWarnings="4127"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\TaskManager.h"

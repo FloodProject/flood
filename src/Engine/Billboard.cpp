@@ -18,9 +18,9 @@ const std::string& Billboard::type = "Billboard";
 //-----------------------------------//
 
 Billboard::Billboard( const CameraPtr& cam, BillboardType::Enum type )
-	: camera(cam),
-	billboardType(type), 
-	rend( new Renderable(Primitive::Lines) )
+	: camera(cam)
+	, billboardType(type)
+	, rend( new Renderable(Primitive::Lines) )
 { }
 
 //-----------------------------------//
@@ -28,10 +28,12 @@ Billboard::Billboard( const CameraPtr& cam, BillboardType::Enum type )
 void Billboard::update( double VAPOR_UNUSED(delta) )
 {
 	// If this is the first update loop, we need to get the transform.
-	if( !transform ) transform = getNode()->getTransform();
+	if( !transform )
+		transform = getNode()->getTransform();
 
 	// If we have no components, nothing to do...
-	if( !camera || !transform ) return;
+	if( !camera || !transform )
+		return;
 	
 	const Matrix4x3& view = camera->getViewMatrix();
 

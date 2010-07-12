@@ -103,19 +103,27 @@ typedef unsigned long	ulong;
 // Threads
 //---------------------------------------------------------------------//
 
-#define BOOST_THREAD_NO_LIB
-
-#ifdef VAPOR_COMPILER_MSVC
-	#pragma warning( push )
-	#pragma warning( disable : 4512 4244 )
-	#include <boost/thread.hpp>
-	#pragma warning( pop )
+#ifdef VAPOR_THREADING
+	#define THREAD( code ) code
 #else
-	#include <boost/thread.hpp>
+	#define THREAD( code )
+	namespace vapor { class Thread; }
 #endif
 
-typedef boost::thread Thread;
-typedef boost::thread* ThreadPtr;
+#ifdef VAPOR_THREADING_BOOST
+	#define BOOST_THREAD_NO_LIB
+
+	#ifdef VAPOR_COMPILER_MSVC
+		#pragma warning( push )
+		#pragma warning( disable : 4512 4244 )
+		#include <boost/thread.hpp>
+		#pragma warning( pop )
+	#else
+		#include <boost/thread.hpp>
+	#endif
+
+	typedef boost::thread Thread;
+#endif
 
 #if !defined(VAPOR_THREADING)
 	typedef int atomic_int;
@@ -131,12 +139,6 @@ typedef boost::thread* ThreadPtr;
 //---------------------------------------------------------------------//
 // Pointer wrappers
 //---------------------------------------------------------------------//
-
-#define TYPEDEF_PTR(type)		\
-	typedef type* type##Ptr;
-
-#define TYPEDEF_AUTO_PTR(type)	\
-	typedef std::auto_ptr<type> type##Ptr;
 
 #if defined(VAPOR_MEMORY_TR1_VENDOR)
 	#if defined(VAPOR_COMPILER_MSVC)
@@ -155,6 +157,12 @@ typedef boost::thread* ThreadPtr;
 	#endif
 #endif
 
+#define TYPEDEF_PTR(type)		\
+	typedef type* type##Ptr;
+
+#define TYPEDEF_AUTO_PTR(type)	\
+	typedef std::auto_ptr<type> type##Ptr;
+
 #if defined( VAPOR_MEMORY_SHARED_PTR )
 	#define TYPEDEF_SHARED_POINTER_FROM_TYPE( class ) \
 		typedef std::shared_ptr< class > class##Ptr;
@@ -164,13 +172,9 @@ typedef boost::thread* ThreadPtr;
 
 #if defined( VAPOR_MEMORY_INTRUSIVE_PTR )
 	#include "boost/intrusive_ptr.hpp"
-	#define TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( class ) \
-		typedef boost::intrusive_ptr< class > class##Ptr;
+	#define TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( type ) \
+		typedef boost::intrusive_ptr< type > type##Ptr;
 	using boost::static_pointer_cast;
-#endif
-
-#if !defined( VAPOR_MEMORY_SHARED_PTR ) && !defined( VAPOR_MEMORY_INTRUSIVE_PTR ) 
-	#error "No shared pointer implementation found."
 #endif
 
 //---------------------------------------------------------------------//

@@ -24,7 +24,8 @@ namespace vapor {
 struct TerrainSettings
 {
 	TerrainSettings()
-		:	CellSize( 500 ), NumberTiles( 16 )
+		: CellSize( 500 )
+		, NumberTiles( 16 )
 	{ }
 
 	// Material for each cell.

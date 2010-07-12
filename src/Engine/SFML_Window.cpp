@@ -16,12 +16,14 @@ namespace vapor {
 //-----------------------------------//
 
 SFML_Window::SFML_Window(const WindowSettings& settings)
-	: Window(settings),
-	cursorState( true ),
-	flags(0)
+	: Window(settings)
+	, cursorState(true)
+	, flags(0)
 {
 	if( !open() )
+	{
 		error( "render", "Could not create SFML render window" );
+	}
 }
 
 //-----------------------------------//
@@ -35,22 +37,22 @@ SFML_Window::~SFML_Window()
 
 bool SFML_Window::open()
 {
-	sfmlSettings.DepthBits = settings.getDepthBits(); 
-	sfmlSettings.StencilBits = settings.getStencilBits();
-	sfmlSettings.AntialiasingLevel = settings.getAntialiasing();
+	windowSettings.DepthBits = settings.getDepthBits(); 
+	windowSettings.StencilBits = settings.getStencilBits();
+	windowSettings.AntialiasingLevel = settings.getAntialiasing();
 	
 	if( settings.isFullscreen() )
 	{
-		vMode = sf::VideoMode::GetMode(0);
+		videoMode = sf::VideoMode::GetMode(0);
 		flags |= sf::Style::Fullscreen;
 	}
 	else
 	{
-		vMode.Width = settings.getWidth(); 
-		vMode.Height = settings.getHeight();
-		vMode.BitsPerPixel = settings.getBpp();
+		videoMode.Width = settings.getWidth(); 
+		videoMode.Height = settings.getHeight();
+		videoMode.BitsPerPixel = settings.getBpp();
 		
-		if( !vMode.IsValid() )
+		if( !videoMode.IsValid() )
 		{
 			error( "window::sfml", "Video mode not supportted." );
 			return false;
@@ -61,16 +63,16 @@ bool SFML_Window::open()
 	
 	createWindow();
 
-	sfmlSettings = window.GetSettings();
+	windowSettings = window.GetSettings();
 	
-	assert( sfmlSettings.DepthBits >= 0 && sfmlSettings.DepthBits <= 32 );
-	settings.setDepthBits( static_cast<ushort>(sfmlSettings.DepthBits) );
+	assert( windowSettings.DepthBits >= 0 && windowSettings.DepthBits <= 32 );
+	settings.setDepthBits( windowSettings.DepthBits );
 	
-	assert( sfmlSettings.StencilBits >= 0 && sfmlSettings.StencilBits <= 32 );
-	settings.setStencilBits( static_cast<ushort>(sfmlSettings.StencilBits) );
+	assert( windowSettings.StencilBits >= 0 && windowSettings.StencilBits <= 32 );
+	settings.setStencilBits( windowSettings.StencilBits );
 	
-	assert( sfmlSettings.AntialiasingLevel >= 0 && sfmlSettings.AntialiasingLevel <= 32 );
-	settings.setAntialiasing( static_cast<ushort>(sfmlSettings.AntialiasingLevel) );
+	assert( windowSettings.AntialiasingLevel >= 0 && windowSettings.AntialiasingLevel <= 32 );
+	settings.setAntialiasing( windowSettings.AntialiasingLevel );
 	
 	window.EnableKeyRepeat( false );
 	
@@ -83,11 +85,12 @@ void SFML_Window::createWindow()
 {
 	if(settings.getCustomHandle())
 	{
-		window.Create( sf::WindowHandle( settings.getCustomHandle() ), sfmlSettings );
+		sf::WindowHandle handle( settings.getCustomHandle() );
+		window.Create( handle, windowSettings );
 	}
 	else
 	{		
-		window.Create( vMode, settings.getTitle(), flags, sfmlSettings );
+		window.Create( videoMode, settings.getTitle(), flags, windowSettings );
 	}
 }
 
@@ -158,9 +161,6 @@ bool SFML_Window::pumpEvents()
 				break;
 			}
 
-			// If the mouse cursor is not visible, set the mouse cursor
-			// position back to the center, if not the mouse gets off
-			// the screen and won't be usable for i.e., camera rotations.
 			case sf::Event::MouseMoved:
 			{
 				inputManager.processSFMLEvent( event );
@@ -208,8 +208,10 @@ void SFML_Window::setCursorPosition( int x, int y )
 
 Vector2i SFML_Window::getCursorPosition() const
 {
-	return Vector2i( window.GetInput().GetMouseX(),
-		window.GetInput().GetMouseY() );
+	int x = window.GetInput().GetMouseX();
+	int y = window.GetInput().GetMouseY();
+
+	return Vector2i(x, y);
 }
 
 //-----------------------------------//

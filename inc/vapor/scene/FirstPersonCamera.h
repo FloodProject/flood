@@ -62,6 +62,9 @@ protected:
 	void onMouseWheel( const MouseWheelEvent& event );
 	void onWindowFocusChange( bool focusLost );
 
+	// Relative movement position.
+	Vector3 relativePosition;
+
 	// Restrict camera movement on the X-axis.
 	bool clampMovementX;
 
@@ -75,7 +78,7 @@ protected:
 	Vector2i mouseDistance;
 	int mouseWheel;
 
-	// Focus state
+	// Focus state.
 	bool hasFocus;
 
 	InputManager* inputManager;

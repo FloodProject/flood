@@ -8,14 +8,11 @@
 
 #pragma once
 
-#include "vapor/CompileOptions.h"
-
 #ifdef VAPOR_INPUT_SFML
 
 #include <SFML/Window.hpp>
 
 #include "vapor/input/InputManager.h"
-
 #include "vapor/input/Mouse.h"
 #include "vapor/input/Keyboard.h"
 #include "vapor/input/Joystick.h"
@@ -34,10 +31,7 @@ class SFML_InputManager : public InputManager
 {
 public:
 
-	SFML_InputManager();
-	virtual ~SFML_InputManager();
-
-	/// Feeds a SFML input event to the input manager.
+	// Feeds a SFML input event to the input manager.
 	void processSFMLEvent( const sf::Event& event );
 
 private:

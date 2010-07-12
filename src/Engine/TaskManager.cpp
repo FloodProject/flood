@@ -16,39 +16,43 @@ namespace vapor {
 
 TaskManager::TaskManager( int poolSize )
 {
+#ifdef VAPOR_THREADING
 	createThreadPool( poolSize );
 
-	foreach( ThreadPtr& thread, threadPool )
+	foreach( Thread* thread, threadPool )
 	{
-		thread = new Thread(&TaskManager::runWorker, this);
+		THREAD(thread = new Thread(&TaskManager::runWorker, this);)
 	}
+#endif
 }
 
 //-----------------------------------//
 
 TaskManager::~TaskManager()
 {
-	foreach( const ThreadPtr& thread, threadPool )
+#ifdef VAPOR_THREADING
+	foreach( Thread* thread, threadPool )
 	{
 		delete thread;
-	} 
+	}
+#endif
 }
 
 //-----------------------------------//
 
 void TaskManager::createThreadPool( int poolSize )
 {
+	// By default use (numberOfCores-1) threads.
+#ifdef VAPOR_THREADING_BOOST
 	if( poolSize < 0 )
-	{
-		// By default use (numberOfCores-1) threads.
 		poolSize = boost::thread::hardware_concurrency()-1;
+#endif
 
-		// If boost returns 0, the number of threads is not available.
-		if( poolSize <= 0 )
-		{
-			// Assume a "safe value" in this case.
-			poolSize = 1;
-		}
+	// The number of threads is not available.
+	if( poolSize <= 0 )
+	{
+		// Assume a "safe value" in this case.
+		poolSize = 1;
 	}
 
 	info( "tasks", "Creating thread pool with %d thread(s)", poolSize );
@@ -68,15 +72,19 @@ void TaskManager::addTask( const TaskPtr& task )
 	// Push event before the thread is pushed.
 	pushEvent( TaskEvent::Added, task, true );
 
+#ifdef VAPOR_THREADING
 	// Push the task in the work queue.
 	tasks.push( task );
+#else
+	task->run();
+#endif
 }
 
 //-----------------------------------//
 
 void TaskManager::runWorker()
 {
-	for(;;)
+	while(true)
 	{
 		// Get a task and run it.
 		TaskPtr task;

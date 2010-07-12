@@ -49,7 +49,7 @@ protected:
 	State* state;
 };
 
-TYPEDEF_RESOURCE_POINTER_FROM_TYPE( Script );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Script );
 
 //-----------------------------------//
 

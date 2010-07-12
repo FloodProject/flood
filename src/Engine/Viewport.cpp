@@ -15,10 +15,10 @@ namespace vapor {
 
 //-----------------------------------//
 
-Viewport::Viewport( CameraPtr camera, RenderTarget* rt )
-	: weakCamera( camera ),
-	target( rt ),
-	size( Vector2i(-1,-1) )
+Viewport::Viewport( CameraPtr camera, RenderTarget* target )
+	: weakCamera( camera )
+	, target( target )
+	, size(-1,-1)
 {
 	setClearColor( Color::White );
 	setRenderTarget( target );
@@ -42,7 +42,9 @@ float Viewport::getAspectRatio() const
 {
 	const Vector2i size = getSize();
 
-	if( size.y == 0 ) return 0.0f;
+	if( size.y == 0 )
+		return 0.0f;
+	
 	return float(size.x) / size.y;
 }
 

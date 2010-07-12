@@ -49,7 +49,7 @@ class VAPOR_API Font : public Resource
 {
 public:
 
-	// Gets the texture that backs this font.
+	// Gets the image that backs this font.
 	virtual const ImagePtr& getImage() const = 0;
 
 	// Gets an array with the available glyphs information.
@@ -78,7 +78,7 @@ protected:
 	int size;
 };
 
-TYPEDEF_RESOURCE_POINTER_FROM_TYPE( Font );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Font );
 
 //-----------------------------------//
 

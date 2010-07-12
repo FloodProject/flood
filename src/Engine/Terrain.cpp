@@ -22,8 +22,6 @@ static const short validDimensions[] =
 	257,	513,	1025,	2049
 };
 
-//-----------------------------------//
-
 const std::string& Terrain::type = "Terrain";
 
 //-----------------------------------//

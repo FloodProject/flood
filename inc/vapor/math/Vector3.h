@@ -115,22 +115,34 @@ public:
 	//-----------------------------------//
 	
 	// Unary minus
-	Vector3T operator - () const { return Vector3T(-x, -y, -z); }
+	Vector3T operator - () const
+	{
+		return Vector3T(-x, -y, -z);
+	}
 
 	//-----------------------------------//
 
 	// Binary addition
-	Vector3T operator + (const Vector3T<T>& v) const { return Vector3T(x+v.x, y+v.y, z+v.z); }
+	Vector3T operator + (const Vector3T<T>& v) const
+	{
+		return Vector3T(x+v.x, y+v.y, z+v.z);
+	}
 
 	//-----------------------------------//
 
 	// Binary subtraction
-	Vector3T operator - (const Vector3T<T>& v) const { return Vector3T(x-v.x, y-v.y, z-v.z); }
+	Vector3T operator - (const Vector3T<T>& v) const
+	{
+		return Vector3T(x-v.x, y-v.y, z-v.z);
+	}
 
 	//-----------------------------------//
 	
 	// Multiplication by a scalar
-	Vector3T operator * (float s) const { return Vector3T(x*s, y*s, z*s); }
+	Vector3T operator * (float s) const
+	{
+		return Vector3T(x*s, y*s, z*s);
+	}
 
 	//-----------------------------------//
 
@@ -145,17 +157,41 @@ public:
 	//-----------------------------------//
 
 	// Zeroes the vector
-	void zero() { x = y = z = 0.0f; }
+	void zero()
+	{
+		x = y = z = 0.0f;
+	}
 
 	//-----------------------------------//
 
 	// Gets the length of the vector
-	T length() const { return sqrt(x*x + y*y + z*z); }
+	T length() const
+	{
+		return sqrt(x*x + y*y + z*z);
+	}
 
 	//-----------------------------------//
 
 	// Gets the length of the vector squared
-	T lengthSquared() const { return x*x + y*y + z*z; }
+	T lengthSquared() const
+	{
+		return x*x + y*y + z*z;
+	}
+
+	//-----------------------------------//
+	
+	// Linear interpolation between two vectors.
+	// Note: blend should be from 0.0 to 1.0.
+	Vector3T lerp(const Vector3T& vec, float blend) const 
+	{
+		Vector3T res;
+
+		res.x = blend * (vec.x - x) + x;
+		res.y = blend * (vec.y - y) + y;
+		res.z = blend * (vec.z - z) + z;
+
+		return res;
+	}
 
 	//-----------------------------------//
 	

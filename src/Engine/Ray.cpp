@@ -14,32 +14,16 @@ namespace vapor {
 //-----------------------------------//
 
 Ray::Ray( const Vector3& origin, const Vector3& direction ) 
-	: origin( origin ), direction( direction )
-{
-
-}
+	: origin( origin )
+	, direction( direction )
+{ }
 
 //-----------------------------------//
 
 Ray::Ray( const Ray& ray )
-	: origin( ray.origin ), direction( ray.direction )
-{
-
-}
-
-//-----------------------------------//
-
-const Vector3& Ray::getOrigin() const
-{
-	return origin;
-}
-
-//-----------------------------------//
-
-const Vector3& Ray::getDirection() const
-{
-	return direction;
-}
+	: origin( ray.origin )
+	, direction( ray.direction )
+{ }
 
 //-----------------------------------//
 

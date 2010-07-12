@@ -16,17 +16,30 @@ namespace vapor {
 
 const std::string& Camera::type = "Camera";
 
+std::string Projection::toString( Projection::Enum proj )
+{
+	switch(proj)
+	{
+	case Projection::Orthographic:
+		return "Ortographic";
+	case Projection::Perspective:
+		return "Perspective";
+	default:
+		assert( 0 && "This should not be reached" );
+	}
+}
+
 //-----------------------------------//
 
 Camera::Camera( RenderDevice* device, Projection::Enum proj )
-	: lookAtVector(Vector3::UnitZ),
-	projection(proj),
-	fov(45.0f),
-	near_(1.0f),
-	far_(5000.0f),
-	viewport(nullptr),
-	viewSize(Vector2i::Zero),
-	renderDevice(device)
+	: lookAtVector(Vector3::UnitZ)
+	, projection(proj)
+	, fov(45.0f)
+	, near_(1.0f)
+	, far_(5000.0f)
+	, viewport(nullptr)
+	, viewSize(Vector2i::Zero)
+	, renderDevice(device)
 {
 	assert( device != nullptr );
 }
@@ -34,11 +47,11 @@ Camera::Camera( RenderDevice* device, Projection::Enum proj )
 //-----------------------------------//
 
 Camera::Camera( const Camera& rhs )
-	: renderDevice( rhs.renderDevice ),
-	projection( rhs.projection ),
-	fov( rhs.fov ),
-	near_( rhs.near_ ),
-	far_( rhs.far_ )
+	: renderDevice( rhs.renderDevice )
+	, projection( rhs.projection )
+	, fov( rhs.fov )
+	, near_( rhs.near_ )
+	, far_( rhs.far_ )
 { }
 
 //-----------------------------------//
@@ -47,8 +60,7 @@ Camera::~Camera()
 {
 	if( transform )
 	{
-		transform->onTransform -=
-			fd::bind( &Camera::onTransform, this );
+		transform->onTransform -= fd::bind( &Camera::onTransform, this );
 	}
 }
 
@@ -166,16 +178,17 @@ Ray Camera::getRay( float screenX, float screenY, Vector3* outFar ) const
 void Camera::update( double VAPOR_UNUSED(delta) )
 {
 	// Only run the following code once.
-	if( transform ) return;
+	if( transform )
+		return;
 
 	assert( getNode() != nullptr );
 	assert( getNode()->getTransform() != nullptr );
 		
 	transform = getNode()->getTransform();
+
 	transform->onTransform += fd::bind( &Camera::onTransform, this );
 
 	// Update the view matrix the first update.
-	/*setupProjection();*/
 	setupView();
 }
 
@@ -199,6 +212,8 @@ void Camera::setupProjection( const Vector2i& size )
 
 void Camera::setupView()
 {
+	assert( transform != nullptr );
+
 	const Vector3& position = transform->getPosition();
 	const EulerAngles& rotation = transform->getRotation();
 	
@@ -231,7 +246,6 @@ void Camera::setViewport( Viewport* newViewport )
 
 void Camera::onTransform()
 {
-	assert( transform != nullptr );
 	setupView();
 }
 
@@ -239,7 +253,8 @@ void Camera::onTransform()
 
 void Camera::render( const NodePtr& node, bool clearView ) const
 {
-	if( !viewport ) return;
+	if( !viewport )
+		return;
 
 	// This will contain all nodes used for rendering.
 	RenderBlock renderBlock;
@@ -276,10 +291,9 @@ void Camera::render() const
 void Camera::cull( RenderBlock& block, const NodePtr& node ) const
 {
 	// Let's forget culling for now. Return all renderable nodes.
-	// TODO: Check if dynamic_cast is faster than a string comparison.
 	
 	// Try to see if this is a Group-derived node.
-	const GroupPtr& group( std::dynamic_pointer_cast< Group >( node ) );
+	const GroupPtr& group( std::dynamic_pointer_cast<Group>(node) );
 	
 	// Yes it is.
 	if( group )
@@ -287,7 +301,9 @@ void Camera::cull( RenderBlock& block, const NodePtr& node ) const
 		// Cull the children nodes recursively.
 		foreach( const NodePtr& child, group->getChildren() )
 		{
-			if( !child->isVisible() ) continue;
+			if( !child->isVisible() ) 
+				continue;
+			
 			cull( block, child );
 		}
 	}
@@ -296,6 +312,7 @@ void Camera::cull( RenderBlock& block, const NodePtr& node ) const
 	// and if the node is visible, then we push it to a list of things
 	// to render that will be later passed to the rendering device.
 	const TransformPtr& transform = node->getTransform();
+	
 	foreach( const GeometryPtr& geometry, node->getGeometry() ) 
 	{
 		// No frustum culling is performed yet.
@@ -334,8 +351,7 @@ void Camera::cull( RenderBlock& block, const NodePtr& node ) const
 
 void Camera::serialize( Json::Value& value )
 {
-	value["projection"] = projection == Projection::Orthographic ?
-		"Orthographic" : "Perspective"; /*Projection::toString( projection );*/
+	value["projection"] = Projection::toString( projection );
 	value["fov"] = fov;
 	value["near"] = near_;
 	value["far"] = far_;

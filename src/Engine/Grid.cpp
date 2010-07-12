@@ -15,25 +15,29 @@ namespace vapor {
 
 const std::string& Grid::type = "Grid";
 
-//-----------------------------------//
+static const Vector3 RegularLineColor(0.4f);
+static const Vector3 StrongLineColor(0.9f);
 
 Grid::Grid()
-	: sizeX(500), sizeZ(500), divX(20), divZ(20),
-	strongMainLines( true )
+  : sizeX(500)
+  , sizeZ(500)
+  , divX(20)
+  , divZ(20)
+  , strongMainLines(true)
 {
-	MaterialPtr mat( new Material("Grid") );
-	mat->setDepthTest(false);
+	MaterialPtr material( new Material("Grid") );
+	material->setDepthTest(false);
 	
-	RenderablePtr rend( new Renderable( Primitive::Lines ) );
-	rend->setVertexBuffer( getGridBuffer() );
-	rend->setMaterial( mat );
+	RenderablePtr rend( new Renderable(Primitive::Lines) );
+	rend->setVertexBuffer( buildGeometry() );
+	rend->setMaterial( material );
 
 	addRenderable( rend );
 }
 
 //-----------------------------------//
 
-VertexBufferPtr Grid::getGridBuffer()
+VertexBufferPtr Grid::buildGeometry()
 {
 	// Create a new VBO and upload triangle data
 	VertexBufferPtr vb( new VertexBuffer() );
@@ -50,19 +54,20 @@ VertexBufferPtr Grid::getGridBuffer()
 	
 	for( int i = 0; i < divX+1; i++ )
 	{
-		vertex.push_back( Vector3( x_pos, 0.0f, z_pos ) );
-		vertex.push_back( Vector3( -x_pos, 0.0f, z_pos ) );
+		vertex.push_back( Vector3(x_pos, 0.0f, z_pos) );
+		vertex.push_back( Vector3(-x_pos, 0.0f, z_pos) );
 
-		if( strongMainLines && (i % 5 == 0) 
-			&& (i != 0) && (i != divX) )
+		bool isMainLine = (i % 5 == 0) && (i != 0) && (i != divX);
+
+		if( strongMainLines && isMainLine )
 		{
-			colors.push_back( Vector3( 0.9f, 0.9f, 0.9f ) );
-			colors.push_back( Vector3( 0.9f, 0.9f, 0.9f ) );
+			colors.push_back( StrongLineColor );
+			colors.push_back( StrongLineColor );
 		}
 		else
 		{
-			colors.push_back( Vector3( 0.4f, 0.4f, 0.4f ) );
-			colors.push_back( Vector3( 0.4f, 0.4f, 0.4f ) );
+			colors.push_back( RegularLineColor );
+			colors.push_back( RegularLineColor );
 		}
 
 		z_pos += sizeZ / (float)divZ;
@@ -77,16 +82,17 @@ VertexBufferPtr Grid::getGridBuffer()
 		vertex.push_back( Vector3( x_pos, 0.0f, z_pos ) );
 		vertex.push_back( Vector3( x_pos, 0.0f, -z_pos ) );
 
-		if( strongMainLines && (i % 5 == 0)
-			&& (i != 0) && (i != divX) )
+		bool isMainLine = (i % 5 == 0) && (i != 0) && (i != divX);
+
+		if( strongMainLines && isMainLine )
 		{
-			colors.push_back( Vector3( 0.9f, 0.9f, 0.9f ) );
-			colors.push_back( Vector3( 0.9f, 0.9f, 0.9f ) );
+			colors.push_back( StrongLineColor );
+			colors.push_back( StrongLineColor );
 		}
 		else
 		{
-			colors.push_back( Vector3( 0.4f, 0.4f, 0.4f ) );
-			colors.push_back( Vector3( 0.4f, 0.4f, 0.4f ) );
+			colors.push_back( RegularLineColor );
+			colors.push_back( RegularLineColor );
 		}
 
 		x_pos += sizeX / divX;

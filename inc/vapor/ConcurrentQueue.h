@@ -26,19 +26,19 @@ public:
 
 	void push(const T& T)
 	{
-		boost::mutex::scoped_lock lock(mutex);
+		THREAD(boost::mutex::scoped_lock lock(mutex);)
 		
 		queue.push_back(T);
-		lock.unlock();
+		THREAD(lock.unlock();)
 
-		cond_var.notify_one();
+		THREAD(cond_var.notify_one();)
 	}
 
 	//-----------------------------------//
 
 	bool empty() const
 	{
-		boost::mutex::scoped_lock lock(mutex);
+		THREAD(boost::mutex::scoped_lock lock(mutex);)
 		
 		return queue.empty();
 	}
@@ -47,7 +47,7 @@ public:
 
 	bool try_pop(T& popped_value)
 	{
-		boost::mutex::scoped_lock lock(mutex);
+		THREAD(boost::mutex::scoped_lock lock(mutex);)
 	    
 		if( queue.empty() )
 			return false;
@@ -62,10 +62,10 @@ public:
 
 	void wait_and_pop(T& popped_value)
 	{
-		boost::mutex::scoped_lock lock(mutex);
+		THREAD(boost::mutex::scoped_lock lock(mutex);)
 	    
 		while( queue.empty() )
-			cond_var.wait(lock);
+			THREAD(cond_var.wait(lock));
 	    
 		popped_value = queue.front();
 		queue.pop_front();
@@ -75,7 +75,7 @@ public:
 
 	bool find(const T& value)
 	{
-		boost::mutex::scoped_lock lock(mutex);
+		THREAD(boost::mutex::scoped_lock lock(mutex);)
 
 		std::deque<T>::const_iterator it;
 		it = std::find(queue.begin(), queue.end(), value);
@@ -91,8 +91,9 @@ public:
 private:
 
 	std::deque<T> queue;
-	mutable boost::mutex mutex;
-	boost::condition_variable cond_var;
+
+	THREAD(mutable boost::mutex mutex;)
+	THREAD(boost::condition_variable cond_var;)
 };
 
 //-----------------------------------//

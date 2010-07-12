@@ -76,8 +76,8 @@ private:
 
 	// SFML structures
 	sf::Window window;
-	sf::WindowSettings sfmlSettings;
-	sf::VideoMode vMode;
+	sf::WindowSettings windowSettings;
+	sf::VideoMode videoMode;
 	ulong flags;
 	
 	// Holds the current state of the cursor.

@@ -85,7 +85,7 @@ private:
 	std::vector<byte> buffer;
 };
 
-TYPEDEF_RESOURCE_POINTER_FROM_TYPE( Image );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Image );
 
 //-----------------------------------//
 

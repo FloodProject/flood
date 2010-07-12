@@ -35,7 +35,8 @@ double Timer::getCurrentTime()
 {
 	storeTime(currentTime);
 	
-	return static_cast<double>( currentTime );
+	return static_cast<double>(currentTime)
+		/ static_cast<double>(ticksPerSecond);
 }
 
 //-----------------------------------//
@@ -52,9 +53,12 @@ double Timer::getElapsedTime()
 
 //-----------------------------------//
 
-void Timer::reset()
+double Timer::reset()
 {
 	storeTime(lastTime);
+	
+	return static_cast<double>(lastTime)
+		/ static_cast<double>(ticksPerSecond);
 }
 
 //-----------------------------------//

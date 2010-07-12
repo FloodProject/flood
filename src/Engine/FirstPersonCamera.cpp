@@ -25,11 +25,11 @@ const std::string& FirstPersonCamera::type = "FirstPersonCamera";
 
 FirstPersonCamera::FirstPersonCamera( RenderDevice* device,
 									  Projection::Enum projection )
-	: Camera( device, projection ),
-	clampMovementX( true ),
-	moveSensivity( DEFAULT_MOVE_SENSIVITY ), 
-	lookSensivity( DEFAULT_LOOK_SENSIVITY ),
-	mouseWheel(0)
+	: Camera( device, projection )
+	, clampMovementX( true )
+	, moveSensivity( DEFAULT_MOVE_SENSIVITY )
+	, lookSensivity( DEFAULT_LOOK_SENSIVITY )
+	, mouseWheel(0)
 {
 	Window* window = device->getWindow();
 	inputManager = window->getInputManager();
@@ -51,22 +51,21 @@ void FirstPersonCamera::update( double delta )
 
 void FirstPersonCamera::checkControls( double delta )
 {
-	bool viewChanged = false;
-	Vector3 moveVector;
-	
 	Vector3 position = transform->getPosition();
 	EulerAngles rotation = transform->getRotation();
-
+	
+	Vector3 moveVector;
+	bool viewChanged = false;
+	
 	// Check mouse movement.
 	if( mouseDistance != Vector2i::Zero )
 	{
-		Vector3 rotate( float(mouseDistance.y), float(-mouseDistance.x), 0.0f );
-		rotation += rotate * (float(delta) * lookSensivity);
+		Vector3 rotate( mouseDistance.y, -mouseDistance.x, 0.0f );
+		rotation += rotate * (delta * lookSensivity);
 
 		// Restrict X-axis movement by some deegres.
-		// TODO: this screws the movement when we are looking down
 		float& xang = rotation.x;
-		clamp<float>( xang, -DEFAULT_LIMIT_XAXIS, DEFAULT_LIMIT_XAXIS );
+		clamp( xang, -DEFAULT_LIMIT_XAXIS, DEFAULT_LIMIT_XAXIS );
 
 		mouseDistance.zero();
 		viewChanged = true;
@@ -75,13 +74,13 @@ void FirstPersonCamera::checkControls( double delta )
 	// Check mouse wheel movement.
 	if( mouseWheel != 0 )
 	{
-		moveVector += Vector3::UnitZ * float(mouseWheel) * 100;
+		moveVector += Vector3::UnitZ * mouseWheel * 100;
 		mouseWheel = 0;
 	}
 
 	// Check keyboard movement.
-	Keyboard* const kbd = inputManager->getKeyboard();
-	const std::vector< bool >& state = kbd->getKeyState();
+	Keyboard* keyboard = inputManager->getKeyboard();
+	const std::vector< bool >& state = keyboard->getKeyState();
 
 	if( state[Keys::W] )
 		moveVector +=  Vector3::UnitZ;
@@ -103,15 +102,20 @@ void FirstPersonCamera::checkControls( double delta )
 
 	if( moveVector != Vector3::Zero )
 	{
-		moveVector *= float(delta) * moveSensivity;
-		position += moveVector * rotation.getOrientationMatrix();
+		moveVector *= delta * moveSensivity;
+		relativePosition += moveVector * rotation.getOrientationMatrix();
 		viewChanged = true;
 	}
 
-	if( viewChanged )
+	if( viewChanged || (relativePosition != Vector3::Zero) )
 	{
+		Vector3 target = position+relativePosition;
+		Vector3 interp = position.lerp(target, 0.3f);
+
+		relativePosition -= interp-position;
+			
 		// Update transform.
-		transform->setPosition( position );
+		transform->setPosition( interp );
 		transform->setRotation( rotation );
 	}
 }

@@ -95,11 +95,11 @@ void Example::onSetupScene()
 	scene->add( nodeFPS );
 
 	NodePtr grid( new Node("Grid") );
-	grid->addTransform();
+	grid->addComponent( TransformPtr( new Transform(0.0f, 1.0f, 0.0f) ) );
 	grid->addComponent( GridPtr( new Grid() ) );
-	//scene->add( grid );
+	scene->add( grid );
 
-	LightPtr light( new Light( LightType::Directional ) );
+	LightPtr light( new Light(LightType::Directional) );
 	light->setDiffuseColor( Color::Red );
 	light->setAmbientColor( Color::Yellow );
 	
@@ -168,7 +168,7 @@ void Example::onRender()
 	//nodeFBO->setVisible(true);
 	//fbo->unbind();
 
-	// Render the scene
+	// Render the scene.
 	viewport->update();
 }
 

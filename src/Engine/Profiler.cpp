@@ -23,8 +23,10 @@ Profiler::~Profiler()
 {
 	double time = timer.getElapsedTime();
 
-	debug( "%s: took %lu ms / %.5lf µs.", name.c_str(), 
-		(ulong)(time*1000), time );
+	float ms = time * 1000;
+
+	debug( "%s: took %lu ms (%.5lf)",
+		name.c_str(), (ulong) ms, ms );
 }
 
 //-----------------------------------//

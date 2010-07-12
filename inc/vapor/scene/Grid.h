@@ -22,7 +22,7 @@ class VAPOR_API Grid : public Geometry
 {
 public:
 
-	Grid( /*const MaterialPtr& mat*/ );
+	Grid();
 
 	// Returns the type of this component.
 	GETTER(Type, const std::string&, Grid::type)
@@ -30,7 +30,7 @@ public:
 protected:
 
 	// Returns a vertex buffer with the grid geometry.
-	VertexBufferPtr getGridBuffer();
+	VertexBufferPtr buildGeometry();
 
 	// Grid size in the X and Z axis.
 	float sizeX, sizeZ;

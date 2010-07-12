@@ -16,7 +16,7 @@ namespace vapor {
 //-----------------------------------//
 
 Scene::Scene()
-	: Group( "Scene" )
+	: Group("Scene")
 { }
 
 //-----------------------------------//
@@ -98,7 +98,8 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res,
 	// Down to triangle picking.	
 	foreach( const GeometryPtr& geo, node->getGeometry() )
 	{
-		if( !geo ) continue;
+		if( !geo )
+			continue;
 
 		// Let's do a rough bounding volume level intersection test on each
 		// individual geometry of the node. This helps cut the number of 
@@ -107,17 +108,24 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res,
 		const AABB& bv = geo->getBoundingVolume();
 
 		float distance;
+		
 		if( !bv.intersects(ray, distance) )
 			continue;
 
 		foreach( const RenderablePtr& rend, geo->getRenderables() )
 		{
 			// This picking method only works on triangles.
-			if( !rend ) continue;
-			if( rend->getPrimitiveType() != Primitive::Triangles ) continue;
+
+			if( !rend )
+				continue;
+
+			if( rend->getPrimitiveType() != Primitive::Triangles )
+				continue;
 
 			const VertexBufferPtr& vb = rend->getVertexBuffer();
-			if( !vb ) continue;
+			
+			if( !vb )
+				continue;
 
 			const std::vector<Vector3>& vertices = vb->getVertices();
 			uint size = vertices.size();
@@ -163,13 +171,6 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res,
 void Scene::update( double delta )
 {
 	Group::update( delta );
-}
-
-//-----------------------------------//
-
-Node* Scene::getEntityPtr( const std::string& name ) const
-{
-	return getEntity(name).get();
 }
 
 //-----------------------------------//

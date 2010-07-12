@@ -65,10 +65,10 @@ public:
 
 	// Returns index for child with the same pointer, if child cannot
 	// be found, -1 is returned
-	int index( const NodePtr& child ) const;
+	//int index( const NodePtr& child ) const;
 
-	// Returns number of children in this group
-	int count( ) const;
+	// Returns number of children in this group.
+	//int count( ) const;
 
 	// Updates this group of nodes.
 	virtual void update( double delta );

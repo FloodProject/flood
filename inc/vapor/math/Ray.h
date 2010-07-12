@@ -18,18 +18,12 @@ namespace vapor {
  * Ray class.
  */
 
-class VAPOR_API Ray : private boost::noncopyable
+class VAPOR_API Ray
 {
 public:
 
 	Ray( const Vector3& origin, const Vector3& direction );
 	Ray( const Ray& ray );
-
-	// Gets a point with the origin of the ray.
-	const Vector3& getOrigin() const;
-
-	// Gets a vector with the direction of the ray.
-	const Vector3& getDirection() const;
 
 	// Intersects the ray with a triangle.
 	bool intersects( const Vector3 tri[3], 

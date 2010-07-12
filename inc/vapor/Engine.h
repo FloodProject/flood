@@ -78,7 +78,7 @@ public:
 	GETTER(RenderDevice, RenderDevice*, renderDevice)
 
 	// Gets the audio device.
-	//GETTER(AudioDevice, AudioDevice*, audioDevice)
+	GETTER(AudioDevice, AudioDevice*, audioDevice)
 
 	// Gets the scene interface.
 	GETTER(SceneManager, ScenePtr, scene)
@@ -87,13 +87,13 @@ public:
 	GETTER(TaskManager, TaskManager*, taskManager)
 
 	// Gets the scripting state.
-	//GETTER(ScriptState, State*, scriptState)
+	GETTER(ScriptState, State*, scriptState)
 
 	// Gets the resources manager.
 	GETTER(ResourceManager, ResourceManager*, resourceManager)
 
 	// Gets the physics manager.
-	//GETTER(PhysicsManager, PhysicsManager*, physicsManager)
+	GETTER(PhysicsManager, PhysicsManager*, physicsManager)
 
 	// Gets the main engine logger.
 	GETTER(Log, Log*, log)

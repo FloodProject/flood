@@ -89,16 +89,16 @@ bool Group::remove( const NodePtr& node )
 
 //-----------------------------------//
 
-int Group::index( const NodePtr& child ) const
-{
-	NodeVector::const_iterator it;
-	it = std::find( children.begin(), children.end(), child );
-
-	if( it == children.end() )
-		return -1;
-
-	return std::distance(children.begin(), it);
-}
+//int Group::index( const NodePtr& child ) const
+//{
+//	NodeVector::const_iterator it;
+//	it = std::find( children.begin(), children.end(), child );
+//
+//	if( it == children.end() )
+//		return -1;
+//
+//	return std::distance(children.begin(), it);
+//}
 
 //-----------------------------------//
 
@@ -135,10 +135,10 @@ void Group::update( double delta )
 
 //-----------------------------------//
 
-int Group::count() const
-{
-	return children.size();
-}
+//int Group::count() const
+//{
+//	return children.size();
+//}
 
 //-----------------------------------//
 

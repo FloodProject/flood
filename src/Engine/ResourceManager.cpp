@@ -20,8 +20,8 @@ namespace vapor {
 //-----------------------------------//
 
 ResourceManager::ResourceManager( FileWatcher* fileWatcher, TaskManager* tm )
-	: taskManager(tm),
-	numResourcesQueuedLoad(0)
+	: taskManager(tm)
+	, numResourcesQueuedLoad(0)
 {
 	assert( taskManager );
 

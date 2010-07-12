@@ -27,11 +27,8 @@ Framework::Framework(const std::string& app, const char** argv)
 
 void Framework::run()
 {
-	// init the engine
 	Framework::init();
-
-	// call the render cycle
-	render();
+	mainLoop();
 }
 
 //-----------------------------------//
@@ -69,26 +66,36 @@ void Framework::init()
  * game loop implementations: http://dewitters.koonsolo.com/gameloop.html
  */
 
-void Framework::render()
+void Framework::mainLoop()
 {
 	RenderDevice* renderDevice = getRenderDevice();
 	Window* window = renderDevice->getWindow();
 
-	while( frameTimer.reset(), window->pumpEvents() )
+	const ushort numUpdatesSecond = 25;
+	const double maxUpdateTime = 1.0f / numUpdatesSecond;
+
+	Timer updateTimer;
+	double nextTick = updateTimer.reset();
+
+	while( true )
 	{
+		frameTimer.reset();
+		
+		if( !window->pumpEvents() )
+			break;
+
+		while( updateTimer.getCurrentTime() > nextTick )
 		{
-			//PROFILE_STR("Engine update");
-			update( frameStats.lastFrameTime );
+			update( maxUpdateTime );
+
+			// User update callback.
+			onUpdate( maxUpdateTime );
+
+			nextTick += maxUpdateTime;
 		}
 
-		// User update callback.
-		onUpdate( frameStats.lastFrameTime );
-
-		{
-			//PROFILE_STR("Engine render");
-			// User rendering callback.
-			onRender();
-		}
+		// User rendering callback.
+		onRender();
 
 		// Update the active target (swaps buffers).
 		window->update();
@@ -98,6 +105,18 @@ void Framework::render()
 	}
 
 	Timer::sleep(0);
+}
+
+//-----------------------------------//
+
+void Framework::updateFrameTimes()
+{
+	frameStats.lastFrameTime = frameTimer.getElapsedTime();
+
+	if(frameStats.lastFrameTime > 0.1)
+		debug("HOTSPOT! %lf", frameStats.lastFrameTime);
+
+	frameStats.frameStep();
 }
 
 //-----------------------------------//
@@ -124,39 +143,6 @@ void Framework::registerCallbacks()
 		mouse->onMouseButtonRelease +=
 			fd::bind( &Framework::onButtonReleased, this );
 	}
-}
-
-//-----------------------------------//
-
-void Framework::updateFrameTimes()
-{
-	frameStats.lastFrameTime = frameTimer.getElapsedTime();
-
-	if(frameStats.lastFrameTime > 0.1)
-		debug("HOTSPOT! %lf", frameStats.lastFrameTime);
-
-	frameStats.frameStep();
-}
-
-//-----------------------------------//
-
-void Framework::onKeyPressed( const KeyEvent& )
-{
-
-}
-
-//-----------------------------------//
-
-void Framework::onButtonPressed( const MouseButtonEvent& )
-{
-
-}
-
-//-----------------------------------//
-
-void Framework::onButtonReleased( const MouseButtonEvent& )
-{
-
 }
 
 //-----------------------------------//

@@ -38,33 +38,19 @@ struct VAPOR_API TaskEvent
 
 //-----------------------------------//
 
-/** The number of threads that will be available for the thread pool 
- * to manage. If the size is too big, then the OS will be overloaded
- * managing a huge number of threads. If it is too small, then we run
- * the risk of sub-utilizing the machine resources. By default we will
- * use (numberOfCores-1) threads.
- */
-
-const int DEFAULT_THREAD_POOL_SIZE = -1;
-
-//-----------------------------------//
-
 /**
- * Manages a group of tasks, running each one in a thread of execution 
- * managed by the operating system. These allow the engine to execute 
- * code concurrently, such as streaming content from disk, leaving the
- * main thread free to perform other tasks. Low-level synchhronization
- * support and OS abstraction are handled by the boost threads library.
- * A number of new threads are created at the task manager constructor
- * and tasks are run in the first idle thread found. This is generally
- * known as "Thread-pool pattern".
+ * Manages a group of tasks that get run in separate threads.
+ * These allow the engine to execute code concurrently, such as 
+ * streaming content from disk, leaving the main thread free to
+ * perform other tasks. We spawn a few threads in a thread pool
+ * and re-use them for tasks. Tasks get executed in idle threads.
  */
 
 class VAPOR_API TaskManager : public Subsystem
 {
 public:
 
-	TaskManager( int size = DEFAULT_THREAD_POOL_SIZE );
+	TaskManager( int size = -1 );
 	~TaskManager();
 
 	// Adds a new task to be run by the sheduler.
@@ -88,7 +74,7 @@ protected:
 	// Runs the worker threads and executes the tasks.
 	void runWorker();
 
-	typedef std::vector<ThreadPtr> ThreadQueue;
+	typedef std::vector<Thread*> ThreadQueue;
 	ThreadQueue threadPool;
 
 	typedef concurrent_queue<TaskPtr> TaskQueue;

@@ -57,9 +57,6 @@ public:
 	// Gets a shared pointer to the named entity.
 	NodePtr getEntity( const std::string& name ) const;
 
-	// Gets a raw pointer to the named entity.
-	Node* getEntityPtr( const std::string& name ) const;
-
 	// Checks for collision via ray-AABB tests.
 	bool doRayBoxQuery( const Ray& ray, RayBoxQueryResult& res ) const;
 	bool doRayBoxQuery( const Ray& ray, RayBoxQueryList& list, bool all = true ) const;

@@ -54,9 +54,9 @@ protected:
 	virtual void onRender() = 0;
 
 	// Input callback functions.
-	virtual void onKeyPressed( const KeyEvent& );
-	virtual void onButtonPressed( const MouseButtonEvent& );
-	virtual void onButtonReleased( const MouseButtonEvent& );
+	virtual void onKeyPressed( const KeyEvent& ) {}
+	virtual void onButtonPressed( const MouseButtonEvent& ) {}
+	virtual void onButtonReleased( const MouseButtonEvent& ) {}
 
 protected:
 
@@ -69,8 +69,8 @@ protected:
 	// Initializes the engine.
 	virtual void init();
 
-	// Main rendering loop ( calls onRender() ).
-	virtual void render();
+	// Main rendering loop.
+	virtual void mainLoop();
 
 	// Frame loop timer.
 	Timer frameTimer;

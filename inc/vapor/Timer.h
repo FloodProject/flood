@@ -40,7 +40,7 @@ public:
 	double getElapsedTime();
 
 	// Resets the timer.
-	void reset();
+	double reset();
 
 	// Sleeps for a specified ammount of time.
 	static void sleep( double time );

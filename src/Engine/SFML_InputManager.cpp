@@ -16,33 +16,19 @@ namespace vapor {
 
 //-----------------------------------//
 
-SFML_InputManager::SFML_InputManager()
-{
-
-}
-
-//-----------------------------------//
-
-SFML_InputManager::~SFML_InputManager()
-{
-
-}
-
-//-----------------------------------//
-
 void SFML_InputManager::processSFMLEvent( const sf::Event& event )
 {
-	if( isMouseEvent( event.Type ) )
+	if( isMouseEvent(event.Type) )
 	{
-		processMouseEvent( event );
+		processMouseEvent(event);
 	}
-	else if ( isKeyboardEvent( event.Type ) )
+	else if ( isKeyboardEvent(event.Type) )
 	{
-		processKeyboardEvent( event );
+		processKeyboardEvent(event);
 	}
-	else if ( isJoystickEvent( event.Type ) )
+	else if ( isJoystickEvent(event.Type) )
 	{
-		processJoystickEvent( event );
+		processJoystickEvent(event);
 	}
 }
 
