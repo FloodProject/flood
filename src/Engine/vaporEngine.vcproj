@@ -392,6 +392,18 @@
 					</File>
 				</Filter>
 			</Filter>
+			<Filter
+				Name="Noise"
+				>
+				<File
+					RelativePath=".\Noise.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\math\Noise.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Render"
@@ -869,6 +881,18 @@
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\scene\Model.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Water"
+				>
+				<File
+					RelativePath=".\Water.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\scene\Water.h"
 					>
 				</File>
 			</Filter>
@@ -1426,6 +1450,14 @@
 				<File
 					RelativePath=".\Image.cpp"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							DisableSpecificWarnings="4715"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\resources\Image.h"

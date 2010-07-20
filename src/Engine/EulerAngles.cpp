@@ -135,8 +135,8 @@ void EulerAngles::identity()
 
 Matrix4x3 EulerAngles::rotateX( float ang ) const
 {
-	const float cos = cosf( degreeToRadian(ang) );
-	const float sin = sinf( degreeToRadian(ang) );
+	const float cos = std::cos( Math::degreeToRadian(ang) );
+	const float sin = std::sin( Math::degreeToRadian(ang) );
 
 	Matrix4x3 newRotation;
 
@@ -155,8 +155,8 @@ Matrix4x3 EulerAngles::rotateX( float ang ) const
 
 Matrix4x3 EulerAngles::rotateY( float ang ) const
 {
-	const float cos = cosf( degreeToRadian(ang) );
-	const float sin = sinf( degreeToRadian(ang) );
+	const float cos = std::cos( Math::degreeToRadian(ang) );
+	const float sin = std::sin( Math::degreeToRadian(ang) );
 
 	Matrix4x3 newRotation;
 
@@ -175,8 +175,8 @@ Matrix4x3 EulerAngles::rotateY( float ang ) const
 
 Matrix4x3 EulerAngles::rotateZ( float ang ) const
 {
-	const float cos = cosf( degreeToRadian(ang) );
-	const float sin = sinf( degreeToRadian(ang) );
+	const float cos = std::cos( Math::degreeToRadian(ang) );
+	const float sin = std::sin( Math::degreeToRadian(ang) );
 
 	Matrix4x3 newRotation;
 

@@ -165,20 +165,25 @@ void Transform::reset( )
 
 //-----------------------------------//
 
-void Transform::setAbsoluteTransform( const Matrix4x3& matrix )
+void Transform::setAbsoluteTransform( const Matrix4x3& newTransform )
 {
 	needsNotify = true;
 	externalUpdate = true;
-	transform = matrix;
+	transform = newTransform;
 }
 
 //-----------------------------------//
 
 Matrix4x3 Transform::getLocalTransform() const
 {
-	return Matrix4x3::createTranslationMatrix( translation )
-		* rotation.getOrientationMatrix()
-		* Matrix4x3::createScaleMatrix( _scale );
+	Matrix4x3 matOrientation = rotation.getOrientationMatrix();
+	Matrix4x3 matTranslation = Matrix4x3::createTranslationMatrix(translation);
+	Matrix4x3 matScale = Matrix4x3::createScaleMatrix(_scale);
+	
+	// Combine all the transformations in a single matrix.
+	Matrix4x3 transform = matOrientation*matTranslation*matScale;
+
+	return transform;
 }
 
 //-----------------------------------//

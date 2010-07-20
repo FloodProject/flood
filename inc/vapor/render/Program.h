@@ -69,6 +69,9 @@ public:
 	// Adds a named int uniform to the program.
 	virtual void setUniform( const std::string& slot, int value ) = 0;
 
+	// Adds a named float uniform to the program.
+	virtual void setUniform( const std::string& slot, float value ) = 0;
+
 	// Adds a named float array uniform to the program.
 	//virtual void setUniform( const std::string& slot, const std::vector<float> vec ) = 0;
 

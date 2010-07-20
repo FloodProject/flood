@@ -86,7 +86,7 @@ void Cell::rebuildVertices()
 
 	// Vertex buffer setup.
 	vb->set( VertexAttribute::Position, vertex );
-	vb->set( VertexAttribute::MultiTexCoord0, texCoords );
+	vb->set( VertexAttribute::TexCoord0, texCoords );
 }
 
 //-----------------------------------//

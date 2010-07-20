@@ -25,17 +25,17 @@ namespace vapor {
 //-----------------------------------//
 
 NativeFile::NativeFile(const std::string& path, AccessMode::Enum mode)
-  : path(path),
-	mode(mode),
-	fp(nullptr)
+  : path(path)
+  , mode(mode)
+  , fp(nullptr)
 { }
 
 //-----------------------------------//
 
 NativeFile::NativeFile(const char* path, AccessMode::Enum mode)
-  : path(path),
-	mode(mode),
-	fp(nullptr)
+  : path(path)
+  , mode(mode)
+  , fp(nullptr)
 { }
 
 //-----------------------------------//
@@ -88,7 +88,7 @@ void NativeFile::setBuffering( bool state )
 	}
 	else
 	{
-		assert( 0 && "Not implemented" );
+		assert( false && "Not implemented" );
 	}
 }
 

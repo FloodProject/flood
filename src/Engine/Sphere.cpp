@@ -8,18 +8,23 @@
 
 #include "vapor/PCH.h"
 #include "vapor/render/Sphere.h"
-#include "vapor/math/Math.h"
 #include "vapor/math/EulerAngles.h"
+#include "vapor/math/Math.h"
+#include "vapor/math/AABB.h"
 
 namespace vapor {
 
 //-----------------------------------//
-// Declare icosahedron base coordinates. We'll subdivide these
-// starting coordinates to get a more detailed sphere model.
-// Check out the following URLs more information:
-// http://en.wikipedia.org/wiki/Icosahedron#Cartesian_coordinates
-// http://www.geometrictools.com/Documentation/PlatonicSolids.pdf
-// Code is also based from OpenGL Red Book example 2-4.
+
+/**
+ * Declare icosahedron base coordinates. We'll subdivide these
+ * starting coordinates to get a more detailed sphere model.
+ *
+ * Check out the following URLs more information:
+ * http://en.wikipedia.org/wiki/Icosahedron#Cartesian_coordinates
+ * http://www.geometrictools.com/Documentation/PlatonicSolids.pdf
+ * Code is also based from OpenGL Red Book example 2-4.
+ */
 
 //static const float t = (1 + sqrt(5.0f)) / 2;
 //static const float s = sqrt(1 + pow(t, 2));
@@ -44,8 +49,7 @@ static const byte IcoDomeIndices[][3] =
 
 static const byte IcoSphereIndices[][3] =
 {
-	{2, 11, 5}, {3, 7, 11}, {2, 9, 11}, {3, 11, 9},
-	{11, 7, 5},
+	{2, 11, 5}, {3, 7, 11}, {2, 9, 11}, {3, 11, 9}, {11, 7, 5},
 };
 
 //-----------------------------------//
@@ -72,12 +76,40 @@ static const byte OctaSphereIndices[][3] =
 Sphere::Sphere( bool fullSphere, byte numSubDiv, float dim )
 {
 	setPrimitiveType( Primitive::Triangles );
-	setPolygonMode( PolygonMode::Wireframe );
 	
-	VertexData pos;
-	generateSphere( fullSphere, numSubDiv, pos, dim );
-	vb->set( VertexAttribute::Position, pos );
-	pos.clear();
+	VertexData position;
+	buildGeometry( fullSphere, numSubDiv, position, dim );
+	
+	// Build Texture Coordinates.
+	AABB box;
+	
+	foreach( const Vector3& v, position )
+		box.add(v);
+
+	Vector3 center = box.getCenter();
+
+	std::vector<Vector3> texCoords;
+
+	foreach( const Vector3& vert, position )
+	{
+		Vector3 d = vert-center;
+		d.normalize();
+
+		// Conveert to spherical coordinates.
+		//float t = d.z / sqrt(d.x*d.x+d.y*d.y+d.z*d.z);
+		//float delta = acos(t);
+		//float phi = atan2(d.y, d.x);
+
+		//float u = delta / Math::PI;
+		//float v = phi / 2*Math::PI;
+		float u = asinf(d.x) / Math::PI + 0.5f;
+		float v = asinf(d.y) / Math::PI + 0.5f;
+
+		texCoords.push_back( Vector2(u, v) );
+	}
+
+	vb->set( VertexAttribute::Position, position );
+	vb->set( VertexAttribute::TexCoord0, texCoords );
 }
 
 //-----------------------------------//
@@ -106,13 +138,13 @@ void Sphere::subdivide(const Vector3& v1, const Vector3& v2,
 
 //-----------------------------------//
 
-void Sphere::generateSphere( bool fullSphere, byte numSubDiv, 
+void Sphere::buildGeometry( bool fullSphere, byte numSubDiv, 
 							VertexData& pos, float dim)
 {
 	vb = new VertexBuffer();
 
 	// Rotate the vertices, else the sphere is not properly aligned.
-	Matrix4x3 rot( EulerAngles( -60.0f, 0.0f, 0.0f ).getOrientationMatrix() );
+	Matrix4x3 rot( EulerAngles(-60.0f, 0.0f, 0.0f).getOrientationMatrix() );
 
 	foreach( const byte* i, IcoDomeIndices )
 	{

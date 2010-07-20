@@ -75,6 +75,7 @@ public:
 
 protected:
 
+	bool isMode(GizmoTool::Enum mode) { return tool == mode; }
 	void createOperation();
 	void drawGizmo( NodePtr, NodePtr );
 	

@@ -62,8 +62,7 @@ Viewport* Viewframe::createViewport( NodePtr node )
 	transform->onTransform += fd::bind( &Viewframe::onCameraTransform, this );
 	onCameraTransform();
 
-	FirstPersonCameraPtr fps =
-		std::static_pointer_cast<FirstPersonCamera>(camera);
+	FirstPersonCameraPtr fps = std::static_pointer_cast<FirstPersonCamera>(camera);
 	double sens = fps->getMoveSensivity();
 	
 	assert( spn_CameraSpeed != nullptr );

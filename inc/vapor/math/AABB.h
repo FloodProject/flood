@@ -29,8 +29,11 @@ public:
 	AABB( const Vector3& min, const Vector3& max );
 	AABB( const AABB& box );
 
-	// Gets the chosen corner vertice.
-	Vector3 getCorner( int index ) const;
+	// Expands the bounding box to contain the vertex.
+	void add( const Vector3& vertex );
+
+	// Expands the bounding box to contain the bounding box.
+	void add( const AABB& aabb );
 
 	// Resets the bounding box.
 	void reset();
@@ -38,11 +41,8 @@ public:
 	// Gets the center point of the bounding box.
 	Vector3 getCenter() const;
 
-	// Expands the bounding box to contain the vertex.
-	void add( const Vector3& vertex );
-
-	// Expands the bounding box to contain the bounding box.
-	void add( const AABB& aabb );
+	// Gets the chosen corner vertice.
+	Vector3 getCorner( int index ) const;
 
 	// Intersection with a ray.
 	bool intersects( const Ray& ray, float& distance ) const;

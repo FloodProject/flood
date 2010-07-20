@@ -19,7 +19,7 @@ const std::string& Gizmo::type = "Gizmo";
 static const float S = 25.0f;
 
 // Gizmo cone base color.
-static const float BASE_FACTOR = 0.8f;
+static const float BASE_FACTOR = 0.3f;
 
 static const Color& X = Color::Red;
 static const Color& Y = Color::Green;
@@ -28,7 +28,8 @@ static const Color& Z = Color::Blue;
 //-----------------------------------//
 
 Gizmo::Gizmo( const NodePtr& node )
-	: node( node ), selectedAxis( GizmoAxis::None )
+	: node( node )
+	, selectedAxis( GizmoAxis::None )
 {	
 	assert( node != nullptr );
 
@@ -38,8 +39,8 @@ Gizmo::Gizmo( const NodePtr& node )
 
 	// Generate the gizmo lines.
 	MaterialPtr mat( new Material("Gizmo") );
+	mat->setProgram( "Diffuse" );
 	mat->setLineWidth( 2.0f );
-	mat->setProgram( "diffuse" );
 	mat->setDepthTest( false );
 
 	lines = generateLines();
@@ -61,11 +62,12 @@ void Gizmo::selectAxis( GizmoAxis::Enum axis )
 	deselectAxis();
 	selectedAxis = axis;
 	
-	std::vector<Vector3>& colors
-		= lines->getAttribute( VertexAttribute::Color );
+	std::vector<Vector3>& colors =
+		lines->getAttribute( VertexAttribute::Color );
 
 	assert( colors.size() == 3*2 );
 
+	// Re-color the axis for better perception
 	uint i = axis;
 	colors[i] += Color::White*0.5f;
 	colors[i+1] += Color::White*0.5f;
@@ -80,22 +82,22 @@ void Gizmo::deselectAxis()
 	if( selectedAxis == GizmoAxis::None )
 		return;
 
-	std::vector<Vector3>& lines_colors
-		= lines->getAttribute(VertexAttribute::Color);
+	std::vector<Vector3>& linesColors =
+		lines->getAttribute(VertexAttribute::Color);
 
-	lines_colors.clear();
+	linesColors.clear();
 
 	// X axis (red)
-	lines_colors.push_back( X );
-	lines_colors.push_back( X );
+	linesColors.push_back( X );
+	linesColors.push_back( X );
 	
 	// Y axis (green)
-	lines_colors.push_back( Y );
-	lines_colors.push_back( Y );
+	linesColors.push_back( Y );
+	linesColors.push_back( Y );
 	
 	// Z axis (blue)
-	lines_colors.push_back( Z );
-	lines_colors.push_back( Z );
+	linesColors.push_back( Z );
+	linesColors.push_back( Z );
 
 	lines->forceRebuild();
 
@@ -106,17 +108,17 @@ void Gizmo::deselectAxis()
 
 GizmoAxis::Enum Gizmo::getAxis(Color& c)
 {
-	clamp<float>(c.r, 0.0f, 1.0f);
-	clamp<float>(c.g, 0.0f, 1.0f);
-	clamp<float>(c.b, 0.0f, 1.0f);
+	Math::clamp<float>(c.r, 0.0f, 1.0f);
+	Math::clamp<float>(c.g, 0.0f, 1.0f);
+	Math::clamp<float>(c.b, 0.0f, 1.0f);
 
-	if( fcmp(c.r, X.r) || fcmp(c.r, X.r*BASE_FACTOR) )
+	if( Math::floatEqual(c.r, X.r) || Math::floatEqual(c.r, X.r*BASE_FACTOR) )
 		return GizmoAxis::X;
 	
-	else if( fcmp(c.g, Y.g) || fcmp(c.g, Y.g*BASE_FACTOR) )
+	else if( Math::floatEqual(c.g, Y.g) || Math::floatEqual(c.g, Y.g*BASE_FACTOR) )
 		return GizmoAxis::Y;
 	
-	else if( fcmp(c.b, Z.b) || fcmp(c.b, Z.b*BASE_FACTOR) )
+	else if( Math::floatEqual(c.b, Z.b) || Math::floatEqual(c.b, Z.b*BASE_FACTOR) )
 		return GizmoAxis::Z;
 
 	return GizmoAxis::None;
@@ -144,7 +146,9 @@ Vector3 Gizmo::getUnitVector( GizmoAxis::Enum axis )
 
 bool Gizmo::isAnyAxisSelected() const
 {
-	return ( getAxisSelected() != GizmoAxis::None );
+	GizmoAxis::Enum axis = getAxisSelected();
+
+	return axis != GizmoAxis::None;
 }
 
 //-----------------------------------//
@@ -160,24 +164,21 @@ VertexBufferPtr Gizmo::generateLines()
 	// Vertex color data
 	std::vector< Vector3 > colors;
 
-	// X axis (red)
+	// X axis
 	pos.push_back( midPoint );
 	pos.push_back( midPoint + Vector3::UnitX*S );
-	//colors.push_back( Color( 0.6f, 0.0f, 0.0f ) );
 	colors.push_back( X );
 	colors.push_back( X );
 
-	// Y axis (green)
+	// Y axis
 	pos.push_back( midPoint + Vector3::UnitY*0.01f );
 	pos.push_back( midPoint + Vector3::UnitY*S );
-	//colors.push_back(Color( 0.0f, 0.4f, 0.0f ) );
 	colors.push_back( Y );
 	colors.push_back( Y );
 
-	// Z axis (blue)
+	// Z axis
 	pos.push_back( midPoint );
 	pos.push_back( midPoint + Vector3::UnitZ*S );
-	//colors.push_back( Color( 0.0f, 0.0f, 0.6f ) );
 	colors.push_back( Z );
 	colors.push_back( Z );
 
@@ -190,11 +191,11 @@ VertexBufferPtr Gizmo::generateLines()
 
 //-----------------------------------//
 
-#define CONE( tr )							\
+#define TRANSFORM							\
 	foreach( const Vector3& v, cone ) {		\
 		pos.push_back( v*tr ); }
 
-const static byte SLICES = 10;
+static const byte SLICES = 10;
 
 VertexBufferPtr Gizmo::generateCones()
 {
@@ -212,20 +213,22 @@ VertexBufferPtr Gizmo::generateCones()
 	// in the gizmo. A transformation matrix will take care of that.
 	Matrix4x3 tr;
 
-	tr = EulerAngles( 0.0, 0.0, -90.0 ).getOrientationMatrix();
+	// X axis
+	tr = EulerAngles(0, 0, -90).getOrientationMatrix();
 	tr = tr*Matrix4x3::createTranslationMatrix( midPoint+Vector3::UnitX*S );
-	CONE( tr );
-	generateColors( SLICES, colors, X, X /*Color(0.6f, 0.0f, 0.0f)*/ );
+	TRANSFORM;
+	generateColors( SLICES, colors, X, X );
 
-
+	// Y axis
 	tr = Matrix4x3::createTranslationMatrix( midPoint+Vector3::UnitY*S );
-	CONE( tr );
-	generateColors( SLICES, colors, Y, Y /*Color(0.0f, 0.4f, 0.0f)*/ );
+	TRANSFORM;
+	generateColors( SLICES, colors, Y, Y );
 
-	tr = EulerAngles( 90.0, 0.0, 0.0 ).getOrientationMatrix();
+	// Z axis
+	tr = EulerAngles(90, 0, 0).getOrientationMatrix();
 	tr = tr*Matrix4x3::createTranslationMatrix( midPoint+Vector3::UnitZ*S );
-	CONE( tr );
-	generateColors( SLICES, colors, Z, Z /*Color(0.0f, 0.0f, 0.6f)*/ );
+	TRANSFORM;
+	generateColors( SLICES, colors, Z, Z );
 
 	// Vertex buffer setup
 	vb->set( VertexAttribute::Position, pos );
@@ -265,7 +268,7 @@ void Gizmo::generateColors( uint slices, std::vector<Vector3>& colors,
 void Gizmo::generateSolidCone( double base, double height, uint slices,
 							  std::vector<Vector3>& pos )
 {
-	float r = 2*PI / slices;
+	float r = 2*Math::PI / slices;
 	
 	for( uint i = 0; i < slices; i++ )
 	{

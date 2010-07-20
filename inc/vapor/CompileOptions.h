@@ -49,7 +49,7 @@
 //---------------------------------------------------------------------//
 
 #define VAPOR_VFS_PHYSFS
-//#define VAPOR_VFS_FILEWATCHER
+#define VAPOR_VFS_FILEWATCHER
 
 //---------------------------------------------------------------------//
 // Windowing APIs

@@ -2,7 +2,7 @@
 
 attribute vec3 vp_Vertex;
 attribute vec3 vp_Color;
-attribute vec3 vp_MultiTexCoord0;
+attribute vec3 vp_TexCoord0;
 attribute vec3 vp_Normal;
 
 uniform mat4 vp_ProjectionMatrix;
@@ -20,7 +20,7 @@ void main()
 	normal = vp_Normal;
 
 	gl_FrontColor = vec4(vp_Color, 1.0);
-	vp_TexCoord = vp_MultiTexCoord0.st;
+	vp_TexCoord = vp_TexCoord0.st;
 	gl_Position = vec4(vp_Vertex, 1.0) * vp_ModelViewMatrix * vp_ProjectionMatrix;
 } 
 

@@ -45,7 +45,7 @@ private:
 
 inline void intrusive_ptr_add_ref(ReferenceCounted* const ptr)
 {
-	// increment reference count of object
+	// Increment reference count of object.
 #if !defined(VAPOR_THREADING)
 	++(ptr->references);
 #else
@@ -57,8 +57,8 @@ inline void intrusive_ptr_add_ref(ReferenceCounted* const ptr)
 
 inline void intrusive_ptr_release(ReferenceCounted* const ptr)
 {
-	// decrement reference count
-	// delete object when reference count reaches 0
+	// Decrement reference count.
+	// Delete object when reference count reaches 0.
 #if !defined(VAPOR_THREADING)
 	if (--(ptr->references) == 0)
 		delete ptr;

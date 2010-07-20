@@ -63,10 +63,13 @@ public:
 	void onKeyPress( const KeyEvent& );
 	void onKeyRelease( const KeyEvent& );
 
+	// Undo/Redo operations.
+	void registerOperation( Operation* const op );
+	void handleUndoRedoOperation(Operations&, Operations&, bool undo);
+	void updateUndoRedoUI();
+	
 	// Misc stuff.
 	void onModeSwitch( Mode* const mode, int id );
-	void registerOperation( Operation* const op );
-	void updateUndoRedoUI();
 	
 	void onUpdate( double delta );
 	void onRender();
@@ -111,7 +114,6 @@ protected:
 	std::map<int, Mode*> modesMap;
 
 	// Undo/redo operations.
-	typedef std::deque<Operation*> Operations;
 	Operations undoOperations;
 	Operations redoOperations;
 

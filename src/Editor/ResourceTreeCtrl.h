@@ -53,7 +53,7 @@ protected:
 
 	EditorFrame* editor;
 	Engine* engine;
-	ResourceManagerPtr rm;
+	ResourceManager* rm;
 
 	wxImageList* imageList;
 

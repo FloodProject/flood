@@ -19,16 +19,16 @@ namespace vapor {
 
 namespace BlendingSource
 {
-	enum Enum 
-	{ 
+	enum Enum
+	{
 		Zero = GL_ZERO,
 		One = GL_ONE,
 		DestinationColor = GL_DST_COLOR,
-		OneMinusDestinationColor = GL_ONE_MINUS_DST_COLOR,
+		InverseDestinationColor = GL_ONE_MINUS_DST_COLOR,
 		SourceAlpha = GL_SRC_ALPHA,
-		OneMinusSourceAlpha = GL_ONE_MINUS_SRC_ALPHA,
+		InverseSourceAlpha = GL_ONE_MINUS_SRC_ALPHA,
 		DestinationAlpha = GL_DST_ALPHA,
-		OneMinusDestinationAlpha = GL_ONE_MINUS_DST_ALPHA,
+		InverseDestinationAlpha = GL_ONE_MINUS_DST_ALPHA,
 		SourceAlphaSaturate = GL_SRC_ALPHA_SATURATE
 	};
 }
@@ -42,11 +42,11 @@ namespace BlendingDestination
 		Zero = GL_ZERO,
 		One = GL_ONE,
 		SourceColor = GL_SRC_COLOR,
-		OneMinusSourceColor = GL_ONE_MINUS_SRC_COLOR,
+		InverseSourceColor = GL_ONE_MINUS_SRC_COLOR,
 		SourceAlpha = GL_SRC_ALPHA,
-		OneMinusSourceAlpha = GL_ONE_MINUS_SRC_ALPHA,
+		InverseSourceAlpha = GL_ONE_MINUS_SRC_ALPHA,
 		DestinationAlpha = GL_DST_ALPHA,
-		OneMinusDestinationAlpha = GL_ONE_MINUS_DST_ALPHA,
+		InverseDestinationAlpha = GL_ONE_MINUS_DST_ALPHA,
 	};
 }
 

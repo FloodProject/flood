@@ -13,47 +13,58 @@ namespace vapor {
 
 //-----------------------------------//
 
-const float PI = 3.141592654f;
-
-//-----------------------------------//
-
-bool VAPOR_API fcmp(float a, float b);
-
-//-----------------------------------//
-
-float VAPOR_API logn( float base, float value );
-
-//-----------------------------------//
-
-float VAPOR_API random( float min, float max );
-
-//-----------------------------------//
-
-float VAPOR_API degreeToRadian( float degree );
-float VAPOR_API radianToDegree( float radian );
-
-//-----------------------------------//
-
-template< typename T >
-bool clamp( T& var, const T min, const T max )
+namespace Interpolate
 {
-	// Equivalent to: max(min, min(var, max))
+	// Linear interpolation.
+	float VAPOR_API linear(float a, float b, float t);
 
-	if( var >= max )
-	{
-		var = max;
-		return true;
-	}
-	else if( var <= min )
-	{
-		var = min;
-		return true;
-	}
+	// Cosine interpolation.
+	float VAPOR_API cosine(float a, float b, float t);
 
-	return false;
+	// Cubic interpolation.
+	float VAPOR_API cubic(float a, float b, float t);
 }
 
-//-----------------------------------//
+namespace Math
+{
+	// The value of Pi.
+	const float PI = 3.141592654f;
+
+	// Compares float values for equality.
+	bool VAPOR_API floatEqual(float a, float b);
+
+	// Calculates the logarithm of a given base.
+	float VAPOR_API logBase( float base, float value );
+
+	// Returns a random value in the given interval.
+	float VAPOR_API random( float min, float max );
+
+	// Converts from degrees to radians.
+	float VAPOR_API degreeToRadian( float degree );
+
+	// Converts from radians to degrees.
+	float VAPOR_API radianToDegree( float radian );
+
+	// Clamps a variable to the given range.
+	template< typename T >
+	bool clamp( T& var, const T min = 0, const T max = 1 )
+	{
+		// Equivalent to: max(min, min(var, max))
+
+		if( var >= max )
+		{
+			var = max;
+			return true;
+		}
+		else if( var <= min )
+		{
+			var = min;
+			return true;
+		}
+
+		return false;
+	}
+}
 
 // Calculate the normal from a triangle vertices.
 Vector3 VAPOR_API calculateTriangleNormal( const Vector3& v1, 

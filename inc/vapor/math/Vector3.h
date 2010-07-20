@@ -195,6 +195,18 @@ public:
 
 	//-----------------------------------//
 	
+	// Smooth interpolation between two vectors.
+	// http://en.wikipedia.org/wiki/Smoothstep
+	// 
+	Vector3T serp(const Vector3T& vec, float t) const 
+	{
+		float step = t*t*(3-2*t);
+
+		return lerp(vec, step);
+	}
+
+	//-----------------------------------//
+	
 	// Normalize the vector
 	Vector3T normalize() 
 	{
@@ -202,7 +214,9 @@ public:
 
 		if (len > 0.0f) // check for divide-by-zero
 		{
-			x /= len; y /= len; z /= len; 
+			x /= len;
+			y /= len;
+			z /= len; 
 		}
 
 		return *this;
@@ -256,10 +270,9 @@ public:
  * Specific types
  */
 
-typedef VAPOR_API Vector3T<float> Vector3;
 typedef VAPOR_API Vector3T<int> Vector3i;
+typedef VAPOR_API Vector3T<float> Vector3;
 typedef VAPOR_API Vector3T<double> Vector3d;
-typedef VAPOR_API Vector3 Point3;
 
 //-----------------------------------//
 

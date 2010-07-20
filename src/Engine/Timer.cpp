@@ -20,8 +20,8 @@ bool Timer::highResolutionSupport = false;
 //-----------------------------------//
 
 Timer::Timer()
-	: currentTime(0),
-	lastTime(0)
+	: currentTime(0)
+	, lastTime(0)
 {
 	if( !checked && !checkHighResolutionTimers() )
 		error( "timer", "High-resolution timers are not supported" );

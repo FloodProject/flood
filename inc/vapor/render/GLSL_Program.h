@@ -57,6 +57,9 @@ public:
 	// Adds a uniform to the shader.
 	virtual void setUniform( const std::string& slot, int data );
 
+	// Adds a named float uniform to the program.
+	virtual void setUniform( const std::string& slot, float value );
+
 	// Adds a named float array uniform to the program.
 	//virtual void setUniform( const std::string& slot, const std::vector<float> vec ) = 0;
 

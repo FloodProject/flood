@@ -34,9 +34,9 @@ ResourceTreeCtrl::ResourceTreeCtrl(vapor::Engine* engine,
 					const wxPoint& pos, const wxSize& size,
 					long style, const wxValidator& validator, 
 					const wxString&	name)
-	: wxTreeCtrl(parent, id, pos, size, style, validator, name),
-	rm( engine->getResourceManager() ),
-	editor( (EditorFrame*) parent )
+	: wxTreeCtrl(parent, id, pos, size, style, validator, name)
+	, rm( engine->getResourceManager() )
+	, editor( (EditorFrame*) parent )
 {
 	assert( editor != nullptr );
 	assert( rm != nullptr );
@@ -61,7 +61,7 @@ ResourceTreeCtrl::~ResourceTreeCtrl()
 
 	//rm->onResourceAdded -= fd::bind( &ResourceTreeCtrl::onResourceAdded, this );
 	//rm->onResourceRemoved -= fd::bind( &ResourceTreeCtrl::onResourceRemoved, this );
-	
+
 	//rm->onResourceLoaded -= fd::bind( &ResourceTreeCtrl::onResourceReloaded, this );
 	//rm->onResourceReloaded -= fd::bind( &ResourceTreeCtrl::onResourceReloaded, this );
 }

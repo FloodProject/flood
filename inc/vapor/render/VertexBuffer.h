@@ -28,14 +28,14 @@ namespace VertexAttribute
 		Color = 3,
 		SecondaryColor = 4,
 		FogCoord = 5,
-		MultiTexCoord0 = 8,
-		MultiTexcoord1,
-		MultiTexCoord2,
-		MultiTexCoord3,
-		MultiTexCoord4,
-		MultiTexCoord5,
-		MultiTexCoord6,
-		MultiTexCoord7,
+		TexCoord0 = 8,
+		Texcoord1,
+		TexCoord2,
+		TexCoord3,
+		TexCoord4,
+		TexCoord5,
+		TexCoord6,
+		TexCoord7,
 	};
 }
 

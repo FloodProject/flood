@@ -21,9 +21,9 @@ const std::string& Label::type = "Label";
 //-----------------------------------//
 
 Label::Label( const std::string& text, FontPtr font, MaterialPtr material )
-	: text(text),
-	font(font),
-	material(material)
+	: text(text)
+	, font(font)
+	, material(material)
 {
 	init();
 }
@@ -159,7 +159,7 @@ void Label::rebuildGeometry()
 	}
 
 	vb->set( VertexAttribute::Position, vertex );
-	vb->set( VertexAttribute::MultiTexCoord0, texcoords );
+	vb->set( VertexAttribute::TexCoord0, texcoords );
 
 	// No need to update geometry again until the text changes
 	isDirty = false;

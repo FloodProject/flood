@@ -39,7 +39,7 @@ Terrain editing
 	Use a separate VB attribute for the terrain heights
 	Projectors/Decals for terrain
 	Brush interface for editing (WIP)
-	Generic paging interface
+	Generic paging interface (WIP)
 	Streaming of terrain chunks and textures
 	Randomized Perlin noise terrain generation
 	Average terrain normals
@@ -51,7 +51,7 @@ View frustum culling
 
 Skydome component
 	Fix backfaces culling (DONE)
-	Add texture layers for clouds
+	Add texture layers for clouds (WIP)
 	Fix sun and moon update logic
 	Switch to triangle strips
 

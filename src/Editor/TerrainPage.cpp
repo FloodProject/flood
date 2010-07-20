@@ -28,7 +28,7 @@ TerrainPage::TerrainPage( Engine* engine, wxWindow* parent, wxWindowID id,
 {	
 	createUI();
 
-	ResourceManagerPtr rm = engine->getResourceManager();
+	ResourceManager* rm = engine->getResourceManager();
 	const ImagePtr& image = 
 		rm->loadResource<Image>("brushes/default.png", false);
 	

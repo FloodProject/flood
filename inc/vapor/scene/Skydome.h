@@ -31,9 +31,6 @@ public:
 
 	Skydome( /*const MaterialPtr& mat*/ );
 
-	// Returns the name of this component.
-	GETTER(Type, const std::string&, type)
-
 	// SKY
 
 	// Sets the sky to a fixed color.
@@ -42,9 +39,15 @@ public:
 	// Sets the sky to a linear color gradient.
 	void setSkyLinearGradient( const Color& c1, const Color& c2 );
 
+	// Sets a cloud layer in the skydome.
+	void setClouds( const ImagePtr& clouds );
+
 	// CELESTIAL BODIES (Sun, Moon, Stars)
 
+	// Sets the sun node.
 	void setSunNode( const NodePtr& sun );
+	
+	// Gets the position of the sun.
 	Vector3 getSunPosition();
 	
 	//void setStarsVisible( bool enable );
@@ -52,32 +55,38 @@ public:
 	// Gets called each cycle to update the component.
 	void update( double delta );
 
+	// Returns the name of this component.
+	GETTER(Type, const std::string&, type)
+
 protected:
 
 	// Gets the sky color at the vertice at a given time of day.
 	Color getSkyVertexColor( const Vector3& vertex );
 
+	// Scales the Y vertex value into a [0,1] range.
+	float scale( float number );
+
+	// Generates the dome geometry.
 	void generateDome();
+
+	// Generates the sky bodies.
 	void generateBodies();
 
 	// Keeps track of the current walltime
 	double currentTime;
 
-	// Scales the Y vertex value into a [0,1] range.
-	float scale( float number );
-
 	// Dome geometry that will be rendered as the sky.
-	float yMin, yMax;
 	SpherePtr dome;
+	
+	// Sky color gradient.
 	Vector3 colorTop, colorBottom;
+	float yMin, yMax;
 
 	// Celestial bodies geometry.
 	TransformPtr sun;
 
 	static const std::string& type;
 };
-
-//-----------------------------------//
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Skydome );
 

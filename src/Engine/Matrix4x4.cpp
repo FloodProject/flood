@@ -201,7 +201,7 @@ Matrix4x4 Matrix4x4::createPerspectiveProjection( float fov, float ar, float nea
 
 	Matrix4x4 proj;
 
-	float h = 1.0f / tanf( degreeToRadian(fov) * 0.5f );
+	float h = 1.0f / tanf( Math::degreeToRadian(fov) * 0.5f );
 	float neg_depth = (near_ - far_);
 	
 	proj.m11 = h / ar;

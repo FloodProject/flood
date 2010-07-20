@@ -18,15 +18,16 @@ namespace vapor { namespace editor {
 //-----------------------------------//
 
 GizmoMode::GizmoMode( EditorFrame* frame )
-	: Mode( frame ), editorScene( frame->getEditorScene() ),
-	op( nullptr )
+	: Mode(frame)
+	, editorScene(frame->getEditorScene())
+	, op(nullptr)
 {
 	assert( editorScene != nullptr );
 }
 
 //-----------------------------------//
 
-void GizmoMode::onModeInit(wxToolBar* toolBar, ModeIdMap& map)
+void GizmoMode::onModeInit(wxToolBar* toolBar, ModeIdMap& modes)
 {
 	toolBar->AddSeparator();
 
@@ -45,11 +46,11 @@ void GizmoMode::onModeInit(wxToolBar* toolBar, ModeIdMap& map)
 	toolBar->AddTool( GizmoTool::Scale, "Scale", wxMEMORY_BITMAP(scale), 
 		"Selects the Scale tool", wxITEM_RADIO );
 
-	map[GizmoTool::Camera] = this;
-	map[GizmoTool::Select] = this;
-	map[GizmoTool::Translate] = this;
-	map[GizmoTool::Rotate] = this;
-	map[GizmoTool::Scale] = this;
+	modes[GizmoTool::Camera] = this;
+	modes[GizmoTool::Select] = this;
+	modes[GizmoTool::Translate] = this;
+	modes[GizmoTool::Rotate] = this;
+	modes[GizmoTool::Scale] = this;
 }
 
 //-----------------------------------//
@@ -73,19 +74,19 @@ void GizmoMode::enableBoundingGizmo( const NodePtr& node )
 	assert( node != nullptr );
 	assert( gizmos.find(node) == gizmos.end() );
 
-	const TransformPtr& tr = node->getTransform();
-	tr->setDebugRenderableVisible( true );
+	const TransformPtr& transNode = node->getTransform();
+	transNode->setDebugRenderableVisible( true );
+
+	gizmo.reset( new Gizmo(node) );
 
 	static int i = 0;
 	std::string str( "Gizmo"+String::fromNumber(i++) );
-	NodePtr gizNode( new Node(str) );
-	gizNode->addTransform();
-
-	gizmo.reset( new Gizmo(node) );
-	gizNode->addComponent(gizmo);
+	NodePtr nodeGizmo( new Node(str) );
+	nodeGizmo->addTransform();
+	nodeGizmo->addComponent(gizmo);
+	editorScene->add( nodeGizmo );
 	
-	editorScene->add( gizNode );
-	gizmos[node] = gizNode;
+	gizmos[node] = nodeGizmo;
 }
 
 //-----------------------------------//
@@ -106,9 +107,9 @@ void GizmoMode::disableBoundingGizmo( const NodePtr& node )
 	if( it == gizmos.end() )
 		return;
 
-	const NodePtr& gizNode = gizmos[node];
+	const NodePtr& nodeGizmo = gizmos[node];
 	
-	editorScene->remove(gizNode);
+	editorScene->remove(nodeGizmo);
 	gizmos.erase(it);
 	gizmo.reset();
 }
@@ -127,67 +128,62 @@ void GizmoMode::disableSelectedNodes()
 
 //-----------------------------------//
 
-void GizmoMode::drawGizmo( NodePtr old, NodePtr _new )
+void GizmoMode::drawGizmo( NodePtr nodeOld, NodePtr nodeNew )
 {
 	if( tool != GizmoTool::Translate )
 		return;
 
-	if( old )
-		disableBoundingGizmo( old );
+	if( nodeOld )
+		disableBoundingGizmo( nodeOld );
 
-	if( _new && ( gizmos.find(_new) == gizmos.end() ) )
-		enableBoundingGizmo( _new );
+	bool newGizmoNotExists = gizmos.find(nodeNew) == gizmos.end();
+	
+	if( nodeNew && newGizmoNotExists )
+		enableBoundingGizmo( nodeNew );
 
 	viewframe->flagRedraw();
 }
 
 //-----------------------------------//
 
-void GizmoMode::onNodeSelected( NodePtr old, NodePtr _new )
+void GizmoMode::onNodeSelected( NodePtr nodeOld, NodePtr nodeNew )
 {
-	assert( _new != nullptr ); 
+	assert( nodeNew != nullptr ); 
 
-	switch(tool) 
-	{	
-		case GizmoTool::Select:
-		{
-			TransformPtr transform = _new->getTransform();
+	if( tool == GizmoTool::Camera )
+	{
 
-			if( transform )
-				transform->setDebugRenderableVisible( true );
-			
-			break;
-		}
+	}
+	else if( tool == GizmoTool::Select )
+	{
+		TransformPtr transform = nodeNew->getTransform();
 
-		case GizmoTool::Translate:
-		case GizmoTool::Rotate:
-		case GizmoTool::Scale:
-		{
-			drawGizmo( old, _new );
-			break;
-		} 
+		if( transform )
+			transform->setDebugRenderableVisible(true);
+	}
+	else
+	{
+		drawGizmo( nodeOld, nodeNew ); 
 	}
 
-	selected.push_back( _new );
+	selected.push_back( nodeNew );
 }
 
 //-----------------------------------//
 
-void GizmoMode::onMouseMove( const MouseMoveEvent& me )
+void GizmoMode::onMouseMove( const MouseMoveEvent& moveEvent )
 {
-	if( ((tool != GizmoTool::Translate)
-		&& (tool != GizmoTool::Rotate)
-		&& (tool != GizmoTool::Scale))
-		|| !gizmo )
-	{
+	if(!gizmo)
 		return;
-	}
+	
+	if(!isMode(GizmoTool::Translate) 
+		|| !isMode(GizmoTool::Rotate) || !isMode(GizmoTool::Scale))
+		return;
 
 	// To check if the user picked a gizmo we use two hit tests.
-	// The first will be based on bounding volumes and will be
-	// a conservative but not very accurate first result.
-	// If it hits, then we will test with a more accurate
-	// (but also more expensive) image based picking technique.
+	// First a not very accurate test based on bounding volumes.
+	// If it hits, then we will test with a more accurate image
+	// based picking technique (more expensive test).
 
 	//if( !pickBoundingTest(me) )
 	//{
@@ -195,7 +191,7 @@ void GizmoMode::onMouseMove( const MouseMoveEvent& me )
 	//	return;
 	//}
 
-	if( pickImageTest(me, axis) )
+	if( pickImageTest(moveEvent, axis) )
 	{
 		gizmo->selectAxis(axis);
 		
@@ -207,6 +203,7 @@ void GizmoMode::onMouseMove( const MouseMoveEvent& me )
 	else
 	{
 		gizmo->deselectAxis();
+		
 		delete op;
 		op = nullptr;
 	}
@@ -216,7 +213,7 @@ void GizmoMode::onMouseMove( const MouseMoveEvent& me )
 
 //-----------------------------------//
 
-void GizmoMode::onMouseDrag( const MouseDragEvent& de )
+void GizmoMode::onMouseDrag( const MouseDragEvent& dragEvent )
 {
 	if( !gizmo || !gizmo->isAnyAxisSelected() )
 		return;
@@ -226,21 +223,25 @@ void GizmoMode::onMouseDrag( const MouseDragEvent& de )
 	Vector3 unit = Gizmo::getUnitVector(op->axis);
 
 	if( axis == GizmoAxis::X )
-		unit *= de.dx;
+		unit *= dragEvent.dx;
+
 	else if( axis == GizmoAxis::Y )
-		unit *= de.dy;
+		unit *= dragEvent.dy;
+
 	else if( axis == GizmoAxis::Z )
-		unit *= de.dx;
+		unit *= dragEvent.dx;
 
-	const NodePtr node( op->weakNode );
-	const TransformPtr& transform = node->getTransform();
-	transform->translate( unit );
+	// Transform the object.
+	const NodePtr nodeObject( op->weakNode );
+	const TransformPtr& transObject = nodeObject->getTransform();
+	transObject->translate( unit );
 	
-	const NodePtr& giz_node = gizmo->getNode();
-	const TransformPtr& giz_tr = giz_node->getTransform();
-	giz_tr->translate( unit );
+	// Transform the gizmo.
+	const NodePtr& nodeGizmo = gizmo->getNode();
+	const TransformPtr& transGizmo = nodeGizmo->getTransform();
+	transGizmo->translate( unit );
 
-	op->translation = transform->getPosition();
+	op->translation = transObject->getPosition();
 	viewframe->flagRedraw();
 }
 
@@ -266,7 +267,7 @@ void GizmoMode::onMouseButtonPress( const MouseButtonEvent& mbe )
 	// Perform ray casting to find the nodes.
 	RayBoxQueryResult res;
 
-	if( scene->doRayBoxQuery( pickRay, res ) )
+	if( scene->doRayBoxQuery(pickRay, res) )
 	{
 		onNodeSelected( NodePtr(), res.node );
 	}
@@ -289,22 +290,21 @@ void GizmoMode::onMouseButtonRelease( const MouseButtonEvent& mbe )
 
 //-----------------------------------//
 
-bool GizmoMode::pickImageTest( const MouseMoveEvent& me, GizmoAxis::Enum& axis )
+bool GizmoMode::pickImageTest( const MouseMoveEvent& moveEvent, GizmoAxis::Enum& axis )
 {
 	Viewport* viewport = viewframe->getViewport();
 	Vector2i size = viewport->getSize();
 
 	// We need to flip the Y-axis due to a mismatch between the 
 	// OpenGL and wxWidgets coordinate-system origin conventions.
-	int m_x = me.x;
-	int m_y = size.y-me.y;
+	int mouseX = moveEvent.x;
+	int mouseY = size.y-moveEvent.y;
 
-	const RenderDevicePtr& device = engine->getRenderDevice();
-	Color pick = device->getPixel(m_x, m_y);
-	
+	RenderDevice* device = engine->getRenderDevice();
+	Color pick = device->getPixel(mouseX, mouseY);
 	axis = Gizmo::getAxis(pick);
 	
-	return ( axis != GizmoAxis::None );
+	return axis != GizmoAxis::None;
 }
 
 //-----------------------------------//
@@ -353,10 +353,9 @@ void GizmoMode::createOperation()
 //-----------------------------------//
 
 GizmoOperation::GizmoOperation()
-	: tool(GizmoTool::Camera),
-	scale(1.0f, 1.0f, 1.0f)
-{
-}
+	: tool(GizmoTool::Camera)
+	, scale(1.0f, 1.0f, 1.0f)
+{ }
 
 //-----------------------------------//
 
@@ -385,23 +384,21 @@ void GizmoOperation::process( bool undo )
 	if( !node )
 		return;
 
+	const Vector3& tr = undo ? orig_translation : translation;
+
 	TransformPtr transform = node->getTransform();
-
-	const Vector3& tr = undo ?
-		orig_translation : translation;
-
 	transform->setPosition( tr );
 
 	// Modify the gizmo if it still exists.
-	NodePtr giz_node( gizmo->getNode() );
+	NodePtr nodeGizmo( gizmo->getNode() );
 	
-	if( !giz_node )
+	if( !nodeGizmo )
 		return;
 
-	TransformPtr giz_tr = giz_node->getTransform();
+	TransformPtr transGizmo = nodeGizmo->getTransform();
 
-	if( giz_tr )
-		giz_tr->setPosition( tr );
+	if( transGizmo )
+		transGizmo->setPosition( tr );
 }
 
 //-----------------------------------//

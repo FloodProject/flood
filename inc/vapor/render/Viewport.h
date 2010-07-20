@@ -54,6 +54,10 @@ public:
 	// Updates the viewport.
 	void update();
 
+	// Unprojects the vector.
+	Vector3 Unproject( const Vector3& vector, const Matrix4x4& projection,
+		const Matrix4x3& view ) const;
+
 	// Returns if a viewport has more priority than another.
 	bool operator < (Viewport& v);
 

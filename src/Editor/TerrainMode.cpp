@@ -32,9 +32,10 @@ END_EVENT_TABLE()
 //-----------------------------------//
 
 TerrainMode::TerrainMode( EditorFrame* frame )
-	: Mode( frame ), timer( this ), op( nullptr )
-{
-}
+	: Mode( frame )
+	, timer( this )
+	, op( nullptr )
+{ }
 
 //-----------------------------------//
 
@@ -60,11 +61,7 @@ void TerrainMode::onTimer( wxTimerEvent& /*event*/ )
 
 	if( info.leftButton )
 	{
-		if( op == nullptr )
-		{
-			debug( "Operation should exist" );
-			return;
-		}
+		assert( op != nullptr );
 
 		op->applyTerrainTool();
 		editor->RefreshViewport();
@@ -75,7 +72,8 @@ void TerrainMode::onTimer( wxTimerEvent& /*event*/ )
 
 void TerrainMode::onMouseDrag( const MouseDragEvent& mde )
 {
-	//if( !mde.info.leftButton ) return;
+	//if( !mde.info.leftButton )
+	//	return;
 
 	MouseButtonEvent mbe( MouseEventType::MousePress );
 	mbe.x = mde.x;
@@ -119,7 +117,8 @@ void TerrainMode::onMouseLeave()
 
 void TerrainMode::createOperation( const RayTriangleQueryResult& res )
 {
-	if( op ) return;
+	if( op )
+		return;
 
 	// If the left Shift is held down, then lower.
 	Keyboard* kbd = engine->getInputManager()->getKeyboard();
@@ -137,7 +136,8 @@ void TerrainMode::createOperation( const RayTriangleQueryResult& res )
 
 void TerrainMode::registerEvent()
 {
-	if( !op ) return;
+	if( !op )
+		return;
 
 	timer.Stop();
 
@@ -153,6 +153,7 @@ void TerrainMode::registerEvent()
 void TerrainMode::deformTerrain( const MouseButtonEvent& mb )
 {
 	RayTriangleQueryResult res;
+	
 	if( !pickTerrain( mb, res ) )
 		return;
 
@@ -169,8 +170,8 @@ void TerrainMode::deformTerrain( const MouseButtonEvent& mb )
 
 //-----------------------------------//
 
-bool TerrainMode::pickTerrain( const MouseButtonEvent& mb, 
-							  RayTriangleQueryResult& res )
+bool TerrainMode::pickTerrain( const MouseButtonEvent& mb,
+							   RayTriangleQueryResult& res )
 {
 	const ScenePtr& scene = engine->getSceneManager();
 
@@ -179,14 +180,19 @@ bool TerrainMode::pickTerrain( const MouseButtonEvent& mb,
 	const Ray& pickRay = camera->getRay( mb.x, mb.y );
 
 	RayBoxQueryResult query;
+	
 	if( !scene->doRayBoxQuery( pickRay, query ) )
 		return false;
 
 	const NodePtr& node = query.node;
-	if( !node ) return false;
+	
+	if( !node ) 
+		return false;
 
 	const TerrainPtr& terrain = node->getComponent<Terrain>("Terrain");
-	if( !terrain ) return false; // Picked nodes were not terrain.
+	
+	if( !terrain )
+		return false; // Picked nodes were not terrain.
 
 	if( !scene->doRayTriangleQuery( pickRay, res, node ) )
 		return false; // Query does not intersect the terrain.
@@ -197,8 +203,11 @@ bool TerrainMode::pickTerrain( const MouseButtonEvent& mb,
 //-----------------------------------//
 
 TerrainOperation::TerrainOperation( TerrainTool::Enum tool,
-								   const RayTriangleQueryResult& res )
-	: size( 0.0f ), strength( 0.0f ), tool( tool ), res( res )
+								    const RayTriangleQueryResult& res )
+	: size( 0 )
+	, strength( 0 )
+	, tool( tool )
+	, res( res )
 {
 	processState( beforeHeights, true );
 }
@@ -233,10 +242,14 @@ void TerrainOperation::processState( std::vector<float>& heights,
 									bool save )
 {	
 	RenderablePtr rend = res.renderable;
-	if( !rend ) return;
+	
+	if( !rend )
+		return;
 
 	VertexBufferPtr vb = rend->getVertexBuffer();
-	if( !vb ) return;
+	
+	if( !vb )
+		return;
 
 	if( save )
 	{
@@ -260,10 +273,14 @@ void TerrainOperation::processState( std::vector<float>& heights,
 void TerrainOperation::applyTerrainTool()
 {
 	RenderablePtr rend = res.renderable;
-	if( !rend ) return;
+	
+	if( !rend )
+		return;
 
 	VertexBufferPtr vb = rend->getVertexBuffer();
-	if( !vb ) return;
+	
+	if( !vb )
+		return;
 
 	const Vector3& pick = res.intersection;
 

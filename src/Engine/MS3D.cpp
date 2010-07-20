@@ -271,7 +271,7 @@ void MS3D::build( std::vector<RenderablePtr>& renderables )
 				// alpha values are only opaque or fully transparent.
 
 				mat->setBlending( BlendingSource::SourceAlpha,
-					BlendingDestination::OneMinusSourceAlpha );
+					BlendingDestination::InverseSourceAlpha );
 			}
 
 			rend->setMaterial( mat );
@@ -281,7 +281,7 @@ void MS3D::build( std::vector<RenderablePtr>& renderables )
 
 		VertexBufferPtr vb( new VertexBuffer() );
 		vb->set( VertexAttribute::Position, vb_v );
-		vb->set( VertexAttribute::MultiTexCoord0, vb_tc );
+		vb->set( VertexAttribute::TexCoord0, vb_tc );
 
 		rend->setVertexBuffer( vb );
 

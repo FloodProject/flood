@@ -14,7 +14,7 @@ namespace vapor {
 //-----------------------------------//
 
 Quad::Quad( float width, float height )
-	: Renderable( Primitive::Quads, getQuadBuffer( width, height ) )
+	: Renderable( Primitive::Quads, getQuadBuffer(width, height) )
 { }
 
 //-----------------------------------//
@@ -40,15 +40,15 @@ VertexBufferPtr Quad::getQuadBuffer( float width, float height )
 
 	// Vertex tex coords data
 	std::vector< Vector3 > coords;
-	coords.push_back( Vector3( 0.0f, 0.0f, 0.0f ) );
-	coords.push_back( Vector3( 0.0f, 1.0f, 0.0f ) );
-	coords.push_back( Vector3( 1.0f, 1.0f, 0.0f ) );
-	coords.push_back( Vector3( 1.0f, 0.0f, 0.0f ) );
+	coords.push_back( Vector2(0.0f, 0.0f) );
+	coords.push_back( Vector2(0.0f, 1.0f) );
+	coords.push_back( Vector2(1.0f, 1.0f) );
+	coords.push_back( Vector2(1.0f, 0.0f) );
 
 	// Vertex buffer setup
 	vb->set( VertexAttribute::Position, vertex );
 	vb->set( VertexAttribute::Color, colors );
-	vb->set( VertexAttribute::MultiTexCoord0, coords );
+	vb->set( VertexAttribute::TexCoord0, coords );
 
 	return vb;
 }

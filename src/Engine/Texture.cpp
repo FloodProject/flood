@@ -27,9 +27,9 @@ Texture::Texture( const ImagePtr& newImage )
 //-----------------------------------//
 
 Texture::Texture( const Settings& settings, PixelFormat::Enum format )
-	: width(settings.width),
-	height(settings.height),
-	format(format)
+	: width(settings.width)
+	, height(settings.height)
+	, format(format)
 {
 	init();
 	upload();
@@ -124,8 +124,8 @@ void Texture::configure()
 	if(GLEW_EXT_texture_filter_anisotropic)
 		glTexParameterf( target, GL_TEXTURE_MAX_ANISOTROPY_EXT, anisotropicFilter );
 
-	glTexParameterf( target, GL_TEXTURE_MIN_FILTER, convertFilterFormat(minFilter) );
-	glTexParameterf( target, GL_TEXTURE_MAG_FILTER, convertFilterFormat(maxFilter) );
+	glTexParameteri( target, GL_TEXTURE_MIN_FILTER, convertFilterFormat(minFilter) );
+	glTexParameteri( target, GL_TEXTURE_MAG_FILTER, convertFilterFormat(maxFilter) );
 
 	//glTexParameterf(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	//glTexParameterf(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -148,6 +148,7 @@ void Texture::setImage( const ImagePtr& newImage )
 	assert( newImage != nullptr );
 
 	image = newImage;
+
 	width = image->getWidth();
 	height = image->getHeight();
 	format = image->getPixelFormat();

@@ -32,6 +32,8 @@ public:
 	virtual void undo() = 0;
 };
 
+typedef std::deque<Operation*> Operations;
+
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(Operation);
 
 //-----------------------------------//

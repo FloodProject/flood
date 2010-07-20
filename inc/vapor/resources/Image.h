@@ -48,6 +48,7 @@ class VAPOR_API Image : public Resource
 public:
 
 	Image();
+	Image(ushort width, ushort height, PixelFormat::Enum format);
 
 	// Gets/sets the width of the image.
 	ACESSOR(Width, const ushort, width)
@@ -72,16 +73,16 @@ public:
 
 private:
 
-	// image width
+	// Image width.
 	ushort width;
 
-	// image height
+	// Image height.
 	ushort height;
 
-	// pixel format
+	// Pixel format.
 	PixelFormat::Enum pixelFormat;
 
-	// holds the image data
+	// Image data.
 	std::vector<byte> buffer;
 };
 

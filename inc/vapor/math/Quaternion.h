@@ -263,7 +263,7 @@ public:
 		// Check limit conditions
 
 		if (x <= -1.0f) {
-			return PI;
+			return Math::PI;
 		}
 		if (x >= 1.0f) {
 			return 0.0f;
@@ -271,7 +271,7 @@ public:
 
 		// Value is in the domain - use standard C function
 
-		return acos(x);
+		return std::acos(x);
 	}
 
 	//---------------------------------------------------------------------------

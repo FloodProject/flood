@@ -21,10 +21,8 @@
 #endif
 
 #ifdef VAPOR_PLATFORM_WINDOWS
-int WINAPI WinMain( HINSTANCE VAPOR_UNUSED(hInstance),
-	HINSTANCE VAPOR_UNUSED(hPrevInstance),
-    LPSTR VAPOR_UNUSED(lpCmdLine),
-	int VAPOR_UNUSED(nCmdShow) )
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+    LPSTR lpCmdLine, int nCmdShow )
 #else
 int main(int argc, const char** argv)
 #endif

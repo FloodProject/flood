@@ -374,7 +374,7 @@ void SceneTreeCtrl::onComponentAdd(wxCommandEvent& event )
 
 		if( fd.ShowModal() == wxID_OK )
 		{
-			ResourceManagerPtr rm = engine->getResourceManager();
+			ResourceManager* rm = engine->getResourceManager();
 			
 			FileSystem* fs = engine->getFileSystem();
 			//fs->

@@ -44,8 +44,6 @@ void EditorFrame::onUpdate( double delta )
 {
 	editorScene->update( delta );
 	engine->update( delta );
-
-	//viewframe->getControl()->flagRedraw();
 }
 
 //-----------------------------------//
@@ -60,6 +58,31 @@ void EditorFrame::OnNodeSelected(wxTreeItemId old, wxTreeItemId id)
 
 	if( currentMode )
 		currentMode->onNodeSelected( nodeOld, nodeNew );
+}
+
+//-----------------------------------//
+
+void EditorFrame::handleUndoRedoOperation(Operations& firstOperations,
+							 Operations& secondOperations, bool undo)
+{
+	if( firstOperations.empty() )
+		return;
+
+	Operation* op = firstOperations.back();
+
+	if(!op)
+		return;
+
+	firstOperations.pop_back();
+	secondOperations.push_back(op);
+
+	if(undo)
+		op->undo();
+	else
+		op->redo();
+
+	updateUndoRedoUI();
+	RefreshViewport();
 }
 
 //-----------------------------------//
@@ -79,33 +102,13 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 	{
 	case Toolbar_Undo:
 	{
-		if( undoOperations.empty() )
-			return;
-
-		Operation* op = undoOperations.back();
-		undoOperations.pop_back();
-		redoOperations.push_back(op);
-
-		if( op ) op->undo();
-
-		updateUndoRedoUI();
-		RefreshViewport();
+		handleUndoRedoOperation(undoOperations, redoOperations, true);
 		return;
 	}
 	//-----------------------------------//
 	case Toolbar_Redo:
 	{
-		if( redoOperations.empty() )
-			return;
-
-		Operation* op = redoOperations.back();
-		redoOperations.pop_back();
-		undoOperations.push_back(op);
-
-		if( op ) op->redo();
-
-		updateUndoRedoUI();
-		RefreshViewport();
+		handleUndoRedoOperation(redoOperations, undoOperations, false);
 		return;
 	}
 	//-----------------------------------//
@@ -138,7 +141,10 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 	case Toolbar_ToogleGrid:
 	{
 		const NodePtr& grid = editorScene->getEntity( "Grid" );
-		if( grid ) grid->setVisible( !grid->isVisible() );
+		
+		if( grid )
+			grid->setVisible( !grid->isVisible() );
+		
 		RefreshViewport();
 		return;
 	}
@@ -153,8 +159,8 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 	//-----------------------------------//
 	case Toolbar_ToogleSidebar:
 	{
-		wxSize szNew = viewframe->GetClientSize();
-		const wxSize& szNB = notebookCtrl->GetClientSize();
+		wxSize newSize = viewframe->GetClientSize();
+		const wxSize& nbSize = notebookCtrl->GetClientSize();
 
 		if( notebookCtrl->IsShown() )
 		{
@@ -163,10 +169,10 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 		else
 		{
 			notebookCtrl->Show();
-			szNew.SetWidth( szNew.GetWidth() + szNB.GetWidth() );
+			newSize.SetWidth( newSize.GetWidth() + nbSize.GetWidth() );
 		}
 
-		SetClientSize( szNew );
+		SetClientSize( newSize );
 		Layout();
 		
 		return;
@@ -178,7 +184,8 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 
 void EditorFrame::onModeSwitch( Mode* const newMode, int id )
 {
-	if( !newMode ) return;
+	if( !newMode )
+		return;
 
 	if( currentMode )
 		currentMode->onModeExit();
@@ -207,11 +214,11 @@ void EditorFrame::registerOperation( Operation* const op )
 
 void EditorFrame::updateUndoRedoUI()
 {
-	bool u = undoOperations.empty();
-	toolBar->EnableTool( Toolbar_Undo, u ? false : true );
+	bool undoEmpty = undoOperations.empty();
+	toolBar->EnableTool( Toolbar_Undo, !undoEmpty );
 		
-	bool r = redoOperations.empty();
-	toolBar->EnableTool( Toolbar_Redo, r ? false : true );
+	bool redoEmpty = redoOperations.empty();
+	toolBar->EnableTool( Toolbar_Redo, !redoEmpty );
 }
 
 //-----------------------------------//
@@ -221,7 +228,7 @@ void EditorFrame::createEditorScene()
 	// Create a nice grid for the editor.
 	NodePtr grid( new Node("Grid") );
 	grid->addTransform();
-	grid->addComponent( ComponentPtr( new Grid() ) );
+	grid->addComponent( GridPtr( new Grid() ) );
 	grid->setTag( Tags::NonPickable, true );
 	editorScene->add( grid );
 }
@@ -231,49 +238,74 @@ void EditorFrame::createEditorScene()
 void EditorFrame::createScene()
 {
 	const ScenePtr& scene = engine->getSceneManager();
-	ResourceManagerPtr const rm = engine->getResourceManager();
+	ResourceManager* const rm = engine->getResourceManager();
 
 	rm->loadResource("Diffuse.glsl");
 	rm->loadResource("Tex.glsl");
 	rm->loadResource("Toon.glsl");
 	rm->loadResource("Tex_Toon.glsl");
+	rm->loadResource("Sky.glsl");
+	rm->loadResource("Water.glsl");
 
-	MaterialPtr matSun( new Material("SunBlend") );
-	matSun->setProgram( "tex" );
-	matSun->setTexture( 0, "moon.png" );
-	matSun->setBlending( BlendingSource::SourceAlpha, BlendingDestination::OneMinusSourceAlpha );
-	matSun->setBackfaceCulling( false );
-	
-	RenderablePtr sunQuad( new Quad( 100.0f, 100.0f ) );
-	sunQuad->setMaterial( matSun );
+	//MaterialPtr matSun( new Material("SunBlend") );
+	//matSun->setProgram( "tex" );
+	//matSun->setTexture( 0, "moon.png" );
+	//matSun->setBlending( BlendingSource::SourceAlpha, BlendingDestination::OneMinusSourceAlpha );
+	//matSun->setBackfaceCulling( false );
+	//
+	//RenderablePtr sunQuad( new Quad( 100.0f, 100.0f ) );
+	//sunQuad->setMaterial( matSun );
 
-	GeometryPtr geom( new Geometry() );
-	geom->addRenderable( sunQuad, RenderGroup::Transparency );
+	//GeometryPtr geom( new Geometry() );
+	//geom->addRenderable( sunQuad, RenderGroup::Transparency );
 
-	NodePtr sun( new Node("Sun") );
-	sun->addTransform();
-	sun->addComponent( geom );
-	sun->addComponent( BillboardPtr( new Billboard( viewframe->getCamera() ) ) );
-	scene->add( sun );
+	//NodePtr sun( new Node("Sun") );
+	//sun->addTransform();
+	//sun->addComponent( geom );
+	//sun->addComponent( BillboardPtr( new Billboard( viewframe->getCamera() ) ) );
+	//scene->add( sun );
 
+	// Sky.
 	SkydomePtr skydome( new Skydome() );
-	skydome->setSunNode( sun );
+	//skydome->setSunNode( sun );
+	
+	const ImagePtr& clouds = rm->loadResource<Image>( "noise2.png" );
+	skydome->setClouds( clouds );
 
 	NodePtr sky( new Node("Sky") );
 	sky->addTransform();	
 	sky->addComponent( skydome );
 	scene->add( sky );
 
-	NodePtr lnode( new Node("Light") );
-	TransformPtr lt( new Transform(0.0f, 100.0f, 0.0f) );
-	lt->rotate(45.0f, 0.0f, 0.0f);
-	lnode->addComponent( lt );
+	// Water.
+	MaterialPtr matWater( new Material("WaterMat", "Water") );
+	matWater->setTexture( 0, "water.png" );
+	matWater->setBlending(BlendingSource::One, BlendingDestination::One);
+	WaterPtr water( new Water(matWater) );
+
+	NodePtr nodeWater( new Node("Water") );
+	nodeWater->addTransform();	
+	nodeWater->addComponent( water );
+	scene->add( nodeWater );
+
+	TransformPtr transWater = nodeWater->getTransform();
+	transWater->rotate(90.0f, 0.0f, 0.0f);
+	transWater->translate(0.0f, 5.0f, 0.0f);
+
+	// Light.
 	light.reset( new Light( LightType::Directional ) );
 	light->setDiffuseColor( Color::Red );
 	light->setAmbientColor( Color::Yellow );
-	lnode->addComponent( light );
-	scene->add( lnode );
 
+	TransformPtr transLight( new Transform(0.0f, 100.0f, 0.0f) );
+	transLight->rotate(45.0f, 0.0f, 0.0f);
+
+	NodePtr nodeLight( new Node("Light") );
+	nodeLight->addComponent( transLight );
+	nodeLight->addComponent( light );
+	scene->add( nodeLight );
+
+	// Terrain.
 	MaterialPtr cellMaterial( new Material("CellMaterial") );
 	cellMaterial->setTexture( 0, "PineTrunk.png" );
 	cellMaterial->setProgram( "tex_toon" );
@@ -284,14 +316,14 @@ void EditorFrame::createScene()
 	settings.MaxHeight = 100;
 	settings.Material = cellMaterial;
 
-	TerrainPtr terrain( new Terrain( settings ) );
+	TerrainPtr terrain( new Terrain(settings) );
 
-	NodePtr terreno( new Node( "Terreno" ) );
+	NodePtr terreno( new Node("Terreno") );
 	terreno->addTransform();
 	terreno->addComponent( terrain );
 	scene->add( terreno );
 
-	const ImagePtr& heightMap = rm->loadResource<Image>( "height2.png" );
+	const ImagePtr& heightMap = rm->loadResource<Image>("height2.png");
 	terrain->addCell( heightMap, 0, 0 );
 
 	scene->update( 0.1f );
@@ -301,7 +333,9 @@ void EditorFrame::createScene()
 
 void EditorFrame::onMouseMove( const MouseMoveEvent& mve )
 {
-	if( !currentMode ) return;
+	if( !currentMode )
+		return;
+	
 	currentMode->onMouseMove( mve );
 }
 
@@ -309,7 +343,9 @@ void EditorFrame::onMouseMove( const MouseMoveEvent& mve )
 
 void EditorFrame::onMouseDrag( const MouseDragEvent& mde )
 {
-	if( !currentMode ) return;
+	if( !currentMode )
+		return;
+	
 	currentMode->onMouseDrag( mde );
 }
 
@@ -317,7 +353,9 @@ void EditorFrame::onMouseDrag( const MouseDragEvent& mde )
 
 void EditorFrame::onMousePress( const MouseButtonEvent& mbe )
 {
-	if( !currentMode ) return;
+	if( !currentMode )
+		return;
+	
 	currentMode->onMouseButtonPress( mbe );
 }
 
@@ -325,7 +363,9 @@ void EditorFrame::onMousePress( const MouseButtonEvent& mbe )
 
 void EditorFrame::onMouseRelease( const MouseButtonEvent& mbe )
 {
-	if( !currentMode ) return;
+	if( !currentMode )
+		return;
+	
 	currentMode->onMouseButtonRelease( mbe );
 }
 
@@ -333,7 +373,9 @@ void EditorFrame::onMouseRelease( const MouseButtonEvent& mbe )
 
 void EditorFrame::onMouseEnter()
 {
-	if( !currentMode ) return;
+	if( !currentMode )
+		return;
+	
 	currentMode->onMouseEnter();
 }
 
@@ -341,7 +383,9 @@ void EditorFrame::onMouseEnter()
 
 void EditorFrame::onMouseLeave()
 {
-	if( !currentMode ) return;
+	if( !currentMode )
+		return;
+	
 	currentMode->onMouseLeave();
 }
 

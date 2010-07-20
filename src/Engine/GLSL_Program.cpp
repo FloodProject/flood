@@ -284,7 +284,7 @@ void GLSL_Program::bindDefaultAttributes()
 	setAttribute( "vp_Vertex", VertexAttribute::Position );
 	setAttribute( "vp_Normal", VertexAttribute::Normal );
 	setAttribute( "vp_Color", VertexAttribute::Color );
-	setAttribute( "vp_MultiTexCoord0", VertexAttribute::MultiTexCoord0 );
+	setAttribute( "vp_TexCoord0", VertexAttribute::TexCoord0 );
 }
 
 //-----------------------------------//
@@ -320,6 +320,27 @@ void GLSL_Program::setUniform( const std::string& slot, int data )
 	}
 
 	glUniform1i( loc, data );
+
+	//unbind();
+}
+
+//-----------------------------------//
+
+void GLSL_Program::setUniform( const std::string& slot, float data )
+{
+	if( !isLinked() ) return;
+
+	//bind();
+
+	GLint loc = glGetUniformLocation( id, slot.c_str() );
+
+	if( loc == -1 )
+	{
+		// warn( "glsl", "Could not locate uniform location in program object '%d'", id );
+		return;
+	}
+
+	glUniform1f( loc, data );
 
 	//unbind();
 }

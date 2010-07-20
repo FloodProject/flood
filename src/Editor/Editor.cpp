@@ -16,6 +16,8 @@
 
 namespace vapor { namespace editor {
 
+//-----------------------------------//
+
 enum 
 {
 	ID_SceneTreeCtrl = 7843,
@@ -129,7 +131,7 @@ void EditorFrame::initEngine()
 
 	createMainViewframe();
 
-	RenderDevicePtr device = engine->getRenderDevice();
+	RenderDevice* device = engine->getRenderDevice();
 	device->init();
 
 	//rb = device->createRenderBuffer( Settings() );
@@ -155,7 +157,7 @@ void EditorFrame::initEngine()
 
 void EditorFrame::waitFinishLoad()
 {
-	ResourceManagerPtr const rm = engine->getResourceManager();
+	ResourceManager* const rm = engine->getResourceManager();
 	rm->waitUntilQueuedResourcesLoad();
 
 	// Update at least once before rendering.
@@ -176,7 +178,7 @@ void EditorFrame::createMainViewframe()
 	control->onUpdate += fd::bind( &EditorFrame::onUpdate, this );
 	control->SetFocus();
 
-	RenderDevicePtr device = engine->getRenderDevice();
+	RenderDevice* device = engine->getRenderDevice();
 	Window* window = (Window*) control->getRenderWindow(); 
 
 	device->setWindow( window );
@@ -206,12 +208,11 @@ NodePtr EditorFrame::createCamera()
 	// So each camera will have unique names.
 	static byte i = 0;
 
-	InputManager* const im = engine->getInputManager();
-	RenderDevicePtr device = engine->getRenderDevice();
+	RenderDevice* device = engine->getRenderDevice();
 	
 	// Create a new first-person camera for our viewport.
 	// By default it will be in perspective projection.
-	CameraPtr camera( new FirstPersonCamera(im, device) );
+	CameraPtr camera( new FirstPersonCamera(device) );
 
 	// Generate a new unique name.
 	std::string name( "EditorCamera"+String::fromNumber(i++) );

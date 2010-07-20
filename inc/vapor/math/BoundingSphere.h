@@ -28,6 +28,7 @@ public:
 	BoundingSphere( const Vector3& center, float radius );
 	BoundingSphere( const BoundingSphere& bs );
 
+	// Adds a point to the bounding sphere.
 	//void add( const Vector3& vertex );
 
 	// Intersection with a ray.

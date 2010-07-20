@@ -13,6 +13,8 @@
 
 namespace vapor {
 
+//-----------------------------------//
+
 const std::string& Billboard::type = "Billboard";
 
 //-----------------------------------//
@@ -88,7 +90,7 @@ RenderablePtr Billboard::getDebugRenderable() const
 	vb->set( VertexAttribute::Position, pos );
 	vb->set( VertexAttribute::Color, colors );
 	
-	MaterialPtr mat( new Material( "", "diffuse" ) );
+	MaterialPtr mat( new Material("Billboard") );
 
 	rend->setVertexBuffer( vb );
 	rend->setMaterial( mat );

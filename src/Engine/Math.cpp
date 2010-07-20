@@ -13,7 +13,38 @@ namespace vapor {
 
 //-----------------------------------//
 
-bool fcmp(float a, float b)
+float Interpolate::linear(float a, float b, float t)
+{
+	// Linear interpolation.
+	return  a*(1-t) + b*t;
+}
+
+//-----------------------------------//
+
+float Interpolate::cosine(float a, float b, float t)
+{
+	// Cosine interpolation.
+	float ft = t * Math::PI;
+	float f = (1 - std::cos(ft)) * 0.5f;
+
+	// Linear interpolation.
+	return Interpolate::linear(a, b, f);
+}
+
+//-----------------------------------//
+
+float Interpolate::cubic(float a, float b, float t)
+{
+	// Cubic interpolation.
+	float step = t*t*(3-2*t);
+
+	// Linear interpolation.
+	return Interpolate::linear(a, b, step);
+}
+
+//-----------------------------------//
+
+bool Math::floatEqual(float a, float b)
 {
 	return fabs(a - b) < 
 		std::numeric_limits<float>::epsilon();
@@ -21,30 +52,30 @@ bool fcmp(float a, float b)
 
 //-----------------------------------//
 
-float logn( float base, float value )
+float Math::logBase( float base, float value )
 {
-	return log( value ) / log( base );
+	return log(value) / log(base);
 }
 
 //-----------------------------------//
 
-float random( float min, float max )
+float Math::random( float min, float max )
 {
-	return ((max - min) 
-		* ( (float(rand()) / RAND_MAX ) ) 
-		+ min);
+	float n = (max - min) * (rand() / RAND_MAX) + min;
+	
+	return n;
 }
 
 //-----------------------------------//
 
-float degreeToRadian( float degree )
+float Math::degreeToRadian( float degree )
 {
 	return degree * PI / 180.0f;
 }
 
 //-----------------------------------//
 
-float radianToDegree( float radian )
+float Math::radianToDegree( float radian )
 {
 	return radian * 180.0f / PI;
 }

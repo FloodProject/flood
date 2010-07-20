@@ -7,28 +7,24 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/Profiler.h"
+#include "vapor/scene/Water.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-Profiler::Profiler(const std::string& name)
-	: name(name)
-{ }
+const std::string& Water::type = "Water";
 
 //-----------------------------------//
 
-Profiler::~Profiler()
+Water::Water( MaterialPtr material )
 {
-	double time = timer.getElapsedTime();
+	quad = new Quad(100, 100);
+	quad->setMaterial(material);
 
-	float ms = time * 1000;
-
-	debug( "%s: took %lu ms (%.5lf)",
-		name.c_str(), (ulong) ms, ms );
+	addRenderable(quad, RenderGroup::Transparency);
 }
 
 //-----------------------------------//
 
-} // end namespace 
+} // end namespace

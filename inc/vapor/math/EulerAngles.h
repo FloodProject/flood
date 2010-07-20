@@ -27,13 +27,13 @@ public:
 	EulerAngles();
 	EulerAngles( float x, float y, float z );
 
-	// Copy constructor
+	// Copy constructor.
 	EulerAngles(const EulerAngles&);
 
-	// Addition combined
+	// Addition combined.
 	EulerAngles& operator += (const EulerAngles&);
 
-	// Addition combined
+	// Addition combined.
 	EulerAngles& operator += (const Vector3&);
 
 	// Adds the given angles to the existing angles.

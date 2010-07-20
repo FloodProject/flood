@@ -58,7 +58,7 @@ public:
 	virtual void setCursorPosition( int x, int y );
 
 	// Gets the input manager.
-	InputManager& getInputManager() { return *im; }
+	InputManager* getInputManager() { return im; }
 
 	// Makes this the current OpenGL context.
 	virtual void makeCurrent();

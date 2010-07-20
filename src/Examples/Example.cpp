@@ -47,6 +47,8 @@ void Example::onSetupResources()
 	rm->loadResource("Tex.glsl");
 	rm->loadResource("Toon.glsl");
 	rm->loadResource("Tex_Toon.glsl");
+	rm->loadResource("Sky.glsl");
+	rm->loadResource("Water.glsl");
 }
 
 //-----------------------------------//
@@ -55,7 +57,7 @@ void Example::onSetupScene()
 {
 	ResourceManager* rm = getResourceManager();
 
-	// Create a new Camera
+	// Create a new Camera.
 	NodePtr nodeCamera( new Node("MainCamera") );
 	nodeCamera->addComponent( TransformPtr( new Transform( 0.0f, 20.0f, -65.0f ) ) );
 	nodeCamera->addComponent( camera );
@@ -124,7 +126,11 @@ void Example::onSetupScene()
 	nodeTerrain->addComponent( terrain );
 	scene->add( nodeTerrain );
 
+
 	SkydomePtr skydome( new Skydome() );
+
+	const ImagePtr& clouds = rm->loadResource<Image>( "noise2.png" );
+	skydome->setClouds( clouds );
 
 	NodePtr sky( new Node("Sky") );
 	sky->addTransform();	
@@ -145,7 +151,7 @@ void Example::onUpdate( double delta )
 	static double deltaPassed = 0.0f;
 	
 	deltaPassed += delta;
-	bool clamped = clamp<double>(deltaPassed, 0, 1);
+	bool clamped = Math::clamp<double>(deltaPassed, 0, 1);
 
 	if(!clamped)
 		return;
@@ -176,6 +182,28 @@ void Example::onRender()
 
 void Example::onKeyPressed( const KeyEvent& keyEvent )
 {
+	if( keyEvent.keyCode == Keys::N )
+	{
+		Noise noise;
+
+		std::vector<float> fn;
+		noise.generate(fn, 256, 256);
+
+		foreach( float& n, fn )
+			n = pow((n+1) / 2.0f, 2);
+
+		std::vector<byte> bn;
+
+		foreach( float& n, fn )
+			bn.push_back( n*255 );
+
+		Image image(256, 256, PixelFormat::Depth);
+		image.setStatus( ResourceStatus::Loaded );
+		image.setBuffer(bn);
+
+		image.save("noise.png");
+	}
+
 	if( keyEvent.keyCode == Keys::Space )
 		debug( "time: %lf", frameTimer.getElapsedTime() );
 

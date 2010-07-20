@@ -24,8 +24,10 @@ namespace PixelFormat
 			return "R8G8B8A8";
 		case R8G8B8:
 			return "R8G8B8";
+		case Unknown:
+			return "Unknown";
 		default:
-			return "(Unknown)";
+			assert( false );
 		}
 	}
 }
@@ -33,8 +35,17 @@ namespace PixelFormat
 //-----------------------------------//
 
 Image::Image()
-	: pixelFormat( PixelFormat::Unknown ),
-	width(0), height(0)
+	: width(0)
+	, height(0)
+	, pixelFormat( PixelFormat::Unknown )
+{ }
+
+//-----------------------------------//
+
+Image::Image(ushort width, ushort height, PixelFormat::Enum format)
+	: width(width)
+	, height(height)
+	, pixelFormat(format)
 { }
 
 //-----------------------------------//
@@ -92,8 +103,7 @@ void Image::save( const std::string& filename )
 void Image::log() const
 {
 	info("Image", "Image has pixel format '%s' and size %dx%d", 
-		PixelFormat::getString(getPixelFormat()).c_str(), 
-		getWidth(), getHeight());
+		PixelFormat::getString(pixelFormat).c_str(), width, height);
 }
 
 //-----------------------------------//

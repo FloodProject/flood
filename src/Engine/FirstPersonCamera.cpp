@@ -65,7 +65,7 @@ void FirstPersonCamera::checkControls( double delta )
 
 		// Restrict X-axis movement by some deegres.
 		float& xang = rotation.x;
-		clamp( xang, -DEFAULT_LIMIT_XAXIS, DEFAULT_LIMIT_XAXIS );
+		Math::clamp( xang, -DEFAULT_LIMIT_XAXIS, DEFAULT_LIMIT_XAXIS );
 
 		mouseDistance.zero();
 		viewChanged = true;
@@ -110,7 +110,7 @@ void FirstPersonCamera::checkControls( double delta )
 	if( viewChanged || (relativePosition != Vector3::Zero) )
 	{
 		Vector3 target = position+relativePosition;
-		Vector3 interp = position.lerp(target, 0.3f);
+		Vector3 interp = position.serp(target, 0.3f);
 
 		relativePosition -= interp-position;
 			

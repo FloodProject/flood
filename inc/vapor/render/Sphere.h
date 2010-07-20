@@ -37,7 +37,7 @@ protected:
 		const Vector3& v3, byte depth, VertexData& pos );
 
 	// Generates the sphere.
-	void generateSphere( bool fullSphere, byte numSubDiv, VertexData& pos, float dim );
+	void buildGeometry( bool fullSphere, byte numSubDiv, VertexData& pos, float dim );
 };
 
 //-----------------------------------//

@@ -20,8 +20,8 @@ float Material::DefaultLineWidth = 1.0f;
 //-----------------------------------//
 
 Material::Material( const std::string& name, const std::string& program )
-	: name( name ),
-	program( program )
+	: name(name)
+	, program(program)
 {
 	init();
 }
@@ -35,6 +35,7 @@ void Material::init()
 	lineSmooth = false;
 	cullBackfaces = true;
 	lineWidth = DefaultLineWidth;
+	
 	_isBlendingEnabled = false;
 	source = BlendingSource::One;
 	destination = BlendingDestination::Zero;
@@ -117,7 +118,7 @@ void Material::bind()
 	foreach( const TextureMapPair& p, textures )
 	{
 		std::string name = "tex"+String::fromNumber(p.first);
-		program->setUniform( name, p.first );
+		program->setUniform( name, (int)p.first );
 	}
 }
 
