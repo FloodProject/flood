@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "vaporControl.h"
-
 namespace vapor { namespace editor {
+
+class RenderControl;
 
 //-----------------------------------//
 
@@ -39,7 +39,7 @@ public:
 	GETTER(Camera, const CameraPtr, viewport->getCamera())
 
 	// Gets the associated control.
-	GETTER(Control, vaporControl*, control)
+	GETTER(Control, RenderControl*, control)
 
 	// Gets the associated viewport.
 	GETTER(Viewport, Viewport*, viewport)
@@ -57,7 +57,7 @@ protected:
 	void onCameraSpeedSpin( wxSpinDoubleEvent& event );
 	
 	// Control where the scene will be drawn.
-	vaporControl* control;
+	RenderControl* control;
 
 	// Viewport associated with the control.
 	Viewport* viewport;

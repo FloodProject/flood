@@ -9,7 +9,8 @@
 #include "PCH.h"
 #include "Viewframe.h"
 #include "EditorIcons.h"
-#include "vaporWindow.h"
+#include "RenderWindow.h"
+#include "RenderControl.h"
 
 namespace vapor { namespace editor {
 
@@ -32,7 +33,7 @@ Viewframe::Viewframe( wxWindow* parent, wxWindowID id,
 				   const wxPoint& pos, const wxSize& size, long style ) 
 	: wxPanel( parent, id, pos, size, style )
 {
-	control = new vaporControl( this );
+	control = new RenderControl( this );
 	build();
 }
 

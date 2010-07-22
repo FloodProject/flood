@@ -284,41 +284,21 @@
 			Name="Window"
 			>
 			<File
-				RelativePath=".\vaporControl.cpp"
+				RelativePath=".\RenderControl.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\vaporControl.h"
+				RelativePath=".\RenderControl.h"
 				>
 			</File>
 			<File
-				RelativePath=".\vaporWindow.cpp"
+				RelativePath=".\RenderWindow.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\vaporWindow.h"
+				RelativePath=".\RenderWindow.h"
 				>
 			</File>
-			<Filter
-				Name="Input"
-				>
-				<File
-					RelativePath=".\vaporInputManager.cpp"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							DisableSpecificWarnings="4510;4610"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath=".\vaporInputManager.h"
-					>
-				</File>
-			</Filter>
 		</Filter>
 		<Filter
 			Name="Icons"
@@ -390,26 +370,6 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Terrain"
-			>
-			<File
-				RelativePath=".\TerrainMode.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\TerrainMode.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TerrainPage.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\TerrainPage.h"
-				>
-			</File>
-		</Filter>
-		<Filter
 			Name="Viewframe"
 			>
 			<File
@@ -422,36 +382,64 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Gizmo"
+			Name="Tools"
 			>
 			<File
-				RelativePath=".\Gizmo.cpp"
+				RelativePath=".\Tool.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Gizmo.h"
+				RelativePath=".\Tool.h"
 				>
 			</File>
 			<File
-				RelativePath=".\GizmoMode.cpp"
+				RelativePath=".\ToolManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\GizmoMode.h"
+				RelativePath=".\ToolManager.h"
 				>
 			</File>
-		</Filter>
-		<Filter
-			Name="Modes"
-			>
-			<File
-				RelativePath=".\Mode.cpp"
+			<Filter
+				Name="Gizmos"
 				>
-			</File>
-			<File
-				RelativePath=".\Mode.h"
+				<File
+					RelativePath=".\Gizmo.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Gizmo.h"
+					>
+				</File>
+				<File
+					RelativePath=".\GizmoTool.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\GizmoTool.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Terrain"
 				>
-			</File>
+				<File
+					RelativePath=".\TerrainPage.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\TerrainPage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\TerrainTool.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\TerrainTool.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Operation"
@@ -506,6 +494,18 @@
 			</File>
 			<File
 				RelativePath=".\wxSliderCtrl.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Input"
+			>
+			<File
+				RelativePath=".\EditorInputManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\EditorInputManager.h"
 				>
 			</File>
 		</Filter>

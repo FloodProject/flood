@@ -8,11 +8,13 @@
 
 #include "PCH.h"
 #include "Editor.h"
+#include "EditorInputManager.h"
+#include "Tool.h"
 
 namespace vapor { namespace editor {
 
 //-----------------------------------//
-// event handlers
+// Event handlers
 //-----------------------------------//
 
 void EditorFrame::RefreshViewport()
@@ -26,7 +28,6 @@ void EditorFrame::RefreshViewport()
 void EditorFrame::onRender()
 {
 	Viewport* viewport = viewframe->getViewport();
-
 	const CameraPtr& camera = viewport->getCamera();
 	camera->setViewport( viewport );
 	
@@ -182,18 +183,18 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 
 //-----------------------------------//
 
-void EditorFrame::onModeSwitch( Mode* const newMode, int id )
+void EditorFrame::onModeSwitch( Tool* const newMode, int id )
 {
 	if( !newMode )
 		return;
 
 	if( currentMode )
-		currentMode->onModeExit();
+		currentMode->onToolDisable();
 	
 	RefreshViewport();
 	
 	currentMode = newMode;
-	currentMode->onModeEnter( id );
+	currentMode->onToolEnable( id );
 }
 
 //-----------------------------------//
@@ -280,7 +281,7 @@ void EditorFrame::createScene()
 	// Water.
 	MaterialPtr matWater( new Material("WaterMat", "Water") );
 	matWater->setTexture( 0, "water.png" );
-	matWater->setBlending(BlendingSource::One, BlendingDestination::One);
+	matWater->setBlending(BlendingSource::SourceAlpha, BlendingDestination::InverseSourceAlpha);
 	WaterPtr water( new Water(matWater) );
 
 	NodePtr nodeWater( new Node("Water") );
@@ -290,6 +291,7 @@ void EditorFrame::createScene()
 
 	TransformPtr transWater = nodeWater->getTransform();
 	transWater->rotate(90.0f, 0.0f, 0.0f);
+	transWater->scale(10.0f);
 	transWater->translate(0.0f, 5.0f, 0.0f);
 
 	// Light.

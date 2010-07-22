@@ -23,7 +23,7 @@ class Operation : public ReferenceCounted
 public:
 
 	Operation()
-	{ } 
+	{ }
 	
 	virtual ~Operation() 
 	{ }

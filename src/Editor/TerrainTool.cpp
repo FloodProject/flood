@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "PCH.h"
-#include "TerrainMode.h"
+#include "TerrainTool.h"
 #include "EditorIcons.h"
 #include "Editor.h"
 
@@ -32,14 +32,14 @@ END_EVENT_TABLE()
 //-----------------------------------//
 
 TerrainMode::TerrainMode( EditorFrame* frame )
-	: Mode( frame )
+	: Tool( frame )
 	, timer( this )
 	, op( nullptr )
 { }
 
 //-----------------------------------//
 
-void TerrainMode::onModeInit(wxToolBar* toolBar, ModeIdMap& map)
+void TerrainMode::onToolInit(wxToolBar* toolBar, ToolsMap& map)
 {
 	toolBar->AddTool( Terrain_Raise, "Raise/Lower",
 		wxMEMORY_BITMAP(terrain_raise_lower), "Raises/Lowers the terrain",

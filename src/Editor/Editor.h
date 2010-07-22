@@ -8,7 +8,6 @@
 
 #pragma once
  
-#include "Mode.h"
 #include "Operation.h"
 #include "Viewframe.h"
 #include "SceneTreeCtrl.h"
@@ -17,6 +16,9 @@
 #include "ConsoleFrame.h"
 
 namespace vapor { namespace editor {
+
+class Tool;
+class EditorInputManager;
 
 //-----------------------------------//
 
@@ -34,7 +36,7 @@ public:
 // Define a new frame type: this is going to be our main frame
 class EditorFrame : public wxFrame
 {
-	friend class Mode;
+	friend class Tool;
 
 public:
 
@@ -69,7 +71,7 @@ public:
 	void updateUndoRedoUI();
 	
 	// Misc stuff.
-	void onModeSwitch( Mode* const mode, int id );
+	void onModeSwitch( Tool* const mode, int id );
 	
 	void onUpdate( double delta );
 	void onRender();
@@ -104,14 +106,14 @@ protected:
 	ScenePtr editorScene;
 
 	// Input Management
-	vaporInputManager* im;
+	EditorInputManager* im;
 	//InputProcessCallback cb;
 	//void onInputEvent( Event& );
 
 	// Editor modes.
-	Mode* currentMode;
-	std::vector<Mode*> modes;
-	std::map<int, Mode*> modesMap;
+	Tool* currentMode;
+	std::vector<Tool*> modes;
+	std::map<int, Tool*> modesMap;
 
 	// Undo/redo operations.
 	Operations undoOperations;

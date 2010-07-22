@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Mode.h"
+#include "Tool.h"
 #include "Operation.h"
 
 namespace vapor { namespace editor {
@@ -53,14 +53,16 @@ public:
 
 //-----------------------------------//
 
-class TerrainMode : public Mode, public wxEvtHandler
+class TerrainMode : public Tool, public wxEvtHandler
 {
 public:
 
 	TerrainMode( EditorFrame* frame );
 
-	virtual void onModeInit(wxToolBar* toolbar, ModeIdMap& map);
+	// Inits the tool.
+	virtual void onToolInit(wxToolBar* toolbar, ToolsMap& map);
 	
+	// Handles all the mouse events.
 	virtual void onMouseDrag( const MouseDragEvent& mde );
 	virtual void onMouseButtonPress( const MouseButtonEvent& mbe );
 	virtual void onMouseButtonRelease( const MouseButtonEvent& );

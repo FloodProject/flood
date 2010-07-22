@@ -7,34 +7,34 @@
 ************************************************************************/
 
 #include "PCH.h"
-#include "vaporInputManager.h"
+#include "EditorInputManager.h"
 
 namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-vaporInputManager::vaporInputManager()
+EditorInputManager::EditorInputManager()
 {
-	cb += fd::bind( &vaporInputManager::processEvent, this );
+	cb += fd::bind( &EditorInputManager::processEvent, this );
 }
 
 //-----------------------------------//
 
-void vaporInputManager::processKeyEvent( const wxKeyEvent& event, bool keyDown )
+void EditorInputManager::processKeyEvent( const wxKeyEvent& event, bool keyDown )
 {
 	doKeyEvent(cb, event, keyDown);
 }
 
 //-----------------------------------//
 
-void vaporInputManager::processMouseEvent( const wxMouseEvent& event )
+void EditorInputManager::processMouseEvent( const wxMouseEvent& event )
 {
 	doMouseEvent(cb, event);	
 }
 
 //-----------------------------------//
 
-void vaporInputManager::doKeyEvent( InputProcessCallback cb, const wxKeyEvent& event, bool keyDown )
+void EditorInputManager::doKeyEvent( InputProcessCallback cb, const wxKeyEvent& event, bool keyDown )
 {
 	// Convert from the wxWidgets events to the vaporEngine events.
 	KeyEvent ke( 
@@ -49,7 +49,7 @@ void vaporInputManager::doKeyEvent( InputProcessCallback cb, const wxKeyEvent& e
 
 //-----------------------------------//
 
-void vaporInputManager::doMouseEvent( InputProcessCallback cb, const wxMouseEvent& event )
+void EditorInputManager::doMouseEvent( InputProcessCallback cb, const wxMouseEvent& event )
 {
 	// Mouse motion
 	if( event.Moving() )
@@ -129,7 +129,7 @@ void vaporInputManager::doMouseEvent( InputProcessCallback cb, const wxMouseEven
 
 //-----------------------------------//
 
-Keys::Enum vaporInputManager::convertKeyEnum( int keyCode )
+Keys::Enum EditorInputManager::convertKeyEnum( int keyCode )
 {
 	// From the wxWidgets docs:
 	// "Note that the range 33 - 126 is reserved for the standard ASCII characters 

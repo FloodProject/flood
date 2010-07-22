@@ -9,10 +9,12 @@
 #include "PCH.h"
 #include "Editor.h"
 #include "EditorIcons.h"
+#include "RenderControl.h"
+#include "Tool.h"
 
-// Editor modes
-#include "GizmoMode.h"
-#include "TerrainMode.h"
+// Editor tools
+#include "GizmoTool.h"
+#include "TerrainTool.h"
 
 namespace vapor { namespace editor {
 
@@ -29,7 +31,7 @@ enum
 // ----------------------------------------------------------------------
 
 BEGIN_EVENT_TABLE(EditorFrame, wxFrame)
-    EVT_MENU(Editor_Quit,  EditorFrame::OnQuit)
+    EVT_MENU(Editor_Quit, EditorFrame::OnQuit)
     EVT_MENU(Editor_About, EditorFrame::OnAbout)
 	EVT_MENU(wxID_ANY, EditorFrame::OnToolbarButtonClick)
 	EVT_KEY_DOWN(EditorFrame::OnKeyDown)
@@ -69,8 +71,9 @@ bool EditorApp::OnInit()
 
 // frame constructor
 EditorFrame::EditorFrame(const wxString& title)
-       : wxFrame(nullptr, wxID_ANY, title), engine( nullptr ), 
-	   currentMode( nullptr )
+       : wxFrame(nullptr, wxID_ANY, title)
+	   , engine( nullptr )
+	   , currentMode( nullptr )
 {
     // Set the editor icon.
     SetIcon( wxIcon( "editor" ) );
@@ -103,7 +106,7 @@ EditorFrame::EditorFrame(const wxString& title)
 
 EditorFrame::~EditorFrame()
 {
-	foreach( const Mode* mode, modes )
+	foreach( const Tool* mode, modes )
 		delete mode;
 
 	foreach( Operation* const op, undoOperations )
@@ -163,7 +166,7 @@ void EditorFrame::waitFinishLoad()
 	// Update at least once before rendering.
 	onUpdate( 0.0f );
 
-	vaporControl* control = viewframe->getControl();
+	RenderControl* control = viewframe->getControl();
 	control->startFrameLoop();
 }
 
@@ -173,7 +176,7 @@ void EditorFrame::createMainViewframe()
 {
 	viewframe = new Viewframe( this );
 
-	vaporControl* control = viewframe->getControl();
+	RenderControl* control = viewframe->getControl();
 	control->onRender += fd::bind( &EditorFrame::onRender, this );
 	control->onUpdate += fd::bind( &EditorFrame::onUpdate, this );
 	control->SetFocus();
@@ -230,16 +233,16 @@ NodePtr EditorFrame::createCamera()
 
 void EditorFrame::createModes()
 {
-	modes.push_back( new GizmoMode(this) );
+	modes.push_back( new GizmoTool(this) );
 	modes.push_back( new TerrainMode(this) );
 
 	// --------------------
-	// Mode-specific tools
+	// Tool-specific tools
 	// --------------------
 
-	foreach( Mode* const mode, modes )
+	foreach( Tool* const mode, modes )
 	{
-		mode->onModeInit( toolBar, modesMap );
+		mode->onToolInit( toolBar, modesMap );
 	}
 
 	// TODO: hack

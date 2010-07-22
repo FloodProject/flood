@@ -7,23 +7,24 @@
 ************************************************************************/
 
 #include "PCH.h"
-#include "vaporWindow.h"
+#include "RenderWindow.h"
+#include "EditorInputManager.h"
 
 namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-vaporWindow::vaporWindow(const WindowSettings& settings,
+RenderWindow::RenderWindow(const WindowSettings& settings,
 						 wxGLCanvas* const canvas)
 	: Window(settings), canvas(canvas), context(nullptr)
 {
 	createContext();
-	im = new vaporInputManager();
+	im = new EditorInputManager();
 }
 
 //-----------------------------------//
 
-vaporWindow::~vaporWindow()
+RenderWindow::~RenderWindow()
 {
 	delete context;
 	delete im;
@@ -31,9 +32,10 @@ vaporWindow::~vaporWindow()
 
 //-----------------------------------//
 
-bool vaporWindow::createContext()
+bool RenderWindow::createContext()
 {
-	if(!canvas) return false;
+	if(!canvas)
+		return false;
 
     // create OpenGL context
     context = new wxGLContext(canvas);
@@ -49,7 +51,7 @@ bool vaporWindow::createContext()
 
 //-----------------------------------//
 
-void vaporWindow::update() 
+void RenderWindow::update() 
 {
 	assert( context != nullptr );
 
@@ -59,14 +61,14 @@ void vaporWindow::update()
 
 //-----------------------------------//
 
-void vaporWindow::show( bool hide ) 
+void RenderWindow::show( bool hide ) 
 {
 	canvas->Show( hide );
 }
 
 //-----------------------------------//
 
-void vaporWindow::makeCurrent()
+void RenderWindow::makeCurrent()
 {
 	if(!context || !canvas) 
 		return;
@@ -76,7 +78,7 @@ void vaporWindow::makeCurrent()
 
 //-----------------------------------//
 
-Vector2i vaporWindow::getCursorPosition() const
+Vector2i RenderWindow::getCursorPosition() const
 {
 	const wxMouseState& mouseState = wxGetMouseState();
 	
@@ -89,21 +91,21 @@ Vector2i vaporWindow::getCursorPosition() const
 
 //-----------------------------------//
 
-void vaporWindow::setCursorPosition( int x, int y )
+void RenderWindow::setCursorPosition( int x, int y )
 {
 	canvas->WarpPointer( x, y );
 }
 
 //-----------------------------------//
 
-bool vaporWindow::isCursorVisible() const
+bool RenderWindow::isCursorVisible() const
 {
 	return !canvas->HasCapture();
 }
 
 //-----------------------------------//
 
-void vaporWindow::setCursorVisible(bool mouseVisible)
+void RenderWindow::setCursorVisible(bool mouseVisible)
 {
 	if( !mouseVisible )
 	{
@@ -119,7 +121,7 @@ void vaporWindow::setCursorVisible(bool mouseVisible)
 
 //-----------------------------------//
 
-void vaporWindow::processResize(const wxSize& size)
+void RenderWindow::processResize(const wxSize& size)
 {
 	settings.setWidth( size.GetX() );
 	settings.setHeight( size.GetY() );
@@ -129,14 +131,14 @@ void vaporWindow::processResize(const wxSize& size)
 
 //-----------------------------------//
 
-bool vaporWindow::pumpEvents()
+bool RenderWindow::pumpEvents()
 {
 	return true;
 }
 
 //-----------------------------------//
 
-void vaporWindow::setTitle(const std::string& title)
+void RenderWindow::setTitle(const std::string& title)
 {
 	// Our canvas has no title to set, the best we can do is to
 	// set the title as the help text of the wxWidgets control.

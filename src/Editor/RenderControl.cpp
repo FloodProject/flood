@@ -7,8 +7,9 @@
 ************************************************************************/
 
 #include "PCH.h"
-#include "vaporControl.h"
-#include "vaporWindow.h"
+#include "RenderControl.h"
+#include "RenderWindow.h"
+#include "EditorInputManager.h"
 
 namespace vapor { namespace editor {
 
@@ -20,17 +21,17 @@ enum Timers
 	RENDER_TIMER
 };
 
-BEGIN_EVENT_TABLE(vaporControl, wxGLCanvas)
-	EVT_TIMER(UPDATE_TIMER, vaporControl::doUpdate)
-	EVT_TIMER(RENDER_TIMER, vaporControl::doRender)
-    EVT_PAINT(vaporControl::OnPaint)
-	EVT_SIZE(vaporControl::OnSize)
-	EVT_SET_FOCUS(vaporControl::OnFocusSet)
-	EVT_KILL_FOCUS(vaporControl::OnFocusKill)
-	EVT_KEY_DOWN(vaporControl::OnKeyDown)
-	EVT_KEY_UP(vaporControl::OnKeyUp)
-	EVT_MOUSE_EVENTS(vaporControl::OnMouseEvent)
-	EVT_MOUSE_CAPTURE_LOST(vaporControl::OnMouseCaptureLost)
+BEGIN_EVENT_TABLE(RenderControl, wxGLCanvas)
+	EVT_TIMER(UPDATE_TIMER, RenderControl::doUpdate)
+	EVT_TIMER(RENDER_TIMER, RenderControl::doRender)
+    EVT_PAINT(RenderControl::OnPaint)
+	EVT_SIZE(RenderControl::OnSize)
+	EVT_SET_FOCUS(RenderControl::OnFocusSet)
+	EVT_KILL_FOCUS(RenderControl::OnFocusKill)
+	EVT_KEY_DOWN(RenderControl::OnKeyDown)
+	EVT_KEY_UP(RenderControl::OnKeyUp)
+	EVT_MOUSE_EVENTS(RenderControl::OnMouseEvent)
+	EVT_MOUSE_CAPTURE_LOST(RenderControl::OnMouseCaptureLost)
 END_EVENT_TABLE()
 
 const double MAX_RATE_UPDATE = 1.0f / 25;
@@ -38,7 +39,7 @@ const double MAX_RATE_RENDER = 1.0f / 60;
 
 //-----------------------------------//
 
-vaporControl::vaporControl(	wxWindow* parent, wxWindowID id,
+RenderControl::RenderControl(	wxWindow* parent, wxWindowID id,
 	const int* attribList, const wxPoint& pos, const wxSize& size,
 	long style,	const wxString&	name, const wxPalette& )
 
@@ -54,7 +55,7 @@ vaporControl::vaporControl(	wxWindow* parent, wxWindowID id,
 	WindowSettings settings(sz.GetX(), sz.GetY());
 	
 	// Note: This will be deleted by the engine.
-	window = new vaporWindow(settings, this);
+	window = new RenderWindow(settings, this);
 
 	// Setup input in the engine.
 	inputManager = window->im;
@@ -62,7 +63,7 @@ vaporControl::vaporControl(	wxWindow* parent, wxWindowID id,
 
 //-----------------------------------//
 
-void vaporControl::startFrameLoop()
+void RenderControl::startFrameLoop()
 {
 	frameUpdateTimer.Start(MAX_RATE_UPDATE);
 	frameRenderTimer.Start(MAX_RATE_RENDER);
@@ -70,7 +71,7 @@ void vaporControl::startFrameLoop()
 
 //-----------------------------------//
 
-void vaporControl::stopFrameLoop()
+void RenderControl::stopFrameLoop()
 {
 	frameUpdateTimer.Stop();
 	frameRenderTimer.Stop();
@@ -79,7 +80,7 @@ void vaporControl::stopFrameLoop()
 
 //-----------------------------------//
 
-void vaporControl::doUpdate(wxTimerEvent&)
+void RenderControl::doUpdate(wxTimerEvent&)
 {
 	if( !onUpdate.empty() )
 		onUpdate( MAX_RATE_UPDATE );
@@ -87,7 +88,7 @@ void vaporControl::doUpdate(wxTimerEvent&)
 
 //-----------------------------------//
 
-void vaporControl::doRender(wxTimerEvent&)
+void RenderControl::doRender(wxTimerEvent&)
 {
 	if( !needsRedraw )
 		return;
@@ -98,14 +99,14 @@ void vaporControl::doRender(wxTimerEvent&)
 
 //-----------------------------------//
 
-void vaporControl::flagRedraw()
+void RenderControl::flagRedraw()
 {
 	needsRedraw = true;
 }
 
 //-----------------------------------//
 
-void vaporControl::OnPaint(wxPaintEvent& WXUNUSED(event))
+void RenderControl::OnPaint(wxPaintEvent& WXUNUSED(event))
 {   
 	// From the PaintEvent docs: "the application must always create
 	// a wxPaintDC object, even if you do not use it."
@@ -121,7 +122,7 @@ void vaporControl::OnPaint(wxPaintEvent& WXUNUSED(event))
 
 //-----------------------------------//
 
-void vaporControl::OnSize(wxSizeEvent& event)
+void RenderControl::OnSize(wxSizeEvent& event)
 {
 	window->processResize( event.GetSize() );
 	flagRedraw();
@@ -129,35 +130,35 @@ void vaporControl::OnSize(wxSizeEvent& event)
 
 //-----------------------------------//
 
-void vaporControl::OnFocusSet(wxFocusEvent& event)
+void RenderControl::OnFocusSet(wxFocusEvent& event)
 {
 	window->handleWindowFocus(false);
 }
 
 //-----------------------------------//
 
-void vaporControl::OnFocusKill(wxFocusEvent& event)
+void RenderControl::OnFocusKill(wxFocusEvent& event)
 {
 	window->handleWindowFocus(true);
 }
 
 //-----------------------------------//
 
-void vaporControl::OnKeyDown(wxKeyEvent& event)
+void RenderControl::OnKeyDown(wxKeyEvent& event)
 {
 	inputManager->processKeyEvent( event, true );
 }
 
 //-----------------------------------//
 
-void vaporControl::OnKeyUp(wxKeyEvent& event)
+void RenderControl::OnKeyUp(wxKeyEvent& event)
 {
 	inputManager->processKeyEvent( event, false );
 }
 
 //-----------------------------------//
 
-void vaporControl::OnMouseEvent(wxMouseEvent& event)
+void RenderControl::OnMouseEvent(wxMouseEvent& event)
 {
 	if( event.ButtonDown(wxMOUSE_BTN_LEFT) && !HasFocus() )
 		SetFocus();
@@ -167,7 +168,7 @@ void vaporControl::OnMouseEvent(wxMouseEvent& event)
 
 //-----------------------------------//
 
-void vaporControl::OnMouseCaptureLost(wxMouseCaptureLostEvent&)
+void RenderControl::OnMouseCaptureLost(wxMouseCaptureLostEvent&)
 {
 	SetCursor( wxNullCursor );
 }

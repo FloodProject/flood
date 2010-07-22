@@ -9,45 +9,34 @@
 #pragma once
 
 #include <wx/glcanvas.h>
-#include "vaporInputManager.h"
 
 namespace vapor { namespace editor {
 
-class vaporWindow;
+class RenderWindow;
+class EditorInputManager;
 
 //-----------------------------------//
 
 /**
  * Let's link vapor with wxWidgets. There are some different approaches
- * that can be used to do this, some more flexible than others. We could
- * create a custom wxWidgets window impementation in vapor, for example,
- * but this class approaches the problem by getting just an OS-specific
- * window handle, and letting vaporEngine do all the dirty work of setting
- * up the rendering context and implementing the window class.
- * UPDATE: SDL didn't work with external window handles, I had to patch
- * it myself. I ended up creating what I said above, a specific window
- * implementation for vapor based on wxGLCanvas. Now we use SFML instead
- * of SDL, and it has support for external window handles, so it might
- * work well with the window handle approach.
+ * that can be used to do this, some more flexible/difficult than others.
+ * We create a custom wxWidgets window impementation for vapor3D. This is
+ * probably the most difficult approach but also the most flexible since.
+ * wxWidgets creates the OpenGL context (wxGLCanvas control) and we can
+ * control various attributes of the context.
  */
 
-class vaporControl : public wxGLCanvas 
+class RenderControl : public wxGLCanvas 
 {
 public:
 
-	vaporControl( 	wxWindow* parent, wxWindowID id = wxID_ANY,
+	RenderControl( 	wxWindow* parent, wxWindowID id = wxID_ANY,
 					const int* attribList = nullptr,
 					const wxPoint& pos	= wxDefaultPosition,
 					const wxSize& size = wxDefaultSize,
 					long style = 0 | wxFULL_REPAINT_ON_RESIZE | wxSTATIC_BORDER,
 					const wxString&	name = "vaporGLCanvas",
 					const wxPalette& palette = wxNullPalette ); 	
-
-	// Add your frame updating code here.
-	fd::delegate<void(double)> onUpdate;
-
-	// Add your frame rendering code here.
-	fd::delegate<void()> onRender;
 
 	// Flag this control to be redrawn.
 	void flagRedraw();
@@ -59,10 +48,16 @@ public:
 	void stopFrameLoop();
 
 	// Gets the associated window.
-	GETTER(RenderWindow, vaporWindow*, window)
+	GETTER(RenderWindow, RenderWindow*, window)
 
 	// Gets the associated input manager.
-	GETTER(InputManager, vaporInputManager*, inputManager)
+	GETTER(InputManager, EditorInputManager*, inputManager)
+
+	// Add your frame updating code here.
+	fd::delegate<void(double)> onUpdate;
+
+	// Add your frame rendering code here.
+	fd::delegate<void()> onRender;
 
 protected:
 
@@ -83,18 +78,20 @@ protected:
 	void OnMouseEvent(wxMouseEvent& event);
 	void OnMouseCaptureLost(wxMouseCaptureLostEvent& event);
 
-	// Frame timers.
+	// Timer responsible for update ticks.
 	wxTimer frameUpdateTimer;
+
+	// Timer responsible for rendering ticks.
 	wxTimer frameRenderTimer;
 
-	// Holds an instance to the vaporEngine.
+	// Holds an instance to the engine.
 	Engine* engine;
 
 	// Window associated with this control.
-	vaporWindow* window;
+	RenderWindow* window;
 
 	// Holds an instance of the input manager.
-	vaporInputManager* inputManager;
+	EditorInputManager* inputManager;
 
 	// Tracks if the control needs to be redrawn.
 	bool needsRedraw;

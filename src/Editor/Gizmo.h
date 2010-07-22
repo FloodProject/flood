@@ -9,6 +9,8 @@
 #pragma once
 
 #include "vapor/scene/Geometry.h"
+#include "vapor/scene/Camera.h"
+
 #include "vapor/render/Renderable.h"
 #include "vapor/render/Material.h"
 
@@ -45,13 +47,10 @@ class Gizmo : public Geometry
 {
 public:
 
-	Gizmo( const NodePtr& );
+	Gizmo( const NodePtr& node, const CameraWeakPtr& camera );
 
-	// Converts a color to a specific gizmo axis.
-	static GizmoAxis::Enum getAxis(Color&);
-
-	// Converts an axis enum to a unit vector.
-	static Vector3 getUnitVector( GizmoAxis::Enum );
+	// Selects an axis of the gizmo.
+	void selectAxis( GizmoAxis::Enum );
 
 	// Returns if any axis is currently selected in the gizmo.
 	bool isAnyAxisSelected() const;
@@ -59,8 +58,11 @@ public:
 	// Deselects all axis of the gizmo.
 	void deselectAxis();
 
-	// Selects an axis of the gizmo.
-	void selectAxis( GizmoAxis::Enum );
+	// Converts a color to a specific gizmo axis.
+	static GizmoAxis::Enum getAxis(Color&);
+
+	// Converts an axis enum to a unit vector.
+	static Vector3 getUnitVector( GizmoAxis::Enum );
 
 	// Gets the selected axis in the gizmo.
 	GETTER(AxisSelected, GizmoAxis::Enum, selectedAxis)
@@ -70,6 +72,9 @@ public:
 
 	// Returns the name of this component.
 	GETTER(Type, const std::string&, type)
+
+	// Updates this component.
+	virtual void update( double delta );
 
 protected:
 
@@ -88,17 +93,15 @@ protected:
 		const Color& c1, const Color& c2 );
 
 	NodePtr node;
+	CameraWeakPtr weakCamera;
 
 	VertexBufferPtr lines;
 	VertexBufferPtr cones;
 
 	GizmoAxis::Enum selectedAxis;
-	Vector3 midPoint;
 
 	static const std::string& type;
 };
-
-//-----------------------------------//
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Gizmo );
 

@@ -9,7 +9,7 @@
 #pragma once
 
 #include <wx/glcanvas.h> 
-#include "vaporInputManager.h"
+#include "EditorInputManager.h"
 
 namespace vapor { namespace editor {
 
@@ -20,18 +20,18 @@ namespace vapor { namespace editor {
  * This will be used to integrate vapor rendering into wxWidgets-based
  * applications, thus making it possible to do custom tools, like world
  * editors, model viewers, etc. This class only implements the Window
- * interface on the engine side. There is another class, vaporControl,
+ * interface on the engine side. There is another class, RenderControl,
  * that handles the rest of the work.
  */
 
-class vaporWindow : public Window
+class RenderWindow : public Window
 {
-	friend class vaporControl;
+	friend class RenderControl;
 
 public:
 
-	vaporWindow(const WindowSettings&, wxGLCanvas* const);
-	virtual ~vaporWindow();
+	RenderWindow(const WindowSettings&, wxGLCanvas* const);
+	virtual ~RenderWindow();
 
 	// Swaps the buffers (updates the display).
 	virtual void update();
@@ -78,7 +78,7 @@ private:
 	wxGLContext* context;
 
 	// wxWidgets Input Manager.
-	vaporInputManager* im;
+	EditorInputManager* im;
 };
 
 //-----------------------------------//

@@ -7,14 +7,14 @@
 ************************************************************************/
 
 #include "PCH.h"
-#include "Mode.h"
+#include "Tool.h"
 #include "Editor.h"
 
 namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-Mode::Mode( EditorFrame* frame )
+Tool::Tool( EditorFrame* frame )
 	: editor( frame )
 {
 	assert( editor != nullptr );
@@ -25,7 +25,7 @@ Mode::Mode( EditorFrame* frame )
 
 //-----------------------------------//
 
-Mode::~Mode()
+Tool::~Tool()
 {
 
 }
