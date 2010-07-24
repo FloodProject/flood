@@ -10,21 +10,16 @@
 #include "Editor.h"
 #include "EditorIcons.h"
 #include "RenderControl.h"
-#include "Tool.h"
+#include "PluginManagerFrame.h"
 
-// Editor tools
-#include "GizmoTool.h"
-#include "TerrainTool.h"
+// Editor plugins
+#include "tools/Core/CoreTool.h"
+#include "tools/UndoRedo/UndoPlugin.h"
+#include "tools/Gizmos/GizmoPlugin.h"
+#include "tools/Terrain/TerrainPlugin.h"
+#include "tools/Sample/SamplePlugin.h"
 
 namespace vapor { namespace editor {
-
-//-----------------------------------//
-
-enum 
-{
-	ID_SceneTreeCtrl = 7843,
-	ID_ResourceTreeCtrl
-};
 
 // ----------------------------------------------------------------------
 // event tables and other macros for wxWidgets
@@ -47,7 +42,7 @@ bool EditorApp::OnInit()
 {
     // Call the base class initialization method, currently it only parses a
     // few common command-line options but it could be do more in the future.
-    if ( !wxApp::OnInit() )
+    if( !wxApp::OnInit() )
 	{
         return false;
 	}
@@ -69,14 +64,14 @@ bool EditorApp::OnInit()
 
 //-----------------------------------//
 
-// frame constructor
 EditorFrame::EditorFrame(const wxString& title)
-       : wxFrame(nullptr, wxID_ANY, title)
-	   , engine( nullptr )
-	   , currentMode( nullptr )
+	: wxFrame(nullptr, wxID_ANY, title)
+	, engine(nullptr)
+	, viewframe(nullptr)
+	, pluginManagerFrame(nullptr)
 {
     // Set the editor icon.
-    SetIcon( wxIcon( "editor" ) );
+    SetIcon( wxIcon("editor") );
 	
 	// Initialize the engine.
 	initEngine();
@@ -85,14 +80,13 @@ EditorFrame::EditorFrame(const wxString& title)
 	createToolbar();
 	createStatusbar();
 	createNotebook();
+	createPlugins();
 
 	createScene();
 	createEditorScene();
 
 	Viewport* viewport = viewframe->getViewport();
 	viewport->getRenderTarget()->makeCurrent();
-
-	createModes();
 
 	toolBar->Realize();
 	SetSizerAndFit( sizer );
@@ -106,19 +100,43 @@ EditorFrame::EditorFrame(const wxString& title)
 
 EditorFrame::~EditorFrame()
 {
-	foreach( const Tool* mode, modes )
-		delete mode;
-
-	foreach( Operation* const op, undoOperations )
+	foreach( UndoOperation* const op, undoOperations )
 		delete op;
 
-	foreach( Operation* const op, redoOperations )
+	foreach( UndoOperation* const op, redoOperations )
 		delete op;
+
+	delete pluginManager;
 
 	// Stop the frame events.
 	viewframe->Destroy();
 	editorScene.reset();
 	delete engine;
+}
+
+//-----------------------------------//
+
+void EditorFrame::createPlugins()
+{
+	pluginManager = new PluginManager(this);
+	
+	Plugin* plugin = nullptr;
+
+	plugin = new UndoPlugin(this);
+	pluginManager->registerPlugin( plugin );
+	pluginManager->enablePlugin( plugin );
+
+	plugin = new GizmoPlugin(this);
+	pluginManager->registerPlugin( plugin );
+	pluginManager->enablePlugin( plugin );
+
+	plugin = new TerrainPlugin(this);
+	pluginManager->registerPlugin( plugin );
+
+	plugin = new SamplePlugin(this);
+	pluginManager->registerPlugin( plugin );
+
+	pluginManagerFrame = new PluginManagerFrame( this, pluginManager);
 }
 
 //-----------------------------------//
@@ -137,23 +155,9 @@ void EditorFrame::initEngine()
 	RenderDevice* device = engine->getRenderDevice();
 	device->init();
 
-	//rb = device->createRenderBuffer( Settings() );
-	//rb->createRenderBuffer( RenderBufferType::Depth | RenderBufferType::Color );
-	//depthViewport = rb->addViewport( viewframe->getCamera() );
-	//depthViewport->setSize( rb->getSettings().getSize() );
-	//rb->unbind();
-
-	// Register all the mouse events.
-	Mouse* const mouse = engine->getInputManager()->getMouse();
-	mouse->onMouseMove += fd::bind( &EditorFrame::onMouseMove, this );
-	mouse->onMouseDrag += fd::bind( &EditorFrame::onMouseDrag, this );
-	mouse->onMouseButtonPress += fd::bind( &EditorFrame::onMousePress, this );
-	mouse->onMouseButtonRelease += fd::bind( &EditorFrame::onMouseRelease, this );
-	mouse->onMouseEnter	+= fd::bind( &EditorFrame::onMouseEnter, this );
-	mouse->onMouseExit += fd::bind( &EditorFrame::onMouseLeave, this );
-
 	// Mount the editor default media VFS directories.
-	engine->getFileSystem()->mountDefaultLocations();
+	FileSystem* fs = engine->getFileSystem();
+	fs->mountDefaultLocations();
 }
 
 //-----------------------------------//
@@ -231,26 +235,6 @@ NodePtr EditorFrame::createCamera()
 
 //-----------------------------------//
 
-void EditorFrame::createModes()
-{
-	modes.push_back( new GizmoTool(this) );
-	modes.push_back( new TerrainMode(this) );
-
-	// --------------------
-	// Tool-specific tools
-	// --------------------
-
-	foreach( Tool* const mode, modes )
-	{
-		mode->onToolInit( toolBar, modesMap );
-	}
-
-	// TODO: hack
-	onModeSwitch( modes.front(), 18237 );
-}
-
-//-----------------------------------//
-
 void EditorFrame::createNotebook()
 {
 	wxImageList* img = new wxImageList(16, 16, false, 5);
@@ -267,7 +251,7 @@ void EditorFrame::createNotebook()
 	
 	wxBoxSizer* panelSceneSizer = new wxBoxSizer( wxVERTICAL );
 	
-	sceneTreeCtrl = new SceneTreeCtrl( this, engine, panelScene, ID_SceneTreeCtrl );
+	sceneTreeCtrl = new SceneTreeCtrl( this, engine, panelScene, wxID_ANY );
 
 	sceneTreeCtrl->onItemSelected += fd::bind( &EditorFrame::OnNodeSelected, this );
 
@@ -285,8 +269,8 @@ void EditorFrame::createNotebook()
 	
 	wxBoxSizer* panelResourcesSizer = new wxBoxSizer( wxVERTICAL );
 	
-	resourceTreeCtrl = new ResourceTreeCtrl(engine, panelResources, ID_ResourceTreeCtrl,
-		wxDefaultPosition, wxSize(220, -1) );
+	resourceTreeCtrl = new ResourceTreeCtrl(panelResources, wxID_ANY,
+		wxDefaultPosition, wxSize(220, -1), this);
 
 	panelResourcesSizer->Add( resourceTreeCtrl, 1, wxALL|wxEXPAND, 0 );
 
@@ -297,9 +281,6 @@ void EditorFrame::createNotebook()
 	notebookCtrl->SetSelection( scenePage );
 
 	//-----------------------------------//
-
-	terrainPage = new TerrainPage( engine, notebookCtrl );
-	notebookCtrl->AddPage( terrainPage, "Terrains", true, 2 );
 
 	notebookCtrl->ChangeSelection( scenePage );
 }
@@ -374,10 +355,11 @@ void EditorFrame::createToolbar()
 
 	toolBar->AddSeparator();
 
-	toolBar->AddTool( Toolbar_ToogleSidebar, "Show/hide sidebar", 
-		wxMEMORY_BITMAP(application_side_tree_right), "Shows/hides the sidebar" ); 
+	toolBar->AddTool( Toolbar_ToogleSidebar, "Shows/hides the sidebar", 
+		wxMEMORY_BITMAP(application_side_tree_right), "Shows/hides the sidebar" );
 
-	codeEvaluator = new ConsoleFrame( engine, this, "Scripting Console" );
+	toolBar->AddTool( Toolbar_TooglePlugin, "Shows/hides the plugin manager", 
+		wxMEMORY_BITMAP(page_white_text), "Shows/hides the plugin manager" );
 }
 
 //-----------------------------------//

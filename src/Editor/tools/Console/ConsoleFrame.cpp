@@ -13,10 +13,8 @@
 namespace vapor { namespace editor {
 
 //-----------------------------------//
-
-////////////////////////////////////////////////////////////
-// Event table
-////////////////////////////////////////////////////////////
+// Event handlers
+//-----------------------------------//
 
 BEGIN_EVENT_TABLE(ConsoleFrame, wxFrame)
 	EVT_CLOSE( ConsoleFrame::OnClose )

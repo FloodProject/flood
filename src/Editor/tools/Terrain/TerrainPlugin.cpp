@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "PCH.h"
-#include "TerrainTool.h"
+#include "TerrainPlugin.h"
 #include "EditorIcons.h"
 #include "Editor.h"
 
@@ -15,46 +15,65 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-enum
-{
-	Terrain_Raise = 17226,
-	Terrain_Paint,
-};
-
-const int TERRAIN_TIMER_MS = 100;
-
-//-----------------------------------//
-
-BEGIN_EVENT_TABLE(TerrainMode, wxEvtHandler)
-	EVT_TIMER(wxID_ANY, TerrainMode::onTimer)
+BEGIN_EVENT_TABLE(TerrainPlugin, wxEvtHandler)
+	EVT_TIMER(wxID_ANY, TerrainPlugin::onTimer)
 END_EVENT_TABLE()
 
 //-----------------------------------//
 
-TerrainMode::TerrainMode( EditorFrame* frame )
-	: Tool( frame )
+TerrainPlugin::TerrainPlugin( EditorFrame* frame )
+	: Plugin( frame )
 	, timer( this )
 	, op( nullptr )
 { }
 
 //-----------------------------------//
 
-void TerrainMode::onToolInit(wxToolBar* toolBar, ToolsMap& map)
+PluginMetadata TerrainPlugin::getMetadata()
 {
-	toolBar->AddTool( Terrain_Raise, "Raise/Lower",
-		wxMEMORY_BITMAP(terrain_raise_lower), "Raises/Lowers the terrain",
-		wxITEM_RADIO );
+	PluginMetadata metadata;
+	
+	metadata.name = "Terrains";
+	metadata.description = "Provides terrain editing tools.";
+	metadata.author = "triton";
+	metadata.version = "1.0";
 
-	toolBar->AddTool( Terrain_Paint, "Paint", wxMEMORY_BITMAP(terrain_paint),
-		"Paints the terrain", wxITEM_RADIO );
-
-	map[Terrain_Raise] = this;
-	map[Terrain_Paint] = this;
+	return metadata;
 }
 
 //-----------------------------------//
 
-void TerrainMode::onTimer( wxTimerEvent& /*event*/ )
+void TerrainPlugin::onPluginEnable(wxToolBar* toolBar, PluginsMap& map)
+{
+	wxToolBarToolBase* base = nullptr;
+	
+	base = toolBar->AddTool( wxID_ANY, "Raise/Lower",
+		wxMEMORY_BITMAP(terrain_raise_lower), "Raises/Lowers the terrain",
+		wxITEM_RADIO );
+	tools.push_back(base);
+	map[base->GetId()] = this;
+
+	base = toolBar->AddTool( wxID_ANY, "Paint", wxMEMORY_BITMAP(terrain_paint),
+		"Paints the terrain", wxITEM_RADIO );
+	tools.push_back(base);
+	map[base->GetId()] = this;
+}
+
+//-----------------------------------//
+
+void TerrainPlugin::onPluginDisable(wxToolBar* toolBar, PluginsMap& modes)
+{
+	foreach( wxToolBarToolBase* base, tools )
+	{
+		int id = base->GetId();
+		toolBar->DeleteTool(id);
+		modes[id] = nullptr;
+	}
+}
+
+//-----------------------------------//
+
+void TerrainPlugin::onTimer( wxTimerEvent& /*event*/ )
 {
 	Mouse* mouse = engine->getInputManager()->getMouse();
 	const MouseInfo& info = mouse->getMouseInfo();
@@ -70,7 +89,7 @@ void TerrainMode::onTimer( wxTimerEvent& /*event*/ )
 
 //-----------------------------------//
 
-void TerrainMode::onMouseDrag( const MouseDragEvent& mde )
+void TerrainPlugin::onMouseDrag( const MouseDragEvent& mde )
 {
 	//if( !mde.info.leftButton )
 	//	return;
@@ -89,21 +108,21 @@ void TerrainMode::onMouseDrag( const MouseDragEvent& mde )
 
 //-----------------------------------//
 
-void TerrainMode::onMouseButtonPress( const MouseButtonEvent& mbe )
+void TerrainPlugin::onMouseButtonPress( const MouseButtonEvent& mbe )
 {
 	deformTerrain( mbe );
 }
 
 //-----------------------------------//
 
-void TerrainMode::onMouseButtonRelease( const MouseButtonEvent& )
+void TerrainPlugin::onMouseButtonRelease( const MouseButtonEvent& )
 {
 	registerEvent();
 }
 
 //-----------------------------------//
 
-void TerrainMode::onMouseLeave()
+void TerrainPlugin::onMouseLeave()
 {
 	// We use this event to check if the user leaves the window while
 	// dragging in the middle of a terrain operation. If that isn't
@@ -115,7 +134,7 @@ void TerrainMode::onMouseLeave()
 
 //-----------------------------------//
 
-void TerrainMode::createOperation( const RayTriangleQueryResult& res )
+void TerrainPlugin::createOperation( const RayTriangleQueryResult& res )
 {
 	if( op )
 		return;
@@ -134,7 +153,7 @@ void TerrainMode::createOperation( const RayTriangleQueryResult& res )
 
 //-----------------------------------//
 
-void TerrainMode::registerEvent()
+void TerrainPlugin::registerEvent()
 {
 	if( !op )
 		return;
@@ -150,27 +169,29 @@ void TerrainMode::registerEvent()
 
 //-----------------------------------//
 
-void TerrainMode::deformTerrain( const MouseButtonEvent& mb )
+void TerrainPlugin::deformTerrain( const MouseButtonEvent& mb )
 {
+	static const int TERRAIN_TIMER_MS = 100;
+
 	RayTriangleQueryResult res;
 	
-	if( !pickTerrain( mb, res ) )
+	if( !pickTerrain(mb, res) )
 		return;
 
 	if( !op )
-		createOperation( res );
+		createOperation(res);
 	else
 		op->res = res;
 
 	op->applyTerrainTool();
-
 	editor->RefreshViewport();
+
 	timer.Start( TERRAIN_TIMER_MS );
 }
 
 //-----------------------------------//
 
-bool TerrainMode::pickTerrain( const MouseButtonEvent& mb,
+bool TerrainPlugin::pickTerrain( const MouseButtonEvent& mb,
 							   RayTriangleQueryResult& res )
 {
 	const ScenePtr& scene = engine->getSceneManager();

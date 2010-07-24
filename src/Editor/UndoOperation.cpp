@@ -7,28 +7,11 @@
 ************************************************************************/
 
 #include "PCH.h"
-#include "Tool.h"
-#include "Editor.h"
+#include "UndoOperation.h"
 
 namespace vapor { namespace editor {
 
 //-----------------------------------//
-
-Tool::Tool( EditorFrame* frame )
-	: editor( frame )
-{
-	assert( editor != nullptr );
-
-	engine = editor->engine;
-	viewframe = editor->viewframe;
-}
-
-//-----------------------------------//
-
-Tool::~Tool()
-{
-
-}
 
 //-----------------------------------//
 

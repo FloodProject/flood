@@ -9,7 +9,7 @@
 #include "PCH.h"
 #include "Editor.h"
 #include "EditorInputManager.h"
-#include "Tool.h"
+#include "PluginManagerFrame.h"
 
 namespace vapor { namespace editor {
 
@@ -33,10 +33,6 @@ void EditorFrame::onRender()
 	
 	camera->render( engine->getSceneManager() );
 	camera->render( editorScene, false );
-
-	//TexturePtr depth = engine->getRenderDevice()->getShadowTextures()[light];
-	//ImagePtr depthImage = depth->readImage();
-	//depthImage->save( "shadowDepth.png" );
 }
 
 //-----------------------------------//
@@ -49,16 +45,13 @@ void EditorFrame::onUpdate( double delta )
 
 //-----------------------------------//
 
-void EditorFrame::OnNodeSelected(wxTreeItemId old, wxTreeItemId id)
+void EditorFrame::OnNodeSelected(wxTreeItemId oldId, wxTreeItemId newId)
 {
-	const NodePtr& nodeOld = sceneTreeCtrl->getEntity( old );
-	const NodePtr& nodeNew = sceneTreeCtrl->getEntity( id );
+	const NodePtr& nodeOld = sceneTreeCtrl->getEntity( oldId );
+	const NodePtr& nodeNew = sceneTreeCtrl->getEntity( newId );
 	
-	if( !nodeNew )
-		return;
-
-	if( currentMode )
-		currentMode->onNodeSelected( nodeOld, nodeNew );
+	pluginManager->onNodeUnselect(nodeOld);
+	pluginManager->onNodeSelect(nodeNew);
 }
 
 //-----------------------------------//
@@ -69,7 +62,7 @@ void EditorFrame::handleUndoRedoOperation(Operations& firstOperations,
 	if( firstOperations.empty() )
 		return;
 
-	Operation* op = firstOperations.back();
+	UndoOperation* op = firstOperations.back();
 
 	if(!op)
 		return;
@@ -92,15 +85,17 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 {
 	const int id = event.GetId();
 
-	// If the id is registered to a mode, then switch mode...
-	if( modesMap.find(id) != modesMap.end() )
-	{
-		onModeSwitch( modesMap[id], id );
+	if (pluginManager->switchPlugin(id))
 		return;
-	}
 
 	switch(id) 
 	{
+	case Toolbar_TooglePlugin:
+	{
+		pluginManagerFrame->Show( !pluginManagerFrame->IsShown() );
+		pluginManagerFrame->SetFocus();
+		return;
+	}
 	case Toolbar_Undo:
 	{
 		handleUndoRedoOperation(undoOperations, redoOperations, true);
@@ -131,13 +126,7 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 		serializeToFile( scene, fn );
 		return;
 	}
-	//-----------------------------------//
-	case Toolbar_ToogleConsole:
-	{
-		codeEvaluator->Show( !codeEvaluator->IsShown() );
-		codeEvaluator->SetFocus();
-		return;
-	}
+
 	//-----------------------------------//
 	case Toolbar_ToogleGrid:
 	{
@@ -153,7 +142,7 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 	case Toolbar_TooglePlay:
 	{
 		// Enable all simulations.
-		//physics::PhysicsManager* pm = engine->getPhysicsManager();
+		//PhysicsManager* pm = engine->getPhysicsManager();
 		//if( pm ) pm->setSimulationEnabled( !pm->getSimulationEnabled() );
 		return;
 	}
@@ -183,27 +172,11 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 
 //-----------------------------------//
 
-void EditorFrame::onModeSwitch( Tool* const newMode, int id )
-{
-	if( !newMode )
-		return;
-
-	if( currentMode )
-		currentMode->onToolDisable();
-	
-	RefreshViewport();
-	
-	currentMode = newMode;
-	currentMode->onToolEnable( id );
-}
-
-//-----------------------------------//
-
-void EditorFrame::registerOperation( Operation* const op )
+void EditorFrame::registerOperation( UndoOperation* const op )
 {
 	undoOperations.push_back( op );
 
-	foreach( Operation* const op, redoOperations )
+	foreach( UndoOperation* const op, redoOperations )
 		delete op;
 
 	redoOperations.clear();
@@ -247,24 +220,6 @@ void EditorFrame::createScene()
 	rm->loadResource("Tex_Toon.glsl");
 	rm->loadResource("Sky.glsl");
 	rm->loadResource("Water.glsl");
-
-	//MaterialPtr matSun( new Material("SunBlend") );
-	//matSun->setProgram( "tex" );
-	//matSun->setTexture( 0, "moon.png" );
-	//matSun->setBlending( BlendingSource::SourceAlpha, BlendingDestination::OneMinusSourceAlpha );
-	//matSun->setBackfaceCulling( false );
-	//
-	//RenderablePtr sunQuad( new Quad( 100.0f, 100.0f ) );
-	//sunQuad->setMaterial( matSun );
-
-	//GeometryPtr geom( new Geometry() );
-	//geom->addRenderable( sunQuad, RenderGroup::Transparency );
-
-	//NodePtr sun( new Node("Sun") );
-	//sun->addTransform();
-	//sun->addComponent( geom );
-	//sun->addComponent( BillboardPtr( new Billboard( viewframe->getCamera() ) ) );
-	//scene->add( sun );
 
 	// Sky.
 	SkydomePtr skydome( new Skydome() );
@@ -329,66 +284,6 @@ void EditorFrame::createScene()
 	terrain->addCell( heightMap, 0, 0 );
 
 	scene->update( 0.1f );
-}
-
-//-----------------------------------//
-
-void EditorFrame::onMouseMove( const MouseMoveEvent& mve )
-{
-	if( !currentMode )
-		return;
-	
-	currentMode->onMouseMove( mve );
-}
-
-//-----------------------------------//
-
-void EditorFrame::onMouseDrag( const MouseDragEvent& mde )
-{
-	if( !currentMode )
-		return;
-	
-	currentMode->onMouseDrag( mde );
-}
-
-//-----------------------------------//
-
-void EditorFrame::onMousePress( const MouseButtonEvent& mbe )
-{
-	if( !currentMode )
-		return;
-	
-	currentMode->onMouseButtonPress( mbe );
-}
-
-//-----------------------------------//
-
-void EditorFrame::onMouseRelease( const MouseButtonEvent& mbe )
-{
-	if( !currentMode )
-		return;
-	
-	currentMode->onMouseButtonRelease( mbe );
-}
-
-//-----------------------------------//
-
-void EditorFrame::onMouseEnter()
-{
-	if( !currentMode )
-		return;
-	
-	currentMode->onMouseEnter();
-}
-
-//-----------------------------------//
-
-void EditorFrame::onMouseLeave()
-{
-	if( !currentMode )
-		return;
-	
-	currentMode->onMouseLeave();
 }
 
 //-----------------------------------//

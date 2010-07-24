@@ -8,15 +8,15 @@
 
 #pragma once
 
-#include "Tool.h"
+#include "Plugin.h"
 #include "Gizmo.h"
-#include "Operation.h"
+#include "UndoOperation.h"
 
 namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-namespace GizmoType
+namespace GizmoTool
 {
 	enum Enum
 	{
@@ -30,7 +30,7 @@ namespace GizmoType
 
 //-----------------------------------//
 
-class GizmoOperation : public Operation
+class GizmoOperation : public UndoOperation
 {
 public:
 
@@ -41,7 +41,7 @@ public:
 	void process( bool undo );
 
 	NodeWeakPtr weakNode;
-	GizmoType::Enum tool;
+	GizmoTool::Enum tool;
 	GizmoAxis::Enum axis;
 	GizmoPtr gizmo;
 
@@ -56,13 +56,18 @@ public:
 
 //-----------------------------------//
 
-class GizmoTool : public Tool
+class GizmoPlugin : public Plugin
 {
 public:
 
-	GizmoTool( EditorFrame* );
+	GizmoPlugin( EditorFrame* );
+
+	// Gets metadata about this plugin.
+	virtual PluginMetadata getMetadata();
 	
-	virtual void onToolInit( wxToolBar*, ToolsMap& );	
+	virtual void onPluginEnable( wxToolBar*, PluginsMap& );
+	virtual void onPluginDisable( wxToolBar*, PluginsMap& );
+
 	virtual void onToolEnable( int );
 	virtual void onToolDisable();
 
@@ -71,11 +76,12 @@ public:
 	virtual void onMouseButtonPress( const MouseButtonEvent& );
 	virtual void onMouseButtonRelease( const MouseButtonEvent& );
 
-	virtual void onNodeSelected( NodePtr, NodePtr );
+	virtual void onNodeSelect( const NodePtr& );
+	virtual void onNodeUnselect( const NodePtr& );
 
 protected:
 
-	bool isMode(GizmoType::Enum mode) { return tool == mode; }
+	bool isMode(GizmoTool::Enum mode) { return tool == mode; }
 
 	void createOperation();
 	void drawGizmo( NodePtr, NodePtr );
@@ -89,7 +95,7 @@ protected:
 	
 	void disableSelectedNodes();
 
-	GizmoType::Enum tool;
+	GizmoTool::Enum tool;
 	ScenePtr editorScene;
 
 	GizmoPtr gizmo;
@@ -98,6 +104,8 @@ protected:
 	typedef std::map<NodePtr, NodePtr> GizmoNodeMap;
 	GizmoNodeMap gizmos;
 	std::vector<NodePtr> selected;
+
+	std::vector<wxToolBarToolBase*> tools;
 
 	// Holds the current gizmo operation.
 	GizmoOperation* op;

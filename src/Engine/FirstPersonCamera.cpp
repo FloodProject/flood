@@ -107,6 +107,16 @@ void FirstPersonCamera::checkControls( double delta )
 		viewChanged = true;
 	}
 
+	// TODO: hack.
+	static const float epsilon = 0.05f;
+
+	if( (fabs(relativePosition.x) < epsilon)
+		&& (fabs(relativePosition.y) < epsilon)
+		&& (fabs(relativePosition.z) < epsilon) )
+	{
+		relativePosition.zero();
+	}
+
 	if( viewChanged || (relativePosition != Vector3::Zero) )
 	{
 		Vector3 target = position+relativePosition;

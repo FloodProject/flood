@@ -23,27 +23,27 @@ namespace vapor {
 
 WindowSettings::WindowSettings( const ushort width, const ushort height, 
 	const std::string& title, const bool fullscreen )
-	: Settings( width, height ),
-	title(title),
-	fullScreen(fullscreen), 
-	bitsPerPixel(32),
-	stencilBits(8),
-	depthBits(24),
-	antialiasLevel(0),
-	customHandle(nullptr)
+	: Settings( width, height )
+	, title(title)
+	, fullScreen(fullscreen)
+	, bitsPerPixel(32)
+	, stencilBits(8)
+	, depthBits(24)
+	, antialiasLevel(0)
+	, customHandle(nullptr)
 { }
 
 //-----------------------------------//
 
 WindowSettings::WindowSettings( const WindowSettings& s )
-	: Settings(s),
-	title(s.title),
-	fullScreen(s.fullScreen), 
-	bitsPerPixel(s.bitsPerPixel),
-	stencilBits(s.stencilBits),
-	depthBits(s.depthBits),
-	antialiasLevel(s.antialiasLevel),
-	customHandle(s.customHandle)
+	: Settings(s)
+	, title(s.title)
+	, fullScreen(s.fullScreen)
+	, bitsPerPixel(s.bitsPerPixel)
+	, stencilBits(s.stencilBits)
+	, depthBits(s.depthBits)
+	, antialiasLevel(s.antialiasLevel)
+	, customHandle(s.customHandle)
 { }
 
 //-----------------------------------//

@@ -124,6 +124,13 @@ void Transform::setScale( const Vector3& scale )
 
 //-----------------------------------//
 
+Vector3 Transform::getWorldPosition() const
+{
+	return getPosition()*getAbsoluteTransform();
+}
+
+//-----------------------------------//
+
 Matrix4x3 Transform::lookAt( const Vector3& lookAtVector, const Vector3& upVector )
 {
 	const Vector3& eye = translation;
@@ -132,24 +139,24 @@ Matrix4x3 Transform::lookAt( const Vector3& lookAtVector, const Vector3& upVecto
 	Vector3	xaxis = upVector.cross(zaxis).normalize();
 	Vector3	yaxis = zaxis.cross(xaxis);
 
-	Matrix4x3 m;
-	m.m11 = xaxis.x;
-	m.m12 = yaxis.x;
-	m.m13 = zaxis.x;
+	Matrix4x3 mat;
+	mat.m11 = xaxis.x;
+	mat.m12 = yaxis.x;
+	mat.m13 = zaxis.x;
 
-	m.m21 = xaxis.y;
-	m.m22 = yaxis.y;
-	m.m23 = zaxis.y;
+	mat.m21 = xaxis.y;
+	mat.m22 = yaxis.y;
+	mat.m23 = zaxis.y;
 
-	m.m31 = xaxis.z;
-	m.m32 = yaxis.z;
-	m.m33 = zaxis.z;
+	mat.m31 = xaxis.z;
+	mat.m32 = yaxis.z;
+	mat.m33 = zaxis.z;
 
-	m.tx = -xaxis.dot(eye);
-	m.ty = -yaxis.dot(eye);
-	m.tz = -zaxis.dot(eye);
+	mat.tx = -xaxis.dot(eye);
+	mat.ty = -yaxis.dot(eye);
+	mat.tz = -zaxis.dot(eye);
 
-	return m;
+	return mat;
 }
 
 //-----------------------------------//
@@ -181,7 +188,7 @@ Matrix4x3 Transform::getLocalTransform() const
 	Matrix4x3 matScale = Matrix4x3::createScaleMatrix(_scale);
 	
 	// Combine all the transformations in a single matrix.
-	Matrix4x3 transform = matOrientation*matTranslation*matScale;
+	Matrix4x3 transform = matScale*matOrientation*matTranslation;
 
 	return transform;
 }
@@ -205,7 +212,9 @@ bool Transform::requiresBoundingVolumeUpdate() const
 void Transform::updateBoundingVolume()
 {
 	const NodePtr& node = getNode();
-	if( !node ) return;
+	
+	if( !node )
+		return;
 
 	boundingVolume.reset();
 

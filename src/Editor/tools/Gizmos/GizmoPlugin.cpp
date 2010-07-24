@@ -7,17 +7,16 @@
 ************************************************************************/
 
 #include "PCH.h"
-#include "GizmoTool.h"
+#include "GizmoPlugin.h"
 #include "Editor.h"
 #include "EditorIcons.h"
-#include "vapor/render/DebugGeometry.h"
 
 namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-GizmoTool::GizmoTool( EditorFrame* frame )
-	: Tool(frame)
+GizmoPlugin::GizmoPlugin( EditorFrame* frame )
+	: Plugin(frame)
 	, editorScene(frame->getEditorScene())
 	, op(nullptr)
 {
@@ -26,175 +25,129 @@ GizmoTool::GizmoTool( EditorFrame* frame )
 
 //-----------------------------------//
 
-void GizmoTool::onToolInit(wxToolBar* toolBar, ToolsMap& modes)
+PluginMetadata GizmoPlugin::getMetadata()
 {
-	toolBar->AddSeparator();
+	PluginMetadata metadata;
+	
+	metadata.name = "Gizmos";
+	metadata.description = "Provides translate, rotate and scale tools";
+	metadata.author = "triton";
+	metadata.version = "1.0";
 
-	toolBar->AddTool( GizmoType::Camera, "Camera", wxMEMORY_BITMAP(camera), 
+	return metadata;
+}
+
+//-----------------------------------//
+
+void GizmoPlugin::onPluginEnable(wxToolBar* toolBar, PluginsMap& modes)
+{
+	wxToolBarToolBase* base = nullptr;
+	
+	base = toolBar->AddSeparator();
+	tools.push_back(base);
+
+	base = toolBar->AddTool( GizmoTool::Camera, "Camera", wxMEMORY_BITMAP(camera), 
 		"Selects the Camera View tool", wxITEM_RADIO );
+	tools.push_back(base);
 
-	toolBar->AddTool( GizmoType::Select, "Select", wxMEMORY_BITMAP(cursor), 
+	base = toolBar->AddTool( GizmoTool::Select, "Select", wxMEMORY_BITMAP(cursor), 
 		"Selects the Entity Selection tool", wxITEM_RADIO );
+	tools.push_back(base);
 
-	toolBar->AddTool( GizmoType::Translate, "Move", wxMEMORY_BITMAP(move), 
+	base = toolBar->AddTool( GizmoTool::Translate, "Move", wxMEMORY_BITMAP(move), 
 		"Selects the Move tool", wxITEM_RADIO );
+	tools.push_back(base);
 
-	toolBar->AddTool( GizmoType::Rotate, "Rotate", wxMEMORY_BITMAP(rotate2), 
+	base = toolBar->AddTool( GizmoTool::Rotate, "Rotate", wxMEMORY_BITMAP(rotate2), 
 		"Selects the Rotate tool", wxITEM_RADIO );
+	tools.push_back(base);
 
-	toolBar->AddTool( GizmoType::Scale, "Scale", wxMEMORY_BITMAP(scale), 
+	base = toolBar->AddTool( GizmoTool::Scale, "Scale", wxMEMORY_BITMAP(scale), 
 		"Selects the Scale tool", wxITEM_RADIO );
+	tools.push_back(base);
+	
+	// Register the modes.
+	modes[GizmoTool::Camera] = this;
+	modes[GizmoTool::Select] = this;
+	modes[GizmoTool::Translate] = this;
+	modes[GizmoTool::Rotate] = this;
+	modes[GizmoTool::Scale] = this;
+}
+
+//-----------------------------------//
+
+void GizmoPlugin::onPluginDisable(wxToolBar* toolBar, PluginsMap& modes)
+{
+	foreach( wxToolBarToolBase* base, tools )
+	{
+		int id = base->GetId();
+		toolBar->DeleteTool(id);
+	}
+
+	disableSelectedNodes();
 
 	// Register the modes.
-	modes[GizmoType::Camera] = this;
-	modes[GizmoType::Select] = this;
-	modes[GizmoType::Translate] = this;
-	modes[GizmoType::Rotate] = this;
-	modes[GizmoType::Scale] = this;
+	modes[GizmoTool::Camera] = nullptr;
+	modes[GizmoTool::Select] = nullptr;
+	modes[GizmoTool::Translate] = nullptr;
+	modes[GizmoTool::Rotate] = nullptr;
+	modes[GizmoTool::Scale] = nullptr;
 }
 
 //-----------------------------------//
 
-void GizmoTool::onToolEnable( int id )
+void GizmoPlugin::onToolEnable( int id )
 {
-	tool = (GizmoType::Enum) id;
+	tool = (GizmoTool::Enum) id;
 }
 
 //-----------------------------------//
 
-void GizmoTool::onToolDisable()
+void GizmoPlugin::onToolDisable()
 {
 	disableSelectedNodes();
 }
 
 //-----------------------------------//
 
-void GizmoTool::createGizmo( const NodePtr& node )
+void GizmoPlugin::onNodeSelect( const NodePtr& node )
 {
-	assert( node != nullptr );
-	assert( gizmos.find(node) == gizmos.end() );
+	//if( isMode(GizmoTool::Camera) )
+	//	return;
+	//
+	//if( isMode(GizmoTool::Select) )
+	//{
+	//	if( nodeOld )
+	//		setBoundingBoxVisible( nodeOld, false );
 
-	// Create new Gizmo for the node.
-	const CameraPtr& camera = viewframe->getCamera();
-	gizmo.reset( new Gizmo(node, camera) );
+	//	setBoundingBoxVisible( nodeNew, true );
+	//	return;
+	//}
 
-	// Add the gizmo to the scene.
-	NodePtr nodeGizmo( new Node("Gizmo") );
-	nodeGizmo->addTransform();
-	nodeGizmo->addComponent(gizmo);
-	editorScene->add(nodeGizmo);
-	
-	// Associate the gizmo with the node.
-	gizmos[node] = nodeGizmo;
+	//if( isMode(GizmoTool::Translate) || isMode(GizmoTool::Scale) || isMode(GizmoTool::Rotate) )
+	//{
+	//	drawGizmo( nodeOld, nodeNew );
+	//}
+	setBoundingBoxVisible( node, true );
+	editor->RefreshViewport();
 }
 
 //-----------------------------------//
 
-void GizmoTool::removeGizmo( const NodePtr& node )
+void GizmoPlugin::onNodeUnselect( const NodePtr& node )
 {
-	assert( node != nullptr );
-
-	// Find the existing gizmo associated with the node.
-	GizmoNodeMap::iterator it = gizmos.find(node);
-	//assert( it != gizmos.end() );
-
-	if( it == gizmos.end() )
-		return;
-
-	// Find the node of the gizmo.
-	const NodePtr& nodeGizmo = gizmos[node];
-	
-	// Remove the gizmo.
-	editorScene->remove(nodeGizmo);
-	gizmos.erase(it);
-	gizmo.reset();
+	setBoundingBoxVisible( node, false );
+	editor->RefreshViewport();
 }
 
 //-----------------------------------//
 
-void GizmoTool::setBoundingBoxVisible( const NodePtr& node, bool state )
-{
-	assert( node != nullptr );
-
-	const TransformPtr& transform = node->getTransform();
-
-	if( !transform )
-		return;
-
-	transform->setDebugRenderableVisible( state );
-}
-
-//-----------------------------------//
-
-void GizmoTool::disableSelectedNodes()
-{
-	// Disable all selected nodes bounding boxes and gizmos.
-	foreach( const NodePtr& node, selected )
-	{
-		removeGizmo( node );
-		setBoundingBoxVisible( node, false );
-	}
-
-	selected.clear();
-	viewframe->flagRedraw();
-}
-
-//-----------------------------------//
-
-void GizmoTool::drawGizmo( NodePtr nodeOld, NodePtr nodeNew )
-{
-	if( !isMode(GizmoType::Translate) )
-		return;
-
-	if( nodeOld )
-	{
-		removeGizmo( nodeOld );
-		setBoundingBoxVisible( nodeOld, false );
-	}
-
-	bool newGizmoNotExists = gizmos.find(nodeNew) == gizmos.end();
-	
-	if( nodeNew && newGizmoNotExists )
-	{
-		createGizmo( nodeNew );
-		setBoundingBoxVisible( nodeNew, true );
-	}
-
-	viewframe->flagRedraw();
-}
-
-//-----------------------------------//
-
-void GizmoTool::onNodeSelected( NodePtr nodeOld, NodePtr nodeNew )
-{
-	assert( nodeNew != nullptr ); 
-
-	if( isMode(GizmoType::Camera) )
-		return;
-	
-	if( isMode(GizmoType::Select) )
-	{
-		if( nodeOld )
-			setBoundingBoxVisible( nodeOld, false );
-
-		setBoundingBoxVisible( nodeNew, true );
-		return;
-	}
-
-	if( isMode(GizmoType::Translate) || isMode(GizmoType::Scale) || isMode(GizmoType::Rotate) )
-	{
-		drawGizmo( nodeOld, nodeNew );
-	}
-}
-
-//-----------------------------------//
-
-void GizmoTool::onMouseMove( const MouseMoveEvent& moveEvent )
+void GizmoPlugin::onMouseMove( const MouseMoveEvent& moveEvent )
 {
 	if( !gizmo )
 		return;
 
-	if( !isMode(GizmoType::Translate) )
+	if( !isMode(GizmoTool::Translate) )
 		return;
 
 	// To check if the user picked a gizmo we use two hit tests.
@@ -231,7 +184,7 @@ void GizmoTool::onMouseMove( const MouseMoveEvent& moveEvent )
 
 //-----------------------------------//
 
-void GizmoTool::onMouseDrag( const MouseDragEvent& dragEvent )
+void GizmoPlugin::onMouseDrag( const MouseDragEvent& dragEvent )
 {
 	if( !gizmo || !gizmo->isAnyAxisSelected() )
 		return;
@@ -268,7 +221,7 @@ void GizmoTool::onMouseDrag( const MouseDragEvent& dragEvent )
 
 //-----------------------------------//
 
-void GizmoTool::onMouseButtonPress( const MouseButtonEvent& mbe )
+void GizmoPlugin::onMouseButtonPress( const MouseButtonEvent& mbe )
 {
 	if( gizmo && gizmo->isAnyAxisSelected() )
 		return;
@@ -289,14 +242,14 @@ void GizmoTool::onMouseButtonPress( const MouseButtonEvent& mbe )
 	RayBoxQueryResult res;
 
 	if( scene->doRayBoxQuery(pickRay, res) )
-		onNodeSelected( NodePtr(), res.node );
+		onNodeSelect( res.node );
 	//else
 		//disableSelectedNodes();
 }
 
 //-----------------------------------//
 
-void GizmoTool::onMouseButtonRelease( const MouseButtonEvent& mbe )
+void GizmoPlugin::onMouseButtonRelease( const MouseButtonEvent& mbe )
 {
 	if( !op )
 		return;
@@ -307,7 +260,103 @@ void GizmoTool::onMouseButtonRelease( const MouseButtonEvent& mbe )
 
 //-----------------------------------//
 
-bool GizmoTool::pickImageTest( const MouseMoveEvent& moveEvent, GizmoAxis::Enum& axis )
+void GizmoPlugin::createGizmo( const NodePtr& node )
+{
+	assert( node != nullptr );
+	assert( gizmos.find(node) == gizmos.end() );
+
+	// Create new Gizmo for the node.
+	const CameraPtr& camera = viewframe->getCamera();
+	gizmo.reset( new Gizmo(node, camera) );
+
+	// Add the gizmo to the scene.
+	NodePtr nodeGizmo( new Node("Gizmo") );
+	nodeGizmo->addTransform();
+	nodeGizmo->addComponent(gizmo);
+	editorScene->add(nodeGizmo);
+	
+	// Associate the gizmo with the node.
+	gizmos[node] = nodeGizmo;
+}
+
+//-----------------------------------//
+
+void GizmoPlugin::removeGizmo( const NodePtr& node )
+{
+	assert( node != nullptr );
+
+	// Find the existing gizmo associated with the node.
+	GizmoNodeMap::iterator it = gizmos.find(node);
+	//assert( it != gizmos.end() );
+
+	if( it == gizmos.end() )
+		return;
+
+	// Find the node of the gizmo.
+	const NodePtr& nodeGizmo = gizmos[node];
+	
+	// Remove the gizmo.
+	editorScene->remove(nodeGizmo);
+	gizmos.erase(it);
+	gizmo.reset();
+}
+
+//-----------------------------------//
+
+void GizmoPlugin::setBoundingBoxVisible( const NodePtr& node, bool state )
+{
+	assert( node != nullptr );
+
+	const TransformPtr& transform = node->getTransform();
+
+	if( !transform )
+		return;
+
+	transform->setDebugRenderableVisible( state );
+}
+
+//-----------------------------------//
+
+void GizmoPlugin::disableSelectedNodes()
+{
+	// Disable all selected nodes bounding boxes and gizmos.
+	foreach( const NodePtr& node, selected )
+	{
+		removeGizmo( node );
+		setBoundingBoxVisible( node, false );
+	}
+
+	selected.clear();
+	viewframe->flagRedraw();
+}
+
+//-----------------------------------//
+
+void GizmoPlugin::drawGizmo( NodePtr nodeOld, NodePtr nodeNew )
+{
+	if( !isMode(GizmoTool::Translate) )
+		return;
+
+	if( nodeOld )
+	{
+		removeGizmo( nodeOld );
+		setBoundingBoxVisible( nodeOld, false );
+	}
+
+	bool newGizmoNotExists = gizmos.find(nodeNew) == gizmos.end();
+	
+	if( nodeNew && newGizmoNotExists )
+	{
+		createGizmo( nodeNew );
+		setBoundingBoxVisible( nodeNew, true );
+	}
+
+	viewframe->flagRedraw();
+}
+
+//-----------------------------------//
+
+bool GizmoPlugin::pickImageTest( const MouseMoveEvent& moveEvent, GizmoAxis::Enum& axis )
 {
 	Viewport* viewport = viewframe->getViewport();
 	Vector2i size = viewport->getSize();
@@ -326,7 +375,7 @@ bool GizmoTool::pickImageTest( const MouseMoveEvent& moveEvent, GizmoAxis::Enum&
 
 //-----------------------------------//
 
-bool GizmoTool::pickBoundingTest( const MouseMoveEvent& me )
+bool GizmoPlugin::pickBoundingTest( const MouseMoveEvent& me )
 {
 	const CameraPtr& camera = viewframe->getCamera();
 
@@ -348,7 +397,7 @@ bool GizmoTool::pickBoundingTest( const MouseMoveEvent& me )
 
 //-----------------------------------//
 
-void GizmoTool::createOperation()
+void GizmoPlugin::createOperation()
 {
 	assert( op == nullptr );
 	
@@ -370,7 +419,7 @@ void GizmoTool::createOperation()
 //-----------------------------------//
 
 GizmoOperation::GizmoOperation()
-	: tool(GizmoType::Camera)
+	: tool(GizmoTool::Camera)
 	, scale(1.0f, 1.0f, 1.0f)
 { }
 
@@ -392,7 +441,7 @@ void GizmoOperation::redo()
 
 void GizmoOperation::process( bool undo )
 {
-	assert( tool == GizmoType::Translate );
+	assert( tool == GizmoTool::Translate );
 
 	NodePtr node( weakNode );
 

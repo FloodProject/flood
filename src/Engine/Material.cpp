@@ -15,6 +15,7 @@
 
 namespace vapor {
 
+// Default line width.
 float Material::DefaultLineWidth = 1.0f;
 
 //-----------------------------------//
@@ -46,7 +47,10 @@ void Material::init()
 void Material::setTexture( uint unit, const std::string& name )
 {
 	// TODO: refactor
-	TextureManager* tm = Engine::getInstance().getRenderDevice()->getTextureManager();
+	Engine* engine = Engine::getInstancePtr();
+	RenderDevice* renderDevice = engine->getRenderDevice();
+	TextureManager* tm = renderDevice->getTextureManager();
+	
 	TexturePtr tex = tm->getTexture( name );
 	textures[unit] = tex;
 }
@@ -56,7 +60,10 @@ void Material::setTexture( uint unit, const std::string& name )
 void Material::setTexture( uint unit, const ImagePtr& img )
 {
 	// TODO: refactor
-	TextureManager* tm = Engine::getInstance().getRenderDevice()->getTextureManager();
+	Engine* engine = Engine::getInstancePtr();
+	RenderDevice* renderDevice = engine->getRenderDevice();
+	TextureManager* tm = renderDevice->getTextureManager();
+
 	TexturePtr tex = tm->getTexture( img );
 	textures[unit] = tex;
 }
@@ -90,10 +97,11 @@ void Material::setBlending( BlendingSource::Enum _source,
 
 ProgramPtr Material::getProgram()
 {
-	RenderDevice* device = Engine::getInstance().getRenderDevice();
-	ProgramManager* pm = device->getProgramManager();
+	Engine* engine = Engine::getInstancePtr();
+	RenderDevice* renderDevice = engine->getRenderDevice();
+	ProgramManager* programManager = renderDevice->getProgramManager();
 
-	return pm->getProgram( program );
+	return programManager->getProgram( program );
 }
 
 //-----------------------------------//

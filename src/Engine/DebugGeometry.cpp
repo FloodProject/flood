@@ -22,16 +22,14 @@ namespace vapor {
 static const float EXTRA_SPACE = 1.01f;
 
 #define ADD_BOX_FACE( a, b, c, d )						\
-	v.push_back( aabb.getCorner( a ) * EXTRA_SPACE );	\
-	v.push_back( aabb.getCorner( b ) * EXTRA_SPACE );	\
-	v.push_back( aabb.getCorner( c ) * EXTRA_SPACE );	\
-	v.push_back( aabb.getCorner( d ) * EXTRA_SPACE );
+	pos.push_back( aabb.getCorner(a) * EXTRA_SPACE );	\
+	pos.push_back( aabb.getCorner(b) * EXTRA_SPACE );	\
+	pos.push_back( aabb.getCorner(c) * EXTRA_SPACE );	\
+	pos.push_back( aabb.getCorner(d) * EXTRA_SPACE );
 
 RenderablePtr buildBoundingRenderable( const AABB& aabb )
 {
-	VertexBufferPtr vb( new VertexBuffer() );
-
-	std::vector< Vector3 > v;
+	std::vector<Vector3> pos;
 	ADD_BOX_FACE( 0, 2, 3, 1 ) // Front
 	ADD_BOX_FACE( 0, 1, 5, 4 ) // Bottom
 	ADD_BOX_FACE( 4, 5, 7, 6 ) // Back
@@ -39,20 +37,23 @@ RenderablePtr buildBoundingRenderable( const AABB& aabb )
 	ADD_BOX_FACE( 0, 4, 6, 2 ) // Left
 	ADD_BOX_FACE( 1, 3, 7, 5 ) // Right
 
-	std::vector< Vector3 > c( 6/*faces*/*4/*vertices*/, Vector3( 1.0f, 1.0f, 0.0f ) );
-	vb->set( VertexAttribute::Position, v );
-	vb->set( VertexAttribute::Color, c );
+	const int numColors = 6*4; // Faces*Vertices
+	std::vector< Vector3 > colors( numColors, Vector3(1.0f, 1.0f, 0.0f) );
 
-	MaterialPtr mat( new Material( "BoundBox", "diffuse" ) );
+	VertexBufferPtr vb( new VertexBuffer() );
+	vb->set( VertexAttribute::Position, pos );
+	vb->set( VertexAttribute::Color, colors );
+
+	MaterialPtr mat( new Material("BoundingBox", "Diffuse") );
 	mat->setLineWidth( 1.0f );
 	mat->setLineSmoothing( true );
 	mat->setBackfaceCulling( false );
 	mat->setDepthTest( false );
 
-	RenderablePtr bbox( new Renderable(Primitive::Quads, vb, mat) );
-	bbox->setPolygonMode( PolygonMode::Wireframe );
+	RenderablePtr boundingBox( new Renderable(Primitive::Quads, vb, mat) );
+	boundingBox->setPolygonMode( PolygonMode::Wireframe );
 
-	return bbox;
+	return boundingBox;
 }
 
 //-----------------------------------//

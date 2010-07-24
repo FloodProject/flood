@@ -18,23 +18,23 @@ namespace vapor { namespace editor {
  * that the engine provides should be provided using this type.
  */
 
-class Operation : public ReferenceCounted
+class UndoOperation : public ReferenceCounted
 {
 public:
 
-	Operation()
+	UndoOperation()
 	{ }
 	
-	virtual ~Operation() 
+	virtual ~UndoOperation() 
 	{ }
 
 	virtual void redo() = 0;
 	virtual void undo() = 0;
 };
 
-typedef std::deque<Operation*> Operations;
+typedef std::deque<UndoOperation*> Operations;
 
-TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(Operation);
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(UndoOperation);
 
 //-----------------------------------//
 

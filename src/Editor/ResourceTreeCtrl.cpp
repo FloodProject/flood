@@ -29,18 +29,19 @@ END_EVENT_TABLE()
 
 //-----------------------------------//
 
-ResourceTreeCtrl::ResourceTreeCtrl(vapor::Engine* engine,
-					wxWindow* parent, wxWindowID id,
+ResourceTreeCtrl::ResourceTreeCtrl(wxWindow* parent, wxWindowID id,
 					const wxPoint& pos, const wxSize& size,
-					long style, const wxValidator& validator, 
-					const wxString&	name)
-	: wxTreeCtrl(parent, id, pos, size, style, validator, name)
-	, rm( engine->getResourceManager() )
-	, editor( (EditorFrame*) parent )
+					EditorFrame* editor)
+	: wxTreeCtrl(parent, id, pos, size, wxTR_DEFAULT_STYLE | wxTR_HIDE_ROOT,
+		wxDefaultValidator, "ResourceTreeCtrl")
+	, editor(editor)
 {
-	assert( editor != nullptr );
-	assert( rm != nullptr );
+	engine = editor->getEngine();
+	assert( engine != nullptr );
 
+	rm = engine->getResourceManager();
+	assert( rm != nullptr );
+	
 	rm->onResourceAdded += fd::bind( &ResourceTreeCtrl::onResourceAdded, this );
 	rm->onResourceRemoved += fd::bind( &ResourceTreeCtrl::onResourceRemoved, this );
 	

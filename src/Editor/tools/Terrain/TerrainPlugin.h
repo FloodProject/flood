@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "Tool.h"
-#include "Operation.h"
+#include "Plugin.h"
+#include "UndoOperation.h"
 
 namespace vapor { namespace editor {
 
@@ -28,7 +28,7 @@ namespace TerrainTool
 
 //-----------------------------------//
 
-class TerrainOperation : public Operation
+class TerrainOperation : public UndoOperation
 {
 public:
 
@@ -53,14 +53,17 @@ public:
 
 //-----------------------------------//
 
-class TerrainMode : public Tool, public wxEvtHandler
+class TerrainPlugin : public Plugin, public wxEvtHandler
 {
 public:
 
-	TerrainMode( EditorFrame* frame );
+	TerrainPlugin( EditorFrame* frame );
 
-	// Inits the tool.
-	virtual void onToolInit(wxToolBar* toolbar, ToolsMap& map);
+	// Gets metadata about this plugin.
+	virtual PluginMetadata getMetadata();
+
+	virtual void onPluginEnable( wxToolBar*, PluginsMap& );
+	virtual void onPluginDisable( wxToolBar*, PluginsMap& );
 	
 	// Handles all the mouse events.
 	virtual void onMouseDrag( const MouseDragEvent& mde );
@@ -84,6 +87,8 @@ public:
 	void registerEvent();
 
 protected:
+
+	std::vector<wxToolBarToolBase*> tools;
 
 	// Holds the current terrain operation.
 	TerrainOperation* op;

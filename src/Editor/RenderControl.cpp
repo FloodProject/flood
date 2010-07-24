@@ -39,14 +39,14 @@ const double MAX_RATE_RENDER = 1.0f / 60;
 
 //-----------------------------------//
 
-RenderControl::RenderControl(	wxWindow* parent, wxWindowID id,
+RenderControl::RenderControl( wxWindow* parent, wxWindowID id,
 	const int* attribList, const wxPoint& pos, const wxSize& size,
 	long style,	const wxString&	name, const wxPalette& )
 
-	: wxGLCanvas(parent, id, attribList, pos, size, style, name),
-	needsRedraw( false ), frameUpdateTimer(this, UPDATE_TIMER),
-	frameRenderTimer(this, RENDER_TIMER)
-
+	: wxGLCanvas(parent, id, attribList, pos, size, style, name)
+	, needsRedraw( false )
+	, frameUpdateTimer(this, UPDATE_TIMER)
+	, frameRenderTimer(this, RENDER_TIMER)
 {
 	info("vaporEditor", "Creating a new wxWidgets control");
 
@@ -59,6 +59,13 @@ RenderControl::RenderControl(	wxWindow* parent, wxWindowID id,
 
 	// Setup input in the engine.
 	inputManager = window->im;
+
+	//// Connect the timers.
+	//frameUpdateTimer.Bind(wxEVT_TIMER, &RenderControl::doUpdate,
+	//	this, frameUpdateTimer.GetId() );
+	//
+	//frameRenderTimer.Bind(wxEVT_TIMER, &RenderControl::doRender,
+	//	this, frameRenderTimer.GetId() );
 }
 
 //-----------------------------------//
@@ -76,7 +83,6 @@ void RenderControl::stopFrameLoop()
 	frameUpdateTimer.Stop();
 	frameRenderTimer.Stop();
 }
-
 
 //-----------------------------------//
 

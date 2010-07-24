@@ -8,16 +8,16 @@
 
 #pragma once
  
-#include "Operation.h"
+#include "UndoOperation.h"
 #include "Viewframe.h"
 #include "SceneTreeCtrl.h"
 #include "ResourceTreeCtrl.h"
-#include "TerrainPage.h"
-#include "ConsoleFrame.h"
+#include "PluginManager.h"
 
 namespace vapor { namespace editor {
 
-class Tool;
+class Plugin;
+class PluginManagerFrame;
 class EditorInputManager;
 
 //-----------------------------------//
@@ -36,7 +36,7 @@ public:
 // Define a new frame type: this is going to be our main frame
 class EditorFrame : public wxFrame
 {
-	friend class Tool;
+	friend class Plugin;
 
 public:
 
@@ -55,23 +55,10 @@ public:
 	void OnKeyUp(wxKeyEvent& event);
 	void OnMouseEvent(wxMouseEvent& event);
 
-	// Engine Input events.
-	void onMouseMove( const MouseMoveEvent& );
-	void onMouseDrag( const MouseDragEvent& );
-	void onMousePress( const MouseButtonEvent& );
-	void onMouseRelease( const MouseButtonEvent& );
-	void onMouseEnter();
-	void onMouseLeave();
-	void onKeyPress( const KeyEvent& );
-	void onKeyRelease( const KeyEvent& );
-
 	// Undo/Redo operations.
-	void registerOperation( Operation* const op );
+	void registerOperation( UndoOperation* const op );
 	void handleUndoRedoOperation(Operations&, Operations&, bool undo);
 	void updateUndoRedoUI();
-	
-	// Misc stuff.
-	void onModeSwitch( Tool* const mode, int id );
 	
 	void onUpdate( double delta );
 	void onRender();
@@ -92,7 +79,7 @@ protected:
 	void createMenus();
 	void createToolbar();
 	void createStatusbar();
-	void createModes();
+	void createPlugins();
 
 	// Creates the default scenes.
 	void createEditorScene();
@@ -103,17 +90,16 @@ protected:
 
 	// Main engine instance.
 	Engine* engine;
+
+	// Manages the editor scene entities.
 	ScenePtr editorScene;
 
 	// Input Management
 	EditorInputManager* im;
-	//InputProcessCallback cb;
-	//void onInputEvent( Event& );
 
-	// Editor modes.
-	Tool* currentMode;
-	std::vector<Tool*> modes;
-	std::map<int, Tool*> modesMap;
+	// Manages the tools.
+	PluginManager* pluginManager;
+	PluginManagerFrame* pluginManagerFrame;
 
 	// Undo/redo operations.
 	Operations undoOperations;
@@ -126,8 +112,6 @@ protected:
 	wxNotebook* notebookCtrl;
 	SceneTreeCtrl* sceneTreeCtrl;
 	ResourceTreeCtrl* resourceTreeCtrl;
-	TerrainPage* terrainPage;
-	ConsoleFrame* codeEvaluator;
 
 	LightPtr light;
 

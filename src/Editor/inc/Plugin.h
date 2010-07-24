@@ -14,9 +14,27 @@ namespace vapor { namespace editor {
 
 class Viewframe;
 class EditorFrame;
+class PluginManager;
 
-class Tool;
-typedef std::map<int, Tool*> ToolsMap;
+class Plugin;
+typedef std::map<int, Plugin*> PluginsMap;
+
+//-----------------------------------//
+
+struct PluginMetadata
+{
+	// Name of this plugin.
+	std::string name;
+
+	// Description of this plugin.
+	std::string description;
+
+	// Author of this plugin.
+	std::string author;
+
+	// Version of this plugin.
+	std::string version;
+};
 
 //-----------------------------------//
 
@@ -29,18 +47,26 @@ typedef std::map<int, Tool*> ToolsMap;
  * the editor to execute actions in the different events/callbacks.
  */
 
-class Tool
+class Plugin
 {
+	friend class PluginManager;
+
 public:
 
-	Tool( EditorFrame* frame );
-	virtual ~Tool();
+	Plugin( EditorFrame* frame );
+	virtual ~Plugin();
 
-	// Tool initialization callback.
-	virtual void onToolInit( wxToolBar*, ToolsMap& ) {}
+	// Gets if plugin is enabled.
+	virtual bool isPluginEnabled() const;
 
-	// Tool deinitialization callback.
-	virtual void onToolDeinit( wxToolBar*, ToolsMap& ) {}
+	// Gets metadata about this plugin.
+	virtual PluginMetadata getMetadata() = 0;
+
+	// Plugin enable callback.
+	virtual void onPluginEnable( wxToolBar*, PluginsMap& ) = 0;
+
+	// Plugin disable callback.
+	virtual void onPluginDisable( wxToolBar*, PluginsMap& ) = 0;
 
 	// Tool enable callback.
 	virtual void onToolEnable( int tool = -1 ) {}
@@ -49,7 +75,10 @@ public:
 	virtual void onToolDisable() {}
 
 	// Node selection callback.
-	virtual void onNodeSelected( NodePtr, NodePtr ) {}
+	virtual void onNodeSelect( const NodePtr& ) {}
+	
+	// Node unselection callback.
+	virtual void onNodeUnselect( const NodePtr& ) {}
 
 	// Mouse move callback.
 	virtual void onMouseMove( const MouseMoveEvent& ) {}
@@ -82,6 +111,9 @@ protected:
 
 	// Access to the main viewframe.
 	Viewframe* viewframe;
+
+	// Is plugin enabled?
+	bool pluginEnabled;
 };
 
 //-----------------------------------//

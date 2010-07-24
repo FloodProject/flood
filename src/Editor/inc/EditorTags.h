@@ -32,6 +32,7 @@ enum
 	Toolbar_ToogleGrid,
 	Toolbar_TooglePlay,
 	Toolbar_ToogleSidebar,
+	Toolbar_TooglePlugin,
 
 	Toolbar_Undo,
 	Toolbar_Redo

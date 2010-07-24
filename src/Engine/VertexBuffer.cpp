@@ -18,10 +18,10 @@ namespace vapor {
 //-----------------------------------//
 
 VertexBuffer::VertexBuffer()
-	: built( false ),
-	numVertices( 0 ), 
-	bufferUsage( BufferUsage::Static ),
-	bufferAccess( BufferAccess::Read )
+	: built(false)
+	, numVertices(0)
+	, bufferUsage( BufferUsage::Static )
+	, bufferAccess( BufferAccess::Read )
 { }
 
 //-----------------------------------//

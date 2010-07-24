@@ -26,13 +26,10 @@ class ResourceTreeCtrl : public wxTreeCtrl
 {
 public:
 
-	ResourceTreeCtrl(vapor::Engine* engine, 
-					wxWindow* parent, wxWindowID id = wxID_ANY,
-					const wxPoint& pos	= wxDefaultPosition,
+	ResourceTreeCtrl(wxWindow* parent, wxWindowID id = wxID_ANY,
+					const wxPoint& pos = wxDefaultPosition,
 					const wxSize& size = wxDefaultSize,
-					long style = wxTR_DEFAULT_STYLE | wxTR_HIDE_ROOT,
-					const wxValidator& validator = wxDefaultValidator, 
-					const wxString&	name = "ResourceTreeCtrl");
+					EditorFrame* editor = nullptr );
 
 	~ResourceTreeCtrl();
 
@@ -56,7 +53,6 @@ protected:
 	ResourceManager* rm;
 
 	wxImageList* imageList;
-
 	wxTreeItemId root;
 
 	std::map< ResourceGroup::Enum, wxTreeItemId > resourceGroupTreeIds;

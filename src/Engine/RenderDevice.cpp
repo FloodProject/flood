@@ -123,8 +123,8 @@ void RenderDevice::render( RenderBlock& queue, const Camera* _camera )
 	foreach( const RenderState& state, queue.renderables )
 	{
 		const RenderablePtr& rend = state.renderable;
-		
-		if( !rend ) 
+
+		if( !rend )
 			continue;
 
 		const MaterialPtr& material = rend->getMaterial();

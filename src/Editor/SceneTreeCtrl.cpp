@@ -225,19 +225,19 @@ NodePtr SceneTreeCtrl::getEntity( wxTreeItemId id )
 
 void SceneTreeCtrl::onItemChanged(wxTreeEvent& event)
 {
-	wxTreeItemId id_old = event.GetOldItem();
-	wxTreeItemId id_new = event.GetItem();
+	wxTreeItemId oldId = event.GetOldItem();
+	wxTreeItemId newId = event.GetItem();
 
-	const NodePtr& n_new = getEntity( id_new );
+	const NodePtr& newNode = getEntity( newId );
 	
-	if( n_new )
+	if( newNode )
 		buttonNodeDelete->Enable();
 	else
 		buttonNodeDelete->Disable();
 
 	if( !onItemSelected.empty() )
 	{
-		onItemSelected( id_old, id_new );
+		onItemSelected( oldId, newId );
 	}
 }
 
@@ -268,7 +268,7 @@ void SceneTreeCtrl::onItemMenu(wxTreeEvent& event)
 		}
 	}
 
-	menu.Append(ID_MenuSceneNodeDelete, "&Delete...");
+	menu.Append(ID_MenuSceneNodeDelete, "&Delete");
 
 	menu.AppendSeparator();
 
@@ -331,7 +331,9 @@ void SceneTreeCtrl::onNodeMenu( wxCommandEvent& event )
 	if( id == ID_MenuSceneNodeVisible )
 	{
 		const NodePtr& node = getEntity( menuItemId );
-		if( !node ) return;
+		
+		if( !node )
+			return;
 		
 		node->setVisible( !node->isVisible() );
 	}
@@ -339,7 +341,9 @@ void SceneTreeCtrl::onNodeMenu( wxCommandEvent& event )
 	if( id == ID_MenuSceneNodeWireframe )
 	{
 		const NodePtr& node = getEntity( menuItemId );
-		if( !node ) return;
+		
+		if( !node )
+			return;
 
 		PolygonMode::Enum mode = event.IsChecked() ?
 			PolygonMode::Wireframe : PolygonMode::Solid;
@@ -351,6 +355,9 @@ void SceneTreeCtrl::onNodeMenu( wxCommandEvent& event )
 				rend->setPolygonMode( mode );
 			}
 		}
+
+		Viewframe* viewframe = editor->getMainViewframe();
+		viewframe->flagRedraw();
 	}
 
 	if( id > ID_MenuSceneNodeComponentRangeStart
@@ -376,7 +383,7 @@ void SceneTreeCtrl::onComponentAdd(wxCommandEvent& event )
 		{
 			ResourceManager* rm = engine->getResourceManager();
 			
-			FileSystem* fs = engine->getFileSystem();
+			//FileSystem* fs = engine->getFileSystem();
 			//fs->
 
 			std::string filename( fd.GetPath() );

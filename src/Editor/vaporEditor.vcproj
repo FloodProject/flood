@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="-Zm140"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\jsoncpp\include&quot;;&quot;$(SolutionDir)dep\boost&quot;;&quot;$(SolutionDir)dep\fd_delegate\include&quot;;&quot;$(SolutionDir)\dep\OpenAL 1.1 SDK\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\vld\include&quot;;C:\wxWidgets\include;C:\wxWidgets\include\msvc;&quot;$(SolutionDir)dep\havok\Source&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)src\Editor\inc&quot;;&quot;$(SolutionDir)dep\jsoncpp\include&quot;;&quot;$(SolutionDir)dep\boost&quot;;&quot;$(SolutionDir)dep\fd_delegate\include&quot;;&quot;$(SolutionDir)dep\OpenAL 1.1 SDK\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\vld\include&quot;;C:\wxWidgets\include;C:\wxWidgets\include\msvc"
 				PreprocessorDefinitions="WIN32;_DEBUG;__WXDEBUG__;__WXMSW__;_UNICODE;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_SECURE_SCL=0;_HAS_ITERATOR_DEBUGGING=0"
 				MinimalRebuild="true"
 				ExceptionHandling="1"
@@ -73,7 +73,7 @@
 				AdditionalDependencies="vaporEngine.lib jsoncpp_vc9_d.lib libboost_thread-vc90-mt-1_43.lib libboost_date_time-vc90-mt-1_43.lib zlib.lib physfs.lib sfml-system-s-d.lib sfml-window-s-d.lib wxmsw29ud_core.lib wxbase29ud.lib wxpngd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib wininet.lib opengl32.lib glew32s.lib OpenAL32.lib vorbisfile_static.lib ogg_static.lib vorbis_static.lib lua5.1-release.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-$(ConfigurationName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)dep\boost\lib&quot;;&quot;$(SolutionDir)lib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)dep\vld\lib&quot;;&quot;$(SolutionDir)dep\jsoncpp\lib&quot;;&quot;$(SolutionDir)dep\physfs-2.0.0\lib\release&quot;;&quot;$(SolutionDir)dep\zlib\lib&quot;;&quot;$(SolutionDir)dep\glew\lib&quot;;&quot;$(SolutionDir)dep\libvorbis-1.2.0\lib&quot;;&quot;$(SolutionDir)dep\libogg-1.1.3\lib&quot;;&quot;$(SolutionDir)dep\OpenAL 1.1 SDK\libs\Win32&quot;;&quot;$(SolutionDir)dep\sfml\lib\vc2008&quot;;&quot;$(SolutionDir)dep\luabind\lib&quot;;&quot;$(SolutionDir)dep\lua\lib&quot;;C:\wxWidgets\lib\vc_lib;&quot;$(SolutionDir)dep\havok\Lib\win32_net_9-0\hybrid_multithreaded_dll&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)lib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)dep\boost\lib&quot;;&quot;$(SolutionDir)dep\vld\lib&quot;;&quot;$(SolutionDir)dep\jsoncpp\lib&quot;;&quot;$(SolutionDir)dep\physfs-2.0.0\lib\release&quot;;&quot;$(SolutionDir)dep\zlib\lib&quot;;&quot;$(SolutionDir)dep\glew\lib&quot;;&quot;$(SolutionDir)dep\libvorbis-1.2.0\lib&quot;;&quot;$(SolutionDir)dep\libogg-1.1.3\lib&quot;;&quot;$(SolutionDir)dep\OpenAL 1.1 SDK\libs\Win32&quot;;&quot;$(SolutionDir)dep\sfml\lib\vc2008&quot;;&quot;$(SolutionDir)dep\luabind\lib&quot;;&quot;$(SolutionDir)dep\lua\lib&quot;;C:\wxWidgets\lib\vc_lib"
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
@@ -288,7 +288,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\RenderControl.h"
+				RelativePath=".\inc\RenderControl.h"
 				>
 			</File>
 			<File
@@ -296,7 +296,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\RenderWindow.h"
+				RelativePath=".\inc\RenderWindow.h"
 				>
 			</File>
 		</Filter>
@@ -304,31 +304,11 @@
 			Name="Icons"
 			>
 			<File
-				RelativePath=".\EditorIcons.h"
+				RelativePath=".\inc\EditorIcons.h"
 				>
 			</File>
 			<File
 				RelativePath=".\ImageUtils.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Console"
-			>
-			<File
-				RelativePath=".\ConsoleFrame.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ConsoleFrame.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ConsoleTextCtrl.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ConsoleTextCtrl.h"
 				>
 			</File>
 		</Filter>
@@ -382,41 +362,49 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Tools"
+			Name="Plugins"
 			>
 			<File
-				RelativePath=".\Tool.cpp"
+				RelativePath=".\Plugin.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Tool.h"
+				RelativePath=".\inc\Plugin.h"
 				>
 			</File>
 			<File
-				RelativePath=".\ToolManager.cpp"
+				RelativePath=".\PluginManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\ToolManager.h"
+				RelativePath=".\inc\PluginManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PluginManagerFrame.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\PluginManagerFrame.h"
 				>
 			</File>
 			<Filter
 				Name="Gizmos"
 				>
 				<File
-					RelativePath=".\Gizmo.cpp"
+					RelativePath=".\tools\Gizmos\Gizmo.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\Gizmo.h"
+					RelativePath=".\tools\Gizmos\Gizmo.h"
 					>
 				</File>
 				<File
-					RelativePath=".\GizmoTool.cpp"
+					RelativePath=".\tools\Gizmos\GizmoPlugin.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\GizmoTool.h"
+					RelativePath=".\tools\Gizmos\GizmoPlugin.h"
 					>
 				</File>
 			</Filter>
@@ -424,34 +412,94 @@
 				Name="Terrain"
 				>
 				<File
-					RelativePath=".\TerrainPage.cpp"
+					RelativePath=".\tools\Terrain\TerrainPage.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\TerrainPage.h"
+					RelativePath=".\tools\Terrain\TerrainPage.h"
 					>
 				</File>
 				<File
-					RelativePath=".\TerrainTool.cpp"
+					RelativePath=".\tools\Terrain\TerrainPlugin.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\TerrainTool.h"
+					RelativePath=".\tools\Terrain\TerrainPlugin.h"
 					>
 				</File>
 			</Filter>
-		</Filter>
-		<Filter
-			Name="Operation"
-			>
-			<File
-				RelativePath=".\Operation.cpp"
+			<Filter
+				Name="Undo/Redo"
 				>
-			</File>
-			<File
-				RelativePath=".\Operation.h"
+				<File
+					RelativePath=".\UndoManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\inc\UndoManager.h"
+					>
+				</File>
+				<File
+					RelativePath=".\UndoOperation.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\inc\UndoOperation.h"
+					>
+				</File>
+				<File
+					RelativePath=".\tools\UndoRedo\UndoPlugin.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\tools\UndoRedo\UndoPlugin.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Console"
 				>
-			</File>
+				<File
+					RelativePath=".\tools\Console\ConsoleFrame.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\tools\Console\ConsoleFrame.h"
+					>
+				</File>
+				<File
+					RelativePath=".\tools\Console\ConsoleTextCtrl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\tools\Console\ConsoleTextCtrl.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Grid"
+				>
+				<File
+					RelativePath=".\tools\Grid\GridPlugin.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\tools\Grid\GridPlugin.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Sample"
+				>
+				<File
+					RelativePath=".\tools\Sample\SamplePlugin.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\tools\Sample\SamplePlugin.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Scene"
@@ -473,7 +521,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ResourceTreeCtrl.h"
+				RelativePath=".\inc\ResourceTreeCtrl.h"
 				>
 			</File>
 		</Filter>
@@ -514,7 +562,7 @@
 			>
 		</File>
 		<File
-			RelativePath=".\Editor.h"
+			RelativePath=".\inc\Editor.h"
 			>
 		</File>
 		<File
@@ -522,7 +570,7 @@
 			>
 		</File>
 		<File
-			RelativePath=".\EditorTags.h"
+			RelativePath=".\inc\EditorTags.h"
 			>
 		</File>
 		<File
