@@ -9,7 +9,9 @@
 #include "PCH.h"
 #include "Editor.h"
 #include "EditorInputManager.h"
+#include "PluginManager.h"
 #include "PluginManagerFrame.h"
+#include "Viewframe.h"
 
 namespace vapor { namespace editor {
 
@@ -56,37 +58,9 @@ void EditorFrame::OnNodeSelected(wxTreeItemId oldId, wxTreeItemId newId)
 
 //-----------------------------------//
 
-void EditorFrame::handleUndoRedoOperation(Operations& firstOperations,
-							 Operations& secondOperations, bool undo)
-{
-	if( firstOperations.empty() )
-		return;
-
-	UndoOperation* op = firstOperations.back();
-
-	if(!op)
-		return;
-
-	firstOperations.pop_back();
-	secondOperations.push_back(op);
-
-	if(undo)
-		op->undo();
-	else
-		op->redo();
-
-	updateUndoRedoUI();
-	RefreshViewport();
-}
-
-//-----------------------------------//
-
 void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 {
 	const int id = event.GetId();
-
-	if (pluginManager->switchPlugin(id))
-		return;
 
 	switch(id) 
 	{
@@ -96,37 +70,6 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 		pluginManagerFrame->SetFocus();
 		return;
 	}
-	case Toolbar_Undo:
-	{
-		handleUndoRedoOperation(undoOperations, redoOperations, true);
-		return;
-	}
-	//-----------------------------------//
-	case Toolbar_Redo:
-	{
-		handleUndoRedoOperation(redoOperations, undoOperations, false);
-		return;
-	}
-	//-----------------------------------//
-	case Toolbar_Save:
-	{
-		// Ask for file name to save as.
-		wxFileDialog fc( this, wxFileSelectorPromptStr, wxEmptyString,
-			wxEmptyString, "Scene files (*.scene)|*.scene", wxFC_SAVE );
-		
-		if( fc.ShowModal() != wxID_OK )
-			return;
-
-		// Serialize scene to JSON.
-		Json::Value scene;
-		engine->getSceneManager()->serialize( scene );
-
-		// Save it to a file.
-		std::string fn( fc.GetPath() );
-		serializeToFile( scene, fn );
-		return;
-	}
-
 	//-----------------------------------//
 	case Toolbar_ToogleGrid:
 	{
@@ -168,31 +111,6 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 		return;
 	}
 	} // end switch
-}
-
-//-----------------------------------//
-
-void EditorFrame::registerOperation( UndoOperation* const op )
-{
-	undoOperations.push_back( op );
-
-	foreach( UndoOperation* const op, redoOperations )
-		delete op;
-
-	redoOperations.clear();
-
-	updateUndoRedoUI();
-}
-
-//-----------------------------------//
-
-void EditorFrame::updateUndoRedoUI()
-{
-	bool undoEmpty = undoOperations.empty();
-	toolBar->EnableTool( Toolbar_Undo, !undoEmpty );
-		
-	bool redoEmpty = redoOperations.empty();
-	toolBar->EnableTool( Toolbar_Redo, !redoEmpty );
 }
 
 //-----------------------------------//

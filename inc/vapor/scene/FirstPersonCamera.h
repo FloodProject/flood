@@ -29,7 +29,7 @@ public:
 	FirstPersonCamera( RenderDevice* device,
 		Projection::Enum projection = Projection::Perspective );
 
-	// Updates this node.
+	// Updates this component.
 	virtual void update( double delta );
 
 	// Gets/sets the look sensivity of the camera.

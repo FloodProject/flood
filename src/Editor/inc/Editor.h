@@ -7,18 +7,20 @@
 ************************************************************************/
 
 #pragma once
- 
-#include "UndoOperation.h"
-#include "Viewframe.h"
+
 #include "SceneTreeCtrl.h"
 #include "ResourceTreeCtrl.h"
-#include "PluginManager.h"
 
 namespace vapor { namespace editor {
 
+//-----------------------------------//
+
 class Plugin;
+class PluginManager;
 class PluginManagerFrame;
 class EditorInputManager;
+class UndoManager;
+class Viewframe;
 
 //-----------------------------------//
 
@@ -36,37 +38,25 @@ public:
 // Define a new frame type: this is going to be our main frame
 class EditorFrame : public wxFrame
 {
-	friend class Plugin;
-
 public:
 
     EditorFrame(const wxString& title);
 	virtual ~EditorFrame();
-
-    // wxWidgets events.
-	void OnIdle(wxIdleEvent& event);
-    void OnQuit(wxCommandEvent& event);
-    void OnAbout(wxCommandEvent& event);
-	void OnToolbarButtonClick(wxCommandEvent& event);
-	void OnNodeSelected(wxTreeItemId old, wxTreeItemId id);
-
-	// wxWidgets Input events.
-	void OnKeyDown(wxKeyEvent& event);
-	void OnKeyUp(wxKeyEvent& event);
-	void OnMouseEvent(wxMouseEvent& event);
-
-	// Undo/Redo operations.
-	void registerOperation( UndoOperation* const op );
-	void handleUndoRedoOperation(Operations&, Operations&, bool undo);
-	void updateUndoRedoUI();
 	
-	void onUpdate( double delta );
-	void onRender();
+	// Refreshes the main viewport.
 	void RefreshViewport();
 
-	GETTER(MainViewframe, Viewframe* const, viewframe)
+	// Gets the engine instance.	
 	GETTER(Engine, Engine* const, engine)
+
+	// Gets the main viewframe instance.
+	GETTER(MainViewframe, Viewframe* const, viewframe)
+
+	// Gets the editor scene instance.
 	GETTER(EditorScene, ScenePtr, editorScene)
+
+	// Gets the Undo/Redo manager instance.
+	GETTER(UndoManager, UndoManager*, undoManager) 
 
 protected:
 
@@ -84,9 +74,24 @@ protected:
 	// Creates the default scenes.
 	void createEditorScene();
 	void createScene();
-
-	NodePtr createCamera();
 	void createMainViewframe();
+	NodePtr createCamera();
+
+	// Viewframe callbacks.
+	void onUpdate( double delta );
+	void onRender();
+
+    // wxWidgets events.
+	void OnIdle(wxIdleEvent& event);
+    void OnQuit(wxCommandEvent& event);
+    void OnAbout(wxCommandEvent& event);
+	void OnToolbarButtonClick(wxCommandEvent& event);
+	void OnNodeSelected(wxTreeItemId old, wxTreeItemId id);
+
+	// wxWidgets Input events.
+	void OnKeyDown(wxKeyEvent& event);
+	void OnKeyUp(wxKeyEvent& event);
+	void OnMouseEvent(wxMouseEvent& event);
 
 	// Main engine instance.
 	Engine* engine;
@@ -94,16 +99,15 @@ protected:
 	// Manages the editor scene entities.
 	ScenePtr editorScene;
 
-	// Input Management
+	// Input Management.
 	EditorInputManager* im;
 
-	// Manages the tools.
+	// Manages the plugins.
 	PluginManager* pluginManager;
 	PluginManagerFrame* pluginManagerFrame;
 
-	// Undo/redo operations.
-	Operations undoOperations;
-	Operations redoOperations;
+	// Manages the undo/redo operations.
+	UndoManager* undoManager;
 
 	// UI widgets.
 	wxBoxSizer* sizer;

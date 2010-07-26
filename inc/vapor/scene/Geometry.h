@@ -10,7 +10,7 @@
 
 #include "vapor/scene/Transform.h"
 #include "vapor/render/RenderQueue.h"
-#include "vapor/math/AABB.h"
+#include "vapor/math/BoundingBox.h"
 
 namespace vapor {
 

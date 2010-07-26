@@ -22,15 +22,15 @@ Gizmo
 	Change gizmo color when user picks axis (DONE)
 	Add drag event and change the Transform (DONE)
 	Fix cone backface culling (DONE)
-	Make the Gizmo node transform a proxy of the original
+	Scale the gizmo properly in relation to the camera distance (DONE)
+		Make the Gizmo node transform a proxy of the original
 	Get picking working properly with multiple gizmos
-	Scale the gizmo properly in relation to the camera distance
 	When the Camera moves, mouse should be tested
 
 Viewframe
 	Fix the control border
 	Wire the camera render mode buttons
-	Wire the camera speed behaviour
+	Wire the camera speed behaviour (DONE)
 	Redraw when a resource gets updated
 	
 Terrain editing
@@ -42,7 +42,7 @@ Terrain editing
 	Generic paging interface (WIP)
 	Streaming of terrain chunks and textures
 	Randomized Perlin noise terrain generation
-	Average terrain normals
+	Average terrain normals (WIP)
 
 View frustum culling
 	Plane math class
@@ -62,7 +62,7 @@ Console
 
 Camera options
 	Add a small frame below the viewport with camera options (WIP)
-	Integrate speed and the other buttons to do anything (WIP)
+	Integrate speed and the other buttons (WIP)
 			
 Implement camera panning
 Edit grid settings
@@ -148,7 +148,6 @@ Resource Management:
 	
 Scene:
 
-	Variadiac functions for some methods - i.e., group.add(ls, snd, cam, etc)
 	Fix Camera key logic (need to cache it and test it in update time)
 
 Input:
@@ -184,8 +183,8 @@ VFS:
 Engine Modularization/Simplification Work
 	
 	Compile as DLL (Reverted)
-	Remove namespaces (TODO)
-	Remove Singletons from the codebase (DONE)
+	Remove namespaces (DONE)
+	Remove Singletons from the codebase (WIP)
 	Implement ResourceLoaders as (static) plugins	
 	Rename Timer into Stopwatch
 	Refactor core code into its own static library (Reverted)

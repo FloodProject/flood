@@ -9,7 +9,9 @@
 #include "PCH.h"
 #include "GizmoPlugin.h"
 #include "Editor.h"
+#include "UndoManager.h"
 #include "EditorIcons.h"
+#include "Viewframe.h"
 
 namespace vapor { namespace editor {
 
@@ -39,73 +41,64 @@ PluginMetadata GizmoPlugin::getMetadata()
 
 //-----------------------------------//
 
-void GizmoPlugin::onPluginEnable(wxToolBar* toolBar, PluginsMap& modes)
+void GizmoPlugin::onPluginEnable(wxToolBar* toolBar)
 {
-	wxToolBarToolBase* base = nullptr;
-	
-	base = toolBar->AddSeparator();
-	tools.push_back(base);
+	toolBar->AddSeparator();
 
-	base = toolBar->AddTool( GizmoTool::Camera, "Camera", wxMEMORY_BITMAP(camera), 
-		"Selects the Camera View tool", wxITEM_RADIO );
-	tools.push_back(base);
+	wxBitmap iconCamera = wxMEMORY_BITMAP(camera);
+	buttonCamera = toolBar->AddTool( wxID_ANY, "Camera",
+		iconCamera, "Selects the Camera View tool", wxITEM_RADIO );
 
-	base = toolBar->AddTool( GizmoTool::Select, "Select", wxMEMORY_BITMAP(cursor), 
-		"Selects the Entity Selection tool", wxITEM_RADIO );
-	tools.push_back(base);
+	wxBitmap iconSelect = wxMEMORY_BITMAP(cursor);
+	buttonSelect = toolBar->AddTool( GizmoTool::Select, "Select",
+		iconSelect, "Selects the Entity Selection tool", wxITEM_RADIO );
 
-	base = toolBar->AddTool( GizmoTool::Translate, "Move", wxMEMORY_BITMAP(move), 
-		"Selects the Move tool", wxITEM_RADIO );
-	tools.push_back(base);
+	wxBitmap iconTranslate = wxMEMORY_BITMAP(move);
+	buttonTranslate = toolBar->AddTool( GizmoTool::Translate, "Move",
+		iconTranslate, "Selects the Move tool", wxITEM_RADIO );
 
-	base = toolBar->AddTool( GizmoTool::Rotate, "Rotate", wxMEMORY_BITMAP(rotate2), 
-		"Selects the Rotate tool", wxITEM_RADIO );
-	tools.push_back(base);
+	wxBitmap iconRotate = wxMEMORY_BITMAP(rotate2);
+	buttonRotate = toolBar->AddTool( GizmoTool::Rotate, "Rotate",
+		iconRotate, "Selects the Rotate tool", wxITEM_RADIO );
 
-	base = toolBar->AddTool( GizmoTool::Scale, "Scale", wxMEMORY_BITMAP(scale), 
-		"Selects the Scale tool", wxITEM_RADIO );
-	tools.push_back(base);
-	
-	// Register the modes.
-	modes[GizmoTool::Camera] = this;
-	modes[GizmoTool::Select] = this;
-	modes[GizmoTool::Translate] = this;
-	modes[GizmoTool::Rotate] = this;
-	modes[GizmoTool::Scale] = this;
+	wxBitmap iconScale = wxMEMORY_BITMAP(scale);
+	buttonScale = toolBar->AddTool( GizmoTool::Scale, "Scale",
+		iconScale, "Selects the Scale tool", wxITEM_RADIO );
+
+	toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
+		&GizmoPlugin::onGizmoButtonClick, this,
+		buttonCamera->GetId(), buttonScale->GetId() );
 }
 
 //-----------------------------------//
 
-void GizmoPlugin::onPluginDisable(wxToolBar* toolBar, PluginsMap& modes)
+void GizmoPlugin::onPluginDisable(wxToolBar* toolBar)
 {
-	foreach( wxToolBarToolBase* base, tools )
-	{
-		int id = base->GetId();
-		toolBar->DeleteTool(id);
-	}
+	int id;
+	
+	id = buttonCamera->GetId();
+	toolBar->DeleteTool(id);
+
+	id = buttonSelect->GetId();
+	toolBar->DeleteTool(id);
+
+	id = buttonTranslate->GetId();
+	toolBar->DeleteTool(id);
+
+	id = buttonRotate->GetId();
+	toolBar->DeleteTool(id);
+
+	id = buttonScale->GetId();
+	toolBar->DeleteTool(id);
 
 	disableSelectedNodes();
-
-	// Register the modes.
-	modes[GizmoTool::Camera] = nullptr;
-	modes[GizmoTool::Select] = nullptr;
-	modes[GizmoTool::Translate] = nullptr;
-	modes[GizmoTool::Rotate] = nullptr;
-	modes[GizmoTool::Scale] = nullptr;
 }
 
 //-----------------------------------//
 
-void GizmoPlugin::onToolEnable( int id )
+void GizmoPlugin::onGizmoButtonClick(wxCommandEvent& event)
 {
-	tool = (GizmoTool::Enum) id;
-}
-
-//-----------------------------------//
-
-void GizmoPlugin::onToolDisable()
-{
-	disableSelectedNodes();
+	//tool
 }
 
 //-----------------------------------//
@@ -226,8 +219,9 @@ void GizmoPlugin::onMouseButtonPress( const MouseButtonEvent& mbe )
 	if( gizmo && gizmo->isAnyAxisSelected() )
 		return;
 
+	Viewport* viewport = viewframe->getViewport();
+	const CameraPtr& camera = viewport->getCamera();
 	const ScenePtr& scene = engine->getSceneManager();
-	const CameraPtr& camera = viewframe->getCamera();
 
 	// Get a ray given the screen location clicked.
 	Vector3 outFar;
@@ -254,7 +248,9 @@ void GizmoPlugin::onMouseButtonRelease( const MouseButtonEvent& mbe )
 	if( !op )
 		return;
 
-	editor->registerOperation( op );
+	UndoManager* undoManager = editor->getUndoManager();
+	undoManager->registerOperation( op );
+
 	op = nullptr;
 }
 
@@ -265,8 +261,10 @@ void GizmoPlugin::createGizmo( const NodePtr& node )
 	assert( node != nullptr );
 	assert( gizmos.find(node) == gizmos.end() );
 
+	Viewport* viewport = viewframe->getViewport();
+	const CameraPtr& camera = viewport->getCamera();
+
 	// Create new Gizmo for the node.
-	const CameraPtr& camera = viewframe->getCamera();
 	gizmo.reset( new Gizmo(node, camera) );
 
 	// Add the gizmo to the scene.
@@ -377,7 +375,8 @@ bool GizmoPlugin::pickImageTest( const MouseMoveEvent& moveEvent, GizmoAxis::Enu
 
 bool GizmoPlugin::pickBoundingTest( const MouseMoveEvent& me )
 {
-	const CameraPtr& camera = viewframe->getCamera();
+	Viewport* viewport = viewframe->getViewport();
+	const CameraPtr& camera = viewport->getCamera();
 
 	// Get a ray given the screen location clicked.
 	Vector3 outFar;

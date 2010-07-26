@@ -15,7 +15,7 @@
 #include "vapor/math/Matrix4x3.h"
 #include "vapor/math/Vector3.h"
 #include "vapor/math/EulerAngles.h"
-#include "vapor/math/AABB.h"
+#include "vapor/math/BoundingBox.h"
 
 #include "vapor/physics/Physics.h"
 

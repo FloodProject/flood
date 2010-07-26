@@ -23,8 +23,6 @@ class EditorFrame;
 
 class PluginManager
 {
-	friend class PluginManagerFrame;
-
 public:
 
 	PluginManager( EditorFrame* frame );
@@ -45,13 +43,11 @@ public:
 	// Scans for plugins.
 	//void scanPlugins();
 
-	// Switches to a different plugin.
-	bool switchPlugin( int id );
-
 	// Gets all the registered plugins.
 	GETTER(Plugins, std::vector<Plugin*>, plugins)
 
-	//-----------------------------------//
+	// Plugin registered callback.
+	fd::delegate<void(/*PluginEvent*/)> onPluginEvent;
 
 	// Selection events.
 	void onNodeSelect( const NodePtr& );
@@ -70,7 +66,7 @@ public:
 	void onKeyRelease( const KeyEvent& );
 
 protected:
-
+	
 	// Registers for input callbacks.
 	void registerInputCallbacks();
 

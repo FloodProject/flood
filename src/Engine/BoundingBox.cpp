@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/math/AABB.h"
+#include "vapor/math/BoundingBox.h"
 
 namespace vapor {
 

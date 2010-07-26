@@ -71,7 +71,7 @@ public:
 	// Gets a ray given the screen coordinates of the mouse.
 	Ray getRay( float scrx, float scry, Vector3* outFar = nullptr ) const;
 
-	// Updates this node.
+	// Updates this component.
 	virtual void update( double delta );
 
 	// Gets/sets the projection type of the camera.

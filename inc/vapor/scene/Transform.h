@@ -9,7 +9,7 @@
 #pragma once
 
 #include "vapor/math/EulerAngles.h"
-#include "vapor/math/AABB.h"
+#include "vapor/math/BoundingBox.h"
 #include "vapor/scene/Component.h"
 
 namespace vapor {
@@ -64,8 +64,7 @@ public:
 	void setRotation( const EulerAngles& rot );
 
 	// Points to a given point in space.
-	Matrix4x3 lookAt( const Vector3& lookAtVector,
-		const Vector3& upVector );
+	Matrix4x3 lookAt( const Vector3& lookAtVector, const Vector3& upVector );
 
 	// Gets the absolute transformation matrix.
 	GETTER(AbsoluteTransform, const Matrix4x3, getLocalTransform())
@@ -75,6 +74,9 @@ public:
 
 	// Gets the local transformation matrix.
 	Matrix4x3 getLocalTransform() const;
+
+	// Gets the position of the transform in world space.
+	Vector3 getWorldPosition() const;
 
 	// Gets the bounding volume of the transform.
 	GETTER(BoundingVolume, const AABB&, boundingVolume)

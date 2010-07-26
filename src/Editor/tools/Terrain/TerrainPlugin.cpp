@@ -8,8 +8,10 @@
 
 #include "PCH.h"
 #include "TerrainPlugin.h"
-#include "EditorIcons.h"
 #include "Editor.h"
+#include "UndoManager.h"
+#include "EditorIcons.h"
+#include "Viewframe.h"
 
 namespace vapor { namespace editor {
 
@@ -43,7 +45,7 @@ PluginMetadata TerrainPlugin::getMetadata()
 
 //-----------------------------------//
 
-void TerrainPlugin::onPluginEnable(wxToolBar* toolBar, PluginsMap& map)
+void TerrainPlugin::onPluginEnable(wxToolBar* toolBar)
 {
 	wxToolBarToolBase* base = nullptr;
 	
@@ -51,23 +53,23 @@ void TerrainPlugin::onPluginEnable(wxToolBar* toolBar, PluginsMap& map)
 		wxMEMORY_BITMAP(terrain_raise_lower), "Raises/Lowers the terrain",
 		wxITEM_RADIO );
 	tools.push_back(base);
-	map[base->GetId()] = this;
+	//map[base->GetId()] = this;
 
 	base = toolBar->AddTool( wxID_ANY, "Paint", wxMEMORY_BITMAP(terrain_paint),
 		"Paints the terrain", wxITEM_RADIO );
 	tools.push_back(base);
-	map[base->GetId()] = this;
+	//map[base->GetId()] = this;
 }
 
 //-----------------------------------//
 
-void TerrainPlugin::onPluginDisable(wxToolBar* toolBar, PluginsMap& modes)
+void TerrainPlugin::onPluginDisable(wxToolBar* toolBar)
 {
 	foreach( wxToolBarToolBase* base, tools )
 	{
 		int id = base->GetId();
 		toolBar->DeleteTool(id);
-		modes[id] = nullptr;
+		//modes[id] = nullptr;
 	}
 }
 
@@ -162,7 +164,9 @@ void TerrainPlugin::registerEvent()
 
 	// Register the operation in the stack so it can be undone later.
 	op->ready();
-	editor->registerOperation( op );
+	
+	UndoManager* undoManager = editor->getUndoManager();
+	undoManager->registerOperation( op );
 
 	op = nullptr;
 }
@@ -196,8 +200,10 @@ bool TerrainPlugin::pickTerrain( const MouseButtonEvent& mb,
 {
 	const ScenePtr& scene = engine->getSceneManager();
 
+	Viewport* viewport = viewframe->getViewport();
+	const CameraPtr& camera = viewport->getCamera(); 
+	
 	// Get a ray given the screen location clicked.
-	const CameraPtr& camera = viewframe->getCamera(); 
 	const Ray& pickRay = camera->getRay( mb.x, mb.y );
 
 	RayBoxQueryResult query;

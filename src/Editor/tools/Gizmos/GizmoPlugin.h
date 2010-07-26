@@ -20,7 +20,7 @@ namespace GizmoTool
 {
 	enum Enum
 	{
-		Camera = 18237,
+		Camera,
 		Select,
 		Translate,
 		Rotate,
@@ -65,29 +65,34 @@ public:
 	// Gets metadata about this plugin.
 	virtual PluginMetadata getMetadata();
 	
-	virtual void onPluginEnable( wxToolBar*, PluginsMap& );
-	virtual void onPluginDisable( wxToolBar*, PluginsMap& );
+	// Plugin enable callback.
+	virtual void onPluginEnable( wxToolBar* );
 
-	virtual void onToolEnable( int );
-	virtual void onToolDisable();
+	// Plugin disable callback.
+	virtual void onPluginDisable( wxToolBar* );
 
+	// Mouse events.
 	virtual void onMouseMove( const MouseMoveEvent& );
 	virtual void onMouseDrag( const MouseDragEvent& );
 	virtual void onMouseButtonPress( const MouseButtonEvent& );
 	virtual void onMouseButtonRelease( const MouseButtonEvent& );
 
+	// Node events.
 	virtual void onNodeSelect( const NodePtr& );
 	virtual void onNodeUnselect( const NodePtr& );
 
 protected:
 
+	// Called when a toolbar button is clicked.
+	void onGizmoButtonClick(wxCommandEvent& event);
+
 	bool isMode(GizmoTool::Enum mode) { return tool == mode; }
 
-	void createOperation();
 	void drawGizmo( NodePtr, NodePtr );
-	
 	void createGizmo( const NodePtr& );
 	void removeGizmo( const NodePtr& );
+	void createOperation();
+
 	void setBoundingBoxVisible( const NodePtr& node, bool state );
 
 	bool pickBoundingTest( const MouseMoveEvent& );
@@ -95,20 +100,30 @@ protected:
 	
 	void disableSelectedNodes();
 
+	// Current Gizmo tool.
 	GizmoTool::Enum tool;
-	ScenePtr editorScene;
 
+	// Current Gizmo geometry.
 	GizmoPtr gizmo;
+
+	// Current Gizmo axis selection.
 	GizmoAxis::Enum axis;
+
+	// Current gizmo operation.
+	GizmoOperation* op;
+	
+	ScenePtr editorScene;
 
 	typedef std::map<NodePtr, NodePtr> GizmoNodeMap;
 	GizmoNodeMap gizmos;
 	std::vector<NodePtr> selected;
 
-	std::vector<wxToolBarToolBase*> tools;
-
-	// Holds the current gizmo operation.
-	GizmoOperation* op;
+	// Toolbar buttons.
+	wxToolBarToolBase* buttonCamera;
+	wxToolBarToolBase* buttonSelect;
+	wxToolBarToolBase* buttonTranslate;
+	wxToolBarToolBase* buttonRotate;
+	wxToolBarToolBase* buttonScale;
 };
 
 //-----------------------------------//

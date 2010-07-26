@@ -21,39 +21,35 @@ class Vector3T
 {
 public:
 
-	T x, y, z;
-
-	//-----------------------------------//
-
-	// Default empty constructor
+	// Default empty constructor.
 	Vector3T ()
 		: x(0.0f), y(0.0f), z(0.0f)
 	{ }
 
 	//-----------------------------------//
 	
-	// Copy constructor
+	// Copy constructor.
 	Vector3T (const Vector3T<T>& v)
 		: x(v.x), y(v.y), z(v.z)
 	{ }
 
 	//-----------------------------------//
 
-	// Constructs a vector from 1 value
+	// Constructs a vector from 1 value.
 	Vector3T (const T v)
 		: x(v), y(v), z(v)
 	{ }
 
 	//-----------------------------------//
 
-	// Constructs a vector from 3 values
+	// Constructs a vector from 3 values.
 	Vector3T (const T a, const T b, const T c)
 		: x(a), y(b), z(c)
 	{ }
 
 	//-----------------------------------//
 	
-	// Assignment
+	// Assignment.
 	Vector3T &operator = (const Vector3T<T>& v)
 	{
 		x = v.x; y = v.y; z = v.z;
@@ -62,7 +58,7 @@ public:
 
 	//-----------------------------------//
 
-	// Equality
+	// Equality.
 	bool operator == (const Vector3T<T>& v) const
 	{
 		return (x == v.x) && (y == v.y) && (z == v.z); 
@@ -70,7 +66,7 @@ public:
 
 	//-----------------------------------//
 
-	// Inequality
+	// Inequality.
     bool operator != (const Vector3T<T>& v) const
 	{
 		return (x != v.x) || (y != v.y) || (z != v.z);
@@ -78,7 +74,7 @@ public:
 
 	//-----------------------------------//
 
-	// Addition combined
+	// Addition combined.
 	Vector3T &operator += (const Vector3T<T>& v)
 	{
 		x += v.x; y += v.y; z += v.z;
@@ -87,7 +83,7 @@ public:
 
 	//-----------------------------------//
 
-	// Subtraction combined
+	// Subtraction combined.
 	Vector3T &operator -= (const Vector3T<T>& v) 
 	{
 		x -= v.x; y -= v.y;	z -= v.z;
@@ -96,7 +92,7 @@ public:
 
 	//-----------------------------------//
 
-	// Multiplication by a scalar combined
+	// Multiplication by a scalar combined.
 	Vector3T &operator *= (float s) {
 		x *= s;	y *= s;	z *= s;
 		return *this;
@@ -104,7 +100,7 @@ public:
 
 	//-----------------------------------//
 
-	// Division by a scalar combined
+	// Division by a scalar combined.
 	Vector3T &operator /= (float s) 
 	{
 		//assert(s != 0);
@@ -114,7 +110,7 @@ public:
 
 	//-----------------------------------//
 	
-	// Unary minus
+	// Unary minus.
 	Vector3T operator - () const
 	{
 		return Vector3T(-x, -y, -z);
@@ -122,7 +118,7 @@ public:
 
 	//-----------------------------------//
 
-	// Binary addition
+	// Binary addition.
 	Vector3T operator + (const Vector3T<T>& v) const
 	{
 		return Vector3T(x+v.x, y+v.y, z+v.z);
@@ -130,7 +126,7 @@ public:
 
 	//-----------------------------------//
 
-	// Binary subtraction
+	// Binary subtraction.
 	Vector3T operator - (const Vector3T<T>& v) const
 	{
 		return Vector3T(x-v.x, y-v.y, z-v.z);
@@ -138,7 +134,7 @@ public:
 
 	//-----------------------------------//
 	
-	// Multiplication by a scalar
+	// Multiplication by a scalar.
 	Vector3T operator * (float s) const
 	{
 		return Vector3T(x*s, y*s, z*s);
@@ -146,7 +142,7 @@ public:
 
 	//-----------------------------------//
 
-	// Division by a scalar	
+	// Division by a scalar.
 	Vector3T operator / (float s) const
 	{
 		//assert(s != 0);
@@ -156,7 +152,7 @@ public:
 
 	//-----------------------------------//
 
-	// Zeroes the vector
+	// Zeroes the vector.
 	void zero()
 	{
 		x = y = z = 0.0f;
@@ -164,7 +160,7 @@ public:
 
 	//-----------------------------------//
 
-	// Gets the length of the vector
+	// Gets the length of the vector.
 	T length() const
 	{
 		return sqrt(x*x + y*y + z*z);
@@ -172,7 +168,7 @@ public:
 
 	//-----------------------------------//
 
-	// Gets the length of the vector squared
+	// Gets the length of the vector squared.
 	T lengthSquared() const
 	{
 		return x*x + y*y + z*z;
@@ -243,6 +239,14 @@ public:
 
 	//-----------------------------------//
 
+	// Distance between two points.
+	T distance( const Vector3T& v ) const
+	{
+		return (v-*this).length();
+	}
+
+	//-----------------------------------//
+
 	bool operator < ( const Vector3T& rhs ) const
 	{
 		return (x < rhs.x) && (y < rhs.y) && (z < rhs.z);
@@ -261,7 +265,11 @@ public:
 	static VAPOR_API const Vector3T<float> Zero;
 	static VAPOR_API const Vector3T<float> UnitX;
     static VAPOR_API const Vector3T<float> UnitY;
-    static VAPOR_API const Vector3T<float> UnitZ;  
+    static VAPOR_API const Vector3T<float> UnitZ;
+
+public:
+
+	T x, y, z;
 };
 
 //-----------------------------------//

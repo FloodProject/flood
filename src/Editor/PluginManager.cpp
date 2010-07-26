@@ -53,7 +53,7 @@ void PluginManager::enablePlugin( Plugin* plugin )
 	plugin->pluginEnabled = true;
 
 	wxToolBar* toolBar = editorFrame->GetToolBar();
-	plugin->onPluginEnable(toolBar, toolsIdsMap);
+	plugin->onPluginEnable(toolBar);
 
 	toolBar->Realize();
 }
@@ -71,34 +71,9 @@ void PluginManager::disablePlugin( Plugin* plugin )
 	plugin->pluginEnabled = false;
 	
 	wxToolBar* toolBar = editorFrame->GetToolBar();
-	plugin->onPluginDisable(toolBar, toolsIdsMap);
+	plugin->onPluginDisable(toolBar);
 
 	toolBar->Realize();
-}
-
-//-----------------------------------//
-
-bool PluginManager::switchPlugin( int id )
-{
-	if( currentTool )
-	{
-		currentTool->onToolDisable();
-		currentTool = nullptr;
-	}
-
-	// Find plugin assigned to id.
-	PluginsMap::iterator it = toolsIdsMap.find(id);
-
-	if( it == toolsIdsMap.end() )
-		return false;
-	
-	Plugin* newTool = toolsIdsMap[id];
-	assert( newTool != nullptr );
-
-	currentTool = newTool;
-	currentTool->onToolEnable( id );
-
-	return true;
 }
 
 //-----------------------------------//

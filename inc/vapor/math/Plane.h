@@ -9,7 +9,7 @@
 #pragma once
 
 #include "vapor/math/Vector3.h"
-#include "vapor/math/AABB.h"
+#include "vapor/math/BoundingBox.h"
 
 namespace vapor {
 

@@ -25,7 +25,7 @@
 #include <vapor/math/Vector2.h>
 #include <vapor/math/Vector3.h>
 #include <vapor/math/Ray.h>
-#include <vapor/math/AABB.h>
+#include <vapor/math/BoundingBox.h>
 #include <vapor/math/BoundingSphere.h>
 #include <vapor/math/Noise.h>
 
@@ -74,6 +74,7 @@
 #include <vapor/render/ProgramManager.h>
 #include <vapor/render/FBO.h>
 #include <vapor/render/FrameStatistics.h>
+#include <vapor/render/DebugGeometry.h>
 
 //---------------------------------------------------------------------//
 // Input-related Includes

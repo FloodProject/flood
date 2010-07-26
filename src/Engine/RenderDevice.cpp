@@ -177,8 +177,6 @@ bool RenderDevice::setupRenderState( const RenderState& state, const Camera* cam
 	program->setUniform( "vp_ViewMatrix", cam->getViewMatrix() );
 	program->setUniform( "vp_ModelViewMatrix", state.modelMatrix * cam->getViewMatrix() );
 
-	glEnable( GL_DEPTH_TEST );
-
 	return true;
 }
 

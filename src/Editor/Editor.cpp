@@ -10,13 +10,17 @@
 #include "Editor.h"
 #include "EditorIcons.h"
 #include "RenderControl.h"
+#include "PluginManager.h"
 #include "PluginManagerFrame.h"
+#include "UndoManager.h"
+#include "Viewframe.h"
 
 // Editor plugins
-#include "tools/Core/CoreTool.h"
+#include "tools/Project/ProjectPlugin.h"
 #include "tools/UndoRedo/UndoPlugin.h"
 #include "tools/Gizmos/GizmoPlugin.h"
 #include "tools/Terrain/TerrainPlugin.h"
+#include "tools/Camera/CameraPlugin.h"
 #include "tools/Sample/SamplePlugin.h"
 
 namespace vapor { namespace editor {
@@ -69,12 +73,15 @@ EditorFrame::EditorFrame(const wxString& title)
 	, engine(nullptr)
 	, viewframe(nullptr)
 	, pluginManagerFrame(nullptr)
+	, undoManager(nullptr)
 {
     // Set the editor icon.
     SetIcon( wxIcon("editor") );
 	
 	// Initialize the engine.
 	initEngine();
+
+	undoManager = new UndoManager();
 
 	createMenus();
 	createToolbar();
@@ -86,7 +93,8 @@ EditorFrame::EditorFrame(const wxString& title)
 	createEditorScene();
 
 	Viewport* viewport = viewframe->getViewport();
-	viewport->getRenderTarget()->makeCurrent();
+	RenderTarget* renderTarget = viewport->getRenderTarget();
+	renderTarget->makeCurrent();
 
 	toolBar->Realize();
 	SetSizerAndFit( sizer );
@@ -100,13 +108,8 @@ EditorFrame::EditorFrame(const wxString& title)
 
 EditorFrame::~EditorFrame()
 {
-	foreach( UndoOperation* const op, undoOperations )
-		delete op;
-
-	foreach( UndoOperation* const op, redoOperations )
-		delete op;
-
 	delete pluginManager;
+	delete undoManager;
 
 	// Stop the frame events.
 	viewframe->Destroy();
@@ -122,6 +125,10 @@ void EditorFrame::createPlugins()
 	
 	Plugin* plugin = nullptr;
 
+	plugin = new ProjectPlugin(this);
+	pluginManager->registerPlugin( plugin );
+	pluginManager->enablePlugin( plugin );
+
 	plugin = new UndoPlugin(this);
 	pluginManager->registerPlugin( plugin );
 	pluginManager->enablePlugin( plugin );
@@ -132,6 +139,10 @@ void EditorFrame::createPlugins()
 
 	plugin = new TerrainPlugin(this);
 	pluginManager->registerPlugin( plugin );
+
+	plugin = new CameraPlugin(this);
+	pluginManager->registerPlugin( plugin );
+	pluginManager->enablePlugin( plugin );
 
 	plugin = new SamplePlugin(this);
 	pluginManager->registerPlugin( plugin );
@@ -193,7 +204,6 @@ void EditorFrame::createMainViewframe()
 
 	engine->setupInput();
 	im = control->getInputManager();
-	//cb += fd::bind( &EditorFrame::onInputEvent, this );
 
 	NodePtr camera( createCamera() );	
 	editorScene->add( camera );
@@ -320,23 +330,6 @@ void EditorFrame::createMenus()
 void EditorFrame::createToolbar()
 {
 	toolBar = CreateToolBar( wxTB_HORIZONTAL, wxID_ANY );
-
-	// --------------
-	// Project tools
-	// --------------
-
-	toolBar->AddTool( wxID_ANY, "New", wxMEMORY_BITMAP(page_empty) );
-	toolBar->AddTool( wxID_ANY, "Open", wxMEMORY_BITMAP(folder_explore) ); 
-	toolBar->AddTool( Toolbar_Save, "Save", wxMEMORY_BITMAP(disk) );
-	
-	toolBar->AddSeparator();
-
-	toolBar->AddTool( Toolbar_Undo, "Undo", wxMEMORY_BITMAP(arrow_undo) );
-	toolBar->AddTool( Toolbar_Redo, "Redo", wxMEMORY_BITMAP(arrow_redo) );
-
-	updateUndoRedoUI();
-
-	toolBar->AddSeparator();
 
 	toolBar->AddTool( Toolbar_ToogleConsole, "Console", 
 		wxMEMORY_BITMAP(application_xp_terminal), "Open/close the scripting console" ); 

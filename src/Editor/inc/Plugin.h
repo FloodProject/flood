@@ -16,9 +16,6 @@ class Viewframe;
 class EditorFrame;
 class PluginManager;
 
-class Plugin;
-typedef std::map<int, Plugin*> PluginsMap;
-
 //-----------------------------------//
 
 struct PluginMetadata
@@ -63,16 +60,10 @@ public:
 	virtual PluginMetadata getMetadata() = 0;
 
 	// Plugin enable callback.
-	virtual void onPluginEnable( wxToolBar*, PluginsMap& ) = 0;
+	virtual void onPluginEnable( wxToolBar* ) = 0;
 
 	// Plugin disable callback.
-	virtual void onPluginDisable( wxToolBar*, PluginsMap& ) = 0;
-
-	// Tool enable callback.
-	virtual void onToolEnable( int tool = -1 ) {}
-	
-	// Tool disable callback.
-	virtual void onToolDisable() {}
+	virtual void onPluginDisable( wxToolBar* ) = 0;
 
 	// Node selection callback.
 	virtual void onNodeSelect( const NodePtr& ) {}

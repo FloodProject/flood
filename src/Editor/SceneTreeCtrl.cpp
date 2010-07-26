@@ -10,6 +10,7 @@
 #include "SceneTreeCtrl.h"
 #include "EditorIcons.h"
 #include "Editor.h"
+#include "Viewframe.h"
 
 namespace vapor { namespace editor {
 
@@ -257,6 +258,7 @@ void SceneTreeCtrl::onItemMenu(wxTreeEvent& event)
 	menu.Check(ID_MenuSceneNodeVisible, node->isVisible() );
 
 	const std::vector< GeometryPtr >& geo = node->getGeometry();
+	
 	if( !geo.empty() )
 	{
 		const std::vector< RenderablePtr >& rend = geo.front()->getRenderables();
@@ -336,6 +338,7 @@ void SceneTreeCtrl::onNodeMenu( wxCommandEvent& event )
 			return;
 		
 		node->setVisible( !node->isVisible() );
+		editor->RefreshViewport();
 	}
 
 	if( id == ID_MenuSceneNodeWireframe )
@@ -537,7 +540,8 @@ void SceneTreeCtrl::onDragEnd( wxTreeEvent& event )
 
 	// If the drop was not done in a valid tree location, 
 	// then we've got nothing to do here, move along...
-	if( !drag_id.IsOk() ) return;
+	if( !drag_id.IsOk() )
+		return;
 
 	const NodePtr& src = getEntity( dragItemId );
 	const NodePtr& dest = getEntity( drag_id );

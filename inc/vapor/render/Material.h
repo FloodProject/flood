@@ -46,7 +46,7 @@ namespace BlendingDestination
 		SourceAlpha = GL_SRC_ALPHA,
 		InverseSourceAlpha = GL_ONE_MINUS_SRC_ALPHA,
 		DestinationAlpha = GL_DST_ALPHA,
-		InverseDestinationAlpha = GL_ONE_MINUS_DST_ALPHA,
+		InverseDestinationAlpha = GL_ONE_MINUS_DST_ALPHA
 	};
 }
 
@@ -137,25 +137,26 @@ protected:
 	// Program of the material.
 	std::string program;
 
-	// Textures
+	// Textures.
 	TextureMap textures;
 
-	// Backface culling
+	// Backface culling.
 	bool cullBackfaces;
 	
+	// Depth settings.
 	bool depthTest;
 	bool depthWrite;
 
-	// Line settings
+	// Line settings.
 	bool lineSmooth;
 	float lineWidth;
 
-	// Blending operations
+	// Blending settings.
 	BlendingSource::Enum source;
 	BlendingDestination::Enum destination;
 	bool _isBlendingEnabled;
 
-	// Default Line Width.
+	// Default line width.
 	static float DefaultLineWidth;
 };
 

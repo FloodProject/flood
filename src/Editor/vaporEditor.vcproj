@@ -308,7 +308,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ImageUtils.h"
+				RelativePath=".\inc\ImageUtils.h"
 				>
 			</File>
 		</Filter>
@@ -357,7 +357,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Viewframe.h"
+				RelativePath=".\inc\Viewframe.h"
 				>
 			</File>
 		</Filter>
@@ -385,7 +385,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\PluginManagerFrame.h"
+				RelativePath=".\inc\PluginManagerFrame.h"
 				>
 			</File>
 			<Filter
@@ -500,6 +500,38 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Project"
+				>
+				<File
+					RelativePath=".\tools\Project\ProjectPlugin.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\tools\Project\ProjectPlugin.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Camera"
+				>
+				<File
+					RelativePath=".\tools\Camera\CameraControls.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\tools\Camera\CameraControls.h"
+					>
+				</File>
+				<File
+					RelativePath=".\tools\Camera\CameraPlugin.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\tools\Camera\CameraPlugin.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Scene"
@@ -509,7 +541,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\SceneTreeCtrl.h"
+				RelativePath=".\inc\SceneTreeCtrl.h"
 				>
 			</File>
 		</Filter>

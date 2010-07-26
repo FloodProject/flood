@@ -53,7 +53,7 @@ public:
 
 //-----------------------------------//
 
-class TerrainPlugin : public Plugin, public wxEvtHandler
+class TerrainPlugin : public wxEvtHandler, public Plugin
 {
 public:
 
@@ -62,8 +62,8 @@ public:
 	// Gets metadata about this plugin.
 	virtual PluginMetadata getMetadata();
 
-	virtual void onPluginEnable( wxToolBar*, PluginsMap& );
-	virtual void onPluginDisable( wxToolBar*, PluginsMap& );
+	virtual void onPluginEnable( wxToolBar* );
+	virtual void onPluginDisable( wxToolBar* );
 	
 	// Handles all the mouse events.
 	virtual void onMouseDrag( const MouseDragEvent& mde );
