@@ -16,11 +16,8 @@ namespace vapor { namespace editor {
 //-----------------------------------//
 
 PluginManager::PluginManager(EditorFrame* frame)
-	: currentTool(nullptr)
-	, editorFrame(frame)
-{
-	registerInputCallbacks();
-}
+	: editor(frame)
+{ }
 
 //-----------------------------------//
 
@@ -51,11 +48,12 @@ void PluginManager::enablePlugin( Plugin* plugin )
 	info( "editor", "Enabling plugin: %s", metadata.name.c_str() );
 
 	plugin->pluginEnabled = true;
+	plugin->onPluginEnable();
 
-	wxToolBar* toolBar = editorFrame->GetToolBar();
-	plugin->onPluginEnable(toolBar);
+	processTools( plugin, true );
 
-	toolBar->Realize();
+	if( !onPluginEnableEvent.empty() )
+		onPluginEnableEvent(plugin);
 }
 
 //-----------------------------------//
@@ -68,115 +66,35 @@ void PluginManager::disablePlugin( Plugin* plugin )
 	PluginMetadata metadata = plugin->getMetadata();
 	info( "editor", "Disabling plugin: %s", metadata.name.c_str() );
 
+	processTools( plugin, false );
+
 	plugin->pluginEnabled = false;
+	plugin->doPluginDisable();
+
+	if( !onPluginDisableEvent.empty() )
+		onPluginDisableEvent(plugin);
+}
+
+//-----------------------------------//
+
+void PluginManager::processTools( Plugin* plugin, bool enable )
+{
+	foreach( wxToolBarToolBase* tool, plugin->tools )
+	{
+		if( tool->IsSeparator() )
+			continue;
+
+		int id = tool->GetId();
+
+		PluginToolsMap::iterator it = tools.find(id);
 	
-	wxToolBar* toolBar = editorFrame->GetToolBar();
-	plugin->onPluginDisable(toolBar);
-
-	toolBar->Realize();
-}
-
-//-----------------------------------//
-
-void PluginManager::onNodeSelect( const NodePtr& node )
-{
-	if( !currentTool )
-		return;
-
-	if(!node)
-		return;
-
-	currentTool->onNodeSelect(node);
-}
-
-//-----------------------------------//
-
-void PluginManager::onNodeUnselect( const NodePtr& node )
-{
-	if( !currentTool )
-		return;
-
-	if(!node)
-		return;
-
-	currentTool->onNodeUnselect(node);
-}
-
-//-----------------------------------//
-
-void PluginManager::onMouseMove( const MouseMoveEvent& mve )
-{
-	if( !currentTool )
-		return;
-	
-	currentTool->onMouseMove( mve );
-}
-
-//-----------------------------------//
-
-void PluginManager::onMouseDrag( const MouseDragEvent& mde )
-{
-	if( !currentTool )
-		return;
-	
-	currentTool->onMouseDrag( mde );
-}
-
-//-----------------------------------//
-
-void PluginManager::onMousePress( const MouseButtonEvent& mbe )
-{
-	if( !currentTool )
-		return;
-	
-	currentTool->onMouseButtonPress( mbe );
-}
-
-//-----------------------------------//
-
-void PluginManager::onMouseRelease( const MouseButtonEvent& mbe )
-{
-	if( !currentTool )
-		return;
-	
-	currentTool->onMouseButtonRelease( mbe );
-}
-
-//-----------------------------------//
-
-void PluginManager::onMouseEnter()
-{
-	if( !currentTool )
-		return;
-	
-	currentTool->onMouseEnter();
-}
-
-//-----------------------------------//
-
-void PluginManager::onMouseLeave()
-{
-	if( !currentTool )
-		return;
-	
-	currentTool->onMouseLeave();
-}
-
-//-----------------------------------//
-
-void PluginManager::registerInputCallbacks()
-{
-	Engine* engine = editorFrame->getEngine();
-
-	// Register all the mouse events.
-	Mouse* const mouse = engine->getInputManager()->getMouse();
-
-	mouse->onMouseMove += fd::bind( &PluginManager::onMouseMove, this );
-	mouse->onMouseDrag += fd::bind( &PluginManager::onMouseDrag, this );
-	mouse->onMouseButtonPress += fd::bind( &PluginManager::onMousePress, this );
-	mouse->onMouseButtonRelease += fd::bind( &PluginManager::onMouseRelease, this );
-	mouse->onMouseEnter	+= fd::bind( &PluginManager::onMouseEnter, this );
-	mouse->onMouseExit += fd::bind( &PluginManager::onMouseLeave, this );
+		if( enable )
+			// assert( it == tools.end() );
+			tools[id] = plugin;
+		else
+			// assert( it != tools.end() );
+			tools.erase(it);
+	}
 }
 
 //-----------------------------------//

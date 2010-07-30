@@ -136,7 +136,7 @@ void Camera::setupView()
 	const EulerAngles& rotation = transform->getRotation();
 	
 	// Update the lookAt vector.
-	Vector3 forward = Vector3::UnitZ * rotation.getOrientationMatrix();
+	Vector3 forward = Vector3::UnitZ * Matrix4x3::createOrientation(rotation);
 	lookAtVector = position + forward;
 	
 	// Update the view matrix.
@@ -208,8 +208,6 @@ void Camera::render() const
 
 void Camera::cull( RenderBlock& block, const NodePtr& node ) const
 {
-	// Let's forget culling for now. Return all renderable nodes.
-	
 	// Try to see if this is a Group-derived node.
 	const GroupPtr& group( std::dynamic_pointer_cast<Group>(node) );
 	
@@ -258,7 +256,7 @@ void Camera::cull( RenderBlock& block, const NodePtr& node ) const
 		
 		renderState.renderable = cmp.second->getDebugRenderable();
 		renderState.modelMatrix = transform->getAbsoluteTransform();
-		renderState.group = RenderGroup::Normal;
+		renderState.group = RenderGroup::PostTransparency;
 		renderState.priority = 0;
 
 		block.renderables.push_back( renderState );

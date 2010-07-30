@@ -45,32 +45,26 @@ PluginMetadata TerrainPlugin::getMetadata()
 
 //-----------------------------------//
 
-void TerrainPlugin::onPluginEnable(wxToolBar* toolBar)
+void TerrainPlugin::onPluginEnable()
 {
+	wxToolBar* toolBar = editor->getToolbar();
 	wxToolBarToolBase* base = nullptr;
 	
 	base = toolBar->AddTool( wxID_ANY, "Raise/Lower",
 		wxMEMORY_BITMAP(terrain_raise_lower), "Raises/Lowers the terrain",
 		wxITEM_RADIO );
-	tools.push_back(base);
-	//map[base->GetId()] = this;
+	addTool(base);
 
 	base = toolBar->AddTool( wxID_ANY, "Paint", wxMEMORY_BITMAP(terrain_paint),
 		"Paints the terrain", wxITEM_RADIO );
-	tools.push_back(base);
-	//map[base->GetId()] = this;
+	addTool(base);
 }
 
 //-----------------------------------//
 
-void TerrainPlugin::onPluginDisable(wxToolBar* toolBar)
+void TerrainPlugin::onPluginDisable()
 {
-	foreach( wxToolBarToolBase* base, tools )
-	{
-		int id = base->GetId();
-		toolBar->DeleteTool(id);
-		//modes[id] = nullptr;
-	}
+
 }
 
 //-----------------------------------//

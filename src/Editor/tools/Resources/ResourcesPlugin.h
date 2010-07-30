@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vapor3D Editor Â© (2008-2010)
+* vapor3D Editor © (2008-2010)
 *
 *	<http://www.vapor3d.org>
 *
@@ -14,11 +14,15 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-class SamplePlugin : public Plugin
+class ResourcesPage;
+
+//-----------------------------------//
+
+class ResourcesPlugin : public Plugin
 {
 public:
 
-	SamplePlugin( EditorFrame* frame );
+	ResourcesPlugin( EditorFrame* frame );
 
 	// Gets metadata about this plugin.
 	virtual PluginMetadata getMetadata();
@@ -28,6 +32,11 @@ public:
 
 	// Plugin disable callback.
 	virtual void onPluginDisable();
+
+protected:
+
+	ResourcesPage* resourcesPage;
+	int iconResources;
 };
 
 //-----------------------------------//

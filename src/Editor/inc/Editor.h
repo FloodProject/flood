@@ -8,9 +8,6 @@
 
 #pragma once
 
-#include "SceneTreeCtrl.h"
-#include "ResourceTreeCtrl.h"
-
 namespace vapor { namespace editor {
 
 //-----------------------------------//
@@ -21,6 +18,7 @@ class PluginManagerFrame;
 class EditorInputManager;
 class UndoManager;
 class Viewframe;
+class Events;
 
 //-----------------------------------//
 
@@ -56,7 +54,19 @@ public:
 	GETTER(EditorScene, ScenePtr, editorScene)
 
 	// Gets the Undo/Redo manager instance.
-	GETTER(UndoManager, UndoManager*, undoManager) 
+	GETTER(UndoManager, UndoManager*, undoManager)
+
+	// Gets the Undo/Redo manager instance.
+	GETTER(PluginManager, PluginManager*, pluginManager)
+
+	// Gets the events manager instance.
+	GETTER(EventManager, Events*, eventManager)
+
+	// Gets the notebook control.
+	GETTER(Notebook, wxNotebook*, notebookCtrl)
+
+	// Gets the toolbar control.
+	GETTER(Toolbar, wxToolBar*, toolBar)
 
 protected:
 
@@ -68,7 +78,6 @@ protected:
 	void createNotebook();
 	void createMenus();
 	void createToolbar();
-	void createStatusbar();
 	void createPlugins();
 
 	// Creates the default scenes.
@@ -86,7 +95,6 @@ protected:
     void OnQuit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
 	void OnToolbarButtonClick(wxCommandEvent& event);
-	void OnNodeSelected(wxTreeItemId old, wxTreeItemId id);
 
 	// wxWidgets Input events.
 	void OnKeyDown(wxKeyEvent& event);
@@ -96,11 +104,11 @@ protected:
 	// Main engine instance.
 	Engine* engine;
 
-	// Manages the editor scene entities.
+	// Manages the editor scene entities.	
 	ScenePtr editorScene;
 
 	// Input Management.
-	EditorInputManager* im;
+	EditorInputManager* inputManager;
 
 	// Manages the plugins.
 	PluginManager* pluginManager;
@@ -108,16 +116,13 @@ protected:
 
 	// Manages the undo/redo operations.
 	UndoManager* undoManager;
+	Events* eventManager;
 
 	// UI widgets.
 	wxBoxSizer* sizer;
 	wxToolBar* toolBar;
 	Viewframe* viewframe;
 	wxNotebook* notebookCtrl;
-	SceneTreeCtrl* sceneTreeCtrl;
-	ResourceTreeCtrl* resourceTreeCtrl;
-
-	LightPtr light;
 
 private:
 

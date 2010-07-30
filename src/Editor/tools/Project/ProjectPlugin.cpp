@@ -35,26 +35,29 @@ PluginMetadata ProjectPlugin::getMetadata()
 
 //-----------------------------------//
 
-void ProjectPlugin::onPluginEnable(wxToolBar* toolBar)
+void ProjectPlugin::onPluginEnable()
 {
-	PluginMetadata metadata = getMetadata();
+	wxToolBar* toolBar = editor->getToolbar();
 
-	toolBar->AddSeparator();
+	addTool( toolBar->AddSeparator() );
 
 	wxBitmap iconNew = wxMEMORY_BITMAP(page_empty);
 	newButton = toolBar->AddTool( wxID_ANY, "New", iconNew );
-	
+	addTool( newButton );
+
 	toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
 		&ProjectPlugin::onNewButtonClick, this, newButton->GetId() );
 
 	wxBitmap iconOpen = wxMEMORY_BITMAP(folder_explore);
 	openButton = toolBar->AddTool( wxID_ANY, "Open", iconOpen );
+	addTool( openButton );
 
 	toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
 		&ProjectPlugin::onOpenButtonClick, this, openButton->GetId() );
 
 	wxBitmap iconSave = wxMEMORY_BITMAP(disk);
 	saveButton = toolBar->AddTool( wxID_ANY, "Save", iconSave );
+	addTool( saveButton );
 
 	toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
 		&ProjectPlugin::onSaveButtonClick, this, saveButton->GetId() );
@@ -62,18 +65,9 @@ void ProjectPlugin::onPluginEnable(wxToolBar* toolBar)
 
 //-----------------------------------//
 
-void ProjectPlugin::onPluginDisable(wxToolBar* toolBar)
+void ProjectPlugin::onPluginDisable()
 {
-	int id;
-	
-	id = newButton->GetId();
-	toolBar->DeleteTool(id);
 
-	id = openButton->GetId();
-	toolBar->DeleteTool(id);
-
-	id = saveButton->GetId();
-	toolBar->DeleteTool(id);
 }
 
 //-----------------------------------//

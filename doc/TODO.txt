@@ -18,12 +18,13 @@ Input Events
 	instead of just when the mouse is over a viewframe. (WIP)
 
 Gizmo
+	Panning is wrong.
 	Picking when the mouse moves (DONE)
 	Change gizmo color when user picks axis (DONE)
 	Add drag event and change the Transform (DONE)
 	Fix cone backface culling (DONE)
 	Scale the gizmo properly in relation to the camera distance (DONE)
-		Make the Gizmo node transform a proxy of the original
+	Make the Gizmo node transform a proxy of the original
 	Get picking working properly with multiple gizmos
 	When the Camera moves, mouse should be tested
 
@@ -62,7 +63,7 @@ Console
 
 Camera options
 	Add a small frame below the viewport with camera options (WIP)
-	Integrate speed and the other buttons (WIP)
+	Integrate speed and the other buttons (DONE)
 			
 Implement camera panning
 Edit grid settings

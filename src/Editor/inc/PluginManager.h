@@ -10,8 +10,12 @@
 
 namespace vapor { namespace editor {
 
+//-----------------------------------//
+
 class Plugin;
 class EditorFrame;
+
+typedef std::map<int, Plugin*> PluginToolsMap;
 
 //-----------------------------------//
 
@@ -43,42 +47,26 @@ public:
 	// Scans for plugins.
 	//void scanPlugins();
 
-	// Gets all the registered plugins.
+	// Gets all the registered tools.
 	GETTER(Plugins, std::vector<Plugin*>, plugins)
 
-	// Plugin registered callback.
-	fd::delegate<void(/*PluginEvent*/)> onPluginEvent;
+	// Gets all the registered plugins.
+	GETTER(Tools, const PluginToolsMap&, tools)
 
-	// Selection events.
-	void onNodeSelect( const NodePtr& );
-	void onNodeUnselect( const NodePtr& );
-
-	// Mouse input events.
-	void onMouseMove( const MouseMoveEvent& );
-	void onMouseDrag( const MouseDragEvent& );
-	void onMousePress( const MouseButtonEvent& );
-	void onMouseRelease( const MouseButtonEvent& );
-	void onMouseEnter();
-	void onMouseLeave();
-	
-	// Keyboard input events.
-	void onKeyPress( const KeyEvent& );
-	void onKeyRelease( const KeyEvent& );
+	// Plugin events callback.
+	fd::delegate<void(Plugin*)> onPluginEnableEvent;
+	fd::delegate<void(Plugin*)> onPluginDisableEvent;
 
 protected:
 	
-	// Registers for input callbacks.
-	void registerInputCallbacks();
+	// Processes tools from a plugin into tools map.
+	void processTools( Plugin* plugin, bool enable );
 
 	// Editor frame.
-	EditorFrame* editorFrame;
-
-	// Current tool.
-	Plugin* currentTool;
+	EditorFrame* editor;
 
 	// Maps identifiers to tools.
-	typedef std::map<int, Plugin*> PluginsMap;
-	PluginsMap toolsIdsMap;
+	PluginToolsMap tools;
 
 	// Keeps the known tools.
 	std::vector<Plugin*> plugins;

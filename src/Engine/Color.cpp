@@ -33,9 +33,9 @@ Color::Color(int r, int g, int b, int a)
 
 Color::Color(const Color& c)
 	: r(c.r)
-	, b (c.b)
-	, g (c.g)
-	, a (c.a)
+	, b(c.b)
+	, g(c.g)
+	, a(c.a)
 { }
 
 //-----------------------------------//
@@ -46,6 +46,15 @@ bool Color::operator == (const Color& c) const
 		&& (g == c.g)
 		&& (b == c.b)
 		&& (a == c.a); 
+}
+
+//-----------------------------------//
+
+bool Color::equals(const Color& a, float tolerance )
+{
+	return (fabs(a.r - r) < tolerance)
+		&& (fabs(a.g - g) < tolerance)
+		&& (fabs(a.b - b) < tolerance);
 }
 
 //-----------------------------------//
@@ -69,6 +78,7 @@ const VAPOR_API Color Color::Black(0.0f, 0.0f, 0.0f);
 const VAPOR_API Color Color::Red(1.0f, 0.0f, 0.0f);
 const VAPOR_API Color Color::Green(0.0f, 1.0f, 0.0f);
 const VAPOR_API Color Color::Blue(0.0f, 0.0f, 1.0f);
+const VAPOR_API Color Color::NavyBlue(0.0f, 0.0f, 0.5f);
 const VAPOR_API Color Color::SkyBlue(0.5f, 0.7f, 1.0f);
 const VAPOR_API Color Color::Yellow(1.0f, 1.0f, 0.0f);
 

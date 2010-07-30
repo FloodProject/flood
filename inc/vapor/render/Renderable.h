@@ -71,15 +71,17 @@ public:
 
 	Renderable();
 
-    Renderable( Primitive::Enum primitive, const VertexBufferPtr& vb,
-		const IndexBufferPtr& ib, const MaterialPtr& mat );
+    Renderable( Primitive::Enum, const VertexBufferPtr&,
+		const IndexBufferPtr&, const MaterialPtr& );
     
     // No index buffer, default material will be used if none passed.
-	Renderable(Primitive::Enum primitive, const VertexBufferPtr& vb = VertexBufferPtr(),
-			const MaterialPtr& mat = nullptr );
+	Renderable(Primitive::Enum, const VertexBufferPtr& = VertexBufferPtr(),
+		const MaterialPtr& = nullptr );
 
-	// Bind/unbind all the state needed to draw the renderable.
+	// Binds the state needed to draw the renderable.
 	void bind();
+
+	// Unbinds the state needed to draw the renderable.
 	void unbind();
 
     // Render this renderable.

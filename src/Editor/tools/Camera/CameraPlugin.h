@@ -26,10 +26,10 @@ public:
 	virtual PluginMetadata getMetadata();
 
 	// Plugin enable callback.
-	virtual void onPluginEnable( wxToolBar* );
+	virtual void onPluginEnable();
 
 	// Plugin disable callback.
-	virtual void onPluginDisable( wxToolBar* );
+	virtual void onPluginDisable();
 
 protected:
 

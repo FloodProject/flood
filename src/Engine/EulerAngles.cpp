@@ -8,7 +8,6 @@
 
 #include "vapor/PCH.h"
 #include "vapor/math/EulerAngles.h"
-#include "vapor/math/Math.h"
 
 namespace vapor {
 
@@ -129,73 +128,6 @@ void EulerAngles::canonize()
 void EulerAngles::identity()
 {
 	x = y = z = 0;
-}
-
-//-----------------------------------//
-
-Matrix4x3 EulerAngles::rotateX( float ang ) const
-{
-	const float cos = std::cos( Math::degreeToRadian(ang) );
-	const float sin = std::sin( Math::degreeToRadian(ang) );
-
-	Matrix4x3 newRotation;
-
-	newRotation.m11 = 1;
-
-	newRotation.m22 = cos;
-	newRotation.m23 = sin;
-
-	newRotation.m32 = -sin;
-	newRotation.m33 = cos;
-
-	return newRotation;
-}
-
-//-----------------------------------//
-
-Matrix4x3 EulerAngles::rotateY( float ang ) const
-{
-	const float cos = std::cos( Math::degreeToRadian(ang) );
-	const float sin = std::sin( Math::degreeToRadian(ang) );
-
-	Matrix4x3 newRotation;
-
-	newRotation.m11 = cos;
-	newRotation.m13 = -sin;
-
-	newRotation.m22 = 1;
-
-	newRotation.m31 = sin;
-	newRotation.m33 = cos;
-
-	return newRotation;
-}
-
-//-----------------------------------//
-
-Matrix4x3 EulerAngles::rotateZ( float ang ) const
-{
-	const float cos = std::cos( Math::degreeToRadian(ang) );
-	const float sin = std::sin( Math::degreeToRadian(ang) );
-
-	Matrix4x3 newRotation;
-
-	newRotation.m11 = cos;
-	newRotation.m12 = sin;
-
-	newRotation.m21 = -sin;
-	newRotation.m22 = cos;
-
-	newRotation.m33 = 1;
-
-	return newRotation;
-}
-
-//-----------------------------------//
-
-Matrix4x3 EulerAngles::getOrientationMatrix() const
-{
-	return rotateX(x) * rotateY(y) * rotateZ(z);
 }
 
 //-----------------------------------//

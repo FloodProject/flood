@@ -33,13 +33,13 @@ Geometry::Geometry( RenderablePtr rend )
 void Geometry::addRenderable( RenderablePtr rend, RenderGroup::Enum group, 
 							  uint priority )
 {
-	renderables[group].push_back( rend );
+	RenderableList& renderList = renderables[group];
+	renderList.push_back( rend );
 }
 
 //-----------------------------------//
 
-const std::vector< RenderablePtr >& 
-Geometry::getRenderables( RenderGroup::Enum group )
+const RenderableList&  Geometry::getRenderables( RenderGroup::Enum group )
 { 
 	return renderables[group]; 
 }

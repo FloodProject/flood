@@ -37,7 +37,7 @@ PluginMetadata CameraPlugin::getMetadata()
 
 //-----------------------------------//
 
-void CameraPlugin::onPluginEnable(wxToolBar* toolBar)
+void CameraPlugin::onPluginEnable()
 {
 	Viewframe* viewframe = editor->getMainViewframe();
 	cameraControls = new CameraControls(viewframe);
@@ -47,11 +47,12 @@ void CameraPlugin::onPluginEnable(wxToolBar* toolBar)
 
 	wxSizer* viewSizer = viewframe->getSizer();
 	viewSizer->Add( cameraControls, sizerFlags );
+	viewSizer->Layout();
 }
 
 //-----------------------------------//
 
-void CameraPlugin::onPluginDisable(wxToolBar* toolBar)
+void CameraPlugin::onPluginDisable()
 {
 	Viewframe* viewframe = editor->getMainViewframe();
 	viewframe->RemoveChild(cameraControls);

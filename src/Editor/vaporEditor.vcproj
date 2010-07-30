@@ -400,6 +400,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\tools\Gizmos\GizmoOperation.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\tools\Gizmos\GizmoOperation.h"
+					>
+				</File>
+				<File
 					RelativePath=".\tools\Gizmos\GizmoPlugin.cpp"
 					>
 				</File>
@@ -407,6 +415,42 @@
 					RelativePath=".\tools\Gizmos\GizmoPlugin.h"
 					>
 				</File>
+				<Filter
+					Name="Translate"
+					>
+					<File
+						RelativePath=".\tools\Gizmos\GizmoTranslate.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\tools\Gizmos\GizmoTranslate.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Scale"
+					>
+					<File
+						RelativePath=".\tools\Gizmos\GizmoScale.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\tools\Gizmos\GizmoScale.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Rotate"
+					>
+					<File
+						RelativePath=".\tools\Gizmos\GizmoRotate.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\tools\Gizmos\GizmoRotate.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Terrain"
@@ -532,30 +576,46 @@
 					>
 				</File>
 			</Filter>
-		</Filter>
-		<Filter
-			Name="Scene"
-			>
-			<File
-				RelativePath=".\SceneTreeCtrl.cpp"
+			<Filter
+				Name="Scene"
 				>
-			</File>
-			<File
-				RelativePath=".\inc\SceneTreeCtrl.h"
+				<File
+					RelativePath=".\ScenePage.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\inc\ScenePage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\tools\Scene\ScenePlugin.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\tools\Scene\ScenePlugin.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Resources"
 				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Resources"
-			>
-			<File
-				RelativePath=".\ResourceTreeCtrl.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\inc\ResourceTreeCtrl.h"
-				>
-			</File>
+				<File
+					RelativePath=".\ResourcesPage.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\inc\ResourcesPage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\tools\Resources\ResourcesPlugin.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\tools\Resources\ResourcesPlugin.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Widgets"
@@ -607,6 +667,10 @@
 		</File>
 		<File
 			RelativePath=".\Events.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\inc\Events.h"
 			>
 		</File>
 	</Files>

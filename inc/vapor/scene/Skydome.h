@@ -9,8 +9,9 @@
 #pragma once
 
 #include "vapor/math/Color.h"
-#include "vapor/scene/Geometry.h"
 #include "vapor/render/Sphere.h"
+#include "vapor/scene/Geometry.h"
+#include "vapor/scene/Camera.h"
 
 namespace vapor {
 
@@ -29,7 +30,7 @@ class VAPOR_API Skydome : public Geometry
 {
 public:
 
-	Skydome( /*const MaterialPtr& mat*/ );
+	Skydome( CameraPtr camera );
 
 	// SKY
 
@@ -72,7 +73,7 @@ protected:
 	// Generates the sky bodies.
 	void generateBodies();
 
-	// Keeps track of the current walltime
+	// Keeps track of the current walltime.
 	double currentTime;
 
 	// Dome geometry that will be rendered as the sky.
@@ -84,6 +85,9 @@ protected:
 
 	// Celestial bodies geometry.
 	TransformPtr sun;
+
+	// Current camera transform.
+	CameraPtr camera;
 
 	static const std::string& type;
 };

@@ -33,12 +33,17 @@ void UndoManager::registerOperation( UndoOperation* operation )
 		delete op;
 
 	redoOperations.clear();
+
+	fireUndoRedoEvent();
 }
 
 //-----------------------------------//
 
 bool UndoManager::undoOperation()
 {
+	handleOperation(undoOperations, redoOperations, true);
+	fireUndoRedoEvent();
+
 	return undoOperations.empty();
 }
 
@@ -46,31 +51,41 @@ bool UndoManager::undoOperation()
 
 bool UndoManager::redoOperation()
 {
+	handleOperation(redoOperations, undoOperations, false);
+	fireUndoRedoEvent();
+
 	return redoOperations.empty();
 }
 
 //-----------------------------------//
 
-void UndoManager::handleOperation(bool undo)
+void UndoManager::handleOperation(Operations& firstOperations,
+								  Operations& secondOperations,
+								  bool undo)
 {
-	//if( firstOperations.empty() )
-	//	return;
+	if( firstOperations.empty() )
+		return;
 
-	//UndoOperation* op = firstOperations.back();
+	UndoOperation* op = firstOperations.back();
 
-	//if(!op)
-	//	return;
+	if(!op)
+		return;
 
-	//firstOperations.pop_back();
-	//secondOperations.push_back(op);
+	firstOperations.pop_back();
+	secondOperations.push_back(op);
 
-	//if(undo)
-	//	op->undo();
-	//else
-	//	op->redo();
+	if(undo)
+		op->undo();
+	else
+		op->redo();
+}
 
-	//updateUndoRedoUI();
-	//RefreshViewport();
+//-----------------------------------//
+
+void UndoManager::fireUndoRedoEvent()
+{
+	if( !onUndoRedoEvent.empty() )
+		onUndoRedoEvent();
 }
 
 //-----------------------------------//

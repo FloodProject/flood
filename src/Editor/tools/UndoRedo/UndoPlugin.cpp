@@ -39,50 +39,80 @@ PluginMetadata UndoPlugin::getMetadata()
 
 //-----------------------------------//
 
-void UndoPlugin::onPluginEnable(wxToolBar* toolBar)
+void UndoPlugin::onPluginEnable()
 {
-	toolBar->AddSeparator();
+	wxToolBar* toolBar = editor->getToolbar();
+	addTool( toolBar->AddSeparator() );
 
 	wxBitmap iconUndo = wxMEMORY_BITMAP(arrow_undo);
 	undoButton = toolBar->AddTool( wxID_ANY, "Undo", iconUndo );
-	
-	toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
-		&UndoPlugin::onUndoButtonClick, this, undoButton->GetId() );
+	addTool(undoButton);
+	toolBar->EnableTool( undoButton->GetId(), false );
 
 	wxBitmap iconRedo = wxMEMORY_BITMAP(arrow_redo);
 	redoButton = toolBar->AddTool( wxID_ANY, "Redo", iconRedo );
+	addTool(redoButton);
+	toolBar->EnableTool( redoButton->GetId(), false );
+
+	// Connect to click events.
+	toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
+		&UndoPlugin::onUndoButtonClick, this, undoButton->GetId() );
 
 	toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
 		&UndoPlugin::onRedoButtonClick, this, redoButton->GetId() );
+
+	// Connect to undo/redo events.
+	undoManager->onUndoRedoEvent +=
+		fd::bind(&UndoPlugin::onUndoEvent, this);
 }
 
 //-----------------------------------//
 
-void UndoPlugin::onPluginDisable(wxToolBar* toolBar)
+void UndoPlugin::onPluginDisable()
 {
-	int id;
-	
-	id = undoButton->GetId();
-	toolBar->DeleteTool(id);
+	// Disconnect to undo/redo events.
+	undoManager->onUndoRedoEvent -=
+		fd::bind(&UndoPlugin::onUndoEvent, this);
+}
 
-	id = redoButton->GetId();
-	toolBar->DeleteTool(id);
+//-----------------------------------//
+
+void UndoPlugin::onUndoEvent()
+{
+	updateButtons();
+	editor->RefreshViewport();
+}
+
+//-----------------------------------//
+
+void UndoPlugin::updateButtons()
+{
+	wxToolBar* toolBar = editor->getToolbar();
+
+	const Operations& undoOperations = undoManager->getUndoOperations();
+	bool undoEmpty = undoOperations.empty();
+
+	const Operations& redoOperations = undoManager->getRedoOperations();
+	bool redoEmpty = redoOperations.empty();
+
+	toolBar->EnableTool( undoButton->GetId(), !undoEmpty );
+	toolBar->EnableTool( redoButton->GetId(), !redoEmpty );
 }
 
 //-----------------------------------//
 
 void UndoPlugin::onUndoButtonClick(wxCommandEvent& event)
 {
-	bool undoEmpty = undoManager->undoOperation();
-	//toolBar->EnableTool( undoButton->GetId(), !undoEmpty );
+	undoManager->undoOperation();
+	updateButtons();
 }
 
 //-----------------------------------//
 
 void UndoPlugin::onRedoButtonClick(wxCommandEvent& event)
 {
-	bool redoEmpty = undoManager->redoOperation();
-	//toolBar->EnableTool( redoButton->GetId(), !redoEmpty );
+	undoManager->redoOperation();
+	updateButtons();
 }
 
 //-----------------------------------//

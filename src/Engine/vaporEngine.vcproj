@@ -488,22 +488,6 @@
 				Name="Primitives"
 				>
 				<File
-					RelativePath=".\DebugGeometry.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\render\DebugGeometry.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Quad.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\render\Quad.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Renderable.cpp"
 					>
 				</File>
@@ -511,14 +495,58 @@
 					RelativePath="..\..\inc\vapor\render\Renderable.h"
 					>
 				</File>
-				<File
-					RelativePath=".\Sphere.cpp"
+				<Filter
+					Name="Cube"
 					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\render\Sphere.h"
+					<File
+						RelativePath=".\Cube.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\render\Cube.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Sphere"
 					>
-				</File>
+					<File
+						RelativePath=".\Sphere.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\render\Sphere.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Quad"
+					>
+					<File
+						RelativePath=".\Quad.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\render\Quad.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Cone"
+					>
+				</Filter>
+				<Filter
+					Name="Debug"
+					>
+					<File
+						RelativePath=".\DebugGeometry.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\render\DebugGeometry.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Window"

@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "PCH.h"
-#include "ResourceTreeCtrl.h"
+#include "ResourcesPage.h"
 #include "EditorIcons.h"
 #include "Editor.h"
 
@@ -23,17 +23,18 @@ enum
 	//ID_MenuSceneNodeDelete = wxID_DELETE
 };
 
-BEGIN_EVENT_TABLE(ResourceTreeCtrl, wxTreeCtrl)
-	//EVT_TREE_ITEM_MENU(ID_SceneTree, ResourceTreeCtrl::onItemMenu)
+BEGIN_EVENT_TABLE(ResourcesPage, wxTreeCtrl)
+	//EVT_TREE_ITEM_MENU(ID_SceneTree, ResourcesPage::onItemMenu)
 END_EVENT_TABLE()
 
 //-----------------------------------//
 
-ResourceTreeCtrl::ResourceTreeCtrl(wxWindow* parent, wxWindowID id,
-					const wxPoint& pos, const wxSize& size,
-					EditorFrame* editor)
-	: wxTreeCtrl(parent, id, pos, size, wxTR_DEFAULT_STYLE | wxTR_HIDE_ROOT,
-		wxDefaultValidator, "ResourceTreeCtrl")
+ResourcesPage::ResourcesPage( EditorFrame* editor,
+							 wxWindow* parent, wxWindowID id,
+							 const wxPoint& pos, const wxSize& size )
+	: wxTreeCtrl(parent, id, pos, size,
+		wxTR_DEFAULT_STYLE | wxTR_HIDE_ROOT,
+		wxDefaultValidator, "ResourcesPage")
 	, editor(editor)
 {
 	engine = editor->getEngine();
@@ -42,11 +43,11 @@ ResourceTreeCtrl::ResourceTreeCtrl(wxWindow* parent, wxWindowID id,
 	rm = engine->getResourceManager();
 	assert( rm != nullptr );
 	
-	rm->onResourceAdded += fd::bind( &ResourceTreeCtrl::onResourceAdded, this );
-	rm->onResourceRemoved += fd::bind( &ResourceTreeCtrl::onResourceRemoved, this );
+	rm->onResourceAdded += fd::bind( &ResourcesPage::onResourceAdded, this );
+	rm->onResourceRemoved += fd::bind( &ResourcesPage::onResourceRemoved, this );
 	
-	rm->onResourceLoaded += fd::bind( &ResourceTreeCtrl::onResourceReloaded, this );
-	rm->onResourceReloaded += fd::bind( &ResourceTreeCtrl::onResourceReloaded, this );
+	rm->onResourceLoaded += fd::bind( &ResourcesPage::onResourceReloaded, this );
+	rm->onResourceReloaded += fd::bind( &ResourcesPage::onResourceReloaded, this );
 
 	initIcons();
 	initControl();
@@ -56,20 +57,20 @@ ResourceTreeCtrl::ResourceTreeCtrl(wxWindow* parent, wxWindowID id,
 
 //-----------------------------------//
 
-ResourceTreeCtrl::~ResourceTreeCtrl()
+ResourcesPage::~ResourcesPage()
 {
 	assert( rm != nullptr );
 
-	//rm->onResourceAdded -= fd::bind( &ResourceTreeCtrl::onResourceAdded, this );
-	//rm->onResourceRemoved -= fd::bind( &ResourceTreeCtrl::onResourceRemoved, this );
+	//rm->onResourceAdded -= fd::bind( &ResourcesPage::onResourceAdded, this );
+	//rm->onResourceRemoved -= fd::bind( &ResourcesPage::onResourceRemoved, this );
 
-	//rm->onResourceLoaded -= fd::bind( &ResourceTreeCtrl::onResourceReloaded, this );
-	//rm->onResourceReloaded -= fd::bind( &ResourceTreeCtrl::onResourceReloaded, this );
+	//rm->onResourceLoaded -= fd::bind( &ResourcesPage::onResourceReloaded, this );
+	//rm->onResourceReloaded -= fd::bind( &ResourcesPage::onResourceReloaded, this );
 }
 
 //-----------------------------------//
 
-void ResourceTreeCtrl::updateTree()
+void ResourcesPage::updateTree()
 {
 	// traverse each resource and add nodes
 	foreach( const ResourceMapPair& resource, rm->getResources() )
@@ -85,7 +86,7 @@ void ResourceTreeCtrl::updateTree()
 
 //-----------------------------------//
 
-void ResourceTreeCtrl::onResourceAdded( const ResourceEvent& event )
+void ResourcesPage::onResourceAdded( const ResourceEvent& event )
 {
 	const ResourcePtr& res = event.resource;
 	ResourceGroup::Enum group = res->getResourceGroup();
@@ -97,13 +98,13 @@ void ResourceTreeCtrl::onResourceAdded( const ResourceEvent& event )
 
 //-----------------------------------//
 
-void ResourceTreeCtrl::onResourceRemoved( const ResourceEvent& event )
+void ResourcesPage::onResourceRemoved( const ResourceEvent& event )
 {
 }
 
 //-----------------------------------//
 
-void ResourceTreeCtrl::onResourceReloaded( const ResourceEvent& event )
+void ResourcesPage::onResourceReloaded( const ResourceEvent& event )
 {
 	// Update the view when resources get reloaded.
 	editor->RefreshViewport();
@@ -111,7 +112,7 @@ void ResourceTreeCtrl::onResourceReloaded( const ResourceEvent& event )
 
 //-----------------------------------//
 
-void ResourceTreeCtrl::onItemMenu(wxTreeEvent& WXUNUSED(event))
+void ResourcesPage::onItemMenu(wxTreeEvent& WXUNUSED(event))
 {
 //    wxTreeItemId itemId = event.GetItem();
 //	//debug( "%s", itemId.IsOk() ? "true" : "false" );
@@ -137,7 +138,7 @@ void ResourceTreeCtrl::onItemMenu(wxTreeEvent& WXUNUSED(event))
 	resourceGroupIcons[RG(T)] =					\
 			imageList->Add(wxMEMORY_BITMAP(I));	
 
-void ResourceTreeCtrl::initIcons()
+void ResourcesPage::initIcons()
 {
 	// create a new list of all the icons
 	imageList = new wxImageList(16, 16, false, 10);
@@ -161,7 +162,7 @@ void ResourceTreeCtrl::initIcons()
 		ResourceGroup::getString(RG(T)),			\
 		resourceGroupIcons[RG(T)] );
 
-void ResourceTreeCtrl::initControl()
+void ResourcesPage::initControl()
 {
 	root = AddRoot( "Resources", resourceGroupIcons[RG(General)] );
 

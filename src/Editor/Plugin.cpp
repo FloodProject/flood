@@ -33,6 +33,40 @@ Plugin::~Plugin()
 
 //-----------------------------------//
 
+void Plugin::doPluginDisable()
+{
+	onPluginDisable();
+	removeTools();
+}
+
+//-----------------------------------//
+
+void Plugin::addTool( wxToolBarToolBase* tool )
+{
+	tools.push_back( tool );
+
+	wxToolBar* toolBar = editor->getToolbar();
+	toolBar->Realize();
+}
+
+//-----------------------------------//
+
+void Plugin::removeTools()
+{
+	// Clean up toolbar stuff.
+	wxToolBar* toolBar = editor->getToolbar();
+
+	foreach( wxToolBarToolBase* tool, tools )
+	{
+		int id = tool->GetId();
+		toolBar->DeleteTool(id);
+	}
+
+	tools.clear();
+}
+
+//-----------------------------------//
+
 bool Plugin::isPluginEnabled() const
 {
 	return pluginEnabled;

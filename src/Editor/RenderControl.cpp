@@ -58,7 +58,7 @@ RenderControl::RenderControl( wxWindow* parent, wxWindowID id,
 	window = new RenderWindow(settings, this);
 
 	// Setup input in the engine.
-	inputManager = window->im;
+	inputManager = window->inputManager;
 
 	//// Connect the timers.
 	//frameUpdateTimer.Bind(wxEVT_TIMER, &RenderControl::doUpdate,

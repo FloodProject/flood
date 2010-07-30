@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "vapor/math/Matrix4x3.h"
 #include "vapor/math/Vector3.h"
 
 namespace vapor {
@@ -44,14 +43,6 @@ public:
 
 	// Resets the rotations so they don't have any effect.
 	void identity();
-
-	// Gets a orientation matrix represeting the rotation angles.
-	Matrix4x3 getOrientationMatrix() const;
-
-	// many more methods implemented here ...
-	Matrix4x3 rotateX( float ang ) const;
-	Matrix4x3 rotateY( float ang ) const;
-	Matrix4x3 rotateZ( float ang ) const;
 
 public:
 

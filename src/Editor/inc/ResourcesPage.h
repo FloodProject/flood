@@ -22,16 +22,16 @@ class EditorFrame;
  * properties of the associated scene nodes.
  */
 
-class ResourceTreeCtrl : public wxTreeCtrl 
+class ResourcesPage : public wxTreeCtrl 
 {
 public:
 
-	ResourceTreeCtrl(wxWindow* parent, wxWindowID id = wxID_ANY,
-					const wxPoint& pos = wxDefaultPosition,
-					const wxSize& size = wxDefaultSize,
-					EditorFrame* editor = nullptr );
+	ResourcesPage( EditorFrame* editor,
+		wxWindow* parent, wxWindowID id = wxID_ANY,
+		const wxPoint& pos = wxDefaultPosition,
+		const wxSize& size = wxDefaultSize );
 
-	~ResourceTreeCtrl();
+	~ResourcesPage();
 
 	// Synchronizes the tree with the resources.
 	void updateTree();

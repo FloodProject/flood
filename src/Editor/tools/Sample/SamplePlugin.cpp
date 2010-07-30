@@ -34,7 +34,7 @@ PluginMetadata SamplePlugin::getMetadata()
 
 //-----------------------------------//
 
-void SamplePlugin::onPluginEnable(wxToolBar* toolBar)
+void SamplePlugin::onPluginEnable()
 {
 	PluginMetadata metadata = getMetadata();
 
@@ -43,7 +43,7 @@ void SamplePlugin::onPluginEnable(wxToolBar* toolBar)
 
 //-----------------------------------//
 
-void SamplePlugin::onPluginDisable(wxToolBar* toolBar)
+void SamplePlugin::onPluginDisable()
 {
 	PluginMetadata metadata = getMetadata();
 

@@ -26,12 +26,18 @@ public:
 	virtual PluginMetadata getMetadata();
 
 	// Plugin enable callback.
-	virtual void onPluginEnable( wxToolBar* );
+	virtual void onPluginEnable();
 
 	// Plugin disable callback.
-	virtual void onPluginDisable( wxToolBar* );
+	virtual void onPluginDisable();
 
 protected:
+
+	// Update button states.
+	void updateButtons();
+
+	// Handles undo events.
+	void onUndoEvent();
 
 	// Handles undo button click.
 	void onUndoButtonClick(wxCommandEvent& event);

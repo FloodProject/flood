@@ -10,9 +10,12 @@
 
 #include "Plugin.h"
 #include "Gizmo.h"
-#include "UndoOperation.h"
 
 namespace vapor { namespace editor {
+
+//-----------------------------------//
+
+class GizmoOperation;
 
 //-----------------------------------//
 
@@ -20,39 +23,13 @@ namespace GizmoTool
 {
 	enum Enum
 	{
-		Camera,
+		Camera = wxID_HIGHEST,
 		Select,
 		Translate,
 		Rotate,
 		Scale
 	};
 }
-
-//-----------------------------------//
-
-class GizmoOperation : public UndoOperation
-{
-public:
-
-	GizmoOperation();
-	
-	void undo();
-	void redo();
-	void process( bool undo );
-
-	NodeWeakPtr weakNode;
-	GizmoTool::Enum tool;
-	GizmoAxis::Enum axis;
-	GizmoPtr gizmo;
-
-	Vector3 orig_translation;
-	Vector3 orig_scale;
-	EulerAngles orig_rotation;
-
-	Vector3 translation;
-	Vector3 scale;
-	EulerAngles rotation;
-};
 
 //-----------------------------------//
 
@@ -66,10 +43,10 @@ public:
 	virtual PluginMetadata getMetadata();
 	
 	// Plugin enable callback.
-	virtual void onPluginEnable( wxToolBar* );
+	virtual void onPluginEnable();
 
 	// Plugin disable callback.
-	virtual void onPluginDisable( wxToolBar* );
+	virtual void onPluginDisable();
 
 	// Mouse events.
 	virtual void onMouseMove( const MouseMoveEvent& );
@@ -83,12 +60,12 @@ public:
 
 protected:
 
-	// Called when a toolbar button is clicked.
+	// Handles gizmo tools buttons click.
 	void onGizmoButtonClick(wxCommandEvent& event);
 
-	bool isMode(GizmoTool::Enum mode) { return tool == mode; }
+	// Checks if the passed tool the current one.
+	bool isTool(GizmoTool::Enum mode);
 
-	void drawGizmo( NodePtr, NodePtr );
 	void createGizmo( const NodePtr& );
 	void removeGizmo( const NodePtr& );
 	void createOperation();

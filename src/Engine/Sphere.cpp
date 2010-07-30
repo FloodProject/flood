@@ -144,7 +144,7 @@ void Sphere::buildGeometry( bool fullSphere, byte numSubDiv,
 	vb = new VertexBuffer();
 
 	// Rotate the vertices, else the sphere is not properly aligned.
-	Matrix4x3 rot( EulerAngles(-60.0f, 0.0f, 0.0f).getOrientationMatrix() );
+	Matrix4x3 rot = Matrix4x3::createOrientation( EulerAngles(-60, 0, 0) );
 
 	foreach( const byte* i, IcoDomeIndices )
 	{

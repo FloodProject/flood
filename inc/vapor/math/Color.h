@@ -29,6 +29,9 @@ public:
 	// Equality.
 	bool operator == (const Color& v) const;
 
+	// Equality with tolerance.
+	bool equals(const Color& a, float tolerance = 0.05f );
+
 	// Multiplication by a scalar.
 	Color operator * (float s) const;
 	
@@ -41,6 +44,7 @@ public:
 	static const Color Red;
 	static const Color Green;
 	static const Color Blue;
+	static const Color NavyBlue;
 	static const Color SkyBlue;
 	static const Color Yellow;
 

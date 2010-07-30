@@ -48,7 +48,6 @@ RenderablePtr buildBoundingRenderable( const AABB& aabb )
 	mat->setLineWidth( 1.0f );
 	mat->setLineSmoothing( true );
 	mat->setBackfaceCulling( false );
-	mat->setDepthTest( false );
 
 	RenderablePtr boundingBox( new Renderable(Primitive::Quads, vb, mat) );
 	boundingBox->setPolygonMode( PolygonMode::Wireframe );

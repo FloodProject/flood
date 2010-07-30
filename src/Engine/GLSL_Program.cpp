@@ -19,7 +19,8 @@ namespace vapor {
 //-----------------------------------//
 
 GLSL_Program::GLSL_Program( const GLSL_TextPtr& text )
-	: text(text), linkError(false)
+	: text(text)
+	, linkError(false)
 {
 	assert( text != nullptr );
 	
@@ -272,7 +273,7 @@ void GLSL_Program::getLogText()
 	glGetProgramInfoLog( id, size, &length, info );
 
 	log.assign( info );
-	delete info;
+	delete[] info;
 }
 
 //-----------------------------------//

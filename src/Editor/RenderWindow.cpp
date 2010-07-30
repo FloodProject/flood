@@ -21,7 +21,7 @@ RenderWindow::RenderWindow(const WindowSettings& settings,
 	, context(nullptr)
 {
 	createContext();
-	im = new EditorInputManager();
+	inputManager = new EditorInputManager();
 }
 
 //-----------------------------------//
@@ -29,7 +29,7 @@ RenderWindow::RenderWindow(const WindowSettings& settings,
 RenderWindow::~RenderWindow()
 {
 	delete context;
-	delete im;
+	delete inputManager;
 }
 
 //-----------------------------------//

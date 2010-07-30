@@ -54,16 +54,16 @@ public:
 	virtual ~Plugin();
 
 	// Gets if plugin is enabled.
-	virtual bool isPluginEnabled() const;
+	bool isPluginEnabled() const;
 
 	// Gets metadata about this plugin.
 	virtual PluginMetadata getMetadata() = 0;
 
 	// Plugin enable callback.
-	virtual void onPluginEnable( wxToolBar* ) = 0;
+	virtual void onPluginEnable() = 0;
 
 	// Plugin disable callback.
-	virtual void onPluginDisable( wxToolBar* ) = 0;
+	virtual void onPluginDisable() = 0;
 
 	// Node selection callback.
 	virtual void onNodeSelect( const NodePtr& ) {}
@@ -94,6 +94,15 @@ public:
 
 protected:
 
+	// Helper method to disable plugins.
+	void doPluginDisable();
+
+	// Registers a new tool in the plugin.
+	void addTool( wxToolBarToolBase* tool );
+
+	// Removes all the registered tools.
+	void removeTools();
+
 	// Access to the engine instance.
 	Engine* engine;
 
@@ -105,6 +114,10 @@ protected:
 
 	// Is plugin enabled?
 	bool pluginEnabled;
+
+	// Keeps track of all the registered tools.
+	typedef std::vector<wxToolBarToolBase*> Tools;
+	Tools tools;
 };
 
 //-----------------------------------//

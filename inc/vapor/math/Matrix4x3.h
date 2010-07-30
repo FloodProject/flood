@@ -9,6 +9,7 @@
 #pragma once
 
 #include "vapor/math/Vector3.h"
+#include "vapor/math/EulerAngles.h"
 #include "vapor/math/Matrix4x4.h"
 
 namespace vapor {
@@ -30,11 +31,18 @@ public:
 	// Set to identity
 	void identity();
 
-	// Creates a new scaling matrix from a given scale vector.
-	static Matrix4x3 createScaleMatrix( const Vector3& scale );
-	
 	// Creates a new translation matrix from a given translation vector.
-	static Matrix4x3 createTranslationMatrix( const Vector3& translate );
+	static Matrix4x3 createTranslation( const Vector3& translate );
+
+	// Creates a new orientation matrix from a given angles vector.
+	static Matrix4x3 createOrientation( const EulerAngles& angles );
+
+	// Creates a new scaling matrix from a given scale vector.
+	static Matrix4x3 createScale( const Vector3& scale );
+
+	static Matrix4x3 rotateX( float ang );
+	static Matrix4x3 rotateY( float ang );
+	static Matrix4x3 rotateZ( float ang );
 
 public:
 
@@ -66,7 +74,7 @@ Matrix4x4	VAPOR_API operator*(const Matrix4x3 &a, const Matrix4x4 &b);
 // Operator *= for conformance to C++ standards
 
 VAPOR_API Vector3& operator*=(Vector3 &p, const Matrix4x3 &m);
-VAPOR_API Matrix4x3& operator*=(const Matrix4x3 &a, const Matrix4x3 &m);
+VAPOR_API Matrix4x3& operator*=(Matrix4x3& a, const Matrix4x3& b);
 
 // Compute the determinant of the 3x3 portion of the matrix
 

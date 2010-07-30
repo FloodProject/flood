@@ -8,57 +8,13 @@
 
 #include "vapor/PCH.h"
 #include "vapor/math/Matrix4x3.h"
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Notes:
-//
-// See Chapter 11 for more information on class design decisions.
-//
-//---------------------------------------------------------------------------
-//
-// MATRIX ORGANIZATION
-//
-// The purpose of this class is so that a user might perform transformations
-// without fiddling with plus or minus signs or transposing the matrix
-// until the output "looks right."  But of course, the specifics of the
-// internal representation is important.  Not only for the implementation
-// in this file to be correct, but occasionally direct access to the
-// matrix variables is necessary, or beneficial for optimization.  Thus,
-// we document our matrix conventions here.
-//
-// We use row vectors, so multiplying by our matrix looks like this:
-//
-//               | m11 m12 m13 |
-//     [ x y z ] | m21 m22 m23 | = [ x' y' z' ]
-//               | m31 m32 m33 |
-//               | tx  ty  tz  |
-//
-// Strict adherence to linear algebra rules dictates that this
-// multiplication is actually undefined.  To circumvent this, we can
-// consider the input and output vectors as having an assumed fourth
-// coordinate of 1.  Also, since we cannot technically invert a 4x3 matrix
-// according to linear algebra rules, we will also assume a rightmost
-// column of [ 0 0 0 1 ].  This is shown below:
-//
-//                 | m11 m12 m13 0 |
-//     [ x y z 1 ] | m21 m22 m23 0 | = [ x' y' z' 1 ]
-//                 | m31 m32 m33 0 |
-//                 | tx  ty  tz  1 |
-//
-// In case you have forgotten your linear algebra rules for multiplying
-// matrices (which are described in section 7.1.6 and 7.1.7), see the
-// definition of operator* for the expanded computations.
-//
-/////////////////////////////////////////////////////////////////////////////
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Matrix4x3 class members
-//
-/////////////////////////////////////////////////////////////////////////////
+#include "vapor/math/Math.h"
 
 namespace vapor {
+
+//-----------------------------------//
+
+const Matrix4x3 Matrix4x3::Identity;
 
 //-----------------------------------//
 
@@ -67,10 +23,7 @@ Matrix4x3::Matrix4x3()
 	identity(); 
 }
 
-//---------------------------------------------------------------------------
-// Matrix4x3::identity
-//
-// Set the matrix to identity
+//-----------------------------------//
 
 void Matrix4x3::identity() 
 {
@@ -82,7 +35,29 @@ void Matrix4x3::identity()
 
 //-----------------------------------//
 
-Matrix4x3 Matrix4x3::createScaleMatrix( const Vector3& v )
+Matrix4x3 Matrix4x3::createTranslation( const Vector3& v )
+{
+	Matrix4x3 s;
+
+	s.tx = v.x;
+	s.ty = v.y;
+	s.tz = v.z;
+
+	return s;
+}
+
+//-----------------------------------//
+
+Matrix4x3 Matrix4x3::createOrientation( const EulerAngles& angles )
+{
+	return rotateX(angles.x)
+		 * rotateY(angles.y)
+		 * rotateZ(angles.z);
+}
+
+//-----------------------------------//
+
+Matrix4x3 Matrix4x3::createScale( const Vector3& v )
 {
 	Matrix4x3 s;
 
@@ -95,26 +70,65 @@ Matrix4x3 Matrix4x3::createScaleMatrix( const Vector3& v )
 
 //-----------------------------------//
 
-Matrix4x3 Matrix4x3::createTranslationMatrix( const Vector3& v )
+Matrix4x3 Matrix4x3::rotateX( float ang )
 {
-	Matrix4x3 s;
+	const float cos = std::cos( Math::degreeToRadian(ang) );
+	const float sin = std::sin( Math::degreeToRadian(ang) );
 
-	s.tx = v.x;
-	s.ty = v.y;
-	s.tz = v.z;
+	Matrix4x3 newRotation;
 
-	return s;
+	newRotation.m11 = 1;
+
+	newRotation.m22 = cos;
+	newRotation.m23 = sin;
+
+	newRotation.m32 = -sin;
+	newRotation.m33 = cos;
+
+	return newRotation;
 }
 
-//---------------------------------------------------------------------------
-// Vector * Matrix4x3
-//
-// Transform the point.  This makes using the vector class look like it
-// does with linear algebra notation on paper.
-//
-// We also provide a *= operator, as per C convention.
-//
-// See 7.1.7
+//-----------------------------------//
+
+Matrix4x3 Matrix4x3::rotateY( float ang )
+{
+	const float cos = std::cos( Math::degreeToRadian(ang) );
+	const float sin = std::sin( Math::degreeToRadian(ang) );
+
+	Matrix4x3 newRotation;
+
+	newRotation.m11 = cos;
+	newRotation.m13 = -sin;
+
+	newRotation.m22 = 1;
+
+	newRotation.m31 = sin;
+	newRotation.m33 = cos;
+
+	return newRotation;
+}
+
+//-----------------------------------//
+
+Matrix4x3 Matrix4x3::rotateZ( float ang )
+{
+	const float cos = std::cos( Math::degreeToRadian(ang) );
+	const float sin = std::sin( Math::degreeToRadian(ang) );
+
+	Matrix4x3 newRotation;
+
+	newRotation.m11 = cos;
+	newRotation.m12 = sin;
+
+	newRotation.m21 = -sin;
+	newRotation.m22 = cos;
+
+	newRotation.m33 = 1;
+
+	return newRotation;
+}
+
+//-----------------------------------//
 
 Vector3	operator*(const Vector3 &p, const Matrix4x3 &m)
 {
@@ -133,19 +147,10 @@ Vector3 &operator*=(Vector3 &p, const Matrix4x3 &m)
 	return p;
 }
 
-//---------------------------------------------------------------------------
-// Matrix4x3 * Matrix4x3
-//
-// Matrix concatenation.  This makes using the vector class look like it
-// does with linear algebra notation on paper.
-//
-// We also provide a *= operator, as per C convention.
-//
-// See 7.1.6
+//-----------------------------------//
 
 Matrix4x3 operator*(const Matrix4x3 &a, const Matrix4x3 &b) 
 {
-
 	Matrix4x3 r;
 
 	// Compute the upper 3x3 (linear transformation) portion
@@ -184,18 +189,13 @@ Matrix4x4 operator*(const Matrix4x3 &a, const Matrix4x4 &b)
 
 //-----------------------------------//
 
-Matrix4x3 &operator*=(Matrix4x3 &a, const Matrix4x3 &b) 
+Matrix4x3& operator*=(Matrix4x3& a, const Matrix4x3& b) 
 {
 	a = a * b;
 	return a;
 }
 
-//---------------------------------------------------------------------------
-// determinant
-//
-// Compute the determinant of the 3x3 portion of the matrix.
-//
-// See 9.1.1 for more info.
+//-----------------------------------//
 
 float determinant(const Matrix4x3 &m)
 {
@@ -205,13 +205,7 @@ float determinant(const Matrix4x3 &m)
 		+ m.m13 * (m.m21*m.m32 - m.m22*m.m31);
 }
 
-//---------------------------------------------------------------------------
-// inverse
-//
-// Compute the inverse of a matrix.  We use the classical adjoint divided
-// by the determinant method.
-//
-// See 9.2.1 for more info.
+//-----------------------------------//
 
 Matrix4x3 inverse(const Matrix4x3 &m) {
 
@@ -258,10 +252,6 @@ Matrix4x3 inverse(const Matrix4x3 &m) {
 
 	return r;
 }
-
-//-----------------------------------//
-
-const Matrix4x3 Matrix4x3::Identity;
 
 //-----------------------------------//
 

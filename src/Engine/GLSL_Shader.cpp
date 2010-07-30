@@ -18,8 +18,8 @@ namespace vapor {
 //-----------------------------------//
 
 GLSL_Shader::GLSL_Shader() 
-	: shaderId(0),
-	created(false)
+	: shaderId(0)
+	, created(false)
 { }
 
 //-----------------------------------//

@@ -103,7 +103,7 @@ void FirstPersonCamera::checkControls( double delta )
 	if( moveVector != Vector3::Zero )
 	{
 		moveVector *= delta * moveSensivity;
-		relativePosition += moveVector * rotation.getOrientationMatrix();
+		relativePosition += moveVector * Matrix4x3::createOrientation(rotation);
 		viewChanged = true;
 	}
 

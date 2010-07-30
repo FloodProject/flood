@@ -62,8 +62,8 @@ public:
 	// Gets metadata about this plugin.
 	virtual PluginMetadata getMetadata();
 
-	virtual void onPluginEnable( wxToolBar* );
-	virtual void onPluginDisable( wxToolBar* );
+	virtual void onPluginEnable();
+	virtual void onPluginDisable();
 	
 	// Handles all the mouse events.
 	virtual void onMouseDrag( const MouseDragEvent& mde );

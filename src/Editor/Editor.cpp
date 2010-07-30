@@ -14,10 +14,14 @@
 #include "PluginManagerFrame.h"
 #include "UndoManager.h"
 #include "Viewframe.h"
+#include "EditorInputManager.h"
+#include "Events.h"
 
 // Editor plugins
 #include "tools/Project/ProjectPlugin.h"
 #include "tools/UndoRedo/UndoPlugin.h"
+#include "tools/Scene/ScenePlugin.h"
+#include "tools/Resources/ResourcesPlugin.h"
 #include "tools/Gizmos/GizmoPlugin.h"
 #include "tools/Terrain/TerrainPlugin.h"
 #include "tools/Camera/CameraPlugin.h"
@@ -72,8 +76,9 @@ EditorFrame::EditorFrame(const wxString& title)
 	: wxFrame(nullptr, wxID_ANY, title)
 	, engine(nullptr)
 	, viewframe(nullptr)
-	, pluginManagerFrame(nullptr)
 	, undoManager(nullptr)
+	, eventManager(nullptr)
+	, pluginManagerFrame(nullptr)
 {
     // Set the editor icon.
     SetIcon( wxIcon("editor") );
@@ -81,20 +86,18 @@ EditorFrame::EditorFrame(const wxString& title)
 	// Initialize the engine.
 	initEngine();
 
-	undoManager = new UndoManager();
-
 	createMenus();
 	createToolbar();
-	createStatusbar();
 	createNotebook();
+
+	pluginManager = new PluginManager(this);
+	eventManager = new Events(this);
+	undoManager = new UndoManager();
+
 	createPlugins();
 
 	createScene();
 	createEditorScene();
-
-	Viewport* viewport = viewframe->getViewport();
-	RenderTarget* renderTarget = viewport->getRenderTarget();
-	renderTarget->makeCurrent();
 
 	toolBar->Realize();
 	SetSizerAndFit( sizer );
@@ -108,6 +111,7 @@ EditorFrame::EditorFrame(const wxString& title)
 
 EditorFrame::~EditorFrame()
 {
+	delete eventManager;
 	delete pluginManager;
 	delete undoManager;
 
@@ -121,8 +125,6 @@ EditorFrame::~EditorFrame()
 
 void EditorFrame::createPlugins()
 {
-	pluginManager = new PluginManager(this);
-	
 	Plugin* plugin = nullptr;
 
 	plugin = new ProjectPlugin(this);
@@ -130,6 +132,14 @@ void EditorFrame::createPlugins()
 	pluginManager->enablePlugin( plugin );
 
 	plugin = new UndoPlugin(this);
+	pluginManager->registerPlugin( plugin );
+	pluginManager->enablePlugin( plugin );
+
+	plugin = new ScenePlugin(this);
+	pluginManager->registerPlugin( plugin );
+	pluginManager->enablePlugin( plugin );
+
+	plugin = new ResourcesPlugin(this);
 	pluginManager->registerPlugin( plugin );
 	pluginManager->enablePlugin( plugin );
 
@@ -148,6 +158,7 @@ void EditorFrame::createPlugins()
 	pluginManager->registerPlugin( plugin );
 
 	pluginManagerFrame = new PluginManagerFrame( this, pluginManager);
+	pluginManagerFrame->SetInitialSize(wxSize(200, 350));
 }
 
 //-----------------------------------//
@@ -203,7 +214,7 @@ void EditorFrame::createMainViewframe()
 	device->setRenderTarget( window );
 
 	engine->setupInput();
-	im = control->getInputManager();
+	inputManager = control->getInputManager();
 
 	NodePtr camera( createCamera() );	
 	editorScene->add( camera );
@@ -230,78 +241,31 @@ NodePtr EditorFrame::createCamera()
 	// Create a new first-person camera for our viewport.
 	// By default it will be in perspective projection.
 	CameraPtr camera( new FirstPersonCamera(device) );
+	camera->setFar(100000.0f);
 
 	// Generate a new unique name.
 	std::string name( "EditorCamera"+String::fromNumber(i++) );
 
-	NodePtr cameraNode( new Node(name) );
-	cameraNode->addTransform();
-	cameraNode->addComponent( camera );
-	cameraNode->setTag( Tags::NonPickable, true );
-	cameraNode->setTag( EditorTags::EditorOnly, true );
+	NodePtr nodeCamera( new Node(name) );
+	nodeCamera->addTransform();
+	nodeCamera->addComponent( camera );
+	nodeCamera->setTag( Tags::NonPickable, true );
+	nodeCamera->setTag( EditorTags::EditorOnly, true );
 
-	return cameraNode;
+	return nodeCamera;
 }
 
 //-----------------------------------//
 
 void EditorFrame::createNotebook()
 {
-	wxImageList* img = new wxImageList(16, 16, false, 5);
-	img->Add(wxMEMORY_BITMAP(sitemap_color));
-	img->Add(wxMEMORY_BITMAP(package));
-	img->Add(wxMEMORY_BITMAP(world));
-
+	const wxSize notebookMinSize(220, wxSIZE_AUTO_HEIGHT);
 	notebookCtrl = new wxNotebook( this, wxID_ANY );
-	notebookCtrl->AssignImageList( img );
-
-	//-----------------------------------//
-
-	wxPanel* panelScene = new wxPanel( notebookCtrl, wxID_ANY );
-	
-	wxBoxSizer* panelSceneSizer = new wxBoxSizer( wxVERTICAL );
-	
-	sceneTreeCtrl = new SceneTreeCtrl( this, engine, panelScene, wxID_ANY );
-
-	sceneTreeCtrl->onItemSelected += fd::bind( &EditorFrame::OnNodeSelected, this );
-
-	panelSceneSizer->Add( sceneTreeCtrl, 1, wxALL|wxEXPAND, 0 );
-
-	panelScene->SetSizerAndFit( panelSceneSizer );
-
-	int scenePage = notebookCtrl->AddPage( panelScene, wxT("Scene"), true, 0 );
-
+	notebookCtrl->SetMinSize(notebookMinSize);
 	sizer->Add(notebookCtrl, 0, wxALL|wxEXPAND, 0 );
 
-	//-----------------------------------//
-
-	wxPanel* panelResources = new wxPanel( notebookCtrl, wxID_ANY );
-	
-	wxBoxSizer* panelResourcesSizer = new wxBoxSizer( wxVERTICAL );
-	
-	resourceTreeCtrl = new ResourceTreeCtrl(panelResources, wxID_ANY,
-		wxDefaultPosition, wxSize(220, -1), this);
-
-	panelResourcesSizer->Add( resourceTreeCtrl, 1, wxALL|wxEXPAND, 0 );
-
-	panelResources->SetSizerAndFit( panelResourcesSizer );
-
-	notebookCtrl->AddPage( panelResources, wxT("Resources"), true, 1 );
-
-	notebookCtrl->SetSelection( scenePage );
-
-	//-----------------------------------//
-
-	notebookCtrl->ChangeSelection( scenePage );
-}
-
-//-----------------------------------//
-
-void EditorFrame::createStatusbar()
-{
-    // create a status bar just for fun (by default with 1 pane only)
-    //CreateStatusBar(2);
-	//SetStatusText("vaporEngine (FPS: OVER 9000!)");
+	wxImageList* img = new wxImageList(16, 16);
+	notebookCtrl->AssignImageList( img );
 }
 
 //-----------------------------------//
@@ -312,6 +276,8 @@ void EditorFrame::createMenus()
     wxMenu* fileMenu = new wxMenu;
 	fileMenu->Append(Editor_Quit, "E&xit\tAlt-X", "Quit this program");
 
+    wxMenu* toolsMenu = new wxMenu;
+
     // the "About" item should be in the help menu
     wxMenu* helpMenu = new wxMenu;
     helpMenu->Append(Editor_About, "&About...\tF1", "Show about dialog");
@@ -319,6 +285,7 @@ void EditorFrame::createMenus()
     // now append the freshly created menu to the menu bar...
     wxMenuBar* menuBar = new wxMenuBar();
     menuBar->Append(fileMenu, "&File");
+	menuBar->Append(toolsMenu, "&Tools");
     menuBar->Append(helpMenu, "&Help");
 
     // ... and attach this menu bar to the frame
@@ -409,6 +376,221 @@ void EditorFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 	bSizer1->Fit( about );
 
 	about->Show(true);
+}
+
+//-----------------------------------//
+// Event handlers
+//-----------------------------------//
+
+void EditorFrame::RefreshViewport()
+{
+	if( viewframe )
+		viewframe->flagRedraw();
+}
+
+//-----------------------------------//
+
+void EditorFrame::onRender()
+{
+	Viewport* viewport = viewframe->getViewport();
+	const CameraPtr& camera = viewport->getCamera();
+	
+	camera->setViewport( viewport );
+	camera->render( engine->getSceneManager() );
+	camera->render( editorScene, false );
+}
+
+//-----------------------------------//
+
+void EditorFrame::onUpdate( double delta )
+{
+	editorScene->update( delta );
+	engine->update( delta );
+}
+
+//-----------------------------------//
+
+void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
+{
+	const int id = event.GetId();
+
+	switch(id) 
+	{
+	//-----------------------------------//
+	case Toolbar_TooglePlugin:
+	{
+		pluginManagerFrame->Show( !pluginManagerFrame->IsShown() );
+		pluginManagerFrame->SetFocus();
+		return;
+	}
+	//-----------------------------------//
+	case Toolbar_ToogleGrid:
+	{
+		const NodePtr& grid = editorScene->getEntity( "Grid" );
+		
+		if( grid )
+			grid->setVisible( !grid->isVisible() );
+		
+		RefreshViewport();
+		return;
+	}
+	//-----------------------------------//
+	case Toolbar_TooglePlay:
+	{
+		// Enable all simulations.
+		//PhysicsManager* pm = engine->getPhysicsManager();
+		//if( pm ) pm->setSimulationEnabled( !pm->getSimulationEnabled() );
+		return;
+	}
+	//-----------------------------------//
+	case Toolbar_ToogleSidebar:
+	{
+		wxSize newSize = viewframe->GetClientSize();
+		const wxSize& nbSize = notebookCtrl->GetClientSize();
+
+		if( notebookCtrl->IsShown() )
+		{
+			notebookCtrl->Hide();
+		}
+		else
+		{
+			notebookCtrl->Show();
+			newSize.SetWidth( newSize.GetWidth() + nbSize.GetWidth() );
+		}
+
+		SetClientSize( newSize );
+		Layout();
+		
+		return;
+	}
+	//-----------------------------------//
+	} // end switch
+}
+
+//-----------------------------------//
+
+void EditorFrame::createEditorScene()
+{
+	// Create a nice grid for the editor.
+	NodePtr grid( new Node("Grid") );
+	grid->addTransform();
+	grid->addComponent( GridPtr( new Grid() ) );
+	grid->setTag( Tags::NonPickable, true );
+	editorScene->add( grid );
+}
+
+//-----------------------------------//
+
+void EditorFrame::createScene()
+{
+	const ScenePtr& scene = engine->getSceneManager();
+	ResourceManager* const rm = engine->getResourceManager();
+
+	rm->loadResource("Diffuse.glsl");
+	rm->loadResource("Tex.glsl");
+	rm->loadResource("Toon.glsl");
+	rm->loadResource("Tex_Toon.glsl");
+	rm->loadResource("Sky.glsl");
+	rm->loadResource("Water.glsl");
+
+
+	// Sky.
+	ImagePtr clouds = rm->loadResource<Image>( "noise2.png" );
+
+	Viewport* viewport = viewframe->getViewport();
+	SkydomePtr skydome( new Skydome( viewport->getCamera() ) );
+	skydome->setClouds( clouds );
+	
+	NodePtr nodeSky( new Node("Sky") );
+	nodeSky->addTransform();	
+	nodeSky->addComponent( skydome );
+	scene->add( nodeSky );
+
+	TransformPtr transSky = nodeSky->getTransform();
+	transSky->scale(2.0f);
+
+	// Water.
+	MaterialPtr matWater( new Material("WaterMat", "Water") );
+	matWater->setTexture( 0, "water.png" );
+	matWater->setBlending(BlendingSource::SourceAlpha,
+		BlendingDestination::InverseSourceAlpha);
+	WaterPtr water( new Water(matWater) );
+
+	NodePtr nodeWater( new Node("Water") );
+	nodeWater->addTransform();	
+	nodeWater->addComponent( water );
+	scene->add( nodeWater );
+
+	TransformPtr transWater = nodeWater->getTransform();
+	transWater->rotate(90.0f, 0.0f, 0.0f);
+	transWater->scale(10.0f);
+	transWater->translate(0.0f, 5.0f, 0.0f);
+
+	// Light.
+	LightPtr light;
+	light.reset( new Light( LightType::Directional ) );
+	light->setDiffuseColor( Color::Red );
+	light->setAmbientColor( Color::Yellow );
+
+	TransformPtr transLight( new Transform(0.0f, 100.0f, 0.0f) );
+	transLight->rotate(45.0f, 0.0f, 0.0f);
+
+	NodePtr nodeLight( new Node("Light") );
+	nodeLight->addComponent( transLight );
+	nodeLight->addComponent( light );
+	scene->add( nodeLight );
+
+	// Terrain.
+	MaterialPtr cellMaterial( new Material("CellMaterial") );
+	cellMaterial->setTexture( 0, "PineTrunk.png" );
+	cellMaterial->setProgram( "tex_toon" );
+
+	TerrainSettings settings;
+	settings.CellSize = 512;
+	settings.NumberTiles = 32;
+	settings.MaxHeight = 100;
+	settings.Material = cellMaterial;
+
+	TerrainPtr terrain( new Terrain(settings) );
+
+	NodePtr terreno( new Node("Terreno") );
+	terreno->addTransform();
+	terreno->addComponent( terrain );
+	scene->add( terreno );
+
+	const ImagePtr& heightMap = rm->loadResource<Image>("height2.png");
+	terrain->addCell( heightMap, 0, 0 );
+
+	scene->update( 0.1f );
+}
+
+//-----------------------------------//
+
+void EditorFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
+{
+    // true forces the frame to close.
+    Close(true);
+}
+
+//-----------------------------------//
+
+void EditorFrame::OnKeyDown(wxKeyEvent& event)
+{
+	inputManager->processKeyEvent(event, true);
+}
+
+//-----------------------------------//
+
+void EditorFrame::OnKeyUp(wxKeyEvent& event)
+{
+	inputManager->processKeyEvent(event, false);
+}
+
+//-----------------------------------//
+
+void EditorFrame::OnMouseEvent(wxMouseEvent& event)
+{
+	inputManager->processMouseEvent(event);
 }
 
 //-----------------------------------//

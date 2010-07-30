@@ -29,10 +29,23 @@ public:
 	// Redoes an operation.
 	bool redoOperation();
 
+	// Gets the undo operations.
+	GETTER(UndoOperations, const Operations&, undoOperations)
+
+	// Gets the redo operations.
+	GETTER(RedoOperations, const Operations&, redoOperations)
+
+	// Gets sent on an undo/redo event.
+	fd::delegate<void()> onUndoRedoEvent;
+
 protected:
 
+	// Fires the undo/redo event.
+	void fireUndoRedoEvent();
+
 	// Handles undo/redo operations.
-	void handleOperation(bool undo);
+	void handleOperation(Operations& firstOperations,
+		Operations& secondOperations, bool undo);
 
 	// Undo operations.
 	Operations undoOperations;

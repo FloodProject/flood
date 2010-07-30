@@ -28,6 +28,7 @@ namespace RenderGroup
 	{
 		Normal = 0,
 		Transparency = 5,
+		PostTransparency = 7,
 		Overlays = 10
 	};
 }
@@ -45,16 +46,16 @@ namespace RenderGroup
 struct RenderState
 {
 	RenderState()
-		: group( RenderGroup::Normal ),
-		priority(0) 
-	{}
+		: group( RenderGroup::Normal )
+		, priority(0) 
+	{ }
 	
 	RenderState( const RenderState& rhs )
-		: group( rhs.group ),
-		priority( rhs.priority ),
-		renderable( rhs.renderable ),
-		modelMatrix( rhs.modelMatrix )
-	{}
+		: group( rhs.group )
+		, priority( rhs.priority )
+		, renderable( rhs.renderable )
+		, modelMatrix( rhs.modelMatrix )
+	{ }
 
 	RenderGroup::Enum group;
 	int priority;

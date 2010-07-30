@@ -8,9 +8,14 @@
 
 #include "PCH.h"
 #include "GizmoPlugin.h"
+#include "GizmoOperation.h"
+#include "GizmoTranslate.h"
+#include "GizmoRotate.h"
+#include "GizmoScale.h"
 #include "Editor.h"
-#include "UndoManager.h"
 #include "EditorIcons.h"
+#include "Events.h"
+#include "UndoManager.h"
 #include "Viewframe.h"
 
 namespace vapor { namespace editor {
@@ -41,29 +46,40 @@ PluginMetadata GizmoPlugin::getMetadata()
 
 //-----------------------------------//
 
-void GizmoPlugin::onPluginEnable(wxToolBar* toolBar)
+void GizmoPlugin::onPluginEnable()
 {
-	toolBar->AddSeparator();
+	wxToolBar* toolBar = editor->getToolbar();
+
+	addTool( toolBar->AddSeparator() );
 
 	wxBitmap iconCamera = wxMEMORY_BITMAP(camera);
-	buttonCamera = toolBar->AddTool( wxID_ANY, "Camera",
+	buttonCamera = toolBar->AddTool( GizmoTool::Camera, "Camera",
 		iconCamera, "Selects the Camera View tool", wxITEM_RADIO );
+	addTool(buttonCamera);
 
 	wxBitmap iconSelect = wxMEMORY_BITMAP(cursor);
 	buttonSelect = toolBar->AddTool( GizmoTool::Select, "Select",
 		iconSelect, "Selects the Entity Selection tool", wxITEM_RADIO );
+	addTool(buttonSelect);
 
 	wxBitmap iconTranslate = wxMEMORY_BITMAP(move);
 	buttonTranslate = toolBar->AddTool( GizmoTool::Translate, "Move",
 		iconTranslate, "Selects the Move tool", wxITEM_RADIO );
+	addTool(buttonTranslate);
 
 	wxBitmap iconRotate = wxMEMORY_BITMAP(rotate2);
 	buttonRotate = toolBar->AddTool( GizmoTool::Rotate, "Rotate",
 		iconRotate, "Selects the Rotate tool", wxITEM_RADIO );
+	addTool(buttonRotate);
 
 	wxBitmap iconScale = wxMEMORY_BITMAP(scale);
 	buttonScale = toolBar->AddTool( GizmoTool::Scale, "Scale",
 		iconScale, "Selects the Scale tool", wxITEM_RADIO );
+	addTool(buttonScale);
+
+	// TODO: Hack.
+	Events* events = editor->getEventManager();
+	events->currentPlugin = this;
 
 	toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
 		&GizmoPlugin::onGizmoButtonClick, this,
@@ -72,25 +88,8 @@ void GizmoPlugin::onPluginEnable(wxToolBar* toolBar)
 
 //-----------------------------------//
 
-void GizmoPlugin::onPluginDisable(wxToolBar* toolBar)
+void GizmoPlugin::onPluginDisable()
 {
-	int id;
-	
-	id = buttonCamera->GetId();
-	toolBar->DeleteTool(id);
-
-	id = buttonSelect->GetId();
-	toolBar->DeleteTool(id);
-
-	id = buttonTranslate->GetId();
-	toolBar->DeleteTool(id);
-
-	id = buttonRotate->GetId();
-	toolBar->DeleteTool(id);
-
-	id = buttonScale->GetId();
-	toolBar->DeleteTool(id);
-
 	disableSelectedNodes();
 }
 
@@ -98,30 +97,26 @@ void GizmoPlugin::onPluginDisable(wxToolBar* toolBar)
 
 void GizmoPlugin::onGizmoButtonClick(wxCommandEvent& event)
 {
-	//tool
+	tool = (GizmoTool::Enum) event.GetId();
 }
 
 //-----------------------------------//
 
 void GizmoPlugin::onNodeSelect( const NodePtr& node )
 {
-	//if( isMode(GizmoTool::Camera) )
-	//	return;
-	//
-	//if( isMode(GizmoTool::Select) )
-	//{
-	//	if( nodeOld )
-	//		setBoundingBoxVisible( nodeOld, false );
-
-	//	setBoundingBoxVisible( nodeNew, true );
-	//	return;
-	//}
-
-	//if( isMode(GizmoTool::Translate) || isMode(GizmoTool::Scale) || isMode(GizmoTool::Rotate) )
-	//{
-	//	drawGizmo( nodeOld, nodeNew );
-	//}
 	setBoundingBoxVisible( node, true );
+
+	if( isTool(GizmoTool::Translate)
+		|| isTool(GizmoTool::Scale) || isTool(GizmoTool::Rotate) )
+	{
+		setBoundingBoxVisible( node, true );
+
+		bool gizmoExists = gizmos.find(node) != gizmos.end();
+	
+		if( !gizmoExists )
+			createGizmo( node );
+	}
+
 	editor->RefreshViewport();
 }
 
@@ -130,6 +125,14 @@ void GizmoPlugin::onNodeSelect( const NodePtr& node )
 void GizmoPlugin::onNodeUnselect( const NodePtr& node )
 {
 	setBoundingBoxVisible( node, false );
+
+	if( isTool(GizmoTool::Translate)
+		|| isTool(GizmoTool::Scale) || isTool(GizmoTool::Rotate) )
+	{
+		setBoundingBoxVisible( node, false );
+		removeGizmo( node );
+	}
+
 	editor->RefreshViewport();
 }
 
@@ -140,20 +143,21 @@ void GizmoPlugin::onMouseMove( const MouseMoveEvent& moveEvent )
 	if( !gizmo )
 		return;
 
-	if( !isMode(GizmoTool::Translate) )
+	if( !(isTool(GizmoTool::Translate)
+		|| isTool(GizmoTool::Scale) || isTool(GizmoTool::Rotate)) )
 		return;
 
 	// To check if the user picked a gizmo we use two hit tests.
-	// First a not very accurate test based on bounding volumes.
-	// If it hits, then we will test with a more accurate image
-	// based picking technique (more expensive test).
+	// First an inaccurate test based on bounding volumes.
+	// If it hits, then we will test with a more accurate
+	// image based picking technique.
 
-	if( !pickBoundingTest(moveEvent) )
-	{
-		// TODO: Uncomment once picking works properly.
-		//gizmo->deselectAxis();
-		//return;
-	}
+	//if( !pickBoundingTest(moveEvent) )
+	//{
+	//	// TODO: Uncomment once picking works properly.
+	//	//gizmo->deselectAxis();
+	//	//return;
+	//}
 
 	if( pickImageTest(moveEvent, axis) )
 	{
@@ -172,22 +176,30 @@ void GizmoPlugin::onMouseMove( const MouseMoveEvent& moveEvent )
 		op = nullptr;
 	}
 	
-	viewframe->flagRedraw();
+	editor->RefreshViewport();
 }
 
 //-----------------------------------//
 
 void GizmoPlugin::onMouseDrag( const MouseDragEvent& dragEvent )
 {
+	//if( isTool(GizmoTool::Camera) )
+	//{
+	//	Viewport* viewport = viewframe->getViewport();
+	//	CameraPtr camera = viewport->getCamera();
+	//	NodePtr nodeCamera = camera->getNode();
+	//	TransformPtr transCamera = nodeCamera->getTransform();
+	//	transCamera->translate( dragEvent.dx, dragEvent.dy, 0 );
+	//	return;
+	//}
+
 	if( !gizmo || !gizmo->isAnyAxisSelected() )
 		return;
-
-	//assert( op != nullptr );
 
 	if( !op )
 		return;
 
-	Vector3 unit = Gizmo::getUnitVector(op->axis);
+	Vector3 unit = Gizmo::getAxisVector(op->axis);
 
 	if( axis == GizmoAxis::X )
 		unit *= dragEvent.dx;
@@ -201,7 +213,11 @@ void GizmoPlugin::onMouseDrag( const MouseDragEvent& dragEvent )
 	// Transform the object.
 	const NodePtr nodeObject( op->weakNode );
 	const TransformPtr& transObject = nodeObject->getTransform();
-	transObject->translate( unit );
+
+	if( isTool(GizmoTool::Translate) )
+		transObject->translate( unit );
+	else if( isTool(GizmoTool::Scale) )
+		transObject->scale( Vector3(1, 1, 1)+unit*0.05f );
 	
 	// Transform the gizmo.
 	//const NodePtr& nodeGizmo = gizmo->getNode();
@@ -264,14 +280,28 @@ void GizmoPlugin::createGizmo( const NodePtr& node )
 	Viewport* viewport = viewframe->getViewport();
 	const CameraPtr& camera = viewport->getCamera();
 
+	Gizmo* newGizmo = nullptr;
+
 	// Create new Gizmo for the node.
-	gizmo.reset( new Gizmo(node, camera) );
+	if( isTool(GizmoTool::Translate) )
+		newGizmo = new GizmoTranslate(node, camera);
+
+	else if( isTool(GizmoTool::Rotate) )
+		newGizmo = new GizmoRotate(node, camera);
+
+	else if( isTool(GizmoTool::Scale) )
+		newGizmo = new GizmoScale(node, camera);
+
+	gizmo.reset(newGizmo);
+	gizmo->buildGeometry();
 
 	// Add the gizmo to the scene.
 	NodePtr nodeGizmo( new Node("Gizmo") );
 	nodeGizmo->addTransform();
 	nodeGizmo->addComponent(gizmo);
 	editorScene->add(nodeGizmo);
+
+	gizmo->updatePositionScale();
 	
 	// Associate the gizmo with the node.
 	gizmos[node] = nodeGizmo;
@@ -325,36 +355,13 @@ void GizmoPlugin::disableSelectedNodes()
 	}
 
 	selected.clear();
-	viewframe->flagRedraw();
+	editor->RefreshViewport();
 }
 
 //-----------------------------------//
 
-void GizmoPlugin::drawGizmo( NodePtr nodeOld, NodePtr nodeNew )
-{
-	if( !isMode(GizmoTool::Translate) )
-		return;
-
-	if( nodeOld )
-	{
-		removeGizmo( nodeOld );
-		setBoundingBoxVisible( nodeOld, false );
-	}
-
-	bool newGizmoNotExists = gizmos.find(nodeNew) == gizmos.end();
-	
-	if( nodeNew && newGizmoNotExists )
-	{
-		createGizmo( nodeNew );
-		setBoundingBoxVisible( nodeNew, true );
-	}
-
-	viewframe->flagRedraw();
-}
-
-//-----------------------------------//
-
-bool GizmoPlugin::pickImageTest( const MouseMoveEvent& moveEvent, GizmoAxis::Enum& axis )
+bool GizmoPlugin::pickImageTest( const MouseMoveEvent& moveEvent,
+								 GizmoAxis::Enum& axis )
 {
 	Viewport* viewport = viewframe->getViewport();
 	Vector2i size = viewport->getSize();
@@ -362,12 +369,12 @@ bool GizmoPlugin::pickImageTest( const MouseMoveEvent& moveEvent, GizmoAxis::Enu
 	// We need to flip the Y-axis due to a mismatch between the 
 	// OpenGL and wxWidgets coordinate-system origin conventions.
 	int mouseX = moveEvent.x;
-	int mouseY = size.y-moveEvent.y;
+	int mouseY = size.y - moveEvent.y;
 
 	RenderDevice* device = engine->getRenderDevice();
 	Color pick = device->getPixel(mouseX, mouseY);
-	
-	axis = Gizmo::getAxis(pick);
+
+	axis = gizmo->getAxis(pick);
 	return axis != GizmoAxis::None;
 }
 
@@ -407,63 +414,19 @@ void GizmoPlugin::createOperation()
 	op->tool = tool;
 	op->gizmo = gizmo;
 
-	NodePtr node = gizmo->getNodeAttachment();
-	TransformPtr tr = node->getTransform();
+	NodePtr nodeObject = gizmo->getNodeAttachment();
+	TransformPtr transObject = nodeObject->getTransform();
 
-	op->orig_translation = tr->getPosition();
-	op->orig_scale = tr->getScale();
-	op->orig_rotation = tr->getRotation();
+	op->prevTranslation = transObject->getPosition();
+	op->prevScale = transObject->getScale();
+	op->prevRotation = transObject->getRotation();
 }
 
 //-----------------------------------//
 
-GizmoOperation::GizmoOperation()
-	: tool(GizmoTool::Camera)
-	, scale(1.0f, 1.0f, 1.0f)
-{ }
-
-//-----------------------------------//
-
-void GizmoOperation::undo()
+bool GizmoPlugin::isTool(GizmoTool::Enum mode)
 {
-	process( true );
-}
-
-//-----------------------------------//
-
-void GizmoOperation::redo()
-{
-	process( false );
-}
-
-//-----------------------------------//
-
-void GizmoOperation::process( bool undo )
-{
-	assert( tool == GizmoTool::Translate );
-
-	NodePtr node( weakNode );
-
-	// This can happen if the node gets deleted between
-	// the operation registration and the undo/redo action.
-	if( !node )
-		return;
-
-	const Vector3& tr = undo ? orig_translation : translation;
-
-	TransformPtr transform = node->getTransform();
-	transform->setPosition( tr );
-
-	// Modify the gizmo if it still exists.
-	NodePtr nodeGizmo( gizmo->getNode() );
-	
-	if( !nodeGizmo )
-		return;
-
-	TransformPtr transGizmo = nodeGizmo->getTransform();
-
-	if( transGizmo )
-		transGizmo->setPosition( tr );
+	return mode == tool;
 }
 
 //-----------------------------------//

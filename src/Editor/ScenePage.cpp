@@ -7,9 +7,10 @@
 ************************************************************************/
 
 #include "PCH.h"
-#include "SceneTreeCtrl.h"
-#include "EditorIcons.h"
+#include "ScenePage.h"
+#include "Events.h"
 #include "Editor.h"
+#include "EditorIcons.h"
 #include "Viewframe.h"
 
 namespace vapor { namespace editor {
@@ -30,17 +31,17 @@ enum
 // Event table
 ////////////////////////////////////////////////////////////
 
-BEGIN_EVENT_TABLE(SceneTreeCtrl, wxPanel)
-	EVT_TREE_ITEM_MENU(ID_SceneTree, SceneTreeCtrl::onItemMenu)
-	EVT_TREE_SEL_CHANGED(ID_SceneTree, SceneTreeCtrl::onItemChanged)
-	EVT_TREE_BEGIN_LABEL_EDIT(ID_SceneTree, SceneTreeCtrl::onLabelEditBegin)
-	EVT_TREE_END_LABEL_EDIT(ID_SceneTree, SceneTreeCtrl::onLabelEditEnd)
-	EVT_TREE_BEGIN_DRAG(ID_SceneTree, SceneTreeCtrl::onDragBegin)
-	EVT_TREE_END_DRAG(ID_SceneTree, SceneTreeCtrl::onDragEnd)
-	EVT_CONTEXT_MENU(SceneTreeCtrl::onMouseRightUp)
-	EVT_MENU(wxID_ANY, SceneTreeCtrl::onNodeMenu)
-	EVT_BUTTON(ID_ButtonNodeAdd, SceneTreeCtrl::onButtonNodeAdd)
-	EVT_BUTTON(ID_ButtonNodeDelete, SceneTreeCtrl::onButtonNodeDelete)
+BEGIN_EVENT_TABLE(ScenePage, wxPanel)
+	EVT_TREE_ITEM_MENU(ID_SceneTree, ScenePage::onItemMenu)
+	EVT_TREE_SEL_CHANGED(ID_SceneTree, ScenePage::onItemChanged)
+	EVT_TREE_BEGIN_LABEL_EDIT(ID_SceneTree, ScenePage::onLabelEditBegin)
+	EVT_TREE_END_LABEL_EDIT(ID_SceneTree, ScenePage::onLabelEditEnd)
+	EVT_TREE_BEGIN_DRAG(ID_SceneTree, ScenePage::onDragBegin)
+	EVT_TREE_END_DRAG(ID_SceneTree, ScenePage::onDragEnd)
+	EVT_CONTEXT_MENU(ScenePage::onMouseRightUp)
+	EVT_MENU(wxID_ANY, ScenePage::onNodeMenu)
+	EVT_BUTTON(ID_ButtonNodeAdd, ScenePage::onButtonNodeAdd)
+	EVT_BUTTON(ID_ButtonNodeDelete, ScenePage::onButtonNodeDelete)
 END_EVENT_TABLE()
 
 //-----------------------------------//
@@ -97,13 +98,12 @@ public:
 
 //-----------------------------------//
 
-SceneTreeCtrl::SceneTreeCtrl( EditorFrame* frame, Engine* engine,
-							 wxWindow* parent, wxWindowID id )
-	: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(230, -1) ),
-	engine(engine), editor(frame), activated(false)
+ScenePage::ScenePage( EditorFrame* frame, wxWindow* parent, wxWindowID id )
+	: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(230, -1) )
+	, editor(frame)
+	, activated(false)
 {
-	assert( engine != nullptr );
-	
+	engine = editor->getEngine();
 	const ScenePtr& scene = engine->getSceneManager();
 	weakScene = scene;
 
@@ -114,7 +114,7 @@ SceneTreeCtrl::SceneTreeCtrl( EditorFrame* frame, Engine* engine,
 
 //-----------------------------------//
 
-void SceneTreeCtrl::initControl()
+void ScenePage::initControl()
 {
 	wxBoxSizer* sizer = new wxBoxSizer( wxVERTICAL );
 
@@ -131,8 +131,8 @@ void SceneTreeCtrl::initControl()
 
 	tree->ExpandAll();
 
-	scene->onNodeAdded += fd::bind( &SceneTreeCtrl::onNodeAdded, this );
-	scene->onNodeRemoved += fd::bind( &SceneTreeCtrl::onNodeRemoved, this );
+	scene->onNodeAdded += fd::bind( &ScenePage::onNodeAdded, this );
+	scene->onNodeRemoved += fd::bind( &ScenePage::onNodeRemoved, this );
 	
 	wxBoxSizer* sizer2 = new wxBoxSizer( wxHORIZONTAL );
 
@@ -160,7 +160,7 @@ void SceneTreeCtrl::initControl()
 
 //-----------------------------------//
 
-void SceneTreeCtrl::initIcons()
+void ScenePage::initIcons()
 {
 	// create a new list of all the icons.
 	imageList = new wxImageList(16, 16, false, 12);
@@ -187,7 +187,7 @@ void SceneTreeCtrl::initIcons()
 
 //-----------------------------------//
 
-void SceneTreeCtrl::initScene( wxTreeItemId id, const NodePtr& node )
+void ScenePage::initScene( wxTreeItemId id, const NodePtr& node )
 {
 	GroupPtr group( std::dynamic_pointer_cast<Group>(node) );
 	
@@ -209,7 +209,7 @@ void SceneTreeCtrl::initScene( wxTreeItemId id, const NodePtr& node )
 
 //-----------------------------------//
 
-NodePtr SceneTreeCtrl::getEntity( wxTreeItemId id )
+NodePtr ScenePage::getEntity( wxTreeItemId id )
 {
 	if( !id || !id.IsOk() )
 		return NodePtr();
@@ -224,11 +224,12 @@ NodePtr SceneTreeCtrl::getEntity( wxTreeItemId id )
 
 //-----------------------------------//
 
-void SceneTreeCtrl::onItemChanged(wxTreeEvent& event)
+void ScenePage::onItemChanged(wxTreeEvent& event)
 {
 	wxTreeItemId oldId = event.GetOldItem();
 	wxTreeItemId newId = event.GetItem();
 
+	const NodePtr& oldNode = getEntity( oldId );
 	const NodePtr& newNode = getEntity( newId );
 	
 	if( newNode )
@@ -236,15 +237,15 @@ void SceneTreeCtrl::onItemChanged(wxTreeEvent& event)
 	else
 		buttonNodeDelete->Disable();
 
-	if( !onItemSelected.empty() )
-	{
-		onItemSelected( oldId, newId );
-	}
+	// Send proper events to plugins.
+	Events* events = editor->getEventManager();
+	events->onNodeUnselect(oldNode);
+	events->onNodeSelect(newNode);
 }
 
 //-----------------------------------//
 
-void SceneTreeCtrl::onItemMenu(wxTreeEvent& event)
+void ScenePage::onItemMenu(wxTreeEvent& event)
 {
 	menuItemId = event.GetItem();
 	const NodePtr& node = getEntity( menuItemId );
@@ -286,7 +287,7 @@ void SceneTreeCtrl::onItemMenu(wxTreeEvent& event)
 
 //-----------------------------------//
 
-void SceneTreeCtrl::onButtonNodeAdd(wxCommandEvent&)
+void ScenePage::onButtonNodeAdd(wxCommandEvent&)
 {
 	static int i = 0;
 	std::string name( "SceneNode"+String::fromNumber(i++) );
@@ -312,7 +313,7 @@ void SceneTreeCtrl::onButtonNodeAdd(wxCommandEvent&)
 
 //-----------------------------------//
 
-void SceneTreeCtrl::onButtonNodeDelete(wxCommandEvent&)
+void ScenePage::onButtonNodeDelete(wxCommandEvent&)
 {	
 	wxTreeItemId id = tree->GetSelection();
 	NodePtr node = getEntity(id);
@@ -326,7 +327,7 @@ void SceneTreeCtrl::onButtonNodeDelete(wxCommandEvent&)
 
 //-----------------------------------//
 
-void SceneTreeCtrl::onNodeMenu( wxCommandEvent& event )
+void ScenePage::onNodeMenu( wxCommandEvent& event )
 {
 	int id = event.GetId();
 
@@ -372,7 +373,7 @@ void SceneTreeCtrl::onNodeMenu( wxCommandEvent& event )
 
 //-----------------------------------//
 
-void SceneTreeCtrl::onComponentAdd(wxCommandEvent& event )
+void ScenePage::onComponentAdd(wxCommandEvent& event )
 {
 	int id = event.GetId();
 
@@ -413,7 +414,7 @@ void SceneTreeCtrl::onComponentAdd(wxCommandEvent& event )
 
 //-----------------------------------//
 
-void SceneTreeCtrl::addComponent( wxTreeItemId id, ComponentPtr comp )
+void ScenePage::addComponent( wxTreeItemId id, ComponentPtr comp )
 {
 	assert( comp != nullptr );
 	const std::string& type = comp->getType();
@@ -430,7 +431,7 @@ void SceneTreeCtrl::addComponent( wxTreeItemId id, ComponentPtr comp )
 
 //-----------------------------------//
 
-wxTreeItemId SceneTreeCtrl::addNode( const NodePtr& node )
+wxTreeItemId ScenePage::addNode( const NodePtr& node )
 {
 	assert( !node->getName().empty() );
 
@@ -451,7 +452,7 @@ wxTreeItemId SceneTreeCtrl::addNode( const NodePtr& node )
 
 //-----------------------------------//
 
-void SceneTreeCtrl::onNodeAdded( const GroupEvent& event )
+void ScenePage::onNodeAdded( const GroupEvent& event )
 {
 	if( event.node->getTag(EditorTags::EditorOnly) )
 		return;
@@ -461,7 +462,7 @@ void SceneTreeCtrl::onNodeAdded( const GroupEvent& event )
 
 //-----------------------------------//
 
-void SceneTreeCtrl::onNodeRemoved( const GroupEvent& /*event*/ )
+void ScenePage::onNodeRemoved( const GroupEvent& /*event*/ )
 {
 	//const std::string& type = component.second->getType();
 	//AppendItem( id, type, icons[type] );
@@ -469,7 +470,7 @@ void SceneTreeCtrl::onNodeRemoved( const GroupEvent& /*event*/ )
 
 //-----------------------------------//
 
-void SceneTreeCtrl::onLabelEditBegin( wxTreeEvent& event )
+void ScenePage::onLabelEditBegin( wxTreeEvent& event )
 {
 	wxTreeItemId item = event.GetItem();
 	NodePtr node = getEntity( item );
@@ -482,7 +483,7 @@ void SceneTreeCtrl::onLabelEditBegin( wxTreeEvent& event )
 
 //-----------------------------------//
 
-void SceneTreeCtrl::onLabelEditEnd( wxTreeEvent& event )
+void ScenePage::onLabelEditEnd( wxTreeEvent& event )
 {
 	ScenePtr scene( weakScene );
 	wxTreeItemId item = event.GetItem();
@@ -509,7 +510,7 @@ void SceneTreeCtrl::onLabelEditEnd( wxTreeEvent& event )
 
 //-----------------------------------//
 
-void SceneTreeCtrl::onActivate( wxFocusEvent& /*event*/ )
+void ScenePage::onActivate( wxFocusEvent& /*event*/ )
 {
 	if( !activated )
 	{
@@ -520,7 +521,7 @@ void SceneTreeCtrl::onActivate( wxFocusEvent& /*event*/ )
 
 //-----------------------------------//
 
-void SceneTreeCtrl::onDragBegin( wxTreeEvent& event )
+void ScenePage::onDragBegin( wxTreeEvent& event )
 {
 	//event.Allow();
 
@@ -530,7 +531,7 @@ void SceneTreeCtrl::onDragBegin( wxTreeEvent& event )
 
 //-----------------------------------//
 
-void SceneTreeCtrl::onDragEnd( wxTreeEvent& event )
+void ScenePage::onDragEnd( wxTreeEvent& event )
 {
 	// Get the drop point location and do an hit test to check if
 	// it was was done in a valid tree item id location.
@@ -561,7 +562,7 @@ void SceneTreeCtrl::onDragEnd( wxTreeEvent& event )
 
 //-----------------------------------//
 
-void SceneTreeCtrl::onMouseRightUp( wxContextMenuEvent& event )
+void ScenePage::onMouseRightUp( wxContextMenuEvent& event )
 {
 	wxPoint clientpt = event.GetPosition();
 

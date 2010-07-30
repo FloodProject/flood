@@ -67,14 +67,11 @@ void RenderDevice::init()
 
 	setClearColor( Color::White );
 
-	//glEnable( GL_DEPTH_TEST );
 	//glDepthMask( GL_TRUE );
-
 	glEnable( GL_CULL_FACE );
 	glCullFace( GL_BACK );
+	glEnable( GL_DEPTH_TEST );
 	glDisable( GL_BLEND );
-	//glEnable( GL_LINE_SMOOTH );
-	//glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
 }
 
 //-----------------------------------//
@@ -314,7 +311,10 @@ bool RenderDevice::setupRenderStateOverlay( const RenderState& state )
 void RenderDevice::setupRenderStateMaterial( const MaterialPtr& mat )
 {
 	if( mat->lineSmooth )
+	{
 		glEnable( GL_LINE_SMOOTH );
+		glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
+	}
 	
 	if( mat->lineWidth != Material::DefaultLineWidth )
 		glLineWidth( mat->getLineWidth() );

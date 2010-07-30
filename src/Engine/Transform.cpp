@@ -183,9 +183,9 @@ void Transform::setAbsoluteTransform( const Matrix4x3& newTransform )
 
 Matrix4x3 Transform::getLocalTransform() const
 {
-	Matrix4x3 matOrientation = rotation.getOrientationMatrix();
-	Matrix4x3 matTranslation = Matrix4x3::createTranslationMatrix(translation);
-	Matrix4x3 matScale = Matrix4x3::createScaleMatrix(_scale);
+	Matrix4x3 matOrientation = Matrix4x3::createOrientation(rotation);
+	Matrix4x3 matTranslation = Matrix4x3::createTranslation(translation);
+	Matrix4x3 matScale = Matrix4x3::createScale(_scale);
 	
 	// Combine all the transformations in a single matrix.
 	Matrix4x3 transform = matScale*matOrientation*matTranslation;

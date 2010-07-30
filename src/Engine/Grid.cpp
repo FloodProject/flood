@@ -19,14 +19,13 @@ static const Vector3 RegularLineColor(0.4f);
 static const Vector3 StrongLineColor(0.9f);
 
 Grid::Grid()
-  : sizeX(500)
-  , sizeZ(500)
-  , divX(20)
-  , divZ(20)
+  : sizeX(1000)
+  , sizeZ(1000)
+  , divX(40)
+  , divZ(40)
   , strongMainLines(true)
 {
 	MaterialPtr material( new Material("Grid") );
-	material->setDepthTest(false);
 	
 	RenderablePtr rend( new Renderable(Primitive::Lines) );
 	rend->setVertexBuffer( buildGeometry() );

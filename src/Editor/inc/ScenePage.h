@@ -22,18 +22,15 @@ class EditorFrame;
  * properties of the associated scene nodes.
  */
 
-class SceneTreeCtrl : public wxPanel 
+class ScenePage : public wxPanel 
 {
 public:
 
-	SceneTreeCtrl( EditorFrame*, Engine* engine, 
-					wxWindow* parent, wxWindowID id = wxID_ANY );
+	ScenePage( EditorFrame*, 
+		wxWindow* parent, wxWindowID id = wxID_ANY );
 
 	// Gets the entity represented by the tree item.
 	NodePtr getEntity( wxTreeItemId id );
-
-	// Event sent when a tree node selection occurs.
-	fd::delegate<void (wxTreeItemId, wxTreeItemId)> onItemSelected;
 
 protected:
 

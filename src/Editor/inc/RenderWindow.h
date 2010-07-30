@@ -42,6 +42,9 @@ public:
 	// Handle the window message events.
 	virtual bool pumpEvents();
 
+	// Makes this the current OpenGL context.
+	virtual void makeCurrent();
+
 	// Sets the title of the window.
 	virtual void setTitle(const std::string& title);
 
@@ -58,10 +61,7 @@ public:
 	virtual void setCursorPosition( int x, int y );
 
 	// Gets the input manager.
-	InputManager* getInputManager() { return im; }
-
-	// Makes this the current OpenGL context.
-	virtual void makeCurrent();
+	InputManager* getInputManager() { return inputManager; }
 
 private:
 
@@ -78,7 +78,7 @@ private:
 	wxGLContext* context;
 
 	// wxWidgets Input Manager.
-	EditorInputManager* im;
+	EditorInputManager* inputManager;
 };
 
 //-----------------------------------//
