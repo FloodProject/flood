@@ -90,7 +90,8 @@ void GizmoPlugin::onPluginEnable()
 
 void GizmoPlugin::onPluginDisable()
 {
-	disableSelectedNodes();
+	foreach( const GizmoMapPair& pair, gizmos )
+		onNodeUnselect( pair.first );
 }
 
 //-----------------------------------//
@@ -98,6 +99,17 @@ void GizmoPlugin::onPluginDisable()
 void GizmoPlugin::onGizmoButtonClick(wxCommandEvent& event)
 {
 	tool = (GizmoTool::Enum) event.GetId();
+
+	std::vector<NodePtr> nodes;
+	
+	foreach( const GizmoMapPair& pair, gizmos )
+		nodes.push_back(pair.first);
+
+	foreach( const NodePtr& node, nodes )
+	{
+		onNodeUnselect(node);
+		onNodeSelect(node);
+	}
 }
 
 //-----------------------------------//
@@ -109,9 +121,7 @@ void GizmoPlugin::onNodeSelect( const NodePtr& node )
 	if( isTool(GizmoTool::Translate)
 		|| isTool(GizmoTool::Scale) || isTool(GizmoTool::Rotate) )
 	{
-		setBoundingBoxVisible( node, true );
-
-		bool gizmoExists = gizmos.find(node) != gizmos.end();
+		bool gizmoExists = ( gizmos.find(node) != gizmos.end() );
 	
 		if( !gizmoExists )
 			createGizmo( node );
@@ -129,7 +139,6 @@ void GizmoPlugin::onNodeUnselect( const NodePtr& node )
 	if( isTool(GizmoTool::Translate)
 		|| isTool(GizmoTool::Scale) || isTool(GizmoTool::Rotate) )
 	{
-		setBoundingBoxVisible( node, false );
 		removeGizmo( node );
 	}
 
@@ -199,7 +208,7 @@ void GizmoPlugin::onMouseDrag( const MouseDragEvent& dragEvent )
 	if( !op )
 		return;
 
-	Vector3 unit = Gizmo::getAxisVector(op->axis);
+	Vector3 unit = gizmo->getAxisVector(op->axis);
 
 	if( axis == GizmoAxis::X )
 		unit *= dragEvent.dx;
@@ -314,8 +323,7 @@ void GizmoPlugin::removeGizmo( const NodePtr& node )
 	assert( node != nullptr );
 
 	// Find the existing gizmo associated with the node.
-	GizmoNodeMap::iterator it = gizmos.find(node);
-	//assert( it != gizmos.end() );
+	GizmoMap::iterator it = gizmos.find(node);
 
 	if( it == gizmos.end() )
 		return;
@@ -341,21 +349,6 @@ void GizmoPlugin::setBoundingBoxVisible( const NodePtr& node, bool state )
 		return;
 
 	transform->setDebugRenderableVisible( state );
-}
-
-//-----------------------------------//
-
-void GizmoPlugin::disableSelectedNodes()
-{
-	// Disable all selected nodes bounding boxes and gizmos.
-	foreach( const NodePtr& node, selected )
-	{
-		removeGizmo( node );
-		setBoundingBoxVisible( node, false );
-	}
-
-	selected.clear();
-	editor->RefreshViewport();
 }
 
 //-----------------------------------//

@@ -60,7 +60,10 @@ public:
 	virtual GizmoAxis::Enum getAxis(Color&);
 
 	// Converts an axis enum to a unit vector.
-	static Vector3 getAxisVector( GizmoAxis::Enum );
+	Vector3 getAxisVector( GizmoAxis::Enum );
+
+	// Converts an axis to a color.
+	Color getAxisColor( GizmoAxis::Enum axis );
 
 	// Updates the position and scale of the gizmo.
 	void updatePositionScale(); 

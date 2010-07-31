@@ -130,6 +130,24 @@ Vector3 Gizmo::getAxisVector( GizmoAxis::Enum axis )
 
 //-----------------------------------//
 
+Color Gizmo::getAxisColor( GizmoAxis::Enum axis )
+{
+	assert( axis != GizmoAxis::None );
+
+	if( axis == GizmoAxis::X )
+		return X;
+	
+	else if( axis == GizmoAxis::Y )
+		return Y;
+	
+	else if( axis == GizmoAxis::Z )
+		return Z;
+
+	return Color::Black;
+}
+
+//-----------------------------------//
+
 bool Gizmo::isAnyAxisSelected() const
 {
 	GizmoAxis::Enum axis = getAxisSelected();

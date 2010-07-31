@@ -38,15 +38,13 @@ RenderablePtr buildBoundingRenderable( const AABB& aabb )
 	ADD_BOX_FACE( 1, 3, 7, 5 ) // Right
 
 	const int numColors = 6*4; // Faces*Vertices
-	std::vector< Vector3 > colors( numColors, Vector3(1.0f, 1.0f, 0.0f) );
+	std::vector< Vector3 > colors( numColors, Color::White );
 
 	VertexBufferPtr vb( new VertexBuffer() );
 	vb->set( VertexAttribute::Position, pos );
 	vb->set( VertexAttribute::Color, colors );
 
 	MaterialPtr mat( new Material("BoundingBox", "Diffuse") );
-	mat->setLineWidth( 1.0f );
-	mat->setLineSmoothing( true );
 	mat->setBackfaceCulling( false );
 
 	RenderablePtr boundingBox( new Renderable(Primitive::Quads, vb, mat) );

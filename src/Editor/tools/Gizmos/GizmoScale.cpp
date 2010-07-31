@@ -57,17 +57,17 @@ VertexBufferPtr GizmoScale::generateCubes()
 
 	// X axis
 	foreach( const Vector3& v, cubePosition )
-		pos.push_back( v + Vector3::UnitX / 2.0f );
+		pos.push_back( v + (Vector3::UnitX / 2.0f) );
 	generateColors(colors, X);
 
 	// Y axis
 	foreach( const Vector3& v, cubePosition )
-		pos.push_back( v + Vector3::UnitY / 2.0f );
+		pos.push_back( v + (Vector3::UnitY / 2.0f) );
 	generateColors(colors, Y);
 	
 	// Z axis
 	foreach( const Vector3& v, cubePosition )
-		pos.push_back( v + Vector3::UnitZ / 2.0f );
+		pos.push_back( v + (Vector3::UnitZ / 2.0f) );
 	generateColors(colors, Z);
 
 	// Vertex buffer setup

@@ -26,17 +26,10 @@ GizmoRotate::GizmoRotate( const NodePtr& node, const CameraWeakPtr& camera )
 
 void GizmoRotate::buildGeometry()
 {
-	material->setLineWidth(3.0f);
+	//material->setLineWidth(3.0f);
 
 	lines = generateCircles();
 	addRenderable( new Renderable(Primitive::Lines, lines, material) );
-}
-
-//-----------------------------------//
-
-void GizmoRotate::highlightAxis( GizmoAxis::Enum axis, bool highlight )
-{
-
 }
 
 //-----------------------------------//
@@ -61,25 +54,35 @@ VertexBufferPtr GizmoRotate::generateCircles()
 	Matrix4x3 transform;
 
 	// X axis
-	generateCircle(pos, SLICES);
+	std::vector< Vector3 > posX;
+	generateCircle(posX, SLICES);
 	generateColors(colors, X);
+
+	transform = Matrix4x3::createScale( Vector3(0.4f) );
+	TransformVertices(pos, posX, transform);
 
 	// Y axis
 	std::vector< Vector3 > posY;
 	generateCircle(posY, SLICES);
 	generateColors(colors, Y);
-
-	transform = Matrix4x3::createOrientation( EulerAngles(0, 90, 0) );
+	
+	transform = Matrix4x3::createScale( Vector3(0.4f) );
+	transform *= Matrix4x3::createOrientation( EulerAngles(0, 90, 0) );
 	TransformVertices(pos, posY, transform);
-
 	
 	// Z axis
 	std::vector< Vector3 > posZ;
 	generateCircle(posZ, SLICES);
 	generateColors(colors, Z);
 
-	transform = Matrix4x3::createOrientation( EulerAngles(90, 0, 0) );
+	transform = Matrix4x3::createScale( Vector3(0.4f) );
+	transform *= Matrix4x3::createOrientation( EulerAngles(90, 0, 0) );
 	TransformVertices(pos, posZ, transform);
+
+	// Translate it a bit.
+	transform = Matrix4x3::createTranslation( Vector3::UnitY * 0.5f );
+	foreach( Vector3& v, pos )
+		v = v * transform;
 
 	// Vertex buffer setup
 	VertexBufferPtr vb = new VertexBuffer();
@@ -90,6 +93,23 @@ VertexBufferPtr GizmoRotate::generateCircles()
 	vb->set( VertexAttribute::Color, colors );
 	
 	return vb;
+}
+
+//-----------------------------------//
+
+void GizmoRotate::highlightAxis( GizmoAxis::Enum axis, bool highlight )
+{
+	std::vector<Vector3>& colors =
+		lines->getAttribute( VertexAttribute::Color );
+
+	Color c = (highlight) ? Color::White : getAxisColor(axis);
+
+	for( int i = SLICES*2*axis; i < SLICES*2*(axis+1);  i++ )
+	{
+		colors[i] = c;
+	}
+
+	lines->forceRebuild();
 }
 
 //-----------------------------------//

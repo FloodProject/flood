@@ -8,6 +8,8 @@
 
 #pragma once
 
+class wxFourWaySplitter;
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//
@@ -120,6 +122,7 @@ protected:
 
 	// UI widgets.
 	wxBoxSizer* sizer;
+	wxFourWaySplitter* mainSplitter;
 	wxToolBar* toolBar;
 	Viewframe* viewframe;
 	wxNotebook* notebookCtrl;

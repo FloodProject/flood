@@ -580,11 +580,11 @@
 				Name="Scene"
 				>
 				<File
-					RelativePath=".\ScenePage.cpp"
+					RelativePath=".\tools\Scene\ScenePage.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\inc\ScenePage.h"
+					RelativePath=".\tools\Scene\ScenePage.h"
 					>
 				</File>
 				<File
@@ -600,11 +600,11 @@
 				Name="Resources"
 				>
 				<File
-					RelativePath=".\ResourcesPage.cpp"
+					RelativePath=".\tools\Resources\ResourcesPage.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\inc\ResourcesPage.h"
+					RelativePath=".\tools\Resources\ResourcesPage.h"
 					>
 				</File>
 				<File
@@ -620,6 +620,14 @@
 		<Filter
 			Name="Widgets"
 			>
+			<File
+				RelativePath=".\widgets\wxFourWaySplitter.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\inc\wxFourWaySplitter.h"
+				>
+			</File>
 			<File
 				RelativePath=".\wxImageComboBox.cpp"
 				>

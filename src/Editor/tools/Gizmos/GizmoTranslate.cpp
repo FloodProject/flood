@@ -57,21 +57,14 @@ void GizmoTranslate::highlightAxis( GizmoAxis::Enum axis, bool highlight )
 {
 	std::vector<Vector3>& colors =
 		lines->getAttribute( VertexAttribute::Color );
-
 	assert( colors.size() == 6 ); // 2 vertices * 3 lines
+	
+	Color c = (highlight) ? Color::White : getAxisColor(axis);
 
 	uint i = axis*2;
 
-	if( highlight )
-	{
-		colors[i] += Color::White*0.5f;
-		colors[i+1] += Color::White*0.5f;
-	}
-	else
-	{
-		colors[i] -= Color::White*0.5f;
-		colors[i+1] -= Color::White*0.5f;
-	}
+	colors[i] = c;
+	colors[i+1] = c;
 
 	lines->forceRebuild();
 }

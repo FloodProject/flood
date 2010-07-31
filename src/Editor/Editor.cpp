@@ -16,6 +16,7 @@
 #include "Viewframe.h"
 #include "EditorInputManager.h"
 #include "Events.h"
+#include "wxFourWaySplitter.h"
 
 // Editor plugins
 #include "tools/Project/ProjectPlugin.h"
@@ -75,6 +76,7 @@ bool EditorApp::OnInit()
 EditorFrame::EditorFrame(const wxString& title)
 	: wxFrame(nullptr, wxID_ANY, title)
 	, engine(nullptr)
+	, mainSplitter(nullptr)
 	, viewframe(nullptr)
 	, undoManager(nullptr)
 	, eventManager(nullptr)
@@ -114,9 +116,9 @@ EditorFrame::~EditorFrame()
 	delete eventManager;
 	delete pluginManager;
 	delete undoManager;
+	delete mainSplitter;
 
 	// Stop the frame events.
-	viewframe->Destroy();
 	editorScene.reset();
 	delete engine;
 }
@@ -200,7 +202,14 @@ void EditorFrame::waitFinishLoad()
 
 void EditorFrame::createMainViewframe()
 {
-	viewframe = new Viewframe( this );
+	mainSplitter = new wxFourWaySplitter(this);
+	viewframe = new Viewframe( mainSplitter );
+
+	sizer = new wxBoxSizer( wxHORIZONTAL );
+	sizer->Add( mainSplitter, 1, wxEXPAND|wxALL );
+
+	mainSplitter->SetWindow( 0, viewframe );
+	mainSplitter->SetExpanded( viewframe );
 
 	RenderControl* control = viewframe->getControl();
 	control->onRender += fd::bind( &EditorFrame::onRender, this );
@@ -224,9 +233,6 @@ void EditorFrame::createMainViewframe()
 
 	TransformPtr transform( camera->getTransform() );
 	transform->translate( 0.0f, 20.0f, -65.0f );
-
-	sizer = new wxBoxSizer( wxHORIZONTAL );
-	sizer->Add( viewframe, 1, wxEXPAND|wxALL );
 }
 
 //-----------------------------------//
@@ -314,6 +320,9 @@ void EditorFrame::createToolbar()
 	// --------------
 
 	toolBar->AddSeparator();
+
+	toolBar->AddTool( Toolbar_ToogleViewport, "Toogles maximize viewport", 
+		wxMEMORY_BITMAP(scale), "Toogles maximize viewport" );
 
 	toolBar->AddTool( Toolbar_ToogleSidebar, "Shows/hides the sidebar", 
 		wxMEMORY_BITMAP(application_side_tree_right), "Shows/hides the sidebar" );
@@ -440,6 +449,18 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 		// Enable all simulations.
 		//PhysicsManager* pm = engine->getPhysicsManager();
 		//if( pm ) pm->setSimulationEnabled( !pm->getSimulationEnabled() );
+		return;
+	}
+	//-----------------------------------//
+	case Toolbar_ToogleViewport:
+	{
+		int curExpansion = mainSplitter->GetExpanded();
+
+		if( curExpansion >= 0 )
+			mainSplitter->SetExpanded(-1);
+		else
+			mainSplitter->SetExpanded(0);
+		
 		return;
 	}
 	//-----------------------------------//

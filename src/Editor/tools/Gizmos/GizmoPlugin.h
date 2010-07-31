@@ -74,8 +74,6 @@ protected:
 
 	bool pickBoundingTest( const MouseMoveEvent& );
 	bool pickImageTest( const MouseMoveEvent&, GizmoAxis::Enum& );
-	
-	void disableSelectedNodes();
 
 	// Current Gizmo tool.
 	GizmoTool::Enum tool;
@@ -91,9 +89,11 @@ protected:
 	
 	ScenePtr editorScene;
 
-	typedef std::map<NodePtr, NodePtr> GizmoNodeMap;
-	GizmoNodeMap gizmos;
-	std::vector<NodePtr> selected;
+	typedef std::map<NodePtr, NodePtr> GizmoMap;
+	typedef std::pair<const NodePtr, NodePtr> GizmoMapPair;
+
+	// Associates the object nodes to the gizmos nodes.
+	GizmoMap gizmos;
 
 	// Toolbar buttons.
 	wxToolBarToolBase* buttonCamera;

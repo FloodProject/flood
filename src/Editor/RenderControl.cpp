@@ -17,7 +17,7 @@ namespace vapor { namespace editor {
 
 enum Timers
 {
-	UPDATE_TIMER = 5976,
+	UPDATE_TIMER = wxID_HIGHEST + 321,
 	RENDER_TIMER
 };
 
