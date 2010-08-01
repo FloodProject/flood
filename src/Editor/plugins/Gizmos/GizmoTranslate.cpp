@@ -16,7 +16,7 @@ namespace vapor { namespace editor {
 const std::string& GizmoTranslate::type = "GizmoTranslate";
 
 // Gizmo cone base color.
-static const float BASE_FACTOR = 0.3f;
+static const float BASE_FACTOR = 0.5f;
 
 //-----------------------------------//
 
@@ -80,9 +80,10 @@ static void TransformVertices(std::vector<Vector3>& pos,
 	}
 }
 
+static const byte SLICES = 10;
+
 VertexBufferPtr GizmoTranslate::generateCones()
 {
-	static const byte SLICES = 10;
 
 	VertexBufferPtr vb( new VertexBuffer() );
 
@@ -99,21 +100,21 @@ VertexBufferPtr GizmoTranslate::generateCones()
 	Matrix4x3 transform;
 
 	// X axis
-	transform = Matrix4x3::createOrientation( EulerAngles(0, 0, -90) );
+	transform = Matrix4x3::createRotation( EulerAngles(0, 0, -90) );
 	transform *= Matrix4x3::createTranslation( Vector3::UnitX / 2.0f );
 	TransformVertices(pos, cone, transform);
-	generateColors( SLICES, colors, X, X );
+	generateColors( colors, X );
 
 	// Y axis
 	transform = Matrix4x3::createTranslation( Vector3::UnitY / 2.0f );
 	TransformVertices(pos, cone, transform);
-	generateColors( SLICES, colors, Y, Y );
+	generateColors( colors, Y );
 
 	// Z axis
-	transform = Matrix4x3::createOrientation( EulerAngles(90, 0, 0) );
+	transform = Matrix4x3::createRotation( EulerAngles(90, 0, 0) );
 	transform *= Matrix4x3::createTranslation( Vector3::UnitZ / 2.0f );
 	TransformVertices(pos, cone, transform);
-	generateColors( SLICES, colors, Z, Z );
+	generateColors( colors, Z );
 
 	// Vertex buffer setup
 	vb->set( VertexAttribute::Position, pos );
@@ -124,27 +125,25 @@ VertexBufferPtr GizmoTranslate::generateCones()
 
 //-----------------------------------//
 
-void GizmoTranslate::generateColors( uint slices, std::vector<Vector3>& colors,
-						    const Color& c1, const Color& c2 )
+void GizmoTranslate::generateColors( std::vector<Vector3>& colors, const Color& c )
 {
 	// Darkens the color a bit.
-	Vector3 baseColor = Vector3(c2);
-	baseColor = baseColor * BASE_FACTOR;
+	Vector3 baseColor = Vector3(c) * BASE_FACTOR;
 	
-	for( uint i = 0; i < slices; i++ )
+	for( uint i = 0; i < SLICES; i++ )
 	{
-		// Generate the base colors
-		colors.push_back( baseColor);
+		// Generate the base colors.
+		colors.push_back( baseColor );
 		colors.push_back( baseColor );
 		colors.push_back( baseColor );
 	}
 
-	for( uint i = 0; i < slices; i++ )
+	for( uint i = 0; i < SLICES; i++ )
 	{
-		// Generate the top colors
-		colors.push_back( c1 );
-		colors.push_back( c1 );
-		colors.push_back( c2 );
+		// Generate the top colors.
+		colors.push_back( c );
+		colors.push_back( c );
+		colors.push_back( c );
 	}
 }
 

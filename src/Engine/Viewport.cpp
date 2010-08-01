@@ -18,7 +18,6 @@ namespace vapor {
 Viewport::Viewport( CameraPtr camera, RenderTarget* target )
 	: weakCamera( camera )
 	, target( target )
-	, size(-1,-1)
 {
 	setClearColor( Color::White );
 	setRenderTarget( target );
@@ -43,19 +42,20 @@ Vector3 Viewport::Unproject( const Vector3& screen, const Matrix4x4& projection,
 	Matrix4x4 view4( view );
 	Matrix4x4 inverseVP = (view4*projection).inverse();
 
-    //Vector4 pos = new Vector4();
+	Vector2i size = getSize();
+
+    // Map x and y from window coordinates, map to range -1 to 1 
+
+    Vector4 pos;
+    pos.x = (screen.x /*- offset.x*/) / float(size.x) * 2.0f - 1.0f;
+    pos.y = (screen.y /*- offset.y*/) / float(size.y) * 2.0f - 1.0f;
+    pos.z = screen.z * 2.0f - 1.0f;
+    pos.w = 1.0f;
  
-    //// Map x and y from window coordinates, map to range -1 to 1 
-    //pos.x = (screen.x /*- offset.x*/) / size.x * 2.0f - 1.0f;
-    //pos.y = (screen.y /*- offset.y*/) / size.y * 2.0f - 1.0f;
-    //pos.z = screen.z * 2.0f - 1.0f;
-    //pos.w = 1.0f;
+	Vector4 pos2 = inverseVP * pos;
+	Vector3 pos_out( pos2.x, pos2.y, pos2.z );
  
-    //Vector4 pos2 = Vector4.Transform(pos, Matrix4.Invert(Matrix4.Mult(view, projection)));
-    //Vector3 pos_out = new Vector3(pos2.X, pos2.Y, pos2.Z);
- 
-    //return pos_out / pos2.W;
-	return Vector3::Zero;
+    return pos_out / pos2.w;
 }
 
 //-----------------------------------//
@@ -74,10 +74,10 @@ float Viewport::getAspectRatio() const
 
 Vector2i Viewport::getSize() const
 {
-	if( size == Vector2i(-1, -1) )
+	//if( size == Vector2i(-1, -1) )
 		return target->getSettings().getSize();
-	else
-		return size;
+	//else
+		//return size;
 }
 
 //-----------------------------------//

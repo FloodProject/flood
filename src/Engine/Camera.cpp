@@ -11,6 +11,7 @@
 #include "vapor/scene/Group.h"
 #include "vapor/scene/Geometry.h"
 #include "vapor/math/Math.h"
+#include "vapor/math/Vector4.h"
 
 namespace vapor {
 
@@ -74,8 +75,10 @@ Ray Camera::getRay( float screenX, float screenY, Vector3* outFar ) const
 {
 	assert( viewport != nullptr );
 
-	Vector3 nearPoint(screenX, screenY, 0);
-	Vector3 farPoint(screenX, screenY, 1);
+	Vector2i viewSize = viewport->getSize();
+
+	Vector3 nearPoint(screenX, viewSize.y - screenY, 0);
+	Vector3 farPoint(screenX, viewSize.y - screenY, 1);
 
 	Vector3 rayOrigin = viewport->Unproject(nearPoint, projectionMatrix, viewMatrix);
 	Vector3 rayTarget = viewport->Unproject(farPoint, projectionMatrix, viewMatrix);
@@ -136,7 +139,7 @@ void Camera::setupView()
 	const EulerAngles& rotation = transform->getRotation();
 	
 	// Update the lookAt vector.
-	Vector3 forward = Vector3::UnitZ * Matrix4x3::createOrientation(rotation);
+	Vector3 forward = Vector3::UnitZ * Matrix4x3::createRotation(rotation);
 	lookAtVector = position + forward;
 	
 	// Update the view matrix.

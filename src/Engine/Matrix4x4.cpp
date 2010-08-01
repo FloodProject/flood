@@ -72,13 +72,27 @@ Matrix4x4 Matrix4x4::operator *(const Matrix4x4& m2) const
 
 //-----------------------------------//
 
-Vector3 Matrix4x4::operator *( const Vector3 &v ) const
+Vector3 Matrix4x4::operator *( const Vector3& v ) const
 {
     Vector3 r;
 
 	r.x = v.x * m11 + v.y * m21 + v.z * m31 + tx;
 	r.y = v.x * m12 + v.y * m22 + v.z * m32 + ty;
 	r.z = v.x * m13 + v.y * m23 + v.z * m33 + tz;
+
+    return r;
+}
+
+//-----------------------------------//
+
+Vector4 Matrix4x4::operator *( const Vector4& v ) const
+{
+    Vector4 r;
+
+	r.x = v.x * m11 + v.y * m21 + v.z * m31 + v.w * tx;
+	r.y = v.x * m12 + v.y * m22 + v.z * m32 + v.w * ty;
+	r.z = v.x * m13 + v.y * m23 + v.z * m33 + v.w * tz;
+	r.w = v.x * m14 + v.y * m24 + v.z * m34 + v.w * tw;
 
     return r;
 }

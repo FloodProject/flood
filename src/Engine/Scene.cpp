@@ -93,7 +93,7 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res ) co
 //-----------------------------------//
 
 bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res,
-							   const NodePtr& node ) const
+							    const NodePtr& node ) const
 {
 	// Down to triangle picking.	
 	foreach( const GeometryPtr& geo, node->getGeometry() )

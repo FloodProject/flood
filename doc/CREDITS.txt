@@ -48,7 +48,8 @@ Scene:
 			* Sound
 			* Listener
 			* Trigger
-			* Skybox (TODO)
+			* Skydome
+			* Light
 			
 	* Built-in scene serialization to JSON format
 
@@ -69,16 +70,17 @@ Programmers:
 	
 Libraries used:
 
-	* SDL / SFML
+	* SFML
 	* OpenGL
 	* OpenAL
 	* GLEW
-	* DevIL
 	* PhysFS
 	* FreeType
-	* picopng
-	* ogg / vorbis
+	* PicoPNG
+	* Ogg
+	* Vorbis
 	* wxWidgets
+	* Boost
 	
 Tools used:
 

@@ -82,7 +82,7 @@ void GizmoPlugin::onPluginEnable()
 	events->currentPlugin = this;
 
 	toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
-		&GizmoPlugin::onGizmoButtonClick, this,
+		&GizmoPlugin::onGizmoToolClick, this,
 		buttonCamera->GetId(), buttonScale->GetId() );
 }
 
@@ -90,16 +90,22 @@ void GizmoPlugin::onPluginEnable()
 
 void GizmoPlugin::onPluginDisable()
 {
-	foreach( const GizmoMapPair& pair, gizmos )
-		onNodeUnselect( pair.first );
+	unselectNodes();
 }
 
 //-----------------------------------//
 
-void GizmoPlugin::onGizmoButtonClick(wxCommandEvent& event)
+void GizmoPlugin::onGizmoToolClick(wxCommandEvent& event)
 {
 	tool = (GizmoTool::Enum) event.GetId();
 
+	unselectNodes(true);
+}
+
+//-----------------------------------//
+
+void GizmoPlugin::unselectNodes(bool reselect)
+{
 	std::vector<NodePtr> nodes;
 	
 	foreach( const GizmoMapPair& pair, gizmos )
@@ -108,7 +114,9 @@ void GizmoPlugin::onGizmoButtonClick(wxCommandEvent& event)
 	foreach( const NodePtr& node, nodes )
 	{
 		onNodeUnselect(node);
-		onNodeSelect(node);
+
+		if( reselect )
+			onNodeSelect(node);
 	}
 }
 
@@ -156,19 +164,11 @@ void GizmoPlugin::onMouseMove( const MouseMoveEvent& moveEvent )
 		|| isTool(GizmoTool::Scale) || isTool(GizmoTool::Rotate)) )
 		return;
 
-	// To check if the user picked a gizmo we use two hit tests.
-	// First an inaccurate test based on bounding volumes.
-	// If it hits, then we will test with a more accurate
-	// image based picking technique.
+	// To check if the user picked a gizmo we use two hit test techniques.
+	// The first technique is based on bounding volumes so it is not very
+	// accurate. If it hits, a more accurate color picking will be done.
 
-	//if( !pickBoundingTest(moveEvent) )
-	//{
-	//	// TODO: Uncomment once picking works properly.
-	//	//gizmo->deselectAxis();
-	//	//return;
-	//}
-
-	if( pickImageTest(moveEvent, axis) )
+	if( pickBoundingTest(moveEvent) && pickImageTest(moveEvent, axis) )
 	{
 		gizmo->selectAxis(axis);
 		
@@ -184,7 +184,7 @@ void GizmoPlugin::onMouseMove( const MouseMoveEvent& moveEvent )
 		delete op;
 		op = nullptr;
 	}
-	
+
 	editor->RefreshViewport();
 }
 
@@ -227,20 +227,21 @@ void GizmoPlugin::onMouseDrag( const MouseDragEvent& dragEvent )
 		transObject->translate( unit );
 	else if( isTool(GizmoTool::Scale) )
 		transObject->scale( Vector3(1, 1, 1)+unit*0.05f );
-	
-	// Transform the gizmo.
-	//const NodePtr& nodeGizmo = gizmo->getNode();
-	//const TransformPtr& transGizmo = nodeGizmo->getTransform();
-	//transGizmo->translate( unit );
 
+	op->scale = transObject->getScale();
+	op->rotation = transObject->getRotation();
 	op->translation = transObject->getPosition();
-	viewframe->flagRedraw();
+
+	editor->RefreshViewport();
 }
 
 //-----------------------------------//
 
 void GizmoPlugin::onMouseButtonPress( const MouseButtonEvent& mbe )
 {
+	if( mbe.button != MouseButton::Left )
+		return;
+
 	if( gizmo && gizmo->isAnyAxisSelected() )
 		return;
 
@@ -252,7 +253,7 @@ void GizmoPlugin::onMouseButtonPress( const MouseButtonEvent& mbe )
 	Vector3 outFar;
 	const Ray& pickRay = camera->getRay( mbe.x, mbe.y, &outFar );
 
-#if 1 // Enable this to draw debugging lines
+#if 0 // Enable this to draw debugging lines
 	const NodePtr& line = buildRay( pickRay, outFar );
 	editor->getEditorScene()->add( line );
 #endif
@@ -262,8 +263,8 @@ void GizmoPlugin::onMouseButtonPress( const MouseButtonEvent& mbe )
 
 	if( scene->doRayBoxQuery(pickRay, res) )
 		onNodeSelect( res.node );
-	//else
-		//disableSelectedNodes();
+	else
+		unselectNodes();
 }
 
 //-----------------------------------//
@@ -275,8 +276,9 @@ void GizmoPlugin::onMouseButtonRelease( const MouseButtonEvent& mbe )
 
 	UndoManager* undoManager = editor->getUndoManager();
 	undoManager->registerOperation( op );
-
 	op = nullptr;
+	
+	gizmo->deselectAxis();
 }
 
 //-----------------------------------//
@@ -389,9 +391,9 @@ bool GizmoPlugin::pickBoundingTest( const MouseMoveEvent& me )
 		return false;
 
 	// Find out if we picked a gizmo...
-	gizmo = res.node->getComponent<Gizmo>("Gizmo");
+	GizmoPtr gizmo = res.node->getComponent<Gizmo>("Gizmo");
 	
-	return (gizmo != nullptr);
+	return gizmo != nullptr;
 }
 
 //-----------------------------------//

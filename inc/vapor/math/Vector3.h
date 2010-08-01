@@ -203,7 +203,7 @@ public:
 
 	//-----------------------------------//
 	
-	// Normalize the vector
+	// Normalize the vector.
 	Vector3T normalize() 
 	{
 		T len = length();
@@ -220,7 +220,7 @@ public:
 
 	//-----------------------------------//
 
-	// Dot product
+	// Dot product.
 	float dot( const Vector3T& v ) const
 	{
 		return x*v.x + y*v.y + z*v.z;
@@ -228,7 +228,7 @@ public:
 
 	//-----------------------------------//
 
-	// Cross product
+	// Cross product.
 	Vector3T cross( const Vector3T& v ) const
 	{
 		return Vector3T<T>(

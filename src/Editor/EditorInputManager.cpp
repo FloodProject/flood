@@ -102,6 +102,7 @@ void EditorInputManager::doMouseEvent( InputProcessCallback cb, const wxMouseEve
 		MouseButtonEvent mb(type);
 		mb.x = event.GetX();
 		mb.y = event.GetY();
+		mb.button = button;
 		cb( mb );
 	}
 

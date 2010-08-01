@@ -41,7 +41,6 @@ public:
 
 	// Gets the size of the viewport.
 	DECLARE_GETTER(Size, Vector2i)
-	SETTER(Size, Vector2i, size)
 
 	// Gets/sets the clear color of the viewport.
 	ACESSOR(ClearColor, const Color&, clearColor)
@@ -73,9 +72,6 @@ private:
 	// Render target that we are rendering into.
 	RenderTarget* target;
 	
-	// Dimensions of render target.
-	Vector2i size;
-
 	// Background color.
 	Color clearColor;
 

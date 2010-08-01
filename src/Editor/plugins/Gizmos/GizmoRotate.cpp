@@ -67,7 +67,7 @@ VertexBufferPtr GizmoRotate::generateCircles()
 	generateColors(colors, Y);
 	
 	transform = Matrix4x3::createScale( Vector3(0.4f) );
-	transform *= Matrix4x3::createOrientation( EulerAngles(0, 90, 0) );
+	transform *= Matrix4x3::createRotation( EulerAngles(0, 90, 0) );
 	TransformVertices(pos, posY, transform);
 	
 	// Z axis
@@ -76,7 +76,7 @@ VertexBufferPtr GizmoRotate::generateCircles()
 	generateColors(colors, Z);
 
 	transform = Matrix4x3::createScale( Vector3(0.4f) );
-	transform *= Matrix4x3::createOrientation( EulerAngles(90, 0, 0) );
+	transform *= Matrix4x3::createRotation( EulerAngles(90, 0, 0) );
 	TransformVertices(pos, posZ, transform);
 
 	// Translate it a bit.

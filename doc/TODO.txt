@@ -1,42 +1,35 @@
 WIP (work-in-progress)
 ======================
 
-Check messy Logger code
-	Doesn't work good with truncation
-
-Shadows
-	Render to depth texture (DONE)
-	Render from Light viewpoint (WIP)
-
 EDITOR:
 -------
 
-Add Light debug display in editor
+Input:
 
-Input Events
-	Rework input system so modes get events always
-	instead of just when the mouse is over a viewframe. (WIP)
+	Input events should be sent even when outside viewframe
 
-Gizmo
+Gizmo:
+
+	Fix Scale and Rotate gizmos
+	Make the Gizmo node transform a proxy of the original
+	Get picking working properly with multiple gizmos
+	When the Camera moves, mouse should be tested
 	Panning is wrong.
 	Picking when the mouse moves (DONE)
 	Change gizmo color when user picks axis (DONE)
 	Add drag event and change the Transform (DONE)
 	Fix cone backface culling (DONE)
 	Scale the gizmo properly in relation to the camera distance (DONE)
-	Make the Gizmo node transform a proxy of the original
-	Get picking working properly with multiple gizmos
-	When the Camera moves, mouse should be tested
 
-Viewframe
+Viewframe:
+
 	Fix the control border
 	Wire the camera render mode buttons
-	Wire the camera speed behaviour (DONE)
 	Redraw when a resource gets updated
 	
-Terrain editing
+Terrain editing:
+
 	Brushes interface
-	Intensity sliders (DONE)
 	Use a separate VB attribute for the terrain heights
 	Projectors/Decals for terrain
 	Brush interface for editing (WIP)
@@ -45,53 +38,45 @@ Terrain editing
 	Randomized Perlin noise terrain generation
 	Average terrain normals (WIP)
 
-View frustum culling
+View frustum culling:
+
 	Plane math class
 	Frustum-Plane intersection
 	Integrate in Camera::cull
 
-Skydome component
-	Fix backfaces culling (DONE)
-	Add texture layers for clouds (WIP)
-	Fix sun and moon update logic
+Skydome component:
+
+	Add billboards for Sun and Moon
 	Switch to triangle strips
 
-Console 
+Console:
+
 	Clicks should not change the insertion point
 	readline type of library would be kind of nice
 	Write a line then go backwards and to the line again and color is white...
+	Override Lua 'print' method
+	
+Options:
 
-Camera options
-	Add a small frame below the viewport with camera options (WIP)
-	Integrate speed and the other buttons (DONE)
-			
-Implement camera panning
-Edit grid settings
-Add a property system like Firefox/µTorrent...
-See about integrating wxLua in the editor
-Override the print method of Lua
+	Add a preference pane with:
+		- Shortcuts
+		- Grid settings
+		- Colors
+	This can be handled with a Property system (like Firefox).
 
 ENGINE:
 -------
 
-Fix Watcher (sends more notifications than it should).
-	- It's doing the right thing.
+Scene:
 
-Add a Frustum class
-	Make Camera subclass it
-	Maybe Light too?
+	Frustum class (Camera and Light integration)
+	Quadtree for fast terrain queries
+	Geometry component sharing (Instancing)
 
-Add Z-bias to the AABB renderables
-Fix Overlays positioning (might be related to ortographic projection)
-Fix Lua state closing
-Typesafe logging (FastFormat API)
-Ignore Entities (Layers?) (WIP - Tags)
-Add subsystem update infrastructure in engine (WIP)
+Scripting:
 
-Quadtree Terrain
-Per-script Lua state
-
-Make the engine memory-leak proof
+	Fix Lua state closing
+	Per-script Lua state
 
 Textures:
 	Support DDS
@@ -102,22 +87,6 @@ Textures:
 	Combine and support cubemaps / skybox textures
 	Check squish and NVIDIA Texture Tools libraries
 
-Geometry component is shared per node, and that causes some problems.
-Add Z-bias to the AABB renderables
-Fix Lua state closing
-Typesafe logging (FastFormat API)
-
-
-Overlays:
-	Can be 3D too...
-	Think about overlays positioning (absolute and relative)
-
-Add Blending defaults (Modulate, Replace, etc)
-
-
-Timer:
-	Multithreaded timing and timing leaps (check SFML tracker / OGRE code for more info.)
-
 Audio:
 
 	Handle audio streaming for lightweight playback without consuming lots of memory
@@ -126,19 +95,13 @@ Audio:
 	
 Logger:
 
-	The Logger should display the date and time of creation (really needed?)
 	Fix format log time to handle minutes, hours and days
 	Use truncation and close file so each log entry gets commited in each write
-	Make proper type-safe logger that doesn't crash with an invalid format string
 	The Log class should use the user writing directory for output
 	GetLoggers for each class (could be integrated with Profiler? :)
-	AllocConsole for debugging porpuses on a key press
-	Log all the engine calls (WIP)
-	bind/functor for logging
-	Hierarchical log system
-	Logging functions with type-safe variable arguments (need variadiac templates?)
-	Logging boxes for system/CPU/GPU information
-
+	The Logger should display the date and time of creation
+	Typesafe logging (FastFormat API)
+	
 Resource Management:
 
 	Make a Localization class, potentially integrating .po files
@@ -147,14 +110,6 @@ Resource Management:
 	Magic header resource type detection
 	Case-insensitive comparisons in map
 	
-Scene:
-
-	Fix Camera key logic (need to cache it and test it in update time)
-
-Input:
-	
-	Resize the Keyboard KeyState to the proper size. The current 1024 is hackish.
-
 Window:
 
 	Full-screen windowed mode/minimizing doesn't seem to work...
@@ -163,23 +118,26 @@ Window:
 	Move the window polling to a different thread (smooth resizing / maybe SFML itself will do this in 2.0)
 	Hide the window until show is requested.
 	http://msdn.microsoft.com/en-us/library/ms648383%28VS.85%29.aspx
+	Resize the Keyboard KeyState to the proper size. The current 1024 is hackish.
 
 Platform:
 
 	We need a crash handler!!! :)
-	http://www.codeproject.com/KB/cpp/PrivateAssemblyProjects.aspx
-	Move from #pragma error instructions to static_assert
 	Cross-platform Clipboard access
-	
+	Multithreaded timing and timing leaps (check SFML tracker / OGRE code for more info.)
+		
 Rendering:
-
+	
+	Add Z-bias to the AABB renderables
 	Font handling via FreeType 2
 	Signed distance fonts
 	Bitmap font file format (and converter for some freeware generator tool)
+	Add Blending defaults (Modulate, Replace, etc)
 
 VFS:
 
 	Patch PhysFS to use the proper user dir for App Data on Windows
+	Fix Watcher (though it seems to be doing the right thing).
 
 Engine Modularization/Simplification Work
 	
@@ -191,86 +149,8 @@ Engine Modularization/Simplification Work
 	Refactor core code into its own static library (Reverted)
 	Make Singleton code thread-safe (double check pattern?)
 
-
-DONE:
------
-
-Shaders live updating
-Don't allow label editing on components
-Hook up the renaming of Scene node labels
-Make the update logic smarter (no 50% CPU hog)
-Continuous movement bug
-Private editor nodes (hide in the scene tree)
-Remove all the singleton (add Engine instead)
-Background Resource Loading
-Add subsystem update infrastructure in engine
-Task manager with callbacks (for e.g. streaming) 
-Private editor nodes (hide in the scene tree)
-Fix Camera limiting logic (screws Camera when X-axis reaches 90 degrees)
-ProgramManager for handling programs and shaders.
-Fix the Camera behaviour
-Bounding Boxes
-Switch all the resource loaders to use the VFS layer
-Check for maximum texture unit size
-Watcher for resource change notification integrated with VFS
-Switch to intrusive_ptr for all reference-counting classes
-Fix the Window's Focus events. Also the mouse cursor is released when focus is lost.
-Make an abstract Timer class
-Add matrix and AABB class
-Ogg Loader is buggy (make it load from a memory buffer)
-Add Resources pane with all the resource groups
-Check the need for defining copy-constructors in all classes (boost::noncopyable for now)
-Window size changed notifications for Camera/Viewport aspect ration calculations
-TextureManager
-Vertex and index buffers
-Update all the headers to have separators between different sections
-Add timing code for FPS calculation and timing events.
-Add Action Map class for storing input settings for the game.
-Use copy-constructors or boost::non_copyable
-Switch to precompiled headers (BIG GAIN!!)
-Add Window events for resizing, closing, etc.
-Add defines for the different compilers and switch #ifdef pragmas to those...
-Simple VFS (with PhysFS 2.0)
-Clean up the using std decls
-Make the memory leak detector work
-Header in the log output
-CSS-styling to the logging output
-Implement Settings class
-Clean up Window abstract class
-Add Milkshape model parser
-Add namespaces to subsystems
-Clean Visual Studio solutions
-Organize the include directories
-Adapter class
-
-http://www.nuclex.org/downloads/developers/kits/luabind-0-8-1-binaries-and-demo
-http://oldhome.schmorp.de/marc/liblzf.html
-http://wxlua.sourceforge.net/
-http://news.gmane.org/gmane.comp.lib.wxwidgets.wxlua.user
-http://www.ogre3d.org/wiki/index.php/Raycasting_to_the_polygon_level
-http://code.google.com/p/minimal-ogre-collision-toolkit/source/browse/trunk/moc.v1.0.rc1.beta.2008.10.20.src/CollisionTools.cpp
-http://dmalloc.com/releases/
-http://cmldev.net/
 http://www.introgamedev.com/general_memory.html
 http://xania.org/200512/crt-heap-fragmentation-in-windows
 http://blog.pavlov.net/2007/11/11/windows-low-fragmentation-heap/
 http://msdn.microsoft.com/en-us/library/aa366750%28VS.85%29.aspx
 http://www.gamasutra.com/view/feature/2971/play_by_play_effective_memory_.php
-http://www.fastformat.org/
-
-SNIPPETS
-========
-
-ResourceManager stuff.
-
-// Sets a memory budget limit for a given resource group.
-//void setMemoryBudget(ResourceGroup::Enum group, uint memoryBudget);
-
-// Gets the memory usage for a given resource group.
-//uint getMemoryUsage(ResourceGroup::Enum group);
-
-// Gets a list of all the registered resource handlers.
-//std::list<ResourceLoader*> getResourceLoader(std::string extension);
-
-// maps each resource group to a specific budget.
-//std::map< ResourceGroup::Enum, uint > resourceBudgets;

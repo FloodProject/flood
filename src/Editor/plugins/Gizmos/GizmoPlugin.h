@@ -61,10 +61,13 @@ public:
 protected:
 
 	// Handles gizmo tools buttons click.
-	void onGizmoButtonClick(wxCommandEvent& event);
+	void onGizmoToolClick(wxCommandEvent& event);
 
 	// Checks if the passed tool the current one.
 	bool isTool(GizmoTool::Enum mode);
+
+	// Unselects (and can also reselect) nodes (and their gizmos).
+	void GizmoPlugin::unselectNodes(bool reselect = false);
 
 	void createGizmo( const NodePtr& );
 	void removeGizmo( const NodePtr& );

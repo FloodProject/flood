@@ -68,6 +68,7 @@ void Gizmo::updatePositionScale()
 void Gizmo::update( double delta )
 {
 	updatePositionScale();
+	Geometry::update( delta );
 }
 
 //-----------------------------------//

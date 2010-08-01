@@ -19,7 +19,19 @@ Viewframe::Viewframe( wxWindow* parent, wxWindowID id,
 					 const wxPoint& pos, const wxSize& size, long style ) 
 	: wxPanel(parent, id, pos, size, style)
 {
-	control = new RenderControl(this);
+	int n = 0;
+	int attribList[16];
+	attribList[n++] = WX_GL_RGBA;
+	attribList[n++] = WX_GL_DOUBLEBUFFER;
+	attribList[n++] = WX_GL_DEPTH_SIZE;
+	attribList[n++] = 16;
+	attribList[n++] = WX_GL_SAMPLE_BUFFERS;
+	attribList[n++] = 1;
+	attribList[n++] = WX_GL_SAMPLES;
+	attribList[n++] = 4;
+	attribList[n] = 0; // terminate the list
+
+	control = new RenderControl(this, wxID_ANY, attribList);
 
 	mainSizer = new wxBoxSizer( wxVERTICAL );
 	mainSizer->Add( control, 1, wxEXPAND );

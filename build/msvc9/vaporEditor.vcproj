@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="-Zm140"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)src\Editor\inc&quot;;&quot;$(SolutionDir)dep\jsoncpp\include&quot;;&quot;$(SolutionDir)dep\boost&quot;;&quot;$(SolutionDir)dep\fd_delegate\include&quot;;&quot;$(SolutionDir)dep\OpenAL 1.1 SDK\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\vld\include&quot;;C:\wxWidgets\include;C:\wxWidgets\include\msvc"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)src\Editor\inc&quot;;&quot;$(SolutionDir)dep\jsoncpp\include&quot;;&quot;$(SolutionDir)dep\boost&quot;;&quot;$(SolutionDir)dep\fd_delegate\include&quot;;&quot;$(SolutionDir)dep\openal\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\vld\include&quot;;C:\wxWidgets\include;C:\wxWidgets\include\msvc"
 				PreprocessorDefinitions="WIN32;_DEBUG;__WXDEBUG__;__WXMSW__;_UNICODE;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_SECURE_SCL=0;_HAS_ITERATOR_DEBUGGING=0"
 				MinimalRebuild="true"
 				ExceptionHandling="1"
@@ -73,7 +73,7 @@
 				AdditionalDependencies="vaporEngine.lib jsoncpp_vc9_d.lib libboost_thread-vc90-mt-1_43.lib libboost_date_time-vc90-mt-1_43.lib zlib.lib physfs.lib sfml-system-s-d.lib sfml-window-s-d.lib wxmsw29ud_core.lib wxbase29ud.lib wxpngd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib wininet.lib opengl32.lib glew32s.lib OpenAL32.lib vorbisfile_static.lib ogg_static.lib vorbis_static.lib lua5.1-release.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-$(ConfigurationName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)lib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)dep\boost\lib&quot;;&quot;$(SolutionDir)dep\vld\lib&quot;;&quot;$(SolutionDir)dep\jsoncpp\lib&quot;;&quot;$(SolutionDir)dep\physfs-2.0.0\lib\release&quot;;&quot;$(SolutionDir)dep\zlib\lib&quot;;&quot;$(SolutionDir)dep\glew\lib&quot;;&quot;$(SolutionDir)dep\libvorbis-1.2.0\lib&quot;;&quot;$(SolutionDir)dep\libogg-1.1.3\lib&quot;;&quot;$(SolutionDir)dep\OpenAL 1.1 SDK\libs\Win32&quot;;&quot;$(SolutionDir)dep\sfml\lib\vc2008&quot;;&quot;$(SolutionDir)dep\luabind\lib&quot;;&quot;$(SolutionDir)dep\lua\lib&quot;;C:\wxWidgets\lib\vc_lib"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)lib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)dep\boost\lib&quot;;&quot;$(SolutionDir)dep\vld\lib&quot;;&quot;$(SolutionDir)dep\jsoncpp\lib&quot;;&quot;$(SolutionDir)dep\physfs\lib\release&quot;;&quot;$(SolutionDir)dep\zlib\lib&quot;;&quot;$(SolutionDir)dep\glew\lib&quot;;&quot;$(SolutionDir)dep\vorbis\lib&quot;;&quot;$(SolutionDir)dep\ogg\lib&quot;;&quot;$(SolutionDir)dep\openal\libs\Win32&quot;;&quot;$(SolutionDir)dep\sfml\lib\vc2008&quot;;&quot;$(SolutionDir)dep\luabind\lib&quot;;&quot;$(SolutionDir)dep\lua\lib&quot;;C:\wxWidgets\lib\vc_lib"
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
@@ -284,19 +284,19 @@
 			Name="Window"
 			>
 			<File
-				RelativePath=".\RenderControl.cpp"
+				RelativePath="..\..\src\Editor\RenderControl.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\inc\RenderControl.h"
+				RelativePath="..\..\src\Editor\inc\RenderControl.h"
 				>
 			</File>
 			<File
-				RelativePath=".\RenderWindow.cpp"
+				RelativePath="..\..\src\Editor\RenderWindow.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\inc\RenderWindow.h"
+				RelativePath="..\..\src\Editor\inc\RenderWindow.h"
 				>
 			</File>
 		</Filter>
@@ -304,11 +304,11 @@
 			Name="Icons"
 			>
 			<File
-				RelativePath=".\inc\EditorIcons.h"
+				RelativePath="..\..\src\Editor\inc\EditorIcons.h"
 				>
 			</File>
 			<File
-				RelativePath=".\inc\ImageUtils.h"
+				RelativePath="..\..\src\Editor\inc\ImageUtils.h"
 				>
 			</File>
 		</Filter>
@@ -316,7 +316,7 @@
 			Name="PCH"
 			>
 			<File
-				RelativePath=".\PCH.cpp"
+				RelativePath="..\..\src\Editor\PCH.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -345,7 +345,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\PCH.h"
+				RelativePath="..\..\src\Editor\PCH.h"
 				>
 			</File>
 		</Filter>
@@ -353,11 +353,11 @@
 			Name="Viewframe"
 			>
 			<File
-				RelativePath=".\Viewframe.cpp"
+				RelativePath="..\..\src\Editor\Viewframe.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\inc\Viewframe.h"
+				RelativePath="..\..\src\Editor\inc\Viewframe.h"
 				>
 			</File>
 		</Filter>
@@ -365,65 +365,65 @@
 			Name="Plugins"
 			>
 			<File
-				RelativePath=".\Plugin.cpp"
+				RelativePath="..\..\src\Editor\Plugin.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\inc\Plugin.h"
+				RelativePath="..\..\src\Editor\inc\Plugin.h"
 				>
 			</File>
 			<File
-				RelativePath=".\PluginManager.cpp"
+				RelativePath="..\..\src\Editor\PluginManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\inc\PluginManager.h"
+				RelativePath="..\..\src\Editor\inc\PluginManager.h"
 				>
 			</File>
 			<File
-				RelativePath=".\PluginManagerFrame.cpp"
+				RelativePath="..\..\src\Editor\PluginManagerFrame.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\inc\PluginManagerFrame.h"
+				RelativePath="..\..\src\Editor\inc\PluginManagerFrame.h"
 				>
 			</File>
 			<Filter
 				Name="Gizmos"
 				>
 				<File
-					RelativePath=".\tools\Gizmos\Gizmo.cpp"
+					RelativePath="..\..\src\Editor\plugins\Gizmos\Gizmo.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\tools\Gizmos\Gizmo.h"
+					RelativePath="..\..\src\Editor\plugins\Gizmos\Gizmo.h"
 					>
 				</File>
 				<File
-					RelativePath=".\tools\Gizmos\GizmoOperation.cpp"
+					RelativePath="..\..\src\Editor\plugins\Gizmos\GizmoOperation.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\tools\Gizmos\GizmoOperation.h"
+					RelativePath="..\..\src\Editor\plugins\Gizmos\GizmoOperation.h"
 					>
 				</File>
 				<File
-					RelativePath=".\tools\Gizmos\GizmoPlugin.cpp"
+					RelativePath="..\..\src\Editor\plugins\Gizmos\GizmoPlugin.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\tools\Gizmos\GizmoPlugin.h"
+					RelativePath="..\..\src\Editor\plugins\Gizmos\GizmoPlugin.h"
 					>
 				</File>
 				<Filter
 					Name="Translate"
 					>
 					<File
-						RelativePath=".\tools\Gizmos\GizmoTranslate.cpp"
+						RelativePath="..\..\src\Editor\plugins\Gizmos\GizmoTranslate.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\tools\Gizmos\GizmoTranslate.h"
+						RelativePath="..\..\src\Editor\plugins\Gizmos\GizmoTranslate.h"
 						>
 					</File>
 				</Filter>
@@ -431,11 +431,11 @@
 					Name="Scale"
 					>
 					<File
-						RelativePath=".\tools\Gizmos\GizmoScale.cpp"
+						RelativePath="..\..\src\Editor\plugins\Gizmos\GizmoScale.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\tools\Gizmos\GizmoScale.h"
+						RelativePath="..\..\src\Editor\plugins\Gizmos\GizmoScale.h"
 						>
 					</File>
 				</Filter>
@@ -443,11 +443,11 @@
 					Name="Rotate"
 					>
 					<File
-						RelativePath=".\tools\Gizmos\GizmoRotate.cpp"
+						RelativePath="..\..\src\Editor\plugins\Gizmos\GizmoRotate.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\tools\Gizmos\GizmoRotate.h"
+						RelativePath="..\..\src\Editor\plugins\Gizmos\GizmoRotate.h"
 						>
 					</File>
 				</Filter>
@@ -456,19 +456,19 @@
 				Name="Terrain"
 				>
 				<File
-					RelativePath=".\tools\Terrain\TerrainPage.cpp"
+					RelativePath="..\..\src\Editor\plugins\Terrain\TerrainPage.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\tools\Terrain\TerrainPage.h"
+					RelativePath="..\..\src\Editor\plugins\Terrain\TerrainPage.h"
 					>
 				</File>
 				<File
-					RelativePath=".\tools\Terrain\TerrainPlugin.cpp"
+					RelativePath="..\..\src\Editor\plugins\Terrain\TerrainPlugin.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\tools\Terrain\TerrainPlugin.h"
+					RelativePath="..\..\src\Editor\plugins\Terrain\TerrainPlugin.h"
 					>
 				</File>
 			</Filter>
@@ -476,27 +476,27 @@
 				Name="Undo/Redo"
 				>
 				<File
-					RelativePath=".\UndoManager.cpp"
+					RelativePath="..\..\src\Editor\UndoManager.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\inc\UndoManager.h"
+					RelativePath="..\..\src\Editor\inc\UndoManager.h"
 					>
 				</File>
 				<File
-					RelativePath=".\UndoOperation.cpp"
+					RelativePath="..\..\src\Editor\UndoOperation.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\inc\UndoOperation.h"
+					RelativePath="..\..\src\Editor\inc\UndoOperation.h"
 					>
 				</File>
 				<File
-					RelativePath=".\tools\UndoRedo\UndoPlugin.cpp"
+					RelativePath="..\..\src\Editor\plugins\UndoRedo\UndoPlugin.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\tools\UndoRedo\UndoPlugin.h"
+					RelativePath="..\..\src\Editor\plugins\UndoRedo\UndoPlugin.h"
 					>
 				</File>
 			</Filter>
@@ -504,19 +504,19 @@
 				Name="Console"
 				>
 				<File
-					RelativePath=".\tools\Console\ConsoleFrame.cpp"
+					RelativePath="..\..\src\Editor\plugins\Console\ConsoleFrame.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\tools\Console\ConsoleFrame.h"
+					RelativePath="..\..\src\Editor\plugins\Console\ConsoleFrame.h"
 					>
 				</File>
 				<File
-					RelativePath=".\tools\Console\ConsoleTextCtrl.cpp"
+					RelativePath="..\..\src\Editor\plugins\Console\ConsoleTextCtrl.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\tools\Console\ConsoleTextCtrl.h"
+					RelativePath="..\..\src\Editor\plugins\Console\ConsoleTextCtrl.h"
 					>
 				</File>
 			</Filter>
@@ -524,11 +524,11 @@
 				Name="Grid"
 				>
 				<File
-					RelativePath=".\tools\Grid\GridPlugin.cpp"
+					RelativePath="..\..\src\Editor\plugins\Grid\GridPlugin.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\tools\Grid\GridPlugin.h"
+					RelativePath="..\..\src\Editor\plugins\Grid\GridPlugin.h"
 					>
 				</File>
 			</Filter>
@@ -536,11 +536,11 @@
 				Name="Sample"
 				>
 				<File
-					RelativePath=".\tools\Sample\SamplePlugin.cpp"
+					RelativePath="..\..\src\Editor\plugins\Sample\SamplePlugin.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\tools\Sample\SamplePlugin.h"
+					RelativePath="..\..\src\Editor\plugins\Sample\SamplePlugin.h"
 					>
 				</File>
 			</Filter>
@@ -548,11 +548,11 @@
 				Name="Project"
 				>
 				<File
-					RelativePath=".\tools\Project\ProjectPlugin.cpp"
+					RelativePath="..\..\src\Editor\plugins\Project\ProjectPlugin.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\tools\Project\ProjectPlugin.h"
+					RelativePath="..\..\src\Editor\plugins\Project\ProjectPlugin.h"
 					>
 				</File>
 			</Filter>
@@ -560,19 +560,19 @@
 				Name="Camera"
 				>
 				<File
-					RelativePath=".\tools\Camera\CameraControls.cpp"
+					RelativePath="..\..\src\Editor\plugins\Camera\CameraControls.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\tools\Camera\CameraControls.h"
+					RelativePath="..\..\src\Editor\plugins\Camera\CameraControls.h"
 					>
 				</File>
 				<File
-					RelativePath=".\tools\Camera\CameraPlugin.cpp"
+					RelativePath="..\..\src\Editor\plugins\Camera\CameraPlugin.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\tools\Camera\CameraPlugin.h"
+					RelativePath="..\..\src\Editor\plugins\Camera\CameraPlugin.h"
 					>
 				</File>
 			</Filter>
@@ -580,19 +580,19 @@
 				Name="Scene"
 				>
 				<File
-					RelativePath=".\tools\Scene\ScenePage.cpp"
+					RelativePath="..\..\src\Editor\plugins\Scene\ScenePage.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\tools\Scene\ScenePage.h"
+					RelativePath="..\..\src\Editor\plugins\Scene\ScenePage.h"
 					>
 				</File>
 				<File
-					RelativePath=".\tools\Scene\ScenePlugin.cpp"
+					RelativePath="..\..\src\Editor\plugins\Scene\ScenePlugin.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\tools\Scene\ScenePlugin.h"
+					RelativePath="..\..\src\Editor\plugins\Scene\ScenePlugin.h"
 					>
 				</File>
 			</Filter>
@@ -600,19 +600,19 @@
 				Name="Resources"
 				>
 				<File
-					RelativePath=".\tools\Resources\ResourcesPage.cpp"
+					RelativePath="..\..\src\Editor\plugins\Resources\ResourcesPage.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\tools\Resources\ResourcesPage.h"
+					RelativePath="..\..\src\Editor\plugins\Resources\ResourcesPage.h"
 					>
 				</File>
 				<File
-					RelativePath=".\tools\Resources\ResourcesPlugin.cpp"
+					RelativePath="..\..\src\Editor\plugins\Resources\ResourcesPlugin.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\tools\Resources\ResourcesPlugin.h"
+					RelativePath="..\..\src\Editor\plugins\Resources\ResourcesPlugin.h"
 					>
 				</File>
 			</Filter>
@@ -621,27 +621,27 @@
 			Name="Widgets"
 			>
 			<File
-				RelativePath=".\widgets\wxFourWaySplitter.cpp"
+				RelativePath="..\..\src\Editor\widgets\wxFourWaySplitter.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\inc\wxFourWaySplitter.h"
+				RelativePath="..\..\src\Editor\inc\wxFourWaySplitter.h"
 				>
 			</File>
 			<File
-				RelativePath=".\wxImageComboBox.cpp"
+				RelativePath="..\..\src\Editor\widgets\wxImageComboBox.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\wxImageComboBox.h"
+				RelativePath="..\..\src\Editor\inc\wxImageComboBox.h"
 				>
 			</File>
 			<File
-				RelativePath=".\wxSliderCtrl.cpp"
+				RelativePath="..\..\src\Editor\widgets\wxSliderCtrl.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\wxSliderCtrl.h"
+				RelativePath="..\..\src\Editor\inc\wxSliderCtrl.h"
 				>
 			</File>
 		</Filter>
@@ -649,36 +649,36 @@
 			Name="Input"
 			>
 			<File
-				RelativePath=".\EditorInputManager.cpp"
+				RelativePath="..\..\src\Editor\EditorInputManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\EditorInputManager.h"
+				RelativePath="..\..\src\Editor\EditorInputManager.h"
 				>
 			</File>
 		</Filter>
 		<File
-			RelativePath=".\Editor.cpp"
+			RelativePath="..\..\src\Editor\Editor.cpp"
 			>
 		</File>
 		<File
-			RelativePath=".\inc\Editor.h"
+			RelativePath="..\..\src\Editor\inc\Editor.h"
 			>
 		</File>
 		<File
-			RelativePath=".\Editor.rc"
+			RelativePath="..\..\src\Editor\res\Editor.rc"
 			>
 		</File>
 		<File
-			RelativePath=".\inc\EditorTags.h"
+			RelativePath="..\..\src\Editor\inc\EditorTags.h"
 			>
 		</File>
 		<File
-			RelativePath=".\Events.cpp"
+			RelativePath="..\..\src\Editor\Events.cpp"
 			>
 		</File>
 		<File
-			RelativePath=".\inc\Events.h"
+			RelativePath="..\..\src\Editor\inc\Events.h"
 			>
 		</File>
 	</Files>

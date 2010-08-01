@@ -48,7 +48,7 @@ Matrix4x3 Matrix4x3::createTranslation( const Vector3& v )
 
 //-----------------------------------//
 
-Matrix4x3 Matrix4x3::createOrientation( const EulerAngles& angles )
+Matrix4x3 Matrix4x3::createRotation( const EulerAngles& angles )
 {
 	return rotateX(angles.x)
 		 * rotateY(angles.y)
@@ -130,7 +130,7 @@ Matrix4x3 Matrix4x3::rotateZ( float ang )
 
 //-----------------------------------//
 
-Vector3	operator*(const Vector3 &p, const Matrix4x3 &m)
+Vector3	operator*(const Vector3& p, const Matrix4x3& m)
 {
 	return Vector3(
 		p.x*m.m11 + p.y*m.m21 + p.z*m.m31 + m.tx,
@@ -141,7 +141,7 @@ Vector3	operator*(const Vector3 &p, const Matrix4x3 &m)
 
 //-----------------------------------//
 
-Vector3 &operator*=(Vector3 &p, const Matrix4x3 &m)
+Vector3& operator*=(Vector3& p, const Matrix4x3& m)
 {
 	p = p * m;
 	return p;
@@ -149,7 +149,7 @@ Vector3 &operator*=(Vector3 &p, const Matrix4x3 &m)
 
 //-----------------------------------//
 
-Matrix4x3 operator*(const Matrix4x3 &a, const Matrix4x3 &b) 
+Matrix4x3 operator*(const Matrix4x3& a, const Matrix4x3& b) 
 {
 	Matrix4x3 r;
 
@@ -173,16 +173,12 @@ Matrix4x3 operator*(const Matrix4x3 &a, const Matrix4x3 &b)
 	r.ty = a.tx*b.m12 + a.ty*b.m22 + a.tz*b.m32 + b.ty;
 	r.tz = a.tx*b.m13 + a.ty*b.m23 + a.tz*b.m33 + b.tz;
 
-	// Return it.  Ouch - involves a copy constructor call.  If speed
-	// is critical, we may need a seperate function which places the
-	// result where we want it...
-
 	return r;
 }
 
 //-----------------------------------//
 
-Matrix4x4 operator*(const Matrix4x3 &a, const Matrix4x4 &b) 
+Matrix4x4 operator*(const Matrix4x3& a, const Matrix4x4& b) 
 {
 	return Matrix4x4(a)*b;
 }
@@ -197,7 +193,7 @@ Matrix4x3& operator*=(Matrix4x3& a, const Matrix4x3& b)
 
 //-----------------------------------//
 
-float determinant(const Matrix4x3 &m)
+float determinant(const Matrix4x3& m)
 {
 	return
 		  m.m11 * (m.m22*m.m33 - m.m23*m.m32)
@@ -207,11 +203,11 @@ float determinant(const Matrix4x3 &m)
 
 //-----------------------------------//
 
-Matrix4x3 inverse(const Matrix4x3 &m) {
+Matrix4x3 inverse(const Matrix4x3& m) {
 
 	// Compute the determinant
 
-	float	det = determinant(m);
+	float det = determinant(m);
 
 	// If we're singular, then the determinant is zero and there's
 	// no inverse
@@ -245,10 +241,6 @@ Matrix4x3 inverse(const Matrix4x3 &m) {
 	r.tx = -(m.tx*r.m11 + m.ty*r.m21 + m.tz*r.m31);
 	r.ty = -(m.tx*r.m12 + m.ty*r.m22 + m.tz*r.m32);
 	r.tz = -(m.tx*r.m13 + m.ty*r.m23 + m.tz*r.m33);
-
-	// Return it.  Ouch - involves a copy constructor call.  If speed
-	// is critical, we may need a separate function which places the
-	// result where we want it...
 
 	return r;
 }

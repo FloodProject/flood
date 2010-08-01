@@ -9,6 +9,7 @@
 #pragma once
 
 #include "vapor/math/Vector3.h"
+#include "vapor/math/Vector4.h"
 
 namespace vapor {
 
@@ -41,7 +42,10 @@ public:
 	Matrix4x4 operator *(const Matrix4x4& m2) const;
 
 	// Multiplies a vector by the matrix.
-	Vector3 operator *( const Vector3 &v ) const;
+	Vector3 operator *( const Vector3& v ) const;
+
+	// Multiplies a vector by the matrix.
+	Vector4 operator *( const Vector4& v ) const;
 
 	// Gets a projection matrix from a set of parameters.
 	static Matrix4x4 createPerspectiveProjection( float fov, float ar,
@@ -49,8 +53,7 @@ public:
 
 	// Gets an orthographic matrix from a set of parameters.
 	static Matrix4x4 createOrthographicProjection( float left, float right,
-		float bottom, float top,
-		float near_, float far_ );
+		float bottom, float top, float near_, float far_ );
 
 	// Identity matrix.
 	static const Matrix4x4 Identity;

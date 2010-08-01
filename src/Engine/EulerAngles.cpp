@@ -57,7 +57,6 @@ EulerAngles& EulerAngles::operator += (const Vector3& v)
 	return *this;
 }
 
-
 //-----------------------------------//
 
 void EulerAngles::rotate( float x, float y, float z )

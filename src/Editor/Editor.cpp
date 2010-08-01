@@ -19,14 +19,14 @@
 #include "wxFourWaySplitter.h"
 
 // Editor plugins
-#include "tools/Project/ProjectPlugin.h"
-#include "tools/UndoRedo/UndoPlugin.h"
-#include "tools/Scene/ScenePlugin.h"
-#include "tools/Resources/ResourcesPlugin.h"
-#include "tools/Gizmos/GizmoPlugin.h"
-#include "tools/Terrain/TerrainPlugin.h"
-#include "tools/Camera/CameraPlugin.h"
-#include "tools/Sample/SamplePlugin.h"
+#include "plugins/Project/ProjectPlugin.h"
+#include "plugins/UndoRedo/UndoPlugin.h"
+#include "plugins/Scene/ScenePlugin.h"
+#include "plugins/Resources/ResourcesPlugin.h"
+#include "plugins/Gizmos/GizmoPlugin.h"
+#include "plugins/Terrain/TerrainPlugin.h"
+#include "plugins/Camera/CameraPlugin.h"
+#include "plugins/Sample/SamplePlugin.h"
 
 namespace vapor { namespace editor {
 
