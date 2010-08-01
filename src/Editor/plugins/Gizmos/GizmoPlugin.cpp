@@ -129,10 +129,14 @@ void GizmoPlugin::onNodeSelect( const NodePtr& node )
 	if( isTool(GizmoTool::Translate)
 		|| isTool(GizmoTool::Scale) || isTool(GizmoTool::Rotate) )
 	{
-		bool gizmoExists = ( gizmos.find(node) != gizmos.end() );
+		bool gizmoExists = gizmos.find(node) != gizmos.end();
 	
 		if( !gizmoExists )
 			createGizmo( node );
+	}
+	else
+	{
+		gizmos[node] = NodePtr();
 	}
 
 	editor->RefreshViewport();
@@ -143,12 +147,7 @@ void GizmoPlugin::onNodeSelect( const NodePtr& node )
 void GizmoPlugin::onNodeUnselect( const NodePtr& node )
 {
 	setBoundingBoxVisible( node, false );
-
-	if( isTool(GizmoTool::Translate)
-		|| isTool(GizmoTool::Scale) || isTool(GizmoTool::Rotate) )
-	{
-		removeGizmo( node );
-	}
+	removeGizmo( node );
 
 	editor->RefreshViewport();
 }

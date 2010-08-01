@@ -15,11 +15,6 @@ Gizmo:
 	Get picking working properly with multiple gizmos
 	When the Camera moves, mouse should be tested
 	Panning is wrong.
-	Picking when the mouse moves (DONE)
-	Change gizmo color when user picks axis (DONE)
-	Add drag event and change the Transform (DONE)
-	Fix cone backface culling (DONE)
-	Scale the gizmo properly in relation to the camera distance (DONE)
 
 Viewframe:
 
