@@ -128,6 +128,11 @@ struct VAPOR_API MouseButtonEvent : public MouseEvent
 {
 	MouseButtonEvent( MouseEventType::Enum eventType );
 
+	// Convenience button test methods.
+	bool isLeftButton() const { return button == MouseButton::Left; }
+	bool isRightButton() const { return button == MouseButton::Right; }
+	bool isMiddleButton() const { return button == MouseButton::Middle; }
+
 	short x;
 	short y;
 

@@ -80,6 +80,7 @@ void GizmoPlugin::onPluginEnable()
 	// TODO: Hack.
 	Events* events = editor->getEventManager();
 	events->currentPlugin = this;
+	tool = GizmoTool::Camera;
 
 	toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
 		&GizmoPlugin::onGizmoToolClick, this,
@@ -124,19 +125,21 @@ void GizmoPlugin::unselectNodes(bool reselect)
 
 void GizmoPlugin::onNodeSelect( const NodePtr& node )
 {
+	if( isTool(GizmoTool::Camera) )
+		return;
+
 	setBoundingBoxVisible( node, true );
 
-	if( isTool(GizmoTool::Translate)
-		|| isTool(GizmoTool::Scale) || isTool(GizmoTool::Rotate) )
+	if( isTool(GizmoTool::Select) )
+	{
+		gizmos[node] = NodePtr();
+	}
+	else
 	{
 		bool gizmoExists = gizmos.find(node) != gizmos.end();
 	
 		if( !gizmoExists )
 			createGizmo( node );
-	}
-	else
-	{
-		gizmos[node] = NodePtr();
 	}
 
 	editor->RefreshViewport();
@@ -261,7 +264,10 @@ void GizmoPlugin::onMouseButtonPress( const MouseButtonEvent& mbe )
 	RayBoxQueryResult res;
 
 	if( scene->doRayBoxQuery(pickRay, res) )
+	{
+		unselectNodes();
 		onNodeSelect( res.node );
+	}
 	else
 		unselectNodes();
 }
@@ -401,15 +407,15 @@ void GizmoPlugin::createOperation()
 {
 	assert( op == nullptr );
 	
-	op = new GizmoOperation();
-	
-	op->axis = axis;
-	op->weakNode = gizmo->getNodeAttachment();
-	op->tool = tool;
-	op->gizmo = gizmo;
-
 	NodePtr nodeObject = gizmo->getNodeAttachment();
 	TransformPtr transObject = nodeObject->getTransform();
+
+	op = new GizmoOperation();
+
+	op->tool = tool;
+	op->axis = axis;
+	op->gizmo = gizmo;
+	op->weakNode = nodeObject;
 
 	op->prevTranslation = transObject->getPosition();
 	op->prevScale = transObject->getScale();

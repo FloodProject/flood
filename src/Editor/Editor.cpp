@@ -151,6 +151,7 @@ void EditorFrame::createPlugins()
 
 	plugin = new TerrainPlugin(this);
 	pluginManager->registerPlugin( plugin );
+	pluginManager->enablePlugin( plugin );
 
 	plugin = new CameraPlugin(this);
 	pluginManager->registerPlugin( plugin );
@@ -192,7 +193,7 @@ void EditorFrame::waitFinishLoad()
 	rm->waitUntilQueuedResourcesLoad();
 
 	// Update at least once before rendering.
-	onUpdate( 0.0f );
+	onUpdate( 0 );
 
 	RenderControl* control = viewframe->getControl();
 	control->startFrameLoop();
@@ -232,7 +233,7 @@ void EditorFrame::createMainViewframe()
 	viewport->setClearColor( Color(0.0f, 0.10f, 0.25f) );
 
 	TransformPtr transform( camera->getTransform() );
-	transform->translate( 0.0f, 20.0f, -65.0f );
+	transform->translate( 0, 20, -65 );
 }
 
 //-----------------------------------//
@@ -247,7 +248,9 @@ NodePtr EditorFrame::createCamera()
 	// Create a new first-person camera for our viewport.
 	// By default it will be in perspective projection.
 	CameraPtr camera( new FirstPersonCamera(device) );
-	camera->setFar(100000.0f);
+	
+	Frustum& frustum = camera->getFrustum();
+	frustum.farPlane = 100000;
 
 	// Generate a new unique name.
 	std::string name( "EditorCamera"+String::fromNumber(i++) );
@@ -513,7 +516,7 @@ void EditorFrame::createScene()
 	rm->loadResource("Tex_Toon.glsl");
 	rm->loadResource("Sky.glsl");
 	rm->loadResource("Water.glsl");
-
+	rm->loadResource("ProjTex.glsl");
 
 	// Sky.
 	ImagePtr clouds = rm->loadResource<Image>( "noise2.png" );
@@ -528,7 +531,7 @@ void EditorFrame::createScene()
 	scene->add( nodeSky );
 
 	TransformPtr transSky = nodeSky->getTransform();
-	transSky->scale(2.0f);
+	transSky->scale(2);
 
 	// Water.
 	MaterialPtr matWater( new Material("WaterMat", "Water") );
@@ -540,21 +543,21 @@ void EditorFrame::createScene()
 	NodePtr nodeWater( new Node("Water") );
 	nodeWater->addTransform();	
 	nodeWater->addComponent( water );
-	scene->add( nodeWater );
+	//scene->add( nodeWater );
 
 	TransformPtr transWater = nodeWater->getTransform();
-	transWater->rotate(90.0f, 0.0f, 0.0f);
-	transWater->scale(10.0f);
-	transWater->translate(0.0f, 5.0f, 0.0f);
+	transWater->rotate(90, 0, 0);
+	transWater->scale(10);
+	transWater->translate(0, 5, 0);
 
 	// Light.
 	LightPtr light;
-	light.reset( new Light( LightType::Directional ) );
+	light.reset( new Light(LightType::Directional) );
 	light->setDiffuseColor( Color::Red );
 	light->setAmbientColor( Color::Yellow );
 
-	TransformPtr transLight( new Transform(0.0f, 100.0f, 0.0f) );
-	transLight->rotate(45.0f, 0.0f, 0.0f);
+	TransformPtr transLight( new Transform(0, 100, 0) );
+	transLight->rotate(45, 0, 0);
 
 	NodePtr nodeLight( new Node("Light") );
 	nodeLight->addComponent( transLight );
@@ -563,7 +566,7 @@ void EditorFrame::createScene()
 
 	// Terrain.
 	MaterialPtr cellMaterial( new Material("CellMaterial") );
-	cellMaterial->setTexture( 0, "PineTrunk.png" );
+	cellMaterial->setTexture( 0, "sand.png" );
 	cellMaterial->setProgram( "tex_toon" );
 
 	TerrainSettings settings;
@@ -580,7 +583,7 @@ void EditorFrame::createScene()
 	scene->add( terreno );
 
 	const ImagePtr& heightMap = rm->loadResource<Image>("height2.png");
-	terrain->addCell( heightMap, 0, 0 );
+	terrain->addCell( 0, 0, heightMap );
 
 	scene->update( 0.1f );
 }

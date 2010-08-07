@@ -12,9 +12,9 @@
 // Platform detection
 //---------------------------------------------------------------------//
 
-#if defined( _WIN32 ) || defined( WIN32 ) || defined( _WIN64 ) ||  defined( WIN64 )
+#if defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(WIN64)
 	#define VAPOR_PLATFORM_WINDOWS
-#elif defined( __APPLE__ ) || defined( MACOSX )
+#elif defined(__APPLE__) || defined(MACOSX)
 	#define VAPOR_PLATFORM_MACOSX
 #elif defined(__LINUX) || defined(__LINUX__) || defined(LINUX)
 	#define VAPOR_PLATFORM_LINUX
@@ -48,7 +48,7 @@
 // Build mode
 //---------------------------------------------------------------------//
 
-#if defined( _DEBUG ) || defined( ___DEBUG ) || defined( DEBUG )
+#if defined( DEBUG ) || defined( _DEBUG ) || defined( ___DEBUG )
 	#define VAPOR_DEBUG
 #endif
 

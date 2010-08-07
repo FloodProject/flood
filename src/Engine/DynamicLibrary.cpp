@@ -22,8 +22,8 @@ namespace vapor {
 //-----------------------------------//
 
 DynamicLib::DynamicLib(const std::string& name) 
-  : _handle(nullptr),
-	_name(name)
+  : _handle(nullptr)
+  , _name(name)
 {
 	load();
 }

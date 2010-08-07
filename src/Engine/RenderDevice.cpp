@@ -106,10 +106,10 @@ bool stateSorter(const RenderState& lhs, const RenderState& rhs)
 	return lhs.group < rhs.group;
 }
 
-void RenderDevice::render( RenderBlock& queue, const Camera* _camera ) 
+void RenderDevice::render( RenderBlock& queue, Camera* newCamera ) 
 {
-	assert( _camera != nullptr );
-	camera = _camera;
+	assert( newCamera != nullptr );
+	camera = newCamera;
 
 	//setupRenderStateShadow( queue.lights );
 
@@ -163,16 +163,21 @@ void RenderDevice::render( RenderBlock& queue, const Camera* _camera )
 
 //-----------------------------------//
 
-bool RenderDevice::setupRenderState( const RenderState& state, const Camera* cam )
+bool RenderDevice::setupRenderState( const RenderState& state, Camera* camera )
 {
+	const Frustum& frustum = camera->getFrustum();
+
+	const Matrix4x3& matModel = state.modelMatrix;
+	const Matrix4x3& matView = camera->getViewMatrix();
+	const Matrix4x4& matProjection = frustum.matProjection;
+
 	const RenderablePtr& rend = state.renderable;
 	const MaterialPtr& material = rend->getMaterial();
 	const ProgramPtr& program = material->getProgram();
 
-	program->setUniform( "vp_ProjectionMatrix", cam->getProjectionMatrix() );
-	program->setUniform( "vp_ModelMatrix", state.modelMatrix );
-	program->setUniform( "vp_ViewMatrix", cam->getViewMatrix() );
-	program->setUniform( "vp_ModelViewMatrix", state.modelMatrix * cam->getViewMatrix() );
+	program->setUniform( "vp_ModelMatrix", matModel );
+	program->setUniform( "vp_ViewMatrix", matView );
+	program->setUniform( "vp_ProjectionMatrix", matProjection );
 
 	return true;
 }
@@ -217,7 +222,8 @@ void RenderDevice::updateLightDepth( LightState& state )
 	lightView->update();
 	shadowDepthBuffer->unbind();
 
-	Matrix4x4 bias; bias.identity();
+	Matrix4x4 bias;
+	bias.identity();
 	bias.m11 = 0.5f;
 	bias.m22 = 0.5f;
 	bias.m33 = 0.5f;
@@ -225,8 +231,11 @@ void RenderDevice::updateLightDepth( LightState& state )
 	bias.ty  = 0.5f;
 	bias.tz  = 0.5f;
 
+	const Frustum& frustum = lightCamera->getFrustum();
+	const Matrix4x4& matProjection = frustum.matProjection;
+
 	state.projection = lightCamera->getViewMatrix()
-		* lightCamera->getProjectionMatrix() * bias;
+		* matProjection * bias;
 }
 
 //-----------------------------------//

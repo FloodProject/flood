@@ -34,7 +34,7 @@ class VAPOR_API FileSystem : public Subsystem
 {
 public:
 
-	// Constructs a new instance of the virtual filesystem..
+	// Constructs a new instance of the virtual filesystem.
 	FileSystem( const std::string& app, const char* argv0 = nullptr );
 	virtual ~FileSystem();
 
@@ -56,7 +56,7 @@ public:
 
 protected:
 
-// Sets up some sensible default mount points.
+	// Sets up some sensible default mount points.
 	void setDefaultConfig(const std::string& app);
 
 	// Logs the version and supported archive types.

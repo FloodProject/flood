@@ -81,7 +81,7 @@ void ProgramManager::onLoad( const ResourceEvent& evt )
 	const GLSL_TextPtr& glsl = RESOURCE_SMART_PTR_CAST<GLSL_Text>( text );
 	
 	const GLSL_ProgramPtr program = new GLSL_Program(glsl);
-	registerProgram( glsl->getBaseURI(), program );
+	registerProgram( glsl->getBasePath(), program );
 }
 
 //-----------------------------------//
@@ -92,11 +92,11 @@ void ProgramManager::onReload( const ResourceEvent& evt )
 		return;
 
 	const TextPtr& text = RESOURCE_SMART_PTR_CAST<Text>( evt.resource );
-	std::string base( String::toLowerCase( text->getBaseURI() ) );
+	std::string base( String::toLowerCase( text->getBasePath() ) );
 
 	assert( programs.find(base) != programs.end() );
 
-	debug( "Reloading shader '%s'", evt.resource->getURI().c_str() );
+	debug( "Reloading shader '%s'", evt.resource->getPath().c_str() );
 
 	ProgramPtr program = programs[base];
 	program->updateShadersText();

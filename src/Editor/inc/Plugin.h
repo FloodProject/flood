@@ -103,6 +103,9 @@ protected:
 	// Removes all the registered tools.
 	void removeTools();
 
+	// Removes a page from the main notebook.
+	void removePage( wxWindow* page );
+
 	// Access to the engine instance.
 	Engine* engine;
 

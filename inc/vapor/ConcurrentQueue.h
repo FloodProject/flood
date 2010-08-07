@@ -24,11 +24,11 @@ class concurrent_queue
 {
 public:
 
-	void push(const T& T)
+	void push(const T& value)
 	{
 		THREAD(boost::mutex::scoped_lock lock(mutex);)
 		
-		queue.push_back(T);
+		queue.push_back(value);
 		THREAD(lock.unlock();)
 
 		THREAD(cond_var.notify_one();)

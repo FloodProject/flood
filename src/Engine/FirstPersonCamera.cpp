@@ -23,9 +23,8 @@ const std::string& FirstPersonCamera::type = "FirstPersonCamera";
 
 //-----------------------------------//
 
-FirstPersonCamera::FirstPersonCamera( RenderDevice* device,
-									  Projection::Enum projection )
-	: Camera( device, projection )
+FirstPersonCamera::FirstPersonCamera( RenderDevice* device )
+	: Camera( device )
 	, clampMovementX( true )
 	, moveSensivity( DEFAULT_MOVE_SENSIVITY )
 	, lookSensivity( DEFAULT_LOOK_SENSIVITY )

@@ -50,7 +50,7 @@ Viewframe::~Viewframe()
 
 //-----------------------------------//
 
-Viewport* Viewframe::createViewport( NodePtr node )
+Viewport* Viewframe::createViewport( const NodePtr& node )
 {
 	assert( node != nullptr );
 

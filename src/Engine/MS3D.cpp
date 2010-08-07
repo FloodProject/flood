@@ -59,13 +59,9 @@ struct VAPOR_ALIGN_BEGIN(1) ms3d_header_t
 struct VAPOR_ALIGN_BEGIN(1) ms3d_vertex_t
 {
 	byte	flags;
-	float	vertex[3];
-	byte	boneId;
+	Vector3	position;
+	byte	boneIndex;
 	byte	referenceCount;
-	//char boneIds[3];
-	//unsigned char weights[3];
-	//unsigned int extra;
-	//float renderColor[3];
 } VAPOR_ALIGN_END(1);
 
 //-----------------------------------//
@@ -74,10 +70,9 @@ struct VAPOR_ALIGN_BEGIN(1) ms3d_triangle_t
 {
 	ushort	flags;
 	ushort	vertexIndices[3];
-	float	vertexNormals[3][3];
+	Vector3	vertexNormals[3];
 	float	s[3];
 	float	t[3];
-	//float	normal[3];
 	byte	smoothingGroup;
 	byte	groupIndex;
 } VAPOR_ALIGN_END(1);
@@ -99,10 +94,10 @@ struct VAPOR_ALIGN_BEGIN(1) ms3d_group_t
 struct VAPOR_ALIGN_BEGIN(1) ms3d_material_t
 {
 	char			name[32];
-	float			ambient[4];
-	float			diffuse[4];
-	float			specular[4];
-	float			emissive[4];
+	Color			ambient;
+	Color			diffuse;
+	Color			specular;
+	Color			emissive;
 	float			shininess;
     float			transparency;
 	byte			mode;
@@ -117,7 +112,7 @@ struct VAPOR_ALIGN_BEGIN(1) ms3d_material_t
 struct VAPOR_ALIGN_BEGIN(1) ms3d_keyframe_t
 {
 	float time;
-	float key[3];
+	Vector3 parameter;
 } VAPOR_ALIGN_END(1);
 
 //-----------------------------------//
@@ -224,12 +219,16 @@ void MS3D::build( std::vector<RenderablePtr>& renderables )
 		RenderablePtr rend( new Renderable(Primitive::Triangles) );
 		
 		// Vertex data
-		std::vector<Vector3> vb_v;
-		vb_v.reserve( g.triangleIndices.size() );
+		std::vector<Vector3> pos;
+		pos.reserve( g.triangleIndices.size()*3 );
+
+		// Normal data
+		std::vector< Vector3 > normals;
+		normals.reserve( g.triangleIndices.size()*3 );
 		
 		// Texture coords data
-		std::vector< Vector3 > vb_tc;
-		vb_tc.reserve( g.triangleIndices.size() );
+		std::vector< Vector3 > texCoords;
+		texCoords.reserve( g.triangleIndices.size()*3 );
 
 		// Let's process all the triangles of this group.
 		foreach( const ushort& t_ind, g.triangleIndices )
@@ -238,17 +237,17 @@ void MS3D::build( std::vector<RenderablePtr>& renderables )
 
 			foreach( const ushort& v_ind, t.vertexIndices ) 
 			{
-				Vector3 vec( 
-					m_vertices[v_ind]->vertex[0],
-					m_vertices[v_ind]->vertex[1],
-					m_vertices[v_ind]->vertex[2] );
-				vb_v.push_back( vec );
+				const ms3d_vertex_t& v = *m_vertices[v_ind];
+				pos.push_back( v.position );
 			}
 
 			for( int i = 0; i < 3; i++ )
 			{
-				Vector2 st( t.s[i], t.t[i] );
-				vb_tc.push_back( st );	
+				Vector3 normal( t.vertexNormals[i] );
+				normals.push_back( normal );
+
+				Vector2 texCoord( t.s[i], t.t[i] );
+				texCoords.push_back( texCoord );
 			}
 		}
 
@@ -261,7 +260,7 @@ void MS3D::build( std::vector<RenderablePtr>& renderables )
 
 			if( strlen(mt.texture) > 0 )
 			{
-				mat->setProgram( "Tex" );
+				mat->setProgram( "Tex_Toon" );
 				mat->setTexture( 0, mt.texture );
 			}
 
@@ -280,8 +279,9 @@ void MS3D::build( std::vector<RenderablePtr>& renderables )
 		// Vertex buffers
 
 		VertexBufferPtr vb( new VertexBuffer() );
-		vb->set( VertexAttribute::Position, vb_v );
-		vb->set( VertexAttribute::TexCoord0, vb_tc );
+		vb->set( VertexAttribute::Position, pos );
+		vb->set( VertexAttribute::Normal, normals );
+		vb->set( VertexAttribute::TexCoord0, texCoords );
 
 		rend->setVertexBuffer( vb );
 
@@ -369,7 +369,6 @@ void MS3D::read_triangles()
 
 void MS3D::read_groups()
 {
-	// groups
 	ushort& numGroups = FILEBUF_INDEX(ushort);
 	m_groups.resize(numGroups);
 	
@@ -395,7 +394,6 @@ void MS3D::read_groups()
 
 void MS3D::read_materials()
 {
-	// materials
 	ushort& numMaterials = FILEBUF_INDEX(ushort);
 	m_materials.resize(numMaterials);
 	
@@ -403,11 +401,14 @@ void MS3D::read_materials()
 	{
 		FILEBUF_READ(ms3d_material_t, m_materials[i]);
 
+		ms3d_material_t& mat = *m_materials[i];
+		float transparency = mat.transparency;
+
 		// set alpha
-		m_materials[i]->ambient[3] = m_materials[i]->transparency;
-		m_materials[i]->diffuse[3] = m_materials[i]->transparency;
-		m_materials[i]->specular[3] = m_materials[i]->transparency;
-		m_materials[i]->emissive[3] = m_materials[i]->transparency;
+		mat.ambient.a = transparency;
+		mat.diffuse.a = transparency;
+		mat.specular.a = transparency;
+		mat.emissive.a = transparency;
 	}
 }
 
@@ -628,71 +629,6 @@ void MS3D::read_materials()
 //	m_jointSize = 1.0f;
 //	m_transparencyMode = TRANSPARENCY_MODE_SIMPLE;
 //	m_alphaRef = 0.5f;
-//}
-//
-//int msModel::GetNumGroups() const
-//{
-//	return (int) m_groups.size();
-//}
-//
-//ms3d_group_t *msModel::GetGroup(int index)
-//{
-//	return &m_groups[index];
-//}
-//
-//int msModel::GetNumTriangles() const
-//{
-//	return (int) m_triangles.size();
-//}
-//
-//ms3d_triangle_t *msModel::GetTriangle(int index)
-//{
-//	return &m_triangles[index];
-//}
-//
-//int msModel::GetNumVertices() const
-//{
-//	return (int) m_vertices.size();
-//}
-//
-//ms3d_vertex_t *msModel::GetVertex(int index)
-//{
-//	return &m_vertices[index];
-//}
-//
-//int msModel::GetNumMaterials() const
-//{
-//	return (int) m_materials.size();
-//}
-//
-//ms3d_material_t *msModel::GetMaterial(int index)
-//{
-//	return &m_materials[index];
-//}
-//
-//int msModel::GetNumJoints() const
-//{
-//	return (int) m_joints.size();
-//}
-//
-//ms3d_joint_t *msModel::GetJoint(int index)
-//{
-//	return &m_joints[index];
-//}
-//
-//float msModel::GetJointSize() const
-//{
-//	return m_jointSize;
-//}
-//
-//int msModel::GetTransparencyMode() const
-//{
-//	return m_transparencyMode;
-//}
-//
-//float msModel::GetAlphaRef() const
-//{
-//	return m_alphaRef;
 //}
 //
 //int msModel::FindJointByName(const char *name)
@@ -951,21 +887,6 @@ void MS3D::read_materials()
 //		ms3d_joint_t *parentJoint = &m_joints[joint->parentIndex];
 //		R_ConcatTransforms(parentJoint->matGlobal, joint->matLocal, joint->matGlobal);
 //	}
-//}
-//
-//float msModel::GetAnimationFps() const
-//{
-//	return m_animationFps;
-//}
-//
-//float msModel::GetCurrentFrame() const
-//{
-//	return m_currentTime;
-//}
-//
-//int msModel::GetTotalFrames() const
-//{
-//	return m_totalFrames;
 //}
 //
 //void msModel::TransformVertex(const ms3d_vertex_t *vertex, vec3_t out) const

@@ -30,13 +30,8 @@ Cell::Cell( const TerrainSettings& settings,
 	setVertexBuffer( vb );
 	setIndexBuffer( ib );
 
-	{
-		//Profiler p( "terrain build" );
-
-		rebuildGeometry();
-		rebuildFaceNormals();
-		rebuildAveragedNormals();
-	}
+	rebuildGeometry();
+	rebuildNormals();
 }
 
 //-----------------------------------//
@@ -120,6 +115,14 @@ void Cell::rebuildIndices()
 
 	// Index buffer setup.
 	ib->set( indices );
+}
+
+//-----------------------------------//
+
+void Cell::rebuildNormals()
+{
+	rebuildFaceNormals();
+	rebuildAveragedNormals();
 }
 
 //-----------------------------------//

@@ -22,7 +22,7 @@ typedef std::map<int, Plugin*> PluginToolsMap;
 /**
  * Responsible for managing all the plugins aswell as implementing
  * their lifecycle. Plugins should be registered with the manager
- * and enabled or disabled as needed during runtime.
+ * and enabled or disabled as needed dpathng runtime.
  */
 
 class PluginManager

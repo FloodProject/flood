@@ -12,6 +12,8 @@
 
 namespace vapor {
 
+//-----------------------------------//
+
 struct TerrainSettings;
 
 //-----------------------------------//
@@ -36,17 +38,20 @@ public:
 	// Sets the heights of this Cell of terrain.
 	void setHeights( const std::vector<float>& heights );
 
-	// Generates the terrain grid geometry.
+	// Rebuilds the terrain geometry.
 	void rebuildGeometry();
 
-	// Calculate the face normals of the geometry.
-	void rebuildFaceNormals();
-
-	// Calculate the averaged normals of the geometry.
-	void rebuildAveragedNormals();
+	// Rebuilds the terrain normals.
+	void rebuildNormals();
 
 	// Given an indice, gets the neighbour vertices.
 	std::vector<uint> getNeighborFaces( uint index );
+
+	// Gets the X coordinate of the cell.
+	GETTER(X, short, x)
+
+	// Gets the Y coordinate of the cell.
+	GETTER(Y, short, y)
 
 protected:
 
@@ -55,6 +60,12 @@ protected:
 
 	// Calculate the indices of the geometry.
 	void rebuildIndices();
+
+	// Calculate the face normals of the geometry.
+	void rebuildFaceNormals();
+
+	// Calculate the averaged normals of the geometry.
+	void rebuildAveragedNormals();
 
 	// Coordinates of this cell of terrain.
 	short x, y;

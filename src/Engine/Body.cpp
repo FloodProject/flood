@@ -265,7 +265,6 @@ void  Body::setPosition (const Vector3 &position)
 	}
 }
 
-
 //-----------------------------------//
 
 void  Body::setPositionAndRotation (const Matrix4x3 &m)
@@ -285,4 +284,5 @@ void  Body::setPositionAndRotation (const Matrix4x3 &m)
 }
 
 //-----------------------------------//
+
 } // end namespace

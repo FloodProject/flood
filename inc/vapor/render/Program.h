@@ -9,14 +9,13 @@
 #pragma once
 
 #include "vapor/render/Shader.h"
+#include "vapor/render/VertexBuffer.h"
 #include "vapor/math/Matrix4x3.h"
 #include "vapor/math/Matrix4x4.h"
 #include "vapor/math/EulerAngles.h"
 #include "vapor/math/Color.h"
 
 namespace vapor {
-
-namespace VertexAttribute { enum Enum; }
 
 //-----------------------------------//
 

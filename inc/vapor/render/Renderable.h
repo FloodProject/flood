@@ -75,7 +75,7 @@ public:
 		const IndexBufferPtr&, const MaterialPtr& );
     
     // No index buffer, default material will be used if none passed.
-	Renderable(Primitive::Enum, const VertexBufferPtr& = VertexBufferPtr(),
+	Renderable( Primitive::Enum, const VertexBufferPtr& = nullptr,
 		const MaterialPtr& = nullptr );
 
 	// Binds the state needed to draw the renderable.

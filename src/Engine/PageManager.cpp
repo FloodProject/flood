@@ -27,7 +27,8 @@ PageManager::PageManager( uint pageSize )
 //-----------------------------------//
 
 PageManager::PageManager( uint pageSize, CameraWeakPtr weakCamera )
-	: pageSize(pageSize), weakCamera(weakCamera)
+	: pageSize(pageSize)
+	, weakCamera(weakCamera)
 { }
 
 //-----------------------------------//

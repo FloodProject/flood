@@ -207,18 +207,18 @@ Matrix4x4 Matrix4x4::inverse() const
 
 //-----------------------------------//
 
-Matrix4x4 Matrix4x4::createPerspectiveProjection( float fov, float ar, float near_, float far_ ) 
+Matrix4x4 Matrix4x4::createPerspectiveProjection( float FOV, float aspectRatio, float nearPlane, float farPlane ) 
 {
-	assert( near_ > 0 );
-	assert( far_  > 0 );
-	assert( near_ < far_ );
+	assert( nearPlane > 0 );
+	assert( farPlane  > 0 );
+	assert( nearPlane < farPlane );
 
 	Matrix4x4 proj;
 
-	float h = 1.0f / tanf( Math::degreeToRadian(fov) * 0.5f );
-	float neg_depth = (near_ - far_);
+	float h = 1.0f / tanf( Math::degreeToRadian(FOV) * 0.5f );
+	float neg_depth = (nearPlane - farPlane);
 	
-	proj.m11 = h / ar;
+	proj.m11 = h / aspectRatio;
 	proj.m12 = 0;
 	proj.m13 = 0;
 	proj.m14 = 0;
@@ -230,12 +230,12 @@ Matrix4x4 Matrix4x4::createPerspectiveProjection( float fov, float ar, float nea
 
 	proj.m31 = 0;
 	proj.m32 = 0;
-	proj.m33 = (far_ + near_) / neg_depth;
+	proj.m33 = (farPlane + nearPlane) / neg_depth;
 	proj.m34 = -1.0;
 
 	proj.tx = 0;
 	proj.ty = 0;
-	proj.tz = 2.0f * (near_* far_) / neg_depth;
+	proj.tz = 2.0f * (nearPlane* farPlane) / neg_depth;
 	proj.tw = 0;
 
 	return proj;
@@ -244,7 +244,7 @@ Matrix4x4 Matrix4x4::createPerspectiveProjection( float fov, float ar, float nea
 //-----------------------------------//
 
 Matrix4x4 Matrix4x4::createOrthographicProjection( float left, float right,
-		float bottom, float top, float near_, float far_)
+		float bottom, float top, float nearPlane, float farPlane)
 {
 	Matrix4x4 proj;
 
@@ -260,12 +260,12 @@ Matrix4x4 Matrix4x4::createOrthographicProjection( float left, float right,
 
 	proj.m31 = 0;
 	proj.m32 = 0;
-	proj.m33 = -2.0f / (far_ - near_);
+	proj.m33 = -2.0f / (farPlane - nearPlane);
 	proj.m34 = 0;
 
 	proj.tx = -(right + left) / (right - left);
 	proj.ty = -(top + bottom) / (top - bottom);
-	proj.tz = -(far_ + near_) / (far_ - near_);
+	proj.tz = -(farPlane + nearPlane) / (farPlane - nearPlane);
 	proj.tw = 1;
 
 	return proj;	

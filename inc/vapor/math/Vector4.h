@@ -34,6 +34,13 @@ public:
 	{ }
 
 	//-----------------------------------//
+	
+	// Constructs a vector from a vector and 1 value.
+	Vector4T (const Vector3T<T>& v, T w)
+		: x(v.x), y(v.y), z(v.z), w(w)
+	{ }
+
+	//-----------------------------------//
 
 	// Constructs a vector from 1 value.
 	Vector4T (const T v)

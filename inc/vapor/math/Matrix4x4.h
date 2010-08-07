@@ -48,12 +48,12 @@ public:
 	Vector4 operator *( const Vector4& v ) const;
 
 	// Gets a projection matrix from a set of parameters.
-	static Matrix4x4 createPerspectiveProjection( float fov, float ar,
-		float near_, float far_ );
+	static Matrix4x4 createPerspectiveProjection( float FOV,
+		float aspectRatio, float nearPlane, float farPlane );
 
 	// Gets an orthographic matrix from a set of parameters.
 	static Matrix4x4 createOrthographicProjection( float left, float right,
-		float bottom, float top, float near_, float far_ );
+		float bottom, float top, float nearPlane, float farPlane );
 
 	// Identity matrix.
 	static const Matrix4x4 Identity;

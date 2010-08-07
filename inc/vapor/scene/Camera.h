@@ -21,44 +21,30 @@ namespace vapor {
 //-----------------------------------//
 
 /**
- * Types of camera projection.
- */
-
-namespace Projection 
-{
-    enum Enum
-    {
-        Orthographic,
-        Perspective
-    };
-
-	std::string toString( Projection::Enum );
-}
-
-//-----------------------------------//
-
-/**
  * Represents a view from a specific point in the world. Has an associated 
  * projection type, like ortographic or perspective and also holds a frustum 
  * that will be used for performing viewing frustum culling. Culling helps
- * speed up the rendering by cutting nodes that are outside of the view range.
+ * speed up the rendering by cutting nodes that are outside the view range.
  */
 
 class VAPOR_API Camera : public Component
 {
 public:
 
-	Camera( RenderDevice*, Projection::Enum = Projection::Perspective );
+	Camera( RenderDevice* );
 	Camera( const Camera& rhs );
 	~Camera();
 
+	// Gets the camera frustum.
+	Frustum& getFrustum() { return frustum; }
+
 	// Renders the (sub-)scene starting from the passed node to the current 
 	// render target associated in the camera.
-	void render( const NodePtr& node, bool clearView = true ) const;
+	void render( const NodePtr& node, bool clearView = true );
 
 	// Renders the entire scene starting from the root node to the current 
 	// render target associated in the camera.
-	void render() const;
+	void render();
 
 	// Performs hierarchical frustum culling on the nodes in the scene 
 	// starting from the given node. In other words, the camera will check 
@@ -74,23 +60,8 @@ public:
 	// Updates this component.
 	virtual void update( double delta );
 
-	// Gets/sets the projection type of the camera.
-	ACESSOR(Projection, Projection::Enum, projection)
-
-	// Gets/sets the field-of-view of the camera.
-	ACESSOR(FOV, float, fov);
-
-	// Gets/sets the far clipping plane of the camera.
-	ACESSOR(Far, float, far_);
-
-	// Gets/sets the near clipping plane of the camera.
-	ACESSOR(Near, float, near_);
-
 	// Gets the look-at vector of the camera.
 	GETTER(LookAtVector, const Vector3&, lookAtVector)
-
-	// Gets the projection matrix of the camera.
-	GETTER(ProjectionMatrix, const Matrix4x4&, projectionMatrix)
 
 	// Gets the view matrix of the camera.
 	GETTER(ViewMatrix, const Matrix4x3&, viewMatrix)
@@ -98,9 +69,6 @@ public:
 	// Gets/sets the current viewport associated with the camera.
 	GETTER(Viewport, Viewport*, viewport)
 	DECLARE_SETTER(Viewport, Viewport*)
-
-	// Gets the frustum associated with the camera.
-	//GETTER(Frustum, const Frustum&, frustum)
 	
 	// Gets the type of this node.
 	GETTER(Type, const std::string&, type)
@@ -109,34 +77,20 @@ public:
 
 protected:
 
-	// Sets up the projection matrix.
-	void setupProjection( const Vector2i& size );
-
 	// Sets up the view matrix.
 	void setupView();
 
 	// Handles the transform notification.
 	void onTransform();
 
+	// Camera frustum.
+	Frustum frustum;
+
 	// Look-at vector.
 	Vector3 lookAtVector;
 
 	// View matrix.
 	Matrix4x3 viewMatrix;
-
-	// Projection matrix.
-	Matrix4x4 projectionMatrix;
-
-	// Projection mode.
-	Projection::Enum projection;
-	
-	// Field of view of this camera.
-	float fov;
-
-	// Near and far clipping planes values.
-	// Note: near and far are reserved keywords on MSVC. 
-	float near_;
-	float far_;
 
 	// Last viewport the camera rendered into.
 	Viewport* viewport;

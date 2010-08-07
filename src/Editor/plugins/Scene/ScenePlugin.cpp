@@ -48,10 +48,10 @@ void ScenePlugin::onPluginEnable()
 	wxBitmap iconSitemap = wxMEMORY_BITMAP(sitemap_color);
 	iconScene = imageList->Add(iconSitemap);
 
-	scenePage = new ScenePage( editor, notebookCtrl, wxID_ANY );
+	scenePage = new ScenePage( editor, notebookCtrl );
 
 	bool scenePageAdded = 
-		notebookCtrl->AddPage( scenePage, wxT("Scene"),
+		notebookCtrl->AddPage( scenePage, wxEmptyString/*wxT("Scene")*/,
 		true, iconScene );
 
 	if( !scenePageAdded )
@@ -62,26 +62,7 @@ void ScenePlugin::onPluginEnable()
 
 void ScenePlugin::onPluginDisable()
 {
-	wxNotebook* notebookCtrl = editor->getNotebook();
-	assert( notebookCtrl != nullptr );
-
-	wxImageList* imageList = notebookCtrl->GetImageList();
-	assert( imageList != nullptr );
-
-	//imageList->Remove(iconScene);
-
-	int pageCount = notebookCtrl->GetPageCount();
-	
-	for( int i = 0; i < pageCount; i++ )
-	{
-		wxWindow* window = notebookCtrl->GetPage(i);
-		
-		if( window->GetId() == scenePage->GetId() )
-		{
-			notebookCtrl->DeletePage(i);
-			break;
-		}
-	}
+	removePage( scenePage );
 }
 
 //-----------------------------------//

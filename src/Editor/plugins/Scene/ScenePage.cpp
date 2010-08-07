@@ -19,9 +19,9 @@ namespace vapor { namespace editor {
 
 enum 
 {
-	ID_SceneTree = 9832,
 	ID_MenuSceneNodeDelete = wxID_DELETE,
-	ID_MenuSceneNodeVisible = 5643,
+	ID_SceneTree = wxID_HIGHEST+8321,
+	ID_MenuSceneNodeVisible,
 	ID_MenuSceneNodeWireframe,
 	ID_ButtonNodeAdd,
 	ID_ButtonNodeDelete,
@@ -42,6 +42,7 @@ BEGIN_EVENT_TABLE(ScenePage, wxPanel)
 	EVT_MENU(wxID_ANY, ScenePage::onNodeMenu)
 	EVT_BUTTON(ID_ButtonNodeAdd, ScenePage::onButtonNodeAdd)
 	EVT_BUTTON(ID_ButtonNodeDelete, ScenePage::onButtonNodeDelete)
+	EVT_UPDATE_UI(ID_ButtonNodeDelete, ScenePage::onButtonNodeDeleteUpdate)
 END_EVENT_TABLE()
 
 //-----------------------------------//
@@ -101,7 +102,10 @@ public:
 ScenePage::ScenePage( EditorFrame* frame, wxWindow* parent, wxWindowID id )
 	: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(230, -1) )
 	, editor(frame)
-	, activated(false)
+	, tree(nullptr)
+	, imageList(nullptr)
+	, buttonNodeAdd(nullptr)
+	, buttonNodeDelete(nullptr)
 {
 	engine = editor->getEngine();
 	const ScenePtr& scene = engine->getSceneManager();
@@ -110,6 +114,15 @@ ScenePage::ScenePage( EditorFrame* frame, wxWindow* parent, wxWindowID id )
 	initControl();
 	initIcons();
 	initScene( root, scene );
+}
+
+//-----------------------------------//
+
+ScenePage::~ScenePage()
+{
+	//ScenePtr scene( weakScene );
+	//scene->onNodeAdded -= fd::bind( &ScenePage::onNodeAdded, this );
+	//scene->onNodeRemoved -= fd::bind( &ScenePage::onNodeRemoved, this );
 }
 
 //-----------------------------------//
@@ -129,32 +142,32 @@ void ScenePage::initControl()
 	wxString str( scene->getName() );
 	root = tree->AddRoot(str.Capitalize(), 1);
 
-	tree->ExpandAll();
-
 	scene->onNodeAdded += fd::bind( &ScenePage::onNodeAdded, this );
 	scene->onNodeRemoved += fd::bind( &ScenePage::onNodeRemoved, this );
 	
 	wxBoxSizer* sizer2 = new wxBoxSizer( wxHORIZONTAL );
 
-	wxStaticBitmap* m_bitmap4 = new wxStaticBitmap( this, wxID_ANY,
+	wxStaticBitmap* iconFind = new wxStaticBitmap( this, wxID_ANY,
 		wxMEMORY_BITMAP(find) );
-	sizer2->Add( m_bitmap4, 0, wxALL|wxEXPAND, 5 );
+	sizer2->Add( iconFind, 0, wxALL|wxEXPAND, 5 );
 	
-	wxTextCtrl* m_textCtrl13 = new wxTextCtrl( this, wxID_ANY );
-	sizer2->Add( m_textCtrl13, 1, wxEXPAND|wxALL, 5 );
+	wxTextCtrl* textFind = new wxTextCtrl( this, wxID_ANY );
+	sizer2->Add( textFind, 1, wxEXPAND|wxALL, 5 );
 	
+	// Node delete button.
 	buttonNodeDelete = new wxBitmapButton( this, ID_ButtonNodeDelete,
 		wxMEMORY_BITMAP(package_delete) );
-	buttonNodeDelete->SetBitmapDisabled( wxMEMORY_BITMAP(package_delete_disable) );
+	wxBitmap iconDisabled = wxMEMORY_BITMAP(package_delete_disable);
+	buttonNodeDelete->SetBitmapDisabled( iconDisabled );
 	buttonNodeDelete->Disable();
 	sizer2->Add( buttonNodeDelete, 0, wxEXPAND|wxTOP|wxBOTTOM, 5 );
 	
-	wxBitmapButton* m_bpButton51 = new wxBitmapButton( this, ID_ButtonNodeAdd,
+	// Node add button.
+	buttonNodeAdd = new wxBitmapButton( this, ID_ButtonNodeAdd,
 		wxMEMORY_BITMAP(package_add) );
-	sizer2->Add( m_bpButton51, 0, wxTOP|wxBOTTOM, 5 );
+	sizer2->Add( buttonNodeAdd, 0, wxTOP|wxBOTTOM, 5 );
 
 	sizer->Add( sizer2, 0, wxEXPAND, 0 );
-	
 	SetSizer( sizer );
 }
 
@@ -162,10 +175,10 @@ void ScenePage::initControl()
 
 void ScenePage::initIcons()
 {
-	// create a new list of all the icons.
+	// Create a new list of all the icons.
 	imageList = new wxImageList(16, 16, false, 12);
 
-	// the images were preconverted from image files to binary data 
+	// The images were preconverted from image files to binary data 
 	// held in a regular C++ array. this way we don't need to package
 	// external image files with the executable. but we do need to
 	// convert the images from the array to a wxBitmap.
@@ -327,6 +340,16 @@ void ScenePage::onButtonNodeDelete(wxCommandEvent&)
 
 //-----------------------------------//
 
+void ScenePage::onButtonNodeDeleteUpdate(wxUpdateUIEvent& event)
+{
+	ScenePtr scene( weakScene );
+	bool empty = scene->getChildren().empty();
+	
+	event.Enable( !empty );
+}
+
+//-----------------------------------//
+
 void ScenePage::onNodeMenu( wxCommandEvent& event )
 {
 	int id = event.GetId();
@@ -360,8 +383,7 @@ void ScenePage::onNodeMenu( wxCommandEvent& event )
 			}
 		}
 
-		Viewframe* viewframe = editor->getMainViewframe();
-		viewframe->flagRedraw();
+		editor->RefreshViewport();
 	}
 
 	if( id > ID_MenuSceneNodeComponentRangeStart
@@ -381,7 +403,7 @@ void ScenePage::onComponentAdd(wxCommandEvent& event )
 	{
 		wxFileDialog fd( this, wxFileSelectorPromptStr,
 			wxEmptyString, wxEmptyString, "Mesh files (*.ms3d)|*.ms3d",
-			wxFD_DEFAULT_STYLE|wxFD_FILE_MUST_EXIST, wxPoint( 0, 0 ) );
+			wxFD_DEFAULT_STYLE|wxFD_FILE_MUST_EXIST );
 
 		if( fd.ShowModal() == wxID_OK )
 		{
@@ -391,7 +413,9 @@ void ScenePage::onComponentAdd(wxCommandEvent& event )
 			//fs->
 
 			std::string filename( fd.GetPath() );
-			MeshPtr mesh = rm->loadResource<Mesh>(filename);
+			std::vector<std::string> elems = String::split( filename, '\\' );
+
+			MeshPtr mesh = rm->loadResource<Mesh>( elems.back() );
 
 			if( !mesh )
 				return;
@@ -407,6 +431,10 @@ void ScenePage::onComponentAdd(wxCommandEvent& event )
 	if( id == ID_MenuSceneNodeTransform )
 	{
 		const NodePtr& node = getEntity( menuItemId );
+
+		if( node->getTransform() )
+			return;
+
 		node->addTransform();
 		addComponent( menuItemId, node->getTransform() );
 	}
@@ -462,10 +490,12 @@ void ScenePage::onNodeAdded( const GroupEvent& event )
 
 //-----------------------------------//
 
-void ScenePage::onNodeRemoved( const GroupEvent& /*event*/ )
+void ScenePage::onNodeRemoved( const GroupEvent& event )
 {
 	//const std::string& type = component.second->getType();
 	//AppendItem( id, type, icons[type] );
+	Events* events = editor->getEventManager();
+	events->onNodeUnselect( event.node );
 }
 
 //-----------------------------------//
@@ -506,17 +536,6 @@ void ScenePage::onLabelEditEnd( wxTreeEvent& event )
 	assert( node != nullptr );
 
 	node->setName( std::string( label.c_str() ) );
-}
-
-//-----------------------------------//
-
-void ScenePage::onActivate( wxFocusEvent& /*event*/ )
-{
-	if( !activated )
-	{
-		tree->ExpandAll();
-		activated = true;
-	}
 }
 
 //-----------------------------------//

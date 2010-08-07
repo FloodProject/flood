@@ -25,12 +25,11 @@ public:
 	Ray( const Vector3& origin, const Vector3& direction );
 	Ray( const Ray& ray );
 
-	// Intersects the ray with a triangle.
-	bool intersects( const Vector3 tri[3], 
-		Vector3& intersectionPoint, float& t ) const;
+	// Gets a point on the ray.
+	Vector3 getPoint( float distance ) const;
 
-	bool intersectsSlow( const Vector3 tri[3],
-		Vector3& intersectionPoint, float& t ) const;
+	// Intersects the ray with a triangle.
+	bool intersects( const Vector3 tri[3], Vector3& intersection, float& t ) const;
 
 public:
 

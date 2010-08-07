@@ -42,7 +42,6 @@ const double MAX_RATE_RENDER = 1.0f / 60;
 RenderControl::RenderControl( wxWindow* parent, wxWindowID id,
 	const int* attribList, const wxPoint& pos, const wxSize& size,
 	long style,	const wxString&	name, const wxPalette& )
-
 	: wxGLCanvas(parent, id, attribList, pos, size, style, name)
 	, needsRedraw( false )
 	, frameUpdateTimer(this, UPDATE_TIMER)
@@ -114,6 +113,13 @@ void RenderControl::flagRedraw()
 
 void RenderControl::OnPaint(wxPaintEvent& WXUNUSED(event))
 {   
+	// TODO/HACK: wxWidgets won't invalidate the entire window region
+	// on things like window overlap or tooltip hovering, so we need 
+	// to force a complete redraw. This is ugly because I suspect it
+	// draws twice so really try to find a better solution later.
+
+	Refresh();
+
 	// From the PaintEvent docs: "the application must always create
 	// a wxPaintDC object, even if you do not use it."
 	// http://docs.wxwidgets.org/trunk/classwx_paint_event.html
@@ -131,7 +137,6 @@ void RenderControl::OnPaint(wxPaintEvent& WXUNUSED(event))
 void RenderControl::OnSize(wxSizeEvent& event)
 {
 	window->processResize( event.GetSize() );
-	flagRedraw();
 }
 
 //-----------------------------------//

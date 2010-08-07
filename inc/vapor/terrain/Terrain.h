@@ -72,8 +72,17 @@ public:
 
 	Terrain( const TerrainSettings& settings );
 
-	// Adds a new cell of terrain (this will be deferred if the heightmap is not loaded).
-	void addCell( const ImagePtr& heightmap, short x, short y );
+	// Adds a new cell of terrain with default heights.
+	void addCell( short x, short y );
+
+	// Adds a new cell of terrain (deferred if the heightmap is not loaded).
+	void addCell( short x, short y, const ImagePtr& heightmap );
+
+	// Gets a cell from its terrain coords.
+	CellPtr getCell( short x, short y );
+
+	// Gets a cell from its world space coords.
+	Vector2i getCoords( const Vector3& pt );
 
 	// Converts the heightmap to a vector of heights.
 	void convertHeightmap( const ImagePtr& heightmap, std::vector<float>& heights );
@@ -98,14 +107,17 @@ public:
 
 protected:
 
-	// Creates a new cell of terrain (this will be deferred if the heightmap is not loaded).
-	CellPtr createCell( const ImagePtr& heightmap, short x, short y );
+	// Creates a new cell of terrain with the given heights.
+	CellPtr Terrain::createCell(short x, short y, std::vector<float>& heights);
+
+	// Creates a new cell of terrain with a given heightmap.
+	CellPtr createCellHeightmap( short x, short y, const ImagePtr& heightmap );
 
 	// Provides the heights of the terrain.
 	ImagePtr heightmap;
 
 	// Pages of the terrain.
-	std::vector<Cell*> terrainCells;
+	std::vector<CellPtr> terrainCells;
 
 	// Material for this terrain.
 	MaterialPtr cellMaterial;

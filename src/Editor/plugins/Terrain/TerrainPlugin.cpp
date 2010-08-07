@@ -8,6 +8,7 @@
 
 #include "PCH.h"
 #include "TerrainPlugin.h"
+#include "TerrainPage.h"
 #include "Editor.h"
 #include "UndoManager.h"
 #include "EditorIcons.h"
@@ -24,9 +25,10 @@ END_EVENT_TABLE()
 //-----------------------------------//
 
 TerrainPlugin::TerrainPlugin( EditorFrame* frame )
-	: Plugin( frame )
-	, timer( this )
-	, op( nullptr )
+	: Plugin(frame)
+	, terrainPage(nullptr)
+	, timer(this)
+	, op(nullptr)
 { }
 
 //-----------------------------------//
@@ -53,23 +55,57 @@ void TerrainPlugin::onPluginEnable()
 	base = toolBar->AddTool( wxID_ANY, "Raise/Lower",
 		wxMEMORY_BITMAP(terrain_raise_lower), "Raises/Lowers the terrain",
 		wxITEM_RADIO );
+	//base->Enable(false);
 	addTool(base);
 
 	base = toolBar->AddTool( wxID_ANY, "Paint", wxMEMORY_BITMAP(terrain_paint),
 		"Paints the terrain", wxITEM_RADIO );
+	//base->Enable(false);
 	addTool(base);
+
+	wxNotebook* notebookCtrl = editor->getNotebook();
+	wxImageList* imageList = notebookCtrl->GetImageList();
+
+	wxBitmap iconWorld = wxMEMORY_BITMAP(world);
+	int iconTerrain = imageList->Add(iconWorld);
+
+	terrainPage = new TerrainPage( engine, notebookCtrl );
+	notebookCtrl->AddPage( terrainPage, wxEmptyString/*wxT("Terrains")*/, false, iconTerrain );
 }
 
 //-----------------------------------//
 
 void TerrainPlugin::onPluginDisable()
 {
+	removePage( terrainPage );
+}
+
+//-----------------------------------//
+
+void TerrainPlugin::onNodeSelect( const NodePtr& node )
+{
+	foreach( const ComponentMapPair p, node->getComponents() )
+	{
+		if( p.first == "Terrain" )
+		{
+			terrain = std::static_pointer_cast<Terrain>(p.second);
+
+			foreach( wxToolBarToolBase* tool, tools )
+				tool->Enable(true);
+		}
+	}
+}
+
+//-----------------------------------//
+
+void TerrainPlugin::onNodeUnselect( const NodePtr& )
+{
 
 }
 
 //-----------------------------------//
 
-void TerrainPlugin::onTimer( wxTimerEvent& /*event*/ )
+void TerrainPlugin::onTimer( wxTimerEvent& )
 {
 	Mouse* mouse = engine->getInputManager()->getMouse();
 	const MouseInfo& info = mouse->getMouseInfo();
@@ -97,7 +133,7 @@ void TerrainPlugin::onMouseDrag( const MouseDragEvent& mde )
 
 	// We need to handle the case where the user clicks but doesn't move
 	// the mouse anymore. As we don't receive further events in this case,
-	// we need to check if the mouse is still pressed.
+	// we check if the mouse is still pressed.
 
 	deformTerrain( mbe );
 }
@@ -106,7 +142,63 @@ void TerrainPlugin::onMouseDrag( const MouseDragEvent& mde )
 
 void TerrainPlugin::onMouseButtonPress( const MouseButtonEvent& mbe )
 {
-	deformTerrain( mbe );
+	if( mbe.isLeftButton() )
+	{
+		deformTerrain( mbe );
+	}
+	else if( mbe.isRightButton() )
+	{
+		wxMenu menu("Terrain Operations");
+
+		//// Get the intersection point on the terrain.
+		//RayTriangleQueryResult res;
+		//if( pickTerrain(mbe, res) )
+		//{
+		//	wxMenuItem* unloadButton = menu.Append(wxID_ANY, "Unload");
+		//	//unloadButton->Bind();
+		//}
+
+		Viewport* viewport = viewframe->getViewport();
+		const CameraPtr& camera = viewport->getCamera(); 
+		
+		// Get a ray given the screen location clicked.
+		const Ray& pickRay = camera->getRay( mbe.x, mbe.y );
+
+		Plane ground( Vector3::UnitY, 0 );
+		
+		float distance;
+		if( ground.intersects(pickRay, distance) )
+		{
+			Vector3 pt = pickRay.getPoint(distance);
+
+			if( !terrain )
+				return;
+
+			coords = terrain->getCoords(pt);
+
+			wxMenuItem* createCellButton = menu.Append(wxID_ANY,
+				String::format("Create cell at (%d,%d)", coords.x, coords.y));
+
+			menu.Bind( wxEVT_COMMAND_MENU_SELECTED,
+				&TerrainPlugin::onCreateCell, this, createCellButton->GetId() );
+		}
+		else
+		{
+			menu.Append(wxID_ANY, "Invalid cell" );
+		}
+
+		wxPoint clientpt( mbe.x, mbe.y );
+		editor->PopupMenu(&menu, clientpt);
+	}
+}
+
+//-----------------------------------//
+
+void TerrainPlugin::onCreateCell( wxCommandEvent& event )
+{
+	terrain->addCell(coords.x, coords.y);
+
+	editor->RefreshViewport();
 }
 
 //-----------------------------------//
@@ -139,8 +231,8 @@ void TerrainPlugin::createOperation( const RayTriangleQueryResult& res )
 	Keyboard* kbd = engine->getInputManager()->getKeyboard();
 	bool raise = !kbd->isKeyPressed( Keys::LShift );	
 
-	TerrainTool::Enum tool = 
-		raise ? TerrainTool::Raise : TerrainTool::Lower;
+	TerrainTool::Enum tool;
+	tool = raise ? TerrainTool::Raise : TerrainTool::Lower;
 
 	op = new TerrainOperation( tool, res );
 	op->size = 50;
@@ -190,7 +282,7 @@ void TerrainPlugin::deformTerrain( const MouseButtonEvent& mb )
 //-----------------------------------//
 
 bool TerrainPlugin::pickTerrain( const MouseButtonEvent& mb,
-							   RayTriangleQueryResult& res )
+							     RayTriangleQueryResult& res )
 {
 	const ScenePtr& scene = engine->getSceneManager();
 
@@ -225,10 +317,10 @@ bool TerrainPlugin::pickTerrain( const MouseButtonEvent& mb,
 
 TerrainOperation::TerrainOperation( TerrainTool::Enum tool,
 								    const RayTriangleQueryResult& res )
-	: size( 0 )
-	, strength( 0 )
-	, tool( tool )
-	, res( res )
+	: size(0)
+	, strength(0)
+	, tool(tool)
+	, res(res)
 {
 	processState( beforeHeights, true );
 }
@@ -238,6 +330,7 @@ TerrainOperation::TerrainOperation( TerrainTool::Enum tool,
 void TerrainOperation::ready()
 {
 	processState( afterHeights, true );
+	updateNormals();
 }
 
 //-----------------------------------//
@@ -245,6 +338,7 @@ void TerrainOperation::ready()
 void TerrainOperation::undo()
 {
 	processState( beforeHeights, false );
+	updateNormals();
 }
 
 //-----------------------------------//
@@ -255,12 +349,24 @@ void TerrainOperation::redo()
 	// then our best option is to save the state of the terrain.
 
 	processState( afterHeights, false );
+	updateNormals();
 }
 
 //-----------------------------------//
 
-void TerrainOperation::processState( std::vector<float>& heights,
-									bool save )
+void TerrainOperation::updateNormals()
+{
+	RenderablePtr renderable = res.renderable;
+	assert( renderable != nullptr );
+
+	// TODO: Submit this as a task so it gets threaded.
+	CellPtr cell = boost::static_pointer_cast<Cell>( renderable );
+	cell->rebuildNormals();
+}
+
+//-----------------------------------//
+
+void TerrainOperation::processState( std::vector<float>& heights, bool save )
 {	
 	RenderablePtr rend = res.renderable;
 	
@@ -274,7 +380,9 @@ void TerrainOperation::processState( std::vector<float>& heights,
 
 	if( save )
 	{
-		// No need to waste memory, let's save only what we need.
+		// We only need the height of the vertex. This way we can save some memory.
+		// TODO: There is no need to save the unmodified heights of the terrain.
+
 		foreach( const Vector3& v, vb->getVertices() )
 			heights.push_back( v.y );
 	}
@@ -324,13 +432,7 @@ void TerrainOperation::applyTerrainTool()
 	}
 
 	if( updateVB ) 
-	{
 		vb->forceRebuild();
-
-		// TODO: pass bounding sphere to optimize normal calculation.
-		//CellPtr cell = boost::static_pointer_cast<Cell>( rend );
-		//cell->calculateNormals( vertices );
-	}
 }
 
 //-----------------------------------//

@@ -34,7 +34,19 @@ Terrain::Terrain( const TerrainSettings& settings )
 
 //-----------------------------------//
 
-void Terrain::addCell( const ImagePtr& heightmap, short x, short y )
+void Terrain::addCell( short x, short y )
+{
+	int numHeights = pow(settings.NumberTiles + 1.0f, 2);
+
+	std::vector<float> heights;
+	heights.resize( numHeights, 0 );
+
+	createCell(x, y, heights);
+}
+
+//-----------------------------------//
+
+void Terrain::addCell( short x, short y, const ImagePtr& heightmap )
 {
 	if( !heightmap )
 	{
@@ -52,7 +64,44 @@ void Terrain::addCell( const ImagePtr& heightmap, short x, short y )
 
 //-----------------------------------//
 
-CellPtr Terrain::createCell( const ImagePtr& heightmap, short x, short y )
+CellPtr Terrain::getCell( short x, short y )
+{
+	foreach( const CellPtr& cell, terrainCells )
+	{
+		if( (cell->getX() == x) && (cell->getY() == y) )
+			return cell;
+	}
+
+	return nullptr;
+}
+
+//-----------------------------------//
+
+Vector2i Terrain::getCoords( const Vector3& pos )
+{
+	int x = floor(pos.x / settings.CellSize); 
+	int y = floor(pos.z / settings.CellSize);
+
+	return Vector2i(x, y);
+}
+
+//-----------------------------------//
+
+CellPtr Terrain::createCell( short x, short y, std::vector<float>& heights )
+{
+	CellPtr cell( new Cell(settings, heights, x, y) );
+	cell->setMaterial( cellMaterial );
+	addRenderable( cell );
+
+	// Forces AABB generation next update.
+	isDirty = true;
+	
+	return cell;
+}
+
+//-----------------------------------//
+
+CellPtr Terrain::createCellHeightmap( short x, short y, const ImagePtr& heightmap )
 {
 	if( !heightmap )
 		return nullptr;
@@ -68,20 +117,12 @@ CellPtr Terrain::createCell( const ImagePtr& heightmap, short x, short y )
 	std::vector<float> heights;
 	convertHeightmap( heightmap, heights );
 
-	CellPtr cell( new Cell( settings, heights, x, y ) );
-	cell->setMaterial( cellMaterial );
-	addRenderable( cell );
-
-	// Forces AABB generation next update.
-	isDirty = true;
-	
-	return cell;
+	return createCell(x, y, heights);
 }
 
 //-----------------------------------//
 
-void Terrain::convertHeightmap( const ImagePtr& heightmap,
-								std::vector<float>& heights )
+void Terrain::convertHeightmap( const ImagePtr& heightmap, std::vector<float>& heights )
 {
 	// TODO: Can't handle any other pixel format right now...
 	assert( heightmap->getPixelFormat() == PixelFormat::R8G8B8A8 );
@@ -162,7 +203,7 @@ void Terrain::update( double delta )
 		
 		if( heightmap->isLoaded() )
 		{
-			createCell( heightmap, x, y );
+			createCellHeightmap( x, y, heightmap );
 			it = requestsQueue.erase(it);
 		}
 		else

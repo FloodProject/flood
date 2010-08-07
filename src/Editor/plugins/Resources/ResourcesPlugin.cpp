@@ -48,10 +48,10 @@ void ResourcesPlugin::onPluginEnable()
 	wxBitmap iconPackage = wxMEMORY_BITMAP(package);
 	iconResources = imageList->Add(iconPackage);
 
-	resourcesPage = new ResourcesPage( editor, notebookCtrl, wxID_ANY );
+	resourcesPage = new ResourcesPage( editor, notebookCtrl );
 
 	bool resourcesPageAdded = notebookCtrl->AddPage( resourcesPage,
-		wxT("Resources"), false, iconResources );
+		wxEmptyString/*wxT("Resources")*/, false, iconResources );
 
 	if( !resourcesPageAdded )
 		warn( "editor", "Could not add page to notebook" );
@@ -63,26 +63,7 @@ void ResourcesPlugin::onPluginEnable()
 
 void ResourcesPlugin::onPluginDisable()
 {
-	wxNotebook* notebookCtrl = editor->getNotebook();
-	assert( notebookCtrl != nullptr );
-
-	wxImageList* imageList = notebookCtrl->GetImageList();
-	assert( imageList != nullptr );
-
-	//imageList->Remove(iconResources);
-
-	int pageCount = notebookCtrl->GetPageCount();
-	
-	for( int i = 0; i < pageCount; i++ )
-	{
-		wxWindow* window = notebookCtrl->GetPage(i);
-		
-		if( window->GetId() == resourcesPage->GetId() )
-		{
-			notebookCtrl->DeletePage(i);
-			break;
-		}
-	}
+	removePage( resourcesPage );
 }
 
 //-----------------------------------//

@@ -112,7 +112,7 @@ void TextureManager::onReload( const ResourceEvent& evt )
 	if( textures.find(img) == textures.end() )
 		return;
 
-	debug( "Reloading texture '%s'", evt.resource->getURI().c_str() );
+	debug( "Reloading texture '%s'", evt.resource->getPath().c_str() );
 
 	TexturePtr tex = textures[img];
 	tex->setImage(img);

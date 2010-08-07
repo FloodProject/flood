@@ -15,6 +15,10 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
+class TerrainPage;
+
+//-----------------------------------//
+
 namespace TerrainTool
 {
 	enum Enum
@@ -39,6 +43,7 @@ public:
 	void redo();
 	void ready();
 
+	void updateNormals();
 	void processState( std::vector<float>& state, bool save );
 	void applyTerrainTool();
 
@@ -65,7 +70,11 @@ public:
 	virtual void onPluginEnable();
 	virtual void onPluginDisable();
 	
-	// Handles all the mouse events.
+	// Node callbacks.
+	virtual void onNodeSelect( const NodePtr& );
+	virtual void onNodeUnselect( const NodePtr& );
+
+	// Mouse callbacks.
 	virtual void onMouseDrag( const MouseDragEvent& mde );
 	virtual void onMouseButtonPress( const MouseButtonEvent& mbe );
 	virtual void onMouseButtonRelease( const MouseButtonEvent& );
@@ -73,6 +82,9 @@ public:
 
 	// Callback used when editing the terrain by holding the mouse button.
 	void onTimer( wxTimerEvent& event );
+
+	// Callback when cells need to created.
+	void onCreateCell( wxCommandEvent& event );
 
 	// Ray picks the terrain and returns the intersection point.
 	bool pickTerrain( const MouseButtonEvent& mb, RayTriangleQueryResult& res );
@@ -88,10 +100,17 @@ public:
 
 protected:
 
-	std::vector<wxToolBarToolBase*> tools;
+	// Terrain notebook page.
+	TerrainPtr terrain;
+
+	// Terrain notebook page.
+	TerrainPage* terrainPage;
 
 	// Holds the current terrain operation.
 	TerrainOperation* op;
+
+	// Current cell cordinates.
+	Vector2i coords;
 	
 	// Callback used when editing the terrain by holding the mouse button.
 	wxTimer timer;

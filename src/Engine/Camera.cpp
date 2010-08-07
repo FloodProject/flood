@@ -10,8 +10,8 @@
 #include "vapor/scene/Camera.h"
 #include "vapor/scene/Group.h"
 #include "vapor/scene/Geometry.h"
-#include "vapor/math/Math.h"
 #include "vapor/math/Vector4.h"
+#include "vapor/math/Math.h"
 
 namespace vapor {
 
@@ -21,77 +21,73 @@ const std::string& Camera::type = "Camera";
 
 //-----------------------------------//
 
-std::string Projection::toString( Projection::Enum proj )
-{
-	switch(proj)
-	{
-	case Projection::Orthographic:
-		return "Ortographic";
-	case Projection::Perspective:
-		return "Perspective";
-	default:
-		assert( false );
-	}
-}
-
-//-----------------------------------//
-
-Camera::Camera( RenderDevice* device, Projection::Enum proj )
-	: lookAtVector(Vector3::UnitZ)
-	, projection(proj)
-	, fov(45.0f)
-	, near_(1.0f)
-	, far_(5000.0f)
+Camera::Camera( RenderDevice* device )
+	: renderDevice(device)
 	, viewport(nullptr)
 	, viewSize(Vector2i::Zero)
-	, renderDevice(device)
+	, lookAtVector(Vector3::UnitZ)
 {
 	assert( device != nullptr );
+
+	frustum.angleFOV = 45;
+	frustum.nearPlane = 1;
+	frustum.farPlane = 5000;
 }
 
 //-----------------------------------//
 
 Camera::Camera( const Camera& rhs )
 	: renderDevice( rhs.renderDevice )
-	, projection( rhs.projection )
-	, fov( rhs.fov )
-	, near_( rhs.near_ )
-	, far_( rhs.far_ )
 { }
 
 //-----------------------------------//
 
 Camera::~Camera()
 {
-	if( transform )
-	{
-		transform->onTransform -= fd::bind( &Camera::onTransform, this );
-	}
+	assert( transform != nullptr );
+	transform->onTransform -= fd::bind( &Camera::onTransform, this );
 }
 
 //-----------------------------------//
 
-Ray Camera::getRay( float screenX, float screenY, Vector3* outFar ) const
+void Camera::setupView()
 {
-	assert( viewport != nullptr );
+	assert( transform != nullptr );
 
-	Vector2i viewSize = viewport->getSize();
+	const Vector3& position = transform->getPosition();
+	const EulerAngles& rotation = transform->getRotation();
+	
+	// Update the look-at vector.
+	Vector3 forward = Vector3::UnitZ * Matrix4x3::createRotation(rotation);
+	lookAtVector = position + forward;
+	
+	// Update the view matrix.
+	viewMatrix = transform->lookAt( lookAtVector, Vector3::UnitY );
 
-	Vector3 nearPoint(screenX, viewSize.y - screenY, 0);
-	Vector3 farPoint(screenX, viewSize.y - screenY, 1);
+	// Update the frustum planes.
+	frustum.updatePlanes( viewMatrix );
+}
 
-	Vector3 rayOrigin = viewport->Unproject(nearPoint, projectionMatrix, viewMatrix);
-	Vector3 rayTarget = viewport->Unproject(farPoint, projectionMatrix, viewMatrix);
+//-----------------------------------//
 
-	Vector3 rayDirection = rayTarget - rayOrigin;
-	rayDirection.normalize();
+void Camera::setViewport( Viewport* newViewport )
+{
+	assert( newViewport != nullptr );
 
-	Ray pickRay(rayOrigin, rayDirection);
+	viewport = newViewport;
+	Vector2i newSize = viewport->getSize();
 
-	if( outFar )
-		*outFar = rayTarget;
+	if( viewSize != newSize )
+	{
+		viewSize = newSize;
+		
+		// Update frustum matrices.
+		frustum.aspectRatio = viewport->getAspectRatio();
+		frustum.updateProjection( viewSize );
+		frustum.updatePlanes( viewMatrix );
 
-	return pickRay;
+		renderDevice->setViewport( Vector2i::Zero, viewSize );
+	}
 }
 
 //-----------------------------------//
@@ -115,56 +111,6 @@ void Camera::update( double VAPOR_UNUSED(delta) )
 
 //-----------------------------------//
 
-void Camera::setupProjection( const Vector2i& size )
-{
-	if( projection == Projection::Perspective )
-	{
-		projectionMatrix = Matrix4x4::createPerspectiveProjection( 
-			fov, viewport->getAspectRatio(), near_, far_ );
-	}
-	else
-	{
-		projectionMatrix = Matrix4x4::createOrthographicProjection( 
-			0.0f, (float)size.x, 0.0f, (float)size.y, near_, far_ );
-	}
-}
-
-//-----------------------------------//
-
-void Camera::setupView()
-{
-	assert( transform != nullptr );
-
-	const Vector3& position = transform->getPosition();
-	const EulerAngles& rotation = transform->getRotation();
-	
-	// Update the lookAt vector.
-	Vector3 forward = Vector3::UnitZ * Matrix4x3::createRotation(rotation);
-	lookAtVector = position + forward;
-	
-	// Update the view matrix.
-	viewMatrix = transform->lookAt( lookAtVector, Vector3::UnitY );
-}
-
-//-----------------------------------//
-
-void Camera::setViewport( Viewport* newViewport )
-{
-	assert( newViewport != nullptr );
-
-	viewport = newViewport;
-	Vector2i newSize = viewport->getSize();
-
-	if( viewSize != newSize )
-	{
-		viewSize = newSize;
-		setupProjection( viewSize );
-		renderDevice->setViewport( Vector2i::Zero, viewSize );
-	}
-}
-
-//-----------------------------------//
-
 void Camera::onTransform()
 {
 	setupView();
@@ -172,7 +118,7 @@ void Camera::onTransform()
 
 //-----------------------------------//
 
-void Camera::render( const NodePtr& node, bool clearView ) const
+void Camera::render( const NodePtr& node, bool clearView )
 {
 	if( !viewport )
 		return;
@@ -180,6 +126,7 @@ void Camera::render( const NodePtr& node, bool clearView ) const
 	// This will contain all nodes used for rendering.
 	RenderBlock renderBlock;
 
+	// Perform frustum culling.
 	cull( renderBlock, node );
 
 	if( clearView )
@@ -193,7 +140,7 @@ void Camera::render( const NodePtr& node, bool clearView ) const
 
 //-----------------------------------//
 
-void Camera::render() const
+void Camera::render()
 {
 	NodePtr node = getNode();
 	assert( node != nullptr );
@@ -268,13 +215,43 @@ void Camera::cull( RenderBlock& block, const NodePtr& node ) const
 
 //-----------------------------------//
 
+Ray Camera::getRay( float screenX, float screenY, Vector3* outFar ) const
+{
+	assert( viewport != nullptr );
+
+	Vector2i viewSize = viewport->getSize();
+
+	Vector3 nearPoint(screenX, viewSize.y - screenY, 0);
+	Vector3 farPoint (screenX, viewSize.y - screenY, 1);
+
+	const Matrix4x4& matProjection = frustum.matProjection;
+
+	Vector3 rayOrigin =
+		viewport->Unproject(nearPoint, matProjection, viewMatrix);
+	
+	Vector3 rayTarget =
+		viewport->Unproject(farPoint,  matProjection, viewMatrix);
+
+	Vector3 rayDirection = rayTarget - rayOrigin;
+	rayDirection.normalize();
+
+	Ray pickRay(rayOrigin, rayDirection);
+
+	if( outFar )
+		*outFar = rayTarget;
+
+	return pickRay;
+}
+
+//-----------------------------------//
+
 void Camera::serialize( Json::Value& value )
 {
-	value["projection"] = Projection::toString( projection );
-	value["fov"] = fov;
-	value["near"] = near_;
-	value["far"] = far_;
-	value["lookAt"] = toJson(lookAtVector);
+	//value["projection"] = Projection::toString( projection );
+	//value["fov"] = fov;
+	//value["near"] = near_;
+	//value["far"] = far_;
+	//value["lookAt"] = toJson(lookAtVector);
 }
 
 //-----------------------------------//

@@ -33,17 +33,6 @@ Terrain editing:
 	Randomized Perlin noise terrain generation
 	Average terrain normals (WIP)
 
-View frustum culling:
-
-	Plane math class
-	Frustum-Plane intersection
-	Integrate in Camera::cull
-
-Skydome component:
-
-	Add billboards for Sun and Moon
-	Switch to triangle strips
-
 Console:
 
 	Clicks should not change the insertion point
@@ -62,9 +51,19 @@ Options:
 ENGINE:
 -------
 
+View frustum culling:
+
+	Frustum-Plane intersection
+	Integrate in Camera::cull
+
+Skydome component:
+
+	Add billboards for Sun and Moon
+	Switch to triangle strips
+
 Scene:
 
-	Frustum class (Camera and Light integration)
+	Frustum class (Camera and Light integration) (WIP)
 	Quadtree for fast terrain queries
 	Geometry component sharing (Instancing)
 
@@ -137,7 +136,6 @@ VFS:
 Engine Modularization/Simplification Work
 	
 	Compile as DLL (Reverted)
-	Remove namespaces (DONE)
 	Remove Singletons from the codebase (WIP)
 	Implement ResourceLoaders as (static) plugins	
 	Rename Timer into Stopwatch

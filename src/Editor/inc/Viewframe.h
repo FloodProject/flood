@@ -32,7 +32,7 @@ public:
 	~Viewframe();
 
 	// Creates and adds a new viewport to the viewframe.
-	Viewport* createViewport( NodePtr node );
+	Viewport* createViewport( const NodePtr& node );
 
 	// Flags the backing control for redraw.
 	void flagRedraw();

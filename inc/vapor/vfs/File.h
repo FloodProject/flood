@@ -12,9 +12,6 @@
 
 struct PHYSFS_File;
 
-/** \addtogroup virtual Virtual Filesystem 
- * @{ */
-
 namespace vapor {
 
 //-----------------------------------//
@@ -34,7 +31,7 @@ class VAPOR_API File : private boost::noncopyable
 public:
 
 	/// Opens a new file given a path (defaults for reading access).
-	File (const std::string path, AccessMode::Enum e = AccessMode::Read);
+	File (const std::string& path, AccessMode::Enum e = AccessMode::Read);
 	
 	/// Closes the file.
 	~File ();
@@ -105,7 +102,5 @@ TYPEDEF_SHARED_POINTER_FROM_TYPE( File );
 //-----------------------------------//
 
 } // end namespace
-
-/** @} */
 
 #endif

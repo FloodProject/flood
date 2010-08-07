@@ -26,8 +26,7 @@ class VAPOR_API FirstPersonCamera : public Camera
 {
 public:
 
-	FirstPersonCamera( RenderDevice* device,
-		Projection::Enum projection = Projection::Perspective );
+	FirstPersonCamera( RenderDevice* device );
 
 	// Updates this component.
 	virtual void update( double delta );

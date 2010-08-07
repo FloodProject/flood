@@ -113,7 +113,7 @@ public:
 	{
 		assert( rm != nullptr );
 
-		const std::string& path = res->getURI();
+		const std::string& path = res->getPath();
 		
 		File file( path );
 		const std::string& ext = file.getExtension();
@@ -135,7 +135,7 @@ public:
 		if( res->getStatus() == ResourceStatus::Error )
 		{
 			warn("resources", "Resource loader '%s' could not decode resource '%s'",
-				loader->getName().c_str(), res->getURI().c_str());
+				loader->getName().c_str(), res->getPath().c_str());
 			return;
 		}
 
@@ -196,7 +196,7 @@ ResourcePtr ResourceManager::prepareResource( const std::string& path )
 
 	ResourcePtr res( loader->prepare(file) );
 	res->setStatus( ResourceStatus::Loading );
-	res->setURI( path );
+	res->setPath( path );
 
 	return res;
 }
@@ -271,29 +271,22 @@ void ResourceManager::update( double )
 
 void ResourceManager::removeResource(const ResourcePtr& res)
 {
-	ResourceMap::iterator it = resources.begin();
+	std::string name = res->getPath();
 	
-	// Check if the resource is in the map.
-	while(it != resources.end()) 
-	{
-		if(it->second == res) 
-		{
-			// Send callback notifications.
-			if( !onResourceRemoved.empty() )
-			{
-				ResourceEvent event;
-				event.resource = res;
-				onResourceRemoved( event );
-			}
+	ResourceMap::iterator it = resources.find(name);
+	
+	if( it == resources.end() )
+		return;
 
-			it = resources.erase(it);
-			return;
-		}
-		else
-		{
-			it++;
-		}
+	// Send callback notifications.
+	if( !onResourceRemoved.empty() )
+	{
+		ResourceEvent event;
+		event.resource = res;
+		onResourceRemoved( event );
 	}
+
+	resources.erase(it);
 }
 
 //-----------------------------------//

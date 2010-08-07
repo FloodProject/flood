@@ -30,7 +30,7 @@ Label::Label( const std::string& text, FontPtr font, MaterialPtr material )
 
 //-----------------------------------//
 
-Label::Label( const std::string& text, const std::string& uri )
+Label::Label( const std::string& text, const std::string& path )
 	: text(text)
 {
 	static int i = 0;
@@ -38,7 +38,7 @@ Label::Label( const std::string& text, const std::string& uri )
 	material = new Material("FontMaterial" + String::fromNumber(i++), "Tex");
 	
 	ResourceManager* rm = Engine::getInstance().getResourceManager();
-	font = rm->loadResource<Font>(uri);
+	font = rm->loadResource<Font>(path);
 
 	init();
 }

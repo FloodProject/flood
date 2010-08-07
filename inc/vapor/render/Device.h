@@ -63,7 +63,7 @@ public:
 	void init();
 
 	// Renders a list of renderables.
-	void render( RenderBlock& queue, const Camera* cam );
+	void render( RenderBlock& queue, Camera* camera );
 
 	// Gets the framebuffer color in the given pixel location.
 	// Note: it follows OpenGL 2D axis conventions, so the point (0,0)
@@ -120,7 +120,7 @@ protected:
 	void checkExtensions();
 
 	// Render state management.
-	bool setupRenderState( const RenderState&, const Camera* );
+	bool setupRenderState( const RenderState&, Camera* );
 	bool setupRenderStateShadow( LightQueue& lights );
 	bool setupRenderStateLight( const RenderState&, const LightQueue& );
 	bool setupRenderStateOverlay( const RenderState& );
@@ -155,7 +155,7 @@ protected:
 
 	ShadowTextureMap shadowTextures;
 	RenderBuffer* shadowDepthBuffer;
-	const Camera* camera;
+	Camera* camera;
 
 	void updateLightDepth( LightState& state );
 };

@@ -142,7 +142,7 @@ bool GLSL_Program::attachShaders()
 			std::string type = String::toLowerCase( id );
 
 			error( "glsl", "Error compiling %s shader '%s': %s",
-				type.c_str(), text->getBaseURI().c_str(),
+				type.c_str(), text->getBasePath().c_str(),
 				shader->getLog().c_str() );
 
 			linkError = true;

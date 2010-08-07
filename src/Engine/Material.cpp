@@ -125,7 +125,7 @@ void Material::bind()
 
 	foreach( const TextureMapPair& p, textures )
 	{
-		std::string name = "tex"+String::fromNumber(p.first);
+		std::string name = "vp_Texture"+String::fromNumber(p.first);
 		program->setUniform( name, (int)p.first );
 	}
 }

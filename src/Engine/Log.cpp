@@ -86,7 +86,7 @@ void info(const std::string& subsystem, const char* msg, ...)
 
 //-----------------------------------//
 
-void warn(const std::string &subsystem, const char* msg, ...)
+void warn(const std::string& subsystem, const char* msg, ...)
 {
 	if( !Log::getLogger() )
 		return;

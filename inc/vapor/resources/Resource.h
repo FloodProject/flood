@@ -73,7 +73,7 @@ namespace ResourceGroup
  * Represents a generic resource that tipically is used to hold a piece
  * of data that is used by the various systems of the engine, for example
  * mesh, sounds, fonts, images, shaders, and other types of resource data.
- * Each resource is identified by an URI (Uniform Resource Identifier),
+ * Each resource is identified by an Path (Uniform Resource Identifier),
  * that way we can add virtual resources (it could be used for various
  * things, like procedural content generation and to identify streaming
  * resource from a network connection).
@@ -92,10 +92,10 @@ public:
 	// void release();
 
 	// Gets/sets the path that identifies this resource.
-	ACESSOR(URI, const std::string&, uri)
+	ACESSOR(Path, const std::string&, path)
 
-	// Returns the base part of the URI.
-	std::string getBaseURI() const;
+	// Returns the base part of the Path.
+	std::string getBasePath() const;
 	
 	// Gets/sets the resource loading status.
 	ACESSOR(Status, ResourceStatus::Enum, status)
@@ -111,7 +111,7 @@ protected:
 	Resource();
 
 	// Uniform Resource Identifier.
-	std::string uri;
+	std::string path;
 
 	// Status of the resource.
 	ResourceStatus::Enum status;

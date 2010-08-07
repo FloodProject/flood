@@ -18,11 +18,13 @@ const std::string& Grid::type = "Grid";
 static const Vector3 RegularLineColor(0.4f);
 static const Vector3 StrongLineColor(0.9f);
 
+//-----------------------------------//
+
 Grid::Grid()
-  : sizeX(1000)
-  , sizeZ(1000)
-  , divX(40)
-  , divZ(40)
+  : sizeX(1024)
+  , sizeZ(1024)
+  , divX(32)
+  , divZ(32)
   , strongMainLines(true)
 {
 	MaterialPtr material( new Material("Grid") );
@@ -56,7 +58,7 @@ VertexBufferPtr Grid::buildGeometry()
 		vertex.push_back( Vector3(x_pos, 0.0f, z_pos) );
 		vertex.push_back( Vector3(-x_pos, 0.0f, z_pos) );
 
-		bool isMainLine = (i % 5 == 0) && (i != 0) && (i != divX);
+		bool isMainLine = (i % 8 == 0) && (i != 0) && (i != divX);
 
 		if( strongMainLines && isMainLine )
 		{
@@ -69,7 +71,7 @@ VertexBufferPtr Grid::buildGeometry()
 			colors.push_back( RegularLineColor );
 		}
 
-		z_pos += sizeZ / (float)divZ;
+		z_pos += sizeZ / divZ;
 	}
 
 	// Now the lines perpendicular to the Z-axis.
@@ -81,7 +83,7 @@ VertexBufferPtr Grid::buildGeometry()
 		vertex.push_back( Vector3( x_pos, 0.0f, z_pos ) );
 		vertex.push_back( Vector3( x_pos, 0.0f, -z_pos ) );
 
-		bool isMainLine = (i % 5 == 0) && (i != 0) && (i != divX);
+		bool isMainLine = (i % 8 == 0) && (i != 0) && (i != divX);
 
 		if( strongMainLines && isMainLine )
 		{

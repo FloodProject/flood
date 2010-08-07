@@ -653,7 +653,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\Editor\EditorInputManager.h"
+				RelativePath="..\..\src\Editor\inc\EditorInputManager.h"
 				>
 			</File>
 		</Filter>

@@ -37,18 +37,18 @@ void GizmoTranslate::buildGeometry()
 
 //-----------------------------------//
 
-GizmoAxis::Enum GizmoTranslate::getAxis(Color& c)
+GizmoAxis::Enum GizmoTranslate::getAxis(Color& pickColor)
 {
-	if( c.equals(X*BASE_FACTOR) )
+	if( pickColor.nearEqual(X*BASE_FACTOR) )
 		return GizmoAxis::X;
 	
-	else if( c.equals(Y*BASE_FACTOR) )
+	else if( pickColor.nearEqual(Y*BASE_FACTOR) )
 		return GizmoAxis::Y;
 	
-	else if( c.equals(Z*BASE_FACTOR) )
+	else if( pickColor.nearEqual(Z*BASE_FACTOR) )
 		return GizmoAxis::Z;
 
-	return Gizmo::getAxis(c);
+	return Gizmo::getAxis(pickColor);
 }
 
 //-----------------------------------//

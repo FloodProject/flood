@@ -50,7 +50,7 @@ bool Color::operator == (const Color& c) const
 
 //-----------------------------------//
 
-bool Color::equals(const Color& a, float tolerance )
+bool Color::nearEqual(const Color& a, float tolerance )
 {
 	return (fabs(a.r - r) < tolerance)
 		&& (fabs(a.g - g) < tolerance)

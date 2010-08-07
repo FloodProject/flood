@@ -36,7 +36,7 @@ public:
 					const wxSize& size = wxDefaultSize,
 					long style = 0 | wxFULL_REPAINT_ON_RESIZE | wxSTATIC_BORDER,
 					const wxString&	name = "vaporGLCanvas",
-					const wxPalette& palette = wxNullPalette ); 	
+					const wxPalette& palette = wxNullPalette );
 
 	// Flag this control to be redrawn.
 	void flagRedraw();

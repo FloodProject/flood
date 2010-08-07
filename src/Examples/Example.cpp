@@ -126,8 +126,7 @@ void Example::onSetupScene()
 	nodeTerrain->addComponent( terrain );
 	scene->add( nodeTerrain );
 
-
-	SkydomePtr skydome( new Skydome() );
+	SkydomePtr skydome( new Skydome(camera) );
 
 	const ImagePtr& clouds = rm->loadResource<Image>( "noise2.png" );
 	skydome->setClouds( clouds );

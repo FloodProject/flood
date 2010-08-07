@@ -76,7 +76,7 @@ public:
 		return RESOURCE_SMART_PTR_CAST< T >( res );
 	}
 
-	// Gets an existing resource by its URI (or null if it does not exist).
+	// Gets an existing resource by its Path (or null if it does not exist).
 	ResourcePtr getResource(const std::string& path);
 
 	// Gets a specific resource given it's name (if it exists).

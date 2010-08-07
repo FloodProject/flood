@@ -111,7 +111,7 @@ void RenderWindow::setCursorVisible(bool mouseVisible)
 {
 	if( !mouseVisible )
 	{
-		canvas->SetCursor( wxCursor( wxCURSOR_BLANK ) );
+		canvas->SetCursor( wxCursor(wxCURSOR_BLANK) );
 		canvas->CaptureMouse();
 	}
 	else

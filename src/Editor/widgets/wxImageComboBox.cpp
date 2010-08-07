@@ -47,22 +47,27 @@ wxBitmap* wxImageComboBox::convertToBitmap( const ImagePtr& image ) const
 	if( !image )
 		return nullptr;
 
-	assert( image->getPixelFormat() == PixelFormat::R8G8B8 );
+	//assert( image->getPixelFormat() == PixelFormat::R8G8B8 );
 	
-	byte* buf = const_cast<byte*>(&image->getBuffer()[0]);
-	wxImage img( image->getWidth(), image->getHeight(), buf, true /* don't free data */);
+	//byte* buf = const_cast<byte*>(&image->getBuffer()[0]);
 
-	const wxSize& size = GetSize();
-	if( img.GetWidth() > size.GetWidth() || img.GetHeight() > size.GetHeight() )
-	{
-		img.Rescale( size.GetWidth(), size.GetHeight() );
-	}
+	File fileImage( image->getPath() );
+	std::string fullPath = fileImage.getFullPath();
+	wxImage img( fullPath );
 
-	if( !img.HasAlpha() )
-	{
-		img.SetMaskColour( 255, 255, 255 );
-		img.InitAlpha();
-	}
+	//wxImage img( image->getWidth(), image->getHeight(), buf, true /* don't free data */);
+
+	//const wxSize& size = GetSize();
+	//if( img.GetWidth() > size.GetWidth() || img.GetHeight() > size.GetHeight() )
+	//{
+	//	img.Rescale( size.GetWidth(), size.GetHeight() );
+	//}
+
+	//if( !img.HasAlpha() )
+	//{
+	//	img.SetMaskColour( 255, 255, 255 );
+	//	img.InitAlpha();
+	//}
 
 	wxBitmap* bmp = new wxBitmap( img );
 	return bmp;

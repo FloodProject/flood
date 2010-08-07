@@ -30,7 +30,7 @@ public:
 	bool operator == (const Color& v) const;
 
 	// Equality with tolerance.
-	bool equals(const Color& a, float tolerance = 0.05f );
+	bool nearEqual(const Color& a, float tolerance = 0.05f );
 
 	// Multiplication by a scalar.
 	Color operator * (float s) const;

@@ -61,14 +61,14 @@ bool Resource::isLoaded() const
 
 //-----------------------------------//
 
-std::string Resource::getBaseURI() const
+std::string Resource::getBasePath() const
 {
-	assert( !uri.empty() );
+	assert( !path.empty() );
 
-	size_t n = uri.find_last_of(".");
+	size_t n = path.find_last_of(".");
 	assert( n != std::string::npos );
 
-	return uri.substr(0, n);
+	return path.substr(0, n);
 }
 
 //-----------------------------------//

@@ -253,14 +253,14 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\Engine\inc\vapor\math\Math.h"
+				RelativePath="..\..\inc\vapor\math\Math.h"
 				>
 			</File>
 			<Filter
 				Name="Vector"
 				>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\math\Vector2.h"
+					RelativePath="..\..\inc\vapor\math\Vector2.h"
 					>
 				</File>
 				<File
@@ -268,11 +268,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\math\Vector3.h"
+					RelativePath="..\..\inc\vapor\math\Vector3.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\math\Vector4.h"
+					RelativePath="..\..\inc\vapor\math\Vector4.h"
 					>
 				</File>
 			</Filter>
@@ -284,7 +284,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\math\Matrix4x3.h"
+					RelativePath="..\..\inc\vapor\math\Matrix4x3.h"
 					>
 				</File>
 				<File
@@ -292,7 +292,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\math\Matrix4x4.h"
+					RelativePath="..\..\inc\vapor\math\Matrix4x4.h"
 					>
 				</File>
 			</Filter>
@@ -304,7 +304,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\math\Frustum.h"
+					RelativePath="..\..\inc\vapor\math\Frustum.h"
 					>
 				</File>
 			</Filter>
@@ -316,7 +316,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\math\Color.h"
+					RelativePath="..\..\inc\vapor\math\Color.h"
 					>
 				</File>
 			</Filter>
@@ -328,7 +328,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\math\Plane.h"
+					RelativePath="..\..\inc\vapor\math\Plane.h"
 					>
 				</File>
 			</Filter>
@@ -340,7 +340,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\math\EulerAngles.h"
+					RelativePath="..\..\inc\vapor\math\EulerAngles.h"
 					>
 				</File>
 			</Filter>
@@ -352,7 +352,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\math\Ray.h"
+					RelativePath="..\..\inc\vapor\math\Ray.h"
 					>
 				</File>
 			</Filter>
@@ -364,7 +364,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\math\Quaternion.h"
+					RelativePath="..\..\inc\vapor\math\Quaternion.h"
 					>
 				</File>
 			</Filter>
@@ -376,7 +376,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\math\BoundingBox.h"
+					RelativePath="..\..\inc\vapor\math\BoundingBox.h"
 					>
 				</File>
 				<File
@@ -384,7 +384,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\math\BoundingSphere.h"
+					RelativePath="..\..\inc\vapor\math\BoundingSphere.h"
 					>
 				</File>
 			</Filter>
@@ -396,7 +396,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\math\Noise.h"
+					RelativePath="..\..\inc\vapor\math\Noise.h"
 					>
 				</File>
 			</Filter>
@@ -405,7 +405,7 @@
 			Name="Render"
 			>
 			<File
-				RelativePath="..\..\src\Engine\inc\vapor\render\Device.h"
+				RelativePath="..\..\inc\vapor\render\Device.h"
 				>
 			</File>
 			<File
@@ -413,7 +413,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\Engine\inc\vapor\render\GL.h"
+				RelativePath="..\..\inc\vapor\render\GL.h"
 				>
 			</File>
 			<File
@@ -425,7 +425,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\Engine\inc\vapor\render\RenderQueue.h"
+				RelativePath="..\..\inc\vapor\render\RenderQueue.h"
 				>
 			</File>
 			<Filter
@@ -436,7 +436,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\render\Adapter.h"
+					RelativePath="..\..\inc\vapor\render\Adapter.h"
 					>
 				</File>
 			</Filter>
@@ -448,7 +448,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\render\Buffer.h"
+					RelativePath="..\..\inc\vapor\render\Buffer.h"
 					>
 				</File>
 				<File
@@ -456,11 +456,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\render\IndexBuffer.h"
+					RelativePath="..\..\inc\vapor\render\IndexBuffer.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\render\PixelBuffer.h"
+					RelativePath="..\..\inc\vapor\render\PixelBuffer.h"
 					>
 				</File>
 				<File
@@ -468,7 +468,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\render\RenderBuffer.h"
+					RelativePath="..\..\inc\vapor\render\RenderBuffer.h"
 					>
 				</File>
 				<File
@@ -484,7 +484,7 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\render\VertexBuffer.h"
+					RelativePath="..\..\inc\vapor\render\VertexBuffer.h"
 					>
 				</File>
 			</Filter>
@@ -496,7 +496,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\render\Renderable.h"
+					RelativePath="..\..\inc\vapor\render\Renderable.h"
 					>
 				</File>
 				<Filter
@@ -507,7 +507,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Engine\inc\vapor\render\Cube.h"
+						RelativePath="..\..\inc\vapor\render\Cube.h"
 						>
 					</File>
 				</Filter>
@@ -519,7 +519,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Engine\inc\vapor\render\Sphere.h"
+						RelativePath="..\..\inc\vapor\render\Sphere.h"
 						>
 					</File>
 				</Filter>
@@ -531,7 +531,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Engine\inc\vapor\render\Quad.h"
+						RelativePath="..\..\inc\vapor\render\Quad.h"
 						>
 					</File>
 				</Filter>
@@ -547,7 +547,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Engine\inc\vapor\render\DebugGeometry.h"
+						RelativePath="..\..\inc\vapor\render\DebugGeometry.h"
 						>
 					</File>
 				</Filter>
@@ -560,7 +560,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\render\Window.h"
+					RelativePath="..\..\inc\vapor\render\Window.h"
 					>
 				</File>
 				<Filter
@@ -571,7 +571,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Engine\inc\vapor\render\Win32_Window.h"
+						RelativePath="..\..\inc\vapor\render\Win32_Window.h"
 						>
 					</File>
 				</Filter>
@@ -583,7 +583,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Engine\inc\vapor\render\SFML_Window.h"
+						RelativePath="..\..\inc\vapor\render\SFML_Window.h"
 						>
 					</File>
 				</Filter>
@@ -596,7 +596,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\render\FBO.h"
+					RelativePath="..\..\inc\vapor\render\FBO.h"
 					>
 				</File>
 				<File
@@ -604,7 +604,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\render\FrameStatistics.h"
+					RelativePath="..\..\inc\vapor\render\FrameStatistics.h"
 					>
 				</File>
 				<File
@@ -612,7 +612,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\render\Target.h"
+					RelativePath="..\..\inc\vapor\render\Target.h"
 					>
 				</File>
 			</Filter>
@@ -624,7 +624,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\render\Material.h"
+					RelativePath="..\..\inc\vapor\render\Material.h"
 					>
 				</File>
 			</Filter>
@@ -636,7 +636,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\render\Program.h"
+					RelativePath="..\..\inc\vapor\render\Program.h"
 					>
 				</File>
 				<File
@@ -644,7 +644,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\render\ProgramManager.h"
+					RelativePath="..\..\inc\vapor\render\ProgramManager.h"
 					>
 				</File>
 				<File
@@ -652,7 +652,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\render\Shader.h"
+					RelativePath="..\..\inc\vapor\render\Shader.h"
 					>
 				</File>
 				<Filter
@@ -663,7 +663,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Engine\inc\vapor\render\GLSL_Program.h"
+						RelativePath="..\..\inc\vapor\render\GLSL_Program.h"
 						>
 					</File>
 					<File
@@ -671,7 +671,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Engine\inc\vapor\render\GLSL_Shader.h"
+						RelativePath="..\..\inc\vapor\render\GLSL_Shader.h"
 						>
 					</File>
 				</Filter>
@@ -684,7 +684,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\render\Texture.h"
+					RelativePath="..\..\inc\vapor\render\Texture.h"
 					>
 				</File>
 				<File
@@ -692,7 +692,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\render\TextureManager.h"
+					RelativePath="..\..\inc\vapor\render\TextureManager.h"
 					>
 				</File>
 			</Filter>
@@ -704,7 +704,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\render\Viewport.h"
+					RelativePath="..\..\inc\vapor\render\Viewport.h"
 					>
 				</File>
 			</Filter>
@@ -713,23 +713,11 @@
 			Name="Documentation"
 			>
 			<File
-				RelativePath="..\..\src\Engine\doc\CPP.txt"
+				RelativePath="..\..\inc\vapor\Doxygen.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\Engine\doc\CREDITS.txt"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\Engine\doc\DESIGN.txt"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\Engine\inc\vapor\Doxygen.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\Engine\doc\TODO.txt"
+				RelativePath="..\..\doc\TODO.txt"
 				>
 			</File>
 		</Filter>
@@ -741,7 +729,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\Engine\inc\vapor\scene\Component.h"
+				RelativePath="..\..\inc\vapor\scene\Component.h"
 				>
 			</File>
 			<File
@@ -749,7 +737,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\Engine\inc\vapor\scene\Node.h"
+				RelativePath="..\..\inc\vapor\scene\Node.h"
 				>
 			</File>
 			<File
@@ -757,11 +745,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\Engine\inc\vapor\scene\Scene.h"
+				RelativePath="..\..\inc\vapor\scene\Scene.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\Engine\inc\vapor\scene\Tags.h"
+				RelativePath="..\..\inc\vapor\scene\Tags.h"
 				>
 			</File>
 			<Filter
@@ -780,7 +768,7 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\scene\Camera.h"
+					RelativePath="..\..\inc\vapor\scene\Camera.h"
 					>
 				</File>
 				<File
@@ -788,7 +776,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\scene\FirstPersonCamera.h"
+					RelativePath="..\..\inc\vapor\scene\FirstPersonCamera.h"
 					>
 				</File>
 			</Filter>
@@ -800,7 +788,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\scene\Transform.h"
+					RelativePath="..\..\inc\vapor\scene\Transform.h"
 					>
 				</File>
 			</Filter>
@@ -812,7 +800,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\scene\Group.h"
+					RelativePath="..\..\inc\vapor\scene\Group.h"
 					>
 				</File>
 			</Filter>
@@ -824,7 +812,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\scene\Geometry.h"
+					RelativePath="..\..\inc\vapor\scene\Geometry.h"
 					>
 				</File>
 			</Filter>
@@ -836,7 +824,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\scene\Grid.h"
+					RelativePath="..\..\inc\vapor\scene\Grid.h"
 					>
 				</File>
 			</Filter>
@@ -848,7 +836,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\scene\Listener.h"
+					RelativePath="..\..\inc\vapor\scene\Listener.h"
 					>
 				</File>
 				<File
@@ -856,7 +844,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\scene\Sound.h"
+					RelativePath="..\..\inc\vapor\scene\Sound.h"
 					>
 				</File>
 			</Filter>
@@ -868,7 +856,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\scene\Light.h"
+					RelativePath="..\..\inc\vapor\scene\Light.h"
 					>
 				</File>
 			</Filter>
@@ -880,7 +868,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\scene\Skydome.h"
+					RelativePath="..\..\inc\vapor\scene\Skydome.h"
 					>
 				</File>
 			</Filter>
@@ -892,7 +880,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\scene\Billboard.h"
+					RelativePath="..\..\inc\vapor\scene\Billboard.h"
 					>
 				</File>
 			</Filter>
@@ -904,7 +892,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\scene\Model.h"
+					RelativePath="..\..\inc\vapor\scene\Model.h"
 					>
 				</File>
 			</Filter>
@@ -916,7 +904,19 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\scene\Water.h"
+					RelativePath="..\..\inc\vapor\scene\Water.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Projector"
+				>
+				<File
+					RelativePath="..\..\src\Engine\Projector.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\scene\Projector.h"
 					>
 				</File>
 			</Filter>
@@ -932,7 +932,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\audio\Buffer.h"
+					RelativePath="..\..\inc\vapor\audio\Buffer.h"
 					>
 				</File>
 			</Filter>
@@ -944,7 +944,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\audio\Context.h"
+					RelativePath="..\..\inc\vapor\audio\Context.h"
 					>
 				</File>
 			</Filter>
@@ -956,7 +956,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\audio\Source.h"
+					RelativePath="..\..\inc\vapor\audio\Source.h"
 					>
 				</File>
 			</Filter>
@@ -968,7 +968,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\audio\Device.h"
+					RelativePath="..\..\inc\vapor\audio\Device.h"
 					>
 				</File>
 			</Filter>
@@ -981,7 +981,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\Engine\inc\vapor\vfs\File.h"
+				RelativePath="..\..\inc\vapor\vfs\File.h"
 				>
 			</File>
 			<File
@@ -989,7 +989,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\Engine\inc\vapor\vfs\FileSystem.h"
+				RelativePath="..\..\inc\vapor\vfs\FileSystem.h"
 				>
 			</File>
 			<Filter
@@ -1000,7 +1000,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\vfs\FileWatcher.h"
+					RelativePath="..\..\inc\vapor\vfs\FileWatcher.h"
 					>
 				</File>
 				<File
@@ -1029,7 +1029,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\src\Engine\inc\vapor\Engine.h"
+				RelativePath="..\..\inc\vapor\Engine.h"
 				>
 			</File>
 			<File
@@ -1037,26 +1037,22 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\Engine\inc\vapor\Subsystem.h"
+				RelativePath="..\..\inc\vapor\Subsystem.h"
 				>
 			</File>
 			<Filter
 				Name="Framework"
 				>
 				<File
-					RelativePath="...\..\src\Engine\Examples\Dialog.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\src\Framework\Framework.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\Framework.h"
+					RelativePath="..\..\inc\vapor\Framework.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\Main.h"
+					RelativePath="..\..\inc\vapor\Main.h"
 					>
 				</File>
 			</Filter>
@@ -1069,7 +1065,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\Engine\inc\vapor\gui\Atlas.h"
+				RelativePath="..\..\inc\vapor\gui\Atlas.h"
 				>
 			</File>
 			<File
@@ -1100,7 +1096,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\gui\Label.h"
+					RelativePath="..\..\inc\vapor\gui\Label.h"
 					>
 				</File>
 			</Filter>
@@ -1112,7 +1108,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\gui\Overlay.h"
+					RelativePath="..\..\inc\vapor\gui\Overlay.h"
 					>
 				</File>
 			</Filter>
@@ -1124,7 +1120,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\gui\Console.h"
+					RelativePath="..\..\inc\vapor\gui\Console.h"
 					>
 				</File>
 			</Filter>
@@ -1132,7 +1128,7 @@
 				Name="Window"
 				>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\gui\Window.h"
+					RelativePath="..\..\inc\vapor\gui\Window.h"
 					>
 				</File>
 			</Filter>
@@ -1145,7 +1141,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\Engine\inc\vapor\input\InputManager.h"
+				RelativePath="..\..\inc\vapor\input\InputManager.h"
 				>
 			</File>
 			<Filter
@@ -1156,7 +1152,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\input\SFML_InputManager.h"
+					RelativePath="..\..\inc\vapor\input\SFML_InputManager.h"
 					>
 				</File>
 			</Filter>
@@ -1164,7 +1160,7 @@
 				Name="Devices"
 				>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\input\Device.h"
+					RelativePath="..\..\inc\vapor\input\Device.h"
 					>
 				</File>
 				<File
@@ -1187,7 +1183,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Engine\inc\vapor\input\Joystick.h"
+						RelativePath="..\..\inc\vapor\input\Joystick.h"
 						>
 					</File>
 				</Filter>
@@ -1199,11 +1195,11 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Engine\inc\vapor\input\Mouse.h"
+						RelativePath="..\..\inc\vapor\input\Mouse.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Engine\inc\vapor\input\MouseEvents.h"
+						RelativePath="..\..\inc\vapor\input\MouseEvents.h"
 						>
 					</File>
 				</Filter>
@@ -1215,11 +1211,11 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Engine\inc\vapor\input\Keyboard.h"
+						RelativePath="..\..\inc\vapor\input\Keyboard.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Engine\inc\vapor\input\KeyboardEvents.h"
+						RelativePath="..\..\inc\vapor\input\KeyboardEvents.h"
 						>
 					</File>
 				</Filter>
@@ -1240,7 +1236,7 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\input\InputMap.h"
+					RelativePath="..\..\inc\vapor\input\InputMap.h"
 					>
 				</File>
 			</Filter>
@@ -1253,7 +1249,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\Engine\inc\vapor\script\State.h"
+				RelativePath="..\..\inc\vapor\script\State.h"
 				>
 			</File>
 			<Filter
@@ -1269,7 +1265,7 @@
 			Name="Terrain"
 			>
 			<File
-				RelativePath="..\..\src\Engine\inc\vapor\terrain\Brush.h"
+				RelativePath="..\..\inc\vapor\terrain\Brush.h"
 				>
 			</File>
 			<File
@@ -1277,7 +1273,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\Engine\inc\vapor\terrain\Cell.h"
+				RelativePath="..\..\inc\vapor\terrain\Cell.h"
 				>
 			</File>
 			<File
@@ -1285,7 +1281,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\Engine\inc\vapor\terrain\Terrain.h"
+				RelativePath="..\..\inc\vapor\terrain\Terrain.h"
 				>
 			</File>
 		</Filter>
@@ -1313,7 +1309,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\src\Engine\inc\vapor\scene\Body.h"
+				RelativePath="..\..\inc\vapor\scene\Body.h"
 				>
 			</File>
 			<File
@@ -1337,7 +1333,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\src\Engine\inc\vapor\physics\Physics.h"
+				RelativePath="..\..\inc\vapor\physics\Physics.h"
 				>
 			</File>
 		</Filter>
@@ -1357,11 +1353,11 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\src\Engine\inc\vapor\resources\Resource.h"
+				RelativePath="..\..\inc\vapor\resources\Resource.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\Engine\inc\vapor\resources\ResourceLoader.h"
+				RelativePath="..\..\inc\vapor\resources\ResourceLoader.h"
 				>
 			</File>
 			<File
@@ -1373,7 +1369,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\Engine\inc\vapor\resources\ResourceManager.h"
+				RelativePath="..\..\inc\vapor\resources\ResourceManager.h"
 				>
 			</File>
 			<Filter
@@ -1384,7 +1380,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\resources\Mesh.h"
+					RelativePath="..\..\inc\vapor\resources\Mesh.h"
 					>
 				</File>
 				<Filter
@@ -1403,7 +1399,7 @@
 						</FileConfiguration>
 					</File>
 					<File
-						RelativePath="..\..\src\Engine\inc\vapor\resources\MS3D.h"
+						RelativePath="..\..\inc\vapor\resources\MS3D.h"
 						>
 					</File>
 					<File
@@ -1411,7 +1407,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Engine\inc\vapor\resources\MS3D_Loader.h"
+						RelativePath="..\..\inc\vapor\resources\MS3D_Loader.h"
 						>
 					</File>
 				</Filter>
@@ -1424,7 +1420,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\resources\Font.h"
+					RelativePath="..\..\inc\vapor\resources\Font.h"
 					>
 				</File>
 				<File
@@ -1440,7 +1436,7 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\resources\Font_Loader.h"
+					RelativePath="..\..\inc\vapor\resources\Font_Loader.h"
 					>
 				</File>
 				<Filter
@@ -1451,7 +1447,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Engine\inc\vapor\resources\BitmapFont.h"
+						RelativePath="..\..\inc\vapor\resources\BitmapFont.h"
 						>
 					</File>
 				</Filter>
@@ -1463,7 +1459,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Engine\inc\vapor\resources\TTF.h"
+						RelativePath="..\..\inc\vapor\resources\TTF.h"
 						>
 					</File>
 				</Filter>
@@ -1484,7 +1480,7 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\resources\Image.h"
+					RelativePath="..\..\inc\vapor\resources\Image.h"
 					>
 				</File>
 				<Filter
@@ -1511,7 +1507,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Engine\inc\vapor\resources\PNG_Loader.h"
+						RelativePath="..\..\inc\vapor\resources\PNG_Loader.h"
 						>
 						<FileConfiguration
 							Name="Debug|Win32"
@@ -1565,7 +1561,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Engine\inc\vapor\resources\STB_Image_Loader.h"
+						RelativePath="..\..\inc\vapor\resources\STB_Image_Loader.h"
 						>
 					</File>
 				</Filter>
@@ -1581,7 +1577,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Engine\inc\vapor\resources\GLSL_Loader.h"
+						RelativePath="..\..\inc\vapor\resources\GLSL_Loader.h"
 						>
 					</File>
 					<File
@@ -1589,7 +1585,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Engine\inc\vapor\resources\GLSL_Text.h"
+						RelativePath="..\..\inc\vapor\resources\GLSL_Text.h"
 						>
 					</File>
 				</Filter>
@@ -1602,7 +1598,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\resources\Sound.h"
+					RelativePath="..\..\inc\vapor\resources\Sound.h"
 					>
 				</File>
 				<Filter
@@ -1621,7 +1617,7 @@
 						</FileConfiguration>
 					</File>
 					<File
-						RelativePath="..\..\src\Engine\inc\vapor\resources\OGG_Loader.h"
+						RelativePath="..\..\inc\vapor\resources\OGG_Loader.h"
 						>
 					</File>
 				</Filter>
@@ -1642,7 +1638,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\script\Script.h"
+					RelativePath="..\..\inc\vapor\script\Script.h"
 					>
 				</File>
 				<Filter
@@ -1653,7 +1649,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Engine\inc\vapor\resources\Lua_Loader.h"
+						RelativePath="..\..\inc\vapor\resources\Lua_Loader.h"
 						>
 					</File>
 				</Filter>
@@ -1666,7 +1662,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\resources\Text.h"
+					RelativePath="..\..\inc\vapor\resources\Text.h"
 					>
 				</File>
 			</Filter>
@@ -1679,7 +1675,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\Engine\inc\vapor\paging\Page.h"
+				RelativePath="..\..\inc\vapor\paging\Page.h"
 				>
 			</File>
 			<File
@@ -1687,7 +1683,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\Engine\inc\vapor\paging\PageManager.h"
+				RelativePath="..\..\inc\vapor\paging\PageManager.h"
 				>
 			</File>
 		</Filter>
@@ -1695,11 +1691,11 @@
 			Name="Platform"
 			>
 			<File
-				RelativePath="..\..\src\Engine\inc\vapor\Language.h"
+				RelativePath="..\..\inc\vapor\Language.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\Engine\inc\vapor\Platform.h"
+				RelativePath="..\..\inc\vapor\Platform.h"
 				>
 			</File>
 			<File
@@ -1707,7 +1703,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\Engine\inc\vapor\ReferenceCounted.h"
+				RelativePath="..\..\inc\vapor\ReferenceCounted.h"
 				>
 			</File>
 			<File
@@ -1715,7 +1711,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\Engine\inc\vapor\Serialization.h"
+				RelativePath="..\..\inc\vapor\Serialization.h"
 				>
 			</File>
 			<Filter
@@ -1726,7 +1722,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\DynamicLibrary.h"
+					RelativePath="..\..\inc\vapor\DynamicLibrary.h"
 					>
 				</File>
 			</Filter>
@@ -1746,7 +1742,7 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\Log.h"
+					RelativePath="..\..\inc\vapor\Log.h"
 					>
 				</File>
 				<File
@@ -1770,7 +1766,7 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\ConcurrentQueue.h"
+					RelativePath="..\..\inc\vapor\ConcurrentQueue.h"
 					>
 				</File>
 				<File
@@ -1778,7 +1774,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\Task.h"
+					RelativePath="..\..\inc\vapor\Task.h"
 					>
 				</File>
 				<File
@@ -1794,7 +1790,7 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\TaskManager.h"
+					RelativePath="..\..\inc\vapor\TaskManager.h"
 					>
 				</File>
 			</Filter>
@@ -1814,7 +1810,7 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\NativeFile.h"
+					RelativePath="..\..\inc\vapor\NativeFile.h"
 					>
 				</File>
 			</Filter>
@@ -1822,7 +1818,7 @@
 				Name="Utilities"
 				>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\Singleton.h"
+					RelativePath="..\..\inc\vapor\Singleton.h"
 					>
 				</File>
 				<File
@@ -1838,7 +1834,7 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\Utilities.h"
+					RelativePath="..\..\inc\vapor\Utilities.h"
 					>
 				</File>
 			</Filter>
@@ -1875,7 +1871,7 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\PCH.h"
+					RelativePath="..\..\inc\vapor\PCH.h"
 					>
 				</File>
 			</Filter>
@@ -1887,7 +1883,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\Profiler.h"
+					RelativePath="..\..\inc\vapor\Profiler.h"
 					>
 				</File>
 			</Filter>
@@ -1899,17 +1895,17 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\inc\vapor\Timer.h"
+					RelativePath="..\..\inc\vapor\Timer.h"
 					>
 				</File>
 			</Filter>
 		</Filter>
 		<File
-			RelativePath="..\..\src\Engine\inc\vapor\CompileOptions.h"
+			RelativePath="..\..\inc\vapor\CompileOptions.h"
 			>
 		</File>
 		<File
-			RelativePath="..\..\src\Engine\inc\vapor\Headers.h"
+			RelativePath="..\..\inc\vapor\Headers.h"
 			>
 		</File>
 	</Files>

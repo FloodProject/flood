@@ -92,7 +92,7 @@ void ResourcesPage::onResourceAdded( const ResourceEvent& event )
 	ResourceGroup::Enum group = res->getResourceGroup();
 
 	AppendItem( resourceGroupTreeIds[group],
-				res->getURI(), 0
+				res->getPath(), 0
 				/*resourceGroupIcons[group]*/ );
 }
 

@@ -26,8 +26,8 @@ class ScenePage : public wxPanel
 {
 public:
 
-	ScenePage( EditorFrame*, 
-		wxWindow* parent, wxWindowID id = wxID_ANY );
+	ScenePage( EditorFrame*, wxWindow* parent, wxWindowID id = wxID_ANY );
+	virtual ~ScenePage();
 
 	// Gets the entity represented by the tree item.
 	NodePtr getEntity( wxTreeItemId id );
@@ -44,38 +44,42 @@ protected:
 	void onItemMenu( wxTreeEvent& );
 	void onLabelEditBegin( wxTreeEvent& );
 	void onLabelEditEnd( wxTreeEvent& );
-	void onActivate( wxFocusEvent& );
 	void onDragBegin( wxTreeEvent& );
 	void onDragEnd( wxTreeEvent& );
 	void onMouseRightUp( wxContextMenuEvent& );
 	void onNodeMenu( wxCommandEvent& );
 	void onComponentAdd( wxCommandEvent& );
 
-	wxBitmapButton* buttonNodeDelete;
-	void onButtonNodeAdd(wxCommandEvent&);
-	void onButtonNodeDelete(wxCommandEvent&);
-
-	wxTreeCtrl* tree;
-	wxTreeItemId root;
-	wxTreeItemId menuItemId;
-	wxTreeItemId dragItemId;
 	wxTreeItemId addNode( const NodePtr& node );
 	void addComponent( wxTreeItemId id, ComponentPtr  );
+
+	void onButtonNodeAdd(wxCommandEvent&);
+	void onButtonNodeDelete(wxCommandEvent&);
+	void onButtonNodeDeleteUpdate(wxUpdateUIEvent&);
 
 	// Scene-monitoring callbacks.
 	void onNodeAdded( const GroupEvent& );
 	void onNodeRemoved( const GroupEvent& );
 
+	// Scene tree.
+	wxTreeCtrl* tree;
+	wxTreeItemId root;
+	wxTreeItemId menuItemId;
+	wxTreeItemId dragItemId;
+
+	// Tree icons.
 	wxImageList* imageList;
 	std::map<std::string, int> icons;
 
+	// Node buttons.
+	wxBitmapButton* buttonNodeAdd;
+	wxBitmapButton* buttonNodeDelete;
+
 	// Scene associated this control.
-	SceneWeakPtr weakScene;
 	Engine* engine;
 	EditorFrame* editor;
-
-	bool activated;
-
+	SceneWeakPtr weakScene;
+	
 	DECLARE_EVENT_TABLE()
 };
 

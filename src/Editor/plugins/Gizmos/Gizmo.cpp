@@ -99,13 +99,13 @@ void Gizmo::deselectAxis()
 
 GizmoAxis::Enum Gizmo::getAxis(Color& c)
 {
-	if( c.equals(X) )
+	if( c.nearEqual(X) )
 		return GizmoAxis::X;
 
-	else if( c.equals(Y) )
+	else if( c.nearEqual(Y) )
 		return GizmoAxis::Y;
 	
-	else if( c.equals(Z) )
+	else if( c.nearEqual(Z) )
 		return GizmoAxis::Z;
 
 	return GizmoAxis::None;

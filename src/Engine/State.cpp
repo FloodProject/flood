@@ -100,7 +100,7 @@ bool State::execute( const ScriptPtr& script )
 {
 	// From the Lua C API docs:
 	//	"It returns 0 if there are no errors or 1 in case of errors."
-	int status = luaL_dofile( luaState, script->getURI().c_str() );
+	int status = luaL_dofile( luaState, script->getPath().c_str() );
 
 	if( status == 1 )
 	{

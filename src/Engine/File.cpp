@@ -17,12 +17,16 @@ namespace vapor {
 
 //-----------------------------------//
 
-File::File(const std::string path, AccessMode::Enum e)
-	: path(path),
+File::File(const std::string& path_, AccessMode::Enum e)
+	: path(path_),
 	accessMode(e),
 	file(nullptr),
 	closed(false)
 {
+	// Sanitize paths.
+	if( path[0] == '.' && path[1] == '\\' )
+		path.erase(0, 2);
+
 	open();
 }
 
