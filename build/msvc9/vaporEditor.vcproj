@@ -43,7 +43,7 @@
 				AdditionalOptions="-Zm140"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)src\Editor\inc&quot;;&quot;$(SolutionDir)dep\jsoncpp\include&quot;;&quot;$(SolutionDir)dep\boost&quot;;&quot;$(SolutionDir)dep\fd_delegate\include&quot;;&quot;$(SolutionDir)dep\openal\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\vld\include&quot;;C:\wxWidgets\include;C:\wxWidgets\include\msvc"
-				PreprocessorDefinitions="WIN32;_DEBUG;__WXDEBUG__;__WXMSW__;_UNICODE;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_SECURE_SCL=0;_HAS_ITERATOR_DEBUGGING=0"
+				PreprocessorDefinitions="WIN32;_DEBUG;__WXDEBUG__;__WXMSW__;_UNICODE;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE"
 				MinimalRebuild="true"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
@@ -613,6 +613,26 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Editor\plugins\Resources\ResourcesPlugin.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Property"
+				>
+				<File
+					RelativePath="..\..\src\Editor\plugins\Property\PropertyPage.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Editor\plugins\Property\PropertyPage.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Editor\plugins\Property\PropertyPlugin.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Editor\plugins\Property\PropertyPlugin.h"
 					>
 				</File>
 			</Filter>

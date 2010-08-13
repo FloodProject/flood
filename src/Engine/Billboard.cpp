@@ -15,14 +15,15 @@ namespace vapor {
 
 //-----------------------------------//
 
-const std::string& Billboard::type = "Billboard";
+BEGIN_CLASS_PARENT(Billboard, Component)
+END_CLASS()
 
 //-----------------------------------//
 
 Billboard::Billboard( const CameraPtr& cam, BillboardType::Enum type )
 	: camera(cam)
 	, billboardType(type)
-	, rend( new Renderable(Primitive::Lines) )
+	, rend( new Renderable(PolygonPrimitive::Lines) )
 { }
 
 //-----------------------------------//

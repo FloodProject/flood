@@ -29,7 +29,7 @@ void GizmoRotate::buildGeometry()
 	//material->setLineWidth(3.0f);
 
 	lines = generateCircles();
-	addRenderable( new Renderable(Primitive::Lines, lines, material) );
+	addRenderable( new Renderable(PolygonPrimitive::Lines, lines, material) );
 }
 
 //-----------------------------------//

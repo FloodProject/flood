@@ -20,12 +20,11 @@ namespace vapor {
 
 class VAPOR_API Grid : public Geometry
 {
+	DECLARE_CLASS_()
+
 public:
 
 	Grid();
-
-	// Returns the type of this component.
-	GETTER(Type, const std::string&, Grid::type)
 
 protected:
 
@@ -40,8 +39,6 @@ protected:
 
 	// Makes the main lines more visible. 
 	bool strongMainLines;
-
-	static const std::string& type;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Grid );

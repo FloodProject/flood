@@ -272,7 +272,7 @@
 	</References>
 	<Files>
 		<Filter
-			Name="res"
+			Name="Resources"
 			>
 			<File
 				RelativePath="..\..\src\Examples\res\Example.manifest"

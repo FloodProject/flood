@@ -13,7 +13,10 @@
 
 namespace vapor {
 
-const std::string& Overlay::type = "Overlay";
+//-----------------------------------//
+
+BEGIN_CLASS_PARENT(Overlay, Transform)
+END_CLASS()
 
 //-----------------------------------//
 

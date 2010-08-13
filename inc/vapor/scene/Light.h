@@ -33,7 +33,7 @@ namespace LightType
 		Spot
 	};
 
-	static std::string toString(LightType::Enum);
+	DECLARE_ENUM()
 }
 
 //-----------------------------------//
@@ -46,6 +46,8 @@ namespace LightType
 
 class VAPOR_API Light : public Component
 {
+	DECLARE_CLASS_()
+
 public:
 
 	Light( LightType::Enum type );
@@ -74,13 +76,8 @@ public:
 	// Gets/sets the cut-off radius of the light.
 	ACESSOR(CutOffRadius, float, cutoffRadius)
 
-	// Gets the type of this component. 
-	GETTER(Type, const std::string&, Light::type)
-
 	// Called once per frame to update the component.
 	virtual void update( double delta );
-
-	DECLARE_SERIALIZABLE();
   
 protected:
 
@@ -98,9 +95,6 @@ protected:
 	// Light state
 	bool isLightOn;
 	bool castsShadows;
-
-	// Component type
-	static const std::string& type;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Light );

@@ -55,7 +55,7 @@ Viewport* Viewframe::createViewport( const NodePtr& node )
 	assert( node != nullptr );
 
 	// Add a new viewport to the window.
-	CameraPtr camera = node->getComponent<Camera>("Camera");
+	CameraPtr camera = node->getComponent<FirstPersonCamera>();
 	assert( camera != nullptr );
 
 	Window* window = control->getRenderWindow();

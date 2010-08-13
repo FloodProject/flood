@@ -37,6 +37,8 @@ struct GroupEvent
 
 class VAPOR_API Group : public Node
 {
+	DECLARE_CLASS_()
+
 public:
 
 	Group( const std::string& name );
@@ -72,8 +74,6 @@ public:
 
 	// Updates this group of nodes.
 	virtual void update( double delta );
-
-	DECLARE_SERIALIZABLE();
 
 	//-----------------------------------//
 	// Events

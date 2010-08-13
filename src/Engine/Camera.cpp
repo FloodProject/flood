@@ -17,7 +17,9 @@ namespace vapor {
 
 //-----------------------------------//
 
-const std::string& Camera::type = "Camera";
+BEGIN_CLASS_PARENT(Camera, Component)
+	//FIELD_CLASS(Camera, Frustum, frustum)
+END_CLASS()
 
 //-----------------------------------//
 
@@ -241,17 +243,6 @@ Ray Camera::getRay( float screenX, float screenY, Vector3* outFar ) const
 		*outFar = rayTarget;
 
 	return pickRay;
-}
-
-//-----------------------------------//
-
-void Camera::serialize( Json::Value& value )
-{
-	//value["projection"] = Projection::toString( projection );
-	//value["fov"] = fov;
-	//value["near"] = near_;
-	//value["far"] = far_;
-	//value["lookAt"] = toJson(lookAtVector);
 }
 
 //-----------------------------------//

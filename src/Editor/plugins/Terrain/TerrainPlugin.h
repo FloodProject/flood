@@ -25,8 +25,9 @@ namespace TerrainTool
 	{
 		Raise,
 		Lower,
-		Paint,
-		Smooth
+		Smooth,
+		Noise,
+		Paint
 	};
 }
 
@@ -80,14 +81,25 @@ public:
 	virtual void onMouseButtonRelease( const MouseButtonEvent& );
 	virtual void onMouseLeave();
 
+protected:
+
 	// Callback used when editing the terrain by holding the mouse button.
 	void onTimer( wxTimerEvent& event );
 
 	// Callback when cells need to created.
 	void onCreateCell( wxCommandEvent& event );
 
+	// Callback when cell normals need to be rebuilt.
+	void onRebuildNormals( wxCommandEvent& event );
+
+	// Ray picks the terrain and returns the cell coords.
+	bool pickCell( const MouseButtonEvent& mbe );
+
 	// Ray picks the terrain and returns the intersection point.
 	bool pickTerrain( const MouseButtonEvent& mb, RayTriangleQueryResult& res );
+
+	// Handles the right-click context menu creation.
+	void createContextMenu( const MouseButtonEvent& mbe );
 
 	// Checks if the ray hits and deforms.
 	void deformTerrain( const MouseButtonEvent& mb );
@@ -97,8 +109,6 @@ public:
 
 	// Finishes the operation and registers the event in the history stack.
 	void registerEvent();
-
-protected:
 
 	// Terrain notebook page.
 	TerrainPtr terrain;

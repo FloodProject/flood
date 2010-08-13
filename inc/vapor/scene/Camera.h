@@ -29,6 +29,8 @@ namespace vapor {
 
 class VAPOR_API Camera : public Component
 {
+	DECLARE_CLASS_()
+	
 public:
 
 	Camera( RenderDevice* );
@@ -69,11 +71,6 @@ public:
 	// Gets/sets the current viewport associated with the camera.
 	GETTER(Viewport, Viewport*, viewport)
 	DECLARE_SETTER(Viewport, Viewport*)
-	
-	// Gets the type of this node.
-	GETTER(Type, const std::string&, type)
-
-	DECLARE_SERIALIZABLE();
 
 protected:
 
@@ -101,8 +98,6 @@ protected:
 
 	// Used to pass a RenderQueue for rendering.
 	RenderDevice* renderDevice;
-
-	static const std::string& type;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Camera );

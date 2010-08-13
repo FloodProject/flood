@@ -29,10 +29,10 @@ GizmoTranslate::GizmoTranslate( const NodePtr& node, const CameraWeakPtr& camera
 void GizmoTranslate::buildGeometry()
 {
 	lines = generateLines();
-	addRenderable( new Renderable(Primitive::Lines, lines, material) );
+	addRenderable( new Renderable(PolygonPrimitive::Lines, lines, material) );
 
 	cones = generateCones();
-	addRenderable( new Renderable(Primitive::Triangles, cones, material) );
+	addRenderable( new Renderable(PolygonPrimitive::Triangles, cones, material) );
 }
 
 //-----------------------------------//

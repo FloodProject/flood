@@ -75,7 +75,7 @@ static const byte OctaSphereIndices[][3] =
 
 Sphere::Sphere( bool fullSphere, byte numSubDiv, float dim )
 {
-	setPrimitiveType( Primitive::Triangles );
+	setPrimitiveType( PolygonPrimitive::Triangles );
 	
 	VertexData position;
 	buildGeometry( fullSphere, numSubDiv, position, dim );

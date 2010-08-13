@@ -12,7 +12,10 @@
 
 namespace vapor {
 
-const std::string& Geometry::type = "Geometry";
+//-----------------------------------//
+
+BEGIN_CLASS_PARENT(Geometry, Component)
+END_CLASS()
 
 //-----------------------------------//
 
@@ -98,13 +101,6 @@ void Geometry::update( double delta )
 
 	transform->markBoundingVolumeDirty();
 	isDirty = false;
-}
-
-//-----------------------------------//
-
-void Geometry::serialize( Json::Value& value )
-{
-	Component::serialize( value );
 }
 
 //-----------------------------------//

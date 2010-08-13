@@ -28,15 +28,14 @@ namespace vapor {
 
 class VAPOR_API Console : public Overlay
 {
+	DECLARE_CLASS_()
+
 public:
 
 	Console();
 
 	// Updates the console geometry if needed.
 	virtual void update( double delta );
-
-	// Returns this component name identification.
-	virtual const std::string& getType() const;
 
 protected:
 
@@ -45,8 +44,6 @@ protected:
 	
 	// Used to track if the geometry needs updating.
 	bool isDirty;
-
-	static const std::string& type;
 };
 
 //-----------------------------------//

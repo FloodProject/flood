@@ -15,6 +15,8 @@
 
 namespace vapor {
 
+//-----------------------------------//
+
 class RenderDevice;
 
 //-----------------------------------//
@@ -23,7 +25,7 @@ class RenderDevice;
  * Type of primitive of the renderable.
  */
 
-namespace Primitive
+namespace PolygonPrimitive
 {
     enum Enum
     {
@@ -43,7 +45,7 @@ namespace Primitive
 //-----------------------------------//
 
 /**
- * Type of primitive of the renderable.
+ * Type of rendering mode of the renderable.
  */
 
 namespace PolygonMode
@@ -71,11 +73,11 @@ public:
 
 	Renderable();
 
-    Renderable( Primitive::Enum, const VertexBufferPtr&,
+    Renderable( PolygonPrimitive::Enum, const VertexBufferPtr&,
 		const IndexBufferPtr&, const MaterialPtr& );
     
     // No index buffer, default material will be used if none passed.
-	Renderable( Primitive::Enum, const VertexBufferPtr& = nullptr,
+	Renderable( PolygonPrimitive::Enum, const VertexBufferPtr& = nullptr,
 		const MaterialPtr& = nullptr );
 
 	// Binds the state needed to draw the renderable.
@@ -100,12 +102,12 @@ public:
 	ACESSOR(PolygonMode, PolygonMode::Enum, mode)
 
 	// Gets/sets the primitive type of this renderable.
-	ACESSOR(PrimitiveType, Primitive::Enum, type)
+	ACESSOR(PrimitiveType, PolygonPrimitive::Enum, type)
 
 protected:
 
     // Primitive type of the vertex buffer contents.
-    Primitive::Enum type;
+    PolygonPrimitive::Enum type;
 
 	// Rendering mode of the vertex buffer contents.
 	PolygonMode::Enum mode;

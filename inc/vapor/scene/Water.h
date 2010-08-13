@@ -21,19 +21,16 @@ namespace vapor {
 
 class VAPOR_API Water : public Geometry
 {
+	DECLARE_CLASS_()
+
 public:
 
 	Water( MaterialPtr material );
-
-	// Returns the name of this component.
-	GETTER(Type, const std::string&, type)
 
 protected:
 
 	// Water plane.
 	QuadPtr quad;
-
-	static const std::string& type;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Water );

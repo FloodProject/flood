@@ -92,6 +92,9 @@ public:
 	// Key press callback.
 	virtual void onKeyPress() {}
 
+	// Scene update callback.
+	virtual void onSceneUpdate() {}
+
 protected:
 
 	// Helper method to disable plugins.

@@ -31,6 +31,8 @@ typedef std::map< RenderGroup::Enum, RenderableList > RenderableMap;
 
 class VAPOR_API Geometry : public Component
 {
+	DECLARE_CLASS_()
+
 public:
 
 	Geometry();
@@ -56,20 +58,15 @@ public:
 	// Marks the geometry as dirty (forces AABB update).
 	void markDirty();
 
-	// Returns the name of this component.
-	GETTER(Type, const std::string&, type)
-
-	DECLARE_SERIALIZABLE();
-
 protected:
 
 	// Bounding volume of the geometry.
 	AABB boundingVolume;
+
+	// Keeps track if geometry has changed.
 	bool isDirty;
 	
 	RenderableMap renderables;
-	
-	static const std::string& type;
 };
 
 //-----------------------------------//

@@ -21,14 +21,6 @@ TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( Node );
 
 //-----------------------------------//
 
-#define DECLARE_COMPONENT_TYPE				\
-	static const std::string& id;
-
-#define COMPONENT_TYPE(type,str)	\
-	const std::string& type::id = str;
-
-//-----------------------------------//
-
 /**
  * Represents a component, a specific piece of functionality that can be
  * added to each entity in the scene. A component will tipically hold a
@@ -36,8 +28,10 @@ TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( Node );
  * A component will also be able to register methods for scripting.
  */
 
-class VAPOR_API Component : public Serializable, private boost::noncopyable
+class VAPOR_API Component : private boost::noncopyable
 {
+	DECLARE_CLASS_()
+
 public:
 
 	explicit Component();
@@ -61,15 +55,12 @@ public:
 	// Gets the debug renderable of this component.
 	virtual RenderablePtr getDebugRenderable() const;
 
-	// Gets the type of this component. 
-	// Each component should have a unique type string.
-	virtual const std::string& getType() const = 0;
-
-	DECLARE_SERIALIZABLE();
-
 protected:
 
+	// Node that owns this component.
 	NodeWeakPtr node;
+
+	// Should the debug represention be rendereed.
 	bool drawDebugRenderable;
 };
 

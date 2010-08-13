@@ -46,6 +46,8 @@ namespace BillboardType
 
 class VAPOR_API Billboard : public Component
 {
+	DECLARE_CLASS_()
+
 public:
 
 	Billboard( const CameraPtr& cam,
@@ -53,9 +55,6 @@ public:
 
 	// Updates the component.
 	void update( double delta );
-
-	// Gets the type of this component.
-	GETTER(Type, const std::string&, type)
 
 	// Gets the debug renderable of the component.
 	RenderablePtr getDebugRenderable() const;
@@ -68,9 +67,6 @@ private:
 	TransformPtr transform;
 	CameraPtr camera;
 	RenderablePtr rend;
-
-	// Component type
-	static const std::string& type;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Billboard );

@@ -16,7 +16,10 @@
 
 namespace vapor {
 
-const std::string& Label::type = "Label";
+//-----------------------------------//
+
+BEGIN_CLASS_PARENT(Label, Overlay)
+END_CLASS()
 
 //-----------------------------------//
 
@@ -51,7 +54,7 @@ void Label::init()
 	setupDone = false;
 
 	VertexBufferPtr vb( new VertexBuffer() );
-	renderable = new Renderable( Primitive::Quads, vb, material );
+	renderable = new Renderable( PolygonPrimitive::Quads, vb, material );
 
 	// Add a new renderable to hold the text geometry
 	addRenderable( renderable, RenderGroup::Overlays );

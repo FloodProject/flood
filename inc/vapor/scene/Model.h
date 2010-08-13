@@ -25,22 +25,17 @@ namespace vapor {
 
 class VAPOR_API Model : public Geometry
 {
-public:
+	DECLARE_CLASS_()
 
+public:
 	Model( const MeshPtr& mesh );
 
 	// Builds the mesh when it is fully loaded.
 	void update( double delta );
-
-	// Gets the type of this component.
-	GETTER(Type, const std::string&, type)
   
 private:
 
 	MeshPtr mesh;
-
-	// Component type.
-	static const std::string& type;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Model );

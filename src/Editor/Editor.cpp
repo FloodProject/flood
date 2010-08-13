@@ -23,6 +23,7 @@
 #include "plugins/UndoRedo/UndoPlugin.h"
 #include "plugins/Scene/ScenePlugin.h"
 #include "plugins/Resources/ResourcesPlugin.h"
+#include "plugins/Property/PropertyPlugin.h"
 #include "plugins/Gizmos/GizmoPlugin.h"
 #include "plugins/Terrain/TerrainPlugin.h"
 #include "plugins/Camera/CameraPlugin.h"
@@ -138,6 +139,10 @@ void EditorFrame::createPlugins()
 	pluginManager->enablePlugin( plugin );
 
 	plugin = new ScenePlugin(this);
+	pluginManager->registerPlugin( plugin );
+	pluginManager->enablePlugin( plugin );
+
+	plugin = new PropertyPlugin(this);
 	pluginManager->registerPlugin( plugin );
 	pluginManager->enablePlugin( plugin );
 
@@ -418,6 +423,8 @@ void EditorFrame::onUpdate( double delta )
 {
 	editorScene->update( delta );
 	engine->update( delta );
+
+	//eventManager->onSceneUpdate();
 }
 
 //-----------------------------------//

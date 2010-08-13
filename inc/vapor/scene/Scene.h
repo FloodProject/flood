@@ -47,6 +47,8 @@ typedef std::vector<RayBoxQueryResult> RayBoxQueryList;
 
 class VAPOR_API Scene : public Group
 {
+	DECLARE_CLASS_()
+
 public:
 
 	Scene();

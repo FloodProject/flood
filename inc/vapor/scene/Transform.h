@@ -24,6 +24,8 @@ namespace vapor {
 
 class VAPOR_API Transform : public Component
 {
+	DECLARE_CLASS_()
+
 public:
 
 	Transform( float x = 0.0f, float y = 0.0f, float z = 0.0f );
@@ -52,7 +54,7 @@ public:
 	void setPosition( const Vector3& position );
 
 	// Gets the scale of the transform.
-	GETTER(Scale, const Vector3&, _scale)
+	GETTER(Scale, const Vector3&, scaling)
 
 	// Sets the scale of the transform.
 	void setScale( const Vector3& scale );
@@ -90,7 +92,7 @@ public:
 	// Marks the bounding volume as needing an update.
 	void markBoundingVolumeDirty();
 
-	// Does this transform's bounding box need to be updated?
+	// Gets if the bounding volume need to be updated.
 	bool requiresBoundingVolumeUpdate() const;
 
 	// Use this to render some debug bounding boxes.
@@ -102,11 +104,6 @@ public:
 	// Gets fired when the transform is changed.
 	fd::delegate<void()> onTransform;
 
-	// Gets the type of this component.
-	GETTER(Type, const std::string&, Transform::type)
-
-	DECLARE_SERIALIZABLE();
-
 protected:
 
 	// Tracks if the transform has been changed.
@@ -115,23 +112,29 @@ protected:
 	// Sends notifications when the transform has changed.
 	void notify();
 
+	// Translation.
 	Vector3 translation;
+
+	// Orientation.
 	EulerAngles rotation;
-	Vector3 _scale;
+
+	// Scaling.
+	Vector3 scaling;
 	
-	// Local transform
+	// Local transform.
 	Matrix4x3 transform;
 
-	// Bounding volumes used for culling.
+	// Does the bounding volume needs to be rebuilt.
 	bool needsVolumeUpdate;
+
+	// Bounding volume of the renderables.
 	AABB boundingVolume;
+
+	// Geometry of the bounding volume.
 	RenderablePtr boundingVolumeRenderable;
 
-	// If an external update occurs (the matrix is changed) then we
-	// don't want to override that when the transform is updated.
-	bool externalUpdate;
-
-	static const std::string& type;
+	// If an external transform is given, don't generate our own.
+	bool externalTransform;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Transform );

@@ -14,27 +14,33 @@
 
 namespace vapor {
 
-const std::string& Transform::type = "Transform";
+//-----------------------------------//
+
+BEGIN_CLASS_PARENT(Transform, Component)
+	FIELD_PRIMITIVE(Transform, Vector3, translation)
+	FIELD_PRIMITIVE(Transform, Vector3, rotation)
+	FIELD_PRIMITIVE(Transform, Vector3, scaling)
+END_CLASS()
 
 //-----------------------------------//
 
 Transform::Transform( float x, float y, float z )
-	: _scale( 1.0f )
+	: scaling( 1.0f )
 	, translation( x, y, z )
 	, needsNotify( false )
 	, needsVolumeUpdate( true )
-	, externalUpdate( false )
+	, externalTransform( false )
 { }
 
 //-----------------------------------//
 
 Transform::Transform( const Transform& rhs )
-	: _scale( rhs._scale )
+	: scaling( rhs.scaling )
 	, translation( rhs.translation )
 	, rotation( rhs.rotation )
 	, needsVolumeUpdate( false )
 	, needsNotify( false )
-	, externalUpdate( false )
+	, externalTransform( false )
 { }
 
 //-----------------------------------//
@@ -75,9 +81,9 @@ void Transform::scale( float x, float y, float z )
 {
 	needsNotify = true;
 
-	_scale.x *= x;
-	_scale.y *= y;
-	_scale.z *= z;
+	scaling.x *= x;
+	scaling.y *= y;
+	scaling.z *= z;
 }
 
 //-----------------------------------//
@@ -119,7 +125,7 @@ void Transform::setRotation( const EulerAngles& rot )
 void Transform::setScale( const Vector3& scale )
 {
 	needsNotify = true;
-	_scale = scale;
+	scaling = scale;
 }
 
 //-----------------------------------//
@@ -166,7 +172,7 @@ void Transform::reset( )
 	needsNotify = true;
 
 	translation.zero();
-	_scale = Vector3( 1.0f );
+	scaling = Vector3( 1.0f );
 	rotation.identity();
 }
 
@@ -175,7 +181,7 @@ void Transform::reset( )
 void Transform::setAbsoluteTransform( const Matrix4x3& newTransform )
 {
 	needsNotify = true;
-	externalUpdate = true;
+	externalTransform = true;
 	transform = newTransform;
 }
 
@@ -185,7 +191,7 @@ Matrix4x3 Transform::getLocalTransform() const
 {
 	Matrix4x3 matOrientation = Matrix4x3::createRotation(rotation);
 	Matrix4x3 matTranslation = Matrix4x3::createTranslation(translation);
-	Matrix4x3 matScale = Matrix4x3::createScale(_scale);
+	Matrix4x3 matScale = Matrix4x3::createScale(scaling);
 	
 	// Combine all the transformations in a single matrix.
 	Matrix4x3 transform = matScale*matOrientation*matTranslation;
@@ -232,7 +238,7 @@ void Transform::updateBoundingVolume()
 
 void Transform::update( double VAPOR_UNUSED(delta) )
 {
-	if( !externalUpdate )
+	if( !externalTransform )
 		transform = getLocalTransform();
 
 	if( requiresBoundingVolumeUpdate() )
@@ -244,7 +250,7 @@ void Transform::update( double VAPOR_UNUSED(delta) )
 		needsNotify = false;
 	}
 
-	externalUpdate = false;
+	externalTransform = false;
 }
 
 //-----------------------------------//
@@ -264,15 +270,6 @@ void Transform::notify()
 AABB Transform::getWorldBoundingVolume() const
 {
 	return boundingVolume.transform( getAbsoluteTransform() );
-}
-
-//-----------------------------------//
-
-void Transform::serialize( Json::Value& value )
-{
-	value["position"] = toJson(translation);
-	value["rotation"] = toJson(rotation);
-	value["scale"] = toJson(_scale);
 }
 
 //-----------------------------------//

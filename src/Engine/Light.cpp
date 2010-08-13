@@ -11,33 +11,30 @@
 
 namespace vapor {
 
-const std::string& Light::type = "Light";
-
 //-----------------------------------//
 
-namespace LightType
-{
-	std::string toString(LightType::Enum e)
-	{
-		switch(e)
-		{
-		case LightType::Directional:
-			return "Directional";
-		case LightType::Spot:
-			return "Spot";
-		case LightType::Point:
-			return "Point";
-		}
+BEGIN_ENUM(LightType)
+	ENUM(Directional)
+	ENUM(Point)
+	ENUM(Spot)
+END_ENUM()
 
-		return "(unknown)";
-	}
-}
+BEGIN_CLASS_PARENT(Light, Component)
+	FIELD_ENUM(Light, LightType, lightType)
+	FIELD_PRIMITIVE(Light, Color, diffuseColor)
+	FIELD_PRIMITIVE(Light, Color, specularColor)
+	FIELD_PRIMITIVE(Light, Color, emissiveColor)
+	FIELD_PRIMITIVE(Light, Color, ambientColor)
+	FIELD_PRIMITIVE(Light, float, cutoffRadius)
+	FIELD_PRIMITIVE(Light, bool, isLightOn)
+	FIELD_PRIMITIVE(Light, bool, castsShadows)
+END_CLASS()
 
 //-----------------------------------//
 
 Light::Light( LightType::Enum type )
-	: lightType(type),
-	cutoffRadius(0.0f)
+	: lightType(type)
+	, cutoffRadius(0)
 {
 	//updateGeometry();
 }
@@ -46,20 +43,6 @@ Light::Light( LightType::Enum type )
 
 void Light::update( double delta )
 { }
-
-//-----------------------------------//
-
-void Light::serialize( Json::Value& value )
-{
-	value["lightType"] = LightType::toString(lightType);
-	value["diffuseColor"] = toJson(diffuseColor);
-	value["specularColor"] = toJson(specularColor);
-	value["emissiveColor"] = toJson(emissiveColor);
-	value["ambientColor"] = toJson(ambientColor);
-	value["cutoffRadius"] = cutoffRadius;
-	value["isLightOn"] = isLightOn;
-	value["castsShadows"] = castsShadows;
-}
 
 //-----------------------------------//
 

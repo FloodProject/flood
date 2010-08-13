@@ -19,7 +19,7 @@ Renderable::Renderable()
 
 //-----------------------------------//
 
-Renderable::Renderable( Primitive::Enum primitive,
+Renderable::Renderable( PolygonPrimitive::Enum primitive,
 						const VertexBufferPtr& vb, 
 						const IndexBufferPtr& ib, 
 						const MaterialPtr& mat )
@@ -32,7 +32,7 @@ Renderable::Renderable( Primitive::Enum primitive,
 
 //-----------------------------------//
 
-Renderable::Renderable( Primitive::Enum primitive, 
+Renderable::Renderable( PolygonPrimitive::Enum primitive, 
 						const VertexBufferPtr& vb, 
 						const MaterialPtr& mat )
 	: type( primitive )

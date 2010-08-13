@@ -14,6 +14,11 @@ namespace vapor {
 
 //-----------------------------------//
 
+BEGIN_CLASS_PARENT(Terrain, Geometry) 
+END_CLASS()
+
+//-----------------------------------//
+
 // Range of valid dimensions for heightmaps.
 static const short validDimensions[] =
 {
@@ -21,8 +26,6 @@ static const short validDimensions[] =
 	17,		33,		65,		129,
 	257,	513,	1025,	2049
 };
-
-const std::string& Terrain::type = "Terrain";
 
 //-----------------------------------//
 
@@ -95,6 +98,8 @@ CellPtr Terrain::createCell( short x, short y, std::vector<float>& heights )
 
 	// Forces AABB generation next update.
 	isDirty = true;
+
+	terrainCells.push_back(cell);
 	
 	return cell;
 }

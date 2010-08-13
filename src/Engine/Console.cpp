@@ -14,7 +14,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-const std::string& Console::type = "Console";
+BEGIN_CLASS_PARENT(Console, Overlay)
+END_CLASS()
 
 //-----------------------------------//
 
@@ -39,13 +40,6 @@ void Console::update( double VAPOR_UNUSED(delta) )
 	if( !isDirty ) return;
 
 	buildGeometry();
-}
-
-//-----------------------------------//
-
-const std::string& Console::getType() const 
-{
-	return type; 
 }
 
 //-----------------------------------//

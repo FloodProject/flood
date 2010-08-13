@@ -30,6 +30,8 @@ namespace vapor {
 
 class VAPOR_API Label : public Overlay
 {
+	DECLARE_CLASS_()
+
 public:
 
 	Label( const std::string& text, FontPtr font, MaterialPtr mat );
@@ -43,9 +45,6 @@ public:
 
 	// Updates the geometry to match the new text if needed.
 	virtual void update( double delta );
-
-	// Returns this component name identification.
-	GETTER(Type, const std::string&, type)
 
 protected:
 
@@ -75,7 +74,7 @@ protected:
 
 	bool setupDone;
 
-	static const std::string& type;
+	static Type typeInfo;
 };
 
 //-----------------------------------//

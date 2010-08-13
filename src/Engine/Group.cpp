@@ -14,6 +14,11 @@ namespace vapor {
 
 //-----------------------------------//
 
+BEGIN_CLASS_PARENT(Group, Node)
+END_CLASS()
+
+//-----------------------------------//
+
 Group::Group( const std::string& name )
 	: Node( name )
 { }
@@ -139,16 +144,6 @@ void Group::update( double delta )
 //{
 //	return children.size();
 //}
-
-//-----------------------------------//
-
-void Group::serialize( Json::Value& value )
-{
-	value["name"] = getName();
-
-	foreach( const NodePtr& node, children )
-		node->serialize( value["nodes"][node->getName()] );
-}
 
 //-----------------------------------//
 

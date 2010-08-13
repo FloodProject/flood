@@ -24,6 +24,8 @@ namespace vapor {
 
 class VAPOR_API FirstPersonCamera : public Camera
 {
+	DECLARE_CLASS_()
+
 public:
 
 	FirstPersonCamera( RenderDevice* device );
@@ -36,11 +38,6 @@ public:
 	
 	// Gets/sets the move sensivity of the camera.
 	ACESSOR(MoveSensivity, float, moveSensivity);
-
-	// Gets the type of this node.
-	GETTER(Type, const std::string&, Camera::type)
-
-	DECLARE_SERIALIZABLE();
 
 protected:
 
@@ -81,8 +78,6 @@ protected:
 	bool hasFocus;
 
 	InputManager* inputManager;
-
-	static const std::string& type;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( FirstPersonCamera );

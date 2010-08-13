@@ -20,7 +20,7 @@ namespace vapor {
 //-----------------------------------//
 
 #define DECLARE_SERIALIZABLE()		\
-	virtual void serialize( Json::Value& )
+	virtual void serialize( Json::Value& );
 
 /**
  * Classes that want to be serializable should inherit this class and

@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\boost\&quot;;&quot;$(SolutionDir)dep\picopng\&quot;;&quot;$(SolutionDir)dep\stb\&quot;;&quot;$(SolutionDir)dep\vld\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;;&quot;$(SolutionDir)dep\openal\include&quot;;&quot;$(SolutionDir)dep\ogg\include&quot;;&quot;$(SolutionDir)dep\physfs\include&quot;;&quot;$(SolutionDir)dep\vorbis\include&quot;;&quot;$(SolutionDir)dep\jsoncpp\include&quot;;&quot;$(SolutionDir)dep\SFML\include&quot;;&quot;$(SolutionDir)dep\fd_delegate\include&quot;;&quot;$(SolutionDir)dep\lua\include&quot;"
-				PreprocessorDefinitions="_DEBUG;___DEBUG;WIN32;_WINDOWS;_SECURE_SCL=0;_HAS_ITERATOR_DEBUGGING=0"
+				PreprocessorDefinitions="_DEBUG;___DEBUG;WIN32;_WINDOWS"
 				MinimalRebuild="true"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="0"
@@ -249,7 +249,7 @@
 			Name="Math"
 			>
 			<File
-				RelativePath="..\..\src\Engine\Math.cpp"
+				RelativePath="..\..\src\Core\math\Math.cpp"
 				>
 			</File>
 			<File
@@ -264,7 +264,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\Vector3.cpp"
+					RelativePath="..\..\src\Core\math\Vector3.cpp"
 					>
 				</File>
 				<File
@@ -280,7 +280,7 @@
 				Name="Matrix"
 				>
 				<File
-					RelativePath="..\..\src\Engine\Matrix4x3.cpp"
+					RelativePath="..\..\src\Core\math\Matrix4x3.cpp"
 					>
 				</File>
 				<File
@@ -288,7 +288,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\Matrix4x4.cpp"
+					RelativePath="..\..\src\Core\math\Matrix4x4.cpp"
 					>
 				</File>
 				<File
@@ -300,7 +300,7 @@
 				Name="Frustum"
 				>
 				<File
-					RelativePath="..\..\src\Engine\Frustum.cpp"
+					RelativePath="..\..\src\Core\math\Frustum.cpp"
 					>
 				</File>
 				<File
@@ -312,7 +312,7 @@
 				Name="Color"
 				>
 				<File
-					RelativePath="..\..\src\Engine\Color.cpp"
+					RelativePath="..\..\src\Core\math\Color.cpp"
 					>
 				</File>
 				<File
@@ -324,7 +324,7 @@
 				Name="Plane"
 				>
 				<File
-					RelativePath="..\..\src\Engine\Plane.cpp"
+					RelativePath="..\..\src\Core\math\Plane.cpp"
 					>
 				</File>
 				<File
@@ -336,7 +336,7 @@
 				Name="Angles"
 				>
 				<File
-					RelativePath="..\..\src\Engine\EulerAngles.cpp"
+					RelativePath="..\..\src\Core\math\EulerAngles.cpp"
 					>
 				</File>
 				<File
@@ -348,7 +348,7 @@
 				Name="Ray"
 				>
 				<File
-					RelativePath="..\..\src\Engine\Ray.cpp"
+					RelativePath="..\..\src\Core\math\Ray.cpp"
 					>
 				</File>
 				<File
@@ -360,7 +360,7 @@
 				Name="Quaternion"
 				>
 				<File
-					RelativePath="..\..\src\Engine\Quaternion.cpp"
+					RelativePath="..\..\src\Core\math\Quaternion.cpp"
 					>
 				</File>
 				<File
@@ -372,7 +372,7 @@
 				Name="Bounding Volumes"
 				>
 				<File
-					RelativePath="..\..\src\Engine\BoundingBox.cpp"
+					RelativePath="..\..\src\Core\math\BoundingBox.cpp"
 					>
 				</File>
 				<File
@@ -380,7 +380,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Engine\BoundingSphere.cpp"
+					RelativePath="..\..\src\Core\math\BoundingSphere.cpp"
 					>
 				</File>
 				<File
@@ -392,7 +392,7 @@
 				Name="Noise"
 				>
 				<File
-					RelativePath="..\..\src\Engine\Noise.cpp"
+					RelativePath="..\..\src\Core\math\Noise.cpp"
 					>
 				</File>
 				<File
@@ -1850,7 +1850,7 @@
 						<Tool
 							Name="VCCLCompilerTool"
 							UsePrecompiledHeader="1"
-							DisableSpecificWarnings="4800; 4244; 4100"
+							DisableSpecificWarnings="4800; 4244; 4100; 4512"
 						/>
 					</FileConfiguration>
 					<FileConfiguration
@@ -1899,6 +1899,50 @@
 					>
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="Reflection"
+			>
+			<File
+				RelativePath="..\..\src\Core\reflection\Class.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\core\Class.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\Core\reflection\Enum.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\core\Enum.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\Core\reflection\Field.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\core\Field.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\Core\reflection\Primitive.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\core\Primitive.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\Core\reflection\Type.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\core\Type.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath="..\..\inc\vapor\CompileOptions.h"

@@ -32,6 +32,12 @@ public:
 	Events( EditorFrame* editor );
 	virtual ~Events();
 
+	// Add a plugin as an event listener.
+	void addEventListener( Plugin* plugin );
+
+	// Remove a plugin as an event listener.
+	void removeEventListener( Plugin* plugin );
+
 	// Pre-handling of events from the toolbar.
 	virtual bool TryBefore( wxEvent& event );
 	
@@ -50,6 +56,9 @@ public:
 	// Keyboard input events.
 	void onKeyPress( const KeyEvent& );
 	void onKeyRelease( const KeyEvent& );
+
+	// Scene update events.
+	void onSceneUpdate();
 
 	// Current active plugin.
 	Plugin* currentPlugin;
@@ -71,6 +80,9 @@ protected:
 
 	// Keeps the plugin manager instance.
 	PluginManager* pluginManager;
+
+	// Global event listener plugins.
+	std::vector<Plugin*> eventListeners;
 };
 
 //-----------------------------------//

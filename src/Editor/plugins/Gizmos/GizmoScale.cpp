@@ -27,10 +27,10 @@ GizmoScale::GizmoScale( const NodePtr& node, const CameraWeakPtr& camera )
 void GizmoScale::buildGeometry()
 {
 	lines = generateLines();
-	addRenderable( new Renderable(Primitive::Lines, lines, material) );
+	addRenderable( new Renderable(PolygonPrimitive::Lines, lines, material) );
 
 	cubes = generateCubes();
-	addRenderable( new Renderable(Primitive::Quads, cubes, material) );
+	addRenderable( new Renderable(PolygonPrimitive::Quads, cubes, material) );
 }
 
 //-----------------------------------//

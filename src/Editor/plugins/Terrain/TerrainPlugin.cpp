@@ -86,12 +86,12 @@ void TerrainPlugin::onNodeSelect( const NodePtr& node )
 {
 	foreach( const ComponentMapPair p, node->getComponents() )
 	{
-		if( p.first == "Terrain" )
+		if( p.first->is<Terrain>() )
 		{
 			terrain = std::static_pointer_cast<Terrain>(p.second);
 
-			foreach( wxToolBarToolBase* tool, tools )
-				tool->Enable(true);
+			//foreach( wxToolBarToolBase* tool, tools )
+			//	tool->Enable(true);
 		}
 	}
 }
@@ -140,6 +140,78 @@ void TerrainPlugin::onMouseDrag( const MouseDragEvent& mde )
 
 //-----------------------------------//
 
+bool TerrainPlugin::pickCell( const MouseButtonEvent& mbe )
+{
+	if( !terrain )
+		return false;
+
+	Viewport* viewport = viewframe->getViewport();
+	const CameraPtr& camera = viewport->getCamera(); 
+	
+	// Get a ray given the screen location clicked.
+	const Ray& pickRay = camera->getRay( mbe.x, mbe.y );
+
+	Plane ground( Vector3::UnitY, 0 );
+	
+	float distance;
+	if( !ground.intersects(pickRay, distance) )
+		return false;
+		
+	Vector3 pt = pickRay.getPoint(distance);
+	coords = terrain->getCoords(pt);
+		
+	return true;
+}
+
+//-----------------------------------//
+
+void TerrainPlugin::createContextMenu( const MouseButtonEvent& mbe )
+{
+	std::string menuTitle( "Terrain Operations" );
+	wxMenu menu( menuTitle );
+
+	if( pickCell(mbe) )
+	{
+		CellPtr cell = terrain->getCell(coords.x, coords.y);
+
+		std::string newTitle = String::format( "%s (Cell %hd,%hd)",
+			menuTitle.c_str(), coords.x, coords.y );
+
+		menu.SetTitle( newTitle );
+
+		if( cell )
+		{
+			wxMenuItem* rebuildNormalsButton =
+				menu.Append(wxID_ANY, "Rebuild normals");
+
+			menu.Bind( wxEVT_COMMAND_MENU_SELECTED,
+				&TerrainPlugin::onRebuildNormals, this,
+				rebuildNormalsButton->GetId() );
+		}
+		else
+		{
+			wxMenuItem* createCellButton =
+				menu.Append(wxID_ANY, "Create cell");
+
+			menu.Bind( wxEVT_COMMAND_MENU_SELECTED,
+				&TerrainPlugin::onCreateCell, this,
+				createCellButton->GetId() );
+		}
+	}
+	else
+	{
+		if( !terrain )
+			menu.Append(wxID_ANY, "Invalid terrain" );
+		else
+			menu.Append(wxID_ANY, "Invalid cell" );
+	}
+
+	wxPoint clientpt( mbe.x, mbe.y );
+	editor->PopupMenu(&menu, clientpt);
+}
+
+//-----------------------------------//
+
 void TerrainPlugin::onMouseButtonPress( const MouseButtonEvent& mbe )
 {
 	if( mbe.isLeftButton() )
@@ -148,47 +220,7 @@ void TerrainPlugin::onMouseButtonPress( const MouseButtonEvent& mbe )
 	}
 	else if( mbe.isRightButton() )
 	{
-		wxMenu menu("Terrain Operations");
-
-		//// Get the intersection point on the terrain.
-		//RayTriangleQueryResult res;
-		//if( pickTerrain(mbe, res) )
-		//{
-		//	wxMenuItem* unloadButton = menu.Append(wxID_ANY, "Unload");
-		//	//unloadButton->Bind();
-		//}
-
-		Viewport* viewport = viewframe->getViewport();
-		const CameraPtr& camera = viewport->getCamera(); 
-		
-		// Get a ray given the screen location clicked.
-		const Ray& pickRay = camera->getRay( mbe.x, mbe.y );
-
-		Plane ground( Vector3::UnitY, 0 );
-		
-		float distance;
-		if( ground.intersects(pickRay, distance) )
-		{
-			Vector3 pt = pickRay.getPoint(distance);
-
-			if( !terrain )
-				return;
-
-			coords = terrain->getCoords(pt);
-
-			wxMenuItem* createCellButton = menu.Append(wxID_ANY,
-				String::format("Create cell at (%d,%d)", coords.x, coords.y));
-
-			menu.Bind( wxEVT_COMMAND_MENU_SELECTED,
-				&TerrainPlugin::onCreateCell, this, createCellButton->GetId() );
-		}
-		else
-		{
-			menu.Append(wxID_ANY, "Invalid cell" );
-		}
-
-		wxPoint clientpt( mbe.x, mbe.y );
-		editor->PopupMenu(&menu, clientpt);
+		createContextMenu( mbe );
 	}
 }
 
@@ -200,6 +232,19 @@ void TerrainPlugin::onCreateCell( wxCommandEvent& event )
 
 	editor->RefreshViewport();
 }
+
+//-----------------------------------//
+
+void TerrainPlugin::onRebuildNormals( wxCommandEvent& event )
+{
+	CellPtr cell = terrain->getCell(coords.x, coords.y);
+	assert( cell != nullptr );
+
+	cell->rebuildNormals();
+
+	editor->RefreshViewport();
+}
+
 
 //-----------------------------------//
 
@@ -307,7 +352,7 @@ bool TerrainPlugin::pickTerrain( const MouseButtonEvent& mb,
 	if( !terrain )
 		return false; // Picked nodes were not terrain.
 
-	if( !scene->doRayTriangleQuery( pickRay, res, node ) )
+	if( !scene->doRayTriangleQuery(pickRay, res, node) )
 		return false; // Query does not intersect the terrain.
 
 	return true;
@@ -359,7 +404,7 @@ void TerrainOperation::updateNormals()
 	RenderablePtr renderable = res.renderable;
 	assert( renderable != nullptr );
 
-	// TODO: Submit this as a task so it gets threaded.
+	// TODO: Submit this as a task so it is done in the background.
 	CellPtr cell = boost::static_pointer_cast<Cell>( renderable );
 	cell->rebuildNormals();
 }

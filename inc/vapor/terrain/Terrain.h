@@ -68,6 +68,8 @@ struct CellRequest
 
 class VAPOR_API Terrain : public Geometry
 {
+	DECLARE_CLASS_()
+
 public:
 
 	Terrain( const TerrainSettings& settings );
@@ -102,9 +104,6 @@ public:
 	// Updates the terrain geometry if needed.
 	virtual void update( double delta );
 
-	// Returns the name of this component.
-	GETTER(Type, const std::string&, type)
-
 protected:
 
 	// Creates a new cell of terrain with the given heights.
@@ -128,7 +127,7 @@ protected:
 	TerrainSettings settings;
 
 	// Component type.
-	static const std::string& type;
+	static Type typeInfo;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Terrain );

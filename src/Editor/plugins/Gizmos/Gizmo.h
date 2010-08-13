@@ -40,6 +40,8 @@ namespace GizmoAxis
 
 class Gizmo : public Geometry
 {
+	DECLARE_CLASS_()
+
 public:
 
 	Gizmo( const NodePtr& node, const CameraWeakPtr& camera );
@@ -77,9 +79,6 @@ public:
 	// Updates this component.
 	virtual void update( double delta );
 
-	// Returns the type of this component.
-	GETTER(Type, const std::string&, type)
-
 protected:
 
 	// Highlights an axis to provide visual feedback of handle selection.
@@ -98,8 +97,6 @@ protected:
 	static const Color& X;
 	static const Color& Y;
 	static const Color& Z;
-
-	static const std::string& type;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Gizmo );

@@ -14,7 +14,7 @@ namespace vapor {
 //-----------------------------------//
 
 Cube::Cube( float width, float height )
-	: Renderable( Primitive::Quads, buildGeometry(width, height) )
+	: Renderable( PolygonPrimitive::Quads, buildGeometry(width, height) )
 { }
 
 //-----------------------------------//

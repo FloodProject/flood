@@ -99,12 +99,12 @@ void ProjectPlugin::onSaveButtonClick(wxCommandEvent& event)
 	ScenePtr scene = engine->getSceneManager();
 	
 	// Serialize scene to JSON.
-	Json::Value sceneJSON;
-	scene->serialize( sceneJSON );
+	//Json::Value sceneJSON;
+	//scene->serialize( sceneJSON );
 
 	// Save it to a file.
-	std::string fn( fc.GetPath() );
-	serializeToFile( sceneJSON, fn );
+	//std::string fn( fc.GetPath() );
+	//serializeToFile( sceneJSON, fn );
 }
 
 //-----------------------------------//

@@ -48,5 +48,10 @@
 // Reference Counting
 //---------------------------------------------------------------------//
 
+#include "vapor/core/Type.h"
+#include "vapor/core/Class.h"
+#include "vapor/core/Enum.h"
+#include "vapor/core/Primitive.h"
+
 #include "vapor/ReferenceCounted.h"
 #include "vapor/Serialization.h"

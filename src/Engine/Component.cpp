@@ -14,6 +14,12 @@ namespace vapor {
 
 //-----------------------------------//
 
+BEGIN_CLASS(Component)
+	FIELD_PRIMITIVE(Component, bool, drawDebugRenderable)
+END_CLASS()
+
+//-----------------------------------//
+
 Component::Component()
 	: drawDebugRenderable( false )
 { }
@@ -41,14 +47,14 @@ bool Component::isDebugRenderableVisible() const
 
 RenderablePtr Component::getDebugRenderable() const
 {
-	return RenderablePtr();
+	return nullptr;
 }
 
 //-----------------------------------//
 
-void Component::setNode( const NodePtr& node )
+void Component::setNode( const NodePtr& newNode )
 {
-	this->node = node ;
+	node = newNode;
 }
 
 //-----------------------------------//
@@ -56,17 +62,6 @@ void Component::setNode( const NodePtr& node )
 NodePtr Component::getNode() const
 {
 	return node.lock();
-}
-
-//-----------------------------------//
-
-void Component::serialize( Json::Value& value )
-{
-	//value["type"] = getType();
-	
-	// No need to clutter the serialization with default values.
-	if( drawDebugRenderable != false )
-		value["drawDebugRenderable"] = drawDebugRenderable;
 }
 
 //-----------------------------------//

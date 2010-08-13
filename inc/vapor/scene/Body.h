@@ -31,6 +31,8 @@ namespace vapor {
 
 class VAPOR_API Body : public Component
 {
+	DECLARE_CLASS_()
+
 public:
 
 	Body();
@@ -39,9 +41,6 @@ public:
 
 	// Inits the physics body.
 	void init();
-
-	// Gets the type of this component. 
-	virtual const std::string& getType() const;
 
 	// Called once per frame to update the component.
 	virtual void update( double delta );
@@ -71,10 +70,6 @@ private:
 
 	hkpRigidBodyCinfo* info;
 	hkpBoxShape* shape;
-
-protected:
-
-	static const std::string& type;
 };
 
 //-----------------------------------//

@@ -216,7 +216,7 @@ void MS3D::build( std::vector<RenderablePtr>& renderables )
 		if( g.triangleIndices.empty() )
 			continue;
 
-		RenderablePtr rend( new Renderable(Primitive::Triangles) );
+		RenderablePtr rend( new Renderable(PolygonPrimitive::Triangles) );
 		
 		// Vertex data
 		std::vector<Vector3> pos;

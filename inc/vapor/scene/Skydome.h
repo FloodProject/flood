@@ -28,9 +28,11 @@ namespace vapor {
 
 class VAPOR_API Skydome : public Geometry
 {
+	DECLARE_CLASS_()
+
 public:
 
-	Skydome( CameraPtr camera );
+	Skydome( const CameraPtr& camera );
 
 	// SKY
 
@@ -40,8 +42,13 @@ public:
 	// Sets the sky to a linear color gradient.
 	void setSkyLinearGradient( const Color& c1, const Color& c2 );
 
-	// Sets a cloud layer in the skydome.
+	// CLOUDS
+
+	// Sets the texture of the clouds layer.
 	void setClouds( const ImagePtr& clouds );
+
+	// Enables or disables the clouds layer.
+	ACESSOR( CloudsVisible, bool, showClouds );
 
 	// CELESTIAL BODIES (Sun, Moon, Stars)
 
@@ -55,9 +62,6 @@ public:
 
 	// Gets called each cycle to update the component.
 	void update( double delta );
-
-	// Returns the name of this component.
-	GETTER(Type, const std::string&, type)
 
 protected:
 
@@ -73,23 +77,25 @@ protected:
 	// Generates the sky bodies.
 	void generateBodies();
 
-	// Keeps track of the current walltime.
-	double currentTime;
+	// Keeps track of the current virtual game time.
+	float currentTime;
 
 	// Dome geometry that will be rendered as the sky.
 	SpherePtr dome;
 	
 	// Sky color gradient.
-	Vector3 colorTop, colorBottom;
+	Color skyColorTop;
+	Color skyColorBottom;
 	float yMin, yMax;
+
+	// Show clouds.
+	bool showClouds;
 
 	// Celestial bodies geometry.
 	TransformPtr sun;
 
 	// Current camera transform.
 	CameraPtr camera;
-
-	static const std::string& type;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Skydome );

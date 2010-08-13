@@ -15,11 +15,14 @@ namespace vapor {
 
 //-----------------------------------//
 
+BEGIN_CLASS_PARENT(FirstPersonCamera, Camera)
+END_CLASS()
+
+//-----------------------------------//
+
 static const float DEFAULT_MOVE_SENSIVITY = 100.0f;
 static const float DEFAULT_LOOK_SENSIVITY = 20.0f;
 static const float DEFAULT_LIMIT_XAXIS = 89.0f;
-
-const std::string& FirstPersonCamera::type = "FirstPersonCamera";
 
 //-----------------------------------//
 
@@ -256,16 +259,6 @@ void FirstPersonCamera::onWindowFocusChange( bool focusLost )
 	
 	if( hasFocus && !window->isCursorVisible() )
 		centerCursor();
-}
-
-//-----------------------------------//
-
-void FirstPersonCamera::serialize( Json::Value& value )
-{
-	Camera::serialize( value );
-
-	value["lookSensivity"] = lookSensivity;
-	value["moveSensivity"] = moveSensivity;
 }
 
 //-----------------------------------//

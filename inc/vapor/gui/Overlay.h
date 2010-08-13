@@ -81,6 +81,8 @@ namespace Anchor
 
 class VAPOR_API Overlay : public virtual Geometry
 {
+	DECLARE_CLASS_()
+
 public:
 
 	Overlay();
@@ -100,9 +102,6 @@ public:
 	// Updates the overlay if needed.
 	virtual void update( double delta );
 
-	// Returns this component name identification.
-	GETTER(Type, const std::string&, type)
-
 protected:
 
 	// Positioning mode used.
@@ -114,7 +113,7 @@ protected:
 	// Overlay position.
 	Vector2i position;
 
-	static const std::string& type;
+	static Type typeInfo;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Overlay );

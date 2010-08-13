@@ -15,6 +15,11 @@ namespace vapor {
 
 //-----------------------------------//
 
+BEGIN_CLASS_PARENT(Scene, Group)
+END_CLASS()
+
+//-----------------------------------//
+
 Scene::Scene()
 	: Group("Scene")
 { }
@@ -119,7 +124,7 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res,
 			if( !rend )
 				continue;
 
-			if( rend->getPrimitiveType() != Primitive::Triangles )
+			if( rend->getPrimitiveType() != PolygonPrimitive::Triangles )
 				continue;
 
 			const VertexBufferPtr& vb = rend->getVertexBuffer();

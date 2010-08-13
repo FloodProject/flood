@@ -13,10 +13,14 @@ namespace vapor {
 
 //-----------------------------------//
 
-const std::string& Grid::type = "Grid";
+BEGIN_CLASS_PARENT(Grid, Geometry)
+END_CLASS()
 
-static const Vector3 RegularLineColor(0.4f);
-static const Vector3 StrongLineColor(0.9f);
+//-----------------------------------//
+
+static const Vector3 LineColor(0.4f);
+static const Vector3 MainLineColor(0.9f);
+static const short   MainLineStep = 8;
 
 //-----------------------------------//
 
@@ -29,7 +33,7 @@ Grid::Grid()
 {
 	MaterialPtr material( new Material("Grid") );
 	
-	RenderablePtr rend( new Renderable(Primitive::Lines) );
+	RenderablePtr rend( new Renderable(PolygonPrimitive::Lines) );
 	rend->setVertexBuffer( buildGeometry() );
 	rend->setMaterial( material );
 
@@ -58,17 +62,17 @@ VertexBufferPtr Grid::buildGeometry()
 		vertex.push_back( Vector3(x_pos, 0.0f, z_pos) );
 		vertex.push_back( Vector3(-x_pos, 0.0f, z_pos) );
 
-		bool isMainLine = (i % 8 == 0) && (i != 0) && (i != divX);
+		bool isMainLine = (i % MainLineStep == 0) && (i != 0) && (i != divX);
 
 		if( strongMainLines && isMainLine )
 		{
-			colors.push_back( StrongLineColor );
-			colors.push_back( StrongLineColor );
+			colors.push_back( MainLineColor );
+			colors.push_back( MainLineColor );
 		}
 		else
 		{
-			colors.push_back( RegularLineColor );
-			colors.push_back( RegularLineColor );
+			colors.push_back( LineColor );
+			colors.push_back( LineColor );
 		}
 
 		z_pos += sizeZ / divZ;
@@ -83,17 +87,17 @@ VertexBufferPtr Grid::buildGeometry()
 		vertex.push_back( Vector3( x_pos, 0.0f, z_pos ) );
 		vertex.push_back( Vector3( x_pos, 0.0f, -z_pos ) );
 
-		bool isMainLine = (i % 8 == 0) && (i != 0) && (i != divX);
+		bool isMainLine = (i % MainLineStep == 0) && (i != 0) && (i != divX);
 
 		if( strongMainLines && isMainLine )
 		{
-			colors.push_back( StrongLineColor );
-			colors.push_back( StrongLineColor );
+			colors.push_back( MainLineColor );
+			colors.push_back( MainLineColor );
 		}
 		else
 		{
-			colors.push_back( RegularLineColor );
-			colors.push_back( RegularLineColor );
+			colors.push_back( LineColor );
+			colors.push_back( LineColor );
 		}
 
 		x_pos += sizeX / divX;

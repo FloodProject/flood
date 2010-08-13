@@ -11,9 +11,7 @@
 
 namespace vapor { namespace editor {
 
-////////////////////////////////////////////////////////////
-// Event table
-////////////////////////////////////////////////////////////
+//-----------------------------------//
 
 BEGIN_EVENT_TABLE(TerrainPage, wxPanel)
 	//
@@ -100,7 +98,7 @@ void TerrainPage::createUI()
 	bSizer1->Add( m_cbTerrainTool, 1, wxEXPAND|wxALL, 5 );
 	
 	createBrush();
-	createCell();
+	//createCell();
 
 	SetSizer( bSizer1 );
 	Layout();

@@ -19,6 +19,8 @@ namespace vapor {
 
 class VAPOR_API Projector : public Component
 {
+	DECLARE_CLASS_()
+
 public:
 
 	Projector();
@@ -26,17 +28,10 @@ public:
 	// Gets the camera frustum.
 	Frustum& getFrustum() { return frustum; }
 
-	// Returns the name of this component.
-	GETTER(Type, const std::string&, type)
-
-	DECLARE_SERIALIZABLE();
-
 protected:
 
 	// Projector frustum.
 	Frustum frustum;
-
-	static const std::string& type;
 };
 
 //-----------------------------------//

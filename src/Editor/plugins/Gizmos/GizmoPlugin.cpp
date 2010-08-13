@@ -266,7 +266,9 @@ void GizmoPlugin::onMouseButtonPress( const MouseButtonEvent& mbe )
 	if( scene->doRayBoxQuery(pickRay, res) )
 	{
 		unselectNodes();
-		onNodeSelect( res.node );
+		
+		Events* events = editor->getEventManager();
+		events->onNodeSelect(res.node);
 	}
 	else
 		unselectNodes();

@@ -12,7 +12,10 @@
 
 namespace vapor {
 
-const std::string& Model::type = "Model";
+//-----------------------------------//
+
+BEGIN_CLASS_PARENT(Model, Geometry)
+END_CLASS()
 
 //-----------------------------------//
 

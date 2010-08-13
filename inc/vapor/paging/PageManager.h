@@ -17,6 +17,8 @@ FWD_DECL_SHARED_WEAK(Camera)
 
 namespace vapor {
 
+//-----------------------------------//
+
 class Page;
 
 //-----------------------------------//

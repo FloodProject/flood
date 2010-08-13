@@ -13,7 +13,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-const std::string& Water::type = "Water";
+BEGIN_CLASS_PARENT(Water, Geometry)
+END_CLASS()
 
 //-----------------------------------//
 

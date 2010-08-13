@@ -49,6 +49,31 @@ Events::~Events()
 
 //-----------------------------------//
 
+void Events::addEventListener( Plugin* plugin )
+{
+	std::vector<Plugin*>::iterator it = std::find(
+		eventListeners.begin(), eventListeners.end(), plugin);
+	
+	if( it != eventListeners.end() )
+		return;
+
+	eventListeners.push_back(plugin);
+}
+
+//-----------------------------------//
+
+void Events::removeEventListener( Plugin* plugin )
+{
+	std::vector<Plugin*>::iterator it = std::find(
+		eventListeners.begin(), eventListeners.end(), plugin);
+
+	assert( it != eventListeners.end() );
+
+	eventListeners.erase(it);
+}
+
+//-----------------------------------//
+
 bool Events::TryBefore(wxEvent& event)
 {
 	// We are only interested in toolbar button click events.
@@ -102,6 +127,10 @@ void Events::onNodeSelect( const NodePtr& node )
 		return;
 
 	currentPlugin->onNodeSelect(node);
+
+	// Global event listeners.
+	foreach( Plugin* plugin, eventListeners )
+		plugin->onNodeSelect(node);
 }
 
 //-----------------------------------//
@@ -115,6 +144,10 @@ void Events::onNodeUnselect( const NodePtr& node )
 		return;
 
 	currentPlugin->onNodeUnselect(node);
+
+	// Global event listeners.
+	foreach( Plugin* plugin, eventListeners )
+		plugin->onNodeUnselect(node);
 }
 
 //-----------------------------------//
@@ -125,6 +158,10 @@ void Events::onMouseMove( const MouseMoveEvent& mve )
 		return;
 	
 	currentPlugin->onMouseMove( mve );
+
+	// Global event listeners.
+	foreach( Plugin* plugin, eventListeners )
+		plugin->onMouseMove( mve );
 }
 
 //-----------------------------------//
@@ -135,6 +172,10 @@ void Events::onMouseDrag( const MouseDragEvent& mde )
 		return;
 	
 	currentPlugin->onMouseDrag( mde );
+
+	// Global event listeners.
+	foreach( Plugin* plugin, eventListeners )
+		plugin->onMouseDrag( mde );
 }
 
 //-----------------------------------//
@@ -145,6 +186,10 @@ void Events::onMousePress( const MouseButtonEvent& mbe )
 		return;
 	
 	currentPlugin->onMouseButtonPress( mbe );
+
+	// Global event listeners.
+	foreach( Plugin* plugin, eventListeners )
+		plugin->onMouseButtonPress( mbe );
 }
 
 //-----------------------------------//
@@ -155,6 +200,10 @@ void Events::onMouseRelease( const MouseButtonEvent& mbe )
 		return;
 	
 	currentPlugin->onMouseButtonRelease( mbe );
+
+	// Global event listeners.
+	foreach( Plugin* plugin, eventListeners )
+		plugin->onMouseButtonRelease( mbe );
 }
 
 //-----------------------------------//
@@ -165,6 +214,10 @@ void Events::onMouseEnter()
 		return;
 	
 	currentPlugin->onMouseEnter();
+
+	// Global event listeners.
+	foreach( Plugin* plugin, eventListeners )
+		plugin->onMouseEnter();
 }
 
 //-----------------------------------//
@@ -175,6 +228,24 @@ void Events::onMouseLeave()
 		return;
 	
 	currentPlugin->onMouseLeave();
+
+	// Global event listeners.
+	foreach( Plugin* plugin, eventListeners )
+		plugin->onMouseLeave();
+}
+
+//-----------------------------------//
+
+void Events::onSceneUpdate()
+{
+	if( !currentPlugin )
+		return;
+	
+	currentPlugin->onSceneUpdate();
+
+	// Global event listeners.
+	foreach( Plugin* plugin, eventListeners )
+		plugin->onSceneUpdate();
 }
 
 //-----------------------------------//

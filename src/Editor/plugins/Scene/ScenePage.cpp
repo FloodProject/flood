@@ -445,7 +445,7 @@ void ScenePage::onComponentAdd(wxCommandEvent& event )
 void ScenePage::addComponent( wxTreeItemId id, ComponentPtr comp )
 {
 	assert( comp != nullptr );
-	const std::string& type = comp->getType();
+	const std::string& type = comp->getInstanceType().getName();
 
 	wxTreeItemId ch = tree->AppendItem( id, type, icons[type] );
 

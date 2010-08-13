@@ -355,7 +355,7 @@ void wxFourWaySplitter::AdjustLayout()
 
 	wxSize sz = GetSize();
 	int barSize = GetSashSize();
-	int border = GetBorderSize();
+	//int border = GetBorderSize();
 
 	mFracSize.x = sz.x > barSize ? 
 		(10000 * mSplit.x + (sz.x - barSize - 1)) / (sz.x - barSize) : 0;
