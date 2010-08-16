@@ -15,8 +15,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(FirstPersonCamera, Camera)
-END_CLASS()
+//BEGIN_CLASS_PARENT(FirstPersonCamera, Camera)
+//END_CLASS()
 
 //-----------------------------------//
 

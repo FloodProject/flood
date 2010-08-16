@@ -17,8 +17,8 @@ namespace vapor {
 //-----------------------------------//
 
 typedef std::vector< RenderablePtr > RenderableList;
-typedef std::pair<const RenderGroup::Enum, RenderableList > RenderableMapPair;
 typedef std::map< RenderGroup::Enum, RenderableList > RenderableMap;
+typedef std::pair<const RenderGroup::Enum, RenderableList > RenderableMapPair;
 
 //-----------------------------------//
 
@@ -36,10 +36,10 @@ class VAPOR_API Geometry : public Component
 public:
 
 	Geometry();
-	Geometry( RenderablePtr rend );
+	Geometry( RenderablePtr renderable );
 
 	// Adds a new renderable to this geometry.
-	void addRenderable( RenderablePtr rend, 
+	void addRenderable( RenderablePtr renderable, 
 		RenderGroup::Enum group = RenderGroup::Normal,
 		uint priority = 0 );
 
@@ -55,7 +55,7 @@ public:
 	// Gets the bounding volume of this geometry.
 	GETTER(BoundingVolume, const AABB&, boundingVolume)
 
-	// Marks the geometry as dirty (forces AABB update).
+	// Marks the geometry as dirty (forces bounding volume update).
 	void markDirty();
 
 protected:

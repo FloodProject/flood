@@ -107,6 +107,8 @@ void GizmoPlugin::onGizmoToolClick(wxCommandEvent& event)
 
 void GizmoPlugin::unselectNodes(bool reselect)
 {
+	Events* events = editor->getEventManager();
+
 	std::vector<NodePtr> nodes;
 	
 	foreach( const GizmoMapPair& pair, gizmos )
@@ -114,7 +116,7 @@ void GizmoPlugin::unselectNodes(bool reselect)
 
 	foreach( const NodePtr& node, nodes )
 	{
-		onNodeUnselect(node);
+		events->onNodeUnselect(node);
 
 		if( reselect )
 			onNodeSelect(node);
@@ -125,6 +127,8 @@ void GizmoPlugin::unselectNodes(bool reselect)
 
 void GizmoPlugin::onNodeSelect( const NodePtr& node )
 {
+	unselectNodes();
+
 	if( isTool(GizmoTool::Camera) )
 		return;
 
@@ -241,6 +245,9 @@ void GizmoPlugin::onMouseDrag( const MouseDragEvent& dragEvent )
 
 void GizmoPlugin::onMouseButtonPress( const MouseButtonEvent& mbe )
 {
+	if( isTool(GizmoTool::Camera) )
+		return;
+
 	if( mbe.button != MouseButton::Left )
 		return;
 
@@ -271,7 +278,9 @@ void GizmoPlugin::onMouseButtonPress( const MouseButtonEvent& mbe )
 		events->onNodeSelect(res.node);
 	}
 	else
+	{
 		unselectNodes();
+	}
 }
 
 //-----------------------------------//

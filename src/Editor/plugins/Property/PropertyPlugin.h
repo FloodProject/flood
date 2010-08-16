@@ -9,7 +9,6 @@
 #pragma once
 
 #include "Plugin.h"
-#include <wx/propgrid/property.h>
 
 namespace vapor { namespace editor {
 
@@ -43,22 +42,10 @@ public:
 	// Scene update callback.
 	virtual void onSceneUpdate();
 
+	// Field change callback.
+	void onFieldChanged(const Field& field);
+
 protected:
-
-	// Populates properties on the grid.
-	void showNodeProperties( const NodePtr& );
-
-	// Appends the type fields to the property grid.
-	void appendObjectFields(const Class& type, void* object);
-
-	// Creates a new property for a primitive type.
-	wxPGProperty* createPrimitiveProperty(const Field& field, void* object);
-
-	// Creates a new property for an enum type.
-	wxPGProperty* createEnumProperty(const Field& field, void* object);
-
-	// Formats the given string to a readable version for display.
-	wxString convertToReadable(const wxString& str);
 
 	PropertyPage* propertyPage;
 	int iconProperty;

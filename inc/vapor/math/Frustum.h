@@ -27,6 +27,8 @@ namespace Projection
         Orthographic,
         Perspective
     };
+
+	DECLARE_ENUM()
 }
 
 //-----------------------------------//
@@ -40,6 +42,8 @@ namespace Projection
 
 class VAPOR_API Frustum
 {
+	DECLARE_CLASS_()
+
 public:
 
     // Constructs the 6 planes making up the frustum, using the passed parameters.
@@ -62,13 +66,13 @@ public:
 public:
 
 	// Projection type.
-	Projection::Enum typeProjection;
+	Projection::Enum projectionType;
 	
 	// Projection matrix.
-	Matrix4x4 matProjection;
+	Matrix4x4 projectionMatrix;
 
 	// Field of view.
-	float angleFOV;
+	float fieldOfView;
 
 	// Near clipping plane.
 	float nearPlane;

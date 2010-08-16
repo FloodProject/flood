@@ -48,6 +48,13 @@ const RenderableList&  Geometry::getRenderables( RenderGroup::Enum group )
 }
 
 //-----------------------------------//
+
+void Geometry::markDirty()
+{
+	isDirty = true;
+}
+
+//-----------------------------------//
  
 void Geometry::appendRenderables( RenderQueue& queue, TransformPtr transform )
 {

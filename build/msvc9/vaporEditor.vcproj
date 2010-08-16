@@ -620,6 +620,14 @@
 				Name="Property"
 				>
 				<File
+					RelativePath="..\..\src\Editor\plugins\Property\PropertyOperation.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Editor\plugins\Property\PropertyOperation.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Editor\plugins\Property\PropertyPage.cpp"
 					>
 				</File>

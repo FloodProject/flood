@@ -96,8 +96,8 @@ CellPtr Terrain::createCell( short x, short y, std::vector<float>& heights )
 	cell->setMaterial( cellMaterial );
 	addRenderable( cell );
 
-	// Forces AABB generation next update.
-	isDirty = true;
+	// Forces bounding volume update.
+	markDirty();
 
 	terrainCells.push_back(cell);
 	

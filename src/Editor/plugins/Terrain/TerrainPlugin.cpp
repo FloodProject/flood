@@ -187,6 +187,14 @@ void TerrainPlugin::createContextMenu( const MouseButtonEvent& mbe )
 			menu.Bind( wxEVT_COMMAND_MENU_SELECTED,
 				&TerrainPlugin::onRebuildNormals, this,
 				rebuildNormalsButton->GetId() );
+
+			// TODO:
+			//wxMenuItem* removeCellButton =
+			//	menu.Append(wxID_ANY, "Remove cell");
+
+			//menu.Bind( wxEVT_COMMAND_MENU_SELECTED,
+			//	&TerrainPlugin::onRemoveCell, this,
+			//	removeCellButton->GetId() );
 		}
 		else
 		{

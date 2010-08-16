@@ -15,13 +15,13 @@ namespace vapor {
 //-----------------------------------//
 
 BEGIN_CLASS(Component)
-	FIELD_PRIMITIVE(Component, bool, drawDebugRenderable)
+	FIELD_PRIMITIVE(Component, bool, debugVisible)
 END_CLASS()
 
 //-----------------------------------//
 
 Component::Component()
-	: drawDebugRenderable( false )
+	: debugVisible( false )
 { }
 
 //-----------------------------------//
@@ -31,16 +31,16 @@ Component::~Component()
 
 //-----------------------------------//
 
-void Component::setDebugRenderableVisible( bool draw )
+void Component::setDebugRenderableVisible( bool visible )
 {
-	drawDebugRenderable = draw;
+	debugVisible = visible;
 }
 
 //-----------------------------------//
 
 bool Component::isDebugRenderableVisible() const
 {
-	return drawDebugRenderable;
+	return debugVisible;
 }
 
 //-----------------------------------//

@@ -39,4 +39,14 @@ const FieldsMap& Class::getFields() const
 
 //-----------------------------------//
 
+void Class::notifyChanged(const Field& field) const
+{
+	if( onFieldChanged.empty() )
+		return;
+	
+	onFieldChanged(field);
+}
+
+//-----------------------------------//
+
 } // end namespace

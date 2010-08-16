@@ -8,22 +8,18 @@
 
 #pragma once
 
-#include "vapor/math/Color.h"
-#include "vapor/render/Sphere.h"
 #include "vapor/scene/Geometry.h"
 #include "vapor/scene/Camera.h"
+#include "vapor/render/Sphere.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
 /**
- * Implements a skydome, a higher-quality alternative to skyboxes, using
- * half of a sphere in the background (can also be 3/4 or more if needed).
- * This component is tipically used to simulate a sky system, with moving
- * clouds, and a big texture representing the horizon, but this class only
- * takes care of the sphere generation and texture mapping. A proper sky
- * system can be implemented on top of this class if needed.
+ * Implements a skydome, an alternative to skyboxes, using a (semi) sphere
+ * instead of a cube to simulate the horizon and sky. This component also
+ * simulates a dynamic sky, with moving clouds.
  */
 
 class VAPOR_API Skydome : public Geometry
@@ -33,6 +29,7 @@ class VAPOR_API Skydome : public Geometry
 public:
 
 	Skydome( const CameraPtr& camera );
+	virtual ~Skydome();
 
 	// SKY
 
@@ -77,6 +74,9 @@ protected:
 	// Generates the sky bodies.
 	void generateBodies();
 
+	// Field change callback.
+	void onFieldChanged(const Field& field);
+
 	// Keeps track of the current virtual game time.
 	float currentTime;
 
@@ -90,6 +90,7 @@ protected:
 
 	// Show clouds.
 	bool showClouds;
+	TexturePtr texClouds;
 
 	// Celestial bodies geometry.
 	TransformPtr sun;

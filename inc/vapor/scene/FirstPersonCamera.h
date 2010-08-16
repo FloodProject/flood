@@ -24,7 +24,7 @@ namespace vapor {
 
 class VAPOR_API FirstPersonCamera : public Camera
 {
-	DECLARE_CLASS_()
+	//DECLARE_CLASS_()
 
 public:
 

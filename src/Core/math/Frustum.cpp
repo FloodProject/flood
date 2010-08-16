@@ -13,22 +13,24 @@ namespace vapor {
 
 //-----------------------------------//
 
-//std::string Projection::toString( Projection::Enum proj )
-//{
-//	switch(proj)
-//	{
-//	case Projection::Orthographic:
-//		return "Ortographic";
-//	case Projection::Perspective:
-//		return "Perspective";
-//	}
-//}
+BEGIN_ENUM(Projection)
+	ENUM(Orthographic)
+	ENUM(Perspective)
+END_ENUM()
+
+BEGIN_CLASS(Frustum)
+	FIELD_ENUM(Frustum, Projection, projectionType)
+	FIELD_PRIMITIVE(Frustum, float, fieldOfView)
+	FIELD_PRIMITIVE(Frustum, float, nearPlane)
+	FIELD_PRIMITIVE(Frustum, float, farPlane)
+	FIELD_PRIMITIVE(Frustum, float, aspectRatio)
+END_CLASS()
 
 //-----------------------------------//
 
 Frustum::Frustum()
-	: typeProjection( Projection::Perspective )
-	, angleFOV(60)
+	: projectionType( Projection::Perspective )
+	, fieldOfView(60)
 	, nearPlane(1)
 	, farPlane(100)
 	, aspectRatio(0)
@@ -37,9 +39,9 @@ Frustum::Frustum()
 //-----------------------------------//
 
 Frustum::Frustum( const Frustum& rhs )
-	: typeProjection( rhs.typeProjection )
-	, matProjection( rhs.matProjection )
-	, angleFOV( rhs.angleFOV )
+	: projectionType( rhs.projectionType )
+	, projectionMatrix( rhs.projectionMatrix )
+	, fieldOfView( rhs.fieldOfView )
 	, nearPlane( rhs.nearPlane )
 	, farPlane( rhs.farPlane )
 	, aspectRatio( rhs.aspectRatio )
@@ -49,14 +51,14 @@ Frustum::Frustum( const Frustum& rhs )
 
 void Frustum::updateProjection( const Vector2i& size )
 {
-	if( typeProjection == Projection::Perspective )
+	if( projectionType == Projection::Perspective )
 	{
-		matProjection = Matrix4x4::createPerspectiveProjection(
-			angleFOV, aspectRatio, nearPlane, farPlane );
+		projectionMatrix = Matrix4x4::createPerspectiveProjection(
+			fieldOfView, aspectRatio, nearPlane, farPlane );
 	}
 	else
 	{
-		matProjection = Matrix4x4::createOrthographicProjection(
+		projectionMatrix = Matrix4x4::createOrthographicProjection(
 			0, size.x, 0, size.y, nearPlane, farPlane );
 	}
 }
@@ -70,7 +72,7 @@ void Frustum::updatePlanes( const Matrix4x3& matView )
 	// http://www.cs.otago.ac.nz/postgrads/alexis/planeExtraction.pdf
 
 	Matrix4x4 matView4( matView );
-	Matrix4x4 matClip = matView * matProjection;
+	Matrix4x4 matClip = matView * projectionMatrix;
 
 	// Left clipping plane
 	planes[0].normal.x = matClip.m14 + matClip.m11;
@@ -121,7 +123,7 @@ void Frustum::updatePlanes( const Matrix4x3& matView )
 
 void Frustum::updateCorners( const Matrix4x3& matView )
 {
-	Matrix4x4 matInvClip = matProjection.inverse();
+	Matrix4x4 matInvClip = projectionMatrix.inverse();
 
 	// The following are the corner points of the frustum (which becomes
 	// a unit cube) in clip space. Check the diagram for more information:

@@ -169,7 +169,7 @@ bool RenderDevice::setupRenderState( const RenderState& state, Camera* camera )
 
 	const Matrix4x3& matModel = state.modelMatrix;
 	const Matrix4x3& matView = camera->getViewMatrix();
-	const Matrix4x4& matProjection = frustum.matProjection;
+	const Matrix4x4& matProjection = frustum.projectionMatrix;
 
 	const RenderablePtr& rend = state.renderable;
 	const MaterialPtr& material = rend->getMaterial();
@@ -232,7 +232,7 @@ void RenderDevice::updateLightDepth( LightState& state )
 	bias.tz  = 0.5f;
 
 	const Frustum& frustum = lightCamera->getFrustum();
-	const Matrix4x4& matProjection = frustum.matProjection;
+	const Matrix4x4& matProjection = frustum.projectionMatrix;
 
 	state.projection = lightCamera->getViewMatrix()
 		* matProjection * bias;

@@ -11,6 +11,7 @@
 #include "ScenePage.h"
 #include "Editor.h"
 #include "EditorIcons.h"
+#include "Events.h"
 
 namespace vapor { namespace editor {
 
@@ -56,6 +57,10 @@ void ScenePlugin::onPluginEnable()
 
 	if( !scenePageAdded )
 		warn( "editor", "Could not add page to notebook" );
+
+	// Subscribe as an event listener.
+	Events* events = editor->getEventManager();
+	events->addEventListener(this);
 }
 
 //-----------------------------------//
@@ -63,6 +68,37 @@ void ScenePlugin::onPluginEnable()
 void ScenePlugin::onPluginDisable()
 {
 	removePage( scenePage );
+
+	// Unsubscribe as an event listener.
+	Events* events = editor->getEventManager();
+	events->removeEventListener(this);
+}
+
+//-----------------------------------//
+
+void ScenePlugin::onNodeSelect( const NodePtr& node )
+{
+	if( scenePage->sentLastSelectionEvent )
+		return;
+
+	wxTreeItemId nodeId = scenePage->getTreeIdFromNode(node);
+
+	if( !nodeId.IsOk() )
+		return;
+
+	//wxTreeCtrl* treeCtrl = scenePage->getTreeCtrl();
+	//treeCtrl->SelectItem(nodeId);
+}
+
+//-----------------------------------//
+
+void ScenePlugin::onNodeUnselect( const NodePtr& node )
+{
+	if( scenePage->sentLastSelectionEvent )
+		return;
+
+	wxTreeCtrl* treeCtrl = scenePage->getTreeCtrl();
+	treeCtrl->Unselect();
 }
 
 //-----------------------------------//

@@ -50,7 +50,7 @@ public:
 	virtual bool isDebugRenderableVisible() const;
 	
 	// Sets the debug renderable as visible.
-	virtual void setDebugRenderableVisible( bool draw );
+	virtual void setDebugRenderableVisible( bool visible );
 	
 	// Gets the debug renderable of this component.
 	virtual RenderablePtr getDebugRenderable() const;
@@ -60,8 +60,8 @@ protected:
 	// Node that owns this component.
 	NodeWeakPtr node;
 
-	// Should the debug represention be rendereed.
-	bool drawDebugRenderable;
+	// Is the debug representation visible.
+	bool debugVisible;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Component )

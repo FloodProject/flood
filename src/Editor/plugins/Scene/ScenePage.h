@@ -10,7 +10,20 @@
 
 namespace vapor { namespace editor {
 
+//-----------------------------------//
+
 class EditorFrame;
+typedef std::map<NodeWeakPtr, wxTreeItemId> NodeIdsMap;
+
+//-----------------------------------//
+
+class NodeItemData : public wxTreeItemData
+{
+public:
+
+	NodeWeakPtr node;
+	ComponentWeakPtr component;
+};
 
 //-----------------------------------//
 
@@ -29,17 +42,36 @@ public:
 	ScenePage( EditorFrame*, wxWindow* parent, wxWindowID id = wxID_ANY );
 	virtual ~ScenePage();
 
-	// Gets the entity represented by the tree item.
-	NodePtr getEntity( wxTreeItemId id );
+	// Gets the tree control.
+	GETTER(TreeCtrl, wxTreeCtrl*, treeCtrl)
+
+	// Gets the node associated with the tree item.
+	NodePtr getNodeFromTreeId( wxTreeItemId id );
+
+	// Gets the tree id from the node.
+	wxTreeItemId getTreeIdFromNode(const NodePtr& node);
+
+	// Did we send the last selection event.
+	bool sentLastSelectionEvent;
 
 protected:
 
-	// Initializes the control and icons.
+	// Initializes the control.
 	void initControl();
-	void initIcons();
-	void initScene( wxTreeItemId id, const NodePtr& node );
 
-	// wxWidgets events.
+	// Initializes the icons list.
+	void initIcons();
+
+	// Adds a node and its children to the tree.
+	void addNodeRecursively( wxTreeItemId id, const NodePtr& node );
+
+	// Adds a new node to the tree.
+	wxTreeItemId addNode( const NodePtr& node );
+
+	// Adds a component to the tree item.
+	void addComponent( wxTreeItemId id, ComponentPtr component );
+
+	// wxWidgets event callbacks.
 	void onItemChanged( wxTreeEvent& );
 	void onItemMenu( wxTreeEvent& );
 	void onLabelEditBegin( wxTreeEvent& );
@@ -49,10 +81,6 @@ protected:
 	void onMouseRightUp( wxContextMenuEvent& );
 	void onNodeMenu( wxCommandEvent& );
 	void onComponentAdd( wxCommandEvent& );
-
-	wxTreeItemId addNode( const NodePtr& node );
-	void addComponent( wxTreeItemId id, ComponentPtr  );
-
 	void onButtonNodeAdd(wxCommandEvent&);
 	void onButtonNodeDelete(wxCommandEvent&);
 	void onButtonNodeDeleteUpdate(wxUpdateUIEvent&);
@@ -62,10 +90,11 @@ protected:
 	void onNodeRemoved( const GroupEvent& );
 
 	// Scene tree.
-	wxTreeCtrl* tree;
-	wxTreeItemId root;
+	wxTreeCtrl* treeCtrl;
+	wxTreeItemId rootId;
 	wxTreeItemId menuItemId;
 	wxTreeItemId dragItemId;
+	NodeIdsMap nodeIds;
 
 	// Tree icons.
 	wxImageList* imageList;
@@ -75,11 +104,17 @@ protected:
 	wxBitmapButton* buttonNodeAdd;
 	wxBitmapButton* buttonNodeDelete;
 
-	// Scene associated this control.
-	Engine* engine;
+	// Editor instance.
 	EditorFrame* editor;
+
+	// Engine instance.
+	Engine* engine;
+
+	// Scene instance.
 	SceneWeakPtr weakScene;
 	
+private:
+
 	DECLARE_EVENT_TABLE()
 };
 

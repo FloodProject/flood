@@ -106,26 +106,26 @@ void Transform::rotate( float xang, float yang, float zang )
 
 //-----------------------------------//
 
-void Transform::setPosition( const Vector3& position )
+void Transform::setPosition( const Vector3& newTranslation )
 {
 	needsNotify = true;
-	translation = position;
+	translation = newTranslation;
 }
 
 //-----------------------------------//
 
-void Transform::setRotation( const EulerAngles& rot )
+void Transform::setRotation( const EulerAngles& newRotation )
 {
 	needsNotify = true;
-	rotation = rot;
+	rotation = newRotation;
 }
 
 //-----------------------------------//
 
-void Transform::setScale( const Vector3& scale )
+void Transform::setScale( const Vector3& newScale )
 {
 	needsNotify = true;
-	scaling = scale;
+	scaling = newScale;
 }
 
 //-----------------------------------//

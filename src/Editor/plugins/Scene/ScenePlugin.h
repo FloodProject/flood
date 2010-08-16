@@ -33,6 +33,12 @@ public:
 	// Plugin disable callback.
 	virtual void onPluginDisable();
 
+	// Node selection callback.
+	virtual void onNodeSelect( const NodePtr& );
+	
+	// Node unselection callback.
+	virtual void onNodeUnselect( const NodePtr& );
+
 protected:
 
 	ScenePage* scenePage;

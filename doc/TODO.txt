@@ -1,6 +1,9 @@
 WIP (work-in-progress)
 ======================
 
+Serialization
+Light and Camera debug
+
 EDITOR:
 -------
 
@@ -60,6 +63,8 @@ Skydome component:
 
 	Add billboards for Sun and Moon
 	Switch to triangle strips
+	Fix the gradient color generation
+	Add dynamic day-night system
 
 Scene:
 

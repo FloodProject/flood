@@ -16,7 +16,7 @@ namespace vapor {
 //-----------------------------------//
 
 typedef std::map<std::string, Field*> FieldsMap;
-typedef std::pair<const std::string, Field*> FieldsPair; 
+typedef std::pair<const std::string, Field*> FieldsPair;
 
 //-----------------------------------//
 
@@ -39,7 +39,40 @@ public:
 	// Adds a field to the class.
 	void addField(Field& field);
 
+	// Gets a value in the field.
+	template<typename T>
+	bool getFieldValue( const std::string& f, const void* obj, T& value )
+	{
+		if( fields.find(f) == fields.end() )
+			return false;
+
+		Field* field = fields[f];
+		value = field->get<T>(obj);
+
+		return true;
+	}
+
+	// Sets a value in the field.
+	template<typename T>
+	bool setFieldValue( const std::string& f, const void* obj, const T& value )
+	{
+		if( fields.find(f) == fields.end() )
+			return false;
+
+		Field* field = fields[f];
+		field->set<T>(obj, value);
+
+		notifyChanged(*field);
+		return true;
+	}
+
+	// Sent when a field value is changed.
+	fd::delegate<void(const Field&)> onFieldChanged;
+
 protected:
+
+	// Notifies watchers that the field changed.
+	void notifyChanged(const Field& field) const;
 
 	// Keeps track of type fields.
 	FieldsMap fields;
@@ -66,7 +99,7 @@ public:																	\
 #define END_CLASS()														\
 	return type; }
 
-#define FIELD_COMMON(classType, fieldName)													\
+#define FIELD_COMMON(classType, fieldName)								\
 	fieldName.offset = offsetof(classType, fieldName);					\
 	fieldName.name = TOSTRING(fieldName);								\
 	type.addField(fieldName);

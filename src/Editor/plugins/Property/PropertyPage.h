@@ -15,12 +15,25 @@ namespace vapor { namespace editor {
 //-----------------------------------//
 
 class EditorFrame;
+class PropertyOperation;
+
+//-----------------------------------//
+
+class PropertyData : public wxClientData
+{
+public:
+
+	const Type* type;
+	const Field* field;
+	const void* object;
+};
 
 //-----------------------------------//
 
 /**
- * This control is responsible for providing a page with component and
- * node properties, so they can be viewed and edited.
+ * This control is responsible for providing a page with a property editor.
+ * It uses the reflection system provided by the engine to introspect the
+ * types and allow easy editing of the fields.
  */
 
 class PropertyPage : public wxPropertyGrid
@@ -32,23 +45,34 @@ public:
 		const wxPoint& pos = wxDefaultPosition,
 		const wxSize& size = wxDefaultSize );
 
-	~PropertyPage();
+	// Populates properties on the grid.
+	void showNodeProperties( const NodePtr& );
 
-	// Synchronizes the tree with the resources.
-	void updateTree();
+	// Appends the type fields to the property grid.
+	void appendObjectFields(const Class& type, void* object, bool newCategory = true);
+
+	// Creates a new property for a primitive type.
+	wxPGProperty* createPrimitiveProperty(const Field& field, void* object);
+
+	// Creates a new property for an enum type.
+	wxPGProperty* createEnumProperty(const Field& field, void* object);
 
 protected:
 
+	// Initializes the control.
 	void initControl();
 
-	void onItemMenu(wxTreeEvent& event);
+	// Callback when property value is about to change.
+	void onPropertyChanging(wxPropertyGridEvent& event);
 
+	// Callback when property value changes.
+	void onPropertyChanged(wxPropertyGridEvent& event);
+
+	// Current property value.
+	wxAny propertyValue;
+
+	// Editor instance.
 	EditorFrame* editor;
-	Engine* engine;
-
-private:
-
-	DECLARE_EVENT_TABLE()
 };
 
 //-----------------------------------//

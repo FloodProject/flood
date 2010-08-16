@@ -24,15 +24,18 @@ public:
 
 	Field( const Type& type );
 
-	template<typename T> const T& get(void* object) const
+	template<typename T>
+	const T& get( const void* object ) const
 	{
-		T* ptr = (T*)((bool*)object + offset);
+		T* ptr = (T*)((byte*)object + offset);
 		return *ptr;
 	}
 
-	template<typename T> void set( const T& value ) const
+	template<typename T>
+	void set( const void* object, const T& value ) const
 	{
-		(*(T*)ptr) = value;
+		T* ptr = (T*)((byte*)object + offset);
+		*ptr = value;
 	}
 
 public:

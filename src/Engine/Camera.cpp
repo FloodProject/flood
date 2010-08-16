@@ -18,7 +18,7 @@ namespace vapor {
 //-----------------------------------//
 
 BEGIN_CLASS_PARENT(Camera, Component)
-	//FIELD_CLASS(Camera, Frustum, frustum)
+	FIELD_CLASS(Camera, Frustum, frustum)
 END_CLASS()
 
 //-----------------------------------//
@@ -31,7 +31,7 @@ Camera::Camera( RenderDevice* device )
 {
 	assert( device != nullptr );
 
-	frustum.angleFOV = 45;
+	frustum.fieldOfView = 45;
 	frustum.nearPlane = 1;
 	frustum.farPlane = 5000;
 }
@@ -226,7 +226,7 @@ Ray Camera::getRay( float screenX, float screenY, Vector3* outFar ) const
 	Vector3 nearPoint(screenX, viewSize.y - screenY, 0);
 	Vector3 farPoint (screenX, viewSize.y - screenY, 1);
 
-	const Matrix4x4& matProjection = frustum.matProjection;
+	const Matrix4x4& matProjection = frustum.projectionMatrix;
 
 	Vector3 rayOrigin =
 		viewport->Unproject(nearPoint, matProjection, viewMatrix);
