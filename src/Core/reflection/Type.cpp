@@ -17,7 +17,10 @@ Type::Type(MetaType::Enum type, const std::string& name)
 	: metaType(type)
 	, name(name)
 	, parent(nullptr)
-{ }
+{
+	TypeRegistry& typeRegistry = TypeRegistry::getInstance();
+	typeRegistry.registerType(*this);
+}
 
 //-----------------------------------//
 
@@ -25,7 +28,10 @@ Type::Type(MetaType::Enum type, const std::string& name, const Type& _parent)
 	: metaType(type)
 	, name(name)
 	, parent(&_parent)
-{ }
+{
+	TypeRegistry& typeRegistry = TypeRegistry::getInstance();
+	typeRegistry.registerType(*this);
+}
 
 //-----------------------------------//
 
@@ -67,6 +73,34 @@ bool Type::isClass() const
 bool Type::isEnum() const
 {
 	return metaType == MetaType::Enumeration;
+}
+
+//-----------------------------------//
+
+void TypeRegistry::registerType(const Type& type)
+{
+	const std::string& typeName = type.getName();
+	registeredTypes[typeName] = &type;
+}
+
+//-----------------------------------//
+
+const Type* TypeRegistry::getType(const std::string& type)
+{
+	TypeRegistryMap::iterator it = registeredTypes.find(type);
+
+	if( it == registeredTypes.end() )
+		return nullptr;
+
+	return registeredTypes[type];
+}
+
+//-----------------------------------//
+
+TypeRegistry& TypeRegistry::getInstance()
+{
+	static TypeRegistry typeRegistry;
+	return typeRegistry;
 }
 
 //-----------------------------------//

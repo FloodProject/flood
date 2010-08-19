@@ -9,7 +9,6 @@
 #pragma once
 
 #include "vapor/scene/Geometry.h"
-#include "vapor/scene/Camera.h"
 #include "vapor/render/Sphere.h"
 
 namespace vapor {
@@ -28,7 +27,7 @@ class VAPOR_API Skydome : public Geometry
 
 public:
 
-	Skydome( const CameraPtr& camera );
+	Skydome();
 	virtual ~Skydome();
 
 	// SKY
@@ -88,15 +87,17 @@ protected:
 	Color skyColorBottom;
 	float yMin, yMax;
 
+	// Keeps track if sky follows the camera.
+	bool followCamera;
+
 	// Show clouds.
 	bool showClouds;
-	TexturePtr texClouds;
+
+	// Image of the clouds.
+	ImagePtr imgClouds;
 
 	// Celestial bodies geometry.
 	TransformPtr sun;
-
-	// Current camera transform.
-	CameraPtr camera;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Skydome );

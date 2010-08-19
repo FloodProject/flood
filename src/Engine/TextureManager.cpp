@@ -31,8 +31,9 @@ TextureManager::~TextureManager()
 	rm->onResourceLoaded -= fd::bind( &TextureManager::onLoad, this );
 	rm->onResourceReloaded -= fd::bind( &TextureManager::onReload, this );
 
-	foreach( const TextureMapPair& p, textures )
-		assert( p.second->getReferenceCount() == 2 );
+	#pragma TODO("Make sure all textures are released on exit")
+	//foreach( const TextureMapPair& p, textures )
+	//	assert( p.second->getReferenceCount() == 2 );
 }
 
 //-----------------------------------//

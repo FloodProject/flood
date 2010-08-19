@@ -26,7 +26,6 @@ namespace PrimitiveType
 		Float,
 		Double,
 		String,
-
 		Vector3,
 		Color,
 	};
@@ -61,8 +60,6 @@ public:
 	// Gets if this type represents an string.
 	bool isString() const;
 
-
-
 	// Gets if this type represents a vector.
 	bool isVector3() const;
 
@@ -83,7 +80,6 @@ public:
 	static const Primitive _float;
 	static const Primitive _double;
 	static const Primitive _string;
-	
 	static const Primitive _Vector3;
 	static const Primitive _Color;
 };

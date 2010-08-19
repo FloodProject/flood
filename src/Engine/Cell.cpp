@@ -23,6 +23,12 @@ Cell::Cell( const TerrainSettings& settings,
 	, heights( heights )
 	, x(x), y(y)
 {
+	// Make a copy of the default cell material.
+	MaterialPtr material = new Material(*settings.Material);
+	setMaterial(material);
+	
+	//material->setTexture(0, default);
+
 	// Create a new VBO and upload triangle data
 	VertexBufferPtr vb( new VertexBuffer() );
 	IndexBufferPtr ib( new IndexBuffer() );

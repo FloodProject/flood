@@ -412,7 +412,7 @@ void TerrainOperation::updateNormals()
 	RenderablePtr renderable = res.renderable;
 	assert( renderable != nullptr );
 
-	// TODO: Submit this as a task so it is done in the background.
+	#pragma TODO("Generate terrain normals in the background")
 	CellPtr cell = boost::static_pointer_cast<Cell>( renderable );
 	cell->rebuildNormals();
 }
@@ -434,7 +434,7 @@ void TerrainOperation::processState( std::vector<float>& heights, bool save )
 	if( save )
 	{
 		// We only need the height of the vertex. This way we can save some memory.
-		// TODO: There is no need to save the unmodified heights of the terrain.
+		#pragma TODO("There is no need to save the unmodified heights of the terrain")
 
 		foreach( const Vector3& v, vb->getVertices() )
 			heights.push_back( v.y );

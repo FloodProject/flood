@@ -73,8 +73,6 @@ protected:
 	bool isDirty;
 
 	bool setupDone;
-
-	static Type typeInfo;
 };
 
 //-----------------------------------//

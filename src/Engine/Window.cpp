@@ -8,6 +8,7 @@
 
 #include "vapor/PCH.h"
 #include "vapor/render/Window.h"
+#include "vapor/input/Keyboard.h"
 
 #if defined(VAPOR_WINDOWING_WIN32)
 	#include <vapor/render/Win32_Window.h>

@@ -23,9 +23,11 @@ namespace vapor {
 
 struct TerrainSettings
 {
+	//DECLARE_CLASS_();
+
 	TerrainSettings()
-		: CellSize( 500 )
-		, NumberTiles( 16 )
+		: CellSize(500)
+		, NumberTiles(16)
 	{ }
 
 	// Material for each cell.
@@ -72,6 +74,7 @@ class VAPOR_API Terrain : public Geometry
 
 public:
 
+	Terrain();
 	Terrain( const TerrainSettings& settings );
 
 	// Adds a new cell of terrain with default heights.
@@ -95,12 +98,6 @@ public:
 	// Applies a brush operation in a specified region.
 	//void applyBrush( const Brush& brush, const Region& region );
 
-	// Gets/sets the material of the terrain.
-	ACESSOR(Material, MaterialPtr, cellMaterial)
-
-	// Gets/sets the heightmap of the terrain.
-	ACESSOR(Heightmap, ImagePtr, heightmap)
-
 	// Updates the terrain geometry if needed.
 	virtual void update( double delta );
 
@@ -112,22 +109,14 @@ protected:
 	// Creates a new cell of terrain with a given heightmap.
 	CellPtr createCellHeightmap( short x, short y, const ImagePtr& heightmap );
 
-	// Provides the heights of the terrain.
-	ImagePtr heightmap;
-
-	// Pages of the terrain.
+	// Cells of the terrain.
 	std::vector<CellPtr> terrainCells;
 
-	// Material for this terrain.
-	MaterialPtr cellMaterial;
-
+	// Holds temporary cell creation requests.
 	std::list<CellRequest> requestsQueue;
 
 	// Terrain settings.
 	TerrainSettings settings;
-
-	// Component type.
-	static Type typeInfo;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Terrain );

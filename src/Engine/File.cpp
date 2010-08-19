@@ -17,15 +17,14 @@ namespace vapor {
 
 //-----------------------------------//
 
-File::File(const std::string& path_, AccessMode::Enum e)
-	: path(path_),
-	accessMode(e),
-	file(nullptr),
-	closed(false)
+File::File(const std::string& fullPath, AccessMode::Enum e)
+	: path(path)
+	, accessMode(e)
+	, file(nullptr)
+	, closed(false)
 {
-	// Sanitize paths.
-	if( path[0] == '.' && path[1] == '\\' )
-		path.erase(0, 2);
+	std::vector<std::string> elems = String::split( fullPath, '\\' );
+	path = elems.back();
 
 	open();
 }
@@ -204,15 +203,15 @@ long File::read(void* buffer, long size ) const
 		return -1;	
 	}
 
-	return static_cast< long >( bytesRead );
+	return static_cast<long>( bytesRead );
 }
 
 //-----------------------------------//
 
 std::vector<std::string> File::readLines() const
 {
-	std::vector<byte> font = read();
-	std::string str( font.begin(), font.end() );
+	std::vector<byte> data = read();
+	std::string str( data.begin(), data.end() );
 	
 	std::vector<std::string> lines = String::split(str, '\n');
 	
@@ -301,14 +300,14 @@ long File::tell() const
 
 	PHYSFS_sint64 pos = PHYSFS_tell(file);
 	
-	return static_cast< long >( pos );
+	return static_cast<long>( pos );
 }
 
 //-----------------------------------//
 
 bool File::exists() const
 {
-	return ( file && exists( path ) );
+	return file && exists(path);
 }
 
 //-----------------------------------//

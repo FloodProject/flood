@@ -39,6 +39,9 @@ public:
 	// Node unselection callback.
 	virtual void onNodeUnselect( const NodePtr& );
 
+	// Scene load callback.
+	void onSceneLoad( const ScenePtr& scene );
+
 protected:
 
 	ScenePage* scenePage;

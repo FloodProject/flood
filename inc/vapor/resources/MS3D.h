@@ -43,7 +43,7 @@ protected:
 	void clear();
 
 	// Builds the vertex and index buffers representing the mesh.
-	void build( std::vector<RenderablePtr>& renderables );
+	void build();
 	bool hasMaterial( const ms3d_group_t& g );
 
 	// Reads and parses the MilkShape3D meshes structures.

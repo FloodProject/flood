@@ -9,16 +9,15 @@
 #include "vapor/PCH.h"
 #include "vapor/input/Keyboard.h"
 
+#pragma TODO("Fix the size of the key states")
+
 namespace vapor {
 
 //-----------------------------------//
 
 Keyboard::Keyboard()
-	: keyState(1024, false),
-	lastKey(Keys::Space)
-// TODO: keyState size hack! previous solution, assigning it to Keys::Pause
-// was causing a heap overflow, probably was off-by-1 error, but assigning
-// a bigger size, like 1024 is probably safer...
+	: keyState(1024, false)
+	, lastKey(Keys::Space)
 { }
 
 //-----------------------------------//

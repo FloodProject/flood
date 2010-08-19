@@ -55,7 +55,13 @@ public:
 	void close();
 
 	// Read file into buffer.
-	long read(void* buffer, long size);
+	long read(void* buffer, long size) const;
+
+	// Read entire file.
+	std::vector<byte> read() const;
+
+	// Read entire file as string.
+	std::string readString() const;
 
 	// Write text into file.
 	long write(const std::string& text);
@@ -64,7 +70,7 @@ public:
 	long write(const std::vector<byte>& buf);
 
 	// Gets the file size.
-	long getSize();
+	long getSize() const;
 
 	// Gets the path of the file.
 	GETTER(Path, const std::string, path)
@@ -73,7 +79,7 @@ public:
 	void setBuffering(bool state);
 
 	// Checks if this file exists.
-	bool exists();
+	bool exists() const;
 	
 	// Checks if the file in path exists.
 	static bool exists(const std::string& path);

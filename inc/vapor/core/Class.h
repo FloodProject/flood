@@ -33,6 +33,9 @@ public:
 	Class(const std::string& name);
 	Class(const std::string& name, const Type& parent);
 
+	// Gets the field with the given name.
+	Field* getField(const std::string& name) const;
+
 	// Gets the fields of the class.
 	const FieldsMap& getFields() const;
 
@@ -43,10 +46,11 @@ public:
 	template<typename T>
 	bool getFieldValue( const std::string& f, const void* obj, T& value )
 	{
-		if( fields.find(f) == fields.end() )
+		Field* field = getField(f);
+		
+		if( !field )
 			return false;
 
-		Field* field = fields[f];
 		value = field->get<T>(obj);
 
 		return true;
@@ -56,10 +60,11 @@ public:
 	template<typename T>
 	bool setFieldValue( const std::string& f, const void* obj, const T& value )
 	{
-		if( fields.find(f) == fields.end() )
+		Field* field = getField(f);
+		
+		if( !field )
 			return false;
 
-		Field* field = fields[f];
 		field->set<T>(obj, value);
 
 		notifyChanged(*field);
@@ -89,15 +94,17 @@ public:																	\
 	virtual const Class& getInstanceType() const { return getType(); }
 
 #define BEGIN_CLASS(name)												\
+	static Class& _ = name::getType();									\
 	Class& name::getType()												\
 	{ static Class type(TOSTRING(name));
 
 #define BEGIN_CLASS_PARENT(name, parent)								\
+	static Class& _ = name::getType();									\
 	Class& name::getType()												\
 	{ static Class type(TOSTRING(name), parent::getType());
 
 #define END_CLASS()														\
-	return type; }
+	return type; }														\
 
 #define FIELD_COMMON(classType, fieldName)								\
 	fieldName.offset = offsetof(classType, fieldName);					\
@@ -106,6 +113,11 @@ public:																	\
 
 #define FIELD_CLASS(classType, fieldType, fieldName)					\
 	static Field fieldName(fieldType::getType());						\
+	FIELD_COMMON(classType, fieldName)
+
+#define FIELD_CLASS_PTR(classType, fieldType, fieldName)				\
+	static Field fieldName(fieldType::getType());						\
+	fieldName.pointer = true;											\
 	FIELD_COMMON(classType, fieldName)
 
 #define FIELD_ENUM(classType, fieldType, fieldName)						\

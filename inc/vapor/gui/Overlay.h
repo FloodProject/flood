@@ -112,8 +112,6 @@ protected:
 
 	// Overlay position.
 	Vector2i position;
-
-	static Type typeInfo;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Overlay );

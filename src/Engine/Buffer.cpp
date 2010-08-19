@@ -16,14 +16,10 @@ namespace vapor {
 
 Buffer::Buffer() 
 {
-	// TODO: make this check somewhere else
-	if(GLEW_ARB_vertex_buffer_object)
-	{
-		glGenBuffers( 1, &id );
+	glGenBuffers( 1, &id );
 
-		if( glHasError("Error generating a new buffer") )
-			return;
-	}
+	if( glHasError("Error generating a new buffer") )
+		return;
 }
 
 //-----------------------------------//
@@ -40,7 +36,7 @@ Buffer::~Buffer()
 
 GLenum Buffer::getGLBufferType( BufferUsage::Enum bU, BufferAccess::Enum bA )
 {
-	// TODO: is this right? -.-
+	#pragma TODO("Rewrite the buffer usage flags")
 
 	if( bU == BufferUsage::Stream && bA == BufferAccess::Read ) return GL_STREAM_READ;
 	if( bU == BufferUsage::Stream && bA == BufferAccess::Write ) return GL_STREAM_DRAW;

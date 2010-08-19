@@ -22,13 +22,18 @@ namespace vapor {
 
 class Mesh : public Resource
 {
+	DECLARE_CLASS_()
+
 public:
 
 	// Builds the geometry of the mesh.
-	virtual void build( std::vector<RenderablePtr>& renderables ) = 0;
+	virtual void build() = 0;
 	
 	// Gets if the mesh is built.
 	bool isBuilt() const;
+
+	// Gets the renderables of the mesh.
+	void appendRenderables( std::vector<RenderablePtr>& renderables );
 
 	// Gets the resource group of this resource.
 	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Meshes)
@@ -37,7 +42,11 @@ protected:
 
 	Mesh();
 
+	// Keeps track if the mesh has been built.
 	bool built;
+
+	// Renderables of the mesh.
+	std::vector<RenderablePtr> renderables;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Mesh );

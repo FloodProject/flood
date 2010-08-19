@@ -137,3 +137,4 @@
 #include <vapor/Log.h>
 #include <vapor/Profiler.h>
 #include <vapor/TaskManager.h>
+#include <vapor/Serialization.h>

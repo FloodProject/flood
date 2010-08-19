@@ -236,6 +236,20 @@ void Events::onMouseLeave()
 
 //-----------------------------------//
 
+void Events::onSceneLoad( const ScenePtr& newScene )
+{
+	if( !currentPlugin )
+		return;
+	
+	currentPlugin->onSceneLoad(newScene);
+
+	// Global event listeners.
+	foreach( Plugin* plugin, eventListeners )
+		plugin->onSceneLoad(newScene);
+}
+
+//-----------------------------------//
+
 void Events::onSceneUpdate()
 {
 	if( !currentPlugin )

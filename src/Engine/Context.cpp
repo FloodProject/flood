@@ -63,9 +63,8 @@ ALCcontext* Context::createContext()
 
 	if(checkError())
 	{
-		// TODO: getError should be for context-specific
-		warn("audio::al", "Could not create OpenAL context: %s",
-			getError());
+		#pragma TODO("OpenAL getError should be for context-specific")
+		warn("audio::al", "Could not create OpenAL context: %s", getError());
 	}
 
 	return context;

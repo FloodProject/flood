@@ -23,6 +23,9 @@ namespace vapor {
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
 
+#define __FILE__LINE__ __FILE__ "(" TOSTRING(__LINE__) ") : "
+#define TODO( x )  message( __FILE__LINE__" TODO :   " #x "\n" ) 
+
 //---------------------------------------------------------------------//
 // Array and Conversion Helpers
 //---------------------------------------------------------------------//

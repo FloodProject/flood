@@ -46,6 +46,23 @@ public:
 
 	// Save toolbar button.
 	wxToolBarToolBase* saveButton;
+
+protected:
+
+	// Handles undo/redo events.
+	void onUndoRedoEvent();
+
+	// Switches the scene.
+	void switchScene(const ScenePtr& scene);
+
+	// Asks to save unsaved changes.
+	void askSaveChanges();
+
+	// Saves the current scene.
+	void saveScene();
+
+	// Keeps track if there are unsaved changes.
+	bool unsavedChanges;
 };
 
 //-----------------------------------//

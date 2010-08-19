@@ -13,10 +13,6 @@
 
 namespace vapor { namespace editor {
 
-////////////////////////////////////////////////////////////
-// Event table
-////////////////////////////////////////////////////////////
-
 enum 
 {
 	ID_ResourceTree,
@@ -144,6 +140,7 @@ void ResourcesPage::initIcons()
 	imageList = new wxImageList(16, 16, false, 10);
 
 	imageList->Add(wxMEMORY_BITMAP(bullet_blue));
+
 	CREATE_RESOURCE_ICON( General, package )
 	CREATE_RESOURCE_ICON( Images, image )
 	CREATE_RESOURCE_ICON( Meshes, shape_flip_horizontal )
@@ -157,23 +154,25 @@ void ResourcesPage::initIcons()
 
 //-----------------------------------//
 
-#define CREATE_RESOURCE_NODE( T )					\
-	resourceGroupTreeIds[RG(T)] = AppendItem(root,	\
-		ResourceGroup::getString(RG(T)),			\
-		resourceGroupIcons[RG(T)] );
-
 void ResourcesPage::initControl()
 {
 	root = AddRoot( "Resources", resourceGroupIcons[RG(General)] );
 
-	// Add the root nodes
-	CREATE_RESOURCE_NODE( General )
-	CREATE_RESOURCE_NODE( Images )
-	CREATE_RESOURCE_NODE( Meshes )
-	CREATE_RESOURCE_NODE( Fonts )
-	CREATE_RESOURCE_NODE( Shaders )
-	CREATE_RESOURCE_NODE( Audio )
-	CREATE_RESOURCE_NODE( Scripts )
+	const Enum& resourcesEnum = ResourceGroup::getType();
+
+	resourceGroupTreeIds[RG(General)] =
+		AppendItem(root, "General", resourceGroupIcons[RG(General)] );
+
+	foreach( const EnumValuesPair& p, resourcesEnum.getValues() )
+	{
+		ResourceGroup::Enum value = (ResourceGroup::Enum) p.second;
+
+		if( value == ResourceGroup::General )
+			continue;
+
+		resourceGroupTreeIds[value] =
+			AppendItem(root, p.first, resourceGroupIcons[value] );
+	}
 }
 
 //-----------------------------------//

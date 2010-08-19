@@ -32,6 +32,9 @@ public:
 	// Adds a new enumeration to this enum.
 	void addValue( const std::string str, int value );
 
+	// Gets the name of this enum value.
+	const std::string& getString(int value) const;
+
 	// Gets the values of this enum.
 	const EnumValuesMap& getValues() const;
 

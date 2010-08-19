@@ -50,7 +50,7 @@ class VAPOR_API Light : public Component
 
 public:
 
-	Light( LightType::Enum type );
+	Light( LightType::Enum type = LightType::Point );
 
 	// Gets/sets the type of this light source.
 	ACESSOR(LightType, LightType::Enum, lightType)

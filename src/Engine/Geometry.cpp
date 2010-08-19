@@ -25,7 +25,7 @@ Geometry::Geometry()
 
 //-----------------------------------//
 
-Geometry::Geometry( RenderablePtr rend )
+Geometry::Geometry( const RenderablePtr& rend )
 	: isDirty( true )
 {
 	addRenderable( rend );
@@ -33,7 +33,7 @@ Geometry::Geometry( RenderablePtr rend )
 
 //-----------------------------------//
 
-void Geometry::addRenderable( RenderablePtr rend, RenderGroup::Enum group, 
+void Geometry::addRenderable( const RenderablePtr& rend, RenderGroup::Enum group, 
 							  uint priority )
 {
 	RenderableList& renderList = renderables[group];
@@ -42,7 +42,7 @@ void Geometry::addRenderable( RenderablePtr rend, RenderGroup::Enum group,
 
 //-----------------------------------//
 
-const RenderableList&  Geometry::getRenderables( RenderGroup::Enum group )
+const RenderableList& Geometry::getRenderables( RenderGroup::Enum group )
 { 
 	return renderables[group]; 
 }

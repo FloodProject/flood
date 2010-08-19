@@ -28,7 +28,7 @@ namespace PixelFormat
 		Unknown
 	};
 
-	const std::string getString(Enum e);
+	DECLARE_ENUM()
 }
 
 //-----------------------------------//
@@ -45,6 +45,8 @@ namespace PixelFormat
 
 class VAPOR_API Image : public Resource
 {
+	DECLARE_CLASS_()
+
 public:
 
 	Image();

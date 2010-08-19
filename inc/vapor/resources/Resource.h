@@ -10,6 +10,8 @@
 
 namespace vapor {
 
+//-----------------------------------//
+
 class ResourceLoader;
 
 //-----------------------------------//
@@ -63,8 +65,7 @@ namespace ResourceGroup
 		Scripts
 	};
 
-	// Yeah, a bit ugly, but it works.
-	const std::string VAPOR_API getString(Enum e);
+	DECLARE_ENUM()
 }
 
 //-----------------------------------//
@@ -81,6 +82,8 @@ namespace ResourceGroup
 
 class VAPOR_API Resource : public ReferenceCounted, private boost::noncopyable
 {
+	DECLARE_CLASS_()
+
 public:
 
 	virtual ~Resource() {}

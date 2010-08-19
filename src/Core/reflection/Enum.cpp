@@ -29,6 +29,19 @@ void Enum::addValue( const std::string str, int value )
 
 //-----------------------------------//
 
+const std::string& Enum::getString(int value) const
+{
+	foreach( const EnumValuesPair& p, values )
+	{
+		if( p.second == value )
+			return p.first;
+	}
+
+	assert( false );
+}
+
+//-----------------------------------//
+
 const EnumValuesMap& Enum::getValues() const
 {
 	return values;

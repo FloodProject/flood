@@ -41,8 +41,7 @@ RenderDevice::~RenderDevice()
 {
 	info("gl", "Closing OpenGL rendering device");
 
-	// TODO: delete all OpenGL resources (shaders, textures...)
-	// Or make sure they are all deleted once we delete the OpenGL context.
+	#pragma TODO("Confirm that all OpenGL resources were reclaimed on exit")	
 
 	delete textureManager;
 	delete programManager;
@@ -95,7 +94,7 @@ void RenderDevice::checkExtensions()
 	{
 		const char* str = "You need at least OpenGL 2.0 to run this.";
 		Log::createMessageDialog( str, LogLevel::Error );
-		exit( -1 ); // TODO: exit program in a structured manner
+		exit( -1 );
 	}
 }
 

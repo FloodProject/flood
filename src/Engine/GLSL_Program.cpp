@@ -255,7 +255,7 @@ void GLSL_Program::unbind()
 
 void GLSL_Program::getLogText()
 {
-	// get linking log size
+	// Get linking log size.
 	GLint size;
 	glGetProgramiv( id, GL_INFO_LOG_LENGTH, &size );
 
@@ -280,7 +280,7 @@ void GLSL_Program::getLogText()
 
 void GLSL_Program::bindDefaultAttributes()
 {
-	// TODO: don't try to bind if user didn't use in shader.
+	#pragma TODO("Shader uniforms and attributes should only be bound if needed")
 
 	setAttribute( "vp_Vertex", VertexAttribute::Position );
 	setAttribute( "vp_Normal", VertexAttribute::Normal );
@@ -464,7 +464,6 @@ void GLSL_Program::setUniform( const std::string& slot, const Matrix4x4& matrix 
 		return;
 	}
 
-	// TODO: Is this right? Might be related to the ortographic trouble we had earlier.
 	glUniformMatrix4fv( loc, 1, true, &matrix.m11 );
 	
 	//float test[16];

@@ -39,6 +39,21 @@ const FieldsMap& Class::getFields() const
 
 //-----------------------------------//
 
+Field* Class::getField(const std::string& name) const
+{
+	FieldsMap::const_iterator it = fields.find(name);
+
+	if( it != fields.end() )
+		return it->second;
+	
+	if( parent )
+		return ((Class*) parent)->getField(name);
+	else
+		return nullptr;
+}
+
+//-----------------------------------//
+
 void Class::notifyChanged(const Field& field) const
 {
 	if( onFieldChanged.empty() )

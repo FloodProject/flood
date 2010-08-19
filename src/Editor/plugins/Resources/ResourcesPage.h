@@ -10,6 +10,8 @@
 
 namespace vapor { namespace editor {
 
+//-----------------------------------//
+
 class EditorFrame;
 
 //-----------------------------------//

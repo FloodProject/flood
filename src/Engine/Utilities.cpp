@@ -102,8 +102,7 @@ std::string String::format(const char* str, ...)
 
 std::string String::format(const char* str, va_list args)
 {
-	const int BUF_MAX_SIZE = 512;
-
+	const int BUF_MAX_SIZE = 16384;
 	char buf[BUF_MAX_SIZE];
 
 	#ifdef VAPOR_COMPILER_MSVC

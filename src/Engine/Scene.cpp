@@ -26,10 +26,15 @@ Scene::Scene()
 
 //-----------------------------------//
 
+Scene::~Scene()
+{ }
+
+//-----------------------------------//
+
 bool Scene::doRayBoxQuery( const Ray& ray, RayBoxQueryResult& res ) const
 {
 	RayBoxQueryList list;
-	if( !doRayBoxQuery( ray, list ) )
+	if( !doRayBoxQuery(ray, list) )
 		return false;
 
 	res = list.front();	

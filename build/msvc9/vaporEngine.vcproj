@@ -1706,14 +1706,6 @@
 				RelativePath="..\..\inc\vapor\ReferenceCounted.h"
 				>
 			</File>
-			<File
-				RelativePath="..\..\src\Engine\Serialization.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\Serialization.h"
-				>
-			</File>
 			<Filter
 				Name="Libraries"
 				>
@@ -1914,6 +1906,14 @@
 			<File
 				RelativePath="..\..\src\Core\reflection\Enum.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						DisableSpecificWarnings="4715"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\inc\vapor\core\Enum.h"
@@ -1933,6 +1933,14 @@
 			</File>
 			<File
 				RelativePath="..\..\inc\vapor\core\Primitive.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\Engine\Serialization.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\Serialization.h"
 				>
 			</File>
 			<File

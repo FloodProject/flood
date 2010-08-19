@@ -39,6 +39,16 @@ void UndoManager::registerOperation( UndoOperation* operation )
 
 //-----------------------------------//
 
+void UndoManager::clearOperations( )
+{
+	undoOperations.clear();
+	redoOperations.clear();
+
+	fireUndoRedoEvent();
+}
+
+//-----------------------------------//
+
 bool UndoManager::undoOperation()
 {
 	handleOperation(undoOperations, redoOperations, true);

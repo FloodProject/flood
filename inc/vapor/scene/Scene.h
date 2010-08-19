@@ -52,6 +52,7 @@ class VAPOR_API Scene : public Group
 public:
 
 	Scene();
+	~Scene();
 
 	// Updates all the entities recursively.
 	virtual void update( double delta );

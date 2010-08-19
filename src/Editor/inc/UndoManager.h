@@ -29,6 +29,9 @@ public:
 	// Redoes an operation.
 	bool redoOperation();
 
+	// Clears the operations.
+	void clearOperations();
+
 	// Gets the undo operations.
 	GETTER(UndoOperations, const Operations&, undoOperations)
 

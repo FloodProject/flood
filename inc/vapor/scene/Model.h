@@ -28,14 +28,20 @@ class VAPOR_API Model : public Geometry
 	DECLARE_CLASS_()
 
 public:
+
+	Model();
 	Model( const MeshPtr& mesh );
 
 	// Builds the mesh when it is fully loaded.
 	void update( double delta );
   
-private:
+protected:
 
+	// Mesh that the model renders.
 	MeshPtr mesh;
+
+	// Has the model been built.
+	bool modelBuilt;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Model );

@@ -13,31 +13,19 @@ namespace vapor {
 
 //-----------------------------------//
 
-namespace ResourceGroup
-{
-	const std::string getString(Enum e) 
-	{
-		switch(e) 
-		{
-		case General:
-			return "General";
-		case Images:
-			return "Images";
-		case Meshes:
-			return "Meshes";
-		case Fonts:
-			return "Fonts";
-		case Shaders:
-			return "Shaders";
-		case Audio:
-			return "Audio";
-		case Scripts:
-			return "Scripts";
-		default:
-			assert( false );
-		}
-	}
-}
+BEGIN_ENUM(ResourceGroup)
+	ENUM(General)
+	ENUM(Images)
+	ENUM(Meshes)
+	ENUM(Fonts)
+	ENUM(Shaders)
+	ENUM(Audio)
+	ENUM(Scripts)
+END_ENUM()
+
+BEGIN_CLASS(Resource)
+	FIELD_PRIMITIVE(Resource, string, path)
+END_CLASS()
 
 //-----------------------------------//
 

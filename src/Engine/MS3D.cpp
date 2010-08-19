@@ -203,7 +203,7 @@ cleanup:
 
 //-----------------------------------//
 
-void MS3D::build( std::vector<RenderablePtr>& renderables )
+void MS3D::build()
 {
 	if(built)
 		return;
@@ -266,8 +266,7 @@ void MS3D::build( std::vector<RenderablePtr>& renderables )
 
 			if( mt.mode & HASALPHA )
 			{
-				// TODO: We can use Alpha Rejection here instead if the 
-				// alpha values are only opaque or fully transparent.
+				#pragma TODO("Use alpha testing when alpha values are fully transparent.")
 
 				mat->setBlending( BlendingSource::SourceAlpha,
 					BlendingDestination::InverseSourceAlpha );
@@ -287,7 +286,8 @@ void MS3D::build( std::vector<RenderablePtr>& renderables )
 
 		renderables.push_back( rend );
 
-		//// TODO: Use Index buffers
+		#pragma TODO("Use index buffers when building mesh geometry")
+		
 		//std::vector< ushort > vb_i;
 		//foreach( const ms3d_triangle_t& t, m_triangles )
 		//{	

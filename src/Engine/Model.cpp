@@ -15,31 +15,48 @@ namespace vapor {
 //-----------------------------------//
 
 BEGIN_CLASS_PARENT(Model, Geometry)
+	FIELD_CLASS_PTR(Model, Mesh, mesh) 
 END_CLASS()
+
+//-----------------------------------//
+
+Model::Model()
+	: modelBuilt(false)
+{ }
 
 //-----------------------------------//
 
 Model::Model( const MeshPtr& mesh )
 	: mesh(mesh)
-{
-	assert( mesh != nullptr );
-}
+	, modelBuilt(false)
+{ }
 
 //-----------------------------------//
 
 void Model::update( double delta )
 {
+	if( !mesh )
+		return;
+
 	if( !mesh->isLoaded() )
 		return;
 
-	if( !mesh->isBuilt() )
+	if( !modelBuilt )
 	{
 		std::vector<RenderablePtr> renderables;
-		
-		mesh->build( renderables );
+		mesh->appendRenderables( renderables );
 
 		foreach( const RenderablePtr& rend, renderables )
-			addRenderable( rend );
+		{
+			MaterialPtr mat = rend->getMaterial();
+
+			if( mat->isBlendingEnabled() )
+				addRenderable( rend, RenderGroup::Transparency );
+			else
+				addRenderable( rend );
+		}
+
+		modelBuilt = true;
 	}
 
 	Geometry::update(delta);

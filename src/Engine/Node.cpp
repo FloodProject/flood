@@ -38,13 +38,15 @@ bool Node::addComponent( const ComponentPtr& component )
 {
 	assert( component != nullptr );
 
-	 const Class* type = &component->getInstanceType();
+	const Class* type = &component->getInstanceType();
 
 	// Searches for a component with the same type.
 	if( components.find(type) != components.end() )
 	{
-		warn( "scene", "Component of type '%s' already exists in entity '%s'",
+		warn( "scene",
+			"Component of type '%s' already exists in node '%s'",
 			type->getName().c_str(), getName().c_str() );
+
 		return false;
 	}
 

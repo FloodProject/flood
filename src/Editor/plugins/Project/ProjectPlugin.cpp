@@ -9,6 +9,8 @@
 #include "PCH.h"
 #include "ProjectPlugin.h"
 #include "Editor.h"
+#include "Events.h"
+#include "UndoManager.h"
 #include "EditorIcons.h"
 
 namespace vapor { namespace editor {
@@ -17,6 +19,7 @@ namespace vapor { namespace editor {
 
 ProjectPlugin::ProjectPlugin( EditorFrame* frame )
 	: Plugin(frame)
+	, unsavedChanges(false)
 { }
 
 //-----------------------------------//
@@ -61,36 +64,90 @@ void ProjectPlugin::onPluginEnable()
 
 	toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
 		&ProjectPlugin::onSaveButtonClick, this, saveButton->GetId() );
+
+	UndoManager* undo = editor->getUndoManager();
+	undo->onUndoRedoEvent += fd::bind(&ProjectPlugin::onUndoRedoEvent, this);
 }
 
 //-----------------------------------//
 
 void ProjectPlugin::onPluginDisable()
 {
+	UndoManager* undo = editor->getUndoManager();
+	undo->onUndoRedoEvent -= fd::bind(&ProjectPlugin::onUndoRedoEvent, this);
+}
 
+//-----------------------------------//
+
+void ProjectPlugin::onUndoRedoEvent()
+{
+	unsavedChanges = true;
 }
 
 //-----------------------------------//
 
 void ProjectPlugin::onNewButtonClick(wxCommandEvent& event)
 {
+	ScenePtr scene( new Scene() );
 
+	askSaveChanges();
+	switchScene(scene);
 }
 
 //-----------------------------------//
 
+static const std::string fileDialogDescription( "Scene files (*.scene)|*.scene" );
+
 void ProjectPlugin::onOpenButtonClick(wxCommandEvent& event)
 {
+	askSaveChanges();
 
+	// Ask for file name to open.
+	wxFileDialog fc( editor, wxFileSelectorPromptStr, wxEmptyString,
+		wxEmptyString, fileDialogDescription, wxFC_OPEN );
+	
+	if( fc.ShowModal() != wxID_OK )
+		return;
+	
+	Serializer deserializer;
+	deserializer.openFromFile( (std::string) fc.GetPath() );
+	ScenePtr newScene = deserializer.deserializeScene();
+
+	switchScene(newScene);
 }
 
 //-----------------------------------//
 
 void ProjectPlugin::onSaveButtonClick(wxCommandEvent& event)
 {
+	saveScene();
+}
+
+//-----------------------------------//
+
+void ProjectPlugin::switchScene(const ScenePtr& scene)
+{
+	Engine* engine = editor->getEngine();
+	engine->setSceneManager(scene);
+
+	UndoManager* undo = editor->getUndoManager();
+	undo->clearOperations();
+
+	unsavedChanges = false;
+
+	Events* events = editor->getEventManager();
+	events->onSceneLoad(scene);
+
+	editor->RefreshViewport();
+}
+
+//-----------------------------------//
+
+void ProjectPlugin::saveScene()
+{
 	// Ask for file name to save as.
 	wxFileDialog fc( editor, wxFileSelectorPromptStr, wxEmptyString,
-		wxEmptyString, "Scene files (*.scene)|*.scene", wxFC_SAVE );
+		wxEmptyString, fileDialogDescription, wxFC_SAVE );
 	
 	if( fc.ShowModal() != wxID_OK )
 		return;
@@ -98,13 +155,26 @@ void ProjectPlugin::onSaveButtonClick(wxCommandEvent& event)
 	Engine* engine = editor->getEngine();
 	ScenePtr scene = engine->getSceneManager();
 	
-	// Serialize scene to JSON.
-	//Json::Value sceneJSON;
-	//scene->serialize( sceneJSON );
+	Serializer serializer;
+	serializer.serializeScene(scene);
+	serializer.saveToFile( (std::string) fc.GetPath() );
 
-	// Save it to a file.
-	//std::string fn( fc.GetPath() );
-	//serializeToFile( sceneJSON, fn );
+	unsavedChanges = false;
+}
+
+//-----------------------------------//
+
+void ProjectPlugin::askSaveChanges()
+{
+	if( !unsavedChanges )
+		return;
+
+    int answer = wxMessageBox(
+		"Scene contains unsaved changes. Do you want to save them?",
+		wxEmptyString, wxYES_NO | wxCANCEL, editor);
+
+    if (answer == wxYES)
+        saveScene();
 }
 
 //-----------------------------------//

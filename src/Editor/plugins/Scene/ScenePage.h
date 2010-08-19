@@ -45,6 +45,9 @@ public:
 	// Gets the tree control.
 	GETTER(TreeCtrl, wxTreeCtrl*, treeCtrl)
 
+	// Sets the current scene.
+	void setScene(const ScenePtr& scene);
+
 	// Gets the node associated with the tree item.
 	NodePtr getNodeFromTreeId( wxTreeItemId id );
 
@@ -98,11 +101,14 @@ protected:
 
 	// Tree icons.
 	wxImageList* imageList;
-	std::map<std::string, int> icons;
+	std::map<const Type*, int> icons;
 
 	// Node buttons.
 	wxBitmapButton* buttonNodeAdd;
 	wxBitmapButton* buttonNodeDelete;
+
+	// Current menu.
+	wxMenu* currentMenu;
 
 	// Editor instance.
 	EditorFrame* editor;

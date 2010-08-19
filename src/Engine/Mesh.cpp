@@ -14,6 +14,11 @@ namespace vapor {
 
 //-----------------------------------//
 
+BEGIN_CLASS_PARENT(Mesh, Resource)
+END_CLASS()
+
+//-----------------------------------//
+
 Mesh::Mesh()
 	: built(false)
 { }
@@ -23,6 +28,16 @@ Mesh::Mesh()
 bool Mesh::isBuilt() const
 {
 	return built;
+}
+
+//-----------------------------------//
+
+void Mesh::appendRenderables( std::vector<RenderablePtr>& rends )
+{
+	if( !built )
+		build();
+
+	rends = renderables;
 }
 
 //-----------------------------------//

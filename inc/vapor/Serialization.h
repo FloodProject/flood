@@ -8,41 +8,63 @@
 
 #pragma once
 
-#include <json/json.h>
-#include "vapor/math/Vector3.h"
-#include "vapor/math/EulerAngles.h"
-#include "vapor/math/Color.h"
+#include "vapor/scene/Scene.h"
 
+#include <json/json.h>
 namespace Json { class Value; }
 
 namespace vapor {
 
 //-----------------------------------//
 
-#define DECLARE_SERIALIZABLE()		\
-	virtual void serialize( Json::Value& );
-
 /**
- * Classes that want to be serializable should inherit this class and
- * implement the virtual method. The members will be written to disk
- * in JSON format, a lightweight readable alternative to XML.
+ * Serialization will write a type object to disk in a format that can
+ * be readable later when loading. We are using the JSON format, a small
+ * and lightweight alternative to XML.
  */
 
-class VAPOR_API Serializable
+class Serializer : private boost::noncopyable
 {
 public:
 
-	virtual void serialize( Json::Value& ) = 0;
+	// Open the JSON representation from a file.
+	bool openFromFile( const std::string& name );
+
+	// Saves the JSON representation to a file.
+	void saveToFile( const std::string& name );
+
+	// Serializes the scene.
+	void serializeScene( const ScenePtr& scene );
+
+	// Deserializes the scene.
+	ScenePtr deserializeScene();
+
+protected:
+
+	// Serializes the node.
+	Json::Value serializeNode( const NodePtr& node );
+
+	// Deserializes the node.
+	NodePtr deserializeNode( const Json::Value& nodeValue );
+
+	// Serializes the class fields.
+	void serializeFields( const Class& type, void* object, Json::Value& );
+
+	// Deserializes the class fields.
+	void deserializeFields( const Class& type, void* object, const Json::Value& );
+
+	// Converts an enum type to a JSON value.
+	Json::Value valueFromEnum( const Field& field, void* object );
+
+	// Converts a primitive type to a JSON value.
+	Json::Value valueFromPrimitive( const Field& field, void* object );
+
+	// Sets the field in the object to the given value.
+	void setFieldFromValue( const Field& field, void* object, const Json::Value& value );
+
+	// Root JSON value.
+	Json::Value rootValue;
 };
-
-//-----------------------------------//
-// Serialization Helpers             // 
-//-----------------------------------//
-
-void serializeToFile( Json::Value& root, const std::string& name );
-Json::Value toJson( const Vector3& vec );
-Json::Value toJson( const EulerAngles& ang );
-Json::Value toJson( const Color& c );
 
 //-----------------------------------//
 

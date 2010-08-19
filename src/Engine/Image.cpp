@@ -14,23 +14,15 @@ namespace vapor {
 
 //-----------------------------------//
 
-namespace PixelFormat
-{
-	const std::string getString(Enum e) 
-	{
-		switch(e) 
-		{
-		case R8G8B8A8:
-			return "R8G8B8A8";
-		case R8G8B8:
-			return "R8G8B8";
-		case Unknown:
-			return "Unknown";
-		default:
-			assert( false );
-		}
-	}
-}
+BEGIN_ENUM(PixelFormat)
+	ENUM(R8G8B8A8)
+	ENUM(R8G8B8)
+	ENUM(Depth)
+	ENUM(Unknown)
+END_ENUM()
+
+BEGIN_CLASS_PARENT(Image, Resource)
+END_CLASS()
 
 //-----------------------------------//
 
@@ -103,7 +95,7 @@ void Image::save( const std::string& filename )
 void Image::log() const
 {
 	info("Image", "Image has pixel format '%s' and size %dx%d", 
-		PixelFormat::getString(pixelFormat).c_str(), width, height);
+		 PixelFormat::getType().getString(pixelFormat), width, height);
 }
 
 //-----------------------------------//

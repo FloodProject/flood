@@ -15,7 +15,15 @@ namespace vapor {
 
 Field::Field( const Type& _type )
 	: type(_type)
+	, pointer(false)
 { }
+
+//-----------------------------------//
+
+bool Field::isPointer() const
+{
+	return pointer;
+}
 
 //-----------------------------------//
 

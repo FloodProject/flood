@@ -24,6 +24,7 @@ public:
 
 	Field( const Type& type );
 
+	// Gets the value of the field in the object.
 	template<typename T>
 	const T& get( const void* object ) const
 	{
@@ -31,6 +32,7 @@ public:
 		return *ptr;
 	}
 
+	// Sets the value of the field in the object.
 	template<typename T>
 	void set( const void* object, const T& value ) const
 	{
@@ -38,8 +40,12 @@ public:
 		*ptr = value;
 	}
 
+	// Returns if the field is a pointer.
+	bool isPointer() const;
+
 public:
 
+	bool pointer;
 	short offset;
 	short size;
 	std::string name;

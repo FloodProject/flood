@@ -138,7 +138,7 @@ void Texture::configure()
 	//glTexParameteri(target, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
 	//glTexParameteri(target, GL_DEPTH_TEXTURE_MODE, GL_INTENSITY);
 
-	// TODO: mipmaps
+	#pragma TODO("Add support for mipmaps")
 }
 
 //-----------------------------------//

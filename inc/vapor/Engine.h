@@ -74,14 +74,14 @@ public:
 	// Sets up the input devices.
 	void setupInput();
 
+	// Gets/sets the scene.
+	ACESSOR(SceneManager, ScenePtr, scene)
+
 	// Gets the device.
 	GETTER(RenderDevice, RenderDevice*, renderDevice)
 
 	// Gets the audio device.
 	GETTER(AudioDevice, AudioDevice*, audioDevice)
-
-	// Gets the scene interface.
-	GETTER(SceneManager, ScenePtr, scene)
 
 	// Gets the device.
 	GETTER(TaskManager, TaskManager*, taskManager)

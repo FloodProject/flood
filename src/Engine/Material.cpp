@@ -29,6 +29,24 @@ Material::Material( const std::string& name, const std::string& program )
 
 //-----------------------------------//
 
+Material::Material( const Material& rhs )
+	: name(rhs.name)
+	, program(rhs.program)
+	, textures(rhs.textures)
+	, cullBackfaces(rhs.cullBackfaces)
+	, depthTest(rhs.depthTest)
+	, depthWrite(rhs.depthWrite)
+	, lineSmooth(rhs.lineSmooth)
+	, lineWidth(rhs.lineWidth)
+	, source(rhs.source)
+	, destination(rhs.destination)
+	, _isBlendingEnabled(rhs._isBlendingEnabled)
+{
+	init();
+}
+
+//-----------------------------------//
+
 void Material::init()
 {
 	depthTest = true;
@@ -36,7 +54,6 @@ void Material::init()
 	lineSmooth = false;
 	cullBackfaces = true;
 	lineWidth = DefaultLineWidth;
-	
 	_isBlendingEnabled = false;
 	source = BlendingSource::One;
 	destination = BlendingDestination::Zero;
@@ -46,7 +63,6 @@ void Material::init()
 
 void Material::setTexture( uint unit, const std::string& name )
 {
-	// TODO: refactor
 	Engine* engine = Engine::getInstancePtr();
 	RenderDevice* renderDevice = engine->getRenderDevice();
 	TextureManager* tm = renderDevice->getTextureManager();
@@ -59,7 +75,6 @@ void Material::setTexture( uint unit, const std::string& name )
 
 void Material::setTexture( uint unit, const ImagePtr& img )
 {
-	// TODO: refactor
 	Engine* engine = Engine::getInstancePtr();
 	RenderDevice* renderDevice = engine->getRenderDevice();
 	TextureManager* tm = renderDevice->getTextureManager();

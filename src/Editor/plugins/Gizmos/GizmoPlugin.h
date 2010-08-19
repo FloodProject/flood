@@ -54,9 +54,12 @@ public:
 	virtual void onMouseButtonPress( const MouseButtonEvent& );
 	virtual void onMouseButtonRelease( const MouseButtonEvent& );
 
-	// Node events.
+	// Node selection events.
 	virtual void onNodeSelect( const NodePtr& );
 	virtual void onNodeUnselect( const NodePtr& );
+
+	// Scene load callback.
+	void onSceneLoad( const ScenePtr& scene );
 
 protected:
 

@@ -184,7 +184,7 @@ void Camera::cull( RenderBlock& block, const NodePtr& node ) const
 	foreach( const GeometryPtr& geometry, node->getGeometry() ) 
 	{
 		// No frustum culling is performed yet.
-		// TODO: Hack! :D
+		#pragma TODO("Hack! :D")
 		geometry->appendRenderables( block.renderables, transform );
 	}
 

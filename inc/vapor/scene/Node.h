@@ -28,7 +28,7 @@ typedef std::pair< const Class*, ComponentPtr > ComponentMapPair;
 
 /**
  * Represents a node, that is, an entity of the world held in the scene. 
- * Entities will need to have components to get different properties.
+ * Nodes can have components that attach behaviour and state to the node.
  * For example you can add a Transform component to give the entity a
  * placement in the world. Or you can add a Physics component that will
  * make it react to the world gravity and make it obey the physics laws.
@@ -109,23 +109,23 @@ public:
 
 private:
 
-	// The name of the node.
+	// Name of the node.
 	std::string name;
 
-	// Holds the components of the node.
-	ComponentMap components;
-
-	// Points to the parent node (if any). 
-	NodeWeakPtr parent;
-	
-	// Caches the geometries nodes (for faster lookup when rendering).
-	std::vector<GeometryPtr> geometries;
-
-	// Visibility
+	// Visibility of the node.
 	bool visible;
 
-	// Bitset used to store useful information about the node.
+	// Tags of the node..
 	std::bitset<32> tag;
+
+	// Components of the node.
+	ComponentMap components;
+
+	// Parent node of the node.
+	NodeWeakPtr parent;
+	
+	// Caches geometry components.
+	std::vector<GeometryPtr> geometries;
 };
 
 //-----------------------------------//

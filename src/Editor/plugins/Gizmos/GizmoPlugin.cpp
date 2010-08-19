@@ -77,7 +77,7 @@ void GizmoPlugin::onPluginEnable()
 		iconScale, "Selects the Scale tool", wxITEM_RADIO );
 	addTool(buttonScale);
 
-	// TODO: Hack.
+	#pragma TODO("Initialize plugins events properly")
 	Events* events = editor->getEventManager();
 	events->currentPlugin = this;
 	tool = GizmoTool::Camera;
@@ -90,6 +90,13 @@ void GizmoPlugin::onPluginEnable()
 //-----------------------------------//
 
 void GizmoPlugin::onPluginDisable()
+{
+	unselectNodes();
+}
+
+//-----------------------------------//
+
+void GizmoPlugin::onSceneLoad( const ScenePtr& scene )
 {
 	unselectNodes();
 }

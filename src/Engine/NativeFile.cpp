@@ -94,7 +94,7 @@ void NativeFile::setBuffering( bool state )
 
 //-----------------------------------//
 
-long NativeFile::getSize()
+long NativeFile::getSize() const
 {
 	// Hold the current file position.
 	long curr = ftell(fp);
@@ -111,9 +111,32 @@ long NativeFile::getSize()
 
 //-----------------------------------//
 
-long NativeFile::read(void* buffer, long size)
+long NativeFile::read(void* buffer, long size) const
 {
 	return fread(buffer, 1, size, fp);
+}
+
+//-----------------------------------//
+
+std::vector<byte> NativeFile::read() const
+{
+	long size = getSize();
+
+	std::vector<byte> data;
+	data.resize(size);
+
+	read(&data.front(), size);
+
+	return data;
+}
+
+//-----------------------------------//
+
+std::string NativeFile::readString() const
+{
+	std::vector<byte> lines = read();
+	std::string str(lines.begin(), lines.end() );
+	return str;
 }
 
 //-----------------------------------//
@@ -138,7 +161,7 @@ long NativeFile::write(const std::vector<byte>& buf)
 
 //-----------------------------------//
 
-bool NativeFile::exists()
+bool NativeFile::exists() const
 {
 	return access(path.c_str(), F_OK) == 0;
 }

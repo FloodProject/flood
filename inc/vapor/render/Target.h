@@ -78,7 +78,7 @@ public:
 	GETTER(Viewports, const ViewportList&, viewports)
 
 	// Event fired when the target gets resized.
-	fd::delegate< void( const Settings& ) > onTargetResize;
+	fd::delegate< void(const Settings&) > onTargetResize;
 
 private:
 

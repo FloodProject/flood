@@ -43,7 +43,8 @@ ProgramPtr ProgramManager::getProgram( const std::string& name )
 
 	if( programs.find(lower) == programs.end() )
 	{
-		// TODO: use fallback program.
+		#pragma TODO("Get GLSL fallback programs working")
+		
 		warn( "program", "Could not locate '%s'", name.c_str() );
 		return ProgramPtr();
 	}
@@ -59,7 +60,6 @@ bool ProgramManager::registerProgram( const std::string& name, const ProgramPtr&
 	
 	std::string lower( String::toLowerCase(name) );
 
-	// TODO: Better error handling.
 	if( programs.find(lower) != programs.end() )
 	{
 		warn( "program", "Shader '%s' already registered", name.c_str() );

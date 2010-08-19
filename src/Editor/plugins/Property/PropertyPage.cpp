@@ -156,9 +156,9 @@ void PropertyPage::showNodeProperties( const NodePtr& node )
 
 	// Transform should be the first component to the displayed.
 	TransformPtr transform = node->getTransform();
-	assert( transform != nullptr );
 
-	appendObjectFields( Transform::getType(), transform.get() );
+	if( transform )
+		appendObjectFields( Transform::getType(), transform.get() );
     
     // Components properties
 	foreach( const ComponentMapPair& p, node->getComponents() )
@@ -258,28 +258,28 @@ wxPGProperty* PropertyPage::createPrimitiveProperty(const Field& field, void* ob
 		prop = new wxBoolProperty( wxEmptyString, wxPG_LABEL, val );
 		Append( prop );
 	}
-
+	//-----------------------------------//
 	else if( type.isInteger() )
 	{
 		int val = field.get<int>(object);
 		prop = new wxIntProperty( wxEmptyString, wxPG_LABEL, val );
 		Append( prop );
 	}
-
+	//-----------------------------------//
 	else if( type.isFloat() )
 	{
 		float val = field.get<float>(object);
 		prop = new wxFloatProperty( wxEmptyString, wxPG_LABEL, val );
 		Append( prop );
 	}
-
+	//-----------------------------------//
 	else if( type.isString() )
 	{
 		std::string val = field.get<std::string>(object);
 		prop = new wxStringProperty( wxEmptyString, wxPG_LABEL, val );
 		Append( prop );
 	}
-
+	//-----------------------------------//
 	else if( type.isColor() )
 	{
 		Color val = field.get<Color>(object);
@@ -287,7 +287,7 @@ wxPGProperty* PropertyPage::createPrimitiveProperty(const Field& field, void* ob
 		prop = new wxColourProperty( wxEmptyString, wxPG_LABEL, wx );
 		Append( prop );
 	}
-
+	//-----------------------------------//
 	else if( type.isVector3() )
 	{
 		Vector3 vec = field.get<Vector3>(object);
@@ -301,13 +301,14 @@ wxPGProperty* PropertyPage::createPrimitiveProperty(const Field& field, void* ob
 
 		Collapse( prop );
 	}
-
-	if( !prop )
+	//-----------------------------------//
+	else
 	{
 		debug( "Unknown property type: '%s'", type.getName().c_str() );
 		assert( false );
 	}
 
+	assert( prop != nullptr );
 	return prop;
 }
 

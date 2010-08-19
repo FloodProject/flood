@@ -61,6 +61,9 @@ void ScenePlugin::onPluginEnable()
 	// Subscribe as an event listener.
 	Events* events = editor->getEventManager();
 	events->addEventListener(this);
+
+	const ScenePtr& scene = engine->getSceneManager();
+	scenePage->setScene(scene);
 }
 
 //-----------------------------------//
@@ -99,6 +102,13 @@ void ScenePlugin::onNodeUnselect( const NodePtr& node )
 
 	wxTreeCtrl* treeCtrl = scenePage->getTreeCtrl();
 	treeCtrl->Unselect();
+}
+
+//-----------------------------------//
+
+void ScenePlugin::onSceneLoad( const ScenePtr& scene )
+{
+	scenePage->setScene(scene);
 }
 
 //-----------------------------------//

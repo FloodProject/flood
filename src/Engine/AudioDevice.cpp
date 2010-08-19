@@ -15,9 +15,9 @@
 #include "vapor/audio/Device.h"
 #include "vapor/audio/Buffer.h"
 
-namespace vapor { namespace audio {
+#pragma TODO("Init first context to log version")
 
-// TODO: init first context to log version
+namespace vapor { namespace audio {
 
 //-----------------------------------//
 
@@ -53,7 +53,7 @@ Device::~Device()
 {
 	if(!device) return;
 
-	// TODO: check that all contexts/buffers are closed
+	#pragma TODO("Check that all contexts/buffers are closed on exit")
 	
 	ALCboolean ret = alcCloseDevice(device);
 		

@@ -29,11 +29,15 @@ static const short validDimensions[] =
 
 //-----------------------------------//
 
+Terrain::Terrain()
+	: settings( TerrainSettings() )
+{ }
+
+//-----------------------------------//
+
 Terrain::Terrain( const TerrainSettings& settings )
 	: settings( settings )
-{
-	cellMaterial = settings.Material;
-}
+{ }
 
 //-----------------------------------//
 
@@ -93,7 +97,6 @@ Vector2i Terrain::getCoords( const Vector3& pos )
 CellPtr Terrain::createCell( short x, short y, std::vector<float>& heights )
 {
 	CellPtr cell( new Cell(settings, heights, x, y) );
-	cell->setMaterial( cellMaterial );
 	addRenderable( cell );
 
 	// Forces bounding volume update.
@@ -129,7 +132,8 @@ CellPtr Terrain::createCellHeightmap( short x, short y, const ImagePtr& heightma
 
 void Terrain::convertHeightmap( const ImagePtr& heightmap, std::vector<float>& heights )
 {
-	// TODO: Can't handle any other pixel format right now...
+	#pragma TODO("Can't handle any other pixel format right now...")
+
 	assert( heightmap->getPixelFormat() == PixelFormat::R8G8B8A8 );
 
 	const std::vector<byte> data = heightmap->getBuffer();

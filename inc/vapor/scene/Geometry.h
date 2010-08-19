@@ -36,10 +36,10 @@ class VAPOR_API Geometry : public Component
 public:
 
 	Geometry();
-	Geometry( RenderablePtr renderable );
+	Geometry( const RenderablePtr& renderable );
 
 	// Adds a new renderable to this geometry.
-	void addRenderable( RenderablePtr renderable, 
+	void addRenderable( const RenderablePtr& renderable, 
 		RenderGroup::Enum group = RenderGroup::Normal,
 		uint priority = 0 );
 

@@ -40,7 +40,8 @@ ResourceManager::~ResourceManager()
 	assert( resourceTaskEvents.empty() );
 
 	// Delete resource loaders.
-	// TODO: comment the extension deleting logic.
+	#pragma TODO("comment the extension deleting logic.")
+
 	foreach( const ResourceLoaderMapPair& entry, resourceLoaders )
 	{
 		ResourceLoader* loader = entry.second;
@@ -231,9 +232,8 @@ void ResourceManager::waitUntilQueuedResourcesLoad()
 
 	while( numResourcesQueuedLoad > 0 )
 	{
-		// TODO: use a timed_wait and notify the observers
-		// to let them implement things like progress bars
-		// on loading screens.
+		#pragma TODO("use a timed_wait and notify the observers")
+
 		THREAD( resourceFinishLoad.wait(lock); )
 		Timer::sleep( 0.01f );
 	}
@@ -293,7 +293,7 @@ void ResourceManager::removeResource(const ResourcePtr& res)
 
 void ResourceManager::registerLoader(ResourceLoader* const loader)
 {
-	// TODO: check if the loader is already registered?
+	#pragma TODO("check if the loader is already registered?")
 
 	// Associate the extensions in the loaders map.
 	foreach( const std::string& ext, loader->getExtensions() )
@@ -307,9 +307,7 @@ void ResourceManager::registerLoader(ResourceLoader* const loader)
 		onResourceLoaderRegistered( *loader );
 	}
 
-	info( "resources", "Registering resource loader '%s'", 
-		loader->getName().c_str(), 
-		ResourceGroup::getString( loader->getResourceGroup() ).c_str() );
+	info( "resources", "Registering resource loader '%s'", loader->getName().c_str() );
 }
 
 //-----------------------------------//
@@ -327,7 +325,8 @@ void ResourceManager::handleWatchResource(const FileWatchEvent& evt)
 	// Reload the resource if it was modified.
 	if( evt.action != Actions::Modified )
 	{
-		// TODO: handle renames
+		#pragma TODO("handle renames")
+
 		debug( "Resource was renamed - handle this" );
 		return;
 	}

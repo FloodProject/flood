@@ -53,9 +53,9 @@ bool EditorApp::OnInit()
     // Call the base class initialization method, currently it only parses a
     // few common command-line options but it could be do more in the future.
     if( !wxApp::OnInit() )
-	{
         return false;
-	}
+
+	wxHandleFatalExceptions(true);
 
 	// Register a PNG image handler (so toolbars icons can be decoded).
 	wxImage::AddHandler(new wxPNGHandler);
@@ -70,6 +70,20 @@ bool EditorApp::OnInit()
     // loop and the application will run. If we returned false here, the
     // application would exit immediately.
     return true;
+}
+
+//-----------------------------------//
+
+bool EditorApp::OnExceptionInMainLoop()
+{
+	throw;
+}
+
+//-----------------------------------//
+
+void EditorApp::OnUnhandledException()
+{
+	throw;
 }
 
 //-----------------------------------//
@@ -412,6 +426,8 @@ void EditorFrame::onRender()
 	Viewport* viewport = viewframe->getViewport();
 	const CameraPtr& camera = viewport->getCamera();
 	
+	#pragma TODO("Renderables need to be sent in a single queue")
+
 	camera->setViewport( viewport );
 	camera->render( engine->getSceneManager() );
 	camera->render( editorScene, false );
@@ -528,8 +544,7 @@ void EditorFrame::createScene()
 	// Sky.
 	ImagePtr clouds = rm->loadResource<Image>( "noise2.png" );
 
-	Viewport* viewport = viewframe->getViewport();
-	SkydomePtr skydome( new Skydome( viewport->getCamera() ) );
+	SkydomePtr skydome( new Skydome() );
 	skydome->setClouds( clouds );
 	
 	NodePtr nodeSky( new Node("Sky") );
@@ -543,8 +558,7 @@ void EditorFrame::createScene()
 	// Water.
 	MaterialPtr matWater( new Material("WaterMat", "Water") );
 	matWater->setTexture( 0, "water.png" );
-	matWater->setBlending(BlendingSource::SourceAlpha,
-		BlendingDestination::InverseSourceAlpha);
+	matWater->setBlending(BlendingSource::SourceAlpha, BlendingDestination::InverseSourceAlpha);
 	WaterPtr water( new Water(matWater) );
 
 	NodePtr nodeWater( new Node("Water") );
@@ -592,7 +606,10 @@ void EditorFrame::createScene()
 	const ImagePtr& heightMap = rm->loadResource<Image>("height2.png");
 	terrain->addCell( 0, 0, heightMap );
 
-	scene->update( 0.1f );
+	// Wait until all resources are loaded.
+	rm->waitUntilQueuedResourcesLoad();
+
+	engine->update( 0.1f );
 }
 
 //-----------------------------------//

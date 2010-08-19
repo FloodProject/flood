@@ -92,6 +92,9 @@ public:
 	// Key press callback.
 	virtual void onKeyPress() {}
 
+	// Scene load callback.
+	virtual void onSceneLoad( const ScenePtr& scene ) {}
+
 	// Scene update callback.
 	virtual void onSceneUpdate() {}
 
