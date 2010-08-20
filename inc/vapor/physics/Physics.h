@@ -8,18 +8,18 @@
 
 #pragma once
 
+#include "vapor/Subsystem.h"
 #include "vapor/math/Vector3.h"
 
-// Uncomment this to enable the Havok Visual Debugger
-#define HAVOK_ENABLE_VDB
+class btCollisionConfiguration;
+class btBroadphaseInterface;
+class btCollisionDispatcher;
+class btSequentialImpulseConstraintSolver;
+class btDiscreteDynamicsWorld;
 
-class hkVisualDebugger;
-class hkpWorld;
-class hkpWorldCinfo;
-class hkpEntity;
-class hkThreadMemory;
+FWD_DECL_SHARED(Body)
 
-namespace vapor { namespace physics {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -27,44 +27,52 @@ namespace vapor { namespace physics {
  * Global hub for physics simulations.
  */
 
-class VAPOR_API PhysicsManager : private boost::noncopyable
+class VAPOR_API PhysicsManager : public Subsystem
 {
 public:
 
 	PhysicsManager();
 	virtual ~PhysicsManager();
-	
+
+	// Creates a new physics world.
 	void createWorld();
+
+	// Sets the gravity of the world.
+	void setWorldGravity(const Vector3& gravity);
 	
-	//void createWorld(Vector3 gravity, float broadphaseSize,
-	//	float collisionTolerance, float maxVelocity, float delta, 
-	//	signed char contactpoint, hkpWorldCinfo::SimulationType sim, hkpWorldCinfo::SolverType solver);
-
+	// Updates the physical simulation.
 	void update( double delta );
-	void addEntity( hkpEntity* entity );
-	void removeEntity( hkpEntity* entity );
 
-	bool getSimulationEnabled();
-	void setSimulationEnabled( bool enable );
+	// Gets/sets the physics simulation state.
+	ACESSOR(Simulation, bool, enableSimulation);
 
-	float del;
-	hkpWorld* getWorld(){ return world; }
+	// Adds a rigid body to the physics world.
+	void addRigidBody( const Body* body );
 
-private:
+	// Removes a rigid body from the physics world.
+	void removeRigidBody( const Body* body );
 
+protected:
+
+	// Keeps track of simulation state.
 	bool enableSimulation;
 
-	hkpWorld* world; 
-	hkThreadMemory* threadMemory;
-	
-#ifdef HAVOK_ENABLE_VDB
-	hkVisualDebugger* vdb;
-#endif
+	// Bullet collision configuration.
+	btCollisionConfiguration* config;
 
-	bool worldCreated;  
-	char* stackBuffer;
+	// Controls the physics broadphase.
+	btBroadphaseInterface* broadphase;
+
+	// Dispatches object collisions.
+	btCollisionDispatcher* dispatcher;
+
+	// Solves the physics equations.
+	btSequentialImpulseConstraintSolver* solver;
+
+	// Physics world.
+	btDiscreteDynamicsWorld* world;
 };
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace

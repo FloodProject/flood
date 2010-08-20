@@ -55,20 +55,21 @@ struct ComponentEntry
 #define BMP(s) s, sizeof(s)
 
 static ComponentEntry components[] = {
-	{ true, TYPE(Transform), BMP(chart_line) },
-	{ true, TYPE(Model), BMP(shape_flip_horizontal) },
-	{ true, TYPE(Camera), BMP(camera) },
-	{ true, TYPE(FirstPersonCamera), BMP(camera) },
-	{ true, TYPE(Light), BMP(lightbulb_off) },
-	{ true, TYPE(Sound), BMP(sound) },
-	//{ true, TYPE(Listener), BMP(status_online) },
-	{ true, TYPE(Terrain), BMP(world) },
-	{ true, TYPE(Grid), BMP(grid_icon_white_bg) },
-	{ true, TYPE(Geometry), BMP(shape_flip_horizontal) },
-	//{ true, TYPE(Body), BMP(link) },
-	{ true, TYPE(Skydome), BMP(skydome) },
-	//{ true, TYPE(Gizmo), BMP(vector_icon) },
-	{ false, TYPE(Scene), BMP(sitemap_color) }
+	{ true, TYPE(Transform),			BMP(chart_line) },
+	{ true, TYPE(Model),				BMP(shape_flip_horizontal) },
+	{ true, TYPE(Camera),				BMP(camera) },
+	{ true, TYPE(FirstPersonCamera),	BMP(camera) },
+	{ true, TYPE(Light),				BMP(lightbulb_off) },
+	{ true, TYPE(Sound),				BMP(sound) },
+	//{ true, TYPE(Listener),			BMP(status_online) },
+	{ true, TYPE(Terrain),				BMP(world) },
+	{ true, TYPE(Grid),					BMP(grid_icon_white_bg) },
+	{ true, TYPE(Geometry),				BMP(shape_flip_horizontal) },
+	{ true, TYPE(BoxShape),				BMP(link) },
+	{ true, TYPE(Body),					BMP(link) },
+	{ true, TYPE(Skydome),				BMP(skydome) },
+	//{ true, TYPE(Gizmo),				BMP(vector_icon) },
+	{ false, TYPE(Scene),				BMP(sitemap_color) }
 };
 
 static std::map<const Type*, wxBitmap> bitmaps;
@@ -500,6 +501,21 @@ void ScenePage::onComponentAdd(wxCommandEvent& event )
 	else if( type->is<Skydome>() )
 	{
 		component.reset( new Skydome() );
+	}
+	//-----------------------------------//
+	else if( type->is<Light>() )
+	{
+		component.reset( new Light() );
+	}
+	//-----------------------------------//
+	else if( type->is<BoxShape>() )
+	{
+		component.reset( new BoxShape() );
+	}
+	//-----------------------------------//
+	else if( type->is<Body>() )
+	{
+		component.reset( new Body() );
 	}
 	else
 		debug( "TODO: Unsupported component" );

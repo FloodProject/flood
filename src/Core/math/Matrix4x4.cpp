@@ -99,6 +99,35 @@ Vector4 Matrix4x4::operator *( const Vector4& v ) const
 
 //-----------------------------------//
 
+Matrix4x4 Matrix4x4::transpose() const
+{
+	Matrix4x4 m;
+	
+	m.m11 = m11;
+	m.m12 = m21;
+	m.m13 = m31;
+	m.m14 = tx;
+
+	m.m21 = m12;
+	m.m22 = m22;
+	m.m23 = m32;
+	m.m24 = ty;
+
+	m.m31 = m13;
+	m.m32 = m23;
+	m.m33 = m33;
+	m.m34 = tz;
+
+	m.tx = m14;
+	m.ty = m24;
+	m.tz = m34;
+	m.tw = tw;
+
+	return m;
+}
+
+//-----------------------------------//
+
 Matrix4x4 Matrix4x4::inverse() const
 {
     int colIdx[] = { 0, 0, 0, 0 };

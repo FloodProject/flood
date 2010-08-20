@@ -38,6 +38,9 @@ public:
 	// Returns the inverse of the matrix.
 	Matrix4x4 inverse() const;
 
+	// Returns the inverse of the matrix.
+	Matrix4x4 transpose() const;
+
 	// Multiplies two matrices together.
 	Matrix4x4 operator *(const Matrix4x4& m2) const;
 

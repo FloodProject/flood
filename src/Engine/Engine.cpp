@@ -16,10 +16,10 @@
 #include "vapor/audio/Device.h"
 #include "vapor/script/State.h"
 #include "vapor/scene/Scene.h"
-#include "vapor/physics/Physics.h"
 #include "vapor/paging/PageManager.h"
 #include "vapor/resources/ResourceManager.h"
 #include "ResourceLoaders.h"
+#include "vapor/physics/Physics.h"
 
 namespace vapor {
 
@@ -58,7 +58,7 @@ Engine::~Engine()
 	
 	delete taskManager;
 	//delete audioDevice;
-	//delete physicsManager;
+	delete physicsManager;
 	delete scriptState;
 	delete renderDevice;
 	delete resourceManager;
@@ -94,7 +94,7 @@ void Engine::init( bool createWindow )
 	resourceManager = new ResourceManager( fw, taskManager );
 
 	// create the physics manager
-	//physicsManager = PhysicsManager::getInstancePtr();
+	physicsManager = new PhysicsManager();
 
 	// register default codecs
 	setupResourceLoaders();
@@ -217,7 +217,7 @@ void Engine::update( double delta )
 	this->getScriptState()->update( delta );
 #endif
 
-	//this->getPhysicsManager()->update( delta );
+	physicsManager->update( delta );
 }
 
 //-----------------------------------//

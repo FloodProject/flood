@@ -55,7 +55,6 @@
 #include <vapor/scene/Skydome.h>
 #include <vapor/scene/Water.h>
 #include <vapor/scene/Billboard.h>
-#include <vapor/scene/Body.h>
 #include <vapor/scene/Tags.h>
 
 //---------------------------------------------------------------------//
@@ -114,6 +113,8 @@
 //---------------------------------------------------------------------//
 
 #include <vapor/physics/Physics.h>
+#include <vapor/physics/Body.h>
+#include <vapor/physics/BoxShape.h>
 
 //---------------------------------------------------------------------//
 // Terrain-related Includes

@@ -71,6 +71,22 @@ public:
 		return std::static_pointer_cast<T>((*it).second);
 	}
 
+	// Gets the first found component inheriting the given type.
+	template<typename T>
+	std::shared_ptr<T> getTypedComponent()
+	{
+		foreach( const ComponentMapPair& p, components )
+		{
+			const ComponentPtr& component = p.second;
+			const Type& componentType = component->getInstanceType();
+
+			if( componentType.inherits<T>() )
+				return std::static_pointer_cast<T>(component);
+		}
+
+		return std::shared_ptr<T>();
+	}
+
 	// Returns all the registered components in this node.
 	GETTER(Components, const ComponentMap&, components)
 

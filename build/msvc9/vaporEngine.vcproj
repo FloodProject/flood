@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\boost\&quot;;&quot;$(SolutionDir)dep\picopng\&quot;;&quot;$(SolutionDir)dep\stb\&quot;;&quot;$(SolutionDir)dep\vld\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;;&quot;$(SolutionDir)dep\openal\include&quot;;&quot;$(SolutionDir)dep\ogg\include&quot;;&quot;$(SolutionDir)dep\physfs\include&quot;;&quot;$(SolutionDir)dep\vorbis\include&quot;;&quot;$(SolutionDir)dep\jsoncpp\include&quot;;&quot;$(SolutionDir)dep\SFML\include&quot;;&quot;$(SolutionDir)dep\fd_delegate\include&quot;;&quot;$(SolutionDir)dep\lua\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\boost\&quot;;&quot;$(SolutionDir)dep\picopng\&quot;;&quot;$(SolutionDir)dep\stb\&quot;;&quot;$(SolutionDir)dep\vld\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;;&quot;$(SolutionDir)dep\openal\include&quot;;&quot;$(SolutionDir)dep\ogg\include&quot;;&quot;$(SolutionDir)dep\physfs\include&quot;;&quot;$(SolutionDir)dep\vorbis\include&quot;;&quot;$(SolutionDir)dep\jsoncpp\include&quot;;&quot;$(SolutionDir)dep\SFML\include&quot;;&quot;$(SolutionDir)dep\fd_delegate\include&quot;;&quot;$(SolutionDir)dep\lua\include&quot;;&quot;$(SolutionDir)dep\bullet\include&quot;"
 				PreprocessorDefinitions="_DEBUG;___DEBUG;WIN32;_WINDOWS"
 				MinimalRebuild="true"
 				ExceptionHandling="1"
@@ -1289,19 +1289,10 @@
 			Name="Physics"
 			>
 			<File
-				RelativePath="..\..\src\Engine\Body.cpp"
+				RelativePath="..\..\src\Engine\physics\Body.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -1309,31 +1300,39 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\inc\vapor\scene\Body.h"
+				RelativePath="..\..\inc\vapor\physics\Body.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\Engine\Physics.cpp"
+				RelativePath="..\..\src\Engine\physics\BoxShape.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\physics\BoxShape.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\Engine\physics\Physics.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
+						DisableSpecificWarnings="4127"
 					/>
 				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\inc\vapor\physics\Physics.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\Engine\physics\Shape.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\physics\Shape.h"
 				>
 			</File>
 		</Filter>

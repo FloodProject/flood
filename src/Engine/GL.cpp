@@ -19,13 +19,17 @@ namespace vapor {
 bool glHasError( const std::string& msg )
 {
 	bool err = false;
+	uint i = 5;
 
 #ifdef VAPOR_DEBUG
-	int glErr;
-	while( (glErr = glGetError()) != GL_NO_ERROR )
+	int gl_err;
+	while( (gl_err = glGetError()) != GL_NO_ERROR )
 	{
 		warn( "gl", msg.c_str() );
 		err = true;
+
+		if( --i == 0 )
+			break;
 	}
 #endif
 

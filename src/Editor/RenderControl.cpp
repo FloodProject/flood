@@ -95,8 +95,8 @@ void RenderControl::doUpdate(wxTimerEvent&)
 
 void RenderControl::doRender(wxTimerEvent&)
 {
-	if( !needsRedraw )
-		return;
+	//if( !needsRedraw )
+		//return;
 
 	Refresh();
 	needsRedraw = false;

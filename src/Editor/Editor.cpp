@@ -437,9 +437,8 @@ void EditorFrame::onRender()
 
 void EditorFrame::onUpdate( double delta )
 {
-	editorScene->update( delta );
 	engine->update( delta );
-
+	editorScene->update( delta );
 	//eventManager->onSceneUpdate();
 }
 
@@ -456,7 +455,8 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 	{
 		pluginManagerFrame->Show( !pluginManagerFrame->IsShown() );
 		pluginManagerFrame->SetFocus();
-		return;
+		
+		break;
 	}
 	//-----------------------------------//
 	case Toolbar_ToogleGrid:
@@ -467,15 +467,22 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 			grid->setVisible( !grid->isVisible() );
 		
 		RefreshViewport();
-		return;
+		
+		break;
 	}
 	//-----------------------------------//
 	case Toolbar_TooglePlay:
 	{
-		// Enable all simulations.
-		//PhysicsManager* pm = engine->getPhysicsManager();
-		//if( pm ) pm->setSimulationEnabled( !pm->getSimulationEnabled() );
-		return;
+		// Toogle the simulation state.
+		PhysicsManager* physics = engine->getPhysicsManager();
+		
+		if( physics )
+		{
+			bool state = physics->getSimulation();
+			physics->setSimulation( !state );
+		}
+		
+		break;
 	}
 	//-----------------------------------//
 	case Toolbar_ToogleViewport:
@@ -486,8 +493,8 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 			mainSplitter->SetExpanded(-1);
 		else
 			mainSplitter->SetExpanded(0);
-		
-		return;
+
+		break;
 	}
 	//-----------------------------------//
 	case Toolbar_ToogleSidebar:
@@ -507,8 +514,8 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 
 		SetClientSize( newSize );
 		Layout();
-		
-		return;
+
+		break;
 	}
 	//-----------------------------------//
 	} // end switch
@@ -530,6 +537,9 @@ void EditorFrame::createEditorScene()
 
 void EditorFrame::createScene()
 {
+	PhysicsManager* physics = engine->getPhysicsManager();
+	physics->createWorld();
+
 	const ScenePtr& scene = engine->getSceneManager();
 	ResourceManager* const rm = engine->getResourceManager();
 
