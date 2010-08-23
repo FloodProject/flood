@@ -3,9 +3,6 @@ WIP (work-in-progress)
 
 Add UpdateUI event to Play button.
 Add a reset method to the editor that sets to defaults (Physics state)
-
-
-Serialization
 Light and Camera debug
 
 EDITOR:

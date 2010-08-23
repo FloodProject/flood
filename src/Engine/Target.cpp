@@ -8,7 +8,7 @@
 
 #include "vapor/PCH.h"
 #include "vapor/render/Target.h"
-#include "vapor/render/Viewport.h"
+#include "vapor/render/View.h"
 
 namespace vapor {
 
@@ -23,17 +23,17 @@ Vector2i Settings::getSize() const
 
 RenderTarget::~RenderTarget()
 {
-	foreach( Viewport* viewport, viewports )
-		delete viewport;
+	foreach( View* view, viewports )
+		delete view;
 }
 
 //-----------------------------------//
 
-Viewport* RenderTarget::addViewport( const CameraPtr& camera )
+View* RenderTarget::addViewport( const CameraPtr& camera )
 {
-	Viewport* viewport = new Viewport(camera, this);
-	viewports.push_back( viewport );
-	return viewport;
+	View* view = new View(camera, this);
+	viewports.push_back( view );
+	return view;
 }
 
 //-----------------------------------//

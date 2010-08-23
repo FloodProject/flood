@@ -93,28 +93,6 @@ Json::Value Serializer::serializeNode(const NodePtr& node)
 
 //-----------------------------------//
 
-ComponentPtr createComponent(const Type* type)
-{
-	ComponentPtr c;
-
-	if( type->is<Transform>() )
-		c.reset( new Transform() );
-	else if( type->is<Light>() )
-		c.reset( new Light() );
-	else if( type->is<Model>() )
-		c.reset( new Model() );
-	else if( type->is<Skydome>() )
-		c.reset( new Skydome() );
-	else if( type->is<Terrain>() )
-		c.reset( new Terrain() );
-	else
-		assert( false );
-
-	return c;
-}
-
-//-----------------------------------//
-
 NodePtr Serializer::deserializeNode( const Json::Value& nodeValue )
 {
 	NodePtr node( new Node() );
@@ -134,7 +112,7 @@ NodePtr Serializer::deserializeNode( const Json::Value& nodeValue )
 		if( !type )
 			continue;
 
-		ComponentPtr component = createComponent(type);
+		ComponentPtr component( (Component*) type->createInstance() );
 		assert( component != nullptr );
 
 		const Json::Value& componentValue = componentValues[name];
@@ -223,7 +201,7 @@ void Serializer::serializeFields(const Class& type, void* object, Json::Value& v
 
 //-----------------------------------//
 
-Vector3 convertValueToVector3( const Json::Value& value )
+static Vector3 convertValueToVector3( const Json::Value& value )
 {
 	Vector3 vec(
 		float(value[0u].asDouble()),
@@ -235,7 +213,7 @@ Vector3 convertValueToVector3( const Json::Value& value )
 
 //-----------------------------------//
 
-Color convertValueToColor( const Json::Value& value )
+static Color convertValueToColor( const Json::Value& value )
 {
 	Color color(
 		float(value[0u].asDouble()),
@@ -338,7 +316,7 @@ void Serializer::saveToFile( const std::string& name )
 
 //-----------------------------------//
 
-Json::Value convertVector3( const Vector3& vec )
+static Json::Value convertVector3( const Vector3& vec )
 {
 	Json::Value v;
 	
@@ -351,7 +329,7 @@ Json::Value convertVector3( const Vector3& vec )
 
 //-----------------------------------//
 
-Json::Value convertEulerAngles( const EulerAngles& ang )
+static Json::Value convertEulerAngles( const EulerAngles& ang )
 {
 	Json::Value v;
 	
@@ -364,7 +342,7 @@ Json::Value convertEulerAngles( const EulerAngles& ang )
 
 //-----------------------------------//
 
-Json::Value convertColor( const Color& c )
+static Json::Value convertColor( const Color& c )
 {
 	Json::Value v;
 	
@@ -448,4 +426,4 @@ Json::Value Serializer::valueFromPrimitive( const Field& field, void* object )
 
 //-----------------------------------//
 
-} // end namespace 
+} // end namespace

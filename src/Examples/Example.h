@@ -47,14 +47,14 @@ protected:
 private:
 	
 	Window* window;
-	Viewport* viewport;
+	View* view;
 	CameraPtr camera;
 
 	LabelPtr labelFPS;
 	TerrainPtr terrain;
 
 	NodePtr nodeFBO;
-	Viewport* viewportFBO;
+	View* viewportFBO;
 	TexturePtr textureFBO;
 	RenderBuffer* bufferFBO;
 };

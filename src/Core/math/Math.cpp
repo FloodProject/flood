@@ -47,7 +47,7 @@ float Interpolate::cubic(float a, float b, float t)
 bool Math::floatEqual(float a, float b)
 {
 	return fabs(a - b) < 
-		std::numeric_limits<float>::epsilon();
+		Limits::FloatEpsilon;
 }
 
 //-----------------------------------//

@@ -7,11 +7,12 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include <BulletCollision/CollisionShapes/btBoxShape.h>
 #include "vapor/physics/BoxShape.h"
-#include "vapor/math/BoundingBox.h"
+#include "vapor/physics/Convert.h"
 #include "vapor/scene/Node.h"
 #include "vapor/scene/Transform.h"
+
+#include <BulletCollision/CollisionShapes/btBoxShape.h>
 
 namespace vapor {
 
@@ -35,29 +36,21 @@ BoxShape::~BoxShape()
 
 //-----------------------------------//
 
-btVector3 toBulletBox(const AABB& box)
-{
-	return btVector3(
-		box.max.x,
-		box.max.y,
-		box.max.z );
-}
-
-//-----------------------------------//
-
 void BoxShape::update( double delta )
 {
+	if( boxShape )
+		return;
+
 	const TransformPtr& transform = getNode()->getTransform();
 	
 	if( !transform )
 		return;
 	
 	const AABB& box = transform->getBoundingVolume();
+	const Vector3& scale = transform->getScale();
 	
-	if( !boxShape )
-	{
-		boxShape = new btBoxShape(toBulletBox(box));
-	}
+	boxShape = new btBoxShape(Convert::toBullet(box));
+	boxShape->setLocalScaling(Convert::toBullet(scale));
 }
 
 //-----------------------------------//

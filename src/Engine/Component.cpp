@@ -14,7 +14,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS(Component)
+BEGIN_CLASS_ABSTRACT(Component)
 	//FIELD_PRIMITIVE(Component, bool, debugVisible)
 END_CLASS()
 

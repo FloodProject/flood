@@ -65,6 +65,9 @@ void ProjectPlugin::onPluginEnable()
 	toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
 		&ProjectPlugin::onSaveButtonClick, this, saveButton->GetId() );
 
+	toolBar->Bind( wxEVT_UPDATE_UI,
+		&ProjectPlugin::onSaveButtonUpdateUI, this, saveButton->GetId() );
+
 	UndoManager* undo = editor->getUndoManager();
 	undo->onUndoRedoEvent += fd::bind(&ProjectPlugin::onUndoRedoEvent, this);
 }
@@ -121,6 +124,13 @@ void ProjectPlugin::onOpenButtonClick(wxCommandEvent& event)
 void ProjectPlugin::onSaveButtonClick(wxCommandEvent& event)
 {
 	saveScene();
+}
+
+//-----------------------------------//
+
+void ProjectPlugin::onSaveButtonUpdateUI(wxUpdateUIEvent& event)
+{
+	event.Enable( unsavedChanges );
 }
 
 //-----------------------------------//

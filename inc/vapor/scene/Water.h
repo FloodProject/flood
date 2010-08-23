@@ -25,6 +25,7 @@ class VAPOR_API Water : public Geometry
 
 public:
 
+	Water();
 	Water( MaterialPtr material );
 
 protected:

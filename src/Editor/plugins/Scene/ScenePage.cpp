@@ -21,6 +21,7 @@ enum
 {
 	ID_MenuSceneNodeDelete = wxID_DELETE,
 	ID_SceneTree = wxID_HIGHEST+8321,
+	ID_MenuSceneNodeDuplicate,
 	ID_MenuSceneNodeVisible,
 	ID_MenuSceneNodeWireframe,
 	ID_ButtonNodeAdd,
@@ -60,7 +61,7 @@ static ComponentEntry components[] = {
 	{ true, TYPE(Camera),				BMP(camera) },
 	{ true, TYPE(FirstPersonCamera),	BMP(camera) },
 	{ true, TYPE(Light),				BMP(lightbulb_off) },
-	{ true, TYPE(Sound),				BMP(sound) },
+	//{ true, TYPE(Sound),				BMP(sound) },
 	//{ true, TYPE(Listener),			BMP(status_online) },
 	{ true, TYPE(Terrain),				BMP(world) },
 	{ true, TYPE(Grid),					BMP(grid_icon_white_bg) },
@@ -79,7 +80,6 @@ static std::map<const Type*, wxBitmap> bitmaps;
 ScenePage::ScenePage( EditorFrame* frame, wxWindow* parent, wxWindowID id )
 	: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(230, -1) )
 	, editor(frame)
-	//, weakScene(ScenePtr())
 	, treeCtrl(nullptr)
 	, imageList(nullptr)
 	, buttonNodeAdd(nullptr)
@@ -96,9 +96,13 @@ ScenePage::ScenePage( EditorFrame* frame, wxWindow* parent, wxWindowID id )
 
 ScenePage::~ScenePage()
 {
-	//ScenePtr scene( weakScene );
-	//scene->onNodeAdded -= fd::bind( &ScenePage::onNodeAdded, this );
-	//scene->onNodeRemoved -= fd::bind( &ScenePage::onNodeRemoved, this );
+	ScenePtr scene = weakScene.lock();
+	
+	if( !scene )
+		return;
+	
+	scene->onNodeAdded -= fd::bind( &ScenePage::onNodeAdded, this );
+	scene->onNodeRemoved -= fd::bind( &ScenePage::onNodeRemoved, this );
 }
 
 //-----------------------------------//
@@ -397,6 +401,7 @@ void ScenePage::onItemMenu(wxTreeEvent& event)
 	}
 
 	menu.Append(ID_MenuSceneNodeDelete, "&Delete");
+	menu.Append(ID_MenuSceneNodeDuplicate, "Duplicate");
 
 	menu.AppendSeparator();
 
@@ -411,20 +416,94 @@ void ScenePage::onItemMenu(wxTreeEvent& event)
 	PopupMenu(&menu, clientpt);
 }
 
+//-----------------------------------//	
+
+template<typename T>
+T* cloneObject(T* object)
+{
+	const Class& type = object->getInstanceType();
+	T* newObject = (T*) type.createInstance();
+
+	foreach( const FieldsPair& p, type.getFields() )
+	{
+		Field* field = p.second;
+		const Type& field_type = field->type;
+		
+		if( field->isPointer() )
+		{
+			field->set<boost::intrusive_ptr<Resource>>(
+				newObject, field->get<boost::intrusive_ptr<Resource>>(object));
+		}
+
+		if( field_type.isPrimitive() )
+		{
+			const Primitive& type = (Primitive&) field_type;
+
+			if( type.isBool() )
+			{
+				field->set<bool>(newObject, field->get<bool>(object));
+			}
+			//-----------------------------------//
+			else if( type.isInteger() )
+			{
+				field->set<int>(newObject, field->get<int>(object));
+			}
+			//-----------------------------------//
+			else if( type.isFloat() )
+			{
+				field->set<float>(newObject, field->get<float>(object));
+			}
+			//-----------------------------------//
+			else if( type.isString() )
+			{
+				field->set<std::string>(newObject, field->get<std::string>(object));
+			}
+			//-----------------------------------//
+			else if( type.isColor() )
+			{
+				field->set<Color>(newObject, field->get<Color>(object));
+			}
+			//-----------------------------------//
+			else if( type.isVector3() )
+			{
+				field->set<Vector3>(newObject, field->get<Vector3>(object));
+			}
+		}
+	}
+
+	return newObject;
+}
+
 //-----------------------------------//
 
 void ScenePage::onNodeMenu( wxCommandEvent& event )
 {
 	int id = event.GetId();
 
+	const NodePtr& node = getNodeFromTreeId( menuItemId );
+	
+	if( !node )
+		return;
+
 	if( id == ID_MenuSceneNodeVisible )
-	{
-		const NodePtr& node = getNodeFromTreeId( menuItemId );
-		
-		if( !node )
-			return;
-		
+	{		
 		node->setVisible( !node->isVisible() );
+	}
+	//-----------------------------------//
+	else if( id == ID_MenuSceneNodeDuplicate )
+	{
+		ScenePtr scene = weakScene.lock();
+	
+		NodePtr newNode( cloneObject<Node>(node.get()) );
+
+		foreach( const ComponentMapPair& p, node->getComponents() )
+		{
+			ComponentPtr component = p.second;
+			ComponentPtr newComponent( cloneObject<Component>(component.get()) );
+			newNode->addComponent(newComponent);
+		}
+		
+		scene->add(newNode);
 	}
 	//-----------------------------------//
 	else if( id == ID_MenuSceneNodeWireframe )
@@ -444,6 +523,26 @@ void ScenePage::onNodeMenu( wxCommandEvent& event )
 				rend->setPolygonMode( mode );
 			}
 		}
+	}
+	else if( id == ID_MenuSceneNodeDelete )
+	{
+		std::string str = (std::string) treeCtrl->GetItemText(menuItemId);
+
+		TypeRegistry& typeRegistry = TypeRegistry::getInstance();
+		const Class* type = (Class*) typeRegistry.getType(str);
+		assert( type != nullptr );
+
+		if( !type->inherits<Component>() )
+			return;
+
+		const ComponentMap& components = node->getComponents();
+		ComponentMap::const_iterator it = components.find(type);
+
+		if( it == components.end() )
+			return;
+
+		ComponentPtr component = it->second;
+		node->removeComponent(component);
 	}
 	//-----------------------------------//
 	else
@@ -486,39 +585,11 @@ void ScenePage::onComponentAdd(wxCommandEvent& event )
 			component.reset( new Model(mesh) );
 		}
 	}
-	//-----------------------------------//
-	else if( type->is<Transform>() )
-	{
-		component.reset( new Transform() );
-	}
-	//-----------------------------------//
-	else if( type->is<FirstPersonCamera>() )
-	{
-		RenderDevice* renderDevice = engine->getRenderDevice();
-		component.reset( new FirstPersonCamera(renderDevice) );
-	}
-	//-----------------------------------//
-	else if( type->is<Skydome>() )
-	{
-		component.reset( new Skydome() );
-	}
-	//-----------------------------------//
-	else if( type->is<Light>() )
-	{
-		component.reset( new Light() );
-	}
-	//-----------------------------------//
-	else if( type->is<BoxShape>() )
-	{
-		component.reset( new BoxShape() );
-	}
-	//-----------------------------------//
-	else if( type->is<Body>() )
-	{
-		component.reset( new Body() );
-	}
 	else
-		debug( "TODO: Unsupported component" );
+	{
+		Class& classType = (Class&) *type;
+		component.reset( (Component*) classType.createInstance() );
+	}
 
 	if( node->addComponent(component) )
 		addComponent(menuItemId, component);

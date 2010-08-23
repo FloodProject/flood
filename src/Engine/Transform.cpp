@@ -30,7 +30,10 @@ Transform::Transform( float x, float y, float z )
 	, needsNotify( false )
 	, needsVolumeUpdate( true )
 	, externalTransform( false )
-{ }
+{
+	Class& klass = getType();
+	klass.onFieldChanged += fd::bind(&Transform::onFieldChanged, this);
+}
 
 //-----------------------------------//
 
@@ -41,7 +44,18 @@ Transform::Transform( const Transform& rhs )
 	, needsVolumeUpdate( false )
 	, needsNotify( false )
 	, externalTransform( false )
-{ }
+{
+	Class& klass = getType();
+	klass.onFieldChanged += fd::bind(&Transform::onFieldChanged, this);
+}
+
+//-----------------------------------//
+
+Transform::~Transform()
+{
+	Class& klass = getType();
+	klass.onFieldChanged -= fd::bind(&Transform::onFieldChanged, this);
+}
 
 //-----------------------------------//
 
@@ -54,7 +68,7 @@ void Transform::translate( const Vector3& tr )
 
 void Transform::translate( float x, float y, float z )
 {
-	needsNotify = true;
+	setNotify();
 
 	translation.x += x;
 	translation.y += y;
@@ -79,7 +93,7 @@ void Transform::scale( const Vector3& s )
 
 void Transform::scale( float x, float y, float z )
 {
-	needsNotify = true;
+	setNotify();
 
 	scaling.x *= x;
 	scaling.y *= y;
@@ -97,7 +111,7 @@ void Transform::rotate( const Vector3& rot )
 
 void Transform::rotate( float xang, float yang, float zang )
 {
-	needsNotify = true;
+	setNotify();
 
 	rotation.x += xang;
 	rotation.y += yang;
@@ -108,7 +122,7 @@ void Transform::rotate( float xang, float yang, float zang )
 
 void Transform::setPosition( const Vector3& newTranslation )
 {
-	needsNotify = true;
+	setNotify();
 	translation = newTranslation;
 }
 
@@ -116,7 +130,7 @@ void Transform::setPosition( const Vector3& newTranslation )
 
 void Transform::setRotation( const EulerAngles& newRotation )
 {
-	needsNotify = true;
+	setNotify();
 	rotation = newRotation;
 }
 
@@ -124,7 +138,7 @@ void Transform::setRotation( const EulerAngles& newRotation )
 
 void Transform::setScale( const Vector3& newScale )
 {
-	needsNotify = true;
+	setNotify();
 	scaling = newScale;
 }
 
@@ -169,7 +183,7 @@ Matrix4x3 Transform::lookAt( const Vector3& lookAtVector, const Vector3& upVecto
 
 void Transform::reset( )
 {
-	needsNotify = true;
+	setNotify();
 
 	translation.zero();
 	scaling = Vector3( 1.0f );
@@ -178,9 +192,23 @@ void Transform::reset( )
 
 //-----------------------------------//
 
-void Transform::setAbsoluteTransform( const Matrix4x3& newTransform )
+void Transform::setNotify()
 {
 	needsNotify = true;
+}
+
+//-----------------------------------//
+
+void Transform::unsetNotify()
+{
+	needsNotify = false;
+}
+
+//-----------------------------------//
+
+void Transform::setAbsoluteTransform( const Matrix4x3& newTransform )
+{
+	setNotify();
 	externalTransform = true;
 	transform = newTransform;
 }
@@ -189,12 +217,12 @@ void Transform::setAbsoluteTransform( const Matrix4x3& newTransform )
 
 Matrix4x3 Transform::getLocalTransform() const
 {
-	Matrix4x3 matOrientation = Matrix4x3::createRotation(rotation);
-	Matrix4x3 matTranslation = Matrix4x3::createTranslation(translation);
 	Matrix4x3 matScale = Matrix4x3::createScale(scaling);
+	Matrix4x3 matRotation = Matrix4x3::createRotation(rotation);
+	Matrix4x3 matTranslation = Matrix4x3::createTranslation(translation);
 	
 	// Combine all the transformations in a single matrix.
-	Matrix4x3 transform = matScale*matOrientation*matTranslation;
+	Matrix4x3 transform = matScale*matRotation*matTranslation;
 
 	return transform;
 }
@@ -247,7 +275,7 @@ void Transform::update( double VAPOR_UNUSED(delta) )
 	if( needsNotify )
 	{
 		notify();
-		needsNotify = false;
+		unsetNotify();
 	}
 
 	externalTransform = false;
@@ -270,6 +298,13 @@ void Transform::notify()
 AABB Transform::getWorldBoundingVolume() const
 {
 	return boundingVolume.transform( getAbsoluteTransform() );
+}
+
+//-----------------------------------//
+
+void Transform::onFieldChanged(const Field& field)
+{
+	setNotify();
 }
 
 //-----------------------------------//

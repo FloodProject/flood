@@ -52,6 +52,24 @@ namespace BlendingDestination
 
 //-----------------------------------//
 
+namespace DepthCompare
+{
+	enum Enum
+	{
+		Never = GL_NEVER,
+		Less = GL_LESS,
+		Equal = GL_EQUAL,
+		LessOrEqual = GL_LEQUAL,
+		Greater = GL_GREATER,
+		NotEqual = GL_NOTEQUAL,
+		GreaterOrEqual = GL_GEQUAL,
+		Always = GL_ALWAYS,
+	};
+}
+
+
+//-----------------------------------//
+
 typedef std::map< uint, TexturePtr > TextureMap;
 typedef std::pair< const uint, TexturePtr > TextureMapPair;
 
@@ -92,6 +110,9 @@ public:
 
 	// Gets/sets the depth testing of the material.
 	ACESSOR(DepthTest, bool, depthTest)
+
+	// Gets/sets the depth testing of the material.
+	ACESSOR(DepthCompare, DepthCompare::Enum, depthCompare)
 
 	// Gets/sets the line width of the material.
 	ACESSOR(LineWidth, float, lineWidth)
@@ -145,6 +166,7 @@ protected:
 	bool cullBackfaces;
 	
 	// Depth settings.
+	DepthCompare::Enum depthCompare;
 	bool depthTest;
 	bool depthWrite;
 

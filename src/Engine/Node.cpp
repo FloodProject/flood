@@ -36,7 +36,8 @@ Node::Node()
 
 bool Node::addComponent( const ComponentPtr& component )
 {
-	assert( component != nullptr );
+	if( !component )
+		return false;
 
 	const Class* type = &component->getInstanceType();
 
@@ -68,33 +69,28 @@ bool Node::addComponent( const ComponentPtr& component )
 
 //-----------------------------------//
 
-bool Node::removeComponent( const std::string& type )
+bool Node::removeComponent( const ComponentPtr& component )
 {
-	assert( false );
+	if( !component )
+		return false;
+	
+	const Class* type = &component->getInstanceType();
 
-	//assert( !type.empty() );
+	ComponentMap::iterator it = components.find(type);
+	
+	if( it == components.end() )
+		return false;
 
-	//if( type.empty() ) 
-	//	return false;
+	components.erase(it);
+	
+	if( !type->inherits<Geometry>() )
+		return true;
 
-	//// Searches for a component with the same type.
-	//ComponentMap::iterator it = components.find( type );
-	//if( it == components.end() )
-	//	return false;
-	//
-	//const ComponentPtr& component = components[type];
-	//components.erase( it );
-
-	//// Check if we cached the component...
-	//const GeometryPtr& geometry = std::dynamic_pointer_cast< Geometry >( component );
-	//if( geometry ) 
-	//{
-	//	std::vector< GeometryPtr >::iterator it;
-	//	it = std::find( geometries.begin(), geometries.end(), geometry );
-
-	//	if( it != geometries.end() )
-	//		geometries.erase( it );
-	//}
+	std::vector<GeometryPtr>::iterator it2;
+	it2 = std::find( geometries.begin(), geometries.end(), component );
+	
+	assert( it2 != geometries.end() );
+	geometries.erase( it2 );
 
 	return true;
 }
@@ -109,6 +105,10 @@ void Node::update( double delta )
 	foreach( const GeometryPtr& geom, getGeometry() )
 		geom->update( delta );
 
+	// Update transform (info may be needed by other components)
+	if( transform )
+		transform->update( delta );
+
 	// Update everything else.
 	foreach( const ComponentMapPair& component, components )
 	{
@@ -117,10 +117,6 @@ void Node::update( double delta )
 
 		component.second->update( delta );
 	}
-
-	// Update transform (info may be needed by other components)
-	if( transform )
-		transform->update( delta );
 }
 
 //-----------------------------------//

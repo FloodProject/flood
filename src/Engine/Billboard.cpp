@@ -20,6 +20,11 @@ END_CLASS()
 
 //-----------------------------------//
 
+Billboard::Billboard()
+{ }
+
+//-----------------------------------//
+
 Billboard::Billboard( const CameraPtr& cam, BillboardType::Enum type )
 	: camera(cam)
 	, billboardType(type)

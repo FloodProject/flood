@@ -13,7 +13,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(Projector, Component)
+BEGIN_CLASS_PARENT_ABSTRACT(Projector, Component)
 END_CLASS()
 
 //-----------------------------------//

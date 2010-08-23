@@ -29,6 +29,7 @@ RenderDevice::RenderDevice( ResourceManager* rm )
 	: adapter(nullptr)
 	, window(nullptr)
 	, activeTarget(nullptr)
+	, activeView(nullptr)
 	, programManager(nullptr)
 	, textureManager(nullptr)
 	, shadowDepthBuffer(nullptr)
@@ -100,70 +101,80 @@ void RenderDevice::checkExtensions()
 
 //-----------------------------------//
 
-bool stateSorter(const RenderState& lhs, const RenderState& rhs)
+static bool RenderStateSorter(const RenderState& lhs, const RenderState& rhs)
 {
 	return lhs.group < rhs.group;
 }
 
-void RenderDevice::render( RenderBlock& queue, Camera* newCamera ) 
+void RenderDevice::render( RenderBlock& queue ) 
 {
-	assert( newCamera != nullptr );
-	camera = newCamera;
-
 	//setupRenderStateShadow( queue.lights );
 
 	// Sort the renderables by render group (TODO: use a radix sorter).
-	std::sort( queue.renderables.begin(), queue.renderables.end(), &stateSorter );
+	std::sort( queue.renderables.begin(), queue.renderables.end(), &RenderStateSorter );
 
 	// Render all the renderables in the queue.
 	foreach( const RenderState& state, queue.renderables )
 	{
-		const RenderablePtr& rend = state.renderable;
-
-		if( !rend )
-			continue;
-
-		const MaterialPtr& material = rend->getMaterial();
-
-		if( !material )
-			continue;
-
-		const ProgramPtr& program = material->getProgram();
-
-		if( !program )
-			continue;
-
-		rend->bind();
-		setupRenderStateMaterial(material);
-
-		if( !program->isLinked() )
-			continue;
-
-		if( state.group != RenderGroup::Overlays )
-		{
-			if( !setupRenderState(state, camera) )
-				continue;
-
-			if( !setupRenderStateLight(state, queue.lights) )
-				continue;
-		}
-		else if( state.group == RenderGroup::Overlays )
-		{
-			if( !setupRenderStateOverlay(state) )
-				continue;
-		}
-
-		state.renderable->render( this );
-		
-		undoRenderStateMaterial(material);
-		rend->unbind();
+		render(state, queue.lights);
 	}
 }
 
 //-----------------------------------//
 
-bool RenderDevice::setupRenderState( const RenderState& state, Camera* camera )
+void RenderDevice::render( const RenderState& state, const LightQueue& lights )
 {
+	const RenderablePtr& rend = state.renderable;
+
+	if( !rend )
+		return;
+
+	const MaterialPtr& material = rend->getMaterial();
+
+	if( !material )
+		return;
+
+	const ProgramPtr& program = material->getProgram();
+
+	if( !program )
+		return;
+
+	rend->bind();
+	setupRenderStateMaterial(material);
+
+	if( !program->isLinked() )
+		return;
+
+	if( state.group != RenderGroup::Overlays )
+	{
+		if( !setupRenderState(state) )
+			return;
+
+		if( !setupRenderStateLight(state, lights) )
+			return;
+	}
+	else if( state.group == RenderGroup::Overlays )
+	{
+		if( !setupRenderStateOverlay(state) )
+			return;
+	}
+
+	state.renderable->render( this );
+	
+	undoRenderStateMaterial(material);
+	rend->unbind();
+}
+
+//-----------------------------------//
+
+bool RenderDevice::setupRenderState( const RenderState& state )
+{
+	assert( activeView != nullptr );
+	CameraPtr camera = activeView->getCamera();
+
+	if( !camera )
+		return false;
+
 	const Frustum& frustum = camera->getFrustum();
 
 	const Matrix4x3& matModel = state.modelMatrix;
@@ -185,56 +196,56 @@ bool RenderDevice::setupRenderState( const RenderState& state, Camera* camera )
 
 void RenderDevice::updateLightDepth( LightState& state )
 {
-	const LightPtr& light = state.light;
-	assert( light->getLightType() == LightType::Directional );
+	//const LightPtr& light = state.light;
+	//assert( light->getLightType() == LightType::Directional );
 
-	TexturePtr shadowDepthTexture;
-	
-	if( !shadowDepthBuffer )
-	{
-		shadowDepthBuffer = createRenderBuffer( Settings(512, 512) );
-	}
+	//TexturePtr shadowDepthTexture;
+	//
+	//if( !shadowDepthBuffer )
+	//{
+	//	shadowDepthBuffer = createRenderBuffer( Settings(512, 512) );
+	//}
 
-	if( shadowTextures.find(light) == shadowTextures.end() )
-	{
-		shadowDepthTexture = shadowDepthBuffer->createRenderTexture();
-		shadowTextures[light] = shadowDepthTexture;
-	}
-	else
-	{
-		shadowDepthTexture = shadowTextures[light];
-	}
+	//if( shadowTextures.find(light) == shadowTextures.end() )
+	//{
+	//	shadowDepthTexture = shadowDepthBuffer->createRenderTexture();
+	//	shadowTextures[light] = shadowDepthTexture;
+	//}
+	//else
+	//{
+	//	shadowDepthTexture = shadowTextures[light];
+	//}
 
-	CameraPtr lightCamera( new Camera(*camera) );
-	TransformPtr lightTransform( new Transform(*state.transform.get()) );
-	
-	NodePtr lightCameraNode( new Node("ShadowCamera") );
-	lightCameraNode->addTransform(); /*Component( lightTransform );*/
-	lightCameraNode->addComponent( lightCamera );
+	//CameraPtr lightCamera( new Camera(*camera) );
+	//TransformPtr lightTransform( new Transform(*state.transform.get()) );
+	//
+	//NodePtr lightCameraNode( new Node("ShadowCamera") );
+	//lightCameraNode->addTransform(); /*Component( lightTransform );*/
+	//lightCameraNode->addComponent( lightCamera );
 
-	Viewport* lightView = new Viewport(lightCamera, shadowDepthBuffer);
+	//View* lightView = new View(lightCamera, shadowDepthBuffer);
 
-	if( !shadowDepthBuffer->check() )
-		return;
+	//if( !shadowDepthBuffer->check() )
+	//	return;
 
-	// TODO: turn off color writes (glColorMask?)
-	lightView->update();
-	shadowDepthBuffer->unbind();
+	//// TODO: turn off color writes (glColorMask?)
+	//lightView->update();
+	//shadowDepthBuffer->unbind();
 
-	Matrix4x4 bias;
-	bias.identity();
-	bias.m11 = 0.5f;
-	bias.m22 = 0.5f;
-	bias.m33 = 0.5f;
-	bias.tx  = 0.5f;
-	bias.ty  = 0.5f;
-	bias.tz  = 0.5f;
+	//Matrix4x4 bias;
+	//bias.identity();
+	//bias.m11 = 0.5f;
+	//bias.m22 = 0.5f;
+	//bias.m33 = 0.5f;
+	//bias.tx  = 0.5f;
+	//bias.ty  = 0.5f;
+	//bias.tz  = 0.5f;
 
-	const Frustum& frustum = lightCamera->getFrustum();
-	const Matrix4x4& matProjection = frustum.projectionMatrix;
+	//const Frustum& frustum = lightCamera->getFrustum();
+	//const Matrix4x4& matProjection = frustum.projectionMatrix;
 
-	state.projection = lightCamera->getViewMatrix()
-		* matProjection * bias;
+	//state.projection = lightCamera->getViewMatrix()
+	//	* matProjection * bias;
 }
 
 //-----------------------------------//
@@ -327,6 +338,9 @@ void RenderDevice::setupRenderStateMaterial( const MaterialPtr& mat )
 	if( mat->lineWidth != Material::DefaultLineWidth )
 		glLineWidth( mat->getLineWidth() );
 
+	if( mat->depthCompare != DepthCompare::Less )
+		glDepthFunc( mat->depthCompare );
+
 	if( !mat->cullBackfaces )
 		glDisable( GL_CULL_FACE );
 
@@ -347,6 +361,9 @@ void RenderDevice::setupRenderStateMaterial( const MaterialPtr& mat )
 
 void RenderDevice::undoRenderStateMaterial( const MaterialPtr& mat )
 {
+	if( mat->depthCompare != DepthCompare::Less )
+		glDepthFunc( DepthCompare::Less );
+
 	if( mat->isBlendingEnabled() ) 
 		glDisable( GL_BLEND );
 
@@ -393,21 +410,26 @@ void RenderDevice::setClearColor(const Color& newColor)
 
 //-----------------------------------//
 
-void RenderDevice::setViewport( const Vector2i& newLeft, const Vector2i& newSize )
+void RenderDevice::setView( View* view )
 {
-	if( (viewportLeft == newLeft) && (viewportSize == newSize) )
+	if( !view )
 		return;
 
-	viewportLeft = newLeft;
-	viewportSize = newSize;
+	activeView = view;
 
-	glViewport( viewportLeft.x, viewportLeft.y, viewportSize.x, viewportSize.y );
+	Vector2i orig = activeView->getOrigin();
+	Vector2i size = activeView->getSize();
+
+	setClearColor( view->getClearColor() );
+	glViewport( orig.x, orig.y, size.x, size.y );
 }
 
 //-----------------------------------//
 
-void RenderDevice::clearTarget()
+void RenderDevice::clearView()
 {
+	#pragma TODO("Use a scissor test to clear only the view")
+
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	glHasError("Could not clear the render target");
 }
@@ -416,17 +438,14 @@ void RenderDevice::clearTarget()
 
 void RenderDevice::setRenderTarget(RenderTarget* target)
 {
+	if( !target )
+		return;
+
+	if( activeTarget == target )
+		return;
+
 	activeTarget = target;
-
-	if(activeTarget)
-		activeTarget->makeCurrent();
-}
-
-//-----------------------------------//
-
-void RenderDevice::setWindowActiveTarget()
-{
-	setRenderTarget( window );
+	activeTarget->makeCurrent();
 }
 
 //-----------------------------------//

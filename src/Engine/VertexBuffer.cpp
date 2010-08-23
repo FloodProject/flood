@@ -218,7 +218,7 @@ std::vector<Vector3>&
 VertexBuffer::getAttribute( VertexAttribute::Enum attr ) const
 {
 	AttributeMap::iterator it;
-	it = attributes.find( attr );
+	it = attributes.find(attr);
 
 	if( it == attributes.end() )
 		assert( 0 && "Can't return null reference" );

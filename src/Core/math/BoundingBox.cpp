@@ -8,18 +8,15 @@
 
 #include "vapor/PCH.h"
 #include "vapor/math/BoundingBox.h"
+#include "vapor/math/Math.h"
 
 namespace vapor {
-
-static const float f_inf = std::numeric_limits<float>::infinity();
-static const float f_min = std::numeric_limits<float>::min();
-static const float f_max = std::numeric_limits<float>::max();
 
 //-----------------------------------//
 
 AABB::AABB()
-	: min( f_max )
-	, max( f_min )
+	: min( Limits::FloatMaximum )
+	, max( Limits::FloatMinimum )
 { }
 
 //-----------------------------------//
@@ -52,36 +49,35 @@ Vector3 AABB::getCorner( int i ) const
 
 Vector3 AABB::getCenter() const
 {
-	int mid_x = min.x + (max.x-min.x) / 2;
-	int mid_y = min.y + (max.y-min.y) / 2;
-	int mid_z = min.z + (max.z-min.z) / 2;
-	
-	return Vector3( mid_x, mid_y, mid_z );
+	return (min + max) * 0.5;
 }
 
 //-----------------------------------//
 
 void AABB::reset()
 {
-	min.x = f_max;
-	min.y = f_max;
-	min.z = f_max;
-
-	max.x = f_min;
-	max.y = f_min;
-	max.z = f_min;
+	min = Limits::FloatMaximum;
+	max = Limits::FloatMinimum;
 }
 
 //-----------------------------------//
 
 void AABB::add( const Vector3& v )
 {
-	if( v.x < min.x ) min.x = v.x;
-	if( v.x > max.x ) max.x = v.x;
-	if( v.y < min.y ) min.y = v.y;
-	if( v.y > max.y ) max.y = v.y;
-	if( v.z < min.z ) min.z = v.z;
-	if( v.z > max.z ) max.z = v.z;
+	min.x = std::min(min.x, v.x);
+	min.y = std::min(min.y, v.y);
+	min.z = std::min(min.z, v.z);
+
+	max.x = std::max(max.x, v.x);
+	max.y = std::max(max.y, v.y);
+	max.z = std::max(max.z, v.z);
+
+	//if( v.x < min.x ) min.x = v.x;
+	//if( v.x > max.x ) max.x = v.x;
+	//if( v.y < min.y ) min.y = v.y;
+	//if( v.y > max.y ) max.y = v.y;
+	//if( v.z < min.z ) min.z = v.z;
+	//if( v.z > max.z ) max.z = v.z;
 }
 
 //-----------------------------------//
@@ -100,7 +96,15 @@ void AABB::add( const AABB& aabb )
 
 AABB AABB::transform( const Matrix4x3& mat ) const
 {
-	return AABB( min*mat, max*mat );
+	AABB box;
+	
+	for(int i = 0; i < 8; i++)
+	{
+		Vector3 pt = getCorner(i)*mat;
+		box.add(pt);
+	}
+	
+	return box;
 }
 
 //-----------------------------------//

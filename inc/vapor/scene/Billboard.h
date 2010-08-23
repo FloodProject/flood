@@ -50,6 +50,7 @@ class VAPOR_API Billboard : public Component
 
 public:
 
+	Billboard();
 	Billboard( const CameraPtr& cam,
 		BillboardType::Enum type = BillboardType::WorldAligned );
 

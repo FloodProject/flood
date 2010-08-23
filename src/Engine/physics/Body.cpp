@@ -10,81 +10,16 @@
 #include "vapor/physics/Body.h"
 #include "vapor/physics/Shape.h"
 #include "vapor/physics/Physics.h"
+#include "vapor/physics/Convert.h"
+
 #include "vapor/scene/Node.h"
 #include "vapor/scene/Transform.h"
 #include "vapor/Engine.h"
 
 #include <BulletDynamics/Dynamics/btRigidBody.h>
+#include "MotionState.h"
 
 namespace vapor {
-
-//-----------------------------------//
-
-Vector3 convertToVector3( const btVector3& vec )
-{
-	return Vector3(
-		vec.x(),
-		vec.y(),
-		vec.z() );
-}
-
-//-----------------------------------//
-
-class BodyMotionState : public btMotionState
-{
-public:
-
-	BodyMotionState(const TransformPtr& transform)
-		: transform(transform)
-	{
-		assert( transform != nullptr );
-		
-		transform->onTransform += fd::bind(&BodyMotionState::onTransform, this);
-	}
-
-	~BodyMotionState()
-	{
-		transform->onTransform -= fd::bind(&BodyMotionState::onTransform, this);
-	}
-
-    virtual void getWorldTransform(btTransform& worldTransform) const
-	{
-		const Matrix4x3& abs = transform->getAbsoluteTransform();
-		const Matrix4x4& trs = Matrix4x4(abs);
-
-		worldTransform.setFromOpenGLMatrix(&trs.m11);
-    }
-
-    virtual void setWorldTransform(const btTransform& worldTransform)
-	{
-		transform->setPosition( convertToVector3(worldTransform.getOrigin()) );
-
-		EulerAngles rot;
-		worldTransform.getBasis().getEulerZYX(rot.z, rot.y, rot.x);
-
-		transform->setRotation(rot);
-    }
-
-    void onTransform()
-	{
-		Engine* engine = Engine::getInstancePtr();
-		PhysicsManager* physics = engine->getPhysicsManager();
-
-		if( physics->getSimulation() )
-			return;
-
-		if( !body )
-			return;
-
-		const Matrix4x3& abs = transform->getAbsoluteTransform();
-		const Matrix4x4& trs = Matrix4x4(abs);
-
-		body->getWorldTransform().setFromOpenGLMatrix(&trs.m11);
-    }
-
-    TransformPtr transform;
-	btRigidBody* body;
-};
 
 //-----------------------------------//
 
@@ -98,15 +33,24 @@ Body::Body()
 	: body(nullptr)
 	, motionState(nullptr)
 	, mass(10)
-{ }
+{
+	Class& klass = getType();
+	klass.onFieldChanged += fd::bind(&Body::onFieldChanged, this);
+}
 
 //-----------------------------------//
 
 Body::~Body()
 {
-	delete motionState;
+	Class& klass = getType();
+	klass.onFieldChanged -= fd::bind(&Body::onFieldChanged, this);
+
+	TransformPtr transform = motionState->transform;
+	transform->onTransform -= fd::bind(&Body::onTransform, this);
 
 	removeWorld();
+
+	delete motionState;
 	delete body;
 }
 
@@ -115,16 +59,47 @@ Body::~Body()
 void Body::update( double delta )
 {
 	if( !body && !createBody() )
+	{
+		TransformPtr transform = getNode()->getTransform();
+		transform->onTransform += fd::bind(&Body::onTransform, this);
 		return;
+	}
 }
 
 //-----------------------------------//
 
-bool Body::createBody()
+void Body::onTransform()
 {
-	if( body )
-		return true;
+	if( !body )
+		return;
 
+	if( motionState->ignoreTransform )
+	{
+		motionState->ignoreTransform = false;
+		return;
+	}
+
+	TransformPtr transform = getNode()->getTransform();
+	const Vector3& scale = transform->getScale();
+
+	btCollisionShape* shape = getBulletShape();
+	shape->setLocalScaling(Convert::toBullet(scale));
+
+	const Matrix4x3& abs = transform->getAbsoluteTransform();
+	Matrix4x4 trs = Matrix4x4(abs);
+
+	trs.m11 = 1;
+	trs.m22 = 1;
+	trs.m33 = 1;
+
+	body->getWorldTransform().setFromOpenGLMatrix(&trs.m11);
+	body->activate();
+}
+
+//-----------------------------------//
+
+btCollisionShape* Body::getBulletShape() const
+{
 	const NodePtr& node = getNode();
 
 	if( !node )
@@ -135,9 +110,24 @@ bool Body::createBody()
 	if( !shape )
 		return false;
 
-	btCollisionShape* bulletShape = shape->getBulletShape();
+	return shape->getBulletShape();
+}
+
+//-----------------------------------//
+
+bool Body::createBody()
+{
+	if( body )
+		return true;
+
+	btCollisionShape* bulletShape = getBulletShape();
 
 	if( !bulletShape )
+		return false;
+
+	const NodePtr& node = getNode();
+
+	if( !node )
 		return false;
 
 	motionState = new BodyMotionState( node->getTransform() );
@@ -177,6 +167,16 @@ void Body::removeWorld()
 		return;
 	
 	physics->removeRigidBody(this);
+}
+
+//-----------------------------------//
+
+void Body::onFieldChanged(const Field& field)
+{
+	if( !body )
+		return;
+
+	body->setMassProps(mass, btVector3());
 }
 
 //-----------------------------------//

@@ -23,6 +23,10 @@ namespace vapor {
 
 //-----------------------------------//
 
+class BulletDebugDrawer;
+
+//-----------------------------------//
+
 /**
  * Global hub for physics simulations.
  */
@@ -37,6 +41,12 @@ public:
 	// Creates a new physics world.
 	void createWorld();
 
+	// Draws the debug of the world.
+	void drawDebug();
+
+	// Updates the transform of the body.
+	void updateBody(const Body* body);
+
 	// Sets the gravity of the world.
 	void setWorldGravity(const Vector3& gravity);
 	
@@ -47,15 +57,18 @@ public:
 	ACESSOR(Simulation, bool, enableSimulation);
 
 	// Adds a rigid body to the physics world.
-	void addRigidBody( const Body* body );
+	void addRigidBody(const Body* body);
 
 	// Removes a rigid body from the physics world.
-	void removeRigidBody( const Body* body );
+	void removeRigidBody(const Body* body);
 
 protected:
 
 	// Keeps track of simulation state.
 	bool enableSimulation;
+	
+	// Draws a debug of the physics world.
+	BulletDebugDrawer* debugDrawer;
 
 	// Bullet collision configuration.
 	btCollisionConfiguration* config;

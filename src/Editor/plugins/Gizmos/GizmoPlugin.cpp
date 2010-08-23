@@ -207,8 +207,8 @@ void GizmoPlugin::onMouseDrag( const MouseDragEvent& dragEvent )
 {
 	//if( isTool(GizmoTool::Camera) )
 	//{
-	//	Viewport* viewport = viewframe->getViewport();
-	//	CameraPtr camera = viewport->getCamera();
+	//	View* view = viewframe->getView();
+	//	CameraPtr camera = view->getCamera();
 	//	NodePtr nodeCamera = camera->getNode();
 	//	TransformPtr transCamera = nodeCamera->getTransform();
 	//	transCamera->translate( dragEvent.dx, dragEvent.dy, 0 );
@@ -261,8 +261,8 @@ void GizmoPlugin::onMouseButtonPress( const MouseButtonEvent& mbe )
 	if( gizmo && gizmo->isAnyAxisSelected() )
 		return;
 
-	Viewport* viewport = viewframe->getViewport();
-	const CameraPtr& camera = viewport->getCamera();
+	View* view = viewframe->getView();
+	const CameraPtr& camera = view->getCamera();
 	const ScenePtr& scene = engine->getSceneManager();
 
 	// Get a ray given the screen location clicked.
@@ -311,8 +311,8 @@ void GizmoPlugin::createGizmo( const NodePtr& node )
 	assert( node != nullptr );
 	assert( gizmos.find(node) == gizmos.end() );
 
-	Viewport* viewport = viewframe->getViewport();
-	const CameraPtr& camera = viewport->getCamera();
+	View* view = viewframe->getView();
+	const CameraPtr& camera = view->getCamera();
 
 	Gizmo* newGizmo = nullptr;
 
@@ -381,8 +381,8 @@ void GizmoPlugin::setBoundingBoxVisible( const NodePtr& node, bool state )
 bool GizmoPlugin::pickImageTest( const MouseMoveEvent& moveEvent,
 								 GizmoAxis::Enum& axis )
 {
-	Viewport* viewport = viewframe->getViewport();
-	Vector2i size = viewport->getSize();
+	View* view = viewframe->getView();
+	Vector2i size = view->getSize();
 
 	// We need to flip the Y-axis due to a mismatch between the 
 	// OpenGL and wxWidgets coordinate-system origin conventions.
@@ -400,8 +400,8 @@ bool GizmoPlugin::pickImageTest( const MouseMoveEvent& moveEvent,
 
 bool GizmoPlugin::pickBoundingTest( const MouseMoveEvent& me )
 {
-	Viewport* viewport = viewframe->getViewport();
-	const CameraPtr& camera = viewport->getCamera();
+	View* view = viewframe->getView();
+	const CameraPtr& camera = view->getCamera();
 
 	// Get a ray given the screen location clicked.
 	Vector3 outFar;

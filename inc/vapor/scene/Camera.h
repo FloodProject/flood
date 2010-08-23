@@ -13,7 +13,7 @@
 #include "vapor/math/Vector2.h"
 #include "vapor/math/Frustum.h"
 #include "vapor/render/Device.h"
-#include "vapor/render/Viewport.h"
+#include "vapor/render/View.h"
 #include "vapor/scene/Transform.h"
 
 namespace vapor {
@@ -33,6 +33,7 @@ class VAPOR_API Camera : public Component
 	
 public:
 
+	Camera();
 	Camera( RenderDevice* );
 	Camera( const Camera& rhs );
 	~Camera();
@@ -68,14 +69,14 @@ public:
 	// Gets the view matrix of the camera.
 	GETTER(ViewMatrix, const Matrix4x3&, viewMatrix)
 	
-	// Gets/sets the current viewport associated with the camera.
-	GETTER(Viewport, Viewport*, viewport)
-	DECLARE_SETTER(Viewport, Viewport*)
+	// Gets/sets the current view associated with the camera.
+	GETTER(View, View*, activeView)
+	DECLARE_SETTER(View, View*)
 
 protected:
 
-	// Sets up the view matrix.
-	void setupView();
+	// Sets up the view transform.
+	void updateViewTransform();
 
 	// Handles the transform notification.
 	void onTransform();
@@ -89,9 +90,8 @@ protected:
 	// View matrix.
 	Matrix4x3 viewMatrix;
 
-	// Last viewport the camera rendered into.
-	Viewport* viewport;
-	Vector2i viewSize;
+	// Last view the camera rendered into.
+	View* activeView;
 
 	// Pointer to the camera's node transform.
 	TransformPtr transform;

@@ -14,7 +14,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(Mesh, Resource)
+BEGIN_CLASS_PARENT_ABSTRACT(Mesh, Resource)
 END_CLASS()
 
 //-----------------------------------//

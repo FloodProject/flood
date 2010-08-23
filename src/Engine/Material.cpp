@@ -34,6 +34,7 @@ Material::Material( const Material& rhs )
 	, program(rhs.program)
 	, textures(rhs.textures)
 	, cullBackfaces(rhs.cullBackfaces)
+	, depthCompare(rhs.depthCompare)
 	, depthTest(rhs.depthTest)
 	, depthWrite(rhs.depthWrite)
 	, lineSmooth(rhs.lineSmooth)
@@ -49,6 +50,7 @@ Material::Material( const Material& rhs )
 
 void Material::init()
 {
+	depthCompare = DepthCompare::Less;
 	depthTest = true;
 	depthWrite = true;
 	lineSmooth = false;

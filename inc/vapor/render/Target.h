@@ -14,7 +14,7 @@ FWD_DECL_SHARED(Camera)
 
 namespace vapor {
 
-class Viewport;
+class View;
 
 //-----------------------------------//
 
@@ -23,11 +23,13 @@ class VAPOR_API Settings
 public:
 
 	Settings( const ushort width = 640, const ushort height = 480 )
-		: width( width ), height( height )
+		: width(width)
+		, height(height)
 	{ }
 
 	Settings( const Settings& s )
-		: width( s.width ), height( s.height )
+		: width(s.width)
+		, height(s.height)
 	{ }
 
 	// Gets/sets the width of the target.
@@ -46,7 +48,7 @@ public:
 
 //-----------------------------------//
 
-typedef std::vector<Viewport*> ViewportList;
+typedef std::vector<View*> ViewportList;
 
 /**
  * Render targets are surfaces where the rendered images can be stored
@@ -59,7 +61,6 @@ class VAPOR_API RenderTarget : private boost::noncopyable
 {
 public:
 
-	RenderTarget() { }
 	virtual ~RenderTarget();
 
 	// Updates the render target (usually swaps buffers).
@@ -71,8 +72,8 @@ public:
 	// Gets the settings of this render target.
 	virtual const Settings& getSettings() const = 0;
 
-	// Adds a new viewport to this target.
-	Viewport* addViewport( const CameraPtr& camera );
+	// Adds a new view to this target.
+	View* addViewport( const CameraPtr& camera );
 
 	// Gets the list of viewports associated with the render target.
 	GETTER(Viewports, const ViewportList&, viewports)

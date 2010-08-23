@@ -139,8 +139,8 @@ void Example::onSetupScene()
 	window = getRenderDevice()->getRenderWindow();
 	window->makeCurrent();
 
-	viewport = window->addViewport(camera);
-	viewport->setClearColor( Color(0.0f, 0.10f, 0.25f) );
+	view = window->addViewport(camera);
+	view->setClearColor( Color(0.0f, 0.10f, 0.25f) );
 }
 
 //-----------------------------------//
@@ -174,7 +174,7 @@ void Example::onRender()
 	//fbo->unbind();
 
 	// Render the scene.
-	viewport->update();
+	view->update();
 }
 
 //-----------------------------------//

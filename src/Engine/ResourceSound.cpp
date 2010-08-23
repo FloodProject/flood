@@ -14,8 +14,8 @@ namespace vapor {
 //-----------------------------------//
 
 Sound::Sound()
-	: frequency(-1),
-	channels(0)
+	: frequency(-1)
+	, channels(0)
 { }
 
 //-----------------------------------//

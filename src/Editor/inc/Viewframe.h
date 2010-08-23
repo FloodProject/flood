@@ -17,7 +17,7 @@ class RenderControl;
 //-----------------------------------//
 
 /**
- * Viewframe displays a viewport.
+ * Viewframe displays a view.
  */
 
 class Viewframe : public wxPanel
@@ -31,14 +31,14 @@ public:
 
 	~Viewframe();
 
-	// Creates and adds a new viewport to the viewframe.
-	Viewport* createViewport( const NodePtr& node );
+	// Creates and adds a new view to the viewframe.
+	View* createViewport( const NodePtr& node );
 
 	// Flags the backing control for redraw.
 	void flagRedraw();
 
-	// Gets the associated viewport.
-	GETTER(Viewport, Viewport*, viewport)
+	// Gets the associated view.
+	GETTER(View, View*, view)
 
 	// Gets the associated control.
 	GETTER(Control, RenderControl*, control)
@@ -51,8 +51,8 @@ protected:
 	// Control where the scene will be drawn.
 	RenderControl* control;
 
-	// Viewport associated with the control.
-	Viewport* viewport;
+	// View associated with the control.
+	View* view;
 
 	// Main sizer.
 	wxSizer* mainSizer;

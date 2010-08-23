@@ -99,7 +99,7 @@ public:
 	}
 
 	// Removes a component from this node.
-	bool removeComponent( const std::string& name );
+	bool removeComponent( const ComponentPtr& component );
 
 	// Updates all the components of the node.
 	virtual void update( double delta );

@@ -23,10 +23,14 @@ END_CLASS()
 
 //-----------------------------------//
 
+Camera::Camera()
+{ }
+
+//-----------------------------------//
+
 Camera::Camera( RenderDevice* device )
 	: renderDevice(device)
-	, viewport(nullptr)
-	, viewSize(Vector2i::Zero)
+	, activeView(nullptr)
 	, lookAtVector(Vector3::UnitZ)
 {
 	assert( device != nullptr );
@@ -52,7 +56,7 @@ Camera::~Camera()
 
 //-----------------------------------//
 
-void Camera::setupView()
+void Camera::updateViewTransform()
 {
 	assert( transform != nullptr );
 
@@ -72,24 +76,21 @@ void Camera::setupView()
 
 //-----------------------------------//
 
-void Camera::setViewport( Viewport* newViewport )
+void Camera::setView( View* view )
 {
-	assert( newViewport != nullptr );
+	if( !view )
+		return;
 
-	viewport = newViewport;
-	Vector2i newSize = viewport->getSize();
+	if( activeView == view )
+		return;
 
-	if( viewSize != newSize )
-	{
-		viewSize = newSize;
-		
-		// Update frustum matrices.
-		frustum.aspectRatio = viewport->getAspectRatio();
-		frustum.updateProjection( viewSize );
-		frustum.updatePlanes( viewMatrix );
+	activeView = view;
+	Vector2i size = view->getSize();
 
-		renderDevice->setViewport( Vector2i::Zero, viewSize );
-	}
+	// Update frustum matrices.
+	frustum.aspectRatio = view->getAspectRatio();
+	frustum.updateProjection( size );
+	frustum.updatePlanes( viewMatrix );	
 }
 
 //-----------------------------------//
@@ -99,30 +100,26 @@ void Camera::update( double VAPOR_UNUSED(delta) )
 	// Only run the following code once.
 	if( transform )
 		return;
-
-	assert( getNode() != nullptr );
-	assert( getNode()->getTransform() != nullptr );
 		
 	transform = getNode()->getTransform();
-
 	transform->onTransform += fd::bind( &Camera::onTransform, this );
 
-	// Update the view matrix the first update.
-	setupView();
+	// Update the view transform the first update.
+	updateViewTransform();
 }
 
 //-----------------------------------//
 
 void Camera::onTransform()
 {
-	setupView();
+	updateViewTransform();
 }
 
 //-----------------------------------//
 
 void Camera::render( const NodePtr& node, bool clearView )
 {
-	if( !viewport )
+	if( !activeView )
 		return;
 
 	// This will contain all nodes used for rendering.
@@ -130,14 +127,13 @@ void Camera::render( const NodePtr& node, bool clearView )
 
 	// Perform frustum culling.
 	cull( renderBlock, node );
+	
+	renderDevice->setView( activeView );
 
 	if( clearView )
-	{
-		renderDevice->setClearColor( viewport->getClearColor() );
-		renderDevice->clearTarget();
-	}
+		renderDevice->clearView();
 
-	renderDevice->render( renderBlock, this );
+	renderDevice->render( renderBlock );
 }
 
 //-----------------------------------//
@@ -219,20 +215,19 @@ void Camera::cull( RenderBlock& block, const NodePtr& node ) const
 
 Ray Camera::getRay( float screenX, float screenY, Vector3* outFar ) const
 {
-	assert( viewport != nullptr );
+	assert( activeView != nullptr );
+	Vector2i size = activeView->getSize();
 
-	Vector2i viewSize = viewport->getSize();
-
-	Vector3 nearPoint(screenX, viewSize.y - screenY, 0);
-	Vector3 farPoint (screenX, viewSize.y - screenY, 1);
+	Vector3 nearPoint(screenX, size.y - screenY, 0);
+	Vector3 farPoint (screenX, size.y - screenY, 1);
 
 	const Matrix4x4& matProjection = frustum.projectionMatrix;
 
 	Vector3 rayOrigin =
-		viewport->Unproject(nearPoint, matProjection, viewMatrix);
+		activeView->unprojectPoint(nearPoint, matProjection, viewMatrix);
 	
 	Vector3 rayTarget =
-		viewport->Unproject(farPoint,  matProjection, viewMatrix);
+		activeView->unprojectPoint(farPoint, matProjection, viewMatrix);
 
 	Vector3 rayDirection = rayTarget - rayOrigin;
 	rayDirection.normalize();

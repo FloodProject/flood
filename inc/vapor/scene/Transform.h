@@ -30,6 +30,7 @@ public:
 
 	Transform( float x = 0.0f, float y = 0.0f, float z = 0.0f );
 	Transform( const Transform& rhs );
+	~Transform();
 
 	// Translate this node by the given parameters.
 	void translate( float x, float y, float z );
@@ -98,6 +99,12 @@ public:
 	// Use this to render some debug bounding boxes.
 	GETTER(DebugRenderable, RenderablePtr, boundingVolumeRenderable)
 
+	// Sets the notify bit of the transform.
+	void setNotify();
+
+	// Unsets the notify bit of the transform.
+	void unsetNotify();
+
 	// Called once per frame to update the component.
 	virtual void update( double delta );
 
@@ -105,6 +112,9 @@ public:
 	fd::delegate<void()> onTransform;
 
 protected:
+
+	// Handles field changes notifications.
+	void onFieldChanged(const Field& field);
 
 	// Tracks if the transform has been changed.
 	bool needsNotify;

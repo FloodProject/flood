@@ -13,7 +13,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(Shape, Component)
+BEGIN_CLASS_PARENT_ABSTRACT(Shape, Component)
 END_CLASS()
 
 //-----------------------------------//

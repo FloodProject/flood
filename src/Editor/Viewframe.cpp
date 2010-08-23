@@ -50,22 +50,22 @@ Viewframe::~Viewframe()
 
 //-----------------------------------//
 
-Viewport* Viewframe::createViewport( const NodePtr& node )
+View* Viewframe::createViewport( const NodePtr& node )
 {
 	assert( node != nullptr );
 
-	// Add a new viewport to the window.
+	// Add a new view to the window.
 	CameraPtr camera = node->getComponent<FirstPersonCamera>();
 	assert( camera != nullptr );
 
 	Window* window = control->getRenderWindow();
-	viewport = window->addViewport( camera );
+	view = window->addViewport( camera );
 
 	// Subscribe to the camera transform events.
 	TransformPtr transform = node->getTransform();
 	transform->onTransform += fd::bind( &Viewframe::flagRedraw, this );
 	
-	return viewport;
+	return view;
 }
 
 //-----------------------------------//

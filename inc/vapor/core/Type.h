@@ -37,6 +37,8 @@ class VAPOR_API Type : private boost::noncopyable
 {
 public:
 
+	virtual ~Type();
+
 	// Gets the name of the type.
 	const std::string& getName() const;
 

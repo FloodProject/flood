@@ -38,6 +38,9 @@ public:
 	// Handles save button click.
 	void onSaveButtonClick(wxCommandEvent& event);
 
+	// Updates the save button UI state.
+	void onSaveButtonUpdateUI(wxUpdateUIEvent& event);
+
 	// New toolbar button.
 	wxToolBarToolBase* newButton;
 

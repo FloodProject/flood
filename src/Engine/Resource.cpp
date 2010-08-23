@@ -23,7 +23,7 @@ BEGIN_ENUM(ResourceGroup)
 	ENUM(Scripts)
 END_ENUM()
 
-BEGIN_CLASS(Resource)
+BEGIN_CLASS_ABSTRACT(Resource)
 	FIELD_PRIMITIVE(Resource, string, path)
 END_CLASS()
 

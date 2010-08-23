@@ -13,6 +13,15 @@ namespace vapor {
 
 //-----------------------------------//
 
+namespace Limits
+{
+	const float FloatMinimum = -std::numeric_limits<float>::max();
+	const float FloatMaximum =  std::numeric_limits<float>::max();
+	const float FloatEpsilon =  std::numeric_limits<float>::epsilon();
+}
+
+//-----------------------------------//
+
 namespace Interpolate
 {
 	// Linear interpolation.

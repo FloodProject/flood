@@ -12,6 +12,7 @@
 
 class btRigidBody;
 class btMotionState;
+class btCollisionShape;
 
 namespace vapor {
 
@@ -33,10 +34,19 @@ public:
 	// Called once per frame to update the component.
 	void update( double delta );
 
+	// Gets the Bullet shape of this body.
+	btCollisionShape* getBulletShape() const;
+
 	// Gets the internal Bullet rigid body.
 	GETTER(BulletBody, btRigidBody*, body)
 
 protected:
+
+	// Field change callback.
+	void onFieldChanged(const Field& field);
+
+	// Transform change callback.
+	void onTransform();
 
 	// Creates the body.
 	bool createBody();

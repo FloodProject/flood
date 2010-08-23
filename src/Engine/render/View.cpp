@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/render/Viewport.h"
+#include "vapor/render/View.h"
 #include "vapor/render/Target.h"
 #include "vapor/scene/Camera.h"
 
@@ -15,7 +15,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-Viewport::Viewport( CameraPtr camera, RenderTarget* target )
+View::View( CameraPtr camera, RenderTarget* target )
 	: weakCamera( camera )
 	, target( target )
 {
@@ -25,19 +25,19 @@ Viewport::Viewport( CameraPtr camera, RenderTarget* target )
 
 //-----------------------------------//
 
-void Viewport::setRenderTarget( RenderTarget* newTarget )
+void View::setRenderTarget( RenderTarget* newTarget )
 {
 	//if( target ) // Remove the old target resize notification.
-	//	target->onTargetResize -= fd::bind( &Viewport::handleTargetResize, this );
+	//	target->onTargetResize -= fd::bind( &View::handleTargetResize, this );
 
 	//target = newTarget;
-	//target->onTargetResize += fd::bind( &Viewport::handleTargetResize, this );
+	//target->onTargetResize += fd::bind( &View::handleTargetResize, this );
 	//handleTargetResize( target->getSettings() );
 }
 
 //-----------------------------------//
 
-Vector3 Viewport::Unproject( const Vector3& screen, const Matrix4x4& projection, const Matrix4x3& view ) const
+Vector3 View::unprojectPoint( const Vector3& screen, const Matrix4x4& projection, const Matrix4x3& view ) const
 {
 	Matrix4x4 view4( view );
 	Matrix4x4 inverseVP = (view4*projection).inverse();
@@ -60,7 +60,7 @@ Vector3 Viewport::Unproject( const Vector3& screen, const Matrix4x4& projection,
 
 //-----------------------------------//
 
-float Viewport::getAspectRatio() const
+float View::getAspectRatio() const
 {
 	const Vector2i size = getSize();
 
@@ -72,27 +72,24 @@ float Viewport::getAspectRatio() const
 
 //-----------------------------------//
 
-Vector2i Viewport::getSize() const
+Vector2i View::getSize() const
 {
-	//if( size == Vector2i(-1, -1) )
-		return target->getSettings().getSize();
-	//else
-		//return size;
+	return target->getSettings().getSize();
 }
 
 //-----------------------------------//
 
-bool Viewport::operator < (Viewport& v)
+bool View::operator < (View& v)
 {
 	return getPriority() < v.getPriority();
 }
 
 //-----------------------------------//
 
-void Viewport::update()
+void View::update()
 {
 	CameraPtr camera( weakCamera );
-	camera->setViewport( this );
+	camera->setView( this );
 	camera->render();
 }
 

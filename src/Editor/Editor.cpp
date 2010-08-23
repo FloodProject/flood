@@ -248,8 +248,8 @@ void EditorFrame::createMainViewframe()
 	NodePtr camera( createCamera() );	
 	editorScene->add( camera );
 
-	Viewport* viewport = viewframe->createViewport( camera );
-	viewport->setClearColor( Color(0.0f, 0.10f, 0.25f) );
+	View* view = viewframe->createViewport( camera );
+	view->setClearColor( Color(0.0f, 0.10f, 0.25f) );
 
 	TransformPtr transform( camera->getTransform() );
 	transform->translate( 0, 20, -65 );
@@ -264,7 +264,7 @@ NodePtr EditorFrame::createCamera()
 
 	RenderDevice* device = engine->getRenderDevice();
 	
-	// Create a new first-person camera for our viewport.
+	// Create a new first-person camera for our view.
 	// By default it will be in perspective projection.
 	CameraPtr camera( new FirstPersonCamera(device) );
 	
@@ -343,8 +343,8 @@ void EditorFrame::createToolbar()
 
 	toolBar->AddSeparator();
 
-	toolBar->AddTool( Toolbar_ToogleViewport, "Toogles maximize viewport", 
-		wxMEMORY_BITMAP(scale), "Toogles maximize viewport" );
+	toolBar->AddTool( Toolbar_ToogleViewport, "Toogles maximize view", 
+		wxMEMORY_BITMAP(scale), "Toogles maximize view" );
 
 	toolBar->AddTool( Toolbar_ToogleSidebar, "Shows/hides the sidebar", 
 		wxMEMORY_BITMAP(application_side_tree_right), "Shows/hides the sidebar" );
@@ -423,14 +423,17 @@ void EditorFrame::RefreshViewport()
 
 void EditorFrame::onRender()
 {
-	Viewport* viewport = viewframe->getViewport();
-	const CameraPtr& camera = viewport->getCamera();
+	View* view = viewframe->getView();
+	const CameraPtr& camera = view->getCamera();
 	
 	#pragma TODO("Renderables need to be sent in a single queue")
 
-	camera->setViewport( viewport );
+	camera->setView( view );
 	camera->render( engine->getSceneManager() );
 	camera->render( editorScene, false );
+
+	PhysicsManager* physics = engine->getPhysicsManager();
+	physics->drawDebug();
 }
 
 //-----------------------------------//
@@ -550,71 +553,6 @@ void EditorFrame::createScene()
 	rm->loadResource("Sky.glsl");
 	rm->loadResource("Water.glsl");
 	rm->loadResource("ProjTex.glsl");
-
-	// Sky.
-	ImagePtr clouds = rm->loadResource<Image>( "noise2.png" );
-
-	SkydomePtr skydome( new Skydome() );
-	skydome->setClouds( clouds );
-	
-	NodePtr nodeSky( new Node("Sky") );
-	nodeSky->addTransform();	
-	nodeSky->addComponent( skydome );
-	scene->add( nodeSky );
-
-	TransformPtr transSky = nodeSky->getTransform();
-	transSky->scale(2);
-
-	// Water.
-	MaterialPtr matWater( new Material("WaterMat", "Water") );
-	matWater->setTexture( 0, "water.png" );
-	matWater->setBlending(BlendingSource::SourceAlpha, BlendingDestination::InverseSourceAlpha);
-	WaterPtr water( new Water(matWater) );
-
-	NodePtr nodeWater( new Node("Water") );
-	nodeWater->addTransform();	
-	nodeWater->addComponent( water );
-	//scene->add( nodeWater );
-
-	TransformPtr transWater = nodeWater->getTransform();
-	transWater->rotate(90, 0, 0);
-	transWater->scale(10);
-	transWater->translate(0, 5, 0);
-
-	// Light.
-	LightPtr light;
-	light.reset( new Light(LightType::Directional) );
-	light->setDiffuseColor( Color::Red );
-	light->setAmbientColor( Color::Yellow );
-
-	TransformPtr transLight( new Transform(0, 100, 0) );
-	transLight->rotate(45, 0, 0);
-
-	NodePtr nodeLight( new Node("Light") );
-	nodeLight->addComponent( transLight );
-	nodeLight->addComponent( light );
-	scene->add( nodeLight );
-
-	// Terrain.
-	MaterialPtr cellMaterial( new Material("CellMaterial") );
-	cellMaterial->setTexture( 0, "sand.png" );
-	cellMaterial->setProgram( "tex_toon" );
-
-	TerrainSettings settings;
-	settings.CellSize = 512;
-	settings.NumberTiles = 32;
-	settings.MaxHeight = 100;
-	settings.Material = cellMaterial;
-
-	TerrainPtr terrain( new Terrain(settings) );
-
-	NodePtr terreno( new Node("Terreno") );
-	terreno->addTransform();
-	terreno->addComponent( terrain );
-	scene->add( terreno );
-
-	const ImagePtr& heightMap = rm->loadResource<Image>("height2.png");
-	terrain->addCell( 0, 0, heightMap );
 
 	// Wait until all resources are loaded.
 	rm->waitUntilQueuedResourcesLoad();

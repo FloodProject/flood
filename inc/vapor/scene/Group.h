@@ -41,6 +41,7 @@ class VAPOR_API Group : public Node
 
 public:
 
+	Group();
 	Group( const std::string& name );
 
 	// Adds child to the end of the child list.  Returns the index of

@@ -35,6 +35,11 @@ Type::Type(MetaType::Enum type, const std::string& name, const Type& _parent)
 
 //-----------------------------------//
 
+Type::~Type()
+{ }
+
+//-----------------------------------//
+
 const std::string& Type::getName() const
 {
 	return name;

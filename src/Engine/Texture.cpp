@@ -54,8 +54,8 @@ void Texture::init()
 	target = GL_TEXTURE_2D;
 	uploaded = false;
 
-	minFilter = TextureFiltering::Linear;
-	maxFilter = TextureFiltering::Linear;
+	minFilter = TextureFiltering::Nearest;
+	maxFilter = TextureFiltering::Nearest;
 	anisotropicFilter = 1.0f;
 
 	generate();

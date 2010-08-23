@@ -48,9 +48,9 @@ void Model::update( double delta )
 
 		foreach( const RenderablePtr& rend, renderables )
 		{
-			MaterialPtr mat = rend->getMaterial();
+			MaterialPtr material = rend->getMaterial();
 
-			if( mat->isBlendingEnabled() )
+			if( material && material->isBlendingEnabled() )
 				addRenderable( rend, RenderGroup::Transparency );
 			else
 				addRenderable( rend );

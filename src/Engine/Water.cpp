@@ -18,6 +18,11 @@ END_CLASS()
 
 //-----------------------------------//
 
+Water::Water()
+{ }
+
+//-----------------------------------//
+
 Water::Water( MaterialPtr material )
 {
 	quad = new Quad(100, 100);

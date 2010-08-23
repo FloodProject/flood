@@ -71,6 +71,9 @@ public:
 		return true;
 	}
 
+	// Returns a new instance of this type.
+	virtual void* createInstance() const { return nullptr; }
+
 	// Sent when a field value is changed.
 	fd::delegate<void(const Field&)> onFieldChanged;
 
@@ -93,12 +96,32 @@ public:																	\
 	static Class& getType();											\
 	virtual const Class& getInstanceType() const { return getType(); }
 
+#define SUBCLASS_CLASS(name)											\
+	class _##name : public Class {										\
+	public:																\
+		_##name(const std::string& n) : Class(n) {}						\
+		_##name(const std::string& n, const Type& p) : Class(n, p) {}	\
+		virtual void* createInstance() const { return new name(); }		\
+	};																	\
+
 #define BEGIN_CLASS(name)												\
+	SUBCLASS_CLASS(name)												\
+	static Class& _ = name::getType();									\
+	Class& name::getType()												\
+	{ static _##name type(TOSTRING(name));
+
+#define BEGIN_CLASS_ABSTRACT(name)										\
 	static Class& _ = name::getType();									\
 	Class& name::getType()												\
 	{ static Class type(TOSTRING(name));
 
 #define BEGIN_CLASS_PARENT(name, parent)								\
+	SUBCLASS_CLASS(name)												\
+	static Class& _ = name::getType();									\
+	Class& name::getType()												\
+	{ static _##name type(TOSTRING(name), parent::getType());
+
+#define BEGIN_CLASS_PARENT_ABSTRACT(name, parent)						\
 	static Class& _ = name::getType();									\
 	Class& name::getType()												\
 	{ static Class type(TOSTRING(name), parent::getType());

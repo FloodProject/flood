@@ -14,12 +14,12 @@ namespace vapor {
 //-----------------------------------//
 
 FrameStatistics::FrameStatistics()
-	: numFrames(0),
-	minFrameTime( std::numeric_limits<double>::max() ),
-	maxFrameTime(0),
-	avgFrameTime(0),
-	sumFrameTime(0),
-	lastFrameTime(0)
+	: numFrames(0)
+	, minFrameTime( std::numeric_limits<double>::max() )
+	, maxFrameTime(0)
+	, avgFrameTime(0)
+	, sumFrameTime(0)
+	, lastFrameTime(0)
 { }
 
 //-----------------------------------//

@@ -61,7 +61,7 @@
 // Render-related Includes
 //---------------------------------------------------------------------//
 
-#include <vapor/render/Viewport.h>
+#include <vapor/render/View.h>
 #include <vapor/render/Target.h>
 #include <vapor/render/VertexBuffer.h>
 #include <vapor/render/Texture.h>

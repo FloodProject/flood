@@ -23,6 +23,11 @@ END_CLASS()
 
 //-----------------------------------//
 
+Label::Label()
+{ }
+
+//-----------------------------------//
+
 Label::Label( const std::string& text, FontPtr font, MaterialPtr material )
 	: text(text)
 	, font(font)

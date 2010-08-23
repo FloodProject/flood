@@ -62,22 +62,20 @@ public:
 	// Note: Needs an active OpenGL context.
 	void init();
 
-	// Renders a list of renderables.
-	void render( RenderBlock& queue, Camera* camera );
+	// Renders a renderable.
+	void render( const RenderState& state, const LightQueue& lights );
 
-	// Gets the framebuffer color in the given pixel location.
-	// Note: it follows OpenGL 2D axis conventions, so the point (0,0)
-	// is located in the top left corner of the screen.
-	Color getPixel(ushort x, ushort y) const;
+	// Renders a list of renderables.
+	void render( RenderBlock& queue );
+
+	// Sets the active view.
+	void setView( View* view );
+
+	// Clears the active render target.
+	void clearView();
 
 	// Renders and updates into all render targets.
 	void updateRenderTargets();
-
-	// Clears the active render target.
-	void clearTarget();
-
-	// Sets the window as the active rendering target.
-	void setWindowActiveTarget();
 
 	// Creates a new render buffer (offscreen render target).
 	RenderBuffer* createRenderBuffer( const Settings& );
@@ -92,15 +90,16 @@ public:
 	GETTER(RenderTarget, RenderTarget*, activeTarget)
 	void setRenderTarget(RenderTarget* target);
 
+	// Gets the framebuffer color in the given pixel location.
+	// Note that point (0,0) is located in the top left corner.
+	Color getPixel(ushort x, ushort y) const;
+
 	// Gets/sets the main rendering window.
 	ACESSOR(Window, Window*, window)
 
 	// Gets/sets the current clear color.
 	GETTER(ClearColor, const Color&, color)
 	void setClearColor(const Color& color);
-
-	// Sets the OpenGL viewport dimensions.
-	void setViewport( const Vector2i&, const Vector2i& );
 
 	// Gets rendering adapter information.
 	GETTER(Adapter, Adapter*, adapter)
@@ -120,7 +119,7 @@ protected:
 	void checkExtensions();
 
 	// Render state management.
-	bool setupRenderState( const RenderState&, Camera* );
+	bool setupRenderState( const RenderState& state );
 	bool setupRenderStateShadow( LightQueue& lights );
 	bool setupRenderStateLight( const RenderState&, const LightQueue& );
 	bool setupRenderStateOverlay( const RenderState& );
@@ -141,6 +140,9 @@ protected:
 	// List of render targets
 	std::vector<RenderTarget*> renderTargets;
 
+	// Active view.
+	View* activeView;
+
 	// Adapter information
 	Adapter* adapter;
 
@@ -150,12 +152,11 @@ protected:
 	// Current clear color
 	Color color;
 
-	// Current viewport dimensions.
+	// Current view dimensions.
 	Vector2i viewportLeft, viewportSize;
 
 	ShadowTextureMap shadowTextures;
 	RenderBuffer* shadowDepthBuffer;
-	Camera* camera;
 
 	void updateLightDepth( LightState& state );
 };

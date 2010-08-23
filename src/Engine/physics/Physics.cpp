@@ -9,8 +9,13 @@
 #include "vapor/PCH.h"
 #include "vapor/physics/Physics.h"
 #include "vapor/physics/Body.h"
+#include "vapor/physics/Convert.h"
+#include "vapor/physics/DebugDraw.h"
 
-#include "btBulletDynamicsCommon.h"
+#include "vapor/Engine.h"
+#include "vapor/render/Device.h"
+
+#include <btBulletDynamicsCommon.h>
 
 namespace vapor {
 
@@ -18,6 +23,7 @@ namespace vapor {
 
 PhysicsManager::PhysicsManager()
 	: enableSimulation(false)
+	, debugDrawer(nullptr)
 	, config(nullptr)
 	, broadphase(nullptr)
 	, dispatcher(nullptr)
@@ -34,6 +40,7 @@ PhysicsManager::PhysicsManager()
 
 PhysicsManager::~PhysicsManager()
 {
+	delete debugDrawer;
     delete world;
     delete solver;
     delete dispatcher;
@@ -43,12 +50,39 @@ PhysicsManager::~PhysicsManager()
 
 //-----------------------------------//
 
-btVector3 toBulletVector(const Vector3& vec)
+void PhysicsManager::updateBody(const Body* body)
 {
-	return btVector3(
-		vec.x,
-		vec.y,
-		vec.z );
+	if( !body )
+		return;
+
+	btRigidBody* bulletBody = body->getBulletBody();
+
+	if( !bulletBody )
+		return;
+
+	world->synchronizeSingleMotionState(bulletBody);
+}
+
+//-----------------------------------//
+
+void PhysicsManager::drawDebug()
+{
+	if( !world )
+		return;
+
+	debugDrawer->clearBuffer();
+	
+	world->debugDrawWorld();
+	
+	debugDrawer->getVertexBuffer()->forceRebuild();
+
+	Engine* engine = Engine::getInstancePtr();
+	RenderDevice* renderDevice = engine->getRenderDevice();
+
+	RenderState state;
+	state.renderable = debugDrawer->getRenderable();
+
+	renderDevice->render( state, LightQueue() );
 }
 
 //-----------------------------------//
@@ -59,7 +93,10 @@ void PhysicsManager::createWorld()
 
     world = new btDiscreteDynamicsWorld(
 		dispatcher, broadphase, solver, config);
-	
+
+	debugDrawer = new BulletDebugDrawer();
+	world->setDebugDrawer( debugDrawer );
+
 	setWorldGravity( Vector3(0, -10, 0) );
 }
 
@@ -70,7 +107,7 @@ void PhysicsManager::setWorldGravity(const Vector3& gravity)
 	if( !world )
 		return;
 
-	world->setGravity(toBulletVector(gravity));
+	world->setGravity(Convert::toBullet(gravity));
 }
 
 //-----------------------------------//

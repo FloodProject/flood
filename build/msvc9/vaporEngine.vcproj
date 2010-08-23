@@ -697,14 +697,14 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="Viewport"
+				Name="View"
 				>
 				<File
-					RelativePath="..\..\src\Engine\Viewport.cpp"
+					RelativePath="..\..\src\Engine\render\View.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\inc\vapor\render\Viewport.h"
+					RelativePath="..\..\inc\vapor\render\View.h"
 					>
 				</File>
 			</Filter>
@@ -1291,13 +1291,6 @@
 			<File
 				RelativePath="..\..\src\Engine\physics\Body.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\inc\vapor\physics\Body.h"
@@ -1309,6 +1302,22 @@
 			</File>
 			<File
 				RelativePath="..\..\inc\vapor\physics\BoxShape.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\physics\Convert.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\Engine\physics\DebugDraw.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\physics\DebugDraw.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\Engine\physics\MotionState.h"
 				>
 			</File>
 			<File

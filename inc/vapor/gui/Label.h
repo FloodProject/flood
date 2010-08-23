@@ -34,6 +34,7 @@ class VAPOR_API Label : public Overlay
 
 public:
 
+	Label();
 	Label( const std::string& text, FontPtr font, MaterialPtr mat );
 	Label( const std::string& text, const std::string& font );
 

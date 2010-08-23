@@ -45,7 +45,7 @@ public:
     EditorFrame(const wxString& title);
 	virtual ~EditorFrame();
 	
-	// Refreshes the main viewport.
+	// Refreshes the main view.
 	void RefreshViewport();
 
 	// Gets the engine instance.	

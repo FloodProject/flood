@@ -48,10 +48,10 @@ CameraControls::~CameraControls()
 
 TransformPtr CameraControls::getCameraTransform() const
 {
-	Viewport* viewport = viewframe->getViewport();
-	assert( viewport != nullptr );
+	View* view = viewframe->getView();
+	assert( view != nullptr );
 
-	CameraPtr camera = viewport->getCamera();
+	CameraPtr camera = view->getCamera();
 	assert( camera != nullptr );
 
 	NodePtr nodeCamera = camera->getNode();
@@ -69,8 +69,8 @@ void CameraControls::onCameraSpeedSpin( wxSpinDoubleEvent& event )
 {
 	double value = event.GetValue();
 
-	Viewport* viewport = viewframe->getViewport();
-	CameraPtr camera( viewport->getCamera() );
+	View* view = viewframe->getView();
+	CameraPtr camera( view->getCamera() );
 	
 	FirstPersonCameraPtr firstPersonCamera =
 		std::static_pointer_cast<FirstPersonCamera>(camera);
@@ -82,8 +82,8 @@ void CameraControls::onCameraSpeedSpin( wxSpinDoubleEvent& event )
 
 void CameraControls::updateCameraSpeedSpin()
 {
-	Viewport* viewport = viewframe->getViewport();
-	CameraPtr camera( viewport->getCamera() );
+	View* view = viewframe->getView();
+	CameraPtr camera( view->getCamera() );
 
 	FirstPersonCameraPtr firstPersonCamera =
 		std::static_pointer_cast<FirstPersonCamera>(camera);

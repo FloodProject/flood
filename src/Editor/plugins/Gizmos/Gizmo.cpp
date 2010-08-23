@@ -13,7 +13,7 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(Gizmo, Geometry)
+BEGIN_CLASS_PARENT_ABSTRACT(Gizmo, Geometry)
 END_CLASS()
 
 const Color& Gizmo::X = Color::Red;
