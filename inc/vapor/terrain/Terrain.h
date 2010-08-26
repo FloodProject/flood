@@ -26,7 +26,7 @@ struct TerrainSettings
 	//DECLARE_CLASS_();
 
 	TerrainSettings()
-		: CellSize(500)
+		: CellSize(512)
 		, NumberTiles(16)
 	{ }
 

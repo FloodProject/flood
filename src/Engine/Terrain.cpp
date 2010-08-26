@@ -31,7 +31,11 @@ static const short validDimensions[] =
 
 Terrain::Terrain()
 	: settings( TerrainSettings() )
-{ }
+{
+	settings.Material = new Material("Terrain");
+	settings.Material->setProgram("Tex_Toon");
+	settings.Material->setTexture(0, "sand.png");
+}
 
 //-----------------------------------//
 

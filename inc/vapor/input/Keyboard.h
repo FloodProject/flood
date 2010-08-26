@@ -26,7 +26,7 @@ public:
 	Keyboard();
 
 	// Returns the current state of the keys.
-	GETTER(KeyState, const std::vector< bool >&, keyState)
+	GETTER(KeyState, const std::vector<bool>&, keyState)
 
 	// Checks if the given key is pressed.
 	bool isKeyPressed( Keys::Enum keyCode ) const;
@@ -56,7 +56,7 @@ private:
 	void keyReleased( const KeyEvent& keyEvent );
 	
 	// Current key state.
-	std::vector< bool > keyState;
+	std::vector<bool> keyState;
 	
 	// Last key pressed.
 	Keys::Enum lastKey;

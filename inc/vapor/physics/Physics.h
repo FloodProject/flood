@@ -42,7 +42,7 @@ public:
 	void createWorld();
 
 	// Draws the debug of the world.
-	void drawDebug();
+	void drawDebugWorld();
 
 	// Updates the transform of the body.
 	void updateBody(const Body* body);
@@ -56,11 +56,17 @@ public:
 	// Gets/sets the physics simulation state.
 	ACESSOR(Simulation, bool, enableSimulation);
 
+	// Gets/sets the physics world debug state.
+	ACESSOR(DebugWorld, bool, drawDebug);
+
 	// Adds a rigid body to the physics world.
 	void addRigidBody(const Body* body);
 
 	// Removes a rigid body from the physics world.
 	void removeRigidBody(const Body* body);
+
+	// Gets the physics world.
+	GETTER(World, btDiscreteDynamicsWorld*, world);
 
 protected:
 
@@ -69,6 +75,9 @@ protected:
 	
 	// Draws a debug of the physics world.
 	BulletDebugDrawer* debugDrawer;
+
+	// On if we should draw the debug of the physics world.
+	bool drawDebug;
 
 	// Bullet collision configuration.
 	btCollisionConfiguration* config;

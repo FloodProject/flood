@@ -17,11 +17,11 @@ namespace vapor {
 
 //-----------------------------------//
 
-VertexBuffer::VertexBuffer()
+VertexBuffer::VertexBuffer(BufferUsage::Enum usage, BufferAccess::Enum access)
 	: built(false)
 	, numVertices(0)
-	, bufferUsage( BufferUsage::Static )
-	, bufferAccess( BufferAccess::Read )
+	, bufferUsage(usage)
+	, bufferAccess(access)
 { }
 
 //-----------------------------------//
@@ -128,11 +128,8 @@ bool VertexBuffer::set( VertexAttribute::Enum num,
 
 //-----------------------------------//
 
-bool VertexBuffer::build( BufferUsage::Enum bu, BufferAccess::Enum ba )
+bool VertexBuffer::build()
 {
-	bufferUsage = bu;
-	bufferAccess = ba;
-
 	bind();
 
 	// Check that all vertex attributes elements are the same size.

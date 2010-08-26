@@ -88,7 +88,7 @@ void RenderControl::stopFrameLoop()
 void RenderControl::doUpdate(wxTimerEvent&)
 {
 	if( !onUpdate.empty() )
-		onUpdate( MAX_RATE_UPDATE );
+		onUpdate( MAX_RATE_RENDER );
 }
 
 //-----------------------------------//

@@ -69,12 +69,13 @@ class VAPOR_API VertexBuffer : public Buffer
 {
 public:
 
-	VertexBuffer();
+	VertexBuffer(BufferUsage::Enum = BufferUsage::Static,
+		BufferAccess::Enum = BufferAccess::Write);
+	
 	virtual ~VertexBuffer();
 
 	// Updates the internal buffer with current attributes.
-	bool build( BufferUsage::Enum = BufferUsage::Static,
-				BufferAccess::Enum = BufferAccess::Write );
+	bool build();
 
 	// Returns if the this buffer is valid.
 	bool isValid() const;

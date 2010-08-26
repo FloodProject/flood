@@ -31,11 +31,17 @@ public:
 	Body();
 	virtual ~Body();
 
+	// Returns if this body is dynamic.
+	bool isDynamic() const;
+
 	// Called once per frame to update the component.
 	void update( double delta );
 
 	// Gets the Bullet shape of this body.
 	btCollisionShape* getBulletShape() const;
+
+	// Updates the physics properties.
+	void updateProperties();
 
 	// Gets the internal Bullet rigid body.
 	GETTER(BulletBody, btRigidBody*, body)
@@ -50,7 +56,7 @@ protected:
 
 	// Creates the body.
 	bool createBody();
-	
+
 	// Adds this body to the world.
 	void addWorld();
 
@@ -59,6 +65,12 @@ protected:
 
 	// Rigid body mass.
 	float mass;
+
+	// Rigid body friction.
+	float friction;
+
+	// Rigid body restitution.
+	float restitution;
 
 	// Motion state of the body.
 	BodyMotionState* motionState;

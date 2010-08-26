@@ -11,6 +11,7 @@
 #include "vapor/math/Vector3.h"
 #include "vapor/math/EulerAngles.h"
 #include "vapor/math/Matrix4x4.h"
+#include "vapor/math/Quaternion.h"
 
 namespace vapor {
 
@@ -31,14 +32,17 @@ public:
 	// Set to identity matrix.
 	void identity();
 
-	// Creates a new translation matrix from a given translation vector.
+	// Creates a new translation matrix from a translation vector.
 	static Matrix4x3 createTranslation( const Vector3& translate );
 
-	// Creates a new orientation matrix from a given angles vector.
+	// Creates a new orientation matrix from an Euler angles vector.
 	static Matrix4x3 createRotation( const EulerAngles& angles );
 
-	// Creates a new scaling matrix from a given scale vector.
+	// Creates a new scaling matrix from a scale vector.
 	static Matrix4x3 createScale( const Vector3& scale );
+
+	// Creates a new orientation matrix from a quaternion.
+	static Matrix4x3 createFromQuaternion(const Quaternion& q);
 
 	// Creates a rotation matrix by the X, Y or Z axis.
 	static Matrix4x3 rotateX( float ang );

@@ -17,7 +17,7 @@ namespace vapor {
 
 BulletDebugDrawer::BulletDebugDrawer()
 {
-	vb = new VertexBuffer();
+	vb = new VertexBuffer(BufferUsage::Dynamic, BufferAccess::Write);
 	clearBuffer();
 
 	material = new Material("DebugDrawer");

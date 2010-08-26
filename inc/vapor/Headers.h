@@ -115,6 +115,9 @@
 #include <vapor/physics/Physics.h>
 #include <vapor/physics/Body.h>
 #include <vapor/physics/BoxShape.h>
+#include <vapor/physics/CapsuleShape.h>
+#include <vapor/physics/MeshShape.h>
+#include <vapor/physics/CharacterController.h>
 
 //---------------------------------------------------------------------//
 // Terrain-related Includes

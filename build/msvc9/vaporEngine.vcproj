@@ -1289,35 +1289,11 @@
 			Name="Physics"
 			>
 			<File
-				RelativePath="..\..\src\Engine\physics\Body.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\physics\Body.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\Engine\physics\BoxShape.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\physics\BoxShape.h"
+				RelativePath="..\..\src\Engine\physics\Convert.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\inc\vapor\physics\Convert.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\Engine\physics\DebugDraw.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\physics\DebugDraw.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\Engine\physics\MotionState.h"
 				>
 			</File>
 			<File
@@ -1336,14 +1312,110 @@
 				RelativePath="..\..\inc\vapor\physics\Physics.h"
 				>
 			</File>
-			<File
-				RelativePath="..\..\src\Engine\physics\Shape.cpp"
+			<Filter
+				Name="Shapes"
 				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\physics\Shape.h"
+				<File
+					RelativePath="..\..\src\Engine\physics\Shape.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\physics\Shape.h"
+					>
+				</File>
+				<Filter
+					Name="Box"
+					>
+					<File
+						RelativePath="..\..\src\Engine\physics\BoxShape.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\physics\BoxShape.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Capsule"
+					>
+					<File
+						RelativePath="..\..\src\Engine\physics\CapsuleShape.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\physics\CapsuleShape.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Mesh"
+					>
+					<File
+						RelativePath="..\..\src\Engine\physics\MeshShape.cpp"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								DisableSpecificWarnings="4127"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\physics\MeshShape.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="Dynamics"
 				>
-			</File>
+				<File
+					RelativePath="..\..\src\Engine\physics\Body.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\physics\Body.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Engine\physics\MotionState.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Debug"
+				>
+				<File
+					RelativePath="..\..\src\Engine\physics\DebugDraw.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\physics\DebugDraw.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Controller"
+				>
+				<File
+					RelativePath="..\..\src\Engine\physics\btKinematicController.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\physics\btKinematicController.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Engine\physics\CharacterController.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\physics\CharacterController.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Resources"
@@ -1959,6 +2031,10 @@
 				RelativePath="..\..\inc\vapor\core\Type.h"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="Animation"
+			>
 		</Filter>
 		<File
 			RelativePath="..\..\inc\vapor\CompileOptions.h"

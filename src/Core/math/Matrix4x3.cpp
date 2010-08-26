@@ -57,6 +57,36 @@ Matrix4x3 Matrix4x3::createRotation( const EulerAngles& angles )
 
 //-----------------------------------//
 
+Matrix4x3 Matrix4x3::createFromQuaternion(const Quaternion& q)
+{
+	// Compute a few values to optimize common subexpressions
+	float	ww = 2.0f * q.w;
+	float	xx = 2.0f * q.x;
+	float	yy = 2.0f * q.y;
+	float	zz = 2.0f * q.z;
+
+	// Set the matrix elements.  There is still a little more
+	// opportunity for optimization due to the many common
+	// subexpressions.  We'll let the compiler handle that...
+	Matrix4x3 m;
+
+	m.m11 = 1.0f - yy*q.y - zz*q.z;
+	m.m12 = xx*q.y + ww*q.z;
+	m.m13 = xx*q.z - ww*q.x;
+
+	m.m21 = xx*q.y - ww*q.z;
+	m.m22 = 1.0f - xx*q.x - zz*q.z;
+	m.m23 = yy*q.z + ww*q.x;
+
+	m.m31 = xx*q.z + ww*q.y;
+	m.m32 = yy*q.z - ww*q.x;
+	m.m33 = 1.0f - xx*q.x - yy*q.y;
+
+	return m;
+}
+
+//-----------------------------------//
+
 Matrix4x3 Matrix4x3::createScale( const Vector3& v )
 {
 	Matrix4x3 s;
@@ -154,7 +184,6 @@ Matrix4x3 operator*(const Matrix4x3& a, const Matrix4x3& b)
 	Matrix4x3 r;
 
 	// Compute the upper 3x3 (linear transformation) portion
-
 	r.m11 = a.m11*b.m11 + a.m12*b.m21 + a.m13*b.m31;
 	r.m12 = a.m11*b.m12 + a.m12*b.m22 + a.m13*b.m32;
 	r.m13 = a.m11*b.m13 + a.m12*b.m23 + a.m13*b.m33;
@@ -168,7 +197,6 @@ Matrix4x3 operator*(const Matrix4x3& a, const Matrix4x3& b)
 	r.m33 = a.m31*b.m13 + a.m32*b.m23 + a.m33*b.m33;
 
 	// Compute the translation portion
-
 	r.tx = a.tx*b.m11 + a.ty*b.m21 + a.tz*b.m31 + b.tx;
 	r.ty = a.tx*b.m12 + a.ty*b.m22 + a.tz*b.m32 + b.ty;
 	r.tz = a.tx*b.m13 + a.ty*b.m23 + a.tz*b.m33 + b.tz;

@@ -7,39 +7,43 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/physics/BoxShape.h"
+#include "vapor/physics/CapsuleShape.h"
 #include "vapor/physics/Convert.h"
 
 #include "vapor/scene/Node.h"
 #include "vapor/scene/Transform.h"
 
-#include <BulletCollision/CollisionShapes/btBoxShape.h>
+#include <BulletCollision/CollisionShapes/btCapsuleShape.h>
 
 namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(BoxShape, Shape)
+BEGIN_CLASS_PARENT(CapsuleShape, Shape)
+	FIELD_PRIMITIVE(CapsuleShape, float, height)
+	FIELD_PRIMITIVE(CapsuleShape, float, radius)
 END_CLASS()
 
 //-----------------------------------//
 
-BoxShape::BoxShape()
-	: boxShape(nullptr)
+CapsuleShape::CapsuleShape()
+	: capsuleShape(nullptr)
+	, radius(1.0f)
+	, height(3.0f)
 { }
 
 //-----------------------------------//
 
-BoxShape::~BoxShape()
+CapsuleShape::~CapsuleShape()
 {
-	delete boxShape;
+	delete capsuleShape;
 }
 
 //-----------------------------------//
 
-void BoxShape::update( double delta )
+void CapsuleShape::update( double delta )
 {
-	if( boxShape )
+	if( capsuleShape )
 		return;
 
 	const TransformPtr& transform = getNode()->getTransform();
@@ -49,16 +53,19 @@ void BoxShape::update( double delta )
 	
 	const AABB& box = transform->getBoundingVolume();
 	const Vector3& scale = transform->getScale();
+
+	radius = box.max.x - box.min.x;
+	height = box.max.y - box.min.y;
 	
-	boxShape = new btBoxShape(Convert::toBullet(box));
-	boxShape->setLocalScaling(Convert::toBullet(scale));
+	capsuleShape = new btCapsuleShape(radius * 0.8f, height * 0.8f);
+	capsuleShape->setLocalScaling(Convert::toBullet(scale));
 }
 
 //-----------------------------------//
 
-btCollisionShape* const BoxShape::getBulletShape() const
+btCollisionShape* const CapsuleShape::getBulletShape() const
 {
-	return boxShape;
+	return capsuleShape;
 }
 
 //-----------------------------------//

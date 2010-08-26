@@ -16,6 +16,8 @@
 #include "vapor/render/Device.h"
 
 #include <btBulletDynamicsCommon.h>
+#include <BulletCollision/CollisionDispatch/btGhostObject.h> 
+//#include <BulletCollision/Gimpact/btGImpactCollisionAlgorithm.h> 
 
 namespace vapor {
 
@@ -24,6 +26,7 @@ namespace vapor {
 PhysicsManager::PhysicsManager()
 	: enableSimulation(false)
 	, debugDrawer(nullptr)
+	, drawDebug(false)
 	, config(nullptr)
 	, broadphase(nullptr)
 	, dispatcher(nullptr)
@@ -34,6 +37,8 @@ PhysicsManager::PhysicsManager()
     broadphase = new btDbvtBroadphase();
 	dispatcher = new btCollisionDispatcher(config);
 	solver = new btSequentialImpulseConstraintSolver;
+
+	//btGImpactCollisionAlgorithm::registerAlgorithm(dispatcher);
 }
 
 //-----------------------------------//
@@ -65,15 +70,16 @@ void PhysicsManager::updateBody(const Body* body)
 
 //-----------------------------------//
 
-void PhysicsManager::drawDebug()
+void PhysicsManager::drawDebugWorld()
 {
 	if( !world )
 		return;
 
+	if( !drawDebug )
+		return;
+
 	debugDrawer->clearBuffer();
-	
 	world->debugDrawWorld();
-	
 	debugDrawer->getVertexBuffer()->forceRebuild();
 
 	Engine* engine = Engine::getInstancePtr();
@@ -93,6 +99,8 @@ void PhysicsManager::createWorld()
 
     world = new btDiscreteDynamicsWorld(
 		dispatcher, broadphase, solver, config);
+
+	world->getPairCache()->setInternalGhostPairCallback( new btGhostPairCallback() );
 
 	debugDrawer = new BulletDebugDrawer();
 	world->setDebugDrawer( debugDrawer );

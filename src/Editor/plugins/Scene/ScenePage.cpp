@@ -66,8 +66,11 @@ static ComponentEntry components[] = {
 	{ true, TYPE(Terrain),				BMP(world) },
 	{ true, TYPE(Grid),					BMP(grid_icon_white_bg) },
 	{ true, TYPE(Geometry),				BMP(shape_flip_horizontal) },
+	{ true, TYPE(MeshShape),			BMP(link) },
 	{ true, TYPE(BoxShape),				BMP(link) },
+	{ true, TYPE(CapsuleShape),			BMP(link) },
 	{ true, TYPE(Body),					BMP(link) },
+	{ true, TYPE(CharacterController),	BMP(link) },
 	{ true, TYPE(Skydome),				BMP(skydome) },
 	//{ true, TYPE(Gizmo),				BMP(vector_icon) },
 	{ false, TYPE(Scene),				BMP(sitemap_color) }

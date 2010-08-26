@@ -30,6 +30,7 @@ enum
 	Toolbar_ToggleScene,
 	Toolbar_ToogleConsole,
 	Toolbar_ToogleGrid,
+	Toolbar_TooglePhysicsDebug,
 	Toolbar_TooglePlay,
 	Toolbar_ToogleSidebar,
 	Toolbar_TooglePlugin,

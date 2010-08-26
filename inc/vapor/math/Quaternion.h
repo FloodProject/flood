@@ -25,13 +25,14 @@ public:
 
 	// Default empty constructor
 	Quaternion ()
-		: x(0.0f), y(0.0f), z(0.0f), w(0.0f)
-	{ }
+	{
+		identity();
+	}
 
 	//-----------------------------------//
 	
 	// Copy constructor
-	Quaternion (const Quaternion &q)
+	Quaternion (const Quaternion& q)
 		: x(q.x), y(q.y), z(q.z), w(q.w)
 	{ }
 
@@ -41,6 +42,8 @@ public:
 	Quaternion (const float u)
 		: x(u), y(u), z(u), w(u)
 	{ }
+
+	//-----------------------------------//
 
 	Quaternion(const EulerAngles& angles)
 	{
@@ -63,7 +66,7 @@ public:
 	//-----------------------------------//
 	
 	// Assignment
-	Quaternion &operator = (const Quaternion &q)
+	Quaternion &operator = (const Quaternion& q)
 	{
 		x = q.x; y = q.y; z = q.z; w = q.w;
 		return *this;
@@ -85,27 +88,34 @@ public:
 		return (x != q.x) || (y != q.y) || (z != q.z) || (w != q.w);
 	}
 
+	//-----------------------------------//
+
+	// Set to identity.
+	void identity()
+	{
+		w = 1.0f;
+		x = y = z = 0.0f;
+	}
+
 	//---------------------------------------------------------------------------
 	// conjugate
 	//
 	// Compute the quaternion conjugate.  This is the quaternian
 	// with the opposite rotation as the original quaternian.  
 
-	Quaternion conjugate(const Quaternion &q) {
+	Quaternion conjugate(const Quaternion& q)
+	{
 		Quaternion result;
 
 		// Same rotation amount
-
 		result.w = q.w;
 
 		// Opposite axis of rotation
-
 		result.x = -q.x;
 		result.y = -q.y;
 		result.z = -q.z;
 
 		// Return it
-
 		return result;
 	}
 
@@ -119,7 +129,8 @@ public:
 	// quaternion multiplication.  See section 10.4.8 for the rationale
 	// behind this deviation from the standard.
 
-	Quaternion operator *(const Quaternion &a) const {
+	Quaternion operator *(const Quaternion& a) const
+	{
 		Quaternion result;
 
 		result.w = w*a.w - x*a.x - y*a.y - z*a.z;
@@ -135,14 +146,12 @@ public:
 	//
 	// Combined cross product and assignment, as per C++ convention
 
-	Quaternion &operator *=(const Quaternion &a) {
-
+	Quaternion &operator *=(const Quaternion& a)
+	{
 		// Multiply and assign
-
 		*this = *this * a;
 
 		// Return reference to l-value
-
 		return *this;
 	}
 
@@ -160,26 +169,21 @@ public:
 	// creep," which can occur when many successive quaternion operations
 	// are applied.
 
-	void normalize() {
-
+	void normalize()
+	{
 		// Compute magnitude of the quaternion
-
-		float	mag = magnitude();
+		float mag = magnitude();
 
 		// Check for bogus length, to protect against divide by zero
-
 		if (mag > 0.0f) {
 
 			// Normalize it
-
 			float	oneOverMag = 1.0f / mag;
 			w *= oneOverMag;
 			x *= oneOverMag;
 			y *= oneOverMag;
 			z *= oneOverMag;
-
 		} 
-	
 	}
 
 	//---------------------------------------------------------------------------
@@ -190,61 +194,59 @@ public:
 	//
 	// Setup the quaternion to rotate about the specified axis
 
-	void setToRotateAboutX(float theta) {
-
+	void setToRotateAboutX(float theta)
+	{
 		// Compute the half angle
-
 		float	thetaOver2 = theta * .5f;
 
 		// Set the values
-
 		w = cosf(thetaOver2);
 		x = sinf(thetaOver2);
 		y = 0.0f;
 		z = 0.0f;
 	}
 
-	void setToRotateAboutY(float theta) {
+	//-----------------------------------//
 
+	void setToRotateAboutY(float theta)
+	{
 		// Compute the half angle
-
 		float	thetaOver2 = theta * .5f;
 
 		// Set the values
-
 		w = cosf(thetaOver2);
 		x = 0.0f;
 		y = sinf(thetaOver2);
 		z = 0.0f;
 	}
 
-	void setToRotateAboutZ(float theta) {
+	//-----------------------------------//
 
+	void setToRotateAboutZ(float theta)
+	{
 		// Compute the half angle
-
 		float	thetaOver2 = theta * .5f;
 
 		// Set the values
-
 		w = cosf(thetaOver2);
 		x = 0.0f;
 		y = 0.0f;
 		z = sinf(thetaOver2);
 	}
 
+	//-----------------------------------//
+
 	void setToRotateAboutAxis(Vector3 &axis, float theta) {
 
 		// The axis of rotation must be normalized
-
-		if ((axis.length() - 1.0f) > .01f) axis.normalize();
+		if ((axis.length() - 1.0f) > .01f)
+			axis.normalize();
 
 		// Compute the half angle and its sin
-
 		float	thetaOver2 = theta * .5f;
 		float	sinThetaOver2 = sinf(thetaOver2);
 
 		// Set the values
-
 		w = cosf(thetaOver2);
 		x = axis.x * sinThetaOver2;
 		y = axis.y * sinThetaOver2;
@@ -261,16 +263,13 @@ public:
 	float safeAcos(float x) {
 
 		// Check limit conditions
-
-		if (x <= -1.0f) {
+		if (x <= -1.0f)
 			return Math::PI;
-		}
-		if (x >= 1.0f) {
+		
+		else if (x >= 1.0f)
 			return 0.0f;
-		}
 
 		// Value is in the domain - use standard C function
-
 		return std::acos(x);
 	}
 
@@ -279,14 +278,12 @@ public:
 	//
 	// Return the rotation angle theta
 
-	float getRotationAngle() {
-
+	float getRotationAngle()
+	{
 		// Compute the half angle.  Remember that w = cos(theta / 2)
-
 		float thetaOver2 = safeAcos(w);
 
 		// Return the rotation angle
-
 		return thetaOver2 * 2.0f;
 	}
 
@@ -295,17 +292,15 @@ public:
 	//
 	// Return the rotation axis
 
-	Vector3	getRotationAxis() const {
-
+	Vector3	getRotationAxis() const
+	{
 		// Compute sin^2(theta/2).  Remember that w = cos(theta/2),
 		// and sin^2(x) + cos^2(x) = 1
-
 		float sinThetaOver2Sq = 1.0f - w*w;
 
 		// Protect against numerical imprecision
-
-		if (sinThetaOver2Sq <= 0.0f) {
-
+		if (sinThetaOver2Sq <= 0.0f)
+		{
 			// Identity quaternion, or numerical imprecision.  Just
 			// return any valid vector, since it doesn't matter
 
@@ -313,11 +308,9 @@ public:
 		}
 
 		// Compute 1 / sin(theta/2)
-
-		float	oneOverSinThetaOver2 = 1.0f / sqrt(sinThetaOver2Sq);
+		float oneOverSinThetaOver2 = 1.0f / sqrt(sinThetaOver2Sq);
 
 		// Return axis of rotation
-
 		return Vector3(
 			x * oneOverSinThetaOver2,
 			y * oneOverSinThetaOver2,
@@ -325,10 +318,16 @@ public:
 		);
 	}
 
-	// dotProduct
-	float dotProduct(const Quaternion &a) {
+	// Dot product.
+	float dot(const Quaternion& a)
+	{
 		return a.w*w + a.x*x + a.y*y + a.z*z;
 	}
+
+	// Spherical linear interpolation.
+	Quaternion slerp(const Quaternion& q, float t);
+
+	static const Quaternion Identity;
 
 public:
 

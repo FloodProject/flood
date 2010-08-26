@@ -332,6 +332,9 @@ void EditorFrame::createToolbar()
 	toolBar->AddTool( Toolbar_ToogleGrid, "Grid", 
 		wxMEMORY_BITMAP(grid_icon), "Show/hide the editor grid", wxITEM_CHECK );
 
+	toolBar->AddTool( Toolbar_TooglePhysicsDebug, "Physics", 
+		wxMEMORY_BITMAP(grid_icon), "Show/hide the physics debug", wxITEM_CHECK );
+
 	toolBar->ToggleTool( Toolbar_ToogleGrid, true );
 
 	toolBar->AddTool( Toolbar_TooglePlay, "Play", wxMEMORY_BITMAP(resultset_next), 
@@ -433,7 +436,7 @@ void EditorFrame::onRender()
 	camera->render( editorScene, false );
 
 	PhysicsManager* physics = engine->getPhysicsManager();
-	physics->drawDebug();
+	physics->drawDebugWorld();
 }
 
 //-----------------------------------//
@@ -468,6 +471,19 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 		
 		if( grid )
 			grid->setVisible( !grid->isVisible() );
+		
+		RefreshViewport();
+		
+		break;
+	}
+	//-----------------------------------//
+	case Toolbar_TooglePhysicsDebug:
+	{
+		Engine* engine = Engine::getInstancePtr();
+		PhysicsManager* physics = engine->getPhysicsManager();
+		
+		if( physics )
+			physics->setDebugWorld( !physics->getDebugWorld() );
 		
 		RefreshViewport();
 		

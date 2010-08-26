@@ -10,25 +10,20 @@
 
 #include "vapor/physics/Shape.h"
 
-FWD_DECL_SHARED(Geometry)
-
-class btBvhTriangleMeshShape;
-class btTriangleIndexVertexArray;
-class btTriangleMesh;
-class btGImpactMeshShape;
+class btCapsuleShape;
 
 namespace vapor {
 
 //-----------------------------------//
 
-class VAPOR_API MeshShape : public Shape
+class VAPOR_API CapsuleShape : public Shape
 {
 	DECLARE_CLASS_()
 
 public:
 
-	MeshShape();
-	virtual ~MeshShape();
+	CapsuleShape();
+	virtual ~CapsuleShape();
 
 	// Updates the shape.
 	void update( double delta );
@@ -38,15 +33,15 @@ public:
 
 protected:
 
-	// Converts the geometry to Bullet format.
-	btTriangleMesh* convertMesh();
+	float height;
+	float radius;
 
 	// Bullet box shape.
-	btBvhTriangleMeshShape* meshShape;
+	btCapsuleShape* capsuleShape;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( MeshShape );
-TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( MeshShape );
+TYPEDEF_SHARED_POINTER_FROM_TYPE( CapsuleShape );
+TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( CapsuleShape );
 
 //-----------------------------------//
 

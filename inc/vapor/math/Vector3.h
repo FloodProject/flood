@@ -141,6 +141,14 @@ public:
 	}
 
 	//-----------------------------------//
+	
+	// Multiplication by a vector.
+	Vector3T operator * (const Vector3T<T>& v) const
+	{
+		return Vector3T(x*v.x, y*v.y, z*v.z);
+	}
+
+	//-----------------------------------//
 
 	// Division by a scalar.
 	Vector3T operator / (float s) const

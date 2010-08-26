@@ -18,10 +18,9 @@ namespace vapor {
 //-----------------------------------//
 
 IndexBuffer::IndexBuffer( IndexBufferType::Enum indexType )
-	: built( false ), indexType( indexType )
-{
-
-}
+	: built(false)
+	, indexType(indexType)
+{ }
 
 //-----------------------------------//
 
@@ -107,7 +106,7 @@ bool IndexBuffer::isBuilt() const
 
 bool IndexBuffer::is16bit() const
 {
-	return ( indexType == IndexBufferType::I16bit );
+	return indexType == IndexBufferType::I16bit;
 }
 
 //-----------------------------------//

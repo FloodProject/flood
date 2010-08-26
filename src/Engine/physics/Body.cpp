@@ -14,6 +14,7 @@
 
 #include "vapor/scene/Node.h"
 #include "vapor/scene/Transform.h"
+
 #include "vapor/Engine.h"
 
 #include <BulletDynamics/Dynamics/btRigidBody.h>
@@ -25,6 +26,8 @@ namespace vapor {
 
 BEGIN_CLASS_PARENT(Body, Component)
 	FIELD_PRIMITIVE(Body, float, mass)
+	FIELD_PRIMITIVE(Body, float, friction)
+	FIELD_PRIMITIVE(Body, float, restitution)
 END_CLASS()
 
 //-----------------------------------//
@@ -32,7 +35,9 @@ END_CLASS()
 Body::Body()
 	: body(nullptr)
 	, motionState(nullptr)
-	, mass(10)
+	, mass(50)
+	, friction(0.5f)
+	, restitution(0.3f) 
 {
 	Class& klass = getType();
 	klass.onFieldChanged += fd::bind(&Body::onFieldChanged, this);
@@ -58,12 +63,13 @@ Body::~Body()
 
 void Body::update( double delta )
 {
-	if( !body && !createBody() )
-	{
-		TransformPtr transform = getNode()->getTransform();
-		transform->onTransform += fd::bind(&Body::onTransform, this);
+	if( body )
 		return;
-	}
+	
+	createBody();
+	
+	TransformPtr transform = getNode()->getTransform();
+	transform->onTransform += fd::bind(&Body::onTransform, this);
 }
 
 //-----------------------------------//
@@ -85,14 +91,7 @@ void Body::onTransform()
 	btCollisionShape* shape = getBulletShape();
 	shape->setLocalScaling(Convert::toBullet(scale));
 
-	const Matrix4x3& abs = transform->getAbsoluteTransform();
-	Matrix4x4 trs = Matrix4x4(abs);
-
-	trs.m11 = 1;
-	trs.m22 = 1;
-	trs.m33 = 1;
-
-	body->getWorldTransform().setFromOpenGLMatrix(&trs.m11);
+	body->setWorldTransform(Convert::toBullet(transform));
 	body->activate();
 }
 
@@ -115,6 +114,13 @@ btCollisionShape* Body::getBulletShape() const
 
 //-----------------------------------//
 
+bool Body::isDynamic() const
+{
+	return mass != 0;
+}
+
+//-----------------------------------//
+
 bool Body::createBody()
 {
 	if( body )
@@ -126,17 +132,22 @@ bool Body::createBody()
 		return false;
 
 	const NodePtr& node = getNode();
-
-	if( !node )
-		return false;
+	assert( node != nullptr );
 
 	motionState = new BodyMotionState( node->getTransform() );
 
-	btRigidBody::btRigidBodyConstructionInfo info( mass, motionState, bulletShape );
+	btVector3 localInertia;
+	localInertia.setZero();
+		
+	if( isDynamic() )
+		bulletShape->calculateLocalInertia(mass, localInertia);
+
+	btRigidBody::btRigidBodyConstructionInfo info( mass, motionState,
+		bulletShape, localInertia);
 
 	body = new btRigidBody(info);
 
-	motionState->body = body;
+	updateProperties();
 
 	addWorld();
 
@@ -171,12 +182,32 @@ void Body::removeWorld()
 
 //-----------------------------------//
 
-void Body::onFieldChanged(const Field& field)
+void Body::updateProperties()
 {
 	if( !body )
 		return;
 
-	body->setMassProps(mass, btVector3());
+	btCollisionShape* bulletShape = getBulletShape();
+
+	if( !bulletShape )
+		return;
+
+	btVector3 localInertia;
+	localInertia.setZero();
+		
+	if( isDynamic() )
+		bulletShape->calculateLocalInertia(mass, localInertia);
+
+	body->setMassProps(mass, localInertia);
+	body->setFriction(friction);
+	body->setRestitution(restitution);
+}
+
+//-----------------------------------//
+
+void Body::onFieldChanged(const Field& field)
+{
+	updateProperties();
 }
 
 //-----------------------------------//
