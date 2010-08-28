@@ -32,11 +32,11 @@ public:
 	GizmoPtr gizmo;
 
 	Vector3 prevTranslation;
-	EulerAngles prevRotation;
+	Quaternion prevRotation;
 	Vector3 prevScale;
 
 	Vector3 translation;
-	EulerAngles rotation;
+	Quaternion rotation;
 	Vector3 scale;
 };
 

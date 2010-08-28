@@ -18,7 +18,7 @@ namespace vapor {
 
 BEGIN_CLASS_PARENT(Transform, Component)
 	FIELD_PRIMITIVE(Transform, Vector3, translation)
-	FIELD_PRIMITIVE(Transform, Vector3, rotation)
+	FIELD_PRIMITIVE(Transform, Quaternion, rotation)
 	FIELD_PRIMITIVE(Transform, Vector3, scaling)
 END_CLASS()
 
@@ -128,7 +128,7 @@ void Transform::setPosition( const Vector3& newTranslation )
 
 //-----------------------------------//
 
-void Transform::setRotation( const EulerAngles& newRotation )
+void Transform::setRotation( const Quaternion& newRotation )
 {
 	setNotify();
 	rotation = newRotation;
@@ -218,7 +218,7 @@ void Transform::setAbsoluteTransform( const Matrix4x3& newTransform )
 Matrix4x3 Transform::getLocalTransform() const
 {
 	Matrix4x3 matScale = Matrix4x3::createScale(scaling);
-	Matrix4x3 matRotation = Matrix4x3::createRotation(rotation);
+	Matrix4x3 matRotation = Matrix4x3::createFromQuaternion(rotation);
 	Matrix4x3 matTranslation = Matrix4x3::createTranslation(translation);
 	
 	// Combine all the transformations in a single matrix.

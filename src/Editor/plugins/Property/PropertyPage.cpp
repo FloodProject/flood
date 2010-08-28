@@ -302,6 +302,20 @@ wxPGProperty* PropertyPage::createPrimitiveProperty(const Field& field, void* ob
 		Collapse( prop );
 	}
 	//-----------------------------------//
+	else if( type.isQuaternion() )
+	{
+		//Vector3 vec = field.get<Vector3>(object);
+		//
+		prop = new wxStringProperty( wxEmptyString, wxPG_LABEL, "<composed>" );
+		Append( prop );
+
+		//AppendIn( prop, new wxFloatProperty( "X", wxPG_LABEL, vec.x ) );
+		//AppendIn( prop, new wxFloatProperty( "Y", wxPG_LABEL, vec.y ) );
+		//AppendIn( prop, new wxFloatProperty( "Z", wxPG_LABEL, vec.z ) );
+
+		//Collapse( prop );
+	}
+	//-----------------------------------//
 	else
 	{
 		debug( "Unknown property type: '%s'", type.getName().c_str() );

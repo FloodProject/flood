@@ -17,8 +17,8 @@ namespace vapor {
 //-----------------------------------//
 
 typedef std::vector< RenderablePtr > RenderableList;
-typedef std::map< RenderGroup::Enum, RenderableList > RenderableMap;
-typedef std::pair<const RenderGroup::Enum, RenderableList > RenderableMapPair;
+typedef std::map< RenderStage::Enum, RenderableList > RenderableMap;
+typedef std::pair<const RenderStage::Enum, RenderableList > RenderableMapPair;
 
 //-----------------------------------//
 
@@ -40,17 +40,20 @@ public:
 
 	// Adds a new renderable to this geometry.
 	void addRenderable( const RenderablePtr& renderable, 
-		RenderGroup::Enum group = RenderGroup::Normal,
+		RenderStage::Enum group = RenderStage::Normal,
 		uint priority = 0 );
 
 	// Gets all the renderables in this geometry.
-	const RenderableList& getRenderables( RenderGroup::Enum = RenderGroup::Normal );
+	const RenderableList& getRenderables( RenderStage::Enum = RenderStage::Normal );
 
 	// Appends all the renderables of this geometry to the queue.
 	void appendRenderables( RenderQueue& queue, TransformPtr transform );
 
 	// Updates the geometry if needed.
 	virtual void update( double delta );
+
+	// Callback when geometry is about to get rendered.
+	virtual void onRender();
 
 	// Gets the bounding volume of this geometry.
 	GETTER(BoundingVolume, const AABB&, boundingVolume)
@@ -65,7 +68,11 @@ protected:
 
 	// Keeps track if geometry has changed.
 	bool isDirty;
+
+	// Keeps track if geometry needs render callback.
+	bool needsRenderCallback;
 	
+	// Renderables of the geometry.
 	RenderableMap renderables;
 };
 

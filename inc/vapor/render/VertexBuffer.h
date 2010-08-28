@@ -29,7 +29,7 @@ namespace VertexAttribute
 		SecondaryColor = 4,
 		FogCoord = 5,
 		TexCoord0 = 8,
-		Texcoord1,
+		TexCoord1,
 		TexCoord2,
 		TexCoord3,
 		TexCoord4,
@@ -50,10 +50,12 @@ struct Attribute
 	  : components(rhs.components)
 	  , size(rhs.size)
 	  , data(rhs.data)
+	  , type(rhs.type)
 	{ }
 
 	int components;
 	int size;
+	int type;
 	std::vector<byte> data;
 };
 
@@ -113,6 +115,9 @@ public:
 	// Sets the attribute data.
 	bool set( VertexAttribute::Enum attr, const std::vector< Vector3 >& data );
 
+	// Sets the attribute data.
+	bool set( VertexAttribute::Enum attr, const std::vector<float>& data );
+
 private:
 
 	// Checks that each entry in the map has the same size.
@@ -123,10 +128,6 @@ private:
 
 	// Tells us if this buffer has already been built.
 	bool built;
-
-	// OpenGL buffer modifiers.
-	BufferUsage::Enum bufferUsage;
-	BufferAccess::Enum bufferAccess;
 
 	// Used to store specific GL types for each attribute.
 	typedef std::map< VertexAttribute::Enum, Attribute > AttributeMap;

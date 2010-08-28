@@ -74,7 +74,7 @@ bool IndexBuffer::build( BufferUsage::Enum bU, BufferAccess::Enum bA )
 	glBufferData( GL_ELEMENT_ARRAY_BUFFER, 
 		getNumIndices() * (is16bit() ? sizeof(ushort) : sizeof(ulong)), 
 		is16bit() ? &data16[0] : reinterpret_cast<ushort*>(&data32[0]), 
-		getGLBufferType( bU, bA ) );
+		getGLBufferType() );
 
 	//debug( "index buffer '%d' has size '%d'", id, getNumIndices() );
 

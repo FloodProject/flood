@@ -226,6 +226,19 @@ static Color convertValueToColor( const Json::Value& value )
 
 //-----------------------------------//
 
+static Quaternion convertValueToQuaternion( const Json::Value& value )
+{
+	Quaternion quat(
+		float(value[0u].asDouble()),
+		float(value[1u].asDouble()),
+		float(value[2u].asDouble()),
+		float(value[3u].asDouble()) );
+
+	return quat;
+}
+
+//-----------------------------------//
+
 void Serializer::setFieldFromValue( const Field& field, void* object, const Json::Value& value )
 {
 	if( !field.type.isPrimitive() )
@@ -271,6 +284,12 @@ void Serializer::setFieldFromValue( const Field& field, void* object, const Json
 	{
 		Vector3 val = convertValueToVector3(value);
 		field.set<Vector3>(object, val);
+	}
+	//-----------------------------------//
+	else if( type.isQuaternion() )
+	{
+		Quaternion val = convertValueToQuaternion(value);
+		field.set<Quaternion>(object, val);
 	}
 	else
 	//-----------------------------------//
@@ -356,6 +375,20 @@ static Json::Value convertColor( const Color& c )
 
 //-----------------------------------//
 
+static Json::Value convertQuaternion( const Quaternion& q )
+{
+	Json::Value v;
+	
+	v.append(q.x);
+	v.append(q.y);
+	v.append(q.z);
+	v.append(q.w);
+	
+	return v;
+}
+
+//-----------------------------------//
+
 Json::Value Serializer::valueFromEnum( const Field& field, void* object )
 {
 	assert( field.type.isEnum() );
@@ -414,6 +447,12 @@ Json::Value Serializer::valueFromPrimitive( const Field& field, void* object )
 	{
 		Vector3 vec = field.get<Vector3>(object);
 		v = convertVector3(vec);
+	}
+	//-----------------------------------//
+	else if( type.isVector3() )
+	{
+		Quaternion quat = field.get<Quaternion>(object);
+		v = convertQuaternion(quat);
 	}
 	else
 	//-----------------------------------//

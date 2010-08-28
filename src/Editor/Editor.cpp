@@ -55,7 +55,7 @@ bool EditorApp::OnInit()
     if( !wxApp::OnInit() )
         return false;
 
-	wxHandleFatalExceptions(true);
+	//wxHandleFatalExceptions(true);
 
 	// Register a PNG image handler (so toolbars icons can be decoded).
 	wxImage::AddHandler(new wxPNGHandler);
@@ -74,17 +74,17 @@ bool EditorApp::OnInit()
 
 //-----------------------------------//
 
-bool EditorApp::OnExceptionInMainLoop()
-{
-	throw;
-}
-
-//-----------------------------------//
-
-void EditorApp::OnUnhandledException()
-{
-	throw;
-}
+//bool EditorApp::OnExceptionInMainLoop()
+//{
+//	throw;
+//}
+//
+////-----------------------------------//
+//
+//void EditorApp::OnUnhandledException()
+//{
+//	throw;
+//}
 
 //-----------------------------------//
 
@@ -566,6 +566,7 @@ void EditorFrame::createScene()
 	rm->loadResource("Tex.glsl");
 	rm->loadResource("Toon.glsl");
 	rm->loadResource("Tex_Toon.glsl");
+	rm->loadResource("Tex_Toon_Skin.glsl");
 	rm->loadResource("Sky.glsl");
 	rm->loadResource("Water.glsl");
 	rm->loadResource("ProjTex.glsl");

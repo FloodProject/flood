@@ -19,11 +19,11 @@ Renderable::Renderable()
 
 //-----------------------------------//
 
-Renderable::Renderable( PolygonPrimitive::Enum primitive,
+Renderable::Renderable( PolygonType::Enum type,
 						const VertexBufferPtr& vb, 
 						const IndexBufferPtr& ib, 
 						const MaterialPtr& mat )
-	: type( primitive )
+	: type( type )
 	, vb( vb )
 	, ib( ib )
 	, mat( mat )
@@ -32,10 +32,10 @@ Renderable::Renderable( PolygonPrimitive::Enum primitive,
 
 //-----------------------------------//
 
-Renderable::Renderable( PolygonPrimitive::Enum primitive, 
+Renderable::Renderable( PolygonType::Enum type, 
 						const VertexBufferPtr& vb, 
 						const MaterialPtr& mat )
-	: type( primitive )
+	: type( type )
 	, vb( vb )
 	, mat( mat )
 	, mode( PolygonMode::Solid )
@@ -43,10 +43,10 @@ Renderable::Renderable( PolygonPrimitive::Enum primitive,
 
 //-----------------------------------//
 
-void Renderable::bind()
+bool Renderable::bind()
 {
 	if( !mat || !vb )
-		return;
+		return false;
 
 	mat->bind();
 
@@ -55,33 +55,39 @@ void Renderable::bind()
 
 	vb->bind();
 
-	if( ib )
-	{
-		if( !ib->isBuilt() )
-			ib->build();
+	if( !ib )
+		return true;
 
-        ib->bind();
-	}
+	if( !ib->isBuilt() )
+		ib->build();
+	
+	ib->bind();
+
+	return true;
 }
 
 //-----------------------------------//
 
-void Renderable::unbind()
+bool Renderable::unbind()
 {
 	if( !mat || !vb )
-		return;
+		return false;
 
 	if( ib )
 		ib->unbind();
     
 	vb->unbind();
 	mat->unbind();
+
+	return true;
 }
 
 //-----------------------------------//
 
 void Renderable::render( RenderDevice* )
 {
+	#pragma TODO("Move polygon modes to the renderer")
+
 	if( mode == PolygonMode::Wireframe )
 		glPolygonMode( GL_FRONT_AND_BACK, PolygonMode::Wireframe );
 
@@ -94,8 +100,8 @@ void Renderable::render( RenderDevice* )
     }
     else
     {
-        GLenum gltype = ib->is16bit() ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
-        glDrawElements( type, ib->getNumIndices(), gltype, 0 );
+        GLenum size = ib->is16bit() ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
+        glDrawElements( type, ib->getNumIndices(), size, 0 );
 
 		if( glHasError("Error drawing index buffer") )
 			return;

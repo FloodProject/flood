@@ -59,10 +59,10 @@ void Label::init()
 	setupDone = false;
 
 	VertexBufferPtr vb( new VertexBuffer() );
-	renderable = new Renderable( PolygonPrimitive::Quads, vb, material );
+	renderable = new Renderable( PolygonType::Quads, vb, material );
 
 	// Add a new renderable to hold the text geometry
-	addRenderable( renderable, RenderGroup::Overlays );
+	addRenderable( renderable, RenderStage::Overlays );
 }
 
 //-----------------------------------//

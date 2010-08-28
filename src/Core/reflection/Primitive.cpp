@@ -21,6 +21,7 @@ const Primitive Primitive::_double(PrimitiveType::Double, "double");
 const Primitive Primitive::_string(PrimitiveType::String, "string");
 const Primitive Primitive::_Vector3(PrimitiveType::Vector3, "Vector3");
 const Primitive Primitive::_Color(PrimitiveType::Color, "Color");
+const Primitive Primitive::_Quaternion(PrimitiveType::Quaternion, "Quaternion");
 
 //-----------------------------------//
 
@@ -80,11 +81,17 @@ bool Primitive::isVector3() const
 
 //-----------------------------------//
 
+bool Primitive::isQuaternion() const
+{
+	return primitive == PrimitiveType::Quaternion;
+}
+
+//-----------------------------------//
+
 bool Primitive::isColor() const
 {
 	return primitive == PrimitiveType::Color;
 }
-
 
 //-----------------------------------//
 

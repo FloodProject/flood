@@ -54,7 +54,6 @@ void FirstPersonCamera::update( double delta )
 void FirstPersonCamera::checkControls( double delta )
 {
 	Vector3 position = transform->getPosition();
-	EulerAngles rotation = transform->getRotation();
 	
 	Vector3 moveVector;
 	bool viewChanged = false;
@@ -62,8 +61,10 @@ void FirstPersonCamera::checkControls( double delta )
 	// Check mouse movement.
 	if( mouseDistance != Vector2i::Zero )
 	{
-		Vector3 rotate( mouseDistance.y, -mouseDistance.x, 0.0f );
-		rotation += rotate * (delta * lookSensivity);
+		Vector3 rotate( mouseDistance.y, -mouseDistance.x, 0 );
+		rotate *= delta * lookSensivity;
+
+		rotation += rotate;
 
 		// Restrict X-axis movement by some deegres.
 		float& xang = rotation.x;
@@ -128,7 +129,11 @@ void FirstPersonCamera::checkControls( double delta )
 			
 		// Update transform.
 		transform->setPosition( interp );
-		transform->setRotation( rotation );
+
+		//Quaternion test;
+		//test.setToRotateAboutX( Math::degreeToRadian(-90) );
+
+		transform->setRotation( Quaternion(rotation) );
 	}
 }
 

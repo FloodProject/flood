@@ -18,10 +18,9 @@ namespace vapor {
 //-----------------------------------//
 
 VertexBuffer::VertexBuffer(BufferUsage::Enum usage, BufferAccess::Enum access)
-	: built(false)
+	: Buffer(usage, access)
+	, built(false)
 	, numVertices(0)
-	, bufferUsage(usage)
-	, bufferAccess(access)
 { }
 
 //-----------------------------------//
@@ -84,7 +83,7 @@ void VertexBuffer::bindPointers()
 			return;
 
 		glVertexAttribPointer( p.first, attr.components,
-			GL_FLOAT, GL_FALSE, 0, (void*) offset );
+			attr.type, GL_FALSE, 0, (void*) offset );
 
 		if( glHasError("Error binding pointers to buffer") )
 			return;
@@ -109,7 +108,7 @@ bool VertexBuffer::isValid() const
 
 //-----------------------------------//
 
-bool VertexBuffer::set( VertexAttribute::Enum num,
+bool VertexBuffer::set( VertexAttribute::Enum num, 
 					    const std::vector<Vector3>& data )
 {
 	built = false;
@@ -117,7 +116,28 @@ bool VertexBuffer::set( VertexAttribute::Enum num,
 	Attribute attr;
 	attr.components = 3;
 	attr.size = sizeof(float);
+	attr.type = GL_FLOAT;
 	attr.data.resize( data.size() * sizeof(Vector3) );
+	
+	if( data.size() != 0)
+		memcpy( &attr.data[0], &data[0], attr.data.size() );
+	
+	attributes[num] = attr;
+	return true;
+}
+
+//-----------------------------------//
+
+bool VertexBuffer::set( VertexAttribute::Enum num,
+					    const std::vector<float>& data )
+{
+	built = false;
+
+	Attribute attr;
+	attr.components = 1;
+	attr.size = sizeof(float);
+	attr.type = GL_FLOAT;
+	attr.data.resize( data.size() * sizeof(int) );
 	
 	if( data.size() != 0)
 		memcpy( &attr.data[0], &data[0], attr.data.size() );
@@ -133,12 +153,14 @@ bool VertexBuffer::build()
 	bind();
 
 	// Check that all vertex attributes elements are the same size.
-	if( !checkSize() )
-		return false;
+	//if( !checkSize() )
+	//{
+	//	warn( "gl", "Vertex buffers elements have different sizes" );
+	//	return false;
+	//}
 
 	// Reserve space for all the vertex elements.
-	GLenum bufferType = getGLBufferType( bufferUsage, bufferAccess );
-	glBufferData( GL_ARRAY_BUFFER, getSize(), nullptr, bufferType );
+	glBufferData( GL_ARRAY_BUFFER, getSize(), nullptr, getGLBufferType() );
 
 	if( glHasError("Could not allocate storage for buffer") )
 		return false;

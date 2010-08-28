@@ -28,7 +28,7 @@ Billboard::Billboard()
 Billboard::Billboard( const CameraPtr& cam, BillboardType::Enum type )
 	: camera(cam)
 	, billboardType(type)
-	, rend( new Renderable(PolygonPrimitive::Lines) )
+	, rend( new Renderable(PolygonType::Lines) )
 { }
 
 //-----------------------------------//

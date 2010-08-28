@@ -27,6 +27,7 @@ namespace PrimitiveType
 		Double,
 		String,
 		Vector3,
+		Quaternion,
 		Color,
 	};
 }
@@ -63,6 +64,9 @@ public:
 	// Gets if this type represents a vector.
 	bool isVector3() const;
 
+	// Gets if this type represents a quaternion.
+	bool isQuaternion() const;
+
 	// Gets if this type represents a color.
 	bool isColor() const;
 
@@ -82,9 +86,8 @@ public:
 	static const Primitive _string;
 	static const Primitive _Vector3;
 	static const Primitive _Color;
+	static const Primitive _Quaternion;
 };
-
-
 
 //-----------------------------------//
 

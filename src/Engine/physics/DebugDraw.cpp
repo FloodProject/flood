@@ -24,7 +24,7 @@ BulletDebugDrawer::BulletDebugDrawer()
 	material->setProgram("Diffuse");
 	material->setDepthCompare(DepthCompare::LessOrEqual);
 
-	renderable = new Renderable(PolygonPrimitive::Lines);
+	renderable = new Renderable(PolygonType::Lines);
 	renderable->setVertexBuffer(vb);
 	renderable->setMaterial(material);
 }

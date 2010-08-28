@@ -47,7 +47,7 @@ RenderablePtr buildBoundingRenderable( const AABB& aabb )
 	MaterialPtr mat( new Material("BoundingBox", "Diffuse") );
 	mat->setBackfaceCulling( false );
 
-	RenderablePtr boundingBox( new Renderable(PolygonPrimitive::Quads, vb, mat) );
+	RenderablePtr boundingBox( new Renderable(PolygonType::Quads, vb, mat) );
 	boundingBox->setPolygonMode( PolygonMode::Wireframe );
 
 	return boundingBox;
@@ -71,7 +71,7 @@ NodePtr buildRay( const Ray& pickRay, const Vector3& outFar )
 
 	MaterialPtr mat( new Material("LineMaterial") );
 	
-	RenderablePtr rend( new Renderable(PolygonPrimitive::Lines, vb) );
+	RenderablePtr rend( new Renderable(PolygonType::Lines, vb) );
 	rend->setMaterial( mat );	
 	
 	GeometryPtr geom( new Geometry(rend) );

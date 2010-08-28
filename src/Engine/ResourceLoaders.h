@@ -17,7 +17,7 @@
 #endif
 
 #ifdef VAPOR_MESH_MILKSHAPE3D
-	#include "vapor/resources/MS3D_Loader.h"
+	#include "vapor/resources/Milkshape3D_Loader.h"
 #endif
 
 #ifdef VAPOR_AUDIO_OGG

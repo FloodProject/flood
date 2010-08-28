@@ -129,7 +129,7 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res,
 			if( !rend )
 				continue;
 
-			if( rend->getPrimitiveType() != PolygonPrimitive::Triangles )
+			if( rend->getPrimitiveType() != PolygonType::Triangles )
 				continue;
 
 			const VertexBufferPtr& vb = rend->getVertexBuffer();

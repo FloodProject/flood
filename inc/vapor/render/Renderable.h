@@ -25,7 +25,7 @@ class RenderDevice;
  * Type of primitive of the renderable.
  */
 
-namespace PolygonPrimitive
+namespace PolygonType
 {
     enum Enum
     {
@@ -73,18 +73,18 @@ public:
 
 	Renderable();
 
-    Renderable( PolygonPrimitive::Enum, const VertexBufferPtr&,
+    Renderable( PolygonType::Enum, const VertexBufferPtr&,
 		const IndexBufferPtr&, const MaterialPtr& );
     
     // No index buffer, default material will be used if none passed.
-	Renderable( PolygonPrimitive::Enum, const VertexBufferPtr& = nullptr,
+	Renderable( PolygonType::Enum, const VertexBufferPtr& = nullptr,
 		const MaterialPtr& = nullptr );
 
 	// Binds the state needed to draw the renderable.
-	void bind();
+	bool bind();
 
 	// Unbinds the state needed to draw the renderable.
-	void unbind();
+	bool unbind();
 
     // Render this renderable.
 	void render(RenderDevice* device);
@@ -102,12 +102,12 @@ public:
 	ACESSOR(PolygonMode, PolygonMode::Enum, mode)
 
 	// Gets/sets the primitive type of this renderable.
-	ACESSOR(PrimitiveType, PolygonPrimitive::Enum, type)
+	ACESSOR(PrimitiveType, PolygonType::Enum, type)
 
 protected:
 
     // Primitive type of the vertex buffer contents.
-    PolygonPrimitive::Enum type;
+    PolygonType::Enum type;
 
 	// Rendering mode of the vertex buffer contents.
 	PolygonMode::Enum mode;

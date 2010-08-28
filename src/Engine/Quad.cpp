@@ -14,7 +14,7 @@ namespace vapor {
 //-----------------------------------//
 
 Quad::Quad( float width, float height )
-	: Renderable( PolygonPrimitive::Quads, getQuadBuffer(width, height) )
+	: Renderable( PolygonType::Quads, getQuadBuffer(width, height) )
 { }
 
 //-----------------------------------//

@@ -20,20 +20,22 @@ END_CLASS()
 //-----------------------------------//
 
 Geometry::Geometry()
-	: isDirty( true )
+	: isDirty(true)
+	, needsRenderCallback(false)
 { }
 
 //-----------------------------------//
 
 Geometry::Geometry( const RenderablePtr& rend )
-	: isDirty( true )
+	: isDirty(true)
+	, needsRenderCallback(false)
 {
 	addRenderable( rend );
 }
 
 //-----------------------------------//
 
-void Geometry::addRenderable( const RenderablePtr& rend, RenderGroup::Enum group, 
+void Geometry::addRenderable( const RenderablePtr& rend, RenderStage::Enum group, 
 							  uint priority )
 {
 	RenderableList& renderList = renderables[group];
@@ -42,7 +44,7 @@ void Geometry::addRenderable( const RenderablePtr& rend, RenderGroup::Enum group
 
 //-----------------------------------//
 
-const RenderableList& Geometry::getRenderables( RenderGroup::Enum group )
+const RenderableList& Geometry::getRenderables( RenderStage::Enum group )
 { 
 	return renderables[group]; 
 }
@@ -52,6 +54,13 @@ const RenderableList& Geometry::getRenderables( RenderGroup::Enum group )
 void Geometry::markDirty()
 {
 	isDirty = true;
+}
+
+//-----------------------------------//
+
+void Geometry::onRender()
+{
+
 }
 
 //-----------------------------------//
@@ -74,6 +83,9 @@ void Geometry::appendRenderables( RenderQueue& queue, TransformPtr transform )
 			renderState.group = pair.first;
 			renderState.priority = 0;
 
+			if( needsRenderCallback )
+				renderState.callback += fd::bind(&Geometry::onRender, this);
+
 			queue.push_back( renderState );
 		}
 	}
@@ -89,7 +101,7 @@ void Geometry::update( double delta )
 	boundingVolume.reset();
 
 	// Update the bounding box to accomodate new geometry.
-	foreach( const RenderablePtr& rend, renderables[RenderGroup::Normal] )
+	foreach( const RenderablePtr& rend, renderables[RenderStage::Normal] )
 	{
 		const VertexBufferPtr& vb = rend->getVertexBuffer();
 		

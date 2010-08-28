@@ -8,6 +8,8 @@
 
 #include "vapor/PCH.h"
 #include "vapor/resources/Mesh.h"
+#include "vapor/animation/Skeleton.h"
+#include "vapor/animation/Animation.h"
 #include "vapor/render/Renderable.h"
 
 namespace vapor {
@@ -20,7 +22,8 @@ END_CLASS()
 //-----------------------------------//
 
 Mesh::Mesh()
-	: built(false)
+	: animated(false)
+	, built(false)
 { }
 
 //-----------------------------------//
@@ -28,6 +31,13 @@ Mesh::Mesh()
 bool Mesh::isBuilt() const
 {
 	return built;
+}
+
+//-----------------------------------//
+
+bool Mesh::isAnimated() const
+{
+	return animated;
 }
 
 //-----------------------------------//

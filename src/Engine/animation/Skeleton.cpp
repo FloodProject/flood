@@ -7,28 +7,38 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/scene/Water.h"
+#include "vapor/animation/Skeleton.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(Water, Geometry)
-END_CLASS()
-
-//-----------------------------------//
-
-Water::Water()
-{ }
-
-//-----------------------------------//
-
-Water::Water( MaterialPtr material )
+void Skeleton::addBone( const BonePtr& bone )
 {
-	quad = new Quad(100, 100);
-	quad->setMaterial(material);
+	bones.push_back(bone);
+}
 
-	addRenderable(quad, RenderStage::Transparency);
+//-----------------------------------//
+
+BonePtr Skeleton::getBone( int index )
+{
+	assert( index >= 0 );
+	assert( (uint)index < bones.size() );
+
+	return bones[index];
+}
+
+//-----------------------------------//
+
+BonePtr Skeleton::findBone( const std::string& name )
+{
+	foreach( const BonePtr& bone, bones )
+	{
+		if( bone->name == name )
+			return bone;
+	}
+
+	return nullptr;
 }
 
 //-----------------------------------//

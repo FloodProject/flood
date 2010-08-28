@@ -24,6 +24,7 @@
 #include <vapor/math/Math.h>
 #include <vapor/math/Vector2.h>
 #include <vapor/math/Vector3.h>
+#include <vapor/math/Quaternion.h>
 #include <vapor/math/Ray.h>
 #include <vapor/math/BoundingBox.h>
 #include <vapor/math/BoundingSphere.h>
@@ -34,7 +35,7 @@
 //---------------------------------------------------------------------//
 
 #include <vapor/resources/Image.h>
-#include <vapor/resources/MS3D.h>
+#include <vapor/resources/Milkshape3D.h>
 #include <vapor/resources/Sound.h>
 #include <vapor/resources/Font.h>
 
@@ -74,6 +75,14 @@
 #include <vapor/render/FBO.h>
 #include <vapor/render/FrameStatistics.h>
 #include <vapor/render/DebugGeometry.h>
+
+//---------------------------------------------------------------------//
+// Animation-related Includes
+//---------------------------------------------------------------------//
+
+#include <vapor/animation/Animation.h>
+#include <vapor/animation/Skeleton.h>
+#include <vapor/animation/Bone.h>
 
 //---------------------------------------------------------------------//
 // Input-related Includes

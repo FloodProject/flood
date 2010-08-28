@@ -13,30 +13,30 @@
 #ifdef VAPOR_MESH_MILKSHAPE3D
 
 #include "vapor/resources/ResourceLoader.h"
-#include "vapor/resources/MS3D.h"
+#include "vapor/resources/Milkshape3D.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
 /**
- * Loads a given MS3D mesh format.
+ * Loads a given Milkshape3D mesh format.
  */
 
-class MS3D_Loader : public ResourceLoader
+class Milkshape3D_Loader : public ResourceLoader
 {
 public:
 
-	MS3D_Loader();
+	Milkshape3D_Loader();
 
 	// Creates the resource with no data.
-	PREPARE(MS3D)
+	PREPARE(Milkshape3D)
 
 	// Decodes a Milkshape3D mesh.
 	virtual bool decode(const File&, Resource* res);
 
 	// Gets the name of this codec.
-	GETTER(Name, const std::string, "MS3D")
+	GETTER(Name, const std::string, "Milkshape3D")
 
 	// Gets the list of extensions recognized by this resource handler.
 	GETTER(Extensions, ExtensionList&, extensions)

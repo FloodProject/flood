@@ -33,7 +33,7 @@ Grid::Grid()
 {
 	MaterialPtr material( new Material("Grid") );
 	
-	RenderablePtr rend( new Renderable(PolygonPrimitive::Lines) );
+	RenderablePtr rend( new Renderable(PolygonType::Lines) );
 	rend->setVertexBuffer( buildGeometry() );
 	rend->setMaterial( material );
 

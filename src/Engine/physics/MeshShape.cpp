@@ -53,7 +53,7 @@ MeshShape::~MeshShape()
 //
 //		foreach( const RenderablePtr& rend, rends )
 //		{
-//			if( rend->getPrimitiveType() != PolygonPrimitive::Triangles )
+//			if( rend->getPrimitiveType() != PolygonType::Triangles )
 //				continue;
 //
 //			VertexBufferPtr vb = rend->getVertexBuffer();
@@ -88,7 +88,7 @@ btTriangleMesh* MeshShape::convertMesh()
 
 		foreach( const RenderablePtr& rend, rends )
 		{
-			if( rend->getPrimitiveType() != PolygonPrimitive::Triangles )
+			if( rend->getPrimitiveType() != PolygonType::Triangles )
 				continue;
 
 			VertexBufferPtr vb = rend->getVertexBuffer();

@@ -9,239 +9,191 @@
 // based on official Milkshape3D viewer source
 
 #include "vapor/PCH.h"
-#include "vapor/resources/MS3D.h"
+#include "vapor/resources/Milkshape3D.h"
 #include "vapor/render/Renderable.h"
+#include "vapor/animation/Skeleton.h"
+#include "vapor/animation/Animation.h"
+#include "vapor/math/Math.h"
+#include "Milkshape3D_Specs.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-const int MAX_VERTICES				= 65534;
-const int MAX_TRIANGLES				= 65534;
-const int MAX_GROUPS				= 255;
-const int MAX_MATERIALS				= 128;
-const int MAX_JOINTS				= 128;
-const int MAX_TEXTURE_FILENAME_SIZE = 128;
-
-const int SELECTED		= 1;
-const int HIDDEN		= 2;
-const int SELECTED2		= 4;
-const int DIRTY			= 8;
-const int ISKEY			= 16;
-const int NEWLYCREATED	= 32;
-const int MARKED		= 64;
-
-const int SPHEREMAP		= 0x80;
-const int HASALPHA		= 0x40;
-const int COMBINEALPHA	= 0x20;
-
-enum TransparencyMode
-{
-	TRANSPARENCY_MODE_SIMPLE,			
-	TRANSPARENCY_MODE_DEPTHSORTEDTRIANGLES,
-	TRANSPARENCY_MODE_ALPHAREF
-};
-
-//-----------------------------------//
-
-#ifdef VAPOR_COMPILER_MSVC
-	#pragma pack( push, 1 )
-#endif
-
-struct VAPOR_ALIGN_BEGIN(1) ms3d_header_t
-{
-	char    id[10];
-	long    version;
-} VAPOR_ALIGN_END(1);
-
-//-----------------------------------//
-
-struct VAPOR_ALIGN_BEGIN(1) ms3d_vertex_t
-{
-	byte	flags;
-	Vector3	position;
-	byte	boneIndex;
-	byte	referenceCount;
-} VAPOR_ALIGN_END(1);
-
-//-----------------------------------//
-
-struct VAPOR_ALIGN_BEGIN(1) ms3d_triangle_t
-{
-	ushort	flags;
-	ushort	vertexIndices[3];
-	Vector3	vertexNormals[3];
-	float	s[3];
-	float	t[3];
-	byte	smoothingGroup;
-	byte	groupIndex;
-} VAPOR_ALIGN_END(1);
-
-//-----------------------------------//
-
-struct VAPOR_ALIGN_BEGIN(1) ms3d_group_t
-{
-	byte flags;
-	char name[32];
-	ushort numGroupTriangles;
-	std::vector<ushort> triangleIndices;
-	char materialIndex;
-	char comment[32];
-} VAPOR_ALIGN_END(1);
-
-//-----------------------------------//
-
-struct VAPOR_ALIGN_BEGIN(1) ms3d_material_t
-{
-	char			name[32];
-	Color			ambient;
-	Color			diffuse;
-	Color			specular;
-	Color			emissive;
-	float			shininess;
-    float			transparency;
-	byte			mode;
-	char			texture[MAX_TEXTURE_FILENAME_SIZE];
-    char			alphamap[MAX_TEXTURE_FILENAME_SIZE];
-	//byte			id;
-	//char			comment[32];
-} VAPOR_ALIGN_END(1);
-
-//-----------------------------------//
-
-struct VAPOR_ALIGN_BEGIN(1) ms3d_keyframe_t
-{
-	float time;
-	Vector3 parameter;
-} VAPOR_ALIGN_END(1);
-
-//-----------------------------------//
-
-struct VAPOR_ALIGN_BEGIN(1) ms3d_tangent_t
-{
-	float tangentIn[3];
-	float tangentOut[3];
-} VAPOR_ALIGN_END(1);
-
-//-----------------------------------//
-
-struct VAPOR_ALIGN_BEGIN(1) ms3d_joint_t
-{
-	byte flags;
-	char name[32];
-	char parentName[32];
-
-	float rot[3];
-	float pos[3];
-
-	std::vector<ms3d_keyframe_t> rotationKeys;
-	std::vector<ms3d_keyframe_t> positionKeys;
-	std::vector<ms3d_tangent_t> tangents;
-
-	std::vector<char> comment;
-	float color[3];
-
-	// used for rendering
-	int parentIndex;
-	float matLocalSkeleton[3][4];
-	float matGlobalSkeleton[3][4];
-
-	float matLocal[3][4];
-	float matGlobal[3][4];
-} VAPOR_ALIGN_END(1);
-
-#ifdef VAPOR_COMPILER_MSVC
-	#pragma pack( pop )
-#endif
-
-//-----------------------------------//
-
-MS3D::MS3D()
+Milkshape3D::Milkshape3D()
 	: index(0)
 { }
 
 //-----------------------------------//
 
-bool MS3D::load(const File& file)
-{
-	if( !read(file) )
-		return false;
-
-	return true;
-}
-
-//-----------------------------------//
-
-bool MS3D::read(const File& file)
+bool Milkshape3D::load(const File& file)
 {
 	filebuf = file.read();
 
 	if( filebuf.empty() ) 
 		return false;
 
-	if(!read_header())
-		goto cleanup;
+	if( !parse() )
+	{
+		filebuf.clear();
+		return false;
+	}
 	
-	read_vertices();
-	read_triangles();
-	read_groups();
-	read_materials();
-
-	// TODO:
-	//read_animation();
-	//read_joints();
-	//read_comments();
-
 	filebuf.clear();
 	return true;
-
-cleanup:
-
-	filebuf.clear();
-	return false;
 }
 
 //-----------------------------------//
 
-void MS3D::build()
+bool Milkshape3D::parse()
+{
+	if( !readHeader() )
+		return false;
+	
+	readVertices();
+	readTriangles();
+	readGroups();
+	readMaterials();
+	readAnimation();
+	readJoints();
+	//readComments();
+
+	return true;
+}
+
+//-----------------------------------//
+
+void Milkshape3D::build()
 {
 	if(built)
 		return;
 
-	built = true;
-	
-	foreach( const ms3d_group_t& g, m_groups )
+	animated = !joints.empty();
+
+	if( isAnimated() )
 	{
-		// In case this group doesn't have geometry, then no need to process it.
-		if( g.triangleIndices.empty() )
+		buildSkeleton();
+		buildAnimation();
+		
+		//setupTangents();
+		setupInitialVertices();
+	}
+
+	buildGeometry();
+	
+	built = true;
+}
+
+//-----------------------------------//
+
+void Milkshape3D::buildSkeleton()
+{
+	setupJointsHierarchy();
+	setupJointRotations();
+	setupJointMatrices();
+
+	skeleton = new Skeleton();
+	
+	uint index = 0;
+
+	foreach( ms3d_joint_t& joint, joints )
+	{
+		BonePtr bone = new Bone();
+
+		bone->name = joint.name;
+		bone->index = index++;
+		bone->parentIndex = joint.parentIndex;
+		bone->position = joint.position;
+		bone->rotation = joint.rotation;
+		bone->relativeMatrix = joint.relativeMatrix;
+		bone->absoluteMatrix = joint.absoluteMatrix;
+
+		skeleton->addBone(bone);
+	}
+}
+
+//-----------------------------------//
+
+void Milkshape3D::buildAnimation()
+{
+	assert( skeleton != nullptr );
+
+	uint numAnimations = 1/*joints[0].positionKeys.size()*/;
+	
+	for( uint i = 0; i < numAnimations; i++ )
+	{
+		AnimationPtr animation = new Animation();
+
+		uint startFrame = 0;
+		uint endFrame = joints[0].positionKeys.size()-1;
+
+		foreach( ms3d_joint_t& joint, joints )
+		{
+			if( joint.positionKeys.empty() )
+				continue;
+
+			const BonePtr& bone = skeleton->findBone(joint.name);
+
+			KeyFramesVector frames;
+
+			for( uint j = 0; j < joint.positionKeys.size(); j++ )
+			{
+				KeyFrame frame;
+
+				frame.time = joint.positionKeys[j].time*animationFPS;
+				frame.position = joint.positionKeys[j].parameter;
+				frame.rotation = (EulerAngles&) joint.rotationKeys[j].parameter;
+
+				frames.push_back(frame);
+			}
+
+			animation->setKeyFrames(bone, frames);
+		}
+
+		animations.push_back(animation);
+	}
+}
+
+//-----------------------------------//
+
+void Milkshape3D::buildGeometry()
+{
+	foreach( const ms3d_group_t& group, groups )
+	{
+		// In case this group doesn't have geometry, skip processing.
+		if( group.triangleIndices.empty() )
 			continue;
 
-		RenderablePtr rend( new Renderable(PolygonPrimitive::Triangles) );
-		
 		// Vertex data
 		std::vector<Vector3> pos;
-		pos.reserve( g.triangleIndices.size()*3 );
+		pos.reserve( group.triangleIndices.size()*3 );
 
 		// Normal data
 		std::vector< Vector3 > normals;
-		normals.reserve( g.triangleIndices.size()*3 );
+		normals.reserve( group.triangleIndices.size()*3 );
 		
 		// Texture coords data
 		std::vector< Vector3 > texCoords;
-		texCoords.reserve( g.triangleIndices.size()*3 );
+		texCoords.reserve( group.triangleIndices.size()*3 );
+
+		// Bones data
+		std::vector<float> bones;
+		bones.reserve( group.triangleIndices.size()*3 );
 
 		// Let's process all the triangles of this group.
-		foreach( const ushort& t_ind, g.triangleIndices )
+		foreach( const ushort& t_ind, group.triangleIndices )
 		{
-			const ms3d_triangle_t& t = *m_triangles[t_ind];
+			const ms3d_triangle_t& t = *triangles[t_ind];
 
 			foreach( const ushort& v_ind, t.vertexIndices ) 
 			{
-				const ms3d_vertex_t& v = *m_vertices[v_ind];
+				const ms3d_vertex_t& v = *vertices[v_ind];
+			
 				pos.push_back( v.position );
+				bones.push_back( v.boneIndex );
 			}
 
-			for( int i = 0; i < 3; i++ )
+			for( uint i = 0; i < 3; i++ )
 			{
 				Vector3 normal( t.vertexNormals[i] );
 				normals.push_back( normal );
@@ -251,45 +203,30 @@ void MS3D::build()
 			}
 		}
 
-		// Material
-		if( hasMaterial(g) )
-		{
-			const ms3d_material_t& mt = *m_materials[g.materialIndex];
+		// Get a shiny material for the group.
+		MaterialPtr mat = buildMaterial(group);
 
-			MaterialPtr mat( new Material(mt.name) );
-
-			if( strlen(mt.texture) > 0 )
-			{
-				mat->setProgram( "Tex_Toon" );
-				mat->setTexture( 0, mt.texture );
-			}
-
-			if( mt.mode & HASALPHA )
-			{
-				#pragma TODO("Use alpha testing when alpha values are fully transparent.")
-
-				mat->setBlending( BlendingSource::SourceAlpha,
-					BlendingDestination::InverseSourceAlpha );
-			}
-
-			rend->setMaterial( mat );
-		}
-
-		// Vertex buffers
-
+		// Vertex buffer.
 		VertexBufferPtr vb( new VertexBuffer() );
+
+		if( isAnimated() )
+			vb->set( VertexAttribute::FogCoord, bones );
+
 		vb->set( VertexAttribute::Position, pos );
 		vb->set( VertexAttribute::Normal, normals );
 		vb->set( VertexAttribute::TexCoord0, texCoords );
 
+		// Renderable.
+		RenderablePtr rend( new Renderable() );
+		rend->setPrimitiveType( PolygonType::Triangles );
 		rend->setVertexBuffer( vb );
-
+		rend->setMaterial( mat );
 		renderables.push_back( rend );
 
 		#pragma TODO("Use index buffers when building mesh geometry")
 		
 		//std::vector< ushort > vb_i;
-		//foreach( const ms3d_triangle_t& t, m_triangles )
+		//foreach( const ms3d_triangle_t& t, triangles )
 		//{	
 		//	vb_i.push_back( t.vertexIndices[0] );
 		//	vb_i.push_back( t.vertexIndices[1] );
@@ -303,13 +240,131 @@ void MS3D::build()
 }
 
 //-----------------------------------//
+	
+MaterialPtr Milkshape3D::buildMaterial(const ms3d_group_t& group)
+{
+	if( !hasMaterial(group) )
+		return nullptr;
 
-bool MS3D::hasMaterial( const ms3d_group_t& g )
+	const ms3d_material_t& mt = *materials[group.materialIndex];
+
+	MaterialPtr mat( new Material(mt.name) );
+
+	if( strlen(mt.texture) > 0 )
+	{
+		mat->setProgram( "Tex_Toon" );
+		mat->setTexture( 0, mt.texture );
+	}
+
+	if( mt.mode & HASALPHA )
+	{
+		#pragma TODO("Use alpha testing when alpha values are fully transparent.")
+
+		mat->setBlending( BlendingSource::SourceAlpha,
+			BlendingDestination::InverseSourceAlpha );
+	}
+
+	if( isAnimated() )
+	{
+		mat->setProgram( "Tex_Toon_Skin" );
+	}
+
+	return mat;
+}
+
+//-----------------------------------//
+
+int Milkshape3D::findJoint(const char* name)
+{
+	if( strlen(name) == 0 )
+		return -1;
+
+	for( uint i = 0; i < joints.size(); i++ )
+	{
+		if( strcmp(joints[i].name, name) == 0 )
+			return i;
+	}
+
+	return -1;
+}
+
+//-----------------------------------//
+
+void Milkshape3D::setupJointsHierarchy()
+{
+	foreach (ms3d_joint_t& joint, joints )
+	{
+		joint.parentIndex = findJoint(joint.parentName);
+	}
+}
+
+//-----------------------------------//
+
+void Milkshape3D::setupJointMatrices()
+{
+	foreach( ms3d_joint_t& joint, joints )
+	{
+		joint.relativeMatrix =
+			Matrix4x3::createRotation(joint.rotation) *
+			Matrix4x3::createTranslation(joint.position);
+
+		if( joint.parentIndex != -1 )
+		{
+			ms3d_joint_t& parent = joints[joint.parentIndex];
+			joint.absoluteMatrix = parent.absoluteMatrix * joint.relativeMatrix;
+		}
+		else
+		{
+			joint.absoluteMatrix = joint.relativeMatrix;
+		}
+	}
+}
+
+//-----------------------------------//
+
+void Milkshape3D::setupJointRotations()
+{
+	foreach( ms3d_joint_t& joint, joints )
+	{
+		joint.rotation = EulerAngles(
+			Math::radianToDegree(joint.rotation.x),
+			Math::radianToDegree(joint.rotation.y),
+			Math::radianToDegree(joint.rotation.z) );
+
+		foreach( ms3d_keyframe_t& keyframe, joint.rotationKeys )
+		{
+			keyframe.parameter = Vector3(
+				Math::radianToDegree(keyframe.parameter.x),
+				Math::radianToDegree(keyframe.parameter.y),
+				Math::radianToDegree(keyframe.parameter.z) );
+		}
+	}
+}
+
+//-----------------------------------//
+
+void Milkshape3D::setupInitialVertices()
+{
+	foreach( ms3d_vertex_t* vertex, vertices )
+	{
+		if( vertex->boneIndex == -1 )
+			continue;
+		
+		ms3d_joint_t& joint = joints[vertex->boneIndex];
+		
+		Matrix4x3 invJoint = inverse(joint.absoluteMatrix);
+		vertex->position = vertex->position * invJoint;
+	}
+}
+
+//-----------------------------------//
+
+bool Milkshape3D::hasMaterial( const ms3d_group_t& g )
 {
 	// Let's check if we have a valid material in the structure.
 	return (g.materialIndex != -1) 
 		&& (g.materialIndex >= 0) 
-		&& (g.materialIndex < signed(m_materials.size()));
+		&& (g.materialIndex < signed(materials.size()));
 }
 
 //-----------------------------------//
@@ -317,19 +372,26 @@ bool MS3D::hasMaterial( const ms3d_group_t& g )
 /**
  * We do this hack to save memory. Since we already have the data in memory
  * we can just reinterpret it as the correct structure. triton saves the day!
+ * I know this is horrible, but it's working fine, so don't touch it. :)
  */
 
-#define FILEBUF_INDEX(struc) *reinterpret_cast<struc*>(&filebuf[index]); index+=sizeof(struc);
-#define FILEBUF_READ(type, ptr) { ptr = reinterpret_cast<type*>(&filebuf[index]); index+=sizeof(type); }
+#define FILEBUF_INDEX(type)												\
+	*reinterpret_cast<type*>(&filebuf[index]); index+=sizeof(type);
 
-bool MS3D::read_header()
+#define FILEBUF_READ(type, ptr)											\
+	{ ptr = reinterpret_cast<type*>(&filebuf[index]); index+=sizeof(type); }
+
+#define MEMCPY_SKIP_INDEX(a,b)											\
+	memcpy(&a,&filebuf[index],b); index+=b;
+
+bool Milkshape3D::readHeader()
 {
 	ms3d_header_t& header = FILEBUF_INDEX(ms3d_header_t);
 
 	if (strncmp(header.id, "MS3D000000", 10) != 0) 
 		return false;
 
-	if (header.version != 4) 
+	if (header.version != 4)
 		return false;
 
 	return true;
@@ -337,74 +399,71 @@ bool MS3D::read_header()
 
 //-----------------------------------//
 
-void MS3D::read_vertices()
+void Milkshape3D::readVertices()
 {
-	ushort& num_vertices = FILEBUF_INDEX(ushort);
-	m_vertices.resize(num_vertices);
+	ushort& numVertices = FILEBUF_INDEX(ushort);
+	vertices.resize(numVertices);
 
-	for (int i = 0; i < num_vertices; i++)
+	for (int i = 0; i < numVertices; i++)
 	{
-		FILEBUF_READ(ms3d_vertex_t, m_vertices[i]);
+		FILEBUF_READ(ms3d_vertex_t, vertices[i]);
 	}
 }
 
 //-----------------------------------//
 
-void MS3D::read_triangles()
+void Milkshape3D::readTriangles()
 {
-	ushort& num_triangles = FILEBUF_INDEX(ushort);
-	m_triangles.resize(num_triangles);
+	ushort& numTriangles = FILEBUF_INDEX(ushort);
+	triangles.resize(numTriangles);
 	
-	for (int i = 0; i < num_triangles; i++)
+	for (int i = 0; i < numTriangles; i++)
 	{
-		FILEBUF_READ(ms3d_triangle_t, m_triangles[i]);
-
-		// TODO: calculate triangle normal
+		FILEBUF_READ(ms3d_triangle_t, triangles[i]);
 	}
 }
 
 //-----------------------------------//
 
-#define MEMCPY_SKIP_INDEX(a,b) memcpy(&a,&filebuf[index],b); index+=b;
-
-void MS3D::read_groups()
+void Milkshape3D::readGroups()
 {
 	ushort& numGroups = FILEBUF_INDEX(ushort);
-	m_groups.resize(numGroups);
+	groups.resize(numGroups);
 	
 	for (int i = 0; i < numGroups; i++)
 	{
-		MEMCPY_SKIP_INDEX(m_groups[i].flags, sizeof(byte));
-		MEMCPY_SKIP_INDEX(m_groups[i].name, sizeof(char)*32);
+		MEMCPY_SKIP_INDEX(groups[i].flags, sizeof(byte));
+		MEMCPY_SKIP_INDEX(groups[i].name, sizeof(char)*32);
 
 		ushort numGroupTriangles;
 		MEMCPY_SKIP_INDEX(numGroupTriangles, sizeof(ushort));
-		m_groups[i].triangleIndices.resize(numGroupTriangles);
+		groups[i].triangleIndices.resize(numGroupTriangles);
 
 		if (numGroupTriangles > 0)
 		{
-			MEMCPY_SKIP_INDEX(m_groups[i].triangleIndices[0], sizeof(ushort)*numGroupTriangles);
+			MEMCPY_SKIP_INDEX(groups[i].triangleIndices[0],
+				sizeof(ushort)*numGroupTriangles);
 		}
 
-		MEMCPY_SKIP_INDEX(m_groups[i].materialIndex, sizeof(byte));
+		MEMCPY_SKIP_INDEX(groups[i].materialIndex, sizeof(byte));
 	}
 }
 
 //-----------------------------------//
 
-void MS3D::read_materials()
+void Milkshape3D::readMaterials()
 {
 	ushort& numMaterials = FILEBUF_INDEX(ushort);
-	m_materials.resize(numMaterials);
+	materials.resize(numMaterials);
 	
 	for (int i = 0; i < numMaterials; i++)
 	{
-		FILEBUF_READ(ms3d_material_t, m_materials[i]);
+		FILEBUF_READ(ms3d_material_t, materials[i]);
 
-		ms3d_material_t& mat = *m_materials[i];
+		ms3d_material_t& mat = *materials[i];
 		float transparency = mat.transparency;
 
-		// set alpha
+		// Set alpha of the material colors.
 		mat.ambient.a = transparency;
 		mat.diffuse.a = transparency;
 		mat.specular.a = transparency;
@@ -414,61 +473,60 @@ void MS3D::read_materials()
 
 //-----------------------------------//
 
-//void Milkshape3D::read_animation()
-//{
-//	// animation
-//	//FILEBUF_READ(&m_animationFps, sizeof(float), 1, fp);
-//	if (m_animationFps < 1.0f)
-//		m_animationFps = 1.0f;
-//	//FILEBUF_READ(&m_currentTime, sizeof(float), 1, fp);
-//	//FILEBUF_READ(&m_totalFrames, sizeof(int), 1, fp);
-//}
-//
-//
-//void Milkshape3D::read_joints()
-//{
-//	// joints
-//	ushort numJoints;
-//	//FILEBUF_READ(&numJoints, sizeof(ushort), 1, fp);
-//	m_joints.resize(numJoints);
-//	for (i = 0; i < numJoints; i++)
-//	{
-//		//FILEBUF_READ(&m_joints[i].flags, sizeof(byte), 1, fp);
-//		//FILEBUF_READ(m_joints[i].name, sizeof(char), 32, fp);
-//		//FILEBUF_READ(m_joints[i].parentName, sizeof(char), 32, fp);
-//        //FILEBUF_READ(m_joints[i].rot, sizeof(float), 3, fp);
-//        //FILEBUF_READ(m_joints[i].pos, sizeof(float), 3, fp);
-//    
-//		ushort numKeyFramesRot;
-//		//FILEBUF_READ(&numKeyFramesRot, sizeof(ushort), 1, fp);
-//		m_joints[i].rotationKeys.resize(numKeyFramesRot);
-//
-//		ushort numKeyFramesPos;
-//		//FILEBUF_READ(&numKeyFramesPos, sizeof(ushort), 1, fp);
-//		m_joints[i].positionKeys.resize(numKeyFramesPos);
-//
-//		// the frame time is in seconds, so multiply it by the animation fps, to get the frames
-//		// rotation channel
-//		for (j = 0; j < numKeyFramesRot; j++)
-//		{
-//			//FILEBUF_READ(&m_joints[i].rotationKeys[j].time, sizeof(float), 1, fp);
-//			//FILEBUF_READ(&m_joints[i].rotationKeys[j].key, sizeof(float), 3, fp);
-//			m_joints[i].rotationKeys[j].time *= m_animationFps;
-//		}
-//
-//		// translation channel
-//		for (j = 0; j < numKeyFramesPos; j++)
-//		{
-//			//FILEBUF_READ(&m_joints[i].positionKeys[j].time, sizeof(float), 1, fp);
-//			//FILEBUF_READ(&m_joints[i].positionKeys[j].key, sizeof(float), 3, fp);
-//			m_joints[i].positionKeys[j].time *= m_animationFps;
-//		}
-//	}
-//}
-//
-//
-//void Milkshape3D::read_comments()
-//{
+void Milkshape3D::readAnimation()
+{
+	animationFPS = FILEBUF_INDEX(float);
+	
+	if (animationFPS < 1.0f)
+		animationFPS = 1.0f;
+	
+	float& m_currentTime = FILEBUF_INDEX(float);
+	totalFrames = FILEBUF_INDEX(float);
+}
+
+//-----------------------------------//
+
+void Milkshape3D::readJoints()
+{
+	ushort& numJoints = FILEBUF_INDEX(ushort);
+	joints.resize(numJoints);
+	
+	for (uint i = 0; i < numJoints; i++)
+	{
+		MEMCPY_SKIP_INDEX(joints[i].flags, sizeof(byte));
+		MEMCPY_SKIP_INDEX(joints[i].name, sizeof(char)*32);
+		MEMCPY_SKIP_INDEX(joints[i].parentName, sizeof(char)*32);
+		MEMCPY_SKIP_INDEX(joints[i].rotation, sizeof(EulerAngles));
+		MEMCPY_SKIP_INDEX(joints[i].position, sizeof(Vector3));
+		joints[i].parentIndex = -1;
+
+		ushort& numKeyFramesRot = FILEBUF_INDEX(ushort);
+		joints[i].rotationKeys.resize(numKeyFramesRot);
+
+		ushort& numKeyFramesPos = FILEBUF_INDEX(ushort);
+		joints[i].positionKeys.resize(numKeyFramesPos);
+
+		// the frame time is in seconds, so multiply it by the animation fps,
+		// to get the frames rotation channel
+		for (uint j = 0; j < numKeyFramesRot; j++)
+		{
+			joints[i].rotationKeys[j].time = FILEBUF_INDEX(float);
+			joints[i].rotationKeys[j].parameter = FILEBUF_INDEX(Vector3);
+		}
+
+		// translation channel
+		for (uint j = 0; j < numKeyFramesPos; j++)
+		{
+			joints[i].positionKeys[j].time = FILEBUF_INDEX(float);
+			joints[i].positionKeys[j].parameter = FILEBUF_INDEX(Vector3);
+		}
+	}
+}
+
+//-----------------------------------//
+
+void Milkshape3D::readComments()
+{
 //	// comments
 //	long filePos = ftell(fp);
 //	if (filePos < fileSize)
@@ -491,8 +549,8 @@ void MS3D::read_materials()
 //				comment.resize(commentSize);
 //				if (commentSize > 0)
 //					//FILEBUF_READ(&comment[0], sizeof(char), commentSize, fp);
-//				if (index >= 0 && index < (int) m_groups.size())
-//					m_groups[index].comment = comment;
+//				if (index >= 0 && index < (int) groups.size())
+//					groups[index].comment = comment;
 //			}
 //
 //			// material comments
@@ -506,8 +564,8 @@ void MS3D::read_materials()
 //				comment.resize(commentSize);
 //				if (commentSize > 0)
 //					//FILEBUF_READ(&comment[0], sizeof(char), commentSize, fp);
-//				if (index >= 0 && index < (int) m_materials.size())
-//					m_materials[index].comment = comment;
+//				if (index >= 0 && index < (int) materials.size())
+//					materials[index].comment = comment;
 //			}
 //
 //			// joint comments
@@ -521,8 +579,8 @@ void MS3D::read_materials()
 //				comment.resize(commentSize);
 //				if (commentSize > 0)
 //					//FILEBUF_READ(&comment[0], sizeof(char), commentSize, fp);
-//				if (index >= 0 && index < (int) m_joints.size())
-//					m_joints[index].comment = comment;
+//				if (index >= 0 && index < (int) joints.size())
+//					joints[index].comment = comment;
 //			}
 //
 //			// model comments
@@ -542,7 +600,7 @@ void MS3D::read_materials()
 //			// "Unknown subversion for comments %d\n", subVersion);
 //		}
 //	}
-//}
+}
 //
 //
 //void Milkshape3D::read_extra()
@@ -557,17 +615,17 @@ void MS3D::read_materials()
 //		{
 //			for (int i = 0; i < numVertices; i++)
 //			{
-//				//FILEBUF_READ(&m_vertices[i].boneIds[0], sizeof(char), 3, fp);
-//				//FILEBUF_READ(&m_vertices[i].weights[0], sizeof(byte), 3, fp);
-//				//FILEBUF_READ(&m_vertices[i].extra, sizeof(unsigned int), 1, fp);
+//				//FILEBUF_READ(&vertices[i].boneIds[0], sizeof(char), 3, fp);
+//				//FILEBUF_READ(&vertices[i].weights[0], sizeof(byte), 3, fp);
+//				//FILEBUF_READ(&vertices[i].extra, sizeof(unsigned int), 1, fp);
 //			}
 //		}
 //		else if (subVersion == 1)
 //		{
 //			for (int i = 0; i < numVertices; i++)
 //			{
-//				//FILEBUF_READ(&m_vertices[i].boneIds[0], sizeof(char), 3, fp);
-//				//FILEBUF_READ(&m_vertices[i].weights[0], sizeof(byte), 3, fp);
+//				//FILEBUF_READ(&vertices[i].boneIds[0], sizeof(char), 3, fp);
+//				//FILEBUF_READ(&vertices[i].weights[0], sizeof(byte), 3, fp);
 //			}
 //		}
 //		else
@@ -586,7 +644,7 @@ void MS3D::read_materials()
 //		{
 //			for (int i = 0; i < numJoints; i++)
 //			{
-//				//FILEBUF_READ(&m_joints[i].color, sizeof(float), 3, fp);
+//				//FILEBUF_READ(&joints[i].color, sizeof(float), 3, fp);
 //			}
 //		}
 //		else
@@ -603,7 +661,7 @@ void MS3D::read_materials()
 //		//FILEBUF_READ(&subVersion, sizeof(int), 1, fp);
 //		if (subVersion == 1)
 //		{
-//			//FILEBUF_READ(&m_jointSize, sizeof(float), 1, fp);
+//			//FILEBUF_READ(&jointsize, sizeof(float), 1, fp);
 //			//FILEBUF_READ(&m_transparencyMode, sizeof(int), 1, fp);
 //			//FILEBUF_READ(&m_alphaRef, sizeof(float), 1, fp);
 //		}
@@ -614,69 +672,11 @@ void MS3D::read_materials()
 //	}
 //}
 
-//
-//void msModel::Clear()
-//{
-//	m_vertices.clear();
-//	m_triangles.clear();
-//	m_groups.clear();
-//	m_materials.clear();
-//	m_animationFps = 24.0f;
-//	m_currentTime = 1.0f;
-//	m_totalFrames = 30;
-//	m_joints.clear();
-//	m_comment.clear();
-//	m_jointSize = 1.0f;
-//	m_transparencyMode = TRANSPARENCY_MODE_SIMPLE;
-//	m_alphaRef = 0.5f;
-//}
-//
-//int msModel::FindJointByName(const char *name)
-//{
-//	for (size_t i = 0; i < m_joints.size(); i++)
-//	{
-//		if (strcmp(m_joints[i].name, name) == 0)
-//			return i;
-//	}
-//
-//	return -1;
-//}
-//
-//void msModel::SetupJoints()
-//{
-//	for (size_t i = 0; i < m_joints.size(); i++)
-//	{
-//		ms3d_joint_t *joint = &m_joints[i];
-//		joint->parentIndex = FindJointByName(joint->parentName);
-//	}
-//
-//	for (size_t i = 0; i < m_joints.size(); i++)
-//	{
-//		ms3d_joint_t *joint = &m_joints[i];
-//		AngleMatrix(joint->rot, joint->matLocalSkeleton);
-//		joint->matLocalSkeleton[0][3]= joint->pos[0];
-//		joint->matLocalSkeleton[1][3]= joint->pos[1];
-//		joint->matLocalSkeleton[2][3]= joint->pos[2];
-//		
-//		if (joint->parentIndex == -1)
-//		{
-//			memcpy(joint->matGlobalSkeleton, joint->matLocalSkeleton, sizeof(joint->matGlobalSkeleton));
-//		}
-//		else
-//		{
-//			ms3d_joint_t *parentJoint = &m_joints[joint->parentIndex];
-//			R_ConcatTransforms(parentJoint->matGlobalSkeleton, joint->matLocalSkeleton, joint->matGlobalSkeleton);
-//		}
-//
-//		SetupTangents();
-//	}
-//}
-//
 //void msModel::SetupTangents()
 //{
-//	for (size_t j = 0; j < m_joints.size(); j++)
+//	for (size_t j = 0; j < joints.size(); j++)
 //	{
-//		ms3d_joint_t *joint = &m_joints[j];
+//		ms3d_joint_t *joint = &joints[j];
 //		int numPositionKeys = (int) joint->positionKeys.size();
 //		joint->tangents.resize(numPositionKeys);
 //
@@ -731,16 +731,16 @@ void MS3D::read_materials()
 //{
 //	if (frame < 0.0f)
 //	{
-//		for (size_t i = 0; i < m_joints.size(); i++)
+//		for (size_t i = 0; i < joints.size(); i++)
 //		{
-//			ms3d_joint_t *joint = &m_joints[i];
+//			ms3d_joint_t *joint = &joints[i];
 //			memcpy(joint->matLocal, joint->matLocalSkeleton, sizeof(joint->matLocal));
 //			memcpy(joint->matGlobal, joint->matGlobalSkeleton, sizeof(joint->matGlobal));
 //		}
 //	}
 //	else
 //	{
-//		for (size_t i = 0; i < m_joints.size(); i++)
+//		for (size_t i = 0; i < joints.size(); i++)
 //		{
 //			EvaluateJoint(i, frame);
 //		}
@@ -751,7 +751,7 @@ void MS3D::read_materials()
 //
 //void msModel::EvaluateJoint(int index, float frame)
 //{
-//	ms3d_joint_t *joint = &m_joints[index];
+//	ms3d_joint_t *joint = &joints[index];
 //
 //	//
 //	// calculate joint animation matrix, this matrix will animate matLocalSkeleton
@@ -884,7 +884,7 @@ void MS3D::read_materials()
 //	}
 //	else
 //	{
-//		ms3d_joint_t *parentJoint = &m_joints[joint->parentIndex];
+//		ms3d_joint_t *parentJoint = &joints[joint->parentIndex];
 //		R_ConcatTransforms(parentJoint->matGlobal, joint->matLocal, joint->matGlobal);
 //	}
 //}
@@ -894,7 +894,7 @@ void MS3D::read_materials()
 //	int jointIndices[4], jointWeights[4];
 //	FillJointIndicesAndWeights(vertex, jointIndices, jointWeights);
 //
-//	if (jointIndices[0] < 0 || jointIndices[0] >= (int) m_joints.size() || m_currentTime < 0.0f)
+//	if (jointIndices[0] < 0 || jointIndices[0] >= (int) joints.size() || m_currentTime < 0.0f)
 //	{
 //		out[0] = vertex->vertex[0];
 //		out[1] = vertex->vertex[1];
@@ -906,7 +906,7 @@ void MS3D::read_materials()
 //		int numWeights = 0;
 //		for (int i = 0; i < 4; i++)
 //		{
-//			if (jointWeights[i] > 0 && jointIndices[i] >= 0 && jointIndices[i] < (int) m_joints.size())
+//			if (jointWeights[i] > 0 && jointIndices[i] >= 0 && jointIndices[i] < (int) joints.size())
 //				++numWeights;
 //			else
 //				break;
@@ -926,7 +926,7 @@ void MS3D::read_materials()
 //		// add weighted vertices
 //		for (int i = 0; i < numWeights; i++)
 //		{
-//			const ms3d_joint_t *joint = &m_joints[jointIndices[i]];
+//			const ms3d_joint_t *joint = &joints[jointIndices[i]];
 //			vec3_t tmp, vert;
 //			VectorITransform(vertex->vertex, joint->matGlobalSkeleton, tmp);
 //			VectorTransform(tmp, joint->matGlobal, vert);
@@ -943,7 +943,7 @@ void MS3D::read_materials()
 //	int jointIndices[4], jointWeights[4];
 //	FillJointIndicesAndWeights(vertex, jointIndices, jointWeights);
 //
-//	if (jointIndices[0] < 0 || jointIndices[0] >= (int) m_joints.size() || m_currentTime < 0.0f)
+//	if (jointIndices[0] < 0 || jointIndices[0] >= (int) joints.size() || m_currentTime < 0.0f)
 //	{
 //		out[0] = normal[0];
 //		out[1] = normal[1];
@@ -955,7 +955,7 @@ void MS3D::read_materials()
 //		int numWeights = 0;
 //		for (int i = 0; i < 4; i++)
 //		{
-//			if (jointWeights[i] > 0 && jointIndices[i] >= 0 && jointIndices[i] < (int) m_joints.size())
+//			if (jointWeights[i] > 0 && jointIndices[i] >= 0 && jointIndices[i] < (int) joints.size())
 //				++numWeights;
 //			else
 //				break;
@@ -975,7 +975,7 @@ void MS3D::read_materials()
 //		// add weighted vertices
 //		for (int i = 0; i < numWeights; i++)
 //		{
-//			const ms3d_joint_t *joint = &m_joints[jointIndices[i]];
+//			const ms3d_joint_t *joint = &joints[jointIndices[i]];
 //			vec3_t tmp, norm;
 //			VectorIRotate(normal, joint->matGlobalSkeleton, tmp);
 //			VectorRotate(tmp, joint->matGlobal, norm);

@@ -22,7 +22,7 @@ namespace vapor {
  * Lower numbers render before higher numbers.
  */
 
-namespace RenderGroup
+namespace RenderStage
 {
 	enum Enum
 	{
@@ -43,10 +43,12 @@ namespace RenderGroup
  * rendered to the render target that is currently active on the device.
  */
 
+typedef fd::delegate<void()> RenderDelegate;
+
 struct RenderState
 {
 	RenderState()
-		: group( RenderGroup::Normal )
+		: group( RenderStage::Normal )
 		, priority(0) 
 	{ }
 	
@@ -55,13 +57,16 @@ struct RenderState
 		, priority( rhs.priority )
 		, renderable( rhs.renderable )
 		, modelMatrix( rhs.modelMatrix )
+		, callback( rhs.callback )
 	{ }
 
-	RenderGroup::Enum group;
+	RenderStage::Enum group;
 	int priority;
 
 	RenderablePtr renderable;
 	Matrix4x3 modelMatrix;
+
+	RenderDelegate callback;
 };
 
 //-----------------------------------//

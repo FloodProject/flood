@@ -145,7 +145,7 @@ void RenderDevice::render( const RenderState& state, const LightQueue& lights )
 	if( !program->isLinked() )
 		return;
 
-	if( state.group != RenderGroup::Overlays )
+	if( state.group != RenderStage::Overlays )
 	{
 		if( !setupRenderState(state) )
 			return;
@@ -153,11 +153,14 @@ void RenderDevice::render( const RenderState& state, const LightQueue& lights )
 		if( !setupRenderStateLight(state, lights) )
 			return;
 	}
-	else if( state.group == RenderGroup::Overlays )
+	else if( state.group == RenderStage::Overlays )
 	{
 		if( !setupRenderStateOverlay(state) )
 			return;
 	}
+
+	if( !state.callback.empty() )
+		state.callback();
 
 	state.renderable->render( this );
 	
@@ -295,7 +298,7 @@ bool RenderDevice::setupRenderStateLight( const RenderState& state, const LightQ
 
 		// TODO: fix the lighting stuff
 		program->setUniform( "vp_LightColors", colors );
-		program->setUniform( "vp_LightDirection", transform->getRotation() );
+		program->setUniform( "vp_LightDirection", transform->getRotationMatrix() );
 		//program->setUniform( "vp_ShadowMap", shadowDepthTexture->id() );
 		//program->setUniform( "vp_CameraProj", state.modelMatrix * lightState.projection );
 	}

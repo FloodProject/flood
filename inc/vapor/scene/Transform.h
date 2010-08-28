@@ -9,6 +9,7 @@
 #pragma once
 
 #include "vapor/math/EulerAngles.h"
+#include "vapor/math/Quaternion.h"
 #include "vapor/math/BoundingBox.h"
 #include "vapor/scene/Component.h"
 
@@ -60,11 +61,14 @@ public:
 	// Sets the scale of the transform.
 	void setScale( const Vector3& scale );
 
-	// Gets the rotation vector of the transform.
-	GETTER(Rotation, const EulerAngles&, rotation)
+	// Gets the rotation quaternion of the transform.
+	GETTER(Rotation, const Quaternion&, rotation)
+
+	// Gets the rotation matrix of the transform.
+	GETTER(RotationMatrix, Matrix4x3, Matrix4x3::createFromQuaternion(rotation))
 
 	// Sets the rotation vector of the transform.
-	void setRotation( const EulerAngles& rot );
+	void setRotation( const Quaternion& rotation );
 
 	// Points to a given point in space.
 	Matrix4x3 lookAt( const Vector3& lookAtVector, const Vector3& upVector );
@@ -126,7 +130,8 @@ protected:
 	Vector3 translation;
 
 	// Orientation.
-	EulerAngles rotation;
+	//EulerAngles rotation;
+	Quaternion rotation;
 
 	// Scaling.
 	Vector3 scaling;

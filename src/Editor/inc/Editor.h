@@ -31,8 +31,8 @@ public:
 
     // return: if OnInit() returns false, the application terminates)
     virtual bool OnInit();
-	virtual void OnUnhandledException();
-	virtual bool OnExceptionInMainLoop();
+	//virtual void OnUnhandledException();
+	//virtual bool OnExceptionInMainLoop();
 };
 
 //-----------------------------------//

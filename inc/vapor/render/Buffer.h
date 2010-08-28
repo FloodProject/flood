@@ -66,14 +66,24 @@ class VAPOR_API Buffer : public ReferenceCounted
 public:
 
 	Buffer();
+	Buffer(BufferUsage::Enum usage, BufferAccess::Enum access);
 	virtual ~Buffer();
+
+	// Gets/sets the buffer usage type.
+	ACESSOR(BufferUsage, BufferUsage::Enum, usage)
+
+	// Gets/sets the buffer access type.
+	ACESSOR(BufferAccess, BufferAccess::Enum, access)
 
 protected:
 
 	// Converts the buffer enums to the equivalent GL ones.
-	GLenum getGLBufferType( BufferUsage::Enum bU, BufferAccess::Enum bA );
+	GLenum getGLBufferType();
 
 	uint id;
+	
+	BufferUsage::Enum usage;
+	BufferAccess::Enum access;
 };
 
 //-----------------------------------//

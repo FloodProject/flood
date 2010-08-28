@@ -49,11 +49,11 @@ public:
 	{
 		Quaternion qx, qy, qz;
 		
-		qx.setToRotateAboutX(angles.x);
-		qy.setToRotateAboutY(angles.y);
-		qz.setToRotateAboutZ(angles.z);
+		qx.setToRotateAboutX(Math::degreeToRadian(angles.x));
+		qy.setToRotateAboutY(Math::degreeToRadian(angles.y));
+		qz.setToRotateAboutZ(Math::degreeToRadian(angles.z));
 		
-		*this = qy*qx*qz;
+		*this = qx*qy*qz;
 	}
 
 	//-----------------------------------//
@@ -66,7 +66,7 @@ public:
 	//-----------------------------------//
 	
 	// Assignment
-	Quaternion &operator = (const Quaternion& q)
+	Quaternion& operator = (const Quaternion& q)
 	{
 		x = q.x; y = q.y; z = q.z; w = q.w;
 		return *this;
@@ -75,7 +75,7 @@ public:
 	//-----------------------------------//
 
 	// Equality
-	bool operator == (Quaternion &q) const
+	bool operator == (Quaternion& q) const
 	{
 		return (x == q.x) && (y == q.y) && (z == q.z) && (w == q.w); 
 	}
@@ -83,7 +83,7 @@ public:
 	//-----------------------------------//
 
 	// Inequality
-    bool operator != (Quaternion &q) const
+    bool operator != (Quaternion& q) const
 	{
 		return (x != q.x) || (y != q.y) || (z != q.z) || (w != q.w);
 	}
@@ -146,7 +146,7 @@ public:
 	//
 	// Combined cross product and assignment, as per C++ convention
 
-	Quaternion &operator *=(const Quaternion& a)
+	Quaternion& operator *=(const Quaternion& a)
 	{
 		// Multiply and assign
 		*this = *this * a;

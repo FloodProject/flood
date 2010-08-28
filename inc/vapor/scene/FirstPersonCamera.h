@@ -60,6 +60,7 @@ protected:
 
 	// Relative movement position.
 	Vector3 relativePosition;
+	EulerAngles rotation;
 
 	// Restrict camera movement on the X-axis.
 	bool clampMovementX;

@@ -173,7 +173,7 @@ void Engine::setupResourceLoaders()
 	#endif
 
 	#ifdef VAPOR_MESH_MILKSHAPE3D
-		loaders.push_back( new MS3D_Loader() );
+		loaders.push_back( new Milkshape3D_Loader() );
 	#endif
 
 	#ifdef VAPOR_AUDIO_OGG

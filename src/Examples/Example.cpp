@@ -83,7 +83,7 @@ void Example::onSetupScene()
 	//nodeFBO->addComponent( GeometryPtr( new Geometry(quad) ) );
 	//scene->add( nodeFBO );
 
-	MeshPtr meshCT = rm->loadResource<Mesh>("ct.ms3d");
+	MeshPtr meshCT = rm->loadResource<Mesh>("ct.Milkshape3D");
 	NodePtr nodeCT( new Node("ct") );
 	nodeCT->addTransform();
 	nodeCT->addComponent( ModelPtr( new Model(meshCT) ) );

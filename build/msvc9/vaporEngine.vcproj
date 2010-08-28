@@ -1464,30 +1464,34 @@
 					>
 				</File>
 				<Filter
-					Name="MS3D"
+					Name="Milkshape"
 					>
 					<File
-						RelativePath="..\..\src\Engine\MS3D.cpp"
+						RelativePath="..\..\src\Engine\Milkshape3D.cpp"
 						>
 						<FileConfiguration
 							Name="Debug|Win32"
 							>
 							<Tool
 								Name="VCCLCompilerTool"
-								DisableSpecificWarnings="4996"
+								DisableSpecificWarnings="4189"
 							/>
 						</FileConfiguration>
 					</File>
 					<File
-						RelativePath="..\..\inc\vapor\resources\MS3D.h"
+						RelativePath="..\..\inc\vapor\resources\Milkshape3D.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Engine\MS3D_Loader.cpp"
+						RelativePath="..\..\src\Engine\Milkshape3D_Loader.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\inc\vapor\resources\MS3D_Loader.h"
+						RelativePath="..\..\inc\vapor\resources\Milkshape3D_Loader.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Engine\Milkshape3D_Specs.h"
 						>
 					</File>
 				</Filter>
@@ -2035,6 +2039,30 @@
 		<Filter
 			Name="Animation"
 			>
+			<File
+				RelativePath="..\..\src\Engine\animation\Animation.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\animation\Animation.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\Engine\animation\Bone.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\animation\Bone.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\Engine\animation\Skeleton.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\animation\Skeleton.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath="..\..\inc\vapor\CompileOptions.h"

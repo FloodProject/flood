@@ -10,6 +10,8 @@
 
 #include "vapor/resources/Resource.h"
 
+FWD_DECL_INTRUSIVE(Skeleton)
+FWD_DECL_INTRUSIVE(Animation)
 FWD_DECL_INTRUSIVE(Renderable)
 
 namespace vapor {
@@ -32,6 +34,15 @@ public:
 	// Gets if the mesh is built.
 	bool isBuilt() const;
 
+	// Gets if the mesh is animated.
+	bool isAnimated() const;
+
+	// Gets the skeleton of the mesh.
+	GETTER(Skeleton, SkeletonPtr, skeleton)
+
+	// Gets the animations of the mesh.
+	GETTER(Animations, const std::vector<AnimationPtr>&, animations)
+
 	// Gets the renderables of the mesh.
 	void appendRenderables( std::vector<RenderablePtr>& renderables );
 
@@ -42,11 +53,20 @@ protected:
 
 	Mesh();
 
-	// Keeps track if the mesh has been built.
-	bool built;
+	// Keeps track if the mesh is animated.
+	bool animated;
+
+	// Skeleton of the mesh.
+	SkeletonPtr skeleton;
+
+	// Skeleton of the mesh.
+	std::vector<AnimationPtr> animations;
 
 	// Renderables of the mesh.
 	std::vector<RenderablePtr> renderables;
+
+	// Keeps track if the mesh has been built.
+	bool built;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Mesh );

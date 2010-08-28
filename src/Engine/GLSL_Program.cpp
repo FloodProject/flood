@@ -286,6 +286,7 @@ void GLSL_Program::bindDefaultAttributes()
 	setAttribute( "vp_Normal", VertexAttribute::Normal );
 	setAttribute( "vp_Color", VertexAttribute::Color );
 	setAttribute( "vp_TexCoord0", VertexAttribute::TexCoord0 );
+	setAttribute( "vp_BoneIndex", VertexAttribute::FogCoord );
 }
 
 //-----------------------------------//
@@ -468,6 +469,29 @@ void GLSL_Program::setUniform( const std::string& slot, const Matrix4x4& matrix 
 	
 	//float test[16];
 	//glGetUniformfv( id, loc, test );
+
+	//unbind();
+}
+
+//-----------------------------------//
+
+void GLSL_Program::setUniform( const std::string& slot, const std::vector<Matrix4x4>& vec )
+{
+	if( !isLinked() ) return;
+
+	if( vec.empty() )
+		return;
+	//bind();
+
+	GLint loc = glGetUniformLocation( id, slot.c_str() );
+
+	if( loc == -1 )
+	{
+		// warn( "glsl", "Could not locate uniform location in program object '%d'", id );
+		return;
+	}
+
+	glUniformMatrix4fv( loc, vec.size(), true, &(vec[0].m11) );
 
 	//unbind();
 }

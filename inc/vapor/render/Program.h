@@ -92,6 +92,9 @@ public:
 	// Adds a named 4x4 matrix uniform to the program.
 	virtual void setUniform( const std::string& slot, const Matrix4x4& mat ) = 0;
 
+	// Adds a named 4x4 matrix vector uniform to the program.
+	virtual void setUniform( const std::string& slot, const std::vector<Matrix4x4>& vec ) = 0;
+
 	// Serialization.
 	//virtual void load( const std::string& name ) = 0;
 	//virtual void save( const std::string& name ) = 0;

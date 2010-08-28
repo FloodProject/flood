@@ -61,10 +61,10 @@ void Camera::updateViewTransform()
 	assert( transform != nullptr );
 
 	const Vector3& position = transform->getPosition();
-	const EulerAngles& rotation = transform->getRotation();
+	const Quaternion& rotation = transform->getRotation();
 	
 	// Update the look-at vector.
-	Vector3 forward = Vector3::UnitZ * Matrix4x3::createRotation(rotation);
+	Vector3 forward = Vector3::UnitZ * Matrix4x3::createFromQuaternion(rotation);
 	lookAtVector = position + forward;
 	
 	// Update the view matrix.
@@ -180,7 +180,7 @@ void Camera::cull( RenderBlock& block, const NodePtr& node ) const
 	foreach( const GeometryPtr& geometry, node->getGeometry() ) 
 	{
 		// No frustum culling is performed yet.
-		#pragma TODO("Hack! :D")
+		#pragma TODO("Fix multiple geometry instancing")
 		geometry->appendRenderables( block.renderables, transform );
 	}
 
@@ -204,7 +204,7 @@ void Camera::cull( RenderBlock& block, const NodePtr& node ) const
 		
 		renderState.renderable = cmp.second->getDebugRenderable();
 		renderState.modelMatrix = transform->getAbsoluteTransform();
-		renderState.group = RenderGroup::PostTransparency;
+		renderState.group = RenderStage::PostTransparency;
 		renderState.priority = 0;
 
 		block.renderables.push_back( renderState );
