@@ -21,7 +21,7 @@ namespace vapor {
  * Axis-aligned Bounding Box.
  */
 
-class VAPOR_API AABB : private boost::noncopyable
+class VAPOR_API AABB
 {
 public:
 

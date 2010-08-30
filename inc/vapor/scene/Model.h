@@ -34,6 +34,9 @@ public:
 	Model();
 	Model( const MeshPtr& mesh );
 
+	// Switches the current mesh animation.
+	void switchAnimation(const std::string& name);
+
 	// Updates the mesh.
 	void update( double delta );
   
@@ -45,8 +48,14 @@ protected:
 	// Initializes the model.
 	void init();
 
+	// Updates the geometry bounds if needed.
+	virtual void updateBounds();
+
 	// Updates the animation of the model.
 	void updateAnimation();
+
+	// Advances the animation time.
+	void advanceTime( double delta );
 
 	// Updates the matrices of the bones.
 	void updateBoneMatrices();
@@ -54,10 +63,10 @@ protected:
 	// Updates the matrix of a bone.
 	void updateBoneMatrix(const BonePtr& bone);
 
-	// Gets a debug renderable of the skeleton.
+	// Gets a debug debugRenderable of the skeleton.
 	virtual RenderablePtr getDebugRenderable() const;
 
-	// Creates a debug renderable of the skeleton.
+	// Creates a debug debugRenderable of the skeleton.
 	virtual void createDebugRenderable() const;
 
 	// Callback when geometry is about to get rendered.
@@ -73,16 +82,19 @@ protected:
 	AnimationPtr animation;
 
 	// Keeps track if we want to perform animation.
-	bool animate;
+	bool animationEnabled;
 
 	// Current animation time.
-	float currentTime;
+	float animationTime;
+
+	// Controls animation speed.
+	float animationSpeed;
 
 	// Bones matrices.
 	mutable std::vector<Matrix4x3> bonesMatrix;
 
 	// Mesh that the model renders.
-	mutable RenderablePtr renderable;
+	mutable RenderablePtr debugRenderable;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Model );

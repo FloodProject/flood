@@ -16,7 +16,7 @@ varying vec2 vp_TexCoord;
 
 void main()
 {
-	normal = vp_Normal;
+	normal = vp_Normal * mat3(vp_BonesMatrix[vp_BoneIndex]);
 	gl_FrontColor = vec4(vp_Color, 1.0);
 	vp_TexCoord = vp_TexCoord0.st;
 	gl_Position = vec4(vp_Vertex, 1.0) * vp_BonesMatrix[vp_BoneIndex] * vp_ModelMatrix * vp_ViewMatrix * vp_ProjectionMatrix;

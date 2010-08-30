@@ -60,6 +60,9 @@ public:
 	// Gets the key frames of the animation.
 	GETTER(KeyFrames, const KeyFramesMap&, keyFrames)
 
+	// Gets/sets the name of the animation.
+	ACESSOR(Name, const std::string&, name)
+
 protected:
 
 	// Name of this animation.

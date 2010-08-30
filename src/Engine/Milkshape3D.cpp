@@ -14,6 +14,7 @@
 #include "vapor/animation/Skeleton.h"
 #include "vapor/animation/Animation.h"
 #include "vapor/math/Math.h"
+#include "vapor/Utilities.h"
 #include "Milkshape3D_Specs.h"
 
 namespace vapor {
@@ -56,7 +57,7 @@ bool Milkshape3D::parse()
 	readMaterials();
 	readAnimation();
 	readJoints();
-	//readComments();
+	readComments();
 
 	return true;
 }
@@ -69,6 +70,8 @@ void Milkshape3D::build()
 		return;
 
 	animated = !joints.empty();
+
+	buildBounds();
 
 	if( isAnimated() )
 	{
@@ -114,18 +117,79 @@ void Milkshape3D::buildSkeleton()
 
 //-----------------------------------//
 
+void Milkshape3D::buildAnimationMetadata()
+{
+	if( mainComment.empty() )
+	{
+		AnimationMetadata data;
+		
+		data.start = 1;
+		data.end = totalFrames;
+
+		metadata.push_back(data);
+
+		return;
+	}
+
+	foreach( char& c, mainComment )
+	{
+		if( c == 10 )
+			c = ' ';
+		if( c == 13 )
+			c = '\n';
+	}
+
+	std::vector<std::string> lines = String::split(mainComment, '\n');
+    
+	foreach( const std::string& line, lines )
+	{
+		std::stringstream ss(line);
+
+		AnimationMetadata data;
+
+		ss >> data.start;
+		ss >> data.end;
+		ss >> data.name;
+
+		data.startTime = getAnimationStart(data);
+
+		metadata.push_back(data);
+	}
+}
+
+//-----------------------------------//
+
+float Milkshape3D::getAnimationStart(const AnimationMetadata& data)
+{
+	float time = Limits::FloatMaximum;
+
+	foreach( const ms3d_joint_t& joint, joints )
+	{
+		foreach( const ms3d_keyframe_t& frame, joint.positionKeys )
+		{
+			int numFrame = std::ceil(frame.time*animationFPS);
+
+			if( numFrame < data.start || numFrame > data.end )
+				continue;
+
+			time = std::min(time, frame.time);
+		}
+	}
+
+	return time;
+}
+
+//-----------------------------------//
+
 void Milkshape3D::buildAnimation()
 {
 	assert( skeleton != nullptr );
 
-	uint numAnimations = 1/*joints[0].positionKeys.size()*/;
-	
-	for( uint i = 0; i < numAnimations; i++ )
+	buildAnimationMetadata();
+
+	foreach( AnimationMetadata& data, metadata )
 	{
 		AnimationPtr animation = new Animation();
-
-		uint startFrame = 0;
-		uint endFrame = joints[0].positionKeys.size()-1;
 
 		foreach( ms3d_joint_t& joint, joints )
 		{
@@ -135,22 +199,41 @@ void Milkshape3D::buildAnimation()
 			const BonePtr& bone = skeleton->findBone(joint.name);
 
 			KeyFramesVector frames;
-
-			for( uint j = 0; j < joint.positionKeys.size(); j++ )
-			{
-				KeyFrame frame;
-
-				frame.time = joint.positionKeys[j].time*animationFPS;
-				frame.position = joint.positionKeys[j].parameter;
-				frame.rotation = (EulerAngles&) joint.rotationKeys[j].parameter;
-
-				frames.push_back(frame);
-			}
+			buildKeyFrames( joint, data, frames );
 
 			animation->setKeyFrames(bone, frames);
 		}
 
 		animations.push_back(animation);
+	}
+}
+
+//-----------------------------------//
+
+void Milkshape3D::buildKeyFrames( const ms3d_joint_t& joint,
+		const AnimationMetadata& data, KeyFramesVector& frames )
+{
+	assert( joint.positionKeys.size() == joint.rotationKeys.size() );
+
+	uint i = 0;
+
+	foreach( const ms3d_keyframe_t& frame, joint.positionKeys )
+	{
+		int numFrame = std::ceil(frame.time*animationFPS);
+
+		if( numFrame < data.start || numFrame > data.end )
+		{
+			i++;
+			continue;
+		}
+
+		KeyFrame key;
+
+		key.time = (frame.time - data.startTime)*animationFPS;
+		key.position = frame.parameter;
+		key.rotation = (EulerAngles&) joint.rotationKeys[i++].parameter;
+
+		frames.push_back(key);
 	}
 }
 
@@ -270,6 +353,19 @@ MaterialPtr Milkshape3D::buildMaterial(const ms3d_group_t& group)
 	}
 
 	return mat;
+}
+
+//-----------------------------------//
+
+void Milkshape3D::buildBounds()
+{
+	boundingVolume.reset();
+
+	// Update the bounding box to accomodate new geometry.
+	foreach( const ms3d_vertex_t* vert, vertices )
+	{
+		boundingVolume.add( vert->position );
+	}
 }
 
 //-----------------------------------//
@@ -527,484 +623,87 @@ void Milkshape3D::readJoints()
 
 void Milkshape3D::readComments()
 {
-//	// comments
-//	long filePos = ftell(fp);
-//	if (filePos < fileSize)
-//	{
-//		int subVersion = 0;
-//		//FILEBUF_READ(&subVersion, sizeof(int), 1, fp);
-//		if (subVersion == 1)
-//		{
-//			int numComments = 0;
-//			size_t commentSize = 0;
-//
-//			// group comments
-//			//FILEBUF_READ(&numComments, sizeof(int), 1, fp); 
-//			for (i = 0; i < numComments; i++)
-//			{
-//				int index;
-//				//FILEBUF_READ(&index, sizeof(int), 1, fp);
-//				std::vector<char> comment;
-//				//FILEBUF_READ(&commentSize, sizeof(size_t), 1, fp);
-//				comment.resize(commentSize);
-//				if (commentSize > 0)
-//					//FILEBUF_READ(&comment[0], sizeof(char), commentSize, fp);
-//				if (index >= 0 && index < (int) groups.size())
-//					groups[index].comment = comment;
-//			}
-//
-//			// material comments
-//			//FILEBUF_READ(&numComments, sizeof(int), 1, fp); 
-//			for (i = 0; i < numComments; i++)
-//			{
-//				int index;
-//				//FILEBUF_READ(&index, sizeof(int), 1, fp);
-//				std::vector<char> comment;
-//				//FILEBUF_READ(&commentSize, sizeof(size_t), 1, fp);
-//				comment.resize(commentSize);
-//				if (commentSize > 0)
-//					//FILEBUF_READ(&comment[0], sizeof(char), commentSize, fp);
-//				if (index >= 0 && index < (int) materials.size())
-//					materials[index].comment = comment;
-//			}
-//
-//			// joint comments
-//			//FILEBUF_READ(&numComments, sizeof(int), 1, fp); 
-//			for (i = 0; i < numComments; i++)
-//			{
-//				int index;
-//				//FILEBUF_READ(&index, sizeof(int), 1, fp);
-//				std::vector<char> comment;
-//				//FILEBUF_READ(&commentSize, sizeof(size_t), 1, fp);
-//				comment.resize(commentSize);
-//				if (commentSize > 0)
-//					//FILEBUF_READ(&comment[0], sizeof(char), commentSize, fp);
-//				if (index >= 0 && index < (int) joints.size())
-//					joints[index].comment = comment;
-//			}
-//
-//			// model comments
-//			//FILEBUF_READ(&numComments, sizeof(int), 1, fp);
-//			if (numComments == 1)
-//			{
-//				std::vector<char> comment;
-//				//FILEBUF_READ(&commentSize, sizeof(size_t), 1, fp);
-//				comment.resize(commentSize);
-//				if (commentSize > 0)
-//					//FILEBUF_READ(&comment[0], sizeof(char), commentSize, fp);
-//				m_comment = comment;
-//			}
-//		}
-//		else
-//		{
-//			// "Unknown subversion for comments %d\n", subVersion);
-//		}
-//	}
-}
-//
-//
-//void Milkshape3D::read_extra()
-//{
-//	// vertex extra
-//	filePos = ftell(fp);
-//	if (filePos < fileSize)
-//	{
-//		int subVersion = 0;
-//		//FILEBUF_READ(&subVersion, sizeof(int), 1, fp);
-//		if (subVersion == 2)
-//		{
-//			for (int i = 0; i < numVertices; i++)
-//			{
-//				//FILEBUF_READ(&vertices[i].boneIds[0], sizeof(char), 3, fp);
-//				//FILEBUF_READ(&vertices[i].weights[0], sizeof(byte), 3, fp);
-//				//FILEBUF_READ(&vertices[i].extra, sizeof(unsigned int), 1, fp);
-//			}
-//		}
-//		else if (subVersion == 1)
-//		{
-//			for (int i = 0; i < numVertices; i++)
-//			{
-//				//FILEBUF_READ(&vertices[i].boneIds[0], sizeof(char), 3, fp);
-//				//FILEBUF_READ(&vertices[i].weights[0], sizeof(byte), 3, fp);
-//			}
-//		}
-//		else
-//		{
-//			// "Unknown subversion for vertex extra %d\n", subVersion);
-//		}
-//	}
-//
-//	// joint extra
-//	filePos = ftell(fp);
-//	if (filePos < fileSize)
-//	{
-//		int subVersion = 0;
-//		//FILEBUF_READ(&subVersion, sizeof(int), 1, fp);
-//		if (subVersion == 1)
-//		{
-//			for (int i = 0; i < numJoints; i++)
-//			{
-//				//FILEBUF_READ(&joints[i].color, sizeof(float), 3, fp);
-//			}
-//		}
-//		else
-//		{
-//			// "Unknown subversion for joint extra %d\n", subVersion);
-//		}
-//	}
-//
-//	// model extra
-//	filePos = ftell(fp);
-//	if (filePos < fileSize)
-//	{
-//		int subVersion = 0;
-//		//FILEBUF_READ(&subVersion, sizeof(int), 1, fp);
-//		if (subVersion == 1)
-//		{
-//			//FILEBUF_READ(&jointsize, sizeof(float), 1, fp);
-//			//FILEBUF_READ(&m_transparencyMode, sizeof(int), 1, fp);
-//			//FILEBUF_READ(&m_alphaRef, sizeof(float), 1, fp);
-//		}
-//		else
-//		{
-//			//"Unknown subversion for model extra %d\n", subVersion);
-//		}
-//	}
-//}
+	int subVersion = FILEBUF_INDEX(int);
+	
+	if (subVersion != 1)
+	{
+		warn( "Milkshape3D", "Unknown subversion comment chunk: '%d'", subVersion );
+		return;
+	}
 
-//void msModel::SetupTangents()
-//{
-//	for (size_t j = 0; j < joints.size(); j++)
-//	{
-//		ms3d_joint_t *joint = &joints[j];
-//		int numPositionKeys = (int) joint->positionKeys.size();
-//		joint->tangents.resize(numPositionKeys);
-//
-//		// clear all tangents (zero derivatives)
-//		for (int k = 0; k < numPositionKeys; k++)
-//		{
-//			joint->tangents[k].tangentIn[0] = 0.0f;
-//			joint->tangents[k].tangentIn[1] = 0.0f;
-//			joint->tangents[k].tangentIn[2] = 0.0f;
-//			joint->tangents[k].tangentOut[0] = 0.0f;
-//			joint->tangents[k].tangentOut[1] = 0.0f;
-//			joint->tangents[k].tangentOut[2] = 0.0f;
-//		}
-//
-//		// if there are more than 2 keys, we can calculate tangents, otherwise we use zero derivatives
-//		if (numPositionKeys > 2)
-//		{
-//			for (int k = 0; k < numPositionKeys; k++)
-//			{
-//				// make the curve tangents looped
-//				int k0 = k - 1;
-//				if (k0 < 0)
-//					k0 = numPositionKeys - 1;
-//				int k1 = k;
-//				int k2 = k + 1;
-//				if (k2 >= numPositionKeys)
-//					k2 = 0;
-//
-//				// calculate the tangent, which is the vector from key[k - 1] to key[k + 1]
-//				float tangent[3];
-//				tangent[0] = (joint->positionKeys[k2].key[0] - joint->positionKeys[k0].key[0]);
-//				tangent[1] = (joint->positionKeys[k2].key[1] - joint->positionKeys[k0].key[1]);
-//				tangent[2] = (joint->positionKeys[k2].key[2] - joint->positionKeys[k0].key[2]);
-//
-//				// weight the incoming and outgoing tangent by their time to avoid changes in speed, if the keys are not within the same interval
-//				float dt1 = joint->positionKeys[k1].time - joint->positionKeys[k0].time;
-//				float dt2 = joint->positionKeys[k2].time - joint->positionKeys[k1].time;
-//				float dt = dt1 + dt2;
-//				joint->tangents[k1].tangentIn[0] = tangent[0] * dt1 / dt;
-//				joint->tangents[k1].tangentIn[1] = tangent[1] * dt1 / dt;
-//				joint->tangents[k1].tangentIn[2] = tangent[2] * dt1 / dt;
-//
-//				joint->tangents[k1].tangentOut[0] = tangent[0] * dt2 / dt;
-//				joint->tangents[k1].tangentOut[1] = tangent[1] * dt2 / dt;
-//				joint->tangents[k1].tangentOut[2] = tangent[2] * dt2 / dt;
-//			}
-//		}
-//	}
-//}
-//
-//void msModel::SetFrame(float frame)
-//{
-//	if (frame < 0.0f)
-//	{
-//		for (size_t i = 0; i < joints.size(); i++)
-//		{
-//			ms3d_joint_t *joint = &joints[i];
-//			memcpy(joint->matLocal, joint->matLocalSkeleton, sizeof(joint->matLocal));
-//			memcpy(joint->matGlobal, joint->matGlobalSkeleton, sizeof(joint->matGlobal));
-//		}
-//	}
-//	else
-//	{
-//		for (size_t i = 0; i < joints.size(); i++)
-//		{
-//			EvaluateJoint(i, frame);
-//		}
-//	}
-//
-//	m_currentTime = frame;
-//}
-//
-//void msModel::EvaluateJoint(int index, float frame)
-//{
-//	ms3d_joint_t *joint = &joints[index];
-//
-//	//
-//	// calculate joint animation matrix, this matrix will animate matLocalSkeleton
-//	//
-//	vec3_t pos = { 0.0f, 0.0f, 0.0f };
-//	int numPositionKeys = (int) joint->positionKeys.size();
-//	if (numPositionKeys > 0)
-//	{
-//		int i1 = -1;
-//		int i2 = -1;
-//
-//		// find the two keys, where "frame" is in between for the position channel
-//		for (int i = 0; i < (numPositionKeys - 1); i++)
-//		{
-//			if (frame >= joint->positionKeys[i].time && frame < joint->positionKeys[i + 1].time)
-//			{
-//				i1 = i;
-//				i2 = i + 1;
-//				break;
-//			}
-//		}
-//
-//		// if there are no such keys
-//		if (i1 == -1 || i2 == -1)
-//		{
-//			// either take the first
-//			if (frame < joint->positionKeys[0].time)
-//			{
-//				pos[0] = joint->positionKeys[0].key[0];
-//				pos[1] = joint->positionKeys[0].key[1];
-//				pos[2] = joint->positionKeys[0].key[2];
-//			}
-//
-//			// or the last key
-//			else if (frame >= joint->positionKeys[numPositionKeys - 1].time)
-//			{
-//				pos[0] = joint->positionKeys[numPositionKeys - 1].key[0];
-//				pos[1] = joint->positionKeys[numPositionKeys - 1].key[1];
-//				pos[2] = joint->positionKeys[numPositionKeys - 1].key[2];
-//			}
-//		}
-//
-//		// there are such keys, so interpolate using hermite interpolation
-//		else
-//		{
-//			ms3d_keyframe_t *p0 = &joint->positionKeys[i1];
-//			ms3d_keyframe_t *p1 = &joint->positionKeys[i2];
-//			ms3d_tangent_t *m0 = &joint->tangents[i1];
-//			ms3d_tangent_t *m1 = &joint->tangents[i2];
-//
-//			// normalize the time between the keys into [0..1]
-//			float t = (frame - joint->positionKeys[i1].time) / (joint->positionKeys[i2].time - joint->positionKeys[i1].time);
-//			float t2 = t * t;
-//			float t3 = t2 * t;
-//
-//			// calculate hermite basis
-//			float h1 =  2.0f * t3 - 3.0f * t2 + 1.0f;
-//			float h2 = -2.0f * t3 + 3.0f * t2;
-//			float h3 =         t3 - 2.0f * t2 + t;
-//			float h4 =         t3 -        t2;
-//
-//			// do hermite interpolation
-//			pos[0] = h1 * p0->key[0] + h3 * m0->tangentOut[0] + h2 * p1->key[0] + h4 * m1->tangentIn[0];
-//			pos[1] = h1 * p0->key[1] + h3 * m0->tangentOut[1] + h2 * p1->key[1] + h4 * m1->tangentIn[1];
-//			pos[2] = h1 * p0->key[2] + h3 * m0->tangentOut[2] + h2 * p1->key[2] + h4 * m1->tangentIn[2];
-//		}
-//	}
-//
-//	vec4_t quat = { 0.0f, 0.0f, 0.0f, 1.0f };
-//	int numRotationKeys = (int) joint->rotationKeys.size();
-//	if (numRotationKeys > 0)
-//	{
-//		int i1 = -1;
-//		int i2 = -1;
-//
-//		// find the two keys, where "frame" is in between for the rotation channel
-//		for (int i = 0; i < (numRotationKeys - 1); i++)
-//		{
-//			if (frame >= joint->rotationKeys[i].time && frame < joint->rotationKeys[i + 1].time)
-//			{
-//				i1 = i;
-//				i2 = i + 1;
-//				break;
-//			}
-//		}
-//
-//		// if there are no such keys
-//		if (i1 == -1 || i2 == -1)
-//		{
-//			// either take the first key
-//			if (frame < joint->rotationKeys[0].time)
-//			{
-//				AngleQuaternion(joint->rotationKeys[0].key, quat);
-//			}
-//
-//			// or the last key
-//			else if (frame >= joint->rotationKeys[numRotationKeys - 1].time)
-//			{
-//				AngleQuaternion(joint->rotationKeys[numRotationKeys - 1].key, quat);
-//			}
-//		}
-//
-//		// there are such keys, so do the quaternion slerp interpolation
-//		else
-//		{
-//			float t = (frame - joint->rotationKeys[i1].time) / (joint->rotationKeys[i2].time - joint->rotationKeys[i1].time);
-//			vec4_t q1;
-//			AngleQuaternion(joint->rotationKeys[i1].key, q1);
-//			vec4_t q2;
-//			AngleQuaternion(joint->rotationKeys[i2].key, q2);
-//			QuaternionSlerp(q1, q2, t, quat);
-//		}
-//	}
-//
-//	// make a matrix from pos/quat
-//	float matAnimate[3][4];
-//	QuaternionMatrix(quat, matAnimate);
-//	matAnimate[0][3] = pos[0];
-//	matAnimate[1][3] = pos[1];
-//	matAnimate[2][3] = pos[2];
-//
-//	// animate the local joint matrix using: matLocal = matLocalSkeleton * matAnimate
-//	R_ConcatTransforms(joint->matLocalSkeleton, matAnimate, joint->matLocal);
-//
-//	// build up the hierarchy if joints
-//	// matGlobal = matGlobal(parent) * matLocal
-//	if (joint->parentIndex == -1)
-//	{
-//		memcpy(joint->matGlobal, joint->matLocal, sizeof(joint->matGlobal));
-//	}
-//	else
-//	{
-//		ms3d_joint_t *parentJoint = &joints[joint->parentIndex];
-//		R_ConcatTransforms(parentJoint->matGlobal, joint->matLocal, joint->matGlobal);
-//	}
-//}
-//
-//void msModel::TransformVertex(const ms3d_vertex_t *vertex, vec3_t out) const
-//{
-//	int jointIndices[4], jointWeights[4];
-//	FillJointIndicesAndWeights(vertex, jointIndices, jointWeights);
-//
-//	if (jointIndices[0] < 0 || jointIndices[0] >= (int) joints.size() || m_currentTime < 0.0f)
-//	{
-//		out[0] = vertex->vertex[0];
-//		out[1] = vertex->vertex[1];
-//		out[2] = vertex->vertex[2];
-//	}
-//	else
-//	{
-//		// count valid weights
-//		int numWeights = 0;
-//		for (int i = 0; i < 4; i++)
-//		{
-//			if (jointWeights[i] > 0 && jointIndices[i] >= 0 && jointIndices[i] < (int) joints.size())
-//				++numWeights;
-//			else
-//				break;
-//		}
-//
-//		// init
-//		out[0] = 0.0f;
-//		out[1] = 0.0f;
-//		out[2] = 0.0f;
-//
-//		float weights[4] = { (float) jointWeights[0] / 100.0f, (float) jointWeights[1] / 100.0f, (float) jointWeights[2] / 100.0f, (float) jointWeights[3] / 100.0f };
-//		if (numWeights == 0)
-//		{
-//			numWeights = 1;
-//			weights[0] = 1.0f;
-//		}
-//		// add weighted vertices
-//		for (int i = 0; i < numWeights; i++)
-//		{
-//			const ms3d_joint_t *joint = &joints[jointIndices[i]];
-//			vec3_t tmp, vert;
-//			VectorITransform(vertex->vertex, joint->matGlobalSkeleton, tmp);
-//			VectorTransform(tmp, joint->matGlobal, vert);
-//
-//			out[0] += vert[0] * weights[i];
-//			out[1] += vert[1] * weights[i];
-//			out[2] += vert[2] * weights[i];
-//		}
-//	}
-//}
-//
-//void msModel::TransformNormal(const ms3d_vertex_t *vertex, const vec3_t normal, vec3_t out) const
-//{
-//	int jointIndices[4], jointWeights[4];
-//	FillJointIndicesAndWeights(vertex, jointIndices, jointWeights);
-//
-//	if (jointIndices[0] < 0 || jointIndices[0] >= (int) joints.size() || m_currentTime < 0.0f)
-//	{
-//		out[0] = normal[0];
-//		out[1] = normal[1];
-//		out[2] = normal[2];
-//	}
-//	else
-//	{
-//		// count valid weights
-//		int numWeights = 0;
-//		for (int i = 0; i < 4; i++)
-//		{
-//			if (jointWeights[i] > 0 && jointIndices[i] >= 0 && jointIndices[i] < (int) joints.size())
-//				++numWeights;
-//			else
-//				break;
-//		}
-//
-//		// init
-//		out[0] = 0.0f;
-//		out[1] = 0.0f;
-//		out[2] = 0.0f;
-//
-//		float weights[4] = { (float) jointWeights[0] / 100.0f, (float) jointWeights[1] / 100.0f, (float) jointWeights[2] / 100.0f, (float) jointWeights[3] / 100.0f };
-//		if (numWeights == 0)
-//		{
-//			numWeights = 1;
-//			weights[0] = 1.0f;
-//		}
-//		// add weighted vertices
-//		for (int i = 0; i < numWeights; i++)
-//		{
-//			const ms3d_joint_t *joint = &joints[jointIndices[i]];
-//			vec3_t tmp, norm;
-//			VectorIRotate(normal, joint->matGlobalSkeleton, tmp);
-//			VectorRotate(tmp, joint->matGlobal, norm);
-//
-//			out[0] += norm[0] * weights[i];
-//			out[1] += norm[1] * weights[i];
-//			out[2] += norm[2] * weights[i];
-//		}
-//	}
-//}
-//
-//void msModel::FillJointIndicesAndWeights(const ms3d_vertex_t *vertex, int jointIndices[4], int jointWeights[4]) const
-//{
-//	jointIndices[0] = vertex->boneId;
-//	jointIndices[1] = vertex->boneIds[0];
-//	jointIndices[2] = vertex->boneIds[1];
-//	jointIndices[3] = vertex->boneIds[2];
-//	jointWeights[0] = 100;
-//	jointWeights[1] = 0;
-//	jointWeights[2] = 0;
-//	jointWeights[3] = 0;
-//	if (vertex->weights[0] != 0 || vertex->weights[1] != 0 || vertex->weights[2] != 0)
-//	{
-//		jointWeights[0] = vertex->weights[0];
-//		jointWeights[1] = vertex->weights[1];
-//		jointWeights[2] = vertex->weights[2];
-//		jointWeights[3] = 100 - (vertex->weights[0] + vertex->weights[1] + vertex->weights[2]);
-//	}
-//}
+	uint numComments = 0;
+	size_t commentSize = 0;
+
+	// group comments
+	numComments = FILEBUF_INDEX(int);
+	
+	for( uint i = 0; i < numComments; ++i )
+	{
+		int& groupIndex = FILEBUF_INDEX(int);
+		commentSize = FILEBUF_INDEX(size_t);
+		//groupComments.resize(commentSize);
+		
+		//if(commentSize > 0)
+			//FILEBUF_READ(&comment[0], sizeof(char), commentSize, fp);
+		index += commentSize;
+		
+		//if (index >= 0 && index < (int) groups.size())
+		//	groups[index].comment = comment;
+	}
+
+	// material comments
+	numComments = FILEBUF_INDEX(int);
+
+	for( uint i = 0; i < numComments; ++i )
+	{
+		int& matIndex = FILEBUF_INDEX(int);
+		commentSize = FILEBUF_INDEX(size_t);
+		//jointComments.resize(commentSize);
+		
+		//if(commentSize > 0)
+			//FILEBUF_READ(&comment[0], sizeof(char), commentSize, fp);
+		index += commentSize;
+		
+		//if (index >= 0 && index < (int) materials.size())
+		//	materials[index].comment = comment;
+	}
+
+	// joint comments
+	numComments = FILEBUF_INDEX(int);
+
+	for( uint i = 0; i < numComments; ++i )
+	{
+		int& jointIndex = FILEBUF_INDEX(int);
+		commentSize = FILEBUF_INDEX(size_t);
+		//groupComments.resize(commentSize);
+		
+		//if(commentSize > 0)
+			//FILEBUF_READ(&comment[0], sizeof(char), commentSize, fp);
+		index += commentSize;
+		
+		//if (index >= 0 && index < (int) joints.size())
+			//joints[index].comment = comment;
+	}
+
+	// model comments
+	numComments = FILEBUF_INDEX(int);
+
+	if (numComments == 1)
+	{
+		commentSize = FILEBUF_INDEX(size_t);
+
+		char* temp = new char[commentSize+1];
+		
+		if (commentSize > 0)
+			MEMCPY_SKIP_INDEX(temp[0], commentSize);
+
+		temp[commentSize] = '\0';
+
+		mainComment = temp;
+
+		delete[] temp;
+	}
+}
 
 //-----------------------------------//
 

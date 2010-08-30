@@ -49,7 +49,10 @@ public:
 	// Appends all the renderables of this geometry to the queue.
 	void appendRenderables( RenderQueue& queue, TransformPtr transform );
 
-	// Updates the geometry if needed.
+	// Updates the geometry bounds if needed.
+	virtual void updateBounds();
+
+	// Updates some geometry information.
 	virtual void update( double delta );
 
 	// Callback when geometry is about to get rendered.
@@ -62,6 +65,9 @@ public:
 	void markDirty();
 
 protected:
+
+	// Notifies the Transform that bounding volumes are dirty.
+	void notifiesTransform();
 
 	// Bounding volume of the geometry.
 	AABB boundingVolume;

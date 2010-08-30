@@ -42,6 +42,19 @@ bool Mesh::isAnimated() const
 
 //-----------------------------------//
 
+AnimationPtr Mesh::findAnimation( const std::string& name )
+{
+	foreach( const AnimationPtr& animation, animations )
+	{
+		if( animation->getName() == name )
+			return animation;
+	}
+
+	return nullptr;
+}
+
+//-----------------------------------//
+
 void Mesh::appendRenderables( std::vector<RenderablePtr>& rends )
 {
 	if( !built )

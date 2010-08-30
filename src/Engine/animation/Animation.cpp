@@ -76,6 +76,7 @@ Matrix4x3 Animation::getInterpolatedKeyFrameMatrix(const BonePtr& bone, double t
 
 	Vector3 position;
 	EulerAngles rotation;
+	//Quaternion rotation;
 
 	if( endIndex == 0 || endIndex == boneKeyFrames.size() )
 	{
@@ -98,7 +99,6 @@ Matrix4x3 Animation::getInterpolatedKeyFrameMatrix(const BonePtr& bone, double t
 		Vector3 rot_left = (Vector3&) left.rotation;
 		Vector3 rot_right = (Vector3&) right.rotation;
 		Vector3 rot = rot_left.lerp(rot_right, interpolator);
-
 		rotation = (EulerAngles&) rot;
 		
 		//Quaternion rotLeft( left.rotation );
@@ -108,6 +108,7 @@ Matrix4x3 Animation::getInterpolatedKeyFrameMatrix(const BonePtr& bone, double t
 
 	Matrix4x3 interp = 
 		Matrix4x3::createRotation(rotation) *
+		//Matrix4x3::createFromQuaternion(rotation) *
 		Matrix4x3::createTranslation(position);
 
 	return interp;

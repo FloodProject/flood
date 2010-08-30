@@ -119,8 +119,8 @@ std::string String::format(const char* str, va_list args)
 
 //-----------------------------------//
 
-std::vector<std::string>& String::split(const std::string &s, char delim, 
-								std::vector<std::string> &elems)
+std::vector<std::string>& String::split(const std::string& s, char delim, 
+								std::vector<std::string>& elems)
 {
     std::stringstream ss(s);
     std::string item;

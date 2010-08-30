@@ -93,12 +93,11 @@ void Geometry::appendRenderables( RenderQueue& queue, TransformPtr transform )
 
 //-----------------------------------//
 
-void Geometry::update( double delta )
+void Geometry::updateBounds()
 {
-	if( !isDirty )
-		return;
-
 	boundingVolume.reset();
+
+	#pragma TODO("Bounding box update needs to handle all render stages")
 
 	// Update the bounding box to accomodate new geometry.
 	foreach( const RenderablePtr& rend, renderables[RenderStage::Normal] )
@@ -109,9 +108,14 @@ void Geometry::update( double delta )
 			continue;
 
 		foreach( const Vector3& v, vb->getVertices() )
-			boundingVolume.add( v );
+			boundingVolume.add(v);
 	}
+}
 
+//-----------------------------------//
+
+void Geometry::notifiesTransform()
+{
 	const NodePtr& node = getNode();
 	assert( node != nullptr );
 
@@ -119,6 +123,17 @@ void Geometry::update( double delta )
 	assert( transform != nullptr );
 
 	transform->markBoundingVolumeDirty();
+}
+
+//-----------------------------------//
+
+void Geometry::update( double delta )
+{
+	if( !isDirty )
+		return;
+
+	updateBounds();
+	notifiesTransform();
 	isDirty = false;
 }
 

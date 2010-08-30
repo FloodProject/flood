@@ -269,7 +269,7 @@ NodePtr EditorFrame::createCamera()
 	CameraPtr camera( new FirstPersonCamera(device) );
 	
 	Frustum& frustum = camera->getFrustum();
-	frustum.farPlane = 100000;
+	frustum.farPlane = 10000;
 
 	// Generate a new unique name.
 	std::string name( "EditorCamera"+String::fromNumber(i++) );

@@ -22,7 +22,8 @@ static const uint MAX_BONES = 32;
 //-----------------------------------//
 
 BEGIN_CLASS_PARENT(Model, Geometry)
-	FIELD_CLASS_PTR(Model, Mesh, mesh) 
+	FIELD_PRIMITIVE(Model, float, animationSpeed)
+	FIELD_CLASS_PTR(Model, Mesh, mesh)
 END_CLASS()
 
 //-----------------------------------//
@@ -45,10 +46,12 @@ Model::Model( const MeshPtr& mesh )
 void Model::init()
 {
 	modelBuilt = false;
-	currentTime = 0;
-	animate = true;
-	renderable = nullptr;
 	needsRenderCallback = true;
+	debugRenderable = nullptr;
+
+	animationTime = 0;
+	animationSpeed = 1;
+	animationEnabled = true;
 }
 
 //-----------------------------------//
@@ -67,21 +70,48 @@ void Model::update( double delta )
 	if( mesh->isAnimated() )
 	{
 		animation = mesh->getAnimations()[0];
-		currentTime += delta * 10;
 
-		if( currentTime > animation->getTotalTime() )
-		{
-			if( animation->isLooped() )
-				currentTime = 0;
-			else
-				animate = false;
-		}
-
-		if( animate )
+		if( animationEnabled )
 			updateAnimation();
+
+		advanceTime(delta);
 	}
 
 	Geometry::update(delta);
+}
+
+//-----------------------------------//
+
+void Model::updateBounds()
+{
+	boundingVolume = mesh->getBoundingVolume();
+}
+
+//-----------------------------------//
+
+void Model::advanceTime( double delta )
+{
+	animationTime += delta * (10 * animationSpeed);
+
+	if( animationTime > animation->getTotalTime() )
+	{
+		if( animation->isLooped() )
+			animationTime = 0;
+		else
+			animationEnabled = false;
+	}
+}
+
+//-----------------------------------//
+
+void Model::switchAnimation(const std::string& name)
+{
+	assert( mesh != nullptr );
+
+	if( !mesh->isAnimated() )
+		return;
+
+	animation = mesh->findAnimation(name);
 }
 
 //-----------------------------------//
@@ -111,13 +141,15 @@ void Model::updateBoneMatrices()
 
 void Model::updateBoneMatrix(const BonePtr& bone)
 {
-		Matrix4x3 frameMatrix = animation->getInterpolatedKeyFrameMatrix(bone, currentTime);
-		frameMatrix = frameMatrix * bone->relativeMatrix;
+	Matrix4x3 frameMatrix =
+		animation->getInterpolatedKeyFrameMatrix(bone, animationTime);
+	
+	frameMatrix = frameMatrix * bone->relativeMatrix;
 
-		if( bone->parentIndex != -1 )
-			bonesMatrix[bone->index] = frameMatrix * bonesMatrix[bone->parentIndex];
-		else
-			bonesMatrix[bone->index] = frameMatrix;
+	if( bone->parentIndex != -1 )
+		bonesMatrix[bone->index] = frameMatrix * bonesMatrix[bone->parentIndex];
+	else
+		bonesMatrix[bone->index] = frameMatrix;
 }
 
 //-----------------------------------//
@@ -127,10 +159,10 @@ RenderablePtr Model::getDebugRenderable() const
 	if( !mesh->isAnimated() )
 		return nullptr;
 
-	if( !renderable )
+	if( !debugRenderable )
 		createDebugRenderable();
 
-	VertexBufferPtr vb = renderable->getVertexBuffer();
+	VertexBufferPtr vb = debugRenderable->getVertexBuffer();
 
 	std::vector<Vector3> pos;
 	std::vector<Vector3> colors;
@@ -152,14 +184,14 @@ RenderablePtr Model::getDebugRenderable() const
 	vb->set( VertexAttribute::Position, pos );
 	vb->set( VertexAttribute::Color, colors );
 
-	return renderable;
+	return debugRenderable;
 }
 
 //-----------------------------------//
 
 void Model::createDebugRenderable() const
 {
-	assert( !renderable );
+	assert( !debugRenderable );
 
 	MaterialPtr mat = new Material("Skeleton");
 	mat->setProgram("Diffuse");
@@ -167,7 +199,7 @@ void Model::createDebugRenderable() const
 
 	VertexBufferPtr vb = new VertexBuffer();
 
-	renderable = new Renderable(PolygonType::LineStrip, vb, mat);
+	debugRenderable = new Renderable(PolygonType::LineStrip, vb, mat);
 }
 
 //-----------------------------------//

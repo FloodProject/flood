@@ -9,6 +9,7 @@
 #pragma once
 
 #include "vapor/resources/Resource.h"
+#include "vapor/math/BoundingBox.h"
 
 FWD_DECL_INTRUSIVE(Skeleton)
 FWD_DECL_INTRUSIVE(Animation)
@@ -40,6 +41,12 @@ public:
 	// Gets the skeleton of the mesh.
 	GETTER(Skeleton, SkeletonPtr, skeleton)
 
+	// Finds an animation from the mesh.
+	AnimationPtr findAnimation( const std::string& name );
+
+	// Gets the bounding box of the mesh.
+	GETTER(BoundingVolume, const AABB&, boundingVolume)
+
 	// Gets the animations of the mesh.
 	GETTER(Animations, const std::vector<AnimationPtr>&, animations)
 
@@ -47,7 +54,7 @@ public:
 	void appendRenderables( std::vector<RenderablePtr>& renderables );
 
 	// Gets the resource group of this resource.
-	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Meshes)
+	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Meshes)	
 
 protected:
 
@@ -64,6 +71,9 @@ protected:
 
 	// Renderables of the mesh.
 	std::vector<RenderablePtr> renderables;
+
+	// Bounding volume of the mesh.
+	AABB boundingVolume;
 
 	// Keeps track if the mesh has been built.
 	bool built;
