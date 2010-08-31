@@ -103,7 +103,7 @@ void ResourcesPage::onResourceRemoved( const ResourceEvent& event )
 void ResourcesPage::onResourceReloaded( const ResourceEvent& event )
 {
 	// Update the view when resources get reloaded.
-	editor->RefreshViewport();
+	editor->redrawView();
 }
 
 //-----------------------------------//

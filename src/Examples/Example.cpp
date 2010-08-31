@@ -18,7 +18,7 @@ Example::Example(const char** argv)
 
 void Example::onInit()
 {
-	camera.reset( new FirstPersonCamera(renderDevice) );
+	camera.reset( new Camera(renderDevice) );
 
 	PageManager* pageManager = new PageManager( 512, camera );
 	pageManager->onPageLoading += fd::bind(&Example::onPageLoading, this);
@@ -34,7 +34,7 @@ void Example::onPageLoading( const PageEvent& event )
 
 	ResourceManager* rm = getResourceManager();
 	const ImagePtr& heightMap = rm->loadResource<Image>( "height4.png" );
-	terrain->addCell( heightMap, event.pos.x, event.pos.y );
+	terrain->addCell( event.pos.x, event.pos.y, heightMap );
 }
 
 //-----------------------------------//
@@ -61,6 +61,7 @@ void Example::onSetupScene()
 	NodePtr nodeCamera( new Node("MainCamera") );
 	nodeCamera->addComponent( TransformPtr( new Transform( 0.0f, 20.0f, -65.0f ) ) );
 	nodeCamera->addComponent( camera );
+	nodeCamera->addComponent( CameraControllerPtr( new FirstPersonController() ) );
 	scene->add( nodeCamera );
 
 	//bufferFBO = rd->createRenderBuffer( Settings() );
@@ -69,7 +70,7 @@ void Example::onSetupScene()
 	//fbo->check();
 	//fbo->unbind();
 
-	//viewportFBO = fbo->addViewport(camera);
+	//viewportFBO = fbo->createView(camera);
 	//viewportFBO->setClearColor( Color::Red );
 
 	//MaterialPtr materialFBO( new Material( "FBO1", "Tex" ) );
@@ -126,20 +127,21 @@ void Example::onSetupScene()
 	nodeTerrain->addComponent( terrain );
 	scene->add( nodeTerrain );
 
-	SkydomePtr skydome( new Skydome(camera) );
+	//SkydomePtr skydome( new Skydome() );
 
-	const ImagePtr& clouds = rm->loadResource<Image>( "noise2.png" );
-	skydome->setClouds( clouds );
+	//const ImagePtr& clouds = rm->loadResource<Image>( "noise2.png" );
+	//skydome->setClouds( clouds );
 
-	NodePtr sky( new Node("Sky") );
-	sky->addTransform();	
-	sky->addComponent( skydome );
-	scene->add( sky );
+	//NodePtr sky( new Node("Sky") );
+	//sky->addTransform();	
+	//sky->addComponent( skydome );
+	//scene->add( sky );
 
 	window = getRenderDevice()->getRenderWindow();
 	window->makeCurrent();
 
-	view = window->addViewport(camera);
+	view = window->createView();
+	view->setCamera(camera);
 	view->setClearColor( Color(0.0f, 0.10f, 0.25f) );
 }
 
@@ -227,14 +229,14 @@ void Example::onKeyPressed( const KeyEvent& keyEvent )
 					frameStats.maxFrameTime );
 	}
 
-	if( keyEvent.keyCode == Keys::J )
-	{
-		Json::Value sc;
-		scene->serialize( sc );
-		
-		File file( "Example.scene", AccessMode::Write );
-		file.write( sc.toStyledString() );
-	}
+	//if( keyEvent.keyCode == Keys::J )
+	//{
+	//	Json::Value sc;
+	//	scene->serialize( sc );
+	//	
+	//	File file( "Example.scene", AccessMode::Write );
+	//	file.write( sc.toStyledString() );
+	//}
 }
 
 //-----------------------------------//

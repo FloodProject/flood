@@ -222,7 +222,7 @@ void Engine::update( double delta )
 
 //-----------------------------------//
 
-InputManager* const Engine::getInputManager() const
+InputManager* Engine::getInputManager() const
 {
 	Window* window = renderDevice->getWindow();
 	return window->getInputManager();

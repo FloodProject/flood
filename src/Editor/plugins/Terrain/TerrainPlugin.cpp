@@ -115,7 +115,7 @@ void TerrainPlugin::onTimer( wxTimerEvent& )
 		assert( op != nullptr );
 
 		op->applyTerrainTool();
-		editor->RefreshViewport();
+		editor->redrawView();
 	}
 }
 
@@ -238,7 +238,7 @@ void TerrainPlugin::onCreateCell( wxCommandEvent& event )
 {
 	terrain->addCell(coords.x, coords.y);
 
-	editor->RefreshViewport();
+	editor->redrawView();
 }
 
 //-----------------------------------//
@@ -250,7 +250,7 @@ void TerrainPlugin::onRebuildNormals( wxCommandEvent& event )
 
 	cell->rebuildNormals();
 
-	editor->RefreshViewport();
+	editor->redrawView();
 }
 
 
@@ -327,7 +327,7 @@ void TerrainPlugin::deformTerrain( const MouseButtonEvent& mb )
 		op->res = res;
 
 	op->applyTerrainTool();
-	editor->RefreshViewport();
+	editor->redrawView();
 
 	timer.Start( TERRAIN_TIMER_MS );
 }

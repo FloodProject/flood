@@ -153,7 +153,7 @@ void GizmoPlugin::onNodeSelect( const NodePtr& node )
 			createGizmo( node );
 	}
 
-	editor->RefreshViewport();
+	editor->redrawView();
 }
 
 //-----------------------------------//
@@ -163,7 +163,7 @@ void GizmoPlugin::onNodeUnselect( const NodePtr& node )
 	setBoundingBoxVisible( node, false );
 	removeGizmo( node );
 
-	editor->RefreshViewport();
+	editor->redrawView();
 }
 
 //-----------------------------------//
@@ -198,7 +198,7 @@ void GizmoPlugin::onMouseMove( const MouseMoveEvent& moveEvent )
 		op = nullptr;
 	}
 
-	editor->RefreshViewport();
+	editor->redrawView();
 }
 
 //-----------------------------------//
@@ -245,7 +245,7 @@ void GizmoPlugin::onMouseDrag( const MouseDragEvent& dragEvent )
 	op->rotation = transObject->getRotation();
 	op->translation = transObject->getPosition();
 
-	editor->RefreshViewport();
+	editor->redrawView();
 }
 
 //-----------------------------------//

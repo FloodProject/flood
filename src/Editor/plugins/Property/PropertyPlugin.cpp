@@ -101,17 +101,17 @@ void PropertyPlugin::onNodeUnselect( const NodePtr& node )
 
 void PropertyPlugin::onFieldChanged(const Field& field)
 {
-	const NodePtr& node( selectedNode.lock() );
-	
-	propertyPage->Clear();
-	propertyPage->showNodeProperties(node);
+	const NodePtr& node = selectedNode.lock();
+
+	if( node )	
+		propertyPage->showNodeProperties(node);
 }
 
 //-----------------------------------//
 
 void PropertyPlugin::onSceneUpdate()
 {
-	NodePtr node( selectedNode );
+	const NodePtr& node = selectedNode.lock();
 
 	if( node )
 		propertyPage->showNodeProperties( node );

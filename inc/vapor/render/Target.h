@@ -48,8 +48,6 @@ public:
 
 //-----------------------------------//
 
-typedef std::vector<View*> ViewportList;
-
 /**
  * Render targets are surfaces where the rendered images can be stored
  * and/or displayed. The most common use is windows, but there are also
@@ -63,27 +61,27 @@ public:
 
 	virtual ~RenderTarget();
 
-	// Updates the render target (usually swaps buffers).
-	virtual void update() = 0;
+	// Creates a new view and adds it to this target.
+	View* createView();
 
 	// Sets this rendering target as the current.
 	virtual void makeCurrent() = 0;
 
+	// Updates the render target (usually swaps buffers).
+	virtual void update() = 0;
+
 	// Gets the settings of this render target.
 	virtual const Settings& getSettings() const = 0;
 
-	// Adds a new view to this target.
-	View* addViewport( const CameraPtr& camera );
-
 	// Gets the list of viewports associated with the render target.
-	GETTER(Viewports, const ViewportList&, viewports)
+	GETTER(Views, const std::vector<View*>&, views)
 
 	// Event fired when the target gets resized.
-	fd::delegate< void(const Settings&) > onTargetResize;
+	fd::delegate<void(const Settings&)> onTargetResize;
 
-private:
+protected:
 
-	ViewportList viewports;
+	std::vector<View*> views;
 };
 
 //-----------------------------------//

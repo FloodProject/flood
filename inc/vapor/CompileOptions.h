@@ -55,7 +55,7 @@
 // Windowing APIs
 //---------------------------------------------------------------------//
 
-//#define VAPOR_WINDOWING_SFML
+#define VAPOR_WINDOWING_SFML
 //#define VAPOR_WINDOWING_WIN32
 
 //---------------------------------------------------------------------//

@@ -11,6 +11,7 @@
 #include "vapor/math/Color.h"
 #include "vapor/math/Vector2.h"
 #include "vapor/math/Matrix4x3.h"
+#include "vapor/render/Target.h"
 
 FWD_DECL_SHARED(Node)
 FWD_DECL_SHARED(Camera)
@@ -33,19 +34,23 @@ class VAPOR_API View : private boost::noncopyable
 {
 public:
 
-	View( CameraPtr, RenderTarget* );
+	View();
+	View( const CameraPtr& );
 
 	// Gets the camera of the view.
 	GETTER(Camera, CameraPtr, weakCamera.lock())
 
-	// Gets the render target of the view.
-	GETTER(RenderTarget, RenderTarget*, target)
+	// Sets the camera of the view.
+	SETTER(Camera, const CameraPtr&, weakCamera)
+
+	// Gets/sets the render target of the view.
+	ACESSOR(RenderTarget, RenderTarget*, target)
 
 	// Gets the origin of the view.
 	GETTER(Origin, Vector2i, Vector2i::Zero)
 
 	// Gets the size of the view.
-	DECLARE_GETTER(Size, Vector2i)
+	GETTER(Size, Vector2i, target->getSettings().getSize())
 
 	// Gets/sets the clear color of the view.
 	ACESSOR(ClearColor, const Color&, clearColor)
@@ -53,35 +58,35 @@ public:
 	// Gets the aspect ratio of the view.
 	float getAspectRatio() const;
 
-	// Gets/sets the Z-order priority of the view.
-	ACESSOR(Priority, int, zPriority)
+	// Gets/sets the depth (Z-order) priority of the view.
+	ACESSOR(DepthPriority, int, depthPriority)
 
 	// Updates the view.
 	void update();
 
-	// Unprojects the vector.
-	Vector3 unprojectPoint( const Vector3& vector,
+	// Unprojects the point.
+	Vector3 unprojectPoint( const Vector3& point,
 		const Matrix4x4& projection, const Matrix4x3& view ) const;
 
 	// Returns if a view has more priority than another.
 	bool operator < (View& v);
 
-private:
+	// Handles render target resize.
+	void handleRenderTargetResize();
 
-	// Sets a new render target in the camera.
-	void setRenderTarget( RenderTarget* target );
+protected:
 
 	// Camera that will render into this view.
 	CameraWeakPtr weakCamera;
 
-	// Render target that we are rendering into.
+	// Render target.
 	RenderTarget* target;
-	
+
 	// Background color.
 	Color clearColor;
 
-	// Z-order priority.
-	int zPriority;
+	// Depth priority.
+	int depthPriority;
 };
 
 //-----------------------------------//

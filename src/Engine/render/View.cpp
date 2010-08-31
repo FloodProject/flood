@@ -15,36 +15,38 @@ namespace vapor {
 
 //-----------------------------------//
 
-View::View( CameraPtr camera, RenderTarget* target )
-	: weakCamera( camera )
-	, target( target )
+View::View()
 {
 	setClearColor( Color::White );
-	setRenderTarget( target );
 }
 
 //-----------------------------------//
 
-void View::setRenderTarget( RenderTarget* newTarget )
+View::View( const CameraPtr& camera )
+	: weakCamera( camera )
 {
-	//if( target ) // Remove the old target resize notification.
-	//	target->onTargetResize -= fd::bind( &View::handleTargetResize, this );
-
-	//target = newTarget;
-	//target->onTargetResize += fd::bind( &View::handleTargetResize, this );
-	//handleTargetResize( target->getSettings() );
+	setClearColor( Color::White );
 }
 
 //-----------------------------------//
 
-Vector3 View::unprojectPoint( const Vector3& screen, const Matrix4x4& projection, const Matrix4x3& view ) const
+void View::handleRenderTargetResize()
+{
+	//size = target->getSettings().getSize();
+	#pragma TODO("Views need to be updated when render targets change")
+}
+
+//-----------------------------------//
+
+Vector3 View::unprojectPoint( const Vector3& screen, const Matrix4x4& projection,
+							  const Matrix4x3& view ) const
 {
 	Matrix4x4 view4( view );
 	Matrix4x4 inverseVP = (view4*projection).inverse();
 
 	Vector2i size = getSize();
 
-    // Map x and y from window coordinates, map to range -1 to 1 
+    // Map x and y from window coordinates, map to range -1 to 1.
 
     Vector4 pos;
     pos.x = (screen.x /*- offset.x*/) / float(size.x) * 2.0f - 1.0f;
@@ -65,30 +67,27 @@ float View::getAspectRatio() const
 	const Vector2i size = getSize();
 
 	if( size.y == 0 )
-		return 0.0f;
+		return 0;
 	
 	return float(size.x) / size.y;
 }
 
 //-----------------------------------//
 
-Vector2i View::getSize() const
-{
-	return target->getSettings().getSize();
-}
-
-//-----------------------------------//
-
 bool View::operator < (View& v)
 {
-	return getPriority() < v.getPriority();
+	return getDepthPriority() < v.getDepthPriority();
 }
 
 //-----------------------------------//
 
 void View::update()
 {
-	CameraPtr camera( weakCamera );
+	CameraPtr camera = weakCamera.lock();
+
+	if( !camera )
+		return;
+
 	camera->setView( this );
 	camera->render();
 }

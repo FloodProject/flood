@@ -148,7 +148,7 @@ void ProjectPlugin::switchScene(const ScenePtr& scene)
 	Events* events = editor->getEventManager();
 	events->onSceneLoad(scene);
 
-	editor->RefreshViewport();
+	editor->redrawView();
 }
 
 //-----------------------------------//

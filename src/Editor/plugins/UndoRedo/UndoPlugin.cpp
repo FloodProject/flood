@@ -80,7 +80,7 @@ void UndoPlugin::onPluginDisable()
 void UndoPlugin::onUndoEvent()
 {
 	updateButtons();
-	editor->RefreshViewport();
+	editor->redrawView();
 }
 
 //-----------------------------------//

@@ -8,36 +8,40 @@
 
 #pragma once
 
-#include "vapor/scene/Camera.h"
-#include "vapor/input/InputManager.h"
-#include "vapor/input/Keyboard.h"
-#include "vapor/input/Mouse.h"
+#include "vapor/controllers/CameraController.h"
 #include "vapor/math/Vector2.h"
+#include "vapor/math/EulerAngles.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
+class Window;
+
+class InputManager;
+
+struct KeyEvent;
+struct MouseMoveEvent;
+struct MouseDragEvent;
+struct MouseWheelEvent;
+
+//-----------------------------------//
+
 /**
- * Implements a simple First-Person style camera.
+ * A simple First-Person style camera controller.
  */
 
-class VAPOR_API FirstPersonCamera : public Camera
+class VAPOR_API FirstPersonController : public CameraController
 {
-	//DECLARE_CLASS_()
+	DECLARE_CLASS_()
 
 public:
 
-	FirstPersonCamera( RenderDevice* device );
+	FirstPersonController();
+	~FirstPersonController();
 
 	// Updates this component.
 	virtual void update( double delta );
-
-	// Gets/sets the look sensivity of the camera.
-	ACESSOR(LookSensivity, float, lookSensivity);
-	
-	// Gets/sets the move sensivity of the camera.
-	ACESSOR(MoveSensivity, float, moveSensivity);
 
 protected:
 
@@ -65,10 +69,6 @@ protected:
 	// Restrict camera movement on the X-axis.
 	bool clampMovementX;
 
-	// Camera sensivity.
-	float lookSensivity;
-	float moveSensivity;
-
 	// Mouse movement.
 	Vector2i oldMousePosition;
 	Vector2i lastPosition;
@@ -78,10 +78,11 @@ protected:
 	// Focus state.
 	bool hasFocus;
 
+	Window* window;
 	InputManager* inputManager;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( FirstPersonCamera );
+TYPEDEF_SHARED_POINTER_FROM_TYPE( FirstPersonController );
 
 //-----------------------------------//
 

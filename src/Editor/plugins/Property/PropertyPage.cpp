@@ -86,6 +86,7 @@ void PropertyPage::initControl()
 	// Events bindings.
 	Bind(wxEVT_PG_CHANGED, &PropertyPage::onPropertyChanged, this);
 	Bind(wxEVT_PG_CHANGING, &PropertyPage::onPropertyChanging, this);
+	Bind(wxEVT_IDLE, &PropertyPage::onIdle, this);
 
 	// Make the default font a little smaller.
 	SetFont( editor->GetFont().Scaled(0.9f) );
@@ -147,8 +148,20 @@ void PropertyPage::onPropertyChanged(wxPropertyGridEvent& event)
 
 //-----------------------------------//
 
+void PropertyPage::onIdle(wxIdleEvent& event)
+{
+	const NodePtr& node = selectedNode.lock();
+	
+	//if( node )
+		//showNodeProperties(node);
+}
+
+//-----------------------------------//
+
 void PropertyPage::showNodeProperties( const NodePtr& node )
 {
+	selectedNode = node;
+
 	Clear();
 
     // Node properties
@@ -184,6 +197,12 @@ void PropertyPage::appendObjectFields(const Class& type, void* object, bool newC
 		Append(category);
 	}
 
+	if( type.getParent() )
+	{
+		const Class& parent = (Class&) *type.getParent();
+		appendObjectFields(parent, object, false);
+	}
+
 	foreach( const FieldsPair& p, type.getFields() )
 	{
 		const Field& field = *p.second;
@@ -191,9 +210,13 @@ void PropertyPage::appendObjectFields(const Class& type, void* object, bool newC
 
 		wxPGProperty* prop = nullptr;
 
+		if( field.isPointer() )
+			continue;
+
 		if( field_type.isClass() || field_type.isStruct() )
 		{
-			appendObjectFields((Class&) field_type, object, false);
+			void* field_ptr = (byte*) object + field.offset;
+			appendObjectFields((Class&) field_type, field_ptr, false);
 		}
 		else if( field_type.isPrimitive() )
 		{
@@ -237,7 +260,9 @@ wxPGProperty* PropertyPage::createEnumProperty(const Field& field, void* object)
 		arrValues.Add( p.first, p.second );
 	}
 
-	prop = new wxEnumProperty( wxEmptyString, wxPG_LABEL, arrValues );
+	int val = field.get<int>(object);
+
+	prop = new wxEnumProperty( wxEmptyString, wxPG_LABEL, arrValues, val );
 	Append( prop );
 
 	return prop;

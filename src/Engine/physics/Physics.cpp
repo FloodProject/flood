@@ -80,7 +80,6 @@ void PhysicsManager::drawDebugWorld()
 
 	debugDrawer->clearBuffer();
 	world->debugDrawWorld();
-	debugDrawer->getVertexBuffer()->forceRebuild();
 
 	Engine* engine = Engine::getInstancePtr();
 	RenderDevice* renderDevice = engine->getRenderDevice();

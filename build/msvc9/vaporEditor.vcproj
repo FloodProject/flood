@@ -301,18 +301,6 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Icons"
-			>
-			<File
-				RelativePath="..\..\src\Editor\inc\EditorIcons.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\Editor\inc\ImageUtils.h"
-				>
-			</File>
-		</Filter>
-		<Filter
 			Name="PCH"
 			>
 			<File
@@ -350,7 +338,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Viewframe"
+			Name="View"
 			>
 			<File
 				RelativePath="..\..\src\Editor\Viewframe.cpp"
@@ -685,6 +673,34 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Events"
+			>
+			<File
+				RelativePath="..\..\src\Editor\Events.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\Editor\inc\Events.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Resources"
+			>
+			<File
+				RelativePath="..\..\src\Editor\res\Editor.rc"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\Editor\inc\EditorIcons.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\Editor\inc\ImageUtils.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath="..\..\src\Editor\Editor.cpp"
 			>
@@ -694,19 +710,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\..\src\Editor\res\Editor.rc"
-			>
-		</File>
-		<File
 			RelativePath="..\..\src\Editor\inc\EditorTags.h"
-			>
-		</File>
-		<File
-			RelativePath="..\..\src\Editor\Events.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\src\Editor\inc\Events.h"
 			>
 		</File>
 	</Files>

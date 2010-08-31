@@ -9,9 +9,9 @@
 #include "vapor/PCH.h"
 #include "vapor/scene/Camera.h"
 #include "vapor/scene/Group.h"
-#include "vapor/scene/Geometry.h"
-#include "vapor/math/Vector4.h"
-#include "vapor/math/Math.h"
+#include "vapor/render/Device.h"
+#include "vapor/render/View.h"
+#include "vapor/Engine.h"
 
 namespace vapor {
 
@@ -24,20 +24,19 @@ END_CLASS()
 //-----------------------------------//
 
 Camera::Camera()
-{ }
+{
+	init();
+
+	renderDevice = Engine::getInstancePtr()->getRenderDevice();
+}
 
 //-----------------------------------//
 
 Camera::Camera( RenderDevice* device )
 	: renderDevice(device)
-	, activeView(nullptr)
-	, lookAtVector(Vector3::UnitZ)
 {
 	assert( device != nullptr );
-
-	frustum.fieldOfView = 45;
-	frustum.nearPlane = 1;
-	frustum.farPlane = 5000;
+	init();
 }
 
 //-----------------------------------//
@@ -52,6 +51,19 @@ Camera::~Camera()
 {
 	assert( transform != nullptr );
 	transform->onTransform -= fd::bind( &Camera::onTransform, this );
+}
+
+//-----------------------------------//
+
+void Camera::init()
+{
+	activeView = nullptr;
+	lookAtVector = Vector3::UnitZ;
+
+	frustum.projectionType = Projection::Perspective;
+	frustum.fieldOfView = 45;
+	frustum.nearPlane = 1;
+	frustum.farPlane = 5000;
 }
 
 //-----------------------------------//
@@ -85,11 +97,10 @@ void Camera::setView( View* view )
 		return;
 
 	activeView = view;
-	Vector2i size = view->getSize();
 
 	// Update frustum matrices.
 	frustum.aspectRatio = view->getAspectRatio();
-	frustum.updateProjection( size );
+	frustum.updateProjection( view->getSize() );
 	frustum.updatePlanes( viewMatrix );	
 }
 
@@ -97,6 +108,14 @@ void Camera::setView( View* view )
 
 void Camera::update( double VAPOR_UNUSED(delta) )
 {
+	if( activeView )
+	{
+		// Update frustum matrices.
+		frustum.aspectRatio = activeView->getAspectRatio();
+		frustum.updateProjection( activeView->getSize() );
+		frustum.updatePlanes( viewMatrix );	
+	}
+
 	// Only run the following code once.
 	if( transform )
 		return;

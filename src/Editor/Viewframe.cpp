@@ -50,20 +50,38 @@ Viewframe::~Viewframe()
 
 //-----------------------------------//
 
-View* Viewframe::createViewport( const NodePtr& node )
+void Viewframe::switchToDefaultCamera()
 {
-	assert( node != nullptr );
+	CameraPtr camera = mainCamera.lock();
+
+	if( !camera )
+		return;
+
+	NodePtr nodeCamera = camera->getNode();
+	ControllerPtr controller = nodeCamera->getTypedComponent<Controller>();
+
+	if( controller )
+		controller->setEnabled(true);
+
+	view->setCamera(camera);
+}
+
+//-----------------------------------//
+
+View* Viewframe::createView( /*const NodePtr& node*/ )
+{
 
 	// Add a new view to the window.
-	CameraPtr camera = node->getComponent<FirstPersonCamera>();
-	assert( camera != nullptr );
+	//CameraPtr camera = node->getComponent<Camera>();
+	//assert( camera != nullptr );
 
 	Window* window = control->getRenderWindow();
-	view = window->addViewport( camera );
+	view = window->createView();
+	//view->setCamera(camera);
 
 	// Subscribe to the camera transform events.
-	TransformPtr transform = node->getTransform();
-	transform->onTransform += fd::bind( &Viewframe::flagRedraw, this );
+	//TransformPtr transform = node->getTransform();
+	//transform->onTransform += fd::bind( &Viewframe::flagRedraw, this );
 	
 	return view;
 }

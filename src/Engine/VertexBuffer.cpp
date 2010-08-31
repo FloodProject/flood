@@ -170,6 +170,9 @@ bool VertexBuffer::build()
 	{
 		const std::vector<byte>& vec = p.second.data;
 
+		if( vec.empty() )
+			continue;
+
 		glBufferSubData( GL_ARRAY_BUFFER, offset, vec.size(), &vec[0] );
 
 		if( glHasError("Could not buffer the data") )

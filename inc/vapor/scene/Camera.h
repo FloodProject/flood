@@ -8,15 +8,18 @@
 
 #pragma once
 
-#include "vapor/math/Matrix4x3.h"
-#include "vapor/math/Matrix4x4.h"
-#include "vapor/math/Vector2.h"
+#include "vapor/scene/Component.h"
 #include "vapor/math/Frustum.h"
-#include "vapor/render/Device.h"
-#include "vapor/render/View.h"
-#include "vapor/scene/Transform.h"
+
+FWD_DECL_SHARED(Transform)
 
 namespace vapor {
+
+//-----------------------------------//
+
+class View;
+class RenderDevice;
+struct RenderBlock;
 
 //-----------------------------------//
 
@@ -38,23 +41,13 @@ public:
 	Camera( const Camera& rhs );
 	~Camera();
 
-	// Gets the camera frustum.
-	Frustum& getFrustum() { return frustum; }
-
-	// Renders the (sub-)scene starting from the passed node to the current 
-	// render target associated in the camera.
-	void render( const NodePtr& node, bool clearView = true );
-
-	// Renders the entire scene starting from the root node to the current 
-	// render target associated in the camera.
+	// Renders the scene to the current render view.
 	void render();
 
-	// Performs hierarchical frustum culling on the nodes in the scene 
-	// starting from the given node. In other words, the camera will check 
-	// all the nodes and return a list of those that are inside its frustum
-	// for later rendering (and also their local to world matrices). 
-	// The queue is passed as a reference to the cull method, which fills 
-	// it with the data.
+	// Renders the scene to the current render view.
+	void render( const NodePtr& node, bool clearView = true );
+
+	// Performs hierarchical frustum culling on the nodes in the scene.
 	void cull( RenderBlock& queue, const NodePtr& node ) const;
 
 	// Gets a ray given the screen coordinates of the mouse.
@@ -63,17 +56,25 @@ public:
 	// Updates this component.
 	virtual void update( double delta );
 
+	// Gets the camera frustum.
+	Frustum& getFrustum() { return frustum; }
+
 	// Gets the look-at vector of the camera.
 	GETTER(LookAtVector, const Vector3&, lookAtVector)
 
 	// Gets the view matrix of the camera.
 	GETTER(ViewMatrix, const Matrix4x3&, viewMatrix)
 	
-	// Gets/sets the current view associated with the camera.
+	// Gets the current view associated with the camera.
 	GETTER(View, View*, activeView)
+
+	// Sets the current view associated with the camera.
 	DECLARE_SETTER(View, View*)
 
 protected:
+
+	// Initializes the camera.
+	void init();
 
 	// Sets up the view transform.
 	void updateViewTransform();
@@ -90,13 +91,13 @@ protected:
 	// View matrix.
 	Matrix4x3 viewMatrix;
 
-	// Last view the camera rendered into.
+	// Last view active the camera.
 	View* activeView;
 
-	// Pointer to the camera's node transform.
+	// Pointer to the camera node transform.
 	TransformPtr transform;
 
-	// Used to pass a RenderQueue for rendering.
+	// Rendering device.
 	RenderDevice* renderDevice;
 };
 

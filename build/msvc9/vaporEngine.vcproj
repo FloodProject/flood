@@ -771,14 +771,6 @@
 					RelativePath="..\..\inc\vapor\scene\Camera.h"
 					>
 				</File>
-				<File
-					RelativePath="..\..\src\Engine\FirstPersonCamera.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\scene\FirstPersonCamera.h"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="Transform"
@@ -2063,6 +2055,54 @@
 				RelativePath="..\..\inc\vapor\animation\Skeleton.h"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="Controllers"
+			>
+			<File
+				RelativePath="..\..\src\Engine\controllers\Controller.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\controllers\Controller.h"
+				>
+			</File>
+			<Filter
+				Name="Camera"
+				>
+				<File
+					RelativePath="..\..\src\Engine\controllers\CameraController.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\controllers\CameraController.h"
+					>
+				</File>
+				<Filter
+					Name="First Person"
+					>
+					<File
+						RelativePath="..\..\src\Engine\controllers\FirstPersonController.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\controllers\FirstPersonController.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Third Person"
+					>
+					<File
+						RelativePath="..\..\src\Engine\controllers\ThirdPersonController.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\controllers\ThirdPersonController.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
 		</Filter>
 		<File
 			RelativePath="..\..\inc\vapor\CompileOptions.h"

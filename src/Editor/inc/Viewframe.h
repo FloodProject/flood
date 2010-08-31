@@ -31,8 +31,13 @@ public:
 
 	~Viewframe();
 
+	// Switches to the default camera.
+	void switchToDefaultCamera();
+
+	SETTER(MainCamera, const CameraPtr&, mainCamera)
+
 	// Creates and adds a new view to the viewframe.
-	View* createViewport( const NodePtr& node );
+	View* createView();
 
 	// Flags the backing control for redraw.
 	void flagRedraw();
@@ -47,6 +52,9 @@ public:
 	GETTER(Sizer, wxSizer*, mainSizer)
 
 protected:
+
+	// Camera of the viewframe.
+	CameraWeakPtr mainCamera;
 
 	// Control where the scene will be drawn.
 	RenderControl* control;

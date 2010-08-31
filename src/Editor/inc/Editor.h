@@ -46,7 +46,7 @@ public:
 	virtual ~EditorFrame();
 	
 	// Refreshes the main view.
-	void RefreshViewport();
+	void redrawView();
 
 	// Gets the engine instance.	
 	GETTER(Engine, Engine* const, engine)
@@ -72,35 +72,53 @@ public:
 	// Gets the toolbar control.
 	GETTER(Toolbar, wxToolBar*, toolBar)
 
+	// Gets the player camera.
+	CameraPtr getPlayerCamera() const;
+
 protected:
 
-	// Initializes the engine and editor.
-	void initEngine();
-	void waitFinishLoad();
-
-	// Creates the layout of the editor.
-	void createNotebook();
+	// Creates the main UI layout.
+	void createUI();
+	void createSplitter();
 	void createMenus();
 	void createToolbar();
+	void createNotebook();
+
+	// Creates the engine instance.
+	void createEngine();
+
+	// Creates the views.
+	void createViews();
+
+	// Creates the editor managers.
+	void createServices();
+
+	// Creates the editor plugins.
 	void createPlugins();
 
-	// Creates the default scenes.
-	void createEditorScene();
+	// Creates the editor scene.
 	void createScene();
-	void createMainViewframe();
+
+	// Creates the default resources.
+	void createResources();
+
+	// Creates a new camera.
 	NodePtr createCamera();
 
-	// Viewframe callbacks.
+	// View callbacks.
 	void onUpdate( double delta );
 	void onRender();
 
-    // wxWidgets events.
+	// Switches the editor to play mode.
+	void switchPlayMode(bool switchToPlay);
+
+    // wxWidgets main events.
 	void OnIdle(wxIdleEvent& event);
     void OnQuit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
 	void OnToolbarButtonClick(wxCommandEvent& event);
 
-	// wxWidgets Input events.
+	// wxWidgets input events.
 	void OnKeyDown(wxKeyEvent& event);
 	void OnKeyUp(wxKeyEvent& event);
 	void OnMouseEvent(wxMouseEvent& event);
@@ -114,12 +132,16 @@ protected:
 	// Input Management.
 	EditorInputManager* inputManager;
 
-	// Manages the plugins.
+	// Plugin Manager.
 	PluginManager* pluginManager;
+	
+	// Plugin Manager Frame.
 	PluginManagerFrame* pluginManagerFrame;
 
-	// Manages the undo/redo operations.
+	// Undo/Redo operations.
 	UndoManager* undoManager;
+
+	// Global Events.
 	Events* eventManager;
 
 	// UI widgets.
@@ -131,7 +153,6 @@ protected:
 
 private:
 
-    // any class wishing to process wxWidgets events must use this macro
     DECLARE_EVENT_TABLE()
 };
 

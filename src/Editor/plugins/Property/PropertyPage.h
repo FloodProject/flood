@@ -46,7 +46,7 @@ public:
 		const wxSize& size = wxDefaultSize );
 
 	// Populates properties on the grid.
-	void showNodeProperties( const NodePtr& );
+	void showNodeProperties( const NodePtr& node );
 
 	// Appends the type fields to the property grid.
 	void appendObjectFields(const Class& type, void* object, bool newCategory = true);
@@ -68,8 +68,14 @@ protected:
 	// Callback when property value changes.
 	void onPropertyChanged(wxPropertyGridEvent& event);
 
+	// Callback when app is idle.
+	void onIdle(wxIdleEvent& event);
+
 	// Current property value.
 	wxAny propertyValue;
+
+	// Selected node.
+	NodeWeakPtr selectedNode;
 
 	// Editor instance.
 	EditorFrame* editor;

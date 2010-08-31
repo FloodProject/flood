@@ -9,6 +9,7 @@
 #include "vapor/PCH.h"
 #include "vapor/render/Window.h"
 #include "vapor/input/Keyboard.h"
+#include "vapor/render/View.h"
 
 #if defined(VAPOR_WINDOWING_WIN32)
 	#include <vapor/render/Win32_Window.h>
@@ -98,10 +99,10 @@ void Window::handleWindowFocus( bool focusLost )
 		// loses focus. This could lead to problems when the user
 		// unfocus the main control. In that case the key events
 		// might not be properly handled by the input implementation.
-		Keyboard* kbd = getInputManager()->getKeyboard();
+		Keyboard* keyboard = getInputManager()->getKeyboard();
 
-		if(kbd)
-			kbd->resetKeys();
+		if(keyboard)
+			keyboard->resetKeys();
 	}
 
 	if( onWindowFocusChange.empty() )

@@ -97,31 +97,24 @@ EditorFrame::EditorFrame(const wxString& title)
 	, eventManager(nullptr)
 	, pluginManagerFrame(nullptr)
 {
-    // Set the editor icon.
-    SetIcon( wxIcon("editor") );
-	
-	// Initialize the engine.
-	initEngine();
-
-	createMenus();
-	createToolbar();
-	createNotebook();
-
-	pluginManager = new PluginManager(this);
-	eventManager = new Events(this);
-	undoManager = new UndoManager();
-
-	createPlugins();
-
+	createUI();
+	createEngine();
+	createViews();
+	createResources();
 	createScene();
-	createEditorScene();
-
+	createServices();
+	createPlugins();
 	toolBar->Realize();
 	SetSizerAndFit( sizer );
 
-	waitFinishLoad();
+	ResourceManager* const rm = engine->getResourceManager();
+	rm->waitUntilQueuedResourcesLoad();
 
-	//SetFocusIgnoringChildren();
+	// Update at least once before rendering.
+	onUpdate( 0 );
+
+	RenderControl* control = viewframe->getControl();
+	control->startFrameLoop();
 }
 
 //-----------------------------------//
@@ -133,7 +126,6 @@ EditorFrame::~EditorFrame()
 	delete undoManager;
 	delete mainSplitter;
 
-	// Stop the frame events.
 	editorScene.reset();
 	delete engine;
 }
@@ -185,19 +177,11 @@ void EditorFrame::createPlugins()
 
 //-----------------------------------//
 
-void EditorFrame::initEngine()
+void EditorFrame::createEngine()
 {
 	engine = Engine::getInstancePtr();
 	engine->create( VAPOR_EDITOR_NAME, nullptr, false );
 	engine->init( false );
-
-	// Create a scene node with editor stuff only.
-	editorScene.reset( new Scene() );
-
-	createMainViewframe();
-
-	RenderDevice* device = engine->getRenderDevice();
-	device->init();
 
 	// Mount the editor default media VFS directories.
 	FileSystem* fs = engine->getFileSystem();
@@ -206,28 +190,9 @@ void EditorFrame::initEngine()
 
 //-----------------------------------//
 
-void EditorFrame::waitFinishLoad()
-{
-	ResourceManager* const rm = engine->getResourceManager();
-	rm->waitUntilQueuedResourcesLoad();
-
-	// Update at least once before rendering.
-	onUpdate( 0 );
-
-	RenderControl* control = viewframe->getControl();
-	control->startFrameLoop();
-}
-
-//-----------------------------------//
-
-void EditorFrame::createMainViewframe()
-{
-	mainSplitter = new wxFourWaySplitter(this);
+void EditorFrame::createViews()
+{	
 	viewframe = new Viewframe( mainSplitter );
-
-	sizer = new wxBoxSizer( wxHORIZONTAL );
-	sizer->Add( mainSplitter, 1, wxEXPAND|wxALL );
-
 	mainSplitter->SetWindow( 0, viewframe );
 	mainSplitter->SetExpanded( viewframe );
 
@@ -245,14 +210,62 @@ void EditorFrame::createMainViewframe()
 	engine->setupInput();
 	inputManager = control->getInputManager();
 
-	NodePtr camera( createCamera() );	
-	editorScene->add( camera );
-
-	View* view = viewframe->createViewport( camera );
+	View* view = viewframe->createView();
 	view->setClearColor( Color(0.0f, 0.10f, 0.25f) );
 
-	TransformPtr transform( camera->getTransform() );
-	transform->translate( 0, 20, -65 );
+	engine->getRenderDevice()->init();
+	engine->getPhysicsManager()->createWorld();
+}
+
+//-----------------------------------//
+
+void EditorFrame::createScene()
+{
+	// Create a scene node with editor stuff only.
+	editorScene.reset( new Scene() );
+	
+	// Create a nice grid for the editor.
+	NodePtr nodeGrid( new Node("Grid") );
+	nodeGrid->addTransform();
+	nodeGrid->addComponent( GridPtr( new Grid() ) );
+	nodeGrid->setTag( Tags::NonPickable, true );
+	editorScene->add( nodeGrid );
+
+	NodePtr nodeCamera( createCamera() );
+	nodeCamera->getTransform()->translate( 0, 20, -65 );
+	editorScene->add( nodeCamera );
+
+	CameraPtr camera = nodeCamera->getComponent<Camera>();
+
+	viewframe->setMainCamera(camera);
+	viewframe->switchToDefaultCamera();
+}
+
+//-----------------------------------//
+
+void EditorFrame::createResources()
+{
+	ResourceManager* const rm = engine->getResourceManager();
+
+	rm->loadResource("Diffuse.glsl");
+	rm->loadResource("Tex.glsl");
+	rm->loadResource("Toon.glsl");
+	rm->loadResource("Tex_Toon.glsl");
+	rm->loadResource("Tex_Toon_Skin.glsl");
+	rm->loadResource("Sky.glsl");
+	rm->loadResource("Water.glsl");
+	rm->loadResource("ProjTex.glsl");
+}
+
+//-----------------------------------//
+
+void EditorFrame::createServices()
+{
+	pluginManager = new PluginManager(this);
+	
+	eventManager = new Events(this);
+	
+	undoManager = new UndoManager();
 }
 
 //-----------------------------------//
@@ -266,8 +279,9 @@ NodePtr EditorFrame::createCamera()
 	
 	// Create a new first-person camera for our view.
 	// By default it will be in perspective projection.
-	CameraPtr camera( new FirstPersonCamera(device) );
-	
+	CameraPtr camera( new Camera(device) );
+	ComponentPtr cameraController( new FirstPersonController() );
+
 	Frustum& frustum = camera->getFrustum();
 	frustum.farPlane = 10000;
 
@@ -277,6 +291,7 @@ NodePtr EditorFrame::createCamera()
 	NodePtr nodeCamera( new Node(name) );
 	nodeCamera->addTransform();
 	nodeCamera->addComponent( camera );
+	nodeCamera->addComponent( cameraController );
 	nodeCamera->setTag( Tags::NonPickable, true );
 	nodeCamera->setTag( EditorTags::EditorOnly, true );
 
@@ -285,15 +300,25 @@ NodePtr EditorFrame::createCamera()
 
 //-----------------------------------//
 
-void EditorFrame::createNotebook()
+void EditorFrame::createUI()
 {
-	const wxSize notebookMinSize(220, wxSIZE_AUTO_HEIGHT);
-	notebookCtrl = new wxNotebook( this, wxID_ANY );
-	notebookCtrl->SetMinSize(notebookMinSize);
-	sizer->Add(notebookCtrl, 0, wxALL|wxEXPAND, 0 );
+    SetIcon( wxIcon("editor") );
 
-	wxImageList* img = new wxImageList(16, 16);
-	notebookCtrl->AssignImageList( img );
+	// Creates the main sizer.
+	sizer = new wxBoxSizer( wxHORIZONTAL );
+
+	createSplitter();
+	createMenus();
+	createToolbar();
+	createNotebook();
+}
+
+//-----------------------------------//
+
+void EditorFrame::createSplitter()
+{
+	mainSplitter = new wxFourWaySplitter(this);
+	sizer->Add( mainSplitter, 1, wxEXPAND|wxALL );
 }
 
 //-----------------------------------//
@@ -340,10 +365,6 @@ void EditorFrame::createToolbar()
 	toolBar->AddTool( Toolbar_TooglePlay, "Play", wxMEMORY_BITMAP(resultset_next), 
 		"Enable/disable Play mode", wxITEM_CHECK );
 
-	// --------------
-	// UI tools
-	// --------------
-
 	toolBar->AddSeparator();
 
 	toolBar->AddTool( Toolbar_ToogleViewport, "Toogles maximize view", 
@@ -354,6 +375,226 @@ void EditorFrame::createToolbar()
 
 	toolBar->AddTool( Toolbar_TooglePlugin, "Shows/hides the plugin manager", 
 		wxMEMORY_BITMAP(page_white_text), "Shows/hides the plugin manager" );
+}
+
+//-----------------------------------//
+
+void EditorFrame::createNotebook()
+{
+	const wxSize notebookMinSize(220, wxSIZE_AUTO_HEIGHT);
+	notebookCtrl = new wxNotebook( this, wxID_ANY );
+	notebookCtrl->SetMinSize(notebookMinSize);
+	sizer->Add(notebookCtrl, 0, wxALL|wxEXPAND, 0 );
+
+	wxImageList* img = new wxImageList(16, 16);
+	notebookCtrl->AssignImageList( img );
+}
+
+//-----------------------------------//
+
+void EditorFrame::redrawView()
+{
+	if( !viewframe )
+		return;
+
+	viewframe->flagRedraw();
+}
+
+//-----------------------------------//
+
+void EditorFrame::onRender()
+{
+	View* view = viewframe->getView();
+	const CameraPtr& camera = view->getCamera();
+
+	if( !camera )
+		viewframe->switchToDefaultCamera();
+
+	#pragma TODO("Renderables need to be sent in a single queue")
+
+	camera->setView( view );
+	camera->render( engine->getSceneManager() );
+	camera->render( editorScene, false );
+
+	PhysicsManager* physics = engine->getPhysicsManager();
+	physics->drawDebugWorld();
+}
+
+//-----------------------------------//
+
+void EditorFrame::onUpdate( double delta )
+{
+	engine->update( delta );
+	editorScene->update( delta );
+	//eventManager->onSceneUpdate();
+}
+
+//-----------------------------------//
+
+CameraPtr EditorFrame::getPlayerCamera() const
+{
+	ScenePtr scene = engine->getSceneManager();
+	CameraPtr camera;
+
+	foreach( const NodePtr& node, scene->getChildren() )
+	{
+		camera = node->getComponent<Camera>();
+
+		if( camera )
+			break;
+	}
+
+	return camera;
+}
+		
+//-----------------------------------//
+
+void EditorFrame::switchPlayMode(bool switchToPlay)
+{
+	CameraPtr camera = getPlayerCamera();
+
+	NodePtr nodeCamera = camera->getNode();
+	ControllerPtr controller = nodeCamera->getTypedComponent<Controller>();
+
+	if( switchToPlay )
+	{
+		// Change the active camera.
+		View* view = viewframe->getView();
+
+		if( controller )
+			controller->setEnabled(true);
+
+		if( camera )
+			view->setCamera(camera);
+	}
+	else
+	{
+		if( controller )
+			controller->setEnabled(false);
+
+		viewframe->switchToDefaultCamera();
+	}
+
+	// Toogle the physics simulation state.
+	PhysicsManager* physics = engine->getPhysicsManager();
+	
+	if( physics )
+		physics->setSimulation( switchToPlay );
+}
+
+//-----------------------------------//
+
+void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
+{
+	const int id = event.GetId();
+
+	switch(id) 
+	{
+	//-----------------------------------//
+	case Toolbar_TooglePlugin:
+	{
+		pluginManagerFrame->Show( !pluginManagerFrame->IsShown() );
+		pluginManagerFrame->SetFocus();
+		
+		break;
+	}
+	//-----------------------------------//
+	case Toolbar_ToogleGrid:
+	{
+		const NodePtr& grid = editorScene->getEntity( "Grid" );
+		
+		if( grid )
+			grid->setVisible( !grid->isVisible() );
+		
+		redrawView();
+		
+		break;
+	}
+	//-----------------------------------//
+	case Toolbar_TooglePhysicsDebug:
+	{
+		Engine* engine = Engine::getInstancePtr();
+		PhysicsManager* physics = engine->getPhysicsManager();
+		
+		if( physics )
+			physics->setDebugWorld( !physics->getDebugWorld() );
+		
+		redrawView();
+		
+		break;
+	}
+	//-----------------------------------//
+	case Toolbar_TooglePlay:
+	{
+		bool switchToPlay = event.IsChecked();
+		switchPlayMode(switchToPlay);
+
+		break;
+	}
+	//-----------------------------------//
+	case Toolbar_ToogleViewport:
+	{
+		int curExpansion = mainSplitter->GetExpanded();
+
+		if( curExpansion >= 0 )
+			mainSplitter->SetExpanded(-1);
+		else
+			mainSplitter->SetExpanded(0);
+
+		break;
+	}
+	//-----------------------------------//
+	case Toolbar_ToogleSidebar:
+	{
+		wxSize newSize = viewframe->GetClientSize();
+		const wxSize& nbSize = notebookCtrl->GetClientSize();
+
+		if( notebookCtrl->IsShown() )
+		{
+			notebookCtrl->Hide();
+		}
+		else
+		{
+			notebookCtrl->Show();
+			newSize.SetWidth( newSize.GetWidth() + nbSize.GetWidth() );
+		}
+
+		SetClientSize( newSize );
+		Layout();
+
+		break;
+	}
+	//-----------------------------------//
+	} // end switch
+}
+
+//-----------------------------------//
+
+void EditorFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
+{
+    // true forces the frame to close.
+    Close(true);
+}
+
+//-----------------------------------//
+
+void EditorFrame::OnKeyDown(wxKeyEvent& event)
+{
+	inputManager->processKeyEvent(event, true);
+}
+
+//-----------------------------------//
+
+void EditorFrame::OnKeyUp(wxKeyEvent& event)
+{
+	inputManager->processKeyEvent(event, false);
+}
+
+//-----------------------------------//
+
+void EditorFrame::OnMouseEvent(wxMouseEvent& event)
+{
+	inputManager->processMouseEvent(event);
 }
 
 //-----------------------------------//
@@ -410,200 +651,6 @@ void EditorFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 	bSizer1->Fit( about );
 
 	about->Show(true);
-}
-
-//-----------------------------------//
-// Event handlers
-//-----------------------------------//
-
-void EditorFrame::RefreshViewport()
-{
-	if( viewframe )
-		viewframe->flagRedraw();
-}
-
-//-----------------------------------//
-
-void EditorFrame::onRender()
-{
-	View* view = viewframe->getView();
-	const CameraPtr& camera = view->getCamera();
-	
-	#pragma TODO("Renderables need to be sent in a single queue")
-
-	camera->setView( view );
-	camera->render( engine->getSceneManager() );
-	camera->render( editorScene, false );
-
-	PhysicsManager* physics = engine->getPhysicsManager();
-	physics->drawDebugWorld();
-}
-
-//-----------------------------------//
-
-void EditorFrame::onUpdate( double delta )
-{
-	engine->update( delta );
-	editorScene->update( delta );
-	//eventManager->onSceneUpdate();
-}
-
-//-----------------------------------//
-
-void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
-{
-	const int id = event.GetId();
-
-	switch(id) 
-	{
-	//-----------------------------------//
-	case Toolbar_TooglePlugin:
-	{
-		pluginManagerFrame->Show( !pluginManagerFrame->IsShown() );
-		pluginManagerFrame->SetFocus();
-		
-		break;
-	}
-	//-----------------------------------//
-	case Toolbar_ToogleGrid:
-	{
-		const NodePtr& grid = editorScene->getEntity( "Grid" );
-		
-		if( grid )
-			grid->setVisible( !grid->isVisible() );
-		
-		RefreshViewport();
-		
-		break;
-	}
-	//-----------------------------------//
-	case Toolbar_TooglePhysicsDebug:
-	{
-		Engine* engine = Engine::getInstancePtr();
-		PhysicsManager* physics = engine->getPhysicsManager();
-		
-		if( physics )
-			physics->setDebugWorld( !physics->getDebugWorld() );
-		
-		RefreshViewport();
-		
-		break;
-	}
-	//-----------------------------------//
-	case Toolbar_TooglePlay:
-	{
-		// Toogle the simulation state.
-		PhysicsManager* physics = engine->getPhysicsManager();
-		
-		if( physics )
-		{
-			bool state = physics->getSimulation();
-			physics->setSimulation( !state );
-		}
-		
-		break;
-	}
-	//-----------------------------------//
-	case Toolbar_ToogleViewport:
-	{
-		int curExpansion = mainSplitter->GetExpanded();
-
-		if( curExpansion >= 0 )
-			mainSplitter->SetExpanded(-1);
-		else
-			mainSplitter->SetExpanded(0);
-
-		break;
-	}
-	//-----------------------------------//
-	case Toolbar_ToogleSidebar:
-	{
-		wxSize newSize = viewframe->GetClientSize();
-		const wxSize& nbSize = notebookCtrl->GetClientSize();
-
-		if( notebookCtrl->IsShown() )
-		{
-			notebookCtrl->Hide();
-		}
-		else
-		{
-			notebookCtrl->Show();
-			newSize.SetWidth( newSize.GetWidth() + nbSize.GetWidth() );
-		}
-
-		SetClientSize( newSize );
-		Layout();
-
-		break;
-	}
-	//-----------------------------------//
-	} // end switch
-}
-
-//-----------------------------------//
-
-void EditorFrame::createEditorScene()
-{
-	// Create a nice grid for the editor.
-	NodePtr grid( new Node("Grid") );
-	grid->addTransform();
-	grid->addComponent( GridPtr( new Grid() ) );
-	grid->setTag( Tags::NonPickable, true );
-	editorScene->add( grid );
-}
-
-//-----------------------------------//
-
-void EditorFrame::createScene()
-{
-	PhysicsManager* physics = engine->getPhysicsManager();
-	physics->createWorld();
-
-	const ScenePtr& scene = engine->getSceneManager();
-	ResourceManager* const rm = engine->getResourceManager();
-
-	rm->loadResource("Diffuse.glsl");
-	rm->loadResource("Tex.glsl");
-	rm->loadResource("Toon.glsl");
-	rm->loadResource("Tex_Toon.glsl");
-	rm->loadResource("Tex_Toon_Skin.glsl");
-	rm->loadResource("Sky.glsl");
-	rm->loadResource("Water.glsl");
-	rm->loadResource("ProjTex.glsl");
-
-	// Wait until all resources are loaded.
-	rm->waitUntilQueuedResourcesLoad();
-
-	engine->update( 0.1f );
-}
-
-//-----------------------------------//
-
-void EditorFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
-{
-    // true forces the frame to close.
-    Close(true);
-}
-
-//-----------------------------------//
-
-void EditorFrame::OnKeyDown(wxKeyEvent& event)
-{
-	inputManager->processKeyEvent(event, true);
-}
-
-//-----------------------------------//
-
-void EditorFrame::OnKeyUp(wxKeyEvent& event)
-{
-	inputManager->processKeyEvent(event, false);
-}
-
-//-----------------------------------//
-
-void EditorFrame::OnMouseEvent(wxMouseEvent& event)
-{
-	inputManager->processMouseEvent(event);
 }
 
 //-----------------------------------//

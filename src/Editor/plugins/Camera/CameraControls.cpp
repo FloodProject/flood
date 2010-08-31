@@ -70,12 +70,17 @@ void CameraControls::onCameraSpeedSpin( wxSpinDoubleEvent& event )
 	double value = event.GetValue();
 
 	View* view = viewframe->getView();
+	
 	CameraPtr camera( view->getCamera() );
+	assert( camera != nullptr );
+
+	NodePtr nodeCamera = camera->getNode();
+	assert( nodeCamera != nullptr );
+
+	CameraControllerPtr cameraController =
+		nodeCamera->getTypedComponent<CameraController>();
 	
-	FirstPersonCameraPtr firstPersonCamera =
-		std::static_pointer_cast<FirstPersonCamera>(camera);
-	
-	firstPersonCamera->setMoveSensivity( value );
+	cameraController->setMoveSensivity( value );
 }
 
 //-----------------------------------//
@@ -83,12 +88,17 @@ void CameraControls::onCameraSpeedSpin( wxSpinDoubleEvent& event )
 void CameraControls::updateCameraSpeedSpin()
 {
 	View* view = viewframe->getView();
+	
 	CameraPtr camera( view->getCamera() );
+	assert( camera != nullptr );
 
-	FirstPersonCameraPtr firstPersonCamera =
-		std::static_pointer_cast<FirstPersonCamera>(camera);
+	NodePtr nodeCamera = camera->getNode();
+	assert( nodeCamera != nullptr );
 
-	double cameraMoveSensivity = firstPersonCamera->getMoveSensivity();
+	CameraControllerPtr cameraController =
+		nodeCamera->getTypedComponent<CameraController>();
+
+	double cameraMoveSensivity = cameraController->getMoveSensivity();
 	
 	assert( spinCameraSpeed != nullptr );
 	spinCameraSpeed->SetValue( cameraMoveSensivity );

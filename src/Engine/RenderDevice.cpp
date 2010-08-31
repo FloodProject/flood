@@ -17,6 +17,7 @@
 #include "vapor/render/TextureManager.h"
 #include "vapor/render/ProgramManager.h"
 #include "vapor/render/Window.h"
+#include "vapor/render/View.h"
 
 #include "vapor/scene/Camera.h"
 #include "vapor/scene/Node.h"

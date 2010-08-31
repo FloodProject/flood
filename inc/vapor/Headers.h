@@ -46,7 +46,6 @@
 #include <vapor/scene/Group.h>
 #include <vapor/scene/Scene.h>
 #include <vapor/scene/Camera.h>
-#include <vapor/scene/FirstPersonCamera.h>
 #include <vapor/scene/Sound.h>
 #include <vapor/scene/Listener.h>
 #include <vapor/scene/Geometry.h>
@@ -62,6 +61,7 @@
 // Render-related Includes
 //---------------------------------------------------------------------//
 
+#include <vapor/render/Device.h>
 #include <vapor/render/View.h>
 #include <vapor/render/Target.h>
 #include <vapor/render/VertexBuffer.h>
@@ -75,6 +75,12 @@
 #include <vapor/render/FBO.h>
 #include <vapor/render/FrameStatistics.h>
 #include <vapor/render/DebugGeometry.h>
+
+//---------------------------------------------------------------------//
+// Controller-related Includes
+//---------------------------------------------------------------------//
+
+#include <vapor/controllers/FirstPersonController.h>
 
 //---------------------------------------------------------------------//
 // Animation-related Includes

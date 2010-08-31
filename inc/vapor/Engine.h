@@ -102,7 +102,7 @@ public:
 	GETTER(FileSystem, FileSystem*, fileSystem)
 
 	// Gets the input manager.
-	InputManager* const getInputManager() const;
+	InputManager* getInputManager() const;
 
 	// Updates the main subsystems.
 	void update( double delta );

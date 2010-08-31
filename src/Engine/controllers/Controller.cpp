@@ -7,36 +7,25 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/render/Target.h"
-#include "vapor/render/View.h"
+#include "vapor/controllers/Controller.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-RenderTarget::~RenderTarget()
-{
-	foreach( const View* view, views )
-		delete view;
-}
+BEGIN_CLASS_PARENT_ABSTRACT(Controller, Component)
+	FIELD_PRIMITIVE(Controller, bool, enabled)
+END_CLASS()
 
 //-----------------------------------//
 
-View* RenderTarget::createView()
-{
-	View* view = new View();
-	view->setRenderTarget(this);
-
-	views.push_back( view );
-	return view;
-}
+Controller::Controller()
+{ }
 
 //-----------------------------------//
 
-Vector2i Settings::getSize() const
-{
-	return Vector2i(width, height);
-}
+Controller::~Controller()
+{ }
 
 //-----------------------------------//
 

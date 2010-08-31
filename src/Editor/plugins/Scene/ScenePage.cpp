@@ -59,7 +59,7 @@ static ComponentEntry components[] = {
 	{ true, TYPE(Transform),			BMP(chart_line) },
 	{ true, TYPE(Model),				BMP(shape_flip_horizontal) },
 	{ true, TYPE(Camera),				BMP(camera) },
-	{ true, TYPE(FirstPersonCamera),	BMP(camera) },
+	{ true, TYPE(FirstPersonController),	BMP(camera) },
 	{ true, TYPE(Light),				BMP(lightbulb_off) },
 	//{ true, TYPE(Sound),				BMP(sound) },
 	//{ true, TYPE(Listener),			BMP(status_online) },
@@ -256,7 +256,7 @@ void ScenePage::addComponent( wxTreeItemId id, ComponentPtr component )
 
 	treeCtrl->SetItemData( ch, data );
 
-	editor->RefreshViewport();
+	editor->redrawView();
 }
 
 //-----------------------------------//
@@ -357,7 +357,7 @@ void ScenePage::onButtonNodeDelete(wxCommandEvent&)
 	treeCtrl->Delete(id);
 	weakScene.lock()->remove( node );
 
-	editor->RefreshViewport();
+	editor->redrawView();
 }
 
 //-----------------------------------//
@@ -553,7 +553,7 @@ void ScenePage::onNodeMenu( wxCommandEvent& event )
 		onComponentAdd( event );
 	}
 
-	editor->RefreshViewport();
+	editor->redrawView();
 }
 
 //-----------------------------------//
