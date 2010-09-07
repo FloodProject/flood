@@ -22,12 +22,12 @@ namespace vapor {
 static const float EXTRA_SPACE = 1.01f;
 
 #define ADD_BOX_FACE( a, b, c, d )						\
-	pos.push_back( aabb.getCorner(a) * EXTRA_SPACE );	\
-	pos.push_back( aabb.getCorner(b) * EXTRA_SPACE );	\
-	pos.push_back( aabb.getCorner(c) * EXTRA_SPACE );	\
-	pos.push_back( aabb.getCorner(d) * EXTRA_SPACE );
+	pos.push_back( box.getCorner(a) * EXTRA_SPACE );	\
+	pos.push_back( box.getCorner(b) * EXTRA_SPACE );	\
+	pos.push_back( box.getCorner(c) * EXTRA_SPACE );	\
+	pos.push_back( box.getCorner(d) * EXTRA_SPACE );
 
-RenderablePtr buildBoundingRenderable( const AABB& aabb )
+RenderablePtr buildBoundingRenderable( const BoundingBox& box )
 {
 	std::vector<Vector3> pos;
 	ADD_BOX_FACE( 0, 2, 3, 1 ) // Front

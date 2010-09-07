@@ -8,6 +8,10 @@
 
 #pragma once
 
+#ifndef VAPOR_PLATFORM_WINDOWS
+	#include <sys/time.h>
+#endif
+
 namespace vapor {
 
 //-----------------------------------//
@@ -15,7 +19,7 @@ namespace vapor {
 #ifdef VAPOR_PLATFORM_WINDOWS
 	typedef int64 ticks_t;
 #else
-	#error "Implementation is missing"
+	typedef timeval ticks_t;
 #endif
 
 //-----------------------------------//

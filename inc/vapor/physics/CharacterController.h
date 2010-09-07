@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "vapor/scene/Component.h"
+#include "vapor/controllers/Controller.h"
 
 class btKinematicController;
 class btPairCachingGhostObject;
@@ -17,7 +17,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-class VAPOR_API CharacterController : public Component
+class VAPOR_API CharacterController : public Controller
 {
 	DECLARE_CLASS_()
 

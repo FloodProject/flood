@@ -67,8 +67,6 @@ protected:
 	bool supportsAnisotropic;
 };
 
-TYPEDEF_PTR(Adapter)
-
 //-----------------------------------//
 
 } // end namespace

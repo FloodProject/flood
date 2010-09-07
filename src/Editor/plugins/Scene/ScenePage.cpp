@@ -13,6 +13,8 @@
 #include "EditorIcons.h"
 #include "Viewframe.h"
 
+#include "vapor/controllers/ThirdPersonController.h"
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//
@@ -58,22 +60,23 @@ struct ComponentEntry
 static ComponentEntry components[] = {
 	{ true, TYPE(Transform),			BMP(chart_line) },
 	{ true, TYPE(Model),				BMP(shape_flip_horizontal) },
-	{ true, TYPE(Camera),				BMP(camera) },
-	{ true, TYPE(FirstPersonController),	BMP(camera) },
 	{ true, TYPE(Light),				BMP(lightbulb_off) },
+	{ true, TYPE(Terrain),				BMP(world) },
+	{ true, TYPE(Skydome),				BMP(skydome) },
+	{ true, TYPE(Camera),				BMP(camera) },
 	//{ true, TYPE(Sound),				BMP(sound) },
 	//{ true, TYPE(Listener),			BMP(status_online) },
-	{ true, TYPE(Terrain),				BMP(world) },
 	{ true, TYPE(Grid),					BMP(grid_icon_white_bg) },
 	{ true, TYPE(Geometry),				BMP(shape_flip_horizontal) },
-	{ true, TYPE(MeshShape),			BMP(link) },
+	{ true, TYPE(Behaviour),			BMP(shape_flip_horizontal) },
+	{ true, TYPE(CharacterController),	BMP(link) },
+	{ true, TYPE(FirstPersonController),BMP(camera) },
+	{ true, TYPE(ThirdPersonController),BMP(camera) },
 	{ true, TYPE(BoxShape),				BMP(link) },
+	{ true, TYPE(MeshShape),			BMP(link) },
 	{ true, TYPE(CapsuleShape),			BMP(link) },
 	{ true, TYPE(Body),					BMP(link) },
-	{ true, TYPE(CharacterController),	BMP(link) },
-	{ true, TYPE(Skydome),				BMP(skydome) },
-	//{ true, TYPE(Gizmo),				BMP(vector_icon) },
-	{ false, TYPE(Scene),				BMP(sitemap_color) }
+	{ false,TYPE(Scene),				BMP(sitemap_color) }
 };
 
 static std::map<const Type*, wxBitmap> bitmaps;

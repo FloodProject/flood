@@ -22,28 +22,32 @@ public:
 		const wxSize& size = wxDefaultSize, 
 		long style = 0 | wxTE_MULTILINE | wxTE_NOHIDESEL | wxTE_RICH2 );
 
-	virtual ~ConsoleTextCtrl() { }
+	virtual ~ConsoleTextCtrl();
+
+	// Appends a line of text with a given text attribute.
+	void AppendTextColor( const wxString& text, const wxTextAttr& attr );
+
+	// Writes a new prompt line on the console.
+	void NewPromptLine();
+
+	// Overrides the Lua 'print' function.
+	int luaPrint(lua_State* L);
 
 protected:
 
 	// Initializes the control.
 	void InitControl();
 
-	void OnEnter(/*wxCommandEvent& event*/);
+	// Event handlers.
+	void OnEnter();
 	void OnKeyDown(wxKeyEvent& event);
 	void OnSetFocus(wxFocusEvent& event);
 
-	void AppendTextColor( const wxString& text, const wxTextAttr& attr );
-
-	void NewPromptLine();
-
-	// Holds an instance of the input manager.
+	// Holds an instance of the scripting state.
 	State* luaState;
 
 	// Holds an instance to the vaporEngine.
-	vapor::Engine* engine;
-
-	DECLARE_EVENT_TABLE()
+	Engine* engine;
 };
 
 //-----------------------------------//

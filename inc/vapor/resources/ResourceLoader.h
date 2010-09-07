@@ -50,8 +50,6 @@ public:
 	virtual ResourceGroup::Enum getResourceGroup() const = 0;
 };
 
-TYPEDEF_PTR(ResourceLoader)
-
 //-----------------------------------//
 
 } // end namespace

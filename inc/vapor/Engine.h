@@ -39,7 +39,10 @@ class State;
  * a class like this one that instantiates everything and sets it all up.
  */
 
-class VAPOR_API Engine : public Singleton<Engine>
+class Engine;
+typedef Singleton<Engine> SingletonEngine;
+
+class VAPOR_API Engine : public SingletonEngine
 {
 	friend class Singleton<Engine>;
 
@@ -61,9 +64,6 @@ public:
 
 	// Sets up the global engine logger.
 	void setupLogger();
-
-	// Sets up the resource manager.
-	void setupResourceManager();
 
 	// Sets up the default resource codecs.
 	void setupResourceLoaders();

@@ -59,7 +59,7 @@ public:
 	virtual void onRender();
 
 	// Gets the bounding volume of this geometry.
-	GETTER(BoundingVolume, const AABB&, boundingVolume)
+	GETTER(BoundingVolume, const BoundingBox&, boundingVolume)
 
 	// Marks the geometry as dirty (forces bounding volume update).
 	void markDirty();
@@ -70,7 +70,7 @@ protected:
 	void notifiesTransform();
 
 	// Bounding volume of the geometry.
-	AABB boundingVolume;
+	BoundingBox boundingVolume;
 
 	// Keeps track if geometry has changed.
 	bool isDirty;

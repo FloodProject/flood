@@ -19,7 +19,7 @@ namespace vapor {
  * Attribute of a vertex element.
  */
 
-namespace VertexAttribute
+struct VertexAttribute
 {
 	enum Enum
 	{
@@ -37,7 +37,7 @@ namespace VertexAttribute
 		TexCoord6,
 		TexCoord7,
 	};
-}
+};
 
 //-----------------------------------//
 

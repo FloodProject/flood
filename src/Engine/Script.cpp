@@ -8,8 +8,6 @@
 
 #include "vapor/PCH.h"
 
-//#ifdef VAPOR_SCRIPTING_LUA
-
 #include "vapor/script/Script.h"
 #include "vapor/script/State.h"
 
@@ -17,13 +15,14 @@ namespace vapor {
 
 //-----------------------------------//
 
-void Script::execute()
-{
-	state->execute( this );
-}
+//void Script::execute()
+//{
+//	if( !state )
+//		return;
+//
+//	state->execute( this );
+//}
 
 //-----------------------------------//
 
 } // end namespace
-
-//#endif

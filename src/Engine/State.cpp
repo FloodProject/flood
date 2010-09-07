@@ -8,22 +8,16 @@
 
 #include "vapor/PCH.h"
 
-//#ifdef VAPOR_SCRIPTING_LUA
+#ifdef VAPOR_SCRIPTING_LUA
 
 #include "vapor/script/State.h"
-
 #include <lua.hpp>
 
 namespace vapor {
 
 //-----------------------------------//
 
-// Forward declaration. This function is on another file (Bindings.cpp).
-void bindEngine( lua_State* luaState, Engine* engine );
-
-//-----------------------------------//
-
-int handle_error( lua_State* L )
+static int handleLuaError( lua_State* L )
 {
 	// We will ask Lua some more information about the error.
 	// This is the structure where Lua will return it to us.
@@ -59,27 +53,22 @@ int handle_error( lua_State* L )
 
 State::State()
 {
-	// Create a new Lua VM instance (called a state in Lua terminology).
-	// It calls lua_newstate with an allocator based on the standard C 
-	// realloc function and then sets a panic function (see lua_atpanic)
-	// that prints an error message to the standard error output in case
-	// of fatal errors. 
+	// Create a new Lua VM instance.
 	luaState = luaL_newstate();
 
 	// Check for proper initialization of the Lua state.
-	if( luaState != nullptr )
-		info( "lua", "Initialized %s", LUA_RELEASE );
-	else
+	if( !luaState )
+	{
 		error( "lua", "Error initializing %s", LUA_RELEASE );
+		return;
+	}
+
+	lua_atpanic( luaState, &handleLuaError );
 
 	// Initialize the standard libraries (we want to disallow I/O though).
 	luaL_openlibs( luaState );
 
-	// Pass the newly created Lua state to Luabind.
-	//luabind::open( luaState );
-
-	// Set our own error handling function for Luabind.
-	//luabind::set_pcall_callback( &handle_error );
+	info( "lua", "Initialized %s", LUA_RELEASE );
 }
 
 //-----------------------------------//
@@ -91,25 +80,14 @@ State::~State()
 	scripts.clear();
 
 	// Clean up the Lua state.
-	//lua_close( luaState );
+	lua_close( luaState );
 }
 
 //-----------------------------------//
 
 bool State::execute( const ScriptPtr& script )
 {
-	// From the Lua C API docs:
-	//	"It returns 0 if there are no errors or 1 in case of errors."
-	int status = luaL_dofile( luaState, script->getPath().c_str() );
-
-	if( status == 1 )
-	{
-		// An error has occured so we need to handle it.
-		handleError();
-		return false;
-	}
-
-	return true;
+	return execute( script->getSource() );
 }
 
 //-----------------------------------//
@@ -131,16 +109,6 @@ bool State::execute( const std::string& source )
 
 //-----------------------------------//
 
-void State::bind( Engine* const engine )
-{
-#ifdef VAPOR_SCRIPTING_LUA
-	// Binds all the engine API to Lua.
-	bindEngine( luaState, engine );
-#endif
-}
-
-//-----------------------------------//
-
 void State::handleError()
 {
 	// This will be called when you call a Lua function and it errors.
@@ -156,7 +124,7 @@ void State::handleError()
 void State::registerScript( const ScriptPtr& script )
 {
 	// Check if the script is already in the database.
-	scriptsIterator it = std::find( scripts.begin(), scripts.end(), script );
+	ScriptsIterator it = std::find( scripts.begin(), scripts.end(), script );
 
 	// If it was not found...
 	if( it == scripts.end() )
@@ -165,7 +133,7 @@ void State::registerScript( const ScriptPtr& script )
 		scripts.push_back( script );
 
 		// Additionaly set the script's state.
-		script->setState( this );
+		//script->setState( this );
 	}
 }
 
@@ -173,15 +141,15 @@ void State::registerScript( const ScriptPtr& script )
 
 void State::update( float deltaTime )
 {
-	// Execute all scripts.
-	foreach( const ScriptPtr& script, scripts )
-	{
-		script->execute();
-	}
+	//// Execute all scripts.
+	//foreach( const ScriptPtr& script, scripts )
+	//{
+	//	script->execute();
+	//}
 }
 
 //-----------------------------------//
 
 } // end namespace
 
-//#endif
+#endif

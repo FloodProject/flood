@@ -1,6 +1,8 @@
 -- Print a debug message
 -- log.debug("hello from lua ")
 
+debug('hello from lua')
+
 -- Transform a bit the grid entity
 -- grid = Scene:GetEntity("EditorGrid")
 -- transform = grid:GetTransform()

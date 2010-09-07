@@ -57,7 +57,7 @@ TexturePtr TextureManager::getTexture( const ImagePtr& img )
 	// Image not found.
 	if( !img ) 
 	{
-		warn( "render", "Reverting to fallback texture" );
+		//warn( "render", "Reverting to fallback texture" );
 		return TexturePtr( new Texture( Settings(TEX_SIZE, TEX_SIZE) ) );
 	}
 

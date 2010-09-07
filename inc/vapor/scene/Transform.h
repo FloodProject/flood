@@ -86,10 +86,10 @@ public:
 	Vector3 getWorldPosition() const;
 
 	// Gets the bounding volume of the transform.
-	GETTER(BoundingVolume, const AABB&, boundingVolume)
+	GETTER(BoundingVolume, const BoundingBox&, boundingVolume)
 
 	// Gets the world bounding volume of the transform.
-	AABB getWorldBoundingVolume() const;
+	BoundingBox getWorldBoundingVolume() const;
 
 	// Updates the bounding volume geometry.
 	void updateBoundingVolume();
@@ -143,7 +143,7 @@ protected:
 	bool needsVolumeUpdate;
 
 	// Bounding volume of the renderables.
-	AABB boundingVolume;
+	BoundingBox boundingVolume;
 
 	// Geometry of the bounding volume.
 	RenderablePtr boundingVolumeRenderable;

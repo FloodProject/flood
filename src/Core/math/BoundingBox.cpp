@@ -14,28 +14,28 @@ namespace vapor {
 
 //-----------------------------------//
 
-AABB::AABB()
+BoundingBox::BoundingBox()
 	: min( Limits::FloatMaximum )
 	, max( Limits::FloatMinimum )
 { }
 
 //-----------------------------------//
 
-AABB::AABB( const Vector3& min, const Vector3& max )
+BoundingBox::BoundingBox( const Vector3& min, const Vector3& max )
 	: min( min )
 	, max( max )
 { }
 
 //-----------------------------------//
 
-AABB::AABB( const AABB& box )
+BoundingBox::BoundingBox( const BoundingBox& box )
 	: min( box.min )
 	, max( box.max )
 { }
 
 //-----------------------------------//
 
-Vector3 AABB::getCorner( int i ) const
+Vector3 BoundingBox::getCorner( int i ) const
 {
 	assert(i >= 0 && i <= 7);
 
@@ -47,14 +47,14 @@ Vector3 AABB::getCorner( int i ) const
 
 //-----------------------------------//
 
-Vector3 AABB::getCenter() const
+Vector3 BoundingBox::getCenter() const
 {
 	return (min + max) * 0.5;
 }
 
 //-----------------------------------//
 
-void AABB::reset()
+void BoundingBox::reset()
 {
 	min = Limits::FloatMaximum;
 	max = Limits::FloatMinimum;
@@ -62,7 +62,7 @@ void AABB::reset()
 
 //-----------------------------------//
 
-void AABB::add( const Vector3& v )
+void BoundingBox::add( const Vector3& v )
 {
 	min.x = std::min(min.x, v.x);
 	min.y = std::min(min.y, v.y);
@@ -71,36 +71,29 @@ void AABB::add( const Vector3& v )
 	max.x = std::max(max.x, v.x);
 	max.y = std::max(max.y, v.y);
 	max.z = std::max(max.z, v.z);
-
-	//if( v.x < min.x ) min.x = v.x;
-	//if( v.x > max.x ) max.x = v.x;
-	//if( v.y < min.y ) min.y = v.y;
-	//if( v.y > max.y ) max.y = v.y;
-	//if( v.z < min.z ) min.z = v.z;
-	//if( v.z > max.z ) max.z = v.z;
 }
 
 //-----------------------------------//
 
-void AABB::add( const AABB& aabb )
+void BoundingBox::add( const BoundingBox& box )
 {
-	if( aabb.min.x < min.x ) min.x = aabb.min.x;
-	if( aabb.max.x > max.x ) max.x = aabb.max.x;
-	if( aabb.min.y < min.y ) min.y = aabb.min.y;
-	if( aabb.max.y > max.y ) max.y = aabb.max.y;
-	if( aabb.min.z < min.z ) min.z = aabb.min.z;
-	if( aabb.max.z > max.z ) max.z = aabb.max.z;
+	if( box.min.x < min.x ) min.x = box.min.x;
+	if( box.max.x > max.x ) max.x = box.max.x;
+	if( box.min.y < min.y ) min.y = box.min.y;
+	if( box.max.y > max.y ) max.y = box.max.y;
+	if( box.min.z < min.z ) min.z = box.min.z;
+	if( box.max.z > max.z ) max.z = box.max.z;
 }
 
 //-----------------------------------//
 
-AABB AABB::transform( const Matrix4x3& mat ) const
+BoundingBox BoundingBox::transform( const Matrix4x3& mat ) const
 {
-	AABB box;
+	BoundingBox box;
 	
 	for(int i = 0; i < 8; i++)
 	{
-		Vector3 pt = getCorner(i)*mat;
+		Vector3 pt = mat*getCorner(i);
 		box.add(pt);
 	}
 	
@@ -112,7 +105,7 @@ AABB AABB::transform( const Matrix4x3& mat ) const
 // From "Fast Ray-Box Intersection," by Woo in Graphics Gems I,
 // page 395.
 
-bool AABB::intersects( const Ray& ray, float& distance ) const
+bool BoundingBox::intersects( const Ray& ray, float& distance ) const
 {
 	float lowt = 0.0f;
 	float t;

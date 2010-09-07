@@ -75,6 +75,9 @@ public:
 	// Gets the player camera.
 	CameraPtr getPlayerCamera() const;
 
+	// Switches the editor to play mode.
+	void switchPlayMode(bool switchToPlay);
+
 protected:
 
 	// Creates the main UI layout.
@@ -108,9 +111,6 @@ protected:
 	// View callbacks.
 	void onUpdate( double delta );
 	void onRender();
-
-	// Switches the editor to play mode.
-	void switchPlayMode(bool switchToPlay);
 
     // wxWidgets main events.
 	void OnIdle(wxIdleEvent& event);

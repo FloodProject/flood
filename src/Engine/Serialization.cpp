@@ -176,10 +176,13 @@ void Serializer::serializeFields(const Class& type, void* object, Json::Value& v
 		{
 			// Get the real object from the pointer.
 			const boost::intrusive_ptr<Resource> ptr =
-				field.get<boost::intrusive_ptr<Resource>>(object);
+				field.get<boost::intrusive_ptr<Resource> >(object);
 			
 			realObject = (void*) ptr.get();
-		} 
+		}
+
+		if( !realObject )
+			continue;
 
 		if( field_type.isClass() || field_type.isStruct() )
 		{
@@ -293,9 +296,7 @@ void Serializer::setFieldFromValue( const Field& field, void* object, const Json
 	}
 	else
 	//-----------------------------------//
-	{
 		assert( false );
-	}
 }
 
 //-----------------------------------//
@@ -449,16 +450,14 @@ Json::Value Serializer::valueFromPrimitive( const Field& field, void* object )
 		v = convertVector3(vec);
 	}
 	//-----------------------------------//
-	else if( type.isVector3() )
+	else if( type.isQuaternion() )
 	{
 		Quaternion quat = field.get<Quaternion>(object);
 		v = convertQuaternion(quat);
 	}
 	else
 	//-----------------------------------//
-	{
 		assert( false );
-	}
 
 	return v;
 }

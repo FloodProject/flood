@@ -11,6 +11,7 @@
 #include "vapor/math/Color.h"
 #include "vapor/math/Vector2.h"
 #include "vapor/math/Matrix4x3.h"
+#include "vapor/math/Matrix4x4.h"
 #include "vapor/render/Target.h"
 
 FWD_DECL_SHARED(Node)

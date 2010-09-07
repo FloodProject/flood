@@ -343,8 +343,8 @@ MaterialPtr Milkshape3D::buildMaterial(const ms3d_group_t& group)
 	{
 		#pragma TODO("Use alpha testing when alpha values are fully transparent.")
 
-		mat->setBlending( BlendingSource::SourceAlpha,
-			BlendingDestination::InverseSourceAlpha );
+		mat->setBlending( BlendSource::SourceAlpha,
+			BlendDestination::InverseSourceAlpha );
 	}
 
 	if( isAnimated() )
@@ -448,8 +448,8 @@ void Milkshape3D::setupInitialVertices()
 		
 		ms3d_joint_t& joint = joints[vertex->boneIndex];
 		
-		Matrix4x3 invJoint = inverse(joint.absoluteMatrix);
-		vertex->position = vertex->position * invJoint;
+		Matrix4x3 invJoint = joint.absoluteMatrix.inverse();
+		vertex->position = invJoint*vertex->position;
 	}
 }
 

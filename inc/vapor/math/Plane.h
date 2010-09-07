@@ -16,7 +16,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-namespace PlaneIntersection
+struct PlaneIntersection
 {
     enum Enum
     {
@@ -24,7 +24,7 @@ namespace PlaneIntersection
         NegativeSide,
         PositiveSide
     };
-}
+};
 
 //-----------------------------------//
 
@@ -39,16 +39,16 @@ public:
     Plane( const Vector3& normal, float d );
 
     // Build a plane based on normal to plane and a point on the plane.
-    Plane( const Vector3& normal, const Vector3& point );
+    //Plane( const Vector3& normal, const Vector3& point );
     
 	// Normalizes the plane.
 	void normalize();
 
     // Returns if point is on the plane.
-	PlaneIntersection::Enum intersects( const Vector3& point ) const;
+	//PlaneIntersection::Enum intersects( const Vector3& point ) const;
     
 	// Returns if the plane intersects with bounding box.
-    bool intersects( const AABB& aabb ) const;
+    //bool intersects( const BoundingBox& box ) const;
 
     // Returns distance from ray origin to plane.
 	bool intersects( const Ray& ray, float& distance ) const;

@@ -17,7 +17,7 @@ namespace vapor {
 //-----------------------------------//
 
 /**
- * A simple First-Person style camera controller.
+ * A simple camera controller that follows a node.
  */
 
 class VAPOR_API ThirdPersonController : public CameraController
@@ -28,13 +28,27 @@ public:
 
 	ThirdPersonController();
 
+	// Gets the follow node.
+	GETTER(FollowNode, NodePtr, followNode.lock())
+
+	// Sets the follow node.
+	SETTER(FollowNode, const NodePtr&, followNode)
+
 	// Updates this component.
 	virtual void update( double delta );
 
 protected:
 
-	// Relative movement position.
-	Vector3 relativePosition;
+	// Follow node name.
+	std::string followNodeName;
+
+	// Follow node.
+	NodeWeakPtr followNode;
+
+	// Distance to the tracked node.
+	Vector3 distance;
+
+	// Rotation to the tracked node.
 	EulerAngles rotation;
 };
 

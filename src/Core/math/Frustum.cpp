@@ -71,8 +71,7 @@ void Frustum::updatePlanes( const Matrix4x3& matView )
 	// from the World-View-Projection Matrix" by Gil Gribb.
 	// http://www.cs.otago.ac.nz/postgrads/alexis/planeExtraction.pdf
 
-	Matrix4x4 matView4( matView );
-	Matrix4x4 matClip = matView * projectionMatrix;
+	Matrix4x4 matClip = Matrix4x4(matView) * projectionMatrix;
 
 	// Left clipping plane
 	planes[0].normal.x = matClip.m14 + matClip.m11;

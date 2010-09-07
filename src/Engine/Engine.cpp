@@ -108,7 +108,6 @@ void Engine::init( bool createWindow )
 #ifdef VAPOR_SCRIPTING_LUA
 	// Initialize the scripting
 	scriptState = new State();
-	scriptState->bind( this );
 #endif
 }
 

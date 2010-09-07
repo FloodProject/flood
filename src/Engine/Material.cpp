@@ -57,8 +57,8 @@ void Material::init()
 	cullBackfaces = true;
 	lineWidth = DefaultLineWidth;
 	_isBlendingEnabled = false;
-	source = BlendingSource::One;
-	destination = BlendingDestination::Zero;
+	source = BlendSource::One;
+	destination = BlendDestination::Zero;
 }
 
 //-----------------------------------//
@@ -101,8 +101,8 @@ bool Material::isBlendingEnabled() const
 
 //-----------------------------------//
 
-void Material::setBlending( BlendingSource::Enum _source, 
-	BlendingDestination::Enum _destination )
+void Material::setBlending( BlendSource::Enum _source, 
+	BlendDestination::Enum _destination )
 {
 	source = _source;
 	destination = _destination;

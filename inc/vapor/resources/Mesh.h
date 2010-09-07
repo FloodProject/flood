@@ -45,7 +45,7 @@ public:
 	AnimationPtr findAnimation( const std::string& name );
 
 	// Gets the bounding box of the mesh.
-	GETTER(BoundingVolume, const AABB&, boundingVolume)
+	GETTER(BoundingVolume, const BoundingBox&, boundingVolume)
 
 	// Gets the animations of the mesh.
 	GETTER(Animations, const std::vector<AnimationPtr>&, animations)
@@ -73,7 +73,7 @@ protected:
 	std::vector<RenderablePtr> renderables;
 
 	// Bounding volume of the mesh.
-	AABB boundingVolume;
+	BoundingBox boundingVolume;
 
 	// Keeps track if the mesh has been built.
 	bool built;

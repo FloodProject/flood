@@ -55,6 +55,7 @@
 #include <vapor/scene/Skydome.h>
 #include <vapor/scene/Water.h>
 #include <vapor/scene/Billboard.h>
+#include <vapor/scene/Behaviour.h>
 #include <vapor/scene/Tags.h>
 
 //---------------------------------------------------------------------//

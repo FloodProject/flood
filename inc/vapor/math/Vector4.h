@@ -136,7 +136,7 @@ public:
 	// Binary subtraction.
 	Vector4T operator - (const Vector4T<T>& v) const
 	{
-		return Vector4T(x-v.x, y-v.y, z-v.z);
+		return Vector4T(x-v.x, y-v.y, z-v.z, w-v.w);
 	}
 
 	//-----------------------------------//
@@ -144,7 +144,7 @@ public:
 	// Multiplication by a scalar.
 	Vector4T operator * (float s) const
 	{
-		return Vector4T(x*s, y*s, z*s);
+		return Vector4T(x*s, y*s, z*s, w*s);
 	}
 
 	//-----------------------------------//
@@ -243,12 +243,14 @@ public:
 
 	//-----------------------------------//
 
+#ifndef SWIG
 	// Special points
 	static VAPOR_API const Vector4T<float> Zero;
 	static VAPOR_API const Vector4T<float> UnitX;
     static VAPOR_API const Vector4T<float> UnitY;
     static VAPOR_API const Vector4T<float> UnitZ;
 	static VAPOR_API const Vector4T<float> UnitW;
+#endif
 
 public:
 

@@ -47,7 +47,7 @@ void BoxShape::update( double delta )
 	if( !transform )
 		return;
 	
-	const AABB& box = transform->getBoundingVolume();
+	const BoundingBox& box = transform->getBoundingVolume();
 	const Vector3& scale = transform->getScale();
 	
 	boxShape = new btBoxShape(Convert::toBullet(box));

@@ -25,23 +25,23 @@ Group::Group()
 //-----------------------------------//
 
 Group::Group( const std::string& name )
-	: Node( name )
+	: Node(name)
 { }
 
 //-----------------------------------//
 
-int Group::add( const NodePtr& child )
+int Group::add( const NodePtr& node )
 {
 	// Beware that you have to assign a new Group-derived object
 	// to a shared_ptr, else shared_from_this will return bad_weak_ptr.
 
-	child->setParent( Node::shared_from_this() );
-	children.push_back( child );
+	node->setParent( Node::shared_from_this() );
+	children.push_back( node );
 
 	if( !onNodeAdded.empty() )
 	{
 		GroupEvent event;
-		event.node = child;
+		event.node = node;
 
 		onNodeAdded( event );
 	}
@@ -51,7 +51,20 @@ int Group::add( const NodePtr& child )
 
 //-----------------------------------//
 
-int Group::insert( uint i, const NodePtr& child )
+NodePtr Group::findNode( const std::string& name ) const
+{
+	foreach( const NodePtr& node, children )
+	{
+		if( node->getName() == name )
+			return node;
+	}
+
+	return NodePtr();
+}
+
+//-----------------------------------//
+
+int Group::insert( uint i, const NodePtr& node )
 {
 	// TODO
 	return 1;

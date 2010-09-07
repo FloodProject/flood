@@ -9,7 +9,7 @@
 #pragma once
 
 #include "vapor/math/Vector2.h"
-#include "vapor/math/Matrix4x3.h"
+#include "vapor/math/Matrix4x4.h"
 #include "vapor/math/Plane.h"
 
 namespace vapor {
@@ -59,9 +59,9 @@ public:
 	// Updates the frustum corners.
 	void updateCorners( const Matrix4x3& matView );
 
-    // Tests all the points of the AABB to check if they are inside the frustum.
-    // Returns true if the aabb is inside or overlaping the frustum, false otherwise
-    bool intersect ( const AABB& aabb ) const;
+    // Tests all the points of the BoundingBox to check if they are inside the frustum.
+    // Returns true if the BoundingBox is inside or overlaping the frustum, false otherwise.
+    //bool intersect ( const BoundingBox& box ) const;
 
 public:
 

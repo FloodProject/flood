@@ -76,7 +76,7 @@ static void TransformVertices(std::vector<Vector3>& pos,
 {
 	foreach( const Vector3& v, vs )
 	{
-		pos.push_back( v * transform );
+		pos.push_back( transform*v );
 	}
 }
 
@@ -101,7 +101,7 @@ VertexBufferPtr GizmoTranslate::generateCones()
 
 	// X axis
 	transform = Matrix4x3::createRotation( EulerAngles(0, 0, -90) );
-	transform *= Matrix4x3::createTranslation( Vector3::UnitX / 2.0f );
+	transform = transform * Matrix4x3::createTranslation( Vector3::UnitX / 2.0f );
 	TransformVertices(pos, cone, transform);
 	generateColors( colors, X );
 
@@ -112,7 +112,7 @@ VertexBufferPtr GizmoTranslate::generateCones()
 
 	// Z axis
 	transform = Matrix4x3::createRotation( EulerAngles(90, 0, 0) );
-	transform *= Matrix4x3::createTranslation( Vector3::UnitZ / 2.0f );
+	transform = transform * Matrix4x3::createTranslation( Vector3::UnitZ / 2.0f );
 	TransformVertices(pos, cone, transform);
 	generateColors( colors, Z );
 

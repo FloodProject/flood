@@ -88,7 +88,7 @@ void Label::setupState()
 
 	// Setup the material to have the texture font and enable blending
 	material->setTexture( 0, font->getImage() );
-	material->setBlending( BlendingSource::SourceAlpha, BlendingDestination::One );
+	material->setBlending( BlendSource::SourceAlpha, BlendDestination::One );
 	material->setProgram( "Tex" );
 
 	setupDone = true;

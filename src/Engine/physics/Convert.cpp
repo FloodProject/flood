@@ -37,7 +37,7 @@ btVector3 Convert::toBullet(const Vector3& vec )
 
 //-----------------------------------//
 
-btVector3 Convert::toBullet(const AABB& box)
+btVector3 Convert::toBullet(const BoundingBox& box)
 {
 	Vector3 extents = box.max-box.getCenter();
 	return toBullet(extents);
@@ -53,7 +53,7 @@ Vector3 getOffset(const NodePtr& node)
 		return Vector3::Zero;
 
 	const TransformPtr& transform = node->getTransform();
-	const AABB& box = transform->getBoundingVolume();
+	const BoundingBox& box = transform->getBoundingVolume();
 	const Vector3& scale = transform->getScale();
 
 	Vector3 offset = (box.max - box.min) / 2;

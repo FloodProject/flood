@@ -146,7 +146,7 @@ void Transform::setScale( const Vector3& newScale )
 
 Vector3 Transform::getWorldPosition() const
 {
-	return getPosition()*getAbsoluteTransform();
+	return getAbsoluteTransform()*getPosition();
 }
 
 //-----------------------------------//
@@ -295,7 +295,7 @@ void Transform::notify()
 
 //-----------------------------------//
 
-AABB Transform::getWorldBoundingVolume() const
+BoundingBox Transform::getWorldBoundingVolume() const
 {
 	return boundingVolume.transform( getAbsoluteTransform() );
 }

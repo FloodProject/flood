@@ -18,7 +18,7 @@ namespace vapor {
  * Possible pixel formats for an image.
  */
 
-namespace PixelFormat 
+struct PixelFormat 
 {
 	enum Enum 
 	{
@@ -29,7 +29,7 @@ namespace PixelFormat
 	};
 
 	DECLARE_ENUM()
-}
+};
 
 //-----------------------------------//
 

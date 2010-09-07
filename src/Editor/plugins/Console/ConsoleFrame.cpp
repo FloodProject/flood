@@ -13,29 +13,15 @@
 namespace vapor { namespace editor {
 
 //-----------------------------------//
-// Event handlers
-//-----------------------------------//
 
-BEGIN_EVENT_TABLE(ConsoleFrame, wxFrame)
-	EVT_CLOSE( ConsoleFrame::OnClose )
-END_EVENT_TABLE()
-
-//-----------------------------------//
-
-ConsoleFrame::ConsoleFrame( vapor::Engine* engine, wxWindow* parent, 
+ConsoleFrame::ConsoleFrame( Engine* engine, wxWindow* parent, 
 						   const wxString& name )
-	: wxFrame( parent, wxID_ANY, name, wxDefaultPosition, wxDefaultSize,
-		wxDEFAULT_FRAME_STYLE | wxFRAME_TOOL_WINDOW | wxFRAME_FLOAT_ON_PARENT
-		| wxBORDER_NONE ), engine( engine )
+	: wxFrame( parent, wxID_ANY, name, wxDefaultPosition,
+	wxDefaultSize, wxDEFAULT_FRAME_STYLE | wxFRAME_TOOL_WINDOW |
+	wxFRAME_FLOAT_ON_PARENT | wxBORDER_NONE )
+	, engine( engine )
 {
 	InitControl();
-}
-
-//-----------------------------------//
-
-ConsoleFrame::~ConsoleFrame()
-{
-
 }
 
 //-----------------------------------//
@@ -43,6 +29,8 @@ ConsoleFrame::~ConsoleFrame()
 void ConsoleFrame::InitControl()
 {
 	textCtrl = new ConsoleTextCtrl( engine, this );
+
+	Bind( wxEVT_CLOSE_WINDOW, &ConsoleFrame::OnClose, this );
 }
 
 //-----------------------------------//

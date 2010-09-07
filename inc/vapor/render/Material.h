@@ -17,8 +17,10 @@ namespace vapor {
 
 //-----------------------------------//
 
-namespace BlendingSource
+class BlendSource
 {
+public:
+
 	enum Enum
 	{
 		Zero = GL_ZERO,
@@ -31,11 +33,11 @@ namespace BlendingSource
 		InverseDestinationAlpha = GL_ONE_MINUS_DST_ALPHA,
 		SourceAlphaSaturate = GL_SRC_ALPHA_SATURATE
 	};
-}
+};
 
 //-----------------------------------//
 
-namespace BlendingDestination
+struct BlendDestination
 {
 	enum Enum
 	{
@@ -48,11 +50,11 @@ namespace BlendingDestination
 		DestinationAlpha = GL_DST_ALPHA,
 		InverseDestinationAlpha = GL_ONE_MINUS_DST_ALPHA
 	};
-}
+};
 
 //-----------------------------------//
 
-namespace DepthCompare
+struct DepthCompare
 {
 	enum Enum
 	{
@@ -65,8 +67,7 @@ namespace DepthCompare
 		GreaterOrEqual = GL_GEQUAL,
 		Always = GL_ALWAYS,
 	};
-}
-
+};
 
 //-----------------------------------//
 
@@ -124,17 +125,17 @@ public:
 	ACESSOR(BackfaceCulling, bool, cullBackfaces)
 
 	// Gets the blending options for this material.
-	GETTER(BlendingSource, BlendingSource::Enum, source)
+	GETTER(BlendSource, BlendSource::Enum, source)
 	
 	// Gets the blending options for this material.
-	GETTER(BlendingDestination, BlendingDestination::Enum, destination)
+	GETTER(BlendDestination, BlendDestination::Enum, destination)
 
 	// Is blending enabled?
 	// Blending is automatically enabled if you set a custom option.
 	bool isBlendingEnabled() const;
 
 	// Sets the blending options for this material.
-	void setBlending( BlendingSource::Enum, BlendingDestination::Enum );
+	void setBlending( BlendSource::Enum, BlendDestination::Enum );
 
 	// Gets the textures in the material.
 	GETTER(Textures, const TextureMap&, textures)
@@ -175,8 +176,8 @@ protected:
 	float lineWidth;
 
 	// Blending settings.
-	BlendingSource::Enum source;
-	BlendingDestination::Enum destination;
+	BlendSource::Enum source;
+	BlendDestination::Enum destination;
 	bool _isBlendingEnabled;
 
 	// Default line width.

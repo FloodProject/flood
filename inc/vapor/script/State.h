@@ -8,13 +8,15 @@
 
 #pragma once
 
-//#ifdef VAPOR_SCRIPTING_LUA
+#ifdef VAPOR_SCRIPTING_LUA
 
 struct lua_State;
 
 #include "vapor/script/Script.h"
 
 namespace vapor {
+
+//-----------------------------------//
 
 class Engine;
 
@@ -29,31 +31,31 @@ class VAPOR_API State : private boost::noncopyable
 {
 public:
 
-	/// Constructs a new scripting VM.
+	// Constructs a new scripting VM.
 	State();
 	
-	/// Destructs this scripting VM.
+	// Destructs this scripting VM.
 	~State();
 
 	// Creates a new script.
 	//ScriptPtr createScript();
 
-	/// Executes a piece of source code.
+	// Gets the Lua state.
+	GETTER(LuaState, lua_State*, luaState)
+
+	// Executes a piece of source code.
 	bool execute( const std::string& source );
 
-	/// Executes a script resource.
+	// Executes a script resource.
 	bool execute( const ScriptPtr& script );
 
-	/// Bind the engine API to Lua.
-	void bind( Engine* const engine );
-
-	/// Registers a script into this state.
+	// Registers a script into this state.
 	void registerScript( const ScriptPtr& script );
 
-	/// Handles the Lua error states.
+	// Handles the Lua error states.
 	void handleError();
 
-	/// Executes all the registered scripts.
+	// Executes all the registered scripts.
 	void update( float deltaTime );
 
 	// Gets the last error.
@@ -61,12 +63,12 @@ public:
 
 protected:
 
-	/// Lua VM state.
+	// Lua VM state.
 	lua_State* luaState;
 
-	/// Holds Lua scripts.
-	std::vector< ScriptPtr > scripts;
-	typedef std::vector< ScriptPtr >::iterator scriptsIterator;
+	// Holds Lua scripts.
+	std::vector<ScriptPtr> scripts;
+	typedef std::vector<ScriptPtr>::iterator ScriptsIterator;
 
 	std::string lastError;
 };
@@ -75,4 +77,4 @@ protected:
 
 } // end namespace
 
-//#endif
+#endif

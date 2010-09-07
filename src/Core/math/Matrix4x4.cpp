@@ -44,28 +44,28 @@ void Matrix4x4::identity()
 
 //-----------------------------------//
 
-Matrix4x4 Matrix4x4::operator *(const Matrix4x4& m2) const
+Matrix4x4 Matrix4x4::operator*(const Matrix4x4& m) const
 {
     Matrix4x4 r;
-    r.m11 = m11 * m2.m11 + m12 * m2.m21 + m13 * m2.m31 + m14 * m2.tx;
-    r.m12 = m11 * m2.m12 + m12 * m2.m22 + m13 * m2.m32 + m14 * m2.ty;
-    r.m13 = m11 * m2.m13 + m12 * m2.m23 + m13 * m2.m33 + m14 * m2.tz;
-    r.m14 = m11 * m2.m14 + m12 * m2.m24 + m13 * m2.m34 + m14 * m2.tw;
+    r.m11 = m11 * m.m11 + m12 * m.m21 + m13 * m.m31 + m14 * m.tx;
+    r.m12 = m11 * m.m12 + m12 * m.m22 + m13 * m.m32 + m14 * m.ty;
+    r.m13 = m11 * m.m13 + m12 * m.m23 + m13 * m.m33 + m14 * m.tz;
+    r.m14 = m11 * m.m14 + m12 * m.m24 + m13 * m.m34 + m14 * m.tw;
 
-    r.m21 = m21 * m2.m11 + m22 * m2.m21 + m23 * m2.m31 + m24 * m2.tx;
-    r.m22 = m21 * m2.m12 + m22 * m2.m22 + m23 * m2.m32 + m24 * m2.ty;
-    r.m23 = m21 * m2.m13 + m22 * m2.m23 + m23 * m2.m33 + m24 * m2.tz;
-    r.m24 = m21 * m2.m14 + m22 * m2.m24 + m23 * m2.m34 + m24 * m2.tw;
+    r.m21 = m21 * m.m11 + m22 * m.m21 + m23 * m.m31 + m24 * m.tx;
+    r.m22 = m21 * m.m12 + m22 * m.m22 + m23 * m.m32 + m24 * m.ty;
+    r.m23 = m21 * m.m13 + m22 * m.m23 + m23 * m.m33 + m24 * m.tz;
+    r.m24 = m21 * m.m14 + m22 * m.m24 + m23 * m.m34 + m24 * m.tw;
 
-    r.m31 = m31 * m2.m11 + m32 * m2.m21 + m33 * m2.m31 + m34 * m2.tx;
-    r.m32 = m31 * m2.m12 + m32 * m2.m22 + m33 * m2.m32 + m34 * m2.ty;
-    r.m33 = m31 * m2.m13 + m32 * m2.m23 + m33 * m2.m33 + m34 * m2.tz;
-    r.m34 = m31 * m2.m14 + m32 * m2.m24 + m33 * m2.m34 + m34 * m2.tw;
+    r.m31 = m31 * m.m11 + m32 * m.m21 + m33 * m.m31 + m34 * m.tx;
+    r.m32 = m31 * m.m12 + m32 * m.m22 + m33 * m.m32 + m34 * m.ty;
+    r.m33 = m31 * m.m13 + m32 * m.m23 + m33 * m.m33 + m34 * m.tz;
+    r.m34 = m31 * m.m14 + m32 * m.m24 + m33 * m.m34 + m34 * m.tw;
 
-    r.tx = tx * m2.m11 + ty * m2.m21 + tz * m2.m31 + tw * m2.tx;
-    r.ty = tx * m2.m12 + ty * m2.m22 + tz * m2.m32 + tw * m2.ty;
-    r.tz = tx * m2.m13 + ty * m2.m23 + tz * m2.m33 + tw * m2.tz;
-    r.tw = tx * m2.m14 + ty * m2.m24 + tz * m2.m34 + tw * m2.tw;
+    r.tx = tx * m.m11 + ty * m.m21 + tz * m.m31 + tw * m.tx;
+    r.ty = tx * m.m12 + ty * m.m22 + tz * m.m32 + tw * m.ty;
+    r.tz = tx * m.m13 + ty * m.m23 + tz * m.m33 + tw * m.tz;
+    r.tw = tx * m.m14 + ty * m.m24 + tz * m.m34 + tw * m.tw;
 
     return r;
 }

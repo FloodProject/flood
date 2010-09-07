@@ -24,7 +24,7 @@ namespace vapor {
  * a cone, they have a direction and position and also a cut-off value.
  */
 
-namespace LightType
+struct LightType
 {
 	enum Enum
 	{
@@ -34,7 +34,7 @@ namespace LightType
 	};
 
 	DECLARE_ENUM()
-}
+};
 
 //-----------------------------------//
 

@@ -8,40 +8,63 @@
 
 #include "PCH.h"
 #include "ConsoleTextCtrl.h"
+#include "lua.hpp"
 
 namespace vapor { namespace editor {
 
-////////////////////////////////////////////////////////////
-// Event table
-////////////////////////////////////////////////////////////
+//-----------------------------------//
 
-BEGIN_EVENT_TABLE(ConsoleTextCtrl, wxTextCtrl)
-	//EVT_SET_FOCUS( ConsoleTextCtrl::OnSetFocus )
-	EVT_KEY_DOWN( ConsoleTextCtrl::OnKeyDown )
-	//EVT_TEXT_ENTER( wxID_ANY, ConsoleTextCtrl::OnEnter )
-END_EVENT_TABLE()
+#define TEXT_COLOR wxColour("LIGHT GREY")
+#define EVAL_COLOR *wxWHITE
+#define ERROR_COLOR wxColour("#C80000")
+
+static ConsoleTextCtrl* console = nullptr;
+
+//-----------------------------------//
+
+int luaPrintStub(lua_State* L)
+{
+	if( !console )
+		return 1;
+
+	return console->luaPrint(L);
+}
 
 //-----------------------------------//
 
 ConsoleTextCtrl::ConsoleTextCtrl( vapor::Engine* engine, wxWindow* parent,
 		wxWindowID id, const wxString& name, const wxPoint& pos, 
 		const wxSize& size, long style )
-		: wxTextCtrl( parent, id, name, pos, size, style ), engine( engine )
+		: wxTextCtrl( parent, id, name, pos, size, style )
+		, engine( engine )
 {
+	console = this;
 	InitControl();
+
+	luaState = engine->getScriptState();
+	lua_register( luaState->getLuaState() , "print", luaPrintStub );
 }
 
 //-----------------------------------//
 
-#define TEXT_COLOR wxColour( "LIGHT GREY" )
-#define ERROR_COLOR wxColour( "#C80000" )
+ConsoleTextCtrl::~ConsoleTextCtrl()
+{
+	console = nullptr;
+}
+
+//-----------------------------------//
 
 void ConsoleTextCtrl::InitControl()
 {
-	SetBackgroundColour( *wxBLACK );
-	SetForegroundColour( TEXT_COLOR );
+	Bind( wxEVT_SET_FOCUS, &ConsoleTextCtrl::OnSetFocus, this );
+	Bind( wxEVT_KEY_DOWN, &ConsoleTextCtrl::OnKeyDown, this );
 
-	Bind( wxEVT_SET_FOCUS, &ConsoleTextCtrl::OnSetFocus, this ); 
+	SetBackgroundColour( *wxBLACK );
+
+	wxTextAttr attr;
+	attr.SetBackgroundColour( *wxBLACK );
+	attr.SetTextColour( TEXT_COLOR );
+	SetDefaultStyle(attr);
 
 	// The way these operations are ordered might seem stupid but
 	// any other order didn't seem to work... might be a wx bug.
@@ -50,14 +73,46 @@ void ConsoleTextCtrl::InitControl()
 		"Welcome to " VAPOR_EDITOR_NAME " Console [%s]\n\n", VAPOR_ENGINE_VERSION ),
 		*wxWHITE ); 
 
-	AppendTextColor( ">", *wxWHITE );
-
-	wxTextAttr style( TEXT_COLOR );
-	SetDefaultStyle( style );
-
+	AppendTextColor( ">", EVAL_COLOR );
 	AppendText( " " );
+}
 
-	luaState = engine->getScriptState();
+//-----------------------------------//
+
+int ConsoleTextCtrl::luaPrint(lua_State* L)
+{
+	int numArgs = lua_gettop(L);
+	lua_getglobal(L, "tostring");
+	
+	std::string ret;
+	ret.append("\n");
+	
+	for(int i = 1; i <= numArgs; i++)
+	{
+		const char *s;
+		
+		lua_pushvalue(L, -1);
+		lua_pushvalue(L, i);
+		lua_call(L, 1, 1);
+		
+		s = lua_tostring(L, -1);
+		
+		if( !s )
+		{
+			return luaL_error(L, LUA_QL("tostring") " must return a string to ",
+			LUA_QL("print"));
+		}
+
+		if(i > 1)
+			ret.append("\t");
+
+		ret.append(s);
+		lua_pop(L, 1);
+	}
+
+	AppendTextColor( ret, EVAL_COLOR );
+
+	return 0;
 }
 
 //-----------------------------------//
@@ -116,7 +171,7 @@ void ConsoleTextCtrl::OnKeyDown(wxKeyEvent& event)
 		NewPromptLine();
 	}
 
-	if( key == WXK_RETURN )
+	if( key == WXK_RETURN || key == WXK_NUMPAD_ENTER )
 	{
 		OnEnter();
 		return;

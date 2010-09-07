@@ -62,8 +62,6 @@ protected:
 	bool colorAttach;
 };
 
-TYPEDEF_PTR( FBO );
-
 //-----------------------------------//
 
 } // end namespace

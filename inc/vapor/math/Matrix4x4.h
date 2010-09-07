@@ -42,13 +42,16 @@ public:
 	Matrix4x4 transpose() const;
 
 	// Multiplies two matrices together.
-	Matrix4x4 operator *(const Matrix4x4& m2) const;
+	Matrix4x4 operator*(const Matrix4x4& m) const;
+
+	// Multiplies two matrices together.
+	Matrix4x4 operator*(const Matrix4x3& m) const;
 
 	// Multiplies a vector by the matrix.
-	Vector3 operator *( const Vector3& v ) const;
+	Vector3 operator*( const Vector3& v ) const;
 
 	// Multiplies a vector by the matrix.
-	Vector4 operator *( const Vector4& v ) const;
+	Vector4 operator*( const Vector4& v ) const;
 
 	// Gets a projection matrix from a set of parameters.
 	static Matrix4x4 createPerspectiveProjection( float FOV,

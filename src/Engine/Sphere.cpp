@@ -81,7 +81,7 @@ Sphere::Sphere( bool fullSphere, byte numSubDiv, float dim )
 	buildGeometry( fullSphere, numSubDiv, position, dim );
 	
 	// Build Texture Coordinates.
-	AABB box;
+	BoundingBox box;
 	
 	foreach( const Vector3& v, position )
 		box.add(v);
@@ -152,7 +152,7 @@ void Sphere::buildGeometry( bool fullSphere, byte numSubDiv,
 		Vector3 v2( IcoVertices[i[1]][0], IcoVertices[i[1]][2], IcoVertices[i[1]][1] );
 		Vector3 v3( IcoVertices[i[2]][0], IcoVertices[i[2]][2], IcoVertices[i[2]][1] );
 
-		subdivide( v1*rot, v2*rot, v3*rot, numSubDiv, pos );
+		subdivide( rot*v1, rot*v2, rot*v3, numSubDiv, pos );
 	}
 
 	// If we don't want a full sphere, we return here.
@@ -165,7 +165,7 @@ void Sphere::buildGeometry( bool fullSphere, byte numSubDiv,
 			Vector3 v2( IcoVertices[i[1]][0], IcoVertices[i[1]][2], IcoVertices[i[1]][1] );
 			Vector3 v3( IcoVertices[i[2]][0], IcoVertices[i[2]][2], IcoVertices[i[2]][1] );
 
-			subdivide( v1*rot, v2*rot, v3*rot, numSubDiv, pos );
+			subdivide( rot*v1, rot*v2, rot*v3, numSubDiv, pos );
 		}
 	}
 

@@ -48,7 +48,7 @@ protected:
 
 	void decodeOgg( OggVorbis_File* vf, std::vector<byte>& buffer );
 
-	// holds all file extensions recognized by this codec
+	// Holds all file extensions recognized by this codec.
 	mutable ExtensionList extensions;
 
 	// Used for providing libvorbisfile with I/O callbacks.

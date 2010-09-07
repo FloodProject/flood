@@ -357,7 +357,7 @@ void RenderDevice::setupRenderStateMaterial( const MaterialPtr& mat )
 	if( mat->isBlendingEnabled() ) 
 	{
 		glEnable( GL_BLEND );
-		glBlendFunc( mat->getBlendingSource(), mat->getBlendingDestination() );
+		glBlendFunc( mat->getBlendSource(), mat->getBlendDestination() );
 	}
 }
 

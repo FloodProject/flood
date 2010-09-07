@@ -10,7 +10,6 @@
 
 #include "vapor/math/Vector3.h"
 #include "vapor/math/EulerAngles.h"
-#include "vapor/math/Matrix4x4.h"
 #include "vapor/math/Quaternion.h"
 
 namespace vapor {
@@ -18,7 +17,7 @@ namespace vapor {
 //-----------------------------------//
 
 /**
- * Implement a 4x3 transformation matrix.  This class can represent
+ * Implements a 4x3 transformation matrix.  This class can represent
  * any 3D affine transformation, like scaling, translation, rotation,
  * shearing, etc.
  */
@@ -31,6 +30,22 @@ public:
 
 	// Set to identity matrix.
 	void identity();
+
+	// Compute the determinant of the 3x3 portion of the matrix.
+	float determinant() const;
+
+	// Compute the inverse of a matrix.
+	Matrix4x3 inverse() const;
+
+	// Transforms the point by the matrix.
+	Vector3 operator*(const Vector3& p) const;
+	
+	// Concatenates the matrices.
+	Matrix4x3 operator*(const Matrix4x3& m) const;
+
+	// Operator *= for conformance to C++ standards.
+	//Vector3& operator*=(Vector3 &p);
+	//Matrix4x3& operator*=(Matrix4x3& m);
 
 	// Creates a new translation matrix from a translation vector.
 	static Matrix4x3 createTranslation( const Vector3& translate );
@@ -64,29 +79,6 @@ public:
 	// Special matrices
 	static const Matrix4x3 Identity;
 };
-
-//-----------------------------------//
-
-// Operator* is used to transforms a point, and also concatonate matrices.
-// The order of multiplications from left to right is the same as
-// the order of transformations.
-
-VAPOR_API Vector3 operator*(const Vector3 &p, const Matrix4x3 &m);
-VAPOR_API Matrix4x3	operator*(const Matrix4x3 &a, const Matrix4x3 &b);
-VAPOR_API Matrix4x4	operator*(const Matrix4x3 &a, const Matrix4x4 &b);
-
-// Operator *= for conformance to C++ standards.
-
-VAPOR_API Vector3& operator*=(Vector3 &p, const Matrix4x3 &m);
-VAPOR_API Matrix4x3& operator*=(Matrix4x3& a, const Matrix4x3& b);
-
-// Compute the determinant of the 3x3 portion of the matrix.
-
-VAPOR_API float	determinant(const Matrix4x3 &m);
-
-// Compute the inverse of a matrix.
-
-VAPOR_API Matrix4x3 inverse(const Matrix4x3 &m);
 
 //-----------------------------------//
 

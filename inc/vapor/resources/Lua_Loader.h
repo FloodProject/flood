@@ -46,8 +46,8 @@ public:
 
 protected:
 
-	// holds all file extensions recognized by this codec
-	ExtensionList extensions;
+	// Holds all file extensions recognized by this codec.
+	mutable ExtensionList extensions;
 };
 
 //-----------------------------------//

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "vapor/render/Renderable.h"
+FWD_DECL_INTRUSIVE(Renderable)
 
 namespace vapor {
 

@@ -21,11 +21,8 @@ class ConsoleFrame : public wxFrame
 {
 public:
 
-	ConsoleFrame( vapor::Engine* engine, 
-					wxWindow* parent, 
-					const wxString&	name = "ConsoleFrame" );
-
-	virtual ~ConsoleFrame();
+	ConsoleFrame( Engine* engine, wxWindow* parent,
+		const wxString&	name = "Console" );
 
 protected:
 
@@ -36,12 +33,10 @@ protected:
 	void OnClose(wxCloseEvent& event);
 
 	// Holds an instance to the vaporEngine.
-	vapor::Engine* engine;
+	Engine* engine;
 
 	// Text control to enter commands.
-	wxTextCtrl *textCtrl;
-
-	DECLARE_EVENT_TABLE()
+	wxTextCtrl* textCtrl;
 };
 
 //-----------------------------------//

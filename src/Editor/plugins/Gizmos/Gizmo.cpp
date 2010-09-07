@@ -39,7 +39,7 @@ Gizmo::Gizmo( const NodePtr& node, const CameraWeakPtr& camera )
 void Gizmo::updatePositionScale()
 {
 	const TransformPtr& transObject = nodeObject->getTransform();
-	const AABB& boxObject = transObject->getWorldBoundingVolume();
+	const BoundingBox& boxObject = transObject->getWorldBoundingVolume();
 	Vector3 centerObject = boxObject.getCenter();
 
 	// Get the editor camera and its transform.

@@ -62,10 +62,10 @@ bool Scene::doRayBoxQuery( const Ray& ray, RayBoxQueryList& list, bool all ) con
 		if( !transform )
 			continue;
 
-		const AABB& aabb = transform->getWorldBoundingVolume();
+		const BoundingBox& box = transform->getWorldBoundingVolume();
 			
 		float distance;
-		if( aabb.intersects(ray, distance) )
+		if( box.intersects(ray, distance) )
 		{
 			RayBoxQueryResult res;
 			res.node = node;
@@ -115,7 +115,7 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res,
 		// individual geometry of the node. This helps cut the number of 
 		// collisions tests in nodes with lots of geometry components.
 
-		const AABB& bv = geo->getBoundingVolume();
+		const BoundingBox& bv = geo->getBoundingVolume();
 
 		float distance;
 		

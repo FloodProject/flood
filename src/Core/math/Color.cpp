@@ -8,6 +8,7 @@
 
 #include "vapor/PCH.h"
 #include "vapor/math/Color.h"
+#include "vapor/math/Math.h"
 
 namespace vapor {
 
@@ -50,11 +51,11 @@ bool Color::operator == (const Color& c) const
 
 //-----------------------------------//
 
-bool Color::nearEqual(const Color& a, float tolerance )
+bool Color::nearEqual(const Color& a, float tolerance)
 {
-	return (fabs(a.r - r) < tolerance)
-		&& (fabs(a.g - g) < tolerance)
-		&& (fabs(a.b - b) < tolerance);
+	return (std::fabs(a.r - r) < tolerance)
+		&& (std::fabs(a.g - g) < tolerance)
+		&& (std::fabs(a.b - b) < tolerance);
 }
 
 //-----------------------------------//

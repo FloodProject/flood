@@ -24,7 +24,7 @@ namespace vapor {
  * will be used both drawing and reading (GL to GL).
  */
 
-namespace BufferUsage
+struct BufferUsage
 {
 	enum Enum
 	{
@@ -32,7 +32,7 @@ namespace BufferUsage
 		Stream,		// Content sometimes changes
 		Dynamic		// Content always changes
 	};
-}
+};
 
 //-----------------------------------//
 
@@ -42,7 +42,7 @@ namespace BufferUsage
  * store the buffers, which leads to better rendering performance.
  */
 
-namespace BufferAccess
+struct BufferAccess
 {
 	enum Enum
 	{
@@ -50,7 +50,7 @@ namespace BufferAccess
 		Write,		// Write content only
 		ReadWrite	// Read and write content
 	};
-}
+};
 
 //-----------------------------------//
 

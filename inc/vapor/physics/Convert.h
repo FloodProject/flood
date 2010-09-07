@@ -32,7 +32,7 @@ namespace Convert
 	btVector3 toBullet(const Vector3& vec );
 
 	// Converts bounding boxes to Bullet.
-	btVector3 toBullet(const AABB& box);
+	btVector3 toBullet(const BoundingBox& box);
 
 	// Converts transforms to Bullet.
 	btTransform toBullet(const TransformPtr& transform);

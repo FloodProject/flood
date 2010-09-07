@@ -7,7 +7,6 @@
 #pragma once
 
 #include "vapor/math/Vector3.h"
-#include <cmath>
 
 namespace vapor {
 

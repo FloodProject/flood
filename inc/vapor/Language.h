@@ -157,12 +157,6 @@ typedef unsigned long	ulong;
 	#endif
 #endif
 
-#define TYPEDEF_PTR(type)		\
-	typedef type* type##Ptr;
-
-#define TYPEDEF_AUTO_PTR(type)	\
-	typedef std::auto_ptr<type> type##Ptr;
-
 #if defined( VAPOR_MEMORY_SHARED_PTR )
 	#define TYPEDEF_SHARED_POINTER_FROM_TYPE( class ) \
 		typedef std::shared_ptr< class > class##Ptr;
@@ -174,23 +168,4 @@ typedef unsigned long	ulong;
 	#include "boost/intrusive_ptr.hpp"
 	#define TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( type ) \
 		typedef boost::intrusive_ptr< type > type##Ptr;
-	using boost::static_pointer_cast;
-#endif
-
-//---------------------------------------------------------------------//
-// Iterator Debugging
-//---------------------------------------------------------------------//
-
-#ifdef VAPOR_COMPILER_MSVC
-	#ifndef D_SCL_SECURE_NO_WARNINGS
-		#define	D_SCL_SECURE_NO_WARNINGS
-	#endif
-	
-	#ifndef _SECURE_SCL
-		#define _SECURE_SCL 0
-	#endif
-	
-	#ifndef _HAS_ITERATOR_DEBUGGING
-		#define _HAS_ITERATOR_DEBUGGING 0
-	#endif
 #endif

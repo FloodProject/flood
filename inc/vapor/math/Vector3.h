@@ -171,7 +171,7 @@ public:
 	// Gets the length of the vector.
 	T length() const
 	{
-		return sqrt(x*x + y*y + z*z);
+		return std::sqrt(x*x + y*y + z*z);
 	}
 
 	//-----------------------------------//
@@ -269,11 +269,13 @@ public:
 
 	//-----------------------------------//
 
+#ifndef SWIG
 	// Special points
 	static VAPOR_API const Vector3T<float> Zero;
 	static VAPOR_API const Vector3T<float> UnitX;
     static VAPOR_API const Vector3T<float> UnitY;
     static VAPOR_API const Vector3T<float> UnitZ;
+#endif
 
 public:
 

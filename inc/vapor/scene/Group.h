@@ -51,10 +51,10 @@ public:
 	// Inserts child after child at i'th index.  Returns the index of
 	// the new child inserted, if there is no existing
 	// child at 'i' then -1 is returned.
-	virtual int insert( uint i, const NodePtr& child );
+	virtual int insert( uint i, const NodePtr& node );
 
 	// Removes node from the group.
-	virtual bool remove( const NodePtr& );
+	virtual bool remove( const NodePtr& node );
 
 	// Removes child at index i, if i is out of bounds returns false,
 	// if i is in bounds and child was removed, returns true
@@ -62,6 +62,9 @@ public:
 
 	// Returns null pointer if cannot find index i
 	NodePtr get( uint i ) const;
+
+	// Finds a node in the group via its name.
+	NodePtr findNode( const std::string& name ) const;
 
 	// Gets the children of this group.
 	GETTER(Children, const std::vector<NodePtr>&, children)
@@ -80,9 +83,9 @@ public:
 	// Events
 	//-----------------------------------//
 
-	fd::delegate< void( const GroupEvent& ) > onNodeAdded;
-	fd::delegate< void( const GroupEvent& ) > onNodeRemoved;
-	fd::delegate< void( const GroupEvent& ) > onNodeInserted;
+	fd::delegate<void(const GroupEvent&)> onNodeAdded;
+	fd::delegate<void(const GroupEvent&)> onNodeRemoved;
+	fd::delegate<void(const GroupEvent&)> onNodeInserted;
 
 protected:
 

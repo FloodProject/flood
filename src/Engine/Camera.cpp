@@ -76,7 +76,7 @@ void Camera::updateViewTransform()
 	const Quaternion& rotation = transform->getRotation();
 	
 	// Update the look-at vector.
-	Vector3 forward = Vector3::UnitZ * Matrix4x3::createFromQuaternion(rotation);
+	Vector3 forward = Matrix4x3::createFromQuaternion(rotation) * Vector3::UnitZ;
 	lookAtVector = position + forward;
 	
 	// Update the view matrix.

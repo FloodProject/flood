@@ -22,6 +22,7 @@
 #include "plugins/Project/ProjectPlugin.h"
 #include "plugins/UndoRedo/UndoPlugin.h"
 #include "plugins/Scene/ScenePlugin.h"
+#include "plugins/Console/ConsolePlugin.h"
 #include "plugins/Resources/ResourcesPlugin.h"
 #include "plugins/Property/PropertyPlugin.h"
 #include "plugins/Gizmos/GizmoPlugin.h"
@@ -152,6 +153,10 @@ void EditorFrame::createPlugins()
 	pluginManager->registerPlugin( plugin );
 	pluginManager->enablePlugin( plugin );
 
+	plugin = new ConsolePlugin(this);
+	pluginManager->registerPlugin( plugin );
+	pluginManager->enablePlugin( plugin );
+
 	plugin = new ResourcesPlugin(this);
 	pluginManager->registerPlugin( plugin );
 	pluginManager->enablePlugin( plugin );
@@ -177,6 +182,10 @@ void EditorFrame::createPlugins()
 
 //-----------------------------------//
 
+extern "C" {
+	int luaopen_vapor(lua_State* L);
+}
+
 void EditorFrame::createEngine()
 {
 	engine = Engine::getInstancePtr();
@@ -186,6 +195,9 @@ void EditorFrame::createEngine()
 	// Mount the editor default media VFS directories.
 	FileSystem* fs = engine->getFileSystem();
 	fs->mountDefaultLocations();
+
+	State* state = engine->getScriptState();
+	luaopen_vapor( state->getLuaState() );
 }
 
 //-----------------------------------//
@@ -351,9 +363,6 @@ void EditorFrame::createToolbar()
 {
 	toolBar = CreateToolBar( wxTB_HORIZONTAL, wxID_ANY );
 
-	toolBar->AddTool( Toolbar_ToogleConsole, "Console", 
-		wxMEMORY_BITMAP(application_xp_terminal), "Open/close the scripting console" ); 
-
 	toolBar->AddTool( Toolbar_ToogleGrid, "Grid", 
 		wxMEMORY_BITMAP(grid_icon), "Show/hide the editor grid", wxITEM_CHECK );
 
@@ -405,10 +414,11 @@ void EditorFrame::redrawView()
 void EditorFrame::onRender()
 {
 	View* view = viewframe->getView();
-	const CameraPtr& camera = view->getCamera();
 
-	if( !camera )
+	if( !view->getCamera() )
 		viewframe->switchToDefaultCamera();
+
+	const CameraPtr& camera = view->getCamera();
 
 	#pragma TODO("Renderables need to be sent in a single queue")
 
@@ -451,10 +461,24 @@ CameraPtr EditorFrame::getPlayerCamera() const
 
 void EditorFrame::switchPlayMode(bool switchToPlay)
 {
-	CameraPtr camera = getPlayerCamera();
+	// Toogle the physics simulation state.
+	PhysicsManager* physics = engine->getPhysicsManager();
+	
+	if( physics )
+		physics->setSimulation( switchToPlay );
 
-	NodePtr nodeCamera = camera->getNode();
-	ControllerPtr controller = nodeCamera->getTypedComponent<Controller>();
+	CameraPtr camera = getPlayerCamera();
+	NodePtr nodeCamera;
+	ControllerPtr controller;
+
+	if( camera )
+		nodeCamera = camera->getNode();
+
+	if( !nodeCamera )
+		return;
+
+	if( controller )
+		controller = nodeCamera->getTypedComponent<Controller>();
 
 	if( switchToPlay )
 	{
@@ -474,12 +498,6 @@ void EditorFrame::switchPlayMode(bool switchToPlay)
 
 		viewframe->switchToDefaultCamera();
 	}
-
-	// Toogle the physics simulation state.
-	PhysicsManager* physics = engine->getPhysicsManager();
-	
-	if( physics )
-		physics->setSimulation( switchToPlay );
 }
 
 //-----------------------------------//

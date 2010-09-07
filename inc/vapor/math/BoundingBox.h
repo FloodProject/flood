@@ -21,19 +21,19 @@ namespace vapor {
  * Axis-aligned Bounding Box.
  */
 
-class VAPOR_API AABB
+class VAPOR_API BoundingBox
 {
 public:
 
-	AABB();
-	AABB( const Vector3& min, const Vector3& max );
-	AABB( const AABB& box );
+	BoundingBox();
+	BoundingBox( const Vector3& min, const Vector3& max );
+	BoundingBox( const BoundingBox& box );
 
 	// Expands the bounding box to contain the vertex.
 	void add( const Vector3& vertex );
 
 	// Expands the bounding box to contain the bounding box.
-	void add( const AABB& aabb );
+	void add( const BoundingBox& box );
 
 	// Resets the bounding box.
 	void reset();
@@ -47,8 +47,8 @@ public:
 	// Intersection with a ray.
 	bool intersects( const Ray& ray, float& distance ) const;
 	
-	// Transforms the AABB by a matrix.
-	AABB transform( const Matrix4x3& mat ) const;
+	// Transforms the BoundingBox by a matrix.
+	BoundingBox transform( const Matrix4x3& mat ) const;
 
 public:
 

@@ -51,7 +51,7 @@ void CapsuleShape::update( double delta )
 	if( !transform )
 		return;
 	
-	const AABB& box = transform->getBoundingVolume();
+	const BoundingBox& box = transform->getBoundingVolume();
 	const Vector3& scale = transform->getScale();
 
 	radius = box.max.x - box.min.x;

@@ -13,6 +13,7 @@
 #include "vapor/math/Math.h"
 #include "vapor/scene/Node.h"
 #include "vapor/scene/Camera.h"
+#include "vapor/scene/Scene.h"
 #include "vapor/render/Device.h"
 #include "vapor/input/InputManager.h"
 #include "vapor/input/Keyboard.h"
@@ -23,6 +24,9 @@ namespace vapor {
 //-----------------------------------//
 
 BEGIN_CLASS_PARENT(ThirdPersonController, CameraController)
+	FIELD_PRIMITIVE(ThirdPersonController, Vector3, distance)
+	FIELD_PRIMITIVE(ThirdPersonController, Vector3, rotation)
+	FIELD_PRIMITIVE(ThirdPersonController, string, followNodeName)
 END_CLASS()
 
 //-----------------------------------//
@@ -36,7 +40,24 @@ void ThirdPersonController::update( double delta )
 {
 	if( !enabled )
 		return;
-//	const TransformPtr& transform = getNode()->getTransform();
+
+	if( !followNode.lock() )
+	{
+		Engine* engine = Engine::getInstancePtr();
+		const ScenePtr& scene = engine->getSceneManager();
+		followNode = scene->findNode(followNodeName);
+	}
+
+	const NodePtr& node = followNode.lock();
+
+	if( !node )
+		return;
+
+	const TransformPtr& followTransform = node->getTransform();
+	const TransformPtr& transform = getNode()->getTransform();
+
+	transform->setPosition( followTransform->getPosition() + distance );
+	transform->setRotation( followTransform->getRotation() * Quaternion(rotation) );
 //
 //	Vector3 thirdPersonReference = new Vector3(0, 200, -200);
 //	Matrix rotationMatrix = Matrix.CreateRotationY(avatarYaw);

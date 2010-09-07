@@ -160,82 +160,66 @@ Matrix4x3 Matrix4x3::rotateZ( float ang )
 
 //-----------------------------------//
 
-Vector3	operator*(const Vector3& p, const Matrix4x3& m)
+Vector3	Matrix4x3::operator*(const Vector3& p) const
 {
 	return Vector3(
-		p.x*m.m11 + p.y*m.m21 + p.z*m.m31 + m.tx,
-		p.x*m.m12 + p.y*m.m22 + p.z*m.m32 + m.ty,
-		p.x*m.m13 + p.y*m.m23 + p.z*m.m33 + m.tz
+		p.x*m11 + p.y*m21 + p.z*m31 + tx,
+		p.x*m12 + p.y*m22 + p.z*m32 + ty,
+		p.x*m13 + p.y*m23 + p.z*m33 + tz
 	);
 }
 
 //-----------------------------------//
 
-Vector3& operator*=(Vector3& p, const Matrix4x3& m)
-{
-	p = p * m;
-	return p;
-}
-
-//-----------------------------------//
-
-Matrix4x3 operator*(const Matrix4x3& a, const Matrix4x3& b) 
+Matrix4x3 Matrix4x3::operator*(const Matrix4x3& m) const
 {
 	Matrix4x3 r;
 
 	// Compute the upper 3x3 (linear transformation) portion
-	r.m11 = a.m11*b.m11 + a.m12*b.m21 + a.m13*b.m31;
-	r.m12 = a.m11*b.m12 + a.m12*b.m22 + a.m13*b.m32;
-	r.m13 = a.m11*b.m13 + a.m12*b.m23 + a.m13*b.m33;
+	r.m11 = m11*m.m11 + m12*m.m21 + m13*m.m31;
+	r.m12 = m11*m.m12 + m12*m.m22 + m13*m.m32;
+	r.m13 = m11*m.m13 + m12*m.m23 + m13*m.m33;
 
-	r.m21 = a.m21*b.m11 + a.m22*b.m21 + a.m23*b.m31;
-	r.m22 = a.m21*b.m12 + a.m22*b.m22 + a.m23*b.m32;
-	r.m23 = a.m21*b.m13 + a.m22*b.m23 + a.m23*b.m33;
+	r.m21 = m21*m.m11 + m22*m.m21 + m23*m.m31;
+	r.m22 = m21*m.m12 + m22*m.m22 + m23*m.m32;
+	r.m23 = m21*m.m13 + m22*m.m23 + m23*m.m33;
 
-	r.m31 = a.m31*b.m11 + a.m32*b.m21 + a.m33*b.m31;
-	r.m32 = a.m31*b.m12 + a.m32*b.m22 + a.m33*b.m32;
-	r.m33 = a.m31*b.m13 + a.m32*b.m23 + a.m33*b.m33;
+	r.m31 = m31*m.m11 + m32*m.m21 + m33*m.m31;
+	r.m32 = m31*m.m12 + m32*m.m22 + m33*m.m32;
+	r.m33 = m31*m.m13 + m32*m.m23 + m33*m.m33;
 
 	// Compute the translation portion
-	r.tx = a.tx*b.m11 + a.ty*b.m21 + a.tz*b.m31 + b.tx;
-	r.ty = a.tx*b.m12 + a.ty*b.m22 + a.tz*b.m32 + b.ty;
-	r.tz = a.tx*b.m13 + a.ty*b.m23 + a.tz*b.m33 + b.tz;
+	r.tx = tx*m.m11 + ty*m.m21 + tz*m.m31 + m.tx;
+	r.ty = tx*m.m12 + ty*m.m22 + tz*m.m32 + m.ty;
+	r.tz = tx*m.m13 + ty*m.m23 + tz*m.m33 + m.tz;
 
 	return r;
 }
 
 //-----------------------------------//
 
-Matrix4x4 operator*(const Matrix4x3& a, const Matrix4x4& b) 
-{
-	return Matrix4x4(a)*b;
-}
+//Matrix4x3& Matrix4x3::operator*=(Matrix4x3& a, const Matrix4x3& b) 
+//{
+//	a = a * b;
+//	return a;
+//}
 
 //-----------------------------------//
 
-Matrix4x3& operator*=(Matrix4x3& a, const Matrix4x3& b) 
-{
-	a = a * b;
-	return a;
-}
-
-//-----------------------------------//
-
-float determinant(const Matrix4x3& m)
+float Matrix4x3::determinant() const
 {
 	return
-		  m.m11 * (m.m22*m.m33 - m.m23*m.m32)
-		+ m.m12 * (m.m23*m.m31 - m.m21*m.m33)
-		+ m.m13 * (m.m21*m.m32 - m.m22*m.m31);
+		  m11 * (m22*m33 - m23*m32)
+		+ m12 * (m23*m31 - m21*m33)
+		+ m13 * (m21*m32 - m22*m31);
 }
 
 //-----------------------------------//
 
-Matrix4x3 inverse(const Matrix4x3& m) {
-
+Matrix4x3 Matrix4x3::inverse() const
+{
 	// Compute the determinant
-
-	float det = determinant(m);
+	float det = determinant();
 
 	// If we're singular, then the determinant is zero and there's
 	// no inverse
@@ -244,31 +228,28 @@ Matrix4x3 inverse(const Matrix4x3& m) {
 
 	// Compute one over the determinant, so we divide once and
 	// can *multiply* per element
-
 	float	oneOverDet = 1.0f / det;
 
 	// Compute the 3x3 portion of the inverse, by
 	// dividing the adjoint by the determinant
-
 	Matrix4x3	r;
 
-	r.m11 = (m.m22*m.m33 - m.m23*m.m32) * oneOverDet;
-	r.m12 = (m.m13*m.m32 - m.m12*m.m33) * oneOverDet;
-	r.m13 = (m.m12*m.m23 - m.m13*m.m22) * oneOverDet;
+	r.m11 = (m22*m33 - m23*m32) * oneOverDet;
+	r.m12 = (m13*m32 - m12*m33) * oneOverDet;
+	r.m13 = (m12*m23 - m13*m22) * oneOverDet;
 
-	r.m21 = (m.m23*m.m31 - m.m21*m.m33) * oneOverDet;
-	r.m22 = (m.m11*m.m33 - m.m13*m.m31) * oneOverDet;
-	r.m23 = (m.m13*m.m21 - m.m11*m.m23) * oneOverDet;
+	r.m21 = (m23*m31 - m21*m33) * oneOverDet;
+	r.m22 = (m11*m33 - m13*m31) * oneOverDet;
+	r.m23 = (m13*m21 - m11*m23) * oneOverDet;
 
-	r.m31 = (m.m21*m.m32 - m.m22*m.m31) * oneOverDet;
-	r.m32 = (m.m12*m.m31 - m.m11*m.m32) * oneOverDet;
-	r.m33 = (m.m11*m.m22 - m.m12*m.m21) * oneOverDet;
+	r.m31 = (m21*m32 - m22*m31) * oneOverDet;
+	r.m32 = (m12*m31 - m11*m32) * oneOverDet;
+	r.m33 = (m11*m22 - m12*m21) * oneOverDet;
 
 	// Compute the translation portion of the inverse
-
-	r.tx = -(m.tx*r.m11 + m.ty*r.m21 + m.tz*r.m31);
-	r.ty = -(m.tx*r.m12 + m.ty*r.m22 + m.tz*r.m32);
-	r.tz = -(m.tx*r.m13 + m.ty*r.m23 + m.tz*r.m33);
+	r.tx = -(tx*r.m11 + ty*r.m21 + tz*r.m31);
+	r.ty = -(tx*r.m12 + ty*r.m22 + tz*r.m32);
+	r.tz = -(tx*r.m13 + ty*r.m23 + tz*r.m33);
 
 	return r;
 }

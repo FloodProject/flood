@@ -13,15 +13,22 @@ namespace vapor {
 
 //-----------------------------------//
 
-ticks_t Timer::ticksPerSecond = 0;
+#ifdef VAPOR_PLATFORM_WINDOWS
+	ticks_t Timer::ticksPerSecond = 0;
+#endif
+
 bool Timer::checked = false;
 bool Timer::highResolutionSupport = false;
 
 //-----------------------------------//
 
 Timer::Timer()
+#ifdef VAPOR_PLATFORM_WINDOWS
 	: currentTime(0)
 	, lastTime(0)
+#else
+	// Figure out what to put in here
+#endif
 {
 	if( !checked && !checkHighResolutionTimers() )
 		error( "timer", "High-resolution timers are not supported" );
@@ -34,9 +41,12 @@ Timer::Timer()
 double Timer::getCurrentTime()
 {
 	storeTime(currentTime);
-	
+#ifdef VAPOR_PLATFORM_WINDOWS	
 	return static_cast<double>(currentTime)
 		/ static_cast<double>(ticksPerSecond);
+#else
+	return currentTime.tv_sec;
+#endif
 }
 
 //-----------------------------------//
@@ -45,10 +55,13 @@ double Timer::getElapsedTime()
 {
 	getCurrentTime();	
 
+#ifdef VAPOR_PLATFORM_WINDOWS
 	ticks_t diff = currentTime - lastTime;
-
 	return static_cast<double>(diff) 
 		/ static_cast<double>(ticksPerSecond);
+#else
+	return currentTime.tv_sec - lastTime.tv_sec;
+#endif
 }
 
 //-----------------------------------//
@@ -56,9 +69,12 @@ double Timer::getElapsedTime()
 double Timer::reset()
 {
 	storeTime(lastTime);
-	
+#ifdef VAPOR_PLATFORM_WINDOWS
 	return static_cast<double>(lastTime)
 		/ static_cast<double>(ticksPerSecond);
+#else
+	return lastTime.tv_sec;
+#endif
 }
 
 //-----------------------------------//
@@ -73,7 +89,7 @@ void Timer::storeTime( ticks_t& var )
 	QueryPerformanceCounter( time );
 
 #else
-	#error "Implementation is missing"
+	gettimeofday(&var, NULL);
 #endif
 }
 
@@ -90,9 +106,6 @@ bool Timer::checkHighResolutionTimers()
 	
 	if( !QueryPerformanceFrequency(freq) )
 		return false;
-
-#else
-	#error "Implementation is missing"
 #endif
 
 	return true;
@@ -105,7 +118,9 @@ void Timer::sleep( double time )
 #ifdef VAPOR_PLATFORM_WINDOWS
 	::Sleep( static_cast<DWORD>(time) );
 #else
-	#error "Implementation is missing"
+	timespec param;
+	param.tv_nsec = time*1000000000.0;
+	nanosleep(&param, NULL);
 #endif
 }
 

@@ -137,13 +137,15 @@ void ProjectPlugin::onSaveButtonUpdateUI(wxUpdateUIEvent& event)
 
 void ProjectPlugin::switchScene(const ScenePtr& scene)
 {
-	Engine* engine = editor->getEngine();
-	engine->setSceneManager(scene);
+	editor->switchPlayMode(false);
 
 	UndoManager* undo = editor->getUndoManager();
 	undo->clearOperations();
 
 	unsavedChanges = false;
+
+	Engine* engine = editor->getEngine();
+	engine->setSceneManager(scene);
 
 	Events* events = editor->getEventManager();
 	events->onSceneLoad(scene);

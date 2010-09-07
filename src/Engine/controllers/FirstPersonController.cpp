@@ -128,7 +128,7 @@ void FirstPersonController::checkControls( double delta )
 	if( moveVector != Vector3::Zero )
 	{
 		moveVector *= delta * moveSensivity;
-		relativePosition += moveVector * Matrix4x3::createRotation(rotation);
+		relativePosition += Matrix4x3::createRotation(rotation) * moveVector;
 		viewChanged = true;
 	}
 

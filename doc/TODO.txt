@@ -128,7 +128,7 @@ Platform:
 		
 Rendering:
 	
-	Add Z-bias to the AABB renderables
+	Add Z-bias to the BoundingBox renderables
 	Font handling via FreeType 2
 	Signed distance fonts
 	Bitmap font file format (and converter for some freeware generator tool)

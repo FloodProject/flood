@@ -912,6 +912,18 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Behaviour"
+				>
+				<File
+					RelativePath="..\..\src\Engine\scene\Behaviour.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\scene\Behaviour.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Audio"
@@ -1397,14 +1409,6 @@
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\physics\btKinematicController.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Engine\physics\CharacterController.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\physics\CharacterController.h"
 					>
 				</File>
 			</Filter>
@@ -2102,6 +2106,18 @@
 						>
 					</File>
 				</Filter>
+			</Filter>
+			<Filter
+				Name="Character"
+				>
+				<File
+					RelativePath="..\..\src\Engine\physics\CharacterController.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\physics\CharacterController.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<File

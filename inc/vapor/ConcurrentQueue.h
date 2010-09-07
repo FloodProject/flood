@@ -65,7 +65,7 @@ public:
 		THREAD(boost::mutex::scoped_lock lock(mutex);)
 	    
 		while( queue.empty() )
-			THREAD(cond_var.wait(lock));
+			THREAD(cond_var.wait(lock);)
 	    
 		popped_value = queue.front();
 		queue.pop_front();

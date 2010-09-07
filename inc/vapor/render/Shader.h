@@ -21,7 +21,7 @@ namespace vapor {
  *  - Geometry shaders can be used to generate geometry procedurally.
  */
 
-namespace ShaderType
+struct ShaderType
 {
 	enum Enum 
 	{
@@ -30,8 +30,8 @@ namespace ShaderType
 		Geometry
 	};
 
-	const std::string getString(Enum e);
-}
+	static const std::string getString(Enum e);
+};
 
 //-----------------------------------//
 

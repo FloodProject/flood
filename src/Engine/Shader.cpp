@@ -13,21 +13,18 @@ namespace vapor {
 
 //-----------------------------------//
 
-namespace ShaderType
+const std::string ShaderType::getString(Enum e) 
 {
-	const std::string getString(Enum e) 
+	switch(e) 
 	{
-		switch(e) 
-		{
-		case Vertex:
-			return "Vertex";
-		case Fragment:
-			return "Fragment";
-		case Geometry:
-			return "Geometry";
-		default:
-			return "";
-		}
+	case Vertex:
+		return "Vertex";
+	case Fragment:
+		return "Fragment";
+	case Geometry:
+		return "Geometry";
+	default:
+		return "";
 	}
 }
 

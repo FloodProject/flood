@@ -170,13 +170,13 @@ RenderablePtr Model::getDebugRenderable() const
 	foreach( const BonePtr& bone, mesh->getSkeleton()->getBones() )
 	{
 		Vector3 vertex;
-		pos.push_back( vertex * bonesMatrix[bone->index] );
+		pos.push_back( bonesMatrix[bone->index]*vertex );
 		colors.push_back( Color::Blue );
 
 		if( bone->parentIndex != -1 )
 		{
 			Vector3 parentVertex;
-			pos.push_back( parentVertex * bonesMatrix[bone->parentIndex] );
+			pos.push_back( bonesMatrix[bone->parentIndex]*parentVertex );
 			colors.push_back( Color::Blue );
 		}
 	}

@@ -39,7 +39,7 @@ static void TransformVertices(std::vector<Vector3>& pos,
 {
 	foreach( const Vector3& v, vs )
 	{
-		pos.push_back( v * transform );
+		pos.push_back( transform*v );
 	}
 }
 
@@ -67,7 +67,7 @@ VertexBufferPtr GizmoRotate::generateCircles()
 	generateColors(colors, Y);
 	
 	transform = Matrix4x3::createScale( Vector3(0.4f) );
-	transform *= Matrix4x3::createRotation( EulerAngles(0, 90, 0) );
+	transform = transform*Matrix4x3::createRotation( EulerAngles(0, 90, 0) );
 	TransformVertices(pos, posY, transform);
 	
 	// Z axis
@@ -76,13 +76,13 @@ VertexBufferPtr GizmoRotate::generateCircles()
 	generateColors(colors, Z);
 
 	transform = Matrix4x3::createScale( Vector3(0.4f) );
-	transform *= Matrix4x3::createRotation( EulerAngles(90, 0, 0) );
+	transform = transform*Matrix4x3::createRotation( EulerAngles(90, 0, 0) );
 	TransformVertices(pos, posZ, transform);
 
 	// Translate it a bit.
 	transform = Matrix4x3::createTranslation( Vector3::UnitY * 0.5f );
 	foreach( Vector3& v, pos )
-		v = v * transform;
+		v = transform*v;
 
 	// Vertex buffer setup
 	VertexBufferPtr vb = new VertexBuffer();

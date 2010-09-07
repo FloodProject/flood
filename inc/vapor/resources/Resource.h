@@ -33,7 +33,7 @@ typedef int	ResourceHandle; // Note: unused for now.
  * only be fully loaded when the resource status changes to loaded.
  */
 
-namespace ResourceStatus
+struct ResourceStatus
 {
 	enum Enum
 	{
@@ -42,7 +42,7 @@ namespace ResourceStatus
 		Loading,
 		Loaded
 	};
-}
+};
 
 //-----------------------------------//
 
@@ -52,7 +52,7 @@ namespace ResourceStatus
  * related resources together, and for managing the data.
  */
 
-namespace ResourceGroup
+struct ResourceGroup
 {
 	enum Enum
 	{
@@ -66,7 +66,7 @@ namespace ResourceGroup
 	};
 
 	DECLARE_ENUM()
-}
+};
 
 //-----------------------------------//
 

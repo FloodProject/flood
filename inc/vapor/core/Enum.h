@@ -43,7 +43,7 @@ protected:
 	EnumValuesMap values;
 };
 
-#define DECLARE_ENUM() vapor::Enum& getType();
+#define DECLARE_ENUM() static vapor::Enum& getType();
 
 #define BEGIN_ENUM(enumName)							\
 	vapor::Enum& enumName::getType() {					\
