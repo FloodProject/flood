@@ -61,11 +61,8 @@ FirstPersonController::~FirstPersonController()
 
 //-----------------------------------//
 
-void FirstPersonController::update( double delta )
+void FirstPersonController::_update( double delta )
 {
-	if( !enabled )
-		return;
-
 	if( hasFocus )
 		checkControls( delta );
 }

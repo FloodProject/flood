@@ -29,4 +29,14 @@ Controller::~Controller()
 
 //-----------------------------------//
 
+void Controller::update( double time )
+{
+	if( !enabled )
+		return;
+
+	_update(time);
+}
+
+//-----------------------------------//
+
 } // end namespace

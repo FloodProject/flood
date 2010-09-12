@@ -27,7 +27,7 @@ class PhysicsManager;
 class PageManager;
 class InputManager;
 class FileSystem;
-class State;
+class ScriptManager;
 
 //-----------------------------------//
 
@@ -87,7 +87,7 @@ public:
 	GETTER(TaskManager, TaskManager*, taskManager)
 
 	// Gets the scripting state.
-	GETTER(ScriptState, State*, scriptState)
+	GETTER(ScriptManager, ScriptManager*, scriptManager)
 
 	// Gets the resources manager.
 	GETTER(ResourceManager, ResourceManager*, resourceManager)
@@ -139,7 +139,7 @@ protected:
 	Log* log;
 
 	// Scripting state.
-	State* scriptState;
+	ScriptManager* scriptManager;
 
 	// Application name.
 	std::string app;

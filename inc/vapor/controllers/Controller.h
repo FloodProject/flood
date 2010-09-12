@@ -24,9 +24,12 @@ public:
 
 	// Gets/sets if the controller is enabled.
 	ACESSOR(Enabled, bool, enabled)
+
+	// Updates the controller.
+	virtual void update( double delta );
 	
-	// Called to update the controller.
-	virtual void update( double delta ) = 0;
+	// Implements the controller update logic.
+	virtual void _update( double delta ) = 0;
 
 protected:
 
@@ -34,7 +37,6 @@ protected:
 
 	// If controller is disabled, it doesn't update.
 	bool enabled;
-
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Controller )

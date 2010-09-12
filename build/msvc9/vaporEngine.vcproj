@@ -1249,6 +1249,14 @@
 			Name="Scripting"
 			>
 			<File
+				RelativePath="..\..\src\Engine\ScriptManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\script\ScriptManager.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\Engine\State.cpp"
 				>
 			</File>

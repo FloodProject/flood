@@ -51,36 +51,39 @@ static int handleLuaError( lua_State* L )
 
 //-----------------------------------//
 
-State::State()
+State::State(lua_State* state)
+	: luaState(nullptr)
 {
-	// Create a new Lua VM instance.
-	luaState = luaL_newstate();
+	assert( state != nullptr );
 
-	// Check for proper initialization of the Lua state.
-	if( !luaState )
-	{
-		error( "lua", "Error initializing %s", LUA_RELEASE );
-		return;
-	}
+	luaState = state;
 
 	lua_atpanic( luaState, &handleLuaError );
-
-	// Initialize the standard libraries (we want to disallow I/O though).
-	luaL_openlibs( luaState );
-
-	info( "lua", "Initialized %s", LUA_RELEASE );
 }
 
 //-----------------------------------//
 
 State::~State()
 {
-	info("lua", "Cleaning up the Lua state");
-
-	scripts.clear();
-
 	// Clean up the Lua state.
 	lua_close( luaState );
+}
+
+//-----------------------------------//
+
+bool State::load( const ScriptPtr& script )
+{
+	if( !script )
+		return false;
+
+	int status = luaL_dostring( luaState,
+		script->getSource().c_str() );
+
+	if( status == 0 )
+		return true;
+
+	handleError();
+	return false;
 }
 
 //-----------------------------------//
@@ -109,6 +112,28 @@ bool State::execute( const std::string& source )
 
 //-----------------------------------//
 
+bool State::invoke( const std::string& name )
+{
+	// Get the function from the global table.
+	lua_getglobal(luaState, name.c_str());
+	
+	// Resume the coroutine in the function.
+	int res = lua_resume(luaState, 0);
+
+	if( res != 0 && res != LUA_YIELD )
+	{
+		debug( "Lua error in invoke()" );
+		return false;
+	}
+
+	// Clean the function from the stack.
+	//lua_pop(luaState, 1);
+
+	return true;
+}
+
+//-----------------------------------//
+
 void State::handleError()
 {
 	// This will be called when you call a Lua function and it errors.
@@ -117,35 +142,6 @@ void State::handleError()
 
 	lastError = lua_tostring( luaState, -1 );
 	lua_pop( luaState, 1 );
-}
-
-//-----------------------------------//
-
-void State::registerScript( const ScriptPtr& script )
-{
-	// Check if the script is already in the database.
-	ScriptsIterator it = std::find( scripts.begin(), scripts.end(), script );
-
-	// If it was not found...
-	if( it == scripts.end() )
-	{
-		// Add the new script to this state's database.
-		scripts.push_back( script );
-
-		// Additionaly set the script's state.
-		//script->setState( this );
-	}
-}
-
-//-----------------------------------//
-
-void State::update( float deltaTime )
-{
-	//// Execute all scripts.
-	//foreach( const ScriptPtr& script, scripts )
-	//{
-	//	script->execute();
-	//}
 }
 
 //-----------------------------------//

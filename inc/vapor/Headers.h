@@ -121,6 +121,7 @@
 // Scripting-related Includes
 //---------------------------------------------------------------------//
 
+#include <vapor/script/ScriptManager.h>
 #include <vapor/script/State.h>
 #include <vapor/script/Script.h>
 

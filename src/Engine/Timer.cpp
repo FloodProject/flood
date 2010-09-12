@@ -23,12 +23,8 @@ bool Timer::highResolutionSupport = false;
 //-----------------------------------//
 
 Timer::Timer()
-#ifdef VAPOR_PLATFORM_WINDOWS
 	: currentTime(0)
 	, lastTime(0)
-#else
-	// Figure out what to put in here
-#endif
 {
 	if( !checked && !checkHighResolutionTimers() )
 		error( "timer", "High-resolution timers are not supported" );

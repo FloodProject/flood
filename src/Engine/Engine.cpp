@@ -14,7 +14,7 @@
 #include "vapor/render/Device.h"
 #include "vapor/input/InputManager.h"
 #include "vapor/audio/Device.h"
-#include "vapor/script/State.h"
+#include "vapor/script/ScriptManager.h"
 #include "vapor/scene/Scene.h"
 #include "vapor/paging/PageManager.h"
 #include "vapor/resources/ResourceManager.h"
@@ -32,7 +32,7 @@ Engine::Engine()
 	, renderDevice(nullptr)
 	, audioDevice(nullptr)
 	, physicsManager(nullptr)
-	, scriptState(nullptr)
+	, scriptManager(nullptr)
 { }
 
 //-----------------------------------//
@@ -59,7 +59,7 @@ Engine::~Engine()
 	delete taskManager;
 	//delete audioDevice;
 	delete physicsManager;
-	delete scriptState;
+	delete scriptManager;
 	delete renderDevice;
 	delete resourceManager;
 	delete fileSystem;
@@ -107,7 +107,7 @@ void Engine::init( bool createWindow )
 
 #ifdef VAPOR_SCRIPTING_LUA
 	// Initialize the scripting
-	scriptState = new State();
+	scriptManager = new ScriptManager();
 #endif
 }
 
@@ -213,7 +213,7 @@ void Engine::update( double delta )
 	scene->update( delta );
 
 #ifdef VAPOR_SCRIPTING_LUA
-	this->getScriptState()->update( delta );
+	scriptManager->update( delta );
 #endif
 
 	physicsManager->update( delta );

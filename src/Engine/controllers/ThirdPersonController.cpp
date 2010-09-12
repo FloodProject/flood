@@ -36,11 +36,8 @@ ThirdPersonController::ThirdPersonController()
 
 //-----------------------------------//
 
-void ThirdPersonController::update( double delta )
+void ThirdPersonController::_update( double delta )
 {
-	if( !enabled )
-		return;
-
 	if( !followNode.lock() )
 	{
 		Engine* engine = Engine::getInstancePtr();

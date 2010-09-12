@@ -32,16 +32,16 @@ class VAPOR_API State : private boost::noncopyable
 public:
 
 	// Constructs a new scripting VM.
-	State();
+	State(lua_State* state);
 	
 	// Destructs this scripting VM.
 	~State();
 
-	// Creates a new script.
-	//ScriptPtr createScript();
-
 	// Gets the Lua state.
 	GETTER(LuaState, lua_State*, luaState)
+
+	// Loads a script resource.
+	bool load( const ScriptPtr& script );
 
 	// Executes a piece of source code.
 	bool execute( const std::string& source );
@@ -49,14 +49,11 @@ public:
 	// Executes a script resource.
 	bool execute( const ScriptPtr& script );
 
-	// Registers a script into this state.
-	void registerScript( const ScriptPtr& script );
+	// Invokes a function in the state.
+	bool invoke( const std::string& name );
 
 	// Handles the Lua error states.
 	void handleError();
-
-	// Executes all the registered scripts.
-	void update( float deltaTime );
 
 	// Gets the last error.
 	GETTER(LastError, const std::string&, lastError)
@@ -66,10 +63,7 @@ protected:
 	// Lua VM state.
 	lua_State* luaState;
 
-	// Holds Lua scripts.
-	std::vector<ScriptPtr> scripts;
-	typedef std::vector<ScriptPtr>::iterator ScriptsIterator;
-
+	// Last error.
 	std::string lastError;
 };
 

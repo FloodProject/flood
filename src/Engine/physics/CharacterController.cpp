@@ -77,7 +77,7 @@ CharacterController::~CharacterController()
 
 //-----------------------------------//
 
-void CharacterController::update( double delta )
+void CharacterController::_update( double delta )
 {
 	if( !createController() )
 		return;

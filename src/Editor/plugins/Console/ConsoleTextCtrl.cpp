@@ -41,7 +41,7 @@ ConsoleTextCtrl::ConsoleTextCtrl( vapor::Engine* engine, wxWindow* parent,
 	console = this;
 	InitControl();
 
-	luaState = engine->getScriptState();
+	luaState = engine->getScriptManager()->getState();
 	lua_register( luaState->getLuaState() , "print", luaPrintStub );
 }
 

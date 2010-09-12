@@ -4,9 +4,14 @@ WIP (work-in-progress)
 Add UpdateUI event to Play button.
 Add a reset method to the editor that sets to defaults (Physics state)
 Light and Camera debug
-
+ 
 EDITOR:
 -------
+
+Properties:
+	Fix the active property on node creation
+	Allow editing of bitfields
+	Fix the rotation display (quaternions)
 
 Input:
 

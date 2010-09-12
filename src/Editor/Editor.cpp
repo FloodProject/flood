@@ -196,8 +196,10 @@ void EditorFrame::createEngine()
 	FileSystem* fs = engine->getFileSystem();
 	fs->mountDefaultLocations();
 
-	State* state = engine->getScriptState();
+#ifdef VAPOR_SCRIPTING_LUA
+	State* state = engine->getScriptManager()->getState();
 	luaopen_vapor( state->getLuaState() );
+#endif
 }
 
 //-----------------------------------//

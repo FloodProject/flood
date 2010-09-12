@@ -41,7 +41,7 @@ public:
 	~FirstPersonController();
 
 	// Updates this component.
-	virtual void update( double delta );
+	virtual void _update( double delta );
 
 protected:
 
