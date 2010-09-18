@@ -198,6 +198,7 @@ void EditorFrame::createEngine()
 
 #ifdef VAPOR_SCRIPTING_LUA
 	State* state = engine->getScriptManager()->getState();
+	#pragma TODO("SWIG Lua bindings should be done on the engine")
 	luaopen_vapor( state->getLuaState() );
 #endif
 }
@@ -276,9 +277,7 @@ void EditorFrame::createResources()
 void EditorFrame::createServices()
 {
 	pluginManager = new PluginManager(this);
-	
 	eventManager = new Events(this);
-	
 	undoManager = new UndoManager();
 }
 
@@ -621,22 +620,25 @@ void EditorFrame::OnMouseEvent(wxMouseEvent& event)
 
 void EditorFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
-	wxFrame* about = new wxFrame(this, wxID_ANY, "About " VAPOR_EDITOR_NAME, wxDefaultPosition,
-		wxDefaultSize, wxCAPTION|wxCLOSE_BOX|wxFRAME_FLOAT_ON_PARENT|wxFRAME_TOOL_WINDOW|
-		wxSYSTEM_MENU|wxTAB_TRAVERSAL );
+	wxFrame* about = new wxFrame(this, wxID_ANY, "About " VAPOR_EDITOR_NAME,
+		wxDefaultPosition, wxDefaultSize, wxCAPTION|wxCLOSE_BOX|wxSYSTEM_MENU|
+		wxFRAME_FLOAT_ON_PARENT|wxFRAME_TOOL_WINDOW|wxTAB_TRAVERSAL);
 
 	wxBoxSizer* bSizer1 = new wxBoxSizer( wxVERTICAL );
 	wxBoxSizer* bSizer2 = new wxBoxSizer( wxVERTICAL );
 
 	wxPanel* m_panel1 = new wxPanel( about );
 
-	wxStaticBitmap* m_bitmap1 = new wxStaticBitmap( m_panel1, wxID_ANY, wxMEMORY_BITMAP(::about) );
+	wxBitmap aboutIcon = wxMEMORY_BITMAP(::about);
+	wxStaticBitmap* m_bitmap1 = new wxStaticBitmap( m_panel1, wxID_ANY, aboutIcon);
 	bSizer2->Add( m_bitmap1, 0, wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 0 );
 
-	wxString aboutText( "This software is © 2009-2010 João Matos and the rest of the team.\n\n"
-		VAPOR_EDITOR_NAME " uses some free software packages: wxWidgets (wxWidgets.org), Lua (lua.org),\n"
-		"Bullet (bulletphysics.com), Boost (boost.org), zlib (zlib.org) and the list goes on.\n\n"
-		"Check the documentation provided with the software for more details." );
+	wxString aboutText(
+		"This software is © 2009-2010 João Matos and the rest of the team.\n\n"
+		VAPOR_EDITOR_NAME " uses some free software packages: wxWidgets (wxWidgets.org),"
+		" Lua (lua.org),\nBullet (bulletphysics.com), Boost (boost.org), zlib (zlib.org)"
+		" and the list goes on.\n\nCheck the documentation provided with the software"
+		" for more details.");
 
 	wxStaticText* m_staticText2 = new wxStaticText( m_panel1, wxID_ANY, aboutText );
 	m_staticText2->Wrap( -1 );

@@ -173,6 +173,9 @@ void FirstPersonController::registerCallbacks()
 
 void FirstPersonController::onKeyPressed( const KeyEvent& keyEvent )
 {
+	if( !enabled )
+		return;
+
 	switch( keyEvent.keyCode )
 	{
 
@@ -214,6 +217,9 @@ void FirstPersonController::onKeyPressed( const KeyEvent& keyEvent )
 
 void FirstPersonController::onMouseWheel( const MouseWheelEvent& event )
 {
+	if( !enabled )
+		return;
+
 	mouseWheel += event.delta;
 }
 
@@ -221,6 +227,9 @@ void FirstPersonController::onMouseWheel( const MouseWheelEvent& event )
 
 void FirstPersonController::onMouseMove( const MouseMoveEvent& moveEvent )
 {
+	if( !enabled )
+		return;
+
 	if( window->isCursorVisible() )
 		return;
 		
@@ -234,6 +243,9 @@ void FirstPersonController::onMouseMove( const MouseMoveEvent& moveEvent )
 
 void FirstPersonController::onMouseDrag( const MouseDragEvent& event )
 {
+	if( !enabled )
+		return;
+
 	MouseMoveEvent me;
 	me.x = event.x;
 	me.y = event.y;
@@ -253,6 +265,9 @@ void FirstPersonController::centerCursor( )
 
 void FirstPersonController::onWindowFocusChange( bool focusLost )
 {
+	if( !enabled )
+		return;
+	
 	hasFocus = !focusLost;
 
 	if( hasFocus && !window->isCursorVisible() )

@@ -52,8 +52,7 @@ void ScenePlugin::onPluginEnable()
 	scenePage = new ScenePage( editor, notebookCtrl );
 
 	bool scenePageAdded = 
-		notebookCtrl->AddPage( scenePage, wxEmptyString/*wxT("Scene")*/,
-		true, iconScene );
+		notebookCtrl->AddPage( scenePage, "Scene", true, iconScene );
 
 	if( !scenePageAdded )
 		warn( "editor", "Could not add page to notebook" );

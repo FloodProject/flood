@@ -46,8 +46,6 @@ protected:
 	
 	// Virtual event handlers, overide them in your derived class
 	virtual void OnToolChoice( wxCommandEvent& event ){ event.Skip(); }
-
-	DECLARE_EVENT_TABLE()
 };
 
 //-----------------------------------//

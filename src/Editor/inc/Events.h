@@ -44,6 +44,13 @@ public:
 	// Node unselection event.
 	void onNodeUnselect( const NodePtr& );
 
+	// Component selection event.
+	void onComponentSelect( const ComponentPtr& );
+
+	// Component unselection event.
+	void onComponentUnselect( const ComponentPtr& );
+
+
 	// Mouse input events.
 	void onMouseMove( const MouseMoveEvent& );
 	void onMouseDrag( const MouseDragEvent& );
@@ -57,7 +64,7 @@ public:
 	void onKeyRelease( const KeyEvent& );
 
 	// Scene load event.
-	void onSceneLoad( const ScenePtr& newScene );
+	void onSceneLoad( const ScenePtr& scebe );
 
 	// Scene update event.
 	void onSceneUpdate();

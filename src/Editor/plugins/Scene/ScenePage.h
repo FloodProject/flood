@@ -17,16 +17,6 @@ typedef std::map<NodeWeakPtr, wxTreeItemId> NodeIdsMap;
 
 //-----------------------------------//
 
-class NodeItemData : public wxTreeItemData
-{
-public:
-
-	NodeWeakPtr node;
-	ComponentWeakPtr component;
-};
-
-//-----------------------------------//
-
 /**
  * This control is responsible for mantaining and updating a TreeCtrl
  * with all the contents of the scene tree in the passed instance of
@@ -60,19 +50,23 @@ public:
 protected:
 
 	// Initializes the control.
-	void initControl();
+	void initTree();
+	void initButtons();
 
 	// Initializes the icons list.
 	void initIcons();
 
-	// Adds a node and its children to the tree.
-	void addNodeRecursively( wxTreeItemId id, const NodePtr& node );
+	// Adds a group node to the tree.
+	void addGroup( wxTreeItemId id, const NodePtr& node );
 
-	// Adds a new node to the tree.
-	wxTreeItemId addNode( const NodePtr& node );
+	// Adds a node to the tree.
+	wxTreeItemId addNode( wxTreeItemId id, const NodePtr& node );
 
 	// Adds a component to the tree item.
 	void addComponent( wxTreeItemId id, ComponentPtr component );
+
+	// Cleans the current scene.
+	void cleanScene();
 
 	// wxWidgets event callbacks.
 	void onItemChanged( wxTreeEvent& );
@@ -81,8 +75,8 @@ protected:
 	void onLabelEditEnd( wxTreeEvent& );
 	void onDragBegin( wxTreeEvent& );
 	void onDragEnd( wxTreeEvent& );
-	void onMouseRightUp( wxContextMenuEvent& );
-	void onNodeMenu( wxCommandEvent& );
+	void onContextMenu( wxContextMenuEvent& );
+	void onMenuSelected( wxCommandEvent& );
 	void onComponentAdd( wxCommandEvent& );
 	void onButtonNodeAdd(wxCommandEvent&);
 	void onButtonNodeDelete(wxCommandEvent&);
@@ -93,6 +87,7 @@ protected:
 	void onNodeRemoved( const GroupEvent& );
 
 	// Scene tree.
+	wxBoxSizer* sizer;
 	wxTreeCtrl* treeCtrl;
 	wxTreeItemId rootId;
 	wxTreeItemId menuItemId;
@@ -102,6 +97,7 @@ protected:
 	// Tree icons.
 	wxImageList* imageList;
 	std::map<const Type*, int> icons;
+	std::map<const Type*, wxBitmap> bitmaps;
 
 	// Node buttons.
 	wxBitmapButton* buttonNodeAdd;
@@ -118,10 +114,9 @@ protected:
 
 	// Scene instance.
 	SceneWeakPtr weakScene;
-	
-private:
 
-	DECLARE_EVENT_TABLE()
+	// Node counter.
+	int nodeCounter;
 };
 
 //-----------------------------------//

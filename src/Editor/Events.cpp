@@ -152,6 +152,41 @@ void Events::onNodeUnselect( const NodePtr& node )
 
 //-----------------------------------//
 
+void Events::onComponentSelect( const ComponentPtr& component )
+{
+	if( !currentPlugin )
+		return;
+
+	if(!component)
+		return;
+
+	currentPlugin->onComponentSelect(component);
+
+	// Global event listeners.
+	foreach( Plugin* plugin, eventListeners )
+		plugin->onComponentSelect(component);
+}
+
+//-----------------------------------//
+
+void Events::onComponentUnselect( const ComponentPtr& component )
+{
+	if( !currentPlugin )
+		return;
+
+	if(!component)
+		return;
+
+	currentPlugin->onComponentUnselect(component);
+
+	// Global event listeners.
+	foreach( Plugin* plugin, eventListeners )
+		plugin->onComponentUnselect(component);
+}
+
+
+//-----------------------------------//
+
 void Events::onMouseMove( const MouseMoveEvent& mve )
 {
 	if( !currentPlugin )

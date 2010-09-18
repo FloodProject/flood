@@ -2,16 +2,32 @@ WIP (work-in-progress)
 ======================
 
 Add UpdateUI event to Play button.
-Add a reset method to the editor that sets to defaults (Physics state)
+Add a reset method to the editor that sets to defaults
+
+	void newScene()
+	{
+		editorScene.clear();
+		scene.clear();
+		
+		undoManager.clear()
+		resources.clear()
+		physicsWorld.clear()
+		
+		scene = new Scene();
+		camera stuff, etc.
+	}
+
 Light and Camera debug
- 
+Fix default animation state on skinned meshes with no animation tracks.
+
 EDITOR:
 -------
 
+Scene:
+	Add Undo events for node and components.
+
 Properties:
 	Fix the active property on node creation
-	Allow editing of bitfields
-	Fix the rotation display (quaternions)
 
 Input:
 
@@ -81,7 +97,6 @@ Scene:
 Scripting:
 
 	Fix Lua state closing
-	Per-script Lua state
 
 Textures:
 	Support DDS

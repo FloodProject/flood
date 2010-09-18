@@ -110,7 +110,10 @@ NodePtr Serializer::deserializeNode( const Json::Value& nodeValue )
 		const Class* type = (Class*) typeRegistry.getType(name);
 
 		if( !type )
+		{
+			warn("serialization", "Type '%s' was not found in registry", name.c_str() );
 			continue;
+		}
 
 		ComponentPtr component( (Component*) type->createInstance() );
 		assert( component != nullptr );
@@ -122,37 +125,6 @@ NodePtr Serializer::deserializeNode( const Json::Value& nodeValue )
 	}
 
 	return node;
-}
-
-//-----------------------------------//
-
-void Serializer::deserializeFields(const Class& type, void* object, const Json::Value& fieldsValue)
-{
-	foreach( const std::string& name, fieldsValue.getMemberNames() )
-	{
-		const Field* field = type.getField(name);
-
-		if( !field )
-			continue;
-
-		if( field->isPointer() )
-		{
-			const Json::Value& fieldValue = fieldsValue[name];
-			const Json::Value::Members& members = fieldValue.getMemberNames();
-			assert( members.size() > 0 );
-
-			const Json::Value& resValue = fieldValue[members.front()];
-			const std::string& resPath = resValue["path"].asString();
-			
-			Engine* engine = Engine::getInstancePtr();
-			ResourceManager* rm = engine->getResourceManager();
-			ResourcePtr res = rm->loadResource(resPath);
-
-			field->set<ResourcePtr>(object, res);
-		}
-		else
-			setFieldFromValue( *field, object, fieldsValue[name] );
-	}
 }
 
 //-----------------------------------//
@@ -199,6 +171,37 @@ void Serializer::serializeFields(const Class& type, void* object, Json::Value& v
 		}
 		else
 			assert( false );
+	}
+}
+
+//-----------------------------------//
+
+void Serializer::deserializeFields(const Class& type, void* object, const Json::Value& fieldsValue)
+{
+	foreach( const std::string& name, fieldsValue.getMemberNames() )
+	{
+		const Field* field = type.getField(name);
+
+		if( !field )
+			continue;
+
+		if( field->isPointer() )
+		{
+			const Json::Value& fieldValue = fieldsValue[name];
+			const Json::Value::Members& members = fieldValue.getMemberNames();
+			assert( members.size() > 0 );
+
+			const Json::Value& resValue = fieldValue[members.front()];
+			const std::string& resPath = resValue["path"].asString();
+			
+			Engine* engine = Engine::getInstancePtr();
+			ResourceManager* rm = engine->getResourceManager();
+			ResourcePtr res = rm->loadResource(resPath);
+
+			field->set<ResourcePtr>(object, res);
+		}
+		else
+			setFieldFromValue( *field, object, fieldsValue[name] );
 	}
 }
 
@@ -294,6 +297,13 @@ void Serializer::setFieldFromValue( const Field& field, void* object, const Json
 		Quaternion val = convertValueToQuaternion(value);
 		field.set<Quaternion>(object, val);
 	}
+	//-----------------------------------//
+	else if( type.isBitfield() )
+	{
+		std::string str = value.asString();
+		std::bitset<32> val(str);
+		field.set< std::bitset<32> >(object, val);
+	}
 	else
 	//-----------------------------------//
 		assert( false );
@@ -343,19 +353,6 @@ static Json::Value convertVector3( const Vector3& vec )
 	v.append(vec.x);
 	v.append(vec.y);
 	v.append(vec.z);
-	
-	return v;
-}
-
-//-----------------------------------//
-
-static Json::Value convertEulerAngles( const EulerAngles& ang )
-{
-	Json::Value v;
-	
-	v.append(ang.x);
-	v.append(ang.y);
-	v.append(ang.z);
 	
 	return v;
 }
@@ -454,6 +451,12 @@ Json::Value Serializer::valueFromPrimitive( const Field& field, void* object )
 	{
 		Quaternion quat = field.get<Quaternion>(object);
 		v = convertQuaternion(quat);
+	}
+	//-----------------------------------//
+	else if( type.isBitfield() )
+	{
+		std::bitset<32> bits = field.get< std::bitset<32> >(object);
+		v = bits.to_string();
 	}
 	else
 	//-----------------------------------//

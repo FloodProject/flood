@@ -24,6 +24,9 @@ namespace Convert
 {
 	// Converts vectors from Bullet.
 	Vector3 fromBullet( const btVector3& vec );
+	
+	// Converts quaternions from Bullet.
+	Quaternion fromBullet( const btQuaternion& quat );
 
 	// Converts transform from Bullet.
 	void fromBullet( const btTransform& bullet, const TransformPtr& transform );

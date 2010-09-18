@@ -17,6 +17,7 @@ namespace vapor {
 BEGIN_CLASS(Node)
 	FIELD_PRIMITIVE(Node, string, name)
 	FIELD_PRIMITIVE(Node, bool, visible)
+	FIELD_PRIMITIVE(Node, Bitfield, tags)
 END_CLASS()
 
 //-----------------------------------//
@@ -136,30 +137,30 @@ TransformPtr Node::getTransform() const
 
 //-----------------------------------//
 
-NodePtr Node::getParent( ) const
+NodePtr Node::getParent() const
 {
 	return parent.lock();
 }
 
 //-----------------------------------//
 
-bool Node::isVisible( ) const
+bool Node::isVisible() const
 {
 	return visible;
 }
 
 //-----------------------------------//
 
-bool Node::getTag( int index )
+bool Node::getTag(int index)
 {
-	return tag[index];
+	return tags[index];
 }
 
 //-----------------------------------//
 
-void Node::setTag( int index, bool state )
+void Node::setTag(int index, bool state)
 {
-	tag[index] = state;
+	tags[index] = state;
 }
 
 //-----------------------------------//

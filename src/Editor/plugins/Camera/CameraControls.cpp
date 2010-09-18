@@ -174,8 +174,7 @@ void CameraControls::buildControls()
 		wxDefaultPosition, wxSize(50, BAR_HEIGHT),
 		wxTE_CENTRE | wxTE_PROCESS_ENTER, validatorX);
 
-	textX->Bind(wxEVT_COMMAND_TEXT_ENTER,
-		&CameraControls::onTextEnter, this);
+	textX->Bind(wxEVT_COMMAND_TEXT_ENTER, &CameraControls::onTextEnter, this);
 
 	sizer->Add( textX, 0, wxALIGN_CENTER_VERTICAL, 5 );
 

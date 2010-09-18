@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/scene/Behaviour.h"
+#include "vapor/controllers/ScriptController.h"
 #include "vapor/script/Script.h"
 #include "vapor/script/ScriptManager.h"
 #include "vapor/resources/ResourceManager.h"
@@ -17,20 +17,20 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(Behaviour, Controller)
-	FIELD_PRIMITIVE(Behaviour, string, scriptName)
-	FIELD_CLASS_PTR(Behaviour, Script, script)
+BEGIN_CLASS_PARENT(ScriptController, Controller)
+	FIELD_PRIMITIVE(ScriptController, string, scriptName)
+	FIELD_CLASS_PTR(ScriptController, Script, script)
 END_CLASS()
 
 //-----------------------------------//
 
-Behaviour::Behaviour()
+ScriptController::ScriptController()
 	: state(nullptr)
 { }
 
 //-----------------------------------//
 
-void Behaviour::_update( double delta )
+void ScriptController::_update( double delta )
 {
 	if( !script && !scriptName.empty() )
 		script = getScript();
@@ -44,7 +44,7 @@ void Behaviour::_update( double delta )
 
 //-----------------------------------//
 
-State* Behaviour::createState()
+State* ScriptController::createState()
 {
 	Engine* engine = Engine::getInstancePtr();
 
@@ -57,7 +57,7 @@ State* Behaviour::createState()
 
 //-----------------------------------//
 
-ScriptPtr Behaviour::getScript()
+ScriptPtr ScriptController::getScript()
 {
 	Engine* engine = Engine::getInstancePtr();
 

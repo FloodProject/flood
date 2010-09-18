@@ -60,36 +60,52 @@ void PropertyOperation::setFieldValue(const wxAny& value)
 			bool val = value.As<bool>();
 			type->setFieldValue<bool>(field->name, object, val);
 		}
-
+		//-----------------------------------//
 		else if( prim_type.isInteger() )
 		{
 			int val = value.As<int>();
 			type->setFieldValue<int>(field->name, object, val);
 		}
-
+		//-----------------------------------//
 		else if( prim_type.isFloat() )
 		{
 			float val = value.As<float>();
 			type->setFieldValue<float>(field->name, object, val);
 		}
-
+		//-----------------------------------//
 		else if( prim_type.isString() )
 		{
 			wxString val = value.As<wxString>();
 			type->setFieldValue<std::string>(field->name, object, (std::string) val);
 		}
-
+		//-----------------------------------//
 		else if( prim_type.isColor() )
 		{
 			wxColour val = value.As<wxColour>();
 			type->setFieldValue<Color>(field->name, object, getColorFromWx(val));
 		}
-
+		//-----------------------------------//
 		else if( prim_type.isVector3() )
 		{
 			Vector3 val = value.As<Vector3>();
-			type->setFieldValue<Vector3>(field->name, object, val );
+			type->setFieldValue<Vector3>(field->name, object, val);
 		}
+		//-----------------------------------//
+		else if( prim_type.isQuaternion() )
+		{
+			Quaternion val = value.As<Quaternion>();
+			type->setFieldValue<Quaternion>(field->name, object, val);
+		}
+		//-----------------------------------//
+		else if( prim_type.isBitfield() )
+		{
+			long bits = value.As<long>();
+			std::bitset<32> val(bits);
+			type->setFieldValue< std::bitset<32> >(field->name, object, val);
+		}
+		//-----------------------------------//
+		else
+			assert( false );
 	}
 	else
 		assert( false );

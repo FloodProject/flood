@@ -18,7 +18,7 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-wxString convertToReadable(const wxString& str)
+static wxString convertToReadable(const wxString& str)
 {
 	if( str.IsEmpty() )
 		return wxEmptyString;
@@ -43,7 +43,7 @@ wxString convertToReadable(const wxString& str)
 
 //-----------------------------------//
 
-wxAny getPropertyRealValue(wxPGProperty* prop, const Type& field_type)
+static wxAny getComposedPropertyValue(wxPGProperty* prop, const Type& field_type)
 {
 	if( field_type.isPrimitive() )
 	{
@@ -61,6 +61,19 @@ wxAny getPropertyRealValue(wxPGProperty* prop, const Type& field_type)
 
 			Vector3 val( x.As<float>(), y.As<float>(), z.As<float>() );
 			return wxAny(val);
+		}
+		else if( prim_type.isQuaternion() )
+		{
+			wxPGProperty* X = prop->GetPropertyByName("X"); 
+			wxPGProperty* Y = prop->GetPropertyByName("Y");
+			wxPGProperty* Z = prop->GetPropertyByName("Z");
+
+			wxAny x = X->GetValue();
+			wxAny y = Y->GetValue();
+			wxAny z = Z->GetValue();
+
+			EulerAngles val( x.As<float>(), y.As<float>(), z.As<float>() );
+			return wxAny( Quaternion(val) );
 		}
 	}
 
@@ -112,7 +125,7 @@ void PropertyPage::onPropertyChanging(wxPropertyGridEvent& event)
 	PropertyData* data = (PropertyData*) prop->GetClientObject();
 	assert( data != nullptr );
 
-	propertyValue = getPropertyRealValue(prop, data->field->type);
+	propertyValue = getComposedPropertyValue(prop, data->field->type);
 }
 
 //-----------------------------------//
@@ -131,7 +144,7 @@ void PropertyPage::onPropertyChanged(wxPropertyGridEvent& event)
 	PropertyData* data = (PropertyData*) prop->GetClientObject();
 	assert( data != nullptr );
 
-	wxAny value = getPropertyRealValue(prop, data->field->type);
+	wxAny value = getComposedPropertyValue(prop, data->field->type);
 
 	PropertyOperation* op = new PropertyOperation();
 	op->type = (Class*) data->type;
@@ -270,6 +283,23 @@ wxPGProperty* PropertyPage::createEnumProperty(const Field& field, void* object)
 
 //-----------------------------------//
 
+struct TagName
+{
+	long id;
+	const char* name;
+};
+
+TagName TagNames[] = 
+{
+	{ 1 << 24, "NonPickable" },
+	{ 1 << 25, "NonTransformable" },
+	{ 1 << 26, "NonCollidable" },
+	{ 1 << 27, "UpdateTransformsOnly" },
+	{ 1 << 31, "EditorOnly" },
+};
+
+//-----------------------------------//
+
 wxPGProperty* PropertyPage::createPrimitiveProperty(const Field& field, void* object)
 {
 	wxPGProperty* prop = nullptr;
@@ -329,16 +359,34 @@ wxPGProperty* PropertyPage::createPrimitiveProperty(const Field& field, void* ob
 	//-----------------------------------//
 	else if( type.isQuaternion() )
 	{
-		//Vector3 vec = field.get<Vector3>(object);
-		//
+		Quaternion quat = field.get<Quaternion>(object);
+		EulerAngles ang = quat.getEulerAngles(quat);
+		
 		prop = new wxStringProperty( wxEmptyString, wxPG_LABEL, "<composed>" );
 		Append( prop );
 
-		//AppendIn( prop, new wxFloatProperty( "X", wxPG_LABEL, vec.x ) );
-		//AppendIn( prop, new wxFloatProperty( "Y", wxPG_LABEL, vec.y ) );
-		//AppendIn( prop, new wxFloatProperty( "Z", wxPG_LABEL, vec.z ) );
+		AppendIn( prop, new wxFloatProperty( "X", wxPG_LABEL, ang.x ) );
+		AppendIn( prop, new wxFloatProperty( "Y", wxPG_LABEL, ang.y ) );
+		AppendIn( prop, new wxFloatProperty( "Z", wxPG_LABEL, ang.z ) );
 
-		//Collapse( prop );
+		Collapse( prop );
+	}
+	//-----------------------------------//
+	else if( type.isBitfield() )
+	{
+		std::bitset<32> bitfield = field.get<std::bitset<32>>(object);
+		ulong bits = bitfield.to_ulong();
+		
+		wxPGChoices choices;
+
+		foreach( const TagName& p, TagNames )
+		{
+			wxString name( std::string(p.name) );
+			choices.Add( convertToReadable(name), p.id );
+		}
+
+		prop = new wxFlagsProperty( wxEmptyString, wxPG_LABEL, choices, bits );
+		Append( prop );
 	}
 	//-----------------------------------//
 	else

@@ -131,7 +131,7 @@ private:
 	bool visible;
 
 	// Tags of the node..
-	std::bitset<32> tag;
+	std::bitset<32> tags;
 
 	// Components of the node.
 	ComponentMap components;

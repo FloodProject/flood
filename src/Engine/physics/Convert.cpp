@@ -27,6 +27,17 @@ Vector3 Convert::fromBullet( const btVector3& vec )
 
 //-----------------------------------//
 
+Quaternion Convert::fromBullet( const btQuaternion& quat )
+{
+	return Quaternion(
+		quat.x(),
+		quat.y(),
+		quat.z(),
+		quat.w() );
+}
+
+//-----------------------------------//
+
 btVector3 Convert::toBullet(const Vector3& vec )
 {
 	return btVector3(
@@ -45,7 +56,7 @@ btVector3 Convert::toBullet(const BoundingBox& box)
 
 //-----------------------------------//
 
-Vector3 getOffset(const NodePtr& node)
+static Vector3 getOffset(const NodePtr& node)
 {
 	ShapePtr shape = node->getTypedComponent<Shape>();
 
@@ -71,9 +82,8 @@ void Convert::fromBullet( const btTransform& bullet, const TransformPtr& transfo
 	Vector3 origin = fromBullet( bullet.getOrigin() );
 	transform->setPosition( origin-offset );
 
-	EulerAngles rot;
-	bullet.getBasis().getEulerZYX(rot.z, rot.y, rot.x);
-	transform->setRotation(rot);
+	Quaternion quat = Convert::fromBullet(bullet.getRotation());
+	transform->setRotation(quat);
 }
 
 //-----------------------------------//

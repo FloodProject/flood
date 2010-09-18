@@ -59,28 +59,29 @@ Matrix4x3 Matrix4x3::createRotation( const EulerAngles& angles )
 
 Matrix4x3 Matrix4x3::createFromQuaternion(const Quaternion& q)
 {
-	// Compute a few values to optimize common subexpressions
-	float	ww = 2.0f * q.w;
-	float	xx = 2.0f * q.x;
-	float	yy = 2.0f * q.y;
-	float	zz = 2.0f * q.z;
-
-	// Set the matrix elements.  There is still a little more
-	// opportunity for optimization due to the many common
-	// subexpressions.  We'll let the compiler handle that...
 	Matrix4x3 m;
 
-	m.m11 = 1.0f - yy*q.y - zz*q.z;
-	m.m12 = xx*q.y + ww*q.z;
-	m.m13 = xx*q.z - ww*q.x;
+	float s, xs, ys, zs, wx, wy, wz, xx, xy, xz, yy, yz, zz;
+	
+	// if q is normalized, s = 2.0f
+	s = 2.0f/( q.x*q.x + q.y*q.y + q.z*q.z + q.w*q.w );
+	
+	xs = s*q.x; ys = s*q.y; zs = s*q.z;
+	wx = q.w*xs; wy = q.w*ys; wz = q.w*zs;
+	xx = q.x*xs; xy = q.x*ys; xz = q.x*zs;
+	yy = q.y*ys; yz = q.y*zs; zz = q.z*zs;
+	
+	m.m11 = 1.0f - (yy + zz);
+	m.m12 = xy + wz;
+	m.m13 = xz - wy;
+	
+	m.m21 = xy - wz;
+	m.m22 = 1.0f - (xx + zz);
+	m.m23 = yz + wx;
 
-	m.m21 = xx*q.y - ww*q.z;
-	m.m22 = 1.0f - xx*q.x - zz*q.z;
-	m.m23 = yy*q.z + ww*q.x;
-
-	m.m31 = xx*q.z + ww*q.y;
-	m.m32 = yy*q.z - ww*q.x;
-	m.m33 = 1.0f - xx*q.x - yy*q.y;
+	m.m31 = xz + wy;
+	m.m32 = yz - wx;
+	m.m33 = 1.0f - (xx + yy);
 
 	return m;
 }

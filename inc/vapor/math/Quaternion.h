@@ -318,6 +318,40 @@ public:
 		);
 	}
 
+	// Return the euler angles
+	EulerAngles getEulerAngles(const Quaternion& q) const
+	{
+		float pitch, heading, bank;
+
+		// Extract sin(pitch)
+		float sp = -2.0f * (q.y*q.z + q.w*q.x);
+
+		// Check for Gimbel lock, giving slight tolerance for numerical imprecision
+		if (fabs(sp) > 0.9999f)
+		{
+			// Looking straight up or down
+			pitch = (Math::PI / 2.0f) * sp;
+
+			// Compute heading, slam bank to zero
+			heading = atan2(-q.x*q.z - q.w*q.y, 0.5f - q.y*q.y - q.z*q.z);
+			bank = 0.0f;
+		}
+		else
+		{
+			// Compute angles.  We don't have to use the "safe" asin
+			// function because we already checked for range errors when
+			// checking for Gimbel lock
+			pitch	= asin(sp);
+			heading	= atan2(q.x*q.z - q.w*q.y, 0.5f - q.x*q.x - q.y*q.y);
+			bank	= atan2(q.x*q.y - q.w*q.z, 0.5f - q.x*q.x - q.z*q.z);
+		}
+
+		return EulerAngles(
+			Math::radianToDegree(pitch),
+			Math::radianToDegree(heading),
+			Math::radianToDegree(bank) );
+	}
+
 	// Dot product.
 	float dot(const Quaternion& a)
 	{

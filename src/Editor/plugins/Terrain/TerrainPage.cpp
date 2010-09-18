@@ -13,12 +13,6 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-BEGIN_EVENT_TABLE(TerrainPage, wxPanel)
-	//
-END_EVENT_TABLE()
-
-//-----------------------------------//
-
 TerrainPage::TerrainPage( Engine* engine, wxWindow* parent, wxWindowID id,
 						 const wxPoint& pos, const wxSize& size, long style ) 
 	: wxPanel( parent, id, pos, size, style )

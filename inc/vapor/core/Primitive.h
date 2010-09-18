@@ -29,6 +29,7 @@ namespace PrimitiveType
 		Vector3,
 		Quaternion,
 		Color,
+		Bitfield,
 	};
 }
 
@@ -70,6 +71,9 @@ public:
 	// Gets if this type represents a color.
 	bool isColor() const;
 
+	// Gets if this type represents a bitfield.
+	bool isBitfield() const;
+
 protected:
 
 	// Primitive type of the type.
@@ -87,6 +91,7 @@ public:
 	static const Primitive _Vector3;
 	static const Primitive _Color;
 	static const Primitive _Quaternion;
+	static const Primitive _Bitfield;
 };
 
 //-----------------------------------//

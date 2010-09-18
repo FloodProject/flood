@@ -71,6 +71,12 @@ public:
 	// Node unselection callback.
 	virtual void onNodeUnselect( const NodePtr& ) {}
 
+	// Component selection callback.
+	virtual void onComponentSelect( const ComponentPtr& ) {}
+	
+	// Component unselection callback.
+	virtual void onComponentUnselect( const ComponentPtr& ) {}
+
 	// Mouse move callback.
 	virtual void onMouseMove( const MouseMoveEvent& ) {}
 	

@@ -24,13 +24,13 @@ class State;
  * Script that can be executed by a script state.
  */
 
-class VAPOR_API Behaviour : public Controller
+class VAPOR_API ScriptController : public Controller
 {
 	DECLARE_CLASS_()
 
 public:
 
-	Behaviour();
+	ScriptController();
 
 	// Invokes a function on the behaviour.
 	bool invoke( const std::string& name );
