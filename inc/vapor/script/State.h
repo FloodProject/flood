@@ -50,7 +50,7 @@ public:
 	bool execute( const ScriptPtr& script );
 
 	// Invokes a function in the state.
-	bool invoke( const std::string& name );
+	bool invoke( const std::string& name, int numArguments = 0 );
 
 	// Handles the Lua error states.
 	void handleError();

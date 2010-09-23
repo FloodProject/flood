@@ -725,6 +725,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\interface\input.i"
+				>
+			</File>
+			<File
 				RelativePath="..\..\interface\math.i"
 				>
 			</File>

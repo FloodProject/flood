@@ -24,9 +24,11 @@ EDITOR:
 -------
 
 Scene:
+
 	Add Undo events for node and components.
 
 Properties:
+
 	Fix the active property on node creation
 
 Input:
@@ -43,7 +45,6 @@ Gizmo:
 
 Viewframe:
 
-	Fix the control border
 	Wire the camera render mode buttons
 	Redraw when a resource gets updated
 	
@@ -63,7 +64,6 @@ Console:
 	Clicks should not change the insertion point
 	readline type of library would be kind of nice
 	Write a line then go backwards and to the line again and color is white...
-	Override Lua 'print' method
 	
 Options:
 
@@ -148,7 +148,7 @@ Platform:
 		
 Rendering:
 	
-	Add Z-bias to the BoundingBox renderables
+	Add Z-bias to the BoundingBox debug renderables
 	Font handling via FreeType 2
 	Signed distance fonts
 	Bitmap font file format (and converter for some freeware generator tool)

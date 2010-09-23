@@ -118,6 +118,7 @@ void RenderControl::OnPaint(wxPaintEvent& WXUNUSED(event))
 	// to force a complete redraw. This is ugly because I suspect it
 	// draws twice so really try to find a better solution later.
 
+	#pragma TODO("Redraw only the invalidated regions of windows")
 	Refresh();
 
 	// From the PaintEvent docs: "the application must always create

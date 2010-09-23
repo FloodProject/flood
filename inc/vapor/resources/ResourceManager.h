@@ -70,10 +70,10 @@ public:
 
 	// Creates a new resource and returns the specific resource type.
 	template <typename T>
-	RESOURCE_TYPEDECL_FROM_TYPE(T) loadResource(const std::string& path, bool async = true)
+	boost::intrusive_ptr<T> loadResource(const std::string& path, bool async = true)
 	{
 		ResourcePtr res = loadResource( path, async );
-		return RESOURCE_SMART_PTR_CAST< T >( res );
+		return boost::static_pointer_cast<T>( res );
 	}
 
 	// Gets an existing resource by its Path (or null if it does not exist).
@@ -81,10 +81,10 @@ public:
 
 	// Gets a specific resource given it's name (if it exists).
 	template <typename T>
-	RESOURCE_TYPEDECL_FROM_TYPE(T) getResource(const std::string& path)
+	boost::intrusive_ptr<T> getResource(const std::string& path)
 	{
 		ResourcePtr res = getResource( path );
-		return RESOURCE_SMART_PTR_CAST< T >( res );
+		return boost::static_pointer_cast<T>( res );
 	}
 
 	// Removes a resource from the manager.

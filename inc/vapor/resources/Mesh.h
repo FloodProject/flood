@@ -41,6 +41,9 @@ public:
 	// Gets the skeleton of the mesh.
 	GETTER(Skeleton, SkeletonPtr, skeleton)
 
+	// Gets the bind pose animation of the mesh.
+	GETTER(BindPose, AnimationPtr, bindPose)
+
 	// Finds an animation from the mesh.
 	AnimationPtr findAnimation( const std::string& name );
 
@@ -66,7 +69,10 @@ protected:
 	// Skeleton of the mesh.
 	SkeletonPtr skeleton;
 
-	// Skeleton of the mesh.
+	// Bind pose animation of the mesh.
+	AnimationPtr bindPose;
+
+	// Animations of the mesh.
 	std::vector<AnimationPtr> animations;
 
 	// Renderables of the mesh.

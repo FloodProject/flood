@@ -20,7 +20,7 @@ struct MouseInfo;
  * Different types of mouse buttons.
  */
 
-namespace MouseButton
+struct MouseButton
 {
 	enum Enum
 	{
@@ -33,7 +33,7 @@ namespace MouseButton
 		Mouse4,
 		Mouse5,
 	};
-}
+};
 
 //-----------------------------------//
 
@@ -41,7 +41,7 @@ namespace MouseButton
  * Different types of mouse events.
  */
 
-namespace MouseEventType
+struct MouseEventType
 {
 	enum Enum
 	{
@@ -60,7 +60,7 @@ namespace MouseEventType
 		// Occurs when the mouse cursor exits the window
 		MouseExit,
 	};
-}
+};
 
 //-----------------------------------//
 

@@ -62,6 +62,9 @@ Matrix4x3 Animation::getInterpolatedKeyFrameMatrix(const BonePtr& bone, double t
 		return Matrix4x3::Identity;
 		 
 	const KeyFramesVector& boneKeyFrames = keyFrames[bone];
+
+	if( boneKeyFrames.empty() )
+		return Matrix4x3::Identity;
 	
 	uint endIndex = 0;
 

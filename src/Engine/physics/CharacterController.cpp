@@ -23,13 +23,12 @@
 #include <BulletCollision/CollisionShapes/btConvexShape.h>
 #include <BulletCollision/CollisionDispatch/btGhostObject.h> 
 #include <BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h>
-//#include <BulletDynamics/Character/btKinematicCharacterController.h>
 
 namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(CharacterController, Component)
+BEGIN_CLASS_PARENT(CharacterController, Controller)
 	FIELD_PRIMITIVE(CharacterController, float, stepHeight)
 	FIELD_PRIMITIVE(CharacterController, float, walkVelocity)
 	FIELD_PRIMITIVE(CharacterController, float, fallSpeed)
@@ -43,7 +42,7 @@ END_CLASS()
 CharacterController::CharacterController()
 	: controller(nullptr)
 	, stepHeight(0.3f)
-	, walkVelocity(8)
+	, walkVelocity(8.0f)
 	, fallSpeed(1.0f)
 	, jumpSpeed(1.0f)
 	, maxJumpHeight(1.0f)

@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "vapor/input/Device.h"
+
 namespace vapor {
 
 //-----------------------------------//	
@@ -19,7 +21,7 @@ namespace vapor {
  * TODO: How about Japanese keyboard? And Unicode?
  */
 
-namespace Keys
+struct Keys
 {
 	enum Enum
 	{
@@ -141,7 +143,7 @@ namespace Keys
 		
 		Pause,
 	};
-}
+};
 
 //-----------------------------------//
 
@@ -149,7 +151,7 @@ namespace Keys
  * Different types of keyboard events.
  */
 
-namespace KeyboardEventType
+struct KeyboardEventType
 {
 	enum Enum
 	{
@@ -158,7 +160,7 @@ namespace KeyboardEventType
 		// Occurs when a keyboard key is released
 		KeyReleased
 	};
-}
+};
 
 //-----------------------------------//
 

@@ -29,13 +29,31 @@ TerrainPage::TerrainPage( Engine* engine, wxWindow* parent, wxWindowID id,
 
 //-----------------------------------//
 
+void TerrainPage::createUI()
+{
+	m_cbTerrainTool = new wxChoicebook( this, wxID_ANY, 
+		wxDefaultPosition, wxDefaultSize, wxCHB_DEFAULT );
+
+	wxBoxSizer* bSizer1;
+	bSizer1 = new wxBoxSizer( wxVERTICAL );
+	bSizer1->Add( m_cbTerrainTool, 1, wxEXPAND|wxALL, 5 );
+	
+	createBrush();
+	createCell();
+
+	SetSizerAndFit( bSizer1 );
+	Layout();
+}
+
+//-----------------------------------//
+
 void TerrainPage::createBrush()
 {
 	m_panelBrush = new wxPanel( m_cbTerrainTool, wxID_ANY, 
 		wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 
-	new wxStaticLine( m_panelBrush, wxID_ANY, 
-		wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+	//new wxStaticLine( m_panelBrush, wxID_ANY, 
+	//	wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 
 	wxFlexGridSizer* fgSizer2;
 	fgSizer2 = new wxFlexGridSizer( 2 );
@@ -77,24 +95,6 @@ void TerrainPage::createCell()
 		wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 
 	m_cbTerrainTool->AddPage( m_panelCell, "Cell Placement", true );
-}
-
-//-----------------------------------//
-
-void TerrainPage::createUI()
-{
-	m_cbTerrainTool = new wxChoicebook( this, wxID_ANY, 
-		wxDefaultPosition, wxDefaultSize, wxCHB_DEFAULT );
-	
-	wxBoxSizer* bSizer1;
-	bSizer1 = new wxBoxSizer( wxVERTICAL );
-	bSizer1->Add( m_cbTerrainTool, 1, wxEXPAND|wxALL, 5 );
-	
-	createBrush();
-	//createCell();
-
-	SetSizer( bSizer1 );
-	Layout();
 }
 
 //-----------------------------------//

@@ -32,27 +32,12 @@
 
 namespace vapor { namespace editor {
 
-// ----------------------------------------------------------------------
-// event tables and other macros for wxWidgets
-// ----------------------------------------------------------------------
-
-BEGIN_EVENT_TABLE(EditorFrame, wxFrame)
-    EVT_MENU(Editor_Quit, EditorFrame::OnQuit)
-    EVT_MENU(Editor_About, EditorFrame::OnAbout)
-	EVT_MENU(wxID_ANY, EditorFrame::OnToolbarButtonClick)
-	EVT_KEY_DOWN(EditorFrame::OnKeyDown)
-	EVT_KEY_UP(EditorFrame::OnKeyUp)
-	EVT_MOUSE_EVENTS(EditorFrame::OnMouseEvent)
-END_EVENT_TABLE()
+//-----------------------------------//
 
 IMPLEMENT_APP(EditorApp)
 
-//-----------------------------------//
-
 bool EditorApp::OnInit()
 {
-    // Call the base class initialization method, currently it only parses a
-    // few common command-line options but it could be do more in the future.
     if( !wxApp::OnInit() )
         return false;
 
@@ -75,24 +60,11 @@ bool EditorApp::OnInit()
 
 //-----------------------------------//
 
-//bool EditorApp::OnExceptionInMainLoop()
-//{
-//	throw;
-//}
-//
-////-----------------------------------//
-//
-//void EditorApp::OnUnhandledException()
-//{
-//	throw;
-//}
-
-//-----------------------------------//
-
 EditorFrame::EditorFrame(const wxString& title)
 	: wxFrame(nullptr, wxID_ANY, title)
 	, engine(nullptr)
 	, mainSplitter(nullptr)
+	, viewSplitter(nullptr)
 	, viewframe(nullptr)
 	, undoManager(nullptr)
 	, eventManager(nullptr)
@@ -122,10 +94,11 @@ EditorFrame::EditorFrame(const wxString& title)
 
 EditorFrame::~EditorFrame()
 {
-	delete eventManager;
+	mainSplitter->Destroy();
+
 	delete pluginManager;
+	delete eventManager;
 	delete undoManager;
-	delete mainSplitter;
 
 	editorScene.reset();
 	delete engine;
@@ -207,9 +180,9 @@ void EditorFrame::createEngine()
 
 void EditorFrame::createViews()
 {	
-	viewframe = new Viewframe( mainSplitter );
-	mainSplitter->SetWindow( 0, viewframe );
-	mainSplitter->SetExpanded( viewframe );
+	viewframe = new Viewframe( viewSplitter );
+	viewSplitter->SetWindow( 0, viewframe );
+	viewSplitter->SetExpanded( viewframe );
 
 	RenderControl* control = viewframe->getControl();
 	control->onRender += fd::bind( &EditorFrame::onRender, this );
@@ -324,14 +297,46 @@ void EditorFrame::createUI()
 	createMenus();
 	createToolbar();
 	createNotebook();
+
+	mainSplitter->SplitVertically(viewSplitter, notebookCtrl, -220);
+
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &EditorFrame::OnQuit, this, Editor_Quit);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &EditorFrame::OnAbout, this, Editor_About);
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &EditorFrame::OnToolbarButtonClick, this);
+	Bind(wxEVT_KEY_DOWN, &EditorFrame::OnKeyDown, this);
+	Bind(wxEVT_KEY_UP, &EditorFrame::OnKeyUp, this);
+	
+	Bind(wxEVT_LEFT_DOWN, &EditorFrame::OnMouseEvent, this);
+	Bind(wxEVT_LEFT_UP, &EditorFrame::OnMouseEvent, this);
+	Bind(wxEVT_LEFT_DCLICK, &EditorFrame::OnMouseEvent, this);
+	Bind(wxEVT_MIDDLE_DOWN, &EditorFrame::OnMouseEvent, this);
+	Bind(wxEVT_MIDDLE_UP, &EditorFrame::OnMouseEvent, this);
+	Bind(wxEVT_MIDDLE_DCLICK, &EditorFrame::OnMouseEvent, this);
+	Bind(wxEVT_RIGHT_DOWN, &EditorFrame::OnMouseEvent, this);
+	Bind(wxEVT_RIGHT_UP, &EditorFrame::OnMouseEvent, this);
+	Bind(wxEVT_RIGHT_DCLICK, &EditorFrame::OnMouseEvent, this);
+	Bind(wxEVT_AUX1_DOWN, &EditorFrame::OnMouseEvent, this);
+	Bind(wxEVT_AUX1_UP, &EditorFrame::OnMouseEvent, this);
+	Bind(wxEVT_AUX1_DCLICK, &EditorFrame::OnMouseEvent, this);
+	Bind(wxEVT_AUX2_DOWN, &EditorFrame::OnMouseEvent, this);
+	Bind(wxEVT_AUX2_UP, &EditorFrame::OnMouseEvent, this);
+	Bind(wxEVT_MOTION, &EditorFrame::OnMouseEvent, this);
+	Bind(wxEVT_LEAVE_WINDOW, &EditorFrame::OnMouseEvent, this);
+	Bind(wxEVT_ENTER_WINDOW, &EditorFrame::OnMouseEvent, this);
+	Bind(wxEVT_MOUSEWHEEL, &EditorFrame::OnMouseEvent, this);
 }
 
 //-----------------------------------//
 
 void EditorFrame::createSplitter()
 {
-	mainSplitter = new wxFourWaySplitter(this);
-	sizer->Add( mainSplitter, 1, wxEXPAND|wxALL );
+	mainSplitter = new wxSplitterWindow(this);
+	mainSplitter->SetSashGravity( 1.0 );
+	//mainSplitter->SetMinimumPaneSize( );
+	sizer->Add( mainSplitter, wxSizerFlags(1).Expand() );
+
+	viewSplitter = new wxFourWaySplitter(mainSplitter);
+	//sizer->Add( viewSplitter, wxSizerFlags(1).Expand() );
 }
 
 //-----------------------------------//
@@ -391,10 +396,7 @@ void EditorFrame::createToolbar()
 
 void EditorFrame::createNotebook()
 {
-	const wxSize notebookMinSize(220, wxSIZE_AUTO_HEIGHT);
-	notebookCtrl = new wxNotebook( this, wxID_ANY );
-	notebookCtrl->SetMinSize(notebookMinSize);
-	sizer->Add(notebookCtrl, 0, wxALL|wxEXPAND, 0 );
+	notebookCtrl = new wxNotebook(mainSplitter, wxID_ANY);
 
 	wxImageList* img = new wxImageList(16, 16);
 	notebookCtrl->AssignImageList( img );
@@ -553,33 +555,22 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 	//-----------------------------------//
 	case Toolbar_ToogleViewport:
 	{
-		int curExpansion = mainSplitter->GetExpanded();
+		int curExpansion = viewSplitter->GetExpanded();
 
 		if( curExpansion >= 0 )
-			mainSplitter->SetExpanded(-1);
+			viewSplitter->SetExpanded(-1);
 		else
-			mainSplitter->SetExpanded(0);
+			viewSplitter->SetExpanded(0);
 
 		break;
 	}
 	//-----------------------------------//
 	case Toolbar_ToogleSidebar:
 	{
-		wxSize newSize = viewframe->GetClientSize();
-		const wxSize& nbSize = notebookCtrl->GetClientSize();
-
-		if( notebookCtrl->IsShown() )
-		{
-			notebookCtrl->Hide();
-		}
+		if( !mainSplitter->GetWindow2() )
+			mainSplitter->SplitVertically(viewSplitter, notebookCtrl, -220);
 		else
-		{
-			notebookCtrl->Show();
-			newSize.SetWidth( newSize.GetWidth() + nbSize.GetWidth() );
-		}
-
-		SetClientSize( newSize );
-		Layout();
+			mainSplitter->Unsplit();
 
 		break;
 	}

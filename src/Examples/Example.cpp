@@ -84,7 +84,7 @@ void Example::onSetupScene()
 	//nodeFBO->addComponent( GeometryPtr( new Geometry(quad) ) );
 	//scene->add( nodeFBO );
 
-	MeshPtr meshCT = rm->loadResource<Mesh>("ct.Milkshape3D");
+	MeshPtr meshCT = rm->loadResource<Mesh>("ct.ms3d");
 	NodePtr nodeCT( new Node("ct") );
 	nodeCT->addTransform();
 	nodeCT->addComponent( ModelPtr( new Model(meshCT) ) );
@@ -181,9 +181,9 @@ void Example::onRender()
 
 //-----------------------------------//
 
-void Example::onKeyPressed( const KeyEvent& keyEvent )
+void Example::onKeyPressed( const KeyEvent& event )
 {
-	if( keyEvent.keyCode == Keys::N )
+	if( event.keyCode == Keys::N )
 	{
 		Noise noise;
 
@@ -205,23 +205,23 @@ void Example::onKeyPressed( const KeyEvent& keyEvent )
 		image.save("noise.png");
 	}
 
-	if( keyEvent.keyCode == Keys::Space )
+	else if( event.keyCode == Keys::Space )
 		debug( "time: %lf", frameTimer.getElapsedTime() );
 
-	if( keyEvent.keyCode == Keys::Pause )
+	else if( event.keyCode == Keys::Pause )
 		Log::showDebug = !Log::showDebug;
 
-	if( keyEvent.keyCode == Keys::G )
+	else if( event.keyCode == Keys::G )
 	{
 		bufferFBO->bind();
 		textureFBO->readImage()->save("depth.png");
 		bufferFBO->unbind();
 	}
 
-	if( keyEvent.keyCode == Keys::F )
-		debug( "FPS: %d", int(frameStats.getLastFPS()));
+	else if( event.keyCode == Keys::F )
+		debug( "FPS: %d", (int) frameStats.getLastFPS() );
 
-	if( keyEvent.keyCode == Keys::M )
+	else if( event.keyCode == Keys::M )
 	{
 		debug( "min/avg/max: %lf / %lf / %lf", 
 					frameStats.minFrameTime,
@@ -229,7 +229,7 @@ void Example::onKeyPressed( const KeyEvent& keyEvent )
 					frameStats.maxFrameTime );
 	}
 
-	//if( keyEvent.keyCode == Keys::J )
+	//else if( event.keyCode == Keys::J )
 	//{
 	//	Json::Value sc;
 	//	scene->serialize( sc );

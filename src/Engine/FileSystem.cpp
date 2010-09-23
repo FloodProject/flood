@@ -98,7 +98,9 @@ bool FileSystem::mount(const std::string& path, const std::string& mount, bool a
 
 void FileSystem::mountDefaultLocations()
 {
-	// Default FileSystem mount points
+	//mount( PHYSFS_getBaseDir() );
+
+	// Default filesystem mount points.
 	const std::string media( "media/" );
 
 	std::string dirs[] = 
@@ -111,7 +113,7 @@ void FileSystem::mountDefaultLocations()
 		"sounds"
 	};
 
-	if ( !mount( media ) )
+	if ( !mount(media) )
 		return;
 
 	foreach( const std::string& dir, dirs )

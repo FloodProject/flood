@@ -88,7 +88,7 @@ ResourcePtr ResourceManager::loadResource(const std::string& path, bool async)
 		onResourceAdded( event );
 	}
 
-	resources[path] = res;
+	resources[res->getPath()] = res;
 	return res;
 }
 
@@ -197,7 +197,7 @@ ResourcePtr ResourceManager::prepareResource( const std::string& path )
 
 	ResourcePtr res( loader->prepare(file) );
 	res->setStatus( ResourceStatus::Loading );
-	res->setPath( path );
+	res->setPath( file.getPath() );
 
 	return res;
 }
@@ -247,9 +247,7 @@ ResourcePtr ResourceManager::getResource(const std::string& path)
 {
 	// Check if we have this resource in the map.
 	if( resources.find(path) == resources.end() ) 
-	{
-		return ResourcePtr();
-	}
+		return nullptr;
 
 	return resources[path];
 }

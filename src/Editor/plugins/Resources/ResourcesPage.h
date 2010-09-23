@@ -35,6 +35,9 @@ public:
 
 	~ResourcesPage();
 
+	// Gets the resource associated with the tree item.
+	ResourcePtr getResourceFromTreeId( wxTreeItemId id );
+
 	// Synchronizes the tree with the resources.
 	void updateTree();
 
@@ -43,7 +46,8 @@ protected:
 	void initControl();
 	void initIcons();
 
-	void onItemMenu(wxTreeEvent& event);
+	void onTreeItemMenu(wxTreeEvent& event);
+	void onCommandMenuSelected( wxCommandEvent& event );
 
 	// Resource-monitoring callbacks.
 	void onResourceAdded( const ResourceEvent& event );
@@ -55,14 +59,11 @@ protected:
 	ResourceManager* rm;
 
 	wxImageList* imageList;
-	wxTreeItemId root;
+	wxTreeItemId rootItemId;
+	wxTreeItemId menuItemId;
 
 	std::map< ResourceGroup::Enum, wxTreeItemId > resourceGroupTreeIds;
 	std::map< ResourceGroup::Enum, int > resourceGroupIcons;
-
-private:
-
-	DECLARE_EVENT_TABLE()
 };
 
 //-----------------------------------//

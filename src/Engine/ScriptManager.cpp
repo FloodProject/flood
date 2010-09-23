@@ -102,7 +102,7 @@ void ScriptManager::onReload( const ResourceEvent& evt )
 	
 	debug( "Reloading script '%s'", evt.resource->getPath().c_str() );
 	
-	const ScriptPtr& script = RESOURCE_SMART_PTR_CAST<Script>( evt.resource );
+	const ScriptPtr& script = boost::static_pointer_cast<Script>( evt.resource );
 
 	foreach( const ScriptsMapPair& p, scripts )
 	{

@@ -91,7 +91,7 @@ void TextureManager::onLoad( const ResourceEvent& evt )
 	if( evt.resource->getResourceGroup() != ResourceGroup::Images )
 		return;
 	
-	const ImagePtr& image = RESOURCE_SMART_PTR_CAST<Image>( evt.resource );
+	const ImagePtr& image = boost::static_pointer_cast<Image>( evt.resource );
 
 	if( textures.find(image) == textures.end() )
 		return;
@@ -107,7 +107,7 @@ void TextureManager::onReload( const ResourceEvent& evt )
 	if( evt.resource->getResourceGroup() != ResourceGroup::Images )
 		return;
 
-	const ImagePtr& img = RESOURCE_SMART_PTR_CAST<Image>( evt.resource );
+	const ImagePtr& img = boost::static_pointer_cast<Image>( evt.resource );
 	//const ImagePtr& newImage = RESOURCE_SMART_PTR_CAST<Image>( evt.newResource );
 
 	if( textures.find(img) == textures.end() )

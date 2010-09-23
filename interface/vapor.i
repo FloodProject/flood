@@ -24,6 +24,7 @@ namespace vapor
 
 %include "math.i"
 %include "resources.i"
+%include "input.i"
 %include "render.i"
 %include "scene.i"
 

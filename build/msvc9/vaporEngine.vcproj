@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\boost\&quot;;&quot;$(SolutionDir)dep\picopng\&quot;;&quot;$(SolutionDir)dep\stb\&quot;;&quot;$(SolutionDir)dep\vld\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;;&quot;$(SolutionDir)dep\openal\include&quot;;&quot;$(SolutionDir)dep\ogg\include&quot;;&quot;$(SolutionDir)dep\physfs\include&quot;;&quot;$(SolutionDir)dep\vorbis\include&quot;;&quot;$(SolutionDir)dep\jsoncpp\include&quot;;&quot;$(SolutionDir)dep\SFML\include&quot;;&quot;$(SolutionDir)dep\fd_delegate\include&quot;;&quot;$(SolutionDir)dep\lua\include&quot;;&quot;$(SolutionDir)dep\bullet\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\boost\&quot;;&quot;$(SolutionDir)dep\picopng\&quot;;&quot;$(SolutionDir)dep\stb\&quot;;&quot;$(SolutionDir)dep\vld\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;;&quot;$(SolutionDir)dep\openal\include&quot;;&quot;$(SolutionDir)dep\ogg\include&quot;;&quot;$(SolutionDir)dep\physfs\include&quot;;&quot;$(SolutionDir)dep\vorbis\include&quot;;&quot;$(SolutionDir)dep\jsoncpp\include&quot;;&quot;$(SolutionDir)dep\SFML\include&quot;;&quot;$(SolutionDir)dep\fd_delegate\include&quot;;&quot;$(SolutionDir)dep\lua\include&quot;;&quot;$(SolutionDir)dep\swig\include&quot;;&quot;$(SolutionDir)dep\bullet\include&quot;"
 				PreprocessorDefinitions="_DEBUG;___DEBUG;WIN32;_WINDOWS"
 				MinimalRebuild="true"
 				ExceptionHandling="1"
@@ -2062,6 +2062,14 @@
 			<File
 				RelativePath="..\..\src\Engine\controllers\Controller.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="SWIG_TYPE_TABLE=vapor"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\inc\vapor\controllers\Controller.h"
@@ -2121,6 +2129,14 @@
 				<File
 					RelativePath="..\..\src\Engine\controllers\ScriptController.cpp"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							DisableSpecificWarnings="4996"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\controllers\ScriptController.h"

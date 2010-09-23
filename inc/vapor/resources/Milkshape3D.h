@@ -67,7 +67,10 @@ public:
 	void buildSkeleton();
 
 	// Builds the mesh animation data.
-	void buildAnimation();
+	void buildAnimations();
+
+	// Builds an animation from a metadata.
+	AnimationPtr buildAnimation(AnimationMetadata& data);
 
 	// Builds the animation metadata.
 	void buildAnimationMetadata();

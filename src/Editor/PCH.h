@@ -32,6 +32,7 @@
 #include <wx/statline.h>
 #include <wx/spinctrl.h>
 #include <wx/filectrl.h>
+#include <wx/splitter.h>
 
 //---------------------------------------------------------------------//
 // Image Conversion Utilities

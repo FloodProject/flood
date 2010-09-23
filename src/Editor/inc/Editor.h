@@ -146,14 +146,11 @@ protected:
 
 	// UI widgets.
 	wxBoxSizer* sizer;
-	wxFourWaySplitter* mainSplitter;
+	wxSplitterWindow* mainSplitter;
+	wxFourWaySplitter* viewSplitter;
 	wxToolBar* toolBar;
 	Viewframe* viewframe;
 	wxNotebook* notebookCtrl;
-
-private:
-
-    DECLARE_EVENT_TABLE()
 };
 
 //-----------------------------------//

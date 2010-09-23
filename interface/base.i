@@ -6,14 +6,12 @@
 *
 ************************************************************************/
 
-%include "std_string.i"
-%include "std_vector.i"
-//%include "std_list.i"
-%include "std_map.i"
+%include <std_string.i>
+%include <std_vector.i>
+%include <std_map.i>
 
-#define SWIG_SHARED_PTR_NAMESPACE std
-#define SWIG_SHARED_PTR_SUBNAMESPACE tr1
-%include <shared_ptr.i>
+//#define SWIG_SHARED_PTR_NAMESPACE std
+//%include <std_shared_ptr.i>
 
 %define VAPOR_API
 %enddef

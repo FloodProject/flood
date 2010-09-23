@@ -10,13 +10,18 @@
 
 #include "vapor/controllers/Controller.h"
 
+
 FWD_DECL_INTRUSIVE(Script)
+
+struct swig_module_info;
 
 namespace vapor {
 
 //-----------------------------------//
 
 class State;
+struct KeyEvent;
+struct MouseButtonEvent;
 
 //-----------------------------------//
 
@@ -31,9 +36,7 @@ class VAPOR_API ScriptController : public Controller
 public:
 
 	ScriptController();
-
-	// Invokes a function on the behaviour.
-	bool invoke( const std::string& name );
+	~ScriptController();
 
 	// Updates the script.
 	virtual void _update( double delta );
@@ -41,10 +44,22 @@ public:
 protected:
 
 	// Creates a new state.
-	State* createState();
+	void createState();
+
+	// Binds the node instance.
+	void bindNode();
+
+	// Binds a type into this instance.
+	void bindType(swig_module_info* module, const char* name,
+		const char* type, void* object);
 
 	// Gets the script by its name.
 	ScriptPtr getScript();
+
+	// Input callback functions.
+	virtual void onKeyPressed( const KeyEvent& );
+	virtual void onMouseButtonPressed( const MouseButtonEvent& );
+	virtual void onMouseButtonReleased( const MouseButtonEvent& );
 
 	// Script name.
 	std::string scriptName;

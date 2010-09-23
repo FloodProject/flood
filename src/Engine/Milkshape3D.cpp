@@ -76,7 +76,7 @@ void Milkshape3D::build()
 	if( isAnimated() )
 	{
 		buildSkeleton();
-		buildAnimation();
+		buildAnimations();
 		
 		//setupTangents();
 		setupInitialVertices();
@@ -181,7 +181,7 @@ float Milkshape3D::getAnimationStart(const AnimationMetadata& data)
 
 //-----------------------------------//
 
-void Milkshape3D::buildAnimation()
+void Milkshape3D::buildAnimations()
 {
 	assert( skeleton != nullptr );
 
@@ -189,23 +189,42 @@ void Milkshape3D::buildAnimation()
 
 	foreach( AnimationMetadata& data, metadata )
 	{
-		AnimationPtr animation = new Animation();
-
-		foreach( ms3d_joint_t& joint, joints )
-		{
-			if( joint.positionKeys.empty() )
-				continue;
-
-			const BonePtr& bone = skeleton->findBone(joint.name);
-
-			KeyFramesVector frames;
-			buildKeyFrames( joint, data, frames );
-
-			animation->setKeyFrames(bone, frames);
-		}
-
+		AnimationPtr animation = buildAnimation(data);
 		animations.push_back(animation);
 	}
+
+	// Builds the bind pose animation.
+	AnimationMetadata bindPoseMetadata;
+	
+	bindPoseMetadata.start = 0;
+	bindPoseMetadata.end = 0;
+	bindPoseMetadata.name = "bind";
+	bindPoseMetadata.startTime = 0;
+
+	bindPose = buildAnimation(bindPoseMetadata);
+}
+
+//-----------------------------------//
+
+AnimationPtr Milkshape3D::buildAnimation(AnimationMetadata& data)
+{
+	AnimationPtr animation = new Animation();
+	animation->setName(data.name);
+
+	foreach( ms3d_joint_t& joint, joints )
+	{
+		if( joint.positionKeys.empty() )
+			continue;
+
+		const BonePtr& bone = skeleton->findBone(joint.name);
+
+		KeyFramesVector frames;
+		buildKeyFrames( joint, data, frames );
+
+		animation->setKeyFrames(bone, frames);
+	}
+
+	return animation;
 }
 
 //-----------------------------------//

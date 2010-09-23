@@ -260,7 +260,7 @@ void ScenePage::addComponent( wxTreeItemId id, ComponentPtr component )
 
 NodePtr ScenePage::getNodeFromTreeId( wxTreeItemId id )
 {
-	if( !id || !id.IsOk() )
+	if( !id )
 		return NodePtr();
 
 	NodeItemData* data = (NodeItemData*) treeCtrl->GetItemData(id);
@@ -370,6 +370,8 @@ void ScenePage::onButtonNodeAdd(wxCommandEvent&)
 
 	UndoManager* undoManager = editor->getUndoManager();
 	undoManager->registerOperation(nodeOperation);
+
+	editor->redrawView();
 }
 
 //-----------------------------------//
@@ -389,6 +391,13 @@ void ScenePage::onButtonNodeDelete(wxCommandEvent&)
 	nodeIds.erase(node);
 	treeCtrl->Delete(id);
 	weakScene.lock()->remove( node );
+
+	NodeOperation* nodeOperation = new NodeOperation();
+	nodeOperation->weakNode = node;
+	nodeOperation->scenePage = this;
+
+	UndoManager* undoManager = editor->getUndoManager();
+	undoManager->registerOperation(nodeOperation);
 
 	editor->redrawView();
 }

@@ -23,7 +23,8 @@ class TerrainPage : public wxPanel
 {
 public:
 
-	TerrainPage( Engine* engine, wxWindow* parent, wxWindowID id = wxID_ANY, 
+	TerrainPage( Engine* engine, wxWindow* parent,
+		wxWindowID id = wxID_ANY, 
 		const wxPoint& pos = wxDefaultPosition, 
 		const wxSize& size = wxDefaultSize, 
 		long style = wxTAB_TRAVERSAL );

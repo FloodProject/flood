@@ -32,7 +32,6 @@ bool Lua_Loader::decode(const File& file, Resource* res)
 
 	Script* script = static_cast<Script*>( res );
 	script->setSource( str );
-	script->setPath( file.getFullPath() );
 
 	return true;
 }

@@ -112,22 +112,36 @@ bool State::execute( const std::string& source )
 
 //-----------------------------------//
 
-bool State::invoke( const std::string& name )
+bool State::invoke( const std::string& name, int numArguments )
 {
 	// Get the function from the global table.
 	lua_getglobal(luaState, name.c_str());
-	
-	// Resume the coroutine in the function.
-	int res = lua_resume(luaState, 0);
 
-	if( res != 0 && res != LUA_YIELD )
+	if( !lua_isfunction(luaState, -1) )
 	{
-		debug( "Lua error in invoke()" );
+		lua_pop(luaState, 1);
 		return false;
 	}
 
-	// Clean the function from the stack.
-	//lua_pop(luaState, 1);
+	if( numArguments > 0 )
+		lua_insert(luaState, -numArguments-1);
+	
+	// Resume the coroutine in the function.
+	int res = lua_resume(luaState, numArguments);
+
+	if( res != 0 && res != LUA_YIELD )
+	{
+		std::string msg = lua_tostring(luaState, -1);
+		lua_pop(luaState, -1);
+
+		if( lastError != msg )
+		{
+			debug(msg);
+			lastError = msg;
+		}
+
+		return false;
+	}
 
 	return true;
 }

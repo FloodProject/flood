@@ -124,25 +124,13 @@ void Framework::updateFrameTimes()
 void Framework::registerCallbacks()
 {
 	InputManager* im = getInputManager();
-
+	
 	Keyboard* keyboard = im->getKeyboard();
-
-	if( keyboard )
-	{
-		keyboard->onKeyPress +=
-			fd::bind( &Framework::onKeyPressed, this );
-	}
+	keyboard->onKeyPress += fd::bind( &Framework::onKeyPressed, this );
 	
 	Mouse* mouse = im->getMouse();
-
-	if( mouse )
-	{
-		mouse->onMouseButtonPress +=
-			fd::bind( &Framework::onButtonPressed, this );
-		
-		mouse->onMouseButtonRelease +=
-			fd::bind( &Framework::onButtonReleased, this );
-	}
+	mouse->onMouseButtonPress += fd::bind( &Framework::onButtonPressed, this );
+	mouse->onMouseButtonRelease += fd::bind( &Framework::onButtonReleased, this );
 }
 
 //-----------------------------------//

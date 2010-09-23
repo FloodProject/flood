@@ -24,6 +24,7 @@ END_CLASS()
 Mesh::Mesh()
 	: animated(false)
 	, built(false)
+	, bindPose(nullptr)
 { }
 
 //-----------------------------------//

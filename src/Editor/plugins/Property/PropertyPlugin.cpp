@@ -49,9 +49,15 @@ void PropertyPlugin::onPluginEnable()
 	wxBitmap iconPackage = wxMEMORY_BITMAP(grid_icon);
 	iconProperty = imageList->Add(iconPackage);
 
-	propertyPage = new PropertyPage( editor, notebookCtrl );
+	wxBoxSizer* sizer = new wxBoxSizer( wxVERTICAL );
 
-	bool propertyPageAdded = notebookCtrl->AddPage( propertyPage,
+	wxPanel* panel = new wxPanel(notebookCtrl);
+	panel->SetSizer(sizer);
+
+	propertyPage = new PropertyPage( editor, panel );
+	sizer->Add( propertyPage, wxSizerFlags(1).Expand() );
+
+	bool propertyPageAdded = notebookCtrl->AddPage( panel,
 		wxEmptyString/*wxT("Property")*/, false, iconProperty );
 
 	if( !propertyPageAdded )

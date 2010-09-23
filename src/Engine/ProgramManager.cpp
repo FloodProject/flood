@@ -77,8 +77,8 @@ void ProgramManager::onLoad( const ResourceEvent& evt )
 	if( evt.resource->getResourceGroup() != ResourceGroup::Shaders )
 		return;
 	
-	const TextPtr& text = RESOURCE_SMART_PTR_CAST<Text>( evt.resource );
-	const GLSL_TextPtr& glsl = RESOURCE_SMART_PTR_CAST<GLSL_Text>( text );
+	const TextPtr& text = boost::static_pointer_cast<Text>( evt.resource );
+	const GLSL_TextPtr& glsl = boost::static_pointer_cast<GLSL_Text>( text );
 	
 	const GLSL_ProgramPtr program = new GLSL_Program(glsl);
 	registerProgram( glsl->getBasePath(), program );
@@ -91,7 +91,7 @@ void ProgramManager::onReload( const ResourceEvent& evt )
 	if( evt.resource->getResourceGroup() != ResourceGroup::Shaders )
 		return;
 
-	const TextPtr& text = RESOURCE_SMART_PTR_CAST<Text>( evt.resource );
+	const TextPtr& text = boost::static_pointer_cast<Text>( evt.resource );
 	std::string base( String::toLowerCase( text->getBasePath() ) );
 
 	assert( programs.find(base) != programs.end() );

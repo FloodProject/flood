@@ -124,14 +124,6 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Resource );
 
 //-----------------------------------//
 
-#define RESOURCE_TYPEDECL_FROM_TYPE(T)			\
-	boost::intrusive_ptr<T>
-
-#define RESOURCE_SMART_PTR_CAST					\
-	boost::static_pointer_cast
-
-//-----------------------------------//
-
 } // end namespace
 
 

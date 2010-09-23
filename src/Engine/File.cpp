@@ -17,14 +17,21 @@ namespace vapor {
 
 //-----------------------------------//
 
-File::File(const std::string& fullPath, AccessMode::Enum e)
-	: path(path)
-	, accessMode(e)
+static std::string normalizePath(std::string path)
+{
+	//std::replace( path.begin(), path.end(), '..', '' );
+	std::replace( path.begin(), path.end(), '\\', '/' );
+	return String::split( path, '/' ).back();
+}
+
+//-----------------------------------//
+
+File::File(const std::string& fullPath, AccessMode::Enum mode)
+	: accessMode(mode)
 	, file(nullptr)
 	, closed(false)
 {
-	std::vector<std::string> elems = String::split( fullPath, '\\' );
-	path = elems.back();
+	path = normalizePath(fullPath);
 
 	open();
 }
@@ -40,11 +47,11 @@ File::~File()
 
 const std::string File::getFullPath() const
 {
-	// Get the full file path
+	// Gets the full file path.
 	const char* realPath = PHYSFS_getRealDir( path.c_str() );
 	
 	std::string fullPath( realPath );
-	fullPath.append( PHYSFS_getDirSeparator() );
+	fullPath.append( /*PHYSFS_getDirSeparator()*/ "/" );
 	fullPath.append( path );
 
 	return fullPath;
@@ -132,9 +139,7 @@ std::vector<byte> File::read(long sz) const
 {
 	if( accessMode != AccessMode::Read )
 	{
-		error( "file", "Access mode violation in file '%s'", 
-			path.c_str() );
-		
+		error( "file", "Access mode violation in file '%s'", path.c_str() );
 		return std::vector<byte>();
 	}
 
@@ -231,12 +236,9 @@ std::vector<std::string> File::readLines() const
 
 long File::write(const std::vector<byte>& buffer, long size)
 {
-	if( (accessMode != AccessMode::Write)
-		&& (accessMode != AccessMode::Append) ) 
+	if( accessMode == AccessMode::Read )
 	{
-		error( "file", "Access mode violation in file '%s'", 
-			path.c_str());
-
+		error( "file", "Access mode violation in file '%s'", path.c_str());
 		return -1;
 	}
 

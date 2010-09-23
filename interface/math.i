@@ -75,4 +75,4 @@
 %include "vapor/math/BoundingBox.h"
 
 //%include "vapor/math/Plane.h"
-//%include "vapor/math/Frustum.h"
+%import "vapor/math/Frustum.h"

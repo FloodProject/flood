@@ -69,7 +69,8 @@ void Model::update( double delta )
 
 	if( mesh->isAnimated() )
 	{
-		animation = mesh->getAnimations()[0];
+		if( !animation )
+			animation = mesh->getBindPose();
 
 		if( animationEnabled )
 			updateAnimation();
@@ -78,13 +79,6 @@ void Model::update( double delta )
 	}
 
 	Geometry::update(delta);
-}
-
-//-----------------------------------//
-
-void Model::updateBounds()
-{
-	boundingVolume = mesh->getBoundingVolume();
 }
 
 //-----------------------------------//
@@ -100,18 +94,6 @@ void Model::advanceTime( double delta )
 		else
 			animationEnabled = false;
 	}
-}
-
-//-----------------------------------//
-
-void Model::switchAnimation(const std::string& name)
-{
-	assert( mesh != nullptr );
-
-	if( !mesh->isAnimated() )
-		return;
-
-	animation = mesh->findAnimation(name);
 }
 
 //-----------------------------------//
@@ -150,6 +132,25 @@ void Model::updateBoneMatrix(const BonePtr& bone)
 		bonesMatrix[bone->index] = frameMatrix * bonesMatrix[bone->parentIndex];
 	else
 		bonesMatrix[bone->index] = frameMatrix;
+}
+
+//-----------------------------------//
+
+void Model::updateBounds()
+{
+	boundingVolume = mesh->getBoundingVolume();
+}
+
+//-----------------------------------//
+
+void Model::switchAnimation(const std::string& name)
+{
+	assert( mesh != nullptr );
+
+	if( !mesh->isAnimated() )
+		return;
+
+	animation = mesh->findAnimation(name);
 }
 
 //-----------------------------------//
