@@ -25,6 +25,8 @@ public:
 	wxSliderCtrl( wxWindow* parent, wxWindowID id,
 		int initial, int min, int max );
 
+	wxSlider* GetSlider() const { return m_slider; }
+
 private:
 
 	void onScroll(wxScrollEvent& event);

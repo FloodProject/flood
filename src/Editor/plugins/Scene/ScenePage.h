@@ -41,6 +41,9 @@ public:
 	// Gets the node associated with the tree item.
 	NodePtr getNodeFromTreeId( wxTreeItemId id );
 
+	// Gets the component associated with the tree item.
+	ComponentPtr getComponentFromTreeId( wxTreeItemId id );
+
 	// Gets the tree id from the node.
 	wxTreeItemId getTreeIdFromNode(const NodePtr& node);
 
@@ -57,7 +60,7 @@ protected:
 	void initIcons();
 
 	// Adds a group node to the tree.
-	void addGroup( wxTreeItemId id, const NodePtr& node );
+	void addGroup( wxTreeItemId id, const NodePtr& node, bool createGroup = true );
 
 	// Adds a node to the tree.
 	wxTreeItemId addNode( wxTreeItemId id, const NodePtr& node );
@@ -81,6 +84,19 @@ protected:
 	void onButtonNodeAdd(wxCommandEvent&);
 	void onButtonNodeDelete(wxCommandEvent&);
 	void onButtonNodeDeleteUpdate(wxUpdateUIEvent&);
+
+	// Event helpers.
+	MeshPtr askMeshResource();
+	void populateNodeItemMenu(wxMenu& menu, const NodePtr& node);
+	void populateComponentItemMenu(wxMenu& menu, const ComponentPtr& component);
+	void onAnimationMenuSelected(wxCommandEvent&);
+	void onAttachmentMenuSelected(wxCommandEvent&);
+	wxMenu* createMenuAnimation(const MeshPtr& node);
+	wxMenu* createMenuAttachment(const MeshPtr& node);
+	int firstAnimationId;
+	int firstAttachmentId;
+	MeshPtr mesh;
+	ModelPtr model;
 
 	// Scene-monitoring callbacks.
 	void onNodeAdded( const GroupEvent& );

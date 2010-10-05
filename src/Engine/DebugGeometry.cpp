@@ -12,20 +12,17 @@
 #include "vapor/render/DebugGeometry.h"
 #include "vapor/render/Renderable.h"
 #include "vapor/scene/Node.h"
-#include "vapor/scene/Geometry.h"
 #include "vapor/scene/Tags.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-static const float EXTRA_SPACE = 1.01f;
-
-#define ADD_BOX_FACE( a, b, c, d )						\
-	pos.push_back( box.getCorner(a) * EXTRA_SPACE );	\
-	pos.push_back( box.getCorner(b) * EXTRA_SPACE );	\
-	pos.push_back( box.getCorner(c) * EXTRA_SPACE );	\
-	pos.push_back( box.getCorner(d) * EXTRA_SPACE );
+#define ADD_BOX_FACE( a, b, c, d )		\
+	pos.push_back( box.getCorner(a) );	\
+	pos.push_back( box.getCorner(b) );	\
+	pos.push_back( box.getCorner(c) );	\
+	pos.push_back( box.getCorner(d) );
 
 RenderablePtr buildBoundingRenderable( const BoundingBox& box )
 {
@@ -69,17 +66,14 @@ NodePtr buildRay( const Ray& pickRay, const Vector3& outFar )
 	vb->set( VertexAttribute::Position, vertex );
 	vb->set( VertexAttribute::Color, colors );
 
-	MaterialPtr mat( new Material("LineMaterial") );
-	
-	RenderablePtr rend( new Renderable(PolygonType::Lines, vb) );
-	rend->setMaterial( mat );	
-	
+	MaterialPtr mat = new Material("LineMaterial");
+	RenderablePtr rend = new Renderable(PolygonType::Lines, vb, mat);
 	GeometryPtr geom( new Geometry(rend) );
 	
-	NodePtr line( new Node("line") );
+	NodePtr line( new Node("Line") );
+	line->setTag( Tags::NonPickable, true );
 	line->addTransform();
 	line->addComponent( geom );
-	line->setTag( Tags::NonPickable, true );
 	
 	return line;
 }

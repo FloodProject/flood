@@ -35,6 +35,32 @@ void Matrix4x3::identity()
 
 //-----------------------------------//
 
+#define linerp(a, b, t) a*(1-t) + b*t
+
+Matrix4x3 Matrix4x3::lerp(const Matrix4x3& a, const Matrix4x3& b, float t)
+{
+	Matrix4x3 s;
+	s.m11 = linerp(a.m11, b.m11, t);
+	s.m12 = linerp(a.m12, b.m12, t);
+	s.m13 = linerp(a.m13, b.m13, t);
+
+	s.m21 = linerp(a.m21, b.m21, t);
+	s.m22 = linerp(a.m22, b.m22, t);
+	s.m23 = linerp(a.m23, b.m23, t);
+
+	s.m31 = linerp(a.m31, b.m31, t);
+	s.m32 = linerp(a.m32, b.m32, t);
+	s.m33 = linerp(a.m33, b.m33, t);
+
+	s.tx = linerp(a.tx, b.tx, t);
+	s.ty = linerp(a.ty, b.ty, t);
+	s.tz = linerp(a.tz, b.tz, t);
+
+	return s;
+}
+
+//-----------------------------------//
+
 Matrix4x3 Matrix4x3::createTranslation( const Vector3& v )
 {
 	Matrix4x3 s;

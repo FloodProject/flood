@@ -31,9 +31,10 @@ Scene::~Scene()
 
 //-----------------------------------//
 
-bool Scene::doRayBoxQuery( const Ray& ray, RayBoxQueryResult& res ) const
+bool Scene::doRayBoxQuery( const Ray& ray, RayBoxQueryResult& res )
 {
 	RayBoxQueryList list;
+	
 	if( !doRayBoxQuery(ray, list) )
 		return false;
 
@@ -43,49 +44,68 @@ bool Scene::doRayBoxQuery( const Ray& ray, RayBoxQueryResult& res ) const
 
 //-----------------------------------//
 
-bool sortResult(const RayBoxQueryResult& lhs, const RayBoxQueryResult& rhs)
+static bool sortRayBoxQueryResult(const RayBoxQueryResult& lhs, const RayBoxQueryResult& rhs)
 {
 	return lhs.distance < rhs.distance;
 }
 
-bool Scene::doRayBoxQuery( const Ray& ray, RayBoxQueryList& list, bool all ) const
+static bool doRayBoxGroupQuery( const GroupPtr& group, const Ray& ray,
+							   RayBoxQueryList& list, bool all )
 {
-	// Do some ray tracing to find a collision.
-	foreach( const NodePtr& node, getChildren() )
+	// Do some ray casting to find a collision.
+	foreach( const NodePtr& node, group->getChildren() )
 	{
-		// No need to pick invisible nodes.
-		if( !node->isVisible() || node->getTag(Tags::NonPickable) )
-			continue;
+		const Type& type = node->getInstanceType();
 
-		const TransformPtr& transform = node->getTransform();
-		
-		if( !transform )
-			continue;
-
-		const BoundingBox& box = transform->getWorldBoundingVolume();
-			
-		float distance;
-		if( box.intersects(ray, distance) )
+		if( type.is<Group>() || type.inherits<Group>() )
 		{
-			RayBoxQueryResult res;
-			res.node = node;
-			res.distance = distance;
+			GroupPtr group = std::static_pointer_cast<Group>(node);
 
-			list.push_back( res );
+			if( doRayBoxGroupQuery(group, ray, list, all) && !all )
+				return true;
+		}
+		else
+		{
+			// No need to pick invisible nodes.
+			if( !node->isVisible() || node->getTag(Tags::NonPickable) )
+				continue;
 
-			if( !all ) break;
+			const TransformPtr& transform = node->getTransform();
+			
+			if( !transform )
+				continue;
+
+			const BoundingBox& box = transform->getWorldBoundingVolume();
+				
+			float distance;
+			if( box.intersects(ray, distance) )
+			{
+				RayBoxQueryResult res;
+				res.node = node;
+				res.distance = distance;
+
+				list.push_back( res );
+
+				if( !all ) break;
+			}
 		}
 	}
 
 	// Sort the results by distance.
-	std::sort( list.begin(), list.end(), &sortResult );
+	std::sort( list.begin(), list.end(), &sortRayBoxQueryResult );
 
 	return !list.empty();
 }
 
+bool Scene::doRayBoxQuery( const Ray& ray, RayBoxQueryList& list, bool all )
+{
+	GroupPtr group = std::static_pointer_cast<Group>(shared_from_this());
+	return doRayBoxGroupQuery(group, ray, list, all);
+}
+
 //-----------------------------------//
 
-bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res ) const
+bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res )
 {
 	// Perform ray casting to find the nodes.
 	RayBoxQueryList list;
@@ -103,7 +123,7 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res ) co
 //-----------------------------------//
 
 bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res,
-							    const NodePtr& node ) const
+							    const NodePtr& node )
 {
 	// Down to triangle picking.	
 	foreach( const GeometryPtr& geo, node->getGeometry() )
@@ -115,11 +135,11 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res,
 		// individual geometry of the node. This helps cut the number of 
 		// collisions tests in nodes with lots of geometry components.
 
-		const BoundingBox& bv = geo->getBoundingVolume();
+		const BoundingBox& bound = geo->getBoundingVolume();
 
 		float distance;
 		
-		if( !bv.intersects(ray, distance) )
+		if( !bound.intersects(ray, distance) )
 			continue;
 
 		foreach( const RenderablePtr& rend, geo->getRenderables() )
@@ -136,6 +156,9 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res,
 			
 			if( !vb )
 				continue;
+
+			const std::vector<Vector3>& UVs = 
+				vb->getAttribute(VertexAttribute::TexCoord0);
 
 			const std::vector<Vector3>& vertices = vb->getVertices();
 			uint size = vertices.size();
@@ -156,12 +179,23 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res,
 				tri[1] = ib ? vertices[indices[i+1]] : vertices[i+1];
 				tri[2] = ib ? vertices[indices[i+2]] : vertices[i+2];
 
-				Vector3 to; float n;
-				if( ray.intersects( tri, to, n ) )
+				Vector3 uv[3];
+				uv[0] = ib ? UVs[indices[i+0]] : UVs[i+0];
+				uv[1] = ib ? UVs[indices[i+1]] : UVs[i+1];
+				uv[2] = ib ? UVs[indices[i+2]] : UVs[i+2];
+
+				Vector3 to; float n; float u, v;
+				if( ray.intersects(tri, to, n, u, v) )
 				{					
 					for( byte i = 0; i < 3; i++ )
-						res.triangle[i] = tri[i];					
-				
+						res.trianglePosition[i] = tri[i];
+
+					for( byte i = 0; i < 3; i++ )
+						res.triangleUV[i] = uv[i];
+
+					res.intersectionUV.x = u;
+					res.intersectionUV.y = v;
+
 					res.intersection = to;
 					res.distance = n;
 					res.geometry = geo;

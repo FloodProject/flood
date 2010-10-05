@@ -39,6 +39,10 @@ Gizmo::Gizmo( const NodePtr& node, const CameraWeakPtr& camera )
 void Gizmo::updatePositionScale()
 {
 	const TransformPtr& transObject = nodeObject->getTransform();
+
+	if( !transObject )
+		return;
+
 	const BoundingBox& boxObject = transObject->getWorldBoundingVolume();
 	Vector3 centerObject = boxObject.getCenter();
 

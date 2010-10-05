@@ -13,8 +13,13 @@
 FWD_DECL_INTRUSIVE(Mesh)
 FWD_DECL_INTRUSIVE(Bone)
 FWD_DECL_INTRUSIVE(Animation)
+FWD_DECL_INTRUSIVE(Attachment)
 
 namespace vapor {
+
+//-----------------------------------//
+
+struct AnimationState;
 
 //-----------------------------------//
 
@@ -34,8 +39,20 @@ public:
 	Model();
 	Model( const MeshPtr& mesh );
 
-	// Switches the current mesh animation.
-	void switchAnimation(const std::string& name);
+	// Gets the mesh associated with the model.
+	GETTER(Mesh, const MeshPtr&, mesh)
+
+	// Sets the mesh animation.
+	void setAnimation(const AnimationPtr& animation);
+
+	// Sets the mesh animation.
+	void setAnimation(const std::string& name);
+
+	// Sets and fades the mesh animation.
+	void setCrossFadeAnimation(const std::string& name, float fade = 1.0f);
+
+	// Attaches a node to the bone.
+	void attachNode(const std::string& bone, const NodePtr& node);
 
 	// Updates the mesh.
 	void update( double delta );
@@ -51,17 +68,20 @@ protected:
 	// Updates the geometry bounds if needed.
 	virtual void updateBounds();
 
-	// Updates the animation of the model.
-	void updateAnimation();
+	// Updates the attachments of the model.
+	void updateAttachments();
 
-	// Advances the animation time.
-	void advanceTime( double delta );
+	// Updates the animation of the model.
+	void updateAnimations(double delta);
+
+	// Updates the animation time.
+	void updateAnimationTime(AnimationState& state, double delta);
 
 	// Updates the matrices of the bones.
-	void updateBoneMatrices();
+	void updateAnimationBones(AnimationState& state);
 
-	// Updates the matrix of a bone.
-	void updateBoneMatrix(const BonePtr& bone);
+	// Updates the final animation matrix.
+	void updateFinalAnimationBones();
 
 	// Gets a debug debugRenderable of the skeleton.
 	virtual RenderablePtr getDebugRenderable() const;
@@ -78,20 +98,26 @@ protected:
 	// Has the model been built.
 	bool modelBuilt;
 
-	// Current animation.
-	AnimationPtr animation;
-
 	// Keeps track if we want to perform animation.
 	bool animationEnabled;
 
-	// Current animation time.
-	float animationTime;
+	// Animation fade time.
+	float animationFadeTime;
+
+	// Animation fade time.
+	float animationCurrentFadeTime;
 
 	// Controls animation speed.
 	float animationSpeed;
 
-	// Bones matrices.
-	mutable std::vector<Matrix4x3> bonesMatrix;
+	// Animation states.
+	std::vector<AnimationState> animations;
+
+	// Attachments.
+	std::vector<AttachmentPtr> attachments;
+
+	// Final bones matrices.
+	std::vector<Matrix4x3> bones;
 
 	// Mesh that the model renders.
 	mutable RenderablePtr debugRenderable;

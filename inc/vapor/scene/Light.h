@@ -78,8 +78,11 @@ public:
 
 	// Called once per frame to update the component.
 	virtual void update( double delta );
-  
+
 protected:
+
+	// Creates the debug renderable of this component.
+	RenderablePtr createDebugRenderable() const;
 
 	// Light type and colors
 	LightType::Enum lightType;

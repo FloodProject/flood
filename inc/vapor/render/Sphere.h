@@ -40,8 +40,6 @@ protected:
 	void buildGeometry( bool fullSphere, byte numSubDiv, VertexData& pos, float dim );
 };
 
-//-----------------------------------//
-
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Sphere );
 
 //-----------------------------------//

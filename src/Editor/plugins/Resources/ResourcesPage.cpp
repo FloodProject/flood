@@ -194,8 +194,8 @@ void ResourcesPage::onCommandMenuSelected( wxCommandEvent& event )
 	{
 		File file( res->getPath() );
 
-		if( !wxLaunchDefaultApplication( file.getFullPath() ) )
-			debug("Failed to open resource '%s'", res->getPath().c_str() );
+		if( !wxLaunchDefaultApplication( file.getRealPath() ) )
+			debug("Failed to open resource '%s'", file.getName().c_str() );
 	}
 }
 

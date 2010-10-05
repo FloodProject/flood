@@ -117,7 +117,7 @@ protected:
 	bool validateResource( const File& file );
 
 	// Returns a new resource ready to be processed by a loader.
-	ResourcePtr prepareResource( const std::string& path );
+	ResourcePtr prepareResource( const File& file );
 
 	// Processes the resource with the right resource loader.
 	void decodeResource( ResourcePtr res, bool async = true, bool notify = true );

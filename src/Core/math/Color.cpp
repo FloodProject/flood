@@ -76,6 +76,7 @@ Color::operator Vector3 () const
 
 const VAPOR_API Color Color::White(1.0f, 1.0f, 1.0f);
 const VAPOR_API Color Color::Black(0.0f, 0.0f, 0.0f);
+const VAPOR_API Color Color::LightGrey(0.7f, 0.7f, 0.7f);
 const VAPOR_API Color Color::Red(1.0f, 0.0f, 0.0f);
 const VAPOR_API Color Color::Green(0.0f, 1.0f, 0.0f);
 const VAPOR_API Color Color::Blue(0.0f, 0.0f, 1.0f);

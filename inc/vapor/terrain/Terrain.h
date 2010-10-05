@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "vapor/scene/Geometry.h"
+#include "vapor/scene/Group.h"
 #include "vapor/resources/Image.h"
 #include "vapor/terrain/Cell.h"
 #include "vapor/terrain/Brush.h"
@@ -68,14 +68,18 @@ struct CellRequest
  * for any integer value n.
  */
 
-class VAPOR_API Terrain : public Geometry
+class VAPOR_API Terrain : public Group
 {
 	DECLARE_CLASS_()
 
 public:
 
 	Terrain();
-	Terrain( const TerrainSettings& settings );
+	Terrain( const std::string& name );
+	Terrain( const std::string& name, const TerrainSettings& settings );
+
+	// Initializes the terrain settings.
+	void init();
 
 	// Adds a new cell of terrain with default heights.
 	void addCell( short x, short y );
@@ -104,7 +108,7 @@ public:
 protected:
 
 	// Creates a new cell of terrain with the given heights.
-	CellPtr Terrain::createCell(short x, short y, std::vector<float>& heights);
+	CellPtr createCell(short x, short y, std::vector<float>& heights);
 
 	// Creates a new cell of terrain with a given heightmap.
 	CellPtr createCellHeightmap( short x, short y, const ImagePtr& heightmap );

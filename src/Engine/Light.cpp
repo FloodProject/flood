@@ -8,6 +8,7 @@
 
 #include "vapor/PCH.h"
 #include "vapor/scene/Light.h"
+#include "vapor/render/Sphere.h"
 
 namespace vapor {
 
@@ -35,14 +36,29 @@ END_CLASS()
 Light::Light( LightType::Enum type )
 	: lightType(type)
 	, cutoffRadius(0)
-{
-	//updateGeometry();
-}
+{ }
 
 //-----------------------------------//
 
 void Light::update( double delta )
-{ }
+{
+	if( !debugRenderable )
+		debugRenderable = createDebugRenderable();
+}
+
+//-----------------------------------//
+
+RenderablePtr Light::createDebugRenderable() const
+{
+	MaterialPtr matLight = new Material("LightMaterial");
+	matLight->setDepthTest(false);
+	matLight->setProgram("Diffuse");
+
+	SpherePtr sphere = new Sphere();
+	sphere->setMaterial(matLight);
+
+	return sphere;
+}
 
 //-----------------------------------//
 

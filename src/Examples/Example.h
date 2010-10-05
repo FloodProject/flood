@@ -51,7 +51,7 @@ private:
 	CameraPtr camera;
 
 	LabelPtr labelFPS;
-	TerrainPtr terrain;
+	TerrainPtr nodeTerrain;
 
 	NodePtr nodeFBO;
 	View* viewportFBO;

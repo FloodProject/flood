@@ -17,7 +17,7 @@ namespace vapor {
  * Check the File class description for more information.
  */
 
-namespace AccessMode
+namespace FileMode
 {
 	enum Enum
 	{
@@ -41,10 +41,10 @@ class VAPOR_API NativeFile : private boost::noncopyable
 public:
 
 	NativeFile(const std::string& path, 
-		AccessMode::Enum mode = AccessMode::Read);
+		FileMode::Enum mode = FileMode::Read);
 
 	NativeFile(const char* path,
-		AccessMode::Enum mode = AccessMode::Read);
+		FileMode::Enum mode = FileMode::Read);
 	
 	~NativeFile ();
 
@@ -87,7 +87,7 @@ public:
 protected:
 
 	std::string	path;
-	AccessMode::Enum mode;
+	FileMode::Enum mode;
 
 	FILE* fp;
 };

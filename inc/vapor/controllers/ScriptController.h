@@ -57,7 +57,8 @@ protected:
 	ScriptPtr getScript();
 
 	// Input callback functions.
-	virtual void onKeyPressed( const KeyEvent& );
+	virtual void onKeyPress( const KeyEvent& );
+	virtual void onKeyRelease( const KeyEvent& );
 	virtual void onMouseButtonPressed( const MouseButtonEvent& );
 	virtual void onMouseButtonReleased( const MouseButtonEvent& );
 

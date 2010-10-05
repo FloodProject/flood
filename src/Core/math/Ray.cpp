@@ -35,7 +35,7 @@ Vector3 Ray::getPoint( float distance ) const
 
 //-----------------------------------//
 
-bool Ray::intersects( const Vector3 tri[3], Vector3& intersectionPoint, float& t ) const 
+bool Ray::intersects( const Vector3 tri[3], Vector3& intersection, float& t, float& u, float& v ) const 
 { 
 	// This code is based on the published code by Tomas Möller.
 	// http://www.cs.lth.se/home/Tomas_Akenine_Moller/raytri/
@@ -63,7 +63,7 @@ bool Ray::intersects( const Vector3 tri[3], Vector3& intersectionPoint, float& t
 		Vector3 tvec = origin-v1;
 
 		/* calculate U parameter and test bounds */
-		float u = tvec.dot(pvec);
+		u = tvec.dot(pvec);
 		
 		if (u < 0.0 || u > det)
 			return false;
@@ -72,7 +72,7 @@ bool Ray::intersects( const Vector3 tri[3], Vector3& intersectionPoint, float& t
 		qvec = tvec.cross(edge1);
 
 		/* calculate V parameter and test bounds */
-		float v = direction.dot(qvec);	
+		v = direction.dot(qvec);	
 	
 		if (v < 0.0 || (u + v) > det)
 			return false;
@@ -83,7 +83,7 @@ bool Ray::intersects( const Vector3 tri[3], Vector3& intersectionPoint, float& t
 		Vector3 tvec = origin-v1;
 
 		/* calculate U parameter and test bounds */
-		float u = tvec.dot(pvec);
+		u = tvec.dot(pvec);
 		
 		if (u > 0.0 || u < det)
 			return false;
@@ -92,7 +92,7 @@ bool Ray::intersects( const Vector3 tri[3], Vector3& intersectionPoint, float& t
 		qvec = tvec.cross(edge1);
 
 		/* calculate V parameter and test bounds */
-		float v = direction.dot(qvec);	
+		v = direction.dot(qvec);	
 	
 		if (v > 0.0 || (u + v) < det)
 			return false;
@@ -103,10 +103,10 @@ bool Ray::intersects( const Vector3 tri[3], Vector3& intersectionPoint, float& t
 	
 	/* calculate t, ray intersects triangle */
 	t = edge2.dot(qvec) * inv_det;
-	//u *= inv_det;
-	//v *= inv_det;
+	u *= inv_det;
+	v *= inv_det;
 	
-	intersectionPoint = origin + (direction * t);
+	intersection = origin + (direction * t);
 
 	return true;
 }

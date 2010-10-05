@@ -47,7 +47,7 @@ AnimationPtr Mesh::findAnimation( const std::string& name )
 {
 	foreach( const AnimationPtr& animation, animations )
 	{
-		if( animation->getName() == name )
+		if( String::compareInsensitive(animation->getName(), name) == 0 )
 			return animation;
 	}
 

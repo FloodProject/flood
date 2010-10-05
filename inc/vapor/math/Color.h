@@ -41,6 +41,7 @@ public:
 	// Special colors.
 	static const Color White;
 	static const Color Black;
+	static const Color LightGrey;
 	static const Color Red;
 	static const Color Green;
 	static const Color Blue;

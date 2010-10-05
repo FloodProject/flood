@@ -94,6 +94,18 @@ void Material::setTexture( uint unit, const TexturePtr& tex )
 
 //-----------------------------------//
 
+TexturePtr Material::getTexture( uint unit )
+{
+	TextureMap::iterator it = textures.find(unit);
+	
+	if( it == textures.end() )
+		return nullptr;
+
+	return textures[unit];
+}
+
+//-----------------------------------//
+
 bool Material::isBlendingEnabled() const
 {
 	return _isBlendingEnabled;

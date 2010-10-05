@@ -47,6 +47,9 @@ public:
 	//Vector3& operator*=(Vector3 &p);
 	//Matrix4x3& operator*=(Matrix4x3& m);
 
+	// Linear interpolation between two matrices.
+	static Matrix4x3 lerp(const Matrix4x3& a, const Matrix4x3& b, float t);
+
 	// Creates a new translation matrix from a translation vector.
 	static Matrix4x3 createTranslation( const Vector3& translate );
 

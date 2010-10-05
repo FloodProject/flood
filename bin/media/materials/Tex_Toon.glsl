@@ -18,7 +18,7 @@ varying vec2 vp_TexCoord;
 
 void main()
 {
-	normal = vp_Normal;
+	normal = vp_Normal * mat3(vp_ModelMatrix);
 
 	gl_FrontColor = vec4(vp_Color, 1.0);
 	vp_TexCoord = vp_TexCoord0.st;

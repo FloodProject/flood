@@ -9,6 +9,12 @@
 #include "vapor/PCH.h"
 #include "vapor/Utilities.h"
 
+#ifdef VAPOR_COMPILER_MSVC
+	#define __stricmp _stricmp
+#else
+	#define __stricmp stricmp
+#endif
+
 namespace vapor {
 
 //-----------------------------------//
@@ -37,6 +43,13 @@ long System::swapEndian(long i)
 	b4 = ( i>>24 ) & 255;
 
 	return ((int)b1 << 24) + ((int)b2 << 16) + ((int)b3 << 8) + b4;
+}
+
+//-----------------------------------//
+
+int String::compareInsensitive(const std::string& s1, const std::string& s2)
+{
+	return __stricmp(s1.c_str(), s2.c_str());
 }
 
 //-----------------------------------//

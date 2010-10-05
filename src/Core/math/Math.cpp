@@ -16,7 +16,7 @@ namespace vapor {
 float Interpolate::linear(float a, float b, float t)
 {
 	// Linear interpolation.
-	return  a*(1-t) + b*t;
+	return a*(1-t) + b*t;
 }
 
 //-----------------------------------//

@@ -914,59 +914,7 @@
 			</Filter>
 		</Filter>
 		<Filter
-			Name="Audio"
-			>
-			<Filter
-				Name="Buffer"
-				>
-				<File
-					RelativePath="..\..\src\Engine\AudioBuffer.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\audio\Buffer.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Context"
-				>
-				<File
-					RelativePath="..\..\src\Engine\Context.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\audio\Context.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Source"
-				>
-				<File
-					RelativePath="..\..\src\Engine\Source.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\audio\Source.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Device"
-				>
-				<File
-					RelativePath="..\..\src\Engine\AudioDevice.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\inc\vapor\audio\Device.h"
-					>
-				</File>
-			</Filter>
-		</Filter>
-		<Filter
-			Name="FileSystem"
+			Name="Filesystem"
 			>
 			<File
 				RelativePath="..\..\src\Engine\File.cpp"
@@ -1232,6 +1180,58 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Audio"
+				>
+				<Filter
+					Name="Buffer"
+					>
+					<File
+						RelativePath="..\..\src\Engine\AudioBuffer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\audio\Buffer.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Context"
+					>
+					<File
+						RelativePath="..\..\src\Engine\Context.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\audio\Context.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Source"
+					>
+					<File
+						RelativePath="..\..\src\Engine\Source.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\audio\Source.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Device"
+					>
+					<File
+						RelativePath="..\..\src\Engine\AudioDevice.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\inc\vapor\audio\Device.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Scripting"
@@ -1442,6 +1442,10 @@
 			</File>
 			<File
 				RelativePath="..\..\inc\vapor\resources\ResourceManager.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\Engine\ResourceTask.h"
 				>
 			</File>
 			<Filter
@@ -2037,6 +2041,10 @@
 			</File>
 			<File
 				RelativePath="..\..\inc\vapor\animation\Animation.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\vapor\animation\Attachment.h"
 				>
 			</File>
 			<File

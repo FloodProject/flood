@@ -11,8 +11,8 @@
 #include "vapor/math/BoundingBox.h"
 #include "vapor/math/Frustum.h"
 
-FWD_DECL_INTRUSIVE(Renderable)
 FWD_DECL_SHARED(Node)
+FWD_DECL_INTRUSIVE(Renderable)
 
 namespace vapor {
 

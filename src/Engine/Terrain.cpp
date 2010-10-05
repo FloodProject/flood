@@ -14,7 +14,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(Terrain, Geometry) 
+BEGIN_CLASS_PARENT(Terrain, Group) 
 END_CLASS()
 
 //-----------------------------------//
@@ -32,16 +32,37 @@ static const short validDimensions[] =
 Terrain::Terrain()
 	: settings( TerrainSettings() )
 {
-	settings.Material = new Material("Terrain");
-	settings.Material->setProgram("Tex_Toon");
-	settings.Material->setTexture(0, "sand.png");
+	init();
 }
 
 //-----------------------------------//
 
-Terrain::Terrain( const TerrainSettings& settings )
-	: settings( settings )
+Terrain::Terrain(const std::string& name)
+	: Group(name)
+	, settings( TerrainSettings() )
+{
+	init();
+}
+
+//-----------------------------------//
+
+Terrain::Terrain( const std::string& name, const TerrainSettings& settings )
+	: Group(name)
+	, settings( settings )
 { }
+
+//-----------------------------------//
+
+void Terrain::init()
+{
+	settings.Material = new Material("Terrain");
+	settings.Material->setProgram("Tex_Toon");
+
+	ImagePtr image( new Image(1024, 1024, PixelFormat::R8G8B8A8) );
+	image->setColor( Color::LightGrey );
+
+	settings.Material->setTexture(0, image);
+}
 
 //-----------------------------------//
 
@@ -101,13 +122,17 @@ Vector2i Terrain::getCoords( const Vector3& pos )
 CellPtr Terrain::createCell( short x, short y, std::vector<float>& heights )
 {
 	CellPtr cell( new Cell(settings, heights, x, y) );
-	addRenderable( cell );
-
-	// Forces bounding volume update.
-	markDirty();
-
 	terrainCells.push_back(cell);
-	
+
+	std::string name = String::format("Cell (%hd,%hd)", x, y);
+	NodePtr nodeCell( new Node(name) );
+	nodeCell->addTransform();
+
+	GeometryPtr geometry( new Geometry(cell) );
+	nodeCell->addComponent(geometry);
+
+	add( nodeCell );
+
 	return cell;
 }
 
@@ -121,7 +146,7 @@ CellPtr Terrain::createCellHeightmap( short x, short y, const ImagePtr& heightma
 	if( !heightmap->isLoaded() )
 		return nullptr;
 
-	if( !validateHeightmap( heightmap ) )
+	if( !validateHeightmap(heightmap) )
 		return nullptr;
 
 	settings.NumberTiles = heightmap->getWidth() - 1;
@@ -225,7 +250,7 @@ void Terrain::update( double delta )
 		}
 	}
 
-	Geometry::update( delta );
+	Group::update( delta );
 }
 
 //-----------------------------------//

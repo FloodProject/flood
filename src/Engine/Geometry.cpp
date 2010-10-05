@@ -97,19 +97,23 @@ void Geometry::updateBounds()
 {
 	boundingVolume.reset();
 
-	#pragma TODO("Bounding box update needs to handle all render stages")
-
 	// Update the bounding box to accomodate new geometry.
-	foreach( const RenderablePtr& rend, renderables[RenderStage::Normal] )
+	foreach( const RenderableMapPair& p, renderables )
 	{
-		const VertexBufferPtr& vb = rend->getVertexBuffer();
-		
-		if( !vb )
-			continue;
+		foreach( const RenderablePtr& rend, p.second )
+		{
+			const VertexBufferPtr& vb = rend->getVertexBuffer();
+			
+			if( !vb )
+				continue;
 
-		foreach( const Vector3& v, vb->getVertices() )
-			boundingVolume.add(v);
+			foreach( const Vector3& v, vb->getVertices() )
+				boundingVolume.add(v);
+		}
 	}
+
+	if( boundingVolume.isInfinite() )
+		boundingVolume.setZero();
 }
 
 //-----------------------------------//

@@ -9,6 +9,7 @@
 #pragma once
 
 #include "vapor/resources/Resource.h"
+#include "vapor/math/Color.h"
 
 namespace vapor {
 
@@ -64,8 +65,14 @@ public:
 	// Gets/sets the buffer containing the image data.
 	ACESSOR(Buffer, const std::vector<byte>&, buffer)
 
+	// Gets/sets the buffer containing the image data.
+	std::vector<byte>& getBuffer() { return buffer; }
+
 	// Return the proper resource group for this resource.
 	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Images)
+
+	// Sets the image with the given color.
+	void setColor( Color color );
 
 	// Saves the image contents to a file.
 	void save( const std::string& filename );

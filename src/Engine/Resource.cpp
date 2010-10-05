@@ -30,7 +30,7 @@ END_CLASS()
 //-----------------------------------//
 
 Resource::Resource()
-	: status( ResourceStatus::Unloaded )
+	: status( ResourceStatus::Loaded )
 { }
 
 //-----------------------------------//

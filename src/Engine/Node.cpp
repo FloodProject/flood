@@ -53,7 +53,7 @@ bool Node::addComponent( const ComponentPtr& component )
 	}
 
 	// Cache geometry (renderable) objects.
-	if( type->inherits<Geometry>() )
+	if( type->is<Geometry>() || type->inherits<Geometry>() )
 	{
 		const GeometryPtr& geometry =
 			std::dynamic_pointer_cast<Geometry>( component );

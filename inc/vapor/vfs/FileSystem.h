@@ -38,6 +38,9 @@ public:
 	FileSystem( const std::string& app, const char* argv0 = nullptr );
 	virtual ~FileSystem();
 
+	// Enumerate files in a virtual mount point.
+	std::vector<std::string> enumerateFiles(const std::string& path);
+
 	// Mount an archive into the virtual filesystem point.
 	bool mount(const std::string& path, const std::string& mount = "",
 		bool append = true);

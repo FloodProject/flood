@@ -15,6 +15,7 @@
 FWD_DECL_INTRUSIVE(Mesh)
 FWD_DECL_INTRUSIVE(Bone)
 FWD_DECL_INTRUSIVE(Skeleton)
+FWD_DECL_INTRUSIVE(Animation)
 
 namespace vapor {
 
@@ -52,7 +53,7 @@ public:
 	double getTotalTime() const;
 
 	// Gets the interpolated key frame matrix.
-	Matrix4x3 getInterpolatedKeyFrameMatrix(const BonePtr& bone, double time);
+	Matrix4x3 getKeyFrameMatrix(const BonePtr& bone, double time);
 
 	// Sets the keyframes for the animation.
 	void setKeyFrames(const BonePtr& bone, const KeyFramesVector& frames);
@@ -76,6 +77,20 @@ protected:
 
 	// Key frames of this animation.
 	KeyFramesVector keyFramesVector;
+};
+
+//-----------------------------------//
+
+struct AnimationState
+{
+	// Animation data.
+	AnimationPtr animation;
+
+	// Animation time.
+	float animationTime;
+
+	// Interpolated bones matrices.
+	std::vector<Matrix4x3> bonesMatrix;
 };
 
 //-----------------------------------//

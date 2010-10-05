@@ -54,6 +54,9 @@ public:
 	// Parses the contents of the file.
 	bool parse();
 
+	// Preprocesses the mesh.
+	void preprocess();
+
 	// Builds the mesh.
 	void build();
 

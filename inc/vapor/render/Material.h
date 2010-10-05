@@ -91,14 +91,17 @@ public:
 	// Gets the textual name of the material.
 	GETTER(Name, const std::string&, name);
 
-	// Adds a texture to the material.
+	// Sets a texture to the material.
 	void setTexture( uint unit, const std::string& tex );
 
-	// Adds a texture to the material.
+	// Sets a texture to the material.
 	void setTexture( uint unit, const TexturePtr& tex );
 
-	// Adds an image as texture to the material.
+	// Sets an image as texture to the material.
 	void setTexture( uint unit, const ImagePtr& tex );
+
+	// Gets a texture of the material.
+	TexturePtr getTexture( uint unit );
 
 	// Gets/sets the associated program.
 	ACESSOR(Program, const std::string&, program)

@@ -203,7 +203,7 @@ void Camera::cull( RenderBlock& block, const NodePtr& node ) const
 		geometry->appendRenderables( block.renderables, transform );
 	}
 
-	const LightPtr& light = node->getComponent<Light>("Light");
+	const LightPtr& light = node->getComponent<Light>();
 	
 	if( light ) 
 	{

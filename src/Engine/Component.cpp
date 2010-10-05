@@ -15,7 +15,7 @@ namespace vapor {
 //-----------------------------------//
 
 BEGIN_CLASS_ABSTRACT(Component)
-	//FIELD_PRIMITIVE(Component, bool, debugVisible)
+	FIELD_PRIMITIVE(Component, bool, debugVisible)
 END_CLASS()
 
 //-----------------------------------//
@@ -47,7 +47,7 @@ bool Component::isDebugRenderableVisible() const
 
 RenderablePtr Component::getDebugRenderable() const
 {
-	return nullptr;
+	return debugRenderable;
 }
 
 //-----------------------------------//

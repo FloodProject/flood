@@ -45,14 +45,31 @@ public:
 	void ready();
 
 	void updateNormals();
-	void processState( std::vector<float>& state, bool save );
-	void applyTerrainTool();
+	void loadSaveHeights( std::vector<float>& state, bool save );
+	void loadSaveImage( std::vector<byte>& state, bool save );
+	
+	void applyTool();
+	void applyRaiseTool();
+	void applyPaintTool();
 
-	float size;
-	float strength;
 	TerrainTool::Enum tool;
-	RayTriangleQueryResult res;
+	RayTriangleQueryResult rayQuery;
 
+	// Brush settings.
+	int brushSize;
+	int brushStrength;
+	ImagePtr paintImage;
+	
+	// Tile settings.
+	bool tileLock;
+	int tileOffsetX;
+	int tileOffsetY;
+
+	// Image data.
+	std::vector<byte> beforeImage;
+	std::vector<byte> afterImage;
+
+	// Heights data.
 	std::vector<float> beforeHeights;
 	std::vector<float> afterHeights;
 };
@@ -83,6 +100,9 @@ public:
 
 protected:
 
+	// Handles tools buttons click.
+	void onToolClick(wxCommandEvent& event);
+
 	// Callback used when editing the terrain by holding the mouse button.
 	void onTimer( wxTimerEvent& event );
 
@@ -101,8 +121,8 @@ protected:
 	// Handles the right-click context menu creation.
 	void createContextMenu( const MouseButtonEvent& mbe );
 
-	// Checks if the ray hits and deforms.
-	void deformTerrain( const MouseButtonEvent& mb );
+	// Sets up the terrain operation.
+	void setupOperation( const MouseButtonEvent& mb );
 
 	// Creates a new operation if there is none currently.
 	void createOperation( const RayTriangleQueryResult& res );
@@ -124,6 +144,13 @@ protected:
 	
 	// Callback used when editing the terrain by holding the mouse button.
 	wxTimer timer;
+
+	// Current tool.
+	TerrainTool::Enum tool;
+
+	// Toolbar buttons.
+	wxToolBarToolBase* buttonRaise;
+	wxToolBarToolBase* buttonPaint;
 
 private:
 

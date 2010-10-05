@@ -26,7 +26,7 @@ public:
 	void addBone( const BonePtr& bone );
 
 	// Gets a bone from the skeleton.
-	BonePtr getBone( int index );
+	BonePtr getBone( uint index );
 
 	// Finds a bone from the skeleton.
 	BonePtr findBone( const std::string& name );
@@ -44,4 +44,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(Skeleton)
 
 //-----------------------------------//
 
-} // end namespace
+} // end	 namespace

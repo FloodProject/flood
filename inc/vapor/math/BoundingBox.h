@@ -38,6 +38,12 @@ public:
 	// Resets the bounding box.
 	void reset();
 
+	// Sets the box to zero.
+	void setZero();
+
+	// Gets if the box is infinite.
+	bool isInfinite() const;
+
 	// Gets the center point of the bounding box.
 	Vector3 getCenter() const;
 

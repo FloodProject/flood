@@ -62,6 +62,9 @@ protected:
 
 	// Is the debug representation visible.
 	bool debugVisible;
+
+	// Debug renderable of component.
+	RenderablePtr debugRenderable;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Component )

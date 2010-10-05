@@ -8,3 +8,4 @@
 
 %import "vapor/resources/Resource.h"
 //%include "vapor/resources/Image.h"
+%include "vapor/resources/Mesh.h"

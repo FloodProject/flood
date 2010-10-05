@@ -34,7 +34,7 @@ void Example::onPageLoading( const PageEvent& event )
 
 	ResourceManager* rm = getResourceManager();
 	const ImagePtr& heightMap = rm->loadResource<Image>( "height4.png" );
-	terrain->addCell( event.pos.x, event.pos.y, heightMap );
+	nodeTerrain->addCell( event.pos.x, event.pos.y, heightMap );
 }
 
 //-----------------------------------//
@@ -47,6 +47,7 @@ void Example::onSetupResources()
 	rm->loadResource("Tex.glsl");
 	rm->loadResource("Toon.glsl");
 	rm->loadResource("Tex_Toon.glsl");
+	rm->loadResource("Tex_Toon_Skin.glsl");
 	rm->loadResource("Sky.glsl");
 	rm->loadResource("Water.glsl");
 }
@@ -84,12 +85,22 @@ void Example::onSetupScene()
 	//nodeFBO->addComponent( GeometryPtr( new Geometry(quad) ) );
 	//scene->add( nodeFBO );
 
-	MeshPtr meshCT = rm->loadResource<Mesh>("ct.ms3d");
+	MeshPtr meshSword = rm->loadResource<Mesh>("sword.ms3d");
+	NodePtr nodeSword( new Node("sword") );
+	nodeSword->addTransform();
+	nodeSword->addComponent( ModelPtr( new Model(meshSword) ) );
+	scene->add(nodeSword);
+
+	MeshPtr meshCT = rm->loadResource<Mesh>("ninja.ms3d", false);
+	ModelPtr modelCT( new Model(meshCT) );
+	modelCT->attachNode("Joint17", nodeSword);
+	modelCT->switchAnimation("Idle1");
+
 	NodePtr nodeCT( new Node("ct") );
-	nodeCT->addTransform();
-	nodeCT->addComponent( ModelPtr( new Model(meshCT) ) );
+	nodeCT->addTransform();	
+	nodeCT->addComponent( modelCT );
 	scene->add(nodeCT);
-	
+
 	labelFPS.reset( new Label( "", "Verdana.font") );
 	
 	NodePtr nodeFPS( new Node("LabelFPS") );
@@ -120,11 +131,7 @@ void Example::onSetupScene()
 	settings.MaxHeight = 100;
 	settings.Material = materialCell;
 
-	terrain.reset( new Terrain(settings) );
-
-	NodePtr nodeTerrain( new Node("Terreno") );
-	nodeTerrain->addTransform();
-	nodeTerrain->addComponent( terrain );
+	nodeTerrain.reset( new Terrain("Terreno", settings) );
 	scene->add( nodeTerrain );
 
 	//SkydomePtr skydome( new Skydome() );
@@ -234,7 +241,7 @@ void Example::onKeyPressed( const KeyEvent& event )
 	//	Json::Value sc;
 	//	scene->serialize( sc );
 	//	
-	//	File file( "Example.scene", AccessMode::Write );
+	//	File file( "Example.scene", FileMode::Write );
 	//	file.write( sc.toStyledString() );
 	//}
 }

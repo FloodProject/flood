@@ -206,6 +206,13 @@ void Transform::unsetNotify()
 
 //-----------------------------------//
 
+const Matrix4x3& Transform::getAbsoluteTransform() const
+{
+	return transform;
+}
+
+//-----------------------------------//
+
 void Transform::setAbsoluteTransform( const Matrix4x3& newTransform )
 {
 	setNotify();
@@ -253,12 +260,13 @@ void Transform::updateBoundingVolume()
 	boundingVolume.reset();
 
 	foreach( const GeometryPtr& geometry, node->getGeometry() )
-	{
 		boundingVolume.add( geometry->getBoundingVolume() );
-	}
 	
+	if( boundingVolume.isInfinite() )
+		boundingVolume.setZero();
+
 	// Update debug renderable.
-	boundingVolumeRenderable = buildBoundingRenderable( boundingVolume );
+	debugRenderable = buildBoundingRenderable( boundingVolume );
 	needsVolumeUpdate = false;
 }
 

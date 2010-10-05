@@ -60,6 +60,9 @@ bool STB_Image_Loader::decode(const File& file, Resource* res)
 		pf = PixelFormat::R8G8B8A8;
 		break;
 	}
+
+	if( pf == PixelFormat::Unknown )
+		return nullptr;
 	
 	std::vector<byte> buffer;
 	int sz = width*height*comp; 

@@ -111,6 +111,9 @@ namespace System
 
 namespace String
 {
+	// Compares a string in a case insensitive way.
+	VAPOR_API int compareInsensitive(const std::string& s1, const std::string& s2);
+
 	// Formats the string according to the 'printf' style format string.
 	// Note: This is not type-safe so be careful.
 	VAPOR_API std::string format(const char* str, ...);

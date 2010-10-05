@@ -64,7 +64,7 @@ public:
 protected:
 
 	// Handles gizmo tools buttons click.
-	void onGizmoToolClick(wxCommandEvent& event);
+	void onToolClick(wxCommandEvent& event);
 
 	// Checks if the passed tool the current one.
 	bool isTool(GizmoTool::Enum mode);
@@ -72,14 +72,23 @@ protected:
 	// Unselects (and can also reselect) nodes (and their gizmos).
 	void GizmoPlugin::unselectNodes(bool reselect = false);
 
-	void createGizmo( const NodePtr& );
-	void removeGizmo( const NodePtr& );
+	// Creates a new gizmo for the given node.
+	void createGizmo( const NodePtr& node );
+
+	// Removes the active gizmo for the given node.
+	void removeGizmo( const NodePtr& node );
+
+	// Creates a new gizmo undo/redo operation.
 	void createOperation();
 
+	// Sets the bounding box visibility of the given node.
 	void setBoundingBoxVisible( const NodePtr& node, bool state );
 
-	bool pickBoundingTest( const MouseMoveEvent& );
-	bool pickImageTest( const MouseMoveEvent&, GizmoAxis::Enum& );
+	// Performs bounding-box based ray picking.
+	bool pickBoundingTest( const MouseMoveEvent& event );
+
+	// Performs pixel-color based picking.
+	bool pickImageTest( const MouseMoveEvent& event, GizmoAxis::Enum& axis );
 
 	// Current Gizmo tool.
 	GizmoTool::Enum tool;
@@ -93,6 +102,7 @@ protected:
 	// Current gizmo operation.
 	GizmoOperation* op;
 	
+	// Editor scene.
 	ScenePtr editorScene;
 
 	typedef std::map<NodePtr, NodePtr> GizmoMap;

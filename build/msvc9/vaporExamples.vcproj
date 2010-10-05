@@ -67,7 +67,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vaporEngine.lib libboost_thread-vc90-mt-1_43.lib libboost_date_time-vc90-mt-1_43.lib jsoncpp_vc9_d.lib opengl32.lib glew32s.lib OpenAL32.lib vorbisfile_static.lib ogg_static.lib vorbis_static.lib physfs.lib sfml-system-s-d.lib sfml-window-s-d.lib lua5.1-debug.lib zlib.lib LinearMath.lib BulletCollision.lib BulletDynamics.lib"
+				AdditionalDependencies="vaporEngine.lib libboost_thread-vc90-mt-1_43.lib libboost_date_time-vc90-mt-1_43.lib jsoncpp_vc9_d.lib opengl32.lib glew32s.lib OpenAL32.lib vorbisfile_static.lib ogg_static.lib vorbis_static.lib physfs.lib sfml-system-s-d.lib sfml-window-s-d.lib lua.lib zlib.lib LinearMath.lib BulletCollision.lib BulletDynamics.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-$(ConfigurationName).exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)dep\boost\lib&quot;;&quot;$(SolutionDir)dep\vld\lib&quot;;&quot;$(SolutionDir)dep\jsoncpp\lib&quot;;&quot;$(SolutionDir)dep\physfs\lib\release&quot;;&quot;$(SolutionDir)lib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)dep\glew\lib&quot;;&quot;$(SolutionDir)dep\vorbis\lib&quot;;&quot;$(SolutionDir)dep\ogg\lib&quot;;&quot;$(SolutionDir)dep\openal\libs\Win32&quot;;&quot;$(SolutionDir)dep\SFML\lib\vc2008&quot;;&quot;$(SolutionDir)dep\lua\lib&quot;;&quot;$(SolutionDir)dep\luabind\lib&quot;;&quot;$(SolutionDir)dep\bullet\lib&quot;;&quot;$(SolutionDir)dep\zlib\lib&quot;"

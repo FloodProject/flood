@@ -224,7 +224,6 @@ void EditorFrame::createScene()
 	editorScene->add( nodeCamera );
 
 	CameraPtr camera = nodeCamera->getComponent<Camera>();
-
 	viewframe->setMainCamera(camera);
 	viewframe->switchToDefaultCamera();
 }

@@ -1,7 +1,34 @@
 WIP (work-in-progress)
 ======================
 
+Duplicate resources in Resources pane in editor
+Check skinning limit in shader
+
+   GLint location = glGetUniformLocation(mProgramID, name);
+   if (location == -1)
+       return NULL;
+      // now find it in the list of uniforms to get type and size
+   GLint numUniforms = 0;
+   glGetProgramiv(    mProgramID, GL_ACTIVE_UNIFORMS, &numUniforms );
+   GLint uniformMaxLength = 0;
+   glGetProgramiv(    mProgramID, GL_ACTIVE_UNIFORM_MAX_LENGTH,  &uniformMaxLength );
+   GLint count = -1;
+   GLenum type = 0;
+   GLchar* uniformName = new GLchar[uniformMaxLength];
+   for ( GLint i = 0; i < numUniforms; ++i )
+   {
+       GLsizei length;
+       glGetActiveUniform(    mProgramID, i, uniformMaxLength, &length,  &count, &type, uniformName);                     if ( strcmp(uniformName, name) == 0 )
+           break;
+   }
+   delete [] uniformName;
+
+
+
+Fix model debug renderable of skeleton.
+wxWidgets regression in message dialog (missing icons in save dialog)
 Add UpdateUI event to Play button.
+Physics rotation becomes wrong due to bounding box calculation.
 Add a reset method to the editor that sets to defaults
 
 	void newScene()
@@ -50,10 +77,8 @@ Viewframe:
 	
 Terrain editing:
 
-	Brushes interface
 	Use a separate VB attribute for the terrain heights
 	Projectors/Decals for terrain
-	Brush interface for editing (WIP)
 	Generic paging interface (WIP)
 	Streaming of terrain chunks and textures
 	Randomized Perlin noise terrain generation

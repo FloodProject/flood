@@ -20,10 +20,10 @@ void Skeleton::addBone( const BonePtr& bone )
 
 //-----------------------------------//
 
-BonePtr Skeleton::getBone( int index )
+BonePtr Skeleton::getBone( uint index )
 {
 	assert( index >= 0 );
-	assert( (uint)index < bones.size() );
+	assert( index < bones.size() );
 
 	return bones[index];
 }
@@ -34,7 +34,7 @@ BonePtr Skeleton::findBone( const std::string& name )
 {
 	foreach( const BonePtr& bone, bones )
 	{
-		if( bone->name == name )
+		if( String::compareInsensitive(bone->name, name) == 0 )
 			return bone;
 	}
 

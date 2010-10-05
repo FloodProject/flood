@@ -43,10 +43,6 @@ const byte TEX_SIZE = 64;
 TexturePtr TextureManager::getTexture( const std::string& name )
 {
 	ImagePtr img = rm->loadResource<Image>(name);
-
-	if( !img )
-		warn( "render", "Could not find image: '%s'", name.c_str() );
-
 	return getTexture(img);
 }
 

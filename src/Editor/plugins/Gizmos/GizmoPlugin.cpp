@@ -83,7 +83,7 @@ void GizmoPlugin::onPluginEnable()
 	tool = GizmoTool::Camera;
 
 	toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
-		&GizmoPlugin::onGizmoToolClick, this,
+		&GizmoPlugin::onToolClick, this,
 		buttonCamera->GetId(), buttonScale->GetId() );
 }
 
@@ -103,7 +103,7 @@ void GizmoPlugin::onSceneLoad( const ScenePtr& scene )
 
 //-----------------------------------//
 
-void GizmoPlugin::onGizmoToolClick(wxCommandEvent& event)
+void GizmoPlugin::onToolClick(wxCommandEvent& event)
 {
 	tool = (GizmoTool::Enum) event.GetId();
 

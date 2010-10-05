@@ -58,17 +58,15 @@ bool Milkshape3D::parse()
 	readAnimation();
 	readJoints();
 	readComments();
+	preprocess();
 
 	return true;
 }
 
 //-----------------------------------//
 
-void Milkshape3D::build()
+void Milkshape3D::preprocess()
 {
-	if(built)
-		return;
-
 	animated = !joints.empty();
 
 	buildBounds();
@@ -77,13 +75,19 @@ void Milkshape3D::build()
 	{
 		buildSkeleton();
 		buildAnimations();
-		
-		//setupTangents();
 		setupInitialVertices();
 	}
+}
+
+//-----------------------------------//
+
+void Milkshape3D::build()
+{
+	if( built )
+		return;
 
 	buildGeometry();
-	
+
 	built = true;
 }
 
@@ -143,6 +147,9 @@ void Milkshape3D::buildAnimationMetadata()
     
 	foreach( const std::string& line, lines )
 	{
+		if( line.size() < 2 )
+			continue;
+
 		std::stringstream ss(line);
 
 		AnimationMetadata data;
@@ -167,7 +174,7 @@ float Milkshape3D::getAnimationStart(const AnimationMetadata& data)
 	{
 		foreach( const ms3d_keyframe_t& frame, joint.positionKeys )
 		{
-			int numFrame = std::ceil(frame.time*animationFPS);
+			int numFrame = std::floor(frame.time*animationFPS + 0.5);
 
 			if( numFrame < data.start || numFrame > data.end )
 				continue;
@@ -198,7 +205,7 @@ void Milkshape3D::buildAnimations()
 	
 	bindPoseMetadata.start = 0;
 	bindPoseMetadata.end = 0;
-	bindPoseMetadata.name = "bind";
+	bindPoseMetadata.name = "Bind";
 	bindPoseMetadata.startTime = 0;
 
 	bindPose = buildAnimation(bindPoseMetadata);
@@ -238,7 +245,7 @@ void Milkshape3D::buildKeyFrames( const ms3d_joint_t& joint,
 
 	foreach( const ms3d_keyframe_t& frame, joint.positionKeys )
 	{
-		int numFrame = std::ceil(frame.time*animationFPS);
+		int numFrame = std::floor(frame.time*animationFPS + 0.5);
 
 		if( numFrame < data.start || numFrame > data.end )
 		{
@@ -262,6 +269,9 @@ void Milkshape3D::buildGeometry()
 {
 	foreach( const ms3d_group_t& group, groups )
 	{
+		if( group.flags & HIDDEN )
+			continue;
+
 		// In case this group doesn't have geometry, skip processing.
 		if( group.triangleIndices.empty() )
 			continue;
@@ -275,7 +285,7 @@ void Milkshape3D::buildGeometry()
 		normals.reserve( group.triangleIndices.size()*3 );
 		
 		// Texture coords data
-		std::vector< Vector3 > texCoords;
+		std::vector<Vector3> texCoords;
 		texCoords.reserve( group.triangleIndices.size()*3 );
 
 		// Bones data
@@ -355,21 +365,19 @@ MaterialPtr Milkshape3D::buildMaterial(const ms3d_group_t& group)
 	if( strlen(mt.texture) > 0 )
 	{
 		mat->setProgram( "Tex_Toon" );
-		mat->setTexture( 0, mt.texture );
+
+		std::string texturePath = String::split( mt.texture, '/' ).back();
+		mat->setTexture( 0, texturePath );
 	}
 
 	if( mt.mode & HASALPHA )
 	{
 		#pragma TODO("Use alpha testing when alpha values are fully transparent.")
-
-		mat->setBlending( BlendSource::SourceAlpha,
-			BlendDestination::InverseSourceAlpha );
+		mat->setBlending( BlendSource::SourceAlpha, BlendDestination::InverseSourceAlpha );
 	}
 
 	if( isAnimated() )
-	{
 		mat->setProgram( "Tex_Toon_Skin" );
-	}
 
 	return mat;
 }
@@ -382,9 +390,10 @@ void Milkshape3D::buildBounds()
 
 	// Update the bounding box to accomodate new geometry.
 	foreach( const ms3d_vertex_t* vert, vertices )
-	{
 		boundingVolume.add( vert->position );
-	}
+
+	if( boundingVolume.isInfinite() )
+		boundingVolume.setZero();
 }
 
 //-----------------------------------//
@@ -425,8 +434,8 @@ void Milkshape3D::setupJointMatrices()
 
 		if( joint.parentIndex != -1 )
 		{
-			ms3d_joint_t& parent = joints[joint.parentIndex];
-			joint.absoluteMatrix = parent.absoluteMatrix * joint.relativeMatrix;
+			const ms3d_joint_t& parent = joints[joint.parentIndex];
+			joint.absoluteMatrix = joint.relativeMatrix * parent.absoluteMatrix;
 		}
 		else
 		{
@@ -503,10 +512,10 @@ bool Milkshape3D::readHeader()
 {
 	ms3d_header_t& header = FILEBUF_INDEX(ms3d_header_t);
 
-	if (strncmp(header.id, "MS3D000000", 10) != 0) 
+	if(strncmp(header.id, "MS3D000000", 10) != 0) 
 		return false;
 
-	if (header.version != 4)
+	if(header.version != 4)
 		return false;
 
 	return true;
@@ -642,9 +651,12 @@ void Milkshape3D::readJoints()
 
 void Milkshape3D::readComments()
 {
+	if( index == filebuf.size() )
+		return;
+
 	int subVersion = FILEBUF_INDEX(int);
 	
-	if (subVersion != 1)
+	if( subVersion != 1 )
 	{
 		warn( "Milkshape3D", "Unknown subversion comment chunk: '%d'", subVersion );
 		return;

@@ -38,7 +38,21 @@ Image::Image(ushort width, ushort height, PixelFormat::Enum format)
 	: width(width)
 	, height(height)
 	, pixelFormat(format)
-{ }
+{
+	uint size = width*height;
+
+	switch( format )
+	{
+	case PixelFormat::R8G8B8A8:
+		size = size*4;
+	case PixelFormat::R8G8B8:
+		size = size*3;
+	case PixelFormat::Depth:
+		size = size;
+	}
+
+	buffer.resize(size);
+}
 
 //-----------------------------------//
 
@@ -82,12 +96,27 @@ void Image::save( const std::string& filename )
 		return;
 	}
 
-	NativeFile file(filename, AccessMode::Write);
+	NativeFile file(filename, FileMode::Write);
 	
 	if( !file.open() )
 		return;
 
 	file.write(output);
+}
+
+//-----------------------------------//
+
+void Image::setColor( Color color )
+{
+	if( pixelFormat != PixelFormat::R8G8B8A8 )
+		return;
+
+	for( uint i = 0; i < buffer.size(); i += 4 )
+	{
+		buffer[i+0] = color.r * 255;
+		buffer[i+1] = color.g * 255;
+		buffer[i+2] = color.b * 255;
+	}
 }
 
 //-----------------------------------//

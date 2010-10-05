@@ -21,9 +21,7 @@ namespace vapor {
 FileSystem::FileSystem(const std::string& app, const char* argv0 )
 	: fileWatcher(nullptr)
 {
-	int err = PHYSFS_init( argv0 );
-
-	if( err == 0 ) 
+	if( !PHYSFS_init(argv0) ) 
 	{
 		logError("Could not initialize PhysFS");	
 		return;
@@ -46,11 +44,7 @@ FileSystem::~FileSystem()
 	foreach( const std::string& point, mountPoints )
 		PHYSFS_removeFromSearchPath( point.c_str() );
 	
-	mountPoints.clear();
-
-	int err = PHYSFS_deinit();
-
-	if( err == 0 )
+	if( !PHYSFS_deinit() )
 		logError( "Could not clean up PhysFS" );
 
 	delete fileWatcher;
@@ -73,6 +67,22 @@ void FileSystem::setDefaultConfig(const std::string& app)
 
 //-----------------------------------//
 
+std::vector<std::string> FileSystem::enumerateFiles(const std::string& path)
+{
+	char **rc = PHYSFS_enumerateFiles( path.c_str() );
+	
+	std::vector<std::string> files;
+	
+	for (char** i = rc; *i != nullptr; i++)
+		files.push_back(*i);	
+		
+	PHYSFS_freeList(rc);
+	
+	return files;
+}
+
+//-----------------------------------//
+
 bool FileSystem::mount(const std::string& path, const std::string& mount, bool append )
 {
 	int err = PHYSFS_mount( path.c_str(), mount.c_str(), append ? 1 : 0 );
@@ -82,8 +92,6 @@ bool FileSystem::mount(const std::string& path, const std::string& mount, bool a
 		logError( "Could not mount '" + path + "'" );
 		return false;
 	}
-
-	//mountPoints.push_back( path );
 
 	info( "vfs", "Mounted '%s' in mount point '%s'",
 		path.c_str(), mount.empty() ? "/" : mount.c_str() );
@@ -98,8 +106,6 @@ bool FileSystem::mount(const std::string& path, const std::string& mount, bool a
 
 void FileSystem::mountDefaultLocations()
 {
-	//mount( PHYSFS_getBaseDir() );
-
 	// Default filesystem mount points.
 	const std::string media( "media/" );
 
@@ -139,8 +145,6 @@ void FileSystem::logError( const std::string& msg )
 
 void FileSystem::log()
 {
-	std::stringstream ss;
-
 	PHYSFS_Version version;
 	PHYSFS_getLinkedVersion(&version);
 
@@ -149,18 +153,16 @@ void FileSystem::log()
 
 	const PHYSFS_ArchiveInfo **i;
 
+	std::stringstream ss;
 	ss << "Supported archives: ";
 
 	for (i = PHYSFS_supportedArchiveTypes(); *i != nullptr; i++)
-	{
 		ss << "'" << (*i)->extension << "', ";
-			// << "' (" << (*i)->description << "), ";
-	}
 
 	info( "vfs", "User write folder: %s", PHYSFS_getWriteDir() );
 	
 	std::string s = ss.str();
-	s = s.substr( 0, s.find_last_of( ',' ) );
+	s = s.substr( 0, s.find_last_of(',') );
 	info( "vfs", "%s", s.c_str() );
 }
 

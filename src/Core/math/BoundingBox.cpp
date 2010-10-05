@@ -15,8 +15,8 @@ namespace vapor {
 //-----------------------------------//
 
 BoundingBox::BoundingBox()
-	: min( Limits::FloatMaximum )
-	, max( Limits::FloatMinimum )
+	: min(0)
+	, max(0)
 { }
 
 //-----------------------------------//
@@ -35,21 +35,18 @@ BoundingBox::BoundingBox( const BoundingBox& box )
 
 //-----------------------------------//
 
-Vector3 BoundingBox::getCorner( int i ) const
+void BoundingBox::setZero()
 {
-	assert(i >= 0 && i <= 7);
-
-	return Vector3(
-		(i & 1) ? max.x : min.x,
-		(i & 2) ? max.y : min.y,
-		(i & 4) ? max.z : min.z );
+	min = 0;
+	max = 0;
 }
 
 //-----------------------------------//
 
-Vector3 BoundingBox::getCenter() const
+bool BoundingBox::isInfinite() const
 {
-	return (min + max) * 0.5;
+	return min == Limits::FloatMaximum
+		&& max == Limits::FloatMinimum;
 }
 
 //-----------------------------------//
@@ -98,6 +95,25 @@ BoundingBox BoundingBox::transform( const Matrix4x3& mat ) const
 	}
 	
 	return box;
+}
+
+//-----------------------------------//
+
+Vector3 BoundingBox::getCorner( int i ) const
+{
+	assert(i >= 0 && i <= 7);
+
+	return Vector3(
+		(i & 1) ? max.x : min.x,
+		(i & 2) ? max.y : min.y,
+		(i & 4) ? max.z : min.z );
+}
+
+//-----------------------------------//
+
+Vector3 BoundingBox::getCenter() const
+{
+	return (min + max) * 0.5;
 }
 
 //-----------------------------------//

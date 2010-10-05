@@ -122,7 +122,7 @@ void error(const std::string& subsystem, const char* msg, ...)
 //-----------------------------------//
 
 Log::Log(const std::string& title, const std::string& fn)
-	: NativeFile(fn, AccessMode::Write), even(true)
+	: NativeFile(fn, FileMode::Write), even(true)
 {
 	if( !open() ) 
 	{

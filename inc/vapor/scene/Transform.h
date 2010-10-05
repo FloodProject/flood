@@ -74,7 +74,7 @@ public:
 	Matrix4x3 lookAt( const Vector3& lookAtVector, const Vector3& upVector );
 
 	// Gets the absolute transformation matrix.
-	GETTER(AbsoluteTransform, const Matrix4x3, getLocalTransform())
+	const Matrix4x3& getAbsoluteTransform() const;
 	
 	// Sets the absolute transformation matrix.
 	void setAbsoluteTransform( const Matrix4x3& matrix );
@@ -99,9 +99,6 @@ public:
 
 	// Gets if the bounding volume need to be updated.
 	bool requiresBoundingVolumeUpdate() const;
-
-	// Use this to render some debug bounding boxes.
-	GETTER(DebugRenderable, RenderablePtr, boundingVolumeRenderable)
 
 	// Sets the notify bit of the transform.
 	void setNotify();
@@ -144,9 +141,6 @@ protected:
 
 	// Bounding volume of the renderables.
 	BoundingBox boundingVolume;
-
-	// Geometry of the bounding volume.
-	RenderablePtr boundingVolumeRenderable;
 
 	// If an external transform is given, don't generate our own.
 	bool externalTransform;

@@ -8,6 +8,7 @@
 
 #include "vapor/PCH.h"
 #include "vapor/controllers/ScriptController.h"
+#include "vapor/physics/CharacterController.h"
 
 #include "vapor/script/Script.h"
 #include "vapor/script/ScriptManager.h"
@@ -43,7 +44,8 @@ ScriptController::ScriptController()
 	InputManager* im = Engine::getInstancePtr()->getInputManager();
 	
 	Keyboard* keyboard = im->getKeyboard();
-	keyboard->onKeyPress += fd::bind( &ScriptController::onKeyPressed, this );
+	keyboard->onKeyPress += fd::bind( &ScriptController::onKeyPress, this );
+	keyboard->onKeyRelease += fd::bind( &ScriptController::onKeyRelease, this );
 	
 	Mouse* mouse = im->getMouse();
 	mouse->onMouseButtonPress += fd::bind( &ScriptController::onMouseButtonPressed, this );
@@ -57,7 +59,8 @@ ScriptController::~ScriptController()
 	InputManager* im = Engine::getInstancePtr()->getInputManager();
 	
 	Keyboard* keyboard = im->getKeyboard();
-	keyboard->onKeyPress -= fd::bind( &ScriptController::onKeyPressed, this );
+	keyboard->onKeyPress -= fd::bind( &ScriptController::onKeyPress, this );
+	keyboard->onKeyRelease -= fd::bind( &ScriptController::onKeyRelease, this );
 	
 	Mouse* mouse = im->getMouse();
 	mouse->onMouseButtonPress -= fd::bind( &ScriptController::onMouseButtonPressed, this );
@@ -116,6 +119,7 @@ void ScriptController::bindNode()
 	BIND_COMPONENT("light", Light)
 	BIND_COMPONENT("model", Model)
 	BIND_COMPONENT("camera", Camera)
+	BIND_COMPONENT("characterController", CharacterController)
 }
 
 //-----------------------------------//
@@ -147,7 +151,7 @@ ScriptPtr ScriptController::getScript()
 
 //-----------------------------------//
 
-void ScriptController::onKeyPressed( const KeyEvent& event )
+void ScriptController::onKeyPress( const KeyEvent& event )
 {
 	if( !enabled )
 		return;
@@ -168,6 +172,31 @@ void ScriptController::onKeyPressed( const KeyEvent& event )
     SWIG_Lua_NewPointerObj(L, (void*) &event, type, 0);
 
 	state->invoke("onKeyPress", 1);
+}
+
+//-----------------------------------//
+
+void ScriptController::onKeyRelease( const KeyEvent& event )
+{
+	if( !enabled )
+		return;
+
+	if( !state )
+		return;
+
+	Engine* engine = Engine::getInstancePtr();
+	State* mainState = engine->getScriptManager()->getState();
+
+	swig_module_info* module = SWIG_Lua_GetModule( mainState->getLuaState() );
+	assert( module != nullptr );
+
+	swig_type_info* type = SWIG_TypeQueryModule(module, module, "vapor::KeyEvent *");
+	assert( type != nullptr );
+
+	lua_State* L = state->getLuaState();
+    SWIG_Lua_NewPointerObj(L, (void*) &event, type, 0);
+
+	state->invoke("onKeyRelease", 1);
 }
 
 //-----------------------------------//

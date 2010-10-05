@@ -26,12 +26,12 @@ END_EVENT_TABLE()
 
 wxSliderCtrl::wxSliderCtrl( wxWindow* parent, wxWindowID id,
 						   int initial, int min, int max)
-	: wxPanel( parent, id, initial, min, max )
+	: wxPanel( parent, id )
 {
 	wxBoxSizer* bSizer81;
 	bSizer81 = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_slider = new wxSlider( this, wxID_ANY, 1, 0, 100, 
+	m_slider = new wxSlider( this, wxID_ANY, initial, min, max,
 		wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
 	bSizer81->Add( m_slider, 1, wxEXPAND, 5 );
 	

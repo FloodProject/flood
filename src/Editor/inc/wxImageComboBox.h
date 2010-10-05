@@ -36,15 +36,12 @@ public:
 	virtual wxCoord	OnMeasureItem (size_t item) const;
 	virtual wxCoord	OnMeasureItemWidth (size_t item) const;
 
-	void addImage( const wxString& item, const ImagePtr& image );
+	void addImage( const ImagePtr& image );
 
 protected:
 
 	wxBitmap* convertToBitmap( const ImagePtr& image ) const;
-
 	std::vector<ImagePtr> images;
-
-	DECLARE_EVENT_TABLE()
 };
 
 //-----------------------------------//

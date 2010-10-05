@@ -1,5 +1,7 @@
 [vertex]
 
+#pragma strict
+
 attribute vec3 vp_Vertex;
 attribute vec3 vp_Color;
 attribute vec3 vp_TexCoord0;
@@ -9,15 +11,16 @@ attribute float vp_BoneIndex;
 uniform mat4 vp_ModelMatrix;
 uniform mat4 vp_ViewMatrix;
 uniform mat4 vp_ProjectionMatrix;
-uniform mat4 vp_BonesMatrix[32];
+uniform mat4 vp_BonesMatrix[50];
 
 varying vec3 normal;
 varying vec2 vp_TexCoord;
 
 void main()
 {
-	normal = vp_Normal * mat3(vp_BonesMatrix[vp_BoneIndex]);
-	gl_FrontColor = vec4(vp_Color, 1.0);
+	normal = vp_Normal * mat3(vp_BonesMatrix[vp_BoneIndex]) * mat3(vp_ModelMatrix);
+	normal = normalize(normal);
+	normal = vp_Normal;
 	vp_TexCoord = vp_TexCoord0.st;
 	gl_Position = vec4(vp_Vertex, 1.0) * vp_BonesMatrix[vp_BoneIndex] * vp_ModelMatrix * vp_ViewMatrix * vp_ProjectionMatrix;
 } 

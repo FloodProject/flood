@@ -315,7 +315,7 @@ bool Serializer::openFromFile( const std::string& name )
 {
 	LocaleSaveRestore c;
 
-	NativeFile file( name, AccessMode::Read );
+	NativeFile file( name, FileMode::Read );
 
 	if( !file.open() )
 		return false;
@@ -336,7 +336,7 @@ void Serializer::saveToFile( const std::string& name )
 	// JSON, else the library will format the data erroneously.
 	LocaleSaveRestore c;
 
-	NativeFile file( name, AccessMode::Write );
+	NativeFile file( name, FileMode::Write );
 
 	if( !file.open() )
 		return;

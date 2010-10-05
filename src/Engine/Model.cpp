@@ -8,21 +8,22 @@
 
 #include "vapor/PCH.h"
 #include "vapor/scene/Model.h"
+#include "vapor/scene/Transform.h"
+#include "vapor/scene/Node.h"
 #include "vapor/resources/Mesh.h"
 #include "vapor/animation/Animation.h"
 #include "vapor/animation/Skeleton.h"
 #include "vapor/animation/Bone.h"
+#include "vapor/animation/Attachment.h"
+#include "vapor/math/Math.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-static const uint MAX_BONES = 32;
-
-//-----------------------------------//
-
 BEGIN_CLASS_PARENT(Model, Geometry)
 	FIELD_PRIMITIVE(Model, float, animationSpeed)
+	FIELD_PRIMITIVE(Model, bool, animationEnabled);
 	FIELD_CLASS_PTR(Model, Mesh, mesh)
 END_CLASS()
 
@@ -49,7 +50,8 @@ void Model::init()
 	needsRenderCallback = true;
 	debugRenderable = nullptr;
 
-	animationTime = 0;
+	animationFadeTime = 0;
+	animationCurrentFadeTime = 0;
 	animationSpeed = 1;
 	animationEnabled = true;
 }
@@ -58,10 +60,7 @@ void Model::init()
 
 void Model::update( double delta )
 {
-	if( !mesh )
-		return;
-
-	if( !mesh->isLoaded() )
+	if( !mesh || !mesh->isLoaded() )
 		return;
 
 	if( !modelBuilt )
@@ -69,138 +68,19 @@ void Model::update( double delta )
 
 	if( mesh->isAnimated() )
 	{
-		if( !animation )
-			animation = mesh->getBindPose();
-
+		if( animations.empty() )
+			setAnimation( mesh->getBindPose() );
+		
 		if( animationEnabled )
-			updateAnimation();
+		{
+			updateAnimations(delta);
+			updateFinalAnimationBones();
+		}
 
-		advanceTime(delta);
+		updateAttachments();
 	}
 
 	Geometry::update(delta);
-}
-
-//-----------------------------------//
-
-void Model::advanceTime( double delta )
-{
-	animationTime += delta * (10 * animationSpeed);
-
-	if( animationTime > animation->getTotalTime() )
-	{
-		if( animation->isLooped() )
-			animationTime = 0;
-		else
-			animationEnabled = false;
-	}
-}
-
-//-----------------------------------//
-
-void Model::updateAnimation()
-{
-	if( !animation )
-		return;
-
-	updateBoneMatrices();
-}
-
-//-----------------------------------//
-
-void Model::updateBoneMatrices()
-{
-	const KeyFramesMap& keyFrames = animation->getKeyFrames();
-
-	foreach( const KeyFramesPair& p, keyFrames )
-	{
-		const BonePtr& bone = p.first;
-		updateBoneMatrix( bone );
-	}
-}
-
-//-----------------------------------//
-
-void Model::updateBoneMatrix(const BonePtr& bone)
-{
-	Matrix4x3 frameMatrix =
-		animation->getInterpolatedKeyFrameMatrix(bone, animationTime);
-	
-	frameMatrix = frameMatrix * bone->relativeMatrix;
-
-	if( bone->parentIndex != -1 )
-		bonesMatrix[bone->index] = frameMatrix * bonesMatrix[bone->parentIndex];
-	else
-		bonesMatrix[bone->index] = frameMatrix;
-}
-
-//-----------------------------------//
-
-void Model::updateBounds()
-{
-	boundingVolume = mesh->getBoundingVolume();
-}
-
-//-----------------------------------//
-
-void Model::switchAnimation(const std::string& name)
-{
-	assert( mesh != nullptr );
-
-	if( !mesh->isAnimated() )
-		return;
-
-	animation = mesh->findAnimation(name);
-}
-
-//-----------------------------------//
-
-RenderablePtr Model::getDebugRenderable() const
-{
-	if( !mesh->isAnimated() )
-		return nullptr;
-
-	if( !debugRenderable )
-		createDebugRenderable();
-
-	VertexBufferPtr vb = debugRenderable->getVertexBuffer();
-
-	std::vector<Vector3> pos;
-	std::vector<Vector3> colors;
-
-	foreach( const BonePtr& bone, mesh->getSkeleton()->getBones() )
-	{
-		Vector3 vertex;
-		pos.push_back( bonesMatrix[bone->index]*vertex );
-		colors.push_back( Color::Blue );
-
-		if( bone->parentIndex != -1 )
-		{
-			Vector3 parentVertex;
-			pos.push_back( bonesMatrix[bone->parentIndex]*parentVertex );
-			colors.push_back( Color::Blue );
-		}
-	}
-
-	vb->set( VertexAttribute::Position, pos );
-	vb->set( VertexAttribute::Color, colors );
-
-	return debugRenderable;
-}
-
-//-----------------------------------//
-
-void Model::createDebugRenderable() const
-{
-	assert( !debugRenderable );
-
-	MaterialPtr mat = new Material("Skeleton");
-	mat->setProgram("Diffuse");
-	mat->setDepthTest(false);
-
-	VertexBufferPtr vb = new VertexBuffer();
-
-	debugRenderable = new Renderable(PolygonType::LineStrip, vb, mat);
 }
 
 //-----------------------------------//
@@ -224,26 +104,271 @@ void Model::build()
 	}
 
 	if( mesh->isAnimated() )
-		bonesMatrix.resize(MAX_BONES);	
+	{
+		int numBones = mesh->getSkeleton()->getBones().size();
+		bones.resize( numBones );	
+	}
 
 	modelBuilt = true;
 }
 
 //-----------------------------------//
 
+void Model::updateAnimations(double delta)
+{
+	foreach( AnimationState& state, animations )
+	{
+		const AnimationPtr& animation = state.animation;
+		float& animationTime = state.animationTime;
+
+		if( Math::floatEqual(animationTime, animation->getTotalTime()) )
+		{
+			animationTime = 0;
+			
+			if( !animation->isLooped() )
+				animationEnabled = false;
+		}
+
+		updateAnimationBones(state);
+		updateAnimationTime(state, delta);
+	}
+
+	if( animationCurrentFadeTime > animationFadeTime )
+	{
+		animationFadeTime = 0;
+		animationCurrentFadeTime = 0;
+
+		if( animations.size() >= 2 )
+			animations.erase( animations.begin()+1 );
+	}
+
+	if( animationFadeTime > 0 )
+		animationCurrentFadeTime += delta;
+}
+
+//-----------------------------------//
+
+void Model::updateAnimationTime(AnimationState& state, double delta)
+{
+	const AnimationPtr& animation = state.animation;
+	float& animationTime = state.animationTime;
+
+	animationTime += delta * 10 * animationSpeed;
+
+	if( animationTime > animation->getTotalTime() )
+		animationTime = animation->getTotalTime();
+}
+
+//-----------------------------------//
+
+void Model::updateAnimationBones(AnimationState& state)
+{
+	const AnimationPtr& animation = state.animation;
+	float animationTime = state.animationTime;
+
+	std::vector<Matrix4x3>& bones = state.bonesMatrix;
+
+	foreach( const KeyFramesPair& p, animation->getKeyFrames() )
+	{
+		const BonePtr& bone = p.first;
+		
+		Matrix4x3 matBone = animation->getKeyFrameMatrix(bone, animationTime);
+		matBone = matBone * bone->relativeMatrix;
+
+		if( bone->parentIndex != -1 )
+			bones[bone->index] = matBone * bones[bone->parentIndex];
+		else
+			bones[bone->index] = matBone;
+	}
+}
+
+//-----------------------------------//
+
+void Model::updateFinalAnimationBones()
+{
+	if( animations.empty() )
+		return;
+
+	for( uint i = 0; i < bones.size(); i++ )
+	{
+		if( animations.size() >= 2 )
+		{
+			bones[i] = Matrix4x3::lerp(
+				animations[0].bonesMatrix[i], animations[1].bonesMatrix[i],
+				1 - (animationCurrentFadeTime / animationFadeTime));
+		}
+		else
+		{
+			bones[i] = animations[0].bonesMatrix[i];
+		}
+	}
+}
+
+//-----------------------------------//
+
+void Model::updateAttachments()
+{
+	foreach( const AttachmentPtr& attachment, attachments )
+	{
+		const NodePtr& node = attachment->node;
+		const BonePtr& bone = attachment->bone;
+
+		const TransformPtr& transform = node->getTransform();
+		transform->setAbsoluteTransform( bones[bone->index] );
+	}
+}
+
+//-----------------------------------//
+
+void Model::updateBounds()
+{
+	boundingVolume = mesh->getBoundingVolume();
+}
+
+//-----------------------------------//
+
+void Model::setAnimation(const AnimationPtr& animation)
+{
+	assert( mesh != nullptr );
+
+	if( !mesh->isAnimated() )
+		return;
+
+	if( !animation )
+		return;
+
+	AnimationState state;
+	state.animation = animation;
+	state.animationTime = 0;
+
+	int numBones = mesh->getSkeleton()->getBones().size();
+	state.bonesMatrix.resize(numBones);
+
+	if( animations.empty() )
+		animations.push_back(state);
+	else
+		animations[0] = state;
+
+	animationEnabled = true;
+}
+
+//-----------------------------------//
+
+void Model::setAnimation(const std::string& name)
+{
+	AnimationPtr animation = mesh->findAnimation(name);
+	setAnimation(animation);
+}
+
+//-----------------------------------//
+
+void Model::setCrossFadeAnimation(const std::string& name, float fadeTime)
+{
+	assert( mesh != nullptr );
+
+	if( !mesh->isAnimated() )
+		return;
+
+	if( animations.size() >= 2 )
+		animations[1] = animations[0];
+	else
+		animations.push_back( animations[0] );
+		
+	setAnimation(name);
+	animationFadeTime = fadeTime;
+	animationCurrentFadeTime = 0;
+}
+
+//-----------------------------------//
+
 void Model::onRender()
 {
-	const RenderablePtr& rend = getRenderables()[0];
-	const MaterialPtr& mat = rend->getMaterial();
-	const ProgramPtr& prog = mat->getProgram();
+	if( !mesh->isAnimated() )
+		return;
 
-	std::vector<Matrix4x4> newMatrices;
-	newMatrices.reserve( bonesMatrix.size() );
+	foreach( const RenderablePtr& rend, getRenderables() )
+	{
+		const MaterialPtr& material = rend->getMaterial();
+		const ProgramPtr& program = material->getProgram();
 
-	foreach( const Matrix4x3& mat, bonesMatrix )
-		newMatrices.push_back(Matrix4x4(mat));
+		std::vector<Matrix4x4> matrices;
+		matrices.reserve( bones.size() );
+
+		foreach( const Matrix4x3& bone, bones )
+			matrices.push_back( Matrix4x4(bone) );
+		
+		program->setUniform("vp_BonesMatrix", matrices);
+	}
+}
+
+//-----------------------------------//
+
+void Model::attachNode(const std::string& boneName, const NodePtr& node)
+{
+	SkeletonPtr skeleton = mesh->getSkeleton();
+	assert( skeleton != nullptr );
+
+	BonePtr bone = skeleton->findBone(boneName);
 	
-	prog->setUniform("vp_BonesMatrix", newMatrices);
+	if( !bone )
+		return;
+
+	AttachmentPtr attachment = new Attachment();
+	
+	attachment->bone = bone;
+	attachment->node = node;
+
+	attachments.push_back(attachment);
+}
+
+//-----------------------------------//
+
+RenderablePtr Model::getDebugRenderable() const
+{
+	if( !mesh->isAnimated() )
+		return nullptr;
+
+	if( !debugRenderable )
+		createDebugRenderable();
+
+	VertexBufferPtr vb = debugRenderable->getVertexBuffer();
+
+	std::vector<Vector3> pos;
+	std::vector<Vector3> colors;
+
+	foreach( const BonePtr& bone, mesh->getSkeleton()->getBones() )
+	{
+		Vector3 vertex;
+		pos.push_back( bones[bone->index]*vertex );
+		colors.push_back( Color::Blue );
+
+		if( bone->parentIndex != -1 )
+		{
+			Vector3 parentVertex;
+			pos.push_back( bones[bone->parentIndex]*parentVertex );
+			colors.push_back( Color::Blue );
+		}
+	}
+
+	vb->set( VertexAttribute::Position, pos );
+	vb->set( VertexAttribute::Color, colors );
+
+	return debugRenderable;
+}
+
+//-----------------------------------//
+
+void Model::createDebugRenderable() const
+{
+	assert( !debugRenderable );
+
+	MaterialPtr mat = new Material("Skeleton");
+	mat->setProgram("Diffuse");
+	mat->setDepthTest(false);
+
+	VertexBufferPtr vb = new VertexBuffer();
+
+	debugRenderable = new Renderable(PolygonType::LineStrip, vb, mat);
 }
 
 //-----------------------------------//

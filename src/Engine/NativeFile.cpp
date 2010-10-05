@@ -24,7 +24,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-NativeFile::NativeFile(const std::string& path, AccessMode::Enum mode)
+NativeFile::NativeFile(const std::string& path, FileMode::Enum mode)
   : path(path)
   , mode(mode)
   , fp(nullptr)
@@ -32,7 +32,7 @@ NativeFile::NativeFile(const std::string& path, AccessMode::Enum mode)
 
 //-----------------------------------//
 
-NativeFile::NativeFile(const char* path, AccessMode::Enum mode)
+NativeFile::NativeFile(const char* path, FileMode::Enum mode)
   : path(path)
   , mode(mode)
   , fp(nullptr)
@@ -51,11 +51,11 @@ bool NativeFile::open()
 {
 	char* mode_ = nullptr;
 
-	if( mode == AccessMode::Read )
+	if( mode == FileMode::Read )
 		mode_ = "rb";
-	else if( mode == AccessMode::Write )
+	else if( mode == FileMode::Write )
 		mode_ = "w+b";
-	else if( mode == AccessMode::Append )
+	else if( mode == FileMode::Append )
 		mode_ = "a+b";
 
 	fp = fopen(path.c_str(), mode_);

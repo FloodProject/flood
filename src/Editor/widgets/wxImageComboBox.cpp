@@ -13,13 +13,6 @@
 
 namespace vapor { namespace editor {
 
-////////////////////////////////////////////////////////////
-// Event table
-////////////////////////////////////////////////////////////
-
-BEGIN_EVENT_TABLE(wxImageComboBox, wxOwnerDrawnComboBox)
-END_EVENT_TABLE()
-
 //-----------------------------------//
 
 wxImageComboBox::wxImageComboBox( wxWindow* parent, wxWindowID id )
@@ -32,11 +25,11 @@ wxImageComboBox::wxImageComboBox( wxWindow* parent, wxWindowID id )
 
 //-----------------------------------//
 
-void wxImageComboBox::addImage( const wxString& item, const ImagePtr& image )
+void wxImageComboBox::addImage( const ImagePtr& image )
 {
 	assert( image != nullptr );
 
-	Append( wxEmptyString );
+	Append( image->getPath() );
 	images.push_back(image);
 }
 
@@ -51,9 +44,8 @@ wxBitmap* wxImageComboBox::convertToBitmap( const ImagePtr& image ) const
 	
 	//byte* buf = const_cast<byte*>(&image->getBuffer()[0]);
 
-	File fileImage( image->getPath() );
-	std::string fullPath = fileImage.getFullPath();
-	wxImage img( fullPath );
+	File file( image->getPath() );
+	wxImage img( file.getRealPath() );
 
 	//wxImage img( image->getWidth(), image->getHeight(), buf, true /* don't free data */);
 
