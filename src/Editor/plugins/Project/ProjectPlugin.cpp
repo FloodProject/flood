@@ -91,9 +91,10 @@ void ProjectPlugin::onUndoRedoEvent()
 
 void ProjectPlugin::onNewButtonClick(wxCommandEvent& event)
 {
-	ScenePtr scene( new Scene() );
+	if( !askSaveChanges() )
+		return;
 
-	askSaveChanges();
+	ScenePtr scene( new Scene() );
 	switchScene(scene);
 }
 
@@ -103,7 +104,8 @@ static const std::string fileDialogDescription( "Scene files (*.scene)|*.scene" 
 
 void ProjectPlugin::onOpenButtonClick(wxCommandEvent& event)
 {
-	askSaveChanges();
+	if( !askSaveChanges() )
+		return;
 
 	// Ask for file name to open.
 	wxFileDialog fc( editor, wxFileSelectorPromptStr, wxEmptyString,
@@ -114,8 +116,8 @@ void ProjectPlugin::onOpenButtonClick(wxCommandEvent& event)
 	
 	Serializer deserializer;
 	deserializer.openFromFile( (std::string) fc.GetPath() );
+	
 	ScenePtr newScene = deserializer.deserializeScene();
-
 	switchScene(newScene);
 }
 
@@ -155,14 +157,14 @@ void ProjectPlugin::switchScene(const ScenePtr& scene)
 
 //-----------------------------------//
 
-void ProjectPlugin::saveScene()
+bool ProjectPlugin::saveScene()
 {
 	// Ask for file name to save as.
 	wxFileDialog fc( editor, wxFileSelectorPromptStr, wxEmptyString,
 		wxEmptyString, fileDialogDescription, wxFC_SAVE );
 	
 	if( fc.ShowModal() != wxID_OK )
-		return;
+		return false;
 
 	Engine* engine = editor->getEngine();
 	ScenePtr scene = engine->getSceneManager();
@@ -172,21 +174,27 @@ void ProjectPlugin::saveScene()
 	serializer.saveToFile( (std::string) fc.GetPath() );
 
 	unsavedChanges = false;
+	return true;
 }
 
 //-----------------------------------//
 
-void ProjectPlugin::askSaveChanges()
+bool ProjectPlugin::askSaveChanges()
 {
 	if( !unsavedChanges )
-		return;
+		return false;
 
     int answer = wxMessageBox(
 		"Scene contains unsaved changes. Do you want to save them?",
 		wxEmptyString, wxYES_NO | wxCANCEL, editor);
 
-    if (answer == wxYES)
-        saveScene();
+    if( answer == wxYES && !saveScene() )
+		return false;
+
+	if(answer != wxCANCEL)
+		return true;
+	else
+		return false;
 }
 
 //-----------------------------------//

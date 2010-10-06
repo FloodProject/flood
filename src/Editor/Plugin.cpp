@@ -43,6 +43,9 @@ void Plugin::doPluginDisable()
 
 void Plugin::addTool( wxToolBarToolBase* tool )
 {
+	if( tool->IsSeparator() )
+		return;
+
 	tools.push_back( tool );
 
 	wxToolBar* toolBar = editor->getToolbar();

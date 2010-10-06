@@ -30,30 +30,23 @@ Group::Group( const std::string& name )
 
 //-----------------------------------//
 
-int Group::add( const NodePtr& node )
+void Group::add( const NodePtr& node )
 {
 	// Beware that you have to assign a new Group-derived object
 	// to a shared_ptr, else shared_from_this will return bad_weak_ptr.
 
 	node->setParent( Node::shared_from_this() );
-	children.push_back( node );
+	nodes.push_back( node );
 
 	if( !onNodeAdded.empty() )
-	{
-		GroupEvent event;
-		event.node = node;
-
-		onNodeAdded( event );
-	}
-	
-	return children.size() - 1;
+		onNodeAdded(node);
 }
 
 //-----------------------------------//
 
 NodePtr Group::findNode( const std::string& name ) const
 {
-	foreach( const NodePtr& node, children )
+	foreach( const NodePtr& node, nodes )
 	{
 		if( node->getName() == name )
 			return node;
@@ -64,75 +57,20 @@ NodePtr Group::findNode( const std::string& name ) const
 
 //-----------------------------------//
 
-int Group::insert( uint i, const NodePtr& node )
-{
-	// TODO
-	return 1;
-}
-
-//-----------------------------------//
-
-bool Group::remove( uint i )
-{
-	// TODO
-
-	//if( !onNodeRemoved.empty() )
-	//{
-	//	GroupEvent event;
-	//	event.node = child;
-
-	//	onNodeRemoved( event );
-	//}
-
-	return false;
-}
-
-//-----------------------------------//
-
 bool Group::remove( const NodePtr& node )
 {
-	NodeVector::iterator it =
-		std::find(children.begin(), children.end(), node );
+	std::vector<NodePtr>::iterator it =
+		std::find(nodes.begin(), nodes.end(), node );
 
-	if( it == children.end() )
+	if( it == nodes.end() )
 		return false;
 
-	children.erase(it);
+	nodes.erase(it);
 
 	if( !onNodeRemoved.empty() )
-	{
-		GroupEvent event;
-		event.node = node;
-
-		onNodeRemoved( event );
-	}
+		onNodeRemoved(node);
 
 	return true;
-}
-
-//-----------------------------------//
-
-//int Group::index( const NodePtr& child ) const
-//{
-//	NodeVector::const_iterator it;
-//	it = std::find( children.begin(), children.end(), child );
-//
-//	if( it == children.end() )
-//		return -1;
-//
-//	return std::distance(children.begin(), it);
-//}
-
-//-----------------------------------//
-
-NodePtr Group::get( uint i ) const
-{
-	if( i >= children.size() )
-	{
-		return NodePtr();
-	}
-
-	return children[i];
 }
 
 //-----------------------------------//
@@ -140,14 +78,14 @@ NodePtr Group::get( uint i ) const
 void Group::update( double delta )
 {
 #ifdef VAPOR_GROUP_USE_FOREACH
-	foreach( const NodePtr& node, children )
+	foreach( const NodePtr& node, nodes )
 	{
 		node->update( delta );
 	}
 #else
 	typedef std::vector<NodePtr>::const_iterator vec_it;
-	vec_it it = children.begin();
-	vec_it end = children.end();
+	vec_it it = nodes.begin();
+	vec_it end = nodes.end();
 	
 	while( ++it != end )
 	{
@@ -155,13 +93,6 @@ void Group::update( double delta )
 	}
 #endif
 }
-
-//-----------------------------------//
-
-//int Group::count() const
-//{
-//	return children.size();
-//}
 
 //-----------------------------------//
 

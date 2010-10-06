@@ -94,11 +94,10 @@ EditorFrame::EditorFrame(const wxString& title)
 
 EditorFrame::~EditorFrame()
 {
-	mainSplitter->Destroy();
-
 	delete pluginManager;
 	delete eventManager;
 	delete undoManager;
+	mainSplitter->Destroy();
 
 	editorScene.reset();
 	delete engine;

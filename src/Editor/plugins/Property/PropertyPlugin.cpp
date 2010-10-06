@@ -90,6 +90,9 @@ void PropertyPlugin::onNodeSelect( const NodePtr& node )
 
 	Class& klass = (Class&) node->getInstanceType();
 	klass.onFieldChanged += fd::bind(&PropertyPlugin::onFieldChanged, this);
+
+	node->onComponentAdded += fd::bind(&PropertyPlugin::onComponentChanged, this);
+	node->onComponentRemoved += fd::bind(&PropertyPlugin::onComponentChanged, this);
 }
 
 //-----------------------------------//
@@ -101,26 +104,56 @@ void PropertyPlugin::onNodeUnselect( const NodePtr& node )
 
 	Class& klass = (Class&) node->getInstanceType();
 	klass.onFieldChanged -= fd::bind(&PropertyPlugin::onFieldChanged, this);
+
+	node->onComponentAdded -= fd::bind(&PropertyPlugin::onComponentChanged, this);
+	node->onComponentRemoved -= fd::bind(&PropertyPlugin::onComponentChanged, this);
+}
+
+//-----------------------------------//
+
+void PropertyPlugin::onComponentSelect( const ComponentPtr& component )
+{
+	const NodePtr& node = component->getNode();
+	onNodeSelect(node);
+}
+
+//-----------------------------------//
+
+void PropertyPlugin::onComponentUnselect( const ComponentPtr& component )
+{
+	const NodePtr& node = component->getNode();
+	onNodeUnselect(node);
 }
 
 //-----------------------------------//
 
 void PropertyPlugin::onFieldChanged(const Field& field)
 {
-	const NodePtr& node = selectedNode.lock();
+	updateProperties();
+}
 
-	if( node )	
-		propertyPage->showNodeProperties(node);
+//-----------------------------------//
+
+void PropertyPlugin::onComponentChanged(const ComponentPtr& component)
+{
+	updateProperties();
 }
 
 //-----------------------------------//
 
 void PropertyPlugin::onSceneUpdate()
 {
+	updateProperties();
+}
+
+//-----------------------------------//
+
+void PropertyPlugin::updateProperties()
+{
 	const NodePtr& node = selectedNode.lock();
 
-	if( node )
-		propertyPage->showNodeProperties( node );
+	if( node )	
+		propertyPage->showNodeProperties(node);
 }
 
 //-----------------------------------//

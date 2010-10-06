@@ -99,8 +99,8 @@ protected:
 	ModelPtr model;
 
 	// Scene-monitoring callbacks.
-	void onNodeAdded( const GroupEvent& );
-	void onNodeRemoved( const GroupEvent& );
+	void onNodeAdded( const NodePtr& node );
+	void onNodeRemoved( const NodePtr& node );
 
 	// Scene tree.
 	wxBoxSizer* sizer;

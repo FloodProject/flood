@@ -294,9 +294,7 @@ void Transform::update( double VAPOR_UNUSED(delta) )
 void Transform::notify()
 {
 	if( onTransform.empty() ) 
-	{
 		return;
-	}
 
 	onTransform();
 }

@@ -44,25 +44,58 @@ public:
 	explicit Node();
 	explicit Node( const std::string& name );
 	
+	// Gets/sets the name of the node.
+	ACESSOR(Name, const std::string&, name);
+
+	// Gets if this node is visible.
+	bool isVisible() const;
+
+	// Sets if this node is visible.
+	ACESSOR(Visible, bool, visible);
+
 	// Gets the parent of the node.
 	NodePtr getParent() const;
 
 	// Sets the parent of the node.
 	SETTER(Parent, const NodePtr&, parent)
 
+	// Gets the tag of the node.
+	bool getTag( int index );
+
+	// Sets the tag of the node.
+	void setTag( int index, bool state );
+
 	// Adds a component to this node.
 	bool addComponent( const ComponentPtr& component );
 
+	// Removes a component from this node.
+	bool removeComponent( const ComponentPtr& component );
+
 	// Adds a transform component to this node.
 	bool addTransform();
+
+	// Gets the associated transform component (if any).
+	TransformPtr getTransform() const;
+
+	// Returns all the registered components in this node.
+	GETTER(Components, const ComponentMap&, components)
+
+	// Gets the geometries components in the node.
+	GETTER(Geometry, const std::vector<GeometryPtr>&, geometries)
+
+	// Gets a component from this node.
+	template <typename T>
+	std::shared_ptr<T> getComponent( const std::string& type ) const
+	{
+		const ComponentPtr& comp = getComponent<T>();
+		return std::static_pointer_cast<T>(comp);
+	}
 
 	// Gets a component from this node.
 	template <typename T>
 	std::shared_ptr<T> getComponent() const
 	{
-		const Class* type = &T::getType();
-
-		ComponentMap::const_iterator it = components.find(type);
+		ComponentMap::const_iterator it = components.find(&T::getType());
 		
 		if( it == components.end() )
 			return std::shared_ptr<T>();
@@ -86,43 +119,16 @@ public:
 		return std::shared_ptr<T>();
 	}
 
-	// Returns all the registered components in this node.
-	GETTER(Components, const ComponentMap&, components)
-
-	// Gets a component from this node.
-	template <typename T>
-	std::shared_ptr<T> getComponent( const std::string& type ) const
-	{
-		const ComponentPtr& comp = getComponent<T>();
-		return std::static_pointer_cast<T>(comp);
-	}
-
-	// Removes a component from this node.
-	bool removeComponent( const ComponentPtr& component );
-
 	// Updates all the components of the node.
 	virtual void update( double delta );
 
-	// Gets/sets the name of the node.
-	ACESSOR(Name, const std::string&, name);
+	// Events gets called when a component is added.
+	fd::delegate<void(const ComponentPtr&)> onComponentAdded;
 
-	// Gets the associated transform component (if any).
-	TransformPtr getTransform() const;
+	// Events gets called when a component is removed.
+	fd::delegate<void(const ComponentPtr&)> onComponentRemoved;
 
-	// Gets the geometries components in the node.
-	GETTER(Geometry, const std::vector<GeometryPtr>&, geometries)
-
-	// Gets if this node is visible.
-	bool isVisible() const;
-
-	// Sets if this node is visible.
-	ACESSOR(Visible, bool, visible);
-
-	// Gets/sets the node tag state.
-	bool getTag( int index );
-	void setTag( int index, bool state );
-
-private:
+protected:
 
 	// Name of the node.
 	std::string name;
@@ -130,7 +136,7 @@ private:
 	// Visibility of the node.
 	bool visible;
 
-	// Tags of the node..
+	// Tags of the node.
 	std::bitset<32> tags;
 
 	// Components of the node.

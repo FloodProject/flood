@@ -11,6 +11,7 @@
 #include "vapor/scene/Group.h"
 #include "vapor/render/Device.h"
 #include "vapor/render/View.h"
+#include "vapor/render/DebugGeometry.h"
 #include "vapor/Engine.h"
 
 namespace vapor {
@@ -113,8 +114,10 @@ void Camera::update( double VAPOR_UNUSED(delta) )
 		// Update frustum matrices.
 		frustum.aspectRatio = activeView->getAspectRatio();
 		frustum.updateProjection( activeView->getSize() );
-		frustum.updatePlanes( viewMatrix );	
+		frustum.updatePlanes( viewMatrix );
 	}
+
+	updateDebugRenderable();
 
 	// Only run the following code once.
 	if( transform )
@@ -257,6 +260,24 @@ Ray Camera::getRay( float screenX, float screenY, Vector3* outFar ) const
 		*outFar = rayTarget;
 
 	return pickRay;
+}
+
+//-----------------------------------//
+
+void Camera::updateDebugRenderable() const
+{
+	if( !debugRenderable )
+		return;
+
+	updateFrustum( debugRenderable, frustum );
+}
+
+//-----------------------------------//
+
+RenderablePtr Camera::createDebugRenderable() const
+{
+	assert( !debugRenderable );
+	return buildFrustum( frustum );
 }
 
 //-----------------------------------//

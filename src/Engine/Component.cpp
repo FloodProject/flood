@@ -47,7 +47,17 @@ bool Component::isDebugRenderableVisible() const
 
 RenderablePtr Component::getDebugRenderable() const
 {
+	if( !debugRenderable )
+		debugRenderable = createDebugRenderable();
+
 	return debugRenderable;
+}
+
+//-----------------------------------//
+
+RenderablePtr Component::createDebugRenderable() const
+{
+	return nullptr;
 }
 
 //-----------------------------------//

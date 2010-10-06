@@ -315,10 +315,8 @@ void ScenePage::onItemChanged(wxTreeEvent& event)
 	const NodePtr& oldNode = getNodeFromTreeId( oldId );
 	const NodePtr& newNode = getNodeFromTreeId( newId );
 	
-	if( newNode )
-		buttonNodeDelete->Enable();
-	else
-		buttonNodeDelete->Disable();
+	const ComponentPtr& oldComponent = getComponentFromTreeId( oldId );
+	const ComponentPtr& newComponent = getComponentFromTreeId( newId );
 
 	sentLastSelectionEvent = true;
 
@@ -328,8 +326,14 @@ void ScenePage::onItemChanged(wxTreeEvent& event)
 	if( oldNode )
 		events->onNodeUnselect(oldNode);
 
+	if( oldComponent )
+		events->onComponentUnselect(oldComponent);
+
 	if( newNode )
 		events->onNodeSelect(newNode);
+
+	if( newComponent )
+		events->onComponentSelect(newComponent);
 
 	sentLastSelectionEvent = false;
 }
@@ -343,24 +347,20 @@ public:
 	void redo();
 	void undo();
 
-	ScenePage* scenePage;
-	NodeWeakPtr weakNode;
+	NodePtr node;
+	SceneWeakPtr weakScene;
 };
 
 void NodeOperation::redo()
 {
-	NodePtr node = weakNode.lock();
-
-	if( !node )
-		return;
+	ScenePtr scene = weakScene.lock();
+	scene->add(node);
 }
 
 void NodeOperation::undo()
 {
-	NodePtr node = weakNode.lock();
-
-	if( !node )
-		return;
+	ScenePtr scene = weakScene.lock();
+	scene->remove(node);
 }
 
 //-----------------------------------//
@@ -371,29 +371,19 @@ void ScenePage::onButtonNodeAdd(wxCommandEvent&)
 	NodePtr node( new Node(name) );
 	node->addTransform();
 	
-	// This is to prevent the editor of processing the node
-	// in the method 'onNodeAdded', which could result in the
-	// duplication of the node in the editor's scene tree.
-	node->setTag( EditorTags::EditorOnly, true );
-	
-	ScenePtr scene = weakScene.lock();
-	assert( scene != nullptr );
-	scene->add(node);
-
-	node->setTag( EditorTags::EditorOnly, false );
-
-	wxTreeItemId id = addNode(rootId, node);
-
-	treeCtrl->Expand(id);
-	treeCtrl->SelectItem(id);
-	treeCtrl->EditLabel(id);
-
 	NodeOperation* nodeOperation = new NodeOperation();
-	nodeOperation->weakNode = node;
-	nodeOperation->scenePage = this;
+	nodeOperation->node = node;
+	nodeOperation->weakScene = weakScene;
 
 	UndoManager* undoManager = editor->getUndoManager();
 	undoManager->registerOperation(nodeOperation);
+
+	nodeOperation->redo();
+	
+	wxTreeItemId id = getTreeIdFromNode(node);
+	treeCtrl->Expand(id);
+	treeCtrl->SelectItem(id);
+	treeCtrl->EditLabel(id);
 
 	editor->redrawView();
 }
@@ -403,25 +393,19 @@ void ScenePage::onButtonNodeAdd(wxCommandEvent&)
 void ScenePage::onButtonNodeDelete(wxCommandEvent&)
 {	
 	wxTreeItemId id = treeCtrl->GetSelection();
-	
 	NodePtr node = getNodeFromTreeId(id);
 
 	if( !node )
 		return;
 
-	assert( node != nullptr );
-	assert( nodeIds[node] == id );
-
-	nodeIds.erase(node);
-	treeCtrl->Delete(id);
-	weakScene.lock()->remove( node );
-
 	NodeOperation* nodeOperation = new NodeOperation();
-	nodeOperation->weakNode = node;
-	nodeOperation->scenePage = this;
+	nodeOperation->node = node;
+	nodeOperation->weakScene = weakScene;
 
 	UndoManager* undoManager = editor->getUndoManager();
 	undoManager->registerOperation(nodeOperation);
+
+	nodeOperation->undo();
 
 	editor->redrawView();
 }
@@ -436,8 +420,32 @@ void ScenePage::onButtonNodeDeleteUpdate(wxUpdateUIEvent& event)
 		return;
 
 	bool empty = scene->getChildren().empty();
-	
 	event.Enable( !empty );
+}
+
+//-----------------------------------//
+
+void ScenePage::onNodeAdded( const NodePtr& node )
+{
+	if( node->getTag(EditorTags::EditorOnly) )
+		return;
+	
+	wxTreeItemId id = getTreeIdFromNode(node->getParent());
+	addGroup( id, node );
+}
+
+//-----------------------------------//
+
+void ScenePage::onNodeRemoved( const NodePtr& node )
+{
+	wxTreeItemId id = getTreeIdFromNode(node);
+	treeCtrl->Delete(id);
+	
+	assert( nodeIds[node] == id );
+	nodeIds.erase(node);
+
+	//Events* events = editor->getEventManager();
+	//events->onNodeUnselect( event.node );
 }
 
 //-----------------------------------//
@@ -447,11 +455,12 @@ void ScenePage::populateNodeItemMenu(wxMenu& menu, const NodePtr& node)
 	menu.AppendCheckItem(ID_MenuSceneNodeVisible, "&Visible");
 	menu.Check(ID_MenuSceneNodeVisible, node->isVisible() );
 
-	const std::vector< GeometryPtr >& geo = node->getGeometry();
+	const std::vector<GeometryPtr>& geo = node->getGeometry();
 	
 	if( !geo.empty() )
 	{
-		const std::vector< RenderablePtr >& rend = geo.front()->getRenderables();
+		const std::vector<RenderablePtr>& rend = geo.front()->getRenderables();
+		
 		if( !rend.empty() )
 		{
 			bool state = (rend.front()->getPolygonMode() != PolygonMode::Solid);
@@ -689,6 +698,9 @@ void ScenePage::onMenuSelected( wxCommandEvent& event )
 {
 	int id = event.GetId();
 
+	//if( id < 0 )
+	//	return;
+
 	ScenePtr scene = weakScene.lock();
 	const NodePtr& node = getNodeFromTreeId( menuItemId );
 
@@ -800,6 +812,10 @@ void ScenePage::onComponentAdd(wxCommandEvent& event )
 	const NodePtr& node = getNodeFromTreeId( menuItemId );
 	
 	int id = event.GetId();
+	
+	//if( id < 0 )
+	//	return;
+
 	const wxString& name =  currentMenu->GetLabelText(id); 
 	
 	TypeRegistry& registry = TypeRegistry::getInstance();
@@ -827,38 +843,13 @@ void ScenePage::onComponentAdd(wxCommandEvent& event )
 
 //-----------------------------------//
 
-void ScenePage::onNodeAdded( const GroupEvent& event )
-{
-	const NodePtr& node = event.node;
-
-	if( node->getTag(EditorTags::EditorOnly) )
-		return;
-	
-	wxTreeItemId groupId = getTreeIdFromNode(node->getParent());
-	addGroup( groupId, node );
-}
-
-//-----------------------------------//
-
-void ScenePage::onNodeRemoved( const GroupEvent& event )
-{
-	//const std::string& type = component.second->getType();
-	//AppendItem( id, type, icons[type] );
-	Events* events = editor->getEventManager();
-	events->onNodeUnselect( event.node );
-}
-
-//-----------------------------------//
-
 void ScenePage::onLabelEditBegin( wxTreeEvent& event )
 {
 	wxTreeItemId item = event.GetItem();
 	NodePtr node = getNodeFromTreeId( item );
 	
 	if( !node )
-	{
 		event.Veto();
-	}
 }
 
 //-----------------------------------//

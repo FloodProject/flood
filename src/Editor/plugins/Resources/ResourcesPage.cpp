@@ -19,8 +19,8 @@ namespace vapor { namespace editor {
 ResourcesPage::ResourcesPage( EditorFrame* editor,
 							 wxWindow* parent, wxWindowID id,
 							 const wxPoint& pos, const wxSize& size )
-	: wxTreeCtrl(parent, id, pos, size, wxTR_DEFAULT_STYLE |
-		wxTR_HIDE_ROOT, wxDefaultValidator, "ResourcesPage")
+	: wxTreeCtrl(parent, id, pos, size, wxTR_DEFAULT_STYLE|wxTR_HIDE_ROOT,
+	  wxDefaultValidator, "ResourcesPage")
 	, editor(editor)
 {
 	engine = editor->getEngine();
@@ -34,18 +34,18 @@ ResourcesPage::ResourcesPage( EditorFrame* editor,
 
 	initIcons();
 	initControl();
-	ExpandAll();
+	updateTree();
 }
 
 //-----------------------------------//
 
 ResourcesPage::~ResourcesPage()
 {
-	//rm->onResourceAdded -= fd::bind( &ResourcesPage::onResourceAdded, this );
-	//rm->onResourceRemoved -= fd::bind( &ResourcesPage::onResourceRemoved, this );
+	rm->onResourceAdded -= fd::bind( &ResourcesPage::onResourceAdded, this );
+	rm->onResourceRemoved -= fd::bind( &ResourcesPage::onResourceRemoved, this );
 
-	//rm->onResourceLoaded -= fd::bind( &ResourcesPage::onResourceReloaded, this );
-	//rm->onResourceReloaded -= fd::bind( &ResourcesPage::onResourceReloaded, this );
+	rm->onResourceLoaded -= fd::bind( &ResourcesPage::onResourceReloaded, this );
+	rm->onResourceReloaded -= fd::bind( &ResourcesPage::onResourceReloaded, this );
 }
 
 //-----------------------------------//
@@ -59,7 +59,7 @@ void ResourcesPage::initControl()
 	const Enum& resourcesEnum = ResourceGroup::getType();
 
 	resourceGroupTreeIds[RG(General)] =
-		AppendItem(rootItemId, "General", resourceGroupIcons[RG(General)] );
+		AppendItem(rootItemId, "General", resourceGroupIcons[RG(General)]);
 
 	foreach( const EnumValuesPair& p, resourcesEnum.getValues() )
 	{
@@ -69,7 +69,7 @@ void ResourcesPage::initControl()
 			continue;
 
 		resourceGroupTreeIds[value] =
-			AppendItem(rootItemId, p.first, resourceGroupIcons[value] );
+			AppendItem(rootItemId, p.first, resourceGroupIcons[value]);
 	}
 
 	Bind(wxEVT_COMMAND_TREE_ITEM_MENU, &ResourcesPage::onTreeItemMenu, this);

@@ -221,7 +221,7 @@ void Scene::update( double delta )
 
 NodePtr Scene::getEntity( const std::string& name ) const
 {
-	foreach( const NodePtr& node, children )
+	foreach( const NodePtr& node, nodes )
 	{
 		if( node->getName() == name )
 			return node;

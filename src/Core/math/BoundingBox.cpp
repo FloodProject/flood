@@ -87,6 +87,7 @@ void BoundingBox::add( const BoundingBox& box )
 BoundingBox BoundingBox::transform( const Matrix4x3& mat ) const
 {
 	BoundingBox box;
+	box.reset();
 	
 	for(int i = 0; i < 8; i++)
 	{

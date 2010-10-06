@@ -1019,14 +1019,6 @@
 						Name="VCCLCompilerTool"
 					/>
 				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<Filter
 				Name="Label"
@@ -2047,22 +2039,30 @@
 				RelativePath="..\..\inc\vapor\animation\Attachment.h"
 				>
 			</File>
-			<File
-				RelativePath="..\..\src\Engine\animation\Bone.cpp"
+			<Filter
+				Name="Skeleton"
 				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\animation\Bone.h"
+				<File
+					RelativePath="..\..\src\Engine\animation\Skeleton.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\animation\Skeleton.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Bones"
 				>
-			</File>
-			<File
-				RelativePath="..\..\src\Engine\animation\Skeleton.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\vapor\animation\Skeleton.h"
-				>
-			</File>
+				<File
+					RelativePath="..\..\src\Engine\animation\Bone.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\animation\Bone.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Controllers"

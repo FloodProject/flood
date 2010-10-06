@@ -2,61 +2,30 @@ WIP (work-in-progress)
 ======================
 
 Duplicate resources in Resources pane in editor
-Check skinning limit in shader
-
-   GLint location = glGetUniformLocation(mProgramID, name);
-   if (location == -1)
-       return NULL;
-      // now find it in the list of uniforms to get type and size
-   GLint numUniforms = 0;
-   glGetProgramiv(    mProgramID, GL_ACTIVE_UNIFORMS, &numUniforms );
-   GLint uniformMaxLength = 0;
-   glGetProgramiv(    mProgramID, GL_ACTIVE_UNIFORM_MAX_LENGTH,  &uniformMaxLength );
-   GLint count = -1;
-   GLenum type = 0;
-   GLchar* uniformName = new GLchar[uniformMaxLength];
-   for ( GLint i = 0; i < numUniforms; ++i )
-   {
-       GLsizei length;
-       glGetActiveUniform(    mProgramID, i, uniformMaxLength, &length,  &count, &type, uniformName);                     if ( strcmp(uniformName, name) == 0 )
-           break;
-   }
-   delete [] uniformName;
-
-
-
 Fix model debug renderable of skeleton.
 wxWidgets regression in message dialog (missing icons in save dialog)
 Add UpdateUI event to Play button.
 Physics rotation becomes wrong due to bounding box calculation.
+
 Add a reset method to the editor that sets to defaults
 
-	void newScene()
-	{
-		editorScene.clear();
-		scene.clear();
-		
-		undoManager.clear()
-		resources.clear()
-		physicsWorld.clear()
-		
-		scene = new Scene();
-		camera stuff, etc.
-	}
+void newScene()
+{
+	editorScene.clear();
+	scene.clear();
+	
+	undoManager.clear()
+	resources.clear()
+	physicsWorld.clear()
+	
+	scene = new Scene();
+	camera stuff, etc.
+}
 
-Light and Camera debug
 Fix default animation state on skinned meshes with no animation tracks.
 
 EDITOR:
 -------
-
-Scene:
-
-	Add Undo events for node and components.
-
-Properties:
-
-	Fix the active property on node creation
 
 Input:
 
@@ -198,3 +167,30 @@ http://xania.org/200512/crt-heap-fragmentation-in-windows
 http://blog.pavlov.net/2007/11/11/windows-low-fragmentation-heap/
 http://msdn.microsoft.com/en-us/library/aa366750%28VS.85%29.aspx
 http://www.gamasutra.com/view/feature/2971/play_by_play_effective_memory_.php
+
+
+Check skinning limit in shader
+
+GLint location = glGetUniformLocation(mProgramID, name);
+if (location == -1)
+   return NULL;
+
+// now find it in the list of uniforms to get type and size
+GLint numUniforms = 0;
+glGetProgramiv( mProgramID, GL_ACTIVE_UNIFORMS, &numUniforms );
+
+GLint uniformMaxLength = 0;
+glGetProgramiv( mProgramID, GL_ACTIVE_UNIFORM_MAX_LENGTH,  &uniformMaxLength );
+
+GLint count = -1;
+GLenum type = 0;
+GLchar* uniformName = new GLchar[uniformMaxLength];
+
+for( GLint i = 0; i < numUniforms; ++i )
+{
+   GLsizei length;
+   glGetActiveUniform(    mProgramID, i, uniformMaxLength, &length,  &count, &type, uniformName);                     if ( strcmp(uniformName, name) == 0 )
+	   break;
+}
+
+delete [] uniformName;

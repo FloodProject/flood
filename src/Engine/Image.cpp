@@ -106,7 +106,7 @@ void Image::save( const std::string& filename )
 
 //-----------------------------------//
 
-void Image::setColor( Color color )
+void Image::setColor( const Color& color )
 {
 	if( pixelFormat != PixelFormat::R8G8B8A8 )
 		return;

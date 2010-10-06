@@ -39,11 +39,23 @@ public:
 	// Node unselection callback.
 	virtual void onNodeUnselect( const NodePtr& );
 
+	// Component selection callback.
+	virtual void onComponentSelect( const ComponentPtr& component );
+
+	// Component unselection callback.
+	virtual void onComponentUnselect( const ComponentPtr& component );
+
 	// Scene update callback.
 	virtual void onSceneUpdate();
 
 	// Field change callback.
 	void onFieldChanged(const Field& field);
+
+	// Component change callback.
+	void onComponentChanged(const ComponentPtr& component);
+
+	// Updates the properties.
+	void updateProperties();
 
 protected:
 

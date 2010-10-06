@@ -42,28 +42,27 @@ bool Node::addComponent( const ComponentPtr& component )
 
 	const Class* type = &component->getInstanceType();
 
-	// Searches for a component with the same type.
 	if( components.find(type) != components.end() )
 	{
 		warn( "scene",
 			"Component of type '%s' already exists in node '%s'",
 			type->getName().c_str(), getName().c_str() );
-
 		return false;
 	}
 
 	// Cache geometry (renderable) objects.
 	if( type->is<Geometry>() || type->inherits<Geometry>() )
 	{
-		const GeometryPtr& geometry =
-			std::dynamic_pointer_cast<Geometry>( component );
-	
+		const GeometryPtr& geometry = std::dynamic_pointer_cast<Geometry>( component );
 		geometries.push_back( geometry );
 	}
 
 	// If it doesn't exist yet, add it in the map.
 	components[type] = component;
 	component->setNode( shared_from_this() );
+
+	if( !onComponentAdded.empty() )
+		onComponentAdded(component);
 
 	return true;
 }
@@ -92,6 +91,9 @@ bool Node::removeComponent( const ComponentPtr& component )
 	
 	assert( it2 != geometries.end() );
 	geometries.erase( it2 );
+
+	if( !onComponentRemoved.empty() )
+		onComponentRemoved(component);
 
 	return true;
 }

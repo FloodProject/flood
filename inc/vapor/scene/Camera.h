@@ -82,6 +82,12 @@ protected:
 	// Handles the transform notification.
 	void onTransform();
 
+	// Updates the debug renderable of the camera.
+	void updateDebugRenderable() const;
+
+	// Creates the debug renderable of the camera.
+	virtual RenderablePtr createDebugRenderable() const;
+
 	// Camera frustum.
 	Frustum frustum;
 

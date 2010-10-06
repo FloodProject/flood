@@ -83,11 +83,11 @@ protected:
 	// Updates the final animation matrix.
 	void updateFinalAnimationBones();
 
-	// Gets a debug debugRenderable of the skeleton.
-	virtual RenderablePtr getDebugRenderable() const;
+	// Updates the debug renderable of the skeleton.
+	void updateDebugRenderable() const;
 
-	// Creates a debug debugRenderable of the skeleton.
-	virtual void createDebugRenderable() const;
+	// Creates a debug renderable of the skeleton.
+	virtual RenderablePtr createDebugRenderable() const;
 
 	// Callback when geometry is about to get rendered.
 	virtual void onRender();
@@ -118,9 +118,6 @@ protected:
 
 	// Final bones matrices.
 	std::vector<Matrix4x3> bones;
-
-	// Mesh that the model renders.
-	mutable RenderablePtr debugRenderable;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Model );

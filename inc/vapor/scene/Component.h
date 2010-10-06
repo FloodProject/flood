@@ -55,6 +55,9 @@ public:
 	// Gets the debug renderable of this component.
 	virtual RenderablePtr getDebugRenderable() const;
 
+	// Creates the debug renderable of this component.
+	virtual RenderablePtr createDebugRenderable() const;
+
 protected:
 
 	// Node that owns this component.
@@ -64,7 +67,7 @@ protected:
 	bool debugVisible;
 
 	// Debug renderable of component.
-	RenderablePtr debugRenderable;
+	mutable RenderablePtr debugRenderable;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Component )

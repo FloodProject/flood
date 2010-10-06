@@ -59,10 +59,10 @@ protected:
 	void switchScene(const ScenePtr& scene);
 
 	// Asks to save unsaved changes.
-	void askSaveChanges();
+	bool askSaveChanges();
 
 	// Saves the current scene.
-	void saveScene();
+	bool saveScene();
 
 	// Keeps track if there are unsaved changes.
 	bool unsavedChanges;

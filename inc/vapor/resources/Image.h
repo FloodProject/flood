@@ -72,7 +72,7 @@ public:
 	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Images)
 
 	// Sets the image with the given color.
-	void setColor( Color color );
+	void setColor( const Color& color );
 
 	// Saves the image contents to a file.
 	void save( const std::string& filename );

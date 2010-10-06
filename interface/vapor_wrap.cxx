@@ -1517,45 +1517,45 @@ SWIG_Lua_dostring(lua_State *L, const char* str) {
 #define SWIGTYPE_p_boost__intrusive_ptrT_vapor__Resource_t swig_types[5]
 #define SWIGTYPE_p_boost__intrusive_ptrT_vapor__Skeleton_t swig_types[6]
 #define SWIGTYPE_p_fd__delegateT_void_fF_t swig_types[7]
-#define SWIGTYPE_p_fd__delegateT_void_fvapor__GroupEvent_const_RF_t swig_types[8]
-#define SWIGTYPE_p_float swig_types[9]
-#define SWIGTYPE_p_int swig_types[10]
-#define SWIGTYPE_p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t swig_types[11]
-#define SWIGTYPE_p_std__mapT_vapor__RenderStage__Enum_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t_t swig_types[12]
-#define SWIGTYPE_p_std__pairT_Class_const_p_std__shared_ptrT_vapor__Component_t_t swig_types[13]
-#define SWIGTYPE_p_std__pairT_vapor__RenderStage__Enum_const_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t_t swig_types[14]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Camera_t swig_types[15]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Component_t swig_types[16]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Geometry_t swig_types[17]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Group_t swig_types[18]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Light_t swig_types[19]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Model_t swig_types[20]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Node_t swig_types[21]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Scene_t swig_types[22]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Transform_t swig_types[23]
-#define SWIGTYPE_p_std__vectorT_boost__intrusive_ptrT_vapor__Animation_t_t swig_types[24]
-#define SWIGTYPE_p_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t swig_types[25]
-#define SWIGTYPE_p_std__vectorT_std__shared_ptrT_vapor__Geometry_t_t swig_types[26]
-#define SWIGTYPE_p_std__vectorT_std__shared_ptrT_vapor__Node_t_t swig_types[27]
-#define SWIGTYPE_p_std__vectorT_vapor__RayBoxQueryResult_t swig_types[28]
-#define SWIGTYPE_p_std__weak_ptrT_vapor__Camera_t swig_types[29]
-#define SWIGTYPE_p_std__weak_ptrT_vapor__Component_t swig_types[30]
-#define SWIGTYPE_p_std__weak_ptrT_vapor__Geometry_t swig_types[31]
-#define SWIGTYPE_p_std__weak_ptrT_vapor__Node_t swig_types[32]
-#define SWIGTYPE_p_std__weak_ptrT_vapor__Scene_t swig_types[33]
-#define SWIGTYPE_p_unsigned_char swig_types[34]
-#define SWIGTYPE_p_unsigned_int swig_types[35]
-#define SWIGTYPE_p_unsigned_long swig_types[36]
-#define SWIGTYPE_p_unsigned_short swig_types[37]
-#define SWIGTYPE_p_vapor__BoundingBox swig_types[38]
-#define SWIGTYPE_p_vapor__Camera swig_types[39]
-#define SWIGTYPE_p_vapor__Color swig_types[40]
-#define SWIGTYPE_p_vapor__Component swig_types[41]
-#define SWIGTYPE_p_vapor__EulerAngles swig_types[42]
-#define SWIGTYPE_p_vapor__Frustum swig_types[43]
-#define SWIGTYPE_p_vapor__Geometry swig_types[44]
-#define SWIGTYPE_p_vapor__Group swig_types[45]
-#define SWIGTYPE_p_vapor__GroupEvent swig_types[46]
+#define SWIGTYPE_p_fd__delegateT_void_fvapor__ComponentPtr_const_RF_t swig_types[8]
+#define SWIGTYPE_p_fd__delegateT_void_fvapor__NodePtr_const_RF_t swig_types[9]
+#define SWIGTYPE_p_float swig_types[10]
+#define SWIGTYPE_p_int swig_types[11]
+#define SWIGTYPE_p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t swig_types[12]
+#define SWIGTYPE_p_std__mapT_vapor__RenderStage__Enum_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t_t swig_types[13]
+#define SWIGTYPE_p_std__pairT_Class_const_p_std__shared_ptrT_vapor__Component_t_t swig_types[14]
+#define SWIGTYPE_p_std__pairT_vapor__RenderStage__Enum_const_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t_t swig_types[15]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Camera_t swig_types[16]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Component_t swig_types[17]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Geometry_t swig_types[18]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Group_t swig_types[19]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Light_t swig_types[20]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Model_t swig_types[21]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Node_t swig_types[22]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Scene_t swig_types[23]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Transform_t swig_types[24]
+#define SWIGTYPE_p_std__vectorT_boost__intrusive_ptrT_vapor__Animation_t_t swig_types[25]
+#define SWIGTYPE_p_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t swig_types[26]
+#define SWIGTYPE_p_std__vectorT_std__shared_ptrT_vapor__Geometry_t_t swig_types[27]
+#define SWIGTYPE_p_std__vectorT_std__shared_ptrT_vapor__Node_t_t swig_types[28]
+#define SWIGTYPE_p_std__vectorT_vapor__RayBoxQueryResult_t swig_types[29]
+#define SWIGTYPE_p_std__weak_ptrT_vapor__Camera_t swig_types[30]
+#define SWIGTYPE_p_std__weak_ptrT_vapor__Component_t swig_types[31]
+#define SWIGTYPE_p_std__weak_ptrT_vapor__Geometry_t swig_types[32]
+#define SWIGTYPE_p_std__weak_ptrT_vapor__Node_t swig_types[33]
+#define SWIGTYPE_p_std__weak_ptrT_vapor__Scene_t swig_types[34]
+#define SWIGTYPE_p_unsigned_char swig_types[35]
+#define SWIGTYPE_p_unsigned_int swig_types[36]
+#define SWIGTYPE_p_unsigned_long swig_types[37]
+#define SWIGTYPE_p_unsigned_short swig_types[38]
+#define SWIGTYPE_p_vapor__BoundingBox swig_types[39]
+#define SWIGTYPE_p_vapor__Camera swig_types[40]
+#define SWIGTYPE_p_vapor__Color swig_types[41]
+#define SWIGTYPE_p_vapor__Component swig_types[42]
+#define SWIGTYPE_p_vapor__EulerAngles swig_types[43]
+#define SWIGTYPE_p_vapor__Frustum swig_types[44]
+#define SWIGTYPE_p_vapor__Geometry swig_types[45]
+#define SWIGTYPE_p_vapor__Group swig_types[46]
 #define SWIGTYPE_p_vapor__InputEvent swig_types[47]
 #define SWIGTYPE_p_vapor__KeyEvent swig_types[48]
 #define SWIGTYPE_p_vapor__KeyboardEventType swig_types[49]
@@ -5479,6 +5479,43 @@ static int _wrap_Matrix4x3___mul(lua_State* L) {
 }
 
 
+static int _wrap_Matrix4x3_lerp(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Matrix4x3 *arg1 = 0 ;
+  vapor::Matrix4x3 *arg2 = 0 ;
+  float arg3 ;
+  vapor::Matrix4x3 result;
+  
+  SWIG_check_num_args("vapor::Matrix4x3::lerp",3,3)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("vapor::Matrix4x3::lerp",1,"vapor::Matrix4x3 const &");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("vapor::Matrix4x3::lerp",2,"vapor::Matrix4x3 const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("vapor::Matrix4x3::lerp",3,"float");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Matrix4x3,0))){
+    SWIG_fail_ptr("Matrix4x3_lerp",1,SWIGTYPE_p_vapor__Matrix4x3);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Matrix4x3,0))){
+    SWIG_fail_ptr("Matrix4x3_lerp",2,SWIGTYPE_p_vapor__Matrix4x3);
+  }
+  
+  arg3 = (float)lua_tonumber(L, 3);
+  result = vapor::Matrix4x3::lerp((vapor::Matrix4x3 const &)*arg1,(vapor::Matrix4x3 const &)*arg2,arg3);
+  {
+    vapor::Matrix4x3 * resultptr = new vapor::Matrix4x3((const vapor::Matrix4x3 &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__Matrix4x3,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_Matrix4x3_createTranslation(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Vector3 *arg1 = 0 ;
@@ -6580,6 +6617,53 @@ fail:
 }
 
 
+static int _wrap_BoundingBox_setZero(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::BoundingBox *arg1 = (vapor::BoundingBox *) 0 ;
+  
+  SWIG_check_num_args("setZero",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setZero",1,"vapor::BoundingBox *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__BoundingBox,0))){
+    SWIG_fail_ptr("BoundingBox_setZero",1,SWIGTYPE_p_vapor__BoundingBox);
+  }
+  
+  (arg1)->setZero();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_BoundingBox_isInfinite(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::BoundingBox *arg1 = (vapor::BoundingBox *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("isInfinite",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isInfinite",1,"vapor::BoundingBox const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__BoundingBox,0))){
+    SWIG_fail_ptr("BoundingBox_isInfinite",1,SWIGTYPE_p_vapor__BoundingBox);
+  }
+  
+  result = (bool)((vapor::BoundingBox const *)arg1)->isInfinite();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_BoundingBox_getCenter(lua_State* L) {
   int SWIG_arg = 0;
   vapor::BoundingBox *arg1 = (vapor::BoundingBox *) 0 ;
@@ -6824,6 +6908,8 @@ delete arg1;
 static swig_lua_method swig_vapor_BoundingBox_methods[] = {
     {"add", _wrap_BoundingBox_add}, 
     {"reset", _wrap_BoundingBox_reset}, 
+    {"setZero", _wrap_BoundingBox_setZero}, 
+    {"isInfinite", _wrap_BoundingBox_isInfinite}, 
     {"getCenter", _wrap_BoundingBox_getCenter}, 
     {"getCorner", _wrap_BoundingBox_getCorner}, 
     {"intersects", _wrap_BoundingBox_intersects}, 
@@ -12180,199 +12266,6 @@ static int _wrap_new_Node(lua_State* L) {
 }
 
 
-static int _wrap_Node_getParent(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Node *arg1 = (vapor::Node *) 0 ;
-  SwigValueWrapper< std::shared_ptr< vapor::Node > > result;
-  
-  SWIG_check_num_args("getParent",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getParent",1,"vapor::Node const *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Node,0))){
-    SWIG_fail_ptr("Node_getParent",1,SWIGTYPE_p_vapor__Node);
-  }
-  
-  result = ((vapor::Node const *)arg1)->getParent();
-  {
-    vapor::NodePtr * resultptr = new vapor::NodePtr((const vapor::NodePtr &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_std__shared_ptrT_vapor__Node_t,1); SWIG_arg++;
-  }
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Node_setParent(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Node *arg1 = (vapor::Node *) 0 ;
-  vapor::NodePtr *arg2 = 0 ;
-  
-  SWIG_check_num_args("setParent",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setParent",1,"vapor::Node *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("setParent",2,"vapor::NodePtr const &");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Node,0))){
-    SWIG_fail_ptr("Node_setParent",1,SWIGTYPE_p_vapor__Node);
-  }
-  
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_std__shared_ptrT_vapor__Node_t,0))){
-    SWIG_fail_ptr("Node_setParent",2,SWIGTYPE_p_std__shared_ptrT_vapor__Node_t);
-  }
-  
-  (arg1)->setParent((vapor::NodePtr const &)*arg2);
-  
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Node_addComponent(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Node *arg1 = (vapor::Node *) 0 ;
-  vapor::ComponentPtr *arg2 = 0 ;
-  bool result;
-  
-  SWIG_check_num_args("addComponent",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addComponent",1,"vapor::Node *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addComponent",2,"vapor::ComponentPtr const &");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Node,0))){
-    SWIG_fail_ptr("Node_addComponent",1,SWIGTYPE_p_vapor__Node);
-  }
-  
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_std__shared_ptrT_vapor__Component_t,0))){
-    SWIG_fail_ptr("Node_addComponent",2,SWIGTYPE_p_std__shared_ptrT_vapor__Component_t);
-  }
-  
-  result = (bool)(arg1)->addComponent((vapor::ComponentPtr const &)*arg2);
-  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Node_addTransform(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Node *arg1 = (vapor::Node *) 0 ;
-  bool result;
-  
-  SWIG_check_num_args("addTransform",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addTransform",1,"vapor::Node *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Node,0))){
-    SWIG_fail_ptr("Node_addTransform",1,SWIGTYPE_p_vapor__Node);
-  }
-  
-  result = (bool)(arg1)->addTransform();
-  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Node_getComponents(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Node *arg1 = (vapor::Node *) 0 ;
-  vapor::ComponentMap *result = 0 ;
-  
-  SWIG_check_num_args("getComponents",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getComponents",1,"vapor::Node const *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Node,0))){
-    SWIG_fail_ptr("Node_getComponents",1,SWIGTYPE_p_vapor__Node);
-  }
-  
-  result = (vapor::ComponentMap *) &((vapor::Node const *)arg1)->getComponents();
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t,0); SWIG_arg++; 
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Node_removeComponent(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Node *arg1 = (vapor::Node *) 0 ;
-  vapor::ComponentPtr *arg2 = 0 ;
-  bool result;
-  
-  SWIG_check_num_args("removeComponent",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("removeComponent",1,"vapor::Node *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("removeComponent",2,"vapor::ComponentPtr const &");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Node,0))){
-    SWIG_fail_ptr("Node_removeComponent",1,SWIGTYPE_p_vapor__Node);
-  }
-  
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_std__shared_ptrT_vapor__Component_t,0))){
-    SWIG_fail_ptr("Node_removeComponent",2,SWIGTYPE_p_std__shared_ptrT_vapor__Component_t);
-  }
-  
-  result = (bool)(arg1)->removeComponent((vapor::ComponentPtr const &)*arg2);
-  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Node_update(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Node *arg1 = (vapor::Node *) 0 ;
-  double arg2 ;
-  
-  SWIG_check_num_args("update",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("update",1,"vapor::Node *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("update",2,"double");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Node,0))){
-    SWIG_fail_ptr("Node_update",1,SWIGTYPE_p_vapor__Node);
-  }
-  
-  arg2 = (double)lua_tonumber(L, 2);
-  (arg1)->update(arg2);
-  
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
 static int _wrap_Node_getName(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Node *arg1 = (vapor::Node *) 0 ;
@@ -12414,57 +12307,6 @@ static int _wrap_Node_setName(lua_State* L) {
   temp2.assign(lua_tostring(L,2),lua_strlen(L,2)); arg2=&temp2;
   (arg1)->setName((std::string const &)*arg2);
   
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Node_getTransform(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Node *arg1 = (vapor::Node *) 0 ;
-  SwigValueWrapper< std::shared_ptr< vapor::Transform > > result;
-  
-  SWIG_check_num_args("getTransform",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getTransform",1,"vapor::Node const *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Node,0))){
-    SWIG_fail_ptr("Node_getTransform",1,SWIGTYPE_p_vapor__Node);
-  }
-  
-  result = ((vapor::Node const *)arg1)->getTransform();
-  {
-    vapor::TransformPtr * resultptr = new vapor::TransformPtr((const vapor::TransformPtr &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_std__shared_ptrT_vapor__Transform_t,1); SWIG_arg++;
-  }
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Node_getGeometry(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Node *arg1 = (vapor::Node *) 0 ;
-  std::vector< vapor::GeometryPtr > *result = 0 ;
-  
-  SWIG_check_num_args("getGeometry",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getGeometry",1,"vapor::Node const *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Node,0))){
-    SWIG_fail_ptr("Node_getGeometry",1,SWIGTYPE_p_vapor__Node);
-  }
-  
-  result = (std::vector< vapor::GeometryPtr > *) &((vapor::Node const *)arg1)->getGeometry();
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__vectorT_std__shared_ptrT_vapor__Geometry_t_t,0); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -12549,6 +12391,63 @@ fail:
 }
 
 
+static int _wrap_Node_getParent(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Node *arg1 = (vapor::Node *) 0 ;
+  SwigValueWrapper< std::shared_ptr< vapor::Node > > result;
+  
+  SWIG_check_num_args("getParent",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getParent",1,"vapor::Node const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Node,0))){
+    SWIG_fail_ptr("Node_getParent",1,SWIGTYPE_p_vapor__Node);
+  }
+  
+  result = ((vapor::Node const *)arg1)->getParent();
+  {
+    vapor::NodePtr * resultptr = new vapor::NodePtr((const vapor::NodePtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_std__shared_ptrT_vapor__Node_t,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Node_setParent(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Node *arg1 = (vapor::Node *) 0 ;
+  vapor::NodePtr *arg2 = 0 ;
+  
+  SWIG_check_num_args("setParent",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setParent",1,"vapor::Node *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("setParent",2,"vapor::NodePtr const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Node,0))){
+    SWIG_fail_ptr("Node_setParent",1,SWIGTYPE_p_vapor__Node);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_std__shared_ptrT_vapor__Node_t,0))){
+    SWIG_fail_ptr("Node_setParent",2,SWIGTYPE_p_std__shared_ptrT_vapor__Node_t);
+  }
+  
+  (arg1)->setParent((vapor::NodePtr const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_Node_getTag(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Node *arg1 = (vapor::Node *) 0 ;
@@ -12605,121 +12504,342 @@ fail:
 }
 
 
+static int _wrap_Node_addComponent(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Node *arg1 = (vapor::Node *) 0 ;
+  vapor::ComponentPtr *arg2 = 0 ;
+  bool result;
+  
+  SWIG_check_num_args("addComponent",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addComponent",1,"vapor::Node *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addComponent",2,"vapor::ComponentPtr const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Node,0))){
+    SWIG_fail_ptr("Node_addComponent",1,SWIGTYPE_p_vapor__Node);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_std__shared_ptrT_vapor__Component_t,0))){
+    SWIG_fail_ptr("Node_addComponent",2,SWIGTYPE_p_std__shared_ptrT_vapor__Component_t);
+  }
+  
+  result = (bool)(arg1)->addComponent((vapor::ComponentPtr const &)*arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Node_removeComponent(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Node *arg1 = (vapor::Node *) 0 ;
+  vapor::ComponentPtr *arg2 = 0 ;
+  bool result;
+  
+  SWIG_check_num_args("removeComponent",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("removeComponent",1,"vapor::Node *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("removeComponent",2,"vapor::ComponentPtr const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Node,0))){
+    SWIG_fail_ptr("Node_removeComponent",1,SWIGTYPE_p_vapor__Node);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_std__shared_ptrT_vapor__Component_t,0))){
+    SWIG_fail_ptr("Node_removeComponent",2,SWIGTYPE_p_std__shared_ptrT_vapor__Component_t);
+  }
+  
+  result = (bool)(arg1)->removeComponent((vapor::ComponentPtr const &)*arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Node_addTransform(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Node *arg1 = (vapor::Node *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("addTransform",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addTransform",1,"vapor::Node *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Node,0))){
+    SWIG_fail_ptr("Node_addTransform",1,SWIGTYPE_p_vapor__Node);
+  }
+  
+  result = (bool)(arg1)->addTransform();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Node_getTransform(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Node *arg1 = (vapor::Node *) 0 ;
+  SwigValueWrapper< std::shared_ptr< vapor::Transform > > result;
+  
+  SWIG_check_num_args("getTransform",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getTransform",1,"vapor::Node const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Node,0))){
+    SWIG_fail_ptr("Node_getTransform",1,SWIGTYPE_p_vapor__Node);
+  }
+  
+  result = ((vapor::Node const *)arg1)->getTransform();
+  {
+    vapor::TransformPtr * resultptr = new vapor::TransformPtr((const vapor::TransformPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_std__shared_ptrT_vapor__Transform_t,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Node_getComponents(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Node *arg1 = (vapor::Node *) 0 ;
+  vapor::ComponentMap *result = 0 ;
+  
+  SWIG_check_num_args("getComponents",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getComponents",1,"vapor::Node const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Node,0))){
+    SWIG_fail_ptr("Node_getComponents",1,SWIGTYPE_p_vapor__Node);
+  }
+  
+  result = (vapor::ComponentMap *) &((vapor::Node const *)arg1)->getComponents();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Node_getGeometry(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Node *arg1 = (vapor::Node *) 0 ;
+  std::vector< vapor::GeometryPtr > *result = 0 ;
+  
+  SWIG_check_num_args("getGeometry",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getGeometry",1,"vapor::Node const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Node,0))){
+    SWIG_fail_ptr("Node_getGeometry",1,SWIGTYPE_p_vapor__Node);
+  }
+  
+  result = (std::vector< vapor::GeometryPtr > *) &((vapor::Node const *)arg1)->getGeometry();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__vectorT_std__shared_ptrT_vapor__Geometry_t_t,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Node_update(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Node *arg1 = (vapor::Node *) 0 ;
+  double arg2 ;
+  
+  SWIG_check_num_args("update",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("update",1,"vapor::Node *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("update",2,"double");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Node,0))){
+    SWIG_fail_ptr("Node_update",1,SWIGTYPE_p_vapor__Node);
+  }
+  
+  arg2 = (double)lua_tonumber(L, 2);
+  (arg1)->update(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Node_onComponentAdded_set(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Node *arg1 = (vapor::Node *) 0 ;
+  fd::delegate< void (vapor::ComponentPtr const &) > arg2 ;
+  fd::delegate< void (vapor::ComponentPtr const &) > *argp2 ;
+  
+  SWIG_check_num_args("onComponentAdded",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("onComponentAdded",1,"vapor::Node *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("onComponentAdded",2,"fd::delegate< void (vapor::ComponentPtr const &) >");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Node,0))){
+    SWIG_fail_ptr("Node_onComponentAdded_set",1,SWIGTYPE_p_vapor__Node);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_fd__delegateT_void_fvapor__ComponentPtr_const_RF_t,0))){
+    SWIG_fail_ptr("Node_onComponentAdded_set",2,SWIGTYPE_p_fd__delegateT_void_fvapor__ComponentPtr_const_RF_t);
+  }
+  arg2 = *argp2;
+  
+  if (arg1) (arg1)->onComponentAdded = arg2;
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Node_onComponentAdded_get(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Node *arg1 = (vapor::Node *) 0 ;
+  fd::delegate< void (vapor::ComponentPtr const &) > result;
+  
+  SWIG_check_num_args("onComponentAdded",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("onComponentAdded",1,"vapor::Node *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Node,0))){
+    SWIG_fail_ptr("Node_onComponentAdded_get",1,SWIGTYPE_p_vapor__Node);
+  }
+  
+  result =  ((arg1)->onComponentAdded);
+  {
+    fd::delegate< void (vapor::ComponentPtr const &) > * resultptr = new fd::delegate< void (vapor::ComponentPtr const &) >((const fd::delegate< void (vapor::ComponentPtr const &) > &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_fd__delegateT_void_fvapor__ComponentPtr_const_RF_t,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Node_onComponentRemoved_set(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Node *arg1 = (vapor::Node *) 0 ;
+  fd::delegate< void (vapor::ComponentPtr const &) > arg2 ;
+  fd::delegate< void (vapor::ComponentPtr const &) > *argp2 ;
+  
+  SWIG_check_num_args("onComponentRemoved",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("onComponentRemoved",1,"vapor::Node *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("onComponentRemoved",2,"fd::delegate< void (vapor::ComponentPtr const &) >");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Node,0))){
+    SWIG_fail_ptr("Node_onComponentRemoved_set",1,SWIGTYPE_p_vapor__Node);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_fd__delegateT_void_fvapor__ComponentPtr_const_RF_t,0))){
+    SWIG_fail_ptr("Node_onComponentRemoved_set",2,SWIGTYPE_p_fd__delegateT_void_fvapor__ComponentPtr_const_RF_t);
+  }
+  arg2 = *argp2;
+  
+  if (arg1) (arg1)->onComponentRemoved = arg2;
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Node_onComponentRemoved_get(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Node *arg1 = (vapor::Node *) 0 ;
+  fd::delegate< void (vapor::ComponentPtr const &) > result;
+  
+  SWIG_check_num_args("onComponentRemoved",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("onComponentRemoved",1,"vapor::Node *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Node,0))){
+    SWIG_fail_ptr("Node_onComponentRemoved_get",1,SWIGTYPE_p_vapor__Node);
+  }
+  
+  result =  ((arg1)->onComponentRemoved);
+  {
+    fd::delegate< void (vapor::ComponentPtr const &) > * resultptr = new fd::delegate< void (vapor::ComponentPtr const &) >((const fd::delegate< void (vapor::ComponentPtr const &) > &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_fd__delegateT_void_fvapor__ComponentPtr_const_RF_t,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static void swig_delete_Node(void *obj) {
 vapor::Node *arg1 = (vapor::Node *) obj;
 delete arg1;
 }
 static swig_lua_method swig_vapor_Node_methods[] = {
-    {"getParent", _wrap_Node_getParent}, 
-    {"setParent", _wrap_Node_setParent}, 
-    {"addComponent", _wrap_Node_addComponent}, 
-    {"addTransform", _wrap_Node_addTransform}, 
-    {"getComponents", _wrap_Node_getComponents}, 
-    {"removeComponent", _wrap_Node_removeComponent}, 
-    {"update", _wrap_Node_update}, 
     {"getName", _wrap_Node_getName}, 
     {"setName", _wrap_Node_setName}, 
-    {"getTransform", _wrap_Node_getTransform}, 
-    {"getGeometry", _wrap_Node_getGeometry}, 
     {"isVisible", _wrap_Node_isVisible}, 
     {"getVisible", _wrap_Node_getVisible}, 
     {"setVisible", _wrap_Node_setVisible}, 
+    {"getParent", _wrap_Node_getParent}, 
+    {"setParent", _wrap_Node_setParent}, 
     {"getTag", _wrap_Node_getTag}, 
     {"setTag", _wrap_Node_setTag}, 
+    {"addComponent", _wrap_Node_addComponent}, 
+    {"removeComponent", _wrap_Node_removeComponent}, 
+    {"addTransform", _wrap_Node_addTransform}, 
+    {"getTransform", _wrap_Node_getTransform}, 
+    {"getComponents", _wrap_Node_getComponents}, 
+    {"getGeometry", _wrap_Node_getGeometry}, 
+    {"update", _wrap_Node_update}, 
     {0,0}
 };
 static swig_lua_attribute swig_vapor_Node_attributes[] = {
+    { "onComponentAdded", _wrap_Node_onComponentAdded_get, _wrap_Node_onComponentAdded_set},
+    { "onComponentRemoved", _wrap_Node_onComponentRemoved_get, _wrap_Node_onComponentRemoved_set},
     {0,0,0}
 };
 static swig_lua_class *swig_vapor_Node_bases[] = {0};
 static const char *swig_vapor_Node_base_names[] = {0};
 static swig_lua_class _wrap_class_vapor_Node = { "Node", &SWIGTYPE_p_vapor__Node,_wrap_new_Node, swig_delete_Node, swig_vapor_Node_methods, swig_vapor_Node_attributes, swig_vapor_Node_bases, swig_vapor_Node_base_names };
-
-static int _wrap_GroupEvent_node_set(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::GroupEvent *arg1 = (vapor::GroupEvent *) 0 ;
-  vapor::NodePtr *arg2 = (vapor::NodePtr *) 0 ;
-  
-  SWIG_check_num_args("node",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("node",1,"vapor::GroupEvent *");
-  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("node",2,"vapor::NodePtr *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__GroupEvent,0))){
-    SWIG_fail_ptr("GroupEvent_node_set",1,SWIGTYPE_p_vapor__GroupEvent);
-  }
-  
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_std__shared_ptrT_vapor__Node_t,0))){
-    SWIG_fail_ptr("GroupEvent_node_set",2,SWIGTYPE_p_std__shared_ptrT_vapor__Node_t);
-  }
-  
-  if (arg1) (arg1)->node = *arg2;
-  
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_GroupEvent_node_get(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::GroupEvent *arg1 = (vapor::GroupEvent *) 0 ;
-  vapor::NodePtr *result = 0 ;
-  
-  SWIG_check_num_args("node",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("node",1,"vapor::GroupEvent *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__GroupEvent,0))){
-    SWIG_fail_ptr("GroupEvent_node_get",1,SWIGTYPE_p_vapor__GroupEvent);
-  }
-  
-  result = (vapor::NodePtr *)& ((arg1)->node);
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__shared_ptrT_vapor__Node_t,0); SWIG_arg++; 
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_new_GroupEvent(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::GroupEvent *result = 0 ;
-  
-  SWIG_check_num_args("vapor::GroupEvent::GroupEvent",0,0)
-  result = (vapor::GroupEvent *)new vapor::GroupEvent();
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__GroupEvent,1); SWIG_arg++; 
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static void swig_delete_GroupEvent(void *obj) {
-vapor::GroupEvent *arg1 = (vapor::GroupEvent *) obj;
-delete arg1;
-}
-static swig_lua_method swig_vapor_GroupEvent_methods[] = {
-    {0,0}
-};
-static swig_lua_attribute swig_vapor_GroupEvent_attributes[] = {
-    { "node", _wrap_GroupEvent_node_get, _wrap_GroupEvent_node_set},
-    {0,0,0}
-};
-static swig_lua_class *swig_vapor_GroupEvent_bases[] = {0};
-static const char *swig_vapor_GroupEvent_base_names[] = {0};
-static swig_lua_class _wrap_class_vapor_GroupEvent = { "GroupEvent", &SWIGTYPE_p_vapor__GroupEvent,_wrap_new_GroupEvent, swig_delete_GroupEvent, swig_vapor_GroupEvent_methods, swig_vapor_GroupEvent_attributes, swig_vapor_GroupEvent_bases, swig_vapor_GroupEvent_base_names };
 
 static int _wrap_new_Group__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
@@ -12791,7 +12911,6 @@ static int _wrap_Group_add(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Group *arg1 = (vapor::Group *) 0 ;
   vapor::NodePtr *arg2 = 0 ;
-  int result;
   
   SWIG_check_num_args("add",2,2)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("add",1,"vapor::Group *");
@@ -12806,8 +12925,8 @@ static int _wrap_Group_add(lua_State* L) {
     SWIG_fail_ptr("Group_add",2,SWIGTYPE_p_std__shared_ptrT_vapor__Node_t);
   }
   
-  result = (int)(arg1)->add((vapor::NodePtr const &)*arg2);
-  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  (arg1)->add((vapor::NodePtr const &)*arg2);
+  
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -12818,42 +12937,7 @@ fail:
 }
 
 
-static int _wrap_Group_insert(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Group *arg1 = (vapor::Group *) 0 ;
-  uint arg2 ;
-  vapor::NodePtr *arg3 = 0 ;
-  int result;
-  
-  SWIG_check_num_args("insert",3,3)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("insert",1,"vapor::Group *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("insert",2,"uint");
-  if(!lua_isuserdata(L,3)) SWIG_fail_arg("insert",3,"vapor::NodePtr const &");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Group,0))){
-    SWIG_fail_ptr("Group_insert",1,SWIGTYPE_p_vapor__Group);
-  }
-  
-  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
-  arg2 = (uint)lua_tonumber(L, 2);
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_std__shared_ptrT_vapor__Node_t,0))){
-    SWIG_fail_ptr("Group_insert",3,SWIGTYPE_p_std__shared_ptrT_vapor__Node_t);
-  }
-  
-  result = (int)(arg1)->insert(arg2,(vapor::NodePtr const &)*arg3);
-  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Group_remove__SWIG_0(lua_State* L) {
+static int _wrap_Group_remove(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Group *arg1 = (vapor::Group *) 0 ;
   vapor::NodePtr *arg2 = 0 ;
@@ -12874,124 +12958,6 @@ static int _wrap_Group_remove__SWIG_0(lua_State* L) {
   
   result = (bool)(arg1)->remove((vapor::NodePtr const &)*arg2);
   lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Group_remove__SWIG_1(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Group *arg1 = (vapor::Group *) 0 ;
-  uint arg2 ;
-  bool result;
-  
-  SWIG_check_num_args("remove",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("remove",1,"vapor::Group *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("remove",2,"uint");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Group,0))){
-    SWIG_fail_ptr("Group_remove",1,SWIGTYPE_p_vapor__Group);
-  }
-  
-  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
-  arg2 = (uint)lua_tonumber(L, 2);
-  result = (bool)(arg1)->remove(arg2);
-  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Group_remove(lua_State* L) {
-  int argc;
-  int argv[3]={
-    1,2,3
-  };
-  
-  argc = lua_gettop(L);
-  if (argc == 2) {
-    int _v;
-    {
-      void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_vapor__Group, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      {
-        void *ptr;
-        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_std__shared_ptrT_vapor__Node_t, 0)) {
-          _v = 0;
-        } else {
-          _v = 1;
-        }
-      }
-      if (_v) {
-        return _wrap_Group_remove__SWIG_0(L);
-      }
-    }
-  }
-  if (argc == 2) {
-    int _v;
-    {
-      void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_vapor__Group, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      {
-        _v = lua_isnumber(L,argv[1]);
-      }
-      if (_v) {
-        return _wrap_Group_remove__SWIG_1(L);
-      }
-    }
-  }
-  
-  lua_pushstring(L,"Wrong arguments for overloaded function 'Group_remove'\n"
-    "  Possible C/C++ prototypes are:\n"
-    "    remove(vapor::Group *,vapor::NodePtr const &)\n"
-    "    remove(vapor::Group *,uint)\n");
-  lua_error(L);return 0;
-}
-
-
-static int _wrap_Group_get(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Group *arg1 = (vapor::Group *) 0 ;
-  uint arg2 ;
-  SwigValueWrapper< std::shared_ptr< vapor::Node > > result;
-  
-  SWIG_check_num_args("get",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("get",1,"vapor::Group const *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("get",2,"uint");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Group,0))){
-    SWIG_fail_ptr("Group_get",1,SWIGTYPE_p_vapor__Group);
-  }
-  
-  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
-  arg2 = (uint)lua_tonumber(L, 2);
-  result = ((vapor::Group const *)arg1)->get(arg2);
-  {
-    vapor::NodePtr * resultptr = new vapor::NodePtr((const vapor::NodePtr &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_std__shared_ptrT_vapor__Node_t,1); SWIG_arg++;
-  }
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -13086,20 +13052,20 @@ fail:
 static int _wrap_Group_onNodeAdded_set(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Group *arg1 = (vapor::Group *) 0 ;
-  fd::delegate< void (vapor::GroupEvent const &) > arg2 ;
-  fd::delegate< void (vapor::GroupEvent const &) > *argp2 ;
+  fd::delegate< void (vapor::NodePtr const &) > arg2 ;
+  fd::delegate< void (vapor::NodePtr const &) > *argp2 ;
   
   SWIG_check_num_args("onNodeAdded",2,2)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("onNodeAdded",1,"vapor::Group *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("onNodeAdded",2,"fd::delegate< void (vapor::GroupEvent const &) >");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("onNodeAdded",2,"fd::delegate< void (vapor::NodePtr const &) >");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Group,0))){
     SWIG_fail_ptr("Group_onNodeAdded_set",1,SWIGTYPE_p_vapor__Group);
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_fd__delegateT_void_fvapor__GroupEvent_const_RF_t,0))){
-    SWIG_fail_ptr("Group_onNodeAdded_set",2,SWIGTYPE_p_fd__delegateT_void_fvapor__GroupEvent_const_RF_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_fd__delegateT_void_fvapor__NodePtr_const_RF_t,0))){
+    SWIG_fail_ptr("Group_onNodeAdded_set",2,SWIGTYPE_p_fd__delegateT_void_fvapor__NodePtr_const_RF_t);
   }
   arg2 = *argp2;
   
@@ -13118,7 +13084,7 @@ fail:
 static int _wrap_Group_onNodeAdded_get(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Group *arg1 = (vapor::Group *) 0 ;
-  fd::delegate< void (vapor::GroupEvent const &) > result;
+  fd::delegate< void (vapor::NodePtr const &) > result;
   
   SWIG_check_num_args("onNodeAdded",1,1)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("onNodeAdded",1,"vapor::Group *");
@@ -13129,8 +13095,8 @@ static int _wrap_Group_onNodeAdded_get(lua_State* L) {
   
   result =  ((arg1)->onNodeAdded);
   {
-    fd::delegate< void (vapor::GroupEvent const &) > * resultptr = new fd::delegate< void (vapor::GroupEvent const &) >((const fd::delegate< void (vapor::GroupEvent const &) > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_fd__delegateT_void_fvapor__GroupEvent_const_RF_t,1); SWIG_arg++;
+    fd::delegate< void (vapor::NodePtr const &) > * resultptr = new fd::delegate< void (vapor::NodePtr const &) >((const fd::delegate< void (vapor::NodePtr const &) > &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_fd__delegateT_void_fvapor__NodePtr_const_RF_t,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -13145,20 +13111,20 @@ fail:
 static int _wrap_Group_onNodeRemoved_set(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Group *arg1 = (vapor::Group *) 0 ;
-  fd::delegate< void (vapor::GroupEvent const &) > arg2 ;
-  fd::delegate< void (vapor::GroupEvent const &) > *argp2 ;
+  fd::delegate< void (vapor::NodePtr const &) > arg2 ;
+  fd::delegate< void (vapor::NodePtr const &) > *argp2 ;
   
   SWIG_check_num_args("onNodeRemoved",2,2)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("onNodeRemoved",1,"vapor::Group *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("onNodeRemoved",2,"fd::delegate< void (vapor::GroupEvent const &) >");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("onNodeRemoved",2,"fd::delegate< void (vapor::NodePtr const &) >");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Group,0))){
     SWIG_fail_ptr("Group_onNodeRemoved_set",1,SWIGTYPE_p_vapor__Group);
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_fd__delegateT_void_fvapor__GroupEvent_const_RF_t,0))){
-    SWIG_fail_ptr("Group_onNodeRemoved_set",2,SWIGTYPE_p_fd__delegateT_void_fvapor__GroupEvent_const_RF_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_fd__delegateT_void_fvapor__NodePtr_const_RF_t,0))){
+    SWIG_fail_ptr("Group_onNodeRemoved_set",2,SWIGTYPE_p_fd__delegateT_void_fvapor__NodePtr_const_RF_t);
   }
   arg2 = *argp2;
   
@@ -13177,7 +13143,7 @@ fail:
 static int _wrap_Group_onNodeRemoved_get(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Group *arg1 = (vapor::Group *) 0 ;
-  fd::delegate< void (vapor::GroupEvent const &) > result;
+  fd::delegate< void (vapor::NodePtr const &) > result;
   
   SWIG_check_num_args("onNodeRemoved",1,1)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("onNodeRemoved",1,"vapor::Group *");
@@ -13188,67 +13154,8 @@ static int _wrap_Group_onNodeRemoved_get(lua_State* L) {
   
   result =  ((arg1)->onNodeRemoved);
   {
-    fd::delegate< void (vapor::GroupEvent const &) > * resultptr = new fd::delegate< void (vapor::GroupEvent const &) >((const fd::delegate< void (vapor::GroupEvent const &) > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_fd__delegateT_void_fvapor__GroupEvent_const_RF_t,1); SWIG_arg++;
-  }
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Group_onNodeInserted_set(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Group *arg1 = (vapor::Group *) 0 ;
-  fd::delegate< void (vapor::GroupEvent const &) > arg2 ;
-  fd::delegate< void (vapor::GroupEvent const &) > *argp2 ;
-  
-  SWIG_check_num_args("onNodeInserted",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("onNodeInserted",1,"vapor::Group *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("onNodeInserted",2,"fd::delegate< void (vapor::GroupEvent const &) >");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Group,0))){
-    SWIG_fail_ptr("Group_onNodeInserted_set",1,SWIGTYPE_p_vapor__Group);
-  }
-  
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_fd__delegateT_void_fvapor__GroupEvent_const_RF_t,0))){
-    SWIG_fail_ptr("Group_onNodeInserted_set",2,SWIGTYPE_p_fd__delegateT_void_fvapor__GroupEvent_const_RF_t);
-  }
-  arg2 = *argp2;
-  
-  if (arg1) (arg1)->onNodeInserted = arg2;
-  
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Group_onNodeInserted_get(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Group *arg1 = (vapor::Group *) 0 ;
-  fd::delegate< void (vapor::GroupEvent const &) > result;
-  
-  SWIG_check_num_args("onNodeInserted",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("onNodeInserted",1,"vapor::Group *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Group,0))){
-    SWIG_fail_ptr("Group_onNodeInserted_get",1,SWIGTYPE_p_vapor__Group);
-  }
-  
-  result =  ((arg1)->onNodeInserted);
-  {
-    fd::delegate< void (vapor::GroupEvent const &) > * resultptr = new fd::delegate< void (vapor::GroupEvent const &) >((const fd::delegate< void (vapor::GroupEvent const &) > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_fd__delegateT_void_fvapor__GroupEvent_const_RF_t,1); SWIG_arg++;
+    fd::delegate< void (vapor::NodePtr const &) > * resultptr = new fd::delegate< void (vapor::NodePtr const &) >((const fd::delegate< void (vapor::NodePtr const &) > &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_fd__delegateT_void_fvapor__NodePtr_const_RF_t,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -13266,9 +13173,7 @@ delete arg1;
 }
 static swig_lua_method swig_vapor_Group_methods[] = {
     {"add", _wrap_Group_add}, 
-    {"insert", _wrap_Group_insert}, 
     {"remove", _wrap_Group_remove}, 
-    {"get", _wrap_Group_get}, 
     {"findNode", _wrap_Group_findNode}, 
     {"getChildren", _wrap_Group_getChildren}, 
     {"update", _wrap_Group_update}, 
@@ -13277,7 +13182,6 @@ static swig_lua_method swig_vapor_Group_methods[] = {
 static swig_lua_attribute swig_vapor_Group_attributes[] = {
     { "onNodeAdded", _wrap_Group_onNodeAdded_get, _wrap_Group_onNodeAdded_set},
     { "onNodeRemoved", _wrap_Group_onNodeRemoved_get, _wrap_Group_onNodeRemoved_set},
-    { "onNodeInserted", _wrap_Group_onNodeInserted_get, _wrap_Group_onNodeInserted_set},
     {0,0,0}
 };
 static swig_lua_class *swig_vapor_Group_bases[] = {0,0};
@@ -14365,6 +14269,7 @@ static const struct luaL_reg swig_commands[] = {
     { "info", _wrap_info},
     { "warn", _wrap_warn},
     { "error", _wrap_error},
+    { "Matrix4x3_lerp", _wrap_Matrix4x3_lerp},
     { "Matrix4x3_createTranslation", _wrap_Matrix4x3_createTranslation},
     { "Matrix4x3_createRotation", _wrap_Matrix4x3_createRotation},
     { "Matrix4x3_createScale", _wrap_Matrix4x3_createScale},
@@ -14582,7 +14487,8 @@ static swig_type_info _swigt__p_boost__intrusive_ptrT_vapor__Renderable_t = {"_p
 static swig_type_info _swigt__p_boost__intrusive_ptrT_vapor__Resource_t = {"_p_boost__intrusive_ptrT_vapor__Resource_t", "boost::intrusive_ptr< vapor::Resource > *|vapor::ResourcePtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_boost__intrusive_ptrT_vapor__Skeleton_t = {"_p_boost__intrusive_ptrT_vapor__Skeleton_t", "vapor::SkeletonPtr *|boost::intrusive_ptr< vapor::Skeleton > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_fd__delegateT_void_fF_t = {"_p_fd__delegateT_void_fF_t", "fd::delegate< void () > *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_fd__delegateT_void_fvapor__GroupEvent_const_RF_t = {"_p_fd__delegateT_void_fvapor__GroupEvent_const_RF_t", "fd::delegate< void (vapor::GroupEvent const &) > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_fd__delegateT_void_fvapor__ComponentPtr_const_RF_t = {"_p_fd__delegateT_void_fvapor__ComponentPtr_const_RF_t", "fd::delegate< void (vapor::ComponentPtr const &) > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_fd__delegateT_void_fvapor__NodePtr_const_RF_t = {"_p_fd__delegateT_void_fvapor__NodePtr_const_RF_t", "fd::delegate< void (vapor::NodePtr const &) > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_float = {"_p_float", "float *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_int = {"_p_int", "int *|vapor::ResourceHandle *|atomic_int *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t = {"_p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t", "vapor::ComponentMap *|std::map< Class const *,std::shared_ptr< vapor::Component > > *", 0, 0, (void*)0, 0};
@@ -14620,7 +14526,6 @@ static swig_type_info _swigt__p_vapor__EulerAngles = {"_p_vapor__EulerAngles", "
 static swig_type_info _swigt__p_vapor__Frustum = {"_p_vapor__Frustum", "vapor::Frustum *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_vapor__Geometry = {"_p_vapor__Geometry", "vapor::Geometry *", 0, 0, (void*)&_wrap_class_vapor_Geometry, 0};
 static swig_type_info _swigt__p_vapor__Group = {"_p_vapor__Group", "vapor::Group *", 0, 0, (void*)&_wrap_class_vapor_Group, 0};
-static swig_type_info _swigt__p_vapor__GroupEvent = {"_p_vapor__GroupEvent", "vapor::GroupEvent *", 0, 0, (void*)&_wrap_class_vapor_GroupEvent, 0};
 static swig_type_info _swigt__p_vapor__InputEvent = {"_p_vapor__InputEvent", "vapor::InputEvent *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_vapor__KeyEvent = {"_p_vapor__KeyEvent", "vapor::KeyEvent *", 0, 0, (void*)&_wrap_class_vapor_KeyEvent, 0};
 static swig_type_info _swigt__p_vapor__KeyboardEventType = {"_p_vapor__KeyboardEventType", "vapor::KeyboardEventType *", 0, 0, (void*)&_wrap_class_vapor_KeyboardEventType, 0};
@@ -14668,7 +14573,8 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_boost__intrusive_ptrT_vapor__Resource_t,
   &_swigt__p_boost__intrusive_ptrT_vapor__Skeleton_t,
   &_swigt__p_fd__delegateT_void_fF_t,
-  &_swigt__p_fd__delegateT_void_fvapor__GroupEvent_const_RF_t,
+  &_swigt__p_fd__delegateT_void_fvapor__ComponentPtr_const_RF_t,
+  &_swigt__p_fd__delegateT_void_fvapor__NodePtr_const_RF_t,
   &_swigt__p_float,
   &_swigt__p_int,
   &_swigt__p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t,
@@ -14706,7 +14612,6 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_vapor__Frustum,
   &_swigt__p_vapor__Geometry,
   &_swigt__p_vapor__Group,
-  &_swigt__p_vapor__GroupEvent,
   &_swigt__p_vapor__InputEvent,
   &_swigt__p_vapor__KeyEvent,
   &_swigt__p_vapor__KeyboardEventType,
@@ -14754,7 +14659,8 @@ static swig_cast_info _swigc__p_boost__intrusive_ptrT_vapor__Renderable_t[] = { 
 static swig_cast_info _swigc__p_boost__intrusive_ptrT_vapor__Resource_t[] = {  {&_swigt__p_boost__intrusive_ptrT_vapor__Resource_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_boost__intrusive_ptrT_vapor__Skeleton_t[] = {  {&_swigt__p_boost__intrusive_ptrT_vapor__Skeleton_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_fd__delegateT_void_fF_t[] = {  {&_swigt__p_fd__delegateT_void_fF_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_fd__delegateT_void_fvapor__GroupEvent_const_RF_t[] = {  {&_swigt__p_fd__delegateT_void_fvapor__GroupEvent_const_RF_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_fd__delegateT_void_fvapor__ComponentPtr_const_RF_t[] = {  {&_swigt__p_fd__delegateT_void_fvapor__ComponentPtr_const_RF_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_fd__delegateT_void_fvapor__NodePtr_const_RF_t[] = {  {&_swigt__p_fd__delegateT_void_fvapor__NodePtr_const_RF_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_float[] = {  {&_swigt__p_float, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t[] = {  {&_swigt__p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -14792,7 +14698,6 @@ static swig_cast_info _swigc__p_vapor__EulerAngles[] = {  {&_swigt__p_vapor__Eul
 static swig_cast_info _swigc__p_vapor__Frustum[] = {  {&_swigt__p_vapor__Frustum, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__Geometry[] = {  {&_swigt__p_vapor__Geometry, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__Group[] = {  {&_swigt__p_vapor__Group, 0, 0, 0},  {&_swigt__p_vapor__Scene, _p_vapor__SceneTo_p_vapor__Group, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_vapor__GroupEvent[] = {  {&_swigt__p_vapor__GroupEvent, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__InputEvent[] = {  {&_swigt__p_vapor__MouseEvent, _p_vapor__MouseEventTo_p_vapor__InputEvent, 0, 0},  {&_swigt__p_vapor__MouseWheelEvent, _p_vapor__MouseWheelEventTo_p_vapor__InputEvent, 0, 0},  {&_swigt__p_vapor__MouseMoveEvent, _p_vapor__MouseMoveEventTo_p_vapor__InputEvent, 0, 0},  {&_swigt__p_vapor__InputEvent, 0, 0, 0},  {&_swigt__p_vapor__MouseDragEvent, _p_vapor__MouseDragEventTo_p_vapor__InputEvent, 0, 0},  {&_swigt__p_vapor__MouseButtonEvent, _p_vapor__MouseButtonEventTo_p_vapor__InputEvent, 0, 0},  {&_swigt__p_vapor__KeyEvent, _p_vapor__KeyEventTo_p_vapor__InputEvent, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__KeyEvent[] = {  {&_swigt__p_vapor__KeyEvent, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__KeyboardEventType[] = {  {&_swigt__p_vapor__KeyboardEventType, 0, 0, 0},{0, 0, 0, 0}};
@@ -14840,7 +14745,8 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_boost__intrusive_ptrT_vapor__Resource_t,
   _swigc__p_boost__intrusive_ptrT_vapor__Skeleton_t,
   _swigc__p_fd__delegateT_void_fF_t,
-  _swigc__p_fd__delegateT_void_fvapor__GroupEvent_const_RF_t,
+  _swigc__p_fd__delegateT_void_fvapor__ComponentPtr_const_RF_t,
+  _swigc__p_fd__delegateT_void_fvapor__NodePtr_const_RF_t,
   _swigc__p_float,
   _swigc__p_int,
   _swigc__p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t,
@@ -14878,7 +14784,6 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_vapor__Frustum,
   _swigc__p_vapor__Geometry,
   _swigc__p_vapor__Group,
-  _swigc__p_vapor__GroupEvent,
   _swigc__p_vapor__InputEvent,
   _swigc__p_vapor__KeyEvent,
   _swigc__p_vapor__KeyboardEventType,

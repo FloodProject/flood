@@ -20,7 +20,7 @@ END_CLASS()
 
 //-----------------------------------//
 
-static const float DEFAULT_MOVE_SENSIVITY = 100.0f;
+static const float DEFAULT_MOVE_SENSIVITY = 50.0f;
 static const float DEFAULT_LOOK_SENSIVITY = 20.0f;
 
 //-----------------------------------//

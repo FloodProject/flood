@@ -80,6 +80,7 @@ void Model::update( double delta )
 		updateAttachments();
 	}
 
+	updateDebugRenderable();
 	Geometry::update(delta);
 }
 
@@ -323,13 +324,13 @@ void Model::attachNode(const std::string& boneName, const NodePtr& node)
 
 //-----------------------------------//
 
-RenderablePtr Model::getDebugRenderable() const
+void Model::updateDebugRenderable() const
 {
-	if( !mesh->isAnimated() )
-		return nullptr;
-
 	if( !debugRenderable )
-		createDebugRenderable();
+		return;
+
+	if( !mesh->isAnimated() )
+		return;
 
 	VertexBufferPtr vb = debugRenderable->getVertexBuffer();
 
@@ -352,13 +353,11 @@ RenderablePtr Model::getDebugRenderable() const
 
 	vb->set( VertexAttribute::Position, pos );
 	vb->set( VertexAttribute::Color, colors );
-
-	return debugRenderable;
 }
 
 //-----------------------------------//
 
-void Model::createDebugRenderable() const
+RenderablePtr Model::createDebugRenderable() const
 {
 	assert( !debugRenderable );
 
@@ -367,8 +366,8 @@ void Model::createDebugRenderable() const
 	mat->setDepthTest(false);
 
 	VertexBufferPtr vb = new VertexBuffer();
-
-	debugRenderable = new Renderable(PolygonType::LineStrip, vb, mat);
+	RenderablePtr rend( new Renderable(PolygonType::LineStrip, vb, mat) );
+	return rend;
 }
 
 //-----------------------------------//
