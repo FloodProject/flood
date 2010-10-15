@@ -31,13 +31,13 @@ void InputManager::addDevice( InputDevice* device )
 {
 	if( !device )
 	{
-		warn( "input", "Tried to add an invalid input device" );
+		Log::warn( "Tried to add an invalid input device" );
 		return;
 	}
 	
 	devices.push_back( device );
 
-	info( "input", "Registered a new input device: '%s'", 
+	Log::info( "Registered a new input device: '%s'", 
 		InputDeviceType::getString( device->getType() ).c_str() );
 }
 
@@ -48,9 +48,7 @@ Keyboard* InputManager::getKeyboard() const
 	foreach( InputDevice* device, devices )
 	{
 		if( device->getType() == InputDeviceType::Keyboard )
-		{
 			return static_cast< Keyboard* > ( device );
-		}
 	}
 
 	return nullptr;
@@ -63,9 +61,7 @@ Mouse* InputManager::getMouse() const
 	foreach( InputDevice* device, devices )
 	{
 		if( device->getType() == InputDeviceType::Mouse )
-		{
 			return static_cast< Mouse* > ( device );
-		}
 	}
 
 	return nullptr;

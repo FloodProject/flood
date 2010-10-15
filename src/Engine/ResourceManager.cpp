@@ -95,7 +95,7 @@ ResourcePtr ResourceManager::loadResource(const std::string& path, bool async)
 	decodeResource(resource, async);
 
 	// Register the decoded resource in the map.
-	info("resources", "Loaded resource '%s'", file.getName().c_str());
+	Log::info("Loaded resource '%s'", file.getName().c_str());
 
 	// Send callback notifications.
 	if( !onResourceAdded.empty() )
@@ -117,7 +117,7 @@ bool ResourceManager::validateResource( const File& file )
 
 	if( !file.exists() )
 	{
-		warn( "resources", "Resource '%s' was not found", path.c_str() );
+		Log::warn( "Resource '%s' was not found", path.c_str() );
 		return false;
 	}
 
@@ -125,7 +125,7 @@ bool ResourceManager::validateResource( const File& file )
 	
 	if( extension.empty() )
 	{
-		warn( "resources", "Resource '%s' has an invalid extension", path.c_str() );
+		Log::warn( "Resource '%s' has an invalid extension", path.c_str() );
 		return false;
 	}
 
@@ -144,7 +144,7 @@ ResourcePtr ResourceManager::prepareResource(const File& file)
 
 	if( !loader )
 	{
-		warn("resources", "No resource loader found for resource '%s'", file.getPath().c_str());
+		Log::warn("No resource loader found for resource '%s'", file.getPath().c_str());
 		return nullptr;
 	}
 
@@ -249,7 +249,7 @@ void ResourceManager::registerLoader(ResourceLoader* const loader)
 	if( !onResourceLoaderRegistered.empty() )
 		onResourceLoaderRegistered( *loader );
 
-	info( "resources", "Registering resource loader '%s'", loader->getName().c_str() );
+	Log::info( "Registering resource loader '%s'", loader->getName().c_str() );
 }
 
 //-----------------------------------//
@@ -269,12 +269,12 @@ void ResourceManager::handleWatchResource(const FileWatchEvent& evt)
 	{
 		#pragma TODO("Add rename support in live updating")
 
-		debug( "Resource was renamed - handle this" );
+		Log::debug( "Resource was renamed - handle this" );
 		return;
 	}
 
 	// Register the decoded resource in the map.
-	info("resources", "Reloading resource '%s'", file.c_str());
+	Log::info("Reloading resource '%s'", file.c_str());
 
 	decodeResource( res, true, false );
 

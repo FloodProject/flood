@@ -1791,7 +1791,7 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="Logging"
+				Name="Logs"
 				>
 				<File
 					RelativePath="..\..\src\Engine\Log.cpp"

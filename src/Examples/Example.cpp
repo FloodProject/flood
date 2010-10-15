@@ -30,7 +30,7 @@ void Example::onInit()
 
 void Example::onPageLoading( const PageEvent& event )
 {
-	debug("%d,%d", event.pos.x, event.pos.y );
+	Log::debug("%d,%d", event.pos.x, event.pos.y );
 
 	ResourceManager* rm = getResourceManager();
 	const ImagePtr& heightMap = rm->loadResource<Image>( "height4.png" );
@@ -213,7 +213,7 @@ void Example::onKeyPressed( const KeyEvent& event )
 	}
 
 	else if( event.keyCode == Keys::Space )
-		debug( "time: %lf", frameTimer.getElapsedTime() );
+		Log::debug( "time: %lf", frameTimer.getElapsedTime() );
 
 	else if( event.keyCode == Keys::Pause )
 		Log::showDebug = !Log::showDebug;
@@ -226,7 +226,7 @@ void Example::onKeyPressed( const KeyEvent& event )
 	}
 
 	else if( event.keyCode == Keys::F )
-		debug( "FPS: %d", (int) frameStats.getLastFPS() );
+		Log::debug( "FPS: %d", (int) frameStats.getLastFPS() );
 
 	else if( event.keyCode == Keys::M )
 	{
@@ -250,7 +250,7 @@ void Example::onKeyPressed( const KeyEvent& event )
 
 void Example::onButtonPressed( const MouseButtonEvent& event )
 {
-	debug( "%hd,%hd", event.x, event.y );
+	Log::debug( "%hd,%hd", event.x, event.y );
 }
 
 //-----------------------------------//

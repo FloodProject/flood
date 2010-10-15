@@ -76,7 +76,7 @@ bool IndexBuffer::build( BufferUsage::Enum bU, BufferAccess::Enum bA )
 		is16bit() ? &data16[0] : reinterpret_cast<ushort*>(&data32[0]), 
 		getGLBufferType() );
 
-	//debug( "index buffer '%d' has size '%d'", id, getNumIndices() );
+	//Log::debug( "index buffer '%d' has size '%d'", id, getNumIndices() );
 
 	if( glHasError("Could not buffer data in index buffer") )
 		return false;

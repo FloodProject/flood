@@ -192,9 +192,7 @@ FileWatcherWin32::~FileWatcherWin32()
 	WatchMap::iterator end = mWatches.end();
 	
 	for(; iter != end; ++iter)
-	{
 		DestroyWatch(iter->second);
-	}
 
 	mWatches.clear();
 }
@@ -206,12 +204,12 @@ WatchID FileWatcherWin32::addWatch(const std::string& directory)
 	WatchID watchid = ++mLastWatchID;
 
 	std::wstring wdir( directory.begin(), directory.end() );
-	WatchStruct* watch = CreateWatch( wdir.c_str(),
-		FILE_NOTIFY_CHANGE_LAST_WRITE | FILE_NOTIFY_CHANGE_SIZE | FILE_NOTIFY_CHANGE_FILE_NAME);
+	WatchStruct* watch = CreateWatch( wdir.c_str(), FILE_NOTIFY_CHANGE_LAST_WRITE
+		| FILE_NOTIFY_CHANGE_SIZE | FILE_NOTIFY_CHANGE_FILE_NAME);
 	
 	if(!watch)
 	{
-		warn( "vfs", "Could not watch directory %s", directory.c_str() );
+		Log::warn( "Could not watch directory %s", directory.c_str() );
 		return 0;
 	}
 
@@ -267,7 +265,7 @@ void FileWatcherWin32::update()
 
 void FileWatcherWin32::handleAction(WatchStruct* watch, const std::wstring& filename, ulong action)
 {
-	Action fwAction;
+	Actions::Enum fwAction;
 
 	switch(action)
 	{

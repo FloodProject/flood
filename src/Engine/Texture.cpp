@@ -77,13 +77,12 @@ bool Texture::generate()
 
 bool Texture::check()
 {
-	uint maxTextureSize;
-	glGetIntegerv( GL_MAX_TEXTURE_SIZE, (GLint*) &maxTextureSize );
+	uint max;
+	glGetIntegerv( GL_MAX_TEXTURE_SIZE, (GLint*) &max );
 	
-	if(width > maxTextureSize || height > maxTextureSize)
+	if(width > max || height > max)
 	{
-		warn( "gl", "Texture size is not supported (max: %dx%d)",
-			maxTextureSize, maxTextureSize );		
+		Log::warn( "Texture size is not supported (max: %dx%d)", max, max );		
 		return false;
 	}
 

@@ -136,7 +136,7 @@ bool State::invoke( const std::string& name, int numArguments )
 
 		if( lastError != msg )
 		{
-			debug(msg);
+			Log::debug(msg);
 			lastError = msg;
 		}
 

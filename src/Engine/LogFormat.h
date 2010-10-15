@@ -18,19 +18,20 @@ namespace vapor {
 
 static const char LOG_HTML[] =
 
-	"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n"
-		"\t\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n"
-	"<html xmlns='http://www.w3.org/1999/xhtml'>\n"
+	"<!DOCTYPE html>\n"
 		"<head>\n"
-			"\t<meta http-equiv='content-type' content='application/xhtml+xml; charset=utf-8'/>\n"
+			"\t<meta charset='utf-8'>\n"
 			"\t<title>%s</title>\n"
-			"\t<style type=\"text/css\">\n" "%s" "\t</style>\n"
+			"\t<style type='text/css'>\n" "%s" "\t</style>\n"
 		"</head>\n"
 		"<body>\n"
 			"\t<div id='container'>\n"
 				"\t<img id='header' src='head.png' alt=''/>\n"
-				"\t<table class='sortable'>\n"
-					"\t\t<thead><tr><th></th><th>Time</th><th>Subsystem</th><th>Description</th></tr></thead>\n";
+				"\t<table>\n"
+					"\t\t<thead><tr><th></th>"
+						"<th>Time</th>"
+						"<th>Description</th>"
+					"</tr></thead>\n";
 
 //-----------------------------------//
 

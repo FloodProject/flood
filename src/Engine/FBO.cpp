@@ -74,7 +74,7 @@ bool FBO::check()
 
 	if( status != GL_FRAMEBUFFER_COMPLETE_EXT )
 	{
-		warn("fbo", "FBO error: %s", glErrorString(status) );
+		Log::warn("FBO error: %s", glErrorString(status) );
 		return false;
 	}
 	
@@ -199,14 +199,11 @@ void FBO::createRenderBufferStorage(int buffer, int type, int attachment)
 bool FBO::checkSize()
 {
 	// Check if the FBO respect the maximum size defined by OpenGL.
-	uint width = settings.getWidth();
-	uint height = settings.getHeight();
-	uint maxSize = GL_MAX_RENDERBUFFER_SIZE_EXT;
+	uint max = GL_MAX_RENDERBUFFER_SIZE_EXT;
 
-	if( (width > maxSize) || (height > maxSize) )
+	if(settings.getWidth() > max || settings.getHeight() > max)
 	{
-		warn( "gl", "Invalid FBO dimensions (OpenGL max: %d,%d)",
-			maxSize, maxSize );
+		Log::warn( "Invalid FBO dimensions (OpenGL max: %d,%d)", max, max );
 		return false;
 	}
 

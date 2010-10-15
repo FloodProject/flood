@@ -42,7 +42,7 @@ Cell::Cell( const TerrainSettings& settings,
 
 void Cell::rebuildGeometry()
 {
-	info( "cell", "Rebuilding geometry of cell (%hd, %hd)", x, y );
+	Log::info( "Rebuilding geometry of cell (%hd, %hd)", x, y );
 
 	rebuildVertices();
 	rebuildIndices();
@@ -143,7 +143,7 @@ void Cell::rebuildFaceNormals()
 
 	faceNormals.clear();
 
-	info( "cell", "Rebuilding face normals of cell (%hd, %hd)", x, y );
+	Log::info( "Rebuilding face normals of cell (%hd, %hd)", x, y );
 
 	for( uint i = 0; i < ind.size(); i += 3 )
 	{
@@ -214,7 +214,7 @@ void Cell::rebuildAveragedNormals()
 	// Averaged per-vertex normals.
 	std::vector<Vector3> normals;
 
-	info( "cell", "Rebuilding average per-vertex normals of cell (%hd, %hd)", x, y );
+	Log::info( "Rebuilding average per-vertex normals of cell (%hd, %hd)", x, y );
 	
 	for(uint i = 0; i < vs.size(); i++)
 	{

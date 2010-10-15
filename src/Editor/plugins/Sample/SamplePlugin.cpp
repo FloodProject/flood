@@ -38,7 +38,7 @@ void SamplePlugin::onPluginEnable()
 {
 	PluginMetadata metadata = getMetadata();
 
-	debug( "Plugin '%s': Hello", metadata.name.c_str() );
+	Log::debug( "Plugin '%s': Hello", metadata.name.c_str() );
 }
 
 //-----------------------------------//
@@ -47,7 +47,7 @@ void SamplePlugin::onPluginDisable()
 {
 	PluginMetadata metadata = getMetadata();
 
-	debug( "Plugin '%s': Bye", metadata.name.c_str() );
+	Log::debug( "Plugin '%s': Bye", metadata.name.c_str() );
 }
 
 //-----------------------------------//

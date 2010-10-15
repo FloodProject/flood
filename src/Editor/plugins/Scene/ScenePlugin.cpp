@@ -55,7 +55,7 @@ void ScenePlugin::onPluginEnable()
 		notebookCtrl->AddPage( scenePage, "Scene", true, iconScene );
 
 	if( !scenePageAdded )
-		warn( "editor", "Could not add page to notebook" );
+		Log::warn( "Could not add page to notebook" );
 
 	// Subscribe as an event listener.
 	Events* events = editor->getEventManager();

@@ -32,7 +32,7 @@ public:
 
 		if( !loader )
 		{
-			warn( "resources", "No resource loader found for resource '%s'", path.c_str() );
+			Log::warn( "No resource loader found for resource '%s'", path.c_str() );
 			return;
 		}
 		
@@ -43,7 +43,7 @@ public:
 		else
 		{
 			res->setStatus( ResourceStatus::Error );
-			warn("resources", "Error decoding resource '%s'", path.c_str());
+			Log::warn("Error decoding resource '%s'", path.c_str());
 			return;
 		}
 

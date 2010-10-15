@@ -51,7 +51,7 @@ bool STB_Image_Loader::decode(const File& file, Resource* res)
 	{
 	case 0:
 	case 1:
-		error( "STB_Image", "Implement support for more pixel formats" );
+		Log::error( "Implement support for more pixel formats" );
 		return false;
 	case 3:
 		pf = PixelFormat::R8G8B8;

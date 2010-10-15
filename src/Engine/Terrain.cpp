@@ -82,7 +82,7 @@ void Terrain::addCell( short x, short y, const ImagePtr& heightmap )
 {
 	if( !heightmap )
 	{
-		warn("terrain", "Cannot create terrain cell: Heightmap is invalid");
+		Log::warn("Cannot create terrain cell: Heightmap is invalid");
 		return;
 	}
 
@@ -196,7 +196,7 @@ bool Terrain::validateHeightmap( const ImagePtr& heightmap )
 	// First condition: width and height should be the same.
 	if( width != height )
 	{
-		warn( "terrain", "Invalid heightmap (width != height)" );
+		Log::warn( "Invalid heightmap (width != height)" );
 		return false;
 	}
 
@@ -215,7 +215,7 @@ bool Terrain::validateHeightmap( const ImagePtr& heightmap )
 
 	if( !valid )
 	{
-		warn( "terrain", "Invalid heightmap dimensions (should be 2^n+1)" );
+		Log::warn( "Invalid heightmap dimensions (should be 2^n+1)" );
 		return false;
 	}
 

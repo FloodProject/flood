@@ -25,7 +25,7 @@ Profiler::~Profiler()
 
 	float ms = time * 1000;
 
-	debug( "%s: took %lu ms (%.5lf)",
+	Log::debug( "%s: took %lu ms (%.5lf)",
 		name.c_str(), (ulong) ms, ms );
 }
 

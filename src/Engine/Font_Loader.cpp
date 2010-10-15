@@ -100,7 +100,7 @@ bool Font_Loader::validateFont()
 	// Validate file length.
 	if( lines.size() != 4 )
 	{
-		warn( "font", "Font description has invalid size" );
+		Log::warn( "Font description has invalid size" );
 		return false;
 	}
 		
@@ -108,7 +108,7 @@ bool Font_Loader::validateFont()
 
 	if( fontNameSizeInfo.size() != 2 )
 	{
-		warn( "font", "Font description file format is invalid (font name and size)" );
+		Log::warn( "Font description file format is invalid (font name and size)" );
 		return false;
 	}
 
@@ -116,7 +116,7 @@ bool Font_Loader::validateFont()
 
 	if( !File::exists(imageFilename) )
 	{
-		warn( "font", "Could not find the font image '%s'", imageFilename.c_str() );
+		Log::warn( "Could not find the font image '%s'", imageFilename.c_str() );
 		return false;
 	}
 
@@ -124,7 +124,7 @@ bool Font_Loader::validateFont()
 
 	if( !File::exists(glyphsFilename) )
 	{
-		warn( "font", "Could not find the glyphs definition file '%s'", glyphsFilename.c_str() );
+		Log::warn( "Could not find the glyphs definition file '%s'", glyphsFilename.c_str() );
 		return false;
 	}
 
@@ -132,7 +132,7 @@ bool Font_Loader::validateFont()
 
 	if( glyphSizeInfo.size() != 2 )
 	{
-		warn( "font", "Font description file format is invalid (glyph size)" );
+		Log::warn( "Font description file format is invalid (glyph size)" );
 		return false;
 	}
 

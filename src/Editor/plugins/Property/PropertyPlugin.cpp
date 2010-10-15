@@ -61,7 +61,7 @@ void PropertyPlugin::onPluginEnable()
 		wxEmptyString/*wxT("Property")*/, false, iconProperty );
 
 	if( !propertyPageAdded )
-		warn( "editor", "Could not add page to notebook" );
+		Log::warn( "Could not add page to notebook" );
 
 	notebookCtrl->Refresh();
 

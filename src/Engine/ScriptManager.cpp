@@ -32,14 +32,14 @@ ScriptManager::ScriptManager()
 	// Check for proper initialization of the Lua state.
 	if( !state->getLuaState() )
 	{
-		error( "lua", "Error initializing %s", LUA_RELEASE );
+		Log::error( "Error initializing %s", LUA_RELEASE );
 		return;
 	}
 
 	// Initialize the standard libraries (we want to disallow I/O though).
 	luaL_openlibs( state->getLuaState() );
 
-	info( "lua", "Initialized %s", LUA_RELEASE );
+	Log::info( "Initialized %s", LUA_RELEASE );
 }
 
 //-----------------------------------//
@@ -50,7 +50,7 @@ ScriptManager::~ScriptManager()
 	ResourceManager* rm = engine->getResourceManager();
 	rm->onResourceReloaded -= fd::bind( &ScriptManager::onReload, this );
 
-	info("lua", "Cleaning up the Lua state");
+	Log::info("Cleaning up the Lua state");
 	delete state;
 }
 
@@ -100,7 +100,7 @@ void ScriptManager::onReload( const ResourceEvent& evt )
 	if( evt.resource->getResourceGroup() != ResourceGroup::Scripts )
 		return;
 	
-	debug( "Reloading script '%s'", evt.resource->getPath().c_str() );
+	Log::debug( "Reloading script '%s'", evt.resource->getPath().c_str() );
 	
 	const ScriptPtr& script = boost::static_pointer_cast<Script>( evt.resource );
 

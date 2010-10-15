@@ -26,7 +26,7 @@ Win32Window::Win32Window(Settings& settings)
 
 	if ( !registerClass() || !createWindow() ) 
 	{
-		error("window", "Could not open a Win32 window");
+		Log::error("Could not open a Win32 window");
 		//exit(1);
 	}
 }
@@ -59,7 +59,7 @@ bool Win32Window::registerClass()
 
 	if (!RegisterClass(&wc)) 
 	{
-		error( "window", "RegisterClass() failed: %s", getErrorMessage().c_str() );
+		Log::error( "RegisterClass() failed: %s", getErrorMessage().c_str() );
 		return false;
 	}
 
@@ -83,7 +83,7 @@ bool Win32Window::createWindow()
 	// AdjustWindowRectEx corrects the size of the client area of the window
 	if (!AdjustWindowRectEx( &windowRect, style, false, exStyle ))
 	{
-		error( "window", "AdjustWindowRectEx() failed: %s", getErrorMessage().c_str() );
+		Log::error( "AdjustWindowRectEx() failed: %s", getErrorMessage().c_str() );
 	}
 
 	HWND hWnd = CreateWindowEx( exStyle, TEXT("vapor_Window"), TEXT("vaporEngine"), 
@@ -93,7 +93,7 @@ bool Win32Window::createWindow()
 
 	if (!hWnd) 
 	{
-		error( "window", "CreateWindowEx() failed: %s", getErrorMessage().c_str() );
+		Log::error( "CreateWindowEx() failed: %s", getErrorMessage().c_str() );
 		return false;
 	}
 
@@ -116,7 +116,7 @@ bool Win32Window::createContext()
 
 	if( !hDC )
 	{
-		error( "window", "GetDC() failed: %s", getErrorMessage().c_str() );
+		Log::error( "GetDC() failed: %s", getErrorMessage().c_str() );
 		return false;
 	}
 
@@ -135,26 +135,26 @@ bool Win32Window::createContext()
 
 	if ( !pf ) 
 	{
-		error( "window", "ChoosePixelFormat() failed: %s", getErrorMessage().c_str() );
+		Log::error( "ChoosePixelFormat() failed: %s", getErrorMessage().c_str() );
 	}
 
 	if ( !SetPixelFormat( hDC, pf, &pfd ) ) 
 	{
-		error( "window", "SetPixelFormat() failed: %s", getErrorMessage().c_str() );
+		Log::error( "SetPixelFormat() failed: %s", getErrorMessage().c_str() );
 	} 
 
 	//DescribePixelFormat( hDC, pf, sizeof ( PIXELFORMATDESCRIPTOR ), &pfd );
 
 	//if ( pfd.dwFlags & PFD_NEED_PALETTE || pfd.dwFlags & PFD_NEED_SYSTEM_PALETTE )
 	//{
-	//	error( "window", "Requested format requires a palette");
+	//	Log::error( "Requested format requires a palette");
 	//}
 
 	hRC = wglCreateContext( hDC );
 
 	if( !hRC )
 	{
-		error( "window", "wglCreateContext() failed: %s", getErrorMessage().c_str() );
+		Log::error( "wglCreateContext() failed: %s", getErrorMessage().c_str() );
 		return false;
 	}
 
@@ -229,7 +229,7 @@ void Win32Window::makeCurrent()
 
 	if( !wglMakeCurrent(hDC, hRC) ) 
 	{
-		error( "window", "wglMakeCurrent() failed: %s", getErrorMessage().c_str() );
+		Log::error( "wglMakeCurrent() failed: %s", getErrorMessage().c_str() );
 	}
 }
 

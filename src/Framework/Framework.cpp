@@ -19,7 +19,7 @@ namespace vapor {
 
 Framework::Framework(const std::string& app, const char** argv)
 {
-	info( "framework", "Engine framework getting into action" );
+	Log::info( "Engine framework getting into action" );
 	Engine::create(app, argv, false);
 }
 
@@ -114,7 +114,7 @@ void Framework::updateFrameTimes()
 	frameStats.lastFrameTime = frameTimer.getElapsedTime();
 
 	if(frameStats.lastFrameTime > 0.1)
-		debug("HOTSPOT! %lf", frameStats.lastFrameTime);
+		Log::debug("HOTSPOT! %lf", frameStats.lastFrameTime);
 
 	frameStats.frameStep();
 }

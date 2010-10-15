@@ -67,7 +67,7 @@ void BulletDebugDrawer::drawContactPoint(const btVector3 &PointOnB,
 
 void BulletDebugDrawer::reportErrorWarning (const char *warningString)
 {
-	error( "bullet", warningString );
+	Log::error( warningString );
 }
 
 //-----------------------------------//

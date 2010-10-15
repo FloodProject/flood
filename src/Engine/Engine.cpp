@@ -70,7 +70,7 @@ Engine::~Engine()
 
 void Engine::addSubsystem( Subsystem* const subsystem )
 {
-	info( "engine", "Registering new engine subsystem" );
+	Log::info( "Registering new engine subsystem" );
 	
 	subsystems.push_back( subsystem );
 }
@@ -82,7 +82,7 @@ void Engine::init( bool createWindow )
 	// setup the global logger
 	setupLogger();
 
-	info( "engine", "Starting vaporEngine version '%s'", VAPOR_ENGINE_VERSION );
+	Log::info( "Starting vaporEngine version '%s'", VAPOR_ENGINE_VERSION );
 
 	// create the virtual filesystem
 	fileSystem = new FileSystem( app, argv ? argv[0] : nullptr );
@@ -115,11 +115,10 @@ void Engine::init( bool createWindow )
 
 void Engine::setupLogger()
 {
-	// get a suitabfle log filename
-	std::string file = app + ".html";
-	
-	// create and set a new logger
-	log = new Log(app, file);
+	#pragma TODO(Create log files in a folder)
+
+	// Create a new logger.
+	log = new Logger(app, app + ".html");
 }
 
 //-----------------------------------//

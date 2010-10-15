@@ -17,8 +17,8 @@ namespace vapor {
 
 static const int BUF_MAX_SIZE = 256;
 
-Log* Log::engineLog = nullptr;
-bool Log::showDebug = true;
+Logger* Logger::engineLog = nullptr;
+bool Logger::showDebug = true;
 
 //-----------------------------------//
 
@@ -34,22 +34,22 @@ std::string LogLevel::toString( LogLevel::Enum level )
 		return "Error";
 	default:
 		assert( 0 && "This should not be reached" );
-		return "(undefined)";
+		return "";
 	}
 }
 
 //-----------------------------------//
 
-void debug( const std::string& msg )
+void Log::debug( const std::string& msg )
 {
-	debug( "%s", msg.c_str() );
+	Log::debug( "%s", msg.c_str() );
 }
 
 //-----------------------------------//
 
-void debug(const char* str, ...)
+void Log::debug(const char* str, ...)
 {
-	if( !Log::showDebug )
+	if( !Logger::showDebug )
 		return;
 
 	va_list args;
@@ -70,58 +70,58 @@ void debug(const char* str, ...)
 
 //-----------------------------------//
 
-void info(const std::string& subsystem, const char* msg, ...)
+void Log::info(const char* msg, ...)
 {
-	if( !Log::getLogger() )
+	if( !Logger::getLogger() )
 		return;
 
 	va_list args;
 	va_start(args, msg);
 
-		Log* const log = Log::getLogger();
-		log->write(LogLevel::Info, subsystem, msg, args);
+		Logger* const log = Logger::getLogger();
+		log->write(LogLevel::Info, msg, args);
 	
 	va_end(args);
 }
 
 //-----------------------------------//
 
-void warn(const std::string& subsystem, const char* msg, ...)
+void Log::warn(const char* msg, ...)
 {
-	if( !Log::getLogger() )
+	if( !Logger::getLogger() )
 		return;
 
 	va_list args;
 	va_start(args, msg);
 
-		Log* const log = Log::getLogger();
-		log->write(LogLevel::Warning, subsystem, msg, args);
+		Logger* const log = Logger::getLogger();
+		log->write(LogLevel::Warning, msg, args);
 	
 		std::string buf = String::format(msg, args);
-		debug( "%s", buf.c_str() );
+		Log::debug( "%s", buf.c_str() );
 
 	va_end(args);
 }
 
 //-----------------------------------//
 
-void error(const std::string& subsystem, const char* msg, ...)
+void Log::error(const char* msg, ...)
 {
 	va_list args;
 	va_start(args, msg);
 
-		Log* const log = Log::getLogger();
-		log->write(LogLevel::Error, subsystem, msg, args);
+		Logger* const log = Logger::getLogger();
+		log->write(LogLevel::Error, msg, args);
 	
 		std::string buf = String::format(msg, args);
-		debug( "%s", buf.c_str() );
+		Log::debug( "%s", buf.c_str() );
 
 	va_end(args);
 }
 
 //-----------------------------------//
 
-Log::Log(const std::string& title, const std::string& fn)
+Logger::Logger(const std::string& title, const std::string& fn)
 	: NativeFile(fn, FileMode::Write), even(true)
 {
 	if( !open() ) 
@@ -136,7 +136,7 @@ Log::Log(const std::string& title, const std::string& fn)
 	
 	writeHeader( title );
 
-	info("log", "Creating log file '%s'", fn.c_str());
+	Log::info("Creating log file '%s'", fn.c_str());
 
 	if( !getLogger() )
 		setLogger(this);
@@ -144,7 +144,7 @@ Log::Log(const std::string& title, const std::string& fn)
 
 //-----------------------------------//
 
-Log::~Log()
+Logger::~Logger()
 {
 	writeFooter();
 
@@ -154,7 +154,7 @@ Log::~Log()
 
 //-----------------------------------//
 
-void Log::createMessageDialog(const std::string& msg, const LogLevel::Enum level)
+void Logger::createMessageDialog(const std::string& msg, const LogLevel::Enum level)
 {
 #ifdef VAPOR_PLATFORM_WINDOWS
 	UINT style = MB_OK;
@@ -183,11 +183,9 @@ void Log::createMessageDialog(const std::string& msg, const LogLevel::Enum level
 
 //-----------------------------------//
 
-void Log::write(const LogLevel::Enum level, const std::string& subsystem, 
+void Logger::write(const LogLevel::Enum level, 
 				const char* msg, va_list args)
 {
-	assert( fp != nullptr );
-
 	std::string s = String::toLowerCase( LogLevel::toString(level) );
 
 	LocaleSaveRestore c;
@@ -199,7 +197,6 @@ void Log::write(const LogLevel::Enum level, const std::string& subsystem,
 	fprintf(fp, "\t\t<tr class=\"%s,%s\">", s.c_str(), even ? "even" : "odd");
 		fprintf(fp, "<td class=\"%s\"></td>", s.c_str());
 		fprintf(fp, "<td>%.3fs</td>", timer.getElapsedTime()); // date time
-		fprintf(fp, "<td>%s</td>", subsystem.c_str()); // subsystem
 		fprintf(fp, "<td>");
 			vfprintf(fp, msg, args);
 		fprintf(fp, "</td>");
@@ -211,52 +208,48 @@ void Log::write(const LogLevel::Enum level, const std::string& subsystem,
 
 //-----------------------------------//
 
-void Log::writeHeader(const std::string& title)
+void Logger::writeHeader(const std::string& title)
 {
-	assert( fp != nullptr );
-
 	fprintf(fp, LOG_HTML, title.c_str(), LOG_CSS );
 }
 
 //-----------------------------------//
 
-void Log::writeFooter()
+void Logger::writeFooter()
 {
-	assert( fp != nullptr );
-
 	fprintf(fp, "\t</table>\n" "\t</div>\n" "</body>\n" "</html>\n");
 }
 
 //-----------------------------------//
 
-void Log::info(const std::string& subsystem, const char* msg, ...)
+void Logger::info(const char* msg, ...)
 {
 	va_list args;
 
 	va_start(args, msg);
-		write(LogLevel::Info, subsystem, msg, args);
+		write(LogLevel::Info, msg, args);
 	va_end(args);
 }
 
 //-----------------------------------//
 
-void Log::warn(const std::string& subsystem, const char* msg, ...)
+void Logger::warn(const char* msg, ...)
 {
 	va_list args;
 
 	va_start(args, msg);
-		write(LogLevel::Warning, subsystem, msg, args);
+		write(LogLevel::Warning, msg, args);
 	va_end(args);
 }
 
 //-----------------------------------//
 
-void Log::error(const std::string& subsystem, const char* msg, ...)
+void Logger::error(const char* msg, ...)
 {
 	va_list args;
 
 	va_start(args, msg);
-		write(LogLevel::Error, subsystem, msg, args);
+		write(LogLevel::Error, msg, args);
 	va_end(args);
 }
 

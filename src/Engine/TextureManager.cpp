@@ -53,7 +53,7 @@ TexturePtr TextureManager::getTexture( const ImagePtr& img )
 	// Image not found.
 	if( !img ) 
 	{
-		//warn( "render", "Reverting to fallback texture" );
+		//Log::warn( "Reverting to fallback texture" );
 		return TexturePtr( new Texture( Settings(TEX_SIZE, TEX_SIZE) ) );
 	}
 
@@ -109,7 +109,7 @@ void TextureManager::onReload( const ResourceEvent& evt )
 	if( textures.find(img) == textures.end() )
 		return;
 
-	debug( "Reloading texture '%s'", evt.resource->getPath().c_str() );
+	Log::debug( "Reloading texture '%s'", evt.resource->getPath().c_str() );
 
 	TexturePtr tex = textures[img];
 	tex->setImage(img);

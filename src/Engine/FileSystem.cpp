@@ -62,7 +62,7 @@ void FileSystem::setDefaultConfig(const std::string& app)
 		return;
 	}
 
-	info( "vfs", "Mounted '%s' in mount point '/'", PHYSFS_getBaseDir() );
+	Log::info( "Mounted '%s' in mount point '/'", PHYSFS_getBaseDir() );
 }
 
 //-----------------------------------//
@@ -93,7 +93,7 @@ bool FileSystem::mount(const std::string& path, const std::string& mount, bool a
 		return false;
 	}
 
-	info( "vfs", "Mounted '%s' in mount point '%s'",
+	Log::info( "Mounted '%s' in mount point '%s'",
 		path.c_str(), mount.empty() ? "/" : mount.c_str() );
 
 	if( fileWatcher )
@@ -138,7 +138,7 @@ void FileSystem::update( double )
 
 void FileSystem::logError( const std::string& msg )
 {
-	error( "vfs", "%s: %s", msg.c_str(), PHYSFS_getLastError() );
+	Log::error( "%s: %s", msg.c_str(), PHYSFS_getLastError() );
 }
 
 //-----------------------------------//
@@ -148,8 +148,8 @@ void FileSystem::log()
 	PHYSFS_Version version;
 	PHYSFS_getLinkedVersion(&version);
 
-	info("vfs", "Initialized PhysFS version %d.%d.%d", 
-		version.major, version.minor, version.patch);
+	Log::info( "Initialized PhysFS version %d.%d.%d", 
+		version.major, version.minor, version.patch );
 
 	const PHYSFS_ArchiveInfo **i;
 
@@ -159,11 +159,11 @@ void FileSystem::log()
 	for (i = PHYSFS_supportedArchiveTypes(); *i != nullptr; i++)
 		ss << "'" << (*i)->extension << "', ";
 
-	info( "vfs", "User write folder: %s", PHYSFS_getWriteDir() );
+	Log::info( "User write folder: %s", PHYSFS_getWriteDir() );
 	
 	std::string s = ss.str();
 	s = s.substr( 0, s.find_last_of(',') );
-	info( "vfs", "%s", s.c_str() );
+	Log::info( "%s", s.c_str() );
 }
 
 //-----------------------------------//

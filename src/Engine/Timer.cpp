@@ -27,7 +27,7 @@ Timer::Timer()
 	, lastTime(0)
 {
 	if( !checked && !checkHighResolutionTimers() )
-		error( "timer", "High-resolution timers are not supported" );
+		Log::error( "High-resolution timers are not supported" );
 
 	reset();
 }

@@ -111,7 +111,7 @@ NodePtr Serializer::deserializeNode( const Json::Value& nodeValue )
 
 		if( !type )
 		{
-			warn("serialization", "Type '%s' was not found in registry", name.c_str() );
+			Log::warn("Type '%s' was not found in registry", name.c_str() );
 			continue;
 		}
 
@@ -249,7 +249,7 @@ void Serializer::setFieldFromValue( const Field& field, void* object, const Json
 {
 	if( !field.type.isPrimitive() )
 	{
-		debug( "field: %s", field.name.c_str() );
+		Log::debug( "field: %s", field.name.c_str() );
 		return;
 	}
 

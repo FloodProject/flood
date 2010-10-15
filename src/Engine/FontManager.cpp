@@ -22,7 +22,7 @@ FontManager::FontManager()
 		info("ttf", "Initialized FreeType %d.%d.%d", 
 			FREETYPE_MAJOR, FREETYPE_MINOR, FREETYPE_PATCH);
 	} else {
-		error("ttf", "Failed to initialize FreeType");
+		Log::error("Failed to initialize FreeType");
 		exit(EXIT_FAILURE);
 	}
 }
@@ -33,7 +33,7 @@ FontManager::~FontManager()
 {
 	if(FT_Done_FreeType(ft) != 0) 
 	{
-		warn("ttf", "Failed to destroy FreeType");
+		Log::warn("Failed to destroy FreeType");
 	}
 }
 

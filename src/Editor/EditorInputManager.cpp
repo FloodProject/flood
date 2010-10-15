@@ -291,7 +291,7 @@ Keys::Enum EditorInputManager::convertKeyEnum( int keyCode )
 		return Keys::Pause;
 
 	default:
-		warn( "input", "Could not map wxWidgets keycode: Invalid keycode" );
+		Log::warn( "Could not map wxWidgets keycode: Invalid keycode" );
 		return Keys::Escape;
 	}	
 }

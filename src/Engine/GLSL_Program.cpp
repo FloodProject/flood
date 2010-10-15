@@ -141,7 +141,7 @@ bool GLSL_Program::attachShaders()
 			std::string id = ShaderType::getString( shader->getType() );
 			std::string type = String::toLowerCase( id );
 
-			error( "glsl", "Error compiling %s shader '%s': %s",
+			Log::error( "Error compiling %s shader '%s': %s",
 				type.c_str(), text->getBasePath().c_str(),
 				shader->getLog().c_str() );
 
@@ -194,7 +194,7 @@ bool GLSL_Program::link()
 
 	if( status != GL_TRUE )
 	{
-		warn( "glsl", "Could not link program object '%d': %s", id, log.c_str() );
+		Log::warn( "Could not link program object '%d': %s", id, log.c_str() );
 		linked = false;
 		linkError = true;
 		return false;
@@ -221,8 +221,7 @@ bool GLSL_Program::validate()
 	{
 		getLogText();
 
-		warn( "glsl", "Could not validate program object '%d': %s", 
-					  id, log.c_str() );
+		Log::warn( "Could not validate program object '%d': %s", id, log.c_str() );
 		return false;
 	}
 
@@ -317,7 +316,7 @@ void GLSL_Program::setUniform( const std::string& slot, int data )
 
 	if( loc == -1 )
 	{
-		// warn( "glsl", "Could not locate uniform location in program object '%d'", id );
+		// Log::warn( "Could not locate uniform location in program object '%d'", id );
 		return;
 	}
 
@@ -338,7 +337,7 @@ void GLSL_Program::setUniform( const std::string& slot, float data )
 
 	if( loc == -1 )
 	{
-		// warn( "glsl", "Could not locate uniform location in program object '%d'", id );
+		// Log::warn( "Could not locate uniform location in program object '%d'", id );
 		return;
 	}
 
@@ -361,7 +360,7 @@ void GLSL_Program::setUniform( const std::string& slot, const std::vector<Vector
 
 	if( loc == -1 )
 	{
-		// warn( "glsl", "Could not locate uniform location in program object '%d'", id );
+		// Log::warn( "Could not locate uniform location in program object '%d'", id );
 		return;
 	}
 
@@ -384,7 +383,7 @@ void GLSL_Program::setUniform( const std::string& slot, const std::vector<Color>
 
 	if( loc == -1 )
 	{
-		//// warn( "glsl", "Could not locate uniform location in program object '%d'", id );
+		//// Log::warn( "Could not locate uniform location in program object '%d'", id );
 		return;
 	}
 
@@ -405,7 +404,7 @@ void GLSL_Program::setUniform( const std::string& slot, const Vector3& vec )
 
 	if( loc == -1 )
 	{
-		//// warn( "glsl", "Could not locate uniform location in program object '%d'", id );
+		//// Log::warn( "Could not locate uniform location in program object '%d'", id );
 		return;
 	}
 
@@ -434,7 +433,7 @@ void GLSL_Program::setUniform( const std::string& slot, const Matrix4x3& matrix 
 
 	if( loc == -1 )
 	{
-		//// warn( "glsl", "Could not locate uniform location in program object '%d'", id );
+		//// Log::warn( "Could not locate uniform location in program object '%d'", id );
 		return;
 	}
 
@@ -461,7 +460,7 @@ void GLSL_Program::setUniform( const std::string& slot, const Matrix4x4& matrix 
 
 	if( loc == -1 )
 	{
-		//// warn( "glsl", "Could not locate uniform location in program object '%d'", id );
+		//// Log::warn( "Could not locate uniform location in program object '%d'", id );
 		return;
 	}
 
@@ -487,7 +486,7 @@ void GLSL_Program::setUniform( const std::string& slot, const std::vector<Matrix
 
 	if( loc == -1 )
 	{
-		// warn( "glsl", "Could not locate uniform location in program object '%d'", id );
+		// Log::warn( "Could not locate uniform location in program object '%d'", id );
 		return;
 	}
 

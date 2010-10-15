@@ -47,7 +47,7 @@ RenderControl::RenderControl( wxWindow* parent, wxWindowID id,
 	, frameUpdateTimer(this, UPDATE_TIMER)
 	, frameRenderTimer(this, RENDER_TIMER)
 {
-	info("editor", "Creating a new wxWidgets control");
+	Log::info("Creating a new wxWidgets control");
 
 	// Create a new vapor3D window.
 	const wxSize& sz = GetSize();

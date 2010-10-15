@@ -16,7 +16,7 @@
 
 namespace vapor
 {
-	VAPOR_API void debug(const std::string& msg);
+	VAPOR_API void Log::debug(const std::string& msg);
 	VAPOR_API void info(const std::string& subsystem, const char* msg, ...);
 	VAPOR_API void warn(const std::string& subsystem, const char* msg, ...);
 	VAPOR_API void error(const std::string& subsystem, const char* msg, ...);

@@ -44,8 +44,7 @@ bool Node::addComponent( const ComponentPtr& component )
 
 	if( components.find(type) != components.end() )
 	{
-		warn( "scene",
-			"Component of type '%s' already exists in node '%s'",
+		Log::warn( "Component of type '%s' already exists in node '%s'",
 			type->getName().c_str(), getName().c_str() );
 		return false;
 	}

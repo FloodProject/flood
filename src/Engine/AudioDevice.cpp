@@ -29,21 +29,21 @@ Device::Device()
 	
 	if( !device || checkError() )
 	{
-		warn("audio::al", "Could not create OpenAL device: %s", getError());
+		Log::warn("Could not create OpenAL device: %s", getError());
 	}
 
 	const ALchar* version = alGetString(AL_VERSION);
 	
 	if( !version || checkError() ) 
 	{
-		warn("audio::al", "Could not get OpenAL version");
+		Log::warn("Could not get OpenAL version");
 	} else {
-		info("audio::al", "Using OpenAL version %s", version);
+		Log::info("Using OpenAL version %s", version);
 	}
 
 	if( checkError() )
 	{
-		warn("audio::al", "Error initializing OpenAL: %s", getError());
+		Log::warn("Error initializing OpenAL: %s", getError());
 	}
 }
 
@@ -59,7 +59,7 @@ Device::~Device()
 		
 	if(ret != ALC_TRUE) 
 	{
-		warn("audio::al", "Error closing OpenAL device: %s", getError());
+		Log::warn("Error closing OpenAL device: %s", getError());
 		return;
 	}
 
@@ -124,7 +124,7 @@ void Device::setVolume(float volume)
 
 	if(checkError()) 
 	{
-		warn("audio::al", "Error changing listener volume: %s", getError());
+		Log::warn("Error changing listener volume: %s", getError());
 	}
 }
 
@@ -163,7 +163,7 @@ void Device::switchContext(ALCcontext* context)
 
 	if( (ret != ALC_TRUE))
 	{
-		warn("audio::al", "Could not make OpenAL context current");
+		Log::warn("Could not make OpenAL context current");
 		return;
 	}
 

@@ -24,7 +24,7 @@ void GLSL_Text::parse()
 
 	if( v == std::string::npos )
 	{
-		warn( "glsl", "No vertex shader found in '%s'", path.c_str() );
+		Log::warn( "No vertex shader found in '%s'", path.c_str() );
 		vertex.clear();
 	}
 	else
@@ -34,7 +34,7 @@ void GLSL_Text::parse()
 
 	if( p == std::string::npos )
 	{
-		warn( "glsl", "No fragment shader found in '%s'", path.c_str() );
+		Log::warn( "No fragment shader found in '%s'", path.c_str() );
 		pixel.clear();
 	}
 	else

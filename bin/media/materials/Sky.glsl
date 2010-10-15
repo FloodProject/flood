@@ -26,9 +26,10 @@ uniform float vp_TexScroll;
 
 void main(void)
 {
-	vp_TexCoord[0] += vp_TexScroll;
+	vec2 TexCoord = vp_TexCoord;
+	TexCoord[0] += vp_TexScroll;
 	//vp_TexCoord[1] += vp_TexScroll;
 	
-	vec4 clouds = texture2D(vp_Texture0, vp_TexCoord);
+	vec4 clouds = texture2D(vp_Texture0, TexCoord);
 	gl_FragColor = mix(gl_Color, clouds, clouds.a);
 }

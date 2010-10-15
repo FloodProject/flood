@@ -46,12 +46,12 @@ public:
 	// Gets the maximum texture size.
 	GETTER(MaxTextureSize, int, maxTextureSize)
 
-	// Logs adapter version information
+	// Logs adapter version information.
 	void log() const;
 
 protected:
 
-	// Gets and parses the OpenGL information
+	// Gets and parses the OpenGL information.
 	void parseInfo();
 
 	std::string name;

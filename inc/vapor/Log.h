@@ -20,8 +20,11 @@ namespace vapor {
  * Doesn't do anything on release builds.
  */
 
-VAPOR_API void debug(const char* msg, ...);
-VAPOR_API void debug(const std::string& msg);
+namespace Log
+{
+	VAPOR_API void debug(const char* msg, ...);
+	VAPOR_API void debug(const std::string& msg);
+}
 
 //-----------------------------------//
 
@@ -29,9 +32,12 @@ VAPOR_API void debug(const std::string& msg);
  * Convenience functions to log in the main engine stream.
  */
 
-VAPOR_API void info(const std::string& subsystem, const char* msg, ...);
-VAPOR_API void warn(const std::string& subsystem, const char* msg, ...);
-VAPOR_API void error(const std::string& subsystem, const char* msg, ...);
+namespace Log
+{
+	VAPOR_API void info(const char* msg, ...);
+	VAPOR_API void warn(const char* msg, ...);
+	VAPOR_API void error(const char* msg, ...);
+}
 		
 //-----------------------------------//
 
@@ -59,24 +65,24 @@ namespace LogLevel
  * to an output file format. Currently it outputs to HTML.
  */
 
-class VAPOR_API Log : public NativeFile
+class VAPOR_API Logger : public NativeFile
 {
 public:
 	
-	Log(const std::string& title, const std::string& filename);
-	~Log();
+	Logger(const std::string& title, const std::string& filename);
+	~Logger();
 	
 	// Logging methods for each message category.
-	void info(const std::string& subsystem, const char* msg, ...);
-	void warn(const std::string& subsystem, const char* msg, ...);
-	void error(const std::string& subsystem, const char* msg, ...);
+	void info(const char* msg, ...);
+	void warn(const char* msg, ...);
+	void error(const char* msg, ...);
 
 	// Low-level logging implementation.
-	void write(const LogLevel::Enum level, const std::string& subsystem, 
+	void write(const LogLevel::Enum level, 
 		const char* msg, va_list args);
 
 	// Gets/sets the global engine logger.
-	STATIC_ACESSOR(Logger, Log*, engineLog)
+	STATIC_ACESSOR(Logger, Logger*, engineLog)
 
 	// Spawns a new message box dialog.
 	static void createMessageDialog(const std::string& msg, 
@@ -88,7 +94,7 @@ public:
 	static bool showDebug;
 
 	// Global engine logger.
-	static Log* engineLog;
+	static Logger* engineLog;
 
 protected:
 		

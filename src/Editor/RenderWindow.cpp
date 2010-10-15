@@ -44,7 +44,7 @@ bool RenderWindow::createContext()
 	
 	if(!context)
 	{
-		error("wx", "Error creating wxGLCanvas context");
+		Log::error("Error creating wxGLCanvas context");
 		return false;
 	}
 

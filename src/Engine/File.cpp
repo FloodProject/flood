@@ -109,8 +109,8 @@ bool File::close()
 
 void File::log(const std::string& err) const
 {
-	error( "file", "%s '%s': %s", err.c_str(), getPath().c_str(),
-		PHYSFS_getLastError() );
+	Log::error( "%s '%s': %s", err.c_str(),
+		getPath().c_str(), PHYSFS_getLastError() );
 }
 
 //-----------------------------------//
@@ -132,7 +132,7 @@ bool File::validate(FileMode::Enum check) const
 	if( mode == check )
 		return true;
 
-	error( "file", "Access mode violation in file '%s'", getName().c_str() );
+	Log::error( "Access mode violation in file '%s'", getName().c_str() );
 	return false;
 }
 

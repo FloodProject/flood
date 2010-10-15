@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="-Zm140"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)src\Editor\inc&quot;;&quot;$(SolutionDir)dep\jsoncpp\include&quot;;&quot;$(SolutionDir)dep\boost&quot;;&quot;$(SolutionDir)dep\fd_delegate\include&quot;;&quot;$(SolutionDir)dep\lua\include&quot;;&quot;$(SolutionDir)dep\openal\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\vld\include&quot;;C:\wxWidgets\include;C:\wxWidgets\include\msvc"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)src\Editor\inc&quot;;&quot;$(SolutionDir)dep\jsoncpp\include&quot;;&quot;$(SolutionDir)dep\boost&quot;;&quot;$(SolutionDir)dep\fd_delegate\include&quot;;&quot;$(SolutionDir)dep\lua\include&quot;;&quot;$(SolutionDir)dep\openal\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\vld\include&quot;;&quot;$(SolutionDir)dep\wx\include&quot;;&quot;$(SolutionDir)dep\wx\include\msvc&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;__WXDEBUG__;__WXMSW__;_UNICODE;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE"
 				MinimalRebuild="true"
 				ExceptionHandling="1"
@@ -63,17 +63,17 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				AdditionalIncludeDirectories="C:\wxWidgets\include"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)dep\wx\include&quot;"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vaporEngine.lib jsoncpp_vc9_d.lib libboost_thread-vc90-mt-1_43.lib libboost_date_time-vc90-mt-1_43.lib zlib.lib physfs.lib sfml-system-s-d.lib sfml-window-s-d.lib wxmsw29ud_core.lib wxbase29ud.lib wxpngd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib wininet.lib opengl32.lib glew32s.lib OpenAL32.lib vorbisfile_static.lib ogg_static.lib vorbis_static.lib lua.lib LinearMath.lib BulletCollision.lib BulletDynamics.lib"
+				AdditionalDependencies="vaporEngine.lib jsoncpp_vc9_d.lib libboost_thread-vc90-mt-gd-1_43.lib libboost_date_time-vc90-mt-gd-1_43.lib zlib.lib physfs.lib sfml-system-s-d.lib sfml-window-s-d.lib wxmsw29ud_core.lib wxbase29ud.lib wxpngd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib wininet.lib opengl32.lib glew32s.lib OpenAL32.lib vorbisfile_static.lib ogg_static.lib vorbis_static.lib lua.lib LinearMath.lib BulletCollision.lib BulletDynamics.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-$(ConfigurationName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)lib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)dep\boost\lib&quot;;&quot;$(SolutionDir)dep\vld\lib&quot;;&quot;$(SolutionDir)dep\jsoncpp\lib&quot;;&quot;$(SolutionDir)dep\physfs\lib\release&quot;;&quot;$(SolutionDir)dep\bullet\lib&quot;;&quot;$(SolutionDir)dep\zlib\lib&quot;;&quot;$(SolutionDir)dep\glew\lib&quot;;&quot;$(SolutionDir)dep\vorbis\lib&quot;;&quot;$(SolutionDir)dep\ogg\lib&quot;;&quot;$(SolutionDir)dep\openal\libs\Win32&quot;;&quot;$(SolutionDir)dep\sfml\lib\vc2008&quot;;&quot;$(SolutionDir)dep\luabind\lib&quot;;&quot;$(SolutionDir)dep\lua\lib&quot;;C:\wxWidgets\lib\vc_lib"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)lib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)dep\boost\lib&quot;;&quot;$(SolutionDir)dep\vld\lib&quot;;&quot;$(SolutionDir)dep\jsoncpp\lib&quot;;&quot;$(SolutionDir)dep\physfs\lib\release&quot;;&quot;$(SolutionDir)dep\bullet\lib&quot;;&quot;$(SolutionDir)dep\zlib\lib&quot;;&quot;$(SolutionDir)dep\glew\lib&quot;;&quot;$(SolutionDir)dep\vorbis\lib&quot;;&quot;$(SolutionDir)dep\ogg\lib&quot;;&quot;$(SolutionDir)dep\openal\libs\Win32&quot;;&quot;$(SolutionDir)dep\sfml\lib\vc2008&quot;;&quot;$(SolutionDir)dep\luabind\lib&quot;;&quot;$(SolutionDir)dep\lua\lib&quot;;&quot;$(SolutionDir)dep\wx\lib\vc_lib&quot;"
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"

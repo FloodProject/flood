@@ -33,7 +33,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-/// Type for a watch id
+// Type for a watch id
 typedef ulong WatchID;
 
 //-----------------------------------//
@@ -48,20 +48,21 @@ namespace Actions
 {
 	enum Enum
 	{
-		/// Sent when a file is created
+		// Sent when a file is created
 		Added,
-		/// Sent when a file is deleted
+		
+		// Sent when a file is deleted
 		Deleted,
-		/// Sent when a file is modified
+		
+		// Sent when a file is modified
 		Modified,
-		/// Sent when a file is renamed
+		
+		// Sent when a file is renamed
 		Renamed,
 	};
 
 	const std::string getString( Actions::Enum a );
 }
-
-typedef Actions::Enum Action;
 
 //-----------------------------------//
 
@@ -74,9 +75,12 @@ typedef Actions::Enum Action;
 
 struct VAPOR_API FileWatchEvent : private boost::noncopyable
 {
-	FileWatchEvent( Actions::Enum a, WatchID w,
-		const std::string& d, const std::string& f )
-	: action( a ), watchid( w ), dir( d ), filename( f )
+	FileWatchEvent( Actions::Enum action, WatchID id,
+		const std::string& dir, const std::string& file )
+		: action(action)
+		, watchid(id)
+		, dir(dir)
+		, filename(file)
 	{ }
 
 	Actions::Enum action;
@@ -98,20 +102,19 @@ public:
 
 	virtual ~FileWatcher() { }
 
-	/// Add a directory watch
-	/// TODO: @exception FileNotFoundException Thrown when the requested directory does not exist
+	// Add a directory watch
 	virtual WatchID addWatch(const std::string& directory) = 0;
 
-	/// Remove a directory watch. This is a brute force search O(nlogn).
+	// Remove a directory watch. This is a brute force search O(nlogn).
 	virtual void removeWatch(const std::string& directory) = 0;
 
-	/// Remove a directory watch. This is a map lookup O(logn).
+	// Remove a directory watch. This is a map lookup O(logn).
 	virtual void removeWatch(WatchID watchid) = 0;
 
-	/// Updates the watcher. Must be called often.
+	// Updates the watcher. Must be called often.
 	virtual void update() = 0;
 
-	/// Fired up when the watcher gets notified by the OS.
+	// Fired up when the watcher gets notified by the OS.
 	fd::delegate<void(const FileWatchEvent&)> onFileWatchEvent;
 };
 

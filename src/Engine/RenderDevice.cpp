@@ -41,7 +41,7 @@ RenderDevice::RenderDevice( ResourceManager* rm )
 
 RenderDevice::~RenderDevice()
 {
-	info("gl", "Closing OpenGL rendering device");
+	Log::info("Closing OpenGL rendering device");
 
 	#pragma TODO("Confirm that all OpenGL resources were reclaimed on exit")	
 
@@ -55,10 +55,10 @@ RenderDevice::~RenderDevice()
 
 void RenderDevice::init()
 {
-	info( "gl", "Creating OpenGL rendering device" );
+	Log::info( "Creating OpenGL rendering device" );
 
 	if( !window ) 
-		error( "gl", "No current OpenGL context found, stuff may fail" );
+		Log::error( "No current OpenGL context found, stuff may fail" );
 	
 	checkExtensions();
 
@@ -86,16 +86,16 @@ void RenderDevice::checkExtensions()
 	if( err != GLEW_OK )
 	{
 		const GLubyte* str = glewGetErrorString(err);
-		error( "render", "Failed to initialize GLEW: %s", str );
+		Log::error( "Failed to initialize GLEW: %s", str );
 		return;
 	}
 
-	info( "render", "Using GLEW version %s", glewGetString(GLEW_VERSION) );
+	Log::info( "Using GLEW version %s", glewGetString(GLEW_VERSION) );
 
 	if( !GLEW_VERSION_2_0 )
 	{
 		const char* str = "You need at least OpenGL 2.0 to run this.";
-		Log::createMessageDialog( str, LogLevel::Error );
+		Logger::createMessageDialog( str, LogLevel::Error );
 		exit( -1 );
 	}
 }

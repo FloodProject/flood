@@ -18,7 +18,7 @@ varying vec2 vp_TexCoord;
 
 void main()
 {
-	normal = vp_Normal * mat3(vp_ModelMatrix);
+	normal = vp_Normal; // * mat3(vp_ModelMatrix);
 
 	gl_FrontColor = vec4(vp_Color, 1.0);
 	vp_TexCoord = vp_TexCoord0.st;
@@ -39,7 +39,7 @@ void main(void)
 	vec4 ambient = vec4(0.3,0.3,0.25,1.0);
 	
 	float diffuse = dot(vec3(0.5,0.5,0.5), normal);
-	diffuse = pow((0.5*diffuse)+0.5,2);
+	//diffuse = pow((0.5*diffuse)+0.5,2);
 	
 	vec4 tex = texture2D(vp_Texture0, vp_TexCoord);
 	vec4 albedo = tex*diffuse;

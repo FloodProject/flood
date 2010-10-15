@@ -44,7 +44,7 @@ void PropertyOperation::setFieldValue(const wxAny& value)
 	assert( field != nullptr );
 
 	const Type& field_type = field->type;
-	debug("Changed property value: %s", field->name.c_str() );
+	Log::debug("Changed property value: %s", field->name.c_str() );
 
 	if( field_type.isEnum() )
 	{

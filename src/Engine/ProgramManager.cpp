@@ -45,7 +45,7 @@ ProgramPtr ProgramManager::getProgram( const std::string& name )
 	{
 		#pragma TODO("Get GLSL fallback programs working")
 		
-		warn( "program", "Could not locate '%s'", name.c_str() );
+		Log::warn( "Could not locate '%s'", name.c_str() );
 		return ProgramPtr();
 	}
 
@@ -62,7 +62,7 @@ bool ProgramManager::registerProgram( const std::string& name, const ProgramPtr&
 
 	if( programs.find(lower) != programs.end() )
 	{
-		warn( "program", "Shader '%s' already registered", name.c_str() );
+		Log::warn( "Shader '%s' already registered", name.c_str() );
 		return false;
 	}
 
@@ -96,7 +96,7 @@ void ProgramManager::onReload( const ResourceEvent& evt )
 
 	assert( programs.find(base) != programs.end() );
 
-	debug( "Reloading shader '%s'", evt.resource->getPath().c_str() );
+	Log::debug( "Reloading shader '%s'", evt.resource->getPath().c_str() );
 
 	ProgramPtr program = programs[base];
 	program->updateShadersText();

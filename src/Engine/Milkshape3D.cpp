@@ -658,7 +658,7 @@ void Milkshape3D::readComments()
 	
 	if( subVersion != 1 )
 	{
-		warn( "Milkshape3D", "Unknown subversion comment chunk: '%d'", subVersion );
+		Log::warn( "Unknown subversion comment chunk: '%d'", subVersion );
 		return;
 	}
 

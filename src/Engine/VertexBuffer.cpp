@@ -99,7 +99,7 @@ bool VertexBuffer::isValid() const
 	// Check that we have a valid buffer.
 	if( !glIsBuffer(id) )
 	{
-		warn( "gl", "Vertex buffer is not valid" );
+		Log::warn( "Vertex buffer is not valid" );
 		return false;
 	}
 
@@ -155,7 +155,7 @@ bool VertexBuffer::build()
 	// Check that all vertex attributes elements are the same size.
 	//if( !checkSize() )
 	//{
-	//	warn( "gl", "Vertex buffers elements have different sizes" );
+	//	Log::warn( "Vertex buffers elements have different sizes" );
 	//	return false;
 	//}
 

@@ -96,7 +96,7 @@ public:
 	GETTER(PhysicsManager, PhysicsManager*, physicsManager)
 
 	// Gets the main engine logger.
-	GETTER(Log, Log*, log)
+	GETTER(Logger, Logger*, log)
 
 	// Gets the virtual filesystem.
 	GETTER(FileSystem, FileSystem*, fileSystem)
@@ -136,7 +136,7 @@ protected:
 	FileSystem* fileSystem;
 
 	// Default logger.
-	Log* log;
+	Logger* log;
 
 	// Scripting state.
 	ScriptManager* scriptManager;

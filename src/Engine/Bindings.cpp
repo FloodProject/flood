@@ -122,7 +122,7 @@
 //
 //void debug( const std::string& msg )
 //{
-//	debug( msg );
+//	Log::debug( msg );
 //}
 //
 //void bindLogger( lua_State* luaState )

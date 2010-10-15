@@ -92,7 +92,7 @@ void Image::save( const std::string& filename )
 
 	if( encoder.hasError() )
 	{
-		error("image", "Could not write PNG: '%s'", filename.c_str() );
+		Log::error("Could not write PNG: '%s'", filename.c_str() );
 		return;
 	}
 
@@ -123,8 +123,8 @@ void Image::setColor( const Color& color )
 
 void Image::log() const
 {
-	info("Image", "Image has pixel format '%s' and size %dx%d", 
-		 PixelFormat::getType().getString(pixelFormat), width, height);
+	Log::info( "Image has pixel format '%s' and size %dx%d", 
+		 PixelFormat::getType().getString(pixelFormat), width, height );
 }
 
 //-----------------------------------//

@@ -1650,7 +1650,7 @@ static int _wrap_debug(lua_State* L) {
   SWIG_check_num_args("vapor::debug",1,1)
   if(!lua_isstring(L,1)) SWIG_fail_arg("vapor::debug",1,"std::string const &");
   temp1.assign(lua_tostring(L,1),lua_strlen(L,1)); arg1=&temp1;
-  vapor::debug((std::string const &)*arg1);
+  vapor::Log::debug((std::string const &)*arg1);
   
   return SWIG_arg;
   
@@ -1674,7 +1674,7 @@ static int _wrap_info(lua_State* L) {
   if(!SWIG_lua_isnilstring(L,2)) SWIG_fail_arg("vapor::info",2,"char const *");
   temp1.assign(lua_tostring(L,1),lua_strlen(L,1)); arg1=&temp1;
   arg2 = (char *)lua_tostring(L, 2);
-  vapor::info((std::string const &)*arg1,(char const *)arg2,arg3);
+  vapor::Log::info((char const *)arg2,arg3);
   
   return SWIG_arg;
   
@@ -1698,7 +1698,7 @@ static int _wrap_warn(lua_State* L) {
   if(!SWIG_lua_isnilstring(L,2)) SWIG_fail_arg("vapor::warn",2,"char const *");
   temp1.assign(lua_tostring(L,1),lua_strlen(L,1)); arg1=&temp1;
   arg2 = (char *)lua_tostring(L, 2);
-  vapor::warn((std::string const &)*arg1,(char const *)arg2,arg3);
+  vapor::Log::warn((char const *)arg2,arg3);
   
   return SWIG_arg;
   
@@ -1722,7 +1722,7 @@ static int _wrap_error(lua_State* L) {
   if(!SWIG_lua_isnilstring(L,2)) SWIG_fail_arg("vapor::error",2,"char const *");
   temp1.assign(lua_tostring(L,1),lua_strlen(L,1)); arg1=&temp1;
   arg2 = (char *)lua_tostring(L, 2);
-  vapor::error((std::string const &)*arg1,(char const *)arg2,arg3);
+  vapor::Log::error((char const *)arg2,arg3);
   
   return SWIG_arg;
   

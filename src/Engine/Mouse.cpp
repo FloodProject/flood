@@ -94,7 +94,7 @@ bool Mouse::isButtonPressed( MouseButton::Enum button ) const
 			return mouseInfo.Mouse5;
 	}
 
-	warn( "input", "Could not map enum: Invalid mouse button" );
+	Log::warn( "Could not map enum: Invalid mouse button" );
 	return MouseButton::Left;
 }
 	

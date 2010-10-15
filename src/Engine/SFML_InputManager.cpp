@@ -221,7 +221,7 @@ MouseButton::Enum SFML_InputManager::convertMouseButtonEnum(
 			return MouseButton::Mouse5;
 
 		default:
-			warn( "input", "Could not map SFML mouse button: Invalid button" );
+			Log::warn( "Could not map SFML mouse button: Invalid button" );
 			return MouseButton::Mouse5;
 	}
 }
@@ -255,7 +255,7 @@ JoystickAxis::Enum SFML_InputManager::convertJoystickAxisEnum(
 			return JoystickAxis::AxisPOV;
 
 		default:
-			warn( "input", "Could not map SFML joystick axis: Invalid axis" );
+			Log::warn( "Could not map SFML joystick axis: Invalid axis" );
 			return JoystickAxis::AxisPOV;
 	}
 }
@@ -481,7 +481,7 @@ Keys::Enum SFML_InputManager::convertKeyEnum(sf::Key::Code keycode)
 			return Keys::Pause;
 
 		default:
-			warn( "input", "Could not map SFML keycode: Invalid keycode" );
+			Log::warn( "Could not map SFML keycode: Invalid keycode" );
 			return Keys::Escape;
 	}
 }

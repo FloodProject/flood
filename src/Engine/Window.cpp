@@ -53,16 +53,14 @@ WindowSettings::WindowSettings( const WindowSettings& s )
 Window::Window(const WindowSettings& settings)
 	: settings(settings)
 {
-	info( "window", "Creating %swindow \
-		(size: %dx%d, title: '%s', bits-per-pixel: %d)",
+	Log::info( "Creating %swindow (size: %dx%d, title: '%s', bits-per-pixel: %d)",
 		settings.isFullscreen() ? "fullscreen " : "",
 		settings.getWidth(), settings.getHeight(),
 		settings.getTitle().c_str(), settings.getBpp() );
 
 	if( settings.getCustomHandle() )
 	{
-		info("window", "External window handle found: %d",
-			settings.getCustomHandle());
+		Log::info( "External window handle found: %d", settings.getCustomHandle());
 	}
 }
 
@@ -70,7 +68,7 @@ Window::Window(const WindowSettings& settings)
 
 void Window::handleWindowResize()
 {
-	info("window", "Resizing window (new size: %dx%d)",
+	Log::info("Resizing window (new size: %dx%d)",
 		settings.getWidth(), settings.getHeight() );
 
 	if( onTargetResize.empty() )

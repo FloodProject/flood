@@ -391,7 +391,7 @@ wxPGProperty* PropertyPage::createPrimitiveProperty(const Field& field, void* ob
 	//-----------------------------------//
 	else
 	{
-		debug( "Unknown property type: '%s'", type.getName().c_str() );
+		Log::debug( "Unknown property type: '%s'", type.getName().c_str() );
 		assert( false );
 	}
 

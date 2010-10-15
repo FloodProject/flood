@@ -55,7 +55,7 @@ void TaskManager::createThreadPool( int poolSize )
 		poolSize = 1;
 	}
 
-	info( "tasks", "Creating thread pool with %d thread(s)", poolSize );
+	Log::info( "Creating thread pool with %d thread(s)", poolSize );
 
 	threadPool.resize( poolSize );
 }

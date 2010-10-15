@@ -22,7 +22,7 @@ SFML_Window::SFML_Window(const WindowSettings& settings)
 {
 	if( !open() )
 	{
-		error( "render", "Could not create SFML render window" );
+		Log::error( "Could not create SFML render window" );
 	}
 }
 
@@ -54,7 +54,7 @@ bool SFML_Window::open()
 		
 		if( !videoMode.IsValid() )
 		{
-			error( "window::sfml", "Video mode not supportted." );
+			Log::error( "Video mode not supportted." );
 			return false;
 		}
 		
@@ -179,7 +179,7 @@ void SFML_Window::setTitle(const std::string& title)
 	settings.setTitle(title);
 	createWindow();
 	
-	info( "window::sfml", "Changing window title to '%s'", title.c_str() );
+	Log::info( "Changing window title to '%s'", title.c_str() );
 }
 
 //-----------------------------------//

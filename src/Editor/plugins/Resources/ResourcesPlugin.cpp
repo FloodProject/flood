@@ -54,7 +54,7 @@ void ResourcesPlugin::onPluginEnable()
 		wxEmptyString/*wxT("Resources")*/, false, iconResources );
 
 	if( !resourcesPageAdded )
-		warn( "editor", "Could not add page to notebook" );
+		Log::warn( "Could not add page to notebook" );
 
 	notebookCtrl->Refresh();
 }

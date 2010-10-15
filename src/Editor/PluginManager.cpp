@@ -45,7 +45,7 @@ void PluginManager::enablePlugin( Plugin* plugin )
 		return;
 	
 	PluginMetadata metadata = plugin->getMetadata();
-	info( "editor", "Enabling plugin: %s", metadata.name.c_str() );
+	Log::info( "Enabling plugin: %s", metadata.name.c_str() );
 
 	plugin->pluginEnabled = true;
 	plugin->onPluginEnable();
@@ -64,7 +64,7 @@ void PluginManager::disablePlugin( Plugin* plugin )
 		return;
 
 	PluginMetadata metadata = plugin->getMetadata();
-	info( "editor", "Disabling plugin: %s", metadata.name.c_str() );
+	Log::info( "Disabling plugin: %s", metadata.name.c_str() );
 
 	processTools( plugin, false );
 
