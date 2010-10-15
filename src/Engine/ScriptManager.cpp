@@ -15,6 +15,10 @@
 
 #include <lua.hpp>
 
+extern "C" {
+	int luaopen_vapor(lua_State* L);
+}
+
 namespace vapor {
 
 //-----------------------------------//
@@ -38,6 +42,7 @@ ScriptManager::ScriptManager()
 
 	// Initialize the standard libraries (we want to disallow I/O though).
 	luaL_openlibs( state->getLuaState() );
+	luaopen_vapor( state->getLuaState() );
 
 	Log::info( "Initialized %s", LUA_RELEASE );
 }

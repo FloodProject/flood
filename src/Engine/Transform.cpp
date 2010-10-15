@@ -41,8 +41,8 @@ Transform::Transform( const Transform& rhs )
 	: scaling( rhs.scaling )
 	, translation( rhs.translation )
 	, rotation( rhs.rotation )
-	, needsVolumeUpdate( false )
 	, needsNotify( false )
+	, needsVolumeUpdate( false )
 	, externalTransform( false )
 {
 	Class& klass = getType();
@@ -215,9 +215,9 @@ const Matrix4x3& Transform::getAbsoluteTransform() const
 
 void Transform::setAbsoluteTransform( const Matrix4x3& newTransform )
 {
-	setNotify();
-	externalTransform = true;
 	transform = newTransform;
+	externalTransform = true;
+	setNotify();
 }
 
 //-----------------------------------//
@@ -227,11 +227,9 @@ Matrix4x3 Transform::getLocalTransform() const
 	Matrix4x3 matScale = Matrix4x3::createScale(scaling);
 	Matrix4x3 matRotation = Matrix4x3::createFromQuaternion(rotation);
 	Matrix4x3 matTranslation = Matrix4x3::createTranslation(translation);
-	
-	// Combine all the transformations in a single matrix.
-	Matrix4x3 transform = matScale*matRotation*matTranslation;
+	Matrix4x3 matTransform = matScale*matRotation*matTranslation;
 
-	return transform;
+	return matTransform;
 }
 
 //-----------------------------------//
@@ -303,7 +301,8 @@ void Transform::notify()
 
 BoundingBox Transform::getWorldBoundingVolume() const
 {
-	return boundingVolume.transform( getAbsoluteTransform() );
+	const Matrix4x3& transform = getAbsoluteTransform();
+	return boundingVolume.transform(transform);
 }
 
 //-----------------------------------//

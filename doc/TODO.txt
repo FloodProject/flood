@@ -1,31 +1,25 @@
 WIP (work-in-progress)
 ======================
 
+Camera bounding frustum renderable seems to be inverted
 Duplicate resources in Resources pane in editor
+Serialization of group nodes
 Fix model debug renderable of skeleton.
 wxWidgets regression in message dialog (missing icons in save dialog)
 Add UpdateUI event to Play button.
 Physics rotation becomes wrong due to bounding box calculation.
-
-Add a reset method to the editor that sets to defaults
-
-void newScene()
-{
-	editorScene.clear();
-	scene.clear();
-	
-	undoManager.clear()
-	resources.clear()
-	physicsWorld.clear()
-	
-	scene = new Scene();
-	camera stuff, etc.
-}
-
 Fix default animation state on skinned meshes with no animation tracks.
 
 EDITOR:
 -------
+
+Optimize hashing and loading in resources browser (it reads twice)
+Reload meshes on the fly
+Control resolution of terrains
+Better terrain tools
+Clone tool
+Asset browser
+Proper reset sequence
 
 Input:
 
@@ -141,8 +135,7 @@ Platform:
 	Multithreaded timing and timing leaps (check SFML tracker / OGRE code for more info.)
 		
 Rendering:
-	
-	Add Z-bias to the BoundingBox debug renderables
+
 	Font handling via FreeType 2
 	Signed distance fonts
 	Bitmap font file format (and converter for some freeware generator tool)

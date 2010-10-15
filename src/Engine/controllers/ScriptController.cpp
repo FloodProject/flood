@@ -15,14 +15,11 @@
 #include "vapor/resources/ResourceManager.h"
 
 #include "vapor/scene/Node.h"
-#include "vapor/scene/Model.h"
-#include "vapor/scene/Camera.h"
+#include "vapor/Engine.h"
 
 #include "vapor/input/InputManager.h"
 #include "vapor/input/Keyboard.h"
 #include "vapor/input/Mouse.h"
-
-#include "vapor/Engine.h"
 
 #include <swigluarun.h>
 #include <lua.hpp>
@@ -99,7 +96,7 @@ void ScriptController::createState()
 
 #define BIND_COMPONENT(var, type)						\
 	bindType(module, var, "vapor::"TOSTRING(type)" *",	\
-	node->getComponent<type>().get());
+	node->getComponent<Component>(TOSTRING(type)).get());
 
 void ScriptController::bindNode()
 {

@@ -9,6 +9,7 @@
 #include "PCH.h"
 #include "ResourcesPlugin.h"
 #include "ResourcesPage.h"
+#include "ResourcesBrowser.h"
 #include "Editor.h"
 #include "EditorIcons.h"
 
@@ -57,6 +58,18 @@ void ResourcesPlugin::onPluginEnable()
 		Log::warn( "Could not add page to notebook" );
 
 	notebookCtrl->Refresh();
+
+	wxToolBar* toolBar = editor->getToolbar();
+
+	resourcesBrowserButton = toolBar->AddTool(
+		wxID_ANY, "Resources Browser", iconPackage );
+	addTool( resourcesBrowserButton );
+
+	toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
+		&ResourcesPlugin::onBrowserButtonClick,
+		this, resourcesBrowserButton->GetId() );
+
+	resourcesBrowser = new ResourcesBrowser( editor );
 }
 
 //-----------------------------------//
@@ -64,6 +77,14 @@ void ResourcesPlugin::onPluginEnable()
 void ResourcesPlugin::onPluginDisable()
 {
 	removePage( resourcesPage );
+}
+
+//-----------------------------------//
+
+void ResourcesPlugin::onBrowserButtonClick(wxCommandEvent& event)
+{
+	resourcesBrowser->scanFiles();
+	resourcesBrowser->Show();
 }
 
 //-----------------------------------//

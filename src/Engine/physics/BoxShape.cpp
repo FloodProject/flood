@@ -32,6 +32,7 @@ BoxShape::BoxShape()
 
 BoxShape::~BoxShape()
 {
+	removeBody();
 	delete boxShape;
 }
 

@@ -13,8 +13,6 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-const std::string& GizmoTranslate::type = "GizmoTranslate";
-
 // Gizmo cone base color.
 static const float BASE_FACTOR = 0.5f;
 

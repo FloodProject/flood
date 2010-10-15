@@ -25,21 +25,20 @@ public:
 
 	Keyboard();
 
-	// Returns the current state of the keys.
-	GETTER(KeyState, const std::vector<bool>&, keyState)
-
 	// Checks if the given key is pressed.
 	bool isKeyPressed( Keys::Enum keyCode ) const;
 
 	// Resets the keys state.
 	void resetKeys();
 
-	//-----------------------------------//
-	// Events
-	//-----------------------------------//
+	// Returns the current state of the keys.
+	GETTER(KeyState, const std::vector<bool>&, keyState)
 
-	fd::delegate< void( const KeyEvent& ) > onKeyPress;
-	fd::delegate< void( const KeyEvent& ) > onKeyRelease;
+	// Event is sent when a key is pressed.
+	fd::delegate< void(const KeyEvent&) > onKeyPress;
+
+	// Event is sent when a key is released.
+	fd::delegate< void(const KeyEvent&) > onKeyRelease;
 
 private:
 	

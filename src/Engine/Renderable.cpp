@@ -26,7 +26,7 @@ Renderable::Renderable( PolygonType::Enum type,
 	: type( type )
 	, vb( vb )
 	, ib( ib )
-	, mat( mat )
+	, material( mat )
 	, mode( PolygonMode::Solid )
 { }
 
@@ -37,7 +37,7 @@ Renderable::Renderable( PolygonType::Enum type,
 						const MaterialPtr& mat )
 	: type( type )
 	, vb( vb )
-	, mat( mat )
+	, material( mat )
 	, mode( PolygonMode::Solid )
 { }
 
@@ -45,10 +45,10 @@ Renderable::Renderable( PolygonType::Enum type,
 
 bool Renderable::bind()
 {
-	if( !mat || !vb )
+	if( !material || !vb )
 		return false;
 
-	mat->bind();
+	material->bind();
 
 	if( !vb->isBuilt() )
 		vb->build();
@@ -70,14 +70,14 @@ bool Renderable::bind()
 
 bool Renderable::unbind()
 {
-	if( !mat || !vb )
+	if( !material || !vb )
 		return false;
 
 	if( ib )
 		ib->unbind();
     
 	vb->unbind();
-	mat->unbind();
+	material->unbind();
 
 	return true;
 }

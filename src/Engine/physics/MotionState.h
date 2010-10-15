@@ -7,8 +7,24 @@
 ************************************************************************/
 
 #include <BulletCollision/CollisionShapes/btCollisionShape.h>
+#include "vapor/physics/MeshShape.h"
 
 namespace vapor {
+
+//-----------------------------------//
+
+static Vector3 getOffset(const NodePtr& node)
+{
+	ShapePtr shape = node->getTypedComponent<Shape>();
+
+	if( shape->getInstanceType().is<MeshShape>() )
+		return Vector3::Zero;
+
+	const TransformPtr& transform = node->getTransform();
+	const BoundingBox& box = transform->getWorldBoundingVolume();
+
+	return box.max - box.getCenter();
+}
 
 //-----------------------------------//
 
@@ -23,7 +39,10 @@ public:
 	BodyMotionState(const TransformPtr& transform)
 		: transform(transform)
 		, ignoreTransform(false)
-	{ }
+	{
+		offset = getOffset(transform->getNode()) * Vector3::UnitY;
+		//centerOffset.setOrigin( Convert::toBullet(offset) );
+	}
 
 	~BodyMotionState()
 	{ }
@@ -31,6 +50,7 @@ public:
     virtual void getWorldTransform(btTransform& worldTransform) const
 	{
 		worldTransform = Convert::toBullet(transform);
+		//worldTransform.setOrigin( worldTransform.getOrigin() + Convert::toBullet(offset) );
     }
 
     virtual void setWorldTransform(const btTransform& worldTransform)
@@ -38,6 +58,8 @@ public:
 		Convert::fromBullet(worldTransform, transform);
 		ignoreTransform = true;
     }
+
+	Vector3 offset;
 
 	// Object transform.
 	TransformPtr transform;

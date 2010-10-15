@@ -23,7 +23,7 @@ namespace vapor {
  * Mesh resources contain 3D geometry data.
  */
 
-class Mesh : public Resource
+class VAPOR_API Mesh : public Resource
 {
 	DECLARE_CLASS_()
 

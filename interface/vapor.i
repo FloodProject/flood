@@ -9,7 +9,8 @@
 %module vapor
 
 %begin %{
-#include "PCH.h"
+#include "vapor/PCH.h"
+#include "vapor/Engine.h"
 %}
 
 %import "base.i"

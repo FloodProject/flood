@@ -36,7 +36,7 @@ public:
 	virtual bool decode(const File&, Resource* res);
 
 	// Gets the name of this codec.
-	GETTER(Name, const std::string, "Milkshape3D")
+	GETTER(Name, const std::string, "MS3D")
 
 	// Gets the list of extensions recognized by this resource handler.
 	GETTER(Extensions, ExtensionList&, extensions)

@@ -23,9 +23,6 @@ public:
 	// Builds the gizmo geometry.
 	virtual void buildGeometry();
 
-	// Returns the name of this component.
-	//GETTER(Type, const std::string&, type)
-
 protected:
 
 	// Highlights an axis to provide visual feedback of handle selection.
@@ -42,8 +39,6 @@ protected:
 
 	// Lines geometry.
 	VertexBufferPtr lines;
-
-	static const std::string& type;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( GizmoRotate );

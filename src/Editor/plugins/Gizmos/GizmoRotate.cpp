@@ -14,10 +14,6 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-const std::string& GizmoRotate::type = "GizmoRotate";
-
-//-----------------------------------//
-
 GizmoRotate::GizmoRotate( const NodePtr& node, const CameraWeakPtr& camera )
 	: Gizmo( node, camera )
 { }

@@ -40,9 +40,6 @@ public:
 
 	// CLOUDS
 
-	// Sets the texture of the clouds layer.
-	void setClouds( const ImagePtr& clouds );
-
 	// Enables or disables the clouds layer.
 	ACESSOR( CloudsVisible, bool, showClouds );
 
@@ -53,8 +50,6 @@ public:
 	
 	// Gets the position of the sun.
 	Vector3 getSunPosition();
-	
-	//void setStarsVisible( bool enable );
 
 	// Gets called each cycle to update the component.
 	void update( double delta );
@@ -72,6 +67,12 @@ protected:
 
 	// Generates the sky bodies.
 	void generateBodies();
+
+	// Updates clouds.
+	void updateClouds();
+
+	// Transforms noise into clouds.
+	float cloudsExpCurve(float v);
 
 	// Field change callback.
 	void onFieldChanged(const Field& field);
@@ -93,8 +94,19 @@ protected:
 	// Show clouds.
 	bool showClouds;
 
+	// Clouds cover.
+	float cloudsCover;
+
+	// Clouds cover.
+	float cloudsSharpness;
+
 	// Image of the clouds.
-	ImagePtr imgClouds;
+	ImagePtr clouds;
+
+	int cloudsNoiseSeed;
+
+	// Unprocessed clouds noise.
+	std::vector<float> cloudsNoise;
 
 	// Celestial bodies geometry.
 	TransformPtr sun;

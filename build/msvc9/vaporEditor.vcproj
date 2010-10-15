@@ -158,7 +158,7 @@
 				AdditionalDependencies="jsoncpp_vc9.lib zlib.lib physfs.lib wxmsw29ud_core.lib wxbase29ud.lib wxpngd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib wininet.lib vaporEngine.lib opengl32.lib glew32s.lib OpenAL32.lib vorbisfile_static.lib ogg_static.lib vorbis_static.lib sfml-system-s.lib sfml-window-s.lib lua5.1-release.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-$(ConfigurationName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)lib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)dep\jsoncpp\lib&quot;;&quot;$(SolutionDir)dep\vld\lib&quot;;&quot;$(SolutionDir)dep\physfs-2.0.0\lib\release&quot;;&quot;$(SolutionDir)dep\zlib\lib&quot;;&quot;$(SolutionDir)dep\SDL-1.3\lib&quot;;&quot;$(SolutionDir)dep\SFML\lib\vc2008&quot;;&quot;$(SolutionDir)dep\glew\lib&quot;;&quot;$(SolutionDir)dep\libvorbis-1.2.0\lib&quot;;&quot;$(SolutionDir)dep\libogg-1.1.3\lib&quot;;&quot;$(SolutionDir)dep\OpenAL 1.1 SDK\libs\Win32&quot;;&quot;$(SolutionDir)dep\luabind\lib&quot;;&quot;$(SolutionDir)dep\lua\lib&quot;;C:\wxWidgets\lib\vc_lib;&quot;$(SolutionDir)dep\havok\Lib\win32_net_9-0\release_multithreaded_dll&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)lib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)dep\boost\lib&quot;;&quot;$(SolutionDir)dep\vld\lib&quot;;&quot;$(SolutionDir)dep\jsoncpp\lib&quot;;&quot;$(SolutionDir)dep\physfs\lib\release&quot;;&quot;$(SolutionDir)dep\bullet\lib&quot;;&quot;$(SolutionDir)dep\zlib\lib&quot;;&quot;$(SolutionDir)dep\glew\lib&quot;;&quot;$(SolutionDir)dep\vorbis\lib&quot;;&quot;$(SolutionDir)dep\ogg\lib&quot;;&quot;$(SolutionDir)dep\openal\libs\Win32&quot;;&quot;$(SolutionDir)dep\sfml\lib\vc2008&quot;;&quot;$(SolutionDir)dep\luabind\lib&quot;;&quot;$(SolutionDir)dep\lua\lib&quot;"
 				IgnoreDefaultLibraryNames="libcmt.lib"
 				GenerateDebugInformation="false"
 				SubSystem="2"
@@ -215,8 +215,8 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="-Zm110"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\jsoncpp\include&quot;;&quot;$(SolutionDir)dep\boost_1_39_0\&quot;;&quot;$(SolutionDir)dep\fd_delegate\include&quot;;&quot;$(SolutionDir)\dep\OpenAL 1.1 SDK\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\vld\include&quot;;C:\wxWidgets\include;C:\wxWidgets\include\msvc;&quot;$(SolutionDir)dep\havok\Source&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;__WXDEBUG__;__WXMSW__;WXUSINGDLL;_UNICODE;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)src\Editor\inc&quot;;&quot;$(SolutionDir)dep\jsoncpp\include&quot;;&quot;$(SolutionDir)dep\boost&quot;;&quot;$(SolutionDir)dep\fd_delegate\include&quot;;&quot;$(SolutionDir)dep\lua\include&quot;;&quot;$(SolutionDir)dep\openal\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\vld\include&quot;;C:\wxWidgets\include;C:\wxWidgets\include\msvc"
+				PreprocessorDefinitions="WIN32;_DEBUG;__WXDEBUG__;__WXMSW__;_UNICODE;_WINDOWS;VAPOR_API_DLL;VAPOR_IMPORT"
 				MinimalRebuild="true"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
@@ -234,17 +234,17 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				AdditionalIncludeDirectories="C:\wxWidgets-2.9.0\include"
+				AdditionalIncludeDirectories="C:\wxWidgets\include"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="zlib.lib physfs.lib wxmsw29ud_core.lib wxbase29ud.lib wxpngd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib wininet.lib vaporEngine.lib opengl32.lib glu32.lib glew32s.lib OpenAL32.lib vorbisfile_static.lib ogg_static.lib vorbis_static.lib luabindd.lib sfml-system-s-d.lib sfml-window-s-d.lib lua5.1-release.lib hkBase.lib hkSceneData.lib hkInternal.lib hkGeometryUtilities.lib hkCompat.lib hkpCollide.lib hkpConstraintSolver.lib hkpDynamics.lib hkpInternal.lib hkpUtilities.lib hkVisualize.lib hkSerialize.lib hkpVehicle.lib"
+				AdditionalDependencies="vaporEngine.lib wxmsw29ud_core.lib wxbase29ud.lib wxpngd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib wininet.lib opengl32.lib lua.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-$(ConfigurationName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)lib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)dep\vld\lib&quot;;&quot;$(SolutionDir)dep\physfs-2.0.0\lib\release&quot;;&quot;$(SolutionDir)dep\zlib\lib&quot;;&quot;$(SolutionDir)dep\glew\lib&quot;;&quot;$(SolutionDir)dep\libvorbis-1.2.0\lib&quot;;&quot;$(SolutionDir)dep\libogg-1.1.3\lib&quot;;&quot;$(SolutionDir)dep\OpenAL 1.1 SDK\libs\Win32&quot;;&quot;$(SolutionDir)dep\sfml\lib\vc2008&quot;;&quot;$(SolutionDir)dep\luabind\lib&quot;;&quot;$(SolutionDir)dep\lua\lib&quot;;C:\wxWidgets\lib\vc_dll;&quot;$(SolutionDir)dep\havok\Lib\win32_net_9-0\hybrid_multithreaded_dll&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)lib\$(ConfigurationName)&quot;;C:\wxWidgets\lib\vc_lib;&quot;$(SolutionDir)dep\lua\lib&quot;"
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
@@ -596,6 +596,14 @@
 				Name="Resources"
 				>
 				<File
+					RelativePath="..\..\src\Editor\plugins\Resources\ResourcesBrowser.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Editor\plugins\Resources\ResourcesBrowser.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Editor\plugins\Resources\ResourcesPage.cpp"
 					>
 				</File>
@@ -710,44 +718,8 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Bindings"
+			Name="Settings"
 			>
-			<File
-				RelativePath="..\..\interface\vapor_wrap.cxx"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Interface"
-			>
-			<File
-				RelativePath="..\..\interface\base.i"
-				>
-			</File>
-			<File
-				RelativePath="..\..\interface\input.i"
-				>
-			</File>
-			<File
-				RelativePath="..\..\interface\math.i"
-				>
-			</File>
-			<File
-				RelativePath="..\..\interface\render.i"
-				>
-			</File>
-			<File
-				RelativePath="..\..\interface\resources.i"
-				>
-			</File>
-			<File
-				RelativePath="..\..\interface\scene.i"
-				>
-			</File>
-			<File
-				RelativePath="..\..\interface\vapor.i"
-				>
-			</File>
 		</Filter>
 		<File
 			RelativePath="..\..\src\Editor\Editor.cpp"

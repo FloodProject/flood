@@ -50,8 +50,8 @@ Camera::Camera( const Camera& rhs )
 
 Camera::~Camera()
 {
-	assert( transform != nullptr );
-	transform->onTransform -= fd::bind( &Camera::onTransform, this );
+	if( transform )
+		transform->onTransform -= fd::bind( &Camera::onTransform, this );
 }
 
 //-----------------------------------//
@@ -222,9 +222,10 @@ void Camera::cull( RenderBlock& block, const NodePtr& node ) const
 		if( !cmp.second->isDebugRenderableVisible() )
 			continue;
 
+		const RenderablePtr& renderable = cmp.second->getDebugRenderable();
+	
 		RenderState renderState;
-		
-		renderState.renderable = cmp.second->getDebugRenderable();
+		renderState.renderable = renderable;
 		renderState.modelMatrix = transform->getAbsoluteTransform();
 		renderState.group = RenderStage::PostTransparency;
 		renderState.priority = 0;

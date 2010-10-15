@@ -125,7 +125,8 @@ std::vector<byte> NativeFile::read() const
 	std::vector<byte> data;
 	data.resize(size);
 
-	read(&data.front(), size);
+	if(size > 0)
+		read(&data.front(), size);
 
 	return data;
 }

@@ -18,6 +18,41 @@ namespace vapor {
 
 //-----------------------------------//
 
+bool Serializer::openFromFile( const std::string& name )
+{
+	LocaleSaveRestore c;
+
+	NativeFile file( name, FileMode::Read );
+
+	if( !file.open() )
+		return false;
+
+	std::string str = file.readString();
+
+	Json::Reader jsonReader;
+	bool success = jsonReader.parse(str, rootValue, false);
+	
+	return success;
+}
+
+//-----------------------------------//
+
+void Serializer::saveToFile( const std::string& name )
+{
+	// Always switch to the platform independent "C" locale when writing
+	// JSON, else the library will format the data erroneously.
+	LocaleSaveRestore c;
+
+	NativeFile file( name, FileMode::Write );
+
+	if( !file.open() )
+		return;
+
+	file.write( rootValue.toStyledString() );
+}
+
+//-----------------------------------//
+
 void Serializer::serializeScene(const ScenePtr& scene)
 {
 	rootValue.clear();
@@ -307,41 +342,6 @@ void Serializer::setFieldFromValue( const Field& field, void* object, const Json
 	else
 	//-----------------------------------//
 		assert( false );
-}
-
-//-----------------------------------//
-
-bool Serializer::openFromFile( const std::string& name )
-{
-	LocaleSaveRestore c;
-
-	NativeFile file( name, FileMode::Read );
-
-	if( !file.open() )
-		return false;
-
-	std::string str = file.readString();
-
-	Json::Reader jsonReader;
-	bool success = jsonReader.parse(str, rootValue, false);
-	
-	return success;
-}
-
-//-----------------------------------//
-
-void Serializer::saveToFile( const std::string& name )
-{
-	// Always switch to the platform independent "C" locale when writing
-	// JSON, else the library will format the data erroneously.
-	LocaleSaveRestore c;
-
-	NativeFile file( name, FileMode::Write );
-
-	if( !file.open() )
-		return;
-
-	file.write( rootValue.toStyledString() );
 }
 
 //-----------------------------------//

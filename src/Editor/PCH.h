@@ -33,6 +33,7 @@
 #include <wx/spinctrl.h>
 #include <wx/filectrl.h>
 #include <wx/splitter.h>
+#include <wx/progdlg.h>
 
 //---------------------------------------------------------------------//
 // Image Conversion Utilities

@@ -33,7 +33,7 @@ typedef int	ResourceHandle; // Note: unused for now.
  * only be fully loaded when the resource status changes to loaded.
  */
 
-struct ResourceStatus
+struct VAPOR_API ResourceStatus
 {
 	enum Enum
 	{
@@ -52,7 +52,7 @@ struct ResourceStatus
  * related resources together, and for managing the data.
  */
 
-struct ResourceGroup
+struct VAPOR_API ResourceGroup
 {
 	enum Enum
 	{

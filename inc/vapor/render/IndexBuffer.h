@@ -60,8 +60,7 @@ public:
 	bool unbind();
 
 	// Updates the internal IBO with current values for indices.
-	bool build( BufferUsage::Enum bufferUsage = BufferUsage::Static, 
-		BufferAccess::Enum bufferAccess = BufferAccess::Write );
+	bool build();
 
 	// Returns true if the vertex buffer is built, false otherwhise.
 	bool isBuilt() const;

@@ -120,7 +120,7 @@ protected:
 
 	// Contents of the file.
 	std::vector<byte> filebuf;
-	long index;
+	unsigned long index;
 
 	// Mesh data structures.
 	std::vector<ms3d_vertex_t*> vertices;

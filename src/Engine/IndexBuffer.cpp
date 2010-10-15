@@ -64,7 +64,7 @@ bool IndexBuffer::unbind()
 
 //-----------------------------------//
 
-bool IndexBuffer::build( BufferUsage::Enum bU, BufferAccess::Enum bA )
+bool IndexBuffer::build()
 {
 	bind();
 

@@ -16,24 +16,13 @@ namespace vapor {
 //-----------------------------------//
 
 /**
- * Use this to issue debug messages.
- * Doesn't do anything on release builds.
+ * Convenience functions to log in the main engine stream.
  */
 
 namespace Log
 {
 	VAPOR_API void debug(const char* msg, ...);
 	VAPOR_API void debug(const std::string& msg);
-}
-
-//-----------------------------------//
-
-/**
- * Convenience functions to log in the main engine stream.
- */
-
-namespace Log
-{
 	VAPOR_API void info(const char* msg, ...);
 	VAPOR_API void warn(const char* msg, ...);
 	VAPOR_API void error(const char* msg, ...);
@@ -54,7 +43,6 @@ namespace LogLevel
 		Error
 	};
 
-	// Gets an error string
 	std::string toString( LogLevel::Enum );
 };
 
@@ -72,45 +60,52 @@ public:
 	Logger(const std::string& title, const std::string& filename);
 	~Logger();
 	
-	// Logging methods for each message category.
+	// Logs an information to the stream.
 	void info(const char* msg, ...);
+
+	// Logs a warning to the stream.
 	void warn(const char* msg, ...);
+
+	// Logs an error to the stream.
 	void error(const char* msg, ...);
 
 	// Low-level logging implementation.
-	void write(const LogLevel::Enum level, 
-		const char* msg, va_list args);
-
-	// Gets/sets the global engine logger.
-	STATIC_ACESSOR(Logger, Logger*, engineLog)
+	void write(const LogLevel::Enum level, const char* msg, va_list args);
 
 	// Spawns a new message box dialog.
 	static void createMessageDialog(const std::string& msg, 
 		const LogLevel::Enum level = LogLevel::Warning);
 
-	//-----------------------------------//
+protected:
+		
+	// Writes the header to the log.
+	void writeHeader(const std::string& title);
+	
+	// Writes the footer to the log.
+	void writeFooter();
+
+	// Keeps track of elapsed time.
+	Timer timer;
+
+	// Keeps track of zebra coloring the table.
+	bool even;
+
+	// Mutex lock to synchronize access.
+	THREAD(boost::mutex lock;)
+
+public:
+
+	// Gets the global engine logger.
+	static Logger* getLogger() { return engineLog; }
+
+	// Gets the global engine logger.
+	static SETTER(Logger, Logger*, engineLog)
 
 	// This controls if debug is output.
 	static bool showDebug;
 
 	// Global engine logger.
 	static Logger* engineLog;
-
-protected:
-		
-	// Writes the header and footer to the log.
-	void writeHeader(const std::string& title);
-	void writeFooter();
-
-	// Timer used for data/time control
-	Timer timer;
-
-	// Used for zebra coloring the table.
-	bool even;
-
-#ifdef VAPOR_THREADING
-	boost::mutex mut;
-#endif
 };
 
 //-----------------------------------//

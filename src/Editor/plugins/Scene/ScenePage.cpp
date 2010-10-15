@@ -259,7 +259,7 @@ void ScenePage::addComponent( wxTreeItemId id, ComponentPtr component )
 	const Type& type = component->getInstanceType();
 
 	wxTreeItemId componentId = 
-		treeCtrl->AppendItem( id, type.getName(), icons[&type] );
+treeCtrl->AppendItem( id, type.getName(), icons[&type] );
 
 	NodeItemData* data = new NodeItemData();
 	data->component = component;
@@ -550,6 +550,9 @@ wxMenu* ScenePage::createMenuAttachment(const MeshPtr& mesh)
 
 void ScenePage::populateComponentItemMenu(wxMenu& menu, const ComponentPtr& component)
 {
+	if( !component )
+		return;
+
 	const Type& type = component->getInstanceType();
 	menu.SetTitle( type.getName() );
 
@@ -698,8 +701,8 @@ void ScenePage::onMenuSelected( wxCommandEvent& event )
 {
 	int id = event.GetId();
 
-	//if( id < 0 )
-	//	return;
+	if( id == wxID_NONE )
+		return;
 
 	ScenePtr scene = weakScene.lock();
 	const NodePtr& node = getNodeFromTreeId( menuItemId );
@@ -813,14 +816,16 @@ void ScenePage::onComponentAdd(wxCommandEvent& event )
 	
 	int id = event.GetId();
 	
-	//if( id < 0 )
-	//	return;
+	if( id == wxID_NONE )
+		return;
 
 	const wxString& name =  currentMenu->GetLabelText(id); 
 	
 	TypeRegistry& registry = TypeRegistry::getInstance();
 	const Type* type = registry.getType( (std::string) name );
-	assert( type != nullptr );
+	
+	if( !type )
+		return;
 
 	ComponentPtr component;
 
@@ -924,6 +929,8 @@ void ScenePage::onDragEnd( wxTreeEvent& event )
 
 void ScenePage::onContextMenu( wxContextMenuEvent& event )
 {
+	menuItemId = wxTreeItemId();
+
 	wxMenu menu("Scene");
 	menu.Append(ID_MenuSceneNodeTerrain, "Create &Terrain");
 

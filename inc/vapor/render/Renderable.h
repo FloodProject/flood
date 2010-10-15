@@ -96,7 +96,7 @@ public:
 	ACESSOR(IndexBuffer, IndexBufferPtr, ib)
 
     // Gets/sets the material associated with the renderable.
-    ACESSOR(Material, MaterialPtr, mat)
+    ACESSOR(Material, MaterialPtr, material)
 
     // Gets/sets the render mode of this renderable.
 	ACESSOR(PolygonMode, PolygonMode::Enum, mode)
@@ -119,7 +119,7 @@ protected:
     IndexBufferPtr ib;
     
 	// Material of this renderable.
-	MaterialPtr mat;
+	MaterialPtr material;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Renderable );

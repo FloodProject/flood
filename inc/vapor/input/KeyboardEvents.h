@@ -25,7 +25,7 @@ struct Keys
 {
 	enum Enum
 	{
-		// Alpha keys
+		// Alphabet keys
 		A = 'A',
 		B = 'B',
 		C = 'C',

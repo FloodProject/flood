@@ -45,6 +45,36 @@ Events::~Events()
 {
 	wxToolBar* toolBar = editor->getToolbar();
 	toolBar->PopEventHandler();
+
+	pluginManager->onPluginEnableEvent -=
+		fd::bind( &Events::onPluginEnableEvent, this );
+	
+	pluginManager->onPluginDisableEvent -=
+		fd::bind( &Events::onPluginDisableEvent, this );
+
+	Engine* engine = editor->getEngine();
+	InputManager* input = engine->getInputManager();
+
+	// Unsubscribe from all mouse events.
+	Mouse* const mouse = input->getMouse();
+
+	mouse->onMouseMove -=
+		fd::bind( &Events::onMouseMove, this );
+	
+	mouse->onMouseDrag -=
+		fd::bind( &Events::onMouseDrag, this );
+	
+	mouse->onMouseButtonPress -=
+		fd::bind( &Events::onMousePress, this );
+	
+	mouse->onMouseButtonRelease -=
+		fd::bind( &Events::onMouseRelease, this );
+	
+	mouse->onMouseEnter	-=
+		fd::bind( &Events::onMouseEnter, this );
+	
+	mouse->onMouseExit -=
+		fd::bind( &Events::onMouseLeave, this );
 }
 
 //-----------------------------------//

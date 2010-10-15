@@ -26,9 +26,6 @@ public:
 	// Converts a color to a specific gizmo axis.
 	virtual GizmoAxis::Enum getAxis(Color&);
 
-	// Returns the name of this component.
-	//GETTER(Type, const std::string&, type)
-
 protected:
 
 	// Highlights an axis to provide visual feedback of handle selection.
@@ -49,8 +46,6 @@ protected:
 
 	// Cones geometry.
 	VertexBufferPtr cones;
-
-	static const std::string& type;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( GizmoTranslate );

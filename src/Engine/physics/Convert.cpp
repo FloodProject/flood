@@ -48,9 +48,20 @@ btVector3 Convert::toBullet(const Vector3& vec )
 
 //-----------------------------------//
 
+btQuaternion Convert::toBullet(const Quaternion& quat )
+{
+	return btQuaternion(
+		quat.x,
+		quat.y,
+		quat.z,
+		quat.w );
+}
+
+//-----------------------------------//
+
 btVector3 Convert::toBullet(const BoundingBox& box)
 {
-	Vector3 extents = box.max-box.getCenter();
+	Vector3 extents = box.max - box.getCenter();
 	return toBullet(extents);
 }
 
@@ -64,46 +75,29 @@ static Vector3 getOffset(const NodePtr& node)
 		return Vector3::Zero;
 
 	const TransformPtr& transform = node->getTransform();
-	const BoundingBox& box = transform->getBoundingVolume();
-	const Vector3& scale = transform->getScale();
+	const BoundingBox& box = transform->getWorldBoundingVolume();
 
-	Vector3 offset = (box.max - box.min) / 2;
-	offset = (offset + box.min) * scale;
-
-	return offset;
+	return box.max - box.getCenter();
 }
 
 //-----------------------------------//
 
 void Convert::fromBullet( const btTransform& bullet, const TransformPtr& transform )
 {
-	Vector3 offset = getOffset(transform->getNode());
-
-	Vector3 origin = fromBullet( bullet.getOrigin() );
-	transform->setPosition( origin-offset );
-
-	Quaternion quat = Convert::fromBullet(bullet.getRotation());
-	transform->setRotation(quat);
+	Vector3 offset = getOffset(transform->getNode()) * Vector3::UnitY;
+	transform->setPosition( fromBullet(bullet.getOrigin()) - offset );
+	transform->setRotation( fromBullet(bullet.getRotation()) );
 }
 
 //-----------------------------------//
 
 btTransform Convert::toBullet(const TransformPtr& transform)
 {
-	const Vector3& pos = transform->getPosition();
-	Vector3 offset = getOffset( transform->getNode() );
+	Vector3 offset = getOffset(transform->getNode()) * Vector3::UnitY;
 	
-	const Matrix4x3& abs = transform->getAbsoluteTransform();
-	Matrix4x4 trs = Matrix4x4(abs);
-
 	btTransform startTransform;
-
-	trs.m11 = 1;
-	trs.m22 = 1;
-	trs.m33 = 1;
-
-	startTransform.setFromOpenGLMatrix(&trs.m11);
-	startTransform.setOrigin(Convert::toBullet(pos+offset));
+	startTransform.setOrigin( toBullet(transform->getPosition() + offset) );
+	startTransform.setRotation( toBullet(transform->getRotation()) );
 
 	return startTransform;
 }

@@ -9,8 +9,9 @@
 #pragma once
 
 #include "vapor/scene/Geometry.h"
+#include "vapor/resources/Mesh.h"
 
-FWD_DECL_INTRUSIVE(Mesh)
+//FWD_DECL_INTRUSIVE(Mesh)
 FWD_DECL_INTRUSIVE(Bone)
 FWD_DECL_INTRUSIVE(Animation)
 FWD_DECL_INTRUSIVE(Attachment)

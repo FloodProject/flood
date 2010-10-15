@@ -14,10 +14,6 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-const std::string& GizmoScale::type = "GizmoScale";
-
-//-----------------------------------//
-
 GizmoScale::GizmoScale( const NodePtr& node, const CameraWeakPtr& camera )
 	: Gizmo( node, camera )
 { }

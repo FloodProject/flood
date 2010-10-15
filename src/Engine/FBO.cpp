@@ -134,6 +134,8 @@ void FBO::attachRenderTexture(const TexturePtr& tex)
 	glHasError( "Could not attach texture into framebuffer object" );
 	
 	textureBuffers.push_back( tex );
+
+	unbind();
 }
 
 //-----------------------------------//

@@ -7,29 +7,16 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/physics/Shape.h"
-#include "vapor/physics/Body.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT_ABSTRACT(Shape, Component)
-END_CLASS()
-
-//-----------------------------------//
-
-Shape::~Shape()
-{ }
-
-//-----------------------------------//
-
-void Shape::removeBody()
+namespace Hash
 {
-	const BodyPtr& body = weakBody.lock();
-
-	if( body )
-		body->removeWorld();
+	// Hashes some data using the Murmur2 hash.
+	// http://sites.google.com/site/murmurhash/
+	uint Murmur2( const std::vector<byte>& data, uint seed );
 }
 
 //-----------------------------------//

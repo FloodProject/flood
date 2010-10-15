@@ -22,7 +22,7 @@ namespace vapor {
  * For example, you can attach a sword to the hand of a ninja.
  */
 
-class Attachment : public ReferenceCounted
+class VAPOR_API Attachment : public ReferenceCounted
 {
 public:
 

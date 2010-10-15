@@ -85,8 +85,11 @@ void CharacterController::_update( double delta )
 	PhysicsManager* physics = engine->getPhysicsManager();
 	btDiscreteDynamicsWorld* world = physics->getWorld();
 
-	controller->updateAction(world, delta);
-	updateCharacterTransform();
+	if( physics->getSimulation() )
+	{
+		controller->updateAction(world, delta);
+		updateCharacterTransform();
+	}
 
 	InputManager* input = engine->getInputManager();
 	Keyboard* keyboard = input->getKeyboard();

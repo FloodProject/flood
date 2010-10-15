@@ -29,7 +29,6 @@ ConsoleFrame::ConsoleFrame( Engine* engine, wxWindow* parent,
 void ConsoleFrame::InitControl()
 {
 	textCtrl = new ConsoleTextCtrl( engine, this );
-
 	Bind( wxEVT_CLOSE_WINDOW, &ConsoleFrame::OnClose, this );
 }
 
@@ -46,7 +45,7 @@ void ConsoleFrame::OnClose(wxCloseEvent& event)
         return;   
     }
 
-    Destroy();  // you may also do: event.Skip();
+    event.Skip();
 }
 
 //-----------------------------------//

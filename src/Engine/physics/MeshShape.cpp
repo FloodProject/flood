@@ -34,7 +34,8 @@ MeshShape::MeshShape()
 //-----------------------------------//
 
 MeshShape::~MeshShape()
-{ 
+{
+	removeBody();
 	delete meshShape;
 }
 

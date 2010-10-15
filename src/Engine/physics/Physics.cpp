@@ -37,7 +37,6 @@ PhysicsManager::PhysicsManager()
     broadphase = new btDbvtBroadphase();
 	dispatcher = new btCollisionDispatcher(config);
 	solver = new btSequentialImpulseConstraintSolver;
-
 	//btGImpactCollisionAlgorithm::registerAlgorithm(dispatcher);
 }
 

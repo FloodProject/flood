@@ -92,8 +92,8 @@ public:
 	// Gets the resources manager.
 	GETTER(ResourceManager, ResourceManager*, resourceManager)
 
-	// Gets the physics manager.
-	GETTER(PhysicsManager, PhysicsManager*, physicsManager)
+	// Gets/sets the physics manager.
+	ACESSOR(PhysicsManager, PhysicsManager*, physicsManager)
 
 	// Gets the main engine logger.
 	GETTER(Logger, Logger*, log)

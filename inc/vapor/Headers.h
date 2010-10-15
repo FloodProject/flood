@@ -21,21 +21,23 @@
 // Math-related Includes
 //---------------------------------------------------------------------//
 
-#include <vapor/math/Math.h>
 #include <vapor/math/Vector2.h>
 #include <vapor/math/Vector3.h>
+#include <vapor/math/Color.h>
 #include <vapor/math/Quaternion.h>
 #include <vapor/math/Ray.h>
 #include <vapor/math/BoundingBox.h>
 #include <vapor/math/BoundingSphere.h>
 #include <vapor/math/Noise.h>
+#include <vapor/math/Hash.h>
+#include <vapor/math/Math.h>
 
 //---------------------------------------------------------------------//
 // Resource-related Includes
 //---------------------------------------------------------------------//
 
 #include <vapor/resources/Image.h>
-#include <vapor/resources/Milkshape3D.h>
+#include <vapor/resources/Mesh.h>
 #include <vapor/resources/Sound.h>
 #include <vapor/resources/Font.h>
 
@@ -77,20 +79,21 @@
 #include <vapor/render/DebugGeometry.h>
 
 //---------------------------------------------------------------------//
-// Controller-related Includes
-//---------------------------------------------------------------------//
-
-#include <vapor/controllers/FirstPersonController.h>
-#include <vapor/controllers/ThirdPersonController.h>
-#include <vapor/controllers/ScriptController.h>
-
-//---------------------------------------------------------------------//
 // Animation-related Includes
 //---------------------------------------------------------------------//
 
 #include <vapor/animation/Animation.h>
 #include <vapor/animation/Skeleton.h>
 #include <vapor/animation/Bone.h>
+#include <vapor/animation/Attachment.h>
+
+//---------------------------------------------------------------------//
+// Controller-related Includes
+//---------------------------------------------------------------------//
+
+#include <vapor/controllers/FirstPersonController.h>
+#include <vapor/controllers/ThirdPersonController.h>
+#include <vapor/controllers/ScriptController.h>
 
 //---------------------------------------------------------------------//
 // Input-related Includes

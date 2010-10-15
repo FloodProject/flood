@@ -10,7 +10,6 @@
 
 #include "vapor/controllers/Controller.h"
 
-
 FWD_DECL_INTRUSIVE(Script)
 
 struct swig_module_info;

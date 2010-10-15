@@ -45,21 +45,21 @@ void ProjectPlugin::onPluginEnable()
 	addTool( toolBar->AddSeparator() );
 
 	wxBitmap iconNew = wxMEMORY_BITMAP(page_empty);
-	newButton = toolBar->AddTool( wxID_ANY, "New", iconNew );
+	newButton = toolBar->AddTool( wxID_ANY, "New", iconNew, "Creates a new scene" );
 	addTool( newButton );
 
 	toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
 		&ProjectPlugin::onNewButtonClick, this, newButton->GetId() );
 
 	wxBitmap iconOpen = wxMEMORY_BITMAP(folder_explore);
-	openButton = toolBar->AddTool( wxID_ANY, "Open", iconOpen );
+	openButton = toolBar->AddTool( wxID_ANY, "Open", iconOpen, "Opens an existing scene" );
 	addTool( openButton );
 
 	toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
 		&ProjectPlugin::onOpenButtonClick, this, openButton->GetId() );
 
 	wxBitmap iconSave = wxMEMORY_BITMAP(disk);
-	saveButton = toolBar->AddTool( wxID_ANY, "Save", iconSave );
+	saveButton = toolBar->AddTool( wxID_ANY, "Save", iconSave, "Save the current scene" );
 	addTool( saveButton );
 
 	toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
@@ -147,6 +147,13 @@ void ProjectPlugin::switchScene(const ScenePtr& scene)
 	unsavedChanges = false;
 
 	Engine* engine = editor->getEngine();
+	delete engine->getPhysicsManager();
+
+	PhysicsManager* physics = new PhysicsManager();
+	physics->createWorld();
+
+	engine->setPhysicsManager(physics);
+	
 	engine->setSceneManager(scene);
 
 	Events* events = editor->getEventManager();
@@ -182,7 +189,7 @@ bool ProjectPlugin::saveScene()
 bool ProjectPlugin::askSaveChanges()
 {
 	if( !unsavedChanges )
-		return false;
+		return true;
 
     int answer = wxMessageBox(
 		"Scene contains unsaved changes. Do you want to save them?",

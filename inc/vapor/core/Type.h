@@ -92,7 +92,7 @@ protected:
 
 //-----------------------------------//
 
-typedef std::map<std::string, const Type*> TypeRegistryMap;
+typedef VAPOR_API std::map<std::string, const Type*> TypeRegistryMap;
 
 /**
  * Stores a globally acessible mapping of type names and their instances.
@@ -100,7 +100,7 @@ typedef std::map<std::string, const Type*> TypeRegistryMap;
  * by its name. Things like serialization need this information.
  */
 
-class TypeRegistry
+class VAPOR_API TypeRegistry
 {
 public:
 
@@ -113,6 +113,7 @@ public:
 	// Maps all the type names to their type instances.
 	TypeRegistryMap registeredTypes;
 
+	// Gets the instance of the registry.
 	static TypeRegistry& getInstance();
 };
 

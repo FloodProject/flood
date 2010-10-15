@@ -33,7 +33,13 @@ public:
 
 protected:
 
+	// Field change callback.
+	void onFieldChanged(const Field& field);
+
+	// Height of the capsule.
 	float height;
+
+	// Radius of the capsule.
 	float radius;
 
 	// Bullet box shape.

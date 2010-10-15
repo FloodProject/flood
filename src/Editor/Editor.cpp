@@ -94,8 +94,8 @@ EditorFrame::EditorFrame(const wxString& title)
 
 EditorFrame::~EditorFrame()
 {
-	delete pluginManager;
 	delete eventManager;
+	delete pluginManager;
 	delete undoManager;
 	mainSplitter->Destroy();
 
@@ -154,10 +154,6 @@ void EditorFrame::createPlugins()
 
 //-----------------------------------//
 
-extern "C" {
-	int luaopen_vapor(lua_State* L);
-}
-
 void EditorFrame::createEngine()
 {
 	engine = Engine::getInstancePtr();
@@ -167,12 +163,6 @@ void EditorFrame::createEngine()
 	// Mount the editor default media VFS directories.
 	FileSystem* fs = engine->getFileSystem();
 	fs->mountDefaultLocations();
-
-#ifdef VAPOR_SCRIPTING_LUA
-	State* state = engine->getScriptManager()->getState();
-	#pragma TODO("SWIG Lua bindings should be done on the engine")
-	luaopen_vapor( state->getLuaState() );
-#endif
 }
 
 //-----------------------------------//

@@ -88,11 +88,11 @@ BoundingBox BoundingBox::transform( const Matrix4x3& mat ) const
 {
 	BoundingBox box;
 	box.reset();
-	
+
 	for(int i = 0; i < 8; i++)
 	{
-		Vector3 pt = mat*getCorner(i);
-		box.add(pt);
+		Vector3 point = mat*getCorner(i);
+		box.add(point);
 	}
 	
 	return box;

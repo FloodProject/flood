@@ -31,5 +31,5 @@ void main(void)
 	//vp_TexCoord[1] += vp_TexScroll;
 	
 	vec4 clouds = texture2D(vp_Texture0, TexCoord);
-	gl_FragColor = mix(gl_Color, clouds, clouds.a);
+	gl_FragColor = mix(gl_Color, vec4(1.0,1.0,1.0,1.0), clouds.a);
 }

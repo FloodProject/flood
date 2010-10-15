@@ -45,12 +45,12 @@ void UndoPlugin::onPluginEnable()
 	addTool( toolBar->AddSeparator() );
 
 	wxBitmap iconUndo = wxMEMORY_BITMAP(arrow_undo);
-	undoButton = toolBar->AddTool( wxID_UNDO, "Undo", iconUndo );
+	undoButton = toolBar->AddTool( wxID_UNDO, "Undo", iconUndo, "Undo" );
 	addTool(undoButton);
 	toolBar->EnableTool( undoButton->GetId(), false );
 
 	wxBitmap iconRedo = wxMEMORY_BITMAP(arrow_redo);
-	redoButton = toolBar->AddTool( wxID_REDO, "Redo", iconRedo );
+	redoButton = toolBar->AddTool( wxID_REDO, "Redo", iconRedo, "Redo" );
 	addTool(redoButton);
 	toolBar->EnableTool( redoButton->GetId(), false );
 

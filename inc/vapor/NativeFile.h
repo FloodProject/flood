@@ -72,9 +72,6 @@ public:
 	// Gets the file size.
 	long getSize() const;
 
-	// Gets the path of the file.
-	GETTER(Path, const std::string, path)
-
 	// Sets if the file should be buffered.
 	void setBuffering(bool state);
 
@@ -83,6 +80,13 @@ public:
 	
 	// Checks if the file in path exists.
 	static bool exists(const std::string& path);
+
+	// Gets the path of the file.
+	GETTER(Path, const std::string&, path)
+
+	// Gets the internal pointer of the file.
+	GETTER(Pointer, const FILE*, fp)
+
 	
 protected:
 

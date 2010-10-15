@@ -15,6 +15,7 @@ namespace vapor { namespace editor {
 //-----------------------------------//
 
 class ResourcesPage;
+class ResourcesBrowser;
 
 //-----------------------------------//
 
@@ -33,9 +34,14 @@ public:
 	// Plugin disable callback.
 	virtual void onPluginDisable();
 
+	// Handles button click.
+	void onBrowserButtonClick(wxCommandEvent& event);
+
 protected:
 
 	ResourcesPage* resourcesPage;
+	ResourcesBrowser* resourcesBrowser;
+	wxToolBarToolBase* resourcesBrowserButton;
 	int iconResources;
 };
 

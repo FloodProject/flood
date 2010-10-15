@@ -11,6 +11,10 @@
 #ifdef VAPOR_MESH_MILKSHAPE3D
 
 #include "vapor/resources/Milkshape3D_Loader.h"
+#include "vapor/resources/Mesh.h"
+#include "vapor/animation/Animation.h"
+#include "vapor/animation/Skeleton.h"
+#include "vapor/render/Renderable.h"
 
 using vapor::File;
 

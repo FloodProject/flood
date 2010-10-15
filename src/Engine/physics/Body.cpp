@@ -37,7 +37,7 @@ Body::Body()
 	, motionState(nullptr)
 	, mass(50)
 	, friction(0.5f)
-	, restitution(0.3f) 
+	, restitution(0.3f)
 {
 	Class& klass = getType();
 	klass.onFieldChanged += fd::bind(&Body::onFieldChanged, this);
@@ -100,23 +100,12 @@ void Body::onTransform()
 btCollisionShape* Body::getBulletShape() const
 {
 	const NodePtr& node = getNode();
-
-	if( !node )
-		return false;
-
 	ShapePtr shape = node->getTypedComponent<Shape>();
 
 	if( !shape )
-		return false;
+		return nullptr;
 
 	return shape->getBulletShape();
-}
-
-//-----------------------------------//
-
-bool Body::isDynamic() const
-{
-	return mass != 0;
 }
 
 //-----------------------------------//
@@ -132,8 +121,6 @@ bool Body::createBody()
 		return false;
 
 	const NodePtr& node = getNode();
-	assert( node != nullptr );
-
 	motionState = new BodyMotionState( node->getTransform() );
 
 	btVector3 localInertia;
@@ -142,8 +129,8 @@ bool Body::createBody()
 	if( isDynamic() )
 		bulletShape->calculateLocalInertia(mass, localInertia);
 
-	btRigidBody::btRigidBodyConstructionInfo info( mass, motionState,
-		bulletShape, localInertia);
+	btRigidBody::btRigidBodyConstructionInfo info(
+		mass, motionState, bulletShape, localInertia);
 
 	body = new btRigidBody(info);
 
@@ -201,6 +188,13 @@ void Body::updateProperties()
 	body->setMassProps(mass, localInertia);
 	body->setFriction(friction);
 	body->setRestitution(restitution);
+}
+
+//-----------------------------------//
+
+bool Body::isDynamic() const
+{
+	return mass != 0;
 }
 
 //-----------------------------------//

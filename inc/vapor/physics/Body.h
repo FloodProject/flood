@@ -43,6 +43,12 @@ public:
 	// Updates the physics properties.
 	void updateProperties();
 
+	// Adds this body to the world.
+	void addWorld();
+
+	// Removes this body from the world.
+	void removeWorld();
+
 	// Gets the internal Bullet rigid body.
 	GETTER(BulletBody, btRigidBody*, body)
 
@@ -56,12 +62,6 @@ protected:
 
 	// Creates the body.
 	bool createBody();
-
-	// Adds this body to the world.
-	void addWorld();
-
-	// Removes this body from the world.
-	void removeWorld();
 
 	// Rigid body mass.
 	float mass;

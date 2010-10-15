@@ -17,8 +17,14 @@ namespace vapor {
 
 Keyboard::Keyboard()
 	: keyState(1024, false)
-	, lastKey(Keys::Space)
 { }
+
+//-----------------------------------//
+
+bool Keyboard::isKeyPressed( Keys::Enum keycode ) const
+{
+	return keyState[keycode];
+}
 
 //-----------------------------------//
 
@@ -34,19 +40,19 @@ void Keyboard::processEvent( const InputEvent& event )
 	if( event.deviceType != InputDeviceType::Keyboard )
 		return;
 
-	const KeyEvent& kevt = static_cast< const KeyEvent& > ( event );
+	const KeyEvent& keyEvent = static_cast<const KeyEvent&>(event);
 	
-	switch(kevt.eventType)
+	switch(keyEvent.eventType)
 	{
 		case KeyboardEventType::KeyPressed:
 		{
-			keyPressed( kevt );
+			keyPressed(keyEvent);
 			break;
 		}
 
 		case KeyboardEventType::KeyReleased:
 		{
-			keyReleased( kevt );
+			keyReleased(keyEvent);
 			break;
 		}
 	}
@@ -56,13 +62,15 @@ void Keyboard::processEvent( const InputEvent& event )
 
 void Keyboard::keyPressed( const KeyEvent& keyEvent )
 {
+	// Ignore automatic key repeat.
+	if( keyState[keyEvent.keyCode] )
+		return;
+
 	keyState[keyEvent.keyCode] = true;
 	lastKey = keyEvent.keyCode;
 
 	if( !onKeyPress.empty() )
-	{
-		onKeyPress( keyEvent );
-	}
+		onKeyPress(keyEvent);
 }
 
 //-----------------------------------//
@@ -72,9 +80,7 @@ void Keyboard::keyReleased( const KeyEvent& keyEvent )
 	keyState[keyEvent.keyCode] = false;
 
 	if( !onKeyRelease.empty() )
-	{
-		onKeyRelease( keyEvent );
-	}
+		onKeyRelease(keyEvent);
 }
 
 //-----------------------------------//
@@ -82,17 +88,13 @@ void Keyboard::keyReleased( const KeyEvent& keyEvent )
 KeyEvent::KeyEvent(Keys::Enum keyCode, 
 					bool alt, bool shift, bool ctrl,
 					KeyboardEventType::Enum eventType)
-	: InputEvent(InputDeviceType::Keyboard), keyCode(keyCode),
-	altPressed(alt), shiftPressed(shift), ctrlPressed(ctrl),
-	eventType( eventType )
+	: InputEvent(InputDeviceType::Keyboard)
+	, keyCode(keyCode)
+	, altPressed(alt)
+	, shiftPressed(shift)
+	, ctrlPressed(ctrl)
+	, eventType(eventType)
 { }
-
-//-----------------------------------//
-
-bool Keyboard::isKeyPressed( Keys::Enum keycode ) const
-{
-	return keyState[keycode];
-}
 
 //-----------------------------------//
 

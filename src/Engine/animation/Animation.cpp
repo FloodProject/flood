@@ -9,6 +9,7 @@
 #include "vapor/PCH.h"
 #include "vapor/animation/Animation.h"
 #include "vapor/animation/Bone.h"
+#include "vapor/math/Math.h"
 
 namespace vapor {
 
@@ -35,7 +36,7 @@ double Animation::getTotalTime() const
 	if( keyFrames.empty() )
 		return 0;
 
-	float min = 1000000;
+	float min = Limits::FloatMaximum;
 	float max = 0;
 
 	foreach( const KeyFrame& keyFrame, keyFramesVector )
@@ -43,6 +44,9 @@ double Animation::getTotalTime() const
 		min = std::min(min, keyFrame.time);
 		max = std::max(max, keyFrame.time);
 	}
+
+	if( min == Limits::FloatMaximum )
+		return 0;
 
 	return max - min;
 }

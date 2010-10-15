@@ -13,7 +13,7 @@ namespace vapor {
 //-----------------------------------//
 
 /**
- * HTML markup. We declare it as XHTML Strict. All cool kids are doing it.
+ * HTML markup. We declare it with an HTML5 doctype for extra coolness!
  */
 
 static const char LOG_HTML[] =

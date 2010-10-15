@@ -36,6 +36,9 @@ namespace Convert
 
 	// Converts bounding boxes to Bullet.
 	btVector3 toBullet(const BoundingBox& box);
+	
+	// Converts quaternions to Bullet.
+	btQuaternion toBullet(const Quaternion& quat );
 
 	// Converts transforms to Bullet.
 	btTransform toBullet(const TransformPtr& transform);

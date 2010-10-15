@@ -115,10 +115,7 @@ void Engine::init( bool createWindow )
 
 void Engine::setupLogger()
 {
-	#pragma TODO(Create log files in a folder)
-
-	// Create a new logger.
-	log = new Logger(app, app + ".html");
+	log = new Logger(app, "Logs/Log.html");
 }
 
 //-----------------------------------//

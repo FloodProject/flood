@@ -23,7 +23,7 @@ namespace vapor {
  * and lightweight alternative to XML.
  */
 
-class Serializer : private boost::noncopyable
+class VAPOR_API Serializer : private boost::noncopyable
 {
 public:
 

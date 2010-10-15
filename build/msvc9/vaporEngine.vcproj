@@ -115,7 +115,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\picopng\&quot;;&quot;$(SolutionDir)dep\stb\&quot;;&quot;$(SolutionDir)dep\boost\&quot;;&quot;$(SolutionDir)dep\vld\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;;&quot;$(SolutionDir)dep\OpenAL 1.1 SDK\include&quot;;&quot;$(SolutionDir)dep\libogg-1.1.3\include&quot;;&quot;$(SolutionDir)dep\physfs-2.0.0\include&quot;;&quot;$(SolutionDir)dep\libvorbis-1.2.0\include&quot;;&quot;$(SolutionDir)dep\jsoncpp\include&quot;;&quot;$(SolutionDir)dep\SFML\include&quot;;&quot;$(SolutionDir)dep\fd_delegate\include&quot;;&quot;$(SolutionDir)dep\lua\include&quot;;&quot;$(SolutionDir)dep\havok\Source&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\boost\&quot;;&quot;$(SolutionDir)dep\picopng\&quot;;&quot;$(SolutionDir)dep\stb\&quot;;&quot;$(SolutionDir)dep\vld\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;;&quot;$(SolutionDir)dep\openal\include&quot;;&quot;$(SolutionDir)dep\ogg\include&quot;;&quot;$(SolutionDir)dep\physfs\include&quot;;&quot;$(SolutionDir)dep\vorbis\include&quot;;&quot;$(SolutionDir)dep\jsoncpp\include&quot;;&quot;$(SolutionDir)dep\SFML\include&quot;;&quot;$(SolutionDir)dep\fd_delegate\include&quot;;&quot;$(SolutionDir)dep\lua\include&quot;;&quot;$(SolutionDir)dep\swig\include&quot;;&quot;$(SolutionDir)dep\bullet\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;VAPOR_EXPORT;D_SCL_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				ExceptionHandling="1"
@@ -186,8 +186,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\stb\&quot;;&quot;$(SolutionDir)dep\boost_1_39_0\&quot;;&quot;$(SolutionDir)dep\vld\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;;&quot;$(SolutionDir)dep\OpenAL 1.1 SDK\include&quot;;&quot;$(SolutionDir)dep\libogg-1.1.3\include&quot;;&quot;$(SolutionDir)dep\physfs-2.0.0\include&quot;;&quot;$(SolutionDir)dep\libvorbis-1.2.0\include&quot;;&quot;$(SolutionDir)dep\SFML\include&quot;;&quot;$(SolutionDir)dep\fd_delegate\include&quot;;&quot;$(SolutionDir)dep\lua\include&quot;;&quot;$(SolutionDir)dep\havok\Source&quot;"
-				PreprocessorDefinitions="WIN32;___DEBUG;_WINDOWS;_DEBUG;VAPOR_API_DLL;VAPOR_EXPORT;D_SCL_SECURE_NO_WARNINGS"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)inc&quot;;&quot;$(SolutionDir)dep\boost\&quot;;&quot;$(SolutionDir)dep\picopng\&quot;;&quot;$(SolutionDir)dep\stb\&quot;;&quot;$(SolutionDir)dep\vld\include&quot;;&quot;$(SolutionDir)dep\glew\include&quot;;&quot;$(SolutionDir)dep\freetype\include&quot;;&quot;$(SolutionDir)dep\openal\include&quot;;&quot;$(SolutionDir)dep\ogg\include&quot;;&quot;$(SolutionDir)dep\physfs\include&quot;;&quot;$(SolutionDir)dep\vorbis\include&quot;;&quot;$(SolutionDir)dep\jsoncpp\include&quot;;&quot;$(SolutionDir)dep\SFML\include&quot;;&quot;$(SolutionDir)dep\fd_delegate\include&quot;;&quot;$(SolutionDir)dep\lua\include&quot;;&quot;$(SolutionDir)dep\swig\include&quot;;&quot;$(SolutionDir)dep\bullet\include&quot;"
+				PreprocessorDefinitions="_DEBUG;___DEBUG;WIN32;_WINDOWS;VAPOR_API_DLL;VAPOR_EXPORT"
 				MinimalRebuild="true"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
@@ -201,7 +201,7 @@
 				WarnAsError="false"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
-				DisableSpecificWarnings="4503"
+				DisableSpecificWarnings="4503; 4251; 4275"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -214,8 +214,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib glu32.lib glew32s.lib OpenAL32.lib vorbisfile_static.lib ogg_static.lib vorbis_static.lib physfs.lib sfml-system-s-d.lib sfml-window-s-d.lib luabindd.lib lua5.1-release.lib zlib.lib hkBase.lib hkSerialize.lib hkSceneData.lib hkInternal.lib hkGeometryUtilities.lib hkCompat.lib hkpCollide.lib hkpConstraintSolver.lib hkpDynamics.lib hkpInternal.lib hkpUtilities.lib hkVisualize.lib hkpVehicle.lib"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)dep\vld\lib&quot;;&quot;$(SolutionDir)dep\physfs-2.0.0\lib\release&quot;;&quot;$(SolutionDir)dep\SDL-1.2.13\lib&quot;;&quot;$(SolutionDir)lib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)dep\glew\lib&quot;;&quot;$(SolutionDir)dep\libvorbis-1.2.0\lib&quot;;&quot;$(SolutionDir)dep\libogg-1.1.3\lib&quot;;&quot;$(SolutionDir)dep\OpenAL 1.1 SDK\libs\Win32&quot;;&quot;$(SolutionDir)dep\SFML\lib\vc2008&quot;;&quot;$(SolutionDir)dep\lua\lib&quot;;&quot;$(SolutionDir)dep\luabind\lib&quot;;&quot;$(SolutionDir)dep\zlib\lib&quot;;&quot;$(SolutionDir)dep\havok\Lib\win32_net_9-0\hybrid_multithreaded_dll&quot;"
+				AdditionalDependencies="zlib.lib jsoncpp_vc9_d.lib libboost_thread-vc90-mt-1_43.lib libboost_date_time-vc90-mt-1_43.lib physfs.lib sfml-system-s-d.lib sfml-window-s-d.lib opengl32.lib glew32s.lib OpenAL32.lib vorbisfile_static.lib ogg_static.lib vorbis_static.lib lua.lib LinearMath.lib BulletCollision.lib BulletDynamics.lib"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)lib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)dep\boost\lib&quot;;&quot;$(SolutionDir)dep\vld\lib&quot;;&quot;$(SolutionDir)dep\jsoncpp\lib&quot;;&quot;$(SolutionDir)dep\physfs\lib\release&quot;;&quot;$(SolutionDir)dep\bullet\lib&quot;;&quot;$(SolutionDir)dep\zlib\lib&quot;;&quot;$(SolutionDir)dep\glew\lib&quot;;&quot;$(SolutionDir)dep\vorbis\lib&quot;;&quot;$(SolutionDir)dep\ogg\lib&quot;;&quot;$(SolutionDir)dep\openal\libs\Win32&quot;;&quot;$(SolutionDir)dep\sfml\lib\vc2008&quot;;&quot;$(SolutionDir)dep\luabind\lib&quot;;&quot;$(SolutionDir)dep\lua\lib&quot;"
 				GenerateDebugInformation="false"
 				SubSystem="2"
 			/>
@@ -397,6 +397,18 @@
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\math\Noise.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Hash"
+				>
+				<File
+					RelativePath="..\..\src\Core\math\Hash.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\inc\vapor\math\Hash.h"
 					>
 				</File>
 			</Filter>
@@ -1007,18 +1019,6 @@
 			<File
 				RelativePath="..\..\inc\vapor\gui\Atlas.h"
 				>
-			</File>
-			<File
-				RelativePath="..\..\src\Engine\FontManager.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<Filter
 				Name="Label"
@@ -2010,6 +2010,14 @@
 			<File
 				RelativePath="..\..\src\Engine\Serialization.cpp"
 				>
+				<FileConfiguration
+					Name="DLL Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						DisableSpecificWarnings="4251"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\inc\vapor\Serialization.h"
@@ -2145,12 +2153,72 @@
 							DisableSpecificWarnings="4996"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="DLL Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							DisableSpecificWarnings="4251"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\inc\vapor\controllers\ScriptController.h"
 					>
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="Bindings"
+			>
+			<File
+				RelativePath="..\..\interface\base.i"
+				>
+			</File>
+			<File
+				RelativePath="..\..\interface\input.i"
+				>
+			</File>
+			<File
+				RelativePath="..\..\interface\math.i"
+				>
+			</File>
+			<File
+				RelativePath="..\..\interface\render.i"
+				>
+			</File>
+			<File
+				RelativePath="..\..\interface\resources.i"
+				>
+			</File>
+			<File
+				RelativePath="..\..\interface\scene.i"
+				>
+			</File>
+			<File
+				RelativePath="..\..\interface\vapor.i"
+				>
+			</File>
+			<File
+				RelativePath="..\..\interface\vapor_wrap.cxx"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						DisableSpecificWarnings="4996; 4127"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DLL Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						DisableSpecificWarnings="4996"
+					/>
+				</FileConfiguration>
+			</File>
 		</Filter>
 		<File
 			RelativePath="..\..\inc\vapor\CompileOptions.h"

@@ -88,10 +88,6 @@ namespace vapor {
 	GETTER_PTR(name, type, var)					\
 	SETTER_PTR(name, type, var)
 
-#define STATIC_ACESSOR(name, type, var)			\
-	static type get##name() { return var; }		\
-	static SETTER(name, type, var)
-
 //---------------------------------------------------------------------//
 // System Information
 //---------------------------------------------------------------------//
@@ -164,7 +160,7 @@ namespace String
 	}
 
 	// Converts a float to a string.
-	void fromFloat( char* str, float n, byte precision = 2 );
+	VAPOR_API void fromFloat( char* str, float n, byte precision = 2 );
 }
 
 //---------------------------------------------------------------------//

@@ -69,10 +69,9 @@ public:
 
 public:
 
-	// The values of the matrix.  Basically the upper 3x3 portion
+	// The values of the matrix. Basically the upper 3x3 portion
 	// contains a linear transformation, and the last row is the
-	// translation portion.  See the Matrix4x3.cpp for more
-	// details.
+	// translation portion.
 
 	float	m11, m12, m13;
 	float	m21, m22, m23;
