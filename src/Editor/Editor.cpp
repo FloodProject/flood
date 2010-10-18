@@ -176,6 +176,7 @@ void EditorFrame::createViews()
 	RenderControl* control = viewframe->getControl();
 	control->onRender += fd::bind( &EditorFrame::onRender, this );
 	control->onUpdate += fd::bind( &EditorFrame::onUpdate, this );
+	control->SetDropTarget(this);
 	control->SetFocus();
 
 	RenderDevice* device = engine->getRenderDevice();
@@ -312,6 +313,8 @@ void EditorFrame::createUI()
 	Bind(wxEVT_LEAVE_WINDOW, &EditorFrame::OnMouseEvent, this);
 	Bind(wxEVT_ENTER_WINDOW, &EditorFrame::OnMouseEvent, this);
 	Bind(wxEVT_MOUSEWHEEL, &EditorFrame::OnMouseEvent, this);
+
+	SetDataObject(&data);
 }
 
 //-----------------------------------//
@@ -564,6 +567,16 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 	}
 	//-----------------------------------//
 	} // end switch
+}
+
+//-----------------------------------//
+
+wxDragResult EditorFrame::OnData(wxCoord x, wxCoord y, wxDragResult def)
+{
+	dropCoords.x = x;
+	dropCoords.y = y;
+
+	return def;
 }
 
 //-----------------------------------//

@@ -8,6 +8,8 @@
 
 #include "PCH.h"
 #include "ResourcesBrowser.h"
+#include "Editor.h"
+#include "Viewframe.h"
 #include "EditorIcons.h"
 
 namespace vapor { namespace editor {
@@ -16,14 +18,18 @@ namespace vapor { namespace editor {
 
 static const std::string CacheFolder( "Cache/" );
 static const std::string ThumbCache( "Thumbs.cache" );
+static const int ThumbSize = 256;
 
 //-----------------------------------//
 
-ResourcesBrowser::ResourcesBrowser( wxWindow* parent, wxWindowID id,
-							 const wxPoint& pos, const wxSize& size )
-	: wxFrame(parent, id, "Resources Browser", pos, size,
+ResourcesBrowser::ResourcesBrowser( EditorFrame* editor,
+							wxWindow* parent, wxWindowID id,
+							const wxPoint& pos, const wxSize& size )
+	: wxFrame(parent, id, "Resources Browser", pos, wxSize(200, 500),
 		wxDEFAULT_FRAME_STYLE | /*wxFRAME_TOOL_WINDOW |
 		wxFRAME_FLOAT_ON_PARENT |*/ wxBORDER_NONE, "ResourcesBrowser")
+	, editor(editor)
+	, listIndex(0)
 {
 	setupUI();
 	setupRender();
@@ -44,12 +50,13 @@ void ResourcesBrowser::setupUI()
 	wxBoxSizer* bSizer1;
 	bSizer1 = new wxBoxSizer( wxVERTICAL );
 	
-	m_panel2 = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_panel2 = new wxPanel( this, wxID_ANY );
 	wxBoxSizer* bSizer3;
 	bSizer3 = new wxBoxSizer( wxVERTICAL );
 	
-	m_listBox1 = new wxListBox( m_panel2, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
-	bSizer3->Add( m_listBox1, 1, wxEXPAND, 5 );
+	m_listCtrl = new wxListCtrl( m_panel2, wxID_ANY,
+		wxDefaultPosition, wxDefaultSize, wxLC_ICON | wxLC_AUTOARRANGE ); 
+	bSizer3->Add( m_listCtrl, 1, wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer6;
 	bSizer6 = new wxBoxSizer( wxHORIZONTAL );
@@ -57,11 +64,11 @@ void ResourcesBrowser::setupUI()
 	wxBoxSizer* bSizer5;
 	bSizer5 = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_staticText1 = new wxStaticText( m_panel2, wxID_ANY, wxT("Detail"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText1 = new wxStaticText( m_panel2, wxID_ANY, "Detail" );
 	m_staticText1->Wrap( -1 );
 	bSizer5->Add( m_staticText1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_slider1 = new wxSlider( m_panel2, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
+	m_slider1 = new wxSlider( m_panel2, wxID_ANY, 50, 0, 100 );
 	bSizer5->Add( m_slider1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	bSizer6->Add( bSizer5, 1, wxALIGN_LEFT, 5 );
@@ -69,7 +76,7 @@ void ResourcesBrowser::setupUI()
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_button1 = new wxButton( m_panel2, wxID_ANY, wxT("Refresh"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_button1 = new wxButton( m_panel2, wxID_ANY, "Refresh" );
 	bSizer2->Add( m_button1, 1, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	bSizer6->Add( bSizer2, 0, wxALIGN_RIGHT, 5 );
@@ -92,6 +99,13 @@ void ResourcesBrowser::setupUI()
 	icon.CopyFromBitmap( wxMEMORY_BITMAP(package) );
 	
 	SetIcon(icon);
+
+	int size = ThumbSize / 2;
+	images = new wxImageList(size, size);
+	m_listCtrl->AssignImageList(images, wxIMAGE_LIST_NORMAL);
+
+	m_listCtrl->Bind( wxEVT_COMMAND_LIST_BEGIN_DRAG,
+		&ResourcesBrowser::OnListBeginDrag, this );
 }
 
 //-----------------------------------//
@@ -101,7 +115,7 @@ void ResourcesBrowser::setupRender()
 	Engine* engine = Engine::getInstancePtr();
 	RenderDevice* device = engine->getRenderDevice();
 
-	Settings settings(256, 256);
+	Settings settings(ThumbSize, ThumbSize);
 	renderBuffer = device->createRenderBuffer(settings);
 	renderTexture = renderBuffer->createRenderTexture();
 	
@@ -118,6 +132,40 @@ void ResourcesBrowser::setupRender()
 	renderView = new View(camera);
 	renderView->setClearColor(Color::White);
 	renderView->setRenderTarget(renderBuffer);
+}
+
+//-----------------------------------//
+
+static const std::string getBase(const std::string& name)
+{
+	// Check if it has a file extension.
+	size_t ch = name.find_last_of(".");
+
+	if( ch == std::string::npos ) 
+		return "";
+
+	// Return the file extension.
+	return name.substr( 0, ch );
+}
+
+void ResourcesBrowser::setupImages()
+{
+	int size = ThumbSize / 2;
+
+	foreach( ResourcesCachePair p, resourcesCache )
+	{
+		ResourceMetadata& metadata = p.second;
+		
+		wxImage image;
+		if( !image.LoadFile(CacheFolder + metadata.thumbnail) )
+			continue;
+
+		image.Rescale(size, size);
+		image = image.Mirror(false);
+
+		metadata.index = images->Add( wxBitmap(image) );
+		m_listCtrl->InsertItem(listIndex++, getBase(metadata.thumbnail), metadata.index);
+	}
 }
 
 //-----------------------------------//
@@ -242,7 +290,7 @@ void ResourcesBrowser::scanFiles()
 		ResourceMetadata metadata;
 		metadata.hash = hash;
 		metadata.thumbnail = mesh->getPath() + ".png";
-
+		metadata.path = mesh->getPath();
 		resourcesCache[hash] = metadata;
 
 		ImagePtr thumb = generateThumbnail(mesh);
@@ -288,6 +336,58 @@ ImagePtr ResourcesBrowser::generateThumbnail(const MeshPtr& mesh)
 	scene->remove( nodeResource );
 
 	return image;
+}
+
+//-----------------------------------//
+
+void ResourcesBrowser::OnListBeginDrag(wxListEvent& event)
+{
+	wxTextDataObject data;
+	wxDropSource dragSource(this);
+	dragSource.SetData(data);
+    
+	wxDragResult result = dragSource.DoDragDrop( wxDrag_DefaultMove );
+
+	if( result == wxDragCancel || result == wxDragNone )
+		return;
+
+	Vector3 dropPoint;
+
+	Vector2 coords = editor->getDropCoords();
+	View* view = editor->getMainViewframe()->getView();
+	Ray ray = view->getCamera()->getRay(coords.x, coords.y);
+
+	ScenePtr scene = editor->getEngine()->getSceneManager();
+	RayTriangleQueryResult res;
+
+	if( scene->doRayTriangleQuery(ray, res) )
+	{
+		dropPoint = res.intersection;
+	}
+	else
+	{
+		Plane ground( Vector3::UnitY, 0 );
+		
+		float distance;
+		if( !ground.intersects(ray, distance) )
+			return;
+			
+		dropPoint = ray.getPoint(distance);
+	}
+
+	std::string name = event.GetText();
+
+	ResourceManager* rm = editor->getEngine()->getResourceManager();
+	MeshPtr mesh = rm->loadResource<Mesh>(name);
+
+	if( !mesh )
+		return;
+
+	NodePtr node( new Node("Node") );
+	node->addTransform();
+	node->getTransform()->setPosition(dropPoint);
+	node->addComponent( ModelPtr( new Model(mesh) ) );
+	scene->add(node);
 }
 
 //-----------------------------------//

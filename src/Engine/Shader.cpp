@@ -31,11 +31,10 @@ const std::string ShaderType::getString(Enum e)
 //-----------------------------------//
 
 Shader::Shader()
-	: compiled( false ), compileErrors( false ),
-	type( ShaderType::Vertex )
-{
-
-}
+	: compiled(false)
+	, compileErrors(false)
+	, type( ShaderType::Vertex )
+{ }
 
 //-----------------------------------//
 

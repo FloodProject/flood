@@ -24,6 +24,7 @@ namespace vapor {
 ResourceManager::ResourceManager( FileWatcher* fileWatcher, TaskManager* tasks )
 	: taskManager(tasks)
 	, numResourcesQueuedLoad(0)
+	, threadedLoading(true)
 {
 	assert( taskManager != nullptr );
 
@@ -157,7 +158,7 @@ ResourcePtr ResourceManager::prepareResource(const File& file)
 
 //-----------------------------------//
 
-void ResourceManager::decodeResource( ResourcePtr resource, bool async, bool notify )
+void ResourceManager::decodeResource( ResourcePtr resource, bool useThreads, bool notify )
 {
 	boost::intrusive_ptr<ResourceTask> task = new ResourceTask();
 
@@ -167,7 +168,7 @@ void ResourceManager::decodeResource( ResourcePtr resource, bool async, bool not
 
 	numResourcesQueuedLoad++;
 
-	if( async )
+	if( threadedLoading && useThreads )
 		taskManager->addTask( task );
 	else
 		task->run();

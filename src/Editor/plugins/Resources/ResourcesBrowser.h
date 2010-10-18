@@ -12,13 +12,23 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
+class EditorFrame;
+
+//-----------------------------------//
+
 struct ResourceMetadata
 {
 	// Hash of the resource.
 	uint hash;
 
+	// Path of the resource.
+	std::string path;
+
 	// Thumbnail of the resource.
 	std::string thumbnail;
+
+	// Image list index.
+	int index;
 };
 
 typedef std::map<uint, ResourceMetadata> ResourcesCache;
@@ -35,7 +45,8 @@ class ResourcesBrowser : public wxFrame
 {
 public:
 
-	ResourcesBrowser( wxWindow* parent, wxWindowID id = wxID_ANY,
+	ResourcesBrowser( EditorFrame* editor,
+		wxWindow* parent, wxWindowID id = wxID_ANY,
 		const wxPoint& pos = wxDefaultPosition,
 		const wxSize& size = wxDefaultSize );
 
@@ -50,6 +61,9 @@ public:
 	// Saves the thumbnails cache.
 	bool saveCache();
 
+	// Sets up the images.
+	void setupImages();
+
 	// Generate thumbnail.
 	ImagePtr generateThumbnail(const MeshPtr& mesh);
 
@@ -63,12 +77,16 @@ protected:
 
 	// Event handlers.
 	void OnClose(wxCloseEvent& event);
+	void OnListBeginDrag(wxListEvent& event);
 
+	EditorFrame* editor;
+	wxImageList* images;
 	wxPanel* m_panel2;
-	wxListBox* m_listBox1;
+	wxListCtrl* m_listCtrl;
 	wxStaticText* m_staticText1;
 	wxSlider* m_slider1;
 	wxButton* m_button1;
+	int listIndex;
 
 	ScenePtr scene;
 	NodePtr nodeCamera;

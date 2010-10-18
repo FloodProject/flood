@@ -111,6 +111,9 @@ public:
 	// Gets the registered resource loaders.
 	GETTER(ResourceLoaders, const ResourceLoaderMap&, resourceLoaders)
 
+	// Gets/sets the threading status.
+	ACESSOR(ThreadedLoading, bool, threadedLoading)
+
 protected:
 
 	// Validates that the resource exists and there is a loader for it.
@@ -135,10 +138,11 @@ protected:
 	concurrent_queue<ResourceEvent> resourceTaskEvents;
 	atomic_int numResourcesQueuedLoad;
 
-#ifdef VAPOR_THREADING
-	boost::mutex resourceFinishLoadMutex;
-	boost::condition_variable resourceFinishLoad;
-#endif
+	// Global setting to override threaded loading.
+	bool threadedLoading;
+
+	THREAD(boost::mutex resourceFinishLoadMutex;)
+	THREAD(boost::condition_variable resourceFinishLoad;)
 
 public:
 

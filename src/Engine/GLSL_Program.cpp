@@ -134,13 +134,11 @@ bool GLSL_Program::attachShaders()
 		if( shader->isCompiled() )
 			 continue;
 		
+		std::string type = String::toLowerCase(
+			ShaderType::getString( shader->getType()));
+
 		if( !shader->compile() )
 		{
-			assert( text != nullptr );
-
-			std::string id = ShaderType::getString( shader->getType() );
-			std::string type = String::toLowerCase( id );
-
 			Log::error( "Error compiling %s shader '%s': %s",
 				type.c_str(), text->getBasePath().c_str(),
 				shader->getLog().c_str() );
@@ -149,6 +147,11 @@ bool GLSL_Program::attachShaders()
 			linked = false;
 
 			return false;
+		}
+		else
+		{
+			Log::info( "Compiled %s shader '%s' with no errors",
+				type.c_str(), text->getBasePath().c_str() );
 		}
 	}
 

@@ -69,7 +69,7 @@ void ResourcesPlugin::onPluginEnable()
 		&ResourcesPlugin::onBrowserButtonClick,
 		this, resourcesBrowserButton->GetId() );
 
-	resourcesBrowser = new ResourcesBrowser( editor );
+	resourcesBrowser = new ResourcesBrowser(editor, editor);
 }
 
 //-----------------------------------//
@@ -84,6 +84,7 @@ void ResourcesPlugin::onPluginDisable()
 void ResourcesPlugin::onBrowserButtonClick(wxCommandEvent& event)
 {
 	resourcesBrowser->scanFiles();
+	resourcesBrowser->setupImages();
 	resourcesBrowser->Show();
 }
 

@@ -34,6 +34,7 @@
 #include <wx/filectrl.h>
 #include <wx/splitter.h>
 #include <wx/progdlg.h>
+#include <wx/dnd.h>
 
 //---------------------------------------------------------------------//
 // Image Conversion Utilities
