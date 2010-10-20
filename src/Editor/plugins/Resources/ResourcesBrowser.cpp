@@ -117,8 +117,7 @@ void ResourcesBrowser::setupRender()
 
 	Settings settings(ThumbSize, ThumbSize);
 	renderBuffer = device->createRenderBuffer(settings);
-	//depthTexture = renderBuffer->createRenderTexture(RenderBufferType::Depth);
-	//renderBuffer->createRenderBuffer(RenderBufferType::Depth);
+	renderBuffer->createRenderBuffer(RenderBufferType::Depth);
 	colorTexture = renderBuffer->createRenderTexture(RenderBufferType::Color);
 	renderBuffer->check();
 	
@@ -336,8 +335,9 @@ ImagePtr ResourcesBrowser::generateThumbnail(const MeshPtr& mesh)
 
 	renderBuffer->bind();
 	renderView->update();
-	ImagePtr image = colorTexture->readImage();
 	renderBuffer->unbind();
+
+	ImagePtr image = colorTexture->readImage();
 
 	scene->remove( nodeResource );
 

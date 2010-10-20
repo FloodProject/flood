@@ -38,9 +38,8 @@ void main(void)
 {
 	vec4 ambient = vec4(0.3,0.3,0.25,1.0);
 	
-	float diffuse = 0.6;
-	//float diffuse = dot(vec3(0.5,0.5,0.5), normal);
-	//diffuse = pow((0.5*diffuse)+0.5,2.0);
+	float diffuse = dot(vec3(0.5,0.5,0.5), normal);
+	diffuse = pow((0.5*diffuse)+0.5,2.0);
 	
 	vec4 tex = texture2D(vp_Texture0, texCoord0);
 	vec4 albedo = tex*diffuse;

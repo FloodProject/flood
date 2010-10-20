@@ -92,13 +92,18 @@ bool FBO::check()
 void FBO::setBufferState()
 {
 	if( colorAttach )
-		return;
+	{
+		glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
+		glReadBuffer(GL_NONE);
+	}
+	else
+	{
+		// In case there is only a depth attachment in the FBO,
+		// then we need to setup the following OpenGL state.
 	
-	// In case there is only a depth attachment in the FBO,
-	// then we need to setup the following OpenGL state.
-
-	glDrawBuffer(GL_NONE);
-	glReadBuffer(GL_NONE);
+		glDrawBuffer(GL_NONE);
+		glReadBuffer(GL_NONE);
+	}
 }
 
 //-----------------------------------//
