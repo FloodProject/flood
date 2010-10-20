@@ -117,11 +117,12 @@ void ResourcesBrowser::setupRender()
 
 	Settings settings(ThumbSize, ThumbSize);
 	renderBuffer = device->createRenderBuffer(settings);
-	renderTexture = renderBuffer->createRenderTexture();
+	//depthTexture = renderBuffer->createRenderTexture(RenderBufferType::Depth);
+	//renderBuffer->createRenderBuffer(RenderBufferType::Depth);
+	colorTexture = renderBuffer->createRenderTexture(RenderBufferType::Color);
+	renderBuffer->check();
 	
 	camera.reset( new Camera() );
-	camera->getFrustum().projectionType = Projection::Perspective;
-	
 	nodeCamera.reset( new Node() );
 	nodeCamera->addTransform();
 	nodeCamera->addComponent( camera );
@@ -256,9 +257,12 @@ bool ResourcesBrowser::saveCache()
 void ResourcesBrowser::scanFiles()
 {
 	Engine* engine = Engine::getInstancePtr();
+	
 	ResourceManager* rm = engine->getResourceManager();
-	FileSystem* fs = engine->getFileSystem();
+	bool threadedStatus = rm->getThreadedLoading();
+	rm->setThreadedLoading(false);
 
+	FileSystem* fs = engine->getFileSystem();
 	std::vector<std::string> files = fs->enumerateFiles("meshes");
 
 	wxProgressDialog progressDialog( "Resources loading progress",
@@ -300,6 +304,8 @@ void ResourcesBrowser::scanFiles()
 
 		thumb->save( CacheFolder + metadata.thumbnail );
 	}
+
+	rm->setThreadedLoading(threadedStatus);
 }
 
 //-----------------------------------//
@@ -330,7 +336,7 @@ ImagePtr ResourcesBrowser::generateThumbnail(const MeshPtr& mesh)
 
 	renderBuffer->bind();
 	renderView->update();
-	ImagePtr image = renderTexture->readImage();
+	ImagePtr image = colorTexture->readImage();
 	renderBuffer->unbind();
 
 	scene->remove( nodeResource );

@@ -54,8 +54,8 @@ void Texture::init()
 	target = GL_TEXTURE_2D;
 	uploaded = false;
 
-	minFilter = TextureFiltering::Linear;
-	maxFilter = TextureFiltering::Linear;
+	minFilter = TextureFiltering::Nearest;
+	maxFilter = TextureFiltering::Nearest;
 	anisotropicFilter = 1.0f;
 
 	generate();
@@ -102,7 +102,7 @@ bool Texture::upload()
 		convertInternalFormat(format),
 		width, height, 0,
 		convertSourceFormat(format),
-		/*(format == PixelFormat::Depth) ? GL_FLOAT :*/ GL_UNSIGNED_BYTE,
+		/*(format == PixelFormat::Depth) ? GL_FLOAT : */GL_UNSIGNED_BYTE,
 		(image && !image->getBuffer().empty()) ? &image->getBuffer()[0] : nullptr );
 
 	if( glHasError("Could not upload pixel data to texture object") )

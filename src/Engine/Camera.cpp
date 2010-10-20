@@ -28,7 +28,8 @@ Camera::Camera()
 {
 	init();
 
-	renderDevice = Engine::getInstancePtr()->getRenderDevice();
+	Engine* engine = Engine::getInstancePtr();
+	renderDevice = engine->getRenderDevice();
 }
 
 //-----------------------------------//
@@ -60,11 +61,6 @@ void Camera::init()
 {
 	activeView = nullptr;
 	lookAtVector = Vector3::UnitZ;
-
-	frustum.projectionType = Projection::Perspective;
-	frustum.fieldOfView = 45;
-	frustum.nearPlane = 1;
-	frustum.farPlane = 5000;
 }
 
 //-----------------------------------//

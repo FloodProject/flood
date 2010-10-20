@@ -34,10 +34,7 @@ namespace Projection
 //-----------------------------------//
 
 /**
- * Creates a new Frustum with the field-of-view, aspect ratio, near and far
- * projection settings. It also takes a local to world matrix, because all 
- * of our AABBs are in world space, so when performing object intersection 
- * tests, the frustum also needs to be converted to world space.
+ * Frustum is a shape similiar to a pyramid with the top truncated.
  */
 
 class VAPOR_API Frustum
@@ -46,7 +43,6 @@ class VAPOR_API Frustum
 
 public:
 
-    // Constructs the 6 planes making up the frustum, using the passed parameters.
     Frustum();
     Frustum( const Frustum& rhs );
 
@@ -59,8 +55,7 @@ public:
 	// Updates the frustum corners.
 	void updateCorners( const Matrix4x3& matView );
 
-    // Tests all the points of the BoundingBox to check if they are inside the frustum.
-    // Returns true if the BoundingBox is inside or overlaping the frustum, false otherwise.
+    // Checks if the box is inside the frustum.
     //bool intersect ( const BoundingBox& box ) const;
 
 public:

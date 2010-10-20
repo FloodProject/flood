@@ -94,7 +94,7 @@ EditorFrame::EditorFrame(const wxString& title)
 
 EditorFrame::~EditorFrame()
 {
-	delete eventManager;
+ 	delete eventManager;
 	delete pluginManager;
 	delete undoManager;
 	mainSplitter->Destroy();

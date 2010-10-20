@@ -16,8 +16,10 @@ namespace vapor {
 //-----------------------------------//
 
 FBO::FBO(const Settings& settings) 
-	: RenderBuffer(settings), bound(false), valid(false),
-	colorAttach( false )
+	: RenderBuffer(settings)
+	, bound(false)
+	, valid(false)
+	, colorAttach(false)
 {
 	glGenFramebuffersEXT(1, &id);
 	glHasError( "Could not create framebuffer object" );
@@ -29,9 +31,9 @@ FBO::~FBO()
 {
 	glDeleteFramebuffersEXT(1, &id);
 
-	foreach( uint rb, renderBuffers )
+	foreach( uint buffer, renderBuffers )
 	{
-		glDeleteRenderbuffersEXT(1, &rb);
+		glDeleteRenderbuffersEXT(1, &buffer);
 		glHasError( "Could not delete renderbuffer object" );
 	}
 }
@@ -67,6 +69,7 @@ void FBO::unbind()
 bool FBO::check()
 {
 	bind();
+
 	setBufferState();
 
 	GLenum status;
@@ -77,6 +80,8 @@ bool FBO::check()
 		Log::warn("FBO error: %s", glErrorString(status) );
 		return false;
 	}
+
+	unbind();
 	
 	valid = true;
 	return true;
@@ -86,14 +91,14 @@ bool FBO::check()
 
 void FBO::setBufferState()
 {
-	if(!colorAttach)
-	{
-		// In case there is only a depth attachment in the FBO,
-		// then we need to setup the following OpenGL state.
+	if( colorAttach )
+		return;
+	
+	// In case there is only a depth attachment in the FBO,
+	// then we need to setup the following OpenGL state.
 
-		glDrawBuffer(GL_NONE);
-		glReadBuffer(GL_NONE);
-	}
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
 }
 
 //-----------------------------------//
@@ -129,8 +134,7 @@ void FBO::attachRenderTexture(const TexturePtr& tex)
 	if( tex->getPixelFormat() == PixelFormat::Depth )
 		attach = GL_DEPTH_ATTACHMENT_EXT;
 
-	glFramebufferTexture2DEXT(
-		GL_FRAMEBUFFER_EXT, attach, GL_TEXTURE_2D, tex->id(), 0);
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, attach, GL_TEXTURE_2D, tex->id(), 0);
 	glHasError( "Could not attach texture into framebuffer object" );
 	
 	textureBuffers.push_back( tex );
@@ -158,23 +162,18 @@ void FBO::createRenderBuffer( int bufferComponents )
 
 	bind();
 
-	if( bufferComponents & RenderBufferType::Color )
-	{
-		createRenderBufferStorage(renderBuffer,
-			GL_RGBA, GL_COLOR_ATTACHMENT0_EXT);
-		colorAttach = true;
-	}
-
 	if( bufferComponents & RenderBufferType::Depth )
 	{
-		createRenderBufferStorage(renderBuffer,
-			GL_DEPTH_COMPONENT, GL_DEPTH_ATTACHMENT_EXT);
+		createRenderBufferStorage(renderBuffer, GL_DEPTH_COMPONENT, GL_DEPTH_ATTACHMENT_EXT);
 	}
-
+	if( bufferComponents & RenderBufferType::Color )
+	{
+		createRenderBufferStorage(renderBuffer, GL_RGBA, GL_COLOR_ATTACHMENT0_EXT);
+		colorAttach = true;
+	}
 	if( bufferComponents & RenderBufferType::Stencil )
 	{
-		createRenderBufferStorage(renderBuffer,
-			GL_STENCIL_INDEX, GL_STENCIL_ATTACHMENT_EXT);
+		createRenderBufferStorage(renderBuffer, GL_STENCIL_INDEX, GL_STENCIL_ATTACHMENT_EXT);
 		colorAttach = true;
 	}
 
@@ -185,14 +184,13 @@ void FBO::createRenderBuffer( int bufferComponents )
 
 void FBO::createRenderBufferStorage(int buffer, int type, int attachment)
 {
-	uint w = settings.getWidth();
-	uint h = settings.getHeight();
+	uint width = settings.getWidth();
+	uint height = settings.getHeight();
 
-	glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, type, w, h);
+	glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, type, width, height);
 	glHasError( "Could not create renderbuffer object storage" );
 
-	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, 
-			attachment, GL_RENDERBUFFER_EXT, buffer);
+	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, attachment, GL_RENDERBUFFER_EXT, buffer);
 	glHasError( "Could not attach renderbuffer into framebuffer object" );
 }
 
@@ -200,10 +198,13 @@ void FBO::createRenderBufferStorage(int buffer, int type, int attachment)
 
 bool FBO::checkSize()
 {
+	uint width = settings.getWidth();
+	uint height = settings.getHeight();
+
 	// Check if the FBO respect the maximum size defined by OpenGL.
 	uint max = GL_MAX_RENDERBUFFER_SIZE_EXT;
 
-	if(settings.getWidth() > max || settings.getHeight() > max)
+	if(width > max || height > max)
 	{
 		Log::warn( "Invalid FBO dimensions (OpenGL max: %d,%d)", max, max );
 		return false;
@@ -215,9 +216,7 @@ bool FBO::checkSize()
 //-----------------------------------//
 
 void FBO::update()
-{
-
-}
+{ }
 
 //-----------------------------------//
 

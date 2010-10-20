@@ -92,7 +92,9 @@ protected:
 	NodePtr nodeCamera;
 	CameraPtr camera;
 	View* renderView;
-	TexturePtr renderTexture;
+
+	TexturePtr depthTexture;
+	TexturePtr colorTexture;
 	RenderBuffer* renderBuffer;
 
 	// Caches all the resources metadata.
