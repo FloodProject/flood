@@ -61,10 +61,10 @@ public:
 public:
 
 	// Projection type.
-	Projection::Enum projectionType;
+	Projection::Enum projection;
 	
 	// Projection matrix.
-	Matrix4x4 projectionMatrix;
+	Matrix4x4 matProjection;
 
 	// Field of view.
 	float fieldOfView;

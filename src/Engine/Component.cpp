@@ -21,7 +21,8 @@ END_CLASS()
 //-----------------------------------//
 
 Component::Component()
-	: debugVisible( false )
+	: debugVisible(false)
+	, debugInheritsTransform(true)
 { }
 
 //-----------------------------------//

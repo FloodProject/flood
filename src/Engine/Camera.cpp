@@ -163,9 +163,7 @@ void Camera::render()
 
 	// Search for the root node.
 	while ( node->getParent() )
-	{
 		node = node->getParent();
-	}
 	  
 	render( node );
 }
@@ -215,14 +213,19 @@ void Camera::cull( RenderBlock& block, const NodePtr& node ) const
 
 	foreach( const ComponentMapPair& cmp, node->getComponents() )
 	{
-		if( !cmp.second->isDebugRenderableVisible() )
+		const ComponentPtr& component = cmp.second;
+
+		if( !component->isDebugRenderableVisible() )
 			continue;
 
-		const RenderablePtr& renderable = cmp.second->getDebugRenderable();
+		const RenderablePtr& renderable = component->getDebugRenderable();
 	
 		RenderState renderState;
 		renderState.renderable = renderable;
-		renderState.modelMatrix = transform->getAbsoluteTransform();
+
+		if( component->getDebugInheritsTransform() )
+			renderState.modelMatrix = transform->getAbsoluteTransform();
+	
 		renderState.group = RenderStage::PostTransparency;
 		renderState.priority = 0;
 
@@ -240,7 +243,7 @@ Ray Camera::getRay( float screenX, float screenY, Vector3* outFar ) const
 	Vector3 nearPoint(screenX, size.y - screenY, 0);
 	Vector3 farPoint (screenX, size.y - screenY, 1);
 
-	const Matrix4x4& matProjection = frustum.projectionMatrix;
+	const Matrix4x4& matProjection = frustum.matProjection;
 
 	Vector3 rayOrigin =
 		activeView->unprojectPoint(nearPoint, matProjection, viewMatrix);
@@ -274,6 +277,8 @@ void Camera::updateDebugRenderable() const
 RenderablePtr Camera::createDebugRenderable() const
 {
 	assert( !debugRenderable );
+
+	debugInheritsTransform = false;
 	return buildFrustum( frustum );
 }
 

@@ -8,7 +8,22 @@
 
 #pragma once
 
+#include "UndoOperation.h"
+
 namespace vapor { namespace editor {
+
+//-----------------------------------//
+
+class NodeOperation : public UndoOperation
+{
+public:
+
+	void redo();
+	void undo();
+
+	NodePtr node;
+	SceneWeakPtr weakScene;
+};
 
 //-----------------------------------//
 

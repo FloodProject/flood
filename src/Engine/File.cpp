@@ -11,6 +11,7 @@
 #ifdef VAPOR_VFS_PHYSFS
 
 #include "vapor/vfs/File.h"
+#include "vapor/Utilities.h"
 #include <physfs.h>
 
 namespace vapor {
@@ -19,23 +20,10 @@ namespace vapor {
 
 static std::string normalizePath(std::string path)
 {
-	std::replace( path.begin(), path.end(), '\\', '/' );
-
-	std::string::size_type pos = 0;
-
-	while( (pos = path.find("//", pos)) != std::string::npos )
-	{
-        path.replace( pos, 2, "/" );
-        pos++;
-    }
-
-	pos = 0;
-
-	while( (pos = path.find("../", pos)) != std::string::npos )
-	{
-        path.replace( pos, 3, "" );
-        pos++;
-    }
+	String::replace(path, "\\", "/");
+	String::replace(path, "//", "/");
+	String::replace(path, "../", "");
+	String::replace(path, "./", "");
 
 	return path;
 }

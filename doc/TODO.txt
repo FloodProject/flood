@@ -13,14 +13,11 @@ Fix default animation state on skinned meshes with no animation tracks.
 EDITOR:
 -------
 
-Add mode to resource manager to force ansychronous
-
 Optimize hashing and loading in resources browser (it reads twice)
 Reload meshes on the fly
 Control resolution of terrains
 Better terrain tools
 Clone tool
-Asset browser
 Proper reset sequence
 
 Input:

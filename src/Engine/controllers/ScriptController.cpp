@@ -21,6 +21,8 @@
 #include "vapor/input/Keyboard.h"
 #include "vapor/input/Mouse.h"
 
+#include "vapor/Headers.h"
+
 #include <swigluarun.h>
 #include <lua.hpp>
 
@@ -95,8 +97,9 @@ void ScriptController::createState()
 //-----------------------------------//
 
 #define BIND_COMPONENT(var, type)						\
-	bindType(module, var, "vapor::"TOSTRING(type)" *",	\
-	node->getComponent<Component>(TOSTRING(type)).get());
+	bindType( module, var,								\
+		"vapor::"TOSTRING(type)" *",					\
+		node->getComponent<type>().get() );
 
 void ScriptController::bindNode()
 {

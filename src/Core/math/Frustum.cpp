@@ -19,7 +19,7 @@ BEGIN_ENUM(Projection)
 END_ENUM()
 
 BEGIN_CLASS(Frustum)
-	FIELD_ENUM(Frustum, Projection, projectionType)
+	FIELD_ENUM(Frustum, Projection, projection)
 	FIELD_PRIMITIVE(Frustum, float, fieldOfView)
 	FIELD_PRIMITIVE(Frustum, float, nearPlane)
 	FIELD_PRIMITIVE(Frustum, float, farPlane)
@@ -29,7 +29,7 @@ END_CLASS()
 //-----------------------------------//
 
 Frustum::Frustum()
-	: projectionType( Projection::Perspective )
+	: projection( Projection::Perspective )
 	, fieldOfView(60)
 	, nearPlane(1)
 	, farPlane(100)
@@ -39,8 +39,8 @@ Frustum::Frustum()
 //-----------------------------------//
 
 Frustum::Frustum( const Frustum& rhs )
-	: projectionType( rhs.projectionType )
-	, projectionMatrix( rhs.projectionMatrix )
+	: projection( rhs.projection )
+	, matProjection( rhs.matProjection )
 	, fieldOfView( rhs.fieldOfView )
 	, nearPlane( rhs.nearPlane )
 	, farPlane( rhs.farPlane )
@@ -51,14 +51,14 @@ Frustum::Frustum( const Frustum& rhs )
 
 void Frustum::updateProjection( const Vector2i& size )
 {
-	if( projectionType == Projection::Perspective )
+	if( projection == Projection::Perspective )
 	{
-		projectionMatrix = Matrix4x4::createPerspectiveProjection(
+		matProjection = Matrix4x4::createPerspectiveProjection(
 			fieldOfView, aspectRatio, nearPlane, farPlane );
 	}
 	else
 	{
-		projectionMatrix = Matrix4x4::createOrthographicProjection(
+		matProjection = Matrix4x4::createOrthographicProjection(
 			0, size.x, 0, size.y, nearPlane, farPlane );
 	}
 }
@@ -71,7 +71,7 @@ void Frustum::updatePlanes( const Matrix4x3& matView )
 	// from the World-View-Projection Matrix" by Gil Gribb.
 	// http://www.cs.otago.ac.nz/postgrads/alexis/planeExtraction.pdf
 
-	Matrix4x4 matClip = Matrix4x4(matView) * projectionMatrix;
+	Matrix4x4 matClip = Matrix4x4(matView) * matProjection;
 
 	// Left clipping plane
 	planes[0].normal.x = matClip.m14 + matClip.m11;
@@ -122,7 +122,8 @@ void Frustum::updatePlanes( const Matrix4x3& matView )
 
 void Frustum::updateCorners( const Matrix4x3& matView )
 {
-	Matrix4x4 matInvClip = projectionMatrix.inverse();
+	Matrix4x4 matClip = Matrix4x4(matView) * matProjection;
+	Matrix4x4 matInvClip = matClip.inverse();
 
 	// The following are the corner points of the frustum (which becomes
 	// a unit cube) in clip space. Check the diagram for more information:

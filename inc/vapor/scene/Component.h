@@ -58,6 +58,9 @@ public:
 	// Creates the debug renderable of this component.
 	virtual RenderablePtr createDebugRenderable() const;
 
+	// Gets/sets if the debug renderable inherits the transform.
+	ACESSOR(DebugInheritsTransform, bool, debugInheritsTransform)
+
 protected:
 
 	// Node that owns this component.
@@ -65,6 +68,9 @@ protected:
 
 	// Is the debug representation visible.
 	bool debugVisible;
+
+	// Does the debug inherit the transform.
+	mutable bool debugInheritsTransform;
 
 	// Debug renderable of component.
 	mutable RenderablePtr debugRenderable;

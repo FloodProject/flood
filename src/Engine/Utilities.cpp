@@ -176,4 +176,21 @@ std::string String::toUpperCase(const std::string& str)
 
 //-----------------------------------//
 
+void String::replace(std::string& source, const std::string& from, const std::string& to)
+{
+	std::string::size_type pos = 0;
+
+	while(true)
+	{
+		pos = source.find(from, pos);
+		
+		if( pos == std::string::npos )
+			return;
+		
+		source.replace( pos++, from.size(), to );
+	}
+}
+
+//-----------------------------------//
+
 } // end namespace

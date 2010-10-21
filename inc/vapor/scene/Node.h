@@ -85,14 +85,6 @@ public:
 
 	// Gets a component from this node.
 	template <typename T>
-	std::shared_ptr<T> getComponent( const std::string& type ) const
-	{
-		const ComponentPtr& comp = getComponent<T>();
-		return std::static_pointer_cast<T>(comp);
-	}
-
-	// Gets a component from this node.
-	template <typename T>
 	std::shared_ptr<T> getComponent() const
 	{
 		ComponentMap::const_iterator it = components.find(&T::getType());

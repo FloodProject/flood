@@ -13,9 +13,22 @@
 #include "EditorIcons.h"
 #include "Viewframe.h"
 #include "UndoManager.h"
-#include "UndoOperation.h"
 
 namespace vapor { namespace editor {
+
+//-----------------------------------//
+
+void NodeOperation::redo()
+{
+	ScenePtr scene = weakScene.lock();
+	if(scene) scene->add(node);
+}
+
+void NodeOperation::undo()
+{
+	ScenePtr scene = weakScene.lock();
+	if(scene) scene->remove(node);
+}
 
 //-----------------------------------//
 
@@ -71,6 +84,62 @@ static ComponentEntry components[] = {
 	{ true, TYPE(Body),					BMP(link) },
 	{ false,TYPE(Scene),				BMP(sitemap_color) }
 };
+
+//-----------------------------------//	
+
+template<typename T> T* cloneObject(T* object)
+{
+	const Class& type = object->getInstanceType();
+	T* newObject = (T*) type.createInstance();
+
+	foreach( const FieldsPair& p, type.getFields() )
+	{
+		Field* field = p.second;
+		const Type& field_type = field->type;
+		
+		if( field->isPointer() )
+		{
+			field->set<boost::intrusive_ptr<Resource>>(
+				newObject, field->get<boost::intrusive_ptr<Resource>>(object));
+		}
+		else if( field_type.isPrimitive() )
+		{
+			const Primitive& type = (Primitive&) field_type;
+
+			if( type.isBool() )
+			{
+				field->set<bool>(newObject, field->get<bool>(object));
+			}
+			//-----------------------------------//
+			else if( type.isInteger() )
+			{
+				field->set<int>(newObject, field->get<int>(object));
+			}
+			//-----------------------------------//
+			else if( type.isFloat() )
+			{
+				field->set<float>(newObject, field->get<float>(object));
+			}
+			//-----------------------------------//
+			else if( type.isString() )
+			{
+				field->set<std::string>(newObject, field->get<std::string>(object));
+			}
+			//-----------------------------------//
+			else if( type.isColor() )
+			{
+				field->set<Color>(newObject, field->get<Color>(object));
+			}
+			//-----------------------------------//
+			else if( type.isVector3() )
+			{
+				field->set<Vector3>(newObject, field->get<Vector3>(object));
+			}
+		}
+	}
+
+	return newObject;
+}
 
 //-----------------------------------//
 
@@ -336,31 +405,6 @@ void ScenePage::onItemChanged(wxTreeEvent& event)
 		events->onComponentSelect(newComponent);
 
 	sentLastSelectionEvent = false;
-}
-
-//-----------------------------------//
-
-class NodeOperation : public UndoOperation
-{
-public:
-
-	void redo();
-	void undo();
-
-	NodePtr node;
-	SceneWeakPtr weakScene;
-};
-
-void NodeOperation::redo()
-{
-	ScenePtr scene = weakScene.lock();
-	scene->add(node);
-}
-
-void NodeOperation::undo()
-{
-	ScenePtr scene = weakScene.lock();
-	scene->remove(node);
 }
 
 //-----------------------------------//
@@ -637,64 +681,6 @@ void ScenePage::onItemMenu(wxTreeEvent& event)
 	PopupMenu(&menu, clientpt);
 }
 
-//-----------------------------------//	
-
-template<typename T>
-T* cloneObject(T* object)
-{
-	const Class& type = object->getInstanceType();
-	T* newObject = (T*) type.createInstance();
-
-	foreach( const FieldsPair& p, type.getFields() )
-	{
-		Field* field = p.second;
-		const Type& field_type = field->type;
-		
-		if( field->isPointer() )
-		{
-			field->set<boost::intrusive_ptr<Resource>>(
-				newObject, field->get<boost::intrusive_ptr<Resource>>(object));
-		}
-
-		if( field_type.isPrimitive() )
-		{
-			const Primitive& type = (Primitive&) field_type;
-
-			if( type.isBool() )
-			{
-				field->set<bool>(newObject, field->get<bool>(object));
-			}
-			//-----------------------------------//
-			else if( type.isInteger() )
-			{
-				field->set<int>(newObject, field->get<int>(object));
-			}
-			//-----------------------------------//
-			else if( type.isFloat() )
-			{
-				field->set<float>(newObject, field->get<float>(object));
-			}
-			//-----------------------------------//
-			else if( type.isString() )
-			{
-				field->set<std::string>(newObject, field->get<std::string>(object));
-			}
-			//-----------------------------------//
-			else if( type.isColor() )
-			{
-				field->set<Color>(newObject, field->get<Color>(object));
-			}
-			//-----------------------------------//
-			else if( type.isVector3() )
-			{
-				field->set<Vector3>(newObject, field->get<Vector3>(object));
-			}
-		}
-	}
-
-	return newObject;
-}
-
 //-----------------------------------//
 
 void ScenePage::onMenuSelected( wxCommandEvent& event )
@@ -798,9 +784,8 @@ MeshPtr ScenePage::askMeshResource()
 	if( fd.ShowModal() != wxID_OK )
 		return nullptr;
 
-
-	std::string filename( fd.GetPath() );
-	std::vector<std::string> elems = String::split( filename, '\\' );
+	std::string file( fd.GetPath() );
+	std::vector<std::string> elems = String::split(file, '\\');
 
 	ResourceManager* rm = engine->getResourceManager();
 	MeshPtr mesh = rm->loadResource<Mesh>( elems.back() );

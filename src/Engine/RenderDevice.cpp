@@ -183,7 +183,7 @@ bool RenderDevice::setupRenderState( const RenderState& state )
 
 	const Matrix4x3& matModel = state.modelMatrix;
 	const Matrix4x3& matView = camera->getViewMatrix();
-	const Matrix4x4& matProjection = frustum.projectionMatrix;
+	const Matrix4x4& matProjection = frustum.matProjection;
 
 	const RenderablePtr& rend = state.renderable;
 	const MaterialPtr& material = rend->getMaterial();

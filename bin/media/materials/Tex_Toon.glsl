@@ -27,7 +27,7 @@ void main()
 
 #version 110
 
-uniform vec4 vp_LightColors[];
+//uniform vec4 vp_LightColors[];
 uniform vec3 vp_LightDirection;
 uniform sampler2D vp_Texture0;
 
@@ -38,7 +38,7 @@ void main(void)
 {
 	vec4 ambient = vec4(0.3,0.3,0.25,1.0);
 	
-	float diffuse = dot(vec3(0.5,0.5,0.5), normal);
+	float diffuse = dot(vec3(0.5,0.5,-1.0), normal);
 	diffuse = pow((0.5*diffuse)+0.5,2.0);
 	
 	vec4 tex = texture2D(vp_Texture0, texCoord0);

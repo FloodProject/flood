@@ -720,6 +720,14 @@
 		<Filter
 			Name="Settings"
 			>
+			<File
+				RelativePath="..\..\src\Editor\Settings.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\Editor\inc\Settings.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath="..\..\src\Editor\Editor.cpp"

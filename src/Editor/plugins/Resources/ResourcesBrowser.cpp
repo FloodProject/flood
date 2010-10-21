@@ -11,14 +11,11 @@
 #include "Editor.h"
 #include "Viewframe.h"
 #include "EditorIcons.h"
+#include "Settings.h"
+#include "UndoManager.h"
+#include "../Scene/ScenePage.h"
 
 namespace vapor { namespace editor {
-
-//-----------------------------------//
-
-static const std::string CacheFolder( "Cache/" );
-static const std::string ThumbCache( "Thumbs.cache" );
-static const int ThumbSize = 256;
 
 //-----------------------------------//
 
@@ -45,71 +42,6 @@ ResourcesBrowser::~ResourcesBrowser()
 
 //-----------------------------------//
 
-void ResourcesBrowser::setupUI()
-{
-	wxBoxSizer* bSizer1;
-	bSizer1 = new wxBoxSizer( wxVERTICAL );
-	
-	m_panel2 = new wxPanel( this, wxID_ANY );
-	wxBoxSizer* bSizer3;
-	bSizer3 = new wxBoxSizer( wxVERTICAL );
-	
-	m_listCtrl = new wxListCtrl( m_panel2, wxID_ANY,
-		wxDefaultPosition, wxDefaultSize, wxLC_ICON | wxLC_AUTOARRANGE ); 
-	bSizer3->Add( m_listCtrl, 1, wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer6;
-	bSizer6 = new wxBoxSizer( wxHORIZONTAL );
-	
-	wxBoxSizer* bSizer5;
-	bSizer5 = new wxBoxSizer( wxHORIZONTAL );
-	
-	m_staticText1 = new wxStaticText( m_panel2, wxID_ANY, "Detail" );
-	m_staticText1->Wrap( -1 );
-	bSizer5->Add( m_staticText1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	m_slider1 = new wxSlider( m_panel2, wxID_ANY, 50, 0, 100 );
-	bSizer5->Add( m_slider1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	bSizer6->Add( bSizer5, 1, wxALIGN_LEFT, 5 );
-	
-	wxBoxSizer* bSizer2;
-	bSizer2 = new wxBoxSizer( wxHORIZONTAL );
-	
-	m_button1 = new wxButton( m_panel2, wxID_ANY, "Refresh" );
-	bSizer2->Add( m_button1, 1, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	bSizer6->Add( bSizer2, 0, wxALIGN_RIGHT, 5 );
-	
-	bSizer3->Add( bSizer6, 0, wxEXPAND, 5 );
-	
-	m_panel2->SetSizer( bSizer3 );
-	m_panel2->Layout();
-	bSizer3->Fit( m_panel2 );
-	bSizer1->Add( m_panel2, 1, wxEXPAND, 5 );
-	
-	SetSizer( bSizer1 );
-	Layout();
-	
-	Centre( wxBOTH );
-
-	Bind( wxEVT_CLOSE_WINDOW, &ResourcesBrowser::OnClose, this );
-
-	wxIcon icon;
-	icon.CopyFromBitmap( wxMEMORY_BITMAP(package) );
-	
-	SetIcon(icon);
-
-	int size = ThumbSize / 2;
-	images = new wxImageList(size, size);
-	m_listCtrl->AssignImageList(images, wxIMAGE_LIST_NORMAL);
-
-	m_listCtrl->Bind( wxEVT_COMMAND_LIST_BEGIN_DRAG,
-		&ResourcesBrowser::OnListBeginDrag, this );
-}
-
-//-----------------------------------//
-
 void ResourcesBrowser::setupRender()
 {
 	Engine* engine = Engine::getInstancePtr();
@@ -119,9 +51,14 @@ void ResourcesBrowser::setupRender()
 	renderBuffer = device->createRenderBuffer(settings);
 	renderBuffer->createRenderBuffer(RenderBufferType::Depth);
 	colorTexture = renderBuffer->createRenderTexture(RenderBufferType::Color);
-	renderBuffer->check();
+	
+	if( !renderBuffer->check() )
+		return;
 	
 	camera.reset( new Camera() );
+	Frustum& frustum = camera->getFrustum();
+	frustum.nearPlane = 0.1f;
+
 	nodeCamera.reset( new Node() );
 	nodeCamera->addTransform();
 	nodeCamera->addComponent( camera );
@@ -135,6 +72,8 @@ void ResourcesBrowser::setupRender()
 }
 
 //-----------------------------------//
+
+#pragma TODO("Refactor utility functions in a proper header")
 
 static const std::string getBase(const std::string& name)
 {
@@ -393,7 +332,15 @@ void ResourcesBrowser::OnListBeginDrag(wxListEvent& event)
 	node->addTransform();
 	node->getTransform()->setPosition(dropPoint);
 	node->addComponent( ModelPtr( new Model(mesh) ) );
-	scene->add(node);
+
+	NodeOperation* nodeOperation = new NodeOperation();
+	nodeOperation->node = node;
+	nodeOperation->weakScene = scene;
+
+	UndoManager* undoManager = editor->getUndoManager();
+	undoManager->registerOperation(nodeOperation);
+
+	nodeOperation->redo();
 }
 
 //-----------------------------------//
@@ -410,6 +357,71 @@ void ResourcesBrowser::OnClose(wxCloseEvent& event)
     }
 
     event.Skip();
+}
+
+//-----------------------------------//
+
+void ResourcesBrowser::setupUI()
+{
+	wxBoxSizer* bSizer1;
+	bSizer1 = new wxBoxSizer( wxVERTICAL );
+	
+	m_panel2 = new wxPanel( this, wxID_ANY );
+	wxBoxSizer* bSizer3;
+	bSizer3 = new wxBoxSizer( wxVERTICAL );
+	
+	m_listCtrl = new wxListCtrl( m_panel2, wxID_ANY,
+		wxDefaultPosition, wxDefaultSize, wxLC_ICON | wxLC_AUTOARRANGE ); 
+	bSizer3->Add( m_listCtrl, 1, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer6;
+	bSizer6 = new wxBoxSizer( wxHORIZONTAL );
+	
+	wxBoxSizer* bSizer5;
+	bSizer5 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_staticText1 = new wxStaticText( m_panel2, wxID_ANY, "Detail" );
+	m_staticText1->Wrap( -1 );
+	bSizer5->Add( m_staticText1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_slider1 = new wxSlider( m_panel2, wxID_ANY, 50, 0, 100 );
+	bSizer5->Add( m_slider1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	bSizer6->Add( bSizer5, 1, wxALIGN_LEFT, 5 );
+	
+	wxBoxSizer* bSizer2;
+	bSizer2 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_button1 = new wxButton( m_panel2, wxID_ANY, "Refresh" );
+	bSizer2->Add( m_button1, 1, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	bSizer6->Add( bSizer2, 0, wxALIGN_RIGHT, 5 );
+	
+	bSizer3->Add( bSizer6, 0, wxEXPAND, 5 );
+	
+	m_panel2->SetSizer( bSizer3 );
+	m_panel2->Layout();
+	bSizer3->Fit( m_panel2 );
+	bSizer1->Add( m_panel2, 1, wxEXPAND, 5 );
+	
+	SetSizer( bSizer1 );
+	Layout();
+	
+	Centre( wxBOTH );
+
+	Bind( wxEVT_CLOSE_WINDOW, &ResourcesBrowser::OnClose, this );
+
+	wxIcon icon;
+	icon.CopyFromBitmap( wxMEMORY_BITMAP(package) );
+	
+	SetIcon(icon);
+
+	int size = ThumbSize / 2;
+	images = new wxImageList(size, size);
+	m_listCtrl->AssignImageList(images, wxIMAGE_LIST_NORMAL);
+
+	m_listCtrl->Bind( wxEVT_COMMAND_LIST_BEGIN_DRAG,
+		&ResourcesBrowser::OnListBeginDrag, this );
 }
 
 //-----------------------------------//

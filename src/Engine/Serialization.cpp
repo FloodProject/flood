@@ -269,6 +269,16 @@ static Color convertValueToColor( const Json::Value& value )
 
 static Quaternion convertValueToQuaternion( const Json::Value& value )
 {
+	if(value.size() == 3)
+	{
+		EulerAngles ang(
+			float(value[0u].asDouble()),
+			float(value[1u].asDouble()),
+			float(value[2u].asDouble()));
+
+		return Quaternion(ang);
+	}
+
 	Quaternion quat(
 		float(value[0u].asDouble()),
 		float(value[1u].asDouble()),

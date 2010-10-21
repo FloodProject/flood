@@ -134,6 +134,9 @@ namespace String
 	// Converts a regular string to upper case.
 	VAPOR_API std::string toUpperCase(const std::string& str);
 
+	// Replaces a sub-string by another sub-string in the source string.
+	VAPOR_API void replace(std::string& source, const std::string& from, const std::string& to);
+
 	// Converts a number to a string.
 	template< typename T >
 	std::string fromNumber(const T& t)
