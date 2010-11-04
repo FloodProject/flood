@@ -8,6 +8,8 @@
 
 #pragma once
 
+#ifdef VAPOR_PHYSICS_BULLET
+
 #include "vapor/scene/Component.h"
 
 class btCollisionShape;
@@ -51,3 +53,5 @@ TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( Shape );
 //-----------------------------------//
 
 } // end namespace
+
+#endif

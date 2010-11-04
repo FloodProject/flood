@@ -14,9 +14,11 @@
 
 namespace vapor {
 
+//-----------------------------------//
+
 class File;
 class FileWatcher;
-struct FileWatchEvent;
+class FileWatchEvent;
 
 class TaskManager;
 class ResourceTask;
@@ -25,9 +27,9 @@ class ResourceLoader;
 //-----------------------------------//
 
 /**
- * This event gets sent out whenever an operation that has the corresponding
- * delegate declared in the Resource class is executed. This can be useful 
- * when monitoring resource changes is (for example, in editor applications).
+ * Event fired whenever an operation on the resource happens.
+ * This can be useful to know when monitoring for changes,
+ * for example in editors.
  */
 
 struct ResourceEvent
@@ -65,33 +67,29 @@ public:
 	ResourceManager( FileWatcher* fileWatcher, TaskManager* );
 	virtual ~ResourceManager();
  
-	// Creates a new resource and returns an handle to the resource.
+	// Creates a new resource and returns it.
 	ResourcePtr loadResource(const std::string& path, bool async = true);
 
-	// Creates a new resource and returns the specific resource type.
-	template <typename T>
-	boost::intrusive_ptr<T> loadResource(const std::string& path, bool async = true)
-	{
-		ResourcePtr res = loadResource( path, async );
-		return boost::static_pointer_cast<T>( res );
-	}
-
-	// Gets an existing resource by its Path (or null if it does not exist).
+	// Gets an already loaded resource by its path.
 	ResourcePtr getResource(const std::string& path);
 
-	// Gets a specific resource given it's name (if it exists).
-	template <typename T>
-	boost::intrusive_ptr<T> getResource(const std::string& path)
-	{
-		ResourcePtr res = getResource( path );
-		return boost::static_pointer_cast<T>( res );
-	}
+	// Finds the loader for the given extension.
+	ResourceLoader* findLoader(const std::string& ext);
+
+	// Validates if the resource exists and if there is a loader for it.
+	bool validateResource( const std::string& path );
 
 	// Removes a resource from the manager.
 	void removeResource(const ResourcePtr& res);
 
+	// Removes a resource from the manager.
+	void removeResource(const std::string& path);
+
+	// Removes unused resources.
+	void removeUnusedResources();
+
 	// Finishes until all queued resources are loaded.
-	void waitUntilQueuedResourcesLoad();
+	void loadQueuedResources();
 
 	// Registers a resource handler.
 	void registerLoader(ResourceLoader* const loader);
@@ -116,14 +114,14 @@ public:
 
 protected:
 
-	// Validates that the resource exists and there is a loader for it.
-	bool validateResource( const File& file );
-
 	// Returns a new resource ready to be processed by a loader.
 	ResourcePtr prepareResource( const File& file );
 
 	// Processes the resource with the right resource loader.
 	void decodeResource( ResourcePtr res, bool async = true, bool notify = true );
+
+	// Sends pending resource events.
+	void sendPendingEvents();
 
 	// Maps a name to a resource.
 	ResourceMap resources;
@@ -134,8 +132,10 @@ protected:
 	// Manages all background loading tasks.
 	TaskManager* taskManager;
 
-	// When tasks finish, they queue a loaded event into the queue.
+	// When tasks finish, they queue an event.
 	concurrent_queue<ResourceEvent> resourceTaskEvents;
+
+	// Number of resources queued for loading.
 	atomic_int numResourcesQueuedLoad;
 
 	// Global setting to override threaded loading.
@@ -147,11 +147,27 @@ protected:
 public:
 
 	// These events are sent when their correspending actions happen.
-	fd::delegate< void( const ResourceEvent& ) > onResourceAdded;
+	fd::delegate< void( const ResourceEvent& ) > onResourcePrepared;
 	fd::delegate< void( const ResourceEvent& ) > onResourceLoaded;
 	fd::delegate< void( const ResourceEvent& ) > onResourceRemoved;
 	fd::delegate< void( const ResourceEvent& ) > onResourceReloaded;
 	fd::delegate< void( const ResourceLoader& ) > onResourceLoaderRegistered;
+
+	// Gets a specific resource given it's name (if it exists).
+	template <typename T>
+	boost::intrusive_ptr<T> getResource(const std::string& path)
+	{
+		ResourcePtr res = getResource( path );
+		return boost::static_pointer_cast<T>( res );
+	}
+
+	// Creates a new resource and returns the specific resource type.
+	template <typename T>
+	boost::intrusive_ptr<T> loadResource(const std::string& path, bool async = true)
+	{
+		ResourcePtr res = loadResource( path, async );
+		return boost::static_pointer_cast<T>( res );
+	}
 };
 
 //-----------------------------------//

@@ -8,6 +8,8 @@
 
 #pragma once
 
+#ifdef VAPOR_PHYSICS_BULLET
+
 #include "vapor/physics/Shape.h"
 
 FWD_DECL_SHARED(Geometry)
@@ -51,3 +53,5 @@ TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( MeshShape );
 //-----------------------------------//
 
 } // end namespace
+
+#endif

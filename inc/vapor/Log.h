@@ -16,21 +16,6 @@ namespace vapor {
 //-----------------------------------//
 
 /**
- * Convenience functions to log in the main engine stream.
- */
-
-namespace Log
-{
-	VAPOR_API void debug(const char* msg, ...);
-	VAPOR_API void debug(const std::string& msg);
-	VAPOR_API void info(const char* msg, ...);
-	VAPOR_API void warn(const char* msg, ...);
-	VAPOR_API void error(const char* msg, ...);
-}
-		
-//-----------------------------------//
-
-/**
  * Severity level of the log message.
  */
 
@@ -40,7 +25,8 @@ namespace LogLevel
 	{
 		Info,
 		Warning,
-		Error
+		Error,
+		Debug
 	};
 
 	std::string toString( LogLevel::Enum );
@@ -49,8 +35,34 @@ namespace LogLevel
 //-----------------------------------//
 
 /**
- * Logging class used to output useful logging and debugging information
- * to an output file format. Currently it outputs to HTML.
+ * Convenience logging functions.
+ */
+
+namespace Log
+{
+	// Logs a debug message to the global logger.
+	VAPOR_API void debug(const char* msg, ...);
+	
+	// Logs a debug message to the global logger.
+	VAPOR_API void debug(const std::string& msg);
+	
+	// Logs an info message to the global logger.
+	VAPOR_API void info(const char* msg, ...);
+	
+	// Logs a warning message to the global logger.
+	VAPOR_API void warn(const char* msg, ...);
+	
+	// Logs an error message to the global logger.
+	VAPOR_API void error(const char* msg, ...);
+	
+	// Shows a message box dialog.
+	VAPOR_API void messageDialog(const std::string& msg, LogLevel::Enum = LogLevel::Warning);
+}
+
+//-----------------------------------//
+
+/**
+ * Logging class used to log relevant information to a stream.
  */
 
 class VAPOR_API Logger : public NativeFile
@@ -72,10 +84,6 @@ public:
 	// Low-level logging implementation.
 	void write(const LogLevel::Enum level, const char* msg, va_list args);
 
-	// Spawns a new message box dialog.
-	static void createMessageDialog(const std::string& msg, 
-		const LogLevel::Enum level = LogLevel::Warning);
-
 protected:
 		
 	// Writes the header to the log.
@@ -91,21 +99,21 @@ protected:
 	bool even;
 
 	// Mutex lock to synchronize access.
-	THREAD(boost::mutex lock;)
+	THREAD(boost::mutex mutex;)
 
 public:
 
 	// Gets the global engine logger.
-	static Logger* getLogger() { return engineLog; }
+	static Logger* getLogger() { return globalLogger; }
 
 	// Gets the global engine logger.
-	static SETTER(Logger, Logger*, engineLog)
+	static SETTER(Logger, Logger*, globalLogger)
 
 	// This controls if debug is output.
 	static bool showDebug;
 
 	// Global engine logger.
-	static Logger* engineLog;
+	static Logger* globalLogger;
 };
 
 //-----------------------------------//

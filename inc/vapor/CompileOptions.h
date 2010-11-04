@@ -12,7 +12,7 @@
 // Engine information
 //---------------------------------------------------------------------//
 
-#define VAPOR_ENGINE_VERSION "vapor3D-SVN"
+#define VAPOR_ENGINE_VERSION "SVN"
 
 //---------------------------------------------------------------------//
 // API building information
@@ -40,8 +40,8 @@
 // Threading stuff
 //---------------------------------------------------------------------//
 
-//#define VAPOR_THREADING
-	//#define VAPOR_THREADING_BOOST
+#define VAPOR_THREADING
+	#define VAPOR_THREADING_BOOST
 	//#define VAPOR_THREADING_STD
 
 //---------------------------------------------------------------------//
@@ -55,7 +55,7 @@
 // Windowing APIs
 //---------------------------------------------------------------------//
 
-#define VAPOR_WINDOWING_SFML
+//#define VAPOR_WINDOWING_SFML
 //#define VAPOR_WINDOWING_WIN32
 
 //---------------------------------------------------------------------//
@@ -79,20 +79,20 @@
 // Input APIs
 //---------------------------------------------------------------------//
 
-#define VAPOR_INPUT_SFML
+//#define VAPOR_INPUT_SFML
 
 //---------------------------------------------------------------------//
 // Audio codecs
 //---------------------------------------------------------------------//
 
-#define VAPOR_AUDIO_OGG
+//#define VAPOR_AUDIO_OGG
 
 //---------------------------------------------------------------------//
 // Image codecs
 //---------------------------------------------------------------------//
 
-//#define VAPOR_IMAGE_DEVIL
-#define VAPOR_IMAGE_PICOPNG
+#define VAPOR_IMAGE_DEVIL
+//#define VAPOR_IMAGE_PICOPNG
 //#define VAPOR_IMAGE_STB
 
 //---------------------------------------------------------------------//
@@ -105,11 +105,13 @@
 // Font providers
 //---------------------------------------------------------------------//
 
-#define VAPOR_FONT_FREETYPE2
-#define VAPOR_FONT_BITMAP
+//#define VAPOR_FONT_FREETYPE2
+//#define VAPOR_FONT_BITMAP
 
 //---------------------------------------------------------------------//
 // Scripting languages
 //---------------------------------------------------------------------//
 
-#define VAPOR_SCRIPTING_LUA
+//#define VAPOR_SCRIPTING_LUA
+
+//#ifdef VAPOR_PHYSICS_BULLET

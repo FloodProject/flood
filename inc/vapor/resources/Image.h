@@ -25,6 +25,8 @@ struct PixelFormat
 	{
 		R8G8B8A8 = 0,
 		R8G8B8,
+		B8G8R8,
+		B8G8R8A8,
 		Depth,
 		Unknown
 	};
@@ -54,10 +56,10 @@ public:
 	Image(ushort width, ushort height, PixelFormat::Enum format);
 
 	// Gets/sets the width of the image.
-	ACESSOR(Width, const ushort, width)
+	ACESSOR(Width, const uint, width)
 	
 	// Gets/sets the height of the image.
-	ACESSOR(Height, const ushort, height)
+	ACESSOR(Height, const uint, height)
 
 	// Gets/sets the pixel format of the image.
 	ACESSOR(PixelFormat, PixelFormat::Enum, pixelFormat)
@@ -83,10 +85,10 @@ public:
 private:
 
 	// Image width.
-	ushort width;
+	uint width;
 
 	// Image height.
-	ushort height;
+	uint height;
 
 	// Pixel format.
 	PixelFormat::Enum pixelFormat;

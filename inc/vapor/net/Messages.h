@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
+* vapor3D Server © (2008-2010)
 *
 *	<http://www.vapor3d.org>
 *
@@ -12,11 +12,16 @@ namespace vapor {
 
 //-----------------------------------//
 
-namespace Hash
+namespace MessageType
 {
-	// Hashes some data using the Murmur2 hash.
-	// http://sites.google.com/site/murmurhash/
-	uint Murmur2( const std::vector<byte>& data, uint seed );
+	enum Enum
+	{
+		ResourceRequest = 0,
+		ResourceResponse,
+		ResourceIndexRequest,
+		ResourceLockRequest,
+		ResourceUnlockRequest
+	};
 }
 
 //-----------------------------------//

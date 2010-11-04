@@ -73,8 +73,10 @@ namespace Actions
  * live updating, so when an asset changes it will be reloaded.
  */
 
-struct VAPOR_API FileWatchEvent : private boost::noncopyable
+class VAPOR_API FileWatchEvent : private boost::noncopyable
 {
+public:
+
 	FileWatchEvent( Actions::Enum action, WatchID id,
 		const std::string& dir, const std::string& file )
 		: action(action)

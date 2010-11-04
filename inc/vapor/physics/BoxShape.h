@@ -8,6 +8,8 @@
 
 #pragma once
 
+#ifdef VAPOR_PHYSICS_BULLET
+
 #include "vapor/physics/Shape.h"
 
 class btBoxShape;
@@ -43,3 +45,5 @@ TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( BoxShape );
 //-----------------------------------//
 
 } // end namespace
+
+#endif

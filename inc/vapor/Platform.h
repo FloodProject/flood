@@ -119,5 +119,13 @@
 	#define VAPOR_ALIGN_BEGIN( alignment )
 	#define VAPOR_ALIGN_END( alignment ) __attribute__ ((aligned( alignment )))
 #else
-	#error "Alignment control for your platform is not currently supported"
+	#error "Implement alignment support for your compiler"
+#endif
+
+#if defined(VAPOR_COMPILER_MSVC)
+	#define VAPOR_INLINE __forceinline
+#elif defined(VAPOR_COMPILER_GCC)
+	#define VAPOR_INLINE __attribute__((always_inline))
+#else
+	#error "Implement inlining support for your compiler"
 #endif

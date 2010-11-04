@@ -8,6 +8,8 @@
 
 #pragma once
 
+#ifdef VAPOR_PHYSICS_BULLET
+
 #include "vapor/Subsystem.h"
 #include "vapor/math/Vector3.h"
 
@@ -98,3 +100,5 @@ protected:
 //-----------------------------------//
 
 } // end namespace
+
+#endif

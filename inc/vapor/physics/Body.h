@@ -8,6 +8,8 @@
 
 #pragma once
 
+#ifdef VAPOR_PHYSICS_BULLET
+
 #include "vapor/scene/Component.h"
 
 class btRigidBody;
@@ -85,3 +87,5 @@ TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( Body );
 //-----------------------------------//
 
 } // end namespace
+
+#endif

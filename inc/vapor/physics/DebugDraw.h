@@ -8,6 +8,8 @@
 
 #pragma once
 
+#ifdef VAPOR_PHYSICS_BULLET
+
 FWD_DECL_INTRUSIVE(VertexBuffer)
 FWD_DECL_INTRUSIVE(Material)
 FWD_DECL_INTRUSIVE(Renderable)
@@ -64,3 +66,5 @@ protected:
 //-----------------------------------//
 
 } // end namespace
+
+#endif

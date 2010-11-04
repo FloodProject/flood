@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
+* vapor3D Server © (2008-2010)
 *
 *	<http://www.vapor3d.org>
 *
@@ -12,26 +12,21 @@ namespace vapor {
 
 //-----------------------------------//
 
-class VAPOR_API Task : public ReferenceCounted, private boost::noncopyable
+class Downloader
 {
 public:
 
-	Task();
-	virtual ~Task() { }
-	virtual void run() = 0;
+	// Initializes the downloader context.
+	bool init();
 
-	// Flags the task to finish.
-	void flagFinish();
+	// Downloads a remote file.
+	void download(const std::string& url);
 
 protected:
 
-	// Keeps track if the task is to finish.
-	bool finish;
-};
 
-TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Task );
+};
 
 //-----------------------------------//
 
 } // end namespace
-	

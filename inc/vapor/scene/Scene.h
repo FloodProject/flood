@@ -54,13 +54,10 @@ class VAPOR_API Scene : public Group
 public:
 
 	Scene();
-	~Scene();
+	virtual ~Scene();
 
 	// Updates all the entities recursively.
 	virtual void update( double delta );
-
-	// Gets a shared pointer to the named entity.
-	NodePtr getEntity( const std::string& name ) const;
 
 	// Checks for collision via ray-BoundingBox tests.
 	bool doRayBoxQuery( const Ray& ray, RayBoxQueryResult& res );
@@ -69,11 +66,6 @@ public:
 	// Checks for collision via ray-triangle tests.
 	bool doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res );
 	bool doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, const NodePtr& node );
-
-private:	
-
-	/// Updates all the transforms and bounding volumes of the scene nodes.
-	//void updateTransformAndBV( NodePtr node, MatrixStack& transformStack );
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Scene );

@@ -8,6 +8,8 @@
 
 #pragma once
 
+#ifdef VAPOR_PHYSICS_BULLET
+
 #include "vapor/math/Vector3.h"
 #include "vapor/math/BoundingBox.h"
 
@@ -47,3 +49,5 @@ namespace Convert
 //-----------------------------------//
 
 } // end namespace
+
+#endif

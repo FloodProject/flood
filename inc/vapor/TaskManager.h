@@ -56,6 +56,9 @@ public:
 	// Adds a new task to be run by the sheduler.
 	void addTask( const TaskPtr& task );
 
+	// Gets the worker threads.
+	GETTER(Threads, const std::vector<Thread*>&, threadPool)
+
 	// Sends the events to the observers.
 	void update( double delta );
 
@@ -71,7 +74,7 @@ protected:
 	void pushEvent( TaskEvent::Enum event, const TaskPtr& task,
 		bool sendEvent = false );
 
-	// Runs the worker threads and executes the tasks.
+	// Runs in the worker threads and executes the tasks.
 	void runWorker();
 
 	typedef std::vector<Thread*> ThreadQueue;
@@ -80,8 +83,8 @@ protected:
 	typedef concurrent_queue<TaskPtr> TaskQueue;
 	TaskQueue tasks;
 
-	typedef concurrent_queue<TaskEvent> EventQueue;
-	EventQueue events;
+	typedef concurrent_queue<TaskEvent> TaskEventQueue;
+	TaskEventQueue events;
 };
 
 //-----------------------------------//

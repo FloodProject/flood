@@ -87,6 +87,7 @@ public:
 	//Material( const std::string& name );
 	Material( const std::string& name, const std::string& program = "diffuse" );
 	Material( const Material& rhs );
+	~Material();
 
 	// Gets the textual name of the material.
 	GETTER(Name, const std::string&, name);
@@ -117,6 +118,9 @@ public:
 
 	// Gets/sets the depth testing of the material.
 	ACESSOR(DepthCompare, DepthCompare::Enum, depthCompare)
+
+	// Gets/sets the alpha testing of the material.
+	ACESSOR(AlphaTest, bool, alphaTest)
 
 	// Gets/sets the line width of the material.
 	ACESSOR(LineWidth, float, lineWidth)
@@ -173,6 +177,9 @@ protected:
 	DepthCompare::Enum depthCompare;
 	bool depthTest;
 	bool depthWrite;
+
+	// Alpha settings.
+	bool alphaTest;
 
 	// Line settings.
 	bool lineSmooth;

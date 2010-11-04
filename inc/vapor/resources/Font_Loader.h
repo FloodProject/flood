@@ -8,6 +8,8 @@
 
 #pragma once
 
+#ifdef VAPOR_FONT_FREETYPE2
+
 #include "vapor/resources/ResourceLoader.h"	
 #include "vapor/resources/Font.h"
 #include "vapor/resources/BitmapFont.h"
@@ -92,3 +94,5 @@ protected:
 //-----------------------------------//
 
 } // end namespace
+
+#endif

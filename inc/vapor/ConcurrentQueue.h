@@ -88,7 +88,7 @@ public:
 
 	//-----------------------------------//
 
-private:
+protected:
 
 	std::deque<T> queue;
 

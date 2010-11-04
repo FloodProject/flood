@@ -11,84 +11,6 @@
 namespace vapor {
 
 //---------------------------------------------------------------------//
-// Macro for unused parameters to clean up compiler warnings
-//---------------------------------------------------------------------//
-
-#define VAPOR_UNUSED( id )
-
-//---------------------------------------------------------------------//
-// Helper macros to stringify parameters.
-//---------------------------------------------------------------------//
-
-#define STRINGIFY(x) #x
-#define TOSTRING(x) STRINGIFY(x)
-
-#define __FILE__LINE__ __FILE__ "(" TOSTRING(__LINE__) ") : "
-#define TODO( x )  message( __FILE__LINE__" TODO :   " #x "\n" ) 
-
-//---------------------------------------------------------------------//
-// Array and Conversion Helpers
-//---------------------------------------------------------------------//
-
-#define VAPOR_ARRAY_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))
-
-//---------------------------------------------------------------------//
-// Forward-declaration Helpers
-//---------------------------------------------------------------------//
-
-#define FWD_DECL_INTRUSIVE(T)						\
-	namespace vapor {								\
-		class T;									\
-		TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( T );	\
-	} // end namespace
-	
-#define FWD_DECL_SHARED(T)							\
-	namespace vapor {								\
-		class T;									\
-		TYPEDEF_SHARED_POINTER_FROM_TYPE( T );		\
-	} // end namespace
-
-#define FWD_DECL_SHARED_WEAK(T)						\
-	namespace vapor {								\
-		class T;									\
-		TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( T );	\
-	} // end namespace
-
-//---------------------------------------------------------------------//
-// Acessors
-//---------------------------------------------------------------------//
-
-#define DECLARE_GETTER(name, type)				\
-	type get##name() const;
-
-#define DECLARE_SETTER(name, type)				\
-	void set##name(type v);
-
-#define DECLARE_ACESSOR(name, type)				\
-	DECLARE_GETTER(name, type)					\
-	DECLARE_SETTER(name, type)
-
-#define GETTER(name, type, var)					\
-	type get##name() const { return var; }
-
-#define SETTER(name, type, var)					\
-	void set##name(type v) { var = v; }
-
-#define GETTER_PTR(name, type, var)				\
-	type get##name() const { return *var; }
-
-#define SETTER_PTR(name, type, var)				\
-	void set##name(type v) { var = &v; }
-
-#define ACESSOR(name, type, var)				\
-	GETTER(name, type, var)						\
-	SETTER(name, type, var)
-
-#define ACESSOR_PTR(name, type, var)			\
-	GETTER_PTR(name, type, var)					\
-	SETTER_PTR(name, type, var)
-
-//---------------------------------------------------------------------//
 // System Information
 //---------------------------------------------------------------------//
 
@@ -99,6 +21,12 @@ namespace System
 
 	// Swaps the endianness of a long.
 	long swapEndian(long i);
+
+	// Enumerates files in a given path.
+	std::vector<std::string> enumerateFiles(const std::string& path);
+
+	// Enumerates dirs in a given path.
+	std::vector<std::string> enumerateDirs(const std::string& path);
 }
 
 //---------------------------------------------------------------------//
@@ -137,6 +65,15 @@ namespace String
 	// Replaces a sub-string by another sub-string in the source string.
 	VAPOR_API void replace(std::string& source, const std::string& from, const std::string& to);
 
+	// Gets the base part of the filename string.
+	VAPOR_API std::string getBaseFromPath(const std::string& name);
+
+	// Gets the extension part of the filename string.
+	VAPOR_API std::string getExtensionFromPath(const std::string& name);
+
+	// Gets the file part of the path string.
+	VAPOR_API std::string getFileFromPath(const std::string& name);
+
 	// Converts a number to a string.
 	template< typename T >
 	std::string fromNumber(const T& t)
@@ -163,7 +100,7 @@ namespace String
 	}
 
 	// Converts a float to a string.
-	VAPOR_API void fromFloat( char* str, float n, byte precision = 2 );
+	VAPOR_API std::string fromFloat( float n, byte precision = 2 );
 }
 
 //---------------------------------------------------------------------//

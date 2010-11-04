@@ -62,10 +62,10 @@ public:
 	GETTER(PixelFormat, PixelFormat::Enum, format)
 
 	// Gets the associated image.
-	GETTER(Image, const ImagePtr&, image)
+	GETTER(Image, const Image*, image)
 
 	// Sets the associated image.
-	void setImage( const ImagePtr& );
+	void setImage( Image* image );
 
 protected:
 
@@ -104,7 +104,7 @@ protected:
 	TextureFiltering::Enum maxFilter;
 	float anisotropicFilter;
 	
-	ImagePtr image;
+	Image* image;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Texture );

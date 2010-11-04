@@ -36,6 +36,9 @@
 // Resource-related Includes
 //---------------------------------------------------------------------//
 
+#include "vapor/resources/Resource.h"
+#include "vapor/resources/ResourceManager.h"
+#include "vapor/resources/ResourceLoader.h"
 #include <vapor/resources/Image.h>
 #include <vapor/resources/Mesh.h>
 #include <vapor/resources/Sound.h>

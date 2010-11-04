@@ -40,7 +40,7 @@ public:
 	NodePtr findNode( const std::string& name ) const;
 
 	// Gets the nodes of the group.
-	GETTER(Children, const std::vector<NodePtr>&, nodes)
+	GETTER(Nodes, const std::vector<NodePtr>&, nodes)
 
 	// Updates this group of nodes.
 	virtual void update( double delta );

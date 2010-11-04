@@ -12,6 +12,7 @@
 #include "vapor/math/Frustum.h"
 
 FWD_DECL_SHARED(Transform)
+FWD_DECL_SHARED(Scene)
 
 namespace vapor {
 
@@ -45,13 +46,16 @@ public:
 	void render();
 
 	// Renders the scene to the current render view.
-	void render( const NodePtr& node, bool clearView = true );
+	void render( const NodePtr& scene );
+
+	// Renders the block to the current render view.
+	void render( RenderBlock& block, bool clearView = true );
 
 	// Performs hierarchical frustum culling on the nodes in the scene.
-	void cull( RenderBlock& queue, const NodePtr& node ) const;
+	void cull( RenderBlock& queue, const NodePtr& node );
 
 	// Gets a ray given the screen coordinates of the mouse.
-	Ray getRay( float scrx, float scry, Vector3* outFar = nullptr ) const;
+	Ray getRay( float x, float y, Vector3* outFar = nullptr ) const;
 
 	// Updates this component.
 	virtual void update( double delta );

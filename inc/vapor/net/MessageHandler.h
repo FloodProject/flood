@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
+* vapor3D Server © (2008-2010)
 *
 *	<http://www.vapor3d.org>
 *
@@ -8,16 +8,21 @@
 
 #pragma once
 
+#include "Message.h"
+
 namespace vapor {
 
 //-----------------------------------//
 
-namespace Hash
+class MessageHandler
 {
-	// Hashes some data using the Murmur2 hash.
-	// http://sites.google.com/site/murmurhash/
-	uint Murmur2( const std::vector<byte>& data, uint seed );
-}
+public:
+
+	virtual ~MessageHandler() { }
+
+	// Handles the message.
+	virtual void handleMessage(const MessagePtr&) = 0;
+};
 
 //-----------------------------------//
 

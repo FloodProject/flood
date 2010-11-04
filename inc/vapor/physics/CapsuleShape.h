@@ -8,6 +8,8 @@
 
 #pragma once
 
+#ifdef VAPOR_PHYSICS_BULLET
+
 #include "vapor/physics/Shape.h"
 
 class btCapsuleShape;
@@ -52,3 +54,5 @@ TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( CapsuleShape );
 //-----------------------------------//
 
 } // end namespace
+
+#endif
