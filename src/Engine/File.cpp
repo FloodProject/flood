@@ -307,15 +307,7 @@ const std::string File::getName() const
 const std::string File::getExtension() const
 {
 	std::string name = getName();
-
-	// Check if it has a file extension.
-	size_t ch = name.find_last_of(".");
-
-	if( ch == std::string::npos ) 
-		return "";
-
-	// Return the file extension.
-	return name.substr( ++ch );
+	return String::getExtensionFromPath(name);
 }
 
 //-----------------------------------//

@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Core.h"
 #include "vapor/NativeFile.h"
 
 #ifdef VAPOR_PLATFORM_WINDOWS
@@ -58,8 +58,12 @@ bool NativeFile::open()
 	else if( mode == FileMode::Append )
 		mode_ = "a+b";
 
+#ifdef VAPOR_COMPILER_MSVC
+	fopen_s(&fp, path.c_str(), mode_);
+#else
 	fp = fopen(path.c_str(), mode_);
-	
+#endif
+
 	if ( !fp ) 
 		return false;
 
@@ -81,15 +85,12 @@ void NativeFile::close()
 
 void NativeFile::setBuffering( bool state )
 {
+	int mode = _IOFBF;
+	
 	if( !state )
-	{
-		// Turn off file buffering.
-		setbuf(fp, nullptr);
-	}
-	else
-	{
-		assert( false && "Not implemented" );
-	}
+		mode = _IONBF;
+	
+	setvbuf(fp, nullptr, mode, 0);
 }
 
 //-----------------------------------//

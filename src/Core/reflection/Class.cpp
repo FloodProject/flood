@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Core.h"
 #include "vapor/core/Class.h"
 
 namespace vapor {

@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Core.h"
 #include "vapor/math/Vector2.h"
 #include "vapor/math/Vector3.h"
 #include "vapor/math/Vector4.h"

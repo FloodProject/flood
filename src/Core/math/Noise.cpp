@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Core.h"
 #include "vapor/math/Noise.h"
 #include "vapor/math/Math.h"
 

@@ -8,6 +8,8 @@
 
 #include "vapor/PCH.h"
 
+#ifdef VAPOR_PHYSICS_BULLET
+
 #include "vapor/physics/CapsuleShape.h"
 #include "vapor/physics/Convert.h"
 #include "vapor/physics/Body.h"
@@ -92,3 +94,5 @@ void CapsuleShape::onFieldChanged(const Field& field)
 //-----------------------------------//
 
 } // end namespace
+
+#endif

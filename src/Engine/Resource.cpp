@@ -52,11 +52,7 @@ bool Resource::isLoaded() const
 std::string Resource::getBasePath() const
 {
 	assert( !path.empty() );
-
-	size_t n = path.find_last_of(".");
-	assert( n != std::string::npos );
-
-	return path.substr(0, n);
+	return String::getBaseFromPath(path);
 }
 
 //-----------------------------------//

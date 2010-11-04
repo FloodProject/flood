@@ -414,7 +414,7 @@ bool GizmoPlugin::pickBoundingTest( const MouseMoveEvent& me )
 		return false;
 
 	// Find out if we picked a gizmo...
-	GizmoPtr gizmo = res.node->getComponent<Gizmo>("Gizmo");
+	GizmoPtr gizmo = res.node->getComponent<Gizmo>();
 	
 	return gizmo != nullptr;
 }

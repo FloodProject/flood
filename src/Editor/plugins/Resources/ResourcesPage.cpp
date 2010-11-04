@@ -10,7 +10,6 @@
 #include "ResourcesPage.h"
 #include "EditorIcons.h"
 #include "Editor.h"
-#include <wx/utils.h> 
 
 namespace vapor { namespace editor {
 
@@ -23,10 +22,10 @@ ResourcesPage::ResourcesPage( EditorFrame* editor,
 	  wxDefaultValidator, "ResourcesPage")
 	, editor(editor)
 {
-	engine = editor->getEngine();
+	Engine* engine = editor->getEngine();
 	rm = engine->getResourceManager();
 	
-	rm->onResourceAdded += fd::bind( &ResourcesPage::onResourceAdded, this );
+	rm->onResourcePrepared += fd::bind( &ResourcesPage::onResourcePrepared, this );
 	rm->onResourceRemoved += fd::bind( &ResourcesPage::onResourceRemoved, this );
 	
 	rm->onResourceLoaded += fd::bind( &ResourcesPage::onResourceReloaded, this );
@@ -41,7 +40,7 @@ ResourcesPage::ResourcesPage( EditorFrame* editor,
 
 ResourcesPage::~ResourcesPage()
 {
-	rm->onResourceAdded -= fd::bind( &ResourcesPage::onResourceAdded, this );
+	rm->onResourcePrepared -= fd::bind( &ResourcesPage::onResourcePrepared, this );
 	rm->onResourceRemoved -= fd::bind( &ResourcesPage::onResourceRemoved, this );
 
 	rm->onResourceLoaded -= fd::bind( &ResourcesPage::onResourceReloaded, this );
@@ -63,13 +62,13 @@ void ResourcesPage::initControl()
 
 	foreach( const EnumValuesPair& p, resourcesEnum.getValues() )
 	{
-		ResourceGroup::Enum value = (ResourceGroup::Enum) p.second;
+		ResourceGroup::Enum group = (ResourceGroup::Enum) p.second;
 
-		if( value == ResourceGroup::General )
+		if( group == ResourceGroup::General )
 			continue;
 
-		resourceGroupTreeIds[value] =
-			AppendItem(rootItemId, p.first, resourceGroupIcons[value]);
+		resourceGroupTreeIds[group] =
+			AppendItem(rootItemId, p.first, resourceGroupIcons[group]);
 	}
 
 	Bind(wxEVT_COMMAND_TREE_ITEM_MENU, &ResourcesPage::onTreeItemMenu, this);
@@ -104,33 +103,51 @@ void ResourcesPage::initIcons()
 
 void ResourcesPage::updateTree()
 {
-	foreach( const ResourceMapPair& resource, rm->getResources() )
+	foreach( const ResourceMapPair& p, rm->getResources() )
 	{
-		const ResourcePtr& res = resource.second;
-		ResourceGroup::Enum group = res->getResourceGroup();
-
-		AppendItem( resourceGroupTreeIds[group],
-					resource.first, 0
-					/*resourceGroupIcons[group]*/ );
+		const ResourcePtr& res = p.second;
+		addResource(res);
 	}
 }
 
 //-----------------------------------//
 
-void ResourcesPage::onResourceAdded( const ResourceEvent& event )
+wxTreeItemId ResourcesPage::addResource(const ResourcePtr& res)
+{
+	if( resourceIds.find(res.get()) != resourceIds.end() )
+		return wxTreeItemId();
+
+	ResourceGroup::Enum group = res->getResourceGroup();
+	wxTreeItemId groupId = resourceGroupTreeIds[group];
+
+	wxTreeItemId id = AppendItem(groupId, res->getPath(), 0 );
+	resourceIds[res.get()] = id;
+
+	return id;
+}
+
+//-----------------------------------//
+
+void ResourcesPage::onResourcePrepared( const ResourceEvent& event )
 {
 	const ResourcePtr& res = event.resource;
-	ResourceGroup::Enum group = res->getResourceGroup();
-
-	AppendItem( resourceGroupTreeIds[group],
-				res->getPath(), 0
-				/*resourceGroupIcons[group]*/ );
+	addResource(res);
 }
 
 //-----------------------------------//
 
 void ResourcesPage::onResourceRemoved( const ResourceEvent& event )
 {
+	const ResourcePtr& res = event.resource;
+
+	ResourceIdsMap::iterator it = resourceIds.find( res.get() );
+	assert( it != resourceIds.end() );
+
+	wxTreeItemId id = (*it).second;
+	assert( id.IsOk() );
+
+	Delete(id);
+	resourceIds.erase(it);
 }
 
 //-----------------------------------//

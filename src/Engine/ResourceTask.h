@@ -16,8 +16,7 @@ public:
 
 	~ResourceTask()
 	{
-		rm->numResourcesQueuedLoad--;
-		THREAD( rm->resourceFinishLoad.notify_one(); )
+
 	}
 
 	void run()
@@ -54,6 +53,11 @@ public:
 
 			rm->resourceTaskEvents.push(event);
 		}
+
+		rm->numResourcesQueuedLoad--;
+		THREAD( rm->resourceFinishLoad.notify_one(); )
+
+		Log::info("Loaded resource '%s'", path.c_str());
 	}
 
 	Resource* res;

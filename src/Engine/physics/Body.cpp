@@ -7,6 +7,9 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
+
+#ifdef VAPOR_PHYSICS_BULLET
+
 #include "vapor/physics/Body.h"
 #include "vapor/physics/Shape.h"
 #include "vapor/physics/Physics.h"
@@ -207,3 +210,5 @@ void Body::onFieldChanged(const Field& field)
 //-----------------------------------//
 
 } // end namespace
+
+#endif

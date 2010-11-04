@@ -15,8 +15,6 @@
 
 namespace vapor {
 
-using vapor::File;
-
 //-----------------------------------//
 
 GLSL_Loader::GLSL_Loader()

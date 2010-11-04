@@ -24,6 +24,7 @@ class ResourcesPlugin : public Plugin
 public:
 
 	ResourcesPlugin( EditorFrame* frame );
+	~ResourcesPlugin();
 
 	// Gets metadata about this plugin.
 	virtual PluginMetadata getMetadata();

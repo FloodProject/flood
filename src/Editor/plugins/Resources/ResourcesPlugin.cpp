@@ -24,6 +24,14 @@ ResourcesPlugin::ResourcesPlugin( EditorFrame* frame )
 
 //-----------------------------------//
 
+ResourcesPlugin::~ResourcesPlugin()
+{
+	delete resourcesPage;
+	delete resourcesBrowser;
+}
+
+//-----------------------------------//
+
 PluginMetadata ResourcesPlugin::getMetadata()
 {
 	PluginMetadata metadata;
@@ -83,8 +91,15 @@ void ResourcesPlugin::onPluginDisable()
 
 void ResourcesPlugin::onBrowserButtonClick(wxCommandEvent& event)
 {
-	resourcesBrowser->scanFiles();
-	resourcesBrowser->setupImages();
+	static bool scanned = false;
+
+	if(!scanned)
+	{
+		resourcesBrowser->scanFiles();
+		resourcesBrowser->setupImages();
+		scanned = true;
+	}
+
 	resourcesBrowser->Show();
 }
 

@@ -30,8 +30,10 @@ public:
 	// Writes a new prompt line on the console.
 	void NewPromptLine();
 
+#ifdef VAPOR_SCRIPTING_LUA
 	// Overrides the Lua 'print' function.
 	int luaPrint(lua_State* L);
+#endif
 
 protected:
 

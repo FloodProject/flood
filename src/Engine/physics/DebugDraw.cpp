@@ -7,6 +7,9 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
+
+#ifdef VAPOR_PHYSICS_BULLET
+
 #include "vapor/physics/DebugDraw.h"
 #include "vapor/physics/Convert.h"
 #include "vapor/render/Renderable.h"
@@ -94,3 +97,5 @@ int	BulletDebugDrawer::getDebugMode() const
 //-----------------------------------//
 
 } // end namespace
+
+#endif

@@ -93,8 +93,10 @@ void Engine::init( bool createWindow )
 	FileWatcher* fw = fileSystem->getFileWatcher();
 	resourceManager = new ResourceManager( fw, taskManager );
 
+#ifdef VAPOR_PHYSICS_BULLET
 	// create the physics manager
 	physicsManager = new PhysicsManager();
+#endif
 
 	// register default codecs
 	setupResourceLoaders();
@@ -186,6 +188,10 @@ void Engine::setupResourceLoaders()
 	#ifdef VAPOR_IMAGE_STB
 		loaders.push_back( new STB_Image_Loader() );
 	#endif
+
+	#ifdef VAPOR_IMAGE_DEVIL
+		loaders.push_back( new IL_Image_Loader() );
+	#endif
 	
 	#ifdef VAPOR_FONT_BITMAP
 		loaders.push_back( new Font_Loader() );
@@ -212,7 +218,9 @@ void Engine::update( double delta )
 	scriptManager->update( delta );
 #endif
 
+#ifdef VAPOR_PHYSICS_BULLET
 	physicsManager->update( delta );
+#endif
 }
 
 //-----------------------------------//

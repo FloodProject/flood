@@ -6,14 +6,9 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Core.h"
 #include "vapor/Utilities.h"
-
-#ifdef VAPOR_COMPILER_MSVC
-	#define __stricmp _stricmp
-#else
-	#define __stricmp stricmp
-#endif
+#include "dirent.h"
 
 namespace vapor {
 
@@ -24,9 +19,9 @@ namespace vapor {
 
 bool System::isLittleEndian()
 {
-	byte EndianTest[2] = { 1, 0 };
+	byte endianTest[2] = { 1, 0 };
 	short x;
-	x = *(short *) EndianTest;
+	x = *(short *) endianTest;
 
 	return x == 1; // Little Endian
 }
@@ -47,6 +42,77 @@ long System::swapEndian(long i)
 
 //-----------------------------------//
 
+static void enumerateFilesHelper(std::vector<std::string>& files, std::string path, bool dirs)
+{
+	DIR *dir;
+	struct dirent *ent;
+
+	// Open directory stream.
+	dir = opendir( path.c_str() );
+    
+	if( !dir )
+	{
+		Log::error("Could not open directory '%s'", path.c_str());
+		goto end;
+	}
+
+	// Get all the files and directories within directory.
+	while((ent = readdir(dir)) != nullptr)
+	{
+		std::string name(ent->d_name);
+		std::string newPath = path + "/" + name;
+
+		switch(ent->d_type)
+		{
+		case DT_REG:
+		{
+			if(!dirs)
+				files.push_back(newPath);
+			break;
+		}
+		case DT_DIR:
+		{
+			if(!name.empty() && name[0] == '.')
+				continue;
+
+			if(dirs)
+				files.push_back(newPath);
+
+			enumerateFilesHelper(files, newPath, dirs);
+
+			break;
+		}
+		default:
+			Log::debug("Unknown dir entry: %s", path.c_str());
+		}
+	}
+
+end:
+	closedir (dir);
+}
+
+//-----------------------------------//
+
+std::vector<std::string> System::enumerateFiles(const std::string& path)
+{
+	std::vector<std::string> files;
+	enumerateFilesHelper(files, path, false);
+
+	return files;
+}
+
+//-----------------------------------//
+
+std::vector<std::string> System::enumerateDirs(const std::string& path)
+{
+	std::vector<std::string> dirs;
+	enumerateFilesHelper(dirs, path, true);
+
+	return dirs;
+}
+
+//-----------------------------------//
+
 int String::compareInsensitive(const std::string& s1, const std::string& s2)
 {
 	return __stricmp(s1.c_str(), s2.c_str());
@@ -54,9 +120,9 @@ int String::compareInsensitive(const std::string& s1, const std::string& s2)
 
 //-----------------------------------//
 
-void String::fromFloat( char* str, float n, byte precision )
+std::string String::fromFloat( float n, byte precision )
 {
-	sprintf( str, "%#.*f", precision, n );
+	return String::format("%#.*f", precision, n );
 }
 
 //-----------------------------------//
@@ -128,6 +194,48 @@ std::string String::format(const char* str, va_list args)
 	assert( n < BUF_MAX_SIZE ); // check for truncation
 
 	return std::string(buf);
+}
+
+//-----------------------------------//
+
+std::string String::getBaseFromPath(const std::string& name)
+{
+	// Check if it has a file extension.
+	size_t ch = name.find_last_of(".");
+
+	if( ch == std::string::npos ) 
+		return "";
+
+	// Return the file extension.
+	return name.substr( 0, ch );
+}
+
+//-----------------------------------//
+
+std::string String::getExtensionFromPath(const std::string& name)
+{
+	// Check if it has a file extension.
+	size_t ch = name.find_last_of(".");
+
+	if( ch == std::string::npos ) 
+		return "";
+
+	// Return the file extension.
+	return name.substr( ++ch );
+}
+
+//-----------------------------------//
+
+std::string String::getFileFromPath(const std::string& name)
+{
+	// Check if it has a file extension.
+	size_t ch = name.find_last_of("/");
+
+	if( ch == std::string::npos ) 
+		return "";
+
+	// Return the file extension.
+	return name.substr( ++ch );
 }
 
 //-----------------------------------//

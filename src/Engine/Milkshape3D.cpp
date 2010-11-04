@@ -373,7 +373,8 @@ MaterialPtr Milkshape3D::buildMaterial(const ms3d_group_t& group)
 	if( mt.mode & HASALPHA )
 	{
 		#pragma TODO("Use alpha testing when alpha values are fully transparent.")
-		mat->setBlending( BlendSource::SourceAlpha, BlendDestination::InverseSourceAlpha );
+		mat->setAlphaTest(true);
+		//mat->setBlending( BlendSource::SourceAlpha, BlendDestination::InverseSourceAlpha );
 	}
 
 	if( isAnimated() )

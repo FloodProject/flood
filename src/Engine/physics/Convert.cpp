@@ -7,6 +7,9 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
+
+#ifdef VAPOR_PHYSICS_BULLET
+
 #include "vapor/physics/Convert.h"
 #include "vapor/physics/MeshShape.h"
 
@@ -105,3 +108,5 @@ btTransform Convert::toBullet(const TransformPtr& transform)
 //-----------------------------------//
 
 } // end namespace
+
+#endif

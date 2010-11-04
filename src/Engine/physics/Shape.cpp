@@ -7,6 +7,9 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
+
+#ifdef VAPOR_PHYSICS_BULLET
+
 #include "vapor/physics/Shape.h"
 #include "vapor/physics/Body.h"
 
@@ -35,3 +38,5 @@ void Shape::removeBody()
 //-----------------------------------//
 
 } // end namespace
+
+#endif

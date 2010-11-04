@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Core.h"
 #include "vapor/TaskManager.h"
 #include "vapor/Utilities.h"
 
@@ -18,11 +18,8 @@ TaskManager::TaskManager( int poolSize )
 {
 #ifdef VAPOR_THREADING
 	createThreadPool( poolSize );
-
-	foreach( Thread* thread, threadPool )
-	{
-		THREAD(thread = new Thread(&TaskManager::runWorker, this);)
-	}
+#else
+	createThreadPool( 0 );
 #endif
 }
 
@@ -30,34 +27,30 @@ TaskManager::TaskManager( int poolSize )
 
 TaskManager::~TaskManager()
 {
-#ifdef VAPOR_THREADING
 	foreach( Thread* thread, threadPool )
 	{
-		delete thread;
+		THREAD(delete thread;)
 	}
-#endif
 }
 
 //-----------------------------------//
 
 void TaskManager::createThreadPool( int poolSize )
 {
-	// By default use (numberOfCores-1) threads.
-#ifdef VAPOR_THREADING_BOOST
+#ifdef VAPOR_THREADING
+	// By default use (numCPUCores-1) threads.
 	if( poolSize < 0 )
 		poolSize = boost::thread::hardware_concurrency()-1;
-#endif
-
-	// The number of threads is not available.
-	if( poolSize <= 0 )
-	{
-		// Assume a "safe value" in this case.
-		poolSize = 1;
-	}
-
-	Log::info( "Creating thread pool with %d thread(s)", poolSize );
 
 	threadPool.resize( poolSize );
+
+	foreach( Thread* thread, threadPool )
+	{
+		thread = new Thread(&TaskManager::runWorker, this);
+	}
+#endif
+
+	Log::info( "Created thread pool with %d thread(s)", poolSize );
 }
 
 //-----------------------------------//

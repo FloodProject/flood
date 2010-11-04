@@ -24,7 +24,7 @@ enum Timers
 BEGIN_EVENT_TABLE(RenderControl, wxGLCanvas)
 	EVT_TIMER(UPDATE_TIMER, RenderControl::doUpdate)
 	EVT_TIMER(RENDER_TIMER, RenderControl::doRender)
-    EVT_PAINT(RenderControl::OnPaint)
+	EVT_PAINT(RenderControl::OnPaint)
 	EVT_SIZE(RenderControl::OnSize)
 	EVT_SET_FOCUS(RenderControl::OnFocusSet)
 	EVT_KILL_FOCUS(RenderControl::OnFocusKill)

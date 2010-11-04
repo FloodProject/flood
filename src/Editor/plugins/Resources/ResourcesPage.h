@@ -41,6 +41,9 @@ public:
 	// Synchronizes the tree with the resources.
 	void updateTree();
 
+	// Adds a new resource to the tree.
+	wxTreeItemId addResource(const ResourcePtr& res);
+
 protected:
 
 	void initControl();
@@ -50,20 +53,25 @@ protected:
 	void onCommandMenuSelected( wxCommandEvent& event );
 
 	// Resource-monitoring callbacks.
-	void onResourceAdded( const ResourceEvent& event );
+	void onResourcePrepared( const ResourceEvent& event );
 	void onResourceRemoved( const ResourceEvent& event );
 	void onResourceReloaded( const ResourceEvent& event );
 
 	EditorFrame* editor;
-	Engine* engine;
 	ResourceManager* rm;
 
 	wxImageList* imageList;
 	wxTreeItemId rootItemId;
 	wxTreeItemId menuItemId;
 
-	std::map< ResourceGroup::Enum, wxTreeItemId > resourceGroupTreeIds;
-	std::map< ResourceGroup::Enum, int > resourceGroupIcons;
+	typedef std::map< Resource*, wxTreeItemId > ResourceIdsMap;
+	ResourceIdsMap resourceIds;
+
+	typedef std::map< ResourceGroup::Enum, wxTreeItemId > ResourceGroupIdsMap;
+	ResourceGroupIdsMap resourceGroupTreeIds;
+	
+	typedef std::map< ResourceGroup::Enum, int > ResourceGroupIconsMap;
+	ResourceGroupIconsMap resourceGroupIcons;
 };
 
 //-----------------------------------//

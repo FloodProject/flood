@@ -16,6 +16,10 @@
 	#include "vapor/resources/STB_Image_Loader.h"
 #endif
 
+#ifdef VAPOR_IMAGE_DEVIL
+	#include "vapor/resources/IL_Image_Loader.h"
+#endif
+
 #ifdef VAPOR_MESH_MILKSHAPE3D
 	#include "vapor/resources/Milkshape3D_Loader.h"
 #endif

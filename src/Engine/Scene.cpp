@@ -53,7 +53,7 @@ static bool doRayBoxGroupQuery( const GroupPtr& group, const Ray& ray,
 							   RayBoxQueryList& list, bool all )
 {
 	// Do some ray casting to find a collision.
-	foreach( const NodePtr& node, group->getChildren() )
+	foreach( const NodePtr& node, group->getNodes() )
 	{
 		const Type& type = node->getInstanceType();
 
@@ -215,19 +215,6 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res,
 void Scene::update( double delta )
 {
 	Group::update( delta );
-}
-
-//-----------------------------------//
-
-NodePtr Scene::getEntity( const std::string& name ) const
-{
-	foreach( const NodePtr& node, nodes )
-	{
-		if( node->getName() == name )
-			return node;
-	}
-
-	return NodePtr();
 }
 
 //-----------------------------------//

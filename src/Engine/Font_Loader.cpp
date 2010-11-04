@@ -7,6 +7,9 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
+
+#ifdef VAPOR_FONT_FREETYPE2
+
 #include "vapor/resources/Font_Loader.h"
 #include "vapor/math/Math.h"
 
@@ -14,8 +17,6 @@
 #include "vapor/Engine.h"
 
 namespace vapor {
-
-using vapor::File;
 
 //-----------------------------------//
 
@@ -142,3 +143,5 @@ bool Font_Loader::validateFont()
 //-----------------------------------//
 
 } // end namespace
+
+#endif

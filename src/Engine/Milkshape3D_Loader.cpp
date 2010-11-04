@@ -16,8 +16,6 @@
 #include "vapor/animation/Skeleton.h"
 #include "vapor/render/Renderable.h"
 
-using vapor::File;
-
 namespace vapor {
 
 //-----------------------------------//

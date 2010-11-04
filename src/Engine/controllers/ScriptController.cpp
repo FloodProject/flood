@@ -7,6 +7,9 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
+
+#ifdef VAPOR_SCRIPTING_LUA
+
 #include "vapor/controllers/ScriptController.h"
 #include "vapor/physics/CharacterController.h"
 
@@ -224,3 +227,5 @@ void ScriptController::onMouseButtonReleased( const MouseButtonEvent& event )
 //-----------------------------------//
 
 } // end namespace
+
+#endif

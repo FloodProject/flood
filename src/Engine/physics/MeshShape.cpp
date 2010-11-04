@@ -7,6 +7,9 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
+
+#ifdef VAPOR_PHYSICS_BULLET
+
 #include "vapor/physics/MeshShape.h"
 #include "vapor/physics/Convert.h"
 #include "vapor/scene/Node.h"
@@ -152,3 +155,5 @@ btCollisionShape* const MeshShape::getBulletShape() const
 //-----------------------------------//
 
 } // end namespace
+
+#endif

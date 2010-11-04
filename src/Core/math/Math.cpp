@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "vapor/PCH.h"
+#include "Core.h"
 #include "vapor/math/Math.h"
 
 namespace vapor {

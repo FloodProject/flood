@@ -480,7 +480,7 @@ void TerrainOperation::loadSaveImage( std::vector<byte>& state, bool save )
 	RenderablePtr rend = rayQuery.renderable;
 	MaterialPtr material = rend->getMaterial();
 	const TexturePtr& texture = material->getTexture(0);
-	const ImagePtr& image = texture->getImage();
+	const Image* image = texture->getImage();
 
 	if( save )
 	{
@@ -535,11 +535,11 @@ void TerrainOperation::applyRaiseTool()
 
 //-----------------------------------//
 
-static void blitToImage(const ImagePtr& dest, int destX, int destY,
-						const ImagePtr& source, int limitX, int limitY)
+static void blitToImage(const Image* dest, int destX, int destY,
+						const Image* source, int limitX, int limitY)
 {
-	std::vector<byte>& destBuffer = dest->getBuffer();
-	std::vector<byte>& sourceBuffer = source->getBuffer();
+	std::vector<byte>& destBuffer = const_cast<std::vector<byte>&>(dest->getBuffer());
+	std::vector<byte>& sourceBuffer = const_cast<std::vector<byte>&>(source->getBuffer());
 
 	int sourceY = limitY;
 
@@ -581,7 +581,7 @@ void TerrainOperation::applyPaintTool()
 
 	MaterialPtr material = rend->getMaterial();
 	const TexturePtr& texture = material->getTexture(0);
-	const ImagePtr& image = texture->getImage();
+	const Image* image = texture->getImage();
 
 	int x = ut * image->getWidth();
 	int y = vt * image->getHeight();
@@ -615,8 +615,8 @@ void TerrainOperation::applyPaintTool()
 		y = 0;
 	}
 
-	blitToImage(image, x, y, paintImage, offsetX, offsetY);
-	texture->setImage(image);
+	blitToImage(image, x, y, paintImage.get(), offsetX, offsetY);
+	texture->setImage((Image*)image);
 }
 
 //-----------------------------------//

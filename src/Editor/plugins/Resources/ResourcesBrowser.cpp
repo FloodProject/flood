@@ -19,18 +19,16 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-ResourcesBrowser::ResourcesBrowser( EditorFrame* editor,
-							wxWindow* parent, wxWindowID id,
-							const wxPoint& pos, const wxSize& size )
-	: wxFrame(parent, id, "Resources Browser", pos, wxSize(200, 500),
-		wxDEFAULT_FRAME_STYLE | /*wxFRAME_TOOL_WINDOW |
-		wxFRAME_FLOAT_ON_PARENT |*/ wxBORDER_NONE, "ResourcesBrowser")
+ResourcesBrowser::ResourcesBrowser( EditorFrame* editor, wxWindow* parent,
+					wxWindowID id, const wxPoint& pos, const wxSize& size )
+	: wxFrame(parent, id, "Resources Browser", pos, wxSize(600, 450))
 	, editor(editor)
 	, listIndex(0)
 {
 	setupUI();
 	setupRender();
 	loadCache();
+	network.init();
 }
 
 //-----------------------------------//
@@ -73,20 +71,6 @@ void ResourcesBrowser::setupRender()
 
 //-----------------------------------//
 
-#pragma TODO("Refactor utility functions in a proper header")
-
-static const std::string getBase(const std::string& name)
-{
-	// Check if it has a file extension.
-	size_t ch = name.find_last_of(".");
-
-	if( ch == std::string::npos ) 
-		return "";
-
-	// Return the file extension.
-	return name.substr( 0, ch );
-}
-
 void ResourcesBrowser::setupImages()
 {
 	int size = ThumbSize / 2;
@@ -96,6 +80,7 @@ void ResourcesBrowser::setupImages()
 		ResourceMetadata& metadata = p.second;
 		
 		wxImage image;
+		
 		if( !image.LoadFile(CacheFolder + metadata.thumbnail) )
 			continue;
 
@@ -103,7 +88,9 @@ void ResourcesBrowser::setupImages()
 		image = image.Mirror(false);
 
 		metadata.index = images->Add( wxBitmap(image) );
-		m_listCtrl->InsertItem(listIndex++, getBase(metadata.thumbnail), metadata.index);
+		
+		std::string base = String::getBaseFromPath(metadata.thumbnail);
+		m_listCtrl->InsertItem(listIndex++, base, metadata.index);
 	}
 }
 
@@ -112,22 +99,32 @@ void ResourcesBrowser::setupImages()
 bool ResourcesBrowser::loadCache()
 {
 	LocaleSaveRestore locale;
+	std::string path = CacheFolder + ThumbCache;
 
-	NativeFile file( CacheFolder + ThumbCache, FileMode::Read );
+	//if( !File::exists(path) )
+	//{
+	//	Log::warn("Could not find thumbnails cache file '%s'", path.c_str());
+	//	return false;
+	//}
+
+	NativeFile file( path, FileMode::Read );
 
 	if( !file.open() )
+	{
+		Log::warn("Could not open thumbnails cache file '%s'", path.c_str());
 		return false;
+	}
 
 	std::string str = file.readString();
 
 	Json::Value root;
-	Json::Reader jsonReader;
-	bool success = jsonReader.parse(str, root, false);
-
-	if( !success )
+	Json::Reader reader;
+	
+	if( !reader.parse(str, root, false) )
 		return false;
 
-	for( uint i = 0; i < root.size(); i++ )
+	uint i = 0;
+	for( ; i < root.size(); i++ )
 	{
 		if( !root.isValidIndex(i) )
 			continue;
@@ -156,6 +153,8 @@ bool ResourcesBrowser::loadCache()
 		resourcesCache[metadata.hash] = metadata;
 	}
 
+	Log::info("Loaded thumbnails cache from '%s' with %u entries", path.c_str(), i);
+
 	return true;
 }
 
@@ -164,15 +163,14 @@ bool ResourcesBrowser::loadCache()
 bool ResourcesBrowser::saveCache()
 {
 	LocaleSaveRestore locale;
-
-	NativeFile file( CacheFolder + ThumbCache, FileMode::Write );
+	std::string path = CacheFolder + ThumbCache;
+	NativeFile file( path, FileMode::Write );
 
 	if( !file.open() )
 		return false;
 	
 	Json::Value root;
-
-	static uint i = 0;
+	uint i = 0;
 
 	foreach( const ResourcesCachePair& p, resourcesCache )
 	{
@@ -186,6 +184,7 @@ bool ResourcesBrowser::saveCache()
 	}
 
 	file.write( root.toStyledString() );
+	Log::info("Wrote thumbnails cache to '%s' with %u entries", path.c_str(), i);
 
 	return true;
 }
@@ -194,18 +193,31 @@ bool ResourcesBrowser::saveCache()
 
 void ResourcesBrowser::scanFiles()
 {
-	Engine* engine = Engine::getInstancePtr();
-	
+	Engine* engine = editor->getEngine();
 	ResourceManager* rm = engine->getResourceManager();
+	
 	bool threadedStatus = rm->getThreadedLoading();
 	rm->setThreadedLoading(false);
 
-	FileSystem* fs = engine->getFileSystem();
-	std::vector<std::string> files = fs->enumerateFiles("meshes");
+	std::vector<std::string> files;
+	
+	foreach( const std::string& path, System::enumerateFiles("media/meshes") )
+	{
+		std::string ext = String::getExtensionFromPath(path);
+		ResourceLoader* loader = rm->findLoader(ext);
 
-	wxProgressDialog progressDialog( "Resources loading progress",
-		"Please wait while resources are loaded.", files.size(), this,
-		wxPD_AUTO_HIDE | wxPD_SMOOTH | wxPD_CAN_ABORT );
+		if( !loader )
+			continue;
+
+		if( loader->getResourceGroup() != ResourceGroup::Meshes )
+			continue;
+
+		files.push_back(path);
+	}
+
+	wxProgressDialog progressDialog( "Loading resources",
+		"Please wait while resources are loaded.", files.size(),
+		this, wxPD_AUTO_HIDE | wxPD_SMOOTH | wxPD_CAN_ABORT );
 	
 	progressDialog.Show();
 
@@ -213,7 +225,10 @@ void ResourcesBrowser::scanFiles()
 
 	foreach( const std::string& path, files )
 	{
-		progressDialog.Update(progress++, path);
+		// Force unused resources to be unloaded.
+		rm->update(0);
+
+		progressDialog.Update(progress++, String::getFileFromPath(path));
 
 		if( progressDialog.WasCancelled() )
 			break;
@@ -229,10 +244,12 @@ void ResourcesBrowser::scanFiles()
 		if( !mesh || mesh->getResourceGroup() != ResourceGroup::Meshes )
 			continue;
 
+		const std::string& resPath = String::getFileFromPath(mesh->getPath());
+
 		ResourceMetadata metadata;
 		metadata.hash = hash;
-		metadata.thumbnail = mesh->getPath() + ".png";
-		metadata.path = mesh->getPath();
+		metadata.thumbnail = resPath + ".png";
+		metadata.path = resPath;
 		resourcesCache[hash] = metadata;
 
 		ImagePtr thumb = generateThumbnail(mesh);
@@ -241,6 +258,8 @@ void ResourcesBrowser::scanFiles()
 			continue;
 
 		thumb->save( CacheFolder + metadata.thumbnail );
+
+		Log::info("Generated thumbnail for resource '%s'", resPath.c_str());
 	}
 
 	rm->setThreadedLoading(threadedStatus);
@@ -255,20 +274,21 @@ ImagePtr ResourcesBrowser::generateThumbnail(const MeshPtr& mesh)
 	nodeResource->addComponent( ModelPtr(new Model(mesh)) );
 	scene->add( nodeResource );
 
-	TransformPtr transResource = nodeResource->getTransform();
 	const BoundingBox& box = mesh->getBoundingVolume();
 	const Vector3& center = box.getCenter();
-	transResource->setPosition( Vector3(-center.x, -center.y, 0) );
-	//transResource->setScale( Vector3(-1, -1, 0) );
 
-	TransformPtr transCamera = nodeCamera->getTransform();
+	TransformPtr transResource = nodeResource->getTransform();
+	transResource->setPosition( Vector3(-center.x, -center.y, 0) );
+
+	Vector3 size = (box.max - box.min) / 2;
+	float maxSize = std::max(size.x, std::max(size.y, size.z));
+	
 	const Frustum& frustum = camera->getFrustum();
+	float fovRad = Math::degreeToRadian(frustum.fieldOfView);
+	float distance = maxSize / std::tan(fovRad / 2) + size.z;
 	
-	float distance = ((box.max.y - box.min.y) / 2)
-		/ std::tan(Math::degreeToRadian(frustum.fieldOfView) / 2);
-	
-	transCamera->setPosition(
-		Vector3(0, 0, -distance - ((box.max.z - box.min.z) / 2)) );
+	TransformPtr transCamera = nodeCamera->getTransform();
+	transCamera->setPosition(Vector3(0, 0, -distance));
 
 	scene->update(0);
 
@@ -276,9 +296,9 @@ ImagePtr ResourcesBrowser::generateThumbnail(const MeshPtr& mesh)
 	renderView->update();
 	renderBuffer->unbind();
 
-	ImagePtr image = colorTexture->readImage();
-
 	scene->remove( nodeResource );
+
+	ImagePtr image = colorTexture->readImage();
 
 	return image;
 }
@@ -298,7 +318,7 @@ void ResourcesBrowser::OnListBeginDrag(wxListEvent& event)
 
 	Vector3 dropPoint;
 
-	Vector2 coords = editor->getDropCoords();
+	Vector2i coords = editor->getDropCoords();
 	View* view = editor->getMainViewframe()->getView();
 	Ray ray = view->getCamera()->getRay(coords.x, coords.y);
 
@@ -328,7 +348,7 @@ void ResourcesBrowser::OnListBeginDrag(wxListEvent& event)
 	if( !mesh )
 		return;
 
-	NodePtr node( new Node("Node") );
+	NodePtr node( new Node( String::getBaseFromPath(name) ) );
 	node->addTransform();
 	node->getTransform()->setPosition(dropPoint);
 	node->addComponent( ModelPtr( new Model(mesh) ) );
@@ -341,6 +361,25 @@ void ResourcesBrowser::OnListBeginDrag(wxListEvent& event)
 	undoManager->registerOperation(nodeOperation);
 
 	nodeOperation->redo();
+}
+
+//-----------------------------------//
+
+void ResourcesBrowser::onConnectClicked(wxCommandEvent& event)
+{
+	if( network.createClientSocket("tcp://127.0.0.1:7654") )
+	{
+		m_button1->SetLabel("Connected");
+		m_button1->Disable();
+	}
+
+	std::vector<byte> data;
+	data.push_back( MessageType::ResourceIndexRequest );
+
+	MessagePtr message = new Message(data);
+	//message->setMessageType( MessageType::ResourceIndexRequest );
+
+	network.sendMessage(message);
 }
 
 //-----------------------------------//
@@ -363,6 +402,8 @@ void ResourcesBrowser::OnClose(wxCloseEvent& event)
 
 void ResourcesBrowser::setupUI()
 {
+	SetWindowStyle(wxDEFAULT_FRAME_STYLE | wxFRAME_TOOL_WINDOW | wxFRAME_FLOAT_ON_PARENT | wxBORDER_NONE );
+
 	wxBoxSizer* bSizer1;
 	bSizer1 = new wxBoxSizer( wxVERTICAL );
 	
@@ -392,9 +433,11 @@ void ResourcesBrowser::setupUI()
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_button1 = new wxButton( m_panel2, wxID_ANY, "Refresh" );
+	m_button1 = new wxButton( m_panel2, wxID_ANY, "Connect to server" );
+	m_button1->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ResourcesBrowser::onConnectClicked, this );
+
 	bSizer2->Add( m_button1, 1, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	bSizer6->Add( bSizer2, 0, wxALIGN_RIGHT, 5 );
 	
 	bSizer3->Add( bSizer6, 0, wxEXPAND, 5 );

@@ -12,8 +12,6 @@
 
 #include "vapor/resources/OGG_Loader.h"
 
-using vapor::File;
-
 namespace vapor {
 
 //-----------------------------------//

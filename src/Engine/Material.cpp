@@ -48,8 +48,16 @@ Material::Material( const Material& rhs )
 
 //-----------------------------------//
 
+Material::~Material()
+{
+	Log::debug("Removing material '%s'", name.c_str());
+}
+
+//-----------------------------------//
+
 void Material::init()
 {
+	alphaTest = false;
 	depthCompare = DepthCompare::Less;
 	depthTest = true;
 	depthWrite = true;

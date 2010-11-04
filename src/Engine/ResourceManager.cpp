@@ -7,14 +7,12 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
+
 #include "vapor/resources/ResourceManager.h"
 #include "vapor/resources/ResourceLoader.h"
-
-#include "vapor/vfs/File.h"
-#include "vapor/vfs/FileWatcher.h"
 #include "vapor/vfs/FileSystem.h"
-
 #include "vapor/TaskManager.h"
+
 #include "ResourceTask.h"
 
 namespace vapor {
@@ -39,12 +37,10 @@ ResourceManager::ResourceManager( FileWatcher* fileWatcher, TaskManager* tasks )
 
 ResourceManager::~ResourceManager()
 {
-	waitUntilQueuedResourcesLoad();
+	loadQueuedResources();
 	assert( resourceTaskEvents.empty() );
 
 	// Delete resource loaders.
-	#pragma TODO("Document the extension deleting logic.")
-
 	foreach( const ResourceLoaderMapPair& entry, resourceLoaders )
 	{
 		ResourceLoader* loader = entry.second;
@@ -60,7 +56,9 @@ ResourceManager::~ResourceManager()
 
 	// Check that all resources will be deleted.
 	//foreach( const ResourceMapPair& p, resources )
-		//assert( p.second->getReferenceCount() == 1 );
+	//{
+	//	assert( p.second->getReferenceCount() == 1 );
+	//}
 }
 
 //-----------------------------------//
@@ -78,55 +76,62 @@ ResourcePtr ResourceManager::getResource(const std::string& path)
 
 ResourcePtr ResourceManager::loadResource(const std::string& path, bool async)
 {
-	if( path.empty() )
-		return nullptr;
-
 	// Check if the resource is already loaded.
 	ResourcePtr resource = getResource(path);
 	
 	if( resource )
 		return resource;
 
+	if( !validateResource(path) )
+		return nullptr;
+
 	File file(path);
 	resource = prepareResource(file);
 	
 	if( !resource )
-		return resource;
+		return nullptr;
 
 	decodeResource(resource, async);
 
 	// Register the decoded resource in the map.
-	Log::info("Loaded resource '%s'", file.getName().c_str());
+	resources[file.getName()] = resource;
 
 	// Send callback notifications.
-	if( !onResourceAdded.empty() )
+	if( !onResourcePrepared.empty() )
 	{
 		ResourceEvent event;
 		event.resource = resource;
-		onResourceAdded( event );
+		
+		onResourcePrepared( event );
 	}
 
-	resources[file.getName()] = resource;
 	return resource;
 }
 
 //-----------------------------------//
 
-bool ResourceManager::validateResource( const File& file )
+bool ResourceManager::validateResource( const std::string& path )
 {
-	const std::string& path = file.getPath();
-
-	if( !file.exists() )
+	if( path.empty() )
+		return false;
+	
+	if( !File::exists(path) )
 	{
 		Log::warn( "Resource '%s' was not found", path.c_str() );
 		return false;
 	}
 
-	const std::string& extension = file.getExtension();
+	const std::string& extension = String::getExtensionFromPath(path);
 	
 	if( extension.empty() )
 	{
 		Log::warn( "Resource '%s' has an invalid extension", path.c_str() );
+		return false;
+	}
+
+	if( !findLoader(extension) )
+	{
+		Log::warn("No resource loader found for resource '%s'", path.c_str());
 		return false;
 	}
 
@@ -137,11 +142,8 @@ bool ResourceManager::validateResource( const File& file )
 
 ResourcePtr ResourceManager::prepareResource(const File& file)
 {
-	if( !validateResource(file) )
-		return nullptr;
-
 	// Get the available resource loader and prepare the resource.
-	ResourceLoader* loader = resourceLoaders[file.getExtension()];
+	ResourceLoader* loader = findLoader(file.getExtension());
 
 	if( !loader )
 	{
@@ -158,6 +160,14 @@ ResourcePtr ResourceManager::prepareResource(const File& file)
 
 //-----------------------------------//
 
+ResourceLoader* ResourceManager::findLoader(const std::string& ext)
+{
+	ResourceLoader* loader = resourceLoaders[ext];
+	return loader;
+}
+
+//-----------------------------------//
+
 void ResourceManager::decodeResource( ResourcePtr resource, bool useThreads, bool notify )
 {
 	boost::intrusive_ptr<ResourceTask> task = new ResourceTask();
@@ -169,14 +179,17 @@ void ResourceManager::decodeResource( ResourcePtr resource, bool useThreads, boo
 	numResourcesQueuedLoad++;
 
 	if( threadedLoading && useThreads )
+	{
 		taskManager->addTask( task );
-	else
-		task->run();
+		return;
+	}
+	
+	task->run();
 }
 
 //-----------------------------------//
 
-void ResourceManager::waitUntilQueuedResourcesLoad()
+void ResourceManager::loadQueuedResources()
 {
 	THREAD( boost::unique_lock<boost::mutex> lock(resourceFinishLoadMutex); )
 
@@ -207,20 +220,60 @@ ResourceLoader* const ResourceManager::getResourceLoader(const std::string& ext)
 
 void ResourceManager::update( double )
 {
+	sendPendingEvents();
+	removeUnusedResources();
+}
+
+//-----------------------------------//
+
+void ResourceManager::sendPendingEvents()
+{
+	// Send resource events.
 	ResourceEvent event;
-	
+
 	while( resourceTaskEvents.try_pop(event) )
 	{
-		if( !onResourceLoaded.empty() )
-			onResourceLoaded( event );	
+		if( onResourceLoaded.empty() )
+			continue;
+		
+		onResourceLoaded( event );	
 	}
 }
 
 //-----------------------------------//
 
-void ResourceManager::removeResource(const ResourcePtr& res)
+void ResourceManager::removeUnusedResources()
 {
-	ResourceMap::iterator it = resources.find( res->getPath() );
+	std::vector<std::string> resourcesToRemove;
+
+	// Search for unused resources.
+	foreach( const ResourceMapPair& p, resources )
+	{
+		const ResourcePtr& resource = p.second;
+
+		if( resource->getReferenceCount() == 1 )
+			resourcesToRemove.push_back(p.first);
+	}
+
+	foreach( const std::string& resource, resourcesToRemove )
+	{
+		removeResource(resource);
+	}
+}
+
+//-----------------------------------//
+
+void ResourceManager::removeResource(const ResourcePtr& resource)
+{
+	const std::string& path = resource->getPath();
+	removeResource(path);
+}
+
+//-----------------------------------//
+
+void ResourceManager::removeResource(const std::string& path)
+{
+	ResourceMap::iterator it = resources.find( path );
 	
 	if( it == resources.end() )
 		return;
@@ -229,11 +282,14 @@ void ResourceManager::removeResource(const ResourcePtr& res)
 	if( !onResourceRemoved.empty() )
 	{
 		ResourceEvent event;
-		event.resource = res;
+		event.resource = (*it).second;
+		
 		onResourceRemoved( event );
 	}
 
 	resources.erase(it);
+
+	Log::info("Unloaded resource: %s", path.c_str());
 }
 
 //-----------------------------------//
@@ -248,9 +304,11 @@ void ResourceManager::registerLoader(ResourceLoader* const loader)
 
 	// Send callback notifications.
 	if( !onResourceLoaderRegistered.empty() )
+	{
 		onResourceLoaderRegistered( *loader );
+	}
 
-	Log::info( "Registering resource loader '%s'", loader->getName().c_str() );
+	Log::info( "Registered resource loader '%s'", loader->getName().c_str() );
 }
 
 //-----------------------------------//

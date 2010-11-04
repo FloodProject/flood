@@ -12,8 +12,6 @@
 
 #include "vapor/resources/Lua_Loader.h"
 
-using vapor::File;
-
 namespace vapor {
 
 //-----------------------------------//

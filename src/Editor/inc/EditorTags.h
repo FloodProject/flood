@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "wx/defs.h"
+
 namespace vapor { namespace editor {
 
 // ----------------------------------------------------------------------

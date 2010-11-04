@@ -147,14 +147,14 @@ void ProjectPlugin::switchScene(const ScenePtr& scene)
 	unsavedChanges = false;
 
 	Engine* engine = editor->getEngine();
-	delete engine->getPhysicsManager();
+	engine->setSceneManager(scene);
 
+#ifdef VAPOR_PHYSICS_BULLET
+	delete engine->getPhysicsManager();
 	PhysicsManager* physics = new PhysicsManager();
 	physics->createWorld();
-
 	engine->setPhysicsManager(physics);
-	
-	engine->setSceneManager(scene);
+#endif
 
 	Events* events = editor->getEventManager();
 	events->onSceneLoad(scene);

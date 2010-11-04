@@ -17,10 +17,9 @@ namespace vapor {
 //-----------------------------------//
 
 Texture::Texture( const ImagePtr& newImage )
-	: image(nullptr)
 {
 	init();
-	setImage( newImage );
+	setImage( newImage.get() );
 	configure();
 }
 
@@ -44,6 +43,8 @@ Texture::~Texture()
 	
 	if( glHasError("Could not delete texture object") )
 		return;
+
+	Log::debug("Deleting texture");
 }
 
 //-----------------------------------//
@@ -53,9 +54,10 @@ void Texture::init()
 	_id = 0;
 	target = GL_TEXTURE_2D;
 	uploaded = false;
+	image = nullptr;
 
-	minFilter = TextureFiltering::Nearest;
-	maxFilter = TextureFiltering::Nearest;
+	minFilter = TextureFiltering::Linear;
+	maxFilter = TextureFiltering::Linear;
 	anisotropicFilter = 1.0f;
 
 	generate();
@@ -98,12 +100,16 @@ bool Texture::upload()
 
 	bind();
 
+	bool haveImage = image && !image->getBuffer().empty();
+
 	glTexImage2D( target, 0, 
 		convertInternalFormat(format),
 		width, height, 0,
 		convertSourceFormat(format),
 		/*(format == PixelFormat::Depth) ? GL_FLOAT : */GL_UNSIGNED_BYTE,
-		(image && !image->getBuffer().empty()) ? &image->getBuffer()[0] : nullptr );
+		(haveImage) ? &image->getBuffer()[0] : nullptr );
+
+	#pragma TODO("Check that there is free memory in the GPU before uploading textures")
 
 	if( glHasError("Could not upload pixel data to texture object") )
 	{
@@ -141,7 +147,7 @@ void Texture::configure()
 
 //-----------------------------------//
 
-void Texture::setImage( const ImagePtr& newImage )
+void Texture::setImage( Image* newImage )
 {
 	assert( newImage != nullptr );
 

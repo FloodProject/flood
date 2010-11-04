@@ -15,8 +15,6 @@
 #define STBI_HEADER_FILE_ONLY
 #include "stb_image.cpp"
 
-using vapor::File;
-
 namespace vapor {
 
 //-----------------------------------//

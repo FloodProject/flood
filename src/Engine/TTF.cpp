@@ -9,6 +9,8 @@
 #include "vapor/PCH.h"
 #include "vapor/resources/TTF.h"
 
+#ifdef VAPOR_FONT_FREETYPE2
+
 namespace vapor {
 
 //-----------------------------------//
@@ -27,3 +29,5 @@ TTF::~TTF()
 //-----------------------------------//
 
 } // end namespace
+
+#endif

@@ -25,7 +25,7 @@ bool glHasError( const std::string& msg )
 	int gl_err;
 	while( (gl_err = glGetError()) != GL_NO_ERROR )
 	{
-		Log::warn( ("OpenGL:" + msg).c_str() );
+		Log::warn( ("OpenGL: " + msg).c_str() );
 		err = true;
 
 		if( --i == 0 )

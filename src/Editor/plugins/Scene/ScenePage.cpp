@@ -74,14 +74,21 @@ static ComponentEntry components[] = {
 	//{ true, TYPE(Listener),			BMP(status_online) },
 	{ true, TYPE(Grid),					BMP(grid_icon_white_bg) },
 	{ true, TYPE(Geometry),				BMP(shape_flip_horizontal) },
-	{ true, TYPE(CharacterController),	BMP(link) },
 	{ true, TYPE(FirstPersonController),BMP(camera) },
 	{ true, TYPE(ThirdPersonController),BMP(camera) },
-	{ true, TYPE(ScriptController),			BMP(shape_flip_horizontal) },
+
+#ifdef VAPOR_SCRIPTING_LUA
+	{ true, TYPE(ScriptController),		BMP(shape_flip_horizontal) },
+#endif
+
+#ifdef VAPOR_PHYSICS_BULLET
+	{ true, TYPE(CharacterController),	BMP(link) },
 	{ true, TYPE(BoxShape),				BMP(link) },
 	{ true, TYPE(MeshShape),			BMP(link) },
 	{ true, TYPE(CapsuleShape),			BMP(link) },
 	{ true, TYPE(Body),					BMP(link) },
+#endif
+
 	{ false,TYPE(Scene),				BMP(sitemap_color) }
 };
 
@@ -298,7 +305,7 @@ void ScenePage::addGroup( wxTreeItemId id, const NodePtr& node, bool createGroup
 	nodeIds[node] = groupId;
 	treeCtrl->SetItemData( groupId, data );
 
-	foreach( const NodePtr& child, group->getChildren() )
+	foreach( const NodePtr& child, group->getNodes() )
 		addGroup(groupId, child);
 }
 
@@ -463,7 +470,7 @@ void ScenePage::onButtonNodeDeleteUpdate(wxUpdateUIEvent& event)
 	if( !scene )
 		return;
 
-	bool empty = scene->getChildren().empty();
+	bool empty = scene->getNodes().empty();
 	event.Enable( !empty );
 }
 

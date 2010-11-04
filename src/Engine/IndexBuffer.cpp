@@ -70,13 +70,11 @@ bool IndexBuffer::build()
 
 	if( data16.empty() && data32.empty() ) return false;
 
-	// reserve space for all the elements
+	// Reserve space for all the buffer elements.
 	glBufferData( GL_ELEMENT_ARRAY_BUFFER, 
 		getNumIndices() * (is16bit() ? sizeof(ushort) : sizeof(ulong)), 
 		is16bit() ? &data16[0] : reinterpret_cast<ushort*>(&data32[0]), 
 		getGLBufferType() );
-
-	//Log::debug( "index buffer '%d' has size '%d'", id, getNumIndices() );
 
 	if( glHasError("Could not buffer data in index buffer") )
 		return false;

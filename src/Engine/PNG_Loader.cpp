@@ -12,15 +12,8 @@
 
 #include "vapor/resources/PNG_Loader.h"
 
-using vapor::File;
-
-//-----------------------------------//
-
-// PicoPNG decoding function forward declaration.
 int decodePNG(std::vector<byte>& out_image_32bit, ulong& image_width, 
 			  ulong& image_height, const byte* in_png, ulong in_size);
-
-//-----------------------------------//
 
 namespace vapor {
 
@@ -35,7 +28,6 @@ PNG_Pico_Loader::PNG_Pico_Loader()
 
 bool PNG_Pico_Loader::decode(const File& file, Resource* res)
 {
-	// read contents of the file into the vector
 	std::vector<byte> filebuf = file.read();
 
 	if( filebuf.empty() )
@@ -48,12 +40,13 @@ bool PNG_Pico_Loader::decode(const File& file, Resource* res)
 
 	//flip( buffer, width, height );
 
-	// build our image with the data. the pixel format returned by picoPNG
+	// Build our image with the data. The pixel format returned by picoPNG
 	// is always the same, 32bits per pixel, RGBA 8 bits per component.
+
 	Image* image = static_cast<Image*>( res );
+	image->setPixelFormat( PixelFormat::R8G8B8A8 );
 	image->setWidth( width );
 	image->setHeight( height );
-	image->setPixelFormat( PixelFormat::R8G8B8A8 );
 	image->setBuffer( buffer );
 
 	return true;
@@ -63,7 +56,7 @@ bool PNG_Pico_Loader::decode(const File& file, Resource* res)
 
 void PNG_Pico_Loader::flip( std::vector<byte>& buffer, ulong width, ulong height )
 {
-	// flip Y in place
+	// Flip Y in place.
 	for( uint y = 0; y < height/2; y++ )
 	{
 		int minrow = y*width*4;

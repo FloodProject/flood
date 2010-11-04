@@ -7,6 +7,10 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
+
+#ifdef VAPOR_PHYSICS_BULLET
+
+
 #include "vapor/physics/CharacterController.h"
 #include "vapor/physics/Shape.h"
 #include "vapor/physics/Convert.h"
@@ -197,3 +201,5 @@ void CharacterController::onFieldChanged(const Field& field)
 //-----------------------------------//
 
 } // end namespace
+
+#endif

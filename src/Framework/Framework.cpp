@@ -56,7 +56,7 @@ void Framework::init()
 
 	// Wait until all resources are loaded.
 	ResourceManager* rm = getResourceManager();
-	rm->waitUntilQueuedResourcesLoad();
+	rm->loadQueuedResources();
 }
 
 //-----------------------------------//

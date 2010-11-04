@@ -116,15 +116,15 @@ void CameraControls::onCameraTransform()
 	TransformPtr transCamera = getCameraTransform();
 	Vector3 position = transCamera->getPosition();
 	
-	char str[32];
-
-	String::fromFloat( str, position.x );
+	std::string str;
+	
+	str = String::fromFloat( position.x );
 	textX->ChangeValue( str );
 	
-	String::fromFloat( str, position.y );
+	str = String::fromFloat( position.y );
 	textY->ChangeValue( str );
 	
-	String::fromFloat( str, position.z );
+	str = String::fromFloat( position.z );
 	textZ->ChangeValue( str );
 }
 

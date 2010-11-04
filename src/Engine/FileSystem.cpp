@@ -109,21 +109,28 @@ void FileSystem::mountDefaultLocations()
 	// Default filesystem mount points.
 	const std::string media( "media/" );
 
-	std::string dirs[] = 
-	{
-		"fonts",
-		"images",
-		"materials",
-		"meshes",
-		"scripts",
-		"sounds"
-	};
+	//std::string dirs[] = 
+	//{
+	//	"fonts",
+	//	"images",
+	//	"materials",
+	//	"meshes",
+	//	"scripts",
+	//	"sounds"
+	//};
+
+	mount(".");
 
 	if ( !mount(media) )
 		return;
 
+	std::vector<std::string> dirs = System::enumerateDirs(media);
+
 	foreach( const std::string& dir, dirs )
-		mount(media+dir);
+		mount(dir);
+
+	//foreach( const std::string& dir, dirs )
+	//	mount(media+dir);
 }
 
 //-----------------------------------//

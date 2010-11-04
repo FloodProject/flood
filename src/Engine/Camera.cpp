@@ -8,7 +8,7 @@
 
 #include "vapor/PCH.h"
 #include "vapor/scene/Camera.h"
-#include "vapor/scene/Group.h"
+#include "vapor/scene/Scene.h"
 #include "vapor/render/Device.h"
 #include "vapor/render/View.h"
 #include "vapor/render/DebugGeometry.h"
@@ -135,27 +135,6 @@ void Camera::onTransform()
 
 //-----------------------------------//
 
-void Camera::render( const NodePtr& node, bool clearView )
-{
-	if( !activeView )
-		return;
-
-	// This will contain all nodes used for rendering.
-	RenderBlock renderBlock;
-
-	// Perform frustum culling.
-	cull( renderBlock, node );
-	
-	renderDevice->setView( activeView );
-
-	if( clearView )
-		renderDevice->clearView();
-
-	renderDevice->render( renderBlock );
-}
-
-//-----------------------------------//
-
 void Camera::render()
 {
 	NodePtr node = getNode();
@@ -170,7 +149,36 @@ void Camera::render()
 
 //-----------------------------------//
 
-void Camera::cull( RenderBlock& block, const NodePtr& node ) const
+void Camera::render( const NodePtr& scene )
+{
+	// This will contain all nodes used for rendering.
+	RenderBlock renderBlock;
+
+	// Perform frustum culling.
+	cull( renderBlock, scene );
+
+	// Submits the geometry to the renderer.
+	render( renderBlock );
+}
+
+//-----------------------------------//
+
+void Camera::render( RenderBlock& block, bool clearView )
+{
+	if( !activeView )
+		return;
+	
+	renderDevice->setView( activeView );
+
+	if( clearView )
+		renderDevice->clearView();
+
+	renderDevice->render( block );
+}
+
+//-----------------------------------//
+
+void Camera::cull( RenderBlock& block, const NodePtr& node )
 {
 	// Try to see if this is a Group-derived node.
 	const GroupPtr& group( std::dynamic_pointer_cast<Group>(node) );
@@ -179,7 +187,7 @@ void Camera::cull( RenderBlock& block, const NodePtr& node ) const
 	if( group )
 	{
 		// Cull the children nodes recursively.
-		foreach( const NodePtr& child, group->getChildren() )
+		foreach( const NodePtr& child, group->getNodes() )
 		{
 			if( !child->isVisible() ) 
 				continue;

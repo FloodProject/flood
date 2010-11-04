@@ -28,7 +28,12 @@ public:
 //-----------------------------------//
 
 class EditorFrame;
+
+#if defined(VAPOR_COMPILER_MSVC_2010) && defined(VAPOR_MEMORY_TR1_VENDOR)
+typedef std::map<NodeWeakPtr, wxTreeItemId, std::owner_less<NodeWeakPtr>> NodeIdsMap;
+#else
 typedef std::map<NodeWeakPtr, wxTreeItemId> NodeIdsMap;
+#endif
 
 //-----------------------------------//
 

@@ -38,7 +38,7 @@ public:
 //-----------------------------------//
 
 // Define a new frame type: this is going to be our main frame
-class EditorFrame : public wxFrame, public wxDropTarget
+class EditorFrame : public wxFrame
 {
 public:
 
@@ -72,8 +72,8 @@ public:
 	// Gets the toolbar control.
 	GETTER(Toolbar, wxToolBar*, toolBar)
 
-	// Gets the drag and drop coords.
-	GETTER(DropCoords, Vector2, dropCoords)
+	// Gets/sets the drag and drop coords.
+	ACESSOR(DropCoords, Vector2i, dropCoords)
 
 	// Gets the player camera.
 	CameraPtr getPlayerCamera() const;
@@ -120,7 +120,6 @@ protected:
     void OnQuit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
 	void OnToolbarButtonClick(wxCommandEvent& event);
-	wxDragResult OnData(wxCoord x, wxCoord y, wxDragResult def);
 
 	// wxWidgets input events.
 	void OnKeyDown(wxKeyEvent& event);
@@ -128,7 +127,7 @@ protected:
 	void OnMouseEvent(wxMouseEvent& event);
 
 	// Drag and drop coords.
-	Vector2 dropCoords;
+	Vector2i dropCoords;
 
 	// Main engine instance.
 	Engine* engine;
@@ -158,7 +157,6 @@ protected:
 	wxToolBar* toolBar;
 	Viewframe* viewframe;
 	wxNotebook* notebookCtrl;
-	wxTextDataObject data;
 };
 
 //-----------------------------------//

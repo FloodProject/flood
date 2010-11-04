@@ -68,7 +68,7 @@ Window::Window(const WindowSettings& settings)
 
 void Window::handleWindowResize()
 {
-	Log::info("Resizing window (new size: %dx%d)",
+	Log::info("Resizing window to size %dx%d",
 		settings.getWidth(), settings.getHeight() );
 
 	if( onTargetResize.empty() )

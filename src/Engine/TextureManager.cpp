@@ -20,20 +20,51 @@ TextureManager::TextureManager( ResourceManager* resourceManager )
 {
 	assert( rm != nullptr );
 	
-	rm->onResourceLoaded += fd::bind( &TextureManager::onLoad, this );
-	rm->onResourceReloaded += fd::bind( &TextureManager::onReload, this );
+	rm->onResourceLoaded += fd::bind( &TextureManager::onLoaded, this );
+	rm->onResourceRemoved += fd::bind( &TextureManager::onUnloaded, this );
+	rm->onResourceReloaded += fd::bind( &TextureManager::onReloaded, this );
 }
 
 //-----------------------------------//
 
 TextureManager::~TextureManager()
 {
-	rm->onResourceLoaded -= fd::bind( &TextureManager::onLoad, this );
-	rm->onResourceReloaded -= fd::bind( &TextureManager::onReload, this );
+	rm->onResourceLoaded -= fd::bind( &TextureManager::onLoaded, this );
+	rm->onResourceRemoved -= fd::bind( &TextureManager::onUnloaded, this );
+	rm->onResourceReloaded -= fd::bind( &TextureManager::onReloaded, this );
 
 	#pragma TODO("Make sure all textures are released on exit")
+	foreach( const TextureMapPair& p, textures )
+	{
+		assert( p.second->getReferenceCount() == 2 );
+	}
+}
+
+//-----------------------------------//
+
+void TextureManager::update( double delta )
+{
+	//std::vector<TexturePtr> texturesToRemove;
+
 	//foreach( const TextureMapPair& p, textures )
-	//	assert( p.second->getReferenceCount() == 2 );
+	//{
+	//	if( p.second->getReferenceCount() == 2 )
+	//	{
+	//		texturesToRemove.push_back(p.second);
+	//	}
+	//}
+}
+
+//-----------------------------------//
+
+void TextureManager::removeTexture(const ImagePtr& image)
+{
+	TextureMap::iterator it = textures.find(image.get());
+	
+	if( it == textures.end() )
+		return;
+
+	textures.erase(it);
 }
 
 //-----------------------------------//
@@ -48,8 +79,10 @@ TexturePtr TextureManager::getTexture( const std::string& name )
 
 //-----------------------------------//
 
-TexturePtr TextureManager::getTexture( const ImagePtr& img )
+TexturePtr TextureManager::getTexture( const ImagePtr& image )
 {
+	Image* img = image.get();
+
 	// Image not found.
 	if( !img ) 
 	{
@@ -82,23 +115,40 @@ TexturePtr TextureManager::getTexture( const ImagePtr& img )
 
 //-----------------------------------//
 
-void TextureManager::onLoad( const ResourceEvent& evt )
+void TextureManager::onLoaded( const ResourceEvent& evt )
 {
 	if( evt.resource->getResourceGroup() != ResourceGroup::Images )
 		return;
 	
 	const ImagePtr& image = boost::static_pointer_cast<Image>( evt.resource );
 
-	if( textures.find(image) == textures.end() )
+	if( textures.find(image.get()) == textures.end() )
 		return;
 
-	TexturePtr texture = textures[image];
-	texture->setImage(image);
+	TexturePtr texture = textures[image.get()];
+	texture->setImage(image.get());
 }
 
 //-----------------------------------//
 
-void TextureManager::onReload( const ResourceEvent& evt )
+void TextureManager::onUnloaded( const ResourceEvent& evt )
+{
+	if( evt.resource->getResourceGroup() != ResourceGroup::Images )
+		return;
+
+	const ImagePtr& img = boost::static_pointer_cast<Image>( evt.resource );
+
+	if( textures.find(img.get()) == textures.end() )
+		return;
+
+	Log::debug( "Removing texture '%s'", evt.resource->getPath().c_str() );
+
+	removeTexture(img);
+}
+
+//-----------------------------------//
+
+void TextureManager::onReloaded( const ResourceEvent& evt )
 {
 	if( evt.resource->getResourceGroup() != ResourceGroup::Images )
 		return;
@@ -106,13 +156,13 @@ void TextureManager::onReload( const ResourceEvent& evt )
 	const ImagePtr& img = boost::static_pointer_cast<Image>( evt.resource );
 	//const ImagePtr& newImage = RESOURCE_SMART_PTR_CAST<Image>( evt.newResource );
 
-	if( textures.find(img) == textures.end() )
+	if( textures.find(img.get()) == textures.end() )
 		return;
 
 	Log::debug( "Reloading texture '%s'", evt.resource->getPath().c_str() );
 
-	TexturePtr tex = textures[img];
-	tex->setImage(img);
+	TexturePtr tex = textures[img.get()];
+	tex->setImage(img.get());
 
 	//switchImage( currImage, newImage );
 }
@@ -121,11 +171,11 @@ void TextureManager::onReload( const ResourceEvent& evt )
 
 void TextureManager::switchImage( const ImagePtr& curr, const ImagePtr& new_ )
 {
-	TexturePtr texture = textures[curr];
-	texture->setImage(new_);
+	TexturePtr texture = textures[curr.get()];
+	texture->setImage(new_.get());
 	
-	textures.erase(curr);
-	textures[new_] = texture;
+	textures.erase(curr.get());
+	textures[new_.get()] = texture;
 }
 
 //-----------------------------------//

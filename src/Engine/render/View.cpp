@@ -10,6 +10,7 @@
 #include "vapor/render/View.h"
 #include "vapor/render/Target.h"
 #include "vapor/scene/Camera.h"
+#include "vapor/Engine.h"
 
 namespace vapor {
 

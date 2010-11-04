@@ -30,11 +30,13 @@
 #include "plugins/Camera/CameraPlugin.h"
 #include "plugins/Sample/SamplePlugin.h"
 
+wxIMPLEMENT_WXWIN_MAIN_CONSOLE
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-IMPLEMENT_APP(EditorApp)
+wxIMPLEMENT_APP_NO_MAIN(EditorApp);
 
 bool EditorApp::OnInit()
 {
@@ -77,11 +79,11 @@ EditorFrame::EditorFrame(const wxString& title)
 	createScene();
 	createServices();
 	createPlugins();
-	toolBar->Realize();
+	createToolbar();
 	SetSizerAndFit( sizer );
 
 	ResourceManager* const rm = engine->getResourceManager();
-	rm->waitUntilQueuedResourcesLoad();
+	rm->loadQueuedResources();
 
 	// Update at least once before rendering.
 	onUpdate( 0 );
@@ -167,6 +169,40 @@ void EditorFrame::createEngine()
 
 //-----------------------------------//
 
+class ResourceDropTarget : public wxDropTarget
+{
+public:
+
+	ResourceDropTarget(EditorFrame* frame);
+	wxDragResult OnData(wxCoord x, wxCoord y, wxDragResult def);
+
+protected:
+
+	wxTextDataObject* data;
+	EditorFrame* frame;
+};
+
+//-----------------------------------//
+
+ResourceDropTarget::ResourceDropTarget(EditorFrame* frame)
+	: frame(frame)
+{
+	data = new wxTextDataObject();
+	SetDataObject(data);
+}
+
+ //-----------------------------------//
+
+wxDragResult ResourceDropTarget::OnData(wxCoord x, wxCoord y, wxDragResult def)
+{
+	Vector2i coords(x, y);
+	frame->setDropCoords(coords);
+
+	return def;
+}
+
+//-----------------------------------//
+
 void EditorFrame::createViews()
 {	
 	viewframe = new Viewframe( viewSplitter );
@@ -176,7 +212,7 @@ void EditorFrame::createViews()
 	RenderControl* control = viewframe->getControl();
 	control->onRender += fd::bind( &EditorFrame::onRender, this );
 	control->onUpdate += fd::bind( &EditorFrame::onUpdate, this );
-	control->SetDropTarget(this);
+	control->SetDropTarget( new ResourceDropTarget(this) );
 	control->SetFocus();
 
 	RenderDevice* device = engine->getRenderDevice();
@@ -192,7 +228,10 @@ void EditorFrame::createViews()
 	view->setClearColor( Color(0.0f, 0.10f, 0.25f) );
 
 	engine->getRenderDevice()->init();
+
+#ifdef VAPOR_PHYSICS_BULLET
 	engine->getPhysicsManager()->createWorld();
+#endif
 }
 
 //-----------------------------------//
@@ -284,8 +323,9 @@ void EditorFrame::createUI()
 
 	createSplitter();
 	createMenus();
-	createToolbar();
 	createNotebook();
+
+	toolBar = CreateToolBar( wxTB_HORIZONTAL, wxID_ANY );
 
 	mainSplitter->SplitVertically(viewSplitter, notebookCtrl, -220);
 
@@ -313,8 +353,6 @@ void EditorFrame::createUI()
 	Bind(wxEVT_LEAVE_WINDOW, &EditorFrame::OnMouseEvent, this);
 	Bind(wxEVT_ENTER_WINDOW, &EditorFrame::OnMouseEvent, this);
 	Bind(wxEVT_MOUSEWHEEL, &EditorFrame::OnMouseEvent, this);
-
-	SetDataObject(&data);
 }
 
 //-----------------------------------//
@@ -358,8 +396,6 @@ void EditorFrame::createMenus()
 
 void EditorFrame::createToolbar()
 {
-	toolBar = CreateToolBar( wxTB_HORIZONTAL, wxID_ANY );
-
 	toolBar->AddTool( Toolbar_ToogleGrid, "Grid", 
 		wxMEMORY_BITMAP(grid_icon), "Show/hide the editor grid", wxITEM_CHECK );
 
@@ -381,6 +417,8 @@ void EditorFrame::createToolbar()
 
 	toolBar->AddTool( Toolbar_TooglePlugin, "Shows/hides the plugin manager", 
 		wxMEMORY_BITMAP(page_white_text), "Shows/hides the plugin manager" );
+
+	toolBar->Realize();
 }
 
 //-----------------------------------//
@@ -413,15 +451,17 @@ void EditorFrame::onRender()
 		viewframe->switchToDefaultCamera();
 
 	const CameraPtr& camera = view->getCamera();
-
-	#pragma TODO("Renderables need to be sent in a single queue")
-
 	camera->setView( view );
-	camera->render( engine->getSceneManager() );
-	camera->render( editorScene, false );
 
+	RenderBlock block;
+	camera->cull( block, engine->getSceneManager() );
+	camera->cull( block, editorScene );
+	camera->render(block);
+
+#ifdef VAPOR_PHYSICS_BULLET
 	PhysicsManager* physics = engine->getPhysicsManager();
 	physics->drawDebugWorld();
+#endif
 }
 
 //-----------------------------------//
@@ -440,7 +480,7 @@ CameraPtr EditorFrame::getPlayerCamera() const
 	ScenePtr scene = engine->getSceneManager();
 	CameraPtr camera;
 
-	foreach( const NodePtr& node, scene->getChildren() )
+	foreach( const NodePtr& node, scene->getNodes() )
 	{
 		camera = node->getComponent<Camera>();
 
@@ -455,11 +495,13 @@ CameraPtr EditorFrame::getPlayerCamera() const
 
 void EditorFrame::switchPlayMode(bool switchToPlay)
 {
+#ifdef VAPOR_PHYSICS_BULLET
 	// Toogle the physics simulation state.
 	PhysicsManager* physics = engine->getPhysicsManager();
 	
 	if( physics )
 		physics->setSimulation( switchToPlay );
+#endif
 
 	CameraPtr camera = getPlayerCamera();
 	NodePtr nodeCamera;
@@ -513,7 +555,7 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 	//-----------------------------------//
 	case Toolbar_ToogleGrid:
 	{
-		const NodePtr& grid = editorScene->getEntity( "Grid" );
+		const NodePtr& grid = editorScene->findNode( "Grid" );
 		
 		if( grid )
 			grid->setVisible( !grid->isVisible() );
@@ -525,6 +567,7 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 	//-----------------------------------//
 	case Toolbar_TooglePhysicsDebug:
 	{
+#ifdef VAPOR_PHYSICS_BULLET
 		Engine* engine = Engine::getInstancePtr();
 		PhysicsManager* physics = engine->getPhysicsManager();
 		
@@ -532,7 +575,7 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 			physics->setDebugWorld( !physics->getDebugWorld() );
 		
 		redrawView();
-		
+#endif
 		break;
 	}
 	//-----------------------------------//
@@ -567,16 +610,6 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 	}
 	//-----------------------------------//
 	} // end switch
-}
-
-//-----------------------------------//
-
-wxDragResult EditorFrame::OnData(wxCoord x, wxCoord y, wxDragResult def)
-{
-	dropCoords.x = x;
-	dropCoords.y = y;
-
-	return def;
 }
 
 //-----------------------------------//

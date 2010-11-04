@@ -62,7 +62,7 @@ void Serializer::serializeScene(const ScenePtr& scene)
 	
 	serializeFields( sceneType, scene.get(), sceneValue );
 		
-	foreach( const NodePtr& node, scene->getChildren() )
+	foreach( const NodePtr& node, scene->getNodes() )
 	{
 		const Class& nodeType = node->getInstanceType();
 

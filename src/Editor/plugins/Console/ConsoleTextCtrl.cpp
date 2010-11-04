@@ -22,6 +22,8 @@ static ConsoleTextCtrl* console = nullptr;
 
 //-----------------------------------//
 
+#ifdef VAPOR_SCRIPTING_LUA
+
 int luaPrintStub(lua_State* L)
 {
 	if( !console )
@@ -29,6 +31,8 @@ int luaPrintStub(lua_State* L)
 
 	return console->luaPrint(L);
 }
+
+#endif
 
 //-----------------------------------//
 
@@ -41,8 +45,10 @@ ConsoleTextCtrl::ConsoleTextCtrl( vapor::Engine* engine, wxWindow* parent,
 	console = this;
 	InitControl();
 
+#ifdef VAPOR_SCRIPTING_LUA
 	luaState = engine->getScriptManager()->getState();
 	lua_register( luaState->getLuaState() , "print", luaPrintStub );
+#endif
 }
 
 //-----------------------------------//
@@ -79,6 +85,8 @@ void ConsoleTextCtrl::InitControl()
 
 //-----------------------------------//
 
+#ifdef VAPOR_SCRIPTING_LUA
+
 int ConsoleTextCtrl::luaPrint(lua_State* L)
 {
 	int numArgs = lua_gettop(L);
@@ -114,6 +122,8 @@ int ConsoleTextCtrl::luaPrint(lua_State* L)
 
 	return 0;
 }
+
+#endif
 
 //-----------------------------------//
 

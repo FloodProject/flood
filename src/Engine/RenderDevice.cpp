@@ -73,6 +73,7 @@ void RenderDevice::init()
 	glCullFace( GL_BACK );
 	glEnable( GL_DEPTH_TEST );
 	glDisable( GL_BLEND );
+	glAlphaFunc( GL_EQUAL, 1 );
 }
 
 //-----------------------------------//
@@ -95,7 +96,7 @@ void RenderDevice::checkExtensions()
 	if( !GLEW_VERSION_2_0 )
 	{
 		const char* str = "You need at least OpenGL 2.0 to run this.";
-		Logger::createMessageDialog( str, LogLevel::Error );
+		Log::messageDialog( str, LogLevel::Error );
 		exit( -1 );
 	}
 }
@@ -348,6 +349,9 @@ void RenderDevice::setupRenderStateMaterial( const MaterialPtr& mat )
 	if( !mat->cullBackfaces )
 		glDisable( GL_CULL_FACE );
 
+	if( mat->alphaTest )
+		glEnable( GL_ALPHA_TEST );
+
 	if( !mat->depthTest )
 		glDisable( GL_DEPTH_TEST );
 
@@ -373,6 +377,9 @@ void RenderDevice::undoRenderStateMaterial( const MaterialPtr& mat )
 
 	if( !mat->cullBackfaces )
 		glEnable( GL_CULL_FACE );
+
+	if( mat->alphaTest )
+		glDisable( GL_ALPHA_TEST );
 
 	if( !mat->depthTest )
 		glEnable( GL_DEPTH_TEST );

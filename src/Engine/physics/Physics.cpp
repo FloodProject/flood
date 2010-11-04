@@ -7,6 +7,9 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
+
+#ifdef VAPOR_PHYSICS_BULLET
+
 #include "vapor/physics/Physics.h"
 #include "vapor/physics/Body.h"
 #include "vapor/physics/Convert.h"
@@ -166,3 +169,5 @@ void PhysicsManager::removeRigidBody( const Body* body )
 //-----------------------------------//
 
 } // end namespace
+
+#endif
