@@ -33,7 +33,7 @@ public:
 	PREPARE(Script)
 
 	// Parses a Lua text script to a buffer.
-	virtual bool decode(const File&, Resource* res);
+	virtual bool decode(const Stream& file, Resource* res);
 
 	// Gets the name of this codec.
 	GETTER(Name, const std::string, "LUA")

@@ -25,7 +25,7 @@ namespace vapor {
 //-----------------------------------//
 
 /**
- * Represents a timer that can be used for timing information.
+ * Represents a timer that can be used to measure time precisely.
  * Uses high-precision timers on Windows if supported, else it will use
  * the general lower-precision timers. On POSIX platforms it'll use the
  * most high-precision timer available.
@@ -37,17 +37,14 @@ public:
 
 	Timer();
 
-	// Gets the current time.
-	double getCurrentTime();
+	// Resets the timer.
+	double reset();
 
 	// Gets the time since the last reset.
 	double getElapsedTime();
 
-	// Resets the timer.
-	double reset();
-
-	// Sleeps for a specified ammount of time.
-	static void sleep( double time );
+	// Gets the current time.
+	double getCurrentTime();
 	
 private:
 

@@ -23,7 +23,7 @@ class ResourceLoader;
  * might have a different pointer.
  */
 
-typedef int	ResourceHandle; // Note: unused for now.
+typedef int	ResourceHandle;
 
 //-----------------------------------//
 

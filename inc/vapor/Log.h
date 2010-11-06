@@ -84,6 +84,18 @@ public:
 	// Low-level logging implementation.
 	void write(const LogLevel::Enum level, const char* msg, va_list args);
 
+	// Gets the global engine logger.
+	static Logger* getLogger() { return globalLogger; }
+
+	// Gets the global engine logger.
+	static SETTER(Logger, Logger*, globalLogger)
+
+	// This controls if debug is output.
+	static bool showDebug;
+
+	// Global engine logger.
+	static Logger* globalLogger;
+
 protected:
 		
 	// Writes the header to the log.
@@ -100,20 +112,6 @@ protected:
 
 	// Mutex lock to synchronize access.
 	THREAD(boost::mutex mutex;)
-
-public:
-
-	// Gets the global engine logger.
-	static Logger* getLogger() { return globalLogger; }
-
-	// Gets the global engine logger.
-	static SETTER(Logger, Logger*, globalLogger)
-
-	// This controls if debug is output.
-	static bool showDebug;
-
-	// Global engine logger.
-	static Logger* globalLogger;
 };
 
 //-----------------------------------//

@@ -33,7 +33,7 @@ public:
 	PREPARE(Milkshape3D)
 
 	// Decodes a Milkshape3D mesh.
-	virtual bool decode(const File&, Resource* res);
+	virtual bool decode(const Stream& stream, Resource* res);
 
 	// Gets the name of this codec.
 	GETTER(Name, const std::string, "MS3D")

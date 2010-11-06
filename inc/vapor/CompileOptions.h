@@ -40,8 +40,8 @@
 // Threading stuff
 //---------------------------------------------------------------------//
 
-#define VAPOR_THREADING
-	#define VAPOR_THREADING_BOOST
+//#define VAPOR_THREADING
+	//#define VAPOR_THREADING_BOOST
 	//#define VAPOR_THREADING_STD
 
 //---------------------------------------------------------------------//
@@ -114,4 +114,4 @@
 
 //#define VAPOR_SCRIPTING_LUA
 
-//#ifdef VAPOR_PHYSICS_BULLET
+#define VAPOR_PHYSICS_BULLET

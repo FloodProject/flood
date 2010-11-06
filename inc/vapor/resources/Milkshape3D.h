@@ -11,7 +11,7 @@
 #include "vapor/resources/Mesh.h"
 #include "vapor/animation/Animation.h"
 #include "vapor/animation/Skeleton.h"
-#include "vapor/vfs/File.h"
+#include "vapor/Stream.h"
 
 FWD_DECL_INTRUSIVE(Material)
 
@@ -38,8 +38,7 @@ struct AnimationMetadata
 
 /**
  * Represents Milkshape 3D meshes. These can hold vertex, animation, and 
- * material data, are relatively easy to parse and use, and are quite
- * well documented and lightweight.
+ * material data, are relatively easy to parse and use, and documented.
  */
 
 class Milkshape3D : public Mesh
@@ -49,7 +48,7 @@ public:
 	Milkshape3D();
 
 	// Loads the mesh data into the resource.
-	bool load(const File& file);
+	bool load(const Stream& stream);
 
 	// Parses the contents of the file.
 	bool parse();

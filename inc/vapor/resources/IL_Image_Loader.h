@@ -34,7 +34,7 @@ public:
 	PREPARE(Image)
 
 	// Decode an image file to a buffer.
-	virtual bool decode(const File&, Resource* res);
+	virtual bool decode(const Stream& file, Resource* res);
 
 	// Gets the name of this codec.
 	GETTER(Name, const std::string, "STB_IMAGE")

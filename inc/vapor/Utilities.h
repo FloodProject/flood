@@ -22,6 +22,9 @@ namespace System
 	// Swaps the endianness of a long.
 	long swapEndian(long i);
 
+	// Sleeps for a specified ammount of time.
+	void sleep( double time );
+
 	// Enumerates files in a given path.
 	std::vector<std::string> enumerateFiles(const std::string& path);
 

@@ -32,7 +32,7 @@ namespace FileMode
 /**
  * Represents a native file managed by the OS.
  * This is a small utility wrapper class that will be extended as needed,
- * but usually you should use the File class of the  virtual filesystem 
+ * but usually you should use the File class of the virtual filesystem 
  * (VFS) provided by the engine.
  */
 

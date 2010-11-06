@@ -29,10 +29,10 @@ public:
 	GLSL_Loader();
 
 	// Creates the resource with no data.
-	virtual Resource* prepare(const File& file);
+	virtual Resource* prepare(const Stream& stream);
 
 	// Parses a GLSL text shader to a buffer.
-	virtual bool decode(const File&, Resource* res);
+	virtual bool decode(const Stream& file, Resource* res);
 
 	// Gets the name of this codec.
 	GETTER(Name, const std::string, "GLSL")
