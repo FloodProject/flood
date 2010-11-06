@@ -1,5 +1,4 @@
 #include "vapor/PCH.h"
-#include <vector>
 
 #ifdef VAPOR_IMAGE_PICOPNG
 

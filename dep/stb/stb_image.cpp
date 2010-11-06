@@ -1,12 +1,12 @@
 #include "vapor/PCH.h"
 
+#ifdef VAPOR_IMAGE_STB
+
 // Configuration
 #define STBI_NO_STDIO
 #define STBI_NO_HDR
 #define STBI_NO_FAILURE_STRINGS
 #define STBI_NO_WRITE
-
-#ifdef VAPOR_IMAGE_STB
 
 /* stbi-1.18 - public domain JPEG/PNG reader - http://nothings.org/stb_image.c
                       when you control the images you're loading
