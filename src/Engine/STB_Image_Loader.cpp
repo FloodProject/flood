@@ -29,7 +29,7 @@ STB_Image_Loader::STB_Image_Loader()
 
 //-----------------------------------//
 
-bool STB_Image_Loader::decode(const File& file, Resource* res)
+bool STB_Image_Loader::decode(const Stream& file, Resource* res)
 {
 	// read contents of the file into the vector
 	std::vector<byte> filebuf = file.read();

@@ -98,10 +98,10 @@ void PhysicsManager::createWorld()
 {
 	assert( !world );
 
-    world = new btDiscreteDynamicsWorld(
-		dispatcher, broadphase, solver, config);
+    world = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, config);
 
-	world->getPairCache()->setInternalGhostPairCallback( new btGhostPairCallback() );
+	//btOverlappingPairCache* cache = world->getPairCache();
+	//cache->setInternalGhostPairCallback( new btGhostPairCallback() );
 
 	debugDrawer = new BulletDebugDrawer();
 	world->setDebugDrawer( debugDrawer );

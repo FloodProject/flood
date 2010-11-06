@@ -21,7 +21,7 @@
 	THE SOFTWARE.
 */
 
-#include "vapor/PCH.h"
+#include "Core.h"
 #include "vapor/vfs/FileWatcher.h"
 
 namespace vapor {

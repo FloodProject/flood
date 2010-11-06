@@ -151,7 +151,9 @@ ResourcePtr ResourceManager::prepareResource(const File& file)
 		return nullptr;
 	}
 
-	ResourcePtr res( loader->prepare(file) );
+	PhysfsStream stream(const_cast<File&>(file));
+
+	ResourcePtr res( loader->prepare(stream) );
 	res->setStatus( ResourceStatus::Loading );
 	res->setPath( file.getPath() );
 
@@ -198,7 +200,7 @@ void ResourceManager::loadQueuedResources()
 		#pragma TODO("Use timed_wait and notify the observers of progress")
 
 		THREAD( resourceFinishLoad.wait(lock); )
-		Timer::sleep( 0.01f );
+		System::sleep( 0.01f );
 	}
 
 	assert( numResourcesQueuedLoad == 0 );

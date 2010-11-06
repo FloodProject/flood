@@ -24,7 +24,7 @@ GLSL_Loader::GLSL_Loader()
 
 //-----------------------------------//
 
-Resource* GLSL_Loader::prepare(const File& file)
+Resource* GLSL_Loader::prepare(const Stream& stream)
 {
 	GLSL_Text* shader = new GLSL_Text;
 	return shader;
@@ -32,7 +32,7 @@ Resource* GLSL_Loader::prepare(const File& file)
 
 //-----------------------------------//
 
-bool GLSL_Loader::decode(const File& file, Resource* res)
+bool GLSL_Loader::decode(const Stream& file, Resource* res)
 {
 	std::vector<byte> text = file.read();
 	std::string str( text.begin(), text.end() );

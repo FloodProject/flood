@@ -62,7 +62,7 @@ OGG_Loader::OGG_Loader()
 
 //-----------------------------------//
 
-bool OGG_Loader::decode(const File& file, Resource* res)
+bool OGG_Loader::decode(const Stream& file, Resource* res)
 {
 	OggVorbis_File oggFile;
 	ov_open_callbacks((void*) &file, &oggFile, nullptr, 0, callbacks);

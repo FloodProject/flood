@@ -104,7 +104,7 @@ void Framework::mainLoop()
 		updateFrameTimes();
 	}
 
-	Timer::sleep(0);
+	System::sleep(0);
 }
 
 //-----------------------------------//

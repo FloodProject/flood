@@ -47,11 +47,11 @@ IL_Image_Loader::~IL_Image_Loader()
 
 //-----------------------------------//
 
-bool IL_Image_Loader::decode(const File& file, Resource* res)
+bool IL_Image_Loader::decode(const Stream& stream, Resource* res)
 {
-	std::vector<byte> filebuf = file.read();
+	std::vector<byte> data = stream.read();
 
-	if( filebuf.empty() ) 
+	if( data.empty() ) 
 		return false;
 
 	THREAD(boost::lock_guard<boost::mutex> lock(mutex);)
@@ -62,7 +62,7 @@ bool IL_Image_Loader::decode(const File& file, Resource* res)
 	ilEnable(IL_ORIGIN_SET);
 	ilSetInteger(IL_ORIGIN_MODE, IL_ORIGIN_UPPER_LEFT);
 
-	if( !ilLoadL(IL_TYPE_UNKNOWN, &filebuf[0], filebuf.size()) )
+	if( !ilLoadL(IL_TYPE_UNKNOWN, &data[0], data.size()) )
 		return false;
 
 	if( checkErrors() )

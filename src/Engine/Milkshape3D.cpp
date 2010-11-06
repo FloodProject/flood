@@ -27,9 +27,9 @@ Milkshape3D::Milkshape3D()
 
 //-----------------------------------//
 
-bool Milkshape3D::load(const File& file)
+bool Milkshape3D::load(const Stream& stream)
 {
-	filebuf = file.read();
+	filebuf = stream.read();
 
 	if( filebuf.empty() ) 
 		return false;

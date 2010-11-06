@@ -23,7 +23,7 @@ Lua_Loader::Lua_Loader()
 
 //-----------------------------------//
 
-bool Lua_Loader::decode(const File& file, Resource* res)
+bool Lua_Loader::decode(const Stream& file, Resource* res)
 {
 	std::vector<byte> text = file.read();
 	std::string str( text.begin(), text.end() );

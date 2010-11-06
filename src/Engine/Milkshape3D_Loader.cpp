@@ -27,14 +27,11 @@ Milkshape3D_Loader::Milkshape3D_Loader()
 
 //-----------------------------------//
 
-bool Milkshape3D_Loader::decode(const File& file, Resource* res)
+bool Milkshape3D_Loader::decode(const Stream& stream, Resource* res)
 {
-	if( !file.exists() ) 
-		return false;
-
 	Milkshape3D* mesh = static_cast<Milkshape3D*>(res);
 	
-	if( !mesh->load(file) )
+	if( !mesh->load(stream) )
 		return false;
 	
 	return true;

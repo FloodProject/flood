@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Core.h"
 
 #ifdef VAPOR_VFS_PHYSFS
 

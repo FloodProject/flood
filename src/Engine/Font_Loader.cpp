@@ -27,7 +27,7 @@ Font_Loader::Font_Loader()
 
 //-----------------------------------//
 
-bool Font_Loader::decode(const File& file, Resource* res)
+bool Font_Loader::decode(const Stream& file, Resource* res)
 {
 	lines = file.readLines();
 

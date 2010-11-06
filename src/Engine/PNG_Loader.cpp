@@ -26,7 +26,7 @@ PNG_Pico_Loader::PNG_Pico_Loader()
 
 //-----------------------------------//
 
-bool PNG_Pico_Loader::decode(const File& file, Resource* res)
+bool PNG_Pico_Loader::decode(const Stream& file, Resource* res)
 {
 	std::vector<byte> filebuf = file.read();
 

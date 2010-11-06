@@ -42,6 +42,19 @@ long System::swapEndian(long i)
 
 //-----------------------------------//
 
+void System::sleep( double time )
+{
+#ifdef VAPOR_PLATFORM_WINDOWS
+	::Sleep( static_cast<DWORD>(time) );
+#else
+	timespec param;
+	param.tv_nsec = time*1000000000.0;
+	nanosleep(&param, NULL);
+#endif
+}
+
+//-----------------------------------//
+
 static void enumerateFilesHelper(std::vector<std::string>& files, std::string path, bool dirs)
 {
 	DIR *dir;

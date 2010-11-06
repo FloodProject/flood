@@ -180,11 +180,10 @@ Logger::~Logger()
 
 void Logger::write(const LogLevel::Enum level, const char* msg, va_list args)
 {
-	std::string lvl = String::toLowerCase( LogLevel::toString(level) );
-
+	THREAD(boost::lock_guard<boost::mutex> lock(mutex);)
 	LocaleSaveRestore c;
 
-	THREAD(boost::lock_guard<boost::mutex> lock(mutex);)
+	std::string lvl = String::toLowerCase( LogLevel::toString(level) );
 
 	fprintf(fp, "\t\t<tr class=\"%s,%s\">", lvl.c_str(), even ? "even" : "odd");
 		fprintf(fp, "<td class=\"%s\"></td>", lvl.c_str());

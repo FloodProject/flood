@@ -6,6 +6,8 @@
 *
 ************************************************************************/
 
+#include "vapor/vfs/PhysfsStream.h"
+
 namespace vapor {
 
 //-----------------------------------//
@@ -13,11 +15,6 @@ namespace vapor {
 class ResourceTask : public Task
 {
 public:
-
-	~ResourceTask()
-	{
-
-	}
 
 	void run()
 	{
@@ -34,8 +31,11 @@ public:
 			Log::warn( "No resource loader found for resource '%s'", path.c_str() );
 			return;
 		}
+
+		PhysfsStream stream(file);
+		bool decoded = loader->decode(stream, res);
 		
-		if( loader->decode(file, res) )
+		if(decoded)
 		{
 			res->setStatus( ResourceStatus::Loaded );
 		}

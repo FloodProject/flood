@@ -21,7 +21,7 @@
 	THE SOFTWARE.
 */
 
-#include "vapor/PCH.h"
+#include "Core.h"
 #include "FileWatcherWin32.h"
 
 #ifdef VAPOR_PLATFORM_WINDOWS
