@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Core.h"
-#include "vapor/Profiler.h"
+#include "Profiler.h"
 
 namespace vapor {
 
@@ -22,11 +22,9 @@ Profiler::Profiler(const std::string& name)
 Profiler::~Profiler()
 {
 	double time = timer.getElapsedTime();
+	double ms = time * 1000;
 
-	float ms = time * 1000;
-
-	Log::debug( "%s: took %lu ms (%.5lf)",
-		name.c_str(), (ulong) ms, ms );
+	Log::debug( "%s: took %lu ms (%.5lf)", name.c_str(), (ulong) ms, ms );
 }
 
 //-----------------------------------//

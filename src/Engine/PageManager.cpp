@@ -65,14 +65,12 @@ void PageManager::update( double delta )
 		PageEvent event;
 		event.pos = page;
 	
-		if( !onPageSwitch.empty() )
-			onPageSwitch(event);
+		onPageSwitch(event);
 
 		if(!loaded[page.x][page.y])
 		{
 			loaded[page.x][page.y] = true;
 
-		if( !onPageLoading.empty() )
 			onPageLoading(event);
 		}
 	}

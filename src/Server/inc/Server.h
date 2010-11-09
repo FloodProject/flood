@@ -22,7 +22,7 @@ public:
 
 	Server();
 	~Server();
-
+	
 	// Initializes the server.
 	bool init();
 

@@ -53,7 +53,7 @@ CharacterController::CharacterController()
 	, maxSlope(45)
 {
 	Class& klass = getType();
-	klass.onFieldChanged += fd::bind(&CharacterController::onFieldChanged, this);
+	klass.onFieldChanged.Connect(this, &CharacterController::onFieldChanged);
 }
 
 //-----------------------------------//
@@ -61,7 +61,7 @@ CharacterController::CharacterController()
 CharacterController::~CharacterController()
 {
 	Class& klass = getType();
-	klass.onFieldChanged -= fd::bind(&CharacterController::onFieldChanged, this);
+	klass.onFieldChanged.Disconnect(this, &CharacterController::onFieldChanged);
 
 	Engine* engine = Engine::getInstancePtr();
 	PhysicsManager* physics = engine->getPhysicsManager();

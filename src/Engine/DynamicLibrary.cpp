@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Core.h"
-#include "vapor/DynamicLibrary.h"
+#include "DynamicLibrary.h"
 
 #ifdef VAPOR_PLATFORM_WINDOWS
 	#define DYNLIB_LOAD(lib)		LoadLibraryExA(lib, nullptr, LOAD_WITH_ALTERED_SEARCH_PATH)
@@ -21,7 +21,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-DynamicLib::DynamicLib(const std::string& name) 
+DynamicLibrary::DynamicLibrary(const std::string& name) 
   : _handle(nullptr)
   , _name(name)
 {
@@ -30,7 +30,7 @@ DynamicLib::DynamicLib(const std::string& name)
 
 //-----------------------------------//
 
-DynamicLib::~DynamicLib()
+DynamicLibrary::~DynamicLibrary()
 {
 	if(_handle)
 	{
@@ -40,7 +40,7 @@ DynamicLib::~DynamicLib()
 
 //-----------------------------------//
 
-bool DynamicLib::load()
+bool DynamicLibrary::load()
 {
 	_handle = (DynLibHandle) DYNLIB_LOAD(_name.c_str());
 
@@ -53,7 +53,7 @@ bool DynamicLib::load()
 
 //-----------------------------------//
 
-void* DynamicLib::getSymbol(const std::string& symbol)
+void* DynamicLibrary::getSymbol(const std::string& symbol)
 {
 	return (void*) DYNLIB_GETSYM(_handle, symbol.c_str()); 
 }

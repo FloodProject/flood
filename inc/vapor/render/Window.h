@@ -115,10 +115,10 @@ public:
 	GETTER(Settings, const Settings&, settings)
 
 	// Event fired when the window is closed.
-	fd::delegate< void() > onWindowClose;
+	Event0<> onWindowClose;
 
 	// Event fired when the window focus changes.
-	fd::delegate< void( bool focusLost ) > onWindowFocusChange;
+	Event1<bool> onWindowFocusChange;
 
 	// Create a new render window.
 	static Window* createWindow( const WindowSettings& = WindowSettings() );

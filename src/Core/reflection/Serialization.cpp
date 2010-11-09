@@ -18,11 +18,16 @@ namespace vapor {
 
 //-----------------------------------//
 
+Serializer::Serializer()
+{ }
+
+//-----------------------------------//
+
 bool Serializer::openFromFile( const std::string& name )
 {
-	LocaleSaveRestore c;
+	LocaleSwitch c;
 
-	NativeFile file( name, FileMode::Read );
+	FileStream file( name, StreamMode::Read );
 
 	if( !file.open() )
 		return false;
@@ -41,14 +46,15 @@ void Serializer::saveToFile( const std::string& name )
 {
 	// Always switch to the platform independent "C" locale when writing
 	// JSON, else the library will format the data erroneously.
-	LocaleSaveRestore c;
+	LocaleSwitch c;
 
-	NativeFile file( name, FileMode::Write );
+	FileStream file( name, StreamMode::Write );
 
 	if( !file.open() )
 		return;
 
-	file.write( rootValue.toStyledString() );
+	#pragma TODO(Write)
+	//file.write( rootValue.toStyledString() );
 }
 
 //-----------------------------------//

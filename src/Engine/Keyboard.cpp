@@ -69,8 +69,7 @@ void Keyboard::keyPressed( const KeyEvent& keyEvent )
 	keyState[keyEvent.keyCode] = true;
 	lastKey = keyEvent.keyCode;
 
-	if( !onKeyPress.empty() )
-		onKeyPress(keyEvent);
+	onKeyPress(keyEvent);
 }
 
 //-----------------------------------//
@@ -79,8 +78,7 @@ void Keyboard::keyReleased( const KeyEvent& keyEvent )
 {
 	keyState[keyEvent.keyCode] = false;
 
-	if( !onKeyRelease.empty() )
-		onKeyRelease(keyEvent);
+	onKeyRelease(keyEvent);
 }
 
 //-----------------------------------//

@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Core.h"
-#include "vapor/net/Message.h"
+#include "net/Message.h"
 
 namespace vapor {
 

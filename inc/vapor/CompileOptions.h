@@ -40,8 +40,8 @@
 // Threading stuff
 //---------------------------------------------------------------------//
 
-//#define VAPOR_THREADING
-	//#define VAPOR_THREADING_BOOST
+#define VAPOR_THREADING
+	#define VAPOR_THREADING_BOOST
 	//#define VAPOR_THREADING_STD
 
 //---------------------------------------------------------------------//

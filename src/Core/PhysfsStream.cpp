@@ -7,14 +7,14 @@
 ************************************************************************/
 
 #include "Core.h"
-#include "vapor/vfs/PhysfsStream.h"
+#include "vfs/PhysfsStream.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
 PhysfsStream::PhysfsStream(File& file)
-	: Stream(AccessMode::Read)
+	: Stream(StreamMode::Read)
 	, file(file)
 	//, path(file.getPath())
 { }
@@ -35,7 +35,7 @@ void PhysfsStream::close()
 
 //-----------------------------------//
 
-long PhysfsStream::read(void* buffer, long size)
+long PhysfsStream::read(void* buffer, long size) const
 {
 	return file.read(buffer, size);
 }

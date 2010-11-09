@@ -105,18 +105,16 @@ class VAPOR_API Joystick : public InputDevice
 	// Return this device as a joystick.
 	virtual const InputDeviceType::Enum getType();
 
-	//-----------------------------------//
 	// Events
-	//-----------------------------------//
 
 	// Occurs when the joystick is moved.
-	fd::delegate< void( const JoyMoveEvent& ) > onJoystickMove;
+	Event1< const JoyMoveEvent& > onJoystickMove;
 	
 	// Occurs when a joystick button is pressed.
-	fd::delegate< void( const JoyButtonEvent& ) > onJoystickButtonPress;
+	Event1< const JoyButtonEvent& > onJoystickButtonPress;
 	
 	// Occurs when a joystick button is released.
-	fd::delegate< void( const JoyButtonEvent& ) > onJoystickButtonRelease;
+	Event1< const JoyButtonEvent& > onJoystickButtonRelease;
 
 private:
 

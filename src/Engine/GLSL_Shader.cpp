@@ -80,7 +80,7 @@ bool GLSL_Shader::compile()
 		return false;
 	}
 
-	getGLSLLog();
+	getCompileLog();
 
 	GLint status;
 	glGetShaderiv( shaderId, GL_COMPILE_STATUS, &status );
@@ -113,7 +113,7 @@ bool GLSL_Shader::upload()
 
 //-----------------------------------//
 
-void GLSL_Shader::getGLSLLog()
+void GLSL_Shader::getCompileLog()
 {
 	// get compilation log size
 	GLint size;

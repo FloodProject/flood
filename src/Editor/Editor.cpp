@@ -191,7 +191,7 @@ ResourceDropTarget::ResourceDropTarget(EditorFrame* frame)
 	SetDataObject(data);
 }
 
- //-----------------------------------//
+//-----------------------------------//
 
 wxDragResult ResourceDropTarget::OnData(wxCoord x, wxCoord y, wxDragResult def)
 {
@@ -210,8 +210,8 @@ void EditorFrame::createViews()
 	viewSplitter->SetExpanded( viewframe );
 
 	RenderControl* control = viewframe->getControl();
-	control->onRender += fd::bind( &EditorFrame::onRender, this );
-	control->onUpdate += fd::bind( &EditorFrame::onUpdate, this );
+	control->onRender.Connect( this, &EditorFrame::onRender );
+	control->onUpdate.Connect( this, &EditorFrame::onUpdate );
 	control->SetDropTarget( new ResourceDropTarget(this) );
 	control->SetFocus();
 
@@ -224,10 +224,10 @@ void EditorFrame::createViews()
 	engine->setupInput();
 	inputManager = control->getInputManager();
 
-	View* view = viewframe->createView();
+	RenderView* view = viewframe->createView();
 	view->setClearColor( Color(0.0f, 0.10f, 0.25f) );
 
-	engine->getRenderDevice()->init();
+	device->init();
 
 #ifdef VAPOR_PHYSICS_BULLET
 	engine->getPhysicsManager()->createWorld();
@@ -445,7 +445,7 @@ void EditorFrame::redrawView()
 
 void EditorFrame::onRender()
 {
-	View* view = viewframe->getView();
+	RenderView* view = viewframe->getView();
 
 	if( !view->getCamera() )
 		viewframe->switchToDefaultCamera();
@@ -519,7 +519,7 @@ void EditorFrame::switchPlayMode(bool switchToPlay)
 	if( switchToPlay )
 	{
 		// Change the active camera.
-		View* view = viewframe->getView();
+		RenderView* view = viewframe->getView();
 
 		if( controller )
 			controller->setEnabled(true);

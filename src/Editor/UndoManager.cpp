@@ -94,8 +94,7 @@ void UndoManager::handleOperation(Operations& firstOperations,
 
 void UndoManager::fireUndoRedoEvent()
 {
-	if( !onUndoRedoEvent.empty() )
-		onUndoRedoEvent();
+	onUndoRedoEvent();
 }
 
 //-----------------------------------//

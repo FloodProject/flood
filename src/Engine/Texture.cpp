@@ -102,12 +102,12 @@ bool Texture::upload()
 
 	bool haveImage = image && !image->getBuffer().empty();
 
-	//glTexImage2D( target, 0, 
-	//	convertInternalFormat(format),
-	//	width, height, 0,
-	//	convertSourceFormat(format),
-	//	/*(format == PixelFormat::Depth) ? GL_FLOAT : */GL_UNSIGNED_BYTE,
-	//	(haveImage) ? &image->getBuffer()[0] : nullptr );
+	glTexImage2D( target, 0, 
+		convertInternalFormat(format),
+		width, height, 0,
+		convertSourceFormat(format),
+		/*(format == PixelFormat::Depth) ? GL_FLOAT : */GL_UNSIGNED_BYTE,
+		(haveImage) ? &image->getBuffer()[0] : nullptr );
 
 	#pragma TODO("Check that there is free memory in the GPU before uploading textures")
 

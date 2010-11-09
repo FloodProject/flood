@@ -10,8 +10,8 @@
 
 #ifdef VAPOR_VFS_PHYSFS
 
-#include "vapor/vfs/File.h"
-#include "vapor/Utilities.h"
+#include "vfs/File.h"
+#include "Utilities.h"
 #include <physfs.h>
 
 namespace vapor {
@@ -30,7 +30,7 @@ static std::string normalizePath(std::string path)
 
 //-----------------------------------//
 
-File::File(const std::string& tempPath, FileMode::Enum mode)
+File::File(const std::string& tempPath, StreamMode::Enum mode)
 	: mode(mode)
 	, file(nullptr)
 	, closed(false)
@@ -54,15 +54,17 @@ bool File::open()
 {
 	switch( mode )
 	{
-	case FileMode::Read:
+	case StreamMode::Read:
 		file = PHYSFS_openRead( getPath().c_str() );
 		break;
-	case FileMode::Write:
+	case StreamMode::Write:
 		file = PHYSFS_openWrite( getPath().c_str() );
 		break;
-	case FileMode::Append:
+	case StreamMode::Append:
 		file = PHYSFS_openAppend( getPath().c_str() );
 		break;
+	default:
+		assert( false );
 	}
 
 	if( !file )
@@ -115,7 +117,7 @@ long File::getSize() const
 
 //-----------------------------------//
 
-bool File::validate(FileMode::Enum check) const
+bool File::validate(StreamMode::Enum check) const
 {
 	if( mode == check )
 		return true;
@@ -130,7 +132,7 @@ std::vector<byte> File::read(long sz) const
 {
 	std::vector<byte> buffer;
 
-	if( !(validate(FileMode::Read) || validate(FileMode::Append)) )
+	if( !(validate(StreamMode::Read) || validate(StreamMode::Append)) )
 		return buffer;
 
 	if( !file || PHYSFS_eof(file) ) 
@@ -160,7 +162,7 @@ std::vector<byte> File::read(long sz) const
 
 long File::read(void* buffer, long size ) const
 {
-	if( !(validate(FileMode::Read) || validate(FileMode::Append)) )
+	if( !(validate(StreamMode::Read) || validate(StreamMode::Append)) )
 		return -1;
 
 	if( !file || PHYSFS_eof(file) ) 
@@ -206,7 +208,7 @@ std::vector<std::string> File::readLines() const
 
 long File::write(const std::vector<byte>& buffer, long size)
 {
-	if( !validate(FileMode::Write) )
+	if( !validate(StreamMode::Write) )
 		return -1;
 
 	if( (size < 0) || ((ulong) size > buffer.size()) )
@@ -271,7 +273,7 @@ bool File::exists() const
 
 bool File::exists(const std::string& path)
 {
-	return PHYSFS_exists(path.c_str());
+	return PHYSFS_exists(path.c_str()) != 0;
 }
 
 //-----------------------------------//

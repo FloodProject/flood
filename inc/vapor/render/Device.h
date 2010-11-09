@@ -69,7 +69,7 @@ public:
 	void render( RenderBlock& queue );
 
 	// Sets the active view.
-	void setView( View* view );
+	void setView( RenderView* view );
 
 	// Clears the active render target.
 	void clearView();
@@ -141,7 +141,7 @@ protected:
 	std::vector<RenderTarget*> renderTargets;
 
 	// Active view.
-	View* activeView;
+	RenderView* activeView;
 
 	// Adapter information
 	Adapter* adapter;

@@ -7,11 +7,11 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
 #include "vapor/resources/ResourceManager.h"
 #include "vapor/resources/ResourceLoader.h"
 #include "vapor/vfs/FileSystem.h"
 #include "vapor/TaskManager.h"
+#include "vapor/Utilities.h"
 
 #include "ResourceTask.h"
 
@@ -28,8 +28,7 @@ ResourceManager::ResourceManager( FileWatcher* fileWatcher, TaskManager* tasks )
 
 	if( fileWatcher )
 	{
-		fileWatcher->onFileWatchEvent +=
-			fd::bind(&ResourceManager::handleWatchResource, this);
+		fileWatcher->onFileWatchEvent.Connect(this, &ResourceManager::handleWatchResource);
 	}
 }
 
@@ -97,13 +96,10 @@ ResourcePtr ResourceManager::loadResource(const std::string& path, bool async)
 	resources[file.getName()] = resource;
 
 	// Send callback notifications.
-	if( !onResourcePrepared.empty() )
-	{
-		ResourceEvent event;
-		event.resource = resource;
+	ResourceEvent event;
+	event.resource = resource;
 		
-		onResourcePrepared( event );
-	}
+	onResourcePrepared( event );
 
 	return resource;
 }
@@ -235,9 +231,6 @@ void ResourceManager::sendPendingEvents()
 
 	while( resourceTaskEvents.try_pop(event) )
 	{
-		if( onResourceLoaded.empty() )
-			continue;
-		
 		onResourceLoaded( event );	
 	}
 }
@@ -275,19 +268,16 @@ void ResourceManager::removeResource(const ResourcePtr& resource)
 
 void ResourceManager::removeResource(const std::string& path)
 {
-	ResourceMap::iterator it = resources.find( path );
+	ResourceMap::iterator it = resources.find(path);
 	
 	if( it == resources.end() )
 		return;
 
 	// Send callback notifications.
-	if( !onResourceRemoved.empty() )
-	{
-		ResourceEvent event;
-		event.resource = (*it).second;
+	ResourceEvent event;
+	event.resource = (*it).second;
 		
-		onResourceRemoved( event );
-	}
+	onResourceRemoved( event );
 
 	resources.erase(it);
 
@@ -305,10 +295,7 @@ void ResourceManager::registerLoader(ResourceLoader* const loader)
 		resourceLoaders[extension] = loader;
 
 	// Send callback notifications.
-	if( !onResourceLoaderRegistered.empty() )
-	{
-		onResourceLoaderRegistered( *loader );
-	}
+	onResourceLoaderRegistered( *loader );
 
 	Log::info( "Registered resource loader '%s'", loader->getName().c_str() );
 }
@@ -339,12 +326,9 @@ void ResourceManager::handleWatchResource(const FileWatchEvent& evt)
 
 	decodeResource( res, true, false );
 
-	if( !onResourceReloaded.empty() )
-	{
-		ResourceEvent re;
-		re.resource = res;
-		onResourceReloaded( re );
-	}
+	ResourceEvent re;
+	re.resource = res;
+	onResourceReloaded( re );
 }
 
 //-----------------------------------//

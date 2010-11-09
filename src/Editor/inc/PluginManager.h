@@ -54,8 +54,8 @@ public:
 	GETTER(Tools, const PluginToolsMap&, tools)
 
 	// Plugin events callback.
-	fd::delegate<void(Plugin*)> onPluginEnableEvent;
-	fd::delegate<void(Plugin*)> onPluginDisableEvent;
+	Event1<Plugin*> onPluginEnableEvent;
+	Event1<Plugin*> onPluginDisableEvent;
 
 protected:
 	

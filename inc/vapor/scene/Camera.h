@@ -18,7 +18,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-class View;
+class RenderView;
 class RenderDevice;
 struct RenderBlock;
 
@@ -70,10 +70,10 @@ public:
 	GETTER(ViewMatrix, const Matrix4x3&, viewMatrix)
 	
 	// Gets the current view associated with the camera.
-	GETTER(View, View*, activeView)
+	GETTER(View, RenderView*, activeView)
 
 	// Sets the current view associated with the camera.
-	DECLARE_SETTER(View, View*)
+	DECLARE_SETTER(View, RenderView*)
 
 protected:
 
@@ -102,7 +102,7 @@ protected:
 	Matrix4x3 viewMatrix;
 
 	// Last view active the camera.
-	View* activeView;
+	RenderView* activeView;
 
 	// Pointer to the camera node transform.
 	TransformPtr transform;

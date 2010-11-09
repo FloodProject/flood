@@ -25,7 +25,7 @@ struct TerrainSettings;
  * integer coordinates.
  */
 
-class VAPOR_API Cell : public Renderable
+class VAPOR_API Cell : public Renderable, private boost::noncopyable
 {
 public:
 

@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "vapor/math/Vector3.h"
-#include "vapor/math/BoundingBox.h"
-#include "vapor/math/Ray.h"
+#include "math/Vector3.h"
+#include "math/BoundingBox.h"
+#include "math/Ray.h"
 
 namespace vapor {
 

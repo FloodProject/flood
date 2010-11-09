@@ -79,7 +79,7 @@ void Engine::addSubsystem( Subsystem* const subsystem )
 
 void Engine::init( bool createWindow )
 {
-	// setup the global logger
+	// Sets up the global logger.
 	setupLogger();
 
 	Log::info( "Starting vaporEngine version '%s'", VAPOR_ENGINE_VERSION );
@@ -117,7 +117,8 @@ void Engine::init( bool createWindow )
 
 void Engine::setupLogger()
 {
-	log = new Logger(app, "Logs/Log.html");
+	FileStream stream("Logs/Log.html");
+	log = new Logger(stream);
 }
 
 //-----------------------------------//

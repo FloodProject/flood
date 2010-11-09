@@ -23,14 +23,14 @@ solution "vapor"
 	location ( _ACTION )
 	objdir 	( _ACTION .. "/obj" )
 	
-	project "vaporCore"
+	project "Core"
 	
 		kind "StaticLib"
 		language "C++"	
 	
 		-- Source files
 		files {
-			"../inc/vapor/core/*.h",
+			"../inc/vapor/*.h",
 			"../src/core/**.h",
 			"../src/core/**.cpp",
 		}
@@ -43,7 +43,7 @@ solution "vapor"
 			"../dep/fd_delegate/include",
 		}	
 
-	project "vaporEngine"
+	project "Engine"
 	
 		kind "StaticLib"
 		language "C++"
@@ -57,24 +57,21 @@ solution "vapor"
 			"../src/Engine/**.h",
 			"../src/Engine/**.cpp",
 		}
-		
-		excludes { "Body.*", "Physics.*" }
 
 		-- Include directories
 		includedirs {
 			"../inc",
+			"../dep/boost",
 			"../dep/jsoncpp/include",
-			"../dep/boost_1_39_0",
 			"../dep/fd_delegate/include",
 			"../dep/freetype/include",
 			"../dep/glew/include",
-			"../dep/libogg-1.1.3/include",
-			"../dep/libvorbis-1.2.0/include",
+			"../dep/ogg/include",
+			"../dep/vorbis/include",
 			"../dep/lua/include",
-			"../dep/luabind/include",
-			"../dep/OpenAL 1.1 SDK/include",
-			"../dep/physfs-2.0.0/include",
-			"../dep/SFML/include",
+			"../dep/openal/include",
+			"../dep/physfs/include",
+			"../dep/sfml/include",
 		}
 
 		-- include only the Visual Leak Detector on VS builds

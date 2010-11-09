@@ -68,7 +68,7 @@ void Viewframe::switchToDefaultCamera()
 
 //-----------------------------------//
 
-View* Viewframe::createView( /*const NodePtr& node*/ )
+RenderView* Viewframe::createView( /*const NodePtr& node*/ )
 {
 
 	// Add a new view to the window.
@@ -81,7 +81,7 @@ View* Viewframe::createView( /*const NodePtr& node*/ )
 
 	// Subscribe to the camera transform events.
 	//TransformPtr transform = node->getTransform();
-	//transform->onTransform += fd::bind( &Viewframe::flagRedraw, this );
+	//transform->onTransform.Connect( &Viewframe::flagRedraw, this );
 	
 	return view;
 }

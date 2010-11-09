@@ -9,6 +9,7 @@
 #pragma once
 
 #include "Messages.h"
+#include <zmq.h>
 
 namespace vapor {
 

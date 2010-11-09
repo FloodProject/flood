@@ -8,6 +8,7 @@
 
 #include "vapor/PCH.h"
 #include "vapor/animation/Skeleton.h"
+#include "vapor/Utilities.h"
 
 namespace vapor {
 

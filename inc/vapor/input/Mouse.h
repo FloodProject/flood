@@ -10,6 +10,7 @@
 
 #include "vapor/input/Device.h"
 #include "vapor/input/MouseEvents.h"
+#include "Event.h"
 
 namespace vapor {
 
@@ -54,20 +55,18 @@ public:
 	// Return this device as a mouse.
 	GETTER(Type, const InputDeviceType::Enum, InputDeviceType::Mouse)
 
-	//-----------------------------------//
 	// Events
-	//-----------------------------------//
 
-	fd::delegate< void( const MouseMoveEvent& ) > onMouseMove;
-	fd::delegate< void( const MouseDragEvent& ) > onMouseDrag;
+	Event1< const MouseMoveEvent& > onMouseMove;
+	Event1< const MouseDragEvent& > onMouseDrag;
 	
-	fd::delegate< void( const MouseButtonEvent& ) > onMouseButtonPress;
-	fd::delegate< void( const MouseButtonEvent& ) > onMouseButtonRelease;
+	Event1< const MouseButtonEvent& > onMouseButtonPress;
+	Event1< const MouseButtonEvent& > onMouseButtonRelease;
 	
-	fd::delegate< void( const MouseWheelEvent& ) > onMouseWheelMove;
+	Event1< const MouseWheelEvent& > onMouseWheelMove;
 	
-	fd::delegate< void( void ) > onMouseEnter;
-	fd::delegate< void( void ) > onMouseExit;
+	Event0<> onMouseEnter;
+	Event0<> onMouseExit;
 
 private:
 

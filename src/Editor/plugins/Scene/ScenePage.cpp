@@ -183,8 +183,8 @@ void ScenePage::cleanScene()
 	if( !scene )
 		return;
 	
-	scene->onNodeAdded -= fd::bind( &ScenePage::onNodeAdded, this );
-	scene->onNodeRemoved -= fd::bind( &ScenePage::onNodeRemoved, this );
+	scene->onNodeAdded.Disconnect( this, &ScenePage::onNodeAdded );
+	scene->onNodeRemoved.Disconnect( this, &ScenePage::onNodeRemoved );
 
 	weakScene.reset();
 }
@@ -291,8 +291,8 @@ void ScenePage::addGroup( wxTreeItemId id, const NodePtr& node, bool createGroup
 	
 	GroupPtr group = std::dynamic_pointer_cast<Group>(node);
 
-	group->onNodeAdded += fd::bind( &ScenePage::onNodeAdded, this );
-	group->onNodeRemoved += fd::bind( &ScenePage::onNodeRemoved, this );
+	group->onNodeAdded.Connect( this, &ScenePage::onNodeAdded );
+	group->onNodeRemoved.Connect( this, &ScenePage::onNodeRemoved );
 
 	wxTreeItemId groupId = id;
 		
@@ -444,18 +444,9 @@ void ScenePage::onButtonNodeAdd(wxCommandEvent&)
 void ScenePage::onButtonNodeDelete(wxCommandEvent&)
 {	
 	wxTreeItemId id = treeCtrl->GetSelection();
-	NodePtr node = getNodeFromTreeId(id);
+	const NodePtr& node = getNodeFromTreeId(id);
 
-	if( !node )
-		return;
-
-	NodeOperation* nodeOperation = new NodeOperation();
-	nodeOperation->node = node;
-	nodeOperation->weakScene = weakScene;
-
-	UndoManager* undoManager = editor->getUndoManager();
-	undoManager->registerOperation(nodeOperation);
-
+	NodeOperation* nodeOperation = createNodeOperation(node);
 	nodeOperation->undo();
 
 	editor->redrawView();
@@ -472,6 +463,23 @@ void ScenePage::onButtonNodeDeleteUpdate(wxUpdateUIEvent& event)
 
 	bool empty = scene->getNodes().empty();
 	event.Enable( !empty );
+}
+
+//-----------------------------------//
+
+NodeOperation* ScenePage::createNodeOperation(const NodePtr& node)
+{
+	if( !node )
+		return nullptr;
+
+	NodeOperation* nodeOperation = new NodeOperation();
+	nodeOperation->node = node;
+	nodeOperation->weakScene = weakScene;
+
+	UndoManager* undoManager = editor->getUndoManager();
+	undoManager->registerOperation(nodeOperation);
+
+	return nodeOperation;
 }
 
 //-----------------------------------//
@@ -743,26 +751,25 @@ void ScenePage::onMenuSelected( wxCommandEvent& event )
 	//-----------------------------------//
 	else if( id == ID_MenuSceneNodeDelete )
 	{
-		if( !node )
-			return;
+		NodeOperation* op = createNodeOperation(node);
+		op->undo();
+		//std::string str = (std::string) treeCtrl->GetItemText(menuItemId);
 
-		std::string str = (std::string) treeCtrl->GetItemText(menuItemId);
+		//TypeRegistry& typeRegistry = TypeRegistry::getInstance();
+		//const Class* type = (Class*) typeRegistry.getType(str);
+		//assert( type != nullptr );
 
-		TypeRegistry& typeRegistry = TypeRegistry::getInstance();
-		const Class* type = (Class*) typeRegistry.getType(str);
-		assert( type != nullptr );
+		//if( !type->inherits<Component>() )
+		//	return;
 
-		if( !type->inherits<Component>() )
-			return;
+		//const ComponentMap& components = node->getComponents();
+		//ComponentMap::const_iterator it = components.find(type);
 
-		const ComponentMap& components = node->getComponents();
-		ComponentMap::const_iterator it = components.find(type);
+		//if( it == components.end() )
+		//	return;
 
-		if( it == components.end() )
-			return;
-
-		ComponentPtr component = it->second;
-		node->removeComponent(component);
+		//ComponentPtr component = it->second;
+		//node->removeComponent(component);
 	}
 	//-----------------------------------//
 	else if( id == ID_MenuSceneNodeTerrain )
@@ -870,7 +877,7 @@ void ScenePage::onLabelEditEnd( wxTreeEvent& event )
 		return;
 	}
 
-	NodePtr node = getNodeFromTreeId( item );
+	const NodePtr& node = getNodeFromTreeId( item );
 	assert( node != nullptr );
 
 	node->setName( std::string( label.c_str() ) );
@@ -893,16 +900,16 @@ void ScenePage::onDragEnd( wxTreeEvent& event )
 	// Get the drop point location and do an hit test to check if
 	// it was was done in a valid tree item id location.
 	
-	wxPoint drag_point = event.GetPoint();
-	wxTreeItemId drag_id = treeCtrl->HitTest( drag_point );
+	wxPoint dragPoint = event.GetPoint();
+	wxTreeItemId dragId = treeCtrl->HitTest( dragPoint );
 
 	// If the drop was not done in a valid tree location, 
 	// then we've got nothing to do here, move along...
-	if( !drag_id.IsOk() )
+	if( !dragId.IsOk() )
 		return;
 
 	const NodePtr& src = getNodeFromTreeId( dragItemId );
-	const NodePtr& dest = getNodeFromTreeId( drag_id );
+	const NodePtr& dest = getNodeFromTreeId( dragId );
 
 	if( src && dest ) // It is a node, just re-parent it.
 	{

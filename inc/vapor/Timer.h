@@ -17,9 +17,9 @@ namespace vapor {
 //-----------------------------------//
 
 #ifdef VAPOR_PLATFORM_WINDOWS
-	typedef int64 ticks_t;
+	typedef int64 Ticks;
 #else
-	typedef timeval ticks_t;
+	typedef timeval Ticks;
 #endif
 
 //-----------------------------------//
@@ -31,8 +31,10 @@ namespace vapor {
  * most high-precision timer available.
  */
 
-class VAPOR_API Timer : private boost::noncopyable
+class VAPOR_API Timer
 {
+	DECLARE_UNCOPYABLE(Timer)
+
 public:
 
 	Timer();
@@ -52,16 +54,16 @@ private:
 	bool checkHighResolutionTimers();
 
 	// Stores the current time in the variable.
-	void storeTime( ticks_t& var );
+	void storeTime( Ticks& var );
 
 	// Holds the current time (used for calculating the diff).
-	ticks_t currentTime;
+	Ticks currentTime;
 
 	// Holds the time when the last reset happened.
-	ticks_t lastTime;
+	Ticks lastTime;
 
 	// Holds the ticks per second (timer resolution).
-	static ticks_t ticksPerSecond;
+	static Ticks ticksPerSecond;
 
 	// Holds if we have checked for high resolution timers.
 	static bool checked;

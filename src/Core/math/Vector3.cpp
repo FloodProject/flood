@@ -7,9 +7,9 @@
 ************************************************************************/
 
 #include "Core.h"
-#include "vapor/math/Vector2.h"
-#include "vapor/math/Vector3.h"
-#include "vapor/math/Vector4.h"
+#include "math/Vector2.h"
+#include "math/Vector3.h"
+#include "math/Vector4.h"
 
 namespace vapor {
 

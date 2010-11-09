@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Core.h"
-#include "vapor/math/Ray.h"
-#include "vapor/math/Math.h"
+#include "math/Ray.h"
+#include "math/Math.h"
 
 namespace vapor {
 

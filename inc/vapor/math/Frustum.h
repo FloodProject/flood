@@ -8,9 +8,10 @@
 
 #pragma once
 
-#include "vapor/math/Vector2.h"
-#include "vapor/math/Matrix4x4.h"
-#include "vapor/math/Plane.h"
+#include "math/Vector2.h"
+#include "math/Matrix4x4.h"
+#include "math/Plane.h"
+#include "Reflection.h"
 
 namespace vapor {
 

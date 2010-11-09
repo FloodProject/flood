@@ -7,13 +7,13 @@
 ************************************************************************/
 
 #include "Core.h"
-#include "vapor/Stream.h"
+#include "Stream.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-Stream::Stream(AccessMode::Enum mode)
+Stream::Stream(StreamMode::Enum mode)
   : mode(mode)
 { }
 
@@ -40,9 +40,9 @@ std::string Stream::readString() const
 
 //-----------------------------------//
 
-long Stream::writeString(const std::string& str)
+long Stream::write(const std::string& string)
 {
-	std::vector<byte> data( str.begin(), str.end() );
+	std::vector<byte> data( string.begin(), string.end() );
 	return write(data);  
 }
 

@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Core.h"
-#include "vapor/Utilities.h"
-#include "dirent.h"
+#include "Utilities.h"
+#include <dirent.h>
 
 namespace vapor {
 
@@ -101,7 +101,7 @@ static void enumerateFilesHelper(std::vector<std::string>& files, std::string pa
 	}
 
 end:
-	closedir (dir);
+	closedir(dir);
 }
 
 //-----------------------------------//

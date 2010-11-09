@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "vapor/NativeFile.h"
-#include "vapor/Timer.h"
+#include "FileStream.h"
+#include "Timer.h"
 
 namespace vapor {
 
@@ -65,11 +65,11 @@ namespace Log
  * Logging class used to log relevant information to a stream.
  */
 
-class VAPOR_API Logger : public NativeFile
+class VAPOR_API Logger
 {
 public:
 	
-	Logger(const std::string& title, const std::string& filename);
+	Logger(FileStream& stream);
 	~Logger();
 	
 	// Logs an information to the stream.
@@ -110,8 +110,16 @@ protected:
 	// Keeps track of zebra coloring the table.
 	bool even;
 
+	// Keeps track of last message.
+	std::string last;
+
 	// Mutex lock to synchronize access.
 	THREAD(boost::mutex mutex;)
+
+	// Stream to log into.
+	Stream& stream;
+
+	FILE* fp;
 };
 
 //-----------------------------------//

@@ -7,14 +7,14 @@
 ************************************************************************/
 
 #include "Core.h"
-#include "vapor/core/Field.h"
+#include "core/Field.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-Field::Field( const Type& _type )
-	: type(_type)
+Field::Field( const Type& type )
+	: type(type)
 	, pointer(false)
 { }
 

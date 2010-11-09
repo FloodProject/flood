@@ -71,9 +71,6 @@ void Window::handleWindowResize()
 	Log::info("Resizing window to size %dx%d",
 		settings.getWidth(), settings.getHeight() );
 
-	if( onTargetResize.empty() )
-		return;
-
 	onTargetResize( getSettings() );
 }
 
@@ -81,9 +78,6 @@ void Window::handleWindowResize()
 
 void Window::handleWindowClose()
 {
-	if( onWindowClose.empty() )
-		return;
-
 	onWindowClose();
 }
 
@@ -102,9 +96,6 @@ void Window::handleWindowFocus( bool focusLost )
 		if(keyboard)
 			keyboard->resetKeys();
 	}
-
-	if( onWindowFocusChange.empty() )
-		return;
 
 	onWindowFocusChange( focusLost );
 }

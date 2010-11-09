@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "vapor/math/Vector3.h"
+#include "math/Vector3.h"
 
 namespace vapor {
 

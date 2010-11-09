@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "FileStream.h"
+
 #ifdef VAPOR_VFS_PHYSFS
 
 struct PHYSFS_File;
@@ -26,15 +28,17 @@ namespace vapor {
  * data in the same machine, and it will be saved in each user's directory.
  */
 
-class VAPOR_API File : private boost::noncopyable
+class VAPOR_API File
 {
+	DECLARE_UNCOPYABLE(File)
+
 public:
 
 	// Opens a new file given a path (defaults for reading access).
-	File (const std::string& path, FileMode::Enum = FileMode::Read);
+	File(const std::string& path, StreamMode::Enum = StreamMode::Read);
 	
 	// Closes the file.
-	~File ();
+	~File();
 
 	// Closes the file.
 	bool close();
@@ -90,13 +94,13 @@ private:
 	// Logs an error.
 	void log(const std::string& err) const;
 
-	bool validate(FileMode::Enum mode) const;
+	bool validate(StreamMode::Enum mode) const;
 
 	// PhysFS handle to the file.
 	PHYSFS_File* file;
 
 	// Allowed access mode to the file.
-	FileMode::Enum mode;
+	StreamMode::Enum mode;
 	
 	// Virtual path to the file.
 	std::string path;

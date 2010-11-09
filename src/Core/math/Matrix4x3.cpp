@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Core.h"
-#include "vapor/math/Matrix4x3.h"
-#include "vapor/math/Math.h"
+#include "math/Matrix4x3.h"
+#include "math/Math.h"
 
 namespace vapor {
 

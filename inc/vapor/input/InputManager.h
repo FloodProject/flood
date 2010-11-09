@@ -25,8 +25,10 @@ class Joystick;
  * Manages a set of input devices.
  */
 
-class VAPOR_API InputManager : private boost::noncopyable
+class VAPOR_API InputManager
 {
+	DECLARE_UNCOPYABLE(InputManager)
+
 public:
 
 	virtual ~InputManager();
@@ -50,6 +52,8 @@ public:
 	void createDefaultDevices();
 
 protected:
+
+	InputManager() {}
 
 	// Holds all the input devices.
 	std::vector< InputDevice* > devices;

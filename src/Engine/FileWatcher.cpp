@@ -22,7 +22,7 @@
 */
 
 #include "Core.h"
-#include "vapor/vfs/FileWatcher.h"
+#include "vfs/FileWatcher.h"
 
 namespace vapor {
 

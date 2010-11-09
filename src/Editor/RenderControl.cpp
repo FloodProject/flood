@@ -87,8 +87,7 @@ void RenderControl::stopFrameLoop()
 
 void RenderControl::doUpdate(wxTimerEvent&)
 {
-	if( !onUpdate.empty() )
-		onUpdate( MAX_RATE_RENDER );
+	onUpdate( MAX_RATE_RENDER );
 }
 
 //-----------------------------------//
@@ -126,9 +125,8 @@ void RenderControl::OnPaint(wxPaintEvent& WXUNUSED(event))
 	// http://docs.wxwidgets.org/trunk/classwx_paint_event.html
 	wxPaintDC dc(this);
 
-	if( !onRender.empty() )
-		onRender();
-
+	onRender();
+	
 	// Swaps the front and back buffers.
 	window->update();
 }

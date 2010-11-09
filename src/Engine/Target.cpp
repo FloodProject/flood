@@ -16,15 +16,15 @@ namespace vapor {
 
 RenderTarget::~RenderTarget()
 {
-	foreach( const View* view, views )
+	foreach( const RenderView* view, views )
 		delete view;
 }
 
 //-----------------------------------//
 
-View* RenderTarget::createView()
+RenderView* RenderTarget::createView()
 {
-	View* view = new View();
+	RenderView* view = new RenderView();
 	view->setRenderTarget(this);
 
 	views.push_back( view );

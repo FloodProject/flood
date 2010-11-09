@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Core.h"
-#include "vapor/math/BoundingBox.h"
-#include "vapor/math/Math.h"
+#include "math/BoundingBox.h"
+#include "math/Math.h"
 
 namespace vapor {
 

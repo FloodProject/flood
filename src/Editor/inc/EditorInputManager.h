@@ -12,8 +12,6 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-typedef fd::delegate<void(InputEvent&)> InputProcessCallback;
-
 /**
  * Forwards all the input received by wxWidgets to the engine.
  */
@@ -31,15 +29,13 @@ public:
 	void processMouseEvent( const wxMouseEvent& );
 
 	// Custom processing of input events.
-	static void doKeyEvent( InputProcessCallback, const wxKeyEvent&, bool keyDown );
-	static void doMouseEvent( InputProcessCallback, const wxMouseEvent& );
+	void doKeyEvent( const wxKeyEvent&, bool keyDown );
+	void doMouseEvent( const wxMouseEvent& );
 
 private:
 
 	// Converts from wxWidgets events to vapor3D events.
 	static Keys::Enum convertKeyEnum( int keyCode );
-
-	InputProcessCallback cb;
 };
 
 //-----------------------------------//

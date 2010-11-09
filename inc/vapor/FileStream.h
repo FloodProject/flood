@@ -8,45 +8,25 @@
 
 #pragma once
 
+#include "Stream.h"
+
 namespace vapor {
 
 //-----------------------------------//
 
 /**
- * Use these for different kinds of access to the files.
- * Check the File class description for more information.
+ * Wraps a file in an I/O stream.
  */
 
-namespace FileMode
+class VAPOR_API FileStream : public Stream
 {
-	enum Enum
-	{
-		Read,
-		Write,
-		Append
-	};
-}
+	DECLARE_UNCOPYABLE(FileStream)
 
-//-----------------------------------//
-
-/**
- * Represents a native file managed by the OS.
- * This is a small utility wrapper class that will be extended as needed,
- * but usually you should use the File class of the virtual filesystem 
- * (VFS) provided by the engine.
- */
-
-class VAPOR_API NativeFile : private boost::noncopyable
-{
 public:
 
-	NativeFile(const std::string& path, 
-		FileMode::Enum mode = FileMode::Read);
-
-	NativeFile(const char* path,
-		FileMode::Enum mode = FileMode::Read);
-	
-	~NativeFile ();
+	FileStream(const std::string& path, StreamMode::Enum mode = StreamMode::Read);
+	FileStream(const char* path, StreamMode::Enum mode = StreamMode::Read);
+	virtual ~FileStream();
 
 	// Opens the file.
 	bool open();
@@ -59,12 +39,6 @@ public:
 
 	// Read entire file.
 	std::vector<byte> read() const;
-
-	// Read entire file as string.
-	std::string readString() const;
-
-	// Write text into file.
-	long write(const std::string& text);
 
 	// Write buffer into file.
 	long write(const std::vector<byte>& buf);
@@ -81,18 +55,12 @@ public:
 	// Checks if the file in path exists.
 	static bool exists(const std::string& path);
 
-	// Gets the path of the file.
-	GETTER(Path, const std::string&, path)
-
 	// Gets the internal pointer of the file.
-	GETTER(Pointer, const FILE*, fp)
-
+	FILE* getFilePointer();
 	
 protected:
 
-	std::string	path;
-	FileMode::Enum mode;
-
+	std::string path;
 	FILE* fp;
 };
 

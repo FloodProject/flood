@@ -15,7 +15,7 @@ namespace vapor {
 #ifdef VAPOR_PLATFORM_WINDOWS
 	typedef struct HINSTANCE__* DynLibHandle;
 #else
-	#error "Support for dynamic libraries not found"
+	#warning "Support for dynamic libraries not found"
 #endif
 
 //-----------------------------------//
@@ -26,12 +26,14 @@ namespace vapor {
  * possible to retrieve symbols using this class.
  */
 
-class VAPOR_API DynamicLib : private boost::noncopyable
+class VAPOR_API DynamicLibrary
 {
+	DECLARE_UNCOPYABLE(DynamicLibrary)
+
 public:
 
-	DynamicLib( const std::string& name );
-	~DynamicLib();
+	DynamicLibrary( const std::string& name );
+	~DynamicLibrary();
 
 	// Gets a pointer to the given symbol.
 	void* getSymbol( const std::string& symbol );

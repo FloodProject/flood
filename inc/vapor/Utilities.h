@@ -110,16 +110,16 @@ namespace String
 // Locales
 //---------------------------------------------------------------------//
 
-struct LocaleSaveRestore
+struct LocaleSwitch
 {
 public:
 
-	LocaleSaveRestore()
+	LocaleSwitch()
 	{
 		cur = setlocale(LC_NUMERIC, "C");
 	}
 
-	~LocaleSaveRestore()
+	~LocaleSwitch()
 	{
 		setlocale(LC_NUMERIC, cur);
 	}

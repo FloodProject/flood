@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "vapor/math/Math.h"
-#include "vapor/math/EulerAngles.h"
+#include "math/Math.h"
+#include "math/EulerAngles.h"
 
 namespace vapor {
 

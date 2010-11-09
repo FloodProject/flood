@@ -7,6 +7,7 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
+#include "Event.h"
 #include "vapor/controllers/FirstPersonController.h"
 #include "vapor/Engine.h"
 #include "vapor/math/Math.h"
@@ -52,11 +53,11 @@ FirstPersonController::~FirstPersonController()
 	Mouse* const mouse = inputManager->getMouse();
 	assert( mouse != nullptr );
 	
-	keyboard->onKeyPress -= fd::bind( &FirstPersonController::onKeyPressed, this );
-	mouse->onMouseMove -= fd::bind( &FirstPersonController::onMouseMove, this );
-	mouse->onMouseDrag -= fd::bind( &FirstPersonController::onMouseDrag, this );
-	mouse->onMouseWheelMove -= fd::bind( &FirstPersonController::onMouseWheel, this );
-	window->onWindowFocusChange -= fd::bind( &FirstPersonController::onWindowFocusChange, this );
+	keyboard->onKeyPress.Disconnect( this, &FirstPersonController::onKeyPressed );
+	mouse->onMouseMove.Disconnect( this, &FirstPersonController::onMouseMove );
+	mouse->onMouseDrag.Disconnect( this, &FirstPersonController::onMouseDrag );
+	mouse->onMouseWheelMove.Disconnect( this, &FirstPersonController::onMouseWheel );
+	window->onWindowFocusChange.Disconnect( this, &FirstPersonController::onWindowFocusChange );
 }
 
 //-----------------------------------//
@@ -162,11 +163,11 @@ void FirstPersonController::registerCallbacks()
 	Mouse* const mouse = inputManager->getMouse();
 	assert( mouse != nullptr );
 	
-	keyboard->onKeyPress += fd::bind( &FirstPersonController::onKeyPressed, this );
-	mouse->onMouseMove += fd::bind( &FirstPersonController::onMouseMove, this );
-	mouse->onMouseDrag += fd::bind( &FirstPersonController::onMouseDrag, this );
-	mouse->onMouseWheelMove += fd::bind( &FirstPersonController::onMouseWheel, this );
-	window->onWindowFocusChange += fd::bind( &FirstPersonController::onWindowFocusChange, this );
+	keyboard->onKeyPress.Connect( this, &FirstPersonController::onKeyPressed );
+	mouse->onMouseMove.Connect( this, &FirstPersonController::onMouseMove );
+	mouse->onMouseDrag.Connect( this, &FirstPersonController::onMouseDrag );
+	mouse->onMouseWheelMove.Connect( this, &FirstPersonController::onMouseWheel );
+	window->onWindowFocusChange.Connect( this, &FirstPersonController::onWindowFocusChange );
 }
 
 //-----------------------------------//

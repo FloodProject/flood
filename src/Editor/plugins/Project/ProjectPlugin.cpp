@@ -69,7 +69,7 @@ void ProjectPlugin::onPluginEnable()
 		&ProjectPlugin::onSaveButtonUpdateUI, this, saveButton->GetId() );
 
 	UndoManager* undo = editor->getUndoManager();
-	undo->onUndoRedoEvent += fd::bind(&ProjectPlugin::onUndoRedoEvent, this);
+	undo->onUndoRedoEvent.Connect(this, &ProjectPlugin::onUndoRedoEvent);
 }
 
 //-----------------------------------//
@@ -77,7 +77,7 @@ void ProjectPlugin::onPluginEnable()
 void ProjectPlugin::onPluginDisable()
 {
 	UndoManager* undo = editor->getUndoManager();
-	undo->onUndoRedoEvent -= fd::bind(&ProjectPlugin::onUndoRedoEvent, this);
+	undo->onUndoRedoEvent.Disconnect(this, &ProjectPlugin::onUndoRedoEvent);
 }
 
 //-----------------------------------//

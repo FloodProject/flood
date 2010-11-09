@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Core.h"
-#include "vapor/math/Hash.h"
+#include "math/Hash.h"
 
 namespace vapor {
 

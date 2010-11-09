@@ -52,8 +52,7 @@ void PluginManager::enablePlugin( Plugin* plugin )
 
 	processTools( plugin, true );
 
-	if( !onPluginEnableEvent.empty() )
-		onPluginEnableEvent(plugin);
+	onPluginEnableEvent(plugin);
 }
 
 //-----------------------------------//
@@ -71,8 +70,7 @@ void PluginManager::disablePlugin( Plugin* plugin )
 	plugin->pluginEnabled = false;
 	plugin->doPluginDisable();
 
-	if( !onPluginDisableEvent.empty() )
-		onPluginDisableEvent(plugin);
+	onPluginDisableEvent(plugin);
 }
 
 //-----------------------------------//

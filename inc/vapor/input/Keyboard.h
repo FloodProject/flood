@@ -35,10 +35,10 @@ public:
 	GETTER(KeyState, const std::vector<bool>&, keyState)
 
 	// Event is sent when a key is pressed.
-	fd::delegate< void(const KeyEvent&) > onKeyPress;
+	Event1<const KeyEvent&> onKeyPress;
 
 	// Event is sent when a key is released.
-	fd::delegate< void(const KeyEvent&) > onKeyRelease;
+	Event1<const KeyEvent&> onKeyRelease;
 
 private:
 	

@@ -241,7 +241,7 @@ void Example::onKeyPressed( const KeyEvent& event )
 	//	Json::Value sc;
 	//	scene->serialize( sc );
 	//	
-	//	File file( "Example.scene", FileMode::Write );
+	//	File file( "Example.scene", StreamMode::Write );
 	//	file.write( sc.toStyledString() );
 	//}
 }

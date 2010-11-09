@@ -10,7 +10,8 @@
 
 #ifdef VAPOR_VFS_PHYSFS
 
-#include "vapor/vfs/FileSystem.h"
+#include "Utilities.h"
+#include "vfs/FileSystem.h"
 #include "FileWatcherWin32.h"
 #include <physfs.h>
 

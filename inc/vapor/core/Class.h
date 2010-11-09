@@ -8,8 +8,9 @@
 
 #pragma once
 
-#include "vapor/core/Type.h"
-#include "vapor/core/Field.h"
+#include "core/Type.h"
+#include "core/Field.h"
+#include "Event.h"
 
 namespace vapor {
 
@@ -75,7 +76,7 @@ public:
 	virtual void* createInstance() const { return nullptr; }
 
 	// Sent when a field value is changed.
-	fd::delegate<void(const Field&)> onFieldChanged;
+	Event1<const Field&> onFieldChanged;
 
 protected:
 

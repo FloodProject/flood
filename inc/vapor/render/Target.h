@@ -8,7 +8,8 @@
 
 #pragma once
 
-#include "vapor/math/Vector2.h"
+#include "math/Vector2.h"
+#include "Event.h"
 
 FWD_DECL_SHARED(Camera)
 
@@ -16,7 +17,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-class View;
+class RenderView;
 
 //-----------------------------------//
 
@@ -64,7 +65,7 @@ public:
 	virtual ~RenderTarget();
 
 	// Creates a new view and adds it to this target.
-	View* createView();
+	RenderView* createView();
 
 	// Sets this rendering target as the current.
 	virtual void makeCurrent() = 0;
@@ -76,14 +77,14 @@ public:
 	virtual const Settings& getSettings() const = 0;
 
 	// Gets the list of viewports associated with the render target.
-	GETTER(Views, const std::vector<View*>&, views)
+	GETTER(Views, const std::vector<RenderView*>&, views)
 
 	// Event fired when the target gets resized.
-	fd::delegate<void(const Settings&)> onTargetResize;
+	Event1<const Settings&> onTargetResize;
 
 protected:
 
-	std::vector<View*> views;
+	std::vector<RenderView*> views;
 };
 
 //-----------------------------------//

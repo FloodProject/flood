@@ -57,7 +57,6 @@ typedef unsigned long	ulong;
 #include <algorithm>
 #include <limits>
 #include <iostream>
-#include <boost/noncopyable.hpp>
 
 //---------------------------------------------------------------------//
 // nullptr replacement
@@ -84,21 +83,6 @@ typedef unsigned long	ulong;
 
 #define foreach         BOOST_FOREACH
 #define reverse_foreach BOOST_REVERSE_FOREACH
-
-//---------------------------------------------------------------------//
-// Delegates
-//---------------------------------------------------------------------//
-
-#ifdef VAPOR_COMPILER_MSVC
-	#pragma warning( push )
-	#pragma warning( disable : 4100 4512 4702 )
-	#include <fd/delegate.hpp>
-	#include <fd/delegate/bind.hpp>
-	#pragma warning( pop )
-#else
-	#include <fd/delegate.hpp>
-	#include <fd/delegate/bind.hpp>
-#endif
 
 //---------------------------------------------------------------------//
 // Threads
@@ -254,3 +238,8 @@ typedef unsigned long	ulong;
 #else
 	#define __stricmp stricmp
 #endif
+
+#define DECLARE_UNCOPYABLE(Type)				\
+	private:									\
+		Type( const Type& );					\
+		const Type& operator=( const Type& );

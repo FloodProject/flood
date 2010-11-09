@@ -37,13 +37,13 @@ public:
 	SETTER(MainCamera, const CameraPtr&, mainCamera)
 
 	// Creates and adds a new view to the viewframe.
-	View* createView();
+	RenderView* createView();
 
 	// Flags the backing control for redraw.
 	void flagRedraw();
 
 	// Gets the associated view.
-	GETTER(View, View*, view)
+	GETTER(View, RenderView*, view)
 
 	// Gets the associated control.
 	GETTER(Control, RenderControl*, control)
@@ -60,7 +60,7 @@ protected:
 	RenderControl* control;
 
 	// View associated with the control.
-	View* view;
+	RenderView* view;
 
 	// Main sizer.
 	wxSizer* mainSizer;

@@ -7,6 +7,7 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
+#include "Event.h"
 
 #ifdef VAPOR_PHYSICS_BULLET
 
@@ -43,7 +44,7 @@ Body::Body()
 	, restitution(0.3f)
 {
 	Class& klass = getType();
-	klass.onFieldChanged += fd::bind(&Body::onFieldChanged, this);
+	klass.onFieldChanged.Connect( this, &Body::onFieldChanged );
 }
 
 //-----------------------------------//
@@ -51,10 +52,10 @@ Body::Body()
 Body::~Body()
 {
 	Class& klass = getType();
-	klass.onFieldChanged -= fd::bind(&Body::onFieldChanged, this);
+	klass.onFieldChanged.Disconnect( this, &Body::onFieldChanged );
 
 	TransformPtr transform = motionState->transform;
-	transform->onTransform -= fd::bind(&Body::onTransform, this);
+	transform->onTransform.Disconnect( this, &Body::onTransform );
 
 	removeWorld();
 
@@ -72,7 +73,7 @@ void Body::update( double delta )
 	createBody();
 	
 	TransformPtr transform = getNode()->getTransform();
-	transform->onTransform += fd::bind(&Body::onTransform, this);
+	transform->onTransform.Connect( this, &Body::onTransform);
 }
 
 //-----------------------------------//

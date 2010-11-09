@@ -23,9 +23,13 @@ namespace vapor {
  * and lightweight alternative to XML.
  */
 
-class VAPOR_API Serializer : private boost::noncopyable
+class VAPOR_API Serializer
 {
+	DECLARE_UNCOPYABLE(Serializer)
+
 public:
+
+	Serializer();
 
 	// Open the JSON representation from a file.
 	bool openFromFile( const std::string& name );

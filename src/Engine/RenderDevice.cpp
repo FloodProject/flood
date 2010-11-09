@@ -161,9 +161,7 @@ void RenderDevice::render( const RenderState& state, const LightQueue& lights )
 			return;
 	}
 
-	if( !state.callback.empty() )
-		state.callback();
-
+	state.callback();
 	state.renderable->render( this );
 	
 	undoRenderStateMaterial(material);
@@ -228,7 +226,7 @@ void RenderDevice::updateLightDepth( LightState& state )
 	//lightCameraNode->addTransform(); /*Component( lightTransform );*/
 	//lightCameraNode->addComponent( lightCamera );
 
-	//View* lightView = new View(lightCamera, shadowDepthBuffer);
+	//RenderView* lightView = new View(lightCamera, shadowDepthBuffer);
 
 	//if( !shadowDepthBuffer->check() )
 	//	return;
@@ -421,7 +419,7 @@ void RenderDevice::setClearColor(const Color& newColor)
 
 //-----------------------------------//
 
-void RenderDevice::setView( View* view )
+void RenderDevice::setView( RenderView* view )
 {
 	if( !view )
 		return;

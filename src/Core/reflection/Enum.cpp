@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Core.h"
-#include "vapor/core/Enum.h"
+#include "core/Enum.h"
 
 namespace vapor {
 

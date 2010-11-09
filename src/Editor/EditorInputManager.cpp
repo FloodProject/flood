@@ -14,27 +14,25 @@ namespace vapor { namespace editor {
 //-----------------------------------//
 
 EditorInputManager::EditorInputManager()
-{
-	cb += fd::bind( &EditorInputManager::processEvent, this );
-}
+{ }
 
 //-----------------------------------//
 
 void EditorInputManager::processKeyEvent( const wxKeyEvent& event, bool keyDown )
 {
-	doKeyEvent(cb, event, keyDown);
+	doKeyEvent(event, keyDown);
 }
 
 //-----------------------------------//
 
 void EditorInputManager::processMouseEvent( const wxMouseEvent& event )
 {
-	doMouseEvent(cb, event);	
+	doMouseEvent(event);	
 }
 
 //-----------------------------------//
 
-void EditorInputManager::doKeyEvent( InputProcessCallback cb, const wxKeyEvent& event, bool keyDown )
+void EditorInputManager::doKeyEvent( const wxKeyEvent& event, bool keyDown )
 {
 	// Convert from the wxWidgets events to the vaporEngine events.
 	KeyEvent ke( 
@@ -44,12 +42,12 @@ void EditorInputManager::doKeyEvent( InputProcessCallback cb, const wxKeyEvent& 
 		event.ControlDown(),
 		(keyDown) ? KeyboardEventType::KeyPressed : KeyboardEventType::KeyReleased  );
 
-	cb( ke );
+	processEvent( ke );
 }
 
 //-----------------------------------//
 
-void EditorInputManager::doMouseEvent( InputProcessCallback cb, const wxMouseEvent& event )
+void EditorInputManager::doMouseEvent( const wxMouseEvent& event )
 {
 	// Mouse motion
 	if( event.Moving() )
@@ -57,7 +55,7 @@ void EditorInputManager::doMouseEvent( InputProcessCallback cb, const wxMouseEve
 		MouseMoveEvent me;
 		me.x = event.GetX();
 		me.y = event.GetY();
-		cb( me );
+		processEvent( me );
 	}
 
 	// Mouse dragged
@@ -66,7 +64,7 @@ void EditorInputManager::doMouseEvent( InputProcessCallback cb, const wxMouseEve
 		MouseDragEvent me;
 		me.x = event.GetX();
 		me.y = event.GetY();
-		cb( me );
+		processEvent( me );
 	} 
 	
 	// Mouse button
@@ -103,7 +101,7 @@ void EditorInputManager::doMouseEvent( InputProcessCallback cb, const wxMouseEve
 		mb.x = event.GetX();
 		mb.y = event.GetY();
 		mb.button = button;
-		cb( mb );
+		processEvent( mb );
 	}
 
 	else if( event.GetWheelRotation() != 0 )
@@ -112,19 +110,19 @@ void EditorInputManager::doMouseEvent( InputProcessCallback cb, const wxMouseEve
 		// so we clamp it down to be uniform with other platforms.
 		MouseWheelEvent mwe;
 		mwe.delta = ( event.GetWheelRotation() / 120 );
-		cb( mwe );
+		processEvent( mwe );
 	}
 
 	else if( event.Entering() )
 	{
 		MouseEvent me( MouseEventType::MouseEnter );
-		cb( me );
+		processEvent( me );
 	}
 
 	else if( event.Leaving() )
 	{
 		MouseEvent me( MouseEventType::MouseExit );
-		cb( me );
+		processEvent( me );
 	}
 }
 

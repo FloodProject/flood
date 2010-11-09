@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "core/Type.h"
+
 namespace vapor {
 
 //-----------------------------------//

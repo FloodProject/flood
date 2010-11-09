@@ -52,7 +52,7 @@ Camera::Camera( const Camera& rhs )
 Camera::~Camera()
 {
 	if( transform )
-		transform->onTransform -= fd::bind( &Camera::onTransform, this );
+		transform->onTransform.Disconnect( this, &Camera::onTransform );
 }
 
 //-----------------------------------//
@@ -85,7 +85,7 @@ void Camera::updateViewTransform()
 
 //-----------------------------------//
 
-void Camera::setView( View* view )
+void Camera::setView( RenderView* view )
 {
 	if( !view )
 		return;
@@ -120,7 +120,7 @@ void Camera::update( double VAPOR_UNUSED(delta) )
 		return;
 		
 	transform = getNode()->getTransform();
-	transform->onTransform += fd::bind( &Camera::onTransform, this );
+	transform->onTransform.Connect( this, &Camera::onTransform );
 
 	// Update the view transform the first update.
 	updateViewTransform();

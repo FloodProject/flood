@@ -9,6 +9,8 @@
 #include "PCH.h"
 #include "Server.h"
 #include "Settings.h"
+#include "Event.h"
+#include "Profiler.h"
 
 namespace vapor {
 
@@ -39,7 +41,7 @@ public:
 //-----------------------------------//
 
 Server::Server()
-	: logger("Server", "Log.html")
+	: logger( FileStream("Log.html") )
 	, tasks(Settings::NumThreadsWorkers)
 { }
 
@@ -54,9 +56,9 @@ Server::~Server()
 
 bool Server::init()
 {
-	Downloader dl;
-	dl.init();
-	dl.download("http://www.google.com");
+	Downloader dwn;
+	dwn.init();
+	dwn.download("http://www.google.com");
 
 	// Create processing tasks.
 	for(int i = 0; i < Settings::NumTasksProcess; i++)
@@ -85,7 +87,7 @@ void Server::shutdown()
 
 void Server::run()
 {
-	Thread thread( &Network::waitMessages, boost::ref(network) );
+	boost::thread thread( &Network::waitMessages, boost::ref(network) );
 	
 	while(true)
 	{

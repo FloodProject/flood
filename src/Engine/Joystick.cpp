@@ -64,49 +64,40 @@ void Joystick::processEvent( const InputEvent& event )
 
 void Joystick::joyMoved(const JoyMoveEvent& jme)
 {
-	if ( !onJoystickMove.empty() )
-	{
-		onJoystickMove( jme );
-	}
+	onJoystickMove( jme );
 }
 
 //-----------------------------------//
 
 void Joystick::joyButtonPressed(const JoyButtonEvent& jbp)
 {
-	if ( !onJoystickButtonPress.empty() )
-	{
-		onJoystickButtonPress( jbp );
-	}
+	onJoystickButtonPress( jbp );
 }
 
 //-----------------------------------//
 
 void Joystick::joyButtonReleased(const JoyButtonEvent& jbe)
 {
-	if ( !onJoystickButtonRelease.empty() )
-	{
-		onJoystickButtonRelease( jbe );
-	}
+	onJoystickButtonRelease( jbe );
 }
 
 //-----------------------------------//
 
 JoyMoveEvent::JoyMoveEvent(uint id, JoystickAxis::Enum axis, float pos)
-	: JoystickEvent(JoystickEventType::JoystickMove),
-	JoystickId(id),
-	Axis(axis),
-	Position(pos)
+	: JoystickEvent(JoystickEventType::JoystickMove)
+	, JoystickId(id)
+	, Axis(axis)
+	, Position(pos)
 { }
 
 //-----------------------------------//
 
 JoyButtonEvent::JoyButtonEvent(unsigned int JoystickId, unsigned int Button, 
-		JoystickEventType::Enum eventType): JoystickEvent(eventType), 
-		JoystickId(JoystickId), Button(Button)
-{
-
-}
+		JoystickEventType::Enum eventType)
+	: JoystickEvent(eventType)
+	, JoystickId(JoystickId)
+	, Button(Button)
+{ }
 
 //-----------------------------------//
 

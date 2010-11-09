@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "vapor/Timer.h"
+#include "Timer.h"
 
 namespace vapor {
 

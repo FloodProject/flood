@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vapor3D Server © (2008-2010)
+* vapor3D Engine © (2008-2010)
 *
 *	<http://www.vapor3d.org>
 *
@@ -9,7 +9,10 @@
 #pragma once
 
 //---------------------------------------------------------------------//
-// Core Includes
+// Reflection system
 //---------------------------------------------------------------------//
 
-#include "Core.h"
+#include "core/Type.h"
+#include "core/Class.h"
+#include "core/Enum.h"
+#include "core/Primitive.h"

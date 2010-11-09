@@ -28,7 +28,7 @@ ScriptManager::ScriptManager()
 {
 	Engine* engine = Engine::getInstancePtr();
 	ResourceManager* rm = engine->getResourceManager();
-	rm->onResourceReloaded += fd::bind( &ScriptManager::onReload, this );
+	rm->onResourceReloaded.Connect( this, &ScriptManager::onReload );
 
 	// Create a new Lua VM instance.
 	state = new State( luaL_newstate() );
@@ -53,7 +53,7 @@ ScriptManager::~ScriptManager()
 {
 	Engine* engine = Engine::getInstancePtr();
 	ResourceManager* rm = engine->getResourceManager();
-	rm->onResourceReloaded -= fd::bind( &ScriptManager::onReload, this );
+	rm->onResourceReloaded.Disconnect( this, &ScriptManager::onReload );
 
 	Log::info("Cleaning up the Lua state");
 	delete state;

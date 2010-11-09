@@ -26,9 +26,7 @@ CameraControls::CameraControls( wxWindow* parent, wxWindowID id,
 	assert( viewframe != nullptr );
 
 	TransformPtr transCamera = getCameraTransform();
-
-	transCamera->onTransform +=
-		fd::bind( &CameraControls::onCameraTransform, this );
+	transCamera->onTransform.Connect( this, &CameraControls::onCameraTransform );
 	
 	onCameraTransform();
 	updateCameraSpeedSpin();
@@ -40,15 +38,14 @@ CameraControls::~CameraControls()
 {
 	TransformPtr transCamera = getCameraTransform();
 
-	transCamera->onTransform -=
-		fd::bind( &CameraControls::onCameraTransform, this );
+	transCamera->onTransform.Disconnect( this, &CameraControls::onCameraTransform );
 }
 
 //-----------------------------------//
 
 TransformPtr CameraControls::getCameraTransform() const
 {
-	View* view = viewframe->getView();
+	RenderView* view = viewframe->getView();
 	assert( view != nullptr );
 
 	CameraPtr camera = view->getCamera();
@@ -69,7 +66,7 @@ void CameraControls::onCameraSpeedSpin( wxSpinDoubleEvent& event )
 {
 	double value = event.GetValue();
 
-	View* view = viewframe->getView();
+	RenderView* view = viewframe->getView();
 	
 	CameraPtr camera( view->getCamera() );
 	assert( camera != nullptr );
@@ -87,7 +84,7 @@ void CameraControls::onCameraSpeedSpin( wxSpinDoubleEvent& event )
 
 void CameraControls::updateCameraSpeedSpin()
 {
-	View* view = viewframe->getView();
+	RenderView* view = viewframe->getView();
 	
 	CameraPtr camera( view->getCamera() );
 	assert( camera != nullptr );
@@ -111,7 +108,7 @@ void CameraControls::onCameraTransform()
 	// We need to switch to a neutral locale or else the text
 	// conversion will lead to different results depending on
 	// each machine due to different locale settings.
-	LocaleSaveRestore c;
+	LocaleSwitch c;
 	
 	TransformPtr transCamera = getCameraTransform();
 	Vector3 position = transCamera->getPosition();

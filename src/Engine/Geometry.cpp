@@ -84,7 +84,7 @@ void Geometry::appendRenderables( RenderQueue& queue, TransformPtr transform )
 			renderState.priority = 0;
 
 			if( needsRenderCallback )
-				renderState.callback += fd::bind(&Geometry::onRender, this);
+				renderState.callback.Connect( this, &Geometry::onRender );
 
 			queue.push_back( renderState );
 		}

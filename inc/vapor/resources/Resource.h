@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "vapor/Reflection.h"
+
 namespace vapor {
 
 //-----------------------------------//

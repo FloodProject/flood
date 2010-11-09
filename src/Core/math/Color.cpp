@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Core.h"
-#include "vapor/math/Color.h"
-#include "vapor/math/Math.h"
+#include "math/Color.h"
+#include "math/Math.h"
 
 namespace vapor {
 

@@ -96,7 +96,7 @@ void Image::save( const std::string& filename )
 		return;
 	}
 
-	NativeFile file(filename, FileMode::Write);
+	FileStream file(filename, StreamMode::Write);
 	
 	if( !file.open() )
 		return;

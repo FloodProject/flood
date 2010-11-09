@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Core.h"
-#include "vapor/Log.h"
-#include "vapor/Utilities.h"
+#include "Log.h"
+#include "Utilities.h"
 #include "LogFormat.h"
 
 namespace vapor {
@@ -145,22 +145,26 @@ void Log::messageDialog(const std::string& msg, LogLevel::Enum level)
 
 //-----------------------------------//
 
-Logger::Logger(const std::string& title, const std::string& fn)
-	: NativeFile(fn, FileMode::Write), even(true)
+Logger::Logger(FileStream& fileStream)
+	: stream(fileStream)
+	, even(true)
 {
-	if( !open() ) 
+	if( !stream.open() )
 	{
-		std::string msg = String::format("Could not open log file '%s'", fn.c_str() );
-		Log::messageDialog(msg);
+		//std::string msg = String::format("Could not open log stream: '%s'", stream.getPath().c_str());
+		//Log::messageDialog(msg);
+		//fp = stdout;
 		return;
 	}
 
-	// Turn off file buffering.
-	setBuffering( false );
-	
-	writeHeader( title );
+	fp = (FILE*) fileStream.getFilePointer();
 
-	Log::info("Creating log file '%s'", fn.c_str());
+	// Turn off stream buffering.
+	//stream.setBuffering( false );
+	
+	writeHeader( ""/*title*/ );
+
+	Log::info("Creating log file '%s'", stream.getPath().c_str());
 
 	if( !getLogger() )
 		setLogger(this);
@@ -181,7 +185,15 @@ Logger::~Logger()
 void Logger::write(const LogLevel::Enum level, const char* msg, va_list args)
 {
 	THREAD(boost::lock_guard<boost::mutex> lock(mutex);)
-	LocaleSaveRestore c;
+
+	std::string fmt = String::format(msg, args);
+	
+	if(last == fmt)
+		return;
+	
+	last = fmt;
+
+	LocaleSwitch c;
 
 	std::string lvl = String::toLowerCase( LogLevel::toString(level) );
 
@@ -204,7 +216,7 @@ void Logger::write(const LogLevel::Enum level, const char* msg, va_list args)
 #ifdef VAPOR_COMPILER_MSVC
 	if(level == LogLevel::Debug)
 	{
-		std::string fmt = String::format(msg, args);
+		//std::string fmt = String::format(msg, args);
 		fmt.append("\n");
 		OutputDebugStringA( fmt.c_str() );
 	}

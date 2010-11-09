@@ -10,7 +10,8 @@
 
 %begin %{
 #include "vapor/PCH.h"
-#include "vapor/Engine.h"
+#include "vapor/Headers.h"
+using namespace vapor;
 %}
 
 %import "base.i"
@@ -18,9 +19,9 @@
 namespace vapor
 {
 	VAPOR_API void Log::debug(const std::string& msg);
-	VAPOR_API void info(const std::string& subsystem, const char* msg, ...);
-	VAPOR_API void warn(const std::string& subsystem, const char* msg, ...);
-	VAPOR_API void error(const std::string& subsystem, const char* msg, ...);
+	VAPOR_API void Log::info(const std::string& subsystem, const char* msg, ...);
+	VAPOR_API void Log::warn(const std::string& subsystem, const char* msg, ...);
+	VAPOR_API void Log::error(const std::string& subsystem, const char* msg, ...);
 }
 
 %include "math.i"

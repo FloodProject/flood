@@ -17,6 +17,7 @@
 %include "vapor/scene/Camera.h"
 %include "vapor/scene/Geometry.h"
 %include "vapor/scene/Light.h"
+%include "vapor/controllers/Controller.h"
 %include "vapor/physics/CharacterController.h"
 
 %warnfilter(401) Node;

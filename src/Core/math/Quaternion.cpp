@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Core.h"
-#include "vapor/math/Quaternion.h"
+#include "math/Quaternion.h"
 
 namespace vapor {
 

@@ -183,7 +183,7 @@ bool TerrainPlugin::pickCell( const MouseButtonEvent& mbe )
 	if( !terrain )
 		return false;
 
-	View* view = viewframe->getView();
+	RenderView* view = viewframe->getView();
 	const CameraPtr& camera = view->getCamera(); 
 	
 	// Get a ray given the screen location clicked.
@@ -346,7 +346,7 @@ bool TerrainPlugin::pickTerrain( const MouseButtonEvent& mb,
 {
 	const ScenePtr& scene = engine->getSceneManager();
 
-	View* view = viewframe->getView();
+	RenderView* view = viewframe->getView();
 	const CameraPtr& camera = view->getCamera(); 
 	
 	// Get a ray given the screen location clicked.

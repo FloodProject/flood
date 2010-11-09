@@ -62,8 +62,7 @@ void UndoPlugin::onPluginEnable()
 		&UndoPlugin::onRedoButtonClick, this, redoButton->GetId() );
 
 	// Connect to undo/redo events.
-	undoManager->onUndoRedoEvent +=
-		fd::bind(&UndoPlugin::onUndoEvent, this);
+	undoManager->onUndoRedoEvent.Connect(this, &UndoPlugin::onUndoEvent);
 }
 
 //-----------------------------------//
@@ -71,8 +70,7 @@ void UndoPlugin::onPluginEnable()
 void UndoPlugin::onPluginDisable()
 {
 	// Disconnect to undo/redo events.
-	undoManager->onUndoRedoEvent -=
-		fd::bind(&UndoPlugin::onUndoEvent, this);
+	undoManager->onUndoRedoEvent.Connect(this, &UndoPlugin::onUndoEvent);
 }
 
 //-----------------------------------//

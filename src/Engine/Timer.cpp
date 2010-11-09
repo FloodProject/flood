@@ -7,14 +7,14 @@
 ************************************************************************/
 
 #include "Core.h"
-#include "vapor/Timer.h"
+#include "Timer.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
 #ifdef VAPOR_PLATFORM_WINDOWS
-	ticks_t Timer::ticksPerSecond = 0;
+	Ticks Timer::ticksPerSecond = 0;
 #endif
 
 bool Timer::checked = false;
@@ -37,9 +37,9 @@ Timer::Timer()
 double Timer::getCurrentTime()
 {
 	storeTime(currentTime);
+
 #ifdef VAPOR_PLATFORM_WINDOWS	
-	return static_cast<double>(currentTime)
-		/ static_cast<double>(ticksPerSecond);
+	return (double) currentTime / (double) ticksPerSecond;
 #else
 	return currentTime.tv_sec;
 #endif
@@ -52,9 +52,8 @@ double Timer::getElapsedTime()
 	getCurrentTime();	
 
 #ifdef VAPOR_PLATFORM_WINDOWS
-	ticks_t diff = currentTime - lastTime;
-	return static_cast<double>(diff) 
-		/ static_cast<double>(ticksPerSecond);
+	Ticks diff = currentTime - lastTime;
+	return (double) diff / (double) ticksPerSecond;
 #else
 	return currentTime.tv_sec - lastTime.tv_sec;
 #endif
@@ -65,9 +64,9 @@ double Timer::getElapsedTime()
 double Timer::reset()
 {
 	storeTime(lastTime);
+
 #ifdef VAPOR_PLATFORM_WINDOWS
-	return static_cast<double>(lastTime)
-		/ static_cast<double>(ticksPerSecond);
+	return (double) lastTime / (double) ticksPerSecond;
 #else
 	return lastTime.tv_sec;
 #endif
@@ -75,15 +74,11 @@ double Timer::reset()
 
 //-----------------------------------//
 
-void Timer::storeTime( ticks_t& var )
+void Timer::storeTime( Ticks& var )
 {
 #ifdef VAPOR_PLATFORM_WINDOWS
-
-	LARGE_INTEGER* time = nullptr;
-	time = reinterpret_cast<LARGE_INTEGER*>( &var );
-	
+	LARGE_INTEGER* time = (LARGE_INTEGER*) &var;
 	QueryPerformanceCounter( time );
-
 #else
 	gettimeofday(&var, NULL);
 #endif
@@ -96,9 +91,7 @@ bool Timer::checkHighResolutionTimers()
 	checked = true;
 
 #ifdef VAPOR_PLATFORM_WINDOWS
-
-	LARGE_INTEGER* freq = nullptr;
-	freq = reinterpret_cast<LARGE_INTEGER*>( &ticksPerSecond );
+	LARGE_INTEGER* freq = (LARGE_INTEGER*) &ticksPerSecond;
 	
 	if( !QueryPerformanceFrequency(freq) )
 		return false;

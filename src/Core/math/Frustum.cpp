@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Core.h"
-#include "vapor/math/Frustum.h"
+#include "math/Frustum.h"
 
 namespace vapor {
 
@@ -59,7 +59,7 @@ void Frustum::updateProjection( const Vector2i& size )
 	else
 	{
 		matProjection = Matrix4x4::createOrthographicProjection(
-			0, size.x, 0, size.y, nearPlane, farPlane );
+			0, (float) size.x, 0, (float) size.y, nearPlane, farPlane );
 	}
 }
 
@@ -137,9 +137,10 @@ void Frustum::updateCorners( const Matrix4x3& matView )
 		Vector3(-1, -1, -1), Vector3( 1, -1, -1)
 	};
 
-	int i = 0;
-	foreach( const Vector3& corner, cornerPoints )
+	for( uint i = 0; i < VAPOR_ARRAY_SIZE(cornerPoints); i++ )
 	{
+		const Vector3& corner = cornerPoints[i];
+
 		Vector4 c = matInvClip * Vector4(corner, 1.0);
 		corners[i++] = Vector3(c.x / c.w, c.y / c.w, c.z / c.w);
 	}

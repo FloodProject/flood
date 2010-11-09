@@ -25,11 +25,11 @@ ResourcesPage::ResourcesPage( EditorFrame* editor,
 	Engine* engine = editor->getEngine();
 	rm = engine->getResourceManager();
 	
-	rm->onResourcePrepared += fd::bind( &ResourcesPage::onResourcePrepared, this );
-	rm->onResourceRemoved += fd::bind( &ResourcesPage::onResourceRemoved, this );
+	rm->onResourcePrepared.Connect( this, &ResourcesPage::onResourcePrepared );
+	rm->onResourceRemoved.Connect( this, &ResourcesPage::onResourceRemoved );
 	
-	rm->onResourceLoaded += fd::bind( &ResourcesPage::onResourceReloaded, this );
-	rm->onResourceReloaded += fd::bind( &ResourcesPage::onResourceReloaded, this );
+	rm->onResourceLoaded.Connect( this, &ResourcesPage::onResourceReloaded );
+	rm->onResourceReloaded.Connect( this, &ResourcesPage::onResourceReloaded );
 
 	initIcons();
 	initControl();
@@ -40,11 +40,11 @@ ResourcesPage::ResourcesPage( EditorFrame* editor,
 
 ResourcesPage::~ResourcesPage()
 {
-	rm->onResourcePrepared -= fd::bind( &ResourcesPage::onResourcePrepared, this );
-	rm->onResourceRemoved -= fd::bind( &ResourcesPage::onResourceRemoved, this );
+	rm->onResourcePrepared.Disconnect( this, &ResourcesPage::onResourcePrepared );
+	rm->onResourceRemoved.Disconnect( this, &ResourcesPage::onResourceRemoved );
 
-	rm->onResourceLoaded -= fd::bind( &ResourcesPage::onResourceReloaded, this );
-	rm->onResourceReloaded -= fd::bind( &ResourcesPage::onResourceReloaded, this );
+	rm->onResourceLoaded.Disconnect( this, &ResourcesPage::onResourceReloaded );
+	rm->onResourceReloaded.Disconnect( this, &ResourcesPage::onResourceReloaded );
 }
 
 //-----------------------------------//

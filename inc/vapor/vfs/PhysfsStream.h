@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "vapor/Stream.h"
-#include "vapor/vfs/File.h"
+#include "Stream.h"
+#include "vfs/File.h"
 
 namespace vapor {
 
@@ -32,7 +32,7 @@ public:
 	virtual void close();
 
 	// Reads the stream into a buffer.
-	virtual long read(void* buffer, long size);
+	virtual long read(void* buffer, long size) const;
 
 	// Reads the entire stream.
 	virtual std::vector<byte> read() const;

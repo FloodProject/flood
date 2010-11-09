@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Core.h"
-#include "vapor/net/Network.h"
-#include "vapor/net/Message.h"
+#include "net/Network.h"
+#include "net/Message.h"
 #include <zmq.h>
 
 namespace vapor {

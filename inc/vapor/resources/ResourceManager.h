@@ -147,11 +147,11 @@ protected:
 public:
 
 	// These events are sent when their correspending actions happen.
-	fd::delegate< void( const ResourceEvent& ) > onResourcePrepared;
-	fd::delegate< void( const ResourceEvent& ) > onResourceLoaded;
-	fd::delegate< void( const ResourceEvent& ) > onResourceRemoved;
-	fd::delegate< void( const ResourceEvent& ) > onResourceReloaded;
-	fd::delegate< void( const ResourceLoader& ) > onResourceLoaderRegistered;
+	Event1< const ResourceEvent& > onResourcePrepared;
+	Event1< const ResourceEvent& > onResourceLoaded;
+	Event1< const ResourceEvent& > onResourceRemoved;
+	Event1< const ResourceEvent& > onResourceReloaded;
+	Event1< const ResourceLoader&> onResourceLoaderRegistered;
 
 	// Gets a specific resource given it's name (if it exists).
 	template <typename T>

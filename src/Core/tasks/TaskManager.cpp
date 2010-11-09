@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Core.h"
-#include "vapor/TaskManager.h"
-#include "vapor/Utilities.h"
+#include "TaskManager.h"
+#include "Utilities.h"
 
 namespace vapor {
 
@@ -100,10 +100,7 @@ void TaskManager::update( double )
 	
 	while( events.try_pop(event) )
 	{
-		if( !onTaskEvent.empty() )
-		{
-			onTaskEvent( event );	
-		}
+		onTaskEvent( event );	
 	}
 }
 
@@ -117,16 +114,9 @@ void TaskManager::pushEvent( TaskEvent::Enum event,
 	taskEvent.task = task;
 
 	if( sendEvent )
-	{
-		if( !onTaskEvent.empty() )
-		{
-			onTaskEvent( taskEvent );	
-		}
-	}
+		onTaskEvent( taskEvent );	
 	else
-	{
 		events.push( taskEvent );
-	}
 }
 
 //-----------------------------------//

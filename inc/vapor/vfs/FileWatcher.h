@@ -29,6 +29,8 @@
 
 #pragma once
 
+#include "Event.h"
+
 namespace vapor {
 
 //-----------------------------------//
@@ -73,8 +75,10 @@ namespace Actions
  * live updating, so when an asset changes it will be reloaded.
  */
 
-class VAPOR_API FileWatchEvent : private boost::noncopyable
+class VAPOR_API FileWatchEvent
 {
+	DECLARE_UNCOPYABLE(FileWatchEvent)
+
 public:
 
 	FileWatchEvent( Actions::Enum action, WatchID id,
@@ -98,11 +102,14 @@ public:
  * to notify the parent program of the changes.
  */
 
-class VAPOR_API FileWatcher : private boost::noncopyable
+class VAPOR_API FileWatcher
 {
+	DECLARE_UNCOPYABLE(FileWatcher)
+
 public:
 
-	virtual ~FileWatcher() { }
+	FileWatcher() {}
+	virtual ~FileWatcher() {}
 
 	// Add a directory watch
 	virtual WatchID addWatch(const std::string& directory) = 0;
@@ -117,7 +124,7 @@ public:
 	virtual void update() = 0;
 
 	// Fired up when the watcher gets notified by the OS.
-	fd::delegate<void(const FileWatchEvent&)> onFileWatchEvent;
+	Event1<const FileWatchEvent&> onFileWatchEvent;
 };
 
 //-----------------------------------//

@@ -39,7 +39,7 @@ public:
 	GETTER(RedoOperations, const Operations&, redoOperations)
 
 	// Gets sent on an undo/redo event.
-	fd::delegate<void()> onUndoRedoEvent;
+	Event0<> onUndoRedoEvent;
 
 protected:
 

@@ -32,7 +32,7 @@ Transform::Transform( float x, float y, float z )
 	, externalTransform( false )
 {
 	Class& klass = getType();
-	klass.onFieldChanged += fd::bind(&Transform::onFieldChanged, this);
+	klass.onFieldChanged.Connect( this, &Transform::onFieldChanged );
 }
 
 //-----------------------------------//
@@ -46,7 +46,7 @@ Transform::Transform( const Transform& rhs )
 	, externalTransform( false )
 {
 	Class& klass = getType();
-	klass.onFieldChanged += fd::bind(&Transform::onFieldChanged, this);
+	klass.onFieldChanged.Connect( this, &Transform::onFieldChanged );
 }
 
 //-----------------------------------//
@@ -54,7 +54,7 @@ Transform::Transform( const Transform& rhs )
 Transform::~Transform()
 {
 	Class& klass = getType();
-	klass.onFieldChanged -= fd::bind(&Transform::onFieldChanged, this);
+	klass.onFieldChanged.Disconnect( this, &Transform::onFieldChanged );
 }
 
 //-----------------------------------//
@@ -291,9 +291,6 @@ void Transform::update( double VAPOR_UNUSED(delta) )
 
 void Transform::notify()
 {
-	if( onTransform.empty() ) 
-		return;
-
 	onTransform();
 }
 

@@ -38,8 +38,7 @@ void Group::add( const NodePtr& node )
 	node->setParent( Node::shared_from_this() );
 	nodes.push_back( node );
 
-	if( !onNodeAdded.empty() )
-		onNodeAdded(node);
+	onNodeAdded(node);
 }
 
 //-----------------------------------//
@@ -65,10 +64,8 @@ bool Group::remove( const NodePtr& node )
 	if( it == nodes.end() )
 		return false;
 
+	onNodeRemoved(node);
 	nodes.erase(it);
-
-	if( !onNodeRemoved.empty() )
-		onNodeRemoved(node);
 
 	return true;
 }

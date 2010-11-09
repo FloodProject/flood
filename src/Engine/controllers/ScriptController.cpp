@@ -46,12 +46,12 @@ ScriptController::ScriptController()
 	InputManager* im = Engine::getInstancePtr()->getInputManager();
 	
 	Keyboard* keyboard = im->getKeyboard();
-	keyboard->onKeyPress += fd::bind( &ScriptController::onKeyPress, this );
-	keyboard->onKeyRelease += fd::bind( &ScriptController::onKeyRelease, this );
+	keyboard->onKeyPress.Connect( this, &ScriptController::onKeyPress );
+	keyboard->onKeyRelease.Connect( this, &ScriptController::onKeyRelease );
 	
 	Mouse* mouse = im->getMouse();
-	mouse->onMouseButtonPress += fd::bind( &ScriptController::onMouseButtonPressed, this );
-	mouse->onMouseButtonRelease += fd::bind( &ScriptController::onMouseButtonReleased, this );
+	mouse->onMouseButtonPress.Connect( this, &ScriptController::onMouseButtonPressed );
+	mouse->onMouseButtonRelease.Connect( this, &ScriptController::onMouseButtonReleased );
 }
 
 //-----------------------------------//
@@ -61,12 +61,12 @@ ScriptController::~ScriptController()
 	InputManager* im = Engine::getInstancePtr()->getInputManager();
 	
 	Keyboard* keyboard = im->getKeyboard();
-	keyboard->onKeyPress -= fd::bind( &ScriptController::onKeyPress, this );
-	keyboard->onKeyRelease -= fd::bind( &ScriptController::onKeyRelease, this );
+	keyboard->onKeyPress.Disconnect( this, &ScriptController::onKeyPress );
+	keyboard->onKeyRelease.Disconnect( this, &ScriptController::onKeyRelease );
 	
 	Mouse* mouse = im->getMouse();
-	mouse->onMouseButtonPress -= fd::bind( &ScriptController::onMouseButtonPressed, this );
-	mouse->onMouseButtonRelease -= fd::bind( &ScriptController::onMouseButtonReleased, this );
+	mouse->onMouseButtonPress.Disconnect( this, &ScriptController::onMouseButtonPressed );
+	mouse->onMouseButtonRelease.Disconnect( this, &ScriptController::onMouseButtonReleased );
 }
 
 //-----------------------------------//

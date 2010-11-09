@@ -11,6 +11,7 @@
 #include "vapor/render/GLSL_Program.h"
 #include "vapor/resources/GLSL_Text.h"
 #include "vapor/resources/ResourceManager.h"
+#include "vapor/Utilities.h"
 
 namespace vapor {
 
@@ -21,8 +22,8 @@ ProgramManager::ProgramManager( ResourceManager* resourceManager )
 {
 	assert( rm != nullptr );
 	
-	rm->onResourceLoaded += fd::bind( &ProgramManager::onLoad, this );
-	rm->onResourceReloaded += fd::bind( &ProgramManager::onReload, this );
+	rm->onResourceLoaded.Connect( this, &ProgramManager::onLoad );
+	rm->onResourceReloaded.Connect( this, &ProgramManager::onReload );
 }
 
 //-----------------------------------//
@@ -31,8 +32,8 @@ ProgramManager::~ProgramManager()
 {
 	assert( rm != nullptr );
 	
-	rm->onResourceLoaded -= fd::bind( &ProgramManager::onLoad, this );
-	rm->onResourceReloaded -= fd::bind( &ProgramManager::onReload, this );
+	rm->onResourceLoaded.Disconnect( this, &ProgramManager::onLoad );
+	rm->onResourceReloaded.Disconnect( this, &ProgramManager::onReload );
 }
 
 //-----------------------------------//

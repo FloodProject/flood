@@ -11,6 +11,7 @@
 #include "vapor/scene/Component.h"
 #include "vapor/scene/Transform.h"
 #include "vapor/scene/Geometry.h"
+#include "Event.h"
 
 namespace vapor {
 
@@ -115,10 +116,10 @@ public:
 	virtual void update( double delta );
 
 	// Events gets called when a component is added.
-	fd::delegate<void(const ComponentPtr&)> onComponentAdded;
+	Event1<const ComponentPtr&> onComponentAdded;
 
 	// Events gets called when a component is removed.
-	fd::delegate<void(const ComponentPtr&)> onComponentRemoved;
+	Event1<const ComponentPtr&> onComponentRemoved;
 
 protected:
 

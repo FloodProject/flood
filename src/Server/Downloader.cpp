@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Core.h"
-#include "vapor/net/Downloader.h"
+#include "net/Downloader.h"
 
 #define CURL_STATICLIB
 #include <curl/curl.h>

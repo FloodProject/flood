@@ -11,6 +11,7 @@
 #include "vapor/Subsystem.h"
 #include "vapor/math/Vector2.h"
 #include "vapor/math/Vector3.h"
+#include "Event.h"
 
 FWD_DECL_SHARED(Camera)
 FWD_DECL_SHARED_WEAK(Camera)
@@ -53,10 +54,10 @@ public:
 	virtual void update( double delta );
 
 	// Paging events.
-	fd::delegate<void(const PageEvent&)> onPageSwitch;
-	fd::delegate<void(const PageEvent&)> onPageLoading;
-	fd::delegate<void(const PageEvent&)> onPageLoaded;
-	fd::delegate<void(const PageEvent&)> onPageRemoved;
+	Event1<const PageEvent&> onPageSwitch;
+	Event1<const PageEvent&> onPageLoading;
+	Event1<const PageEvent&> onPageLoaded;
+	Event1<const PageEvent&> onPageRemoved;
 
 protected:
 

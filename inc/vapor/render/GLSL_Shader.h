@@ -40,7 +40,7 @@ private:
 	bool upload();
 
 	// Gets the GLSL compilation log.
-	void getGLSLLog();
+	void getCompileLog();
 
 	// Returns the OpenGL shader type.
 	uint getGLShaderType( ShaderType::Enum type );

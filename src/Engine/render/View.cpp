@@ -16,14 +16,14 @@ namespace vapor {
 
 //-----------------------------------//
 
-View::View()
+RenderView::RenderView()
 {
 	setClearColor( Color::White );
 }
 
 //-----------------------------------//
 
-View::View( const CameraPtr& camera )
+RenderView::RenderView( const CameraPtr& camera )
 	: weakCamera( camera )
 {
 	setClearColor( Color::White );
@@ -31,7 +31,7 @@ View::View( const CameraPtr& camera )
 
 //-----------------------------------//
 
-void View::handleRenderTargetResize()
+void RenderView::handleRenderTargetResize()
 {
 	//size = target->getSettings().getSize();
 	#pragma TODO("Views need to be updated when render targets change")
@@ -39,7 +39,7 @@ void View::handleRenderTargetResize()
 
 //-----------------------------------//
 
-Vector3 View::unprojectPoint( const Vector3& screen, const Matrix4x4& projection,
+Vector3 RenderView::unprojectPoint( const Vector3& screen, const Matrix4x4& projection,
 							  const Matrix4x3& view ) const
 {
 	Matrix4x4 view4( view );
@@ -63,7 +63,7 @@ Vector3 View::unprojectPoint( const Vector3& screen, const Matrix4x4& projection
 
 //-----------------------------------//
 
-float View::getAspectRatio() const
+float RenderView::getAspectRatio() const
 {
 	const Vector2i size = getSize();
 
@@ -75,14 +75,14 @@ float View::getAspectRatio() const
 
 //-----------------------------------//
 
-bool View::operator < (View& v)
+bool RenderView::operator < (RenderView& v)
 {
 	return getDepthPriority() < v.getDepthPriority();
 }
 
 //-----------------------------------//
 
-void View::update()
+void RenderView::update()
 {
 	CameraPtr camera = weakCamera.lock();
 

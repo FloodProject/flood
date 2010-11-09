@@ -54,10 +54,10 @@ public:
 	GETTER(InputManager, EditorInputManager*, inputManager)
 
 	// Add your frame updating code here.
-	fd::delegate<void(double)> onUpdate;
+	Event1<double> onUpdate;
 
 	// Add your frame rendering code here.
-	fd::delegate<void()> onRender;
+	Event0<> onRender;
 
 protected:
 

@@ -28,6 +28,7 @@ public:
 //-----------------------------------//
 
 class EditorFrame;
+class NodeOperation;
 
 #if defined(VAPOR_COMPILER_MSVC_2010) && defined(VAPOR_MEMORY_TR1_VENDOR)
 typedef std::map<NodeWeakPtr, wxTreeItemId, std::owner_less<NodeWeakPtr>> NodeIdsMap;
@@ -87,6 +88,9 @@ protected:
 
 	// Adds a component to the tree item.
 	void addComponent( wxTreeItemId id, ComponentPtr component );
+
+	// Creates a new node operation.
+	NodeOperation* createNodeOperation(const NodePtr& node);
 
 	// Cleans the current scene.
 	void cleanScene();

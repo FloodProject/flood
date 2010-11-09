@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "vapor/core/Type.h"
+#include "core/Type.h"
 
 namespace vapor {
 

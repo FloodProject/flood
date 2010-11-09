@@ -96,7 +96,7 @@ protected:
 	ScenePtr scene;
 	NodePtr nodeCamera;
 	CameraPtr camera;
-	View* renderView;
+	RenderView* renderView;
 
 	TexturePtr depthTexture;
 	TexturePtr colorTexture;

@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Core.h"
-#include "vapor/math/BoundingSphere.h"
+#include "math/BoundingSphere.h"
 
 namespace vapor {
 

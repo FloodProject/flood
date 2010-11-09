@@ -126,11 +126,11 @@ void Framework::registerCallbacks()
 	InputManager* im = getInputManager();
 	
 	Keyboard* keyboard = im->getKeyboard();
-	keyboard->onKeyPress += fd::bind( &Framework::onKeyPressed, this );
+	keyboard->onKeyPress.Connect( this, &Framework::onKeyPressed );
 	
 	Mouse* mouse = im->getMouse();
-	mouse->onMouseButtonPress += fd::bind( &Framework::onButtonPressed, this );
-	mouse->onMouseButtonRelease += fd::bind( &Framework::onButtonReleased, this );
+	mouse->onMouseButtonPress.Connect( this, &Framework::onButtonPressed );
+	mouse->onMouseButtonRelease.Connect( this, &Framework::onButtonReleased );
 }
 
 //-----------------------------------//

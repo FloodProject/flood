@@ -7,4 +7,4 @@
 ************************************************************************/
 
 #include "Core.h"
-#include "vapor/ReferenceCounted.h"
+#include "ReferenceCounted.h"

@@ -31,12 +31,12 @@ class RenderTarget;
  * It has an associated camera that will render into the view.
  */
 
-class VAPOR_API View : private boost::noncopyable
+class VAPOR_API RenderView : private boost::noncopyable
 {
 public:
 
-	View();
-	View( const CameraPtr& );
+	RenderView();
+	RenderView( const CameraPtr& );
 
 	// Gets the camera of the view.
 	GETTER(Camera, CameraPtr, weakCamera.lock())
@@ -70,7 +70,7 @@ public:
 		const Matrix4x4& projection, const Matrix4x3& view ) const;
 
 	// Returns if a view has more priority than another.
-	bool operator < (View& v);
+	bool operator < (RenderView& v);
 
 	// Handles render target resize.
 	void handleRenderTargetResize();

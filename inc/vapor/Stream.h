@@ -13,16 +13,16 @@ namespace vapor {
 //-----------------------------------//
 
 /**
- * Use these for different kinds of access to the files.
- * Check the File class description for more information.
+ * Use these for different kinds of access to the streams.
  */
 
-namespace AccessMode
+namespace StreamMode
 {
 	enum Enum
 	{
 		Read,
 		Write,
+		Append
 	};
 }
 
@@ -34,11 +34,12 @@ namespace AccessMode
  * remove servers.
  */
 
-class VAPOR_API Stream : private boost::noncopyable
+class VAPOR_API Stream
 {
+	DECLARE_UNCOPYABLE(Stream)
+
 public:
 
-	Stream(AccessMode::Enum mode);
 	virtual ~Stream();
 
 	// Opens the stream.
@@ -48,27 +49,29 @@ public:
 	virtual void close();
 
 	// Reads the stream into a buffer.
-	virtual long read(void* buffer, long size) = 0;
+	virtual long read(void* buffer, long size) const = 0;
 
 	// Reads the entire stream.
 	virtual std::vector<byte> read() const = 0;
 
+	// Reads the entire stream as a string.
+	virtual std::string readString() const;
+
 	// Writes a buffer into the stream.
 	virtual long write(const std::vector<byte>& buffer) = 0;
 
-	// Reads the stream as a string.
-	std::string readString() const;
-
 	// Writes a string into the stream.
-	long writeString(const std::string& str);
+	virtual long write(const std::string& string);
 
 	// Gets the path of the stream.
 	GETTER(Path, const std::string&, path)
 
 protected:
 
+	Stream(StreamMode::Enum mode);
+
+	StreamMode::Enum mode;
 	std::string	path;
-	AccessMode::Enum mode;
 };
 
 //-----------------------------------//

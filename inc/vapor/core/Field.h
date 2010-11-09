@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "vapor/core/Type.h"
+#include "core/Type.h"
 
 namespace vapor {
 
@@ -20,6 +20,8 @@ namespace vapor {
 
 class VAPOR_API Field
 {
+	DECLARE_UNCOPYABLE(Field)
+
 public:
 
 	Field( const Type& type );

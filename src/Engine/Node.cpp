@@ -60,8 +60,7 @@ bool Node::addComponent( const ComponentPtr& component )
 	components[type] = component;
 	component->setNode( shared_from_this() );
 
-	if( !onComponentAdded.empty() )
-		onComponentAdded(component);
+	onComponentAdded(component);
 
 	return true;
 }
@@ -91,8 +90,7 @@ bool Node::removeComponent( const ComponentPtr& component )
 	assert( it2 != geometries.end() );
 	geometries.erase( it2 );
 
-	if( !onComponentRemoved.empty() )
-		onComponentRemoved(component);
+	onComponentRemoved(component);
 
 	return true;
 }

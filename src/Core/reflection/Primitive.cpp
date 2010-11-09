@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Core.h"
-#include "vapor/core/Primitive.h"
+#include "core/Primitive.h"
 
 namespace vapor {
 

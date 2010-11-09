@@ -110,7 +110,7 @@ public:
 	virtual void update( double delta );
 
 	// Gets fired when the transform is changed.
-	fd::delegate<void()> onTransform;
+	Event0<> onTransform;
 
 protected:
 

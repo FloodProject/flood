@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Core.h"
-#include "vapor/math/Noise.h"
-#include "vapor/math/Math.h"
+#include "math/Noise.h"
+#include "math/Math.h"
 
 namespace vapor {
 

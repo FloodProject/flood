@@ -105,10 +105,7 @@ void Mouse::mouseMoved(const MouseMoveEvent& mme)
 	mouseInfo.x = mme.x;
 	mouseInfo.y = mme.y;
 
-	if ( !onMouseMove.empty() )
-	{
-		onMouseMove( mme );
-	}
+	onMouseMove( mme );
 }
 
 //-----------------------------------//
@@ -123,10 +120,7 @@ void Mouse::mouseDragged(const MouseDragEvent& mde)
 	mouseInfo.x = mde.x;
 	mouseInfo.y = mde.y;
 
-	if ( !onMouseDrag.empty() )
-	{
-		onMouseDrag( mde );
-	}
+	onMouseDrag( mde );
 }
 
 //-----------------------------------//
@@ -138,10 +132,7 @@ void Mouse::mouseButtonPressed(const MouseButtonEvent& mbp)
 	
 	setMouseButton( mbp.button, true );
 
-	if ( !onMouseButtonPress.empty() )
-	{
-		onMouseButtonPress( mbp );
-	}
+	onMouseButtonPress( mbp );
 }
 
 //-----------------------------------//
@@ -152,11 +143,7 @@ void Mouse::mouseButtonReleased(const MouseButtonEvent& mbe)
 	mouseInfo.y = mbe.y;
 	
 	setMouseButton( mbe.button, false );
-
-	if ( !onMouseButtonRelease.empty() )
-	{
-		onMouseButtonRelease( mbe );
-	}
+	onMouseButtonRelease( mbe );
 }
 
 //-----------------------------------//
@@ -164,11 +151,7 @@ void Mouse::mouseButtonReleased(const MouseButtonEvent& mbe)
 void Mouse::mouseEnter()
 {
 	mouseInfo.insideWindow = true;
-
-	if ( !onMouseEnter.empty() )
-	{
-		onMouseEnter( );
-	}
+	onMouseEnter();
 }
 
 //-----------------------------------//
@@ -176,21 +159,14 @@ void Mouse::mouseEnter()
 void Mouse::mouseExit()
 {
 	mouseInfo.insideWindow = false;
-
-	if ( !onMouseExit.empty() )
-	{
-		onMouseExit( );
-	}
+	onMouseExit();
 }
 
 //-----------------------------------//
 
 void Mouse::mouseWheelMove(const MouseWheelEvent& mevt)
 {
-	if ( !onMouseWheelMove.empty() )
-	{
-		onMouseWheelMove( mevt );
-	}	
+	onMouseWheelMove( mevt );
 }
 
 //-----------------------------------//
@@ -224,15 +200,20 @@ void Mouse::setMouseButton( MouseButton::Enum btn, bool state )
 //-----------------------------------//
 
 MouseInfo::MouseInfo()
-	: x(0), y(0), 
-	leftButton(false), rightButton(false), middleButton(false),
-	Mouse4(false), Mouse5(false), insideWindow(false)
+	: x(0), y(0)
+	, leftButton(false)
+	, rightButton(false)
+	, middleButton(false)
+	, Mouse4(false)
+	, Mouse5(false)
+	, insideWindow(false)
 { }
 
 //-----------------------------------//
 
 MouseEvent::MouseEvent( MouseEventType::Enum eventType )
-	: InputEvent( InputDeviceType::Mouse ), eventType( eventType )
+	: InputEvent( InputDeviceType::Mouse )
+	, eventType( eventType )
 { }
 
 //-----------------------------------//

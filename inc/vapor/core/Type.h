@@ -33,8 +33,10 @@ namespace MetaType
  * (introspection) and serialization.
  */
 
-class VAPOR_API Type : private boost::noncopyable
+class VAPOR_API Type
 {
+	DECLARE_UNCOPYABLE(Type)
+
 public:
 
 	virtual ~Type();

@@ -20,18 +20,18 @@ TextureManager::TextureManager( ResourceManager* resourceManager )
 {
 	assert( rm != nullptr );
 	
-	rm->onResourceLoaded += fd::bind( &TextureManager::onLoaded, this );
-	rm->onResourceRemoved += fd::bind( &TextureManager::onUnloaded, this );
-	rm->onResourceReloaded += fd::bind( &TextureManager::onReloaded, this );
+	rm->onResourceLoaded.Connect( this, &TextureManager::onLoaded );
+	rm->onResourceRemoved.Connect( this, &TextureManager::onUnloaded );
+	rm->onResourceReloaded.Connect( this, &TextureManager::onReloaded );
 }
 
 //-----------------------------------//
 
 TextureManager::~TextureManager()
 {
-	rm->onResourceLoaded -= fd::bind( &TextureManager::onLoaded, this );
-	rm->onResourceRemoved -= fd::bind( &TextureManager::onUnloaded, this );
-	rm->onResourceReloaded -= fd::bind( &TextureManager::onReloaded, this );
+	rm->onResourceLoaded.Disconnect( this, &TextureManager::onLoaded );
+	rm->onResourceRemoved.Disconnect( this, &TextureManager::onUnloaded );
+	rm->onResourceReloaded.Disconnect( this, &TextureManager::onReloaded );
 
 	#pragma TODO("Make sure all textures are released on exit")
 	foreach( const TextureMapPair& p, textures )

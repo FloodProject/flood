@@ -43,7 +43,7 @@ namespace RenderStage
  * rendered to the render target that is currently active on the device.
  */
 
-typedef fd::delegate<void()> RenderDelegate;
+typedef Event0<> RenderDelegate;
 
 struct RenderState
 {

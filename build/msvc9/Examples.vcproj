@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="vaporExample"
+	Name="Examples"
 	ProjectGUID="{7E63C46E-4243-4806-AE6C-944A2476F29F}"
 	RootNamespace="tests"
 	Keyword="Win32Proj"

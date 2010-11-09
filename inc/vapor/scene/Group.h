@@ -46,10 +46,10 @@ public:
 	virtual void update( double delta );
 
 	// Event gets called when a node is added.
-	fd::delegate<void(const NodePtr&)> onNodeAdded;
+	Event1<const NodePtr&> onNodeAdded;
 
 	// Event gets called when a node is removed.
-	fd::delegate<void(const NodePtr&)> onNodeRemoved;
+	Event1<const NodePtr&> onNodeRemoved;
 
 protected:
 

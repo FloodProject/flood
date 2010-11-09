@@ -7,6 +7,7 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
+#include "Event.h"
 
 #ifdef VAPOR_PHYSICS_BULLET
 
@@ -36,7 +37,7 @@ CapsuleShape::CapsuleShape()
 	, height(3.0f)
 {
 	Class& klass = getType();
-	klass.onFieldChanged += fd::bind(&CapsuleShape::onFieldChanged, this);
+	klass.onFieldChanged.Connect( this, &CapsuleShape::onFieldChanged);
 }
 
 //-----------------------------------//

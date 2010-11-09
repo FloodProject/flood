@@ -13,6 +13,7 @@
 #include "vapor/render/GLSL_Program.h"
 #include "vapor/resources/GLSL_Text.h"
 #include "vapor/render/GL.h"
+#include "vapor/Utilities.h"
 
 namespace vapor {
 
@@ -91,18 +92,16 @@ void GLSL_Program::createShaders()
 	if( !text )
 		return;
 
-	const GLSL_ShaderPtr& gl_vertex = new GLSL_Shader();
-	vertex = gl_vertex;
+	vertex = new GLSL_Shader();
 	vertex->setType( ShaderType::Vertex );
 	vertex->create();
 	
-	const GLSL_ShaderPtr& gl_fragment = new GLSL_Shader();
-	fragment = gl_fragment;
+	fragment = new GLSL_Shader();
 	fragment->setType( ShaderType::Fragment );
 	fragment->create();
 
-	addShader( gl_vertex );
-	addShader( gl_fragment );
+	addShader( (GLSL_ShaderPtr&) vertex );
+	addShader( (GLSL_ShaderPtr&) fragment );
 }
 
 //-----------------------------------//

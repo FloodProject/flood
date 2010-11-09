@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Core.h"
-#include "vapor/Task.h"
+#include "Task.h"
 
 namespace vapor {
 
@@ -17,6 +17,11 @@ namespace vapor {
 
 Task::Task()
 	: finish(false)
+{ }
+
+//-----------------------------------//
+
+Task::~Task()
 { }
 
 //-----------------------------------//

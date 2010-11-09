@@ -31,7 +31,7 @@
 
 #ifdef VAPOR_PLATFORM_WINDOWS
 
-#include "vapor/vfs/FileWatcher.h"
+#include "vfs/FileWatcher.h"
 
 namespace vapor {
 

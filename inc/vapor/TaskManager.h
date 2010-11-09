@@ -8,10 +8,11 @@
 
 #pragma once
 
-#include "vapor/Subsystem.h"
-#include "vapor/Singleton.h"
-#include "vapor/Task.h"
-#include "vapor/ConcurrentQueue.h"
+#include "Subsystem.h"
+#include "Singleton.h"
+#include "Task.h"
+#include "ConcurrentQueue.h"
+#include "Event.h"
 
 namespace vapor {
 
@@ -63,7 +64,7 @@ public:
 	void update( double delta );
 
 	// Notifies the observers of a given task event.
-	fd::delegate< void(const TaskEvent&) > onTaskEvent;
+	Event1<const TaskEvent&> onTaskEvent;
 	
 protected:
 

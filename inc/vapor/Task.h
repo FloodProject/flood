@@ -12,12 +12,16 @@ namespace vapor {
 
 //-----------------------------------//
 
-class VAPOR_API Task : public ReferenceCounted, private boost::noncopyable
+class VAPOR_API Task : public ReferenceCounted
 {
+	DECLARE_UNCOPYABLE(Task);
+
 public:
 
 	Task();
-	virtual ~Task() { }
+	virtual ~Task();
+
+	// Runs the task.
 	virtual void run() = 0;
 
 	// Flags the task to finish.

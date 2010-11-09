@@ -10,9 +10,9 @@
 
 #ifdef VAPOR_VFS_PHYSFS
 
-#include "vapor/Subsystem.h"
-#include "vapor/vfs/File.h"
-#include "vapor/vfs/FileWatcher.h"
+#include "Subsystem.h"
+#include "vfs/File.h"
+#include "vfs/FileWatcher.h"
 
 namespace vapor {
 

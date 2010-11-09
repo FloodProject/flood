@@ -89,10 +89,10 @@ void PropertyPlugin::onNodeSelect( const NodePtr& node )
 	propertyPage->showNodeProperties( node );
 
 	Class& klass = (Class&) node->getInstanceType();
-	klass.onFieldChanged += fd::bind(&PropertyPlugin::onFieldChanged, this);
+	klass.onFieldChanged.Connect(this, &PropertyPlugin::onFieldChanged);
 
-	node->onComponentAdded += fd::bind(&PropertyPlugin::onComponentChanged, this);
-	node->onComponentRemoved += fd::bind(&PropertyPlugin::onComponentChanged, this);
+	node->onComponentAdded.Connect(this, &PropertyPlugin::onComponentChanged);
+	node->onComponentRemoved.Connect(this, &PropertyPlugin::onComponentChanged);
 }
 
 //-----------------------------------//
@@ -103,10 +103,10 @@ void PropertyPlugin::onNodeUnselect( const NodePtr& node )
 	propertyPage->Clear();
 
 	Class& klass = (Class&) node->getInstanceType();
-	klass.onFieldChanged -= fd::bind(&PropertyPlugin::onFieldChanged, this);
+	klass.onFieldChanged.Disconnect(this, &PropertyPlugin::onFieldChanged);
 
-	node->onComponentAdded -= fd::bind(&PropertyPlugin::onComponentChanged, this);
-	node->onComponentRemoved -= fd::bind(&PropertyPlugin::onComponentChanged, this);
+	node->onComponentAdded.Disconnect(this, &PropertyPlugin::onComponentChanged);
+	node->onComponentRemoved.Disconnect(this, &PropertyPlugin::onComponentChanged);
 }
 
 //-----------------------------------//

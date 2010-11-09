@@ -1,18 +1,29 @@
 WIP (work-in-progress)
 ======================
 
-Camera bounding frustum renderable seems to be inverted
-Duplicate resources in Resources pane in editor
+Core:
+
+	Fuck boost. :)
+	Fuck fd_delegates
+	Fuck boost atomics.
+
+High Priority:
+
+	Switch to a resource handle based system.
+	Switch to Stream based resource loaders.
+
 Serialization of group nodes
 Fix model debug renderable of skeleton.
 wxWidgets regression in message dialog (missing icons in save dialog)
 Add UpdateUI event to Play button.
 Physics rotation becomes wrong due to bounding box calculation.
 Fix default animation state on skinned meshes with no animation tracks.
+Meshes with alpha values need to get blending enabled.
 
 EDITOR:
 -------
 
+When deleting a single node from the scene tree, the Unselected event isn't sent.
 Optimize hashing and loading in resources browser (it reads twice)
 Reload meshes on the fly
 Control resolution of terrains
@@ -151,7 +162,6 @@ Engine Modularization/Simplification Work
 	Remove Singletons from the codebase (WIP)
 	Implement ResourceLoaders as (static) plugins	
 	Rename Timer into Stopwatch
-	Refactor core code into its own static library (Reverted)
 	Make Singleton code thread-safe (double check pattern?)
 
 http://www.introgamedev.com/general_memory.html
@@ -186,3 +196,7 @@ for( GLint i = 0; i < numUniforms; ++i )
 }
 
 delete [] uniformName;
+
+
+
+linear_depth = (2.0 * znear) / (zfar + znear - exp_depth * (zfar - znear));

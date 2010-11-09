@@ -166,3 +166,4 @@
 #include <vapor/Profiler.h>
 #include <vapor/TaskManager.h>
 #include <vapor/Serialization.h>
+#include <vapor/Event.h>

@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Core.h"
-#include "vapor/core/Class.h"
+#include "core/Class.h"
 
 namespace vapor {
 
@@ -56,9 +56,6 @@ Field* Class::getField(const std::string& name) const
 
 void Class::notifyChanged(const Field& field) const
 {
-	if( onFieldChanged.empty() )
-		return;
-	
 	onFieldChanged(field);
 }
 

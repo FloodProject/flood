@@ -23,17 +23,9 @@
 
 #include "Core.h"
 #include "FileWatcherWin32.h"
+#include "Utilities.h"
 
 #ifdef VAPOR_PLATFORM_WINDOWS
-
-#ifdef VAPOR_COMPILER_MSVC
-	#pragma comment(lib, "comctl32.lib")
-	#pragma comment(lib, "user32.lib")
-	#pragma comment(lib, "ole32.lib")
-
-	// disable secure warnings
-	#pragma warning (disable: 4996)
-#endif
 
 namespace vapor {
 
@@ -50,9 +42,9 @@ struct WatchStruct
 	LPARAM lParam;
 	DWORD mNotifyFilter;
 	bool mStopNow;
-	FileWatcherWin32* mWatcher;
 	char* mDirName;
 	WatchID mWatchid;
+	FileWatcherWin32* mWatcher;
 };
 
 //-----------------------------------//
@@ -213,10 +205,11 @@ WatchID FileWatcherWin32::addWatch(const std::string& directory)
 		return 0;
 	}
 
+	size_t len = directory.length()+1;
 	watch->mWatchid = watchid;
 	watch->mWatcher = this;
-	watch->mDirName = new char[directory.length()+1];
-	strcpy(watch->mDirName, directory.c_str());
+	watch->mDirName = new char[len];
+	strcpy_s(watch->mDirName, len, directory.c_str());
 
 	mWatches.insert(std::make_pair(watchid, watch));
 

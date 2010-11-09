@@ -64,7 +64,7 @@ void ResourcesBrowser::setupRender()
 	scene.reset( new Scene() );
 	scene->add( nodeCamera );
 
-	renderView = new View(camera);
+	renderView = new RenderView(camera);
 	renderView->setClearColor(Color::White);
 	renderView->setRenderTarget(renderBuffer);
 }
@@ -98,7 +98,7 @@ void ResourcesBrowser::setupImages()
 
 bool ResourcesBrowser::loadCache()
 {
-	LocaleSaveRestore locale;
+	LocaleSwitch locale;
 	std::string path = CacheFolder + ThumbCache;
 
 	//if( !File::exists(path) )
@@ -107,7 +107,7 @@ bool ResourcesBrowser::loadCache()
 	//	return false;
 	//}
 
-	NativeFile file( path, FileMode::Read );
+	FileStream file( path, StreamMode::Read );
 
 	if( !file.open() )
 	{
@@ -162,9 +162,9 @@ bool ResourcesBrowser::loadCache()
 
 bool ResourcesBrowser::saveCache()
 {
-	LocaleSaveRestore locale;
+	LocaleSwitch locale;
 	std::string path = CacheFolder + ThumbCache;
-	NativeFile file( path, FileMode::Write );
+	FileStream file( path, StreamMode::Write );
 
 	if( !file.open() )
 		return false;
@@ -183,7 +183,8 @@ bool ResourcesBrowser::saveCache()
 		root[i++] = value;
 	}
 
-	file.write( root.toStyledString() );
+	#pragma TODO(Write)
+	//file.write( root.toStyledString() );
 	Log::info("Wrote thumbnails cache to '%s' with %u entries", path.c_str(), i);
 
 	return true;
@@ -319,7 +320,7 @@ void ResourcesBrowser::OnListBeginDrag(wxListEvent& event)
 	Vector3 dropPoint;
 
 	Vector2i coords = editor->getDropCoords();
-	View* view = editor->getMainViewframe()->getView();
+	RenderView* view = editor->getMainViewframe()->getView();
 	Ray ray = view->getCamera()->getRay(coords.x, coords.y);
 
 	ScenePtr scene = editor->getEngine()->getSceneManager();

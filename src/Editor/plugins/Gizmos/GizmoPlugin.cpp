@@ -207,7 +207,7 @@ void GizmoPlugin::onMouseDrag( const MouseDragEvent& dragEvent )
 {
 	//if( isTool(GizmoTool::Camera) )
 	//{
-	//	View* view = viewframe->getView();
+	//	RenderView* view = viewframe->getView();
 	//	CameraPtr camera = view->getCamera();
 	//	NodePtr nodeCamera = camera->getNode();
 	//	TransformPtr transCamera = nodeCamera->getTransform();
@@ -261,7 +261,7 @@ void GizmoPlugin::onMouseButtonPress( const MouseButtonEvent& mbe )
 	if( gizmo && gizmo->isAnyAxisSelected() )
 		return;
 
-	View* view = viewframe->getView();
+	RenderView* view = viewframe->getView();
 	const CameraPtr& camera = view->getCamera();
 	const ScenePtr& scene = engine->getSceneManager();
 
@@ -311,7 +311,7 @@ void GizmoPlugin::createGizmo( const NodePtr& node )
 	assert( node != nullptr );
 	assert( gizmos.find(node) == gizmos.end() );
 
-	View* view = viewframe->getView();
+	RenderView* view = viewframe->getView();
 	const CameraPtr& camera = view->getCamera();
 
 	Gizmo* newGizmo = nullptr;
@@ -381,7 +381,7 @@ void GizmoPlugin::setBoundingBoxVisible( const NodePtr& node, bool state )
 bool GizmoPlugin::pickImageTest( const MouseMoveEvent& moveEvent,
 								 GizmoAxis::Enum& axis )
 {
-	View* view = viewframe->getView();
+	RenderView* view = viewframe->getView();
 	Vector2i size = view->getSize();
 
 	// We need to flip the Y-axis due to a mismatch between the 
@@ -400,7 +400,7 @@ bool GizmoPlugin::pickImageTest( const MouseMoveEvent& moveEvent,
 
 bool GizmoPlugin::pickBoundingTest( const MouseMoveEvent& me )
 {
-	View* view = viewframe->getView();
+	RenderView* view = viewframe->getView();
 	const CameraPtr& camera = view->getCamera();
 
 	// Get a ray given the screen location clicked.

@@ -37,17 +37,19 @@ struct Compare
 
 //-----------------------------------//
 
-class VAPOR_API InputMap : private boost::noncopyable
+class VAPOR_API InputMap
 {
+	DECLARE_UNCOPYABLE(InputMap);
+
 public:
 
 	InputMap( const InputManager& manager );
 	~InputMap();
 
-	fd::delegate<void(void)>* registerAction(const std::string&, Keys::Enum);
-	fd::delegate<void(void)>* registerAction(const std::string&, MouseButton::Enum);
-	fd::delegate<void(void)>* registerAction(const std::string&, joyId);
-	fd::delegate<void(void)>* getFunction(const std::string&);
+	Event0<>* registerAction(const std::string&, Keys::Enum);
+	Event0<>* registerAction(const std::string&, MouseButton::Enum);
+	Event0<>* registerAction(const std::string&, joyId);
+	Event0<>* getFunction(const std::string&);
 	
 	void onKeyPress(const KeyEvent& ke);
 	void onMousePress(const MouseButtonEvent& mbe);
@@ -58,7 +60,7 @@ private:
 	std::map< Keys::Enum, std::string > keymap;
 	std::map< MouseButton::Enum, std::string > mousemap;
 	std::map< joyId, std::string, Compare> joystickmap;
-	std::map< std::string, fd::delegate<void(void)> > inputMap; 
+	std::map< std::string, Event0<>* > inputMap; 
 };
 
 //-----------------------------------//

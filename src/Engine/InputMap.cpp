@@ -27,8 +27,8 @@ InputMap::InputMap(const InputManager& manager)
 	Keyboard* kbd = manager.getKeyboard();
 	Mouse* mouse = manager.getMouse();
 	
-	kbd->onKeyPress.bind( &InputMap::onKeyPress, this );
-	mouse->onMouseButtonPress.bind( &InputMap::onMousePress, this );
+	kbd->onKeyPress.Connect( this, &InputMap::onKeyPress );
+	mouse->onMouseButtonPress.Connect( this, &InputMap::onMousePress );
 }
 
 //-----------------------------------//
@@ -40,34 +40,37 @@ InputMap::~InputMap()
 
 //-----------------------------------//
 
-fd::delegate<void(void)> * InputMap::registerAction(const std::string& action, Keys::Enum keycode)
+Event0<>* InputMap::registerAction(const std::string& action, Keys::Enum keycode)
 {
 	keymap[keycode] = action;
-	return &(inputMap[action]);
+	//return &(inputMap[action]);
+	return nullptr;
 }
 
 //-----------------------------------//
 
-fd::delegate<void(void)> * InputMap::registerAction(const std::string& action, MouseButton::Enum button)
+Event0<>* InputMap::registerAction(const std::string& action, MouseButton::Enum button)
 {
 	mousemap[button] = action;
-	return &(inputMap[action]);
-	
+	//return &(inputMap[action]);
+	return nullptr;
 }
 
 //-----------------------------------//
 
-fd::delegate<void(void)> * InputMap::registerAction(const std::string& action, joyId joy)
+Event0<>* InputMap::registerAction(const std::string& action, joyId joy)
 {
 	joystickmap[joy] = action;
-	return &(inputMap[action]);
+	//return &(inputMap[action]);
+	return nullptr;
 }
 
 //-----------------------------------//
 
-fd::delegate<void(void)> * InputMap::getFunction(const std::string& action)
+Event0<>* InputMap::getFunction(const std::string& action)
 {
-		return &(inputMap[action]);
+	//return &(inputMap[action]);
+	return nullptr;
 }
 
 //-----------------------------------//
@@ -77,8 +80,7 @@ void InputMap::onKeyPress(const KeyEvent& ke)
 	if(keymap.find(ke.keyCode) != keymap.end())
 	{
 		std::string action = keymap[ke.keyCode];
-		if(!(inputMap[action]).empty())
-			(inputMap[action])();
+		//inputMap[action]();
 	}
 }
 
@@ -89,8 +91,7 @@ void InputMap::onMousePress(const MouseButtonEvent& mbe)
 	if(mousemap.find(mbe.button) != mousemap.end())
 	{
 		std::string action = mousemap[mbe.button];
-		if(!(inputMap[action]).empty())
-			(inputMap[action])();
+		//inputMap[action]();
 	}
 }
 
@@ -102,8 +103,7 @@ void InputMap::onJoyPress(const JoyButtonEvent& jbe)
 	if(joystickmap.find(joy) != joystickmap.end())
 	{
 		std::string action = joystickmap[joy];
-		if(!(inputMap[action]).empty())
-			(inputMap[action])();
+		//inputMap[action]();
 	}
 }
 

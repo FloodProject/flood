@@ -8,6 +8,7 @@
 
 #include "vapor/PCH.h"
 #include "vapor/resources/Resource.h"
+#include "vapor/Utilities.h"
 
 namespace vapor {
 
