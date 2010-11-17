@@ -128,39 +128,37 @@ bool File::validate(StreamMode::Enum check) const
 
 //-----------------------------------//
 
-std::vector<byte> File::read(long sz) const
+bool File::read(std::vector<byte>& data, long size) const
 {
-	std::vector<byte> buffer;
-
 	if( !(validate(StreamMode::Read) || validate(StreamMode::Append)) )
-		return buffer;
+		return false;
 
 	if( !file || PHYSFS_eof(file) ) 
-		return buffer;
+		return false;
 
-	if( sz == -1 )
-		sz = getSize() ;
-	else if ( tell()+sz > getSize() )
-		sz = getSize() - tell();
+	if( size == -1 )
+		size = getSize() ;
+	else if ( tell()+size > getSize() )
+		size = getSize() - tell();
 
-	if( sz == 0 )
-		return buffer;
+	if( size == 0 )
+		return false;
 	
-	buffer.resize(sz); 
-	PHYSFS_sint64 bytesRead = PHYSFS_read(file, &buffer[0], 1, sz); 
+	data.resize(size); 
+	PHYSFS_sint64 bytesRead = PHYSFS_read(file, &data[0], 1, size);
 
 	if(bytesRead < 0)
 	{
 		log("Could not read from file");
-		buffer;	
+		return false;	
 	}
 
-	return buffer;
+	return true;
 }
 
 //-----------------------------------//
 
-long File::read(void* buffer, long size ) const
+long File::read(void* buffer, long size) const
 {
 	if( !(validate(StreamMode::Read) || validate(StreamMode::Append)) )
 		return -1;
@@ -189,12 +187,13 @@ long File::read(void* buffer, long size ) const
 
 std::vector<std::string> File::readLines() const
 {
-	std::vector<byte> data = read();
+	std::vector<byte> data;
+	read( data );
+
 	std::string str( data.begin(), data.end() );
-	
 	std::vector<std::string> lines = String::split(str, '\n');
 	
-	// Trim excess \r fat that can be left over.
+	// Trim excess fat that can be left over.
 	foreach( std::string& str, lines )
 	{
 		if( str[str.size()-1] == '\r' )

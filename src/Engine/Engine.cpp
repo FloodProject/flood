@@ -33,6 +33,7 @@ Engine::Engine()
 	, audioDevice(nullptr)
 	, physicsManager(nullptr)
 	, scriptManager(nullptr)
+	, stream("Logs/Log.html", StreamMode::Write)
 { }
 
 //-----------------------------------//
@@ -117,8 +118,8 @@ void Engine::init( bool createWindow )
 
 void Engine::setupLogger()
 {
-	FileStream stream("Logs/Log.html");
-	log = new Logger(stream);
+	log = new Logger();
+	log->add( new LogSinkHTML(stream) );
 }
 
 //-----------------------------------//

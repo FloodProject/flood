@@ -110,17 +110,6 @@ typedef unsigned long	ulong;
 	typedef boost::thread Thread;
 #endif
 
-#if !defined(VAPOR_THREADING)
-	typedef int atomic_int;
-#elif defined(VAPOR_THREADING) && defined(VAPOR_THREADING_BOOST)
-	#include <boost/atomic.hpp>
-	typedef boost::atomic<int> atomic_int;
-#elif defined(VAPOR_THREADING) && defined(VAPOR_THREADING_STD)
-	typedef std::atomic<int> atomic_int;
-#else
-	#error
-#endif
-
 //---------------------------------------------------------------------//
 // Pointer wrappers
 //---------------------------------------------------------------------//
@@ -169,7 +158,7 @@ typedef unsigned long	ulong;
 #define TOSTRING(x) STRINGIFY(x)
 
 #define __FILE__LINE__ __FILE__ "(" TOSTRING(__LINE__) ") : "
-#define TODO( x )  message( __FILE__LINE__" TODO :   " #x "\n" ) 
+#define TODO( x )  message( __FILE__LINE__" TODO :   " #x ) 
 
 //---------------------------------------------------------------------//
 // Array and Conversion Helpers

@@ -31,8 +31,10 @@ class RenderTarget;
  * It has an associated camera that will render into the view.
  */
 
-class VAPOR_API RenderView : private boost::noncopyable
+class VAPOR_API RenderView
 {
+	DECLARE_UNCOPYABLE(RenderView)
+
 public:
 
 	RenderView();

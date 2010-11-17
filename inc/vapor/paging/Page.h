@@ -16,8 +16,10 @@ namespace vapor {
  * Pages define regions of space that can be streamed out.
  */
 
-class VAPOR_API Page : private boost::noncopyable
+class VAPOR_API Page
 {
+	DECLARE_UNCOPYABLE(Page)
+
 public:
 
 	Page();

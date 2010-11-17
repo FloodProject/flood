@@ -108,17 +108,7 @@ bool FileSystem::mount(const std::string& path, const std::string& mount, bool a
 void FileSystem::mountDefaultLocations()
 {
 	// Default filesystem mount points.
-	const std::string media( "media/" );
-
-	//std::string dirs[] = 
-	//{
-	//	"fonts",
-	//	"images",
-	//	"materials",
-	//	"meshes",
-	//	"scripts",
-	//	"sounds"
-	//};
+	const std::string media( "media" );
 
 	mount(".");
 
@@ -129,9 +119,6 @@ void FileSystem::mountDefaultLocations()
 
 	foreach( const std::string& dir, dirs )
 		mount(dir);
-
-	//foreach( const std::string& dir, dirs )
-	//	mount(media+dir);
 }
 
 //-----------------------------------//

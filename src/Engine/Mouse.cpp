@@ -89,9 +89,9 @@ bool Mouse::isButtonPressed( MouseButton::Enum button ) const
 		case MouseButton::Middle:
 			return mouseInfo.middleButton;
 		case MouseButton::Mouse4:
-			return mouseInfo.Mouse4;
+			return mouseInfo.aux1Button;
 		case MouseButton::Mouse5:
-			return mouseInfo.Mouse5;
+			return mouseInfo.aux2Button;
 	}
 
 	Log::warn( "Could not map enum: Invalid mouse button" );
@@ -171,29 +171,29 @@ void Mouse::mouseWheelMove(const MouseWheelEvent& mevt)
 
 //-----------------------------------//
 
-void Mouse::setMouseButton( MouseButton::Enum btn, bool state )
+void Mouse::setMouseButton( MouseButton::Enum button, bool state )
 {
-	switch( btn )
+	switch(button)
 	{
-		case MouseButton::Left:
-			mouseInfo.leftButton = state;
-			break;
+	case MouseButton::Left:
+		mouseInfo.leftButton = state;
+		break;
 		
-		case MouseButton::Right:
-			mouseInfo.rightButton = state;
-			break;
+	case MouseButton::Right:
+		mouseInfo.rightButton = state;
+		break;
 		
-		case MouseButton::Middle:
-			mouseInfo.middleButton = state;
-			break;
+	case MouseButton::Middle:
+		mouseInfo.middleButton = state;
+		break;
 		
-		case MouseButton::Mouse4:
-			mouseInfo.Mouse4 = state;
-			break;
+	case MouseButton::Mouse4:
+		mouseInfo.aux1Button = state;
+		break;
 		
-		case MouseButton::Mouse5:
-			mouseInfo.Mouse5 = state;
-			break;
+	case MouseButton::Mouse5:
+		mouseInfo.aux2Button = state;
+		break;
 	}
 }
 
@@ -204,8 +204,8 @@ MouseInfo::MouseInfo()
 	, leftButton(false)
 	, rightButton(false)
 	, middleButton(false)
-	, Mouse4(false)
-	, Mouse5(false)
+	, aux1Button(false)
+	, aux2Button(false)
 	, insideWindow(false)
 { }
 

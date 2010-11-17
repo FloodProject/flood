@@ -8,6 +8,8 @@
 
 #include "Core.h"
 #include "Utilities.h"
+#include "Log.h"
+
 #include <dirent.h>
 
 namespace vapor {
@@ -50,6 +52,35 @@ void System::sleep( double time )
 	timespec param;
 	param.tv_nsec = time*1000000000.0;
 	nanosleep(&param, NULL);
+#endif
+}
+
+//-----------------------------------//
+
+void System::messageDialog(const std::string& msg, LogLevel::Enum level)
+{
+#ifdef VAPOR_PLATFORM_WINDOWS
+	UINT style = MB_OK;
+
+	switch(level)
+	{
+	case LogLevel::Info:	
+		style |= MB_ICONINFORMATION; 
+		break;
+	case LogLevel::Warning:	
+		style |= MB_ICONWARNING; 
+		break;
+	case LogLevel::Error:	
+		style |= MB_ICONERROR; 
+		break;
+	}
+
+	MessageBoxA(nullptr, msg.c_str(), nullptr, style);
+#elif defined(VAPOR_PLATFORM_LINUX)
+	Log* log = getLogger();
+	log->write(level, "MessageBox", msg.c_str() );
+#else
+	#error "Missing message box implementation"
 #endif
 }
 

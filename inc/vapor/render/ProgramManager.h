@@ -29,8 +29,10 @@ struct ResourceEvent;
  * to default programs.
  */
 
-class VAPOR_API ProgramManager : public boost::noncopyable
+class VAPOR_API ProgramManager
 {
+	DECLARE_UNCOPYABLE(ProgramManager)
+
 public:
 
 	ProgramManager( ResourceManager* );

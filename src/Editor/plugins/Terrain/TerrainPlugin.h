@@ -37,8 +37,7 @@ class TerrainOperation : public UndoOperation
 {
 public:
 
-	TerrainOperation( TerrainTool::Enum tool,
-		const RayTriangleQueryResult& res );
+	TerrainOperation( TerrainTool::Enum, const RayTriangleQueryResult& );
 	
 	void undo();
 	void redo();
@@ -52,6 +51,10 @@ public:
 	void applyRaiseTool();
 	void applyPaintTool();
 
+	void getCellsInRange(const BoundingSphere&, std::vector<CellPtr>& );
+	void applyRaiseCell(const BoundingSphere&, const CellPtr& );
+
+	TerrainPtr terrain;
 	TerrainTool::Enum tool;
 	RayTriangleQueryResult rayQuery;
 
@@ -127,8 +130,8 @@ protected:
 	// Creates a new operation if there is none currently.
 	void createOperation( const RayTriangleQueryResult& res );
 
-	// Finishes the operation and registers the event in the history stack.
-	void registerEvent();
+	// Registers the operation in undo history.
+	void registerUndoOperation();
 
 	// Terrain notebook page.
 	TerrainPtr terrain;
@@ -137,7 +140,7 @@ protected:
 	TerrainPage* terrainPage;
 
 	// Holds the current terrain operation.
-	TerrainOperation* op;
+	TerrainOperation* terrainOperation;
 
 	// Current cell cordinates.
 	Vector2i coords;

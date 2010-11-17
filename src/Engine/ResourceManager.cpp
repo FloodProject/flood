@@ -174,7 +174,7 @@ void ResourceManager::decodeResource( ResourcePtr resource, bool useThreads, boo
 	task->rm = this;
 	task->notify = notify;
 
-	numResourcesQueuedLoad++;
+	numResourcesQueuedLoad.inc();
 
 	if( threadedLoading && useThreads )
 	{
@@ -191,7 +191,7 @@ void ResourceManager::loadQueuedResources()
 {
 	THREAD( boost::unique_lock<boost::mutex> lock(resourceFinishLoadMutex); )
 
-	while( numResourcesQueuedLoad > 0 )
+	while( numResourcesQueuedLoad.get() > 0 )
 	{
 		#pragma TODO("Use timed_wait and notify the observers of progress")
 
@@ -199,7 +199,7 @@ void ResourceManager::loadQueuedResources()
 		System::sleep( 0.01f );
 	}
 
-	assert( numResourcesQueuedLoad == 0 );
+	assert( numResourcesQueuedLoad.get() == 0 );
 }
 
 //-----------------------------------//

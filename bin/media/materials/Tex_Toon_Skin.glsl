@@ -1,6 +1,6 @@
 [vertex]
 
-#pragma strict
+#version 110
 
 attribute vec3 vp_Vertex;
 attribute vec3 vp_Color;
@@ -18,11 +18,11 @@ varying vec2 vp_TexCoord;
 
 void main()
 {
-	normal = vp_Normal * mat3(vp_BonesMatrix[vp_BoneIndex]) * mat3(vp_ModelMatrix);
+	normal = vp_Normal;// * mat3(vp_BonesMatrix[vp_BoneIndex]) * mat3(vp_ModelMatrix);
 	normal = normalize(normal);
 	normal = vp_Normal;
 	vp_TexCoord = vp_TexCoord0.st;
-	gl_Position = vec4(vp_Vertex, 1.0) * vp_BonesMatrix[vp_BoneIndex] * vp_ModelMatrix * vp_ViewMatrix * vp_ProjectionMatrix;
+	gl_Position = vec4(vp_Vertex, 1.0) * vp_BonesMatrix[int(vp_BoneIndex)] * vp_ModelMatrix * vp_ViewMatrix * vp_ProjectionMatrix;
 } 
 
 [fragment]
@@ -39,7 +39,7 @@ void main(void)
 	vec4 ambient = vec4(0.3,0.3,0.25,1.0);
 
 	float diffuse = dot(vec3(0.5,0.5,0.5), normal);
-	diffuse = pow((0.5*diffuse)+0.5,2);
+	//diffuse = pow((0.5*diffuse)+0.5,2);
 	
 	vec4 tex = texture2D(vp_Texture0, vp_TexCoord);
 	vec4 albedo = tex*diffuse;

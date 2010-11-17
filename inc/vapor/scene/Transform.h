@@ -50,7 +50,7 @@ public:
 	void reset();
 
 	// Gets the position of the transform.
-	GETTER(Position, const Vector3&, translation)
+	GETTER(Position, const Vector3&, position)
 
 	// Sets the position of the transform.
 	void setPosition( const Vector3& position );
@@ -100,11 +100,8 @@ public:
 	// Gets if the bounding volume need to be updated.
 	bool requiresBoundingVolumeUpdate() const;
 
-	// Sets the notify bit of the transform.
-	void setNotify();
-
-	// Unsets the notify bit of the transform.
-	void unsetNotify();
+	// Sets the notify state of the transform.
+	void setNotify(bool state = true);
 
 	// Called once per frame to update the component.
 	virtual void update( double delta );
@@ -114,20 +111,19 @@ public:
 
 protected:
 
+	// Initializes the component.
+	void init();
+
 	// Handles field changes notifications.
 	void onFieldChanged(const Field& field);
 
-	// Tracks if the transform has been changed.
-	bool needsNotify;
-
 	// Sends notifications when the transform has changed.
-	void notify();
+	void sendNotifications();
 
-	// Translation.
-	Vector3 translation;
+	// Position.
+	Vector3 position;
 
 	// Orientation.
-	//EulerAngles rotation;
 	Quaternion rotation;
 
 	// Scaling.
@@ -136,14 +132,17 @@ protected:
 	// Local transform.
 	Matrix4x3 transform;
 
+	// Tracks if the transform has been changed.
+	bool needsNotify;
+
 	// Does the bounding volume needs to be rebuilt.
 	bool needsVolumeUpdate;
 
-	// Bounding volume of the renderables.
-	BoundingBox boundingVolume;
-
 	// If an external transform is given, don't generate our own.
 	bool externalTransform;
+
+	// Bounding volume of the renderables.
+	BoundingBox boundingVolume;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Transform );

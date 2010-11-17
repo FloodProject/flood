@@ -1,16 +1,9 @@
 WIP (work-in-progress)
 ======================
 
-Core:
-
-	Fuck boost. :)
-	Fuck fd_delegates
-	Fuck boost atomics.
-
 High Priority:
 
 	Switch to a resource handle based system.
-	Switch to Stream based resource loaders.
 
 Serialization of group nodes
 Fix model debug renderable of skeleton.
@@ -19,6 +12,7 @@ Add UpdateUI event to Play button.
 Physics rotation becomes wrong due to bounding box calculation.
 Fix default animation state on skinned meshes with no animation tracks.
 Meshes with alpha values need to get blending enabled.
+Fix debug draw of bones skeleton
 
 EDITOR:
 -------
@@ -122,9 +116,6 @@ Logger:
 	
 Resource Management:
 
-	Make a Localization class, potentially integrating .po files
-	Check how the resource manager will handle missing resources
-	Create a ResourceFile class (maybe stream-based - C++ streams? )
 	Magic header resource type detection
 	Case-insensitive comparisons in map
 	

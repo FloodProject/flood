@@ -204,7 +204,7 @@ bool Terrain::validateHeightmap( const ImagePtr& heightmap )
 	// Check an embedded LUT with the valid dimensions.
 	
 	bool valid = false;
-	for( int i = 0; i < VAPOR_ARRAY_SIZE(validDimensions); i++ )
+	for( uint i = 0; i < VAPOR_ARRAY_SIZE(validDimensions); i++ )
 	{
 		if( width == validDimensions[i] ) 
 		{

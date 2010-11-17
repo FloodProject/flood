@@ -112,6 +112,6 @@
 // Scripting languages
 //---------------------------------------------------------------------//
 
-//#define VAPOR_SCRIPTING_LUA
+#define VAPOR_SCRIPTING_LUA
 
 #define VAPOR_PHYSICS_BULLET

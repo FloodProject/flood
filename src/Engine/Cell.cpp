@@ -169,31 +169,31 @@ void Cell::rebuildFaceNormals()
 #define isRegular(x,y) ((x>=1u) && (x<=(numTiles-1u)) \
 						&& (y>=1u) && (y<=(numTiles-1u)))
 
-std::vector<uint> Cell::getNeighborFaces( uint i )
+uint Cell::getNeighborFaces( uint i, std::vector<uint>& ns )
 {
-	std::vector<uint> n;
-
 	const ushort numTiles = settings.NumberTiles;
 	uint facesPerRow = numTiles*2;
 	
 	uint row = i / (numTiles+1);
 	uint col = i % (numTiles+1);
 	
+	uint n = 0;
+
 	if( isRegular(col, row) )
 	{
 		uint startFace = (row-1)*facesPerRow+(col*2);
 
-		n.push_back(startFace-1);
-		n.push_back(startFace);
-		n.push_back(startFace+1);
+		ns[n++] = startFace-1;
+		ns[n++] = startFace;
+		ns[n++] = startFace+1;
 
-		n.push_back(startFace+facesPerRow-2);
-		n.push_back(startFace+facesPerRow-1);
-		n.push_back(startFace+facesPerRow);
+		ns[n++] = startFace+facesPerRow-2;
+		ns[n++] = startFace+facesPerRow-1;
+		ns[n++] = startFace+facesPerRow;
 	}
 	else
 	{
-		n.push_back(0);
+		ns[n++] = 0;
 	}
 
 	return n;
@@ -215,16 +215,19 @@ void Cell::rebuildAveragedNormals()
 	std::vector<Vector3> normals;
 
 	Log::info( "Rebuilding average per-vertex normals of cell (%hd, %hd)", x, y );
-	
+
+	std::vector<uint> ns;
+	ns.resize(6);
+
 	for(uint i = 0; i < vs.size(); i++)
 	{
-		std::vector<uint> ns = getNeighborFaces(i);
+		uint n = getNeighborFaces(i, ns);
 
 		Vector3 average;
-		foreach( const uint& n, ns )
-			average += faceNormals[n];
+		for( uint e = 0; e < n; e++ )
+			average += faceNormals[ns[e]];
 
-		average /= ns.size();
+		average /= n;
 		average.normalize();
 
 		normals.push_back( average );

@@ -14,7 +14,7 @@ namespace vapor {
 //-----------------------------------//
 
 BoundingSphere::BoundingSphere()
-	: radius( 0.0f )
+	: radius( 0 )
 { }
 
 //-----------------------------------//
@@ -33,9 +33,27 @@ BoundingSphere::BoundingSphere( const BoundingSphere& bs )
 
 //-----------------------------------//
 
+BoundingSphere::BoundingSphere( const BoundingBox& box )
+	: center( box.getCenter() )
+	, radius( (box.getCenter()-box.max.x).length() )
+{ }
+
+//-----------------------------------//
+
 bool BoundingSphere::intersects( const Ray& ray, float& distance ) const
 {
+	assert( 0 );
 	return false;
+}
+
+//-----------------------------------//
+
+bool BoundingSphere::intersects( const BoundingSphere& sphere ) const
+{
+	Vector3 dist = center - sphere.center;
+	float minDist = radius + sphere.radius;
+
+	return dist.lengthSquared() <= minDist * minDist;
 }
 
 //-----------------------------------//

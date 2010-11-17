@@ -46,6 +46,8 @@ namespace RenderBufferType
 
 class VAPOR_API RenderBuffer : public RenderTarget
 {
+	DECLARE_UNCOPYABLE(RenderBuffer)
+
 public:
 
 	// Sets this rendering target as the current.

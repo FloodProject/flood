@@ -14,9 +14,8 @@ namespace vapor {
 //-----------------------------------//
 
 PhysfsStream::PhysfsStream(File& file)
-	: Stream(StreamMode::Read)
+	: Stream(StreamMode::Read, file.getPath())
 	, file(file)
-	//, path(file.getPath())
 { }
 
 //-----------------------------------//
@@ -42,9 +41,9 @@ long PhysfsStream::read(void* buffer, long size) const
 
 //-----------------------------------//
 
-std::vector<byte> PhysfsStream::read() const
+void PhysfsStream::read(std::vector<byte>& data) const
 {
-	return file.read();
+	file.read(data);
 }
 
 //-----------------------------------//

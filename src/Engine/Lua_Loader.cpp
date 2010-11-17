@@ -25,11 +25,11 @@ Lua_Loader::Lua_Loader()
 
 bool Lua_Loader::decode(const Stream& file, Resource* res)
 {
-	std::vector<byte> text = file.read();
-	std::string str( text.begin(), text.end() );
+	std::string text;
+	file.read(text);
 
 	Script* script = static_cast<Script*>( res );
-	script->setSource( str );
+	script->setSource( text );
 
 	return true;
 }

@@ -11,6 +11,7 @@
 #include "math/Vector3.h"
 #include "math/Matrix4x3.h"
 #include "math/Ray.h"
+#include "math/BoundingBox.h"
 
 namespace vapor {
 
@@ -27,12 +28,16 @@ public:
 	BoundingSphere();
 	BoundingSphere( const Vector3& center, float radius );
 	BoundingSphere( const BoundingSphere& bs );
+	BoundingSphere( const BoundingBox& box );
 
 	// Adds a point to the bounding sphere.
 	//void add( const Vector3& vertex );
 
 	// Intersection with a ray.
 	bool intersects( const Ray& ray, float& distance ) const;
+
+	// Intersection with a sphere.
+	bool intersects( const BoundingSphere& sphere ) const;
 
 	// Intersection with a point.
 	bool intersects( const Vector3& pt ) const;

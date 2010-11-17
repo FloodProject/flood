@@ -22,6 +22,7 @@
 #include "plugins/Project/ProjectPlugin.h"
 #include "plugins/UndoRedo/UndoPlugin.h"
 #include "plugins/Scene/ScenePlugin.h"
+#include "plugins/Log/LogPlugin.h"
 #include "plugins/Console/ConsolePlugin.h"
 #include "plugins/Resources/ResourcesPlugin.h"
 #include "plugins/Property/PropertyPlugin.h"
@@ -124,6 +125,10 @@ void EditorFrame::createPlugins()
 	pluginManager->enablePlugin( plugin );
 
 	plugin = new PropertyPlugin(this);
+	pluginManager->registerPlugin( plugin );
+	pluginManager->enablePlugin( plugin );
+
+	plugin = new LogPlugin(this);
 	pluginManager->registerPlugin( plugin );
 	pluginManager->enablePlugin( plugin );
 

@@ -14,6 +14,11 @@ namespace vapor {
 
 //-----------------------------------//
 
+RenderTarget::RenderTarget()
+{ }
+
+//-----------------------------------//
+
 RenderTarget::~RenderTarget()
 {
 	foreach( const RenderView* view, views )

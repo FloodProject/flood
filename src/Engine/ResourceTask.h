@@ -54,7 +54,7 @@ public:
 			rm->resourceTaskEvents.push(event);
 		}
 
-		rm->numResourcesQueuedLoad--;
+		rm->numResourcesQueuedLoad.dec();
 		THREAD( rm->resourceFinishLoad.notify_one(); )
 
 		Log::info("Loaded resource '%s'", path.c_str());

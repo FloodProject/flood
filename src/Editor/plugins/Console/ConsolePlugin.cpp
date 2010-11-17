@@ -8,9 +8,10 @@
 
 #include "PCH.h"
 #include "ConsolePlugin.h"
+#include "ConsoleFrame.h"
+
 #include "Editor.h"
 #include "EditorIcons.h"
-#include "ConsoleFrame.h"
 
 namespace vapor { namespace editor {
 

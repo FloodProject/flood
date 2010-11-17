@@ -16,8 +16,6 @@ namespace vapor {
 
 struct TerrainSettings;
 
-//-----------------------------------//
-
 /**
  * Cells are pieces of terrain geometry. They are further subdivided in 
  * cells, that are conceptually similar to tiles in 2D games, and allow
@@ -25,12 +23,15 @@ struct TerrainSettings;
  * integer coordinates.
  */
 
-class VAPOR_API Cell : public Renderable, private boost::noncopyable
+class VAPOR_API Cell : public Renderable
 {
+	DECLARE_UNCOPYABLE(Cell)
+
 public:
 
 	Cell( const TerrainSettings& settings, 
-		  const std::vector<float>& heights, short x, short y );
+		  const std::vector<float>& heights,
+		  short x, short y );
 
 	// Gets the heights of this Cell of terrain.
 	const std::vector<float>& getHeights();
@@ -45,7 +46,7 @@ public:
 	void rebuildNormals();
 
 	// Given an indice, gets the neighbour vertices.
-	std::vector<uint> getNeighborFaces( uint index );
+	uint getNeighborFaces( uint index, std::vector<uint>& n );
 
 	// Gets the X coordinate of the cell.
 	GETTER(X, short, x)

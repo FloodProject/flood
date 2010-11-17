@@ -19,15 +19,28 @@ Plane::Plane()
 
 //-----------------------------------//
 
-Plane::Plane( const Vector3& p1, const Vector3& p2, const Vector3& p3 )
-{ }
+Plane::Plane( const Vector3& _normal, const Vector3& point )
+	: normal(_normal)
+{
+	normal.normalize();
+	offset = -normal.dot(point);
+}
 
 //-----------------------------------//
 
-Plane::Plane( const Vector3& normal, float distance )
-	: normal(normal)
+Plane::Plane( const Vector3& _normal, float distance )
+	: normal(_normal)
 	, offset(distance)
-{ }
+{
+	normal.normalize();
+}
+
+//-----------------------------------//
+
+Vector3 Plane::project(const Vector3& vec)
+{
+	return vec - normal*vec.dot(normal);
+}
 
 //-----------------------------------//
 

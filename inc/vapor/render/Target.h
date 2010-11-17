@@ -58,10 +58,13 @@ public:
  * Each render target mantains a list of viewports 
  */
 
-class VAPOR_API RenderTarget : private boost::noncopyable
+class VAPOR_API RenderTarget
 {
+	DECLARE_UNCOPYABLE(RenderTarget)
+
 public:
 
+	RenderTarget();
 	virtual ~RenderTarget();
 
 	// Creates a new view and adds it to this target.

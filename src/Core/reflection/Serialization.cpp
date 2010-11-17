@@ -32,10 +32,11 @@ bool Serializer::openFromFile( const std::string& name )
 	if( !file.open() )
 		return false;
 
-	std::string str = file.readString();
+	std::string text;
+	file.read(text);
 
 	Json::Reader jsonReader;
-	bool success = jsonReader.parse(str, rootValue, false);
+	bool success = jsonReader.parse(text, rootValue, false);
 	
 	return success;
 }

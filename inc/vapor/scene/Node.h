@@ -35,10 +35,10 @@ typedef std::pair< const Class*, ComponentPtr > ComponentMapPair;
  * make it react to the world gravity and make it obey the physics laws.
  */
 
-class VAPOR_API Node : private boost::noncopyable, public std::enable_shared_from_this<Node>
-	
+class VAPOR_API Node : public std::enable_shared_from_this<Node>
 {
 	DECLARE_CLASS_()
+	DECLARE_UNCOPYABLE(Node)
 
 public:
 

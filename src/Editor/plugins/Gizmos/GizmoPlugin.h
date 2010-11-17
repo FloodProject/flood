@@ -70,7 +70,7 @@ protected:
 	bool isTool(GizmoTool::Enum mode);
 
 	// Unselects (and can also reselect) nodes (and their gizmos).
-	void GizmoPlugin::unselectNodes(bool reselect = false);
+	void unselectNodes(bool reselect = false);
 
 	// Creates a new gizmo for the given node.
 	void createGizmo( const NodePtr& node );
@@ -87,8 +87,17 @@ protected:
 	// Performs bounding-box based ray picking.
 	bool pickBoundingTest( const MouseMoveEvent& event );
 
-	// Performs pixel-color based picking.
+	// Performs color based pixel picking.
 	bool pickImageTest( const MouseMoveEvent& event, GizmoAxis::Enum& axis );
+
+	// Gets the best plane for pick intersection.
+	Plane getGizmoPickPlane();
+
+	// Gets the point picked on the intersection plane.
+	bool getGizmoPickPoint(int x, int y, Vector3& pickPoint);
+
+	// Gets the node picked by the ray.
+	bool getGizmoPickNode(int x, int y, NodePtr& node);
 
 	// Current Gizmo tool.
 	GizmoTool::Enum tool;
@@ -99,8 +108,13 @@ protected:
 	// Current Gizmo axis selection.
 	GizmoAxis::Enum axis;
 
+	// Current gizmo pick point.
+	Vector3 firstPickPoint;
+
 	// Current gizmo operation.
 	GizmoOperation* op;
+
+	RenderablePtr planeDebug;
 	
 	// Editor scene.
 	ScenePtr editorScene;

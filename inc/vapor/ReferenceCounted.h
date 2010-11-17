@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "Atomic.h"
+
 namespace vapor {
 
 //-----------------------------------//
@@ -22,7 +24,7 @@ class VAPOR_API ReferenceCounted
 {
 public:
 
-	GETTER(ReferenceCount, int, references)
+	GETTER(ReferenceCount, uint, references.get())
 
 protected:
 	
@@ -35,7 +37,7 @@ protected:
 
 private:
 
-	atomic_int references;
+	mutable Atomic references;
 
 	friend void intrusive_ptr_add_ref(ReferenceCounted* const ptr);
 	friend void intrusive_ptr_release(ReferenceCounted* const ptr);
@@ -45,28 +47,16 @@ private:
 
 inline void intrusive_ptr_add_ref(ReferenceCounted* const ptr)
 {
-	// Increment reference count of object.
-#if !defined(VAPOR_THREADING)
-	++(ptr->references);
-#else
-	ptr->references.fetch_add(1);
-#endif
+	ptr->references.inc();
 }
 
 //-----------------------------------//
 
 inline void intrusive_ptr_release(ReferenceCounted* const ptr)
 {
-	// Decrement reference count.
 	// Delete object when reference count reaches 0.
-#if !defined(VAPOR_THREADING)
-	if (--(ptr->references) == 0)
+	if(ptr->references.dec() == 0)
 		delete ptr;
-#else
-	// fetch returns the old value, so should be 1.
-	if(ptr->references.fetch_sub(1) == 1)
-		delete ptr;
-#endif
 }
 
 //-----------------------------------//

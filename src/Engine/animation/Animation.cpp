@@ -99,7 +99,7 @@ Matrix4x3 Animation::getKeyFrameMatrix(const BonePtr& bone, double time)
 		const KeyFrame& keyRight = boneKeyFrames[endIndex];
 
 		float timeDelta = keyRight.time - keyLeft.time;
-		float interpolator = (time - keyLeft.time) / timeDelta;
+		float interpolator = ((float) time - keyLeft.time) / timeDelta;
 
 		position = keyLeft.position.lerp(keyRight.position, interpolator);
 		

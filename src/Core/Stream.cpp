@@ -13,8 +13,9 @@ namespace vapor {
 
 //-----------------------------------//
 
-Stream::Stream(StreamMode::Enum mode)
+Stream::Stream(StreamMode::Enum mode, const std::string& path)
   : mode(mode)
+  , path(path)
 { }
 
 //-----------------------------------//
@@ -31,11 +32,12 @@ void Stream::close()
 
 //-----------------------------------//
 
-std::string Stream::readString() const
+void Stream::read(std::string& str) const
 {
-	std::vector<byte> lines = read();
-	std::string str( lines.begin(), lines.end() );
-	return str;
+	std::vector<byte> lines;
+	read(lines);
+
+	str.assign( lines.begin(), lines.end() );
 }
 
 //-----------------------------------//

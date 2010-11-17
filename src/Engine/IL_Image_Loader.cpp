@@ -49,7 +49,8 @@ IL_Image_Loader::~IL_Image_Loader()
 
 bool IL_Image_Loader::decode(const Stream& stream, Resource* res)
 {
-	std::vector<byte> data = stream.read();
+	std::vector<byte> data;
+	stream.read(data);
 
 	if( data.empty() ) 
 		return false;

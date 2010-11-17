@@ -82,9 +82,11 @@ struct VAPOR_API ResourceGroup
  * resource from a network connection).
  */
 
-class VAPOR_API Resource : public ReferenceCounted, private boost::noncopyable
+class VAPOR_API Resource : public ReferenceCounted
 {
 	DECLARE_CLASS_()
+	DECLARE_UNCOPYABLE(Resource)
+
 
 public:
 

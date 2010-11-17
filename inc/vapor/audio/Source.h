@@ -32,8 +32,10 @@ namespace vapor { namespace audio {
 class Buffer;
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Buffer );
 
-class VAPOR_API Source : private boost::noncopyable
+class VAPOR_API Source
 {
+	DECLARE_UNCOPYABLE(Source)
+
 public:
 
 	Source( std::shared_ptr<audio::Context> context, SoundPtr sound );

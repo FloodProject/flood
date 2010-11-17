@@ -34,11 +34,11 @@ Resource* GLSL_Loader::prepare(const Stream& stream)
 
 bool GLSL_Loader::decode(const Stream& file, Resource* res)
 {
-	std::vector<byte> text = file.read();
-	std::string str( text.begin(), text.end() );
+	std::string text;
+	file.read(text);
 
 	GLSL_Text* shader = static_cast<GLSL_Text*>(res);
-	shader->setText( str );
+	shader->setText( text );
 	shader->parse();
 
 	return true;

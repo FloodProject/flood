@@ -23,8 +23,6 @@ namespace vapor {
 
 struct TerrainSettings
 {
-	//DECLARE_CLASS_();
-
 	TerrainSettings()
 		: CellSize(512)
 		, NumberTiles(16)
@@ -90,8 +88,11 @@ public:
 	// Gets a cell from its terrain coords.
 	CellPtr getCell( short x, short y );
 
+	// Gets the cells of the terrain.
+	GETTER(Cells, const std::vector<CellPtr>&, terrainCells)
+
 	// Gets a cell from its world space coords.
-	Vector2i getCoords( const Vector3& pt );
+	Vector2i getCoords( const Vector3& point );
 
 	// Converts the heightmap to a vector of heights.
 	void convertHeightmap( const ImagePtr& heightmap, std::vector<float>& heights );

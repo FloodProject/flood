@@ -25,7 +25,6 @@ class VAPOR_API FileStream : public Stream
 public:
 
 	FileStream(const std::string& path, StreamMode::Enum mode = StreamMode::Read);
-	FileStream(const char* path, StreamMode::Enum mode = StreamMode::Read);
 	virtual ~FileStream();
 
 	// Opens the file.
@@ -38,7 +37,7 @@ public:
 	long read(void* buffer, long size) const;
 
 	// Read entire file.
-	std::vector<byte> read() const;
+	void read(std::vector<byte>& data) const;
 
 	// Write buffer into file.
 	long write(const std::vector<byte>& buf);
@@ -57,10 +56,11 @@ public:
 
 	// Gets the internal pointer of the file.
 	FILE* getFilePointer();
+
+	using Stream::read;
 	
 protected:
 
-	std::string path;
 	FILE* fp;
 };
 

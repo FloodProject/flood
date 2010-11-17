@@ -26,9 +26,7 @@ GizmoPlugin::GizmoPlugin( EditorFrame* frame )
 	: Plugin(frame)
 	, editorScene(frame->getEditorScene())
 	, op(nullptr)
-{
-	assert( editorScene != nullptr );
-}
+{ }
 
 //-----------------------------------//
 
@@ -134,6 +132,8 @@ void GizmoPlugin::unselectNodes(bool reselect)
 
 void GizmoPlugin::onNodeSelect( const NodePtr& node )
 {
+	editor->redrawView();
+
 	unselectNodes();
 
 	if( isTool(GizmoTool::Camera) )
@@ -144,16 +144,13 @@ void GizmoPlugin::onNodeSelect( const NodePtr& node )
 	if( isTool(GizmoTool::Select) )
 	{
 		gizmos[node] = NodePtr();
+		return;
 	}
-	else
-	{
-		bool gizmoExists = gizmos.find(node) != gizmos.end();
 	
-		if( !gizmoExists )
+	bool gizmoExists = gizmos.find(node) != gizmos.end();
+	
+	if( !gizmoExists )
 			createGizmo( node );
-	}
-
-	editor->redrawView();
 }
 
 //-----------------------------------//
@@ -164,6 +161,85 @@ void GizmoPlugin::onNodeUnselect( const NodePtr& node )
 	removeGizmo( node );
 
 	editor->redrawView();
+}
+
+//-----------------------------------//
+
+Plane GizmoPlugin::getGizmoPickPlane()
+{
+	const NodePtr nodeObject( op->weakNode );
+	const TransformPtr& transObject = nodeObject->getTransform();
+
+	Vector3 gizmoAxis = gizmo->getAxisVector(op->axis);
+	Vector3 gizmoPosition = transObject->getPosition();
+	
+	Plane planeX( Vector3::UnitX, gizmoPosition.x );
+	Plane planeY( Vector3::UnitY, gizmoPosition.y );
+	Plane planeZ( Vector3::UnitZ, gizmoPosition.z );
+
+	RenderView* renderView = viewframe->getView();
+	const CameraPtr& camera = renderView->getCamera();
+	
+	Vector2i viewCenter = renderView->getSize() / 2.0f;
+	Ray ray = camera->getRay(viewCenter.x, viewCenter.y);
+	
+	float lengthX = planeX.project(ray.direction).lengthSquared();
+	float lengthY = planeY.project(ray.direction).lengthSquared();
+	float lengthZ = planeZ.project(ray.direction).lengthSquared();
+
+	if( lengthX < lengthY && lengthX < lengthZ )
+		return planeX;
+	else if( lengthY < lengthX && lengthY < lengthZ )
+		return planeY;
+	else
+		return planeZ;
+}
+
+//-----------------------------------//
+
+bool GizmoPlugin::getGizmoPickPoint(int x, int y, Vector3& pickPoint)
+{
+	RenderView* renderView = viewframe->getView();
+	const CameraPtr& camera = renderView->getCamera();	
+
+	Plane pickPlane = getGizmoPickPlane();	
+	Ray ray = camera->getRay(x, y);
+	
+	float distance;
+	if( !pickPlane.intersects(ray, distance) )
+		return false;
+
+	pickPoint = ray.getPoint(distance);
+	
+	return true;
+}
+
+//-----------------------------------//
+
+bool GizmoPlugin::getGizmoPickNode(int x, int y ,NodePtr& node)
+{
+	RenderView* view = viewframe->getView();
+	const CameraPtr& camera = view->getCamera();
+	const ScenePtr& scene = engine->getSceneManager();
+
+	// Get a ray given the screen location clicked.
+	Vector3 outFar;
+	const Ray& pickRay = camera->getRay( x, y, &outFar );
+
+#if 0 // Enable this to draw debugging lines
+	const NodePtr& line = buildRay( pickRay, outFar );
+	editor->getEditorScene()->add( line );
+#endif
+
+	// Perform ray casting to find the nodes.
+	RayBoxQueryResult res;
+
+	if( !scene->doRayBoxQuery(pickRay, res) )
+		return false;
+
+	node = res.node;
+
+	return true;
 }
 
 //-----------------------------------//
@@ -205,41 +281,30 @@ void GizmoPlugin::onMouseMove( const MouseMoveEvent& moveEvent )
 
 void GizmoPlugin::onMouseDrag( const MouseDragEvent& dragEvent )
 {
-	//if( isTool(GizmoTool::Camera) )
-	//{
-	//	RenderView* view = viewframe->getView();
-	//	CameraPtr camera = view->getCamera();
-	//	NodePtr nodeCamera = camera->getNode();
-	//	TransformPtr transCamera = nodeCamera->getTransform();
-	//	transCamera->translate( dragEvent.dx, dragEvent.dy, 0 );
-	//	return;
-	//}
-
 	if( !gizmo || !gizmo->isAnyAxisSelected() )
 		return;
 
 	if( !op )
 		return;
+	
+	Vector3 pickPoint;
+	
+	if( !getGizmoPickPoint(dragEvent.x, dragEvent.y, pickPoint) )
+		return;
 
-	Vector3 unit = gizmo->getAxisVector(op->axis);
+	Vector3 pickAxis = gizmo->getAxisVector(op->axis);
+	Vector3 pickOffset = pickAxis.project(pickPoint - firstPickPoint);
 
-	if( axis == GizmoAxis::X )
-		unit *= dragEvent.dx;
-
-	else if( axis == GizmoAxis::Y )
-		unit *= dragEvent.dy;
-
-	else if( axis == GizmoAxis::Z )
-		unit *= dragEvent.dx;
-
-	// Transform the object.
 	const NodePtr nodeObject( op->weakNode );
 	const TransformPtr& transObject = nodeObject->getTransform();
-
+	
 	if( isTool(GizmoTool::Translate) )
-		transObject->translate( unit );
-	else if( isTool(GizmoTool::Scale) )
-		transObject->scale( Vector3(1, 1, 1)+unit*0.05f );
+		transObject->translate( (pickPoint - firstPickPoint)*pickAxis );
+
+	firstPickPoint = pickPoint;
+
+	//else if( isTool(GizmoTool::Scale) )
+		//transObject->scale( Vector3(1, 1, 1)+unit*0.05f );
 
 	op->scale = transObject->getScale();
 	op->rotation = transObject->getRotation();
@@ -257,37 +322,21 @@ void GizmoPlugin::onMouseButtonPress( const MouseButtonEvent& mbe )
 
 	if( mbe.button != MouseButton::Left )
 		return;
-
+	
 	if( gizmo && gizmo->isAnyAxisSelected() )
+	{
+		getGizmoPickPoint(mbe.x, mbe.y, firstPickPoint);
+		return;
+	}
+	
+	unselectNodes();
+
+	NodePtr node;
+	if( !getGizmoPickNode(mbe.x, mbe.y, node) )
 		return;
 
-	RenderView* view = viewframe->getView();
-	const CameraPtr& camera = view->getCamera();
-	const ScenePtr& scene = engine->getSceneManager();
-
-	// Get a ray given the screen location clicked.
-	Vector3 outFar;
-	const Ray& pickRay = camera->getRay( mbe.x, mbe.y, &outFar );
-
-#if 0 // Enable this to draw debugging lines
-	const NodePtr& line = buildRay( pickRay, outFar );
-	editor->getEditorScene()->add( line );
-#endif
-
-	// Perform ray casting to find the nodes.
-	RayBoxQueryResult res;
-
-	if( scene->doRayBoxQuery(pickRay, res) )
-	{
-		unselectNodes();
-		
-		Events* events = editor->getEventManager();
-		events->onNodeSelect(res.node);
-	}
-	else
-	{
-		unselectNodes();
-	}
+	Events* events = editor->getEventManager();
+	events->onNodeSelect(node);
 }
 
 //-----------------------------------//
@@ -325,6 +374,8 @@ void GizmoPlugin::createGizmo( const NodePtr& node )
 
 	else if( isTool(GizmoTool::Scale) )
 		newGizmo = new GizmoScale(node, camera);
+
+	else assert( 0 && "Unknown gizmo tool" );
 
 	gizmo.reset(newGizmo);
 	gizmo->buildGeometry();

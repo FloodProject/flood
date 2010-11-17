@@ -29,8 +29,10 @@ typedef std::list< std::string > ExtensionList;
  * The loader also provides the extensions of those formats.
  */
 
-class VAPOR_API ResourceLoader : private boost::noncopyable
+class VAPOR_API ResourceLoader
 {
+	DECLARE_UNCOPYABLE(ResourceLoader)
+
 public:
 
 	ResourceLoader() {}

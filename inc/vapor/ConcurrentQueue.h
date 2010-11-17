@@ -20,7 +20,7 @@ namespace vapor {
  */
 
 template<typename T>
-class concurrent_queue
+class VAPOR_API concurrent_queue
 {
 public:
 

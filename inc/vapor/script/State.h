@@ -27,8 +27,10 @@ class Engine;
  * Currently this represents a Lua interpreter state. 
  */
 
-class VAPOR_API State : private boost::noncopyable
+class VAPOR_API State
 {
+	DECLARE_UNCOPYABLE(State)
+
 public:
 
 	// Constructs a new scripting VM.

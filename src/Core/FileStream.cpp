@@ -25,16 +25,7 @@ namespace vapor {
 //-----------------------------------//
 
 FileStream::FileStream(const std::string& path, StreamMode::Enum mode)
-  : Stream(mode)
-  , path(path)
-  , fp(nullptr)
-{ }
-
-//-----------------------------------//
-
-FileStream::FileStream(const char* path, StreamMode::Enum mode)
-  : Stream(mode)
-  , path(path)
+  : Stream(mode, path)
   , fp(nullptr)
 { }
 
@@ -90,17 +81,14 @@ long FileStream::read(void* buffer, long size) const
 
 //-----------------------------------//
 
-std::vector<byte> FileStream::read() const
+void FileStream::read(std::vector<byte>& data) const
 {
 	long size = getSize();
 
-	std::vector<byte> data;
 	data.resize(size);
 
 	if(size > 0)
 		read(&data.front(), size);
-
-	return data;
 }
 
 //-----------------------------------//

@@ -36,10 +36,13 @@ namespace InputDeviceType
  * Base struct for input events.
  */
 
-struct VAPOR_API InputEvent : private boost::noncopyable
+struct VAPOR_API InputEvent
 {
-	InputEvent( InputDeviceType::Enum );
+	DECLARE_UNCOPYABLE(InputEvent)
 
+public:
+
+	InputEvent( InputDeviceType::Enum );
 	InputDeviceType::Enum deviceType;
 };
 
@@ -49,10 +52,13 @@ struct VAPOR_API InputEvent : private boost::noncopyable
  * Input device.
  */
 
-class VAPOR_API InputDevice : private boost::noncopyable
+class VAPOR_API InputDevice
 {
+	DECLARE_UNCOPYABLE(InputDevice)
+
 public:
 
+	InputDevice() {}
 	virtual ~InputDevice() {}
 
 	// Processes an event.

@@ -35,14 +35,14 @@ public:
 	virtual long read(void* buffer, long size) const;
 
 	// Reads the entire stream.
-	virtual std::vector<byte> read() const;
+	virtual void read(std::vector<byte>& data) const;
 
 	// Writes a buffer into the stream.
 	virtual long write(const std::vector<byte>& buffer);
 
 protected:
 
-	File& file;
+	mutable File& file;
 };
 
 //-----------------------------------//

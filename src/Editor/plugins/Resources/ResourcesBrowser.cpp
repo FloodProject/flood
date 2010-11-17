@@ -115,16 +115,17 @@ bool ResourcesBrowser::loadCache()
 		return false;
 	}
 
-	std::string str = file.readString();
+	std::string text;
+	file.read(text);
 
 	Json::Value root;
 	Json::Reader reader;
 	
-	if( !reader.parse(str, root, false) )
+	if( !reader.parse(text, root, false) )
 		return false;
 
 	uint i = 0;
-	for( ; i < root.size(); i++ )
+	while( i++ < root.size() )
 	{
 		if( !root.isValidIndex(i) )
 			continue;
@@ -235,7 +236,11 @@ void ResourcesBrowser::scanFiles()
 			break;
 
 		File file(path);
-		uint hash = Hash::Murmur2( file.read(), 0xBEEF );
+		
+		std::vector<byte> data;
+		file.read(data);
+
+		uint hash = Hash::Murmur2( data, 0xBEEF );
 		
 		if( resourcesCache.find(hash) != resourcesCache.end() )
 			continue;

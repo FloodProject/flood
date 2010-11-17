@@ -18,8 +18,10 @@ namespace vapor {
  * implement the main services provided by the engine.
  */
 
-class VAPOR_API Subsystem : private boost::noncopyable
+class VAPOR_API Subsystem
 {
+	DECLARE_UNCOPYABLE(Subsystem)
+
 	friend class Engine;
 
 public:

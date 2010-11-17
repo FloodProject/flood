@@ -17,24 +17,24 @@ namespace vapor {
 //-----------------------------------//
 
 /**
- * Holds all the mouse state.
+ * Holds the mouse state.
  */
 
 struct VAPOR_API MouseInfo
 {
 	MouseInfo();
 
+	// Position state.
 	short x;
 	short y;
+	bool insideWindow;
 	
+	// Buttons state.
 	bool leftButton;
 	bool rightButton;
 	bool middleButton;
-	
-	bool Mouse4;
-	bool Mouse5;
-	
-	bool insideWindow;
+	bool aux1Button;
+	bool aux2Button;
 };
 
 //-----------------------------------//
@@ -55,17 +55,25 @@ public:
 	// Return this device as a mouse.
 	GETTER(Type, const InputDeviceType::Enum, InputDeviceType::Mouse)
 
-	// Events
-
+	// Mouse move event.
 	Event1< const MouseMoveEvent& > onMouseMove;
+
+	// Mouse drag event.
 	Event1< const MouseDragEvent& > onMouseDrag;
 	
+	// Mouse button press event.
 	Event1< const MouseButtonEvent& > onMouseButtonPress;
+	
+	// Mouse button release event.
 	Event1< const MouseButtonEvent& > onMouseButtonRelease;
 	
+	// Mouse wheel move event.
 	Event1< const MouseWheelEvent& > onMouseWheelMove;
 	
+	// Mouse enter window event.
 	Event0<> onMouseEnter;
+
+	// Mouse exit window event.
 	Event0<> onMouseExit;
 
 private:

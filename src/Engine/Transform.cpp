@@ -7,17 +7,17 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/math/Math.h"
-#include "vapor/scene/Node.h"
-#include "vapor/scene/Transform.h"
-#include "vapor/render/DebugGeometry.h"
+#include "scene/Transform.h"
+#include "scene/Node.h"
+#include "render/DebugGeometry.h"
+#include "math/Math.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
 BEGIN_CLASS_PARENT(Transform, Component)
-	FIELD_PRIMITIVE(Transform, Vector3, translation)
+	FIELD_PRIMITIVE(Transform, Vector3, position)
 	FIELD_PRIMITIVE(Transform, Quaternion, rotation)
 	FIELD_PRIMITIVE(Transform, Vector3, scaling)
 END_CLASS()
@@ -25,43 +25,47 @@ END_CLASS()
 //-----------------------------------//
 
 Transform::Transform( float x, float y, float z )
-	: scaling( 1.0f )
-	, translation( x, y, z )
-	, needsNotify( false )
-	, needsVolumeUpdate( true )
-	, externalTransform( false )
+	: position( x, y, z )
+	, scaling( 1.0f )
 {
-	Class& klass = getType();
-	klass.onFieldChanged.Connect( this, &Transform::onFieldChanged );
+	init();
 }
 
 //-----------------------------------//
 
 Transform::Transform( const Transform& rhs )
-	: scaling( rhs.scaling )
-	, translation( rhs.translation )
+	: position( rhs.position )
 	, rotation( rhs.rotation )
-	, needsNotify( false )
-	, needsVolumeUpdate( false )
-	, externalTransform( false )
+	, scaling( rhs.scaling )
 {
-	Class& klass = getType();
-	klass.onFieldChanged.Connect( this, &Transform::onFieldChanged );
+	init();
 }
 
 //-----------------------------------//
 
 Transform::~Transform()
 {
-	Class& klass = getType();
-	klass.onFieldChanged.Disconnect( this, &Transform::onFieldChanged );
+	Class& type = getType();
+	type.onFieldChanged.Disconnect( this, &Transform::onFieldChanged );
 }
 
 //-----------------------------------//
 
-void Transform::translate( const Vector3& tr )
+void Transform::init()
 {
-	translate( tr.x, tr.y, tr.z );
+	needsNotify = false;
+	needsVolumeUpdate = true;
+	externalTransform = false;
+
+	Class& type = getType();
+	type.onFieldChanged.Connect( this, &Transform::onFieldChanged );
+}
+
+//-----------------------------------//
+
+void Transform::translate( const Vector3& offset )
+{
+	translate( offset.x, offset.y, offset.z );
 }
 
 //-----------------------------------//
@@ -70,23 +74,23 @@ void Transform::translate( float x, float y, float z )
 {
 	setNotify();
 
-	translation.x += x;
-	translation.y += y;
-	translation.z += z;
+	position.x += x;
+	position.y += y;
+	position.z += z;
 }
 
 //-----------------------------------//
 
-void Transform::scale( float uniform )
+void Transform::scale( float value )
 {
-	scale( uniform, uniform, uniform );
+	scale( value, value, value );
 }
 
 //-----------------------------------//
 
-void Transform::scale( const Vector3& s )
+void Transform::scale( const Vector3& value )
 {
-	scale( s.x, s.y, s.z );
+	scale( value.x, value.y, value.z );
 }
 
 //-----------------------------------//
@@ -123,7 +127,7 @@ void Transform::rotate( float xang, float yang, float zang )
 void Transform::setPosition( const Vector3& newTranslation )
 {
 	setNotify();
-	translation = newTranslation;
+	position = newTranslation;
 }
 
 //-----------------------------------//
@@ -153,7 +157,7 @@ Vector3 Transform::getWorldPosition() const
 
 Matrix4x3 Transform::lookAt( const Vector3& lookAtVector, const Vector3& upVector )
 {
-	const Vector3& eye = translation;
+	const Vector3& eye = position;
 
 	Vector3 zaxis = (eye - lookAtVector).normalize();
 	Vector3	xaxis = upVector.cross(zaxis).normalize();
@@ -185,23 +189,16 @@ void Transform::reset( )
 {
 	setNotify();
 
-	translation.zero();
-	scaling = Vector3( 1.0f );
+	position.zero();
 	rotation.identity();
+	scaling = Vector3( 1.0f );
 }
 
 //-----------------------------------//
 
-void Transform::setNotify()
+void Transform::setNotify(bool state)
 {
-	needsNotify = true;
-}
-
-//-----------------------------------//
-
-void Transform::unsetNotify()
-{
-	needsNotify = false;
+	needsNotify = state;
 }
 
 //-----------------------------------//
@@ -226,9 +223,9 @@ Matrix4x3 Transform::getLocalTransform() const
 {
 	Matrix4x3 matScale = Matrix4x3::createScale(scaling);
 	Matrix4x3 matRotation = Matrix4x3::createFromQuaternion(rotation);
-	Matrix4x3 matTranslation = Matrix4x3::createTranslation(translation);
+	Matrix4x3 matTranslation = Matrix4x3::createTranslation(position);
+	
 	Matrix4x3 matTransform = matScale*matRotation*matTranslation;
-
 	return matTransform;
 }
 
@@ -270,7 +267,7 @@ void Transform::updateBoundingVolume()
 
 //-----------------------------------//
 
-void Transform::update( double VAPOR_UNUSED(delta) )
+void Transform::update( double delta )
 {
 	if( !externalTransform )
 		transform = getLocalTransform();
@@ -280,8 +277,8 @@ void Transform::update( double VAPOR_UNUSED(delta) )
 
 	if( needsNotify )
 	{
-		notify();
-		unsetNotify();
+		sendNotifications();
+		setNotify(false);
 	}
 
 	externalTransform = false;
@@ -289,7 +286,7 @@ void Transform::update( double VAPOR_UNUSED(delta) )
 
 //-----------------------------------//
 
-void Transform::notify()
+void Transform::sendNotifications()
 {
 	onTransform();
 }

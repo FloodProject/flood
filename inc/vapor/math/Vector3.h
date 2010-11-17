@@ -183,6 +183,14 @@ public:
 	}
 
 	//-----------------------------------//
+
+	// Projects the vector and returns the result.
+	Vector3T project(const Vector3T& v) const
+	{
+		return v * dot(v) / length();
+	}
+
+	//-----------------------------------//
 	
 	// Linear interpolation between two vectors.
 	// Note: blend should be from 0.0 to 1.0.

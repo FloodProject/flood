@@ -22,6 +22,9 @@ namespace System
 	// Swaps the endianness of a long.
 	long swapEndian(long i);
 
+	// Shows a message box dialog.
+	void messageDialog(const std::string& msg, LogLevel::Enum = LogLevel::Warning);
+	
 	// Sleeps for a specified ammount of time.
 	void sleep( double time );
 

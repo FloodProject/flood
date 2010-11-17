@@ -30,9 +30,10 @@ TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( Node )
  * A component will also be able to register methods for scripting.
  */
 
-class VAPOR_API Component : private boost::noncopyable
+class VAPOR_API Component
 {
 	DECLARE_CLASS_()
+	DECLARE_UNCOPYABLE(Component)
 
 public:
 

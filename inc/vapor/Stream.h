@@ -52,10 +52,10 @@ public:
 	virtual long read(void* buffer, long size) const = 0;
 
 	// Reads the entire stream.
-	virtual std::vector<byte> read() const = 0;
+	virtual void read(std::vector<byte>& data) const = 0;
 
 	// Reads the entire stream as a string.
-	virtual std::string readString() const;
+	virtual void read(std::string& string) const;
 
 	// Writes a buffer into the stream.
 	virtual long write(const std::vector<byte>& buffer) = 0;
@@ -68,9 +68,12 @@ public:
 
 protected:
 
-	Stream(StreamMode::Enum mode);
+	Stream(StreamMode::Enum mode, const std::string& path);
 
+	// Access mode of the stream.
 	StreamMode::Enum mode;
+
+	// Path of the stream.
 	std::string	path;
 };
 

@@ -136,7 +136,7 @@ protected:
 	concurrent_queue<ResourceEvent> resourceTaskEvents;
 
 	// Number of resources queued for loading.
-	atomic_int numResourcesQueuedLoad;
+	Atomic numResourcesQueuedLoad;
 
 	// Global setting to override threaded loading.
 	bool threadedLoading;

@@ -51,8 +51,10 @@ class TextureManager;
 
 typedef std::map<LightPtr, TexturePtr> ShadowTextureMap;
 
-class VAPOR_API RenderDevice : private boost::noncopyable
+class VAPOR_API RenderDevice
 {
+	DECLARE_UNCOPYABLE(RenderDevice)
+
 public:
 
 	RenderDevice( ResourceManager* );

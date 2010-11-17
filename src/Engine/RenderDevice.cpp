@@ -96,7 +96,7 @@ void RenderDevice::checkExtensions()
 	if( !GLEW_VERSION_2_0 )
 	{
 		const char* str = "You need at least OpenGL 2.0 to run this.";
-		Log::messageDialog( str, LogLevel::Error );
+		System::messageDialog( str, LogLevel::Error );
 		exit( -1 );
 	}
 }

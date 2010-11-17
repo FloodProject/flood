@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "vapor/math/Vector3.h"
-#include "vapor/math/EulerAngles.h"
-#include "vapor/math/Matrix4x3.h"
+#include "math/Vector3.h"
+#include "math/EulerAngles.h"
+#include "math/Matrix4x3.h"
 
 FWD_DECL_INTRUSIVE(Mesh)
 FWD_DECL_INTRUSIVE(Bone)
@@ -23,8 +23,13 @@ namespace vapor {
 
 struct KeyFrame
 {
+	// Time of the frame.
 	float time;
+
+	// Position of the frame.
 	Vector3 position;
+
+	// Rotation of the frame.
 	EulerAngles rotation;
 };
 

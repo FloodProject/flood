@@ -26,7 +26,6 @@ class AudioDevice;
 class PhysicsManager;
 class PageManager;
 class InputManager;
-class FileSystem;
 class ScriptManager;
 
 //-----------------------------------//
@@ -39,10 +38,7 @@ class ScriptManager;
  * a class like this one that instantiates everything and sets it all up.
  */
 
-class Engine;
-typedef Singleton<Engine> SingletonEngine;
-
-class VAPOR_API Engine : public SingletonEngine
+class VAPOR_API Engine : public Singleton<Engine>
 {
 	friend class Singleton<Engine>;
 
@@ -117,6 +113,12 @@ protected:
 	// Manages background tasks.
 	TaskManager* taskManager;
 
+	// Default logger.
+	Logger* log;
+
+	// Log stream.
+	FileStream stream;
+
 	// Scene root node.
 	ScenePtr scene;
 
@@ -134,9 +136,6 @@ protected:
 
 	// Virtual filesystem.
 	FileSystem* fileSystem;
-
-	// Default logger.
-	Logger* log;
 
 	// Scripting state.
 	ScriptManager* scriptManager;

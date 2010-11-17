@@ -340,7 +340,7 @@ public:
 		{
 			// Compute angles.  We don't have to use the "safe" asin
 			// function because we already checked for range errors when
-			// checking for Gimbel lock
+			// checking for Gimbal lock
 			pitch	= asin(sp);
 			heading	= atan2(q.x*q.z - q.w*q.y, 0.5f - q.x*q.x - q.y*q.y);
 			bank	= atan2(q.x*q.y - q.w*q.z, 0.5f - q.x*q.x - q.z*q.z);

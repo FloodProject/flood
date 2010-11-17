@@ -30,8 +30,10 @@ namespace vapor { namespace audio {
  * not delete the audio data if it's potentially needed in the future.
  */
 
-class VAPOR_API Buffer : private boost::noncopyable
+class VAPOR_API Buffer
 {
+	DECLARE_UNCOPYABLE(Buffer)
+
 	friend class Source;
 
 public:

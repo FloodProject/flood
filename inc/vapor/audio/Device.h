@@ -27,8 +27,10 @@ namespace vapor { namespace audio {
  * Audio device to play sound data using OpenAL as backend.
  */
 
-class VAPOR_API Device : private boost::noncopyable
+class VAPOR_API Device
 {
+	DECLARE_UNCOPYABLE(Device)
+
 	friend class Context;
 	friend class Source;
 	friend class Buffer;

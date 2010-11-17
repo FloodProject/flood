@@ -34,30 +34,32 @@ namespace LogLevel
 
 //-----------------------------------//
 
-/**
- * Convenience logging functions.
- */
-
-namespace Log
+struct LogEntry
 {
-	// Logs a debug message to the global logger.
-	VAPOR_API void debug(const char* msg, ...);
-	
-	// Logs a debug message to the global logger.
-	VAPOR_API void debug(const std::string& msg);
-	
-	// Logs an info message to the global logger.
-	VAPOR_API void info(const char* msg, ...);
-	
-	// Logs a warning message to the global logger.
-	VAPOR_API void warn(const char* msg, ...);
-	
-	// Logs an error message to the global logger.
-	VAPOR_API void error(const char* msg, ...);
-	
-	// Shows a message box dialog.
-	VAPOR_API void messageDialog(const std::string& msg, LogLevel::Enum = LogLevel::Warning);
-}
+	// Time of the message.
+	float time;
+
+	// Formatted message.
+	std::string message;
+
+	// Level of the message.
+	LogLevel::Enum level;
+};
+
+//-----------------------------------//
+
+class LogSink
+{
+	DECLARE_UNCOPYABLE(LogSink)
+
+public:
+
+	LogSink() {}
+	virtual ~LogSink() {}
+
+	// Writes a log entry into the sink.
+	virtual void process(LogEntry& entry) = 0;
+};
 
 //-----------------------------------//
 
@@ -69,46 +71,37 @@ class VAPOR_API Logger
 {
 public:
 	
-	Logger(FileStream& stream);
+	Logger();
 	~Logger();
 	
-	// Logs an information to the stream.
+	// Logs an information message.
 	void info(const char* msg, ...);
 
-	// Logs a warning to the stream.
+	// Logs a warning message.
 	void warn(const char* msg, ...);
 
-	// Logs an error to the stream.
+	// Logs an error message.
 	void error(const char* msg, ...);
 
-	// Low-level logging implementation.
-	void write(const LogLevel::Enum level, const char* msg, va_list args);
+	// Writes a message of the given level.
+	void write(LogLevel::Enum level, const char* msg, va_list args);
 
-	// Gets the global engine logger.
-	static Logger* getLogger() { return globalLogger; }
+	// Adds a new sink to the logger.
+	void add( LogSink* sink );
 
-	// Gets the global engine logger.
-	static SETTER(Logger, Logger*, globalLogger)
+	// Gets the main logger.
+	static Logger* getLogger() { return mainLogger; }
 
-	// This controls if debug is output.
-	static bool showDebug;
+	// Gets the main logger.
+	static SETTER(Logger, Logger*, mainLogger)
 
-	// Global engine logger.
-	static Logger* globalLogger;
+	// Main logger.
+	static Logger* mainLogger;
 
 protected:
-		
-	// Writes the header to the log.
-	void writeHeader(const std::string& title);
-	
-	// Writes the footer to the log.
-	void writeFooter();
 
 	// Keeps track of elapsed time.
 	Timer timer;
-
-	// Keeps track of zebra coloring the table.
-	bool even;
 
 	// Keeps track of last message.
 	std::string last;
@@ -116,10 +109,62 @@ protected:
 	// Mutex lock to synchronize access.
 	THREAD(boost::mutex mutex;)
 
-	// Stream to log into.
-	Stream& stream;
+	// Log sinks.
+	std::vector<LogSink*> sinks;
+};
 
+//-----------------------------------//
+
+/**
+ * Convenience logging functions.
+ */
+
+namespace Log
+{
+	// Logs a debug message to the global logger.
+	VAPOR_API void debug(const std::string& msg);
+
+	// Logs a debug message to the global logger.
+	VAPOR_API void debug(const char* msg, ...);
+	
+	// Logs an info message to the global logger.
+	VAPOR_API void info(const char* msg, ...);
+	
+	// Logs a warning message to the global logger.
+	VAPOR_API void warn(const char* msg, ...);
+	
+	// Logs an error message to the global logger.
+	VAPOR_API void error(const char* msg, ...);
+}
+
+//-----------------------------------//
+
+class LogSinkConsole : public LogSink
+{
+public:
+
+	void process(LogEntry& entry);
+};
+
+//-----------------------------------//
+
+class LogSinkHTML : public LogSink
+{
+public:
+
+	LogSinkHTML(FileStream& stream);
+	~LogSinkHTML();
+
+	void process(LogEntry& entry);
+
+protected:
+
+	void writeHeader();
+	void writeFooter();
+
+	Stream& stream;
 	FILE* fp;
+	bool even;
 };
 
 //-----------------------------------//

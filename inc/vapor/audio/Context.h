@@ -28,8 +28,10 @@ namespace vapor { namespace audio {
  * everything in a context.
  */
 
-class VAPOR_API Context : private boost::noncopyable
+class VAPOR_API Context
 {
+	DECLARE_UNCOPYABLE(Context)
+
 	friend class Source;
 
 public:

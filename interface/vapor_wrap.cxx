@@ -9818,7 +9818,33 @@ fail:
 }
 
 
-static int _wrap_Transform_setNotify(lua_State* L) {
+static int _wrap_Transform_setNotify__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Transform *arg1 = (vapor::Transform *) 0 ;
+  bool arg2 ;
+  
+  SWIG_check_num_args("setNotify",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setNotify",1,"vapor::Transform *");
+  if(!lua_isboolean(L,2)) SWIG_fail_arg("setNotify",2,"bool");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Transform,0))){
+    SWIG_fail_ptr("Transform_setNotify",1,SWIGTYPE_p_vapor__Transform);
+  }
+  
+  arg2 = (lua_toboolean(L, 2)!=0);
+  (arg1)->setNotify(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Transform_setNotify__SWIG_1(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Transform *arg1 = (vapor::Transform *) 0 ;
   
@@ -9841,26 +9867,52 @@ fail:
 }
 
 
-static int _wrap_Transform_unsetNotify(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Transform *arg1 = (vapor::Transform *) 0 ;
+static int _wrap_Transform_setNotify(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
   
-  SWIG_check_num_args("unsetNotify",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("unsetNotify",1,"vapor::Transform *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Transform,0))){
-    SWIG_fail_ptr("Transform_unsetNotify",1,SWIGTYPE_p_vapor__Transform);
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_vapor__Transform, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_Transform_setNotify__SWIG_1(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_vapor__Transform, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isboolean(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_Transform_setNotify__SWIG_0(L);
+      }
+    }
   }
   
-  (arg1)->unsetNotify();
-  
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
+  lua_pushstring(L,"Wrong arguments for overloaded function 'Transform_setNotify'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    setNotify(vapor::Transform *,bool)\n"
+    "    setNotify(vapor::Transform *)\n");
+  lua_error(L);return 0;
 }
 
 
@@ -9976,7 +10028,6 @@ static swig_lua_method swig_vapor_Transform_methods[] = {
     {"markBoundingVolumeDirty", _wrap_Transform_markBoundingVolumeDirty}, 
     {"requiresBoundingVolumeUpdate", _wrap_Transform_requiresBoundingVolumeUpdate}, 
     {"setNotify", _wrap_Transform_setNotify}, 
-    {"unsetNotify", _wrap_Transform_unsetNotify}, 
     {"update", _wrap_Transform_update}, 
     {0,0}
 };

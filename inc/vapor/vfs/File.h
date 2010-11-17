@@ -44,7 +44,7 @@ public:
 	bool close();
 
 	// Returns the contents of the file.
-	std::vector<byte> read(long size = -1) const;
+	bool read(std::vector<byte>& data, long size = -1) const;
 
 	// Reads up to size bytes into the buffer.
 	long read(void* buffer, long size) const;
