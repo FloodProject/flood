@@ -7,6 +7,7 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
+#include "vapor/Utilities.h"
 
 #ifdef VAPOR_RENDERER_OPENGL
 
@@ -20,7 +21,7 @@
 #include "vapor/render/View.h"
 
 #include "vapor/scene/Camera.h"
-#include "vapor/scene/Node.h"
+#include "vapor/scene/Entity.h"
 
 namespace vapor {
 
@@ -96,7 +97,7 @@ void RenderDevice::checkExtensions()
 	if( !GLEW_VERSION_2_0 )
 	{
 		const char* str = "You need at least OpenGL 2.0 to run this.";
-		System::messageDialog( str, LogLevel::Error );
+		System::messageDialog( str ); //, LogLevel::Error );
 		exit( -1 );
 	}
 }
@@ -116,8 +117,9 @@ void RenderDevice::render( RenderBlock& queue )
 	std::sort( queue.renderables.begin(), queue.renderables.end(), &RenderStateSorter );
 
 	// Render all the renderables in the queue.
-	foreach( const RenderState& state, queue.renderables )
+	for( uint i = 0; i < queue.renderables.size(); i++ )
 	{
+		const RenderState& state = queue.renderables[i];
 		render(state, queue.lights);
 	}
 }
@@ -222,9 +224,9 @@ void RenderDevice::updateLightDepth( LightState& state )
 	//CameraPtr lightCamera( new Camera(*camera) );
 	//TransformPtr lightTransform( new Transform(*state.transform.get()) );
 	//
-	//NodePtr lightCameraNode( new Node("ShadowCamera") );
-	//lightCameraNode->addTransform(); /*Component( lightTransform );*/
-	//lightCameraNode->addComponent( lightCamera );
+	//EntityPtr lightCameraEntity( new Entity("ShadowCamera") );
+	//lightCameraEntity->addTransform(); /*Component( lightTransform );*/
+	//lightCameraEntity->addComponent( lightCamera );
 
 	//RenderView* lightView = new View(lightCamera, shadowDepthBuffer);
 
@@ -258,8 +260,9 @@ bool RenderDevice::setupRenderStateShadow( LightQueue& lights )
 	if( lights.empty() ) 
 		return true;
 
-	foreach( LightState& state, lights )
+	for( uint i = 0; i < lights.size(); i++ )
 	{
+		LightState& state = lights[i];
 		const LightPtr& light = state.light;
 
 		if( !light->getCastsShadows() )
@@ -279,8 +282,9 @@ bool RenderDevice::setupRenderStateLight( const RenderState& state, const LightQ
 	const MaterialPtr& material = rend->getMaterial();
 	const ProgramPtr& program = material->getProgram();
 
-	foreach( const LightState& lightState, lights )
+	for( uint i = 0; i < lights.size(); i++ )
 	{
+		const LightState& lightState = lights[i];
 		const LightPtr& light = lightState.light;
 
 		//TexturePtr shadowDepthTexture;

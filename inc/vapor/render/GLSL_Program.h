@@ -102,9 +102,8 @@ protected:
 	void getLogText();
 
 	GLuint id;
-
-	GLSL_TextPtr text;
 	bool linkError;
+	GLSL_TextPtr text;
 
 	typedef std::vector< GLSL_ShaderPtr > ShaderVector;
 	ShaderVector shaders;

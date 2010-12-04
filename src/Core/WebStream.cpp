@@ -8,6 +8,7 @@
 
 #include "Core.h"
 #include "WebStream.h"
+#include "Log.h"
 
 #define CURL_STATICLIB
 #include <curl/curl.h>

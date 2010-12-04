@@ -25,8 +25,11 @@ void Animation::setKeyFrames(const BonePtr& bone, const KeyFramesVector& frames)
 {
 	keyFrames[bone] = frames;
 
-	foreach( const KeyFrame& frame, frames )
+	for( uint i = 0; i < frames.size(); i++ )
+	{	
+		const KeyFrame& frame = frames[i];
 		keyFramesVector.push_back(frame);
+	}
 }
 
 //-----------------------------------//
@@ -39,8 +42,10 @@ double Animation::getTotalTime() const
 	float min = Limits::FloatMaximum;
 	float max = 0;
 
-	foreach( const KeyFrame& keyFrame, keyFramesVector )
+	for( uint i = 0; i < keyFramesVector.size(); i++ )
 	{
+		const KeyFrame& keyFrame = keyFramesVector[i];
+
 		min = std::min(min, keyFrame.time);
 		max = std::max(max, keyFrame.time);
 	}

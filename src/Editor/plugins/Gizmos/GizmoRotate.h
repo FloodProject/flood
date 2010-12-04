@@ -18,7 +18,7 @@ class GizmoRotate : public Gizmo
 {
 public:
 
-	GizmoRotate( const NodePtr& node, const CameraWeakPtr& camera );
+	GizmoRotate( const EntityPtr& node, const CameraWeakPtr& camera );
 
 	// Builds the gizmo geometry.
 	virtual void buildGeometry();

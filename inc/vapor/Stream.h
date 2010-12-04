@@ -34,7 +34,7 @@ namespace StreamMode
  * remove servers.
  */
 
-class VAPOR_API Stream
+class CORE_API Stream
 {
 	DECLARE_UNCOPYABLE(Stream)
 

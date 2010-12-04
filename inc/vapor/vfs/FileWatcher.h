@@ -75,7 +75,7 @@ namespace Actions
  * live updating, so when an asset changes it will be reloaded.
  */
 
-class VAPOR_API FileWatchEvent
+class CORE_API FileWatchEvent
 {
 	DECLARE_UNCOPYABLE(FileWatchEvent)
 
@@ -102,7 +102,7 @@ public:
  * to notify the parent program of the changes.
  */
 
-class VAPOR_API FileWatcher
+class CORE_API FileWatcher
 {
 	DECLARE_UNCOPYABLE(FileWatcher)
 

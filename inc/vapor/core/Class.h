@@ -27,7 +27,7 @@ typedef std::pair<const std::string, Field*> FieldsPair;
  * serialization and also property editing in the editor.
  */
 
-class VAPOR_API Class : public Type
+class CORE_API Class : public Type
 {
 public:
 

@@ -19,7 +19,7 @@ namespace vapor {
  * Wraps an PhysFS file handle into a stream.
  */
 
-class VAPOR_API PhysfsStream : public Stream
+class CORE_API PhysfsStream : public Stream
 {
 public:
 

@@ -14,7 +14,7 @@
 #include "vapor/math/Matrix4x4.h"
 #include "vapor/render/Target.h"
 
-FWD_DECL_SHARED(Node)
+FWD_DECL_SHARED(Entity)
 FWD_DECL_SHARED(Camera)
 FWD_DECL_SHARED_WEAK(Camera)
 

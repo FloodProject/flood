@@ -46,8 +46,8 @@ void PropertyPlugin::onPluginEnable()
 	wxImageList* imageList = notebookCtrl->GetImageList();
 	assert( imageList != nullptr );
 
-	wxBitmap iconPackage = wxMEMORY_BITMAP(grid_icon);
-	iconProperty = imageList->Add(iconPackage);
+	wxBitmap iconProp = wxMEMORY_BITMAP(application_view_list);
+	iconProperty = imageList->Add(iconProp);
 
 	wxBoxSizer* sizer = new wxBoxSizer( wxVERTICAL );
 
@@ -83,10 +83,10 @@ void PropertyPlugin::onPluginDisable()
 
 //-----------------------------------//
 
-void PropertyPlugin::onNodeSelect( const NodePtr& node )
+void PropertyPlugin::onEntitySelect( const EntityPtr& node )
 {
-	selectedNode = node;
-	propertyPage->showNodeProperties( node );
+	selectedEntity = node;
+	propertyPage->showEntityProperties( node );
 
 	Class& klass = (Class&) node->getInstanceType();
 	klass.onFieldChanged.Connect(this, &PropertyPlugin::onFieldChanged);
@@ -97,9 +97,9 @@ void PropertyPlugin::onNodeSelect( const NodePtr& node )
 
 //-----------------------------------//
 
-void PropertyPlugin::onNodeUnselect( const NodePtr& node )
+void PropertyPlugin::onEntityUnselect( const EntityPtr& node )
 {
-	selectedNode.reset();
+	selectedEntity.reset();
 	propertyPage->Clear();
 
 	Class& klass = (Class&) node->getInstanceType();
@@ -113,16 +113,16 @@ void PropertyPlugin::onNodeUnselect( const NodePtr& node )
 
 void PropertyPlugin::onComponentSelect( const ComponentPtr& component )
 {
-	const NodePtr& node = component->getNode();
-	onNodeSelect(node);
+	const EntityPtr& node = component->getEntity();
+	onEntitySelect(node);
 }
 
 //-----------------------------------//
 
 void PropertyPlugin::onComponentUnselect( const ComponentPtr& component )
 {
-	const NodePtr& node = component->getNode();
-	onNodeUnselect(node);
+	const EntityPtr& node = component->getEntity();
+	onEntityUnselect(node);
 }
 
 //-----------------------------------//
@@ -150,10 +150,10 @@ void PropertyPlugin::onSceneUpdate()
 
 void PropertyPlugin::updateProperties()
 {
-	const NodePtr& node = selectedNode.lock();
+	const EntityPtr& node = selectedEntity.lock();
 
 	if( node )	
-		propertyPage->showNodeProperties(node);
+		propertyPage->showEntityProperties(node);
 }
 
 //-----------------------------------//

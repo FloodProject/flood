@@ -21,7 +21,7 @@ namespace vapor {
  * Bounding Sphere.
  */
 
-class VAPOR_API BoundingSphere
+class CORE_API BoundingSphere
 {
 public:
 

@@ -18,7 +18,7 @@ namespace vapor {
  * Wraps a file in an I/O stream.
  */
 
-class VAPOR_API FileStream : public Stream
+class CORE_API FileStream : public Stream
 {
 	DECLARE_UNCOPYABLE(FileStream)
 

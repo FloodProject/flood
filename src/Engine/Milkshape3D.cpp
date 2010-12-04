@@ -103,8 +103,10 @@ void Milkshape3D::buildSkeleton()
 	
 	uint index = 0;
 
-	foreach( ms3d_joint_t& joint, joints )
+	for( uint i = 0; i < joints.size(); i++ )
 	{
+		ms3d_joint_t& joint = joints[i];
+		
 		BonePtr bone = new Bone();
 
 		bone->name = joint.name;
@@ -135,8 +137,10 @@ void Milkshape3D::buildAnimationMetadata()
 		return;
 	}
 
-	foreach( char& c, mainComment )
+	for( uint i = 0; i < mainComment.size(); i++ )
 	{
+		char& c = mainComment[i];
+
 		if( c == 10 )
 			c = ' ';
 		if( c == 13 )
@@ -145,8 +149,10 @@ void Milkshape3D::buildAnimationMetadata()
 
 	std::vector<std::string> lines = String::split(mainComment, '\n');
     
-	foreach( const std::string& line, lines )
+	for( uint i = 0; i < lines.size(); i++ )
 	{
+		const std::string& line = lines[i];
+
 		if( line.size() < 2 )
 			continue;
 
@@ -170,10 +176,14 @@ float Milkshape3D::getAnimationStart(const AnimationMetadata& data)
 {
 	float time = Limits::FloatMaximum;
 
-	foreach( const ms3d_joint_t& joint, joints )
+	for( uint i = 0; i < joints.size(); i++ )
 	{
-		foreach( const ms3d_keyframe_t& frame, joint.positionKeys )
+		const ms3d_joint_t& joint = joints[i];
+
+		for( uint j = 0; j < joint.positionKeys.size(); j++ )
 		{
+			const ms3d_keyframe_t& frame = joint.positionKeys[j];
+
 			int numFrame = std::floor(frame.time*animationFPS + 0.5);
 
 			if( numFrame < data.start || numFrame > data.end )
@@ -194,8 +204,9 @@ void Milkshape3D::buildAnimations()
 
 	buildAnimationMetadata();
 
-	foreach( AnimationMetadata& data, metadata )
+	for( uint i = 0; i < metadata.size(); i++ )
 	{
+		 AnimationMetadata& data = metadata[i];
 		AnimationPtr animation = buildAnimation(data);
 		animations.push_back(animation);
 	}
@@ -218,8 +229,10 @@ AnimationPtr Milkshape3D::buildAnimation(AnimationMetadata& data)
 	AnimationPtr animation = new Animation();
 	animation->setName(data.name);
 
-	foreach( ms3d_joint_t& joint, joints )
+	for( uint i = 0; i < joints.size(); i++ )
 	{
+		ms3d_joint_t& joint = joints[i];
+
 		if( joint.positionKeys.empty() )
 			continue;
 
@@ -243,8 +256,10 @@ void Milkshape3D::buildKeyFrames( const ms3d_joint_t& joint,
 
 	uint i = 0;
 
-	foreach( const ms3d_keyframe_t& frame, joint.positionKeys )
+	for( uint i = 0; i < joint.positionKeys.size(); i++ )
 	{
+		const ms3d_keyframe_t& frame = joint.positionKeys[i];
+
 		int numFrame = std::floor(frame.time*animationFPS + 0.5);
 
 		if( numFrame < data.start || numFrame > data.end )
@@ -267,8 +282,10 @@ void Milkshape3D::buildKeyFrames( const ms3d_joint_t& joint,
 
 void Milkshape3D::buildGeometry()
 {
-	foreach( const ms3d_group_t& group, groups )
+	for( uint i = 0; i < groups.size(); i++ )
 	{
+		const ms3d_group_t& group = groups[i];
+
 		if( group.flags & HIDDEN )
 			continue;
 
@@ -293,24 +310,26 @@ void Milkshape3D::buildGeometry()
 		bones.reserve( group.triangleIndices.size()*3 );
 
 		// Let's process all the triangles of this group.
-		foreach( const ushort& t_ind, group.triangleIndices )
+		for( uint j = 0; j < group.triangleIndices.size(); j++ )
 		{
+			const ushort& t_ind = group.triangleIndices[j];
 			const ms3d_triangle_t& t = *triangles[t_ind];
 
-			foreach( const ushort& v_ind, t.vertexIndices ) 
+			for( uint e = 0; e < 3; e++ )
 			{
+				const ushort& v_ind = t.vertexIndices[e];
 				const ms3d_vertex_t& v = *vertices[v_ind];
 			
 				pos.push_back( v.position );
 				bones.push_back( v.boneIndex );
 			}
 
-			for( uint i = 0; i < 3; i++ )
+			for( uint e = 0; e < 3; e++ )
 			{
-				Vector3 normal( t.vertexNormals[i] );
+				Vector3 normal( t.vertexNormals[e] );
 				normals.push_back( normal );
 
-				Vector2 texCoord( t.s[i], t.t[i] );
+				Vector2 texCoord( t.s[e], t.t[e] );
 				texCoords.push_back( texCoord );
 			}
 		}
@@ -390,8 +409,11 @@ void Milkshape3D::buildBounds()
 	boundingVolume.reset();
 
 	// Update the bounding box to accomodate new geometry.
-	foreach( const ms3d_vertex_t* vert, vertices )
+	for( uint i = 0; i < vertices.size(); i++ )
+	{
+		const ms3d_vertex_t* vert = vertices[i];
 		boundingVolume.add( vert->position );
+	}
 
 	if( boundingVolume.isInfinite() )
 		boundingVolume.setZero();
@@ -417,8 +439,9 @@ int Milkshape3D::findJoint(const char* name)
 
 void Milkshape3D::setupJointsHierarchy()
 {
-	foreach (ms3d_joint_t& joint, joints )
+	for( uint i = 0; i < joints.size(); i++ )
 	{
+		ms3d_joint_t& joint = joints[i];
 		joint.parentIndex = findJoint(joint.parentName);
 	}
 }
@@ -427,8 +450,10 @@ void Milkshape3D::setupJointsHierarchy()
 
 void Milkshape3D::setupJointMatrices()
 {
-	foreach( ms3d_joint_t& joint, joints )
+	for( uint i = 0; i < joints.size(); i++ )
 	{
+		ms3d_joint_t& joint = joints[i];
+
 		joint.relativeMatrix =
 			Matrix4x3::createRotation(joint.rotation) *
 			Matrix4x3::createTranslation(joint.position);
@@ -449,15 +474,19 @@ void Milkshape3D::setupJointMatrices()
 
 void Milkshape3D::setupJointRotations()
 {
-	foreach( ms3d_joint_t& joint, joints )
+	for( uint i = 0; i < joints.size(); i++ )
 	{
+		ms3d_joint_t& joint = joints[i];
+
 		joint.rotation = EulerAngles(
 			Math::radianToDegree(joint.rotation.x),
 			Math::radianToDegree(joint.rotation.y),
 			Math::radianToDegree(joint.rotation.z) );
 
-		foreach( ms3d_keyframe_t& keyframe, joint.rotationKeys )
+		for( uint j = 0; j < joint.rotationKeys.size(); j++ )
 		{
+			ms3d_keyframe_t& keyframe = joint.rotationKeys[i];
+
 			keyframe.parameter = Vector3(
 				Math::radianToDegree(keyframe.parameter.x),
 				Math::radianToDegree(keyframe.parameter.y),
@@ -470,8 +499,10 @@ void Milkshape3D::setupJointRotations()
 
 void Milkshape3D::setupInitialVertices()
 {
-	foreach( ms3d_vertex_t* vertex, vertices )
+	for( uint i = 0; i < vertices.size(); i++ )
 	{
+		ms3d_vertex_t* vertex = vertices[i];
+
 		if( vertex->boneIndex == -1 )
 			continue;
 		

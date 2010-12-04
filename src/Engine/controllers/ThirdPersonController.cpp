@@ -11,7 +11,7 @@
 
 #include "vapor/Engine.h"
 #include "vapor/math/Math.h"
-#include "vapor/scene/Node.h"
+#include "vapor/scene/Entity.h"
 #include "vapor/scene/Camera.h"
 #include "vapor/scene/Scene.h"
 #include "vapor/render/Device.h"
@@ -26,7 +26,7 @@ namespace vapor {
 BEGIN_CLASS_PARENT(ThirdPersonController, CameraController)
 	FIELD_PRIMITIVE(ThirdPersonController, Vector3, distance)
 	FIELD_PRIMITIVE(ThirdPersonController, Vector3, rotation)
-	FIELD_PRIMITIVE(ThirdPersonController, string, followNodeName)
+	FIELD_PRIMITIVE(ThirdPersonController, string, followEntityName)
 END_CLASS()
 
 //-----------------------------------//
@@ -38,20 +38,20 @@ ThirdPersonController::ThirdPersonController()
 
 void ThirdPersonController::_update( double delta )
 {
-	if( !followNode.lock() )
+	if( !followEntity.lock() )
 	{
 		Engine* engine = Engine::getInstancePtr();
 		const ScenePtr& scene = engine->getSceneManager();
-		followNode = scene->findNode(followNodeName);
+		followEntity = scene->findEntity(followEntityName);
 	}
 
-	const NodePtr& node = followNode.lock();
+	const EntityPtr& node = followEntity.lock();
 
 	if( !node )
 		return;
 
 	const TransformPtr& followTransform = node->getTransform();
-	const TransformPtr& transform = getNode()->getTransform();
+	const TransformPtr& transform = getEntity()->getTransform();
 
 	transform->setPosition( followTransform->getPosition() + distance );
 	transform->setRotation( followTransform->getRotation() * Quaternion(rotation) );

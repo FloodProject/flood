@@ -91,9 +91,9 @@ public:
 	virtual void onPluginEnable();
 	virtual void onPluginDisable();
 	
-	// Node callbacks.
-	virtual void onNodeSelect( const NodePtr& );
-	virtual void onNodeUnselect( const NodePtr& );
+	// Entity callbacks.
+	virtual void onEntitySelect( const EntityPtr& );
+	virtual void onEntityUnselect( const EntityPtr& );
 
 	// Mouse callbacks.
 	virtual void onMouseDrag( const MouseDragEvent& mde );

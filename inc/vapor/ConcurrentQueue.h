@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "Thread.h"
+
 namespace vapor {
 
 //-----------------------------------//
@@ -20,7 +22,7 @@ namespace vapor {
  */
 
 template<typename T>
-class VAPOR_API concurrent_queue
+class CORE_API ConcurrentQueue
 {
 public:
 

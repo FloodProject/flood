@@ -14,7 +14,7 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-GizmoScale::GizmoScale( const NodePtr& node, const CameraWeakPtr& camera )
+GizmoScale::GizmoScale( const EntityPtr& node, const CameraWeakPtr& camera )
 	: Gizmo( node, camera )
 { }
 
@@ -52,18 +52,27 @@ VertexBufferPtr GizmoScale::generateCubes()
 	std::vector< Vector3 > colors;
 
 	// X axis
-	foreach( const Vector3& v, cubePosition )
+	for( uint i = 0; i < cubePosition.size(); i++ )
+	{
+		const Vector3& v = cubePosition[i];
 		pos.push_back( v + (Vector3::UnitX / 2.0f) );
+	}
 	generateColors(colors, X);
 
 	// Y axis
-	foreach( const Vector3& v, cubePosition )
+	for( uint i = 0; i < cubePosition.size(); i++ )
+	{
+		const Vector3& v = cubePosition[i];
 		pos.push_back( v + (Vector3::UnitY / 2.0f) );
+	}
 	generateColors(colors, Y);
 	
 	// Z axis
-	foreach( const Vector3& v, cubePosition )
+	for( uint i = 0; i < cubePosition.size(); i++ )
+	{
+		const Vector3& v = cubePosition[i];
 		pos.push_back( v + (Vector3::UnitZ / 2.0f) );
+	}
 	generateColors(colors, Z);
 
 	// Vertex buffer setup

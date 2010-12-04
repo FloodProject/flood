@@ -8,7 +8,8 @@
 
 #pragma once
 
-#include "vapor/Reflection.h"
+#include "Reflection.h"
+#include "ReferenceCount.h"
 
 FWD_DECL_INTRUSIVE(Renderable)
 
@@ -16,10 +17,10 @@ namespace vapor {
 
 //-----------------------------------//
 
-class Node;
+class Entity;
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Node )
-TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( Node )
+TYPEDEF_SHARED_POINTER_FROM_TYPE( Entity )
+TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( Entity )
 
 //-----------------------------------//
 
@@ -41,10 +42,10 @@ public:
 	virtual ~Component();
 	
 	// Gets the associated node of this component.
-	NodePtr getNode() const;
+	EntityPtr getEntity() const;
 
 	// Sets the associated node of this component.
-	void setNode( const NodePtr& node );
+	void setEntity( const EntityPtr& node );
 
 	// Called once per frame to update the component.
 	virtual void update( double delta ) = 0;
@@ -66,8 +67,8 @@ public:
 
 protected:
 
-	// Node that owns this component.
-	NodeWeakPtr node;
+	// Entity that owns this component.
+	EntityWeakPtr node;
 
 	// Is the debug representation visible.
 	bool debugVisible;

@@ -31,8 +31,10 @@ FBO::~FBO()
 {
 	glDeleteFramebuffersEXT(1, &id);
 
-	foreach( uint buffer, renderBuffers )
+	for( uint i = 0; i < renderBuffers.size(); i++ )
 	{
+		uint buffer = renderBuffers[i];
+
 		glDeleteRenderbuffersEXT(1, &buffer);
 		glHasError( "Could not delete renderbuffer object" );
 	}

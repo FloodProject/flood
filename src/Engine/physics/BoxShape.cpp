@@ -13,7 +13,7 @@
 #include "vapor/physics/BoxShape.h"
 #include "vapor/physics/Convert.h"
 
-#include "vapor/scene/Node.h"
+#include "vapor/scene/Entity.h"
 #include "vapor/scene/Transform.h"
 
 #include <BulletCollision/CollisionShapes/btBoxShape.h>
@@ -46,7 +46,7 @@ void BoxShape::update( double delta )
 	if( boxShape )
 		return;
 
-	const TransformPtr& transform = getNode()->getTransform();
+	const TransformPtr& transform = getEntity()->getTransform();
 	
 	if( !transform )
 		return;

@@ -65,11 +65,11 @@ public:
 	// Plugin disable callback.
 	virtual void onPluginDisable() = 0;
 
-	// Node selection callback.
-	virtual void onNodeSelect( const NodePtr& ) {}
+	// Entity selection callback.
+	virtual void onEntitySelect( const EntityPtr& ) {}
 	
-	// Node unselection callback.
-	virtual void onNodeUnselect( const NodePtr& ) {}
+	// Entity unselection callback.
+	virtual void onEntityUnselect( const EntityPtr& ) {}
 
 	// Component selection callback.
 	virtual void onComponentSelect( const ComponentPtr& ) {}

@@ -23,7 +23,7 @@ typedef std::pair<const std::string, int> EnumValuesPair;
  * Represents an enum in the type system.
  */
 
-class VAPOR_API Enum : public Type
+class CORE_API Enum : public Type
 {
 public:
 
@@ -40,7 +40,7 @@ public:
 
 protected:
 
-	EnumValuesMap values;
+	mutable EnumValuesMap values;
 };
 
 #define DECLARE_ENUM() static vapor::Enum& getType();

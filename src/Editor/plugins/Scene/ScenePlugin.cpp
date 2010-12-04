@@ -78,12 +78,12 @@ void ScenePlugin::onPluginDisable()
 
 //-----------------------------------//
 
-void ScenePlugin::onNodeSelect( const NodePtr& node )
+void ScenePlugin::onEntitySelect( const EntityPtr& node )
 {
 	if( scenePage->sentLastSelectionEvent )
 		return;
 
-	wxTreeItemId nodeId = scenePage->getTreeIdFromNode(node);
+	wxTreeItemId nodeId = scenePage->getTreeIdFromEntity(node);
 
 	if( !nodeId.IsOk() )
 		return;
@@ -94,7 +94,7 @@ void ScenePlugin::onNodeSelect( const NodePtr& node )
 
 //-----------------------------------//
 
-void ScenePlugin::onNodeUnselect( const NodePtr& node )
+void ScenePlugin::onEntityUnselect( const EntityPtr& node )
 {
 	if( scenePage->sentLastSelectionEvent )
 		return;

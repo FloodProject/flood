@@ -20,10 +20,10 @@ void Example::onInit()
 {
 	camera.reset( new Camera(renderDevice) );
 
-	PageManager* pageManager = new PageManager( 512, camera );
-	pageManager->onPageLoading += fd::bind(&Example::onPageLoading, this);
+	//PageManager* pageManager = new PageManager( 512, camera );
+	//pageManager->onPageLoading += fd::bind(&Example::onPageLoading, this);
 
-	addSubsystem(pageManager);
+	//addSubsystem(pageManager);
 }
 
 //-----------------------------------//
@@ -59,7 +59,7 @@ void Example::onSetupScene()
 	ResourceManager* rm = getResourceManager();
 
 	// Create a new Camera.
-	NodePtr nodeCamera( new Node("MainCamera") );
+	EntityPtr nodeCamera( new Entity("MainCamera") );
 	nodeCamera->addComponent( TransformPtr( new Transform( 0.0f, 20.0f, -65.0f ) ) );
 	nodeCamera->addComponent( camera );
 	nodeCamera->addComponent( CameraControllerPtr( new FirstPersonController() ) );
@@ -80,35 +80,35 @@ void Example::onSetupScene()
 	//RenderablePtr quad( new Quad(100.0f, 100.0f) );
 	//quad->setMaterial( materialFBO );
 
-	//nodeFBO.reset( new Node( "FBOquad" ) );
+	//nodeFBO.reset( new Entity( "FBOquad" ) );
 	//nodeFBO->addTransform();
 	//nodeFBO->addComponent( GeometryPtr( new Geometry(quad) ) );
 	//scene->add( nodeFBO );
 
 	MeshPtr meshSword = rm->loadResource<Mesh>("sword.ms3d");
-	NodePtr nodeSword( new Node("sword") );
+	EntityPtr nodeSword( new Entity("sword") );
 	nodeSword->addTransform();
 	nodeSword->addComponent( ModelPtr( new Model(meshSword) ) );
 	scene->add(nodeSword);
 
 	MeshPtr meshCT = rm->loadResource<Mesh>("ninja.ms3d", false);
 	ModelPtr modelCT( new Model(meshCT) );
-	modelCT->attachNode("Joint17", nodeSword);
-	modelCT->switchAnimation("Idle1");
+	modelCT->setAttachment("Joint17", nodeSword);
+	modelCT->setAnimation("Idle1");
 
-	NodePtr nodeCT( new Node("ct") );
+	EntityPtr nodeCT( new Entity("ct") );
 	nodeCT->addTransform();	
 	nodeCT->addComponent( modelCT );
 	scene->add(nodeCT);
 
 	labelFPS.reset( new Label( "", "Verdana.font") );
 	
-	NodePtr nodeFPS( new Node("LabelFPS") );
+	EntityPtr nodeFPS( new Entity("LabelFPS") );
 	nodeFPS->addTransform();
 	nodeFPS->addComponent( labelFPS );
 	scene->add( nodeFPS );
 
-	NodePtr grid( new Node("Grid") );
+	EntityPtr grid( new Entity("Grid") );
 	grid->addComponent( TransformPtr( new Transform(0.0f, 1.0f, 0.0f) ) );
 	grid->addComponent( GridPtr( new Grid() ) );
 	scene->add( grid );
@@ -117,7 +117,7 @@ void Example::onSetupScene()
 	light->setDiffuseColor( Color::Red );
 	light->setAmbientColor( Color::Yellow );
 	
-	NodePtr nodeLight( new Node("Light") );
+	EntityPtr nodeLight( new Entity("Light") );
 	nodeLight->addTransform();
 	nodeLight->addComponent( light );
 	scene->add( nodeLight );
@@ -139,7 +139,7 @@ void Example::onSetupScene()
 	//const ImagePtr& clouds = rm->loadResource<Image>( "noise2.png" );
 	//skydome->setClouds( clouds );
 
-	//NodePtr sky( new Node("Sky") );
+	//EntityPtr sky( new Entity("Sky") );
 	//sky->addTransform();	
 	//sky->addComponent( skydome );
 	//scene->add( sky );
@@ -211,39 +211,27 @@ void Example::onKeyPressed( const KeyEvent& event )
 
 		image.save("noise.png");
 	}
-
 	else if( event.keyCode == Keys::Space )
+	{
 		Log::debug( "time: %lf", frameTimer.getElapsedTime() );
-
-	else if( event.keyCode == Keys::Pause )
-		Log::showDebug = !Log::showDebug;
-
+	}
 	else if( event.keyCode == Keys::G )
 	{
 		bufferFBO->bind();
 		textureFBO->readImage()->save("depth.png");
 		bufferFBO->unbind();
 	}
-
 	else if( event.keyCode == Keys::F )
+	{
 		Log::debug( "FPS: %d", (int) frameStats.getLastFPS() );
-
+	}
 	else if( event.keyCode == Keys::M )
 	{
-		debug( "min/avg/max: %lf / %lf / %lf", 
+		Log::debug( "min/avg/max: %lf / %lf / %lf", 
 					frameStats.minFrameTime,
 					frameStats.avgFrameTime,
 					frameStats.maxFrameTime );
 	}
-
-	//else if( event.keyCode == Keys::J )
-	//{
-	//	Json::Value sc;
-	//	scene->serialize( sc );
-	//	
-	//	File file( "Example.scene", StreamMode::Write );
-	//	file.write( sc.toStyledString() );
-	//}
 }
 
 //-----------------------------------//

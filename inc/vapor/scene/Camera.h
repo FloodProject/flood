@@ -10,6 +10,7 @@
 
 #include "vapor/scene/Component.h"
 #include "vapor/math/Frustum.h"
+#include "vapor/math/Matrix4x3.h"
 
 FWD_DECL_SHARED(Transform)
 FWD_DECL_SHARED(Scene)
@@ -46,13 +47,13 @@ public:
 	void render();
 
 	// Renders the scene to the current render view.
-	void render( const NodePtr& scene );
+	void render( const EntityPtr& scene );
 
 	// Renders the block to the current render view.
 	void render( RenderBlock& block, bool clearView = true );
 
 	// Performs hierarchical frustum culling on the nodes in the scene.
-	void cull( RenderBlock& queue, const NodePtr& node );
+	void cull( RenderBlock& queue, const EntityPtr& node );
 
 	// Gets a ray given the screen coordinates of the mouse.
 	Ray getRay( float x, float y, Vector3* outFar = nullptr ) const;

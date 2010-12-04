@@ -18,7 +18,7 @@ class GizmoTranslate : public Gizmo
 {
 public:
 
-	GizmoTranslate( const NodePtr& node, const CameraWeakPtr& camera );
+	GizmoTranslate( const EntityPtr& node, const CameraWeakPtr& camera );
 
 	// Builds the gizmo geometry.
 	virtual void buildGeometry();

@@ -13,7 +13,7 @@
 #include "vapor/physics/Convert.h"
 #include "vapor/physics/MeshShape.h"
 
-#include "vapor/scene/Node.h"
+#include "vapor/scene/Entity.h"
 #include "vapor/scene/Transform.h"
 
 namespace vapor {
@@ -70,14 +70,14 @@ btVector3 Convert::toBullet(const BoundingBox& box)
 
 //-----------------------------------//
 
-static Vector3 getOffset(const NodePtr& node)
+static Vector3 getOffset(const EntityPtr& entity)
 {
-	ShapePtr shape = node->getTypedComponent<Shape>();
+	ShapePtr shape = entity->getTypedComponent<Shape>();
 
 	if( shape->getInstanceType().is<MeshShape>() )
 		return Vector3::Zero;
 
-	const TransformPtr& transform = node->getTransform();
+	const TransformPtr& transform = entity->getTransform();
 	const BoundingBox& box = transform->getWorldBoundingVolume();
 
 	return box.max - box.getCenter();
@@ -87,7 +87,7 @@ static Vector3 getOffset(const NodePtr& node)
 
 void Convert::fromBullet( const btTransform& bullet, const TransformPtr& transform )
 {
-	Vector3 offset = getOffset(transform->getNode()) * Vector3::UnitY;
+	Vector3 offset = getOffset(transform->getEntity()) * Vector3::UnitY;
 	transform->setPosition( fromBullet(bullet.getOrigin()) - offset );
 	transform->setRotation( fromBullet(bullet.getRotation()) );
 }
@@ -96,7 +96,7 @@ void Convert::fromBullet( const btTransform& bullet, const TransformPtr& transfo
 
 btTransform Convert::toBullet(const TransformPtr& transform)
 {
-	Vector3 offset = getOffset(transform->getNode()) * Vector3::UnitY;
+	Vector3 offset = getOffset(transform->getEntity()) * Vector3::UnitY;
 	
 	btTransform startTransform;
 	startTransform.setOrigin( toBullet(transform->getPosition() + offset) );

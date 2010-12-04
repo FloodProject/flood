@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "ReferenceCount.h"
 #include "Messages.h"
 #include <zmq.h>
 

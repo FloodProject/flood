@@ -9,12 +9,6 @@
 #pragma once
 
 //---------------------------------------------------------------------//
-// Compile-time options
-//---------------------------------------------------------------------//
-
-#include "CompileOptions.h"
-
-//---------------------------------------------------------------------//
 // Platform headers
 //---------------------------------------------------------------------//
 
@@ -27,13 +21,25 @@
 #include "Language.h"
 
 //---------------------------------------------------------------------//
-// Reference Counting
+// API Exports
 //---------------------------------------------------------------------//
 
-#include "ReferenceCounted.h"
+#if defined(CORE_API_DLL) && defined(CORE_API_DLL_EXPORT)
+	#ifdef VAPOR_PLATFORM_WINDOWS
+		#define CORE_API __declspec( dllexport )
+	#else
+		#define CORE_API __attribute__ ((visibility("default")))
+	#endif
+#elif defined(CORE_API_DLL) && defined(VAPOR_PLATFORM_WINDOWS)
+	#define CORE_API __declspec( dllimport )
+#else
+	#define CORE_API
+#endif
 
 //---------------------------------------------------------------------//
-// Logging. Use and abuse it.
+// External Templates
 //---------------------------------------------------------------------//
 
-#include "Log.h"
+#ifndef INSTANTIATE_TEMPLATES
+extern template class std::basic_string<char>;
+#endif

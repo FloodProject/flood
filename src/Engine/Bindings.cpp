@@ -34,19 +34,19 @@
 //{
 //	module( luaState )
 //	[
-//	class_< Node >( "Entity" )
+//	class_< Entity >( "Entity" )
 //		// Constructors
 //		.def( constructor<>() )
 //		.def( constructor< const std::string& >() )
 //		// Methods
-//		.def( "AddComponent", &Node::addComponent )
-//		.def( "Update", &Node::update )
-//		.def( "GetName", &Node::getName )
-//		.def( "GetTransform", &Node::getTransformPtr )
+//		.def( "AddComponent", &Entity::addComponent )
+//		.def( "Update", &Entity::update )
+//		.def( "GetName", &Entity::getName )
+//		.def( "GetTransform", &Entity::getTransformPtr )
 //		// Properties
-//		//.property( "Components", &Node::getComponents )
-//		.property( "Name", &Node::getName )
-//		.property( "Parent", &Node::getParent, &Node::setParent ),
+//		//.property( "Components", &Entity::getComponents )
+//		.property( "Name", &Entity::getName )
+//		.property( "Parent", &Entity::getParent, &Node::setParent ),
 //		// Fields
 //		//.def_readwrite("a", &A::a)
 //		//.def_readonly("a", &A::a)

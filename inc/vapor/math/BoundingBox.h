@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "Utilities.h"
 #include "math/Vector3.h"
 #include "math/Matrix4x3.h"
 #include "math/Ray.h"
@@ -21,7 +20,7 @@ namespace vapor {
  * Axis-aligned Bounding Box.
  */
 
-class VAPOR_API BoundingBox
+class CORE_API BoundingBox
 {
 public:
 

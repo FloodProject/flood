@@ -15,11 +15,17 @@ namespace vapor { namespace editor {
 
 UndoManager::~UndoManager()
 {
-	foreach( UndoOperation* const op, undoOperations )
+	for( uint i = 0; i < undoOperations.size(); i++ )
+	{
+		UndoOperation* op = undoOperations[i];
 		delete op;
+	}
 
-	foreach( UndoOperation* const op, redoOperations )
+	for( uint i = 0; i < redoOperations.size(); i++ )
+	{
+		UndoOperation* op = redoOperations[i];
 		delete op;
+	}
 }
 
 //-----------------------------------//
@@ -29,8 +35,11 @@ void UndoManager::registerOperation( UndoOperation* operation )
 	undoOperations.push_back( operation );
 
 	// Remove all the existing redo operations.
-	foreach( UndoOperation* const op, redoOperations )
+	for( uint i = 0; i < redoOperations.size(); i++ )
+	{
+		UndoOperation* op = redoOperations[i];
 		delete op;
+	}
 
 	redoOperations.clear();
 

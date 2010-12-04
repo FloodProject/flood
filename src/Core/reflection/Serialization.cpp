@@ -8,6 +8,7 @@
 
 #include "vapor/PCH.h"
 #include "vapor/Serialization.h"
+#include "vapor/Utilities.h"
 #include "vapor/scene/Group.h"
 #include "vapor/math/Color.h"
 #include "vapor/math/EulerAngles.h"
@@ -69,14 +70,16 @@ void Serializer::serializeScene(const ScenePtr& scene)
 	
 	serializeFields( sceneType, scene.get(), sceneValue );
 		
-	foreach( const NodePtr& node, scene->getNodes() )
+	const std::vector<EntityPtr>& entities = scene->getEntities();
+	for( uint i = 0; i < entities.size(); i++ )
 	{
-		const Class& nodeType = node->getInstanceType();
+		const EntityPtr& entity = entities[i];
+		const Class& type = entity->getInstanceType();
 
-		if( nodeType.inherits<Group>() )
+		if( type.inherits<Group>() )
 			assert( false );
 
-		sceneValue["nodes"].append(serializeNode(node));
+		sceneValue["nodes"].append(serializeEntity(entity));
 	}
 }
 
@@ -100,7 +103,7 @@ ScenePtr Serializer::deserializeScene()
 		if( nodeValue.isNull() || nodeValue.empty() )
 			continue;
 
-		const NodePtr& node = deserializeNode(nodeValue);
+		const EntityPtr& node = deserializeEntity(nodeValue);
 		scene->add(node);
 	}
 
@@ -109,7 +112,7 @@ ScenePtr Serializer::deserializeScene()
 
 //-----------------------------------//
 
-Json::Value Serializer::serializeNode(const NodePtr& node)
+Json::Value Serializer::serializeEntity(const EntityPtr& node)
 {
 	Json::Value value;
 
@@ -120,10 +123,13 @@ Json::Value Serializer::serializeNode(const NodePtr& node)
 	serializeFields( nodeType, object, value );
     
     // Serialize components.
-	foreach( const ComponentMapPair& p, node->getComponents() )
+	const ComponentMap& components = node->getComponents();
+	
+	ComponentMap::const_iterator it;
+	for( it = components.cbegin(); it != components.cend(); it++ )
 	{
-		const Class& type = *(p.first);
-		const ComponentPtr& component = p.second;
+		const Class& type = *(it->first);
+		const ComponentPtr& component = it->second;
 
 		Json::Value& componentValue = value["components"][type.getName()];
 
@@ -135,20 +141,21 @@ Json::Value Serializer::serializeNode(const NodePtr& node)
 
 //-----------------------------------//
 
-NodePtr Serializer::deserializeNode( const Json::Value& nodeValue )
+EntityPtr Serializer::deserializeEntity( const Json::Value& nodeValue )
 {
-	NodePtr node( new Node() );
+	TypeRegistry& typeRegistry = TypeRegistry::getInstance();
 
-	const Class& nodeType = node->getInstanceType();
+	EntityPtr entity( new Entity() );
+	const Class& type = entity->getInstanceType();
 
-	deserializeFields(nodeType, node.get(), nodeValue);
+	deserializeFields(type, entity.get(), nodeValue);
 
     // Components.
 	const Json::Value& componentValues = nodeValue["components"];
 
-	foreach( const std::string& name, componentValues.getMemberNames() )
+	for( uint i = 0; i < componentValues.getMemberNames().size(); i++ )
 	{
-		TypeRegistry& typeRegistry = TypeRegistry::getInstance();
+		const std::string& name = componentValues.getMemberNames()[i];
 		const Class* type = (Class*) typeRegistry.getType(name);
 
 		if( !type )
@@ -163,10 +170,10 @@ NodePtr Serializer::deserializeNode( const Json::Value& nodeValue )
 		const Json::Value& componentValue = componentValues[name];
 		deserializeFields(*type, component.get(), componentValue);
 
-		node->addComponent(component);
+		entity->addComponent(component);
 	}
 
-	return node;
+	return entity;
 }
 
 //-----------------------------------//
@@ -179,9 +186,12 @@ void Serializer::serializeFields(const Class& type, void* object, Json::Value& v
 		serializeFields(parent, object, value);
 	}
 
-	foreach( const FieldsPair& p, type.getFields() )
+	const FieldsMap& fields = type.getFields();
+	
+	FieldsMap::const_iterator it;
+	for( it = fields.cbegin(); it != fields.cend(); it++ )
 	{
-		const Field& field = *p.second;
+		const Field& field = *(it->second);
 		const Type& field_type = field.type;
 
 		void* realObject = object;
@@ -189,9 +199,7 @@ void Serializer::serializeFields(const Class& type, void* object, Json::Value& v
 		if( field.isPointer() )
 		{
 			// Get the real object from the pointer.
-			const boost::intrusive_ptr<Resource> ptr =
-				field.get<boost::intrusive_ptr<Resource> >(object);
-			
+			const ResourcePtr ptr = field.get<ResourcePtr>(object);
 			realObject = (void*) ptr.get();
 		}
 
@@ -220,8 +228,9 @@ void Serializer::serializeFields(const Class& type, void* object, Json::Value& v
 
 void Serializer::deserializeFields(const Class& type, void* object, const Json::Value& fieldsValue)
 {
-	foreach( const std::string& name, fieldsValue.getMemberNames() )
+	for( uint i = 0; i < fieldsValue.getMemberNames().size(); i++ )
 	{
+		const std::string& name = fieldsValue.getMemberNames()[i];
 		const Field* field = type.getField(name);
 
 		if( !field )

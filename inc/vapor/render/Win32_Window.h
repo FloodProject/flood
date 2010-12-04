@@ -12,20 +12,31 @@
 
 #include "vapor/render/Window.h"
 
+#ifdef VAPOR_PLATFORM_WINDOWS
+	#define WIN32_LEAN_AND_MEAN
+	#define NOMINMAX
+	#include <Windows.h>	
+#endif
+
 namespace vapor {
 
 //-----------------------------------//
 
 /**
- * Another window implementation. Uses only native Windows API calls.
+ * Window implementation that uses native Windows API calls.
  */
 
 class Win32Window : public Window
 {
+	friend LRESULT CALLBACK WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam );
+
 public:
 
-	Win32Window(Settings& settings);
+	Win32Window(const WindowSettings& settings);
 	virtual ~Win32Window();
+
+	// Gets the window handle.
+	WindowHandle* getHandle();
 
 	// Swaps the buffers (updates the display).
 	void update();
@@ -34,7 +45,7 @@ public:
 	bool pumpEvents();
 
 	// Sets the title of the window.
-	void setTitle(const std::string& title);
+	bool setTitle(const std::wstring& title);
 
 	// Sets the cursor visibility.
 	void setCursor(bool state);
@@ -42,30 +53,34 @@ public:
 	// Sets this context as the current.
 	void makeCurrent();
 
-private:
+protected:
 
-	// These do the real work!
-	bool createWindow();
-	bool createContext();
+	// Registers the Win32 window class.
 	bool registerClass();
+
+	// Creates the window.
+	bool createWindow();
+
+	bool createContext();
 
 	// Get a string of the latest Windows error.
 	std::string getErrorMessage();
 
-	// Instance
+	// Instance handle.
 	HINSTANCE hInstance;
 
-	// Device context
+	// Device context.
 	HDC hDC;
 
-	// Window handle
+	// Window handle.
 	HWND hWnd;
 
-	// GL context
+	// GL rendering context.
 	HGLRC hRC;
-};
 
-LONG WINAPI WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam );
+	// Windows procedure.
+	WNDPROC windowProcedure;
+};
 
 //-----------------------------------//
 

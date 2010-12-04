@@ -46,10 +46,10 @@ public:
 protected:
 
 	// Serializes the node.
-	Json::Value serializeNode( const NodePtr& node );
+	Json::Value serializeEntity( const EntityPtr& node );
 
 	// Deserializes the node.
-	NodePtr deserializeNode( const Json::Value& nodeValue );
+	EntityPtr deserializeEntity( const Json::Value& nodeValue );
 
 	// Serializes the class fields.
 	void serializeFields( const Class& type, void* object, Json::Value& );

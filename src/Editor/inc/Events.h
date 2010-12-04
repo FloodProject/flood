@@ -38,11 +38,11 @@ public:
 	// Remove a plugin as an event listener.
 	void removeEventListener( Plugin* plugin );
 	
-	// Node selection event.
-	void onNodeSelect( const NodePtr& );
+	// Entity selection event.
+	void onEntitySelect( const EntityPtr& );
 
-	// Node unselection event.
-	void onNodeUnselect( const NodePtr& );
+	// Entity unselection event.
+	void onEntityUnselect( const EntityPtr& );
 
 	// Component selection event.
 	void onComponentSelect( const ComponentPtr& );

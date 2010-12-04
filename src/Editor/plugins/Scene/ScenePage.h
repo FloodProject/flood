@@ -14,26 +14,26 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-class NodeOperation : public UndoOperation
+class EntityOperation : public UndoOperation
 {
 public:
 
 	void redo();
 	void undo();
 
-	NodePtr node;
+	EntityPtr node;
 	SceneWeakPtr weakScene;
 };
 
 //-----------------------------------//
 
 class EditorFrame;
-class NodeOperation;
+class EntityOperation;
 
 #if defined(VAPOR_COMPILER_MSVC_2010) && defined(VAPOR_MEMORY_TR1_VENDOR)
-typedef std::map<NodeWeakPtr, wxTreeItemId, std::owner_less<NodeWeakPtr>> NodeIdsMap;
+typedef std::map<EntityWeakPtr, wxTreeItemId, std::owner_less<EntityWeakPtr>> EntityIdsMap;
 #else
-typedef std::map<NodeWeakPtr, wxTreeItemId> NodeIdsMap;
+typedef std::map<EntityWeakPtr, wxTreeItemId> EntityIdsMap;
 #endif
 
 //-----------------------------------//
@@ -60,13 +60,13 @@ public:
 	void setScene(const ScenePtr& scene);
 
 	// Gets the node associated with the tree item.
-	NodePtr getNodeFromTreeId( wxTreeItemId id );
+	EntityPtr getEntityFromTreeId( wxTreeItemId id );
 
 	// Gets the component associated with the tree item.
 	ComponentPtr getComponentFromTreeId( wxTreeItemId id );
 
 	// Gets the tree id from the node.
-	wxTreeItemId getTreeIdFromNode(const NodePtr& node);
+	wxTreeItemId getTreeIdFromEntity(const EntityPtr& node);
 
 	// Did we send the last selection event.
 	bool sentLastSelectionEvent;
@@ -81,16 +81,16 @@ protected:
 	void initIcons();
 
 	// Adds a group node to the tree.
-	void addGroup( wxTreeItemId id, const NodePtr& node, bool createGroup = true );
+	void addGroup( wxTreeItemId id, const EntityPtr& node, bool createGroup = true );
 
 	// Adds a node to the tree.
-	wxTreeItemId addNode( wxTreeItemId id, const NodePtr& node );
+	wxTreeItemId addEntity( wxTreeItemId id, const EntityPtr& node );
 
 	// Adds a component to the tree item.
 	void addComponent( wxTreeItemId id, ComponentPtr component );
 
 	// Creates a new node operation.
-	NodeOperation* createNodeOperation(const NodePtr& node);
+	EntityOperation* createEntityOperation(const EntityPtr& node);
 
 	// Cleans the current scene.
 	void cleanScene();
@@ -105,13 +105,13 @@ protected:
 	void onContextMenu( wxContextMenuEvent& );
 	void onMenuSelected( wxCommandEvent& );
 	void onComponentAdd( wxCommandEvent& );
-	void onButtonNodeAdd(wxCommandEvent&);
-	void onButtonNodeDelete(wxCommandEvent&);
-	void onButtonNodeDeleteUpdate(wxUpdateUIEvent&);
+	void onButtonEntityAdd(wxCommandEvent&);
+	void onButtonEntityDelete(wxCommandEvent&);
+	void onButtonEntityDeleteUpdate(wxUpdateUIEvent&);
 
 	// Event helpers.
 	MeshPtr askMeshResource();
-	void populateNodeItemMenu(wxMenu& menu, const NodePtr& node);
+	void populateEntityItemMenu(wxMenu& menu, const EntityPtr& node);
 	void populateComponentItemMenu(wxMenu& menu, const ComponentPtr& component);
 	void onAnimationMenuSelected(wxCommandEvent&);
 	void onAttachmentMenuSelected(wxCommandEvent&);
@@ -123,8 +123,8 @@ protected:
 	ModelPtr model;
 
 	// Scene-monitoring callbacks.
-	void onNodeAdded( const NodePtr& node );
-	void onNodeRemoved( const NodePtr& node );
+	void onEntityAdded( const EntityPtr& node );
+	void onEntityRemoved( const EntityPtr& node );
 
 	// Scene tree.
 	wxBoxSizer* sizer;
@@ -132,16 +132,16 @@ protected:
 	wxTreeItemId rootId;
 	wxTreeItemId menuItemId;
 	wxTreeItemId dragItemId;
-	NodeIdsMap nodeIds;
+	EntityIdsMap nodeIds;
 
 	// Tree icons.
 	wxImageList* imageList;
 	std::map<const Type*, int> icons;
 	std::map<const Type*, wxBitmap> bitmaps;
 
-	// Node buttons.
-	wxBitmapButton* buttonNodeAdd;
-	wxBitmapButton* buttonNodeDelete;
+	// Entity buttons.
+	wxBitmapButton* buttonEntityAdd;
+	wxBitmapButton* buttonEntityDelete;
 
 	// Current menu.
 	wxMenu* currentMenu;
@@ -155,7 +155,7 @@ protected:
 	// Scene instance.
 	SceneWeakPtr weakScene;
 
-	// Node counter.
+	// Entity counter.
 	int nodeCounter;
 };
 

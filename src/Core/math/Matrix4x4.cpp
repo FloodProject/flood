@@ -13,7 +13,7 @@
 
 namespace vapor {
 
-const VAPOR_API Matrix4x4 Matrix4x4::Identity;
+const CORE_API Matrix4x4 Matrix4x4::Identity;
 
 //-----------------------------------//
 
@@ -192,7 +192,7 @@ Matrix4x4 Matrix4x4::inverse() const
         // check for singular matrix
         if (pivot == 0.0f)
         {
-			Log::warn("Matrix is singular and cannot be inverted");
+			assert( 0 && "Matrix is singular and cannot be inverted" );
             return *this;
         }
   

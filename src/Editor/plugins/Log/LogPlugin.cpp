@@ -43,7 +43,7 @@ void LogPlugin::onPluginEnable()
 
 	addTool( toolBar->AddSeparator() );
 
-	wxBitmap iconLog = wxMEMORY_BITMAP(application_xp_terminal);
+	wxBitmap iconLog = wxMEMORY_BITMAP(page_white_text);
 	logButton = toolBar->AddTool( wxID_ANY, "Log", iconLog );
 	addTool( logButton );
 
@@ -63,7 +63,7 @@ void LogPlugin::onPluginDisable()
 
 void LogPlugin::onLogButtonClick(wxCommandEvent& event)
 {
-	log->Show();
+	log->Show( !log->IsShown() );
 }
 
 //-----------------------------------//

@@ -10,7 +10,7 @@
 #include "vapor/paging/PageManager.h"
 #include "vapor/paging/Page.h"
 
-#include "vapor/scene/Node.h"
+#include "vapor/scene/Entity.h"
 #include "vapor/scene/Transform.h"
 #include "vapor/scene/Camera.h"
 
@@ -35,8 +35,11 @@ PageManager::PageManager( uint pageSize, CameraWeakPtr weakCamera )
 
 PageManager::~PageManager()
 {
-	foreach( Page* const page, pages )
+	for( uint i = 0; i < pages.size(); i++ )
+	{
+		Page* const page = pages[i];
 		delete page;
+	}
 }
 
 //-----------------------------------//
@@ -49,7 +52,7 @@ void PageManager::update( double delta )
 	if(!camera)
 		return;
 
-	const NodePtr& nodeCamera = camera->getNode();
+	const EntityPtr& nodeCamera = camera->getEntity();
 	assert( nodeCamera != nullptr );
 
 	const TransformPtr& transform = nodeCamera->getTransform();

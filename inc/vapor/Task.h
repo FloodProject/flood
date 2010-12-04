@@ -8,11 +8,13 @@
 
 #pragma once
 
+#include "ReferenceCount.h"
+
 namespace vapor {
 
 //-----------------------------------//
 
-class VAPOR_API Task : public ReferenceCounted
+class CORE_API Task : public ReferenceCounted
 {
 	DECLARE_UNCOPYABLE(Task);
 

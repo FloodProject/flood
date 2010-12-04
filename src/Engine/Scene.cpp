@@ -7,9 +7,10 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/scene/Scene.h"
-#include "vapor/scene/Transform.h"
-#include "vapor/scene/Tags.h"
+#include "scene/Scene.h"
+#include "scene/Transform.h"
+#include "scene/Tags.h"
+#include "scene/Geometry.h"
 
 namespace vapor {
 
@@ -53,13 +54,14 @@ static bool doRayBoxGroupQuery( const GroupPtr& group, const Ray& ray,
 							   RayBoxQueryList& list, bool all )
 {
 	// Do some ray casting to find a collision.
-	foreach( const NodePtr& node, group->getNodes() )
+	for( uint i = 0; i < group->getEntities().size(); i++ )
 	{
-		const Type& type = node->getInstanceType();
+		const EntityPtr& entity = group->getEntities()[i];
+		const Type& type = entity->getInstanceType();
 
 		if( type.is<Group>() || type.inherits<Group>() )
 		{
-			GroupPtr group = std::static_pointer_cast<Group>(node);
+			GroupPtr group = std::static_pointer_cast<Group>(entity);
 
 			if( doRayBoxGroupQuery(group, ray, list, all) && !all )
 				return true;
@@ -67,10 +69,10 @@ static bool doRayBoxGroupQuery( const GroupPtr& group, const Ray& ray,
 		else
 		{
 			// No need to pick invisible nodes.
-			if( !node->isVisible() || node->getTag(Tags::NonPickable) )
+			if( !entity->isVisible() || entity->getTag(Tags::NonPickable) )
 				continue;
 
-			const TransformPtr& transform = node->getTransform();
+			const TransformPtr& transform = entity->getTransform();
 			
 			if( !transform )
 				continue;
@@ -81,7 +83,7 @@ static bool doRayBoxGroupQuery( const GroupPtr& group, const Ray& ray,
 			if( box.intersects(ray, distance) )
 			{
 				RayBoxQueryResult res;
-				res.node = node;
+				res.node = entity;
 				res.distance = distance;
 
 				list.push_back( res );
@@ -111,8 +113,10 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res )
 	RayBoxQueryList list;
 	doRayBoxQuery( ray, list );
 
-	foreach( const RayBoxQueryResult& query, list )
+	for( uint i = 0; i < list.size(); i++ )
 	{
+		const RayBoxQueryResult& query = list[i];
+	
 		if( doRayTriangleQuery( ray, res, query.node ) )
 			return true;
 	}
@@ -123,11 +127,13 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res )
 //-----------------------------------//
 
 bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res,
-							    const NodePtr& node )
+							    const EntityPtr& node )
 {
 	// Down to triangle picking.	
-	foreach( const GeometryPtr& geo, node->getGeometry() )
-	{
+	for( uint i = 0; i < node->getGeometry().size(); i++ )
+	{		
+		const GeometryPtr& geo = node->getGeometry()[i];
+	
 		if( !geo )
 			continue;
 
@@ -142,8 +148,10 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res,
 		if( !bound.intersects(ray, distance) )
 			continue;
 
-		foreach( const RenderablePtr& rend, geo->getRenderables() )
+		for( uint e = 0; e < geo->getRenderables().size(); e++ )
 		{
+			const RenderablePtr& rend = geo->getRenderables()[e];
+
 			// This picking method only works on triangles.
 
 			if( !rend )

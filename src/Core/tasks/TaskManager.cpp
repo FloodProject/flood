@@ -8,7 +8,8 @@
 
 #include "Core.h"
 #include "TaskManager.h"
-#include "Utilities.h"
+#include "Task.h"
+#include "Log.h"
 
 namespace vapor {
 
@@ -27,8 +28,9 @@ TaskManager::TaskManager( int poolSize )
 
 TaskManager::~TaskManager()
 {
-	foreach( Thread* thread, threadPool )
+	for( uint i = 0; i < threadPool.size(); i++ )
 	{
+		Thread* thread = threadPool[i];
 		THREAD(delete thread;)
 	}
 }

@@ -11,6 +11,7 @@
 #include "math/Vector3.h"
 #include "math/EulerAngles.h"
 #include "math/Matrix4x3.h"
+#include "ReferenceCount.h"
 
 FWD_DECL_INTRUSIVE(Mesh)
 FWD_DECL_INTRUSIVE(Bone)

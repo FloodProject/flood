@@ -18,7 +18,7 @@ namespace vapor {
  * Simple utility profiler class.
  */
 
-class VAPOR_API Profiler
+class CORE_API Profiler
 {
 public:
 

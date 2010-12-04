@@ -63,14 +63,14 @@ RenderablePtr Component::createDebugRenderable() const
 
 //-----------------------------------//
 
-void Component::setNode( const NodePtr& newNode )
+void Component::setEntity( const EntityPtr& newEntity )
 {
-	node = newNode;
+	node = newEntity;
 }
 
 //-----------------------------------//
 
-NodePtr Component::getNode() const
+EntityPtr Component::getEntity() const
 {
 	return node.lock();
 }

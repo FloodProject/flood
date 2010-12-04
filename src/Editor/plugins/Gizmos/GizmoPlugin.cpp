@@ -89,14 +89,14 @@ void GizmoPlugin::onPluginEnable()
 
 void GizmoPlugin::onPluginDisable()
 {
-	unselectNodes();
+	unselectEntities();
 }
 
 //-----------------------------------//
 
 void GizmoPlugin::onSceneLoad( const ScenePtr& scene )
 {
-	unselectNodes();
+	unselectEntities();
 }
 
 //-----------------------------------//
@@ -105,36 +105,40 @@ void GizmoPlugin::onToolClick(wxCommandEvent& event)
 {
 	tool = (GizmoTool::Enum) event.GetId();
 
-	unselectNodes(true);
+	unselectEntities(true);
 }
 
 //-----------------------------------//
 
-void GizmoPlugin::unselectNodes(bool reselect)
+void GizmoPlugin::unselectEntities(bool reselect)
 {
 	Events* events = editor->getEventManager();
 
-	std::vector<NodePtr> nodes;
-	
-	foreach( const GizmoMapPair& pair, gizmos )
-		nodes.push_back(pair.first);
+	std::vector<EntityPtr> nodes;
 
-	foreach( const NodePtr& node, nodes )
+	GizmoMap::const_iterator it;
+	for( it = gizmos.cbegin(); it != gizmos.cend(); it++ )
 	{
-		events->onNodeUnselect(node);
+		nodes.push_back(it->first);
+	}
+
+	for( uint i = 0; i < nodes.size(); i++ )
+	{
+		const EntityPtr& node = nodes[i];
+		events->onEntityUnselect(node);
 
 		if( reselect )
-			onNodeSelect(node);
+			onEntitySelect(node);
 	}
 }
 
 //-----------------------------------//
 
-void GizmoPlugin::onNodeSelect( const NodePtr& node )
+void GizmoPlugin::onEntitySelect( const EntityPtr& node )
 {
 	editor->redrawView();
 
-	unselectNodes();
+	unselectEntities();
 
 	if( isTool(GizmoTool::Camera) )
 		return;
@@ -143,7 +147,7 @@ void GizmoPlugin::onNodeSelect( const NodePtr& node )
 
 	if( isTool(GizmoTool::Select) )
 	{
-		gizmos[node] = NodePtr();
+		gizmos[node] = EntityPtr();
 		return;
 	}
 	
@@ -155,7 +159,7 @@ void GizmoPlugin::onNodeSelect( const NodePtr& node )
 
 //-----------------------------------//
 
-void GizmoPlugin::onNodeUnselect( const NodePtr& node )
+void GizmoPlugin::onEntityUnselect( const EntityPtr& node )
 {
 	setBoundingBoxVisible( node, false );
 	removeGizmo( node );
@@ -167,7 +171,7 @@ void GizmoPlugin::onNodeUnselect( const NodePtr& node )
 
 Plane GizmoPlugin::getGizmoPickPlane()
 {
-	const NodePtr nodeObject( op->weakNode );
+	const EntityPtr nodeObject( op->weakEntity );
 	const TransformPtr& transObject = nodeObject->getTransform();
 
 	Vector3 gizmoAxis = gizmo->getAxisVector(op->axis);
@@ -216,7 +220,7 @@ bool GizmoPlugin::getGizmoPickPoint(int x, int y, Vector3& pickPoint)
 
 //-----------------------------------//
 
-bool GizmoPlugin::getGizmoPickNode(int x, int y ,NodePtr& node)
+bool GizmoPlugin::getGizmoPickEntity(int x, int y ,EntityPtr& node)
 {
 	RenderView* view = viewframe->getView();
 	const CameraPtr& camera = view->getCamera();
@@ -227,7 +231,7 @@ bool GizmoPlugin::getGizmoPickNode(int x, int y ,NodePtr& node)
 	const Ray& pickRay = camera->getRay( x, y, &outFar );
 
 #if 0 // Enable this to draw debugging lines
-	const NodePtr& line = buildRay( pickRay, outFar );
+	const EntityPtr& line = buildRay( pickRay, outFar );
 	editor->getEditorScene()->add( line );
 #endif
 
@@ -295,7 +299,7 @@ void GizmoPlugin::onMouseDrag( const MouseDragEvent& dragEvent )
 	Vector3 pickAxis = gizmo->getAxisVector(op->axis);
 	Vector3 pickOffset = pickAxis.project(pickPoint - firstPickPoint);
 
-	const NodePtr nodeObject( op->weakNode );
+	const EntityPtr nodeObject( op->weakEntity );
 	const TransformPtr& transObject = nodeObject->getTransform();
 	
 	if( isTool(GizmoTool::Translate) )
@@ -329,14 +333,14 @@ void GizmoPlugin::onMouseButtonPress( const MouseButtonEvent& mbe )
 		return;
 	}
 	
-	unselectNodes();
+	unselectEntities();
 
-	NodePtr node;
-	if( !getGizmoPickNode(mbe.x, mbe.y, node) )
+	EntityPtr node;
+	if( !getGizmoPickEntity(mbe.x, mbe.y, node) )
 		return;
 
 	Events* events = editor->getEventManager();
-	events->onNodeSelect(node);
+	events->onEntitySelect(node);
 }
 
 //-----------------------------------//
@@ -355,7 +359,7 @@ void GizmoPlugin::onMouseButtonRelease( const MouseButtonEvent& mbe )
 
 //-----------------------------------//
 
-void GizmoPlugin::createGizmo( const NodePtr& node )
+void GizmoPlugin::createGizmo( const EntityPtr& node )
 {
 	assert( node != nullptr );
 	assert( gizmos.find(node) == gizmos.end() );
@@ -381,7 +385,7 @@ void GizmoPlugin::createGizmo( const NodePtr& node )
 	gizmo->buildGeometry();
 
 	// Add the gizmo to the scene.
-	NodePtr nodeGizmo( new Node("Gizmo") );
+	EntityPtr nodeGizmo( new Entity("Gizmo") );
 	nodeGizmo->addTransform();
 	nodeGizmo->addComponent(gizmo);
 	editorScene->add(nodeGizmo);
@@ -394,7 +398,7 @@ void GizmoPlugin::createGizmo( const NodePtr& node )
 
 //-----------------------------------//
 
-void GizmoPlugin::removeGizmo( const NodePtr& node )
+void GizmoPlugin::removeGizmo( const EntityPtr& node )
 {
 	assert( node != nullptr );
 
@@ -405,7 +409,7 @@ void GizmoPlugin::removeGizmo( const NodePtr& node )
 		return;
 
 	// Find the node of the gizmo.
-	const NodePtr& nodeGizmo = gizmos[node];
+	const EntityPtr& nodeGizmo = gizmos[node];
 	
 	// Remove the gizmo.
 	editorScene->remove(nodeGizmo);
@@ -415,7 +419,7 @@ void GizmoPlugin::removeGizmo( const NodePtr& node )
 
 //-----------------------------------//
 
-void GizmoPlugin::setBoundingBoxVisible( const NodePtr& node, bool state )
+void GizmoPlugin::setBoundingBoxVisible( const EntityPtr& node, bool state )
 {
 	assert( node != nullptr );
 
@@ -476,7 +480,7 @@ void GizmoPlugin::createOperation()
 {
 	assert( op == nullptr );
 	
-	NodePtr nodeObject = gizmo->getNodeAttachment();
+	EntityPtr nodeObject = gizmo->getEntityAttachment();
 	TransformPtr transObject = nodeObject->getTransform();
 
 	op = new GizmoOperation();
@@ -484,7 +488,7 @@ void GizmoPlugin::createOperation()
 	op->tool = tool;
 	op->axis = axis;
 	op->gizmo = gizmo;
-	op->weakNode = nodeObject;
+	op->weakEntity = nodeObject;
 
 	op->prevTranslation = transObject->getPosition();
 	op->prevScale = transObject->getScale();

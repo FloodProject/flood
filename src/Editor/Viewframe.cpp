@@ -57,7 +57,7 @@ void Viewframe::switchToDefaultCamera()
 	if( !camera )
 		return;
 
-	NodePtr nodeCamera = camera->getNode();
+	EntityPtr nodeCamera = camera->getEntity();
 	ControllerPtr controller = nodeCamera->getTypedComponent<Controller>();
 
 	if( controller )
@@ -68,7 +68,7 @@ void Viewframe::switchToDefaultCamera()
 
 //-----------------------------------//
 
-RenderView* Viewframe::createView( /*const NodePtr& node*/ )
+RenderView* Viewframe::createView( /*const EntityPtr& node*/ )
 {
 
 	// Add a new view to the window.

@@ -15,7 +15,7 @@
 #include "vapor/physics/Convert.h"
 #include "vapor/physics/Body.h"
 
-#include "vapor/scene/Node.h"
+#include "vapor/scene/Entity.h"
 #include "vapor/scene/Transform.h"
 
 #include <BulletCollision/CollisionShapes/btCapsuleShape.h>
@@ -55,7 +55,7 @@ void CapsuleShape::update( double delta )
 	if( capsuleShape )
 		return;
 
-	const TransformPtr& transform = getNode()->getTransform();
+	const TransformPtr& transform = getEntity()->getTransform();
 	
 	if( !transform )
 		return;
@@ -80,7 +80,7 @@ void CapsuleShape::onFieldChanged(const Field& field)
 	if( !capsuleShape )
 		return;
 
-	const BodyPtr& body = getNode()->getComponent<Body>();
+	const BodyPtr& body = getEntity()->getComponent<Body>();
 
 	if( body )
 		body->removeWorld();

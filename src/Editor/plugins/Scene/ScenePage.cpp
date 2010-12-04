@@ -8,6 +8,7 @@
 
 #include "PCH.h"
 #include "ScenePage.h"
+#include "Utilities.h"
 #include "Events.h"
 #include "Editor.h"
 #include "EditorIcons.h"
@@ -18,13 +19,13 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-void NodeOperation::redo()
+void EntityOperation::redo()
 {
 	ScenePtr scene = weakScene.lock();
 	if(scene) scene->add(node);
 }
 
-void NodeOperation::undo()
+void EntityOperation::undo()
 {
 	ScenePtr scene = weakScene.lock();
 	if(scene) scene->remove(node);
@@ -32,11 +33,11 @@ void NodeOperation::undo()
 
 //-----------------------------------//
 
-class NodeItemData : public wxTreeItemData
+class EntityItemData : public wxTreeItemData
 {
 public:
 
-	NodeWeakPtr node;
+	EntityWeakPtr node;
 	ComponentWeakPtr component;
 };
 
@@ -44,11 +45,11 @@ public:
 
 enum 
 {
-	ID_MenuSceneNodeDelete = wxID_HIGHEST+472,
-	ID_MenuSceneNodeDuplicate,
-	ID_MenuSceneNodeVisible,
-	ID_MenuSceneNodeWireframe,
-	ID_MenuSceneNodeTerrain,
+	ID_MenuSceneEntityDelete = wxID_HIGHEST+472,
+	ID_MenuSceneEntityDuplicate,
+	ID_MenuSceneEntityVisible,
+	ID_MenuSceneEntityWireframe,
+	ID_MenuSceneEntityTerrain,
 };
 
 //-----------------------------------//
@@ -68,7 +69,7 @@ static ComponentEntry components[] = {
 	{ true, TYPE(Transform),			BMP(chart_line) },
 	{ true, TYPE(Model),				BMP(shape_flip_horizontal) },
 	{ true, TYPE(Light),				BMP(lightbulb_off) },
-	{ true, TYPE(Skydome),				BMP(skydome) },
+	{ true, TYPE(Skydome),				BMP(weather_clouds) },
 	{ true, TYPE(Camera),				BMP(camera) },
 	//{ true, TYPE(Sound),				BMP(sound) },
 	//{ true, TYPE(Listener),			BMP(status_online) },
@@ -99,15 +100,17 @@ template<typename T> T* cloneObject(T* object)
 	const Class& type = object->getInstanceType();
 	T* newObject = (T*) type.createInstance();
 
-	foreach( const FieldsPair& p, type.getFields() )
+	const FieldsMap& fields = type.getFields();
+	
+	FieldsMap::const_iterator it;
+	for( it = fields.cbegin(); it != fields.cend(); it++ )
 	{
-		Field* field = p.second;
+		Field* field = it->second;
 		const Type& field_type = field->type;
 		
 		if( field->isPointer() )
 		{
-			field->set<boost::intrusive_ptr<Resource>>(
-				newObject, field->get<boost::intrusive_ptr<Resource>>(object));
+			field->set<ResourcePtr>(newObject, field->get<ResourcePtr>(object));
 		}
 		else if( field_type.isPrimitive() )
 		{
@@ -154,8 +157,8 @@ ScenePage::ScenePage( EditorFrame* frame, wxWindow* parent, wxWindowID id )
 	: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(250, -1) )
 	, treeCtrl(nullptr)
 	, imageList(nullptr)
-	, buttonNodeAdd(nullptr)
-	, buttonNodeDelete(nullptr)
+	, buttonEntityAdd(nullptr)
+	, buttonEntityDelete(nullptr)
 	, currentMenu(nullptr)
 	, sentLastSelectionEvent(false)
 	, editor(frame)
@@ -183,8 +186,8 @@ void ScenePage::cleanScene()
 	if( !scene )
 		return;
 	
-	scene->onNodeAdded.Disconnect( this, &ScenePage::onNodeAdded );
-	scene->onNodeRemoved.Disconnect( this, &ScenePage::onNodeRemoved );
+	scene->onEntityAdded.Disconnect( this, &ScenePage::onEntityAdded );
+	scene->onEntityRemoved.Disconnect( this, &ScenePage::onEntityRemoved );
 
 	weakScene.reset();
 }
@@ -208,7 +211,7 @@ void ScenePage::initTree()
 	treeCtrl->Bind(wxEVT_COMMAND_TREE_BEGIN_DRAG, &ScenePage::onDragBegin, this);
 	treeCtrl->Bind(wxEVT_COMMAND_TREE_END_DRAG, &ScenePage::onDragEnd, this);
 
-	SetSizer( sizer );
+	SetSizer( sizer ); 
 
 	Bind(wxEVT_CONTEXT_MENU, &ScenePage::onContextMenu, this);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &ScenePage::onMenuSelected, this);
@@ -227,19 +230,19 @@ void ScenePage::initButtons()
 	wxTextCtrl* textFind = new wxTextCtrl( this, wxID_ANY );
 	sizer2->Add( textFind, 1, wxEXPAND|wxALL, 5 );
 	
-	// Node delete button.
-	buttonNodeDelete = new wxBitmapButton( this, wxID_ANY, wxMEMORY_BITMAP(package_delete) );
-	buttonNodeDelete->SetBitmapDisabled( wxMEMORY_BITMAP(package_delete_disable) );
-	sizer2->Add( buttonNodeDelete, 0, wxEXPAND|wxTOP|wxBOTTOM, 5 );
+	// Entity delete button.
+	buttonEntityDelete = new wxBitmapButton( this, wxID_ANY, wxMEMORY_BITMAP(package_delete) );
+	buttonEntityDelete->SetBitmapDisabled( wxMEMORY_BITMAP(package_delete_disable) );
+	sizer2->Add( buttonEntityDelete, 0, wxEXPAND|wxTOP|wxBOTTOM, 5 );
 	
-	buttonNodeDelete->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ScenePage::onButtonNodeDelete, this);
-	buttonNodeDelete->Bind(wxEVT_UPDATE_UI, &ScenePage::onButtonNodeDeleteUpdate, this);
+	buttonEntityDelete->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ScenePage::onButtonEntityDelete, this);
+	buttonEntityDelete->Bind(wxEVT_UPDATE_UI, &ScenePage::onButtonEntityDeleteUpdate, this);
 
-	// Node add button.
-	buttonNodeAdd = new wxBitmapButton( this, wxID_ANY, wxMEMORY_BITMAP(package_add) );
-	sizer2->Add( buttonNodeAdd, 0, wxTOP|wxBOTTOM, 5 );
+	// Entity add button.
+	buttonEntityAdd = new wxBitmapButton( this, wxID_ANY, wxMEMORY_BITMAP(package_add) );
+	sizer2->Add( buttonEntityAdd, 0, wxTOP|wxBOTTOM, 5 );
 
-	buttonNodeAdd->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ScenePage::onButtonNodeAdd, this);
+	buttonEntityAdd->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ScenePage::onButtonEntityAdd, this);
 	sizer->Add( sizer2, 0, wxEXPAND, 0 );
 }
 
@@ -251,8 +254,9 @@ void ScenePage::initIcons()
 	imageList = new wxImageList(16, 16, false, 16);
 	imageList->Add(wxMEMORY_BITMAP(package));
 
-	foreach( const ComponentEntry& c, components )
+	for( uint i = 0; i < VAPOR_ARRAY_SIZE(components); i++ )
 	{
+		const ComponentEntry& c = components[i];
 		const Type* type = &c.type;
 		
 		bitmaps[type] = _wxConvertMemoryToBitmap(c.icon, c.icon_length);
@@ -281,44 +285,50 @@ void ScenePage::setScene(const ScenePtr& scene)
 
 //-----------------------------------//
 
-void ScenePage::addGroup( wxTreeItemId id, const NodePtr& node, bool createGroup )
+void ScenePage::addGroup( wxTreeItemId id, const EntityPtr& node, bool createGroup )
 {
 	if( !node->getInstanceType().inherits<Group>() )
 	{
-		addNode(id, node);
+		addEntity(id, node);
 		return;
 	}
 	
-	GroupPtr group = std::dynamic_pointer_cast<Group>(node);
+	GroupPtr group = std::static_pointer_cast<Group>(node);
 
-	group->onNodeAdded.Connect( this, &ScenePage::onNodeAdded );
-	group->onNodeRemoved.Connect( this, &ScenePage::onNodeRemoved );
+	group->onEntityAdded.Connect( this, &ScenePage::onEntityAdded );
+	group->onEntityRemoved.Connect( this, &ScenePage::onEntityRemoved );
 
 	wxTreeItemId groupId = id;
 		
 	if( createGroup )
 		groupId = treeCtrl->AppendItem( id, group->getName(), 0 );
 
-	NodeItemData* data = new NodeItemData();
+	EntityItemData* data = new EntityItemData();
 	data->node = node;
 
 	nodeIds[node] = groupId;
 	treeCtrl->SetItemData( groupId, data );
 
-	foreach( const NodePtr& child, group->getNodes() )
+	for( uint i = 0; i < group->getEntities().size(); i++ )
+	{
+		const EntityPtr& child = group->getEntities()[i];
 		addGroup(groupId, child);
+	}
 }
 
 //-----------------------------------//
 
-wxTreeItemId ScenePage::addNode( wxTreeItemId id, const NodePtr& node )
+wxTreeItemId ScenePage::addEntity( wxTreeItemId id, const EntityPtr& node )
 {
 	wxTreeItemId nodeId = treeCtrl->AppendItem( id, node->getName(), 0 );
 
-	foreach( const ComponentMapPair& component, node->getComponents() )
-		addComponent(nodeId, component.second);
+	const ComponentMap& components = node->getComponents();
 
-	NodeItemData* data = new NodeItemData();
+	ComponentMap::const_iterator it;
+	for( it = components.cbegin(); it != components.cend(); it++ )
+		addComponent(nodeId, it->second);
+
+	EntityItemData* data = new EntityItemData();
 	data->node = node;
 
 	treeCtrl->SetItemData( nodeId, data );
@@ -335,9 +345,9 @@ void ScenePage::addComponent( wxTreeItemId id, ComponentPtr component )
 	const Type& type = component->getInstanceType();
 
 	wxTreeItemId componentId = 
-treeCtrl->AppendItem( id, type.getName(), icons[&type] );
+		treeCtrl->AppendItem( id, type.getName(), icons[&type] );
 
-	NodeItemData* data = new NodeItemData();
+	EntityItemData* data = new EntityItemData();
 	data->component = component;
 
 	treeCtrl->SetItemData( componentId, data );
@@ -350,7 +360,7 @@ ComponentPtr ScenePage::getComponentFromTreeId( wxTreeItemId id )
 	if( !id )
 		return ComponentPtr();
 
-	NodeItemData* data = (NodeItemData*) treeCtrl->GetItemData(id);
+	EntityItemData* data = (EntityItemData*) treeCtrl->GetItemData(id);
 	assert( data != nullptr );
 
 	return data->component.lock();
@@ -358,12 +368,12 @@ ComponentPtr ScenePage::getComponentFromTreeId( wxTreeItemId id )
 
 //-----------------------------------//
 
-NodePtr ScenePage::getNodeFromTreeId( wxTreeItemId id )
+EntityPtr ScenePage::getEntityFromTreeId( wxTreeItemId id )
 {
 	if( !id )
-		return NodePtr();
+		return EntityPtr();
 
-	NodeItemData* data = (NodeItemData*) treeCtrl->GetItemData(id);
+	EntityItemData* data = (EntityItemData*) treeCtrl->GetItemData(id);
 	assert( data != nullptr );
 
 	return data->node.lock();
@@ -371,9 +381,9 @@ NodePtr ScenePage::getNodeFromTreeId( wxTreeItemId id )
 
 //-----------------------------------//
 
-wxTreeItemId ScenePage::getTreeIdFromNode(const NodePtr& node)  
+wxTreeItemId ScenePage::getTreeIdFromEntity(const EntityPtr& node)  
 {
-	NodeIdsMap::iterator it = nodeIds.find(node);
+	EntityIdsMap::iterator it = nodeIds.find(node);
 
 	if( it == nodeIds.end() )
 		return wxTreeItemId();
@@ -388,8 +398,8 @@ void ScenePage::onItemChanged(wxTreeEvent& event)
 	wxTreeItemId oldId = event.GetOldItem();
 	wxTreeItemId newId = event.GetItem();
 
-	const NodePtr& oldNode = getNodeFromTreeId( oldId );
-	const NodePtr& newNode = getNodeFromTreeId( newId );
+	const EntityPtr& oldEntity = getEntityFromTreeId( oldId );
+	const EntityPtr& newEntity = getEntityFromTreeId( newId );
 	
 	const ComponentPtr& oldComponent = getComponentFromTreeId( oldId );
 	const ComponentPtr& newComponent = getComponentFromTreeId( newId );
@@ -399,14 +409,14 @@ void ScenePage::onItemChanged(wxTreeEvent& event)
 	// Send events to plugins.
 	Events* events = editor->getEventManager();
 
-	if( oldNode )
-		events->onNodeUnselect(oldNode);
+	if( oldEntity )
+		events->onEntityUnselect(oldEntity);
 
 	if( oldComponent )
 		events->onComponentUnselect(oldComponent);
 
-	if( newNode )
-		events->onNodeSelect(newNode);
+	if( newEntity )
+		events->onEntitySelect(newEntity);
 
 	if( newComponent )
 		events->onComponentSelect(newComponent);
@@ -416,13 +426,13 @@ void ScenePage::onItemChanged(wxTreeEvent& event)
 
 //-----------------------------------//
 
-void ScenePage::onButtonNodeAdd(wxCommandEvent&)
+void ScenePage::onButtonEntityAdd(wxCommandEvent&)
 {
-	std::string name("Node"+String::fromNumber(nodeCounter++));
-	NodePtr node( new Node(name) );
+	std::string name("Entity"+String::fromNumber(nodeCounter++));
+	EntityPtr node( new Entity(name) );
 	node->addTransform();
 	
-	NodeOperation* nodeOperation = new NodeOperation();
+	EntityOperation* nodeOperation = new EntityOperation();
 	nodeOperation->node = node;
 	nodeOperation->weakScene = weakScene;
 
@@ -431,7 +441,7 @@ void ScenePage::onButtonNodeAdd(wxCommandEvent&)
 
 	nodeOperation->redo();
 	
-	wxTreeItemId id = getTreeIdFromNode(node);
+	wxTreeItemId id = getTreeIdFromEntity(node);
 	treeCtrl->Expand(id);
 	treeCtrl->SelectItem(id);
 	treeCtrl->EditLabel(id);
@@ -441,12 +451,12 @@ void ScenePage::onButtonNodeAdd(wxCommandEvent&)
 
 //-----------------------------------//
 
-void ScenePage::onButtonNodeDelete(wxCommandEvent&)
+void ScenePage::onButtonEntityDelete(wxCommandEvent&)
 {	
 	wxTreeItemId id = treeCtrl->GetSelection();
-	const NodePtr& node = getNodeFromTreeId(id);
+	const EntityPtr& node = getEntityFromTreeId(id);
 
-	NodeOperation* nodeOperation = createNodeOperation(node);
+	EntityOperation* nodeOperation = createEntityOperation(node);
 	nodeOperation->undo();
 
 	editor->redrawView();
@@ -454,25 +464,25 @@ void ScenePage::onButtonNodeDelete(wxCommandEvent&)
 
 //-----------------------------------//
 
-void ScenePage::onButtonNodeDeleteUpdate(wxUpdateUIEvent& event)
+void ScenePage::onButtonEntityDeleteUpdate(wxUpdateUIEvent& event)
 {
 	ScenePtr scene = weakScene.lock();
 
 	if( !scene )
 		return;
 
-	bool empty = scene->getNodes().empty();
+	bool empty = scene->getEntities().empty();
 	event.Enable( !empty );
 }
 
 //-----------------------------------//
 
-NodeOperation* ScenePage::createNodeOperation(const NodePtr& node)
+EntityOperation* ScenePage::createEntityOperation(const EntityPtr& node)
 {
 	if( !node )
 		return nullptr;
 
-	NodeOperation* nodeOperation = new NodeOperation();
+	EntityOperation* nodeOperation = new EntityOperation();
 	nodeOperation->node = node;
 	nodeOperation->weakScene = weakScene;
 
@@ -484,35 +494,35 @@ NodeOperation* ScenePage::createNodeOperation(const NodePtr& node)
 
 //-----------------------------------//
 
-void ScenePage::onNodeAdded( const NodePtr& node )
+void ScenePage::onEntityAdded( const EntityPtr& node )
 {
 	if( node->getTag(EditorTags::EditorOnly) )
 		return;
 	
-	wxTreeItemId id = getTreeIdFromNode(node->getParent());
+	wxTreeItemId id = getTreeIdFromEntity(node->getParent());
 	addGroup( id, node );
 }
 
 //-----------------------------------//
 
-void ScenePage::onNodeRemoved( const NodePtr& node )
+void ScenePage::onEntityRemoved( const EntityPtr& node )
 {
-	wxTreeItemId id = getTreeIdFromNode(node);
+	wxTreeItemId id = getTreeIdFromEntity(node);
 	treeCtrl->Delete(id);
 	
 	assert( nodeIds[node] == id );
 	nodeIds.erase(node);
 
 	//Events* events = editor->getEventManager();
-	//events->onNodeUnselect( event.node );
+	//events->onEntityUnselect( event.node );
 }
 
 //-----------------------------------//
 
-void ScenePage::populateNodeItemMenu(wxMenu& menu, const NodePtr& node)
+void ScenePage::populateEntityItemMenu(wxMenu& menu, const EntityPtr& node)
 {
-	menu.AppendCheckItem(ID_MenuSceneNodeVisible, "&Visible");
-	menu.Check(ID_MenuSceneNodeVisible, node->isVisible() );
+	menu.AppendCheckItem(ID_MenuSceneEntityVisible, "&Visible");
+	menu.Check(ID_MenuSceneEntityVisible, node->isVisible() );
 
 	const std::vector<GeometryPtr>& geo = node->getGeometry();
 	
@@ -523,19 +533,21 @@ void ScenePage::populateNodeItemMenu(wxMenu& menu, const NodePtr& node)
 		if( !rend.empty() )
 		{
 			bool state = (rend.front()->getPolygonMode() != PolygonMode::Solid);
-			menu.AppendCheckItem(ID_MenuSceneNodeWireframe, "&Wireframe");
-			menu.Check(ID_MenuSceneNodeWireframe, state );
+			menu.AppendCheckItem(ID_MenuSceneEntityWireframe, "&Wireframe");
+			menu.Check(ID_MenuSceneEntityWireframe, state );
 		}
 	}
 
-	menu.Append(ID_MenuSceneNodeDelete, "&Delete");
-	menu.Append(ID_MenuSceneNodeDuplicate, "Duplicate");
+	menu.Append(ID_MenuSceneEntityDelete, "&Delete");
+	menu.Append(ID_MenuSceneEntityDuplicate, "Duplicate");
 
 	menu.AppendSeparator();
 
-	foreach( ComponentEntry& c, components )
+	for( uint i = 0; i < VAPOR_ARRAY_SIZE(components); i++ )
 	{
+		ComponentEntry& c = components[i];
 		const Type& type = c.type;
+
 		wxMenuItem* item = menu.Append(wxID_ANY, type.getName());
 		item->SetBitmap( bitmaps[&type], false );
 	}
@@ -553,8 +565,10 @@ wxMenu* ScenePage::createMenuAnimation(const MeshPtr& mesh)
 	wxMenuItem* itemFirst = nullptr;
 	wxMenuItem* item = nullptr;
 
-	foreach( const AnimationPtr& animation, mesh->getAnimations() )
+	const std::vector<AnimationPtr>& anims = mesh->getAnimations();
+	for( uint i = 0; i < anims.size(); i++ )
 	{
+		const AnimationPtr& animation = anims[i];
 		const std::string& name = animation->getName();
 
 		if( name.empty() )
@@ -588,8 +602,10 @@ wxMenu* ScenePage::createMenuAttachment(const MeshPtr& mesh)
 	wxMenuItem* itemFirst = nullptr;
 	wxMenuItem* item = nullptr;
 
-	foreach( const BonePtr& bone, mesh->getSkeleton()->getBones() )
+	const std::vector<BonePtr>& bones = mesh->getSkeleton()->getBones();
+	for( uint i = 0; i < bones.size(); i++ )
 	{
+		const BonePtr& bone = bones[i];
 		item = menuAttachment->Append( wxNewId(), bone->name );
 
 		if( !itemFirst )
@@ -659,14 +675,14 @@ void ScenePage::onAttachmentMenuSelected(wxCommandEvent& event)
 
 	std::string name = "Attachment"+String::fromNumber(nodeCounter++);
 	
-	NodePtr node( new Node(name) );
+	EntityPtr node( new Entity(name) );
 	node->addTransform();
 	node->addComponent( ModelPtr( new Model(mesh) ) );
 	
 	ScenePtr scene = weakScene.lock();
 	scene->add( node );
 
-	model->attachNode( bone->name, node );
+	model->setAttachment( bone->name, node );
 }
 
 //-----------------------------------//
@@ -675,7 +691,7 @@ void ScenePage::onItemMenu(wxTreeEvent& event)
 {
 	menuItemId = event.GetItem();
 
-	const NodePtr& node = getNodeFromTreeId( menuItemId );
+	const EntityPtr& node = getEntityFromTreeId( menuItemId );
 	const ComponentPtr& component = getComponentFromTreeId( menuItemId );
 
 	wxMenu menu;
@@ -683,8 +699,8 @@ void ScenePage::onItemMenu(wxTreeEvent& event)
 
 	if( node )
 	{
-		menu.SetTitle("Node");
-		populateNodeItemMenu(menu, node);
+		menu.SetTitle("Entity");
+		populateEntityItemMenu(menu, node);
 	}
 	else
 	{
@@ -706,9 +722,9 @@ void ScenePage::onMenuSelected( wxCommandEvent& event )
 		return;
 
 	ScenePtr scene = weakScene.lock();
-	const NodePtr& node = getNodeFromTreeId( menuItemId );
+	const EntityPtr& node = getEntityFromTreeId( menuItemId );
 
-	if( id == ID_MenuSceneNodeVisible )
+	if( id == ID_MenuSceneEntityVisible )
 	{
 		if( !node )
 			return;
@@ -716,42 +732,48 @@ void ScenePage::onMenuSelected( wxCommandEvent& event )
 		node->setVisible( !node->isVisible() );
 	}
 	//-----------------------------------//
-	else if( id == ID_MenuSceneNodeDuplicate )
+	else if( id == ID_MenuSceneEntityDuplicate )
 	{
 		if( !node )
 			return;
 
-		NodePtr newNode( cloneObject<Node>(node.get()) );
+		EntityPtr newEntity( cloneObject<Entity>(node.get()) );
 
-		foreach( const ComponentMapPair& p, node->getComponents() )
+		const ComponentMap& components = node->getComponents();
+		
+		ComponentMap::const_iterator it;
+		for( it = components.cbegin(); it != components.cend(); it++ )
 		{
-			ComponentPtr component = p.second;
+			ComponentPtr component = it->second;
 			ComponentPtr newComponent( cloneObject<Component>(component.get()) );
-			newNode->addComponent(newComponent);
+			newEntity->addComponent(newComponent);
 		}
 		
-		scene->add(newNode);
+		scene->add(newEntity);
 	}
 	//-----------------------------------//
-	else if( id == ID_MenuSceneNodeWireframe )
+	else if( id == ID_MenuSceneEntityWireframe )
 	{
 		if( !node )
 			return;
 
 		PolygonMode::Enum mode = event.IsChecked() ? PolygonMode::Wireframe : PolygonMode::Solid;
 
-		foreach( const GeometryPtr& geo, node->getGeometry() )
+		for( uint i = 0; i < node->getGeometry().size(); i++ )
 		{
-			foreach( const RenderablePtr& rend, geo->getRenderables() )
+			const GeometryPtr& geo = node->getGeometry()[i];
+			
+			for( uint j = 0; j < geo->getRenderables().size(); j++ )
 			{
+				const RenderablePtr& rend = geo->getRenderables()[i];
 				rend->setPolygonMode( mode );
 			}
 		}
 	}
 	//-----------------------------------//
-	else if( id == ID_MenuSceneNodeDelete )
+	else if( id == ID_MenuSceneEntityDelete )
 	{
-		NodeOperation* op = createNodeOperation(node);
+		EntityOperation* op = createEntityOperation(node);
 		op->undo();
 		//std::string str = (std::string) treeCtrl->GetItemText(menuItemId);
 
@@ -772,7 +794,7 @@ void ScenePage::onMenuSelected( wxCommandEvent& event )
 		//node->removeComponent(component);
 	}
 	//-----------------------------------//
-	else if( id == ID_MenuSceneNodeTerrain )
+	else if( id == ID_MenuSceneEntityTerrain )
 	{
 		std::string name("Terrain"+String::fromNumber(nodeCounter++));
 		TerrainPtr terrain( new Terrain(name) );
@@ -811,7 +833,7 @@ MeshPtr ScenePage::askMeshResource()
 
 void ScenePage::onComponentAdd(wxCommandEvent& event )
 {
-	const NodePtr& node = getNodeFromTreeId( menuItemId );
+	const EntityPtr& node = getEntityFromTreeId( menuItemId );
 	
 	int id = event.GetId();
 	
@@ -850,7 +872,7 @@ void ScenePage::onComponentAdd(wxCommandEvent& event )
 void ScenePage::onLabelEditBegin( wxTreeEvent& event )
 {
 	wxTreeItemId item = event.GetItem();
-	NodePtr node = getNodeFromTreeId( item );
+	EntityPtr node = getEntityFromTreeId( item );
 	
 	if( !node )
 		event.Veto();
@@ -877,7 +899,7 @@ void ScenePage::onLabelEditEnd( wxTreeEvent& event )
 		return;
 	}
 
-	const NodePtr& node = getNodeFromTreeId( item );
+	const EntityPtr& node = getEntityFromTreeId( item );
 	assert( node != nullptr );
 
 	node->setName( std::string( label.c_str() ) );
@@ -908,8 +930,8 @@ void ScenePage::onDragEnd( wxTreeEvent& event )
 	if( !dragId.IsOk() )
 		return;
 
-	const NodePtr& src = getNodeFromTreeId( dragItemId );
-	const NodePtr& dest = getNodeFromTreeId( dragId );
+	const EntityPtr& src = getEntityFromTreeId( dragItemId );
+	const EntityPtr& dest = getEntityFromTreeId( dragId );
 
 	if( src && dest ) // It is a node, just re-parent it.
 	{
@@ -931,7 +953,7 @@ void ScenePage::onContextMenu( wxContextMenuEvent& event )
 	menuItemId = wxTreeItemId();
 
 	wxMenu menu("Scene");
-	menu.Append(ID_MenuSceneNodeTerrain, "Create &Terrain");
+	menu.Append(ID_MenuSceneEntityTerrain, "Create &Terrain");
 
 	PopupMenu(&menu);
 }

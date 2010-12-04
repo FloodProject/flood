@@ -23,8 +23,11 @@ PluginManager::PluginManager(EditorFrame* frame)
 
 PluginManager::~PluginManager()
 {
-	foreach( const Plugin* plugin, plugins )
+	for( uint i = 0; i < plugins.size(); i++ )
+	{
+		const Plugin* plugin = plugins[i];
 		delete plugin;
+	}
 }
 
 //-----------------------------------//
@@ -77,8 +80,10 @@ void PluginManager::disablePlugin( Plugin* plugin )
 
 void PluginManager::processTools( Plugin* plugin, bool enable )
 {
-	foreach( wxToolBarToolBase* tool, plugin->tools )
+	for( uint i = 0; i < plugin->tools.size(); i++ )
 	{
+		wxToolBarToolBase* tool = plugin->tools[i];
+	
 		if( tool->IsSeparator() )
 			continue;
 

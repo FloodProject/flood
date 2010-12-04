@@ -17,7 +17,7 @@
 #include "vapor/script/ScriptManager.h"
 #include "vapor/resources/ResourceManager.h"
 
-#include "vapor/scene/Node.h"
+#include "vapor/scene/Entity.h"
 #include "vapor/Engine.h"
 
 #include "vapor/input/InputManager.h"
@@ -79,7 +79,7 @@ void ScriptController::_update( double delta )
 	if( !state && script )
 	{
 		createState();
-		bindNode();
+		bindEntity();
 	}
 
 	if( state )
@@ -104,9 +104,9 @@ void ScriptController::createState()
 		"vapor::"TOSTRING(type)" *",					\
 		node->getComponent<type>().get() );
 
-void ScriptController::bindNode()
+void ScriptController::bindEntity()
 {
-	const NodePtr& node = getNode();
+	const EntityPtr& node = getEntity();
 	assert( node != nullptr );
 
 	Engine* engine = Engine::getInstancePtr();
@@ -115,7 +115,7 @@ void ScriptController::bindNode()
 	swig_module_info* module = SWIG_Lua_GetModule( mainState->getLuaState() );
 	assert( module != nullptr );
 
-	bindType(module, "node", "vapor::Node *", node.get());
+	bindType(module, "node", "vapor::Entity *", node.get());
 	
 	BIND_COMPONENT("transform", Transform)
 	BIND_COMPONENT("geometry", Geometry)

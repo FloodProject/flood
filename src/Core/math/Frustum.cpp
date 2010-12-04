@@ -8,6 +8,7 @@
 
 #include "Core.h"
 #include "math/Frustum.h"
+#include "core/Primitive.h"
 
 namespace vapor {
 

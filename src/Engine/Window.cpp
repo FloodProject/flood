@@ -9,7 +9,6 @@
 #include "vapor/PCH.h"
 #include "vapor/render/Window.h"
 #include "vapor/input/Keyboard.h"
-#include "vapor/render/View.h"
 
 #if defined(VAPOR_WINDOWING_WIN32)
 	#include <vapor/render/Win32_Window.h>
@@ -32,20 +31,7 @@ WindowSettings::WindowSettings( const ushort width, const ushort height,
 	, stencilBits(8)
 	, depthBits(24)
 	, antialiasLevel(0)
-	, customHandle(nullptr)
-{ }
-
-//-----------------------------------//
-
-WindowSettings::WindowSettings( const WindowSettings& s )
-	: Settings(s)
-	, title(s.title)
-	, fullScreen(s.fullScreen)
-	, bitsPerPixel(s.bitsPerPixel)
-	, stencilBits(s.stencilBits)
-	, depthBits(s.depthBits)
-	, antialiasLevel(s.antialiasLevel)
-	, customHandle(s.customHandle)
+	, handle(nullptr)
 { }
 
 //-----------------------------------//
@@ -54,13 +40,13 @@ Window::Window(const WindowSettings& settings)
 	: settings(settings)
 {
 	Log::info( "Creating %swindow (size: %dx%d, title: '%s', bits-per-pixel: %d)",
-		settings.isFullscreen() ? "fullscreen " : "",
-		settings.getWidth(), settings.getHeight(),
-		settings.getTitle().c_str(), settings.getBpp() );
+		settings.fullScreen ? "fullscreen " : "",
+		settings.width, settings.height,
+		settings.title.c_str(), settings.bitsPerPixel );
 
-	if( settings.getCustomHandle() )
+	if( settings.handle )
 	{
-		Log::info( "External window handle found: %d", settings.getCustomHandle());
+		Log::info( "External window handle found" );
 	}
 }
 
@@ -68,9 +54,7 @@ Window::Window(const WindowSettings& settings)
 
 void Window::handleWindowResize()
 {
-	Log::info("Resizing window to size %dx%d",
-		settings.getWidth(), settings.getHeight() );
-
+	Log::info("Resizing window to size %dx%d", settings.width, settings.height );
 	onTargetResize( getSettings() );
 }
 

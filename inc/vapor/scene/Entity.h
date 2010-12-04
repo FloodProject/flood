@@ -8,19 +8,20 @@
 
 #pragma once
 
-#include "vapor/scene/Component.h"
-#include "vapor/scene/Transform.h"
-#include "vapor/scene/Geometry.h"
+#include "scene/Component.h"
 #include "Event.h"
+
+FWD_DECL_SHARED(Component)
+
+FWD_DECL_SHARED(Entity)
+FWD_DECL_SHARED_WEAK(Entity)
+
+FWD_DECL_SHARED(Transform)
+FWD_DECL_SHARED(Geometry)
 
 namespace vapor {
 
 //-----------------------------------//
-
-class Node;
-
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Node );
-TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( Node );
 
 typedef std::map< const Class*, ComponentPtr > ComponentMap;
 typedef std::pair< const Class*, ComponentPtr > ComponentMapPair;
@@ -28,22 +29,22 @@ typedef std::pair< const Class*, ComponentPtr > ComponentMapPair;
 //-----------------------------------//
 
 /**
- * Represents a node, that is, an entity of the world held in the scene. 
- * Nodes can have components that attach behaviour and state to the node.
+ * Represents an entity of the world held in the scene.
+ * Entities can have components attached, providing behaviour.
  * For example you can add a Transform component to give the entity a
  * placement in the world. Or you can add a Physics component that will
  * make it react to the world gravity and make it obey the physics laws.
  */
 
-class VAPOR_API Node : public std::enable_shared_from_this<Node>
+class VAPOR_API Entity : public std::enable_shared_from_this<Entity>
 {
 	DECLARE_CLASS_()
-	DECLARE_UNCOPYABLE(Node)
+	DECLARE_UNCOPYABLE(Entity)
 
 public:
 
-	explicit Node();
-	explicit Node( const std::string& name );
+	explicit Entity();
+	explicit Entity( const std::string& name );
 	
 	// Gets/sets the name of the node.
 	ACESSOR(Name, const std::string&, name);
@@ -55,10 +56,10 @@ public:
 	ACESSOR(Visible, bool, visible);
 
 	// Gets the parent of the node.
-	NodePtr getParent() const;
+	EntityPtr getParent() const;
 
 	// Sets the parent of the node.
-	SETTER(Parent, const NodePtr&, parent)
+	SETTER(Parent, const EntityPtr&, parent)
 
 	// Gets the tag of the node.
 	bool getTag( int index );
@@ -100,9 +101,10 @@ public:
 	template<typename T>
 	std::shared_ptr<T> getTypedComponent()
 	{
-		foreach( const ComponentMapPair& p, components )
+		ComponentMap::const_iterator it;
+		for( it = components.cbegin(); it != components.cend(); it++ )
 		{
-			const ComponentPtr& component = p.second;
+			const ComponentPtr& component = it->second;
 			const Type& componentType = component->getInstanceType();
 
 			if( componentType.inherits<T>() )
@@ -136,7 +138,7 @@ protected:
 	ComponentMap components;
 
 	// Parent node of the node.
-	NodeWeakPtr parent;
+	EntityWeakPtr parent;
 	
 	// Caches geometry components.
 	std::vector<GeometryPtr> geometries;

@@ -8,7 +8,7 @@
 
 #include "vapor/PCH.h"
 #include "vapor/gui/Overlay.h"
-#include "vapor/scene/Node.h"
+#include "vapor/scene/Entity.h"
 #include "vapor/scene/Transform.h"
 
 namespace vapor {
@@ -29,7 +29,7 @@ Overlay::Overlay()
 
 void Overlay::update( double )
 {
-	TransformPtr transform = getNode()->getTransform();
+	TransformPtr transform = getEntity()->getTransform();
 	assert( transform != nullptr );
 	transform->reset();
 	

@@ -8,13 +8,12 @@
 
 #include "vapor/PCH.h"
 #include "vapor/scene/Group.h"
-#define VAPOR_GROUP_USE_FOREACH
 
 namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(Group, Node)
+BEGIN_CLASS_PARENT(Group, Entity)
 END_CLASS()
 
 //-----------------------------------//
@@ -25,46 +24,48 @@ Group::Group()
 //-----------------------------------//
 
 Group::Group( const std::string& name )
-	: Node(name)
+	: Entity(name)
 { }
 
 //-----------------------------------//
 
-void Group::add( const NodePtr& node )
+void Group::add( const EntityPtr& node )
 {
 	// Beware that you have to assign a new Group-derived object
 	// to a shared_ptr, else shared_from_this will return bad_weak_ptr.
 
-	node->setParent( Node::shared_from_this() );
+	node->setParent( Entity::shared_from_this() );
 	nodes.push_back( node );
 
-	onNodeAdded(node);
+	onEntityAdded(node);
 }
 
 //-----------------------------------//
 
-NodePtr Group::findNode( const std::string& name ) const
+EntityPtr Group::findEntity( const std::string& name ) const
 {
-	foreach( const NodePtr& node, nodes )
+	for( uint i = 0; i < nodes.size(); i++ )
 	{
-		if( node->getName() == name )
-			return node;
+		const EntityPtr& entity = nodes[i];
+		
+		if( entity->getName() == name )
+			return entity;
 	}
 
-	return NodePtr();
+	return EntityPtr();
 }
 
 //-----------------------------------//
 
-bool Group::remove( const NodePtr& node )
+bool Group::remove( const EntityPtr& node )
 {
-	std::vector<NodePtr>::iterator it =
+	std::vector<EntityPtr>::iterator it =
 		std::find(nodes.begin(), nodes.end(), node );
 
 	if( it == nodes.end() )
 		return false;
 
-	onNodeRemoved(node);
+	onEntityRemoved(node);
 	nodes.erase(it);
 
 	return true;
@@ -74,21 +75,11 @@ bool Group::remove( const NodePtr& node )
 
 void Group::update( double delta )
 {
-#ifdef VAPOR_GROUP_USE_FOREACH
-	foreach( const NodePtr& node, nodes )
+	for( uint i = 0; i < nodes.size(); i++ )
 	{
+		const EntityPtr& node = nodes[i];
 		node->update( delta );
 	}
-#else
-	typedef std::vector<NodePtr>::const_iterator vec_it;
-	vec_it it = nodes.begin();
-	vec_it end = nodes.end();
-	
-	while( ++it != end )
-	{
-		(*it)->update( delta );
-	}
-#endif
 }
 
 //-----------------------------------//

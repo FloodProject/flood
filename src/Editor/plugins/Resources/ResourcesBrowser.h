@@ -8,10 +8,6 @@
 
 #pragma once
 
-#include "vapor/net/Network.h"
-#include "vapor/net/Message.h"
-#include "vapor/net/Messages.h"
-
 namespace vapor { namespace editor {
 
 //-----------------------------------//
@@ -94,7 +90,7 @@ protected:
 	int listIndex;
 
 	ScenePtr scene;
-	NodePtr nodeCamera;
+	EntityPtr nodeCamera;
 	CameraPtr camera;
 	RenderView* renderView;
 
@@ -104,8 +100,6 @@ protected:
 
 	// Caches all the resources metadata.
 	ResourcesCache resourcesCache;
-
-	Network network;
 };
 
 //-----------------------------------//

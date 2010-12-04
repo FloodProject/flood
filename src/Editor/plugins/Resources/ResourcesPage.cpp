@@ -60,15 +60,18 @@ void ResourcesPage::initControl()
 	resourceGroupTreeIds[RG(General)] =
 		AppendItem(rootItemId, "General", resourceGroupIcons[RG(General)]);
 
-	foreach( const EnumValuesPair& p, resourcesEnum.getValues() )
+	const EnumValuesMap& values = resourcesEnum.getValues();
+	
+	EnumValuesMap::const_iterator it;
+	for( it = values.cbegin(); it != values.cend(); it++ )
 	{
-		ResourceGroup::Enum group = (ResourceGroup::Enum) p.second;
+		ResourceGroup::Enum group = (ResourceGroup::Enum) it->second;
 
 		if( group == ResourceGroup::General )
 			continue;
 
 		resourceGroupTreeIds[group] =
-			AppendItem(rootItemId, p.first, resourceGroupIcons[group]);
+			AppendItem(rootItemId, it->first, resourceGroupIcons[group]);
 	}
 
 	Bind(wxEVT_COMMAND_TREE_ITEM_MENU, &ResourcesPage::onTreeItemMenu, this);
@@ -103,9 +106,12 @@ void ResourcesPage::initIcons()
 
 void ResourcesPage::updateTree()
 {
-	foreach( const ResourceMapPair& p, rm->getResources() )
+	const ResourceMap& resources = rm->getResources();
+	
+	ResourceMap::const_iterator it;
+	for( it = resources.cbegin(); it != resources.cend(); it++ )
 	{
-		const ResourcePtr& res = p.second;
+		const ResourcePtr& res = it->second;
 		addResource(res);
 	}
 }

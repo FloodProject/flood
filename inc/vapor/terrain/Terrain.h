@@ -26,6 +26,7 @@ struct TerrainSettings
 	TerrainSettings()
 		: CellSize(512)
 		, NumberTiles(16)
+		, TextureSize(512)
 	{ }
 
 	// Material for each cell.
@@ -39,6 +40,9 @@ struct TerrainSettings
 
 	// Number of tiles per row/column.
 	ushort NumberTiles;
+
+	// Texture size.
+	ushort TextureSize;
 };
 
 //-----------------------------------//
@@ -80,13 +84,13 @@ public:
 	void init();
 
 	// Adds a new cell of terrain with default heights.
-	void addCell( short x, short y );
+	void addCell( int x, int y );
 
 	// Adds a new cell of terrain (deferred if the heightmap is not loaded).
-	void addCell( short x, short y, const ImagePtr& heightmap );
+	void addCell( int x, int y, const ImagePtr& heightmap );
 
 	// Gets a cell from its terrain coords.
-	CellPtr getCell( short x, short y );
+	CellPtr getCell( int x, int y );
 
 	// Gets the cells of the terrain.
 	GETTER(Cells, const std::vector<CellPtr>&, terrainCells)
@@ -109,10 +113,10 @@ public:
 protected:
 
 	// Creates a new cell of terrain with the given heights.
-	CellPtr createCell(short x, short y, std::vector<float>& heights);
+	CellPtr createCell(int x, int y, std::vector<float>& heights);
 
 	// Creates a new cell of terrain with a given heightmap.
-	CellPtr createCellHeightmap( short x, short y, const ImagePtr& heightmap );
+	CellPtr createCellHeightmap( int x, int y, const ImagePtr& heightmap );
 
 	// Cells of the terrain.
 	std::vector<CellPtr> terrainCells;

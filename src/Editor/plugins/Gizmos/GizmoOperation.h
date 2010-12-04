@@ -26,7 +26,7 @@ public:
 	void redo();
 	void process( bool undo );
 
-	NodeWeakPtr weakNode;
+	EntityWeakPtr weakEntity;
 	GizmoTool::Enum tool;
 	GizmoAxis::Enum axis;
 	GizmoPtr gizmo;

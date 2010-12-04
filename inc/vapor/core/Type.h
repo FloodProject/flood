@@ -33,7 +33,7 @@ namespace MetaType
  * (introspection) and serialization.
  */
 
-class VAPOR_API Type
+class CORE_API Type
 {
 	DECLARE_UNCOPYABLE(Type)
 
@@ -94,7 +94,7 @@ protected:
 
 //-----------------------------------//
 
-typedef VAPOR_API std::map<std::string, const Type*> TypeRegistryMap;
+typedef CORE_API std::map<std::string, const Type*> TypeRegistryMap;
 
 /**
  * Stores a globally acessible mapping of type names and their instances.
@@ -102,7 +102,7 @@ typedef VAPOR_API std::map<std::string, const Type*> TypeRegistryMap;
  * by its name. Things like serialization need this information.
  */
 
-class VAPOR_API TypeRegistry
+class CORE_API TypeRegistry
 {
 public:
 

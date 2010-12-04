@@ -33,8 +33,10 @@ BonePtr Skeleton::getBone( uint index )
 
 BonePtr Skeleton::findBone( const std::string& name )
 {
-	foreach( const BonePtr& bone, bones )
+	for( uint i = 0; i < bones.size(); i++ )
 	{
+		const BonePtr& bone = bones[i];
+
 		if( String::compareInsensitive(bone->name, name) == 0 )
 			return bone;
 	}

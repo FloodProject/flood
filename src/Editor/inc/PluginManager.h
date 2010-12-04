@@ -47,10 +47,10 @@ public:
 	// Scans for plugins.
 	//void scanPlugins();
 
-	// Gets all the registered tools.
+	// Gets all the registered plugins.
 	GETTER(Plugins, std::vector<Plugin*>, plugins)
 
-	// Gets all the registered plugins.
+	// Gets all the registered tools.
 	GETTER(Tools, const PluginToolsMap&, tools)
 
 	// Plugin events callback.

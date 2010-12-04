@@ -8,6 +8,7 @@
 
 #include "PCH.h"
 #include "CameraControls.h"
+#include "Utilities.h"
 #include "Viewframe.h"
 #include "EditorIcons.h"
 
@@ -51,7 +52,7 @@ TransformPtr CameraControls::getCameraTransform() const
 	CameraPtr camera = view->getCamera();
 	assert( camera != nullptr );
 
-	NodePtr nodeCamera = camera->getNode();
+	EntityPtr nodeCamera = camera->getEntity();
 	assert( nodeCamera != nullptr );
 
 	TransformPtr transCamera = nodeCamera->getTransform();
@@ -71,7 +72,7 @@ void CameraControls::onCameraSpeedSpin( wxSpinDoubleEvent& event )
 	CameraPtr camera( view->getCamera() );
 	assert( camera != nullptr );
 
-	NodePtr nodeCamera = camera->getNode();
+	EntityPtr nodeCamera = camera->getEntity();
 	assert( nodeCamera != nullptr );
 
 	CameraControllerPtr cameraController =
@@ -89,7 +90,7 @@ void CameraControls::updateCameraSpeedSpin()
 	CameraPtr camera( view->getCamera() );
 	assert( camera != nullptr );
 
-	NodePtr nodeCamera = camera->getNode();
+	EntityPtr nodeCamera = camera->getEntity();
 	assert( nodeCamera != nullptr );
 
 	CameraControllerPtr cameraController =
@@ -108,7 +109,7 @@ void CameraControls::onCameraTransform()
 	// We need to switch to a neutral locale or else the text
 	// conversion will lead to different results depending on
 	// each machine due to different locale settings.
-	LocaleSwitch c;
+	LocaleSwitch locale;
 	
 	TransformPtr transCamera = getCameraTransform();
 	Vector3 position = transCamera->getPosition();

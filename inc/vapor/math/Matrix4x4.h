@@ -25,7 +25,7 @@ class Matrix4x3;
  * case of projections a full 4x4 matrix is needed.
  */
 
-class VAPOR_API Matrix4x4
+class CORE_API Matrix4x4
 {
 public:
 

@@ -12,10 +12,10 @@
 
 namespace vapor { namespace editor {
 
+//-----------------------------------//
+
 class RenderWindow;
 class EditorInputManager;
-
-//-----------------------------------//
 
 /**
  * Let's link vapor with wxWidgets. There are some different approaches

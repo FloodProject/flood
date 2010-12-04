@@ -8,6 +8,7 @@
 
 #include "PCH.h"
 #include "Editor.h"
+#include "Utilities.h"
 #include "EditorIcons.h"
 #include "RenderControl.h"
 #include "PluginManager.h"
@@ -247,13 +248,13 @@ void EditorFrame::createScene()
 	editorScene.reset( new Scene() );
 	
 	// Create a nice grid for the editor.
-	NodePtr nodeGrid( new Node("Grid") );
+	EntityPtr nodeGrid( new Entity("Grid") );
 	nodeGrid->addTransform();
 	nodeGrid->addComponent( GridPtr( new Grid() ) );
 	nodeGrid->setTag( Tags::NonPickable, true );
 	editorScene->add( nodeGrid );
 
-	NodePtr nodeCamera( createCamera() );
+	EntityPtr nodeCamera( createCamera() );
 	nodeCamera->getTransform()->translate( 0, 20, -65 );
 	editorScene->add( nodeCamera );
 
@@ -289,7 +290,7 @@ void EditorFrame::createServices()
 
 //-----------------------------------//
 
-NodePtr EditorFrame::createCamera()
+EntityPtr EditorFrame::createCamera()
 {
 	// So each camera will have unique names.
 	static byte i = 0;
@@ -307,7 +308,7 @@ NodePtr EditorFrame::createCamera()
 	// Generate a new unique name.
 	std::string name( "EditorCamera"+String::fromNumber(i++) );
 
-	NodePtr nodeCamera( new Node(name) );
+	EntityPtr nodeCamera( new Entity(name) );
 	nodeCamera->addTransform();
 	nodeCamera->addComponent( camera );
 	nodeCamera->addComponent( cameraController );
@@ -415,13 +416,13 @@ void EditorFrame::createToolbar()
 	toolBar->AddSeparator();
 
 	toolBar->AddTool( Toolbar_ToogleViewport, "Toogles maximize view", 
-		wxMEMORY_BITMAP(scale), "Toogles maximize view" );
+		wxMEMORY_BITMAP(application_split), "Toogles maximize view" );
 
 	toolBar->AddTool( Toolbar_ToogleSidebar, "Shows/hides the sidebar", 
 		wxMEMORY_BITMAP(application_side_tree_right), "Shows/hides the sidebar" );
 
 	toolBar->AddTool( Toolbar_TooglePlugin, "Shows/hides the plugin manager", 
-		wxMEMORY_BITMAP(page_white_text), "Shows/hides the plugin manager" );
+		wxMEMORY_BITMAP(cog), "Shows/hides the plugin manager" );
 
 	toolBar->Realize();
 }
@@ -484,9 +485,12 @@ CameraPtr EditorFrame::getPlayerCamera() const
 {
 	ScenePtr scene = engine->getSceneManager();
 	CameraPtr camera;
-
-	foreach( const NodePtr& node, scene->getNodes() )
+	
+	const std::vector<EntityPtr> entities = scene->getEntities();
+	
+	for( uint i = 0; i < entities.size(); i++ )
 	{
+		const EntityPtr& node = entities[i];
 		camera = node->getComponent<Camera>();
 
 		if( camera )
@@ -509,11 +513,11 @@ void EditorFrame::switchPlayMode(bool switchToPlay)
 #endif
 
 	CameraPtr camera = getPlayerCamera();
-	NodePtr nodeCamera;
+	EntityPtr nodeCamera;
 	ControllerPtr controller;
 
 	if( camera )
-		nodeCamera = camera->getNode();
+		nodeCamera = camera->getEntity();
 
 	if( !nodeCamera )
 		return;
@@ -560,7 +564,7 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 	//-----------------------------------//
 	case Toolbar_ToogleGrid:
 	{
-		const NodePtr& grid = editorScene->findNode( "Grid" );
+		const EntityPtr& grid = editorScene->findEntity( "Grid" );
 		
 		if( grid )
 			grid->setVisible( !grid->isVisible() );

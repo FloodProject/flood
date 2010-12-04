@@ -12,7 +12,7 @@
 
 #include "vapor/physics/MeshShape.h"
 #include "vapor/physics/Convert.h"
-#include "vapor/scene/Node.h"
+#include "vapor/scene/Entity.h"
 #include "vapor/scene/Transform.h"
 #include "vapor/scene/Geometry.h"
 
@@ -49,7 +49,7 @@ MeshShape::~MeshShape()
 //	btTriangleIndexVertexArray* vertexArray;
 //	vertexArray = new btTriangleIndexVertexArray();
 //
-//	const NodePtr& node = getNode();
+//	const EntityPtr& node = getEntity();
 //	
 //	foreach( const GeometryPtr& geometry, node->getGeometry() )
 //	{
@@ -84,14 +84,17 @@ btTriangleMesh* MeshShape::convertMesh()
 {
 	btTriangleMesh* mesh = new btTriangleMesh(false);
 
-	const NodePtr& node = getNode();
+	const EntityPtr& node = getEntity();
 	
-	foreach( const GeometryPtr& geometry, node->getGeometry() )
+	for( uint i = 0; i < node->getGeometry().size(); i++ )
 	{
+		const GeometryPtr& geometry = node->getGeometry()[i];
 		const RenderableList& rends = geometry->getRenderables();
 
-		foreach( const RenderablePtr& rend, rends )
+		for( uint e = 0; i < rends.size(); e++ )
 		{
+			const RenderablePtr& rend = rends[i];
+
 			if( rend->getPrimitiveType() != PolygonType::Triangles )
 				continue;
 
@@ -140,7 +143,7 @@ void MeshShape::update( double delta )
 	meshShape = new btBvhTriangleMeshShape( convertMesh(), true );
 	//meshShape->updateBound();
 	
-	const TransformPtr& transform = getNode()->getTransform();
+	const TransformPtr& transform = getEntity()->getTransform();
 	const Vector3& scale = transform->getScale();
 	meshShape->setLocalScaling(Convert::toBullet(scale));
 }

@@ -18,7 +18,7 @@ class GizmoScale : public Gizmo
 {
 public:
 
-	GizmoScale( const NodePtr& node, const CameraWeakPtr& camera );
+	GizmoScale( const EntityPtr& node, const CameraWeakPtr& camera );
 
 	// Builds the gizmo geometry.
 	virtual void buildGeometry();

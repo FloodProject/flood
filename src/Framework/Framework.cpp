@@ -12,6 +12,7 @@
 #include <vapor/vfs/FileSystem.h>
 #include <vapor/input/InputManager.h>
 #include <vapor/resources/ResourceManager.h>
+#include <vapor/Utilities.h>
 
 namespace vapor {
 
@@ -123,12 +124,15 @@ void Framework::updateFrameTimes()
 
 void Framework::registerCallbacks()
 {
-	InputManager* im = getInputManager();
+	InputManager* input = getInputManager();
+
+	if(!input)
+		return;
 	
-	Keyboard* keyboard = im->getKeyboard();
+	Keyboard* keyboard = input->getKeyboard();
 	keyboard->onKeyPress.Connect( this, &Framework::onKeyPressed );
 	
-	Mouse* mouse = im->getMouse();
+	Mouse* mouse = input->getMouse();
 	mouse->onMouseButtonPress.Connect( this, &Framework::onButtonPressed );
 	mouse->onMouseButtonRelease.Connect( this, &Framework::onButtonReleased );
 }

@@ -10,6 +10,7 @@
 
 #include "FileStream.h"
 #include "Timer.h"
+#include "Thread.h"
 
 namespace vapor {
 
@@ -67,7 +68,7 @@ public:
  * Logging class used to log relevant information to a stream.
  */
 
-class VAPOR_API Logger
+class CORE_API Logger
 {
 public:
 	
@@ -122,19 +123,19 @@ protected:
 namespace Log
 {
 	// Logs a debug message to the global logger.
-	VAPOR_API void debug(const std::string& msg);
+	CORE_API void debug(const std::string& msg);
 
 	// Logs a debug message to the global logger.
-	VAPOR_API void debug(const char* msg, ...);
+	CORE_API void debug(const char* msg, ...);
 	
 	// Logs an info message to the global logger.
-	VAPOR_API void info(const char* msg, ...);
+	CORE_API void info(const char* msg, ...);
 	
 	// Logs a warning message to the global logger.
-	VAPOR_API void warn(const char* msg, ...);
+	CORE_API void warn(const char* msg, ...);
 	
 	// Logs an error message to the global logger.
-	VAPOR_API void error(const char* msg, ...);
+	CORE_API void error(const char* msg, ...);
 }
 
 //-----------------------------------//
@@ -158,9 +159,6 @@ public:
 	void process(LogEntry& entry);
 
 protected:
-
-	void writeHeader();
-	void writeFooter();
 
 	Stream& stream;
 	FILE* fp;

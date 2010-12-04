@@ -59,8 +59,10 @@ void Plugin::removeTools()
 	// Clean up toolbar stuff.
 	wxToolBar* toolBar = editor->getToolbar();
 
-	foreach( wxToolBarToolBase* tool, tools )
+	for( uint i = 0; i < tools.size(); i++ )
 	{
+		wxToolBarToolBase* tool = tools[i];
+		
 		int id = tool->GetId();
 		toolBar->DeleteTool(id);
 	}

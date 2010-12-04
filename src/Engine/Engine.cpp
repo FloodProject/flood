@@ -33,7 +33,7 @@ Engine::Engine()
 	, audioDevice(nullptr)
 	, physicsManager(nullptr)
 	, scriptManager(nullptr)
-	, stream("Logs/Log.html", StreamMode::Write)
+	, stream(nullptr)
 { }
 
 //-----------------------------------//
@@ -54,8 +54,11 @@ Engine::~Engine()
 {
 	scene.reset();
 
-	foreach( Subsystem* const sub, subsystems )
-		delete sub;
+	for( uint i = 0; i < subsystems.size(); i++ )
+	{
+		Subsystem* system = subsystems[i];
+		delete system;
+	}
 	
 	delete taskManager;
 	//delete audioDevice;
@@ -119,7 +122,9 @@ void Engine::init( bool createWindow )
 void Engine::setupLogger()
 {
 	log = new Logger();
-	log->add( new LogSinkHTML(stream) );
+
+	stream = new FileStream("Log.html", StreamMode::Write);
+	log->add( new LogSinkHTML(*stream) );
 }
 
 //-----------------------------------//
@@ -154,8 +159,16 @@ void Engine::setupDevices( bool createWindow )
 void Engine::setupInput()
 {
 	Window* window = renderDevice->getWindow();
-	InputManager* im = window->getInputManager();
-	im->createDefaultDevices(); 
+	
+	if(!window)
+		return;
+
+	InputManager* input = window->getInputManager();
+	
+	if(!input)
+		return;
+
+	input->createDefaultDevices(); 
 }
 
 //-----------------------------------//
@@ -199,8 +212,9 @@ void Engine::setupResourceLoaders()
 		loaders.push_back( new Font_Loader() );
 	#endif
 
-	foreach( ResourceLoader* const loader, loaders )
+	for( uint i = 0; i < loaders.size(); i++ )
 	{
+		ResourceLoader* loader = loaders[i];
 		resourceManager->registerLoader( loader );
 	}
 }
@@ -209,8 +223,11 @@ void Engine::setupResourceLoaders()
 
 void Engine::update( double delta )
 {
-	foreach( Subsystem* subsystem, subsystems )
-		subsystem->update( delta );
+	for( uint i = 0; i < subsystems.size(); i++ )
+	{
+		Subsystem* system = subsystems[i];
+		system->update( delta );
+	}
 
 	fileSystem->update( delta );
 	resourceManager->update( delta );

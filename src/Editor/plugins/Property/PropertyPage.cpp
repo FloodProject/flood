@@ -18,6 +18,23 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
+struct TagName
+{
+	long id;
+	const char* name;
+};
+
+TagName TagNames[] = 
+{
+	{ 1 << 24, "NonPickable" },
+	{ 1 << 25, "NonTransformable" },
+	{ 1 << 26, "NonCollidable" },
+	{ 1 << 27, "UpdateTransformsOnly" },
+	{ 1 << 31, "EditorOnly" },
+};
+
+//-----------------------------------//
+
 static wxString convertToReadable(const wxString& str)
 {
 	if( str.IsEmpty() )
@@ -43,13 +60,13 @@ static wxString convertToReadable(const wxString& str)
 
 //-----------------------------------//
 
-static wxAny getComposedPropertyValue(wxPGProperty* prop, const Type& field_type)
+static wxAny getComposedPropertyValue(wxPGProperty* prop, const Type& typeField)
 {
-	if( field_type.isPrimitive() )
+	if( typeField.isPrimitive() )
 	{
-		const Primitive& prim_type = (const Primitive&) field_type;
+		const Primitive& typePrim = (const Primitive&) typeField;
 
-		if( prim_type.isVector3() )
+		if( typePrim.isVector3() )
 		{
 			wxPGProperty* X = prop->GetPropertyByName("X"); 
 			wxPGProperty* Y = prop->GetPropertyByName("Y");
@@ -59,10 +76,10 @@ static wxAny getComposedPropertyValue(wxPGProperty* prop, const Type& field_type
 			wxAny y = Y->GetValue();
 			wxAny z = Z->GetValue();
 
-			Vector3 val( x.As<float>(), y.As<float>(), z.As<float>() );
-			return wxAny(val);
+			Vector3 vec( x.As<float>(), y.As<float>(), z.As<float>() );
+			return wxAny(vec);
 		}
-		else if( prim_type.isQuaternion() )
+		else if( typePrim.isQuaternion() )
 		{
 			wxPGProperty* X = prop->GetPropertyByName("X"); 
 			wxPGProperty* Y = prop->GetPropertyByName("Y");
@@ -72,8 +89,8 @@ static wxAny getComposedPropertyValue(wxPGProperty* prop, const Type& field_type
 			wxAny y = Y->GetValue();
 			wxAny z = Z->GetValue();
 
-			EulerAngles val( x.As<float>(), y.As<float>(), z.As<float>() );
-			return wxAny( Quaternion(val) );
+			EulerAngles ang( x.As<float>(), y.As<float>(), z.As<float>() );
+			return wxAny( Quaternion(ang) );
 		}
 	}
 
@@ -141,6 +158,7 @@ void PropertyPage::onPropertyChanged(wxPropertyGridEvent& event)
 	if(	!prop->GetClientObject() )
 		prop = prop->GetParent();
 
+
 	PropertyData* data = (PropertyData*) prop->GetClientObject();
 	assert( data != nullptr );
 
@@ -163,21 +181,21 @@ void PropertyPage::onPropertyChanged(wxPropertyGridEvent& event)
 
 void PropertyPage::onIdle(wxIdleEvent& event)
 {
-	const NodePtr& node = selectedNode.lock();
+	const EntityPtr& node = selectedEntity.lock();
 	
 	//if( node )
-		//showNodeProperties(node);
+		//showEntityProperties(node);
 }
 
 //-----------------------------------//
 
-void PropertyPage::showNodeProperties( const NodePtr& node )
+void PropertyPage::showEntityProperties( const EntityPtr& node )
 {
-	selectedNode = node;
+	selectedEntity = node;
 
 	Clear();
 
-    // Node properties
+    // Entity properties
 	appendObjectFields( node->getInstanceType(), node.get() );
 
 	// Transform should be the first component to the displayed.
@@ -187,10 +205,13 @@ void PropertyPage::showNodeProperties( const NodePtr& node )
 		appendObjectFields( Transform::getType(), transform.get() );
     
     // Components properties
-	foreach( const ComponentMapPair& p, node->getComponents() )
+	const ComponentMap& components = node->getComponents();
+	
+	ComponentMap::const_iterator it;
+	for( it = components.cbegin(); it != components.cend(); it++ )
 	{
-		const Class& type = *(p.first);
-		const ComponentPtr& component = p.second;
+		const Class& type = *(it->first);
+		const ComponentPtr& component = it->second;
 
 		if( type.is<Transform>() )
 			continue;
@@ -215,27 +236,30 @@ void PropertyPage::appendObjectFields(const Class& type, void* object, bool newC
 		const Class& parent = (Class&) *type.getParent();
 		appendObjectFields(parent, object, false);
 	}
-
-	foreach( const FieldsPair& p, type.getFields() )
+	
+	const FieldsMap& fields = type.getFields();
+	
+	FieldsMap::const_iterator it;
+	for( it = fields.cbegin(); it != fields.cend(); it++ )
 	{
-		const Field& field = *p.second;
-		const Type& field_type = field.type;
+		const Field& field = *(it->second);
+		const Type& fieldType = field.type;
 
 		wxPGProperty* prop = nullptr;
 
 		if( field.isPointer() )
 			continue;
 
-		if( field_type.isClass() || field_type.isStruct() )
+		if( fieldType.isClass() || fieldType.isStruct() )
 		{
-			void* field_ptr = (byte*) object + field.offset;
-			appendObjectFields((Class&) field_type, field_ptr, false);
+			void* addr = (byte*) object + field.offset;
+			appendObjectFields((Class&) fieldType, addr, false);
 		}
-		else if( field_type.isPrimitive() )
+		else if( fieldType.isPrimitive() )
 		{
 			prop = createPrimitiveProperty(field, object);
 		}
-		else if( field_type.isEnum() )
+		else if( fieldType.isEnum() )
 		{
 			prop = createEnumProperty(field, object);
 		}
@@ -267,10 +291,13 @@ wxPGProperty* PropertyPage::createEnumProperty(const Field& field, void* object)
 	const Enum& type = (const Enum&) field.type;
 
 	wxPGChoices arrValues;
-
-	foreach( const EnumValuesPair& p, type.getValues() )
+	
+	const EnumValuesMap& values = type.getValues();
+	
+	EnumValuesMap::const_iterator it;
+	for( it = values.cbegin(); it != values.cend(); it++ )
 	{
-		arrValues.Add( p.first, p.second );
+		arrValues.Add( it->first, it->second );
 	}
 
 	int val = field.get<int>(object);
@@ -280,23 +307,6 @@ wxPGProperty* PropertyPage::createEnumProperty(const Field& field, void* object)
 
 	return prop;
 }
-
-//-----------------------------------//
-
-struct TagName
-{
-	long id;
-	const char* name;
-};
-
-TagName TagNames[] = 
-{
-	{ 1 << 24, "NonPickable" },
-	{ 1 << 25, "NonTransformable" },
-	{ 1 << 26, "NonCollidable" },
-	{ 1 << 27, "UpdateTransformsOnly" },
-	{ 1 << 31, "EditorOnly" },
-};
 
 //-----------------------------------//
 
@@ -379,10 +389,12 @@ wxPGProperty* PropertyPage::createPrimitiveProperty(const Field& field, void* ob
 		
 		wxPGChoices choices;
 
-		foreach( const TagName& p, TagNames )
+		for( uint i = 0; i < VAPOR_ARRAY_SIZE(TagNames); i++ )
 		{
-			wxString name( std::string(p.name) );
-			choices.Add( convertToReadable(name), p.id );
+			const TagName& tag = TagNames[i];
+			
+			wxString name( std::string(tag.name) );
+			choices.Add( convertToReadable(name), tag.id );
 		}
 
 		prop = new wxFlagsProperty( wxEmptyString, wxPG_LABEL, choices, bits );

@@ -9,6 +9,8 @@
 #include "vapor/PCH.h"
 #include "vapor/terrain/Terrain.h"
 #include "vapor/math/Math.h"
+#include "scene/Geometry.h"
+#include "Utilities.h"
 
 namespace vapor {
 
@@ -57,16 +59,11 @@ void Terrain::init()
 {
 	settings.Material = new Material("Terrain");
 	settings.Material->setProgram("Tex_Toon");
-
-	ImagePtr image( new Image(1024, 1024, PixelFormat::R8G8B8A8) );
-	image->setColor( Color::LightGrey );
-
-	settings.Material->setTexture(0, image);
 }
 
 //-----------------------------------//
 
-void Terrain::addCell( short x, short y )
+void Terrain::addCell( int x, int y )
 {
 	int numHeights = pow(settings.NumberTiles + 1.0f, 2);
 
@@ -78,7 +75,7 @@ void Terrain::addCell( short x, short y )
 
 //-----------------------------------//
 
-void Terrain::addCell( short x, short y, const ImagePtr& heightmap )
+void Terrain::addCell( int x, int y, const ImagePtr& heightmap )
 {
 	if( !heightmap )
 	{
@@ -96,10 +93,12 @@ void Terrain::addCell( short x, short y, const ImagePtr& heightmap )
 
 //-----------------------------------//
 
-CellPtr Terrain::getCell( short x, short y )
+CellPtr Terrain::getCell( int x, int y )
 {
-	foreach( const CellPtr& cell, terrainCells )
+	for( uint i = 0; i < terrainCells.size(); i++ )
 	{
+		const CellPtr& cell = terrainCells[i];
+
 		if( (cell->getX() == x) && (cell->getY() == y) )
 			return cell;
 	}
@@ -119,13 +118,13 @@ Vector2i Terrain::getCoords( const Vector3& pos )
 
 //-----------------------------------//
 
-CellPtr Terrain::createCell( short x, short y, std::vector<float>& heights )
+CellPtr Terrain::createCell( int x, int y, std::vector<float>& heights )
 {
 	CellPtr cell( new Cell(settings, heights, x, y) );
 	terrainCells.push_back(cell);
 
 	std::string name = String::format("Cell (%hd,%hd)", x, y);
-	NodePtr nodeCell( new Node(name) );
+	EntityPtr nodeCell( new Entity(name) );
 	nodeCell->addTransform();
 
 	GeometryPtr geometry( new Geometry(cell) );
@@ -138,7 +137,7 @@ CellPtr Terrain::createCell( short x, short y, std::vector<float>& heights )
 
 //-----------------------------------//
 
-CellPtr Terrain::createCellHeightmap( short x, short y, const ImagePtr& heightmap )
+CellPtr Terrain::createCellHeightmap( int x, int y, const ImagePtr& heightmap )
 {
 	if( !heightmap )
 		return nullptr;

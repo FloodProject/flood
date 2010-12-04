@@ -24,13 +24,13 @@ namespace Limits
 namespace Interpolate
 {
 	// Linear interpolation.
-	float VAPOR_API linear(float a, float b, float t);
+	float CORE_API linear(float a, float b, float t);
 
 	// Cosine interpolation.
-	float VAPOR_API cosine(float a, float b, float t);
+	float CORE_API cosine(float a, float b, float t);
 
 	// Cubic interpolation.
-	float VAPOR_API cubic(float a, float b, float t);
+	float CORE_API cubic(float a, float b, float t);
 }
 
 namespace Math
@@ -39,19 +39,19 @@ namespace Math
 	const float PI = 3.141592654f;
 
 	// Compares float values for equality.
-	bool VAPOR_API floatEqual(float a, float b);
+	bool CORE_API floatEqual(float a, float b);
 
 	// Calculates the logarithm of a given base.
-	float VAPOR_API logBase( float base, float value );
+	float CORE_API logBase( float base, float value );
 
 	// Returns a random value in the given interval.
-	float VAPOR_API random( float min, float max );
+	float CORE_API random( float min, float max );
 
 	// Converts from degrees to radians.
-	float VAPOR_API degreeToRadian( float degree );
+	float CORE_API degreeToRadian( float degree );
 
 	// Converts from radians to degrees.
-	float VAPOR_API radianToDegree( float radian );
+	float CORE_API radianToDegree( float radian );
 
 	// Clamps a variable to the given range.
 	template< typename T >
@@ -75,7 +75,7 @@ namespace Math
 }
 
 // Calculate the normal from a triangle vertices.
-Vector3 VAPOR_API calculateTriangleNormal( const Vector3& v1, 
+Vector3 CORE_API calculateTriangleNormal( const Vector3& v1, 
 	const Vector3& v2, const Vector3& v3 );
 
 //-----------------------------------//

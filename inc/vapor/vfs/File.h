@@ -10,7 +10,7 @@
 
 #include "FileStream.h"
 
-#ifdef VAPOR_VFS_PHYSFS
+//#ifdef VAPOR_VFS_PHYSFS
 
 struct PHYSFS_File;
 
@@ -28,7 +28,7 @@ namespace vapor {
  * data in the same machine, and it will be saved in each user's directory.
  */
 
-class VAPOR_API File
+class CORE_API File
 {
 	DECLARE_UNCOPYABLE(File)
 
@@ -113,4 +113,4 @@ private:
 
 } // end namespace
 
-#endif
+//#endif

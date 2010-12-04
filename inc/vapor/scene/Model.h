@@ -50,10 +50,10 @@ public:
 	void setAnimation(const std::string& name);
 
 	// Sets and fades the mesh animation.
-	void setCrossFadeAnimation(const std::string& name, float fade = 1.0f);
+	void setAnimationFade(const std::string& name, float fade = 1.0f);
 
 	// Attaches a node to the bone.
-	void attachNode(const std::string& bone, const NodePtr& node);
+	void setAttachment(const std::string& bone, const EntityPtr& node);
 
 	// Updates the mesh.
 	void update( double delta );

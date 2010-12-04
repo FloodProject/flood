@@ -18,7 +18,7 @@
 #include "vapor/physics/btKinematicController.h"
 
 #include "vapor/math/Math.h"
-#include "vapor/scene/Node.h"
+#include "vapor/scene/Entity.h"
 
 #include "vapor/Engine.h"
 #include "vapor/input/InputManager.h"
@@ -124,7 +124,7 @@ void CharacterController::_update( double delta )
 
 void CharacterController::updateBulletTransform()
 {
-	TransformPtr transform = getNode()->getTransform();
+	TransformPtr transform = getEntity()->getTransform();
 	ghostObject->setWorldTransform(Convert::toBullet(transform));
 }
 
@@ -133,7 +133,7 @@ void CharacterController::updateBulletTransform()
 void CharacterController::updateCharacterTransform()
 {
 	const btTransform& bullet = ghostObject->getWorldTransform();
-	TransformPtr transform = getNode()->getTransform();
+	TransformPtr transform = getEntity()->getTransform();
 	Convert::fromBullet(bullet, transform);
 }
 
@@ -144,7 +144,7 @@ bool CharacterController::createController()
 	if( controller )
 		return true;
 
-	const NodePtr& node = getNode();
+	const EntityPtr& node = getEntity();
 	ShapePtr shape = node->getTypedComponent<Shape>();
 
 	if( !shape )

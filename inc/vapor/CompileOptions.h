@@ -40,8 +40,8 @@
 // Threading stuff
 //---------------------------------------------------------------------//
 
-#define VAPOR_THREADING
-	#define VAPOR_THREADING_BOOST
+//#define VAPOR_THREADING
+	//#define VAPOR_THREADING_BOOST
 	//#define VAPOR_THREADING_STD
 
 //---------------------------------------------------------------------//
@@ -56,7 +56,7 @@
 //---------------------------------------------------------------------//
 
 //#define VAPOR_WINDOWING_SFML
-//#define VAPOR_WINDOWING_WIN32
+#define VAPOR_WINDOWING_WIN32
 
 //---------------------------------------------------------------------//
 // Graphics APIs

@@ -30,6 +30,8 @@ class VAPOR_API Program : public ReferenceCounted
 {
 public:
 
+	virtual ~Program() {}
+
 	// Creates the program.
 	virtual bool create() = 0;
 
@@ -102,7 +104,6 @@ public:
 protected:
 
 	Program();
-	virtual ~Program() {}
 
 	ShaderPtr vertex;
 	ShaderPtr fragment;

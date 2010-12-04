@@ -19,7 +19,7 @@ namespace vapor {
 // Bounding-box based intersection
 struct RayBoxQueryResult
 {
-	NodePtr node;
+	EntityPtr node;
 	float distance;
 };
 
@@ -65,7 +65,7 @@ public:
 	
 	// Checks for collision via ray-triangle tests.
 	bool doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res );
-	bool doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, const NodePtr& node );
+	bool doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, const EntityPtr& node );
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Scene );

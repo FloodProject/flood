@@ -13,7 +13,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-static Vector3 getOffset(const NodePtr& node)
+static Vector3 getOffset(const EntityPtr& node)
 {
 	ShapePtr shape = node->getTypedComponent<Shape>();
 
@@ -40,7 +40,7 @@ public:
 		: transform(transform)
 		, ignoreTransform(false)
 	{
-		offset = getOffset(transform->getNode()) * Vector3::UnitY;
+		offset = getOffset(transform->getEntity()) * Vector3::UnitY;
 		//centerOffset.setOrigin( Convert::toBullet(offset) );
 	}
 

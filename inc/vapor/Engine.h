@@ -10,6 +10,7 @@
 
 #include "vapor/PCH.h"
 #include "vapor/Singleton.h"
+#include "ReferenceCount.h"
 
 FWD_DECL_SHARED(Scene)
 
@@ -117,7 +118,7 @@ protected:
 	Logger* log;
 
 	// Log stream.
-	FileStream stream;
+	FileStream* stream;
 
 	// Scene root node.
 	ScenePtr scene;

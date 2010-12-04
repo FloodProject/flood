@@ -18,20 +18,18 @@ namespace vapor {
  * implement the main services provided by the engine.
  */
 
-class VAPOR_API Subsystem
+class CORE_API Subsystem
 {
 	DECLARE_UNCOPYABLE(Subsystem)
 
-	friend class Engine;
-
 public:
 
+	virtual ~Subsystem() { }
 	virtual void update( double delta ) { }
 
 protected:
 
 	Subsystem() { }
-	virtual ~Subsystem() { }
 };
 
 //-----------------------------------//

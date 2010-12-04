@@ -11,6 +11,7 @@
 #include "vapor/render/Renderable.h"
 #include "vapor/scene/Transform.h"
 #include "vapor/scene/Light.h"
+#include "Event.h"
 
 namespace vapor {
 

@@ -46,7 +46,7 @@ public:
 		const wxSize& size = wxDefaultSize );
 
 	// Populates properties on the grid.
-	void showNodeProperties( const NodePtr& node );
+	void showEntityProperties( const EntityPtr& node );
 
 	// Appends the type fields to the property grid.
 	void appendObjectFields(const Class& type, void* object, bool newCategory = true);
@@ -75,7 +75,7 @@ protected:
 	wxAny propertyValue;
 
 	// Selected node.
-	NodeWeakPtr selectedNode;
+	EntityWeakPtr selectedEntity;
 
 	// Editor instance.
 	EditorFrame* editor;

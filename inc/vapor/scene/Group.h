@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "vapor/scene/Node.h"
+#include "vapor/scene/Entity.h"
 
 namespace vapor {
 
@@ -21,7 +21,7 @@ namespace vapor {
  * child node transformations.
  */
 
-class VAPOR_API Group : public Node
+class VAPOR_API Group : public Entity
 {
 	DECLARE_CLASS_()
 
@@ -31,30 +31,30 @@ public:
 	Group( const std::string& name );
 
 	// Adds child to the end of the child list.
-	void add( const NodePtr& node );
+	void add( const EntityPtr& node );
 
 	// Removes node from the group.
-	bool remove( const NodePtr& node );
+	bool remove( const EntityPtr& node );
 
 	// Finds a node in the group via its name.
-	NodePtr findNode( const std::string& name ) const;
+	EntityPtr findEntity( const std::string& name ) const;
 
 	// Gets the nodes of the group.
-	GETTER(Nodes, const std::vector<NodePtr>&, nodes)
+	GETTER(Entities, const std::vector<EntityPtr>&, nodes)
 
 	// Updates this group of nodes.
 	virtual void update( double delta );
 
 	// Event gets called when a node is added.
-	Event1<const NodePtr&> onNodeAdded;
+	Event1<const EntityPtr&> onEntityAdded;
 
 	// Event gets called when a node is removed.
-	Event1<const NodePtr&> onNodeRemoved;
+	Event1<const EntityPtr&> onEntityRemoved;
 
 protected:
 
 	// Holds the nodes of the group.
-	std::vector<NodePtr> nodes;
+	std::vector<EntityPtr> nodes;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Group );

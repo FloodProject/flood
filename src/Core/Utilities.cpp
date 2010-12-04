@@ -57,23 +57,23 @@ void System::sleep( double time )
 
 //-----------------------------------//
 
-void System::messageDialog(const std::string& msg, LogLevel::Enum level)
+void System::messageDialog(const std::string& msg/*, LogLevel::Enum level*/)
 {
 #ifdef VAPOR_PLATFORM_WINDOWS
 	UINT style = MB_OK;
 
-	switch(level)
-	{
-	case LogLevel::Info:	
-		style |= MB_ICONINFORMATION; 
-		break;
-	case LogLevel::Warning:	
-		style |= MB_ICONWARNING; 
-		break;
-	case LogLevel::Error:	
-		style |= MB_ICONERROR; 
-		break;
-	}
+	//switch(level)
+	//{
+	//case LogLevel::Info:	
+	//	style |= MB_ICONINFORMATION; 
+	//	break;
+	//case LogLevel::Warning:	
+	//	style |= MB_ICONWARNING; 
+	//	break;
+	//case LogLevel::Error:	
+	//	style |= MB_ICONERROR; 
+	//	break;
+	//}
 
 	MessageBoxA(nullptr, msg.c_str(), nullptr, style);
 #elif defined(VAPOR_PLATFORM_LINUX)

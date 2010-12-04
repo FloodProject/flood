@@ -10,7 +10,11 @@
 #include "Log.h"
 #include "Utilities.h"
 
-using namespace boost;
+#ifdef VAPOR_PLATFORM_WINDOWS
+	#define WIN32_LEAN_AND_MEAN
+	#define NOMINMAX
+	#include <Windows.h>	
+#endif
 
 namespace vapor {
 
@@ -54,7 +58,7 @@ void Log::debug(const char* msg, ...)
 	va_start(args, msg);
 
 		Logger* const log = Logger::getLogger();
-		log->write(LogLevel::Debug, msg, args);
+		if(log) log->write(LogLevel::Debug, msg, args);
 
 	va_end(args);
 }
@@ -67,7 +71,7 @@ void Log::info(const char* msg, ...)
 	va_start(args, msg);
 
 		Logger* const log = Logger::getLogger();
-		log->write(LogLevel::Info, msg, args);
+		if(log) log->write(LogLevel::Info, msg, args);
 	
 	va_end(args);
 }
@@ -80,7 +84,7 @@ void Log::warn(const char* msg, ...)
 	va_start(args, msg);
 
 		Logger* const log = Logger::getLogger();
-		log->write(LogLevel::Warning, msg, args);
+		if(log) log->write(LogLevel::Warning, msg, args);
 	
 	va_end(args);
 }
@@ -93,7 +97,7 @@ void Log::error(const char* msg, ...)
 	va_start(args, msg);
 
 		Logger* const log = Logger::getLogger();
-		log->write(LogLevel::Error, msg, args);
+		if(log) log->write(LogLevel::Error, msg, args);
 
 	va_end(args);
 }
@@ -114,8 +118,11 @@ Logger::Logger()
 
 Logger::~Logger()
 {
-	foreach( LogSink* sink, sinks )
+	for( uint i = 0; i < sinks.size(); i++ )
+	{
+		LogSink* sink = sinks[i];
 		delete sink;
+	}
 
 	if( getLogger() == this )
 		setLogger(nullptr);
@@ -148,8 +155,11 @@ void Logger::write(LogLevel::Enum level, const char* msg, va_list args)
 	entry.message = format;
 	entry.level = level;
 
-	foreach( LogSink* sink, sinks )
+	for( uint i = 0; i < sinks.size(); i++ )
+	{
+		LogSink* sink = sinks[i];
 		sink->process(entry);
+	}
 }
 
 //-----------------------------------//
@@ -235,33 +245,22 @@ static const char LOG_CSS[] =
 LogSinkHTML::LogSinkHTML(FileStream& stream)
 	: stream(stream)
 	, even(true)
+	, fp(nullptr)
 {
 	if( !stream.open() )
 		return;
 
 	fp = (FILE*) stream.getFilePointer();
+	assert( fp != nullptr );
+
 	stream.setBuffering( false );
 	
-	writeHeader();
-}
-
-//-----------------------------------//
-
-LogSinkHTML::~LogSinkHTML()
-{
-	writeFooter();
-}
-
-//-----------------------------------//
-
-void LogSinkHTML::writeHeader()
-{
 	fprintf(fp, LOG_HTML, "Log", LOG_CSS );
 }
 
 //-----------------------------------//
 
-void LogSinkHTML::writeFooter()
+LogSinkHTML::~LogSinkHTML()
 {
 	fprintf(fp, "\t</table>\n" "\t</div>\n" "</body>\n" "</html>\n");
 }

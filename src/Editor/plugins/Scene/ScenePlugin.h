@@ -33,11 +33,11 @@ public:
 	// Plugin disable callback.
 	virtual void onPluginDisable();
 
-	// Node selection callback.
-	virtual void onNodeSelect( const NodePtr& );
+	// Entity selection callback.
+	virtual void onEntitySelect( const EntityPtr& );
 	
-	// Node unselection callback.
-	virtual void onNodeUnselect( const NodePtr& );
+	// Entity unselection callback.
+	virtual void onEntityUnselect( const EntityPtr& );
 
 	// Scene load callback.
 	void onSceneLoad( const ScenePtr& scene );

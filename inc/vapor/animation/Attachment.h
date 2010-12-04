@@ -30,7 +30,7 @@ public:
 	BonePtr bone;
 
 	// Attachment node.
-	NodePtr node;
+	EntityPtr node;
 
 	// Position offset.
 	Vector3 offsetPosition;

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#ifdef VAPOR_VFS_PHYSFS
+//#ifdef VAPOR_VFS_PHYSFS
 
 #include "Subsystem.h"
 #include "vfs/File.h"
@@ -30,7 +30,7 @@ namespace vapor {
  * to the search path while mounting it in the virtual filesystem.
  */
 
-class VAPOR_API FileSystem : public Subsystem
+class CORE_API FileSystem : public Subsystem
 {
 public:
 
@@ -79,4 +79,4 @@ protected:
 
 } // end namespace
 
-#endif
+//#endif

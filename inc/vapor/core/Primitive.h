@@ -40,7 +40,7 @@ namespace PrimitiveType
  * primitive C++ language types, like booleans, integers and strings.
  */
 
-class VAPOR_API Primitive : public Type
+class CORE_API Primitive : public Type
 {
 public:
 

@@ -8,9 +8,11 @@
 
 #include "vapor/PCH.h"
 #include "scene/Transform.h"
-#include "scene/Node.h"
-#include "render/DebugGeometry.h"
+#include "scene/Geometry.h"
+#include "scene/Entity.h"
+
 #include "math/Math.h"
+#include "render/DebugGeometry.h"
 
 namespace vapor {
 
@@ -247,15 +249,18 @@ bool Transform::requiresBoundingVolumeUpdate() const
 
 void Transform::updateBoundingVolume()
 {
-	const NodePtr& node = getNode();
+	const EntityPtr& node = getEntity();
 	
 	if( !node )
 		return;
 
 	boundingVolume.reset();
 
-	foreach( const GeometryPtr& geometry, node->getGeometry() )
+	for( uint i = 0; i < node->getGeometry().size(); i++ )
+	{
+		const GeometryPtr& geometry = node->getGeometry()[i];
 		boundingVolume.add( geometry->getBoundingVolume() );
+	}
 	
 	if( boundingVolume.isInfinite() )
 		boundingVolume.setZero();

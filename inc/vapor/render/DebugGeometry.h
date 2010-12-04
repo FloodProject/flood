@@ -8,10 +8,11 @@
 
 #pragma once
 
-#include "vapor/math/BoundingBox.h"
-#include "vapor/math/Frustum.h"
+#include "math/BoundingBox.h"
+#include "math/Frustum.h"
+#include "ReferenceCount.h"
 
-FWD_DECL_SHARED(Node)
+FWD_DECL_SHARED(Entity)
 FWD_DECL_INTRUSIVE(Renderable)
 
 namespace vapor {
@@ -22,7 +23,7 @@ namespace vapor {
 RenderablePtr VAPOR_API buildBoundingRenderable( const BoundingBox& box );
 
 // Builds debug geometry of a ray.
-NodePtr VAPOR_API buildRay( const Ray& pickRay, const Vector3& outFar );
+EntityPtr VAPOR_API buildRay( const Ray& pickRay, const Vector3& outFar );
 
 // Builds debug geometry of a frustum.
 RenderablePtr VAPOR_API buildFrustum( const Frustum& box );

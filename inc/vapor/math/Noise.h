@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "math/Vector3.h"
-
 namespace vapor {
 
 //-----------------------------------//
@@ -18,7 +16,7 @@ namespace vapor {
  * Generates coherent value noise (smooth pseudorandom noise).
  */
 
-class VAPOR_API Noise
+class CORE_API Noise
 {
 public:
 
@@ -34,7 +32,6 @@ public:
 	float nextFloat(int x, int y);
 
 	int seed;
-	
 	uint octaves;
 	float frequency;
 	float persistence;

@@ -13,6 +13,7 @@
 #include "vapor/scene/Geometry.h"
 #include "vapor/resources/ResourceManager.h"
 #include "vapor/Engine.h"
+#include "vapor/Utilities.h"
 
 namespace vapor {
 
@@ -138,8 +139,10 @@ void Label::rebuildGeometry()
 
 	ushort mid_offset = font->getGlyphSize().x /2;
 
-	foreach( unsigned char c, text )
+	for( uint i = 0; i < text.size(); i++ )
 	{
+		unsigned char c = text[i];
+
 		// If we find a line break, we start a new line.
 		if( c == '\n' )
 		{

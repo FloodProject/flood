@@ -17,14 +17,19 @@ namespace vapor {
 //-----------------------------------//
 
 Cell::Cell( const TerrainSettings& settings, 
-			const std::vector<float>& heights, short x, short y )
+			const std::vector<float>& heights, int x, int y )
 	: Renderable( PolygonType::Triangles )
 	, settings( settings )
 	, heights( heights )
 	, x(x), y(y)
 {
+	uint size = settings.TextureSize;
+	image = new Image(size, size, PixelFormat::R8G8B8A8);
+	image->setColor( Color::LightGrey );
+
 	// Make a copy of the default cell material.
 	MaterialPtr material = new Material(*settings.Material);
+	material->setTexture(0, image);
 	setMaterial(material);
 
 	// Create a new VBO and upload triangle data
@@ -58,14 +63,14 @@ void Cell::rebuildVertices()
 	std::vector<Vector3> vertex;
 	std::vector<Vector3> texCoords;
 
-	const ushort numTiles = settings.NumberTiles;
-	const ushort sizeCell = settings.CellSize;
+	ushort numTiles = settings.NumberTiles;
+	ushort sizeCell = settings.CellSize;
 
 	float offsetX = x * sizeCell;
 	float offsetZ = y * sizeCell;
 
-	const float tileSize = sizeCell / numTiles;
-	const ushort numExpectedVertices = (numTiles+1)*(numTiles+1);
+	float tileSize = sizeCell / numTiles;
+	uint numExpectedVertices = (numTiles+1)*(numTiles+1);
 
 	for( uint i = 0; i < numExpectedVertices; i++ )
 	{
@@ -103,10 +108,10 @@ void Cell::rebuildIndices()
 	{
 		for( short row = 0; row < numTiles; row++ )
 		{
-			uint i = col*(numTiles+1)+row;
+			ushort i = col*(numTiles+1)+row;
 
 			// First triangle
-			indices.push_back( i) ;
+			indices.push_back( i );
 			indices.push_back( i+(numTiles+1) );
 			indices.push_back( i+1 );
 

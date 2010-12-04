@@ -9,6 +9,7 @@
 #include "vapor/PCH.h"
 #include "vapor/scene/Camera.h"
 #include "vapor/scene/Scene.h"
+#include "vapor/scene/Geometry.h"
 #include "vapor/render/Device.h"
 #include "vapor/render/View.h"
 #include "vapor/render/DebugGeometry.h"
@@ -119,7 +120,7 @@ void Camera::update( double VAPOR_UNUSED(delta) )
 	if( transform )
 		return;
 		
-	transform = getNode()->getTransform();
+	transform = getEntity()->getTransform();
 	transform->onTransform.Connect( this, &Camera::onTransform );
 
 	// Update the view transform the first update.
@@ -137,7 +138,7 @@ void Camera::onTransform()
 
 void Camera::render()
 {
-	NodePtr node = getNode();
+	EntityPtr node = getEntity();
 	assert( node != nullptr );
 
 	// Search for the root node.
@@ -149,7 +150,7 @@ void Camera::render()
 
 //-----------------------------------//
 
-void Camera::render( const NodePtr& scene )
+void Camera::render( const EntityPtr& scene )
 {
 	// This will contain all nodes used for rendering.
 	RenderBlock renderBlock;
@@ -178,17 +179,20 @@ void Camera::render( RenderBlock& block, bool clearView )
 
 //-----------------------------------//
 
-void Camera::cull( RenderBlock& block, const NodePtr& node )
+void Camera::cull( RenderBlock& block, const EntityPtr& node )
 {
 	// Try to see if this is a Group-derived node.
-	const GroupPtr& group( std::dynamic_pointer_cast<Group>(node) );
+	const Type& type = node->getInstanceType();
 	
-	// Yes it is.
-	if( group )
+	if( type.inherits<Group>() || type.is<Group>() )
 	{
+		GroupPtr group = std::static_pointer_cast<Group>(node);
+
 		// Cull the children nodes recursively.
-		foreach( const NodePtr& child, group->getNodes() )
+		for( uint i = 0; i < group->getEntities().size(); i++ )
 		{
+			const EntityPtr& child = group->getEntities()[i];
+
 			if( !child->isVisible() ) 
 				continue;
 			
@@ -201,8 +205,10 @@ void Camera::cull( RenderBlock& block, const NodePtr& node )
 	// to render that will be later passed to the rendering device.
 	const TransformPtr& transform = node->getTransform();
 	
-	foreach( const GeometryPtr& geometry, node->getGeometry() ) 
+	for( uint i = 0; i < node->getGeometry().size(); i++ )
 	{
+		const GeometryPtr& geometry = node->getGeometry()[i];
+
 		// No frustum culling is performed yet.
 		#pragma TODO("Fix multiple geometry instancing")
 		geometry->appendRenderables( block.renderables, transform );
@@ -219,9 +225,10 @@ void Camera::cull( RenderBlock& block, const NodePtr& node )
 		block.lights.push_back( ls );
 	}
 
-	foreach( const ComponentMapPair& cmp, node->getComponents() )
+	ComponentMap::const_iterator it;
+	for( it = node->getComponents().cbegin(); it != node->getComponents().cend(); it++ )
 	{
-		const ComponentPtr& component = cmp.second;
+		const ComponentPtr& component = it->second;
 
 		if( !component->isDebugRenderableVisible() )
 			continue;

@@ -9,6 +9,7 @@
 #pragma once
 
 #include "vapor/render/Buffer.h"
+#include "ReferenceCount.h"
 
 namespace vapor {
 

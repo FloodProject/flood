@@ -31,8 +31,11 @@ void Enum::addValue( const std::string str, int value )
 
 const std::string& Enum::getString(int value) const
 {
-	foreach( const EnumValuesPair& p, values )
+	EnumValuesMap::iterator it;
+	for( it = values.begin(); it != values.end(); it++ )
 	{
+		const EnumValuesPair& p = *it;
+		
 		if( p.second == value )
 			return p.first;
 	}

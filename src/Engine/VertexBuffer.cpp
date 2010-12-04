@@ -56,9 +56,10 @@ bool VertexBuffer::unbind()
 	if( !built )
 		return true;
 
-	foreach( const AttributeMapPair& p, attributes )
+	AttributeMap::const_iterator it;
+	for( it = attributes.cbegin(); it != attributes.cend(); it++ )
 	{
-		glDisableVertexAttribArray( p.first );
+		glDisableVertexAttribArray( it->first );
 	}
 
 	return true;
@@ -73,16 +74,17 @@ void VertexBuffer::bindPointers()
 
 	int offset = 0;
 
-	foreach( const AttributeMapPair& p, attributes )
+	AttributeMap::const_iterator it;
+	for( it = attributes.cbegin(); it != attributes.cend(); it++ )
 	{
-		const Attribute& attr = p.second;
+		const Attribute& attr = it->second;
 
-		glEnableVertexAttribArray( p.first );
+		glEnableVertexAttribArray( it->first );
 
 		if( glHasError("Error enabling vertex attribute array") )
 			return;
 
-		glVertexAttribPointer( p.first, attr.components,
+		glVertexAttribPointer( it->first, attr.components,
 			attr.type, GL_FALSE, 0, (void*) offset );
 
 		if( glHasError("Error binding pointers to buffer") )
@@ -166,9 +168,11 @@ bool VertexBuffer::build()
 		return false;
 
 	int offset = 0;
-	foreach( const AttributeMapPair& p, attributes )
+	
+	AttributeMap::const_iterator it;
+	for( it = attributes.cbegin(); it != attributes.cend(); it++ )
 	{
-		const std::vector<byte>& vec = p.second.data;
+		const std::vector<byte>& vec = it->second.data;
 
 		if( vec.empty() )
 			continue;
@@ -194,9 +198,10 @@ bool VertexBuffer::checkSize() const
 
 	int initialSize = 0;
 
-	foreach( const AttributeMapPair& p, attributes )
+	AttributeMap::const_iterator it;
+	for( it = attributes.cbegin(); it != attributes.cend(); it++ )
 	{
-		const Attribute& attr = p.second;
+		const Attribute& attr = it->second;
 		int size = attr.data.size();
 
 		if( size == 0 )
@@ -221,8 +226,11 @@ uint VertexBuffer::getSize() const
 {
 	uint totalBytes = 0;
 
-	foreach( const AttributeMapPair& p, attributes )
-		totalBytes += p.second.data.size();
+	AttributeMap::const_iterator it;
+	for( it = attributes.cbegin(); it != attributes.cend(); it++ )
+	{
+		totalBytes += it->second.data.size();
+	}
 
 	return totalBytes;
 }

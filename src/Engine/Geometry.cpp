@@ -8,7 +8,7 @@
 
 #include "vapor/PCH.h"
 #include "vapor/scene/Geometry.h"
-#include "vapor/scene/Node.h"
+#include "vapor/scene/Entity.h"
 
 namespace vapor {
 
@@ -72,15 +72,17 @@ void Geometry::appendRenderables( RenderQueue& queue, TransformPtr transform )
 	
 	const Matrix4x3& absoluteTransform = transform->getAbsoluteTransform();
 	
-	foreach( const RenderableMapPair& pair, renderables )
+	RenderableMap::const_iterator it;
+	for( it = renderables.cbegin(); it != renderables.cend(); it++ )
 	{
-		foreach( const RenderablePtr& rend, pair.second )
+		for( uint i = 0; i < it->second.size(); i++ )
 		{
+			const RenderablePtr& rend = it->second[i];
 			RenderState renderState;
 			
 			renderState.renderable = rend;
 			renderState.modelMatrix = absoluteTransform;
-			renderState.group = pair.first;
+			renderState.group = it->first;
 			renderState.priority = 0;
 
 			if( needsRenderCallback )
@@ -98,17 +100,22 @@ void Geometry::updateBounds()
 	boundingVolume.reset();
 
 	// Update the bounding box to accomodate new geometry.
-	foreach( const RenderableMapPair& p, renderables )
+	RenderableMap::const_iterator it;
+	for( it = renderables.cbegin(); it != renderables.cend(); it++ )
 	{
-		foreach( const RenderablePtr& rend, p.second )
+		for( uint i = 0; i < it->second.size(); i++ )
 		{
+			const RenderablePtr& rend = it->second[i];
 			const VertexBufferPtr& vb = rend->getVertexBuffer();
 			
 			if( !vb )
 				continue;
 
-			foreach( const Vector3& v, vb->getVertices() )
-				boundingVolume.add(v);
+			for( uint i = 0; i < vb->getVertices().size(); i++ )
+			{
+				const Vector3& vec = vb->getVertices()[i];
+				boundingVolume.add(vec);
+			}
 		}
 	}
 
@@ -120,7 +127,7 @@ void Geometry::updateBounds()
 
 void Geometry::notifiesTransform()
 {
-	const NodePtr& node = getNode();
+	const EntityPtr& node = getEntity();
 	assert( node != nullptr );
 
 	const TransformPtr& transform = node->getTransform();

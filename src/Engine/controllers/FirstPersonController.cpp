@@ -11,7 +11,7 @@
 #include "vapor/controllers/FirstPersonController.h"
 #include "vapor/Engine.h"
 #include "vapor/math/Math.h"
-#include "vapor/scene/Node.h"
+#include "vapor/scene/Entity.h"
 #include "vapor/scene/Camera.h"
 #include "vapor/render/Device.h"
 #include "vapor/input/InputManager.h"
@@ -47,6 +47,11 @@ FirstPersonController::FirstPersonController()
 
 FirstPersonController::~FirstPersonController()
 {
+	window->onWindowFocusChange.Disconnect( this, &FirstPersonController::onWindowFocusChange );
+
+	if(!inputManager)
+		return;
+
 	Keyboard* const keyboard = inputManager->getKeyboard();
 	assert( keyboard != nullptr );
 
@@ -57,7 +62,6 @@ FirstPersonController::~FirstPersonController()
 	mouse->onMouseMove.Disconnect( this, &FirstPersonController::onMouseMove );
 	mouse->onMouseDrag.Disconnect( this, &FirstPersonController::onMouseDrag );
 	mouse->onMouseWheelMove.Disconnect( this, &FirstPersonController::onMouseWheel );
-	window->onWindowFocusChange.Disconnect( this, &FirstPersonController::onWindowFocusChange );
 }
 
 //-----------------------------------//
@@ -72,7 +76,10 @@ void FirstPersonController::_update( double delta )
 
 void FirstPersonController::checkControls( double delta )
 {
-	const TransformPtr& transform = getNode()->getTransform();
+	if(!inputManager)
+		return;
+
+	const TransformPtr& transform = getEntity()->getTransform();
 	Vector3 position = transform->getPosition();
 	
 	Vector3 moveVector;
@@ -157,6 +164,11 @@ void FirstPersonController::checkControls( double delta )
 
 void FirstPersonController::registerCallbacks()
 {
+	window->onWindowFocusChange.Connect( this, &FirstPersonController::onWindowFocusChange );
+
+	if(!inputManager)
+		return;
+
 	Keyboard* const keyboard = inputManager->getKeyboard();
 	assert( keyboard != nullptr );
 
@@ -167,7 +179,6 @@ void FirstPersonController::registerCallbacks()
 	mouse->onMouseMove.Connect( this, &FirstPersonController::onMouseMove );
 	mouse->onMouseDrag.Connect( this, &FirstPersonController::onMouseDrag );
 	mouse->onMouseWheelMove.Connect( this, &FirstPersonController::onMouseWheel );
-	window->onWindowFocusChange.Connect( this, &FirstPersonController::onWindowFocusChange );
 }
 
 //-----------------------------------//

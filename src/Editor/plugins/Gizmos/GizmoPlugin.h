@@ -33,6 +33,9 @@ namespace GizmoTool
 
 //-----------------------------------//
 
+typedef std::map<EntityPtr, EntityPtr> GizmoMap;
+typedef std::pair<const EntityPtr, EntityPtr> GizmoMapPair;
+
 class GizmoPlugin : public Plugin
 {
 public:
@@ -54,9 +57,9 @@ public:
 	virtual void onMouseButtonPress( const MouseButtonEvent& );
 	virtual void onMouseButtonRelease( const MouseButtonEvent& );
 
-	// Node selection events.
-	virtual void onNodeSelect( const NodePtr& );
-	virtual void onNodeUnselect( const NodePtr& );
+	// Entity selection events.
+	virtual void onEntitySelect( const EntityPtr& );
+	virtual void onEntityUnselect( const EntityPtr& );
 
 	// Scene load callback.
 	void onSceneLoad( const ScenePtr& scene );
@@ -70,19 +73,19 @@ protected:
 	bool isTool(GizmoTool::Enum mode);
 
 	// Unselects (and can also reselect) nodes (and their gizmos).
-	void unselectNodes(bool reselect = false);
+	void unselectEntities(bool reselect = false);
 
 	// Creates a new gizmo for the given node.
-	void createGizmo( const NodePtr& node );
+	void createGizmo( const EntityPtr& node );
 
 	// Removes the active gizmo for the given node.
-	void removeGizmo( const NodePtr& node );
+	void removeGizmo( const EntityPtr& node );
 
 	// Creates a new gizmo undo/redo operation.
 	void createOperation();
 
 	// Sets the bounding box visibility of the given node.
-	void setBoundingBoxVisible( const NodePtr& node, bool state );
+	void setBoundingBoxVisible( const EntityPtr& node, bool state );
 
 	// Performs bounding-box based ray picking.
 	bool pickBoundingTest( const MouseMoveEvent& event );
@@ -97,7 +100,7 @@ protected:
 	bool getGizmoPickPoint(int x, int y, Vector3& pickPoint);
 
 	// Gets the node picked by the ray.
-	bool getGizmoPickNode(int x, int y, NodePtr& node);
+	bool getGizmoPickEntity(int x, int y, EntityPtr& node);
 
 	// Current Gizmo tool.
 	GizmoTool::Enum tool;
@@ -108,22 +111,17 @@ protected:
 	// Current Gizmo axis selection.
 	GizmoAxis::Enum axis;
 
-	// Current gizmo pick point.
-	Vector3 firstPickPoint;
+	// Associates the object nodes to the gizmos nodes.
+	GizmoMap gizmos;
 
 	// Current gizmo operation.
 	GizmoOperation* op;
 
-	RenderablePtr planeDebug;
-	
+	// Current gizmo pick point.
+	Vector3 firstPickPoint;
+
 	// Editor scene.
 	ScenePtr editorScene;
-
-	typedef std::map<NodePtr, NodePtr> GizmoMap;
-	typedef std::pair<const NodePtr, NodePtr> GizmoMapPair;
-
-	// Associates the object nodes to the gizmos nodes.
-	GizmoMap gizmos;
 
 	// Toolbar buttons.
 	wxToolBarToolBase* buttonCamera;

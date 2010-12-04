@@ -9,7 +9,7 @@
 #include "vapor/PCH.h"
 #include "vapor/scene/Billboard.h"
 #include "vapor/render/Material.h"
-#include "vapor/scene/Node.h"
+#include "vapor/scene/Entity.h"
 
 namespace vapor {
 
@@ -37,7 +37,7 @@ void Billboard::update( double VAPOR_UNUSED(delta) )
 {
 	// If this is the first update loop, we need to get the transform.
 	if( !transform )
-		transform = getNode()->getTransform();
+		transform = getEntity()->getTransform();
 
 	// If we have no components, nothing to do...
 	if( !camera || !transform )
@@ -76,7 +76,7 @@ RenderablePtr Billboard::getDebugRenderable() const
 	std::vector<Vector3> pos;
 	std::vector<Vector3> colors;
 
-	TransformPtr cameraTransform = camera->getNode()->getTransform();
+	TransformPtr cameraTransform = camera->getEntity()->getTransform();
 	Vector3 lookAt = transform->getPosition()-cameraTransform->getPosition();
 	
 	pos.push_back( transform->getPosition() );

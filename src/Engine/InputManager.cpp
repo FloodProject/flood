@@ -19,8 +19,9 @@ namespace vapor {
 
 InputManager::~InputManager()
 {
-	foreach( InputDevice* const device, devices )
+	for( uint i = 0; i < devices.size(); i++ )
 	{
+		InputDevice* device = devices[i];
 		delete device;
 	}
 }
@@ -45,8 +46,9 @@ void InputManager::addDevice( InputDevice* device )
 
 Keyboard* InputManager::getKeyboard() const
 {
-	foreach( InputDevice* device, devices )
+	for( uint i = 0; i < devices.size(); i++ )
 	{
+		InputDevice* device = devices[i];
 		if( device->getType() == InputDeviceType::Keyboard )
 			return static_cast< Keyboard* > ( device );
 	}
@@ -58,8 +60,9 @@ Keyboard* InputManager::getKeyboard() const
 
 Mouse* InputManager::getMouse() const
 {
-	foreach( InputDevice* device, devices )
+	for( uint i = 0; i < devices.size(); i++ )
 	{
+		InputDevice* device = devices[i];
 		if( device->getType() == InputDeviceType::Mouse )
 			return static_cast< Mouse* > ( device );
 	}
@@ -71,8 +74,9 @@ Mouse* InputManager::getMouse() const
 
 void InputManager::processEvent( const InputEvent& event )
 {
-	foreach( InputDevice* const device, devices )
+	for( uint i = 0; i < devices.size(); i++ )
 	{
+		InputDevice* device = devices[i];
 		device->processEvent( event );
 	}
 }

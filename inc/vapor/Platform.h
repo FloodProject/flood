@@ -26,8 +26,7 @@
 // Compiler detection
 //---------------------------------------------------------------------//
 
-#ifdef _MSC_VER
-	// Microsoft Visual C++
+#ifdef _MSC_VER // Microsoft Visual C++ Compiler
 	#if _MSC_VER == 1600
 		#define VAPOR_COMPILER_MSVC_2010 0x1600
 		#define VAPOR_COMPILER_MSVC	VAPOR_COMPILER_MSVC_2010
@@ -50,25 +49,10 @@
 
 #if defined( DEBUG ) || defined( _DEBUG ) || defined( ___DEBUG )
 	#define VAPOR_DEBUG
-#endif
-
-#if !defined( VAPOR_DEBUG ) && !defined( NDEBUG )
+#elif !defined( VAPOR_DEBUG ) && !defined( NDEBUG )
 	#define NDEBUG
-#endif
-
-#if defined( VAPOR_DEBUG ) && defined( NDEBUG )
+#elif defined( VAPOR_DEBUG ) && defined( NDEBUG )
 	#error
-#endif
-
-//---------------------------------------------------------------------//
-// Platform headers
-//---------------------------------------------------------------------//
-
-#ifdef VAPOR_PLATFORM_WINDOWS
-	// include the main Windows headers
-	#define WIN32_LEAN_AND_MEAN
-	#define NOMINMAX
-	#include <Windows.h>	
 #endif
 
 //---------------------------------------------------------------------//
@@ -81,31 +65,6 @@
 		// (http://dmoulding.googlepages.com/vld)
 		#include <vld.h>
 	#endif
-#endif
-
-//---------------------------------------------------------------------//
-// API exports
-//---------------------------------------------------------------------//
-
-#ifdef VAPOR_API_DLL
-	#ifdef VAPOR_EXPORT
-		#ifdef VAPOR_PLATFORM_WINDOWS
-			// This should work for both MSVC and GCC on Windows.
-			// For more details see:
-			// http://gcc.gnu.org/onlinedocs/gcc-4.4.0/gcc/Function-Attributes.html
-			#define VAPOR_API __declspec( dllexport )
-		#else
-			#define VAPOR_API __attribute__ ((visibility("default")))
-		#endif
-	#else
-		#ifdef VAPOR_PLATFORM_WINDOWS
-			#define VAPOR_API __declspec( dllimport )
-		#else
-			#define VAPOR_API
-		#endif
-	#endif
-#else
-	#define VAPOR_API
 #endif
 
 //---------------------------------------------------------------------//

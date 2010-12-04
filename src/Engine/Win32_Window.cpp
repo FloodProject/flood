@@ -15,7 +15,10 @@ namespace vapor {
 
 //-----------------------------------//
 
-Win32Window::Win32Window(Settings& settings)
+static bool classRegistered = false;
+static const TCHAR className[] = TEXT("vapor3D");
+
+Win32Window::Win32Window(const WindowSettings& settings)
 	: Window(settings)
 	, hInstance(nullptr)
 	, hDC(nullptr)
@@ -27,7 +30,7 @@ Win32Window::Win32Window(Settings& settings)
 	if ( !registerClass() || !createWindow() ) 
 	{
 		Log::error("Could not open a Win32 window");
-		//exit(1);
+		return;
 	}
 }
 
@@ -36,6 +39,14 @@ Win32Window::Win32Window(Settings& settings)
 Win32Window::~Win32Window()
 {
 	// Unregister class
+	if( !UnregisterClass(className, NULL) )
+	{
+		Log::error( "UnregisterClass() failed: %s", getErrorMessage().c_str() );
+		return;
+	}
+
+	classRegistered = false;
+
 	// Destroy context
 	// Destroy window
 }
@@ -43,7 +54,10 @@ Win32Window::~Win32Window()
 //-----------------------------------//
 
 bool Win32Window::registerClass()
-{	
+{
+	if(classRegistered)
+		return true;
+
 	WNDCLASS wc;
 
 	wc.style         = CS_HREDRAW | CS_VREDRAW | CS_OWNDC ;
@@ -51,18 +65,19 @@ bool Win32Window::registerClass()
 	wc.cbClsExtra    = 0;
 	wc.cbWndExtra    = 0;
 	wc.hInstance     = hInstance;
-	wc.hIcon         = LoadIcon( nullptr, IDI_WINLOGO );
+	wc.hIcon         = LoadIcon( nullptr, IDI_APPLICATION );
 	wc.hCursor       = LoadCursor( nullptr, IDC_ARROW );
 	wc.hbrBackground = nullptr;
 	wc.lpszMenuName  = nullptr;
-	wc.lpszClassName = TEXT("vapor_Window");
+	wc.lpszClassName = className;
 
-	if (!RegisterClass(&wc)) 
+	if( !RegisterClass(&wc) )
 	{
 		Log::error( "RegisterClass() failed: %s", getErrorMessage().c_str() );
 		return false;
 	}
 
+	classRegistered = true;
 	return true;
 }
 
@@ -78,18 +93,20 @@ bool Win32Window::createWindow()
 	// AdjustWindowRectEx needs the rect to be filled in with the coordinates of 
 	// the top-left and bottom-right corners of the desired client area
 	RECT windowRect;
-	SetRect( &windowRect, 0, 0, settings.getWidth(), settings.getHeight() );
+	SetRect( &windowRect, 0, 0, settings.width, settings.height );
 
 	// AdjustWindowRectEx corrects the size of the client area of the window
 	if (!AdjustWindowRectEx( &windowRect, style, false, exStyle ))
 	{
 		Log::error( "AdjustWindowRectEx() failed: %s", getErrorMessage().c_str() );
+		return false;
 	}
 
-	HWND hWnd = CreateWindowEx( exStyle, TEXT("vapor_Window"), TEXT("vaporEngine"), 
+	hWnd = CreateWindowEx( exStyle, className, TEXT(""), 
 		style | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
 		0, 0, windowRect.right - windowRect.left,
-		windowRect.bottom - windowRect.top, nullptr, nullptr, hInstance, nullptr );
+		windowRect.bottom - windowRect.top,
+		nullptr, nullptr, hInstance, this );
 
 	if (!hWnd) 
 	{
@@ -136,11 +153,13 @@ bool Win32Window::createContext()
 	if ( !pf ) 
 	{
 		Log::error( "ChoosePixelFormat() failed: %s", getErrorMessage().c_str() );
+		return false;
 	}
 
 	if ( !SetPixelFormat( hDC, pf, &pfd ) ) 
 	{
 		Log::error( "SetPixelFormat() failed: %s", getErrorMessage().c_str() );
+		return false;
 	} 
 
 	//DescribePixelFormat( hDC, pf, sizeof ( PIXELFORMATDESCRIPTOR ), &pfd );
@@ -163,25 +182,23 @@ bool Win32Window::createContext()
 
 //-----------------------------------//
 
-string Win32Window::getErrorMessage()
+std::string Win32Window::getErrorMessage()
 {
 	DWORD dw = GetLastError();
 
-    LPTSTR lpMsgBuf;
+	LPTSTR lpMsgBuf;
 
-    FormatMessage(
-        FORMAT_MESSAGE_ALLOCATE_BUFFER | 
-        FORMAT_MESSAGE_FROM_SYSTEM |
-        FORMAT_MESSAGE_IGNORE_INSERTS,
-        nullptr,
-        dw,
-        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-        (LPTSTR) &lpMsgBuf,
-        0, nullptr );
+	FormatMessage(
+		FORMAT_MESSAGE_ALLOCATE_BUFFER |
+		FORMAT_MESSAGE_FROM_SYSTEM |
+		FORMAT_MESSAGE_IGNORE_INSERTS,
+		NULL,
+		dw,
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		(LPTSTR) &lpMsgBuf,
+		0, NULL );
 
-	puts( (LPCSTR) lpMsgBuf );
-
-	string msg( (LPCSTR) lpMsgBuf );
+	std::string msg( (LPCSTR) lpMsgBuf );
 	LocalFree(lpMsgBuf);
 
 	return msg;
@@ -201,16 +218,34 @@ void Win32Window::update()
 
 bool Win32Window::pumpEvents()
 {
+	MSG msg;
+
+	while( PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) )
+	{
+		// If the message is WM_QUIT, then return.
+		if (msg.message == WM_QUIT)
+			return false;
+
+		TranslateMessage(&msg);
+		DispatchMessage(&msg); 
+	}
+
 	return true;
 }
 
 //-----------------------------------//
 
-void Win32Window::setTitle(const string& title)
+bool Win32Window::setTitle(const std::wstring& title)
 {
+	// If the function succeeds, the return value is nonzero.
+	if( !SetWindowText(hWnd, title.c_str()) )
+	{
+		Log::error( "SetWindowText() failed: %s", getErrorMessage().c_str() );
+		return false;
+	}
 
+	return true;
 }
-
 
 //-----------------------------------//
 
@@ -219,6 +254,12 @@ void Win32Window::setCursor(bool state)
 
 }
 
+//-----------------------------------//
+
+WindowHandle* Win32Window::getHandle()
+{
+	return (WindowHandle*) hWnd;
+}
 
 //-----------------------------------//
 
@@ -230,63 +271,47 @@ void Win32Window::makeCurrent()
 	if( !wglMakeCurrent(hDC, hRC) ) 
 	{
 		Log::error( "wglMakeCurrent() failed: %s", getErrorMessage().c_str() );
+		return;
 	}
 }
 
 //-----------------------------------//
 
-LONG WINAPI WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
+LRESULT CALLBACK WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 { 
-  switch ( uMsg )
-  {
-	//case WM_SYSCOMMAND:	// Intercept System Commands
-	//{
-	//	switch ( wParam )	// Check System Calls
-	//	{
-	//	// Screensaver Trying To Start?
-	//	case SC_SCREENSAVE:	
-	//	
-	//	// Monitor Trying To Enter Powersave?
-	//	case SC_MONITORPOWER:
-	//		return 0;	// Prevent From Happening
-	//	}
-	//	
-	//	break;
-	//}
+	Win32Window* window = (Win32Window*) GetWindowLongPtr(hWnd, GWLP_USERDATA);
 
-    case WM_SIZE:
-    {
-		// this code would be an observer/subject pattern since
-		// the user may want to do more things during resize
-		int width = LOWORD(lParam);
-		int height = HIWORD(lParam);
+	switch ( uMsg )
+	{
+	case WM_CREATE:
+	{
+		CREATESTRUCT* pCreate = (CREATESTRUCT*) lParam;
+        SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR) pCreate->lpCreateParams);
+		break;
+	}
+	case WM_SIZE:
+	{
+		Settings& settings = (Settings&) window->getSettings();
+		settings.width = LOWORD(lParam);
+		settings.height = HIWORD(lParam);
+		window->handleWindowResize();
+		break;
+	}
+	case WM_CLOSE:
+	{
+		DestroyWindow(hWnd);
+		break;
+	}
+	case WM_DESTROY:
+	{
+		PostQuitMessage(0);
+		break;
+	}
+	default:
+		break;
+	}
 
-		//settings.
-
-		return 0;
-    }
-
-    case WM_CHAR:
-    {
-      // this wouldnt really be here, just for this example
-	    switch ( wParam ) 
-      {
-        // escape key code
-	      case 27:
-	        PostQuitMessage( 0 );
-	        break;
-	    }
-	    return 0;
-    }
-
-    case WM_CLOSE:
-    {
-		  PostQuitMessage( 0 );
-	    return 0;
-    }
-  }
-
-  return DefWindowProc( hWnd, uMsg, wParam, lParam ); 
+	return DefWindowProc( hWnd, uMsg, wParam, lParam ); 
 } 
 
 //-----------------------------------//

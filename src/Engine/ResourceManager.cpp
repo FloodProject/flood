@@ -40,9 +40,10 @@ ResourceManager::~ResourceManager()
 	assert( resourceTaskEvents.empty() );
 
 	// Delete resource loaders.
-	foreach( const ResourceLoaderMapPair& entry, resourceLoaders )
+	ResourceLoaderMap::const_iterator it;
+	for( it = resourceLoaders.cbegin(); it != resourceLoaders.cend(); it++ )
 	{
-		ResourceLoader* loader = entry.second;
+		ResourceLoader* loader = it->second;
 
 		if( !loader )
 			continue;
@@ -50,7 +51,7 @@ ResourceManager::~ResourceManager()
 		if( loader->getExtensions().size() == 1 )
 			delete loader;
 		else
-			loader->getExtensions().remove( entry.first );
+			loader->getExtensions().remove( it->first );
 	}
 
 	// Check that all resources will be deleted.
@@ -168,7 +169,7 @@ ResourceLoader* ResourceManager::findLoader(const std::string& ext)
 
 void ResourceManager::decodeResource( ResourcePtr resource, bool useThreads, bool notify )
 {
-	boost::intrusive_ptr<ResourceTask> task = new ResourceTask();
+	RefPtr<ResourceTask> task = new ResourceTask();
 
 	task->res = resource.get();
 	task->rm = this;
@@ -242,16 +243,18 @@ void ResourceManager::removeUnusedResources()
 	std::vector<std::string> resourcesToRemove;
 
 	// Search for unused resources.
-	foreach( const ResourceMapPair& p, resources )
+	ResourceMap::const_iterator it;
+	for( it = resources.cbegin(); it != resources.cend(); it++ )
 	{
-		const ResourcePtr& resource = p.second;
+		const ResourcePtr& resource = it->second;
 
 		if( resource->getReferenceCount() == 1 )
-			resourcesToRemove.push_back(p.first);
+			resourcesToRemove.push_back(it->first);
 	}
 
-	foreach( const std::string& resource, resourcesToRemove )
+	for( uint i = 0; i < resourcesToRemove.size(); i++ )
 	{
+		const std::string& resource = resourcesToRemove[i];
 		removeResource(resource);
 	}
 }
@@ -291,8 +294,12 @@ void ResourceManager::registerLoader(ResourceLoader* const loader)
 	#pragma TODO("Check if the resource loader is already registered")
 
 	// Associate the extensions in the loaders map.
-	foreach( const std::string& extension, loader->getExtensions() )
+	ExtensionList::const_iterator it;
+	for( it = loader->getExtensions().cbegin(); it != loader->getExtensions().cend(); it++ )
+	{
+		const std::string& extension = *it;
 		resourceLoaders[extension] = loader;
+	}
 
 	// Send callback notifications.
 	onResourceLoaderRegistered( *loader );

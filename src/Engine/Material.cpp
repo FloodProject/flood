@@ -12,6 +12,7 @@
 #include "vapor/render/TextureManager.h"
 #include "vapor/render/ProgramManager.h"
 #include "vapor/Engine.h"
+#include "vapor/Utilities.h"
 
 namespace vapor {
 
@@ -148,9 +149,10 @@ void Material::bind()
 	ProgramPtr program = getProgram();
 	assert( program != nullptr );
 
-	foreach( const TextureMapPair& p, textures )
+	TextureMap::const_iterator it;
+	for( it = textures.cbegin(); it != textures.cend(); it++ )
 	{
-		p.second->bind( p.first );
+		it->second->bind( it->first );
 	}
 
 	if( !program->isLinked() )
@@ -160,10 +162,10 @@ void Material::bind()
 
 	program->bind();
 
-	foreach( const TextureMapPair& p, textures )
+	for( it = textures.cbegin(); it != textures.cend(); it++ )
 	{
-		std::string name = "vp_Texture"+String::fromNumber(p.first);
-		program->setUniform( name, (int)p.first );
+		std::string name = "vp_Texture"+String::fromNumber(it->first);
+		program->setUniform( name, (int) it->first );
 	}
 }
 
@@ -175,9 +177,10 @@ void Material::unbind()
 
 	program->unbind();
 
-	foreach( const TextureMapPair& p, getTextures() )
+	TextureMap::const_iterator it;
+	for( it = textures.cbegin(); it != textures.cend(); it++ )
 	{
-		p.second->unbind( p.first );
+		it->second->unbind( it->first );
 	}
 }
 

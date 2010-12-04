@@ -18,7 +18,7 @@ namespace vapor {
  * Represents a field in a class.
  */
 
-class VAPOR_API Field
+class CORE_API Field
 {
 	DECLARE_UNCOPYABLE(Field)
 

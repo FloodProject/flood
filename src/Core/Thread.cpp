@@ -1,10 +1,10 @@
 /************************************************************************
 *
-* vapor3D Engine © (2008-2010)
+* vapor3D Server © (2008-2010)
 *
 *	<http://www.vapor3d.org>
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "vapor/Subsystem.h"
+#include "Core.h"
+#include "Thread.h"

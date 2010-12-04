@@ -16,7 +16,7 @@
 #include "vapor/physics/Physics.h"
 #include "vapor/physics/Convert.h"
 
-#include "vapor/scene/Node.h"
+#include "vapor/scene/Entity.h"
 #include "vapor/scene/Transform.h"
 
 #include "vapor/Engine.h"
@@ -72,7 +72,7 @@ void Body::update( double delta )
 	
 	createBody();
 	
-	TransformPtr transform = getNode()->getTransform();
+	TransformPtr transform = getEntity()->getTransform();
 	transform->onTransform.Connect( this, &Body::onTransform);
 }
 
@@ -89,7 +89,7 @@ void Body::onTransform()
 		return;
 	}
 
-	TransformPtr transform = getNode()->getTransform();
+	TransformPtr transform = getEntity()->getTransform();
 	const Vector3& scale = transform->getScale();
 
 	btCollisionShape* shape = getBulletShape();
@@ -103,7 +103,7 @@ void Body::onTransform()
 
 btCollisionShape* Body::getBulletShape() const
 {
-	const NodePtr& node = getNode();
+	const EntityPtr& node = getEntity();
 	ShapePtr shape = node->getTypedComponent<Shape>();
 
 	if( !shape )
@@ -124,7 +124,7 @@ bool Body::createBody()
 	if( !bulletShape )
 		return false;
 
-	const NodePtr& node = getNode();
+	const EntityPtr& node = getEntity();
 	motionState = new BodyMotionState( node->getTransform() );
 
 	btVector3 localInertia;

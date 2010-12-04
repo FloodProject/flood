@@ -11,7 +11,9 @@
 #include "math/Vector2.h"
 #include "math/Matrix4x4.h"
 #include "math/Plane.h"
-#include "Reflection.h"
+
+#include "core/Enum.h"
+#include "core/Class.h"
 
 namespace vapor {
 
@@ -38,7 +40,7 @@ namespace Projection
  * Frustum is a shape similiar to a pyramid with the top truncated.
  */
 
-class VAPOR_API Frustum
+class CORE_API Frustum
 {
 	DECLARE_CLASS_()
 

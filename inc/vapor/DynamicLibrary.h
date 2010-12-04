@@ -13,7 +13,7 @@ namespace vapor {
 //-----------------------------------//
 
 #ifdef VAPOR_PLATFORM_WINDOWS
-	typedef struct HINSTANCE__* DynLibHandle;
+	typedef void* DynLibHandle;
 #else
 	#warning "Support for dynamic libraries not found"
 #endif
@@ -26,7 +26,7 @@ namespace vapor {
  * possible to retrieve symbols using this class.
  */
 
-class VAPOR_API DynamicLibrary
+class CORE_API DynamicLibrary
 {
 	DECLARE_UNCOPYABLE(DynamicLibrary)
 

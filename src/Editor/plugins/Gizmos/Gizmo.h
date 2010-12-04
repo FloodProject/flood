@@ -44,7 +44,7 @@ class Gizmo : public Geometry
 
 public:
 
-	Gizmo( const NodePtr& node, const CameraWeakPtr& camera );
+	Gizmo( const EntityPtr& node, const CameraWeakPtr& camera );
 
 	// Builds the gizmo geometry.
 	virtual void buildGeometry() = 0;
@@ -74,7 +74,7 @@ public:
 	GETTER(AxisSelected, GizmoAxis::Enum, selectedAxis)
 
 	// Gets the node attached to the gizmo.
-	GETTER(NodeAttachment, const NodePtr&, nodeObject)
+	GETTER(EntityAttachment, const EntityPtr&, nodeObject)
 
 	// Updates this component.
 	virtual void update( double delta );
@@ -88,7 +88,7 @@ protected:
 	VertexBufferPtr generateLines();
 	void generateLinesColors(std::vector<Vector3>& colors);
 
-	NodePtr nodeObject;
+	EntityPtr nodeObject;
 	MaterialPtr material;
 	CameraWeakPtr weakCamera;
 	GizmoAxis::Enum selectedAxis;

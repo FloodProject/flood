@@ -21,8 +21,11 @@ RenderTarget::RenderTarget()
 
 RenderTarget::~RenderTarget()
 {
-	foreach( const RenderView* view, views )
+	for( uint i = 0; i < views.size(); i++ )
+	{
+		const RenderView* view = views[i];
 		delete view;
+	}
 }
 
 //-----------------------------------//

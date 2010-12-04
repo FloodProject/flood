@@ -14,6 +14,7 @@
 #include "Settings.h"
 #include "UndoManager.h"
 #include "../Scene/ScenePage.h"
+#include "Utilities.h"
 
 namespace vapor { namespace editor {
 
@@ -28,7 +29,7 @@ ResourcesBrowser::ResourcesBrowser( EditorFrame* editor, wxWindow* parent,
 	setupUI();
 	setupRender();
 	loadCache();
-	network.init();
+	//network.init();
 }
 
 //-----------------------------------//
@@ -57,7 +58,7 @@ void ResourcesBrowser::setupRender()
 	Frustum& frustum = camera->getFrustum();
 	frustum.nearPlane = 0.1f;
 
-	nodeCamera.reset( new Node() );
+	nodeCamera.reset( new Entity() );
 	nodeCamera->addTransform();
 	nodeCamera->addComponent( camera );
 	
@@ -75,9 +76,10 @@ void ResourcesBrowser::setupImages()
 {
 	int size = ThumbSize / 2;
 
-	foreach( ResourcesCachePair p, resourcesCache )
+	ResourcesCache::iterator it;
+	for( it = resourcesCache.begin(); it != resourcesCache.end(); it++ )
 	{
-		ResourceMetadata& metadata = p.second;
+		ResourceMetadata& metadata = it->second;
 		
 		wxImage image;
 		
@@ -173,9 +175,10 @@ bool ResourcesBrowser::saveCache()
 	Json::Value root;
 	uint i = 0;
 
-	foreach( const ResourcesCachePair& p, resourcesCache )
+	ResourcesCache::const_iterator it;
+	for( it = resourcesCache.cbegin(); it != resourcesCache.cend(); it++ )
 	{
-		const ResourceMetadata& metadata = p.second;
+		const ResourceMetadata& metadata = it->second;
 		
 		Json::Value value;
 		value["hash"] = metadata.hash;
@@ -203,8 +206,12 @@ void ResourcesBrowser::scanFiles()
 
 	std::vector<std::string> files;
 	
-	foreach( const std::string& path, System::enumerateFiles("media/meshes") )
+	std::vector<std::string> found = System::enumerateFiles("media/meshes");
+	
+	for( uint i = 0; i < found.size(); i++ )
 	{
+		const std::string& path = found[i];
+
 		std::string ext = String::getExtensionFromPath(path);
 		ResourceLoader* loader = rm->findLoader(ext);
 
@@ -225,8 +232,10 @@ void ResourcesBrowser::scanFiles()
 
 	uint progress = 0;
 
-	foreach( const std::string& path, files )
+	for( uint i = 0; i < files.size(); i++ )
 	{
+		const std::string& path = files[i];
+		
 		// Force unused resources to be unloaded.
 		rm->update(0);
 
@@ -275,7 +284,7 @@ void ResourcesBrowser::scanFiles()
 
 ImagePtr ResourcesBrowser::generateThumbnail(const MeshPtr& mesh)
 {
-	NodePtr nodeResource( new Node() );
+	EntityPtr nodeResource( new Entity() );
 	nodeResource->addTransform();
 	nodeResource->addComponent( ModelPtr(new Model(mesh)) );
 	scene->add( nodeResource );
@@ -354,12 +363,12 @@ void ResourcesBrowser::OnListBeginDrag(wxListEvent& event)
 	if( !mesh )
 		return;
 
-	NodePtr node( new Node( String::getBaseFromPath(name) ) );
+	EntityPtr node( new Entity( String::getBaseFromPath(name) ) );
 	node->addTransform();
 	node->getTransform()->setPosition(dropPoint);
 	node->addComponent( ModelPtr( new Model(mesh) ) );
 
-	NodeOperation* nodeOperation = new NodeOperation();
+	EntityOperation* nodeOperation = new EntityOperation();
 	nodeOperation->node = node;
 	nodeOperation->weakScene = scene;
 
@@ -373,19 +382,19 @@ void ResourcesBrowser::OnListBeginDrag(wxListEvent& event)
 
 void ResourcesBrowser::onConnectClicked(wxCommandEvent& event)
 {
-	if( network.createClientSocket("tcp://127.0.0.1:7654") )
-	{
-		m_button1->SetLabel("Connected");
-		m_button1->Disable();
-	}
+	//if( network.createClientSocket("tcp://127.0.0.1:7654") )
+	//{
+	//	m_button1->SetLabel("Connected");
+	//	m_button1->Disable();
+	//}
 
-	std::vector<byte> data;
-	data.push_back( MessageType::ResourceIndexRequest );
+	//std::vector<byte> data;
+	//data.push_back( MessageType::ResourceIndexRequest );
 
-	MessagePtr message = new Message(data);
-	//message->setMessageType( MessageType::ResourceIndexRequest );
+	//MessagePtr message = new Message(data);
+	////message->setMessageType( MessageType::ResourceIndexRequest );
 
-	network.sendMessage(message);
+	//network.sendMessage(message);
 }
 
 //-----------------------------------//

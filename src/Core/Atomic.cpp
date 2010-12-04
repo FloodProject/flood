@@ -13,6 +13,12 @@
 	#error "Implement atomics support in UNIX"
 #endif
 
+#ifdef VAPOR_PLATFORM_WINDOWS
+	#define WIN32_LEAN_AND_MEAN
+	#define NOMINMAX
+	#include <Windows.h>	
+#endif
+
 namespace vapor {
 
 //-----------------------------------//

@@ -18,7 +18,7 @@ static const float BASE_FACTOR = 0.5f;
 
 //-----------------------------------//
 
-GizmoTranslate::GizmoTranslate( const NodePtr& node, const CameraWeakPtr& camera )
+GizmoTranslate::GizmoTranslate( const EntityPtr& node, const CameraWeakPtr& camera )
 	: Gizmo( node, camera )
 { }
 
@@ -72,8 +72,9 @@ void GizmoTranslate::highlightAxis( GizmoAxis::Enum axis, bool highlight )
 static void TransformVertices(std::vector<Vector3>& pos,
 					   std::vector<Vector3>& vs, Matrix4x3& transform)
 {
-	foreach( const Vector3& v, vs )
+	for( uint i = 0; i < vs.size(); i++ )
 	{
+		const Vector3& v = vs[i];
 		pos.push_back( transform*v );
 	}
 }

@@ -109,7 +109,7 @@ protected:
 	void createResources();
 
 	// Creates a new camera.
-	NodePtr createCamera();
+	EntityPtr createCamera();
 
 	// View callbacks.
 	void onUpdate( double delta );

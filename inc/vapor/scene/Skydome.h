@@ -46,7 +46,7 @@ public:
 	// CELESTIAL BODIES (Sun, Moon, Stars)
 
 	// Sets the sun node.
-	void setSunNode( const NodePtr& sun );
+	void setSunEntity( const EntityPtr& sun );
 	
 	// Gets the position of the sun.
 	Vector3 getSunPosition();

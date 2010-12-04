@@ -14,6 +14,7 @@
 #include "vapor/resources/GLSL_Text.h"
 #include "vapor/render/GL.h"
 #include "vapor/Utilities.h"
+#include "ReferenceCount.h"
 
 namespace vapor {
 
@@ -35,8 +36,10 @@ GLSL_Program::GLSL_Program( const GLSL_TextPtr& text )
 GLSL_Program::~GLSL_Program()
 {
 	// Detach shaders.
-	foreach( const GLSL_ShaderPtr& shader, shaders )
+	for( uint i = 0; i < shaders.size(); i++ )
 	{
+		const GLSL_ShaderPtr& shader = shaders[i];
+	
 		if( attached[shader] )
 			glDetachShader( id, shader->id() );
 
@@ -116,8 +119,11 @@ void GLSL_Program::updateShadersText()
 	assert( fragment != nullptr );
 	fragment->setText( text->getFragmentSource() );
 
-	foreach( const ShaderPtr& shader, shaders )
+	for( uint i = 0; i < shaders.size(); i++ )
+	{
+		const ShaderPtr& shader = shaders[i];
 		shader->forceRecompile();
+	}
 
 	linkError = false;
 	linked = false;
@@ -128,8 +134,10 @@ void GLSL_Program::updateShadersText()
 bool GLSL_Program::attachShaders()
 {
 	// Make sure all shaders are compiled.
-	foreach( const GLSL_ShaderPtr& shader, shaders )
+	for( uint i = 0; i < shaders.size(); i++ )
 	{
+		const GLSL_ShaderPtr& shader = shaders[i];
+
 		if( shader->isCompiled() )
 			 continue;
 		

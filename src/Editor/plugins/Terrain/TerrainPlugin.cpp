@@ -9,6 +9,7 @@
 #include "PCH.h"
 #include "TerrainPlugin.h"
 #include "TerrainPage.h"
+#include "Utilities.h"
 #include "Editor.h"
 #include "UndoManager.h"
 #include "EditorIcons.h"
@@ -93,7 +94,7 @@ void TerrainPlugin::onPluginDisable()
 
 //-----------------------------------//
 
-void TerrainPlugin::onNodeSelect( const NodePtr& node )
+void TerrainPlugin::onEntitySelect( const EntityPtr& node )
 {
 	if( !node->getInstanceType().is<Terrain>() )
 		return;
@@ -103,7 +104,7 @@ void TerrainPlugin::onNodeSelect( const NodePtr& node )
 
 //-----------------------------------//
 
-void TerrainPlugin::onNodeUnselect( const NodePtr& )
+void TerrainPlugin::onEntityUnselect( const EntityPtr& )
 {
 
 }
@@ -285,8 +286,13 @@ void TerrainPlugin::createOperation( const RayTriangleQueryResult& res )
 	if( terrainOperation )
 		return;
 
+	InputManager* input = engine->getInputManager();
+
+	if( !input )
+		return;
+
 	// If the left Shift is held down, then lower.
-	Keyboard* keyboard = engine->getInputManager()->getKeyboard();
+	Keyboard* keyboard = input->getKeyboard();
 	bool raise = !keyboard->isKeyPressed( Keys::LShift );	
 
 	terrainOperation = new TerrainOperation( tool, res );
@@ -358,7 +364,7 @@ bool TerrainPlugin::pickTerrain( const MouseButtonEvent& mb, RayTriangleQueryRes
 	if( !scene->doRayBoxQuery(pickRay, query) )
 		return false;
 
-	const NodePtr& node = query.node;
+	const EntityPtr& node = query.node;
 	
 	if( !node ) 
 		return false;
@@ -453,8 +459,9 @@ void TerrainOperation::updateNormals()
 	std::vector<CellPtr> cells;
 	getCellsInRange(bs, cells);
 
-	foreach(const CellPtr& cell, cells) 
+	for( uint i = 0; i < cells.size(); i++ )
 	{
+		const CellPtr& cell = cells[i];
 		cell->rebuildNormals();
 	}
 }
@@ -470,9 +477,13 @@ void TerrainOperation::loadSaveHeights( std::vector<float>& heights, bool save )
 	{
 		// We only need the height of the vertex. This way we can save some memory.
 		#pragma TODO("There is no need to save the unmodified heights of the terrain")
+		const std::vector<Vector3>& vertices = vb->getVertices();
 
-		foreach( const Vector3& v, vb->getVertices() )
+		for( uint i = 0; i < vertices.size(); i++ )
+		{
+			const Vector3& v = vertices[i];
 			heights.push_back( v.y );
+		}
 	}
 	else
 	{
@@ -519,8 +530,10 @@ void TerrainOperation::applyTool()
 
 void TerrainOperation::getCellsInRange(const BoundingSphere& bs, std::vector<CellPtr>& cells)
 {
-	foreach(const NodePtr& node, terrain->getNodes() ) 
+	const std::vector<EntityPtr>& entities = terrain->getEntities();
+	for( uint i = 0; i < entities.size(); i++ )
 	{
+		const EntityPtr& node = entities[i];
 		const TransformPtr& transform = node->getTransform();
 		const BoundingBox& box = transform->getBoundingVolume();
 
@@ -533,7 +546,7 @@ void TerrainOperation::getCellsInRange(const BoundingSphere& bs, std::vector<Cel
 		const RenderableList& renderables = geometry->getRenderables();
 		assert( !renderables.empty() );
 
-		const CellPtr& cell = boost::static_pointer_cast<Cell>(renderables[0]);
+		const CellPtr& cell = RefCast<Cell>(renderables[0]);
 		cells.push_back(cell);
 	}
 }
@@ -550,8 +563,9 @@ void TerrainOperation::applyRaiseTool()
 	std::vector<CellPtr> cells;
 	getCellsInRange(bs, cells);
 
-	foreach(const CellPtr& cell, cells) 
+	for( uint i = 0; i < cells.size(); i++ )
 	{
+		const CellPtr& cell = cells[i];
 		applyRaiseCell(bs, cell);
 	}
 }
@@ -561,10 +575,14 @@ void TerrainOperation::applyRaiseTool()
 void TerrainOperation::applyRaiseCell(const BoundingSphere& bs, const CellPtr& rend)
 {
 	bool updateVB = false;
+	
 	VertexBufferPtr vb = rend->getVertexBuffer();
-
-	foreach( Vector3& v, vb->getVertices() )
+	std::vector<Vector3>& vertices = vb->getVertices();
+	
+	for( uint i = 0; i < vertices.size(); i++ )
 	{
+		Vector3& v = vertices[i];
+		
 		if( !bs.intersects(v) )
 			continue;
 
@@ -619,7 +637,7 @@ static void blitToImage(const Image* dest, int destX, int destY,
 
 void TerrainOperation::applyPaintTool()
 {
-	RenderablePtr rend = rayQuery.renderable;
+	const RenderablePtr& rend = rayQuery.renderable;
 
 	float ut = uv[0].x + intUV.x*(uv[1].x-uv[0].x) + intUV.y*(uv[2].x-uv[0].x) + 1;
 	float vt = uv[0].y + intUV.x*(uv[1].y-uv[0].y) + intUV.y*(uv[2].y-uv[0].y);
@@ -629,7 +647,7 @@ void TerrainOperation::applyPaintTool()
 
 	MaterialPtr material = rend->getMaterial();
 	const TexturePtr& texture = material->getTexture(0);
-	const Image* image = texture->getImage();
+	Image* image = (Image*) texture->getImage();
 
 	int x = ut * image->getWidth();
 	int y = vt * image->getHeight();
@@ -664,7 +682,7 @@ void TerrainOperation::applyPaintTool()
 	}
 
 	blitToImage(image, x, y, paintImage.get(), offsetX, offsetY);
-	texture->setImage((Image*)image);
+	texture->setImage(image);
 }
 
 //-----------------------------------//

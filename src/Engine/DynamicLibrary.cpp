@@ -10,9 +10,15 @@
 #include "DynamicLibrary.h"
 
 #ifdef VAPOR_PLATFORM_WINDOWS
+	#define WIN32_LEAN_AND_MEAN
+	#define NOMINMAX
+	#include <Windows.h>	
+#endif
+
+#ifdef VAPOR_PLATFORM_WINDOWS
 	#define DYNLIB_LOAD(lib)		LoadLibraryExA(lib, nullptr, LOAD_WITH_ALTERED_SEARCH_PATH)
-	#define DYNLIB_GETSYM(lib, sym)	GetProcAddress(lib, sym)
-	#define DYNLIB_UNLOAD(lib)		FreeLibrary(lib)
+	#define DYNLIB_GETSYM(lib, sym)	GetProcAddress((HINSTANCE) lib, sym)
+	#define DYNLIB_UNLOAD(lib)		FreeLibrary((HINSTANCE) lib)
 #else
 	#error "Support for dynamic libraries not found"
 #endif

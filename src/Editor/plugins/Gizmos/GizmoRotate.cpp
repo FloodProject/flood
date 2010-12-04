@@ -14,7 +14,7 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-GizmoRotate::GizmoRotate( const NodePtr& node, const CameraWeakPtr& camera )
+GizmoRotate::GizmoRotate( const EntityPtr& node, const CameraWeakPtr& camera )
 	: Gizmo( node, camera )
 { }
 
@@ -33,8 +33,9 @@ void GizmoRotate::buildGeometry()
 static void TransformVertices(std::vector<Vector3>& pos,
 					   std::vector<Vector3>& vs, Matrix4x3& transform)
 {
-	foreach( const Vector3& v, vs )
+	for( uint i = 0; i < vs.size(); i++ )
 	{
+		const Vector3& v = vs[i];
 		pos.push_back( transform*v );
 	}
 }
@@ -77,8 +78,11 @@ VertexBufferPtr GizmoRotate::generateCircles()
 
 	// Translate it a bit.
 	transform = Matrix4x3::createTranslation( Vector3::UnitY * 0.5f );
-	foreach( Vector3& v, pos )
+	for( uint i = 0; i < pos.size(); i++ )
+	{
+		Vector3& v = pos[i];
 		v = transform*v;
+	}
 
 	// Vertex buffer setup
 	VertexBufferPtr vb = new VertexBuffer();

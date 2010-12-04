@@ -11,6 +11,7 @@
 #include "vapor/Subsystem.h"
 #include "vapor/ConcurrentQueue.h"
 #include "vapor/resources/Resource.h"
+#include "ReferenceCount.h"
 
 namespace vapor {
 
@@ -133,7 +134,7 @@ protected:
 	TaskManager* taskManager;
 
 	// When tasks finish, they queue an event.
-	concurrent_queue<ResourceEvent> resourceTaskEvents;
+	ConcurrentQueue<ResourceEvent> resourceTaskEvents;
 
 	// Number of resources queued for loading.
 	Atomic numResourcesQueuedLoad;
@@ -155,18 +156,18 @@ public:
 
 	// Gets a specific resource given it's name (if it exists).
 	template <typename T>
-	boost::intrusive_ptr<T> getResource(const std::string& path)
+	RefPtr<T> getResource(const std::string& path)
 	{
 		ResourcePtr res = getResource( path );
-		return boost::static_pointer_cast<T>( res );
+		return RefCast<T>(res);
 	}
 
 	// Creates a new resource and returns the specific resource type.
 	template <typename T>
-	boost::intrusive_ptr<T> loadResource(const std::string& path, bool async = true)
+	RefPtr<T> loadResource(const std::string& path, bool async = true)
 	{
 		ResourcePtr res = loadResource( path, async );
-		return boost::static_pointer_cast<T>( res );
+		return RefCast<T>(res);
 	}
 };
 

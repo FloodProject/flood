@@ -69,82 +69,6 @@ typedef unsigned long	ulong;
 #endif
 
 //---------------------------------------------------------------------//
-// C++ foreach construct
-//---------------------------------------------------------------------//
-
-#ifdef VAPOR_COMPILER_MSVC
-	#pragma warning( push )
-	#pragma warning( disable : 4512 4503 )
-	#include <boost/foreach.hpp>
-	#pragma warning( pop )
-#else
-	#include <boost/foreach.hpp>
-#endif
-
-#define foreach         BOOST_FOREACH
-#define reverse_foreach BOOST_REVERSE_FOREACH
-
-//---------------------------------------------------------------------//
-// Threads
-//---------------------------------------------------------------------//
-
-#ifdef VAPOR_THREADING
-	#define THREAD( code ) code
-#else
-	#define THREAD( code )
-	namespace vapor { class Thread; }
-#endif
-
-#ifdef VAPOR_THREADING_BOOST
-	#define BOOST_THREAD_NO_LIB
-
-	#ifdef VAPOR_COMPILER_MSVC
-		#pragma warning( push )
-		#pragma warning( disable : 4512 4244 )
-		#include <boost/thread.hpp>
-		#pragma warning( pop )
-	#else
-		#include <boost/thread.hpp>
-	#endif
-
-	typedef boost::thread Thread;
-#endif
-
-//---------------------------------------------------------------------//
-// Pointer wrappers
-//---------------------------------------------------------------------//
-
-#if defined(VAPOR_MEMORY_TR1_VENDOR)
-	#if defined(VAPOR_COMPILER_MSVC)
-		#include <memory>
-		#include <functional>
-	#elif defined(VAPOR_COMPILER_GCC)
-		#include <tr1/memory>
-	#endif
-#elif defined(VAPOR_MEMORY_TR1_BOOST)
-	#include <boost/tr1/memory.hpp>
-#endif
-
-#ifdef VAPOR_COMPILER_MSVC
-	#if VAPOR_COMPILER_MSVC != VAPOR_COMPILER_MSVC_2010 
-		namespace std { using namespace std::tr1; }
-	#endif
-#endif
-
-#if defined( VAPOR_MEMORY_SHARED_PTR )
-	#define TYPEDEF_SHARED_POINTER_FROM_TYPE( class ) \
-		typedef std::shared_ptr< class > class##Ptr;
-	#define TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( class ) \
-		typedef std::weak_ptr< class > class##WeakPtr;
-#endif
-
-#if defined( VAPOR_MEMORY_INTRUSIVE_PTR )
-	#include "boost/intrusive_ptr.hpp"
-	#define TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( type ) \
-		typedef boost::intrusive_ptr< type > type##Ptr;
-#endif
-
-//---------------------------------------------------------------------//
 // Macro for unused parameters to clean up compiler warnings
 //---------------------------------------------------------------------//
 
@@ -170,12 +94,6 @@ typedef unsigned long	ulong;
 // Forward-declaration Helpers
 //---------------------------------------------------------------------//
 
-#define FWD_DECL_INTRUSIVE(T)						\
-	namespace vapor {								\
-		class T;									\
-		TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( T );	\
-	} // end namespace
-	
 #define FWD_DECL_SHARED(T)							\
 	namespace vapor {								\
 		class T;									\

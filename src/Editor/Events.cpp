@@ -130,7 +130,7 @@ void Events::onPluginDisableEvent(Plugin* plugin)
 
 //-----------------------------------//
 
-void Events::onNodeSelect( const NodePtr& node )
+void Events::onEntitySelect( const EntityPtr& node )
 {
 	if( !currentPlugin )
 		return;
@@ -138,16 +138,19 @@ void Events::onNodeSelect( const NodePtr& node )
 	if(!node)
 		return;
 
-	currentPlugin->onNodeSelect(node);
+	currentPlugin->onEntitySelect(node);
 
 	// Global event listeners.
-	foreach( Plugin* plugin, eventListeners )
-		plugin->onNodeSelect(node);
+	for( uint i = 0; i < eventListeners.size(); i++ )
+	{
+		Plugin* plugin = eventListeners[i];
+		plugin->onEntitySelect(node);
+	}
 }
 
 //-----------------------------------//
 
-void Events::onNodeUnselect( const NodePtr& node )
+void Events::onEntityUnselect( const EntityPtr& node )
 {
 	if( !currentPlugin )
 		return;
@@ -155,11 +158,14 @@ void Events::onNodeUnselect( const NodePtr& node )
 	if(!node)
 		return;
 
-	currentPlugin->onNodeUnselect(node);
+	currentPlugin->onEntityUnselect(node);
 
 	// Global event listeners.
-	foreach( Plugin* plugin, eventListeners )
-		plugin->onNodeUnselect(node);
+	for( uint i = 0; i < eventListeners.size(); i++ )
+	{
+		Plugin* plugin = eventListeners[i];
+		plugin->onEntityUnselect(node);
+	}
 }
 
 //-----------------------------------//
@@ -175,8 +181,11 @@ void Events::onComponentSelect( const ComponentPtr& component )
 	currentPlugin->onComponentSelect(component);
 
 	// Global event listeners.
-	foreach( Plugin* plugin, eventListeners )
+	for( uint i = 0; i < eventListeners.size(); i++ )
+	{
+		Plugin* plugin = eventListeners[i];
 		plugin->onComponentSelect(component);
+	}
 }
 
 //-----------------------------------//
@@ -192,8 +201,11 @@ void Events::onComponentUnselect( const ComponentPtr& component )
 	currentPlugin->onComponentUnselect(component);
 
 	// Global event listeners.
-	foreach( Plugin* plugin, eventListeners )
+	for( uint i = 0; i < eventListeners.size(); i++ )
+	{
+		Plugin* plugin = eventListeners[i];
 		plugin->onComponentUnselect(component);
+	}
 }
 
 
@@ -207,8 +219,11 @@ void Events::onMouseMove( const MouseMoveEvent& mve )
 	currentPlugin->onMouseMove( mve );
 
 	// Global event listeners.
-	foreach( Plugin* plugin, eventListeners )
+	for( uint i = 0; i < eventListeners.size(); i++ )
+	{
+		Plugin* plugin = eventListeners[i];
 		plugin->onMouseMove( mve );
+	}
 }
 
 //-----------------------------------//
@@ -221,8 +236,11 @@ void Events::onMouseDrag( const MouseDragEvent& mde )
 	currentPlugin->onMouseDrag( mde );
 
 	// Global event listeners.
-	foreach( Plugin* plugin, eventListeners )
+	for( uint i = 0; i < eventListeners.size(); i++ )
+	{
+		Plugin* plugin = eventListeners[i];
 		plugin->onMouseDrag( mde );
+	}
 }
 
 //-----------------------------------//
@@ -235,8 +253,11 @@ void Events::onMousePress( const MouseButtonEvent& mbe )
 	currentPlugin->onMouseButtonPress( mbe );
 
 	// Global event listeners.
-	foreach( Plugin* plugin, eventListeners )
+	for( uint i = 0; i < eventListeners.size(); i++ )
+	{
+		Plugin* plugin = eventListeners[i];
 		plugin->onMouseButtonPress( mbe );
+	}
 }
 
 //-----------------------------------//
@@ -249,8 +270,11 @@ void Events::onMouseRelease( const MouseButtonEvent& mbe )
 	currentPlugin->onMouseButtonRelease( mbe );
 
 	// Global event listeners.
-	foreach( Plugin* plugin, eventListeners )
+	for( uint i = 0; i < eventListeners.size(); i++ )
+	{
+		Plugin* plugin = eventListeners[i];
 		plugin->onMouseButtonRelease( mbe );
+	}
 }
 
 //-----------------------------------//
@@ -263,8 +287,11 @@ void Events::onMouseEnter()
 	currentPlugin->onMouseEnter();
 
 	// Global event listeners.
-	foreach( Plugin* plugin, eventListeners )
+	for( uint i = 0; i < eventListeners.size(); i++ )
+	{
+		Plugin* plugin = eventListeners[i];
 		plugin->onMouseEnter();
+	}
 }
 
 //-----------------------------------//
@@ -277,8 +304,11 @@ void Events::onMouseLeave()
 	currentPlugin->onMouseLeave();
 
 	// Global event listeners.
-	foreach( Plugin* plugin, eventListeners )
+	for( uint i = 0; i < eventListeners.size(); i++ )
+	{
+		Plugin* plugin = eventListeners[i];
 		plugin->onMouseLeave();
+	}
 }
 
 //-----------------------------------//
@@ -291,8 +321,11 @@ void Events::onSceneLoad( const ScenePtr& newScene )
 	currentPlugin->onSceneLoad(newScene);
 
 	// Global event listeners.
-	foreach( Plugin* plugin, eventListeners )
+	for( uint i = 0; i < eventListeners.size(); i++ )
+	{
+		Plugin* plugin = eventListeners[i];
 		plugin->onSceneLoad(newScene);
+	}
 }
 
 //-----------------------------------//
@@ -305,8 +338,11 @@ void Events::onSceneUpdate()
 	currentPlugin->onSceneUpdate();
 
 	// Global event listeners.
-	foreach( Plugin* plugin, eventListeners )
+	for( uint i = 0; i < eventListeners.size(); i++ )
+	{
+		Plugin* plugin = eventListeners[i];
 		plugin->onSceneUpdate();
+	}
 }
 
 //-----------------------------------//

@@ -83,15 +83,19 @@ Sphere::Sphere( bool fullSphere, byte numSubDiv, float dim )
 	// Build Texture Coordinates.
 	BoundingBox box;
 	
-	foreach( const Vector3& v, position )
+	for( uint i = 0; i < position.size(); i++ )
+	{
+		const Vector3& v = position[i];
 		box.add(v);
+	}
 
 	Vector3 center = box.getCenter();
 
 	std::vector<Vector3> texCoords;
 
-	foreach( const Vector3& vert, position )
+	for( uint i = 0; i < position.size(); i++ )
 	{
+		const Vector3& vert = position[i];
 		Vector3 d = vert-center;
 		d.normalize();
 
@@ -146,11 +150,13 @@ void Sphere::buildGeometry( bool fullSphere, byte numSubDiv,
 	// Rotate the vertices, else the sphere is not properly aligned.
 	Matrix4x3 rot = Matrix4x3::createRotation( EulerAngles(-60, 0, 0) );
 
-	foreach( const byte* i, IcoDomeIndices )
+	for( uint i = 0; i < VAPOR_ARRAY_SIZE(IcoDomeIndices); i++ )
 	{
-		Vector3 v1( IcoVertices[i[0]][0], IcoVertices[i[0]][2], IcoVertices[i[0]][1] );
-		Vector3 v2( IcoVertices[i[1]][0], IcoVertices[i[1]][2], IcoVertices[i[1]][1] );
-		Vector3 v3( IcoVertices[i[2]][0], IcoVertices[i[2]][2], IcoVertices[i[2]][1] );
+		const byte* p = IcoDomeIndices[i];
+	
+		Vector3 v1( IcoVertices[p[0]][0], IcoVertices[p[0]][2], IcoVertices[p[0]][1] );
+		Vector3 v2( IcoVertices[p[1]][0], IcoVertices[p[1]][2], IcoVertices[p[1]][1] );
+		Vector3 v3( IcoVertices[p[2]][0], IcoVertices[p[2]][2], IcoVertices[p[2]][1] );
 
 		subdivide( rot*v1, rot*v2, rot*v3, numSubDiv, pos );
 	}
@@ -159,19 +165,21 @@ void Sphere::buildGeometry( bool fullSphere, byte numSubDiv,
 	if( fullSphere )
 	{
 		// These indices are the bottom of the sphere.
-		foreach( const byte* i, IcoSphereIndices )
+		for( uint i = 0; i < VAPOR_ARRAY_SIZE(IcoSphereIndices); i++ )
 		{
-			Vector3 v1( IcoVertices[i[0]][0], IcoVertices[i[0]][2], IcoVertices[i[0]][1] );
-			Vector3 v2( IcoVertices[i[1]][0], IcoVertices[i[1]][2], IcoVertices[i[1]][1] );
-			Vector3 v3( IcoVertices[i[2]][0], IcoVertices[i[2]][2], IcoVertices[i[2]][1] );
+			const byte* p = IcoSphereIndices[i];
+			Vector3 v1( IcoVertices[p[0]][0], IcoVertices[p[0]][2], IcoVertices[p[0]][1] );
+			Vector3 v2( IcoVertices[p[1]][0], IcoVertices[p[1]][2], IcoVertices[p[1]][1] );
+			Vector3 v3( IcoVertices[p[2]][0], IcoVertices[p[2]][2], IcoVertices[p[2]][1] );
 
 			subdivide( rot*v1, rot*v2, rot*v3, numSubDiv, pos );
 		}
 	}
 
 	// Scale all the vertices.
-	foreach( Vector3& vec, pos )
+	for( uint i = 0; i < pos.size(); i++ )
 	{
+		Vector3& vec = pos[i];	
 		vec *= dim;
 	}
 }

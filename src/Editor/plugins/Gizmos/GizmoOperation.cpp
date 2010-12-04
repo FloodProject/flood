@@ -37,7 +37,7 @@ void GizmoOperation::redo()
 
 void GizmoOperation::process( bool undo )
 {
-	NodePtr node( weakNode );
+	EntityPtr node( weakEntity );
 
 	// This can happen if the node gets deleted between
 	// the operation registration and the undo/redo action.

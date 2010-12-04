@@ -39,8 +39,9 @@ void PluginManagerFrame::InitControl()
 	checkListBox = new wxCheckListBox(this, wxID_ANY);
 
 	// Populate the list with the plugins.
-	foreach( Plugin* plugin, pluginManager->getPlugins() )
+	for( uint i = 0; i < pluginManager->getPlugins().size(); i++ )
 	{
+		Plugin* plugin = pluginManager->getPlugins()[i];
 		PluginMetadata metadata = plugin->getMetadata();
 		
 		int n = checkListBox->Append( metadata.name, (void*) plugin );

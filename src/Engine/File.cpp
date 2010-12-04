@@ -7,11 +7,13 @@
 ************************************************************************/
 
 #include "Core.h"
-
-#ifdef VAPOR_VFS_PHYSFS
-
 #include "vfs/File.h"
+
+//#ifdef VAPOR_VFS_PHYSFS
+
+#include "Log.h"
 #include "Utilities.h"
+
 #include <physfs.h>
 
 namespace vapor {
@@ -194,8 +196,9 @@ std::vector<std::string> File::readLines() const
 	std::vector<std::string> lines = String::split(str, '\n');
 	
 	// Trim excess fat that can be left over.
-	foreach( std::string& str, lines )
+	for( uint i = 0; i < lines.size(); i++ )
 	{
+		std::string& str = lines[i];
 		if( str[str.size()-1] == '\r' )
 			str.erase( str.size()-1 );
 	}
@@ -315,4 +318,4 @@ const std::string File::getExtension() const
 
 } // end namespace
 
-#endif
+//#endif

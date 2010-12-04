@@ -10,7 +10,7 @@
 
 #include "vapor/net/Message.h"
 #include "vapor/net/MessageHandler.h"
-#include "vapor/ConcurrentQueue.h"
+#include "ConcurrentQueue.h"
 
 namespace vapor {
 
@@ -53,7 +53,7 @@ protected:
 	MessageHandlersMap messageHandlers;
 
 	// Queue of undispatched messages.
-	concurrent_queue<MessagePtr> messages;
+	ConcurrentQueue<MessagePtr> messages;
 
 	// ZeroMQ context.
 	typedef void* ZMQContext;

@@ -20,7 +20,7 @@
 %include "vapor/controllers/Controller.h"
 %include "vapor/physics/CharacterController.h"
 
-%warnfilter(401) Node;
-%include "vapor/scene/Node.h"
+%warnfilter(401) Entity;
+%include "vapor/scene/Entity.h"
 %include "vapor/scene/Group.h"
 %include "vapor/scene/Scene.h"

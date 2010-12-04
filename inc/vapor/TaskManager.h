@@ -9,10 +9,11 @@
 #pragma once
 
 #include "Subsystem.h"
-#include "Singleton.h"
-#include "Task.h"
 #include "ConcurrentQueue.h"
 #include "Event.h"
+#include "ReferenceCount.h"
+
+FWD_DECL_INTRUSIVE(Task)
 
 namespace vapor {
 
@@ -24,7 +25,7 @@ namespace vapor {
  * finishes processing of the task.
  */
 
-struct VAPOR_API TaskEvent
+struct CORE_API TaskEvent
 {
 	enum Enum
 	{
@@ -47,7 +48,7 @@ struct VAPOR_API TaskEvent
  * and re-use them for tasks. Tasks get executed in idle threads.
  */
 
-class VAPOR_API TaskManager : public Subsystem
+class CORE_API TaskManager : public Subsystem
 {
 public:
 
@@ -72,8 +73,7 @@ protected:
 	void createThreadPool( int poolSize );
 
 	// Pushes a new event in the event queue.
-	void pushEvent( TaskEvent::Enum event, const TaskPtr& task,
-		bool sendEvent = false );
+	void pushEvent( TaskEvent::Enum, const TaskPtr&, bool sendEvent = false );
 
 	// Runs in the worker threads and executes the tasks.
 	void runWorker();
@@ -81,10 +81,10 @@ protected:
 	typedef std::vector<Thread*> ThreadQueue;
 	ThreadQueue threadPool;
 
-	typedef concurrent_queue<TaskPtr> TaskQueue;
+	typedef ConcurrentQueue<TaskPtr> TaskQueue;
 	TaskQueue tasks;
 
-	typedef concurrent_queue<TaskEvent> TaskEventQueue;
+	typedef ConcurrentQueue<TaskEvent> TaskEventQueue;
 	TaskEventQueue events;
 };
 

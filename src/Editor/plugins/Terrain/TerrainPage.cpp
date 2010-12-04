@@ -33,8 +33,10 @@ void TerrainPage::createBrushes()
 
 	ResourceManager* rm = engine->getResourceManager();
 
-	foreach( const std::string& file, files )
+	for( uint i = 0; i < files.size(); i++ )
 	{
+		const std::string& file = files[i];
+
 		ImagePtr image = rm->loadResource<Image>(brushesPath+file, false);
 		
 		if( !image )
@@ -153,13 +155,15 @@ void TerrainPage::onComboBoxDropdown(wxCommandEvent& event)
 	m_textureChoice->Clear();
 
 	ResourceManager* rm = engine->getResourceManager();
+	const ResourceMap& resources = rm->getResources();
 
-	foreach( const ResourceMapPair& p, rm->getResources() )
+	ResourceMap::const_iterator it;
+	for( it = resources.cbegin(); it != resources.cend(); it++ )
 	{
-		if( p.second->getResourceGroup() != ResourceGroup::Images )
+		if( it->second->getResourceGroup() != ResourceGroup::Images )
 			continue;
 
-		m_textureChoice->Append(p.first);
+		m_textureChoice->Append(it->first);
 	}
 }
 

@@ -7,35 +7,38 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/scene/Node.h"
-#include "vapor/scene/Tags.h"
+#include "scene/Entity.h"
+#include "scene/Tags.h"
+#include "scene/Transform.h"
+#include "scene/Geometry.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS(Node)
-	FIELD_PRIMITIVE(Node, string, name)
-	FIELD_PRIMITIVE(Node, bool, visible)
-	FIELD_PRIMITIVE(Node, Bitfield, tags)
+BEGIN_CLASS(Entity)
+	FIELD_PRIMITIVE(Entity, string, name)
+	FIELD_PRIMITIVE(Entity, bool, visible)
+	FIELD_PRIMITIVE(Entity, Bitfield, tags)
 END_CLASS()
 
 //-----------------------------------//
 
-Node::Node( const std::string& name )
+Entity::Entity()
+	: visible( true )
+{ }
+
+//-----------------------------------//
+
+
+Entity::Entity( const std::string& name )
 	: name( name )
 	, visible( true )
 { }
 
 //-----------------------------------//
 
-Node::Node()
-	: visible( true )
-{ }
-
-//-----------------------------------//
-
-bool Node::addComponent( const ComponentPtr& component )
+bool Entity::addComponent( const ComponentPtr& component )
 {
 	if( !component )
 		return false;
@@ -44,21 +47,20 @@ bool Node::addComponent( const ComponentPtr& component )
 
 	if( components.find(type) != components.end() )
 	{
-		Log::warn( "Component of type '%s' already exists in node '%s'",
-			type->getName().c_str(), getName().c_str() );
+		Log::warn( "Component of type '%s' already exists in entity '%s'", type->getName().c_str(), name.c_str() );
 		return false;
 	}
 
 	// Cache geometry (renderable) objects.
 	if( type->is<Geometry>() || type->inherits<Geometry>() )
 	{
-		const GeometryPtr& geometry = std::dynamic_pointer_cast<Geometry>( component );
+		const GeometryPtr& geometry = std::static_pointer_cast<Geometry>( component );
 		geometries.push_back( geometry );
 	}
 
 	// If it doesn't exist yet, add it in the map.
 	components[type] = component;
-	component->setNode( shared_from_this() );
+	component->setEntity( shared_from_this() );
 
 	onComponentAdded(component);
 
@@ -67,7 +69,7 @@ bool Node::addComponent( const ComponentPtr& component )
 
 //-----------------------------------//
 
-bool Node::removeComponent( const ComponentPtr& component )
+bool Entity::removeComponent( const ComponentPtr& component )
 {
 	if( !component )
 		return false;
@@ -97,31 +99,37 @@ bool Node::removeComponent( const ComponentPtr& component )
 
 //-----------------------------------//
 
-void Node::update( double delta )
+void Entity::update( double delta )
 {
 	const TransformPtr& transform = getTransform();
 
 	// Update all geometry bounding boxes first.
-	foreach( const GeometryPtr& geom, getGeometry() )
+	for( uint i = 0; i < getGeometry().size(); i++ )
+	{
+		const GeometryPtr& geom = getGeometry()[i];
 		geom->update( delta );
+	}
 
 	// Update transform (info may be needed by other components)
 	if( transform )
 		transform->update( delta );
 
 	// Update everything else.
-	foreach( const ComponentMapPair& component, components )
+	ComponentMap::const_iterator it;
+	for( it = components.cbegin(); it != components.cend(); it++ )
 	{
-		if( component.second == transform ) 
+		const ComponentPtr& component = it->second;
+
+		if( component == transform ) 
 			continue;
 
-		component.second->update( delta );
+		component->update( delta );
 	}
 }
 
 //-----------------------------------//
 
-bool Node::addTransform()
+bool Entity::addTransform()
 {
 	TransformPtr transform( new Transform() );
 	return addComponent(transform);
@@ -129,35 +137,35 @@ bool Node::addTransform()
 
 //-----------------------------------//
 
-TransformPtr Node::getTransform() const
+TransformPtr Entity::getTransform() const
 {
 	return getComponent<Transform>();
 }
 
 //-----------------------------------//
 
-NodePtr Node::getParent() const
+EntityPtr Entity::getParent() const
 {
 	return parent.lock();
 }
 
 //-----------------------------------//
 
-bool Node::isVisible() const
+bool Entity::isVisible() const
 {
 	return visible;
 }
 
 //-----------------------------------//
 
-bool Node::getTag(int index)
+bool Entity::getTag(int index)
 {
 	return tags[index];
 }
 
 //-----------------------------------//
 
-void Node::setTag(int index, bool state)
+void Entity::setTag(int index, bool state)
 {
 	tags[index] = state;
 }

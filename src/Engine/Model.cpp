@@ -9,7 +9,7 @@
 #include "vapor/PCH.h"
 #include "vapor/scene/Model.h"
 #include "vapor/scene/Transform.h"
-#include "vapor/scene/Node.h"
+#include "vapor/scene/Entity.h"
 #include "vapor/resources/Mesh.h"
 #include "vapor/animation/Animation.h"
 #include "vapor/animation/Skeleton.h"
@@ -94,8 +94,9 @@ void Model::build()
 	std::vector<RenderablePtr> renderables;
 	mesh->appendRenderables( renderables );
 
-	foreach( const RenderablePtr& rend, renderables )
+	for( uint i = 0; i < renderables.size(); i++ )
 	{
+		const RenderablePtr& rend = renderables[i];
 		MaterialPtr material = rend->getMaterial();
 
 		if( material && material->isBlendingEnabled() )
@@ -117,8 +118,9 @@ void Model::build()
 
 void Model::updateAnimations(double delta)
 {
-	foreach( AnimationState& state, animations )
+	for( uint i = 0; i < animations.size(); i++ )
 	{
+		AnimationState& state = animations[i];
 		const AnimationPtr& animation = state.animation;
 		float& animationTime = state.animationTime;
 
@@ -169,9 +171,12 @@ void Model::updateAnimationBones(AnimationState& state)
 
 	std::vector<Matrix4x3>& bones = state.bonesMatrix;
 
-	foreach( const KeyFramesPair& p, animation->getKeyFrames() )
+	const KeyFramesMap& keyFrames = animation->getKeyFrames();
+
+	KeyFramesMap::const_iterator it;
+	for( it = keyFrames.cbegin(); it != keyFrames.cend(); it++ )
 	{
-		const BonePtr& bone = p.first;
+		const BonePtr& bone = it->first;
 		
 		Matrix4x3 matBone = animation->getKeyFrameMatrix(bone, animationTime);
 		matBone = matBone * bone->relativeMatrix;
@@ -209,9 +214,10 @@ void Model::updateFinalAnimationBones()
 
 void Model::updateAttachments()
 {
-	foreach( const AttachmentPtr& attachment, attachments )
+	for( uint i = 0; i < attachments.size(); i++ )
 	{
-		const NodePtr& node = attachment->node;
+		const AttachmentPtr& attachment = attachments[i];
+		const EntityPtr& node = attachment->node;
 		const BonePtr& bone = attachment->bone;
 
 		const TransformPtr& transform = node->getTransform();
@@ -257,13 +263,16 @@ void Model::setAnimation(const AnimationPtr& animation)
 
 void Model::setAnimation(const std::string& name)
 {
+	if(!mesh)
+		return;
+
 	AnimationPtr animation = mesh->findAnimation(name);
 	setAnimation(animation);
 }
 
 //-----------------------------------//
 
-void Model::setCrossFadeAnimation(const std::string& name, float fadeTime)
+void Model::setAnimationFade(const std::string& name, float fadeTime)
 {
 	assert( mesh != nullptr );
 
@@ -287,16 +296,20 @@ void Model::onRender()
 	if( !mesh->isAnimated() )
 		return;
 
-	foreach( const RenderablePtr& rend, getRenderables() )
+	for( uint i = 0; i < getRenderables().size(); i++ )
 	{
+		const RenderablePtr& rend = getRenderables()[i];
 		const MaterialPtr& material = rend->getMaterial();
 		const ProgramPtr& program = material->getProgram();
 
 		std::vector<Matrix4x4> matrices;
 		matrices.reserve( bones.size() );
 
-		foreach( const Matrix4x3& bone, bones )
+		for( uint i = 0; i < bones.size(); i++ )
+		{
+			const Matrix4x3& bone = bones[i];
 			matrices.push_back( Matrix4x4(bone) );
+		}
 		
 		program->setUniform("vp_BonesMatrix", matrices);
 	}
@@ -304,8 +317,11 @@ void Model::onRender()
 
 //-----------------------------------//
 
-void Model::attachNode(const std::string& boneName, const NodePtr& node)
+void Model::setAttachment(const std::string& boneName, const EntityPtr& node)
 {
+	if(!mesh)
+		return;
+
 	SkeletonPtr skeleton = mesh->getSkeleton();
 	assert( skeleton != nullptr );
 
@@ -337,8 +353,11 @@ void Model::updateDebugRenderable() const
 	std::vector<Vector3> pos;
 	std::vector<Vector3> colors;
 
-	foreach( const BonePtr& bone, mesh->getSkeleton()->getBones() )
+	const std::vector<BonePtr> skeletonBones = mesh->getSkeleton()->getBones();
+	for( uint i = 0; i < skeletonBones.size(); i++ )
 	{
+		const BonePtr& bone = skeletonBones[i];
+
 		Vector3 vertex;
 		pos.push_back( bones[bone->index]*vertex );
 		colors.push_back( Color::Blue );

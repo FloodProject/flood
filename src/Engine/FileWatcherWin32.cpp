@@ -24,8 +24,15 @@
 #include "Core.h"
 #include "FileWatcherWin32.h"
 #include "Utilities.h"
+#include "Log.h"
 
 #ifdef VAPOR_PLATFORM_WINDOWS
+
+#ifdef VAPOR_PLATFORM_WINDOWS
+	#define WIN32_LEAN_AND_MEAN
+	#define NOMINMAX
+	#include <Windows.h>	
+#endif
 
 namespace vapor {
 

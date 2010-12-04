@@ -191,14 +191,18 @@ bool ProjectPlugin::askSaveChanges()
 	if( !unsavedChanges )
 		return true;
 
-    int answer = wxMessageBox(
+	wxMessageDialog dialog(editor,  
 		"Scene contains unsaved changes. Do you want to save them?",
-		wxEmptyString, wxYES_NO | wxCANCEL, editor);
+		"Editor", wxYES_NO | wxCANCEL | wxICON_EXCLAMATION);
 
-    if( answer == wxYES && !saveScene() )
+	//dialog.SetSetYesNoLabels(wxID_SAVE, "&Don't save");
+
+    int answer = dialog.ShowModal();
+
+     if( answer == wxID_YES && !saveScene() )
 		return false;
 
-	if(answer != wxCANCEL)
+	if(answer != wxID_CANCEL )
 		return true;
 	else
 		return false;

@@ -135,16 +135,16 @@ public:
 
 #ifndef SWIG
 	// Special points
-	static VAPOR_API const Vector2T<int> Zero;
-	static VAPOR_API const Vector2T<int> UnitX;
-	static VAPOR_API const Vector2T<int> UnitY;
+	static CORE_API const Vector2T<int> Zero;
+	static CORE_API const Vector2T<int> UnitX;
+	static CORE_API const Vector2T<int> UnitY;
 #endif
 };
 
 //-----------------------------------//
 
-typedef VAPOR_API Vector2T<float> Vector2;
-typedef VAPOR_API Vector2T<int> Vector2i;
+typedef CORE_API Vector2T<float> Vector2;
+typedef CORE_API Vector2T<int> Vector2i;
 
 //-----------------------------------//
 

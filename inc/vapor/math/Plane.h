@@ -9,7 +9,6 @@
 #pragma once
 
 #include "math/Vector3.h"
-#include "math/BoundingBox.h"
 #include "math/Ray.h"
 
 namespace vapor {
@@ -28,7 +27,7 @@ struct PlaneIntersection
 
 //-----------------------------------//
 
-class VAPOR_API Plane
+class CORE_API Plane
 {
 public:
 

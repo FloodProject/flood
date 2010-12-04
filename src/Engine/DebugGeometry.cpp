@@ -11,7 +11,8 @@
 #include "vapor/PCH.h"
 #include "vapor/render/DebugGeometry.h"
 #include "vapor/render/Renderable.h"
-#include "vapor/scene/Node.h"
+#include "vapor/scene/Geometry.h"
+#include "vapor/scene/Entity.h"
 #include "vapor/scene/Tags.h"
 
 namespace vapor {
@@ -43,6 +44,7 @@ RenderablePtr buildBoundingRenderable( const BoundingBox& box )
 
 	MaterialPtr mat( new Material("BoundingBox", "Diffuse") );
 	mat->setBackfaceCulling( false );
+	mat->setDepthTest( false );
 
 	RenderablePtr boundingBox( new Renderable(PolygonType::Quads, vb, mat) );
 	boundingBox->setPolygonMode( PolygonMode::Wireframe );
@@ -52,7 +54,7 @@ RenderablePtr buildBoundingRenderable( const BoundingBox& box )
 
 //-----------------------------------//
 
-NodePtr buildRay( const Ray& pickRay, const Vector3& outFar )
+EntityPtr buildRay( const Ray& pickRay, const Vector3& outFar )
 {
 	std::vector<Vector3> vertex;
 	vertex.push_back( pickRay.origin );
@@ -68,7 +70,7 @@ NodePtr buildRay( const Ray& pickRay, const Vector3& outFar )
 	RenderablePtr rend = new Renderable(PolygonType::Lines, vb, mat);
 	GeometryPtr geom( new Geometry(rend) );
 	
-	NodePtr line( new Node("Line") );
+	EntityPtr line( new Entity("Line") );
 	line->setTag( Tags::NonPickable, true );
 	line->addTransform();
 	line->addComponent( geom );

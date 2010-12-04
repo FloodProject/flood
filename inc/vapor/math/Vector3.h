@@ -279,10 +279,10 @@ public:
 
 #ifndef SWIG
 	// Special points
-	static VAPOR_API const Vector3T<float> Zero;
-	static VAPOR_API const Vector3T<float> UnitX;
-    static VAPOR_API const Vector3T<float> UnitY;
-    static VAPOR_API const Vector3T<float> UnitZ;
+	static CORE_API const Vector3T<float> Zero;
+	static CORE_API const Vector3T<float> UnitX;
+    static CORE_API const Vector3T<float> UnitY;
+    static CORE_API const Vector3T<float> UnitZ;
 #endif
 
 public:
@@ -296,9 +296,9 @@ public:
  * Specific types
  */
 
-typedef VAPOR_API Vector3T<int> Vector3i;
-typedef VAPOR_API Vector3T<float> Vector3;
-typedef VAPOR_API Vector3T<double> Vector3d;
+typedef CORE_API Vector3T<int> Vector3i;
+typedef CORE_API Vector3T<float> Vector3;
+typedef CORE_API Vector3T<double> Vector3d;
 
 //-----------------------------------//
 

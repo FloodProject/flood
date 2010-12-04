@@ -18,7 +18,7 @@ namespace vapor {
  * Representation of colors in RGBA format.
  */
 
-class VAPOR_API Color
+class CORE_API Color
 {
 public:
 

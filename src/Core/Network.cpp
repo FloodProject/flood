@@ -9,6 +9,7 @@
 #include "Core.h"
 #include "net/Network.h"
 #include "net/Message.h"
+#include "Log.h"
 #include <zmq.h>
 
 namespace vapor {

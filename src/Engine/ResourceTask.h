@@ -6,7 +6,8 @@
 *
 ************************************************************************/
 
-#include "vapor/vfs/PhysfsStream.h"
+#include "vfs/PhysfsStream.h"
+#include "Task.h"
 
 namespace vapor {
 

@@ -8,7 +8,8 @@
 
 #pragma once
 
-#include "vapor/render/GL.h"
+#include "render/GL.h"
+#include "ReferenceCount.h"
 
 namespace vapor {
 

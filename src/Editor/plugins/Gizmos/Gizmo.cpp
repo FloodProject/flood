@@ -22,7 +22,7 @@ const Color& Gizmo::Z = Color::NavyBlue;
 
 //-----------------------------------//
 
-Gizmo::Gizmo( const NodePtr& node, const CameraWeakPtr& camera )
+Gizmo::Gizmo( const EntityPtr& node, const CameraWeakPtr& camera )
 	: nodeObject( node )
 	, weakCamera( camera )
 	, selectedAxis( GizmoAxis::None )
@@ -48,7 +48,7 @@ void Gizmo::updatePositionScale()
 
 	// Get the editor camera and its transform.
 	CameraPtr camera = weakCamera.lock();
-	const NodePtr& nodeCamera = camera->getNode();
+	const EntityPtr& nodeCamera = camera->getEntity();
 	const TransformPtr& transCamera = nodeCamera->getTransform();
 
 	// Get the distance between the two points.
@@ -57,7 +57,7 @@ void Gizmo::updatePositionScale()
 	float distance = posCamera.distance(posGizmo);
 
 	// Get the gizmo node and its transform.
-	const NodePtr& nodeGizmo = getNode();
+	const EntityPtr& nodeGizmo = getEntity();
 	const TransformPtr& transGizmo = nodeGizmo->getTransform();
 
 	// Scale the gizmo relative to the distance.

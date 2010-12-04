@@ -8,8 +8,9 @@
 
 #include "Core.h"
 
-#ifdef VAPOR_VFS_PHYSFS
+//#ifdef VAPOR_VFS_PHYSFS
 
+#include "Log.h"
 #include "Utilities.h"
 #include "vfs/FileSystem.h"
 #include "FileWatcherWin32.h"
@@ -42,8 +43,11 @@ FileSystem::FileSystem(const std::string& app, const char* argv0 )
 
 FileSystem::~FileSystem()
 {
-	foreach( const std::string& point, mountPoints )
+	for( uint i = 0; i < mountPoints.size(); i++ )
+	{
+		const std::string& point = mountPoints[i];
 		PHYSFS_removeFromSearchPath( point.c_str() );
+	}
 	
 	if( !PHYSFS_deinit() )
 		logError( "Could not clean up PhysFS" );
@@ -117,8 +121,11 @@ void FileSystem::mountDefaultLocations()
 
 	std::vector<std::string> dirs = System::enumerateDirs(media);
 
-	foreach( const std::string& dir, dirs )
+	for( uint i = 0; i < dirs.size(); i++ )
+	{
+		const std::string& dir = dirs[i];
 		mount(dir);
+	}
 }
 
 //-----------------------------------//
@@ -165,4 +172,4 @@ void FileSystem::log()
 
 } // end namespace
 
-#endif
+//#endif

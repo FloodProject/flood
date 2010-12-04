@@ -16,12 +16,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-/**
- * Represents the information that the user wants to pass to the engine
- * related to the creation of a new rendering window, like for example
- * bits-per-pixel, the size of the the window, if it is fullscreen, and 
- * in the future, anti-aliasing settings, and custom window handle hooks.
- */
+typedef void WindowHandle;
 
 class VAPOR_API WindowSettings : public Settings
 {
@@ -30,38 +25,13 @@ public:
 	WindowSettings( const ushort width = 640, const ushort height = 480,
 		const std::string& title = "Untitled", const bool fullscreen = false );
 
-	WindowSettings( const WindowSettings& settings );
-
-	// Gets/sets the window title.
-	ACESSOR(Title, const std::string&, title)
-
-	// Gets/sets the bits-per-pixel of the window.
-	ACESSOR(Bpp, const ushort, bitsPerPixel)
-
-	// Gets/sets the size of the window's depth buffer.
-	ACESSOR(DepthBits, const ushort, depthBits)
-
-	// Gets/sets the size of the window's stencil buffer.
-	ACESSOR(StencilBits, const ushort, stencilBits)
-
-	// Gets/sets the antialiasing level of the window.
-	ACESSOR(Antialiasing, const ushort, antialiasLevel)
-
-	// Gets/sets the custom handle of the window.
-	ACESSOR(CustomHandle, void*, customHandle)
-
-	// Is this window fullscreen?
-	const bool isFullscreen() const { return fullScreen; }
-
-protected:
-
 	std::string title;
 	bool fullScreen;
 	ushort bitsPerPixel;
 	ushort depthBits;
 	ushort stencilBits;
 	ushort antialiasLevel;
-	void* customHandle;
+	WindowHandle* handle;
 };
 
 //-----------------------------------//
@@ -81,34 +51,34 @@ public:
 	Window (const WindowSettings& settings);
 
 	// Updates the window content.
-	virtual void update() = 0;
+	virtual void update() {} // = 0;
 
 	// Sets this rendering target as the current.
-	virtual void makeCurrent() = 0;
+	virtual void makeCurrent() {} // = 0;
 
 	// Shows/hides the window.
-	virtual void show( bool hide = false ) = 0;
+	virtual void show( bool hide = false ) {} // = 0;
 
 	// Handles the event loop of the window.
-	virtual bool pumpEvents() = 0;
+	virtual bool pumpEvents() { return true; } // = 0;
 
 	// Sets the title of the window.
-	virtual void setTitle (const std::string& title) = 0;
+	virtual void setTitle (const std::string& title) {} // = 0;
 
 	// Gets the input manager.
-	virtual InputManager* getInputManager() = 0;
+	virtual InputManager* getInputManager() { return nullptr; } // = 0;
 
 	// Sets the visibility of the mouse cursor.
-	virtual void setCursorVisible( bool state ) = 0;
+	virtual void setCursorVisible( bool state ) {} // = 0;
 
 	// Gets the visibility of the mouse cursor.
-	virtual bool isCursorVisible() const = 0;
+	virtual bool isCursorVisible() const { return false; } // = 0;
 
 	// Gets the cursor position on screen.
-	virtual Vector2i getCursorPosition() const = 0;
+	virtual Vector2i getCursorPosition() const { return Vector2i::Zero; } // = 0;
 
 	// Sets the cursor position on screen.
-	virtual void setCursorPosition( int x, int y ) = 0;
+	virtual void setCursorPosition( int x, int y ) {} // = 0;
 	void setCursorPosition( const Vector2i& pos );
 
 	// Gets the window settings.

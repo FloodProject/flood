@@ -31,7 +31,7 @@ namespace vapor {
  * most high-precision timer available.
  */
 
-class VAPOR_API Timer
+class CORE_API Timer
 {
 	DECLARE_UNCOPYABLE(Timer)
 

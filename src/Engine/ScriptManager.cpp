@@ -107,14 +107,15 @@ void ScriptManager::onReload( const ResourceEvent& evt )
 	
 	Log::debug( "Reloading script '%s'", evt.resource->getPath().c_str() );
 	
-	const ScriptPtr& script = boost::static_pointer_cast<Script>( evt.resource );
+	const ScriptPtr& script = RefCast<Script>( evt.resource );
 
-	foreach( const ScriptsMapPair& p, scripts )
+	ScriptsMap::const_iterator it;
+	for( it = scripts.cbegin(); it != scripts.cend(); it++ )
 	{
-		if( script != p.second )
+		if( script != it->second )
 			continue;
 
-		State* state = (State*) p.first;
+		State* state = it->first;
 		assert( state != nullptr );
 		
 		state->load( script );

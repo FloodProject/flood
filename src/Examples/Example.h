@@ -53,7 +53,7 @@ private:
 	LabelPtr labelFPS;
 	TerrainPtr nodeTerrain;
 
-	NodePtr nodeFBO;
+	EntityPtr nodeFBO;
 	RenderView* viewportFBO;
 	TexturePtr textureFBO;
 	RenderBuffer* bufferFBO;

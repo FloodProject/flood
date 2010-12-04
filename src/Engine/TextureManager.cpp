@@ -34,9 +34,11 @@ TextureManager::~TextureManager()
 	rm->onResourceReloaded.Disconnect( this, &TextureManager::onReloaded );
 
 	#pragma TODO("Make sure all textures are released on exit")
-	foreach( const TextureMapPair& p, textures )
+	TextureMap::const_iterator it;
+	for( it = textures.cbegin(); it != textures.cend(); it++ )
 	{
-		assert( p.second->getReferenceCount() == 2 );
+		const TexturePtr& texture = it->second;
+		assert( texture->getReferenceCount() == 2 );
 	}
 }
 
@@ -120,7 +122,7 @@ void TextureManager::onLoaded( const ResourceEvent& evt )
 	if( evt.resource->getResourceGroup() != ResourceGroup::Images )
 		return;
 	
-	const ImagePtr& image = boost::static_pointer_cast<Image>( evt.resource );
+	const ImagePtr& image = RefCast<Image>(evt.resource);
 
 	if( textures.find(image.get()) == textures.end() )
 		return;
@@ -136,9 +138,9 @@ void TextureManager::onUnloaded( const ResourceEvent& evt )
 	if( evt.resource->getResourceGroup() != ResourceGroup::Images )
 		return;
 
-	const ImagePtr& img = boost::static_pointer_cast<Image>( evt.resource );
+	const ImagePtr& image = RefCast<Image>(evt.resource);
 
-	if( textures.find(img.get()) == textures.end() )
+	if( textures.find(image.get()) == textures.end() )
 		return;
 
 	Log::debug( "Removing texture '%s'", evt.resource->getPath().c_str() );
@@ -153,16 +155,16 @@ void TextureManager::onReloaded( const ResourceEvent& evt )
 	if( evt.resource->getResourceGroup() != ResourceGroup::Images )
 		return;
 
-	const ImagePtr& img = boost::static_pointer_cast<Image>( evt.resource );
+	const ImagePtr& image = RefCast<Image>(evt.resource);
 	//const ImagePtr& newImage = RESOURCE_SMART_PTR_CAST<Image>( evt.newResource );
 
-	if( textures.find(img.get()) == textures.end() )
+	if( textures.find(image.get()) == textures.end() )
 		return;
 
 	Log::debug( "Reloading texture '%s'", evt.resource->getPath().c_str() );
 
-	TexturePtr tex = textures[img.get()];
-	tex->setImage(img.get());
+	TexturePtr tex = textures[image.get()];
+	tex->setImage(image.get());
 
 	//switchImage( currImage, newImage );
 }
@@ -184,8 +186,9 @@ uint TextureManager::getMemoryUsage()
 {
 	uint total = 0;
 
-	foreach( const TextureMapPair& p, textures )
-		total += p.first->getBuffer().size();
+	TextureMap::const_iterator it;
+	for( it = textures.cbegin(); it != textures.cend(); it++ )
+		total += it->first->getBuffer().size();
 
 	return total;
 }

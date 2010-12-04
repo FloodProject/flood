@@ -10,6 +10,8 @@
 
 #ifdef VAPOR_PHYSICS_BULLET
 
+#include "ReferenceCount.h"
+
 FWD_DECL_INTRUSIVE(VertexBuffer)
 FWD_DECL_INTRUSIVE(Material)
 FWD_DECL_INTRUSIVE(Renderable)

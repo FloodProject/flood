@@ -31,7 +31,7 @@ public:
 
 	Cell( const TerrainSettings& settings, 
 		  const std::vector<float>& heights,
-		  short x, short y );
+		  int x, int y );
 
 	// Gets the heights of this Cell of terrain.
 	const std::vector<float>& getHeights();
@@ -49,10 +49,10 @@ public:
 	uint getNeighborFaces( uint index, std::vector<uint>& n );
 
 	// Gets the X coordinate of the cell.
-	GETTER(X, short, x)
+	GETTER(X, int, x)
 
 	// Gets the Y coordinate of the cell.
-	GETTER(Y, short, y)
+	GETTER(Y, int, y)
 
 protected:
 
@@ -69,13 +69,16 @@ protected:
 	void rebuildAveragedNormals();
 
 	// Coordinates of this cell of terrain.
-	short x, y;
+	int x, y;
 
 	// Stores the heights of this cell of terrain.
 	std::vector<float> heights;
 	
 	// Stores the triangle face normals.
 	std::vector<Vector3> faceNormals;
+
+	// Cell image.
+	ImagePtr image;
 
 	// Terrain settings.
 	const TerrainSettings& settings;

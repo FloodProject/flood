@@ -62,7 +62,7 @@ void ConsolePlugin::onPluginDisable()
 
 void ConsolePlugin::onConsoleButtonClick(wxCommandEvent& event)
 {
-	console->Show();
+	console->Show( !console->IsShown() );
 }
 
 //-----------------------------------//

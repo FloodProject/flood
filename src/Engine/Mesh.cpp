@@ -11,6 +11,7 @@
 #include "vapor/animation/Skeleton.h"
 #include "vapor/animation/Animation.h"
 #include "vapor/render/Renderable.h"
+#include "vapor/Utilities.h"
 
 namespace vapor {
 
@@ -45,8 +46,10 @@ bool Mesh::isAnimated() const
 
 AnimationPtr Mesh::findAnimation( const std::string& name )
 {
-	foreach( const AnimationPtr& animation, animations )
+	for( uint i = 0; i < animations.size(); i++ )
 	{
+		 const AnimationPtr& animation = animations[i];
+
 		if( String::compareInsensitive(animation->getName(), name) == 0 )
 			return animation;
 	}
