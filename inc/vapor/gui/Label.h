@@ -52,8 +52,8 @@ protected:
 	// Initializes the label.
 	void init();
 
-	// Rebuilds the label geometry.
-	void rebuildGeometry();
+	// Rebuilds the overlay geometry.
+	virtual void rebuildGeometry();
 
 	// Initializes the label once the font is loaded.
 	void setupState();
@@ -64,19 +64,11 @@ protected:
 	// Holds the font texture we are gonna use for rendering the glyphs.
 	FontPtr font;
 	
-	// Font geometry.
-	RenderablePtr renderable;
-
-	// Font material.
-	MaterialPtr material;
-	
 	// Used to track if a label needs updating.
 	bool isDirty;
 
 	bool setupDone;
 };
-
-//-----------------------------------//
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Label );
 

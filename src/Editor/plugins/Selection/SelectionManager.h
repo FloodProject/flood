@@ -8,27 +8,77 @@
 
 #pragma once
 
-#include "scene/Entity.h"
+#include "UndoOperation.h"
 
 namespace vapor { namespace editor {
 
 //-----------------------------------//
 
+class EditorFrame;
+class UndoManager;
+class Events;
+class SelectionManager;
+
 namespace SelectionMode
 {
 	enum Enum
 	{
-		Entity,
-		Face,
+		None,
+		Vertex,
 		Edge,
-		Vertex
+		Face,
+		Entity,
+		Group
 	};
 }
+
+//-----------------------------------//
 
 struct SelectionData
 {
 	EntityPtr entity;
+};
+
+class SelectionOperation : public UndoOperation
+{
+	friend class SelectionManager;
+public:
+
+	// Undoes the operation.
+	virtual void undo();	
+
+	// Redoes the operation.
+	virtual void redo();
+
+	// Adds an entity to the selection.
+	void addEntity(const EntityPtr& entity);
+
+	// Selects all the objects.
+	void selectAll();
+
+	// Unselects all the objects.
+	void unselectAll();
+
+	// Selects all the previous selected objects.
+	void selectPrevious();
+
+	// Unselects all the previous selected objects.
+	void unselectPrevious();
+
+	// Selection mode.
 	SelectionMode::Enum mode;
+
+	// Selections.
+	std::vector<SelectionData> selections;
+	std::vector<SelectionData> previous;
+
+protected:
+
+	// Sets the bounding box visibility of the given node.
+	void setBoundingBoxVisible( const EntityPtr& node, bool state );
+
+	Events* events;
+	SelectionManager* selectionManager;
 };
 
 /**
@@ -42,19 +92,37 @@ class SelectionManager
 {
 public:
 
-	SelectionManager();
+	SelectionManager( EditorFrame* editor );
 
 	// Gets the current selection mode.
-	SelectionMode::Enum getSelectionMode();
+	SelectionMode::Enum getSelectionMode() const;
 
 	// Sets the current selection mode.
 	void setSelectionMode(SelectionMode::Enum mode);
 
-private:
+	// Gets the current selection.
+	SelectionOperation* getSelection() const;
+
+	// Sets the current selection.
+	void setSelection(SelectionOperation*);
+
+	// Creates a new selection operation.
+	SelectionOperation* createOperation();
+
+protected:
 
 	// Selection mode.
 	SelectionMode::Enum mode;
-	std::vector<SelectionData*> selections;
+
+	// Selection operation.
+	SelectionOperation* selection;
+
+	// Events manager.
+	Events* events;
+
+	// Undo manager.
+	UndoManager* undoManager;
+
 };
 
 //-----------------------------------//

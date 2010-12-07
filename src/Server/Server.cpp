@@ -11,6 +11,7 @@
 #include "Settings.h"
 #include "Event.h"
 #include "Profiler.h"
+#include "Task.h"
 
 namespace vapor {
 
@@ -41,9 +42,12 @@ public:
 //-----------------------------------//
 
 Server::Server()
-	: logger( FileStream("Log.html") )
-	, tasks(Settings::NumThreadsWorkers)
-{ }
+	: tasks(Settings::NumThreadsWorkers)
+{
+	FileStream fs("Log.html");
+	logger.add( new LogSinkHTML(fs) );
+
+}
 
 //-----------------------------------//
 
@@ -87,7 +91,7 @@ void Server::shutdown()
 
 void Server::run()
 {
-	boost::thread thread( &Network::waitMessages, boost::ref(network) );
+	//Thread thread( &Network::waitMessages, boost::ref(network) );
 	
 	while(true)
 	{

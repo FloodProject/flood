@@ -121,16 +121,6 @@ void Model::updateAnimations(double delta)
 	for( uint i = 0; i < animations.size(); i++ )
 	{
 		AnimationState& state = animations[i];
-		const AnimationPtr& animation = state.animation;
-		float& animationTime = state.animationTime;
-
-		if( Math::floatEqual(animationTime, animation->getTotalTime()) )
-		{
-			animationTime = 0;
-			
-			if( !animation->isLooped() )
-				animationEnabled = false;
-		}
 
 		updateAnimationBones(state);
 		updateAnimationTime(state, delta);
@@ -155,11 +145,25 @@ void Model::updateAnimationTime(AnimationState& state, double delta)
 {
 	const AnimationPtr& animation = state.animation;
 	float& animationTime = state.animationTime;
+	float totalTime = animation->getTotalTime();
 
-	animationTime += delta * 10 * animationSpeed;
+	if( Math::floatEqual(animationTime, totalTime) )
+	{
+		animationTime = 0;
+			
+		if( !animation->isLooped() )
+			animationEnabled = false;
+	}
+	else
+	{
+		animationTime += delta * 10 * animationSpeed;
 
-	if( animationTime > animation->getTotalTime() )
-		animationTime = animation->getTotalTime();
+		if( animationTime > totalTime )
+		{
+			animationTime = animation->getTotalTime();
+		}
+	}
+
 }
 
 //-----------------------------------//
@@ -170,7 +174,6 @@ void Model::updateAnimationBones(AnimationState& state)
 	float animationTime = state.animationTime;
 
 	std::vector<Matrix4x3>& bones = state.bonesMatrix;
-
 	const KeyFramesMap& keyFrames = animation->getKeyFrames();
 
 	KeyFramesMap::const_iterator it;
@@ -178,11 +181,11 @@ void Model::updateAnimationBones(AnimationState& state)
 	{
 		const BonePtr& bone = it->first;
 		
-		Matrix4x3 matBone = animation->getKeyFrameMatrix(bone, animationTime);
-		matBone = matBone * bone->relativeMatrix;
+		const Matrix4x3& matKey = animation->getKeyFrameMatrix(bone, animationTime);	
+		Matrix4x3 matBone = matKey * bone->relativeMatrix;
 
-		if( bone->parentIndex != -1 )
-			bones[bone->index] = matBone * bones[bone->parentIndex];
+		if( bone->indexParent != -1 )
+			bones[bone->index] = matBone * bones[bone->indexParent];
 		else
 			bones[bone->index] = matBone;
 	}
@@ -296,9 +299,11 @@ void Model::onRender()
 	if( !mesh->isAnimated() )
 		return;
 
-	for( uint i = 0; i < getRenderables().size(); i++ )
+	const std::vector<RenderablePtr>& rends = getRenderables();
+
+	for( uint i = 0; i < rends.size(); i++ )
 	{
-		const RenderablePtr& rend = getRenderables()[i];
+		const RenderablePtr& rend = rends[i];
 		const MaterialPtr& material = rend->getMaterial();
 		const ProgramPtr& program = material->getProgram();
 
@@ -362,10 +367,10 @@ void Model::updateDebugRenderable() const
 		pos.push_back( bones[bone->index]*vertex );
 		colors.push_back( Color::Blue );
 
-		if( bone->parentIndex != -1 )
+		if( bone->indexParent != -1 )
 		{
 			Vector3 parentVertex;
-			pos.push_back( bones[bone->parentIndex]*parentVertex );
+			pos.push_back( bones[bone->indexParent]*parentVertex );
 			colors.push_back( Color::Blue );
 		}
 	}

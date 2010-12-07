@@ -151,11 +151,13 @@ EntityPtr Serializer::deserializeEntity( const Json::Value& nodeValue )
 	deserializeFields(type, entity.get(), nodeValue);
 
     // Components.
-	const Json::Value& componentValues = nodeValue["components"];
+	const Json::Value& values = nodeValue["components"];
 
-	for( uint i = 0; i < componentValues.getMemberNames().size(); i++ )
+	Json::Value::Members members = values.getMemberNames();
+
+	for( uint i = 0; i < members.size(); i++ )
 	{
-		const std::string& name = componentValues.getMemberNames()[i];
+		const std::string& name = members[i];
 		const Class* type = (Class*) typeRegistry.getType(name);
 
 		if( !type )
@@ -164,11 +166,10 @@ EntityPtr Serializer::deserializeEntity( const Json::Value& nodeValue )
 			continue;
 		}
 
-		ComponentPtr component( (Component*) type->createInstance() );
-		assert( component != nullptr );
+		const Json::Value& value = values[name];
 
-		const Json::Value& componentValue = componentValues[name];
-		deserializeFields(*type, component.get(), componentValue);
+		ComponentPtr component( (Component*) type->createInstance() );
+		deserializeFields(*type, component.get(), value);
 
 		entity->addComponent(component);
 	}
@@ -228,9 +229,14 @@ void Serializer::serializeFields(const Class& type, void* object, Json::Value& v
 
 void Serializer::deserializeFields(const Class& type, void* object, const Json::Value& fieldsValue)
 {
-	for( uint i = 0; i < fieldsValue.getMemberNames().size(); i++ )
+	if( fieldsValue.isNull() )
+		return;
+
+	const Json::Value::Members& members = fieldsValue.getMemberNames();
+
+	for( uint i = 0; i < members.size(); i++ )
 	{
-		const std::string& name = fieldsValue.getMemberNames()[i];
+		const std::string& name = members[i];
 		const Field* field = type.getField(name);
 
 		if( !field )

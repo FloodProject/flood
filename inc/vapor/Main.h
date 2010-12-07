@@ -8,6 +8,12 @@
 
 #pragma once
 
+#ifdef VAPOR_PLATFORM_WINDOWS
+	#define WIN32_LEAN_AND_MEAN
+	#define NOMINMAX
+	#include <Windows.h>	
+#endif
+
 #include <vapor/Framework.h>
 
 #if defined(VAPOR_PLATFORM_WINDOWS) && defined(USE_COMMON_CONTROLS)

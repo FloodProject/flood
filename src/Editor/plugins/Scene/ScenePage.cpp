@@ -457,6 +457,10 @@ void ScenePage::onButtonEntityDelete(wxCommandEvent&)
 	const EntityPtr& node = getEntityFromTreeId(id);
 
 	EntityOperation* nodeOperation = createEntityOperation(node);
+
+	if( !nodeOperation )
+		return;
+
 	nodeOperation->undo();
 
 	editor->redrawView();

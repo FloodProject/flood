@@ -32,6 +32,21 @@ PluginManager::~PluginManager()
 
 //-----------------------------------//
 
+Plugin* PluginManager::getPlugin(const std::string& name)
+{
+	for(uint i = 0; i < plugins.size(); i++)
+	{
+		Plugin* plugin = plugins[i];
+
+		if(plugin->getMetadata().name == name)
+			return plugin;
+	}
+
+	return nullptr;
+}
+
+//-----------------------------------//
+
 void PluginManager::registerPlugin( Plugin* plugin )
 {
 	if( !plugin )

@@ -122,7 +122,7 @@ struct VAPOR_ALIGN_BEGIN(1) ms3d_joint_t
 	byte flags;
 	char name[32];
 	char parentName[32];
-	int parentIndex;
+	int indexParent;
 
 	EulerAngles rotation;
 	Vector3 position;

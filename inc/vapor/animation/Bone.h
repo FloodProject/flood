@@ -32,7 +32,7 @@ public:
 	int index;
 
 	// Index of the parent bone.
-	int parentIndex;
+	int indexParent;
 
 	// Position of the bone.
 	Vector3 position;

@@ -44,9 +44,21 @@ void Geometry::addRenderable( const RenderablePtr& rend, RenderStage::Enum group
 
 //-----------------------------------//
 
-const RenderableList& Geometry::getRenderables( RenderStage::Enum group )
-{ 
-	return renderables[group]; 
+RenderableList Geometry::getRenderables( RenderStage::Enum group )
+{
+	RenderableList rends;
+
+	RenderableMap::const_iterator it;
+	for( it = renderables.cbegin(); it != renderables.cend(); it++ )
+	{
+		const RenderableList& groupRends = it->second;
+		
+		for( uint i = 0; i < groupRends.size(); i++ )
+			rends.push_back(groupRends[i]);
+	}
+
+	//return renderables[group];
+	return rends;
 }
 
 //-----------------------------------//

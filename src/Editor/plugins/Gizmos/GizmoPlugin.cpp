@@ -17,6 +17,10 @@
 #include "Events.h"
 #include "UndoManager.h"
 #include "Viewframe.h"
+#include "PluginManager.h"
+
+#include "../Selection/SelectionPlugin.h"
+#include "../Selection/SelectionManager.h"
 
 namespace vapor { namespace editor {
 
@@ -26,7 +30,15 @@ GizmoPlugin::GizmoPlugin( EditorFrame* frame )
 	: Plugin(frame)
 	, editorScene(frame->getEditorScene())
 	, op(nullptr)
-{ }
+{
+	PluginManager* plugins = editor->getPluginManager();
+	
+	SelectionPlugin* sp = (SelectionPlugin*) plugins->getPlugin("Selection");
+	assert( sp != nullptr );
+
+	selections = sp->getSelectionManager();
+	assert( selections != nullptr );
+}
 
 //-----------------------------------//
 
@@ -48,17 +60,12 @@ void GizmoPlugin::onPluginEnable()
 {
 	wxToolBar* toolBar = editor->getToolbar();
 
-	addTool( toolBar->AddSeparator() );
+	//addTool( toolBar->AddSeparator() );
 
 	wxBitmap iconCamera = wxMEMORY_BITMAP(camera);
 	buttonCamera = toolBar->AddTool( GizmoTool::Camera, "Camera",
 		iconCamera, "Selects the Camera View tool", wxITEM_RADIO );
 	addTool(buttonCamera);
-
-	wxBitmap iconSelect = wxMEMORY_BITMAP(cursor);
-	buttonSelect = toolBar->AddTool( GizmoTool::Select, "Select",
-		iconSelect, "Selects the Entity Selection tool", wxITEM_RADIO );
-	addTool(buttonSelect);
 
 	wxBitmap iconTranslate = wxMEMORY_BITMAP(move);
 	buttonTranslate = toolBar->AddTool( GizmoTool::Translate, "Move",
@@ -74,96 +81,84 @@ void GizmoPlugin::onPluginEnable()
 	buttonScale = toolBar->AddTool( GizmoTool::Scale, "Scale",
 		iconScale, "Selects the Scale tool", wxITEM_RADIO );
 	addTool(buttonScale);
-
-	#pragma TODO("Initialize plugins events properly")
-	Events* events = editor->getEventManager();
-	events->currentPlugin = this;
-	tool = GizmoTool::Camera;
-
-	toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
-		&GizmoPlugin::onToolClick, this,
-		buttonCamera->GetId(), buttonScale->GetId() );
 }
 
 //-----------------------------------//
 
 void GizmoPlugin::onPluginDisable()
 {
-	unselectEntities();
 }
 
 //-----------------------------------//
 
-void GizmoPlugin::onSceneLoad( const ScenePtr& scene )
+void GizmoPlugin::onToolSelect( int id )
 {
-	unselectEntities();
-}
+	tool = (GizmoTool::Enum) id;
 
-//-----------------------------------//
+	SelectionOperation* selection = selections->getSelection();
 
-void GizmoPlugin::onToolClick(wxCommandEvent& event)
-{
-	tool = (GizmoTool::Enum) event.GetId();
+	if( !selection )
+		return;
 
-	unselectEntities(true);
-}
-
-//-----------------------------------//
-
-void GizmoPlugin::unselectEntities(bool reselect)
-{
-	Events* events = editor->getEventManager();
-
-	std::vector<EntityPtr> nodes;
-
-	GizmoMap::const_iterator it;
-	for( it = gizmos.cbegin(); it != gizmos.cend(); it++ )
+	if( selection->mode == SelectionMode::None )
+		return;
+	
+	for( uint i = 0; i < selection->selections.size(); i++ )
 	{
-		nodes.push_back(it->first);
-	}
-
-	for( uint i = 0; i < nodes.size(); i++ )
-	{
-		const EntityPtr& node = nodes[i];
-		events->onEntityUnselect(node);
-
-		if( reselect )
-			onEntitySelect(node);
+		onEntityUnselect( selection->selections[i].entity );
+		onEntitySelect( selection->selections[i].entity );
 	}
 }
 
 //-----------------------------------//
 
-void GizmoPlugin::onEntitySelect( const EntityPtr& node )
+void GizmoPlugin::onToolUnselect( int id )
+{
+	if(id >= GizmoTool::Camera && id <= GizmoTool::Scale)
+		return;
+
+	SelectionOperation* sel = selections->getSelection();
+	
+	if( sel->mode == SelectionMode::None )
+		return;
+
+	for( uint i = 0; i < sel->selections.size(); i++ )
+	{
+		onEntityUnselect( sel->selections[i].entity );
+	}
+
+	//std::vector<EntityPtr> entities;
+
+	//GizmoMap::const_iterator it;
+	//for( it = gizmos.cbegin(); it != gizmos.cend(); it++ )
+	//	entities.push_back( it->first );	
+	//
+	//for( uint i = 0; i < entities.size(); i++ )	
+	//	removeGizmo( entities[i] );
+
+	//assert( gizmos.empty() );
+}
+
+//-----------------------------------//
+
+void GizmoPlugin::onEntitySelect( const EntityPtr& entity )
 {
 	editor->redrawView();
 
-	unselectEntities();
-
 	if( isTool(GizmoTool::Camera) )
 		return;
-
-	setBoundingBoxVisible( node, true );
-
-	if( isTool(GizmoTool::Select) )
-	{
-		gizmos[node] = EntityPtr();
-		return;
-	}
 	
-	bool gizmoExists = gizmos.find(node) != gizmos.end();
+	bool gizmoExists = gizmos.find(entity) != gizmos.end();
 	
 	if( !gizmoExists )
-			createGizmo( node );
+			createGizmo( entity );
 }
 
 //-----------------------------------//
 
-void GizmoPlugin::onEntityUnselect( const EntityPtr& node )
+void GizmoPlugin::onEntityUnselect( const EntityPtr& entity )
 {
-	setBoundingBoxVisible( node, false );
-	removeGizmo( node );
-
+	removeGizmo( entity );
 	editor->redrawView();
 }
 
@@ -171,8 +166,8 @@ void GizmoPlugin::onEntityUnselect( const EntityPtr& node )
 
 Plane GizmoPlugin::getGizmoPickPlane()
 {
-	const EntityPtr nodeObject( op->weakEntity );
-	const TransformPtr& transObject = nodeObject->getTransform();
+	const EntityPtr entityObject( op->weakEntity );
+	const TransformPtr& transObject = entityObject->getTransform();
 
 	Vector3 gizmoAxis = gizmo->getAxisVector(op->axis);
 	Vector3 gizmoPosition = transObject->getPosition();
@@ -215,34 +210,6 @@ bool GizmoPlugin::getGizmoPickPoint(int x, int y, Vector3& pickPoint)
 
 	pickPoint = ray.getPoint(distance);
 	
-	return true;
-}
-
-//-----------------------------------//
-
-bool GizmoPlugin::getGizmoPickEntity(int x, int y ,EntityPtr& node)
-{
-	RenderView* view = viewframe->getView();
-	const CameraPtr& camera = view->getCamera();
-	const ScenePtr& scene = engine->getSceneManager();
-
-	// Get a ray given the screen location clicked.
-	Vector3 outFar;
-	const Ray& pickRay = camera->getRay( x, y, &outFar );
-
-#if 0 // Enable this to draw debugging lines
-	const EntityPtr& line = buildRay( pickRay, outFar );
-	editor->getEditorScene()->add( line );
-#endif
-
-	// Perform ray casting to find the nodes.
-	RayBoxQueryResult res;
-
-	if( !scene->doRayBoxQuery(pickRay, res) )
-		return false;
-
-	node = res.node;
-
 	return true;
 }
 
@@ -299,8 +266,8 @@ void GizmoPlugin::onMouseDrag( const MouseDragEvent& dragEvent )
 	Vector3 pickAxis = gizmo->getAxisVector(op->axis);
 	Vector3 pickOffset = pickAxis.project(pickPoint - firstPickPoint);
 
-	const EntityPtr nodeObject( op->weakEntity );
-	const TransformPtr& transObject = nodeObject->getTransform();
+	const EntityPtr entityObject( op->weakEntity );
+	const TransformPtr& transObject = entityObject->getTransform();
 	
 	if( isTool(GizmoTool::Translate) )
 		transObject->translate( (pickPoint - firstPickPoint)*pickAxis );
@@ -332,15 +299,6 @@ void GizmoPlugin::onMouseButtonPress( const MouseButtonEvent& mbe )
 		getGizmoPickPoint(mbe.x, mbe.y, firstPickPoint);
 		return;
 	}
-	
-	unselectEntities();
-
-	EntityPtr node;
-	if( !getGizmoPickEntity(mbe.x, mbe.y, node) )
-		return;
-
-	Events* events = editor->getEventManager();
-	events->onEntitySelect(node);
 }
 
 //-----------------------------------//
@@ -354,30 +312,31 @@ void GizmoPlugin::onMouseButtonRelease( const MouseButtonEvent& mbe )
 	undoManager->registerOperation( op );
 	op = nullptr;
 	
-	gizmo->deselectAxis();
+	if(gizmo)
+		gizmo->deselectAxis();
 }
 
 //-----------------------------------//
 
-void GizmoPlugin::createGizmo( const EntityPtr& node )
+void GizmoPlugin::createGizmo( const EntityPtr& entity )
 {
-	assert( node != nullptr );
-	assert( gizmos.find(node) == gizmos.end() );
+	assert( entity != nullptr );
+	assert( gizmos.find(entity) == gizmos.end() );
 
 	RenderView* view = viewframe->getView();
 	const CameraPtr& camera = view->getCamera();
 
 	Gizmo* newGizmo = nullptr;
 
-	// Create new Gizmo for the node.
+	// Create new Gizmo for the entity.
 	if( isTool(GizmoTool::Translate) )
-		newGizmo = new GizmoTranslate(node, camera);
+		newGizmo = new GizmoTranslate(entity, camera);
 
 	else if( isTool(GizmoTool::Rotate) )
-		newGizmo = new GizmoRotate(node, camera);
+		newGizmo = new GizmoRotate(entity, camera);
 
 	else if( isTool(GizmoTool::Scale) )
-		newGizmo = new GizmoScale(node, camera);
+		newGizmo = new GizmoScale(entity, camera);
 
 	else assert( 0 && "Unknown gizmo tool" );
 
@@ -385,50 +344,36 @@ void GizmoPlugin::createGizmo( const EntityPtr& node )
 	gizmo->buildGeometry();
 
 	// Add the gizmo to the scene.
-	EntityPtr nodeGizmo( new Entity("Gizmo") );
-	nodeGizmo->addTransform();
-	nodeGizmo->addComponent(gizmo);
-	editorScene->add(nodeGizmo);
+	EntityPtr entityGizmo( new Entity("Gizmo") );
+	entityGizmo->addTransform();
+	entityGizmo->addComponent(gizmo);
+	editorScene->add(entityGizmo);
 
 	gizmo->updatePositionScale();
 	
-	// Associate the gizmo with the node.
-	gizmos[node] = nodeGizmo;
+	// Associate the gizmo with the entity.
+	gizmos[entity] = entityGizmo;
 }
 
 //-----------------------------------//
 
-void GizmoPlugin::removeGizmo( const EntityPtr& node )
+void GizmoPlugin::removeGizmo( const EntityPtr& entity )
 {
-	assert( node != nullptr );
+	assert( entity != nullptr );
 
-	// Find the existing gizmo associated with the node.
-	GizmoMap::iterator it = gizmos.find(node);
+	// Find the existing gizmo associated with the entity.
+	GizmoMap::iterator it = gizmos.find(entity);
 
 	if( it == gizmos.end() )
 		return;
 
-	// Find the node of the gizmo.
-	const EntityPtr& nodeGizmo = gizmos[node];
+	// Find the entity of the gizmo.
+	const EntityPtr& entityGizmo = gizmos[entity];
 	
 	// Remove the gizmo.
-	editorScene->remove(nodeGizmo);
+	editorScene->remove(entityGizmo);
 	gizmos.erase(it);
 	gizmo.reset();
-}
-
-//-----------------------------------//
-
-void GizmoPlugin::setBoundingBoxVisible( const EntityPtr& node, bool state )
-{
-	assert( node != nullptr );
-
-	const TransformPtr& transform = node->getTransform();
-
-	if( !transform )
-		return;
-
-	transform->setDebugRenderableVisible( state );
 }
 
 //-----------------------------------//
@@ -462,7 +407,7 @@ bool GizmoPlugin::pickBoundingTest( const MouseMoveEvent& me )
 	Vector3 outFar;
 	const Ray& pickRay = camera->getRay( me.x, me.y, &outFar );
 
-	// Perform ray casting to find the nodes.
+	// Perform ray casting to find the entities.
 	RayBoxQueryResult res;
 	
 	if( !editorScene->doRayBoxQuery(pickRay, res) )
@@ -480,15 +425,15 @@ void GizmoPlugin::createOperation()
 {
 	assert( op == nullptr );
 	
-	EntityPtr nodeObject = gizmo->getEntityAttachment();
-	TransformPtr transObject = nodeObject->getTransform();
+	EntityPtr entityObject = gizmo->getEntityAttachment();
+	TransformPtr transObject = entityObject->getTransform();
 
 	op = new GizmoOperation();
 
 	op->tool = tool;
 	op->axis = axis;
 	op->gizmo = gizmo;
-	op->weakEntity = nodeObject;
+	op->weakEntity = entityObject;
 
 	op->prevTranslation = transObject->getPosition();
 	op->prevScale = transObject->getScale();

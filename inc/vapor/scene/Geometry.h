@@ -44,7 +44,7 @@ public:
 		uint priority = 0 );
 
 	// Gets all the renderables in this geometry.
-	const RenderableList& getRenderables( RenderStage::Enum = RenderStage::Normal );
+	RenderableList getRenderables( RenderStage::Enum = RenderStage::Normal );
 
 	// Appends all the renderables of this geometry to the queue.
 	void appendRenderables( RenderQueue& queue, TransformPtr transform );

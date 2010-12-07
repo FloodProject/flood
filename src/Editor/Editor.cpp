@@ -27,6 +27,7 @@
 #include "plugins/Console/ConsolePlugin.h"
 #include "plugins/Resources/ResourcesPlugin.h"
 #include "plugins/Property/PropertyPlugin.h"
+#include "plugins/Selection/SelectionPlugin.h"
 #include "plugins/Gizmos/GizmoPlugin.h"
 #include "plugins/Terrain/TerrainPlugin.h"
 #include "plugins/Camera/CameraPlugin.h"
@@ -109,52 +110,27 @@ EditorFrame::~EditorFrame()
 
 //-----------------------------------//
 
+#define PLUGIN(name)	\
+	plugin = new name##Plugin(this);			\
+	pluginManager->registerPlugin( plugin );	\
+	pluginManager->enablePlugin( plugin );		\
+
 void EditorFrame::createPlugins()
 {
 	Plugin* plugin = nullptr;
 
-	plugin = new ProjectPlugin(this);
-	pluginManager->registerPlugin( plugin );
-	pluginManager->enablePlugin( plugin );
-
-	plugin = new UndoPlugin(this);
-	pluginManager->registerPlugin( plugin );
-	pluginManager->enablePlugin( plugin );
-
-	plugin = new ScenePlugin(this);
-	pluginManager->registerPlugin( plugin );
-	pluginManager->enablePlugin( plugin );
-
-	plugin = new PropertyPlugin(this);
-	pluginManager->registerPlugin( plugin );
-	pluginManager->enablePlugin( plugin );
-
-	plugin = new LogPlugin(this);
-	pluginManager->registerPlugin( plugin );
-	pluginManager->enablePlugin( plugin );
-
-	plugin = new ConsolePlugin(this);
-	pluginManager->registerPlugin( plugin );
-	pluginManager->enablePlugin( plugin );
-
-	plugin = new ResourcesPlugin(this);
-	pluginManager->registerPlugin( plugin );
-	pluginManager->enablePlugin( plugin );
-
-	plugin = new GizmoPlugin(this);
-	pluginManager->registerPlugin( plugin );
-	pluginManager->enablePlugin( plugin );
-
-	plugin = new TerrainPlugin(this);
-	pluginManager->registerPlugin( plugin );
-	pluginManager->enablePlugin( plugin );
-
-	plugin = new CameraPlugin(this);
-	pluginManager->registerPlugin( plugin );
-	pluginManager->enablePlugin( plugin );
-
-	plugin = new SamplePlugin(this);
-	pluginManager->registerPlugin( plugin );
+	PLUGIN(Log);
+	PLUGIN(Project);
+	PLUGIN(Undo);
+	PLUGIN(Scene);
+	PLUGIN(Property);
+	PLUGIN(Console);
+	PLUGIN(Resources);
+	PLUGIN(Selection);
+	PLUGIN(Gizmo);
+	PLUGIN(Terrain);
+	PLUGIN(Camera);
+	PLUGIN(Sample);
 
 	pluginManagerFrame = new PluginManagerFrame( this, pluginManager);
 	pluginManagerFrame->SetInitialSize(wxSize(200, 350));

@@ -32,6 +32,9 @@ public:
 	PluginManager( EditorFrame* frame );
 	~PluginManager();
 
+	// Gets a plugin from its name.
+	Plugin* getPlugin(const std::string& name);
+
 	// Registers a new plugin.
 	void registerPlugin( Plugin* plugin );
 

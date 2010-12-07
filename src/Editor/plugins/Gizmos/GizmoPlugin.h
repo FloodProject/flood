@@ -15,16 +15,14 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
+class SelectionManager;
 class GizmoOperation;
-
-//-----------------------------------//
 
 namespace GizmoTool
 {
 	enum Enum
 	{
-		Camera = wxID_HIGHEST,
-		Select,
+		Camera = wxID_HIGHEST + 83,
 		Translate,
 		Rotate,
 		Scale
@@ -61,19 +59,16 @@ public:
 	virtual void onEntitySelect( const EntityPtr& );
 	virtual void onEntityUnselect( const EntityPtr& );
 
-	// Scene load callback.
-	void onSceneLoad( const ScenePtr& scene );
+	// Tool selection callback.
+	virtual void onToolSelect( int id );
+
+	// Tool unselection callback.
+	void onToolUnselect( int id );
 
 protected:
 
-	// Handles gizmo tools buttons click.
-	void onToolClick(wxCommandEvent& event);
-
 	// Checks if the passed tool the current one.
 	bool isTool(GizmoTool::Enum mode);
-
-	// Unselects (and can also reselect) nodes (and their gizmos).
-	void unselectEntities(bool reselect = false);
 
 	// Creates a new gizmo for the given node.
 	void createGizmo( const EntityPtr& node );
@@ -83,9 +78,6 @@ protected:
 
 	// Creates a new gizmo undo/redo operation.
 	void createOperation();
-
-	// Sets the bounding box visibility of the given node.
-	void setBoundingBoxVisible( const EntityPtr& node, bool state );
 
 	// Performs bounding-box based ray picking.
 	bool pickBoundingTest( const MouseMoveEvent& event );
@@ -98,9 +90,6 @@ protected:
 
 	// Gets the point picked on the intersection plane.
 	bool getGizmoPickPoint(int x, int y, Vector3& pickPoint);
-
-	// Gets the node picked by the ray.
-	bool getGizmoPickEntity(int x, int y, EntityPtr& node);
 
 	// Current Gizmo tool.
 	GizmoTool::Enum tool;
@@ -125,10 +114,11 @@ protected:
 
 	// Toolbar buttons.
 	wxToolBarToolBase* buttonCamera;
-	wxToolBarToolBase* buttonSelect;
 	wxToolBarToolBase* buttonTranslate;
 	wxToolBarToolBase* buttonRotate;
 	wxToolBarToolBase* buttonScale;
+
+	SelectionManager* selections;
 };
 
 //-----------------------------------//

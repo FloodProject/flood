@@ -13,6 +13,14 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
+UndoOperation::UndoOperation()
+{ }
+
+//-----------------------------------//
+
+UndoOperation::~UndoOperation()
+{ }
+
 //-----------------------------------//
 
 } } // end namespaces

@@ -16,8 +16,8 @@ namespace vapor {
 //-----------------------------------//
 
 /**
- * Each overlay can be positioned in two different ways: Relative-mode
- * positioning and Absolute-mode positioning. In Relative-mode you can
+ * Each overlay can be positioned in two different ways: relative-mode
+ * positioning and absolute-mode positioning. In relative-mode you can
  * set an anchor (see the Anchor enum documentation for detailed info
  * about how it works and the different modes you can choose) and the
  * overlay position will be automatically adjusted by the engine even
@@ -25,7 +25,7 @@ namespace vapor {
  * and set a 5-pixel x-offset from it, then it will always stay there.
  */ 
 
-namespace Positioning
+namespace PositionMode
 {
 	enum Enum
 	{
@@ -50,7 +50,6 @@ namespace Positioning
  *		| BL      BC      BR |
  *		|____________________|
  *	
- * Hope you understand. :)
  */ 
 
 namespace Anchor
@@ -79,7 +78,7 @@ namespace Anchor
  * these different positioning modes, please check out the docs above.
  */
 
-class VAPOR_API Overlay : public virtual Geometry
+class VAPOR_API Overlay : public Geometry
 {
 	DECLARE_CLASS_()
 
@@ -88,13 +87,16 @@ public:
 	Overlay();
 
 	// Gets/sets the current positioning mode.
-	ACESSOR(Positioning, Positioning::Enum, positioning) 
+	ACESSOR(PositionMode, PositionMode::Enum, positioning) 
 
 	// Gets/sets the current anchor settings.
 	ACESSOR(Anchor, Anchor::Enum, anchor)
 
 	// Gets/sets the positioning of the label.
 	ACESSOR(Position, const Vector2i&, position)
+
+	// Gets/sets the positioning of the label.
+	ACESSOR(Size, const Vector2i&, size)
 
 	// Sets the position of the overlay.
 	void setPosition( int x, int y );
@@ -104,14 +106,29 @@ public:
 
 protected:
 
-	// Positioning mode used.
-	Positioning::Enum positioning;
+	// Creates the overlay geometry.
+	void createGeometry();
+
+	// Rebuilds the overlay geometry.
+	virtual void rebuildGeometry();
+
+	// PositionMode mode used.
+	PositionMode::Enum positioning;
 
 	// Anchoring mode used.
 	Anchor::Enum anchor;
 
 	// Overlay position.
 	Vector2i position;
+
+	// Overlay size.
+	Vector2i size;
+
+	// Overlay geometry.
+	RenderablePtr renderable;
+
+	// Overlay material.
+	MaterialPtr material;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Overlay );

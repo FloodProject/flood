@@ -8,6 +8,7 @@
 
 #include "PCH.h"
 #include "UndoManager.h"
+#include "UndoOperation.h"
 
 namespace vapor { namespace editor {
 
@@ -16,16 +17,10 @@ namespace vapor { namespace editor {
 UndoManager::~UndoManager()
 {
 	for( uint i = 0; i < undoOperations.size(); i++ )
-	{
-		UndoOperation* op = undoOperations[i];
-		delete op;
-	}
+		delete undoOperations[i];
 
 	for( uint i = 0; i < redoOperations.size(); i++ )
-	{
-		UndoOperation* op = redoOperations[i];
-		delete op;
-	}
+		delete redoOperations[i];
 }
 
 //-----------------------------------//
@@ -36,14 +31,11 @@ void UndoManager::registerOperation( UndoOperation* operation )
 
 	// Remove all the existing redo operations.
 	for( uint i = 0; i < redoOperations.size(); i++ )
-	{
-		UndoOperation* op = redoOperations[i];
-		delete op;
-	}
+		delete redoOperations[i];
 
 	redoOperations.clear();
 
-	fireUndoRedoEvent();
+	onUndoRedoEvent();
 }
 
 //-----------------------------------//
@@ -53,7 +45,7 @@ void UndoManager::clearOperations( )
 	undoOperations.clear();
 	redoOperations.clear();
 
-	fireUndoRedoEvent();
+	onUndoRedoEvent();
 }
 
 //-----------------------------------//
@@ -61,7 +53,7 @@ void UndoManager::clearOperations( )
 bool UndoManager::undoOperation()
 {
 	handleOperation(undoOperations, redoOperations, true);
-	fireUndoRedoEvent();
+	onUndoRedoEvent();
 
 	return undoOperations.empty();
 }
@@ -71,7 +63,7 @@ bool UndoManager::undoOperation()
 bool UndoManager::redoOperation()
 {
 	handleOperation(redoOperations, undoOperations, false);
-	fireUndoRedoEvent();
+	onUndoRedoEvent();
 
 	return redoOperations.empty();
 }
@@ -97,13 +89,6 @@ void UndoManager::handleOperation(Operations& firstOperations,
 		op->undo();
 	else
 		op->redo();
-}
-
-//-----------------------------------//
-
-void UndoManager::fireUndoRedoEvent()
-{
-	onUndoRedoEvent();
 }
 
 //-----------------------------------//

@@ -102,12 +102,19 @@ bool Events::TryBefore(wxEvent& event)
 
 	const PluginToolsMap& tools = pluginManager->getTools();
 	PluginToolsMap::const_iterator it = tools.find(id);
-	bool found = (it != tools.end());
 	
-	if( found )
+	if( it != tools.end() )
+	{
+		int toolId = it->first;
+
+		currentPlugin->onToolUnselect( toolId );
 		currentPlugin = (*it).second;
+		currentPlugin->onToolSelect( toolId );
+	}
 	else
+	{
 		currentPlugin = nullptr;
+	}
 	
 	return false;
 }

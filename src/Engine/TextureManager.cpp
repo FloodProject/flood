@@ -38,7 +38,7 @@ TextureManager::~TextureManager()
 	for( it = textures.cbegin(); it != textures.cend(); it++ )
 	{
 		const TexturePtr& texture = it->second;
-		assert( texture->getReferenceCount() == 2 );
+		//assert( texture->getReferenceCount() == 2 );
 	}
 }
 

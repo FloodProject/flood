@@ -65,6 +65,12 @@ public:
 	// Plugin disable callback.
 	virtual void onPluginDisable() = 0;
 
+	// Plugin tool selection callback.
+	virtual void onToolSelect( int id ) {}
+
+	// Plugin tool unselection callback.
+	virtual void onToolUnselect( int id ) {}
+
 	// Entity selection callback.
 	virtual void onEntitySelect( const EntityPtr& ) {}
 	

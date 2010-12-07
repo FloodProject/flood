@@ -32,9 +32,9 @@ Label::Label()
 Label::Label( const std::string& text, FontPtr font, MaterialPtr material )
 	: text(text)
 	, font(font)
-	, material(material)
 {
 	init();
+	renderable->setMaterial(material);
 }
 
 //-----------------------------------//
@@ -58,12 +58,6 @@ void Label::init()
 {
 	isDirty = true;
 	setupDone = false;
-
-	VertexBufferPtr vb( new VertexBuffer() );
-	renderable = new Renderable( PolygonType::Quads, vb, material );
-
-	// Add a new renderable to hold the text geometry
-	addRenderable( renderable, RenderStage::Overlays );
 }
 
 //-----------------------------------//
@@ -118,11 +112,6 @@ void Label::update( double delta )
 
 void Label::rebuildGeometry()
 {
-	const std::vector<Glyph>& glyphs = font->getGlyphs();
-
-	const float width = font->getImage()->getWidth();
-	const float height = font->getImage()->getHeight();
-
 	const VertexBufferPtr& vb = renderable->getVertexBuffer();
 
 	// Invalidate the existing vertex buffer contents
@@ -136,6 +125,11 @@ void Label::rebuildGeometry()
 
 	ushort x_pos = 0;
 	ushort y_pos = 0;
+
+	const std::vector<Glyph>& glyphs = font->getGlyphs();
+
+	const float width = font->getImage()->getWidth();
+	const float height = font->getImage()->getHeight();
 
 	ushort mid_offset = font->getGlyphSize().x /2;
 

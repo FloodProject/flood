@@ -8,6 +8,7 @@
 
 #include "PCH.h"
 #include "TerrainPage.h"
+#include "Utilities.h"
 
 namespace vapor { namespace editor {
 
@@ -26,10 +27,11 @@ TerrainPage::TerrainPage( Engine* engine, wxWindow* parent, wxWindowID id,
 
 void TerrainPage::createBrushes()
 {
-	std::string brushesPath = "brushes/";
+	std::string brushesPath = "media/brushes/";
 
-	FileSystem* fs = engine->getFileSystem();
-	std::vector<std::string> files = fs->enumerateFiles(brushesPath);
+	//FileSystem* fs = engine->getFileSystem();
+	std::vector<std::string> files = System::enumerateFiles(brushesPath);
+	//std::vector<std::string> files = fs->enumerateFiles(brushesPath);
 
 	ResourceManager* rm = engine->getResourceManager();
 
@@ -37,7 +39,7 @@ void TerrainPage::createBrushes()
 	{
 		const std::string& file = files[i];
 
-		ImagePtr image = rm->loadResource<Image>(brushesPath+file, false);
+		ImagePtr image = rm->loadResource<Image>(file, false);
 		
 		if( !image )
 			continue;

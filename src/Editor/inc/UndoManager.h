@@ -6,13 +6,16 @@
 *
 ************************************************************************/
 
-#include "UndoOperation.h"
-
 namespace vapor { namespace editor {
 
+//-----------------------------------//
+
+class UndoOperation;
 typedef std::deque<UndoOperation*> Operations;
 
-//-----------------------------------//
+/**
+ * Manages undo/redo operations.
+ */
 
 class UndoManager
 {
@@ -43,12 +46,11 @@ public:
 
 protected:
 
-	// Fires the undo/redo event.
-	void fireUndoRedoEvent();
+	// Sends the undo/redo event.
+	void sendUndoRedoEvent();
 
 	// Handles undo/redo operations.
-	void handleOperation(Operations& firstOperations,
-		Operations& secondOperations, bool undo);
+	void handleOperation(Operations& first,	Operations& second, bool undo);
 
 	// Undo operations.
 	Operations undoOperations;
@@ -56,8 +58,6 @@ protected:
 	// Redo operations.
 	Operations redoOperations;
 };
-
-
 
 //-----------------------------------//
 

@@ -111,7 +111,7 @@ void Milkshape3D::buildSkeleton()
 
 		bone->name = joint.name;
 		bone->index = index++;
-		bone->parentIndex = joint.parentIndex;
+		bone->indexParent = joint.indexParent;
 		bone->position = joint.position;
 		bone->rotation = joint.rotation;
 		bone->relativeMatrix = joint.relativeMatrix;
@@ -206,7 +206,7 @@ void Milkshape3D::buildAnimations()
 
 	for( uint i = 0; i < metadata.size(); i++ )
 	{
-		 AnimationMetadata& data = metadata[i];
+		AnimationMetadata& data = metadata[i];
 		AnimationPtr animation = buildAnimation(data);
 		animations.push_back(animation);
 	}
@@ -254,7 +254,7 @@ void Milkshape3D::buildKeyFrames( const ms3d_joint_t& joint,
 {
 	assert( joint.positionKeys.size() == joint.rotationKeys.size() );
 
-	uint i = 0;
+	uint n = 0;
 
 	for( uint i = 0; i < joint.positionKeys.size(); i++ )
 	{
@@ -264,7 +264,7 @@ void Milkshape3D::buildKeyFrames( const ms3d_joint_t& joint,
 
 		if( numFrame < data.start || numFrame > data.end )
 		{
-			i++;
+			n++;
 			continue;
 		}
 
@@ -272,7 +272,7 @@ void Milkshape3D::buildKeyFrames( const ms3d_joint_t& joint,
 
 		key.time = (frame.time - data.startTime)*animationFPS;
 		key.position = frame.parameter;
-		key.rotation = (EulerAngles&) joint.rotationKeys[i++].parameter;
+		key.rotation = (EulerAngles&) joint.rotationKeys[n++].parameter;
 
 		frames.push_back(key);
 	}
@@ -442,7 +442,7 @@ void Milkshape3D::setupJointsHierarchy()
 	for( uint i = 0; i < joints.size(); i++ )
 	{
 		ms3d_joint_t& joint = joints[i];
-		joint.parentIndex = findJoint(joint.parentName);
+		joint.indexParent = findJoint(joint.parentName);
 	}
 }
 
@@ -458,9 +458,9 @@ void Milkshape3D::setupJointMatrices()
 			Matrix4x3::createRotation(joint.rotation) *
 			Matrix4x3::createTranslation(joint.position);
 
-		if( joint.parentIndex != -1 )
+		if( joint.indexParent != -1 )
 		{
-			const ms3d_joint_t& parent = joints[joint.parentIndex];
+			const ms3d_joint_t& parent = joints[joint.indexParent];
 			joint.absoluteMatrix = joint.relativeMatrix * parent.absoluteMatrix;
 		}
 		else
@@ -485,7 +485,7 @@ void Milkshape3D::setupJointRotations()
 
 		for( uint j = 0; j < joint.rotationKeys.size(); j++ )
 		{
-			ms3d_keyframe_t& keyframe = joint.rotationKeys[i];
+			ms3d_keyframe_t& keyframe = joint.rotationKeys[j];
 
 			keyframe.parameter = Vector3(
 				Math::radianToDegree(keyframe.parameter.x),
@@ -654,7 +654,7 @@ void Milkshape3D::readJoints()
 		MEMCPY_SKIP_INDEX(joints[i].parentName, sizeof(char)*32);
 		MEMCPY_SKIP_INDEX(joints[i].rotation, sizeof(EulerAngles));
 		MEMCPY_SKIP_INDEX(joints[i].position, sizeof(Vector3));
-		joints[i].parentIndex = -1;
+		joints[i].indexParent = -1;
 
 		ushort& numKeyFramesRot = FILEBUF_INDEX(ushort);
 		joints[i].rotationKeys.resize(numKeyFramesRot);

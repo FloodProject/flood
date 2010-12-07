@@ -1,6 +1,8 @@
 WIP (work-in-progress)
 ======================
 
+Fix mesh collide loop overflows
+
 Serialization of group nodes
 Fix model debug renderable of skeleton.
 Add UpdateUI event to Play button.

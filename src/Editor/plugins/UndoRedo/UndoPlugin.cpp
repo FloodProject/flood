@@ -70,7 +70,7 @@ void UndoPlugin::onPluginEnable()
 void UndoPlugin::onPluginDisable()
 {
 	// Disconnect to undo/redo events.
-	undoManager->onUndoRedoEvent.Connect(this, &UndoPlugin::onUndoEvent);
+	undoManager->onUndoRedoEvent.Disconnect(this, &UndoPlugin::onUndoEvent);
 }
 
 //-----------------------------------//

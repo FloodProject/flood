@@ -50,7 +50,6 @@ public:
 	// Component unselection event.
 	void onComponentUnselect( const ComponentPtr& );
 
-
 	// Mouse input events.
 	void onMouseMove( const MouseMoveEvent& );
 	void onMouseDrag( const MouseDragEvent& );

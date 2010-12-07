@@ -8,9 +8,10 @@
 
 #pragma once
 
-#include "vapor/TaskManager.h"
-#include "vapor/net/Network.h"
-#include "vapor/net/Downloader.h"
+#include "Log.h"
+#include "TaskManager.h"
+#include "net/Network.h"
+#include "net/Downloader.h"
 
 namespace vapor {
 

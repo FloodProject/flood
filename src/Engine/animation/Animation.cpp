@@ -65,6 +65,8 @@ bool Animation::isLooped()
 
 //-----------------------------------//
 
+//#define VAPOR_ANIMATION_INTERPOLATION_LINEAR
+
 Matrix4x3 Animation::getKeyFrameMatrix(const BonePtr& bone, double time)
 {
 	if( !bone || keyFrames.empty() )
@@ -87,8 +89,12 @@ Matrix4x3 Animation::getKeyFrameMatrix(const BonePtr& bone, double time)
 	}
 
 	Vector3 position;
-	//EulerAngles rotation;
+
+#ifdef VAPOR_ANIMATION_INTERPOLATION_LINEAR
+	EulerAngles rotation;
+#else
 	Quaternion rotation;
+#endif
 
 	if( endIndex == 0 || endIndex == boneKeyFrames.size() )
 	{
@@ -100,27 +106,31 @@ Matrix4x3 Animation::getKeyFrameMatrix(const BonePtr& bone, double time)
 	{
 		int startIndex = endIndex - 1;
 
-		const KeyFrame& keyLeft = boneKeyFrames[startIndex];
-		const KeyFrame& keyRight = boneKeyFrames[endIndex];
+		const KeyFrame& keyL = boneKeyFrames[startIndex];
+		const KeyFrame& keyR = boneKeyFrames[endIndex];
 
-		float timeDelta = keyRight.time - keyLeft.time;
-		float interpolator = ((float) time - keyLeft.time) / timeDelta;
+		float timeDelta = keyR.time - keyL.time;
+		float interpolator = ((float) time - keyL.time) / timeDelta;
 
-		position = keyLeft.position.lerp(keyRight.position, interpolator);
+		position = keyL.position.lerp(keyR.position, interpolator);
 		
-		//Vector3 rot_left = (Vector3&) left.rotation;
-		//Vector3 rot_right = (Vector3&) right.rotation;
-		//Vector3 rot = rot_left.lerp(rot_right, interpolator);
-		//rotation = (EulerAngles&) rot;
-		
-		Quaternion rotLeft( keyLeft.rotation );
-		Quaternion rotRight( keyRight.rotation );
-		rotation = rotLeft.slerp(rotRight, interpolator);
+#ifdef VAPOR_ANIMATION_INTERPOLATION_LINEAR
+		rotation = (EulerAngles&)
+			((Vector3&) keyL.rotation).lerp(
+			(Vector3&) keyR.rotation, interpolator);
+#else
+		Quaternion quatL( keyL.rotation );
+		Quaternion quatR( keyR.rotation );
+		rotation = quatL.slerp(quatR, interpolator);
+#endif
 	}
 
-	Matrix4x3 interp = 
-		//Matrix4x3::createRotation(rotation) *
+	Matrix4x3 interp =
+#ifdef VAPOR_ANIMATION_INTERPOLATION_LINEAR
+		Matrix4x3::createRotation(rotation) *
+#else
 		Matrix4x3::createFromQuaternion(rotation) *
+#endif
 		Matrix4x3::createTranslation(position);
 
 	return interp;

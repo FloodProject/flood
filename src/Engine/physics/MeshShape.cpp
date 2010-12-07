@@ -91,9 +91,9 @@ btTriangleMesh* MeshShape::convertMesh()
 		const GeometryPtr& geometry = node->getGeometry()[i];
 		const RenderableList& rends = geometry->getRenderables();
 
-		for( uint e = 0; i < rends.size(); e++ )
+		for( uint e = 0; e < rends.size(); e++ )
 		{
-			const RenderablePtr& rend = rends[i];
+			const RenderablePtr& rend = rends[e];
 
 			if( rend->getPrimitiveType() != PolygonType::Triangles )
 				continue;

@@ -190,6 +190,7 @@ void ResourceManager::decodeResource( ResourcePtr resource, bool useThreads, boo
 
 void ResourceManager::loadQueuedResources()
 {
+#ifdef VAPOR_THREADING
 	THREAD( boost::unique_lock<boost::mutex> lock(resourceFinishLoadMutex); )
 
 	while( numResourcesQueuedLoad.get() > 0 )
@@ -201,6 +202,7 @@ void ResourceManager::loadQueuedResources()
 	}
 
 	assert( numResourcesQueuedLoad.get() == 0 );
+#endif
 }
 
 //-----------------------------------//

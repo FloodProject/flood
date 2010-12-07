@@ -22,14 +22,12 @@ class UndoOperation : public ReferenceCounted
 {
 public:
 
-	UndoOperation()
-	{ }
+	UndoOperation();
 	
-	virtual ~UndoOperation() 
-	{ }
+	virtual ~UndoOperation();
 
-	virtual void redo() = 0;
 	virtual void undo() = 0;
+	virtual void redo() = 0;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(UndoOperation);
