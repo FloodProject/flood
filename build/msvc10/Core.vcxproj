@@ -1,0 +1,236 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug DLL|Win32">
+      <Configuration>Debug DLL</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{4B97591E-C124-44CE-AA98-D8086FC9BFEC}</ProjectGuid>
+    <RootNamespace>Core</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v100</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v100</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)lib\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">$(SolutionDir)lib\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">$(SolutionDir)obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)lib\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)obj\$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(SolutionDir)inc;$(SolutionDir)inc\vapor;$(SolutionDir)dep\jsoncpp\include;$(SolutionDir)dep\vld\include;$(SolutionDir)dep\zeromq\include;$(SolutionDir)dep\curl\include;$(SolutionDir)dep\misc\include;$(SolutionDir)dep\physfs\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;___DEBUG;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Core.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableSpecificWarnings>%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <ExceptionHandling>false</ExceptionHandling>
+      <ProgramDataBaseFileName>$(TargetDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(SolutionDir)inc;$(SolutionDir)inc\vapor;$(SolutionDir)dep\jsoncpp\include;$(SolutionDir)dep\boost;$(SolutionDir)dep\lua\include;$(SolutionDir)dep\vld\include;$(SolutionDir)dep\zeromq\include;$(SolutionDir)dep\curl\include;$(SolutionDir)dep\misc\include;$(SolutionDir)dep\physfs\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;___DEBUG;CORE_API_DLL;CORE_API_DLL_EXPORT;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Core.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableSpecificWarnings>%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <ExceptionHandling>false</ExceptionHandling>
+      <ProgramDataBaseFileName>$(TargetDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>physfsd.lib;zmqd.lib;libcurld.lib;ws2_32.lib;Rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)dep\physfs\lib\vc10;$(SolutionDir)dep\zeromq\lib\vc10;$(SolutionDir)dep\curl\lib\</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>$(SolutionDir)inc;$(SolutionDir)inc\vapor;$(SolutionDir)dep\jsoncpp\include;$(SolutionDir)dep\vld\include;$(SolutionDir)dep\zeromq\include;$(SolutionDir)dep\curl\include;$(SolutionDir)dep\misc\include;$(SolutionDir)dep\physfs\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Core.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4800;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <ExceptionHandling>false</ExceptionHandling>
+      <ProgramDataBaseFileName>$(TargetDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\Core\Atomic.cpp" />
+    <ClCompile Include="..\..\src\Core\Delegate.cpp" />
+    <ClCompile Include="..\..\src\Core\Event.cpp" />
+    <ClCompile Include="..\..\src\Core\FileStream.cpp" />
+    <ClCompile Include="..\..\src\Core\Log.cpp" />
+    <ClCompile Include="..\..\src\Core\math\Math.cpp" />
+    <ClCompile Include="..\..\src\Core\math\Vector3.cpp" />
+    <ClCompile Include="..\..\src\Core\math\Matrix4x3.cpp" />
+    <ClCompile Include="..\..\src\Core\math\Matrix4x4.cpp" />
+    <ClCompile Include="..\..\src\Core\math\Frustum.cpp" />
+    <ClCompile Include="..\..\src\Core\math\Color.cpp" />
+    <ClCompile Include="..\..\src\Core\math\Plane.cpp" />
+    <ClCompile Include="..\..\src\Core\math\EulerAngles.cpp" />
+    <ClCompile Include="..\..\src\Core\math\Ray.cpp" />
+    <ClCompile Include="..\..\src\Core\math\Quaternion.cpp" />
+    <ClCompile Include="..\..\src\Core\math\BoundingBox.cpp" />
+    <ClCompile Include="..\..\src\Core\math\BoundingSphere.cpp" />
+    <ClCompile Include="..\..\src\Core\math\Noise.cpp" />
+    <ClCompile Include="..\..\src\Core\math\Hash.cpp" />
+    <ClCompile Include="..\..\src\Core\Message.cpp" />
+    <ClCompile Include="..\..\src\Core\Network.cpp" />
+    <ClCompile Include="..\..\src\Core\PhysfsStream.cpp" />
+    <ClCompile Include="..\..\src\Core\ReferenceCount.cpp" />
+    <ClCompile Include="..\..\src\Core\reflection\Class.cpp" />
+    <ClCompile Include="..\..\src\Core\reflection\Enum.cpp">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4800;4244;4715;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">4800;4244;4715;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\reflection\Field.cpp" />
+    <ClCompile Include="..\..\src\Core\reflection\Primitive.cpp" />
+    <ClCompile Include="..\..\src\Core\reflection\Type.cpp" />
+    <ClCompile Include="..\..\src\Core\Stream.cpp" />
+    <ClCompile Include="..\..\src\Core\Subsystem.cpp" />
+    <ClCompile Include="..\..\src\Core\Thread.cpp" />
+    <ClCompile Include="..\..\src\Core\Utilities.cpp" />
+    <ClCompile Include="..\..\src\Core\WebStream.cpp" />
+    <ClCompile Include="..\..\src\Engine\File.cpp" />
+    <ClCompile Include="..\..\src\Engine\FileSystem.cpp" />
+    <ClCompile Include="..\..\src\Engine\FileWatcher.cpp" />
+    <ClCompile Include="..\..\src\Engine\FileWatcherWin32.cpp" />
+    <ClCompile Include="..\..\src\Engine\DynamicLibrary.cpp" />
+    <ClCompile Include="..\..\src\Engine\Profiler.cpp" />
+    <ClCompile Include="..\..\src\Engine\ConcurrentQueue.cpp" />
+    <ClCompile Include="..\..\src\Core\tasks\Task.cpp" />
+    <ClCompile Include="..\..\src\Core\tasks\TaskManager.cpp" />
+    <ClCompile Include="..\..\src\Engine\Timer.cpp" />
+    <ClCompile Include="..\..\src\Server\Downloader.cpp" />
+    <ClCompile Include="..\..\src\Core\Core.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Core.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">Core.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\inc\vapor\Atomic.h" />
+    <ClInclude Include="..\..\inc\vapor\Core.h" />
+    <ClInclude Include="..\..\inc\vapor\Delegate.h" />
+    <ClInclude Include="..\..\inc\vapor\Event.h" />
+    <ClInclude Include="..\..\inc\vapor\FileStream.h" />
+    <ClInclude Include="..\..\inc\vapor\math\Math.h" />
+    <ClInclude Include="..\..\inc\vapor\math\Vector2.h" />
+    <ClInclude Include="..\..\inc\vapor\math\Vector3.h" />
+    <ClInclude Include="..\..\inc\vapor\math\Vector4.h" />
+    <ClInclude Include="..\..\inc\vapor\math\Matrix4x3.h" />
+    <ClInclude Include="..\..\inc\vapor\math\Matrix4x4.h" />
+    <ClInclude Include="..\..\inc\vapor\math\Frustum.h" />
+    <ClInclude Include="..\..\inc\vapor\math\Color.h" />
+    <ClInclude Include="..\..\inc\vapor\math\Plane.h" />
+    <ClInclude Include="..\..\inc\vapor\math\EulerAngles.h" />
+    <ClInclude Include="..\..\inc\vapor\math\Ray.h" />
+    <ClInclude Include="..\..\inc\vapor\math\Quaternion.h" />
+    <ClInclude Include="..\..\inc\vapor\math\BoundingBox.h" />
+    <ClInclude Include="..\..\inc\vapor\math\BoundingSphere.h" />
+    <ClInclude Include="..\..\inc\vapor\math\Noise.h" />
+    <ClInclude Include="..\..\inc\vapor\math\Hash.h" />
+    <ClInclude Include="..\..\inc\vapor\core\Class.h" />
+    <ClInclude Include="..\..\inc\vapor\core\Enum.h" />
+    <ClInclude Include="..\..\inc\vapor\core\Field.h" />
+    <ClInclude Include="..\..\inc\vapor\core\Primitive.h" />
+    <ClInclude Include="..\..\inc\vapor\core\Type.h" />
+    <ClInclude Include="..\..\inc\vapor\Language.h" />
+    <ClInclude Include="..\..\inc\vapor\Platform.h" />
+    <ClInclude Include="..\..\inc\vapor\ReferenceCount.h" />
+    <ClInclude Include="..\..\inc\vapor\Reflection.h" />
+    <ClInclude Include="..\..\inc\vapor\Singleton.h" />
+    <ClInclude Include="..\..\inc\vapor\Stream.h" />
+    <ClInclude Include="..\..\inc\vapor\Subsystem.h" />
+    <ClInclude Include="..\..\inc\vapor\Thread.h" />
+    <ClInclude Include="..\..\inc\vapor\Utilities.h" />
+    <ClInclude Include="..\..\inc\vapor\DynamicLibrary.h" />
+    <ClInclude Include="..\..\inc\vapor\Log.h" />
+    <ClInclude Include="..\..\inc\vapor\vfs\File.h" />
+    <ClInclude Include="..\..\inc\vapor\vfs\FileSystem.h" />
+    <ClInclude Include="..\..\inc\vapor\vfs\FileWatcher.h" />
+    <ClInclude Include="..\..\inc\vapor\vfs\PhysfsStream.h" />
+    <ClInclude Include="..\..\inc\vapor\WebStream.h" />
+    <ClInclude Include="..\..\src\Engine\FileWatcherWin32.h" />
+    <ClInclude Include="..\..\inc\vapor\Profiler.h" />
+    <ClInclude Include="..\..\inc\vapor\ConcurrentQueue.h" />
+    <ClInclude Include="..\..\inc\vapor\Task.h" />
+    <ClInclude Include="..\..\inc\vapor\TaskManager.h" />
+    <ClInclude Include="..\..\inc\vapor\Timer.h" />
+    <ClInclude Include="..\..\inc\vapor\net\Downloader.h" />
+    <ClInclude Include="..\..\inc\vapor\net\Network.h" />
+    <ClInclude Include="..\..\inc\vapor\net\Message.h" />
+    <ClInclude Include="..\..\inc\vapor\net\MessageHandler.h" />
+    <ClInclude Include="..\..\inc\vapor\net\Messages.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

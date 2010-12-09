@@ -1,0 +1,279 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DLL Debug|Win32">
+      <Configuration>DLL Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{68C71437-26B5-46EE-87B6-F225EA16396D}</ProjectGuid>
+    <RootNamespace>tests</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v100</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DLL Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)bin\Editor\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)obj\Editor\$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)bin\editor\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)obj\$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DLL Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DLL Debug|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='DLL Debug|Win32'">true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalOptions>-Zm140 </AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(SolutionDir)inc;$(SolutionDir)inc\vapor;$(SolutionDir)src\Editor\inc;$(SolutionDir)dep\jsoncpp\include;$(SolutionDir)dep\lua\include;$(SolutionDir)dep\openal\include;$(SolutionDir)dep\glew\include;$(SolutionDir)dep\vld\include;$(SolutionDir)dep\zeromq\include;$(SolutionDir)dep\wx\include;$(SolutionDir)dep\wx\include\msvc;$(SolutionDir)dep\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;__WXMSW__;_UNICODE;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>PCH.h</PrecompiledHeaderFile>
+      <ProgramDataBaseFileName>$(TargetDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4510;4610;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ShowIncludes>false</ShowIncludes>
+    </ClCompile>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)dep\wx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>Core.lib;Engine.lib;opengl32.lib;glewd.lib;jsoncppd.lib;pngd.lib;zlibd.lib;luad.lib;devild.lib;physfsd.lib;bulletd.lib;zmqd.lib;ws2_32.lib;wxmsw29ud_core.lib;wxbase29ud.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName)-$(Configuration).exe</OutputFile>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\$(Configuration);$(SolutionDir)dep\vld\lib\vc10;$(SolutionDir)dep\jsoncpp\lib\vc10;$(SolutionDir)dep\physfs\lib\vc10;$(SolutionDir)dep\bullet\lib\vc10;$(SolutionDir)dep\zlib\lib\vc10;$(SolutionDir)dep\glew\lib\vc10;$(SolutionDir)dep\vorbis\lib\vc10;$(SolutionDir)dep\ogg\lib\vc10;$(SolutionDir)dep\openal\lib\vc10;$(SolutionDir)dep\sfml\lib\vc10;$(SolutionDir)dep\lua\lib\vc10;$(SolutionDir)dep\zeromq\lib\vc10;$(SolutionDir)dep\wx\lib\vc_lib\vc10;$(SolutionDir)dep\png\lib\vc10;$(SolutionDir)dep\devil\lib\vc10;$(SolutionDir)dep\curl\lib\vc10;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>wxpngd.lib;libcmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateMapFile>
+      </GenerateMapFile>
+      <MapFileName>$(TargetDir)$(TargetName)-symbols.map</MapFileName>
+      <SubSystem>Console</SubSystem>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+      <TargetMachine>MachineX86</TargetMachine>
+      <MapExports>true</MapExports>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>$(SolutionDir)inc;$(SolutionDir)inc\vapor;$(SolutionDir)src\Editor\inc;$(SolutionDir)dep\jsoncpp\include;$(SolutionDir)dep\lua\include;$(SolutionDir)dep\openal\include;$(SolutionDir)dep\glew\include;$(SolutionDir)dep\vld\include;$(SolutionDir)dep\zeromq\include;$(SolutionDir)dep\wx\include;$(SolutionDir)dep\wx\include\msvc;$(SolutionDir)dep\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;__WXDEBUG__;__WXMSW__;_UNICODE;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ExceptionHandling>false</ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>PCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalOptions>-Zm140 </AdditionalOptions>
+    </ClCompile>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)dep\wx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>Core.lib;Engine.lib;opengl32.lib;glewd.lib;jsoncppd.lib;pngd.lib;zlibd.lib;luad.lib;devild.lib;physfsd.lib;bulletd.lib;zmqd.lib;ws2_32.lib;wxmsw29ud_core.lib;wxbase29ud.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName)-$(Configuration).exe</OutputFile>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\$(Configuration);$(SolutionDir)dep\vld\lib\vc10;$(SolutionDir)dep\jsoncpp\lib\vc10;$(SolutionDir)dep\physfs\lib\vc10;$(SolutionDir)dep\bullet\lib\vc10;$(SolutionDir)dep\zlib\lib\vc10;$(SolutionDir)dep\glew\lib\vc10;$(SolutionDir)dep\vorbis\lib\vc10;$(SolutionDir)dep\ogg\lib\vc10;$(SolutionDir)dep\openal\lib\vc10;$(SolutionDir)dep\sfml\lib\vc10;$(SolutionDir)dep\lua\lib\vc10;$(SolutionDir)dep\zeromq\lib\vc10;$(SolutionDir)dep\wx\lib\vc_lib\vc10;$(SolutionDir)dep\png\lib\vc10;$(SolutionDir)dep\devil\lib\vc10;$(SolutionDir)dep\curl\lib\vc10;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>wxpng.lib;libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DLL Debug|Win32'">
+    <ClCompile>
+      <AdditionalOptions>-Zm140 </AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(SolutionDir)inc;$(SolutionDir)inc\vapor;$(SolutionDir)src\Editor\inc;$(SolutionDir)dep\jsoncpp\include;$(SolutionDir)dep\lua\include;$(SolutionDir)dep\openal\include;$(SolutionDir)dep\glew\include;$(SolutionDir)dep\vld\include;$(SolutionDir)dep\zeromq\include;$(SolutionDir)dep\wx\include;$(SolutionDir)dep\wx\include\msvc;$(SolutionDir)dep\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;__WXDEBUG__;__WXMSW__;_UNICODE;_WINDOWS;VAPOR_API_DLL;VAPOR_IMPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>PCH.h</PrecompiledHeaderFile>
+      <ProgramDataBaseFileName>$(TargetDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ShowIncludes>false</ShowIncludes>
+    </ClCompile>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)dep\wx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>Core.lib;Engine.lib;opengl32.lib;glewd.lib;jsoncppd.lib;pngd.lib;zlibd.lib;luad.lib;devild.lib;physfsd.lib;bulletd.lib;zmqd.lib;ws2_32.lib;wxmsw29ud_core.lib;wxbase29ud.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName)-$(Configuration).exe</OutputFile>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\$(Configuration);$(SolutionDir)dep\vld\lib\vc10;$(SolutionDir)dep\jsoncpp\lib\vc10;$(SolutionDir)dep\physfs\lib\vc10;$(SolutionDir)dep\bullet\lib\vc10;$(SolutionDir)dep\zlib\lib\vc10;$(SolutionDir)dep\glew\lib\vc10;$(SolutionDir)dep\vorbis\lib\vc10;$(SolutionDir)dep\ogg\lib\vc10;$(SolutionDir)dep\openal\lib\vc10;$(SolutionDir)dep\sfml\lib\vc10;$(SolutionDir)dep\lua\lib\vc10;$(SolutionDir)dep\zeromq\lib\vc10;$(SolutionDir)dep\wx\lib\vc_lib\vc10;$(SolutionDir)dep\png\lib\vc10;$(SolutionDir)dep\devil\lib\vc10;$(SolutionDir)dep\curl\lib\vc10;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapFileName>$(TargetDir)$(TargetName)-symbols.map</MapFileName>
+      <SubSystem>Windows</SubSystem>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\Editor\plugins\Log\LogFrame.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Log\LogPlugin.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Selection\SelectionManager.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Selection\SelectionPlugin.cpp" />
+    <ClCompile Include="..\..\src\Editor\RenderControl.cpp" />
+    <ClCompile Include="..\..\src\Editor\RenderWindow.cpp" />
+    <ClCompile Include="..\..\src\Editor\PCH.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DLL Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4800;4100;4510;4610;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\Viewframe.cpp" />
+    <ClCompile Include="..\..\src\Editor\Plugin.cpp" />
+    <ClCompile Include="..\..\src\Editor\PluginManager.cpp" />
+    <ClCompile Include="..\..\src\Editor\PluginManagerFrame.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Gizmos\Gizmo.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Gizmos\GizmoOperation.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Gizmos\GizmoPlugin.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Gizmos\GizmoTranslate.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Gizmos\GizmoScale.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Gizmos\GizmoRotate.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Terrain\TerrainPage.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Terrain\TerrainPlugin.cpp" />
+    <ClCompile Include="..\..\src\Editor\UndoManager.cpp" />
+    <ClCompile Include="..\..\src\Editor\UndoOperation.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\UndoRedo\UndoPlugin.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Console\ConsoleFrame.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Console\ConsolePlugin.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Console\ConsoleTextCtrl.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Grid\GridPlugin.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Sample\SamplePlugin.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Project\ProjectPlugin.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Camera\CameraControls.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Camera\CameraPlugin.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Scene\ScenePage.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Scene\ScenePlugin.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourcesBrowser.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourcesPage.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourcesPlugin.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Property\PropertyOperation.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Property\PropertyPage.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Property\PropertyPlugin.cpp" />
+    <ClCompile Include="..\..\src\Editor\widgets\wxFourWaySplitter.cpp" />
+    <ClCompile Include="..\..\src\Editor\widgets\wxImageComboBox.cpp" />
+    <ClCompile Include="..\..\src\Editor\widgets\wxSliderCtrl.cpp" />
+    <ClCompile Include="..\..\src\Editor\EditorInputManager.cpp" />
+    <ClCompile Include="..\..\src\Editor\Events.cpp" />
+    <ClCompile Include="..\..\src\Editor\Settings.cpp" />
+    <ClCompile Include="..\..\src\Editor\Editor.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\Editor\inc\RenderControl.h" />
+    <ClInclude Include="..\..\src\Editor\inc\RenderWindow.h" />
+    <ClInclude Include="..\..\src\Editor\PCH.h" />
+    <ClInclude Include="..\..\src\Editor\inc\Viewframe.h" />
+    <ClInclude Include="..\..\src\Editor\inc\Plugin.h" />
+    <ClInclude Include="..\..\src\Editor\inc\PluginManager.h" />
+    <ClInclude Include="..\..\src\Editor\inc\PluginManagerFrame.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Gizmos\Gizmo.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Gizmos\GizmoOperation.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Gizmos\GizmoPlugin.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Gizmos\GizmoTranslate.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Gizmos\GizmoScale.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Gizmos\GizmoRotate.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Log\LogFrame.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Log\LogPlugin.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Selection\SelectionManager.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Selection\SelectionPlugin.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Terrain\TerrainPage.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Terrain\TerrainPlugin.h" />
+    <ClInclude Include="..\..\src\Editor\inc\UndoManager.h" />
+    <ClInclude Include="..\..\src\Editor\inc\UndoOperation.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\UndoRedo\UndoPlugin.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Console\ConsoleFrame.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Console\ConsolePlugin.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Console\ConsoleTextCtrl.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Grid\GridPlugin.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Sample\SamplePlugin.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Project\ProjectPlugin.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Camera\CameraControls.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Camera\CameraPlugin.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Scene\ScenePage.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Scene\ScenePlugin.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourcesBrowser.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourcesPage.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourcesPlugin.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Property\PropertyOperation.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Property\PropertyPage.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Property\PropertyPlugin.h" />
+    <ClInclude Include="..\..\src\Editor\inc\wxFourWaySplitter.h" />
+    <ClInclude Include="..\..\src\Editor\inc\wxImageComboBox.h" />
+    <ClInclude Include="..\..\src\Editor\inc\wxSliderCtrl.h" />
+    <ClInclude Include="..\..\src\Editor\inc\EditorInputManager.h" />
+    <ClInclude Include="..\..\src\Editor\inc\Events.h" />
+    <ClInclude Include="..\..\src\Editor\inc\EditorIcons.h" />
+    <ClInclude Include="..\..\src\Editor\inc\ImageUtils.h" />
+    <ClInclude Include="..\..\src\Editor\inc\Settings.h" />
+    <ClInclude Include="..\..\src\Editor\inc\Editor.h" />
+    <ClInclude Include="..\..\src\Editor\inc\EditorTags.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\src\Editor\res\Editor.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

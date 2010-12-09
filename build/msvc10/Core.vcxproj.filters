@@ -1,0 +1,425 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Math">
+      <UniqueIdentifier>{68ca7f4c-a740-4ea0-b37c-ac4cdbc6bc89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Vector">
+      <UniqueIdentifier>{2fdc1b0a-3581-4aa2-b506-b03506882426}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Matrix">
+      <UniqueIdentifier>{d097046b-2f14-4153-bb09-137d9bcc9629}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Frustum">
+      <UniqueIdentifier>{943f5aef-9a9b-4b87-b301-4a2d5e1c085c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Color">
+      <UniqueIdentifier>{4a557c92-883e-4879-ab4d-07cfe4bf78eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Plane">
+      <UniqueIdentifier>{44265d51-538a-41fc-b081-ba8f4e448c5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Angles">
+      <UniqueIdentifier>{5350711b-915d-42f5-b7c0-2f9651ff0981}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Ray">
+      <UniqueIdentifier>{e3758151-7df7-4fd8-ab8a-c126be192c3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Quaternion">
+      <UniqueIdentifier>{34c1eeeb-a825-439c-a3ae-9d7226121e34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Bounding Volumes">
+      <UniqueIdentifier>{64632e50-5b81-4b69-8914-25a4afcc7c82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Noise">
+      <UniqueIdentifier>{a5a4b2c0-4933-435f-b0aa-5f4107752e1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Hash">
+      <UniqueIdentifier>{7301984a-92fe-44d1-8c93-9c70cc679179}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Reflection">
+      <UniqueIdentifier>{19bf65b6-9a34-43e9-9cdb-26982891fb57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{efb52232-5b3b-4b1a-a86c-6000c3cf1d38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{2ec0074e-3373-4dd7-90b4-150b5c9b3b81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Streams">
+      <UniqueIdentifier>{4ba939fd-b107-4e66-a533-1d4544e3ca60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries">
+      <UniqueIdentifier>{be569ec3-8535-47ac-a4ef-ed9e7da88040}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logs">
+      <UniqueIdentifier>{6feb2fad-a0a3-4952-b879-a78cfca47da1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Profiler">
+      <UniqueIdentifier>{129ceb6c-25f7-4ca9-987b-15cc0f780686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Timer">
+      <UniqueIdentifier>{8c332f64-f7fe-4d28-9f4f-051e6e7fec46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network">
+      <UniqueIdentifier>{ad3128d5-000b-4150-87ec-8dd9521038b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Messages">
+      <UniqueIdentifier>{a220fe4b-9168-483c-8a36-f9f54da117c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Messages\Handlers">
+      <UniqueIdentifier>{bba9d7d7-847f-49d2-9a88-6430517263e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Reflection\Class">
+      <UniqueIdentifier>{589adffd-2d13-4fdb-a6c9-3238321b45a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Reflection\Enum">
+      <UniqueIdentifier>{69727d44-4120-46df-b9ea-f6d0a281f934}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Reflection\Field">
+      <UniqueIdentifier>{11faf90e-3cc9-4cda-a793-ab3427a39c36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Reflection\Primitive">
+      <UniqueIdentifier>{ef48bbb0-31ac-45e2-8f11-0b8a3b9f37f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Reflection\Type">
+      <UniqueIdentifier>{826d8247-bd83-446a-8e8d-a0f390155db2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events">
+      <UniqueIdentifier>{baf2d738-9110-4b41-9b57-4ebc27eb2117}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Streams\File">
+      <UniqueIdentifier>{a43b1a03-12a9-4af2-9420-ea918510e202}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Streams\Web">
+      <UniqueIdentifier>{00995d4d-9f14-4038-8b88-242280d3dec4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Streams\Physfs">
+      <UniqueIdentifier>{4b95ea0e-9dba-4253-90ad-e95e695160d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Streams\Physfs\Filesystem">
+      <UniqueIdentifier>{90db7c90-f20e-4c6b-8bb6-35edaa19de88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Streams\Physfs\Filesystem\Watcher">
+      <UniqueIdentifier>{946baa8f-8d96-40b9-a4bf-e6edfac7dca9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Concurrency">
+      <UniqueIdentifier>{86c014cf-6d87-4960-96e7-c53c16829a95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Concurrency\Tasks">
+      <UniqueIdentifier>{4239ba56-422a-4325-beef-914261d54f18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Concurrency\Atomic">
+      <UniqueIdentifier>{1160a7f4-0102-41bd-b8a8-39113c5c71d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Concurrency\Threads">
+      <UniqueIdentifier>{30068cce-1667-4243-81ea-714920be889e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Patterns">
+      <UniqueIdentifier>{0d5d15a9-1e90-4a41-bf1f-fa642a7a5878}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Patterns\Singleton">
+      <UniqueIdentifier>{de770f13-350e-48a6-8b90-ad1f52007465}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Patterns\Subsystem">
+      <UniqueIdentifier>{98dd3a0f-13de-4f5f-9f75-4a7eb9bd6621}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Patterns\Pointers">
+      <UniqueIdentifier>{e5eb86c7-4197-4458-b4e6-583690b8a259}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\Core\math\Math.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\math\Vector3.cpp">
+      <Filter>Math\Vector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\math\Matrix4x3.cpp">
+      <Filter>Math\Matrix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\math\Matrix4x4.cpp">
+      <Filter>Math\Matrix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\math\Frustum.cpp">
+      <Filter>Math\Frustum</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\math\Color.cpp">
+      <Filter>Math\Color</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\math\Plane.cpp">
+      <Filter>Math\Plane</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\math\EulerAngles.cpp">
+      <Filter>Math\Angles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\math\Ray.cpp">
+      <Filter>Math\Ray</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\math\Quaternion.cpp">
+      <Filter>Math\Quaternion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\math\BoundingBox.cpp">
+      <Filter>Math\Bounding Volumes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\math\BoundingSphere.cpp">
+      <Filter>Math\Bounding Volumes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\math\Noise.cpp">
+      <Filter>Math\Noise</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\math\Hash.cpp">
+      <Filter>Math\Hash</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\Utilities.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Engine\DynamicLibrary.cpp">
+      <Filter>Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Engine\Profiler.cpp">
+      <Filter>Profiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Engine\ConcurrentQueue.cpp">
+      <Filter>Concurrency\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\tasks\Task.cpp">
+      <Filter>Concurrency\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\tasks\TaskManager.cpp">
+      <Filter>Concurrency\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Engine\Timer.cpp">
+      <Filter>Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Server\Downloader.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\Core.cpp" />
+    <ClCompile Include="..\..\src\Core\Stream.cpp">
+      <Filter>Streams</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\Network.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\Message.cpp">
+      <Filter>Network\Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Engine\File.cpp">
+      <Filter>Streams\Physfs\Filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Engine\FileSystem.cpp">
+      <Filter>Streams\Physfs\Filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Engine\FileWatcher.cpp">
+      <Filter>Streams\Physfs\Filesystem\Watcher</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Engine\FileWatcherWin32.cpp">
+      <Filter>Streams\Physfs\Filesystem\Watcher</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\reflection\Class.cpp">
+      <Filter>Reflection\Class</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\reflection\Enum.cpp">
+      <Filter>Reflection\Enum</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\reflection\Field.cpp">
+      <Filter>Reflection\Field</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\reflection\Primitive.cpp">
+      <Filter>Reflection\Primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\reflection\Type.cpp">
+      <Filter>Reflection\Type</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\Delegate.cpp">
+      <Filter>Events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\Event.cpp">
+      <Filter>Events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\Atomic.cpp">
+      <Filter>Concurrency\Atomic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\FileStream.cpp">
+      <Filter>Streams\File</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\WebStream.cpp">
+      <Filter>Streams\Web</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\PhysfsStream.cpp">
+      <Filter>Streams\Physfs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\Log.cpp">
+      <Filter>Logs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\ReferenceCount.cpp">
+      <Filter>Patterns\Pointers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\Thread.cpp">
+      <Filter>Concurrency\Threads</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\Subsystem.cpp">
+      <Filter>Patterns\Subsystem</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\inc\vapor\math\Math.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\math\Vector2.h">
+      <Filter>Math\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\math\Vector3.h">
+      <Filter>Math\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\math\Vector4.h">
+      <Filter>Math\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\math\Matrix4x3.h">
+      <Filter>Math\Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\math\Matrix4x4.h">
+      <Filter>Math\Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\math\Frustum.h">
+      <Filter>Math\Frustum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\math\Color.h">
+      <Filter>Math\Color</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\math\Plane.h">
+      <Filter>Math\Plane</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\math\EulerAngles.h">
+      <Filter>Math\Angles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\math\Ray.h">
+      <Filter>Math\Ray</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\math\Quaternion.h">
+      <Filter>Math\Quaternion</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\math\BoundingBox.h">
+      <Filter>Math\Bounding Volumes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\math\BoundingSphere.h">
+      <Filter>Math\Bounding Volumes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\math\Noise.h">
+      <Filter>Math\Noise</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\math\Hash.h">
+      <Filter>Math\Hash</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\Language.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\Platform.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\Utilities.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\DynamicLibrary.h">
+      <Filter>Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\Log.h">
+      <Filter>Logs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\Profiler.h">
+      <Filter>Profiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\ConcurrentQueue.h">
+      <Filter>Concurrency\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\Task.h">
+      <Filter>Concurrency\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\TaskManager.h">
+      <Filter>Concurrency\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\Timer.h">
+      <Filter>Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\net\Downloader.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\net\Network.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\net\Message.h">
+      <Filter>Network\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\net\MessageHandler.h">
+      <Filter>Network\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\net\Messages.h">
+      <Filter>Network\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\Stream.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\vfs\File.h">
+      <Filter>Streams\Physfs\Filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\vfs\FileSystem.h">
+      <Filter>Streams\Physfs\Filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\vfs\FileWatcher.h">
+      <Filter>Streams\Physfs\Filesystem\Watcher</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Engine\FileWatcherWin32.h">
+      <Filter>Streams\Physfs\Filesystem\Watcher</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\Core.h" />
+    <ClInclude Include="..\..\inc\vapor\core\Class.h">
+      <Filter>Reflection\Class</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\core\Field.h">
+      <Filter>Reflection\Field</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\core\Enum.h">
+      <Filter>Reflection\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\core\Primitive.h">
+      <Filter>Reflection\Primitive</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\core\Type.h">
+      <Filter>Reflection\Type</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\Reflection.h">
+      <Filter>Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\Delegate.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\Event.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\Atomic.h">
+      <Filter>Concurrency\Atomic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\FileStream.h">
+      <Filter>Streams\File</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\vfs\PhysfsStream.h">
+      <Filter>Streams\Physfs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\WebStream.h">
+      <Filter>Streams\Web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\ReferenceCount.h">
+      <Filter>Patterns\Pointers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\Thread.h">
+      <Filter>Concurrency\Threads</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\Singleton.h">
+      <Filter>Patterns\Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\Subsystem.h">
+      <Filter>Patterns\Subsystem</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

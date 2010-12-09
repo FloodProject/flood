@@ -1,0 +1,359 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Window">
+      <UniqueIdentifier>{c07c46bb-4b66-4945-88e1-57c20f965aa0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PCH">
+      <UniqueIdentifier>{edb363aa-e59f-4af7-b806-21fdfee0e748}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="View">
+      <UniqueIdentifier>{b10d95ea-b7da-427a-a845-146ea3f41837}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins">
+      <UniqueIdentifier>{1583b4a4-33f5-445a-916d-c38bf28900da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Gizmos">
+      <UniqueIdentifier>{0cd96a61-8a06-4bc6-8847-452f89fbf915}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Gizmos\Translate">
+      <UniqueIdentifier>{cf1c017e-16f4-4574-abac-e74c1b0518d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Gizmos\Scale">
+      <UniqueIdentifier>{f63ca83e-3fdf-4c2f-a739-1cbf24e6e203}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Gizmos\Rotate">
+      <UniqueIdentifier>{eb994d16-3775-47d7-ae4c-7d9e1d988114}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Terrain">
+      <UniqueIdentifier>{54e18a13-b37a-49b1-b230-eb01868eb602}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Undo/Redo">
+      <UniqueIdentifier>{5c9a3cce-1fe3-420a-bbb9-43f500be7b1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Console">
+      <UniqueIdentifier>{265a3f7d-5714-433e-8ace-a8f8d9298ff1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Grid">
+      <UniqueIdentifier>{0031455e-4937-4e40-9702-0018ff758753}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Sample">
+      <UniqueIdentifier>{0d604e66-4a52-4bab-a472-58201f480682}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Project">
+      <UniqueIdentifier>{c0811d18-cd27-4a70-bf51-1102524a8439}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Camera">
+      <UniqueIdentifier>{b23243dd-5c32-4796-94eb-d71cdb3bd5ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Scene">
+      <UniqueIdentifier>{cb2b3438-87ba-440f-bb5f-0d115293944e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Resources">
+      <UniqueIdentifier>{05ab8480-3d18-47bb-bee9-977c329179be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Property">
+      <UniqueIdentifier>{666e7054-5c91-4f18-b90c-3d5cc7a012e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets">
+      <UniqueIdentifier>{6d7d05dc-8fc3-443c-8746-e65285fa7eb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{6f507f23-7c30-4d5f-8217-430756dcf17e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Settings">
+      <UniqueIdentifier>{86c2ce60-173a-4731-956e-de5cd957aa4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Log">
+      <UniqueIdentifier>{5f247d3c-9570-489e-8419-8afb10736b21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Selection">
+      <UniqueIdentifier>{c169e919-29c4-4636-9691-1ba667b4bb7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events">
+      <UniqueIdentifier>{5ab474fb-d133-43cc-a5db-77ca6b9f3641}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\Editor\RenderControl.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\RenderWindow.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\PCH.cpp">
+      <Filter>PCH</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\Viewframe.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\Plugin.cpp">
+      <Filter>Plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\PluginManager.cpp">
+      <Filter>Plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\PluginManagerFrame.cpp">
+      <Filter>Plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Gizmos\Gizmo.cpp">
+      <Filter>Plugins\Gizmos</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Gizmos\GizmoOperation.cpp">
+      <Filter>Plugins\Gizmos</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Gizmos\GizmoPlugin.cpp">
+      <Filter>Plugins\Gizmos</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Gizmos\GizmoTranslate.cpp">
+      <Filter>Plugins\Gizmos\Translate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Gizmos\GizmoScale.cpp">
+      <Filter>Plugins\Gizmos\Scale</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Gizmos\GizmoRotate.cpp">
+      <Filter>Plugins\Gizmos\Rotate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Terrain\TerrainPage.cpp">
+      <Filter>Plugins\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Terrain\TerrainPlugin.cpp">
+      <Filter>Plugins\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\UndoManager.cpp">
+      <Filter>Plugins\Undo/Redo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\UndoOperation.cpp">
+      <Filter>Plugins\Undo/Redo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\UndoRedo\UndoPlugin.cpp">
+      <Filter>Plugins\Undo/Redo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Console\ConsoleFrame.cpp">
+      <Filter>Plugins\Console</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Console\ConsolePlugin.cpp">
+      <Filter>Plugins\Console</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Console\ConsoleTextCtrl.cpp">
+      <Filter>Plugins\Console</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Grid\GridPlugin.cpp">
+      <Filter>Plugins\Grid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Sample\SamplePlugin.cpp">
+      <Filter>Plugins\Sample</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Project\ProjectPlugin.cpp">
+      <Filter>Plugins\Project</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Camera\CameraControls.cpp">
+      <Filter>Plugins\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Camera\CameraPlugin.cpp">
+      <Filter>Plugins\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Scene\ScenePage.cpp">
+      <Filter>Plugins\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Scene\ScenePlugin.cpp">
+      <Filter>Plugins\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourcesBrowser.cpp">
+      <Filter>Plugins\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourcesPage.cpp">
+      <Filter>Plugins\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourcesPlugin.cpp">
+      <Filter>Plugins\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Property\PropertyOperation.cpp">
+      <Filter>Plugins\Property</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Property\PropertyPage.cpp">
+      <Filter>Plugins\Property</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Property\PropertyPlugin.cpp">
+      <Filter>Plugins\Property</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\widgets\wxFourWaySplitter.cpp">
+      <Filter>Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\widgets\wxImageComboBox.cpp">
+      <Filter>Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\widgets\wxSliderCtrl.cpp">
+      <Filter>Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\EditorInputManager.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\Events.cpp">
+      <Filter>Events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\Settings.cpp">
+      <Filter>Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\Editor.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Log\LogPlugin.cpp">
+      <Filter>Plugins\Log</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Log\LogFrame.cpp">
+      <Filter>Plugins\Log</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Selection\SelectionPlugin.cpp">
+      <Filter>Plugins\Selection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Selection\SelectionManager.cpp">
+      <Filter>Plugins\Selection</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\Editor\inc\RenderControl.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\inc\RenderWindow.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\PCH.h">
+      <Filter>PCH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\inc\Viewframe.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\inc\Plugin.h">
+      <Filter>Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\inc\PluginManager.h">
+      <Filter>Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\inc\PluginManagerFrame.h">
+      <Filter>Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Gizmos\Gizmo.h">
+      <Filter>Plugins\Gizmos</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Gizmos\GizmoOperation.h">
+      <Filter>Plugins\Gizmos</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Gizmos\GizmoPlugin.h">
+      <Filter>Plugins\Gizmos</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Gizmos\GizmoTranslate.h">
+      <Filter>Plugins\Gizmos\Translate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Gizmos\GizmoScale.h">
+      <Filter>Plugins\Gizmos\Scale</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Gizmos\GizmoRotate.h">
+      <Filter>Plugins\Gizmos\Rotate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Terrain\TerrainPage.h">
+      <Filter>Plugins\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Terrain\TerrainPlugin.h">
+      <Filter>Plugins\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\inc\UndoManager.h">
+      <Filter>Plugins\Undo/Redo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\inc\UndoOperation.h">
+      <Filter>Plugins\Undo/Redo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\UndoRedo\UndoPlugin.h">
+      <Filter>Plugins\Undo/Redo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Console\ConsoleFrame.h">
+      <Filter>Plugins\Console</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Console\ConsolePlugin.h">
+      <Filter>Plugins\Console</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Console\ConsoleTextCtrl.h">
+      <Filter>Plugins\Console</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Grid\GridPlugin.h">
+      <Filter>Plugins\Grid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Sample\SamplePlugin.h">
+      <Filter>Plugins\Sample</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Project\ProjectPlugin.h">
+      <Filter>Plugins\Project</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Camera\CameraControls.h">
+      <Filter>Plugins\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Camera\CameraPlugin.h">
+      <Filter>Plugins\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Scene\ScenePage.h">
+      <Filter>Plugins\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Scene\ScenePlugin.h">
+      <Filter>Plugins\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourcesBrowser.h">
+      <Filter>Plugins\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourcesPage.h">
+      <Filter>Plugins\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourcesPlugin.h">
+      <Filter>Plugins\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Property\PropertyOperation.h">
+      <Filter>Plugins\Property</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Property\PropertyPage.h">
+      <Filter>Plugins\Property</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Property\PropertyPlugin.h">
+      <Filter>Plugins\Property</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\inc\wxFourWaySplitter.h">
+      <Filter>Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\inc\wxImageComboBox.h">
+      <Filter>Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\inc\wxSliderCtrl.h">
+      <Filter>Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\inc\EditorInputManager.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\inc\Events.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\inc\Settings.h">
+      <Filter>Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\inc\Editor.h" />
+    <ClInclude Include="..\..\src\Editor\inc\EditorTags.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Log\LogPlugin.h">
+      <Filter>Plugins\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Log\LogFrame.h">
+      <Filter>Plugins\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Selection\SelectionManager.h">
+      <Filter>Plugins\Selection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Selection\SelectionPlugin.h">
+      <Filter>Plugins\Selection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\inc\ImageUtils.h">
+      <Filter>PCH</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\inc\EditorIcons.h">
+      <Filter>PCH</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\src\Editor\res\Editor.rc">
+      <Filter>PCH</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
