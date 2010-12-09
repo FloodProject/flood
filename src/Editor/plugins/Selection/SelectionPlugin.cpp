@@ -93,11 +93,8 @@ void SelectionPlugin::onMouseDrag( const MouseDragEvent& event )
 {
 	if( !dragRectangle )
 	{
-		Vector2i pos;
-		pos.x = event.x;
-		pos.y = event.y;
-		
-		createRectangle(pos);
+		dragOrigin = Vector2i(event.x, event.y );
+		createRectangle();
 	}
 
 	updateRectangle( event );
@@ -105,7 +102,7 @@ void SelectionPlugin::onMouseDrag( const MouseDragEvent& event )
 
 //-----------------------------------//
 
-void SelectionPlugin::createRectangle(const Vector2i& pos)
+void SelectionPlugin::createRectangle()
 {
 	//VertexBufferPtr vb = new VertexBuffer();
 	//MaterialPtr mat = new Material("Drag");
@@ -113,14 +110,12 @@ void SelectionPlugin::createRectangle(const Vector2i& pos)
 
 	//GeometryPtr geom = new Geometry();
 	//geom->addRenderable( rend, RenderStage::Overlays );
-	RenderView* view = editor->getMainViewframe()->getView();
 	
-	Vector2i position = pos;
-	position.y -= view->getSize().y;
+	//Vector2i position = pos;
+	//position.y -= view->getSize().y;
 
 	OverlayPtr overlay( new Overlay() );
 	overlay->setPositionMode( PositionMode::Absolute );
-	overlay->setPosition( position );
 
 	dragRectangle.reset( new Entity() );
 	dragRectangle->addTransform();
@@ -132,12 +127,32 @@ void SelectionPlugin::createRectangle(const Vector2i& pos)
 
 void SelectionPlugin::updateRectangle( const MouseDragEvent& event )
 {
+	RenderView* view = editor->getMainViewframe()->getView();
 	OverlayPtr overlay = dragRectangle->getComponent<Overlay>();
-	overlay->setSize( Vector2i(event.x, event.y) - overlay->getPosition() );
 
-	Log::debug("Overlay Size: %d %d", overlay->getSize().x, overlay->getSize().y);
+	Vector2i dragPoint = Vector2i(event.x, event.y);
+	
+	if(dragPoint < dragOrigin)
+	{
+		dragOrigin = dragPoint;
+		dragOrigin.y = view->getSize().y - dragOrigin.y;
+	}
 
-	//const RenderablePtr& rend = dragRectangle->getComponent<Geometry>();
+	Vector2i size = dragPoint - dragOrigin;
+	size.x = abs(size.x);
+	size.y = abs(size.y);
+	
+	Log::debug("Drag Coord: %d %d", event.x, event.y);
+	Log::debug("Overlay Origin: %d %d", dragOrigin.x, dragOrigin.y);
+	Log::debug("Overlay Size: %d %d", size.x, size.y);
+
+	overlay->setPosition(dragOrigin);
+	overlay->setSize(size);
+
+	overlay->setPosition(0, 0);
+	overlay->setSize( Vector2i(-100, -100) );
+
+	//const RenderablePtr& rend =ja dragRectangle->getComponent<Geometry>();
 	//const RenderablePtr& rend = dragRectangle->getRenderable();
 	//const VertexBufferPtr& vb = rend->getVertexBuffer();
 }

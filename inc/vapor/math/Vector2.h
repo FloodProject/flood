@@ -52,6 +52,20 @@ public:
 
 	//-----------------------------------//
 
+	bool operator < ( const Vector2T& rhs ) const
+	{
+		return (x < rhs.x) && (y < rhs.y);
+	}
+
+	//-----------------------------------//
+
+	bool operator > ( const Vector2T& rhs ) const
+	{
+		return (x > rhs.x) && (y > rhs.y);
+	}
+
+	//-----------------------------------//
+
 	// Assignment
 	Vector2T& operator = (const Vector2T<T>& v)
 	{

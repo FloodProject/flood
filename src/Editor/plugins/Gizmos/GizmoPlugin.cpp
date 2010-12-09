@@ -119,7 +119,7 @@ void GizmoPlugin::onToolUnselect( int id )
 
 	SelectionOperation* sel = selections->getSelection();
 	
-	if( sel->mode == SelectionMode::None )
+	if( !sel || sel->mode == SelectionMode::None )
 		return;
 
 	for( uint i = 0; i < sel->selections.size(); i++ )

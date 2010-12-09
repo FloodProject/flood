@@ -51,12 +51,10 @@ void Overlay::rebuildGeometry()
 	// Position.
 	std::vector<Vector3> pos;
 
-	Vector2i vec;
-
 	pos.push_back( Vector3::Zero );
-	pos.push_back( Vector2i(size.x, 0) );
-	pos.push_back( size );
 	pos.push_back( Vector2i(0, size.y) );
+	pos.push_back( size );
+	pos.push_back( Vector2i(size.x, 0) );
 
 	std::vector< Vector3 > colors;
 	colors.push_back( Color::White );

@@ -322,7 +322,7 @@ bool RenderDevice::setupRenderStateOverlay( const RenderState& state )
 	Vector2i size = activeTarget->getSettings().getSize();
 
 	Matrix4x4 proj = Matrix4x4::createOrthographicProjection( 
-		0, size.x, 0, size.y, -1.0, 1.0 );
+		0, size.x, 0, size.y, /*0,*/ 1.0, -1.0 );
 
 	program->setUniform( "vp_ProjectionMatrix", proj );
 	program->setUniform( "vp_ModelMatrix", state.modelMatrix );

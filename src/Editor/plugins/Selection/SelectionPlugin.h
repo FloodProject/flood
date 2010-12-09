@@ -52,7 +52,7 @@ public:
 protected:
 
 	// Creates the drag selection rectangle.
-	void createRectangle(const Vector2i& pos);
+	void createRectangle();
 
 	// Updates the drag selection rectangle.
 	void updateRectangle( const MouseDragEvent& );
