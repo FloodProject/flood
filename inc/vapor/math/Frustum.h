@@ -11,6 +11,7 @@
 #include "math/Vector2.h"
 #include "math/Matrix4x4.h"
 #include "math/Plane.h"
+#include "math/BoundingBox.h"
 
 #include "core/Enum.h"
 #include "core/Class.h"
@@ -59,7 +60,7 @@ public:
 	void updateCorners( const Matrix4x3& matView );
 
     // Checks if the box is inside the frustum.
-    //bool intersect ( const BoundingBox& box ) const;
+    bool intersects( const BoundingBox& box ) const;
 
 public:
 

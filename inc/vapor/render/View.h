@@ -8,11 +8,11 @@
 
 #pragma once
 
-#include "vapor/math/Color.h"
-#include "vapor/math/Vector2.h"
-#include "vapor/math/Matrix4x3.h"
-#include "vapor/math/Matrix4x4.h"
-#include "vapor/render/Target.h"
+#include "math/Color.h"
+#include "math/Vector2.h"
+#include "math/Matrix4x3.h"
+#include "math/Matrix4x4.h"
+#include "render/Target.h"
 
 FWD_DECL_SHARED(Entity)
 FWD_DECL_SHARED(Camera)
@@ -23,8 +23,6 @@ namespace vapor {
 //-----------------------------------//
 
 class RenderTarget;
-
-//-----------------------------------//
 
 /**
  * A view is a region in a render target that can be rendered into.
@@ -58,11 +56,11 @@ public:
 	// Gets/sets the clear color of the view.
 	ACESSOR(ClearColor, const Color&, clearColor)
 
-	// Gets the aspect ratio of the view.
-	float getAspectRatio() const;
-
 	// Gets/sets the depth (Z-order) priority of the view.
 	ACESSOR(DepthPriority, int, depthPriority)
+
+	// Gets the aspect ratio of the view.
+	float getAspectRatio() const;
 
 	// Updates the view.
 	void update();

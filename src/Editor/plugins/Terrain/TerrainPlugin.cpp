@@ -28,8 +28,8 @@ END_EVENT_TABLE()
 TerrainPlugin::TerrainPlugin( EditorFrame* frame )
 	: Plugin(frame)
 	, terrainPage(nullptr)
-	, timer(this)
 	, terrainOperation(nullptr)
+	, timer(this)
 { }
 
 //-----------------------------------//
@@ -359,20 +359,20 @@ bool TerrainPlugin::pickTerrain( const MouseButtonEvent& mb, RayTriangleQueryRes
 	// Get a ray given the screen location clicked.
 	const Ray& pickRay = camera->getRay( mb.x, mb.y );
 
-	RayBoxQueryResult query;
+	RayQueryResult query;
 	
 	if( !scene->doRayBoxQuery(pickRay, query) )
 		return false;
 
-	const EntityPtr& node = query.node;
+	const EntityPtr& entity = query.entity;
 	
-	if( !node ) 
+	if( !entity ) 
 		return false;
 
-	if( !node->getParent()->getInstanceType().is<Terrain>() )
+	if( !entity->getParent()->getInstanceType().is<Terrain>() )
 		return false;
 
-	if( !scene->doRayTriangleQuery(pickRay, res, node) )
+	if( !scene->doRayTriangleQuery(pickRay, res, entity) )
 		return false; // Query does not intersect the terrain.
 
 	return true;

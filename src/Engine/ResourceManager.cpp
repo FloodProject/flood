@@ -27,9 +27,7 @@ ResourceManager::ResourceManager( FileWatcher* fileWatcher, TaskManager* tasks )
 	assert( taskManager != nullptr );
 
 	if( fileWatcher )
-	{
 		fileWatcher->onFileWatchEvent.Connect(this, &ResourceManager::handleWatchResource);
-	}
 }
 
 //-----------------------------------//
@@ -53,6 +51,9 @@ ResourceManager::~ResourceManager()
 		else
 			loader->getExtensions().remove( it->first );
 	}
+
+	//if( fileWatcher )
+		//fileWatcher->onFileWatchEvent.Disconnect(this, &ResourceManager::handleWatchResource);
 
 	// Check that all resources will be deleted.
 	//foreach( const ResourceMapPair& p, resources )
@@ -118,7 +119,7 @@ bool ResourceManager::validateResource( const std::string& path )
 		return false;
 	}
 
-	const std::string& extension = String::getExtensionFromPath(path);
+	const std::string& extension = Path::getExtension(path);
 	
 	if( extension.empty() )
 	{

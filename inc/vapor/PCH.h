@@ -73,12 +73,6 @@
 	#endif
 #endif
 
-#define TYPEDEF_SHARED_POINTER_FROM_TYPE( class ) \
-	typedef std::shared_ptr< class > class##Ptr;
-
-#define TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( class ) \
-		typedef std::weak_ptr< class > class##WeakPtr;
-
 //---------------------------------------------------------------------//
 // Logging. Use and abuse it.
 //---------------------------------------------------------------------//

@@ -385,7 +385,7 @@ MaterialPtr Milkshape3D::buildMaterial(const ms3d_group_t& group)
 	{
 		mat->setProgram( "Tex_Toon" );
 
-		std::string texturePath = String::split( mt.texture, '/' ).back();
+		std::string texturePath = Path::normalize(mt.texture);
 		mat->setTexture( 0, texturePath );
 	}
 

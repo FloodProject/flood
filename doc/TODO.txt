@@ -4,7 +4,6 @@ WIP (work-in-progress)
 Fix mesh collide loop overflows
 
 Serialization of group nodes
-Fix model debug renderable of skeleton.
 Add UpdateUI event to Play button.
 Physics rotation becomes wrong due to bounding box calculation.
 Fix default animation state on skinned meshes with no animation tracks.
@@ -15,9 +14,6 @@ Add code to generate a default texture
 EDITOR:
 -------
 
-Low priority:
-
-	wxWidgets regression in message dialog (missing icons in save dialog)
 
 When deleting a single node from the scene tree, the Unselected event isn't sent.
 Optimize hashing and loading in resources browser (it reads twice)
@@ -194,3 +190,13 @@ delete [] uniformName;
 
 linear_depth = (2.0 * znear) / (zfar + znear - exp_depth * (zfar - znear));
 float kDepth = 1.0 - ( gl_FragCoord.z / gl_FragCoord.w ) / ( v_farPlane - v_nearPlane );
+
+
+
+	OverlayPtr overlay( new Overlay() );
+	overlay->setSize( Vector2i(100, 100) );
+
+	EntityPtr nodeOverlay( new Entity("Overlay") );
+	nodeOverlay->addTransform();
+	nodeOverlay->addComponent(overlay);
+	editorScene->add( nodeOverlay );

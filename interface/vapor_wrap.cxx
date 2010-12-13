@@ -1514,97 +1514,94 @@ SWIG_Lua_dostring(lua_State *L, const char* str) {
 #define SWIGTYPE_p_Event0T_t swig_types[0]
 #define SWIGTYPE_p_Event1T_std__shared_ptrT_vapor__Component_t_const_R_t swig_types[1]
 #define SWIGTYPE_p_Event1T_std__shared_ptrT_vapor__Entity_t_const_R_t swig_types[2]
-#define SWIGTYPE_p_boost__atomicT_int_t swig_types[3]
-#define SWIGTYPE_p_boost__intrusive_ptrT_vapor__Animation_t swig_types[4]
-#define SWIGTYPE_p_boost__intrusive_ptrT_vapor__Attachment_t swig_types[5]
-#define SWIGTYPE_p_boost__intrusive_ptrT_vapor__Bone_t swig_types[6]
-#define SWIGTYPE_p_boost__intrusive_ptrT_vapor__Mesh_t swig_types[7]
-#define SWIGTYPE_p_boost__intrusive_ptrT_vapor__Renderable_t swig_types[8]
-#define SWIGTYPE_p_boost__intrusive_ptrT_vapor__Resource_t swig_types[9]
-#define SWIGTYPE_p_boost__intrusive_ptrT_vapor__Skeleton_t swig_types[10]
-#define SWIGTYPE_p_boost__thread swig_types[11]
-#define SWIGTYPE_p_float swig_types[12]
-#define SWIGTYPE_p_int swig_types[13]
-#define SWIGTYPE_p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t swig_types[14]
-#define SWIGTYPE_p_std__mapT_vapor__RenderStage__Enum_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t_t swig_types[15]
-#define SWIGTYPE_p_std__pairT_Class_const_p_std__shared_ptrT_vapor__Component_t_t swig_types[16]
-#define SWIGTYPE_p_std__pairT_vapor__RenderStage__Enum_const_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t_t swig_types[17]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Camera_t swig_types[18]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__CharacterController_t swig_types[19]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Component_t swig_types[20]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Controller_t swig_types[21]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Geometry_t swig_types[22]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Group_t swig_types[23]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Light_t swig_types[24]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Model_t swig_types[25]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Entity_t swig_types[26]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Scene_t swig_types[27]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Transform_t swig_types[28]
-#define SWIGTYPE_p_std__vectorT_boost__intrusive_ptrT_vapor__Animation_t_t swig_types[29]
-#define SWIGTYPE_p_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t swig_types[30]
-#define SWIGTYPE_p_std__vectorT_std__shared_ptrT_vapor__Geometry_t_t swig_types[31]
-#define SWIGTYPE_p_std__vectorT_std__shared_ptrT_vapor__Entity_t_t swig_types[32]
-#define SWIGTYPE_p_std__vectorT_vapor__RayBoxQueryResult_t swig_types[33]
-#define SWIGTYPE_p_std__weak_ptrT_vapor__Camera_t swig_types[34]
-#define SWIGTYPE_p_std__weak_ptrT_vapor__CharacterController_t swig_types[35]
-#define SWIGTYPE_p_std__weak_ptrT_vapor__Component_t swig_types[36]
-#define SWIGTYPE_p_std__weak_ptrT_vapor__Controller_t swig_types[37]
-#define SWIGTYPE_p_std__weak_ptrT_vapor__Geometry_t swig_types[38]
-#define SWIGTYPE_p_std__weak_ptrT_vapor__Entity_t swig_types[39]
-#define SWIGTYPE_p_std__weak_ptrT_vapor__Scene_t swig_types[40]
-#define SWIGTYPE_p_unsigned_char swig_types[41]
-#define SWIGTYPE_p_unsigned_int swig_types[42]
-#define SWIGTYPE_p_unsigned_long swig_types[43]
-#define SWIGTYPE_p_unsigned_short swig_types[44]
-#define SWIGTYPE_p_vapor__BoundingBox swig_types[45]
-#define SWIGTYPE_p_vapor__Camera swig_types[46]
-#define SWIGTYPE_p_vapor__CharacterController swig_types[47]
-#define SWIGTYPE_p_vapor__Color swig_types[48]
-#define SWIGTYPE_p_vapor__Component swig_types[49]
-#define SWIGTYPE_p_vapor__Controller swig_types[50]
-#define SWIGTYPE_p_vapor__EulerAngles swig_types[51]
-#define SWIGTYPE_p_vapor__Frustum swig_types[52]
-#define SWIGTYPE_p_vapor__Geometry swig_types[53]
-#define SWIGTYPE_p_vapor__Group swig_types[54]
-#define SWIGTYPE_p_vapor__InputEvent swig_types[55]
-#define SWIGTYPE_p_vapor__KeyEvent swig_types[56]
-#define SWIGTYPE_p_vapor__KeyboardEventType swig_types[57]
-#define SWIGTYPE_p_vapor__Keys swig_types[58]
-#define SWIGTYPE_p_vapor__Light swig_types[59]
-#define SWIGTYPE_p_vapor__LightType swig_types[60]
-#define SWIGTYPE_p_vapor__Matrix4x3 swig_types[61]
-#define SWIGTYPE_p_vapor__Mesh swig_types[62]
-#define SWIGTYPE_p_vapor__Model swig_types[63]
-#define SWIGTYPE_p_vapor__MouseButton swig_types[64]
-#define SWIGTYPE_p_vapor__MouseButtonEvent swig_types[65]
-#define SWIGTYPE_p_vapor__MouseDragEvent swig_types[66]
-#define SWIGTYPE_p_vapor__MouseEvent swig_types[67]
-#define SWIGTYPE_p_vapor__MouseEventType swig_types[68]
-#define SWIGTYPE_p_vapor__MouseMoveEvent swig_types[69]
-#define SWIGTYPE_p_vapor__MouseWheelEvent swig_types[70]
-#define SWIGTYPE_p_vapor__Entity swig_types[71]
-#define SWIGTYPE_p_vapor__Quaternion swig_types[72]
-#define SWIGTYPE_p_vapor__Ray swig_types[73]
-#define SWIGTYPE_p_vapor__RayBoxQueryResult swig_types[74]
-#define SWIGTYPE_p_vapor__RayTriangleQueryResult swig_types[75]
-#define SWIGTYPE_p_vapor__ReferenceCounted swig_types[76]
-#define SWIGTYPE_p_vapor__RenderBlock swig_types[77]
-#define SWIGTYPE_p_vapor__RenderDevice swig_types[78]
-#define SWIGTYPE_p_vapor__RenderQueue swig_types[79]
-#define SWIGTYPE_p_vapor__RenderView swig_types[80]
-#define SWIGTYPE_p_vapor__Resource swig_types[81]
-#define SWIGTYPE_p_vapor__Scene swig_types[82]
-#define SWIGTYPE_p_vapor__Transform swig_types[83]
-#define SWIGTYPE_p_vapor__Vector2TT_float_t swig_types[84]
-#define SWIGTYPE_p_vapor__Vector2TT_int_t swig_types[85]
-#define SWIGTYPE_p_vapor__Vector3TT_double_t swig_types[86]
-#define SWIGTYPE_p_vapor__Vector3TT_float_t swig_types[87]
-#define SWIGTYPE_p_vapor__Vector3TT_int_t swig_types[88]
-#define SWIGTYPE_p_vapor__Vector4TT_double_t swig_types[89]
-#define SWIGTYPE_p_vapor__Vector4TT_float_t swig_types[90]
-#define SWIGTYPE_p_vapor__Vector4TT_int_t swig_types[91]
-static swig_type_info *swig_types[93];
-static swig_module_info swig_module = {swig_types, 92, 0, 0, 0, 0};
+#define SWIGTYPE_p_float swig_types[3]
+#define SWIGTYPE_p_int swig_types[4]
+#define SWIGTYPE_p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t swig_types[5]
+#define SWIGTYPE_p_std__mapT_vapor__RenderStage__Enum_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t_t swig_types[6]
+#define SWIGTYPE_p_std__pairT_Class_const_p_std__shared_ptrT_vapor__Component_t_t swig_types[7]
+#define SWIGTYPE_p_std__pairT_vapor__RenderStage__Enum_const_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t_t swig_types[8]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Camera_t swig_types[9]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__CharacterController_t swig_types[10]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Component_t swig_types[11]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Controller_t swig_types[12]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Entity_t swig_types[13]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Geometry_t swig_types[14]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Group_t swig_types[15]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Light_t swig_types[16]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Model_t swig_types[17]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Scene_t swig_types[18]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Transform_t swig_types[19]
+#define SWIGTYPE_p_std__vectorT_std__shared_ptrT_vapor__Entity_t_t swig_types[20]
+#define SWIGTYPE_p_std__vectorT_std__shared_ptrT_vapor__Geometry_t_t swig_types[21]
+#define SWIGTYPE_p_std__vectorT_vapor__RayQueryResult_t swig_types[22]
+#define SWIGTYPE_p_std__vectorT_vapor__RefPtrT_vapor__Animation_t_t swig_types[23]
+#define SWIGTYPE_p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t swig_types[24]
+#define SWIGTYPE_p_std__weak_ptrT_vapor__Camera_t swig_types[25]
+#define SWIGTYPE_p_std__weak_ptrT_vapor__CharacterController_t swig_types[26]
+#define SWIGTYPE_p_std__weak_ptrT_vapor__Component_t swig_types[27]
+#define SWIGTYPE_p_std__weak_ptrT_vapor__Controller_t swig_types[28]
+#define SWIGTYPE_p_std__weak_ptrT_vapor__Entity_t swig_types[29]
+#define SWIGTYPE_p_std__weak_ptrT_vapor__Geometry_t swig_types[30]
+#define SWIGTYPE_p_std__weak_ptrT_vapor__Scene_t swig_types[31]
+#define SWIGTYPE_p_unsigned_char swig_types[32]
+#define SWIGTYPE_p_unsigned_int swig_types[33]
+#define SWIGTYPE_p_unsigned_long swig_types[34]
+#define SWIGTYPE_p_unsigned_short swig_types[35]
+#define SWIGTYPE_p_vapor__BoundingBox swig_types[36]
+#define SWIGTYPE_p_vapor__Camera swig_types[37]
+#define SWIGTYPE_p_vapor__CharacterController swig_types[38]
+#define SWIGTYPE_p_vapor__Color swig_types[39]
+#define SWIGTYPE_p_vapor__Component swig_types[40]
+#define SWIGTYPE_p_vapor__Controller swig_types[41]
+#define SWIGTYPE_p_vapor__Entity swig_types[42]
+#define SWIGTYPE_p_vapor__EulerAngles swig_types[43]
+#define SWIGTYPE_p_vapor__Frustum swig_types[44]
+#define SWIGTYPE_p_vapor__Geometry swig_types[45]
+#define SWIGTYPE_p_vapor__Group swig_types[46]
+#define SWIGTYPE_p_vapor__InputEvent swig_types[47]
+#define SWIGTYPE_p_vapor__KeyEvent swig_types[48]
+#define SWIGTYPE_p_vapor__KeyboardEventType swig_types[49]
+#define SWIGTYPE_p_vapor__Keys swig_types[50]
+#define SWIGTYPE_p_vapor__Light swig_types[51]
+#define SWIGTYPE_p_vapor__LightType swig_types[52]
+#define SWIGTYPE_p_vapor__Matrix4x3 swig_types[53]
+#define SWIGTYPE_p_vapor__Mesh swig_types[54]
+#define SWIGTYPE_p_vapor__Model swig_types[55]
+#define SWIGTYPE_p_vapor__MouseButton swig_types[56]
+#define SWIGTYPE_p_vapor__MouseButtonEvent swig_types[57]
+#define SWIGTYPE_p_vapor__MouseDragEvent swig_types[58]
+#define SWIGTYPE_p_vapor__MouseEvent swig_types[59]
+#define SWIGTYPE_p_vapor__MouseEventType swig_types[60]
+#define SWIGTYPE_p_vapor__MouseMoveEvent swig_types[61]
+#define SWIGTYPE_p_vapor__MouseWheelEvent swig_types[62]
+#define SWIGTYPE_p_vapor__Quaternion swig_types[63]
+#define SWIGTYPE_p_vapor__Ray swig_types[64]
+#define SWIGTYPE_p_vapor__RayQueryResult swig_types[65]
+#define SWIGTYPE_p_vapor__RayTriangleQueryResult swig_types[66]
+#define SWIGTYPE_p_vapor__RefPtrT_vapor__Animation_t swig_types[67]
+#define SWIGTYPE_p_vapor__RefPtrT_vapor__Attachment_t swig_types[68]
+#define SWIGTYPE_p_vapor__RefPtrT_vapor__Bone_t swig_types[69]
+#define SWIGTYPE_p_vapor__RefPtrT_vapor__Mesh_t swig_types[70]
+#define SWIGTYPE_p_vapor__RefPtrT_vapor__Renderable_t swig_types[71]
+#define SWIGTYPE_p_vapor__RefPtrT_vapor__Resource_t swig_types[72]
+#define SWIGTYPE_p_vapor__RefPtrT_vapor__Skeleton_t swig_types[73]
+#define SWIGTYPE_p_vapor__ReferenceCounted swig_types[74]
+#define SWIGTYPE_p_vapor__RenderBlock swig_types[75]
+#define SWIGTYPE_p_vapor__RenderQueue swig_types[76]
+#define SWIGTYPE_p_vapor__RenderView swig_types[77]
+#define SWIGTYPE_p_vapor__Resource swig_types[78]
+#define SWIGTYPE_p_vapor__Scene swig_types[79]
+#define SWIGTYPE_p_vapor__Transform swig_types[80]
+#define SWIGTYPE_p_vapor__Vector2TT_float_t swig_types[81]
+#define SWIGTYPE_p_vapor__Vector2TT_int_t swig_types[82]
+#define SWIGTYPE_p_vapor__Vector3TT_double_t swig_types[83]
+#define SWIGTYPE_p_vapor__Vector3TT_float_t swig_types[84]
+#define SWIGTYPE_p_vapor__Vector3TT_int_t swig_types[85]
+#define SWIGTYPE_p_vapor__Vector4TT_double_t swig_types[86]
+#define SWIGTYPE_p_vapor__Vector4TT_float_t swig_types[87]
+#define SWIGTYPE_p_vapor__Vector4TT_int_t swig_types[88]
+static swig_type_info *swig_types[90];
+static swig_module_info swig_module = {swig_types, 89, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -2144,6 +2141,40 @@ fail:
 }
 
 
+static int _wrap_Vector3_project(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Vector3T< float > *arg1 = (vapor::Vector3T< float > *) 0 ;
+  vapor::Vector3T< float > *arg2 = 0 ;
+  vapor::Vector3T< float > result;
+  
+  SWIG_check_num_args("project",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("project",1,"vapor::Vector3T< float > const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("project",2,"vapor::Vector3T< float > const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
+    SWIG_fail_ptr("Vector3_project",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
+    SWIG_fail_ptr("Vector3_project",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
+  }
+  
+  result = ((vapor::Vector3T< float > const *)arg1)->project((vapor::Vector3T< float > const &)*arg2);
+  {
+    vapor::Vector3T< float > * resultptr = new vapor::Vector3T< float >((const vapor::Vector3T< float > &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__Vector3TT_float_t,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_Vector3_lerp(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Vector3T< float > *arg1 = (vapor::Vector3T< float > *) 0 ;
@@ -2560,6 +2591,7 @@ static swig_lua_method swig_vapor_Vector3T_Sl_float_Sg__methods[] = {
     {"zero", _wrap_Vector3_zero}, 
     {"length", _wrap_Vector3_length}, 
     {"lengthSquared", _wrap_Vector3_lengthSquared}, 
+    {"project", _wrap_Vector3_project}, 
     {"lerp", _wrap_Vector3_lerp}, 
     {"serp", _wrap_Vector3_serp}, 
     {"normalize", _wrap_Vector3_normalize}, 
@@ -6909,7 +6941,7 @@ fail:
 static int _wrap_Mesh_getSkeleton(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Mesh *arg1 = (vapor::Mesh *) 0 ;
-  vapor::SkeletonPtr result;
+  SwigValueWrapper< vapor::RefPtr< vapor::Skeleton > > result;
   
   SWIG_check_num_args("getSkeleton",1,1)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getSkeleton",1,"vapor::Mesh const *");
@@ -6921,7 +6953,7 @@ static int _wrap_Mesh_getSkeleton(lua_State* L) {
   result = ((vapor::Mesh const *)arg1)->getSkeleton();
   {
     vapor::SkeletonPtr * resultptr = new vapor::SkeletonPtr((const vapor::SkeletonPtr &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_boost__intrusive_ptrT_vapor__Skeleton_t,1); SWIG_arg++;
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__RefPtrT_vapor__Skeleton_t,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -6936,7 +6968,7 @@ fail:
 static int _wrap_Mesh_getBindPose(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Mesh *arg1 = (vapor::Mesh *) 0 ;
-  vapor::AnimationPtr result;
+  SwigValueWrapper< vapor::RefPtr< vapor::Animation > > result;
   
   SWIG_check_num_args("getBindPose",1,1)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getBindPose",1,"vapor::Mesh const *");
@@ -6948,7 +6980,7 @@ static int _wrap_Mesh_getBindPose(lua_State* L) {
   result = ((vapor::Mesh const *)arg1)->getBindPose();
   {
     vapor::AnimationPtr * resultptr = new vapor::AnimationPtr((const vapor::AnimationPtr &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_boost__intrusive_ptrT_vapor__Animation_t,1); SWIG_arg++;
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__RefPtrT_vapor__Animation_t,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -6965,7 +6997,7 @@ static int _wrap_Mesh_findAnimation(lua_State* L) {
   vapor::Mesh *arg1 = (vapor::Mesh *) 0 ;
   std::string *arg2 = 0 ;
   std::string temp2 ;
-  vapor::AnimationPtr result;
+  SwigValueWrapper< vapor::RefPtr< vapor::Animation > > result;
   
   SWIG_check_num_args("findAnimation",2,2)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("findAnimation",1,"vapor::Mesh *");
@@ -6979,7 +7011,7 @@ static int _wrap_Mesh_findAnimation(lua_State* L) {
   result = (arg1)->findAnimation((std::string const &)*arg2);
   {
     vapor::AnimationPtr * resultptr = new vapor::AnimationPtr((const vapor::AnimationPtr &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_boost__intrusive_ptrT_vapor__Animation_t,1); SWIG_arg++;
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__RefPtrT_vapor__Animation_t,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -7028,7 +7060,7 @@ static int _wrap_Mesh_getAnimations(lua_State* L) {
   }
   
   result = (std::vector< vapor::AnimationPtr > *) &((vapor::Mesh const *)arg1)->getAnimations();
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__vectorT_boost__intrusive_ptrT_vapor__Animation_t_t,0); SWIG_arg++; 
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__vectorT_vapor__RefPtrT_vapor__Animation_t_t,0); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -7053,8 +7085,8 @@ static int _wrap_Mesh_appendRenderables(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t,0))){
-    SWIG_fail_ptr("Mesh_appendRenderables",2,SWIGTYPE_p_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t,0))){
+    SWIG_fail_ptr("Mesh_appendRenderables",2,SWIGTYPE_p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t);
   }
   
   (arg1)->appendRenderables(*arg2);
@@ -8585,7 +8617,7 @@ fail:
 static int _wrap_Component_getDebugRenderable(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Component *arg1 = (vapor::Component *) 0 ;
-  vapor::RenderablePtr result;
+  SwigValueWrapper< vapor::RefPtr< vapor::Renderable > > result;
   
   SWIG_check_num_args("getDebugRenderable",1,1)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getDebugRenderable",1,"vapor::Component const *");
@@ -8597,7 +8629,7 @@ static int _wrap_Component_getDebugRenderable(lua_State* L) {
   result = ((vapor::Component const *)arg1)->getDebugRenderable();
   {
     vapor::RenderablePtr * resultptr = new vapor::RenderablePtr((const vapor::RenderablePtr &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_boost__intrusive_ptrT_vapor__Renderable_t,1); SWIG_arg++;
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__RefPtrT_vapor__Renderable_t,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -8612,7 +8644,7 @@ fail:
 static int _wrap_Component_createDebugRenderable(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Component *arg1 = (vapor::Component *) 0 ;
-  vapor::RenderablePtr result;
+  SwigValueWrapper< vapor::RefPtr< vapor::Renderable > > result;
   
   SWIG_check_num_args("createDebugRenderable",1,1)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("createDebugRenderable",1,"vapor::Component const *");
@@ -8624,7 +8656,7 @@ static int _wrap_Component_createDebugRenderable(lua_State* L) {
   result = ((vapor::Component const *)arg1)->createDebugRenderable();
   {
     vapor::RenderablePtr * resultptr = new vapor::RenderablePtr((const vapor::RenderablePtr &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_boost__intrusive_ptrT_vapor__Renderable_t,1); SWIG_arg++;
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__RefPtrT_vapor__Renderable_t,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -10064,8 +10096,8 @@ static int _wrap_new_Model__SWIG_1(lua_State* L) {
   SWIG_check_num_args("vapor::Model",1,1)
   if(!lua_isuserdata(L,1)) SWIG_fail_arg("vapor::Model",1,"vapor::MeshPtr const &");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_boost__intrusive_ptrT_vapor__Mesh_t,0))){
-    SWIG_fail_ptr("new_Model",1,SWIGTYPE_p_boost__intrusive_ptrT_vapor__Mesh_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__RefPtrT_vapor__Mesh_t,0))){
+    SWIG_fail_ptr("new_Model",1,SWIGTYPE_p_vapor__RefPtrT_vapor__Mesh_t);
   }
   
   result = (vapor::Model *)new vapor::Model((vapor::MeshPtr const &)*arg1);
@@ -10094,7 +10126,7 @@ static int _wrap_new_Model(lua_State* L) {
     int _v;
     {
       void *ptr;
-      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_boost__intrusive_ptrT_vapor__Mesh_t, 0)) {
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_vapor__RefPtrT_vapor__Mesh_t, 0)) {
         _v = 0;
       } else {
         _v = 1;
@@ -10126,7 +10158,7 @@ static int _wrap_Model_getMesh(lua_State* L) {
   }
   
   result = (vapor::MeshPtr *) &((vapor::Model const *)arg1)->getMesh();
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_boost__intrusive_ptrT_vapor__Mesh_t,0); SWIG_arg++; 
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__RefPtrT_vapor__Mesh_t,0); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -10151,8 +10183,8 @@ static int _wrap_Model_setAnimation__SWIG_0(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_boost__intrusive_ptrT_vapor__Animation_t,0))){
-    SWIG_fail_ptr("Model_setAnimation",2,SWIGTYPE_p_boost__intrusive_ptrT_vapor__Animation_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__RefPtrT_vapor__Animation_t,0))){
+    SWIG_fail_ptr("Model_setAnimation",2,SWIGTYPE_p_vapor__RefPtrT_vapor__Animation_t);
   }
   
   (arg1)->setAnimation((vapor::AnimationPtr const &)*arg2);
@@ -10214,7 +10246,7 @@ static int _wrap_Model_setAnimation(lua_State* L) {
     if (_v) {
       {
         void *ptr;
-        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_boost__intrusive_ptrT_vapor__Animation_t, 0)) {
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_vapor__RefPtrT_vapor__Animation_t, 0)) {
           _v = 0;
         } else {
           _v = 1;
@@ -10253,20 +10285,20 @@ static int _wrap_Model_setAnimation(lua_State* L) {
 }
 
 
-static int _wrap_Model_setCrossFadeAnimation__SWIG_0(lua_State* L) {
+static int _wrap_Model_setAnimationFade__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Model *arg1 = (vapor::Model *) 0 ;
   std::string *arg2 = 0 ;
   float arg3 ;
   std::string temp2 ;
   
-  SWIG_check_num_args("setCrossFadeAnimation",3,3)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setCrossFadeAnimation",1,"vapor::Model *");
-  if(!lua_isstring(L,2)) SWIG_fail_arg("setCrossFadeAnimation",2,"std::string const &");
-  if(!lua_isnumber(L,3)) SWIG_fail_arg("setCrossFadeAnimation",3,"float");
+  SWIG_check_num_args("setAnimationFade",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setAnimationFade",1,"vapor::Model *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("setAnimationFade",2,"std::string const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("setAnimationFade",3,"float");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Model,0))){
-    SWIG_fail_ptr("Model_setCrossFadeAnimation",1,SWIGTYPE_p_vapor__Model);
+    SWIG_fail_ptr("Model_setAnimationFade",1,SWIGTYPE_p_vapor__Model);
   }
   
   temp2.assign(lua_tostring(L,2),lua_strlen(L,2)); arg2=&temp2;
@@ -10283,18 +10315,18 @@ fail:
 }
 
 
-static int _wrap_Model_setCrossFadeAnimation__SWIG_1(lua_State* L) {
+static int _wrap_Model_setAnimationFade__SWIG_1(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Model *arg1 = (vapor::Model *) 0 ;
   std::string *arg2 = 0 ;
   std::string temp2 ;
   
-  SWIG_check_num_args("setCrossFadeAnimation",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setCrossFadeAnimation",1,"vapor::Model *");
-  if(!lua_isstring(L,2)) SWIG_fail_arg("setCrossFadeAnimation",2,"std::string const &");
+  SWIG_check_num_args("setAnimationFade",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setAnimationFade",1,"vapor::Model *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("setAnimationFade",2,"std::string const &");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Model,0))){
-    SWIG_fail_ptr("Model_setCrossFadeAnimation",1,SWIGTYPE_p_vapor__Model);
+    SWIG_fail_ptr("Model_setAnimationFade",1,SWIGTYPE_p_vapor__Model);
   }
   
   temp2.assign(lua_tostring(L,2),lua_strlen(L,2)); arg2=&temp2;
@@ -10310,7 +10342,7 @@ fail:
 }
 
 
-static int _wrap_Model_setCrossFadeAnimation(lua_State* L) {
+static int _wrap_Model_setAnimationFade(lua_State* L) {
   int argc;
   int argv[4]={
     1,2,3,4
@@ -10332,7 +10364,7 @@ static int _wrap_Model_setCrossFadeAnimation(lua_State* L) {
         _v = lua_isstring(L,argv[1]);
       }
       if (_v) {
-        return _wrap_Model_setCrossFadeAnimation__SWIG_1(L);
+        return _wrap_Model_setAnimationFade__SWIG_1(L);
       }
     }
   }
@@ -10355,40 +10387,40 @@ static int _wrap_Model_setCrossFadeAnimation(lua_State* L) {
           _v = lua_isnumber(L,argv[2]);
         }
         if (_v) {
-          return _wrap_Model_setCrossFadeAnimation__SWIG_0(L);
+          return _wrap_Model_setAnimationFade__SWIG_0(L);
         }
       }
     }
   }
   
-  lua_pushstring(L,"Wrong arguments for overloaded function 'Model_setCrossFadeAnimation'\n"
+  lua_pushstring(L,"Wrong arguments for overloaded function 'Model_setAnimationFade'\n"
     "  Possible C/C++ prototypes are:\n"
-    "    setCrossFadeAnimation(vapor::Model *,std::string const &,float)\n"
-    "    setCrossFadeAnimation(vapor::Model *,std::string const &)\n");
+    "    setAnimationFade(vapor::Model *,std::string const &,float)\n"
+    "    setAnimationFade(vapor::Model *,std::string const &)\n");
   lua_error(L);return 0;
 }
 
 
-static int _wrap_Model_attachEntity(lua_State* L) {
+static int _wrap_Model_setAttachment(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Model *arg1 = (vapor::Model *) 0 ;
   std::string *arg2 = 0 ;
   vapor::EntityPtr *arg3 = 0 ;
   std::string temp2 ;
   
-  SWIG_check_num_args("attachEntity",3,3)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("attachEntity",1,"vapor::Model *");
-  if(!lua_isstring(L,2)) SWIG_fail_arg("attachEntity",2,"std::string const &");
-  if(!lua_isuserdata(L,3)) SWIG_fail_arg("attachEntity",3,"vapor::EntityPtr const &");
+  SWIG_check_num_args("setAttachment",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setAttachment",1,"vapor::Model *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("setAttachment",2,"std::string const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("setAttachment",3,"vapor::EntityPtr const &");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Model,0))){
-    SWIG_fail_ptr("Model_attachEntity",1,SWIGTYPE_p_vapor__Model);
+    SWIG_fail_ptr("Model_setAttachment",1,SWIGTYPE_p_vapor__Model);
   }
   
   temp2.assign(lua_tostring(L,2),lua_strlen(L,2)); arg2=&temp2;
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_std__shared_ptrT_vapor__Entity_t,0))){
-    SWIG_fail_ptr("Model_attachEntity",3,SWIGTYPE_p_std__shared_ptrT_vapor__Entity_t);
+    SWIG_fail_ptr("Model_setAttachment",3,SWIGTYPE_p_std__shared_ptrT_vapor__Entity_t);
   }
   
   (arg1)->setAttachment((std::string const &)*arg2,(vapor::EntityPtr const &)*arg3);
@@ -10459,8 +10491,8 @@ delete arg1;
 static swig_lua_method swig_vapor_Model_methods[] = {
     {"getMesh", _wrap_Model_getMesh}, 
     {"setAnimation", _wrap_Model_setAnimation}, 
-    {"setCrossFadeAnimation", _wrap_Model_setCrossFadeAnimation}, 
-    {"attachEntity", _wrap_Model_attachEntity}, 
+    {"setAnimationFade", _wrap_Model_setAnimationFade}, 
+    {"setAttachment", _wrap_Model_setAttachment}, 
     {"update", _wrap_Model_update}, 
     {"build", _wrap_Model_build}, 
     {0,0}
@@ -10472,7 +10504,7 @@ static swig_lua_class *swig_vapor_Model_bases[] = {0};
 static const char *swig_vapor_Model_base_names[] = {0};
 static swig_lua_class _wrap_class_vapor_Model = { "Model", &SWIGTYPE_p_vapor__Model,_wrap_new_Model, swig_delete_Model, swig_vapor_Model_methods, swig_vapor_Model_attributes, swig_vapor_Model_bases, swig_vapor_Model_base_names };
 
-static int _wrap_new_Camera__SWIG_0(lua_State* L) {
+static int _wrap_new_Camera(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Camera *result = 0 ;
   
@@ -10486,102 +10518,6 @@ static int _wrap_new_Camera__SWIG_0(lua_State* L) {
 fail:
   lua_error(L);
   return SWIG_arg;
-}
-
-
-static int _wrap_new_Camera__SWIG_1(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::RenderDevice *arg1 = (vapor::RenderDevice *) 0 ;
-  vapor::Camera *result = 0 ;
-  
-  SWIG_check_num_args("vapor::Camera",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("vapor::Camera",1,"vapor::RenderDevice *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__RenderDevice,0))){
-    SWIG_fail_ptr("new_Camera",1,SWIGTYPE_p_vapor__RenderDevice);
-  }
-  
-  result = (vapor::Camera *)new vapor::Camera(arg1);
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Camera,1); SWIG_arg++; 
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_new_Camera__SWIG_2(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Camera *arg1 = 0 ;
-  vapor::Camera *result = 0 ;
-  
-  SWIG_check_num_args("vapor::Camera",1,1)
-  if(!lua_isuserdata(L,1)) SWIG_fail_arg("vapor::Camera",1,"vapor::Camera const &");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Camera,0))){
-    SWIG_fail_ptr("new_Camera",1,SWIGTYPE_p_vapor__Camera);
-  }
-  
-  result = (vapor::Camera *)new vapor::Camera((vapor::Camera const &)*arg1);
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Camera,1); SWIG_arg++; 
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_new_Camera(lua_State* L) {
-  int argc;
-  int argv[2]={
-    1,2
-  };
-  
-  argc = lua_gettop(L);
-  if (argc == 0) {
-    return _wrap_new_Camera__SWIG_0(L);
-  }
-  if (argc == 1) {
-    int _v;
-    {
-      void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_vapor__RenderDevice, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      return _wrap_new_Camera__SWIG_1(L);
-    }
-  }
-  if (argc == 1) {
-    int _v;
-    {
-      void *ptr;
-      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_vapor__Camera, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      return _wrap_new_Camera__SWIG_2(L);
-    }
-  }
-  
-  lua_pushstring(L,"Wrong arguments for overloaded function 'new_Camera'\n"
-    "  Possible C/C++ prototypes are:\n"
-    "    vapor::Camera()\n"
-    "    vapor::Camera(vapor::RenderDevice *)\n"
-    "    vapor::Camera(vapor::Camera const &)\n");
-  lua_error(L);return 0;
 }
 
 
@@ -10847,6 +10783,132 @@ fail:
 }
 
 
+static int _wrap_Camera_getLookAtVector(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Camera *arg1 = (vapor::Camera *) 0 ;
+  vapor::Vector3 *result = 0 ;
+  
+  SWIG_check_num_args("getLookAtVector",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getLookAtVector",1,"vapor::Camera const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Camera,0))){
+    SWIG_fail_ptr("Camera_getLookAtVector",1,SWIGTYPE_p_vapor__Camera);
+  }
+  
+  result = (vapor::Vector3 *) &((vapor::Camera const *)arg1)->getLookAtVector();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Vector3TT_float_t,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Camera_getViewMatrix(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Camera *arg1 = (vapor::Camera *) 0 ;
+  vapor::Matrix4x3 *result = 0 ;
+  
+  SWIG_check_num_args("getViewMatrix",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getViewMatrix",1,"vapor::Camera const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Camera,0))){
+    SWIG_fail_ptr("Camera_getViewMatrix",1,SWIGTYPE_p_vapor__Camera);
+  }
+  
+  result = (vapor::Matrix4x3 *) &((vapor::Camera const *)arg1)->getViewMatrix();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Matrix4x3,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Camera_getView(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Camera *arg1 = (vapor::Camera *) 0 ;
+  vapor::RenderView *result = 0 ;
+  
+  SWIG_check_num_args("getView",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getView",1,"vapor::Camera const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Camera,0))){
+    SWIG_fail_ptr("Camera_getView",1,SWIGTYPE_p_vapor__Camera);
+  }
+  
+  result = (vapor::RenderView *)((vapor::Camera const *)arg1)->getView();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__RenderView,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Camera_setView(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Camera *arg1 = (vapor::Camera *) 0 ;
+  vapor::RenderView *arg2 = (vapor::RenderView *) 0 ;
+  
+  SWIG_check_num_args("setView",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setView",1,"vapor::Camera *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("setView",2,"vapor::RenderView *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Camera,0))){
+    SWIG_fail_ptr("Camera_setView",1,SWIGTYPE_p_vapor__Camera);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__RenderView,0))){
+    SWIG_fail_ptr("Camera_setView",2,SWIGTYPE_p_vapor__RenderView);
+  }
+  
+  (arg1)->setView(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Camera_getFrustum(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Camera *arg1 = (vapor::Camera *) 0 ;
+  vapor::Frustum *result = 0 ;
+  
+  SWIG_check_num_args("getFrustum",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getFrustum",1,"vapor::Camera *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Camera,0))){
+    SWIG_fail_ptr("Camera_getFrustum",1,SWIGTYPE_p_vapor__Camera);
+  }
+  
+  result = (vapor::Frustum *) &(arg1)->getFrustum();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Frustum,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_Camera_getRay__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Camera *arg1 = (vapor::Camera *) 0 ;
@@ -10994,6 +11056,45 @@ static int _wrap_Camera_getRay(lua_State* L) {
 }
 
 
+static int _wrap_Camera_getVolume(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Camera *arg1 = (vapor::Camera *) 0 ;
+  float arg2 ;
+  float arg3 ;
+  float arg4 ;
+  float arg5 ;
+  vapor::Frustum result;
+  
+  SWIG_check_num_args("getVolume",5,5)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getVolume",1,"vapor::Camera *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("getVolume",2,"float");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("getVolume",3,"float");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("getVolume",4,"float");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("getVolume",5,"float");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Camera,0))){
+    SWIG_fail_ptr("Camera_getVolume",1,SWIGTYPE_p_vapor__Camera);
+  }
+  
+  arg2 = (float)lua_tonumber(L, 2);
+  arg3 = (float)lua_tonumber(L, 3);
+  arg4 = (float)lua_tonumber(L, 4);
+  arg5 = (float)lua_tonumber(L, 5);
+  result = (arg1)->getVolume(arg2,arg3,arg4,arg5);
+  {
+    vapor::Frustum * resultptr = new vapor::Frustum((const vapor::Frustum &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__Frustum,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_Camera_update(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Camera *arg1 = (vapor::Camera *) 0 ;
@@ -11020,132 +11121,6 @@ fail:
 }
 
 
-static int _wrap_Camera_getFrustum(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Camera *arg1 = (vapor::Camera *) 0 ;
-  vapor::Frustum *result = 0 ;
-  
-  SWIG_check_num_args("getFrustum",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getFrustum",1,"vapor::Camera *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Camera,0))){
-    SWIG_fail_ptr("Camera_getFrustum",1,SWIGTYPE_p_vapor__Camera);
-  }
-  
-  result = (vapor::Frustum *) &(arg1)->getFrustum();
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Frustum,0); SWIG_arg++; 
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Camera_getLookAtVector(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Camera *arg1 = (vapor::Camera *) 0 ;
-  vapor::Vector3 *result = 0 ;
-  
-  SWIG_check_num_args("getLookAtVector",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getLookAtVector",1,"vapor::Camera const *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Camera,0))){
-    SWIG_fail_ptr("Camera_getLookAtVector",1,SWIGTYPE_p_vapor__Camera);
-  }
-  
-  result = (vapor::Vector3 *) &((vapor::Camera const *)arg1)->getLookAtVector();
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Vector3TT_float_t,0); SWIG_arg++; 
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Camera_getViewMatrix(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Camera *arg1 = (vapor::Camera *) 0 ;
-  vapor::Matrix4x3 *result = 0 ;
-  
-  SWIG_check_num_args("getViewMatrix",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getViewMatrix",1,"vapor::Camera const *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Camera,0))){
-    SWIG_fail_ptr("Camera_getViewMatrix",1,SWIGTYPE_p_vapor__Camera);
-  }
-  
-  result = (vapor::Matrix4x3 *) &((vapor::Camera const *)arg1)->getViewMatrix();
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Matrix4x3,0); SWIG_arg++; 
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Camera_getView(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Camera *arg1 = (vapor::Camera *) 0 ;
-  vapor::RenderView *result = 0 ;
-  
-  SWIG_check_num_args("getView",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getView",1,"vapor::Camera const *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Camera,0))){
-    SWIG_fail_ptr("Camera_getView",1,SWIGTYPE_p_vapor__Camera);
-  }
-  
-  result = (vapor::RenderView *)((vapor::Camera const *)arg1)->getView();
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__RenderView,0); SWIG_arg++; 
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Camera_setView(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Camera *arg1 = (vapor::Camera *) 0 ;
-  vapor::RenderView *arg2 = (vapor::RenderView *) 0 ;
-  
-  SWIG_check_num_args("setView",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setView",1,"vapor::Camera *");
-  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("setView",2,"vapor::RenderView *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Camera,0))){
-    SWIG_fail_ptr("Camera_setView",1,SWIGTYPE_p_vapor__Camera);
-  }
-  
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__RenderView,0))){
-    SWIG_fail_ptr("Camera_setView",2,SWIGTYPE_p_vapor__RenderView);
-  }
-  
-  (arg1)->setView(arg2);
-  
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
 static void swig_delete_Camera(void *obj) {
 vapor::Camera *arg1 = (vapor::Camera *) obj;
 delete arg1;
@@ -11153,13 +11128,14 @@ delete arg1;
 static swig_lua_method swig_vapor_Camera_methods[] = {
     {"render", _wrap_Camera_render}, 
     {"cull", _wrap_Camera_cull}, 
-    {"getRay", _wrap_Camera_getRay}, 
-    {"update", _wrap_Camera_update}, 
-    {"getFrustum", _wrap_Camera_getFrustum}, 
     {"getLookAtVector", _wrap_Camera_getLookAtVector}, 
     {"getViewMatrix", _wrap_Camera_getViewMatrix}, 
     {"getView", _wrap_Camera_getView}, 
     {"setView", _wrap_Camera_setView}, 
+    {"getFrustum", _wrap_Camera_getFrustum}, 
+    {"getRay", _wrap_Camera_getRay}, 
+    {"getVolume", _wrap_Camera_getVolume}, 
+    {"update", _wrap_Camera_update}, 
     {0,0}
 };
 static swig_lua_attribute swig_vapor_Camera_attributes[] = {
@@ -11194,8 +11170,8 @@ static int _wrap_new_Geometry__SWIG_1(lua_State* L) {
   SWIG_check_num_args("vapor::Geometry",1,1)
   if(!lua_isuserdata(L,1)) SWIG_fail_arg("vapor::Geometry",1,"vapor::RenderablePtr const &");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_boost__intrusive_ptrT_vapor__Renderable_t,0))){
-    SWIG_fail_ptr("new_Geometry",1,SWIGTYPE_p_boost__intrusive_ptrT_vapor__Renderable_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__RefPtrT_vapor__Renderable_t,0))){
+    SWIG_fail_ptr("new_Geometry",1,SWIGTYPE_p_vapor__RefPtrT_vapor__Renderable_t);
   }
   
   result = (vapor::Geometry *)new vapor::Geometry((vapor::RenderablePtr const &)*arg1);
@@ -11224,7 +11200,7 @@ static int _wrap_new_Geometry(lua_State* L) {
     int _v;
     {
       void *ptr;
-      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_boost__intrusive_ptrT_vapor__Renderable_t, 0)) {
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_vapor__RefPtrT_vapor__Renderable_t, 0)) {
         _v = 0;
       } else {
         _v = 1;
@@ -11261,8 +11237,8 @@ static int _wrap_Geometry_addRenderable__SWIG_0(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_boost__intrusive_ptrT_vapor__Renderable_t,0))){
-    SWIG_fail_ptr("Geometry_addRenderable",2,SWIGTYPE_p_boost__intrusive_ptrT_vapor__Renderable_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__RefPtrT_vapor__Renderable_t,0))){
+    SWIG_fail_ptr("Geometry_addRenderable",2,SWIGTYPE_p_vapor__RefPtrT_vapor__Renderable_t);
   }
   
   arg3 = (vapor::RenderStage::Enum)(int)lua_tonumber(L, 3);
@@ -11296,8 +11272,8 @@ static int _wrap_Geometry_addRenderable__SWIG_1(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_boost__intrusive_ptrT_vapor__Renderable_t,0))){
-    SWIG_fail_ptr("Geometry_addRenderable",2,SWIGTYPE_p_boost__intrusive_ptrT_vapor__Renderable_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__RefPtrT_vapor__Renderable_t,0))){
+    SWIG_fail_ptr("Geometry_addRenderable",2,SWIGTYPE_p_vapor__RefPtrT_vapor__Renderable_t);
   }
   
   arg3 = (vapor::RenderStage::Enum)(int)lua_tonumber(L, 3);
@@ -11327,8 +11303,8 @@ static int _wrap_Geometry_addRenderable__SWIG_2(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_boost__intrusive_ptrT_vapor__Renderable_t,0))){
-    SWIG_fail_ptr("Geometry_addRenderable",2,SWIGTYPE_p_boost__intrusive_ptrT_vapor__Renderable_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__RefPtrT_vapor__Renderable_t,0))){
+    SWIG_fail_ptr("Geometry_addRenderable",2,SWIGTYPE_p_vapor__RefPtrT_vapor__Renderable_t);
   }
   
   (arg1)->addRenderable((vapor::RenderablePtr const &)*arg2);
@@ -11363,7 +11339,7 @@ static int _wrap_Geometry_addRenderable(lua_State* L) {
     if (_v) {
       {
         void *ptr;
-        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_boost__intrusive_ptrT_vapor__Renderable_t, 0)) {
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_vapor__RefPtrT_vapor__Renderable_t, 0)) {
           _v = 0;
         } else {
           _v = 1;
@@ -11387,7 +11363,7 @@ static int _wrap_Geometry_addRenderable(lua_State* L) {
     if (_v) {
       {
         void *ptr;
-        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_boost__intrusive_ptrT_vapor__Renderable_t, 0)) {
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_vapor__RefPtrT_vapor__Renderable_t, 0)) {
           _v = 0;
         } else {
           _v = 1;
@@ -11416,7 +11392,7 @@ static int _wrap_Geometry_addRenderable(lua_State* L) {
     if (_v) {
       {
         void *ptr;
-        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_boost__intrusive_ptrT_vapor__Renderable_t, 0)) {
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_vapor__RefPtrT_vapor__Renderable_t, 0)) {
           _v = 0;
         } else {
           _v = 1;
@@ -11451,7 +11427,7 @@ static int _wrap_Geometry_getRenderables__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Geometry *arg1 = (vapor::Geometry *) 0 ;
   vapor::RenderStage::Enum arg2 ;
-  vapor::RenderableList *result = 0 ;
+  SwigValueWrapper< std::vector< vapor::RefPtr< vapor::Renderable > > > result;
   
   SWIG_check_num_args("getRenderables",2,2)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getRenderables",1,"vapor::Geometry *");
@@ -11462,8 +11438,11 @@ static int _wrap_Geometry_getRenderables__SWIG_0(lua_State* L) {
   }
   
   arg2 = (vapor::RenderStage::Enum)(int)lua_tonumber(L, 2);
-  result = (vapor::RenderableList *) &(arg1)->getRenderables(arg2);
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t,0); SWIG_arg++; 
+  result = (arg1)->getRenderables(arg2);
+  {
+    vapor::RenderableList * resultptr = new vapor::RenderableList((const vapor::RenderableList &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t,1); SWIG_arg++;
+  }
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -11477,7 +11456,7 @@ fail:
 static int _wrap_Geometry_getRenderables__SWIG_1(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Geometry *arg1 = (vapor::Geometry *) 0 ;
-  vapor::RenderableList *result = 0 ;
+  SwigValueWrapper< std::vector< vapor::RefPtr< vapor::Renderable > > > result;
   
   SWIG_check_num_args("getRenderables",1,1)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getRenderables",1,"vapor::Geometry *");
@@ -11486,8 +11465,11 @@ static int _wrap_Geometry_getRenderables__SWIG_1(lua_State* L) {
     SWIG_fail_ptr("Geometry_getRenderables",1,SWIGTYPE_p_vapor__Geometry);
   }
   
-  result = (vapor::RenderableList *) &(arg1)->getRenderables();
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t,0); SWIG_arg++; 
+  result = (arg1)->getRenderables();
+  {
+    vapor::RenderableList * resultptr = new vapor::RenderableList((const vapor::RenderableList &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t,1); SWIG_arg++;
+  }
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -13442,25 +13424,25 @@ static swig_lua_class *swig_vapor_Group_bases[] = {0,0};
 static const char *swig_vapor_Group_base_names[] = {"vapor::Entity *",0};
 static swig_lua_class _wrap_class_vapor_Group = { "Group", &SWIGTYPE_p_vapor__Group,_wrap_new_Group, swig_delete_Group, swig_vapor_Group_methods, swig_vapor_Group_attributes, swig_vapor_Group_bases, swig_vapor_Group_base_names };
 
-static int _wrap_RayBoxQueryResult_node_set(lua_State* L) {
+static int _wrap_RayQueryResult_entity_set(lua_State* L) {
   int SWIG_arg = 0;
-  vapor::RayBoxQueryResult *arg1 = (vapor::RayBoxQueryResult *) 0 ;
+  vapor::RayQueryResult *arg1 = (vapor::RayQueryResult *) 0 ;
   vapor::EntityPtr *arg2 = (vapor::EntityPtr *) 0 ;
   
-  SWIG_check_num_args("node",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("node",1,"vapor::RayBoxQueryResult *");
-  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("node",2,"vapor::EntityPtr *");
+  SWIG_check_num_args("entity",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("entity",1,"vapor::RayQueryResult *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("entity",2,"vapor::EntityPtr *");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__RayBoxQueryResult,0))){
-    SWIG_fail_ptr("RayBoxQueryResult_node_set",1,SWIGTYPE_p_vapor__RayBoxQueryResult);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__RayQueryResult,0))){
+    SWIG_fail_ptr("RayQueryResult_entity_set",1,SWIGTYPE_p_vapor__RayQueryResult);
   }
   
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_std__shared_ptrT_vapor__Entity_t,0))){
-    SWIG_fail_ptr("RayBoxQueryResult_node_set",2,SWIGTYPE_p_std__shared_ptrT_vapor__Entity_t);
+    SWIG_fail_ptr("RayQueryResult_entity_set",2,SWIGTYPE_p_std__shared_ptrT_vapor__Entity_t);
   }
   
-  if (arg1) (arg1)->node = *arg2;
+  if (arg1) (arg1)->entity = *arg2;
   
   return SWIG_arg;
   
@@ -13472,19 +13454,19 @@ fail:
 }
 
 
-static int _wrap_RayBoxQueryResult_node_get(lua_State* L) {
+static int _wrap_RayQueryResult_entity_get(lua_State* L) {
   int SWIG_arg = 0;
-  vapor::RayBoxQueryResult *arg1 = (vapor::RayBoxQueryResult *) 0 ;
+  vapor::RayQueryResult *arg1 = (vapor::RayQueryResult *) 0 ;
   vapor::EntityPtr *result = 0 ;
   
-  SWIG_check_num_args("node",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("node",1,"vapor::RayBoxQueryResult *");
+  SWIG_check_num_args("entity",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("entity",1,"vapor::RayQueryResult *");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__RayBoxQueryResult,0))){
-    SWIG_fail_ptr("RayBoxQueryResult_node_get",1,SWIGTYPE_p_vapor__RayBoxQueryResult);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__RayQueryResult,0))){
+    SWIG_fail_ptr("RayQueryResult_entity_get",1,SWIGTYPE_p_vapor__RayQueryResult);
   }
   
-  result = (vapor::EntityPtr *)& ((arg1)->node);
+  result = (vapor::EntityPtr *)& ((arg1)->entity);
   SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__shared_ptrT_vapor__Entity_t,0); SWIG_arg++; 
   return SWIG_arg;
   
@@ -13496,17 +13478,17 @@ fail:
 }
 
 
-static int _wrap_RayBoxQueryResult_distance_set(lua_State* L) {
+static int _wrap_RayQueryResult_distance_set(lua_State* L) {
   int SWIG_arg = 0;
-  vapor::RayBoxQueryResult *arg1 = (vapor::RayBoxQueryResult *) 0 ;
+  vapor::RayQueryResult *arg1 = (vapor::RayQueryResult *) 0 ;
   float arg2 ;
   
   SWIG_check_num_args("distance",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("distance",1,"vapor::RayBoxQueryResult *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("distance",1,"vapor::RayQueryResult *");
   if(!lua_isnumber(L,2)) SWIG_fail_arg("distance",2,"float");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__RayBoxQueryResult,0))){
-    SWIG_fail_ptr("RayBoxQueryResult_distance_set",1,SWIGTYPE_p_vapor__RayBoxQueryResult);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__RayQueryResult,0))){
+    SWIG_fail_ptr("RayQueryResult_distance_set",1,SWIGTYPE_p_vapor__RayQueryResult);
   }
   
   arg2 = (float)lua_tonumber(L, 2);
@@ -13522,16 +13504,16 @@ fail:
 }
 
 
-static int _wrap_RayBoxQueryResult_distance_get(lua_State* L) {
+static int _wrap_RayQueryResult_distance_get(lua_State* L) {
   int SWIG_arg = 0;
-  vapor::RayBoxQueryResult *arg1 = (vapor::RayBoxQueryResult *) 0 ;
+  vapor::RayQueryResult *arg1 = (vapor::RayQueryResult *) 0 ;
   float result;
   
   SWIG_check_num_args("distance",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("distance",1,"vapor::RayBoxQueryResult *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("distance",1,"vapor::RayQueryResult *");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__RayBoxQueryResult,0))){
-    SWIG_fail_ptr("RayBoxQueryResult_distance_get",1,SWIGTYPE_p_vapor__RayBoxQueryResult);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__RayQueryResult,0))){
+    SWIG_fail_ptr("RayQueryResult_distance_get",1,SWIGTYPE_p_vapor__RayQueryResult);
   }
   
   result = (float) ((arg1)->distance);
@@ -13546,13 +13528,13 @@ fail:
 }
 
 
-static int _wrap_new_RayBoxQueryResult(lua_State* L) {
+static int _wrap_new_RayQueryResult(lua_State* L) {
   int SWIG_arg = 0;
-  vapor::RayBoxQueryResult *result = 0 ;
+  vapor::RayQueryResult *result = 0 ;
   
-  SWIG_check_num_args("vapor::RayBoxQueryResult::RayBoxQueryResult",0,0)
-  result = (vapor::RayBoxQueryResult *)new vapor::RayBoxQueryResult();
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__RayBoxQueryResult,1); SWIG_arg++; 
+  SWIG_check_num_args("vapor::RayQueryResult::RayQueryResult",0,0)
+  result = (vapor::RayQueryResult *)new vapor::RayQueryResult();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__RayQueryResult,1); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -13563,21 +13545,21 @@ fail:
 }
 
 
-static void swig_delete_RayBoxQueryResult(void *obj) {
-vapor::RayBoxQueryResult *arg1 = (vapor::RayBoxQueryResult *) obj;
+static void swig_delete_RayQueryResult(void *obj) {
+vapor::RayQueryResult *arg1 = (vapor::RayQueryResult *) obj;
 delete arg1;
 }
-static swig_lua_method swig_vapor_RayBoxQueryResult_methods[] = {
+static swig_lua_method swig_vapor_RayQueryResult_methods[] = {
     {0,0}
 };
-static swig_lua_attribute swig_vapor_RayBoxQueryResult_attributes[] = {
-    { "node", _wrap_RayBoxQueryResult_node_get, _wrap_RayBoxQueryResult_node_set},
-    { "distance", _wrap_RayBoxQueryResult_distance_get, _wrap_RayBoxQueryResult_distance_set},
+static swig_lua_attribute swig_vapor_RayQueryResult_attributes[] = {
+    { "entity", _wrap_RayQueryResult_entity_get, _wrap_RayQueryResult_entity_set},
+    { "distance", _wrap_RayQueryResult_distance_get, _wrap_RayQueryResult_distance_set},
     {0,0,0}
 };
-static swig_lua_class *swig_vapor_RayBoxQueryResult_bases[] = {0};
-static const char *swig_vapor_RayBoxQueryResult_base_names[] = {0};
-static swig_lua_class _wrap_class_vapor_RayBoxQueryResult = { "RayBoxQueryResult", &SWIGTYPE_p_vapor__RayBoxQueryResult,_wrap_new_RayBoxQueryResult, swig_delete_RayBoxQueryResult, swig_vapor_RayBoxQueryResult_methods, swig_vapor_RayBoxQueryResult_attributes, swig_vapor_RayBoxQueryResult_bases, swig_vapor_RayBoxQueryResult_base_names };
+static swig_lua_class *swig_vapor_RayQueryResult_bases[] = {0};
+static const char *swig_vapor_RayQueryResult_base_names[] = {0};
+static swig_lua_class _wrap_class_vapor_RayQueryResult = { "RayQueryResult", &SWIGTYPE_p_vapor__RayQueryResult,_wrap_new_RayQueryResult, swig_delete_RayQueryResult, swig_vapor_RayQueryResult_methods, swig_vapor_RayQueryResult_attributes, swig_vapor_RayQueryResult_bases, swig_vapor_RayQueryResult_base_names };
 
 static int _wrap_RayTriangleQueryResult_geometry_set(lua_State* L) {
   int SWIG_arg = 0;
@@ -13636,24 +13618,22 @@ fail:
 static int _wrap_RayTriangleQueryResult_renderable_set(lua_State* L) {
   int SWIG_arg = 0;
   vapor::RayTriangleQueryResult *arg1 = (vapor::RayTriangleQueryResult *) 0 ;
-  vapor::RenderablePtr arg2 ;
-  vapor::RenderablePtr *argp2 ;
+  vapor::RenderablePtr *arg2 = (vapor::RenderablePtr *) 0 ;
   
   SWIG_check_num_args("renderable",2,2)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("renderable",1,"vapor::RayTriangleQueryResult *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("renderable",2,"vapor::RenderablePtr");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("renderable",2,"vapor::RenderablePtr *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__RayTriangleQueryResult,0))){
     SWIG_fail_ptr("RayTriangleQueryResult_renderable_set",1,SWIGTYPE_p_vapor__RayTriangleQueryResult);
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_boost__intrusive_ptrT_vapor__Renderable_t,0))){
-    SWIG_fail_ptr("RayTriangleQueryResult_renderable_set",2,SWIGTYPE_p_boost__intrusive_ptrT_vapor__Renderable_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__RefPtrT_vapor__Renderable_t,0))){
+    SWIG_fail_ptr("RayTriangleQueryResult_renderable_set",2,SWIGTYPE_p_vapor__RefPtrT_vapor__Renderable_t);
   }
-  arg2 = *argp2;
   
-  if (arg1) (arg1)->renderable = arg2;
+  if (arg1) (arg1)->renderable = *arg2;
   
   return SWIG_arg;
   
@@ -13668,7 +13648,7 @@ fail:
 static int _wrap_RayTriangleQueryResult_renderable_get(lua_State* L) {
   int SWIG_arg = 0;
   vapor::RayTriangleQueryResult *arg1 = (vapor::RayTriangleQueryResult *) 0 ;
-  vapor::RenderablePtr result;
+  vapor::RenderablePtr *result = 0 ;
   
   SWIG_check_num_args("renderable",1,1)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("renderable",1,"vapor::RayTriangleQueryResult *");
@@ -13677,11 +13657,8 @@ static int _wrap_RayTriangleQueryResult_renderable_get(lua_State* L) {
     SWIG_fail_ptr("RayTriangleQueryResult_renderable_get",1,SWIGTYPE_p_vapor__RayTriangleQueryResult);
   }
   
-  result =  ((arg1)->renderable);
-  {
-    vapor::RenderablePtr * resultptr = new vapor::RenderablePtr((const vapor::RenderablePtr &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_boost__intrusive_ptrT_vapor__Renderable_t,1); SWIG_arg++;
-  }
+  result = (vapor::RenderablePtr *)& ((arg1)->renderable);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__RefPtrT_vapor__Renderable_t,0); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -14051,13 +14028,13 @@ static int _wrap_Scene_doRayBoxQuery__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Scene *arg1 = (vapor::Scene *) 0 ;
   vapor::Ray *arg2 = 0 ;
-  vapor::RayBoxQueryResult *arg3 = 0 ;
+  vapor::RayQueryResult *arg3 = 0 ;
   bool result;
   
   SWIG_check_num_args("doRayBoxQuery",3,3)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("doRayBoxQuery",1,"vapor::Scene *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("doRayBoxQuery",2,"vapor::Ray const &");
-  if(!lua_isuserdata(L,3)) SWIG_fail_arg("doRayBoxQuery",3,"vapor::RayBoxQueryResult &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("doRayBoxQuery",3,"vapor::RayQueryResult &");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Scene,0))){
     SWIG_fail_ptr("Scene_doRayBoxQuery",1,SWIGTYPE_p_vapor__Scene);
@@ -14069,8 +14046,8 @@ static int _wrap_Scene_doRayBoxQuery__SWIG_0(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_vapor__RayBoxQueryResult,0))){
-    SWIG_fail_ptr("Scene_doRayBoxQuery",3,SWIGTYPE_p_vapor__RayBoxQueryResult);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_vapor__RayQueryResult,0))){
+    SWIG_fail_ptr("Scene_doRayBoxQuery",3,SWIGTYPE_p_vapor__RayQueryResult);
   }
   
   result = (bool)(arg1)->doRayBoxQuery((vapor::Ray const &)*arg2,*arg3);
@@ -14089,14 +14066,14 @@ static int _wrap_Scene_doRayBoxQuery__SWIG_1(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Scene *arg1 = (vapor::Scene *) 0 ;
   vapor::Ray *arg2 = 0 ;
-  vapor::RayBoxQueryList *arg3 = 0 ;
+  vapor::RayQueryList *arg3 = 0 ;
   bool arg4 ;
   bool result;
   
   SWIG_check_num_args("doRayBoxQuery",4,4)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("doRayBoxQuery",1,"vapor::Scene *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("doRayBoxQuery",2,"vapor::Ray const &");
-  if(!lua_isuserdata(L,3)) SWIG_fail_arg("doRayBoxQuery",3,"vapor::RayBoxQueryList &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("doRayBoxQuery",3,"vapor::RayQueryList &");
   if(!lua_isboolean(L,4)) SWIG_fail_arg("doRayBoxQuery",4,"bool");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Scene,0))){
@@ -14109,8 +14086,8 @@ static int _wrap_Scene_doRayBoxQuery__SWIG_1(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_std__vectorT_vapor__RayBoxQueryResult_t,0))){
-    SWIG_fail_ptr("Scene_doRayBoxQuery",3,SWIGTYPE_p_std__vectorT_vapor__RayBoxQueryResult_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_std__vectorT_vapor__RayQueryResult_t,0))){
+    SWIG_fail_ptr("Scene_doRayBoxQuery",3,SWIGTYPE_p_std__vectorT_vapor__RayQueryResult_t);
   }
   
   arg4 = (lua_toboolean(L, 4)!=0);
@@ -14130,13 +14107,13 @@ static int _wrap_Scene_doRayBoxQuery__SWIG_2(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Scene *arg1 = (vapor::Scene *) 0 ;
   vapor::Ray *arg2 = 0 ;
-  vapor::RayBoxQueryList *arg3 = 0 ;
+  vapor::RayQueryList *arg3 = 0 ;
   bool result;
   
   SWIG_check_num_args("doRayBoxQuery",3,3)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("doRayBoxQuery",1,"vapor::Scene *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("doRayBoxQuery",2,"vapor::Ray const &");
-  if(!lua_isuserdata(L,3)) SWIG_fail_arg("doRayBoxQuery",3,"vapor::RayBoxQueryList &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("doRayBoxQuery",3,"vapor::RayQueryList &");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Scene,0))){
     SWIG_fail_ptr("Scene_doRayBoxQuery",1,SWIGTYPE_p_vapor__Scene);
@@ -14148,8 +14125,8 @@ static int _wrap_Scene_doRayBoxQuery__SWIG_2(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_std__vectorT_vapor__RayBoxQueryResult_t,0))){
-    SWIG_fail_ptr("Scene_doRayBoxQuery",3,SWIGTYPE_p_std__vectorT_vapor__RayBoxQueryResult_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_std__vectorT_vapor__RayQueryResult_t,0))){
+    SWIG_fail_ptr("Scene_doRayBoxQuery",3,SWIGTYPE_p_std__vectorT_vapor__RayQueryResult_t);
   }
   
   result = (bool)(arg1)->doRayBoxQuery((vapor::Ray const &)*arg2,*arg3);
@@ -14193,7 +14170,7 @@ static int _wrap_Scene_doRayBoxQuery(lua_State* L) {
       if (_v) {
         {
           void *ptr;
-          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_vapor__RayBoxQueryResult, 0)) {
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_vapor__RayQueryResult, 0)) {
             _v = 0;
           } else {
             _v = 1;
@@ -14227,7 +14204,7 @@ static int _wrap_Scene_doRayBoxQuery(lua_State* L) {
       if (_v) {
         {
           void *ptr;
-          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_std__vectorT_vapor__RayBoxQueryResult_t, 0)) {
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_std__vectorT_vapor__RayQueryResult_t, 0)) {
             _v = 0;
           } else {
             _v = 1;
@@ -14261,7 +14238,7 @@ static int _wrap_Scene_doRayBoxQuery(lua_State* L) {
       if (_v) {
         {
           void *ptr;
-          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_std__vectorT_vapor__RayBoxQueryResult_t, 0)) {
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_std__vectorT_vapor__RayQueryResult_t, 0)) {
             _v = 0;
           } else {
             _v = 1;
@@ -14281,9 +14258,177 @@ static int _wrap_Scene_doRayBoxQuery(lua_State* L) {
   
   lua_pushstring(L,"Wrong arguments for overloaded function 'Scene_doRayBoxQuery'\n"
     "  Possible C/C++ prototypes are:\n"
-    "    doRayBoxQuery(vapor::Scene *,vapor::Ray const &,vapor::RayBoxQueryResult &)\n"
-    "    doRayBoxQuery(vapor::Scene *,vapor::Ray const &,vapor::RayBoxQueryList &,bool)\n"
-    "    doRayBoxQuery(vapor::Scene *,vapor::Ray const &,vapor::RayBoxQueryList &)\n");
+    "    doRayBoxQuery(vapor::Scene *,vapor::Ray const &,vapor::RayQueryResult &)\n"
+    "    doRayBoxQuery(vapor::Scene *,vapor::Ray const &,vapor::RayQueryList &,bool)\n"
+    "    doRayBoxQuery(vapor::Scene *,vapor::Ray const &,vapor::RayQueryList &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_Scene_doRayVolumeQuery__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Scene *arg1 = (vapor::Scene *) 0 ;
+  vapor::Frustum *arg2 = 0 ;
+  vapor::RayQueryList *arg3 = 0 ;
+  bool arg4 ;
+  bool result;
+  
+  SWIG_check_num_args("doRayVolumeQuery",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("doRayVolumeQuery",1,"vapor::Scene *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("doRayVolumeQuery",2,"vapor::Frustum const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("doRayVolumeQuery",3,"vapor::RayQueryList &");
+  if(!lua_isboolean(L,4)) SWIG_fail_arg("doRayVolumeQuery",4,"bool");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Scene,0))){
+    SWIG_fail_ptr("Scene_doRayVolumeQuery",1,SWIGTYPE_p_vapor__Scene);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Frustum,0))){
+    SWIG_fail_ptr("Scene_doRayVolumeQuery",2,SWIGTYPE_p_vapor__Frustum);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_std__vectorT_vapor__RayQueryResult_t,0))){
+    SWIG_fail_ptr("Scene_doRayVolumeQuery",3,SWIGTYPE_p_std__vectorT_vapor__RayQueryResult_t);
+  }
+  
+  arg4 = (lua_toboolean(L, 4)!=0);
+  result = (bool)(arg1)->doRayVolumeQuery((vapor::Frustum const &)*arg2,*arg3,arg4);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Scene_doRayVolumeQuery__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Scene *arg1 = (vapor::Scene *) 0 ;
+  vapor::Frustum *arg2 = 0 ;
+  vapor::RayQueryList *arg3 = 0 ;
+  bool result;
+  
+  SWIG_check_num_args("doRayVolumeQuery",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("doRayVolumeQuery",1,"vapor::Scene *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("doRayVolumeQuery",2,"vapor::Frustum const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("doRayVolumeQuery",3,"vapor::RayQueryList &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Scene,0))){
+    SWIG_fail_ptr("Scene_doRayVolumeQuery",1,SWIGTYPE_p_vapor__Scene);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Frustum,0))){
+    SWIG_fail_ptr("Scene_doRayVolumeQuery",2,SWIGTYPE_p_vapor__Frustum);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_std__vectorT_vapor__RayQueryResult_t,0))){
+    SWIG_fail_ptr("Scene_doRayVolumeQuery",3,SWIGTYPE_p_std__vectorT_vapor__RayQueryResult_t);
+  }
+  
+  result = (bool)(arg1)->doRayVolumeQuery((vapor::Frustum const &)*arg2,*arg3);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Scene_doRayVolumeQuery(lua_State* L) {
+  int argc;
+  int argv[5]={
+    1,2,3,4,5
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_vapor__Scene, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_vapor__Frustum, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_std__vectorT_vapor__RayQueryResult_t, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          return _wrap_Scene_doRayVolumeQuery__SWIG_1(L);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_vapor__Scene, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_vapor__Frustum, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_std__vectorT_vapor__RayQueryResult_t, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          {
+            _v = lua_isboolean(L,argv[3]);
+          }
+          if (_v) {
+            return _wrap_Scene_doRayVolumeQuery__SWIG_0(L);
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'Scene_doRayVolumeQuery'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    doRayVolumeQuery(vapor::Scene *,vapor::Frustum const &,vapor::RayQueryList &,bool)\n"
+    "    doRayVolumeQuery(vapor::Scene *,vapor::Frustum const &,vapor::RayQueryList &)\n");
   lua_error(L);return 0;
 }
 
@@ -14472,6 +14617,7 @@ delete arg1;
 static swig_lua_method swig_vapor_Scene_methods[] = {
     {"update", _wrap_Scene_update}, 
     {"doRayBoxQuery", _wrap_Scene_doRayBoxQuery}, 
+    {"doRayVolumeQuery", _wrap_Scene_doRayVolumeQuery}, 
     {"doRayTriangleQuery", _wrap_Scene_doRayTriangleQuery}, 
     {0,0}
 };
@@ -14643,6 +14789,12 @@ static void *_p_vapor__ResourceTo_p_vapor__ReferenceCounted(void *x, int *SWIGUN
 static void *_p_vapor__MeshTo_p_vapor__ReferenceCounted(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((vapor::ReferenceCounted *) (vapor::Resource *) ((vapor::Mesh *) x));
 }
+static void *_p_vapor__GroupTo_p_vapor__Entity(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((vapor::Entity *)  ((vapor::Group *) x));
+}
+static void *_p_vapor__SceneTo_p_vapor__Entity(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((vapor::Entity *) (vapor::Group *) ((vapor::Scene *) x));
+}
 static void *_p_vapor__ControllerTo_p_vapor__Component(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((vapor::Component *)  ((vapor::Controller *) x));
 }
@@ -14685,12 +14837,6 @@ static void *_p_vapor__SceneTo_p_vapor__Group(void *x, int *SWIGUNUSEDPARM(newme
 static void *_p_vapor__MeshTo_p_vapor__Resource(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((vapor::Resource *)  ((vapor::Mesh *) x));
 }
-static void *_p_vapor__GroupTo_p_vapor__Entity(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((vapor::Entity *)  ((vapor::Group *) x));
-}
-static void *_p_vapor__SceneTo_p_vapor__Entity(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((vapor::Entity *) (vapor::Group *) ((vapor::Scene *) x));
-}
 static void *_p_vapor__MouseWheelEventTo_p_vapor__MouseEvent(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((vapor::MouseEvent *)  ((vapor::MouseWheelEvent *) x));
 }
@@ -14709,43 +14855,34 @@ static void *_p_vapor__CharacterControllerTo_p_vapor__Controller(void *x, int *S
 static swig_type_info _swigt__p_Event0T_t = {"_p_Event0T_t", "Event0< > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Event1T_std__shared_ptrT_vapor__Component_t_const_R_t = {"_p_Event1T_std__shared_ptrT_vapor__Component_t_const_R_t", "Event1< vapor::ComponentPtr const & > *|Event1< std::shared_ptr< vapor::Component > const & > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Event1T_std__shared_ptrT_vapor__Entity_t_const_R_t = {"_p_Event1T_std__shared_ptrT_vapor__Entity_t_const_R_t", "Event1< std::shared_ptr< vapor::Entity > const & > *|Event1< vapor::EntityPtr const & > *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_boost__atomicT_int_t = {"_p_boost__atomicT_int_t", "boost::atomic< int > *|atomic_int *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_boost__intrusive_ptrT_vapor__Animation_t = {"_p_boost__intrusive_ptrT_vapor__Animation_t", "vapor::AnimationPtr *|boost::intrusive_ptr< vapor::Animation > *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_boost__intrusive_ptrT_vapor__Attachment_t = {"_p_boost__intrusive_ptrT_vapor__Attachment_t", "vapor::AttachmentPtr *|boost::intrusive_ptr< vapor::Attachment > *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_boost__intrusive_ptrT_vapor__Bone_t = {"_p_boost__intrusive_ptrT_vapor__Bone_t", "boost::intrusive_ptr< vapor::Bone > *|vapor::BonePtr *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_boost__intrusive_ptrT_vapor__Mesh_t = {"_p_boost__intrusive_ptrT_vapor__Mesh_t", "boost::intrusive_ptr< vapor::Mesh > *|vapor::MeshPtr *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_boost__intrusive_ptrT_vapor__Renderable_t = {"_p_boost__intrusive_ptrT_vapor__Renderable_t", "vapor::RenderablePtr *|boost::intrusive_ptr< vapor::Renderable > *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_boost__intrusive_ptrT_vapor__Resource_t = {"_p_boost__intrusive_ptrT_vapor__Resource_t", "boost::intrusive_ptr< vapor::Resource > *|vapor::ResourcePtr *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_boost__intrusive_ptrT_vapor__Skeleton_t = {"_p_boost__intrusive_ptrT_vapor__Skeleton_t", "vapor::SkeletonPtr *|boost::intrusive_ptr< vapor::Skeleton > *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_boost__thread = {"_p_boost__thread", "boost::thread *|Thread *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_float = {"_p_float", "float *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_int = {"_p_int", "int *|vapor::ResourceHandle *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t = {"_p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t", "vapor::ComponentMap *|std::map< Class const *,std::shared_ptr< vapor::Component > > *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_std__mapT_vapor__RenderStage__Enum_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t_t = {"_p_std__mapT_vapor__RenderStage__Enum_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t_t", "vapor::RenderableMap *|std::map< enum vapor::RenderStage::Enum,std::vector< boost::intrusive_ptr< vapor::Renderable > > > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__mapT_vapor__RenderStage__Enum_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t_t = {"_p_std__mapT_vapor__RenderStage__Enum_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t_t", "vapor::RenderableMap *|std::map< enum vapor::RenderStage::Enum,std::vector< vapor::RefPtr< vapor::Renderable > > > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__pairT_Class_const_p_std__shared_ptrT_vapor__Component_t_t = {"_p_std__pairT_Class_const_p_std__shared_ptrT_vapor__Component_t_t", "std::pair< Class const *,std::shared_ptr< vapor::Component > > *|vapor::ComponentMapPair *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_std__pairT_vapor__RenderStage__Enum_const_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t_t = {"_p_std__pairT_vapor__RenderStage__Enum_const_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t_t", "std::pair< enum vapor::RenderStage::Enum const,std::vector< boost::intrusive_ptr< vapor::Renderable > > > *|vapor::RenderableMapPair *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__pairT_vapor__RenderStage__Enum_const_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t_t = {"_p_std__pairT_vapor__RenderStage__Enum_const_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t_t", "std::pair< enum vapor::RenderStage::Enum const,std::vector< vapor::RefPtr< vapor::Renderable > > > *|vapor::RenderableMapPair *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__shared_ptrT_vapor__Camera_t = {"_p_std__shared_ptrT_vapor__Camera_t", "std::shared_ptr< vapor::Camera > *|vapor::CameraPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__shared_ptrT_vapor__CharacterController_t = {"_p_std__shared_ptrT_vapor__CharacterController_t", "std::shared_ptr< vapor::CharacterController > *|vapor::CharacterControllerPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__shared_ptrT_vapor__Component_t = {"_p_std__shared_ptrT_vapor__Component_t", "vapor::ComponentPtr *|std::shared_ptr< vapor::Component > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__shared_ptrT_vapor__Controller_t = {"_p_std__shared_ptrT_vapor__Controller_t", "std::shared_ptr< vapor::Controller > *|vapor::ControllerPtr *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__shared_ptrT_vapor__Entity_t = {"_p_std__shared_ptrT_vapor__Entity_t", "std::shared_ptr< vapor::Entity > *|vapor::EntityPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__shared_ptrT_vapor__Geometry_t = {"_p_std__shared_ptrT_vapor__Geometry_t", "std::shared_ptr< vapor::Geometry > *|vapor::GeometryPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__shared_ptrT_vapor__Group_t = {"_p_std__shared_ptrT_vapor__Group_t", "std::shared_ptr< vapor::Group > *|vapor::GroupPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__shared_ptrT_vapor__Light_t = {"_p_std__shared_ptrT_vapor__Light_t", "vapor::LightPtr *|std::shared_ptr< vapor::Light > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__shared_ptrT_vapor__Model_t = {"_p_std__shared_ptrT_vapor__Model_t", "vapor::ModelPtr *|std::shared_ptr< vapor::Model > *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_std__shared_ptrT_vapor__Entity_t = {"_p_std__shared_ptrT_vapor__Entity_t", "std::shared_ptr< vapor::Entity > *|vapor::EntityPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__shared_ptrT_vapor__Scene_t = {"_p_std__shared_ptrT_vapor__Scene_t", "std::shared_ptr< vapor::Scene > *|vapor::ScenePtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__shared_ptrT_vapor__Transform_t = {"_p_std__shared_ptrT_vapor__Transform_t", "std::shared_ptr< vapor::Transform > *|vapor::TransformPtr *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_std__vectorT_boost__intrusive_ptrT_vapor__Animation_t_t = {"_p_std__vectorT_boost__intrusive_ptrT_vapor__Animation_t_t", "std::vector< vapor::AnimationPtr > *|std::vector< boost::intrusive_ptr< vapor::Animation > > *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t = {"_p_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t", "vapor::RenderableList *|std::vector< boost::intrusive_ptr< vapor::Renderable > > *|std::vector< vapor::RenderablePtr > *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_std__vectorT_std__shared_ptrT_vapor__Geometry_t_t = {"_p_std__vectorT_std__shared_ptrT_vapor__Geometry_t_t", "std::vector< std::shared_ptr< vapor::Geometry > > *|std::vector< vapor::GeometryPtr > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__vectorT_std__shared_ptrT_vapor__Entity_t_t = {"_p_std__vectorT_std__shared_ptrT_vapor__Entity_t_t", "std::vector< std::shared_ptr< vapor::Entity > > *|std::vector< vapor::EntityPtr > *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_std__vectorT_vapor__RayBoxQueryResult_t = {"_p_std__vectorT_vapor__RayBoxQueryResult_t", "std::vector< vapor::RayBoxQueryResult > *|vapor::RayBoxQueryList *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__vectorT_std__shared_ptrT_vapor__Geometry_t_t = {"_p_std__vectorT_std__shared_ptrT_vapor__Geometry_t_t", "std::vector< std::shared_ptr< vapor::Geometry > > *|std::vector< vapor::GeometryPtr > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__vectorT_vapor__RayQueryResult_t = {"_p_std__vectorT_vapor__RayQueryResult_t", "std::vector< vapor::RayQueryResult > *|vapor::RayQueryList *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__vectorT_vapor__RefPtrT_vapor__Animation_t_t = {"_p_std__vectorT_vapor__RefPtrT_vapor__Animation_t_t", "std::vector< vapor::RefPtr< vapor::Animation > > *|std::vector< vapor::AnimationPtr > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t = {"_p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t", "vapor::RenderableList *|std::vector< vapor::RenderablePtr > *|std::vector< vapor::RefPtr< vapor::Renderable > > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__weak_ptrT_vapor__Camera_t = {"_p_std__weak_ptrT_vapor__Camera_t", "std::weak_ptr< vapor::Camera > *|vapor::CameraWeakPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__weak_ptrT_vapor__CharacterController_t = {"_p_std__weak_ptrT_vapor__CharacterController_t", "std::weak_ptr< vapor::CharacterController > *|vapor::CharacterControllerWeakPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__weak_ptrT_vapor__Component_t = {"_p_std__weak_ptrT_vapor__Component_t", "vapor::ComponentWeakPtr *|std::weak_ptr< vapor::Component > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__weak_ptrT_vapor__Controller_t = {"_p_std__weak_ptrT_vapor__Controller_t", "std::weak_ptr< vapor::Controller > *|vapor::ControllerWeakPtr *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_std__weak_ptrT_vapor__Geometry_t = {"_p_std__weak_ptrT_vapor__Geometry_t", "std::weak_ptr< vapor::Geometry > *|vapor::GeometryWeakPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__weak_ptrT_vapor__Entity_t = {"_p_std__weak_ptrT_vapor__Entity_t", "vapor::EntityWeakPtr *|std::weak_ptr< vapor::Entity > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__weak_ptrT_vapor__Geometry_t = {"_p_std__weak_ptrT_vapor__Geometry_t", "std::weak_ptr< vapor::Geometry > *|vapor::GeometryWeakPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__weak_ptrT_vapor__Scene_t = {"_p_std__weak_ptrT_vapor__Scene_t", "std::weak_ptr< vapor::Scene > *|vapor::SceneWeakPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_unsigned_char = {"_p_unsigned_char", "unsigned char *|byte *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_unsigned_int = {"_p_unsigned_int", "unsigned int *|uint *", 0, 0, (void*)0, 0};
@@ -14757,6 +14894,7 @@ static swig_type_info _swigt__p_vapor__CharacterController = {"_p_vapor__Charact
 static swig_type_info _swigt__p_vapor__Color = {"_p_vapor__Color", "vapor::Color *", 0, 0, (void*)&_wrap_class_vapor_Color, 0};
 static swig_type_info _swigt__p_vapor__Component = {"_p_vapor__Component", "vapor::Component *", 0, 0, (void*)&_wrap_class_vapor_Component, 0};
 static swig_type_info _swigt__p_vapor__Controller = {"_p_vapor__Controller", "vapor::Controller *", 0, 0, (void*)&_wrap_class_vapor_Controller, 0};
+static swig_type_info _swigt__p_vapor__Entity = {"_p_vapor__Entity", "vapor::Entity *", 0, 0, (void*)&_wrap_class_vapor_Entity, 0};
 static swig_type_info _swigt__p_vapor__EulerAngles = {"_p_vapor__EulerAngles", "vapor::EulerAngles *", 0, 0, (void*)&_wrap_class_vapor_EulerAngles, 0};
 static swig_type_info _swigt__p_vapor__Frustum = {"_p_vapor__Frustum", "vapor::Frustum *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_vapor__Geometry = {"_p_vapor__Geometry", "vapor::Geometry *", 0, 0, (void*)&_wrap_class_vapor_Geometry, 0};
@@ -14777,14 +14915,19 @@ static swig_type_info _swigt__p_vapor__MouseEvent = {"_p_vapor__MouseEvent", "va
 static swig_type_info _swigt__p_vapor__MouseEventType = {"_p_vapor__MouseEventType", "vapor::MouseEventType *", 0, 0, (void*)&_wrap_class_vapor_MouseEventType, 0};
 static swig_type_info _swigt__p_vapor__MouseMoveEvent = {"_p_vapor__MouseMoveEvent", "vapor::MouseMoveEvent *", 0, 0, (void*)&_wrap_class_vapor_MouseMoveEvent, 0};
 static swig_type_info _swigt__p_vapor__MouseWheelEvent = {"_p_vapor__MouseWheelEvent", "vapor::MouseWheelEvent *", 0, 0, (void*)&_wrap_class_vapor_MouseWheelEvent, 0};
-static swig_type_info _swigt__p_vapor__Entity = {"_p_vapor__Entity", "vapor::Entity *", 0, 0, (void*)&_wrap_class_vapor_Entity, 0};
 static swig_type_info _swigt__p_vapor__Quaternion = {"_p_vapor__Quaternion", "vapor::Quaternion *", 0, 0, (void*)&_wrap_class_vapor_Quaternion, 0};
 static swig_type_info _swigt__p_vapor__Ray = {"_p_vapor__Ray", "vapor::Ray *", 0, 0, (void*)&_wrap_class_vapor_Ray, 0};
-static swig_type_info _swigt__p_vapor__RayBoxQueryResult = {"_p_vapor__RayBoxQueryResult", "vapor::RayBoxQueryResult *", 0, 0, (void*)&_wrap_class_vapor_RayBoxQueryResult, 0};
+static swig_type_info _swigt__p_vapor__RayQueryResult = {"_p_vapor__RayQueryResult", "vapor::RayQueryResult *", 0, 0, (void*)&_wrap_class_vapor_RayQueryResult, 0};
 static swig_type_info _swigt__p_vapor__RayTriangleQueryResult = {"_p_vapor__RayTriangleQueryResult", "vapor::RayTriangleQueryResult *", 0, 0, (void*)&_wrap_class_vapor_RayTriangleQueryResult, 0};
+static swig_type_info _swigt__p_vapor__RefPtrT_vapor__Animation_t = {"_p_vapor__RefPtrT_vapor__Animation_t", "vapor::AnimationPtr *|vapor::RefPtr< vapor::Animation > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_vapor__RefPtrT_vapor__Attachment_t = {"_p_vapor__RefPtrT_vapor__Attachment_t", "vapor::AttachmentPtr *|vapor::RefPtr< vapor::Attachment > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_vapor__RefPtrT_vapor__Bone_t = {"_p_vapor__RefPtrT_vapor__Bone_t", "vapor::RefPtr< vapor::Bone > *|vapor::BonePtr *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_vapor__RefPtrT_vapor__Mesh_t = {"_p_vapor__RefPtrT_vapor__Mesh_t", "vapor::RefPtr< vapor::Mesh > *|vapor::MeshPtr *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_vapor__RefPtrT_vapor__Renderable_t = {"_p_vapor__RefPtrT_vapor__Renderable_t", "vapor::RenderablePtr *|vapor::RefPtr< vapor::Renderable > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_vapor__RefPtrT_vapor__Resource_t = {"_p_vapor__RefPtrT_vapor__Resource_t", "vapor::RefPtr< vapor::Resource > *|vapor::ResourcePtr *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_vapor__RefPtrT_vapor__Skeleton_t = {"_p_vapor__RefPtrT_vapor__Skeleton_t", "vapor::SkeletonPtr *|vapor::RefPtr< vapor::Skeleton > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_vapor__ReferenceCounted = {"_p_vapor__ReferenceCounted", "vapor::ReferenceCounted *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_vapor__RenderBlock = {"_p_vapor__RenderBlock", "vapor::RenderBlock *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_vapor__RenderDevice = {"_p_vapor__RenderDevice", "vapor::RenderDevice *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_vapor__RenderQueue = {"_p_vapor__RenderQueue", "vapor::RenderQueue *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_vapor__RenderView = {"_p_vapor__RenderView", "vapor::RenderView *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_vapor__Resource = {"_p_vapor__Resource", "vapor::Resource *", 0, 0, (void*)0, 0};
@@ -14803,43 +14946,34 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_Event0T_t,
   &_swigt__p_Event1T_std__shared_ptrT_vapor__Component_t_const_R_t,
   &_swigt__p_Event1T_std__shared_ptrT_vapor__Entity_t_const_R_t,
-  &_swigt__p_boost__atomicT_int_t,
-  &_swigt__p_boost__intrusive_ptrT_vapor__Animation_t,
-  &_swigt__p_boost__intrusive_ptrT_vapor__Attachment_t,
-  &_swigt__p_boost__intrusive_ptrT_vapor__Bone_t,
-  &_swigt__p_boost__intrusive_ptrT_vapor__Mesh_t,
-  &_swigt__p_boost__intrusive_ptrT_vapor__Renderable_t,
-  &_swigt__p_boost__intrusive_ptrT_vapor__Resource_t,
-  &_swigt__p_boost__intrusive_ptrT_vapor__Skeleton_t,
-  &_swigt__p_boost__thread,
   &_swigt__p_float,
   &_swigt__p_int,
   &_swigt__p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t,
-  &_swigt__p_std__mapT_vapor__RenderStage__Enum_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t_t,
+  &_swigt__p_std__mapT_vapor__RenderStage__Enum_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t_t,
   &_swigt__p_std__pairT_Class_const_p_std__shared_ptrT_vapor__Component_t_t,
-  &_swigt__p_std__pairT_vapor__RenderStage__Enum_const_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t_t,
+  &_swigt__p_std__pairT_vapor__RenderStage__Enum_const_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t_t,
   &_swigt__p_std__shared_ptrT_vapor__Camera_t,
   &_swigt__p_std__shared_ptrT_vapor__CharacterController_t,
   &_swigt__p_std__shared_ptrT_vapor__Component_t,
   &_swigt__p_std__shared_ptrT_vapor__Controller_t,
+  &_swigt__p_std__shared_ptrT_vapor__Entity_t,
   &_swigt__p_std__shared_ptrT_vapor__Geometry_t,
   &_swigt__p_std__shared_ptrT_vapor__Group_t,
   &_swigt__p_std__shared_ptrT_vapor__Light_t,
   &_swigt__p_std__shared_ptrT_vapor__Model_t,
-  &_swigt__p_std__shared_ptrT_vapor__Entity_t,
   &_swigt__p_std__shared_ptrT_vapor__Scene_t,
   &_swigt__p_std__shared_ptrT_vapor__Transform_t,
-  &_swigt__p_std__vectorT_boost__intrusive_ptrT_vapor__Animation_t_t,
-  &_swigt__p_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t,
-  &_swigt__p_std__vectorT_std__shared_ptrT_vapor__Geometry_t_t,
   &_swigt__p_std__vectorT_std__shared_ptrT_vapor__Entity_t_t,
-  &_swigt__p_std__vectorT_vapor__RayBoxQueryResult_t,
+  &_swigt__p_std__vectorT_std__shared_ptrT_vapor__Geometry_t_t,
+  &_swigt__p_std__vectorT_vapor__RayQueryResult_t,
+  &_swigt__p_std__vectorT_vapor__RefPtrT_vapor__Animation_t_t,
+  &_swigt__p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t,
   &_swigt__p_std__weak_ptrT_vapor__Camera_t,
   &_swigt__p_std__weak_ptrT_vapor__CharacterController_t,
   &_swigt__p_std__weak_ptrT_vapor__Component_t,
   &_swigt__p_std__weak_ptrT_vapor__Controller_t,
-  &_swigt__p_std__weak_ptrT_vapor__Geometry_t,
   &_swigt__p_std__weak_ptrT_vapor__Entity_t,
+  &_swigt__p_std__weak_ptrT_vapor__Geometry_t,
   &_swigt__p_std__weak_ptrT_vapor__Scene_t,
   &_swigt__p_unsigned_char,
   &_swigt__p_unsigned_int,
@@ -14851,6 +14985,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_vapor__Color,
   &_swigt__p_vapor__Component,
   &_swigt__p_vapor__Controller,
+  &_swigt__p_vapor__Entity,
   &_swigt__p_vapor__EulerAngles,
   &_swigt__p_vapor__Frustum,
   &_swigt__p_vapor__Geometry,
@@ -14871,14 +15006,19 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_vapor__MouseEventType,
   &_swigt__p_vapor__MouseMoveEvent,
   &_swigt__p_vapor__MouseWheelEvent,
-  &_swigt__p_vapor__Entity,
   &_swigt__p_vapor__Quaternion,
   &_swigt__p_vapor__Ray,
-  &_swigt__p_vapor__RayBoxQueryResult,
+  &_swigt__p_vapor__RayQueryResult,
   &_swigt__p_vapor__RayTriangleQueryResult,
+  &_swigt__p_vapor__RefPtrT_vapor__Animation_t,
+  &_swigt__p_vapor__RefPtrT_vapor__Attachment_t,
+  &_swigt__p_vapor__RefPtrT_vapor__Bone_t,
+  &_swigt__p_vapor__RefPtrT_vapor__Mesh_t,
+  &_swigt__p_vapor__RefPtrT_vapor__Renderable_t,
+  &_swigt__p_vapor__RefPtrT_vapor__Resource_t,
+  &_swigt__p_vapor__RefPtrT_vapor__Skeleton_t,
   &_swigt__p_vapor__ReferenceCounted,
   &_swigt__p_vapor__RenderBlock,
-  &_swigt__p_vapor__RenderDevice,
   &_swigt__p_vapor__RenderQueue,
   &_swigt__p_vapor__RenderView,
   &_swigt__p_vapor__Resource,
@@ -14897,43 +15037,34 @@ static swig_type_info *swig_type_initial[] = {
 static swig_cast_info _swigc__p_Event0T_t[] = {  {&_swigt__p_Event0T_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Event1T_std__shared_ptrT_vapor__Component_t_const_R_t[] = {  {&_swigt__p_Event1T_std__shared_ptrT_vapor__Component_t_const_R_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Event1T_std__shared_ptrT_vapor__Entity_t_const_R_t[] = {  {&_swigt__p_Event1T_std__shared_ptrT_vapor__Entity_t_const_R_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_boost__atomicT_int_t[] = {  {&_swigt__p_boost__atomicT_int_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_boost__intrusive_ptrT_vapor__Animation_t[] = {  {&_swigt__p_boost__intrusive_ptrT_vapor__Animation_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_boost__intrusive_ptrT_vapor__Attachment_t[] = {  {&_swigt__p_boost__intrusive_ptrT_vapor__Attachment_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_boost__intrusive_ptrT_vapor__Bone_t[] = {  {&_swigt__p_boost__intrusive_ptrT_vapor__Bone_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_boost__intrusive_ptrT_vapor__Mesh_t[] = {  {&_swigt__p_boost__intrusive_ptrT_vapor__Mesh_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_boost__intrusive_ptrT_vapor__Renderable_t[] = {  {&_swigt__p_boost__intrusive_ptrT_vapor__Renderable_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_boost__intrusive_ptrT_vapor__Resource_t[] = {  {&_swigt__p_boost__intrusive_ptrT_vapor__Resource_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_boost__intrusive_ptrT_vapor__Skeleton_t[] = {  {&_swigt__p_boost__intrusive_ptrT_vapor__Skeleton_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_boost__thread[] = {  {&_swigt__p_boost__thread, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_float[] = {  {&_swigt__p_float, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t[] = {  {&_swigt__p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_std__mapT_vapor__RenderStage__Enum_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t_t[] = {  {&_swigt__p_std__mapT_vapor__RenderStage__Enum_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__mapT_vapor__RenderStage__Enum_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t_t[] = {  {&_swigt__p_std__mapT_vapor__RenderStage__Enum_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__pairT_Class_const_p_std__shared_ptrT_vapor__Component_t_t[] = {  {&_swigt__p_std__pairT_Class_const_p_std__shared_ptrT_vapor__Component_t_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_std__pairT_vapor__RenderStage__Enum_const_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t_t[] = {  {&_swigt__p_std__pairT_vapor__RenderStage__Enum_const_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__pairT_vapor__RenderStage__Enum_const_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t_t[] = {  {&_swigt__p_std__pairT_vapor__RenderStage__Enum_const_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__shared_ptrT_vapor__Camera_t[] = {  {&_swigt__p_std__shared_ptrT_vapor__Camera_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__shared_ptrT_vapor__CharacterController_t[] = {  {&_swigt__p_std__shared_ptrT_vapor__CharacterController_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__shared_ptrT_vapor__Component_t[] = {  {&_swigt__p_std__shared_ptrT_vapor__Component_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__shared_ptrT_vapor__Controller_t[] = {  {&_swigt__p_std__shared_ptrT_vapor__Controller_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__shared_ptrT_vapor__Entity_t[] = {  {&_swigt__p_std__shared_ptrT_vapor__Entity_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__shared_ptrT_vapor__Geometry_t[] = {  {&_swigt__p_std__shared_ptrT_vapor__Geometry_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__shared_ptrT_vapor__Group_t[] = {  {&_swigt__p_std__shared_ptrT_vapor__Group_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__shared_ptrT_vapor__Light_t[] = {  {&_swigt__p_std__shared_ptrT_vapor__Light_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__shared_ptrT_vapor__Model_t[] = {  {&_swigt__p_std__shared_ptrT_vapor__Model_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_std__shared_ptrT_vapor__Entity_t[] = {  {&_swigt__p_std__shared_ptrT_vapor__Entity_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__shared_ptrT_vapor__Scene_t[] = {  {&_swigt__p_std__shared_ptrT_vapor__Scene_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__shared_ptrT_vapor__Transform_t[] = {  {&_swigt__p_std__shared_ptrT_vapor__Transform_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_std__vectorT_boost__intrusive_ptrT_vapor__Animation_t_t[] = {  {&_swigt__p_std__vectorT_boost__intrusive_ptrT_vapor__Animation_t_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t[] = {  {&_swigt__p_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_std__vectorT_std__shared_ptrT_vapor__Geometry_t_t[] = {  {&_swigt__p_std__vectorT_std__shared_ptrT_vapor__Geometry_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__vectorT_std__shared_ptrT_vapor__Entity_t_t[] = {  {&_swigt__p_std__vectorT_std__shared_ptrT_vapor__Entity_t_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_std__vectorT_vapor__RayBoxQueryResult_t[] = {  {&_swigt__p_std__vectorT_vapor__RayBoxQueryResult_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__vectorT_std__shared_ptrT_vapor__Geometry_t_t[] = {  {&_swigt__p_std__vectorT_std__shared_ptrT_vapor__Geometry_t_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__vectorT_vapor__RayQueryResult_t[] = {  {&_swigt__p_std__vectorT_vapor__RayQueryResult_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__vectorT_vapor__RefPtrT_vapor__Animation_t_t[] = {  {&_swigt__p_std__vectorT_vapor__RefPtrT_vapor__Animation_t_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t[] = {  {&_swigt__p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__weak_ptrT_vapor__Camera_t[] = {  {&_swigt__p_std__weak_ptrT_vapor__Camera_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__weak_ptrT_vapor__CharacterController_t[] = {  {&_swigt__p_std__weak_ptrT_vapor__CharacterController_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__weak_ptrT_vapor__Component_t[] = {  {&_swigt__p_std__weak_ptrT_vapor__Component_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__weak_ptrT_vapor__Controller_t[] = {  {&_swigt__p_std__weak_ptrT_vapor__Controller_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_std__weak_ptrT_vapor__Geometry_t[] = {  {&_swigt__p_std__weak_ptrT_vapor__Geometry_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__weak_ptrT_vapor__Entity_t[] = {  {&_swigt__p_std__weak_ptrT_vapor__Entity_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__weak_ptrT_vapor__Geometry_t[] = {  {&_swigt__p_std__weak_ptrT_vapor__Geometry_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__weak_ptrT_vapor__Scene_t[] = {  {&_swigt__p_std__weak_ptrT_vapor__Scene_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_unsigned_char[] = {  {&_swigt__p_unsigned_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_unsigned_int[] = {  {&_swigt__p_unsigned_int, 0, 0, 0},{0, 0, 0, 0}};
@@ -14945,6 +15076,7 @@ static swig_cast_info _swigc__p_vapor__CharacterController[] = {  {&_swigt__p_va
 static swig_cast_info _swigc__p_vapor__Color[] = {  {&_swigt__p_vapor__Color, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__Component[] = {  {&_swigt__p_vapor__Component, 0, 0, 0},  {&_swigt__p_vapor__Controller, _p_vapor__ControllerTo_p_vapor__Component, 0, 0},  {&_swigt__p_vapor__CharacterController, _p_vapor__CharacterControllerTo_p_vapor__Component, 0, 0},  {&_swigt__p_vapor__Light, _p_vapor__LightTo_p_vapor__Component, 0, 0},  {&_swigt__p_vapor__Geometry, _p_vapor__GeometryTo_p_vapor__Component, 0, 0},  {&_swigt__p_vapor__Transform, _p_vapor__TransformTo_p_vapor__Component, 0, 0},  {&_swigt__p_vapor__Camera, _p_vapor__CameraTo_p_vapor__Component, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__Controller[] = {  {&_swigt__p_vapor__Controller, 0, 0, 0},  {&_swigt__p_vapor__CharacterController, _p_vapor__CharacterControllerTo_p_vapor__Controller, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_vapor__Entity[] = {  {&_swigt__p_vapor__Group, _p_vapor__GroupTo_p_vapor__Entity, 0, 0},  {&_swigt__p_vapor__Scene, _p_vapor__SceneTo_p_vapor__Entity, 0, 0},  {&_swigt__p_vapor__Entity, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__EulerAngles[] = {  {&_swigt__p_vapor__EulerAngles, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__Frustum[] = {  {&_swigt__p_vapor__Frustum, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__Geometry[] = {  {&_swigt__p_vapor__Geometry, 0, 0, 0},{0, 0, 0, 0}};
@@ -14965,14 +15097,19 @@ static swig_cast_info _swigc__p_vapor__MouseEvent[] = {  {&_swigt__p_vapor__Mous
 static swig_cast_info _swigc__p_vapor__MouseEventType[] = {  {&_swigt__p_vapor__MouseEventType, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__MouseMoveEvent[] = {  {&_swigt__p_vapor__MouseMoveEvent, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__MouseWheelEvent[] = {  {&_swigt__p_vapor__MouseWheelEvent, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_vapor__Entity[] = {  {&_swigt__p_vapor__Group, _p_vapor__GroupTo_p_vapor__Entity, 0, 0},  {&_swigt__p_vapor__Scene, _p_vapor__SceneTo_p_vapor__Entity, 0, 0},  {&_swigt__p_vapor__Entity, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__Quaternion[] = {  {&_swigt__p_vapor__Quaternion, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__Ray[] = {  {&_swigt__p_vapor__Ray, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_vapor__RayBoxQueryResult[] = {  {&_swigt__p_vapor__RayBoxQueryResult, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_vapor__RayQueryResult[] = {  {&_swigt__p_vapor__RayQueryResult, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__RayTriangleQueryResult[] = {  {&_swigt__p_vapor__RayTriangleQueryResult, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_vapor__RefPtrT_vapor__Animation_t[] = {  {&_swigt__p_vapor__RefPtrT_vapor__Animation_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_vapor__RefPtrT_vapor__Attachment_t[] = {  {&_swigt__p_vapor__RefPtrT_vapor__Attachment_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_vapor__RefPtrT_vapor__Bone_t[] = {  {&_swigt__p_vapor__RefPtrT_vapor__Bone_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_vapor__RefPtrT_vapor__Mesh_t[] = {  {&_swigt__p_vapor__RefPtrT_vapor__Mesh_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_vapor__RefPtrT_vapor__Renderable_t[] = {  {&_swigt__p_vapor__RefPtrT_vapor__Renderable_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_vapor__RefPtrT_vapor__Resource_t[] = {  {&_swigt__p_vapor__RefPtrT_vapor__Resource_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_vapor__RefPtrT_vapor__Skeleton_t[] = {  {&_swigt__p_vapor__RefPtrT_vapor__Skeleton_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__ReferenceCounted[] = {  {&_swigt__p_vapor__ReferenceCounted, 0, 0, 0},  {&_swigt__p_vapor__Resource, _p_vapor__ResourceTo_p_vapor__ReferenceCounted, 0, 0},  {&_swigt__p_vapor__Mesh, _p_vapor__MeshTo_p_vapor__ReferenceCounted, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__RenderBlock[] = {  {&_swigt__p_vapor__RenderBlock, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_vapor__RenderDevice[] = {  {&_swigt__p_vapor__RenderDevice, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__RenderQueue[] = {  {&_swigt__p_vapor__RenderQueue, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__RenderView[] = {  {&_swigt__p_vapor__RenderView, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__Resource[] = {  {&_swigt__p_vapor__Resource, 0, 0, 0},  {&_swigt__p_vapor__Mesh, _p_vapor__MeshTo_p_vapor__Resource, 0, 0},{0, 0, 0, 0}};
@@ -14991,43 +15128,34 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_Event0T_t,
   _swigc__p_Event1T_std__shared_ptrT_vapor__Component_t_const_R_t,
   _swigc__p_Event1T_std__shared_ptrT_vapor__Entity_t_const_R_t,
-  _swigc__p_boost__atomicT_int_t,
-  _swigc__p_boost__intrusive_ptrT_vapor__Animation_t,
-  _swigc__p_boost__intrusive_ptrT_vapor__Attachment_t,
-  _swigc__p_boost__intrusive_ptrT_vapor__Bone_t,
-  _swigc__p_boost__intrusive_ptrT_vapor__Mesh_t,
-  _swigc__p_boost__intrusive_ptrT_vapor__Renderable_t,
-  _swigc__p_boost__intrusive_ptrT_vapor__Resource_t,
-  _swigc__p_boost__intrusive_ptrT_vapor__Skeleton_t,
-  _swigc__p_boost__thread,
   _swigc__p_float,
   _swigc__p_int,
   _swigc__p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t,
-  _swigc__p_std__mapT_vapor__RenderStage__Enum_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t_t,
+  _swigc__p_std__mapT_vapor__RenderStage__Enum_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t_t,
   _swigc__p_std__pairT_Class_const_p_std__shared_ptrT_vapor__Component_t_t,
-  _swigc__p_std__pairT_vapor__RenderStage__Enum_const_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t_t,
+  _swigc__p_std__pairT_vapor__RenderStage__Enum_const_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t_t,
   _swigc__p_std__shared_ptrT_vapor__Camera_t,
   _swigc__p_std__shared_ptrT_vapor__CharacterController_t,
   _swigc__p_std__shared_ptrT_vapor__Component_t,
   _swigc__p_std__shared_ptrT_vapor__Controller_t,
+  _swigc__p_std__shared_ptrT_vapor__Entity_t,
   _swigc__p_std__shared_ptrT_vapor__Geometry_t,
   _swigc__p_std__shared_ptrT_vapor__Group_t,
   _swigc__p_std__shared_ptrT_vapor__Light_t,
   _swigc__p_std__shared_ptrT_vapor__Model_t,
-  _swigc__p_std__shared_ptrT_vapor__Entity_t,
   _swigc__p_std__shared_ptrT_vapor__Scene_t,
   _swigc__p_std__shared_ptrT_vapor__Transform_t,
-  _swigc__p_std__vectorT_boost__intrusive_ptrT_vapor__Animation_t_t,
-  _swigc__p_std__vectorT_boost__intrusive_ptrT_vapor__Renderable_t_t,
-  _swigc__p_std__vectorT_std__shared_ptrT_vapor__Geometry_t_t,
   _swigc__p_std__vectorT_std__shared_ptrT_vapor__Entity_t_t,
-  _swigc__p_std__vectorT_vapor__RayBoxQueryResult_t,
+  _swigc__p_std__vectorT_std__shared_ptrT_vapor__Geometry_t_t,
+  _swigc__p_std__vectorT_vapor__RayQueryResult_t,
+  _swigc__p_std__vectorT_vapor__RefPtrT_vapor__Animation_t_t,
+  _swigc__p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t,
   _swigc__p_std__weak_ptrT_vapor__Camera_t,
   _swigc__p_std__weak_ptrT_vapor__CharacterController_t,
   _swigc__p_std__weak_ptrT_vapor__Component_t,
   _swigc__p_std__weak_ptrT_vapor__Controller_t,
-  _swigc__p_std__weak_ptrT_vapor__Geometry_t,
   _swigc__p_std__weak_ptrT_vapor__Entity_t,
+  _swigc__p_std__weak_ptrT_vapor__Geometry_t,
   _swigc__p_std__weak_ptrT_vapor__Scene_t,
   _swigc__p_unsigned_char,
   _swigc__p_unsigned_int,
@@ -15039,6 +15167,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_vapor__Color,
   _swigc__p_vapor__Component,
   _swigc__p_vapor__Controller,
+  _swigc__p_vapor__Entity,
   _swigc__p_vapor__EulerAngles,
   _swigc__p_vapor__Frustum,
   _swigc__p_vapor__Geometry,
@@ -15059,14 +15188,19 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_vapor__MouseEventType,
   _swigc__p_vapor__MouseMoveEvent,
   _swigc__p_vapor__MouseWheelEvent,
-  _swigc__p_vapor__Entity,
   _swigc__p_vapor__Quaternion,
   _swigc__p_vapor__Ray,
-  _swigc__p_vapor__RayBoxQueryResult,
+  _swigc__p_vapor__RayQueryResult,
   _swigc__p_vapor__RayTriangleQueryResult,
+  _swigc__p_vapor__RefPtrT_vapor__Animation_t,
+  _swigc__p_vapor__RefPtrT_vapor__Attachment_t,
+  _swigc__p_vapor__RefPtrT_vapor__Bone_t,
+  _swigc__p_vapor__RefPtrT_vapor__Mesh_t,
+  _swigc__p_vapor__RefPtrT_vapor__Renderable_t,
+  _swigc__p_vapor__RefPtrT_vapor__Resource_t,
+  _swigc__p_vapor__RefPtrT_vapor__Skeleton_t,
   _swigc__p_vapor__ReferenceCounted,
   _swigc__p_vapor__RenderBlock,
-  _swigc__p_vapor__RenderDevice,
   _swigc__p_vapor__RenderQueue,
   _swigc__p_vapor__RenderView,
   _swigc__p_vapor__Resource,

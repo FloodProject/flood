@@ -7,13 +7,13 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/scene/Camera.h"
-#include "vapor/scene/Scene.h"
-#include "vapor/scene/Geometry.h"
-#include "vapor/render/Device.h"
-#include "vapor/render/View.h"
-#include "vapor/render/DebugGeometry.h"
-#include "vapor/Engine.h"
+#include "scene/Camera.h"
+#include "scene/Scene.h"
+#include "scene/Geometry.h"
+#include "render/Device.h"
+#include "render/View.h"
+#include "render/DebugGeometry.h"
+#include "Engine.h"
 
 namespace vapor {
 
@@ -32,21 +32,6 @@ Camera::Camera()
 	Engine* engine = Engine::getInstancePtr();
 	renderDevice = engine->getRenderDevice();
 }
-
-//-----------------------------------//
-
-Camera::Camera( RenderDevice* device )
-	: renderDevice(device)
-{
-	assert( device != nullptr );
-	init();
-}
-
-//-----------------------------------//
-
-Camera::Camera( const Camera& rhs )
-	: renderDevice( rhs.renderDevice )
-{ }
 
 //-----------------------------------//
 
@@ -104,7 +89,7 @@ void Camera::setView( RenderView* view )
 
 //-----------------------------------//
 
-void Camera::update( double VAPOR_UNUSED(delta) )
+void Camera::update( double )
 {
 	if( activeView )
 	{
@@ -259,22 +244,72 @@ Ray Camera::getRay( float screenX, float screenY, Vector3* outFar ) const
 	Vector3 farPoint (screenX, size.y - screenY, 1);
 
 	const Matrix4x4& matProjection = frustum.matProjection;
-
-	Vector3 rayOrigin =
-		activeView->unprojectPoint(nearPoint, matProjection, viewMatrix);
+	Vector3 rayOrigin = activeView->unprojectPoint(nearPoint, matProjection, viewMatrix);
+	Vector3 rayTarget = activeView->unprojectPoint(farPoint, matProjection, viewMatrix);
 	
-	Vector3 rayTarget =
-		activeView->unprojectPoint(farPoint, matProjection, viewMatrix);
-
 	Vector3 rayDirection = rayTarget - rayOrigin;
 	rayDirection.normalize();
 
-	Ray pickRay(rayOrigin, rayDirection);
-
-	if( outFar )
+	if( outFar != nullptr )
 		*outFar = rayTarget;
 
+	Ray pickRay(rayOrigin, rayDirection);
 	return pickRay;
+}
+
+//-----------------------------------//
+
+Frustum Camera::getVolume( float screenLeft, float screenRight, float screenTop, float screenBottom )
+{
+	const TransformPtr& transform = getEntity()->getTransform();
+	const Vector3& pos = transform->getPosition();
+
+	Frustum volume;
+
+	if(frustum.projection == Projection::Perspective)
+	{
+		Ray ul = getRay(screenLeft, screenTop);
+		Ray ur = getRay(screenRight, screenTop);
+		Ray bl = getRay(screenLeft, screenBottom);
+		Ray br = getRay(screenRight, screenBottom);
+
+		Vector3 normal;
+		
+		// Planes order: Left, Right, Top, Bottom, Near, Far.
+
+		// Left plane
+		normal = bl.direction.cross(ul.direction);
+		volume.planes[0] = Plane(normal, pos);
+
+		// Right plane
+		normal = ur.direction.cross(br.direction);
+		volume.planes[1] = Plane(normal, pos);
+
+		// Top plane
+		normal = ul.direction.cross(ur.direction);
+		volume.planes[2] = Plane(normal, pos);
+
+		// Bottom plane
+		normal = br.direction.cross(bl.direction);
+		volume.planes[3] = Plane(normal, pos);
+	}
+	else
+	{
+		// Ortho planes are parallel to frustum planes
+		Ray ul = getRay(screenLeft, screenTop);
+		Ray br = getRay(screenRight, screenBottom);
+
+		volume.planes[0] = Plane(frustum.planes[0].normal, ul.origin);	
+		volume.planes[1] = Plane(frustum.planes[1].normal, br.origin);
+		volume.planes[2] = Plane(frustum.planes[2].normal, ul.origin);
+		volume.planes[3] = Plane(frustum.planes[3].normal, br.origin);
+	}
+
+	// Near & Far plane applicable to both projection types
+	volume.planes[4] = frustum.planes[4];
+	volume.planes[5] = frustum.planes[5];
+
+	return volume;
 }
 
 //-----------------------------------//

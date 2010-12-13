@@ -69,7 +69,6 @@ void RenderDevice::init()
 
 	setClearColor( Color::White );
 
-	//glDepthMask( GL_TRUE );
 	glEnable( GL_CULL_FACE );
 	glCullFace( GL_BACK );
 	glEnable( GL_DEPTH_TEST );
@@ -316,13 +315,12 @@ bool RenderDevice::setupRenderStateOverlay( const RenderState& state )
 {
 	const ProgramPtr& program = state.renderable->getMaterial()->getProgram();
 	
-	glDisable( GL_DEPTH_TEST );
 	//glDepthMask( false );
 
 	Vector2i size = activeTarget->getSettings().getSize();
 
 	Matrix4x4 proj = Matrix4x4::createOrthographicProjection( 
-		0, size.x, 0, size.y, /*0,*/ 1.0, -1.0 );
+		0, size.x, size.y, 0, 0, 100 );
 
 	program->setUniform( "vp_ProjectionMatrix", proj );
 	program->setUniform( "vp_ModelMatrix", state.modelMatrix );

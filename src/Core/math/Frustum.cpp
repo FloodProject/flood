@@ -46,7 +46,12 @@ Frustum::Frustum( const Frustum& rhs )
 	, nearPlane( rhs.nearPlane )
 	, farPlane( rhs.farPlane )
 	, aspectRatio( rhs.aspectRatio )
-{ }
+{
+	for(uint i = 0; i < VAPOR_ARRAY_SIZE(rhs.planes); i++ )
+	{
+		planes[i] = rhs.planes[i];
+	}
+}
 
 //-----------------------------------//
 
@@ -132,19 +137,44 @@ void Frustum::updateCorners( const Matrix4x3& matView )
 
 	Vector3 cornerPoints[] =
 	{
-		Vector3(-1,  1,  1), Vector3( 1,  1,  1),
-		Vector3(-1, -1,  1), Vector3( 1, -1,  1),
-		Vector3(-1,  1, -1), Vector3( 1,  1, -1),
-		Vector3(-1, -1, -1), Vector3( 1, -1, -1)
+		Vector3(-1,  1,  1), Vector3(1,  1,  1),
+		Vector3(-1, -1,  1), Vector3(1, -1,  1),
+		Vector3(-1,  1, -1), Vector3(1,  1, -1),
+		Vector3(-1, -1, -1), Vector3(1, -1, -1)
 	};
 
 	for( uint i = 0; i < VAPOR_ARRAY_SIZE(cornerPoints); i++ )
 	{
 		const Vector3& corner = cornerPoints[i];
 
-		Vector4 c = matInvClip * Vector4(corner, 1.0);
+		Vector4 c = matInvClip * Vector4(corner, 1);
 		corners[i++] = Vector3(c.x / c.w, c.y / c.w, c.z / c.w);
 	}
+}
+
+//-----------------------------------//
+
+bool Frustum::intersects( const BoundingBox& box ) const
+{
+	// Loop through each side of the frustum and test if the box lies outside any of them.
+	
+	for(uint i = 0; i < VAPOR_ARRAY_SIZE(planes); i++)
+	{
+		const Plane& plane = planes[i];
+
+		if(plane.distance(box.min) >= 0) continue;
+		if(plane.distance(box.max.x, box.min.y, box.min.z) >= 0) continue;
+		if(plane.distance(box.min.x, box.max.y, box.min.z) >= 0) continue;
+		if(plane.distance(box.max.x, box.max.y, box.min.z) >= 0) continue;
+		if(plane.distance(box.min.x, box.min.y, box.max.z) >= 0) continue;
+		if(plane.distance(box.max.x, box.min.y, box.max.z) >= 0) continue;
+		if(plane.distance(box.min.x, box.max.y, box.max.z) >= 0) continue;
+		if(plane.distance(box.max) >= 0) continue;
+    
+		return false;
+	}
+
+	return true;
 }
 
 //-----------------------------------//

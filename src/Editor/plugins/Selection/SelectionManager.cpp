@@ -113,8 +113,8 @@ void SelectionOperation::redo()
 	}
 	else
 	{
-		selectAll();
 		unselectPrevious();
+		selectAll();
 	}
 
 	selectionManager->setSelection(this);

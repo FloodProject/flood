@@ -34,7 +34,7 @@ void Animation::setKeyFrames(const BonePtr& bone, const KeyFramesVector& frames)
 
 //-----------------------------------//
 
-double Animation::getTotalTime() const
+float Animation::getTotalTime() const
 {
 	if( keyFrames.empty() )
 		return 0;

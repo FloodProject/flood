@@ -52,7 +52,6 @@ RenderablePtr Light::createDebugRenderable() const
 {
 	MaterialPtr matLight = new Material("LightMaterial");
 	matLight->setDepthTest(false);
-	matLight->setProgram("Diffuse");
 
 	SpherePtr sphere = new Sphere();
 	sphere->setMaterial(matLight);

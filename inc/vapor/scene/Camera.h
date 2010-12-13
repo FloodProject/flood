@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "vapor/scene/Component.h"
-#include "vapor/math/Frustum.h"
-#include "vapor/math/Matrix4x3.h"
+#include "scene/Component.h"
+#include "math/Frustum.h"
+#include "math/Matrix4x3.h"
 
 FWD_DECL_SHARED(Transform)
 FWD_DECL_SHARED(Scene)
@@ -23,8 +23,6 @@ class RenderView;
 class RenderDevice;
 struct RenderBlock;
 
-//-----------------------------------//
-
 /**
  * Represents a view from a specific point in the world. Has an associated 
  * projection type, like ortographic or perspective and also holds a frustum 
@@ -34,14 +32,13 @@ struct RenderBlock;
 
 class VAPOR_API Camera : public Component
 {
+	DECLARE_UNCOPYABLE(Camera)
 	DECLARE_CLASS_()
 	
 public:
 
 	Camera();
-	Camera( RenderDevice* );
-	Camera( const Camera& rhs );
-	~Camera();
+	virtual ~Camera();
 
 	// Renders the scene to the current render view.
 	void render();
@@ -55,15 +52,6 @@ public:
 	// Performs hierarchical frustum culling on the nodes in the scene.
 	void cull( RenderBlock& queue, const EntityPtr& node );
 
-	// Gets a ray given the screen coordinates of the mouse.
-	Ray getRay( float x, float y, Vector3* outFar = nullptr ) const;
-
-	// Updates this component.
-	virtual void update( double delta );
-
-	// Gets the camera frustum.
-	Frustum& getFrustum() { return frustum; }
-
 	// Gets the look-at vector of the camera.
 	GETTER(LookAtVector, const Vector3&, lookAtVector)
 
@@ -74,7 +62,19 @@ public:
 	GETTER(View, RenderView*, activeView)
 
 	// Sets the current view associated with the camera.
-	DECLARE_SETTER(View, RenderView*)
+	void setView(RenderView* view);
+
+	// Gets the camera frustum.
+	Frustum& getFrustum() { return frustum; }
+
+	// Gets a ray given the screen coordinates of the mouse.
+	Ray getRay( float x, float y, Vector3* outFar = nullptr ) const;
+
+	// Gets a volume given the screen coordinates of the mouse.
+	Frustum getVolume( float screenLeft, float screenRight, float screenTop, float screenBottom );
+
+	// Updates this component.
+	void update( double delta );
 
 protected:
 
@@ -91,7 +91,7 @@ protected:
 	void updateDebugRenderable() const;
 
 	// Creates the debug renderable of the camera.
-	virtual RenderablePtr createDebugRenderable() const;
+	RenderablePtr createDebugRenderable() const;
 
 	// Camera frustum.
 	Frustum frustum;
@@ -102,11 +102,11 @@ protected:
 	// View matrix.
 	Matrix4x3 viewMatrix;
 
-	// Last view active the camera.
-	RenderView* activeView;
-
 	// Pointer to the camera node transform.
 	TransformPtr transform;
+
+	// Last view active the camera.
+	RenderView* activeView;
 
 	// Rendering device.
 	RenderDevice* renderDevice;

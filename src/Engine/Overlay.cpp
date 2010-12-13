@@ -23,6 +23,7 @@ END_CLASS()
 Overlay::Overlay() 
 	: positioning( PositionMode::Relative )
 	, anchor( Anchor::TopLeft )
+	, opacity(1.0f)
 {
 	createGeometry();
 }

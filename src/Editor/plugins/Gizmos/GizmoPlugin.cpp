@@ -408,13 +408,13 @@ bool GizmoPlugin::pickBoundingTest( const MouseMoveEvent& me )
 	const Ray& pickRay = camera->getRay( me.x, me.y, &outFar );
 
 	// Perform ray casting to find the entities.
-	RayBoxQueryResult res;
+	RayQueryResult res;
 	
 	if( !editorScene->doRayBoxQuery(pickRay, res) )
 		return false;
 
 	// Find out if we picked a gizmo...
-	GizmoPtr gizmo = res.node->getComponent<Gizmo>();
+	GizmoPtr gizmo = res.entity->getComponent<Gizmo>();
 	
 	return gizmo != nullptr;
 }

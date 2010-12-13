@@ -8,7 +8,7 @@
 
 #pragma once
 
-#define VAPOR_EDITOR_NAME "vapor3D Editor"
+#define VAPOR_EDITOR_NAME "vapor3D"
 
 //---------------------------------------------------------------------//
 // vapor3D Engine

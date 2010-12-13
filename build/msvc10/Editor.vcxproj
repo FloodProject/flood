@@ -223,6 +223,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\src\Editor\inc\RenderControl.h" />
     <ClInclude Include="..\..\src\Editor\inc\RenderWindow.h" />
+    <ClInclude Include="..\..\src\Editor\inc\ResourceDrop.h" />
     <ClInclude Include="..\..\src\Editor\PCH.h" />
     <ClInclude Include="..\..\src\Editor\inc\Viewframe.h" />
     <ClInclude Include="..\..\src\Editor\inc\Plugin.h" />

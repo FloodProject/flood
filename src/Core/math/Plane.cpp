@@ -37,6 +37,33 @@ Plane::Plane( const Vector3& _normal, float distance )
 
 //-----------------------------------//
 
+Plane& Plane::operator = (const Plane& plane)
+{
+	normal = plane.normal;
+	offset = plane.offset;
+	
+	return *this;
+}
+
+//-----------------------------------//
+
+float Plane::distance(const Vector3& pt) const
+{
+	return distance(pt.x, pt.y, pt.z);
+}
+
+//-----------------------------------//
+
+float Plane::distance(float x, float y, float z) const
+{
+	return normal.x*x
+		 + normal.y*y
+		 + normal.z*z
+		 + offset;
+}
+
+//-----------------------------------//
+
 Vector3 Plane::project(const Vector3& vec)
 {
 	return vec - normal*vec.dot(normal);

@@ -20,24 +20,13 @@ namespace vapor {
 
 //-----------------------------------//
 
-static std::string normalizePath(std::string path)
-{
-	String::replace(path, "\\", "/");
-	String::replace(path, "//", "/");
-	String::replace(path, "../", "");
-	String::replace(path, "./", "");
-
-	return path;
-}
-
-//-----------------------------------//
-
 File::File(const std::string& tempPath, StreamMode::Enum mode)
 	: mode(mode)
 	, file(nullptr)
 	, closed(false)
 {
-	path = normalizePath(tempPath);
+	path = Path::normalize(tempPath);
+	path = Path::getFile(path);
 
 	if( !open() )
 		return;
@@ -296,14 +285,14 @@ const std::string File::getRealPath() const
 	fullPath.append( "/" );
 	fullPath.append( getPath() );
 
-	return normalizePath(fullPath);
+	return Path::normalize(fullPath);
 }
 
 //-----------------------------------//
 
 const std::string File::getName() const
 {
-	return String::split( getPath(), '/' ).back();
+	return String::split( path, '/' ).back();
 }
 
 //-----------------------------------//
@@ -311,7 +300,7 @@ const std::string File::getName() const
 const std::string File::getExtension() const
 {
 	std::string name = getName();
-	return String::getExtensionFromPath(name);
+	return Path::getExtension(name);
 }
 
 //-----------------------------------//

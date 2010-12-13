@@ -42,6 +42,7 @@ struct SelectionData
 class SelectionOperation : public UndoOperation
 {
 	friend class SelectionManager;
+
 public:
 
 	// Undoes the operation.

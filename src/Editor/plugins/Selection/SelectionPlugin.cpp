@@ -93,7 +93,6 @@ void SelectionPlugin::onMouseDrag( const MouseDragEvent& event )
 {
 	if( !dragRectangle )
 	{
-		dragOrigin = Vector2i(event.x, event.y );
 		createRectangle();
 	}
 
@@ -104,18 +103,12 @@ void SelectionPlugin::onMouseDrag( const MouseDragEvent& event )
 
 void SelectionPlugin::createRectangle()
 {
-	//VertexBufferPtr vb = new VertexBuffer();
-	//MaterialPtr mat = new Material("Drag");
-	//RenderablePtr rend = new Renderable(PolygonType::Quads, vb, mat);
-
-	//GeometryPtr geom = new Geometry();
-	//geom->addRenderable( rend, RenderStage::Overlays );
-	
-	//Vector2i position = pos;
-	//position.y -= view->getSize().y;
-
 	OverlayPtr overlay( new Overlay() );
 	overlay->setPositionMode( PositionMode::Absolute );
+	//overlay->setOpacity();
+
+	MaterialPtr material = overlay->getRenderables()[0]->getMaterial();
+	material->setBlending(BlendSource::SourceAlpha, BlendDestination::InverseSourceAlpha);
 
 	dragRectangle.reset( new Entity() );
 	dragRectangle->addTransform();
@@ -127,90 +120,137 @@ void SelectionPlugin::createRectangle()
 
 void SelectionPlugin::updateRectangle( const MouseDragEvent& event )
 {
-	RenderView* view = editor->getMainViewframe()->getView();
-	OverlayPtr overlay = dragRectangle->getComponent<Overlay>();
-
 	Vector2i dragPoint = Vector2i(event.x, event.y);
 	
-	if(dragPoint < dragOrigin)
-	{
-		dragOrigin = dragPoint;
-		dragOrigin.y = view->getSize().y - dragOrigin.y;
-	}
+	Vector2i dragMin;
+	dragMin.x = std::min(dragOrigin.x, dragPoint.x);
+	dragMin.y = std::min(dragOrigin.y, dragPoint.y);
 
-	Vector2i size = dragPoint - dragOrigin;
-	size.x = abs(size.x);
-	size.y = abs(size.y);
-	
-	Log::debug("Drag Coord: %d %d", event.x, event.y);
-	Log::debug("Overlay Origin: %d %d", dragOrigin.x, dragOrigin.y);
-	Log::debug("Overlay Size: %d %d", size.x, size.y);
+	Vector2i dragMax;
+	dragMax.x = std::max(dragOrigin.x, dragPoint.x);
+	dragMax.y = std::max(dragOrigin.y, dragPoint.y);
 
-	overlay->setPosition(dragOrigin);
-	overlay->setSize(size);
-
-	overlay->setPosition(0, 0);
-	overlay->setSize( Vector2i(-100, -100) );
-
-	//const RenderablePtr& rend =ja dragRectangle->getComponent<Geometry>();
-	//const RenderablePtr& rend = dragRectangle->getRenderable();
-	//const VertexBufferPtr& vb = rend->getVertexBuffer();
+	OverlayPtr overlay = dragRectangle->getComponent<Overlay>();
+	overlay->setPosition(dragMin);
+	overlay->setSize( dragMax - dragMin );
 }
 
 //-----------------------------------//
 
 void SelectionPlugin::onMouseButtonPress( const MouseButtonEvent& event )
 {
-	dragOrigin.x = event.x;
-	dragOrigin.y = event.y;
+	dragOrigin = Vector2i(event.x, event.y );
+}
+
+//-----------------------------------//
+
+SelectionOperation* SelectionPlugin::createDeselection()
+{
+	SelectionOperation* selected = selections->getSelection();
+
+	if( !selected )
+		return nullptr;
+
+	// If there is a current selection, and the user pressed the mouse,
+	// then we need to unselect everything that is currently selected.
+
+	SelectionOperation* selection = selections->createOperation();
+	selection->previous = selected->selections;
+	selection->mode = SelectionMode::None;
+
+	return selection;
+}
+
+//-----------------------------------//
+
+SelectionOperation* SelectionPlugin::processDragSelection(const MouseButtonEvent& event)
+{
+	RenderView* view = editor->getMainViewframe()->getView();
+	const CameraPtr& camera = view->getCamera();
+
+	OverlayPtr overlay = dragRectangle->getComponent<Overlay>();
+	const Vector2i& pos = overlay->getPosition();
+	const Vector2i& size = overlay->getSize();
+
+	Frustum pickVolume = camera->getVolume(pos.x, pos.x+size.x, pos.y, pos.y+size.y);
+
+	const ScenePtr& scene = editor->getEngine()->getSceneManager();
+		
+	RayQueryList list;
+	scene->doRayVolumeQuery(pickVolume, list);
+
+	SelectionOperation* selection = nullptr;
+	SelectionOperation* selected = selections->getSelection();
+
+	editor->getEditorScene()->remove(dragRectangle);
+	dragRectangle.reset();
+
+	if( list.empty() )
+	{
+		selection = createDeselection();
+		return selection;
+	}
+
+	selection = selections->createOperation();
+
+	if( selected )
+		selection->previous = selected->selections;
+
+	for(uint i = 0; i < list.size(); i++ )
+	{
+		selection->addEntity( list[i].entity );
+	}
+
+	return selection;
+}
+
+//-----------------------------------//
+
+SelectionOperation* SelectionPlugin::processSelection(const MouseButtonEvent& event)
+{
+	SelectionOperation* selection = nullptr;
+	SelectionOperation* selected = selections->getSelection();
+
+	EntityPtr entity;
+	
+	if( !getPickEntity(event.x, event.y, entity) )
+	{
+		selection = createDeselection();
+		return selection;
+	}
+	
+	selection = selections->createOperation();
+
+	if( selected )
+		selection->previous = selected->selections;
+
+	selection->addEntity(entity);
+
+	return selection;
 }
 
 //-----------------------------------//
 
 void SelectionPlugin::onMouseButtonRelease( const MouseButtonEvent& event )
 {
-	if(dragRectangle)
-	{
-		editor->getEditorScene()->remove(dragRectangle);
-		dragRectangle.reset();
-	}
-
 	if( event.button != MouseButton::Left )
 		return;
-	
+
 	SelectionOperation* selection = nullptr;
 	SelectionOperation* selected = selections->getSelection();
 
-	EntityPtr entity;
-	if( !getPickEntity(event.x, event.y, entity) )
-	{
-		if( !selected )
-			return;
-
-		// If there is a current selection, and the user pressed the mouse,
-		// then we need to unselect everything that is currently selected.
-
-		selection = selections->createOperation();
-		selection->previous = selected->selections;
-		selection->mode = SelectionMode::None;
-	}
+	if(dragRectangle)
+		selection = processDragSelection(event);
 	else
-	{
-		if(selections->getSelectionMode() != SelectionMode::Entity)
-			return;
+		selection = processSelection(event);
 
-		if( selected )
-			selected->unselectAll();
+	if( !selection )
+		return;
 
-		selection = selections->createOperation();
+	if( selected )
+		selected->unselectAll();
 
-		if( selected )
-			selection->previous = selected->selections;
-
-		selection->addEntity(entity);
-	}
-
-	assert( selection != nullptr );
+	//assert( selection != nullptr );
 
 	UndoManager* undoManager = editor->getUndoManager();
 	undoManager->registerOperation(selection);
@@ -238,11 +278,11 @@ bool SelectionPlugin::getPickEntity(int x, int y, EntityPtr& entity)
 #endif
 
 	// Perform ray casting to find the nodes.
-	RayBoxQueryResult res;
+	RayQueryResult res;
 	if( !scene->doRayBoxQuery(pickRay, res) )
 		return false;
 
-	entity = res.node;
+	entity = res.entity;
 	return true;
 }
 

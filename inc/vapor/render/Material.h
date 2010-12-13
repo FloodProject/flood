@@ -85,7 +85,7 @@ class VAPOR_API Material : public ReferenceCounted
 public:
 
 	//Material( const std::string& name );
-	Material( const std::string& name, const std::string& program = "diffuse" );
+	Material( const std::string& name, const std::string& program = "VertexColor" );
 	Material( const Material& rhs );
 	~Material();
 

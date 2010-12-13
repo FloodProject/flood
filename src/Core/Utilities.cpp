@@ -242,48 +242,6 @@ std::string String::format(const char* str, va_list args)
 
 //-----------------------------------//
 
-std::string String::getBaseFromPath(const std::string& name)
-{
-	// Check if it has a file extension.
-	size_t ch = name.find_last_of(".");
-
-	if( ch == std::string::npos ) 
-		return "";
-
-	// Return the file extension.
-	return name.substr( 0, ch );
-}
-
-//-----------------------------------//
-
-std::string String::getExtensionFromPath(const std::string& name)
-{
-	// Check if it has a file extension.
-	size_t ch = name.find_last_of(".");
-
-	if( ch == std::string::npos ) 
-		return "";
-
-	// Return the file extension.
-	return name.substr( ++ch );
-}
-
-//-----------------------------------//
-
-std::string String::getFileFromPath(const std::string& name)
-{
-	// Check if it has a file extension.
-	size_t ch = name.find_last_of("/");
-
-	if( ch == std::string::npos ) 
-		return "";
-
-	// Return the file extension.
-	return name.substr( ++ch );
-}
-
-//-----------------------------------//
-
 std::vector<std::string>& String::split(const std::string& s, char delim, 
 								std::vector<std::string>& elems)
 {
@@ -341,6 +299,62 @@ void String::replace(std::string& source, const std::string& from, const std::st
 		
 		source.replace( pos++, from.size(), to );
 	}
+}
+
+//-----------------------------------//
+
+std::string Path::getBase(const std::string& name)
+{
+	// Check if it has a file extension.
+	size_t ch = name.find_last_of(".");
+
+	if( ch == std::string::npos ) 
+		return "";
+
+	// Return the file extension.
+	return name.substr( 0, ch );
+}
+
+//-----------------------------------//
+
+std::string Path::getExtension(const std::string& name)
+{
+	// Check if it has a file extension.
+	size_t ch = name.find_last_of(".");
+
+	if( ch == std::string::npos ) 
+		return "";
+
+	// Return the file extension.
+	return name.substr( ++ch );
+}
+
+//-----------------------------------//
+
+std::string Path::getFile(const std::string& name)
+{
+	// Check if it has a file extension.
+	size_t ch = name.find_last_of("/");
+
+	if( ch == std::string::npos ) 
+		return name;
+
+	// Return the file extension.
+	return name.substr( ++ch );
+}
+
+//-----------------------------------//
+
+std::string Path::normalize(const std::string& path)
+{
+	std::string str = path;
+
+	String::replace(str, "\\", "/");
+	String::replace(str, "//", "/");
+	String::replace(str, "../", "");
+	String::replace(str, "./", "");
+
+	return str;
 }
 
 //-----------------------------------//

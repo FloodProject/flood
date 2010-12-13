@@ -17,6 +17,7 @@
 #include "Viewframe.h"
 #include "EditorInputManager.h"
 #include "Events.h"
+#include "ResourceDrop.h"
 #include "wxFourWaySplitter.h"
 
 // Editor plugins
@@ -151,40 +152,6 @@ void EditorFrame::createEngine()
 
 //-----------------------------------//
 
-class ResourceDropTarget : public wxDropTarget
-{
-public:
-
-	ResourceDropTarget(EditorFrame* frame);
-	wxDragResult OnData(wxCoord x, wxCoord y, wxDragResult def);
-
-protected:
-
-	wxTextDataObject* data;
-	EditorFrame* frame;
-};
-
-//-----------------------------------//
-
-ResourceDropTarget::ResourceDropTarget(EditorFrame* frame)
-	: frame(frame)
-{
-	data = new wxTextDataObject();
-	SetDataObject(data);
-}
-
-//-----------------------------------//
-
-wxDragResult ResourceDropTarget::OnData(wxCoord x, wxCoord y, wxDragResult def)
-{
-	Vector2i coords(x, y);
-	frame->setDropCoords(coords);
-
-	return def;
-}
-
-//-----------------------------------//
-
 void EditorFrame::createViews()
 {	
 	viewframe = new Viewframe( viewSplitter );
@@ -212,7 +179,8 @@ void EditorFrame::createViews()
 	device->init();
 
 #ifdef VAPOR_PHYSICS_BULLET
-	engine->getPhysicsManager()->createWorld();
+	PhysicsManager* physics = engine->getPhysicsManager();
+	physics->createWorld();
 #endif
 }
 
@@ -245,14 +213,10 @@ void EditorFrame::createResources()
 {
 	ResourceManager* const rm = engine->getResourceManager();
 
-	rm->loadResource("Diffuse.glsl");
-	rm->loadResource("Tex.glsl");
-	rm->loadResource("Toon.glsl");
-	rm->loadResource("Tex_Toon.glsl");
-	rm->loadResource("Tex_Toon_Skin.glsl");
-	rm->loadResource("Sky.glsl");
-	rm->loadResource("Water.glsl");
-	rm->loadResource("ProjTex.glsl");
+	std::vector<std::string> files = System::enumerateFiles("Media/Shaders");
+
+	for(uint i = 0; i < files.size(); i++ )
+		rm->loadResource(files[i]);
 }
 
 //-----------------------------------//
@@ -271,11 +235,9 @@ EntityPtr EditorFrame::createCamera()
 	// So each camera will have unique names.
 	static byte i = 0;
 
-	RenderDevice* device = engine->getRenderDevice();
-	
 	// Create a new first-person camera for our view.
 	// By default it will be in perspective projection.
-	CameraPtr camera( new Camera(device) );
+	CameraPtr camera( new Camera() );
 	ComponentPtr cameraController( new FirstPersonController() );
 
 	Frustum& frustum = camera->getFrustum();

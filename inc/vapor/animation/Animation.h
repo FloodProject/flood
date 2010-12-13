@@ -56,7 +56,7 @@ public:
 	bool isLooped();
 
 	// Gets the total animation time.
-	double getTotalTime() const;
+	float getTotalTime() const;
 
 	// Gets the interpolated key frame matrix.
 	Matrix4x3 getKeyFrameMatrix(const BonePtr& bone, double time);

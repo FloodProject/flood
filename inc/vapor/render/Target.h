@@ -19,8 +19,6 @@ namespace vapor {
 
 class RenderView;
 
-//-----------------------------------//
-
 class VAPOR_API Settings
 {
 public:

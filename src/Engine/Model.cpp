@@ -136,7 +136,7 @@ void Model::updateAnimations(double delta)
 	}
 
 	if( animationFadeTime > 0 )
-		animationCurrentFadeTime += delta;
+		animationCurrentFadeTime += float(delta);
 }
 
 //-----------------------------------//
@@ -156,7 +156,7 @@ void Model::updateAnimationTime(AnimationState& state, double delta)
 	}
 	else
 	{
-		animationTime += delta * 10 * animationSpeed;
+		animationTime += float(delta * 10 * animationSpeed);
 
 		if( animationTime > totalTime )
 		{
@@ -364,15 +364,18 @@ void Model::updateDebugRenderable() const
 		const BonePtr& bone = skeletonBones[i];
 
 		Vector3 vertex;
+		Vector3 parentVertex;
+
+		if( bone->indexParent != -1 )
+			parentVertex = bones[bone->indexParent]*parentVertex;
+		else
+			continue;
+
 		pos.push_back( bones[bone->index]*vertex );
 		colors.push_back( Color::Blue );
 
-		if( bone->indexParent != -1 )
-		{
-			Vector3 parentVertex;
-			pos.push_back( bones[bone->indexParent]*parentVertex );
-			colors.push_back( Color::Blue );
-		}
+		pos.push_back( parentVertex);
+		colors.push_back( Color::Blue );
 	}
 
 	vb->set( VertexAttribute::Position, pos );
@@ -385,12 +388,11 @@ RenderablePtr Model::createDebugRenderable() const
 {
 	assert( !debugRenderable );
 
-	MaterialPtr mat = new Material("Skeleton");
-	mat->setProgram("Diffuse");
+	MaterialPtr mat = new Material("SkeletonDebug");
 	mat->setDepthTest(false);
 
 	VertexBufferPtr vb = new VertexBuffer();
-	RenderablePtr rend( new Renderable(PolygonType::LineStrip, vb, mat) );
+	RenderablePtr rend( new Renderable(PolygonType::Lines, vb, mat) );
 	return rend;
 }
 

@@ -53,7 +53,7 @@ bool Resource::isLoaded() const
 std::string Resource::getBasePath() const
 {
 	assert( !path.empty() );
-	return String::getBaseFromPath(path);
+	return Path::getBase(path);
 }
 
 //-----------------------------------//

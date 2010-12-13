@@ -16,13 +16,22 @@ namespace vapor {
 
 //-----------------------------------//
 
+struct Culler
+{
+	Culler() : ray(nullptr), frustum(nullptr) {}
+	
+	const Ray* ray;
+	const Frustum* frustum;
+};
+
+//-----------------------------------//
+
 BEGIN_CLASS_PARENT(Scene, Group)
 END_CLASS()
 
 //-----------------------------------//
 
-Scene::Scene()
-	: Group("Scene")
+Scene::Scene() : Group("Scene")
 { }
 
 //-----------------------------------//
@@ -32,38 +41,26 @@ Scene::~Scene()
 
 //-----------------------------------//
 
-bool Scene::doRayBoxQuery( const Ray& ray, RayBoxQueryResult& res )
-{
-	RayBoxQueryList list;
-	
-	if( !doRayBoxQuery(ray, list) )
-		return false;
-
-	res = list.front();	
-	return true;
-}
-
-//-----------------------------------//
-
-static bool sortRayBoxQueryResult(const RayBoxQueryResult& lhs, const RayBoxQueryResult& rhs)
+static bool sortRayQueryResult(const RayQueryResult& lhs, const RayQueryResult& rhs)
 {
 	return lhs.distance < rhs.distance;
 }
 
-static bool doRayBoxGroupQuery( const GroupPtr& group, const Ray& ray,
-							   RayBoxQueryList& list, bool all )
+static bool doRayGroupQuery( const GroupPtr& group, const Culler& culler, RayQueryList& list, bool all )
 {
+	const std::vector<EntityPtr>& entities = group->getEntities();
+
 	// Do some ray casting to find a collision.
-	for( uint i = 0; i < group->getEntities().size(); i++ )
+	for( uint i = 0; i < entities.size(); i++ )
 	{
-		const EntityPtr& entity = group->getEntities()[i];
+		const EntityPtr& entity = entities[i];
 		const Type& type = entity->getInstanceType();
 
 		if( type.is<Group>() || type.inherits<Group>() )
 		{
 			GroupPtr group = std::static_pointer_cast<Group>(entity);
 
-			if( doRayBoxGroupQuery(group, ray, list, all) && !all )
+			if( doRayGroupQuery(group, culler, list, all) && !all )
 				return true;
 		}
 		else
@@ -73,17 +70,17 @@ static bool doRayBoxGroupQuery( const GroupPtr& group, const Ray& ray,
 				continue;
 
 			const TransformPtr& transform = entity->getTransform();
-			
-			if( !transform )
-				continue;
+			if( !transform ) continue;
 
 			const BoundingBox& box = transform->getWorldBoundingVolume();
 				
-			float distance;
-			if( box.intersects(ray, distance) )
+			float distance = -1;
+
+			if((culler.ray && box.intersects(*culler.ray, distance)) ||
+			   (culler.frustum && culler.frustum->intersects(box)))
 			{
-				RayBoxQueryResult res;
-				res.node = entity;
+				RayQueryResult res;
+				res.entity = entity;
 				res.distance = distance;
 
 				list.push_back( res );
@@ -94,15 +91,46 @@ static bool doRayBoxGroupQuery( const GroupPtr& group, const Ray& ray,
 	}
 
 	// Sort the results by distance.
-	std::sort( list.begin(), list.end(), &sortRayBoxQueryResult );
+	std::sort( list.begin(), list.end(), &sortRayQueryResult );
 
 	return !list.empty();
 }
 
-bool Scene::doRayBoxQuery( const Ray& ray, RayBoxQueryList& list, bool all )
+//-----------------------------------//
+
+bool Scene::doRayBoxQuery( const Ray& ray, RayQueryResult& res )
+{
+	RayQueryList list;
+	
+	if( !doRayBoxQuery(ray, list, false) )
+		return false;
+
+	res = list.front();	
+	return true;
+}
+
+//-----------------------------------//
+
+bool Scene::doRayBoxQuery( const Ray& ray, RayQueryList& list, bool all )
 {
 	GroupPtr group = std::static_pointer_cast<Group>(shared_from_this());
-	return doRayBoxGroupQuery(group, ray, list, all);
+
+	Culler culler;
+	culler.ray = &ray;
+
+	return doRayGroupQuery(group, culler, list, all);
+}
+
+//-----------------------------------//
+
+bool Scene::doRayVolumeQuery( const Frustum& volume, RayQueryList& list, bool all )
+{
+	GroupPtr group = std::static_pointer_cast<Group>(shared_from_this());
+
+	Culler culler;
+	culler.frustum = &volume;
+
+	return doRayGroupQuery(group, culler, list, all);
 }
 
 //-----------------------------------//
@@ -110,14 +138,14 @@ bool Scene::doRayBoxQuery( const Ray& ray, RayBoxQueryList& list, bool all )
 bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res )
 {
 	// Perform ray casting to find the nodes.
-	RayBoxQueryList list;
+	RayQueryList list;
 	doRayBoxQuery( ray, list );
 
 	for( uint i = 0; i < list.size(); i++ )
 	{
-		const RayBoxQueryResult& query = list[i];
+		const RayQueryResult& query = list[i];
 	
-		if( doRayTriangleQuery( ray, res, query.node ) )
+		if( doRayTriangleQuery( ray, res, query.entity ) )
 			return true;
 	}
 
@@ -129,10 +157,12 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res )
 bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res,
 							    const EntityPtr& node )
 {
+	const std::vector<GeometryPtr>& geoms = node->getGeometry();
+
 	// Down to triangle picking.	
-	for( uint i = 0; i < node->getGeometry().size(); i++ )
+	for( uint i = 0; i < geoms.size(); i++ )
 	{		
-		const GeometryPtr& geo = node->getGeometry()[i];
+		const GeometryPtr& geo = geoms[i];
 	
 		if( !geo )
 			continue;
@@ -148,9 +178,11 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res,
 		if( !bound.intersects(ray, distance) )
 			continue;
 
-		for( uint e = 0; e < geo->getRenderables().size(); e++ )
+		const std::vector<RenderablePtr>& rends = geo->getRenderables();
+
+		for( uint e = 0; e < rends.size(); e++ )
 		{
-			const RenderablePtr& rend = geo->getRenderables()[e];
+			const RenderablePtr& rend = rends[e];
 
 			// This picking method only works on triangles.
 
@@ -195,10 +227,10 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res,
 				Vector3 to; float n; float u, v;
 				if( ray.intersects(tri, to, n, u, v) )
 				{					
-					for( byte i = 0; i < 3; i++ )
+					for( uint i = 0; i < 3; i++ )
 						res.trianglePosition[i] = tri[i];
 
-					for( byte i = 0; i < 3; i++ )
+					for( uint i = 0; i < 3; i++ )
 						res.triangleUV[i] = uv[i];
 
 					res.intersectionUV.x = u;

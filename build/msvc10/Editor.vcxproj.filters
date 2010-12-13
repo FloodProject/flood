@@ -350,6 +350,7 @@
     <ClInclude Include="..\..\src\Editor\inc\EditorIcons.h">
       <Filter>PCH</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\Editor\inc\ResourceDrop.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\src\Editor\res\Editor.rc">

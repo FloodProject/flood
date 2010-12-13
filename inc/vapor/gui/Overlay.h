@@ -124,6 +124,9 @@ protected:
 	// Overlay size.
 	Vector2i size;
 
+	// Opacity of the overlay.
+	float opacity;
+
 	// Overlay geometry.
 	RenderablePtr renderable;
 

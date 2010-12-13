@@ -162,8 +162,8 @@ Matrix4x3 Transform::lookAt( const Vector3& lookAtVector, const Vector3& upVecto
 	const Vector3& eye = position;
 
 	Vector3 zaxis = (eye - lookAtVector).normalize();
-	Vector3	xaxis = upVector.cross(zaxis).normalize();
-	Vector3	yaxis = zaxis.cross(xaxis);
+	Vector3 xaxis = upVector.cross(zaxis).normalize();
+	Vector3 yaxis = zaxis.cross(xaxis);
 
 	Matrix4x3 mat;
 	mat.m11 = xaxis.x;

@@ -9,21 +9,22 @@
 #pragma once
 
 #include "vapor/scene/Group.h"
-#include "vapor/math/Matrix4x3.h"
-#include "vapor/math/Ray.h"
+#include "math/Matrix4x3.h"
+#include "math/Ray.h"
+#include "math/Frustum.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-// Bounding-box based intersection
-struct RayBoxQueryResult
+struct RayQueryResult
 {
-	EntityPtr node;
+	EntityPtr entity;
 	float distance;
 };
 
-// Triangle based intersection
+typedef std::vector<RayQueryResult> RayQueryList;
+
 struct RayTriangleQueryResult
 {
 	GeometryPtr geometry;
@@ -34,8 +35,6 @@ struct RayTriangleQueryResult
 	Vector3 triangleUV[3];
 	float distance;
 };
-
-typedef std::vector<RayBoxQueryResult> RayBoxQueryList;
 
 //-----------------------------------//
 
@@ -59,10 +58,13 @@ public:
 	// Updates all the entities recursively.
 	virtual void update( double delta );
 
-	// Checks for collision via ray-BoundingBox tests.
-	bool doRayBoxQuery( const Ray& ray, RayBoxQueryResult& res );
-	bool doRayBoxQuery( const Ray& ray, RayBoxQueryList& list, bool all = true );
+	// Checks for collision via ray-box tests.
+	bool doRayBoxQuery( const Ray& ray, RayQueryResult& res );
+	bool doRayBoxQuery( const Ray& ray, RayQueryList& list, bool all = true );
 	
+	// Checks for collision via frustum-box tests.
+	bool doRayVolumeQuery( const Frustum& volume, RayQueryList& list, bool all = true );
+
 	// Checks for collision via ray-triangle tests.
 	bool doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res );
 	bool doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, const EntityPtr& node );

@@ -13,6 +13,9 @@
 //#define SWIG_SHARED_PTR_NAMESPACE std
 //%include <std_shared_ptr.i>
 
+%define CORE_API
+%enddef
+
 %define VAPOR_API
 %enddef
 
@@ -20,7 +23,7 @@
 %import "vapor/Language.h"
 %import "vapor/Utilities.h"
 %import "vapor/Singleton.h"
-%import "vapor/ReferenceCounted.h"
+%import "vapor/ReferenceCount.h"
 
 %define DECLARE_CLASS_()
 %enddef

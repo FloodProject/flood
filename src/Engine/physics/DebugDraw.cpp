@@ -24,7 +24,6 @@ BulletDebugDrawer::BulletDebugDrawer()
 	clearBuffer();
 
 	material = new Material("DebugDrawer");
-	material->setProgram("Diffuse");
 	material->setDepthCompare(DepthCompare::LessOrEqual);
 
 	renderable = new Renderable(PolygonType::Lines);

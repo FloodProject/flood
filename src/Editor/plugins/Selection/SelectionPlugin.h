@@ -15,6 +15,7 @@ namespace vapor { namespace editor {
 //-----------------------------------//
 
 class SelectionManager;
+class SelectionOperation;
 
 class SelectionPlugin : public Plugin
 {
@@ -56,6 +57,15 @@ protected:
 
 	// Updates the drag selection rectangle.
 	void updateRectangle( const MouseDragEvent& );
+
+	// Creates a deselection operation.
+	SelectionOperation* createDeselection();
+
+	// Processes a normal selection.
+	SelectionOperation* processSelection(const MouseButtonEvent& event);
+
+	// Processes a drag selection.
+	SelectionOperation* processDragSelection(const MouseButtonEvent& event);
 
 	SelectionManager* selections;
 	wxToolBarToolBase* buttonSelect;

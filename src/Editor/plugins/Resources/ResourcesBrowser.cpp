@@ -91,7 +91,7 @@ void ResourcesBrowser::setupImages()
 
 		metadata.index = images->Add( wxBitmap(image) );
 		
-		std::string base = String::getBaseFromPath(metadata.thumbnail);
+		std::string base = Path::getBase(metadata.thumbnail);
 		m_listCtrl->InsertItem(listIndex++, base, metadata.index);
 	}
 }
@@ -212,7 +212,7 @@ void ResourcesBrowser::scanFiles()
 	{
 		const std::string& path = found[i];
 
-		std::string ext = String::getExtensionFromPath(path);
+		std::string ext = Path::getExtension(path);
 		ResourceLoader* loader = rm->findLoader(ext);
 
 		if( !loader )
@@ -239,7 +239,7 @@ void ResourcesBrowser::scanFiles()
 		// Force unused resources to be unloaded.
 		rm->update(0);
 
-		progressDialog.Update(progress++, String::getFileFromPath(path));
+		progressDialog.Update(progress++, Path::getFile(path));
 
 		if( progressDialog.WasCancelled() )
 			break;
@@ -259,7 +259,7 @@ void ResourcesBrowser::scanFiles()
 		if( !mesh || mesh->getResourceGroup() != ResourceGroup::Meshes )
 			continue;
 
-		const std::string& resPath = String::getFileFromPath(mesh->getPath());
+		const std::string& resPath = Path::getFile(mesh->getPath());
 
 		ResourceMetadata metadata;
 		metadata.hash = hash;
@@ -363,7 +363,7 @@ void ResourcesBrowser::OnListBeginDrag(wxListEvent& event)
 	if( !mesh )
 		return;
 
-	EntityPtr node( new Entity( String::getBaseFromPath(name) ) );
+	EntityPtr node( new Entity( Path::getFile(name) ) );
 	node->addTransform();
 	node->getTransform()->setPosition(dropPoint);
 	node->addComponent( ModelPtr( new Model(mesh) ) );

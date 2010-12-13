@@ -42,10 +42,8 @@ RenderablePtr buildBoundingRenderable( const BoundingBox& box )
 	vb->set( VertexAttribute::Position, pos );
 	vb->set( VertexAttribute::Color, colors );
 
-	MaterialPtr mat( new Material("BoundingBox", "Diffuse") );
-	mat->setBackfaceCulling( false );
+	MaterialPtr mat( new Material("BoundingBox") );
 	mat->setDepthCompare( DepthCompare::LessOrEqual );
-	//mat->setDepthTest( false );
 
 	RenderablePtr boundingBox( new Renderable(PolygonType::Quads, vb, mat) );
 	boundingBox->setPolygonMode( PolygonMode::Wireframe );
@@ -89,7 +87,7 @@ RenderablePtr buildFrustum( const Frustum& box )
 	VertexBufferPtr vb = new VertexBuffer();
 	vb->set( VertexAttribute::Color, colors );
 
-	MaterialPtr mat( new Material("", "Diffuse") );
+	MaterialPtr mat( new Material("FrustumDebug") );
 	mat->setBackfaceCulling( false );
 
 	RenderablePtr renderable( new Renderable(PolygonType::Quads, vb, mat) );

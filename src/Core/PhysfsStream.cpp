@@ -22,7 +22,8 @@ PhysfsStream::PhysfsStream(File& file)
 
 bool PhysfsStream::open()
 {
-	return true;//file.open();
+	//file.open();
+	return true;
 }
 
 //-----------------------------------//

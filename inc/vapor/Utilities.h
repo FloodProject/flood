@@ -71,15 +71,6 @@ namespace String
 	// Replaces a sub-string by another sub-string in the source string.
 	CORE_API void replace(std::string& source, const std::string& from, const std::string& to);
 
-	// Gets the base part of the filename string.
-	CORE_API std::string getBaseFromPath(const std::string& name);
-
-	// Gets the extension part of the filename string.
-	CORE_API std::string getExtensionFromPath(const std::string& name);
-
-	// Gets the file part of the path string.
-	CORE_API std::string getFileFromPath(const std::string& name);
-
 	// Converts a number to a string.
 	template< typename T >
 	std::string fromNumber(const T& t)
@@ -107,6 +98,25 @@ namespace String
 
 	// Converts a float to a string.
 	CORE_API std::string fromFloat( float n, byte precision = 2 );
+}
+
+//---------------------------------------------------------------------//
+// Path manipulation
+//---------------------------------------------------------------------//
+
+namespace Path
+{
+	// Gets the base part of the filename string.
+	CORE_API std::string getBase(const std::string& name);
+
+	// Gets the extension part of the filename string.
+	CORE_API std::string getExtension(const std::string& name);
+
+	// Gets the file part of the path string.
+	CORE_API std::string getFile(const std::string& name);
+
+	// Normalizes the path.
+	CORE_API std::string normalize(const std::string& path);
 }
 
 //---------------------------------------------------------------------//
