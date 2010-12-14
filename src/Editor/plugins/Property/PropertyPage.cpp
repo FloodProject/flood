@@ -12,6 +12,8 @@
 #include "Editor.h"
 #include "EditorIcons.h"
 #include "UndoManager.h"
+#include "math/Hash.h"
+
 #include <wx/propgrid/advprops.h>
 
 namespace vapor { namespace editor {
@@ -68,7 +70,7 @@ static wxAny getComposedPropertyValue(wxPGProperty* prop, const Type& typeField)
 
 		if( typePrim.isVector3() )
 		{
-			wxPGProperty* X = prop->GetPropertyByName("X"); 
+			wxPGProperty* X = prop->GetPropertyByName("X");
 			wxPGProperty* Y = prop->GetPropertyByName("Y");
 			wxPGProperty* Z = prop->GetPropertyByName("Z");
 
@@ -158,7 +160,6 @@ void PropertyPage::onPropertyChanged(wxPropertyGridEvent& event)
 	if(	!prop->GetClientObject() )
 		prop = prop->GetParent();
 
-
 	PropertyData* data = (PropertyData*) prop->GetClientObject();
 	assert( data != nullptr );
 
@@ -179,12 +180,91 @@ void PropertyPage::onPropertyChanged(wxPropertyGridEvent& event)
 
 //-----------------------------------//
 
+static void createMemoryWatch(const Class* klass, void* object, MemoryWatch& watch)
+{
+	const FieldsMap& fields = klass->getFields();
+	if( fields.empty() ) return;
+	
+	byte* min = (byte*) 0xffffffff;
+	byte* max = nullptr;
+
+	FieldsMap::const_iterator it;
+	for(it = fields.cbegin(); it != fields.cend(); ++it)
+	{
+		int offset = it->second->offset;
+		byte* field = (byte*) object + offset;
+		
+		if( field < min ) min = field;
+		if( field > max ) max = field;
+	}
+
+	std::vector<byte> memory;
+	memory.resize(max - min);
+	
+	std::copy( min, max, memory.begin() );
+	uint hash = Hash::Murmur2(memory, 0xF00D);
+
+	watch.rangeBegin = min;
+	watch.rangeEnd = max;
+	watch.hash = hash;
+}
+
+//-----------------------------------//
+
+bool PropertyPage::updateMemoryWatch(const Class* klass, void* object)
+{
+	MemoryWatch watch; createMemoryWatch(klass, object, watch);
+
+	if(memoryWatches.find(klass) == memoryWatches.end())
+	{
+		memoryWatches[klass] = watch;
+		return false;
+	}
+
+	const MemoryWatch& oldWatch = memoryWatches[klass];
+
+	if(oldWatch.hash == watch.hash)
+		return false;
+
+	memoryWatches[klass] = watch;	
+	return true;
+}
+
+//-----------------------------------//
+
+bool PropertyPage::updateMemoryWatches()
+{
+	bool changed = false;
+
+	const EntityPtr& entity = selectedEntity.lock();
+	if( !entity ) return false;
+
+	const ComponentMap& components = entity->getComponents();
+	
+	ComponentMap::const_iterator it;
+	for(it = components.cbegin(); it != components.cend(); ++it)
+	{
+		const Class* klass = it->first;
+		void* object = (void*) it->second.get();
+
+		bool watchChanged = updateMemoryWatch(klass, object);
+		if( !changed ) changed = watchChanged;
+	}
+
+	return changed;
+}
+
+//-----------------------------------//
+
 void PropertyPage::onIdle(wxIdleEvent& event)
 {
-	const EntityPtr& node = selectedEntity.lock();
-	
-	//if( node )
-		//showEntityProperties(node);
+	if( !updateMemoryWatches() )
+		return;
+
+	Log::debug("Memory watches detected changes");
+
+	const EntityPtr& entity = selectedEntity.lock();
+	showEntityProperties(entity);
 }
 
 //-----------------------------------//
@@ -192,6 +272,9 @@ void PropertyPage::onIdle(wxIdleEvent& event)
 void PropertyPage::showEntityProperties( const EntityPtr& node )
 {
 	selectedEntity = node;
+
+	memoryWatches.clear();
+	updateMemoryWatches();
 
 	Clear();
 
@@ -310,6 +393,15 @@ wxPGProperty* PropertyPage::createEnumProperty(const Field& field, void* object)
 
 //-----------------------------------//
 
+static wxFloatProperty* createFloatProperty(const char* name, float value)
+{
+	wxFloatProperty* prop = new wxFloatProperty( name, wxPG_LABEL, value );
+	prop->SetAttribute(wxPG_FLOAT_PRECISION, 3);
+	return prop;
+}
+
+//-----------------------------------//
+
 wxPGProperty* PropertyPage::createPrimitiveProperty(const Field& field, void* object)
 {
 	wxPGProperty* prop = nullptr;
@@ -334,7 +426,7 @@ wxPGProperty* PropertyPage::createPrimitiveProperty(const Field& field, void* ob
 	else if( type.isFloat() )
 	{
 		float val = field.get<float>(object);
-		prop = new wxFloatProperty( wxEmptyString, wxPG_LABEL, val );
+		prop = createFloatProperty( (const char*) wxEmptyString, val );
 		Append( prop );
 	}
 	//-----------------------------------//
@@ -360,9 +452,9 @@ wxPGProperty* PropertyPage::createPrimitiveProperty(const Field& field, void* ob
 		prop = new wxStringProperty( wxEmptyString, wxPG_LABEL, "<composed>" );
 		Append( prop );
 
-		AppendIn( prop, new wxFloatProperty( "X", wxPG_LABEL, vec.x ) );
-		AppendIn( prop, new wxFloatProperty( "Y", wxPG_LABEL, vec.y ) );
-		AppendIn( prop, new wxFloatProperty( "Z", wxPG_LABEL, vec.z ) );
+		AppendIn( prop, createFloatProperty( "X", vec.x ) );
+		AppendIn( prop, createFloatProperty( "Y", vec.y ) );
+		AppendIn( prop, createFloatProperty( "Z", vec.z ) );
 
 		Collapse( prop );
 	}
@@ -375,9 +467,9 @@ wxPGProperty* PropertyPage::createPrimitiveProperty(const Field& field, void* ob
 		prop = new wxStringProperty( wxEmptyString, wxPG_LABEL, "<composed>" );
 		Append( prop );
 
-		AppendIn( prop, new wxFloatProperty( "X", wxPG_LABEL, ang.x ) );
-		AppendIn( prop, new wxFloatProperty( "Y", wxPG_LABEL, ang.y ) );
-		AppendIn( prop, new wxFloatProperty( "Z", wxPG_LABEL, ang.z ) );
+		AppendIn( prop, createFloatProperty( "X", ang.x ) );
+		AppendIn( prop, createFloatProperty( "Y", ang.y ) );
+		AppendIn( prop, createFloatProperty( "Z", ang.z ) );
 
 		Collapse( prop );
 	}

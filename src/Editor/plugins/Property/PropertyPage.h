@@ -17,8 +17,6 @@ namespace vapor { namespace editor {
 class EditorFrame;
 class PropertyOperation;
 
-//-----------------------------------//
-
 class PropertyData : public wxClientData
 {
 public:
@@ -26,6 +24,15 @@ public:
 	const Type* type;
 	const Field* field;
 	const void* object;
+};
+
+//-----------------------------------//
+
+struct MemoryWatch
+{
+	byte* rangeBegin;
+	byte* rangeEnd;
+	uint hash;
 };
 
 //-----------------------------------//
@@ -57,6 +64,9 @@ public:
 	// Creates a new property for an enum type.
 	wxPGProperty* createEnumProperty(const Field& field, void* object);
 
+	// Updates the memory watches.
+	bool updateMemoryWatches();
+
 protected:
 
 	// Initializes the control.
@@ -76,6 +86,12 @@ protected:
 
 	// Selected node.
 	EntityWeakPtr selectedEntity;
+
+	// Updates a memory watch.
+	bool updateMemoryWatch(const Class* klass, void* object);
+
+	// Memory watches.
+	std::map<const Class*, MemoryWatch> memoryWatches;
 
 	// Editor instance.
 	EditorFrame* editor;

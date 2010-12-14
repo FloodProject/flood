@@ -32,18 +32,21 @@ STB_Image_Loader::STB_Image_Loader()
 bool STB_Image_Loader::decode(const Stream& file, Resource* res)
 {
 	// read contents of the file into the vector
-	std::vector<byte> filebuf = file.read();
+	std::vector<byte> data;
+	file.read(data);
 
-	if( filebuf.size() == 0 ) 
+	if( data.empty() ) 
 		return false;
 
-	// TODO: error handling
 	int width, height, comp;
-	byte* data = stbi_load_from_memory( &filebuf[0], filebuf.size(), 
-		&width, &height, &comp, 0 /* 0=auto-detect, 3=RGB, 4=RGBA */ );
+	
+	byte* pixelData = stbi_load_from_memory( &data[0], data.size(), &width, 
+		&height, &comp, 0 /* 0=auto-detect, 3=RGB, 4=RGBA */ );
+
+	if( !pixelData )
+		return false;
 
 	// Build our image with the pixel data returned by stb_image.
-
 	PixelFormat::Enum pf = PixelFormat::Unknown;
 	switch( comp )
 	{
@@ -60,13 +63,13 @@ bool STB_Image_Loader::decode(const Stream& file, Resource* res)
 	}
 
 	if( pf == PixelFormat::Unknown )
-		return nullptr;
+		return false;
 	
 	std::vector<byte> buffer;
 	int sz = width*height*comp; 
 	buffer.resize(sz);
-	memcpy(&buffer[0], data, sz);
-	free(data);
+	memcpy(&buffer[0], pixelData, sz);
+	free(pixelData);
 
 	Image* image = static_cast<Image*>( res );
 	image->setWidth( width );
@@ -74,7 +77,7 @@ bool STB_Image_Loader::decode(const Stream& file, Resource* res)
 	image->setPixelFormat( pf );
 	image->setBuffer( buffer );
 
-	return image;
+	return true;
 }
 
 //-----------------------------------//

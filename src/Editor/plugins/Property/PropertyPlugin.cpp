@@ -152,8 +152,11 @@ void PropertyPlugin::updateProperties()
 {
 	const EntityPtr& node = selectedEntity.lock();
 
-	if( node )	
+	if( node )
+	{
+		propertyPage->updateMemoryWatches();
 		propertyPage->showEntityProperties(node);
+	}
 }
 
 //-----------------------------------//

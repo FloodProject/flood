@@ -89,6 +89,48 @@ void SelectionPlugin::onSceneLoad( const ScenePtr& scene )
 
 //-----------------------------------//
 
+void SelectionPlugin::onMouseButtonPress( const MouseButtonEvent& event )
+{
+	dragOrigin = Vector2i(event.x, event.y );
+}
+
+//-----------------------------------//
+
+void SelectionPlugin::onMouseButtonRelease( const MouseButtonEvent& event )
+{
+	if( event.button != MouseButton::Left )
+		return;
+
+	SelectionOperation* selection = nullptr;
+	SelectionOperation* selected = selections->getSelection();
+
+	if(dragRectangle)
+		selection = processDragSelection(event);
+	else
+		selection = processSelection(event);
+
+	if( !selection )
+		return;
+
+	// Prevent duplication of selection events.
+	if( selected && (!selected->lastUndone)
+		&& (selected->selections == selection->selections))
+	{
+		delete selection;
+		return;
+	}
+
+	UndoManager* undoManager = editor->getUndoManager();
+	undoManager->registerOperation(selection);
+
+	if( selected )
+		selected->unselectAll();
+
+	selection->redo();
+}
+
+//-----------------------------------//
+
 void SelectionPlugin::onMouseDrag( const MouseDragEvent& event )
 {
 	if( !dragRectangle )
@@ -137,13 +179,6 @@ void SelectionPlugin::updateRectangle( const MouseDragEvent& event )
 
 //-----------------------------------//
 
-void SelectionPlugin::onMouseButtonPress( const MouseButtonEvent& event )
-{
-	dragOrigin = Vector2i(event.x, event.y );
-}
-
-//-----------------------------------//
-
 SelectionOperation* SelectionPlugin::createDeselection()
 {
 	SelectionOperation* selected = selections->getSelection();
@@ -155,8 +190,9 @@ SelectionOperation* SelectionPlugin::createDeselection()
 	// then we need to unselect everything that is currently selected.
 
 	SelectionOperation* selection = selections->createOperation();
-	selection->previous = selected->selections;
+	selection->description = "Deselection";
 	selection->mode = SelectionMode::None;
+	selection->previous = selected->selections;
 
 	return selection;
 }
@@ -165,6 +201,7 @@ SelectionOperation* SelectionPlugin::createDeselection()
 
 SelectionOperation* SelectionPlugin::processDragSelection(const MouseButtonEvent& event)
 {
+	const ScenePtr& scene = editor->getEngine()->getSceneManager();
 	RenderView* view = editor->getMainViewframe()->getView();
 	const CameraPtr& camera = view->getCamera();
 
@@ -174,8 +211,6 @@ SelectionOperation* SelectionPlugin::processDragSelection(const MouseButtonEvent
 
 	Frustum pickVolume = camera->getVolume(pos.x, pos.x+size.x, pos.y, pos.y+size.y);
 
-	const ScenePtr& scene = editor->getEngine()->getSceneManager();
-		
 	RayQueryList list;
 	scene->doRayVolumeQuery(pickVolume, list);
 
@@ -192,6 +227,7 @@ SelectionOperation* SelectionPlugin::processDragSelection(const MouseButtonEvent
 	}
 
 	selection = selections->createOperation();
+	selection->description = "Drag Selection";
 
 	if( selected )
 		selection->previous = selected->selections;
@@ -220,6 +256,7 @@ SelectionOperation* SelectionPlugin::processSelection(const MouseButtonEvent& ev
 	}
 	
 	selection = selections->createOperation();
+	selection->description = "Selection";
 
 	if( selected )
 		selection->previous = selected->selections;
@@ -227,35 +264,6 @@ SelectionOperation* SelectionPlugin::processSelection(const MouseButtonEvent& ev
 	selection->addEntity(entity);
 
 	return selection;
-}
-
-//-----------------------------------//
-
-void SelectionPlugin::onMouseButtonRelease( const MouseButtonEvent& event )
-{
-	if( event.button != MouseButton::Left )
-		return;
-
-	SelectionOperation* selection = nullptr;
-	SelectionOperation* selected = selections->getSelection();
-
-	if(dragRectangle)
-		selection = processDragSelection(event);
-	else
-		selection = processSelection(event);
-
-	if( !selection )
-		return;
-
-	if( selected )
-		selected->unselectAll();
-
-	//assert( selection != nullptr );
-
-	UndoManager* undoManager = editor->getUndoManager();
-	undoManager->registerOperation(selection);
-
-	selection->redo();
 }
 
 //-----------------------------------//

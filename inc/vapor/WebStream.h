@@ -44,6 +44,9 @@ public:
 	// Write buffer into the stream.
 	long write(const std::vector<byte>& buf);
 
+	using Stream::read;
+	using Stream::write;
+
 protected:
 	
 	mutable CURL* request;

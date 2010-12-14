@@ -13,8 +13,8 @@
 #include "EditorIcons.h"
 #include "Settings.h"
 #include "UndoManager.h"
-#include "../Scene/ScenePage.h"
 #include "Utilities.h"
+#include "../Scene/ScenePage.h"
 
 namespace vapor { namespace editor {
 
@@ -29,7 +29,6 @@ ResourcesBrowser::ResourcesBrowser( EditorFrame* editor, wxWindow* parent,
 	setupUI();
 	setupRender();
 	loadCache();
-	//network.init();
 }
 
 //-----------------------------------//
@@ -103,11 +102,18 @@ bool ResourcesBrowser::loadCache()
 	LocaleSwitch locale;
 	std::string path = CacheFolder + ThumbCache;
 
-	//if( !File::exists(path) )
-	//{
-	//	Log::warn("Could not find thumbnails cache file '%s'", path.c_str());
-	//	return false;
-	//}
+	if( !wxFileName::DirExists(CacheFolder) )
+	{
+		Log::info("Creating cache directory: '%s'", CacheFolder.c_str());
+		wxFileName::Mkdir(CacheFolder);
+		return false;
+	}
+
+	if( !File::exists(path) )
+	{
+		Log::warn("Could not find thumbnails cache file '%s'", path.c_str());
+		return false;
+	}
 
 	FileStream file( path, StreamMode::Read );
 
@@ -126,8 +132,8 @@ bool ResourcesBrowser::loadCache()
 	if( !reader.parse(text, root, false) )
 		return false;
 
-	uint i = 0;
-	while( i++ < root.size() )
+	uint i;
+	for( i = 0; i < root.size(); i++ )
 	{
 		if( !root.isValidIndex(i) )
 			continue;
@@ -187,8 +193,7 @@ bool ResourcesBrowser::saveCache()
 		root[i++] = value;
 	}
 
-	#pragma TODO(Write)
-	//file.write( root.toStyledString() );
+	file.write( root.toStyledString() );
 	Log::info("Wrote thumbnails cache to '%s' with %u entries", path.c_str(), i);
 
 	return true;

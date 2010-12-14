@@ -334,11 +334,11 @@ void Milkshape3D::buildGeometry()
 			}
 		}
 
-		// Get a shiny material for the group.
+		// Gets a material for the group.
 		MaterialPtr mat = buildMaterial(group);
 
 		// Vertex buffer.
-		VertexBufferPtr vb( new VertexBuffer() );
+		VertexBufferPtr vb = new VertexBuffer();
 
 		if( isAnimated() )
 			vb->set( VertexAttribute::FogCoord, bones );
@@ -348,7 +348,7 @@ void Milkshape3D::buildGeometry()
 		vb->set( VertexAttribute::TexCoord0, texCoords );
 
 		// Renderable.
-		RenderablePtr rend( new Renderable() );
+		RenderablePtr rend = new Renderable();
 		rend->setPrimitiveType( PolygonType::Triangles );
 		rend->setVertexBuffer( vb );
 		rend->setMaterial( mat );

@@ -58,6 +58,7 @@ public:
 	FILE* getFilePointer();
 
 	using Stream::read;
+	using Stream::write;
 	
 protected:
 

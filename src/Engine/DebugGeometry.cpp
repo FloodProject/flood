@@ -44,6 +44,7 @@ RenderablePtr buildBoundingRenderable( const BoundingBox& box )
 
 	MaterialPtr mat( new Material("BoundingBox") );
 	mat->setDepthCompare( DepthCompare::LessOrEqual );
+	mat->setDepthTest( false );
 
 	RenderablePtr boundingBox( new Renderable(PolygonType::Quads, vb, mat) );
 	boundingBox->setPolygonMode( PolygonMode::Wireframe );

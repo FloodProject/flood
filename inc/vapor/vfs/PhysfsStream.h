@@ -40,6 +40,9 @@ public:
 	// Writes a buffer into the stream.
 	virtual long write(const std::vector<byte>& buffer);
 
+	using Stream::read;
+	using Stream::write;
+
 protected:
 
 	mutable File& file;

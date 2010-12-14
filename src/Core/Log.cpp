@@ -262,6 +262,7 @@ LogSinkHTML::LogSinkHTML(FileStream& stream)
 
 LogSinkHTML::~LogSinkHTML()
 {
+	if(!fp) return;
 	fprintf(fp, "\t</table>\n" "\t</div>\n" "</body>\n" "</html>\n");
 }
 
@@ -269,6 +270,8 @@ LogSinkHTML::~LogSinkHTML()
 
 void LogSinkHTML::process(LogEntry& entry)
 {
+	if(!fp) return;
+
 	std::string level = LogLevel::toString(entry.level);
 	level = String::toLowerCase(level);
 

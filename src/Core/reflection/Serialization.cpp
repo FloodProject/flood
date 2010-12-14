@@ -55,8 +55,7 @@ void Serializer::saveToFile( const std::string& name )
 	if( !file.open() )
 		return;
 
-	#pragma TODO(Write)
-	//file.write( rootValue.toStyledString() );
+	file.write( rootValue.toStyledString() );
 }
 
 //-----------------------------------//

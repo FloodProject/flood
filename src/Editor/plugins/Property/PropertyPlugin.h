@@ -16,8 +16,6 @@ namespace vapor { namespace editor {
 
 class PropertyPage;
 
-//-----------------------------------//
-
 class PropertyPlugin : public Plugin
 {
 public:

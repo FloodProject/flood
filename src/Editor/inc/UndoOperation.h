@@ -23,11 +23,13 @@ class UndoOperation : public ReferenceCounted
 public:
 
 	UndoOperation();
-	
 	virtual ~UndoOperation();
 
 	virtual void undo() = 0;
 	virtual void redo() = 0;
+
+	bool lastUndone;
+	std::string description;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(UndoOperation);

@@ -96,6 +96,7 @@ void SelectionOperation::undo()
 		selectPrevious();
 	}
 
+	lastUndone = true;
 	selectionManager->setSelection(this);
 }
 
@@ -117,6 +118,7 @@ void SelectionOperation::redo()
 		selectAll();
 	}
 
+	lastUndone = false;
 	selectionManager->setSelection(this);
 }
 

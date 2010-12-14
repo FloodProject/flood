@@ -91,9 +91,9 @@
 // Image codecs
 //---------------------------------------------------------------------//
 
-#define VAPOR_IMAGE_DEVIL
+//#define VAPOR_IMAGE_DEVIL
 //#define VAPOR_IMAGE_PICOPNG
-//#define VAPOR_IMAGE_STB
+#define VAPOR_IMAGE_STB
 
 //---------------------------------------------------------------------//
 // Mesh formats

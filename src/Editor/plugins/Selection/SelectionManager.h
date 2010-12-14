@@ -36,6 +36,11 @@ namespace SelectionMode
 
 struct SelectionData
 {
+	bool operator == (const SelectionData& rhs) const
+	{
+		return entity == rhs.entity;
+	}
+
 	EntityPtr entity;
 };
 
@@ -105,7 +110,7 @@ public:
 	SelectionOperation* getSelection() const;
 
 	// Sets the current selection.
-	void setSelection(SelectionOperation*);
+	void setSelection(SelectionOperation* selection);
 
 	// Creates a new selection operation.
 	SelectionOperation* createOperation();

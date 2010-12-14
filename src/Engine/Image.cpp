@@ -113,9 +113,9 @@ void Image::setColor( const Color& color )
 
 	for( uint i = 0; i < buffer.size(); i += 4 )
 	{
-		buffer[i+0] = color.r * 255;
-		buffer[i+1] = color.g * 255;
-		buffer[i+2] = color.b * 255;
+		buffer[i+0] = byte(color.r * 255);
+		buffer[i+1] = byte(color.g * 255);
+		buffer[i+2] = byte(color.b * 255);
 	}
 }
 

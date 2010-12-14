@@ -294,20 +294,26 @@ void ResourceManager::removeResource(const std::string& path)
 
 void ResourceManager::registerLoader(ResourceLoader* const loader)
 {
-	#pragma TODO("Check if the resource loader is already registered")
+	Log::info( "Registering resource loader '%s'", loader->getName().c_str() );
 
-	// Associate the extensions in the loaders map.
+	const ExtensionList& extensions = loader->getExtensions();
 	ExtensionList::const_iterator it;
-	for( it = loader->getExtensions().cbegin(); it != loader->getExtensions().cend(); it++ )
+
+	for( it = extensions.cbegin(); it != extensions.cend(); it++ )
 	{
 		const std::string& extension = *it;
+
+		if(resourceLoaders.find(extension) != resourceLoaders.end())
+		{
+			Log::debug("Extension '%s' already has a resource loader", extension.c_str());
+			continue;
+		}
+
 		resourceLoaders[extension] = loader;
 	}
 
 	// Send callback notifications.
 	onResourceLoaderRegistered( *loader );
-
-	Log::info( "Registered resource loader '%s'", loader->getName().c_str() );
 }
 
 //-----------------------------------//
