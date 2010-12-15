@@ -763,13 +763,17 @@ void ScenePage::onMenuSelected( wxCommandEvent& event )
 
 		PolygonMode::Enum mode = event.IsChecked() ? PolygonMode::Wireframe : PolygonMode::Solid;
 
-		for( uint i = 0; i < node->getGeometry().size(); i++ )
+		const std::vector<GeometryPtr>& geometries = node->getGeometry();
+
+		for( uint i = 0; i < geometries.size(); i++ )
 		{
-			const GeometryPtr& geo = node->getGeometry()[i];
+			const GeometryPtr& geo = geometries[i];
+
+			const std::vector<RenderablePtr>& rends = geo->getRenderables();
 			
-			for( uint j = 0; j < geo->getRenderables().size(); j++ )
+			for( uint j = 0; j < rends.size(); j++ )
 			{
-				const RenderablePtr& rend = geo->getRenderables()[i];
+				const RenderablePtr& rend = rends[i];
 				rend->setPolygonMode( mode );
 			}
 		}

@@ -38,6 +38,7 @@ void Group::add( const EntityPtr& node )
 	nodes.push_back( node );
 
 	onEntityAdded(node);
+	onChanged();
 }
 
 //-----------------------------------//
@@ -66,6 +67,8 @@ bool Group::remove( const EntityPtr& node )
 		return false;
 
 	onEntityRemoved(node);
+	onChanged();
+
 	nodes.erase(it);
 
 	return true;

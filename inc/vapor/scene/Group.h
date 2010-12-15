@@ -51,6 +51,9 @@ public:
 	// Event gets called when a node is removed.
 	Event1<const EntityPtr&> onEntityRemoved;
 
+	// Event gets called when its contents change.
+	Event0<> onChanged;
+
 protected:
 
 	// Holds the nodes of the group.

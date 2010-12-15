@@ -80,8 +80,8 @@ EditorFrame::EditorFrame(const wxString& title)
 	createEngine();
 	createViews();
 	createResources();
-	createScene();
 	createServices();
+	createScene();
 	createPlugins();
 	createToolbar();
 	SetSizerAndFit( sizer );
@@ -135,6 +135,9 @@ void EditorFrame::createPlugins()
 
 	pluginManagerFrame = new PluginManagerFrame( this, pluginManager);
 	pluginManagerFrame->SetInitialSize(wxSize(200, 350));
+
+	ScenePtr scene = engine->getSceneManager();
+	eventManager->onSceneLoad(scene);
 }
 
 //-----------------------------------//

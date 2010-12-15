@@ -9,6 +9,8 @@
 #include "vapor/PCH.h"
 #include "vapor/terrain/Cell.h"
 #include "vapor/terrain/Terrain.h"
+#include "vapor/scene/Entity.h"
+#include "vapor/scene/Geometry.h"
 #include "vapor/math/Math.h"
 #include "vapor/math/Color.h"
 
@@ -16,28 +18,36 @@ namespace vapor {
 
 //-----------------------------------//
 
-Cell::Cell( const TerrainSettings& settings, 
+BEGIN_CLASS_PARENT(Cell, Geometry)
+END_CLASS()
+
+//-----------------------------------//
+
+Cell::Cell() { }
+
+//-----------------------------------//
+
+Cell::Cell( const TerrainSettings& settings_, 
 			const std::vector<float>& heights, int x, int y )
-	: Renderable( PolygonType::Triangles )
-	, settings( settings )
+	: Geometry()
+	, settings( &settings_ )
 	, heights( heights )
 	, x(x), y(y)
 {
-	uint size = settings.TextureSize;
+	ushort size = settings->TextureSize;
 	image = new Image(size, size, PixelFormat::R8G8B8A8);
 	image->setColor( Color::LightGrey );
 
 	// Make a copy of the default cell material.
-	MaterialPtr material = new Material(*settings.Material);
+	MaterialPtr material = new Material(*settings->Material);
 	material->setTexture(0, image);
-	setMaterial(material);
 
-	// Create a new VBO and upload triangle data
-	VertexBufferPtr vb( new VertexBuffer() );
-	IndexBufferPtr ib( new IndexBuffer() );
+	rend = new Renderable( PolygonType::Triangles );
+	rend->setVertexBuffer( new VertexBuffer() );
+	rend->setIndexBuffer( new IndexBuffer() );
+	rend->setMaterial(material);
 
-	setVertexBuffer( vb );
-	setIndexBuffer( ib );
+	addRenderable(rend);
 
 	rebuildGeometry();
 	rebuildNormals();
@@ -51,25 +61,26 @@ void Cell::rebuildGeometry()
 
 	rebuildVertices();
 	rebuildIndices();
+
+	// Force bounding-box update.
+	markDirty();
 }
 
 //-----------------------------------//
 
 void Cell::rebuildVertices()
 {
-	assert( vb != nullptr );
-
 	// Vertex data
 	std::vector<Vector3> vertex;
 	std::vector<Vector3> texCoords;
 
-	ushort numTiles = settings.NumberTiles;
-	ushort sizeCell = settings.CellSize;
+	ushort numTiles = settings->NumberTiles;
+	ushort sizeCell = settings->CellSize;
 
-	float offsetX = x * sizeCell;
-	float offsetZ = y * sizeCell;
+	float offsetX = float(x * sizeCell);
+	float offsetZ = float(y * sizeCell);
 
-	float tileSize = sizeCell / numTiles;
+	float tileSize = float(sizeCell / numTiles);
 	uint numExpectedVertices = (numTiles+1)*(numTiles+1);
 
 	for( uint i = 0; i < numExpectedVertices; i++ )
@@ -79,7 +90,7 @@ void Cell::rebuildVertices()
 
 		float X = offsetX + tileSize*row;
 		float Z = offsetZ + tileSize*col;
-		float Y = heights[i] * settings.MaxHeight;
+		float Y = heights[i] * settings->MaxHeight;
 		
 		vertex.push_back( Vector3(X, Y, Z) );
 		texCoords.push_back( Vector2(X/sizeCell, Z/sizeCell) );
@@ -89,6 +100,7 @@ void Cell::rebuildVertices()
 	assert( texCoords.size() == numExpectedVertices );
 
 	// Vertex buffer setup.
+	const VertexBufferPtr& vb = rend->getVertexBuffer();
 	vb->set( VertexAttribute::Position, vertex );
 	vb->set( VertexAttribute::TexCoord0, texCoords );
 }
@@ -97,12 +109,10 @@ void Cell::rebuildVertices()
 
 void Cell::rebuildIndices()
 {
-	assert( ib != nullptr );
-
 	// Vertex data
 	std::vector<ushort> indices;
 
-	const ushort numTiles = settings.NumberTiles;
+	const ushort numTiles = settings->NumberTiles;
 	
 	for( short col = 0; col < numTiles; col++ )
 	{
@@ -123,6 +133,7 @@ void Cell::rebuildIndices()
 	}
 
 	// Index buffer setup.
+	const IndexBufferPtr& ib = rend->getIndexBuffer();
 	ib->set( indices );
 }
 
@@ -138,7 +149,8 @@ void Cell::rebuildNormals()
 
 void Cell::rebuildFaceNormals()
 {
-	assert( vb && ib );
+	const VertexBufferPtr& vb = rend->getVertexBuffer();
+	const IndexBufferPtr& ib = rend->getIndexBuffer();
 
 	const std::vector<Vector3>& vs = vb->getVertices();
 	assert( !vs.empty() );
@@ -160,7 +172,7 @@ void Cell::rebuildFaceNormals()
 		faceNormals.push_back( normal );
 	}
 
-	const uint numTiles = settings.NumberTiles;
+	const uint numTiles = settings->NumberTiles;
 	assert( faceNormals.size() == numTiles*numTiles*2 );
 }
 
@@ -174,15 +186,15 @@ void Cell::rebuildFaceNormals()
 #define isRegular(x,y) ((x>=1u) && (x<=(numTiles-1u)) \
 						&& (y>=1u) && (y<=(numTiles-1u)))
 
-uint Cell::getNeighborFaces( uint i, std::vector<uint>& ns )
+byte Cell::getNeighborFaces( uint i, std::vector<uint>& ns )
 {
-	const ushort numTiles = settings.NumberTiles;
+	const ushort numTiles = settings->NumberTiles;
 	uint facesPerRow = numTiles*2;
 	
 	uint row = i / (numTiles+1);
 	uint col = i % (numTiles+1);
 	
-	uint n = 0;
+	byte n = 0;
 
 	if( isRegular(col, row) )
 	{
@@ -208,7 +220,8 @@ uint Cell::getNeighborFaces( uint i, std::vector<uint>& ns )
 
 void Cell::rebuildAveragedNormals()
 {
-	assert( vb && ib );
+	const VertexBufferPtr& vb = rend->getVertexBuffer();
+	const IndexBufferPtr& ib = rend->getIndexBuffer();
 
 	const std::vector<Vector3>& vs = vb->getVertices();
 	assert( !vs.empty() );
@@ -226,7 +239,7 @@ void Cell::rebuildAveragedNormals()
 
 	for(uint i = 0; i < vs.size(); i++)
 	{
-		uint n = getNeighborFaces(i, ns);
+		byte n = getNeighborFaces(i, ns);
 
 		Vector3 average;
 		for( uint e = 0; e < n; e++ )
@@ -237,6 +250,7 @@ void Cell::rebuildAveragedNormals()
 
 		normals.push_back( average );
 	}
+
 
 	assert( normals.size() == vs.size() );
 	vb->set( VertexAttribute::Normal, normals );

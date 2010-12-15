@@ -14,8 +14,6 @@ namespace vapor { namespace editor {
 
 class RenderControl;
 
-//-----------------------------------//
-
 /**
  * Viewframe displays a view.
  */
@@ -35,6 +33,7 @@ public:
 	void switchToDefaultCamera();
 
 	SETTER(MainCamera, const CameraPtr&, mainCamera)
+	GETTER(MainCamera, const CameraWeakPtr&, mainCamera)
 
 	// Creates and adds a new view to the viewframe.
 	RenderView* createView();

@@ -70,7 +70,6 @@ void Viewframe::switchToDefaultCamera()
 
 RenderView* Viewframe::createView( /*const EntityPtr& node*/ )
 {
-
 	// Add a new view to the window.
 	//CameraPtr camera = node->getComponent<Camera>();
 	//assert( camera != nullptr );

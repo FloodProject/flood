@@ -21,6 +21,7 @@ namespace vapor {
 
 BEGIN_CLASS_PARENT(Camera, Component)
 	FIELD_CLASS(Camera, Frustum, frustum)
+	FIELD_PRIMITIVE(Camera, bool, frustumCulling)
 END_CLASS()
 
 //-----------------------------------//
@@ -46,6 +47,7 @@ Camera::~Camera()
 void Camera::init()
 {
 	activeView = nullptr;
+	frustumCulling = false;
 	lookAtVector = Vector3::UnitZ;
 }
 
@@ -164,42 +166,49 @@ void Camera::render( RenderBlock& block, bool clearView )
 
 //-----------------------------------//
 
-void Camera::cull( RenderBlock& block, const EntityPtr& node )
+void Camera::cull( RenderBlock& block, const EntityPtr& entity )
 {
 	// Try to see if this is a Group-derived node.
-	const Type& type = node->getInstanceType();
+	const Type& type = entity->getInstanceType();
 	
 	if( type.inherits<Group>() || type.is<Group>() )
 	{
-		GroupPtr group = std::static_pointer_cast<Group>(node);
+		GroupPtr group = std::static_pointer_cast<Group>(entity);
+		const std::vector<EntityPtr>& entities = group->getEntities();
 
-		// Cull the children nodes recursively.
-		for( uint i = 0; i < group->getEntities().size(); i++ )
+		// Cull the children entities recursively.
+		for( uint i = 0; i < entities.size(); i++ )
 		{
-			const EntityPtr& child = group->getEntities()[i];
-
-			if( !child->isVisible() ) 
-				continue;
-			
+			const EntityPtr& child = entities[i];			
 			cull( block, child );
 		}
+
+		return;
 	}
 
-	// If it is a renderable object, then we perform frustum culling
-	// and if the node is visible, then we push it to a list of things
-	// to render that will be later passed to the rendering device.
-	const TransformPtr& transform = node->getTransform();
-	
-	for( uint i = 0; i < node->getGeometry().size(); i++ )
-	{
-		const GeometryPtr& geometry = node->getGeometry()[i];
+	// If this is a visible renderable object, then we perform frustum culling
+	// and then we push it to a list of things passed later to the renderer.
 
-		// No frustum culling is performed yet.
-		#pragma TODO("Fix multiple geometry instancing")
+	if( !entity->isVisible() ) 
+		return;
+
+	const TransformPtr& transform = entity->getTransform();
+	const BoundingBox& box = transform->getWorldBoundingVolume();
+
+	if( frustumCulling && !frustum.intersects(box) )
+		return;
+
+	#pragma TODO("Fix multiple geometry instancing")
+
+	const std::vector<GeometryPtr>& geometries = entity->getGeometry();
+
+	for( uint i = 0; i < geometries.size(); i++ )
+	{
+		const GeometryPtr& geometry = geometries[i];
 		geometry->appendRenderables( block.renderables, transform );
 	}
 
-	const LightPtr& light = node->getComponent<Light>();
+	const LightPtr& light = entity->getComponent<Light>();
 	
 	if( light ) 
 	{
@@ -210,8 +219,10 @@ void Camera::cull( RenderBlock& block, const EntityPtr& node )
 		block.lights.push_back( ls );
 	}
 
+	const ComponentMap& components = entity->getComponents();
+
 	ComponentMap::const_iterator it;
-	for( it = node->getComponents().cbegin(); it != node->getComponents().cend(); it++ )
+	for( it = components.cbegin(); it != components.cend(); it++ )
 	{
 		const ComponentPtr& component = it->second;
 

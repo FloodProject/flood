@@ -123,12 +123,11 @@ CellPtr Terrain::createCell( int x, int y, std::vector<float>& heights )
 	CellPtr cell( new Cell(settings, heights, x, y) );
 	terrainCells.push_back(cell);
 
-	std::string name = String::format("Cell (%hd,%hd)", x, y);
+	std::string name = String::format("Cell (%d,%d)", x, y);
+	
 	EntityPtr nodeCell( new Entity(name) );
 	nodeCell->addTransform();
-
-	GeometryPtr geometry( new Geometry(cell) );
-	nodeCell->addComponent(geometry);
+	nodeCell->addComponent(cell);
 
 	add( nodeCell );
 

@@ -96,6 +96,9 @@ protected:
 	// Camera frustum.
 	Frustum frustum;
 
+	// Frustum culling.
+	bool frustumCulling;
+
 	// Look-at vector.
 	Vector3 lookAtVector;
 

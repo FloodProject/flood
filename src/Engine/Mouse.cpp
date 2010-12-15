@@ -116,6 +116,8 @@ void Mouse::mouseDragged(const MouseDragEvent& mde)
 
 	me.dx = mouseInfo.x - mde.x;
 	me.dy = mouseInfo.y - mde.y;
+	
+	me.info = &mouseInfo;
 
 	mouseInfo.x = mde.x;
 	mouseInfo.y = mde.y;
@@ -131,7 +133,6 @@ void Mouse::mouseButtonPressed(const MouseButtonEvent& mbp)
 	mouseInfo.y = mbp.y;
 	
 	setMouseButton( mbp.button, true );
-
 	onMouseButtonPress( mbp );
 }
 

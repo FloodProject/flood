@@ -107,6 +107,9 @@ public:
 	// Scene load callback.
 	virtual void onSceneLoad( const ScenePtr& scene ) {}
 
+	// Scene unload callback.
+	virtual void onSceneUnload( const ScenePtr& scene ) {}
+
 	// Scene update callback.
 	virtual void onSceneUpdate() {}
 

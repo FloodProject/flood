@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "vapor/render/Renderable.h"
+#include "scene/Geometry.h"
 
 namespace vapor {
 
@@ -23,11 +23,13 @@ struct TerrainSettings;
  * integer coordinates.
  */
 
-class VAPOR_API Cell : public Renderable
+class VAPOR_API Cell : public Geometry
 {
-	DECLARE_UNCOPYABLE(Cell)
+	DECLARE_CLASS_()
 
 public:
+
+	Cell();
 
 	Cell( const TerrainSettings& settings, 
 		  const std::vector<float>& heights,
@@ -46,7 +48,7 @@ public:
 	void rebuildNormals();
 
 	// Given an indice, gets the neighbour vertices.
-	uint getNeighborFaces( uint index, std::vector<uint>& n );
+	byte getNeighborFaces( uint index, std::vector<uint>& n );
 
 	// Gets the X coordinate of the cell.
 	GETTER(X, int, x)
@@ -68,6 +70,9 @@ protected:
 	// Calculate the averaged normals of the geometry.
 	void rebuildAveragedNormals();
 
+	// Terrain settings.
+	const TerrainSettings* settings;
+
 	// Coordinates of this cell of terrain.
 	int x, y;
 
@@ -80,11 +85,11 @@ protected:
 	// Cell image.
 	ImagePtr image;
 
-	// Terrain settings.
-	const TerrainSettings& settings;
+	// Renderable of the cell.
+	RenderablePtr rend;
 };
 
-TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Cell );
+TYPEDEF_SHARED_POINTER_FROM_TYPE( Cell );
 
 //-----------------------------------//
 

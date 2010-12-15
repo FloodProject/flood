@@ -11,6 +11,7 @@
 #include "scene/Tags.h"
 #include "scene/Transform.h"
 #include "scene/Geometry.h"
+#include "scene/Group.h"
 
 namespace vapor {
 
@@ -63,6 +64,7 @@ bool Entity::addComponent( const ComponentPtr& component )
 	component->setEntity( shared_from_this() );
 
 	onComponentAdded(component);
+	sendNotifications();
 
 	return true;
 }
@@ -93,6 +95,7 @@ bool Entity::removeComponent( const ComponentPtr& component )
 	geometries.erase( it2 );
 
 	onComponentRemoved(component);
+	sendNotifications();
 
 	return true;
 }
@@ -125,6 +128,32 @@ void Entity::update( double delta )
 
 		component->update( delta );
 	}
+}
+
+//-----------------------------------//
+
+void Entity::sendNotifications()
+{
+	EntityPtr entity = parent.lock();
+
+	if( !entity )
+		return;
+
+	const Class& type =  entity->getInstanceType();
+
+	if( !type.is<Group>() && !type.inherits<Group>() )
+		return;
+
+	GroupPtr group = std::static_pointer_cast<Group>(entity);
+	group->onChanged();
+}
+
+//-----------------------------------//
+
+void Entity::setName( const std::string& name )
+{
+	this->name = name;
+	sendNotifications();
 }
 
 //-----------------------------------//

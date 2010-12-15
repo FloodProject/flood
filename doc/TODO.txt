@@ -66,11 +66,6 @@ Options:
 ENGINE:
 -------
 
-View frustum culling:
-
-	Frustum-Plane intersection
-	Integrate in Camera::cull
-
 Skydome component:
 
 	Add billboards for Sun and Moon

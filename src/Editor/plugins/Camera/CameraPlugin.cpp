@@ -11,6 +11,7 @@
 #include "CameraControls.h"
 #include "Editor.h"
 #include "Viewframe.h"
+#include "Events.h"
 
 namespace vapor { namespace editor {
 
@@ -40,7 +41,7 @@ PluginMetadata CameraPlugin::getMetadata()
 void CameraPlugin::onPluginEnable()
 {
 	Viewframe* viewframe = editor->getMainViewframe();
-	cameraControls = new CameraControls(viewframe);
+	cameraControls = new CameraControls(editor, viewframe);
 
 	wxSizerFlags sizerFlags(0);
 	sizerFlags.Expand().Border(wxTOP, 2);
@@ -48,6 +49,10 @@ void CameraPlugin::onPluginEnable()
 	wxSizer* viewSizer = viewframe->getSizer();
 	viewSizer->Add( cameraControls, sizerFlags );
 	viewSizer->Layout();
+
+	// Subscribe as an event listener.
+	Events* events = editor->getEventManager();
+	events->addEventListener(this);
 }
 
 //-----------------------------------//
@@ -63,6 +68,35 @@ void CameraPlugin::onPluginDisable()
 	viewSizer->Layout();
 		
 	cameraControls->Destroy();
+}
+
+//-----------------------------------//
+
+void CameraPlugin::onSceneLoad( const ScenePtr& scene )
+{
+	const ScenePtr& editorScene = editor->getEditorScene();
+	editorScene->onChanged.Connect( this, &CameraPlugin::onEntityChange );
+	scene->onChanged.Connect( this, &CameraPlugin::onEntityChange );
+	
+	cameraControls->updateCameraSelection();
+}
+
+//-----------------------------------//
+
+void CameraPlugin::onSceneUnload( const ScenePtr& scene )
+{
+	const ScenePtr& editorScene = editor->getEditorScene();
+	editorScene->onChanged.Disconnect( this, &CameraPlugin::onEntityChange );
+	scene->onChanged.Disconnect( this, &CameraPlugin::onEntityChange );
+	
+	cameraControls->updateCameraSelection();
+}
+
+//-----------------------------------//
+
+void CameraPlugin::onEntityChange()
+{
+	cameraControls->updateCameraSelection();
 }
 
 //-----------------------------------//

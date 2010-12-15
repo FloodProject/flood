@@ -114,6 +114,8 @@ struct VAPOR_API MouseDragEvent : public MouseEvent
 
 	short x;
 	short y;
+
+	MouseInfo* info;
 };
 
 //-----------------------------------//

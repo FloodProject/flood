@@ -31,6 +31,15 @@ public:
 	// Plugin disable callback.
 	virtual void onPluginDisable();
 
+	// Scene load callback.
+	virtual void onSceneLoad( const ScenePtr& scene );
+
+	// Scene unload callback.
+	virtual void onSceneUnload( const ScenePtr& scene );
+
+	// Entity change callback.
+	void onEntityChange(); 
+
 protected:
 
 	CameraControls* cameraControls;

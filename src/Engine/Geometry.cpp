@@ -62,20 +62,6 @@ RenderableList Geometry::getRenderables( RenderStage::Enum group )
 }
 
 //-----------------------------------//
-
-void Geometry::markDirty()
-{
-	isDirty = true;
-}
-
-//-----------------------------------//
-
-void Geometry::onRender()
-{
-
-}
-
-//-----------------------------------//
  
 void Geometry::appendRenderables( RenderQueue& queue, TransformPtr transform )
 {
@@ -120,12 +106,12 @@ void Geometry::updateBounds()
 			const RenderablePtr& rend = it->second[i];
 			const VertexBufferPtr& vb = rend->getVertexBuffer();
 			
-			if( !vb )
-				continue;
+			if( !vb ) continue;
 
-			for( uint i = 0; i < vb->getVertices().size(); i++ )
+			const std::vector<Vector3>& verts = vb->getVertices();
+			for( uint e = 0; e < verts.size(); e++ )
 			{
-				const Vector3& vec = vb->getVertices()[i];
+				const Vector3& vec = verts[e];
 				boundingVolume.add(vec);
 			}
 		}
@@ -158,6 +144,20 @@ void Geometry::update( double delta )
 	updateBounds();
 	notifiesTransform();
 	isDirty = false;
+}
+
+//-----------------------------------//
+
+void Geometry::markDirty()
+{
+	isDirty = true;
+}
+
+//-----------------------------------//
+
+void Geometry::onRender()
+{
+
 }
 
 //-----------------------------------//

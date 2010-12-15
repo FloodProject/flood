@@ -91,6 +91,9 @@ void SelectionPlugin::onSceneLoad( const ScenePtr& scene )
 
 void SelectionPlugin::onMouseButtonPress( const MouseButtonEvent& event )
 {
+	if( event.button != MouseButton::Left )
+		return;
+
 	dragOrigin = Vector2i(event.x, event.y );
 }
 
@@ -133,6 +136,9 @@ void SelectionPlugin::onMouseButtonRelease( const MouseButtonEvent& event )
 
 void SelectionPlugin::onMouseDrag( const MouseDragEvent& event )
 {
+	if( !event.info->leftButton )
+		return;
+
 	if( !dragRectangle )
 	{
 		createRectangle();

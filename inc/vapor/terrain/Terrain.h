@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include "vapor/scene/Group.h"
-#include "vapor/resources/Image.h"
-#include "vapor/terrain/Cell.h"
-#include "vapor/terrain/Brush.h"
+#include "scene/Group.h"
+#include "resources/Image.h"
+#include "terrain/Cell.h"
+#include "terrain/Brush.h"
 
 namespace vapor {
 
@@ -25,7 +25,7 @@ struct TerrainSettings
 {
 	TerrainSettings()
 		: CellSize(512)
-		, NumberTiles(16)
+		, NumberTiles(32)
 		, TextureSize(512)
 	{ }
 

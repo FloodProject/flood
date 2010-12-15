@@ -47,7 +47,8 @@ public:
 	explicit Entity( const std::string& name );
 	
 	// Gets/sets the name of the node.
-	ACESSOR(Name, const std::string&, name);
+	GETTER(Name, const std::string&, name);
+	void setName( const std::string& name );
 
 	// Gets if this node is visible.
 	bool isVisible() const;
@@ -116,6 +117,10 @@ public:
 
 	// Updates all the components of the node.
 	virtual void update( double delta );
+
+
+	// Sends change notifications.
+	void sendNotifications();
 
 	// Events gets called when a component is added.
 	Event1<const ComponentPtr&> onComponentAdded;

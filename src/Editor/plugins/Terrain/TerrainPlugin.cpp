@@ -539,15 +539,18 @@ void TerrainOperation::getCellsInRange(const BoundingSphere& bs, std::vector<Cel
 
 		if( !bs.intersects( BoundingSphere(box) ) )
 			continue;
-		
-		GeometryPtr geometry = node->getComponent<Geometry>();
-		assert( geometry != nullptr );
 
-		const RenderableList& renderables = geometry->getRenderables();
-		assert( !renderables.empty() );
-
-		const CellPtr& cell = RefCast<Cell>(renderables[0]);
+		const CellPtr& cell = node->getComponent<Cell>();
 		cells.push_back(cell);
+		
+		//GeometryPtr geometry = node->getComponent<Geometry>();
+		//assert( geometry != nullptr );
+
+		//const RenderableList& renderables = geometry->getRenderables();
+		//assert( !renderables.empty() );
+
+		//const CellPtr& cell = RefCast<Cell>(renderables[0]);
+		//cells.push_back(cell);
 	}
 }
 
@@ -567,16 +570,18 @@ void TerrainOperation::applyRaiseTool()
 	{
 		const CellPtr& cell = cells[i];
 		applyRaiseCell(bs, cell);
+		cell->markDirty();
 	}
 }
 
 //-----------------------------------//
 
-void TerrainOperation::applyRaiseCell(const BoundingSphere& bs, const CellPtr& rend)
+void TerrainOperation::applyRaiseCell(const BoundingSphere& bs, const CellPtr& cell)
 {
 	bool updateVB = false;
 	
-	VertexBufferPtr vb = rend->getVertexBuffer();
+	RenderablePtr rend = cell->getRenderables()[0];
+	const VertexBufferPtr& vb = rend->getVertexBuffer();
 	std::vector<Vector3>& vertices = vb->getVertices();
 	
 	for( uint i = 0; i < vertices.size(); i++ )
