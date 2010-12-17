@@ -104,7 +104,7 @@ void GizmoPlugin::onToolSelect( int id )
 		return;
 	
 	for( uint i = 0; i < selection->selections.size(); i++ )
-	{
+	{	
 		onEntityUnselect( selection->selections[i].entity );
 		onEntitySelect( selection->selections[i].entity );
 	}

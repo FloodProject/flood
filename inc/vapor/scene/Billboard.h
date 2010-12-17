@@ -30,6 +30,8 @@ namespace vapor {
 
 namespace BillboardType
 {
+	DECLARE_ENUM()
+
 	enum Enum
 	{
 		ScreenAligned,
@@ -51,23 +53,19 @@ class VAPOR_API Billboard : public Component
 public:
 
 	Billboard();
-	Billboard( const CameraPtr& cam,
-		BillboardType::Enum type = BillboardType::WorldAligned );
+	Billboard( BillboardType::Enum type );
 
 	// Updates the component.
 	void update( double delta );
 
-	// Gets the debug renderable of the component.
-	RenderablePtr getDebugRenderable() const;
+	// Creates the debug renderable of the component.
+	RenderablePtr createDebugRenderable() const;
   
-private:
+protected:
 
 	// Billboard type
 	BillboardType::Enum billboardType;
-
 	TransformPtr transform;
-	CameraPtr camera;
-	RenderablePtr rend;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Billboard );

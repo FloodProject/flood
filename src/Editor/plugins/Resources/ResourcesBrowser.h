@@ -64,6 +64,9 @@ public:
 	// Sets up the images.
 	void setupImages();
 
+	// Generate thumbnails.
+	void generateThumbnails(const std::vector<std::string>& files);
+
 	// Generate thumbnail.
 	ImagePtr generateThumbnail(const MeshPtr& mesh);
 

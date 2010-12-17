@@ -254,9 +254,8 @@ Ray Camera::getRay( float screenX, float screenY, Vector3* outFar ) const
 	Vector3 nearPoint(screenX, size.y - screenY, 0);
 	Vector3 farPoint (screenX, size.y - screenY, 1);
 
-	const Matrix4x4& matProjection = frustum.matProjection;
-	Vector3 rayOrigin = activeView->unprojectPoint(nearPoint, matProjection, viewMatrix);
-	Vector3 rayTarget = activeView->unprojectPoint(farPoint, matProjection, viewMatrix);
+	Vector3 rayOrigin = activeView->unprojectPoint(nearPoint, this);
+	Vector3 rayTarget = activeView->unprojectPoint(farPoint, this);
 	
 	Vector3 rayDirection = rayTarget - rayOrigin;
 	rayDirection.normalize();

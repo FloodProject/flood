@@ -9,6 +9,7 @@
 #include "PCH.h"
 #include "TerrainPlugin.h"
 #include "TerrainPage.h"
+#include "TerrainOperation.h"
 #include "Utilities.h"
 #include "Editor.h"
 #include "UndoManager.h"
@@ -65,24 +66,40 @@ void TerrainPlugin::onPluginEnable()
 	wxImageList* imageList = notebookCtrl->GetImageList();
 
 	wxBitmap iconWorld = wxMEMORY_BITMAP(world);
-	int iconTerrain = imageList->Add(iconWorld);
+	iconTerrain = imageList->Add(iconWorld);
 
 	terrainPage = new TerrainPage( engine, notebookCtrl );
-	notebookCtrl->AddPage( terrainPage, /*"Terrains"*/"", false, iconTerrain );
-
-	toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
-		&TerrainPlugin::onToolClick, this,
-		buttonRaise->GetId(), buttonPaint->GetId() );
+	terrainPage->Hide();
 }
 
 //-----------------------------------//
 
-void TerrainPlugin::onToolClick(wxCommandEvent& event)
+void TerrainPlugin::onToolSelect( int id )
 {
-	tool = (TerrainTool::Enum) event.GetId();
-	
+	tool = (TerrainTool::Enum) id;
+
 	delete terrainOperation;
 	terrainOperation = nullptr;
+
+	wxNotebook* notebookCtrl = editor->getNotebook();
+
+	if(notebookCtrl->GetCurrentPage() == terrainPage)
+		return;
+
+	notebookCtrl->AddPage( terrainPage, /*"Terrains"*/"", true, iconTerrain );
+	terrainPage->Show();
+}
+
+//-----------------------------------//
+
+void TerrainPlugin::onToolUnselect( int id )
+{
+	//wxNotebook* notebookCtrl = editor->getNotebook();
+
+	//if(notebookCtrl->GetCurrentPage() != terrainPage)
+	//	return;
+
+	removePage( terrainPage );
 }
 
 //-----------------------------------//
@@ -205,6 +222,126 @@ bool TerrainPlugin::pickCell( const MouseButtonEvent& mbe )
 
 //-----------------------------------//
 
+void TerrainPlugin::onCreateCell( wxCommandEvent& event )
+{
+	terrain->addCell(coords.x, coords.y);
+
+	editor->redrawView();
+}
+
+//-----------------------------------//
+
+void TerrainPlugin::onRebuildNormals( wxCommandEvent& event )
+{
+	CellPtr cell = terrain->getCell(coords.x, coords.y);
+	assert( cell != nullptr );
+
+	cell->rebuildNormals();
+
+	editor->redrawView();
+}
+
+//-----------------------------------//
+
+void TerrainPlugin::createOperation( const RayTriangleQueryResult& res )
+{
+	if( terrainOperation )
+		return;
+
+	InputManager* input = engine->getInputManager();
+
+	// If the left Shift is held down, then lower.
+	Keyboard* keyboard = input->getKeyboard();
+	bool raise = !keyboard->isKeyPressed( Keys::LShift );	
+
+	terrainOperation = new TerrainOperation( tool, res );
+	terrainOperation->terrain = terrain;
+
+	terrainOperation->brushSize = terrainPage->getBrushSize();
+	terrainOperation->brushStrength = terrainPage->getBrushStrength();
+	terrainOperation->paintImage = terrainPage->getPaintImage();
+
+	terrainOperation->tileLock = terrainPage->getTileLock();
+	terrainOperation->tileOffsetX = terrainPage->getTileOffsetX();
+	terrainOperation->tileOffsetY = terrainPage->getTileOffsetY();
+}
+
+//-----------------------------------//
+
+void TerrainPlugin::registerUndoOperation()
+{
+	if( !terrainOperation )
+		return;
+
+	timer.Stop();
+
+	// Register the operation in the stack so it can be undone later.
+	terrainOperation->ready();
+	
+	UndoManager* undoManager = editor->getUndoManager();
+	undoManager->registerOperation( terrainOperation );
+
+	terrainOperation = nullptr;
+}
+
+//-----------------------------------//
+
+void TerrainPlugin::setupOperation( const MouseButtonEvent& mb )
+{
+	const int TERRAIN_TIMER_MS = 500;
+
+	RayTriangleQueryResult res;
+
+	if( !pickTerrain(mb, res) )
+		return;
+
+	EntityPtr parent = res.entity->getParent();
+	terrain = std::static_pointer_cast<Terrain>(parent);
+
+	if( !terrainOperation )
+		createOperation(res);
+	else
+		terrainOperation->rayQuery = res;
+
+	terrainOperation->applyTool();
+	editor->redrawView();
+
+	timer.Start( TERRAIN_TIMER_MS );
+}
+
+//-----------------------------------//
+
+bool TerrainPlugin::pickTerrain( const MouseButtonEvent& mb, RayTriangleQueryResult& res )
+{
+	const ScenePtr& scene = engine->getSceneManager();
+
+	RenderView* view = viewframe->getView();
+	const CameraPtr& camera = view->getCamera(); 
+	
+	// Get a ray given the screen location clicked.
+	const Ray& pickRay = camera->getRay( mb.x, mb.y );
+
+	RayQueryResult query;
+	
+	if( !scene->doRayBoxQuery(pickRay, query) )
+		return false;
+
+	const EntityPtr& entity = query.entity;
+	
+	if( !entity ) 
+		return false;
+
+	if( !entity->getParent()->getInstanceType().is<Terrain>() )
+		return false;
+
+	if( !scene->doRayTriangleQuery(pickRay, res, entity) )
+		return false; // Query does not intersect the terrain.
+
+	return true;
+}
+
+//-----------------------------------//
+
 void TerrainPlugin::createContextMenu( const MouseButtonEvent& mbe )
 {
 	std::string menuTitle( "Terrain Operations" );
@@ -256,438 +393,6 @@ void TerrainPlugin::createContextMenu( const MouseButtonEvent& mbe )
 
 	wxPoint clientpt( mbe.x, mbe.y );
 	editor->PopupMenu(&menu, clientpt);
-}
-
-//-----------------------------------//
-
-void TerrainPlugin::onCreateCell( wxCommandEvent& event )
-{
-	terrain->addCell(coords.x, coords.y);
-
-	editor->redrawView();
-}
-
-//-----------------------------------//
-
-void TerrainPlugin::onRebuildNormals( wxCommandEvent& event )
-{
-	CellPtr cell = terrain->getCell(coords.x, coords.y);
-	assert( cell != nullptr );
-
-	cell->rebuildNormals();
-
-	editor->redrawView();
-}
-
-//-----------------------------------//
-
-void TerrainPlugin::createOperation( const RayTriangleQueryResult& res )
-{
-	if( terrainOperation )
-		return;
-
-	InputManager* input = engine->getInputManager();
-
-	if( !input )
-		return;
-
-	// If the left Shift is held down, then lower.
-	Keyboard* keyboard = input->getKeyboard();
-	bool raise = !keyboard->isKeyPressed( Keys::LShift );	
-
-	terrainOperation = new TerrainOperation( tool, res );
-	terrainOperation->terrain = terrain;
-
-	terrainOperation->brushSize = terrainPage->getBrushSize();
-	terrainOperation->brushStrength = terrainPage->getBrushStrength();
-	terrainOperation->paintImage = terrainPage->getPaintImage();
-
-	terrainOperation->tileLock = terrainPage->getTileLock();
-	terrainOperation->tileOffsetX = terrainPage->getTileOffsetX();
-	terrainOperation->tileOffsetY = terrainPage->getTileOffsetY();
-}
-
-//-----------------------------------//
-
-void TerrainPlugin::registerUndoOperation()
-{
-	if( !terrainOperation )
-		return;
-
-	timer.Stop();
-
-	// Register the operation in the stack so it can be undone later.
-	terrainOperation->ready();
-	
-	UndoManager* undoManager = editor->getUndoManager();
-	undoManager->registerOperation( terrainOperation );
-
-	terrainOperation = nullptr;
-}
-
-//-----------------------------------//
-
-void TerrainPlugin::setupOperation( const MouseButtonEvent& mb )
-{
-	const int TERRAIN_TIMER_MS = 500;
-
-	RayTriangleQueryResult res;
-	
-	if( !pickTerrain(mb, res) )
-		return;
-
-	if( !terrainOperation )
-		createOperation(res);
-	else
-		terrainOperation->rayQuery = res;
-
-	terrainOperation->applyTool();
-	editor->redrawView();
-
-	timer.Start( TERRAIN_TIMER_MS );
-}
-
-//-----------------------------------//
-
-bool TerrainPlugin::pickTerrain( const MouseButtonEvent& mb, RayTriangleQueryResult& res )
-{
-	const ScenePtr& scene = engine->getSceneManager();
-
-	RenderView* view = viewframe->getView();
-	const CameraPtr& camera = view->getCamera(); 
-	
-	// Get a ray given the screen location clicked.
-	const Ray& pickRay = camera->getRay( mb.x, mb.y );
-
-	RayQueryResult query;
-	
-	if( !scene->doRayBoxQuery(pickRay, query) )
-		return false;
-
-	const EntityPtr& entity = query.entity;
-	
-	if( !entity ) 
-		return false;
-
-	if( !entity->getParent()->getInstanceType().is<Terrain>() )
-		return false;
-
-	if( !scene->doRayTriangleQuery(pickRay, res, entity) )
-		return false; // Query does not intersect the terrain.
-
-	return true;
-}
-
-//-----------------------------------//
-
-TerrainOperation::TerrainOperation( TerrainTool::Enum tool,
-								    const RayTriangleQueryResult& res )
-	: brushSize(0)
-	, brushStrength(0)
-	, tool(tool)
-	, rayQuery(res)
-{
-	assert( res.renderable != nullptr );
-
-	if( tool == TerrainTool::Raise )
-		loadSaveHeights( beforeHeights, true );
-	else if( tool == TerrainTool::Paint )
-		loadSaveImage( beforeImage, true );
-}
-
-//-----------------------------------//
-
-void TerrainOperation::ready()
-{
-	if( tool == TerrainTool::Raise )
-	{
-		loadSaveHeights( afterHeights, true );
-		updateNormals();
-	}
-	else if( tool == TerrainTool::Paint )
-	{
-		loadSaveImage( afterImage, true );
-	}
-}
-
-//-----------------------------------//
-
-void TerrainOperation::undo()
-{
-	if( tool == TerrainTool::Raise )
-	{
-		loadSaveHeights( beforeHeights, false );
-		updateNormals();
-	}
-	else if( tool == TerrainTool::Paint )
-	{
-		loadSaveImage( beforeImage, false );
-	}
-}
-
-//-----------------------------------//
-
-void TerrainOperation::redo()
-{
-	// If the operation can't be undone with an algorithm, 
-	// then our best option is to save the state of the terrain.
-
-	if( tool == TerrainTool::Raise )
-	{
-		loadSaveHeights( afterHeights, false );
-		updateNormals();
-	}
-	else if( tool == TerrainTool::Paint )
-	{
-		loadSaveImage( afterImage, false );
-	}
-}
-
-//-----------------------------------//
-
-void TerrainOperation::updateNormals()
-{
-	//RenderablePtr renderable = rayQuery.renderable;
-
-	#pragma TODO("Generate terrain normals in the background")
-	//CellPtr cell = boost::static_pointer_cast<Cell>( renderable );
-
-	const Vector3& pick = rayQuery.intersection;
-
-	BoundingSphere bs( pick, brushSize );
-	
-	std::vector<CellPtr> cells;
-	getCellsInRange(bs, cells);
-
-	for( uint i = 0; i < cells.size(); i++ )
-	{
-		const CellPtr& cell = cells[i];
-		cell->rebuildNormals();
-	}
-}
-
-//-----------------------------------//
-
-void TerrainOperation::loadSaveHeights( std::vector<float>& heights, bool save )
-{	
-	RenderablePtr rend = rayQuery.renderable;
-	VertexBufferPtr vb = rend->getVertexBuffer();
-	
-	if( save )
-	{
-		// We only need the height of the vertex. This way we can save some memory.
-		#pragma TODO("There is no need to save the unmodified heights of the terrain")
-		const std::vector<Vector3>& vertices = vb->getVertices();
-
-		for( uint i = 0; i < vertices.size(); i++ )
-		{
-			const Vector3& v = vertices[i];
-			heights.push_back( v.y );
-		}
-	}
-	else
-	{
-		std::vector<Vector3>& vertices = vb->getVertices();
-
-		for( uint i = 0; i < vertices.size(); i++ )
-			vertices[i].y = heights[i];
-
-		vb->forceRebuild();
-	}
-}
-
-//-----------------------------------//
-
-void TerrainOperation::loadSaveImage( std::vector<byte>& state, bool save )
-{	
-	RenderablePtr rend = rayQuery.renderable;
-	MaterialPtr material = rend->getMaterial();
-	const TexturePtr& texture = material->getTexture(0);
-	const Image* image = texture->getImage();
-
-	if( save )
-	{
-		//state = image->getBuffer();
-	}
-	else
-	{
-		//image->setBuffer(state);
-		//texture->setImage(image);
-	}
-}
-
-//-----------------------------------//
-
-void TerrainOperation::applyTool()
-{
-	if( tool == TerrainTool::Raise )
-		applyRaiseTool();
-	else if( tool == TerrainTool::Paint )
-		applyPaintTool();
-}
-
-//-----------------------------------//
-
-void TerrainOperation::getCellsInRange(const BoundingSphere& bs, std::vector<CellPtr>& cells)
-{
-	const std::vector<EntityPtr>& entities = terrain->getEntities();
-	for( uint i = 0; i < entities.size(); i++ )
-	{
-		const EntityPtr& node = entities[i];
-		const TransformPtr& transform = node->getTransform();
-		const BoundingBox& box = transform->getBoundingVolume();
-
-		if( !bs.intersects( BoundingSphere(box) ) )
-			continue;
-
-		const CellPtr& cell = node->getComponent<Cell>();
-		cells.push_back(cell);
-		
-		//GeometryPtr geometry = node->getComponent<Geometry>();
-		//assert( geometry != nullptr );
-
-		//const RenderableList& renderables = geometry->getRenderables();
-		//assert( !renderables.empty() );
-
-		//const CellPtr& cell = RefCast<Cell>(renderables[0]);
-		//cells.push_back(cell);
-	}
-}
-
-//-----------------------------------//
-
-void TerrainOperation::applyRaiseTool()
-{
-	RenderablePtr rend = rayQuery.renderable;
-	const Vector3& pick = rayQuery.intersection;
-
-	BoundingSphere bs( pick, brushSize );
-	
-	std::vector<CellPtr> cells;
-	getCellsInRange(bs, cells);
-
-	for( uint i = 0; i < cells.size(); i++ )
-	{
-		const CellPtr& cell = cells[i];
-		applyRaiseCell(bs, cell);
-		cell->markDirty();
-	}
-}
-
-//-----------------------------------//
-
-void TerrainOperation::applyRaiseCell(const BoundingSphere& bs, const CellPtr& cell)
-{
-	bool updateVB = false;
-	
-	RenderablePtr rend = cell->getRenderables()[0];
-	const VertexBufferPtr& vb = rend->getVertexBuffer();
-	std::vector<Vector3>& vertices = vb->getVertices();
-	
-	for( uint i = 0; i < vertices.size(); i++ )
-	{
-		Vector3& v = vertices[i];
-		
-		if( !bs.intersects(v) )
-			continue;
-
-		if( tool == TerrainTool::Raise )
-			v.y += brushStrength;
-		
-		if( tool == TerrainTool::Lower )
-			v.y -= brushStrength;
-
-		updateVB = true;
-	}
-
-	if( updateVB ) 
-		vb->forceRebuild();
-}
-
-//-----------------------------------//
-
-static void blitToImage(const Image* dest, int destX, int destY,
-						const Image* source, int limitX, int limitY)
-{
-	std::vector<byte>& destBuffer = const_cast<std::vector<byte>&>(dest->getBuffer());
-	std::vector<byte>& sourceBuffer = const_cast<std::vector<byte>&>(source->getBuffer());
-
-	uint sourceY = limitY;
-
-	for( uint y = destY; y < dest->getHeight() && sourceY < source->getHeight(); ++y )
-	{
-		uint sourceX = limitX;
-
-		for( uint x = destX; x < dest->getWidth() && sourceX < source->getWidth(); ++x )
-		{
-			uint destPos = (y*dest->getWidth()*4)+(x*4);
-			uint sourcePos = (sourceY*source->getWidth()*4)+(sourceX*4);
-		
-			destBuffer[destPos+0] = sourceBuffer[sourcePos+0];
-			destBuffer[destPos+1] = sourceBuffer[sourcePos+1];
-			destBuffer[destPos+2] = sourceBuffer[sourcePos+2];
-			destBuffer[destPos+3] = sourceBuffer[sourcePos+3];
-
-			++sourceX;
-		}
-
-		++sourceY;
-	}
-}
-
-//-----------------------------------//
-
-#define uv rayQuery.triangleUV
-#define intUV rayQuery.intersectionUV
-
-void TerrainOperation::applyPaintTool()
-{
-	const RenderablePtr& rend = rayQuery.renderable;
-
-	float ut = uv[0].x + intUV.x*(uv[1].x-uv[0].x) + intUV.y*(uv[2].x-uv[0].x) + 1;
-	float vt = uv[0].y + intUV.x*(uv[1].y-uv[0].y) + intUV.y*(uv[2].y-uv[0].y);
-
-	if( !paintImage )
-		return;
-
-	MaterialPtr material = rend->getMaterial();
-	const TexturePtr& texture = material->getTexture(0);
-	Image* image = (Image*) texture->getImage();
-
-	int x = ut * image->getWidth();
-	int y = vt * image->getHeight();
-
-	if( tileLock )
-	{
-		x -= x % paintImage->getWidth();
-		x += tileOffsetX;
-
-		y -= y % paintImage->getHeight();
-		y += tileOffsetY;
-	}
-	else
-	{
-		x -= paintImage->getWidth() / 2;
-		y -= paintImage->getWidth() / 2;
-	}
-
-	int offsetX = 0;
-	int offsetY = 0;
-
-	if( x < 0 )
-	{
-		offsetX = -x;
-		x = 0;
-	}
-
-	if( y < 0 )
-	{
-		offsetY = -y;
-		y = 0;
-	}
-
-	blitToImage(image, x, y, paintImage.get(), offsetX, offsetY);
-	texture->setImage(image);
 }
 
 //-----------------------------------//

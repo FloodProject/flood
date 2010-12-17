@@ -148,6 +148,15 @@ void Geometry::update( double delta )
 
 //-----------------------------------//
 
+BoundingBox Geometry::getWorldBoundingVolume() const
+{
+	const TransformPtr& trans = getEntity()->getTransform();
+	const Matrix4x3& transform = trans->getAbsoluteTransform();
+	return boundingVolume.transform(transform);
+}
+
+//-----------------------------------//
+
 void Geometry::markDirty()
 {
 	isDirty = true;

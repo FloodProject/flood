@@ -163,7 +163,6 @@ void Model::updateAnimationTime(AnimationState& state, double delta)
 			animationTime = animation->getTotalTime();
 		}
 	}
-
 }
 
 //-----------------------------------//

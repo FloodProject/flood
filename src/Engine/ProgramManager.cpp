@@ -40,17 +40,15 @@ ProgramManager::~ProgramManager()
 
 ProgramPtr ProgramManager::getProgram( const std::string& name )
 {
-	std::string lower( String::toLowerCase(name) );
-
-	if( programs.find(lower) == programs.end() )
+	if( programs.find(name) == programs.end() )
 	{
 		#pragma TODO("Get GLSL fallback programs working")
 		
 		Log::warn( "Could not locate '%s'", name.c_str() );
-		return ProgramPtr();
+		return nullptr;
 	}
 
-	return programs[lower];
+	return programs[name];
 }
 
 //-----------------------------------//
@@ -59,15 +57,13 @@ bool ProgramManager::registerProgram( const std::string& name, const ProgramPtr&
 {
 	assert( program != nullptr );
 	
-	std::string lower( String::toLowerCase(name) );
-
-	if( programs.find(lower) != programs.end() )
+	if( programs.find(name) != programs.end() )
 	{
 		Log::warn( "Shader '%s' already registered", name.c_str() );
 		return false;
 	}
 
-	programs[lower] = program;
+	programs[name] = program;
 	return true;
 }
 

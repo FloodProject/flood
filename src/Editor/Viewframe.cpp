@@ -19,17 +19,15 @@ Viewframe::Viewframe( wxWindow* parent, wxWindowID id,
 					 const wxPoint& pos, const wxSize& size, long style ) 
 	: wxPanel(parent, id, pos, size, style)
 {
-	int n = 0;
-	int attribList[16];
-	attribList[n++] = WX_GL_RGBA;
-	attribList[n++] = WX_GL_DOUBLEBUFFER;
-	attribList[n++] = WX_GL_DEPTH_SIZE;
-	attribList[n++] = 16;
-	attribList[n++] = WX_GL_SAMPLE_BUFFERS;
-	attribList[n++] = 1;
-	attribList[n++] = WX_GL_SAMPLES;
-	attribList[n++] = 4;
-	attribList[n] = 0; // terminate the list
+	int attribList[] =
+ {
+		WX_GL_RGBA,
+		WX_GL_DOUBLEBUFFER,
+		WX_GL_DEPTH_SIZE, 16,
+		WX_GL_SAMPLE_BUFFERS, 1,
+		WX_GL_SAMPLES, 4,
+		0
+	};
 
 	control = new RenderControl(this, wxID_ANY, attribList);
 
@@ -52,7 +50,7 @@ Viewframe::~Viewframe()
 
 void Viewframe::switchToDefaultCamera()
 {
-	CameraPtr camera = mainCamera.lock();
+	const CameraPtr& camera = mainCamera.lock();
 
 	if( !camera )
 		return;
@@ -68,29 +66,36 @@ void Viewframe::switchToDefaultCamera()
 
 //-----------------------------------//
 
-RenderView* Viewframe::createView( /*const EntityPtr& node*/ )
+RenderView* Viewframe::createView()
 {
-	// Add a new view to the window.
-	//CameraPtr camera = node->getComponent<Camera>();
-	//assert( camera != nullptr );
-
 	Window* window = control->getRenderWindow();
 	view = window->createView();
-	//view->setCamera(camera);
 
-	// Subscribe to the camera transform events.
-	//TransformPtr transform = node->getTransform();
-	//transform->onTransform.Connect( &Viewframe::flagRedraw, this );
+	view->onCameraChanged.Connect(this, &Viewframe::onCameraChanged);
 	
 	return view;
 }
 
 //-----------------------------------//
 
+void Viewframe::onCameraChanged(const CameraPtr& camera)
+{
+	flagRedraw();
+
+	// Subscribe to the camera transform events.
+	TransformPtr transform = camera->getEntity()->getTransform();
+	transform->onTransform.Connect( this, &Viewframe::flagRedraw );
+}
+
+//-----------------------------------//
+
 void Viewframe::flagRedraw()
 {
-	if( control )
-		control->flagRedraw();
+	if( !control )
+		return;
+
+	control->flagRedraw();
+	Log::debug("Force redraw of view");
 }
 
 //-----------------------------------//

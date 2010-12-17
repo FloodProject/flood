@@ -208,6 +208,9 @@
     <ClCompile Include="..\..\src\Editor\plugins\Selection\SelectionManager.cpp">
       <Filter>Plugins\Selection</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Terrain\TerrainOperation.cpp">
+      <Filter>Plugins\Terrain</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Editor\inc\RenderControl.h">
@@ -351,6 +354,9 @@
       <Filter>PCH</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\inc\ResourceDrop.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Terrain\TerrainOperation.h">
+      <Filter>Plugins\Terrain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\src\Editor\res\Editor.rc">

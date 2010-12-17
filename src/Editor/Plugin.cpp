@@ -93,7 +93,7 @@ void Plugin::removePage( wxWindow* page )
 		
 		if( window->GetId() == page->GetId() )
 		{
-			notebookCtrl->DeletePage(i);
+			notebookCtrl->RemovePage(i);
 			break;
 		}
 	}

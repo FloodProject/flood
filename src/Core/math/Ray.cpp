@@ -14,6 +14,10 @@ namespace vapor {
 
 //-----------------------------------//
 
+Ray::Ray() {}
+
+//-----------------------------------//
+
 Ray::Ray( const Vector3& origin, const Vector3& direction ) 
 	: origin( origin )
 	, direction( direction )
@@ -34,6 +38,47 @@ Vector3 Ray::getPoint( float distance ) const
 }
 
 //-----------------------------------//
+
+bool Ray::intersects( const Vector3 tri[3], float& t, float& u, float& v ) const 
+{ 
+	// This code is based of the published code by Tomas Möller.
+	// http://www.cs.lth.se/home/Tomas_Akenine_Moller/raytri/
+	// Also thanks to LittleCodingFox for sharing the code with me.
+
+	Vector3 v1 = tri[0];
+	Vector3 v2 = tri[1];
+	Vector3 v3 = tri[2];
+
+	Vector3 edge1 = v2-v1;
+	Vector3 edge2 = v3-v1;
+	Vector3 pvec = direction.cross(edge2);
+
+	float det = edge1.dot(pvec);
+
+	if (det > -FLT_EPSILON && det < FLT_EPSILON)
+		return false;
+
+	float inv_det = 1.0f / det;
+	Vector3 tvec = origin-v1;
+	u = tvec.dot(pvec) * inv_det;
+
+	if (u < 0.0 || u > 1.0)
+		return false;
+
+	Vector3 qvec = tvec.cross(edge1);
+	v = direction.dot(qvec) * inv_det;
+
+	if (v < 0.0 || (u + v) > 1.0)
+		return false;
+
+	t = edge2.dot(qvec) * inv_det;
+
+    return true;
+}
+
+//-----------------------------------//
+
+#if 0
 
 bool Ray::intersects( const Vector3 tri[3], Vector3& intersection, float& t, float& u, float& v ) const 
 { 
@@ -110,6 +155,8 @@ bool Ray::intersects( const Vector3 tri[3], Vector3& intersection, float& t, flo
 
 	return true;
 }
+
+#endif
 
 //-----------------------------------//
 

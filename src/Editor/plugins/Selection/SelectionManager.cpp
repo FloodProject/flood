@@ -192,7 +192,8 @@ void SelectionOperation::addEntity(const EntityPtr& entity)
 
 void SelectionOperation::setBoundingBoxVisible(const EntityPtr& entity, bool state)
 {
-	assert( entity != nullptr );
+	if( !entity )
+		return;
 
 	const TransformPtr& transform = entity->getTransform();
 

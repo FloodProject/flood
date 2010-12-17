@@ -63,8 +63,11 @@ void SelectionPlugin::onPluginEnable()
 	addTool(buttonSelect);
 
 	#pragma TODO("Initialize plugins events properly")
+	
 	Events* events = editor->getEventManager();
-	events->currentPlugin = this;
+	events->setCurrentPlugin(this);
+	events->setCurrentTool((int) SelectionTool::Select);
+	events->addEventListener(this);
 
 	selections = new SelectionManager(editor);
 }
@@ -104,6 +107,8 @@ void SelectionPlugin::onMouseButtonRelease( const MouseButtonEvent& event )
 	if( event.button != MouseButton::Left )
 		return;
 
+	editor->redrawView();
+
 	SelectionOperation* selection = nullptr;
 	SelectionOperation* selected = selections->getSelection();
 
@@ -116,8 +121,7 @@ void SelectionPlugin::onMouseButtonRelease( const MouseButtonEvent& event )
 		return;
 
 	// Prevent duplication of selection events.
-	if( selected && (!selected->lastUndone)
-		&& (selected->selections == selection->selections))
+	if( selected && (!selected->lastUndone) && (selected->selections == selection->selections))
 	{
 		delete selection;
 		return;
@@ -129,13 +133,17 @@ void SelectionPlugin::onMouseButtonRelease( const MouseButtonEvent& event )
 	if( selected )
 		selected->unselectAll();
 
-	selection->redo();
+	selection->redo();	
 }
 
 //-----------------------------------//
 
 void SelectionPlugin::onMouseDrag( const MouseDragEvent& event )
 {
+	Events* events = editor->getEventManager();
+	if( events->getCurrentTool() != SelectionTool::Select )
+		return;
+
 	if( !event.info->leftButton )
 		return;
 
@@ -181,6 +189,8 @@ void SelectionPlugin::updateRectangle( const MouseDragEvent& event )
 	OverlayPtr overlay = dragRectangle->getComponent<Overlay>();
 	overlay->setPosition(dragMin);
 	overlay->setSize( dragMax - dragMin );
+
+	editor->redrawView();
 }
 
 //-----------------------------------//
@@ -291,13 +301,34 @@ bool SelectionPlugin::getPickEntity(int x, int y, EntityPtr& entity)
 	editor->getEditorScene()->add( line );
 #endif
 
-	// Perform ray casting to find the nodes.
-	RayQueryResult res;
-	if( !scene->doRayBoxQuery(pickRay, res) )
+	// Perform ray casting to find the entities.
+	// The results are sorted by proximity to the camera.
+	RayQueryList list;
+	
+	if( !scene->doRayBoxQuery(pickRay, list) )
 		return false;
 
-	entity = res.entity;
-	return true;
+	float minDistance = Limits::FloatMaximum;
+
+	bool found = false;
+
+	for( uint i = 0; i < list.size(); i++ )
+	{
+		const RayQueryResult& query = list[i];
+		
+		RayTriangleQueryResult res;
+		if( !scene->doRayTriangleQuery(pickRay, res, query.entity) )
+			continue;
+			
+		if( res.distance < minDistance )
+		{
+			found = true;
+			minDistance = res.distance;
+			entity = res.entity;
+		}
+	}
+	
+	return found;
 }
 
 //-----------------------------------//

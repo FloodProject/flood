@@ -213,7 +213,8 @@ static void createMemoryWatch(const Class* klass, void* object, MemoryWatch& wat
 
 bool PropertyPage::updateMemoryWatch(const Class* klass, void* object)
 {
-	MemoryWatch watch; createMemoryWatch(klass, object, watch);
+	MemoryWatch watch;
+	createMemoryWatch(klass, object, watch);
 
 	if(memoryWatches.find(klass) == memoryWatches.end())
 	{
@@ -261,7 +262,7 @@ void PropertyPage::onIdle(wxIdleEvent& event)
 	if( !updateMemoryWatches() )
 		return;
 
-	Log::debug("Memory watches detected changes");
+	//Log::debug("Memory watches detected changes");
 
 	const EntityPtr& entity = selectedEntity.lock();
 	showEntityProperties(entity);

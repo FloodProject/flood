@@ -15,10 +15,6 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-class TerrainPage;
-
-//-----------------------------------//
-
 namespace TerrainTool
 {
 	enum Enum
@@ -33,51 +29,8 @@ namespace TerrainTool
 
 //-----------------------------------//
 
-class TerrainOperation : public UndoOperation
-{
-public:
-
-	TerrainOperation( TerrainTool::Enum, const RayTriangleQueryResult& );
-	
-	void undo();
-	void redo();
-	void ready();
-
-	void updateNormals();
-	void loadSaveHeights( std::vector<float>& state, bool save );
-	void loadSaveImage( std::vector<byte>& state, bool save );
-	
-	void applyTool();
-	void applyRaiseTool();
-	void applyPaintTool();
-
-	void getCellsInRange(const BoundingSphere&, std::vector<CellPtr>& );
-	void applyRaiseCell(const BoundingSphere&, const CellPtr& );
-
-	TerrainPtr terrain;
-	TerrainTool::Enum tool;
-	RayTriangleQueryResult rayQuery;
-
-	// Brush settings.
-	int brushSize;
-	int brushStrength;
-	ImagePtr paintImage;
-	
-	// Tile settings.
-	bool tileLock;
-	int tileOffsetX;
-	int tileOffsetY;
-
-	// Image data.
-	std::vector<byte> beforeImage;
-	std::vector<byte> afterImage;
-
-	// Heights data.
-	std::vector<float> beforeHeights;
-	std::vector<float> afterHeights;
-};
-
-//-----------------------------------//
+class TerrainPage;
+class TerrainOperation;
 
 class TerrainPlugin : public wxEvtHandler, public Plugin
 {
@@ -91,6 +44,12 @@ public:
 	virtual void onPluginEnable();
 	virtual void onPluginDisable();
 	
+	// Plugin tool selection callback.
+	virtual void onToolSelect( int id );
+
+	// Plugin tool unselection callback.
+	virtual void onToolUnselect( int id );
+
 	// Entity callbacks.
 	virtual void onEntitySelect( const EntityPtr& );
 	virtual void onEntityUnselect( const EntityPtr& );
@@ -102,9 +61,6 @@ public:
 	virtual void onMouseLeave();
 
 protected:
-
-	// Handles tools buttons click.
-	void onToolClick(wxCommandEvent& event);
 
 	// Callback used when editing the terrain by holding the mouse button.
 	void onTimer( wxTimerEvent& event );
@@ -154,6 +110,8 @@ protected:
 	// Toolbar buttons.
 	wxToolBarToolBase* buttonRaise;
 	wxToolBarToolBase* buttonPaint;
+
+	int iconTerrain;
 
 private:
 

@@ -61,6 +61,9 @@ public:
 	// Gets the bounding volume of this geometry.
 	GETTER(BoundingVolume, const BoundingBox&, boundingVolume)
 
+	// Gets the world bounding volume of the transform.
+	BoundingBox getWorldBoundingVolume() const;
+
 	// Marks the geometry as dirty (forces bounding volume update).
 	void markDirty();
 

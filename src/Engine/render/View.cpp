@@ -24,9 +24,9 @@ RenderView::RenderView()
 //-----------------------------------//
 
 RenderView::RenderView( const CameraPtr& camera )
-	: weakCamera( camera )
 {
 	setClearColor( Color::White );
+	setCamera(camera);
 }
 
 //-----------------------------------//
@@ -39,11 +39,11 @@ void RenderView::handleRenderTargetResize()
 
 //-----------------------------------//
 
-Vector3 RenderView::unprojectPoint( const Vector3& screen, const Matrix4x4& projection,
-							  const Matrix4x3& view ) const
+Vector3 RenderView::unprojectPoint( const Vector3& screen, const Camera* camera ) const
 {
-	Matrix4x4 view4( view );
-	Matrix4x4 inverseVP = (view4*projection).inverse();
+	Matrix4x4 view4( camera->getViewMatrix() );
+	const Matrix4x4& proj = camera->getFrustum().matProjection;
+	Matrix4x4 inverseVP = (view4 * proj).inverse();
 
 	Vector2i size = getSize();
 
@@ -71,6 +71,14 @@ float RenderView::getAspectRatio() const
 		return 0;
 	
 	return float(size.x) / size.y;
+}
+
+//-----------------------------------//
+
+void RenderView::setCamera( const CameraPtr& camera )
+{
+	weakCamera = camera;
+	onCameraChanged(camera);
 }
 
 //-----------------------------------//

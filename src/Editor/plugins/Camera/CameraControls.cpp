@@ -163,14 +163,19 @@ void CameraControls::onCameraChoice( wxCommandEvent& event )
 
 void CameraControls::setCamera(const CameraPtr& camera)
 {
-	//if(currentCamera)
-	//{
-	//	TransformPtr transCamera = getCameraTransform();
-	//	transCamera->onTransform.Disconnect( this, &CameraControls::onCameraTransform );
-	//}
+	if(currentCamera)
+	{
+		TransformPtr transform = currentCamera->getEntity()->getTransform();
+		transform->onTransform.Disconnect( this, &CameraControls::onCameraTransform );
+	}
 
 	RenderView* view = viewframe->getView();
 	view->setCamera(camera);
+
+	currentCamera = camera;
+
+	TransformPtr transform = camera->getEntity()->getTransform();
+	transform->onTransform.Connect( this, &CameraControls::onCameraTransform );
 
 	onCameraTransform();
 	updateCameraSpeedSpin();

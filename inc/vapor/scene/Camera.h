@@ -66,6 +66,7 @@ public:
 
 	// Gets the camera frustum.
 	Frustum& getFrustum() { return frustum; }
+	const Frustum& getFrustum() const { return frustum; }
 
 	// Gets a ray given the screen coordinates of the mouse.
 	Ray getRay( float x, float y, Vector3* outFar = nullptr ) const;

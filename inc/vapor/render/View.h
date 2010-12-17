@@ -42,7 +42,7 @@ public:
 	GETTER(Camera, CameraPtr, weakCamera.lock())
 
 	// Sets the camera of the view.
-	SETTER(Camera, const CameraPtr&, weakCamera)
+	void setCamera( const CameraPtr& camera );
 
 	// Gets/sets the render target of the view.
 	ACESSOR(RenderTarget, RenderTarget*, target)
@@ -66,14 +66,16 @@ public:
 	void update();
 
 	// Unprojects the point.
-	Vector3 unprojectPoint( const Vector3& point,
-		const Matrix4x4& projection, const Matrix4x3& view ) const;
+	Vector3 unprojectPoint( const Vector3& pt, const Camera* camera ) const;
 
 	// Returns if a view has more priority than another.
-	bool operator < (RenderView& v);
+	bool operator < (RenderView& view);
 
 	// Handles render target resize.
 	void handleRenderTargetResize();
+
+	// Event is sent when camera changes.
+	Event1<const CameraPtr&> onCameraChanged; 
 
 protected:
 

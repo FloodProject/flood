@@ -344,13 +344,12 @@ void ScenePage::addComponent( wxTreeItemId id, ComponentPtr component )
 	assert( component != nullptr );
 	const Type& type = component->getInstanceType();
 
-	wxTreeItemId componentId = 
-		treeCtrl->AppendItem( id, type.getName(), icons[&type] );
+	wxTreeItemId compId = treeCtrl->AppendItem( id, type.getName(), icons[&type] );
 
 	EntityItemData* data = new EntityItemData();
 	data->component = component;
 
-	treeCtrl->SetItemData( componentId, data );
+	treeCtrl->SetItemData( compId, data );
 }
 
 //-----------------------------------//
@@ -649,6 +648,10 @@ void ScenePage::populateComponentItemMenu(wxMenu& menu, const ComponentPtr& comp
 		wxMenu* menuAttachment = createMenuAttachment(mesh);
 		menu.AppendSubMenu(menuAttachment, "Attachment");
 	}
+	else if(type.is<Transform>())
+	{
+		//wxMenuItem* item = new wxMenuItem("");
+	}
 }
 
 //-----------------------------------//
@@ -805,8 +808,11 @@ void ScenePage::onMenuSelected( wxCommandEvent& event )
 	else if( id == ID_MenuSceneEntityTerrain )
 	{
 		std::string name("Terrain"+String::fromNumber(nodeCounter++));
+		
 		TerrainPtr terrain( new Terrain(name) );
 		scene->add( terrain );
+
+		terrain->addCell(0, 0);
 	}
 	//-----------------------------------//
 	else

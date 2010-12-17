@@ -205,12 +205,8 @@ void ResourcesBrowser::scanFiles()
 {
 	Engine* engine = editor->getEngine();
 	ResourceManager* rm = engine->getResourceManager();
-	
-	bool threadedStatus = rm->getThreadedLoading();
-	rm->setThreadedLoading(false);
 
-	std::vector<std::string> files;
-	
+	std::vector<std::string> files;	
 	std::vector<std::string> found = System::enumerateFiles("media/meshes");
 	
 	for( uint i = 0; i < found.size(); i++ )
@@ -226,8 +222,32 @@ void ResourcesBrowser::scanFiles()
 		if( loader->getResourceGroup() != ResourceGroup::Meshes )
 			continue;
 
+		File file(path);
+		
+		std::vector<byte> data;
+		file.read(data);
+
+		uint hash = Hash::Murmur2( data, 0xBEEF );
+		
+		if( resourcesCache.find(hash) != resourcesCache.end() )
+			continue;
+
 		files.push_back(path);
 	}
+
+	if( !files.empty() )
+		generateThumbnails(files);
+}
+
+//-----------------------------------//
+
+void ResourcesBrowser::generateThumbnails(const std::vector<std::string>& files)
+{
+	Engine* engine = editor->getEngine();
+	ResourceManager* rm = engine->getResourceManager();
+
+	bool threadedStatus = rm->getThreadedLoading();
+	rm->setThreadedLoading(false);
 
 	wxProgressDialog progressDialog( "Loading resources",
 		"Please wait while resources are loaded.", files.size(),

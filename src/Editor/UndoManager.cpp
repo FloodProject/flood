@@ -29,7 +29,7 @@ void UndoManager::registerOperation( UndoOperation* operation )
 {
 	undoOperations.push_back( operation );
 
-	Log::debug("Registed undo/redo event: %s", operation->description.c_str() );
+	Log::debug("Registered undo/redo event: %s", operation->description.c_str() );
 
 	// Remove all the existing redo operations.
 	for( uint i = 0; i < redoOperations.size(); i++ )

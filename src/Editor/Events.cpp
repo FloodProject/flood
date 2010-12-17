@@ -19,6 +19,7 @@ namespace vapor { namespace editor {
 Events::Events( EditorFrame* editor )
 	: editor(editor)
 	, currentPlugin(nullptr)
+	, toolId(0)
 {
 	assert( editor != nullptr );
 	pluginManager = editor->getPluginManager();
@@ -105,7 +106,7 @@ bool Events::TryBefore(wxEvent& event)
 	
 	if( it != tools.end() )
 	{
-		int toolId = it->first;
+		toolId = it->first;
 
 		currentPlugin->onToolUnselect( toolId );
 		currentPlugin = (*it).second;
@@ -113,6 +114,7 @@ bool Events::TryBefore(wxEvent& event)
 	}
 	else
 	{
+		toolId = 0;
 		currentPlugin = nullptr;
 	}
 	
@@ -151,6 +153,7 @@ void Events::onEntitySelect( const EntityPtr& node )
 	for( uint i = 0; i < eventListeners.size(); i++ )
 	{
 		Plugin* plugin = eventListeners[i];
+		if(plugin == currentPlugin) continue;
 		plugin->onEntitySelect(node);
 	}
 }
@@ -171,6 +174,7 @@ void Events::onEntityUnselect( const EntityPtr& node )
 	for( uint i = 0; i < eventListeners.size(); i++ )
 	{
 		Plugin* plugin = eventListeners[i];
+		if(plugin == currentPlugin) continue;
 		plugin->onEntityUnselect(node);
 	}
 }
@@ -191,6 +195,7 @@ void Events::onComponentSelect( const ComponentPtr& component )
 	for( uint i = 0; i < eventListeners.size(); i++ )
 	{
 		Plugin* plugin = eventListeners[i];
+		if(plugin == currentPlugin) continue;
 		plugin->onComponentSelect(component);
 	}
 }
@@ -211,6 +216,7 @@ void Events::onComponentUnselect( const ComponentPtr& component )
 	for( uint i = 0; i < eventListeners.size(); i++ )
 	{
 		Plugin* plugin = eventListeners[i];
+		if(plugin == currentPlugin) continue;
 		plugin->onComponentUnselect(component);
 	}
 }
@@ -229,6 +235,7 @@ void Events::onMouseMove( const MouseMoveEvent& mve )
 	for( uint i = 0; i < eventListeners.size(); i++ )
 	{
 		Plugin* plugin = eventListeners[i];
+		if(plugin == currentPlugin) continue;
 		plugin->onMouseMove( mve );
 	}
 }
@@ -246,6 +253,7 @@ void Events::onMouseDrag( const MouseDragEvent& mde )
 	for( uint i = 0; i < eventListeners.size(); i++ )
 	{
 		Plugin* plugin = eventListeners[i];
+		if(plugin == currentPlugin) continue;
 		plugin->onMouseDrag( mde );
 	}
 }
@@ -263,6 +271,7 @@ void Events::onMousePress( const MouseButtonEvent& mbe )
 	for( uint i = 0; i < eventListeners.size(); i++ )
 	{
 		Plugin* plugin = eventListeners[i];
+		if(plugin == currentPlugin) continue;
 		plugin->onMouseButtonPress( mbe );
 	}
 }
@@ -280,6 +289,7 @@ void Events::onMouseRelease( const MouseButtonEvent& mbe )
 	for( uint i = 0; i < eventListeners.size(); i++ )
 	{
 		Plugin* plugin = eventListeners[i];
+		if(plugin == currentPlugin) continue;
 		plugin->onMouseButtonRelease( mbe );
 	}
 }
@@ -297,6 +307,7 @@ void Events::onMouseEnter()
 	for( uint i = 0; i < eventListeners.size(); i++ )
 	{
 		Plugin* plugin = eventListeners[i];
+		if(plugin == currentPlugin) continue;
 		plugin->onMouseEnter();
 	}
 }
@@ -314,6 +325,7 @@ void Events::onMouseLeave()
 	for( uint i = 0; i < eventListeners.size(); i++ )
 	{
 		Plugin* plugin = eventListeners[i];
+		if(plugin == currentPlugin) continue;
 		plugin->onMouseLeave();
 	}
 }
@@ -331,6 +343,7 @@ void Events::onSceneLoad( const ScenePtr& newScene )
 	for( uint i = 0; i < eventListeners.size(); i++ )
 	{
 		Plugin* plugin = eventListeners[i];
+		if(plugin == currentPlugin) continue;
 		plugin->onSceneLoad(newScene);
 	}
 }
@@ -348,6 +361,7 @@ void Events::onSceneUpdate()
 	for( uint i = 0; i < eventListeners.size(); i++ )
 	{
 		Plugin* plugin = eventListeners[i];
+		if(plugin == currentPlugin) continue;
 		plugin->onSceneUpdate();
 	}
 }

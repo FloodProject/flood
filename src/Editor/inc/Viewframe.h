@@ -32,8 +32,11 @@ public:
 	// Switches to the default camera.
 	void switchToDefaultCamera();
 
-	SETTER(MainCamera, const CameraPtr&, mainCamera)
+	// Gets the main camera of the viewframe.
 	GETTER(MainCamera, const CameraWeakPtr&, mainCamera)
+
+	// Sets the main camera of the viewframe.
+	SETTER(MainCamera, const CameraPtr&, mainCamera)
 
 	// Creates and adds a new view to the viewframe.
 	RenderView* createView();
@@ -51,6 +54,9 @@ public:
 	GETTER(Sizer, wxSizer*, mainSizer)
 
 protected:
+
+	// Gets called when camera changes in the view.
+	void onCameraChanged(const CameraPtr& camera);
 
 	// Camera of the viewframe.
 	CameraWeakPtr mainCamera;

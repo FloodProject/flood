@@ -68,8 +68,11 @@ public:
 	// Scene update event.
 	void onSceneUpdate();
 
-	// Current active plugin.
-	Plugin* currentPlugin;
+	// Gets the current tool.
+	ACESSOR(CurrentTool, int, toolId)
+
+	// Gets/sets the current plugin.
+	ACESSOR(CurrentPlugin, Plugin*, currentPlugin)
 
 protected:
 
@@ -86,11 +89,17 @@ protected:
 	// Pre-handling of events from the toolbar.
 	virtual bool TryBefore( wxEvent& event );
 
+	// Current tool id.
+	int toolId;
+
 	// Keeps the main editor instance.
 	EditorFrame* editor;
 
 	// Keeps the plugin manager instance.
 	PluginManager* pluginManager;
+
+	// Current active plugin.
+	Plugin* currentPlugin;
 
 	// Global event listener plugins.
 	std::vector<Plugin*> eventListeners;

@@ -27,6 +27,7 @@ typedef std::vector<RayQueryResult> RayQueryList;
 
 struct RayTriangleQueryResult
 {
+	EntityPtr entity;
 	GeometryPtr geometry;
 	RenderablePtr renderable;
 	Vector3 intersection;
@@ -53,7 +54,6 @@ class VAPOR_API Scene : public Group
 public:
 
 	Scene();
-	virtual ~Scene();
 
 	// Updates all the entities recursively.
 	virtual void update( double delta );
@@ -68,6 +68,9 @@ public:
 	// Checks for collision via ray-triangle tests.
 	bool doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res );
 	bool doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, const EntityPtr& node );
+
+	// // Checks for collision via ray-renderable tests.
+	bool doRayRendQuery( const Ray&, const RenderablePtr&, RayTriangleQueryResult& );
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Scene );

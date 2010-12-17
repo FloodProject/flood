@@ -19,6 +19,8 @@ class UndoManager;
 class Events;
 class SelectionManager;
 
+//-----------------------------------//
+
 namespace SelectionMode
 {
 	enum Enum

@@ -157,6 +157,8 @@ void PropertyPlugin::updateProperties()
 		propertyPage->updateMemoryWatches();
 		propertyPage->showEntityProperties(node);
 	}
+
+	editor->redrawView();
 }
 
 //-----------------------------------//
