@@ -20,7 +20,7 @@ class LogFrame : public wxFrame
 {
 public:
 
-	LogFrame( Engine* engine, wxWindow* parent, const wxString&	name = "Log" );
+	LogFrame( wxWindow* parent, const wxString&	name = "Log" );
 
 protected:
 
@@ -29,9 +29,6 @@ protected:
 
 	// Event handlers.
 	void OnClose(wxCloseEvent& event);
-
-	// Holds an instance to the vaporEngine.
-	Engine* engine;
 
 	// Text control to enter commands.
 	wxPanel* panel;

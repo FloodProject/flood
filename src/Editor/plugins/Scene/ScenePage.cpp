@@ -25,6 +25,8 @@ void EntityOperation::redo()
 	if(scene) scene->add(node);
 }
 
+//-----------------------------------//
+
 void EntityOperation::undo()
 {
 	ScenePtr scene = weakScene.lock();
@@ -58,30 +60,54 @@ struct ComponentEntry
 {
 	bool show;
 	const Type& type;
-	const unsigned char* icon;
+	const byte* icon;
 	const int icon_length;
 };
 
-#define TYPE(t) t::getType()
+#define TYPE(t) t::getStaticType()
 #define BMP(s) s, sizeof(s)
 
-static ComponentEntry components[] = {
+static ComponentEntry components[] =
+{
+	{ false,TYPE(Scene),				BMP(sitemap_color) },
 	{ true, TYPE(Transform),			BMP(chart_line) },
 	{ true, TYPE(Model),				BMP(shape_flip_horizontal) },
 	{ true, TYPE(Light),				BMP(lightbulb_off) },
 	{ true, TYPE(Skydome),				BMP(weather_clouds) },
 	{ true, TYPE(Camera),				BMP(camera) },
-	//{ true, TYPE(Sound),				BMP(sound) },
-	//{ true, TYPE(Listener),			BMP(status_online) },
+	{ true, TYPE(Label),				BMP(text_align_left) },
+	//{ true, TYPE(Geometry),				BMP(shape_flip_horizontal) },
+};
+
+static ComponentEntry componentsExtra[] =
+{
 	{ true, TYPE(Grid),					BMP(grid_icon_white_bg) },
-	{ true, TYPE(Geometry),				BMP(shape_flip_horizontal) },
+	{ true, TYPE(Billboard),			BMP(shape_flip_horizontal) },
+	{ true, TYPE(Projector),			BMP(lightbulb_off) },
+};
+
+#ifdef VAPOR_AUDIO_OPENAL
+
+static ComponentEntry componentsAudio[] =
+{
+	{ true, TYPE(Sound),				BMP(sound) },
+	{ true, TYPE(Listener),				BMP(status_online) },
+};
+
+#endif
+
+static ComponentEntry componentsControllers[] =
+{
 	{ true, TYPE(FirstPersonController),BMP(camera) },
 	{ true, TYPE(ThirdPersonController),BMP(camera) },
 
 #ifdef VAPOR_SCRIPTING_LUA
 	{ true, TYPE(ScriptController),		BMP(shape_flip_horizontal) },
 #endif
+};
 
+static ComponentEntry componentsPhysics[] =
+{
 #ifdef VAPOR_PHYSICS_BULLET
 	{ true, TYPE(CharacterController),	BMP(link) },
 	{ true, TYPE(BoxShape),				BMP(link) },
@@ -89,80 +115,18 @@ static ComponentEntry components[] = {
 	{ true, TYPE(CapsuleShape),			BMP(link) },
 	{ true, TYPE(Body),					BMP(link) },
 #endif
-
-	{ false,TYPE(Scene),				BMP(sitemap_color) }
 };
-
-//-----------------------------------//	
-
-template<typename T> T* cloneObject(T* object)
-{
-	const Class& type = object->getInstanceType();
-	T* newObject = (T*) type.createInstance();
-
-	const FieldsMap& fields = type.getFields();
-	
-	FieldsMap::const_iterator it;
-	for( it = fields.cbegin(); it != fields.cend(); it++ )
-	{
-		Field* field = it->second;
-		const Type& field_type = field->type;
-		
-		if( field->isPointer() )
-		{
-			field->set<ResourcePtr>(newObject, field->get<ResourcePtr>(object));
-		}
-		else if( field_type.isPrimitive() )
-		{
-			const Primitive& type = (Primitive&) field_type;
-
-			if( type.isBool() )
-			{
-				field->set<bool>(newObject, field->get<bool>(object));
-			}
-			//-----------------------------------//
-			else if( type.isInteger() )
-			{
-				field->set<int>(newObject, field->get<int>(object));
-			}
-			//-----------------------------------//
-			else if( type.isFloat() )
-			{
-				field->set<float>(newObject, field->get<float>(object));
-			}
-			//-----------------------------------//
-			else if( type.isString() )
-			{
-				field->set<std::string>(newObject, field->get<std::string>(object));
-			}
-			//-----------------------------------//
-			else if( type.isColor() )
-			{
-				field->set<Color>(newObject, field->get<Color>(object));
-			}
-			//-----------------------------------//
-			else if( type.isVector3() )
-			{
-				field->set<Vector3>(newObject, field->get<Vector3>(object));
-			}
-		}
-	}
-
-	return newObject;
-}
 
 //-----------------------------------//
 
-ScenePage::ScenePage( EditorFrame* frame, wxWindow* parent, wxWindowID id )
-	: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(250, -1) )
+ScenePage::ScenePage( wxWindow* parent, wxWindowID id )
+	: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize)
 	, treeCtrl(nullptr)
 	, imageList(nullptr)
 	, buttonEntityAdd(nullptr)
 	, buttonEntityDelete(nullptr)
 	, currentMenu(nullptr)
 	, sentLastSelectionEvent(false)
-	, editor(frame)
-	, engine(editor->getEngine())
 	, nodeCounter(0)
 {
 	initTree();
@@ -199,8 +163,8 @@ void ScenePage::initTree()
 	sizer = new wxBoxSizer( wxVERTICAL );
 
 	treeCtrl = new wxTreeCtrl(this, wxID_ANY, wxDefaultPosition,
-		wxDefaultSize, wxTR_DEFAULT_STYLE | wxTR_EDIT_LABELS 
-		| wxTR_NO_BUTTONS | wxTR_SINGLE | wxTR_HIDE_ROOT );
+		wxDefaultSize, wxTR_DEFAULT_STYLE | wxTR_EDIT_LABELS |
+		wxTR_NO_BUTTONS | wxTR_SINGLE | wxTR_HIDE_ROOT /*| wxBORDER_NONE*/);
 
 	sizer->Add( treeCtrl, 1, wxEXPAND, 0 );
 
@@ -287,7 +251,7 @@ void ScenePage::setScene(const ScenePtr& scene)
 
 void ScenePage::addGroup( wxTreeItemId id, const EntityPtr& node, bool createGroup )
 {
-	if( !node->getInstanceType().inherits<Group>() )
+	if( !node->getType().inherits<Group>() )
 	{
 		addEntity(id, node);
 		return;
@@ -342,7 +306,7 @@ wxTreeItemId ScenePage::addEntity( wxTreeItemId id, const EntityPtr& node )
 void ScenePage::addComponent( wxTreeItemId id, ComponentPtr component )
 {
 	assert( component != nullptr );
-	const Type& type = component->getInstanceType();
+	const Type& type = component->getType();
 
 	wxTreeItemId compId = treeCtrl->AppendItem( id, type.getName(), icons[&type] );
 
@@ -406,7 +370,7 @@ void ScenePage::onItemChanged(wxTreeEvent& event)
 	sentLastSelectionEvent = true;
 
 	// Send events to plugins.
-	Events* events = editor->getEventManager();
+	Events* events = GetEditor().getEventManager();
 
 	if( oldEntity )
 		events->onEntityUnselect(oldEntity);
@@ -435,7 +399,7 @@ void ScenePage::onButtonEntityAdd(wxCommandEvent&)
 	nodeOperation->node = node;
 	nodeOperation->weakScene = weakScene;
 
-	UndoManager* undoManager = editor->getUndoManager();
+	UndoManager* undoManager = GetEditor().getUndoManager();
 	undoManager->registerOperation(nodeOperation);
 
 	nodeOperation->redo();
@@ -445,7 +409,7 @@ void ScenePage::onButtonEntityAdd(wxCommandEvent&)
 	treeCtrl->SelectItem(id);
 	treeCtrl->EditLabel(id);
 
-	editor->redrawView();
+	GetEditor().redrawView();
 }
 
 //-----------------------------------//
@@ -462,7 +426,7 @@ void ScenePage::onButtonEntityDelete(wxCommandEvent&)
 
 	nodeOperation->undo();
 
-	editor->redrawView();
+	GetEditor().redrawView();
 }
 
 //-----------------------------------//
@@ -489,7 +453,7 @@ EntityOperation* ScenePage::createEntityOperation(const EntityPtr& node)
 	nodeOperation->node = node;
 	nodeOperation->weakScene = weakScene;
 
-	UndoManager* undoManager = editor->getUndoManager();
+	UndoManager* undoManager = GetEditor().getUndoManager();
 	undoManager->registerOperation(nodeOperation);
 
 	return nodeOperation;
@@ -516,7 +480,7 @@ void ScenePage::onEntityRemoved( const EntityPtr& node )
 	assert( nodeIds[node] == id );
 	nodeIds.erase(node);
 
-	//Events* events = editor->getEventManager();
+	//Events* events = GetEditor().getEventManager();
 	//events->onEntityUnselect( event.node );
 }
 
@@ -631,7 +595,7 @@ void ScenePage::populateComponentItemMenu(wxMenu& menu, const ComponentPtr& comp
 	if( !component )
 		return;
 
-	const Type& type = component->getInstanceType();
+	const Type& type = component->getType();
 	menu.SetTitle( type.getName() );
 
 	if(type.is<Model>())
@@ -744,7 +708,11 @@ void ScenePage::onMenuSelected( wxCommandEvent& event )
 		if( !node )
 			return;
 
-		EntityPtr newEntity( cloneObject<Entity>(node.get()) );
+		#pragma TODO(Add object cloning)
+
+#if 0
+		Class& type = (Class&) node->getType();
+		EntityPtr newEntity( type.clone<Entity>(node.get()) );
 
 		const ComponentMap& components = node->getComponents();
 		
@@ -752,11 +720,14 @@ void ScenePage::onMenuSelected( wxCommandEvent& event )
 		for( it = components.cbegin(); it != components.cend(); it++ )
 		{
 			ComponentPtr component = it->second;
-			ComponentPtr newComponent( cloneObject<Component>(component.get()) );
+			Class& ctype = (Class&) component->getType();
+
+			ComponentPtr newComponent( ctype.clone<Component>(component.get()) );
 			newEntity->addComponent(newComponent);
 		}
 		
 		scene->add(newEntity);
+#endif
 	}
 	//-----------------------------------//
 	else if( id == ID_MenuSceneEntityWireframe )
@@ -820,7 +791,7 @@ void ScenePage::onMenuSelected( wxCommandEvent& event )
 		onComponentAdd( event );
 	}
 
-	editor->redrawView();
+	GetEditor().redrawView();
 }
 
 //-----------------------------------//
@@ -837,7 +808,7 @@ MeshPtr ScenePage::askMeshResource()
 	std::string file( fd.GetPath() );
 	std::vector<std::string> elems = String::split(file, '\\');
 
-	ResourceManager* rm = engine->getResourceManager();
+	ResourceManager* rm = GetEditor().getEngine()->getResourceManager();
 	MeshPtr mesh = rm->loadResource<Mesh>( elems.back() );
 
 	return mesh;
@@ -847,17 +818,15 @@ MeshPtr ScenePage::askMeshResource()
 
 void ScenePage::onComponentAdd(wxCommandEvent& event )
 {
-	const EntityPtr& node = getEntityFromTreeId( menuItemId );
+	const EntityPtr& entity = getEntityFromTreeId( menuItemId );
 	
 	int id = event.GetId();
 	
 	if( id == wxID_NONE )
 		return;
 
-	const wxString& name =  currentMenu->GetLabelText(id); 
-	
-	TypeRegistry& registry = TypeRegistry::getInstance();
-	const Type* type = registry.getType( (std::string) name );
+	const std::string name = currentMenu->GetLabelText(id); 
+	const Type* type = Type::GetRegistry().getType(name);
 	
 	if( !type )
 		return;
@@ -877,7 +846,13 @@ void ScenePage::onComponentAdd(wxCommandEvent& event )
 		component.reset( (Component*) classType.createInstance() );
 	}
 
-	if( component && node->addComponent(component) )
+	if( type->is<Skydome>() )
+	{
+		entity->setTag(Tags::NonPickable, true);
+		entity->setTag(Tags::NonCulled, true);
+	}
+
+	if( component && entity->addComponent(component) )
 		addComponent(menuItemId, component);
 }
 

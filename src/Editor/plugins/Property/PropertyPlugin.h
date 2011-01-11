@@ -47,7 +47,7 @@ public:
 	virtual void onSceneUpdate();
 
 	// Field change callback.
-	void onFieldChanged(const Field& field);
+	//void onFieldChanged(const Field& field);
 
 	// Component change callback.
 	void onComponentChanged(const ComponentPtr& component);
@@ -58,9 +58,8 @@ public:
 protected:
 
 	PropertyPage* propertyPage;
-	int iconProperty;
 
-	// Selected node.
+	// Selected entity.
 	EntityWeakPtr selectedEntity;
 };
 

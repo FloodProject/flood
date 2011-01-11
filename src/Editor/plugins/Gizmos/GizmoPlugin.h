@@ -113,10 +113,10 @@ protected:
 	ScenePtr editorScene;
 
 	// Toolbar buttons.
-	wxToolBarToolBase* buttonCamera;
-	wxToolBarToolBase* buttonTranslate;
-	wxToolBarToolBase* buttonRotate;
-	wxToolBarToolBase* buttonScale;
+	wxAuiToolBarItem* buttonCamera;
+	wxAuiToolBarItem* buttonTranslate;
+	wxAuiToolBarItem* buttonRotate;
+	wxAuiToolBarItem* buttonScale;
 
 	SelectionManager* selections;
 };

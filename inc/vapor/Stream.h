@@ -55,13 +55,16 @@ public:
 	virtual void read(std::vector<byte>& data) const = 0;
 
 	// Reads the entire stream as a string.
-	virtual void read(std::string& string) const;
+	virtual void read(std::string& text) const;
+
+	// Reads the stream as text lines.
+	std::vector<std::string> readLines() const;
 
 	// Writes a buffer into the stream.
 	virtual long write(const std::vector<byte>& buffer) = 0;
 
 	// Writes a string into the stream.
-	virtual long write(const std::string& string);
+	virtual long write(const std::string& text);
 
 	// Gets the path of the stream.
 	GETTER(Path, const std::string&, path)

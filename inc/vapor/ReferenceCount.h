@@ -10,6 +10,7 @@
 
 #include <functional>
 #include "Atomic.h"
+#include "Log.h"
 
 namespace vapor {
 

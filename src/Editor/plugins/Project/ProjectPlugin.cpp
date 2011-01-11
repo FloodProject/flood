@@ -40,33 +40,34 @@ PluginMetadata ProjectPlugin::getMetadata()
 
 void ProjectPlugin::onPluginEnable()
 {
-	wxToolBar* toolBar = editor->getToolbar();
+	wxAuiToolBar* toolBar = editor->getToolbar();
 
-	addTool( toolBar->AddSeparator() );
+	if(toolBar)
+	{
+		wxBitmap iconNew = wxMEMORY_BITMAP(page_empty);
+		newButton = toolBar->AddTool( wxID_ANY, "New", iconNew, "Creates a new scene" );
+		addTool( newButton );
 
-	wxBitmap iconNew = wxMEMORY_BITMAP(page_empty);
-	newButton = toolBar->AddTool( wxID_ANY, "New", iconNew, "Creates a new scene" );
-	addTool( newButton );
+		toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
+			&ProjectPlugin::onNewButtonClick, this, newButton->GetId() );
 
-	toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
-		&ProjectPlugin::onNewButtonClick, this, newButton->GetId() );
+		wxBitmap iconOpen = wxMEMORY_BITMAP(folder_explore);
+		openButton = toolBar->AddTool( wxID_ANY, "Open", iconOpen, "Opens an existing scene" );
+		addTool( openButton );
 
-	wxBitmap iconOpen = wxMEMORY_BITMAP(folder_explore);
-	openButton = toolBar->AddTool( wxID_ANY, "Open", iconOpen, "Opens an existing scene" );
-	addTool( openButton );
+		toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
+			&ProjectPlugin::onOpenButtonClick, this, openButton->GetId() );
 
-	toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
-		&ProjectPlugin::onOpenButtonClick, this, openButton->GetId() );
+		wxBitmap iconSave = wxMEMORY_BITMAP(disk);
+		saveButton = toolBar->AddTool( wxID_ANY, "Save", iconSave, "Save the current scene" );
+		addTool( saveButton );
 
-	wxBitmap iconSave = wxMEMORY_BITMAP(disk);
-	saveButton = toolBar->AddTool( wxID_ANY, "Save", iconSave, "Save the current scene" );
-	addTool( saveButton );
+		toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
+			&ProjectPlugin::onSaveButtonClick, this, saveButton->GetId() );
 
-	toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
-		&ProjectPlugin::onSaveButtonClick, this, saveButton->GetId() );
-
-	toolBar->Bind( wxEVT_UPDATE_UI,
-		&ProjectPlugin::onSaveButtonUpdateUI, this, saveButton->GetId() );
+		toolBar->Bind( wxEVT_UPDATE_UI,
+			&ProjectPlugin::onSaveButtonUpdateUI, this, saveButton->GetId() );
+	}
 
 	UndoManager* undo = editor->getUndoManager();
 	undo->onUndoRedoEvent.Connect(this, &ProjectPlugin::onUndoRedoEvent);
@@ -113,12 +114,12 @@ void ProjectPlugin::onOpenButtonClick(wxCommandEvent& event)
 	
 	if( fc.ShowModal() != wxID_OK )
 		return;
-	
-	Serializer deserializer;
-	deserializer.openFromFile( (std::string) fc.GetPath() );
-	
-	ScenePtr newScene = deserializer.deserializeScene();
-	switchScene(newScene);
+
+	//Serializer deserializer;
+	//deserializer.openFromFile( (std::string) fc.GetPath() );
+	//
+	//ScenePtr newScene = deserializer.deserializeScene();
+	//switchScene(newScene);
 }
 
 //-----------------------------------//
@@ -176,9 +177,9 @@ bool ProjectPlugin::saveScene()
 	Engine* engine = editor->getEngine();
 	ScenePtr scene = engine->getSceneManager();
 	
-	Serializer serializer;
-	serializer.serializeScene(scene);
-	serializer.saveToFile( (std::string) fc.GetPath() );
+	//Serializer serializer;
+	//serializer.serializeScene(scene);
+	//serializer.saveToFile( (std::string) fc.GetPath() );
 
 	unsavedChanges = false;
 	return true;

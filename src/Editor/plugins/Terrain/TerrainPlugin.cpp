@@ -51,24 +51,23 @@ PluginMetadata TerrainPlugin::getMetadata()
 
 void TerrainPlugin::onPluginEnable()
 {
-	wxToolBar* toolBar = editor->getToolbar();
+	wxAuiToolBar* toolBar = editor->getToolbar();
 	
-	buttonRaise = toolBar->AddTool( TerrainTool::Raise/*wxID_ANY*/, "Raise/Lower",
-		wxMEMORY_BITMAP(terrain_raise_lower), "Raises/Lowers the terrain",
-		wxITEM_RADIO );
-	addTool(buttonRaise);
+	if(toolBar)
+	{
+		buttonRaise = toolBar->AddTool( TerrainTool::Raise, "Raise/Lower",
+			wxMEMORY_BITMAP(terrain_raise_lower), "Raises/Lowers the terrain",
+			wxITEM_RADIO );
+		addTool(buttonRaise);
 
-	buttonPaint = toolBar->AddTool( TerrainTool::Paint/*wxID_ANY*/, "Paint",
-		wxMEMORY_BITMAP(terrain_paint), "Paints the terrain", wxITEM_RADIO );
-	addTool(buttonPaint);
-
-	wxNotebook* notebookCtrl = editor->getNotebook();
-	wxImageList* imageList = notebookCtrl->GetImageList();
+		buttonPaint = toolBar->AddTool( TerrainTool::Paint, "Paint",
+			wxMEMORY_BITMAP(terrain_paint), "Paints the terrain", wxITEM_RADIO );
+		addTool(buttonPaint);
+	}
 
 	wxBitmap iconWorld = wxMEMORY_BITMAP(world);
-	iconTerrain = imageList->Add(iconWorld);
 
-	terrainPage = new TerrainPage( engine, notebookCtrl );
+	terrainPage = new TerrainPage( engine, editor/*notebookCtrl*/ );
 	terrainPage->Hide();
 }
 
@@ -81,12 +80,12 @@ void TerrainPlugin::onToolSelect( int id )
 	delete terrainOperation;
 	terrainOperation = nullptr;
 
-	wxNotebook* notebookCtrl = editor->getNotebook();
+	//wxAuiNotebook* notebookCtrl = editor->getNotebook();
 
-	if(notebookCtrl->GetCurrentPage() == terrainPage)
-		return;
+	//if(notebookCtrl->GetCurrentPage() == terrainPage)
+	//	return;
 
-	notebookCtrl->AddPage( terrainPage, /*"Terrains"*/"", true, iconTerrain );
+	//notebookCtrl->AddPage( terrainPage, /*"Terrains"*/"", true, iconTerrain );
 	terrainPage->Show();
 }
 
@@ -94,7 +93,7 @@ void TerrainPlugin::onToolSelect( int id )
 
 void TerrainPlugin::onToolUnselect( int id )
 {
-	//wxNotebook* notebookCtrl = editor->getNotebook();
+	//wxAuiNotebook* notebookCtrl = editor->getNotebook();
 
 	//if(notebookCtrl->GetCurrentPage() != terrainPage)
 	//	return;
@@ -113,7 +112,7 @@ void TerrainPlugin::onPluginDisable()
 
 void TerrainPlugin::onEntitySelect( const EntityPtr& node )
 {
-	if( !node->getInstanceType().is<Terrain>() )
+	if( !node->getType().is<Terrain>() )
 		return;
 
 	terrain = std::static_pointer_cast<Terrain>(node);
@@ -331,7 +330,7 @@ bool TerrainPlugin::pickTerrain( const MouseButtonEvent& mb, RayTriangleQueryRes
 	if( !entity ) 
 		return false;
 
-	if( !entity->getParent()->getInstanceType().is<Terrain>() )
+	if( !entity->getParent()->getType().is<Terrain>() )
 		return false;
 
 	if( !scene->doRayTriangleQuery(pickRay, res, entity) )

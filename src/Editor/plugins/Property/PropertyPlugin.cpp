@@ -40,30 +40,16 @@ PluginMetadata PropertyPlugin::getMetadata()
 
 void PropertyPlugin::onPluginEnable()
 {
-	wxNotebook* notebookCtrl = editor->getNotebook();
-	assert( notebookCtrl != nullptr );
+	propertyPage = new PropertyPage(editor);
+	propertyPage->SetSize(220, 400);
 
-	wxImageList* imageList = notebookCtrl->GetImageList();
-	assert( imageList != nullptr );
+	wxBitmap icon = wxMEMORY_BITMAP(application_view_list);
+	
+	wxAuiPaneInfo pane;
+	pane.Caption("Properties").Right().Dock().Icon(icon);
 
-	wxBitmap iconProp = wxMEMORY_BITMAP(application_view_list);
-	iconProperty = imageList->Add(iconProp);
-
-	wxBoxSizer* sizer = new wxBoxSizer( wxVERTICAL );
-
-	wxPanel* panel = new wxPanel(notebookCtrl);
-	panel->SetSizer(sizer);
-
-	propertyPage = new PropertyPage( editor, panel );
-	sizer->Add( propertyPage, wxSizerFlags(1).Expand() );
-
-	bool propertyPageAdded = notebookCtrl->AddPage( panel,
-		wxEmptyString/*wxT("Property")*/, false, iconProperty );
-
-	if( !propertyPageAdded )
-		Log::warn( "Could not add page to notebook" );
-
-	notebookCtrl->Refresh();
+	editor->getAUI()->AddPane(propertyPage, pane);
+	editor->getAUI()->Update();
 
 	// Subscribe as an event listener.
 	Events* events = editor->getEventManager();
@@ -74,7 +60,11 @@ void PropertyPlugin::onPluginEnable()
 
 void PropertyPlugin::onPluginDisable()
 {
-	removePage( propertyPage );
+	editor->getAUI()->DetachPane(propertyPage);
+	editor->getAUI()->Update();
+
+	delete propertyPage;
+	propertyPage = nullptr;
 
 	// Unsubscribe as an event listener.
 	Events* events = editor->getEventManager();
@@ -83,53 +73,52 @@ void PropertyPlugin::onPluginDisable()
 
 //-----------------------------------//
 
-void PropertyPlugin::onEntitySelect( const EntityPtr& node )
+void PropertyPlugin::onEntitySelect( const EntityPtr& entity )
 {
-	selectedEntity = node;
-	propertyPage->showEntityProperties( node );
+	if( entity->getType().inherits<Group>() )
+		return;
 
-	Class& klass = (Class&) node->getInstanceType();
-	klass.onFieldChanged.Connect(this, &PropertyPlugin::onFieldChanged);
+	selectedEntity = entity;
+	propertyPage->showEntityProperties( entity );
 
-	node->onComponentAdded.Connect(this, &PropertyPlugin::onComponentChanged);
-	node->onComponentRemoved.Connect(this, &PropertyPlugin::onComponentChanged);
+	//Class& klass = (Class&) entity->getType();
+	//klass.onFieldChanged.Connect(this, &PropertyPlugin::onFieldChanged);
+
+	entity->onComponentAdded.Connect(this, &PropertyPlugin::onComponentChanged);
+	entity->onComponentRemoved.Connect(this, &PropertyPlugin::onComponentChanged);
 }
 
 //-----------------------------------//
 
-void PropertyPlugin::onEntityUnselect( const EntityPtr& node )
+void PropertyPlugin::onEntityUnselect( const EntityPtr& entity )
 {
-	selectedEntity.reset();
-	propertyPage->Clear();
+	//if( selectedEntity )
+	{
+		selectedEntity.reset();
+		propertyPage->Clear();
+	}
 
-	Class& klass = (Class&) node->getInstanceType();
-	klass.onFieldChanged.Disconnect(this, &PropertyPlugin::onFieldChanged);
+	//Class& klass = (Class&) entity->getType();
+	//klass.onFieldChanged.Disconnect(this, &PropertyPlugin::onFieldChanged);
 
-	node->onComponentAdded.Disconnect(this, &PropertyPlugin::onComponentChanged);
-	node->onComponentRemoved.Disconnect(this, &PropertyPlugin::onComponentChanged);
+	entity->onComponentAdded.Disconnect(this, &PropertyPlugin::onComponentChanged);
+	entity->onComponentRemoved.Disconnect(this, &PropertyPlugin::onComponentChanged);
 }
 
 //-----------------------------------//
 
 void PropertyPlugin::onComponentSelect( const ComponentPtr& component )
 {
-	const EntityPtr& node = component->getEntity();
-	onEntitySelect(node);
+	const EntityPtr& entity = component->getEntity();
+	onEntitySelect(entity);
 }
 
 //-----------------------------------//
 
 void PropertyPlugin::onComponentUnselect( const ComponentPtr& component )
 {
-	const EntityPtr& node = component->getEntity();
-	onEntityUnselect(node);
-}
-
-//-----------------------------------//
-
-void PropertyPlugin::onFieldChanged(const Field& field)
-{
-	updateProperties();
+	const EntityPtr& entity = component->getEntity();
+	onEntityUnselect(entity);
 }
 
 //-----------------------------------//
@@ -150,12 +139,12 @@ void PropertyPlugin::onSceneUpdate()
 
 void PropertyPlugin::updateProperties()
 {
-	const EntityPtr& node = selectedEntity.lock();
+	const EntityPtr& entity = selectedEntity.lock();
 
-	if( node )
+	if( entity )
 	{
 		propertyPage->updateMemoryWatches();
-		propertyPage->showEntityProperties(node);
+		propertyPage->showEntityProperties(entity);
 	}
 
 	editor->redrawView();

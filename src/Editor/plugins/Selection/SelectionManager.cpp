@@ -67,6 +67,14 @@ SelectionOperation* SelectionManager::createOperation()
 
 //-----------------------------------//
 
+SelectionOperation::~SelectionOperation()
+{
+	if( selectionManager->getSelection() == this )
+		selectionManager->setSelection(nullptr);
+}
+
+//-----------------------------------//
+
 /** 
 Unselect everything
 	Undo: Select previous selection

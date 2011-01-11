@@ -31,8 +31,8 @@ class CORE_API Class : public Type
 {
 public:
 
-	Class(const std::string& name);
-	Class(const std::string& name, const Type& parent);
+	Class(const std::string& name, int size);
+	Class(const std::string& name, const Type& parent, int size);
 
 	// Gets the field with the given name.
 	Field* getField(const std::string& name) const;
@@ -45,35 +45,29 @@ public:
 
 	// Gets a value in the field.
 	template<typename T>
-	bool getFieldValue( const std::string& f, const void* obj, T& value )
+	bool getFieldValue( const std::string& name, const void* obj, T& value )
 	{
-		Field* field = getField(f);
+		Field* field = getField(name);
+		if( !field ) return false;
 		
-		if( !field )
-			return false;
-
 		value = field->get<T>(obj);
-
 		return true;
 	}
 
 	// Sets a value in the field.
 	template<typename T>
-	bool setFieldValue( const std::string& f, const void* obj, const T& value )
+	bool setFieldValue( const std::string& name, const void* obj, const T& value )
 	{
-		Field* field = getField(f);
-		
-		if( !field )
-			return false;
+		Field* field = getField(name);
+		if( !field ) return false;
 
 		field->set<T>(obj, value);
-
 		notifyChanged(*field);
 		return true;
 	}
 
 	// Returns a new instance of this type.
-	virtual void* createInstance() const { return nullptr; }
+	virtual void* createInstance() const;
 
 	// Sent when a field value is changed.
 	Event1<const Field&> onFieldChanged;
@@ -94,38 +88,41 @@ protected:
 
 #define DECLARE_CLASS_()												\
 public:																	\
-	static Class& getType();											\
-	virtual const Class& getInstanceType() const { return getType(); }
+	static Class& getStaticType();										\
+	virtual const Class& getType() const { return getStaticType(); }
 
 #define SUBCLASS_CLASS(name)											\
 	class _##name : public Class {										\
 	public:																\
-		_##name(const std::string& n) : Class(n) {}						\
-		_##name(const std::string& n, const Type& p) : Class(n, p) {}	\
+		_##name(const std::string& n, int sz) : Class(n, sz) {}			\
+		_##name(const std::string& n, const Type& p, int sz)			\
+			: Class(n, p, sz) {}										\
 		virtual void* createInstance() const { return new name(); }		\
 	};																	\
 
 #define BEGIN_CLASS(name)												\
 	SUBCLASS_CLASS(name)												\
-	static Class& _ = name::getType();									\
-	Class& name::getType()												\
-	{ static _##name type(TOSTRING(name));
+	static Class& _ = name::getStaticType();							\
+	Class& name::getStaticType()										\
+	{ static _##name type(TOSTRING(name), sizeof(name));
 
 #define BEGIN_CLASS_ABSTRACT(name)										\
-	static Class& _ = name::getType();									\
-	Class& name::getType()												\
-	{ static Class type(TOSTRING(name));
+	static Class& _ = name::getStaticType();							\
+	Class& name::getStaticType()										\
+	{ static Class type(TOSTRING(name), sizeof(name));
 
 #define BEGIN_CLASS_PARENT(name, parent)								\
 	SUBCLASS_CLASS(name)												\
-	static Class& _ = name::getType();									\
-	Class& name::getType()												\
-	{ static _##name type(TOSTRING(name), parent::getType());
+	static Class& _ = name::getStaticType();							\
+	Class& name::getStaticType()										\
+	{ static _##name type(TOSTRING(name), parent::getStaticType(),		\
+		sizeof(name));
 
 #define BEGIN_CLASS_PARENT_ABSTRACT(name, parent)						\
-	static Class& _ = name::getType();									\
-	Class& name::getType()												\
-	{ static Class type(TOSTRING(name), parent::getType());
+	static Class& _ = name::getStaticType();							\
+	Class& name::getStaticType()										\
+	{ static Class type(TOSTRING(name), parent::getStaticType(),		\
+		sizeof(name));
 
 #define END_CLASS()														\
 	return type; }														\
@@ -136,16 +133,28 @@ public:																	\
 	type.addField(fieldName);
 
 #define FIELD_CLASS(classType, fieldType, fieldName)					\
-	static Field fieldName(fieldType::getType());						\
+	static Field fieldName(fieldType::getStaticType());						\
 	FIELD_COMMON(classType, fieldName)
 
 #define FIELD_CLASS_PTR(classType, fieldType, fieldName)				\
-	static Field fieldName(fieldType::getType());						\
-	fieldName.pointer = true;											\
+	static Field fieldName(fieldType::getStaticType());						\
+	fieldName.setQualifier(Qualifier::Pointer);							\
 	FIELD_COMMON(classType, fieldName)
 
 #define FIELD_ENUM(classType, fieldType, fieldName)						\
-	static Field fieldName(fieldType::getType());						\
+	static Field fieldName(fieldType::getStaticType());						\
+	FIELD_COMMON(classType, fieldName)
+
+#define FIELD_VECTOR(classType, fieldType, fieldName)					\
+	static Field fieldName(fieldType::getStaticType());						\
+	fieldName.setQualifier(Qualifier::Array);							\
+	FIELD_COMMON(classType, fieldName)
+
+#define FIELD_VECTOR_PTR(classType, fieldType, pointerType, fieldName ) \
+	static Field fieldName(fieldType::getStaticType());						\
+	fieldName.setQualifier(Qualifier::Array);							\
+	fieldName.setQualifier(Qualifier::Pointer);							\
+	fieldName.size = sizeof(pointerType);								\
 	FIELD_COMMON(classType, fieldName)
 
 #define FIELD_PRIMITIVE(classType, fieldType, fieldName)				\

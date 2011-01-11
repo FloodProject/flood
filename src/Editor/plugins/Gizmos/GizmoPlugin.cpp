@@ -58,29 +58,31 @@ PluginMetadata GizmoPlugin::getMetadata()
 
 void GizmoPlugin::onPluginEnable()
 {
-	wxToolBar* toolBar = editor->getToolbar();
+	wxAuiToolBar* toolBar = editor->getToolbar();
 
 	//addTool( toolBar->AddSeparator() );
+	if(toolBar)
+	{
+		wxBitmap iconCamera = wxMEMORY_BITMAP(camera);
+		buttonCamera = toolBar->AddTool( GizmoTool::Camera, "Camera",
+			iconCamera, "Selects the Camera View tool", wxITEM_RADIO );
+		addTool(buttonCamera);
 
-	wxBitmap iconCamera = wxMEMORY_BITMAP(camera);
-	buttonCamera = toolBar->AddTool( GizmoTool::Camera, "Camera",
-		iconCamera, "Selects the Camera View tool", wxITEM_RADIO );
-	addTool(buttonCamera);
+		wxBitmap iconTranslate = wxMEMORY_BITMAP(move);
+		buttonTranslate = toolBar->AddTool( GizmoTool::Translate, "Move",
+			iconTranslate, "Selects the Move tool", wxITEM_RADIO );
+		addTool(buttonTranslate);
 
-	wxBitmap iconTranslate = wxMEMORY_BITMAP(move);
-	buttonTranslate = toolBar->AddTool( GizmoTool::Translate, "Move",
-		iconTranslate, "Selects the Move tool", wxITEM_RADIO );
-	addTool(buttonTranslate);
+		wxBitmap iconRotate = wxMEMORY_BITMAP(rotate2);
+		buttonRotate = toolBar->AddTool( GizmoTool::Rotate, "Rotate",
+			iconRotate, "Selects the Rotate tool", wxITEM_RADIO );
+		addTool(buttonRotate);
 
-	wxBitmap iconRotate = wxMEMORY_BITMAP(rotate2);
-	buttonRotate = toolBar->AddTool( GizmoTool::Rotate, "Rotate",
-		iconRotate, "Selects the Rotate tool", wxITEM_RADIO );
-	addTool(buttonRotate);
-
-	wxBitmap iconScale = wxMEMORY_BITMAP(scale);
-	buttonScale = toolBar->AddTool( GizmoTool::Scale, "Scale",
-		iconScale, "Selects the Scale tool", wxITEM_RADIO );
-	addTool(buttonScale);
+		wxBitmap iconScale = wxMEMORY_BITMAP(scale);
+		buttonScale = toolBar->AddTool( GizmoTool::Scale, "Scale",
+			iconScale, "Selects the Scale tool", wxITEM_RADIO );
+		addTool(buttonScale);
+	}
 }
 
 //-----------------------------------//

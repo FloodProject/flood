@@ -8,66 +8,106 @@
 
 #pragma once
 
-#include "vapor/scene/Scene.h"
-
-#include <json/json.h>
-namespace Json { class Value; }
+#include "Reflection.h"
+#include "math/Vector3.h"
+#include "math/Quaternion.h"
+#include "math/EulerAngles.h"
+#include "math/Color.h"
+#include <bitset>
 
 namespace vapor {
 
 //-----------------------------------//
 
 /**
- * Serialization will write a type object to disk in a format that can
- * be readable later when loading. We are using the JSON format, a small
- * and lightweight alternative to XML.
+ * Abstract serialization API.
  */
 
-class VAPOR_API Serializer
+class CORE_API Serializer
 {
 	DECLARE_UNCOPYABLE(Serializer)
 
 public:
 
-	Serializer();
+	Serializer() {}
+	virtual ~Serializer() {}
 
-	// Open the JSON representation from a file.
-	bool openFromFile( const std::string& name );
+	// Flushes the serialization to the stream.
+	virtual void flushStream() = 0;
 
-	// Saves the JSON representation to a file.
-	void saveToFile( const std::string& name );
+	// Begins a new class block.
+	virtual void beginClass(const Class& type) = 0;
 
-	// Serializes the scene.
-	void serializeScene( const ScenePtr& scene );
+	// Ends the current class block.
+	virtual void endClass() = 0;
 
-	// Deserializes the scene.
-	ScenePtr deserializeScene();
+	// Writes a field into the class block.
+	virtual void writeField( const Field& field ) = 0;
+
+	// Begins a new array block.
+	virtual void beginArray(const Type& type) = 0;
+
+	// Ends the current array block.
+	virtual void endArray() = 0;
+
+	// Primitive Primitives.
+	virtual void writeBool( const Primitive&, bool ) = 0;
+	virtual void writeInt( const Primitive&, int ) = 0;
+	virtual void writeUInt( const Primitive&, uint ) = 0;
+	virtual void writeFloat( const Primitive&, float ) = 0;
+	virtual void writeDouble( const Primitive&, double ) = 0;
+	virtual void writeString( const Primitive&, const std::string& ) = 0;
+	virtual void writeVector3( const Primitive&, const Vector3& ) = 0;
+	virtual void writeQuaternion( const Primitive&, const Quaternion& ) = 0;
+	virtual void writeColor( const Primitive&, const Color& ) = 0;
+	virtual void writeBitfield( const Primitive&, const std::bitset<32>& ) = 0;
+	//virtual void writeHandle( const Handle& ) = 0;
+};
+
+struct ObjectData
+{
+	void* instance;
+	Type* type;
+};
+
+//-----------------------------------//
+
+/**
+ * Serialization will write a type object to disk in a format that can
+ * be readable later when loading. The serializator will use an abstract
+ * class to format the data. This allows multiple serialization formats.
+ */
+
+class CORE_API ObjectSerializer
+{
+	DECLARE_UNCOPYABLE(ObjectSerializer)
+
+public:
+
+	ObjectSerializer( Serializer& serializer );
+
+	// Loads an object from a stream.
+	bool load( ObjectData& object );
+
+	// Saves an object to a stream.
+	void save( const ObjectData& object );
 
 protected:
 
-	// Serializes the node.
-	Json::Value serializeEntity( const EntityPtr& node );
+	// Serializes a type.
+	void serializeType(ObjectData object);
 
-	// Deserializes the node.
-	EntityPtr deserializeEntity( const Json::Value& nodeValue );
+	// Serializes a class.
+	void serializeClass(ObjectData object);
 
-	// Serializes the class fields.
-	void serializeFields( const Class& type, void* object, Json::Value& );
+	// Serializes the field of the object.
+	void serializeField(ObjectData object, const Field& field);
 
-	// Deserializes the class fields.
-	void deserializeFields( const Class& type, void* object, const Json::Value& );
+	// Serializes a primitive field of the object.
+	void serializePrimitive(const ObjectData& object);
 
-	// Converts an enum type to a JSON value.
-	Json::Value valueFromEnum( const Field& field, void* object );
-
-	// Converts a primitive type to a JSON value.
-	Json::Value valueFromPrimitive( const Field& field, void* object );
-
-	// Sets the field in the object to the given value.
-	void setFieldFromValue( const Field& field, void* object, const Json::Value& value );
-
-	// Root JSON value.
-	Json::Value rootValue;
+	// Concrete serializer implementation.
+	Serializer& serializer;
 };
 
 //-----------------------------------//

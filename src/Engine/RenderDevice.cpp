@@ -8,6 +8,7 @@
 
 #include "vapor/PCH.h"
 #include "vapor/Utilities.h"
+#include <algorithm>
 
 #ifdef VAPOR_RENDERER_OPENGL
 
@@ -27,7 +28,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-RenderDevice::RenderDevice( ResourceManager* rm )
+RenderDevice::RenderDevice( ResourceManager* res )
 	: adapter(nullptr)
 	, window(nullptr)
 	, activeTarget(nullptr)
@@ -35,7 +36,7 @@ RenderDevice::RenderDevice( ResourceManager* rm )
 	, programManager(nullptr)
 	, textureManager(nullptr)
 	, shadowDepthBuffer(nullptr)
-	, resourceManager(rm)
+	, resourceManager(res)
 { }
 
 //-----------------------------------//

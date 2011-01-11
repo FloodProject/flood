@@ -7,19 +7,19 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/Engine.h"
+#include "Engine.h"
 
-#include "vapor/TaskManager.h"
-#include "vapor/vfs/FileSystem.h"
-#include "vapor/render/Device.h"
-#include "vapor/input/InputManager.h"
-#include "vapor/audio/Device.h"
-#include "vapor/script/ScriptManager.h"
-#include "vapor/scene/Scene.h"
-#include "vapor/paging/PageManager.h"
-#include "vapor/resources/ResourceManager.h"
+#include "TaskManager.h"
+#include "vfs/FileSystem.h"
+#include "render/Device.h"
+#include "input/InputManager.h"
+#include "audio/Device.h"
+#include "script/ScriptManager.h"
+#include "scene/Scene.h"
+#include "paging/PageManager.h"
+#include "resources/ResourceManager.h"
+#include "physics/Physics.h"
 #include "ResourceLoaders.h"
-#include "vapor/physics/Physics.h"
 
 namespace vapor {
 
@@ -27,25 +27,21 @@ namespace vapor {
 
 Engine::Engine()
 	: log(nullptr)
+	, stream(nullptr)
 	, fileSystem(nullptr)
 	, resourceManager(nullptr)
 	, renderDevice(nullptr)
 	, audioDevice(nullptr)
 	, physicsManager(nullptr)
 	, scriptManager(nullptr)
-	, stream(nullptr)
 { }
 
 //-----------------------------------//
 
-void Engine::create(const std::string& _app, 
-					const char** _argv, bool autoInit)
+void Engine::create(const std::string& app, const char** argv)
 {
-	app = _app;
-	argv = _argv;
-
-	if( autoInit )
-		init();
+	this->app = app;
+	this->argv = argv;
 }
 
 //-----------------------------------//
@@ -88,32 +84,33 @@ void Engine::init( bool createWindow )
 
 	Log::info( "Starting vaporEngine version '%s'", VAPOR_ENGINE_VERSION );
 
-	// create the virtual filesystem
+	// Creates the file system.
 	fileSystem = new FileSystem( app, argv ? argv[0] : nullptr );
 
+	// Creates the task system.
 	taskManager = new TaskManager();
 
-	// create the resource manager
+	// Creates the resource manager.
 	FileWatcher* fw = fileSystem->getFileWatcher();
 	resourceManager = new ResourceManager( fw, taskManager );
 
-#ifdef VAPOR_PHYSICS_BULLET
-	// create the physics manager
-	physicsManager = new PhysicsManager();
-#endif
-
-	// register default codecs
+	// Registers default resource loaders.
 	setupResourceLoaders();
 
-	// create a rendering and audio device
+	// Creates the rendering and audio devices.
 	setupDevices( createWindow );
 
-	// create the root scene node
+	// Creates the initial scene.
 	scene.reset( new Scene() );
 
 #ifdef VAPOR_SCRIPTING_LUA
-	// Initialize the scripting
+	// Creates the scripting manager.
 	scriptManager = new ScriptManager();
+#endif
+
+#ifdef VAPOR_PHYSICS_BULLET
+	// Creates the physics manager.
+	physicsManager = new PhysicsManager();
 #endif
 }
 
@@ -131,26 +128,23 @@ void Engine::setupLogger()
 
 void Engine::setupDevices( bool createWindow )
 {
-	// create render device
 	renderDevice = new RenderDevice( resourceManager );
 
 	if( createWindow )
 	{
-		// create a window and set the title
+		// Creates a new render window.
 		renderDevice->createWindow();
 
-		// init the render device now that it has a context
+		// Initializes the render device with new window context.
 		renderDevice->init();
 		
-		// creates the default input devices
+		// Creates the input devices.
 		setupInput();
 	}
 
 #ifdef VAPOR_AUDIO_OPENAL
-
-	// create the audio device
+	// Creates the audio device.
 	audioDevice = new audio::Device();
-
 #endif
 }
 
@@ -175,11 +169,8 @@ void Engine::setupInput()
 
 void Engine::setupResourceLoaders()
 {
-	assert( resourceManager != nullptr );
-
 	std::vector<ResourceLoader*> loaders;
 
-	// register default compiled codecs
 	#ifdef VAPOR_IMAGE_PICOPNG
 		loaders.push_back( new PNG_Pico_Loader() );
 	#endif
@@ -247,6 +238,10 @@ void Engine::update( double delta )
 InputManager* Engine::getInputManager() const
 {
 	Window* window = renderDevice->getWindow();
+
+	if( !window )
+		return nullptr;
+
 	return window->getInputManager();
 }
 

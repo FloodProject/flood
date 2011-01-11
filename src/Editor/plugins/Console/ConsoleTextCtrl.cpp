@@ -8,6 +8,8 @@
 
 #include "PCH.h"
 #include "ConsoleTextCtrl.h"
+#include "Editor.h"
+
 #include "lua.hpp"
 
 namespace vapor { namespace editor {
@@ -36,13 +38,13 @@ int luaPrintStub(lua_State* L)
 
 //-----------------------------------//
 
-ConsoleTextCtrl::ConsoleTextCtrl( vapor::Engine* engine, wxWindow* parent,
-		wxWindowID id, const wxString& name, const wxPoint& pos, 
-		const wxSize& size, long style )
+ConsoleTextCtrl::ConsoleTextCtrl( wxWindow* parent, wxWindowID id,
+		const wxString& name, const wxPoint& pos, const wxSize& size, long style )
 		: wxTextCtrl( parent, id, name, pos, size, style )
-		, engine( engine )
 {
 	console = this;
+	engine = GetEditor().getEngine();
+
 	InitControl();
 
 #ifdef VAPOR_SCRIPTING_LUA

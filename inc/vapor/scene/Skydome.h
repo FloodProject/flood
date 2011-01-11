@@ -51,7 +51,7 @@ public:
 	// Gets the position of the sun.
 	Vector3 getSunPosition();
 
-	// Gets called each cycle to update the component.
+	// Gets called each m to update the component.
 	void update( double delta );
 
 protected:

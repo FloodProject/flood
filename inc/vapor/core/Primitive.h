@@ -32,6 +32,7 @@ namespace PrimitiveType
 		Quaternion,
 		Color,
 		Bitfield,
+		Handle
 	};
 }
 
@@ -44,7 +45,7 @@ class CORE_API Primitive : public Type
 {
 public:
 
-	Primitive(PrimitiveType::Enum, const std::string& name);
+	Primitive(PrimitiveType::Enum, const std::string& name, int size);
 
 	// Gets if this type represents a bool.
 	bool isBool() const;

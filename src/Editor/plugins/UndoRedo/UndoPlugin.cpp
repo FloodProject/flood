@@ -41,25 +41,29 @@ PluginMetadata UndoPlugin::getMetadata()
 
 void UndoPlugin::onPluginEnable()
 {
-	wxToolBar* toolBar = editor->getToolbar();
-	addTool( toolBar->AddSeparator() );
+	wxAuiToolBar* toolBar = editor->getToolbar();
+	
+	if(toolBar)
+	{
+		addTool( toolBar->AddSeparator() );
 
-	wxBitmap iconUndo = wxMEMORY_BITMAP(arrow_undo);
-	undoButton = toolBar->AddTool( wxID_UNDO, "Undo", iconUndo, "Undo" );
-	addTool(undoButton);
-	toolBar->EnableTool( undoButton->GetId(), false );
+		wxBitmap iconUndo = wxMEMORY_BITMAP(arrow_undo);
+		undoButton = toolBar->AddTool( wxID_UNDO, "Undo", iconUndo, "Undo" );
+		addTool(undoButton);
+		toolBar->EnableTool( undoButton->GetId(), false );
 
-	wxBitmap iconRedo = wxMEMORY_BITMAP(arrow_redo);
-	redoButton = toolBar->AddTool( wxID_REDO, "Redo", iconRedo, "Redo" );
-	addTool(redoButton);
-	toolBar->EnableTool( redoButton->GetId(), false );
+		wxBitmap iconRedo = wxMEMORY_BITMAP(arrow_redo);
+		redoButton = toolBar->AddTool( wxID_REDO, "Redo", iconRedo, "Redo" );
+		addTool(redoButton);
+		toolBar->EnableTool( redoButton->GetId(), false );
 
-	// Connect to click events.
-	toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
-		&UndoPlugin::onUndoButtonClick, this, undoButton->GetId() );
+		// Connect to click events.
+		toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
+			&UndoPlugin::onUndoButtonClick, this, undoButton->GetId() );
 
-	toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
-		&UndoPlugin::onRedoButtonClick, this, redoButton->GetId() );
+		toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
+			&UndoPlugin::onRedoButtonClick, this, redoButton->GetId() );
+	}
 
 	// Connect to undo/redo events.
 	undoManager->onUndoRedoEvent.Connect(this, &UndoPlugin::onUndoEvent);
@@ -85,16 +89,19 @@ void UndoPlugin::onUndoEvent()
 
 void UndoPlugin::updateButtons()
 {
-	wxToolBar* toolBar = editor->getToolbar();
-
 	const Operations& undoOperations = undoManager->getUndoOperations();
 	bool undoEmpty = undoOperations.empty();
 
 	const Operations& redoOperations = undoManager->getRedoOperations();
 	bool redoEmpty = redoOperations.empty();
 
-	toolBar->EnableTool( undoButton->GetId(), !undoEmpty );
-	toolBar->EnableTool( redoButton->GetId(), !redoEmpty );
+	wxAuiToolBar* toolBar = editor->getToolbar();
+
+	if(toolBar)
+	{
+		toolBar->EnableTool( undoButton->GetId(), !undoEmpty );
+		toolBar->EnableTool( redoButton->GetId(), !redoEmpty );
+	}
 }
 
 //-----------------------------------//

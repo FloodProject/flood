@@ -67,10 +67,13 @@ public:
 	GETTER(EventManager, Events*, eventManager)
 
 	// Gets the notebook control.
-	GETTER(Notebook, wxNotebook*, notebookCtrl)
+	GETTER(Notebook, wxAuiNotebook*, notebookCtrl)
 
 	// Gets the toolbar control.
-	GETTER(Toolbar, wxToolBar*, toolBar)
+	GETTER(Toolbar, wxAuiToolBar*, toolBar)
+
+	// Gets the AUI interface manager.
+	GETTER(AUI, wxAuiManager*, auiManager)
 
 	// Gets/sets the drag and drop coords.
 	ACESSOR(DropCoords, Vector2i, dropCoords)
@@ -154,10 +157,13 @@ protected:
 	wxBoxSizer* sizer;
 	wxSplitterWindow* mainSplitter;
 	wxFourWaySplitter* viewSplitter;
-	wxToolBar* toolBar;
+	wxAuiToolBar* toolBar;
 	Viewframe* viewframe;
-	wxNotebook* notebookCtrl;
+	wxAuiNotebook* notebookCtrl;
+	wxAuiManager* auiManager;
 };
+
+EditorFrame& GetEditor();
 
 //-----------------------------------//
 

@@ -8,7 +8,6 @@
 
 #include "Core.h"
 #include "math/Frustum.h"
-#include "core/Primitive.h"
 
 namespace vapor {
 
@@ -34,7 +33,7 @@ Frustum::Frustum()
 	, fieldOfView(60)
 	, nearPlane(1)
 	, farPlane(100)
-	, aspectRatio(0)
+	, aspectRatio(1)
 { }
 
 //-----------------------------------//
@@ -48,9 +47,7 @@ Frustum::Frustum( const Frustum& rhs )
 	, aspectRatio( rhs.aspectRatio )
 {
 	for(uint i = 0; i < VAPOR_ARRAY_SIZE(rhs.planes); i++ )
-	{
 		planes[i] = rhs.planes[i];
-	}
 }
 
 //-----------------------------------//

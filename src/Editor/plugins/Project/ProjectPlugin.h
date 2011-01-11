@@ -42,13 +42,13 @@ public:
 	void onSaveButtonUpdateUI(wxUpdateUIEvent& event);
 
 	// New toolbar button.
-	wxToolBarToolBase* newButton;
+	wxAuiToolBarItem* newButton;
 
 	// Open toolbar button.
-	wxToolBarToolBase* openButton;
+	wxAuiToolBarItem* openButton;
 
 	// Save toolbar button.
-	wxToolBarToolBase* saveButton;
+	wxAuiToolBarItem* saveButton;
 
 protected:
 

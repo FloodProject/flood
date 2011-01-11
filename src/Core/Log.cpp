@@ -37,6 +37,8 @@ std::string LogLevel::toString( LogLevel::Enum level )
 		return "Error";
 	case LogLevel::Debug:
 		return "Debug";
+	case LogLevel::Assert:
+		return "Assert";
 	default:
 		assert( 0 && "This should not be reached" );
 		return "";
@@ -59,6 +61,19 @@ void Log::debug(const char* msg, ...)
 
 		Logger* const log = Logger::getLogger();
 		if(log) log->write(LogLevel::Debug, msg, args);
+
+	va_end(args);
+}
+
+//-----------------------------------//
+
+void Log::_assert(const char* msg, ...)
+{
+	va_list args;
+	va_start(args, msg);
+
+		Logger* const log = Logger::getLogger();
+		if(log) log->write(LogLevel::Assert, msg, args);
 
 	va_end(args);
 }

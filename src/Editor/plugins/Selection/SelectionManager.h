@@ -52,6 +52,8 @@ class SelectionOperation : public UndoOperation
 
 public:
 
+	~SelectionOperation();
+
 	// Undoes the operation.
 	virtual void undo();	
 

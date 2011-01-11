@@ -8,13 +8,14 @@
 
 #include "Core.h"
 #include "core/Enum.h"
+#include "Log.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-Enum::Enum(const std::string& name)
-	: Type(MetaType::Enumeration, name)
+Enum::Enum(const std::string& name, int size)
+	: Type(MetaType::Enumeration, name, size)
 { }
 
 //-----------------------------------//

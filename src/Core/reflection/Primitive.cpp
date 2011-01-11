@@ -9,25 +9,30 @@
 #include "Core.h"
 #include "core/Primitive.h"
 
+#include "math/Vector3.h"
+#include "math/Color.h"
+#include "math/Quaternion.h"
+#include <bitset>
+
 namespace vapor {
 
 //-----------------------------------//
 
-const Primitive Primitive::_bool(PrimitiveType::Bool, "bool");
-const Primitive Primitive::_int(PrimitiveType::Integer, "int");
-const Primitive Primitive::_uint(PrimitiveType::UnsignedInteger, "uint");
-const Primitive Primitive::_float(PrimitiveType::Float, "float");
-const Primitive Primitive::_double(PrimitiveType::Double, "double");
-const Primitive Primitive::_string(PrimitiveType::String, "string");
-const Primitive Primitive::_Vector3(PrimitiveType::Vector3, "Vector3");
-const Primitive Primitive::_Color(PrimitiveType::Color, "Color");
-const Primitive Primitive::_Quaternion(PrimitiveType::Quaternion, "Quaternion");
-const Primitive Primitive::_Bitfield(PrimitiveType::Bitfield, "Bitfield");
+const Primitive Primitive::_bool(PrimitiveType::Bool, "bool", sizeof(bool));
+const Primitive Primitive::_int(PrimitiveType::Integer, "int", sizeof(int));
+const Primitive Primitive::_uint(PrimitiveType::UnsignedInteger, "uint", sizeof(uint));
+const Primitive Primitive::_float(PrimitiveType::Float, "float", sizeof(float));
+const Primitive Primitive::_double(PrimitiveType::Double, "double", sizeof(double));
+const Primitive Primitive::_string(PrimitiveType::String, "string", sizeof(std::string));
+const Primitive Primitive::_Vector3(PrimitiveType::Vector3, "Vector3", sizeof(Vector3));
+const Primitive Primitive::_Color(PrimitiveType::Color, "Color", sizeof(Color));
+const Primitive Primitive::_Quaternion(PrimitiveType::Quaternion, "Quaternion", sizeof(Quaternion));
+const Primitive Primitive::_Bitfield(PrimitiveType::Bitfield, "Bitfield", sizeof(std::bitset<32>));
 
 //-----------------------------------//
 
-Primitive::Primitive(PrimitiveType::Enum primitive, const std::string& name)
-	: Type(MetaType::Primitive, name)
+Primitive::Primitive(PrimitiveType::Enum primitive, const std::string& name, int size)
+	: Type(MetaType::Primitive, name, size)
 	, primitive(primitive)
 { }
 

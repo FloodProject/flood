@@ -10,6 +10,7 @@
 #include "scene/Camera.h"
 #include "scene/Scene.h"
 #include "scene/Geometry.h"
+#include "scene/Tags.h"
 #include "render/Device.h"
 #include "render/View.h"
 #include "render/DebugGeometry.h"
@@ -27,9 +28,10 @@ END_CLASS()
 //-----------------------------------//
 
 Camera::Camera()
+	: activeView(nullptr)
+	, frustumCulling(false)
+	, lookAtVector(Vector3::UnitZ)
 {
-	init();
-
 	Engine* engine = Engine::getInstancePtr();
 	renderDevice = engine->getRenderDevice();
 }
@@ -39,16 +41,10 @@ Camera::Camera()
 Camera::~Camera()
 {
 	if( transform )
+	{
 		transform->onTransform.Disconnect( this, &Camera::onTransform );
-}
-
-//-----------------------------------//
-
-void Camera::init()
-{
-	activeView = nullptr;
-	frustumCulling = false;
-	lookAtVector = Vector3::UnitZ;
+		transform = nullptr;
+	}
 }
 
 //-----------------------------------//
@@ -73,35 +69,42 @@ void Camera::updateViewTransform()
 
 //-----------------------------------//
 
-void Camera::setView( RenderView* view )
+void Camera::updateFrustum()
 {
-	if( !view )
+	if( !activeView )
 		return;
 
-	if( activeView == view )
+	// Update frustum matrices.
+	frustum.aspectRatio = activeView->getAspectRatio();
+	frustum.updateProjection( activeView->getSize() );
+	frustum.updatePlanes( viewMatrix );
+
+	updateDebugRenderable();
+}
+
+//-----------------------------------//
+
+void Camera::setView( RenderView* view )
+{
+	if( !view || (activeView == view) )
 		return;
 
 	activeView = view;
 
-	// Update frustum matrices.
-	frustum.aspectRatio = view->getAspectRatio();
-	frustum.updateProjection( view->getSize() );
-	frustum.updatePlanes( viewMatrix );	
+	updateFrustum();
 }
 
 //-----------------------------------//
 
 void Camera::update( double )
 {
-	if( activeView )
+	if( !activeView )
 	{
-		// Update frustum matrices.
-		frustum.aspectRatio = activeView->getAspectRatio();
-		frustum.updateProjection( activeView->getSize() );
-		frustum.updatePlanes( viewMatrix );
+		RenderView* view = renderDevice->getActiveView();
+		setView(view);
 	}
 
-	updateDebugRenderable();
+	updateFrustum();
 
 	// Only run the following code once.
 	if( transform )
@@ -169,7 +172,7 @@ void Camera::render( RenderBlock& block, bool clearView )
 void Camera::cull( RenderBlock& block, const EntityPtr& entity )
 {
 	// Try to see if this is a Group-derived node.
-	const Type& type = entity->getInstanceType();
+	const Type& type = entity->getType();
 	
 	if( type.inherits<Group>() || type.is<Group>() )
 	{
@@ -189,7 +192,9 @@ void Camera::cull( RenderBlock& block, const EntityPtr& entity )
 	// If this is a visible renderable object, then we perform frustum culling
 	// and then we push it to a list of things passed later to the renderer.
 
-	if( !entity->isVisible() ) 
+	//entity->onPreCull();
+
+	if( !entity->isVisible() || entity->getTag(Tags::NonCulled) ) 
 		return;
 
 	const TransformPtr& transform = entity->getTransform();
@@ -200,11 +205,11 @@ void Camera::cull( RenderBlock& block, const EntityPtr& entity )
 
 	#pragma TODO("Fix multiple geometry instancing")
 
-	const std::vector<GeometryPtr>& geometries = entity->getGeometry();
+	const std::vector<GeometryPtr>& geoms = entity->getGeometry();
 
-	for( uint i = 0; i < geometries.size(); i++ )
+	for( uint i = 0; i < geoms.size(); i++ )
 	{
-		const GeometryPtr& geometry = geometries[i];
+		const GeometryPtr& geometry = geoms[i];
 		geometry->appendRenderables( block.renderables, transform );
 	}
 
@@ -225,6 +230,8 @@ void Camera::cull( RenderBlock& block, const EntityPtr& entity )
 	for( it = components.cbegin(); it != components.cend(); it++ )
 	{
 		const ComponentPtr& component = it->second;
+
+		component->onPreRender(*this);
 
 		if( !component->isDebugRenderableVisible() )
 			continue;
@@ -329,7 +336,7 @@ void Camera::updateDebugRenderable() const
 	if( !debugRenderable )
 		return;
 
-	updateFrustum( debugRenderable, frustum );
+	updateDebugFrustum( debugRenderable, frustum );
 }
 
 //-----------------------------------//

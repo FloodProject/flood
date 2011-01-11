@@ -41,14 +41,14 @@ void Plugin::doPluginDisable()
 
 //-----------------------------------//
 
-void Plugin::addTool( wxToolBarToolBase* tool )
+void Plugin::addTool( wxAuiToolBarItem* tool )
 {
-	if( tool->IsSeparator() )
-		return;
+	//if( tool->IsSeparator() )
+		//return;
 
 	tools.push_back( tool );
 
-	wxToolBar* toolBar = editor->getToolbar();
+	wxAuiToolBar* toolBar = editor->getToolbar();
 	toolBar->Realize();
 }
 
@@ -57,11 +57,11 @@ void Plugin::addTool( wxToolBarToolBase* tool )
 void Plugin::removeTools()
 {
 	// Clean up toolbar stuff.
-	wxToolBar* toolBar = editor->getToolbar();
+	wxAuiToolBar* toolBar = editor->getToolbar();
 
 	for( uint i = 0; i < tools.size(); i++ )
 	{
-		wxToolBarToolBase* tool = tools[i];
+		wxAuiToolBarItem* tool = tools[i];
 		
 		int id = tool->GetId();
 		toolBar->DeleteTool(id);
@@ -77,13 +77,7 @@ void Plugin::removePage( wxWindow* page )
 	if( !page )
 		return;
 
-	wxNotebook* notebookCtrl = editor->getNotebook();
-	assert( notebookCtrl != nullptr );
-
-	wxImageList* imageList = notebookCtrl->GetImageList();
-	assert( imageList != nullptr );
-
-	//imageList->Remove(iconPage);
+	wxAuiNotebook* notebookCtrl = editor->getNotebook();
 
 	int pageCount = notebookCtrl->GetPageCount();
 	

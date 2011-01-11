@@ -108,8 +108,8 @@ protected:
 	TerrainTool::Enum tool;
 
 	// Toolbar buttons.
-	wxToolBarToolBase* buttonRaise;
-	wxToolBarToolBase* buttonPaint;
+	wxAuiToolBarItem* buttonRaise;
+	wxAuiToolBarItem* buttonPaint;
 
 	int iconTerrain;
 

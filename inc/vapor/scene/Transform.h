@@ -8,45 +8,43 @@
 
 #pragma once
 
-#include "vapor/math/EulerAngles.h"
-#include "vapor/math/Quaternion.h"
-#include "vapor/math/BoundingBox.h"
-#include "vapor/scene/Component.h"
+#include "math/EulerAngles.h"
+#include "math/Quaternion.h"
+#include "math/BoundingBox.h"
+#include "scene/Component.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
 /**
- * Transform components provide entities position and orientation information.
- * They can be used to scale, rotate and translate nodes in the scene, and keep
- * track of bounding volumes aswell.
+ * Transform provide entities with position and orientation information.
+ * They can be used to scale, rotate and translate entities in the scene,
+ * and keep track of their bounding volumes aswell.
  */
 
 class VAPOR_API Transform : public Component
 {
 	DECLARE_CLASS_()
+	DECLARE_UNCOPYABLE(Transform)
 
 public:
 
-	Transform( float x = 0.0f, float y = 0.0f, float z = 0.0f );
-	Transform( const Transform& rhs );
-	~Transform();
+	Transform();
 
-	// Translate this node by the given parameters.
+	// Translates by the given parameters.
 	void translate( float x, float y, float z );
 	void translate( const Vector3& tr );
 
-	// Scale this node by the given parameters.
-	void scale( float uniform );
+	// Scales by the given parameters.
 	void scale( float x, float y, float z );
 	void scale( const Vector3& scale );
 
-	// Rotates this node by the given parameters.
+	// Rotates by the given parameters.
 	void rotate( float xang, float yang, float zang );
-	void rotate( const Vector3& rot );
+	void rotate( const Vector3& rotation );
 
-	// Resets all the transformations in the transform.
+	// Resets all the transformations.
 	void reset();
 
 	// Gets the position of the transform.
@@ -86,7 +84,7 @@ public:
 	Vector3 getWorldPosition() const;
 
 	// Gets the bounding volume of the transform.
-	GETTER(BoundingVolume, const BoundingBox&, boundingVolume)
+	GETTER(BoundingVolume, const BoundingBox&, bounds)
 
 	// Gets the world bounding volume of the transform.
 	BoundingBox getWorldBoundingVolume() const;
@@ -100,9 +98,6 @@ public:
 	// Gets if the bounding volume need to be updated.
 	bool requiresBoundingVolumeUpdate() const;
 
-	// Sets the notify state of the transform.
-	void setNotify(bool state = true);
-
 	// Called once per frame to update the component.
 	virtual void update( double delta );
 
@@ -111,14 +106,8 @@ public:
 
 protected:
 
-	// Initializes the component.
-	void init();
-
-	// Handles field changes notifications.
-	void onFieldChanged(const Field& field);
-
-	// Sends notifications when the transform has changed.
-	void sendNotifications();
+	// Sets the notify state of the transform.
+	void setChanged(bool state = true);
 
 	// Position.
 	Vector3 position;
@@ -132,17 +121,17 @@ protected:
 	// Local transform.
 	Matrix4x3 transform;
 
+	// Bounding volume of the renderables.
+	BoundingBox bounds;
+
 	// Tracks if the transform has been changed.
-	bool needsNotify;
+	bool wasChanged;
 
 	// Does the bounding volume needs to be rebuilt.
-	bool needsVolumeUpdate;
+	bool needsBoundsUpdate;
 
 	// If an external transform is given, don't generate our own.
 	bool externalTransform;
-
-	// Bounding volume of the renderables.
-	BoundingBox boundingVolume;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Transform );

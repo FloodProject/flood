@@ -13,8 +13,7 @@
 #include "math/Plane.h"
 #include "math/BoundingBox.h"
 
-#include "core/Enum.h"
-#include "core/Class.h"
+#include "Object.h"
 
 namespace vapor {
 
@@ -24,7 +23,7 @@ namespace vapor {
  * Projection types.
  */
 
-namespace Projection 
+struct Projection 
 {
     enum Enum
     {
@@ -33,7 +32,7 @@ namespace Projection
     };
 
 	DECLARE_ENUM()
-}
+};
 
 //-----------------------------------//
 
@@ -41,7 +40,7 @@ namespace Projection
  * Frustum is a shape similiar to a pyramid with the top truncated.
  */
 
-class CORE_API Frustum
+class CORE_API Frustum : public Object
 {
 	DECLARE_CLASS_()
 

@@ -295,7 +295,7 @@ void Model::setAnimationFade(const std::string& name, float fadeTime)
 
 void Model::onRender()
 {
-	if( !mesh->isAnimated() )
+	if( !mesh || !mesh->isLoaded() || !mesh->isAnimated() )
 		return;
 
 	const std::vector<RenderablePtr>& rends = getRenderables();

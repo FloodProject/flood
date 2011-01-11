@@ -84,7 +84,6 @@ protected:
 	std::string glyphsFilename;
 
 	std::vector<std::string> lines;
-
 	std::vector<byte> data;
 
 	// Holds all file extensions recognized by this codec.

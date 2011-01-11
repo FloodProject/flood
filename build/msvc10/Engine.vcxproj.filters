@@ -31,15 +31,6 @@
     <Filter Include="Render\Primitives\Debug">
       <UniqueIdentifier>{0b6a713d-48e0-4486-8b2d-d142166fa1c3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Render\Window">
-      <UniqueIdentifier>{b87fb3c1-b1e5-498e-a05f-0d80923ca8e1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Render\Window\Win32">
-      <UniqueIdentifier>{66e151a3-bb6f-4c2c-8ee8-d86397ae8ce1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Render\Window\SFML">
-      <UniqueIdentifier>{c7712ee9-ceb6-451c-88d9-2a8c57ad04d2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Render\Target">
       <UniqueIdentifier>{4296de7c-264b-4eb2-89b3-9459d3be1866}</UniqueIdentifier>
     </Filter>
@@ -141,21 +132,6 @@
     </Filter>
     <Filter Include="Input\Map">
       <UniqueIdentifier>{ef163700-24bf-4f6e-b992-37ea5fc5c43b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Input\Audio">
-      <UniqueIdentifier>{b81a2bdf-ed7f-4c31-b32f-ef5508a868ff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Input\Audio\Buffer">
-      <UniqueIdentifier>{5d794244-3438-4b8e-889c-879b1bff99b4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Input\Audio\Context">
-      <UniqueIdentifier>{d67da2db-92bb-4fbe-98d9-df08b24ebcbf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Input\Audio\Source">
-      <UniqueIdentifier>{b74f1d29-de7c-468f-9d99-e905e1a11a2e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Input\Audio\Device">
-      <UniqueIdentifier>{c4ca7ec6-67be-45f8-adfd-cb6632da4474}</UniqueIdentifier>
     </Filter>
     <Filter Include="Scripting">
       <UniqueIdentifier>{e6be7719-ceb8-483b-8df7-becbd24629a0}</UniqueIdentifier>
@@ -277,6 +253,33 @@
     <Filter Include="Controllers\Script">
       <UniqueIdentifier>{039fb325-4eaf-49cc-9ad6-1ef4af674ee7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Audio">
+      <UniqueIdentifier>{b81a2bdf-ed7f-4c31-b32f-ef5508a868ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio\Buffer">
+      <UniqueIdentifier>{5d794244-3438-4b8e-889c-879b1bff99b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio\Context">
+      <UniqueIdentifier>{d67da2db-92bb-4fbe-98d9-df08b24ebcbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio\Source">
+      <UniqueIdentifier>{b74f1d29-de7c-468f-9d99-e905e1a11a2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio\Device">
+      <UniqueIdentifier>{c4ca7ec6-67be-45f8-adfd-cb6632da4474}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window">
+      <UniqueIdentifier>{b87fb3c1-b1e5-498e-a05f-0d80923ca8e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window\Win32">
+      <UniqueIdentifier>{66e151a3-bb6f-4c2c-8ee8-d86397ae8ce1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window\SFML">
+      <UniqueIdentifier>{c7712ee9-ceb6-451c-88d9-2a8c57ad04d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Clouds">
+      <UniqueIdentifier>{5ee8f4e9-aba7-4460-b2da-7cdc72ddac89}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Engine\PCH.cpp">
@@ -322,13 +325,13 @@
       <Filter>Render\Primitives\Debug</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\Window.cpp">
-      <Filter>Render\Window</Filter>
+      <Filter>Window</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\Win32_Window.cpp">
-      <Filter>Render\Window\Win32</Filter>
+      <Filter>Window\Win32</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\SFML_Window.cpp">
-      <Filter>Render\Window\SFML</Filter>
+      <Filter>Window\SFML</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\FBO.cpp">
       <Filter>Render\Target</Filter>
@@ -451,16 +454,16 @@
       <Filter>Input\Map</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\AudioBuffer.cpp">
-      <Filter>Input\Audio\Buffer</Filter>
+      <Filter>Audio\Buffer</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\Context.cpp">
-      <Filter>Input\Audio\Context</Filter>
+      <Filter>Audio\Context</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\Source.cpp">
-      <Filter>Input\Audio\Source</Filter>
+      <Filter>Audio\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\AudioDevice.cpp">
-      <Filter>Input\Audio\Device</Filter>
+      <Filter>Audio\Device</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\ScriptManager.cpp">
       <Filter>Scripting</Filter>
@@ -606,7 +609,6 @@
     <ClCompile Include="..\..\src\Engine\controllers\ScriptController.cpp">
       <Filter>Controllers\Script</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Core\reflection\Serialization.cpp" />
     <ClCompile Include="..\..\src\Engine\Entity.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
@@ -658,13 +660,13 @@
       <Filter>Render\Primitives\Debug</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\render\Window.h">
-      <Filter>Render\Window</Filter>
+      <Filter>Window</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\render\Win32_Window.h">
-      <Filter>Render\Window\Win32</Filter>
+      <Filter>Window\Win32</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\render\SFML_Window.h">
-      <Filter>Render\Window\SFML</Filter>
+      <Filter>Window\SFML</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\render\FBO.h">
       <Filter>Render\Target</Filter>
@@ -805,16 +807,16 @@
       <Filter>Input\Map</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\audio\Buffer.h">
-      <Filter>Input\Audio\Buffer</Filter>
+      <Filter>Audio\Buffer</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\audio\Context.h">
-      <Filter>Input\Audio\Context</Filter>
+      <Filter>Audio\Context</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\audio\Source.h">
-      <Filter>Input\Audio\Source</Filter>
+      <Filter>Audio\Source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\audio\Device.h">
-      <Filter>Input\Audio\Device</Filter>
+      <Filter>Audio\Device</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\script\ScriptManager.h">
       <Filter>Scripting</Filter>
@@ -968,7 +970,6 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\CompileOptions.h" />
     <ClInclude Include="..\..\inc\vapor\Headers.h" />
-    <ClInclude Include="..\..\inc\vapor\Serialization.h" />
     <ClInclude Include="..\..\inc\vapor\scene\Entity.h">
       <Filter>Scene</Filter>
     </ClInclude>

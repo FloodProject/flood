@@ -44,25 +44,23 @@ wxIMPLEMENT_APP_NO_MAIN(EditorApp);
 
 bool EditorApp::OnInit()
 {
-    if( !wxApp::OnInit() )
-        return false;
+    if( !wxApp::OnInit() ) return false;
 
-	//wxHandleFatalExceptions(true);
-
-	// Register a PNG image handler (so toolbars icons can be decoded).
 	wxImage::AddHandler(new wxPNGHandler);
 
     EditorFrame* frame = new EditorFrame( VAPOR_EDITOR_NAME );
 	frame->SetSize(750, 500);
     frame->Show(true);
+	
+	SetTopWindow(frame);
 
-	SetTopWindow( frame );
-
-    // wxApp::OnRun() will be called which will enter the main message
-    // loop and the application will run. If we returned false here, the
-    // application would exit immediately.
     return true;
 }
+
+//-----------------------------------//
+
+static EditorFrame* editorInstance;
+EditorFrame& GetEditor() { return *editorInstance; }
 
 //-----------------------------------//
 
@@ -71,11 +69,16 @@ EditorFrame::EditorFrame(const wxString& title)
 	, engine(nullptr)
 	, mainSplitter(nullptr)
 	, viewSplitter(nullptr)
+	, auiManager(nullptr)
+	, toolBar(nullptr)
+	, notebookCtrl(nullptr)
 	, viewframe(nullptr)
 	, undoManager(nullptr)
 	, eventManager(nullptr)
 	, pluginManagerFrame(nullptr)
 {
+	editorInstance = this;
+
 	createUI();
 	createEngine();
 	createViews();
@@ -84,13 +87,14 @@ EditorFrame::EditorFrame(const wxString& title)
 	createScene();
 	createPlugins();
 	createToolbar();
-	SetSizerAndFit( sizer );
 
-	ResourceManager* const rm = engine->getResourceManager();
-	rm->loadQueuedResources();
+	getAUI()->Update();
+
+	ResourceManager* res = engine->getResourceManager();
+	res->loadQueuedResources();
 
 	// Update at least once before rendering.
-	onUpdate( 0 );
+	onUpdate(0);
 
 	RenderControl* control = viewframe->getControl();
 	control->startFrameLoop();
@@ -100,10 +104,12 @@ EditorFrame::EditorFrame(const wxString& title)
 
 EditorFrame::~EditorFrame()
 {
+	getAUI()->UnInit();
+	delete auiManager;
+
  	delete eventManager;
 	delete pluginManager;
 	delete undoManager;
-	mainSplitter->Destroy();
 
 	editorScene.reset();
 	delete engine;
@@ -120,21 +126,28 @@ void EditorFrame::createPlugins()
 {
 	Plugin* plugin = nullptr;
 
-	PLUGIN(Log);
 	PLUGIN(Project);
 	PLUGIN(Undo);
 	PLUGIN(Scene);
 	PLUGIN(Property);
 	PLUGIN(Console);
-	PLUGIN(Resources);
+	//PLUGIN(Resources);
 	PLUGIN(Selection);
 	PLUGIN(Gizmo);
-	PLUGIN(Terrain);
+	//PLUGIN(Terrain);
 	PLUGIN(Camera);
+	PLUGIN(Log);
 	PLUGIN(Sample);
 
-	pluginManagerFrame = new PluginManagerFrame( this, pluginManager);
+	pluginManagerFrame = new PluginManagerFrame(this, pluginManager);
 	pluginManagerFrame->SetInitialSize(wxSize(200, 350));
+
+	wxBitmap icon = wxMEMORY_BITMAP(cog);
+	
+	wxAuiPaneInfo pane;
+	pane.Caption("Plugins").Right().Dock().Icon(icon).Hide().Maximize();
+
+	getAUI()->AddPane(pluginManagerFrame, pane);
 
 	ScenePtr scene = engine->getSceneManager();
 	eventManager->onSceneLoad(scene);
@@ -145,12 +158,8 @@ void EditorFrame::createPlugins()
 void EditorFrame::createEngine()
 {
 	engine = Engine::getInstancePtr();
-	engine->create( VAPOR_EDITOR_NAME, nullptr, false );
-	engine->init( false );
-
-	// Mount the editor default media VFS directories.
-	FileSystem* fs = engine->getFileSystem();
-	fs->mountDefaultLocations();
+	engine->create(VAPOR_EDITOR_NAME);
+	engine->init(false);
 }
 
 //-----------------------------------//
@@ -214,12 +223,15 @@ void EditorFrame::createScene()
 
 void EditorFrame::createResources()
 {
-	ResourceManager* const rm = engine->getResourceManager();
+	// Mount the editor default media directories.
+	FileSystem* fs = engine->getFileSystem();
+	fs->mountDefaultLocations();
 
+	ResourceManager* res = engine->getResourceManager();
 	std::vector<std::string> files = System::enumerateFiles("Media/Shaders");
 
 	for(uint i = 0; i < files.size(); i++ )
-		rm->loadResource(files[i]);
+		res->loadResource(files[i]);
 }
 
 //-----------------------------------//
@@ -249,14 +261,12 @@ EntityPtr EditorFrame::createCamera()
 	// Generate a new unique name.
 	std::string name( "EditorCamera"+String::fromNumber(i++) );
 
-	EntityPtr nodeCamera( new Entity(name) );
-	nodeCamera->addTransform();
-	nodeCamera->addComponent( camera );
-	nodeCamera->addComponent( cameraController );
-	nodeCamera->setTag( Tags::NonPickable, true );
-	nodeCamera->setTag( EditorTags::EditorOnly, true );
+	EntityPtr entityCamera( new Entity(name) );
+	entityCamera->addTransform();
+	entityCamera->addComponent( camera );
+	entityCamera->addComponent( cameraController );
 
-	return nodeCamera;
+	return entityCamera;
 }
 
 //-----------------------------------//
@@ -265,16 +275,15 @@ void EditorFrame::createUI()
 {
     SetIcon( wxIcon("editor") );
 
-	// Creates the main sizer.
-	sizer = new wxBoxSizer( wxHORIZONTAL );
+	auiManager = new wxAuiManager;
+	auiManager->SetManagedWindow(this);
 
 	createSplitter();
 	createMenus();
 	createNotebook();
 
-	toolBar = CreateToolBar( wxTB_HORIZONTAL, wxID_ANY );
-
-	mainSplitter->SplitVertically(viewSplitter, notebookCtrl, -220);
+	toolBar = new wxAuiToolBar(this);
+	auiManager->AddPane(toolBar, wxAuiPaneInfo().ToolbarPane().Maximize()/*.Top()*/);
 
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &EditorFrame::OnQuit, this, Editor_Quit);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &EditorFrame::OnAbout, this, Editor_About);
@@ -306,13 +315,8 @@ void EditorFrame::createUI()
 
 void EditorFrame::createSplitter()
 {
-	mainSplitter = new wxSplitterWindow(this);
-	mainSplitter->SetSashGravity( 1.0 );
-	//mainSplitter->SetMinimumPaneSize( );
-	sizer->Add( mainSplitter, wxSizerFlags(1).Expand() );
-
-	viewSplitter = new wxFourWaySplitter(mainSplitter);
-	//sizer->Add( viewSplitter, wxSizerFlags(1).Expand() );
+	viewSplitter = new wxFourWaySplitter(this);
+	auiManager->AddPane(viewSplitter, wxAuiPaneInfo().CentrePane().Maximize());
 }
 
 //-----------------------------------//
@@ -343,6 +347,8 @@ void EditorFrame::createMenus()
 
 void EditorFrame::createToolbar()
 {
+	if(!toolBar) return;
+
 	toolBar->AddTool( Toolbar_ToogleGrid, "Grid", 
 		wxMEMORY_BITMAP(grid_icon), "Show/hide the editor grid", wxITEM_CHECK );
 
@@ -372,10 +378,12 @@ void EditorFrame::createToolbar()
 
 void EditorFrame::createNotebook()
 {
-	notebookCtrl = new wxNotebook(mainSplitter, wxID_ANY);
+	//notebookCtrl = new wxAuiNotebook(this);
 
-	wxImageList* img = new wxImageList(16, 16);
-	notebookCtrl->AssignImageList( img );
+	//wxImageList* img = new wxImageList(16, 16);
+	//notebookCtrl->( img );
+
+	//auiManager->AddPane(notebookCtrl, wxAuiPaneInfo().Right().MinSize(220, -1));
 }
 
 //-----------------------------------//
@@ -398,6 +406,8 @@ void EditorFrame::onRender()
 		viewframe->switchToDefaultCamera();
 
 	const CameraPtr& camera = view->getCamera();
+	if( !camera ) return;
+	
 	camera->setView( view );
 
 	RenderBlock block;
@@ -416,7 +426,9 @@ void EditorFrame::onRender()
 void EditorFrame::onUpdate( double delta )
 {
 	engine->update( delta );
-	editorScene->update( delta );
+	
+	if(editorScene)
+		editorScene->update( delta );
 	//eventManager->onSceneUpdate();
 }
 
@@ -497,9 +509,10 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 	//-----------------------------------//
 	case Toolbar_TooglePlugin:
 	{
-		pluginManagerFrame->Show( !pluginManagerFrame->IsShown() );
-		pluginManagerFrame->SetFocus();
-		
+		wxAuiPaneInfo& pane = getAUI()->GetPane(pluginManagerFrame);
+		pane.Show( !pane.IsShown() );
+		getAUI()->Update();
+
 		break;
 	}
 	//-----------------------------------//
@@ -551,12 +564,12 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 	//-----------------------------------//
 	case Toolbar_ToogleSidebar:
 	{
-		if( !mainSplitter->GetWindow2() )
-			mainSplitter->SplitVertically(viewSplitter, notebookCtrl, -220);
-		else
-			mainSplitter->Unsplit();
+		//if( !mainSplitter->GetWindow2() )
+		//	mainSplitter->SplitVertically(viewSplitter, notebookCtrl, -220);
+		//else
+		//	mainSplitter->Unsplit();
 
-		break;
+		//break;
 	}
 	//-----------------------------------//
 	} // end switch

@@ -14,9 +14,7 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-class ConsoleFrame;
-
-//-----------------------------------//
+class ConsoleTextCtrl;
 
 class ConsolePlugin : public Plugin
 {
@@ -39,10 +37,10 @@ public:
 protected:
 
 	// Console toolbar button.
-	wxToolBarToolBase* consoleButton;
+	wxAuiToolBarItem* consoleButton;
 
-	// Console frame.
-	ConsoleFrame* console;
+	// Console.
+	ConsoleTextCtrl* console;
 };
 
 //-----------------------------------//

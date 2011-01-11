@@ -11,6 +11,8 @@
 #include "Log.h"
 
 #include <dirent.h>
+#include <sstream>
+#include <algorithm>
 
 namespace vapor {
 

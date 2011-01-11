@@ -68,7 +68,7 @@ protected:
 	SelectionOperation* processDragSelection(const MouseButtonEvent& event);
 
 	SelectionManager* selections;
-	wxToolBarToolBase* buttonSelect;
+	wxAuiToolBarItem* buttonSelect;
 
 	Vector2i dragOrigin;
 	EntityPtr dragRectangle;

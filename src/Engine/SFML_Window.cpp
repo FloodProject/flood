@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/render/SFML_Window.h"
+#include "render/SFML_Window.h"
 
 #ifdef VAPOR_WINDOWING_SFML
 
@@ -37,20 +37,20 @@ SFML_Window::~SFML_Window()
 
 bool SFML_Window::open()
 {
-	windowSettings.DepthBits = settings.getDepthBits(); 
-	windowSettings.StencilBits = settings.getStencilBits();
-	windowSettings.AntialiasingLevel = settings.getAntialiasing();
+	windowSettings.DepthBits = settings.depthBits; 
+	windowSettings.StencilBits = settings.stencilBits;
+	windowSettings.AntialiasingLevel = settings.antialiasLevel;
 	
-	if( settings.isFullscreen() )
+	if( settings.fullScreen )
 	{
 		videoMode = sf::VideoMode::GetMode(0);
 		flags |= sf::Style::Fullscreen;
 	}
 	else
 	{
-		videoMode.Width = settings.getWidth(); 
-		videoMode.Height = settings.getHeight();
-		videoMode.BitsPerPixel = settings.getBpp();
+		videoMode.Width = settings.width; 
+		videoMode.Height = settings.height;
+		videoMode.BitsPerPixel = settings.bitsPerPixel;
 		
 		if( !videoMode.IsValid() )
 		{
@@ -66,13 +66,13 @@ bool SFML_Window::open()
 	windowSettings = window.GetSettings();
 	
 	assert( windowSettings.DepthBits >= 0 && windowSettings.DepthBits <= 32 );
-	settings.setDepthBits( windowSettings.DepthBits );
+	settings.depthBits = windowSettings.DepthBits;
 	
 	assert( windowSettings.StencilBits >= 0 && windowSettings.StencilBits <= 32 );
-	settings.setStencilBits( windowSettings.StencilBits );
+	settings.stencilBits = windowSettings.StencilBits;
 	
 	assert( windowSettings.AntialiasingLevel >= 0 && windowSettings.AntialiasingLevel <= 32 );
-	settings.setAntialiasing( windowSettings.AntialiasingLevel );
+	settings.antialiasLevel = windowSettings.AntialiasingLevel;
 	
 	window.EnableKeyRepeat( false );
 	
@@ -83,14 +83,14 @@ bool SFML_Window::open()
 
 void SFML_Window::createWindow()
 {
-	if(settings.getCustomHandle())
+	if(settings.handle)
 	{
-		sf::WindowHandle handle( settings.getCustomHandle() );
+		sf::WindowHandle handle( settings.handle );
 		window.Create( handle, windowSettings );
 	}
 	else
 	{		
-		window.Create( videoMode, settings.getTitle(), flags, windowSettings );
+		window.Create( videoMode, settings.title, flags, windowSettings );
 	}
 }
 
@@ -176,7 +176,7 @@ bool SFML_Window::pumpEvents()
 
 void SFML_Window::setTitle(const std::string& title) 
 {
-	settings.setTitle(title);
+	settings.title = title;
 	createWindow();
 	
 	Log::info( "Changing window title to '%s'", title.c_str() );

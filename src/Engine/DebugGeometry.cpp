@@ -94,7 +94,7 @@ RenderablePtr buildFrustum( const Frustum& box )
 	RenderablePtr renderable( new Renderable(PolygonType::Quads, vb, mat) );
 	renderable->setPolygonMode( PolygonMode::Wireframe );
 
-	updateFrustum(renderable, box);
+	updateDebugFrustum(renderable, box);
 	return renderable;
 }
 
@@ -106,7 +106,7 @@ RenderablePtr buildFrustum( const Frustum& box )
 	pos.push_back( box.corners[c] );	\
 	pos.push_back( box.corners[d] );
 
-void updateFrustum( const RenderablePtr& rend, const Frustum& box )
+void updateDebugFrustum( const RenderablePtr& rend, const Frustum& box )
 {
 	std::vector<Vector3> pos;
 	ADD_BOX_FRUSTUM( 0, 2, 3, 1 ) // Front

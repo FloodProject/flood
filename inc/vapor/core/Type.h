@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "Registry.h"
+
 namespace vapor {
 
 //-----------------------------------//
@@ -62,7 +64,7 @@ public:
 	// Returns if this type is the same as the given type.
 	template<typename T> bool is() const
 	{
-		return this == &(T::getType());
+		return this == &T::getStaticType();
 	}
 
 	// Returns if this type inherits from the given type.
@@ -71,16 +73,21 @@ public:
 		if( parent == nullptr )
 			return false;
 
-		if( parent == &(T::getType()) )
-			return true;
-		else
-			return parent->inherits<T>();
+		return parent->is<T>() || parent->inherits<T>();
 	}
+
+	// Gets the type registry.
+	static Registry& GetRegistry();
 
 protected:
 
-	Type(MetaType::Enum type, const std::string& name);
-	Type(MetaType::Enum type, const std::string& name, const Type& parent);
+	Type(MetaType::Enum type, const std::string& name, int size);
+	Type(MetaType::Enum type, const std::string& name, const Type& parent, int size);
+
+public:
+
+	// Meta type of the type.
+	MetaType::Enum metaType;
 
 	// Name of the type.
 	const std::string name;
@@ -88,35 +95,13 @@ protected:
 	// Parent of the type.
 	const Type* parent;
 
-	// Meta type of the type.
-	MetaType::Enum metaType;
-};
+	// Size of the type.
+	int size;
 
-//-----------------------------------//
+private:
 
-typedef CORE_API std::map<std::string, const Type*> TypeRegistryMap;
-
-/**
- * Stores a globally acessible mapping of type names and their instances.
- * This can be useful when you need to get information about a type just
- * by its name. Things like serialization need this information.
- */
-
-class CORE_API TypeRegistry
-{
-public:
-
-	// Registers a new type mapping.
-	void registerType(const Type& type);
-
-	// Gets a type given a name.
-	const Type* getType(const std::string& type);
-
-	// Maps all the type names to their type instances.
-	TypeRegistryMap registeredTypes;
-
-	// Gets the instance of the registry.
-	static TypeRegistry& getInstance();
+	// Registers the type in the registry.
+	void registerInstance();
 };
 
 //-----------------------------------//

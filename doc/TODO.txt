@@ -72,7 +72,8 @@ ENGINE:
 -------
 
 Skydome component:
-
+	
+	Separate Clouds component
 	Add billboards for Sun and Moon
 	Switch to triangle strips
 	Fix the gradient color generation
@@ -83,6 +84,7 @@ Scene:
 	Frustum class (Camera and Light integration) (WIP)
 	Quadtree for fast terrain queries
 	Geometry component sharing (Instancing)
+	Ray query class
 
 Scripting:
 

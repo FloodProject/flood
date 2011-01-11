@@ -129,9 +129,6 @@
     <ClCompile Include="..\..\src\Editor\plugins\UndoRedo\UndoPlugin.cpp">
       <Filter>Plugins\Undo/Redo</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Editor\plugins\Console\ConsoleFrame.cpp">
-      <Filter>Plugins\Console</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Editor\plugins\Console\ConsolePlugin.cpp">
       <Filter>Plugins\Console</Filter>
     </ClCompile>
@@ -266,9 +263,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\plugins\UndoRedo\UndoPlugin.h">
       <Filter>Plugins\Undo/Redo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Editor\plugins\Console\ConsoleFrame.h">
-      <Filter>Plugins\Console</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\plugins\Console\ConsolePlugin.h">
       <Filter>Plugins\Console</Filter>

@@ -10,6 +10,7 @@
 #include "math/Matrix4x4.h"
 #include "math/Matrix4x3.h"
 #include "math/Math.h"
+#include "Log.h"
 
 namespace vapor {
 

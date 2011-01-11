@@ -39,40 +39,15 @@ typedef unsigned long	ulong;
 #include <vector>
 #include <list>
 #include <map>
-#include <deque>
-#include <stack>
-#include <queue>
-#include <bitset>
 #include <string>
-#include <sstream>
-
-//---------------------------------------------------------------------//
-// Miscellaneous headers
-//---------------------------------------------------------------------//
-
-#include <cstdio>
-#include <cstdarg>
-#include <ctime>
-#include <cassert>
-#include <algorithm>
-#include <limits>
-#include <iostream>
 
 //---------------------------------------------------------------------//
 // nullptr replacement
 //---------------------------------------------------------------------//
 
-#ifdef VAPOR_COMPILER_MSVC
-	#if VAPOR_COMPILER_MSVC != VAPOR_COMPILER_MSVC_2010 
-		#define nullptr NULL
-	#endif
+#if defined(VAPOR_COMPILER_MSVC) && (VAPOR_COMPILER_MSVC != VAPOR_COMPILER_MSVC_2010)
+	#define nullptr NULL
 #endif
-
-//---------------------------------------------------------------------//
-// Macro for unused parameters to clean up compiler warnings
-//---------------------------------------------------------------------//
-
-#define VAPOR_UNUSED( id )
 
 //---------------------------------------------------------------------//
 // Helper macros to stringify parameters.
@@ -116,35 +91,15 @@ typedef unsigned long	ulong;
 // Acessors
 //---------------------------------------------------------------------//
 
-#define DECLARE_GETTER(name, type)				\
-	type get##name() const;
-
-#define DECLARE_SETTER(name, type)				\
-	void set##name(type v);
-
-#define DECLARE_ACESSOR(name, type)				\
-	DECLARE_GETTER(name, type)					\
-	DECLARE_SETTER(name, type)
-
 #define GETTER(name, type, var)					\
 	type get##name() const { return var; }
 
 #define SETTER(name, type, var)					\
 	void set##name(type v) { var = v; }
 
-#define GETTER_PTR(name, type, var)				\
-	type get##name() const { return *var; }
-
-#define SETTER_PTR(name, type, var)				\
-	void set##name(type v) { var = &v; }
-
 #define ACESSOR(name, type, var)				\
 	GETTER(name, type, var)						\
 	SETTER(name, type, var)
-
-#define ACESSOR_PTR(name, type, var)			\
-	GETTER_PTR(name, type, var)					\
-	SETTER_PTR(name, type, var)
 
 #ifdef VAPOR_COMPILER_MSVC
 	#define __stricmp _stricmp

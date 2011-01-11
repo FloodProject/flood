@@ -21,7 +21,7 @@ namespace vapor {
 Framework::Framework(const std::string& app, const char** argv)
 {
 	Log::info( "Engine framework getting into action" );
-	Engine::create(app, argv, false);
+	Engine::create(app, argv);
 }
 
 //-----------------------------------//
@@ -37,7 +37,7 @@ void Framework::run()
 void Framework::init()
 {
 	// Init the engine.
-	Engine::init( true );
+	Engine::init(true);
 
 	// Register default media locations.
 	FileSystem* fs = getFileSystem();

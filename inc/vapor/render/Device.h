@@ -115,6 +115,9 @@ public:
 	// Gets the texture manager.
 	GETTER(ShadowTextures, ShadowTextureMap, shadowTextures)
 
+	// Gets the active view.
+	GETTER(ActiveView, RenderView*, activeView)
+
 protected:
 
 	// Checks that all needed OpenGL extensions are available.

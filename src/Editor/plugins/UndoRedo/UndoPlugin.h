@@ -49,10 +49,10 @@ protected:
 	UndoManager* undoManager;
 
 	// Undo toolbar button.
-	wxToolBarToolBase* undoButton;
+	wxAuiToolBarItem* undoButton;
 
 	// Redo toolbar button.
-	wxToolBarToolBase* redoButton;
+	wxAuiToolBarItem* redoButton;
 };
 
 //-----------------------------------//

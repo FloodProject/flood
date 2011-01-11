@@ -8,10 +8,11 @@
 
 #pragma once
 
-#include "Reflection.h"
+#include "Object.h"
 #include "ReferenceCount.h"
 
 FWD_DECL_INTRUSIVE(Renderable)
+FWD_DECL_SHARED(Camera)
 
 namespace vapor {
 
@@ -31,36 +32,46 @@ TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( Entity )
  * A component will also be able to register methods for scripting.
  */
 
-class VAPOR_API Component
+class VAPOR_API Component : public Object
 {
 	DECLARE_CLASS_()
 	DECLARE_UNCOPYABLE(Component)
 
 public:
 
-	explicit Component();
+	Component();
 	virtual ~Component();
 	
 	// Gets the associated node of this component.
 	EntityPtr getEntity() const;
 
 	// Sets the associated node of this component.
-	void setEntity( const EntityPtr& node );
+	void setEntity( const EntityPtr& entity );
+
+public:
 
 	// Called once per frame to update the component.
 	virtual void update( double delta ) = 0;
+
+	// Called just before the camera culls this component.
+	//virtual void onPreCull( const CameraPtr& camera );
+
+	// Called just before the camera renders this component.
+	virtual void onPreRender( const Camera& camera );
+
+public:
 
 	// Gets if the debug renderable is visible.
 	virtual bool isDebugRenderableVisible() const;
 	
 	// Sets the debug renderable as visible.
 	virtual void setDebugRenderableVisible( bool visible );
-	
-	// Gets the debug renderable of this component.
-	virtual RenderablePtr getDebugRenderable() const;
 
 	// Creates the debug renderable of this component.
 	virtual RenderablePtr createDebugRenderable() const;
+	
+	// Gets the debug renderable of this component.
+	virtual RenderablePtr getDebugRenderable() const;
 
 	// Gets/sets if the debug renderable inherits the transform.
 	ACESSOR(DebugInheritsTransform, bool, debugInheritsTransform)
@@ -68,7 +79,7 @@ public:
 protected:
 
 	// Entity that owns this component.
-	EntityWeakPtr node;
+	EntityWeakPtr entity;
 
 	// Is the debug representation visible.
 	bool debugVisible;

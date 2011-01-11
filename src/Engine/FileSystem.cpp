@@ -15,6 +15,7 @@
 #include "vfs/FileSystem.h"
 #include "FileWatcherWin32.h"
 #include <physfs.h>
+#include <sstream>
 
 namespace vapor {
 

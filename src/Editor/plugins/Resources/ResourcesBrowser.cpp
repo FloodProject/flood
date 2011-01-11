@@ -16,6 +16,8 @@
 #include "Utilities.h"
 #include "../Scene/ScenePage.h"
 
+#include <json/json.h>
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//
@@ -330,7 +332,7 @@ ImagePtr ResourcesBrowser::generateThumbnail(const MeshPtr& mesh)
 	TransformPtr transCamera = nodeCamera->getTransform();
 	transCamera->setPosition(Vector3(0, 0, -distance));
 
-	scene->update(0);
+	scene->update(2);
 
 	renderBuffer->bind();
 	renderView->update();

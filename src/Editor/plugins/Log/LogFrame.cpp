@@ -8,6 +8,7 @@
 
 #include "PCH.h"
 #include "LogFrame.h"
+#include "Editor.h"
 
 namespace vapor { namespace editor {
 
@@ -16,6 +17,7 @@ namespace vapor { namespace editor {
 class LogSinkFrame : public LogSink
 {
 public:
+
 	LogSinkFrame( wxListCtrl* listCtrl ) 
 		: listCtrl(listCtrl)
 	{}
@@ -37,11 +39,9 @@ public:
 
 //-----------------------------------//
 
-LogFrame::LogFrame( Engine* engine, wxWindow* parent, const wxString& name )
-	: wxFrame( parent, wxID_ANY, name, wxDefaultPosition,
-	wxDefaultSize, wxDEFAULT_FRAME_STYLE | wxFRAME_TOOL_WINDOW |
-	wxFRAME_FLOAT_ON_PARENT | wxBORDER_NONE )
-	, engine(engine)
+LogFrame::LogFrame( wxWindow* parent, const wxString& name )
+	: wxFrame( parent, wxID_ANY, name, wxDefaultPosition, wxDefaultSize,
+	wxDEFAULT_FRAME_STYLE | wxFRAME_TOOL_WINDOW | wxFRAME_FLOAT_ON_PARENT | wxBORDER_NONE )
 {
 	InitControl();
 
@@ -54,7 +54,7 @@ LogFrame::LogFrame( Engine* engine, wxWindow* parent, const wxString& name )
 	message.SetWidth(1000);
 	listCtrl->InsertColumn(1, message);
 
-	Logger* log = engine->getLogger();
+	Logger* log = GetEditor().getEngine()->getLogger();
 	log->add( new LogSinkFrame(listCtrl) );
 }
 
@@ -62,15 +62,14 @@ LogFrame::LogFrame( Engine* engine, wxWindow* parent, const wxString& name )
 
 void LogFrame::InitControl()
 {
-	//SetSizeHints( wxDefaultSize, wxDefaultSize );
-	
 	panel = new wxPanel( this, wxID_ANY );
 	
 	wxBoxSizer* mainSizer = new wxBoxSizer( wxVERTICAL );
 	mainSizer->Add( panel, 1, wxEXPAND, 5 );
 
-	listCtrl = new wxListCtrl( panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_HRULES|wxLC_REPORT );
-	
+	listCtrl = new wxListCtrl( panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_HRULES | wxLC_REPORT );
+	listCtrl->SetFont( listCtrl->GetFont().Smaller() );;
+
 	wxBoxSizer* panelSizer = new wxBoxSizer( wxVERTICAL );
 	panelSizer->Add( listCtrl, 1, wxEXPAND, 5 );
 	

@@ -43,13 +43,13 @@ RenderControl::RenderControl( wxWindow* parent, wxWindowID id,
 	const int* attribList, const wxPoint& pos, const wxSize& size,
 	long style,	const wxString&	name, const wxPalette& )
 	: wxGLCanvas(parent, id, attribList, pos, size, style, name)
-	, needsRedraw( false )
+	, needsRedraw(false)
 	, frameUpdateTimer(this, UPDATE_TIMER)
 	, frameRenderTimer(this, RENDER_TIMER)
 {
 	Log::info("Creating a new wxWidgets control");
 
-	// Create a new vapor3D window.
+	// Create a new engine window.
 	const wxSize& sz = GetSize();
 	WindowSettings settings(sz.GetX(), sz.GetY());
 	
@@ -136,6 +136,7 @@ void RenderControl::OnPaint(wxPaintEvent& WXUNUSED(event))
 void RenderControl::OnSize(wxSizeEvent& event)
 {
 	window->processResize( event.GetSize() );
+	flagRedraw();
 }
 
 //-----------------------------------//

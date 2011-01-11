@@ -11,6 +11,7 @@
 #include "scene/Transform.h"
 #include "scene/Tags.h"
 #include "scene/Geometry.h"
+#include <algorithm>
 
 namespace vapor {
 
@@ -28,7 +29,10 @@ Scene::Scene() : Group("Scene")
 
 struct Culler
 {
-	Culler() : ray(nullptr), frustum(nullptr) {}
+	Culler()
+		: ray(nullptr)
+		, frustum(nullptr)
+	{}
 	
 	const Ray* ray;
 	const Frustum* frustum;
@@ -47,7 +51,7 @@ static bool doRayGroupQuery( const GroupPtr& group, const Culler& culler, RayQue
 	for( uint i = 0; i < entities.size(); i++ )
 	{
 		const EntityPtr& entity = entities[i];
-		const Type& type = entity->getInstanceType();
+		const Type& type = entity->getType();
 
 		if( type.is<Group>() || type.inherits<Group>() )
 		{
@@ -58,12 +62,14 @@ static bool doRayGroupQuery( const GroupPtr& group, const Culler& culler, RayQue
 		}
 		else
 		{
-			// No need to pick invisible nodes.
+			// Ignore invisible entities.
 			if( !entity->isVisible() || entity->getTag(Tags::NonPickable) )
 				continue;
 
 			const TransformPtr& transform = entity->getTransform();
-			if( !transform ) continue;
+			
+			if( !transform )
+				continue;
 
 			const BoundingBox& box = transform->getWorldBoundingVolume();
 				

@@ -16,11 +16,11 @@ class ConsoleTextCtrl : public wxTextCtrl
 {
 public:
 
-	ConsoleTextCtrl( vapor::Engine* engine, wxWindow* parent,
-		wxWindowID id = wxID_ANY, const wxString& name = wxEmptyString,
+	ConsoleTextCtrl( wxWindow* parent, wxWindowID id = wxID_ANY,
+		const wxString& name = wxEmptyString,
 		const wxPoint& pos = wxDefaultPosition,	
 		const wxSize& size = wxDefaultSize, 
-		long style = 0 | wxTE_MULTILINE | wxTE_NOHIDESEL | wxTE_RICH2 );
+		long style = wxBORDER_NONE | wxTE_MULTILINE | wxTE_NOHIDESEL | wxTE_RICH2 );
 
 	virtual ~ConsoleTextCtrl();
 

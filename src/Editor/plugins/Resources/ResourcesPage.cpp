@@ -55,7 +55,7 @@ void ResourcesPage::initControl()
 {
 	rootItemId = AddRoot( "Resources", resourceGroupIcons[RG(General)] );
 
-	const Enum& resourcesEnum = ResourceGroup::getType();
+	const Enum& resourcesEnum = ResourceGroup::getStaticType();
 
 	resourceGroupTreeIds[RG(General)] =
 		AppendItem(rootItemId, "General", resourceGroupIcons[RG(General)]);

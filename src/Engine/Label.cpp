@@ -20,6 +20,9 @@ namespace vapor {
 //-----------------------------------//
 
 BEGIN_CLASS_PARENT(Label, Overlay)
+	FIELD_PRIMITIVE(Label, string, text)
+	FIELD_PRIMITIVE(Label, bool, isDirty)
+	FIELD_CLASS_PTR(Label, Font, font) 
 END_CLASS()
 
 //-----------------------------------//
@@ -105,7 +108,7 @@ void Label::update( double delta )
 	if( isDirty )
 		rebuildGeometry();
 
-	Overlay::update( delta );
+	//Overlay::update( delta );
 }
 
 //-----------------------------------//

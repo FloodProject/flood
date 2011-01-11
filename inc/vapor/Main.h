@@ -26,11 +26,11 @@
 	#error "vapor::Framework code needs you need to define VAPOR_EXAMPLE_NAME."
 #endif
 
-#ifdef VAPOR_PLATFORM_WINDOWS
-int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
-#else
+//#ifdef VAPOR_PLATFORM_WINDOWS
+//int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+//#else
 int main(int argc, const char** argv)
-#endif
+//#endif
 {
 	#if defined(VAPOR_PLATFORM_WINDOWS) && defined(USE_COMMON_CONTROLS)
 		InitCommonControls();

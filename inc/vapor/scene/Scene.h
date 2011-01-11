@@ -8,7 +8,8 @@
 
 #pragma once
 
-#include "vapor/scene/Group.h"
+#include "scene/Group.h"
+#include "render/Renderable.h"
 #include "math/Matrix4x3.h"
 #include "math/Ray.h"
 #include "math/Frustum.h"
@@ -25,26 +26,26 @@ struct RayQueryResult
 
 typedef std::vector<RayQueryResult> RayQueryList;
 
-struct RayTriangleQueryResult
+//-----------------------------------//
+
+struct RayTriangleQueryResult : public RayQueryResult
 {
-	EntityPtr entity;
 	GeometryPtr geometry;
 	RenderablePtr renderable;
 	Vector3 intersection;
 	Vector3 intersectionUV;
 	Vector3 trianglePosition[3];
 	Vector3 triangleUV[3];
-	float distance;
 };
 
 //-----------------------------------//
 
 /**
- * Scene tree that holds all the nodes attached to the scene. This is the
- * main interface that the engine programmer will use to attach/detach all
- * different types of content to the scene. There are different types of 
- * nodes that can be used in the scene, like Mesh, Light, Camera, Particle,
- * Listener, Trigger, Billboard and maybe other that we want to later add.
+ * A scene instance holds all the entities that are attached to it.
+ * You might have different scenes for different 'levels' of your game
+ * and switch between them in runtime. The scene is also responsible
+ * for updating all the game entities and will aswell call hooks like 
+ * before performing frustum culling or before rendering the entity.
  */
 
 class VAPOR_API Scene : public Group
@@ -67,7 +68,7 @@ public:
 
 	// Checks for collision via ray-triangle tests.
 	bool doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res );
-	bool doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, const EntityPtr& node );
+	bool doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, const EntityPtr& );
 
 	// // Checks for collision via ray-renderable tests.
 	bool doRayRendQuery( const Ray&, const RenderablePtr&, RayTriangleQueryResult& );

@@ -8,6 +8,7 @@
 
 #include "Core.h"
 #include "math/BoundingSphere.h"
+#include "Log.h"
 
 namespace vapor {
 

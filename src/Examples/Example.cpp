@@ -7,6 +7,8 @@
 ************************************************************************/
 
 #include "Example.h"
+#include "Utilities.h"
+#include "io/JsonSerializer.h"
 
 //-----------------------------------//
 
@@ -18,7 +20,8 @@ Example::Example(const char** argv)
 
 void Example::onInit()
 {
-	camera.reset( new Camera(renderDevice) );
+	camera.reset( new Camera() );
+	camera->getFrustum().farPlane = 10000.0f;
 
 	//PageManager* pageManager = new PageManager( 512, camera );
 	//pageManager->onPageLoading += fd::bind(&Example::onPageLoading, this);
@@ -41,15 +44,12 @@ void Example::onPageLoading( const PageEvent& event )
 
 void Example::onSetupResources() 
 {
-	ResourceManager* rm = getResourceManager();
-	
-	rm->loadResource("Diffuse.glsl");
-	rm->loadResource("Tex.glsl");
-	rm->loadResource("Toon.glsl");
-	rm->loadResource("Tex_Toon.glsl");
-	rm->loadResource("Tex_Toon_Skin.glsl");
-	rm->loadResource("Sky.glsl");
-	rm->loadResource("Water.glsl");
+	ResourceManager* const rm = getResourceManager();
+
+	std::vector<std::string> files = System::enumerateFiles("Media/Shaders");
+
+	for(uint i = 0; i < files.size(); i++ )
+		rm->loadResource(files[i]);
 }
 
 //-----------------------------------//
@@ -85,31 +85,32 @@ void Example::onSetupScene()
 	//nodeFBO->addComponent( GeometryPtr( new Geometry(quad) ) );
 	//scene->add( nodeFBO );
 
-	MeshPtr meshSword = rm->loadResource<Mesh>("sword.ms3d");
-	EntityPtr nodeSword( new Entity("sword") );
-	nodeSword->addTransform();
-	nodeSword->addComponent( ModelPtr( new Model(meshSword) ) );
-	scene->add(nodeSword);
+	//MeshPtr meshSword = rm->loadResource<Mesh>("sword.ms3d");
+	//EntityPtr nodeSword( new Entity("sword") );
+	//nodeSword->addTransform();
+	//nodeSword->addComponent( ModelPtr( new Model(meshSword) ) );
+	//scene->add(nodeSword);
 
-	MeshPtr meshCT = rm->loadResource<Mesh>("ninja.ms3d", false);
-	ModelPtr modelCT( new Model(meshCT) );
-	modelCT->setAttachment("Joint17", nodeSword);
-	modelCT->setAnimation("Idle1");
+	//MeshPtr meshCT = rm->loadResource<Mesh>("ninja.ms3d", false);
+	//ModelPtr modelCT( new Model(meshCT) );
+	//modelCT->setAttachment("Joint17", nodeSword);
+	//modelCT->setAnimation("Idle1");
 
-	EntityPtr nodeCT( new Entity("ct") );
-	nodeCT->addTransform();	
-	nodeCT->addComponent( modelCT );
-	scene->add(nodeCT);
+	//EntityPtr nodeCT( new Entity("ct") );
+	//nodeCT->addTransform();	
+	//nodeCT->addComponent( modelCT );
+	//scene->add(nodeCT);
 
 	labelFPS.reset( new Label( "", "Verdana.font") );
 	
 	EntityPtr nodeFPS( new Entity("LabelFPS") );
 	nodeFPS->addTransform();
+	nodeFPS->getTransform()->setPosition( Vector3(300.0f, 300.0f, 0) );
 	nodeFPS->addComponent( labelFPS );
 	scene->add( nodeFPS );
 
 	EntityPtr grid( new Entity("Grid") );
-	grid->addComponent( TransformPtr( new Transform(0.0f, 1.0f, 0.0f) ) );
+	grid->addTransform();
 	grid->addComponent( GridPtr( new Grid() ) );
 	scene->add( grid );
 
@@ -131,18 +132,13 @@ void Example::onSetupScene()
 	settings.MaxHeight = 100;
 	settings.Material = materialCell;
 
-	nodeTerrain.reset( new Terrain("Terreno", settings) );
+	nodeTerrain.reset( new Terrain("Terrain", settings) );
 	scene->add( nodeTerrain );
 
-	//SkydomePtr skydome( new Skydome() );
-
-	//const ImagePtr& clouds = rm->loadResource<Image>( "noise2.png" );
-	//skydome->setClouds( clouds );
-
-	//EntityPtr sky( new Entity("Sky") );
-	//sky->addTransform();	
-	//sky->addComponent( skydome );
-	//scene->add( sky );
+	EntityPtr sky( new Entity("Sky") );
+	sky->addTransform();	
+	sky->addComponent( SkydomePtr( new Skydome() ) );
+	scene->add( sky );
 
 	window = getRenderDevice()->getRenderWindow();
 	window->makeCurrent();
@@ -150,6 +146,19 @@ void Example::onSetupScene()
 	view = window->createView();
 	view->setCamera(camera);
 	view->setClearColor( Color(0.0f, 0.10f, 0.25f) );
+
+	//Object object;
+	//object.instance = scene.get();
+	//object.type = &Scene::getStaticType();
+
+	FileStream stream("Test.scene", StreamMode::Write);
+	stream.open();
+
+	JsonSerializer json(stream);
+	scene->save(serializer);
+	
+	//ObjectSerializer serializer(json);
+	//serializer.save();
 }
 
 //-----------------------------------//
@@ -197,13 +206,16 @@ void Example::onKeyPressed( const KeyEvent& event )
 		std::vector<float> fn;
 		noise.generate(fn, 256, 256);
 
-		foreach( float& n, fn )
+		for( uint i = 0; i < fn.size(); i++ )
+		{
+			float& n = fn[i];
 			n = pow((n+1) / 2.0f, 2);
+		}
 
 		std::vector<byte> bn;
-
-		foreach( float& n, fn )
-			bn.push_back( n*255 );
+		
+		for( uint i = 0; i < fn.size(); i++ )
+			bn.push_back( fn[i]*255 );
 
 		Image image(256, 256, PixelFormat::Depth);
 		image.setStatus( ResourceStatus::Loaded );

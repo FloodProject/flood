@@ -27,7 +27,8 @@ namespace LogLevel
 		Info,
 		Warning,
 		Error,
-		Debug
+		Debug,
+		Assert
 	};
 
 	std::string toString( LogLevel::Enum );
@@ -122,6 +123,9 @@ protected:
 
 namespace Log
 {
+	// Logs an assert message to the global logger.
+	CORE_API void _assert(const char* msg, ...);
+
 	// Logs a debug message to the global logger.
 	CORE_API void debug(const std::string& msg);
 
@@ -137,6 +141,10 @@ namespace Log
 	// Logs an error message to the global logger.
 	CORE_API void error(const char* msg, ...);
 }
+
+#define assert(expr)     \
+	(void)( (!!(expr)) || \
+	(Log::_assert("%s (%s:%d)", #expr, __FUNCTION__, __LINE__), 0) )
 
 //-----------------------------------//
 

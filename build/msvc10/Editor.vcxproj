@@ -96,7 +96,7 @@
       <EntryPointSymbol>
       </EntryPointSymbol>
       <TargetMachine>MachineX86</TargetMachine>
-      <MapExports>true</MapExports>
+      <MapExports>false</MapExports>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -197,7 +197,6 @@
     <ClCompile Include="..\..\src\Editor\UndoManager.cpp" />
     <ClCompile Include="..\..\src\Editor\UndoOperation.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\UndoRedo\UndoPlugin.cpp" />
-    <ClCompile Include="..\..\src\Editor\plugins\Console\ConsoleFrame.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Console\ConsolePlugin.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Console\ConsoleTextCtrl.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Grid\GridPlugin.cpp" />
@@ -246,7 +245,6 @@
     <ClInclude Include="..\..\src\Editor\inc\UndoManager.h" />
     <ClInclude Include="..\..\src\Editor\inc\UndoOperation.h" />
     <ClInclude Include="..\..\src\Editor\plugins\UndoRedo\UndoPlugin.h" />
-    <ClInclude Include="..\..\src\Editor\plugins\Console\ConsoleFrame.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Console\ConsolePlugin.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Console\ConsoleTextCtrl.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Grid\GridPlugin.h" />

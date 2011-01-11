@@ -47,8 +47,7 @@ class PropertyPage : public wxPropertyGrid
 {
 public:
 
-	PropertyPage( EditorFrame* editor,
-		wxWindow* parent, wxWindowID id = wxID_ANY,
+	PropertyPage( wxWindow* parent, wxWindowID id = wxID_ANY,
 		const wxPoint& pos = wxDefaultPosition,
 		const wxSize& size = wxDefaultSize );
 
@@ -68,9 +67,6 @@ public:
 	bool updateMemoryWatches();
 
 protected:
-
-	// Initializes the control.
-	void initControl();
 
 	// Callback when property value is about to change.
 	void onPropertyChanging(wxPropertyGridEvent& event);
@@ -92,9 +88,6 @@ protected:
 
 	// Memory watches.
 	std::map<const Class*, MemoryWatch> memoryWatches;
-
-	// Editor instance.
-	EditorFrame* editor;
 };
 
 //-----------------------------------//

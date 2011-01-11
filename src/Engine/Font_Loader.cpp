@@ -10,11 +10,12 @@
 
 #ifdef VAPOR_FONT_FREETYPE2
 
-#include "vapor/resources/Font_Loader.h"
-#include "vapor/math/Math.h"
-
-#include "vapor/resources/ResourceManager.h"
-#include "vapor/Engine.h"
+#include "resources/Font_Loader.h"
+#include "resources/ResourceManager.h"
+#include "math/Math.h"
+#include "Utilities.h"
+#include "vfs/File.h"
+#include "Engine.h"
 
 namespace vapor {
 
@@ -27,9 +28,9 @@ Font_Loader::Font_Loader()
 
 //-----------------------------------//
 
-bool Font_Loader::decode(const Stream& file, Resource* res)
+bool Font_Loader::decode(const Stream& stream, Resource* res)
 {
-	lines = file.readLines();
+	lines = stream.readLines();
 
 	if( !validateFont() )
 		return false;
@@ -41,8 +42,8 @@ bool Font_Loader::decode(const Stream& file, Resource* res)
 	if( !image )
 		return false;
 
-	File glyphsFile( glyphsFilename );
-	data = glyphsFile.read();
+	File glyphsStream( glyphsFilename );
+	glyphsStream.read(data);
 
 	parseGlyphs();
 
@@ -62,7 +63,7 @@ void Font_Loader::parseGlyphs()
 	ushort glyph_width = String::toNumber<ushort>( glyphSizeInfo[0] );
 	ushort glyph_height = String::toNumber<ushort>( glyphSizeInfo[1] );
 
-	ushort image_width = image->getWidth();
+	const uint image_width = image->getWidth();
 	//ushort image_height = image->getHeight();
 
 	glyphs.clear();

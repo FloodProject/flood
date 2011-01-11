@@ -21,11 +21,11 @@ class PluginManager;
  * metadata and can be enabled and disabled on the fly.
  */
 
-class PluginManagerFrame : public wxFrame 
+class PluginManagerFrame : public wxPanel
 {
 public:
 
-	PluginManagerFrame( wxWindow* parent, PluginManager* );
+	PluginManagerFrame( wxWindow* parent, PluginManager* plugins );
 
 protected:
 
@@ -33,16 +33,13 @@ protected:
 	void InitControl();
 
 	// Event handlers.
-	void OnClose(wxCloseEvent& event);
 	void OnCheckEvent(wxCommandEvent& event);
 
-	// Manages all the plugins.
-	PluginManager* pluginManager;
+	// Manages the plugins.
+	PluginManager* plugins;
 
 	// Widget where plugin metadata is shown.
 	wxCheckListBox *checkListBox;
-
-	DECLARE_EVENT_TABLE()
 };
 
 //-----------------------------------//

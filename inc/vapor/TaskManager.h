@@ -52,14 +52,14 @@ class CORE_API TaskManager : public Subsystem
 {
 public:
 
-	TaskManager( int size = -1 );
+	TaskManager( int numThreads = -1 );
 	~TaskManager();
 
 	// Adds a new task to be run by the sheduler.
 	void addTask( const TaskPtr& task );
 
 	// Gets the worker threads.
-	GETTER(Threads, const std::vector<Thread*>&, threadPool)
+	GETTER(Threads, const std::vector<Thread*>&, threads)
 
 	// Sends the events to the observers.
 	void update( double delta );
@@ -69,8 +69,8 @@ public:
 	
 protected:
 
-	// Creates the thread pool.
-	void createThreadPool( int poolSize );
+	// Creates the threads in the pool.
+	void createThreads( int numThreads );
 
 	// Pushes a new event in the event queue.
 	void pushEvent( TaskEvent::Enum, const TaskPtr&, bool sendEvent = false );
@@ -79,7 +79,7 @@ protected:
 	void runWorker();
 
 	typedef std::vector<Thread*> ThreadQueue;
-	ThreadQueue threadPool;
+	ThreadQueue threads;
 
 	typedef ConcurrentQueue<TaskPtr> TaskQueue;
 	TaskQueue tasks;

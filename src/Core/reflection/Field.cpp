@@ -15,14 +15,21 @@ namespace vapor {
 
 Field::Field( const Type& type )
 	: type(type)
-	, pointer(false)
+	, qualifiers(0)
 { }
+
+//-----------------------------------//
+
+void Field::setQualifier( byte qualifier )
+{
+	qualifiers |= qualifier;
+}
 
 //-----------------------------------//
 
 bool Field::isPointer() const
 {
-	return pointer;
+	return qualifiers == Qualifier::Pointer;
 }
 
 //-----------------------------------//

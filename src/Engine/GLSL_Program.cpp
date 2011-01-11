@@ -15,6 +15,7 @@
 #include "vapor/render/GL.h"
 #include "vapor/Utilities.h"
 #include "ReferenceCount.h"
+#include <algorithm>
 
 namespace vapor {
 

@@ -55,12 +55,15 @@ PluginMetadata SelectionPlugin::getMetadata()
 
 void SelectionPlugin::onPluginEnable()
 {
-	wxToolBar* toolbar = editor->getToolbar();
+	wxAuiToolBar* toolbar = editor->getToolbar();
 
-	wxBitmap iconSelect = wxMEMORY_BITMAP(cursor);
-	buttonSelect = toolbar->AddTool( SelectionTool::Select, "Select",
-		iconSelect, "Selects the Entity Selection tool", wxITEM_RADIO );
-	addTool(buttonSelect);
+	if(toolbar)
+	{
+		wxBitmap iconSelect = wxMEMORY_BITMAP(cursor);
+		buttonSelect = toolbar->AddTool( SelectionTool::Select, "Select",
+			iconSelect, "Selects the Entity Selection tool", wxITEM_RADIO );
+		addTool(buttonSelect);
+	}
 
 	#pragma TODO("Initialize plugins events properly")
 	
@@ -110,7 +113,6 @@ void SelectionPlugin::onMouseButtonRelease( const MouseButtonEvent& event )
 	editor->redrawView();
 
 	SelectionOperation* selection = nullptr;
-	SelectionOperation* selected = selections->getSelection();
 
 	if(dragRectangle)
 		selection = processDragSelection(event);
@@ -120,6 +122,8 @@ void SelectionPlugin::onMouseButtonRelease( const MouseButtonEvent& event )
 	if( !selection )
 		return;
 
+	SelectionOperation* selected = selections->getSelection();
+
 	// Prevent duplication of selection events.
 	if( selected && (!selected->lastUndone) && (selected->selections == selection->selections))
 	{
@@ -127,11 +131,11 @@ void SelectionPlugin::onMouseButtonRelease( const MouseButtonEvent& event )
 		return;
 	}
 
-	UndoManager* undoManager = editor->getUndoManager();
-	undoManager->registerOperation(selection);
-
 	if( selected )
 		selected->unselectAll();
+
+	UndoManager* undoManager = editor->getUndoManager();
+	undoManager->registerOperation(selection);
 
 	selection->redo();	
 }
@@ -274,8 +278,10 @@ SelectionOperation* SelectionPlugin::processSelection(const MouseButtonEvent& ev
 	selection = selections->createOperation();
 	selection->description = "Selection";
 
-	if( selected )
+	if( selected && !selected->lastUndone )
 		selection->previous = selected->selections;
+	else if( selected )
+		selection->previous = selected->previous;
 
 	selection->addEntity(entity);
 

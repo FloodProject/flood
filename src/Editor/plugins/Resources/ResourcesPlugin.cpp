@@ -48,34 +48,33 @@ PluginMetadata ResourcesPlugin::getMetadata()
 
 void ResourcesPlugin::onPluginEnable()
 {
-	wxNotebook* notebookCtrl = editor->getNotebook();
+	wxAuiNotebook* notebookCtrl = editor->getNotebook();
 	assert( notebookCtrl != nullptr );
 
-	wxImageList* imageList = notebookCtrl->GetImageList();
-	assert( imageList != nullptr );
+	//wxImageList* imageList = notebookCtrl->GetImageList();
+	//assert( imageList != nullptr );
 
 	wxBitmap iconPackage = wxMEMORY_BITMAP(package);
-	iconResources = imageList->Add(iconPackage);
+	//iconResources = imageList->Add(iconPackage);
 
 	resourcesPage = new ResourcesPage( editor, notebookCtrl );
 
-	bool resourcesPageAdded = notebookCtrl->AddPage( resourcesPage,
-		wxEmptyString/*wxT("Resources")*/, false, iconResources );
-
-	if( !resourcesPageAdded )
-		Log::warn( "Could not add page to notebook" );
+	bool resourcesPageAdded =
+		notebookCtrl->AddPage( resourcesPage, "Resources", false, iconPackage );
 
 	notebookCtrl->Refresh();
 
-	wxToolBar* toolBar = editor->getToolbar();
+	wxAuiToolBar* toolBar = editor->getToolbar();
 
-	resourcesBrowserButton = toolBar->AddTool(
-		wxID_ANY, "Resources Browser", iconPackage );
-	addTool( resourcesBrowserButton );
+	if(toolBar)
+	{
+		resourcesBrowserButton = toolBar->AddTool( wxID_ANY, "Resources Browser", iconPackage );
+		addTool( resourcesBrowserButton );
 
-	toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
-		&ResourcesPlugin::onBrowserButtonClick,
-		this, resourcesBrowserButton->GetId() );
+		toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
+			&ResourcesPlugin::onBrowserButtonClick,
+			this, resourcesBrowserButton->GetId() );
+	}
 
 	resourcesBrowser = new ResourcesBrowser(editor, editor);
 }
@@ -85,6 +84,12 @@ void ResourcesPlugin::onPluginEnable()
 void ResourcesPlugin::onPluginDisable()
 {
 	removePage( resourcesPage );
+
+	delete resourcesBrowser;
+	resourcesBrowser = nullptr;
+
+	delete resourcesPage;
+	resourcesPage = nullptr;
 }
 
 //-----------------------------------//

@@ -36,7 +36,7 @@ public:
 	int	getBrushSize();
 
 	// Gets the image of the brush.
-	//int	getBrushImage();
+	//int getBrushImage();
 
 	// Gets the paint image.
 	ImagePtr getPaintImage();

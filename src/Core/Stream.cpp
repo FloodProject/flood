@@ -8,6 +8,7 @@
 
 #include "Core.h"
 #include "Stream.h"
+#include "Utilities.h"
 
 namespace vapor {
 
@@ -32,12 +33,33 @@ void Stream::close()
 
 //-----------------------------------//
 
-void Stream::read(std::string& str) const
+void Stream::read(std::string& text) const
 {
-	std::vector<byte> lines;
-	read(lines);
+	std::vector<byte> data;
+	read(data);
 
-	str.assign( lines.begin(), lines.end() );
+	text.assign( data.begin(), data.end() );
+}
+
+//-----------------------------------//
+
+std::vector<std::string> Stream::readLines() const
+{
+	std::string str;
+	read(str);
+
+	std::vector<std::string> lines = String::split(str, '\n');
+	
+	// Trim extra line endings that might be left.
+	for( uint i = 0; i < lines.size(); i++ )
+	{
+		std::string& str = lines[i];
+		
+		if( str[str.size()-1] == '\r' )
+			str.erase( str.size()-1 );
+	}
+	
+	return lines;
 }
 
 //-----------------------------------//

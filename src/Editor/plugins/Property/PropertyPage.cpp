@@ -31,7 +31,8 @@ TagName TagNames[] =
 	{ 1 << 24, "NonPickable" },
 	{ 1 << 25, "NonTransformable" },
 	{ 1 << 26, "NonCollidable" },
-	{ 1 << 27, "UpdateTransformsOnly" },
+	{ 1 << 27, "NonCulled" },
+	{ 1 << 28, "UpdateTransformsOnly" },
 	{ 1 << 31, "EditorOnly" },
 };
 
@@ -101,19 +102,9 @@ static wxAny getComposedPropertyValue(wxPGProperty* prop, const Type& typeField)
 
 //-----------------------------------//
 
-PropertyPage::PropertyPage( EditorFrame* editor,
-							 wxWindow* parent, wxWindowID id,
-							 const wxPoint& pos, const wxSize& size )
-	: wxPropertyGrid(parent, id, pos, size,
-		wxPG_DEFAULT_STYLE | wxPG_SPLITTER_AUTO_CENTER)
-	, editor(editor)
-{
-	initControl();
-}
-
-//-----------------------------------//
-
-void PropertyPage::initControl()
+PropertyPage::PropertyPage( wxWindow* parent, wxWindowID id, 
+	const wxPoint& pos, const wxSize& size )
+	: wxPropertyGrid(parent, id, pos, size, wxPG_DEFAULT_STYLE | wxPG_SPLITTER_AUTO_CENTER | wxBORDER_NONE)
 {
 	// Events bindings.
 	Bind(wxEVT_PG_CHANGED, &PropertyPage::onPropertyChanged, this);
@@ -121,7 +112,7 @@ void PropertyPage::initControl()
 	Bind(wxEVT_IDLE, &PropertyPage::onIdle, this);
 
 	// Make the default font a little smaller.
-	SetFont( editor->GetFont().Scaled(0.9f) );
+	SetFont( GetEditor().GetFont().Scaled(0.9f) );
 
 	// Switch to slighty lighter colors.
 	wxColour color = wxLIGHT_GREY->ChangeLightness(150);
@@ -172,7 +163,7 @@ void PropertyPage::onPropertyChanged(wxPropertyGridEvent& event)
 	op->prevValue = propertyValue;
 	op->newValue = value;
 	
-	UndoManager* undoManager = editor->getUndoManager();
+	UndoManager* undoManager = GetEditor().getUndoManager();
 	undoManager->registerOperation(op);
 
 	op->redo();
@@ -280,13 +271,13 @@ void PropertyPage::showEntityProperties( const EntityPtr& node )
 	Clear();
 
     // Entity properties
-	appendObjectFields( node->getInstanceType(), node.get() );
+	appendObjectFields( node->getType(), node.get() );
 
 	// Transform should be the first component to the displayed.
 	TransformPtr transform = node->getTransform();
 
 	if( transform )
-		appendObjectFields( Transform::getType(), transform.get() );
+		appendObjectFields( Transform::getStaticType(), transform.get() );
     
     // Components properties
 	const ComponentMap& components = node->getComponents();

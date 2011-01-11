@@ -40,22 +40,16 @@ PluginMetadata ScenePlugin::getMetadata()
 
 void ScenePlugin::onPluginEnable()
 {
-	wxNotebook* notebookCtrl = editor->getNotebook();
-	assert( notebookCtrl != nullptr );
+	scenePage = new ScenePage(editor);
+	scenePage->SetSize(220, 400);
 
-	wxImageList* imageList = notebookCtrl->GetImageList();
-	assert( imageList != nullptr );
+	wxBitmap icon = wxMEMORY_BITMAP(sitemap_color);
 
-	wxBitmap iconSitemap = wxMEMORY_BITMAP(sitemap_color);
-	iconScene = imageList->Add(iconSitemap);
-
-	scenePage = new ScenePage( editor, notebookCtrl );
-
-	bool scenePageAdded = 
-		notebookCtrl->AddPage( scenePage, "Scene", true, iconScene );
-
-	if( !scenePageAdded )
-		Log::warn( "Could not add page to notebook" );
+	wxAuiPaneInfo pane;
+	pane.Caption("Scene").Right().Dock().Icon(icon);
+	
+	editor->getAUI()->AddPane(scenePage, pane);
+	editor->getAUI()->Update();
 
 	// Subscribe as an event listener.
 	Events* events = editor->getEventManager();
@@ -69,7 +63,12 @@ void ScenePlugin::onPluginEnable()
 
 void ScenePlugin::onPluginDisable()
 {
-	removePage( scenePage );
+	//removePage( scenePage );
+	editor->getAUI()->DetachPane(scenePage);
+	editor->getAUI()->Update();
+
+	delete scenePage;
+	scenePage = nullptr;
 
 	// Unsubscribe as an event listener.
 	Events* events = editor->getEventManager();

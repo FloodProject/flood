@@ -8,14 +8,43 @@
 
 #pragma once
 
+#include "ReferenceCount.h"
 #include "math/BoundingBox.h"
 #include "math/Frustum.h"
-#include "ReferenceCount.h"
+#include "render/Renderable.h"
 
 FWD_DECL_SHARED(Entity)
 FWD_DECL_INTRUSIVE(Renderable)
 
 namespace vapor {
+
+//-----------------------------------//
+
+//class VAPOR_API DebugRenderable : public Renderable
+//{
+//public:
+//
+//	DebugRenderable();
+//
+//	// Gets if the debug renderable is visible.
+//	virtual bool isVisible() const;
+//	
+//	// Sets the debug renderable as visible.
+//	virtual void setVisible( bool visible );
+//
+//	// Gets/sets if the debug renderable inherits the transform.
+//	ACESSOR(InheritsTransform, bool, inheritsTransform)
+//
+//protected:
+//
+//	// Is the debug representation visible.
+//	bool visible;
+//
+//	// Does the debug inherit the transform.
+//	bool inheritsTransform;
+//};
+//
+//TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( DebugRenderable );
 
 //-----------------------------------//
 
@@ -29,7 +58,7 @@ EntityPtr VAPOR_API buildRay( const Ray& pickRay, const Vector3& outFar );
 RenderablePtr VAPOR_API buildFrustum( const Frustum& box );
 
 // Updates the debug geometry of a frustum.
-void VAPOR_API updateFrustum( const RenderablePtr& rend, const Frustum& box );
+void VAPOR_API updateDebugFrustum( const RenderablePtr& rend, const Frustum& box );
 
 //-----------------------------------//
 

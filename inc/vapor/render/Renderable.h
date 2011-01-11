@@ -17,10 +17,6 @@ namespace vapor {
 
 //-----------------------------------//
 
-class RenderDevice;
-
-//-----------------------------------//
-
 /**
  * Type of primitive of the renderable.
  */
@@ -59,6 +55,8 @@ namespace PolygonMode
 }
 
 //-----------------------------------//
+
+class RenderDevice;
 
 /**
  * Represents a renderable object, that is, the only rendering object

@@ -42,7 +42,7 @@ protected:
 
 	ResourcesPage* resourcesPage;
 	ResourcesBrowser* resourcesBrowser;
-	wxToolBarToolBase* resourcesBrowserButton;
+	wxAuiToolBarItem* resourcesBrowserButton;
 	int iconResources;
 };
 

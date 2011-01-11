@@ -13,30 +13,45 @@ namespace vapor {
 
 //-----------------------------------//
 
-Type::Type(MetaType::Enum type, const std::string& name)
-	: metaType(type)
-	, name(name)
-	, parent(nullptr)
+Registry& Type::GetRegistry()
 {
-	TypeRegistry& typeRegistry = TypeRegistry::getInstance();
-	typeRegistry.registerType(*this);
+	static Registry registry;
+	return registry;
 }
 
 //-----------------------------------//
 
-Type::Type(MetaType::Enum type, const std::string& name, const Type& _parent)
+Type::Type(MetaType::Enum type, const std::string& name, int size)
+	: metaType(type)
+	, name(name)
+	, parent(nullptr)
+	, size(size)
+{
+	registerInstance();
+}
+
+//-----------------------------------//
+
+Type::Type(MetaType::Enum type, const std::string& name, const Type& _parent, int size)
 	: metaType(type)
 	, name(name)
 	, parent(&_parent)
+	, size(size)
 {
-	TypeRegistry& typeRegistry = TypeRegistry::getInstance();
-	typeRegistry.registerType(*this);
+	registerInstance();
 }
 
 //-----------------------------------//
 
 Type::~Type()
 { }
+
+//-----------------------------------//
+
+void Type::registerInstance()
+{
+	GetRegistry().registerType(*this);
+}
 
 //-----------------------------------//
 
@@ -82,30 +97,22 @@ bool Type::isEnum() const
 
 //-----------------------------------//
 
-void TypeRegistry::registerType(const Type& type)
+void Registry::registerType(const Type& type)
 {
 	const std::string& typeName = type.getName();
-	registeredTypes[typeName] = &type;
+	types[typeName] = &type;
 }
 
 //-----------------------------------//
 
-const Type* TypeRegistry::getType(const std::string& type)
+const Type* Registry::getType(const std::string& type)
 {
-	TypeRegistryMap::iterator it = registeredTypes.find(type);
+	TypeRegistryMap::iterator it = types.find(type);
 
-	if( it == registeredTypes.end() )
+	if( it == types.end() )
 		return nullptr;
 
-	return registeredTypes[type];
-}
-
-//-----------------------------------//
-
-TypeRegistry& TypeRegistry::getInstance()
-{
-	static TypeRegistry typeRegistry;
-	return typeRegistry;
+	return types[type];
 }
 
 //-----------------------------------//

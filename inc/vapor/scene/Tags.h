@@ -24,6 +24,7 @@ namespace Tags
 		NonPickable = 24,
 		NonTransformable,
 		NonCollidable,
+		NonCulled,
 		UpdateTransformsOnly
 	};
 }

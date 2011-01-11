@@ -26,42 +26,12 @@ END_CLASS()
 
 //-----------------------------------//
 
-Transform::Transform( float x, float y, float z )
-	: position( x, y, z )
-	, scaling( 1.0f )
-{
-	init();
-}
-
-//-----------------------------------//
-
-Transform::Transform( const Transform& rhs )
-	: position( rhs.position )
-	, rotation( rhs.rotation )
-	, scaling( rhs.scaling )
-{
-	init();
-}
-
-//-----------------------------------//
-
-Transform::~Transform()
-{
-	Class& type = getType();
-	type.onFieldChanged.Disconnect( this, &Transform::onFieldChanged );
-}
-
-//-----------------------------------//
-
-void Transform::init()
-{
-	needsNotify = false;
-	needsVolumeUpdate = true;
-	externalTransform = false;
-
-	Class& type = getType();
-	type.onFieldChanged.Connect( this, &Transform::onFieldChanged );
-}
+Transform::Transform()
+	: wasChanged(false)
+	, needsBoundsUpdate(true)
+	, externalTransform(false)
+	, scaling(1)
+{ }
 
 //-----------------------------------//
 
@@ -74,18 +44,11 @@ void Transform::translate( const Vector3& offset )
 
 void Transform::translate( float x, float y, float z )
 {
-	setNotify();
+	setChanged();
 
 	position.x += x;
 	position.y += y;
 	position.z += z;
-}
-
-//-----------------------------------//
-
-void Transform::scale( float value )
-{
-	scale( value, value, value );
 }
 
 //-----------------------------------//
@@ -99,7 +62,7 @@ void Transform::scale( const Vector3& value )
 
 void Transform::scale( float x, float y, float z )
 {
-	setNotify();
+	setChanged();
 
 	scaling.x *= x;
 	scaling.y *= y;
@@ -117,7 +80,7 @@ void Transform::rotate( const Vector3& rot )
 
 void Transform::rotate( float xang, float yang, float zang )
 {
-	setNotify();
+	setChanged();
 
 	rotation.x += xang;
 	rotation.y += yang;
@@ -128,7 +91,7 @@ void Transform::rotate( float xang, float yang, float zang )
 
 void Transform::setPosition( const Vector3& newTranslation )
 {
-	setNotify();
+	setChanged();
 	position = newTranslation;
 }
 
@@ -136,7 +99,7 @@ void Transform::setPosition( const Vector3& newTranslation )
 
 void Transform::setRotation( const Quaternion& newRotation )
 {
-	setNotify();
+	setChanged();
 	rotation = newRotation;
 }
 
@@ -144,15 +107,26 @@ void Transform::setRotation( const Quaternion& newRotation )
 
 void Transform::setScale( const Vector3& newScale )
 {
-	setNotify();
+	setChanged();
 	scaling = newScale;
+}
+
+//-----------------------------------//
+
+void Transform::reset()
+{
+	setChanged();
+
+	position.zero();
+	rotation.identity();
+	scaling = 1;
 }
 
 //-----------------------------------//
 
 Vector3 Transform::getWorldPosition() const
 {
-	return getAbsoluteTransform()*getPosition();
+	return getAbsoluteTransform() * getPosition();
 }
 
 //-----------------------------------//
@@ -187,20 +161,9 @@ Matrix4x3 Transform::lookAt( const Vector3& lookAtVector, const Vector3& upVecto
 
 //-----------------------------------//
 
-void Transform::reset( )
+void Transform::setChanged(bool state)
 {
-	setNotify();
-
-	position.zero();
-	rotation.identity();
-	scaling = Vector3( 1.0f );
-}
-
-//-----------------------------------//
-
-void Transform::setNotify(bool state)
-{
-	needsNotify = state;
+	wasChanged = state;
 }
 
 //-----------------------------------//
@@ -214,9 +177,10 @@ const Matrix4x3& Transform::getAbsoluteTransform() const
 
 void Transform::setAbsoluteTransform( const Matrix4x3& newTransform )
 {
+	setChanged();
+
 	transform = newTransform;
 	externalTransform = true;
-	setNotify();
 }
 
 //-----------------------------------//
@@ -227,22 +191,21 @@ Matrix4x3 Transform::getLocalTransform() const
 	Matrix4x3 matRotation = Matrix4x3::createFromQuaternion(rotation);
 	Matrix4x3 matTranslation = Matrix4x3::createTranslation(position);
 	
-	Matrix4x3 matTransform = matScale*matRotation*matTranslation;
-	return matTransform;
+	return matScale*matRotation*matTranslation;
 }
 
 //-----------------------------------//
 
 void Transform::markBoundingVolumeDirty()
 {
-	needsVolumeUpdate = true;
+	needsBoundsUpdate = true;
 }
 
 //-----------------------------------//
 
 bool Transform::requiresBoundingVolumeUpdate() const
 {
-	return needsVolumeUpdate;
+	return needsBoundsUpdate;
 }
 
 //-----------------------------------//
@@ -254,20 +217,20 @@ void Transform::updateBoundingVolume()
 	if( !node )
 		return;
 
-	boundingVolume.reset();
+	bounds.reset();
 
 	for( uint i = 0; i < node->getGeometry().size(); i++ )
 	{
 		const GeometryPtr& geometry = node->getGeometry()[i];
-		boundingVolume.add( geometry->getBoundingVolume() );
+		bounds.add( geometry->getBoundingVolume() );
 	}
 	
-	if( boundingVolume.isInfinite() )
-		boundingVolume.setZero();
+	if( bounds.isInfinite() )
+		bounds.setZero();
 
 	// Update debug renderable.
-	debugRenderable = buildBoundingRenderable( boundingVolume );
-	needsVolumeUpdate = false;
+	debugRenderable = buildBoundingRenderable( bounds );
+	needsBoundsUpdate = false;
 }
 
 //-----------------------------------//
@@ -280,20 +243,13 @@ void Transform::update( double delta )
 	if( requiresBoundingVolumeUpdate() )
 		updateBoundingVolume();
 
-	if( needsNotify )
+	if( wasChanged )
 	{
-		sendNotifications();
-		setNotify(false);
+		onTransform();
+		setChanged(false);
 	}
 
-	externalTransform = false;
-}
-
-//-----------------------------------//
-
-void Transform::sendNotifications()
-{
-	onTransform();
+	//externalTransform = false;
 }
 
 //-----------------------------------//
@@ -301,14 +257,7 @@ void Transform::sendNotifications()
 BoundingBox Transform::getWorldBoundingVolume() const
 {
 	const Matrix4x3& transform = getAbsoluteTransform();
-	return boundingVolume.transform(transform);
-}
-
-//-----------------------------------//
-
-void Transform::onFieldChanged(const Field& field)
-{
-	setNotify();
+	return bounds.transform(transform);
 }
 
 //-----------------------------------//

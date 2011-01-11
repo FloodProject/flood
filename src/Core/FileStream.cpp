@@ -8,6 +8,7 @@
 
 #include "Core.h"
 #include "FileStream.h"
+#include "Log.h"
 
 #ifdef VAPOR_PLATFORM_WINDOWS
 	#include <io.h>
@@ -95,9 +96,10 @@ void FileStream::read(std::vector<byte>& data) const
 
 long FileStream::write(const std::vector<byte>& buf)
 {
+	assert( mode == StreamMode::Write || mode == StreamMode::Append );
 	assert( !buf.empty() );
 
-	if( buf.empty() )
+	if( !fp || buf.empty() )
 		return -1;
 
 	return fwrite(&buf.front(), buf.size(), 1, fp);  

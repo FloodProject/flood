@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "vapor/scene/Geometry.h"
+#include "scene/Geometry.h"
 
 namespace vapor {
 

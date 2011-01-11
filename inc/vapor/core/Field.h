@@ -14,6 +14,19 @@ namespace vapor {
 
 //-----------------------------------//
 
+namespace Qualifier
+{
+	enum Enum
+	{
+		Handle	= 1 << 0,
+		Pointer	= 1 << 1,
+		Array	= 1 << 2,
+		Map		= 1 << 3
+	};
+}
+
+//-----------------------------------//
+
 /**
  * Represents a field in a class.
  */
@@ -25,6 +38,9 @@ class CORE_API Field
 public:
 
 	Field( const Type& type );
+
+	// Sets the qualifier of the field.
+	void setQualifier( byte qualifier );
 
 	// Gets the value of the field in the object.
 	template<typename T>
@@ -47,11 +63,20 @@ public:
 
 public:
 
-	bool pointer;
-	short offset;
-	short size;
+	// Name of the field in the class.
 	std::string name;
+
+	// Type of the field.
 	const Type& type;
+
+	// Qualifiers of the field.
+	byte qualifiers;
+
+	// Offset in the class.
+	short offset;
+
+	// Size of the field.
+	short size;
 };
 
 //-----------------------------------//

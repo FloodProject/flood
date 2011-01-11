@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/scene/Component.h"
-#include "vapor/render/Renderable.h"
+#include "scene/Component.h"
+#include "render/Renderable.h"
 
 namespace vapor {
 
@@ -28,6 +28,25 @@ Component::Component()
 //-----------------------------------//
 
 Component::~Component()
+{ }
+
+//-----------------------------------//
+
+EntityPtr Component::getEntity() const
+{
+	return entity.lock();
+}
+
+//-----------------------------------//
+
+void Component::setEntity( const EntityPtr& entity )
+{
+	this->entity = entity;
+}
+
+//-----------------------------------//
+
+void Component::onPreRender( const Camera& camera )
 { }
 
 //-----------------------------------//
@@ -59,20 +78,6 @@ RenderablePtr Component::getDebugRenderable() const
 RenderablePtr Component::createDebugRenderable() const
 {
 	return nullptr;
-}
-
-//-----------------------------------//
-
-void Component::setEntity( const EntityPtr& newEntity )
-{
-	node = newEntity;
-}
-
-//-----------------------------------//
-
-EntityPtr Component::getEntity() const
-{
-	return node.lock();
 }
 
 //-----------------------------------//

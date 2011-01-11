@@ -284,7 +284,6 @@
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='DLL Debug|Win32'">4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
-    <ClCompile Include="..\..\src\Core\reflection\Serialization.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\vapor\PCH.h" />
@@ -409,7 +408,6 @@
     <ClInclude Include="..\..\inc\vapor\controllers\ScriptController.h" />
     <ClInclude Include="..\..\inc\vapor\CompileOptions.h" />
     <ClInclude Include="..\..\inc\vapor\Headers.h" />
-    <ClInclude Include="..\..\inc\vapor\Serialization.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\doc\TODO.txt" />

@@ -28,6 +28,15 @@ public:
 	// Gets the camera frustum.
 	Frustum& getFrustum() { return frustum; }
 
+	// Updates this component.
+	void update( double delta );
+
+	// Updates the debug renderable of the camera.
+	void updateDebugRenderable() const;
+
+	// Creates the debug renderable of the camera.
+	RenderablePtr createDebugRenderable() const;
+
 protected:
 
 	// Projector frustum.

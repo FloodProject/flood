@@ -8,6 +8,7 @@
 
 #include "Core.h"
 #include "math/Quaternion.h"
+#include "Log.h"
 
 namespace vapor {
 

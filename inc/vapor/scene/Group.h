@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "vapor/scene/Entity.h"
+#include "scene/Entity.h"
 
 namespace vapor {
 
@@ -30,34 +30,34 @@ public:
 	Group();
 	Group( const std::string& name );
 
-	// Adds child to the end of the child list.
-	void add( const EntityPtr& node );
+	// Adds an entity to the group.
+	void add( const EntityPtr& entity );
 
-	// Removes node from the group.
-	bool remove( const EntityPtr& node );
+	// Removes an entity from the group.
+	bool remove( const EntityPtr& entity );
 
-	// Finds a node in the group via its name.
+	// Finds an entity in the group via its name.
 	EntityPtr findEntity( const std::string& name ) const;
 
-	// Gets the nodes of the group.
-	GETTER(Entities, const std::vector<EntityPtr>&, nodes)
+	// Gets the entities of the group.
+	GETTER(Entities, const std::vector<EntityPtr>&, entities)
 
-	// Updates this group of nodes.
+	// Updates the group.
 	virtual void update( double delta );
 
-	// Event gets called when a node is added.
+	// Event gets called when an entity is added.
 	Event1<const EntityPtr&> onEntityAdded;
 
-	// Event gets called when a node is removed.
+	// Event gets called when an entity is removed.
 	Event1<const EntityPtr&> onEntityRemoved;
 
 	// Event gets called when its contents change.
-	Event0<> onChanged;
+	Event0<> onEntityChanged;
 
 protected:
 
-	// Holds the nodes of the group.
-	std::vector<EntityPtr> nodes;
+	// Holds the entities of the group.
+	std::vector<EntityPtr> entities;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Group );

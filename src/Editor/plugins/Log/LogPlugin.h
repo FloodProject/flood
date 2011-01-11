@@ -39,7 +39,7 @@ public:
 protected:
 
 	// Log toolbar button.
-	wxToolBarToolBase* logButton;
+	wxAuiToolBarItem* logButton;
 
 	// Log frame.
 	LogFrame* log;

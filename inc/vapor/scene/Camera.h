@@ -19,8 +19,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-class RenderView;
-class RenderDevice;
+class  RenderView;
+class  RenderDevice;
 struct RenderBlock;
 
 /**
@@ -77,12 +77,12 @@ public:
 	// Updates this component.
 	void update( double delta );
 
+	// Updates the frustum.
+	void updateFrustum();
+
 protected:
 
-	// Initializes the camera.
-	void init();
-
-	// Sets up the view transform.
+	// Updates the view transform.
 	void updateViewTransform();
 
 	// Handles the transform notification.

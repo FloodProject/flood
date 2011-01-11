@@ -52,7 +52,7 @@ CharacterController::CharacterController()
 	, maxJumpHeight(1.0f)
 	, maxSlope(45)
 {
-	Class& klass = getType();
+	Class& klass = (Class&) getType();
 	klass.onFieldChanged.Connect(this, &CharacterController::onFieldChanged);
 }
 
@@ -60,7 +60,7 @@ CharacterController::CharacterController()
 
 CharacterController::~CharacterController()
 {
-	Class& klass = getType();
+	Class& klass = (Class&) getType();
 	klass.onFieldChanged.Disconnect(this, &CharacterController::onFieldChanged);
 
 	Engine* engine = Engine::getInstancePtr();

@@ -79,7 +79,7 @@
 // Input APIs
 //---------------------------------------------------------------------//
 
-//#define VAPOR_INPUT_SFML
+#define VAPOR_INPUT_SFML
 
 //---------------------------------------------------------------------//
 // Audio codecs
@@ -105,8 +105,8 @@
 // Font providers
 //---------------------------------------------------------------------//
 
-//#define VAPOR_FONT_FREETYPE2
-//#define VAPOR_FONT_BITMAP
+#define VAPOR_FONT_FREETYPE2
+#define VAPOR_FONT_BITMAP
 
 //---------------------------------------------------------------------//
 // Scripting languages

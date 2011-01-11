@@ -119,7 +119,7 @@ protected:
 	void doPluginDisable();
 
 	// Registers a new tool in the plugin.
-	void addTool( wxToolBarToolBase* tool );
+	void addTool( wxAuiToolBarItem* tool );
 
 	// Removes all the registered tools.
 	void removeTools();
@@ -140,7 +140,7 @@ protected:
 	bool pluginEnabled;
 
 	// Keeps track of all the registered tools.
-	typedef std::vector<wxToolBarToolBase*> Tools;
+	typedef std::vector<wxAuiToolBarItem*> Tools;
 	Tools tools;
 };
 

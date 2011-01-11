@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "build\msvc10\Engi
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Editor", "build\msvc10\Editor.vcxproj", "{68C71437-26B5-46EE-87B6-F225EA16396D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Examples", "build\msvc10\Examples.vcxproj", "{7E63C46E-4243-4806-AE6C-944A2476F29F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug DLL|Win32 = Debug DLL|Win32
@@ -39,6 +41,14 @@ Global
 		{68C71437-26B5-46EE-87B6-F225EA16396D}.DLL Debug|Win32.Build.0 = DLL Debug|Win32
 		{68C71437-26B5-46EE-87B6-F225EA16396D}.Release|Win32.ActiveCfg = Release|Win32
 		{68C71437-26B5-46EE-87B6-F225EA16396D}.Release|Win32.Build.0 = Release|Win32
+		{7E63C46E-4243-4806-AE6C-944A2476F29F}.Debug DLL|Win32.ActiveCfg = Debug|Win32
+		{7E63C46E-4243-4806-AE6C-944A2476F29F}.Debug DLL|Win32.Build.0 = Debug|Win32
+		{7E63C46E-4243-4806-AE6C-944A2476F29F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7E63C46E-4243-4806-AE6C-944A2476F29F}.Debug|Win32.Build.0 = Debug|Win32
+		{7E63C46E-4243-4806-AE6C-944A2476F29F}.DLL Debug|Win32.ActiveCfg = DLL Debug|Win32
+		{7E63C46E-4243-4806-AE6C-944A2476F29F}.DLL Debug|Win32.Build.0 = DLL Debug|Win32
+		{7E63C46E-4243-4806-AE6C-944A2476F29F}.Release|Win32.ActiveCfg = Release|Win32
+		{7E63C46E-4243-4806-AE6C-944A2476F29F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

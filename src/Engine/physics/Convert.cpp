@@ -74,7 +74,7 @@ static Vector3 getOffset(const EntityPtr& entity)
 {
 	ShapePtr shape = entity->getTypedComponent<Shape>();
 
-	if( shape->getInstanceType().is<MeshShape>() )
+	if( shape->getType().is<MeshShape>() )
 		return Vector3::Zero;
 
 	const TransformPtr& transform = entity->getTransform();

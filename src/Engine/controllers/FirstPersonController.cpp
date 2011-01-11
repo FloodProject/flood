@@ -164,10 +164,10 @@ void FirstPersonController::checkControls( double delta )
 
 void FirstPersonController::registerCallbacks()
 {
-	window->onWindowFocusChange.Connect( this, &FirstPersonController::onWindowFocusChange );
-
-	if(!inputManager)
+	if(!window || !inputManager)
 		return;
+
+	window->onWindowFocusChange.Connect( this, &FirstPersonController::onWindowFocusChange );
 
 	Keyboard* const keyboard = inputManager->getKeyboard();
 	assert( keyboard != nullptr );

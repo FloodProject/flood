@@ -124,6 +124,9 @@
     <ClCompile Include="..\..\src\Core\Delegate.cpp" />
     <ClCompile Include="..\..\src\Core\Event.cpp" />
     <ClCompile Include="..\..\src\Core\FileStream.cpp" />
+    <ClCompile Include="..\..\src\Core\io\BinarySerializer.cpp" />
+    <ClCompile Include="..\..\src\Core\io\JsonSerializer.cpp" />
+    <ClCompile Include="..\..\src\Core\io\Serialization.cpp" />
     <ClCompile Include="..\..\src\Core\Log.cpp" />
     <ClCompile Include="..\..\src\Core\math\Math.cpp" />
     <ClCompile Include="..\..\src\Core\math\Vector3.cpp" />
@@ -149,6 +152,7 @@
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">4800;4244;4715;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\reflection\Field.cpp" />
+    <ClCompile Include="..\..\src\Core\reflection\Object.cpp" />
     <ClCompile Include="..\..\src\Core\reflection\Primitive.cpp" />
     <ClCompile Include="..\..\src\Core\reflection\Type.cpp" />
     <ClCompile Include="..\..\src\Core\Stream.cpp" />
@@ -177,10 +181,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\vapor\Atomic.h" />
+    <ClInclude Include="..\..\inc\vapor\Chunk.h" />
     <ClInclude Include="..\..\inc\vapor\Core.h" />
     <ClInclude Include="..\..\inc\vapor\Delegate.h" />
     <ClInclude Include="..\..\inc\vapor\Event.h" />
     <ClInclude Include="..\..\inc\vapor\FileStream.h" />
+    <ClInclude Include="..\..\inc\vapor\io\BinarySerializer.h" />
+    <ClInclude Include="..\..\inc\vapor\io\JsonSerializer.h" />
     <ClInclude Include="..\..\inc\vapor\math\Math.h" />
     <ClInclude Include="..\..\inc\vapor\math\Vector2.h" />
     <ClInclude Include="..\..\inc\vapor\math\Vector3.h" />
@@ -203,9 +210,12 @@
     <ClInclude Include="..\..\inc\vapor\core\Primitive.h" />
     <ClInclude Include="..\..\inc\vapor\core\Type.h" />
     <ClInclude Include="..\..\inc\vapor\Language.h" />
+    <ClInclude Include="..\..\inc\vapor\Object.h" />
     <ClInclude Include="..\..\inc\vapor\Platform.h" />
     <ClInclude Include="..\..\inc\vapor\ReferenceCount.h" />
     <ClInclude Include="..\..\inc\vapor\Reflection.h" />
+    <ClInclude Include="..\..\inc\vapor\Registry.h" />
+    <ClInclude Include="..\..\inc\vapor\Serialization.h" />
     <ClInclude Include="..\..\inc\vapor\Singleton.h" />
     <ClInclude Include="..\..\inc\vapor\Stream.h" />
     <ClInclude Include="..\..\inc\vapor\Subsystem.h" />

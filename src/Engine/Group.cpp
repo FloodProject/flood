@@ -7,13 +7,15 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/scene/Group.h"
+#include "scene/Group.h"
+#include <algorithm>
 
 namespace vapor {
 
 //-----------------------------------//
 
 BEGIN_CLASS_PARENT(Group, Entity)
+	FIELD_VECTOR_PTR(Group, Entity, EntityPtr, entities)
 END_CLASS()
 
 //-----------------------------------//
@@ -29,25 +31,25 @@ Group::Group( const std::string& name )
 
 //-----------------------------------//
 
-void Group::add( const EntityPtr& node )
+void Group::add( const EntityPtr& entity )
 {
 	// Beware that you have to assign a new Group-derived object
 	// to a shared_ptr, else shared_from_this will return bad_weak_ptr.
 
-	node->setParent( Entity::shared_from_this() );
-	nodes.push_back( node );
+	entity->setParent( Entity::shared_from_this() );
+	entities.push_back( entity );
 
-	onEntityAdded(node);
-	onChanged();
+	onEntityAdded(entity);
+	onEntityChanged();
 }
 
 //-----------------------------------//
 
 EntityPtr Group::findEntity( const std::string& name ) const
 {
-	for( uint i = 0; i < nodes.size(); i++ )
+	for( uint i = 0; i < entities.size(); i++ )
 	{
-		const EntityPtr& entity = nodes[i];
+		const EntityPtr& entity = entities[i];
 		
 		if( entity->getName() == name )
 			return entity;
@@ -58,18 +60,18 @@ EntityPtr Group::findEntity( const std::string& name ) const
 
 //-----------------------------------//
 
-bool Group::remove( const EntityPtr& node )
+bool Group::remove( const EntityPtr& entity )
 {
-	std::vector<EntityPtr>::iterator it =
-		std::find(nodes.begin(), nodes.end(), node );
+	std::vector<EntityPtr>::iterator it;
+	it = std::find(entities.begin(), entities.end(), entity);
 
-	if( it == nodes.end() )
+	if( it == entities.end() )
 		return false;
 
-	onEntityRemoved(node);
-	onChanged();
+	onEntityRemoved(entity);
+	onEntityChanged();
 
-	nodes.erase(it);
+	entities.erase(it);
 
 	return true;
 }
@@ -78,10 +80,10 @@ bool Group::remove( const EntityPtr& node )
 
 void Group::update( double delta )
 {
-	for( uint i = 0; i < nodes.size(); i++ )
+	for( uint i = 0; i < entities.size(); i++ )
 	{
-		const EntityPtr& node = nodes[i];
-		node->update( delta );
+		const EntityPtr& entity = entities[i];
+		entity->update( delta );
 	}
 }
 

@@ -28,7 +28,7 @@ namespace vapor {
  * fly over them, since that would break the illusion.
  */
 
-namespace BillboardType
+struct BillboardType
 {
 	DECLARE_ENUM()
 
@@ -38,7 +38,7 @@ namespace BillboardType
 		WorldAligned,
 		AxisAligned,
 	};
-}
+};
 
 //-----------------------------------//
 
@@ -58,6 +58,9 @@ public:
 	// Updates the component.
 	void update( double delta );
 
+	// Called just before the camera renders this component.
+	void onPreRender( const Camera& camera );
+
 	// Creates the debug renderable of the component.
 	RenderablePtr createDebugRenderable() const;
   
@@ -65,7 +68,6 @@ protected:
 
 	// Billboard type
 	BillboardType::Enum billboardType;
-	TransformPtr transform;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Billboard );

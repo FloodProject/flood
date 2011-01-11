@@ -15,12 +15,12 @@ namespace vapor {
 
 //-----------------------------------//
 
-TaskManager::TaskManager( int poolSize )
+TaskManager::TaskManager( int numThreads )
 {
 #ifdef VAPOR_THREADING
-	createThreadPool( poolSize );
+	createThreads(numThreads);
 #else
-	createThreadPool( 0 );
+	createThreads(0);
 #endif
 }
 
@@ -28,31 +28,31 @@ TaskManager::TaskManager( int poolSize )
 
 TaskManager::~TaskManager()
 {
-	for( uint i = 0; i < threadPool.size(); i++ )
+	for( uint i = 0; i < threads.size(); i++ )
 	{
-		Thread* thread = threadPool[i];
+		Thread* thread = threads[i];
 		THREAD(delete thread;)
 	}
 }
 
 //-----------------------------------//
 
-void TaskManager::createThreadPool( int poolSize )
+void TaskManager::createThreads( int numThreads )
 {
 #ifdef VAPOR_THREADING
 	// By default use (numCPUCores-1) threads.
-	if( poolSize < 0 )
-		poolSize = boost::thread::hardware_concurrency()-1;
+	if( numThreads < 0 )
+		numThreads = boost::thread::hardware_concurrency()-1;
 
-	threadPool.resize( poolSize );
+	threads.resize( numThreads );
 
-	foreach( Thread* thread, threadPool )
+	foreach( Thread* thread, threads )
 	{
 		thread = new Thread(&TaskManager::runWorker, this);
 	}
 #endif
 
-	Log::info( "Created thread pool with %d thread(s)", poolSize );
+	Log::info( "Created thread pool with %d thread(s)", numThreads );
 }
 
 //-----------------------------------//

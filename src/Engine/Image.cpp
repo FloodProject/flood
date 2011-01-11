@@ -124,7 +124,7 @@ void Image::setColor( const Color& color )
 void Image::log() const
 {
 	Log::info( "Image has pixel format '%s' and size %dx%d", 
-		 PixelFormat::getType().getString(pixelFormat), width, height );
+		 PixelFormat::getStaticType().getString(pixelFormat), width, height );
 }
 
 //-----------------------------------//

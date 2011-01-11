@@ -75,8 +75,8 @@ void CameraPlugin::onPluginDisable()
 void CameraPlugin::onSceneLoad( const ScenePtr& scene )
 {
 	const ScenePtr& editorScene = editor->getEditorScene();
-	editorScene->onChanged.Connect( this, &CameraPlugin::onEntityChange );
-	scene->onChanged.Connect( this, &CameraPlugin::onEntityChange );
+	editorScene->onEntityChanged.Connect( this, &CameraPlugin::onEntityChange );
+	scene->onEntityChanged.Connect( this, &CameraPlugin::onEntityChange );
 	
 	cameraControls->updateCameraSelection();
 }
@@ -86,8 +86,8 @@ void CameraPlugin::onSceneLoad( const ScenePtr& scene )
 void CameraPlugin::onSceneUnload( const ScenePtr& scene )
 {
 	const ScenePtr& editorScene = editor->getEditorScene();
-	editorScene->onChanged.Disconnect( this, &CameraPlugin::onEntityChange );
-	scene->onChanged.Disconnect( this, &CameraPlugin::onEntityChange );
+	editorScene->onEntityChanged.Disconnect( this, &CameraPlugin::onEntityChange );
+	scene->onEntityChanged.Disconnect( this, &CameraPlugin::onEntityChange );
 	
 	cameraControls->updateCameraSelection();
 }

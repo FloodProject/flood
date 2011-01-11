@@ -97,10 +97,10 @@ void PluginManager::processTools( Plugin* plugin, bool enable )
 {
 	for( uint i = 0; i < plugin->tools.size(); i++ )
 	{
-		wxToolBarToolBase* tool = plugin->tools[i];
+		wxAuiToolBarItem* tool = plugin->tools[i];
 	
-		if( tool->IsSeparator() )
-			continue;
+		//if( tool->IsSeparator() )
+			//continue;
 
 		int id = tool->GetId();
 

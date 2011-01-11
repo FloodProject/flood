@@ -12,6 +12,7 @@
 
 #include "vapor/script/State.h"
 #include <lua.hpp>
+#include <sstream>
 
 namespace vapor {
 

@@ -53,8 +53,7 @@ public:
 	// If autoInit is true, then the method will make sure everything 
 	// is properly set up when you instantiate the object, else you will
 	// have to call the init methods manually.
-	void create(const std::string& app = "vaporApp",
-		const char** argv = nullptr, bool autoInit = true);
+	void create(const std::string& app, const char** argv = nullptr);
 
 	// Adds a subsystem to be managed by the engine.
 	void addSubsystem( Subsystem* const subsystem );

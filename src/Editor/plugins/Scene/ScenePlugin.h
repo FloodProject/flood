@@ -16,8 +16,6 @@ namespace vapor { namespace editor {
 
 class ScenePage;
 
-//-----------------------------------//
-
 class ScenePlugin : public Plugin
 {
 public:

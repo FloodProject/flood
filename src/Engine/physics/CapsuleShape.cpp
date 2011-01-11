@@ -36,7 +36,7 @@ CapsuleShape::CapsuleShape()
 	, radius(1.0f)
 	, height(3.0f)
 {
-	Class& klass = getType();
+	Class& klass = (Class&) getType();
 	klass.onFieldChanged.Connect( this, &CapsuleShape::onFieldChanged);
 }
 

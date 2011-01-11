@@ -47,6 +47,9 @@
 #include <wx/splitter.h>
 #include <wx/progdlg.h>
 #include <wx/dnd.h>
+#include <wx/aui/framemanager.h>
+#include <wx/aui/auibook.h>
+#include <wx/aui/auibar.h>
 
 //---------------------------------------------------------------------//
 // Image Conversion Utilities

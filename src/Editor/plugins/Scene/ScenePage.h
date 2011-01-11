@@ -50,7 +50,7 @@ class ScenePage : public wxPanel
 {
 public:
 
-	ScenePage( EditorFrame*, wxWindow* parent, wxWindowID id = wxID_ANY );
+	ScenePage( wxWindow* parent, wxWindowID id = wxID_ANY );
 	virtual ~ScenePage();
 
 	// Gets the tree control.
@@ -145,12 +145,6 @@ protected:
 
 	// Current menu.
 	wxMenu* currentMenu;
-
-	// Editor instance.
-	EditorFrame* editor;
-
-	// Engine instance.
-	Engine* engine;
 
 	// Scene instance.
 	SceneWeakPtr weakScene;

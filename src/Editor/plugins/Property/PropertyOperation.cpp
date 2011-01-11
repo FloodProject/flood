@@ -8,25 +8,16 @@
 
 #include "PCH.h"
 #include "PropertyOperation.h"
+#include "Editor.h"
 
 namespace vapor { namespace editor {
-
-//-----------------------------------//
-
-Color getColorFromWx( wxColour& colour )
-{
-	return Color(
-		colour.Red()   / 255.0f,
-		colour.Green() / 255.0f,
-		colour.Blue()  / 255.0f,
-		colour.Alpha() / 255.0f );
-}
 
 //-----------------------------------//
 
 void PropertyOperation::undo()
 { 
 	setFieldValue(prevValue);
+	GetEditor().redrawView();
 }
 
 //-----------------------------------//
@@ -34,6 +25,18 @@ void PropertyOperation::undo()
 void PropertyOperation::redo()
 {
 	setFieldValue(newValue);
+	GetEditor().redrawView();
+}
+
+//-----------------------------------//
+
+static Color getColorFromWx( wxColour& colour )
+{
+	return Color(
+		colour.Red()   / 255.0f,
+		colour.Green() / 255.0f,
+		colour.Blue()  / 255.0f,
+		colour.Alpha() / 255.0f );
 }
 
 //-----------------------------------//

@@ -6,7 +6,5 @@
 *
 ************************************************************************/
 
-#pragma once
-
 #include "Core.h"
 #include "ConcurrentQueue.h"

@@ -8,7 +8,7 @@
 
 #include "PCH.h"
 #include "ConsolePlugin.h"
-#include "ConsoleFrame.h"
+#include "ConsoleTextCtrl.h"
 
 #include "Editor.h"
 #include "EditorIcons.h"
@@ -39,30 +39,49 @@ PluginMetadata ConsolePlugin::getMetadata()
 
 void ConsolePlugin::onPluginEnable()
 {
-	wxToolBar* toolBar = editor->getToolbar();
-
-	addTool( toolBar->AddSeparator() );
-
+	wxAuiToolBar* toolBar = editor->getToolbar();
 	wxBitmap iconConsole = wxMEMORY_BITMAP(application_xp_terminal);
-	consoleButton = toolBar->AddTool( wxID_ANY, "Console", iconConsole );
-	addTool( consoleButton );
 
-	toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
-		&ConsolePlugin::onConsoleButtonClick, this, consoleButton->GetId() );
+	if(toolBar)
+	{
+		addTool( toolBar->AddSeparator() );
 
-	console = new ConsoleFrame( editor->getEngine(), editor );
+		consoleButton = toolBar->AddTool( wxID_ANY, "Console", iconConsole );
+		addTool( consoleButton );
+
+		toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
+			&ConsolePlugin::onConsoleButtonClick, this, consoleButton->GetId() );
+	}
+
+	console = new ConsoleTextCtrl(editor);
+	console->SetSize(400, 200);
+
+	wxAuiPaneInfo pane;
+	pane.Caption("Console").Bottom().Dock().MaximizeButton()/*.Float()*/.Hide().Icon(iconConsole).Resizable();
+	
+	editor->getAUI()->AddPane(console, pane);
+	editor->getAUI()->Update();
 }
 
 //-----------------------------------//
 
 void ConsolePlugin::onPluginDisable()
-{ }
+{
+	editor->getAUI()->DetachPane(console);
+	editor->getAUI()->Update();
+
+	delete console;
+	console = nullptr;
+}
 
 //-----------------------------------//
 
 void ConsolePlugin::onConsoleButtonClick(wxCommandEvent& event)
 {
-	console->Show( !console->IsShown() );
+	wxAuiPaneInfo& pane = editor->getAUI()->GetPane(console);
+	pane.Show( !pane.IsShown() );
+
+	editor->getAUI()->Update();
 }
 
 //-----------------------------------//

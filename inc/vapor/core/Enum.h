@@ -27,7 +27,7 @@ class CORE_API Enum : public Type
 {
 public:
 
-	Enum(const std::string& name);
+	Enum(const std::string& name, int size);
 
 	// Adds a new enumeration to this enum.
 	void addValue( const std::string str, int value );
@@ -43,11 +43,12 @@ protected:
 	mutable EnumValuesMap values;
 };
 
-#define DECLARE_ENUM() static vapor::Enum& getType();
+#define DECLARE_ENUM() static vapor::Enum& getStaticType();
 
 #define BEGIN_ENUM(enumName)							\
-	vapor::Enum& enumName::getType() {					\
-	static vapor::Enum enuHmm(TOSTRING(enumName));		\
+	vapor::Enum& enumName::getStaticType() {			\
+	static vapor::Enum enuHmm(TOSTRING(enumName),		\
+		sizeof(enumName));
 	
 #define ENUM(enumName)									\
 	enuHmm.addValue(TOSTRING(enumName), (int)enumName);

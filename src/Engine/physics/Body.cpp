@@ -43,7 +43,7 @@ Body::Body()
 	, friction(0.5f)
 	, restitution(0.3f)
 {
-	Class& klass = getType();
+	Class& klass = (Class&) getType();
 	klass.onFieldChanged.Connect( this, &Body::onFieldChanged );
 }
 
@@ -51,7 +51,7 @@ Body::Body()
 
 Body::~Body()
 {
-	Class& klass = getType();
+	Class& klass = (Class&) getType();
 	klass.onFieldChanged.Disconnect( this, &Body::onFieldChanged );
 
 	TransformPtr transform = motionState->transform;

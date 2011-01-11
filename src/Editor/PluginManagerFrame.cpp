@@ -14,20 +14,10 @@
 namespace vapor { namespace editor {
 
 //-----------------------------------//
-// Event handlers
-//-----------------------------------//
 
-BEGIN_EVENT_TABLE(PluginManagerFrame, wxFrame)
-	EVT_CLOSE( PluginManagerFrame::OnClose )
-	EVT_CHECKLISTBOX( wxID_ANY, PluginManagerFrame::OnCheckEvent )
-END_EVENT_TABLE()
-
-//-----------------------------------//
-
-PluginManagerFrame::PluginManagerFrame( wxWindow* parent, PluginManager* pluginManager )
-	: wxFrame(parent, wxID_ANY, "Plugin Manager", wxDefaultPosition, wxDefaultSize,
-	wxDEFAULT_FRAME_STYLE | wxFRAME_TOOL_WINDOW | wxFRAME_FLOAT_ON_PARENT | wxBORDER_NONE )
-	, pluginManager(pluginManager)
+PluginManagerFrame::PluginManagerFrame( wxWindow* parent, PluginManager* plugins )
+	: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE)
+	, plugins(plugins)
 {
 	InitControl();
 }
@@ -37,11 +27,14 @@ PluginManagerFrame::PluginManagerFrame( wxWindow* parent, PluginManager* pluginM
 void PluginManagerFrame::InitControl()
 {
 	checkListBox = new wxCheckListBox(this, wxID_ANY);
+	checkListBox->Bind(wxEVT_COMMAND_CHECKLISTBOX_TOGGLED, &PluginManagerFrame::OnCheckEvent, this);
+
+	const std::vector<Plugin*>& plugs = plugins->getPlugins();
 
 	// Populate the list with the plugins.
-	for( uint i = 0; i < pluginManager->getPlugins().size(); i++ )
+	for( uint i = 0; i < plugs.size(); i++ )
 	{
-		Plugin* plugin = pluginManager->getPlugins()[i];
+		Plugin* plugin = plugs[i];
 		PluginMetadata metadata = plugin->getMetadata();
 		
 		int n = checkListBox->Append( metadata.name, (void*) plugin );
@@ -64,25 +57,9 @@ void PluginManagerFrame::OnCheckEvent(wxCommandEvent& event)
 	bool doEnable = !plugin->isPluginEnabled();
 
 	if(doEnable)
-		pluginManager->enablePlugin( plugin );
+		plugins->enablePlugin( plugin );
 	else
-		pluginManager->disablePlugin( plugin );
-}
-
-//-----------------------------------//
-
-void PluginManagerFrame::OnClose(wxCloseEvent& event)
-{
-    if( event.CanVeto() )
-    {
-		// Hide the window instead of closing it.
-		Hide();
-
-        event.Veto();
-        return;   
-    }
-
-    Destroy();  // you may also do: event.Skip();
+		plugins->disablePlugin( plugin );
 }
 
 //-----------------------------------//

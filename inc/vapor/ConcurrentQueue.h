@@ -9,6 +9,7 @@
 #pragma once
 
 #include "Thread.h"
+#include <queue>
 
 namespace vapor {
 

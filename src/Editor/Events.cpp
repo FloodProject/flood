@@ -24,8 +24,6 @@ Events::Events( EditorFrame* editor )
 	assert( editor != nullptr );
 	pluginManager = editor->getPluginManager();
 
-	registerInputCallbacks();
-
 	pluginManager->onPluginEnableEvent.Connect(this, &Events::onPluginEnableEvent);
 	pluginManager->onPluginDisableEvent.Connect(this, &Events::onPluginDisableEvent);
 
@@ -33,16 +31,18 @@ Events::Events( EditorFrame* editor )
 	// that get routed through the toolbar. This will let us find
 	// the current toolbar mode.
 
-	wxToolBar* toolBar = editor->getToolbar();
-	toolBar->PushEventHandler(this);
+	wxAuiToolBar* toolBar = editor->getToolbar();
+	if(toolBar) toolBar->PushEventHandler(this);
+
+	registerInputCallbacks();
 }
 
 //-----------------------------------//
 
 Events::~Events()
 {
-	wxToolBar* toolBar = editor->getToolbar();
-	toolBar->PopEventHandler();
+	wxAuiToolBar* toolBar = editor->getToolbar();
+	if(toolBar) toolBar->PopEventHandler();
 
 	pluginManager->onPluginEnableEvent.Disconnect(this, &Events::onPluginEnableEvent);
 	pluginManager->onPluginDisableEvent.Disconnect(this, &Events::onPluginDisableEvent);
@@ -95,8 +95,8 @@ bool Events::TryBefore(wxEvent& event)
 
 	int id = event.GetId();
 
-	wxToolBar* toolBar = editor->getToolbar();
-	wxToolBarToolBase* tool = toolBar->FindById(id);
+	wxAuiToolBar* toolBar = editor->getToolbar();
+	wxAuiToolBarItem* tool = toolBar->FindTool(id);
 
 	if( tool->GetKind() != wxITEM_RADIO )
 		return false;
