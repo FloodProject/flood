@@ -56,7 +56,7 @@ public:
 	ImagePtr readImage() const;
 
 	// Gets the associated identifier.
-	uint id() const { return _id; }
+	GETTER(Id, uint, id)
 
 	// Gets the associated pixel format.
 	GETTER(PixelFormat, PixelFormat::Enum, format)
@@ -92,7 +92,7 @@ protected:
 	int convertInternalFormat( PixelFormat::Enum ) const;
 	int convertFilterFormat( TextureFiltering::Enum ) const;
 
-	uint _id;
+	uint id;
 	uint target;
 	bool uploaded;
 	

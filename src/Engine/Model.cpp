@@ -391,8 +391,12 @@ RenderablePtr Model::createDebugRenderable() const
 	mat->setDepthTest(false);
 
 	VertexBufferPtr vb = new VertexBuffer();
-	RenderablePtr rend( new Renderable(PolygonType::Lines, vb, mat) );
-	return rend;
+	
+	RenderablePtr renderable = new Renderable(PolygonType::Lines);
+	renderable->setVertexBuffer(vb);
+	renderable->setMaterial(mat);
+
+	return renderable;
 }
 
 //-----------------------------------//

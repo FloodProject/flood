@@ -7,16 +7,17 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/render/TextureManager.h"
-#include "vapor/resources/ResourceManager.h"
-#include "vapor/render/GL.h"
+#include "render/TextureManager.h"
+#include "resources/ResourceManager.h"
+#include "render/GL.h"
+#include "Engine.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-TextureManager::TextureManager( ResourceManager* resourceManager )
-	: rm( resourceManager )
+TextureManager::TextureManager()
+	: rm( GetEngine()->getResourceManager() )
 {
 	assert( rm != nullptr );
 	

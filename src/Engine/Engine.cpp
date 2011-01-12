@@ -25,6 +25,9 @@ namespace vapor {
 
 //-----------------------------------//
 
+static Engine* engineInstance;
+Engine* GetEngine() { return engineInstance; }
+
 Engine::Engine()
 	: log(nullptr)
 	, stream(nullptr)
@@ -34,14 +37,8 @@ Engine::Engine()
 	, audioDevice(nullptr)
 	, physicsManager(nullptr)
 	, scriptManager(nullptr)
-{ }
-
-//-----------------------------------//
-
-void Engine::create(const std::string& app, const char** argv)
 {
-	this->app = app;
-	this->argv = argv;
+	engineInstance = this;
 }
 
 //-----------------------------------//
@@ -64,6 +61,17 @@ Engine::~Engine()
 	delete resourceManager;
 	delete fileSystem;
 	delete log;
+
+	if(engineInstance == this)
+		engineInstance = nullptr;
+}
+
+//-----------------------------------//
+
+void Engine::create(const std::string& app, const char** argv)
+{
+	this->app = app;
+	this->argv = argv;
 }
 
 //-----------------------------------//
@@ -128,7 +136,7 @@ void Engine::setupLogger()
 
 void Engine::setupDevices( bool createWindow )
 {
-	renderDevice = new RenderDevice( resourceManager );
+	renderDevice = new RenderDevice();
 
 	if( createWindow )
 	{

@@ -93,7 +93,7 @@ protected:
 	int listIndex;
 
 	ScenePtr scene;
-	EntityPtr nodeCamera;
+	EntityPtr entityCamera;
 	CameraPtr camera;
 	RenderView* renderView;
 

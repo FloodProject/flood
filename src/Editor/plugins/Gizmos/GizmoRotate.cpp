@@ -8,14 +8,14 @@
 
 #include "PCH.h"
 #include "GizmoRotate.h"
-#include "vapor/render/Cube.h"
+#include "render/Cube.h"
 
 namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-GizmoRotate::GizmoRotate( const EntityPtr& node, const CameraWeakPtr& camera )
-	: Gizmo( node, camera )
+GizmoRotate::GizmoRotate( const EntityPtr& entity, const CameraWeakPtr& camera )
+	: Gizmo(entity, camera)
 { }
 
 //-----------------------------------//
@@ -25,7 +25,12 @@ void GizmoRotate::buildGeometry()
 	//material->setLineWidth(3.0f);
 
 	lines = generateCircles();
-	addRenderable( new Renderable(PolygonType::Lines, lines, material) );
+
+	RenderablePtr renderable = new Renderable(PolygonType::Lines);
+	renderable->setVertexBuffer(lines);
+	renderable->setMaterial(material);
+
+	addRenderable(renderable);
 }
 
 //-----------------------------------//

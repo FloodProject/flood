@@ -70,14 +70,8 @@ class VAPOR_API Renderable : public ReferenceCounted
 public:
 
 	Renderable();
-
-    Renderable( PolygonType::Enum, const VertexBufferPtr&,
-		const IndexBufferPtr&, const MaterialPtr& );
+    Renderable( PolygonType::Enum );
     
-    // No index buffer, default material will be used if none passed.
-	Renderable( PolygonType::Enum, const VertexBufferPtr& = nullptr,
-		const MaterialPtr& = nullptr );
-
 	// Binds the state needed to draw the renderable.
 	bool bind();
 

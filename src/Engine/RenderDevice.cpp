@@ -7,28 +7,27 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/Utilities.h"
-#include <algorithm>
 
 #ifdef VAPOR_RENDERER_OPENGL
 
-#include "vapor/render/Device.h"
-#include "vapor/render/GL.h"
-#include "vapor/render/FBO.h"
-#include "vapor/render/Adapter.h"
-#include "vapor/render/TextureManager.h"
-#include "vapor/render/ProgramManager.h"
-#include "vapor/render/Window.h"
-#include "vapor/render/View.h"
-
-#include "vapor/scene/Camera.h"
-#include "vapor/scene/Entity.h"
+#include "render/Device.h"
+#include "render/GL.h"
+#include "render/FBO.h"
+#include "render/Adapter.h"
+#include "render/TextureManager.h"
+#include "render/ProgramManager.h"
+#include "render/Window.h"
+#include "render/View.h"
+#include "scene/Camera.h"
+#include "scene/Entity.h"
+#include "Utilities.h"
+#include <algorithm>
 
 namespace vapor {
 
 //-----------------------------------//
 
-RenderDevice::RenderDevice( ResourceManager* res )
+RenderDevice::RenderDevice()
 	: adapter(nullptr)
 	, window(nullptr)
 	, activeTarget(nullptr)
@@ -36,7 +35,7 @@ RenderDevice::RenderDevice( ResourceManager* res )
 	, programManager(nullptr)
 	, textureManager(nullptr)
 	, shadowDepthBuffer(nullptr)
-	, resourceManager(res)
+	, pipeline(RenderPipeline::Fixed)
 { }
 
 //-----------------------------------//
@@ -65,8 +64,8 @@ void RenderDevice::init()
 	checkExtensions();
 
 	adapter = new Adapter();
-	textureManager = new TextureManager(resourceManager);
-	programManager = new ProgramManager(resourceManager);
+	textureManager = new TextureManager();
+	programManager = new ProgramManager();
 
 	setClearColor( Color::White );
 
@@ -97,8 +96,8 @@ void RenderDevice::checkExtensions()
 	if( !GLEW_VERSION_2_0 )
 	{
 		const char* str = "You need at least OpenGL 2.0 to run this.";
-		System::messageDialog( str ); //, LogLevel::Error );
-		exit( -1 );
+		System::messageDialog( str/*, LogLevel::Error*/ );
+		exit(-1);
 	}
 }
 
@@ -128,30 +127,137 @@ void RenderDevice::render( RenderBlock& queue )
 
 void RenderDevice::render( const RenderState& state, const LightQueue& lights )
 {
-	const RenderablePtr& rend = state.renderable;
+	const RenderablePtr& renderable = state.renderable;
+	if( !renderable ) return;
 
-	if( !rend )
+	const MaterialPtr& material = renderable->getMaterial();
+	if( !material ) return;
+
+	switch(pipeline)
+	{
+	case RenderPipeline::Fixed:
+		setupRenderFixed(state, lights);
 		return;
-
-	const MaterialPtr& material = rend->getMaterial();
-
-	if( !material )
+	case RenderPipeline::ShaderForward:
+		setupRenderForward(state, lights);
 		return;
-
-	const ProgramPtr& program = material->getProgram();
-
-	if( !program )
+	default:
+		Log::error("Unknown render pipeline");
 		return;
+	}
+}
 
-	rend->bind();
+//-----------------------------------//
+
+void RenderDevice::setupRenderFixed(const RenderState& state, const LightQueue& lights)
+{
+	const RenderablePtr& renderable = state.renderable;
+	renderable->bind();
+
+	const MaterialPtr& material = renderable->getMaterial();
+	material->bindTextures(false);
+
+	const VertexBufferPtr& vb = renderable->getVertexBuffer();
+	vb->bindPointers();
+
 	setupRenderStateMaterial(material);
-
-	if( !program->isLinked() )
-		return;
 
 	if( state.group != RenderStage::Overlays )
 	{
-		if( !setupRenderState(state) )
+		if( !setupRenderFixedMatrix(state) )
+			return;
+	}
+	else if( state.group == RenderStage::Overlays )
+	{
+		if( !setupRenderFixedOverlay(state) )
+			return;
+	}
+
+	glDisable(GL_LIGHTING);
+
+	glPushMatrix();
+
+	const Matrix4x4& model = state.modelMatrix;
+	glMultMatrixf(&model.m11);
+
+	state.callback();
+	renderable->render(this);
+	
+	glPopMatrix();
+
+	undoRenderStateMaterial(material);
+	material->unbindTextures();
+
+	vb->unbindPointers();	
+	renderable->unbind();
+}
+
+//-----------------------------------//
+
+bool RenderDevice::setupRenderFixedMatrix( const RenderState& state )
+{
+	CameraPtr camera = activeView->getCamera();
+
+	if( !camera )
+		return false;
+
+	const Frustum& frustum = camera->getFrustum();
+
+	const Matrix4x4& view = Matrix4x4(camera->getViewMatrix());
+	const Matrix4x4& projection = frustum.matProjection;
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadMatrixf(&projection.m11);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixf(&view.m11);
+
+	return true;
+}
+
+//-----------------------------------//
+
+bool RenderDevice::setupRenderFixedOverlay( const RenderState& state )
+{
+	Vector2i size = activeTarget->getSettings().getSize();
+	
+	Matrix4x4 projection = Matrix4x4::createOrthographicProjection(
+		0, size.x, size.y, 0, 0, 100);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadMatrixf(&projection.m11);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	return true;
+}
+
+//-----------------------------------//
+
+void RenderDevice::setupRenderForward(const RenderState& state, const LightQueue& lights)
+{
+	const RenderablePtr& renderable = state.renderable;
+	const MaterialPtr& material = renderable->getMaterial();
+	const ProgramPtr& program = material->getProgram();
+	
+	if( !program ) return;
+
+	if( !program->isLinked() )
+		program->link();
+	
+	program->bind();
+	renderable->bind();
+	material->bindTextures(true);
+
+	const VertexBufferPtr& vb = renderable->getVertexBuffer();
+	vb->bindGenericPointers();
+
+	setupRenderStateMaterial(material);
+
+	if( state.group != RenderStage::Overlays )
+	{
+		if( !setupRenderStateMatrix(state) )
 			return;
 
 		if( !setupRenderStateLight(state, lights) )
@@ -164,15 +270,17 @@ void RenderDevice::render( const RenderState& state, const LightQueue& lights )
 	}
 
 	state.callback();
-	state.renderable->render( this );
+	renderable->render(this);
 	
 	undoRenderStateMaterial(material);
-	rend->unbind();
+	
+	renderable->unbind();
+	material->unbindTextures();
 }
 
 //-----------------------------------//
 
-bool RenderDevice::setupRenderState( const RenderState& state )
+bool RenderDevice::setupRenderStateMatrix( const RenderState& state )
 {
 	assert( activeView != nullptr );
 	CameraPtr camera = activeView->getCamera();
@@ -314,16 +422,12 @@ bool RenderDevice::setupRenderStateLight( const RenderState& state, const LightQ
 
 bool RenderDevice::setupRenderStateOverlay( const RenderState& state )
 {
-	const ProgramPtr& program = state.renderable->getMaterial()->getProgram();
-	
-	//glDepthMask( false );
-
 	Vector2i size = activeTarget->getSettings().getSize();
+	Matrix4x4 projection = Matrix4x4::createOrthographicProjection(0, size.x, size.y, 0, 0, 100);
 
-	Matrix4x4 proj = Matrix4x4::createOrthographicProjection( 
-		0, size.x, size.y, 0, 0, 100 );
+	const ProgramPtr& program = state.renderable->getMaterial()->getProgram();
 
-	program->setUniform( "vp_ProjectionMatrix", proj );
+	program->setUniform( "vp_ProjectionMatrix", projection );
 	program->setUniform( "vp_ModelMatrix", state.modelMatrix );
 	program->setUniform( "vp_ViewMatrix", Matrix4x4::Identity );
 	program->setUniform( "vp_ModelViewMatrix", state.modelMatrix );
@@ -411,12 +515,8 @@ Color RenderDevice::getPixel(ushort x, ushort y) const
 
 //-----------------------------------//
 
-void RenderDevice::setClearColor(const Color& newColor)
+void RenderDevice::setClearColor(const Color& color)
 {
-	if( newColor == color )
-		return;
-
-	color = newColor;
 	glClearColor( color.r, color.g, color.b, color.a );
 }
 
@@ -424,16 +524,16 @@ void RenderDevice::setClearColor(const Color& newColor)
 
 void RenderDevice::setView( RenderView* view )
 {
-	if( !view )
-		return;
+	if( !view ) return;
 
 	activeView = view;
 
-	Vector2i orig = activeView->getOrigin();
+	setClearColor( view->getClearColor() );
+
+	Vector2i origin = activeView->getOrigin();
 	Vector2i size = activeView->getSize();
 
-	setClearColor( view->getClearColor() );
-	glViewport( orig.x, orig.y, size.x, size.y );
+	glViewport( origin.x, origin.y, size.x, size.y );
 }
 
 //-----------------------------------//
@@ -450,10 +550,7 @@ void RenderDevice::clearView()
 
 void RenderDevice::setRenderTarget(RenderTarget* target)
 {
-	if( !target )
-		return;
-
-	if( activeTarget == target )
+	if( !target || target == activeTarget )
 		return;
 
 	activeTarget = target;

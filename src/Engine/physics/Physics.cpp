@@ -10,13 +10,12 @@
 
 #ifdef VAPOR_PHYSICS_BULLET
 
-#include "vapor/physics/Physics.h"
-#include "vapor/physics/Body.h"
-#include "vapor/physics/Convert.h"
-#include "vapor/physics/DebugDraw.h"
-
-#include "vapor/Engine.h"
-#include "vapor/render/Device.h"
+#include "physics/Physics.h"
+#include "physics/Body.h"
+#include "physics/Convert.h"
+#include "physics/DebugDraw.h"
+#include "render/Device.h"
+#include "Engine.h"
 
 #include <btBulletDynamicsCommon.h>
 #include <BulletCollision/CollisionDispatch/btGhostObject.h> 
@@ -83,8 +82,7 @@ void PhysicsManager::drawDebugWorld()
 	debugDrawer->clearBuffer();
 	world->debugDrawWorld();
 
-	Engine* engine = Engine::getInstancePtr();
-	RenderDevice* renderDevice = engine->getRenderDevice();
+	RenderDevice* renderDevice = GetEngine()->getRenderDevice();
 
 	RenderState state;
 	state.renderable = debugDrawer->getRenderable();

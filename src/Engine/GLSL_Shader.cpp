@@ -10,15 +10,15 @@
 
 #ifdef VAPOR_SHADER_GLSL
 
-#include "vapor/render/GLSL_Shader.h"
-#include "vapor/render/GL.h"
+#include "render/GLSL_Shader.h"
+#include "render/GL.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
 GLSL_Shader::GLSL_Shader() 
-	: shaderId(0)
+	: id(0)
 	, created(false)
 { }
 
@@ -26,18 +26,10 @@ GLSL_Shader::GLSL_Shader()
 
 GLSL_Shader::~GLSL_Shader()
 {
-	glDeleteShader( shaderId );
+	glDeleteShader(id);
 
-	glHasError("Could not delete shader object");
-
-//#ifdef VAPOR_DEBUG
-//	GLenum err = glGetError();
-//	if( err != GL_NO_ERROR )
-//	{
-//		warn( "glsl", "Could not delete shader object '%d': %s", 
-//			shaderId, /*glErrorString( err )*/"" );
-//	}
-//#endif
+	if( glHasError("Could not delete shader object") )
+		return;
 }
 
 //-----------------------------------//
@@ -47,7 +39,7 @@ bool GLSL_Shader::create()
 	if( created )
 		return true;
 
-	shaderId = glCreateShader( getGLShaderType(type) );
+	id = glCreateShader( getGLShaderType(type) );
 
 	if( glHasError("Could not create a new shader object") )
 	{
@@ -72,7 +64,7 @@ bool GLSL_Shader::compile()
 		return false;
 	}
 
-	glCompileShader( shaderId );
+	glCompileShader(id);
 
 	if( glHasError("Error compiling shader object") )
 	{
@@ -83,7 +75,7 @@ bool GLSL_Shader::compile()
 	getCompileLog();
 
 	GLint status;
-	glGetShaderiv( shaderId, GL_COMPILE_STATUS, &status );
+	glGetShaderiv(id, GL_COMPILE_STATUS, &status);
 
 	if( status != GL_TRUE ) 
 	{
@@ -103,7 +95,7 @@ bool GLSL_Shader::upload()
 		return false;
 
 	const char* str = text.c_str();
-	glShaderSource( shaderId, 1, &str, nullptr );
+	glShaderSource(id, 1, &str, nullptr);
 
 	if( glHasError("Error uploading shader text to object") )
 		return false;
@@ -117,14 +109,14 @@ void GLSL_Shader::getCompileLog()
 {
 	// get compilation log size
 	GLint size;
-	glGetShaderiv( shaderId, GL_INFO_LOG_LENGTH, &size );
+	glGetShaderiv(id, GL_INFO_LOG_LENGTH, &size);
 
 	// TODO: move directly to string...
 
 	GLchar* info = new char[size];
 	GLsizei length;
 
-	glGetShaderInfoLog( shaderId, size, &length, info );
+	glGetShaderInfoLog(id, size, &length, info);
 
 	log.assign( info );
 
@@ -149,16 +141,8 @@ GLenum GLSL_Shader::getGLShaderType( ShaderType::Enum type )
 	case ShaderType::Geometry:
 		return GL_GEOMETRY_SHADER_EXT;
 	default:
-		assert( true ); // Should not be reached.
-		return GL_VERTEX_SHADER;
+		return 0;
 	}	
-}
-
-//-----------------------------------//
-
-uint GLSL_Shader::id()
-{
-	return shaderId;
 }
 
 //-----------------------------------//

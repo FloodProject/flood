@@ -35,7 +35,7 @@ class VAPOR_API ProgramManager
 
 public:
 
-	ProgramManager( ResourceManager* );
+	ProgramManager();
 	~ProgramManager();
 
 	// Gets a program given a name identifier.

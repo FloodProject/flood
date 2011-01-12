@@ -148,17 +148,14 @@ public:
 	GETTER(Textures, const TextureMap&, textures)
 
 	// Binds the material object.
-	void bind();
+	void bindTextures(bool bindUniforms);
 
 	// Unbinds the material object.
-	void unbind();
-
-	// Serialization.
-	//void serialize( Json::Value value );
+	void unbindTextures();
 
 protected:
 
-	// Common material initialization.
+	// Initialization.
 	void init();
 
 	// Name of the material.

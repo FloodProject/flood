@@ -8,12 +8,13 @@
 
 #include "PCH.h"
 #include "ResourcesBrowser.h"
-#include "Editor.h"
 #include "Viewframe.h"
 #include "EditorIcons.h"
 #include "Settings.h"
 #include "UndoManager.h"
 #include "Utilities.h"
+#include "Editor.h"
+
 #include "../Scene/ScenePage.h"
 
 #include <json/json.h>
@@ -44,8 +45,7 @@ ResourcesBrowser::~ResourcesBrowser()
 
 void ResourcesBrowser::setupRender()
 {
-	Engine* engine = Engine::getInstancePtr();
-	RenderDevice* device = engine->getRenderDevice();
+	RenderDevice* device = GetEditor().getEngine()->getRenderDevice();
 
 	Settings settings(ThumbSize, ThumbSize);
 	renderBuffer = device->createRenderBuffer(settings);
@@ -59,12 +59,12 @@ void ResourcesBrowser::setupRender()
 	Frustum& frustum = camera->getFrustum();
 	frustum.nearPlane = 0.1f;
 
-	nodeCamera.reset( new Entity() );
-	nodeCamera->addTransform();
-	nodeCamera->addComponent( camera );
+	entityCamera.reset( new Entity() );
+	entityCamera->addTransform();
+	entityCamera->addComponent( camera );
 	
 	scene.reset( new Scene() );
-	scene->add( nodeCamera );
+	scene->add( entityCamera );
 
 	renderView = new RenderView(camera);
 	renderView->setClearColor(Color::White);
@@ -329,7 +329,7 @@ ImagePtr ResourcesBrowser::generateThumbnail(const MeshPtr& mesh)
 	float fovRad = Math::degreeToRadian(frustum.fieldOfView);
 	float distance = maxSize / std::tan(fovRad / 2) + size.z;
 	
-	TransformPtr transCamera = nodeCamera->getTransform();
+	TransformPtr transCamera = entityCamera->getTransform();
 	transCamera->setPosition(Vector3(0, 0, -distance));
 
 	scene->update(2);

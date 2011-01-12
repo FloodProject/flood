@@ -49,7 +49,7 @@ Label::Label( const std::string& text, const std::string& path )
 
 	material = new Material("FontMaterial" + String::fromNumber(i++), "Tex");
 	
-	ResourceManager* rm = Engine::getInstance().getResourceManager();
+	ResourceManager* rm = GetEngine()->getResourceManager();
 	font = rm->loadResource<Font>(path);
 
 	init();

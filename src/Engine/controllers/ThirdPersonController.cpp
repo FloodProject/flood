@@ -40,7 +40,7 @@ void ThirdPersonController::_update( double delta )
 {
 	if( !followEntity.lock() )
 	{
-		Engine* engine = Engine::getInstancePtr();
+		Engine* engine = GetEngine();
 		const ScenePtr& scene = engine->getSceneManager();
 		followEntity = scene->findEntity(followEntityName);
 	}

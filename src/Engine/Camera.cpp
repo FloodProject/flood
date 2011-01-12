@@ -32,8 +32,7 @@ Camera::Camera()
 	, frustumCulling(false)
 	, lookAtVector(Vector3::UnitZ)
 {
-	Engine* engine = Engine::getInstancePtr();
-	renderDevice = engine->getRenderDevice();
+	renderDevice = GetEngine()->getRenderDevice();
 }
 
 //-----------------------------------//

@@ -157,7 +157,7 @@ void EditorFrame::createPlugins()
 
 void EditorFrame::createEngine()
 {
-	engine = Engine::getInstancePtr();
+	engine = new Engine;
 	engine->create(VAPOR_EDITOR_NAME);
 	engine->init(false);
 }
@@ -531,7 +531,7 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 	case Toolbar_TooglePhysicsDebug:
 	{
 #ifdef VAPOR_PHYSICS_BULLET
-		Engine* engine = Engine::getInstancePtr();
+		Engine* engine = GetEngine();
 		PhysicsManager* physics = engine->getPhysicsManager();
 		
 		if( physics )

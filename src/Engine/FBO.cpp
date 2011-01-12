@@ -7,9 +7,9 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/render/FBO.h"
-#include "vapor/render/GL.h"
-#include "vapor/resources/Image.h"
+#include "render/FBO.h"
+#include "render/GL.h"
+#include "resources/Image.h"
 
 namespace vapor {
 
@@ -141,7 +141,7 @@ void FBO::attachRenderTexture(const TexturePtr& tex)
 	if( tex->getPixelFormat() == PixelFormat::Depth )
 		attach = GL_DEPTH_ATTACHMENT_EXT;
 
-	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, attach, GL_TEXTURE_2D, tex->id(), 0);
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, attach, GL_TEXTURE_2D, tex->getId(), 0);
 	glHasError( "Could not attach texture into framebuffer object" );
 	
 	textureBuffers.push_back( tex );

@@ -10,8 +10,8 @@
 
 #ifdef VAPOR_RENDERER_OPENGL
 
-#include "vapor/render/VertexBuffer.h"
-#include "vapor/render/GL.h"
+#include "render/VertexBuffer.h"
+#include "render/GL.h"
 
 namespace vapor {
 
@@ -36,12 +36,7 @@ bool VertexBuffer::bind()
 {
 	glBindBuffer( GL_ARRAY_BUFFER, id );
 
-	if( glHasError("Error binding vertex buffer") )
-		return false;
-
-	bindPointers();
-
-	return true;
+	return !glHasError("Error binding vertex buffer");
 }
 
 //-----------------------------------//
@@ -50,47 +45,114 @@ bool VertexBuffer::unbind()
 {
 	glBindBuffer( GL_ARRAY_BUFFER, 0 );
 
-	if( glHasError("Error unbinding vertex buffer") )
-		return false;
-
-	if( !built )
-		return true;
-
-	AttributeMap::const_iterator it;
-	for( it = attributes.cbegin(); it != attributes.cend(); it++ )
-	{
-		glDisableVertexAttribArray( it->first );
-	}
-
-	return true;
+	return !glHasError("Error unbinding vertex buffer");
 }
 
 //-----------------------------------//
 
+#define IfAttributeExists(attr)										\
+	it = attributes.find(VertexAttribute::##attr);					\
+	if(it != attributes.end())
+
+#define IfAttributeIs(attr)											\
+	if(index == VertexAttribute::##attr)
+
+#define EnableArrayPointer(arr, func)								\
+	{ glEnableClientState(arr);										\
+	func(attr.components, attr.type, 0, (void*) offset); }
+
+#define EnableTexArrayPointer(i)									\
+	{ glClientActiveTexture(GL_TEXTURE0+i);							\
+	EnableArrayPointer(GL_TEXTURE_COORD_ARRAY, glTexCoordPointer) }
+
+
 void VertexBuffer::bindPointers()
 {
-	if( !built )
-		return;
+	if( !built ) return;
 
 	int offset = 0;
 
 	AttributeMap::const_iterator it;
 	for( it = attributes.cbegin(); it != attributes.cend(); it++ )
 	{
+		int index = it->first;
+		const Attribute& attr = it->second;
+		
+		IfAttributeIs(Position) EnableArrayPointer(GL_VERTEX_ARRAY, glVertexPointer)
+		IfAttributeIs(Color) EnableArrayPointer(GL_COLOR_ARRAY, glColorPointer)
+		IfAttributeIs(TexCoord0) EnableTexArrayPointer(0)
+		IfAttributeIs(TexCoord1) EnableTexArrayPointer(1)
+		IfAttributeIs(TexCoord2) EnableTexArrayPointer(2)
+		IfAttributeIs(TexCoord3) EnableTexArrayPointer(3)
+
+		offset += attr.data.size();
+	}
+}
+
+//-----------------------------------//
+
+#define DisableTexCoordArray(i)										\
+	{ glClientActiveTexture(GL_TEXTURE0+1);							\
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY); }
+
+void VertexBuffer::unbindPointers()	
+{
+	if( !built ) return;
+
+	AttributeMap::const_iterator it;
+
+	IfAttributeExists(Position) glDisableClientState(GL_VERTEX_ARRAY);
+	IfAttributeExists(Normal) glDisableClientState(GL_NORMAL_ARRAY);
+	IfAttributeExists(Color) glDisableClientState(GL_COLOR_ARRAY);
+	IfAttributeExists(SecondaryColor) glDisableClientState(GL_SECONDARY_COLOR_ARRAY);
+	IfAttributeExists(FogCoord) glDisableClientState(GL_FOG_COORD_ARRAY);
+	IfAttributeExists(TexCoord0) DisableTexCoordArray(0)
+	IfAttributeExists(TexCoord1) DisableTexCoordArray(1)
+	IfAttributeExists(TexCoord2) DisableTexCoordArray(2)
+	IfAttributeExists(TexCoord3) DisableTexCoordArray(3)
+}
+
+//-----------------------------------//
+
+void VertexBuffer::bindGenericPointers()
+{
+	if( !built ) return;
+
+	int offset = 0;
+
+	AttributeMap::const_iterator it;
+	for( it = attributes.cbegin(); it != attributes.cend(); it++ )
+	{
+		VertexAttribute::Enum index = it->first;
 		const Attribute& attr = it->second;
 
-		glEnableVertexAttribArray( it->first );
+		glEnableVertexAttribArray(index);
 
 		if( glHasError("Error enabling vertex attribute array") )
 			return;
 
-		glVertexAttribPointer( it->first, attr.components,
-			attr.type, GL_FALSE, 0, (void*) offset );
+		glVertexAttribPointer(index,
+			attr.components, attr.type, GL_FALSE, 0, (void*) offset );
 
 		if( glHasError("Error binding pointers to buffer") )
 			return;
 
 		offset += attr.data.size();
+	}
+}
+
+//-----------------------------------//
+
+void VertexBuffer::unbindGenericPointers()
+{
+	if( !built ) return;
+
+	AttributeMap::const_iterator it;
+
+	for( it = attributes.cbegin(); it != attributes.cend(); it++ )
+	{
+		VertexAttribute::Enum index = it->first;
+		glDisableVertexAttribArray(index);
 	}
 }
 
@@ -110,41 +172,58 @@ bool VertexBuffer::isValid() const
 
 //-----------------------------------//
 
-bool VertexBuffer::set( VertexAttribute::Enum num, 
-					    const std::vector<Vector3>& data )
+bool VertexBuffer::set( VertexAttribute::Enum index, const std::vector<Vector3>& data )
 {
 	built = false;
 
-	Attribute attr;
-	attr.components = 3;
-	attr.size = sizeof(float);
-	attr.type = GL_FLOAT;
-	attr.data.resize( data.size() * sizeof(Vector3) );
+	Attribute attribute;
+	attribute.components = 3;
+	attribute.size = sizeof(float);
+	attribute.type = GL_FLOAT;
+	attribute.data.resize( data.size() * sizeof(Vector3) );
 	
 	if( data.size() != 0)
-		memcpy( &attr.data[0], &data[0], attr.data.size() );
+		memcpy( &attribute.data[0], &data[0], attribute.data.size() );
 	
-	attributes[num] = attr;
+	attributes[index] = attribute;
 	return true;
 }
 
 //-----------------------------------//
 
-bool VertexBuffer::set( VertexAttribute::Enum num,
-					    const std::vector<float>& data )
+bool VertexBuffer::set( VertexAttribute::Enum index, const std::vector<float>& data )
 {
 	built = false;
 
-	Attribute attr;
-	attr.components = 1;
-	attr.size = sizeof(float);
-	attr.type = GL_FLOAT;
-	attr.data.resize( data.size() * sizeof(int) );
+	Attribute attribute;
+	attribute.components = 1;
+	attribute.size = sizeof(float);
+	attribute.type = GL_FLOAT;
+	attribute.data.resize( data.size() * sizeof(float) );
 	
 	if( data.size() != 0)
-		memcpy( &attr.data[0], &data[0], attr.data.size() );
+		memcpy( &attribute.data[0], &data[0], attribute.data.size() );
 	
-	attributes[num] = attr;
+	attributes[index] = attribute;
+	return true;
+}
+
+//-----------------------------------//
+
+bool VertexBuffer::set( VertexAttribute::Enum index, const std::vector<Color>& data )
+{
+	built = false;
+
+	Attribute attribute;
+	attribute.components = 4;
+	attribute.size = sizeof(float);
+	attribute.type = GL_FLOAT;
+	attribute.data.resize( data.size() * sizeof(Color) );
+	
+	if( data.size() != 0)
+		memcpy( &attribute.data[0], &data[0], attribute.data.size() );
+	
+	attributes[index] = attribute;
 	return true;
 }
 

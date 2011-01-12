@@ -358,7 +358,7 @@ void ObjectSerializer::serializePrimitive(const ObjectData& object)
 //			const Json::Value& resValue = fieldValue[members.front()];
 //			const std::string& resPath = resValue["path"].asString();
 //			
-//			Engine* engine = Engine::getInstancePtr();
+//			Engine* engine = GetEngine();
 //			ResourceManager* rm = engine->getResourceManager();
 //			ResourcePtr res = rm->loadResource(resPath);
 //

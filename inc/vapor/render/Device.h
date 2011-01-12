@@ -10,14 +10,14 @@
 
 #ifdef VAPOR_RENDERER_OPENGL
 
-#include "vapor/math/Color.h"
-#include "vapor/math/Vector2.h"
-#include "vapor/math/Matrix4x3.h"
+#include "math/Color.h"
+#include "math/Vector2.h"
+#include "math/Matrix4x3.h"
 
-#include "vapor/render/Window.h"
-#include "vapor/render/Target.h"
-#include "vapor/render/Renderable.h"
-#include "vapor/render/RenderQueue.h"
+#include "render/Window.h"
+#include "render/Target.h"
+#include "render/Renderable.h"
+#include "render/RenderQueue.h"
 
 namespace vapor {
 
@@ -30,6 +30,22 @@ class BufferManager;
 class ResourceManager;
 class ProgramManager;
 class TextureManager;
+
+/**
+ * There are a couple rendering pipelines. You can choose each one depending
+ * on the hardware functionality (shaders don't exist on some old or mobile
+ * hardware) or user preference (fixed function is faster on some machines).
+ */
+
+namespace RenderPipeline
+{
+	enum Enum
+	{
+		Fixed,
+		ShaderForward,
+		ShaderDeferred
+	};
+}
 
 //-----------------------------------//
 
@@ -57,11 +73,10 @@ class VAPOR_API RenderDevice
 
 public:
 
-	RenderDevice( ResourceManager* );
+	RenderDevice();
 	~RenderDevice();
 
-	// Initializes the rendering system.
-	// Note: Needs an active OpenGL context.
+	// Initializes the rendering system (needs an OpenGL context).
 	void init();
 
 	// Renders a renderable.
@@ -99,9 +114,11 @@ public:
 	// Gets/sets the main rendering window.
 	ACESSOR(Window, Window*, window)
 
-	// Gets/sets the current clear color.
-	GETTER(ClearColor, const Color&, color)
+	// Sets the current clear color.
 	void setClearColor(const Color& color);
+
+	// Gets the current rendering pipeline.
+	GETTER(Pipeline, RenderPipeline::Enum, pipeline)
 
 	// Gets rendering adapter information.
 	GETTER(Adapter, Adapter*, adapter)
@@ -123,15 +140,27 @@ protected:
 	// Checks that all needed OpenGL extensions are available.
 	void checkExtensions();
 
-	// Render state management.
-	bool setupRenderState( const RenderState& state );
+	// Fixed render state management.
+	void setupRenderFixed( const RenderState&, const LightQueue& );
+	bool setupRenderFixedMatrix( const RenderState& state );
+	bool setupRenderFixedOverlay( const RenderState& state );
+	//bool setupRenderFixedShadow( LightQueue& lights );
+	//bool setupRenderFixedLight( const RenderState&, const LightQueue& );
+	//bool setupRenderFixedOverlay( const RenderState& );
+
+	// Forward render state management.
+	void setupRenderForward( const RenderState&, const LightQueue& );
+	bool setupRenderStateMatrix( const RenderState& state );
 	bool setupRenderStateShadow( LightQueue& lights );
 	bool setupRenderStateLight( const RenderState&, const LightQueue& );
 	bool setupRenderStateOverlay( const RenderState& );
+
+	// Common render state management.
 	void setupRenderStateMaterial( const MaterialPtr& );
 	void undoRenderStateMaterial( const MaterialPtr& );
 
-	ResourceManager* resourceManager;
+	// Rendering pipeline.
+	RenderPipeline::Enum pipeline;
 
 	// Manages all the shaders.
 	TextureManager* textureManager;
@@ -153,12 +182,6 @@ protected:
 
 	// Render window
 	Window* window;
-
-	// Current clear color
-	Color color;
-
-	// Current view dimensions.
-	Vector2i viewportLeft, viewportSize;
 
 	ShadowTextureMap shadowTextures;
 	RenderBuffer* shadowDepthBuffer;

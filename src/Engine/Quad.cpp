@@ -7,15 +7,18 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/render/Quad.h"
+#include "render/Quad.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
 Quad::Quad( float width, float height )
-	: Renderable( PolygonType::Quads, getQuadBuffer(width, height) )
-{ }
+	: Renderable( PolygonType::Quads )
+{
+	const VertexBufferPtr& vb =  getQuadBuffer(width, height);
+	setVertexBuffer(vb);
+}
 
 //-----------------------------------//
 

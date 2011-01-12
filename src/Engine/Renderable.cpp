@@ -7,37 +7,20 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/render/Renderable.h"
+#include "render/Renderable.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-Renderable::Renderable() 
+Renderable::Renderable()
 	: mode( PolygonMode::Solid )
 { }
 
 //-----------------------------------//
 
-Renderable::Renderable( PolygonType::Enum type,
-						const VertexBufferPtr& vb, 
-						const IndexBufferPtr& ib, 
-						const MaterialPtr& mat )
+Renderable::Renderable( PolygonType::Enum type )
 	: type( type )
-	, vb( vb )
-	, ib( ib )
-	, material( mat )
-	, mode( PolygonMode::Solid )
-{ }
-
-//-----------------------------------//
-
-Renderable::Renderable( PolygonType::Enum type, 
-						const VertexBufferPtr& vb, 
-						const MaterialPtr& mat )
-	: type( type )
-	, vb( vb )
-	, material( mat )
 	, mode( PolygonMode::Solid )
 { }
 
@@ -45,22 +28,18 @@ Renderable::Renderable( PolygonType::Enum type,
 
 bool Renderable::bind()
 {
-	if( !material || !vb )
-		return false;
-
-	material->bind();
+	if( !vb ) return false;
 
 	if( !vb->isBuilt() )
 		vb->build();
 
 	vb->bind();
 
-	if( !ib )
-		return true;
-
+	if( !ib ) return true;
+	
 	if( !ib->isBuilt() )
 		ib->build();
-	
+
 	ib->bind();
 
 	return true;
@@ -70,21 +49,20 @@ bool Renderable::bind()
 
 bool Renderable::unbind()
 {
-	if( !material || !vb )
+	if( !vb )
 		return false;
 
 	if( ib )
 		ib->unbind();
     
 	vb->unbind();
-	material->unbind();
 
 	return true;
 }
 
 //-----------------------------------//
 
-void Renderable::render( RenderDevice* )
+void Renderable::render( RenderDevice* device )
 {
 	#pragma TODO("Move polygon modes to the renderer")
 

@@ -43,7 +43,7 @@ END_CLASS()
 ScriptController::ScriptController()
 	: state(nullptr)
 {
-	InputManager* im = Engine::getInstancePtr()->getInputManager();
+	InputManager* im = GetEngine()->getInputManager();
 	
 	Keyboard* keyboard = im->getKeyboard();
 	keyboard->onKeyPress.Connect( this, &ScriptController::onKeyPress );
@@ -58,7 +58,7 @@ ScriptController::ScriptController()
 
 ScriptController::~ScriptController()
 {
-	InputManager* im = Engine::getInstancePtr()->getInputManager();
+	InputManager* im = GetEngine()->getInputManager();
 	
 	Keyboard* keyboard = im->getKeyboard();
 	keyboard->onKeyPress.Disconnect( this, &ScriptController::onKeyPress );
@@ -90,7 +90,7 @@ void ScriptController::_update( double delta )
 
 void ScriptController::createState()
 {
-	Engine* engine = Engine::getInstancePtr();	
+	Engine* engine = GetEngine();	
 	ScriptManager* scripts = engine->getScriptManager();
 
 	assert( script != nullptr );
@@ -109,7 +109,7 @@ void ScriptController::bindEntity()
 	const EntityPtr& node = getEntity();
 	assert( node != nullptr );
 
-	Engine* engine = Engine::getInstancePtr();
+	Engine* engine = GetEngine();
 	State* mainState = engine->getScriptManager()->getState();
 
 	swig_module_info* module = SWIG_Lua_GetModule( mainState->getLuaState() );
@@ -146,7 +146,7 @@ void ScriptController::bindType(swig_module_info* module,
 
 ScriptPtr ScriptController::getScript()
 {
-	Engine* engine = Engine::getInstancePtr();
+	Engine* engine = GetEngine();
 
 	ResourceManager* resources = engine->getResourceManager();
 	return resources->loadResource<Script>(scriptName);
@@ -162,7 +162,7 @@ void ScriptController::onKeyPress( const KeyEvent& event )
 	if( !state )
 		return;
 
-	Engine* engine = Engine::getInstancePtr();
+	Engine* engine = GetEngine();
 	State* mainState = engine->getScriptManager()->getState();
 
 	swig_module_info* module = SWIG_Lua_GetModule( mainState->getLuaState() );
@@ -187,7 +187,7 @@ void ScriptController::onKeyRelease( const KeyEvent& event )
 	if( !state )
 		return;
 
-	Engine* engine = Engine::getInstancePtr();
+	Engine* engine = GetEngine();
 	State* mainState = engine->getScriptManager()->getState();
 
 	swig_module_info* module = SWIG_Lua_GetModule( mainState->getLuaState() );

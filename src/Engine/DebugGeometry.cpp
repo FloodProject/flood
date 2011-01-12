@@ -46,10 +46,12 @@ RenderablePtr buildBoundingRenderable( const BoundingBox& box )
 	mat->setDepthCompare( DepthCompare::LessOrEqual );
 	mat->setDepthTest( false );
 
-	RenderablePtr boundingBox( new Renderable(PolygonType::Quads, vb, mat) );
-	boundingBox->setPolygonMode( PolygonMode::Wireframe );
+	RenderablePtr renderable = new Renderable(PolygonType::Quads);
+	renderable->setVertexBuffer(vb);
+	renderable->setMaterial(mat);
+	renderable->setPolygonMode( PolygonMode::Wireframe );
 
-	return boundingBox;
+	return renderable;
 }
 
 //-----------------------------------//
@@ -67,13 +69,17 @@ EntityPtr buildRay( const Ray& pickRay, const Vector3& outFar )
 	vb->set( VertexAttribute::Color, colors );
 
 	MaterialPtr mat = new Material("LineMaterial");
-	RenderablePtr rend = new Renderable(PolygonType::Lines, vb, mat);
-	GeometryPtr geom( new Geometry(rend) );
+
+	RenderablePtr renderable = new Renderable(PolygonType::Lines);
+	renderable->setVertexBuffer(vb);
+	renderable->setMaterial(mat);
+	
+	GeometryPtr geometry( new Geometry(renderable) );
 	
 	EntityPtr line( new Entity("Line") );
 	line->setTag( Tags::NonPickable, true );
 	line->addTransform();
-	line->addComponent( geom );
+	line->addComponent( geometry );
 	
 	return line;
 }
@@ -91,7 +97,9 @@ RenderablePtr buildFrustum( const Frustum& box )
 	MaterialPtr mat( new Material("FrustumDebug") );
 	mat->setBackfaceCulling( false );
 
-	RenderablePtr renderable( new Renderable(PolygonType::Quads, vb, mat) );
+	RenderablePtr renderable = new Renderable(PolygonType::Quads);
+	renderable->setVertexBuffer(vb);
+	renderable->setMaterial(mat);
 	renderable->setPolygonMode( PolygonMode::Wireframe );
 
 	updateDebugFrustum(renderable, box);

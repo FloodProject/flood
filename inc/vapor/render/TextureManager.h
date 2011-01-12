@@ -8,15 +8,15 @@
 
 #pragma once
 
-#include "vapor/resources/Image.h"
-#include "vapor/render/Texture.h"
+#include "render/Texture.h"
+#include "resources/Image.h"
 
 namespace vapor {
 
+//-----------------------------------//
+
 class ResourceManager;
 struct ResourceEvent;
-
-//-----------------------------------//
 
 /**
  * Manages a set of textures. The rest of the engine, when needing a 
@@ -32,7 +32,7 @@ class VAPOR_API TextureManager
 {
 public:
 
-	TextureManager( ResourceManager* );
+	TextureManager();
 	~TextureManager();
 
 	// Gets a texture given a name identifier.

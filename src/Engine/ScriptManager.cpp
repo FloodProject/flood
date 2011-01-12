@@ -10,14 +10,12 @@
 
 #ifdef VAPOR_SCRIPTING_LUA
 
-#include "vapor/script/ScriptManager.h"
-#include "vapor/Engine.h"
+#include "script/ScriptManager.h"
+#include "Engine.h"
 
 #include <lua.hpp>
 
-extern "C" {
-	int luaopen_vapor(lua_State* L);
-}
+extern "C" int luaopen_vapor(lua_State* L);
 
 namespace vapor {
 
@@ -26,8 +24,7 @@ namespace vapor {
 ScriptManager::ScriptManager()
 	: state(nullptr)
 {
-	Engine* engine = Engine::getInstancePtr();
-	ResourceManager* rm = engine->getResourceManager();
+	ResourceManager* rm = GetEngine()->getResourceManager();
 	rm->onResourceReloaded.Connect( this, &ScriptManager::onReload );
 
 	// Create a new Lua VM instance.
@@ -51,8 +48,7 @@ ScriptManager::ScriptManager()
 
 ScriptManager::~ScriptManager()
 {
-	Engine* engine = Engine::getInstancePtr();
-	ResourceManager* rm = engine->getResourceManager();
+	ResourceManager* rm = GetEngine()->getResourceManager();
 	rm->onResourceReloaded.Disconnect( this, &ScriptManager::onReload );
 
 	Log::info("Cleaning up the Lua state");

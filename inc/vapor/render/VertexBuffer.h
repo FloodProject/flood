@@ -8,8 +8,9 @@
 
 #pragma once
 
-#include "vapor/math/Vector3.h"
-#include "vapor/render/Buffer.h"
+#include "math/Vector3.h"
+#include "math/Color.h"
+#include "render/Buffer.h"
 
 namespace vapor {
 
@@ -43,15 +44,14 @@ struct VertexAttribute
 
 struct Attribute
 {
-	Attribute()
-	{ }
+	Attribute() {}
 
 	Attribute(const Attribute& rhs)
 	  : components(rhs.components)
 	  , size(rhs.size)
 	  , data(rhs.data)
 	  , type(rhs.type)
-	{ }
+	{}
 
 	int components;
 	int size;
@@ -60,6 +60,9 @@ struct Attribute
 };
 
 //-----------------------------------//
+
+typedef std::map<VertexAttribute::Enum, Attribute> AttributeMap;
+typedef std::pair<const VertexAttribute::Enum, Attribute> AttributeMapPair;
 
 /**
  * Represents a vertex buffer. One limitation here is that all data is 
@@ -71,13 +74,32 @@ class VAPOR_API VertexBuffer : public Buffer
 {
 public:
 
-	VertexBuffer(BufferUsage::Enum = BufferUsage::Static,
+	VertexBuffer(
+		BufferUsage::Enum = BufferUsage::Static,
 		BufferAccess::Enum = BufferAccess::Write);
 	
 	virtual ~VertexBuffer();
 
-	// Updates the internal buffer with current attributes.
-	bool build();
+	// Binds the vertex buffer.
+	bool bind();
+	
+	// Unbinds the vertex buffer.
+	bool unbind();
+
+	// Binds the attributes pointers.
+	void bindPointers();
+
+	// Unbinds the attribute pointers.
+	void unbindPointers();
+
+	// Binds the attribute pointers.
+	void bindGenericPointers();
+
+	// Unbinds the attribute pointers.
+	void unbindGenericPointers();
+	
+	// Clears this vertex buffer. All vertex data will be gone.
+	void clear();
 
 	// Returns if the this buffer is valid.
 	bool isValid() const;
@@ -85,17 +107,11 @@ public:
 	// Returns true if the vertex buffer is built, false otherwhise.
 	bool isBuilt() const;
 
+	// Updates the internal buffer with current attributes.
+	bool build();
+
 	// Forces a rebuild of the vertex buffer the next update.
 	void forceRebuild();
-	
-	// Binds the vertex buffer.
-	bool bind();
-	
-	// Unbinds the vertex buffer.
-	bool unbind();
-	
-	// Clears this vertex buffer. All vertex data will be gone.
-	void clear();
 
 	// Returns an attribute data in the vertex buffer.
 	std::vector<Vector3>& getAttribute( VertexAttribute::Enum ) const;
@@ -113,7 +129,10 @@ public:
 	uint getNumVertices() const;
 
 	// Sets the attribute data.
-	bool set( VertexAttribute::Enum attr, const std::vector< Vector3 >& data );
+	bool set( VertexAttribute::Enum attr, const std::vector<Vector3>& data );
+
+	// Sets the attribute data.
+	bool set( VertexAttribute::Enum attr, const std::vector<Color>& data );
 
 	// Sets the attribute data.
 	bool set( VertexAttribute::Enum attr, const std::vector<float>& data );
@@ -123,15 +142,8 @@ private:
 	// Checks that each entry in the map has the same size.
 	bool checkSize() const;
 
-	// Binds all the OpenGL pointers when the buffer is built.
-	void bindPointers();
-
-	// Tells us if this buffer has already been built.
+	// Tracks if the buffer has been built.
 	bool built;
-
-	// Used to store specific GL types for each attribute.
-	typedef std::map< VertexAttribute::Enum, Attribute > AttributeMap;
-	typedef std::pair< const VertexAttribute::Enum, Attribute > AttributeMapPair;
 	
 	// Holds all the vertex attributes.
 	mutable AttributeMap attributes;

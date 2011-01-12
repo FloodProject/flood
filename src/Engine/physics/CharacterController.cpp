@@ -63,8 +63,7 @@ CharacterController::~CharacterController()
 	Class& klass = (Class&) getType();
 	klass.onFieldChanged.Disconnect(this, &CharacterController::onFieldChanged);
 
-	Engine* engine = Engine::getInstancePtr();
-	PhysicsManager* physics = engine->getPhysicsManager();
+	PhysicsManager* physics = GetEngine()->getPhysicsManager();
 	
 	btDiscreteDynamicsWorld* world = physics->getWorld();
 	
@@ -85,7 +84,7 @@ void CharacterController::_update( double delta )
 	if( !createController() )
 		return;
 
-	Engine* engine = Engine::getInstancePtr();
+	Engine* engine = GetEngine();
 	PhysicsManager* physics = engine->getPhysicsManager();
 	btDiscreteDynamicsWorld* world = physics->getWorld();
 
@@ -168,7 +167,7 @@ bool CharacterController::createController()
 	updateBulletTransform();
 	//updateProperties();
 
-	Engine* engine = Engine::getInstancePtr();
+	Engine* engine = GetEngine();
 	PhysicsManager* physics = engine->getPhysicsManager();
 	btDiscreteDynamicsWorld* world = physics->getWorld();
 

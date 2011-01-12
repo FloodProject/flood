@@ -42,7 +42,7 @@ GLSL_Program::~GLSL_Program()
 		const GLSL_ShaderPtr& shader = shaders[i];
 	
 		if( attached[shader] )
-			glDetachShader( id, shader->id() );
+			glDetachShader( id, shader->getId() );
 
 		if( glHasError("Could not detach shader object") )
 			continue;
@@ -70,8 +70,7 @@ bool GLSL_Program::create()
 
 void GLSL_Program::addShader( const GLSL_ShaderPtr& shader )
 {
-	ShaderVector::iterator it =
-		std::find(shaders.begin(), shaders.end(), shader);
+	ShaderVector::iterator it = std::find(shaders.begin(), shaders.end(), shader);
 
 	if( it == shaders.end() )
 	{
@@ -80,7 +79,7 @@ void GLSL_Program::addShader( const GLSL_ShaderPtr& shader )
 
 	if( !attached[shader] )
 	{
-		glAttachShader( id, shader->id() );
+		glAttachShader( id, shader->getId() );
 
 		if( glHasError("Could not attach shader") )
 			return;
@@ -303,26 +302,16 @@ void GLSL_Program::bindDefaultAttributes()
 
 void GLSL_Program::setAttribute( const std::string& name, VertexAttribute::Enum attr )
 {
-	//if( !isLinked() ) return;
-
-	//bind();
-
 	glBindAttribLocation( id, attr, name.c_str() );
 
 	if( glHasError("Could not bind attribute variable") )
 		return;
-
-	//unbind();
 }
 
 //-----------------------------------//
 
 void GLSL_Program::setUniform( const std::string& slot, int data )
 {
-	if( !isLinked() ) return;
-
-	//bind();
-
 	GLint loc = glGetUniformLocation( id, slot.c_str() );
 
 	if( loc == -1 )
@@ -332,18 +321,12 @@ void GLSL_Program::setUniform( const std::string& slot, int data )
 	}
 
 	glUniform1i( loc, data );
-
-	//unbind();
 }
 
 //-----------------------------------//
 
 void GLSL_Program::setUniform( const std::string& slot, float data )
 {
-	if( !isLinked() ) return;
-
-	//bind();
-
 	GLint loc = glGetUniformLocation( id, slot.c_str() );
 
 	if( loc == -1 )
@@ -353,19 +336,13 @@ void GLSL_Program::setUniform( const std::string& slot, float data )
 	}
 
 	glUniform1f( loc, data );
-
-	//unbind();
 }
 
 //-----------------------------------//
 
 void GLSL_Program::setUniform( const std::string& slot, const std::vector<Vector3> vec )
 {
-	if( !isLinked() ) return;
-
 	assert( sizeof(vec[0]) == 3*sizeof(float) );
-
-	//bind();
 
 	GLint loc = glGetUniformLocation( id, slot.c_str() );
 
@@ -376,19 +353,13 @@ void GLSL_Program::setUniform( const std::string& slot, const std::vector<Vector
 	}
 
 	glUniform3fv( loc, vec.size(), reinterpret_cast<const float*>(&vec[0]) );
-
-	//unbind();
 }
 
 //-----------------------------------//
 
 void GLSL_Program::setUniform( const std::string& slot, const std::vector<Color> vec )
 {
-	if( !isLinked() ) return;
-
 	assert( sizeof(vec[0]) == 4*sizeof(float) );
-
-	//bind();
 
 	GLint loc = glGetUniformLocation( id, slot.c_str() );
 
@@ -399,18 +370,12 @@ void GLSL_Program::setUniform( const std::string& slot, const std::vector<Color>
 	}
 
 	glUniform4fv( loc, vec.size(), reinterpret_cast<const float*>(&vec[0]) );
-
-	//unbind();
 }
 
 //-----------------------------------//
 
 void GLSL_Program::setUniform( const std::string& slot, const Vector3& vec )
 {
-	if( !isLinked() ) return;
-
-	//bind();
-
 	GLint loc = glGetUniformLocation( id, slot.c_str() );
 
 	if( loc == -1 )
@@ -420,8 +385,6 @@ void GLSL_Program::setUniform( const std::string& slot, const Vector3& vec )
 	}
 
 	glUniform3f( loc, vec.x, vec.y, vec.z );
-
-	//unbind();
 }
 
 //-----------------------------------//
@@ -436,10 +399,6 @@ void GLSL_Program::setUniform( const std::string& slot, const EulerAngles& ang )
 
 void GLSL_Program::setUniform( const std::string& slot, const Matrix4x3& matrix )
 {
-	if( !isLinked() ) return;
-
-	//bind();
-
 	GLint loc = glGetUniformLocation( id, slot.c_str() );
 
 	if( loc == -1 )
@@ -450,12 +409,12 @@ void GLSL_Program::setUniform( const std::string& slot, const Matrix4x3& matrix 
 
 	//if(glUniformMatrix4x3fv)
 	//{
-	//	glUniformMatrix4x3fv( loc, 1, true, &matrix.m11 );
+	//	glUniformMatrix4x3fv( loc, 1, false, &matrix.m11 );
 	//}
 	//else
 	{
 		Matrix4x4 mat( matrix );
-		glUniformMatrix4fv( loc, 1, true, &mat.m11 );
+		glUniformMatrix4fv( loc, 1, false, &mat.m11 );
 	}
 }
 
@@ -463,10 +422,6 @@ void GLSL_Program::setUniform( const std::string& slot, const Matrix4x3& matrix 
 
 void GLSL_Program::setUniform( const std::string& slot, const Matrix4x4& matrix )
 {
-	if( !isLinked() ) return;
-
-	//bind();
-
 	GLint loc = glGetUniformLocation( id, slot.c_str() );
 
 	if( loc == -1 )
@@ -475,23 +430,15 @@ void GLSL_Program::setUniform( const std::string& slot, const Matrix4x4& matrix 
 		return;
 	}
 
-	glUniformMatrix4fv( loc, 1, true, &matrix.m11 );
-	
-	//float test[16];
-	//glGetUniformfv( id, loc, test );
-
-	//unbind();
+	glUniformMatrix4fv( loc, 1, false, &matrix.m11 );
 }
 
 //-----------------------------------//
 
 void GLSL_Program::setUniform( const std::string& slot, const std::vector<Matrix4x4>& vec )
 {
-	if( !isLinked() ) return;
-
 	if( vec.empty() )
 		return;
-	//bind();
 
 	GLint loc = glGetUniformLocation( id, slot.c_str() );
 
@@ -501,9 +448,7 @@ void GLSL_Program::setUniform( const std::string& slot, const std::vector<Matrix
 		return;
 	}
 
-	glUniformMatrix4fv( loc, vec.size(), true, &(vec[0].m11) );
-
-	//unbind();
+	glUniformMatrix4fv( loc, vec.size(), false, &(vec[0].m11) );
 }
 
 //-----------------------------------//

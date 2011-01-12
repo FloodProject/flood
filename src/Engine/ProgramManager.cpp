@@ -7,18 +7,19 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/render/ProgramManager.h"
-#include "vapor/render/GLSL_Program.h"
-#include "vapor/resources/GLSL_Text.h"
-#include "vapor/resources/ResourceManager.h"
-#include "vapor/Utilities.h"
+#include "render/ProgramManager.h"
+#include "render/GLSL_Program.h"
+#include "resources/GLSL_Text.h"
+#include "resources/ResourceManager.h"
+#include "Utilities.h"
+#include "Engine.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-ProgramManager::ProgramManager( ResourceManager* resourceManager )
-	: rm( resourceManager )
+ProgramManager::ProgramManager()
+	: rm( GetEngine()->getResourceManager() )
 {
 	assert( rm != nullptr );
 	

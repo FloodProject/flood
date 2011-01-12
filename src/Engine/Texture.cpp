@@ -39,7 +39,7 @@ Texture::Texture( const Settings& settings, PixelFormat::Enum format )
 
 Texture::~Texture()
 {
-	glDeleteTextures( 1, &_id );
+	glDeleteTextures( 1, &id );
 	
 	if( glHasError("Could not delete texture object") )
 		return;
@@ -51,7 +51,7 @@ Texture::~Texture()
 
 void Texture::init()
 {
-	_id = 0;
+	id = 0;
 	target = GL_TEXTURE_2D;
 	uploaded = false;
 	image = nullptr;
@@ -67,7 +67,7 @@ void Texture::init()
 
 bool Texture::generate()
 {
-	glGenTextures( 1, &_id );
+	glGenTextures( 1, &id );
 
 	if( glHasError("Could not generate a new texture object") )
 		return false;
@@ -165,7 +165,8 @@ void Texture::setImage( Image* newImage )
 void Texture::bind( int unit ) const
 {
 	glActiveTexture( GL_TEXTURE0+unit );
-	glBindTexture( target, _id );
+	glEnable(target);
+	glBindTexture( target, id );
 }
 
 //-----------------------------------//
@@ -173,6 +174,7 @@ void Texture::bind( int unit ) const
 void Texture::unbind( int unit ) const
 {
 	glActiveTexture( GL_TEXTURE0+unit );
+	glDisable(target);
 	glBindTexture( target, 0 );
 }
 

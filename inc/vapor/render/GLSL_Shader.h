@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "vapor/render/Shader.h"
+#include "render/Shader.h"
 
 namespace vapor {
 
@@ -32,7 +32,7 @@ public:
 	virtual bool compile();
 
 	// Gets the OpenGL shader id.
-	uint id();
+	GETTER(Id, uint, id)
 
 private:
 
@@ -46,7 +46,7 @@ private:
 	uint getGLShaderType( ShaderType::Enum type );
 
 	// Internal OpenGL shader id.
-	uint shaderId;
+	uint id;
 
 	// Was this shader already created?
 	bool created;

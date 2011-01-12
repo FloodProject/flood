@@ -101,6 +101,9 @@ public:
 	// Sets the position of the overlay.
 	void setPosition( int x, int y );
 
+	// Sets the opacity of the overlay.
+	void setOpacity( float opacity );
+
 	// Updates the overlay if needed.
 	virtual void update( double delta );
 

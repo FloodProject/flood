@@ -9,7 +9,6 @@
 #pragma once
 
 #include "vapor/PCH.h"
-#include "vapor/Singleton.h"
 #include "ReferenceCount.h"
 
 FWD_DECL_SHARED(Scene)
@@ -39,12 +38,11 @@ class ScriptManager;
  * a class like this one that instantiates everything and sets it all up.
  */
 
-class VAPOR_API Engine : public Singleton<Engine>
+class VAPOR_API Engine
 {
-	friend class Singleton<Engine>;
-
 public:
 	
+	Engine();	
 	~Engine();
 
 	// Initialize the engine subsystems.
@@ -105,8 +103,6 @@ public:
 
 protected:
 
-	Engine();
-
 	// Subsystems.
 	std::vector< Subsystem* > subsystems;
 
@@ -146,6 +142,9 @@ protected:
 	// Arguments.
 	const char** argv;
 };
+
+// Gets the engine instance.
+Engine* GetEngine();
 
 //-----------------------------------//
 

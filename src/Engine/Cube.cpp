@@ -7,15 +7,18 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/render/Cube.h"
+#include "render/Cube.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
 Cube::Cube( float width, float height )
-	: Renderable( PolygonType::Quads, buildGeometry(width, height) )
-{ }
+	: Renderable( PolygonType::Quads )
+{
+	VertexBufferPtr vb = buildGeometry(width, height);
+	setVertexBuffer(vb);
+}
 
 //-----------------------------------//
 

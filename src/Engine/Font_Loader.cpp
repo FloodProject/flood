@@ -36,7 +36,7 @@ bool Font_Loader::decode(const Stream& stream, Resource* res)
 		return false;
 
 	// TODO: ugly.
-	ResourceManager* rm = Engine::getInstance().getResourceManager();
+	ResourceManager* rm = GetEngine()->getResourceManager();
 	image = rm->loadResource<Image>( imageFilename, false );
 
 	if( !image )

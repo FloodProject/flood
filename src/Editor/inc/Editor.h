@@ -163,6 +163,7 @@ protected:
 	wxAuiManager* auiManager;
 };
 
+// Gets the editor instance.
 EditorFrame& GetEditor();
 
 //-----------------------------------//

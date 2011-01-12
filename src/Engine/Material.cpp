@@ -74,8 +74,7 @@ void Material::init()
 
 void Material::setTexture( uint unit, const std::string& name )
 {
-	Engine* engine = Engine::getInstancePtr();
-	RenderDevice* renderDevice = engine->getRenderDevice();
+	RenderDevice* renderDevice = GetEngine()->getRenderDevice();
 	TextureManager* tm = renderDevice->getTextureManager();
 	
 	TexturePtr tex = tm->getTexture( name );
@@ -86,7 +85,7 @@ void Material::setTexture( uint unit, const std::string& name )
 
 void Material::setTexture( uint unit, const ImagePtr& img )
 {
-	Engine* engine = Engine::getInstancePtr();
+	Engine* engine = GetEngine();
 	RenderDevice* renderDevice = engine->getRenderDevice();
 	TextureManager* tm = renderDevice->getTextureManager();
 
@@ -122,11 +121,10 @@ bool Material::isBlendingEnabled() const
 
 //-----------------------------------//
 
-void Material::setBlending( BlendSource::Enum _source, 
-	BlendDestination::Enum _destination )
+void Material::setBlending( BlendSource::Enum source, BlendDestination::Enum destination )
 {
-	source = _source;
-	destination = _destination;
+	this->source = source;
+	this->destination = destination;
 	
 	_isBlendingEnabled = true;
 }
@@ -135,8 +133,7 @@ void Material::setBlending( BlendSource::Enum _source,
 
 ProgramPtr Material::getProgram()
 {
-	Engine* engine = Engine::getInstancePtr();
-	RenderDevice* renderDevice = engine->getRenderDevice();
+	RenderDevice* renderDevice = GetEngine()->getRenderDevice();
 	ProgramManager* programManager = renderDevice->getProgramManager();
 
 	return programManager->getProgram( program );
@@ -144,43 +141,37 @@ ProgramPtr Material::getProgram()
 
 //-----------------------------------//
 
-void Material::bind()
+void Material::bindTextures(bool bindUniforms)
 {
-	ProgramPtr program = getProgram();
-	assert( program != nullptr );
-
 	TextureMap::const_iterator it;
 	for( it = textures.cbegin(); it != textures.cend(); it++ )
 	{
-		it->second->bind( it->first );
-	}
+		const TexturePtr& tex = it->second;
+		int index = it->first;
 
-	if( !program->isLinked() )
-	{
-		program->link();
-	}
+		tex->bind(index);
 
-	program->bind();
+		if(!bindUniforms) continue;
 
-	for( it = textures.cbegin(); it != textures.cend(); it++ )
-	{
-		std::string name = "vp_Texture"+String::fromNumber(it->first);
-		program->setUniform( name, (int) it->first );
+		std::string name = "vp_Texture" + String::fromNumber(index);
+		
+		const ProgramPtr& program = getProgram();
+
+		if( !program ) continue;
+
+		program->setUniform( name, index );
 	}
 }
 
 //-----------------------------------//
 
-void Material::unbind()
+void Material::unbindTextures()
 {
-	ProgramPtr program = getProgram();
-
-	program->unbind();
-
 	TextureMap::const_iterator it;
 	for( it = textures.cbegin(); it != textures.cend(); it++ )
 	{
-		it->second->unbind( it->first );
+		const TexturePtr& tex = it->second;
+		tex->unbind( it->first );
 	}
 }
 

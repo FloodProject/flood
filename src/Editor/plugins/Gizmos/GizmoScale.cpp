@@ -8,14 +8,14 @@
 
 #include "PCH.h"
 #include "GizmoScale.h"
-#include "vapor/render/Cube.h"
+#include "render/Cube.h"
 
 namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-GizmoScale::GizmoScale( const EntityPtr& node, const CameraWeakPtr& camera )
-	: Gizmo( node, camera )
+GizmoScale::GizmoScale( const EntityPtr& entity, const CameraWeakPtr& camera )
+	: Gizmo(entity, camera)
 { }
 
 //-----------------------------------//
@@ -23,10 +23,20 @@ GizmoScale::GizmoScale( const EntityPtr& node, const CameraWeakPtr& camera )
 void GizmoScale::buildGeometry()
 {
 	lines = generateLines();
-	addRenderable( new Renderable(PolygonType::Lines, lines, material) );
+
+	RenderablePtr renderable = new Renderable(PolygonType::Lines);
+	renderable->setVertexBuffer(lines);
+	renderable->setMaterial(material);
+
+	addRenderable(renderable);
 
 	cubes = generateCubes();
-	addRenderable( new Renderable(PolygonType::Quads, cubes, material) );
+
+	renderable = new Renderable(PolygonType::Quads);
+	renderable->setVertexBuffer(cubes);
+	renderable->setMaterial(material);
+
+	addRenderable(renderable);
 }
 
 //-----------------------------------//

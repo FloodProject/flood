@@ -18,8 +18,8 @@ static const float BASE_FACTOR = 0.5f;
 
 //-----------------------------------//
 
-GizmoTranslate::GizmoTranslate( const EntityPtr& node, const CameraWeakPtr& camera )
-	: Gizmo( node, camera )
+GizmoTranslate::GizmoTranslate( const EntityPtr& entity, const CameraWeakPtr& camera )
+	: Gizmo(entity, camera)
 { }
 
 //-----------------------------------//
@@ -27,10 +27,20 @@ GizmoTranslate::GizmoTranslate( const EntityPtr& node, const CameraWeakPtr& came
 void GizmoTranslate::buildGeometry()
 {
 	lines = generateLines();
-	addRenderable( new Renderable(PolygonType::Lines, lines, material) );
+	
+	RenderablePtr renderable = new Renderable(PolygonType::Lines);
+	renderable->setVertexBuffer(lines);
+	renderable->setMaterial(material);
+
+	addRenderable(renderable);
 
 	cones = generateCones();
-	addRenderable( new Renderable(PolygonType::Triangles, cones, material) );
+	
+	renderable = new Renderable(PolygonType::Triangles);
+	renderable->setVertexBuffer(cones);
+	renderable->setMaterial(material);
+
+	addRenderable(renderable);
 }
 
 //-----------------------------------//

@@ -165,10 +165,7 @@ void SelectionPlugin::createRectangle()
 {
 	OverlayPtr overlay( new Overlay() );
 	overlay->setPositionMode( PositionMode::Absolute );
-	//overlay->setOpacity();
-
-	MaterialPtr material = overlay->getRenderables()[0]->getMaterial();
-	material->setBlending(BlendSource::SourceAlpha, BlendDestination::InverseSourceAlpha);
+	overlay->setOpacity(0.5f);
 
 	dragRectangle.reset( new Entity() );
 	dragRectangle->addTransform();

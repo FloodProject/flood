@@ -35,7 +35,7 @@ FirstPersonController::FirstPersonController()
 	: clampMovementX( true )
 	, mouseWheel(0)
 {
-	Engine* engine = Engine::getInstancePtr();
+	Engine* engine = GetEngine();
 
 	window = engine->getRenderDevice()->getWindow();
 	inputManager = engine->getInputManager();

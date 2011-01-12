@@ -149,7 +149,7 @@ bool Body::createBody()
 
 void Body::addWorld()
 {
-	Engine* engine = Engine::getInstancePtr();
+	Engine* engine = GetEngine();
 	PhysicsManager* physics = engine->getPhysicsManager();
 	
 	if( !physics )
@@ -162,7 +162,7 @@ void Body::addWorld()
 
 void Body::removeWorld()
 {
-	Engine* engine = Engine::getInstancePtr();
+	Engine* engine = GetEngine();
 	PhysicsManager* physics = engine->getPhysicsManager();
 	
 	if( !physics )
