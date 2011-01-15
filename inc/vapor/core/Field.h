@@ -59,16 +59,16 @@ public:
 
 	// Sets the value of the field in the object.
 	template<typename T>
-	void set( const void* object, const T& value ) const
-	{
-		T* ptr = (T*)((byte*)object + offset);
-		*ptr = value;
+	void set( const void* object, const T& value )
+	{		
+		if(setterFunction)
+			setterFunction((void*) object, (void*) &value);
+		else
+			*(T*)((byte*)object + offset) = value;
 	}
 
 	// Returns if the field is a pointer.
 	bool isPointer() const;
-
-public:
 
 	// Name of the field in the class.
 	std::string name;

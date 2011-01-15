@@ -19,8 +19,6 @@ namespace vapor {
 typedef std::map<std::string, Field*> FieldsMap;
 typedef std::pair<const std::string, Field*> FieldsPair;
 
-//-----------------------------------//
-
 /**
  * This class provides types with a fast RTTI (Runtime Type Information)
  * system that will be used for fast dynamic type checking, reflection,
@@ -40,38 +38,11 @@ public:
 	// Gets the fields of the class.
 	const FieldsMap& getFields() const;
 
+	// Gets the fields of the class.
+	const std::vector<Field*>& getFieldsVector() const;
+
 	// Adds a field to the class.
 	void addField(Field& field);
-
-	// Gets a value in the field.
-	template<typename T>
-	bool getFieldValue( const std::string& name, const void* obj, T& value ) const
-	{
-		Field* field = getField(name);
-		if( !field ) return false;
-		
-		value = field->get<T>(obj);
-		return true;
-	}
-
-	// Sets a value in the field.
-	template<typename T>
-	bool setFieldValue( const std::string& name, const void* obj, const T& value )
-	{
-		Field* field = getField(name);
-		if( !field ) return false;
-
-		SetterFunctionPtr setFn = field->setterFunction;
-		
-		if(setFn)
-			setFn((void*) obj, (void*) &value);
-		else
-			field->set<T>(obj, value);
-
-		notifyChanged(*field);
-
-		return true;
-	}
 
 	// Returns a new instance of this type.
 	virtual void* createInstance() const;
@@ -86,6 +57,9 @@ protected:
 
 	// Keeps track of type fields.
 	FieldsMap fields;
+
+	// Keeps track of the type fields in insertion order.
+	std::vector<Field*> fieldsVector; 
 };
 
 //-----------------------------------//
@@ -107,33 +81,41 @@ public:																			\
 		virtual void* createInstance() const { return new name(); }				\
 	};																			\
 
+#define BEGIN_CLASS_COMMON()													\
+	static bool init = false;													\
+	if(init) return type;														\
+	init = true;
+
 #define BEGIN_CLASS(name)														\
 	SUBCLASS_CLASS(name)														\
 	static Class& _ = name::getStaticType();									\
-	Class& name::getStaticType()												\
-	{ static _##name type(TOSTRING(name), sizeof(name));
+	Class& name::getStaticType() { 												\
+	static _##name type(TOSTRING(name), sizeof(name));							\
+	BEGIN_CLASS_COMMON()
 
 #define BEGIN_CLASS_ABSTRACT(name)												\
 	static Class& _ = name::getStaticType();									\
 	Class& name::getStaticType()												\
-	{ static Class type(TOSTRING(name), sizeof(name));
+	{ static Class type(TOSTRING(name), sizeof(name));							\
+	BEGIN_CLASS_COMMON()
 
 #define BEGIN_CLASS_PARENT(name, parent)										\
 	SUBCLASS_CLASS(name)														\
 	static Class& _ = name::getStaticType();									\
 	Class& name::getStaticType()												\
 	{ static _##name type(TOSTRING(name), parent::getStaticType(),				\
-		sizeof(name));
+		sizeof(name));															\
+	BEGIN_CLASS_COMMON()
 
 #define BEGIN_CLASS_PARENT_ABSTRACT(name, parent)								\
 	static Class& _ = name::getStaticType();									\
 	Class& name::getStaticType()												\
 	{ static Class type(TOSTRING(name), parent::getStaticType(),				\
-		sizeof(name));
+		sizeof(name));															\
+	BEGIN_CLASS_COMMON()
 
 #define END_CLASS()																\
 	return type; }																\
-
 
 #define NAME_FIELD_SETTER(classType, fieldName)									\
 	_set_##classType##_##fieldName

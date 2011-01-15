@@ -36,7 +36,7 @@ void GizmoScale::buildGeometry()
 	renderable->setVertexBuffer(cubes);
 	renderable->setMaterial(material);
 
-	addRenderable(renderable);
+	addRenderable(renderable, RenderStage::PostTransparency, 100);
 }
 
 //-----------------------------------//

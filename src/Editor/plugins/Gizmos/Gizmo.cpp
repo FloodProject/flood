@@ -30,7 +30,7 @@ Gizmo::Gizmo( const EntityPtr& node, const CameraWeakPtr& camera )
 	assert( node != nullptr );
 
 	// Disable the depth testing so the gizmo can be seen behind objects.
-	material = new Material("Gizmo");
+	material = new Material("GizmoMaterial");
 	material->setDepthTest( false );
 }
 
@@ -157,7 +157,6 @@ Color Gizmo::getAxisColor( GizmoAxis::Enum axis )
 bool Gizmo::isAnyAxisSelected() const
 {
 	GizmoAxis::Enum axis = getAxisSelected();
-
 	return axis != GizmoAxis::None;
 }
 

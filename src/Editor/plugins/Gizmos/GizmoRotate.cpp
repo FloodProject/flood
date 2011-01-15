@@ -30,7 +30,7 @@ void GizmoRotate::buildGeometry()
 	renderable->setVertexBuffer(lines);
 	renderable->setMaterial(material);
 
-	addRenderable(renderable);
+	addRenderable(renderable, RenderStage::PostTransparency, 100);
 }
 
 //-----------------------------------//

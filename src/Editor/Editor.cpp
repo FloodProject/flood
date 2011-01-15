@@ -150,7 +150,7 @@ void EditorFrame::createPlugins()
 	PLUGIN(Gizmo);
 	PLUGIN(Resources);
 	//PLUGIN(Terrain);
-	PLUGIN(Camera);
+	//PLUGIN(Camera);
 	PLUGIN(Log);
 	PLUGIN(Sample);
 

@@ -30,6 +30,7 @@ Class::Class(const std::string& name, const Type& parent, int size)
 void Class::addField(Field& field)
 {
 	fields[field.name] = &field;
+	fieldsVector.push_back(&field);
 }
 
 //-----------------------------------//
@@ -37,6 +38,13 @@ void Class::addField(Field& field)
 const FieldsMap& Class::getFields() const
 {
 	return fields;
+}
+
+//-----------------------------------//
+
+const std::vector<Field*>& Class::getFieldsVector() const
+{
+	return fieldsVector;
 }
 
 //-----------------------------------//

@@ -61,12 +61,12 @@ void PropertyOperation::setFieldValue(const wxAny& value)
 		if( !resource )
 			return;
 
-		type->setFieldValue<ResourcePtr>(field->name, object, resource);
+		field->set<ResourcePtr>(object, resource);
 	}
 	else if( field_type.isEnum() )
 	{
 		int val = value.As<int>();
-		type->setFieldValue<int>(field->name, object, val);
+		field->set<int>(object, val);
 	}
 	else if( field_type.isPrimitive() )
 	{
@@ -75,50 +75,50 @@ void PropertyOperation::setFieldValue(const wxAny& value)
 		if( prim_type.isBool() )
 		{
 			bool val = value.As<bool>();
-			type->setFieldValue<bool>(field->name, object, val);
+			field->set<bool>(object, val);
 		}
 		//-----------------------------------//
 		else if( prim_type.isInteger() )
 		{
 			int val = value.As<int>();
-			type->setFieldValue<int>(field->name, object, val);
+			field->set<int>(object, val);
 		}
 		//-----------------------------------//
 		else if( prim_type.isFloat() )
 		{
 			float val = value.As<float>();
-			type->setFieldValue<float>(field->name, object, val);
+			field->set<float>(object, val);
 		}
 		//-----------------------------------//
 		else if( prim_type.isString() )
 		{
-			wxString val = value.As<wxString>();
-			type->setFieldValue<std::string>(field->name, object, (std::string) val);
+			std::string val = value.As<wxString>();
+			field->set<std::string>(object, val);
 		}
 		//-----------------------------------//
 		else if( prim_type.isColor() )
 		{
 			wxColour val = value.As<wxColour>();
-			type->setFieldValue<Color>(field->name, object, getColorFromWx(val));
+			field->set<Color>(object, getColorFromWx(val));
 		}
 		//-----------------------------------//
 		else if( prim_type.isVector3() )
 		{
 			Vector3 val = value.As<Vector3>();
-			type->setFieldValue<Vector3>(field->name, object, val);
+			field->set<Vector3>(object, val);
 		}
 		//-----------------------------------//
 		else if( prim_type.isQuaternion() )
 		{
 			Quaternion val = value.As<Quaternion>();
-			type->setFieldValue<Quaternion>(field->name, object, val);
+			field->set<Quaternion>(object, val);
 		}
 		//-----------------------------------//
 		else if( prim_type.isBitfield() )
 		{
 			long bits = value.As<long>();
 			std::bitset<32> val(bits);
-			type->setFieldValue< std::bitset<32> >(field->name, object, val);
+			field->set<std::bitset<32>>(object, val);
 		}
 		//-----------------------------------//
 		else assert( false );

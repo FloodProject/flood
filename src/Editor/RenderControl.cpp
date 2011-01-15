@@ -58,13 +58,6 @@ RenderControl::RenderControl( wxWindow* parent, wxWindowID id,
 
 	// Setup input in the engine.
 	inputManager = window->inputManager;
-
-	//// Connect the timers.
-	//frameUpdateTimer.Bind(wxEVT_TIMER, &RenderControl::doUpdate,
-	//	this, frameUpdateTimer.GetId() );
-	//
-	//frameRenderTimer.Bind(wxEVT_TIMER, &RenderControl::doRender,
-	//	this, frameRenderTimer.GetId() );
 }
 
 //-----------------------------------//
@@ -94,8 +87,8 @@ void RenderControl::doUpdate(wxTimerEvent&)
 
 void RenderControl::doRender(wxTimerEvent&)
 {
-	if( !needsRedraw )
-		return;
+	//if( !needsRedraw )
+	//	return;
 
 	Refresh();
 	needsRedraw = false;

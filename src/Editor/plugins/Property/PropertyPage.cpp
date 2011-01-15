@@ -361,12 +361,11 @@ void PropertyPage::appendObjectFields(const Class& type, void* object, bool newC
 		appendObjectFields(parent, object, false);
 	}
 	
-	const FieldsMap& fields = type.getFields();
+	const std::vector<Field*>& fields = type.getFieldsVector();
 	
-	FieldsMap::const_iterator it;
-	for( it = fields.cbegin(); it != fields.cend(); it++ )
+	for( uint i = 0; i < fields.size(); i++ )
 	{
-		const Field& field = *(it->second);
+		const Field& field = *fields[i];
 		const Type& fieldType = field.type;
 
 		wxPGProperty* prop = nullptr;
@@ -376,11 +375,11 @@ void PropertyPage::appendObjectFields(const Class& type, void* object, bool newC
 		if( field.isPointer() && isResource )
 		{
 			const std::string& name = field.type.getName();
-			std::string value;
-
-			ResourcePtr res;
+			ResourcePtr res = field.get<ResourcePtr>(object);
 			
-			if( type.getFieldValue<ResourcePtr>(field.name, object, res) && res )
+			std::string value;
+			
+			if( res )
 				value = Path::getFile( res->getPath() );
 
 			prop = new ResourceProperty(name);

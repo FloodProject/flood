@@ -1,15 +1,16 @@
 WIP (work-in-progress)
 ======================
 
+Only update indivual properties
+
 Fix mesh collide loop overflows
 Serialization of group nodes
 Add UpdateUI event to Play button.
 Physics rotation becomes wrong due to bounding box calculation.
 Fix default animation state on skinned meshes with no animation tracks.
-Meshes with alpha values need to get blending enabled.
+Meshes with alpha values need to get ble nding enabled.
 Logger can have problems with multiple threads
 Add code to generate a default texture
-
 
 Merge mouse events
 Fix currentPlugin crasher bug

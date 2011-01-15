@@ -27,6 +27,10 @@ BEGIN_CLASS_PARENT(Particles, Geometry)
 	FIELD_PRIMITIVE(Particles, float, spawnRate)
 	FIELD_PRIMITIVE(Particles, float, fadeRate)
 	FIELD_PRIMITIVE(Particles, float, size)
+	FIELD_PRIMITIVE(Particles, float, minLife)
+	FIELD_PRIMITIVE(Particles, float, maxLife)
+	FIELD_PRIMITIVE(Particles, Vector3, minVelocity)
+	FIELD_PRIMITIVE(Particles, Vector3, maxVelocity)
 	FIELD_PRIMITIVE(Particles, float, minScale)
 	FIELD_PRIMITIVE(Particles, float, maxScale)
 	FIELD_PRIMITIVE(Particles, Vector3, attenuation)
@@ -42,8 +46,12 @@ Particles::Particles()
 	, size(10)
 	, spawnRate(20)
 	, fadeRate(60)
+	, minLife(1)
+	, maxLife(2)
 	, minScale(1)
-	, maxScale(1)
+	, maxScale(20)
+	, minVelocity(0, 0, 0)
+	, maxVelocity(0, 1, 0)
 	, attenuation(1, 0, 0)
 	, image(nullptr)
 	, numParticles(0)
@@ -82,11 +90,13 @@ void Particles::resetParticle(Particle& particle)
 	particle.position.y = Math::random(0.0f, 1.0f);
 	particle.position.z = Math::random(0.0f, 1.0f);
 		
-	particle.velocity.x = Math::random(0.0f, 0.1f);
-	particle.velocity.y = Math::random(0.0f, 0.1f);
-	particle.velocity.z = Math::random(0.0f, 0.1f);
+	particle.velocity.x = Math::random(minVelocity.x, maxVelocity.x);
+	particle.velocity.y = Math::random(minVelocity.y, maxVelocity.y);
+	particle.velocity.z = Math::random(minVelocity.z, maxVelocity.z);
 
-	particle.alive = true;
+	particle.color = Color::White;
+	particle.life = Math::random(minLife, maxLife);
+	particle.alive = false;
 }
 
 //-----------------------------------//
@@ -101,6 +111,8 @@ void Particles::spawnParticles(int numSpawn)
 			continue;
 
 		resetParticle(particle);
+		particle.alive = true;
+
 		numSpawn--;
 	}
 }
@@ -111,11 +123,14 @@ void Particles::update(double delta)
 {
 	numParticles = particles.size();
 
-	int numSpawn = int(spawnRate / delta);
+	int numSpawn = ceil(spawnRate * delta);
 	spawnParticles(numSpawn);
 
 	std::vector<Vector3> positions;
 	positions.reserve( numParticles );
+
+	std::vector<Color> colors;
+	colors.reserve( numParticles );
 
 	// Update the particles.
 	for(uint i = 0; i < numParticles; i++)
@@ -125,12 +140,22 @@ void Particles::update(double delta)
 		if( !particle.alive )
 			continue;
 
+		if( particle.life <= 0 )
+		{
+			particle.alive = false;
+			continue;
+		}
+
 		particle.position += particle.velocity;
+		particle.life -= float(delta);
+		particle.color.a = particle.life / maxLife;
 
 		positions.push_back( particle.position );
+		colors.push_back( particle.color );
 	}
 
 	vb->set(VertexAttribute::Position, positions);
+	vb->set(VertexAttribute::Color, colors);
 
 	//updateDebugRenderable();
 }

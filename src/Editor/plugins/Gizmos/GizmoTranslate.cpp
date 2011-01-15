@@ -40,7 +40,7 @@ void GizmoTranslate::buildGeometry()
 	renderable->setVertexBuffer(cones);
 	renderable->setMaterial(material);
 
-	addRenderable(renderable);
+	addRenderable(renderable, RenderStage::PostTransparency, 100);
 }
 
 //-----------------------------------//

@@ -18,11 +18,16 @@ namespace vapor {
 
 struct Particle
 {
-	Particle() : alive(false) {}
+	Particle() 
+		: alive(false)
+		, life(0)
+	{}
 
 	Vector3 position;
 	Vector3 velocity;
-	//Color color;
+	Color color;
+
+	float life;
 	bool alive;
 };
 
@@ -92,11 +97,23 @@ protected:
 	// Point size.
 	float size;
 
+	// Mininum life.
+	float minLife;
+
+	// Maximum life.
+	float maxLife;
+
 	// Mininum scale size.
 	float minScale;
 
 	// Maximum scale size.
 	float maxScale;
+
+	// Mininum velocity.
+	Vector3 minVelocity;
+
+	// Maximum velocity.
+	Vector3 maxVelocity;
 
 	// Distance attenuation.
 	Vector3 attenuation;
