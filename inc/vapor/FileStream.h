@@ -33,6 +33,9 @@ public:
 	// Closes the file.
 	void close();
 
+	// Tells the location in the file.
+	int tell();
+
 	// Read file into buffer.
 	long read(void* buffer, long size) const;
 

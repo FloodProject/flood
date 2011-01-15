@@ -31,9 +31,13 @@ namespace Qualifier
  * Represents a field in a class.
  */
 
+typedef void (*SetterFunctionPtr)(void*, void*);
+
 class CORE_API Field
 {
 	DECLARE_UNCOPYABLE(Field)
+	
+	friend class Class;
 
 public:
 
@@ -41,6 +45,9 @@ public:
 
 	// Sets the qualifier of the field.
 	void setQualifier( byte qualifier );
+
+	// Sets the setter of the field.
+	void setSetter( SetterFunctionPtr fn = nullptr );
 
 	// Gets the value of the field in the object.
 	template<typename T>
@@ -77,6 +84,9 @@ public:
 
 	// Size of the field.
 	short size;
+
+	// Setter function.
+	SetterFunctionPtr setterFunction;
 };
 
 //-----------------------------------//

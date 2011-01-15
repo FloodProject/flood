@@ -34,7 +34,7 @@ public:
 					const int* attribList = nullptr,
 					const wxPoint& pos	= wxDefaultPosition,
 					const wxSize& size = wxDefaultSize,
-					long style = 0 | wxFULL_REPAINT_ON_RESIZE | wxSTATIC_BORDER,
+					long style = wxFULL_REPAINT_ON_RESIZE | wxBORDER_NONE,
 					const wxString&	name = "vaporGLCanvas",
 					const wxPalette& palette = wxNullPalette );
 

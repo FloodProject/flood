@@ -48,6 +48,9 @@ public:
 	// Closes the stream.
 	virtual void close();
 
+	// Tells the current location in the stream.
+	virtual int tell();
+
 	// Reads the stream into a buffer.
 	virtual long read(void* buffer, long size) const = 0;
 

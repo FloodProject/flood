@@ -10,16 +10,15 @@
 
 #ifdef VAPOR_AUDIO_OPENAL
 
-#include "vapor/resources/Sound.h"
-#include "vapor/audio/Device.h"
-#include "vapor/audio/Source.h"
+#include "resources/Sound.h"
+#include "audio/Source.h"
 
-/** \addtogroup audio Audio 
- * @{ */
-
-namespace vapor { namespace audio {
+namespace vapor {
 
 //-----------------------------------//
+
+class AudioDevice;
+class AudioContext;
 
 /**
  * Wraps an OpenAL buffer in a class. A buffer in OpenAL is the object 
@@ -30,44 +29,39 @@ namespace vapor { namespace audio {
  * not delete the audio data if it's potentially needed in the future.
  */
 
-class VAPOR_API Buffer
+class VAPOR_API AudioBuffer
 {
-	DECLARE_UNCOPYABLE(Buffer)
+	DECLARE_UNCOPYABLE(AudioBuffer)
 
-	friend class Source;
+	friend class AudioSource;
 
 public:
 	
-	/// Constructor
-	Buffer( audio::Device* device, SoundPtr sound );
-	
-	/// Destructor
-	~Buffer();
+	AudioBuffer( AudioDevice* device, const SoundPtr& sound );
+	~AudioBuffer();
   
 protected:
 
-	/// Gets the OpenAL id of this buffer.
-	ALuint id();
+	// Gets the id of this buffer.
+	GETTER(Id, ALuint, id)
 
-	/// Queues the buffer data in the source.
+	// Queues the buffer data in the source.
 	void upload();
 
-	/// Holds a pointer to the audio device.
-	audio::Device* device;
+	// Holds a pointer to the audio device.
+	AudioDevice* device;
 	
-	/// Holds a pointer to the audio data buffer.
+	// Holds a pointer to the audio data buffer.
 	SoundPtr resource;
 
-	/// Holds the source id from OpenAL.
-	ALuint bufferId;
+	// Holds the source id from OpenAL.
+	ALuint id;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Buffer );
+TYPEDEF_SHARED_POINTER_FROM_TYPE( AudioBuffer );
 
 //-----------------------------------//
 
-} } // end namespaces
-
-/** @} */
+} // end namespace
 
 #endif

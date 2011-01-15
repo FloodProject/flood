@@ -10,7 +10,8 @@
 
 #ifdef VAPOR_AUDIO_OGG
 
-#include "vapor/resources/OGG_Loader.h"
+#include "resources/OGG_Loader.h"
+#include "Utilities.h"
 
 namespace vapor {
 
@@ -18,16 +19,14 @@ namespace vapor {
 
 size_t read_func(void *ptr, size_t size, size_t nmemb, void *datasource)
 {
-	const File& file = *reinterpret_cast< File* >( datasource );
-	return file.read( ptr, size*nmemb );
+	Stream* stream = (Stream*) datasource;
+	return stream->read(ptr, size*nmemb);
 }
 
 //-----------------------------------//
 
 int seek_func(void* /*datasource*/, ogg_int64_t /*offset*/, int /*whence*/)
 {
-	//const File& file = *reinterpret_cast< File* >( datasource );
-	////return file.seek( ... );
 	return 0;
 }
 
@@ -35,8 +34,6 @@ int seek_func(void* /*datasource*/, ogg_int64_t /*offset*/, int /*whence*/)
 
 int close_func(void* /*datasource*/)
 {
-	//const File& file = *reinterpret_cast< File* >( datasource );
-	////return file.close( ... );
 	return 0;
 }
 
@@ -44,8 +41,8 @@ int close_func(void* /*datasource*/)
 
 long tell_func(void *datasource)
 {
-	const File& file = *reinterpret_cast< File* >( datasource );
-	return file.tell();
+	Stream* stream = (Stream*) datasource;
+	return stream->tell();
 }
 
 //-----------------------------------//
@@ -55,17 +52,17 @@ OGG_Loader::OGG_Loader()
 	extensions.push_back("ogg");
 
 	callbacks.read_func = read_func;
-	callbacks.seek_func = nullptr /*seek_func*/;
-	callbacks.close_func = nullptr /*close_func*/;
+	callbacks.seek_func = nullptr;
+	callbacks.close_func = nullptr;
 	callbacks.tell_func = tell_func;
 }
 
 //-----------------------------------//
 
-bool OGG_Loader::decode(const Stream& file, Resource* res)
+bool OGG_Loader::decode(const Stream& stream, Resource* res)
 {
 	OggVorbis_File oggFile;
-	ov_open_callbacks((void*) &file, &oggFile, nullptr, 0, callbacks);
+	ov_open_callbacks((void*) &stream, &oggFile, nullptr, 0, callbacks);
 
 	// Get some information about the OGG file.
 	// To retrieve the vorbis_info struct for the current bitstream,
@@ -82,6 +79,7 @@ bool OGG_Loader::decode(const Stream& file, Resource* res)
 	std::vector<byte>( buffer ).swap( buffer );
 
 	Sound* sound = static_cast<Sound*>( res );
+	sound->setSize(16);
 	sound->setChannels( pInfo->channels );
 	sound->setFrequency( pInfo->rate );
 	sound->setBuffer( buffer );

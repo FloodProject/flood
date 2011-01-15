@@ -9,11 +9,11 @@
 #pragma once
 
 #include "vapor/PCH.h"
-#include "vapor/render/DebugGeometry.h"
-#include "vapor/render/Renderable.h"
-#include "vapor/scene/Geometry.h"
-#include "vapor/scene/Entity.h"
-#include "vapor/scene/Tags.h"
+#include "render/DebugGeometry.h"
+#include "render/Renderable.h"
+#include "scene/Geometry.h"
+#include "scene/Entity.h"
+#include "scene/Tags.h"
 
 namespace vapor {
 
@@ -42,9 +42,10 @@ RenderablePtr buildBoundingRenderable( const BoundingBox& box )
 	vb->set( VertexAttribute::Position, pos );
 	vb->set( VertexAttribute::Color, colors );
 
-	MaterialPtr mat( new Material("BoundingBox") );
+	MaterialPtr mat( new Material("BoundingBoxDebug") );
 	mat->setDepthCompare( DepthCompare::LessOrEqual );
 	mat->setDepthTest( false );
+	mat->setBackfaceCulling( false );
 
 	RenderablePtr renderable = new Renderable(PolygonType::Quads);
 	renderable->setVertexBuffer(vb);
@@ -68,7 +69,7 @@ EntityPtr buildRay( const Ray& pickRay, const Vector3& outFar )
 	vb->set( VertexAttribute::Position, vertex );
 	vb->set( VertexAttribute::Color, colors );
 
-	MaterialPtr mat = new Material("LineMaterial");
+	MaterialPtr mat = new Material("RayDebug");
 
 	RenderablePtr renderable = new Renderable(PolygonType::Lines);
 	renderable->setVertexBuffer(vb);

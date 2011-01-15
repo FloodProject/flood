@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "vapor/scene/Geometry.h"
-#include "vapor/resources/Mesh.h"
+#include "scene/Geometry.h"
+#include "resources/Mesh.h"
 
 //FWD_DECL_INTRUSIVE(Mesh)
 FWD_DECL_INTRUSIVE(Bone)
@@ -21,8 +21,6 @@ namespace vapor {
 //-----------------------------------//
 
 struct AnimationState;
-
-//-----------------------------------//
 
 /**
  * Models are specific instances of meshes in the scene. This way the
@@ -90,8 +88,14 @@ protected:
 	// Creates a debug renderable of the skeleton.
 	virtual RenderablePtr createDebugRenderable() const;
 
-	// Callback when geometry is about to get rendered.
-	virtual void onRender();
+	// Pre-render callback.
+	void onRender();
+
+	// Sets up CPU skinning.
+	void setupSkinning();
+
+	// Sets up shader skinning.
+	void setupShaderSkinning();
 
 	// Mesh that the model renders.
 	MeshPtr mesh;

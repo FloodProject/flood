@@ -21,6 +21,8 @@
 #include "physics/Physics.h"
 #include "ResourceLoaders.h"
 
+#include <ctime>
+
 namespace vapor {
 
 //-----------------------------------//
@@ -87,10 +89,10 @@ void Engine::addSubsystem( Subsystem* const subsystem )
 
 void Engine::init( bool createWindow )
 {
-	// Sets up the global logger.
+	// Sets up the main logger.
 	setupLogger();
 
-	Log::info( "Starting vaporEngine version '%s'", VAPOR_ENGINE_VERSION );
+	Log::info( "Starting vapor3D version '%s'", VAPOR_ENGINE_VERSION );
 
 	// Creates the file system.
 	fileSystem = new FileSystem( app, argv ? argv[0] : nullptr );
@@ -126,9 +128,26 @@ void Engine::init( bool createWindow )
 
 void Engine::setupLogger()
 {
-	log = new Logger();
+//	time_t rawtime;
+//	time( &rawtime );
+//
+//	struct tm* timeinfo;
+//
+//#ifdef VAPOR_PLATFORM_WINDOWS
+//	localtime_s( timeinfo, &rawtime );
+//#else
+//	timeinfo = localtime( &rawtime );
+//#endif
+//
+//	char name[64];
+//	
+//	strftime(
+//		name, VAPOR_ARRAY_SIZE(name),
+//		"%Y_%m_%d-%H_%M_%S.html", timeinfo);
 
-	stream = new FileStream("Log.html", StreamMode::Write);
+	stream = new FileStream("Log.html"/*name*/, StreamMode::Write);
+	
+	log = new Logger();
 	log->add( new LogSinkHTML(*stream) );
 }
 
@@ -152,7 +171,7 @@ void Engine::setupDevices( bool createWindow )
 
 #ifdef VAPOR_AUDIO_OPENAL
 	// Creates the audio device.
-	audioDevice = new audio::Device();
+	audioDevice = new AudioDevice();
 #endif
 }
 

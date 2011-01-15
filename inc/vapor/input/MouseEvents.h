@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "vapor/input/Device.h"
+#include "input/Device.h"
 
 namespace vapor {
 

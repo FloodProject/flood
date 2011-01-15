@@ -7,11 +7,15 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-
-#include "vapor/script/Script.h"
-#include "vapor/script/State.h"
+#include "script/Script.h"
+#include "script/State.h"
 
 namespace vapor {
+
+//-----------------------------------//
+
+BEGIN_CLASS_PARENT_ABSTRACT(Script, Resource)
+END_CLASS()
 
 //-----------------------------------//
 

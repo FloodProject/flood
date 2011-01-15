@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/render/Win32_Window.h"
+#include "render/Win32_Window.h"
 
 #ifdef VAPOR_WINDOWING_WIN32
 
@@ -90,8 +90,8 @@ bool Win32Window::createWindow()
 
 	// TODO: fullscreen
 
-	// AdjustWindowRectEx needs the rect to be filled in with the coordinates of 
-	// the top-left and bottom-right corners of the desired client area
+	// AdjustWindowRectEx needs the rect to be filled in with the coordinates
+	// of the top-left and bottom-right corners of the desired client area.
 	RECT windowRect;
 	SetRect( &windowRect, 0, 0, settings.width, settings.height );
 

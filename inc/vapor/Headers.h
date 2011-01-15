@@ -51,7 +51,7 @@
 #include <vapor/scene/Group.h>
 #include <vapor/scene/Scene.h>
 #include <vapor/scene/Camera.h>
-#include <vapor/scene/Sound.h>
+#include <vapor/scene/Source.h>
 #include <vapor/scene/Listener.h>
 #include <vapor/scene/Geometry.h>
 #include <vapor/scene/Model.h>
@@ -61,6 +61,7 @@
 #include <vapor/scene/Water.h>
 #include <vapor/scene/Billboard.h>
 #include <vapor/scene/Projector.h>
+#include <vapor/scene/Particles.h>
 #include <vapor/scene/Tags.h>
 
 //---------------------------------------------------------------------//

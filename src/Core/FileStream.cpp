@@ -75,6 +75,16 @@ void FileStream::close()
 
 //-----------------------------------//
 
+int FileStream::tell()
+{
+	if(!fp)
+		return -1;
+	
+	return ftell(fp);
+}
+
+//-----------------------------------//
+
 long FileStream::read(void* buffer, long size) const
 {
 	return fread(buffer, 1, size, fp);

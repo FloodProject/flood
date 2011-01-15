@@ -7,9 +7,14 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/resources/GLSL_Text.h"
+#include "resources/GLSL_Text.h"
 
 namespace vapor {
+
+//-----------------------------------//
+
+//BEGIN_CLASS_PARENT_ABSTRACT(GLSL_Text, Resource)
+//END_CLASS()
 
 //-----------------------------------//
 

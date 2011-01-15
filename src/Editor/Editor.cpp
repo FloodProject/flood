@@ -19,6 +19,7 @@
 #include "Events.h"
 #include "ResourceDrop.h"
 #include "wxFourWaySplitter.h"
+#include "StackWalker.h"
 
 // Editor plugins
 #include "plugins/Project/ProjectPlugin.h"
@@ -44,17 +45,31 @@ wxIMPLEMENT_APP_NO_MAIN(EditorApp);
 
 bool EditorApp::OnInit()
 {
+	wxHandleFatalExceptions();
+
     if( !wxApp::OnInit() ) return false;
 
-	wxImage::AddHandler(new wxPNGHandler);
+	wxImage::AddHandler( new wxPNGHandler() );
 
-    EditorFrame* frame = new EditorFrame( VAPOR_EDITOR_NAME );
-	frame->SetSize(750, 500);
+    EditorFrame* frame = new EditorFrame(VAPOR_EDITOR_NAME);
+	frame->SetSize(800, 500);
     frame->Show(true);
 	
 	SetTopWindow(frame);
 
     return true;
+}
+
+//-----------------------------------//
+
+void EditorApp::OnFatalException()
+{
+	StackWalkerLog sw;
+	sw.ShowCallstack();
+	sw.Log();
+
+	wxMessageOutputBest output;
+	output.Output("An exception occured. Please send the log file to the developers.");
 }
 
 //-----------------------------------//
@@ -117,10 +132,10 @@ EditorFrame::~EditorFrame()
 
 //-----------------------------------//
 
-#define PLUGIN(name)	\
-	plugin = new name##Plugin(this);			\
-	pluginManager->registerPlugin( plugin );	\
-	pluginManager->enablePlugin( plugin );		\
+#define PLUGIN(name)								\
+	plugin = new name##Plugin(this);				\
+	pluginManager->registerPlugin( plugin );		\
+	pluginManager->enablePlugin( plugin );			\
 
 void EditorFrame::createPlugins()
 {
@@ -131,21 +146,20 @@ void EditorFrame::createPlugins()
 	PLUGIN(Scene);
 	PLUGIN(Property);
 	PLUGIN(Console);
-	//PLUGIN(Resources);
 	PLUGIN(Selection);
 	PLUGIN(Gizmo);
+	PLUGIN(Resources);
 	//PLUGIN(Terrain);
 	PLUGIN(Camera);
 	PLUGIN(Log);
 	PLUGIN(Sample);
 
 	pluginManagerFrame = new PluginManagerFrame(this, pluginManager);
-	pluginManagerFrame->SetInitialSize(wxSize(200, 350));
 
 	wxBitmap icon = wxMEMORY_BITMAP(cog);
 	
 	wxAuiPaneInfo pane;
-	pane.Caption("Plugins").Right().Dock().Icon(icon).Hide().Maximize();
+	pane.Caption("Plugins").Right().Dock().Icon(icon).Hide();
 
 	getAUI()->AddPane(pluginManagerFrame, pane);
 
@@ -282,8 +296,8 @@ void EditorFrame::createUI()
 	createMenus();
 	createNotebook();
 
-	toolBar = new wxAuiToolBar(this);
-	auiManager->AddPane(toolBar, wxAuiPaneInfo().ToolbarPane().Maximize()/*.Top()*/);
+	int style = wxAUI_TB_DEFAULT_STYLE | wxAUI_TB_OVERFLOW;
+	toolBar = new wxAuiToolBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, style);
 
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &EditorFrame::OnQuit, this, Editor_Quit);
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &EditorFrame::OnAbout, this, Editor_About);
@@ -371,7 +385,7 @@ void EditorFrame::createToolbar()
 	toolBar->AddTool( Toolbar_TooglePlugin, "Shows/hides the plugin manager", 
 		wxMEMORY_BITMAP(cog), "Shows/hides the plugin manager" );
 
-	toolBar->Realize();
+	getAUI()->AddPane(toolBar, wxAuiPaneInfo().ToolbarPane().Caption("Toolbar").Top());
 }
 
 //-----------------------------------//
@@ -518,7 +532,7 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 	//-----------------------------------//
 	case Toolbar_ToogleGrid:
 	{
-		const EntityPtr& grid = editorScene->findEntity( "Grid" );
+		const EntityPtr& grid = editorScene->findEntity("Grid");
 		
 		if( grid )
 			grid->setVisible( !grid->isVisible() );

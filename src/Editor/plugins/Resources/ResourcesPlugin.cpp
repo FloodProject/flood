@@ -48,21 +48,16 @@ PluginMetadata ResourcesPlugin::getMetadata()
 
 void ResourcesPlugin::onPluginEnable()
 {
-	wxAuiNotebook* notebookCtrl = editor->getNotebook();
-	assert( notebookCtrl != nullptr );
-
-	//wxImageList* imageList = notebookCtrl->GetImageList();
-	//assert( imageList != nullptr );
+	resourcesPage = new ResourcesPage(editor);
+	resourcesPage->SetSize(300, 200);
 
 	wxBitmap iconPackage = wxMEMORY_BITMAP(package);
-	//iconResources = imageList->Add(iconPackage);
 
-	resourcesPage = new ResourcesPage( editor, notebookCtrl );
+	wxAuiPaneInfo pane;
+	pane.Caption("Resources").Right().Float().Hide().Icon(iconPackage);
 
-	bool resourcesPageAdded =
-		notebookCtrl->AddPage( resourcesPage, "Resources", false, iconPackage );
-
-	notebookCtrl->Refresh();
+	editor->getAUI()->AddPane(resourcesPage, pane);
+	editor->getAUI()->Update();
 
 	wxAuiToolBar* toolBar = editor->getToolbar();
 
@@ -83,7 +78,8 @@ void ResourcesPlugin::onPluginEnable()
 
 void ResourcesPlugin::onPluginDisable()
 {
-	removePage( resourcesPage );
+	editor->getAUI()->DetachPane(resourcesPage);
+	editor->getAUI()->Update();
 
 	delete resourcesBrowser;
 	resourcesBrowser = nullptr;

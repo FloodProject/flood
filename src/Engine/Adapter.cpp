@@ -10,8 +10,8 @@
 
 #ifdef VAPOR_RENDERER_OPENGL
 
-#include "vapor/render/Adapter.h"
-#include "vapor/render/GL.h"
+#include "render/Adapter.h"
+#include "render/GL.h"
 
 namespace vapor {
 

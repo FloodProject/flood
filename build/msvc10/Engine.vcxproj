@@ -132,7 +132,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\Engine\AudioContext.cpp" />
+    <ClCompile Include="..\..\src\Engine\AudioSource.cpp" />
     <ClCompile Include="..\..\src\Engine\Entity.cpp" />
+    <ClCompile Include="..\..\src\Engine\Particles.cpp" />
     <ClCompile Include="..\..\src\Engine\PCH.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DLL Debug|Win32'">Create</PrecompiledHeader>
@@ -145,6 +148,7 @@
     <ClCompile Include="..\..\src\Engine\Buffer.cpp" />
     <ClCompile Include="..\..\src\Engine\IndexBuffer.cpp" />
     <ClCompile Include="..\..\src\Engine\RenderBuffer.cpp" />
+    <ClCompile Include="..\..\src\Engine\Source.cpp" />
     <ClCompile Include="..\..\src\Engine\VertexBuffer.cpp">
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4503;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
@@ -178,7 +182,6 @@
     <ClCompile Include="..\..\src\Engine\Geometry.cpp" />
     <ClCompile Include="..\..\src\Engine\Grid.cpp" />
     <ClCompile Include="..\..\src\Engine\Listener.cpp" />
-    <ClCompile Include="..\..\src\Engine\SceneSound.cpp" />
     <ClCompile Include="..\..\src\Engine\Light.cpp" />
     <ClCompile Include="..\..\src\Engine\Skydome.cpp" />
     <ClCompile Include="..\..\src\Engine\Billboard.cpp" />
@@ -205,8 +208,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\AudioBuffer.cpp" />
-    <ClCompile Include="..\..\src\Engine\Context.cpp" />
-    <ClCompile Include="..\..\src\Engine\Source.cpp" />
     <ClCompile Include="..\..\src\Engine\AudioDevice.cpp" />
     <ClCompile Include="..\..\src\Engine\ScriptManager.cpp" />
     <ClCompile Include="..\..\src\Engine\State.cpp" />
@@ -319,7 +320,9 @@
     <ClInclude Include="..\..\inc\vapor\Doxygen.h" />
     <ClInclude Include="..\..\inc\vapor\scene\Component.h" />
     <ClInclude Include="..\..\inc\vapor\scene\Entity.h" />
+    <ClInclude Include="..\..\inc\vapor\scene\Particles.h" />
     <ClInclude Include="..\..\inc\vapor\scene\Scene.h" />
+    <ClInclude Include="..\..\inc\vapor\scene\Source.h" />
     <ClInclude Include="..\..\inc\vapor\scene\Tags.h" />
     <ClInclude Include="..\..\inc\vapor\scene\Camera.h" />
     <ClInclude Include="..\..\inc\vapor\scene\Transform.h" />
@@ -327,7 +330,6 @@
     <ClInclude Include="..\..\inc\vapor\scene\Geometry.h" />
     <ClInclude Include="..\..\inc\vapor\scene\Grid.h" />
     <ClInclude Include="..\..\inc\vapor\scene\Listener.h" />
-    <ClInclude Include="..\..\inc\vapor\scene\Sound.h" />
     <ClInclude Include="..\..\inc\vapor\scene\Light.h" />
     <ClInclude Include="..\..\inc\vapor\scene\Skydome.h" />
     <ClInclude Include="..\..\inc\vapor\scene\Billboard.h" />

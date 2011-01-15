@@ -91,15 +91,6 @@ public:
 	// Adds a new sink to the logger.
 	void add( LogSink* sink );
 
-	// Gets the main logger.
-	static Logger* getLogger() { return mainLogger; }
-
-	// Gets the main logger.
-	static SETTER(Logger, Logger*, mainLogger)
-
-	// Main logger.
-	static Logger* mainLogger;
-
 protected:
 
 	// Keeps track of elapsed time.
@@ -114,6 +105,9 @@ protected:
 	// Log sinks.
 	std::vector<LogSink*> sinks;
 };
+
+// Gets the main log instance.
+Logger* GetLogger();
 
 //-----------------------------------//
 

@@ -61,9 +61,7 @@ float Math::logBase( float base, float value )
 
 float Math::random( float min, float max )
 {
-	float n = (max - min) * (rand() / RAND_MAX) + min;
-	
-	return n;
+	return (max - min) * (rand() / float(RAND_MAX)) + min;
 }
 
 //-----------------------------------//

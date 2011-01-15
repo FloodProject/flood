@@ -79,13 +79,6 @@ public:
 	// Gets the type registry.
 	static Registry& GetRegistry();
 
-protected:
-
-	Type(MetaType::Enum type, const std::string& name, int size);
-	Type(MetaType::Enum type, const std::string& name, const Type& parent, int size);
-
-public:
-
 	// Meta type of the type.
 	MetaType::Enum metaType;
 
@@ -97,6 +90,11 @@ public:
 
 	// Size of the type.
 	int size;
+
+protected:
+
+	Type(MetaType::Enum type, const std::string& name, int size);
+	Type(MetaType::Enum type, const std::string& name, const Type& parent, int size);
 
 private:
 

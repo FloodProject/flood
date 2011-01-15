@@ -10,15 +10,14 @@
 
 #ifdef VAPOR_AUDIO_OPENAL
 
-#include "vapor/audio/Device.h"
-#include "vapor/math/Vector3.h"
+#include "math/Vector3.h"
+#include <alc.h>
 
-namespace vapor { namespace audio {
-
-/** \addtogroup audio Audio 
- * @{ */
+namespace vapor {
 
 //-----------------------------------//
+
+class AudioDevice;
 
 /**
  * Wraps an OpenAL context in a class. A context in OpenAL is like a context 
@@ -28,14 +27,17 @@ namespace vapor { namespace audio {
  * everything in a context.
  */
 
-class VAPOR_API Context
+class VAPOR_API AudioContext
 {
-	DECLARE_UNCOPYABLE(Context)
+	DECLARE_UNCOPYABLE(AudioContext)
 
-	friend class Source;
+	friend class AudioSource;
 
 public:
-  
+
+	AudioContext(AudioDevice* device);
+	virtual ~AudioContext();
+
 	// Set the global volume of this context.
 	void setVolume( float volume );
 
@@ -47,9 +49,6 @@ public:
 
 protected:
 
-	Context(audio::Device* device);
-	virtual ~Context();
-
 	// Creates a new OpenAL context
 	ALCcontext* createContext();
 
@@ -60,7 +59,7 @@ protected:
 	const std::string getError();
 
 	// Audio device
-	audio::Device* device;
+	AudioDevice* device;
 
 	// Holds an OpenAL context
 	ALCcontext* context;
@@ -71,11 +70,7 @@ protected:
 
 //-----------------------------------//
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Context );
-
-//-----------------------------------//
-
-} } // end namespaces
+} // end namespace
 
 /** @} */
 

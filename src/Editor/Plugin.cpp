@@ -27,14 +27,18 @@ Plugin::Plugin( EditorFrame* frame )
 //-----------------------------------//
 
 Plugin::~Plugin()
-{
-
-}
+{ }
 
 //-----------------------------------//
 
 void Plugin::doPluginDisable()
 {
+	Engine* engine = editor->getEngine();
+	const ScenePtr& scene = engine->getSceneManager();
+
+	if(scene)
+		onSceneUnload(scene);
+
 	onPluginDisable();
 	removeTools();
 }

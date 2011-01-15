@@ -10,44 +10,56 @@
 
 #ifdef VAPOR_AUDIO_OPENAL
 
-#include "vapor/scene/Listener.h"
+#include "scene/Listener.h"
+#include "scene/Transform.h"
+#include "scene/Entity.h"
+#include "audio/Device.h"
+#include "Engine.h"
 
 namespace vapor {
 
-using std::static_pointer_cast;
+//-----------------------------------//
+
+BEGIN_CLASS_PARENT(Listener, Component)
+	FIELD_PRIMITIVE_SETTER(Listener, float, volume, Volume)
+END_CLASS()
 
 //-----------------------------------//
 
-Listener::Listener(audio::Device* device)
-	: Context(device)
+Listener::Listener()
+	: volume(0.75f)
+	, audioContext(nullptr)
 {
-
+	AudioDevice* audioDevice = GetEngine()->getAudioDevice();
+	audioContext = audioDevice->getMainContext();
 }
 
 //-----------------------------------//
 
 Listener::~Listener()
-{
+{ }
 
+//-----------------------------------//
+
+void Listener::setVolume( float volume )
+{
+	this->volume = volume;
+	audioContext->setVolume(volume);
 }
 
 //-----------------------------------//
 
 void Listener::update( double delta )
 {
+	if(!audioContext)
+		return;
 
+	const EntityPtr& entity = getEntity();
+	const TransformPtr& transform = entity->getTransform();
+	const Vector3& position = transform->getPosition();
+	
+	audioContext->setListener( position );
 }
-
-//-----------------------------------//
-
-std::shared_ptr<audio::Context> Listener::getContext(ListenerPtr ls)
-{
-	std::shared_ptr<audio::Context> ctx = 
-		std::static_pointer_cast<audio::Context>(ls);
-
-	return ctx;
-}
-
 
 //-----------------------------------//
 

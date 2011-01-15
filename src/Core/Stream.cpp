@@ -33,6 +33,13 @@ void Stream::close()
 
 //-----------------------------------//
 
+int Stream::tell()
+{
+	return -1;
+}
+
+//-----------------------------------//
+
 void Stream::read(std::string& text) const
 {
 	std::vector<byte> data;

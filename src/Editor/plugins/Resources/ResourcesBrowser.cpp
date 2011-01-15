@@ -30,7 +30,7 @@ ResourcesBrowser::ResourcesBrowser( EditorFrame* editor, wxWindow* parent,
 	, listIndex(0)
 {
 	setupUI();
-	setupRender();
+	//setupRender();
 	loadCache();
 }
 

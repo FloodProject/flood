@@ -21,9 +21,6 @@ namespace vapor {
 //-----------------------------------//
 
 static const int BUF_MAX_SIZE = 256;
-Logger* Logger::mainLogger = nullptr;
-
-//-----------------------------------//
 
 std::string LogLevel::toString( LogLevel::Enum level )
 {
@@ -59,7 +56,7 @@ void Log::debug(const char* msg, ...)
 	va_list args;
 	va_start(args, msg);
 
-		Logger* const log = Logger::getLogger();
+		Logger* const log = GetLogger();
 		if(log) log->write(LogLevel::Debug, msg, args);
 
 	va_end(args);
@@ -72,7 +69,7 @@ void Log::_assert(const char* msg, ...)
 	va_list args;
 	va_start(args, msg);
 
-		Logger* const log = Logger::getLogger();
+		Logger* const log = GetLogger();
 		if(log) log->write(LogLevel::Assert, msg, args);
 
 	va_end(args);
@@ -85,7 +82,7 @@ void Log::info(const char* msg, ...)
 	va_list args;
 	va_start(args, msg);
 
-		Logger* const log = Logger::getLogger();
+		Logger* const log = GetLogger();
 		if(log) log->write(LogLevel::Info, msg, args);
 	
 	va_end(args);
@@ -98,7 +95,7 @@ void Log::warn(const char* msg, ...)
 	va_list args;
 	va_start(args, msg);
 
-		Logger* const log = Logger::getLogger();
+		Logger* const log = GetLogger();
 		if(log) log->write(LogLevel::Warning, msg, args);
 	
 	va_end(args);
@@ -111,7 +108,7 @@ void Log::error(const char* msg, ...)
 	va_list args;
 	va_start(args, msg);
 
-		Logger* const log = Logger::getLogger();
+		Logger* const log = GetLogger();
 		if(log) log->write(LogLevel::Error, msg, args);
 
 	va_end(args);
@@ -119,12 +116,17 @@ void Log::error(const char* msg, ...)
 
 //-----------------------------------//
 
+static Logger* logInstance;
+Logger* GetLogger() { return logInstance; }
+
+//-----------------------------------//
+
 Logger::Logger()
 {
 	add( new LogSinkConsole() );
 
-	if( !getLogger() )
-		setLogger(this);
+	if( !logInstance )
+		logInstance = this;
 
 	Log::info("Creating logger");
 }
@@ -139,8 +141,10 @@ Logger::~Logger()
 		delete sink;
 	}
 
-	if( getLogger() == this )
-		setLogger(nullptr);
+	if( logInstance == this )
+	{
+		logInstance = nullptr;
+	}
 }
 
 //-----------------------------------//
@@ -226,7 +230,7 @@ static const char LOG_HTML[] =
 		"</head>\n"
 		"<body>\n"
 			"\t<div id='container'>\n"
-				"\t<img id='header' src='head.png' alt=''/>\n"
+				"\t<img id='header' src='Logo.png' alt=''/>\n"
 				"\t<table>\n"
 					"\t\t<thead><tr><th></th>"
 						"<th>Time</th>"
@@ -248,6 +252,7 @@ static const char LOG_CSS[] =
 	"\t\t\ttr:nth-child(even) { background-color: #eee; }\n"
 	"\t\t\ttable { margin: 0 auto; table-layout: automatic; width: 600px; text-align: left; border: 1px solid black; }\n"
 	"\t\t\tthead th { font-weight: bold; font-size: 1.2em; border-bottom: 1px dotted black; }\n"
+	"\t\t\ttable tr { white-space: pre; }\n"
 	"\t\t\ttable tr.even { background-color: #eee; }\n"
 	"\t\t\ttable tr.warn { background-color: #ff9; }\n"
 	"\t\t\ttable tr.error { background-color: #ff9; }\n"

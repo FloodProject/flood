@@ -10,16 +10,15 @@
 
 #ifdef VAPOR_AUDIO_OPENAL
 
-#include "vapor/resources/Sound.h"
-#include "vapor/math/Vector3.h"
+#include "resources/Sound.h"
+#include "math/Vector3.h"
 
 #include <al.h>
 #include <alc.h>
 
-/** \addtogroup audio Audio 
- * @{ */
+FWD_DECL_SHARED(AudioBuffer)
 
-namespace vapor { namespace audio {
+namespace vapor {
 
 //-----------------------------------//
 
@@ -27,35 +26,37 @@ namespace vapor { namespace audio {
  * Audio device to play sound data using OpenAL as backend.
  */
 
-class VAPOR_API Device
-{
-	DECLARE_UNCOPYABLE(Device)
+typedef std::map<SoundPtr, AudioBufferPtr> SoundBufferMap;
 
-	friend class Context;
-	friend class Source;
-	friend class Buffer;
+class VAPOR_API AudioDevice
+{
+	DECLARE_UNCOPYABLE(AudioDevice)
+
+	friend class AudioContext;
+	friend class AudioSource;
+	friend class AudioBuffer;
 
 public:
 
-	Device();
-	virtual ~Device();
+	AudioDevice();
+	virtual ~AudioDevice();
 	
-	// Play a possibly looped 2D sound
-	//void play2D(shared_ptr<Sound> sound, bool loop = false);
-
 	// Sets the global audio volume
 	void setVolume(float volume);
+
+	// Gets the main audio context.
+	GETTER(MainContext, AudioContext*, mainContext)
 
 protected:
 
 	// Switch current audio context.
 	void switchContext(ALCcontext* context);
 
-	// Gets the AL format matching the engine format.
-	int getALFormat(SoundFormat::Enum format);
+	// Gets the AL format matching the sound.
+	int getFormat(const SoundPtr& sound);
 	
 	// Prepares a buffer for AL usage.
-	std::shared_ptr<Buffer> prepareBuffer( SoundPtr sound );
+	AudioBufferPtr prepareBuffer(const SoundPtr& sound);
 	
 	// Return the last error as a char array.
 	const char* getError();
@@ -66,25 +67,27 @@ protected:
 	// Gets a string with the version of OpenAL.
 	const std::string getVersion();
 
-	// Audio device
+	// Audio device.
 	ALCdevice* device;
 
-	// Current audio context
-	ALCcontext* ctx;
+	// Current audio context.
+	ALCcontext* context;
 
 	// Holds the last error
 	ALenum error;
 
+	// Initialization state.
 	bool init;
 
-	// Maps each sound to a OpenAL sound buffer id
-	std::map< SoundPtr, std::shared_ptr<audio::Buffer> > soundBuffers;
+	// Maps each sound to a OpenAL sound buffer.
+	SoundBufferMap soundBuffers;
+
+	// Main audio context.
+	AudioContext* mainContext;
 };
 
 //-----------------------------------//
 
-} } // end namespaces
-
-/** @} */
+} // end namespace
 
 #endif

@@ -16,7 +16,7 @@ namespace vapor { namespace editor {
 //-----------------------------------//
 
 PluginManagerFrame::PluginManagerFrame( wxWindow* parent, PluginManager* plugins )
-	: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE)
+	: wxCheckListBox(parent, wxID_ANY)
 	, plugins(plugins)
 {
 	InitControl();
@@ -26,8 +26,7 @@ PluginManagerFrame::PluginManagerFrame( wxWindow* parent, PluginManager* plugins
 
 void PluginManagerFrame::InitControl()
 {
-	checkListBox = new wxCheckListBox(this, wxID_ANY);
-	checkListBox->Bind(wxEVT_COMMAND_CHECKLISTBOX_TOGGLED, &PluginManagerFrame::OnCheckEvent, this);
+	Bind(wxEVT_COMMAND_CHECKLISTBOX_TOGGLED, &PluginManagerFrame::OnCheckEvent, this);
 
 	const std::vector<Plugin*>& plugs = plugins->getPlugins();
 
@@ -37,8 +36,8 @@ void PluginManagerFrame::InitControl()
 		Plugin* plugin = plugs[i];
 		PluginMetadata metadata = plugin->getMetadata();
 		
-		int n = checkListBox->Append( metadata.name, (void*) plugin );
-		checkListBox->Check( n, plugin->isPluginEnabled() );
+		int n = Append( metadata.name, (void*) plugin );
+		Check( n, plugin->isPluginEnabled() );
 	}
 }
 
@@ -46,12 +45,12 @@ void PluginManagerFrame::InitControl()
 
 void PluginManagerFrame::OnCheckEvent(wxCommandEvent& event)
 {
-	assert( checkListBox->GetId() == event.GetId() );
+	assert( GetId() == event.GetId() );
 
 	int n = event.GetSelection();
 
 	// Get the plugin stored in the custom data.
-	Plugin* plugin = (Plugin*) checkListBox->GetClientData(n);
+	Plugin* plugin = (Plugin*) GetClientData(n);
 	assert( plugin != nullptr );
 
 	bool doEnable = !plugin->isPluginEnabled();

@@ -20,7 +20,7 @@ Viewframe::Viewframe( wxWindow* parent, wxWindowID id,
 	: wxPanel(parent, id, pos, size, style)
 {
 	int attribList[] =
- {
+	{
 		WX_GL_RGBA,
 		WX_GL_DOUBLEBUFFER,
 		WX_GL_DEPTH_SIZE, 16,
@@ -95,7 +95,7 @@ void Viewframe::flagRedraw()
 		return;
 
 	control->flagRedraw();
-	Log::debug("Force redraw of view");
+	//Log::debug("Force redraw of view");
 }
 
 //-----------------------------------//

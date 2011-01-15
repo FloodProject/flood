@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "vapor/input/Device.h"
-#include "vapor/input/MouseEvents.h"
+#include "input/Device.h"
+#include "input/MouseEvents.h"
 #include "Event.h"
 
 namespace vapor {

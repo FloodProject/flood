@@ -10,61 +10,59 @@
 
 #ifdef VAPOR_AUDIO_OPENAL
 
-#include "vapor/audio/Context.h"
+#include "audio/Context.h"
+#include "audio/Device.h"
 
 #include <al.h>
 #include <alc.h>
 
-namespace vapor { namespace audio {
+namespace vapor {
 
 //-----------------------------------//
 
-Context::Context(audio::Device* device)
-	: device(device),
-	context(nullptr),
-	error(ALC_NO_ERROR),
+AudioContext::AudioContext(AudioDevice* device)
+	: device(device)
+	, context(nullptr)
+	, error(ALC_NO_ERROR)
 {
 	if(!device)
 	{
-		warn("audio::al", "Could not create a new context \
-						  because the device is invalid.");
+		Log::warn("Invalid audio device.");
 		return;
 	}
 
 	context = createContext();
 
-	// set a default listener
+	// Sets a default listener.
 	setListener(Vector3::Zero);
 
-	// set default volume
+	// Sets the default volume.
 	setVolume(1.0f);
 }
 
 //-----------------------------------//
 
-Context::~Context()
+AudioContext::~AudioContext()
 {
-	if(context) 
-	{
-		if(device->ctx == context)
-			device->ctx = nullptr;
+	if(!context)
+		return;
+	
+	if(device->context == context)
+		device->context = nullptr;
 
-		alcDestroyContext(context);
-	}
+	alcDestroyContext(context);
 }
 
 //-----------------------------------//
 
-ALCcontext* Context::createContext()
+ALCcontext* AudioContext::createContext()
 {
-	ALCcontext* context = nullptr;
-	
-	context = alcCreateContext(device->device, nullptr);
+	ALCcontext* context = alcCreateContext(device->device, nullptr);
 
 	if(checkError())
 	{
-		#pragma TODO("OpenAL getError should be for context-specific")
-		Log::Log::warn(getError());
+		#pragma TODO("OpenAL getError() should be context-specific")
+		Log::warn( getError().c_str() );
 	}
 
 	return context;
@@ -72,42 +70,36 @@ ALCcontext* Context::createContext()
 
 //-----------------------------------//
 
-void Context::setVolume(float volume)
+void AudioContext::setVolume(float volume)
 {
-	// update OpenAL volume (or gain)
+	// Update OpenAL's volume.
 	alListenerf(AL_GAIN, volume);
 
 	if(checkError())
-	{
-		warn("audio::al", "Could not set a new volume: %s",
-			getError().c_str());
-	}
+		Log::warn("Could not set new volume: %s", getError().c_str());
 }
 
 //-----------------------------------//
 
-void Context::setListener(const Vector3& position)
+void AudioContext::setListener(const Vector3& position)
 {
-	// update OpenAL listener position
+	// Update OpenAL's listener position.
 	alListener3f(AL_POSITION, position.x, position.y, position.z);
 
 	if(checkError()) 
-	{
-		warn("audio::al", "Error changing listener position: %s",
-			getError().c_str());
-	}
+		Log::warn( "Could not set listener position: %s", getError().c_str());
 }
 
 //-----------------------------------//
 
-void Context::makeCurrent()
+void AudioContext::makeCurrent()
 {
-	device->switchContext(this->context);
+	device->switchContext(context);
 }
 
 //-----------------------------------//
 
-const std::string Context::getError()
+const std::string AudioContext::getError()
 {
 	const ALchar* str;
 	
@@ -141,7 +133,7 @@ const std::string Context::getError()
 
 //-----------------------------------//
 
-bool Context::checkError()
+bool AudioContext::checkError()
 {
 	error = alcGetError(device->device);
 	return (error != AL_NO_ERROR);
@@ -149,6 +141,6 @@ bool Context::checkError()
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

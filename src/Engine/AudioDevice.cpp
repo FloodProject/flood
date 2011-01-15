@@ -10,46 +10,55 @@
 
 #ifdef VAPOR_AUDIO_OPENAL
 
-#include <sstream>
-
-#include "vapor/audio/Device.h"
-#include "vapor/audio/Buffer.h"
+#include "audio/Device.h"
+#include "audio/Buffer.h"
+#include "Utilities.h"
 
 #pragma TODO("Init first context to log version")
 
-namespace vapor { namespace audio {
+namespace vapor {
 
 //-----------------------------------//
 
-Device::Device()
-	: device(nullptr), ctx(nullptr), init(false), error(AL_NO_ERROR)
+AudioDevice::AudioDevice()
+	: device(nullptr)
+	, context(nullptr)
+	, init(false)
+	, error(AL_NO_ERROR)
+	, mainContext(nullptr)
 {
-	// select the "preferred device"
-	device = alcOpenDevice(nullptr); 
+	// Select the "preferred device".
+	device = alcOpenDevice(nullptr);
+
+	// Create a main context.
+	mainContext = new AudioContext(this);
 	
 	if( !device || checkError() )
 	{
 		Log::warn("Could not create OpenAL device: %s", getError());
+		return;
 	}
 
 	const ALchar* version = alGetString(AL_VERSION);
 	
-	if( !version || checkError() ) 
+	if( !version || checkError() )
 	{
 		Log::warn("Could not get OpenAL version");
-	} else {
-		Log::info("Using OpenAL version %s", version);
+		return;
 	}
+	
+	Log::info("Using OpenAL version %s", version);
 
 	if( checkError() )
 	{
 		Log::warn("Error initializing OpenAL: %s", getError());
+		return;
 	}
 }
 
 //-----------------------------------//
 
-Device::~Device()
+AudioDevice::~AudioDevice()
 {
 	if(!device) return;
 
@@ -68,21 +77,20 @@ Device::~Device()
 
 //-----------------------------------//
 
-const std::string Device::getVersion() 
+const std::string AudioDevice::getVersion() 
 {
-    std::stringstream s;
-    ALCint major = 0, minor = 0;
+    ALCint major = 0;
+	ALCint minor = 0;
     
 	alcGetIntegerv(nullptr, ALC_MAJOR_VERSION, 1, &major);
     alcGetIntegerv(nullptr, ALC_MINOR_VERSION, 1, &minor);
-    s << major << "." << minor;
     
-	return s.str();
+	return String::format("%d.%d", major, minor);
 }
 
 //-----------------------------------//
 
-bool Device::checkError()
+bool AudioDevice::checkError()
 {
 	error = alGetError();
 	return (error != AL_NO_ERROR);
@@ -90,11 +98,11 @@ bool Device::checkError()
 
 //-----------------------------------//
 
-const ALchar* Device::getError()
+const ALchar* AudioDevice::getError()
 {
 	const ALchar* str;
 	
-	switch (error)
+	switch(error)
 	{
 	case AL_NO_ERROR:
 		str = "No error."; 
@@ -118,7 +126,7 @@ const ALchar* Device::getError()
 
 //-----------------------------------//
 
-void Device::setVolume(float volume)
+void AudioDevice::setVolume(float volume)
 {
 	alListenerf(AL_GAIN, volume);
 
@@ -130,62 +138,59 @@ void Device::setVolume(float volume)
 
 //-----------------------------------//
 
-ALint Device::getALFormat(SoundFormat::Enum format)
+ALint AudioDevice::getFormat(const SoundPtr& sound)
 {
-	switch(format)
-	{
-		case SoundFormat::Mono8:
-			return AL_FORMAT_MONO8;
+	if( !sound ) return AL_INVALID;
 
-		case SoundFormat::Mono16:
-			return AL_FORMAT_MONO16;
+	int channels = sound->getChannels();
+	int size = sound->getSize();
 
-		case SoundFormat::Stereo8:
-			return AL_FORMAT_STEREO8;
+	if(channels == 1 && size == 8)
+		return AL_FORMAT_MONO8;
 
-		case SoundFormat::Stereo16:
-			return AL_FORMAT_STEREO16;
+	if(channels == 1 && size == 16)
+		return AL_FORMAT_MONO16;
 
-		default:
-			return AL_INVALID;
-	}
+	if(channels == 2 && size == 8)
+		return AL_FORMAT_STEREO8;
+
+	if(channels == 2 && size == 16)
+		return AL_FORMAT_STEREO16;
+
+	return AL_INVALID;
 }
 
 //-----------------------------------//
 
-void Device::switchContext(ALCcontext* context)
+void AudioDevice::switchContext(ALCcontext* context)
 {
-	// if context is already current, return.
-	if( ctx && (ctx == context) )
-		return;
-
 	ALCboolean ret = alcMakeContextCurrent(context);
 
-	if( (ret != ALC_TRUE))
+	if(ret != ALC_TRUE)
 	{
 		Log::warn("Could not make OpenAL context current");
 		return;
 	}
 
-	this->ctx = context;
+	this->context = context;
 }
 
 //-----------------------------------//
 
-std::shared_ptr<Buffer> Device::prepareBuffer(SoundPtr sound)
+AudioBufferPtr AudioDevice::prepareBuffer(const SoundPtr& sound)
 {
-	// check if buffer with same resource already exists
+	// Check if buffer with same resource already exists
 	if( soundBuffers.find(sound) != soundBuffers.end() ) 
 		return soundBuffers[sound];
 
-	std::shared_ptr<Buffer> buf(new Buffer(this, sound));
-	soundBuffers[sound] = buf;
+	AudioBufferPtr buffer( new AudioBuffer(this, sound) );
+	soundBuffers[sound] = buffer;
 
-	return buf;
+	return buffer;
 }
 
 //-----------------------------------//
 
-} } // end namespaces
+} // end namespace
 
 #endif

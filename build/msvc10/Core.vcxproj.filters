@@ -145,6 +145,9 @@
     <Filter Include="Concurrency\Tasks">
       <UniqueIdentifier>{4239ba56-422a-4325-beef-914261d54f18}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Debug">
+      <UniqueIdentifier>{6db6eed6-57b4-4ad7-9a8a-0e679e2a3e19}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Core\math\Math.cpp">
@@ -291,6 +294,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\ConcurrentQueue.cpp">
       <Filter>Concurrency\Queue</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\StackWalker.cpp">
+      <Filter>Debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -468,6 +474,9 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\ConcurrentQueue.h">
       <Filter>Concurrency\Queue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\StackWalker.h">
+      <Filter>Debug</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

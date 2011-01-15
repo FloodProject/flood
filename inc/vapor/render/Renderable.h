@@ -8,10 +8,11 @@
 
 #pragma once
 
-#include "vapor/render/VertexBuffer.h"
-#include "vapor/render/IndexBuffer.h"
-#include "vapor/render/Material.h"
-#include "vapor/render/GL.h"
+#include "render/VertexBuffer.h"
+#include "render/IndexBuffer.h"
+#include "render/Material.h"
+#include "render/GL.h"
+#include "Event.h"
 
 namespace vapor {
 
@@ -95,6 +96,12 @@ public:
 
 	// Gets/sets the primitive type of this renderable.
 	ACESSOR(PrimitiveType, PolygonType::Enum, type)
+
+	// Pre-render callback.
+	Event0<> onPreRender;
+
+	// Post-render callback.
+	Event0<> onPostRender;
 
 protected:
 

@@ -280,6 +280,9 @@
     <Filter Include="Scene\Clouds">
       <UniqueIdentifier>{5ee8f4e9-aba7-4460-b2da-7cdc72ddac89}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene\Particles">
+      <UniqueIdentifier>{1fec75a6-f36b-4570-8399-2d734a372104}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Engine\PCH.cpp">
@@ -393,9 +396,6 @@
     <ClCompile Include="..\..\src\Engine\Listener.cpp">
       <Filter>Scene\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Engine\SceneSound.cpp">
-      <Filter>Scene\Audio</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Engine\Light.cpp">
       <Filter>Scene\Light</Filter>
     </ClCompile>
@@ -455,12 +455,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\AudioBuffer.cpp">
       <Filter>Audio\Buffer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Context.cpp">
-      <Filter>Audio\Context</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Source.cpp">
-      <Filter>Audio\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\AudioDevice.cpp">
       <Filter>Audio\Device</Filter>
@@ -612,6 +606,18 @@
     <ClCompile Include="..\..\src\Engine\Entity.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Engine\AudioContext.cpp">
+      <Filter>Audio\Context</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Engine\AudioSource.cpp">
+      <Filter>Audio\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Engine\Source.cpp">
+      <Filter>Scene\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Engine\Particles.cpp">
+      <Filter>Scene\Particles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\vapor\PCH.h">
@@ -732,9 +738,6 @@
       <Filter>Scene\Grid</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\scene\Listener.h">
-      <Filter>Scene\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\scene\Sound.h">
       <Filter>Scene\Audio</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\scene\Light.h">
@@ -972,6 +975,12 @@
     <ClInclude Include="..\..\inc\vapor\Headers.h" />
     <ClInclude Include="..\..\inc\vapor\scene\Entity.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\scene\Source.h">
+      <Filter>Scene\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\scene\Particles.h">
+      <Filter>Scene\Particles</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

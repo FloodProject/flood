@@ -10,209 +10,160 @@
 
 #ifdef VAPOR_AUDIO_OPENAL
 
-#include "vapor/audio/Source.h"
-#include "vapor/audio/Buffer.h"
+#include "scene/Source.h"
+#include "audio/Source.h"
+#include "resources/Sound.h"
+#include "Engine.h"
 
-namespace vapor { namespace audio {
+namespace vapor {
 
 //-----------------------------------//
 
-Source::Source(std::shared_ptr<audio::Context> context, SoundPtr sound)
-	: context(context), device(context->device), sourceId(0)
-{	
-	context->makeCurrent();
+BEGIN_ENUM(SourceState)
+	ENUM(Play)
+	ENUM(Pause)
+	ENUM(Stop)
+END_ENUM()
 
-	// generate a new OpenAL source
-	alGenSources(1, &sourceId);
+BEGIN_ENUM(SourceMode)
+	ENUM(Static)
+	ENUM(Streaming)
+END_ENUM()
 
-	if(device->checkError())
-	{
-		warn("audio::al", "Could not generate a new audio source: %s",
-			device->getError());
-	}
+BEGIN_CLASS_PARENT(Source, Component)
+	FIELD_ENUM_SETTER(Source, SourceState, state, State)
+	FIELD_ENUM_SETTER(Source, SourceMode, mode, Mode)
+	FIELD_PRIMITIVE_SETTER(Source, float, volume, Volume)
+	FIELD_PRIMITIVE_SETTER(Source, float, pitch, Pitch)
+	FIELD_PRIMITIVE_SETTER(Source, float, rollOff, RollOff)
+	FIELD_PRIMITIVE_SETTER(Source, bool, loop, Loop)
+	FIELD_CLASS_PTR_SETTER(Source, Sound, sound, Sound)
+END_CLASS()
 
-	buffer = device->prepareBuffer(sound);
-	setPosition( Vector3::Zero );
-}
+//-----------------------------------//
+
+Source::Source()
+	: state(SourceState::Stop)
+	, mode(SourceMode::Static)
+	, volume(0.75f)
+	, pitch(1.0f)
+	, rollOff(1.0f)
+	, loop(false)
+	, sound(nullptr)
+	, audioSource(nullptr)
+{ }
 
 //-----------------------------------//
 
 Source::~Source()
 {
-	context->makeCurrent();
-
-	stop();
-
-	alSourcei(sourceId, AL_BUFFER, AL_NONE);
-
-	if(device->checkError())
-	{
-		warn("audio::al", "Could not unset buffer from audio source: %s",
-			device->getError());
-	}
-
-	// delete this source in OpenAL
-	alDeleteSources(1, &sourceId);
-
-	if(device->checkError())
-	{
-		warn("audio::al", "Could not delete audio source: %s",
-			device->getError());
-	}
+	delete audioSource;
 }
 
 //-----------------------------------//
 
-void Source::play( const int count )
+void Source::setVolume(float volume)
 {
-	/**
-	 * The source could be in three different states:
-	 *
-	 *		Stopped (in which case we play it from the beginning)
-	 *		Playing (in which case we do nothing)
-	 *		Paused (in which case we play from where it was paused)
-	 * 
-	 * We'll handle each case now.
-	 */
+	this->volume = volume;
 
-	context->makeCurrent();
+	if(audioSource)
+		audioSource->setVolume(volume);
+}
 
-	if( isPlaying() )
-	{
-		// Source is already playing, do nothing.
+//-----------------------------------//
+
+void Source::setPitch(float pitch)
+{
+	this->pitch = pitch;
+
+	if(audioSource)
+		audioSource->setPitch(pitch);
+}
+
+//-----------------------------------//
+
+void Source::setRollOff(float rollOff)
+{
+	this->rollOff = rollOff;
+
+	if(audioSource)
+		audioSource->setRollOff(rollOff);
+}
+
+//-----------------------------------//
+
+void Source::setLoop(bool state)
+{
+	this->loop = state;
+
+	if(audioSource)
+		audioSource->setLoop(state);
+}
+
+//-----------------------------------//
+
+void Source::setState( SourceState::Enum state )
+{
+	this->state = state;
+
+	if(!audioSource)
 		return;
-	}
 
-	if( !isPaused() )
-	{
-		// Source is stopped so enqueue the buffer 'count' times
-		//for(int i = 0; i < count; i++)
-			//queue();
-
-		alSourcei(sourceId, AL_BUFFER, buffer->id());
-	}
-
-	// Also handles the Paused state implicitly.
-	alSourcePlay(sourceId);
-
-	if(device->checkError())
-	{
-		warn("audio::al", "Could not play audio source: %s",
-			device->getError());
-	}
-}
-
-//-----------------------------------//
-
-void Source::stop()
-{
-	context->makeCurrent();
-
-	alSourceStop(sourceId);
-
-	if(device->checkError())
-	{
-		warn("audio::al", "Could not stop audio source: %s",
-			device->getError());
-	}
-}
-
-//-----------------------------------//
-
-void Source::pause()
-{
-	context->makeCurrent();
-
-	alSourcePause(sourceId);
-
-	if(device->checkError())
-	{
-		warn("audio::al", "Could not pause audio source: %s",
-			device->getError());
-	}
-}
-
-//-----------------------------------//
-
-bool Source::isPlaying()
-{
-	context->makeCurrent();
-
-	ALenum state;
-
-	alGetSourcei(sourceId, AL_SOURCE_STATE, &state);
-
-	return (state == AL_PLAYING);
-}
-
-//-----------------------------------//
-
-bool Source::isPaused()
-{
-	context->makeCurrent();
-
-	ALenum state;
-
-	alGetSourcei(sourceId, AL_SOURCE_STATE, &state);
-
-	return (state == AL_PAUSED);
-}
-
-//-----------------------------------//
-
-void Source::queue()
-{
-	context->makeCurrent();
+	if(state == SourceState::Play && !audioSource->isPlaying())
+		audioSource->play();
 	
-	// get the OpenAL sound buffer id from the device
-	ALuint bufferId = buffer->id();
+	else if(state == SourceState::Pause)
+		audioSource->pause();
 
-	// enqueue the buffer in the audio source
-	alSourceQueueBuffers(sourceId, 1, &bufferId);
-
-	if(device->checkError())
-	{
-		warn("audio::al", "Could not queue buffer in audio source: %s",
-			device->getError());
-	}
+	else if(state == SourceState::Stop)
+		audioSource->stop();
 }
 
 //-----------------------------------//
 
-void Source::clear()
+void Source::setMode( SourceMode::Enum mode )
 {
-	context->makeCurrent();
-	
-	// get the OpenAL sound buffer id from the device
-	ALuint bufferId = buffer->id();
+	this->mode = mode;
 
-	//// dequeue all buffers in the audio source
-	//alSourceUnqueueBuffers(sourceId, 1, &bufferId);
-
-	//if(device->checkError())
-	//{
-	//	warn("audio::al", "Could not queue buffer in audio source: %s",
-	//		device->getError());
-	//}
+	if(!audioSource)
+		return;
 }
 
 //-----------------------------------//
 
-void Source::setPosition( const Vector3& pos )
+void Source::setSound( const SoundPtr& sound )
 {
-	context->makeCurrent();
+	this->sound = sound;
 
-	alSource3f(sourceId, AL_POSITION, pos.x, pos.y, pos.z);
+	AudioDevice* audioDevice = GetEngine()->getAudioDevice();
+	AudioContext* audioContext = audioDevice->getMainContext();
 
-	if(device->checkError())
-	{
-		warn("audio::al", "Could not set position in audio source: %s",
-			device->getError());
-	}
+	audioSource = new AudioSource(audioContext, sound);
+
+	setVolume(volume);
+	setPitch(pitch);
+	setRollOff(rollOff);
+	setMode(mode);
+	setState(state);
 }
 
 //-----------------------------------//
 
-} } // end namespaces
+void Source::update( double delta )
+{
+	if( !audioSource )
+		return;
+
+	if( audioSource->isPlaying() )
+		state = SourceState::Play;
+	else if( audioSource->isPaused() )
+		state = SourceState::Pause;
+	else
+		state = SourceState::Stop;
+}
+
+//-----------------------------------//
+
+} // end namespace
 
 #endif

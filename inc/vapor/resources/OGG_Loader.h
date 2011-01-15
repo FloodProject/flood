@@ -10,8 +10,8 @@
 
 #ifdef VAPOR_AUDIO_OGG
 
-#include "vapor/resources/ResourceLoader.h"
-#include "vapor/resources/Sound.h"
+#include "resources/ResourceLoader.h"
+#include "resources/Sound.h"
 
 #include <vorbis/vorbisfile.h>
 

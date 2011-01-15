@@ -76,38 +76,38 @@ static ComponentEntry components[] =
 	{ true, TYPE(Skydome),				BMP(weather_clouds) },
 	{ true, TYPE(Camera),				BMP(camera) },
 	{ true, TYPE(Label),				BMP(text_align_left) },
-	//{ true, TYPE(Geometry),				BMP(shape_flip_horizontal) },
-};
+	{ true, TYPE(Particles),			BMP(chart_pie) },
+//};
 
-static ComponentEntry componentsExtra[] =
-{
+//static ComponentEntry componentsExtra[] =
+//{
 	{ true, TYPE(Grid),					BMP(grid_icon_white_bg) },
 	{ true, TYPE(Billboard),			BMP(shape_flip_horizontal) },
 	{ true, TYPE(Projector),			BMP(lightbulb_off) },
-};
+//};
 
 #ifdef VAPOR_AUDIO_OPENAL
 
-static ComponentEntry componentsAudio[] =
-{
-	{ true, TYPE(Sound),				BMP(sound) },
+//static ComponentEntry componentsAudio[] =
+//{
+	{ true, TYPE(Source),				BMP(sound) },
 	{ true, TYPE(Listener),				BMP(status_online) },
-};
+//};
 
 #endif
 
-static ComponentEntry componentsControllers[] =
-{
+//static ComponentEntry componentsControllers[] =
+//{
 	{ true, TYPE(FirstPersonController),BMP(camera) },
 	{ true, TYPE(ThirdPersonController),BMP(camera) },
 
 #ifdef VAPOR_SCRIPTING_LUA
 	{ true, TYPE(ScriptController),		BMP(shape_flip_horizontal) },
 #endif
-};
+//};
 
-static ComponentEntry componentsPhysics[] =
-{
+//static ComponentEntry componentsPhysics[] =
+//{
 #ifdef VAPOR_PHYSICS_BULLET
 	{ true, TYPE(CharacterController),	BMP(link) },
 	{ true, TYPE(BoxShape),				BMP(link) },
@@ -395,12 +395,11 @@ void ScenePage::onButtonEntityAdd(wxCommandEvent&)
 	EntityPtr node( new Entity(name) );
 	node->addTransform();
 	
-	EntityOperation* nodeOperation = new EntityOperation();
-	nodeOperation->node = node;
-	nodeOperation->weakScene = weakScene;
+	EntityOperation* nodeOperation;
+	nodeOperation = createEntityOperation(node, "Entity Added");
 
-	UndoManager* undoManager = GetEditor().getUndoManager();
-	undoManager->registerOperation(nodeOperation);
+	if( !nodeOperation )
+		return;
 
 	nodeOperation->redo();
 	
@@ -419,7 +418,8 @@ void ScenePage::onButtonEntityDelete(wxCommandEvent&)
 	wxTreeItemId id = treeCtrl->GetSelection();
 	const EntityPtr& node = getEntityFromTreeId(id);
 
-	EntityOperation* nodeOperation = createEntityOperation(node);
+	EntityOperation* nodeOperation;
+	nodeOperation = createEntityOperation(node, "Entity Removed");
 
 	if( !nodeOperation )
 		return;
@@ -444,7 +444,7 @@ void ScenePage::onButtonEntityDeleteUpdate(wxUpdateUIEvent& event)
 
 //-----------------------------------//
 
-EntityOperation* ScenePage::createEntityOperation(const EntityPtr& node)
+EntityOperation* ScenePage::createEntityOperation(const EntityPtr& node, const std::string& desc)
 {
 	if( !node )
 		return nullptr;
@@ -452,6 +452,7 @@ EntityOperation* ScenePage::createEntityOperation(const EntityPtr& node)
 	EntityOperation* nodeOperation = new EntityOperation();
 	nodeOperation->node = node;
 	nodeOperation->weakScene = weakScene;
+	nodeOperation->description = desc;
 
 	UndoManager* undoManager = GetEditor().getUndoManager();
 	undoManager->registerOperation(nodeOperation);
@@ -639,11 +640,6 @@ void ScenePage::onAttachmentMenuSelected(wxCommandEvent& event)
 	const SkeletonPtr& skeleton = mesh->getSkeleton();
 	BonePtr bone = skeleton->getBones()[ind];
 
-	MeshPtr mesh = askMeshResource();
-
-	if( !mesh )
-		return;
-
 	std::string name = "Attachment"+String::fromNumber(nodeCounter++);
 	
 	EntityPtr node( new Entity(name) );
@@ -735,7 +731,8 @@ void ScenePage::onMenuSelected( wxCommandEvent& event )
 		if( !node )
 			return;
 
-		PolygonMode::Enum mode = event.IsChecked() ? PolygonMode::Wireframe : PolygonMode::Solid;
+		PolygonMode::Enum mode = event.IsChecked()
+			? PolygonMode::Wireframe : PolygonMode::Solid;
 
 		const std::vector<GeometryPtr>& geometries = node->getGeometry();
 
@@ -755,8 +752,9 @@ void ScenePage::onMenuSelected( wxCommandEvent& event )
 	//-----------------------------------//
 	else if( id == ID_MenuSceneEntityDelete )
 	{
-		EntityOperation* op = createEntityOperation(node);
-		op->undo();
+		EntityOperation* nodeOperation;
+		nodeOperation = createEntityOperation(node, "Entity Delete");
+		nodeOperation->undo();
 		//std::string str = (std::string) treeCtrl->GetItemText(menuItemId);
 
 		//TypeRegistry& typeRegistry = TypeRegistry::getInstance();
@@ -796,26 +794,6 @@ void ScenePage::onMenuSelected( wxCommandEvent& event )
 
 //-----------------------------------//
 
-MeshPtr ScenePage::askMeshResource()
-{
-	wxFileDialog fd( this, wxFileSelectorPromptStr,
-			wxEmptyString, wxEmptyString, "Mesh files (*.ms3d)|*.ms3d",
-			wxFD_DEFAULT_STYLE|wxFD_FILE_MUST_EXIST );
-
-	if( fd.ShowModal() != wxID_OK )
-		return nullptr;
-
-	std::string file( fd.GetPath() );
-	std::vector<std::string> elems = String::split(file, '\\');
-
-	ResourceManager* rm = GetEditor().getEngine()->getResourceManager();
-	MeshPtr mesh = rm->loadResource<Mesh>( elems.back() );
-
-	return mesh;
-}
-
-//-----------------------------------//
-
 void ScenePage::onComponentAdd(wxCommandEvent& event )
 {
 	const EntityPtr& entity = getEntityFromTreeId( menuItemId );
@@ -833,18 +811,8 @@ void ScenePage::onComponentAdd(wxCommandEvent& event )
 
 	ComponentPtr component;
 
-	if( type->is<Model>() )
-	{
-		MeshPtr mesh = askMeshResource();
-
-		if( mesh )
-			component.reset( new Model(mesh) );
-	}
-	else
-	{
-		Class& classType = (Class&) *type;
-		component.reset( (Component*) classType.createInstance() );
-	}
+	Class& classType = (Class&) *type;
+	component.reset( (Component*) classType.createInstance() );
 
 	if( type->is<Skydome>() )
 	{

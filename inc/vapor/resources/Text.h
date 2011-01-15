@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "vapor/resources/Resource.h"
+#include "resources/Resource.h"
 
 namespace vapor {
 

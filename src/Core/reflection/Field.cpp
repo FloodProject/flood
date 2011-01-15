@@ -16,7 +16,15 @@ namespace vapor {
 Field::Field( const Type& type )
 	: type(type)
 	, qualifiers(0)
+	, setterFunction(nullptr)
 { }
+
+//-----------------------------------//
+
+void Field::setSetter( SetterFunctionPtr fn )
+{
+	setterFunction = fn;
+}
 
 //-----------------------------------//
 

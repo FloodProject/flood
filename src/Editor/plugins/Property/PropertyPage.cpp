@@ -13,6 +13,7 @@
 #include "EditorIcons.h"
 #include "UndoManager.h"
 #include "math/Hash.h"
+#include "Utilities.h"
 
 #include <wx/propgrid/advprops.h>
 
@@ -297,6 +298,54 @@ void PropertyPage::showEntityProperties( const EntityPtr& node )
 
 //-----------------------------------//
 
+static ResourcePtr askResource()
+{
+	wxFileDialog fd( &GetEditor(), wxFileSelectorPromptStr,
+			wxEmptyString, wxEmptyString, "Resource files | *.*",
+			wxFD_DEFAULT_STYLE | wxFD_FILE_MUST_EXIST );
+
+	if( fd.ShowModal() != wxID_OK )
+		return nullptr;
+
+	std::string path( fd.GetPath() );
+	path = Path::normalize(path);
+	
+	ResourceManager* rm = GetEditor().getEngine()->getResourceManager();
+	return rm->loadResource( Path::getFile(path) );
+}
+
+//-----------------------------------//
+
+class ResourceProperty : public wxLongStringProperty
+{
+public:
+
+	ResourceProperty(const std::string& name)
+		: wxLongStringProperty(name, wxPG_LABEL)
+	{}
+
+	virtual bool OnButtonClick( wxPropertyGrid* propGrid, wxString& value )
+	{
+		ResourcePtr resource = askResource();
+
+		if( !resource )
+			return false;
+
+		//const Type& resourceType = resource->getType();
+
+		//PropertyData* data = (PropertyData*) GetClientObject();
+
+		//if( &resourceType != data->type )
+		//	return false;
+
+		SetValueInEvent( Path::getFile( resource->getPath() ) );
+
+		return true;
+	}
+};
+
+//-----------------------------------//
+
 void PropertyPage::appendObjectFields(const Class& type, void* object, bool newCategory)
 {
 	if( newCategory )
@@ -322,10 +371,24 @@ void PropertyPage::appendObjectFields(const Class& type, void* object, bool newC
 
 		wxPGProperty* prop = nullptr;
 
-		if( field.isPointer() )
-			continue;
+		bool isResource = field.type.is<Resource>() || field.type.inherits<Resource>();
 
-		if( fieldType.isClass() || fieldType.isStruct() )
+		if( field.isPointer() && isResource )
+		{
+			const std::string& name = field.type.getName();
+			std::string value;
+
+			ResourcePtr res;
+			
+			if( type.getFieldValue<ResourcePtr>(field.name, object, res) && res )
+				value = Path::getFile( res->getPath() );
+
+			prop = new ResourceProperty(name);
+			prop->SetValueFromString(value);
+
+			Append( prop );
+		}
+		else if( fieldType.isClass() || fieldType.isStruct() )
 		{
 			void* addr = (byte*) object + field.offset;
 			appendObjectFields((Class&) fieldType, addr, false);
@@ -338,20 +401,23 @@ void PropertyPage::appendObjectFields(const Class& type, void* object, bool newC
 		{
 			prop = createEnumProperty(field, object);
 		}
-		else
-			assert( false );
+		else if( field.isPointer() )
+		{
+			continue;
+		}
+		else assert( false );
 
 		if( prop )
 		{
 			wxString readableName = convertToReadable( field.name );
 			prop->SetLabel( readableName );
 
-			PropertyData* customData = new PropertyData;
-			customData->type = &type;
-			customData->field = &field;
-			customData->object = object;
+			PropertyData* data = new PropertyData();
+			data->type = &type;
+			data->field = &field;
+			data->object = object;
 
-			prop->SetClientObject(customData);
+			prop->SetClientObject(data);
 		}
 	}
 }

@@ -15,15 +15,12 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-ResourcesPage::ResourcesPage( EditorFrame* editor,
-							 wxWindow* parent, wxWindowID id,
-							 const wxPoint& pos, const wxSize& size )
-	: wxTreeCtrl(parent, id, pos, size, wxTR_DEFAULT_STYLE|wxTR_HIDE_ROOT,
-	  wxDefaultValidator, "ResourcesPage")
-	, editor(editor)
+ResourcesPage::ResourcesPage( wxWindow* parent, wxWindowID id,
+							const wxPoint& pos, const wxSize& size )
+	: wxTreeCtrl(parent, id, pos, size, wxTR_DEFAULT_STYLE | wxTR_HIDE_ROOT)
 {
-	Engine* engine = editor->getEngine();
-	rm = engine->getResourceManager();
+
+	rm = GetEditor().getEngine()->getResourceManager();
 	
 	rm->onResourcePrepared.Connect( this, &ResourcesPage::onResourcePrepared );
 	rm->onResourceRemoved.Connect( this, &ResourcesPage::onResourceRemoved );
@@ -161,7 +158,7 @@ void ResourcesPage::onResourceRemoved( const ResourceEvent& event )
 void ResourcesPage::onResourceReloaded( const ResourceEvent& event )
 {
 	// Update the view when resources get reloaded.
-	editor->redrawView();
+	GetEditor().redrawView();
 }
 
 //-----------------------------------//

@@ -155,6 +155,7 @@
     <ClCompile Include="..\..\src\Core\reflection\Object.cpp" />
     <ClCompile Include="..\..\src\Core\reflection\Primitive.cpp" />
     <ClCompile Include="..\..\src\Core\reflection\Type.cpp" />
+    <ClCompile Include="..\..\src\Core\StackWalker.cpp" />
     <ClCompile Include="..\..\src\Core\Stream.cpp" />
     <ClCompile Include="..\..\src\Core\Subsystem.cpp" />
     <ClCompile Include="..\..\src\Core\Thread.cpp" />
@@ -217,6 +218,7 @@
     <ClInclude Include="..\..\inc\vapor\Registry.h" />
     <ClInclude Include="..\..\inc\vapor\Serialization.h" />
     <ClInclude Include="..\..\inc\vapor\Singleton.h" />
+    <ClInclude Include="..\..\inc\vapor\StackWalker.h" />
     <ClInclude Include="..\..\inc\vapor\Stream.h" />
     <ClInclude Include="..\..\inc\vapor\Subsystem.h" />
     <ClInclude Include="..\..\inc\vapor\Thread.h" />

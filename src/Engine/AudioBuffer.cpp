@@ -10,23 +10,24 @@
 
 #ifdef VAPOR_AUDIO_OPENAL
 
-#include "vapor/audio/Buffer.h"
-#include "vapor/audio/Device.h"
+#include "audio/Buffer.h"
+#include "audio/Device.h"
 
-namespace vapor { namespace audio {
+namespace vapor {
 
 //-----------------------------------//
 
-Buffer::Buffer( audio::Device* device, SoundPtr sound )
-	: device(device), bufferId(0), resource(sound)
+AudioBuffer::AudioBuffer( AudioDevice* device, const SoundPtr& sound )
+	: device(device)
+	, id(0)
+	, resource(sound)
 {
-	alGenBuffers(1, &bufferId);
+	alGenBuffers(1, &id);
 
-	// check if buffer was successfuly created
+	// Check if the buffer was successfuly created.
 	if(device->checkError()) 
 	{
-		warn("audio::al", "Error creating a sound buffer: %s",
-			device->getError());
+		Log::warn( "Error creating a sound buffer: %s", device->getError());
 	}
 
 	upload();
@@ -34,12 +35,11 @@ Buffer::Buffer( audio::Device* device, SoundPtr sound )
 
 //-----------------------------------//
 
-Buffer::~Buffer()
+AudioBuffer::~AudioBuffer()
 {
-	alDeleteBuffers(1, &bufferId);
+	alDeleteBuffers(1, &id);
 
-	//if(device->soundBuffers.find(resource) 
-	//	!= device->soundBuffers.end())
+	//if(device->soundBuffers.find(resource) != device->soundBuffers.end())
 	//{
 	//	device->soundBuffers.erase(resource);
 	//}
@@ -47,29 +47,26 @@ Buffer::~Buffer()
 
 //-----------------------------------//
 
-void Buffer::upload()
+void AudioBuffer::upload()
 {
-	// upload sound data to buffer
-	alBufferData(bufferId, 
-		device->getALFormat( resource->getFormat()), &resource->getBuffer()[0], 
-		static_cast <ALsizei> ( resource->getBuffer().size() ), resource->getFrequency() );
+	const std::vector<byte>& buffer = resource->getBuffer();
+	ALsizei size = (ALsizei) buffer.size();
+	
+	int frequency = resource->getFrequency();
+	int format = device->getFormat(resource);
+
+	if( buffer.empty() )
+		return;
+
+	// Uploads sound data to the buffer.
+	alBufferData( id, format, &buffer[0], size, frequency );
 	
 	if(device->checkError())
-	{
-		warn("audio::al", "Error uploading sound to buffer: %s",
-			device->getError());
-	}	
+		Log::warn("Error uploading sound to buffer: %s", device->getError());
 }
 
 //-----------------------------------//
 
-ALuint Buffer::id()
-{
-	return bufferId;
-}
-
-//-----------------------------------//
-
-} } // end namespaces
+} // end namespace
 
 #endif

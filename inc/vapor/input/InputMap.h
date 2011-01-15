@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include "vapor/input/InputManager.h"
-#include "vapor/input/Keyboard.h"
-#include "vapor/input/Mouse.h"
-#include "vapor/input/Joystick.h"
+#include "input/InputManager.h"
+#include "input/Keyboard.h"
+#include "input/Mouse.h"
+#include "input/Joystick.h"
 
 namespace vapor {
 

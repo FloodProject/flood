@@ -120,7 +120,7 @@ void CameraControls::updateCameraSelection()
 
 	choiceView->Clear();
 
-	Engine* engine = editor->getEngine();
+	Engine* engine = GetEditor().getEngine();
 	getCamerasInScene(engine->getSceneManager());
 	getCamerasInScene(editor->getEditorScene());
 

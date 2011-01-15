@@ -45,7 +45,7 @@ public:
 
 	// Gets a value in the field.
 	template<typename T>
-	bool getFieldValue( const std::string& name, const void* obj, T& value )
+	bool getFieldValue( const std::string& name, const void* obj, T& value ) const
 	{
 		Field* field = getField(name);
 		if( !field ) return false;
@@ -61,8 +61,15 @@ public:
 		Field* field = getField(name);
 		if( !field ) return false;
 
-		field->set<T>(obj, value);
+		SetterFunctionPtr setFn = field->setterFunction;
+		
+		if(setFn)
+			setFn((void*) obj, (void*) &value);
+		else
+			field->set<T>(obj, value);
+
 		notifyChanged(*field);
+
 		return true;
 	}
 
@@ -86,80 +93,112 @@ protected:
 // Type is in a static function to work around the undefined order of
 // initialization of static objects between different translation units.
 
-#define DECLARE_CLASS_()												\
-public:																	\
-	static Class& getStaticType();										\
+#define DECLARE_CLASS_()														\
+public:																			\
+	static Class& getStaticType();												\
 	virtual const Class& getType() const { return getStaticType(); }
 
-#define SUBCLASS_CLASS(name)											\
-	class _##name : public Class {										\
-	public:																\
-		_##name(const std::string& n, int sz) : Class(n, sz) {}			\
-		_##name(const std::string& n, const Type& p, int sz)			\
-			: Class(n, p, sz) {}										\
-		virtual void* createInstance() const { return new name(); }		\
-	};																	\
+#define SUBCLASS_CLASS(name)													\
+	class _##name : public Class {												\
+	public:																		\
+		_##name(const std::string& n, int sz) : Class(n, sz) {}					\
+		_##name(const std::string& n, const Type& p, int sz)					\
+			: Class(n, p, sz) {}												\
+		virtual void* createInstance() const { return new name(); }				\
+	};																			\
 
-#define BEGIN_CLASS(name)												\
-	SUBCLASS_CLASS(name)												\
-	static Class& _ = name::getStaticType();							\
-	Class& name::getStaticType()										\
+#define BEGIN_CLASS(name)														\
+	SUBCLASS_CLASS(name)														\
+	static Class& _ = name::getStaticType();									\
+	Class& name::getStaticType()												\
 	{ static _##name type(TOSTRING(name), sizeof(name));
 
-#define BEGIN_CLASS_ABSTRACT(name)										\
-	static Class& _ = name::getStaticType();							\
-	Class& name::getStaticType()										\
+#define BEGIN_CLASS_ABSTRACT(name)												\
+	static Class& _ = name::getStaticType();									\
+	Class& name::getStaticType()												\
 	{ static Class type(TOSTRING(name), sizeof(name));
 
-#define BEGIN_CLASS_PARENT(name, parent)								\
-	SUBCLASS_CLASS(name)												\
-	static Class& _ = name::getStaticType();							\
-	Class& name::getStaticType()										\
-	{ static _##name type(TOSTRING(name), parent::getStaticType(),		\
+#define BEGIN_CLASS_PARENT(name, parent)										\
+	SUBCLASS_CLASS(name)														\
+	static Class& _ = name::getStaticType();									\
+	Class& name::getStaticType()												\
+	{ static _##name type(TOSTRING(name), parent::getStaticType(),				\
 		sizeof(name));
 
-#define BEGIN_CLASS_PARENT_ABSTRACT(name, parent)						\
-	static Class& _ = name::getStaticType();							\
-	Class& name::getStaticType()										\
-	{ static Class type(TOSTRING(name), parent::getStaticType(),		\
+#define BEGIN_CLASS_PARENT_ABSTRACT(name, parent)								\
+	static Class& _ = name::getStaticType();									\
+	Class& name::getStaticType()												\
+	{ static Class type(TOSTRING(name), parent::getStaticType(),				\
 		sizeof(name));
 
-#define END_CLASS()														\
-	return type; }														\
+#define END_CLASS()																\
+	return type; }																\
 
-#define FIELD_COMMON(classType, fieldName)								\
-	fieldName.offset = offsetof(classType, fieldName);					\
-	fieldName.name = TOSTRING(fieldName);								\
+
+#define NAME_FIELD_SETTER(classType, fieldName)									\
+	_set_##classType##_##fieldName
+
+#define NFS(classType, fieldName)												\
+	&fieldName##Set::_set_##classType##_##fieldName
+
+#define FIELD_SETTER(classType, fieldType, fieldName, setterName)				\
+	static void																	\
+	NAME_FIELD_SETTER(classType, fieldName)	(void* vobj, void* vparam) {		\
+		classType* obj = (classType*) vobj;										\
+		fieldType* param = (fieldType*) vparam;									\
+		if( obj && param ) obj->set##setterName(*param); }						\
+
+#define FIELD_SETTER_CLASS(classType, fieldType, fieldName, setterName)			\
+	class fieldName##Set {														\
+	public:																		\
+		FIELD_SETTER(classType, fieldType, fieldName, setterName) };			\
+
+#define FIELD_COMMON(classType, fieldName, ...)									\
+	fieldName.offset = offsetof(classType, fieldName);							\
+	fieldName.name = TOSTRING(fieldName);										\
+	fieldName.setSetter(__VA_ARGS__);											\
 	type.addField(fieldName);
 
-#define FIELD_CLASS(classType, fieldType, fieldName)					\
-	static Field fieldName(fieldType::getStaticType());						\
+#define FIELD_CLASS(classType, fieldType, fieldName, ...)						\
+	static Field fieldName(fieldType::getStaticType());							\
 	FIELD_COMMON(classType, fieldName)
 
-#define FIELD_CLASS_PTR(classType, fieldType, fieldName)				\
-	static Field fieldName(fieldType::getStaticType());						\
-	fieldName.setQualifier(Qualifier::Pointer);							\
-	FIELD_COMMON(classType, fieldName)
+#define FIELD_CLASS_PTR(classType, fieldType, fieldName, ...)					\
+	static Field fieldName(fieldType::getStaticType());							\
+	fieldName.setQualifier(Qualifier::Pointer);									\
+	FIELD_COMMON(classType, fieldName, __VA_ARGS__)
 
-#define FIELD_ENUM(classType, fieldType, fieldName)						\
-	static Field fieldName(fieldType::getStaticType());						\
-	FIELD_COMMON(classType, fieldName)
+#define FIELD_CLASS_PTR_SETTER(classType, fieldType, fieldName, setterName)		\
+	FIELD_SETTER_CLASS(classType, fieldType##Ptr, fieldName, setterName)		\
+	FIELD_CLASS_PTR(classType, fieldType, fieldName, NFS(classType, fieldName))
 
-#define FIELD_VECTOR(classType, fieldType, fieldName)					\
-	static Field fieldName(fieldType::getStaticType());						\
-	fieldName.setQualifier(Qualifier::Array);							\
-	FIELD_COMMON(classType, fieldName)
+#define FIELD_ENUM(classType, fieldType, fieldName, ...)						\
+	static Field fieldName(fieldType::getStaticType());							\
+	FIELD_COMMON(classType, fieldName, __VA_ARGS__)
 
-#define FIELD_VECTOR_PTR(classType, fieldType, pointerType, fieldName ) \
-	static Field fieldName(fieldType::getStaticType());						\
-	fieldName.setQualifier(Qualifier::Array);							\
-	fieldName.setQualifier(Qualifier::Pointer);							\
-	fieldName.size = sizeof(pointerType);								\
-	FIELD_COMMON(classType, fieldName)
+#define FIELD_ENUM_SETTER(classType, fieldType, fieldName, setterName)			\
+	FIELD_SETTER_CLASS(classType, fieldType##::Enum, fieldName, setterName)		\
+	FIELD_ENUM(classType, fieldType, fieldName, NFS(classType, fieldName))
 
-#define FIELD_PRIMITIVE(classType, fieldType, fieldName)				\
-	static Field fieldName(Primitive::_##fieldType);					\
-	FIELD_COMMON(classType, fieldName)
+#define FIELD_VECTOR(classType, fieldType, fieldName, ...)						\
+	static Field fieldName(fieldType::getStaticType());							\
+	fieldName.setQualifier(Qualifier::Array);									\
+	FIELD_COMMON(classType, fieldName, __VA_ARGS__)
+
+#define FIELD_VECTOR_PTR(classType, fieldType, pointerType, fieldName, ... )	\
+	static Field fieldName(fieldType::getStaticType());							\
+	fieldName.setQualifier(Qualifier::Array);									\
+	fieldName.setQualifier(Qualifier::Pointer);									\
+	fieldName.size = sizeof(pointerType);										\
+	FIELD_COMMON(classType, fieldName, __VA_ARGS__)
+
+#define FIELD_PRIMITIVE(classType, fieldType, fieldName, ...)					\
+	static Field fieldName(Primitive::_##fieldType);							\
+	FIELD_COMMON(classType, fieldName, __VA_ARGS__)
+
+#define FIELD_PRIMITIVE_SETTER(classType, fieldType, fieldName, setterName)		\
+	FIELD_SETTER_CLASS(classType, fieldType, fieldName, setterName)				\
+	FIELD_PRIMITIVE(classType, fieldType, fieldName, NFS(classType, fieldName))
 
 //-----------------------------------//
 

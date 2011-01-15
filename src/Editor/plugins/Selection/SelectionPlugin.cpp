@@ -125,7 +125,8 @@ void SelectionPlugin::onMouseButtonRelease( const MouseButtonEvent& event )
 	SelectionOperation* selected = selections->getSelection();
 
 	// Prevent duplication of selection events.
-	if( selected && (!selected->lastUndone) && (selected->selections == selection->selections))
+	if( selected && (!selected->lastUndone)
+		&& (selected->selections == selection->selections))
 	{
 		delete selection;
 		return;
@@ -185,7 +186,7 @@ void SelectionPlugin::updateRectangle( const MouseDragEvent& event )
 
 	Vector2i dragMax;
 	dragMax.x = std::max(dragOrigin.x, dragPoint.x);
-	dragMax.y = std::max(dragOrigin.y, dragPoint.y);
+	dragMax.y = std::max(dragOrigin.y, dragPoint.y) + 3;
 
 	OverlayPtr overlay = dragRectangle->getComponent<Overlay>();
 	overlay->setPosition(dragMin);

@@ -7,15 +7,17 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/scene/Model.h"
-#include "vapor/scene/Transform.h"
-#include "vapor/scene/Entity.h"
-#include "vapor/resources/Mesh.h"
-#include "vapor/animation/Animation.h"
-#include "vapor/animation/Skeleton.h"
-#include "vapor/animation/Bone.h"
-#include "vapor/animation/Attachment.h"
-#include "vapor/math/Math.h"
+#include "scene/Model.h"
+#include "scene/Transform.h"
+#include "scene/Entity.h"
+#include "resources/Mesh.h"
+#include "animation/Animation.h"
+#include "animation/Skeleton.h"
+#include "animation/Bone.h"
+#include "animation/Attachment.h"
+#include "render/Device.h"
+#include "math/Math.h"
+#include "Engine.h"
 
 namespace vapor {
 
@@ -298,6 +300,26 @@ void Model::onRender()
 	if( !mesh || !mesh->isLoaded() || !mesh->isAnimated() )
 		return;
 
+	RenderDevice* device = GetEngine()->getRenderDevice();
+	RenderPipeline::Enum pipeline = device->getPipeline();
+
+	if( pipeline == RenderPipeline::Fixed )
+		setupSkinning();
+	else
+		setupShaderSkinning();
+}
+
+//-----------------------------------//
+
+void Model::setupSkinning()
+{
+	
+}
+
+//-----------------------------------//
+
+void Model::setupShaderSkinning()
+{
 	const std::vector<RenderablePtr>& rends = getRenderables();
 
 	for( uint i = 0; i < rends.size(); i++ )

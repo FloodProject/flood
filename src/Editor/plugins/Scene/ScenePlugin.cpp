@@ -41,13 +41,14 @@ PluginMetadata ScenePlugin::getMetadata()
 void ScenePlugin::onPluginEnable()
 {
 	scenePage = new ScenePage(editor);
-	scenePage->SetSize(220, 400);
+	scenePage->SetSize(200, -1);
 
 	wxBitmap icon = wxMEMORY_BITMAP(sitemap_color);
 
 	wxAuiPaneInfo pane;
 	pane.Caption("Scene").Right().Dock().Icon(icon);
-	
+	pane.MinSize( scenePage->GetSize() );
+
 	editor->getAUI()->AddPane(scenePage, pane);
 	editor->getAUI()->Update();
 
@@ -82,9 +83,9 @@ void ScenePlugin::onEntitySelect( const EntityPtr& node )
 	if( scenePage->sentLastSelectionEvent )
 		return;
 
-	wxTreeItemId nodeId = scenePage->getTreeIdFromEntity(node);
+	wxTreeItemId entityId = scenePage->getTreeIdFromEntity(node);
 
-	if( !nodeId.IsOk() )
+	if( !entityId.IsOk() )
 		return;
 
 	//wxTreeCtrl* treeCtrl = scenePage->getTreeCtrl();

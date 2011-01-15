@@ -90,7 +90,7 @@ protected:
 	void addComponent( wxTreeItemId id, ComponentPtr component );
 
 	// Creates a new node operation.
-	EntityOperation* createEntityOperation(const EntityPtr& node);
+	EntityOperation* createEntityOperation(const EntityPtr& node, const std::string& desc);
 
 	// Cleans the current scene.
 	void cleanScene();
@@ -110,7 +110,6 @@ protected:
 	void onButtonEntityDeleteUpdate(wxUpdateUIEvent&);
 
 	// Event helpers.
-	MeshPtr askMeshResource();
 	void populateEntityItemMenu(wxMenu& menu, const EntityPtr& node);
 	void populateComponentItemMenu(wxMenu& menu, const ComponentPtr& component);
 	void onAnimationMenuSelected(wxCommandEvent&);

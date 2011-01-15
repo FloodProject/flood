@@ -21,7 +21,7 @@ class PluginManager;
  * metadata and can be enabled and disabled on the fly.
  */
 
-class PluginManagerFrame : public wxPanel
+class PluginManagerFrame : public wxCheckListBox
 {
 public:
 
@@ -37,9 +37,6 @@ protected:
 
 	// Manages the plugins.
 	PluginManager* plugins;
-
-	// Widget where plugin metadata is shown.
-	wxCheckListBox *checkListBox;
 };
 
 //-----------------------------------//

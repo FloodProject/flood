@@ -8,45 +8,51 @@
 
 #pragma once
 
-#include "vapor/resources/Resource.h"
-#include "vapor/resources/ResourceManager.h"
+#include "resources/Resource.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
 /**
- * Represents a sound in the engine. 
- * A sound holds uncompressed audio data that can be played back.
+ * Represents a sound resource that holds uncompressed audio data.
  */
 
 class VAPOR_API Sound : public Resource
 {
+	DECLARE_CLASS_()
+
 public:
 
 	Sound();
 
-	/// Gets/sets the frequency of the sound.
+	// Gets/sets the audio sample frequency.
 	ACESSOR(Frequency, const int, frequency)
 
-	/// Gets/sets the audio channels.
+	// Gets/sets the audio channels.
 	ACESSOR(Channels, byte, channels)
 
-	/// Gets/sets the buffer containing the data.
+	// Gets/sets the audio sample size.
+	ACESSOR(Size, byte, size)
+
+	// Gets/sets the buffer containing the data.
 	ACESSOR(Buffer, const std::vector<byte>&, dataBuffer)
 
-	/// Return the proper resource group for this resource.
+	// Return the proper resource group for this resource.
 	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Audio)
 
-private:
+protected:
 
-	/// Sound frequency
+	// Sound frequency.
 	int frequency;
 
-	/// Sound channels
+	// Sound channels.
 	byte channels;
 
-	/// Holds the sound data
+	// Sound sample size.
+	byte size;
+
+	// Holds the sound data.
 	std::vector<byte> dataBuffer;
 };
 

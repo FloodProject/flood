@@ -8,6 +8,7 @@
 
 #include "vapor/PCH.h"
 #include "scene/Projector.h"
+#include "scene/Transform.h"
 #include "scene/Entity.h"
 #include "render/DebugGeometry.h"
 

@@ -49,7 +49,21 @@ void PropertyOperation::setFieldValue(const wxAny& value)
 	const Type& field_type = field->type;
 	Log::debug("Changed property value: %s", field->name.c_str() );
 
-	if( field_type.isEnum() )
+	bool isResource = field_type.is<Resource>() || field_type.inherits<Resource>();
+
+	if( field->isPointer() && isResource )
+	{
+		wxString val = value.As<wxString>();
+
+		ResourceManager* rm = GetEditor().getEngine()->getResourceManager();
+		ResourcePtr resource = rm->loadResource( std::string(val) );
+
+		if( !resource )
+			return;
+
+		type->setFieldValue<ResourcePtr>(field->name, object, resource);
+	}
+	else if( field_type.isEnum() )
 	{
 		int val = value.As<int>();
 		type->setFieldValue<int>(field->name, object, val);
@@ -107,11 +121,9 @@ void PropertyOperation::setFieldValue(const wxAny& value)
 			type->setFieldValue< std::bitset<32> >(field->name, object, val);
 		}
 		//-----------------------------------//
-		else
-			assert( false );
+		else assert( false );
 	}
-	else
-		assert( false );
+	else assert( false );
 }
 
 //-----------------------------------//

@@ -85,9 +85,8 @@ struct VAPOR_API ResourceGroup
 
 class VAPOR_API Resource : public ReferenceCounted
 {
-	DECLARE_CLASS_()
 	DECLARE_UNCOPYABLE(Resource)
-
+	DECLARE_CLASS_()
 
 public:
 

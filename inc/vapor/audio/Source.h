@@ -10,17 +10,18 @@
 
 #ifdef VAPOR_AUDIO_OPENAL
 
-#include "vapor/audio/Device.h"
-#include "vapor/audio/Context.h"
-#include "vapor/resources/Sound.h"
-#include "vapor/math/Vector3.h"
+#include "audio/Device.h"
+#include "audio/Context.h"
+#include "resources/Sound.h"
+#include "math/Vector3.h"
 
-namespace vapor { namespace audio {
+FWD_DECL_SHARED(AudioBuffer)
 
-/** \addtogroup audio Audio 
- * @{ */
+namespace vapor {
 
 //-----------------------------------//
+
+class AudioContext;
 
 /**
  * Wraps an OpenAL source in a class. A source in OpenAL is the object 
@@ -29,30 +30,22 @@ namespace vapor { namespace audio {
  * buffer from the audio device.
  */
 
-class Buffer;
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Buffer );
-
-class VAPOR_API Source
+class VAPOR_API AudioSource
 {
-	DECLARE_UNCOPYABLE(Source)
+	DECLARE_UNCOPYABLE(AudioSource)
 
 public:
 
-	Source( std::shared_ptr<audio::Context> context, SoundPtr sound );
-	~Source();
+	AudioSource( AudioContext* context, const SoundPtr& sound );
+	~AudioSource();
 
-	//void setResource( shared_ptr<Resource> sound );
+	// Plays the sound buffer resuming if paused.
+	void play( int timesToPlay = 1 );
 
-	// Plays the sound buffer a number of times. If you paused the source
-	// then it will resume from where it was paused.
-	void play( const int count = 1 );
-
-	// Stops the playing of the audio. The next time you play it will start
-	// from the beginning.
+	// Stops the sound buffer and seeks to the beginning.
 	void stop();
 
-	// Pauses the playing of the audio. The next time you play it will start
-	// from the position it had when it was paused.
+	// Pauses the sound buffer.
 	void pause();
 
 	// Checks if the source is currently playing.
@@ -62,16 +55,19 @@ public:
 	bool isPaused();
 
 	// Sets the volume of the source. Volume is in the range [0.0-1.0].
-	void setVolume( const float volume );
+	void setVolume( float volume );
 
-	// Sets the pitch of the sourc. Pitch is in the range [0.0-1.0].
-	void setPitch( const float pitch );
+	// Sets the pitch of the source. Pitch is in the range [0.0-1.0].
+	void setPitch( float pitch );
 
-	// Sets the roll-off of the sourc. Roll-off is in the range [0.0-1.0].
-	void setRollOff( const float rollOff );
+	// Sets the roll-off of the source. Roll-off is in the range [0.0-1.0].
+	void setRollOff( float rollOff );
+
+	// Sets the loop of the source.
+	void setLoop( bool state );
 
 	// Sets the position of the source.
-	void setPosition( const Vector3& position ); 
+	void setPosition( const Vector3& position );
   
 protected:
 
@@ -82,26 +78,22 @@ protected:
 	void clear();
 
 	// Holds a pointer to the audio device.
-	audio::Device* device;
+	AudioDevice* device;
 
 	// Holds a pointer to the audio context.
-	ContextPtr context;
+	AudioContext* context;
 	
 	// Holds a pointer to the audio data buffer.
-	BufferPtr buffer;
+	AudioBufferPtr buffer;
 
 	// Holds the source id from OpenAL.
-	ALuint sourceId;
+	ALuint id;
 };
 
-//-----------------------------------//
-
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Source );
+TYPEDEF_SHARED_POINTER_FROM_TYPE( AudioSource );
 
 //-----------------------------------//
 
-} } // end namespaces
-
-/** @} */
+} // end namespace
 
 #endif

@@ -14,8 +14,6 @@ namespace vapor { namespace editor {
 
 class EditorFrame;
 
-//-----------------------------------//
-
 /**
  * This control is responsible for mantaining and updating a TreeCtrl
  * with all the contents of the scene tree in the passed instance of
@@ -28,8 +26,7 @@ class ResourcesPage : public wxTreeCtrl
 {
 public:
 
-	ResourcesPage( EditorFrame* editor,
-		wxWindow* parent, wxWindowID id = wxID_ANY,
+	ResourcesPage( wxWindow* parent, wxWindowID id = wxID_ANY,
 		const wxPoint& pos = wxDefaultPosition,
 		const wxSize& size = wxDefaultSize );
 

@@ -10,28 +10,40 @@
 
 #ifdef VAPOR_AUDIO_OPENAL
 
-#include "vapor/audio/Context.h"
-#include "vapor/scene/Transform.h"
+#include "scene/Component.h"
+#include "audio/Context.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-class VAPOR_API Listener : public Transform, public audio::Context
+class VAPOR_API Listener : Component
 {
+	DECLARE_UNCOPYABLE(Listener)
+	DECLARE_CLASS_()
+
 public:
 
-	Listener(audio::Device* device);
+	Listener();
 	virtual ~Listener();
 
+	// Set the volume of this listener.
+	void setVolume( float volume );
+
+	// Make this the current context in the audio device.
+	void makeCurrent();
+
+	// Updates the component.
 	virtual void update( double delta );
 
-	virtual const std::string save(int UNUSED(indent) = 0) { return ""; }
+protected:
 
-	static std::shared_ptr<audio::Context> getContext(std::shared_ptr<Listener> ls);
+	// Audio context.
+	AudioContext* audioContext;
+
+	// Volume level.
+	float volume;
 };
-
-//-----------------------------------//
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Listener );
 

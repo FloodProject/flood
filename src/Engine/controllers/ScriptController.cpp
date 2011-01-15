@@ -10,21 +10,21 @@
 
 #ifdef VAPOR_SCRIPTING_LUA
 
-#include "vapor/controllers/ScriptController.h"
-#include "vapor/physics/CharacterController.h"
+#include "controllers/ScriptController.h"
+#include "physics/CharacterController.h"
 
-#include "vapor/script/Script.h"
-#include "vapor/script/ScriptManager.h"
-#include "vapor/resources/ResourceManager.h"
+#include "script/Script.h"
+#include "script/ScriptManager.h"
+#include "resources/ResourceManager.h"
 
-#include "vapor/scene/Entity.h"
-#include "vapor/Engine.h"
+#include "scene/Entity.h"
+#include "Engine.h"
 
-#include "vapor/input/InputManager.h"
-#include "vapor/input/Keyboard.h"
-#include "vapor/input/Mouse.h"
+#include "input/InputManager.h"
+#include "input/Keyboard.h"
+#include "input/Mouse.h"
 
-#include "vapor/Headers.h"
+#include "Headers.h"
 
 #include <swigluarun.h>
 #include <lua.hpp>
@@ -34,7 +34,6 @@ namespace vapor {
 //-----------------------------------//
 
 BEGIN_CLASS_PARENT(ScriptController, Controller)
-	FIELD_PRIMITIVE(ScriptController, string, scriptName)
 	FIELD_CLASS_PTR(ScriptController, Script, script)
 END_CLASS()
 
@@ -73,13 +72,12 @@ ScriptController::~ScriptController()
 
 void ScriptController::_update( double delta )
 {
-	if( !script && !scriptName.empty() )
-		script = getScript();
-
 	if( !state && script )
 	{
 		createState();
-		bindEntity();
+
+		const EntityPtr& entity = getEntity();
+		bindEntity(entity);
 	}
 
 	if( state )
@@ -102,20 +100,17 @@ void ScriptController::createState()
 #define BIND_COMPONENT(var, type)						\
 	bindType( module, var,								\
 		"vapor::"TOSTRING(type)" *",					\
-		node->getComponent<type>().get() );
+		entity->getComponent<type>().get() );
 
-void ScriptController::bindEntity()
+void ScriptController::bindEntity(const EntityPtr& entity)
 {
-	const EntityPtr& node = getEntity();
-	assert( node != nullptr );
-
 	Engine* engine = GetEngine();
 	State* mainState = engine->getScriptManager()->getState();
 
 	swig_module_info* module = SWIG_Lua_GetModule( mainState->getLuaState() );
 	assert( module != nullptr );
 
-	bindType(module, "node", "vapor::Entity *", node.get());
+	bindType(module, "entity", "vapor::Entity *", entity.get());
 	
 	BIND_COMPONENT("transform", Transform)
 	BIND_COMPONENT("geometry", Geometry)
@@ -140,16 +135,6 @@ void ScriptController::bindType(swig_module_info* module,
     SWIG_Lua_NewPointerObj(L, object, type, 0);
 
     lua_setglobal(L, name);
-}
-
-//-----------------------------------//
-
-ScriptPtr ScriptController::getScript()
-{
-	Engine* engine = GetEngine();
-
-	ResourceManager* resources = engine->getResourceManager();
-	return resources->loadResource<Script>(scriptName);
 }
 
 //-----------------------------------//

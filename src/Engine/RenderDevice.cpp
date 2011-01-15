@@ -92,13 +92,6 @@ void RenderDevice::checkExtensions()
 	}
 
 	Log::info( "Using GLEW version %s", glewGetString(GLEW_VERSION) );
-
-	if( !GLEW_VERSION_2_0 )
-	{
-		const char* str = "You need at least OpenGL 2.0 to run this.";
-		System::messageDialog( str/*, LogLevel::Error*/ );
-		exit(-1);
-	}
 }
 
 //-----------------------------------//

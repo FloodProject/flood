@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "vapor/controllers/Controller.h"
+#include "controllers/Controller.h"
 
 FWD_DECL_INTRUSIVE(Script)
 
@@ -21,8 +21,6 @@ namespace vapor {
 class State;
 struct KeyEvent;
 struct MouseButtonEvent;
-
-//-----------------------------------//
 
 /**
  * Script that can be executed by a script state.
@@ -46,7 +44,7 @@ protected:
 	void createState();
 
 	// Binds the node instance.
-	void bindEntity();
+	void bindEntity(const EntityPtr& entity);
 
 	// Binds a type into this instance.
 	void bindType(swig_module_info* module, const char* name,
@@ -60,9 +58,6 @@ protected:
 	virtual void onKeyRelease( const KeyEvent& );
 	virtual void onMouseButtonPressed( const MouseButtonEvent& );
 	virtual void onMouseButtonReleased( const MouseButtonEvent& );
-
-	// Script name.
-	std::string scriptName;
 
 	// Source code of the script.
 	ScriptPtr script;
