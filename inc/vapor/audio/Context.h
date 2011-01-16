@@ -44,8 +44,11 @@ public:
 	// Make this the current context in the audio device.
 	void makeCurrent();
 
-	// Sets the listener position
-	void setListener(const Vector3& position);
+	// Sets the listener position.
+	void setPosition(const Vector3& position);
+
+	// Sets the listener orientation.
+	void setOrientation(const Vector3& rotation);
 
 protected:
 

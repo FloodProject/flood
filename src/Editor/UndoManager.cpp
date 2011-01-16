@@ -9,6 +9,7 @@
 #include "PCH.h"
 #include "UndoManager.h"
 #include "UndoOperation.h"
+#include "Editor.h"
 
 namespace vapor { namespace editor {
 
@@ -90,6 +91,8 @@ void UndoManager::handleOperation(Operations& firstOperations,
 		op->undo();
 	else
 		op->redo();
+
+	GetEditor().redrawView();
 }
 
 //-----------------------------------//

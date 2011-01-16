@@ -81,9 +81,6 @@ void PropertyPlugin::onEntitySelect( const EntityPtr& entity )
 	selectedEntity = entity;
 	propertyPage->showEntityProperties( entity );
 
-	//Class& klass = (Class&) entity->getType();
-	//klass.onFieldChanged.Connect(this, &PropertyPlugin::onFieldChanged);
-
 	entity->onComponentAdded.Connect(this, &PropertyPlugin::onComponentChanged);
 	entity->onComponentRemoved.Connect(this, &PropertyPlugin::onComponentChanged);
 }
@@ -97,9 +94,6 @@ void PropertyPlugin::onEntityUnselect( const EntityPtr& entity )
 		selectedEntity.reset();
 		propertyPage->Clear();
 	}
-
-	//Class& klass = (Class&) entity->getType();
-	//klass.onFieldChanged.Disconnect(this, &PropertyPlugin::onFieldChanged);
 
 	entity->onComponentAdded.Disconnect(this, &PropertyPlugin::onComponentChanged);
 	entity->onComponentRemoved.Disconnect(this, &PropertyPlugin::onComponentChanged);

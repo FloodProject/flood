@@ -8,14 +8,9 @@
 
 #pragma once
 
-#include <wx/propgrid/propgrid.h>
-
 namespace vapor { namespace editor {
 
 //-----------------------------------//
-
-class EditorFrame;
-class PropertyOperation;
 
 class PropertyData : public wxClientData
 {
@@ -54,19 +49,34 @@ public:
 	// Populates properties on the grid.
 	void showEntityProperties( const EntityPtr& node );
 
-	// Appends the type fields to the property grid.
-	void appendObjectFields(const Class& type, void* object, bool newCategory = true);
+	// Creates a memory watch.
+	void createMemoryWatch(const Class* type, void* object, MemoryWatch& watch);
 
-	// Creates a new property for a primitive type.
-	wxPGProperty* createPrimitiveProperty(const Field& field, void* object);
-
-	// Creates a new property for an enum type.
-	wxPGProperty* createEnumProperty(const Field& field, void* object);
+	// Updates a memory watch.
+	bool updateMemoryWatch(const Class* type, void* object);
 
 	// Updates the memory watches.
 	bool updateMemoryWatches();
 
 protected:
+
+	// Appends the type fields to the property grid.
+	void appendObjectFields(const Class& type, void* object, bool newCategory = true);
+
+	// Creates a property for a field.
+	wxPGProperty* createProperty(const Class& type, const Field& field, void* object);
+
+	// Creates a new property for a primitive type.
+	wxPGProperty* createPrimitiveProperty(const Field& field, void* object);
+
+	// Creates a new property for a resource type.
+	wxPGProperty* createResourceProperty(const Field& field, void* object);
+
+	// Creates a new property for an enum type.
+	wxPGProperty* createEnumProperty(const Field& field, void* object);
+
+	// Creates a new property for a float type.
+	wxFloatProperty* createFloatProperty(const char* name, float value);
 
 	// Callback when property value is about to change.
 	void onPropertyChanging(wxPropertyGridEvent& event);
@@ -74,7 +84,7 @@ protected:
 	// Callback when property value changes.
 	void onPropertyChanged(wxPropertyGridEvent& event);
 
-	// Callback when app is idle.
+	// Callback when idle.
 	void onIdle(wxIdleEvent& event);
 
 	// Current property value.
@@ -83,11 +93,10 @@ protected:
 	// Selected node.
 	EntityWeakPtr selectedEntity;
 
-	// Updates a memory watch.
-	bool updateMemoryWatch(const Class* klass, void* object);
-
 	// Memory watches.
 	std::map<const Class*, MemoryWatch> memoryWatches;
+
+	std::vector<wxPGProperty*> composed;
 };
 
 //-----------------------------------//

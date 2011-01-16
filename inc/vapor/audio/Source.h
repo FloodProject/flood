@@ -21,6 +21,20 @@ namespace vapor {
 
 //-----------------------------------//
 
+struct VAPOR_API RolloffMode
+{
+	DECLARE_ENUM()
+
+	enum Enum
+	{
+		Logarithmic = AL_INVERSE_DISTANCE_CLAMPED,
+		Linear = AL_LINEAR_DISTANCE_CLAMPED,
+		Exponential = AL_EXPONENT_DISTANCE_CLAMPED
+	};
+};
+
+//-----------------------------------//
+
 class AudioContext;
 
 /**
@@ -60,8 +74,17 @@ public:
 	// Sets the pitch of the source. Pitch is in the range [0.0-1.0].
 	void setPitch( float pitch );
 
+	// Sets the reference distance.
+	void setReferenceDistance( float distance );
+
+	// Sets the maximum distance.
+	void setMaxDistance( float distance );
+
+	// Sets the rolloff mode of the source.
+	void setRolloffMode( RolloffMode::Enum rolloff );
+
 	// Sets the roll-off of the source. Roll-off is in the range [0.0-1.0].
-	void setRollOff( float rollOff );
+	void setRolloff( float rolloff );
 
 	// Sets the loop of the source.
 	void setLoop( bool state );

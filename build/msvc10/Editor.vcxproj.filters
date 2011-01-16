@@ -208,6 +208,9 @@
     <ClCompile Include="..\..\src\Editor\plugins\Terrain\TerrainOperation.cpp">
       <Filter>Plugins\Terrain</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Property\PropertyWatch.cpp">
+      <Filter>Plugins\Property</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Editor\inc\RenderControl.h">

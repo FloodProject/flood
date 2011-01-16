@@ -17,7 +17,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-class VAPOR_API Listener : Component
+class VAPOR_API Listener : public Component
 {
 	DECLARE_UNCOPYABLE(Listener)
 	DECLARE_CLASS_()

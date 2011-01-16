@@ -175,6 +175,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\Editor\plugins\Log\LogFrame.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Log\LogPlugin.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Property\PropertyWatch.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Selection\SelectionManager.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Selection\SelectionPlugin.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Terrain\TerrainOperation.cpp" />

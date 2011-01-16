@@ -50,6 +50,8 @@
 #include <wx/aui/framemanager.h>
 #include <wx/aui/auibook.h>
 #include <wx/aui/auibar.h>
+#include <wx/propgrid/propgrid.h>
+#include <wx/propgrid/advprops.h>
 
 //---------------------------------------------------------------------//
 // Image Conversion Utilities

@@ -9,6 +9,7 @@
 #pragma once
 
 #include "UndoOperation.h"
+#include "PropertyPage.h"
 
 namespace vapor { namespace editor {
 
@@ -21,9 +22,11 @@ public:
 	Class* type;
 	Field* field;
 	void* object;
-	
-	wxAny prevValue;
+
+	wxAny oldValue;
 	wxAny newValue;
+
+	PropertyPage* grid;
 
 	void undo();
 	void redo();

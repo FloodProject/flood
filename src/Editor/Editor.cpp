@@ -280,6 +280,11 @@ EntityPtr EditorFrame::createCamera()
 	entityCamera->addComponent( camera );
 	entityCamera->addComponent( cameraController );
 
+#ifdef VAPOR_AUDIO_OPENAL
+	ComponentPtr listener( new Listener() );
+	entityCamera->addComponent( listener );
+#endif
+
 	return entityCamera;
 }
 

@@ -12,6 +12,7 @@
 
 #include "scene/Listener.h"
 #include "scene/Transform.h"
+#include "scene/Camera.h"
 #include "scene/Entity.h"
 #include "audio/Device.h"
 #include "Engine.h"
@@ -55,10 +56,24 @@ void Listener::update( double delta )
 		return;
 
 	const EntityPtr& entity = getEntity();
-	const TransformPtr& transform = entity->getTransform();
-	const Vector3& position = transform->getPosition();
 	
-	audioContext->setListener( position );
+	const CameraPtr& camera = entity->getComponent<Camera>();
+	
+	if(camera)
+	{
+		Vector3 lookAt = camera->getLookAtVector();
+		lookAt.normalize();
+
+		audioContext->setOrientation(lookAt);
+	}
+
+	const TransformPtr& transform = entity->getTransform();
+
+	if(transform)
+	{
+		const Vector3& position = transform->getPosition();
+		audioContext->setPosition(position);
+	}
 }
 
 //-----------------------------------//

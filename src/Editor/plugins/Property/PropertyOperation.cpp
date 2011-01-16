@@ -16,8 +16,8 @@ namespace vapor { namespace editor {
 
 void PropertyOperation::undo()
 { 
-	setFieldValue(prevValue);
-	GetEditor().redrawView();
+	setFieldValue(oldValue);
+	grid->updateMemoryWatch(type, object);
 }
 
 //-----------------------------------//
@@ -25,7 +25,7 @@ void PropertyOperation::undo()
 void PropertyOperation::redo()
 {
 	setFieldValue(newValue);
-	GetEditor().redrawView();
+	grid->updateMemoryWatch(type, object);
 }
 
 //-----------------------------------//
