@@ -14,25 +14,10 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-void PropertyPage::createMemoryWatch(const Class* type, void* object, MemoryWatch& watch)
+void PropertyPage::createMemoryWatch(const Field* field, void* object, MemoryWatch& watch)
 {
-	const FieldsMap& fields = type->getFields();
-	
-	if( fields.empty() )
-		return;
-	
-	byte* min = (byte*) 0xffffffff;
-	byte* max = nullptr;
-
-	FieldsMap::const_iterator it;
-	for(it = fields.cbegin(); it != fields.cend(); ++it)
-	{
-		int offset = it->second->offset;
-		byte* field = (byte*) object + offset;
-		
-		if( field < min ) min = field;
-		if( field > max ) max = field;
-	}
+	byte* min = (byte*) object + field->offset;
+	byte* max = min + field->size;
 
 	std::vector<byte> memory;
 	memory.resize(max - min);
@@ -47,24 +32,27 @@ void PropertyPage::createMemoryWatch(const Class* type, void* object, MemoryWatc
 
 //-----------------------------------//
 
-bool PropertyPage::updateMemoryWatch(const Class* type, void* object)
+bool PropertyPage::updateMemoryWatch(const Field* field, void* object)
 {
 	MemoryWatch watch;
-	createMemoryWatch(type, object, watch);
+	createMemoryWatch(field, object, watch);
 
-	if(memoryWatches.find(type) == memoryWatches.end())
+	if(memoryWatches.find(field) == memoryWatches.end())
 	{
-		memoryWatches[type] = watch;
+		memoryWatches[field] = watch;
 		return false;
 	}
 
-	const MemoryWatch& oldWatch = memoryWatches[type];
+	const MemoryWatch& oldWatch = memoryWatches[field];
 
 	if(oldWatch.hash == watch.hash)
 		return false;
 
+	watch.property = oldWatch.property;
+	watch.object = oldWatch.object;
+
 	// Returns true if the memory watch changed.
-	memoryWatches[type] = watch;	
+	memoryWatches[field] = watch;	
 	return true;
 }
 
@@ -74,23 +62,21 @@ bool PropertyPage::updateMemoryWatches()
 {
 	bool changed = false;
 
-	const EntityPtr& entity = selectedEntity.lock();
-	
-	if( !entity )
-		return false;
-
-	const ComponentMap& components = entity->getComponents();
-	
-	ComponentMap::const_iterator it;
-	for(it = components.cbegin(); it != components.cend(); ++it)
+	MemoryWatchesMap::const_iterator it;
+	for( it = memoryWatches.cbegin(); it != memoryWatches.cend(); it++ )
 	{
-		const Class* type = it->first;
-		void* object = it->second.get();
-
-		bool watchChanged = updateMemoryWatch(type, object);
+		const Field* field = it->first;
 		
-		if( !changed )
-			changed = watchChanged;
+		MemoryWatch watch = memoryWatches[field];
+		bool watchChanged = updateMemoryWatch(field, watch.object);
+
+		if( !watchChanged )
+			continue;
+		
+		wxAny value = getFieldValue(field, watch.object);
+		setPropertyValue(watch.property, value);
+
+		changed = true;
 	}
 
 	return changed;

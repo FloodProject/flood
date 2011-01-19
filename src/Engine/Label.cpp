@@ -7,13 +7,13 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/gui/Label.h"
-#include "vapor/resources/Font.h"
-#include "vapor/render/Material.h"
-#include "vapor/scene/Geometry.h"
-#include "vapor/resources/ResourceManager.h"
-#include "vapor/Engine.h"
-#include "vapor/Utilities.h"
+#include "gui/Label.h"
+#include "resources/Font.h"
+#include "render/Material.h"
+#include "scene/Geometry.h"
+#include "resources/ResourceManager.h"
+#include "Engine.h"
+#include "Utilities.h"
 
 namespace vapor {
 

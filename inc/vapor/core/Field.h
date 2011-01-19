@@ -69,11 +69,11 @@ public:
 	// Returns if the field is a pointer.
 	bool isPointer() const;
 
-	// Name of the field in the class.
-	std::string name;
-
 	// Type of the field.
 	const Type& type;
+
+	// Name of the field in the class.
+	std::string name;
 
 	// Qualifiers of the field.
 	byte qualifiers;

@@ -63,6 +63,9 @@ public:
 	// Adds an entity to the selection.
 	void addEntity(const EntityPtr& entity);
 
+	// Checks if an entity is in the selection.
+	bool isSelection(const EntityPtr& entity);
+
 	// Selects all the objects.
 	void selectAll();
 

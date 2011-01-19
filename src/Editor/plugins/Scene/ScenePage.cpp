@@ -22,7 +22,14 @@ namespace vapor { namespace editor {
 void EntityOperation::redo()
 {
 	ScenePtr scene = weakScene.lock();
-	if(scene) scene->add(node);
+	
+	if(!scene)
+		return;
+	
+	if(added)
+		scene->add(entity);
+	else
+		scene->remove(entity);
 }
 
 //-----------------------------------//
@@ -30,7 +37,14 @@ void EntityOperation::redo()
 void EntityOperation::undo()
 {
 	ScenePtr scene = weakScene.lock();
-	if(scene) scene->remove(node);
+	
+	if(!scene)
+		return;
+	
+	if(added)
+		scene->remove(entity);
+	else
+		scene->add(entity);
 }
 
 //-----------------------------------//
@@ -39,7 +53,7 @@ class EntityItemData : public wxTreeItemData
 {
 public:
 
-	EntityWeakPtr node;
+	EntityWeakPtr entity;
 	ComponentWeakPtr component;
 };
 
@@ -249,15 +263,15 @@ void ScenePage::setScene(const ScenePtr& scene)
 
 //-----------------------------------//
 
-void ScenePage::addGroup( wxTreeItemId id, const EntityPtr& node, bool createGroup )
+void ScenePage::addGroup( wxTreeItemId id, const EntityPtr& entity, bool createGroup )
 {
-	if( !node->getType().inherits<Group>() )
+	if( !entity->getType().inherits<Group>() )
 	{
-		addEntity(id, node);
+		addEntity(id, entity);
 		return;
 	}
 	
-	GroupPtr group = std::static_pointer_cast<Group>(node);
+	GroupPtr group = std::static_pointer_cast<Group>(entity);
 
 	group->onEntityAdded.Connect( this, &ScenePage::onEntityAdded );
 	group->onEntityRemoved.Connect( this, &ScenePage::onEntityRemoved );
@@ -268,9 +282,9 @@ void ScenePage::addGroup( wxTreeItemId id, const EntityPtr& node, bool createGro
 		groupId = treeCtrl->AppendItem( id, group->getName(), 0 );
 
 	EntityItemData* data = new EntityItemData();
-	data->node = node;
+	data->entity = entity;
 
-	nodeIds[node] = groupId;
+	nodeIds[entity] = groupId;
 	treeCtrl->SetItemData( groupId, data );
 
 	for( uint i = 0; i < group->getEntities().size(); i++ )
@@ -282,21 +296,21 @@ void ScenePage::addGroup( wxTreeItemId id, const EntityPtr& node, bool createGro
 
 //-----------------------------------//
 
-wxTreeItemId ScenePage::addEntity( wxTreeItemId id, const EntityPtr& node )
+wxTreeItemId ScenePage::addEntity( wxTreeItemId id, const EntityPtr& entity )
 {
-	wxTreeItemId nodeId = treeCtrl->AppendItem( id, node->getName(), 0 );
+	wxTreeItemId nodeId = treeCtrl->AppendItem( id, entity->getName(), 0 );
 
-	const ComponentMap& components = node->getComponents();
+	const ComponentMap& components = entity->getComponents();
 
 	ComponentMap::const_iterator it;
 	for( it = components.cbegin(); it != components.cend(); it++ )
 		addComponent(nodeId, it->second);
 
 	EntityItemData* data = new EntityItemData();
-	data->node = node;
+	data->entity = entity;
 
 	treeCtrl->SetItemData( nodeId, data );
-	nodeIds[node] = nodeId;
+	nodeIds[entity] = nodeId;
 
 	return nodeId;
 }
@@ -339,7 +353,7 @@ EntityPtr ScenePage::getEntityFromTreeId( wxTreeItemId id )
 	EntityItemData* data = (EntityItemData*) treeCtrl->GetItemData(id);
 	assert( data != nullptr );
 
-	return data->node.lock();
+	return data->entity.lock();
 }
 
 //-----------------------------------//
@@ -392,23 +406,26 @@ void ScenePage::onItemChanged(wxTreeEvent& event)
 void ScenePage::onButtonEntityAdd(wxCommandEvent&)
 {
 	std::string name("Entity"+String::fromNumber(nodeCounter++));
-	EntityPtr node( new Entity(name) );
-	node->addTransform();
+	
+	EntityPtr entity( new Entity(name) );
+	entity->addTransform();
 	
 	EntityOperation* nodeOperation;
-	nodeOperation = createEntityOperation(node, "Entity Added");
+	nodeOperation = createEntityOperation(entity, "Entity added");
+	nodeOperation->added = true;
 
 	if( !nodeOperation )
 		return;
 
+	Events* events = GetEditor().getEventManager();
+	events->onEntitySelect(entity);
+
 	nodeOperation->redo();
 	
-	wxTreeItemId id = getTreeIdFromEntity(node);
+	wxTreeItemId id = getTreeIdFromEntity(entity);
 	treeCtrl->Expand(id);
 	treeCtrl->SelectItem(id);
 	treeCtrl->EditLabel(id);
-
-	GetEditor().redrawView();
 }
 
 //-----------------------------------//
@@ -416,17 +433,19 @@ void ScenePage::onButtonEntityAdd(wxCommandEvent&)
 void ScenePage::onButtonEntityDelete(wxCommandEvent&)
 {	
 	wxTreeItemId id = treeCtrl->GetSelection();
-	const EntityPtr& node = getEntityFromTreeId(id);
+	const EntityPtr& entity = getEntityFromTreeId(id);
 
 	EntityOperation* nodeOperation;
-	nodeOperation = createEntityOperation(node, "Entity Removed");
+	nodeOperation = createEntityOperation(entity, "Entity removed");
+	nodeOperation->added = false;
 
 	if( !nodeOperation )
 		return;
 
-	nodeOperation->undo();
+	Events* events = GetEditor().getEventManager();
+	events->onEntityUnselect(entity);
 
-	GetEditor().redrawView();
+	nodeOperation->redo();
 }
 
 //-----------------------------------//
@@ -444,13 +463,13 @@ void ScenePage::onButtonEntityDeleteUpdate(wxUpdateUIEvent& event)
 
 //-----------------------------------//
 
-EntityOperation* ScenePage::createEntityOperation(const EntityPtr& node, const std::string& desc)
+EntityOperation* ScenePage::createEntityOperation(const EntityPtr& entity, const std::string& desc)
 {
-	if( !node )
+	if( !entity )
 		return nullptr;
 
 	EntityOperation* nodeOperation = new EntityOperation();
-	nodeOperation->node = node;
+	nodeOperation->entity = entity;
 	nodeOperation->weakScene = weakScene;
 	nodeOperation->description = desc;
 
@@ -462,27 +481,24 @@ EntityOperation* ScenePage::createEntityOperation(const EntityPtr& node, const s
 
 //-----------------------------------//
 
-void ScenePage::onEntityAdded( const EntityPtr& node )
+void ScenePage::onEntityAdded( const EntityPtr& entity )
 {
-	if( node->getTag(EditorTags::EditorOnly) )
+	if( entity->getTag(EditorTags::EditorOnly) )
 		return;
 	
-	wxTreeItemId id = getTreeIdFromEntity(node->getParent());
-	addGroup( id, node );
+	wxTreeItemId id = getTreeIdFromEntity(entity->getParent());
+	addGroup( id, entity );
 }
 
 //-----------------------------------//
 
-void ScenePage::onEntityRemoved( const EntityPtr& node )
+void ScenePage::onEntityRemoved( const EntityPtr& entity )
 {
-	wxTreeItemId id = getTreeIdFromEntity(node);
+	wxTreeItemId id = getTreeIdFromEntity(entity);
 	treeCtrl->Delete(id);
 	
-	assert( nodeIds[node] == id );
-	nodeIds.erase(node);
-
-	//Events* events = GetEditor().getEventManager();
-	//events->onEntityUnselect( event.node );
+	assert( nodeIds[entity] == id );
+	nodeIds.erase(entity);
 }
 
 //-----------------------------------//

@@ -16,8 +16,6 @@ namespace vapor {
 
 const Quaternion Quaternion::Identity;
 
-//-----------------------------------//
-
 Quaternion Quaternion::slerp(const Quaternion& q, float t)
 {
 	// Check for out-of range parameter and return edge points if so
@@ -88,6 +86,41 @@ Quaternion Quaternion::slerp(const Quaternion& q, float t)
 	result.w = k0*w + k1*q1w;
 
 	return result;
+}
+
+//-----------------------------------//
+
+EulerAngles Quaternion::getEulerAngles() const
+{
+	float pitch, heading, bank;
+
+	// Extract sin(pitch)
+	float sp = -2.0f * (y*z + w*x);
+
+	// Check for Gimbel lock, giving slight tolerance for numerical imprecision
+	if (fabs(sp) > 0.9999f)
+	{
+		// Looking straight up or down
+		pitch = (Math::PI / 2.0f) * sp;
+
+		// Compute heading, slam bank to zero
+		heading = atan2(-x*z - w*y, 0.5f - y*y - z*z);
+		bank = 0.0f;
+	}
+	else
+	{
+		// Compute angles. We don't have to use the "safe" asin
+		// function because we already checked for range errors when
+		// checking for Gimbal lock
+		pitch	= asin(sp);
+		heading	= atan2(x*z - w*y, 0.5f - x*x - y*y);
+		bank	= atan2(x*y - w*z, 0.5f - x*x - z*z);
+	}
+
+	return EulerAngles(
+		Math::radianToDegree(pitch),
+		Math::radianToDegree(heading),
+		Math::radianToDegree(bank));
 }
 
 //-----------------------------------//

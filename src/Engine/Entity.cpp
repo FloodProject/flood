@@ -21,13 +21,14 @@ namespace vapor {
 BEGIN_CLASS(Entity)
 	FIELD_PRIMITIVE(Entity, string, name)
 	FIELD_PRIMITIVE(Entity, bool, visible)
-	FIELD_PRIMITIVE(Entity, Bitfield, tags)
+	FIELD_PRIMITIVE_CUSTOM(Entity, int, tags, Bitfield)
 END_CLASS()
 
 //-----------------------------------//
 
 Entity::Entity()
 	: visible(true)
+	, tags(0)
 { }
 
 //-----------------------------------//
@@ -36,6 +37,7 @@ Entity::Entity()
 Entity::Entity( const std::string& name )
 	: name(name)
 	, visible(true)
+	, tags(0)
 { }
 
 //-----------------------------------//
@@ -192,14 +194,17 @@ bool Entity::isVisible() const
 
 bool Entity::getTag(int index)
 {
-	return tags[index];
+	return (tags & index) ? true : false;
 }
 
 //-----------------------------------//
 
 void Entity::setTag(int index, bool state)
 {
-	tags[index] = state;
+	if(state)
+		tags |= index;
+	else
+		tags &= ~index;
 }
 
 //-----------------------------------//

@@ -15,10 +15,6 @@ namespace vapor {
 
 //-----------------------------------//
 
-class ResourceLoader;
-
-//-----------------------------------//
-
 /**
  * When you request a resource, you will be given a resource handle that
  * you can later use to query the resource manager for the real pointer.
@@ -73,11 +69,13 @@ struct VAPOR_API ResourceGroup
 
 //-----------------------------------//
 
+class ResourceLoader;
+
 /**
  * Represents a generic resource that tipically is used to hold a piece
  * of data that is used by the various systems of the engine, for example
  * mesh, sounds, fonts, images, shaders, and other types of resource data.
- * Each resource is identified by an Path (Uniform Resource Identifier),
+ * Each resource is identified by a path (Uniform Resource Identifier),
  * that way we can add virtual resources (it could be used for various
  * things, like procedural content generation and to identify streaming
  * resource from a network connection).

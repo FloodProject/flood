@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "vapor/resources/Resource.h"
-#include "vapor/resources/Image.h"
-#include "vapor/math/Vector2.h"
+#include "resources/Resource.h"
+#include "resources/Image.h"
+#include "math/Vector2.h"
 
 namespace vapor {
 
@@ -47,6 +47,8 @@ struct Glyph
 
 class VAPOR_API Font : public Resource
 {
+	DECLARE_CLASS_()
+
 public:
 
 	// Gets the image that backs this font.

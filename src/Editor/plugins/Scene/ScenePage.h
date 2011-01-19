@@ -18,10 +18,11 @@ class EntityOperation : public UndoOperation
 {
 public:
 
-	void redo();
 	void undo();
+	void redo();
 
-	EntityPtr node;
+	bool added;
+	EntityPtr entity;
 	SceneWeakPtr weakScene;
 };
 
@@ -59,14 +60,14 @@ public:
 	// Sets the current scene.
 	void setScene(const ScenePtr& scene);
 
-	// Gets the node associated with the tree item.
+	// Gets the entity associated with the tree item.
 	EntityPtr getEntityFromTreeId( wxTreeItemId id );
+
+	// Gets the tree item from the entity.
+	wxTreeItemId getTreeIdFromEntity(const EntityPtr& entity);
 
 	// Gets the component associated with the tree item.
 	ComponentPtr getComponentFromTreeId( wxTreeItemId id );
-
-	// Gets the tree id from the node.
-	wxTreeItemId getTreeIdFromEntity(const EntityPtr& node);
 
 	// Did we send the last selection event.
 	bool sentLastSelectionEvent;

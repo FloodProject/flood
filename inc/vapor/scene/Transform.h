@@ -32,17 +32,17 @@ public:
 
 	Transform();
 
-	// Translates by the given parameters.
-	void translate( float x, float y, float z );
-	void translate( const Vector3& tr );
+	//// Translates by the given parameters.
+	//void translate( float x, float y, float z );
+	//void translate( const Vector3& tr );
 
-	// Scales by the given parameters.
-	void scale( float x, float y, float z );
-	void scale( const Vector3& scale );
+	//// Scales by the given parameters.
+	//void scale( float x, float y, float z );
+	//void scale( const Vector3& scale );
 
-	// Rotates by the given parameters.
-	void rotate( float xang, float yang, float zang );
-	void rotate( const Vector3& rotation );
+	//// Rotates by the given parameters.
+	//void rotate( float xang, float yang, float zang );
+	//void rotate( const Vector3& rotation );
 
 	// Resets all the transformations.
 	void reset();
@@ -54,7 +54,7 @@ public:
 	void setPosition( const Vector3& position );
 
 	// Gets the scale of the transform.
-	GETTER(Scale, const Vector3&, scaling)
+	GETTER(Scale, const Vector3&, scale)
 
 	// Sets the scale of the transform.
 	void setScale( const Vector3& scale );
@@ -116,7 +116,7 @@ protected:
 	Quaternion rotation;
 
 	// Scaling.
-	Vector3 scaling;
+	Vector3 scale;
 	
 	// Local transform.
 	Matrix4x3 transform;

@@ -78,8 +78,7 @@ void PropertyPlugin::onEntitySelect( const EntityPtr& entity )
 	if( entity->getType().inherits<Group>() )
 		return;
 
-	selectedEntity = entity;
-	propertyPage->showEntityProperties( entity );
+	propertyPage->showEntityProperties(entity);
 
 	entity->onComponentAdded.Connect(this, &PropertyPlugin::onComponentChanged);
 	entity->onComponentRemoved.Connect(this, &PropertyPlugin::onComponentChanged);
@@ -89,11 +88,7 @@ void PropertyPlugin::onEntitySelect( const EntityPtr& entity )
 
 void PropertyPlugin::onEntityUnselect( const EntityPtr& entity )
 {
-	//if( selectedEntity )
-	{
-		selectedEntity.reset();
-		propertyPage->Clear();
-	}
+	propertyPage->reset();
 
 	entity->onComponentAdded.Disconnect(this, &PropertyPlugin::onComponentChanged);
 	entity->onComponentRemoved.Disconnect(this, &PropertyPlugin::onComponentChanged);
@@ -119,27 +114,16 @@ void PropertyPlugin::onComponentUnselect( const ComponentPtr& component )
 
 void PropertyPlugin::onComponentChanged(const ComponentPtr& component)
 {
-	updateProperties();
+	const EntityPtr& entity = component->getEntity();
+	updateProperties(entity);
 }
 
 //-----------------------------------//
 
-void PropertyPlugin::onSceneUpdate()
+void PropertyPlugin::updateProperties(const EntityPtr& entity)
 {
-	updateProperties();
-}
-
-//-----------------------------------//
-
-void PropertyPlugin::updateProperties()
-{
-	const EntityPtr& entity = selectedEntity.lock();
-
 	if( entity )
-	{
-		propertyPage->updateMemoryWatches();
 		propertyPage->showEntityProperties(entity);
-	}
 
 	editor->redrawView();
 }

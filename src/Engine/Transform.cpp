@@ -10,9 +10,8 @@
 #include "scene/Transform.h"
 #include "scene/Geometry.h"
 #include "scene/Entity.h"
-
-#include "math/Math.h"
 #include "render/DebugGeometry.h"
+#include "math/Math.h"
 
 namespace vapor {
 
@@ -21,7 +20,7 @@ namespace vapor {
 BEGIN_CLASS_PARENT(Transform, Component)
 	FIELD_PRIMITIVE(Transform, Vector3, position)
 	FIELD_PRIMITIVE(Transform, Quaternion, rotation)
-	FIELD_PRIMITIVE(Transform, Vector3, scaling)
+	FIELD_PRIMITIVE(Transform, Vector3, scale)
 END_CLASS()
 
 //-----------------------------------//
@@ -30,85 +29,85 @@ Transform::Transform()
 	: wasChanged(false)
 	, needsBoundsUpdate(true)
 	, externalTransform(false)
-	, scaling(1)
+	, scale(1)
 { }
 
 //-----------------------------------//
 
-void Transform::translate( const Vector3& offset )
-{
-	translate( offset.x, offset.y, offset.z );
-}
+//void Transform::translate( const Vector3& offset )
+//{
+//	translate( offset.x, offset.y, offset.z );
+//}
+//
+////-----------------------------------//
+//
+//void Transform::translate( float x, float y, float z )
+//{
+//	setChanged();
+//
+//	position.x += x;
+//	position.y += y;
+//	position.z += z;
+//}
+//
+////-----------------------------------//
+//
+//void Transform::scale( const Vector3& value )
+//{
+//	scale( value.x, value.y, value.z );
+//}
+//
+////-----------------------------------//
+//
+//void Transform::scale( float x, float y, float z )
+//{
+//	setChanged();
+//
+//	scaling.x *= x;
+//	scaling.y *= y;
+//	scaling.z *= z;
+//}
+//
+////-----------------------------------//
+//
+//void Transform::rotate( const Vector3& rot )
+//{
+//	rotate( rot.x, rot.y, rot.z );
+//}
+//
+////-----------------------------------//
+//
+//void Transform::rotate( float xang, float yang, float zang )
+//{
+//	setChanged();
+//
+//	rotation.x += xang;
+//	rotation.y += yang;
+//	rotation.z += zang;
+//}
 
 //-----------------------------------//
 
-void Transform::translate( float x, float y, float z )
+void Transform::setPosition( const Vector3& position )
 {
 	setChanged();
-
-	position.x += x;
-	position.y += y;
-	position.z += z;
+	this->position = position;
 }
 
 //-----------------------------------//
 
-void Transform::scale( const Vector3& value )
-{
-	scale( value.x, value.y, value.z );
-}
-
-//-----------------------------------//
-
-void Transform::scale( float x, float y, float z )
+void Transform::setRotation( const Quaternion& rotation )
 {
 	setChanged();
-
-	scaling.x *= x;
-	scaling.y *= y;
-	scaling.z *= z;
+	this->rotation = rotation;
 }
 
 //-----------------------------------//
 
-void Transform::rotate( const Vector3& rot )
-{
-	rotate( rot.x, rot.y, rot.z );
-}
-
-//-----------------------------------//
-
-void Transform::rotate( float xang, float yang, float zang )
+void Transform::setScale( const Vector3& scale )
 {
 	setChanged();
-
-	rotation.x += xang;
-	rotation.y += yang;
-	rotation.z += zang;
-}
-
-//-----------------------------------//
-
-void Transform::setPosition( const Vector3& newTranslation )
-{
-	setChanged();
-	position = newTranslation;
-}
-
-//-----------------------------------//
-
-void Transform::setRotation( const Quaternion& newRotation )
-{
-	setChanged();
-	rotation = newRotation;
-}
-
-//-----------------------------------//
-
-void Transform::setScale( const Vector3& newScale )
-{
-	setChanged();
-	scaling = newScale;
+	this->scale = scale;
 }
 
 //-----------------------------------//
@@ -119,7 +118,7 @@ void Transform::reset()
 
 	position.zero();
 	rotation.identity();
-	scaling = 1;
+	scale = 1;
 }
 
 //-----------------------------------//
@@ -187,7 +186,7 @@ void Transform::setAbsoluteTransform( const Matrix4x3& newTransform )
 
 Matrix4x3 Transform::getLocalTransform() const
 {
-	Matrix4x3 matScale = Matrix4x3::createScale(scaling);
+	Matrix4x3 matScale = Matrix4x3::createScale(scale);
 	Matrix4x3 matRotation = Matrix4x3::createFromQuaternion(rotation);
 	Matrix4x3 matTranslation = Matrix4x3::createTranslation(position);
 	

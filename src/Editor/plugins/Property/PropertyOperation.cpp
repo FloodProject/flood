@@ -17,7 +17,7 @@ namespace vapor { namespace editor {
 void PropertyOperation::undo()
 { 
 	setFieldValue(oldValue);
-	grid->updateMemoryWatch(type, object);
+	grid->setFieldValue(field, object, oldValue);
 }
 
 //-----------------------------------//
@@ -25,18 +25,7 @@ void PropertyOperation::undo()
 void PropertyOperation::redo()
 {
 	setFieldValue(newValue);
-	grid->updateMemoryWatch(type, object);
-}
-
-//-----------------------------------//
-
-static Color getColorFromWx( wxColour& colour )
-{
-	return Color(
-		colour.Red()   / 255.0f,
-		colour.Green() / 255.0f,
-		colour.Blue()  / 255.0f,
-		colour.Alpha() / 255.0f );
+	grid->setFieldValue(field, object, newValue);
 }
 
 //-----------------------------------//
@@ -49,14 +38,14 @@ void PropertyOperation::setFieldValue(const wxAny& value)
 	const Type& field_type = field->type;
 	Log::debug("Changed property value: %s", field->name.c_str() );
 
-	bool isResource = field_type.is<Resource>() || field_type.inherits<Resource>();
+	bool isResource = field_type.inherits<Resource>();
 
 	if( field->isPointer() && isResource )
 	{
-		wxString val = value.As<wxString>();
+		std::string val = value.As<std::string>();
 
 		ResourceManager* rm = GetEditor().getEngine()->getResourceManager();
-		ResourcePtr resource = rm->loadResource( std::string(val) );
+		ResourcePtr resource = rm->loadResource(val);
 
 		if( !resource )
 			return;
@@ -92,14 +81,14 @@ void PropertyOperation::setFieldValue(const wxAny& value)
 		//-----------------------------------//
 		else if( prim_type.isString() )
 		{
-			std::string val = value.As<wxString>();
+			std::string val = value.As<std::string>();
 			field->set<std::string>(object, val);
 		}
 		//-----------------------------------//
 		else if( prim_type.isColor() )
 		{
-			wxColour val = value.As<wxColour>();
-			field->set<Color>(object, getColorFromWx(val));
+			Color val = value.As<Color>();
+			field->set<Color>(object, val);
 		}
 		//-----------------------------------//
 		else if( prim_type.isVector3() )
@@ -116,9 +105,8 @@ void PropertyOperation::setFieldValue(const wxAny& value)
 		//-----------------------------------//
 		else if( prim_type.isBitfield() )
 		{
-			long bits = value.As<long>();
-			std::bitset<32> val(bits);
-			field->set<std::bitset<32>>(object, val);
+			int val = value.As<int>();
+			field->set<int>(object, val);
 		}
 		//-----------------------------------//
 		else assert( false );

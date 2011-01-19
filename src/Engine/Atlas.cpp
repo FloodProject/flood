@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/gui/Atlas.h"
+#include "gui/Atlas.h"
 
 namespace vapor {
 

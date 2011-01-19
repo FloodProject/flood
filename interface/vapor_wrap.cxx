@@ -3701,29 +3701,6 @@ fail:
 }
 
 
-static int _wrap_EulerAngles_canonize(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::EulerAngles *arg1 = (vapor::EulerAngles *) 0 ;
-  
-  SWIG_check_num_args("canonize",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("canonize",1,"vapor::EulerAngles *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__EulerAngles,0))){
-    SWIG_fail_ptr("EulerAngles_canonize",1,SWIGTYPE_p_vapor__EulerAngles);
-  }
-  
-  (arg1)->canonize();
-  
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
 static int _wrap_EulerAngles_identity(lua_State* L) {
   int SWIG_arg = 0;
   vapor::EulerAngles *arg1 = (vapor::EulerAngles *) 0 ;
@@ -3927,7 +3904,6 @@ delete arg1;
 }
 static swig_lua_method swig_vapor_EulerAngles_methods[] = {
     {"rotate", _wrap_EulerAngles_rotate}, 
-    {"canonize", _wrap_EulerAngles_canonize}, 
     {"identity", _wrap_EulerAngles_identity}, 
     {"__tostring", _wrap_EulerAngles___tostring}, 
     {0,0}
@@ -4497,40 +4473,6 @@ fail:
 }
 
 
-static int _wrap_Quaternion_getEulerAngles(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Quaternion *arg1 = (vapor::Quaternion *) 0 ;
-  vapor::Quaternion *arg2 = 0 ;
-  vapor::EulerAngles result;
-  
-  SWIG_check_num_args("getEulerAngles",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getEulerAngles",1,"vapor::Quaternion const *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getEulerAngles",2,"vapor::Quaternion const &");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Quaternion,0))){
-    SWIG_fail_ptr("Quaternion_getEulerAngles",1,SWIGTYPE_p_vapor__Quaternion);
-  }
-  
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Quaternion,0))){
-    SWIG_fail_ptr("Quaternion_getEulerAngles",2,SWIGTYPE_p_vapor__Quaternion);
-  }
-  
-  result = ((vapor::Quaternion const *)arg1)->getEulerAngles((vapor::Quaternion const &)*arg2);
-  {
-    vapor::EulerAngles * resultptr = new vapor::EulerAngles((const vapor::EulerAngles &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__EulerAngles,1); SWIG_arg++;
-  }
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
 static int _wrap_Quaternion_dot(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Quaternion *arg1 = (vapor::Quaternion *) 0 ;
@@ -4552,6 +4494,33 @@ static int _wrap_Quaternion_dot(lua_State* L) {
   
   result = (float)(arg1)->dot((vapor::Quaternion const &)*arg2);
   lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Quaternion_getEulerAngles(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Quaternion *arg1 = (vapor::Quaternion *) 0 ;
+  vapor::EulerAngles result;
+  
+  SWIG_check_num_args("getEulerAngles",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getEulerAngles",1,"vapor::Quaternion const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Quaternion,0))){
+    SWIG_fail_ptr("Quaternion_getEulerAngles",1,SWIGTYPE_p_vapor__Quaternion);
+  }
+  
+  result = ((vapor::Quaternion const *)arg1)->getEulerAngles();
+  {
+    vapor::EulerAngles * resultptr = new vapor::EulerAngles((const vapor::EulerAngles &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__EulerAngles,1); SWIG_arg++;
+  }
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -4858,8 +4827,8 @@ static swig_lua_method swig_vapor_Quaternion_methods[] = {
     {"safeAcos", _wrap_Quaternion_safeAcos}, 
     {"getRotationAngle", _wrap_Quaternion_getRotationAngle}, 
     {"getRotationAxis", _wrap_Quaternion_getRotationAxis}, 
-    {"getEulerAngles", _wrap_Quaternion_getEulerAngles}, 
     {"dot", _wrap_Quaternion_dot}, 
+    {"getEulerAngles", _wrap_Quaternion_getEulerAngles}, 
     {"slerp", _wrap_Quaternion_slerp}, 
     {"__tostring", _wrap_Quaternion___tostring}, 
     {0,0}
@@ -8859,399 +8828,6 @@ fail:
 }
 
 
-static int _wrap_Transform_translate__SWIG_0(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Transform *arg1 = (vapor::Transform *) 0 ;
-  float arg2 ;
-  float arg3 ;
-  float arg4 ;
-  
-  SWIG_check_num_args("translate",4,4)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("translate",1,"vapor::Transform *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("translate",2,"float");
-  if(!lua_isnumber(L,3)) SWIG_fail_arg("translate",3,"float");
-  if(!lua_isnumber(L,4)) SWIG_fail_arg("translate",4,"float");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Transform,0))){
-    SWIG_fail_ptr("Transform_translate",1,SWIGTYPE_p_vapor__Transform);
-  }
-  
-  arg2 = (float)lua_tonumber(L, 2);
-  arg3 = (float)lua_tonumber(L, 3);
-  arg4 = (float)lua_tonumber(L, 4);
-  (arg1)->translate(arg2,arg3,arg4);
-  
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Transform_translate__SWIG_1(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Transform *arg1 = (vapor::Transform *) 0 ;
-  vapor::Vector3 *arg2 = 0 ;
-  
-  SWIG_check_num_args("translate",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("translate",1,"vapor::Transform *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("translate",2,"vapor::Vector3 const &");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Transform,0))){
-    SWIG_fail_ptr("Transform_translate",1,SWIGTYPE_p_vapor__Transform);
-  }
-  
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Transform_translate",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  (arg1)->translate((vapor::Vector3 const &)*arg2);
-  
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Transform_translate(lua_State* L) {
-  int argc;
-  int argv[5]={
-    1,2,3,4,5
-  };
-  
-  argc = lua_gettop(L);
-  if (argc == 2) {
-    int _v;
-    {
-      void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_vapor__Transform, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      {
-        void *ptr;
-        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_vapor__Vector3TT_float_t, 0)) {
-          _v = 0;
-        } else {
-          _v = 1;
-        }
-      }
-      if (_v) {
-        return _wrap_Transform_translate__SWIG_1(L);
-      }
-    }
-  }
-  if (argc == 4) {
-    int _v;
-    {
-      void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_vapor__Transform, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      {
-        _v = lua_isnumber(L,argv[1]);
-      }
-      if (_v) {
-        {
-          _v = lua_isnumber(L,argv[2]);
-        }
-        if (_v) {
-          {
-            _v = lua_isnumber(L,argv[3]);
-          }
-          if (_v) {
-            return _wrap_Transform_translate__SWIG_0(L);
-          }
-        }
-      }
-    }
-  }
-  
-  lua_pushstring(L,"Wrong arguments for overloaded function 'Transform_translate'\n"
-    "  Possible C/C++ prototypes are:\n"
-    "    translate(vapor::Transform *,float,float,float)\n"
-    "    translate(vapor::Transform *,vapor::Vector3 const &)\n");
-  lua_error(L);return 0;
-}
-
-
-static int _wrap_Transform_scale__SWIG_0(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Transform *arg1 = (vapor::Transform *) 0 ;
-  float arg2 ;
-  float arg3 ;
-  float arg4 ;
-  
-  SWIG_check_num_args("scale",4,4)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("scale",1,"vapor::Transform *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("scale",2,"float");
-  if(!lua_isnumber(L,3)) SWIG_fail_arg("scale",3,"float");
-  if(!lua_isnumber(L,4)) SWIG_fail_arg("scale",4,"float");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Transform,0))){
-    SWIG_fail_ptr("Transform_scale",1,SWIGTYPE_p_vapor__Transform);
-  }
-  
-  arg2 = (float)lua_tonumber(L, 2);
-  arg3 = (float)lua_tonumber(L, 3);
-  arg4 = (float)lua_tonumber(L, 4);
-  (arg1)->scale(arg2,arg3,arg4);
-  
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Transform_scale__SWIG_1(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Transform *arg1 = (vapor::Transform *) 0 ;
-  vapor::Vector3 *arg2 = 0 ;
-  
-  SWIG_check_num_args("scale",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("scale",1,"vapor::Transform *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("scale",2,"vapor::Vector3 const &");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Transform,0))){
-    SWIG_fail_ptr("Transform_scale",1,SWIGTYPE_p_vapor__Transform);
-  }
-  
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Transform_scale",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  (arg1)->scale((vapor::Vector3 const &)*arg2);
-  
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Transform_scale(lua_State* L) {
-  int argc;
-  int argv[5]={
-    1,2,3,4,5
-  };
-  
-  argc = lua_gettop(L);
-  if (argc == 2) {
-    int _v;
-    {
-      void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_vapor__Transform, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      {
-        void *ptr;
-        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_vapor__Vector3TT_float_t, 0)) {
-          _v = 0;
-        } else {
-          _v = 1;
-        }
-      }
-      if (_v) {
-        return _wrap_Transform_scale__SWIG_1(L);
-      }
-    }
-  }
-  if (argc == 4) {
-    int _v;
-    {
-      void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_vapor__Transform, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      {
-        _v = lua_isnumber(L,argv[1]);
-      }
-      if (_v) {
-        {
-          _v = lua_isnumber(L,argv[2]);
-        }
-        if (_v) {
-          {
-            _v = lua_isnumber(L,argv[3]);
-          }
-          if (_v) {
-            return _wrap_Transform_scale__SWIG_0(L);
-          }
-        }
-      }
-    }
-  }
-  
-  lua_pushstring(L,"Wrong arguments for overloaded function 'Transform_scale'\n"
-    "  Possible C/C++ prototypes are:\n"
-    "    scale(vapor::Transform *,float,float,float)\n"
-    "    scale(vapor::Transform *,vapor::Vector3 const &)\n");
-  lua_error(L);return 0;
-}
-
-
-static int _wrap_Transform_rotate__SWIG_0(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Transform *arg1 = (vapor::Transform *) 0 ;
-  float arg2 ;
-  float arg3 ;
-  float arg4 ;
-  
-  SWIG_check_num_args("rotate",4,4)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("rotate",1,"vapor::Transform *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("rotate",2,"float");
-  if(!lua_isnumber(L,3)) SWIG_fail_arg("rotate",3,"float");
-  if(!lua_isnumber(L,4)) SWIG_fail_arg("rotate",4,"float");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Transform,0))){
-    SWIG_fail_ptr("Transform_rotate",1,SWIGTYPE_p_vapor__Transform);
-  }
-  
-  arg2 = (float)lua_tonumber(L, 2);
-  arg3 = (float)lua_tonumber(L, 3);
-  arg4 = (float)lua_tonumber(L, 4);
-  (arg1)->rotate(arg2,arg3,arg4);
-  
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Transform_rotate__SWIG_1(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Transform *arg1 = (vapor::Transform *) 0 ;
-  vapor::Vector3 *arg2 = 0 ;
-  
-  SWIG_check_num_args("rotate",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("rotate",1,"vapor::Transform *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("rotate",2,"vapor::Vector3 const &");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Transform,0))){
-    SWIG_fail_ptr("Transform_rotate",1,SWIGTYPE_p_vapor__Transform);
-  }
-  
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Transform_rotate",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  (arg1)->rotate((vapor::Vector3 const &)*arg2);
-  
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Transform_rotate(lua_State* L) {
-  int argc;
-  int argv[5]={
-    1,2,3,4,5
-  };
-  
-  argc = lua_gettop(L);
-  if (argc == 2) {
-    int _v;
-    {
-      void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_vapor__Transform, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      {
-        void *ptr;
-        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_vapor__Vector3TT_float_t, 0)) {
-          _v = 0;
-        } else {
-          _v = 1;
-        }
-      }
-      if (_v) {
-        return _wrap_Transform_rotate__SWIG_1(L);
-      }
-    }
-  }
-  if (argc == 4) {
-    int _v;
-    {
-      void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_vapor__Transform, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      {
-        _v = lua_isnumber(L,argv[1]);
-      }
-      if (_v) {
-        {
-          _v = lua_isnumber(L,argv[2]);
-        }
-        if (_v) {
-          {
-            _v = lua_isnumber(L,argv[3]);
-          }
-          if (_v) {
-            return _wrap_Transform_rotate__SWIG_0(L);
-          }
-        }
-      }
-    }
-  }
-  
-  lua_pushstring(L,"Wrong arguments for overloaded function 'Transform_rotate'\n"
-    "  Possible C/C++ prototypes are:\n"
-    "    rotate(vapor::Transform *,float,float,float)\n"
-    "    rotate(vapor::Transform *,vapor::Vector3 const &)\n");
-  lua_error(L);return 0;
-}
-
-
 static int _wrap_Transform_reset(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Transform *arg1 = (vapor::Transform *) 0 ;
@@ -9824,9 +9400,6 @@ vapor::Transform *arg1 = (vapor::Transform *) obj;
 delete arg1;
 }
 static swig_lua_method swig_vapor_Transform_methods[] = {
-    {"translate", _wrap_Transform_translate}, 
-    {"scale", _wrap_Transform_scale}, 
-    {"rotate", _wrap_Transform_rotate}, 
     {"reset", _wrap_Transform_reset}, 
     {"getPosition", _wrap_Transform_getPosition}, 
     {"setPosition", _wrap_Transform_setPosition}, 

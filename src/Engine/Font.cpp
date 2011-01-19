@@ -7,9 +7,14 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/resources/Font.h"
+#include "resources/Font.h"
 
 namespace vapor {
+
+//-----------------------------------//
+
+BEGIN_CLASS_PARENT_ABSTRACT(Font, Resource)
+END_CLASS()
 
 //-----------------------------------//
 

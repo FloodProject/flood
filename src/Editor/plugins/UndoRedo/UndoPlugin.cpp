@@ -101,6 +101,7 @@ void UndoPlugin::updateButtons()
 	{
 		toolBar->EnableTool( undoButton->GetId(), !undoEmpty );
 		toolBar->EnableTool( redoButton->GetId(), !redoEmpty );
+		toolBar->Refresh();
 	}
 }
 
@@ -109,7 +110,6 @@ void UndoPlugin::updateButtons()
 void UndoPlugin::onUndoButtonClick(wxCommandEvent& event)
 {
 	undoManager->undoOperation();
-	updateButtons();
 }
 
 //-----------------------------------//
@@ -117,7 +117,6 @@ void UndoPlugin::onUndoButtonClick(wxCommandEvent& event)
 void UndoPlugin::onRedoButtonClick(wxCommandEvent& event)
 {
 	undoManager->redoOperation();
-	updateButtons();
 }
 
 //-----------------------------------//

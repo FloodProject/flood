@@ -21,11 +21,11 @@ namespace Tags
 {
 	enum Bitfield
 	{
-		NonPickable = 24,
-		NonTransformable,
-		NonCollidable,
-		NonCulled,
-		UpdateTransformsOnly
+		NonPickable				= 1 << 24,
+		NonTransformable		= 1 << 25,
+		NonCollidable			= 1 << 26,
+		NonCulled				= 1 << 27,
+		UpdateTransformsOnly	= 1 << 28,
 	};
 }
 

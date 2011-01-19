@@ -214,14 +214,15 @@ bool RenderDevice::setupRenderFixedOverlay( const RenderState& state )
 {
 	Vector2i size = activeTarget->getSettings().getSize();
 	
-	Matrix4x4 projection = Matrix4x4::createOrthographicProjection(
-		0, size.x, size.y, 0, 0, 100);
+	Matrix4x4 projection =
+		Matrix4x4::createOrthographicProjection(0, size.x/*-1*/, size.y/*-1*/, 0, 0, 100);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadMatrixf(&projection.m11);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+	glTranslatef(0.375f, 0.375f, 0.0f);
 
 	return true;
 }

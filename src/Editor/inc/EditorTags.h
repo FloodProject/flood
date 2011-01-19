@@ -48,7 +48,7 @@ namespace EditorTags
 {
 	enum Bitfield
 	{
-		EditorOnly = 31,
+		EditorOnly = 1 << 31,
 	};
 }
 

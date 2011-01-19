@@ -311,6 +311,9 @@ void ResourcesBrowser::generateThumbnails(const std::vector<std::string>& files)
 
 ImagePtr ResourcesBrowser::generateThumbnail(const MeshPtr& mesh)
 {
+	if( !scene )
+		return nullptr;
+
 	EntityPtr nodeResource( new Entity() );
 	nodeResource->addTransform();
 	nodeResource->addComponent( ModelPtr(new Model(mesh)) );
@@ -390,13 +393,13 @@ void ResourcesBrowser::OnListBeginDrag(wxListEvent& event)
 	if( !mesh )
 		return;
 
-	EntityPtr node( new Entity( Path::getFile(name) ) );
-	node->addTransform();
-	node->getTransform()->setPosition(dropPoint);
-	node->addComponent( ModelPtr( new Model(mesh) ) );
+	EntityPtr entity( new Entity( Path::getFile(name) ) );
+	entity->addTransform();
+	entity->getTransform()->setPosition(dropPoint);
+	entity->addComponent( ModelPtr( new Model(mesh) ) );
 
 	EntityOperation* nodeOperation = new EntityOperation();
-	nodeOperation->node = node;
+	nodeOperation->entity = entity;
 	nodeOperation->weakScene = scene;
 
 	UndoManager* undoManager = editor->getUndoManager();

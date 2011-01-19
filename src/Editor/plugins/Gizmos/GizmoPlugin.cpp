@@ -272,7 +272,10 @@ void GizmoPlugin::onMouseDrag( const MouseDragEvent& dragEvent )
 	const TransformPtr& transObject = entityObject->getTransform();
 	
 	if( isTool(GizmoTool::Translate) )
-		transObject->translate( (pickPoint - firstPickPoint)*pickAxis );
+	{
+		const Vector3& position = transObject->getPosition();
+		transObject->setPosition( position + (pickPoint - firstPickPoint)*pickAxis );
+	}
 
 	firstPickPoint = pickPoint;
 

@@ -71,7 +71,7 @@ public:
 	template<typename T> bool inherits() const
 	{
 		if( parent == nullptr )
-			return false;
+			return is<T>();
 
 		return parent->is<T>() || parent->inherits<T>();
 	}

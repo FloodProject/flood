@@ -7,9 +7,9 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/gui/Overlay.h"
-#include "vapor/scene/Entity.h"
-#include "vapor/scene/Transform.h"
+#include "gui/Overlay.h"
+#include "scene/Entity.h"
+#include "scene/Transform.h"
 
 namespace vapor {
 
@@ -24,6 +24,9 @@ Overlay::Overlay()
 	: positioning( PositionMode::Relative )
 	, anchor( Anchor::TopLeft )
 	, opacity(1.0f)
+	, borderWidth(0)
+	, borderColor(Color::Black)
+	, backgroundColor(Color::White)
 {
 	createGeometry();
 }
@@ -32,15 +35,22 @@ Overlay::Overlay()
 
 void Overlay::createGeometry()
 {
-	VertexBufferPtr vb( new VertexBuffer() );
 	material = new Material("OverlayMaterial");
-	
-	renderable = new Renderable( PolygonType::Quads );
-	renderable->setVertexBuffer(vb);
-	renderable->setMaterial(material);
 
-	// Add a new renderable to hold the text geometry
+	renderable = new Renderable( PolygonType::Quads );
+	renderable->setVertexBuffer( new VertexBuffer() );
+	renderable->setMaterial(material);
+	
 	addRenderable( renderable, RenderStage::Overlays );
+
+	MaterialPtr borderMaterial = new Material("OverlayBorderMaterial");
+	borderMaterial->setDepthTest(false);
+
+	borderRenderable = new Renderable( PolygonType::LineLoop );
+	borderRenderable->setVertexBuffer( new VertexBuffer() );
+	borderRenderable->setMaterial( borderMaterial  );
+
+	addRenderable( borderRenderable, RenderStage::Overlays, 10 );
 }
 
 //-----------------------------------//
@@ -57,7 +67,41 @@ void Overlay::rebuildGeometry()
 	pos.push_back( size );
 	pos.push_back( Vector2i(size.x, 0) );
 
-	Color color = Color(1.0f, 1.0f, 1.0f, opacity);
+	Color color = backgroundColor;
+	color.a = opacity;
+
+	std::vector< Color > colors;
+	colors.push_back(color);
+	colors.push_back(color);
+	colors.push_back(color);
+	colors.push_back(color);
+
+	vb->set( VertexAttribute::Position, pos );
+	vb->set( VertexAttribute::Color, colors );
+
+	rebuildBorderGeometry();
+}
+
+//-----------------------------------//
+
+void Overlay::rebuildBorderGeometry()
+{
+	const VertexBufferPtr& vb = borderRenderable->getVertexBuffer();
+
+	if( borderWidth <= 0 )
+	{
+		vb->clear();
+		return;
+	}
+
+	std::vector<Vector3> pos;
+
+	pos.push_back( Vector3::Zero );
+	pos.push_back( Vector2i(0, size.y) );
+	pos.push_back( size );
+	pos.push_back( Vector2i(size.x, 0) );
+
+	const Color& color = borderColor;
 
 	std::vector< Color > colors;
 	colors.push_back(color);

@@ -38,9 +38,6 @@ public:
 	// Adds the given angles to the existing angles.
 	void rotate( float x, float y, float z );
 
-	// Reduces the angles to the cannonical range (0-360º).
-	void canonize();
-
 	// Resets the rotations so they don't have any effect.
 	void identity();
 

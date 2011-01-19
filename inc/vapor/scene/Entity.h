@@ -10,7 +10,6 @@
 
 #include "Object.h"
 #include "Event.h"
-#include <bitset>
 
 FWD_DECL_SHARED(Component)
 
@@ -137,7 +136,7 @@ protected:
 	bool visible;
 
 	// Tags of the entity.
-	std::bitset<32> tags;
+	int tags;
 
 	// Components of the entity.
 	ComponentMap components;

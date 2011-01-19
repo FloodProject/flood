@@ -25,6 +25,9 @@ public:
 
 struct MemoryWatch
 {
+	wxPGProperty* property;
+	void* object;
+
 	byte* rangeBegin;
 	byte* rangeEnd;
 	uint hash;
@@ -47,21 +50,45 @@ public:
 		const wxSize& size = wxDefaultSize );
 
 	// Populates properties on the grid.
-	void showEntityProperties( const EntityPtr& node );
+	void showEntityProperties( const EntityPtr& entity );
 
-	// Creates a memory watch.
-	void createMemoryWatch(const Class* type, void* object, MemoryWatch& watch);
+	// Gets the value of a field.
+	wxAny getFieldValue(const Field* field, void* object);
 
-	// Updates a memory watch.
-	bool updateMemoryWatch(const Class* type, void* object);
+	// Sets the value of a field.
+	void setFieldValue(const Field* field, void* object, const wxAny& value);
 
 	// Updates the memory watches.
 	bool updateMemoryWatches();
+
+	// Creates a memory watch.
+	void createMemoryWatch(const Field* field, void* object, MemoryWatch& watch);
+
+	// Updates a memory watch.
+	bool updateMemoryWatch(const Field* field, void* object);
+
+	// Resets the properties page.
+	void reset();
 
 protected:
 
 	// Appends the type fields to the property grid.
 	void appendObjectFields(const Class& type, void* object, bool newCategory = true);
+
+	// Gets the value of a property.
+	wxAny getPropertyValue(wxPGProperty* property);
+
+	// Gets the value of a primitive property.
+	wxAny getPropertyPrimitiveValue(wxPGProperty* prop, PropertyData* data);
+
+	// Sets the value of a property.
+	void setPropertyValue(wxPGProperty* property, const wxAny& value);
+
+	// Sets the value of a primitive property.
+	void setPropertyPrimitiveValue(wxPGProperty* property, const wxAny& value);
+
+	// Gets the value of a primitive field.
+	wxAny getFieldPrimitiveValue(const Field* field, void* object);
 
 	// Creates a property for a field.
 	wxPGProperty* createProperty(const Class& type, const Field& field, void* object);
@@ -77,6 +104,9 @@ protected:
 
 	// Creates a new property for a float type.
 	wxFloatProperty* createFloatProperty(const char* name, float value);
+
+	// Updates the property with the field value.
+	void updatePrimitiveProperty(wxPGProperty* prop, const Field& field, void* object);
 
 	// Callback when property value is about to change.
 	void onPropertyChanging(wxPropertyGridEvent& event);
@@ -94,7 +124,8 @@ protected:
 	EntityWeakPtr selectedEntity;
 
 	// Memory watches.
-	std::map<const Class*, MemoryWatch> memoryWatches;
+	typedef std::map<const Field*, MemoryWatch> MemoryWatchesMap;
+	MemoryWatchesMap memoryWatches;
 
 	std::vector<wxPGProperty*> composed;
 };

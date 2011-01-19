@@ -82,6 +82,7 @@ public:																			\
 	};																			\
 
 #define BEGIN_CLASS_COMMON()													\
+	using namespace std;														\
 	static bool init = false;													\
 	if(init) return type;														\
 	init = true;
@@ -135,7 +136,8 @@ public:																			\
 	public:																		\
 		FIELD_SETTER(classType, fieldType, fieldName, setterName) };			\
 
-#define FIELD_COMMON(classType, fieldName, ...)									\
+#define FIELD_COMMON(classType, fieldType, fieldName, ...)						\
+	fieldName.size = sizeof(fieldType);											\
 	fieldName.offset = offsetof(classType, fieldName);							\
 	fieldName.name = TOSTRING(fieldName);										\
 	fieldName.setSetter(__VA_ARGS__);											\
@@ -143,12 +145,12 @@ public:																			\
 
 #define FIELD_CLASS(classType, fieldType, fieldName, ...)						\
 	static Field fieldName(fieldType::getStaticType());							\
-	FIELD_COMMON(classType, fieldName)
+	FIELD_COMMON(classType, fieldType, fieldName)
 
 #define FIELD_CLASS_PTR(classType, fieldType, fieldName, ...)					\
 	static Field fieldName(fieldType::getStaticType());							\
 	fieldName.setQualifier(Qualifier::Pointer);									\
-	FIELD_COMMON(classType, fieldName, __VA_ARGS__)
+	FIELD_COMMON(classType, fieldType##Ptr, fieldName, __VA_ARGS__)
 
 #define FIELD_CLASS_PTR_SETTER(classType, fieldType, fieldName, setterName)		\
 	FIELD_SETTER_CLASS(classType, fieldType##Ptr, fieldName, setterName)		\
@@ -156,7 +158,7 @@ public:																			\
 
 #define FIELD_ENUM(classType, fieldType, fieldName, ...)						\
 	static Field fieldName(fieldType::getStaticType());							\
-	FIELD_COMMON(classType, fieldName, __VA_ARGS__)
+	FIELD_COMMON(classType, fieldType, fieldName, __VA_ARGS__)
 
 #define FIELD_ENUM_SETTER(classType, fieldType, fieldName, setterName)			\
 	FIELD_SETTER_CLASS(classType, fieldType##::Enum, fieldName, setterName)		\
@@ -165,22 +167,30 @@ public:																			\
 #define FIELD_VECTOR(classType, fieldType, fieldName, ...)						\
 	static Field fieldName(fieldType::getStaticType());							\
 	fieldName.setQualifier(Qualifier::Array);									\
-	FIELD_COMMON(classType, fieldName, __VA_ARGS__)
+	FIELD_COMMON(classType, fieldType, fieldName, __VA_ARGS__)
 
 #define FIELD_VECTOR_PTR(classType, fieldType, pointerType, fieldName, ... )	\
 	static Field fieldName(fieldType::getStaticType());							\
 	fieldName.setQualifier(Qualifier::Array);									\
 	fieldName.setQualifier(Qualifier::Pointer);									\
 	fieldName.size = sizeof(pointerType);										\
-	FIELD_COMMON(classType, fieldName, __VA_ARGS__)
+	FIELD_COMMON(classType, fieldType, fieldName, __VA_ARGS__)
 
 #define FIELD_PRIMITIVE(classType, fieldType, fieldName, ...)					\
 	static Field fieldName(Primitive::_##fieldType);							\
-	FIELD_COMMON(classType, fieldName, __VA_ARGS__)
+	FIELD_COMMON(classType, fieldType, fieldName, __VA_ARGS__)
 
 #define FIELD_PRIMITIVE_SETTER(classType, fieldType, fieldName, setterName)		\
 	FIELD_SETTER_CLASS(classType, fieldType, fieldName, setterName)				\
 	FIELD_PRIMITIVE(classType, fieldType, fieldName, NFS(classType, fieldName))
+
+#define FIELD_PRIMITIVE_CUSTOM(classType, fieldType, fieldName, primType, ...)	\
+	static Field fieldName(Primitive::_##primType);								\
+	FIELD_COMMON(classType, fieldType, fieldName, __VA_ARGS__)
+
+#define FIELD_PRIMITIVE_SETTER_CUSTOM(classType, fieldType, fieldName, primType, setterName)	\
+	FIELD_SETTER_CLASS(classType, fieldType, fieldName, setterName)								\
+	FIELD_PRIMITIVE_CUSTOM(classType, fieldType, fieldName, primType, NFS(classType, fieldName))
 
 //-----------------------------------//
 

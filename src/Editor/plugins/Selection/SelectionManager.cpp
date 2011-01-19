@@ -198,6 +198,21 @@ void SelectionOperation::addEntity(const EntityPtr& entity)
 
 //-----------------------------------//
 
+bool SelectionOperation::isSelection(const EntityPtr& entity)
+{
+	for(uint i = 0; i < selections.size(); i++)
+	{
+		SelectionData& data = selections[i];
+		
+		if(data.entity == entity)
+			return true;
+	}
+
+	return false;
+}
+
+//-----------------------------------//
+
 void SelectionOperation::setBoundingBoxVisible(const EntityPtr& entity, bool state)
 {
 	if( !entity )

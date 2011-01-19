@@ -1,25 +1,12 @@
 WIP (work-in-progress)
 ======================
 
-Only update indivual properties
-
-Fix mesh collide loop overflows
-Serialization of group nodes
-Add UpdateUI event to Play button.
-Physics rotation becomes wrong due to bounding box calculation.
-Fix default animation state on skinned meshes with no animation tracks.
-Meshes with alpha values need to get ble nding enabled.
-Logger can have problems with multiple threads
-Add code to generate a default texture
-
-Merge mouse events
-Fix currentPlugin crasher bug
-Update cameras on the editor
-Adaptive grid in the editor
-
 EDITOR:
 -------
 
+Fix currentPlugin crasher bug
+Update cameras on the editor
+Adaptive grid in the editor
 To get proper behaviour under all circumstances, picking should be image-based.
 When deleting a single node from the scene tree, the Unselected event isn't sent.
 Optimize hashing and loading in resources browser (it reads twice)
@@ -28,10 +15,7 @@ Control resolution of terrains
 Better terrain tools
 Clone tool
 Proper reset sequence
-
-Input:
-
-	Input events should be sent even when outside viewframe
+Input events should be sent even when outside viewframe
 
 Gizmo:
 
@@ -71,6 +55,16 @@ Options:
 
 ENGINE:
 -------
+
+Merge mouse events
+Fix mesh collide loop overflows
+Serialization of group nodes
+Add UpdateUI event to Play button.
+Physics rotation becomes wrong due to bounding box calculation.
+Fix default animation state on skinned meshes with no animation tracks.
+Meshes with alpha values need to get ble nding enabled.
+Logger can have problems with multiple threads
+Add code to generate a default texture
 
 Skydome component:
 	

@@ -164,8 +164,8 @@ void Logger::write(LogLevel::Enum level, const char* msg, va_list args)
 
 	std::string format = String::format(msg, args);
 	
-	if(last == format)
-		return;
+	//if(last == format)
+	//	return;
 	
 	last = format;
 

@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/render/Target.h"
-#include "vapor/render/View.h"
+#include "render/Target.h"
+#include "render/View.h"
 
 namespace vapor {
 

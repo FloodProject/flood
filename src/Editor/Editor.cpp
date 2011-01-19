@@ -224,8 +224,10 @@ void EditorFrame::createScene()
 	nodeGrid->setTag( Tags::NonPickable, true );
 	editorScene->add( nodeGrid );
 
+	Vector3 initialCameraPosition(0, 20, -65);
+
 	EntityPtr nodeCamera( createCamera() );
-	nodeCamera->getTransform()->translate( 0, 20, -65 );
+	nodeCamera->getTransform()->setPosition(initialCameraPosition);
 	editorScene->add( nodeCamera );
 
 	CameraPtr camera = nodeCamera->getComponent<Camera>();

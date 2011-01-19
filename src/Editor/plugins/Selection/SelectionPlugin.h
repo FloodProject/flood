@@ -35,6 +35,9 @@ public:
 	// Scene load callback.
 	void onSceneLoad( const ScenePtr& scene );
 
+	// Scene entity removed callback.
+	void onEntityRemoved(const EntityPtr& entity);
+
 	// Mouse button press callback.
 	virtual void onMouseButtonPress( const MouseButtonEvent& );
 

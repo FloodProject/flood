@@ -91,6 +91,21 @@ void SelectionPlugin::onSceneLoad( const ScenePtr& scene )
 
 	if( selection )
 		selection->unselectAll();
+
+	scene->onEntityRemoved.Connect(this, &SelectionPlugin::onEntityRemoved);
+}
+
+//-----------------------------------//
+
+void SelectionPlugin::onEntityRemoved(const EntityPtr& entity)
+{
+	SelectionOperation* op = selections->getSelection();
+
+	if(op && op->isSelection(entity))
+	{
+		Events* events = editor->getEventManager();
+		events->onEntityUnselect(entity);
+	}
 }
 
 //-----------------------------------//
@@ -167,6 +182,9 @@ void SelectionPlugin::createRectangle()
 	OverlayPtr overlay( new Overlay() );
 	overlay->setPositionMode( PositionMode::Absolute );
 	overlay->setOpacity(0.5f);
+	overlay->setBorderWidth(1);
+	overlay->setBorderColor( Color::White );
+	overlay->setBackgroundColor( Color::White );
 
 	dragRectangle.reset( new Entity() );
 	dragRectangle->addTransform();
@@ -186,7 +204,7 @@ void SelectionPlugin::updateRectangle( const MouseDragEvent& event )
 
 	Vector2i dragMax;
 	dragMax.x = std::max(dragOrigin.x, dragPoint.x);
-	dragMax.y = std::max(dragOrigin.y, dragPoint.y) + 3;
+	dragMax.y = std::max(dragOrigin.y, dragPoint.y);
 
 	OverlayPtr overlay = dragRectangle->getComponent<Overlay>();
 	overlay->setPosition(dragMin);

@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/resources/Image.h"
+#include "resources/Image.h"
 #include "lodepng.h"
 
 namespace vapor {

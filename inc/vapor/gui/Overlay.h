@@ -92,11 +92,20 @@ public:
 	// Gets/sets the current anchor settings.
 	ACESSOR(Anchor, Anchor::Enum, anchor)
 
-	// Gets/sets the positioning of the label.
+	// Gets/sets the position.
 	ACESSOR(Position, const Vector2i&, position)
 
-	// Gets/sets the positioning of the label.
+	// Gets/sets the size.
 	ACESSOR(Size, const Vector2i&, size)
+
+	// Gets/sets the background color.
+	ACESSOR(BackgroundColor, Color, backgroundColor)
+
+	// Gets/sets the border width.
+	ACESSOR(BorderWidth, int, borderWidth)
+
+	// Gets/sets the border color.
+	ACESSOR(BorderColor, Color, borderColor)
 
 	// Sets the position of the overlay.
 	void setPosition( int x, int y );
@@ -115,6 +124,9 @@ protected:
 	// Rebuilds the overlay geometry.
 	virtual void rebuildGeometry();
 
+	// Rebuilds the overlay geometry.
+	void rebuildBorderGeometry();
+
 	// PositionMode mode used.
 	PositionMode::Enum positioning;
 
@@ -127,11 +139,23 @@ protected:
 	// Overlay size.
 	Vector2i size;
 
+	// Background color.
+	Color backgroundColor;
+
+	// Border width.
+	int borderWidth;
+
+	// Border color.
+	Color borderColor;
+
 	// Opacity of the overlay.
 	float opacity;
 
 	// Overlay geometry.
 	RenderablePtr renderable;
+
+	// Border geometry.
+	RenderablePtr borderRenderable;
 
 	// Overlay material.
 	MaterialPtr material;
