@@ -1,4 +1,4 @@
-#include "vapor/PCH.h"
+#include "Resources/API.h"
 
 #ifdef VAPOR_IMAGE_PICOPNG
 

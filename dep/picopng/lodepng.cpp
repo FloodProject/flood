@@ -28,7 +28,7 @@ The manual and changelog can be found in the header file "lodepng.h"
 You are free to name this file lodepng.cpp or lodepng.c depending on your usage.
 */
 
-#include "vapor/PCH.h"
+#include "Resources/API.h"
 #include "lodepng.h"
 
 #define VERSION_STRING "20100314"
@@ -4052,6 +4052,10 @@ void LodePNG_Encoder_copy(LodePNG_Encoder* dest, const LodePNG_Encoder* source)
 /* ////////////////////////////////////////////////////////////////////////// */
 
 #ifdef LODEPNG_COMPILE_DISK
+
+#ifdef VAPOR_COMPILER_MSVC
+#pragma warning(disable : 4996)
+#endif
 
 unsigned LodePNG_loadFile(unsigned char** out, size_t* outsize, const char* filename) /*designed for loading files from hard disk in a dynamically allocated buffer*/
 {
