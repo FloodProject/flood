@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "Core.h"
+#include "Core/API.h"
 #include "Serialization.h"
 #include "Reflection.h"
 #include "Log.h"
@@ -58,11 +58,11 @@ void ObjectSerializer::serializeClass(ObjectData object)
 	Class& type = (Class&) *object.type;
 	serializer.beginClass(type);
 
-	if( type.getParent() )
+	if( type.parent )
 	{
 		ObjectData parent;
 		parent.instance = object.instance;
-		parent.type = (Type*) type.getParent();
+		parent.type = (Type*) type.parent;
 		
 		serializeClass(parent);
 	}

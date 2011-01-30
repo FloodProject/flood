@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "Core.h"
+#include "Core/API.h"
 #include "core/Field.h"
 
 namespace vapor {

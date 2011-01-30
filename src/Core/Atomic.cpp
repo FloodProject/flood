@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "Core.h"
+#include "Core/API.h"
 #include "Atomic.h"
 
 #ifndef VAPOR_PLATFORM_WINDOWS

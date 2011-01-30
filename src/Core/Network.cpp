@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "Core.h"
+#include "Core/API.h"
 #include "net/Network.h"
 #include "net/Message.h"
 #include "Log.h"

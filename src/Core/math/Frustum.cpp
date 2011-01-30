@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "Core.h"
+#include "Core/API.h"
 #include "math/Frustum.h"
 
 namespace vapor {
@@ -19,11 +19,11 @@ BEGIN_ENUM(Projection)
 END_ENUM()
 
 BEGIN_CLASS(Frustum)
-	FIELD_ENUM(Frustum, Projection, projection)
-	FIELD_PRIMITIVE(Frustum, float, fieldOfView)
-	FIELD_PRIMITIVE(Frustum, float, nearPlane)
-	FIELD_PRIMITIVE(Frustum, float, farPlane)
-	FIELD_PRIMITIVE(Frustum, float, aspectRatio)
+	FIELD_ENUM(Projection, projection)
+	FIELD_PRIMITIVE(float, fieldOfView)
+	FIELD_PRIMITIVE(float, nearPlane)
+	FIELD_PRIMITIVE(float, farPlane)
+	FIELD_PRIMITIVE(float, aspectRatio)
 END_CLASS()
 
 //-----------------------------------//

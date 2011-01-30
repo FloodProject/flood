@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "Core.h"
+#include "Core/API.h"
 #include "core/Primitive.h"
 
 #include "math/Vector3.h"
@@ -17,6 +17,8 @@
 namespace vapor {
 
 //-----------------------------------//
+
+#define PT(type) PrimitiveType::##T
 
 const Primitive Primitive::_bool(PrimitiveType::Bool, "bool", sizeof(bool));
 const Primitive Primitive::_int(PrimitiveType::Integer, "int", sizeof(int));

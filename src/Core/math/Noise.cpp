@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "Core.h"
+#include "Core/API.h"
 #include "math/Noise.h"
 #include "math/Math.h"
 #include "Log.h"

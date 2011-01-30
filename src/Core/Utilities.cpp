@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "Core.h"
+#include "Core/API.h"
 #include "Utilities.h"
 #include "Log.h"
 
@@ -305,58 +305,58 @@ void String::replace(std::string& source, const std::string& from, const std::st
 
 //-----------------------------------//
 
-std::string Path::getBase(const std::string& name)
+Path PathUtils::getBase(const Path& path)
 {
 	// Check if it has a file extension.
-	size_t ch = name.find_last_of(".");
+	size_t ch = path.find_last_of(".");
 
 	if( ch == std::string::npos ) 
 		return "";
 
 	// Return the file extension.
-	return name.substr( 0, ch );
+	return path.substr( 0, ch );
 }
 
 //-----------------------------------//
 
-std::string Path::getExtension(const std::string& name)
+Path PathUtils::getExtension(const Path& path)
 {
 	// Check if it has a file extension.
-	size_t ch = name.find_last_of(".");
+	size_t ch = path.find_last_of(".");
 
 	if( ch == std::string::npos ) 
 		return "";
 
 	// Return the file extension.
-	return name.substr( ++ch );
+	return path.substr( ++ch );
 }
 
 //-----------------------------------//
 
-std::string Path::getFile(const std::string& name)
+Path PathUtils::getFile(const Path& path)
 {
 	// Check if it has a file extension.
-	size_t ch = name.find_last_of("/");
+	size_t ch = path.find_last_of("/");
 
 	if( ch == std::string::npos ) 
-		return name;
+		return path;
 
 	// Return the file extension.
-	return name.substr( ++ch );
+	return path.substr( ++ch );
 }
 
 //-----------------------------------//
 
-std::string Path::normalize(const std::string& path)
+Path PathUtils::normalize(const Path& path)
 {
-	std::string str = path;
+	Path norm = path;
 
-	String::replace(str, "\\", "/");
-	String::replace(str, "//", "/");
-	String::replace(str, "../", "");
-	String::replace(str, "./", "");
+	String::replace(norm, "\\", "/");
+	String::replace(norm, "//", "/");
+	String::replace(norm, "../", "");
+	String::replace(norm, "./", "");
 
-	return str;
+	return norm;
 }
 
 //-----------------------------------//

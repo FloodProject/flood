@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "Core.h"
+#include "Core/API.h"
 #include "math/Ray.h"
 #include "math/Math.h"
 
@@ -38,6 +38,8 @@ Vector3 Ray::getPoint( float distance ) const
 }
 
 //-----------------------------------//
+
+#if 0
 
 bool Ray::intersects( const Vector3 tri[3], float& t, float& u, float& v ) const 
 { 
@@ -76,11 +78,13 @@ bool Ray::intersects( const Vector3 tri[3], float& t, float& u, float& v ) const
     return true;
 }
 
+#endif
+
 //-----------------------------------//
 
-#if 0
+#if 1
 
-bool Ray::intersects( const Vector3 tri[3], Vector3& intersection, float& t, float& u, float& v ) const 
+bool Ray::intersects( const Vector3 (&tri)[3], float& t, float& u, float& v ) const 
 { 
 	// This code is based on the published code by Tomas Möller.
 	// http://www.cs.lth.se/home/Tomas_Akenine_Moller/raytri/
@@ -151,8 +155,6 @@ bool Ray::intersects( const Vector3 tri[3], Vector3& intersection, float& t, flo
 	u *= inv_det;
 	v *= inv_det;
 	
-	intersection = origin + (direction * t);
-
 	return true;
 }
 

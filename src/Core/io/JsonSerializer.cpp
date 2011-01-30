@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "Core.h"
+#include "Core/API.h"
 #include "io/JsonSerializer.h"
 
 #ifdef VAPOR_SERIALIZATION_JSON
@@ -124,10 +124,8 @@ void JsonSerializer::flushStream()
 
 void JsonSerializer::beginClass(const Class& type)
 {
-	const std::string& name = type.getName();
-	
 	Json::Value& top = values.top();
-	values.push( top[name] );
+	values.push( top[type.name] );
 }
 
 //-----------------------------------//

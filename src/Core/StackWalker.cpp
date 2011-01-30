@@ -74,7 +74,7 @@
  *
  **********************************************************************/
 
-#include "Core.h"
+#include "Core/API.h"
 #include "StackWalker.h"
 
 #ifdef VAPOR_PLATFORM_WINDOWS

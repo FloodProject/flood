@@ -6,8 +6,8 @@
 *
 ************************************************************************/
 
-#include "Core.h"
-#include "vfs/PhysfsStream.h"
+#include "Core/API.h"
+#include "Core/PhysfsStream.h"
 
 namespace vapor {
 

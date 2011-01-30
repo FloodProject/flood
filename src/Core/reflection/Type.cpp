@@ -6,10 +6,79 @@
 *
 ************************************************************************/
 
-#include "Core.h"
+#include "Core/API.h"
 #include "core/Type.h"
+#include "core/Class.h"
 
 namespace vapor {
+
+//-----------------------------------//
+
+Type::Type(MetaType::Enum type, const std::string& name, int size)
+	: type(type)
+	, name(name)
+	, parent(nullptr)
+	, size(size)
+{
+	init();
+}
+
+//-----------------------------------//
+
+Type::Type(MetaType::Enum type, const std::string& name, const Type& _parent, int size)
+	: type(type)
+	, name(name)
+	, parent(&_parent)
+	, size(size)
+{
+	init();
+}
+
+//-----------------------------------//
+
+Type::~Type()
+{ }
+
+//-----------------------------------//
+
+void Type::init()
+{
+	GetRegistry().registerType(this);
+
+	if(!isClass() || !parent)
+		return;
+
+	Class* klass = (Class*) parent;
+	klass->addChild((Class&) *this);
+}
+
+//-----------------------------------//
+
+bool Type::isPrimitive() const
+{
+	return type == MetaType::Primitive;
+}
+
+//-----------------------------------//
+
+bool Type::isStruct() const
+{
+	return type == MetaType::Structure;
+}
+
+//-----------------------------------//
+
+bool Type::isClass() const
+{
+	return type == MetaType::Class;
+}
+
+//-----------------------------------//
+
+bool Type::isEnum() const
+{
+	return type == MetaType::Enumeration;
+}
 
 //-----------------------------------//
 
@@ -21,95 +90,19 @@ Registry& Type::GetRegistry()
 
 //-----------------------------------//
 
-Type::Type(MetaType::Enum type, const std::string& name, int size)
-	: metaType(type)
-	, name(name)
-	, parent(nullptr)
-	, size(size)
+void Registry::registerType(const Type* type)
 {
-	registerInstance();
-}
+	if(!type)
+		return;
 
-//-----------------------------------//
-
-Type::Type(MetaType::Enum type, const std::string& name, const Type& _parent, int size)
-	: metaType(type)
-	, name(name)
-	, parent(&_parent)
-	, size(size)
-{
-	registerInstance();
-}
-
-//-----------------------------------//
-
-Type::~Type()
-{ }
-
-//-----------------------------------//
-
-void Type::registerInstance()
-{
-	GetRegistry().registerType(*this);
-}
-
-//-----------------------------------//
-
-const std::string& Type::getName() const
-{
-	return name;
-}
-
-//-----------------------------------//
-
-const Type* Type::getParent() const
-{
-	return parent;
-}
-
-//-----------------------------------//
-
-bool Type::isPrimitive() const
-{
-	return metaType == MetaType::Primitive;
-}
-
-//-----------------------------------//
-
-bool Type::isStruct() const
-{
-	return metaType == MetaType::Struct;
-}
-
-//-----------------------------------//
-
-bool Type::isClass() const
-{
-	return metaType == MetaType::Class;
-}
-
-//-----------------------------------//
-
-bool Type::isEnum() const
-{
-	return metaType == MetaType::Enumeration;
-}
-
-//-----------------------------------//
-
-void Registry::registerType(const Type& type)
-{
-	const std::string& typeName = type.getName();
-	types[typeName] = &type;
+	types[type->name] = type;
 }
 
 //-----------------------------------//
 
 const Type* Registry::getType(const std::string& type)
 {
-	TypeRegistryMap::iterator it = types.find(type);
-
-	if( it == types.end() )
+	if( types.find(type) == types.end() )
 		return nullptr;
 
 	return types[type];
