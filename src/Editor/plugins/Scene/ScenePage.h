@@ -14,6 +14,17 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
+enum 
+{
+	ID_MenuSceneEntityDelete = wxID_HIGHEST+472,
+	ID_MenuSceneEntityDuplicate,
+	ID_MenuSceneEntityVisible,
+	ID_MenuSceneEntityWireframe,
+	ID_MenuSceneEntityTerrain,
+};
+
+//-----------------------------------//
+
 class EntityOperation : public UndoOperation
 {
 public:
@@ -24,6 +35,16 @@ public:
 	bool added;
 	EntityPtr entity;
 	SceneWeakPtr weakScene;
+};
+
+//-----------------------------------//
+
+class EntityItemData : public wxTreeItemData
+{
+public:
+
+	EntityWeakPtr entity;
+	ComponentWeakPtr component;
 };
 
 //-----------------------------------//

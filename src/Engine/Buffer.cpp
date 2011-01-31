@@ -48,7 +48,7 @@ Buffer::~Buffer()
 
 //-----------------------------------//
 
-GLenum Buffer::getGLBufferType()
+int Buffer::getGLBufferType()
 {
 	if( usage == BufferUsage::Stream && access == BufferAccess::Read )
 		return GL_STREAM_READ;

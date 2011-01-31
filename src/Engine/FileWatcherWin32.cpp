@@ -21,7 +21,7 @@
 	THE SOFTWARE.
 */
 
-#include "Core.h"
+#include "Core/API.h"
 #include "FileWatcherWin32.h"
 #include "Utilities.h"
 #include "Log.h"

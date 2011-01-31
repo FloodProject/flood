@@ -7,50 +7,52 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "render/ProgramManager.h"
-#include "render/GLSL_Program.h"
-#include "resources/GLSL_Text.h"
-#include "resources/ResourceManager.h"
+#include "Render/ProgramManager.h"
+#include "Render/GLSL_Program.h"
+#include "Resources/GLSL_Text.h"
+#include "Resources/ResourceManager.h"
 #include "Utilities.h"
-#include "Engine.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
 ProgramManager::ProgramManager()
-	: rm( GetEngine()->getResourceManager() )
 {
-	assert( rm != nullptr );
-	
-	rm->onResourceLoaded.Connect( this, &ProgramManager::onLoad );
-	rm->onResourceReloaded.Connect( this, &ProgramManager::onReload );
+	GetResourceManager()->onResourceLoaded.Connect( this, &ProgramManager::onLoad );
+	GetResourceManager()->onResourceReloaded.Connect( this, &ProgramManager::onReload );
 }
 
 //-----------------------------------//
 
 ProgramManager::~ProgramManager()
 {
-	assert( rm != nullptr );
-	
-	rm->onResourceLoaded.Disconnect( this, &ProgramManager::onLoad );
-	rm->onResourceReloaded.Disconnect( this, &ProgramManager::onReload );
+	GetResourceManager()->onResourceLoaded.Disconnect( this, &ProgramManager::onLoad );
+	GetResourceManager()->onResourceReloaded.Disconnect( this, &ProgramManager::onReload );
 }
 
 //-----------------------------------//
 
 ProgramPtr ProgramManager::getProgram( const std::string& name )
 {
-	if( programs.find(name) == programs.end() )
-	{
-		#pragma TODO("Get GLSL fallback programs working")
-		
-		Log::warn( "Could not locate '%s'", name.c_str() );
+	if( programs.find(name) != programs.end() )
+		return programs[name];
+
+	ResourceManager* res = GetResourceManager();
+
+	// Tries to load the shader. The program is created in onLoad.
+	ResourceLoadOptions options;
+	options.name = name;
+	options.group = ResourceGroup::Shaders;
+	options.asynchronousLoading = false;
+
+	if( !res->loadResource(options) )
 		return nullptr;
-	}
 
 	return programs[name];
 }
+
+#pragma TODO("Get GLSL fallback programs working")
 
 //-----------------------------------//
 
@@ -70,31 +72,39 @@ bool ProgramManager::registerProgram( const std::string& name, const ProgramPtr&
 
 //-----------------------------------//
 
-void ProgramManager::onLoad( const ResourceEvent& evt )
+ProgramPtr ProgramManager::createProgram(const TextPtr& text)
 {
-	if( evt.resource->getResourceGroup() != ResourceGroup::Shaders )
-		return;
+	const GLSL_TextPtr& gtext = RefCast<GLSL_Text>(text);
+	GLSL_ProgramPtr program = new GLSL_Program(gtext);
 	
-	const TextPtr& text = RefCast<Text>( evt.resource );
-	const GLSL_TextPtr& glsl = RefCast<GLSL_Text>( text );
-	
-	const GLSL_ProgramPtr program = new GLSL_Program(glsl);
-	registerProgram( glsl->getBasePath(), program );
+	return program;
 }
 
 //-----------------------------------//
 
-void ProgramManager::onReload( const ResourceEvent& evt )
+void ProgramManager::onLoad( const ResourceEvent& event )
 {
-	if( evt.resource->getResourceGroup() != ResourceGroup::Shaders )
+	if( event.resource->getResourceGroup() != ResourceGroup::Shaders )
+		return;
+	
+	const TextPtr& text = RefCast<Text>( event.resource );
+	const ProgramPtr& program = createProgram(text);
+	registerProgram( text->getBasePath(), program );
+}
+
+//-----------------------------------//
+
+void ProgramManager::onReload( const ResourceEvent& event )
+{
+	if( event.resource->getResourceGroup() != ResourceGroup::Shaders )
 		return;
 
-	const TextPtr& text = RefCast<Text>( evt.resource );
+	const TextPtr& text = RefCast<Text>( event.resource );
 	std::string base( String::toLowerCase( text->getBasePath() ) );
 
 	assert( programs.find(base) != programs.end() );
 
-	Log::debug( "Reloading shader '%s'", evt.resource->getPath().c_str() );
+	Log::debug( "Reloading shader '%s'", event.resource->getPath().c_str() );
 
 	ProgramPtr program = programs[base];
 	program->updateShadersText();

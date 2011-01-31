@@ -21,7 +21,8 @@ Adapter::Adapter()
 {
 	parseInfo();
 
-	supportsVBO = !! GLEW_ARB_vertex_buffer_object;
+	supportsShaders = !! GLEW_ARB_shading_language_100;
+	supportsVertexBuffers = !! GLEW_ARB_vertex_buffer_object;
 	supportsAnisotropic = !! GLEW_EXT_texture_filter_anisotropic;
 
 	glGetIntegerv( GL_MAX_TEXTURE_SIZE, &maxTextureSize );
@@ -74,13 +75,16 @@ void Adapter::parseInfo()
 		}
 	}
 
-	tmp = (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION);
-	if(tmp == nullptr) {
-		Log::warn("Could not get GLSL version information");
-	} else {
-		glsl = tmp;
-		ch = glsl.find_first_of("-");
-		glsl = glsl.substr(0, ch-1);
+	if(supportsShaders)
+	{
+		tmp = (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION);
+		if(tmp == nullptr) {
+			Log::warn("Could not get GLSL version information");
+		} else {
+			glsl = tmp;
+			ch = glsl.find_first_of("-");
+			glsl = glsl.substr(0, ch-1);
+		}
 	}
 }
 
@@ -98,7 +102,7 @@ void Adapter::log() const
 		!glsl.empty() ? (" / GLSL " + glsl).c_str() : "",
 		!driver.empty() ? (" / driver: " + driver).c_str() : "" );
 
-	if( !supportsVBO )
+	if( !supportsVertexBuffers )
 		Log::error("Your graphics adapter does not support Vertex Buffer Objects");
 
 	Log::info( "Max texture size: %dx%d", maxTextureSize, maxTextureSize );

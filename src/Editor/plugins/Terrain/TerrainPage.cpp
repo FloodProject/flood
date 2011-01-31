@@ -14,10 +14,9 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-TerrainPage::TerrainPage( Engine* engine, wxWindow* parent, wxWindowID id,
+TerrainPage::TerrainPage( wxWindow* parent, wxWindowID id,
 						 const wxPoint& pos, const wxSize& size, long style ) 
 	: wxPanel( parent, id, pos, size, style )
-	, engine(engine)
 {	
 	createUI();
 	createBrushes();
@@ -27,19 +26,16 @@ TerrainPage::TerrainPage( Engine* engine, wxWindow* parent, wxWindowID id,
 
 void TerrainPage::createBrushes()
 {
-	std::string brushesPath = "media/brushes/";
-
-	//FileSystem* fs = engine->getFileSystem();
+	std::string brushesPath = "Media/Brushes/";
 	std::vector<std::string> files = System::enumerateFiles(brushesPath);
-	//std::vector<std::string> files = fs->enumerateFiles(brushesPath);
 
-	ResourceManager* rm = engine->getResourceManager();
+	ResourceManager* rm = GetResourceManager();
 
 	for( uint i = 0; i < files.size(); i++ )
 	{
 		const std::string& file = files[i];
 
-		ImagePtr image = rm->loadResource<Image>(file, false);
+		ImagePtr image = rm->loadResource<Image>(file);
 		
 		if( !image )
 			continue;
@@ -55,29 +51,25 @@ void TerrainPage::createUI()
 	m_cbTerrainTool = new wxChoicebook( this, wxID_ANY, 
 		wxDefaultPosition, wxDefaultSize, wxCHB_DEFAULT );
 
-	wxBoxSizer* bSizer1;
-	bSizer1 = new wxBoxSizer( wxVERTICAL );
+	wxBoxSizer* bSizer1 = new wxBoxSizer( wxVERTICAL );
 	bSizer1->Add( m_cbTerrainTool, 1, wxEXPAND|wxALL, 5 );
 	
 	createBrush();
 	//createCell();
 
-	SetSizerAndFit( bSizer1 );
-	Layout();
+	SetSizer( bSizer1 );
 }
 
 //-----------------------------------//
 
 void TerrainPage::createBrush()
 {
-	m_panelBrush = new wxPanel( m_cbTerrainTool, wxID_ANY, 
-		wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_panelBrush = new wxPanel( m_cbTerrainTool );
 
 	//new wxStaticLine( m_panelBrush, wxID_ANY, 
 	//	wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 
-	wxFlexGridSizer* fgSizer2;
-	fgSizer2 = new wxFlexGridSizer( 2 );
+	wxFlexGridSizer* fgSizer2 = new wxFlexGridSizer( 2 );
 	fgSizer2->SetFlexibleDirection( wxBOTH );
 	fgSizer2->AddGrowableCol( 1 );
 	
@@ -156,7 +148,7 @@ void TerrainPage::onComboBoxDropdown(wxCommandEvent& event)
 {
 	m_textureChoice->Clear();
 
-	ResourceManager* rm = engine->getResourceManager();
+	ResourceManager* rm = GetResourceManager();
 	const ResourceMap& resources = rm->getResources();
 
 	ResourceMap::const_iterator it;
@@ -189,7 +181,7 @@ ImagePtr TerrainPage::getPaintImage()
 {
 	std::string path = m_textureChoice->GetValue();
 
-	ResourceManager* rm = engine->getResourceManager();
+	ResourceManager* rm = GetResourceManager();
 	return rm->loadResource<Image>(path);
 }
 

@@ -27,6 +27,14 @@ namespace vapor {
 
 //-----------------------------------//
 
+BEGIN_ENUM(RenderPipeline)
+	ENUM(Fixed)
+	ENUM(ShaderForward)
+	ENUM(ShaderDeferred)
+END_ENUM()
+
+//-----------------------------------//
+
 RenderDevice::RenderDevice()
 	: adapter(nullptr)
 	, window(nullptr)
@@ -67,13 +75,18 @@ void RenderDevice::init()
 	textureManager = new TextureManager();
 	programManager = new ProgramManager();
 
+	if( adapter->supportsShaders )
+	{
+		Log::info( "Shaders support detected. Switching to forward shaders pipeline" );
+		pipeline = RenderPipeline::ShaderForward;
+	}
+
 	setClearColor( Color::White );
 
 	glEnable( GL_CULL_FACE );
 	glCullFace( GL_BACK );
 	glEnable( GL_DEPTH_TEST );
 	glDisable( GL_BLEND );
-	glAlphaFunc( GL_EQUAL, 1 );
 }
 
 //-----------------------------------//
@@ -232,20 +245,23 @@ bool RenderDevice::setupRenderFixedOverlay( const RenderState& state )
 void RenderDevice::setupRenderForward(const RenderState& state, const LightQueue& lights)
 {
 	const RenderablePtr& renderable = state.renderable;
+	renderable->bind();
+
+	const VertexBufferPtr& vb = renderable->getVertexBuffer();
+	vb->bindGenericPointers();
+
 	const MaterialPtr& material = renderable->getMaterial();
 	const ProgramPtr& program = material->getProgram();
-	
-	if( !program ) return;
+
+	if( !program )
+		return;
 
 	if( !program->isLinked() )
 		program->link();
 	
 	program->bind();
-	renderable->bind();
-	material->bindTextures(true);
 
-	const VertexBufferPtr& vb = renderable->getVertexBuffer();
-	vb->bindGenericPointers();
+	material->bindTextures(true);
 
 	setupRenderStateMaterial(material);
 
@@ -270,6 +286,7 @@ void RenderDevice::setupRenderForward(const RenderState& state, const LightQueue
 	
 	renderable->unbind();
 	material->unbindTextures();
+	vb->unbindGenericPointers();
 }
 
 //-----------------------------------//

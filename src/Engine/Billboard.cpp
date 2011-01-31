@@ -22,7 +22,7 @@ BEGIN_ENUM(BillboardType)
 END_ENUM()
 
 BEGIN_CLASS_PARENT(Billboard, Component)
-	FIELD_ENUM(Billboard, BillboardType, billboardType)
+	FIELD_ENUM(BillboardType, billboardType)
 END_CLASS()
 
 //-----------------------------------//

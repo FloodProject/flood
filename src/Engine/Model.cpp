@@ -10,11 +10,12 @@
 #include "scene/Model.h"
 #include "scene/Transform.h"
 #include "scene/Entity.h"
+#include "MeshBuilder.h"
 #include "resources/Mesh.h"
-#include "animation/Animation.h"
-#include "animation/Skeleton.h"
-#include "animation/Bone.h"
-#include "animation/Attachment.h"
+#include "Resources/Animation.h"
+#include "Resources/Skeleton.h"
+#include "Resources/Bone.h"
+#include "Resources/Attachment.h"
 #include "render/Device.h"
 #include "math/Math.h"
 #include "Engine.h"
@@ -24,9 +25,9 @@ namespace vapor {
 //-----------------------------------//
 
 BEGIN_CLASS_PARENT(Model, Geometry)
-	FIELD_PRIMITIVE(Model, float, animationSpeed)
-	FIELD_PRIMITIVE(Model, bool, animationEnabled);
-	FIELD_CLASS_PTR(Model, Mesh, mesh)
+	FIELD_PRIMITIVE(float, animationSpeed)
+	FIELD_PRIMITIVE(bool, animationEnabled);
+	FIELD_CLASS_PTR(Mesh, mesh)
 END_CLASS()
 
 //-----------------------------------//
@@ -93,8 +94,13 @@ void Model::build()
 	if( modelBuilt )
 		return;
 
-	std::vector<RenderablePtr> renderables;
-	mesh->appendRenderables( renderables );
+	const std::vector<RenderablePtr>& renderables = MeshBuilder::meshRenderables[mesh];
+
+	if( renderables.empty() )
+	{
+		MeshBuilder builder;
+		builder.build(mesh);
+	}
 
 	for( uint i = 0; i < renderables.size(); i++ )
 	{

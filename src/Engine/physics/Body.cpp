@@ -29,9 +29,9 @@ namespace vapor {
 //-----------------------------------//
 
 BEGIN_CLASS_PARENT(Body, Component)
-	FIELD_PRIMITIVE(Body, float, mass)
-	FIELD_PRIMITIVE(Body, float, friction)
-	FIELD_PRIMITIVE(Body, float, restitution)
+	FIELD_PRIMITIVE(float, mass)
+	FIELD_PRIMITIVE(float, friction)
+	FIELD_PRIMITIVE(float, restitution)
 END_CLASS()
 
 //-----------------------------------//
@@ -42,18 +42,12 @@ Body::Body()
 	, mass(50)
 	, friction(0.5f)
 	, restitution(0.3f)
-{
-	Class& klass = (Class&) getType();
-	klass.onFieldChanged.Connect( this, &Body::onFieldChanged );
-}
+{ }
 
 //-----------------------------------//
 
 Body::~Body()
 {
-	Class& klass = (Class&) getType();
-	klass.onFieldChanged.Disconnect( this, &Body::onFieldChanged );
-
 	TransformPtr transform = motionState->transform;
 	transform->onTransform.Disconnect( this, &Body::onTransform );
 

@@ -9,7 +9,7 @@
 #include <vapor/PCH.h>
 #include <vapor/Framework.h>
 #include <vapor/render/Device.h>
-#include <vapor/vfs/FileSystem.h>
+#include <vapor/Core/FileSystem.h>
 #include <vapor/input/InputManager.h>
 #include <vapor/resources/ResourceManager.h>
 #include <vapor/Utilities.h>

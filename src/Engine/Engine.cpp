@@ -7,10 +7,10 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "Engine.h"
-
+#include "Core/FileSystem.h"
 #include "TaskManager.h"
-#include "vfs/FileSystem.h"
+
+#include "Engine.h"
 #include "render/Device.h"
 #include "input/InputManager.h"
 #include "audio/Device.h"
@@ -19,7 +19,7 @@
 #include "paging/PageManager.h"
 #include "resources/ResourceManager.h"
 #include "physics/Physics.h"
-#include "ResourceLoaders.h"
+#include "resources/ResourceLoader.h"
 
 #include <ctime>
 
@@ -101,11 +101,12 @@ void Engine::init( bool createWindow )
 	taskManager = new TaskManager();
 
 	// Creates the resource manager.
-	FileWatcher* fw = fileSystem->getFileWatcher();
-	resourceManager = new ResourceManager( fw, taskManager );
-
+	resourceManager = new ResourceManager();
+	resourceManager->setFileWatcher( fileSystem->getFileWatcher() );
+	resourceManager->setTaskManager( taskManager );
+	
 	// Registers default resource loaders.
-	setupResourceLoaders();
+	resourceManager->setupResourceLoaders();
 
 	// Creates the rendering and audio devices.
 	setupDevices( createWindow );
@@ -190,51 +191,6 @@ void Engine::setupInput()
 		return;
 
 	input->createDefaultDevices(); 
-}
-
-//-----------------------------------//
-
-void Engine::setupResourceLoaders()
-{
-	std::vector<ResourceLoader*> loaders;
-
-	#ifdef VAPOR_IMAGE_PICOPNG
-		loaders.push_back( new PNG_Pico_Loader() );
-	#endif
-
-	#ifdef VAPOR_MESH_MILKSHAPE3D
-		loaders.push_back( new Milkshape3D_Loader() );
-	#endif
-
-	#ifdef VAPOR_AUDIO_OGG
-		loaders.push_back( new OGG_Loader() );
-	#endif
-
-	#ifdef VAPOR_SHADER_GLSL
-		loaders.push_back( new GLSL_Loader() );
-	#endif
-
-	#ifdef VAPOR_SCRIPTING_LUA
-		loaders.push_back( new Lua_Loader() );
-	#endif
-
-	#ifdef VAPOR_IMAGE_STB
-		loaders.push_back( new STB_Image_Loader() );
-	#endif
-
-	#ifdef VAPOR_IMAGE_DEVIL
-		loaders.push_back( new IL_Image_Loader() );
-	#endif
-	
-	#ifdef VAPOR_FONT_BITMAP
-		loaders.push_back( new Font_Loader() );
-	#endif
-
-	for( uint i = 0; i < loaders.size(); i++ )
-	{
-		ResourceLoader* loader = loaders[i];
-		resourceManager->registerLoader( loader );
-	}
 }
 
 //-----------------------------------//

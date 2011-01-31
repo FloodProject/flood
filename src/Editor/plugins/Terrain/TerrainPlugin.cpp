@@ -12,9 +12,9 @@
 #include "TerrainOperation.h"
 #include "Utilities.h"
 #include "Editor.h"
-#include "UndoManager.h"
 #include "EditorIcons.h"
 #include "Viewframe.h"
+#include "UndoManager.h"
 
 namespace vapor { namespace editor {
 
@@ -55,57 +55,62 @@ void TerrainPlugin::onPluginEnable()
 	
 	if(toolBar)
 	{
-		buttonRaise = toolBar->AddTool( TerrainTool::Raise, "Raise/Lower",
+		buttonRaise = toolBar->AddTool( TerrainTool::Raise, "Terrain Raise",
 			wxMEMORY_BITMAP(terrain_raise_lower), "Raises/Lowers the terrain",
 			wxITEM_RADIO );
-		addTool(buttonRaise);
+		addTool(buttonRaise, true);
 
-		buttonPaint = toolBar->AddTool( TerrainTool::Paint, "Paint",
+		buttonPaint = toolBar->AddTool( TerrainTool::Paint, "Terrain Paint",
 			wxMEMORY_BITMAP(terrain_paint), "Paints the terrain", wxITEM_RADIO );
-		addTool(buttonPaint);
+		addTool(buttonPaint, true);
 	}
 
-	wxBitmap iconWorld = wxMEMORY_BITMAP(world);
+	terrainPage = new TerrainPage(editor);
 
-	terrainPage = new TerrainPage( engine, editor/*notebookCtrl*/ );
-	terrainPage->Hide();
+	wxBitmap icon = wxMEMORY_BITMAP(world);
+	
+	wxAuiPaneInfo pane;	
+	pane.Caption("Terrains").Left().Dock().Hide().Icon(icon);
+	pane.BestSize(200, -1);
+
+	editor->getAUI()->AddPane(terrainPage, pane);
+	editor->getAUI()->Update();
 }
 
 //-----------------------------------//
 
 void TerrainPlugin::onToolSelect( int id )
 {
-	tool = (TerrainTool::Enum) id;
-
 	delete terrainOperation;
 	terrainOperation = nullptr;
 
-	//wxAuiNotebook* notebookCtrl = editor->getNotebook();
+	tool = (TerrainTool::Enum) id;
 
-	//if(notebookCtrl->GetCurrentPage() == terrainPage)
-	//	return;
-
-	//notebookCtrl->AddPage( terrainPage, /*"Terrains"*/"", true, iconTerrain );
-	terrainPage->Show();
+	wxAuiPaneInfo& pane = editor->getAUI()->GetPane("Terrains");
+	
+	if( !pane.IsShown() )
+	{
+		pane.Show();
+		editor->getAUI()->Update();
+	}
 }
 
 //-----------------------------------//
 
 void TerrainPlugin::onToolUnselect( int id )
 {
-	//wxAuiNotebook* notebookCtrl = editor->getNotebook();
+	if(isPluginTool(id))
+		return;
 
-	//if(notebookCtrl->GetCurrentPage() != terrainPage)
-	//	return;
-
-	removePage( terrainPage );
+	editor->getAUI()->GetPane("Terrains").Hide();
+	editor->getAUI()->Update();
 }
 
 //-----------------------------------//
 
 void TerrainPlugin::onPluginDisable()
 {
-	removePage( terrainPage );
+	//removePage( terrainPage );
 }
 
 //-----------------------------------//

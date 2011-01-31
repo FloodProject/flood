@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "Core.h"
+#include "Core/API.h"
 #include "DynamicLibrary.h"
 
 #ifdef VAPOR_PLATFORM_WINDOWS

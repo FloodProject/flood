@@ -6,8 +6,8 @@
 *
 ************************************************************************/
 
-#include "Core.h"
-#include "vfs/File.h"
+#include "Core/API.h"
+#include "Core/File.h"
 
 //#ifdef VAPOR_VFS_PHYSFS
 
@@ -25,8 +25,8 @@ File::File(const std::string& tempPath, StreamMode::Enum mode)
 	, file(nullptr)
 	, closed(false)
 {
-	path = Path::normalize(tempPath);
-	path = Path::getFile(path);
+	path = PathUtils::normalize(tempPath);
+	path = PathUtils::getFile(path);
 
 	if( !open() )
 		return;
@@ -269,38 +269,38 @@ bool File::exists(const std::string& path)
 
 //-----------------------------------//
 
-const std::string File::getPath() const
+const Path File::getPath() const
 {
 	return path;
 }
 
 //-----------------------------------//
 
-const std::string File::getRealPath() const
+const Path File::getRealPath() const
 {
 	// Gets the full file path.
 	const char* realPath = PHYSFS_getRealDir( getPath().c_str() );
 	
-	std::string fullPath( realPath );
+	Path fullPath( realPath );
 	fullPath.append( "/" );
 	fullPath.append( getPath() );
 
-	return Path::normalize(fullPath);
+	return PathUtils::normalize(fullPath);
 }
 
 //-----------------------------------//
 
-const std::string File::getName() const
+const Path File::getName() const
 {
 	return String::split( path, '/' ).back();
 }
 
 //-----------------------------------//
 
-const std::string File::getExtension() const
+const Path File::getExtension() const
 {
-	std::string name = getName();
-	return Path::getExtension(name);
+	Path name = getName();
+	return PathUtils::getExtension(name);
 }
 
 //-----------------------------------//

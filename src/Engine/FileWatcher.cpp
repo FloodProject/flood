@@ -21,8 +21,8 @@
 	THE SOFTWARE.
 */
 
-#include "Core.h"
-#include "vfs/FileWatcher.h"
+#include "Core/API.h"
+#include "Core/FileWatcher.h"
 
 namespace vapor {
 

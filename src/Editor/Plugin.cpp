@@ -45,7 +45,7 @@ void Plugin::doPluginDisable()
 
 //-----------------------------------//
 
-void Plugin::addTool( wxAuiToolBarItem* tool )
+void Plugin::addTool( wxAuiToolBarItem* tool, bool addToMenu )
 {
 	//if( tool->IsSeparator() )
 		//return;
@@ -54,6 +54,12 @@ void Plugin::addTool( wxAuiToolBarItem* tool )
 
 	wxAuiToolBar* toolBar = editor->getToolbar();
 	toolBar->Realize();
+
+	if( addToMenu )
+	{
+		editor->toolsMenu->Append(tool->GetId(), tool->GetLabel());
+		editor->getAUI()->Update();
+	}
 }
 
 //-----------------------------------//
@@ -72,6 +78,21 @@ void Plugin::removeTools()
 	}
 
 	tools.clear();
+}
+
+//-----------------------------------//
+
+bool Plugin::isPluginTool(int toolId) const
+{
+	for( uint i = 0; i < tools.size(); i++ )
+	{
+		wxAuiToolBarItem* tool = tools[i];
+		
+		if( toolId == tool->GetId() )
+			return true;
+	}
+
+	return false;
 }
 
 //-----------------------------------//

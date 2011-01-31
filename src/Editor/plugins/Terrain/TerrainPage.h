@@ -15,16 +15,11 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-/**
- * Notebook tab that manages terrains.
- */
-
-class TerrainPage : public wxPanel 
+class TerrainPage : public wxPanel
 {
 public:
 
-	TerrainPage( Engine* engine, wxWindow* parent,
-		wxWindowID id = wxID_ANY, 
+	TerrainPage( wxWindow* parent, wxWindowID id = wxID_ANY, 
 		const wxPoint& pos = wxDefaultPosition, 
 		const wxSize& size = wxDefaultSize, 
 		long style = wxTAB_TRAVERSAL );
@@ -70,8 +65,6 @@ protected:
 	wxCheckBox* m_tileLock;
 	wxSliderCtrl* m_tileOffsetX;
 	wxSliderCtrl* m_tileOffsetY;
-
-	Engine* engine;
 
 	// Virtual event handlers, overide them in your derived class
 	virtual void OnToolChoice( wxCommandEvent& event ){ event.Skip(); }

@@ -19,9 +19,9 @@ namespace vapor {
 //-----------------------------------//
 
 BEGIN_CLASS(Entity)
-	FIELD_PRIMITIVE(Entity, string, name)
-	FIELD_PRIMITIVE(Entity, bool, visible)
-	FIELD_PRIMITIVE_CUSTOM(Entity, int, tags, Bitfield)
+	FIELD_PRIMITIVE(string, name)
+	FIELD_PRIMITIVE(bool, visible)
+	FIELD_PRIMITIVE_CUSTOM(int, tags, Bitfield)
 END_CLASS()
 
 //-----------------------------------//
@@ -51,7 +51,7 @@ bool Entity::addComponent( const ComponentPtr& component )
 
 	if( components.find(type) != components.end() )
 	{
-		Log::warn( "Component of type '%s' already exists in entity '%s'", type->getName().c_str(), name.c_str() );
+		Log::warn( "Component of type '%s' already exists in entity '%s'", type->name.c_str(), name.c_str() );
 		return false;
 	}
 

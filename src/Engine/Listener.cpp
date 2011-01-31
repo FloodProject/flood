@@ -22,7 +22,7 @@ namespace vapor {
 //-----------------------------------//
 
 BEGIN_CLASS_PARENT(Listener, Component)
-	FIELD_PRIMITIVE_SETTER(Listener, float, volume, Volume)
+	FIELD_PRIMITIVE_SETTER(float, volume, Volume)
 END_CLASS()
 
 //-----------------------------------//

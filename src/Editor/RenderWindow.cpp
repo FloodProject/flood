@@ -14,11 +14,11 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-RenderWindow::RenderWindow(const WindowSettings& settings,
-						 wxGLCanvas* const canvas)
+RenderWindow::RenderWindow(const WindowSettings& settings, wxGLCanvas* const canvas)
 	: Window(settings)
 	, canvas(canvas)
 	, context(nullptr)
+	, mouseVisible(true)
 {
 	createContext();
 	inputManager = new EditorInputManager();
@@ -95,30 +95,38 @@ Vector2i RenderWindow::getCursorPosition() const
 
 void RenderWindow::setCursorPosition( int x, int y )
 {
-	canvas->WarpPointer( x, y );
+	canvas->WarpPointer(x, y);
 }
 
 //-----------------------------------//
 
 bool RenderWindow::isCursorVisible() const
 {
-	return !canvas->HasCapture();
+	return mouseVisible;
 }
 
 //-----------------------------------//
 
 void RenderWindow::setCursorVisible(bool mouseVisible)
 {
+	this->mouseVisible = mouseVisible;
+
 	if( !mouseVisible )
-	{
 		canvas->SetCursor( wxCursor(wxCURSOR_BLANK) );
-		canvas->CaptureMouse();
-	}
 	else
-	{
 		canvas->SetCursor( wxNullCursor );
+}
+
+//-----------------------------------//
+
+void RenderWindow::setCursorCapture( bool captureMouse )
+{
+	bool hasCapture = canvas->HasCapture();
+
+	if(captureMouse)
+		canvas->CaptureMouse();
+	else if(hasCapture)
 		canvas->ReleaseMouse();
-	}
 }
 
 //-----------------------------------//

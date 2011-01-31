@@ -146,20 +146,19 @@ void Material::bindTextures(bool bindUniforms)
 	TextureMap::const_iterator it;
 	for( it = textures.cbegin(); it != textures.cend(); it++ )
 	{
-		const TexturePtr& tex = it->second;
 		int index = it->first;
+		const TexturePtr& tex = it->second;
 
 		tex->bind(index);
 
 		if(!bindUniforms) continue;
 
-		std::string name = "vp_Texture" + String::fromNumber(index);
-		
 		const ProgramPtr& program = getProgram();
-
+		
 		if( !program ) continue;
-
-		program->setUniform( name, index );
+		
+		std::string uniform = "vp_Texture" + String::fromNumber(index);
+		program->setUniform( uniform, index );
 	}
 }
 

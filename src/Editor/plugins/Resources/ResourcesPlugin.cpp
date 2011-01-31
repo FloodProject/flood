@@ -54,7 +54,7 @@ void ResourcesPlugin::onPluginEnable()
 	wxBitmap iconPackage = wxMEMORY_BITMAP(package);
 
 	wxAuiPaneInfo pane;
-	pane.Caption("Resources").Right().Float().Hide().Icon(iconPackage);
+	pane.Caption("Resources").Left().Dock().Hide().Icon(iconPackage);
 
 	editor->getAUI()->AddPane(resourcesPage, pane);
 	editor->getAUI()->Update();
@@ -65,7 +65,9 @@ void ResourcesPlugin::onPluginEnable()
 	{
 		resourcesBrowserButton = toolBar->AddTool( wxID_ANY, "Resources Browser", iconPackage );
 		addTool( resourcesBrowserButton );
-
+		
+		toolBar->EnableTool(resourcesBrowserButton->GetId(), false);
+		
 		toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
 			&ResourcesPlugin::onBrowserButtonClick,
 			this, resourcesBrowserButton->GetId() );

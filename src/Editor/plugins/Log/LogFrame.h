@@ -16,24 +16,11 @@ namespace vapor { namespace editor {
  * Shows the log stream in the editor.
  */
 
-class LogFrame : public wxFrame
+class LogFrame : public wxListCtrl
 {
 public:
 
-	LogFrame( wxWindow* parent, const wxString&	name = "Log" );
-
-protected:
-
-	// Initializes the control.
-	void InitControl();
-
-	// Event handlers.
-	void OnClose(wxCloseEvent& event);
-
-	// Text control to enter commands.
-	wxPanel* panel;
-	wxListCtrl* listCtrl;
-
+	LogFrame( wxWindow* parent );
 };
 
 //-----------------------------------//

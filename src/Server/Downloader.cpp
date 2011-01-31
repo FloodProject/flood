@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "Core.h"
+#include "Core/API.h"
 #include "net/Downloader.h"
 #include "Log.h"
 

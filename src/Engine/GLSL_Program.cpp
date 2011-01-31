@@ -294,8 +294,8 @@ void GLSL_Program::bindDefaultAttributes()
 	setAttribute( "vp_Vertex", VertexAttribute::Position );
 	setAttribute( "vp_Normal", VertexAttribute::Normal );
 	setAttribute( "vp_Color", VertexAttribute::Color );
+	setAttribute( "vp_BoneIndex", VertexAttribute::BoneIndex );
 	setAttribute( "vp_TexCoord0", VertexAttribute::TexCoord0 );
-	setAttribute( "vp_BoneIndex", VertexAttribute::FogCoord );
 }
 
 //-----------------------------------//

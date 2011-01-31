@@ -15,6 +15,8 @@
 #include "Events.h"
 #include "UndoManager.h"
 #include "Viewframe.h"
+#include "RenderControl.h"
+#include "RenderWindow.h"
 
 namespace vapor { namespace editor {
 
@@ -59,10 +61,12 @@ void SelectionPlugin::onPluginEnable()
 
 	if(toolbar)
 	{
+		addTool( toolbar->AddSeparator() );
+
 		wxBitmap iconSelect = wxMEMORY_BITMAP(cursor);
 		buttonSelect = toolbar->AddTool( SelectionTool::Select, "Select",
 			iconSelect, "Selects the Entity Selection tool", wxITEM_RADIO );
-		addTool(buttonSelect);
+		addTool(buttonSelect, true);
 	}
 
 	#pragma TODO("Initialize plugins events properly")
@@ -116,6 +120,9 @@ void SelectionPlugin::onMouseButtonPress( const MouseButtonEvent& event )
 		return;
 
 	dragOrigin = Vector2i(event.x, event.y );
+
+	RenderWindow* window = GetEditor().getMainViewframe()->getControl()->getRenderWindow();
+	window->setCursorCapture(true);
 }
 
 //-----------------------------------//
@@ -124,6 +131,9 @@ void SelectionPlugin::onMouseButtonRelease( const MouseButtonEvent& event )
 {
 	if( event.button != MouseButton::Left )
 		return;
+
+	RenderWindow* window = GetEditor().getMainViewframe()->getControl()->getRenderWindow();
+	window->setCursorCapture(false);
 
 	editor->redrawView();
 
@@ -153,7 +163,7 @@ void SelectionPlugin::onMouseButtonRelease( const MouseButtonEvent& event )
 	UndoManager* undoManager = editor->getUndoManager();
 	undoManager->registerOperation(selection);
 
-	selection->redo();	
+	selection->redo();
 }
 
 //-----------------------------------//
@@ -161,6 +171,7 @@ void SelectionPlugin::onMouseButtonRelease( const MouseButtonEvent& event )
 void SelectionPlugin::onMouseDrag( const MouseDragEvent& event )
 {
 	Events* events = editor->getEventManager();
+
 	if( events->getCurrentTool() != SelectionTool::Select )
 		return;
 

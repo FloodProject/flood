@@ -10,6 +10,30 @@
 #include "Utilities.h"
 #include "io/JsonSerializer.h"
 
+class A
+{
+	DECLARE_CLASS_()
+public:
+	float f;
+	void setF(float v) {}
+};
+
+BEGIN_CLASS(A)
+	FIELD_PRIMITIVE_SETTER(float, f, F)
+END_CLASS()
+
+class B
+{
+	DECLARE_CLASS_()
+public:
+	float f;
+	void setF(float v) {}
+};
+
+BEGIN_CLASS(B)
+	FIELD_PRIMITIVE_SETTER(float, f, F)
+END_CLASS()
+
 //-----------------------------------//
 
 Example::Example(const char** argv)
@@ -60,9 +84,10 @@ void Example::onSetupScene()
 
 	// Create a new Camera.
 	EntityPtr nodeCamera( new Entity("MainCamera") );
-	nodeCamera->addComponent( TransformPtr( new Transform( 0.0f, 20.0f, -65.0f ) ) );
+	nodeCamera->addTransform();
 	nodeCamera->addComponent( camera );
 	nodeCamera->addComponent( CameraControllerPtr( new FirstPersonController() ) );
+	nodeCamera->getTransform()->setPosition( Vector3(0, 20, -65) );
 	scene->add( nodeCamera );
 
 	//bufferFBO = rd->createRenderBuffer( Settings() );
@@ -154,8 +179,8 @@ void Example::onSetupScene()
 	FileStream stream("Test.scene", StreamMode::Write);
 	stream.open();
 
-	JsonSerializer json(stream);
-	scene->save(serializer);
+	//JsonSerializer json(stream);
+	//scene->save(serializer);
 	
 	//ObjectSerializer serializer(json);
 	//serializer.save();

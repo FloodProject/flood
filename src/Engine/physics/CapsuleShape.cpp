@@ -25,8 +25,8 @@ namespace vapor {
 //-----------------------------------//
 
 BEGIN_CLASS_PARENT(CapsuleShape, Shape)
-	FIELD_PRIMITIVE(CapsuleShape, float, height)
-	FIELD_PRIMITIVE(CapsuleShape, float, radius)
+	FIELD_PRIMITIVE(float, height)
+	FIELD_PRIMITIVE(float, radius)
 END_CLASS()
 
 //-----------------------------------//
@@ -35,10 +35,7 @@ CapsuleShape::CapsuleShape()
 	: capsuleShape(nullptr)
 	, radius(1.0f)
 	, height(3.0f)
-{
-	Class& klass = (Class&) getType();
-	klass.onFieldChanged.Connect( this, &CapsuleShape::onFieldChanged);
-}
+{ }
 
 //-----------------------------------//
 

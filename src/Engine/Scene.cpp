@@ -243,19 +243,19 @@ bool Scene::doRayRendQuery( const Ray& ray, const RenderablePtr& rend, RayTriang
 		tri[1] = ib ? vertices[indices[i+1]] : vertices[i+1];
 		tri[2] = ib ? vertices[indices[i+2]] : vertices[i+2];
 
-		Vector3 uv[3];
-		uv[0] = ib ? UVs[indices[i+0]] : UVs[i+0];
-		uv[1] = ib ? UVs[indices[i+1]] : UVs[i+1];
-		uv[2] = ib ? UVs[indices[i+2]] : UVs[i+2];
-
 		float t; float u, v;
 		if( ray.intersects(tri, t, u, v) )
 		{
-			for( uint i = 0; i < 3; i++ )
-				res.trianglePosition[i] = tri[i];
+			for( uint j = 0; j < 3; j++ )
+				res.trianglePosition[j] = tri[j];
 
-			for( uint i = 0; i < 3; i++ )
-				res.triangleUV[i] = uv[i];
+			Vector3 uv[3];
+			uv[0] = ib ? UVs[indices[i+0]] : UVs[i+0];
+			uv[1] = ib ? UVs[indices[i+1]] : UVs[i+1];
+			uv[2] = ib ? UVs[indices[i+2]] : UVs[i+2];
+
+			for( uint j = 0; j < 3; j++ )
+				res.triangleUV[j] = uv[j];
 
 			res.intersectionUV.x = u;
 			res.intersectionUV.y = v;

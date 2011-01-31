@@ -21,8 +21,8 @@ namespace vapor {
 //-----------------------------------//
 
 BEGIN_CLASS_PARENT(Camera, Component)
-	FIELD_CLASS(Camera, Frustum, frustum)
-	FIELD_PRIMITIVE(Camera, bool, frustumCulling)
+	FIELD_CLASS(Frustum, frustum)
+	FIELD_PRIMITIVE(bool, frustumCulling)
 END_CLASS()
 
 //-----------------------------------//
@@ -193,13 +193,15 @@ void Camera::cull( RenderBlock& block, const EntityPtr& entity )
 
 	//entity->onPreCull();
 
-	if( !entity->isVisible() || entity->getTag(Tags::NonCulled) ) 
+	if( !entity->isVisible() )
 		return;
 
 	const TransformPtr& transform = entity->getTransform();
 	const BoundingBox& box = transform->getWorldBoundingVolume();
 
-	if( frustumCulling && !frustum.intersects(box) )
+	bool performCull = !entity->getTag(Tags::NonCulled);
+
+	if( frustumCulling && performCull && !frustum.intersects(box) )
 		return;
 
 	#pragma TODO("Fix multiple geometry instancing")

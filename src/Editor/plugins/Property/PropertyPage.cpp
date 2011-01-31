@@ -87,10 +87,10 @@ static ResourcePtr askResource()
 		return nullptr;
 
 	std::string path( fd.GetPath() );
-	path = Path::normalize(path);
+	path = PathUtils::normalize(path);
 	
 	ResourceManager* rm = GetEditor().getEngine()->getResourceManager();
-	return rm->loadResource( Path::getFile(path) );
+	return rm->loadResource( PathUtils::getFile(path) );
 }
 
 //-----------------------------------//
@@ -117,7 +117,7 @@ public:
 		//if( &resourceType != data->type )
 		//	return false;
 
-		SetValueInEvent( Path::getFile( resource->getPath() ) );
+		SetValueInEvent( PathUtils::getFile( resource->getPath() ) );
 
 		return true;
 	}
@@ -237,14 +237,14 @@ void PropertyPage::appendObjectFields(const Class& type, void* object, bool newC
 {
 	if( newCategory )
 	{
-		const std::string& typeName = type.getName();
+		const std::string& typeName = type.name;
 		wxPropertyCategory* category = new wxPropertyCategory(typeName);
 		Append(category);
 	}
 
-	if( type.getParent() )
+	if( type.parent )
 	{
-		const Class& parent = (Class&) *type.getParent();
+		const Class& parent = (Class&) *type.parent;
 		appendObjectFields(parent, object, false);
 	}
 	
@@ -268,17 +268,6 @@ void PropertyPage::appendObjectFields(const Class& type, void* object, bool newC
 		if(!prop) continue;
 
 		Append(prop);
-
-#if 1
-		for( uint i = 0; i < composed.size(); i++ )
-		{
-			wxPGProperty* cp = composed[i];
-			AppendIn( prop, cp );
-		}
-
-		composed.clear();
-#endif
-
 		Collapse(prop);
 
 		wxAny value = getFieldValue(&field, object);
@@ -389,17 +378,17 @@ wxPGProperty* PropertyPage::createPrimitiveProperty(const Field& field, void* ob
 	else if( type.isVector3() )
 	{
 		prop = new wxStringProperty( wxEmptyString, wxPG_LABEL, "<composed>" );
-		composed.push_back( createFloatProperty("X", 0) );
-		composed.push_back( createFloatProperty("Y", 0) );
-		composed.push_back( createFloatProperty("Z", 0) );
+		prop->AppendChild( createFloatProperty("X", 0) );
+		prop->AppendChild( createFloatProperty("Y", 0) );
+		prop->AppendChild( createFloatProperty("Z", 0) );
 	}
 	//-----------------------------------//
 	else if( type.isQuaternion() )
 	{
 		prop = new wxStringProperty( wxEmptyString, wxPG_LABEL, "<composed>" );
-		composed.push_back( createFloatProperty("X", 0) );
-		composed.push_back( createFloatProperty("Y", 0) );
-		composed.push_back( createFloatProperty("Z", 0) );
+		prop->AppendChild( createFloatProperty("X", 0) );
+		prop->AppendChild( createFloatProperty("Y", 0) );
+		prop->AppendChild( createFloatProperty("Z", 0) );
 	}
 	//-----------------------------------//
 	else if( type.isBitfield() )
@@ -410,7 +399,7 @@ wxPGProperty* PropertyPage::createPrimitiveProperty(const Field& field, void* ob
 	//-----------------------------------//
 	else
 	{
-		Log::debug( "Unknown property type: '%s'", type.getName().c_str() );
+		Log::debug( "Unknown property type: '%s'", type.name.c_str() );
 	}
 
 	return prop;
@@ -440,7 +429,7 @@ wxAny PropertyPage::getFieldValue(const Field* field, void* object)
 		std::string name;
 		ResourcePtr res = field->get<ResourcePtr>(object);
 		if(res) name = res->getPath();
-		value = Path::getFile(name);
+		value = PathUtils::getFile(name);
 	}
 	else if( field->type.isEnum() )
 		value = field->get<int>(object);
@@ -467,7 +456,7 @@ wxAny PropertyPage::getFieldPrimitiveValue(const Field* field, void* object)
 	else if( type.isString() )
 		value = field->get<std::string>(object);
 	else if( type.isColor() )
-		value = convertColor(field->get<Color>(object));
+		value = field->get<Color>(object);
 	else if( type.isVector3() )
 		value = field->get<Vector3>(object);
 	else if( type.isQuaternion() )

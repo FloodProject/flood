@@ -174,7 +174,8 @@ void RenderControl::OnMouseEvent(wxMouseEvent& event)
 
 void RenderControl::OnMouseCaptureLost(wxMouseCaptureLostEvent&)
 {
-	SetCursor( wxNullCursor );
+	window->setCursorVisible(true);
+	window->setCursorCapture(false);
 }
 
 //-----------------------------------//

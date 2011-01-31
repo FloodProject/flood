@@ -110,7 +110,7 @@ protected:
 	// Toolbar buttons.
 	wxAuiToolBarItem* buttonRaise;
 	wxAuiToolBarItem* buttonPaint;
-
+	
 	int iconTerrain;
 
 private:

@@ -8,6 +8,7 @@
 
 #include "vapor/PCH.h"
 #include "render/Renderable.h"
+#include "render/GL.h"
 
 namespace vapor {
 

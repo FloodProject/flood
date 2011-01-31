@@ -220,6 +220,9 @@ byte Cell::getNeighborFaces( uint i, std::vector<uint>& ns )
 
 void Cell::rebuildAveragedNormals()
 {
+	if( faceNormals.empty() )
+		return;
+
 	const VertexBufferPtr& vb = rend->getVertexBuffer();
 	const IndexBufferPtr& ib = rend->getIndexBuffer();
 

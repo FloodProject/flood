@@ -17,7 +17,7 @@ namespace vapor {
 //-----------------------------------//
 
 BEGIN_CLASS_PARENT(Projector, Component)
-	FIELD_CLASS(Projector, Frustum, frustum)
+	FIELD_CLASS(Frustum, frustum)
 END_CLASS()
 
 //-----------------------------------//

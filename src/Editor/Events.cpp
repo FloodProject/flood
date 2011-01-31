@@ -33,6 +33,7 @@ Events::Events( EditorFrame* editor )
 
 	wxAuiToolBar* toolBar = editor->getToolbar();
 	if(toolBar) toolBar->PushEventHandler(this);
+	//editor->PushEventHandler(this);
 
 	registerInputCallbacks();
 }
@@ -43,6 +44,7 @@ Events::~Events()
 {
 	wxAuiToolBar* toolBar = editor->getToolbar();
 	if(toolBar) toolBar->PopEventHandler();
+	//editor->PopEventHandler();
 
 	pluginManager->onPluginEnableEvent.Disconnect(this, &Events::onPluginEnableEvent);
 	pluginManager->onPluginDisableEvent.Disconnect(this, &Events::onPluginDisableEvent);
@@ -90,32 +92,49 @@ void Events::removeEventListener( Plugin* plugin )
 bool Events::TryBefore(wxEvent& event)
 {
 	// We are only interested in toolbar button click events.
-	if( event.GetEventType() != wxEVT_COMMAND_TOOL_CLICKED )
+	if( event.GetEventType() != wxEVT_COMMAND_MENU_SELECTED )
 		return false;
 
 	int id = event.GetId();
 
+	//wxObject* object = event.GetEventObject();
+
+	//if( !object )
+	//	return false;
+
+	//if( !object->IsKindOf(&wxAuiToolBarItem::ms_classInfo) )
+	//	return false;
+
 	wxAuiToolBar* toolBar = editor->getToolbar();
 	wxAuiToolBarItem* tool = toolBar->FindTool(id);
+
+	if( !tool ) return false;
 
 	if( tool->GetKind() != wxITEM_RADIO )
 		return false;
 
+	toolBar->ToggleTool(id, true);
+
 	const PluginToolsMap& tools = pluginManager->getTools();
 	PluginToolsMap::const_iterator it = tools.find(id);
 	
-	if( it != tools.end() )
+	if( it == tools.end() )
 	{
-		toolId = it->first;
+		toolId = 0;
+		currentPlugin = nullptr;
+	
+		return false;
+	}
+	
+	int newToolId = it->first;
+
+	if(newToolId != toolId)
+	{
+		toolId = newToolId;
 
 		currentPlugin->onToolUnselect( toolId );
 		currentPlugin = (*it).second;
 		currentPlugin->onToolSelect( toolId );
-	}
-	else
-	{
-		toolId = 0;
-		currentPlugin = nullptr;
 	}
 	
 	return false;

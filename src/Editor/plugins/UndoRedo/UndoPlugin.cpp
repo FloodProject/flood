@@ -50,23 +50,27 @@ void UndoPlugin::onPluginEnable()
 		wxBitmap iconUndo = wxMEMORY_BITMAP(arrow_undo);
 		undoButton = toolBar->AddTool( wxID_UNDO, "Undo", iconUndo, "Undo" );
 		addTool(undoButton);
-		toolBar->EnableTool( undoButton->GetId(), false );
 
 		wxBitmap iconRedo = wxMEMORY_BITMAP(arrow_redo);
 		redoButton = toolBar->AddTool( wxID_REDO, "Redo", iconRedo, "Redo" );
 		addTool(redoButton);
-		toolBar->EnableTool( redoButton->GetId(), false );
 
-		// Connect to click events.
-		toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
-			&UndoPlugin::onUndoButtonClick, this, undoButton->GetId() );
-
-		toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
-			&UndoPlugin::onRedoButtonClick, this, redoButton->GetId() );
+		toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED, &UndoPlugin::onUndoButtonClick, this, undoButton->GetId() );
+		toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED, &UndoPlugin::onRedoButtonClick, this, redoButton->GetId() );
 	}
+
+	wxMenu* menu = editor->editMenu;
+	undoItem = menu->Append(undoButton->GetId(), undoButton->GetLabel() + "\tCtrl-Z");
+	redoItem = menu->Append(redoButton->GetId(), redoButton->GetLabel() + "\tCtrl-Y");
+
+	editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &UndoPlugin::onUndoButtonClick, this, undoButton->GetId() );
+	editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &UndoPlugin::onRedoButtonClick, this, redoButton->GetId() );
 
 	// Connect to undo/redo events.
 	undoManager->onUndoRedoEvent.Connect(this, &UndoPlugin::onUndoEvent);
+
+	// Updates the state of the buttons.
+	updateButtons();
 }
 
 //-----------------------------------//
@@ -102,6 +106,9 @@ void UndoPlugin::updateButtons()
 		toolBar->EnableTool( undoButton->GetId(), !undoEmpty );
 		toolBar->EnableTool( redoButton->GetId(), !redoEmpty );
 		toolBar->Refresh();
+
+		undoItem->Enable( !undoEmpty );
+		redoItem->Enable( !redoEmpty );
 	}
 }
 

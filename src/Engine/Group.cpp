@@ -15,7 +15,7 @@ namespace vapor {
 //-----------------------------------//
 
 BEGIN_CLASS_PARENT(Group, Entity)
-	FIELD_VECTOR_PTR(Group, Entity, EntityPtr, entities)
+	FIELD_VECTOR_PTR(Entity, EntityPtr, entities)
 END_CLASS()
 
 //-----------------------------------//

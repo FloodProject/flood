@@ -12,12 +12,6 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-class Viewframe;
-class EditorFrame;
-class PluginManager;
-
-//-----------------------------------//
-
 struct PluginMetadata
 {
 	// Name of this plugin.
@@ -34,6 +28,10 @@ struct PluginMetadata
 };
 
 //-----------------------------------//
+
+class Viewframe;
+class EditorFrame;
+class PluginManager;
 
 /**
  * A 3D editor needs to provide different kind of tools to the user,
@@ -119,10 +117,13 @@ protected:
 	void doPluginDisable();
 
 	// Registers a new tool in the plugin.
-	void addTool( wxAuiToolBarItem* tool );
+	void addTool( wxAuiToolBarItem* tool, bool addToMenu = false );
 
 	// Removes all the registered tools.
 	void removeTools();
+
+	// Returns if the tool is from the plugin.
+	bool isPluginTool(int id) const;
 
 	// Removes a page from the main notebook.
 	void removePage( wxWindow* page );

@@ -273,20 +273,20 @@ static void blitToImage(const Image* dest, int destX, int destY,
 
 //-----------------------------------//
 
-#define uv rayQuery.triangleUV
-#define intUV rayQuery.intersectionUV
-
 void TerrainOperation::applyPaintTool()
 {
+	if( !paintImage )
+		return;
+
 	const RenderablePtr& rend = rayQuery.renderable;
+
+	const Vector3 (&uv)[3] = rayQuery.triangleUV;
+	const Vector3& intUV = rayQuery.intersectionUV;
 
 	float ut = uv[0].x + intUV.x*(uv[1].x-uv[0].x) + intUV.y*(uv[2].x-uv[0].x) + 1;
 	float vt = uv[0].y + intUV.x*(uv[1].y-uv[0].y) + intUV.y*(uv[2].y-uv[0].y);
 
-	if( !paintImage )
-		return;
-
-	MaterialPtr material = rend->getMaterial();
+	const MaterialPtr& material = rend->getMaterial();
 	const TexturePtr& texture = material->getTexture(0);
 	Image* image = (Image*) texture->getImage();
 

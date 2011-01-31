@@ -146,7 +146,7 @@ void TextureManager::onUnloaded( const ResourceEvent& evt )
 
 	Log::debug( "Removing texture '%s'", evt.resource->getPath().c_str() );
 
-	//removeTexture(img);
+	removeTexture(image.get());
 }
 
 //-----------------------------------//

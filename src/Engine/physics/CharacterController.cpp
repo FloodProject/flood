@@ -33,12 +33,12 @@ namespace vapor {
 //-----------------------------------//
 
 BEGIN_CLASS_PARENT(CharacterController, Controller)
-	FIELD_PRIMITIVE(CharacterController, float, stepHeight)
-	FIELD_PRIMITIVE(CharacterController, float, walkVelocity)
-	FIELD_PRIMITIVE(CharacterController, float, fallSpeed)
-	FIELD_PRIMITIVE(CharacterController, float, jumpSpeed)
-	FIELD_PRIMITIVE(CharacterController, float, maxJumpHeight)
-	FIELD_PRIMITIVE(CharacterController, float, maxSlope)
+	FIELD_PRIMITIVE(float, stepHeight)
+	FIELD_PRIMITIVE(float, walkVelocity)
+	FIELD_PRIMITIVE(float, fallSpeed)
+	FIELD_PRIMITIVE(float, jumpSpeed)
+	FIELD_PRIMITIVE(float, maxJumpHeight)
+	FIELD_PRIMITIVE(float, maxSlope)
 END_CLASS()
 
 //-----------------------------------//
@@ -51,18 +51,12 @@ CharacterController::CharacterController()
 	, jumpSpeed(1.0f)
 	, maxJumpHeight(1.0f)
 	, maxSlope(45)
-{
-	Class& klass = (Class&) getType();
-	klass.onFieldChanged.Connect(this, &CharacterController::onFieldChanged);
-}
+{ }
 
 //-----------------------------------//
 
 CharacterController::~CharacterController()
 {
-	Class& klass = (Class&) getType();
-	klass.onFieldChanged.Disconnect(this, &CharacterController::onFieldChanged);
-
 	PhysicsManager* physics = GetEngine()->getPhysicsManager();
 	
 	btDiscreteDynamicsWorld* world = physics->getWorld();

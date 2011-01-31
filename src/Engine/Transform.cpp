@@ -18,9 +18,9 @@ namespace vapor {
 //-----------------------------------//
 
 BEGIN_CLASS_PARENT(Transform, Component)
-	FIELD_PRIMITIVE(Transform, Vector3, position)
-	FIELD_PRIMITIVE(Transform, Quaternion, rotation)
-	FIELD_PRIMITIVE(Transform, Vector3, scale)
+	FIELD_PRIMITIVE(Vector3, position)
+	FIELD_PRIMITIVE(Quaternion, rotation)
+	FIELD_PRIMITIVE(Vector3, scale)
 END_CLASS()
 
 //-----------------------------------//

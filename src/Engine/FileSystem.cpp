@@ -6,13 +6,13 @@
 *
 ************************************************************************/
 
-#include "Core.h"
+#include "Core/API.h"
 
 //#ifdef VAPOR_VFS_PHYSFS
 
 #include "Log.h"
 #include "Utilities.h"
-#include "vfs/FileSystem.h"
+#include "Core/FileSystem.h"
 #include "FileWatcherWin32.h"
 #include <physfs.h>
 #include <sstream>

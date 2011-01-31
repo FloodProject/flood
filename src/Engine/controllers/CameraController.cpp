@@ -7,15 +7,15 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/controllers/CameraController.h"
+#include "controllers/CameraController.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
 BEGIN_CLASS_PARENT_ABSTRACT(CameraController, Controller)
-	FIELD_PRIMITIVE(CameraController, float, lookSensivity)
-	FIELD_PRIMITIVE(CameraController, float, moveSensivity)
+	FIELD_PRIMITIVE(float, lookSensivity)
+	FIELD_PRIMITIVE(float, moveSensivity)
 END_CLASS()
 
 //-----------------------------------//

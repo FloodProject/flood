@@ -34,7 +34,7 @@ namespace vapor {
 //-----------------------------------//
 
 BEGIN_CLASS_PARENT(ScriptController, Controller)
-	FIELD_CLASS_PTR(ScriptController, Script, script)
+	FIELD_CLASS_PTR(Script, script)
 END_CLASS()
 
 //-----------------------------------//

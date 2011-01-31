@@ -33,6 +33,7 @@ public:
 	//virtual bool OnExceptionInMainLoop();
 	//virtual void OnUnhandledException();
 	virtual void OnFatalException();
+	//virtual int FilterEvent(wxEvent& event);
 };
 
 //-----------------------------------//
@@ -84,10 +85,19 @@ public:
 	// Switches the editor to play mode.
 	void switchPlayMode(bool switchToPlay);
 
+	// Menus.
+	wxMenu* fileMenu;
+	wxMenu* editMenu;
+	wxMenu* toolsMenu;
+	wxMenu* panelsMenu;
+	wxMenu* settingsMenu;
+	wxMenu* helpMenu;
+
 protected:
 
 	// Creates the main UI layout.
 	void createUI();
+	void createLastUI();
 	void createSplitter();
 	void createMenus();
 	void createToolbar();
@@ -124,10 +134,11 @@ protected:
     void OnAbout(wxCommandEvent& event);
 	void OnToolbarButtonClick(wxCommandEvent& event);
 
-	// wxWidgets input events.
-	void OnKeyDown(wxKeyEvent& event);
-	void OnKeyUp(wxKeyEvent& event);
-	void OnMouseEvent(wxMouseEvent& event);
+	void OnMenuOpenEvent(wxMenuEvent& event);
+	void OnPanelsMenuEvent(wxCommandEvent& event);
+	void OnPanelsMenuUpdate(wxUpdateUIEvent& event);
+	void OnSettingsRender(wxCommandEvent& event);
+	void OnSettingsRenderUpdate(wxUpdateUIEvent& event);
 
 	// Drag and drop coords.
 	Vector2i dropCoords;

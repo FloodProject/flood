@@ -43,12 +43,15 @@ public:
 
 	// New toolbar button.
 	wxAuiToolBarItem* newButton;
+	wxMenuItem* newItem;
 
 	// Open toolbar button.
 	wxAuiToolBarItem* openButton;
+	wxMenuItem* openItem;
 
 	// Save toolbar button.
 	wxAuiToolBarItem* saveButton;
+	wxMenuItem* saveItem;
 
 protected:
 

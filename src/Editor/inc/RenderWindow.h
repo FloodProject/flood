@@ -54,6 +54,9 @@ public:
 	// Gets the cursor visibility.
 	virtual bool isCursorVisible() const;
 
+	// Sets the capture of the mouse.
+	virtual void setCursorCapture( bool state );
+
 	// Gets the cursor position on screen.
 	virtual Vector2i getCursorPosition() const;
 
@@ -79,6 +82,9 @@ private:
 
 	// wxWidgets Input Manager.
 	EditorInputManager* inputManager;
+
+	// Mouse visiblity.
+	bool mouseVisible;
 };
 
 //-----------------------------------//

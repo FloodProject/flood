@@ -104,7 +104,7 @@ void VertexBuffer::unbindPointers()
 	IfAttributeExists(Position) glDisableClientState(GL_VERTEX_ARRAY);
 	IfAttributeExists(Normal) glDisableClientState(GL_NORMAL_ARRAY);
 	IfAttributeExists(Color) glDisableClientState(GL_COLOR_ARRAY);
-	IfAttributeExists(SecondaryColor) glDisableClientState(GL_SECONDARY_COLOR_ARRAY);
+	//IfAttributeExists(SecondaryColor) glDisableClientState(GL_SECONDARY_COLOR_ARRAY);
 	IfAttributeExists(FogCoord) glDisableClientState(GL_FOG_COORD_ARRAY);
 	IfAttributeExists(TexCoord0) DisableTexCoordArray(0)
 	IfAttributeExists(TexCoord1) DisableTexCoordArray(1)
@@ -330,7 +330,10 @@ VertexBuffer::getAttribute( VertexAttribute::Enum attr ) const
 	it = attributes.find(attr);
 
 	if( it == attributes.end() )
-		assert( 0 && "Can't return null reference" );
+	{
+		static std::vector<Vector3> nul;
+		return nul;
+	}
 	
 	Attribute& p = (*it).second;
 	std::vector<byte>& arr = p.data;

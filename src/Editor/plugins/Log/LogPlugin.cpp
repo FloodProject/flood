@@ -54,7 +54,15 @@ void LogPlugin::onPluginEnable()
 	}
 
 	log = new LogFrame(editor);
-	log->SetSize(500, 200);
+	log->SetSize(500, 300);
+	
+	wxBitmap icon = wxMEMORY_BITMAP(page_white_text);
+
+	wxAuiPaneInfo pane;
+	pane.Caption("Log").Bottom().Dock().Hide().Icon(icon);
+
+	editor->getAUI()->AddPane(log, pane);
+	editor->getAUI()->Update();
 }
 
 //-----------------------------------//
@@ -66,7 +74,14 @@ void LogPlugin::onPluginDisable()
 
 void LogPlugin::onLogButtonClick(wxCommandEvent& event)
 {
-	log->Show( !log->IsShown() );
+	wxAuiPaneInfo& pane = editor->getAUI()->GetPane(log);
+
+	if( !pane.IsOk() )
+		return;
+
+	pane.Show( !pane.IsShown() );
+
+	editor->getAUI()->Update();
 }
 
 //-----------------------------------//

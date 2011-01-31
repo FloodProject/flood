@@ -35,6 +35,8 @@
 #include "plugins/Camera/CameraPlugin.h"
 #include "plugins/Sample/SamplePlugin.h"
 
+#include <wx/debugrpt.h>
+
 wxIMPLEMENT_WXWIN_MAIN_CONSOLE
 
 namespace vapor { namespace editor {
@@ -64,12 +66,21 @@ bool EditorApp::OnInit()
 
 void EditorApp::OnFatalException()
 {
-	StackWalkerLog sw;
-	sw.ShowCallstack();
-	sw.Log();
+	//StackWalkerLog sw;
+	//sw.ShowCallstack();
+	//sw.Log();
 
-	wxMessageOutputBest output;
-	output.Output("An exception occured. Please send the log file to the developers.");
+	//wxMessageOutputBest output;
+	//output.Output("An exception occured. Please send the log file to the developers.");
+
+    wxDebugReport report;
+    wxDebugReportPreviewStd preview;
+
+    report.AddExceptionContext();
+    report.AddExceptionDump();
+
+    if ( preview.Show(report) )
+        report.Process();
 }
 
 //-----------------------------------//
@@ -90,6 +101,7 @@ EditorFrame::EditorFrame(const wxString& title)
 	, viewframe(nullptr)
 	, undoManager(nullptr)
 	, eventManager(nullptr)
+	, pluginManager(nullptr)
 	, pluginManagerFrame(nullptr)
 {
 	editorInstance = this;
@@ -102,8 +114,7 @@ EditorFrame::EditorFrame(const wxString& title)
 	createScene();
 	createPlugins();
 	createToolbar();
-
-	getAUI()->Update();
+	createLastUI();
 
 	ResourceManager* res = engine->getResourceManager();
 	res->loadQueuedResources();
@@ -145,13 +156,13 @@ void EditorFrame::createPlugins()
 	PLUGIN(Undo);
 	PLUGIN(Scene);
 	PLUGIN(Property);
-	PLUGIN(Console);
 	PLUGIN(Selection);
 	PLUGIN(Gizmo);
-	PLUGIN(Resources);
-	//PLUGIN(Terrain);
+	PLUGIN(Terrain);
 	//PLUGIN(Camera);
+	PLUGIN(Console);
 	PLUGIN(Log);
+	PLUGIN(Resources);
 	PLUGIN(Sample);
 
 	pluginManagerFrame = new PluginManagerFrame(this, pluginManager);
@@ -190,11 +201,11 @@ void EditorFrame::createViews()
 	control->SetDropTarget( new ResourceDropTarget(this) );
 	control->SetFocus();
 
-	RenderDevice* device = engine->getRenderDevice();
+	RenderDevice* renderDevice = engine->getRenderDevice();
 	Window* window = (Window*) control->getRenderWindow(); 
 
-	device->setWindow( window );
-	device->setRenderTarget( window );
+	renderDevice->setWindow( window );
+	renderDevice->setRenderTarget( window );
 
 	engine->setupInput();
 	inputManager = control->getInputManager();
@@ -202,7 +213,7 @@ void EditorFrame::createViews()
 	RenderView* view = viewframe->createView();
 	view->setClearColor( Color(0.0f, 0.10f, 0.25f) );
 
-	device->init();
+	renderDevice->init();
 
 #ifdef VAPOR_PHYSICS_BULLET
 	PhysicsManager* physics = engine->getPhysicsManager();
@@ -242,12 +253,6 @@ void EditorFrame::createResources()
 	// Mount the editor default media directories.
 	FileSystem* fs = engine->getFileSystem();
 	fs->mountDefaultLocations();
-
-	ResourceManager* res = engine->getResourceManager();
-	std::vector<std::string> files = System::enumerateFiles("Media/Shaders");
-
-	for(uint i = 0; i < files.size(); i++ )
-		res->loadResource(files[i]);
 }
 
 //-----------------------------------//
@@ -306,30 +311,7 @@ void EditorFrame::createUI()
 	int style = wxAUI_TB_DEFAULT_STYLE | wxAUI_TB_OVERFLOW;
 	toolBar = new wxAuiToolBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, style);
 
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &EditorFrame::OnQuit, this, Editor_Quit);
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &EditorFrame::OnAbout, this, Editor_About);
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &EditorFrame::OnToolbarButtonClick, this);
-	Bind(wxEVT_KEY_DOWN, &EditorFrame::OnKeyDown, this);
-	Bind(wxEVT_KEY_UP, &EditorFrame::OnKeyUp, this);
-	
-	Bind(wxEVT_LEFT_DOWN, &EditorFrame::OnMouseEvent, this);
-	Bind(wxEVT_LEFT_UP, &EditorFrame::OnMouseEvent, this);
-	Bind(wxEVT_LEFT_DCLICK, &EditorFrame::OnMouseEvent, this);
-	Bind(wxEVT_MIDDLE_DOWN, &EditorFrame::OnMouseEvent, this);
-	Bind(wxEVT_MIDDLE_UP, &EditorFrame::OnMouseEvent, this);
-	Bind(wxEVT_MIDDLE_DCLICK, &EditorFrame::OnMouseEvent, this);
-	Bind(wxEVT_RIGHT_DOWN, &EditorFrame::OnMouseEvent, this);
-	Bind(wxEVT_RIGHT_UP, &EditorFrame::OnMouseEvent, this);
-	Bind(wxEVT_RIGHT_DCLICK, &EditorFrame::OnMouseEvent, this);
-	Bind(wxEVT_AUX1_DOWN, &EditorFrame::OnMouseEvent, this);
-	Bind(wxEVT_AUX1_UP, &EditorFrame::OnMouseEvent, this);
-	Bind(wxEVT_AUX1_DCLICK, &EditorFrame::OnMouseEvent, this);
-	Bind(wxEVT_AUX2_DOWN, &EditorFrame::OnMouseEvent, this);
-	Bind(wxEVT_AUX2_UP, &EditorFrame::OnMouseEvent, this);
-	Bind(wxEVT_MOTION, &EditorFrame::OnMouseEvent, this);
-	Bind(wxEVT_LEAVE_WINDOW, &EditorFrame::OnMouseEvent, this);
-	Bind(wxEVT_ENTER_WINDOW, &EditorFrame::OnMouseEvent, this);
-	Bind(wxEVT_MOUSEWHEEL, &EditorFrame::OnMouseEvent, this);
+	toolBar->Bind(wxEVT_COMMAND_MENU_SELECTED, &EditorFrame::OnToolbarButtonClick, this);
 }
 
 //-----------------------------------//
@@ -338,30 +320,6 @@ void EditorFrame::createSplitter()
 {
 	viewSplitter = new wxFourWaySplitter(this);
 	auiManager->AddPane(viewSplitter, wxAuiPaneInfo().CentrePane().Maximize());
-}
-
-//-----------------------------------//
-
-void EditorFrame::createMenus()
-{
-    // create a menu bar
-    wxMenu* fileMenu = new wxMenu;
-	fileMenu->Append(Editor_Quit, "E&xit\tAlt-X", "Quit this program");
-
-    wxMenu* toolsMenu = new wxMenu;
-
-    // the "About" item should be in the help menu
-    wxMenu* helpMenu = new wxMenu;
-    helpMenu->Append(Editor_About, "&About...\tF1", "Show about dialog");
-
-    // now append the freshly created menu to the menu bar...
-    wxMenuBar* menuBar = new wxMenuBar();
-    menuBar->Append(fileMenu, "&File");
-	menuBar->Append(toolsMenu, "&Tools");
-    menuBar->Append(helpMenu, "&Help");
-
-    // ... and attach this menu bar to the frame
-    SetMenuBar(menuBar);
 }
 
 //-----------------------------------//
@@ -594,94 +552,6 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 	}
 	//-----------------------------------//
 	} // end switch
-}
-
-//-----------------------------------//
-
-void EditorFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
-{
-    // true forces the frame to close.
-    Close(true);
-}
-
-//-----------------------------------//
-
-void EditorFrame::OnKeyDown(wxKeyEvent& event)
-{
-	inputManager->processKeyEvent(event, true);
-}
-
-//-----------------------------------//
-
-void EditorFrame::OnKeyUp(wxKeyEvent& event)
-{
-	inputManager->processKeyEvent(event, false);
-}
-
-//-----------------------------------//
-
-void EditorFrame::OnMouseEvent(wxMouseEvent& event)
-{
-	inputManager->processMouseEvent(event);
-}
-
-//-----------------------------------//
-
-void EditorFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
-{
-	wxFrame* about = new wxFrame(this, wxID_ANY, "About " VAPOR_EDITOR_NAME,
-		wxDefaultPosition, wxDefaultSize, wxCAPTION|wxCLOSE_BOX|wxSYSTEM_MENU|
-		wxFRAME_FLOAT_ON_PARENT|wxFRAME_TOOL_WINDOW|wxTAB_TRAVERSAL);
-
-	wxBoxSizer* bSizer1 = new wxBoxSizer( wxVERTICAL );
-	wxBoxSizer* bSizer2 = new wxBoxSizer( wxVERTICAL );
-
-	wxPanel* m_panel1 = new wxPanel( about );
-
-	wxBitmap aboutIcon = wxMEMORY_BITMAP(::about);
-	wxStaticBitmap* m_bitmap1 = new wxStaticBitmap( m_panel1, wxID_ANY, aboutIcon);
-	bSizer2->Add( m_bitmap1, 0, wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 0 );
-
-	wxString aboutText(
-		"This software is © 2009-2010 João Matos and the rest of the team.\n\n"
-		VAPOR_EDITOR_NAME " uses some free software packages: wxWidgets (wxWidgets.org),"
-		" Lua (lua.org),\nBullet (bulletphysics.com), Boost (boost.org), zlib (zlib.org)"
-		" and the list goes on.\n\nCheck the documentation provided with the software"
-		" for more details.");
-
-	wxStaticText* m_staticText2 = new wxStaticText( m_panel1, wxID_ANY, aboutText );
-	m_staticText2->Wrap( -1 );
-	bSizer2->Add( m_staticText2, 0, wxEXPAND|wxTOP|wxBOTTOM, 5 );
-	
-	wxBoxSizer* bSizer3 = new wxBoxSizer( wxHORIZONTAL );
-	
-	wxStaticLine* m_staticline1 = new wxStaticLine( m_panel1, wxID_ANY );
-	bSizer3->Add( m_staticline1, 1, wxALL|wxALIGN_CENTER_VERTICAL, 10 );
-	
-	wxHyperlinkCtrl* m_hyperlink1 = new wxHyperlinkCtrl( m_panel1, wxID_ANY,
-		"vapor3D (http://www.vapor3d.org)", "http://www.vapor3d.org" );
-	bSizer3->Add( m_hyperlink1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-
-	//wxStaticText* m_hyperlink1 = new wxStaticText( m_panel1, wxID_ANY,
-	//	"http://www.vapor3d.org" );
-	//bSizer3->Add( m_hyperlink1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	wxStaticLine* m_staticline2 = new wxStaticLine( m_panel1, wxID_ANY );
-	bSizer3->Add( m_staticline2, 1, wxALL|wxALIGN_CENTER_VERTICAL, 10 );
-	
-	bSizer2->Add( bSizer3, 1, wxEXPAND, 5 );
-	
-	m_panel1->SetSizer( bSizer2 );
-	m_panel1->Layout();
-
-	bSizer2->Fit( m_panel1 );
-	bSizer1->Add( m_panel1, 1, wxEXPAND, 5 );
-	
-	about->SetSizer( bSizer1 );
-	about->Layout();
-	bSizer1->Fit( about );
-
-	about->Show(true);
 }
 
 //-----------------------------------//

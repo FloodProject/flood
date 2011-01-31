@@ -48,26 +48,28 @@ void ProjectPlugin::onPluginEnable()
 		newButton = toolBar->AddTool( wxID_ANY, "New", iconNew, "Creates a new scene" );
 		addTool( newButton );
 
-		toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
-			&ProjectPlugin::onNewButtonClick, this, newButton->GetId() );
-
 		wxBitmap iconOpen = wxMEMORY_BITMAP(folder_explore);
 		openButton = toolBar->AddTool( wxID_ANY, "Open", iconOpen, "Opens an existing scene" );
 		addTool( openButton );
 
-		toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
-			&ProjectPlugin::onOpenButtonClick, this, openButton->GetId() );
-
 		wxBitmap iconSave = wxMEMORY_BITMAP(disk);
 		saveButton = toolBar->AddTool( wxID_ANY, "Save", iconSave, "Save the current scene" );
 		addTool( saveButton );
-
-		toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
-			&ProjectPlugin::onSaveButtonClick, this, saveButton->GetId() );
-
-		toolBar->Bind( wxEVT_UPDATE_UI,
-			&ProjectPlugin::onSaveButtonUpdateUI, this, saveButton->GetId() );
+		
+		toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onNewButtonClick, this, newButton->GetId() );
+		toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onOpenButtonClick, this, openButton->GetId() );
+		toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onSaveButtonClick, this, saveButton->GetId() );
+		toolBar->Bind( wxEVT_UPDATE_UI, &ProjectPlugin::onSaveButtonUpdateUI, this, saveButton->GetId() );
 	}
+
+	wxMenu* menu = editor->fileMenu;
+	newItem = menu->Append(newButton->GetId(), newButton->GetLabel());
+	openItem = menu->Append(openButton->GetId(), openButton->GetLabel());
+	saveItem = menu->Append(saveButton->GetId(), saveButton->GetLabel());
+
+	editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onNewButtonClick, this, newButton->GetId() );
+	editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onOpenButtonClick, this, openButton->GetId() );
+	editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onSaveButtonClick, this, saveButton->GetId() );
 
 	UndoManager* undo = editor->getUndoManager();
 	undo->onUndoRedoEvent.Connect(this, &ProjectPlugin::onUndoRedoEvent);
@@ -134,6 +136,7 @@ void ProjectPlugin::onSaveButtonClick(wxCommandEvent& event)
 void ProjectPlugin::onSaveButtonUpdateUI(wxUpdateUIEvent& event)
 {
 	event.Enable( unsavedChanges );
+	saveItem->Enable( unsavedChanges );
 }
 
 //-----------------------------------//

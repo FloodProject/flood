@@ -20,9 +20,9 @@ namespace vapor {
 //-----------------------------------//
 
 BEGIN_CLASS_PARENT(Label, Overlay)
-	FIELD_PRIMITIVE(Label, string, text)
-	FIELD_PRIMITIVE(Label, bool, isDirty)
-	FIELD_CLASS_PTR(Label, Font, font) 
+	FIELD_PRIMITIVE(string, text)
+	FIELD_PRIMITIVE(bool, isDirty)
+	FIELD_CLASS_PTR(Font, font) 
 END_CLASS()
 
 //-----------------------------------//
@@ -49,8 +49,8 @@ Label::Label( const std::string& text, const std::string& path )
 
 	material = new Material("FontMaterial" + String::fromNumber(i++), "Tex");
 	
-	ResourceManager* rm = GetEngine()->getResourceManager();
-	font = rm->loadResource<Font>(path);
+	ResourceManager* res = GetResourceManager();
+	font = res->loadResource<Font>(path);
 
 	init();
 }

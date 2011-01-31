@@ -11,6 +11,7 @@
 #include "scene/Transform.h"
 #include "scene/Entity.h"
 #include "render/DebugGeometry.h"
+#include "render/GL.h"
 
 namespace vapor {
 
@@ -23,18 +24,18 @@ BEGIN_ENUM(EmitterType)
 END_ENUM()
 
 BEGIN_CLASS_PARENT(Particles, Geometry)
-	FIELD_ENUM(Particles, EmitterType, emitter)
-	FIELD_PRIMITIVE(Particles, float, spawnRate)
-	FIELD_PRIMITIVE(Particles, float, fadeRate)
-	FIELD_PRIMITIVE(Particles, float, size)
-	FIELD_PRIMITIVE(Particles, float, minLife)
-	FIELD_PRIMITIVE(Particles, float, maxLife)
-	FIELD_PRIMITIVE(Particles, Vector3, minVelocity)
-	FIELD_PRIMITIVE(Particles, Vector3, maxVelocity)
-	FIELD_PRIMITIVE(Particles, float, minScale)
-	FIELD_PRIMITIVE(Particles, float, maxScale)
-	FIELD_PRIMITIVE(Particles, Vector3, attenuation)
-	FIELD_CLASS_PTR_SETTER(Particles, Image, image, Image)
+	FIELD_ENUM(EmitterType, emitter)
+	FIELD_PRIMITIVE(float, spawnRate)
+	FIELD_PRIMITIVE(float, fadeRate)
+	FIELD_PRIMITIVE(float, size)
+	FIELD_PRIMITIVE(float, minLife)
+	FIELD_PRIMITIVE(float, maxLife)
+	FIELD_PRIMITIVE(Vector3, minVelocity)
+	FIELD_PRIMITIVE(Vector3, maxVelocity)
+	FIELD_PRIMITIVE(float, minScale)
+	FIELD_PRIMITIVE(float, maxScale)
+	FIELD_PRIMITIVE(Vector3, attenuation)
+	FIELD_CLASS_PTR_SETTER(Image, image, Image)
 END_CLASS()
 
 const int MAX_PARTICLES = 512;
@@ -60,7 +61,7 @@ Particles::Particles()
 	
 	material = new Material("ParticlesMaterial");
 	material->setDepthWrite(false);
-	material->setBlending(BlendSource::SourceAlpha, BlendDestination::InverseSourceAlpha);
+	material->setBlending(BlendSource::SourceAlpha, BlendDestination::One);
 
 	RenderablePtr renderable = new Renderable(PolygonType::Points);
 	renderable->setVertexBuffer(vb);

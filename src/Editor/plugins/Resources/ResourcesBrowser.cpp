@@ -92,7 +92,7 @@ void ResourcesBrowser::setupImages()
 
 		metadata.index = images->Add( wxBitmap(image) );
 		
-		std::string base = Path::getBase(metadata.thumbnail);
+		std::string base = PathUtils::getBase(metadata.thumbnail);
 		m_listCtrl->InsertItem(listIndex++, base, metadata.index);
 	}
 }
@@ -215,7 +215,7 @@ void ResourcesBrowser::scanFiles()
 	{
 		const std::string& path = found[i];
 
-		std::string ext = Path::getExtension(path);
+		std::string ext = PathUtils::getExtension(path);
 		ResourceLoader* loader = rm->findLoader(ext);
 
 		if( !loader )
@@ -245,11 +245,7 @@ void ResourcesBrowser::scanFiles()
 
 void ResourcesBrowser::generateThumbnails(const std::vector<std::string>& files)
 {
-	Engine* engine = editor->getEngine();
-	ResourceManager* rm = engine->getResourceManager();
-
-	bool threadedStatus = rm->getThreadedLoading();
-	rm->setThreadedLoading(false);
+	ResourceManager* res = GetResourceManager();
 
 	wxProgressDialog progressDialog( "Loading resources",
 		"Please wait while resources are loaded.", files.size(),
@@ -264,9 +260,9 @@ void ResourcesBrowser::generateThumbnails(const std::vector<std::string>& files)
 		const std::string& path = files[i];
 		
 		// Force unused resources to be unloaded.
-		rm->update(0);
+		res->update(0);
 
-		progressDialog.Update(progress++, Path::getFile(path));
+		progressDialog.Update(progress++, PathUtils::getFile(path));
 
 		if( progressDialog.WasCancelled() )
 			break;
@@ -281,12 +277,16 @@ void ResourcesBrowser::generateThumbnails(const std::vector<std::string>& files)
 		if( resourcesCache.find(hash) != resourcesCache.end() )
 			continue;
 
-		MeshPtr mesh = rm->loadResource<Mesh>(path, false);
+		ResourceLoadOptions options;
+		options.name = path;
+		options.asynchronousLoading = false;
+
+		MeshPtr mesh = RefCast<Mesh>(res->loadResource(options));
 
 		if( !mesh || mesh->getResourceGroup() != ResourceGroup::Meshes )
 			continue;
 
-		const std::string& resPath = Path::getFile(mesh->getPath());
+		const std::string& resPath = PathUtils::getFile(mesh->getPath());
 
 		ResourceMetadata metadata;
 		metadata.hash = hash;
@@ -299,12 +299,11 @@ void ResourcesBrowser::generateThumbnails(const std::vector<std::string>& files)
 		if( !thumb )
 			continue;
 
-		thumb->save( CacheFolder + metadata.thumbnail );
+		ImageWriter writer;
+		writer.save( thumb, CacheFolder + metadata.thumbnail );
 
 		Log::info("Generated thumbnail for resource '%s'", resPath.c_str());
 	}
-
-	rm->setThreadedLoading(threadedStatus);
 }
 
 //-----------------------------------//
@@ -393,7 +392,7 @@ void ResourcesBrowser::OnListBeginDrag(wxListEvent& event)
 	if( !mesh )
 		return;
 
-	EntityPtr entity( new Entity( Path::getFile(name) ) );
+	EntityPtr entity( new Entity( PathUtils::getFile(name) ) );
 	entity->addTransform();
 	entity->getTransform()->setPosition(dropPoint);
 	entity->addComponent( ModelPtr( new Model(mesh) ) );

@@ -50,9 +50,11 @@ protected:
 
 	// Undo toolbar button.
 	wxAuiToolBarItem* undoButton;
+	wxMenuItem* undoItem;
 
 	// Redo toolbar button.
 	wxAuiToolBarItem* redoButton;
+	wxMenuItem* redoItem;
 };
 
 //-----------------------------------//
