@@ -30,7 +30,7 @@ public:
 	Vector3 getPoint( float distance ) const;
 
 	// Intersects the ray with a triangle.
-	bool intersects( const Vector3 tri[3], float& t, float& u, float& v ) const;
+	bool intersects( const Vector3 (&tri)[3], float& t, float& u, float& v ) const;
 
 public:
 

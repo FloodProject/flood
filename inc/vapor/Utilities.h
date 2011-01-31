@@ -93,7 +93,6 @@ namespace String
 		
 		T num;
 		ss >> num; 
-		assert( !ss.fail() );
 
 		return num;
 	}
@@ -106,20 +105,22 @@ namespace String
 // Path manipulation
 //---------------------------------------------------------------------//
 
-namespace Path
+typedef std::string Path;
+
+namespace PathUtils
 {
 	// Gets the base part of the filename string.
-	CORE_API std::string getBase(const std::string& name);
+	CORE_API Path getBase(const Path& path);
 
 	// Gets the extension part of the filename string.
-	CORE_API std::string getExtension(const std::string& name);
+	CORE_API Path getExtension(const Path& path);
 
 	// Gets the file part of the path string.
-	CORE_API std::string getFile(const std::string& name);
+	CORE_API Path getFile(const Path& path);
 
 	// Normalizes the path.
-	CORE_API std::string normalize(const std::string& path);
-}
+	CORE_API Path normalize(const Path& path);
+};
 
 //---------------------------------------------------------------------//
 // Locales

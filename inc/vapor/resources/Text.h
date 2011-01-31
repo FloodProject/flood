@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "resources/Resource.h"
+#include "Resources/Resource.h"
 
 namespace vapor {
 
@@ -19,7 +19,7 @@ namespace vapor {
  * resource types, like scripts, shaders, materials, scenes, etc.
  */
 
-class VAPOR_API Text : public Resource
+class RESOURCE_API Text : public Resource
 {
 public:
 

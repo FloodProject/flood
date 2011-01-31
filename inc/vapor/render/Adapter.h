@@ -49,11 +49,6 @@ public:
 	// Logs adapter version information.
 	void log() const;
 
-protected:
-
-	// Gets and parses the OpenGL information.
-	void parseInfo();
-
 	std::string name;
 	std::string vendor;
 	std::string driver;
@@ -63,8 +58,14 @@ protected:
 	int maxTextureSize;
 	int maxAttribs;
 	
-	bool supportsVBO;
+	bool supportsVertexBuffers;
+	bool supportsShaders;
 	bool supportsAnisotropic;
+
+protected:
+
+	// Gets and parses the OpenGL information.
+	void parseInfo();
 };
 
 //-----------------------------------//

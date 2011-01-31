@@ -59,7 +59,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)inc;$(SolutionDir)inc\vapor;$(SolutionDir)dep\picopng\;$(SolutionDir)dep\stb\;$(SolutionDir)dep\vld\include;$(SolutionDir)dep\glew\include;$(SolutionDir)dep\freetype\include;$(SolutionDir)dep\openal\include;$(SolutionDir)dep\ogg\include;$(SolutionDir)dep\physfs\include;$(SolutionDir)dep\vorbis\include;$(SolutionDir)dep\jsoncpp\include;$(SolutionDir)dep\SFML\include;$(SolutionDir)dep\fd_delegate\include;$(SolutionDir)dep\lua\include;$(SolutionDir)dep\swig\include;$(SolutionDir)dep\bullet\include;$(SolutionDir)dep\zeromq\include;$(SolutionDir)dep\devil\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)inc;$(SolutionDir)inc\vapor;$(SolutionDir)src;$(SolutionDir)dep\picopng\;$(SolutionDir)dep\stb\;$(SolutionDir)dep\vld\include;$(SolutionDir)dep\glew\include;$(SolutionDir)dep\freetype\include;$(SolutionDir)dep\openal\include;$(SolutionDir)dep\ogg\include;$(SolutionDir)dep\physfs\include;$(SolutionDir)dep\vorbis\include;$(SolutionDir)dep\jsoncpp\include;$(SolutionDir)dep\SFML\include;$(SolutionDir)dep\lua\include;$(SolutionDir)dep\swig\include;$(SolutionDir)dep\bullet\include;$(SolutionDir)dep\zeromq\include;$(SolutionDir)dep\devil\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;___DEBUG;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <ExceptionHandling>false</ExceptionHandling>
@@ -78,6 +78,8 @@
     </ClCompile>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)dep\vld\lib;$(SolutionDir)dep\glew\lib;$(SolutionDir)dep\libogg-1.1.3\lib;$(SolutionDir)dep\libvorbis-1.2.0\lib;$(SolutionDir)dep\freetype\objs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ForceSymbolReferences>
+      </ForceSymbolReferences>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -135,6 +137,8 @@
     <ClCompile Include="..\..\src\Engine\AudioContext.cpp" />
     <ClCompile Include="..\..\src\Engine\AudioSource.cpp" />
     <ClCompile Include="..\..\src\Engine\Entity.cpp" />
+    <ClCompile Include="..\..\src\Engine\Material.cpp" />
+    <ClCompile Include="..\..\src\Engine\MeshBuilder.cpp" />
     <ClCompile Include="..\..\src\Engine\Particles.cpp" />
     <ClCompile Include="..\..\src\Engine\PCH.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -163,10 +167,8 @@
     <ClCompile Include="..\..\src\Engine\FBO.cpp" />
     <ClCompile Include="..\..\src\Engine\FrameStatistics.cpp" />
     <ClCompile Include="..\..\src\Engine\Target.cpp" />
-    <ClCompile Include="..\..\src\Engine\Material.cpp" />
     <ClCompile Include="..\..\src\Engine\Program.cpp" />
     <ClCompile Include="..\..\src\Engine\ProgramManager.cpp" />
-    <ClCompile Include="..\..\src\Engine\Shader.cpp" />
     <ClCompile Include="..\..\src\Engine\GLSL_Program.cpp" />
     <ClCompile Include="..\..\src\Engine\GLSL_Shader.cpp" />
     <ClCompile Include="..\..\src\Engine\Texture.cpp" />
@@ -230,50 +232,8 @@
     <ClCompile Include="..\..\src\Engine\physics\Body.cpp" />
     <ClCompile Include="..\..\src\Engine\physics\DebugDraw.cpp" />
     <ClCompile Include="..\..\src\Engine\physics\btKinematicController.cpp" />
-    <ClCompile Include="..\..\src\Engine\Resource.cpp">
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4715;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\ResourceManager.cpp" />
-    <ClCompile Include="..\..\src\Engine\Mesh.cpp" />
-    <ClCompile Include="..\..\src\Engine\Milkshape3D.cpp">
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4189;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Milkshape3D_Loader.cpp" />
-    <ClCompile Include="..\..\src\Engine\Font.cpp" />
-    <ClCompile Include="..\..\src\Engine\Font_Loader.cpp">
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\BitmapFont.cpp" />
-    <ClCompile Include="..\..\src\Engine\TTF.cpp" />
-    <ClCompile Include="..\..\src\Engine\Image.cpp">
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4715;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-    </ClCompile>
-    <ClCompile Include="..\..\dep\picopng\lodepng.cpp">
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4996;4706;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-    </ClCompile>
-    <ClCompile Include="..\..\dep\picopng\picopng.cpp" />
-    <ClCompile Include="..\..\src\Engine\PNG_Loader.cpp" />
-    <ClCompile Include="..\..\dep\stb\stb_image.cpp">
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='DLL Debug|Win32'">4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4244;4100;4245;4505;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\STB_Image_Loader.cpp" />
-    <ClCompile Include="..\..\src\Engine\IL_Image_Loader.cpp" />
-    <ClCompile Include="..\..\src\Engine\GLSL_Loader.cpp" />
-    <ClCompile Include="..\..\src\Engine\GLSL_Text.cpp" />
-    <ClCompile Include="..\..\src\Engine\ResourceSound.cpp" />
-    <ClCompile Include="..\..\src\Engine\OGG_Loader.cpp">
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4244; 4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Script.cpp" />
-    <ClCompile Include="..\..\src\Engine\Lua_Loader.cpp" />
-    <ClCompile Include="..\..\src\Engine\Text.cpp" />
     <ClCompile Include="..\..\src\Engine\Page.cpp" />
     <ClCompile Include="..\..\src\Engine\PageManager.cpp" />
-    <ClCompile Include="..\..\src\Engine\animation\Animation.cpp" />
-    <ClCompile Include="..\..\src\Engine\animation\Skeleton.cpp" />
-    <ClCompile Include="..\..\src\Engine\animation\Bone.cpp" />
     <ClCompile Include="..\..\src\Engine\controllers\Controller.cpp">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SWIG_TYPE_TABLE=vapor;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
@@ -290,6 +250,7 @@
     <ClInclude Include="..\..\inc\vapor\PCH.h" />
     <ClInclude Include="..\..\inc\vapor\render\Device.h" />
     <ClInclude Include="..\..\inc\vapor\render\GL.h" />
+    <ClInclude Include="..\..\inc\vapor\render\Material.h" />
     <ClInclude Include="..\..\inc\vapor\render\RenderQueue.h" />
     <ClInclude Include="..\..\inc\vapor\render\Adapter.h" />
     <ClInclude Include="..\..\inc\vapor\render\Buffer.h" />
@@ -308,10 +269,8 @@
     <ClInclude Include="..\..\inc\vapor\render\FBO.h" />
     <ClInclude Include="..\..\inc\vapor\render\FrameStatistics.h" />
     <ClInclude Include="..\..\inc\vapor\render\Target.h" />
-    <ClInclude Include="..\..\inc\vapor\render\Material.h" />
     <ClInclude Include="..\..\inc\vapor\render\Program.h" />
     <ClInclude Include="..\..\inc\vapor\render\ProgramManager.h" />
-    <ClInclude Include="..\..\inc\vapor\render\Shader.h" />
     <ClInclude Include="..\..\inc\vapor\render\GLSL_Program.h" />
     <ClInclude Include="..\..\inc\vapor\render\GLSL_Shader.h" />
     <ClInclude Include="..\..\inc\vapor\render\Texture.h" />
@@ -369,39 +328,13 @@
     <ClInclude Include="..\..\inc\vapor\physics\CapsuleShape.h" />
     <ClInclude Include="..\..\inc\vapor\physics\MeshShape.h" />
     <ClInclude Include="..\..\inc\vapor\physics\Body.h" />
+    <ClInclude Include="..\..\src\Engine\MeshBuilder.h" />
     <ClInclude Include="..\..\src\Engine\physics\MotionState.h" />
     <ClInclude Include="..\..\inc\vapor\physics\DebugDraw.h" />
     <ClInclude Include="..\..\inc\vapor\physics\btKinematicController.h" />
-    <ClInclude Include="..\..\inc\vapor\resources\Resource.h" />
-    <ClInclude Include="..\..\inc\vapor\resources\ResourceLoader.h" />
-    <ClInclude Include="..\..\src\Engine\ResourceLoaders.h" />
-    <ClInclude Include="..\..\inc\vapor\resources\ResourceManager.h" />
-    <ClInclude Include="..\..\src\Engine\ResourceTask.h" />
-    <ClInclude Include="..\..\inc\vapor\resources\Mesh.h" />
-    <ClInclude Include="..\..\inc\vapor\resources\Milkshape3D.h" />
-    <ClInclude Include="..\..\inc\vapor\resources\Milkshape3D_Loader.h" />
-    <ClInclude Include="..\..\src\Engine\Milkshape3D_Specs.h" />
-    <ClInclude Include="..\..\inc\vapor\resources\Font.h" />
-    <ClInclude Include="..\..\inc\vapor\resources\Font_Loader.h" />
-    <ClInclude Include="..\..\inc\vapor\resources\BitmapFont.h" />
-    <ClInclude Include="..\..\inc\vapor\resources\TTF.h" />
-    <ClInclude Include="..\..\inc\vapor\resources\Image.h" />
     <CustomBuildStep Include="..\..\inc\vapor\resources\PNG_Loader.h" />
-    <ClInclude Include="..\..\inc\vapor\resources\STB_Image_Loader.h" />
-    <ClInclude Include="..\..\inc\vapor\resources\IL_Image_Loader.h" />
-    <ClInclude Include="..\..\inc\vapor\resources\GLSL_Loader.h" />
-    <ClInclude Include="..\..\inc\vapor\resources\GLSL_Text.h" />
-    <ClInclude Include="..\..\inc\vapor\resources\Sound.h" />
-    <ClInclude Include="..\..\inc\vapor\resources\OGG_Loader.h" />
-    <ClInclude Include="..\..\inc\vapor\script\Script.h" />
-    <ClInclude Include="..\..\inc\vapor\resources\Lua_Loader.h" />
-    <ClInclude Include="..\..\inc\vapor\resources\Text.h" />
     <ClInclude Include="..\..\inc\vapor\paging\Page.h" />
     <ClInclude Include="..\..\inc\vapor\paging\PageManager.h" />
-    <ClInclude Include="..\..\inc\vapor\animation\Animation.h" />
-    <ClInclude Include="..\..\inc\vapor\animation\Attachment.h" />
-    <ClInclude Include="..\..\inc\vapor\animation\Skeleton.h" />
-    <ClInclude Include="..\..\inc\vapor\animation\Bone.h" />
     <ClInclude Include="..\..\inc\vapor\controllers\Controller.h" />
     <ClInclude Include="..\..\inc\vapor\controllers\CameraController.h" />
     <ClInclude Include="..\..\inc\vapor\controllers\FirstPersonController.h" />

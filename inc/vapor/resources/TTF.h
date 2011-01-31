@@ -10,7 +10,7 @@
 
 #ifdef VAPOR_FONT_FREETYPE2
 
-#include "vapor/resources/Font.h"
+#include "Resources/Font.h"
 
 namespace vapor {
 

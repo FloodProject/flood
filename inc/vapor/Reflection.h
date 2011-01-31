@@ -16,3 +16,4 @@
 #include "core/Class.h"
 #include "core/Enum.h"
 #include "core/Primitive.h"
+#include "core/Helpers.h"

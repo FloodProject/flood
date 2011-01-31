@@ -8,12 +8,12 @@
 
 #pragma once
 
-#include "vapor/CompileOptions.h"
+#include "CompileOptions.h"
 
 #ifdef VAPOR_SCRIPTING_LUA
 
-#include "vapor/resources/ResourceLoader.h"
-#include "vapor/script/Script.h"
+#include "Resources/ResourceLoader.h"
+#include "Script/Script.h"
 
 namespace vapor {
 
@@ -25,6 +25,8 @@ namespace vapor {
 
 class Lua_Loader : public ResourceLoader
 {
+	DECLARE_CLASS_()
+
 public:
 
 	Lua_Loader();

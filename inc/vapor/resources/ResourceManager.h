@@ -8,10 +8,11 @@
 
 #pragma once
 
-#include "vapor/Subsystem.h"
-#include "vapor/ConcurrentQueue.h"
-#include "vapor/resources/Resource.h"
+#include "Subsystem.h"
+#include "ConcurrentQueue.h"
 #include "ReferenceCount.h"
+#include "Resources/Resource.h"
+#include "Task.h"
 
 namespace vapor {
 
@@ -36,15 +37,23 @@ class ResourceLoader;
 struct ResourceEvent
 {
 	ResourcePtr resource;
+	ResourceLoader* loader;
+};
+
+struct ResourceLoadOptions
+{
+	ResourceLoadOptions();
+
+	std::string name;
+	ResourceGroup::Enum group;
+	bool asynchronousLoading;
+	bool sendLoadEvent;
 };
 
 //-----------------------------------//
 
 typedef std::map< std::string, ResourcePtr > ResourceMap;
-typedef std::pair< const std::string, ResourcePtr > ResourceMapPair;
-
 typedef std::map< std::string, ResourceLoader* > ResourceLoaderMap;
-typedef std::pair< std::string, ResourceLoader* > ResourceLoaderMapPair;
 
 /**
  * Responsible for managing a set of resources that are added by the app.
@@ -59,26 +68,23 @@ typedef std::pair< std::string, ResourceLoader* > ResourceLoaderMapPair;
  * which should prove to be less error-prone in case of a corrupt resource.
  */
 
-class VAPOR_API ResourceManager : public Subsystem
+class RESOURCE_API ResourceManager : public Subsystem
 {
 	friend class ResourceTask;
 
 public:
 
-	ResourceManager( FileWatcher* fileWatcher, TaskManager* );
+	ResourceManager();
 	virtual ~ResourceManager();
  
-	// Creates a new resource and returns it.
-	ResourcePtr loadResource(const std::string& path, bool async = true);
+	// Gets an already loaded resource by its name.
+	ResourcePtr getResource(const std::string& name);
 
-	// Gets an already loaded resource by its path.
-	ResourcePtr getResource(const std::string& path);
+	// Loads or returns an already loaded resource by its name.
+	ResourcePtr loadResource(const std::string& name);
 
-	// Finds the loader for the given extension.
-	ResourceLoader* findLoader(const std::string& ext);
-
-	// Validates if the resource exists and if there is a loader for it.
-	bool validateResource( const std::string& path );
+	// Loads or returns an already loaded resource by its name.
+	ResourcePtr loadResource(ResourceLoadOptions options);
 
 	// Removes a resource from the manager.
 	void removeResource(const ResourcePtr& res);
@@ -95,11 +101,11 @@ public:
 	// Registers a resource handler.
 	void registerLoader(ResourceLoader* const loader);
 
-	// Watches a resource for changes and auto-reloads it.
-	void handleWatchResource(const FileWatchEvent& evt);
+	// Finds the loader for the given extension.
+	ResourceLoader* findLoader(const std::string& extension);
 
-	// Gets a registered resource loader for the given extension.
-	ResourceLoader* const getResourceLoader(const std::string& ext);
+	// Sets up the default resource loaders.
+	void setupResourceLoaders();
 
 	// Sends resource events to the subscribers.
 	void update( double );
@@ -111,41 +117,13 @@ public:
 	GETTER(ResourceLoaders, const ResourceLoaderMap&, resourceLoaders)
 
 	// Gets/sets the threading status.
-	ACESSOR(ThreadedLoading, bool, threadedLoading)
+	ACESSOR(AsynchronousLoading, bool, asynchronousLoading)
 
-protected:
+	// Sets the task manager.
+	SETTER(TaskManager, TaskManager*, taskManager) 
 
-	// Returns a new resource ready to be processed by a loader.
-	ResourcePtr prepareResource( const File& file );
-
-	// Processes the resource with the right resource loader.
-	void decodeResource( ResourcePtr res, bool async = true, bool notify = true );
-
-	// Sends pending resource events.
-	void sendPendingEvents();
-
-	// Maps a name to a resource.
-	ResourceMap resources;
-
-	// Maps extensions to resource loaders.
-	ResourceLoaderMap resourceLoaders;
-
-	// Manages all background loading tasks.
-	TaskManager* taskManager;
-
-	// When tasks finish, they queue an event.
-	ConcurrentQueue<ResourceEvent> resourceTaskEvents;
-
-	// Number of resources queued for loading.
-	Atomic numResourcesQueuedLoad;
-
-	// Global setting to override threaded loading.
-	bool threadedLoading;
-
-	THREAD(boost::mutex resourceFinishLoadMutex;)
-	THREAD(boost::condition_variable resourceFinishLoad;)
-
-public:
+	// Sets the file watcher.
+	void setFileWatcher(FileWatcher* watcher);
 
 	// These events are sent when their correspending actions happen.
 	Event1< const ResourceEvent& > onResourcePrepared;
@@ -154,22 +132,81 @@ public:
 	Event1< const ResourceEvent& > onResourceReloaded;
 	Event1< const ResourceLoader&> onResourceLoaderRegistered;
 
-	// Gets a specific resource given it's name (if it exists).
+	// Gets an already loaded resource by its name.
 	template <typename T>
-	RefPtr<T> getResource(const std::string& path)
+	RefPtr<T> getResource(const std::string& name)
 	{
-		ResourcePtr res = getResource( path );
+		ResourcePtr res = getResource(path);
 		return RefCast<T>(res);
 	}
 
 	// Creates a new resource and returns the specific resource type.
 	template <typename T>
-	RefPtr<T> loadResource(const std::string& path, bool async = true)
+	RefPtr<T> loadResource(const std::string& path)
 	{
-		ResourcePtr res = loadResource( path, async );
+		ResourcePtr res = loadResource(path);
 		return RefCast<T>(res);
 	}
+
+protected:
+
+	// Finds the true resource if needed.
+	void findResource( ResourceLoadOptions& options );
+
+	// Returns a new resource ready to be processed by a loader.
+	ResourcePtr prepareResource( const File& file );
+
+	// Processes the resource with the right resource loader.
+	void decodeResource( ResourcePtr res, ResourceLoadOptions& options );
+
+	// Validates if the resource exists and if there is a loader for it.
+	bool validateResource( const std::string& path );
+
+	// Watches a resource for changes and auto-reloads it.
+	void handleWatchResource(const FileWatchEvent& event);
+
+	// Sends pending resource events.
+	void sendPendingEvents();
+
+	// References the resource loaders.
+	void referenceLoaders();
+
+	// Maps a name to a resource.
+	ResourceMap resources;
+
+	// Maps extensions to resource loaders.
+	ResourceLoaderMap resourceLoaders;
+
+	// When tasks finish, they queue an event.
+	ConcurrentQueue<ResourceEvent> resourceTaskEvents;
+
+	// Number of resources queued for loading.
+	Atomic numResourcesQueuedLoad;
+
+	// Keeps track if asynchronous loading is enabled.
+	bool asynchronousLoading;
+
+	//Mutex resourceFinishLoadMutex;
+	//Mutex resourceFinishLoad;
+
+	// Manages all background loading tasks.
+	TaskManager* taskManager;
 };
+
+//-----------------------------------//
+
+class ResourceTask : public Task
+{
+public:
+
+	void run();
+
+	Resource* resource;
+	ResourceLoadOptions options;
+};
+
+// Gets the resource manager instance.
+ResourceManager* GetResourceManager();
 
 //-----------------------------------//
 

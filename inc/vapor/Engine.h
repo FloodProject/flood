@@ -59,9 +59,6 @@ public:
 	// Sets up the global engine logger.
 	void setupLogger();
 
-	// Sets up the default resource codecs.
-	void setupResourceLoaders();
-
 	// Sets up the rendering device.
 	void setupDevices( bool createWindow = true );
 

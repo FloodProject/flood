@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "resources/Resource.h"
-#include "resources/Image.h"
+#include "Resources/Resource.h"
+#include "Resources/Image.h"
 #include "math/Vector2.h"
 
 namespace vapor {
@@ -45,7 +45,7 @@ struct Glyph
  * glyphs from different fonts, and with different sizes.
  */
 
-class VAPOR_API Font : public Resource
+class RESOURCE_API Font : public Resource
 {
 	DECLARE_CLASS_()
 

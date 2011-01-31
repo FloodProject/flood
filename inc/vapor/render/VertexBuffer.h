@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "math/Vector3.h"
-#include "math/Color.h"
-#include "render/Buffer.h"
+#include "Math/Vector3.h"
+#include "Math/Color.h"
+#include "Render/Buffer.h"
 
 namespace vapor {
 
@@ -27,9 +27,10 @@ struct VertexAttribute
 		Position = 0,
 		Normal = 2,
 		Color = 3,
-		SecondaryColor = 4,
+		//SecondaryColor = 4,
+		BoneIndex = 4,
 		FogCoord = 5,
-		TexCoord0 = 8,
+		TexCoord0 = 6,
 		TexCoord1,
 		TexCoord2,
 		TexCoord3,

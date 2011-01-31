@@ -17,8 +17,6 @@ namespace vapor {
 typedef std::map<std::string, int> EnumValuesMap;
 typedef std::pair<const std::string, int> EnumValuesPair;
 
-//-----------------------------------//
-
 /**
  * Represents an enum in the type system.
  */
@@ -42,18 +40,6 @@ protected:
 
 	mutable EnumValuesMap values;
 };
-
-#define DECLARE_ENUM() static vapor::Enum& getStaticType();
-
-#define BEGIN_ENUM(enumName)							\
-	vapor::Enum& enumName::getStaticType() {			\
-	static vapor::Enum enuHmm(TOSTRING(enumName),		\
-		sizeof(enumName));
-	
-#define ENUM(enumName)									\
-	enuHmm.addValue(TOSTRING(enumName), (int)enumName);
-
-#define END_ENUM() return enuHmm; }
 
 //-----------------------------------//
 

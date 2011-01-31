@@ -25,11 +25,11 @@ class CORE_API Registry
 {
 public:
 
-	// Registers a new type mapping.
-	void registerType(const Type& type);
-
 	// Gets a type given a name.
 	const Type* getType(const std::string& type);
+
+	// Registers a new type.
+	void registerType(const Type* type);
 
 	// Maps all the type names to their type instances.
 	TypeRegistryMap types;

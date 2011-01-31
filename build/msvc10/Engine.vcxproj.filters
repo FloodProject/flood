@@ -34,9 +34,6 @@
     <Filter Include="Render\Target">
       <UniqueIdentifier>{4296de7c-264b-4eb2-89b3-9459d3be1866}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Render\Material">
-      <UniqueIdentifier>{5155cf67-e987-48aa-96e2-f769f1280404}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Render\Shaders">
       <UniqueIdentifier>{db00aaea-871c-41fa-ae25-2c08de4432a3}</UniqueIdentifier>
     </Filter>
@@ -166,74 +163,8 @@
     <Filter Include="Physics\Controller">
       <UniqueIdentifier>{48f7100a-3da6-457f-b57c-000e6b130d22}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resources">
-      <UniqueIdentifier>{72f02837-036c-48c3-bff6-8c726e83ffca}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Meshes">
-      <UniqueIdentifier>{b5f65366-e50e-4133-b86e-81b95a2d507e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Meshes\Milkshape">
-      <UniqueIdentifier>{1d047359-b26c-4502-b677-fa0e834ee3b3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Fonts">
-      <UniqueIdentifier>{edbd3cd9-d5c2-481f-a740-ff4436157cf8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Fonts\Bitmap">
-      <UniqueIdentifier>{d12ab1b6-5814-49c9-9b05-2ab18cf40ab4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Fonts\TrueType">
-      <UniqueIdentifier>{cd5b02c8-f956-4273-82bc-c3df64a354af}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Images">
-      <UniqueIdentifier>{fc59466f-0298-4449-963c-6281b92ad52d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Images\PNG">
-      <UniqueIdentifier>{44420c00-6df2-404e-9e6d-63f30661ccc4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Images\STB">
-      <UniqueIdentifier>{80652b4c-232b-41e9-85f3-c239d6d0fda0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Images\DevIL">
-      <UniqueIdentifier>{76e980e8-af07-4239-9ab3-b960b2dd9681}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Shaders">
-      <UniqueIdentifier>{55a85fae-16cd-48c1-a8e7-deaa187100be}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Shaders\GLSL">
-      <UniqueIdentifier>{bdd29f62-9de0-4767-bfc1-e62d56a9a1bc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Sounds">
-      <UniqueIdentifier>{c8aeadf5-cee0-49e6-a2d2-5e5d25037053}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Sounds\OGG">
-      <UniqueIdentifier>{d31ee066-e229-4aa1-8844-5ef5e201f375}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Video">
-      <UniqueIdentifier>{9a44a94e-0ee0-4552-94fb-80c67258a495}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Video\Theora">
-      <UniqueIdentifier>{4d95c5fb-54e2-4db9-8c8d-d4fd2195f1d7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Scripts">
-      <UniqueIdentifier>{b7bec4fb-f277-457b-9995-80b5c94b4573}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Scripts\Lua">
-      <UniqueIdentifier>{a8f16ad6-c479-4168-8dc2-f91b06f2b9aa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Text">
-      <UniqueIdentifier>{d0dd3e16-7967-48aa-8d06-2c3df877d841}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Paging">
       <UniqueIdentifier>{0bad40b1-3622-4812-b531-bd3dfc159758}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Animation">
-      <UniqueIdentifier>{9595a915-293b-434e-81ec-a5b5fcb3232a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Animation\Skeleton">
-      <UniqueIdentifier>{ef4585f6-8a24-49e7-86ae-97c3dcfb7c38}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Animation\Bones">
-      <UniqueIdentifier>{be35c79f-357a-4084-85d0-b0b1e953d5de}</UniqueIdentifier>
     </Filter>
     <Filter Include="Controllers">
       <UniqueIdentifier>{bc1a1ddb-1bf0-4377-8f7e-0f74420d2a85}</UniqueIdentifier>
@@ -282,6 +213,9 @@
     </Filter>
     <Filter Include="Scene\Particles">
       <UniqueIdentifier>{1fec75a6-f36b-4570-8399-2d734a372104}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render\Material">
+      <UniqueIdentifier>{a999175a-ca4f-4a8f-b303-1301cb9445bc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -345,16 +279,10 @@
     <ClCompile Include="..\..\src\Engine\Target.cpp">
       <Filter>Render\Target</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Material.cpp">
-      <Filter>Render\Material</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Engine\Program.cpp">
       <Filter>Render\Shaders</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\ProgramManager.cpp">
-      <Filter>Render\Shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Shader.cpp">
       <Filter>Render\Shaders</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\GLSL_Program.cpp">
@@ -501,89 +429,11 @@
     <ClCompile Include="..\..\src\Engine\physics\btKinematicController.cpp">
       <Filter>Physics\Controller</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Resource.cpp">
-      <Filter>Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\ResourceManager.cpp">
-      <Filter>Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Mesh.cpp">
-      <Filter>Resources\Meshes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Milkshape3D.cpp">
-      <Filter>Resources\Meshes\Milkshape</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Milkshape3D_Loader.cpp">
-      <Filter>Resources\Meshes\Milkshape</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Font.cpp">
-      <Filter>Resources\Fonts</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Font_Loader.cpp">
-      <Filter>Resources\Fonts</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\BitmapFont.cpp">
-      <Filter>Resources\Fonts\Bitmap</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\TTF.cpp">
-      <Filter>Resources\Fonts\TrueType</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Image.cpp">
-      <Filter>Resources\Images</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dep\picopng\lodepng.cpp">
-      <Filter>Resources\Images\PNG</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dep\picopng\picopng.cpp">
-      <Filter>Resources\Images\PNG</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\PNG_Loader.cpp">
-      <Filter>Resources\Images\PNG</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dep\stb\stb_image.cpp">
-      <Filter>Resources\Images\STB</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\STB_Image_Loader.cpp">
-      <Filter>Resources\Images\STB</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\IL_Image_Loader.cpp">
-      <Filter>Resources\Images\DevIL</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\GLSL_Loader.cpp">
-      <Filter>Resources\Shaders\GLSL</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\GLSL_Text.cpp">
-      <Filter>Resources\Shaders\GLSL</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\ResourceSound.cpp">
-      <Filter>Resources\Sounds</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\OGG_Loader.cpp">
-      <Filter>Resources\Sounds\OGG</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Script.cpp">
-      <Filter>Resources\Scripts</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Lua_Loader.cpp">
-      <Filter>Resources\Scripts\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Text.cpp">
-      <Filter>Resources\Text</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Engine\Page.cpp">
       <Filter>Paging</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\PageManager.cpp">
       <Filter>Paging</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\animation\Animation.cpp">
-      <Filter>Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\animation\Skeleton.cpp">
-      <Filter>Animation\Skeleton</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\animation\Bone.cpp">
-      <Filter>Animation\Bones</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\controllers\Controller.cpp">
       <Filter>Controllers</Filter>
@@ -617,6 +467,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\Particles.cpp">
       <Filter>Scene\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Engine\MeshBuilder.cpp">
+      <Filter>Scene\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Engine\Material.cpp">
+      <Filter>Render\Material</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -683,16 +539,10 @@
     <ClInclude Include="..\..\inc\vapor\render\Target.h">
       <Filter>Render\Target</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\Material.h">
-      <Filter>Render\Material</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\vapor\render\Program.h">
       <Filter>Render\Shaders</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\render\ProgramManager.h">
-      <Filter>Render\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\Shader.h">
       <Filter>Render\Shaders</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\render\GLSL_Program.h">
@@ -866,92 +716,11 @@
     <ClInclude Include="..\..\inc\vapor\physics\btKinematicController.h">
       <Filter>Physics\Controller</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\Resource.h">
-      <Filter>Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\ResourceLoader.h">
-      <Filter>Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Engine\ResourceLoaders.h">
-      <Filter>Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\ResourceManager.h">
-      <Filter>Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Engine\ResourceTask.h">
-      <Filter>Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\Mesh.h">
-      <Filter>Resources\Meshes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\Milkshape3D.h">
-      <Filter>Resources\Meshes\Milkshape</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\Milkshape3D_Loader.h">
-      <Filter>Resources\Meshes\Milkshape</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Engine\Milkshape3D_Specs.h">
-      <Filter>Resources\Meshes\Milkshape</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\Font.h">
-      <Filter>Resources\Fonts</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\Font_Loader.h">
-      <Filter>Resources\Fonts</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\BitmapFont.h">
-      <Filter>Resources\Fonts\Bitmap</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\TTF.h">
-      <Filter>Resources\Fonts\TrueType</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\Image.h">
-      <Filter>Resources\Images</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\STB_Image_Loader.h">
-      <Filter>Resources\Images\STB</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\IL_Image_Loader.h">
-      <Filter>Resources\Images\DevIL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\GLSL_Loader.h">
-      <Filter>Resources\Shaders\GLSL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\GLSL_Text.h">
-      <Filter>Resources\Shaders\GLSL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\Sound.h">
-      <Filter>Resources\Sounds</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\OGG_Loader.h">
-      <Filter>Resources\Sounds\OGG</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\script\Script.h">
-      <Filter>Resources\Scripts</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\Lua_Loader.h">
-      <Filter>Resources\Scripts\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\Text.h">
-      <Filter>Resources\Text</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\vapor\paging\Page.h">
       <Filter>Paging</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\paging\PageManager.h">
       <Filter>Paging</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\animation\Animation.h">
-      <Filter>Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\animation\Attachment.h">
-      <Filter>Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\animation\Skeleton.h">
-      <Filter>Animation\Skeleton</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\animation\Bone.h">
-      <Filter>Animation\Bones</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\controllers\Controller.h">
       <Filter>Controllers</Filter>
@@ -982,6 +751,12 @@
     <ClInclude Include="..\..\inc\vapor\scene\Particles.h">
       <Filter>Scene\Particles</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\Engine\MeshBuilder.h">
+      <Filter>Scene\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\render\Material.h">
+      <Filter>Render\Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\doc\TODO.txt">
@@ -1008,10 +783,5 @@
     <None Include="..\..\interface\vapor.i">
       <Filter>Scripting\Bindings</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuildStep Include="..\..\inc\vapor\resources\PNG_Loader.h">
-      <Filter>Resources\Images\PNG</Filter>
-    </CustomBuildStep>
   </ItemGroup>
 </Project>

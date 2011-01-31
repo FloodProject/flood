@@ -59,13 +59,13 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)inc;$(SolutionDir)inc\vapor;$(SolutionDir)dep\jsoncpp\include;$(SolutionDir)dep\vld\include;$(SolutionDir)dep\zeromq\include;$(SolutionDir)dep\curl\include;$(SolutionDir)dep\misc\include;$(SolutionDir)dep\physfs\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)inc;$(SolutionDir)inc\vapor;$(SolutionDir)src;$(SolutionDir)dep\jsoncpp\include;$(SolutionDir)dep\vld\include;$(SolutionDir)dep\zeromq\include;$(SolutionDir)dep\curl\include;$(SolutionDir)dep\misc\include;$(SolutionDir)dep\physfs\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;___DEBUG;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>Core.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>Core/API.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <DisableSpecificWarnings>%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -175,7 +175,7 @@
     <ClCompile Include="..\..\src\Core\Core.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Core.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Core/API.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">Core.h</PrecompiledHeaderFile>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
@@ -183,7 +183,11 @@
   <ItemGroup>
     <ClInclude Include="..\..\inc\vapor\Atomic.h" />
     <ClInclude Include="..\..\inc\vapor\Chunk.h" />
-    <ClInclude Include="..\..\inc\vapor\Core.h" />
+    <ClInclude Include="..\..\inc\vapor\core\File.h" />
+    <ClInclude Include="..\..\inc\vapor\core\FileSystem.h" />
+    <ClInclude Include="..\..\inc\vapor\core\FileWatcher.h" />
+    <ClInclude Include="..\..\inc\vapor\core\Helpers.h" />
+    <ClInclude Include="..\..\inc\vapor\core\PhysfsStream.h" />
     <ClInclude Include="..\..\inc\vapor\Delegate.h" />
     <ClInclude Include="..\..\inc\vapor\Event.h" />
     <ClInclude Include="..\..\inc\vapor\FileStream.h" />
@@ -225,11 +229,8 @@
     <ClInclude Include="..\..\inc\vapor\Utilities.h" />
     <ClInclude Include="..\..\inc\vapor\DynamicLibrary.h" />
     <ClInclude Include="..\..\inc\vapor\Log.h" />
-    <ClInclude Include="..\..\inc\vapor\vfs\File.h" />
-    <ClInclude Include="..\..\inc\vapor\vfs\FileSystem.h" />
-    <ClInclude Include="..\..\inc\vapor\vfs\FileWatcher.h" />
-    <ClInclude Include="..\..\inc\vapor\vfs\PhysfsStream.h" />
     <ClInclude Include="..\..\inc\vapor\WebStream.h" />
+    <ClInclude Include="..\..\src\Core\API.h" />
     <ClInclude Include="..\..\src\Engine\FileWatcherWin32.h" />
     <ClInclude Include="..\..\inc\vapor\Profiler.h" />
     <ClInclude Include="..\..\inc\vapor\ConcurrentQueue.h" />

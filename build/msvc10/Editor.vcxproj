@@ -63,7 +63,7 @@
     <ClCompile>
       <AdditionalOptions>-Zm140 </AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)inc;$(SolutionDir)inc\vapor;$(SolutionDir)src\Editor\inc;$(SolutionDir)dep\jsoncpp\include;$(SolutionDir)dep\lua\include;$(SolutionDir)dep\openal\include;$(SolutionDir)dep\glew\include;$(SolutionDir)dep\vld\include;$(SolutionDir)dep\zeromq\include;$(SolutionDir)dep\wx\include;$(SolutionDir)dep\wx\include\msvc;$(SolutionDir)dep\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)inc;$(SolutionDir)inc\vapor;$(SolutionDir)src;$(SolutionDir)src\Editor\inc;$(SolutionDir)dep\jsoncpp\include;$(SolutionDir)dep\lua\include;$(SolutionDir)dep\openal\include;$(SolutionDir)dep\glew\include;$(SolutionDir)dep\vld\include;$(SolutionDir)dep\zeromq\include;$(SolutionDir)dep\wx\include;$(SolutionDir)dep\wx\include\msvc;$(SolutionDir)dep\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;__WXMSW__;_UNICODE;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -83,7 +83,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)dep\wx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Core.lib;Engine.lib;opengl32.lib;glewd.lib;jsoncppd.lib;pngd.lib;zlibd.lib;luad.lib;devild.lib;physfsd.lib;bulletd.lib;zmqd.lib;ws2_32.lib;wxmsw29ud_core.lib;wxbase29ud.lib;ogg_static_d.lib;vorbis_static_d.lib;vorbisfile_static_d.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Core.lib;Resources.lib;Engine.lib;opengl32.lib;glewd.lib;jsoncppd.lib;pngd.lib;zlibd.lib;luad.lib;devild.lib;physfsd.lib;bulletd.lib;zmqd.lib;ws2_32.lib;wxmsw29ud_core.lib;wxbase29ud.lib;ogg_static_d.lib;vorbis_static_d.lib;vorbisfile_static_d.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)-$(Configuration).exe</OutputFile>
       <AdditionalLibraryDirectories>$(SolutionDir)lib\$(Configuration);$(SolutionDir)dep\vld\lib\vc10;$(SolutionDir)dep\jsoncpp\lib\vc10;$(SolutionDir)dep\physfs\lib\vc10;$(SolutionDir)dep\bullet\lib\vc10;$(SolutionDir)dep\zlib\lib\vc10;$(SolutionDir)dep\glew\lib\vc10;$(SolutionDir)dep\ogg\lib\;$(SolutionDir)dep\vorbis\lib\;$(SolutionDir)dep\openal\lib\Win32;$(SolutionDir)dep\sfml\lib\vc10;$(SolutionDir)dep\lua\lib\vc10;$(SolutionDir)dep\zeromq\lib\vc10;$(SolutionDir)dep\wx\lib\vc_lib\vc10;$(SolutionDir)dep\png\lib\vc10;$(SolutionDir)dep\devil\lib\vc10;$(SolutionDir)dep\curl\lib\vc10;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -173,9 +173,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\Editor\Menus.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Log\LogFrame.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Log\LogPlugin.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Property\PropertyWatch.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneComponents.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneOperation.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Selection\SelectionManager.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Selection\SelectionPlugin.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Terrain\TerrainOperation.cpp" />

@@ -22,7 +22,7 @@ void main()
 	normal = normalize(normal);
 	normal = vp_Normal;
 	vp_TexCoord = vp_TexCoord0.st;
-	gl_Position = vp_ProjectionMatrix * vp_ModelMatrix * vp_ViewMatrix * vp_BonesMatrix[int(vp_BoneIndex)] * vec4(vp_Vertex, 1.0);
+	gl_Position = vp_ProjectionMatrix * vp_ViewMatrix * vp_ModelMatrix * vp_BonesMatrix[int(vp_BoneIndex)] * vec4(vp_Vertex, 1.0);
 } 
 
 [fragment]

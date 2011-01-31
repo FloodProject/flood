@@ -106,39 +106,6 @@
     <Filter Include="Patterns\Pointers">
       <UniqueIdentifier>{e5eb86c7-4197-4458-b4e6-583690b8a259}</UniqueIdentifier>
     </Filter>
-    <Filter Include="IO">
-      <UniqueIdentifier>{0d33dec3-b0fe-4cd2-9370-7e0289d1e0a1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="IO\Streams">
-      <UniqueIdentifier>{4ba939fd-b107-4e66-a533-1d4544e3ca60}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="IO\Streams\File">
-      <UniqueIdentifier>{a43b1a03-12a9-4af2-9420-ea918510e202}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="IO\Streams\Web">
-      <UniqueIdentifier>{00995d4d-9f14-4038-8b88-242280d3dec4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="IO\Streams\Physfs">
-      <UniqueIdentifier>{4b95ea0e-9dba-4253-90ad-e95e695160d2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="IO\Streams\Memory">
-      <UniqueIdentifier>{dad22447-8e41-4e42-ba29-c3e33f8187ac}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="IO\Filesystem">
-      <UniqueIdentifier>{90db7c90-f20e-4c6b-8bb6-35edaa19de88}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="IO\Serialization">
-      <UniqueIdentifier>{088c40f7-8525-4913-b739-988ae37e3186}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="IO\Watcher">
-      <UniqueIdentifier>{946baa8f-8d96-40b9-a4bf-e6edfac7dca9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="IO\Serialization\Binary">
-      <UniqueIdentifier>{4b3b4aef-1a85-40a9-8833-d6e352019dac}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="IO\Serialization\JSON">
-      <UniqueIdentifier>{6de8a758-dc9d-4af8-aa3f-b1459f834ee6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Concurrency\Queue">
       <UniqueIdentifier>{fc2cf6b3-8890-4e2c-8f80-d1ec4fe2a731}</UniqueIdentifier>
     </Filter>
@@ -147,6 +114,36 @@
     </Filter>
     <Filter Include="Debug">
       <UniqueIdentifier>{6db6eed6-57b4-4ad7-9a8a-0e679e2a3e19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serialization">
+      <UniqueIdentifier>{088c40f7-8525-4913-b739-988ae37e3186}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serialization\Binary">
+      <UniqueIdentifier>{4b3b4aef-1a85-40a9-8833-d6e352019dac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serialization\JSON">
+      <UniqueIdentifier>{6de8a758-dc9d-4af8-aa3f-b1459f834ee6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Filesystem">
+      <UniqueIdentifier>{90db7c90-f20e-4c6b-8bb6-35edaa19de88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Filesystem\Watcher">
+      <UniqueIdentifier>{946baa8f-8d96-40b9-a4bf-e6edfac7dca9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Streams">
+      <UniqueIdentifier>{4ba939fd-b107-4e66-a533-1d4544e3ca60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Streams\File">
+      <UniqueIdentifier>{a43b1a03-12a9-4af2-9420-ea918510e202}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Streams\Web">
+      <UniqueIdentifier>{00995d4d-9f14-4038-8b88-242280d3dec4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Streams\Physfs">
+      <UniqueIdentifier>{4b95ea0e-9dba-4253-90ad-e95e695160d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Streams\Memory">
+      <UniqueIdentifier>{dad22447-8e41-4e42-ba29-c3e33f8187ac}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -215,7 +212,7 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Core\Core.cpp" />
     <ClCompile Include="..\..\src\Core\Stream.cpp">
-      <Filter>IO\Streams</Filter>
+      <Filter>Streams</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\Network.cpp">
       <Filter>Network</Filter>
@@ -224,16 +221,16 @@
       <Filter>Network\Messages</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\File.cpp">
-      <Filter>IO\Filesystem</Filter>
+      <Filter>Filesystem</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\FileSystem.cpp">
-      <Filter>IO\Filesystem</Filter>
+      <Filter>Filesystem</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\FileWatcher.cpp">
-      <Filter>IO\Watcher</Filter>
+      <Filter>Filesystem\Watcher</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\FileWatcherWin32.cpp">
-      <Filter>IO\Watcher</Filter>
+      <Filter>Filesystem\Watcher</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\reflection\Class.cpp">
       <Filter>Reflection\Class</Filter>
@@ -260,13 +257,13 @@
       <Filter>Concurrency\Atomic</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\FileStream.cpp">
-      <Filter>IO\Streams\File</Filter>
+      <Filter>Streams\File</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\WebStream.cpp">
-      <Filter>IO\Streams\Web</Filter>
+      <Filter>Streams\Web</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\PhysfsStream.cpp">
-      <Filter>IO\Streams\Physfs</Filter>
+      <Filter>Streams\Physfs</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\Log.cpp">
       <Filter>Logs</Filter>
@@ -281,13 +278,13 @@
       <Filter>Patterns\Subsystem</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\io\Serialization.cpp">
-      <Filter>IO\Serialization</Filter>
+      <Filter>Serialization</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\io\JsonSerializer.cpp">
-      <Filter>IO\Serialization\JSON</Filter>
+      <Filter>Serialization\JSON</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\io\BinarySerializer.cpp">
-      <Filter>IO\Serialization\Binary</Filter>
+      <Filter>Serialization\Binary</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\reflection\Object.cpp">
       <Filter>Reflection</Filter>
@@ -391,21 +388,11 @@
       <Filter>Network\Messages</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\Stream.h">
-      <Filter>IO\Streams</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\vfs\File.h">
-      <Filter>IO\Filesystem</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\vfs\FileSystem.h">
-      <Filter>IO\Filesystem</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\vfs\FileWatcher.h">
-      <Filter>IO\Watcher</Filter>
+      <Filter>Streams</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Engine\FileWatcherWin32.h">
-      <Filter>IO\Watcher</Filter>
+      <Filter>Filesystem\Watcher</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\Core.h" />
     <ClInclude Include="..\..\inc\vapor\core\Class.h">
       <Filter>Reflection\Class</Filter>
     </ClInclude>
@@ -434,13 +421,10 @@
       <Filter>Concurrency\Atomic</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\FileStream.h">
-      <Filter>IO\Streams\File</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\vfs\PhysfsStream.h">
-      <Filter>IO\Streams\Physfs</Filter>
+      <Filter>Streams\File</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\WebStream.h">
-      <Filter>IO\Streams\Web</Filter>
+      <Filter>Streams\Web</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\ReferenceCount.h">
       <Filter>Patterns\Pointers</Filter>
@@ -458,16 +442,16 @@
       <Filter>Reflection</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\Serialization.h">
-      <Filter>IO\Serialization</Filter>
+      <Filter>Serialization</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\io\JsonSerializer.h">
-      <Filter>IO\Serialization\JSON</Filter>
+      <Filter>Serialization\JSON</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\io\BinarySerializer.h">
-      <Filter>IO\Serialization\Binary</Filter>
+      <Filter>Serialization\Binary</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\Chunk.h">
-      <Filter>IO\Serialization\Binary</Filter>
+      <Filter>Serialization\Binary</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\Object.h">
       <Filter>Reflection</Filter>
@@ -477,6 +461,22 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\StackWalker.h">
       <Filter>Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\core\Helpers.h">
+      <Filter>Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Core\API.h" />
+    <ClInclude Include="..\..\inc\vapor\core\File.h">
+      <Filter>Filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\core\FileSystem.h">
+      <Filter>Filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\core\FileWatcher.h">
+      <Filter>Filesystem\Watcher</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\core\PhysfsStream.h">
+      <Filter>Streams\Physfs</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

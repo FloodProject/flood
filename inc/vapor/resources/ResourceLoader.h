@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "vapor/Stream.h"
-#include "vapor/resources/Resource.h"
+#include "Stream.h"
+#include "Resources/Resource.h"
 
 namespace vapor {
 
@@ -29,9 +29,10 @@ typedef std::list< std::string > ExtensionList;
  * The loader also provides the extensions of those formats.
  */
 
-class VAPOR_API ResourceLoader
+class RESOURCE_API ResourceLoader
 {
 	DECLARE_UNCOPYABLE(ResourceLoader)
+	DECLARE_CLASS_()
 
 public:
 

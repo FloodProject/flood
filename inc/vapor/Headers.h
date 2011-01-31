@@ -87,10 +87,10 @@
 // Animation-related Includes
 //---------------------------------------------------------------------//
 
-#include <vapor/animation/Animation.h>
-#include <vapor/animation/Skeleton.h>
-#include <vapor/animation/Bone.h>
-#include <vapor/animation/Attachment.h>
+#include <vapor/resources/Animation.h>
+#include <vapor/resources/Skeleton.h>
+#include <vapor/resources/Bone.h>
+#include <vapor/resources/Attachment.h>
 
 //---------------------------------------------------------------------//
 // Controller-related Includes
@@ -113,9 +113,9 @@
 // VFS-related Includes
 //---------------------------------------------------------------------//
 
-#include <vapor/vfs/FileSystem.h>
-#include <vapor/vfs/FileWatcher.h>
-#include <vapor/vfs/File.h>
+#include <vapor/Core/FileSystem.h>
+#include <vapor/Core/FileWatcher.h>
+#include <vapor/Core/File.h>
 
 //---------------------------------------------------------------------//
 // GUI-related Includes

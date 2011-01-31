@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "resources/Resource.h"
+#include "Resources/Resource.h"
 #include "math/Color.h"
 
 namespace vapor {
@@ -23,10 +23,20 @@ struct PixelFormat
 {
 	enum Enum 
 	{
+		// Uncompressed formats
 		R8G8B8A8 = 0,
 		R8G8B8,
 		B8G8R8,
 		B8G8R8A8,
+
+		// Compressed formats
+		DXT1,
+		DXT1a,
+		DXT3,
+		DXT5,
+		DXT5nm,
+
+		// Misc. formats
 		Depth,
 		Unknown
 	};
@@ -40,13 +50,9 @@ struct PixelFormat
  * Represents an image in the engine. An image usually holds uncompressed 
  * image data, stored in an pixel array in a given pixel format specified 
  * at creation time.
- *
- * The image data cannot be directly modified as is. Later we could add a
- * interface for locking the data buffer to be able to directly modify it.
- * (TODO: getBuffer? does it cause any problems?)
  */
 
-class VAPOR_API Image : public Resource
+class RESOURCE_API Image : public Resource
 {
 	DECLARE_CLASS_()
 
@@ -62,10 +68,13 @@ public:
 	ACESSOR(Height, const uint, height)
 
 	// Gets/sets the pixel format of the image.
-	ACESSOR(PixelFormat, PixelFormat::Enum, pixelFormat)
+	ACESSOR(PixelFormat, PixelFormat::Enum, format)
 
 	// Gets/sets the buffer containing the image data.
 	ACESSOR(Buffer, const std::vector<byte>&, buffer)
+
+	// Returns if the image is in a compressed format.
+	bool isCompressed() const;
 
 	// Gets/sets the buffer containing the image data.
 	std::vector<byte>& getBuffer() { return buffer; }
@@ -75,9 +84,6 @@ public:
 
 	// Sets the image with the given color.
 	void setColor( const Color& color );
-
-	// Saves the image contents to a file.
-	void save( const std::string& filename );
 
 	// Prints image information to the log.
 	void log() const;
@@ -91,13 +97,27 @@ private:
 	uint height;
 
 	// Pixel format.
-	PixelFormat::Enum pixelFormat;
+	PixelFormat::Enum format;
 
 	// Image data.
 	std::vector<byte> buffer;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Image );
+
+class RESOURCE_API ImageWriter
+{
+public:
+
+	// Saves the image contents to a file.
+	void save( const ImagePtr& image, const std::string& filename );
+
+	bool convertPNG( const ImagePtr& image );
+
+protected:
+
+	std::vector<byte> output;
+};
 
 //-----------------------------------//
 

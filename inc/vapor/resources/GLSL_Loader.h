@@ -8,11 +8,11 @@
 
 #pragma once
 
-#include "vapor/CompileOptions.h"
+#include "CompileOptions.h"
 
 #ifdef VAPOR_SHADER_GLSL
 
-#include "vapor/resources/ResourceLoader.h"
+#include "Resources/ResourceLoader.h"
 
 namespace vapor {
 
@@ -24,6 +24,8 @@ namespace vapor {
 
 class GLSL_Loader : public ResourceLoader
 {
+	DECLARE_CLASS_()
+
 public:
 
 	GLSL_Loader();

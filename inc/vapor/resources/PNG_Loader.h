@@ -8,12 +8,12 @@
 
 #pragma once
 
-#include "vapor/CompileOptions.h"
+#include "CompileOptions.h"
 
 #ifdef VAPOR_IMAGE_PICOPNG
 
-#include "vapor/resources/ResourceLoader.h"
-#include "vapor/resources/Image.h"
+#include "Resources/ResourceLoader.h"
+#include "Resources/Image.h"
 
 namespace vapor {
 
@@ -26,6 +26,8 @@ namespace vapor {
 
 class PNG_Pico_Loader : public ResourceLoader
 {
+	DECLARE_CLASS_()
+
 public:
 
 	PNG_Pico_Loader();

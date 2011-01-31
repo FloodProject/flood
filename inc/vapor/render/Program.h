@@ -8,12 +8,12 @@
 
 #pragma once
 
-#include "vapor/render/Shader.h"
-#include "vapor/render/VertexBuffer.h"
-#include "vapor/math/Matrix4x3.h"
-#include "vapor/math/Matrix4x4.h"
-#include "vapor/math/EulerAngles.h"
-#include "vapor/math/Color.h"
+#include "render/Shader.h"
+#include "render/VertexBuffer.h"
+#include "math/Matrix4x3.h"
+#include "math/Matrix4x4.h"
+#include "math/EulerAngles.h"
+#include "math/Color.h"
 
 namespace vapor {
 
@@ -96,10 +96,6 @@ public:
 
 	// Adds a named 4x4 matrix vector uniform to the program.
 	virtual void setUniform( const std::string& slot, const std::vector<Matrix4x4>& vec ) = 0;
-
-	// Serialization.
-	//virtual void load( const std::string& name ) = 0;
-	//virtual void save( const std::string& name ) = 0;
 
 protected:
 

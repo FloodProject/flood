@@ -32,7 +32,7 @@ typedef int	ResourceHandle;
  * only be fully loaded when the resource status changes to loaded.
  */
 
-struct VAPOR_API ResourceStatus
+struct RESOURCE_API ResourceStatus
 {
 	enum Enum
 	{
@@ -51,7 +51,7 @@ struct VAPOR_API ResourceStatus
  * related resources together, and for managing the data.
  */
 
-struct VAPOR_API ResourceGroup
+struct RESOURCE_API ResourceGroup
 {
 	enum Enum
 	{
@@ -81,7 +81,7 @@ class ResourceLoader;
  * resource from a network connection).
  */
 
-class VAPOR_API Resource : public ReferenceCounted
+class RESOURCE_API Resource : public ReferenceCounted
 {
 	DECLARE_UNCOPYABLE(Resource)
 	DECLARE_CLASS_()

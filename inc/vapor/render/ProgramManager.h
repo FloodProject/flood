@@ -8,25 +8,23 @@
 
 #pragma once
 
-#include "vapor/render/Program.h"
+#include "render/Program.h"
 
 FWD_DECL_INTRUSIVE(Text)
 
 namespace vapor {
 
+//-----------------------------------//
+
+typedef std::map<std::string, ProgramPtr> ProgramsMap;
+typedef std::pair<const std::string&, ProgramPtr> ProgramsPair;
+
 class ResourceManager;
 struct ResourceEvent;
 
-//-----------------------------------//
-
 /**
  * Manages a set of programs. The rest of the engine, when needing a 
- * program will ask the ProgramManager for the program with a name.
- * This way the engine will be able to provide, for example, fallback 
- * programs for when it is not possible to load the requested program.
- * This will be pretty useful when resource auto-loading is added, if a 
- * given file is corrupted we can safely render the scene, falling back
- * to default programs.
+ * program will request the program for a given shader.
  */
 
 class VAPOR_API ProgramManager
@@ -41,13 +39,13 @@ public:
 	// Gets a program given a name identifier.
 	ProgramPtr getProgram( const std::string& program );
 
-private:
-
 	// Registers a new program in the manager.
 	bool registerProgram( const std::string& name, const ProgramPtr& program );
 
-	// Creates the shaders given their source text.
-	void createShaders( const TextPtr& );
+	// Creates a program given their shader text.
+	ProgramPtr createProgram( const TextPtr& );
+
+protected:
 
 	// Populates a shader when the text file is loaded.
 	void onLoad( const ResourceEvent& evt );
@@ -56,10 +54,7 @@ private:
 	void onReload( const ResourceEvent& evt );
 
 	// Maps the identifiers to the programs.
-	std::map< std::string, ProgramPtr > programs;
-	typedef std::pair< const std::string&, ProgramPtr > programPair;
-
-	ResourceManager* rm;
+	ProgramsMap programs;
 };
 
 //-----------------------------------//

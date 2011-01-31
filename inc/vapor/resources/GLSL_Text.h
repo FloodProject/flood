@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "resources/Text.h"
+#include "Resources/Text.h"
 
 namespace vapor {
 
@@ -20,7 +20,7 @@ namespace vapor {
  * vertex and pixel shaders.
  */
 
-class VAPOR_API GLSL_Text : public Text
+class RESOURCE_API GLSL_Text : public Text
 {
 public:
 

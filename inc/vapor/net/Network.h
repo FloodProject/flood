@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "vapor/net/Message.h"
-#include "vapor/net/MessageHandler.h"
+#include "net/Message.h"
+#include "net/MessageHandler.h"
 #include "ConcurrentQueue.h"
 
 namespace vapor {

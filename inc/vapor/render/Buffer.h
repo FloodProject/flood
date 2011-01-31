@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "render/GL.h"
 #include "ReferenceCount.h"
 
 namespace vapor {
@@ -79,7 +78,7 @@ public:
 protected:
 
 	// Converts the buffer enums to the equivalent GL ones.
-	GLenum getGLBufferType();
+	int getGLBufferType();
 
 	uint id;
 	

@@ -11,8 +11,8 @@
 //#ifdef VAPOR_VFS_PHYSFS
 
 #include "Subsystem.h"
-#include "vfs/File.h"
-#include "vfs/FileWatcher.h"
+#include "Core/File.h"
+#include "Core/FileWatcher.h"
 
 namespace vapor {
 

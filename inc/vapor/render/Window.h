@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "vapor/math/Vector2.h"
-#include "vapor/render/Target.h"
-#include "vapor/input/InputManager.h"
+#include "math/Vector2.h"
+#include "render/Target.h"
+#include "input/InputManager.h"
 
 namespace vapor {
 
@@ -51,35 +51,38 @@ public:
 	Window (const WindowSettings& settings);
 
 	// Updates the window content.
-	virtual void update() {} // = 0;
+	virtual void update() {}
 
 	// Sets this rendering target as the current.
-	virtual void makeCurrent() {} // = 0;
+	virtual void makeCurrent() {}
 
 	// Shows/hides the window.
-	virtual void show( bool hide = false ) {} // = 0;
+	virtual void show( bool hide = false ) {}
 
 	// Handles the event loop of the window.
-	virtual bool pumpEvents() { return true; } // = 0;
+	virtual bool pumpEvents() { return true; }
 
 	// Sets the title of the window.
-	virtual void setTitle (const std::string& title) {} // = 0;
-
-	// Gets the input manager.
-	virtual InputManager* getInputManager() { return nullptr; } // = 0;
+	virtual void setTitle (const std::string& title) {}
 
 	// Sets the visibility of the mouse cursor.
-	virtual void setCursorVisible( bool state ) {} // = 0;
+	virtual void setCursorVisible( bool state ) {}
 
 	// Gets the visibility of the mouse cursor.
-	virtual bool isCursorVisible() const { return false; } // = 0;
+	virtual bool isCursorVisible() const { return false; }
+
+	// Sets the capture of the mouse cursor.
+	virtual void setCursorCapture( bool state ) {}
 
 	// Gets the cursor position on screen.
-	virtual Vector2i getCursorPosition() const { return Vector2i::Zero; } // = 0;
+	virtual Vector2i getCursorPosition() const { return Vector2i::Zero; }
 
 	// Sets the cursor position on screen.
-	virtual void setCursorPosition( int x, int y ) {} // = 0;
+	virtual void setCursorPosition( int x, int y ) {}
 	void setCursorPosition( const Vector2i& pos );
+
+	// Gets the input manager.
+	virtual InputManager* getInputManager() { return nullptr; }
 
 	// Gets the window settings.
 	GETTER(Settings, const Settings&, settings)

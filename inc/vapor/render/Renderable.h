@@ -11,8 +11,24 @@
 #include "render/VertexBuffer.h"
 #include "render/IndexBuffer.h"
 #include "render/Material.h"
-#include "render/GL.h"
 #include "Event.h"
+
+FWD_DECL_INTRUSIVE(Material)
+
+#define GL_POINTS 0x0000
+#define GL_LINES 0x0001
+#define GL_LINE_LOOP 0x0002
+#define GL_LINE_STRIP 0x0003
+#define GL_TRIANGLES 0x0004
+#define GL_TRIANGLE_STRIP 0x0005
+#define GL_TRIANGLE_FAN 0x0006
+#define GL_QUADS 0x0007
+#define GL_QUAD_STRIP 0x0008
+#define GL_POLYGON 0x0009
+
+#define GL_POINT 0x1B00
+#define GL_LINE 0x1B01
+#define GL_FILL 0x1B02
 
 namespace vapor {
 

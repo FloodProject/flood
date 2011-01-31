@@ -8,19 +8,17 @@
 
 #pragma once
 
-#include "resources/Resource.h"
+#include "Resources/Resource.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-class State;
-
 /**
  * Script that can be executed by a script state.
  */
 
-class VAPOR_API Script : public Resource
+class RESOURCE_API Script : public Resource
 {
 	DECLARE_CLASS_()
 

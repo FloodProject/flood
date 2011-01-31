@@ -23,7 +23,7 @@ namespace MetaType
 	enum Enum
 	{
 		Primitive,
-		Struct,
+		Structure,
 		Class,
 		Enumeration
 	};
@@ -42,12 +42,6 @@ class CORE_API Type
 public:
 
 	virtual ~Type();
-
-	// Gets the name of the type.
-	const std::string& getName() const;
-
-	// Gets the parent of the type.
-	const Type* getParent() const;
 
 	// Gets if this type represents a primitive.
 	bool isPrimitive() const;
@@ -76,11 +70,8 @@ public:
 		return parent->is<T>() || parent->inherits<T>();
 	}
 
-	// Gets the type registry.
-	static Registry& GetRegistry();
-
 	// Meta type of the type.
-	MetaType::Enum metaType;
+	MetaType::Enum type;
 
 	// Name of the type.
 	const std::string name;
@@ -91,6 +82,9 @@ public:
 	// Size of the type.
 	int size;
 
+	// Gets the type registry.
+	static Registry& GetRegistry();
+
 protected:
 
 	Type(MetaType::Enum type, const std::string& name, int size);
@@ -98,8 +92,8 @@ protected:
 
 private:
 
-	// Registers the type in the registry.
-	void registerInstance();
+	// Performs initialization.
+	void init();
 };
 
 //-----------------------------------//

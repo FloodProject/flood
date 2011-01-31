@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "vapor/animation/Bone.h"
+#include "Resources/Bone.h"
 
 namespace vapor {
 

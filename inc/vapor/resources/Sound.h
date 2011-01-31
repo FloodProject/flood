@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "resources/Resource.h"
+#include "Resources/Resource.h"
 
 namespace vapor {
 
@@ -18,7 +18,7 @@ namespace vapor {
  * Represents a sound resource that holds uncompressed audio data.
  */
 
-class VAPOR_API Sound : public Resource
+class RESOURCE_API Sound : public Resource
 {
 	DECLARE_CLASS_()
 

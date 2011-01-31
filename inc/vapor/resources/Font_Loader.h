@@ -10,10 +10,10 @@
 
 #ifdef VAPOR_FONT_FREETYPE2
 
-#include "vapor/resources/ResourceLoader.h"	
-#include "vapor/resources/Font.h"
-#include "vapor/resources/BitmapFont.h"
-#include "vapor/resources/TTF.h"
+#include "Resources/ResourceLoader.h"	
+#include "Resources/Font.h"
+#include "Resources/BitmapFont.h"
+#include "Resources/TTF.h"
 
 namespace vapor {
 
@@ -45,8 +45,10 @@ namespace vapor {
  *		}   
  */
 
-class VAPOR_API Font_Loader : public ResourceLoader
+class RESOURCE_API Font_Loader : public ResourceLoader
 {
+	DECLARE_CLASS_()
+
 public:
 
 	Font_Loader();

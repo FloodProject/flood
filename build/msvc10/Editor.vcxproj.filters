@@ -211,6 +211,13 @@
     <ClCompile Include="..\..\src\Editor\plugins\Property\PropertyWatch.cpp">
       <Filter>Plugins\Property</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Editor\Menus.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneComponents.cpp">
+      <Filter>Plugins\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneOperation.cpp">
+      <Filter>Plugins\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Editor\inc\RenderControl.h">

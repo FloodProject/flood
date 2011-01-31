@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Stream.h"
-#include "vfs/File.h"
+#include "Core/File.h"
 
 namespace vapor {
 

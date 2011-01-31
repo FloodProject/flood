@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include <functional>
 #include "Atomic.h"
 #include "Log.h"
+#include <functional>
 
 namespace vapor {
 

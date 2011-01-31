@@ -10,8 +10,12 @@
 
 #ifdef VAPOR_AUDIO_OGG
 
-#include "resources/ResourceLoader.h"
-#include "resources/Sound.h"
+#include "Resources/ResourceLoader.h"
+#include "Resources/Sound.h"
+
+#ifdef VAPOR_COMPILER_MSVC
+	#pragma warning(disable : 4244 )
+#endif
 
 #include <vorbis/vorbisfile.h>
 
@@ -23,8 +27,10 @@ namespace vapor {
  * Loader for OGG Vorbis files.
  */
 
-class OGG_Loader : public ResourceLoader
+class RESOURCE_API OGG_Loader : public ResourceLoader
 {
+	DECLARE_CLASS_()
+
 public:
 
 	OGG_Loader();

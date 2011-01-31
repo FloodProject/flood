@@ -13,9 +13,7 @@
 #include "math/Matrix4x3.h"
 #include "ReferenceCount.h"
 
-FWD_DECL_INTRUSIVE(Mesh)
 FWD_DECL_INTRUSIVE(Bone)
-FWD_DECL_INTRUSIVE(Skeleton)
 FWD_DECL_INTRUSIVE(Animation)
 
 namespace vapor {
@@ -97,6 +95,16 @@ struct AnimationState
 
 	// Interpolated bones matrices.
 	std::vector<Matrix4x3> bonesMatrix;
+};
+
+//-----------------------------------//
+
+struct AnimationMetadata
+{
+	int start;
+	int end;
+	std::string name;
+	float startTime;
 };
 
 //-----------------------------------//

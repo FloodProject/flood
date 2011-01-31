@@ -1514,95 +1514,103 @@ SWIG_Lua_dostring(lua_State *L, const char* str) {
 #define SWIGTYPE_p_Event0T_t swig_types[0]
 #define SWIGTYPE_p_Event1T_std__shared_ptrT_vapor__Component_t_const_R_t swig_types[1]
 #define SWIGTYPE_p_Event1T_std__shared_ptrT_vapor__Entity_t_const_R_t swig_types[2]
-#define SWIGTYPE_p_float swig_types[3]
-#define SWIGTYPE_p_int swig_types[4]
-#define SWIGTYPE_p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t swig_types[5]
-#define SWIGTYPE_p_std__mapT_vapor__RenderStage__Enum_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t_t swig_types[6]
-#define SWIGTYPE_p_std__pairT_Class_const_p_std__shared_ptrT_vapor__Component_t_t swig_types[7]
-#define SWIGTYPE_p_std__pairT_vapor__RenderStage__Enum_const_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t_t swig_types[8]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Camera_t swig_types[9]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__CharacterController_t swig_types[10]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Component_t swig_types[11]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Controller_t swig_types[12]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Entity_t swig_types[13]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Geometry_t swig_types[14]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Group_t swig_types[15]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Light_t swig_types[16]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Model_t swig_types[17]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Scene_t swig_types[18]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Transform_t swig_types[19]
-#define SWIGTYPE_p_std__vectorT_std__shared_ptrT_vapor__Entity_t_t swig_types[20]
-#define SWIGTYPE_p_std__vectorT_std__shared_ptrT_vapor__Geometry_t_t swig_types[21]
-#define SWIGTYPE_p_std__vectorT_vapor__RayQueryResult_t swig_types[22]
-#define SWIGTYPE_p_std__vectorT_vapor__RefPtrT_vapor__Animation_t_t swig_types[23]
-#define SWIGTYPE_p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t swig_types[24]
-#define SWIGTYPE_p_std__weak_ptrT_vapor__Camera_t swig_types[25]
-#define SWIGTYPE_p_std__weak_ptrT_vapor__CharacterController_t swig_types[26]
-#define SWIGTYPE_p_std__weak_ptrT_vapor__Component_t swig_types[27]
-#define SWIGTYPE_p_std__weak_ptrT_vapor__Controller_t swig_types[28]
-#define SWIGTYPE_p_std__weak_ptrT_vapor__Entity_t swig_types[29]
-#define SWIGTYPE_p_std__weak_ptrT_vapor__Geometry_t swig_types[30]
-#define SWIGTYPE_p_std__weak_ptrT_vapor__Scene_t swig_types[31]
-#define SWIGTYPE_p_unsigned_char swig_types[32]
-#define SWIGTYPE_p_unsigned_int swig_types[33]
-#define SWIGTYPE_p_unsigned_long swig_types[34]
-#define SWIGTYPE_p_unsigned_short swig_types[35]
-#define SWIGTYPE_p_vapor__BoundingBox swig_types[36]
-#define SWIGTYPE_p_vapor__Camera swig_types[37]
-#define SWIGTYPE_p_vapor__CharacterController swig_types[38]
-#define SWIGTYPE_p_vapor__Color swig_types[39]
-#define SWIGTYPE_p_vapor__Component swig_types[40]
-#define SWIGTYPE_p_vapor__Controller swig_types[41]
-#define SWIGTYPE_p_vapor__Entity swig_types[42]
-#define SWIGTYPE_p_vapor__EulerAngles swig_types[43]
-#define SWIGTYPE_p_vapor__Frustum swig_types[44]
-#define SWIGTYPE_p_vapor__Geometry swig_types[45]
-#define SWIGTYPE_p_vapor__Group swig_types[46]
-#define SWIGTYPE_p_vapor__InputEvent swig_types[47]
-#define SWIGTYPE_p_vapor__KeyEvent swig_types[48]
-#define SWIGTYPE_p_vapor__KeyboardEventType swig_types[49]
-#define SWIGTYPE_p_vapor__Keys swig_types[50]
-#define SWIGTYPE_p_vapor__Light swig_types[51]
-#define SWIGTYPE_p_vapor__LightType swig_types[52]
-#define SWIGTYPE_p_vapor__Matrix4x3 swig_types[53]
-#define SWIGTYPE_p_vapor__Mesh swig_types[54]
-#define SWIGTYPE_p_vapor__Model swig_types[55]
-#define SWIGTYPE_p_vapor__MouseButton swig_types[56]
-#define SWIGTYPE_p_vapor__MouseButtonEvent swig_types[57]
-#define SWIGTYPE_p_vapor__MouseDragEvent swig_types[58]
-#define SWIGTYPE_p_vapor__MouseEvent swig_types[59]
-#define SWIGTYPE_p_vapor__MouseEventType swig_types[60]
-#define SWIGTYPE_p_vapor__MouseInfo swig_types[61]
-#define SWIGTYPE_p_vapor__MouseMoveEvent swig_types[62]
-#define SWIGTYPE_p_vapor__MouseWheelEvent swig_types[63]
-#define SWIGTYPE_p_vapor__Quaternion swig_types[64]
-#define SWIGTYPE_p_vapor__Ray swig_types[65]
-#define SWIGTYPE_p_vapor__RayQueryResult swig_types[66]
-#define SWIGTYPE_p_vapor__RayTriangleQueryResult swig_types[67]
-#define SWIGTYPE_p_vapor__RefPtrT_vapor__Animation_t swig_types[68]
-#define SWIGTYPE_p_vapor__RefPtrT_vapor__Attachment_t swig_types[69]
-#define SWIGTYPE_p_vapor__RefPtrT_vapor__Bone_t swig_types[70]
-#define SWIGTYPE_p_vapor__RefPtrT_vapor__Mesh_t swig_types[71]
-#define SWIGTYPE_p_vapor__RefPtrT_vapor__Renderable_t swig_types[72]
-#define SWIGTYPE_p_vapor__RefPtrT_vapor__Resource_t swig_types[73]
-#define SWIGTYPE_p_vapor__RefPtrT_vapor__Skeleton_t swig_types[74]
-#define SWIGTYPE_p_vapor__ReferenceCounted swig_types[75]
-#define SWIGTYPE_p_vapor__RenderBlock swig_types[76]
-#define SWIGTYPE_p_vapor__RenderQueue swig_types[77]
-#define SWIGTYPE_p_vapor__RenderView swig_types[78]
-#define SWIGTYPE_p_vapor__Resource swig_types[79]
-#define SWIGTYPE_p_vapor__Scene swig_types[80]
-#define SWIGTYPE_p_vapor__Transform swig_types[81]
-#define SWIGTYPE_p_vapor__Vector2TT_float_t swig_types[82]
-#define SWIGTYPE_p_vapor__Vector2TT_int_t swig_types[83]
-#define SWIGTYPE_p_vapor__Vector3TT_double_t swig_types[84]
-#define SWIGTYPE_p_vapor__Vector3TT_float_t swig_types[85]
-#define SWIGTYPE_p_vapor__Vector3TT_int_t swig_types[86]
-#define SWIGTYPE_p_vapor__Vector4TT_double_t swig_types[87]
-#define SWIGTYPE_p_vapor__Vector4TT_float_t swig_types[88]
-#define SWIGTYPE_p_vapor__Vector4TT_int_t swig_types[89]
-static swig_type_info *swig_types[91];
-static swig_module_info swig_module = {swig_types, 90, 0, 0, 0, 0};
+#define SWIGTYPE_p_SkeletonPtr swig_types[3]
+#define SWIGTYPE_p_a_3__vapor__Vector3TT_float_t swig_types[4]
+#define SWIGTYPE_p_float swig_types[5]
+#define SWIGTYPE_p_int swig_types[6]
+#define SWIGTYPE_p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t swig_types[7]
+#define SWIGTYPE_p_std__mapT_vapor__RenderStage__Enum_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t_t swig_types[8]
+#define SWIGTYPE_p_std__pairT_Class_const_p_std__shared_ptrT_vapor__Component_t_t swig_types[9]
+#define SWIGTYPE_p_std__pairT_vapor__RenderStage__Enum_const_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t_t swig_types[10]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Camera_t swig_types[11]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__CharacterController_t swig_types[12]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Component_t swig_types[13]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Controller_t swig_types[14]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Entity_t swig_types[15]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Geometry_t swig_types[16]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Group_t swig_types[17]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Light_t swig_types[18]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Model_t swig_types[19]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Scene_t swig_types[20]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Transform_t swig_types[21]
+#define SWIGTYPE_p_std__string swig_types[22]
+#define SWIGTYPE_p_std__vectorT_float_t swig_types[23]
+#define SWIGTYPE_p_std__vectorT_std__shared_ptrT_vapor__Entity_t_t swig_types[24]
+#define SWIGTYPE_p_std__vectorT_std__shared_ptrT_vapor__Geometry_t_t swig_types[25]
+#define SWIGTYPE_p_std__vectorT_vapor__MeshGroup_t swig_types[26]
+#define SWIGTYPE_p_std__vectorT_vapor__RayQueryResult_t swig_types[27]
+#define SWIGTYPE_p_std__vectorT_vapor__RefPtrT_vapor__Animation_t_t swig_types[28]
+#define SWIGTYPE_p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t swig_types[29]
+#define SWIGTYPE_p_std__vectorT_vapor__Renderable_p_t swig_types[30]
+#define SWIGTYPE_p_std__vectorT_vapor__Vector3TT_float_t_t swig_types[31]
+#define SWIGTYPE_p_std__weak_ptrT_vapor__Camera_t swig_types[32]
+#define SWIGTYPE_p_std__weak_ptrT_vapor__CharacterController_t swig_types[33]
+#define SWIGTYPE_p_std__weak_ptrT_vapor__Component_t swig_types[34]
+#define SWIGTYPE_p_std__weak_ptrT_vapor__Controller_t swig_types[35]
+#define SWIGTYPE_p_std__weak_ptrT_vapor__Entity_t swig_types[36]
+#define SWIGTYPE_p_std__weak_ptrT_vapor__Geometry_t swig_types[37]
+#define SWIGTYPE_p_std__weak_ptrT_vapor__Scene_t swig_types[38]
+#define SWIGTYPE_p_unsigned_char swig_types[39]
+#define SWIGTYPE_p_unsigned_int swig_types[40]
+#define SWIGTYPE_p_unsigned_long swig_types[41]
+#define SWIGTYPE_p_unsigned_short swig_types[42]
+#define SWIGTYPE_p_vapor__BoundingBox swig_types[43]
+#define SWIGTYPE_p_vapor__Camera swig_types[44]
+#define SWIGTYPE_p_vapor__CharacterController swig_types[45]
+#define SWIGTYPE_p_vapor__Color swig_types[46]
+#define SWIGTYPE_p_vapor__Component swig_types[47]
+#define SWIGTYPE_p_vapor__Controller swig_types[48]
+#define SWIGTYPE_p_vapor__Entity swig_types[49]
+#define SWIGTYPE_p_vapor__EulerAngles swig_types[50]
+#define SWIGTYPE_p_vapor__Frustum swig_types[51]
+#define SWIGTYPE_p_vapor__Geometry swig_types[52]
+#define SWIGTYPE_p_vapor__Group swig_types[53]
+#define SWIGTYPE_p_vapor__InputEvent swig_types[54]
+#define SWIGTYPE_p_vapor__KeyEvent swig_types[55]
+#define SWIGTYPE_p_vapor__KeyboardEventType swig_types[56]
+#define SWIGTYPE_p_vapor__Keys swig_types[57]
+#define SWIGTYPE_p_vapor__Light swig_types[58]
+#define SWIGTYPE_p_vapor__LightType swig_types[59]
+#define SWIGTYPE_p_vapor__Matrix4x3 swig_types[60]
+#define SWIGTYPE_p_vapor__Mesh swig_types[61]
+#define SWIGTYPE_p_vapor__MeshGroup swig_types[62]
+#define SWIGTYPE_p_vapor__MeshMaterial swig_types[63]
+#define SWIGTYPE_p_vapor__Model swig_types[64]
+#define SWIGTYPE_p_vapor__MouseButton swig_types[65]
+#define SWIGTYPE_p_vapor__MouseButtonEvent swig_types[66]
+#define SWIGTYPE_p_vapor__MouseDragEvent swig_types[67]
+#define SWIGTYPE_p_vapor__MouseEvent swig_types[68]
+#define SWIGTYPE_p_vapor__MouseEventType swig_types[69]
+#define SWIGTYPE_p_vapor__MouseInfo swig_types[70]
+#define SWIGTYPE_p_vapor__MouseMoveEvent swig_types[71]
+#define SWIGTYPE_p_vapor__MouseWheelEvent swig_types[72]
+#define SWIGTYPE_p_vapor__Quaternion swig_types[73]
+#define SWIGTYPE_p_vapor__Ray swig_types[74]
+#define SWIGTYPE_p_vapor__RayQueryResult swig_types[75]
+#define SWIGTYPE_p_vapor__RayTriangleQueryResult swig_types[76]
+#define SWIGTYPE_p_vapor__RefPtrT_vapor__Animation_t swig_types[77]
+#define SWIGTYPE_p_vapor__RefPtrT_vapor__Attachment_t swig_types[78]
+#define SWIGTYPE_p_vapor__RefPtrT_vapor__Bone_t swig_types[79]
+#define SWIGTYPE_p_vapor__RefPtrT_vapor__Mesh_t swig_types[80]
+#define SWIGTYPE_p_vapor__RefPtrT_vapor__Renderable_t swig_types[81]
+#define SWIGTYPE_p_vapor__RefPtrT_vapor__Resource_t swig_types[82]
+#define SWIGTYPE_p_vapor__ReferenceCounted swig_types[83]
+#define SWIGTYPE_p_vapor__RenderBlock swig_types[84]
+#define SWIGTYPE_p_vapor__RenderQueue swig_types[85]
+#define SWIGTYPE_p_vapor__RenderView swig_types[86]
+#define SWIGTYPE_p_vapor__Resource swig_types[87]
+#define SWIGTYPE_p_vapor__Scene swig_types[88]
+#define SWIGTYPE_p_vapor__Transform swig_types[89]
+#define SWIGTYPE_p_vapor__Vector2TT_float_t swig_types[90]
+#define SWIGTYPE_p_vapor__Vector2TT_int_t swig_types[91]
+#define SWIGTYPE_p_vapor__Vector3TT_double_t swig_types[92]
+#define SWIGTYPE_p_vapor__Vector3TT_float_t swig_types[93]
+#define SWIGTYPE_p_vapor__Vector3TT_int_t swig_types[94]
+#define SWIGTYPE_p_vapor__Vector4TT_double_t swig_types[95]
+#define SWIGTYPE_p_vapor__Vector4TT_float_t swig_types[96]
+#define SWIGTYPE_p_vapor__Vector4TT_int_t swig_types[97]
+static swig_type_info *swig_types[99];
+static swig_module_info swig_module = {swig_types, 98, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -5007,7 +5015,7 @@ fail:
 static int _wrap_Ray_intersects(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Ray *arg1 = (vapor::Ray *) 0 ;
-  vapor::Vector3 *arg2 ;
+  vapor::Vector3 (*arg2)[3] = 0 ;
   float *arg3 = 0 ;
   float *arg4 = 0 ;
   float *arg5 = 0 ;
@@ -5015,7 +5023,7 @@ static int _wrap_Ray_intersects(lua_State* L) {
   
   SWIG_check_num_args("intersects",5,5)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersects",1,"vapor::Ray const *");
-  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("intersects",2,"vapor::Vector3 const [3]");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("intersects",2,"vapor::Vector3 const (&)[3]");
   if(!lua_isuserdata(L,3)) SWIG_fail_arg("intersects",3,"float &");
   if(!lua_isuserdata(L,4)) SWIG_fail_arg("intersects",4,"float &");
   if(!lua_isuserdata(L,5)) SWIG_fail_arg("intersects",5,"float &");
@@ -5025,8 +5033,8 @@ static int _wrap_Ray_intersects(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Ray_intersects",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_a_3__vapor__Vector3TT_float_t,0))){
+    SWIG_fail_ptr("Ray_intersects",2,SWIGTYPE_p_a_3__vapor__Vector3TT_float_t);
   }
   
   
@@ -5044,7 +5052,7 @@ static int _wrap_Ray_intersects(lua_State* L) {
     SWIG_fail_ptr("Ray_intersects",5,SWIGTYPE_p_float);
   }
   
-  result = (bool)((vapor::Ray const *)arg1)->intersects((vapor::Vector3 const (*))arg2,*arg3,*arg4,*arg5);
+  result = (bool)((vapor::Ray const *)arg1)->intersects(*arg2,*arg3,*arg4,*arg5);
   lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
   return SWIG_arg;
   
@@ -6851,19 +6859,505 @@ static swig_lua_class *swig_vapor_BoundingBox_bases[] = {0};
 static const char *swig_vapor_BoundingBox_base_names[] = {0};
 static swig_lua_class _wrap_class_vapor_BoundingBox = { "BoundingBox", &SWIGTYPE_p_vapor__BoundingBox,_wrap_new_BoundingBox, swig_delete_BoundingBox, swig_vapor_BoundingBox_methods, swig_vapor_BoundingBox_attributes, swig_vapor_BoundingBox_bases, swig_vapor_BoundingBox_base_names };
 
-static int _wrap_Mesh_build(lua_State* L) {
+static int _wrap_MeshMaterial_name_set(lua_State* L) {
   int SWIG_arg = 0;
-  vapor::Mesh *arg1 = (vapor::Mesh *) 0 ;
+  vapor::MeshMaterial *arg1 = (vapor::MeshMaterial *) 0 ;
+  std::string *arg2 = 0 ;
+  std::string temp2 ;
   
-  SWIG_check_num_args("build",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("build",1,"vapor::Mesh *");
+  SWIG_check_num_args("name",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("name",1,"vapor::MeshMaterial *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("name",2,"std::string const &");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Mesh,0))){
-    SWIG_fail_ptr("Mesh_build",1,SWIGTYPE_p_vapor__Mesh);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__MeshMaterial,0))){
+    SWIG_fail_ptr("MeshMaterial_name_set",1,SWIGTYPE_p_vapor__MeshMaterial);
   }
   
-  (arg1)->build();
+  temp2.assign(lua_tostring(L,2),lua_strlen(L,2)); arg2=&temp2;
+  if (arg1) (arg1)->name = *arg2;
   
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_MeshMaterial_name_get(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::MeshMaterial *arg1 = (vapor::MeshMaterial *) 0 ;
+  std::string *result = 0 ;
+  
+  SWIG_check_num_args("name",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("name",1,"vapor::MeshMaterial *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__MeshMaterial,0))){
+    SWIG_fail_ptr("MeshMaterial_name_get",1,SWIGTYPE_p_vapor__MeshMaterial);
+  }
+  
+  result = (std::string *) & ((arg1)->name);
+  lua_pushlstring(L,result->data(),result->size()); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_MeshMaterial_texture_set(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::MeshMaterial *arg1 = (vapor::MeshMaterial *) 0 ;
+  std::string *arg2 = 0 ;
+  std::string temp2 ;
+  
+  SWIG_check_num_args("texture",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("texture",1,"vapor::MeshMaterial *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("texture",2,"std::string const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__MeshMaterial,0))){
+    SWIG_fail_ptr("MeshMaterial_texture_set",1,SWIGTYPE_p_vapor__MeshMaterial);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_strlen(L,2)); arg2=&temp2;
+  if (arg1) (arg1)->texture = *arg2;
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_MeshMaterial_texture_get(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::MeshMaterial *arg1 = (vapor::MeshMaterial *) 0 ;
+  std::string *result = 0 ;
+  
+  SWIG_check_num_args("texture",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("texture",1,"vapor::MeshMaterial *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__MeshMaterial,0))){
+    SWIG_fail_ptr("MeshMaterial_texture_get",1,SWIGTYPE_p_vapor__MeshMaterial);
+  }
+  
+  result = (std::string *) & ((arg1)->texture);
+  lua_pushlstring(L,result->data(),result->size()); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_MeshMaterial_alpha_set(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::MeshMaterial *arg1 = (vapor::MeshMaterial *) 0 ;
+  bool arg2 ;
+  
+  SWIG_check_num_args("alpha",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("alpha",1,"vapor::MeshMaterial *");
+  if(!lua_isboolean(L,2)) SWIG_fail_arg("alpha",2,"bool");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__MeshMaterial,0))){
+    SWIG_fail_ptr("MeshMaterial_alpha_set",1,SWIGTYPE_p_vapor__MeshMaterial);
+  }
+  
+  arg2 = (lua_toboolean(L, 2)!=0);
+  if (arg1) (arg1)->alpha = arg2;
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_MeshMaterial_alpha_get(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::MeshMaterial *arg1 = (vapor::MeshMaterial *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("alpha",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("alpha",1,"vapor::MeshMaterial *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__MeshMaterial,0))){
+    SWIG_fail_ptr("MeshMaterial_alpha_get",1,SWIGTYPE_p_vapor__MeshMaterial);
+  }
+  
+  result = (bool) ((arg1)->alpha);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_MeshMaterial(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::MeshMaterial *result = 0 ;
+  
+  SWIG_check_num_args("vapor::MeshMaterial::MeshMaterial",0,0)
+  result = (vapor::MeshMaterial *)new vapor::MeshMaterial();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__MeshMaterial,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static void swig_delete_MeshMaterial(void *obj) {
+vapor::MeshMaterial *arg1 = (vapor::MeshMaterial *) obj;
+delete arg1;
+}
+static swig_lua_method swig_vapor_MeshMaterial_methods[] = {
+    {0,0}
+};
+static swig_lua_attribute swig_vapor_MeshMaterial_attributes[] = {
+    { "name", _wrap_MeshMaterial_name_get, _wrap_MeshMaterial_name_set},
+    { "texture", _wrap_MeshMaterial_texture_get, _wrap_MeshMaterial_texture_set},
+    { "alpha", _wrap_MeshMaterial_alpha_get, _wrap_MeshMaterial_alpha_set},
+    {0,0,0}
+};
+static swig_lua_class *swig_vapor_MeshMaterial_bases[] = {0};
+static const char *swig_vapor_MeshMaterial_base_names[] = {0};
+static swig_lua_class _wrap_class_vapor_MeshMaterial = { "MeshMaterial", &SWIGTYPE_p_vapor__MeshMaterial,_wrap_new_MeshMaterial, swig_delete_MeshMaterial, swig_vapor_MeshMaterial_methods, swig_vapor_MeshMaterial_attributes, swig_vapor_MeshMaterial_bases, swig_vapor_MeshMaterial_base_names };
+
+static int _wrap_MeshGroup_position_set(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::MeshGroup *arg1 = (vapor::MeshGroup *) 0 ;
+  std::vector< vapor::Vector3 > *arg2 = (std::vector< vapor::Vector3 > *) 0 ;
+  
+  SWIG_check_num_args("position",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("position",1,"vapor::MeshGroup *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("position",2,"std::vector< vapor::Vector3 > *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__MeshGroup,0))){
+    SWIG_fail_ptr("MeshGroup_position_set",1,SWIGTYPE_p_vapor__MeshGroup);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_std__vectorT_vapor__Vector3TT_float_t_t,0))){
+    SWIG_fail_ptr("MeshGroup_position_set",2,SWIGTYPE_p_std__vectorT_vapor__Vector3TT_float_t_t);
+  }
+  
+  if (arg1) (arg1)->position = *arg2;
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_MeshGroup_position_get(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::MeshGroup *arg1 = (vapor::MeshGroup *) 0 ;
+  std::vector< vapor::Vector3 > *result = 0 ;
+  
+  SWIG_check_num_args("position",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("position",1,"vapor::MeshGroup *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__MeshGroup,0))){
+    SWIG_fail_ptr("MeshGroup_position_get",1,SWIGTYPE_p_vapor__MeshGroup);
+  }
+  
+  result = (std::vector< vapor::Vector3 > *)& ((arg1)->position);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__vectorT_vapor__Vector3TT_float_t_t,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_MeshGroup_normals_set(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::MeshGroup *arg1 = (vapor::MeshGroup *) 0 ;
+  std::vector< vapor::Vector3 > *arg2 = (std::vector< vapor::Vector3 > *) 0 ;
+  
+  SWIG_check_num_args("normals",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("normals",1,"vapor::MeshGroup *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("normals",2,"std::vector< vapor::Vector3 > *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__MeshGroup,0))){
+    SWIG_fail_ptr("MeshGroup_normals_set",1,SWIGTYPE_p_vapor__MeshGroup);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_std__vectorT_vapor__Vector3TT_float_t_t,0))){
+    SWIG_fail_ptr("MeshGroup_normals_set",2,SWIGTYPE_p_std__vectorT_vapor__Vector3TT_float_t_t);
+  }
+  
+  if (arg1) (arg1)->normals = *arg2;
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_MeshGroup_normals_get(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::MeshGroup *arg1 = (vapor::MeshGroup *) 0 ;
+  std::vector< vapor::Vector3 > *result = 0 ;
+  
+  SWIG_check_num_args("normals",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("normals",1,"vapor::MeshGroup *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__MeshGroup,0))){
+    SWIG_fail_ptr("MeshGroup_normals_get",1,SWIGTYPE_p_vapor__MeshGroup);
+  }
+  
+  result = (std::vector< vapor::Vector3 > *)& ((arg1)->normals);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__vectorT_vapor__Vector3TT_float_t_t,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_MeshGroup_texCoords_set(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::MeshGroup *arg1 = (vapor::MeshGroup *) 0 ;
+  std::vector< vapor::Vector3 > *arg2 = (std::vector< vapor::Vector3 > *) 0 ;
+  
+  SWIG_check_num_args("texCoords",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("texCoords",1,"vapor::MeshGroup *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("texCoords",2,"std::vector< vapor::Vector3 > *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__MeshGroup,0))){
+    SWIG_fail_ptr("MeshGroup_texCoords_set",1,SWIGTYPE_p_vapor__MeshGroup);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_std__vectorT_vapor__Vector3TT_float_t_t,0))){
+    SWIG_fail_ptr("MeshGroup_texCoords_set",2,SWIGTYPE_p_std__vectorT_vapor__Vector3TT_float_t_t);
+  }
+  
+  if (arg1) (arg1)->texCoords = *arg2;
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_MeshGroup_texCoords_get(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::MeshGroup *arg1 = (vapor::MeshGroup *) 0 ;
+  std::vector< vapor::Vector3 > *result = 0 ;
+  
+  SWIG_check_num_args("texCoords",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("texCoords",1,"vapor::MeshGroup *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__MeshGroup,0))){
+    SWIG_fail_ptr("MeshGroup_texCoords_get",1,SWIGTYPE_p_vapor__MeshGroup);
+  }
+  
+  result = (std::vector< vapor::Vector3 > *)& ((arg1)->texCoords);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__vectorT_vapor__Vector3TT_float_t_t,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_MeshGroup_bones_set(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::MeshGroup *arg1 = (vapor::MeshGroup *) 0 ;
+  std::vector< float > *arg2 = (std::vector< float > *) 0 ;
+  
+  SWIG_check_num_args("bones",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("bones",1,"vapor::MeshGroup *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("bones",2,"std::vector< float > *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__MeshGroup,0))){
+    SWIG_fail_ptr("MeshGroup_bones_set",1,SWIGTYPE_p_vapor__MeshGroup);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_std__vectorT_float_t,0))){
+    SWIG_fail_ptr("MeshGroup_bones_set",2,SWIGTYPE_p_std__vectorT_float_t);
+  }
+  
+  if (arg1) (arg1)->bones = *arg2;
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_MeshGroup_bones_get(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::MeshGroup *arg1 = (vapor::MeshGroup *) 0 ;
+  std::vector< float > *result = 0 ;
+  
+  SWIG_check_num_args("bones",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("bones",1,"vapor::MeshGroup *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__MeshGroup,0))){
+    SWIG_fail_ptr("MeshGroup_bones_get",1,SWIGTYPE_p_vapor__MeshGroup);
+  }
+  
+  result = (std::vector< float > *)& ((arg1)->bones);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__vectorT_float_t,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_MeshGroup_material_set(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::MeshGroup *arg1 = (vapor::MeshGroup *) 0 ;
+  vapor::MeshMaterial *arg2 = (vapor::MeshMaterial *) 0 ;
+  
+  SWIG_check_num_args("material",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("material",1,"vapor::MeshGroup *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("material",2,"vapor::MeshMaterial *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__MeshGroup,0))){
+    SWIG_fail_ptr("MeshGroup_material_set",1,SWIGTYPE_p_vapor__MeshGroup);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__MeshMaterial,0))){
+    SWIG_fail_ptr("MeshGroup_material_set",2,SWIGTYPE_p_vapor__MeshMaterial);
+  }
+  
+  if (arg1) (arg1)->material = *arg2;
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_MeshGroup_material_get(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::MeshGroup *arg1 = (vapor::MeshGroup *) 0 ;
+  vapor::MeshMaterial *result = 0 ;
+  
+  SWIG_check_num_args("material",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("material",1,"vapor::MeshGroup *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__MeshGroup,0))){
+    SWIG_fail_ptr("MeshGroup_material_get",1,SWIGTYPE_p_vapor__MeshGroup);
+  }
+  
+  result = (vapor::MeshMaterial *)& ((arg1)->material);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__MeshMaterial,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_MeshGroup(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::MeshGroup *result = 0 ;
+  
+  SWIG_check_num_args("vapor::MeshGroup::MeshGroup",0,0)
+  result = (vapor::MeshGroup *)new vapor::MeshGroup();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__MeshGroup,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static void swig_delete_MeshGroup(void *obj) {
+vapor::MeshGroup *arg1 = (vapor::MeshGroup *) obj;
+delete arg1;
+}
+static swig_lua_method swig_vapor_MeshGroup_methods[] = {
+    {0,0}
+};
+static swig_lua_attribute swig_vapor_MeshGroup_attributes[] = {
+    { "position", _wrap_MeshGroup_position_get, _wrap_MeshGroup_position_set},
+    { "normals", _wrap_MeshGroup_normals_get, _wrap_MeshGroup_normals_set},
+    { "texCoords", _wrap_MeshGroup_texCoords_get, _wrap_MeshGroup_texCoords_set},
+    { "bones", _wrap_MeshGroup_bones_get, _wrap_MeshGroup_bones_set},
+    { "material", _wrap_MeshGroup_material_get, _wrap_MeshGroup_material_set},
+    {0,0,0}
+};
+static swig_lua_class *swig_vapor_MeshGroup_bases[] = {0};
+static const char *swig_vapor_MeshGroup_base_names[] = {0};
+static swig_lua_class _wrap_class_vapor_MeshGroup = { "MeshGroup", &SWIGTYPE_p_vapor__MeshGroup,_wrap_new_MeshGroup, swig_delete_MeshGroup, swig_vapor_MeshGroup_methods, swig_vapor_MeshGroup_attributes, swig_vapor_MeshGroup_bases, swig_vapor_MeshGroup_base_names };
+
+static int _wrap_new_Mesh(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Mesh *result = 0 ;
+  
+  SWIG_check_num_args("vapor::Mesh",0,0)
+  result = (vapor::Mesh *)new vapor::Mesh();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Mesh,1); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -6925,7 +7419,7 @@ fail:
 static int _wrap_Mesh_getSkeleton(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Mesh *arg1 = (vapor::Mesh *) 0 ;
-  SwigValueWrapper< vapor::RefPtr< vapor::Skeleton > > result;
+  SkeletonPtr result;
   
   SWIG_check_num_args("getSkeleton",1,1)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getSkeleton",1,"vapor::Mesh const *");
@@ -6936,8 +7430,8 @@ static int _wrap_Mesh_getSkeleton(lua_State* L) {
   
   result = ((vapor::Mesh const *)arg1)->getSkeleton();
   {
-    vapor::SkeletonPtr * resultptr = new vapor::SkeletonPtr((const vapor::SkeletonPtr &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__RefPtrT_vapor__Skeleton_t,1); SWIG_arg++;
+    SkeletonPtr * resultptr = new SkeletonPtr((const SkeletonPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_SkeletonPtr,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -7055,36 +7549,6 @@ fail:
 }
 
 
-static int _wrap_Mesh_appendRenderables(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Mesh *arg1 = (vapor::Mesh *) 0 ;
-  std::vector< vapor::RenderablePtr > *arg2 = 0 ;
-  
-  SWIG_check_num_args("appendRenderables",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("appendRenderables",1,"vapor::Mesh *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("appendRenderables",2,"std::vector< vapor::RenderablePtr > &");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Mesh,0))){
-    SWIG_fail_ptr("Mesh_appendRenderables",1,SWIGTYPE_p_vapor__Mesh);
-  }
-  
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t,0))){
-    SWIG_fail_ptr("Mesh_appendRenderables",2,SWIGTYPE_p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t);
-  }
-  
-  (arg1)->appendRenderables(*arg2);
-  
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
 static int _wrap_Mesh_getResourceGroup(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Mesh *arg1 = (vapor::Mesh *) 0 ;
@@ -7109,12 +7573,486 @@ fail:
 }
 
 
+static int _wrap_Mesh_setupInitialVertices(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Mesh *arg1 = (vapor::Mesh *) 0 ;
+  
+  SWIG_check_num_args("setupInitialVertices",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setupInitialVertices",1,"vapor::Mesh *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Mesh,0))){
+    SWIG_fail_ptr("Mesh_setupInitialVertices",1,SWIGTYPE_p_vapor__Mesh);
+  }
+  
+  (arg1)->setupInitialVertices();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Mesh_buildBounds(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Mesh *arg1 = (vapor::Mesh *) 0 ;
+  
+  SWIG_check_num_args("buildBounds",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("buildBounds",1,"vapor::Mesh *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Mesh,0))){
+    SWIG_fail_ptr("Mesh_buildBounds",1,SWIGTYPE_p_vapor__Mesh);
+  }
+  
+  (arg1)->buildBounds();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Mesh_animated_set(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Mesh *arg1 = (vapor::Mesh *) 0 ;
+  bool arg2 ;
+  
+  SWIG_check_num_args("animated",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("animated",1,"vapor::Mesh *");
+  if(!lua_isboolean(L,2)) SWIG_fail_arg("animated",2,"bool");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Mesh,0))){
+    SWIG_fail_ptr("Mesh_animated_set",1,SWIGTYPE_p_vapor__Mesh);
+  }
+  
+  arg2 = (lua_toboolean(L, 2)!=0);
+  if (arg1) (arg1)->animated = arg2;
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Mesh_animated_get(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Mesh *arg1 = (vapor::Mesh *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("animated",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("animated",1,"vapor::Mesh *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Mesh,0))){
+    SWIG_fail_ptr("Mesh_animated_get",1,SWIGTYPE_p_vapor__Mesh);
+  }
+  
+  result = (bool) ((arg1)->animated);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Mesh_skeleton_set(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Mesh *arg1 = (vapor::Mesh *) 0 ;
+  SkeletonPtr arg2 ;
+  SkeletonPtr *argp2 ;
+  
+  SWIG_check_num_args("skeleton",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("skeleton",1,"vapor::Mesh *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("skeleton",2,"SkeletonPtr");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Mesh,0))){
+    SWIG_fail_ptr("Mesh_skeleton_set",1,SWIGTYPE_p_vapor__Mesh);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_SkeletonPtr,0))){
+    SWIG_fail_ptr("Mesh_skeleton_set",2,SWIGTYPE_p_SkeletonPtr);
+  }
+  arg2 = *argp2;
+  
+  if (arg1) (arg1)->skeleton = arg2;
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Mesh_skeleton_get(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Mesh *arg1 = (vapor::Mesh *) 0 ;
+  SkeletonPtr result;
+  
+  SWIG_check_num_args("skeleton",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("skeleton",1,"vapor::Mesh *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Mesh,0))){
+    SWIG_fail_ptr("Mesh_skeleton_get",1,SWIGTYPE_p_vapor__Mesh);
+  }
+  
+  result =  ((arg1)->skeleton);
+  {
+    SkeletonPtr * resultptr = new SkeletonPtr((const SkeletonPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_SkeletonPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Mesh_bindPose_set(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Mesh *arg1 = (vapor::Mesh *) 0 ;
+  vapor::AnimationPtr *arg2 = (vapor::AnimationPtr *) 0 ;
+  
+  SWIG_check_num_args("bindPose",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("bindPose",1,"vapor::Mesh *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("bindPose",2,"vapor::AnimationPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Mesh,0))){
+    SWIG_fail_ptr("Mesh_bindPose_set",1,SWIGTYPE_p_vapor__Mesh);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__RefPtrT_vapor__Animation_t,0))){
+    SWIG_fail_ptr("Mesh_bindPose_set",2,SWIGTYPE_p_vapor__RefPtrT_vapor__Animation_t);
+  }
+  
+  if (arg1) (arg1)->bindPose = *arg2;
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Mesh_bindPose_get(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Mesh *arg1 = (vapor::Mesh *) 0 ;
+  vapor::AnimationPtr *result = 0 ;
+  
+  SWIG_check_num_args("bindPose",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("bindPose",1,"vapor::Mesh *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Mesh,0))){
+    SWIG_fail_ptr("Mesh_bindPose_get",1,SWIGTYPE_p_vapor__Mesh);
+  }
+  
+  result = (vapor::AnimationPtr *)& ((arg1)->bindPose);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__RefPtrT_vapor__Animation_t,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Mesh_animations_set(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Mesh *arg1 = (vapor::Mesh *) 0 ;
+  std::vector< vapor::AnimationPtr > *arg2 = (std::vector< vapor::AnimationPtr > *) 0 ;
+  
+  SWIG_check_num_args("animations",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("animations",1,"vapor::Mesh *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("animations",2,"std::vector< vapor::AnimationPtr > *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Mesh,0))){
+    SWIG_fail_ptr("Mesh_animations_set",1,SWIGTYPE_p_vapor__Mesh);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_std__vectorT_vapor__RefPtrT_vapor__Animation_t_t,0))){
+    SWIG_fail_ptr("Mesh_animations_set",2,SWIGTYPE_p_std__vectorT_vapor__RefPtrT_vapor__Animation_t_t);
+  }
+  
+  if (arg1) (arg1)->animations = *arg2;
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Mesh_animations_get(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Mesh *arg1 = (vapor::Mesh *) 0 ;
+  std::vector< vapor::AnimationPtr > *result = 0 ;
+  
+  SWIG_check_num_args("animations",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("animations",1,"vapor::Mesh *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Mesh,0))){
+    SWIG_fail_ptr("Mesh_animations_get",1,SWIGTYPE_p_vapor__Mesh);
+  }
+  
+  result = (std::vector< vapor::AnimationPtr > *)& ((arg1)->animations);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__vectorT_vapor__RefPtrT_vapor__Animation_t_t,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Mesh_groups_set(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Mesh *arg1 = (vapor::Mesh *) 0 ;
+  std::vector< vapor::MeshGroup > *arg2 = (std::vector< vapor::MeshGroup > *) 0 ;
+  
+  SWIG_check_num_args("groups",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("groups",1,"vapor::Mesh *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("groups",2,"std::vector< vapor::MeshGroup > *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Mesh,0))){
+    SWIG_fail_ptr("Mesh_groups_set",1,SWIGTYPE_p_vapor__Mesh);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_std__vectorT_vapor__MeshGroup_t,0))){
+    SWIG_fail_ptr("Mesh_groups_set",2,SWIGTYPE_p_std__vectorT_vapor__MeshGroup_t);
+  }
+  
+  if (arg1) (arg1)->groups = *arg2;
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Mesh_groups_get(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Mesh *arg1 = (vapor::Mesh *) 0 ;
+  std::vector< vapor::MeshGroup > *result = 0 ;
+  
+  SWIG_check_num_args("groups",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("groups",1,"vapor::Mesh *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Mesh,0))){
+    SWIG_fail_ptr("Mesh_groups_get",1,SWIGTYPE_p_vapor__Mesh);
+  }
+  
+  result = (std::vector< vapor::MeshGroup > *)& ((arg1)->groups);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__vectorT_vapor__MeshGroup_t,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Mesh_boundingVolume_set(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Mesh *arg1 = (vapor::Mesh *) 0 ;
+  vapor::BoundingBox *arg2 = (vapor::BoundingBox *) 0 ;
+  
+  SWIG_check_num_args("boundingVolume",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("boundingVolume",1,"vapor::Mesh *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("boundingVolume",2,"vapor::BoundingBox *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Mesh,0))){
+    SWIG_fail_ptr("Mesh_boundingVolume_set",1,SWIGTYPE_p_vapor__Mesh);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__BoundingBox,0))){
+    SWIG_fail_ptr("Mesh_boundingVolume_set",2,SWIGTYPE_p_vapor__BoundingBox);
+  }
+  
+  if (arg1) (arg1)->boundingVolume = *arg2;
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Mesh_boundingVolume_get(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Mesh *arg1 = (vapor::Mesh *) 0 ;
+  vapor::BoundingBox *result = 0 ;
+  
+  SWIG_check_num_args("boundingVolume",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("boundingVolume",1,"vapor::Mesh *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Mesh,0))){
+    SWIG_fail_ptr("Mesh_boundingVolume_get",1,SWIGTYPE_p_vapor__Mesh);
+  }
+  
+  result = (vapor::BoundingBox *)& ((arg1)->boundingVolume);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__BoundingBox,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Mesh_renderables_set(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Mesh *arg1 = (vapor::Mesh *) 0 ;
+  std::vector< vapor::Renderable * > *arg2 = (std::vector< vapor::Renderable * > *) 0 ;
+  
+  SWIG_check_num_args("renderables",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("renderables",1,"vapor::Mesh *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("renderables",2,"std::vector< vapor::Renderable * > *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Mesh,0))){
+    SWIG_fail_ptr("Mesh_renderables_set",1,SWIGTYPE_p_vapor__Mesh);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_std__vectorT_vapor__Renderable_p_t,0))){
+    SWIG_fail_ptr("Mesh_renderables_set",2,SWIGTYPE_p_std__vectorT_vapor__Renderable_p_t);
+  }
+  
+  if (arg1) (arg1)->renderables = *arg2;
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Mesh_renderables_get(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Mesh *arg1 = (vapor::Mesh *) 0 ;
+  std::vector< vapor::Renderable * > *result = 0 ;
+  
+  SWIG_check_num_args("renderables",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("renderables",1,"vapor::Mesh *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Mesh,0))){
+    SWIG_fail_ptr("Mesh_renderables_get",1,SWIGTYPE_p_vapor__Mesh);
+  }
+  
+  result = (std::vector< vapor::Renderable * > *)& ((arg1)->renderables);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__vectorT_vapor__Renderable_p_t,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Mesh_built_set(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Mesh *arg1 = (vapor::Mesh *) 0 ;
+  bool arg2 ;
+  
+  SWIG_check_num_args("built",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("built",1,"vapor::Mesh *");
+  if(!lua_isboolean(L,2)) SWIG_fail_arg("built",2,"bool");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Mesh,0))){
+    SWIG_fail_ptr("Mesh_built_set",1,SWIGTYPE_p_vapor__Mesh);
+  }
+  
+  arg2 = (lua_toboolean(L, 2)!=0);
+  if (arg1) (arg1)->built = arg2;
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Mesh_built_get(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Mesh *arg1 = (vapor::Mesh *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("built",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("built",1,"vapor::Mesh *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Mesh,0))){
+    SWIG_fail_ptr("Mesh_built_get",1,SWIGTYPE_p_vapor__Mesh);
+  }
+  
+  result = (bool) ((arg1)->built);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static void swig_delete_Mesh(void *obj) {
 vapor::Mesh *arg1 = (vapor::Mesh *) obj;
 delete arg1;
 }
 static swig_lua_method swig_vapor_Mesh_methods[] = {
-    {"build", _wrap_Mesh_build}, 
     {"isBuilt", _wrap_Mesh_isBuilt}, 
     {"isAnimated", _wrap_Mesh_isAnimated}, 
     {"getSkeleton", _wrap_Mesh_getSkeleton}, 
@@ -7122,16 +8060,25 @@ static swig_lua_method swig_vapor_Mesh_methods[] = {
     {"findAnimation", _wrap_Mesh_findAnimation}, 
     {"getBoundingVolume", _wrap_Mesh_getBoundingVolume}, 
     {"getAnimations", _wrap_Mesh_getAnimations}, 
-    {"appendRenderables", _wrap_Mesh_appendRenderables}, 
     {"getResourceGroup", _wrap_Mesh_getResourceGroup}, 
+    {"setupInitialVertices", _wrap_Mesh_setupInitialVertices}, 
+    {"buildBounds", _wrap_Mesh_buildBounds}, 
     {0,0}
 };
 static swig_lua_attribute swig_vapor_Mesh_attributes[] = {
+    { "animated", _wrap_Mesh_animated_get, _wrap_Mesh_animated_set},
+    { "skeleton", _wrap_Mesh_skeleton_get, _wrap_Mesh_skeleton_set},
+    { "bindPose", _wrap_Mesh_bindPose_get, _wrap_Mesh_bindPose_set},
+    { "animations", _wrap_Mesh_animations_get, _wrap_Mesh_animations_set},
+    { "groups", _wrap_Mesh_groups_get, _wrap_Mesh_groups_set},
+    { "boundingVolume", _wrap_Mesh_boundingVolume_get, _wrap_Mesh_boundingVolume_set},
+    { "renderables", _wrap_Mesh_renderables_get, _wrap_Mesh_renderables_set},
+    { "built", _wrap_Mesh_built_get, _wrap_Mesh_built_set},
     {0,0,0}
 };
 static swig_lua_class *swig_vapor_Mesh_bases[] = {0};
 static const char *swig_vapor_Mesh_base_names[] = {0};
-static swig_lua_class _wrap_class_vapor_Mesh = { "Mesh", &SWIGTYPE_p_vapor__Mesh,0, swig_delete_Mesh, swig_vapor_Mesh_methods, swig_vapor_Mesh_attributes, swig_vapor_Mesh_bases, swig_vapor_Mesh_base_names };
+static swig_lua_class _wrap_class_vapor_Mesh = { "Mesh", &SWIGTYPE_p_vapor__Mesh,_wrap_new_Mesh, swig_delete_Mesh, swig_vapor_Mesh_methods, swig_vapor_Mesh_attributes, swig_vapor_Mesh_bases, swig_vapor_Mesh_base_names };
 
 static int _wrap_new_Keys(lua_State* L) {
   int SWIG_arg = 0;
@@ -14390,6 +15337,8 @@ static void *_p_vapor__CharacterControllerTo_p_vapor__Controller(void *x, int *S
 static swig_type_info _swigt__p_Event0T_t = {"_p_Event0T_t", "Event0< > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Event1T_std__shared_ptrT_vapor__Component_t_const_R_t = {"_p_Event1T_std__shared_ptrT_vapor__Component_t_const_R_t", "Event1< vapor::ComponentPtr const & > *|Event1< std::shared_ptr< vapor::Component > const & > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Event1T_std__shared_ptrT_vapor__Entity_t_const_R_t = {"_p_Event1T_std__shared_ptrT_vapor__Entity_t_const_R_t", "Event1< std::shared_ptr< vapor::Entity > const & > *|Event1< vapor::EntityPtr const & > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_SkeletonPtr = {"_p_SkeletonPtr", "SkeletonPtr *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_a_3__vapor__Vector3TT_float_t = {"_p_a_3__vapor__Vector3TT_float_t", "vapor::Vector3T< float > (*)[3]|vapor::Vector3 (*)[3]", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_float = {"_p_float", "float *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_int = {"_p_int", "int *|vapor::ResourceHandle *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t = {"_p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t", "vapor::ComponentMap *|std::map< Class const *,std::shared_ptr< vapor::Component > > *", 0, 0, (void*)0, 0};
@@ -14407,11 +15356,16 @@ static swig_type_info _swigt__p_std__shared_ptrT_vapor__Light_t = {"_p_std__shar
 static swig_type_info _swigt__p_std__shared_ptrT_vapor__Model_t = {"_p_std__shared_ptrT_vapor__Model_t", "vapor::ModelPtr *|std::shared_ptr< vapor::Model > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__shared_ptrT_vapor__Scene_t = {"_p_std__shared_ptrT_vapor__Scene_t", "std::shared_ptr< vapor::Scene > *|vapor::ScenePtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__shared_ptrT_vapor__Transform_t = {"_p_std__shared_ptrT_vapor__Transform_t", "std::shared_ptr< vapor::Transform > *|vapor::TransformPtr *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__string = {"_p_std__string", "vapor::Path *|std::string *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__vectorT_float_t = {"_p_std__vectorT_float_t", "std::vector< float > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__vectorT_std__shared_ptrT_vapor__Entity_t_t = {"_p_std__vectorT_std__shared_ptrT_vapor__Entity_t_t", "std::vector< std::shared_ptr< vapor::Entity > > *|std::vector< vapor::EntityPtr > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__vectorT_std__shared_ptrT_vapor__Geometry_t_t = {"_p_std__vectorT_std__shared_ptrT_vapor__Geometry_t_t", "std::vector< std::shared_ptr< vapor::Geometry > > *|std::vector< vapor::GeometryPtr > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__vectorT_vapor__MeshGroup_t = {"_p_std__vectorT_vapor__MeshGroup_t", "std::vector< vapor::MeshGroup > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__vectorT_vapor__RayQueryResult_t = {"_p_std__vectorT_vapor__RayQueryResult_t", "std::vector< vapor::RayQueryResult > *|vapor::RayQueryList *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__vectorT_vapor__RefPtrT_vapor__Animation_t_t = {"_p_std__vectorT_vapor__RefPtrT_vapor__Animation_t_t", "std::vector< vapor::RefPtr< vapor::Animation > > *|std::vector< vapor::AnimationPtr > *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t = {"_p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t", "vapor::RenderableList *|std::vector< vapor::RenderablePtr > *|std::vector< vapor::RefPtr< vapor::Renderable > > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t = {"_p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t", "vapor::RenderableList *|std::vector< vapor::RefPtr< vapor::Renderable > > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__vectorT_vapor__Renderable_p_t = {"_p_std__vectorT_vapor__Renderable_p_t", "std::vector< vapor::Renderable * > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__vectorT_vapor__Vector3TT_float_t_t = {"_p_std__vectorT_vapor__Vector3TT_float_t_t", "std::vector< vapor::Vector3T< float > > *|std::vector< vapor::Vector3 > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__weak_ptrT_vapor__Camera_t = {"_p_std__weak_ptrT_vapor__Camera_t", "std::weak_ptr< vapor::Camera > *|vapor::CameraWeakPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__weak_ptrT_vapor__CharacterController_t = {"_p_std__weak_ptrT_vapor__CharacterController_t", "std::weak_ptr< vapor::CharacterController > *|vapor::CharacterControllerWeakPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__weak_ptrT_vapor__Component_t = {"_p_std__weak_ptrT_vapor__Component_t", "vapor::ComponentWeakPtr *|std::weak_ptr< vapor::Component > *", 0, 0, (void*)0, 0};
@@ -14442,6 +15396,8 @@ static swig_type_info _swigt__p_vapor__Light = {"_p_vapor__Light", "vapor::Light
 static swig_type_info _swigt__p_vapor__LightType = {"_p_vapor__LightType", "vapor::LightType *", 0, 0, (void*)&_wrap_class_vapor_LightType, 0};
 static swig_type_info _swigt__p_vapor__Matrix4x3 = {"_p_vapor__Matrix4x3", "vapor::Matrix4x3 *", 0, 0, (void*)&_wrap_class_vapor_Matrix4x3, 0};
 static swig_type_info _swigt__p_vapor__Mesh = {"_p_vapor__Mesh", "vapor::Mesh *", 0, 0, (void*)&_wrap_class_vapor_Mesh, 0};
+static swig_type_info _swigt__p_vapor__MeshGroup = {"_p_vapor__MeshGroup", "vapor::MeshGroup *", 0, 0, (void*)&_wrap_class_vapor_MeshGroup, 0};
+static swig_type_info _swigt__p_vapor__MeshMaterial = {"_p_vapor__MeshMaterial", "vapor::MeshMaterial *", 0, 0, (void*)&_wrap_class_vapor_MeshMaterial, 0};
 static swig_type_info _swigt__p_vapor__Model = {"_p_vapor__Model", "vapor::Model *", 0, 0, (void*)&_wrap_class_vapor_Model, 0};
 static swig_type_info _swigt__p_vapor__MouseButton = {"_p_vapor__MouseButton", "vapor::MouseButton *", 0, 0, (void*)&_wrap_class_vapor_MouseButton, 0};
 static swig_type_info _swigt__p_vapor__MouseButtonEvent = {"_p_vapor__MouseButtonEvent", "vapor::MouseButtonEvent *", 0, 0, (void*)&_wrap_class_vapor_MouseButtonEvent, 0};
@@ -14461,7 +15417,6 @@ static swig_type_info _swigt__p_vapor__RefPtrT_vapor__Bone_t = {"_p_vapor__RefPt
 static swig_type_info _swigt__p_vapor__RefPtrT_vapor__Mesh_t = {"_p_vapor__RefPtrT_vapor__Mesh_t", "vapor::RefPtr< vapor::Mesh > *|vapor::MeshPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_vapor__RefPtrT_vapor__Renderable_t = {"_p_vapor__RefPtrT_vapor__Renderable_t", "vapor::RenderablePtr *|vapor::RefPtr< vapor::Renderable > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_vapor__RefPtrT_vapor__Resource_t = {"_p_vapor__RefPtrT_vapor__Resource_t", "vapor::RefPtr< vapor::Resource > *|vapor::ResourcePtr *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_vapor__RefPtrT_vapor__Skeleton_t = {"_p_vapor__RefPtrT_vapor__Skeleton_t", "vapor::SkeletonPtr *|vapor::RefPtr< vapor::Skeleton > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_vapor__ReferenceCounted = {"_p_vapor__ReferenceCounted", "vapor::ReferenceCounted *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_vapor__RenderBlock = {"_p_vapor__RenderBlock", "vapor::RenderBlock *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_vapor__RenderQueue = {"_p_vapor__RenderQueue", "vapor::RenderQueue *", 0, 0, (void*)0, 0};
@@ -14482,6 +15437,8 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_Event0T_t,
   &_swigt__p_Event1T_std__shared_ptrT_vapor__Component_t_const_R_t,
   &_swigt__p_Event1T_std__shared_ptrT_vapor__Entity_t_const_R_t,
+  &_swigt__p_SkeletonPtr,
+  &_swigt__p_a_3__vapor__Vector3TT_float_t,
   &_swigt__p_float,
   &_swigt__p_int,
   &_swigt__p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t,
@@ -14499,11 +15456,16 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_std__shared_ptrT_vapor__Model_t,
   &_swigt__p_std__shared_ptrT_vapor__Scene_t,
   &_swigt__p_std__shared_ptrT_vapor__Transform_t,
+  &_swigt__p_std__string,
+  &_swigt__p_std__vectorT_float_t,
   &_swigt__p_std__vectorT_std__shared_ptrT_vapor__Entity_t_t,
   &_swigt__p_std__vectorT_std__shared_ptrT_vapor__Geometry_t_t,
+  &_swigt__p_std__vectorT_vapor__MeshGroup_t,
   &_swigt__p_std__vectorT_vapor__RayQueryResult_t,
   &_swigt__p_std__vectorT_vapor__RefPtrT_vapor__Animation_t_t,
   &_swigt__p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t,
+  &_swigt__p_std__vectorT_vapor__Renderable_p_t,
+  &_swigt__p_std__vectorT_vapor__Vector3TT_float_t_t,
   &_swigt__p_std__weak_ptrT_vapor__Camera_t,
   &_swigt__p_std__weak_ptrT_vapor__CharacterController_t,
   &_swigt__p_std__weak_ptrT_vapor__Component_t,
@@ -14534,6 +15496,8 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_vapor__LightType,
   &_swigt__p_vapor__Matrix4x3,
   &_swigt__p_vapor__Mesh,
+  &_swigt__p_vapor__MeshGroup,
+  &_swigt__p_vapor__MeshMaterial,
   &_swigt__p_vapor__Model,
   &_swigt__p_vapor__MouseButton,
   &_swigt__p_vapor__MouseButtonEvent,
@@ -14553,7 +15517,6 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_vapor__RefPtrT_vapor__Mesh_t,
   &_swigt__p_vapor__RefPtrT_vapor__Renderable_t,
   &_swigt__p_vapor__RefPtrT_vapor__Resource_t,
-  &_swigt__p_vapor__RefPtrT_vapor__Skeleton_t,
   &_swigt__p_vapor__ReferenceCounted,
   &_swigt__p_vapor__RenderBlock,
   &_swigt__p_vapor__RenderQueue,
@@ -14574,6 +15537,8 @@ static swig_type_info *swig_type_initial[] = {
 static swig_cast_info _swigc__p_Event0T_t[] = {  {&_swigt__p_Event0T_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Event1T_std__shared_ptrT_vapor__Component_t_const_R_t[] = {  {&_swigt__p_Event1T_std__shared_ptrT_vapor__Component_t_const_R_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Event1T_std__shared_ptrT_vapor__Entity_t_const_R_t[] = {  {&_swigt__p_Event1T_std__shared_ptrT_vapor__Entity_t_const_R_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_SkeletonPtr[] = {  {&_swigt__p_SkeletonPtr, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_a_3__vapor__Vector3TT_float_t[] = {  {&_swigt__p_a_3__vapor__Vector3TT_float_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_float[] = {  {&_swigt__p_float, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t[] = {  {&_swigt__p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -14591,11 +15556,16 @@ static swig_cast_info _swigc__p_std__shared_ptrT_vapor__Light_t[] = {  {&_swigt_
 static swig_cast_info _swigc__p_std__shared_ptrT_vapor__Model_t[] = {  {&_swigt__p_std__shared_ptrT_vapor__Model_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__shared_ptrT_vapor__Scene_t[] = {  {&_swigt__p_std__shared_ptrT_vapor__Scene_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__shared_ptrT_vapor__Transform_t[] = {  {&_swigt__p_std__shared_ptrT_vapor__Transform_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__string[] = {  {&_swigt__p_std__string, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__vectorT_float_t[] = {  {&_swigt__p_std__vectorT_float_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__vectorT_std__shared_ptrT_vapor__Entity_t_t[] = {  {&_swigt__p_std__vectorT_std__shared_ptrT_vapor__Entity_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__vectorT_std__shared_ptrT_vapor__Geometry_t_t[] = {  {&_swigt__p_std__vectorT_std__shared_ptrT_vapor__Geometry_t_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__vectorT_vapor__MeshGroup_t[] = {  {&_swigt__p_std__vectorT_vapor__MeshGroup_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__vectorT_vapor__RayQueryResult_t[] = {  {&_swigt__p_std__vectorT_vapor__RayQueryResult_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__vectorT_vapor__RefPtrT_vapor__Animation_t_t[] = {  {&_swigt__p_std__vectorT_vapor__RefPtrT_vapor__Animation_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t[] = {  {&_swigt__p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__vectorT_vapor__Renderable_p_t[] = {  {&_swigt__p_std__vectorT_vapor__Renderable_p_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__vectorT_vapor__Vector3TT_float_t_t[] = {  {&_swigt__p_std__vectorT_vapor__Vector3TT_float_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__weak_ptrT_vapor__Camera_t[] = {  {&_swigt__p_std__weak_ptrT_vapor__Camera_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__weak_ptrT_vapor__CharacterController_t[] = {  {&_swigt__p_std__weak_ptrT_vapor__CharacterController_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__weak_ptrT_vapor__Component_t[] = {  {&_swigt__p_std__weak_ptrT_vapor__Component_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -14626,6 +15596,8 @@ static swig_cast_info _swigc__p_vapor__Light[] = {  {&_swigt__p_vapor__Light, 0,
 static swig_cast_info _swigc__p_vapor__LightType[] = {  {&_swigt__p_vapor__LightType, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__Matrix4x3[] = {  {&_swigt__p_vapor__Matrix4x3, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__Mesh[] = {  {&_swigt__p_vapor__Mesh, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_vapor__MeshGroup[] = {  {&_swigt__p_vapor__MeshGroup, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_vapor__MeshMaterial[] = {  {&_swigt__p_vapor__MeshMaterial, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__Model[] = {  {&_swigt__p_vapor__Model, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__MouseButton[] = {  {&_swigt__p_vapor__MouseButton, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__MouseButtonEvent[] = {  {&_swigt__p_vapor__MouseButtonEvent, 0, 0, 0},{0, 0, 0, 0}};
@@ -14645,7 +15617,6 @@ static swig_cast_info _swigc__p_vapor__RefPtrT_vapor__Bone_t[] = {  {&_swigt__p_
 static swig_cast_info _swigc__p_vapor__RefPtrT_vapor__Mesh_t[] = {  {&_swigt__p_vapor__RefPtrT_vapor__Mesh_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__RefPtrT_vapor__Renderable_t[] = {  {&_swigt__p_vapor__RefPtrT_vapor__Renderable_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__RefPtrT_vapor__Resource_t[] = {  {&_swigt__p_vapor__RefPtrT_vapor__Resource_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_vapor__RefPtrT_vapor__Skeleton_t[] = {  {&_swigt__p_vapor__RefPtrT_vapor__Skeleton_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__ReferenceCounted[] = {  {&_swigt__p_vapor__ReferenceCounted, 0, 0, 0},  {&_swigt__p_vapor__Resource, _p_vapor__ResourceTo_p_vapor__ReferenceCounted, 0, 0},  {&_swigt__p_vapor__Mesh, _p_vapor__MeshTo_p_vapor__ReferenceCounted, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__RenderBlock[] = {  {&_swigt__p_vapor__RenderBlock, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__RenderQueue[] = {  {&_swigt__p_vapor__RenderQueue, 0, 0, 0},{0, 0, 0, 0}};
@@ -14666,6 +15637,8 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_Event0T_t,
   _swigc__p_Event1T_std__shared_ptrT_vapor__Component_t_const_R_t,
   _swigc__p_Event1T_std__shared_ptrT_vapor__Entity_t_const_R_t,
+  _swigc__p_SkeletonPtr,
+  _swigc__p_a_3__vapor__Vector3TT_float_t,
   _swigc__p_float,
   _swigc__p_int,
   _swigc__p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t,
@@ -14683,11 +15656,16 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_std__shared_ptrT_vapor__Model_t,
   _swigc__p_std__shared_ptrT_vapor__Scene_t,
   _swigc__p_std__shared_ptrT_vapor__Transform_t,
+  _swigc__p_std__string,
+  _swigc__p_std__vectorT_float_t,
   _swigc__p_std__vectorT_std__shared_ptrT_vapor__Entity_t_t,
   _swigc__p_std__vectorT_std__shared_ptrT_vapor__Geometry_t_t,
+  _swigc__p_std__vectorT_vapor__MeshGroup_t,
   _swigc__p_std__vectorT_vapor__RayQueryResult_t,
   _swigc__p_std__vectorT_vapor__RefPtrT_vapor__Animation_t_t,
   _swigc__p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t,
+  _swigc__p_std__vectorT_vapor__Renderable_p_t,
+  _swigc__p_std__vectorT_vapor__Vector3TT_float_t_t,
   _swigc__p_std__weak_ptrT_vapor__Camera_t,
   _swigc__p_std__weak_ptrT_vapor__CharacterController_t,
   _swigc__p_std__weak_ptrT_vapor__Component_t,
@@ -14718,6 +15696,8 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_vapor__LightType,
   _swigc__p_vapor__Matrix4x3,
   _swigc__p_vapor__Mesh,
+  _swigc__p_vapor__MeshGroup,
+  _swigc__p_vapor__MeshMaterial,
   _swigc__p_vapor__Model,
   _swigc__p_vapor__MouseButton,
   _swigc__p_vapor__MouseButtonEvent,
@@ -14737,7 +15717,6 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_vapor__RefPtrT_vapor__Mesh_t,
   _swigc__p_vapor__RefPtrT_vapor__Renderable_t,
   _swigc__p_vapor__RefPtrT_vapor__Resource_t,
-  _swigc__p_vapor__RefPtrT_vapor__Skeleton_t,
   _swigc__p_vapor__ReferenceCounted,
   _swigc__p_vapor__RenderBlock,
   _swigc__p_vapor__RenderQueue,

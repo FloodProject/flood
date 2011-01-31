@@ -4,6 +4,13 @@ WIP (work-in-progress)
 EDITOR:
 -------
 
+
+Fix terrain painting
+Add fixed pipeline animation support
+Add bounding box calculation for animated meshes
+
+
+
 Fix currentPlugin crasher bug
 Update cameras on the editor
 Adaptive grid in the editor

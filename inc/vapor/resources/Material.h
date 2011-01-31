@@ -8,10 +8,6 @@
 
 #pragma once
 
-#include "render/Program.h"
-#include "render/Texture.h"
-#include "render/Shader.h"
-
 #define GL_ZERO 0
 #define GL_ONE 1
 #define GL_SRC_COLOR 0x0300
@@ -89,17 +85,12 @@ struct DepthCompare
 
 //-----------------------------------//
 
-typedef std::map< uint, TexturePtr > TextureMap;
-typedef std::pair< const uint, TexturePtr > TextureMapPair;
-
 /**
  * Rendering material.
  */
 
 class VAPOR_API Material : public ReferenceCounted
 {
-	friend class RenderDevice;
-
 public:
 
 	//Material( const std::string& name );
@@ -110,24 +101,21 @@ public:
 	// Gets the textual name of the material.
 	GETTER(Name, const std::string&, name);
 
-	// Sets a texture to the material.
-	void setTexture( uint unit, const std::string& tex );
+	//// Sets a texture to the material.
+	//void setTexture( uint unit, const std::string& tex );
 
-	// Sets a texture to the material.
-	void setTexture( uint unit, const TexturePtr& tex );
+	//// Sets a texture to the material.
+	//void setTexture( uint unit, const TexturePtr& tex );
 
-	// Sets an image as texture to the material.
-	void setTexture( uint unit, const ImagePtr& tex );
+	//// Sets an image as texture to the material.
+	//void setTexture( uint unit, const ImagePtr& tex );
 
 	// Gets a texture of the material.
-	TexturePtr getTexture( uint unit );
+	//TexturePtr getTexture( uint unit );
 
 	// Gets/sets the associated program.
 	ACESSOR(Program, const std::string&, program)
 	
-	// Gets the associated program.	
-	ProgramPtr getProgram();
-
 	// Gets/sets the depth writing of the material.
 	ACESSOR(DepthWrite, bool, depthWrite)
 
@@ -161,15 +149,6 @@ public:
 
 	// Sets the blending options for this material.
 	void setBlending( BlendSource::Enum, BlendDestination::Enum );
-
-	// Gets the textures in the material.
-	GETTER(Textures, const TextureMap&, textures)
-
-	// Binds the material object.
-	void bindTextures(bool bindUniforms);
-
-	// Unbinds the material object.
-	void unbindTextures();
 
 protected:
 

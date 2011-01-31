@@ -8,10 +8,12 @@
 
 #pragma once
 
-#include "vapor/resources/Resource.h"
-#include "vapor/math/BoundingBox.h"
+#include "Resources/Resource.h"
+#include "Resources/Animation.h"
+#include "Resources/Skeleton.h"
+#include "Math/BoundingBox.h"
+#include "Math/Vector3.h"
 
-FWD_DECL_INTRUSIVE(Skeleton)
 FWD_DECL_INTRUSIVE(Animation)
 FWD_DECL_INTRUSIVE(Renderable)
 
@@ -19,19 +21,34 @@ namespace vapor {
 
 //-----------------------------------//
 
+struct MeshMaterial
+{
+	std::string name;
+	std::string texture;
+	bool alpha;
+};
+
+struct MeshGroup
+{
+	std::vector<Vector3> position;
+	std::vector<Vector3> normals;
+	std::vector<Vector3> texCoords;
+	std::vector<float> bones;
+	MeshMaterial material;
+};
+
 /**
  * Mesh resources contain 3D geometry data.
  */
 
-class VAPOR_API Mesh : public Resource
+class RESOURCE_API Mesh : public Resource
 {
 	DECLARE_CLASS_()
 
 public:
 
-	// Builds the geometry of the mesh.
-	virtual void build() = 0;
-	
+	Mesh();
+
 	// Gets if the mesh is built.
 	bool isBuilt() const;
 
@@ -53,15 +70,16 @@ public:
 	// Gets the animations of the mesh.
 	GETTER(Animations, const std::vector<AnimationPtr>&, animations)
 
-	// Gets the renderables of the mesh.
-	void appendRenderables( std::vector<RenderablePtr>& renderables );
-
 	// Gets the resource group of this resource.
-	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Meshes)	
+	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Meshes)
 
-protected:
+public:
 
-	Mesh();
+	// Sets up the initial vertices in joint-space.
+	void setupInitialVertices();
+
+	// Builds the mesh bounding volume.
+	void buildBounds();
 
 	// Keeps track if the mesh is animated.
 	bool animated;
@@ -75,14 +93,24 @@ protected:
 	// Animations of the mesh.
 	std::vector<AnimationPtr> animations;
 
-	// Renderables of the mesh.
-	std::vector<RenderablePtr> renderables;
+	// Groups of the mesh.
+	std::vector<MeshGroup> groups;
 
 	// Bounding volume of the mesh.
 	BoundingBox boundingVolume;
 
+	// Renderables of the mesh.
+	std::vector<Renderable*> renderables;
+
+	// Vertex data.
+	//std::vector<Vector3> position;
+	//std::vector<Vector3> normals;
+	//std::vector<Vector3> texCoords;
+	//std::vector<float> bones;
+
 	// Keeps track if the mesh has been built.
 	bool built;
+
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Mesh );

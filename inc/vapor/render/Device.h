@@ -10,14 +10,14 @@
 
 #ifdef VAPOR_RENDERER_OPENGL
 
-#include "math/Color.h"
-#include "math/Vector2.h"
-#include "math/Matrix4x3.h"
-
-#include "render/Window.h"
-#include "render/Target.h"
-#include "render/Renderable.h"
-#include "render/RenderQueue.h"
+#include "Render/Window.h"
+#include "Render/Target.h"
+#include "Render/Renderable.h"
+#include "Render/RenderQueue.h"
+#include "Math/Color.h"
+#include "Math/Vector2.h"
+#include "Math/Matrix4x3.h"
+#include "Reflection.h"
 
 namespace vapor {
 
@@ -37,15 +37,17 @@ class TextureManager;
  * hardware) or user preference (fixed function is faster on some machines).
  */
 
-namespace RenderPipeline
+struct RenderPipeline
 {
+	DECLARE_ENUM()
+
 	enum Enum
 	{
 		Fixed,
 		ShaderForward,
 		ShaderDeferred
 	};
-}
+};
 
 //-----------------------------------//
 
@@ -118,7 +120,7 @@ public:
 	void setClearColor(const Color& color);
 
 	// Gets the current rendering pipeline.
-	GETTER(Pipeline, RenderPipeline::Enum, pipeline)
+	ACESSOR(Pipeline, RenderPipeline::Enum, pipeline)
 
 	// Gets rendering adapter information.
 	GETTER(Adapter, Adapter*, adapter)
