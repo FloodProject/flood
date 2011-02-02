@@ -29,8 +29,10 @@ void GizmoRotate::buildGeometry()
 	RenderablePtr renderable = new Renderable(PolygonType::Lines);
 	renderable->setVertexBuffer(lines);
 	renderable->setMaterial(material);
+	renderable->setRenderLayer(RenderLayer::PostTransparency);
+	renderable->setRenderPriority(100);
 
-	addRenderable(renderable, RenderStage::PostTransparency, 100);
+	addRenderable(renderable);
 }
 
 //-----------------------------------//

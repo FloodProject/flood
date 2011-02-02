@@ -66,12 +66,14 @@ void Mesh::buildBounds()
 	for( uint i = 0; i < groups.size(); i++ )
 	{
 		MeshGroup& group = groups[i];
-
+		const std::vector<ushort>& indices = group.indices;
+		
 		// Update the bounding box to accomodate new geometry.
-		for( uint j = 0; j < group.position.size(); j++ )
+		for( uint j = 0; j < indices.size(); j++ )
 		{
-			const Vector3& v = group.position[j];
-			boundingVolume.add( v );
+
+			const Vector3& v = position[indices[j]];
+			boundingVolume.add(v);
 		}
 	}
 
@@ -89,24 +91,18 @@ void Mesh::setupInitialVertices()
 	if( !skeleton )
 		return;
 
-	for( uint i = 0; i < groups.size(); i++ )
+	for( uint i = 0; i < position.size(); i++ )
 	{
-		MeshGroup& group = groups[i];
+		int boneIndex = (int) boneIndices[i];
 
-		for( uint j = 0; j < group.position.size(); j++ )
-		{
-			int boneIndex = (int) group.bones[j];
-
-			if( boneIndex == -1 )
-				continue;
+		if( boneIndex == -1 )
+			continue;
 		
-			const BonePtr& bone = skeleton->getBone(boneIndex);
+		const BonePtr& bone = skeleton->getBone(boneIndex);
+		Matrix4x3 invJoint = bone->absoluteMatrix.inverse();
 		
-			Matrix4x3 invJoint = bone->absoluteMatrix.inverse();
-		
-			Vector3& vertex = group.position[j];			
-			vertex = invJoint*vertex;
-		}
+		Vector3& vertex = position[i];			
+		vertex = invJoint*vertex;
 	}
 }
 

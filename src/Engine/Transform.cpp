@@ -11,7 +11,7 @@
 #include "scene/Geometry.h"
 #include "scene/Entity.h"
 #include "render/DebugGeometry.h"
-#include "math/Math.h"
+#include "math/Helpers.h"
 
 namespace vapor {
 

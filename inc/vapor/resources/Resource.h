@@ -16,17 +16,6 @@ namespace vapor {
 //-----------------------------------//
 
 /**
- * When you request a resource, you will be given a resource handle that
- * you can later use to query the resource manager for the real pointer.
- * Never store the dumb pointers, because if the resource is updated it
- * might have a different pointer.
- */
-
-typedef int	ResourceHandle;
-
-//-----------------------------------//
-
-/**
  * Resources can be loaded in a background task. In that case the caller
  * will still receive a resource but it won't be fully loaded. It will
  * only be fully loaded when the resource status changes to loaded.
@@ -68,8 +57,6 @@ struct RESOURCE_API ResourceGroup
 };
 
 //-----------------------------------//
-
-class ResourceLoader;
 
 /**
  * Represents a generic resource that tipically is used to hold a piece

@@ -323,6 +323,14 @@ float Milkshape3D::getAnimationStart(const AnimationMetadata& data)
 
 void Milkshape3D::buildGeometry()
 {
+	int size = vertices.size();
+
+	// Reserve space for data.
+	mesh->position.reserve(size);
+	mesh->normals.reserve(size);
+	mesh->texCoords.reserve(size);
+	mesh->boneIndices.reserve(size);
+
 	mesh->groups.resize( groups.size() );
 
 	for( uint i = 0; i < groups.size(); i++ )
@@ -332,43 +340,38 @@ void Milkshape3D::buildGeometry()
 		if( group.flags & HIDDEN )
 			continue;
 
+		uint numIndices = group.triangleIndices.size();
+
 		// In case this group doesn't have geometry, skip processing.
-		if( group.triangleIndices.empty() )
+		if( numIndices == 0 )
 			continue;
 
-		int size = group.triangleIndices.size()*3;
-
 		MeshGroup& meshGroup = mesh->groups[i];
-
-		// Reserve space for vertex data.
-		meshGroup.position.reserve(size);
-		meshGroup.normals.reserve(size);
-		meshGroup.texCoords.reserve(size);
-		meshGroup.bones.reserve(size);
+		meshGroup.indices.reserve( numIndices*3 );
 		meshGroup.material = buildMaterial(group);
 
 		// Let's process all the triangles of this group.
-		for( uint j = 0; j < group.triangleIndices.size(); j++ )
+		for( uint j = 0; j < numIndices; j++ )
 		{
-			const ushort& t_ind = group.triangleIndices[j];
-			const ms3d_triangle_t& t = *triangles[t_ind];
+			const ushort& triIndex = group.triangleIndices[j];
+			const ms3d_triangle_t& t = *triangles[triIndex];
 
 			for( uint e = 0; e < 3; e++ )
 			{
-				const ushort& v_ind = t.vertexIndices[e];
-				const ms3d_vertex_t& v = *vertices[v_ind];
-			
-				meshGroup.position.push_back( v.position );
-				meshGroup.bones.push_back( v.boneIndex );
-			}
-
-			for( uint e = 0; e < 3; e++ )
-			{
+				const ushort& vertexIndex = t.vertexIndices[e];
+				const ms3d_vertex_t& vertex = *vertices[vertexIndex];
+		
 				Vector3 normal( t.vertexNormals[e] );
-				meshGroup.normals.push_back( normal );
-
 				Vector2 texCoord( t.s[e], t.t[e] );
-				meshGroup.texCoords.push_back( texCoord );
+
+				mesh->position.push_back( vertex.position );
+				mesh->normals.push_back( normal );
+				mesh->texCoords.push_back( texCoord );
+
+				float boneIndex = vertex.boneIndex;
+				mesh->boneIndices.push_back(boneIndex);
+
+				meshGroup.indices.push_back( mesh->position.size()-1 );
 			}
 		}
 	}

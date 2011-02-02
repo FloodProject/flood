@@ -34,8 +34,6 @@ public:
 	// Gets the bones of the skeleton.
 	GETTER(Bones, const BonesVector&, bones)
 
-protected:
-
 	// Bones of the skeleton.
 	BonesVector bones;
 };

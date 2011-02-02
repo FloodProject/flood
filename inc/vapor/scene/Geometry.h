@@ -8,19 +8,16 @@
 
 #pragma once
 
-#include "vapor/scene/Transform.h"
-#include "vapor/render/RenderQueue.h"
-#include "vapor/math/BoundingBox.h"
+#include "scene/Transform.h"
+#include "math/BoundingBox.h"
+#include "render/Renderable.h"
+#include "render/RenderQueue.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-typedef std::vector< RenderablePtr > RenderableList;
-typedef std::map< RenderStage::Enum, RenderableList > RenderableMap;
-typedef std::pair<const RenderStage::Enum, RenderableList > RenderableMapPair;
-
-//-----------------------------------//
+typedef std::vector<RenderablePtr> RenderableVector;
 
 /**
  * This component holds geometry data for rendering. It can hold multiple
@@ -39,12 +36,10 @@ public:
 	Geometry( const RenderablePtr& renderable );
 
 	// Adds a new renderable to this geometry.
-	void addRenderable( const RenderablePtr& renderable, 
-		RenderStage::Enum group = RenderStage::Normal,
-		uint priority = 0 );
+	void addRenderable( const RenderablePtr& renderable );
 
 	// Gets all the renderables in this geometry.
-	RenderableList getRenderables( RenderStage::Enum = RenderStage::Normal );
+	RenderableVector getRenderables();
 
 	// Appends all the renderables of this geometry to the queue.
 	void appendRenderables( RenderQueue& queue, TransformPtr transform );
@@ -55,11 +50,8 @@ public:
 	// Updates some geometry information.
 	virtual void update( double delta );
 
-	// Callback when geometry is about to get rendered.
-	virtual void onRender();
-
 	// Gets the bounding volume of this geometry.
-	GETTER(BoundingVolume, const BoundingBox&, boundingVolume)
+	GETTER(BoundingVolume, const BoundingBox&, bounds)
 
 	// Gets the world bounding volume of the transform.
 	BoundingBox getWorldBoundingVolume() const;
@@ -72,21 +64,18 @@ protected:
 	// Notifies the Transform that bounding volumes are dirty.
 	void notifiesTransform();
 
+	// Renderables of the geometry.
+	RenderableVector renderables;
+
 	// Bounding volume of the geometry.
-	BoundingBox boundingVolume;
+	BoundingBox bounds;
 
 	// Keeps track if geometry has changed.
 	bool isDirty;
-
-	// Keeps track if geometry needs render callback.
-	bool needsRenderCallback;
-	
-	// Renderables of the geometry.
-	RenderableMap renderables;
 };
 
-TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( Geometry );
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Geometry );
+TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( Geometry );
 
 //-----------------------------------//
 

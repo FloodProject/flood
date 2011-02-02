@@ -19,10 +19,11 @@ varying vec2 vp_TexCoord;
 void main()
 {
 	normal = vp_Normal;// * mat3(vp_BonesMatrix[vp_BoneIndex]) * mat3(vp_ModelMatrix);
-	normal = normalize(normal);
-	normal = vp_Normal;
+	//normal = normalize(normal);
+	
 	vp_TexCoord = vp_TexCoord0.st;
-	gl_Position = vp_ProjectionMatrix * vp_ViewMatrix * vp_ModelMatrix * vp_BonesMatrix[int(vp_BoneIndex)] * vec4(vp_Vertex, 1.0);
+	gl_Position = vp_ProjectionMatrix * vp_ViewMatrix * vp_ModelMatrix
+	 * vp_BonesMatrix[int(vp_BoneIndex)] * vec4(vp_Vertex, 1.0);
 } 
 
 [fragment]

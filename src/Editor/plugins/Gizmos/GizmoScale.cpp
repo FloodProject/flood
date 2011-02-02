@@ -35,8 +35,10 @@ void GizmoScale::buildGeometry()
 	renderable = new Renderable(PolygonType::Quads);
 	renderable->setVertexBuffer(cubes);
 	renderable->setMaterial(material);
+	renderable->setRenderLayer(RenderLayer::PostTransparency);
+	renderable->setRenderPriority(100);
 
-	addRenderable(renderable, RenderStage::PostTransparency, 100);
+	addRenderable(renderable);
 }
 
 //-----------------------------------//

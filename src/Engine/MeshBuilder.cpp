@@ -44,6 +44,19 @@ bool MeshBuilder::build(const MeshPtr& mesh)
 
 void MeshBuilder::buildGeometry()
 {
+	// Vertex buffer.
+	VertexBufferPtr vb = new VertexBuffer();
+
+	vb->set( VertexAttribute::Position, mesh->position );
+	vb->set( VertexAttribute::Normal, mesh->normals );
+	vb->set( VertexAttribute::TexCoord0, mesh->texCoords );
+
+	if( mesh->isAnimated() )
+	{
+		vb->set( VertexAttribute::BoneIndex, mesh->boneIndices );
+	}
+
+	// Construct the mesh groups.
 	const std::vector<MeshGroup>& groups = mesh->groups;
 
 	for( uint i = 0; i < groups.size(); i++ )
@@ -53,37 +66,17 @@ void MeshBuilder::buildGeometry()
 		// Gets a material for the group.
 		MaterialPtr mat = buildMaterial(group);
 
-		// Vertex buffer.
-		VertexBufferPtr vb = new VertexBuffer();
+		IndexBufferPtr ib = new IndexBuffer();
+		ib->set(group.indices);
 
-		vb->set( VertexAttribute::Position, group.position );
-		vb->set( VertexAttribute::Normal, group.normals );
-		vb->set( VertexAttribute::TexCoord0, group.texCoords );
-
-		if( mesh->isAnimated() )
-			vb->set( VertexAttribute::BoneIndex, group.bones );
-
-		// Renderable.
-		RenderablePtr rend = new Renderable();
-		rend->setPrimitiveType( PolygonType::Triangles );
-		rend->setVertexBuffer( vb );
-		rend->setMaterial( mat );
-		
-		meshRenderables[mesh].push_back( rend );
+		RenderablePtr renderable = new Renderable();
+		renderable->setPrimitiveType( PolygonType::Triangles );
+		renderable->setVertexBuffer(vb);
+		renderable->setIndexBuffer(ib);
+		renderable->setMaterial(mat);
+		meshRenderables[mesh].push_back(renderable);
 
 		#pragma TODO("Use index buffers when building mesh geometry")
-		
-		//std::vector< ushort > vb_i;
-		//foreach( const ms3d_triangle_t& t, triangles )
-		//{	
-		//	vb_i.push_back( t.vertexIndices[0] );
-		//	vb_i.push_back( t.vertexIndices[1] );
-		//	vb_i.push_back( t.vertexIndices[2] );
-		//}
-
-		//IndexBufferPtr ib( new IndexBuffer() );
-		//ib->set( vb_i );
-		//rend->setIndexBuffer( ib );
 	}
 }
 

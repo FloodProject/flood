@@ -9,7 +9,7 @@
 #include "vapor/PCH.h"
 #include "vapor/render/Sphere.h"
 #include "vapor/math/EulerAngles.h"
-#include "vapor/math/Math.h"
+#include "vapor/math/Helpers.h"
 #include "vapor/math/BoundingBox.h"
 
 namespace vapor {

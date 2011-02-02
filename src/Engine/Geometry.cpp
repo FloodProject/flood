@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/scene/Geometry.h"
-#include "vapor/scene/Entity.h"
+#include "scene/Geometry.h"
+#include "scene/Entity.h"
 
 namespace vapor {
 
@@ -21,44 +21,28 @@ END_CLASS()
 
 Geometry::Geometry()
 	: isDirty(true)
-	, needsRenderCallback(false)
 { }
 
 //-----------------------------------//
 
 Geometry::Geometry( const RenderablePtr& rend )
 	: isDirty(true)
-	, needsRenderCallback(false)
 {
 	addRenderable( rend );
 }
 
 //-----------------------------------//
 
-void Geometry::addRenderable( const RenderablePtr& rend, RenderStage::Enum group, 
-							  uint priority )
+void Geometry::addRenderable(const RenderablePtr& rend)
 {
-	RenderableList& renderList = renderables[group];
-	renderList.push_back( rend );
+	renderables.push_back( rend );
 }
 
 //-----------------------------------//
 
-RenderableList Geometry::getRenderables( RenderStage::Enum group )
+RenderableVector Geometry::getRenderables()
 {
-	RenderableList rends;
-
-	RenderableMap::const_iterator it;
-	for( it = renderables.cbegin(); it != renderables.cend(); it++ )
-	{
-		const RenderableList& groupRends = it->second;
-		
-		for( uint i = 0; i < groupRends.size(); i++ )
-			rends.push_back(groupRends[i]);
-	}
-
-	//return renderables[group];
-	return rends;
+	return renderables;
 }
 
 //-----------------------------------//
@@ -69,25 +53,16 @@ void Geometry::appendRenderables( RenderQueue& queue, TransformPtr transform )
 		return;
 	
 	const Matrix4x3& absoluteTransform = transform->getAbsoluteTransform();
-	
-	RenderableMap::const_iterator it;
-	for( it = renderables.cbegin(); it != renderables.cend(); it++ )
+
+	for( uint i = 0; i < renderables.size(); i++ )
 	{
-		for( uint i = 0; i < it->second.size(); i++ )
-		{
-			const RenderablePtr& rend = it->second[i];
-			RenderState renderState;
-			
-			renderState.renderable = rend;
-			renderState.modelMatrix = absoluteTransform;
-			renderState.group = it->first;
-			renderState.priority = 0;
+		const RenderablePtr& rend = renderables[i];
+		
+		RenderState state;
+		state.renderable = rend;
+		state.modelMatrix = absoluteTransform;
 
-			if( needsRenderCallback )
-				renderState.callback.Connect( this, &Geometry::onRender );
-
-			queue.push_back( renderState );
-		}
+		queue.push_back(state);
 	}
 }
 
@@ -95,30 +70,27 @@ void Geometry::appendRenderables( RenderQueue& queue, TransformPtr transform )
 
 void Geometry::updateBounds()
 {
-	boundingVolume.reset();
+	bounds.reset();
 
 	// Update the bounding box to accomodate new geometry.
-	RenderableMap::const_iterator it;
-	for( it = renderables.cbegin(); it != renderables.cend(); it++ )
+	for( uint i = 0; i < renderables.size(); i++ )
 	{
-		for( uint i = 0; i < it->second.size(); i++ )
-		{
-			const RenderablePtr& rend = it->second[i];
-			const VertexBufferPtr& vb = rend->getVertexBuffer();
+		const RenderablePtr& rend = renderables[i];
+		const VertexBufferPtr& vb = rend->getVertexBuffer();
 			
-			if( !vb ) continue;
+		if( !vb ) continue;
 
-			const std::vector<Vector3>& verts = vb->getVertices();
-			for( uint e = 0; e < verts.size(); e++ )
-			{
-				const Vector3& vec = verts[e];
-				boundingVolume.add(vec);
-			}
+		const std::vector<Vector3>& verts = vb->getVertices();
+		
+		for( uint j = 0; j < verts.size(); j++ )
+		{
+			const Vector3& vertex = verts[j];
+			bounds.add(vertex);
 		}
 	}
 
-	if( boundingVolume.isInfinite() )
-		boundingVolume.setZero();
+	if( bounds.isInfinite() )
+		bounds.setZero();
 }
 
 //-----------------------------------//
@@ -152,7 +124,7 @@ BoundingBox Geometry::getWorldBoundingVolume() const
 {
 	const TransformPtr& trans = getEntity()->getTransform();
 	const Matrix4x3& transform = trans->getAbsoluteTransform();
-	return boundingVolume.transform(transform);
+	return bounds.transform(transform);
 }
 
 //-----------------------------------//
@@ -160,13 +132,6 @@ BoundingBox Geometry::getWorldBoundingVolume() const
 void Geometry::markDirty()
 {
 	isDirty = true;
-}
-
-//-----------------------------------//
-
-void Geometry::onRender()
-{
-
 }
 
 //-----------------------------------//

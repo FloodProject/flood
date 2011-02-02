@@ -14,6 +14,7 @@
 #include "Resources/Skeleton.h"
 
 FWD_DECL_INTRUSIVE(Material)
+FWD_DECL_INTRUSIVE(Renderable)
 
 namespace vapor {
 

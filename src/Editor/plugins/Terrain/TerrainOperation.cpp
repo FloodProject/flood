@@ -182,7 +182,7 @@ void TerrainOperation::getCellsInRange(const BoundingSphere& bs, std::vector<Cel
 		//GeometryPtr geometry = node->getComponent<Geometry>();
 		//assert( geometry != nullptr );
 
-		//const RenderableList& renderables = geometry->getRenderables();
+		//const RenderableVector& renderables = geometry->getRenderables();
 		//assert( !renderables.empty() );
 
 		//const CellPtr& cell = RefCast<Cell>(renderables[0]);

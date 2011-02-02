@@ -65,7 +65,6 @@ bool VertexBuffer::unbind()
 	{ glClientActiveTexture(GL_TEXTURE0+i);							\
 	EnableArrayPointer(GL_TEXTURE_COORD_ARRAY, glTexCoordPointer) }
 
-
 void VertexBuffer::bindPointers()
 {
 	if( !built ) return;
@@ -200,6 +199,25 @@ bool VertexBuffer::set( VertexAttribute::Enum index, const std::vector<float>& d
 	attribute.size = sizeof(float);
 	attribute.type = GL_FLOAT;
 	attribute.data.resize( data.size() * sizeof(float) );
+	
+	if( data.size() != 0)
+		memcpy( &attribute.data[0], &data[0], attribute.data.size() );
+	
+	attributes[index] = attribute;
+	return true;
+}
+
+//-----------------------------------//
+
+bool VertexBuffer::set( VertexAttribute::Enum index, const std::vector<int>& data )
+{
+	built = false;
+
+	Attribute attribute;
+	attribute.components = 1;
+	attribute.size = sizeof(int);
+	attribute.type = GL_INT;
+	attribute.data.resize( data.size() * sizeof(int) );
 	
 	if( data.size() != 0)
 		memcpy( &attribute.data[0], &data[0], attribute.data.size() );

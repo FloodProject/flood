@@ -66,11 +66,12 @@ Particles::Particles()
 	RenderablePtr renderable = new Renderable(PolygonType::Points);
 	renderable->setVertexBuffer(vb);
 	renderable->setMaterial(material);
-	
+	renderable->setRenderLayer(RenderLayer::Transparency);
+
 	renderable->onPreRender.Connect( this, &Particles::onPreRender );
 	renderable->onPostRender.Connect( this, &Particles::onPostRender ); 
 	
-	addRenderable(renderable, RenderStage::Transparency);
+	addRenderable(renderable);
 
 	particles.resize(MAX_PARTICLES);
 }

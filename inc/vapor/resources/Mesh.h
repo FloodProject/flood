@@ -15,7 +15,6 @@
 #include "Math/Vector3.h"
 
 FWD_DECL_INTRUSIVE(Animation)
-FWD_DECL_INTRUSIVE(Renderable)
 
 namespace vapor {
 
@@ -30,10 +29,7 @@ struct MeshMaterial
 
 struct MeshGroup
 {
-	std::vector<Vector3> position;
-	std::vector<Vector3> normals;
-	std::vector<Vector3> texCoords;
-	std::vector<float> bones;
+	std::vector<ushort> indices;
 	MeshMaterial material;
 };
 
@@ -99,14 +95,11 @@ public:
 	// Bounding volume of the mesh.
 	BoundingBox boundingVolume;
 
-	// Renderables of the mesh.
-	std::vector<Renderable*> renderables;
-
-	// Vertex data.
-	//std::vector<Vector3> position;
-	//std::vector<Vector3> normals;
-	//std::vector<Vector3> texCoords;
-	//std::vector<float> bones;
+	// Vertex data (used for CPU skinning).
+	std::vector<Vector3> position;
+	std::vector<Vector3> normals;
+	std::vector<Vector3> texCoords;
+	std::vector<float> boneIndices;
 
 	// Keeps track if the mesh has been built.
 	bool built;

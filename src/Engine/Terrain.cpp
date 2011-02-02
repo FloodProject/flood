@@ -8,7 +8,7 @@
 
 #include "vapor/PCH.h"
 #include "vapor/terrain/Terrain.h"
-#include "vapor/math/Math.h"
+#include "vapor/math/Helpers.h"
 #include "scene/Geometry.h"
 #include "Utilities.h"
 

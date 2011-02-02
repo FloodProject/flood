@@ -16,6 +16,8 @@ namespace vapor {
 
 Renderable::Renderable()
 	: mode( PolygonMode::Solid )
+	, stage( RenderLayer::Normal )
+	, priority(0)
 { }
 
 //-----------------------------------//
@@ -23,6 +25,8 @@ Renderable::Renderable()
 Renderable::Renderable( PolygonType::Enum type )
 	: type( type )
 	, mode( PolygonMode::Solid )
+	, stage( RenderLayer::Normal )
+	, priority(0)
 { }
 
 //-----------------------------------//

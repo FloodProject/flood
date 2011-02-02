@@ -17,7 +17,7 @@
 #include "vapor/physics/Physics.h"
 #include "vapor/physics/btKinematicController.h"
 
-#include "vapor/math/Math.h"
+#include "vapor/math/Helpers.h"
 #include "vapor/scene/Entity.h"
 
 #include "vapor/Engine.h"

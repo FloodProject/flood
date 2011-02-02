@@ -10,7 +10,7 @@
 #include "vapor/controllers/ThirdPersonController.h"
 
 #include "vapor/Engine.h"
-#include "vapor/math/Math.h"
+#include "vapor/math/Helpers.h"
 #include "vapor/scene/Entity.h"
 #include "vapor/scene/Camera.h"
 #include "vapor/scene/Scene.h"

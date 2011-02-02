@@ -9,7 +9,7 @@
 #include "Resources/API.h"
 #include "Resources/Animation.h"
 #include "Resources/Bone.h"
-#include "math/Math.h"
+#include "math/Helpers.h"
 
 namespace vapor {
 

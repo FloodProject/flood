@@ -11,7 +11,7 @@
 #include "vapor/terrain/Terrain.h"
 #include "vapor/scene/Entity.h"
 #include "vapor/scene/Geometry.h"
-#include "vapor/math/Math.h"
+#include "vapor/math/Helpers.h"
 #include "vapor/math/Color.h"
 
 namespace vapor {

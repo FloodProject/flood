@@ -8,31 +8,12 @@
 
 #pragma once
 
-#include "vapor/render/Renderable.h"
-#include "vapor/scene/Transform.h"
-#include "vapor/scene/Light.h"
+#include "render/Renderable.h"
+#include "scene/Transform.h"
+#include "scene/Light.h"
 #include "Event.h"
 
 namespace vapor {
-
-//-----------------------------------//
-
-/**
- * Use these different kinds of render groups to signal to the renderer
- * how you want your renderables to be sorted by the render device.
- * Lower numbers render before higher numbers.
- */
-
-namespace RenderStage
-{
-	enum Enum
-	{
-		Normal = 0,
-		Transparency = 5,
-		PostTransparency = 7,
-		Overlays = 10
-	};
-}
 
 //-----------------------------------//
 
@@ -48,26 +29,15 @@ typedef Event0<> RenderDelegate;
 
 struct RenderState
 {
-	RenderState()
-		: group( RenderStage::Normal )
-		, priority(0) 
-	{ }
+	RenderState() { }
 	
 	RenderState( const RenderState& rhs )
-		: group( rhs.group )
-		, priority( rhs.priority )
-		, renderable( rhs.renderable )
+		: renderable( rhs.renderable )
 		, modelMatrix( rhs.modelMatrix )
-		, callback( rhs.callback )
 	{ }
-
-	RenderStage::Enum group;
-	int priority;
 
 	RenderablePtr renderable;
 	Matrix4x3 modelMatrix;
-
-	RenderDelegate callback;
 };
 
 //-----------------------------------//

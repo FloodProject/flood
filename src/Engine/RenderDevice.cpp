@@ -78,7 +78,7 @@ void RenderDevice::init()
 	if( adapter->supportsShaders )
 	{
 		Log::info( "Shaders support detected. Switching to forward shaders pipeline" );
-		pipeline = RenderPipeline::ShaderForward;
+		//pipeline = RenderPipeline::ShaderForward;
 	}
 
 	setClearColor( Color::White );
@@ -111,7 +111,8 @@ void RenderDevice::checkExtensions()
 
 static bool RenderStateSorter(const RenderState& lhs, const RenderState& rhs)
 {
-	return lhs.group < rhs.group;
+	return lhs.renderable->getRenderLayer() 
+		< rhs.renderable->getRenderLayer();
 }
 
 void RenderDevice::render( RenderBlock& queue ) 
@@ -168,12 +169,14 @@ void RenderDevice::setupRenderFixed(const RenderState& state, const LightQueue& 
 
 	setupRenderStateMaterial(material);
 
-	if( state.group != RenderStage::Overlays )
+	RenderLayer::Enum stage = renderable->getRenderLayer();
+
+	if( stage != RenderLayer::Overlays )
 	{
 		if( !setupRenderFixedMatrix(state) )
 			return;
 	}
-	else if( state.group == RenderStage::Overlays )
+	else if( stage == RenderLayer::Overlays )
 	{
 		if( !setupRenderFixedOverlay(state) )
 			return;
@@ -186,7 +189,6 @@ void RenderDevice::setupRenderFixed(const RenderState& state, const LightQueue& 
 	const Matrix4x4& model = state.modelMatrix;
 	glMultMatrixf(&model.m11);
 
-	state.callback();
 	renderable->render(this);
 	
 	glPopMatrix();
@@ -265,7 +267,9 @@ void RenderDevice::setupRenderForward(const RenderState& state, const LightQueue
 
 	setupRenderStateMaterial(material);
 
-	if( state.group != RenderStage::Overlays )
+	RenderLayer::Enum stage = renderable->getRenderLayer();
+
+	if( stage != RenderLayer::Overlays )
 	{
 		if( !setupRenderStateMatrix(state) )
 			return;
@@ -273,13 +277,12 @@ void RenderDevice::setupRenderForward(const RenderState& state, const LightQueue
 		if( !setupRenderStateLight(state, lights) )
 			return;
 	}
-	else if( state.group == RenderStage::Overlays )
+	else if( stage == RenderLayer::Overlays )
 	{
 		if( !setupRenderStateOverlay(state) )
 			return;
 	}
 
-	state.callback();
 	renderable->render(this);
 	
 	undoRenderStateMaterial(material);

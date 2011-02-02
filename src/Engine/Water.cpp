@@ -26,9 +26,10 @@ Water::Water()
 Water::Water( MaterialPtr material )
 {
 	quad = new Quad(100, 100);
+	quad->setRenderLayer(RenderLayer::Transparency);
 	quad->setMaterial(material);
 
-	addRenderable(quad, RenderStage::Transparency);
+	addRenderable(quad);
 }
 
 //-----------------------------------//

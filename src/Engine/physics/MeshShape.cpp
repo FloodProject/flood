@@ -53,7 +53,7 @@ MeshShape::~MeshShape()
 //	
 //	foreach( const GeometryPtr& geometry, node->getGeometry() )
 //	{
-//		const RenderableList& rends = geometry->getRenderables();
+//		const RenderableVector& rends = geometry->getRenderables();
 //
 //		foreach( const RenderablePtr& rend, rends )
 //		{
@@ -89,7 +89,7 @@ btTriangleMesh* MeshShape::convertMesh()
 	for( uint i = 0; i < node->getGeometry().size(); i++ )
 	{
 		const GeometryPtr& geometry = node->getGeometry()[i];
-		const RenderableList& rends = geometry->getRenderables();
+		const RenderableVector& rends = geometry->getRenderables();
 
 		for( uint e = 0; e < rends.size(); e++ )
 		{

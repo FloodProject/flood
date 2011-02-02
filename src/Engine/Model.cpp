@@ -7,17 +7,17 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "scene/Model.h"
-#include "scene/Transform.h"
-#include "scene/Entity.h"
-#include "MeshBuilder.h"
-#include "resources/Mesh.h"
+#include "Scene/Model.h"
+#include "Scene/Transform.h"
+#include "Scene/Entity.h"
+#include "Resources/Mesh.h"
 #include "Resources/Animation.h"
 #include "Resources/Skeleton.h"
 #include "Resources/Bone.h"
 #include "Resources/Attachment.h"
-#include "render/Device.h"
-#include "math/Math.h"
+#include "Render/Device.h"
+#include "Math/Helpers.h"
+#include "MeshBuilder.h"
 #include "Engine.h"
 
 namespace vapor {
@@ -50,7 +50,6 @@ Model::Model( const MeshPtr& mesh )
 void Model::init()
 {
 	modelBuilt = false;
-	needsRenderCallback = true;
 	debugRenderable = nullptr;
 
 	animationFadeTime = 0;
@@ -108,9 +107,11 @@ void Model::build()
 		MaterialPtr material = rend->getMaterial();
 
 		if( material && material->isBlendingEnabled() )
-			addRenderable( rend, RenderStage::Transparency );
-		else
-			addRenderable( rend );
+			rend->setRenderLayer(RenderLayer::Transparency);
+
+		rend->onPreRender.Connect(this, &Model::onRender);
+		
+		addRenderable( rend );
 	}
 
 	if( mesh->isAnimated() )
@@ -239,7 +240,7 @@ void Model::updateAttachments()
 
 void Model::updateBounds()
 {
-	boundingVolume = mesh->getBoundingVolume();
+	bounds = mesh->getBoundingVolume();
 }
 
 //-----------------------------------//
@@ -319,7 +320,22 @@ void Model::onRender()
 
 void Model::setupSkinning()
 {
-	
+	for(uint i = 0; i <renderables.size(); i++)
+	{
+		const RenderablePtr& rend = renderables[i];
+		const VertexBufferPtr& vb = rend->getVertexBuffer();
+
+		std::vector<Vector3>& skinnedPositions = vb->getVertices();
+		const std::vector<Vector3>& meshPositions = mesh->position;
+
+		for(uint j = 0; j < meshPositions.size(); j++)
+		{
+			int boneIndex = (int) mesh->boneIndices[j];
+			skinnedPositions[j] = bones[boneIndex]*meshPositions[j];
+		}
+
+		vb->forceRebuild();
+	}
 }
 
 //-----------------------------------//
@@ -385,18 +401,20 @@ void Model::updateDebugRenderable() const
 	std::vector<Vector3> pos;
 	std::vector<Vector3> colors;
 
-	const std::vector<BonePtr> skeletonBones = mesh->getSkeleton()->getBones();
-	for( uint i = 0; i < skeletonBones.size(); i++ )
+	const SkeletonPtr& skel = mesh->getSkeleton();
+
+	uint numBones = skel->bones.size();
+	for( uint i = 0; i < numBones; i++ )
 	{
-		const BonePtr& bone = skeletonBones[i];
+		BonePtr& bone = skel->bones[i];
 
 		Vector3 vertex;
 		Vector3 parentVertex;
 
-		if( bone->indexParent != -1 )
-			parentVertex = bones[bone->indexParent]*parentVertex;
-		else
+		if( bone->indexParent == -1 )
 			continue;
+		
+		parentVertex = bones[bone->indexParent]*parentVertex;	
 
 		pos.push_back( bones[bone->index]*vertex );
 		colors.push_back( Color::Blue );

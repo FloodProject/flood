@@ -40,8 +40,9 @@ void Overlay::createGeometry()
 	renderable = new Renderable( PolygonType::Quads );
 	renderable->setVertexBuffer( new VertexBuffer() );
 	renderable->setMaterial(material);
-	
-	addRenderable( renderable, RenderStage::Overlays );
+	renderable->setRenderLayer(RenderLayer::Overlays);
+
+	addRenderable( renderable );
 
 	MaterialPtr borderMaterial = new Material("OverlayBorderMaterial");
 	borderMaterial->setDepthTest(false);
@@ -49,8 +50,10 @@ void Overlay::createGeometry()
 	borderRenderable = new Renderable( PolygonType::LineLoop );
 	borderRenderable->setVertexBuffer( new VertexBuffer() );
 	borderRenderable->setMaterial( borderMaterial  );
+	borderRenderable->setRenderLayer(RenderLayer::Overlays);
+	borderRenderable->setRenderPriority(10);
 
-	addRenderable( borderRenderable, RenderStage::Overlays, 10 );
+	addRenderable( borderRenderable );
 }
 
 //-----------------------------------//

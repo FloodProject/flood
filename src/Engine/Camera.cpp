@@ -238,15 +238,13 @@ void Camera::cull( RenderBlock& block, const EntityPtr& entity )
 			continue;
 
 		const RenderablePtr& renderable = component->getDebugRenderable();
-	
+		renderable->setRenderLayer(RenderLayer::PostTransparency);
+
 		RenderState renderState;
 		renderState.renderable = renderable;
 
 		if( component->getDebugInheritsTransform() )
 			renderState.modelMatrix = transform->getAbsoluteTransform();
-	
-		renderState.group = RenderStage::PostTransparency;
-		renderState.priority = 0;
 
 		block.renderables.push_back( renderState );
 	}

@@ -11,7 +11,7 @@ namespace vapor
 	class Settings;
 	
 	class RenderQueue;
-	namespace RenderStage { enum Enum; }
+	namespace RenderLayer { enum Enum; }
 
 	class Light;
 	typedef std::shared_ptr<Light> LightPtr;

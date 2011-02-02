@@ -30,7 +30,7 @@
 #include <vapor/math/BoundingSphere.h>
 #include <vapor/math/Noise.h>
 #include <vapor/math/Hash.h>
-#include <vapor/math/Math.h>
+#include <vapor/math/Helpers.h>
 
 //---------------------------------------------------------------------//
 // Resource-related Includes

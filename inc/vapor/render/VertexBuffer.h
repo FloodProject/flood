@@ -51,7 +51,6 @@ struct Attribute
 	  : components(rhs.components)
 	  , size(rhs.size)
 	  , data(rhs.data)
-	  , type(rhs.type)
 	{}
 
 	int components;
@@ -137,6 +136,9 @@ public:
 
 	// Sets the attribute data.
 	bool set( VertexAttribute::Enum attr, const std::vector<float>& data );
+
+	// Sets the attribute data.
+	bool set( VertexAttribute::Enum attr, const std::vector<int>& data );
 
 private:
 

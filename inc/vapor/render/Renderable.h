@@ -73,6 +73,25 @@ namespace PolygonMode
 
 //-----------------------------------//
 
+/**
+ * Use these different kinds of render groups to signal to the renderer
+ * how you want your renderables to be sorted by the render device.
+ * Lower numbers render before higher numbers.
+ */
+
+namespace RenderLayer
+{
+	enum Enum
+	{
+		Normal = 0,
+		Transparency = 5,
+		PostTransparency = 7,
+		Overlays = 10
+	};
+}
+
+//-----------------------------------//
+
 class RenderDevice;
 
 /**
@@ -97,20 +116,26 @@ public:
 
     // Render this renderable.
 	void render(RenderDevice* device);
-    
-    // Gets/sets the vertex buffer associated with the renderable.
-	ACESSOR(VertexBuffer, VertexBufferPtr, vb) 
+
+    // Gets/sets the render stage.
+	ACESSOR(RenderLayer, RenderLayer::Enum, stage)
    
-    // Gets/sets the index buffer associated with the renderable.
+    // Gets/sets the render priority.
+	ACESSOR(RenderPriority, int, priority)
+    
+    // Gets/sets the vertex buffer.
+	ACESSOR(VertexBuffer, VertexBufferPtr, vb)
+   
+    // Gets/sets the index buffer.
 	ACESSOR(IndexBuffer, IndexBufferPtr, ib)
 
-    // Gets/sets the material associated with the renderable.
+    // Gets/sets the material.
     ACESSOR(Material, MaterialPtr, material)
 
-    // Gets/sets the render mode of this renderable.
+    // Gets/sets the render mode.
 	ACESSOR(PolygonMode, PolygonMode::Enum, mode)
 
-	// Gets/sets the primitive type of this renderable.
+	// Gets/sets the primitive type.
 	ACESSOR(PrimitiveType, PolygonType::Enum, type)
 
 	// Pre-render callback.
@@ -121,10 +146,16 @@ public:
 
 protected:
 
-    // Primitive type of the vertex buffer contents.
+	// Rendering stage.
+	RenderLayer::Enum stage;
+
+	// Rendering priority.
+	int priority;
+
+    // Primitive type.
     PolygonType::Enum type;
 
-	// Rendering mode of the vertex buffer contents.
+	// Polygon mode.
 	PolygonMode::Enum mode;
 
 	// Vertex buffer with all the vertices.

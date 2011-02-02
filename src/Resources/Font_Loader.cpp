@@ -11,7 +11,7 @@
 #ifdef VAPOR_FONT_FREETYPE2
 
 #include "Core/File.h"
-#include "Math/Math.h"
+#include "Math/Helpers.h"
 #include "Utilities.h"
 
 #include "Resources/Font_Loader.h"

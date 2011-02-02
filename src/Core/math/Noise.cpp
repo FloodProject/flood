@@ -8,7 +8,7 @@
 
 #include "Core/API.h"
 #include "math/Noise.h"
-#include "math/Math.h"
+#include "math/Helpers.h"
 #include "Log.h"
 
 namespace vapor {
