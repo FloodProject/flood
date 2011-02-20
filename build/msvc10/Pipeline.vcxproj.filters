@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Processors">
+      <UniqueIdentifier>{cc4a5911-fe5c-4fdc-a515-ea14f94051a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Processors\Mesh">
+      <UniqueIdentifier>{a5bd8204-21e4-4c33-b4a7-59f8e46da56f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Processors\Image">
+      <UniqueIdentifier>{f912861f-2a9c-4d79-a212-3c8301b066c4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\Pipeline\API.h" />
+    <ClInclude Include="..\..\src\Pipeline\MeshProcessor.h">
+      <Filter>Processors\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Pipeline\ResourceProcessor.h">
+      <Filter>Processors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Pipeline\ImageProcessor.h">
+      <Filter>Processors\Image</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\Pipeline\Pipeline.cpp" />
+    <ClCompile Include="..\..\src\Pipeline\MeshProcessor.cpp">
+      <Filter>Processors\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Pipeline\ResourceProcessor.cpp">
+      <Filter>Processors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Pipeline\ImageProcessor.cpp">
+      <Filter>Processors\Image</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

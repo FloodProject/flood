@@ -218,6 +218,9 @@
     <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneOperation.cpp">
       <Filter>Plugins\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourceDatabase.cpp">
+      <Filter>Plugins\Resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Editor\inc\RenderControl.h">
@@ -360,6 +363,9 @@
     <ClInclude Include="..\..\src\Editor\inc\ResourceDrop.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Terrain\TerrainOperation.h">
       <Filter>Plugins\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourceDatabase.h">
+      <Filter>Plugins\Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

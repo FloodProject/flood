@@ -1,0 +1,224 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Fonts">
+      <UniqueIdentifier>{cead50f0-d801-4813-9568-e18429c27d2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fonts\Bitmap">
+      <UniqueIdentifier>{6c40a5cb-8e8b-4737-b421-ccdeb3681f79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fonts\TrueType">
+      <UniqueIdentifier>{07bee40a-0251-4ea2-b8fc-01262a767a31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Images">
+      <UniqueIdentifier>{6c159594-a7c6-46e7-a141-1013fddaf32d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Images\PNG">
+      <UniqueIdentifier>{f5de18d6-b829-43a1-8353-99587b7dc42b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Images\STB">
+      <UniqueIdentifier>{a74d0456-6624-4e4e-9867-7e05e07e2e48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Images\DevIL">
+      <UniqueIdentifier>{15020e6b-7bcd-41d4-ada7-e95bba031f88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Meshes">
+      <UniqueIdentifier>{d1a92ffc-5354-4a56-bc75-c38418a93c87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scripts">
+      <UniqueIdentifier>{7f1d829a-8725-417d-b79e-ec0e0beef689}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scripts\Lua">
+      <UniqueIdentifier>{c435975a-c62c-4675-9096-19d73df783c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{52c2e63e-dc71-48c2-bc6b-bee712550cf2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\GLSL">
+      <UniqueIdentifier>{fbbd06f1-236b-4162-9db8-acb1ae5d2cf3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sounds">
+      <UniqueIdentifier>{a8bec5c0-e302-42bb-b3f6-1fb64d049c3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sounds\OGG">
+      <UniqueIdentifier>{04e83506-78f0-4e17-ac7e-6a29a1de992b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Text">
+      <UniqueIdentifier>{78f5c91c-4d2c-4817-8c4a-54d79c25fd55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Video">
+      <UniqueIdentifier>{22e3bb76-5eaf-4fa8-adea-c7fc35743216}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Video\Theora">
+      <UniqueIdentifier>{facfd174-96fa-4e1a-b052-575f049d2e3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Animation">
+      <UniqueIdentifier>{54f47b86-8ff2-44bf-ac5b-4a132b3f03a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Meshes\Milkshape">
+      <UniqueIdentifier>{848862fb-708d-4b20-a285-089c90453fa0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Material">
+      <UniqueIdentifier>{cf227c30-bff1-4860-b0b8-d1dd5592bde5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\dep\picopng\lodepng.cpp">
+      <Filter>Images\PNG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dep\picopng\picopng.cpp">
+      <Filter>Images\PNG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dep\stb\stb_image.cpp">
+      <Filter>Images\STB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\Resource.cpp" />
+    <ClCompile Include="..\..\src\Resources\ResourceManager.cpp" />
+    <ClCompile Include="..\..\src\Resources\Font.cpp">
+      <Filter>Fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\Font_Loader.cpp">
+      <Filter>Fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\BitmapFont.cpp">
+      <Filter>Fonts\Bitmap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\TTF.cpp">
+      <Filter>Fonts\TrueType</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\IL_Image_Loader.cpp">
+      <Filter>Images\DevIL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\PNG_Loader.cpp">
+      <Filter>Images\PNG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\STB_Image_Loader.cpp">
+      <Filter>Images\STB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\Image.cpp">
+      <Filter>Images</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\Mesh.cpp">
+      <Filter>Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\Lua_Loader.cpp">
+      <Filter>Scripts\Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\Script.cpp">
+      <Filter>Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\GLSL_Loader.cpp">
+      <Filter>Shaders\GLSL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\GLSL_Text.cpp">
+      <Filter>Shaders\GLSL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\OGG_Loader.cpp">
+      <Filter>Sounds\OGG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\Text.cpp">
+      <Filter>Text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\ResourceSound.cpp">
+      <Filter>Sounds</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\Bone.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\Skeleton.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\Animation.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\Shader.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\ResourceLoaders.cpp" />
+    <ClCompile Include="..\..\src\Pipeline\Milkshape3D.cpp">
+      <Filter>Meshes\Milkshape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Pipeline\MilkshapeLoader.cpp">
+      <Filter>Meshes\Milkshape</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Resources\ResourceTask.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\inc\vapor\resources\Mesh.h">
+      <Filter>Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\resources\Font.h">
+      <Filter>Fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\resources\Font_Loader.h">
+      <Filter>Fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\resources\BitmapFont.h">
+      <Filter>Fonts\Bitmap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\resources\TTF.h">
+      <Filter>Fonts\TrueType</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\resources\Image.h">
+      <Filter>Images</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\resources\PNG_Loader.h">
+      <Filter>Images\PNG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\resources\STB_Image_Loader.h">
+      <Filter>Images\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\resources\IL_Image_Loader.h">
+      <Filter>Images\DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\resources\GLSL_Loader.h">
+      <Filter>Shaders\GLSL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\resources\GLSL_Text.h">
+      <Filter>Shaders\GLSL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\resources\Sound.h">
+      <Filter>Sounds</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\resources\OGG_Loader.h">
+      <Filter>Sounds\OGG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\script\Script.h">
+      <Filter>Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\resources\Lua_Loader.h">
+      <Filter>Scripts\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\resources\Text.h">
+      <Filter>Text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\resources\Resource.h" />
+    <ClInclude Include="..\..\inc\vapor\resources\ResourceLoader.h" />
+    <ClInclude Include="..\..\inc\vapor\resources\ResourceManager.h" />
+    <ClInclude Include="..\..\src\Resources\API.h" />
+    <ClInclude Include="..\..\inc\vapor\resources\Animation.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\resources\Attachment.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\resources\Bone.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Pipeline\Milkshape3D.h">
+      <Filter>Meshes\Milkshape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Pipeline\MilkshapeFormat.h">
+      <Filter>Meshes\Milkshape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Pipeline\MilkshapeLoader.h">
+      <Filter>Meshes\Milkshape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\resources\Material.h">
+      <Filter>Material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\resources\Shader.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

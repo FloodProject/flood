@@ -166,24 +166,6 @@
     <Filter Include="Paging">
       <UniqueIdentifier>{0bad40b1-3622-4812-b531-bd3dfc159758}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Controllers">
-      <UniqueIdentifier>{bc1a1ddb-1bf0-4377-8f7e-0f74420d2a85}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Controllers\Camera">
-      <UniqueIdentifier>{558e6ede-bd2c-4351-8894-258b58596df5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Controllers\Camera\First Person">
-      <UniqueIdentifier>{bafe60a2-215a-4256-84e5-770711932132}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Controllers\Camera\Third Person">
-      <UniqueIdentifier>{72fd431a-6f92-456b-8242-bca90fedb714}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Controllers\Character">
-      <UniqueIdentifier>{86e0a566-d603-4458-ac03-2a1c5d15fa44}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Controllers\Script">
-      <UniqueIdentifier>{039fb325-4eaf-49cc-9ad6-1ef4af674ee7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Audio">
       <UniqueIdentifier>{b81a2bdf-ed7f-4c31-b32f-ef5508a868ff}</UniqueIdentifier>
     </Filter>
@@ -216,6 +198,27 @@
     </Filter>
     <Filter Include="Render\Material">
       <UniqueIdentifier>{a999175a-ca4f-4a8f-b303-1301cb9445bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Animation">
+      <UniqueIdentifier>{06d212d9-7f06-4d29-877b-f0411630af15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Camera\Controllers">
+      <UniqueIdentifier>{8ad46e0f-bc40-4a66-9e73-9b15352ffcc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Camera\Controllers\First Person">
+      <UniqueIdentifier>{bafe60a2-215a-4256-84e5-770711932132}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Camera\Controllers\Third Person">
+      <UniqueIdentifier>{72fd431a-6f92-456b-8242-bca90fedb714}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Script">
+      <UniqueIdentifier>{039fb325-4eaf-49cc-9ad6-1ef4af674ee7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Controller">
+      <UniqueIdentifier>{bc1a1ddb-1bf0-4377-8f7e-0f74420d2a85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Character">
+      <UniqueIdentifier>{86e0a566-d603-4458-ac03-2a1c5d15fa44}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -436,22 +439,19 @@
       <Filter>Paging</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\controllers\Controller.cpp">
-      <Filter>Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\controllers\CameraController.cpp">
-      <Filter>Controllers\Camera</Filter>
+      <Filter>Scene\Controller</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\controllers\FirstPersonController.cpp">
-      <Filter>Controllers\Camera\First Person</Filter>
+      <Filter>Scene\Camera\Controllers\First Person</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\controllers\ThirdPersonController.cpp">
-      <Filter>Controllers\Camera\Third Person</Filter>
+      <Filter>Scene\Camera\Controllers\Third Person</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\physics\CharacterController.cpp">
-      <Filter>Controllers\Character</Filter>
+      <Filter>Physics\Character</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\controllers\ScriptController.cpp">
-      <Filter>Controllers\Script</Filter>
+      <Filter>Scene\Script</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\Entity.cpp">
       <Filter>Scene</Filter>
@@ -473,6 +473,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\Material.cpp">
       <Filter>Render\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Engine\controllers\CameraController.cpp">
+      <Filter>Scene\Camera\Controllers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -723,22 +726,19 @@
       <Filter>Paging</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\controllers\Controller.h">
-      <Filter>Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\controllers\CameraController.h">
-      <Filter>Controllers\Camera</Filter>
+      <Filter>Scene\Controller</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\controllers\FirstPersonController.h">
-      <Filter>Controllers\Camera\First Person</Filter>
+      <Filter>Scene\Camera\Controllers\First Person</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\controllers\ThirdPersonController.h">
-      <Filter>Controllers\Camera\Third Person</Filter>
+      <Filter>Scene\Camera\Controllers\Third Person</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\physics\CharacterController.h">
-      <Filter>Controllers\Character</Filter>
+      <Filter>Physics\Character</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\controllers\ScriptController.h">
-      <Filter>Controllers\Script</Filter>
+      <Filter>Scene\Script</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\CompileOptions.h" />
     <ClInclude Include="..\..\inc\vapor\Headers.h" />
@@ -756,6 +756,9 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\render\Material.h">
       <Filter>Render\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\controllers\CameraController.h">
+      <Filter>Scene\Camera\Controllers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

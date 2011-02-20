@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\dep\picopng\lodepng.cpp" />
+    <ClCompile Include="..\..\dep\picopng\picopng.cpp" />
+    <ClCompile Include="..\..\dep\stb\stb_image.cpp" />
+    <ClCompile Include="..\..\src\Pipeline\Milkshape3D.cpp" />
+    <ClCompile Include="..\..\src\Pipeline\MilkshapeLoader.cpp" />
+    <ClCompile Include="..\..\src\Resources\Animation.cpp" />
+    <ClCompile Include="..\..\src\Resources\BitmapFont.cpp" />
+    <ClCompile Include="..\..\src\Resources\Bone.cpp" />
+    <ClCompile Include="..\..\src\Resources\Font.cpp" />
+    <ClCompile Include="..\..\src\Resources\Font_Loader.cpp" />
+    <ClCompile Include="..\..\src\Resources\GLSL_Loader.cpp" />
+    <ClCompile Include="..\..\src\Resources\GLSL_Text.cpp" />
+    <ClCompile Include="..\..\src\Resources\IL_Image_Loader.cpp" />
+    <ClCompile Include="..\..\src\Resources\Image.cpp" />
+    <ClCompile Include="..\..\src\Resources\Lua_Loader.cpp" />
+    <ClCompile Include="..\..\src\Resources\Mesh.cpp" />
+    <ClCompile Include="..\..\src\Resources\OGG_Loader.cpp" />
+    <ClCompile Include="..\..\src\Resources\PNG_Loader.cpp" />
+    <ClCompile Include="..\..\src\Resources\Resource.cpp" />
+    <ClCompile Include="..\..\src\Resources\ResourceLoaders.cpp" />
+    <ClCompile Include="..\..\src\Resources\ResourceManager.cpp" />
+    <ClCompile Include="..\..\src\Resources\ResourceSound.cpp" />
+    <ClCompile Include="..\..\src\Resources\ResourceTask.cpp" />
+    <ClCompile Include="..\..\src\Resources\Script.cpp" />
+    <ClCompile Include="..\..\src\Resources\Shader.cpp" />
+    <ClCompile Include="..\..\src\Resources\Skeleton.cpp" />
+    <ClCompile Include="..\..\src\Resources\STB_Image_Loader.cpp" />
+    <ClCompile Include="..\..\src\Resources\Text.cpp" />
+    <ClCompile Include="..\..\src\Resources\TTF.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\inc\vapor\resources\Animation.h" />
+    <ClInclude Include="..\..\inc\vapor\resources\Attachment.h" />
+    <ClInclude Include="..\..\inc\vapor\resources\BitmapFont.h" />
+    <ClInclude Include="..\..\inc\vapor\resources\Bone.h" />
+    <ClInclude Include="..\..\inc\vapor\resources\Font.h" />
+    <ClInclude Include="..\..\inc\vapor\resources\Font_Loader.h" />
+    <ClInclude Include="..\..\inc\vapor\resources\GLSL_Loader.h" />
+    <ClInclude Include="..\..\inc\vapor\resources\GLSL_Text.h" />
+    <ClInclude Include="..\..\inc\vapor\resources\IL_Image_Loader.h" />
+    <ClInclude Include="..\..\inc\vapor\resources\Image.h" />
+    <ClInclude Include="..\..\inc\vapor\resources\Lua_Loader.h" />
+    <ClInclude Include="..\..\inc\vapor\resources\Material.h" />
+    <ClInclude Include="..\..\inc\vapor\resources\Mesh.h" />
+    <ClInclude Include="..\..\inc\vapor\resources\OGG_Loader.h" />
+    <ClInclude Include="..\..\inc\vapor\resources\PNG_Loader.h" />
+    <ClInclude Include="..\..\inc\vapor\resources\Resource.h" />
+    <ClInclude Include="..\..\inc\vapor\resources\ResourceLoader.h" />
+    <ClInclude Include="..\..\inc\vapor\resources\ResourceManager.h" />
+    <ClInclude Include="..\..\inc\vapor\resources\Shader.h" />
+    <ClInclude Include="..\..\inc\vapor\resources\Sound.h" />
+    <ClInclude Include="..\..\inc\vapor\resources\STB_Image_Loader.h" />
+    <ClInclude Include="..\..\inc\vapor\resources\Text.h" />
+    <ClInclude Include="..\..\inc\vapor\resources\TTF.h" />
+    <ClInclude Include="..\..\inc\vapor\script\Script.h" />
+    <ClInclude Include="..\..\src\Pipeline\Milkshape3D.h" />
+    <ClInclude Include="..\..\src\Pipeline\MilkshapeFormat.h" />
+    <ClInclude Include="..\..\src\Pipeline\MilkshapeLoader.h" />
+    <ClInclude Include="..\..\src\Resources\API.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{7A58ED9F-BB90-4B24-B7B0-AB12AAC4E326}</ProjectGuid>
+    <RootNamespace>Resources</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)lib\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)lib\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(SolutionDir)inc;$(SolutionDir)inc\vapor;$(SolutionDir)src\;$(SolutionDir)dep\lodepng\;$(SolutionDir)dep\picopng\;$(SolutionDir)dep\stb;$(SolutionDir)dep\ogg\include;$(SolutionDir)dep\vorbis\include</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4231;4530</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <ProgramDataBaseFileName>$(TargetDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\$(Configuration);$(SolutionDir)dep\vld\lib\vc10;$(SolutionDir)dep\jsoncpp\lib\vc10;$(SolutionDir)dep\physfs\lib\vc10;$(SolutionDir)dep\bullet\lib\vc10;$(SolutionDir)dep\zlib\lib\vc10;$(SolutionDir)dep\glew\lib\vc10;$(SolutionDir)dep\vorbis\lib\;$(SolutionDir)dep\ogg\lib\;$(SolutionDir)dep\openal\lib\Win32;$(SolutionDir)dep\sfml\lib\vc10;$(SolutionDir)dep\lua\lib\vc10;$(SolutionDir)dep\zeromq\lib\vc10;$(SolutionDir)dep\wx\lib\vc_lib\vc10;$(SolutionDir)dep\png\lib\vc10;$(SolutionDir)dep\devil\lib\vc10;$(SolutionDir)dep\curl\lib\vc10;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Core.lib;Engine.lib;opengl32.lib;glewd.lib;jsoncppd.lib;pngd.lib;zlibd.lib;luad.lib;devild.lib;physfsd.lib;bulletd.lib;zmqd.lib;ws2_32.lib;ogg_static_d.lib;vorbis_static_d.lib;vorbisfile_static_d.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Lib>
+      <SubSystem>Console</SubSystem>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>$(SolutionDir)inc;$(SolutionDir)inc\vapor;$(SolutionDir)src\;$(SolutionDir)dep\lodepng\;$(SolutionDir)dep\picopng\;$(SolutionDir)dep\stb;$(SolutionDir)dep\ogg\include;$(SolutionDir)dep\vorbis\include</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4321</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
