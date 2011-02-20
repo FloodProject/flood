@@ -30,7 +30,7 @@ public:
 	MilkshapeLoader();
 
 	// Creates the resource with no data.
-	PREPARE(Mesh)
+	RESOURCE_LOADER_PREPARE(Mesh)
 
 	// Decodes a Milkshape3D mesh.
 	virtual bool decode(const Stream& stream, Resource* res);
@@ -38,16 +38,8 @@ public:
 	// Gets the name of this codec.
 	GETTER(Name, const std::string, "MS3D")
 
-	// Gets the list of extensions recognized by this resource handler.
-	GETTER(Extensions, ExtensionList&, extensions)
-
 	// Overrides this to return the right resource group.
 	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Meshes)
-
-protected:
-
-	// Holds all file extensions recognized by this codec.
-	mutable ExtensionList extensions;
 };
 
 //-----------------------------------//

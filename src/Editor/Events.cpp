@@ -158,231 +158,119 @@ void Events::onPluginDisableEvent(Plugin* plugin)
 
 //-----------------------------------//
 
-void Events::onEntitySelect( const EntityPtr& node )
-{
-	if( !currentPlugin )
-		return;
-
-	if(!node)
-		return;
-
-	currentPlugin->onEntitySelect(node);
-
-	// Global event listeners.
-	for( uint i = 0; i < eventListeners.size(); i++ )
-	{
-		Plugin* plugin = eventListeners[i];
-		if(plugin == currentPlugin) continue;
-		plugin->onEntitySelect(node);
+#define CALL_PLUGIN(func, ...)							\
+	if( !currentPlugin )								\
+		return;											\
+														\
+	currentPlugin->func(__VA_ARGS__);					\
+														\
+	for( uint i = 0; i < eventListeners.size(); i++ )	\
+	{													\
+		Plugin* plugin = eventListeners[i];				\
+		if(plugin == currentPlugin) continue;			\
+		plugin->func(__VA_ARGS__);						\
 	}
+
+#define CALL_PLUGIN_CHECK(func, arg)					\
+	if(!arg) return;									\
+	CALL_PLUGIN(func, arg)
+
+//-----------------------------------//
+
+void Events::onEntitySelect( const EntityPtr& entity )
+{
+	CALL_PLUGIN_CHECK(onEntitySelect, entity);
 }
 
 //-----------------------------------//
 
-void Events::onEntityUnselect( const EntityPtr& node )
+void Events::onEntityUnselect( const EntityPtr& entity )
 {
-	if( !currentPlugin )
-		return;
-
-	if(!node)
-		return;
-
-	currentPlugin->onEntityUnselect(node);
-
-	// Global event listeners.
-	for( uint i = 0; i < eventListeners.size(); i++ )
-	{
-		Plugin* plugin = eventListeners[i];
-		if(plugin == currentPlugin) continue;
-		plugin->onEntityUnselect(node);
-	}
+	CALL_PLUGIN_CHECK(onEntityUnselect, entity);
 }
 
 //-----------------------------------//
 
 void Events::onComponentSelect( const ComponentPtr& component )
 {
-	if( !currentPlugin )
-		return;
-
-	if(!component)
-		return;
-
-	currentPlugin->onComponentSelect(component);
-
-	// Global event listeners.
-	for( uint i = 0; i < eventListeners.size(); i++ )
-	{
-		Plugin* plugin = eventListeners[i];
-		if(plugin == currentPlugin) continue;
-		plugin->onComponentSelect(component);
-	}
+	CALL_PLUGIN_CHECK(onComponentSelect, component);
 }
 
 //-----------------------------------//
 
 void Events::onComponentUnselect( const ComponentPtr& component )
 {
-	if( !currentPlugin )
-		return;
-
-	if(!component)
-		return;
-
-	currentPlugin->onComponentUnselect(component);
-
-	// Global event listeners.
-	for( uint i = 0; i < eventListeners.size(); i++ )
-	{
-		Plugin* plugin = eventListeners[i];
-		if(plugin == currentPlugin) continue;
-		plugin->onComponentUnselect(component);
-	}
-}
-
-
-//-----------------------------------//
-
-void Events::onMouseMove( const MouseMoveEvent& mve )
-{
-	if( !currentPlugin )
-		return;
-	
-	currentPlugin->onMouseMove( mve );
-
-	// Global event listeners.
-	for( uint i = 0; i < eventListeners.size(); i++ )
-	{
-		Plugin* plugin = eventListeners[i];
-		if(plugin == currentPlugin) continue;
-		plugin->onMouseMove( mve );
-	}
+	CALL_PLUGIN_CHECK(onComponentUnselect, component);
 }
 
 //-----------------------------------//
 
-void Events::onMouseDrag( const MouseDragEvent& mde )
+void Events::onResourceSelect( const ResourcePtr& resource )
 {
-	if( !currentPlugin )
-		return;
-	
-	currentPlugin->onMouseDrag( mde );
-
-	// Global event listeners.
-	for( uint i = 0; i < eventListeners.size(); i++ )
-	{
-		Plugin* plugin = eventListeners[i];
-		if(plugin == currentPlugin) continue;
-		plugin->onMouseDrag( mde );
-	}
+	CALL_PLUGIN_CHECK(onResourceSelect, resource);
 }
 
 //-----------------------------------//
 
-void Events::onMousePress( const MouseButtonEvent& mbe )
+void Events::onResourceUnselect( const ResourcePtr& resource )
 {
-	if( !currentPlugin )
-		return;
-	
-	currentPlugin->onMouseButtonPress( mbe );
-
-	// Global event listeners.
-	for( uint i = 0; i < eventListeners.size(); i++ )
-	{
-		Plugin* plugin = eventListeners[i];
-		if(plugin == currentPlugin) continue;
-		plugin->onMouseButtonPress( mbe );
-	}
+	CALL_PLUGIN_CHECK(onResourceUnselect, resource);
 }
 
 //-----------------------------------//
 
-void Events::onMouseRelease( const MouseButtonEvent& mbe )
+void Events::onMouseMove( const MouseMoveEvent& event )
 {
-	if( !currentPlugin )
-		return;
-	
-	currentPlugin->onMouseButtonRelease( mbe );
+	CALL_PLUGIN(onMouseMove, event);
+}
 
-	// Global event listeners.
-	for( uint i = 0; i < eventListeners.size(); i++ )
-	{
-		Plugin* plugin = eventListeners[i];
-		if(plugin == currentPlugin) continue;
-		plugin->onMouseButtonRelease( mbe );
-	}
+//-----------------------------------//
+
+void Events::onMouseDrag( const MouseDragEvent& event )
+{
+	CALL_PLUGIN(onMouseDrag, event);
+}
+
+//-----------------------------------//
+
+void Events::onMousePress( const MouseButtonEvent& event )
+{
+	CALL_PLUGIN(onMouseButtonPress, event);
+}
+
+//-----------------------------------//
+
+void Events::onMouseRelease( const MouseButtonEvent& event )
+{
+	CALL_PLUGIN(onMouseButtonRelease, event);
 }
 
 //-----------------------------------//
 
 void Events::onMouseEnter()
 {
-	if( !currentPlugin )
-		return;
-	
-	currentPlugin->onMouseEnter();
-
-	// Global event listeners.
-	for( uint i = 0; i < eventListeners.size(); i++ )
-	{
-		Plugin* plugin = eventListeners[i];
-		if(plugin == currentPlugin) continue;
-		plugin->onMouseEnter();
-	}
+	CALL_PLUGIN(onMouseEnter);
 }
 
 //-----------------------------------//
 
 void Events::onMouseLeave()
 {
-	if( !currentPlugin )
-		return;
-	
-	currentPlugin->onMouseLeave();
-
-	// Global event listeners.
-	for( uint i = 0; i < eventListeners.size(); i++ )
-	{
-		Plugin* plugin = eventListeners[i];
-		if(plugin == currentPlugin) continue;
-		plugin->onMouseLeave();
-	}
+	CALL_PLUGIN(onMouseLeave);
 }
 
 //-----------------------------------//
 
-void Events::onSceneLoad( const ScenePtr& newScene )
+void Events::onSceneLoad( const ScenePtr& scene )
 {
-	if( !currentPlugin )
-		return;
-	
-	currentPlugin->onSceneLoad(newScene);
-
-	// Global event listeners.
-	for( uint i = 0; i < eventListeners.size(); i++ )
-	{
-		Plugin* plugin = eventListeners[i];
-		if(plugin == currentPlugin) continue;
-		plugin->onSceneLoad(newScene);
-	}
+	CALL_PLUGIN_CHECK(onSceneLoad, scene);
 }
 
 //-----------------------------------//
 
 void Events::onSceneUpdate()
 {
-	if( !currentPlugin )
-		return;
-	
-	currentPlugin->onSceneUpdate();
-
-	// Global event listeners.
-	for( uint i = 0; i < eventListeners.size(); i++ )
-	{
-		Plugin* plugin = eventListeners[i];
-		if(plugin == currentPlugin) continue;
-		plugin->onSceneUpdate();
-	}
+	CALL_PLUGIN(onSceneUpdate)
 }
 
 //-----------------------------------//

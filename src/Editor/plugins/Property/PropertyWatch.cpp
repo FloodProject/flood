@@ -8,7 +8,7 @@
 
 #include "PCH.h"
 #include "PropertyPage.h"
-#include "math/Hash.h"
+#include "Math/Hash.h"
 
 namespace vapor { namespace editor {
 

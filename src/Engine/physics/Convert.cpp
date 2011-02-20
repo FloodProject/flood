@@ -70,9 +70,9 @@ btVector3 Convert::toBullet(const BoundingBox& box)
 
 //-----------------------------------//
 
-static Vector3 getOffset(const EntityPtr& entity)
+static Vector3 getOffset(Entity* entity)
 {
-	ShapePtr shape = entity->getTypedComponent<Shape>();
+	ShapePtr shape = entity->getComponentFromFamily<Shape>();
 
 	if( shape->getType().is<MeshShape>() )
 		return Vector3::Zero;

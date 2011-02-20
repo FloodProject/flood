@@ -12,6 +12,8 @@
 #include "Editor.h"
 #include "Events.h"
 #include "EditorIcons.h"
+#include "Utilities.h"
+#include "Pipeline/ResourceProcessor.h"
 
 namespace vapor { namespace editor {
 
@@ -78,6 +80,7 @@ void PropertyPlugin::onEntitySelect( const EntityPtr& entity )
 	if( entity->getType().inherits<Group>() )
 		return;
 
+	propertyPage->reset();
 	propertyPage->showEntityProperties(entity);
 
 	entity->onComponentAdded.Connect(this, &PropertyPlugin::onComponentChanged);
@@ -88,7 +91,7 @@ void PropertyPlugin::onEntitySelect( const EntityPtr& entity )
 
 void PropertyPlugin::onEntityUnselect( const EntityPtr& entity )
 {
-	propertyPage->reset();
+	propertyPage->resetObject( entity.get() );
 
 	entity->onComponentAdded.Disconnect(this, &PropertyPlugin::onComponentChanged);
 	entity->onComponentRemoved.Disconnect(this, &PropertyPlugin::onComponentChanged);
@@ -98,7 +101,7 @@ void PropertyPlugin::onEntityUnselect( const EntityPtr& entity )
 
 void PropertyPlugin::onComponentSelect( const ComponentPtr& component )
 {
-	const EntityPtr& entity = component->getEntity();
+	const EntityPtr& entity = component->getEntity()->getShared();
 	onEntitySelect(entity);
 }
 
@@ -106,15 +109,46 @@ void PropertyPlugin::onComponentSelect( const ComponentPtr& component )
 
 void PropertyPlugin::onComponentUnselect( const ComponentPtr& component )
 {
-	const EntityPtr& entity = component->getEntity();
+	const EntityPtr& entity = component->getEntity()->getShared();
 	onEntityUnselect(entity);
+}
+
+//-----------------------------------//
+
+void PropertyPlugin::onResourceSelect( const ResourcePtr& resource )
+{
+	propertyPage->showProperties( resource.get() );
+
+	ResourceManager* rm = GetResourceManager();
+
+	const std::string& path = resource->getPath();
+	const std::string& ext = PathUtils::getExtension(path);
+
+	ResourceLoader* loader = rm->findLoader(ext);
+	if( !loader ) return;
+
+	propertyPage->showProperties(loader, false);
+
+	ResourceProcessor* processor =
+		ResourceProcessor::findProcessor( resource->getType() );
+
+	if( !processor ) return;
+
+	propertyPage->showProperties(processor, false);
+}
+
+//-----------------------------------//
+
+void PropertyPlugin::onResourceUnselect( const ResourcePtr& resource )
+{
+	propertyPage->resetObject( resource.get() );
 }
 
 //-----------------------------------//
 
 void PropertyPlugin::onComponentChanged(const ComponentPtr& component)
 {
-	const EntityPtr& entity = component->getEntity();
+	const EntityPtr& entity = component->getEntity()->getShared();
 	updateProperties(entity);
 }
 
@@ -122,10 +156,19 @@ void PropertyPlugin::onComponentChanged(const ComponentPtr& component)
 
 void PropertyPlugin::updateProperties(const EntityPtr& entity)
 {
-	if( entity )
-		propertyPage->showEntityProperties(entity);
+	if( !entity ) return;
+
+	propertyPage->reset();
+	propertyPage->showEntityProperties(entity);
 
 	editor->redrawView();
+}
+
+//-----------------------------------//
+
+void PropertyPlugin::onSceneLoad( const ScenePtr& scene )
+{
+	propertyPage->reset();
 }
 
 //-----------------------------------//

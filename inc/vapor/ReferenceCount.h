@@ -41,13 +41,9 @@ public:
 		return references.get();
 	}
 
-	virtual ~ReferenceCounted()
-	{ }
-
 protected:
 	
-	ReferenceCounted() 
-		: references(0) 
+	ReferenceCounted() : references(0) 
 	{ }
 
 private:

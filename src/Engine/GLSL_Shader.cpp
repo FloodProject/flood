@@ -10,10 +10,15 @@
 
 #ifdef VAPOR_SHADER_GLSL
 
-#include "render/GLSL_Shader.h"
-#include "render/GL.h"
+#include "Render/GLSL_Shader.h"
+#include "Render/GL.h"
 
 namespace vapor {
+
+//-----------------------------------//
+
+BEGIN_CLASS_PARENT(GLSL_Shader, Shader)
+END_CLASS()
 
 //-----------------------------------//
 
@@ -39,7 +44,7 @@ bool GLSL_Shader::create()
 	if( created )
 		return true;
 
-	id = glCreateShader( getGLShaderType(type) );
+	id = glCreateShader( getGLShaderType(shaderType) );
 
 	if( glHasError("Could not create a new shader object") )
 	{

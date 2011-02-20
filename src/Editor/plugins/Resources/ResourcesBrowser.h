@@ -14,28 +14,6 @@ namespace vapor { namespace editor {
 
 class EditorFrame;
 
-//-----------------------------------//
-
-struct ResourceMetadata
-{
-	// Hash of the resource.
-	uint hash;
-
-	// Path of the resource.
-	std::string path;
-
-	// Thumbnail of the resource.
-	std::string thumbnail;
-
-	// Image list index.
-	int index;
-};
-
-typedef std::map<uint, ResourceMetadata> ResourcesCache;
-typedef std::pair<uint, ResourceMetadata> ResourcesCachePair;
-
-//-----------------------------------//
-
 /**
  * A resources browser is a window where you can choose a resource from
  * the existing resouces of a given type.
@@ -49,17 +27,6 @@ public:
 		wxWindow* parent, wxWindowID id = wxID_ANY,
 		const wxPoint& pos = wxDefaultPosition,
 		const wxSize& size = wxDefaultSize );
-
-	~ResourcesBrowser();
-
-	// Scans for known resources.
-	void scanFiles();
-
-	// Loads the thumbnails cache.
-	bool loadCache();
-
-	// Saves the thumbnails cache.
-	bool saveCache();
 
 	// Sets up the images.
 	void setupImages();
@@ -100,9 +67,6 @@ protected:
 	TexturePtr depthTexture;
 	TexturePtr colorTexture;
 	RenderBuffer* renderBuffer;
-
-	// Caches all the resources metadata.
-	ResourcesCache resourcesCache;
 };
 
 //-----------------------------------//

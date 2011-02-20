@@ -14,6 +14,19 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
+class ResourceDatabase;
+
+class Project : public Object
+{
+	REFLECT_DECLARE_CLASS()
+
+public:
+	
+	ResourceDatabase* database;
+};
+
+//-----------------------------------//
+
 class ProjectPlugin : public Plugin
 {
 public:

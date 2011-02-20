@@ -13,8 +13,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-//BEGIN_CLASS_PARENT(GLSL_Text, Resource)
-//END_CLASS()
+BEGIN_CLASS_PARENT(GLSL_Text, Text)
+END_CLASS()
 
 //-----------------------------------//
 

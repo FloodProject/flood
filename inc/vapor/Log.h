@@ -136,6 +136,10 @@ namespace Log
 	CORE_API void error(const char* msg, ...);
 }
 
+#ifdef assert
+	#undef assert
+#endif
+
 #define assert(expr)     \
 	(void)( (!!(expr)) || \
 	(Log::_assert("%s (%s:%d)", #expr, __FUNCTION__, __LINE__), 0) )

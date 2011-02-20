@@ -10,16 +10,16 @@
 
 #ifdef VAPOR_RENDERER_OPENGL
 
-#include "render/Device.h"
-#include "render/GL.h"
-#include "render/FBO.h"
-#include "render/Adapter.h"
-#include "render/TextureManager.h"
-#include "render/ProgramManager.h"
-#include "render/Window.h"
-#include "render/View.h"
-#include "scene/Camera.h"
-#include "scene/Entity.h"
+#include "Render/Device.h"
+#include "Render/GL.h"
+#include "Render/FBO.h"
+#include "Render/Adapter.h"
+#include "Render/TextureManager.h"
+#include "Render/ProgramManager.h"
+#include "Render/Window.h"
+#include "Render/View.h"
+#include "Scene/Camera.h"
+#include "Scene/Entity.h"
 #include "Utilities.h"
 #include <algorithm>
 
@@ -66,8 +66,7 @@ void RenderDevice::init()
 {
 	Log::info( "Creating OpenGL rendering device" );
 
-	if( !window ) 
-		Log::error( "No current OpenGL context found, stuff may fail" );
+	if( !window ) Log::error( "No current OpenGL context found, stuff may fail" );
 	
 	checkExtensions();
 
@@ -78,7 +77,7 @@ void RenderDevice::init()
 	if( adapter->supportsShaders )
 	{
 		Log::info( "Shaders support detected. Switching to forward shaders pipeline" );
-		//pipeline = RenderPipeline::ShaderForward;
+		pipeline = RenderPipeline::ShaderForward;
 	}
 
 	setClearColor( Color::White );
@@ -288,6 +287,7 @@ void RenderDevice::setupRenderForward(const RenderState& state, const LightQueue
 	undoRenderStateMaterial(material);
 	
 	renderable->unbind();
+	program->unbind();
 	material->unbindTextures();
 	vb->unbindGenericPointers();
 }
@@ -592,6 +592,13 @@ Window* RenderDevice::createWindow( const WindowSettings& settings )
 	setRenderTarget( window );
 
 	return window;
+}
+
+//-----------------------------------//
+
+bool RenderDevice::isFixedPipeline() const
+{
+	return pipeline == RenderPipeline::Fixed;
 }
 
 //-----------------------------------//

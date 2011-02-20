@@ -25,8 +25,16 @@ BEGIN_ENUM(ResourceGroup)
 	ENUM(Scripts)
 END_ENUM()
 
+BEGIN_ENUM(ResourceStatus)
+	ENUM(Error)
+	ENUM(Unloaded)
+	ENUM(Loading)
+	ENUM(Loaded)
+END_ENUM()
+
 BEGIN_CLASS_ABSTRACT(Resource)
-	FIELD_PRIMITIVE(string, path)
+	FIELD_PRIMITIVE(string, path) FIELD_READONLY(path)
+	FIELD_ENUM(ResourceStatus, status) FIELD_READONLY(status)
 END_CLASS()
 
 //-----------------------------------//

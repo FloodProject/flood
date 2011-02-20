@@ -24,7 +24,7 @@ namespace vapor {
  * Serializer implementation using JSON.
  */
 
-class CORE_API JsonSerializer : public Serializer
+class CORE_API JsonSerializer : public ReflectionVisitor
 {
 	DECLARE_UNCOPYABLE(JsonSerializer)
 
@@ -32,36 +32,40 @@ public:
 
 	JsonSerializer(Stream& stream);
 
-	// Flushes the serialization to the stream.
-	virtual void flushStream();
+	// Processes an object.
+	virtual void processBegin(const ObjectData& data);
+	virtual void processEnd(const ObjectData& data);
 
-	// Begins a new class block.
-	virtual void beginClass(const Class& type);
+	// Processes a class type.
+	virtual void processClassBegin(const Class& type, bool parent);
+	virtual void processClassEnd(const Class& type, bool parent);
 
-	// Ends the current class block.
-	virtual void endClass();
+	// Processes class fields.
+	virtual void processFieldBegin(const Field& field);
+	virtual void processFieldEnd(const Field& field);
 
-	// Writes a field into the class block.
-	virtual void writeField( const Field& field );
+	// Processes an enum type.
+	virtual void processEnumBegin( const Enum& enuhm );
+	virtual void processEnumEnd( const Enum& enuhm );
+	virtual void processEnumElement(int value, const std::string& name);
 
-	// Begins a new array block.
-	virtual void beginArray(const Type& type);
+	// Processes an array type.
+	virtual void processArrayBegin(const Type& type, int size);
+	virtual void processArrayEnd(const Type& type);
+	virtual void processArrayElementBegin(int i);
+	virtual void processArrayElementEnd(int i);
 
-	// Ends the current array block.
-	virtual void endArray();
-
-	// Primitive Primitives.
-	virtual void writeBool( const Primitive&, bool );
-	virtual void writeInt( const Primitive&, int );
-	virtual void writeUInt( const Primitive&, uint );
-	virtual void writeFloat( const Primitive&, float );
-	virtual void writeDouble( const Primitive&, double );
-	virtual void writeString( const Primitive&, const std::string& );
-	virtual void writeVector3( const Primitive&, const Vector3& );
-	virtual void writeQuaternion( const Primitive&, const Quaternion& );
-	virtual void writeColor( const Primitive&, const Color& );
-	virtual void writeBitfield( const Primitive&, const std::bitset<32>& );
-	//virtual void writeHandle( const Handle& );
+	// Processes a primitive type.
+	virtual void processBool( const Primitive&, bool );
+	virtual void processInt( const Primitive&, int );
+	virtual void processUInt( const Primitive&, uint );
+	virtual void processFloat( const Primitive&, float );
+	virtual void processDouble( const Primitive&, double );
+	virtual void processString( const Primitive&, const std::string& );
+	virtual void processVector3( const Primitive&, const Vector3& );
+	virtual void processQuaternion( const Primitive&, const Quaternion& );
+	virtual void processColor( const Primitive&, const Color& );
+	virtual void processBitfield( const Primitive&, const uint& );
 
 protected:
 
@@ -72,7 +76,35 @@ protected:
 	Json::Value rootValue;
 
 	// Stack of JSON values.
-	std::stack<Json::Value> values;
+	std::stack<Json::Value*> values;
+};
+
+//-----------------------------------//
+
+class CORE_API JsonDeserializer
+{
+	DECLARE_UNCOPYABLE(JsonDeserializer)
+
+public:
+
+	JsonDeserializer(Stream& stream);
+
+	// Deserializes the stream into an object.
+	Object* deserialize();
+
+protected:
+
+	Object* processObject(const Json::Value& value);
+	void processFields(Object* object, const Json::Value& value);
+	void processField(Object* object, Field& field, const Json::Value& value);
+	void processEnum(Object* object, Field& field, const Json::Value& value);
+	void processPrimitive(void* address, Field& field, const Json::Value& value);	
+	void processArray(Object* object, Field& field, const Json::Value& value);	
+	void processArrayElement(void* element, Field& field, const Json::Value& value);
+	byte* processArrayPointer(Object* address, Field& field, int size);
+
+	Stream& stream;
+	Registry& registry;
 };
 
 //-----------------------------------//

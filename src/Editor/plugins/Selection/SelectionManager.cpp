@@ -12,6 +12,9 @@
 #include "UndoManager.h"
 #include "Events.h"
 
+#include "Scene/Entity.h"
+#include "Scene/Transform.h"
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//
@@ -22,6 +25,13 @@ SelectionManager::SelectionManager( EditorFrame* editor )
 {
 	events = editor->getEventManager();
 	undoManager = editor->getUndoManager();
+}
+
+//-----------------------------------//
+
+bool SelectionData::operator == (const SelectionData& rhs) const
+{
+	return entity == rhs.entity;
 }
 
 //-----------------------------------//

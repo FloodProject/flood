@@ -34,7 +34,7 @@ namespace vapor {
 //-----------------------------------//
 
 BEGIN_CLASS_PARENT(ScriptController, Controller)
-	FIELD_CLASS_PTR(Script, script)
+	FIELD_CLASS_PTR(Script, ScriptPtr, script, RefPointer)
 END_CLASS()
 
 //-----------------------------------//
@@ -75,8 +75,6 @@ void ScriptController::_update( double delta )
 	if( !state && script )
 	{
 		createState();
-
-		const EntityPtr& entity = getEntity();
 		bindEntity(entity);
 	}
 
@@ -102,7 +100,7 @@ void ScriptController::createState()
 		"vapor::"TOSTRING(type)" *",					\
 		entity->getComponent<type>().get() );
 
-void ScriptController::bindEntity(const EntityPtr& entity)
+void ScriptController::bindEntity(Entity* entity)
 {
 	Engine* engine = GetEngine();
 	State* mainState = engine->getScriptManager()->getState();
@@ -110,7 +108,7 @@ void ScriptController::bindEntity(const EntityPtr& entity)
 	swig_module_info* module = SWIG_Lua_GetModule( mainState->getLuaState() );
 	assert( module != nullptr );
 
-	bindType(module, "entity", "vapor::Entity *", entity.get());
+	bindType(module, "entity", "vapor::Entity *", entity);
 	
 	BIND_COMPONENT("transform", Transform)
 	BIND_COMPONENT("geometry", Geometry)

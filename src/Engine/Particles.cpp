@@ -35,7 +35,7 @@ BEGIN_CLASS_PARENT(Particles, Geometry)
 	FIELD_PRIMITIVE(float, minScale)
 	FIELD_PRIMITIVE(float, maxScale)
 	FIELD_PRIMITIVE(Vector3, attenuation)
-	FIELD_CLASS_PTR_SETTER(Image, image, Image)
+	FIELD_CLASS_PTR_SETTER(Image, ImagePtr, image, RefPointer, Image)
 END_CLASS()
 
 const int MAX_PARTICLES = 512;

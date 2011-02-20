@@ -11,6 +11,7 @@
 #include "Plugin.h"
 #include "UndoOperation.h"
 #include "TerrainPlugin.h"
+#include "Math/BoundingSphere.h"
 
 namespace vapor { namespace editor {
 

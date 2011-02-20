@@ -97,12 +97,7 @@ void Geometry::updateBounds()
 
 void Geometry::notifiesTransform()
 {
-	const EntityPtr& node = getEntity();
-	assert( node != nullptr );
-
-	const TransformPtr& transform = node->getTransform();
-	assert( transform != nullptr );
-
+	const TransformPtr& transform = entity->getTransform();
 	transform->markBoundingVolumeDirty();
 }
 

@@ -33,16 +33,16 @@ struct TerrainSettings
 	MaterialPtr Material;
 
 	// Cell size in world units.
-	ushort CellSize;
+	int CellSize;
 
 	// Scales the terrain to this maximum height.
-	ushort MaxHeight;
+	int MaxHeight;
 
 	// Number of tiles per row/column.
-	ushort NumberTiles;
+	int NumberTiles;
 
 	// Texture size.
-	ushort TextureSize;
+	int TextureSize;
 };
 
 //-----------------------------------//
@@ -50,8 +50,8 @@ struct TerrainSettings
 struct CellRequest
 {
 	ImagePtr image;
-	short x;
-	short y;
+	int x;
+	int y;
 };
 
 //-----------------------------------//

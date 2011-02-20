@@ -13,7 +13,7 @@ namespace vapor {
 
 //-----------------------------------//
 	
-class CORE_API BinarySerializer : public Serializer
+class CORE_API BinarySerializer : public ReflectionVisitor
 {
 	DECLARE_UNCOPYABLE(BinarySerializer)
 

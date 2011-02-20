@@ -115,12 +115,22 @@ namespace PathUtils
 	// Gets the extension part of the filename string.
 	CORE_API Path getExtension(const Path& path);
 
+	// Gets the base path part of the path string.
+	CORE_API Path getBasePath(const Path& path);
+
 	// Gets the file part of the path string.
 	CORE_API Path getFile(const Path& path);
 
 	// Normalizes the path.
 	CORE_API Path normalize(const Path& path);
+
+	// Gets the current directory.
+	CORE_API Path getCurrentDir();
+
+	// Gets the path separator.
+	CORE_API Path getPathSeparator();
 };
+
 
 //---------------------------------------------------------------------//
 // Locales

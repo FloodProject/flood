@@ -127,7 +127,7 @@ void PhysicsManager::update( double delta )
 	if( !enableSimulation )
 		return;
 
-	world->stepSimulation(delta);
+	world->stepSimulation( (btScalar) delta);
 }
 
 //-----------------------------------//

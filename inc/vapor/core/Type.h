@@ -55,19 +55,22 @@ public:
 	// Gets if this type represents an enum.
 	bool isEnum() const;
 
+	// Returns if this type is the given type.
+	bool is(const Type& type) const;
+
+	// Returns if this type inherits from the given type.
+	bool inherits(const Type& type) const;
+
 	// Returns if this type is the same as the given type.
 	template<typename T> bool is() const
 	{
-		return this == &T::getStaticType();
+		return is(T::getStaticType());
 	}
 
 	// Returns if this type inherits from the given type.
 	template<typename T> bool inherits() const
 	{
-		if( parent == nullptr )
-			return is<T>();
-
-		return parent->is<T>() || parent->inherits<T>();
+		return inherits(T::getStaticType());
 	}
 
 	// Meta type of the type.
@@ -89,8 +92,6 @@ protected:
 
 	Type(MetaType::Enum type, const std::string& name, int size);
 	Type(MetaType::Enum type, const std::string& name, const Type& parent, int size);
-
-private:
 
 	// Performs initialization.
 	void init();

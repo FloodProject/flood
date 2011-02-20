@@ -13,9 +13,9 @@ namespace vapor {
 
 //-----------------------------------//
 
-static Vector3 getOffset(const EntityPtr& node)
+static Vector3 getOffset(Entity* node)
 {
-	ShapePtr shape = node->getTypedComponent<Shape>();
+	ShapePtr shape = node->getComponentFromFamily<Shape>();
 
 	if( shape->getType().is<MeshShape>() )
 		return Vector3::Zero;

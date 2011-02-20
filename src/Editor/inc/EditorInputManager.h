@@ -8,6 +8,9 @@
 
 #pragma once
 
+#include "Input/InputManager.h"
+#include "Input/Keyboard.h"
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//

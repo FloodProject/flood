@@ -7,13 +7,13 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/render/Window.h"
-#include "vapor/input/Keyboard.h"
+#include "render/Window.h"
+#include "input/Keyboard.h"
 
 #if defined(VAPOR_WINDOWING_WIN32)
-	#include <vapor/render/Win32_Window.h>
+	#include <render/Win32_Window.h>
 #elif defined(VAPOR_WINDOWING_SFML)
-	#include <vapor/render/SFML_Window.h>
+	#include <render/SFML_Window.h>
 #else
 	//#error "OpenGL renderer needs a windowing implementation"
 #endif

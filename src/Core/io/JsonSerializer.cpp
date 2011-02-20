@@ -8,6 +8,9 @@
 
 #include "Core/API.h"
 #include "io/JsonSerializer.h"
+#include "Utilities.h"
+#include "ReferenceCount.h"
+#include "Log.h"
 
 #ifdef VAPOR_SERIALIZATION_JSON
 
@@ -109,224 +112,448 @@ static Json::Value convertQuaternion( const Quaternion& quat )
 JsonSerializer::JsonSerializer(Stream& stream)
 	: stream(stream)
 {
-	values.push(rootValue);
+	values.push(&rootValue);
 }
 
 //-----------------------------------//
 
-void JsonSerializer::flushStream()
+void JsonSerializer::processBegin(const ObjectData& data)
+{ }
+
+//-----------------------------------//
+
+void JsonSerializer::processEnd(const ObjectData& data)
 {
-	std::string text = values.top().toStyledString();
+	// Always switch to the platform independent "C" locale when writing
+	// JSON, else the library will format the data erroneously.
+
+	LocaleSwitch locale;
+
+	std::string text = rootValue.toStyledString();
 	stream.write(text);
+	stream.close();
 }
 
 //-----------------------------------//
 
-void JsonSerializer::beginClass(const Class& type)
+void JsonSerializer::processClassBegin(const Class& type, bool parent)
 {
-	Json::Value& top = values.top();
-	values.push( top[type.name] );
+	if(parent)
+		return;
+
+	Json::Value& top = *values.top();
+	values.push( &top[type.name] );
 }
 
 //-----------------------------------//
 
-void JsonSerializer::endClass()
+void JsonSerializer::processClassEnd(const Class& type, bool parent)
+{
+	if(parent)
+		return;
+	
+	values.pop();
+}
+
+//-----------------------------------//
+
+void JsonSerializer::processFieldBegin( const Field& field )
+{
+	Json::Value& top = *values.top();
+	values.push( &top[field.name] );
+}
+
+//-----------------------------------//
+
+void JsonSerializer::processFieldEnd( const Field& field )
 {
 	values.pop();
 }
 
 //-----------------------------------//
 
-void JsonSerializer::beginArray(const Type& type)
+void JsonSerializer::processArrayBegin(const Type& type, int size)
 {
-	//const std::string& name = type.getName();
-	//
-	//Json::Value& top = values.top();
-	//values.push( top[name] );
+
 }
 
 //-----------------------------------//
 
-void JsonSerializer::endArray()
+void JsonSerializer::processArrayEnd(const Type& type)
 {
-	//values.pop();
+
 }
 
 //-----------------------------------//
 
-void JsonSerializer::writeField( const Field& field )
+void JsonSerializer::processArrayElementBegin(int i)
 {
-	Json::Value& top = values.top();
-	values.push( top[field.name] );
+	Json::Value& top = *values.top();
+	values.push( &top[(uint)i] );
 }
 
 //-----------------------------------//
 
-void JsonSerializer::writeBool( const Primitive& prim, bool value )
+void JsonSerializer::processArrayElementEnd(int i)
 {
-	Json::Value& top = values.top();
+	values.pop();
+}
+
+//-----------------------------------//
+
+void JsonSerializer::processEnumBegin( const Enum& enuhm )
+{
+
+}
+
+//-----------------------------------//
+
+void JsonSerializer::processEnumEnd( const Enum& enuhm )
+{
+
+}
+
+//-----------------------------------//
+	
+void JsonSerializer::processEnumElement(int value, const std::string& name)
+{
+	Json::Value& top = *values.top();
+	top = name;
+}
+
+//-----------------------------------//
+
+void JsonSerializer::processBool( const Primitive& prim, bool value )
+{
+	Json::Value& top = *values.top();
 	top = value;
 }
 
 //-----------------------------------//
 
-void JsonSerializer::writeInt( const Primitive& prim, int value )
+void JsonSerializer::processInt( const Primitive& prim, int value )
 {
-	Json::Value& top = values.top();
+	Json::Value& top = *values.top();
 	top = value;
 }
 
 //-----------------------------------//
 
-void JsonSerializer::writeUInt( const Primitive& prim, uint value )
+void JsonSerializer::processUInt( const Primitive& prim, uint value )
 {
-	Json::Value& top = values.top();
+	Json::Value& top = *values.top();
 	top = value;
 }
 
 //-----------------------------------//
 
-void JsonSerializer::writeFloat( const Primitive& prim, float value )
+void JsonSerializer::processFloat( const Primitive& prim, float value )
 {
-	Json::Value& top = values.top();
+	Json::Value& top = *values.top();
 	top = value;
 }
 
 //-----------------------------------//
 
-void JsonSerializer::writeDouble( const Primitive& prim, double value )
+void JsonSerializer::processDouble( const Primitive& prim, double value )
 {
-	Json::Value& top = values.top();
+	Json::Value& top = *values.top();
 	top = value;
 }
 
 //-----------------------------------//
 
-void JsonSerializer::writeString( const Primitive& prim, const std::string& value )
+void JsonSerializer::processString( const Primitive& prim, const std::string& value )
 {
-	Json::Value& top = values.top();
+	Json::Value& top = *values.top();
 	top = value;
 }
 
 //-----------------------------------//
 
-void JsonSerializer::writeVector3( const Primitive& prim, const Vector3& value )
+void JsonSerializer::processVector3( const Primitive& prim, const Vector3& value )
 {
-	Json::Value& top = values.top();
+	Json::Value& top = *values.top();
 	top = convertVector3(value);
 }
 
 //-----------------------------------//
 
-void JsonSerializer::writeQuaternion( const Primitive& prim, const Quaternion& value )
+void JsonSerializer::processQuaternion( const Primitive& prim, const Quaternion& value )
 {
-	Json::Value& top = values.top();
+	Json::Value& top = *values.top();
 	top = convertQuaternion(value);
 }
 
 //-----------------------------------//
 
-void JsonSerializer::writeColor( const Primitive& prim, const Color& value )
+void JsonSerializer::processColor( const Primitive& prim, const Color& value )
 {
-	Json::Value& top = values.top();
+	Json::Value& top = *values.top();
 	top = convertColor(value);
 }
 
 //-----------------------------------//
 
-void JsonSerializer::writeBitfield( const Primitive& prim, const std::bitset<32>& value )
+void JsonSerializer::processBitfield( const Primitive& prim, const uint& value )
 {
-	Json::Value& top = values.top();
-	top = value.to_string();
+	Json::Value& top = *values.top();
+	top = value;
+}
+
+//----------------------------------------------------------------------//
+
+JsonDeserializer::JsonDeserializer(Stream& stream)
+	: stream(stream)
+	, registry(Type::GetRegistry())
+{ }
+
+//-----------------------------------//
+
+Object* JsonDeserializer::deserialize()
+{
+	std::string text;
+	stream.read(text);
+	stream.close();
+
+	Json::Value rootValue;
+	bool success = false;
+
+	{
+		LocaleSwitch locale;
+
+		Json::Reader jsonReader;
+		success = jsonReader.parse(text, rootValue, false);
+	}
+
+	if( !success )
+		return nullptr;
+
+	return processObject(rootValue);
 }
 
 //-----------------------------------//
 
-//void JsonSerializer::writeHandle( const Handle& )
-//{ }
+Object* JsonDeserializer::processObject(const Json::Value& value)
+{
+	Object* object = nullptr;
+
+	if( !value.isObject() )
+		return nullptr;
+
+	Json::Value::Members& members = value.getMemberNames();
+
+	for( uint i = 0; i < members.size(); i++ )
+	{
+		const std::string& name = members[i];
+
+		const Class* klass = (Class*) registry.getType(name);
+		if( !klass ) continue;
+
+		object = (Object*) klass->createInstance();
+		
+		if( !object ) continue;
+
+		const Json::Value& fieldsValue = value[name];
+		processFields(object, fieldsValue);
+
+		object->fixUp();
+	}
+
+	return object;
+}
 
 //-----------------------------------//
 
-//void Serializer::setFieldFromValue( const Field& field, void* object, const Json::Value& value )
-//{
-//	if( !field.type.isPrimitive() )
-//	{
-//		Log::debug( "field: %s", field.name.c_str() );
-//		return;
-//	}
-//
-//	//assert( field.type.isPrimitive() );
-//	const Primitive& type = (const Primitive&) field.type;
-//
-//	if( type.isBool() )
-//	{
-//		bool val = value.asBool();
-//		field.set<bool>(object, val);
-//	}
-//	//-----------------------------------//
-//	else if( type.isInteger() )
-//	{
-//		int val = value.asInt();
-//		field.set<int>(object, val);
-//	}
-//	//-----------------------------------//
-//	else if( type.isFloat() )
-//	{
-//		double val = value.asDouble();
-//		field.set<float>(object, float(val));
-//	}
-//	//-----------------------------------//
-//	else if( type.isString() )
-//	{
-//		std::string val = value.asString();
-//		field.set<std::string>(object, val);
-//	}
-//	//-----------------------------------//
-//	else if( type.isColor() )
-//	{
-//		Color val = convertValueToColor(value);
-//		field.set<Color>(object, val);
-//	}
-//	//-----------------------------------//
-//	else if( type.isVector3() )
-//	{
-//		Vector3 val = convertValueToVector3(value);
-//		field.set<Vector3>(object, val);
-//	}
-//	//-----------------------------------//
-//	else if( type.isQuaternion() )
-//	{
-//		Quaternion val = convertValueToQuaternion(value);
-//		field.set<Quaternion>(object, val);
-//	}
-//	//-----------------------------------//
-//	else if( type.isBitfield() )
-//	{
-//		std::string str = value.asString();
-//		std::bitset<32> val(str);
-//		field.set< std::bitset<32> >(object, val);
-//	}
-//	else
-//	//-----------------------------------//
-//		assert( false );
-//}
+void JsonDeserializer::processFields(Object* object, const Json::Value& value)
+{
+	if( !object ) return;
 
-////-----------------------------------//
-//
-//Json::Value Serializer::valueFromEnum( const Field& field, void* object )
-//{
-//	assert( field.type.isEnum() );
-//	const Enum& type = (const Enum&) field.type;
-//
-//	Json::Value v;
-//
-//	//foreach( const EnumValuesPair& p, type.getValues() )
-//	//{
-//	//	arrValues.Add( p.first, p.second );
-//	//}
-//
-//	return v;
-//}
+	const Class& type = (Class&) object->getType();
+
+	Json::Value::Members& members = value.getMemberNames();
+
+	for( uint i = 0; i < members.size(); i++ )
+	{
+		const std::string& name = members[i];
+
+		Field* field = type.getField(name);
+		if( !field ) continue;
+
+		const Json::Value& fieldValue = value[name];
+		if( fieldValue.isNull() ) continue;
+
+		processField(object, *field, fieldValue);
+	}
+}
+
+//-----------------------------------//
+
+void JsonDeserializer::processField(Object* object, Field& field, const Json::Value& value)
+{
+	if( field.isArray() && value.isArray() )
+		processArray(object, field, value);
+	else if( field.type.isClass() )
+		processObject(value);
+	else if( field.type.isPrimitive() )
+		processPrimitive(object, field, value);
+	else if( field.type.isEnum() )
+		processEnum(object, field, value);
+	else
+		assert(0);
+}
+
+//-----------------------------------//
+
+void JsonDeserializer::processEnum(Object* object, Field& field, const Json::Value& value)
+{
+	std::string name = value.asString();
+	const Enum& type = (Enum&) field.type;
+	uint enumValue = type.getValue(name);
+	field.set<uint>(object, enumValue);
+}
+
+//-----------------------------------//
+
+void JsonDeserializer::processArray(Object* object, Field& field, const Json::Value& value)
+{
+	void* address =  (byte*) object + field.offset;
+	byte* begin = processArrayPointer((Object*)address, field, value.size());
+
+	int size = field.size;
+	if( field.isPointer() )	size = field.pointerSize;
+
+	for(uint i = 0; i < value.size(); i++ )
+	{
+		const Json::Value& arrayValue = value[i];
+		
+		void* element = begin + i * size;
+		processArrayElement(element, field, arrayValue);
+	}
+}
+
+//-----------------------------------//
+
+void JsonDeserializer::processArrayElement(void* element, Field& field, const Json::Value& value)
+{
+	if( field.type.isPrimitive() )
+	{
+		processPrimitive(element, field, value);
+	}
+	else if( field.type.isClass() )
+	{
+		Object* object = processObject(value);
+
+		if( field.qualifiers & Qualifier::SharedPointer )
+		{
+			((std::shared_ptr<Object>*) element)->reset(object);
+		}
+		else if( field.qualifiers & Qualifier::RefPointer )
+		{
+			ReferenceCounted* ref = (ReferenceCounted*) object;
+			((RefPtr<ReferenceCounted>*) element)->reset(ref);
+		}
+		else
+		{
+			int size = field.size;
+			if( field.isPointer() )	size = field.pointerSize;
+			
+			#pragma TODO("Placement new the objects in their memory")
+			memcpy(element, object, size);
+			// Potential memory leak here.
+		}
+	}
+}
+
+//-----------------------------------//
+
+byte* JsonDeserializer::processArrayPointer(Object* address, Field& field, int size)
+{
+	if( field.qualifiers & Qualifier::SharedPointer )
+	{
+		typedef std::vector<std::shared_ptr<Object>> ObjectSharedPtrArray;
+		ObjectSharedPtrArray* array = (ObjectSharedPtrArray*) address;
+		array->resize(size);
+
+		return (byte*) &array->front();
+	}
+	else if( field.qualifiers & Qualifier::RefPointer )
+	{
+		typedef std::vector<RefPtr<ReferenceCounted>> ObjectRefPtrArray;
+		ObjectRefPtrArray* array = (ObjectRefPtrArray*) address;
+		array->resize(size);
+		
+		return (byte*) &array->front();
+	}
+	else
+	{
+		typedef std::vector<Object*> ObjectRawPtrArray;
+		ObjectRawPtrArray* array = (ObjectRawPtrArray*) address;
+		array->resize(size);
+		
+		return (byte*) &array->front();
+	}
+}
+
+//-----------------------------------//
+
+#define setValue(T, val) *(T*)address = val;
+
+void JsonDeserializer::processPrimitive(void* address, Field& field, const Json::Value& value)
+{
+	const Primitive& type = (const Primitive&) field.type;
+	
+	if( !field.isArray() )
+		address = (byte*) address + field.offset;
+	
+	if( type.isBool() )
+	{
+		bool val = value.asBool();
+		setValue(bool, val);
+	}
+	//-----------------------------------//
+	else if( type.isInteger() )
+	{
+		int val = value.asInt();
+		setValue(int, val);
+	}
+	//-----------------------------------//
+	else if( type.isFloat() )
+	{
+		float val = (float) value.asDouble();
+		setValue(float, val);
+	}
+	//-----------------------------------//
+	else if( type.isString() )
+	{
+		std::string val = value.asString();
+		setValue(std::string, val);
+	}
+	//-----------------------------------//
+	else if( type.isColor() )
+	{
+		Color val = convertValueToColor(value);
+		setValue(Color, val);
+	}
+	//-----------------------------------//
+	else if( type.isVector3() )
+	{
+		Vector3 val = convertValueToVector3(value);
+		setValue(Vector3, val);
+	}
+	//-----------------------------------//
+	else if( type.isQuaternion() )
+	{
+		Quaternion val = convertValueToQuaternion(value);
+		setValue(Quaternion, val);
+	}
+	//-----------------------------------//
+	else if( type.isBitfield() )
+	{
+		uint val = value.asUInt();
+		setValue(uint, val);
+	}
+}
 
 //-----------------------------------//
 

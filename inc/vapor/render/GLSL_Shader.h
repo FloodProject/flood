@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "render/Shader.h"
+#include "Resources/Shader.h"
 
 namespace vapor {
 
@@ -20,6 +20,8 @@ namespace vapor {
 
 class VAPOR_API GLSL_Shader : public Shader
 {
+	REFLECT_DECLARE_CLASS()
+
 public:
 
 	GLSL_Shader();

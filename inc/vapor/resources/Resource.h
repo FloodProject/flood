@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "Object.h"
 #include "Reflection.h"
 #include "ReferenceCount.h"
 
@@ -30,6 +31,8 @@ struct RESOURCE_API ResourceStatus
 		Loading,
 		Loaded
 	};
+
+	DECLARE_ENUM()
 };
 
 //-----------------------------------//
@@ -68,7 +71,7 @@ struct RESOURCE_API ResourceGroup
  * resource from a network connection).
  */
 
-class RESOURCE_API Resource : public ReferenceCounted
+class RESOURCE_API Resource : public Object, public ReferenceCounted
 {
 	DECLARE_UNCOPYABLE(Resource)
 	DECLARE_CLASS_()

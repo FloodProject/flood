@@ -7,10 +7,10 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "scene/Scene.h"
-#include "scene/Transform.h"
-#include "scene/Tags.h"
-#include "scene/Geometry.h"
+#include "Scene/Scene.h"
+#include "Scene/Transform.h"
+#include "Scene/Tags.h"
+#include "Scene/Geometry.h"
 #include <algorithm>
 
 namespace vapor {
@@ -43,7 +43,7 @@ static bool sortRayQueryResult(const RayQueryResult& lhs, const RayQueryResult& 
 	return lhs.distance < rhs.distance;
 }
 
-static bool doRayGroupQuery( const GroupPtr& group, const Culler& culler, RayQueryList& list, bool all )
+static bool doRayGroupQuery( const Group* group, const Culler& culler, RayQueryList& list, bool all )
 {
 	const std::vector<EntityPtr>& entities = group->getEntities();
 
@@ -55,7 +55,7 @@ static bool doRayGroupQuery( const GroupPtr& group, const Culler& culler, RayQue
 
 		if( type.is<Group>() || type.inherits<Group>() )
 		{
-			GroupPtr group = std::static_pointer_cast<Group>(entity);
+			const Group* group = (const Group*) entity.get();
 
 			if( doRayGroupQuery(group, culler, list, all) && !all )
 				return true;
@@ -112,24 +112,20 @@ bool Scene::doRayBoxQuery( const Ray& ray, RayQueryResult& res )
 
 bool Scene::doRayBoxQuery( const Ray& ray, RayQueryList& list, bool all )
 {
-	GroupPtr group = std::static_pointer_cast<Group>(shared_from_this());
-
 	Culler culler;
 	culler.ray = &ray;
 
-	return doRayGroupQuery(group, culler, list, all);
+	return doRayGroupQuery(this, culler, list, all);
 }
 
 //-----------------------------------//
 
 bool Scene::doRayVolumeQuery( const Frustum& volume, RayQueryList& list, bool all )
 {
-	GroupPtr group = std::static_pointer_cast<Group>(shared_from_this());
-
 	Culler culler;
 	culler.frustum = &volume;
 
-	return doRayGroupQuery(group, culler, list, all);
+	return doRayGroupQuery(this, culler, list, all);
 }
 
 //-----------------------------------//

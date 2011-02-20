@@ -29,9 +29,11 @@ void EditorFrame::createMenus()
 	//-----------------------------------//
 
     helpMenu = new wxMenu;
-	wxMenuItem* helpItem = helpMenu->Append(wxID_ABOUT, "&About...\tF1");
-	Bind(wxEVT_COMMAND_MENU_SELECTED, &EditorFrame::OnAbout, this, helpItem->GetId());
-
+	wxMenuItem* aboutItem = helpMenu->Append(wxID_ABOUT, "&About...\tF1");
+	wxMenuItem* aboutWxItem = helpMenu->Append(wxID_ANY, "&About wxWidgets...");
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &EditorFrame::OnAbout, this, aboutItem->GetId());
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &EditorFrame::OnAboutWx, this, aboutWxItem->GetId());
+	
 	//-----------------------------------//
 
 	panelsMenu = new wxMenu;
@@ -164,9 +166,8 @@ void EditorFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 
 void EditorFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
-	wxFrame* about = new wxFrame(this, wxID_ANY, "About " VAPOR_EDITOR_NAME,
-		wxDefaultPosition, wxDefaultSize, wxCAPTION|wxCLOSE_BOX|wxSYSTEM_MENU|
-		wxFRAME_FLOAT_ON_PARENT|wxFRAME_TOOL_WINDOW|wxTAB_TRAVERSAL);
+	wxDialog* about = new wxDialog(this, wxID_ANY, "About " VAPOR_EDITOR_NAME,
+		wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxFRAME_TOOL_WINDOW);
 
 	wxBoxSizer* bSizer1 = new wxBoxSizer( wxVERTICAL );
 	wxBoxSizer* bSizer2 = new wxBoxSizer( wxVERTICAL );
@@ -178,7 +179,7 @@ void EditorFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 	bSizer2->Add( m_bitmap1, 0, wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 0 );
 
 	wxString aboutText(
-		"This software is © 2009-2010 João Matos and the rest of the team.\n\n"
+		"This software is © 2009-2011 João Matos and the rest of the team.\n\n"
 		VAPOR_EDITOR_NAME " uses some free software packages: wxWidgets (wxWidgets.org),"
 		" Lua (lua.org),\nBullet (bulletphysics.com), zlib (zlib.org)"
 		" and the list goes on.\n\nCheck the documentation provided with the software"
@@ -197,10 +198,6 @@ void EditorFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 		"vapor3D (http://www.vapor3d.org)", "http://www.vapor3d.org" );
 	bSizer3->Add( m_hyperlink1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	//wxStaticText* m_hyperlink1 = new wxStaticText( m_panel1, wxID_ANY,
-	//	"http://www.vapor3d.org" );
-	//bSizer3->Add( m_hyperlink1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
 	wxStaticLine* m_staticline2 = new wxStaticLine( m_panel1, wxID_ANY );
 	bSizer3->Add( m_staticline2, 1, wxALL|wxALIGN_CENTER_VERTICAL, 10 );
 	
@@ -216,8 +213,15 @@ void EditorFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 	about->Layout();
 	bSizer1->Fit( about );
 
-	about->Show(true);
-}	
+	about->ShowModal();
+}
+
+//-----------------------------------//
+
+void EditorFrame::OnAboutWx(wxCommandEvent& WXUNUSED(event))
+{
+	wxInfoMessageBox(this);
+}
 
 //-----------------------------------//
 

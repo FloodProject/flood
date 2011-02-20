@@ -30,10 +30,10 @@ public:
 	ACESSOR(Frequency, const int, frequency)
 
 	// Gets/sets the audio channels.
-	ACESSOR(Channels, byte, channels)
+	ACESSOR(Channels, int, channels)
 
 	// Gets/sets the audio sample size.
-	ACESSOR(Size, byte, size)
+	ACESSOR(Size, int, size)
 
 	// Gets/sets the buffer containing the data.
 	ACESSOR(Buffer, const std::vector<byte>&, dataBuffer)
@@ -47,10 +47,10 @@ protected:
 	int frequency;
 
 	// Sound channels.
-	byte channels;
+	int channels;
 
 	// Sound sample size.
-	byte size;
+	int size;
 
 	// Holds the sound data.
 	std::vector<byte> dataBuffer;

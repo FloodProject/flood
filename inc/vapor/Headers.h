@@ -75,7 +75,7 @@
 #include <vapor/render/Texture.h>
 #include <vapor/render/Program.h>
 #include <vapor/render/Renderable.h>
-#include <vapor/render/Shader.h>
+#include <vapor/Resources/Shader.h>
 #include <vapor/render/Quad.h>
 #include <vapor/render/TextureManager.h>
 #include <vapor/render/ProgramManager.h>

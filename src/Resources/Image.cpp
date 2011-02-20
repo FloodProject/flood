@@ -27,7 +27,7 @@ BEGIN_ENUM(PixelFormat)
 END_ENUM()
 
 BEGIN_CLASS_PARENT(Image, Resource)
-	FIELD_ENUM(PixelFormat, format)
+	FIELD_ENUM(PixelFormat, format) FIELD_READONLY(format)
 END_CLASS()
 
 //-----------------------------------//
@@ -40,7 +40,7 @@ Image::Image()
 
 //-----------------------------------//
 
-Image::Image(ushort width, ushort height, PixelFormat::Enum format)
+Image::Image(int width, int height, PixelFormat::Enum format)
 	: width(width)
 	, height(height)
 	, format(format)

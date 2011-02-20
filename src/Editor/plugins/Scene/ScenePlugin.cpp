@@ -12,6 +12,7 @@
 #include "Editor.h"
 #include "EditorIcons.h"
 #include "Events.h"
+#include "Engine.h"
 
 namespace vapor { namespace editor {
 

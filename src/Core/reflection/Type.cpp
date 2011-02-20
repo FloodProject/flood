@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "core/Type.h"
-#include "core/Class.h"
+#include "Core/Type.h"
+#include "Core/Class.h"
 
 namespace vapor {
 
@@ -36,8 +36,7 @@ Type::Type(MetaType::Enum type, const std::string& name, const Type& _parent, in
 
 //-----------------------------------//
 
-Type::~Type()
-{ }
+Type::~Type() { }
 
 //-----------------------------------//
 
@@ -78,6 +77,23 @@ bool Type::isClass() const
 bool Type::isEnum() const
 {
 	return type == MetaType::Enumeration;
+}
+
+//-----------------------------------//
+
+bool Type::is(const Type& type) const
+{
+	return this == &type;
+}
+
+//-----------------------------------//
+
+bool Type::inherits(const Type& type) const
+{
+	if( parent == nullptr )
+		return is(type);
+
+	return is(type) || parent->inherits(type);
 }
 
 //-----------------------------------//

@@ -97,8 +97,7 @@ void Body::onTransform()
 
 btCollisionShape* Body::getBulletShape() const
 {
-	const EntityPtr& node = getEntity();
-	ShapePtr shape = node->getTypedComponent<Shape>();
+	ShapePtr shape = entity->getComponentFromFamily<Shape>();
 
 	if( !shape )
 		return nullptr;
@@ -118,8 +117,7 @@ bool Body::createBody()
 	if( !bulletShape )
 		return false;
 
-	const EntityPtr& node = getEntity();
-	motionState = new BodyMotionState( node->getTransform() );
+	motionState = new BodyMotionState( entity->getTransform() );
 
 	btVector3 localInertia;
 	localInertia.setZero();

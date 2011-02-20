@@ -9,9 +9,9 @@
 #include "PCH.h"
 #include "PropertyPage.h"
 #include "PropertyOperation.h"
-
 #include "Editor.h"
 #include "EditorIcons.h"
+#include "EditorTags.h"
 #include "UndoManager.h"
 #include "Utilities.h"
 
@@ -19,10 +19,12 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-static wxString convertToReadable(const wxString& str)
+static wxString convertToReadable(wxString str)
 {
 	if( str.IsEmpty() )
 		return wxEmptyString;
+
+	str.Replace("_", " ");
 
 	wxString format;
 	format.Append(wxUniChar(toupper(str[0])));
@@ -34,7 +36,7 @@ static wxString convertToReadable(const wxString& str)
 
 		if( i < str.Len()-1 )
 		{
-			if( isupper(str[i]) == islower(str[i+1]) )
+			if( !isspace(str[i]) && islower(str[i]) && isupper(str[i+1]) )
 				format.Append(" ");
 		}
 	}
@@ -125,10 +127,10 @@ public:
 
 //-----------------------------------//
 
-PropertyPage::PropertyPage( wxWindow* parent, wxWindowID id, 
-	const wxPoint& pos, const wxSize& size )
-	: wxPropertyGrid(parent, id, pos, size,
-	wxPG_DEFAULT_STYLE | wxPG_SPLITTER_AUTO_CENTER)
+PropertyPage::PropertyPage( wxWindow* parent )
+	: wxPropertyGrid(parent, wxID_ANY, wxDefaultPosition,
+		wxDefaultSize, wxPG_DEFAULT_STYLE | wxPG_SPLITTER_AUTO_CENTER)
+	, currentObject(nullptr)
 {
 	// Events bindings.
 	Bind(wxEVT_PG_CHANGED, &PropertyPage::onPropertyChanged, this);
@@ -150,9 +152,17 @@ PropertyPage::PropertyPage( wxWindow* parent, wxWindowID id,
 
 void PropertyPage::reset()
 {
-	selectedEntity.reset();
+	currentObject = nullptr;
 	memoryWatches.clear();
 	Clear();
+}
+
+//-----------------------------------//
+
+void PropertyPage::resetObject(const Object* object)
+{
+	if(currentObject != object )
+		reset();
 }
 
 //-----------------------------------//
@@ -201,10 +211,27 @@ void PropertyPage::onPropertyChanged(wxPropertyGridEvent& event)
 
 //-----------------------------------//
 
+void PropertyPage::showProperties( const Object* object, bool resetObject )
+{
+	if( resetObject ) reset();
+	currentObject = object;
+
+	ObjectWalker walker(*this);
+	walker.process(object);
+}
+
+//-----------------------------------//
+
+void PropertyPage::processBegin(const ObjectData& data)
+{
+	appendObjectFields(* (Class*) data.type, data.instance);
+}
+
+//-----------------------------------//
+
 void PropertyPage::showEntityProperties( const EntityPtr& entity )
 {
-	reset();
-	selectedEntity = entity;
+	currentObject = entity.get();
 
     // Entity properties.
 	appendObjectFields( entity->getType(), entity.get() );
@@ -231,13 +258,14 @@ void PropertyPage::showEntityProperties( const EntityPtr& entity )
 	}
 }
 
+
 //-----------------------------------//
 
 void PropertyPage::appendObjectFields(const Class& type, void* object, bool newCategory)
 {
 	if( newCategory )
 	{
-		const std::string& typeName = type.name;
+		const wxString& typeName = convertToReadable(type.name);
 		wxPropertyCategory* category = new wxPropertyCategory(typeName);
 		Append(category);
 	}
@@ -305,6 +333,8 @@ wxPGProperty* PropertyPage::createProperty(const Class& type, const Field& field
 
 	wxString name = convertToReadable( field.name );
 	prop->SetLabel( name );
+
+	if( field.isReadOnly() ) prop->Enable(false);
 
 	return prop;
 }

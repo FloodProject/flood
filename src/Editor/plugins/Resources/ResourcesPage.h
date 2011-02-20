@@ -46,6 +46,7 @@ protected:
 	void initControl();
 	void initIcons();
 
+	void onItemChanged( wxTreeEvent& event );
 	void onTreeItemMenu(wxTreeEvent& event);
 	void onCommandMenuSelected( wxCommandEvent& event );
 
@@ -58,17 +59,17 @@ protected:
 	ResourceManager* rm;
 
 	wxImageList* imageList;
-	wxTreeItemId rootItemId;
+	wxTreeItemId rootId;
 	wxTreeItemId menuItemId;
 
 	typedef std::map< Resource*, wxTreeItemId > ResourceIdsMap;
 	ResourceIdsMap resourceIds;
 
 	typedef std::map< ResourceGroup::Enum, wxTreeItemId > ResourceGroupIdsMap;
-	ResourceGroupIdsMap resourceGroupTreeIds;
+	ResourceGroupIdsMap resGroupIds;
 	
 	typedef std::map< ResourceGroup::Enum, int > ResourceGroupIconsMap;
-	ResourceGroupIconsMap resourceGroupIcons;
+	ResourceGroupIconsMap resGroupIcons;
 };
 
 //-----------------------------------//

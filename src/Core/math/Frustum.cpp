@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "math/Frustum.h"
+#include "Math/Frustum.h"
 
 namespace vapor {
 

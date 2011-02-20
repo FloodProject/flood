@@ -10,6 +10,8 @@
 
 #include "UndoOperation.h"
 
+FWD_DECL_SHARED(Entity)
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//
@@ -38,11 +40,7 @@ namespace SelectionMode
 
 struct SelectionData
 {
-	bool operator == (const SelectionData& rhs) const
-	{
-		return entity == rhs.entity;
-	}
-
+	bool operator == (const SelectionData& rhs) const;
 	EntityPtr entity;
 };
 

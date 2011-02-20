@@ -76,6 +76,9 @@ public:
 	// Processes the given resource.
 	bool Process(const ResourcePtr& resource);
 
+	// Gets the processed resource type.
+	const Class& GetResourceType() { return Image::getStaticType(); }
+
 protected:
 
 	CompressionFormat::Enum format;

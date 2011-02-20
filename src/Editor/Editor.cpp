@@ -17,9 +17,11 @@
 #include "Viewframe.h"
 #include "EditorInputManager.h"
 #include "Events.h"
+#include "EditorTags.h"
 #include "ResourceDrop.h"
 #include "wxFourWaySplitter.h"
 #include "StackWalker.h"
+#include "Core/FileSystem.h"
 
 // Editor plugins
 #include "plugins/Project/ProjectPlugin.h"
@@ -449,13 +451,13 @@ void EditorFrame::switchPlayMode(bool switchToPlay)
 	ControllerPtr controller;
 
 	if( camera )
-		nodeCamera = camera->getEntity();
+		nodeCamera = camera->getEntity()->getShared();
 
 	if( !nodeCamera )
 		return;
 
 	if( controller )
-		controller = nodeCamera->getTypedComponent<Controller>();
+		controller = nodeCamera->getComponentFromFamily<Controller>();
 
 	if( switchToPlay )
 	{

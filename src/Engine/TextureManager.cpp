@@ -10,17 +10,14 @@
 #include "render/TextureManager.h"
 #include "resources/ResourceManager.h"
 #include "render/GL.h"
-#include "Engine.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
 TextureManager::TextureManager()
-	: rm( GetEngine()->getResourceManager() )
-{
-	assert( rm != nullptr );
-	
+	: rm( GetResourceManager() )
+{	
 	rm->onResourceLoaded.Connect( this, &TextureManager::onLoaded );
 	rm->onResourceRemoved.Connect( this, &TextureManager::onUnloaded );
 	rm->onResourceReloaded.Connect( this, &TextureManager::onReloaded );

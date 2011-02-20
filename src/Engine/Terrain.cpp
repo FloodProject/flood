@@ -7,9 +7,9 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/terrain/Terrain.h"
-#include "vapor/math/Helpers.h"
-#include "scene/Geometry.h"
+#include "Terrain/Terrain.h"
+#include "Scene/Geometry.h"
+#include "Math/Helpers.h"
 #include "Utilities.h"
 
 namespace vapor {
@@ -65,7 +65,8 @@ void Terrain::init()
 
 void Terrain::addCell( int x, int y )
 {
-	int numHeights = pow(settings.NumberTiles + 1.0f, 2);
+	int numTiles = int(settings.NumberTiles + 1.0f);
+	int numHeights = numTiles*numTiles;
 
 	std::vector<float> heights;
 	heights.resize( numHeights, 0 );
@@ -110,17 +111,20 @@ CellPtr Terrain::getCell( int x, int y )
 
 Vector2i Terrain::getCoords( const Vector3& pos )
 {
-	int x = floor(pos.x / settings.CellSize); 
-	int y = floor(pos.z / settings.CellSize);
+	float x = floor(pos.x / settings.CellSize); 
+	float y = floor(pos.z / settings.CellSize);
 
-	return Vector2i(x, y);
+	return Vector2i( int(x), int(y) );
 }
 
 //-----------------------------------//
 
 CellPtr Terrain::createCell( int x, int y, std::vector<float>& heights )
 {
-	CellPtr cell( new Cell(settings, heights, x, y) );
+	CellPtr cell( new Cell(x, y) );
+	cell->setSettings(settings);
+	cell->setHeights(heights);
+
 	terrainCells.push_back(cell);
 
 	std::string name = String::format("Cell (%d,%d)", x, y);
@@ -187,8 +191,8 @@ bool Terrain::validateHeightmap( const ImagePtr& heightmap )
 	
 	assert( heightmap->isLoaded() );
 
-	const ushort width = heightmap->getWidth();
-	const ushort height = heightmap->getHeight();
+	int width = heightmap->getWidth();
+	int height = heightmap->getHeight();
 
 	// Check the heightmap for the right dimensions.
 	// First condition: width and height should be the same.
@@ -234,8 +238,8 @@ void Terrain::update( double delta )
 		const ImagePtr& heightmap = request.image;
 		assert( heightmap != nullptr );
 
-		short x = request.x;
-		short y = request.y;
+		int x = request.x;
+		int y = request.y;
 		
 		if( heightmap->isLoaded() )
 		{

@@ -22,6 +22,8 @@ namespace vapor {
 
 class RESOURCE_API GLSL_Text : public Text
 {
+	REFLECT_DECLARE_CLASS()
+
 public:
 
 	// Returns the vertex shader source code.
@@ -36,6 +38,7 @@ public:
 	// Returns the proper resource group for the shader.
 	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Shaders)
 
+	// Parses the text into shaders.
 	void parse();
 
 protected:

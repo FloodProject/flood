@@ -36,7 +36,6 @@ STB_Image_Loader::STB_Image_Loader()
 
 bool STB_Image_Loader::decode(const Stream& file, Resource* res)
 {
-	// read contents of the file into the vector
 	std::vector<byte> data;
 	file.read(data);
 
@@ -45,8 +44,9 @@ bool STB_Image_Loader::decode(const Stream& file, Resource* res)
 
 	int width, height, comp;
 	
-	byte* pixelData = stbi_load_from_memory( &data[0], data.size(), &width, 
-		&height, &comp, 0 /* 0=auto-detect, 3=RGB, 4=RGBA */ );
+	byte* pixelData = stbi_load_from_memory(
+		&data[0], data.size(), &width, &height,
+		&comp, 0 /* 0=auto-detect, 3=RGB, 4=RGBA */ );
 
 	if( !pixelData )
 		return false;

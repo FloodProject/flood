@@ -15,12 +15,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-#define PREPARE(T) \
+#define RESOURCE_LOADER_PREPARE(T)									\
 	virtual Resource* prepare(const Stream&) { return new T(); }
-
-typedef std::list< std::string > ExtensionList;
-
-//-----------------------------------//
 
 /**
  * Resource loaders decode resource data into a proper resource.
@@ -29,10 +25,10 @@ typedef std::list< std::string > ExtensionList;
  * The loader also provides the extensions of those formats.
  */
 
-class RESOURCE_API ResourceLoader
+class RESOURCE_API ResourceLoader : public Object
 {
 	DECLARE_UNCOPYABLE(ResourceLoader)
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_CLASS()
 
 public:
 
@@ -46,14 +42,16 @@ public:
 	// Decodes a given file into a resource.
 	virtual bool decode(const Stream&, Resource* res) = 0;
 
-	// Gets a list of recognized extensions by this loader.
-	virtual ExtensionList& getExtensions() const = 0;
-
 	// Gets the name of this resource loader.
 	virtual const std::string getName() const = 0;
 
 	// Gets the resource group of this loader.
 	virtual ResourceGroup::Enum getResourceGroup() const = 0;
+
+	// Gets a list of recognized extensions by this loader.
+	GETTER(Extensions, const std::vector<std::string>&, extensions);
+
+	std::vector<std::string> extensions;
 };
 
 //-----------------------------------//

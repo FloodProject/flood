@@ -41,6 +41,8 @@ Timer::Timer()
 
 //-----------------------------------//
 
+#define tv_time_ms(t) ((t.tv_sec * 1000000.0) + t.tv_usec)
+
 double Timer::getCurrentTime()
 {
 	storeTime(currentTime);
@@ -48,9 +50,12 @@ double Timer::getCurrentTime()
 #ifdef VAPOR_PLATFORM_WINDOWS	
 	return (double) currentTime / (double) ticksPerSecond;
 #else
-	return currentTime.tv_sec;
+	return tv_time_ms(currentTime);
 #endif
 }
+
+#pragma TODO("OSX: Use Mach timers: http://developer.apple.com/library/mac/#qa/qa2004/qa1398.html")
+// Linux: http://linux.die.net/man/3/clock_gettime
 
 //-----------------------------------//
 
@@ -62,7 +67,7 @@ double Timer::getElapsedTime()
 	Ticks diff = currentTime - lastTime;
 	return (double) diff / (double) ticksPerSecond;
 #else
-	return currentTime.tv_sec - lastTime.tv_sec;
+	return tv_time_ms(currentTime) - tv_time_ms(lastTime.tv_sec);
 #endif
 }
 

@@ -24,16 +24,12 @@ BEGIN_ENUM(MipmapFilter)
 	ENUM(Kaizer)
 END_ENUM()
 
-//-----------------------------------//
-
 BEGIN_ENUM(CompressionQuality)
 	ENUM(Fastest)
 	ENUM(Normal)
 	ENUM(Production)
 	ENUM(Highest)
 END_ENUM()
-
-//-----------------------------------//
 
 BEGIN_ENUM(CompressionFormat)
 	ENUM(RGB)
@@ -44,8 +40,6 @@ BEGIN_ENUM(CompressionFormat)
 	ENUM(DXT5)
 	ENUM(DXT5nm)
 END_ENUM()
-
-//-----------------------------------//
 
 BEGIN_CLASS_PARENT(ImageProcessor, ResourceProcessor)
 	FIELD_ENUM(CompressionFormat, format)

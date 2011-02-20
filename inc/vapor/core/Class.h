@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "core/Type.h"
-#include "core/Field.h"
+#include "Core/Type.h"
+#include "Core/Field.h"
 #include "Event.h"
 
 namespace vapor {
@@ -48,7 +48,7 @@ public:
 	void addChild(Class& type);
 
 	// Returns a new instance of this type.
-	virtual void* createInstance() const;
+	virtual void* createInstance(void* address = nullptr) const;
 
 public:
 

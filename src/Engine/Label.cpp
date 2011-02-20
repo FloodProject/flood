@@ -22,7 +22,7 @@ namespace vapor {
 BEGIN_CLASS_PARENT(Label, Overlay)
 	FIELD_PRIMITIVE(string, text)
 	FIELD_PRIMITIVE(bool, isDirty)
-	FIELD_CLASS_PTR(Font, font) 
+	FIELD_CLASS_PTR(Font, FontPtr, font, RefPointer) 
 END_CLASS()
 
 //-----------------------------------//

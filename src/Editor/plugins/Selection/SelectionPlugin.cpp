@@ -18,6 +18,13 @@
 #include "RenderControl.h"
 #include "RenderWindow.h"
 
+#include "Render/View.h"
+#include "Scene/Scene.h"
+#include "Scene/Camera.h"
+#include "GUI/Overlay.h"
+#include "Input/Mouse.h"
+#include "Engine.h"
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//

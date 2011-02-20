@@ -67,10 +67,12 @@ ResourceManager::~ResourceManager()
 		if( !loader )
 			continue;
 
-		if( loader->getExtensions().size() == 1 )
+		std::vector<std::string>& extensions = loader->extensions;
+
+		if( extensions.size() == 1 )
 			delete loader;
 		else
-			loader->getExtensions().remove( it->first );
+			extensions.erase( std::find(extensions.begin(), extensions.end(), it->first) );
 	}
 
 	//if( fileWatcher )
@@ -340,12 +342,11 @@ void ResourceManager::registerLoader(ResourceLoader* const loader)
 {
 	Log::info( "Registering resource loader '%s'", loader->getName().c_str() );
 
-	const ExtensionList& extensions = loader->getExtensions();
-	ExtensionList::const_iterator it;
-
-	for( it = extensions.cbegin(); it != extensions.cend(); it++ )
+	const std::vector<std::string>& extensions = loader->getExtensions();
+	
+	for( uint i = 0; i < extensions.size(); i++ )
 	{
-		const std::string& extension = *it;
+		const std::string& extension = extensions[i];
 
 		if(resourceLoaders.find(extension) != resourceLoaders.end())
 		{

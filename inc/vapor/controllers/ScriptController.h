@@ -44,7 +44,7 @@ protected:
 	void createState();
 
 	// Binds the node instance.
-	void bindEntity(const EntityPtr& entity);
+	void bindEntity(Entity* entity);
 
 	// Binds a type into this instance.
 	void bindType(swig_module_info* module, const char* name,

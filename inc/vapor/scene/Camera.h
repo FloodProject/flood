@@ -41,10 +41,7 @@ public:
 	virtual ~Camera();
 
 	// Renders the scene to the current render view.
-	void render();
-
-	// Renders the scene to the current render view.
-	void render( const EntityPtr& scene );
+	void render( const ScenePtr& scene );
 
 	// Renders the block to the current render view.
 	void render( RenderBlock& block, bool clearView = true );

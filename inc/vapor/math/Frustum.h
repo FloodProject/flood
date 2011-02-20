@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include "math/Vector2.h"
-#include "math/Matrix4x4.h"
-#include "math/Plane.h"
-#include "math/BoundingBox.h"
+#include "Math/Vector2.h"
+#include "Math/Matrix4x4.h"
+#include "Math/Plane.h"
+#include "Math/BoundingBox.h"
 
 #include "Object.h"
 

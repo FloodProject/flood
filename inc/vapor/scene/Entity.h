@@ -34,7 +34,7 @@ typedef std::pair< const Class*, ComponentPtr > ComponentMapPair;
  * by default to give it a placement in the world scene.
  */
 
-class VAPOR_API Entity : public Object, public std::enable_shared_from_this<Entity>
+class VAPOR_API Entity : public Object
 {
 	DECLARE_CLASS_()
 	DECLARE_UNCOPYABLE(Entity)
@@ -57,10 +57,10 @@ public:
 	SETTER(Visible, bool, visible)
 
 	// Gets the parent of the entity.
-	EntityPtr getParent() const;
+	Entity* getParent() const;
 
 	// Sets the parent of the entity.
-	SETTER(Parent, const EntityPtr&, parent)
+	SETTER(Parent, Entity*, parent)
 
 	// Gets the tag of the entity.
 	bool getTag( int index );
@@ -74,6 +74,29 @@ public:
 	// Removes a component from this entity.
 	bool removeComponent( const ComponentPtr& component );
 
+	// Gets a component of the given type name.
+	ComponentPtr getComponent(const std::string& type) const;
+
+	// Gets a component of the given type.
+	ComponentPtr getComponent(const Type& type) const;
+
+	// Gets a component of the given type.
+	ComponentPtr getComponentFromFamily(const Type& type) const;
+
+	// Gets a component from this entity.
+	template <typename T>
+	std::shared_ptr<T> getComponent() const
+	{
+		return std::static_pointer_cast<T>( getComponent(T::getStaticType()) );
+	}
+
+	// Gets the first found component inheriting the given type.
+	template<typename T>
+	std::shared_ptr<T> getComponentFromFamily()
+	{
+		return std::static_pointer_cast<T>( getComponentFromFamily(T::getStaticType()) );
+	}
+
 	// Adds a transform component to this entity.
 	bool addTransform();
 
@@ -81,42 +104,19 @@ public:
 	TransformPtr getTransform() const;
 
 	// Returns all the registered components in this entity.
-	GETTER(Components, const ComponentMap&, components)
+	GETTER(Components, const ComponentMap&, componentsMap)
 
 	// Gets the geometries components in the entity.
-	GETTER(Geometry, const std::vector<GeometryPtr>&, geometries)
+	std::vector<GeometryPtr> getGeometry() const;
 
-	// Gets a component from this entity.
-	template <typename T>
-	std::shared_ptr<T> getComponent() const
-	{
-		ComponentMap::const_iterator it = components.find(&T::getStaticType());
-		
-		if( it == components.end() )
-			return std::shared_ptr<T>();
-
-		return std::static_pointer_cast<T>((*it).second);
-	}
-
-	// Gets the first found component inheriting the given type.
-	template<typename T>
-	std::shared_ptr<T> getTypedComponent()
-	{
-		ComponentMap::const_iterator it;
-		for( it = components.cbegin(); it != components.cend(); it++ )
-		{
-			const ComponentPtr& component = it->second;
-			const Type& componentType = component->getType();
-
-			if( componentType.inherits<T>() )
-				return std::static_pointer_cast<T>(component);
-		}
-
-		return std::shared_ptr<T>();
-	}
+	// Gets the shared pointer from this entity.
+	EntityPtr getShared();
 
 	// Updates all the components of the entity.
 	virtual void update( double delta );
+
+	// Fix-up serialization.
+	virtual void fixUp();
 
 	// Sends event notifications.
 	void sendEvents();
@@ -139,13 +139,13 @@ protected:
 	int tags;
 
 	// Components of the entity.
-	ComponentMap components;
+	std::vector<ComponentPtr> components;
+
+	// Components map of the entity.
+	ComponentMap componentsMap;
 
 	// Parent entity.
-	EntityWeakPtr parent;
-	
-	// Caches geometry components.
-	std::vector<GeometryPtr> geometries;
+	Entity* parent;
 };
 
 //-----------------------------------//

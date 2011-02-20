@@ -69,7 +69,7 @@ void Class::addChild(Class& type)
 
 //-----------------------------------//
 
-void* Class::createInstance() const
+void* Class::createInstance(void* address) const
 {
 	return nullptr;
 }

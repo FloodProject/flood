@@ -160,7 +160,6 @@ void Logger::add( LogSink* sink )
 void Logger::write(LogLevel::Enum level, const char* msg, va_list args)
 {
 	THREAD(lock_guard<boost::mutex> lock(mutex);)
-	LocaleSwitch c;
 
 	std::string format = String::format(msg, args);
 	

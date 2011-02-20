@@ -13,6 +13,8 @@
 #include "UndoManager.h"
 #include "EditorIcons.h"
 
+#include "io/JsonSerializer.h"
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//
@@ -117,53 +119,26 @@ void ProjectPlugin::onOpenButtonClick(wxCommandEvent& event)
 	if( fc.ShowModal() != wxID_OK )
 		return;
 
-	//Serializer deserializer;
-	//deserializer.openFromFile( (std::string) fc.GetPath() );
-	//
-	//ScenePtr newScene = deserializer.deserializeScene();
-	//switchScene(newScene);
-}
+	std::string path = (std::string) fc.GetPath();
+	FileStream stream(path, StreamMode::Read );
+	
+	if( !stream.open() )
+		return;
 
-//-----------------------------------//
+	JsonDeserializer json( stream );
+	Object* object = json.deserialize();
 
-void ProjectPlugin::onSaveButtonClick(wxCommandEvent& event)
-{
-	saveScene();
-}
+	if( !object )
+	{
+		wxMessageDialog message(editor,
+			"Could not load scene.", "Load", wxOK | wxICON_EXCLAMATION);
+		message.ShowModal();
 
-//-----------------------------------//
+		return;
+	}
 
-void ProjectPlugin::onSaveButtonUpdateUI(wxUpdateUIEvent& event)
-{
-	event.Enable( unsavedChanges );
-	saveItem->Enable( unsavedChanges );
-}
-
-//-----------------------------------//
-
-void ProjectPlugin::switchScene(const ScenePtr& scene)
-{
-	editor->switchPlayMode(false);
-
-	UndoManager* undo = editor->getUndoManager();
-	undo->clearOperations();
-
-	unsavedChanges = false;
-
-	Engine* engine = editor->getEngine();
-	engine->setSceneManager(scene);
-
-#ifdef VAPOR_PHYSICS_BULLET
-	delete engine->getPhysicsManager();
-	PhysicsManager* physics = new PhysicsManager();
-	physics->createWorld();
-	engine->setPhysicsManager(physics);
-#endif
-
-	Events* events = editor->getEventManager();
-	events->onSceneLoad(scene);
-
-	editor->redrawView();
+	ScenePtr newScene( (Scene*) object );
+	switchScene(newScene);
 }
 
 //-----------------------------------//
@@ -172,7 +147,7 @@ bool ProjectPlugin::saveScene()
 {
 	// Ask for file name to save as.
 	wxFileDialog fc( editor, wxFileSelectorPromptStr, wxEmptyString,
-		wxEmptyString, fileDialogDescription, wxFC_SAVE );
+		wxEmptyString, fileDialogDescription, wxFC_SAVE | wxFD_OVERWRITE_PROMPT );
 	
 	if( fc.ShowModal() != wxID_OK )
 		return false;
@@ -180,9 +155,16 @@ bool ProjectPlugin::saveScene()
 	Engine* engine = editor->getEngine();
 	ScenePtr scene = engine->getSceneManager();
 	
-	//Serializer serializer;
-	//serializer.serializeScene(scene);
-	//serializer.saveToFile( (std::string) fc.GetPath() );
+	std::string path = (std::string) fc.GetPath();
+	FileStream stream( path, StreamMode::Write );
+	
+	if( !stream.open() )
+		return false;
+
+	JsonSerializer json( stream );
+	
+	ObjectWalker walker(json);
+	walker.process(scene.get());
 
 	unsavedChanges = false;
 	return true;
@@ -210,6 +192,48 @@ bool ProjectPlugin::askSaveChanges()
 		return true;
 	else
 		return false;
+}
+
+//-----------------------------------//
+
+void ProjectPlugin::onSaveButtonClick(wxCommandEvent& event)
+{
+	saveScene();
+}
+
+//-----------------------------------//
+
+void ProjectPlugin::onSaveButtonUpdateUI(wxUpdateUIEvent& event)
+{
+	event.Enable( unsavedChanges );
+	//saveItem->Enable( unsavedChanges );
+}
+
+//-----------------------------------//
+
+void ProjectPlugin::switchScene(const ScenePtr& scene)
+{
+	editor->switchPlayMode(false);
+
+	UndoManager* undo = editor->getUndoManager();
+	undo->clearOperations();
+
+	unsavedChanges = false;
+
+	Engine* engine = editor->getEngine();
+	engine->setSceneManager(scene);
+
+#ifdef VAPOR_PHYSICS_BULLET
+	delete engine->getPhysicsManager();
+	PhysicsManager* physics = new PhysicsManager();
+	physics->createWorld();
+	engine->setPhysicsManager(physics);
+#endif
+
+	Events* events = editor->getEventManager();
+	events->onSceneLoad(scene);
+
+	editor->redrawView();
 }
 
 //-----------------------------------//

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "core/Type.h"
+#include "Core/Type.h"
 
 namespace vapor {
 
@@ -18,10 +18,14 @@ namespace Qualifier
 {
 	enum Enum
 	{
-		Handle	= 1 << 0,
-		Pointer	= 1 << 1,
-		Array	= 1 << 2,
-		Map		= 1 << 3
+		Array			= 1 << 0,
+		Map				= 1 << 1,
+		Set				= 1 << 2,
+		Handle			= 1 << 3,
+		RawPointer		= 1 << 4,
+		SharedPointer	= 1 << 5,
+		RefPointer		= 1 << 6,
+		ReadOnly		= 1 << 7,
 	};
 }
 
@@ -69,6 +73,12 @@ public:
 	// Returns if the field is a pointer.
 	bool isPointer() const;
 
+	// Returns if the field is an array.
+	bool isArray() const;
+
+	// Returns if the field is read-only.
+	bool isReadOnly() const;
+
 	// Type of the field.
 	const Type& type;
 
@@ -83,6 +93,9 @@ public:
 
 	// Size of the field.
 	short size;
+
+	// Size of the pointer.
+	short pointerSize;
 
 	// Setter function.
 	SetterFunctionPtr setterFunction;

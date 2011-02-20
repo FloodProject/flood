@@ -69,22 +69,24 @@ typedef unsigned long	ulong;
 // Forward-declaration Helpers
 //---------------------------------------------------------------------//
 
-#define TYPEDEF_SHARED_POINTER_FROM_TYPE( class ) \
+#define FWD_DECL(T) namespace vapor { class T; }				\
+
+#define TYPEDEF_SHARED_POINTER_FROM_TYPE( class )				\
 	typedef std::shared_ptr< class > class##Ptr;
 
-#define TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( class ) \
+#define TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( class )			\
 		typedef std::weak_ptr< class > class##WeakPtr;
 
-#define FWD_DECL_SHARED(T)							\
-	namespace vapor {								\
-		class T;									\
-		TYPEDEF_SHARED_POINTER_FROM_TYPE( T );		\
+#define FWD_DECL_SHARED(T)										\
+	namespace vapor {											\
+		class T;												\
+		TYPEDEF_SHARED_POINTER_FROM_TYPE( T );					\
 	} // end namespace
 
-#define FWD_DECL_SHARED_WEAK(T)						\
-	namespace vapor {								\
-		class T;									\
-		TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( T );	\
+#define FWD_DECL_SHARED_WEAK(T)									\
+	namespace vapor {											\
+		class T;												\
+		TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( T );				\
 	} // end namespace
 
 //---------------------------------------------------------------------//

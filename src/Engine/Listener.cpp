@@ -55,8 +55,6 @@ void Listener::update( double delta )
 	if(!audioContext)
 		return;
 
-	const EntityPtr& entity = getEntity();
-	
 	const CameraPtr& camera = entity->getComponent<Camera>();
 	
 	if(camera)

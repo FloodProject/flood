@@ -7,12 +7,10 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "core/Primitive.h"
-
-#include "math/Vector3.h"
-#include "math/Color.h"
-#include "math/Quaternion.h"
-#include <bitset>
+#include "Core/Primitive.h"
+#include "Math/Vector3.h"
+#include "Math/Color.h"
+#include "Math/Quaternion.h"
 
 namespace vapor {
 
@@ -29,7 +27,7 @@ const Primitive Primitive::_string(PrimitiveType::String, "string", sizeof(std::
 const Primitive Primitive::_Vector3(PrimitiveType::Vector3, "Vector3", sizeof(Vector3));
 const Primitive Primitive::_Color(PrimitiveType::Color, "Color", sizeof(Color));
 const Primitive Primitive::_Quaternion(PrimitiveType::Quaternion, "Quaternion", sizeof(Quaternion));
-const Primitive Primitive::_Bitfield(PrimitiveType::Bitfield, "Bitfield", sizeof(std::bitset<32>));
+const Primitive Primitive::_Bitfield(PrimitiveType::Bitfield, "Bitfield", sizeof(uint));
 
 //-----------------------------------//
 

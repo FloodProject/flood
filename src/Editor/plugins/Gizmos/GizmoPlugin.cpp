@@ -232,6 +232,9 @@ void GizmoPlugin::onMouseMove( const MouseMoveEvent& moveEvent )
 
 	if( pickBoundingTest(moveEvent) && pickImageTest(moveEvent, axis) )
 	{
+		wxCursor cursor(wxCURSOR_SIZING);
+		wxSetCursor(cursor);
+
 		gizmo->selectAxis(axis);
 		
 		if( !op )
@@ -241,6 +244,8 @@ void GizmoPlugin::onMouseMove( const MouseMoveEvent& moveEvent )
 	}
 	else
 	{
+		wxSetCursor(wxNullCursor);
+
 		gizmo->deselectAxis();
 		
 		delete op;

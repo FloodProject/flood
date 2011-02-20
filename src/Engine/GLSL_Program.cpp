@@ -10,10 +10,10 @@
 
 #ifdef VAPOR_SHADER_GLSL
 
-#include "vapor/render/GLSL_Program.h"
-#include "vapor/resources/GLSL_Text.h"
-#include "vapor/render/GL.h"
-#include "vapor/Utilities.h"
+#include "Render/GLSL_Program.h"
+#include "Resources/GLSL_Text.h"
+#include "Render/GL.h"
+#include "Utilities.h"
 #include "ReferenceCount.h"
 #include <algorithm>
 
@@ -96,11 +96,11 @@ void GLSL_Program::createShaders()
 		return;
 
 	vertex = new GLSL_Shader();
-	vertex->setType( ShaderType::Vertex );
+	vertex->setShaderType( ShaderType::Vertex );
 	vertex->create();
 	
 	fragment = new GLSL_Shader();
-	fragment->setType( ShaderType::Fragment );
+	fragment->setShaderType( ShaderType::Fragment );
 	fragment->create();
 
 	addShader( (GLSL_ShaderPtr&) vertex );
@@ -141,14 +141,10 @@ bool GLSL_Program::attachShaders()
 		if( shader->isCompiled() )
 			 continue;
 		
-		std::string type = String::toLowerCase(
-			ShaderType::getString( shader->getType()));
-
 		if( !shader->compile() )
 		{
-			Log::error( "Error compiling %s shader '%s': %s",
-				type.c_str(), text->getBasePath().c_str(),
-				shader->getLog().c_str() );
+			Log::error( "Error compiling shader '%s': %s",
+				text->getBasePath().c_str(), shader->getLog().c_str() );
 
 			linkError = true;
 			linked = false;
@@ -157,8 +153,7 @@ bool GLSL_Program::attachShaders()
 		}
 		else
 		{
-			Log::info( "Compiled %s shader '%s' with no errors",
-				type.c_str(), text->getBasePath().c_str() );
+			Log::info( "Compiled shader '%s' with no errors", text->getBasePath().c_str() );
 		}
 	}
 

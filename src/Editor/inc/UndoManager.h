@@ -6,6 +6,12 @@
 *
 ************************************************************************/
 
+#pragma once
+
+#include "Event.h"
+#include "ReferenceCount.h"
+#include <deque>
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//

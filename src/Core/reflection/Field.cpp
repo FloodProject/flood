@@ -16,6 +16,9 @@ namespace vapor {
 Field::Field( const Type& type )
 	: type(type)
 	, qualifiers(0)
+	, size(-1)
+	, offset(-1)
+	, pointerSize(-1)
 	, setterFunction(nullptr)
 { }
 
@@ -35,9 +38,25 @@ void Field::setQualifier( byte qualifier )
 
 //-----------------------------------//
 
+bool Field::isArray() const
+{
+	return (qualifiers & Qualifier::Array);
+}
+
+//-----------------------------------//
+
 bool Field::isPointer() const
 {
-	return qualifiers == Qualifier::Pointer;
+	return (qualifiers & Qualifier::RawPointer)
+		|| (qualifiers & Qualifier::SharedPointer)
+		|| (qualifiers & Qualifier::RefPointer);
+}
+
+//-----------------------------------//
+
+bool Field::isReadOnly() const
+{
+	return (qualifiers & Qualifier::ReadOnly) != 0;
 }
 
 //-----------------------------------//

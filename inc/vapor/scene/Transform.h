@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include "math/EulerAngles.h"
-#include "math/Quaternion.h"
-#include "math/BoundingBox.h"
-#include "scene/Component.h"
+#include "Math/EulerAngles.h"
+#include "Math/Quaternion.h"
+#include "Math/BoundingBox.h"
+#include "Scene/Component.h"
 
 namespace vapor {
 
@@ -31,18 +31,6 @@ class VAPOR_API Transform : public Component
 public:
 
 	Transform();
-
-	//// Translates by the given parameters.
-	//void translate( float x, float y, float z );
-	//void translate( const Vector3& tr );
-
-	//// Scales by the given parameters.
-	//void scale( float x, float y, float z );
-	//void scale( const Vector3& scale );
-
-	//// Rotates by the given parameters.
-	//void rotate( float xang, float yang, float zang );
-	//void rotate( const Vector3& rotation );
 
 	// Resets all the transformations.
 	void reset();

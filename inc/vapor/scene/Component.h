@@ -19,9 +19,7 @@ namespace vapor {
 //-----------------------------------//
 
 class Entity;
-
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Entity )
-TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( Entity )
 
 //-----------------------------------//
 
@@ -43,12 +41,10 @@ public:
 	virtual ~Component();
 	
 	// Gets the associated node of this component.
-	EntityPtr getEntity() const;
+	Entity* getEntity() const;
 
 	// Sets the associated node of this component.
-	void setEntity( const EntityPtr& entity );
-
-public:
+	void setEntity( Entity* entity );
 
 	// Called once per frame to update the component.
 	virtual void update( double delta ) = 0;
@@ -58,8 +54,6 @@ public:
 
 	// Called just before the camera renders this component.
 	virtual void onPreRender( const Camera& camera );
-
-public:
 
 	// Gets if the debug renderable is visible.
 	virtual bool isDebugRenderableVisible() const;
@@ -79,7 +73,7 @@ public:
 protected:
 
 	// Entity that owns this component.
-	EntityWeakPtr entity;
+	Entity* entity;
 
 	// Is the debug representation visible.
 	bool debugVisible;

@@ -10,30 +10,6 @@
 #include "Utilities.h"
 #include "io/JsonSerializer.h"
 
-class A
-{
-	DECLARE_CLASS_()
-public:
-	float f;
-	void setF(float v) {}
-};
-
-BEGIN_CLASS(A)
-	FIELD_PRIMITIVE_SETTER(float, f, F)
-END_CLASS()
-
-class B
-{
-	DECLARE_CLASS_()
-public:
-	float f;
-	void setF(float v) {}
-};
-
-BEGIN_CLASS(B)
-	FIELD_PRIMITIVE_SETTER(float, f, F)
-END_CLASS()
-
 //-----------------------------------//
 
 Example::Example(const char** argv)

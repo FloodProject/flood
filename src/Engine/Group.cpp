@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "scene/Group.h"
+#include "Scene/Group.h"
 #include <algorithm>
 
 namespace vapor {
@@ -15,7 +15,7 @@ namespace vapor {
 //-----------------------------------//
 
 BEGIN_CLASS_PARENT(Group, Entity)
-	FIELD_VECTOR_PTR(Entity, EntityPtr, entities)
+	FIELD_VECTOR_PTR(Entity, EntityPtr, entities, SharedPointer)
 END_CLASS()
 
 //-----------------------------------//
@@ -36,7 +36,7 @@ void Group::add( const EntityPtr& entity )
 	// Beware that you have to assign a new Group-derived object
 	// to a shared_ptr, else shared_from_this will return bad_weak_ptr.
 
-	entity->setParent( Entity::shared_from_this() );
+	entity->setParent( this );
 	entities.push_back( entity );
 
 	onEntityAdded(entity);

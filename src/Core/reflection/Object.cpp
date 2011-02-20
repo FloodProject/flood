@@ -13,29 +13,11 @@ namespace vapor {
 
 //-----------------------------------//
 
-Object::Object()
-{ }
+Object::Object() { }
 
 //-----------------------------------//
 
-void Object::serialize( const Serializer& serializer )
-{
-
-}
-
-//-----------------------------------//
-
-Object* Object::createInstance() const
-{
-	return nullptr;
-}
-
-//-----------------------------------//
-
-Object* Object::clone() const
-{
-	return nullptr;
-}
+void Object::fixUp() { }
 
 //-----------------------------------//
 

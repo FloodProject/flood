@@ -9,6 +9,7 @@
 #pragma once
 
 #include <wx/odcombo.h>
+#include "Resources/Image.h"
 
 namespace vapor { namespace editor {
 

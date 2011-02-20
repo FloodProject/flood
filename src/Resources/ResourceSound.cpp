@@ -14,6 +14,8 @@ namespace vapor {
 //-----------------------------------//
 
 BEGIN_CLASS_PARENT(Sound, Resource)
+	FIELD_PRIMITIVE(int, frequency) FIELD_READONLY(frequency)
+	FIELD_PRIMITIVE(int, channels) FIELD_READONLY(channels)
 END_CLASS()
 
 //-----------------------------------//

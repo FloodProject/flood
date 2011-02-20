@@ -9,6 +9,7 @@
 #include "PCH.h"
 #include "Plugin.h"
 #include "Editor.h"
+#include "Engine.h"
 
 namespace vapor { namespace editor {
 

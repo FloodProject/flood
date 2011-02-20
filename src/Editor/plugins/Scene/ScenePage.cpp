@@ -12,6 +12,14 @@
 #include "EditorIcons.h"
 #include "Events.h"
 #include "Utilities.h"
+#include "EditorTags.h"
+#include "Scene/Tags.h"
+#include "Scene/Scene.h"
+#include "Scene/Component.h"
+#include "Scene/Model.h"
+#include "Scene/Skydome.h"
+#include "Resources/Mesh.h"
+#include "Terrain/Terrain.h"
 
 namespace vapor { namespace editor {
 
@@ -146,14 +154,16 @@ void ScenePage::addGroup( wxTreeItemId id, const EntityPtr& entity, bool createG
 		groupId = treeCtrl->AppendItem( id, group->getName(), 0 );
 
 	EntityItemData* data = new EntityItemData();
-	data->entity = entity;
+	data->entity = entity.get();
 
-	nodeIds[entity] = groupId;
+	nodeIds[entity.get()] = groupId;
 	treeCtrl->SetItemData( groupId, data );
 
-	for( uint i = 0; i < group->getEntities().size(); i++ )
+	const std::vector<EntityPtr>& entities = group->getEntities();
+
+	for( uint i = 0; i < entities.size(); i++ )
 	{
-		const EntityPtr& child = group->getEntities()[i];
+		const EntityPtr& child = entities[i];
 		addGroup(groupId, child);
 	}
 }
@@ -171,10 +181,10 @@ wxTreeItemId ScenePage::addEntity( wxTreeItemId id, const EntityPtr& entity )
 		addComponent(nodeId, it->second);
 
 	EntityItemData* data = new EntityItemData();
-	data->entity = entity;
+	data->entity = entity.get();
 
 	treeCtrl->SetItemData( nodeId, data );
-	nodeIds[entity] = nodeId;
+	nodeIds[entity.get()] = nodeId;
 
 	return nodeId;
 }
@@ -202,8 +212,6 @@ ComponentPtr ScenePage::getComponentFromTreeId( wxTreeItemId id )
 		return ComponentPtr();
 
 	EntityItemData* data = (EntityItemData*) treeCtrl->GetItemData(id);
-	assert( data != nullptr );
-
 	return data->component.lock();
 }
 
@@ -215,21 +223,24 @@ EntityPtr ScenePage::getEntityFromTreeId( wxTreeItemId id )
 		return EntityPtr();
 
 	EntityItemData* data = (EntityItemData*) treeCtrl->GetItemData(id);
-	assert( data != nullptr );
-
-	return data->entity.lock();
+	Entity* entity = data->entity;
+	
+	if( entity )
+		return entity->getShared();
+	else
+		return EntityPtr();
 }
 
 //-----------------------------------//
 
-wxTreeItemId ScenePage::getTreeIdFromEntity(const EntityPtr& node)  
+wxTreeItemId ScenePage::getTreeIdFromEntity(const EntityPtr& entity)  
 {
-	EntityIdsMap::iterator it = nodeIds.find(node);
+	EntityIdsMap::iterator it = nodeIds.find(entity.get());
 
 	if( it == nodeIds.end() )
 		return wxTreeItemId();
 
-	return nodeIds[node];
+	return nodeIds[entity.get()];
 }
 
 //-----------------------------------//
@@ -332,8 +343,8 @@ void ScenePage::onEntityAdded( const EntityPtr& entity )
 	if( entity->getTag(EditorTags::EditorOnly) )
 		return;
 	
-	wxTreeItemId id = getTreeIdFromEntity(entity->getParent());
-	addGroup( id, entity );
+	wxTreeItemId id = getTreeIdFromEntity(entity->getParent()->getShared());
+	addGroup( id, entity->getShared() );
 }
 
 //-----------------------------------//
@@ -343,8 +354,8 @@ void ScenePage::onEntityRemoved( const EntityPtr& entity )
 	wxTreeItemId id = getTreeIdFromEntity(entity);
 	treeCtrl->Delete(id);
 	
-	assert( nodeIds[entity] == id );
-	nodeIds.erase(entity);
+	assert( nodeIds[entity.get()] == id );
+	nodeIds.erase(entity.get());
 }
 
 //-----------------------------------//
@@ -718,7 +729,7 @@ void ScenePage::onDragEnd( wxTreeEvent& event )
 
 	if( src && dest ) // It is a node, just re-parent it.
 	{
-		src->setParent( dest );
+		src->setParent( dest.get() );
 	}
 	else // It was probably a component, so handle it.
 	{

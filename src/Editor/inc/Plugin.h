@@ -8,6 +8,13 @@
 
 #pragma once
 
+#include "Scene/Entity.h"
+#include "Input/MouseEvents.h"
+#include "Input/KeyboardEvents.h"
+
+FWD_DECL_SHARED(Scene)
+FWD_DECL(Engine)
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//
@@ -80,6 +87,12 @@ public:
 	
 	// Component unselection callback.
 	virtual void onComponentUnselect( const ComponentPtr& ) {}
+
+	// Resource selection event.
+	virtual void onResourceSelect( const ResourcePtr& ) {}
+
+	// Resource unselection event.
+	virtual void onResourceUnselect( const ResourcePtr& ) {}
 
 	// Mouse move callback.
 	virtual void onMouseMove( const MouseMoveEvent& ) {}

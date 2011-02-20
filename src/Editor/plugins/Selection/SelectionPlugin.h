@@ -9,6 +9,7 @@
 #pragma once
 
 #include "Plugin.h"
+#include "Math/Vector2.h"
 
 namespace vapor { namespace editor {
 

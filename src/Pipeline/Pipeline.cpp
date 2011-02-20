@@ -6,6 +6,8 @@
 *
 ************************************************************************/
 
+#ifdef BUILDING_STANDALONE
+
 #define INSTANTIATE_TEMPLATES
 
 #include "Pipeline/API.h"
@@ -27,7 +29,7 @@ void showResourceLoaders()
 	{
 		Class& child = *type.childs[i];
 		printf("\t%s\n", child.name.c_str());
-	}
+	} 
 }
 
 void showResourceProcessors()
@@ -51,8 +53,8 @@ int main(int argc, char* argv[])
 
 	showResourceLoaders();
 	showResourceProcessors();
-	
-	getchar();
 
 	return 0;
 }
+
+#endif

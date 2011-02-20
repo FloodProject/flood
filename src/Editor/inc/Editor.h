@@ -8,7 +8,14 @@
 
 #pragma once
 
+#include "Math/Vector2.h"
+
 class wxFourWaySplitter;
+
+FWD_DECL_SHARED(Scene)
+FWD_DECL_SHARED(Entity)
+FWD_DECL_SHARED(Camera)
+FWD_DECL(Engine)
 
 namespace vapor { namespace editor {
 
@@ -21,6 +28,7 @@ class EditorInputManager;
 class UndoManager;
 class Viewframe;
 class Events;
+class EditorScene;
 
 //-----------------------------------//
 
@@ -132,6 +140,7 @@ protected:
 	void OnIdle(wxIdleEvent& event);
     void OnQuit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
+	void OnAboutWx(wxCommandEvent& event);
 	void OnToolbarButtonClick(wxCommandEvent& event);
 
 	void OnMenuOpenEvent(wxMenuEvent& event);

@@ -54,16 +54,13 @@ public:
 	Font_Loader();
 
 	// Creates the resource with no data.
-	PREPARE(BitmapFont)
+	RESOURCE_LOADER_PREPARE(BitmapFont)
 
 	// Decode a font definition.
 	virtual bool decode(const Stream& file, Resource* res);
 
 	// Gets the name of this codec.
 	GETTER(Name, const std::string, "FONTS")
-
-	// Gets the list of extensions this codec can handle.
-	GETTER(Extensions, ExtensionList&, extensions)
 
 	// Overrides this to return the right resource group.
 	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Fonts)
@@ -87,9 +84,6 @@ protected:
 
 	std::vector<std::string> lines;
 	std::vector<byte> data;
-
-	// Holds all file extensions recognized by this codec.
-	mutable ExtensionList extensions;
 };
 
 //-----------------------------------//

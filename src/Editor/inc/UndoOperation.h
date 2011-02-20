@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "ReferenceCount.h"
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//

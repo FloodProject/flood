@@ -28,10 +28,13 @@ public:
 	Enum(const std::string& name, int size);
 
 	// Adds a new enumeration to this enum.
-	void addValue( const std::string str, int value );
+	void addValue( const std::string& name, int value );
 
 	// Gets the name of this enum value.
 	const std::string& getString(int value) const;
+
+	// Gets the value of this enum name.
+	const int getValue(const std::string& name) const;
 
 	// Gets the values of this enum.
 	const EnumValuesMap& getValues() const;

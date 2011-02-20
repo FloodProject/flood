@@ -7,10 +7,10 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/render/View.h"
-#include "vapor/render/Target.h"
-#include "vapor/scene/Camera.h"
-#include "vapor/Engine.h"
+#include "render/View.h"
+#include "render/Target.h"
+#include "scene/Camera.h"
+#include "Engine.h"
 
 namespace vapor {
 
@@ -105,7 +105,9 @@ void RenderView::update()
 		return;
 
 	camera->setView( this );
-	camera->render();
+
+	const ScenePtr& scene = GetEngine()->getSceneManager();
+	camera->render(scene);
 }
 
 //-----------------------------------//

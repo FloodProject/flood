@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Resources/Resource.h"
-#include "math/Color.h"
+#include "Math/Color.h"
 
 namespace vapor {
 
@@ -59,13 +59,13 @@ class RESOURCE_API Image : public Resource
 public:
 
 	Image();
-	Image(ushort width, ushort height, PixelFormat::Enum format);
+	Image(int width, int height, PixelFormat::Enum format);
 
 	// Gets/sets the width of the image.
-	ACESSOR(Width, const uint, width)
+	ACESSOR(Width, int, width)
 	
 	// Gets/sets the height of the image.
-	ACESSOR(Height, const uint, height)
+	ACESSOR(Height, int, height)
 
 	// Gets/sets the pixel format of the image.
 	ACESSOR(PixelFormat, PixelFormat::Enum, format)
@@ -91,10 +91,10 @@ public:
 private:
 
 	// Image width.
-	uint width;
+	int width;
 
 	// Image height.
-	uint height;
+	int height;
 
 	// Pixel format.
 	PixelFormat::Enum format;

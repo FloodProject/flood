@@ -12,6 +12,7 @@
 #include "Viewframe.h"
 #include "EditorIcons.h"
 #include "Editor.h"
+#include "Render/View.h"
 
 namespace vapor { namespace editor {
 
@@ -42,7 +43,7 @@ TransformPtr CameraControls::getCameraTransform() const
 	CameraPtr camera = view->getCamera();
 	assert( camera != nullptr );
 
-	EntityPtr nodeCamera = camera->getEntity();
+	EntityPtr nodeCamera = camera->getEntity()->getShared();
 	assert( nodeCamera != nullptr );
 
 	TransformPtr transCamera = nodeCamera->getTransform();
@@ -62,11 +63,11 @@ void CameraControls::onCameraSpeedSpin( wxSpinDoubleEvent& event )
 	CameraPtr camera( view->getCamera() );
 	assert( camera != nullptr );
 
-	EntityPtr nodeCamera = camera->getEntity();
+	EntityPtr nodeCamera = camera->getEntity()->getShared();
 	assert( nodeCamera != nullptr );
 
 	CameraControllerPtr cameraController =
-		nodeCamera->getTypedComponent<CameraController>();
+		nodeCamera->getComponentFromFamily<CameraController>();
 	
 	cameraController->setMoveSensivity( value );
 }
@@ -78,8 +79,8 @@ void CameraControls::updateCameraSpeedSpin()
 	RenderView* view = viewframe->getView();
 	const CameraPtr& camera = view->getCamera();
 
-	EntityPtr entity = camera->getEntity();
-	CameraControllerPtr controller = entity->getTypedComponent<CameraController>();
+	EntityPtr entity = camera->getEntity()->getShared();
+	CameraControllerPtr controller = entity->getComponentFromFamily<CameraController>();
 
 	if( !controller )
 		return;

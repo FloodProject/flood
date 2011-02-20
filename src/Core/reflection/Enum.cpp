@@ -20,12 +20,12 @@ Enum::Enum(const std::string& name, int size)
 
 //-----------------------------------//
 
-void Enum::addValue( const std::string str, int value )
+void Enum::addValue( const std::string& name, int value )
 {
-	EnumValuesMap::iterator it = values.find(str);
+	EnumValuesMap::iterator it = values.find(name);
 	
 	if( it == values.end() )
-		values[str] = value;
+		values[name] = value;
 }
 
 //-----------------------------------//
@@ -33,15 +33,25 @@ void Enum::addValue( const std::string str, int value )
 const std::string& Enum::getString(int value) const
 {
 	EnumValuesMap::iterator it;
+	
 	for( it = values.begin(); it != values.end(); it++ )
 	{
-		const EnumValuesPair& p = *it;
-		
-		if( p.second == value )
-			return p.first;
+		if( it->second == value )
+			return it->first;
 	}
 
-	assert( false );
+	static std::string empty;
+	return empty;
+}
+
+//-----------------------------------//
+
+const int Enum::getValue(const std::string& name) const
+{
+	if(values.find(name) == values.end())
+		return -1;
+
+	return values[name];
 }
 
 //-----------------------------------//

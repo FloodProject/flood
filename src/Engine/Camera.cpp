@@ -125,21 +125,7 @@ void Camera::onTransform()
 
 //-----------------------------------//
 
-void Camera::render()
-{
-	EntityPtr node = getEntity();
-	assert( node != nullptr );
-
-	// Search for the root node.
-	while ( node->getParent() )
-		node = node->getParent();
-	  
-	render( node );
-}
-
-//-----------------------------------//
-
-void Camera::render( const EntityPtr& scene )
+void Camera::render( const ScenePtr& scene )
 {
 	// This will contain all nodes used for rendering.
 	RenderBlock renderBlock;
@@ -238,6 +224,10 @@ void Camera::cull( RenderBlock& block, const EntityPtr& entity )
 			continue;
 
 		const RenderablePtr& renderable = component->getDebugRenderable();
+		
+		if( !renderable )
+			continue;
+
 		renderable->setRenderLayer(RenderLayer::PostTransparency);
 
 		RenderState renderState;

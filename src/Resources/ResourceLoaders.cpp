@@ -24,6 +24,7 @@ namespace vapor {
 //-----------------------------------//
 
 BEGIN_CLASS_ABSTRACT(ResourceLoader)
+	//FIELD_VECTOR(string, extensions) FIELD_READONLY(extensions)
 END_CLASS()
 
 //-----------------------------------//

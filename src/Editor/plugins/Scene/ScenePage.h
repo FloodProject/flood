@@ -10,6 +10,20 @@
 
 #include "UndoOperation.h"
 
+FWD_DECL(Type)
+
+FWD_DECL_SHARED(Entity)
+FWD_DECL_SHARED_WEAK(Entity)
+
+FWD_DECL_SHARED(Scene)
+FWD_DECL_SHARED_WEAK(Scene)
+
+FWD_DECL_SHARED(Component)
+FWD_DECL_SHARED_WEAK(Component)
+
+FWD_DECL_SHARED(Model)
+FWD_DECL_INTRUSIVE(Mesh)
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//
@@ -43,7 +57,9 @@ class EntityItemData : public wxTreeItemData
 {
 public:
 
-	EntityWeakPtr entity;
+	EntityItemData() : entity(nullptr) {}
+
+	Entity* entity;
 	ComponentWeakPtr component;
 };
 
@@ -52,11 +68,7 @@ public:
 class EditorFrame;
 class EntityOperation;
 
-#if defined(VAPOR_COMPILER_MSVC_2010) && defined(VAPOR_MEMORY_TR1_VENDOR)
-typedef std::map<EntityWeakPtr, wxTreeItemId, std::owner_less<EntityWeakPtr>> EntityIdsMap;
-#else
-typedef std::map<EntityWeakPtr, wxTreeItemId> EntityIdsMap;
-#endif
+typedef std::map<Entity*, wxTreeItemId> EntityIdsMap;
 
 //-----------------------------------//
 

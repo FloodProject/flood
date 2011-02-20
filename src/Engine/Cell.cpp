@@ -7,12 +7,12 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/terrain/Cell.h"
-#include "vapor/terrain/Terrain.h"
-#include "vapor/scene/Entity.h"
-#include "vapor/scene/Geometry.h"
-#include "vapor/math/Helpers.h"
-#include "vapor/math/Color.h"
+#include "Terrain/Cell.h"
+#include "Terrain/Terrain.h"
+#include "Scene/Entity.h"
+#include "Scene/Geometry.h"
+#include "Math/Helpers.h"
+#include "Math/Color.h"
 
 namespace vapor {
 
@@ -27,20 +27,30 @@ Cell::Cell() { }
 
 //-----------------------------------//
 
-Cell::Cell( const TerrainSettings& settings_, 
-			const std::vector<float>& heights, int x, int y )
-	: Geometry()
-	, settings( &settings_ )
-	, heights( heights )
-	, x(x), y(y)
+Cell::Cell( int x, int y )
+	: x(x), y(y)
+{ }
+
+//-----------------------------------//
+
+void Cell::setSettings( const TerrainSettings& settings )
 {
-	ushort size = settings->TextureSize;
+	this->settings = &settings;
+
+	int size = settings.TextureSize;
 	image = new Image(size, size, PixelFormat::R8G8B8A8);
 	image->setColor( Color::LightGrey );
 
 	// Make a copy of the default cell material.
-	MaterialPtr material = new Material(*settings->Material);
+	material = new Material(*settings.Material);
 	material->setTexture(0, image);
+}
+
+//-----------------------------------//
+
+void Cell::setHeights( const std::vector<float>& heights )
+{
+	this->heights = heights;
 
 	rend = new Renderable( PolygonType::Triangles );
 	rend->setVertexBuffer( new VertexBuffer() );
@@ -70,12 +80,14 @@ void Cell::rebuildGeometry()
 
 void Cell::rebuildVertices()
 {
+	if( heights.empty() ) return;
+
 	// Vertex data
 	std::vector<Vector3> vertex;
 	std::vector<Vector3> texCoords;
 
-	ushort numTiles = settings->NumberTiles;
-	ushort sizeCell = settings->CellSize;
+	int numTiles = settings->NumberTiles;
+	int sizeCell = settings->CellSize;
 
 	float offsetX = float(x * sizeCell);
 	float offsetZ = float(y * sizeCell);
@@ -112,23 +124,23 @@ void Cell::rebuildIndices()
 	// Vertex data
 	std::vector<ushort> indices;
 
-	const ushort numTiles = settings->NumberTiles;
+	const int numTiles = settings->NumberTiles;
 	
 	for( short col = 0; col < numTiles; col++ )
 	{
 		for( short row = 0; row < numTiles; row++ )
 		{
-			ushort i = col*(numTiles+1)+row;
+			int i = col * (numTiles + 1) + row;
 
 			// First triangle
-			indices.push_back( i );
-			indices.push_back( i+(numTiles+1) );
-			indices.push_back( i+1 );
+			indices.push_back( ushort(i) );
+			indices.push_back( ushort(i+(numTiles+1)) );
+			indices.push_back( ushort(i+1) );
 
 			// Second triangle
-			indices.push_back( i+1 );
-			indices.push_back( i+(numTiles+1) ) ;
-			indices.push_back( i+(numTiles+2) );
+			indices.push_back( ushort(i+1) );
+			indices.push_back( ushort(i+(numTiles+1)) ) ;
+			indices.push_back( ushort(i+(numTiles+2)) );
 		}
 	}
 
@@ -149,6 +161,8 @@ void Cell::rebuildNormals()
 
 void Cell::rebuildFaceNormals()
 {
+	if( heights.empty() ) return;
+
 	const VertexBufferPtr& vb = rend->getVertexBuffer();
 	const IndexBufferPtr& ib = rend->getIndexBuffer();
 
@@ -188,7 +202,7 @@ void Cell::rebuildFaceNormals()
 
 byte Cell::getNeighborFaces( uint i, std::vector<uint>& ns )
 {
-	const ushort numTiles = settings->NumberTiles;
+	const int numTiles = settings->NumberTiles;
 	uint facesPerRow = numTiles*2;
 	
 	uint row = i / (numTiles+1);

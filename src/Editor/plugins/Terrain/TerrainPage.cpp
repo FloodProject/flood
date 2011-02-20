@@ -9,6 +9,8 @@
 #include "PCH.h"
 #include "TerrainPage.h"
 #include "Utilities.h"
+#include "Resources\ResourceManager.h"
+#include <iterator>
 
 namespace vapor { namespace editor {
 
@@ -152,7 +154,7 @@ void TerrainPage::onComboBoxDropdown(wxCommandEvent& event)
 	const ResourceMap& resources = rm->getResources();
 
 	ResourceMap::const_iterator it;
-	for( it = resources.cbegin(); it != resources.cend(); it++ )
+	for( it = resources.begin(); it != resources.end(); it++ )
 	{
 		if( it->second->getResourceGroup() != ResourceGroup::Images )
 			continue;

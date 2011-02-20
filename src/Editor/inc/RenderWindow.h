@@ -10,6 +10,7 @@
 
 #include <wx/glcanvas.h> 
 #include "EditorInputManager.h"
+#include "Render/Window.h"
 
 namespace vapor { namespace editor {
 

@@ -248,13 +248,13 @@ static void blitToImage(const Image* dest, int destX, int destY,
 	std::vector<byte>& destBuffer = const_cast<std::vector<byte>&>(dest->getBuffer());
 	std::vector<byte>& sourceBuffer = const_cast<std::vector<byte>&>(source->getBuffer());
 
-	uint sourceY = limitY;
+	int sourceY = limitY;
 
-	for( uint y = destY; y < dest->getHeight() && sourceY < source->getHeight(); ++y )
+	for( int y = destY; y < dest->getHeight() && sourceY < source->getHeight(); ++y )
 	{
-		uint sourceX = limitX;
+		int sourceX = limitX;
 
-		for( uint x = destX; x < dest->getWidth() && sourceX < source->getWidth(); ++x )
+		for( int x = destX; x < dest->getWidth() && sourceX < source->getWidth(); ++x )
 		{
 			uint destPos = (y*dest->getWidth()*4)+(x*4);
 			uint sourcePos = (sourceY*source->getWidth()*4)+(sourceX*4);

@@ -7,11 +7,12 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "scene/Entity.h"
-#include "scene/Transform.h"
-#include "scene/Geometry.h"
-#include "scene/Group.h"
-#include "scene/Tags.h"
+#include "Scene/Entity.h"
+#include "Scene/Transform.h"
+#include "Scene/Geometry.h"
+#include "Scene/Group.h"
+#include "Scene/Tags.h"
+#include "Registry.h"
 #include <algorithm>
 
 namespace vapor {
@@ -21,6 +22,7 @@ namespace vapor {
 BEGIN_CLASS(Entity)
 	FIELD_PRIMITIVE(string, name)
 	FIELD_PRIMITIVE(bool, visible)
+	FIELD_VECTOR_PTR(Component, ComponentPtr, components, SharedPointer)
 	FIELD_PRIMITIVE_CUSTOM(int, tags, Bitfield)
 END_CLASS()
 
@@ -29,6 +31,7 @@ END_CLASS()
 Entity::Entity()
 	: visible(true)
 	, tags(0)
+	, parent(nullptr)
 { }
 
 //-----------------------------------//
@@ -38,6 +41,7 @@ Entity::Entity( const std::string& name )
 	: name(name)
 	, visible(true)
 	, tags(0)
+	, parent(nullptr)
 { }
 
 //-----------------------------------//
@@ -49,25 +53,19 @@ bool Entity::addComponent( const ComponentPtr& component )
 
 	const Class* type = &component->getType();
 
-	if( components.find(type) != components.end() )
+	if( componentsMap.find(type) != componentsMap.end() )
 	{
-		Log::warn( "Component of type '%s' already exists in entity '%s'", type->name.c_str(), name.c_str() );
+		Log::warn( "Component '%s' already exists in '%s'", type->name.c_str(), name.c_str() );
 		return false;
 	}
 
-	// Cache geometry components.
-	if( type->is<Geometry>() || type->inherits<Geometry>() )
-	{
-		const GeometryPtr& geometry = std::static_pointer_cast<Geometry>( component );
-		geometries.push_back( geometry );
-	}
-
-	// If it doesn't exist yet, add it in the components.
-	components[type] = component;
-	component->setEntity( shared_from_this() );
+	componentsMap[type] = component;
+	component->setEntity( this );
 
 	onComponentAdded(component);
 	sendEvents();
+
+	components.push_back(component);
 
 	return true;
 }
@@ -81,26 +79,86 @@ bool Entity::removeComponent( const ComponentPtr& component )
 	
 	const Class* type = &component->getType();
 
-	ComponentMap::iterator it = components.find(type);
+	ComponentMap::iterator it = componentsMap.find(type);
 	
-	if( it == components.end() )
+	if( it == componentsMap.end() )
 		return false;
 
-	components.erase(it);
-	
-	if( !type->inherits<Geometry>() )
-		return true;
-
-	std::vector<GeometryPtr>::iterator it2;
-	it2 = std::find( geometries.begin(), geometries.end(), component );
-	
-	assert( it2 != geometries.end() );
-	geometries.erase( it2 );
+	componentsMap.erase(it);
 
 	onComponentRemoved(component);
 	sendEvents();
 
 	return true;
+}
+
+//-----------------------------------//
+
+ComponentPtr Entity::getComponent(const std::string& name) const
+{
+	Registry& registry = Type::GetRegistry();
+	const Type* type = registry.getType(name);
+
+	if( !type )
+		return nullptr;
+
+	return getComponent(*type);
+}
+
+//-----------------------------------//
+
+ComponentPtr Entity::getComponent(const Type& type) const
+{
+	if( !type.isClass() )
+		return nullptr;
+
+	const Class& klass = (Class&) type;
+
+	ComponentMap::const_iterator it = componentsMap.find(&klass);
+		
+	if( it == componentsMap.end() )
+		return nullptr;
+
+	return it->second;
+}
+
+//-----------------------------------//
+
+ComponentPtr Entity::getComponentFromFamily(const Type& type) const
+{
+	ComponentMap::const_iterator it;
+	
+	for( it = componentsMap.cbegin(); it != componentsMap.cend(); it++ )
+	{
+		const ComponentPtr& component = it->second;
+		const Type& componentType = component->getType();
+
+		if( componentType.inherits(type) )
+			return component;
+	}
+
+	return nullptr;
+}
+
+//-----------------------------------//
+
+std::vector<GeometryPtr> Entity::getGeometry() const
+{
+	std::vector<GeometryPtr> geoms;
+
+	ComponentMap::const_iterator it;
+	for( it = componentsMap.cbegin(); it != componentsMap.cend(); it++ )
+	{
+		const ComponentPtr& component = it->second;
+
+		if( !component->getType().inherits<Geometry>() )
+			continue;
+
+		const GeometryPtr& geo = std::static_pointer_cast<Geometry>(component);
+		geoms.push_back(geo);
+	}
+
+	return geoms;
 }
 
 //-----------------------------------//
@@ -122,9 +180,9 @@ void Entity::update( double delta )
 	if( transform )
 		transform->update( delta );
 
-	// Update the other components.
+	// Update the other componentsMap.
 	ComponentMap::const_iterator it;
-	for( it = components.cbegin(); it != components.cend(); it++ )
+	for( it = componentsMap.cbegin(); it != componentsMap.cend(); it++ )
 	{
 		const ComponentPtr& component = it->second;
 
@@ -137,19 +195,30 @@ void Entity::update( double delta )
 
 //-----------------------------------//
 
+void Entity::fixUp()
+{
+	for(uint i = 0; i < components.size(); i++ )
+	{
+		const ComponentPtr& component = components[i];
+		
+		component->setEntity( this );
+		componentsMap[&component->getType()] = component;
+	}
+}
+
+//-----------------------------------//
+
 void Entity::sendEvents()
 {
-	EntityPtr entity = parent.lock();
-
-	if( !entity )
+	if( !parent )
 		return;
 
-	const Class& type =  entity->getType();
+	const Class& type =  parent->getType();
 
 	if( !type.is<Group>() && !type.inherits<Group>() )
 		return;
 
-	GroupPtr group = std::static_pointer_cast<Group>(entity);
+	Group* group = (Group*) parent;
 	group->onEntityChanged();
 }
 
@@ -170,9 +239,9 @@ TransformPtr Entity::getTransform() const
 
 //-----------------------------------//
 
-EntityPtr Entity::getParent() const
+Entity* Entity::getParent() const
 {
-	return parent.lock();
+	return parent;
 }
 
 //-----------------------------------//
@@ -205,6 +274,19 @@ void Entity::setTag(int index, bool state)
 		tags |= index;
 	else
 		tags &= ~index;
+}
+
+//-----------------------------------//
+
+EntityPtr Entity::getShared()
+{
+	struct no_op_deleter
+	{
+		void operator()(void*) { }
+	};
+
+	return std::shared_ptr<Entity>(this, no_op_deleter());
+	//return shared_from_this();
 }
 
 //-----------------------------------//

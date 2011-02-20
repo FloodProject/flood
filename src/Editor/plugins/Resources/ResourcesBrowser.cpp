@@ -10,14 +10,11 @@
 #include "ResourcesBrowser.h"
 #include "Viewframe.h"
 #include "EditorIcons.h"
-#include "Settings.h"
 #include "UndoManager.h"
-#include "Utilities.h"
+#include "Settings.h"
 #include "Editor.h"
-
+#include "Utilities.h"
 #include "../Scene/ScenePage.h"
-
-#include <json/json.h>
 
 namespace vapor { namespace editor {
 
@@ -31,14 +28,6 @@ ResourcesBrowser::ResourcesBrowser( EditorFrame* editor, wxWindow* parent,
 {
 	setupUI();
 	//setupRender();
-	loadCache();
-}
-
-//-----------------------------------//
-
-ResourcesBrowser::~ResourcesBrowser()
-{
-	saveCache();
 }
 
 //-----------------------------------//
@@ -72,7 +61,7 @@ void ResourcesBrowser::setupRender()
 }
 
 //-----------------------------------//
-
+#if 0
 void ResourcesBrowser::setupImages()
 {
 	int size = ThumbSize / 2;
@@ -96,257 +85,7 @@ void ResourcesBrowser::setupImages()
 		m_listCtrl->InsertItem(listIndex++, base, metadata.index);
 	}
 }
-
-//-----------------------------------//
-
-bool ResourcesBrowser::loadCache()
-{
-	LocaleSwitch locale;
-	std::string path = CacheFolder + ThumbCache;
-
-	if( !wxFileName::DirExists(CacheFolder) )
-	{
-		Log::info("Creating cache directory: '%s'", CacheFolder.c_str());
-		wxFileName::Mkdir(CacheFolder);
-		return false;
-	}
-
-	if( !File::exists(path) )
-	{
-		Log::warn("Could not find thumbnails cache file '%s'", path.c_str());
-		return false;
-	}
-
-	FileStream file( path, StreamMode::Read );
-
-	if( !file.open() )
-	{
-		Log::warn("Could not open thumbnails cache file '%s'", path.c_str());
-		return false;
-	}
-
-	std::string text;
-	file.read(text);
-
-	Json::Value root;
-	Json::Reader reader;
-	
-	if( !reader.parse(text, root, false) )
-		return false;
-
-	uint i;
-	for( i = 0; i < root.size(); i++ )
-	{
-		if( !root.isValidIndex(i) )
-			continue;
-
-		const Json::Value& value = root[i];
-
-		if( value.isNull() || value.empty() )
-			continue;
-
-		if( !value.isMember("hash") || !value.isMember("thumb") )
-			continue;
-
-		const Json::Value& valHash = value["hash"];
-		const Json::Value& valThumb = value["thumb"];
-
-		if( valHash.isNull() || valHash.empty() )
-			continue;
-
-		if( valThumb.isNull() || valThumb.empty() )
-			continue;
-
-		ResourceMetadata metadata;
-		metadata.hash = valHash.asUInt();
-		metadata.thumbnail = valThumb.asString();
-
-		resourcesCache[metadata.hash] = metadata;
-	}
-
-	Log::info("Loaded thumbnails cache from '%s' with %u entries", path.c_str(), i);
-
-	return true;
-}
-
-//-----------------------------------//
-
-bool ResourcesBrowser::saveCache()
-{
-	LocaleSwitch locale;
-	std::string path = CacheFolder + ThumbCache;
-	FileStream file( path, StreamMode::Write );
-
-	if( !file.open() )
-		return false;
-	
-	Json::Value root;
-	uint i = 0;
-
-	ResourcesCache::const_iterator it;
-	for( it = resourcesCache.cbegin(); it != resourcesCache.cend(); it++ )
-	{
-		const ResourceMetadata& metadata = it->second;
-		
-		Json::Value value;
-		value["hash"] = metadata.hash;
-		value["thumb"] = metadata.thumbnail;
-		
-		root[i++] = value;
-	}
-
-	file.write( root.toStyledString() );
-	Log::info("Wrote thumbnails cache to '%s' with %u entries", path.c_str(), i);
-
-	return true;
-}
-
-//-----------------------------------//
-
-void ResourcesBrowser::scanFiles()
-{
-	Engine* engine = editor->getEngine();
-	ResourceManager* rm = engine->getResourceManager();
-
-	std::vector<std::string> files;	
-	std::vector<std::string> found = System::enumerateFiles("media/meshes");
-	
-	for( uint i = 0; i < found.size(); i++ )
-	{
-		const std::string& path = found[i];
-
-		std::string ext = PathUtils::getExtension(path);
-		ResourceLoader* loader = rm->findLoader(ext);
-
-		if( !loader )
-			continue;
-
-		if( loader->getResourceGroup() != ResourceGroup::Meshes )
-			continue;
-
-		File file(path);
-		
-		std::vector<byte> data;
-		file.read(data);
-
-		uint hash = Hash::Murmur2( data, 0xBEEF );
-		
-		if( resourcesCache.find(hash) != resourcesCache.end() )
-			continue;
-
-		files.push_back(path);
-	}
-
-	if( !files.empty() )
-		generateThumbnails(files);
-}
-
-//-----------------------------------//
-
-void ResourcesBrowser::generateThumbnails(const std::vector<std::string>& files)
-{
-	ResourceManager* res = GetResourceManager();
-
-	wxProgressDialog progressDialog( "Loading resources",
-		"Please wait while resources are loaded.", files.size(),
-		this, wxPD_AUTO_HIDE | wxPD_SMOOTH | wxPD_CAN_ABORT );
-	
-	progressDialog.Show();
-
-	uint progress = 0;
-
-	for( uint i = 0; i < files.size(); i++ )
-	{
-		const std::string& path = files[i];
-		
-		// Force unused resources to be unloaded.
-		res->update(0);
-
-		progressDialog.Update(progress++, PathUtils::getFile(path));
-
-		if( progressDialog.WasCancelled() )
-			break;
-
-		File file(path);
-		
-		std::vector<byte> data;
-		file.read(data);
-
-		uint hash = Hash::Murmur2( data, 0xBEEF );
-		
-		if( resourcesCache.find(hash) != resourcesCache.end() )
-			continue;
-
-		ResourceLoadOptions options;
-		options.name = path;
-		options.asynchronousLoading = false;
-
-		MeshPtr mesh = RefCast<Mesh>(res->loadResource(options));
-
-		if( !mesh || mesh->getResourceGroup() != ResourceGroup::Meshes )
-			continue;
-
-		const std::string& resPath = PathUtils::getFile(mesh->getPath());
-
-		ResourceMetadata metadata;
-		metadata.hash = hash;
-		metadata.thumbnail = resPath + ".png";
-		metadata.path = resPath;
-		resourcesCache[hash] = metadata;
-
-		ImagePtr thumb = generateThumbnail(mesh);
-
-		if( !thumb )
-			continue;
-
-		ImageWriter writer;
-		writer.save( thumb, CacheFolder + metadata.thumbnail );
-
-		Log::info("Generated thumbnail for resource '%s'", resPath.c_str());
-	}
-}
-
-//-----------------------------------//
-
-ImagePtr ResourcesBrowser::generateThumbnail(const MeshPtr& mesh)
-{
-	if( !scene )
-		return nullptr;
-
-	EntityPtr nodeResource( new Entity() );
-	nodeResource->addTransform();
-	nodeResource->addComponent( ModelPtr(new Model(mesh)) );
-	scene->add( nodeResource );
-
-	const BoundingBox& box = mesh->getBoundingVolume();
-	const Vector3& center = box.getCenter();
-
-	TransformPtr transResource = nodeResource->getTransform();
-	transResource->setPosition( Vector3(-center.x, -center.y, 0) );
-
-	Vector3 size = (box.max - box.min) / 2;
-	float maxSize = std::max(size.x, std::max(size.y, size.z));
-	
-	const Frustum& frustum = camera->getFrustum();
-	float fovRad = Math::degreeToRadian(frustum.fieldOfView);
-	float distance = maxSize / std::tan(fovRad / 2) + size.z;
-	
-	TransformPtr transCamera = entityCamera->getTransform();
-	transCamera->setPosition(Vector3(0, 0, -distance));
-
-	scene->update(2);
-
-	renderBuffer->bind();
-	renderView->update();
-	renderBuffer->unbind();
-
-	scene->remove( nodeResource );
-
-	ImagePtr image = colorTexture->readImage();
-
-	return image;
-}
-
+#endif
 //-----------------------------------//
 
 void ResourcesBrowser::OnListBeginDrag(wxListEvent& event)

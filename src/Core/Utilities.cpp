@@ -14,6 +14,14 @@
 #include <sstream>
 #include <algorithm>
 
+#ifdef VAPOR_PLATFORM_WINDOWS
+    #include <direct.h>
+    #define my_getcwd _getcwd
+#else
+    #include <unistd.h>
+    #define my_getcwd getcwd
+#endif
+
 namespace vapor {
 
 //-----------------------------------//
@@ -347,6 +355,20 @@ Path PathUtils::getFile(const Path& path)
 
 //-----------------------------------//
 
+Path PathUtils::getBasePath(const Path& path)
+{
+	// Check if it has a file extension.
+	size_t ch = path.find_last_of("/");
+
+	if( ch == std::string::npos ) 
+		return path;
+
+	// Return the file extension.
+	return path.substr( 0, ch );
+}
+
+//-----------------------------------//
+
 Path PathUtils::normalize(const Path& path)
 {
 	Path norm = path;
@@ -357,6 +379,26 @@ Path PathUtils::normalize(const Path& path)
 	String::replace(norm, "./", "");
 
 	return norm;
+}
+
+//-----------------------------------//
+
+Path PathUtils::getCurrentDir()
+{
+	char buf[256];
+	my_getcwd(buf, VAPOR_ARRAY_SIZE(buf));
+	return std::string(buf);
+}
+
+//-----------------------------------//
+
+Path PathUtils::getPathSeparator()
+{
+#ifdef VAPOR_PLATFORM_WINDOWS
+	return "\\";
+#else
+	return "/";
+#endif
 }
 
 //-----------------------------------//

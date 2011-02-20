@@ -84,7 +84,7 @@ void CharacterController::_update( double delta )
 
 	if( physics->getSimulation() )
 	{
-		controller->updateAction(world, delta);
+		controller->updateAction(world, (btScalar) delta);
 		updateCharacterTransform();
 	}
 
@@ -109,7 +109,7 @@ void CharacterController::_update( double delta )
 	if( keyboard->isKeyPressed(Keys::Space) && controller->canJump() )
 		controller->jump();
 
-	btScalar walkSpeed = walkVelocity * delta;
+	btScalar walkSpeed = btScalar(walkVelocity * delta);
 	controller->setWalkDirection(walkDirection * walkSpeed);
 }
 
@@ -137,8 +137,7 @@ bool CharacterController::createController()
 	if( controller )
 		return true;
 
-	const EntityPtr& node = getEntity();
-	ShapePtr shape = node->getTypedComponent<Shape>();
+	ShapePtr shape = entity->getComponentFromFamily<Shape>();
 
 	if( !shape )
 		return false;

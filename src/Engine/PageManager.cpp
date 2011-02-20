@@ -52,11 +52,8 @@ void PageManager::update( double delta )
 	if(!camera)
 		return;
 
-	const EntityPtr& nodeCamera = camera->getEntity();
-	assert( nodeCamera != nullptr );
-
-	const TransformPtr& transform = nodeCamera->getTransform();
-	assert( transform != nullptr );
+	Entity* entity = camera->getEntity();
+	const TransformPtr& transform = entity->getTransform();
 
 	Vector3 pos = transform->getPosition();
 	Vector2i newPage = convertWorldToPage(pos);

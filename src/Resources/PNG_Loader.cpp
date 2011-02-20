@@ -20,11 +20,13 @@ namespace vapor {
 //-----------------------------------//
 
 BEGIN_CLASS_PARENT(PNG_Pico_Loader, ResourceLoader)
+	FIELD_PRIMITIVE(bool, flipY_Axis)
 END_CLASS()
 
 //-----------------------------------//
 
 PNG_Pico_Loader::PNG_Pico_Loader()
+	: flipY_Axis(false)
 {
 	extensions.push_back("png");
 }

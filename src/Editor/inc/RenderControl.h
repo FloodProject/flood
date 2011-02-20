@@ -10,6 +10,10 @@
 
 #include <wx/glcanvas.h>
 
+#include "Event.h"
+
+FWD_DECL(Engine)
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//

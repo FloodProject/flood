@@ -10,53 +10,68 @@
 #include "Serialization.h"
 #include "Reflection.h"
 #include "Log.h"
+#include "ReferenceCount.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-ObjectSerializer::ObjectSerializer( Serializer& serializer )
-	: serializer(serializer)
+ObjectWalker::ObjectWalker(ReflectionVisitor& visitor)
+	: v(visitor)
 { }
 
 //-----------------------------------//
 
-void ObjectSerializer::save( const ObjectData& object )
+void ObjectWalker::process(const Object* object)
 {
-	assert( object.type != nullptr );
-	assert( object.instance != nullptr );
+	const Class& type = (Class&) object->getType();
 
-	serializeType(object);
-	serializer.flushStream();
+	ObjectData data;
+	data.type = (Type*) &type;
+	data.instance = (void*) object;
+
+	processObject(data);
 }
 
 //-----------------------------------//
 
-void ObjectSerializer::serializeType(ObjectData object)
+void ObjectWalker::processObject(ObjectData object)
 {
+	v.processBegin(object);
+	processType(object);
+	v.processEnd(object);
+}
+
+//-----------------------------------//
+
+void ObjectWalker::processType(ObjectData object)
+{
+	if( !object.instance )
+		return;
+
 	const Type& type = *object.type;
 
 	if( type.isClass() || type.isStruct() )
 	{
-		serializeClass(object);		
+		processClass(object);		
 	}
 	else if( type.isPrimitive() )
 	{
-		serializePrimitive(object);
+		processPrimitive(object);
 	}
 	else if( type.isEnum() )
 	{
-		//value[field.name] = valueFromEnum(field, realObjectData);
+		processEnum(object);
 	}
 	else assert( false );
 }
 
 //-----------------------------------//
 
-void ObjectSerializer::serializeClass(ObjectData object)
+void ObjectWalker::processClass(ObjectData object, bool parent)
 {
 	Class& type = (Class&) *object.type;
-	serializer.beginClass(type);
+	v.processClassBegin(type, parent);
 
 	if( type.parent )
 	{
@@ -64,7 +79,7 @@ void ObjectSerializer::serializeClass(ObjectData object)
 		parent.instance = object.instance;
 		parent.type = (Type*) type.parent;
 		
-		serializeClass(parent);
+		processClass(parent, true);
 	}
 
 	FieldsMap::const_iterator it;
@@ -73,15 +88,31 @@ void ObjectSerializer::serializeClass(ObjectData object)
 	for( it = fields.begin(); it != fields.end(); it++ )
 	{
 		const Field& field = *(it->second);
-		serializeField(object, field);
+		processField(object, field);
 	}
 
-	serializer.endClass();
+	v.processClassEnd(type, parent);
 }
 
 //-----------------------------------//
 
-void ObjectSerializer::serializeField(ObjectData object, const Field& field)
+void ObjectWalker::processEnum(ObjectData object)
+{
+	const Enum& type = (Enum&) *object.type;
+	
+	v.processEnumBegin(type);
+
+	int value = *(int*) object.instance;
+	const std::string& name = type.getString(value);
+	
+	v.processEnumElement(value, name);
+
+	v.processEnumEnd(type);
+}
+
+//-----------------------------------//
+
+void ObjectWalker::processField(ObjectData object, const Field& field)
 {
 	if( !object.instance ) return;
 	
@@ -90,284 +121,139 @@ void ObjectSerializer::serializeField(ObjectData object, const Field& field)
 	object.instance = (byte*) object.instance + field.offset;
 	object.type = (Type*) &type;
 
+	v.processFieldBegin(field);
+
 	if( field.qualifiers & Qualifier::Array )
 	{
-		std::vector<byte>& array = * (std::vector<byte>*) object.instance;
-
-		serializer.beginArray(field.type);
-
-		// TODO: 64-bits support.
-
-		uint numElems = array.size() / field.size;
-		for(uint i = 0; i < numElems; i++)
-		{
-			ObjectData elem;
-			elem.instance = (&array.front() + i * type.size);
-			elem.type = (Type*) &field.type;
-
-			serializeType(elem);
-		}
-
-		serializer.endArray();
+		processArray(object, field);
 	}
-	else if( field.isPointer() )
+	else
 	{
-		// Get the real object from the pointer.
-		//const ResourcePtr ptr = field.get<ResourcePtr>(object);
-		//realObjectData = (void*) ptr.get();	
+		if( field.isPointer() )
+			processPointer(object, field);
+
+		processType(object);
 	}
-	else 
-	{
-		serializePrimitive(object);
-	}
+
+	v.processFieldEnd(field);
 }
 
 //-----------------------------------//
 
-void ObjectSerializer::serializePrimitive(const ObjectData& object)
+void ObjectWalker::processPointer(ObjectData& object, const Field& field)
+{
+	void* address = object.instance;
+
+	if( field.qualifiers & Qualifier::SharedPointer )
+	{
+		std::shared_ptr<Object>* shared = (std::shared_ptr<Object>*) address;
+		address = shared->get();
+	}
+	else if( field.qualifiers & Qualifier::RefPointer )
+	{
+		RefPtr<Object>* ref = (RefPtr<Object>*) address;
+		address = ref->get();
+	}
+
+	object.instance = address;
+
+	if( !address ) return;
+
+	const Object* elemObject = (Object*) address;
+	object.type = (Type*) &elemObject->getType();
+}
+
+//-----------------------------------//
+
+void ObjectWalker::processArray(ObjectData object, const Field& field)
+{
+	std::vector<byte>& array = * (std::vector<byte>*) object.instance;
+
+	int size = 0;
+
+	if( field.isPointer() )
+		size = field.pointerSize;
+	else
+		size = field.size;
+
+	uint numElems = array.size() / size;
+
+	v.processArrayBegin(field.type, numElems);
+		
+	for(uint i = 0; i < numElems; i++)
+	{
+		void* address = (&array.front() + i * size);
+
+		ObjectData elem;
+		elem.instance = address;
+		elem.type = object.type;
+
+		if( field.isPointer() )
+			processPointer(elem, field);
+
+		v.processArrayElementBegin(i);
+		processType(elem);
+		v.processArrayElementEnd(i);
+	}
+
+	v.processArrayEnd(field.type);
+}
+
+//-----------------------------------//
+
+void ObjectWalker::processPrimitive(const ObjectData& object)
 {
 	const Primitive& type = (const Primitive&) *object.type;
 
 	if( type.isBool() )
 	{
 		bool* val = (bool*) object.instance;
-		serializer.writeBool(type, *val);
+		v.processBool(type, *val);
 	}
 	//-----------------------------------//
 	else if( type.isInteger() )
 	{
 		int* val = (int*) object.instance;
-		serializer.writeInt(type, *val);
+		v.processInt(type, *val);
 	}
 	//-----------------------------------//
 	else if( type.isFloat() )
 	{
 		float* val = (float*) object.instance;
-		serializer.writeFloat(type, *val);
+		v.processFloat(type, *val);
 	}
 	//-----------------------------------//
 	else if( type.isString() )
 	{
 		std::string* val = (std::string*) object.instance;
-		serializer.writeString(type, *val);
+		v.processString(type, *val);
 	}
 	//-----------------------------------//
 	else if( type.isColor() )
 	{
 		Color* val = (Color*) object.instance;
-		serializer.writeColor(type, *val);
+		v.processColor(type, *val);
 	}
 	//-----------------------------------//
 	else if( type.isVector3() )
 	{
 		Vector3* vec = (Vector3*) object.instance;
-		serializer.writeVector3(type, *vec);
+		v.processVector3(type, *vec);
 	}
 	//-----------------------------------//
 	else if( type.isQuaternion() )
 	{
 		Quaternion* quat = (Quaternion*) object.instance;
-		serializer.writeQuaternion(type, *quat);
+		v.processQuaternion(type, *quat);
 	}
 	//-----------------------------------//
 	else if( type.isBitfield() )
 	{
-		std::bitset<32>* bits = (std::bitset<32>*) object.instance;
-		serializer.writeBitfield(type, *bits);
+		uint* bits = (uint*) object.instance;
+		v.processBitfield(type, *bits);
 	}
 	else assert( false );
 }
-
-//-----------------------------------//
-
-//bool Serializer::openFromFile( const std::string& name )
-//{
-//	LocaleSwitch c;
-//
-//	FileStream file( name, StreamMode::Read );
-//
-//	if( !file.open() )
-//		return false;
-//
-//	std::string text;
-//	file.read(text);
-//
-//	Json::Reader jsonReader;
-//	bool success = jsonReader.parse(text, rootValue, false);
-//	
-//	return success;
-//}
-//
-////-----------------------------------//
-//
-//void Serializer::saveToFile( const std::string& name )
-//{
-//	// Always switch to the platform independent "C" locale when writing
-//	// JSON, else the library will format the data erroneously.
-//	LocaleSwitch c;
-//
-//	FileStream file( name, StreamMode::Write );
-//
-//	if( !file.open() )
-//		return;
-//
-//	file.write( rootValue.toStyledString() );
-//}
-//
-////-----------------------------------//
-//
-//void Serializer::serializeScene(const ScenePtr& scene)
-//{
-//	rootValue.clear();
-//
-//	const Class& sceneType = scene->getType();
-//	Json::Value& sceneValue = rootValue[sceneType.getName()];
-//	
-//	serializeFields( sceneType, scene.get(), sceneValue );
-//		
-//	const std::vector<EntityPtr>& entities = scene->getEntities();
-//	for( uint i = 0; i < entities.size(); i++ )
-//	{
-//		const EntityPtr& entity = entities[i];
-//		const Class& type = entity->getType();
-//
-//		if( type.inherits<Group>() )
-//			assert( false );
-//
-//		sceneValue["nodes"].append(serializeEntity(entity));
-//	}
-//}
-//
-////-----------------------------------//
-//
-//ScenePtr Serializer::deserializeScene()
-//{
-//	ScenePtr scene( new Scene() );
-//
-//	const Class& sceneType = scene->getType();
-//	const Json::Value& sceneValue = rootValue[sceneType.getName()];
-//
-//	deserializeFields(sceneType, scene.get(), sceneValue);
-//
-//	const Json::Value& nodesValue = sceneValue["nodes"];
-//
-//	for( uint i = 0; i < nodesValue.size(); i++ )
-//	{
-//		const Json::Value& nodeValue = nodesValue[i];
-//
-//		if( nodeValue.isNull() || nodeValue.empty() )
-//			continue;
-//
-//		const EntityPtr& node = deserializeEntity(nodeValue);
-//		scene->add(node);
-//	}
-//
-//	return scene;
-//}
-//
-////-----------------------------------//
-//
-//Json::Value Serializer::serializeEntity(const EntityPtr& node)
-//{
-//	Json::Value value;
-//
-//	const Class& nodeType = node->getType();
-//	void* object = node.get();
-//
-//	// Serialize node fields.
-//	serializeFields( nodeType, object, value );
-//    
-//    // Serialize components.
-//	const ComponentMap& components = node->getComponents();
-//	
-//	ComponentMap::const_iterator it;
-//	for( it = components.cbegin(); it != components.cend(); it++ )
-//	{
-//		const Class& type = *(it->first);
-//		const ComponentPtr& component = it->second;
-//
-//		Json::Value& componentValue = value["components"][type.getName()];
-//
-//		serializeFields( type, component.get(), componentValue );
-//	}
-//
-//	return value;
-//}
-//
-////-----------------------------------//
-//
-//EntityPtr Serializer::deserializeEntity( const Json::Value& nodeValue )
-//{
-//	Registry& typeRegistry = Type::GetRegistry();
-//
-//	EntityPtr entity( new Entity() );
-//	const Class& type = entity->getType();
-//
-//	deserializeFields(type, entity.get(), nodeValue);
-//
-//    // Components.
-//	const Json::Value& values = nodeValue["components"];
-//
-//	Json::Value::Members members = values.getMemberNames();
-//
-//	for( uint i = 0; i < members.size(); i++ )
-//	{
-//		const std::string& name = members[i];
-//		const Class* type = (Class*) typeRegistry.getType(name);
-//
-//		if( !type )
-//		{
-//			Log::warn("Type '%s' was not found in registry", name.c_str() );
-//			continue;
-//		}
-//
-//		const Json::Value& value = values[name];
-//
-//		ComponentPtr component( (Component*) type->createInstance() );
-//		deserializeFields(*type, component.get(), value);
-//
-//		entity->addComponent(component);
-//	}
-//
-//	return entity;
-//}
-//
-////-----------------------------------//
-//
-//void Serializer::deserializeFields(const Class& type, void* object, const Json::Value& fieldsValue)
-//{
-//	if( fieldsValue.isNull() )
-//		return;
-//
-//	const Json::Value::Members& members = fieldsValue.getMemberNames();
-//
-//	for( uint i = 0; i < members.size(); i++ )
-//	{
-//		const std::string& name = members[i];
-//		const Field* field = type.getField(name);
-//
-//		if( !field )
-//			continue;
-//
-//		if( field->isPointer() )
-//		{
-//			const Json::Value& fieldValue = fieldsValue[name];
-//			const Json::Value::Members& members = fieldValue.getMemberNames();
-//			assert( members.size() > 0 );
-//
-//			const Json::Value& resValue = fieldValue[members.front()];
-//			const std::string& resPath = resValue["path"].asString();
-//			
-//			Engine* engine = GetEngine();
-//			ResourceManager* rm = engine->getResourceManager();
-//			ResourcePtr res = rm->loadResource(resPath);
-//
-//			field->set<ResourcePtr>(object, res);
-//		}
-//		else
-//			setFieldFromValue( *field, object, fieldsValue[name] );
-//	}
-//}
 
 //-----------------------------------//
 

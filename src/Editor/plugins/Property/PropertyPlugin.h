@@ -38,19 +38,22 @@ public:
 	virtual void onEntityUnselect( const EntityPtr& );
 
 	// Component selection callback.
-	virtual void onComponentSelect( const ComponentPtr& component );
+	virtual void onComponentSelect( const ComponentPtr& );
 
 	// Component unselection callback.
-	virtual void onComponentUnselect( const ComponentPtr& component );
+	virtual void onComponentUnselect( const ComponentPtr& );
 
-	// Scene update callback.
-	//virtual void onSceneUpdate();
+	// Resource selection event.
+	virtual void onResourceSelect( const ResourcePtr& );
 
-	// Field change callback.
-	//void onFieldChanged(const Field& field);
+	// Resource unselection event.
+	virtual void onResourceUnselect( const ResourcePtr& );
+
+	// Scene load callback.
+	virtual void onSceneLoad( const ScenePtr& );
 
 	// Component change callback.
-	void onComponentChanged(const ComponentPtr& component);
+	void onComponentChanged(const ComponentPtr& );
 
 	// Updates the properties.
 	void updateProperties(const EntityPtr& entity);

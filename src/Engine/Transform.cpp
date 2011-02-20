@@ -7,11 +7,11 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "scene/Transform.h"
-#include "scene/Geometry.h"
-#include "scene/Entity.h"
-#include "render/DebugGeometry.h"
-#include "math/Helpers.h"
+#include "Scene/Transform.h"
+#include "Scene/Geometry.h"
+#include "Scene/Entity.h"
+#include "Render/DebugGeometry.h"
+#include "Math/Helpers.h"
 
 namespace vapor {
 
@@ -211,16 +211,13 @@ bool Transform::requiresBoundingVolumeUpdate() const
 
 void Transform::updateBoundingVolume()
 {
-	const EntityPtr& node = getEntity();
-	
-	if( !node )
-		return;
-
 	bounds.reset();
 
-	for( uint i = 0; i < node->getGeometry().size(); i++ )
+	const std::vector<GeometryPtr>& geoms = entity->getGeometry();
+	
+	for( uint i = 0; i < geoms.size(); i++ )
 	{
-		const GeometryPtr& geometry = node->getGeometry()[i];
+		const GeometryPtr& geometry = geoms[i];
 		bounds.add( geometry->getBoundingVolume() );
 	}
 	

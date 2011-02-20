@@ -10,6 +10,7 @@
 
 #include "PCH.h"
 #include "wxImageComboBox.h"
+#include "Core/File.h"
 
 namespace vapor { namespace editor {
 

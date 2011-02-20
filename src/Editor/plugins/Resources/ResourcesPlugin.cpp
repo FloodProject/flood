@@ -12,6 +12,7 @@
 #include "ResourcesBrowser.h"
 #include "Editor.h"
 #include "EditorIcons.h"
+#include "Pipeline/ResourceProcessor.h"
 
 namespace vapor { namespace editor {
 
@@ -20,6 +21,7 @@ namespace vapor { namespace editor {
 ResourcesPlugin::ResourcesPlugin( EditorFrame* frame )
 	: Plugin(frame)
 	, resourcesPage(nullptr)
+	, resourcesBrowser(nullptr)
 { }
 
 //-----------------------------------//
@@ -37,7 +39,7 @@ PluginMetadata ResourcesPlugin::getMetadata()
 	PluginMetadata metadata;
 	
 	metadata.name = "Resources";
-	metadata.description = "Provides a page with the known resources";
+	metadata.description = "Provides resource handling features";
 	metadata.author = "triton";
 	metadata.version = "1.0";
 
@@ -54,11 +56,12 @@ void ResourcesPlugin::onPluginEnable()
 	wxBitmap iconPackage = wxMEMORY_BITMAP(package);
 
 	wxAuiPaneInfo pane;
-	pane.Caption("Resources").Left().Dock().Hide().Icon(iconPackage);
+	pane.Caption("Resources").Left().Dock().Icon(iconPackage);
 
 	editor->getAUI()->AddPane(resourcesPage, pane);
 	editor->getAUI()->Update();
 
+#if 0
 	wxAuiToolBar* toolBar = editor->getToolbar();
 
 	if(toolBar)
@@ -74,6 +77,10 @@ void ResourcesPlugin::onPluginEnable()
 	}
 
 	resourcesBrowser = new ResourcesBrowser(editor, editor);
+#endif
+
+	ResourceProcessor::referenceProcessors();
+	ResourceProcessor::registerProcessors();
 }
 
 //-----------------------------------//
@@ -94,6 +101,7 @@ void ResourcesPlugin::onPluginDisable()
 
 void ResourcesPlugin::onBrowserButtonClick(wxCommandEvent& event)
 {
+#if 0
 	static bool scanned = false;
 
 	if(!scanned)
@@ -104,6 +112,7 @@ void ResourcesPlugin::onBrowserButtonClick(wxCommandEvent& event)
 	}
 
 	resourcesBrowser->Show();
+#endif
 }
 
 //-----------------------------------//

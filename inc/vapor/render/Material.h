@@ -10,7 +10,7 @@
 
 #include "render/Program.h"
 #include "render/Texture.h"
-#include "render/Shader.h"
+#include "Resources/Shader.h"
 
 #define GL_ZERO 0
 #define GL_ONE 1

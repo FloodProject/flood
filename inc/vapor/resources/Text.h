@@ -21,6 +21,8 @@ namespace vapor {
 
 class RESOURCE_API Text : public Resource
 {
+	REFLECT_DECLARE_CLASS()
+
 public:
 
 	// Gets the text.

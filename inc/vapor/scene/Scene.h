@@ -8,11 +8,11 @@
 
 #pragma once
 
-#include "scene/Group.h"
-#include "render/Renderable.h"
-#include "math/Matrix4x3.h"
-#include "math/Ray.h"
-#include "math/Frustum.h"
+#include "Scene/Group.h"
+#include "Render/Renderable.h"
+#include "Math/Matrix4x3.h"
+#include "Math/Ray.h"
+#include "Math/Frustum.h"
 
 namespace vapor {
 

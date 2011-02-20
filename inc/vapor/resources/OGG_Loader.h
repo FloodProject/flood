@@ -36,7 +36,7 @@ public:
 	OGG_Loader();
 
 	// Creates the resource with no data.
-	PREPARE(Sound)
+	RESOURCE_LOADER_PREPARE(Sound)
 
 	// Decode an OGG file to a buffer.
 	virtual bool decode(const Stream& file, Resource* res);
@@ -44,18 +44,12 @@ public:
 	// Gets the name of this codec.
 	GETTER(Name, const std::string, "OGG")
 
-	// Gets the list of extensions this codec can handle.
-	GETTER(Extensions, ExtensionList&, extensions)
-
 	// Overrides this to return the right resource group.
 	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Audio)
 
 protected:
 
 	void decodeOgg( OggVorbis_File* vf, std::vector<byte>& buffer );
-
-	// Holds all file extensions recognized by this codec.
-	mutable ExtensionList extensions;
 
 	// Used for providing libvorbisfile with I/O callbacks.
 	ov_callbacks callbacks;

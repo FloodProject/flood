@@ -27,7 +27,7 @@ namespace vapor {
 BEGIN_CLASS_PARENT(Model, Geometry)
 	FIELD_PRIMITIVE(float, animationSpeed)
 	FIELD_PRIMITIVE(bool, animationEnabled);
-	FIELD_CLASS_PTR(Mesh, mesh)
+	FIELD_CLASS_PTR(Mesh, MeshPtr, mesh, RefPointer)
 END_CLASS()
 
 //-----------------------------------//

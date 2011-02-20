@@ -28,11 +28,8 @@ public:
 
 	ThirdPersonController();
 
-	// Gets the follow node.
-	GETTER(FollowEntity, EntityPtr, followEntity.lock())
-
-	// Sets the follow node.
-	SETTER(FollowEntity, const EntityPtr&, followEntity)
+	// Gets/sets the follow node.
+	ACESSOR(FollowEntity, EntityPtr, followEntity)
 
 	// Updates this component.
 	virtual void _update( double delta );
@@ -43,7 +40,7 @@ protected:
 	std::string followEntityName;
 
 	// Follow node.
-	EntityWeakPtr followEntity;
+	EntityPtr followEntity;
 
 	// Distance to the tracked node.
 	Vector3 distance;

@@ -8,12 +8,12 @@
 
 #pragma once
 
-#include "render/Shader.h"
-#include "render/VertexBuffer.h"
-#include "math/Matrix4x3.h"
-#include "math/Matrix4x4.h"
-#include "math/EulerAngles.h"
-#include "math/Color.h"
+#include "Resources/Shader.h"
+#include "Render/VertexBuffer.h"
+#include "Math/Matrix4x3.h"
+#include "Math/Matrix4x4.h"
+#include "Math/EulerAngles.h"
+#include "Math/Color.h"
 
 namespace vapor {
 

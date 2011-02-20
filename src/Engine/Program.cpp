@@ -23,12 +23,12 @@ bool Program::validateShaders() const
 {
 	const ShaderPtr& vs = getVertexShader();
 	
-	if( vs->getType() != ShaderType::Vertex )
+	if( vs->getShaderType() != ShaderType::Vertex )
 		return false;
 
 	const ShaderPtr& fs = getFragmentShader();
 	
-	if( fs->getType() != ShaderType::Fragment )
+	if( fs->getShaderType() != ShaderType::Fragment )
 		return false;
 
 	return true;

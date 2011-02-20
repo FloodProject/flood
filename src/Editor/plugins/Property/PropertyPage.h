@@ -41,13 +41,14 @@ struct MemoryWatch
  * types and allow easy editing of the fields.
  */
 
-class PropertyPage : public wxPropertyGrid
+class PropertyPage : public wxPropertyGrid, public ReflectionVisitor
 {
 public:
 
-	PropertyPage( wxWindow* parent, wxWindowID id = wxID_ANY,
-		const wxPoint& pos = wxDefaultPosition,
-		const wxSize& size = wxDefaultSize );
+	PropertyPage( wxWindow* parent );
+
+	// Populates properties on the grid.
+	void showProperties( const Object* object, bool reset = true );
 
 	// Populates properties on the grid.
 	void showEntityProperties( const EntityPtr& entity );
@@ -70,10 +71,16 @@ public:
 	// Resets the properties page.
 	void reset();
 
-protected:
+	// Resets the properties page if the object is current.
+	void resetObject(const Object* object);
 
 	// Appends the type fields to the property grid.
-	void appendObjectFields(const Class& type, void* object, bool newCategory = true);
+	void appendObjectFields(const Class&, void* object, bool newCategory = true);
+
+protected:
+
+	// Visitor methods.
+	void processBegin(const ObjectData& data);
 
 	// Gets the value of a property.
 	wxAny getPropertyValue(wxPGProperty* property);
@@ -120,14 +127,12 @@ protected:
 	// Current property value.
 	wxAny propertyValue;
 
-	// Selected node.
-	EntityWeakPtr selectedEntity;
+	// Current object.
+	const Object* currentObject;
 
 	// Memory watches.
 	typedef std::map<const Field*, MemoryWatch> MemoryWatchesMap;
 	MemoryWatchesMap memoryWatches;
-
-	std::vector<wxPGProperty*> composed;
 };
 
 //-----------------------------------//

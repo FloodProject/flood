@@ -9,6 +9,14 @@
 
 #pragma once
 
+#include "Input/InputManager.h"
+#include "Input/Mouse.h" 
+#include "Input/Keyboard.h"
+
+FWD_DECL_SHARED(Entity)
+FWD_DECL_SHARED(Component)
+FWD_DECL_INTRUSIVE(Resource)
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//
@@ -16,8 +24,6 @@ namespace vapor { namespace editor {
 class Plugin;
 class PluginManager;
 class EditorFrame;
-
-//-----------------------------------//
 
 /**
  * Plugins can subscribe to these events and get notified when things
@@ -49,6 +55,12 @@ public:
 
 	// Component unselection event.
 	void onComponentUnselect( const ComponentPtr& );
+
+	// Resource selection event.
+	void onResourceSelect( const ResourcePtr& );
+
+	// Resource unselection event.
+	void onResourceUnselect( const ResourcePtr& );
 
 	// Mouse input events.
 	void onMouseMove( const MouseMoveEvent& );

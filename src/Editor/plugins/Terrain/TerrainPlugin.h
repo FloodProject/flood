@@ -10,6 +10,8 @@
 
 #include "Plugin.h"
 #include "UndoOperation.h"
+#include "Scene/Scene.h"
+#include "Terrain/Terrain.h"
 
 namespace vapor { namespace editor {
 

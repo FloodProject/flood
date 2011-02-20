@@ -9,7 +9,7 @@
 #pragma once
 
 #include "ResourceProcessor.h"
-#include "resources/Mesh.h"
+#include "Resources/Mesh.h"
 #include "Resources/Animation.h"
 #include "Resources/Skeleton.h"
 
@@ -31,6 +31,9 @@ public:
 
 	// Processes the given resource.
 	bool Process(const ResourcePtr& resource);
+
+	// Gets the processed resource type.
+	const Class& GetResourceType() { return Mesh::getStaticType(); }
 
 private:
 };

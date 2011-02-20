@@ -33,7 +33,7 @@ public:
 	PNG_Pico_Loader();
 	
 	// Creates the resource with no data.
-	PREPARE(Image)
+	RESOURCE_LOADER_PREPARE(Image)
 
 	// Decode an image file to a buffer.
 	virtual bool decode(const Stream& file, Resource* res);
@@ -41,20 +41,16 @@ public:
 	// Gets the name of this codec.
 	GETTER(Name, const std::string, "PICOPNG")
 
-	// Gets the list of extensions this codec can handle.
-	GETTER(Extensions, ExtensionList&, extensions)
-
 	// Overrides this to return the right resource group.
 	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Images)
 
 protected:
 
+	bool flipY_Axis;
+
 	// Flip the Y part of the texture. OpenGL expects the origin at 
 	// bottom-left while the PNG gets decoded as origin being top-left.
 	void flip( std::vector<byte>& buffer, ulong width, ulong height );
-
-	// Holds all file extensions recognized by this codec.
-	mutable ExtensionList extensions;
 };
 
 //-----------------------------------//

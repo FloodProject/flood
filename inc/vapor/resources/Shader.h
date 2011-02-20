@@ -30,7 +30,7 @@ struct ShaderType
 		Geometry
 	};
 
-	static const std::string getString(Enum e);
+	DECLARE_ENUM()
 };
 
 //-----------------------------------//
@@ -43,12 +43,14 @@ struct ShaderType
  * low-level assembly code by the graphics driver.
  */
 
-class VAPOR_API Shader : public ReferenceCounted
+class VAPOR_API Shader : public Resource
 {
+	REFLECT_DECLARE_CLASS()
+
 public:
 
 	// Gets the shader type.
-	ACESSOR(Type, ShaderType::Enum, type)
+	ACESSOR(ShaderType, ShaderType::Enum, shaderType)
 
 	// Gets the shader text.
 	ACESSOR(Text, const std::string&, text)
@@ -71,12 +73,15 @@ public:
 	// Did this shader throw compile errors?
 	bool gotCompileErrors() const;
 
+	// Return the proper resource group for this resource.
+	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Shaders)
+
 protected:
 
 	Shader();
 
 	// Shader type.
-	ShaderType::Enum type;
+	ShaderType::Enum shaderType;
 
 	// Holds the shader text.
 	std::string text;

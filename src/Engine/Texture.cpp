@@ -165,6 +165,8 @@ void Texture::setImage( Image* newImage )
 void Texture::bind( int unit ) const
 {
 	glActiveTexture( GL_TEXTURE0+unit );
+	glClientActiveTexture( GL_TEXTURE0+unit );
+
 	glEnable(target);
 	glBindTexture( target, id );
 }
@@ -174,8 +176,10 @@ void Texture::bind( int unit ) const
 void Texture::unbind( int unit ) const
 {
 	glActiveTexture( GL_TEXTURE0+unit );
-	glDisable(target);
+	glClientActiveTexture( GL_TEXTURE0+unit );
+
 	glBindTexture( target, 0 );
+	glDisable(target);
 }
 
 //-----------------------------------//

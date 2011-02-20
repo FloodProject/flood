@@ -8,6 +8,9 @@
 
 #pragma once
 
+FWD_DECL_SHARED_WEAK(Camera)
+FWD_DECL(RenderView)
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//

@@ -9,62 +9,18 @@
 #pragma once
 
 #include "Reflection.h"
-#include "math/Vector3.h"
-#include "math/Quaternion.h"
-#include "math/EulerAngles.h"
-#include "math/Color.h"
-#include <bitset>
+#include "Object.h"
+
+#include "Math/Vector3.h"
+#include "Math/Quaternion.h"
+#include "Math/EulerAngles.h"
+#include "Math/Color.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-/**
- * Abstract serialization API.
- */
-
-class CORE_API Serializer
-{
-	DECLARE_UNCOPYABLE(Serializer)
-
-public:
-
-	Serializer() {}
-	virtual ~Serializer() {}
-
-	// Flushes the serialization to the stream.
-	virtual void flushStream() = 0;
-
-	// Begins a new class block.
-	virtual void beginClass(const Class& type) = 0;
-
-	// Ends the current class block.
-	virtual void endClass() = 0;
-
-	// Writes a field into the class block.
-	virtual void writeField( const Field& field ) = 0;
-
-	// Begins a new array block.
-	virtual void beginArray(const Type& type) = 0;
-
-	// Ends the current array block.
-	virtual void endArray() = 0;
-
-	// Primitive Primitives.
-	virtual void writeBool( const Primitive&, bool ) = 0;
-	virtual void writeInt( const Primitive&, int ) = 0;
-	virtual void writeUInt( const Primitive&, uint ) = 0;
-	virtual void writeFloat( const Primitive&, float ) = 0;
-	virtual void writeDouble( const Primitive&, double ) = 0;
-	virtual void writeString( const Primitive&, const std::string& ) = 0;
-	virtual void writeVector3( const Primitive&, const Vector3& ) = 0;
-	virtual void writeQuaternion( const Primitive&, const Quaternion& ) = 0;
-	virtual void writeColor( const Primitive&, const Color& ) = 0;
-	virtual void writeBitfield( const Primitive&, const std::bitset<32>& ) = 0;
-	//virtual void writeHandle( const Handle& ) = 0;
-};
-
-struct ObjectData
+struct CORE_API ObjectData
 {
 	void* instance;
 	Type* type;
@@ -72,42 +28,88 @@ struct ObjectData
 
 //-----------------------------------//
 
-/**
- * Serialization will write a type object to disk in a format that can
- * be readable later when loading. The serializator will use an abstract
- * class to format the data. This allows multiple serialization formats.
- */
-
-class CORE_API ObjectSerializer
+class CORE_API ReflectionVisitor
 {
-	DECLARE_UNCOPYABLE(ObjectSerializer)
+public:
+
+	// Processes a type.
+	virtual void processBegin(const ObjectData& data)  {}
+	virtual void processEnd(const ObjectData& data)  {}
+
+	// Processes a class type.
+	virtual void processClassBegin(const Class& type, bool parent)  {}
+	virtual void processClassEnd(const Class& type, bool parent)  {}
+	
+	// Processes class fields.
+	virtual void processFieldBegin(const Field& field)  {}
+	virtual void processFieldEnd(const Field& field)  {}
+
+	// Processes an enum type.
+	virtual void processEnumBegin( const Enum& enuhm )  {}
+	virtual void processEnumEnd( const Enum& enuhm )  {}
+	virtual void processEnumElement(int value, const std::string& name)  {}
+
+	// Processes an array type.
+	virtual void processArrayBegin(const Type& type, int size)  {}
+	virtual void processArrayEnd(const Type& type)  {}
+	virtual void processArrayElementBegin(int i)  {}
+	virtual void processArrayElementEnd(int i)  {}
+
+	// Processes a primitive type.
+	virtual void processBool( const Primitive&, bool )  {}
+	virtual void processInt( const Primitive&, int )  {}
+	virtual void processUInt( const Primitive&, uint )  {}
+	virtual void processFloat( const Primitive&, float )  {}
+	virtual void processDouble( const Primitive&, double )  {}
+	virtual void processString( const Primitive&, const std::string& )  {}
+	virtual void processVector3( const Primitive&, const Vector3& )  {}
+	virtual void processQuaternion( const Primitive&, const Quaternion& )  {}
+	virtual void processColor( const Primitive&, const Color& )  {}
+	virtual void processBitfield( const Primitive&, const uint& )  {}
+};
+
+//-----------------------------------//
+
+class CORE_API ObjectWalker
+{
+	DECLARE_UNCOPYABLE(ObjectWalker)
 
 public:
 
-	ObjectSerializer( Serializer& serializer );
+	ObjectWalker(ReflectionVisitor& visitor);
 
-	// Loads an object from a stream.
-	bool load( ObjectData& object );
-
-	// Saves an object to a stream.
-	void save( const ObjectData& object );
+	// Processes an object.
+	void process(const Object* object);
 
 protected:
 
-	// Serializes a type.
-	void serializeType(ObjectData object);
+	// Processes an object.
+	void processObject(ObjectData object);
 
-	// Serializes a class.
-	void serializeClass(ObjectData object);
+	// Processes a type.
+	void processType(ObjectData object);
 
-	// Serializes the field of the object.
-	void serializeField(ObjectData object, const Field& field);
+	// Processes a class.
+	void processClass(ObjectData object, bool parent = false);
 
-	// Serializes a primitive field of the object.
-	void serializePrimitive(const ObjectData& object);
+	// Processes an enum.
+	void processEnum(ObjectData object);
 
-	// Concrete serializer implementation.
-	Serializer& serializer;
+	// Processes a field of the object.
+	void processField(ObjectData object, const Field& field);
+
+	// Processes an array of the object.
+	void processArray(ObjectData object, const Field& field);
+
+	// Processes a primitive field of the object.
+	void processPrimitive(const ObjectData& object);
+
+	// Processes a pointer type.
+	void processPointer(ObjectData& object, const Field& field);
+
+protected:
+
+	ReflectionVisitor& v;
 };
 
 //-----------------------------------//

@@ -84,11 +84,11 @@ btTriangleMesh* MeshShape::convertMesh()
 {
 	btTriangleMesh* mesh = new btTriangleMesh(false);
 
-	const EntityPtr& node = getEntity();
-	
-	for( uint i = 0; i < node->getGeometry().size(); i++ )
+	const std::vector<GeometryPtr>& geometries = entity->getGeometry();
+
+	for( uint i = 0; i < geometries.size(); i++ )
 	{
-		const GeometryPtr& geometry = node->getGeometry()[i];
+		const GeometryPtr& geometry = geometries[i];
 		const RenderableVector& rends = geometry->getRenderables();
 
 		for( uint e = 0; e < rends.size(); e++ )

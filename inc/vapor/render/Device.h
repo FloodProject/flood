@@ -23,14 +23,6 @@ namespace vapor {
 
 //-----------------------------------//
 
-class Camera;
-class Adapter;
-class RenderBuffer;
-class BufferManager;
-class ResourceManager;
-class ProgramManager;
-class TextureManager;
-
 /**
  * There are a couple rendering pipelines. You can choose each one depending
  * on the hardware functionality (shaders don't exist on some old or mobile
@@ -51,6 +43,16 @@ struct RenderPipeline
 
 //-----------------------------------//
 
+class Camera;
+class Adapter;
+class RenderBuffer;
+class BufferManager;
+class ResourceManager;
+class ProgramManager;
+class TextureManager;
+
+typedef std::map<LightPtr, TexturePtr> ShadowTextureMap;
+
 /**
  * Represents the rendering device we are using. At startup the application
  * can ask the user what device he wants to use (OpenGL / DirectX / Software)
@@ -66,8 +68,6 @@ struct RenderPipeline
  * OpenGL window will be different from an DirectX window, so this is also
  * responsible for creating a new window if no window handle is passed to it.
  */
-
-typedef std::map<LightPtr, TexturePtr> ShadowTextureMap;
 
 class VAPOR_API RenderDevice
 {
@@ -136,6 +136,9 @@ public:
 
 	// Gets the active view.
 	GETTER(ActiveView, RenderView*, activeView)
+
+	// Returns true if device is using fixed pipeline.
+	bool isFixedPipeline() const;
 
 protected:
 

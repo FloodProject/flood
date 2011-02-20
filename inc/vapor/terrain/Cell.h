@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "scene/Geometry.h"
+#include "Scene/Geometry.h"
 
 namespace vapor {
 
@@ -31,14 +31,15 @@ public:
 
 	Cell();
 
-	Cell( const TerrainSettings& settings, 
-		  const std::vector<float>& heights,
-		  int x, int y );
+	Cell( int x, int y );
 
-	// Gets the heights of this Cell of terrain.
+	// Sets the terrain settings of this terrain cell.
+	void setSettings( const TerrainSettings& settings );
+
+	// Gets the heights of this terrain cell.
 	const std::vector<float>& getHeights();
 
-	// Sets the heights of this Cell of terrain.
+	// Sets the heights of this terrain cell.
 	void setHeights( const std::vector<float>& heights );
 
 	// Rebuilds the terrain geometry.
@@ -70,11 +71,11 @@ protected:
 	// Calculate the averaged normals of the geometry.
 	void rebuildAveragedNormals();
 
-	// Terrain settings.
-	const TerrainSettings* settings;
-
 	// Coordinates of this cell of terrain.
 	int x, y;
+
+	// Terrain settings.
+	const TerrainSettings* settings;
 
 	// Stores the heights of this cell of terrain.
 	std::vector<float> heights;
@@ -84,6 +85,9 @@ protected:
 
 	// Cell image.
 	ImagePtr image;
+
+	// Cell material.
+	MaterialPtr material;
 
 	// Renderable of the cell.
 	RenderablePtr rend;

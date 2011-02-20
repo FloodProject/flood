@@ -55,8 +55,8 @@ void Viewframe::switchToDefaultCamera()
 	if( !camera )
 		return;
 
-	EntityPtr nodeCamera = camera->getEntity();
-	ControllerPtr controller = nodeCamera->getTypedComponent<Controller>();
+	EntityPtr nodeCamera = camera->getEntity()->getShared();
+	ControllerPtr controller = nodeCamera->getComponentFromFamily<Controller>();
 
 	if( controller )
 		controller->setEnabled(true);

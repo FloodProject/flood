@@ -8,3 +8,17 @@
 
 #include "Resources/API.h"
 #include "Resources/Text.h"
+
+namespace vapor {
+
+//-----------------------------------//
+
+BEGIN_CLASS_PARENT(Text, Resource)
+END_CLASS()
+
+//-----------------------------------//
+
+} // end namespace
+
+
+	

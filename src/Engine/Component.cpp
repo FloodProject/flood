@@ -32,14 +32,14 @@ Component::~Component()
 
 //-----------------------------------//
 
-EntityPtr Component::getEntity() const
+Entity* Component::getEntity() const
 {
-	return entity.lock();
+	return entity;
 }
 
 //-----------------------------------//
 
-void Component::setEntity( const EntityPtr& entity )
+void Component::setEntity( Entity* entity )
 {
 	this->entity = entity;
 }

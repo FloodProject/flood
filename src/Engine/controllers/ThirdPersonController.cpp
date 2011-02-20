@@ -38,6 +38,7 @@ ThirdPersonController::ThirdPersonController()
 
 void ThirdPersonController::_update( double delta )
 {
+#if 0
 	if( !followEntity.lock() )
 	{
 		Engine* engine = GetEngine();
@@ -55,6 +56,7 @@ void ThirdPersonController::_update( double delta )
 
 	transform->setPosition( followTransform->getPosition() + distance );
 	transform->setRotation( followTransform->getRotation() * Quaternion(rotation) );
+#endif
 //
 //	Vector3 thirdPersonReference = new Vector3(0, 200, -200);
 //	Matrix rotationMatrix = Matrix.CreateRotationY(avatarYaw);

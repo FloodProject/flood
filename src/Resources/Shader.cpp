@@ -7,33 +7,28 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/render/Shader.h"
+#include "Resources/Shader.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-const std::string ShaderType::getString(Enum e) 
-{
-	switch(e) 
-	{
-	case Vertex:
-		return "Vertex";
-	case Fragment:
-		return "Fragment";
-	case Geometry:
-		return "Geometry";
-	default:
-		return "";
-	}
-}
+BEGIN_ENUM(ShaderType)
+	ENUM(Vertex)
+	ENUM(Fragment)
+	ENUM(Geometry)
+END_ENUM()
+
+BEGIN_CLASS_PARENT_ABSTRACT(Shader, Resource)
+	FIELD_ENUM(ShaderType, shaderType)
+END_CLASS()
 
 //-----------------------------------//
 
 Shader::Shader()
 	: compiled(false)
 	, compileErrors(false)
-	, type( ShaderType::Vertex )
+	, shaderType( ShaderType::Vertex )
 { }
 
 //-----------------------------------//

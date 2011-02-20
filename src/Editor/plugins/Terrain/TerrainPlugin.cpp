@@ -15,6 +15,12 @@
 #include "EditorIcons.h"
 #include "Viewframe.h"
 #include "UndoManager.h"
+#include "Render/View.h"
+#include "Scene/Camera.h"
+#include "Input/InputManager.h"
+#include "Input/Keyboard.h"
+#include "Input/Mouse.h"
+#include "Engine.h"
 
 namespace vapor { namespace editor {
 
@@ -299,7 +305,7 @@ void TerrainPlugin::setupOperation( const MouseButtonEvent& mb )
 	if( !pickTerrain(mb, res) )
 		return;
 
-	EntityPtr parent = res.entity->getParent();
+	EntityPtr parent = res.entity->getParent()->getShared();
 	terrain = std::static_pointer_cast<Terrain>(parent);
 
 	if( !terrainOperation )

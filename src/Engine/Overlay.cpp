@@ -120,8 +120,7 @@ void Overlay::rebuildBorderGeometry()
 
 void Overlay::update( double )
 {
-	EntityPtr entity = getEntity();
-	TransformPtr transform = entity->getTransform();
+	const TransformPtr& transform = entity->getTransform();
 	
 	//transform->reset();
 
