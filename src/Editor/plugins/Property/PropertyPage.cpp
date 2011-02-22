@@ -246,7 +246,7 @@ void PropertyPage::showEntityProperties( const EntityPtr& entity )
 	const ComponentMap& components = entity->getComponents();
 	
 	ComponentMap::const_iterator it;
-	for( it = components.cbegin(); it != components.cend(); it++ )
+	for( it = components.begin(); it != components.end(); it++ )
 	{
 		const Class& type = *(it->first);
 		const ComponentPtr& component = it->second;
@@ -357,7 +357,7 @@ wxPGProperty* PropertyPage::createEnumProperty(const Field& field, void* object)
 	wxPGChoices choices;
 	
 	EnumValuesMap::const_iterator it;
-	for( it = values.cbegin(); it != values.cend(); it++ )
+	for( it = values.begin(); it != values.end(); it++ )
 		choices.Add( it->first, it->second );
 
 	wxPGProperty* prop = new wxEnumProperty(wxEmptyString, wxPG_LABEL, choices);

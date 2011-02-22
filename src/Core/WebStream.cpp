@@ -17,7 +17,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-size_t writeHTTP(void* ptr, size_t size, size_t nmemb, void* userdata);
+static size_t writeHTTP(void* ptr, size_t size, size_t nmemb, void* userdata);
 
 //-----------------------------------//
 

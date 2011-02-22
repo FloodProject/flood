@@ -30,14 +30,16 @@ AudioDevice::AudioDevice()
 	// Select the "preferred device".
 	device = alcOpenDevice(nullptr);
 
-	// Create a main context.
-	mainContext = new AudioContext(this);
-	
 	if( !device || checkError() )
 	{
 		Log::warn("Could not create OpenAL device: %s", getError());
 		return;
 	}
+	
+	Log::info("Creating OpenAL main context");
+
+	// Create a main context.
+	mainContext = new AudioContext(this);
 
 	const ALchar* version = alGetString(AL_VERSION);
 	

@@ -9,6 +9,8 @@
 #include "Core/API.h"
 #include "Serialization.h"
 
+#ifdef VAPOR_SERIALIZATION_BINARY
+
 namespace vapor {
 
 //-----------------------------------//
@@ -40,3 +42,5 @@ class CORE_API BinarySerializer : public ReflectionVisitor
 //-----------------------------------//
 
 } // end namespace
+
+#endif

@@ -6,8 +6,6 @@
 *
 ************************************************************************/
 
-#pragma once
-
 #include "vapor/PCH.h"
 #include "render/DebugGeometry.h"
 #include "render/Renderable.h"

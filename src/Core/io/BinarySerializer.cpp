@@ -9,6 +9,8 @@
 #include "Core/API.h"
 #include "io/BinarySerializer.h"
 
+#ifdef VAPOR_SERIALIZATION_BINARY
+
 namespace vapor {
 
 //-----------------------------------//
@@ -16,3 +18,5 @@ namespace vapor {
 //-----------------------------------//
 
 } // end namespace
+
+#endif

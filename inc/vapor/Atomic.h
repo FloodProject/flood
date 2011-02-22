@@ -45,10 +45,7 @@ public:
 	uint dec();
 
 private:
-	
-	VAPOR_ALIGN_BEGIN(32)
-		volatile uint value;
-	VAPOR_ALIGN_END(32)
+	VAPOR_ALIGN_BEGIN(32) volatile uint value VAPOR_ALIGN_END(32);
 };
 
 //-----------------------------------//

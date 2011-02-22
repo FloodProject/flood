@@ -10,11 +10,9 @@
 
 #ifdef VAPOR_AUDIO_OPENAL
 
-#include "audio/Context.h"
-#include "audio/Device.h"
-
-#include <al.h>
-#include <alc.h>
+#include "Audio/Context.h"
+#include "Audio/Device.h"
+#include "Audio/AL.h"
 
 namespace vapor {
 
@@ -32,6 +30,7 @@ AudioContext::AudioContext(AudioDevice* device)
 	}
 
 	context = createContext();
+	makeCurrent();
 
 	// Sets a default listener.
 	setPosition(Vector3::Zero);

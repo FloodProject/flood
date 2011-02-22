@@ -12,7 +12,6 @@
 #include "Events.h"
 #include "UndoManager.h"
 #include "EditorIcons.h"
-
 #include "io/JsonSerializer.h"
 
 namespace vapor { namespace editor {

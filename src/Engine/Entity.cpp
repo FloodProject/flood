@@ -128,7 +128,7 @@ ComponentPtr Entity::getComponentFromFamily(const Type& type) const
 {
 	ComponentMap::const_iterator it;
 	
-	for( it = componentsMap.cbegin(); it != componentsMap.cend(); it++ )
+	for( it = componentsMap.begin(); it != componentsMap.end(); it++ )
 	{
 		const ComponentPtr& component = it->second;
 		const Type& componentType = component->getType();
@@ -147,7 +147,7 @@ std::vector<GeometryPtr> Entity::getGeometry() const
 	std::vector<GeometryPtr> geoms;
 
 	ComponentMap::const_iterator it;
-	for( it = componentsMap.cbegin(); it != componentsMap.cend(); it++ )
+	for( it = componentsMap.begin(); it != componentsMap.end(); it++ )
 	{
 		const ComponentPtr& component = it->second;
 
@@ -182,7 +182,7 @@ void Entity::update( double delta )
 
 	// Update the other componentsMap.
 	ComponentMap::const_iterator it;
-	for( it = componentsMap.cbegin(); it != componentsMap.cend(); it++ )
+	for( it = componentsMap.begin(); it != componentsMap.end(); it++ )
 	{
 		const ComponentPtr& component = it->second;
 

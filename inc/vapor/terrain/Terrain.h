@@ -122,7 +122,7 @@ protected:
 	std::vector<CellPtr> terrainCells;
 
 	// Holds temporary cell creation requests.
-	std::list<CellRequest> requestsQueue;
+	std::vector<CellRequest> requestsQueue;
 
 	// Terrain settings.
 	TerrainSettings settings;

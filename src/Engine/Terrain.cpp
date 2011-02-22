@@ -104,7 +104,7 @@ CellPtr Terrain::getCell( int x, int y )
 			return cell;
 	}
 
-	return nullptr;
+	return CellPtr();
 }
 
 //-----------------------------------//
@@ -143,13 +143,13 @@ CellPtr Terrain::createCell( int x, int y, std::vector<float>& heights )
 CellPtr Terrain::createCellHeightmap( int x, int y, const ImagePtr& heightmap )
 {
 	if( !heightmap )
-		return nullptr;
+		return CellPtr();
 
 	if( !heightmap->isLoaded() )
-		return nullptr;
+		return CellPtr();
 
 	if( !validateHeightmap(heightmap) )
-		return nullptr;
+		return CellPtr();
 
 	settings.NumberTiles = heightmap->getWidth() - 1;
 
@@ -228,8 +228,7 @@ bool Terrain::validateHeightmap( const ImagePtr& heightmap )
 
 void Terrain::update( double delta )
 {
-	std::list<CellRequest>::iterator it;
-	it = requestsQueue.begin();
+	std::vector<CellRequest>::iterator it = requestsQueue.begin();
 
 	while( it != requestsQueue.end() )
 	{

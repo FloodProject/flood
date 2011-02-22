@@ -12,7 +12,7 @@
 // Configuration
 //---------------------------------------------------------------------//
 
-#define VAPOR_SERIALIZATION_JSON
+#include "CompileOptions.h"
 
 //---------------------------------------------------------------------//
 // Platform headers

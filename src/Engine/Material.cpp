@@ -144,7 +144,7 @@ ProgramPtr Material::getProgram()
 void Material::bindTextures(bool bindUniforms)
 {
 	TextureMap::const_iterator it;
-	for( it = textures.cbegin(); it != textures.cend(); it++ )
+	for( it = textures.begin(); it != textures.end(); it++ )
 	{
 		int index = it->first;
 		const TexturePtr& tex = it->second;
@@ -167,7 +167,7 @@ void Material::bindTextures(bool bindUniforms)
 void Material::unbindTextures()
 {
 	TextureMap::const_iterator it;
-	for( it = textures.cbegin(); it != textures.cend(); it++ )
+	for( it = textures.begin(); it != textures.end(); it++ )
 	{
 		const TexturePtr& tex = it->second;
 		tex->unbind( it->first );

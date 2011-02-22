@@ -8,18 +8,20 @@
 
 #include "Core/API.h"
 #include "Utilities.h"
-#include "Log.h"
 
 #include <dirent.h>
 #include <sstream>
 #include <algorithm>
+#include <cassert>
 
 #ifdef VAPOR_PLATFORM_WINDOWS
     #include <direct.h>
     #define my_getcwd _getcwd
+	#define my_stricmp _stricmp
 #else
     #include <unistd.h>
     #define my_getcwd getcwd
+	#define my_stricmp stricmp
 #endif
 
 namespace vapor {
@@ -67,7 +69,7 @@ void System::sleep( double time )
 
 //-----------------------------------//
 
-void System::messageDialog(const std::string& msg/*, LogLevel::Enum level*/)
+void System::messageDialog(const std::string& msg)
 {
 #ifdef VAPOR_PLATFORM_WINDOWS
 	UINT style = MB_OK;
@@ -86,11 +88,8 @@ void System::messageDialog(const std::string& msg/*, LogLevel::Enum level*/)
 	//}
 
 	MessageBoxA(nullptr, msg.c_str(), nullptr, style);
-#elif defined(VAPOR_PLATFORM_LINUX)
-	Log* log = getLogger();
-	log->write(level, "MessageBox", msg.c_str() );
 #else
-	#error "Missing message box implementation"
+
 #endif
 }
 
@@ -104,11 +103,7 @@ static void enumerateFilesHelper(std::vector<std::string>& files, std::string pa
 	// Open directory stream.
 	dir = opendir( path.c_str() );
     
-	if( !dir )
-	{
-		Log::error("Could not open directory '%s'", path.c_str());
-		goto end;
-	}
+	if( !dir ) return;
 
 	// Get all the files and directories within directory.
 	while((ent = readdir(dir)) != nullptr)
@@ -116,8 +111,7 @@ static void enumerateFilesHelper(std::vector<std::string>& files, std::string pa
 		std::string name(ent->d_name);
 		std::string newPath = path + "/" + name;
 
-		switch(ent->d_type)
-		{
+		switch(ent->d_type) {
 		case DT_REG:
 		{
 			if(!dirs)
@@ -135,13 +129,9 @@ static void enumerateFilesHelper(std::vector<std::string>& files, std::string pa
 			enumerateFilesHelper(files, newPath, dirs);
 
 			break;
-		}
-		default:
-			Log::debug("Unknown dir entry: %s", path.c_str());
-		}
+		} }
 	}
 
-end:
 	closedir(dir);
 }
 
@@ -169,7 +159,11 @@ std::vector<std::string> System::enumerateDirs(const std::string& path)
 
 int String::compareInsensitive(const std::string& s1, const std::string& s2)
 {
-	return __stricmp(s1.c_str(), s2.c_str());
+#ifdef VAPOR_PLATFORM_WINDOWS
+	return my_stricmp(s1.c_str(), s2.c_str());
+#else
+	return strcasecmp(s1.c_str(), s2.c_str());
+#endif
 }
 
 //-----------------------------------//
@@ -241,7 +235,7 @@ std::string String::format(const char* str, va_list args)
 	#ifdef VAPOR_COMPILER_MSVC
 		int n = vsnprintf_s( buf, BUF_MAX_SIZE, _TRUNCATE, str, args );
 	#else
-		int n = vsnprintf( &fmt[0], fmt.size(), str, args );
+		int n = vsnprintf( buf, BUF_MAX_SIZE, str, args );
 	#endif
 
 	assert( n >= 0 ); // check for output error

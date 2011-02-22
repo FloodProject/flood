@@ -33,7 +33,7 @@ TextureManager::~TextureManager()
 
 	#pragma TODO("Make sure all textures are released on exit")
 	TextureMap::const_iterator it;
-	for( it = textures.cbegin(); it != textures.cend(); it++ )
+	for( it = textures.begin(); it != textures.end(); it++ )
 	{
 		const TexturePtr& texture = it->second;
 		//assert( texture->getReferenceCount() == 2 );
@@ -185,7 +185,7 @@ uint TextureManager::getMemoryUsage()
 	uint total = 0;
 
 	TextureMap::const_iterator it;
-	for( it = textures.cbegin(); it != textures.cend(); it++ )
+	for( it = textures.begin(); it != textures.end(); it++ )
 		total += it->first->getBuffer().size();
 
 	return total;

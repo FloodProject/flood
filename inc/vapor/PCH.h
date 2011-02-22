@@ -38,22 +38,6 @@
 #endif
 
 //---------------------------------------------------------------------//
-// C++ foreach construct
-//---------------------------------------------------------------------//
-
-//#ifdef VAPOR_COMPILER_MSVC
-//	#pragma warning( push )
-//	#pragma warning( disable : 4512 4503 )
-//	#include <boost/foreach.hpp>
-//	#pragma warning( pop )
-//#else
-//	#include <boost/foreach.hpp>
-//#endif
-//
-//#define foreach         BOOST_FOREACH
-//#define reverse_foreach BOOST_REVERSE_FOREACH
-
-//---------------------------------------------------------------------//
 // Pointer wrappers
 //---------------------------------------------------------------------//
 
@@ -66,12 +50,10 @@
 	#endif
 #elif defined(VAPOR_MEMORY_TR1_BOOST)
 	#include <boost/tr1/memory.hpp>
-#endif
+#endif	
 
-#ifdef VAPOR_COMPILER_MSVC
-	#if VAPOR_COMPILER_MSVC != VAPOR_COMPILER_MSVC_2010 
-		namespace std { using namespace std::tr1; }
-	#endif
+#if VAPOR_COMPILER_MSVC != VAPOR_COMPILER_MSVC_2010 
+	namespace std { using namespace std::tr1; }
 #endif
 
 //---------------------------------------------------------------------//

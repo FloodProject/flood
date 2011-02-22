@@ -10,8 +10,8 @@
 
 #ifdef VAPOR_AUDIO_OPENAL
 
-#include "math/Vector3.h"
-#include <alc.h>
+#include "Math/Vector3.h"
+#include "Audio/AL.h"
 
 namespace vapor {
 

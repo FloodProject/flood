@@ -7,6 +7,9 @@
 ************************************************************************/
 
 #include "Core/API.h"
+
+#ifdef VAPOR_NETWORKING_ZMQ
+
 #include "net/Network.h"
 #include "net/Message.h"
 #include "Log.h"
@@ -179,3 +182,5 @@ void Network::error(const char* str)
 //-----------------------------------//
 
 } // end namespace
+
+#endif

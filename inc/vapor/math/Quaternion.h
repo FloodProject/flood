@@ -10,6 +10,7 @@
 
 #include "math/Helpers.h"
 #include "math/EulerAngles.h"
+#include <cmath>
 
 namespace vapor {
 
@@ -156,7 +157,7 @@ public:
 	}
 
 	// Gets the magnitude of the quaternion
-	float magnitude() const { return sqrt(x*x + y*y + z*z + w*w); }
+	float magnitude() const { return std::sqrt(x*x + y*y + z*z + w*w); }
 
 	//---------------------------------------------------------------------------
 	// Quaternion::normalize
@@ -175,10 +176,10 @@ public:
 		float mag = magnitude();
 
 		// Check for bogus length, to protect against divide by zero
-		if (mag > 0.0f) {
-
+		if (mag > 0.0f)
+		{
 			// Normalize it
-			float	oneOverMag = 1.0f / mag;
+			float oneOverMag = 1.0f / mag;
 			w *= oneOverMag;
 			x *= oneOverMag;
 			y *= oneOverMag;
@@ -197,7 +198,7 @@ public:
 	void setToRotateAboutX(float theta)
 	{
 		// Compute the half angle
-		float	thetaOver2 = theta * .5f;
+		float thetaOver2 = theta * .5f;
 
 		// Set the values
 		w = cosf(thetaOver2);
@@ -211,7 +212,7 @@ public:
 	void setToRotateAboutY(float theta)
 	{
 		// Compute the half angle
-		float	thetaOver2 = theta * .5f;
+		float thetaOver2 = theta * .5f;
 
 		// Set the values
 		w = cosf(thetaOver2);
@@ -225,7 +226,7 @@ public:
 	void setToRotateAboutZ(float theta)
 	{
 		// Compute the half angle
-		float	thetaOver2 = theta * .5f;
+		float thetaOver2 = theta * .5f;
 
 		// Set the values
 		w = cosf(thetaOver2);
@@ -236,15 +237,15 @@ public:
 
 	//-----------------------------------//
 
-	void setToRotateAboutAxis(Vector3 &axis, float theta) {
-
+	void setToRotateAboutAxis(Vector3 &axis, float theta)
+	{
 		// The axis of rotation must be normalized
 		if ((axis.length() - 1.0f) > .01f)
 			axis.normalize();
 
 		// Compute the half angle and its sin
-		float	thetaOver2 = theta * .5f;
-		float	sinThetaOver2 = sinf(thetaOver2);
+		float thetaOver2 = theta * .5f;
+		float sinThetaOver2 = sinf(thetaOver2);
 
 		// Set the values
 		w = cosf(thetaOver2);
@@ -270,7 +271,7 @@ public:
 			return 0.0f;
 
 		// Value is in the domain - use standard C function
-		return std::acos(x);
+		return acosf(x);
 	}
 
 	//---------------------------------------------------------------------------

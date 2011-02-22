@@ -47,7 +47,7 @@ void ScenePlugin::onPluginEnable()
 	wxBitmap icon = wxMEMORY_BITMAP(sitemap_color);
 
 	wxAuiPaneInfo pane;
-	pane.Caption("Scene").Right().Dock().Icon(icon);
+	pane.Caption("Hierarchy").Right().Dock().Icon(icon);
 	pane.MinSize( scenePage->GetSize() );
 
 	editor->getAUI()->AddPane(scenePage, pane);

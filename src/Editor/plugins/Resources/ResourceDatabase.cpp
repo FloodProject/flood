@@ -43,6 +43,7 @@ ResourceDatabase::~ResourceDatabase()
 
 bool ResourceDatabase::loadCache()
 {
+#if 0
 	LocaleSwitch locale;
 	std::string path = CacheFolder + ThumbCache;
 
@@ -110,12 +111,16 @@ bool ResourceDatabase::loadCache()
 	Log::info("Loaded thumbnails cache from '%s' with %u entries", path.c_str(), i);
 
 	return true;
+#endif
+
+	return false;
 }
 
 //-----------------------------------//
 
 bool ResourceDatabase::saveCache()
 {
+#if 0
 	LocaleSwitch locale;
 	std::string path = CacheFolder + ThumbCache;
 	FileStream file( path, StreamMode::Write );
@@ -128,7 +133,7 @@ bool ResourceDatabase::saveCache()
 
 	ResourcesCacheMap::const_iterator it;
 	
-	for( it = resourcesCache.cbegin(); it != resourcesCache.cend(); it++ )
+	for( it = resourcesCache.begin(); it != resourcesCache.end(); it++ )
 	{
 		const ResourceMetadata& metadata = it->second;
 		
@@ -143,6 +148,9 @@ bool ResourceDatabase::saveCache()
 	Log::info("Wrote thumbnails cache to '%s' with %u entries", path.c_str(), i);
 
 	return true;
+#endif
+
+	return false;
 }
 
 //-----------------------------------//

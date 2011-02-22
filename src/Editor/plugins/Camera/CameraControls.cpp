@@ -136,7 +136,7 @@ void CameraControls::updateCameraSelection()
 	choiceView->Append(choices);
 
 	CameraMap::const_iterator it;
-	for(it = cameras.cbegin(); it != cameras.cend(); ++it)
+	for(it = cameras.begin(); it != cameras.end(); ++it)
 	{
 		int n = choiceView->Append(it->first);
 		choiceView->SetClientData(n, (void*) &it->second);

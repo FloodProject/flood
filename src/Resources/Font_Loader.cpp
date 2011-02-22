@@ -8,7 +8,7 @@
 
 #include "Resources/API.h"
 
-#ifdef VAPOR_FONT_FREETYPE2
+#ifdef VAPOR_FONT_BITMAP
 
 #include "Core/File.h"
 #include "Math/Helpers.h"

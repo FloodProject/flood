@@ -90,7 +90,7 @@ public:																			\
 	_set_##_##fieldName
 
 #define NFS(fieldName)															\
-	&fieldName##Set::##NAME_FIELD_SETTER(fieldName)
+	&fieldName##Set::NAME_FIELD_SETTER(fieldName)
 
 #define FIELD_SETTER(fieldType, fieldName, setterName)							\
 	static void	NAME_FIELD_SETTER(fieldName) (void* vobj, void* vparam)			\
@@ -132,7 +132,7 @@ public:																			\
 	FIELD_COMMON(fieldType, fieldName, __VA_ARGS__)
 
 #define FIELD_ENUM_SETTER(fieldType, fieldName, setterName)						\
-	FIELD_SETTER_CLASS(fieldType##::Enum, fieldName, setterName)				\
+	FIELD_SETTER_CLASS(fieldType::Enum, fieldName, setterName)					\
 	FIELD_ENUM(fieldType, fieldName, NFS(fieldName))
 
 #define FIELD_VECTOR(fieldType, fieldName, ...)									\

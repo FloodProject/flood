@@ -132,7 +132,7 @@ void GizmoPlugin::onToolUnselect( int id )
 	//std::vector<EntityPtr> entities;
 
 	//GizmoMap::const_iterator it;
-	//for( it = gizmos.cbegin(); it != gizmos.cend(); it++ )
+	//for( it = gizmos.begin(); it != gizmos.end(); it++ )
 	//	entities.push_back( it->first );	
 	//
 	//for( uint i = 0; i < entities.size(); i++ )	

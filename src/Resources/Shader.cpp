@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Resources/API.h"
 #include "Resources/Shader.h"
 
 namespace vapor {

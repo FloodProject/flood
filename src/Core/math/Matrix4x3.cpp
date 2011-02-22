@@ -7,8 +7,9 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "math/Matrix4x3.h"
-#include "math/Helpers.h"
+#include "Math/Matrix4x3.h"
+#include "Math/Helpers.h"
+#include <cmath>
 
 namespace vapor {
 

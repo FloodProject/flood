@@ -9,7 +9,8 @@
 #pragma once
 
 #include "Thread.h"
-#include <queue>
+#include <deque>
+#include <algorithm>
 
 namespace vapor {
 
@@ -29,7 +30,7 @@ public:
 
 	void push(const T& value)
 	{
-		THREAD(boost::mutex::scoped_lock lock(mutex);)
+		THREAD(boost::mutex::scoped_lock lock(mutex));
 		
 		queue.push_back(value);
 		THREAD(lock.unlock();)
@@ -41,7 +42,7 @@ public:
 
 	bool empty() const
 	{
-		THREAD(boost::mutex::scoped_lock lock(mutex);)
+		THREAD(boost::mutex::scoped_lock lock(mutex));
 		
 		return queue.empty();
 	}
@@ -50,7 +51,7 @@ public:
 
 	bool try_pop(T& popped_value)
 	{
-		THREAD(boost::mutex::scoped_lock lock(mutex);)
+		THREAD(boost::mutex::scoped_lock lock(mutex));
 	    
 		if( queue.empty() )
 			return false;
@@ -65,7 +66,7 @@ public:
 
 	void wait_and_pop(T& popped_value)
 	{
-		THREAD(boost::mutex::scoped_lock lock(mutex);)
+		THREAD(boost::mutex::scoped_lock lock(mutex));
 	    
 		while( queue.empty() )
 			THREAD(cond_var.wait(lock);)
@@ -78,9 +79,9 @@ public:
 
 	bool find(const T& value)
 	{
-		THREAD(boost::mutex::scoped_lock lock(mutex);)
+		THREAD(boost::mutex::scoped_lock lock(mutex));
 
-		std::deque<T>::const_iterator it;
+		typename std::deque<T>::const_iterator it;
 		it = std::find(queue.begin(), queue.end(), value);
 		
 		if( it != queue.end() )
@@ -95,8 +96,8 @@ protected:
 
 	std::deque<T> queue;
 
-	THREAD(mutable boost::mutex mutex;)
-	THREAD(boost::condition_variable cond_var;)
+	THREAD(mutable boost::mutex mutex);
+	THREAD(boost::condition_variable cond_var);
 };
 
 //-----------------------------------//

@@ -185,7 +185,7 @@ void Model::updateAnimationBones(AnimationState& state)
 	const KeyFramesMap& keyFrames = animation->getKeyFrames();
 
 	KeyFramesMap::const_iterator it;
-	for( it = keyFrames.cbegin(); it != keyFrames.cend(); it++ )
+	for( it = keyFrames.begin(); it != keyFrames.end(); it++ )
 	{
 		const BonePtr& bone = it->first;
 		

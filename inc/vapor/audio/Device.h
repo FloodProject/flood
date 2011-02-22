@@ -10,13 +10,12 @@
 
 #ifdef VAPOR_AUDIO_OPENAL
 
-#include "resources/Sound.h"
-#include "math/Vector3.h"
-
-#include <al.h>
-#include <alc.h>
+#include "Resources/Sound.h"
+#include "Math/Vector3.h"
+#include "Audio/AL.h"
 
 FWD_DECL_SHARED(AudioBuffer)
+FWD_DECL_SHARED(AudioContext)
 
 namespace vapor {
 

@@ -8,6 +8,8 @@
 
 #pragma once
 
+#ifdef VAPOR_NETWORKING_ZMQ
+
 #include "ReferenceCount.h"
 #include "Messages.h"
 #include <zmq.h>
@@ -56,3 +58,5 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(Message)
 //-----------------------------------//
 
 } // end namespace
+
+#endif

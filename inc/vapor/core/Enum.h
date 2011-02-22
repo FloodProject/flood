@@ -31,7 +31,7 @@ public:
 	void addValue( const std::string& name, int value );
 
 	// Gets the name of this enum value.
-	const std::string& getString(int value) const;
+	const std::string& getName(int value) const;
 
 	// Gets the value of this enum name.
 	const int getValue(const std::string& name) const;

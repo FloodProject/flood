@@ -58,7 +58,7 @@ void ResourcesPage::initControl()
 	const EnumValuesMap& values = enuhm.getValues();
 	
 	EnumValuesMap::const_iterator it;
-	for( it = values.cbegin(); it != values.cend(); it++ )
+	for( it = values.begin(); it != values.end(); it++ )
 	{
 		ResourceGroup::Enum group = (ResourceGroup::Enum) it->second;
 		resGroupIds[group] = AppendItem(rootId, it->first, resGroupIcons[group]);
@@ -98,7 +98,7 @@ void ResourcesPage::updateTree()
 	const ResourceMap& resources = rm->getResources();
 	
 	ResourceMap::const_iterator it;
-	for( it = resources.cbegin(); it != resources.cend(); it++ )
+	for( it = resources.begin(); it != resources.end(); it++ )
 	{
 		const ResourcePtr& res = it->second;
 		addResource(res);

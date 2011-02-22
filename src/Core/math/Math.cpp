@@ -4,10 +4,8 @@
 *
 ************************************************************************/
 
-#pragma once
-
 #include "Core/API.h"
-#include "math/Helpers.h"
+#include "Math/Helpers.h"
 
 namespace vapor {
 

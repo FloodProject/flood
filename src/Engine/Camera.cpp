@@ -42,7 +42,7 @@ Camera::~Camera()
 	if( transform )
 	{
 		transform->onTransform.Disconnect( this, &Camera::onTransform );
-		transform = nullptr;
+		transform.reset();
 	}
 }
 
@@ -214,7 +214,7 @@ void Camera::cull( RenderBlock& block, const EntityPtr& entity )
 	const ComponentMap& components = entity->getComponents();
 
 	ComponentMap::const_iterator it;
-	for( it = components.cbegin(); it != components.cend(); it++ )
+	for( it = components.begin(); it != components.end(); it++ )
 	{
 		const ComponentPtr& component = it->second;
 

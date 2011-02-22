@@ -22,7 +22,10 @@ misrepresented as being the original software.
 */
 
 #include "vapor/PCH.h"
-#include "vapor/physics/btKinematicController.h"
+
+#ifdef VAPOR_PHYSICS_BULLET
+
+#include "Physics/btKinematicController.h"
 
 #include "LinearMath/btIDebugDraw.h"
 #include "BulletCollision/CollisionDispatch/btGhostObject.h"
@@ -631,3 +634,5 @@ btVector3* btKinematicController::getUpAxisDirections()
 
 void btKinematicController::debugDraw(btIDebugDraw* debugDrawer)
 { }
+
+#endif

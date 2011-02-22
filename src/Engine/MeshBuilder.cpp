@@ -17,7 +17,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-std::map<MeshPtr, std::vector<RenderablePtr>> MeshBuilder::meshRenderables;
+std::map<MeshPtr, std::vector<RenderablePtr> > MeshBuilder::meshRenderables;
 
 MeshBuilder::MeshBuilder()
 { }

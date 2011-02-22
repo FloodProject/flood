@@ -63,7 +63,7 @@ bool PropertyPage::updateMemoryWatches()
 	bool changed = false;
 
 	MemoryWatchesMap::const_iterator it;
-	for( it = memoryWatches.cbegin(); it != memoryWatches.cend(); it++ )
+	for( it = memoryWatches.begin(); it != memoryWatches.end(); it++ )
 	{
 		const Field* field = it->first;
 		

@@ -21,8 +21,6 @@ namespace vapor {
 class Entity;
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Entity )
 
-//-----------------------------------//
-
 /**
  * Represents a component, a specific piece of functionality that can be
  * added to each entity in the scene. A component will tipically hold a

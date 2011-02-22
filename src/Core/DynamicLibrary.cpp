@@ -9,6 +9,8 @@
 #include "Core/API.h"
 #include "DynamicLibrary.h"
 
+#ifdef VAPOR_DYNAMIC_LIBRARY
+
 #ifdef VAPOR_PLATFORM_WINDOWS
 	#define WIN32_LEAN_AND_MEAN
 	#define NOMINMAX
@@ -67,3 +69,5 @@ void* DynamicLibrary::getSymbol(const std::string& symbol)
 //-----------------------------------//
 
 } // end namespace
+
+#endif

@@ -10,8 +10,7 @@
 
 #include "Object.h"
 #include "Event.h"
-
-FWD_DECL_SHARED(Component)
+#include "Component.h"
 
 FWD_DECL_SHARED(Entity)
 FWD_DECL_SHARED_WEAK(Entity)

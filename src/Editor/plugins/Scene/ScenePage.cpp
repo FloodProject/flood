@@ -177,7 +177,7 @@ wxTreeItemId ScenePage::addEntity( wxTreeItemId id, const EntityPtr& entity )
 	const ComponentMap& components = entity->getComponents();
 
 	ComponentMap::const_iterator it;
-	for( it = components.cbegin(); it != components.cend(); it++ )
+	for( it = components.begin(); it != components.end(); it++ )
 		addComponent(nodeId, it->second);
 
 	EntityItemData* data = new EntityItemData();
@@ -550,7 +550,7 @@ void ScenePage::onMenuSelected( wxCommandEvent& event )
 		const ComponentMap& components = node->getComponents();
 		
 		ComponentMap::const_iterator it;
-		for( it = components.cbegin(); it != components.cend(); it++ )
+		for( it = components.begin(); it != components.end(); it++ )
 		{
 			ComponentPtr component = it->second;
 			Class& ctype = (Class&) component->getType();

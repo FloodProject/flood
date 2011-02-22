@@ -30,8 +30,10 @@ bool Timer::highResolutionSupport = false;
 //-----------------------------------//
 
 Timer::Timer()
+#ifdef VAPOR_PLATFORM_WINDOWS
 	: currentTime(0)
 	, lastTime(0)
+#endif
 {
 	if( !checked && !checkHighResolutionTimers() )
 		Log::error( "High-resolution timers are not supported" );
@@ -80,7 +82,7 @@ double Timer::reset()
 #ifdef VAPOR_PLATFORM_WINDOWS
 	return (double) lastTime / (double) ticksPerSecond;
 #else
-	return lastTime.tv_sec;
+	return tv_time_ms(lastTime);
 #endif
 }
 

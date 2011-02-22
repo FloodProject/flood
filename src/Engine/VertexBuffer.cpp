@@ -51,11 +51,11 @@ bool VertexBuffer::unbind()
 //-----------------------------------//
 
 #define IfAttributeExists(attr)										\
-	it = attributes.find(VertexAttribute::##attr);					\
+	it = attributes.find(VertexAttribute::attr);					\
 	if(it != attributes.end())
 
 #define IfAttributeIs(attr)											\
-	if(index == VertexAttribute::##attr)
+	if(index == VertexAttribute::attr)
 
 #define EnableArrayPointer(arr, func)								\
 	{ glEnableClientState(arr);										\
@@ -72,7 +72,7 @@ void VertexBuffer::bindPointers()
 	int offset = 0;
 
 	AttributeMap::const_iterator it;
-	for( it = attributes.cbegin(); it != attributes.cend(); it++ )
+	for( it = attributes.begin(); it != attributes.end(); it++ )
 	{
 		int index = it->first;
 		const Attribute& attr = it->second;
@@ -120,7 +120,7 @@ void VertexBuffer::bindGenericPointers()
 	int offset = 0;
 
 	AttributeMap::const_iterator it;
-	for( it = attributes.cbegin(); it != attributes.cend(); it++ )
+	for( it = attributes.begin(); it != attributes.end(); it++ )
 	{
 		VertexAttribute::Enum index = it->first;
 		const Attribute& attr = it->second;
@@ -148,7 +148,7 @@ void VertexBuffer::unbindGenericPointers()
 
 	AttributeMap::const_iterator it;
 
-	for( it = attributes.cbegin(); it != attributes.cend(); it++ )
+	for( it = attributes.begin(); it != attributes.end(); it++ )
 	{
 		VertexAttribute::Enum index = it->first;
 		glDisableVertexAttribArray(index);
@@ -267,7 +267,7 @@ bool VertexBuffer::build()
 	int offset = 0;
 	
 	AttributeMap::const_iterator it;
-	for( it = attributes.cbegin(); it != attributes.cend(); it++ )
+	for( it = attributes.begin(); it != attributes.end(); it++ )
 	{
 		const std::vector<byte>& vec = it->second.data;
 
@@ -296,7 +296,7 @@ bool VertexBuffer::checkSize() const
 	int initialSize = 0;
 
 	AttributeMap::const_iterator it;
-	for( it = attributes.cbegin(); it != attributes.cend(); it++ )
+	for( it = attributes.begin(); it != attributes.end(); it++ )
 	{
 		const Attribute& attr = it->second;
 		int size = attr.data.size();
@@ -324,7 +324,7 @@ uint VertexBuffer::getSize() const
 	uint totalBytes = 0;
 
 	AttributeMap::const_iterator it;
-	for( it = attributes.cbegin(); it != attributes.cend(); it++ )
+	for( it = attributes.begin(); it != attributes.end(); it++ )
 	{
 		totalBytes += it->second.data.size();
 	}

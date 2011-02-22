@@ -106,7 +106,7 @@ void ScriptManager::onReload( const ResourceEvent& evt )
 	const ScriptPtr& script = RefCast<Script>( evt.resource );
 
 	ScriptsMap::const_iterator it;
-	for( it = scripts.cbegin(); it != scripts.cend(); it++ )
+	for( it = scripts.begin(); it != scripts.end(); it++ )
 	{
 		if( script != it->second )
 			continue;

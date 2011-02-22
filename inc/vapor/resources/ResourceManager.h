@@ -136,7 +136,7 @@ public:
 	template <typename T>
 	RefPtr<T> getResource(const std::string& name)
 	{
-		ResourcePtr res = getResource(path);
+		ResourcePtr res = getResource(name);
 		return RefCast<T>(res);
 	}
 

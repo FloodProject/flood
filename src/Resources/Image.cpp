@@ -8,7 +8,10 @@
 
 #include "Resources/API.h"
 #include "Resources/Image.h"
-#include "lodepng.h"
+
+#ifdef VAPOR_IMAGE_LODEPNG
+	#include "lodepng.h"
+#endif
 
 namespace vapor {
 
@@ -65,7 +68,7 @@ Image::Image(int width, int height, PixelFormat::Enum format)
 
 //-----------------------------------//
 
-#define PF(n) PixelFormat::##n
+#define PF(n) PixelFormat::n
 
 bool Image::isCompressed() const
 {
@@ -103,13 +106,14 @@ void Image::setColor( const Color& color )
 void Image::log() const
 {
 	Log::info( "Image has pixel format '%s' and size %dx%d", 
-		 PixelFormat::getStaticType().getString(format), width, height );
+		 PixelFormat::getStaticType().getName(format).c_str(), width, height );
 }
 
 //-----------------------------------//
 
 void ImageWriter::save( const ImagePtr& image, const std::string& filename )
 {
+#ifdef VAPOR_IMAGE_WRITER	
 	// TODO: sleep until the image is not loadeds
 	if( !image->isLoaded() )
 		return;
@@ -125,12 +129,14 @@ void ImageWriter::save( const ImagePtr& image, const std::string& filename )
 		return;
 
 	file.write(output);
+#endif
 }
 
 //-----------------------------------//
 
 bool ImageWriter::convertPNG( const ImagePtr& image )
 {
+#ifdef VAPOR_IMAGE_WRITER
 	LodePNG::Encoder encoder;
 	
 	LodePNG_InfoColor& png = encoder.getInfoPng().color;
@@ -166,6 +172,9 @@ bool ImageWriter::convertPNG( const ImagePtr& image )
 	}
 
 	return true;
+#else
+	return false;
+#endif
 }
 
 //-----------------------------------//

@@ -37,7 +37,6 @@ typedef unsigned long	ulong;
 //---------------------------------------------------------------------//
 
 #include <vector>
-#include <list>
 #include <map>
 #include <string>
 
@@ -45,7 +44,7 @@ typedef unsigned long	ulong;
 // nullptr replacement
 //---------------------------------------------------------------------//
 
-#if defined(VAPOR_COMPILER_MSVC) && (VAPOR_COMPILER_MSVC != VAPOR_COMPILER_MSVC_2010)
+#if !defined(VAPOR_COMPILER_MSVC) || (VAPOR_COMPILER_MSVC != VAPOR_COMPILER_MSVC_2010)
 	#define nullptr NULL
 #endif
 
@@ -102,12 +101,6 @@ typedef unsigned long	ulong;
 #define ACESSOR(name, type, var)				\
 	GETTER(name, type, var)						\
 	SETTER(name, type, var)
-
-#ifdef VAPOR_COMPILER_MSVC
-	#define __stricmp _stricmp
-#else
-	#define __stricmp stricmp
-#endif
 
 #define DECLARE_UNCOPYABLE(Type)				\
 	private:									\

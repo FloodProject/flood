@@ -41,7 +41,7 @@ FileStream::~FileStream()
 
 bool FileStream::open()
 {
-	char* mode_ = nullptr;
+	const char* mode_ = nullptr;
 
 	if( mode == StreamMode::Read )
 		mode_ = "rb";

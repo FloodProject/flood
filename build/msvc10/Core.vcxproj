@@ -121,9 +121,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Core\Atomic.cpp" />
+    <ClCompile Include="..\..\src\Core\ConcurrentQueue.cpp" />
     <ClCompile Include="..\..\src\Core\Delegate.cpp" />
+    <ClCompile Include="..\..\src\Core\DynamicLibrary.cpp" />
     <ClCompile Include="..\..\src\Core\Event.cpp" />
+    <ClCompile Include="..\..\src\Core\File.cpp" />
     <ClCompile Include="..\..\src\Core\FileStream.cpp" />
+    <ClCompile Include="..\..\src\Core\FileSystem.cpp" />
+    <ClCompile Include="..\..\src\Core\FileWatcher.cpp" />
+    <ClCompile Include="..\..\src\Core\FileWatcherWin32.cpp" />
     <ClCompile Include="..\..\src\Core\io\BinarySerializer.cpp" />
     <ClCompile Include="..\..\src\Core\io\JsonSerializer.cpp" />
     <ClCompile Include="..\..\src\Core\io\Serialization.cpp" />
@@ -145,6 +151,7 @@
     <ClCompile Include="..\..\src\Core\Message.cpp" />
     <ClCompile Include="..\..\src\Core\Network.cpp" />
     <ClCompile Include="..\..\src\Core\PhysfsStream.cpp" />
+    <ClCompile Include="..\..\src\Core\Profiler.cpp" />
     <ClCompile Include="..\..\src\Core\ReferenceCount.cpp" />
     <ClCompile Include="..\..\src\Core\reflection\Class.cpp" />
     <ClCompile Include="..\..\src\Core\reflection\Enum.cpp">
@@ -159,18 +166,11 @@
     <ClCompile Include="..\..\src\Core\Stream.cpp" />
     <ClCompile Include="..\..\src\Core\Subsystem.cpp" />
     <ClCompile Include="..\..\src\Core\Thread.cpp" />
+    <ClCompile Include="..\..\src\Core\Timer.cpp" />
     <ClCompile Include="..\..\src\Core\Utilities.cpp" />
     <ClCompile Include="..\..\src\Core\WebStream.cpp" />
-    <ClCompile Include="..\..\src\Engine\File.cpp" />
-    <ClCompile Include="..\..\src\Engine\FileSystem.cpp" />
-    <ClCompile Include="..\..\src\Engine\FileWatcher.cpp" />
-    <ClCompile Include="..\..\src\Engine\FileWatcherWin32.cpp" />
-    <ClCompile Include="..\..\src\Engine\DynamicLibrary.cpp" />
-    <ClCompile Include="..\..\src\Engine\Profiler.cpp" />
-    <ClCompile Include="..\..\src\Engine\ConcurrentQueue.cpp" />
     <ClCompile Include="..\..\src\Core\tasks\Task.cpp" />
     <ClCompile Include="..\..\src\Core\tasks\TaskManager.cpp" />
-    <ClCompile Include="..\..\src\Engine\Timer.cpp" />
     <ClCompile Include="..\..\src\Server\Downloader.cpp" />
     <ClCompile Include="..\..\src\Core\Core.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -231,7 +231,6 @@
     <ClInclude Include="..\..\inc\vapor\Log.h" />
     <ClInclude Include="..\..\inc\vapor\WebStream.h" />
     <ClInclude Include="..\..\src\Core\API.h" />
-    <ClInclude Include="..\..\src\Engine\FileWatcherWin32.h" />
     <ClInclude Include="..\..\inc\vapor\Profiler.h" />
     <ClInclude Include="..\..\inc\vapor\ConcurrentQueue.h" />
     <ClInclude Include="..\..\inc\vapor\Task.h" />
@@ -242,6 +241,7 @@
     <ClInclude Include="..\..\inc\vapor\net\Message.h" />
     <ClInclude Include="..\..\inc\vapor\net\MessageHandler.h" />
     <ClInclude Include="..\..\inc\vapor\net\Messages.h" />
+    <ClInclude Include="..\..\src\Core\FileWatcherWin32.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

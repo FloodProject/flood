@@ -8,7 +8,7 @@
 
 #pragma once
 
-#ifdef VAPOR_FONT_FREETYPE2
+#ifdef VAPOR_FONT_BITMAP
 
 #include "Resources/ResourceLoader.h"	
 #include "Resources/Font.h"

@@ -29,7 +29,7 @@ END_CLASS()
 
 //-----------------------------------//
 
-#define REF(name) name##::getStaticType();
+#define REF(name) name::getStaticType();
 
 void ResourceManager::referenceLoaders()
 {
@@ -45,11 +45,25 @@ void ResourceManager::referenceLoaders()
 	REF(STB_Image_Loader)
 #endif
 
+#ifdef VAPOR_AUDIO_OGG
 	REF(OGG_Loader)
+#endif
+
+#ifdef VAPOR_SHADER_GLSL
 	REF(GLSL_Loader)
+#endif
+
+#ifdef VAPOR_SCRIPTING_LUA
 	REF(Lua_Loader)
+#endif
+
+#ifdef VAPOR_FONT_BITMAP
 	REF(Font_Loader)
+#endif
+
+#ifdef VAPOR_MESH_MILKSHAPE3D
 	REF(MilkshapeLoader)
+#endif
 }
 
 //-----------------------------------//

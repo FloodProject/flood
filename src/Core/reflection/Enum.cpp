@@ -30,7 +30,7 @@ void Enum::addValue( const std::string& name, int value )
 
 //-----------------------------------//
 
-const std::string& Enum::getString(int value) const
+const std::string& Enum::getName(int value) const
 {
 	EnumValuesMap::iterator it;
 	

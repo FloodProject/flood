@@ -39,7 +39,7 @@ public:
 	// Builds the mesh skeleton data.
 	void buildSkeleton();
 
-	static std::map<MeshPtr, std::vector<RenderablePtr>> meshRenderables;
+	static std::map<MeshPtr, std::vector<RenderablePtr> > meshRenderables;
 
 protected:
 

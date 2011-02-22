@@ -98,16 +98,16 @@ void ObjectWalker::processClass(ObjectData object, bool parent)
 
 void ObjectWalker::processEnum(ObjectData object)
 {
-	const Enum& type = (Enum&) *object.type;
+	const Enum& metaenum = (Enum&) *object.type;
 	
-	v.processEnumBegin(type);
+	v.processEnumBegin(metaenum);
 
 	int value = *(int*) object.instance;
-	const std::string& name = type.getString(value);
+	const std::string& name = metaenum.getName(value);
 	
 	v.processEnumElement(value, name);
 
-	v.processEnumEnd(type);
+	v.processEnumEnd(metaenum);
 }
 
 //-----------------------------------//

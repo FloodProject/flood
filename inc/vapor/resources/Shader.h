@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "resources/Resource.h"
+#include "Resources/Resource.h"
 
 namespace vapor {
 
@@ -43,7 +43,7 @@ struct ShaderType
  * low-level assembly code by the graphics driver.
  */
 
-class VAPOR_API Shader : public Resource
+class RESOURCE_API Shader : public Resource
 {
 	REFLECT_DECLARE_CLASS()
 

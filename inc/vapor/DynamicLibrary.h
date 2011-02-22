@@ -8,6 +8,8 @@
 
 #pragma once
 
+#ifdef VAPOR_DYNAMIC_LIBRARY
+
 namespace vapor {
 
 //-----------------------------------//
@@ -15,7 +17,7 @@ namespace vapor {
 #ifdef VAPOR_PLATFORM_WINDOWS
 	typedef void* DynLibHandle;
 #else
-	#warning "Support for dynamic libraries not found"
+	#error "Support for dynamic libraries not found"
 #endif
 
 //-----------------------------------//
@@ -50,3 +52,5 @@ private:
 //-----------------------------------//
 
 } // end namespace
+
+#endif

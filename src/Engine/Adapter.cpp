@@ -10,8 +10,8 @@
 
 #ifdef VAPOR_RENDERER_OPENGL
 
-#include "render/Adapter.h"
-#include "render/GL.h"
+#include "Render/Adapter.h"
+#include "Render/GL.h"
 
 namespace vapor {
 
@@ -66,7 +66,7 @@ void Adapter::parseInfo()
 	} 
 	else {
 		gl = tmp;
-		uint ch = gl.find_first_of("-");
+		size_t ch = gl.find_first_of("-");
 		if(ch != std::string::npos) {
 			driver = gl.substr(ch+1);
 			gl = gl.substr(0, ch-1);

@@ -192,20 +192,11 @@
     <ClCompile Include="..\..\src\Core\Utilities.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Engine\DynamicLibrary.cpp">
-      <Filter>Libraries</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Profiler.cpp">
-      <Filter>Profiler</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Core\tasks\Task.cpp">
       <Filter>Concurrency\Tasks</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\tasks\TaskManager.cpp">
       <Filter>Concurrency\Tasks</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Timer.cpp">
-      <Filter>Timer</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Server\Downloader.cpp">
       <Filter>Network</Filter>
@@ -219,18 +210,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Core\Message.cpp">
       <Filter>Network\Messages</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\File.cpp">
-      <Filter>Filesystem</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\FileSystem.cpp">
-      <Filter>Filesystem</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\FileWatcher.cpp">
-      <Filter>Filesystem\Watcher</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\FileWatcherWin32.cpp">
-      <Filter>Filesystem\Watcher</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\reflection\Class.cpp">
       <Filter>Reflection\Class</Filter>
@@ -289,11 +268,32 @@
     <ClCompile Include="..\..\src\Core\reflection\Object.cpp">
       <Filter>Reflection</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Engine\ConcurrentQueue.cpp">
-      <Filter>Concurrency\Queue</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Core\StackWalker.cpp">
       <Filter>Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\DynamicLibrary.cpp">
+      <Filter>Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\ConcurrentQueue.cpp">
+      <Filter>Concurrency\Queue</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\FileSystem.cpp">
+      <Filter>Filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\File.cpp">
+      <Filter>Filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\FileWatcherWin32.cpp">
+      <Filter>Filesystem\Watcher</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\FileWatcher.cpp">
+      <Filter>Filesystem\Watcher</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\Profiler.cpp">
+      <Filter>Profiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\Timer.cpp">
+      <Filter>Timer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -390,9 +390,6 @@
     <ClInclude Include="..\..\inc\vapor\Stream.h">
       <Filter>Streams</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Engine\FileWatcherWin32.h">
-      <Filter>Filesystem\Watcher</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\vapor\core\Class.h">
       <Filter>Reflection\Class</Filter>
     </ClInclude>
@@ -477,6 +474,9 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\core\PhysfsStream.h">
       <Filter>Streams\Physfs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Core\FileWatcherWin32.h">
+      <Filter>Filesystem\Watcher</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

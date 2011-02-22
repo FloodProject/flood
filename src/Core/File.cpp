@@ -9,7 +9,7 @@
 #include "Core/API.h"
 #include "Core/File.h"
 
-//#ifdef VAPOR_VFS_PHYSFS
+#ifdef VAPOR_VFS_PHYSFS
 
 #include "Log.h"
 #include "Utilities.h"
@@ -307,4 +307,4 @@ const Path File::getExtension() const
 
 } // end namespace
 
-//#endif
+#endif

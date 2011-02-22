@@ -8,7 +8,7 @@
 
 #include "Core/API.h"
 
-//#ifdef VAPOR_VFS_PHYSFS
+#ifdef VAPOR_VFS_PHYSFS
 
 #include "Log.h"
 #include "Utilities.h"
@@ -173,4 +173,4 @@ void FileSystem::log()
 
 } // end namespace
 
-//#endif
+#endif

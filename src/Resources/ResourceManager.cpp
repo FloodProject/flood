@@ -60,7 +60,7 @@ ResourceManager::~ResourceManager()
 
 	// Delete resource loaders.
 	ResourceLoaderMap::const_iterator it;
-	for( it = resourceLoaders.cbegin(); it != resourceLoaders.cend(); it++ )
+	for( it = resourceLoaders.begin(); it != resourceLoaders.end(); it++ )
 	{
 		ResourceLoader* loader = it->second;
 
@@ -148,7 +148,7 @@ void ResourceManager::findResource(ResourceLoadOptions& options)
 		return;
 
 	ResourceLoaderMap::const_iterator it;
-	for(it = resourceLoaders.cbegin(); it != resourceLoaders.cend(); it++)
+	for(it = resourceLoaders.begin(); it != resourceLoaders.end(); it++)
 	{
 		const std::string& ext = it->first;
 		ResourceLoader* loader = it->second;
@@ -293,7 +293,7 @@ void ResourceManager::removeUnusedResources()
 
 	// Search for unused resources.
 	ResourceMap::const_iterator it;
-	for( it = resources.cbegin(); it != resources.cend(); it++ )
+	for( it = resources.begin(); it != resources.end(); it++ )
 	{
 		const ResourcePtr& resource = it->second;
 
