@@ -37,9 +37,6 @@
     <Filter Include="Render\Shaders">
       <UniqueIdentifier>{db00aaea-871c-41fa-ae25-2c08de4432a3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Render\Shaders\GLSL">
-      <UniqueIdentifier>{2a6b644d-01e3-4888-9575-9515261bda61}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Render\Texture">
       <UniqueIdentifier>{44680aba-7b1f-4755-bced-0a0ba3db2262}</UniqueIdentifier>
     </Filter>
@@ -190,9 +187,6 @@
     <Filter Include="Window\SFML">
       <UniqueIdentifier>{c7712ee9-ceb6-451c-88d9-2a8c57ad04d2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene\Clouds">
-      <UniqueIdentifier>{5ee8f4e9-aba7-4460-b2da-7cdc72ddac89}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scene\Particles">
       <UniqueIdentifier>{1fec75a6-f36b-4570-8399-2d734a372104}</UniqueIdentifier>
     </Filter>
@@ -225,33 +219,6 @@
     <ClCompile Include="..\..\src\Engine\PCH.cpp">
       <Filter>PCH</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Engine\GL.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\RenderDevice.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\RenderQueue.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Adapter.cpp">
-      <Filter>Render\Adapter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Buffer.cpp">
-      <Filter>Render\Buffers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\IndexBuffer.cpp">
-      <Filter>Render\Buffers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\RenderBuffer.cpp">
-      <Filter>Render\Buffers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\VertexBuffer.cpp">
-      <Filter>Render\Buffers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Renderable.cpp">
-      <Filter>Render\Primitives</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Engine\Cube.cpp">
       <Filter>Render\Primitives\Cube</Filter>
     </ClCompile>
@@ -273,77 +240,8 @@
     <ClCompile Include="..\..\src\Engine\SFML_Window.cpp">
       <Filter>Window\SFML</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Engine\FBO.cpp">
-      <Filter>Render\Target</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Engine\FrameStatistics.cpp">
       <Filter>Render\Target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Target.cpp">
-      <Filter>Render\Target</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Program.cpp">
-      <Filter>Render\Shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\ProgramManager.cpp">
-      <Filter>Render\Shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\GLSL_Program.cpp">
-      <Filter>Render\Shaders\GLSL</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\GLSL_Shader.cpp">
-      <Filter>Render\Shaders\GLSL</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Texture.cpp">
-      <Filter>Render\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\TextureManager.cpp">
-      <Filter>Render\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\render\View.cpp">
-      <Filter>Render\View</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Component.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Scene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Camera.cpp">
-      <Filter>Scene\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Transform.cpp">
-      <Filter>Scene\Transform</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Group.cpp">
-      <Filter>Scene\Group</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Geometry.cpp">
-      <Filter>Scene\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Grid.cpp">
-      <Filter>Scene\Grid</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Listener.cpp">
-      <Filter>Scene\Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Light.cpp">
-      <Filter>Scene\Light</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Skydome.cpp">
-      <Filter>Scene\Sky</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Billboard.cpp">
-      <Filter>Scene\Billboard</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Model.cpp">
-      <Filter>Scene\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Water.cpp">
-      <Filter>Scene\Water</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Projector.cpp">
-      <Filter>Scene\Projector</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\Engine.cpp">
       <Filter>Engine</Filter>
@@ -357,38 +255,11 @@
     <ClCompile Include="..\..\src\Engine\Label.cpp">
       <Filter>GUI\Label</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Overlay.cpp">
-      <Filter>GUI\Overlay</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Engine\Console.cpp">
       <Filter>GUI\Console</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Engine\InputManager.cpp">
-      <Filter>Input</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Engine\SFML_InputManager.cpp">
       <Filter>Input\SFML</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\InputDevice.cpp">
-      <Filter>Input\Devices</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Joystick.cpp">
-      <Filter>Input\Devices\Joystick</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Mouse.cpp">
-      <Filter>Input\Devices\Mouse</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Keyboard.cpp">
-      <Filter>Input\Devices\Keyboard</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\InputMap.cpp">
-      <Filter>Input\Map</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\AudioBuffer.cpp">
-      <Filter>Audio\Buffer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\AudioDevice.cpp">
-      <Filter>Audio\Device</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\ScriptManager.cpp">
       <Filter>Scripting</Filter>
@@ -398,39 +269,6 @@
     </ClCompile>
     <ClCompile Include="..\..\interface\vapor_wrap.cxx">
       <Filter>Scripting\Bindings</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Cell.cpp">
-      <Filter>Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Terrain.cpp">
-      <Filter>Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\physics\Convert.cpp">
-      <Filter>Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\physics\Physics.cpp">
-      <Filter>Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\physics\Shape.cpp">
-      <Filter>Physics\Shapes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\physics\BoxShape.cpp">
-      <Filter>Physics\Shapes\Box</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\physics\CapsuleShape.cpp">
-      <Filter>Physics\Shapes\Capsule</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\physics\MeshShape.cpp">
-      <Filter>Physics\Shapes\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\physics\Body.cpp">
-      <Filter>Physics\Dynamics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\physics\DebugDraw.cpp">
-      <Filter>Physics\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\physics\btKinematicController.cpp">
-      <Filter>Physics\Controller</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\Page.cpp">
       <Filter>Paging</Filter>
@@ -447,35 +285,191 @@
     <ClCompile Include="..\..\src\Engine\controllers\ThirdPersonController.cpp">
       <Filter>Scene\Camera\Controllers\Third Person</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Engine\physics\CharacterController.cpp">
-      <Filter>Physics\Character</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Engine\controllers\ScriptController.cpp">
       <Filter>Scene\Script</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Entity.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\AudioContext.cpp">
-      <Filter>Audio\Context</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\AudioSource.cpp">
-      <Filter>Audio\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Source.cpp">
-      <Filter>Scene\Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Particles.cpp">
-      <Filter>Scene\Particles</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\MeshBuilder.cpp">
-      <Filter>Scene\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Material.cpp">
-      <Filter>Render\Material</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Engine\controllers\CameraController.cpp">
       <Filter>Scene\Camera\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Audio\AudioBuffer.cpp">
+      <Filter>Audio\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Audio\AudioContext.cpp">
+      <Filter>Audio\Context</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Audio\AudioDevice.cpp">
+      <Filter>Audio\Device</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Audio\AudioSource.cpp">
+      <Filter>Audio\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Input\InputMap.cpp">
+      <Filter>Input\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Input\InputDevice.cpp">
+      <Filter>Input\Devices</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Input\Joystick.cpp">
+      <Filter>Input\Devices\Joystick</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Input\Keyboard.cpp">
+      <Filter>Input\Devices\Keyboard</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Input\Mouse.cpp">
+      <Filter>Input\Devices\Mouse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Input\InputManager.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Physics\Physics.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Physics\Convert.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Physics\CharacterController.cpp">
+      <Filter>Physics\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Physics\btKinematicController.cpp">
+      <Filter>Physics\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Physics\DebugDraw.cpp">
+      <Filter>Physics\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Physics\Body.cpp">
+      <Filter>Physics\Dynamics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Physics\Shape.cpp">
+      <Filter>Physics\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Physics\BoxShape.cpp">
+      <Filter>Physics\Shapes\Box</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Physics\CapsuleShape.cpp">
+      <Filter>Physics\Shapes\Capsule</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Physics\MeshShape.cpp">
+      <Filter>Physics\Shapes\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Render\RenderDevice.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Render\RenderQueue.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Render\GL.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Render\Adapter.cpp">
+      <Filter>Render\Adapter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Render\RenderBuffer.cpp">
+      <Filter>Render\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Render\VertexBuffer.cpp">
+      <Filter>Render\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Render\IndexBuffer.cpp">
+      <Filter>Render\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Render\Buffer.cpp">
+      <Filter>Render\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Render\Material.cpp">
+      <Filter>Render\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Render\Renderable.cpp">
+      <Filter>Render\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Render\GLSL_Program.cpp">
+      <Filter>Render\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Render\Program.cpp">
+      <Filter>Render\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Render\ProgramManager.cpp">
+      <Filter>Render\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Render\GLSL_Shader.cpp">
+      <Filter>Render\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Render\Target.cpp">
+      <Filter>Render\Target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Render\FBO.cpp">
+      <Filter>Render\Target</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Render\TextureManager.cpp">
+      <Filter>Render\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Render\Texture.cpp">
+      <Filter>Render\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Render\View.cpp">
+      <Filter>Render\View</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Scene\Terrain.cpp">
+      <Filter>Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Scene\Cell.cpp">
+      <Filter>Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Scene\Entity.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Scene\Component.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Scene\Scene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Scene\Source.cpp">
+      <Filter>Scene\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Scene\Listener.cpp">
+      <Filter>Scene\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Scene\Billboard.cpp">
+      <Filter>Scene\Billboard</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Scene\Camera.cpp">
+      <Filter>Scene\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Scene\Water.cpp">
+      <Filter>Scene\Water</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Scene\Transform.cpp">
+      <Filter>Scene\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Scene\Skydome.cpp">
+      <Filter>Scene\Sky</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Scene\Projector.cpp">
+      <Filter>Scene\Projector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Scene\Particles.cpp">
+      <Filter>Scene\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Scene\Model.cpp">
+      <Filter>Scene\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Scene\MeshBuilder.cpp">
+      <Filter>Scene\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Scene\Grid.cpp">
+      <Filter>Scene\Grid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Scene\Group.cpp">
+      <Filter>Scene\Group</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Scene\Light.cpp">
+      <Filter>Scene\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Scene\Geometry.cpp">
+      <Filter>Scene\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Scene\Overlay.cpp">
+      <Filter>GUI\Overlay</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -498,9 +492,6 @@
       <Filter>Render\Buffers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\render\IndexBuffer.h">
-      <Filter>Render\Buffers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\PixelBuffer.h">
       <Filter>Render\Buffers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\render\RenderBuffer.h">
@@ -547,12 +538,6 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\render\ProgramManager.h">
       <Filter>Render\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\GLSL_Program.h">
-      <Filter>Render\Shaders\GLSL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\GLSL_Shader.h">
-      <Filter>Render\Shaders\GLSL</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\render\Texture.h">
       <Filter>Render\Texture</Filter>
@@ -751,14 +736,14 @@
     <ClInclude Include="..\..\inc\vapor\scene\Particles.h">
       <Filter>Scene\Particles</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Engine\MeshBuilder.h">
-      <Filter>Scene\Model</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\vapor\render\Material.h">
       <Filter>Render\Material</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\controllers\CameraController.h">
       <Filter>Scene\Camera\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Scene\MeshBuilder.h">
+      <Filter>Scene\Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

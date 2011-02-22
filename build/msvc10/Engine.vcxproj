@@ -134,29 +134,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\Engine\AudioContext.cpp" />
-    <ClCompile Include="..\..\src\Engine\AudioSource.cpp" />
-    <ClCompile Include="..\..\src\Engine\Entity.cpp" />
-    <ClCompile Include="..\..\src\Engine\Material.cpp" />
-    <ClCompile Include="..\..\src\Engine\MeshBuilder.cpp" />
-    <ClCompile Include="..\..\src\Engine\Particles.cpp" />
+    <ClCompile Include="..\..\src\Audio\AudioBuffer.cpp" />
+    <ClCompile Include="..\..\src\Audio\AudioContext.cpp" />
+    <ClCompile Include="..\..\src\Audio\AudioDevice.cpp" />
+    <ClCompile Include="..\..\src\Audio\AudioSource.cpp" />
     <ClCompile Include="..\..\src\Engine\PCH.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DLL Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\..\src\Engine\GL.cpp" />
-    <ClCompile Include="..\..\src\Engine\RenderDevice.cpp" />
-    <ClCompile Include="..\..\src\Engine\RenderQueue.cpp" />
-    <ClCompile Include="..\..\src\Engine\Adapter.cpp" />
-    <ClCompile Include="..\..\src\Engine\Buffer.cpp" />
-    <ClCompile Include="..\..\src\Engine\IndexBuffer.cpp" />
-    <ClCompile Include="..\..\src\Engine\RenderBuffer.cpp" />
-    <ClCompile Include="..\..\src\Engine\Source.cpp" />
-    <ClCompile Include="..\..\src\Engine\VertexBuffer.cpp">
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4503;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Renderable.cpp" />
     <ClCompile Include="..\..\src\Engine\Cube.cpp" />
     <ClCompile Include="..\..\src\Engine\Sphere.cpp" />
     <ClCompile Include="..\..\src\Engine\Quad.cpp" />
@@ -164,74 +150,21 @@
     <ClCompile Include="..\..\src\Engine\Window.cpp" />
     <ClCompile Include="..\..\src\Engine\Win32_Window.cpp" />
     <ClCompile Include="..\..\src\Engine\SFML_Window.cpp" />
-    <ClCompile Include="..\..\src\Engine\FBO.cpp" />
     <ClCompile Include="..\..\src\Engine\FrameStatistics.cpp" />
-    <ClCompile Include="..\..\src\Engine\Target.cpp" />
-    <ClCompile Include="..\..\src\Engine\Program.cpp" />
-    <ClCompile Include="..\..\src\Engine\ProgramManager.cpp" />
-    <ClCompile Include="..\..\src\Engine\GLSL_Program.cpp" />
-    <ClCompile Include="..\..\src\Engine\GLSL_Shader.cpp" />
-    <ClCompile Include="..\..\src\Engine\Texture.cpp" />
-    <ClCompile Include="..\..\src\Engine\TextureManager.cpp" />
-    <ClCompile Include="..\..\src\Engine\render\View.cpp" />
-    <ClCompile Include="..\..\src\Engine\Component.cpp" />
-    <ClCompile Include="..\..\src\Engine\Scene.cpp" />
-    <ClCompile Include="..\..\src\Engine\Camera.cpp">
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4715;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Transform.cpp" />
-    <ClCompile Include="..\..\src\Engine\Group.cpp" />
-    <ClCompile Include="..\..\src\Engine\Geometry.cpp" />
-    <ClCompile Include="..\..\src\Engine\Grid.cpp" />
-    <ClCompile Include="..\..\src\Engine\Listener.cpp" />
-    <ClCompile Include="..\..\src\Engine\Light.cpp" />
-    <ClCompile Include="..\..\src\Engine\Skydome.cpp" />
-    <ClCompile Include="..\..\src\Engine\Billboard.cpp" />
-    <ClCompile Include="..\..\src\Engine\Model.cpp" />
-    <ClCompile Include="..\..\src\Engine\Water.cpp" />
-    <ClCompile Include="..\..\src\Engine\Projector.cpp" />
     <ClCompile Include="..\..\src\Engine\Engine.cpp">
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <ClCompile Include="..\..\src\Framework\Framework.cpp" />
     <ClCompile Include="..\..\src\Engine\Atlas.cpp" />
     <ClCompile Include="..\..\src\Engine\Label.cpp" />
-    <ClCompile Include="..\..\src\Engine\Overlay.cpp" />
     <ClCompile Include="..\..\src\Engine\Console.cpp" />
-    <ClCompile Include="..\..\src\Engine\InputManager.cpp" />
     <ClCompile Include="..\..\src\Engine\SFML_InputManager.cpp" />
-    <ClCompile Include="..\..\src\Engine\InputDevice.cpp">
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4715;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Joystick.cpp" />
-    <ClCompile Include="..\..\src\Engine\Mouse.cpp" />
-    <ClCompile Include="..\..\src\Engine\Keyboard.cpp" />
-    <ClCompile Include="..\..\src\Engine\InputMap.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\AudioBuffer.cpp" />
-    <ClCompile Include="..\..\src\Engine\AudioDevice.cpp" />
     <ClCompile Include="..\..\src\Engine\ScriptManager.cpp" />
     <ClCompile Include="..\..\src\Engine\State.cpp" />
     <ClCompile Include="..\..\interface\vapor_wrap.cxx">
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='DLL Debug|Win32'">4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4996; 4127;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Cell.cpp" />
-    <ClCompile Include="..\..\src\Engine\Terrain.cpp" />
-    <ClCompile Include="..\..\src\Engine\physics\Convert.cpp" />
-    <ClCompile Include="..\..\src\Engine\physics\Physics.cpp">
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4127;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\physics\Shape.cpp" />
-    <ClCompile Include="..\..\src\Engine\physics\BoxShape.cpp" />
-    <ClCompile Include="..\..\src\Engine\physics\CapsuleShape.cpp" />
-    <ClCompile Include="..\..\src\Engine\physics\MeshShape.cpp">
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4127;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\physics\Body.cpp" />
-    <ClCompile Include="..\..\src\Engine\physics\DebugDraw.cpp" />
-    <ClCompile Include="..\..\src\Engine\physics\btKinematicController.cpp" />
     <ClCompile Include="..\..\src\Engine\Page.cpp" />
     <ClCompile Include="..\..\src\Engine\PageManager.cpp" />
     <ClCompile Include="..\..\src\Engine\controllers\Controller.cpp">
@@ -240,11 +173,66 @@
     <ClCompile Include="..\..\src\Engine\controllers\CameraController.cpp" />
     <ClCompile Include="..\..\src\Engine\controllers\FirstPersonController.cpp" />
     <ClCompile Include="..\..\src\Engine\controllers\ThirdPersonController.cpp" />
-    <ClCompile Include="..\..\src\Engine\physics\CharacterController.cpp" />
     <ClCompile Include="..\..\src\Engine\controllers\ScriptController.cpp">
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='DLL Debug|Win32'">4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
+    <ClCompile Include="..\..\src\Input\InputDevice.cpp" />
+    <ClCompile Include="..\..\src\Input\InputManager.cpp" />
+    <ClCompile Include="..\..\src\Input\InputMap.cpp" />
+    <ClCompile Include="..\..\src\Input\Joystick.cpp" />
+    <ClCompile Include="..\..\src\Input\Keyboard.cpp" />
+    <ClCompile Include="..\..\src\Input\Mouse.cpp" />
+    <ClCompile Include="..\..\src\Physics\Body.cpp" />
+    <ClCompile Include="..\..\src\Physics\BoxShape.cpp" />
+    <ClCompile Include="..\..\src\Physics\btKinematicController.cpp" />
+    <ClCompile Include="..\..\src\Physics\CapsuleShape.cpp" />
+    <ClCompile Include="..\..\src\Physics\CharacterController.cpp" />
+    <ClCompile Include="..\..\src\Physics\Convert.cpp" />
+    <ClCompile Include="..\..\src\Physics\DebugDraw.cpp" />
+    <ClCompile Include="..\..\src\Physics\MeshShape.cpp" />
+    <ClCompile Include="..\..\src\Physics\Physics.cpp" />
+    <ClCompile Include="..\..\src\Physics\Shape.cpp" />
+    <ClCompile Include="..\..\src\Render\Adapter.cpp" />
+    <ClCompile Include="..\..\src\Render\Buffer.cpp" />
+    <ClCompile Include="..\..\src\Render\FBO.cpp" />
+    <ClCompile Include="..\..\src\Render\GL.cpp" />
+    <ClCompile Include="..\..\src\Render\GLSL_Program.cpp" />
+    <ClCompile Include="..\..\src\Render\GLSL_Shader.cpp" />
+    <ClCompile Include="..\..\src\Render\IndexBuffer.cpp" />
+    <ClCompile Include="..\..\src\Render\Material.cpp" />
+    <ClCompile Include="..\..\src\Render\Program.cpp" />
+    <ClCompile Include="..\..\src\Render\ProgramManager.cpp" />
+    <ClCompile Include="..\..\src\Render\Renderable.cpp" />
+    <ClCompile Include="..\..\src\Render\RenderBuffer.cpp" />
+    <ClCompile Include="..\..\src\Render\RenderDevice.cpp" />
+    <ClCompile Include="..\..\src\Render\RenderQueue.cpp" />
+    <ClCompile Include="..\..\src\Render\Target.cpp" />
+    <ClCompile Include="..\..\src\Render\Texture.cpp" />
+    <ClCompile Include="..\..\src\Render\TextureManager.cpp" />
+    <ClCompile Include="..\..\src\Render\VertexBuffer.cpp" />
+    <ClCompile Include="..\..\src\Render\View.cpp" />
+    <ClCompile Include="..\..\src\Scene\Billboard.cpp" />
+    <ClCompile Include="..\..\src\Scene\Camera.cpp" />
+    <ClCompile Include="..\..\src\Scene\Cell.cpp" />
+    <ClCompile Include="..\..\src\Scene\Component.cpp" />
+    <ClCompile Include="..\..\src\Scene\Entity.cpp" />
+    <ClCompile Include="..\..\src\Scene\Geometry.cpp" />
+    <ClCompile Include="..\..\src\Scene\Grid.cpp" />
+    <ClCompile Include="..\..\src\Scene\Group.cpp" />
+    <ClCompile Include="..\..\src\Scene\Light.cpp" />
+    <ClCompile Include="..\..\src\Scene\Listener.cpp" />
+    <ClCompile Include="..\..\src\Scene\MeshBuilder.cpp" />
+    <ClCompile Include="..\..\src\Scene\Model.cpp" />
+    <ClCompile Include="..\..\src\Scene\Overlay.cpp" />
+    <ClCompile Include="..\..\src\Scene\Particles.cpp" />
+    <ClCompile Include="..\..\src\Scene\Projector.cpp" />
+    <ClCompile Include="..\..\src\Scene\Scene.cpp" />
+    <ClCompile Include="..\..\src\Scene\Skydome.cpp" />
+    <ClCompile Include="..\..\src\Scene\Source.cpp" />
+    <ClCompile Include="..\..\src\Scene\Terrain.cpp" />
+    <ClCompile Include="..\..\src\Scene\Transform.cpp" />
+    <ClCompile Include="..\..\src\Scene\Water.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\vapor\PCH.h" />
@@ -255,7 +243,6 @@
     <ClInclude Include="..\..\inc\vapor\render\Adapter.h" />
     <ClInclude Include="..\..\inc\vapor\render\Buffer.h" />
     <ClInclude Include="..\..\inc\vapor\render\IndexBuffer.h" />
-    <ClInclude Include="..\..\inc\vapor\render\PixelBuffer.h" />
     <ClInclude Include="..\..\inc\vapor\render\RenderBuffer.h" />
     <ClInclude Include="..\..\inc\vapor\render\VertexBuffer.h" />
     <ClInclude Include="..\..\inc\vapor\render\Renderable.h" />
@@ -271,8 +258,6 @@
     <ClInclude Include="..\..\inc\vapor\render\Target.h" />
     <ClInclude Include="..\..\inc\vapor\render\Program.h" />
     <ClInclude Include="..\..\inc\vapor\render\ProgramManager.h" />
-    <ClInclude Include="..\..\inc\vapor\render\GLSL_Program.h" />
-    <ClInclude Include="..\..\inc\vapor\render\GLSL_Shader.h" />
     <ClInclude Include="..\..\inc\vapor\render\Texture.h" />
     <ClInclude Include="..\..\inc\vapor\render\TextureManager.h" />
     <ClInclude Include="..\..\inc\vapor\render\View.h" />
@@ -328,10 +313,10 @@
     <ClInclude Include="..\..\inc\vapor\physics\CapsuleShape.h" />
     <ClInclude Include="..\..\inc\vapor\physics\MeshShape.h" />
     <ClInclude Include="..\..\inc\vapor\physics\Body.h" />
-    <ClInclude Include="..\..\src\Engine\MeshBuilder.h" />
     <ClInclude Include="..\..\src\Engine\physics\MotionState.h" />
     <ClInclude Include="..\..\inc\vapor\physics\DebugDraw.h" />
     <ClInclude Include="..\..\inc\vapor\physics\btKinematicController.h" />
+    <ClInclude Include="..\..\src\Scene\MeshBuilder.h" />
     <CustomBuildStep Include="..\..\inc\vapor\resources\PNG_Loader.h" />
     <ClInclude Include="..\..\inc\vapor\paging\Page.h" />
     <ClInclude Include="..\..\inc\vapor\paging\PageManager.h" />
