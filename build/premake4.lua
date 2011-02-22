@@ -1,5 +1,6 @@
--- vapor Build Settings (Premake)
--- Written by triton (2008-2010)
+-- vapor3D Build Script
+
+local action = _ACTION or ""
 
 solution "vapor"
 
@@ -8,7 +9,13 @@ solution "vapor"
 		"Release" 
 	}
 	
-	buildoptions { "-std=c++0x" }
+	configuration "not macosx"
+	
+		buildoptions "-std=c++0x"
+	
+	configuration "gcc"
+	
+		buildoptions "-Wno-invalid-offsetof"
 
 	configuration "Debug"
 	
@@ -20,67 +27,116 @@ solution "vapor"
 		defines { "NDEBUG" }
 		flags { "Optimize" }
 
-	location ( _ACTION )
-	objdir 	( _ACTION .. "/obj" )
+	location (action)
+	objdir (action .. "/obj")
+	targetdir (action .. "/lib")
+	
+	language "C++"
 	
 	project "Core"
 	
 		kind "StaticLib"
-		language "C++"	
-	
-		-- Source files
+		location (action)
+		objdir (action .. "/obj")
+		targetdir (action .. "/lib")
+		
 		files {
-			"../inc/vapor/*.h",
-			"../src/core/**.h",
-			"../src/core/**.cpp",
+			"../src/Core/**.h",
+			"../src/Core/**.cpp",
 		}
 
-		-- Include directories
 		includedirs {
-			"../inc",
+			"../src",
+			"../inc/vapor",
 			"../dep/jsoncpp/include",
-			"../dep/boost_1_39_0",
-			"../dep/fd_delegate/include",
+			"../dep/curl/include",
+			"../dep/zeromq/include",
+			"../dep/physfs/",
+		}
+		
+	project "Resources"
+	
+		kind "StaticLib"
+		location (action)
+		objdir (action .. "/obj")
+		targetdir (action .. "/lib")
+		
+		files {
+			"../src/Resources/**.h",
+			"../src/Resources/**.cpp",
 		}	
+	
+		includedirs {
+			"../src",
+			"../inc/vapor",
+			"../src/Resources/",
+			"../dep/stb/",
+			"../dep/ogg/include",
+			"../dep/vorbis/include",
+		}
 
 	project "Engine"
 	
 		kind "StaticLib"
-		language "C++"
+		location (action)
+		objdir (action .. "/obj")
+		targetdir (action .. "/lib")
 
-		location ( _ACTION )
-		targetdir ( _ACTION .. "/lib" )
-
-		-- Source files
 		files {
-			"../inc/Engine/**.h",
 			"../src/Engine/**.h",
 			"../src/Engine/**.cpp",
+			"../dep/glew/src/glew.c"
 		}
 
-		-- Include directories
 		includedirs {
-			"../inc",
-			"../dep/boost",
-			"../dep/jsoncpp/include",
-			"../dep/fd_delegate/include",
+			"../src",
+			"../inc/",
+			"../inc/vapor",
 			"../dep/freetype/include",
 			"../dep/glew/include",
-			"../dep/ogg/include",
-			"../dep/vorbis/include",
 			"../dep/lua/include",
 			"../dep/openal/include",
-			"../dep/physfs/include",
 			"../dep/sfml/include",
+			"../dep/bullet/include",
+			"../dep/sfml/",
 		}
 
-		-- include only the Visual Leak Detector on VS builds
-		configuration "vs*"
-		
-			includedirs {
-				"../dep/vld/include",
-			}
-
 		-- Pre-compiled headers
-		pchheader "vapor/PCH.h"
-		pchsource "../src/Engine/PCH.cpp"
+		--pchheader "vapor/PCH.h"
+		--pchsource "../src/Engine/PCH.cpp"
+
+	project "Example"
+	
+		kind "WindowedApp"
+		location (action)
+		objdir (action .. "/obj")
+		targetdir ("../bin")
+		
+		files {
+			"../src/Examples/**.h",
+			"../src/Examples/**.cpp",
+			"../src/Framework/**.cpp",
+		}
+
+		includedirs {
+			"../src",
+			"../inc/",
+			"../inc/vapor",
+			"../dep/freetype/include",
+			"../dep/glew/include",
+			"../dep/lua/include",
+			"../dep/openal/include",
+			"../dep/bullet/include"
+		}
+		
+		libdirs {
+			path.join(action, "lib"),
+			"../dep/physfs/",
+			"../dep/sfml/"
+		}
+		
+		links {
+			"Core", "Engine", "Resources",
+			"physfs", "sfml-window.framework",
+			"OpenAL.framework", "OpenGL.framework"
+		}

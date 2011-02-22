@@ -49,13 +49,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)bin\Editor\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)obj\Editor\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)..\..\bin\Editor\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)..\..\obj\Editor\$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)bin\editor\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)obj\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)..\..\bin\editor\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)..\..\obj\$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='DLL Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DLL Debug|Win32'">$(SolutionDir)..\..\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='DLL Debug|Win32'">$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='DLL Debug|Win32'">true</LinkIncremental>
   </PropertyGroup>
@@ -63,7 +63,7 @@
     <ClCompile>
       <AdditionalOptions>-Zm140 </AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)inc;$(SolutionDir)inc\vapor;$(SolutionDir)src;$(SolutionDir)src\Editor\inc;$(SolutionDir)dep\jsoncpp\include;$(SolutionDir)dep\lua\include;$(SolutionDir)dep\openal\include;$(SolutionDir)dep\glew\include;$(SolutionDir)dep\vld\include;$(SolutionDir)dep\zeromq\include;$(SolutionDir)dep\wx\include;$(SolutionDir)dep\wx\include\msvc;$(SolutionDir)dep\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\src;$(SolutionDir)..\..\src\Editor\inc;$(SolutionDir)..\..\dep\jsoncpp\include;$(SolutionDir)..\..\dep\lua\include;$(SolutionDir)..\..\dep\openal\include;$(SolutionDir)..\..\dep\glew\include;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\zeromq\include;$(SolutionDir)..\..\dep\wx\include;$(SolutionDir)..\..\dep\wx\include\msvc;$(SolutionDir)..\..\dep\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;__WXMSW__;_UNICODE;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -80,12 +80,12 @@
       <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)dep\wx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\dep\wx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>Core.lib;Resources.lib;Engine.lib;Pipeline.lib;nvtt_d.lib;opengl32.lib;glewd.lib;jsoncppd.lib;pngd.lib;zlibd.lib;luad.lib;devild.lib;physfsd.lib;bulletd.lib;ws2_32.lib;wxmsw29ud_core.lib;wxbase29ud.lib;ogg_static_d.lib;vorbis_static_d.lib;vorbisfile_static_d.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)-$(Configuration).exe</OutputFile>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\$(Configuration);$(SolutionDir)dep\vld\lib\vc10;$(SolutionDir)dep\jsoncpp\lib\vc10;$(SolutionDir)dep\physfs\lib\vc10;$(SolutionDir)dep\bullet\lib\vc10;$(SolutionDir)dep\zlib\lib\vc10;$(SolutionDir)dep\glew\lib\vc10;$(SolutionDir)dep\ogg\lib\;$(SolutionDir)dep\vorbis\lib\;$(SolutionDir)dep\openal\lib\Win32;$(SolutionDir)dep\sfml\lib\vc10;$(SolutionDir)dep\lua\lib\vc10;$(SolutionDir)dep\zeromq\lib\vc10;$(SolutionDir)dep\wx\lib\vc_lib\vc10;$(SolutionDir)dep\png\lib\vc10;$(SolutionDir)dep\devil\lib\vc10;$(SolutionDir)dep\curl\lib\vc10;$(SolutionDir)dep\nvtt\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration);$(SolutionDir)..\..\dep\vld\lib\vc10;$(SolutionDir)..\..\dep\jsoncpp\lib\vc10;$(SolutionDir)..\..\dep\physfs\lib\vc10;$(SolutionDir)..\..\dep\bullet\lib\vc10;$(SolutionDir)..\..\dep\zlib\lib\vc10;$(SolutionDir)..\..\dep\glew\lib\vc10;$(SolutionDir)..\..\dep\ogg\lib\;$(SolutionDir)..\..\dep\vorbis\lib\;$(SolutionDir)..\..\dep\openal\lib\Win32;$(SolutionDir)..\..\dep\sfml\lib\vc10;$(SolutionDir)..\..\dep\lua\lib\vc10;$(SolutionDir)..\..\dep\zeromq\lib\vc10;$(SolutionDir)..\..\dep\wx\lib\vc_lib\vc10;$(SolutionDir)..\..\dep\png\lib\vc10;$(SolutionDir)..\..\dep\devil\lib\vc10;$(SolutionDir)..\..\dep\curl\lib\vc10;$(SolutionDir)..\..\dep\nvtt\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>wxpngd.lib;libcmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -105,7 +105,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)inc;$(SolutionDir)inc\vapor;$(SolutionDir)src\Editor\inc;$(SolutionDir)dep\jsoncpp\include;$(SolutionDir)dep\lua\include;$(SolutionDir)dep\openal\include;$(SolutionDir)dep\glew\include;$(SolutionDir)dep\vld\include;$(SolutionDir)dep\zeromq\include;$(SolutionDir)dep\wx\include;$(SolutionDir)dep\wx\include\msvc;$(SolutionDir)dep\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\src\Editor\inc;$(SolutionDir)..\..\dep\jsoncpp\include;$(SolutionDir)..\..\dep\lua\include;$(SolutionDir)..\..\dep\openal\include;$(SolutionDir)..\..\dep\glew\include;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\zeromq\include;$(SolutionDir)..\..\dep\wx\include;$(SolutionDir)..\..\dep\wx\include\msvc;$(SolutionDir)..\..\dep\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;__WXDEBUG__;__WXMSW__;_UNICODE;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -118,12 +118,12 @@
       <AdditionalOptions>-Zm140 </AdditionalOptions>
     </ClCompile>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)dep\wx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\dep\wx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>Core.lib;Engine.lib;opengl32.lib;glewd.lib;jsoncppd.lib;pngd.lib;zlibd.lib;luad.lib;devild.lib;physfsd.lib;bulletd.lib;zmqd.lib;ws2_32.lib;wxmsw29ud_core.lib;wxbase29ud.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)-$(Configuration).exe</OutputFile>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\$(Configuration);$(SolutionDir)dep\vld\lib\vc10;$(SolutionDir)dep\jsoncpp\lib\vc10;$(SolutionDir)dep\physfs\lib\vc10;$(SolutionDir)dep\bullet\lib\vc10;$(SolutionDir)dep\zlib\lib\vc10;$(SolutionDir)dep\glew\lib\vc10;$(SolutionDir)dep\vorbis\lib\vc10;$(SolutionDir)dep\ogg\lib\vc10;$(SolutionDir)dep\openal\lib\vc10;$(SolutionDir)dep\sfml\lib\vc10;$(SolutionDir)dep\lua\lib\vc10;$(SolutionDir)dep\zeromq\lib\vc10;$(SolutionDir)dep\wx\lib\vc_lib\vc10;$(SolutionDir)dep\png\lib\vc10;$(SolutionDir)dep\devil\lib\vc10;$(SolutionDir)dep\curl\lib\vc10;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration);$(SolutionDir)..\..\dep\vld\lib\vc10;$(SolutionDir)..\..\dep\jsoncpp\lib\vc10;$(SolutionDir)..\..\dep\physfs\lib\vc10;$(SolutionDir)..\..\dep\bullet\lib\vc10;$(SolutionDir)..\..\dep\zlib\lib\vc10;$(SolutionDir)..\..\dep\glew\lib\vc10;$(SolutionDir)..\..\dep\vorbis\lib\vc10;$(SolutionDir)..\..\dep\ogg\lib\vc10;$(SolutionDir)..\..\dep\openal\lib\vc10;$(SolutionDir)..\..\dep\sfml\lib\vc10;$(SolutionDir)..\..\dep\lua\lib\vc10;$(SolutionDir)..\..\dep\zeromq\lib\vc10;$(SolutionDir)..\..\dep\wx\lib\vc_lib\vc10;$(SolutionDir)..\..\dep\png\lib\vc10;$(SolutionDir)..\..\dep\devil\lib\vc10;$(SolutionDir)..\..\dep\curl\lib\vc10;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>wxpng.lib;libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -139,7 +139,7 @@
     <ClCompile>
       <AdditionalOptions>-Zm140 </AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)inc;$(SolutionDir)inc\vapor;$(SolutionDir)src\Editor\inc;$(SolutionDir)dep\jsoncpp\include;$(SolutionDir)dep\lua\include;$(SolutionDir)dep\openal\include;$(SolutionDir)dep\glew\include;$(SolutionDir)dep\vld\include;$(SolutionDir)dep\zeromq\include;$(SolutionDir)dep\wx\include;$(SolutionDir)dep\wx\include\msvc;$(SolutionDir)dep\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\src\Editor\inc;$(SolutionDir)..\..\dep\jsoncpp\include;$(SolutionDir)..\..\dep\lua\include;$(SolutionDir)..\..\dep\openal\include;$(SolutionDir)..\..\dep\glew\include;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\zeromq\include;$(SolutionDir)..\..\dep\wx\include;$(SolutionDir)..\..\dep\wx\include\msvc;$(SolutionDir)..\..\dep\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;__WXDEBUG__;__WXMSW__;_UNICODE;_WINDOWS;VAPOR_API_DLL;VAPOR_IMPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <ExceptionHandling>false</ExceptionHandling>
@@ -154,12 +154,12 @@
       <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)dep\wx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\dep\wx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>Core.lib;Engine.lib;opengl32.lib;glewd.lib;jsoncppd.lib;pngd.lib;zlibd.lib;luad.lib;devild.lib;physfsd.lib;bulletd.lib;zmqd.lib;ws2_32.lib;wxmsw29ud_core.lib;wxbase29ud.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)-$(Configuration).exe</OutputFile>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\$(Configuration);$(SolutionDir)dep\vld\lib\vc10;$(SolutionDir)dep\jsoncpp\lib\vc10;$(SolutionDir)dep\physfs\lib\vc10;$(SolutionDir)dep\bullet\lib\vc10;$(SolutionDir)dep\zlib\lib\vc10;$(SolutionDir)dep\glew\lib\vc10;$(SolutionDir)dep\vorbis\lib\vc10;$(SolutionDir)dep\ogg\lib\vc10;$(SolutionDir)dep\openal\lib\vc10;$(SolutionDir)dep\sfml\lib\vc10;$(SolutionDir)dep\lua\lib\vc10;$(SolutionDir)dep\zeromq\lib\vc10;$(SolutionDir)dep\wx\lib\vc_lib\vc10;$(SolutionDir)dep\png\lib\vc10;$(SolutionDir)dep\devil\lib\vc10;$(SolutionDir)dep\curl\lib\vc10;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration);$(SolutionDir)..\..\dep\vld\lib\vc10;$(SolutionDir)..\..\dep\jsoncpp\lib\vc10;$(SolutionDir)..\..\dep\physfs\lib\vc10;$(SolutionDir)..\..\dep\bullet\lib\vc10;$(SolutionDir)..\..\dep\zlib\lib\vc10;$(SolutionDir)..\..\dep\glew\lib\vc10;$(SolutionDir)..\..\dep\vorbis\lib\vc10;$(SolutionDir)..\..\dep\ogg\lib\vc10;$(SolutionDir)..\..\dep\openal\lib\vc10;$(SolutionDir)..\..\dep\sfml\lib\vc10;$(SolutionDir)..\..\dep\lua\lib\vc10;$(SolutionDir)..\..\dep\zeromq\lib\vc10;$(SolutionDir)..\..\dep\wx\lib\vc_lib\vc10;$(SolutionDir)..\..\dep\png\lib\vc10;$(SolutionDir)..\..\dep\devil\lib\vc10;$(SolutionDir)..\..\dep\curl\lib\vc10;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
