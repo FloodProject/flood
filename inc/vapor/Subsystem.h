@@ -25,7 +25,7 @@ class CORE_API Subsystem
 public:
 
 	virtual ~Subsystem() { }
-	virtual void update( double delta ) { }
+	virtual void update( float delta ) { }
 
 protected:
 

@@ -27,6 +27,7 @@ END_CLASS()
 //-----------------------------------//
 
 Font_Loader::Font_Loader()
+	: font(nullptr)
 {
 	extensions.push_back("font");
 }

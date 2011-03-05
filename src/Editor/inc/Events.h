@@ -12,6 +12,7 @@
 #include "Input/InputManager.h"
 #include "Input/Mouse.h" 
 #include "Input/Keyboard.h"
+#include "Document.h"
 
 FWD_DECL_SHARED(Entity)
 FWD_DECL_SHARED(Component)
@@ -38,28 +39,24 @@ public:
 	Events( EditorFrame* editor );
 	virtual ~Events();
 
-	// Add a plugin as an event listener.
+	// Add/remove a plugin as an event listener.
 	void addEventListener( Plugin* plugin );
-
-	// Remove a plugin as an event listener.
 	void removeEventListener( Plugin* plugin );
-	
+
+	// Document selection event.
+	void onDocumentSelect( Document& document );
+	void onDocumentUnselect( Document& document );
+
 	// Entity selection event.
 	void onEntitySelect( const EntityPtr& );
-
-	// Entity unselection event.
 	void onEntityUnselect( const EntityPtr& );
 
 	// Component selection event.
 	void onComponentSelect( const ComponentPtr& );
-
-	// Component unselection event.
 	void onComponentUnselect( const ComponentPtr& );
 
 	// Resource selection event.
 	void onResourceSelect( const ResourcePtr& );
-
-	// Resource unselection event.
 	void onResourceUnselect( const ResourcePtr& );
 
 	// Mouse input events.
@@ -75,9 +72,8 @@ public:
 	void onKeyRelease( const KeyEvent& );
 
 	// Scene load event.
-	void onSceneLoad( const ScenePtr& scebe );
-
-	// Scene update event.
+	void onSceneLoad( const ScenePtr& scene );
+	void onSceneUnload( const ScenePtr& scene );
 	void onSceneUpdate();
 
 	// Gets the current tool.

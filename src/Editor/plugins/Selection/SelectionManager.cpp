@@ -19,13 +19,10 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-SelectionManager::SelectionManager( EditorFrame* editor )
+SelectionManager::SelectionManager()
 	: mode(SelectionMode::Entity)
 	, selection(nullptr)
-{
-	events = editor->getEventManager();
-	undoManager = editor->getUndoManager();
-}
+{ }
 
 //-----------------------------------//
 
@@ -69,7 +66,6 @@ SelectionOperation* SelectionManager::createOperation()
 	SelectionOperation* selection = new SelectionOperation();
 	
 	selection->mode = mode;
-	selection->events = events;
 	selection->selectionManager = this;
 
 	return selection;
@@ -150,6 +146,8 @@ void SelectionOperation::selectAll()
 		const EntityPtr& entity = data.entity;
 
 		setBoundingBoxVisible(entity, true);
+
+		Events* events = GetEditor().getEventManager();
 		events->onEntitySelect(entity);
 	}
 }
@@ -164,6 +162,8 @@ void SelectionOperation::unselectAll()
 		const EntityPtr& entity = data.entity;
 
 		setBoundingBoxVisible(entity, false);
+
+		Events* events = GetEditor().getEventManager();
 		events->onEntityUnselect(entity);
 	}
 }
@@ -178,6 +178,8 @@ void SelectionOperation::selectPrevious()
 		const EntityPtr& entity = data.entity;
 
 		setBoundingBoxVisible(entity, true);
+
+		Events* events = GetEditor().getEventManager();
 		events->onEntitySelect(entity);
 	}
 }
@@ -192,6 +194,8 @@ void SelectionOperation::unselectPrevious()
 		const EntityPtr& entity = data.entity;
 
 		setBoundingBoxVisible(entity, false);
+
+		Events* events = GetEditor().getEventManager();
 		events->onEntityUnselect(entity);
 	}
 }

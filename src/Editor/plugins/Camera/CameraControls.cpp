@@ -14,6 +14,8 @@
 #include "Editor.h"
 #include "Render/View.h"
 
+#ifdef ALL_PLUGINS
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//
@@ -56,7 +58,7 @@ TransformPtr CameraControls::getCameraTransform() const
 
 void CameraControls::onCameraSpeedSpin( wxSpinDoubleEvent& event )
 {
-	double value = event.GetValue();
+	float value = event.GetValue();
 
 	RenderView* view = viewframe->getView();
 	
@@ -85,7 +87,7 @@ void CameraControls::updateCameraSpeedSpin()
 	if( !controller )
 		return;
 
-	double cameraMoveSensivity = controller->getMoveSensivity();
+	float cameraMoveSensivity = controller->getMoveSensivity();
 	spinCameraSpeed->SetValue( cameraMoveSensivity );
 }
 
@@ -333,3 +335,5 @@ void CameraControls::buildControls()
 //-----------------------------------//
 
 } } // end namespaces
+
+#endif

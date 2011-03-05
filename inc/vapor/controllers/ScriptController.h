@@ -8,10 +8,9 @@
 
 #pragma once
 
-#include "controllers/Controller.h"
+#include "Controllers/Controller.h"
 
 FWD_DECL_INTRUSIVE(Script)
-
 struct swig_module_info;
 
 namespace vapor {
@@ -36,7 +35,7 @@ public:
 	~ScriptController();
 
 	// Updates the script.
-	virtual void _update( double delta );
+	virtual void _update( float delta );
 
 protected:
 

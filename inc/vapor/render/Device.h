@@ -188,6 +188,8 @@ protected:
 	// Render window
 	Window* window;
 
+	bool initDone;
+
 	ShadowTextureMap shadowTextures;
 	RenderBuffer* shadowDepthBuffer;
 

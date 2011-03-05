@@ -12,9 +12,9 @@
 
 namespace vapor { namespace editor {
 
-class UndoManager;
-
 //-----------------------------------//
+
+class UndoManager;
 
 class UndoPlugin : public Plugin
 {
@@ -25,11 +25,11 @@ public:
 	// Gets metadata about this plugin.
 	virtual PluginMetadata getMetadata();
 
-	// Plugin enable callback.
+	// Plugin callbacks.
 	virtual void onPluginEnable();
-
-	// Plugin disable callback.
 	virtual void onPluginDisable();
+	virtual void onDocumentSelect( Document& document );
+	virtual void onDocumentUnselect( Document& document );
 
 protected:
 
@@ -39,22 +39,17 @@ protected:
 	// Handles undo events.
 	void onUndoEvent();
 
-	// Handles undo button click.
+	// Handles button clicks.
 	void onUndoButtonClick(wxCommandEvent& event);
-
-	// Handles redo button click.
 	void onRedoButtonClick(wxCommandEvent& event);
 
-	// Manages undo/redo operations.
-	UndoManager* undoManager;
-
-	// Undo toolbar button.
 	wxAuiToolBarItem* undoButton;
-	wxMenuItem* undoItem;
-
-	// Redo toolbar button.
 	wxAuiToolBarItem* redoButton;
+
+	wxMenuItem* undoItem;
 	wxMenuItem* redoItem;
+
+	UndoManager* undoManager;
 };
 
 //-----------------------------------//

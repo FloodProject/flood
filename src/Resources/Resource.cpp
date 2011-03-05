@@ -23,6 +23,7 @@ BEGIN_ENUM(ResourceGroup)
 	ENUM(Shaders)
 	ENUM(Audio)
 	ENUM(Scripts)
+	ENUM(Scenes)
 END_ENUM()
 
 BEGIN_ENUM(ResourceStatus)

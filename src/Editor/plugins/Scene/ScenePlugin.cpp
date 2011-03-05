@@ -8,7 +8,7 @@
 
 #include "PCH.h"
 #include "ScenePlugin.h"
-#include "ScenePage.h"
+#include "ScenePane.h"
 #include "Editor.h"
 #include "EditorIcons.h"
 #include "Events.h"
@@ -42,12 +42,12 @@ PluginMetadata ScenePlugin::getMetadata()
 void ScenePlugin::onPluginEnable()
 {
 	scenePage = new ScenePage(editor);
-	scenePage->SetSize(200, -1);
+	scenePage->SetSize(180, -1);
 
 	wxBitmap icon = wxMEMORY_BITMAP(sitemap_color);
 
 	wxAuiPaneInfo pane;
-	pane.Caption("Hierarchy").Right().Dock().Icon(icon);
+	pane.Caption("Hierarchy").Name("Hierarchy").Right().Hide().Dock().Icon(icon);
 	pane.MinSize( scenePage->GetSize() );
 
 	editor->getAUI()->AddPane(scenePage, pane);
@@ -56,9 +56,6 @@ void ScenePlugin::onPluginEnable()
 	// Subscribe as an event listener.
 	Events* events = editor->getEventManager();
 	events->addEventListener(this);
-
-	const ScenePtr& scene = engine->getSceneManager();
-	scenePage->setScene(scene);
 }
 
 //-----------------------------------//
@@ -88,9 +85,6 @@ void ScenePlugin::onEntitySelect( const EntityPtr& entity )
 
 	if( !entityId.IsOk() )
 		return;
-
-	//wxTreeCtrl* treeCtrl = scenePage->getTreeCtrl();
-	//treeCtrl->SelectItem(nodeId);
 }
 
 //-----------------------------------//

@@ -10,7 +10,7 @@
 
 #ifdef VAPOR_RENDERER_OPENGL
 
-#include "vapor/render/GL.h"
+#include "Render/GL.h"
 
 namespace vapor {
 
@@ -18,33 +18,35 @@ namespace vapor {
 
 bool glHasError( const std::string& msg )
 {
-	bool err = false;
-	uint i = 5;
-
 #ifdef VAPOR_DEBUG
-	int gl_err;
-	while( (gl_err = glGetError()) != GL_NO_ERROR )
+	bool occured = false;
+	uint numMaxErrors = 5;
+
+	int error = 0;
+
+	while(((error = glGetError()) != GL_NO_ERROR) && (numMaxErrors-- > 0) )
 	{
 		Log::warn( ("OpenGL: " + msg).c_str() );
-		err = true;
-
-		if( --i == 0 )
-			break;
+		occured = true;
 	}
-#endif
 
-	return err;
+	return occured;
+#else
+	return false;
+#endif
 }
 
 //-----------------------------------//
 
-struct token_string
+#ifdef VAPOR_DEBUG
+
+struct TokenString
 {
-   GLuint Token;
-   const char *String;
+   GLuint token;
+   const char *string;
 };
 
-static const struct token_string Errors[] =
+static const struct TokenString errors[] =
 {
 	{ GL_NO_ERROR, "No error" },
 	{ GL_INVALID_ENUM, "Invalid enumerant" },
@@ -67,14 +69,16 @@ static const struct token_string Errors[] =
 
 const char* glErrorString(GLenum errorCode)
 {
-    for (int i = 0; Errors[i].String; i++) 
+    for (int i = 0; errors[i].string; i++) 
 	{
-        if (Errors[i].Token == errorCode)
-            return Errors[i].String;
+        if(errors[i].token == errorCode)
+            return errors[i].string;
     }
 
     return nullptr;
 }
+
+#endif
 
 //-----------------------------------//
 

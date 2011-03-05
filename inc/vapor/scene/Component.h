@@ -45,7 +45,7 @@ public:
 	void setEntity( Entity* entity );
 
 	// Called once per frame to update the component.
-	virtual void update( double delta ) = 0;
+	virtual void update( float delta ) = 0;
 
 	// Called just before the camera culls this component.
 	//virtual void onPreCull( const CameraPtr& camera );

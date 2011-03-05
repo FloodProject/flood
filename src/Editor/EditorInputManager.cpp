@@ -13,7 +13,8 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-EditorInputManager::EditorInputManager()
+EditorInputManager::EditorInputManager(InputManager* input)
+	: input(input)
 { }
 
 //-----------------------------------//
@@ -42,7 +43,7 @@ void EditorInputManager::doKeyEvent( const wxKeyEvent& event, bool keyDown )
 		event.ControlDown(),
 		(keyDown) ? KeyboardEventType::KeyPressed : KeyboardEventType::KeyReleased  );
 
-	processEvent( ke );
+	input->processEvent( ke );
 }
 
 //-----------------------------------//
@@ -55,7 +56,7 @@ void EditorInputManager::doMouseEvent( const wxMouseEvent& event )
 		MouseMoveEvent me;
 		me.x = event.GetX();
 		me.y = event.GetY();
-		processEvent( me );
+		input->processEvent( me );
 	}
 
 	// Mouse dragged
@@ -64,7 +65,7 @@ void EditorInputManager::doMouseEvent( const wxMouseEvent& event )
 		MouseDragEvent me;
 		me.x = event.GetX();
 		me.y = event.GetY();
-		processEvent( me );
+		input->processEvent( me );
 	} 
 	
 	// Mouse button
@@ -101,7 +102,7 @@ void EditorInputManager::doMouseEvent( const wxMouseEvent& event )
 		mb.x = event.GetX();
 		mb.y = event.GetY();
 		mb.button = button;
-		processEvent( mb );
+		input->processEvent( mb );
 	}
 
 	else if( event.GetWheelRotation() != 0 )
@@ -110,19 +111,19 @@ void EditorInputManager::doMouseEvent( const wxMouseEvent& event )
 		// so we clamp it down to be uniform with other platforms.
 		MouseWheelEvent mwe;
 		mwe.delta = ( event.GetWheelRotation() / 120 );
-		processEvent( mwe );
+		input->processEvent( mwe );
 	}
 
 	else if( event.Entering() )
 	{
 		MouseEvent me( MouseEventType::MouseEnter );
-		processEvent( me );
+		input->processEvent( me );
 	}
 
 	else if( event.Leaving() )
 	{
 		MouseEvent me( MouseEventType::MouseExit );
-		processEvent( me );
+		input->processEvent( me );
 	}
 }
 

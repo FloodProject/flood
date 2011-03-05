@@ -35,7 +35,7 @@ public:
 	Console();
 
 	// Updates the console geometry if needed.
-	virtual void update( double delta );
+	virtual void update( float delta );
 
 protected:
 

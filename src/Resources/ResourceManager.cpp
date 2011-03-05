@@ -45,10 +45,10 @@ ResourceManager::ResourceManager()
  
 void ResourceManager::setFileWatcher(FileWatcher* watcher)
 {
-	if( !watcher )
-		return;
-
-	watcher->onFileWatchEvent.Connect(this, &ResourceManager::handleWatchResource);
+	if( !watcher ) return;
+	
+	fileWatcher = watcher;
+	fileWatcher->onFileWatchEvent.Connect(this, &ResourceManager::handleWatchResource);
 }
 
 //-----------------------------------//
@@ -75,8 +75,8 @@ ResourceManager::~ResourceManager()
 			extensions.erase( std::find(extensions.begin(), extensions.end(), it->first) );
 	}
 
-	//if( fileWatcher )
-		//fileWatcher->onFileWatchEvent.Disconnect(this, &ResourceManager::handleWatchResource);
+	if( fileWatcher )
+		fileWatcher->onFileWatchEvent.Disconnect(this, &ResourceManager::handleWatchResource);
 
 	// Check that all resources will be deleted.
 	//foreach( const ResourceMapPair& p, resources )
@@ -266,7 +266,7 @@ void ResourceManager::loadQueuedResources()
 
 //-----------------------------------//
 
-void ResourceManager::update( double )
+void ResourceManager::update( float )
 {
 	sendPendingEvents();
 	removeUnusedResources();

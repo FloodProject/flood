@@ -103,7 +103,7 @@ void Geometry::notifiesTransform()
 
 //-----------------------------------//
 
-void Geometry::update( double delta )
+void Geometry::update( float delta )
 {
 	if( !isDirty )
 		return;

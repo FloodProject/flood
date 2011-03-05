@@ -27,7 +27,7 @@ namespace vapor {
 BEGIN_CLASS_PARENT(Model, Geometry)
 	FIELD_PRIMITIVE(float, animationSpeed)
 	FIELD_PRIMITIVE(bool, animationEnabled);
-	FIELD_CLASS_PTR(Mesh, MeshPtr, mesh, RefPointer)
+	FIELD_CLASS_PTR_SETTER(Mesh, MeshPtr, mesh, RefPointer, Mesh)
 END_CLASS()
 
 //-----------------------------------//
@@ -52,27 +52,47 @@ void Model::init()
 	modelBuilt = false;
 	debugRenderable = nullptr;
 
+	animationEnabled = true;
 	animationFadeTime = 0;
 	animationCurrentFadeTime = 0;
 	animationSpeed = 1;
-	animationEnabled = true;
+
+	animations.clear();
+	attachments.clear();
+	bones.clear();
+	renderables.clear();
 }
 
 //-----------------------------------//
 
-void Model::update( double delta )
+void Model::setMesh(const MeshPtr& mesh)
+{
+	for( uint i = 0; i < renderables.size(); i++ )
+	{
+		const RenderablePtr& rend = renderables[i];
+		rend->onPreRender.Disconnect(this, &Model::onRender);
+	}
+
+	init();
+	this->mesh = mesh;
+}
+
+//-----------------------------------//
+
+void Model::update( float delta )
 {
 	if( !mesh || !mesh->isLoaded() )
 		return;
 
-	if( !modelBuilt )
-		build();
+	if( !modelBuilt ) build();
 
 	if( mesh->isAnimated() )
 	{
 		if( animations.empty() )
+		{
 			setAnimation( mesh->getBindPose() );
-		
+		}
+
 		if( animationEnabled )
 		{
 			updateAnimations(delta);
@@ -90,8 +110,7 @@ void Model::update( double delta )
 
 void Model::build()
 {
-	if( modelBuilt )
-		return;
+	if( modelBuilt ) return;
 
 	const std::vector<RenderablePtr>& renderables = MeshBuilder::meshRenderables[mesh];
 
@@ -104,7 +123,7 @@ void Model::build()
 	for( uint i = 0; i < renderables.size(); i++ )
 	{
 		const RenderablePtr& rend = renderables[i];
-		MaterialPtr material = rend->getMaterial();
+		const MaterialPtr& material = rend->getMaterial();
 
 		if( material && material->isBlendingEnabled() )
 			rend->setRenderLayer(RenderLayer::Transparency);
@@ -125,7 +144,7 @@ void Model::build()
 
 //-----------------------------------//
 
-void Model::updateAnimations(double delta)
+void Model::updateAnimations(float delta)
 {
 	for( uint i = 0; i < animations.size(); i++ )
 	{
@@ -150,7 +169,7 @@ void Model::updateAnimations(double delta)
 
 //-----------------------------------//
 
-void Model::updateAnimationTime(AnimationState& state, double delta)
+void Model::updateAnimationTime(AnimationState& state, float delta)
 {
 	const AnimationPtr& animation = state.animation;
 	float& animationTime = state.animationTime;

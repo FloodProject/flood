@@ -57,7 +57,7 @@ public:
 	Scene();
 
 	// Updates all the entities recursively.
-	virtual void update( double delta );
+	virtual void update( float delta );
 
 	// Checks for collision via ray-box tests.
 	bool doRayBoxQuery( const Ray& ray, RayQueryResult& res );

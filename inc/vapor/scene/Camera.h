@@ -72,7 +72,7 @@ public:
 	Frustum getVolume( float screenLeft, float screenRight, float screenTop, float screenBottom );
 
 	// Updates this component.
-	void update( double delta );
+	void update( float delta );
 
 	// Updates the frustum.
 	void updateFrustum();

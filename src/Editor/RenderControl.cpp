@@ -34,8 +34,8 @@ BEGIN_EVENT_TABLE(RenderControl, wxGLCanvas)
 	EVT_MOUSE_CAPTURE_LOST(RenderControl::OnMouseCaptureLost)
 END_EVENT_TABLE()
 
-const double MAX_RATE_UPDATE = 1.0f / 25;
-const double MAX_RATE_RENDER = 1.0f / 60;
+const float MAX_RATE_UPDATE = 1.0f / 25;
+const float MAX_RATE_RENDER = 1.0f / 60;
 
 //-----------------------------------//
 

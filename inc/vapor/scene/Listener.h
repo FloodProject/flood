@@ -34,7 +34,7 @@ public:
 	void makeCurrent();
 
 	// Updates the component.
-	virtual void update( double delta );
+	virtual void update( float delta );
 
 protected:
 

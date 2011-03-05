@@ -10,8 +10,8 @@
 
 #ifdef VAPOR_AUDIO_OPENAL
 
-#include "scene/Component.h"
-#include "audio/Source.h"
+#include "Scene/Component.h"
+#include "Audio/Source.h"
 
 FWD_DECL_INTRUSIVE(Sound)
 
@@ -94,7 +94,7 @@ public:
 	void setSound( const SoundPtr& sound );
 
 	// Updates the component.
-	virtual void update( double delta );
+	virtual void update( float delta );
 
 protected:
 

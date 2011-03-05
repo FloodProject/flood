@@ -10,10 +10,9 @@
 
 #ifdef VAPOR_AUDIO_OPENAL
 
-#include "scene/Source.h"
-#include "audio/Source.h"
-#include "resources/Sound.h"
-#include "Engine.h"
+#include "Scene/Source.h"
+#include "Audio/Source.h"
+#include "Resources/Sound.h"
 
 namespace vapor {
 
@@ -71,9 +70,7 @@ Source::~Source()
 void Source::setVolume(float volume)
 {
 	this->volume = volume;
-
-	if(audioSource)
-		audioSource->setVolume(volume);
+	if(audioSource) audioSource->setVolume(volume);
 }
 
 //-----------------------------------//
@@ -81,9 +78,7 @@ void Source::setVolume(float volume)
 void Source::setPitch(float pitch)
 {
 	this->pitch = pitch;
-
-	if(audioSource)
-		audioSource->setPitch(pitch);
+	if(audioSource) audioSource->setPitch(pitch);
 }
 
 //-----------------------------------//
@@ -91,9 +86,7 @@ void Source::setPitch(float pitch)
 void Source::setMinDistance( float distance )
 {
 	this->minDistance = distance;
-
-	if(audioSource)
-		audioSource->setReferenceDistance(distance);
+	if(audioSource) audioSource->setReferenceDistance(distance);
 }
 
 //-----------------------------------//
@@ -101,9 +94,7 @@ void Source::setMinDistance( float distance )
 void Source::setMaxDistance( float distance )
 {
 	this->maxDistance = distance;
-
-	if(audioSource)
-		audioSource->setMaxDistance(distance);
+	if(audioSource) audioSource->setMaxDistance(distance);
 }
 
 //-----------------------------------//
@@ -111,9 +102,7 @@ void Source::setMaxDistance( float distance )
 void Source::setRolloff(float rolloff)
 {
 	this->rolloff = rolloff;
-
-	if(audioSource)
-		audioSource->setRolloff(rolloff);
+	if(audioSource) audioSource->setRolloff(rolloff);
 }
 
 //-----------------------------------//
@@ -121,9 +110,7 @@ void Source::setRolloff(float rolloff)
 void Source::setRolloffMode(RolloffMode::Enum mode)
 {
 	this->rolloffMode = mode;
-
-	if(audioSource)
-		audioSource->setRolloffMode(rolloffMode);
+	if(audioSource) audioSource->setRolloffMode(rolloffMode);
 }
 
 //-----------------------------------//
@@ -131,9 +118,7 @@ void Source::setRolloffMode(RolloffMode::Enum mode)
 void Source::setLoop(bool state)
 {
 	this->loop = state;
-
-	if(audioSource)
-		audioSource->setLoop(state);
+	if(audioSource) audioSource->setLoop(state);
 }
 
 //-----------------------------------//
@@ -141,16 +126,15 @@ void Source::setLoop(bool state)
 void Source::setState( SourceState::Enum state )
 {
 	this->state = state;
-
-	if(!audioSource)
-		return;
+	
+	if(!audioSource) return;
 
 	if(state == SourceState::Play && !audioSource->isPlaying())
 		audioSource->play();
 	
 	else if(state == SourceState::Pause)
 		audioSource->pause();
-
+	
 	else if(state == SourceState::Stop)
 		audioSource->stop();
 }
@@ -160,9 +144,7 @@ void Source::setState( SourceState::Enum state )
 void Source::setMode( SourceMode::Enum mode )
 {
 	this->mode = mode;
-
-	if(!audioSource)
-		return;
+	if(!audioSource) return;
 }
 
 //-----------------------------------//
@@ -171,7 +153,7 @@ void Source::setSound( const SoundPtr& sound )
 {
 	this->sound = sound;
 
-	AudioDevice* device = GetEngine()->getAudioDevice();
+	AudioDevice* device = GetAudioDevice();
 	AudioContext* context = device->getMainContext();
 
 	audioSource = new AudioSource(context, sound);
@@ -185,15 +167,16 @@ void Source::setSound( const SoundPtr& sound )
 
 //-----------------------------------//
 
-void Source::update( double delta )
+void Source::update( float delta )
 {
-	if( !audioSource )
-		return;
+	if( !audioSource ) return;
 
 	if( audioSource->isPlaying() )
 		state = SourceState::Play;
+	
 	else if( audioSource->isPaused() )
 		state = SourceState::Pause;
+	
 	else
 		state = SourceState::Stop;
 }

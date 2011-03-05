@@ -77,7 +77,7 @@ public:
 	GETTER(EntityAttachment, const EntityPtr&, nodeObject)
 
 	// Updates this component.
-	virtual void update( double delta );
+	virtual void update( float delta );
 
 protected:
 

@@ -94,7 +94,7 @@ void Label::setupState()
 
 //-----------------------------------//
 
-void Label::update( double delta )
+void Label::update( float delta )
 {
 	if( !font )
 		return;

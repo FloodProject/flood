@@ -39,17 +39,17 @@ PluginMetadata LogPlugin::getMetadata()
 
 void LogPlugin::onPluginEnable()
 {
-	wxAuiToolBar* toolBar = editor->getToolbar();
+	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
 	
-	if(toolBar)
+	if(toolbarCtrl)
 	{
-		addTool( toolBar->AddSeparator() );
+		addTool( toolbarCtrl->AddSeparator() );
 
 		wxBitmap iconLog = wxMEMORY_BITMAP(page_white_text);
-		logButton = toolBar->AddTool( wxID_ANY, "Log", iconLog );
+		logButton = toolbarCtrl->AddTool( wxID_ANY, "Log", iconLog );
 		addTool( logButton );
 
-		toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
+		toolbarCtrl->Bind( wxEVT_COMMAND_TOOL_CLICKED,
 			&LogPlugin::onLogButtonClick, this, logButton->GetId() );
 	}
 

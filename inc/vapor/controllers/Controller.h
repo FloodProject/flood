@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "scene/Component.h"
+#include "Scene/Component.h"
 
 namespace vapor {
 
@@ -26,10 +26,10 @@ public:
 	ACESSOR(Enabled, bool, enabled)
 
 	// Updates the controller.
-	virtual void update( double delta );
+	virtual void update( float delta );
 	
 	// Implements the controller update logic.
-	virtual void _update( double delta ) = 0;
+	virtual void _update( float delta ) = 0;
 
 protected:
 
@@ -40,7 +40,6 @@ protected:
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Controller )
-TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( Controller )
 
 //-----------------------------------//
 

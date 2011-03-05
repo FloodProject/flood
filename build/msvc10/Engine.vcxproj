@@ -138,6 +138,13 @@
     <ClCompile Include="..\..\src\Audio\AudioContext.cpp" />
     <ClCompile Include="..\..\src\Audio\AudioDevice.cpp" />
     <ClCompile Include="..\..\src\Audio\AudioSource.cpp" />
+    <ClCompile Include="..\..\src\Controllers\CameraController.cpp" />
+    <ClCompile Include="..\..\src\Controllers\Controller.cpp" />
+    <ClCompile Include="..\..\src\Controllers\FirstPersonController.cpp" />
+    <ClCompile Include="..\..\src\Controllers\ScriptController.cpp">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Controllers\ThirdPersonController.cpp" />
     <ClCompile Include="..\..\src\Engine\PCH.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DLL Debug|Win32'">Create</PrecompiledHeader>
@@ -167,16 +174,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\Page.cpp" />
     <ClCompile Include="..\..\src\Engine\PageManager.cpp" />
-    <ClCompile Include="..\..\src\Engine\controllers\Controller.cpp">
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SWIG_TYPE_TABLE=vapor;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\controllers\CameraController.cpp" />
-    <ClCompile Include="..\..\src\Engine\controllers\FirstPersonController.cpp" />
-    <ClCompile Include="..\..\src\Engine\controllers\ThirdPersonController.cpp" />
-    <ClCompile Include="..\..\src\Engine\controllers\ScriptController.cpp">
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='DLL Debug|Win32'">4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-    </ClCompile>
     <ClCompile Include="..\..\src\Input\InputDevice.cpp" />
     <ClCompile Include="..\..\src\Input\InputManager.cpp" />
     <ClCompile Include="..\..\src\Input\InputMap.cpp" />

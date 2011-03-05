@@ -59,7 +59,7 @@ protected:
 	bool checkError();	
 
 	// Returns a string representation of an OpenAL context error
-	const std::string getError();
+	const char* getError();
 
 	// Audio device
 	AudioDevice* device;

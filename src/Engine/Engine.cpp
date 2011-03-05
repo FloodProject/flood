@@ -11,15 +11,15 @@
 #include "TaskManager.h"
 
 #include "Engine.h"
-#include "render/Device.h"
-#include "input/InputManager.h"
-#include "audio/Device.h"
-#include "script/ScriptManager.h"
-#include "scene/Scene.h"
-#include "paging/PageManager.h"
-#include "resources/ResourceManager.h"
-#include "physics/Physics.h"
-#include "resources/ResourceLoader.h"
+#include "Render/Device.h"
+#include "Input/InputManager.h"
+#include "Audio/Device.h"
+#include "Script/ScriptManager.h"
+#include "Scene/Scene.h"
+#include "Paging/PageManager.h"
+#include "Resources/ResourceManager.h"
+#include "Physics/Physics.h"
+#include "Resources/ResourceLoader.h"
 
 #include <ctime>
 
@@ -36,6 +36,7 @@ Engine::Engine()
 	, fileSystem(nullptr)
 	, resourceManager(nullptr)
 	, renderDevice(nullptr)
+	, inputManager(nullptr)
 	, audioDevice(nullptr)
 	, physicsManager(nullptr)
 	, scriptManager(nullptr)
@@ -55,6 +56,7 @@ Engine::~Engine()
 		delete system;
 	}
 	
+	delete inputManager;
 	delete taskManager;
 	//delete audioDevice;
 	delete physicsManager;
@@ -165,9 +167,6 @@ void Engine::setupDevices( bool createWindow )
 
 		// Initializes the render device with new window context.
 		renderDevice->init();
-		
-		// Creates the input devices.
-		setupInput();
 	}
 
 #ifdef VAPOR_AUDIO_OPENAL
@@ -180,22 +179,13 @@ void Engine::setupDevices( bool createWindow )
 
 void Engine::setupInput()
 {
-	Window* window = renderDevice->getWindow();
-	
-	if(!window)
-		return;
-
-	InputManager* input = window->getInputManager();
-	
-	if(!input)
-		return;
-
-	input->createDefaultDevices(); 
+	inputManager = new InputManager();
+	inputManager->createDefaultDevices(); 
 }
 
 //-----------------------------------//
 
-void Engine::update( double delta )
+void Engine::update( float delta )
 {
 	for( uint i = 0; i < subsystems.size(); i++ )
 	{
@@ -220,12 +210,16 @@ void Engine::update( double delta )
 
 InputManager* Engine::getInputManager() const
 {
+#if 0
 	Window* window = renderDevice->getWindow();
 
 	if( !window )
 		return nullptr;
 
 	return window->getInputManager();
+#endif
+
+	return inputManager;
 }
 
 //-----------------------------------//

@@ -64,9 +64,6 @@ public:
 	// Sets the cursor position on screen.
 	virtual void setCursorPosition( int x, int y );
 
-	// Gets the input manager.
-	InputManager* getInputManager() { return inputManager; }
-
 private:
 
 	// Processes a window resize.

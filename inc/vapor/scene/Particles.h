@@ -60,7 +60,7 @@ public:
 	Particles();
 
 	// Updates this component.
-	void update( double delta );
+	void update( float delta );
 
 	// Sets the image of the particles.
 	void setImage(const ImagePtr& image);

@@ -18,12 +18,7 @@ namespace vapor { namespace editor {
 Plugin::Plugin( EditorFrame* frame )
 	: editor( frame )
 	, pluginEnabled(false)
-{
-	assert( editor != nullptr );
-
-	engine = editor->getEngine();
-	viewframe = editor->getMainViewframe();
-}
+{ }
 
 //-----------------------------------//
 
@@ -53,12 +48,12 @@ void Plugin::addTool( wxAuiToolBarItem* tool, bool addToMenu )
 
 	tools.push_back( tool );
 
-	wxAuiToolBar* toolBar = editor->getToolbar();
-	toolBar->Realize();
+	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
+	toolbarCtrl->Realize();
 
 	if( addToMenu )
 	{
-		editor->toolsMenu->Append(tool->GetId(), tool->GetLabel());
+		editor->menuTools->Append(tool->GetId(), tool->GetLabel());
 		editor->getAUI()->Update();
 	}
 }
@@ -68,14 +63,14 @@ void Plugin::addTool( wxAuiToolBarItem* tool, bool addToMenu )
 void Plugin::removeTools()
 {
 	// Clean up toolbar stuff.
-	wxAuiToolBar* toolBar = editor->getToolbar();
+	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
 
 	for( uint i = 0; i < tools.size(); i++ )
 	{
 		wxAuiToolBarItem* tool = tools[i];
 		
 		int id = tool->GetId();
-		toolBar->DeleteTool(id);
+		toolbarCtrl->DeleteTool(id);
 	}
 
 	tools.clear();

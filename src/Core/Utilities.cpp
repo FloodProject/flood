@@ -56,7 +56,7 @@ long System::swapEndian(long i)
 
 //-----------------------------------//
 
-void System::sleep( double time )
+void System::sleep( float time )
 {
 #ifdef VAPOR_PLATFORM_WINDOWS
 	::Sleep( static_cast<DWORD>(time) );

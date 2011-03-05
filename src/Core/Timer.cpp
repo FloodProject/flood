@@ -45,12 +45,12 @@ Timer::Timer()
 
 #define tv_time_ms(t) ((t.tv_sec * 1000000.0) + t.tv_usec)
 
-double Timer::getCurrentTime()
+float Timer::getCurrentTime()
 {
 	storeTime(currentTime);
 
 #ifdef VAPOR_PLATFORM_WINDOWS	
-	return (double) currentTime / (double) ticksPerSecond;
+	return (float) currentTime / (float) ticksPerSecond;
 #else
 	return tv_time_ms(currentTime);
 #endif
@@ -61,13 +61,13 @@ double Timer::getCurrentTime()
 
 //-----------------------------------//
 
-double Timer::getElapsedTime()
+float Timer::getElapsedTime()
 {
 	getCurrentTime();	
 
 #ifdef VAPOR_PLATFORM_WINDOWS
 	Ticks diff = currentTime - lastTime;
-	return (double) diff / (double) ticksPerSecond;
+	return (float) diff / (float) ticksPerSecond;
 #else
 	return tv_time_ms(currentTime) - tv_time_ms(lastTime.tv_sec);
 #endif
@@ -75,12 +75,12 @@ double Timer::getElapsedTime()
 
 //-----------------------------------//
 
-double Timer::reset()
+float Timer::reset()
 {
 	storeTime(lastTime);
 
 #ifdef VAPOR_PLATFORM_WINDOWS
-	return (double) lastTime / (double) ticksPerSecond;
+	return (float) lastTime / (float) ticksPerSecond;
 #else
 	return tv_time_ms(lastTime);
 #endif

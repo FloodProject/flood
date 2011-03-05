@@ -205,14 +205,11 @@
     <Filter Include="Scene\Camera\Controllers\Third Person">
       <UniqueIdentifier>{72fd431a-6f92-456b-8242-bca90fedb714}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene\Script">
-      <UniqueIdentifier>{039fb325-4eaf-49cc-9ad6-1ef4af674ee7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Controller">
-      <UniqueIdentifier>{bc1a1ddb-1bf0-4377-8f7e-0f74420d2a85}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Physics\Character">
       <UniqueIdentifier>{86e0a566-d603-4458-ac03-2a1c5d15fa44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers">
+      <UniqueIdentifier>{bc1a1ddb-1bf0-4377-8f7e-0f74420d2a85}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -275,21 +272,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\PageManager.cpp">
       <Filter>Paging</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\controllers\Controller.cpp">
-      <Filter>Scene\Controller</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\controllers\FirstPersonController.cpp">
-      <Filter>Scene\Camera\Controllers\First Person</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\controllers\ThirdPersonController.cpp">
-      <Filter>Scene\Camera\Controllers\Third Person</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\controllers\ScriptController.cpp">
-      <Filter>Scene\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\controllers\CameraController.cpp">
-      <Filter>Scene\Camera\Controllers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Audio\AudioBuffer.cpp">
       <Filter>Audio\Buffer</Filter>
@@ -470,6 +452,21 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Scene\Overlay.cpp">
       <Filter>GUI\Overlay</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Controllers\Controller.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Controllers\CameraController.cpp">
+      <Filter>Scene\Camera\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Controllers\FirstPersonController.cpp">
+      <Filter>Scene\Camera\Controllers\First Person</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Controllers\ThirdPersonController.cpp">
+      <Filter>Scene\Camera\Controllers\Third Person</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Controllers\ScriptController.cpp">
+      <Filter>Scripting</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -711,7 +708,7 @@
       <Filter>Paging</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\controllers\Controller.h">
-      <Filter>Scene\Controller</Filter>
+      <Filter>Controllers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\controllers\FirstPersonController.h">
       <Filter>Scene\Camera\Controllers\First Person</Filter>
@@ -721,9 +718,6 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\physics\CharacterController.h">
       <Filter>Physics\Character</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\controllers\ScriptController.h">
-      <Filter>Scene\Script</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\CompileOptions.h" />
     <ClInclude Include="..\..\inc\vapor\Headers.h" />
@@ -744,6 +738,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Scene\MeshBuilder.h">
       <Filter>Scene\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\controllers\ScriptController.h">
+      <Filter>Scripting</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

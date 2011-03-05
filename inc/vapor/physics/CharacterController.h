@@ -27,7 +27,7 @@ public:
 	virtual ~CharacterController();
 
 	// Updates the shape.
-	void _update( double delta );
+	void _update( float delta );
 
 protected:
 

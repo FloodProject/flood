@@ -64,10 +64,10 @@ public:
 	//virtual void setUniform( const std::string& slot, const std::vector<float> vec ) = 0;
 
 	// Adds a named Vector3 array uniform to the program.
-	virtual void setUniform( const std::string& slot, const std::vector<Vector3> vec );
+	virtual void setUniform( const std::string& slot, const std::vector<Vector3>& vec );
 
 	// Adds a named color array uniform to the program.
-	virtual void setUniform( const std::string& slot, const std::vector<Color> vec );
+	virtual void setUniform( const std::string& slot, const std::vector<Color>& vec );
 
 	// Adds a named vector uniform to the program.
 	virtual void setUniform( const std::string& slot, const Vector3& vec );

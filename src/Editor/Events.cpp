@@ -31,8 +31,8 @@ Events::Events( EditorFrame* editor )
 	// that get routed through the toolbar. This will let us find
 	// the current toolbar mode.
 
-	wxAuiToolBar* toolBar = editor->getToolbar();
-	if(toolBar) toolBar->PushEventHandler(this);
+	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
+	if(toolbarCtrl) toolbarCtrl->PushEventHandler(this);
 	//editor->PushEventHandler(this);
 
 	registerInputCallbacks();
@@ -42,8 +42,8 @@ Events::Events( EditorFrame* editor )
 
 Events::~Events()
 {
-	wxAuiToolBar* toolBar = editor->getToolbar();
-	if(toolBar) toolBar->PopEventHandler();
+	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
+	if(toolbarCtrl) toolbarCtrl->PopEventHandler();
 	//editor->PopEventHandler();
 
 	pluginManager->onPluginEnableEvent.Disconnect(this, &Events::onPluginEnableEvent);
@@ -105,15 +105,15 @@ bool Events::TryBefore(wxEvent& event)
 	//if( !object->IsKindOf(&wxAuiToolBarItem::ms_classInfo) )
 	//	return false;
 
-	wxAuiToolBar* toolBar = editor->getToolbar();
-	wxAuiToolBarItem* tool = toolBar->FindTool(id);
+	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
+	wxAuiToolBarItem* tool = toolbarCtrl->FindTool(id);
 
 	if( !tool ) return false;
 
 	if( tool->GetKind() != wxITEM_RADIO )
 		return false;
 
-	toolBar->ToggleTool(id, true);
+	toolbarCtrl->ToggleTool(id, true);
 
 	const PluginToolsMap& tools = pluginManager->getTools();
 	PluginToolsMap::const_iterator it = tools.find(id);
@@ -159,10 +159,8 @@ void Events::onPluginDisableEvent(Plugin* plugin)
 //-----------------------------------//
 
 #define CALL_PLUGIN(func, ...)							\
-	if( !currentPlugin )								\
-		return;											\
-														\
-	currentPlugin->func(__VA_ARGS__);					\
+	if( currentPlugin )									\
+		currentPlugin->func(__VA_ARGS__);				\
 														\
 	for( uint i = 0; i < eventListeners.size(); i++ )	\
 	{													\
@@ -174,6 +172,20 @@ void Events::onPluginDisableEvent(Plugin* plugin)
 #define CALL_PLUGIN_CHECK(func, arg)					\
 	if(!arg) return;									\
 	CALL_PLUGIN(func, arg)
+
+//-----------------------------------//
+
+void Events::onDocumentSelect( Document& document )
+{
+	CALL_PLUGIN(onDocumentSelect, document);
+}
+
+//-----------------------------------//
+
+void Events::onDocumentUnselect( Document& document )
+{
+	CALL_PLUGIN(onDocumentUnselect, document);
+}
 
 //-----------------------------------//
 

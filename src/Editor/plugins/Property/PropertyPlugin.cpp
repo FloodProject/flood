@@ -43,12 +43,12 @@ PluginMetadata PropertyPlugin::getMetadata()
 void PropertyPlugin::onPluginEnable()
 {
 	propertyPage = new PropertyPage(editor);
-	propertyPage->SetSize(220, 400);
+	propertyPage->SetSize(180, -1);
 
 	wxBitmap icon = wxMEMORY_BITMAP(application_view_list);
 	
 	wxAuiPaneInfo pane;
-	pane.Caption("Properties").Right().Dock().Icon(icon);
+	pane.Caption("Properties").Name("Properties").Right().Hide().Dock().Icon(icon);
 
 	editor->getAUI()->AddPane(propertyPage, pane);
 	editor->getAUI()->Update();

@@ -148,6 +148,7 @@
     <ClCompile Include="..\..\src\Core\math\BoundingSphere.cpp" />
     <ClCompile Include="..\..\src\Core\math\Noise.cpp" />
     <ClCompile Include="..\..\src\Core\math\Hash.cpp" />
+    <ClCompile Include="..\..\src\Core\Memory.cpp" />
     <ClCompile Include="..\..\src\Core\Message.cpp" />
     <ClCompile Include="..\..\src\Core\Network.cpp" />
     <ClCompile Include="..\..\src\Core\PhysfsStream.cpp" />
@@ -181,6 +182,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\inc\Core\Memory.h" />
     <ClInclude Include="..\..\inc\vapor\Atomic.h" />
     <ClInclude Include="..\..\inc\vapor\Chunk.h" />
     <ClInclude Include="..\..\inc\vapor\core\File.h" />

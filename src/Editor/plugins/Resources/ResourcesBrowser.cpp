@@ -14,7 +14,9 @@
 #include "Settings.h"
 #include "Editor.h"
 #include "Utilities.h"
-#include "../Scene/ScenePage.h"
+#include "../Scene/ScenePane.h"
+
+#ifdef ALL_PLUGINS
 
 namespace vapor { namespace editor {
 
@@ -253,3 +255,5 @@ void ResourcesBrowser::setupUI()
 //-----------------------------------//
 
 } } // end namespaces
+
+#endif

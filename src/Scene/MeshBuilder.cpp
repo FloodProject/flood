@@ -52,9 +52,7 @@ void MeshBuilder::buildGeometry()
 	vb->set( VertexAttribute::TexCoord0, mesh->texCoords );
 
 	if( mesh->isAnimated() )
-	{
 		vb->set( VertexAttribute::BoneIndex, mesh->boneIndices );
-	}
 
 	// Construct the mesh groups.
 	const std::vector<MeshGroup>& groups = mesh->groups;
@@ -67,7 +65,7 @@ void MeshBuilder::buildGeometry()
 		MaterialPtr mat = buildMaterial(group);
 
 		IndexBufferPtr ib = new IndexBuffer();
-		ib->set(group.indices);
+		SetIndexBufferData(ib, group.indices);
 
 		RenderablePtr renderable = new Renderable();
 		renderable->setPrimitiveType( PolygonType::Triangles );
@@ -90,7 +88,7 @@ MaterialPtr MeshBuilder::buildMaterial(const MeshGroup& group)
 
 	if( !matMesh.texture.empty() )
 	{
-		material->setProgram("Tex_Toon");
+		material->setProgram("VertexLit");
 
 		std::string path = PathUtils::normalize(matMesh.texture);
 		material->setTexture( 0, path );
@@ -104,7 +102,7 @@ MaterialPtr MeshBuilder::buildMaterial(const MeshGroup& group)
 	}
 
 	if( mesh->isAnimated() )
-		material->setProgram("Tex_Toon_Skin");
+		material->setProgram("VertexLitSkinned");
 
 	return material;
 }

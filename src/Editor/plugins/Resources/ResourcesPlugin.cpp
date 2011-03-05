@@ -8,7 +8,7 @@
 
 #include "PCH.h"
 #include "ResourcesPlugin.h"
-#include "ResourcesPage.h"
+#include "ResourcesPane.h"
 #include "ResourcesBrowser.h"
 #include "Editor.h"
 #include "EditorIcons.h"
@@ -62,16 +62,16 @@ void ResourcesPlugin::onPluginEnable()
 	editor->getAUI()->Update();
 
 #if 0
-	wxAuiToolBar* toolBar = editor->getToolbar();
+	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
 
-	if(toolBar)
+	if(toolbarCtrl)
 	{
-		resourcesBrowserButton = toolBar->AddTool( wxID_ANY, "Resources Browser", iconPackage );
+		resourcesBrowserButton = toolbarCtrl->AddTool( wxID_ANY, "Resources Browser", iconPackage );
 		addTool( resourcesBrowserButton );
 		
-		toolBar->EnableTool(resourcesBrowserButton->GetId(), false);
+		toolbarCtrl->EnableTool(resourcesBrowserButton->GetId(), false);
 		
-		toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
+		toolbarCtrl->Bind( wxEVT_COMMAND_TOOL_CLICKED,
 			&ResourcesPlugin::onBrowserButtonClick,
 			this, resourcesBrowserButton->GetId() );
 	}

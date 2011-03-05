@@ -78,7 +78,7 @@ public:
 		BufferUsage::Enum = BufferUsage::Static,
 		BufferAccess::Enum = BufferAccess::Write);
 	
-	virtual ~VertexBuffer();
+	~VertexBuffer();
 
 	// Binds the vertex buffer.
 	bool bind();
@@ -144,15 +144,15 @@ private:
 
 	// Checks that each entry in the map has the same size.
 	bool checkSize() const;
-
-	// Tracks if the buffer has been built.
-	bool built;
 	
 	// Holds all the vertex attributes.
 	mutable AttributeMap attributes;
 
 	// Holds the number of vertices inside.
 	mutable uint numVertices;
+
+	// Tracks if the buffer has been built.
+	bool built;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( VertexBuffer );

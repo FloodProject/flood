@@ -53,7 +53,8 @@ struct RESOURCE_API ResourceGroup
 		Fonts,
 		Shaders,
 		Audio,
-		Scripts
+		Scripts,
+		Scenes
 	};
 
 	DECLARE_ENUM()

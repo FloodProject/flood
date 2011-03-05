@@ -10,8 +10,8 @@
 
 #ifdef VAPOR_AUDIO_OPENAL
 
-#include "audio/Source.h"
-#include "audio/Buffer.h"
+#include "Audio/Source.h"
+#include "Audio/Buffer.h"
 
 namespace vapor {
 
@@ -56,13 +56,19 @@ AudioSource::~AudioSource()
 	alSourcei(id, AL_BUFFER, AL_NONE);
 
 	if( device->checkError() )
+	{
 		Log::warn("Could not unset buffer from audio source: %s", device->getError());
+		return;
+	}
 
 	// delete this source in OpenAL
 	alDeleteSources(1, &id);
 
-	if(device->checkError())
+	if( device->checkError() )
+	{
 		Log::warn("Could not delete audio source: %s", device->getError());
+		return;
+	}
 }
 
 //-----------------------------------//
@@ -247,6 +253,7 @@ void AudioSource::setPosition( const Vector3& pos )
 	if(device->checkError())
 	{
 		Log::warn( "Could not set position in audio source: %s", device->getError());
+		return;
 	}
 }
 

@@ -73,7 +73,7 @@ CharacterController::~CharacterController()
 
 //-----------------------------------//
 
-void CharacterController::_update( double delta )
+void CharacterController::_update( float delta )
 {
 	if( !createController() )
 		return;

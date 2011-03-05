@@ -41,7 +41,7 @@ BoxShape::~BoxShape()
 
 //-----------------------------------//
 
-void BoxShape::update( double delta )
+void BoxShape::update( float delta )
 {
 	if( boxShape )
 		return;

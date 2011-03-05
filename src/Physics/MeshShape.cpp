@@ -82,6 +82,7 @@ MeshShape::~MeshShape()
 
 btTriangleMesh* MeshShape::convertMesh()
 {
+#if 0
 	btTriangleMesh* mesh = new btTriangleMesh(false);
 
 	const std::vector<GeometryPtr>& geometries = entity->getGeometry();
@@ -129,13 +130,14 @@ btTriangleMesh* MeshShape::convertMesh()
 			}
 		}
 	}
-
 	return mesh;
+#endif
+	return nullptr;
 }
 
 //-----------------------------------//
 
-void MeshShape::update( double delta )
+void MeshShape::update( float delta )
 {
 	if( meshShape )
 		return;	

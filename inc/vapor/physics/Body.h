@@ -37,7 +37,7 @@ public:
 	bool isDynamic() const;
 
 	// Called once per frame to update the component.
-	void update( double delta );
+	void update( float delta );
 
 	// Gets the Bullet shape of this body.
 	btCollisionShape* getBulletShape() const;

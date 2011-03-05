@@ -19,7 +19,7 @@ class ScenePage;
 class ScenePlugin : public Plugin
 {
 public:
-
+ 
 	ScenePlugin( EditorFrame* frame );
 
 	// Gets metadata about this plugin.
@@ -38,9 +38,7 @@ public:
 	virtual void onEntityUnselect( const EntityPtr& );
 
 	// Scene load callback.
-	void onSceneLoad( const ScenePtr& scene );
-
-protected:
+	virtual void onSceneLoad( const ScenePtr& scene );
 
 	ScenePage* scenePage;
 	int iconScene;

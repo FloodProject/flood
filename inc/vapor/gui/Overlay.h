@@ -114,7 +114,7 @@ public:
 	void setOpacity( float opacity );
 
 	// Updates the overlay if needed.
-	virtual void update( double delta );
+	virtual void update( float delta );
 
 protected:
 

@@ -56,7 +56,7 @@ public:
 	Billboard( BillboardType::Enum type );
 
 	// Updates the component.
-	void update( double delta );
+	void update( float delta );
 
 	// Called just before the camera renders this component.
 	void onPreRender( const Camera& camera );

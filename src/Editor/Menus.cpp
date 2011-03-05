@@ -16,46 +16,46 @@ namespace vapor { namespace editor {
 
 void EditorFrame::createMenus()
 {
-	fileMenu = new wxMenu;
+	menuFile = new wxMenu;
 
 	//-----------------------------------//
 
-    editMenu = new wxMenu;
+    menuEdit = new wxMenu;
 
 	//-----------------------------------//
 
-    toolsMenu = new wxMenu;
+    menuTools = new wxMenu;
 
 	//-----------------------------------//
 
-    helpMenu = new wxMenu;
-	wxMenuItem* aboutItem = helpMenu->Append(wxID_ABOUT, "&About...\tF1");
-	wxMenuItem* aboutWxItem = helpMenu->Append(wxID_ANY, "&About wxWidgets...");
+    menuHelp = new wxMenu;
+	wxMenuItem* aboutItem = menuHelp->Append(wxID_ABOUT, "&About...\tF1");
+	wxMenuItem* aboutWxItem = menuHelp->Append(wxID_ANY, "&About wxWidgets...");
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &EditorFrame::OnAbout, this, aboutItem->GetId());
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &EditorFrame::OnAboutWx, this, aboutWxItem->GetId());
 	
 	//-----------------------------------//
 
-	panelsMenu = new wxMenu;
+	menuPanels = new wxMenu;
 	Bind(wxEVT_UPDATE_UI, &EditorFrame::OnPanelsMenuUpdate, this);
 	Bind(wxEVT_MENU_OPEN, &EditorFrame::OnMenuOpenEvent, this);
 	
 	//-----------------------------------//
 
-	settingsMenu = new wxMenu;
-	wxMenuItem* renderItem = settingsMenu->AppendCheckItem(wxID_ANY, "&Fixed Pipeline");
+	menuSettings = new wxMenu;
+	wxMenuItem* renderItem = menuSettings->AppendCheckItem(wxID_ANY, "&Fixed Pipeline");
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &EditorFrame::OnSettingsRender, this, renderItem->GetId());
 	Bind(wxEVT_UPDATE_UI, &EditorFrame::OnSettingsRenderUpdate, this, renderItem->GetId());
 
 	//-----------------------------------//
 
     wxMenuBar* menuBar = new wxMenuBar();
-	menuBar->Append(fileMenu, "&File");
-	menuBar->Append(editMenu, "&Edit");
-	menuBar->Append(settingsMenu, "&Settings");
-	menuBar->Append(toolsMenu, "&Tools");
-	menuBar->Append(panelsMenu, "&Panels");
-    menuBar->Append(helpMenu, "&Help");
+	menuBar->Append(menuFile, "&File");
+	menuBar->Append(menuEdit, "&Edit");
+	menuBar->Append(menuSettings, "&Settings");
+	menuBar->Append(menuTools, "&Tools");
+	menuBar->Append(menuPanels, "&Panels");
+    menuBar->Append(menuHelp, "&Help");
 
     SetMenuBar(menuBar);
 }
@@ -64,7 +64,7 @@ void EditorFrame::createMenus()
 
 void EditorFrame::createLastUI()
 {
-	wxMenuItem* quitItem = fileMenu->Append(wxID_ANY, "E&xit\tAlt-X", "Quit this program");
+	wxMenuItem* quitItem = menuFile->Append(wxID_ANY, "E&xit\tAlt-X", "Quit this program");
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &EditorFrame::OnQuit, this, quitItem->GetId());
 
 	getAUI()->Update();
@@ -74,10 +74,10 @@ void EditorFrame::createLastUI()
 
 void EditorFrame::OnMenuOpenEvent(wxMenuEvent& event)
 {
-	if( event.GetMenu() != panelsMenu )
+	if( event.GetMenu() != menuPanels )
 		return;
 
-	const wxMenuItemList menus = panelsMenu->GetMenuItems();
+	const wxMenuItemList menus = menuPanels->GetMenuItems();
 
 	if( !menus.IsEmpty() )
 		return;
@@ -85,7 +85,7 @@ void EditorFrame::OnMenuOpenEvent(wxMenuEvent& event)
 	//	wxMenuItem* item = (wxMenuItem *) menus.GetFirst();
 	//	
 	//	if(item)
-	//		panelsMenu->Delete(item);
+	//		menuPanels->Delete(item);
 	//}
 
 	wxAuiManager* aui = getAUI();
@@ -99,7 +99,7 @@ void EditorFrame::OnMenuOpenEvent(wxMenuEvent& event)
 		if( pane.caption.IsEmpty() )
 			continue;
 		
-		wxMenuItem* item = panelsMenu->Append(wxID_ANY, pane.caption);
+		wxMenuItem* item = menuPanels->Append(wxID_ANY, pane.caption);
 		//item->Check(pane.IsShown());
 		//item->SetBitmap(pane.icon);
 
@@ -111,12 +111,12 @@ void EditorFrame::OnMenuOpenEvent(wxMenuEvent& event)
 
 void EditorFrame::OnPanelsMenuEvent(wxCommandEvent& event)
 {
-	wxMenuItem* item = panelsMenu->FindItem( event.GetId() );
+	wxMenuItem* item = menuPanels->FindItem( event.GetId() );
 
 	if( !item )
 		return;
 
-	wxAuiPaneInfo& pane = auiManager->GetPane( item->GetItemLabelText() );
+	wxAuiPaneInfo& pane = paneCtrl->GetPane( item->GetItemLabelText() );
 
 	if( !pane.IsOk() )
 		return;
@@ -124,7 +124,7 @@ void EditorFrame::OnPanelsMenuEvent(wxCommandEvent& event)
 	pane.Show( !pane.IsShown() );
 	//item->Check( pane.IsShown() );
 
-	auiManager->Update();
+	paneCtrl->Update();
 }
 
 

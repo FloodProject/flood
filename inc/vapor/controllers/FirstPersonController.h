@@ -41,7 +41,7 @@ public:
 	~FirstPersonController();
 
 	// Updates this component.
-	virtual void _update( double delta );
+	virtual void _update( float delta );
 
 protected:
 
@@ -52,7 +52,7 @@ protected:
 	void centerCursor();
 
 	// Checks the controls for updates.
-	void checkControls( double delta );
+	void checkControls( float delta );
 
 	// Input callback functions.
 	void onKeyPressed( const KeyEvent& event );

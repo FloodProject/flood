@@ -95,7 +95,7 @@ void Camera::setView( RenderView* view )
 
 //-----------------------------------//
 
-void Camera::update( double )
+void Camera::update( float )
 {
 	if( !activeView )
 	{

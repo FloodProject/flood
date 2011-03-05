@@ -55,7 +55,7 @@ public:
 	GETTER(FileWatcher, FileWatcher*, fileWatcher)
 
 	// Updates the watcher with new notifications.
-	virtual void update( double );
+	virtual void update( float );
 
 protected:
 

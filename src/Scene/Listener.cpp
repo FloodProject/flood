@@ -50,7 +50,7 @@ void Listener::setVolume( float volume )
 
 //-----------------------------------//
 
-void Listener::update( double delta )
+void Listener::update( float delta )
 {
 	if(!audioContext)
 		return;

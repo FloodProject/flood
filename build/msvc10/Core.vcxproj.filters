@@ -145,6 +145,9 @@
     <Filter Include="Streams\Memory">
       <UniqueIdentifier>{dad22447-8e41-4e42-ba29-c3e33f8187ac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Memory">
+      <UniqueIdentifier>{2f67dd86-71a5-4791-905f-cabd91cc370f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Core\math\Math.cpp">
@@ -294,6 +297,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Core\Timer.cpp">
       <Filter>Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\Memory.cpp">
+      <Filter>Memory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -477,6 +483,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Core\FileWatcherWin32.h">
       <Filter>Filesystem\Watcher</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\Memory.h">
+      <Filter>Memory</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

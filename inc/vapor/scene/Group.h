@@ -43,7 +43,7 @@ public:
 	GETTER(Entities, const std::vector<EntityPtr>&, entities)
 
 	// Updates the group.
-	virtual void update( double delta );
+	virtual void update( float delta );
 
 	// Event gets called when an entity is added.
 	Event1<const EntityPtr&> onEntityAdded;

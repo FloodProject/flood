@@ -100,29 +100,28 @@ bool Mouse::isButtonPressed( MouseButton::Enum button ) const
 	
 //-----------------------------------//
 
-void Mouse::mouseMoved(const MouseMoveEvent& mme)
+void Mouse::mouseMoved(const MouseMoveEvent& event)
 {	
-	mouseInfo.x = mme.x;
-	mouseInfo.y = mme.y;
+	mouseInfo.x = event.x;
+	mouseInfo.y = event.y;
 
-	onMouseMove( mme );
+	onMouseMove(event);
 }
 
 //-----------------------------------//
 
-void Mouse::mouseDragged(const MouseDragEvent& mde)
+void Mouse::mouseDragged(const MouseDragEvent& de)
 {
-	MouseDragEvent& me = const_cast<MouseDragEvent&>(mde);
+	MouseDragEvent& event = (MouseDragEvent&) de;
 
-	me.dx = mouseInfo.x - mde.x;
-	me.dy = mouseInfo.y - mde.y;
+	event.dx = mouseInfo.x - event.x;
+	event.dy = mouseInfo.y - event.y;
+	event.info = &mouseInfo;
 	
-	me.info = &mouseInfo;
+	mouseInfo.x = event.x;
+	mouseInfo.y = event.y;
 
-	mouseInfo.x = mde.x;
-	mouseInfo.y = mde.y;
-
-	onMouseDrag( mde );
+	onMouseDrag(event);
 }
 
 //-----------------------------------//

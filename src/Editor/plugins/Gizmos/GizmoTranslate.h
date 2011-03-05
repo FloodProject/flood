@@ -35,7 +35,7 @@ protected:
 	VertexBufferPtr generateCones();
 
 	// Generates solid cone geometry for the gizmo arrows.
-	void generateSolidCone( double base, double height, uint slices,
+	void generateSolidCone( float base, float height, uint slices,
 		std::vector<Vector3>& pos );
 
 	// Generate nice colors for the gizmo.

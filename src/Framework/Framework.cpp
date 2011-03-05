@@ -73,10 +73,10 @@ void Framework::mainLoop()
 	Window* window = renderDevice->getWindow();
 
 	const ushort numUpdatesSecond = 25;
-	const double maxUpdateTime = 1.0f / numUpdatesSecond;
+	const float maxUpdateTime = 1.0f / numUpdatesSecond;
 
 	Timer updateTimer;
-	double nextTick = updateTimer.reset();
+	float nextTick = updateTimer.reset();
 
 	while( true )
 	{
@@ -126,9 +126,6 @@ void Framework::registerCallbacks()
 {
 	InputManager* input = getInputManager();
 
-	if(!input)
-		return;
-	
 	Keyboard* keyboard = input->getKeyboard();
 	keyboard->onKeyPress.Connect( this, &Framework::onKeyPressed );
 	

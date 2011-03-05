@@ -44,7 +44,7 @@ PageManager::~PageManager()
 
 //-----------------------------------//
 
-void PageManager::update( double delta )
+void PageManager::update( float delta )
 {
 	const CameraPtr& camera = weakCamera.lock();
 

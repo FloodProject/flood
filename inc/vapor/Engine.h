@@ -96,7 +96,7 @@ public:
 	InputManager* getInputManager() const;
 
 	// Updates the main subsystems.
-	void update( double delta );
+	void update( float delta );
 
 protected:
 
@@ -117,6 +117,9 @@ protected:
 
 	// Rendering device.
 	RenderDevice* renderDevice;
+
+	// Input manager.
+	InputManager* inputManager;
 
 	// Audio device.
 	AudioDevice* audioDevice;

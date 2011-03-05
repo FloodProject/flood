@@ -67,7 +67,11 @@ public:
 
 	Buffer();
 	Buffer(BufferUsage::Enum usage, BufferAccess::Enum access);
-	virtual ~Buffer();
+
+	// Note: The destructor isn't virtual because this base class
+	// isn't meant to be used polymorphically. We don't want the overhead.
+
+	~Buffer();
 
 	// Gets/sets the buffer usage type.
 	ACESSOR(BufferUsage, BufferUsage::Enum, usage)

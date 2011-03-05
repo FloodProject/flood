@@ -10,13 +10,16 @@
 
 #ifdef VAPOR_AUDIO_OPENAL
 
-#include "audio/Device.h"
-#include "audio/Buffer.h"
+#include "Audio/Device.h"
+#include "Audio/Buffer.h"
 #include "Utilities.h"
 
-#pragma TODO("Init first context to log version")
-
 namespace vapor {
+
+//-----------------------------------//
+
+static AudioDevice* gs_audioDevice = nullptr;
+AudioDevice* GetAudioDevice() { return gs_audioDevice; }
 
 //-----------------------------------//
 
@@ -27,6 +30,8 @@ AudioDevice::AudioDevice()
 	, error(AL_NO_ERROR)
 	, mainContext(nullptr)
 {
+	if(!gs_audioDevice) gs_audioDevice = this;
+
 	// Select the "preferred device".
 	device = alcOpenDevice(nullptr);
 
@@ -35,7 +40,7 @@ AudioDevice::AudioDevice()
 		Log::warn("Could not create OpenAL device: %s", getError());
 		return;
 	}
-	
+
 	Log::info("Creating OpenAL main context");
 
 	// Create a main context.
@@ -66,15 +71,11 @@ AudioDevice::~AudioDevice()
 
 	#pragma TODO("Check that all contexts/buffers are closed on exit")
 	
-	ALCboolean ret = alcCloseDevice(device);
-		
-	if(ret != ALC_TRUE) 
+	if(!alcCloseDevice(device)) 
 	{
 		Log::warn("Error closing OpenAL device: %s", getError());
 		return;
 	}
-
-	device = nullptr;
 }
 
 //-----------------------------------//
@@ -92,42 +93,6 @@ const std::string AudioDevice::getVersion()
 
 //-----------------------------------//
 
-bool AudioDevice::checkError()
-{
-	error = alGetError();
-	return (error != AL_NO_ERROR);
-}
-
-//-----------------------------------//
-
-const ALchar* AudioDevice::getError()
-{
-	const ALchar* str;
-	
-	switch(error)
-	{
-	case AL_NO_ERROR:
-		str = "No error."; 
-		break;
-	case AL_INVALID_ENUM:
-		str = "Invalid enum.";
-		break;
-	case AL_INVALID_VALUE:
-		str = "Invalid value.";
-		break;
-	case AL_INVALID_NAME:
-		str = "Invalid name.";
-		break;
-	default:
-		str = "Unknown error.";
-		break;
-	}
-	
-	return str;
-}
-
-//-----------------------------------//
-
 void AudioDevice::setVolume(float volume)
 {
 	alListenerf(AL_GAIN, volume);
@@ -135,6 +100,7 @@ void AudioDevice::setVolume(float volume)
 	if(checkError()) 
 	{
 		Log::warn("Error changing listener volume: %s", getError());
+		return;
 	}
 }
 
@@ -147,34 +113,12 @@ ALint AudioDevice::getFormat(const SoundPtr& sound)
 	int channels = sound->getChannels();
 	int size = sound->getSize();
 
-	if(channels == 1 && size == 8)
-		return AL_FORMAT_MONO8;
-
-	if(channels == 1 && size == 16)
-		return AL_FORMAT_MONO16;
-
-	if(channels == 2 && size == 8)
-		return AL_FORMAT_STEREO8;
-
-	if(channels == 2 && size == 16)
-		return AL_FORMAT_STEREO16;
+	if(channels == 1 && size == 8) return AL_FORMAT_MONO8;
+	else if(channels == 1 && size == 16) return AL_FORMAT_MONO16;
+	else if(channels == 2 && size ==  8) return AL_FORMAT_STEREO8;
+	else if(channels == 2 && size == 16) return AL_FORMAT_STEREO16;
 
 	return AL_INVALID;
-}
-
-//-----------------------------------//
-
-void AudioDevice::switchContext(ALCcontext* context)
-{
-	ALCboolean ret = alcMakeContextCurrent(context);
-
-	if(ret != ALC_TRUE)
-	{
-		Log::warn("Could not make OpenAL context current");
-		return;
-	}
-
-	this->context = context;
 }
 
 //-----------------------------------//
@@ -189,6 +133,28 @@ AudioBufferPtr AudioDevice::prepareBuffer(const SoundPtr& sound)
 	soundBuffers[sound] = buffer;
 
 	return buffer;
+}
+
+//-----------------------------------//
+
+bool AudioDevice::checkError()
+{
+	error = alGetError();
+	return (error != AL_NO_ERROR);
+}
+
+//-----------------------------------//
+
+const ALchar* AudioDevice::getError()
+{
+	switch(error)
+	{
+	case AL_NO_ERROR: return "No error";
+	case AL_INVALID_ENUM: return "Invalid enum";
+	case AL_INVALID_VALUE: return "Invalid value";
+	case AL_INVALID_NAME: return "Invalid name";
+	default: return "Unknown error";
+	}
 }
 
 //-----------------------------------//

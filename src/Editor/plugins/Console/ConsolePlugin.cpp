@@ -39,17 +39,17 @@ PluginMetadata ConsolePlugin::getMetadata()
 
 void ConsolePlugin::onPluginEnable()
 {
-	wxAuiToolBar* toolBar = editor->getToolbar();
+	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
 	wxBitmap iconConsole = wxMEMORY_BITMAP(application_xp_terminal);
 
-	if(toolBar)
+	if(toolbarCtrl)
 	{
-		addTool( toolBar->AddSeparator() );
+		addTool( toolbarCtrl->AddSeparator() );
 
-		consoleButton = toolBar->AddTool( wxID_ANY, "Console", iconConsole );
+		consoleButton = toolbarCtrl->AddTool( wxID_ANY, "Console", iconConsole );
 		addTool( consoleButton );
 
-		toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED,
+		toolbarCtrl->Bind( wxEVT_COMMAND_TOOL_CLICKED,
 			&ConsolePlugin::onConsoleButtonClick, this, consoleButton->GetId() );
 	}
 

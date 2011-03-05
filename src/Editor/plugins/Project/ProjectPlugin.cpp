@@ -12,6 +12,7 @@
 #include "Events.h"
 #include "UndoManager.h"
 #include "EditorIcons.h"
+#include "../Scene/SceneDocument.h"
 #include "io/JsonSerializer.h"
 
 namespace vapor { namespace editor {
@@ -20,7 +21,6 @@ namespace vapor { namespace editor {
 
 ProjectPlugin::ProjectPlugin( EditorFrame* frame )
 	: Plugin(frame)
-	, unsavedChanges(false)
 { }
 
 //-----------------------------------//
@@ -41,29 +41,29 @@ PluginMetadata ProjectPlugin::getMetadata()
 
 void ProjectPlugin::onPluginEnable()
 {
-	wxAuiToolBar* toolBar = editor->getToolbar();
+	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
 
-	if(toolBar)
+	if(toolbarCtrl)
 	{
 		wxBitmap iconNew = wxMEMORY_BITMAP(page_empty);
-		newButton = toolBar->AddTool( wxID_ANY, "New", iconNew, "Creates a new scene" );
+		newButton = toolbarCtrl->AddTool( wxID_ANY, "New", iconNew, "Creates a new scene" );
 		addTool( newButton );
 
 		wxBitmap iconOpen = wxMEMORY_BITMAP(folder_explore);
-		openButton = toolBar->AddTool( wxID_ANY, "Open", iconOpen, "Opens an existing scene" );
+		openButton = toolbarCtrl->AddTool( wxID_ANY, "Open", iconOpen, "Opens an existing scene" );
 		addTool( openButton );
 
 		wxBitmap iconSave = wxMEMORY_BITMAP(disk);
-		saveButton = toolBar->AddTool( wxID_ANY, "Save", iconSave, "Save the current scene" );
+		saveButton = toolbarCtrl->AddTool( wxID_ANY, "Save", iconSave, "Save the current scene" );
 		addTool( saveButton );
 		
-		toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onNewButtonClick, this, newButton->GetId() );
-		toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onOpenButtonClick, this, openButton->GetId() );
-		toolBar->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onSaveButtonClick, this, saveButton->GetId() );
-		toolBar->Bind( wxEVT_UPDATE_UI, &ProjectPlugin::onSaveButtonUpdateUI, this, saveButton->GetId() );
+		toolbarCtrl->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onNewButtonClick, this, newButton->GetId() );
+		toolbarCtrl->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onOpenButtonClick, this, openButton->GetId() );
+		toolbarCtrl->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onSaveButtonClick, this, saveButton->GetId() );
+		toolbarCtrl->Bind( wxEVT_UPDATE_UI, &ProjectPlugin::onSaveButtonUpdateUI, this, saveButton->GetId() );
 	}
 
-	wxMenu* menu = editor->fileMenu;
+	wxMenu* menu = editor->menuFile;
 	newItem = menu->Append(newButton->GetId(), newButton->GetLabel());
 	openItem = menu->Append(openButton->GetId(), openButton->GetLabel());
 	saveItem = menu->Append(saveButton->GetId(), saveButton->GetLabel());
@@ -71,35 +71,26 @@ void ProjectPlugin::onPluginEnable()
 	editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onNewButtonClick, this, newButton->GetId() );
 	editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onOpenButtonClick, this, openButton->GetId() );
 	editor->Bind( wxEVT_COMMAND_TOOL_CLICKED, &ProjectPlugin::onSaveButtonClick, this, saveButton->GetId() );
-
-	UndoManager* undo = editor->getUndoManager();
-	undo->onUndoRedoEvent.Connect(this, &ProjectPlugin::onUndoRedoEvent);
 }
 
 //-----------------------------------//
 
 void ProjectPlugin::onPluginDisable()
-{
-	UndoManager* undo = editor->getUndoManager();
-	undo->onUndoRedoEvent.Disconnect(this, &ProjectPlugin::onUndoRedoEvent);
-}
-
-//-----------------------------------//
-
-void ProjectPlugin::onUndoRedoEvent()
-{
-	unsavedChanges = true;
-}
+{ }
 
 //-----------------------------------//
 
 void ProjectPlugin::onNewButtonClick(wxCommandEvent& event)
 {
+#if 0
 	if( !askSaveChanges() )
 		return;
+#endif
 
-	ScenePtr scene( new Scene() );
-	switchScene(scene);
+	SceneDocument* document = new SceneDocument();
+	editor->addDocument(document);
+
+	switchScene(document);
 }
 
 //-----------------------------------//
@@ -136,8 +127,39 @@ void ProjectPlugin::onOpenButtonClick(wxCommandEvent& event)
 		return;
 	}
 
+#if 0
 	ScenePtr newScene( (Scene*) object );
 	switchScene(newScene);
+#endif
+}
+
+//-----------------------------------//
+
+bool ProjectPlugin::askSaveChanges()
+{
+	Document* document = editor->getDocument();
+	if( !document ) return false;
+
+	if( !document->getUnsavedChanges() )
+		return true;
+
+	wxMessageDialog dialog(editor,  
+		"Scene contains unsaved changes. Do you want to save them?",
+		"Editor", wxYES_NO | wxCANCEL | wxICON_EXCLAMATION);
+
+	//dialog.SetSetYesNoLabels(wxID_SAVE, "&Don't save");
+
+    int answer = dialog.ShowModal();
+
+     if( answer == wxID_YES && !saveScene() )
+		return false;
+
+	if(answer != wxID_CANCEL )
+		return true;
+	else
+		return false;
+
+	return false;
 }
 
 //-----------------------------------//
@@ -157,40 +179,14 @@ bool ProjectPlugin::saveScene()
 	std::string path = (std::string) fc.GetPath();
 	FileStream stream( path, StreamMode::Write );
 	
-	if( !stream.open() )
-		return false;
+	if( !stream.open() ) return false;
 
 	JsonSerializer json( stream );
 	
 	ObjectWalker walker(json);
 	walker.process(scene.get());
 
-	unsavedChanges = false;
 	return true;
-}
-
-//-----------------------------------//
-
-bool ProjectPlugin::askSaveChanges()
-{
-	if( !unsavedChanges )
-		return true;
-
-	wxMessageDialog dialog(editor,  
-		"Scene contains unsaved changes. Do you want to save them?",
-		"Editor", wxYES_NO | wxCANCEL | wxICON_EXCLAMATION);
-
-	//dialog.SetSetYesNoLabels(wxID_SAVE, "&Don't save");
-
-    int answer = dialog.ShowModal();
-
-     if( answer == wxID_YES && !saveScene() )
-		return false;
-
-	if(answer != wxID_CANCEL )
-		return true;
-	else
-		return false;
 }
 
 //-----------------------------------//
@@ -204,23 +200,30 @@ void ProjectPlugin::onSaveButtonClick(wxCommandEvent& event)
 
 void ProjectPlugin::onSaveButtonUpdateUI(wxUpdateUIEvent& event)
 {
-	event.Enable( unsavedChanges );
-	//saveItem->Enable( unsavedChanges );
+	Document* document = editor->getDocument();
+	
+	if( !document )
+	{
+		event.Enable(false);
+		return;
+	}
+
+	event.Enable( document->getUnsavedChanges() );
 }
 
 //-----------------------------------//
 
-void ProjectPlugin::switchScene(const ScenePtr& scene)
+void ProjectPlugin::switchScene(const SceneDocument* document)
 {
-	editor->switchPlayMode(false);
+	if( !document ) return;
 
-	UndoManager* undo = editor->getUndoManager();
+	UndoManager* undo = document->getUndoManager();
 	undo->clearOperations();
 
-	unsavedChanges = false;
+	const ScenePtr& scene = document->scene;
 
 	Engine* engine = editor->getEngine();
-	engine->setSceneManager(scene);
+	engine->setSceneManager( scene);
 
 #ifdef VAPOR_PHYSICS_BULLET
 	delete engine->getPhysicsManager();

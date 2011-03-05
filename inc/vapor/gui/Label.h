@@ -45,7 +45,7 @@ public:
 	void setText( const std::string& text );
 
 	// Updates the geometry to match the new text if needed.
-	virtual void update( double delta );
+	virtual void update( float delta );
 
 protected:
 

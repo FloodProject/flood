@@ -27,6 +27,8 @@ public:
 
 //-----------------------------------//
 
+class SceneDocument;
+
 class ProjectPlugin : public Plugin
 {
 public:
@@ -68,20 +70,14 @@ public:
 
 protected:
 
-	// Handles undo/redo events.
-	void onUndoRedoEvent();
-
 	// Switches the scene.
-	void switchScene(const ScenePtr& scene);
+	void switchScene(const SceneDocument* document);
 
 	// Asks to save unsaved changes.
 	bool askSaveChanges();
 
 	// Saves the current scene.
 	bool saveScene();
-
-	// Keeps track if there are unsaved changes.
-	bool unsavedChanges;
 };
 
 //-----------------------------------//

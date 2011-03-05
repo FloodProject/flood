@@ -118,7 +118,7 @@ void Overlay::rebuildBorderGeometry()
 
 //-----------------------------------//
 
-void Overlay::update( double )
+void Overlay::update( float )
 {
 	const TransformPtr& transform = entity->getTransform();
 	

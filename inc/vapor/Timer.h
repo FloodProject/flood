@@ -40,13 +40,13 @@ public:
 	Timer();
 
 	// Resets the timer.
-	double reset();
+	float reset();
 
 	// Gets the time since the last reset.
-	double getElapsedTime();
+	float getElapsedTime();
 
 	// Gets the current time.
-	double getCurrentTime();
+	float getCurrentTime();
 	
 private:
 

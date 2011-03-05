@@ -60,7 +60,6 @@ public:
 	virtual void processInt( const Primitive&, int )  {}
 	virtual void processUInt( const Primitive&, uint )  {}
 	virtual void processFloat( const Primitive&, float )  {}
-	virtual void processDouble( const Primitive&, double )  {}
 	virtual void processString( const Primitive&, const std::string& )  {}
 	virtual void processVector3( const Primitive&, const Vector3& )  {}
 	virtual void processQuaternion( const Primitive&, const Quaternion& )  {}

@@ -121,7 +121,7 @@ void Cell::rebuildVertices()
 
 void Cell::rebuildIndices()
 {
-	// Vertex data
+	// Index data.
 	std::vector<ushort> indices;
 
 	const int numTiles = settings->NumberTiles;
@@ -146,7 +146,7 @@ void Cell::rebuildIndices()
 
 	// Index buffer setup.
 	const IndexBufferPtr& ib = rend->getIndexBuffer();
-	ib->set( indices );
+	SetIndexBufferData(ib, indices);
 }
 
 //-----------------------------------//
@@ -166,6 +166,9 @@ void Cell::rebuildFaceNormals()
 	const VertexBufferPtr& vb = rend->getVertexBuffer();
 	const IndexBufferPtr& ib = rend->getIndexBuffer();
 
+#pragma TODO(Finish index buffer work)
+
+#if 0
 	const std::vector<Vector3>& vs = vb->getVertices();
 	assert( !vs.empty() );
 
@@ -188,6 +191,7 @@ void Cell::rebuildFaceNormals()
 
 	const uint numTiles = settings->NumberTiles;
 	assert( faceNormals.size() == numTiles*numTiles*2 );
+#endif
 }
 
 //-----------------------------------//
@@ -243,6 +247,7 @@ void Cell::rebuildAveragedNormals()
 	const std::vector<Vector3>& vs = vb->getVertices();
 	assert( !vs.empty() );
 
+#if 0
 	const std::vector<ushort>& ind = ib->getIndices16();
 	assert( !ind.empty() );
 
@@ -268,9 +273,9 @@ void Cell::rebuildAveragedNormals()
 		normals.push_back( average );
 	}
 
-
 	assert( normals.size() == vs.size() );
 	vb->set( VertexAttribute::Normal, normals );
+#endif
 }
 
 //-----------------------------------//

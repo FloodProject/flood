@@ -108,7 +108,7 @@ public:
 	//void applyBrush( const Brush& brush, const Region& region );
 
 	// Updates the terrain geometry if needed.
-	virtual void update( double delta );
+	virtual void update( float delta );
 
 protected:
 

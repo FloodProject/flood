@@ -231,7 +231,7 @@ void Transform::updateBoundingVolume()
 
 //-----------------------------------//
 
-void Transform::update( double delta )
+void Transform::update( float delta )
 {
 	if( !externalTransform )
 		transform = getLocalTransform();

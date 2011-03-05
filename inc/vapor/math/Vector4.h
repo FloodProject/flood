@@ -257,15 +257,7 @@ public:
 	T x, y, z, w;
 };
 
-//-----------------------------------//
-
-/**
- * Specific types
- */
-
-typedef CORE_API Vector4T<int> Vector4i;
 typedef CORE_API Vector4T<float> Vector4;
-typedef CORE_API Vector4T<double> Vector4d;
 
 //-----------------------------------//
 

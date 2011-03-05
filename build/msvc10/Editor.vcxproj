@@ -173,13 +173,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\Editor\Document.cpp" />
+    <ClCompile Include="..\..\src\Editor\EditorCameraController.cpp" />
     <ClCompile Include="..\..\src\Editor\Menus.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Hierarchy\HierarchyPane.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Hierarchy\HierarchyPlugin.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Log\LogFrame.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Log\LogPlugin.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Property\PropertyWatch.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourceDatabase.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourcesPane.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneComponents.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneDocument.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneOperation.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Scene\ScenePane.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Selection\SelectionManager.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Selection\SelectionPlugin.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Terrain\TerrainOperation.cpp" />
@@ -213,10 +220,8 @@
     <ClCompile Include="..\..\src\Editor\plugins\Project\ProjectPlugin.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Camera\CameraControls.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Camera\CameraPlugin.cpp" />
-    <ClCompile Include="..\..\src\Editor\plugins\Scene\ScenePage.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Scene\ScenePlugin.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourcesBrowser.cpp" />
-    <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourcesPage.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourcesPlugin.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Property\PropertyOperation.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Property\PropertyPage.cpp" />
@@ -230,6 +235,8 @@
     <ClCompile Include="..\..\src\Editor\Editor.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\Editor\inc\Document.h" />
+    <ClInclude Include="..\..\src\Editor\inc\EditorCameraController.h" />
     <ClInclude Include="..\..\src\Editor\inc\RenderControl.h" />
     <ClInclude Include="..\..\src\Editor\inc\RenderWindow.h" />
     <ClInclude Include="..\..\src\Editor\inc\ResourceDrop.h" />
@@ -244,9 +251,14 @@
     <ClInclude Include="..\..\src\Editor\plugins\Gizmos\GizmoTranslate.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Gizmos\GizmoScale.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Gizmos\GizmoRotate.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Hierarchy\HierarchyPane.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Hierarchy\HierarchyPlugin.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Log\LogFrame.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Log\LogPlugin.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourceDatabase.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourcesPane.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Scene\SceneDocument.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Scene\ScenePane.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Selection\SelectionManager.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Selection\SelectionPlugin.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Terrain\TerrainOperation.h" />
@@ -262,10 +274,8 @@
     <ClInclude Include="..\..\src\Editor\plugins\Project\ProjectPlugin.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Camera\CameraControls.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Camera\CameraPlugin.h" />
-    <ClInclude Include="..\..\src\Editor\plugins\Scene\ScenePage.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Scene\ScenePlugin.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourcesBrowser.h" />
-    <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourcesPage.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourcesPlugin.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Property\PropertyOperation.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Property\PropertyPage.h" />

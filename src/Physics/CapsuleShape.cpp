@@ -47,7 +47,7 @@ CapsuleShape::~CapsuleShape()
 
 //-----------------------------------//
 
-void CapsuleShape::update( double delta )
+void CapsuleShape::update( float delta )
 {
 	if( capsuleShape )
 		return;

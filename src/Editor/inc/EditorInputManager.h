@@ -19,11 +19,11 @@ namespace vapor { namespace editor {
  * Forwards all the input received by wxWidgets to the engine.
  */
 
-class EditorInputManager : public InputManager
+class EditorInputManager
 {
 public:
 
-	EditorInputManager();
+	EditorInputManager(InputManager* input);
 
 	// Processes a wxWidgets keyboard input event.
 	void processKeyEvent( const wxKeyEvent&, bool keyDown );
@@ -39,6 +39,8 @@ private:
 
 	// Converts from wxWidgets events to vapor3D events.
 	static Keys::Enum convertKeyEnum( int keyCode );
+
+	InputManager* input;
 };
 
 //-----------------------------------//

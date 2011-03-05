@@ -335,7 +335,7 @@ void GLSL_Program::setUniform( const std::string& slot, float data )
 
 //-----------------------------------//
 
-void GLSL_Program::setUniform( const std::string& slot, const std::vector<Vector3> vec )
+void GLSL_Program::setUniform( const std::string& slot, const std::vector<Vector3>& vec )
 {
 	assert( sizeof(vec[0]) == 3*sizeof(float) );
 
@@ -352,7 +352,7 @@ void GLSL_Program::setUniform( const std::string& slot, const std::vector<Vector
 
 //-----------------------------------//
 
-void GLSL_Program::setUniform( const std::string& slot, const std::vector<Color> vec )
+void GLSL_Program::setUniform( const std::string& slot, const std::vector<Color>& vec )
 {
 	assert( sizeof(vec[0]) == 4*sizeof(float) );
 
@@ -392,6 +392,8 @@ void GLSL_Program::setUniform( const std::string& slot, const EulerAngles& ang )
 
 //-----------------------------------//
 
+#define TRANSPOSE_MATRIX false
+
 void GLSL_Program::setUniform( const std::string& slot, const Matrix4x3& matrix )
 {
 	GLint loc = glGetUniformLocation( id, slot.c_str() );
@@ -409,7 +411,7 @@ void GLSL_Program::setUniform( const std::string& slot, const Matrix4x3& matrix 
 	//else
 	{
 		Matrix4x4 mat( matrix );
-		glUniformMatrix4fv( loc, 1, false, &mat.m11 );
+		glUniformMatrix4fv( loc, 1, TRANSPOSE_MATRIX, &mat.m11 );
 	}
 }
 
@@ -425,7 +427,7 @@ void GLSL_Program::setUniform( const std::string& slot, const Matrix4x4& matrix 
 		return;
 	}
 
-	glUniformMatrix4fv( loc, 1, false, &matrix.m11 );
+	glUniformMatrix4fv( loc, 1, TRANSPOSE_MATRIX, &matrix.m11 );
 }
 
 //-----------------------------------//
@@ -443,7 +445,7 @@ void GLSL_Program::setUniform( const std::string& slot, const std::vector<Matrix
 		return;
 	}
 
-	glUniformMatrix4fv( loc, vec.size(), false, &(vec[0].m11) );
+	glUniformMatrix4fv( loc, vec.size(), TRANSPOSE_MATRIX, &(vec[0].m11) );
 }
 
 //-----------------------------------//

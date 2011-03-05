@@ -67,7 +67,7 @@ bool Animation::isLooped()
 
 //#define VAPOR_ANIMATION_INTERPOLATION_LINEAR
 
-Matrix4x3 Animation::getKeyFrameMatrix(const BonePtr& bone, double time)
+Matrix4x3 Animation::getKeyFrameMatrix(const BonePtr& bone, float time)
 {
 	if( !bone || keyFrames.empty() )
 		return Matrix4x3::Identity;

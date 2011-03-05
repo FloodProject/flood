@@ -255,14 +255,6 @@ void JsonSerializer::processFloat( const Primitive& prim, float value )
 
 //-----------------------------------//
 
-void JsonSerializer::processDouble( const Primitive& prim, double value )
-{
-	Json::Value& top = *values.top();
-	top = value;
-}
-
-//-----------------------------------//
-
 void JsonSerializer::processString( const Primitive& prim, const std::string& value )
 {
 	Json::Value& top = *values.top();

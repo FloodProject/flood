@@ -58,7 +58,7 @@ public:
 	GETTER(InputManager, EditorInputManager*, inputManager)
 
 	// Add your frame updating code here.
-	Event1<double> onUpdate;
+	Event1<float> onUpdate;
 
 	// Add your frame rendering code here.
 	Event0<> onRender;

@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/render/RenderBuffer.h"
+#include "Render/RenderBuffer.h"
 
 namespace vapor {
 

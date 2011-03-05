@@ -51,7 +51,7 @@ public:
 	SETTER(Camera, const CameraPtr&, weakCamera)
 
 	// Checks if paging is needed.
-	virtual void update( double delta );
+	virtual void update( float delta );
 
 	// Paging events.
 	Event1<const PageEvent&> onPageSwitch;

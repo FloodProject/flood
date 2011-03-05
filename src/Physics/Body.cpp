@@ -59,7 +59,7 @@ Body::~Body()
 
 //-----------------------------------//
 
-void Body::update( double delta )
+void Body::update( float delta )
 {
 	if( body )
 		return;

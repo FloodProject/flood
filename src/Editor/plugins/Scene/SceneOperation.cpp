@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "PCH.h"
-#include "ScenePage.h"
+#include "ScenePane.h"
 #include "UndoManager.h"
 #include "Editor.h"
 
@@ -19,8 +19,7 @@ void EntityOperation::redo()
 {
 	ScenePtr scene = weakScene.lock();
 	
-	if(!scene)
-		return;
+	if(!scene) return;
 	
 	if(added)
 		scene->add(entity);
@@ -34,8 +33,7 @@ void EntityOperation::undo()
 {
 	ScenePtr scene = weakScene.lock();
 	
-	if(!scene)
-		return;
+	if(!scene) return;
 	
 	if(added)
 		scene->remove(entity);
@@ -47,16 +45,12 @@ void EntityOperation::undo()
 
 EntityOperation* ScenePage::createEntityOperation(const EntityPtr& entity, const std::string& desc)
 {
-	if( !entity )
-		return nullptr;
+	if( !entity ) return nullptr;
 
 	EntityOperation* nodeOperation = new EntityOperation();
 	nodeOperation->entity = entity;
 	nodeOperation->weakScene = weakScene;
 	nodeOperation->description = desc;
-
-	UndoManager* undoManager = GetEditor().getUndoManager();
-	undoManager->registerOperation(nodeOperation);
 
 	return nodeOperation;
 }

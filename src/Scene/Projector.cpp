@@ -27,7 +27,7 @@ Projector::Projector()
 
 //-----------------------------------//
 
-void Projector::update(double)
+void Projector::update(float)
 {
 	const TransformPtr& transform = getEntity()->getTransform();
 

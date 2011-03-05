@@ -7,13 +7,18 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "input/InputManager.h"
-#include "input/Device.h"
-#include "input/Keyboard.h"
-#include "input/Mouse.h"
-#include "input/Joystick.h"
+#include "Input/InputManager.h"
+#include "Input/Device.h"
+#include "Input/Keyboard.h"
+#include "Input/Mouse.h"
+#include "Input/Joystick.h"
 
 namespace vapor {
+
+//-----------------------------------//
+
+InputManager::InputManager()
+{}
 
 //-----------------------------------//
 

@@ -9,12 +9,6 @@
 #pragma once
 
 #include "Math/Vector2.h"
-
-class wxFourWaySplitter;
-
-FWD_DECL_SHARED(Scene)
-FWD_DECL_SHARED(Entity)
-FWD_DECL_SHARED(Camera)
 FWD_DECL(Engine)
 
 namespace vapor { namespace editor {
@@ -25,28 +19,21 @@ class Plugin;
 class PluginManager;
 class PluginManagerFrame;
 class EditorInputManager;
-class UndoManager;
-class Viewframe;
 class Events;
-class EditorScene;
+class Document;
 
 //-----------------------------------//
 
-// Define a new application type, each program should derive a class from wxApp
 class EditorApp : public wxApp
 {
 public:
 
     virtual bool OnInit();
-	//virtual bool OnExceptionInMainLoop();
-	//virtual void OnUnhandledException();
 	virtual void OnFatalException();
-	//virtual int FilterEvent(wxEvent& event);
 };
 
 //-----------------------------------//
 
-// Define a new frame type: this is going to be our main frame
 class EditorFrame : public wxFrame
 {
 public:
@@ -57,17 +44,20 @@ public:
 	// Refreshes the main view.
 	void redrawView();
 
-	// Gets the engine instance.	
-	GETTER(Engine, Engine* const, engine)
+	// Adds a new document to the notebook.
+	void addDocument(Document* document);
 
-	// Gets the main viewframe instance.
-	GETTER(MainViewframe, Viewframe* const, viewframe)
+	// Gets the current document.
+	GETTER(Document, Document*, currentDocument)
 
-	// Gets the editor scene instance.
-	GETTER(EditorScene, ScenePtr, editorScene)
+	// Gets the notebook control.
+	GETTER(Notebook, wxAuiNotebook*, notebookCtrl)
 
-	// Gets the Undo/Redo manager instance.
-	GETTER(UndoManager, UndoManager*, undoManager)
+	// Gets the toolbar control.
+	GETTER(Toolbar, wxAuiToolBar*, toolbarCtrl)
+
+	// Gets the AUI interface manager.
+	GETTER(AUI, wxAuiManager*, paneCtrl)
 
 	// Gets the Undo/Redo manager instance.
 	GETTER(PluginManager, PluginManager*, pluginManager)
@@ -75,66 +65,23 @@ public:
 	// Gets the events manager instance.
 	GETTER(EventManager, Events*, eventManager)
 
-	// Gets the notebook control.
-	GETTER(Notebook, wxAuiNotebook*, notebookCtrl)
-
-	// Gets the toolbar control.
-	GETTER(Toolbar, wxAuiToolBar*, toolBar)
-
-	// Gets the AUI interface manager.
-	GETTER(AUI, wxAuiManager*, auiManager)
+	// Gets the engine instance.	
+	GETTER(Engine, Engine*, engine)
 
 	// Gets/sets the drag and drop coords.
 	ACESSOR(DropCoords, Vector2i, dropCoords)
-
-	// Gets the player camera.
-	CameraPtr getPlayerCamera() const;
-
-	// Switches the editor to play mode.
-	void switchPlayMode(bool switchToPlay);
-
-	// Menus.
-	wxMenu* fileMenu;
-	wxMenu* editMenu;
-	wxMenu* toolsMenu;
-	wxMenu* panelsMenu;
-	wxMenu* settingsMenu;
-	wxMenu* helpMenu;
 
 protected:
 
 	// Creates the main UI layout.
 	void createUI();
 	void createLastUI();
-	void createSplitter();
 	void createMenus();
 	void createToolbar();
 	void createNotebook();
-
-	// Creates the engine instance.
 	void createEngine();
-
-	// Creates the views.
-	void createViews();
-
-	// Creates the editor managers.
 	void createServices();
-
-	// Creates the editor plugins.
 	void createPlugins();
-
-	// Creates the editor scene.
-	void createScene();
-
-	// Creates the default resources.
-	void createResources();
-
-	// Creates a new camera.
-	EntityPtr createCamera();
-
-	// View callbacks.
-	void onUpdate( double delta );
-	void onRender();
 
     // wxWidgets main events.
 	void OnIdle(wxIdleEvent& event);
@@ -142,45 +89,53 @@ protected:
     void OnAbout(wxCommandEvent& event);
 	void OnAboutWx(wxCommandEvent& event);
 	void OnToolbarButtonClick(wxCommandEvent& event);
+	void onNotebookPageChanged(wxAuiNotebookEvent& event);
+	void onNotebookPageClose(wxAuiNotebookEvent& event);
 
+	// wxWidgets menu events.
 	void OnMenuOpenEvent(wxMenuEvent& event);
 	void OnPanelsMenuEvent(wxCommandEvent& event);
 	void OnPanelsMenuUpdate(wxUpdateUIEvent& event);
 	void OnSettingsRender(wxCommandEvent& event);
 	void OnSettingsRenderUpdate(wxUpdateUIEvent& event);
 
-	// Drag and drop coords.
-	Vector2i dropCoords;
+#if 0
+	// Gets the player camera.
+	CameraPtr getPlayerCamera() const;
 
-	// Main engine instance.
+	// Switches the editor to play mode.
+	void switchPlayMode(bool switchToPlay);
+#endif
+
 	Engine* engine;
 
-	// Manages the editor scene entities.	
-	ScenePtr editorScene;
-
-	// Input Management.
-	EditorInputManager* inputManager;
-
-	// Plugin Manager.
+	// Plugins.
 	PluginManager* pluginManager;
-	
-	// Plugin Manager Frame.
 	PluginManagerFrame* pluginManagerFrame;
-
-	// Undo/Redo operations.
-	UndoManager* undoManager;
-
-	// Global Events.
 	Events* eventManager;
+	
+	// Drag and drop coordinates.
+	Vector2i dropCoords;
 
 	// UI widgets.
-	wxBoxSizer* sizer;
-	wxSplitterWindow* mainSplitter;
-	wxFourWaySplitter* viewSplitter;
-	wxAuiToolBar* toolBar;
-	Viewframe* viewframe;
+	wxAuiManager* paneCtrl;
+	wxAuiToolBar* toolbarCtrl;
 	wxAuiNotebook* notebookCtrl;
-	wxAuiManager* auiManager;
+
+public:
+
+	// Gets a document from a page.
+	Document* getDocumentFromPage(int selection);
+
+	Document* currentDocument;
+	std::vector<Document*> documents;
+
+	wxMenu* menuFile;
+	wxMenu* menuEdit;
+	wxMenu* menuTools;
+	wxMenu* menuPanels;
+	wxMenu* menuSettings;
+	wxMenu* menuHelp;
 };
 
 // Gets the editor instance.

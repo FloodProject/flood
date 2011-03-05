@@ -10,7 +10,7 @@
 
 #ifdef VAPOR_SCRIPTING_LUA
 
-#include "vapor/script/State.h"
+#include "Script/State.h"
 #include <lua.hpp>
 #include <sstream>
 

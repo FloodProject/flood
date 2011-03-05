@@ -48,7 +48,7 @@ public:
 	uint getMemoryUsage();
 
 	// Updates the texture manager.
-	virtual void update( double delta );
+	virtual void update( float delta );
 
 protected:
 

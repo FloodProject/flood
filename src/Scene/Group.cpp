@@ -78,7 +78,7 @@ bool Group::remove( const EntityPtr& entity )
 
 //-----------------------------------//
 
-void Group::update( double delta )
+void Group::update( float delta )
 {
 	for( uint i = 0; i < entities.size(); i++ )
 	{

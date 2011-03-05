@@ -96,7 +96,7 @@ void TaskManager::runWorker()
 
 //-----------------------------------//
 
-void TaskManager::update( double )
+void TaskManager::update( float )
 {
 	TaskEvent event;
 	

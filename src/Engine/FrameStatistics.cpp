@@ -15,7 +15,7 @@ namespace vapor {
 
 FrameStatistics::FrameStatistics()
 	: numFrames(0)
-	, minFrameTime( std::numeric_limits<double>::max() )
+	, minFrameTime( std::numeric_limits<float>::max() )
 	, maxFrameTime(0)
 	, avgFrameTime(0)
 	, sumFrameTime(0)
@@ -37,7 +37,7 @@ void FrameStatistics::frameStep()
 
 //-----------------------------------//
 
-double FrameStatistics::getLastFPS() const
+float FrameStatistics::getLastFPS() const
 {
 	if(lastFrameTime == 0)
 		return 0;

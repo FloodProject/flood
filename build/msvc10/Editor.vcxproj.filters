@@ -73,6 +73,12 @@
     <Filter Include="Events">
       <UniqueIdentifier>{5ab474fb-d133-43cc-a5db-77ca6b9f3641}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Plugins\Hierarchy">
+      <UniqueIdentifier>{de58145e-9649-477a-bd7e-5e0eee8b0dbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Document">
+      <UniqueIdentifier>{d2b870a6-4ddf-4dd6-8200-2207914cd5fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Editor\RenderControl.cpp">
@@ -150,16 +156,10 @@
     <ClCompile Include="..\..\src\Editor\plugins\Camera\CameraPlugin.cpp">
       <Filter>Plugins\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Editor\plugins\Scene\ScenePage.cpp">
-      <Filter>Plugins\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Editor\plugins\Scene\ScenePlugin.cpp">
       <Filter>Plugins\Scene</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourcesBrowser.cpp">
-      <Filter>Plugins\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourcesPage.cpp">
       <Filter>Plugins\Resources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourcesPlugin.cpp">
@@ -221,6 +221,25 @@
     <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourceDatabase.cpp">
       <Filter>Plugins\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Scene\ScenePane.cpp">
+      <Filter>Plugins\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Hierarchy\HierarchyPane.cpp">
+      <Filter>Plugins\Hierarchy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Hierarchy\HierarchyPlugin.cpp">
+      <Filter>Plugins\Hierarchy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourcesPane.cpp">
+      <Filter>Plugins\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\Document.cpp">
+      <Filter>Document</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneDocument.cpp">
+      <Filter>Plugins\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\EditorCameraController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Editor\inc\RenderControl.h">
@@ -298,16 +317,10 @@
     <ClInclude Include="..\..\src\Editor\plugins\Camera\CameraPlugin.h">
       <Filter>Plugins\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Editor\plugins\Scene\ScenePage.h">
-      <Filter>Plugins\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\Editor\plugins\Scene\ScenePlugin.h">
       <Filter>Plugins\Scene</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourcesBrowser.h">
-      <Filter>Plugins\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourcesPage.h">
       <Filter>Plugins\Resources</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourcesPlugin.h">
@@ -367,6 +380,25 @@
     <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourceDatabase.h">
       <Filter>Plugins\Resources</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Scene\ScenePane.h">
+      <Filter>Plugins\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Hierarchy\HierarchyPane.h">
+      <Filter>Plugins\Hierarchy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Hierarchy\HierarchyPlugin.h">
+      <Filter>Plugins\Hierarchy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourcesPane.h">
+      <Filter>Plugins\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\inc\Document.h">
+      <Filter>Document</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Scene\SceneDocument.h">
+      <Filter>Plugins\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\inc\EditorCameraController.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\src\Editor\res\Editor.rc">

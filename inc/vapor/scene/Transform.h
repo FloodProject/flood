@@ -87,7 +87,7 @@ public:
 	bool requiresBoundingVolumeUpdate() const;
 
 	// Called once per frame to update the component.
-	virtual void update( double delta );
+	virtual void update( float delta );
 
 	// Gets fired when the transform is changed.
 	Event0<> onTransform;

@@ -10,8 +10,8 @@
 
 #ifdef VAPOR_RENDERER_OPENGL
 
-#include "render/VertexBuffer.h"
-#include "render/GL.h"
+#include "Render/VertexBuffer.h"
+#include "Render/GL.h"
 
 namespace vapor {
 
@@ -35,7 +35,6 @@ VertexBuffer::~VertexBuffer()
 bool VertexBuffer::bind()
 {
 	glBindBuffer( GL_ARRAY_BUFFER, id );
-
 	return !glHasError("Error binding vertex buffer");
 }
 
@@ -44,7 +43,6 @@ bool VertexBuffer::bind()
 bool VertexBuffer::unbind()
 {
 	glBindBuffer( GL_ARRAY_BUFFER, 0 );
-
 	return !glHasError("Error unbinding vertex buffer");
 }
 
@@ -59,11 +57,15 @@ bool VertexBuffer::unbind()
 
 #define EnableArrayPointer(arr, func)								\
 	{ glEnableClientState(arr);										\
+	func(attr.type, 0, (void*) offset); }
+
+#define EnableArrayPointerComponents(arr, func)						\
+	{ glEnableClientState(arr);										\
 	func(attr.components, attr.type, 0, (void*) offset); }
 
 #define EnableTexArrayPointer(i)									\
 	{ glClientActiveTexture(GL_TEXTURE0+i);							\
-	EnableArrayPointer(GL_TEXTURE_COORD_ARRAY, glTexCoordPointer) }
+	EnableArrayPointerComponents(GL_TEXTURE_COORD_ARRAY, glTexCoordPointer) }
 
 void VertexBuffer::bindPointers()
 {
@@ -77,8 +79,9 @@ void VertexBuffer::bindPointers()
 		int index = it->first;
 		const Attribute& attr = it->second;
 		
-		IfAttributeIs(Position) EnableArrayPointer(GL_VERTEX_ARRAY, glVertexPointer)
-		IfAttributeIs(Color) EnableArrayPointer(GL_COLOR_ARRAY, glColorPointer)
+		IfAttributeIs(Position) EnableArrayPointerComponents(GL_VERTEX_ARRAY, glVertexPointer)
+		IfAttributeIs(Normal) EnableArrayPointer(GL_NORMAL_ARRAY, glNormalPointer);
+		IfAttributeIs(Color) EnableArrayPointerComponents(GL_COLOR_ARRAY, glColorPointer)
 		IfAttributeIs(TexCoord0) EnableTexArrayPointer(0)
 		IfAttributeIs(TexCoord1) EnableTexArrayPointer(1)
 		IfAttributeIs(TexCoord2) EnableTexArrayPointer(2)

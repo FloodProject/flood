@@ -10,8 +10,8 @@
 
 #ifdef VAPOR_AUDIO_OPENAL
 
-#include "audio/Buffer.h"
-#include "audio/Device.h"
+#include "Audio/Buffer.h"
+#include "Audio/Device.h"
 
 namespace vapor {
 
@@ -19,8 +19,8 @@ namespace vapor {
 
 AudioBuffer::AudioBuffer( AudioDevice* device, const SoundPtr& sound )
 	: device(device)
-	, id(0)
 	, resource(sound)
+	, id(0)
 {
 	alGenBuffers(1, &id);
 
@@ -28,6 +28,7 @@ AudioBuffer::AudioBuffer( AudioDevice* device, const SoundPtr& sound )
 	if(device->checkError()) 
 	{
 		Log::warn( "Error creating a sound buffer: %s", device->getError());
+		return;
 	}
 
 	upload();
@@ -39,10 +40,12 @@ AudioBuffer::~AudioBuffer()
 {
 	alDeleteBuffers(1, &id);
 
-	//if(device->soundBuffers.find(resource) != device->soundBuffers.end())
-	//{
-	//	device->soundBuffers.erase(resource);
-	//}
+#if 0
+	if(device->soundBuffers.find(resource) != device->soundBuffers.end())
+	{
+		device->soundBuffers.erase(resource);
+	}
+#endif
 }
 
 //-----------------------------------//
@@ -55,14 +58,16 @@ void AudioBuffer::upload()
 	int frequency = resource->getFrequency();
 	int format = device->getFormat(resource);
 
-	if( buffer.empty() )
-		return;
+	if( buffer.empty() ) return;
 
 	// Uploads sound data to the buffer.
 	alBufferData( id, format, &buffer[0], size, frequency );
 	
 	if(device->checkError())
+	{
 		Log::warn("Error uploading sound to buffer: %s", device->getError());
+		return;
+	}
 }
 
 //-----------------------------------//

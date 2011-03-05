@@ -88,7 +88,6 @@ protected:
 	// Sets the bounding box visibility of the given node.
 	void setBoundingBoxVisible( const EntityPtr& node, bool state );
 
-	Events* events;
 	SelectionManager* selectionManager;
 };
 
@@ -103,7 +102,7 @@ class SelectionManager
 {
 public:
 
-	SelectionManager( EditorFrame* editor );
+	SelectionManager();
 
 	// Gets the current selection mode.
 	SelectionMode::Enum getSelectionMode() const;
@@ -127,13 +126,6 @@ protected:
 
 	// Selection operation.
 	SelectionOperation* selection;
-
-	// Events manager.
-	Events* events;
-
-	// Undo manager.
-	UndoManager* undoManager;
-
 };
 
 //-----------------------------------//

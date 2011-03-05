@@ -10,32 +10,24 @@
 
 #ifdef VAPOR_RENDERER_OPENGL
 
-#include "vapor/render/IndexBuffer.h"
-#include "vapor/render/GL.h"
+#include "Render/IndexBuffer.h"
+#include "Render/GL.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-IndexBuffer::IndexBuffer( IndexBufferType::Enum indexType )
-	: built(false)
-	, indexType(indexType)
+IndexBuffer::IndexBuffer( int indexSize )
+	: isBuilt(false)
+	, indexSize(indexSize)
 { }
 
 //-----------------------------------//
 
-void IndexBuffer::set( const std::vector< ushort >& data )
+void IndexBuffer::setData( const std::vector<byte>& data )
 {
-	data16 = data;
-	built = false;
-}
-
-//-----------------------------------//
-
-void IndexBuffer::set( const std::vector< ulong >& data )
-{
-	data32 = data;
-	built = false;
+	this->data = data;
+	isBuilt = false;
 }
 
 //-----------------------------------//
@@ -66,45 +58,25 @@ bool IndexBuffer::unbind()
 
 bool IndexBuffer::build()
 {
+	if( data.empty() ) return false;
+
 	bind();
 
-	if( data16.empty() && data32.empty() ) return false;
-
 	// Reserve space for all the buffer elements.
-	glBufferData( GL_ELEMENT_ARRAY_BUFFER, 
-		getNumIndices() * (is16bit() ? sizeof(ushort) : sizeof(ulong)), 
-		is16bit() ? &data16[0] : reinterpret_cast<ushort*>(&data32[0]), 
-		getGLBufferType() );
+	glBufferData( GL_ELEMENT_ARRAY_BUFFER, data.size(), &data[0], getGLBufferType() );
 
 	if( glHasError("Could not buffer data in index buffer") )
 		return false;
 
-	built = true;
+	isBuilt = true;
 	return true;
 }
 
 //-----------------------------------//
 
-uint IndexBuffer::getNumIndices() const
+int IndexBuffer::getSize() const
 {
-	if( is16bit() )
-		return data16.size();
-	else
-		return data32.size();
-}
-
-//-----------------------------------//
-
-bool IndexBuffer::isBuilt() const
-{
-	return built;
-}
-
-//-----------------------------------//
-
-bool IndexBuffer::is16bit() const
-{
-	return indexType == IndexBufferType::I16bit;
+	return data.size() / (indexSize / 8);
 }
 
 //-----------------------------------//

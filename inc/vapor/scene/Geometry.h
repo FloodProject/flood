@@ -48,7 +48,7 @@ public:
 	virtual void updateBounds();
 
 	// Updates some geometry information.
-	virtual void update( double delta );
+	virtual void update( float delta );
 
 	// Gets the bounding volume of this geometry.
 	GETTER(BoundingVolume, const BoundingBox&, bounds)

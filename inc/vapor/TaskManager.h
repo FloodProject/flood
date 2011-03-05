@@ -62,7 +62,7 @@ public:
 	GETTER(Threads, const std::vector<Thread*>&, threads)
 
 	// Sends the events to the observers.
-	void update( double delta );
+	void update( float delta );
 
 	// Notifies the observers of a given task event.
 	Event1<const TaskEvent&> onTaskEvent;

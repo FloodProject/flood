@@ -4,6 +4,8 @@ WIP (work-in-progress)
 EDITOR:
 -------
 
+Abstraction on resource handlers
+
 Fix terrain painting
 Add bounding box calculation for animated meshes
 

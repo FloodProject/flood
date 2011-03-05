@@ -43,13 +43,15 @@ AudioContext::AudioContext(AudioDevice* device)
 
 AudioContext::~AudioContext()
 {
-	if(!context)
-		return;
-	
-	if(device->context == context)
-		device->context = nullptr;
+	if(!context) return;
+
+	makeCurrent();
 
 	alcDestroyContext(context);
+	alcMakeContextCurrent(nullptr);
+
+	if(device->context == context)
+		device->context = nullptr;
 }
 
 //-----------------------------------//
@@ -60,8 +62,8 @@ ALCcontext* AudioContext::createContext()
 
 	if(checkError())
 	{
-		#pragma TODO("OpenAL getError() should be context-specific")
-		Log::warn( getError().c_str() );
+		Log::warn("Error creating OpenAL context", getError());
+		return nullptr;
 	}
 
 	return context;
@@ -75,7 +77,10 @@ void AudioContext::setVolume(float volume)
 	alListenerf(AL_GAIN, volume);
 
 	if(checkError())
-		Log::warn("Could not set new volume: %s", getError().c_str());
+	{
+		Log::warn("Could not set new volume: %s", getError());
+		return;
+	}
 }
 
 //-----------------------------------//
@@ -85,8 +90,11 @@ void AudioContext::setPosition(const Vector3& position)
 	// Update OpenAL's listener position.
 	alListenerfv(AL_POSITION, &position.x);
 
-	if(checkError()) 
-		Log::warn( "Could not set listener position: %s", getError().c_str());
+	if(checkError())
+	{
+		Log::warn( "Could not set listener position: %s", getError());
+		return;
+	}
 }
 
 //-----------------------------------//
@@ -97,57 +105,56 @@ void AudioContext::setOrientation(const Vector3& rotation)
 
 	alListenerfv(AL_ORIENTATION, (const ALfloat *) &data );
 
-	if(checkError()) 
-		Log::warn( "Could not set listener orientation: %s", getError().c_str());
+	if(checkError())
+	{
+		Log::warn( "Could not set listener orientation: %s", getError());
+		return;
+	}
 }
 
 //-----------------------------------//
 
 void AudioContext::makeCurrent()
 {
-	device->switchContext(context);
+	ALCboolean ret = alcMakeContextCurrent(context);
+
+	if(ret != ALC_TRUE)
+	{
+		Log::warn("Could not make OpenAL context current");
+		return;
+	}
 }
 
 //-----------------------------------//
 
-const std::string AudioContext::getError()
+const char* AudioContext::getError()
 {
-	const ALchar* str;
-	
+#ifdef VAPOR_DEBUG
 	switch (error)
 	{
-	case ALC_NO_ERROR:
-		str = "No error."; 
-		break;
-    case ALC_INVALID_DEVICE:
-        str = "Invalid device.";
-        break;
-    case ALC_INVALID_CONTEXT:
-        str = "Invalid context.";
-        break;
-	case ALC_INVALID_ENUM:
-		str = "Invalid enum.";
-		break;
-	case ALC_INVALID_VALUE:
-		str = "Invalid value.";
-		break;
-    case ALC_OUT_OF_MEMORY:
-        str = "Out of memory.";
-        break;
-	default:
-		str = "Unknown error.";
-		break;
+	case ALC_NO_ERROR: return "No error";
+    case ALC_INVALID_DEVICE: return "Invalid device";
+    case ALC_INVALID_CONTEXT: return "Invalid context";
+	case ALC_INVALID_ENUM: return "Invalid enum";
+	case ALC_INVALID_VALUE: return "Invalid value";
+    case ALC_OUT_OF_MEMORY: return "Out of memory";
+	default: return "Unknown error";
 	}
-	
-	return str;
+#else
+	return nullptr;
+#endif
 }
 
 //-----------------------------------//
 
 bool AudioContext::checkError()
 {
+#ifdef VAPOR_DEBUG
 	error = alcGetError(device->device);
 	return (error != AL_NO_ERROR);
+#else
+	return false;
+#endif
 }
 
 //-----------------------------------//

@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "PCH.h"
-#include "ResourcesPage.h"
+#include "ResourcesPane.h"
 #include "EditorIcons.h"
 #include "Editor.h"
 #include "Events.h"
@@ -21,13 +21,13 @@ ResourcesPage::ResourcesPage( wxWindow* parent, wxWindowID id,
 										const wxPoint& pos, const wxSize& size )
 	: wxTreeCtrl(parent, id, pos, size, wxTR_DEFAULT_STYLE | wxTR_HIDE_ROOT)
 {
-	rm = GetResourceManager();
+	ResourceManager* res = GetResourceManager();
 	
-	rm->onResourcePrepared.Connect( this, &ResourcesPage::onResourcePrepared );
-	rm->onResourceRemoved.Connect( this, &ResourcesPage::onResourceRemoved );
+	res->onResourcePrepared.Connect( this, &ResourcesPage::onResourcePrepared );
+	res->onResourceRemoved.Connect( this, &ResourcesPage::onResourceRemoved );
 	
-	rm->onResourceLoaded.Connect( this, &ResourcesPage::onResourceReloaded );
-	rm->onResourceReloaded.Connect( this, &ResourcesPage::onResourceReloaded );
+	res->onResourceLoaded.Connect( this, &ResourcesPage::onResourceReloaded );
+	res->onResourceReloaded.Connect( this, &ResourcesPage::onResourceReloaded );
 
 	initIcons();
 	initControl();
@@ -38,11 +38,13 @@ ResourcesPage::ResourcesPage( wxWindow* parent, wxWindowID id,
 
 ResourcesPage::~ResourcesPage()
 {
-	rm->onResourcePrepared.Disconnect( this, &ResourcesPage::onResourcePrepared );
-	rm->onResourceRemoved.Disconnect( this, &ResourcesPage::onResourceRemoved );
+	ResourceManager* res = GetResourceManager();
 
-	rm->onResourceLoaded.Disconnect( this, &ResourcesPage::onResourceReloaded );
-	rm->onResourceReloaded.Disconnect( this, &ResourcesPage::onResourceReloaded );
+	res->onResourcePrepared.Disconnect( this, &ResourcesPage::onResourcePrepared );
+	res->onResourceRemoved.Disconnect( this, &ResourcesPage::onResourceRemoved );
+
+	res->onResourceLoaded.Disconnect( this, &ResourcesPage::onResourceReloaded );
+	res->onResourceReloaded.Disconnect( this, &ResourcesPage::onResourceReloaded );
 }
 
 //-----------------------------------//
@@ -95,7 +97,7 @@ void ResourcesPage::initIcons()
 
 void ResourcesPage::updateTree()
 {
-	const ResourceMap& resources = rm->getResources();
+	const ResourceMap& resources = GetResourceManager()->getResources();
 	
 	ResourceMap::const_iterator it;
 	for( it = resources.begin(); it != resources.end(); it++ )
@@ -163,7 +165,7 @@ ResourcePtr ResourcesPage::getResourceFromTreeId( wxTreeItemId id )
 	if( !id )
 		return nullptr;
 
-	return rm->getResource( (std::string) GetItemText(id) );
+	return GetResourceManager()->getResource( (std::string) GetItemText(id) );
 }
 
 //-----------------------------------//
@@ -190,6 +192,7 @@ void ResourcesPage::onItemChanged( wxTreeEvent& event )
 enum
 {
 	ID_ResourceMenu_Open = wxID_HIGHEST+982,
+	ID_ResourceMenu_Browse,
 	ID_ResourceMenu_Reload,
 	ID_ResourceMenu_Unload,
 	ID_ResourceMenu_Reimport,
@@ -229,6 +232,7 @@ void ResourcesPage::onTreeItemMenu(wxTreeEvent& event)
 	menu.AppendSeparator();
 	
 	menu.Append( ID_ResourceMenu_Open, "&Open" );
+	menu.Append( ID_ResourceMenu_Browse, "&Browse" );
 	menu.Append( ID_ResourceMenu_Reload, "&Reload" );
 	menu.Append( ID_ResourceMenu_Unload, "&Unload" );
 
@@ -291,14 +295,35 @@ void ResourcesPage::onCommandMenuSelected( wxCommandEvent& event )
 {
 	int id = event.GetId();
 
-	ResourcePtr res = getResourceFromTreeId( menuItemId );
-	std::string fullPath = getResourceFullPath(res);
+	const ResourcePtr& res = getResourceFromTreeId( menuItemId );
+	const std::string& fullPath = getResourceFullPath(res);
 
 	switch(id)
 	{
 	case ID_ResourceMenu_Open:
 	{
 		wxLaunchDefaultApplication(fullPath);
+		break;
+	}
+	case ID_ResourceMenu_Browse:
+	{
+#if 0
+		SHELLEXECUTEINFOA info;
+		info.cbSize = sizeof(SHELLEXECUTEINFOA);
+        info.fMask = 0;
+        info.hwnd = nullptr;
+        info.lpParameters = nullptr;
+        info.lpDirectory = nullptr;
+        info.nShow = SW_MAXIMIZE;
+        info.hInstApp = nullptr;
+		info.lpVerb = "explore";
+		info.lpFile = fullPath.c_str();
+		
+		if( !ShellExecuteExA(&info) )
+			return;
+#endif
+		wxString command = wxString("explorer.exe ") + fullPath;
+		executeCommand(command);
 		break;
 	}
 	case ID_ResourceMenu_VCS_Update:

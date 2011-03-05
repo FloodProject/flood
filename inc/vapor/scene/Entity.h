@@ -112,7 +112,7 @@ public:
 	EntityPtr getShared();
 
 	// Updates all the components of the entity.
-	virtual void update( double delta );
+	virtual void update( float delta );
 
 	// Fix-up serialization.
 	virtual void fixUp();

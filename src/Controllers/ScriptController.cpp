@@ -70,7 +70,7 @@ ScriptController::~ScriptController()
 
 //-----------------------------------//
 
-void ScriptController::_update( double delta )
+void ScriptController::_update( float delta )
 {
 	if( !state && script )
 	{

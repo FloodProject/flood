@@ -22,6 +22,8 @@
 #include "../Selection/SelectionPlugin.h"
 #include "../Selection/SelectionManager.h"
 
+#ifdef ALL_PLUGINS
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//
@@ -58,28 +60,28 @@ PluginMetadata GizmoPlugin::getMetadata()
 
 void GizmoPlugin::onPluginEnable()
 {
-	wxAuiToolBar* toolBar = editor->getToolbar();
+	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
 
-	//addTool( toolBar->AddSeparator() );
-	if(toolBar)
+	//addTool( toolbarCtrl->AddSeparator() );
+	if(toolbarCtrl)
 	{
 		wxBitmap iconCamera = wxMEMORY_BITMAP(camera);
-		buttonCamera = toolBar->AddTool( GizmoTool::Camera, "Camera",
+		buttonCamera = toolbarCtrl->AddTool( GizmoTool::Camera, "Camera",
 			iconCamera, "Selects the Camera View tool", wxITEM_RADIO );
 		addTool(buttonCamera, true);
 
 		wxBitmap iconTranslate = wxMEMORY_BITMAP(move);
-		buttonTranslate = toolBar->AddTool( GizmoTool::Translate, "Move",
+		buttonTranslate = toolbarCtrl->AddTool( GizmoTool::Translate, "Move",
 			iconTranslate, "Selects the Move tool", wxITEM_RADIO );
 		addTool(buttonTranslate, true);
 
 		wxBitmap iconRotate = wxMEMORY_BITMAP(rotate2);
-		buttonRotate = toolBar->AddTool( GizmoTool::Rotate, "Rotate",
+		buttonRotate = toolbarCtrl->AddTool( GizmoTool::Rotate, "Rotate",
 			iconRotate, "Selects the Rotate tool", wxITEM_RADIO );
 		addTool(buttonRotate, true);
 
 		wxBitmap iconScale = wxMEMORY_BITMAP(scale);
-		buttonScale = toolBar->AddTool( GizmoTool::Scale, "Scale",
+		buttonScale = toolbarCtrl->AddTool( GizmoTool::Scale, "Scale",
 			iconScale, "Selects the Scale tool", wxITEM_RADIO );
 		addTool(buttonScale, true);
 	}
@@ -460,3 +462,5 @@ bool GizmoPlugin::isTool(GizmoTool::Enum mode)
 //-----------------------------------//
 
 } } // end namespaces
+
+#endif

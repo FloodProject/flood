@@ -32,7 +32,7 @@ public:
 	ACESSOR(FollowEntity, EntityPtr, followEntity)
 
 	// Updates this component.
-	virtual void _update( double delta );
+	virtual void _update( float delta );
 
 protected:
 

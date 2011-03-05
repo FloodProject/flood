@@ -121,7 +121,7 @@ void Particles::spawnParticles(int numSpawn)
 
 //-----------------------------------//
 
-void Particles::update(double delta)
+void Particles::update(float delta)
 {
 	numParticles = particles.size();
 

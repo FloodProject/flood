@@ -119,7 +119,7 @@ void PhysicsManager::setWorldGravity(const Vector3& gravity)
 
 //-----------------------------------//
 
-void PhysicsManager::update( double delta )
+void PhysicsManager::update( float delta )
 {
 	if( !world )
 		return;

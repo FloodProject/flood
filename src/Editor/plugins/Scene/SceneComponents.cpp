@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "PCH.h"
-#include "ScenePage.h"
+#include "ScenePane.h"
 #include "Utilities.h"
 #include "Events.h"
 #include "Editor.h"
@@ -21,63 +21,52 @@ namespace vapor { namespace editor {
 
 struct ComponentEntry
 {
-	bool show;
-	const Type& type;
+	const char* category;
+	const Type* type;
 	const byte* icon;
 	const int icon_length;
 };
 
-#define TYPE(t) t::getStaticType()
+#define TYPE(t) &t::getStaticType()
 #define BMP(s) s, sizeof(s)
 
 static ComponentEntry components[] =
 {
-	{ false,TYPE(Scene),				BMP(sitemap_color) },
-	{ true, TYPE(Transform),			BMP(chart_line) },
-	{ true, TYPE(Model),				BMP(shape_flip_horizontal) },
-	{ true, TYPE(Light),				BMP(lightbulb_off) },
-	{ true, TYPE(Skydome),				BMP(weather_clouds) },
-	{ true, TYPE(Camera),				BMP(camera) },
-	{ true, TYPE(Label),				BMP(text_align_left) },
-	{ true, TYPE(Particles),			BMP(chart_pie) },
-//};
-
-//static ComponentEntry componentsExtra[] =
-//{
-	{ true, TYPE(Grid),					BMP(grid_icon_white_bg) },
-	{ true, TYPE(Billboard),			BMP(shape_flip_horizontal) },
-	{ true, TYPE(Projector),			BMP(lightbulb_off) },
-//};
-
-#ifdef VAPOR_AUDIO_OPENAL
-
-//static ComponentEntry componentsAudio[] =
-//{
-	{ true, TYPE(Source),				BMP(sound) },
-	{ true, TYPE(Listener),				BMP(status_online) },
-//};
-
+	{ nullptr, TYPE(Model),				BMP(shape_flip_horizontal) },
+	{ nullptr, TYPE(Transform),			BMP(chart_line) },
+	{ nullptr, TYPE(Camera),			BMP(camera) },
+	{ nullptr, TYPE(Light),				BMP(lightbulb_off) },
+	{ "Nature", nullptr, nullptr, 0 },
+	{ nullptr, TYPE(Skydome),			BMP(weather_clouds) },
+	//{ nullptr, TYPE(Water),				BMP(weather_clouds) },
+	{ "GUI", nullptr, nullptr, 0 },
+	{ nullptr, TYPE(Label),				BMP(text_align_left) },
+	{ "Particles", nullptr, nullptr, 0 },
+	{ nullptr, TYPE(Particles),			BMP(chart_pie) },
+#ifdef VAPOR_AUDIO_OPENAL	
+	{ "Audio", nullptr, nullptr, 0 },
+	{ nullptr, TYPE(Source),			BMP(sound) },
+	{ nullptr, TYPE(Listener),			BMP(status_online) },
 #endif
-
-//static ComponentEntry componentsControllers[] =
-//{
-	{ true, TYPE(FirstPersonController),BMP(camera) },
-	{ true, TYPE(ThirdPersonController),BMP(camera) },
-
+	{ "Controllers", nullptr, nullptr, 0 },
+	{ nullptr, TYPE(FirstPersonController), BMP(camera) },
+	{ nullptr, TYPE(ThirdPersonController), BMP(camera) },
 #ifdef VAPOR_SCRIPTING_LUA
-	{ true, TYPE(ScriptController),		BMP(shape_flip_horizontal) },
+	{ "Scripting", nullptr, nullptr, 0 },
+	{ nullptr, TYPE(ScriptController),		BMP(shape_flip_horizontal) },
 #endif
-//};
-
-//static ComponentEntry componentsPhysics[] =
-//{
 #ifdef VAPOR_PHYSICS_BULLET
-	{ true, TYPE(CharacterController),	BMP(link) },
-	{ true, TYPE(BoxShape),				BMP(link) },
-	{ true, TYPE(MeshShape),			BMP(link) },
-	{ true, TYPE(CapsuleShape),			BMP(link) },
-	{ true, TYPE(Body),					BMP(link) },
+	{ "Physics", nullptr, nullptr, 0 },
+	{ nullptr, TYPE(CharacterController),	BMP(link) },
+	{ nullptr, TYPE(BoxShape),				BMP(link) },
+	{ nullptr, TYPE(MeshShape),				BMP(link) },
+	{ nullptr, TYPE(CapsuleShape),			BMP(link) },
+	{ nullptr, TYPE(Body),					BMP(link) },
 #endif
+	{ "Extra", nullptr, nullptr, 0 },
+	{ nullptr, TYPE(Grid),				BMP(grid_icon_white_bg) },
+	{ nullptr, TYPE(Billboard),			BMP(shape_flip_horizontal) },
+	{ nullptr, TYPE(Projector),			BMP(lightbulb_off) },
 };
 
 //-----------------------------------//
@@ -91,8 +80,10 @@ void ScenePage::initIcons()
 	for( uint i = 0; i < VAPOR_ARRAY_SIZE(components); i++ )
 	{
 		const ComponentEntry& c = components[i];
-		const Type* type = &c.type;
-		
+		const Type* type = c.type;
+
+		if(c.icon == nullptr) continue;
+
 		bitmaps[type] = _wxConvertMemoryToBitmap(c.icon, c.icon_length);
 		icons[type] = imageList->Add(bitmaps[type]);
 	}
@@ -126,13 +117,23 @@ void ScenePage::populateEntityItemMenu(wxMenu& menu, const EntityPtr& node)
 
 	menu.AppendSeparator();
 
+	wxMenu* subMenu = &menu;
+
 	for( uint i = 0; i < VAPOR_ARRAY_SIZE(components); i++ )
 	{
 		ComponentEntry& c = components[i];
-		const Type& type = c.type;
+		const Type* type = c.type;
+		const char* category = c.category;
 
-		wxMenuItem* item = menu.Append(wxID_ANY, type.name);
-		item->SetBitmap( bitmaps[&type], false );
+		if(category != nullptr)
+		{
+			subMenu = new wxMenu;
+			menu.Append(wxID_ANY, category, subMenu);
+			continue;
+		}
+
+		wxMenuItem* item = subMenu->Append(wxID_ANY, type->name);
+		if(type) item->SetBitmap( bitmaps[type], false );
 	}
 }
 

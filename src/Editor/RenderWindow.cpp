@@ -21,7 +21,7 @@ RenderWindow::RenderWindow(const WindowSettings& settings, wxGLCanvas* const can
 	, mouseVisible(true)
 {
 	createContext();
-	inputManager = new EditorInputManager();
+	inputManager = new EditorInputManager(GetEngine()->getInputManager());
 }
 
 //-----------------------------------//

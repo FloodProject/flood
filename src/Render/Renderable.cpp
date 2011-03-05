@@ -41,11 +41,10 @@ bool Renderable::bind()
 	vb->bind();
 
 	if( !ib ) return true;
-	
-	if( !ib->isBuilt() )
-		ib->build();
 
 	ib->bind();
+	
+	if( !ib->isBuilt ) ib->build();
 
 	return true;
 }
@@ -85,8 +84,8 @@ void Renderable::render( RenderDevice* device )
     }
     else
     {
-        GLenum size = ib->is16bit() ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
-        glDrawElements( type, ib->getNumIndices(), size, 0 );
+        GLenum size = (ib->indexSize == 16) ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
+        glDrawElements( type, ib->getSize(), size, 0 );
 
 		if( glHasError("Error drawing index buffer") )
 			return;

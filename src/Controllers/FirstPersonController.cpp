@@ -66,7 +66,7 @@ FirstPersonController::~FirstPersonController()
 
 //-----------------------------------//
 
-void FirstPersonController::_update( double delta )
+void FirstPersonController::_update( float delta )
 {
 	if( hasFocus )
 		checkControls( delta );
@@ -74,7 +74,7 @@ void FirstPersonController::_update( double delta )
 
 //-----------------------------------//
 
-void FirstPersonController::checkControls( double delta )
+void FirstPersonController::checkControls( float delta )
 {
 	if(!inputManager)
 		return;

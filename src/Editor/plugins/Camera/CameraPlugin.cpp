@@ -14,6 +14,8 @@
 #include "Events.h"
 #include "Scene/Scene.h"
 
+#ifdef ALL_PLUGINS
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//
@@ -103,3 +105,5 @@ void CameraPlugin::onEntityChange()
 //-----------------------------------//
 
 } } // end namespaces
+
+#endif

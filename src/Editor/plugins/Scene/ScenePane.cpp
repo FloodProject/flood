@@ -7,12 +7,14 @@
 ************************************************************************/
 
 #include "PCH.h"
-#include "ScenePage.h"
+#include "ScenePane.h"
 #include "Editor.h"
 #include "EditorIcons.h"
 #include "Events.h"
 #include "Utilities.h"
 #include "EditorTags.h"
+#include "UndoManager.h"
+
 #include "Scene/Tags.h"
 #include "Scene/Scene.h"
 #include "Scene/Component.h"
@@ -280,6 +282,9 @@ void ScenePage::onItemChanged(wxTreeEvent& event)
 
 void ScenePage::onButtonEntityAdd(wxCommandEvent&)
 {
+	Document* document = GetEditor().getDocument();
+	if( !document ) return;
+	
 	std::string name("Entity"+String::fromNumber(nodeCounter++));
 	
 	EntityPtr entity( new Entity(name) );
@@ -289,8 +294,10 @@ void ScenePage::onButtonEntityAdd(wxCommandEvent&)
 	nodeOperation = createEntityOperation(entity, "Entity added");
 	nodeOperation->added = true;
 
-	if( !nodeOperation )
-		return;
+	if( !nodeOperation ) return;
+
+	UndoManager* undoManager = document->getUndoManager();
+	undoManager->registerOperation(nodeOperation);
 
 	nodeOperation->redo();
 	

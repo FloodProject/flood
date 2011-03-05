@@ -27,7 +27,7 @@ public:
 	Frustum& getFrustum() { return frustum; }
 
 	// Updates this component.
-	void update( double delta );
+	void update( float delta );
 
 	// Updates the debug renderable of the camera.
 	void updateDebugRenderable() const;

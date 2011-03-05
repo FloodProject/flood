@@ -28,7 +28,7 @@ namespace System
 	void messageDialog(const std::string& msg/*, LogLevel::Enum = LogLevel::Warning*/);
 	
 	// Sleeps for a specified ammount of time.
-	void sleep( double time );
+	void sleep( float time );
 
 	// Enumerates files in a given path.
 	std::vector<std::string> enumerateFiles(const std::string& path);

@@ -59,9 +59,6 @@ public:
 	// Gets if this type represents a float.
 	bool isFloat() const;
 
-	// Gets if this type represents a double.
-	bool isDouble() const;
-
 	// Gets if this type represents an string.
 	bool isString() const;
 

@@ -8,77 +8,50 @@
 
 #pragma once
 
-#include "render/Buffer.h"
-#include "ReferenceCount.h"
+#include "Render/Buffer.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-/**
- * Type of the indexes stored in this buffer.
- */
-
-namespace IndexBufferType
-{
-	enum Enum
-	{
-		I16bit,
-		I32bit
-	};
-}
-
-//-----------------------------------//
-
-/**
- * Represents an index buffer.
- */
-
 class VAPOR_API IndexBuffer : public Buffer
 {
 public:
 
-	IndexBuffer( IndexBufferType::Enum indexType = IndexBufferType::I16bit );
-
-	// Gets the type of indexes of this buffer.
-	IndexBufferType::Enum getIndexType() const { return indexType; }
-
-	// Gets the number of indexes stored in this buffer.
-	uint getNumIndices() const;
-
-	// Gets a reference to the vector with the indices.
-	GETTER(Indices16, const std::vector<ushort>&, data16)
-	GETTER(Indices32, const std::vector<ulong>&, data32)
+	IndexBuffer( int index = 16 );
 
 	// Sets the indices for the IBO (16-bit version).
-	void set( const std::vector<ushort>& data );
-	
-	// Sets the indices for the IBO (32-bit version).	
-	void set( const std::vector<ulong>& data );
+	void setData( const std::vector<byte>& data );
+
+	// Gets the number of indexes stored in this buffer.
+	int getSize() const;
+
+	// Updates the internal IBO with current values for indices.
+	bool build();
 
 	// Binds/unbinds the index buffer from the OpenGL state.
 	bool bind();
 	bool unbind();
 
-	// Updates the internal IBO with current values for indices.
-	bool build();
+public:
 
-	// Returns true if the vertex buffer is built, false otherwhise.
-	bool isBuilt() const;
-
-	// Returns true if this index buffer is 16-bit, false otherwhise.
-	bool is16bit() const;
-
-private:
-
-	bool built;
-	IndexBufferType::Enum indexType;
-
-	std::vector< ushort > data16;
-	std::vector< ulong > data32;
+	std::vector<byte> data;
+	int indexSize;
+	bool isBuilt;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( IndexBuffer );
+
+template<typename T>
+void SetIndexBufferData(const IndexBufferPtr& ib, const std::vector<T>& data)
+{
+	if( data.empty() ) return;
+
+	int sizeInBytes = data.size() * sizeof(data[0]);
+
+	ib->data.resize(sizeInBytes); 
+	memcpy(&ib->data[0], &data[0], sizeInBytes);
+}
 
 //-----------------------------------//
 

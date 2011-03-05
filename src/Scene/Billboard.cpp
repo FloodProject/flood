@@ -39,7 +39,7 @@ Billboard::Billboard( BillboardType::Enum type )
 
 //-----------------------------------//
 
-void Billboard::update( double )
+void Billboard::update( float )
 {
 }
 

@@ -70,7 +70,7 @@ void Gizmo::updatePositionScale()
 
 //-----------------------------------//
 
-void Gizmo::update( double delta )
+void Gizmo::update( float delta )
 {
 	updatePositionScale();
 	Geometry::update( delta );

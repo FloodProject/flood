@@ -35,7 +35,7 @@ protected:
 	virtual void onSetupScene();
 
 	// Called to update stuff.
-	virtual void onUpdate( double delta );
+	virtual void onUpdate( float delta );
 
 	// Renders the scene.
 	virtual void onRender();

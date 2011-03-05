@@ -10,20 +10,13 @@
 #include "SelectionPlugin.h"
 #include "SelectionManager.h"
 
-#include "Editor.h"
-#include "EditorIcons.h"
 #include "Events.h"
 #include "UndoManager.h"
-#include "Viewframe.h"
-#include "RenderControl.h"
-#include "RenderWindow.h"
 
-#include "Render/View.h"
-#include "Scene/Scene.h"
-#include "Scene/Camera.h"
-#include "GUI/Overlay.h"
-#include "Input/Mouse.h"
-#include "Engine.h"
+#include "Editor.h"
+#include "EditorIcons.h"
+
+#include "../Scene/SceneDocument.h"
 
 namespace vapor { namespace editor {
 
@@ -83,7 +76,7 @@ void SelectionPlugin::onPluginEnable()
 	events->setCurrentTool((int) SelectionTool::Select);
 	events->addEventListener(this);
 
-	selections = new SelectionManager(editor);
+	selections = new SelectionManager;
 }
 
 //-----------------------------------//
@@ -128,7 +121,11 @@ void SelectionPlugin::onMouseButtonPress( const MouseButtonEvent& event )
 
 	dragOrigin = Vector2i(event.x, event.y );
 
-	RenderWindow* window = GetEditor().getMainViewframe()->getControl()->getRenderWindow();
+	Document* document = editor->getDocument();
+	if( !document ) return;
+	SceneDocument* sceneDocument = (SceneDocument*) document;
+	
+	RenderWindow* window = sceneDocument->getRenderWindow();
 	window->setCursorCapture(true);
 }
 
@@ -139,7 +136,11 @@ void SelectionPlugin::onMouseButtonRelease( const MouseButtonEvent& event )
 	if( event.button != MouseButton::Left )
 		return;
 
-	RenderWindow* window = GetEditor().getMainViewframe()->getControl()->getRenderWindow();
+	Document* document = editor->getDocument();
+	if( !document ) return;
+	SceneDocument* sceneDocument = (SceneDocument*) document;
+	
+	RenderWindow* window = sceneDocument->getRenderWindow();
 	window->setCursorCapture(false);
 
 	editor->redrawView();
@@ -167,7 +168,7 @@ void SelectionPlugin::onMouseButtonRelease( const MouseButtonEvent& event )
 	if( selected )
 		selected->unselectAll();
 
-	UndoManager* undoManager = editor->getUndoManager();
+	UndoManager* undoManager = document->getUndoManager();
 	undoManager->registerOperation(selection);
 
 	selection->redo();
@@ -185,11 +186,8 @@ void SelectionPlugin::onMouseDrag( const MouseDragEvent& event )
 	if( !event.info->leftButton )
 		return;
 
-	if( !dragRectangle )
-	{
-		createRectangle();
-	}
-
+	if( !dragRectangle ) createRectangle();
+	
 	updateRectangle( event );
 }
 
@@ -207,7 +205,11 @@ void SelectionPlugin::createRectangle()
 	dragRectangle.reset( new Entity() );
 	dragRectangle->addTransform();
 	dragRectangle->addComponent(overlay);
-	editor->getEditorScene()->add(dragRectangle);
+
+	Document* document = editor->getDocument();
+	if( !document ) return;
+	SceneDocument* sceneDocument = (SceneDocument*) document;
+	sceneDocument->editorScene->add(dragRectangle);
 }
 
 //-----------------------------------//
@@ -255,8 +257,12 @@ SelectionOperation* SelectionPlugin::createDeselection()
 
 SelectionOperation* SelectionPlugin::processDragSelection(const MouseButtonEvent& event)
 {
-	const ScenePtr& scene = editor->getEngine()->getSceneManager();
-	RenderView* view = editor->getMainViewframe()->getView();
+	Document* document = editor->getDocument();
+	if( !document ) return nullptr;
+	SceneDocument* sceneDocument = (SceneDocument*) document;
+
+	const ScenePtr& scene = sceneDocument->scene;
+	RenderView* view = sceneDocument->viewFrame->getView();
 	const CameraPtr& camera = view->getCamera();
 
 	OverlayPtr overlay = dragRectangle->getComponent<Overlay>();
@@ -271,7 +277,7 @@ SelectionOperation* SelectionPlugin::processDragSelection(const MouseButtonEvent
 	SelectionOperation* selection = nullptr;
 	SelectionOperation* selected = selections->getSelection();
 
-	editor->getEditorScene()->remove(dragRectangle);
+	sceneDocument->editorScene->remove(dragRectangle);
 	dragRectangle.reset();
 
 	if( list.empty() )
@@ -326,11 +332,15 @@ SelectionOperation* SelectionPlugin::processSelection(const MouseButtonEvent& ev
 
 bool SelectionPlugin::getPickEntity(int x, int y, EntityPtr& entity)
 {
-	Viewframe* viewframe = editor->getMainViewframe();
-	RenderView* view = viewframe->getView();
+	Document* document = editor->getDocument();
+	if( !document ) return false;
+	SceneDocument* sceneDocument = (SceneDocument*) document;
 	
+	sceneDocument->editorScene->remove(dragRectangle);
+
+	RenderView* view = sceneDocument->viewFrame->getView();
 	const CameraPtr& camera = view->getCamera();
-	const ScenePtr& scene = engine->getSceneManager();
+	const ScenePtr& scene = sceneDocument->scene;
 
 	// Get a ray given the screen location clicked.
 	Vector3 outFar;

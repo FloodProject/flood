@@ -55,9 +55,6 @@ protected:
 	void onResourceRemoved( const ResourceEvent& event );
 	void onResourceReloaded( const ResourceEvent& event );
 
-	EditorFrame* editor;
-	ResourceManager* rm;
-
 	wxImageList* imageList;
 	wxTreeItemId rootId;
 	wxTreeItemId menuItemId;

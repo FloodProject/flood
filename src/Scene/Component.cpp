@@ -7,15 +7,15 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "scene/Component.h"
-#include "render/Renderable.h"
+#include "Scene/Component.h"
+#include "Render/Renderable.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
 BEGIN_CLASS_ABSTRACT(Component)
-	FIELD_PRIMITIVE(bool, debugVisible)
+	//FIELD_PRIMITIVE(bool, debugVisible)
 END_CLASS()
 
 //-----------------------------------//

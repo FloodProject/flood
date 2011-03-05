@@ -42,7 +42,7 @@ TextureManager::~TextureManager()
 
 //-----------------------------------//
 
-void TextureManager::update( double delta )
+void TextureManager::update( float delta )
 {
 	//std::vector<TexturePtr> texturesToRemove;
 

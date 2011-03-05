@@ -47,6 +47,9 @@ ConsoleTextCtrl::ConsoleTextCtrl( wxWindow* parent, wxWindowID id,
 
 	InitControl();
 
+	if( !engine->getScriptManager() )
+		return;
+
 #ifdef VAPOR_SCRIPTING_LUA
 	luaState = engine->getScriptManager()->getState();
 	lua_register( luaState->getLuaState() , "print", luaPrintStub );

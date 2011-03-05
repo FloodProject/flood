@@ -34,7 +34,7 @@ void Console::buildGeometry()
 
 //-----------------------------------//
 
-void Console::update( double )
+void Console::update( float )
 {
 	// No need to update geometry if the label did not change.
 	if( !isDirty ) return;

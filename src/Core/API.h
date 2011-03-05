@@ -42,6 +42,9 @@
 	#define CORE_API
 #endif
 
+#define BEGIN_NAMESPACE_EXTERN namespace vapor
+#define END_NAMESPACE_EXTERN
+
 //---------------------------------------------------------------------//
 // External Templates
 //---------------------------------------------------------------------//

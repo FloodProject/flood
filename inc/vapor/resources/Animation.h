@@ -57,7 +57,7 @@ public:
 	float getTotalTime() const;
 
 	// Gets the interpolated key frame matrix.
-	Matrix4x3 getKeyFrameMatrix(const BonePtr& bone, double time);
+	Matrix4x3 getKeyFrameMatrix(const BonePtr& bone, float time);
 
 	// Sets the keyframes for the animation.
 	void setKeyFrames(const BonePtr& bone, const KeyFramesVector& frames);

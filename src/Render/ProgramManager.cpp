@@ -100,14 +100,15 @@ void ProgramManager::onReload( const ResourceEvent& event )
 		return;
 
 	const TextPtr& text = RefCast<Text>( event.resource );
-	std::string base( String::toLowerCase( text->getBasePath() ) );
-
-	assert( programs.find(base) != programs.end() );
-
-	Log::debug( "Reloading shader '%s'", event.resource->getPath().c_str() );
+	const std::string& base = text->getBasePath();
 
 	ProgramPtr program = programs[base];
-	program->updateShadersText();
+
+	if(program)
+	{
+		Log::debug( "Reloading shader '%s'", event.resource->getPath().c_str() );
+		program->updateShadersText();
+	}
 }
 
 //-----------------------------------//

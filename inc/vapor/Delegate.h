@@ -55,7 +55,7 @@
 //				  * Standardised all the compiler-specific workarounds.
 //				  * MFP conversion now works for CodePlay (but not yet supported in the full code).
 //				  * Now compiles without warnings on _any_ supported compiler, including BCC 5.5.1
-//				  * New syntax: delegate< int (char *, double) >.
+//				  * New syntax: delegate< int (char *, float) >.
 // 14-Feb-05 1.4.1* Now treats =0 as equivalent to .clear(), ==0 as equivalent to .empty(). (Thanks elfric).
 //				  * Now tested on Intel ICL for AMD64, VS2005 Beta for AMD64 and Itanium.
 // 30-Mar-05 1.5  * Safebool idiom: "if (dg)" is now equivalent to "if (!dg.empty())"
@@ -843,7 +843,7 @@ public:
 // Once we have the member function conversion templates, it's easy to make the
 // wrapper classes. So that they will work with as many compilers as possible,
 // the classes are of the form
-//	 Delegate3<int, char *, double>
+//	 Delegate3<int, char *, float>
 // They can cope with any combination of parameters. The max number of parameters
 // allowed is 8, but it is trivial to increase this limit.
 // Note that we need to treat const member functions seperately.
@@ -1301,9 +1301,9 @@ private:	// Invoker for static functions
 //
 //				delegate<> class (Original author: Jody Hagins)
 //	Allows boost::function style syntax like:
-//			delegate< double (int, long) >
+//			delegate< float (int, long) >
 // instead of:
-//			Delegate2< int, long, double >
+//			Delegate2< int, long, float >
 //
 ////////////////////////////////////////////////////////////////////////////////
 

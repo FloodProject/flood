@@ -44,6 +44,7 @@ RenderDevice::RenderDevice()
 	, textureManager(nullptr)
 	, shadowDepthBuffer(nullptr)
 	, pipeline(RenderPipeline::Fixed)
+	, initDone(false)
 { }
 
 //-----------------------------------//
@@ -64,6 +65,8 @@ RenderDevice::~RenderDevice()
 
 void RenderDevice::init()
 {
+	if( initDone ) return;
+
 	Log::info( "Creating OpenGL rendering device" );
 
 	if( !window ) Log::error( "No current OpenGL context found, stuff may fail" );
@@ -86,6 +89,8 @@ void RenderDevice::init()
 	glCullFace( GL_BACK );
 	glEnable( GL_DEPTH_TEST );
 	glDisable( GL_BLEND );
+
+	initDone = true;
 }
 
 //-----------------------------------//

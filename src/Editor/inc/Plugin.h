@@ -8,12 +8,12 @@
 
 #pragma once
 
-#include "Scene/Entity.h"
 #include "Input/MouseEvents.h"
 #include "Input/KeyboardEvents.h"
+#include "Document.h"
 
 FWD_DECL_SHARED(Scene)
-FWD_DECL(Engine)
+FWD_DECL_SHARED(Entity)
 
 namespace vapor { namespace editor {
 
@@ -36,7 +36,6 @@ struct PluginMetadata
 
 //-----------------------------------//
 
-class Viewframe;
 class EditorFrame;
 class PluginManager;
 
@@ -66,63 +65,43 @@ public:
 
 	// Plugin enable callback.
 	virtual void onPluginEnable() = 0;
-
-	// Plugin disable callback.
 	virtual void onPluginDisable() = 0;
 
 	// Plugin tool selection callback.
 	virtual void onToolSelect( int id ) {}
-
-	// Plugin tool unselection callback.
 	virtual void onToolUnselect( int id ) {}
+
+	// Document selection callback.
+	virtual void onDocumentSelect( Document& ) {}
+	virtual void onDocumentUnselect( Document& ) {}
+
+	// Scene load callback.
+	virtual void onSceneLoad( const ScenePtr& scene ) {}
+	virtual void onSceneUnload( const ScenePtr& scene ) {}
+	virtual void onSceneUpdate() {}
 
 	// Entity selection callback.
 	virtual void onEntitySelect( const EntityPtr& ) {}
-	
-	// Entity unselection callback.
 	virtual void onEntityUnselect( const EntityPtr& ) {}
 
 	// Component selection callback.
 	virtual void onComponentSelect( const ComponentPtr& ) {}
-	
-	// Component unselection callback.
 	virtual void onComponentUnselect( const ComponentPtr& ) {}
 
 	// Resource selection event.
 	virtual void onResourceSelect( const ResourcePtr& ) {}
-
-	// Resource unselection event.
 	virtual void onResourceUnselect( const ResourcePtr& ) {}
 
-	// Mouse move callback.
+	// Mouse callback.
 	virtual void onMouseMove( const MouseMoveEvent& ) {}
-	
-	// Mouse drag callback.
 	virtual void onMouseDrag( const MouseDragEvent& ) {}
-	
-	// Mouse button press callback.
 	virtual void onMouseButtonPress( const MouseButtonEvent& ) {}
-	
-	// Mouse button release callback.
 	virtual void onMouseButtonRelease( const MouseButtonEvent& ) {}
-	
-	// Mouse enter callback.
 	virtual void onMouseEnter() {}
-	
-	// Mouse leave callback.
 	virtual void onMouseLeave() {}
 	
 	// Key press callback.
 	virtual void onKeyPress() {}
-
-	// Scene load callback.
-	virtual void onSceneLoad( const ScenePtr& scene ) {}
-
-	// Scene unload callback.
-	virtual void onSceneUnload( const ScenePtr& scene ) {}
-
-	// Scene update callback.
-	virtual void onSceneUpdate() {}
 
 protected:
 
@@ -141,14 +120,8 @@ protected:
 	// Removes a page from the main notebook.
 	void removePage( wxWindow* page );
 
-	// Access to the engine instance.
-	Engine* engine;
-
 	// Access to the editor instance.
 	EditorFrame* editor;
-
-	// Access to the main viewframe.
-	Viewframe* viewframe;
 
 	// Is plugin enabled?
 	bool pluginEnabled;

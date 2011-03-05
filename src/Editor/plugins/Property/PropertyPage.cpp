@@ -14,6 +14,7 @@
 #include "EditorTags.h"
 #include "UndoManager.h"
 #include "Utilities.h"
+#include "Document.h"
 
 namespace vapor { namespace editor {
 
@@ -194,19 +195,19 @@ void PropertyPage::onPropertyChanged(wxPropertyGridEvent& event)
 
 	PropertyData* data = (PropertyData*) prop->GetClientObject();
 
-	PropertyOperation* op = new PropertyOperation();
-	op->description = "Property changed";
-	op->type = (Class*) data->type;
-	op->field = (Field*) data->field;
-	op->object = (void*) data->object;
-	op->oldValue = propertyValue;
-	op->newValue = getPropertyValue(prop);
-	op->grid = this;
+	PropertyOperation* propOperation = new PropertyOperation();
+	propOperation->description = "Property changed";
+	propOperation->type = (Class*) data->type;
+	propOperation->field = (Field*) data->field;
+	propOperation->object = (void*) data->object;
+	propOperation->oldValue = propertyValue;
+	propOperation->newValue = getPropertyValue(prop);
+	propOperation->grid = this;
 	
-	UndoManager* undoManager = GetEditor().getUndoManager();
-	undoManager->registerOperation(op);
+	UndoManager* undoManager = GetEditor().getDocument()->getUndoManager();
+	undoManager->registerOperation(propOperation);
 
-	op->redo();
+	propOperation->redo();
 }
 
 //-----------------------------------//
@@ -490,7 +491,7 @@ wxAny PropertyPage::getFieldPrimitiveValue(const Field* field, void* object)
 	else if( type.isVector3() )
 		value = field->get<Vector3>(object);
 	else if( type.isQuaternion() )
-		value = field->get<Quaternion>(object).getEulerAngles();
+		value = field->get<Quaternion>(object);
 	else if( type.isBitfield() )
 		value = field->get<int>(object);
 
@@ -589,7 +590,8 @@ void PropertyPage::setPropertyPrimitiveValue(wxPGProperty* prop, const wxAny& va
 	//-----------------------------------//
 	else if( type.isQuaternion() )
 	{
-		EulerAngles vec = value.As<EulerAngles>();
+		const Quaternion& quat = value.As<Quaternion>();
+		EulerAngles vec = quat.getEulerAngles();
 		prop->GetPropertyByName("X")->SetValue(vec.x);
 		prop->GetPropertyByName("Y")->SetValue(vec.y);
 		prop->GetPropertyByName("Z")->SetValue(vec.z);

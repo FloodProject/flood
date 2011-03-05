@@ -52,7 +52,7 @@ public:
 	Vector3 getSunPosition();
 
 	// Gets called each m to update the component.
-	void update( double delta );
+	void update( float delta );
 
 protected:
 

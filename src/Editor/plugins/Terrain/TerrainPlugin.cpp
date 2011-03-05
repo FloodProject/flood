@@ -22,6 +22,8 @@
 #include "Input/Mouse.h"
 #include "Engine.h"
 
+#ifdef ALL_PLUGINS
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//
@@ -57,16 +59,16 @@ PluginMetadata TerrainPlugin::getMetadata()
 
 void TerrainPlugin::onPluginEnable()
 {
-	wxAuiToolBar* toolBar = editor->getToolbar();
+	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
 	
-	if(toolBar)
+	if(toolbarCtrl)
 	{
-		buttonRaise = toolBar->AddTool( TerrainTool::Raise, "Terrain Raise",
+		buttonRaise = toolbarCtrl->AddTool( TerrainTool::Raise, "Terrain Raise",
 			wxMEMORY_BITMAP(terrain_raise_lower), "Raises/Lowers the terrain",
 			wxITEM_RADIO );
 		addTool(buttonRaise, true);
 
-		buttonPaint = toolBar->AddTool( TerrainTool::Paint, "Terrain Paint",
+		buttonPaint = toolbarCtrl->AddTool( TerrainTool::Paint, "Terrain Paint",
 			wxMEMORY_BITMAP(terrain_paint), "Paints the terrain", wxITEM_RADIO );
 		addTool(buttonPaint, true);
 	}
@@ -140,7 +142,7 @@ void TerrainPlugin::onEntityUnselect( const EntityPtr& )
 
 void TerrainPlugin::onTimer( wxTimerEvent& )
 {
-	Mouse* mouse = engine->getInputManager()->getMouse();
+	Mouse* mouse = GetEngine()->getInputManager()->getMouse();
 	const MouseInfo& info = mouse->getMouseInfo();
 
 	if( info.leftButton )
@@ -288,8 +290,8 @@ void TerrainPlugin::registerUndoOperation()
 	// Register the operation in the stack so it can be undone later.
 	terrainOperation->ready();
 	
-	UndoManager* undoManager = editor->getUndoManager();
-	undoManager->registerOperation( terrainOperation );
+	UndoManager* undo = editor->getDocument()->getUndoManager();
+	undo->registerOperation( terrainOperation );
 
 	terrainOperation = nullptr;
 }
@@ -408,3 +410,5 @@ void TerrainPlugin::createContextMenu( const MouseButtonEvent& mbe )
 //-----------------------------------//
 
 } } // end namespaces
+
+#endif

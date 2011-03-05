@@ -58,7 +58,7 @@ Terrain::Terrain( const std::string& name, const TerrainSettings& settings )
 void Terrain::init()
 {
 	settings.Material = new Material("Terrain");
-	settings.Material->setProgram("Tex_Toon");
+	settings.Material->setProgram("VertexLit");
 }
 
 //-----------------------------------//
@@ -226,7 +226,7 @@ bool Terrain::validateHeightmap( const ImagePtr& heightmap )
 
 //-----------------------------------//
 
-void Terrain::update( double delta )
+void Terrain::update( float delta )
 {
 	std::vector<CellRequest>::iterator it = requestsQueue.begin();
 

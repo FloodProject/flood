@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "vapor/PCH.h"
-#include "vapor/controllers/Controller.h"
+#include "Controllers/Controller.h"
 
 namespace vapor {
 
@@ -29,7 +29,7 @@ Controller::~Controller()
 
 //-----------------------------------//
 
-void Controller::update( double time )
+void Controller::update( float time )
 {
 	if( !enabled )
 		return;

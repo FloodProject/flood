@@ -131,7 +131,7 @@ void FileSystem::mountDefaultLocations()
 
 //-----------------------------------//
 
-void FileSystem::update( double )
+void FileSystem::update( float )
 {
 	if( fileWatcher )
 		fileWatcher->update();

@@ -108,7 +108,7 @@ public:
 	void setupResourceLoaders();
 
 	// Sends resource events to the subscribers.
-	void update( double );
+	void update( float );
 
 	// Gets the registered resources.
 	GETTER(Resources, const ResourceMap&, resources)
@@ -191,6 +191,7 @@ protected:
 
 	// Manages all background loading tasks.
 	TaskManager* taskManager;
+	FileWatcher* fileWatcher;
 };
 
 //-----------------------------------//

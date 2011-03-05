@@ -40,7 +40,7 @@ Light::Light( LightType::Enum type )
 
 //-----------------------------------//
 
-void Light::update( double delta )
+void Light::update( float delta )
 {
 	if( !debugRenderable )
 		debugRenderable = createDebugRenderable();

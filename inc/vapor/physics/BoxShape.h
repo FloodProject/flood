@@ -28,7 +28,7 @@ public:
 	virtual ~BoxShape();
 
 	// Updates the shape.
-	void update( double delta );
+	void update( float delta );
 
 	// Gets the internal Bullet shape.
 	btCollisionShape* const getBulletShape() const;

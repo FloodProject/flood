@@ -160,7 +160,7 @@ void GizmoTranslate::generateColors( std::vector<Vector3>& colors, const Color& 
 
 //-----------------------------------//
 
-void GizmoTranslate::generateSolidCone( double base, double height, uint slices,
+void GizmoTranslate::generateSolidCone( float base, float height, uint slices,
 							   std::vector<Vector3>& pos )
 {
 	float r = 2*Math::PI / slices;

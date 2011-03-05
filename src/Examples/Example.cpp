@@ -124,7 +124,7 @@ void Example::onSetupScene()
 #if 0
 	MaterialPtr materialCell( new Material("CellMaterial") );
 	materialCell->setTexture( 0, "sand.png" );
-	materialCell->setProgram( "tex_toon" );
+	materialCell->setProgram( "VertexLit" );
 
 	TerrainSettings settings;
 	settings.CellSize = 512;
@@ -150,18 +150,18 @@ void Example::onSetupScene()
 
 //-----------------------------------//
  
-void Example::onUpdate( double delta ) 
+void Example::onUpdate( float delta ) 
 {
 #if 0
-	static double deltaPassed = 0.0f;
+	static float deltaPassed = 0.0f;
 	
 	deltaPassed += delta;
-	bool clamped = Math::clamp<double>(deltaPassed, 0, 1);
+	bool clamped = Math::clamp<float>(deltaPassed, 0, 1);
 
 	if(!clamped)
 		return;
 
-	double fps = frameStats.getLastFPS();
+	float fps = frameStats.getLastFPS();
 	std::string newFPS = String::format("FPS: %d", int(fps));
 
 	labelFPS->setText(newFPS);

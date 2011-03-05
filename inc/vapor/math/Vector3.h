@@ -292,15 +292,8 @@ public:
 	T x, y, z;
 };
 
-//-----------------------------------//
-
-/**
- * Specific types
- */
-
 typedef CORE_API Vector3T<int> Vector3i;
 typedef CORE_API Vector3T<float> Vector3;
-typedef CORE_API Vector3T<double> Vector3d;
 
 //-----------------------------------//
 

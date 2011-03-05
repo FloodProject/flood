@@ -31,6 +31,7 @@ class VAPOR_API InputManager
 
 public:
 
+	InputManager();
 	virtual ~InputManager();
 
 	// Adds a new device that will be managed by this class.
@@ -53,10 +54,8 @@ public:
 
 protected:
 
-	InputManager() {}
-
 	// Holds all the input devices.
-	std::vector< InputDevice* > devices;
+	std::vector<InputDevice*> devices;
 };
 
 //-----------------------------------//

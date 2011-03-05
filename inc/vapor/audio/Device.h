@@ -38,7 +38,7 @@ class VAPOR_API AudioDevice
 public:
 
 	AudioDevice();
-	virtual ~AudioDevice();
+	~AudioDevice();
 	
 	// Sets the global audio volume
 	void setVolume(float volume);
@@ -47,9 +47,6 @@ public:
 	GETTER(MainContext, AudioContext*, mainContext)
 
 protected:
-
-	// Switch current audio context.
-	void switchContext(ALCcontext* context);
 
 	// Gets the AL format matching the sound.
 	int getFormat(const SoundPtr& sound);
@@ -84,6 +81,8 @@ protected:
 	// Main audio context.
 	AudioContext* mainContext;
 };
+
+AudioDevice* GetAudioDevice();
 
 //-----------------------------------//
 

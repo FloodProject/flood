@@ -26,16 +26,16 @@ public:
 	void frameStep();
 
 	// Gets the frames-per-second of the last frame.
-	double getLastFPS() const;
+	float getLastFPS() const;
 
 //protected:
 
 	uint64 numFrames;
-	double minFrameTime;
-	double maxFrameTime;
-	double avgFrameTime;
-	double sumFrameTime;
-	double lastFrameTime;
+	float minFrameTime;
+	float maxFrameTime;
+	float avgFrameTime;
+	float sumFrameTime;
+	float lastFrameTime;
 };
 
 //-----------------------------------//

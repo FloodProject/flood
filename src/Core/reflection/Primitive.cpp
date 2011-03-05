@@ -22,7 +22,6 @@ const Primitive Primitive::_bool(PrimitiveType::Bool, "bool", sizeof(bool));
 const Primitive Primitive::_int(PrimitiveType::Integer, "int", sizeof(int));
 const Primitive Primitive::_uint(PrimitiveType::UnsignedInteger, "uint", sizeof(uint));
 const Primitive Primitive::_float(PrimitiveType::Float, "float", sizeof(float));
-const Primitive Primitive::_double(PrimitiveType::Double, "double", sizeof(double));
 const Primitive Primitive::_string(PrimitiveType::String, "string", sizeof(std::string));
 const Primitive Primitive::_Vector3(PrimitiveType::Vector3, "Vector3", sizeof(Vector3));
 const Primitive Primitive::_Color(PrimitiveType::Color, "Color", sizeof(Color));
@@ -62,13 +61,6 @@ bool Primitive::isUnsignedInteger() const
 bool Primitive::isFloat() const
 {
 	return primitive == PrimitiveType::Float;
-}
-
-//-----------------------------------//
-
-bool Primitive::isDouble() const
-{
-	return primitive == PrimitiveType::Double;
 }
 
 //-----------------------------------//

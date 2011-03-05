@@ -53,7 +53,7 @@ public:
 	void setWorldGravity(const Vector3& gravity);
 	
 	// Updates the physical simulation.
-	void update( double delta );
+	void update( float delta );
 
 	// Gets/sets the physics simulation state.
 	ACESSOR(Simulation, bool, enableSimulation);

@@ -163,7 +163,7 @@ std::vector<GeometryPtr> Entity::getGeometry() const
 
 //-----------------------------------//
 
-void Entity::update( double delta )
+void Entity::update( float delta )
 {
 	// Update all geometry bounding boxes first.
 	const std::vector<GeometryPtr>& geoms = getGeometry();

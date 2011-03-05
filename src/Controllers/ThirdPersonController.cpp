@@ -36,7 +36,7 @@ ThirdPersonController::ThirdPersonController()
 
 //-----------------------------------//
 
-void ThirdPersonController::_update( double delta )
+void ThirdPersonController::_update( float delta )
 {
 #if 0
 	if( !followEntity.lock() )

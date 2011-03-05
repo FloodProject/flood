@@ -41,20 +41,23 @@ public:
 	// Gets the mesh associated with the model.
 	GETTER(Mesh, const MeshPtr&, mesh)
 
-	// Sets the mesh animation.
+	// Sets the mesh.
+	void setMesh(const MeshPtr& mesh);
+
+	// Sets the current animation.
 	void setAnimation(const AnimationPtr& animation);
 
-	// Sets the mesh animation.
+	// Sets the current animation.
 	void setAnimation(const std::string& name);
 
-	// Sets and fades the mesh animation.
+	// Sets and fades the animation.
 	void setAnimationFade(const std::string& name, float fade = 1.0f);
 
-	// Attaches a node to the bone.
-	void setAttachment(const std::string& bone, const EntityPtr& node);
+	// Attaches an entity to the model.
+	void setAttachment(const std::string& bone, const EntityPtr& entity);
 
-	// Updates the mesh.
-	void update( double delta );
+	// Updates the model.
+	void update( float delta );
   
 	// Builds the mesh when it is fully loaded.
 	void build();
@@ -71,10 +74,10 @@ protected:
 	void updateAttachments();
 
 	// Updates the animation of the model.
-	void updateAnimations(double delta);
+	void updateAnimations(float delta);
 
 	// Updates the animation time.
-	void updateAnimationTime(AnimationState& state, double delta);
+	void updateAnimationTime(AnimationState& state, float delta);
 
 	// Updates the matrices of the bones.
 	void updateAnimationBones(AnimationState& state);

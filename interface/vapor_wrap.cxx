@@ -1544,71 +1544,67 @@ SWIG_Lua_dostring(lua_State *L, const char* str) {
 #define SWIGTYPE_p_std__weak_ptrT_vapor__Camera_t swig_types[30]
 #define SWIGTYPE_p_std__weak_ptrT_vapor__CharacterController_t swig_types[31]
 #define SWIGTYPE_p_std__weak_ptrT_vapor__Component_t swig_types[32]
-#define SWIGTYPE_p_std__weak_ptrT_vapor__Controller_t swig_types[33]
-#define SWIGTYPE_p_std__weak_ptrT_vapor__Entity_t swig_types[34]
-#define SWIGTYPE_p_std__weak_ptrT_vapor__Geometry_t swig_types[35]
-#define SWIGTYPE_p_std__weak_ptrT_vapor__Scene_t swig_types[36]
-#define SWIGTYPE_p_unsigned_char swig_types[37]
-#define SWIGTYPE_p_unsigned_int swig_types[38]
-#define SWIGTYPE_p_unsigned_long swig_types[39]
-#define SWIGTYPE_p_unsigned_short swig_types[40]
-#define SWIGTYPE_p_vapor__BoundingBox swig_types[41]
-#define SWIGTYPE_p_vapor__Camera swig_types[42]
-#define SWIGTYPE_p_vapor__CharacterController swig_types[43]
-#define SWIGTYPE_p_vapor__Color swig_types[44]
-#define SWIGTYPE_p_vapor__Component swig_types[45]
-#define SWIGTYPE_p_vapor__Controller swig_types[46]
-#define SWIGTYPE_p_vapor__Entity swig_types[47]
-#define SWIGTYPE_p_vapor__EulerAngles swig_types[48]
-#define SWIGTYPE_p_vapor__Frustum swig_types[49]
-#define SWIGTYPE_p_vapor__Geometry swig_types[50]
-#define SWIGTYPE_p_vapor__Group swig_types[51]
-#define SWIGTYPE_p_vapor__InputEvent swig_types[52]
-#define SWIGTYPE_p_vapor__KeyEvent swig_types[53]
-#define SWIGTYPE_p_vapor__KeyboardEventType swig_types[54]
-#define SWIGTYPE_p_vapor__Keys swig_types[55]
-#define SWIGTYPE_p_vapor__Light swig_types[56]
-#define SWIGTYPE_p_vapor__LightType swig_types[57]
-#define SWIGTYPE_p_vapor__Matrix4x3 swig_types[58]
-#define SWIGTYPE_p_vapor__Mesh swig_types[59]
-#define SWIGTYPE_p_vapor__MeshGroup swig_types[60]
-#define SWIGTYPE_p_vapor__MeshMaterial swig_types[61]
-#define SWIGTYPE_p_vapor__Model swig_types[62]
-#define SWIGTYPE_p_vapor__MouseButton swig_types[63]
-#define SWIGTYPE_p_vapor__MouseButtonEvent swig_types[64]
-#define SWIGTYPE_p_vapor__MouseDragEvent swig_types[65]
-#define SWIGTYPE_p_vapor__MouseEvent swig_types[66]
-#define SWIGTYPE_p_vapor__MouseEventType swig_types[67]
-#define SWIGTYPE_p_vapor__MouseInfo swig_types[68]
-#define SWIGTYPE_p_vapor__MouseMoveEvent swig_types[69]
-#define SWIGTYPE_p_vapor__MouseWheelEvent swig_types[70]
-#define SWIGTYPE_p_vapor__Quaternion swig_types[71]
-#define SWIGTYPE_p_vapor__Ray swig_types[72]
-#define SWIGTYPE_p_vapor__RayQueryResult swig_types[73]
-#define SWIGTYPE_p_vapor__RayTriangleQueryResult swig_types[74]
-#define SWIGTYPE_p_vapor__RefPtrT_vapor__Animation_t swig_types[75]
-#define SWIGTYPE_p_vapor__RefPtrT_vapor__Attachment_t swig_types[76]
-#define SWIGTYPE_p_vapor__RefPtrT_vapor__Bone_t swig_types[77]
-#define SWIGTYPE_p_vapor__RefPtrT_vapor__Mesh_t swig_types[78]
-#define SWIGTYPE_p_vapor__RefPtrT_vapor__Renderable_t swig_types[79]
-#define SWIGTYPE_p_vapor__RefPtrT_vapor__Resource_t swig_types[80]
-#define SWIGTYPE_p_vapor__ReferenceCounted swig_types[81]
-#define SWIGTYPE_p_vapor__RenderBlock swig_types[82]
-#define SWIGTYPE_p_vapor__RenderQueue swig_types[83]
-#define SWIGTYPE_p_vapor__RenderView swig_types[84]
-#define SWIGTYPE_p_vapor__Resource swig_types[85]
-#define SWIGTYPE_p_vapor__Scene swig_types[86]
-#define SWIGTYPE_p_vapor__Transform swig_types[87]
-#define SWIGTYPE_p_vapor__Vector2TT_float_t swig_types[88]
-#define SWIGTYPE_p_vapor__Vector2TT_int_t swig_types[89]
-#define SWIGTYPE_p_vapor__Vector3TT_double_t swig_types[90]
-#define SWIGTYPE_p_vapor__Vector3TT_float_t swig_types[91]
-#define SWIGTYPE_p_vapor__Vector3TT_int_t swig_types[92]
-#define SWIGTYPE_p_vapor__Vector4TT_double_t swig_types[93]
-#define SWIGTYPE_p_vapor__Vector4TT_float_t swig_types[94]
-#define SWIGTYPE_p_vapor__Vector4TT_int_t swig_types[95]
-static swig_type_info *swig_types[97];
-static swig_module_info swig_module = {swig_types, 96, 0, 0, 0, 0};
+#define SWIGTYPE_p_std__weak_ptrT_vapor__Entity_t swig_types[33]
+#define SWIGTYPE_p_std__weak_ptrT_vapor__Geometry_t swig_types[34]
+#define SWIGTYPE_p_std__weak_ptrT_vapor__Scene_t swig_types[35]
+#define SWIGTYPE_p_unsigned_char swig_types[36]
+#define SWIGTYPE_p_unsigned_int swig_types[37]
+#define SWIGTYPE_p_unsigned_long swig_types[38]
+#define SWIGTYPE_p_unsigned_short swig_types[39]
+#define SWIGTYPE_p_vapor__BoundingBox swig_types[40]
+#define SWIGTYPE_p_vapor__Camera swig_types[41]
+#define SWIGTYPE_p_vapor__CharacterController swig_types[42]
+#define SWIGTYPE_p_vapor__Color swig_types[43]
+#define SWIGTYPE_p_vapor__Component swig_types[44]
+#define SWIGTYPE_p_vapor__Controller swig_types[45]
+#define SWIGTYPE_p_vapor__Entity swig_types[46]
+#define SWIGTYPE_p_vapor__EulerAngles swig_types[47]
+#define SWIGTYPE_p_vapor__Frustum swig_types[48]
+#define SWIGTYPE_p_vapor__Geometry swig_types[49]
+#define SWIGTYPE_p_vapor__Group swig_types[50]
+#define SWIGTYPE_p_vapor__InputEvent swig_types[51]
+#define SWIGTYPE_p_vapor__KeyEvent swig_types[52]
+#define SWIGTYPE_p_vapor__KeyboardEventType swig_types[53]
+#define SWIGTYPE_p_vapor__Keys swig_types[54]
+#define SWIGTYPE_p_vapor__Light swig_types[55]
+#define SWIGTYPE_p_vapor__LightType swig_types[56]
+#define SWIGTYPE_p_vapor__Matrix4x3 swig_types[57]
+#define SWIGTYPE_p_vapor__Mesh swig_types[58]
+#define SWIGTYPE_p_vapor__MeshGroup swig_types[59]
+#define SWIGTYPE_p_vapor__MeshMaterial swig_types[60]
+#define SWIGTYPE_p_vapor__Model swig_types[61]
+#define SWIGTYPE_p_vapor__MouseButton swig_types[62]
+#define SWIGTYPE_p_vapor__MouseButtonEvent swig_types[63]
+#define SWIGTYPE_p_vapor__MouseDragEvent swig_types[64]
+#define SWIGTYPE_p_vapor__MouseEvent swig_types[65]
+#define SWIGTYPE_p_vapor__MouseEventType swig_types[66]
+#define SWIGTYPE_p_vapor__MouseInfo swig_types[67]
+#define SWIGTYPE_p_vapor__MouseMoveEvent swig_types[68]
+#define SWIGTYPE_p_vapor__MouseWheelEvent swig_types[69]
+#define SWIGTYPE_p_vapor__Quaternion swig_types[70]
+#define SWIGTYPE_p_vapor__Ray swig_types[71]
+#define SWIGTYPE_p_vapor__RayQueryResult swig_types[72]
+#define SWIGTYPE_p_vapor__RayTriangleQueryResult swig_types[73]
+#define SWIGTYPE_p_vapor__RefPtrT_vapor__Animation_t swig_types[74]
+#define SWIGTYPE_p_vapor__RefPtrT_vapor__Attachment_t swig_types[75]
+#define SWIGTYPE_p_vapor__RefPtrT_vapor__Bone_t swig_types[76]
+#define SWIGTYPE_p_vapor__RefPtrT_vapor__Mesh_t swig_types[77]
+#define SWIGTYPE_p_vapor__RefPtrT_vapor__Renderable_t swig_types[78]
+#define SWIGTYPE_p_vapor__RefPtrT_vapor__Resource_t swig_types[79]
+#define SWIGTYPE_p_vapor__ReferenceCounted swig_types[80]
+#define SWIGTYPE_p_vapor__RenderBlock swig_types[81]
+#define SWIGTYPE_p_vapor__RenderQueue swig_types[82]
+#define SWIGTYPE_p_vapor__RenderView swig_types[83]
+#define SWIGTYPE_p_vapor__Resource swig_types[84]
+#define SWIGTYPE_p_vapor__Scene swig_types[85]
+#define SWIGTYPE_p_vapor__Transform swig_types[86]
+#define SWIGTYPE_p_vapor__Vector2TT_float_t swig_types[87]
+#define SWIGTYPE_p_vapor__Vector2TT_int_t swig_types[88]
+#define SWIGTYPE_p_vapor__Vector3TT_float_t swig_types[89]
+#define SWIGTYPE_p_vapor__Vector3TT_int_t swig_types[90]
+#define SWIGTYPE_p_vapor__Vector4TT_float_t swig_types[91]
+static swig_type_info *swig_types[93];
+static swig_module_info swig_module = {swig_types, 92, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -9522,17 +9518,17 @@ fail:
 static int _wrap_Component_update(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Component *arg1 = (vapor::Component *) 0 ;
-  double arg2 ;
+  float arg2 ;
   
   SWIG_check_num_args("update",2,2)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("update",1,"vapor::Component *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("update",2,"double");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("update",2,"float");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Component,0))){
     SWIG_fail_ptr("Component_update",1,SWIGTYPE_p_vapor__Component);
   }
   
-  arg2 = (double)lua_tonumber(L, 2);
+  arg2 = (float)lua_tonumber(L, 2);
   (arg1)->update(arg2);
   
   return SWIG_arg;
@@ -10255,17 +10251,17 @@ fail:
 static int _wrap_Transform_update(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Transform *arg1 = (vapor::Transform *) 0 ;
-  double arg2 ;
+  float arg2 ;
   
   SWIG_check_num_args("update",2,2)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("update",1,"vapor::Transform *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("update",2,"double");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("update",2,"float");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Transform,0))){
     SWIG_fail_ptr("Transform_update",1,SWIGTYPE_p_vapor__Transform);
   }
   
-  arg2 = (double)lua_tonumber(L, 2);
+  arg2 = (float)lua_tonumber(L, 2);
   (arg1)->update(arg2);
   
   return SWIG_arg;
@@ -10459,6 +10455,36 @@ static int _wrap_Model_getMesh(lua_State* L) {
   
   result = (vapor::MeshPtr *) &((vapor::Model const *)arg1)->getMesh();
   SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__RefPtrT_vapor__Mesh_t,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Model_setMesh(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Model *arg1 = (vapor::Model *) 0 ;
+  vapor::MeshPtr *arg2 = 0 ;
+  
+  SWIG_check_num_args("setMesh",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setMesh",1,"vapor::Model *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("setMesh",2,"vapor::MeshPtr const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Model,0))){
+    SWIG_fail_ptr("Model_setMesh",1,SWIGTYPE_p_vapor__Model);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__RefPtrT_vapor__Mesh_t,0))){
+    SWIG_fail_ptr("Model_setMesh",2,SWIGTYPE_p_vapor__RefPtrT_vapor__Mesh_t);
+  }
+  
+  (arg1)->setMesh((vapor::MeshPtr const &)*arg2);
+  
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -10738,17 +10764,17 @@ fail:
 static int _wrap_Model_update(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Model *arg1 = (vapor::Model *) 0 ;
-  double arg2 ;
+  float arg2 ;
   
   SWIG_check_num_args("update",2,2)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("update",1,"vapor::Model *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("update",2,"double");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("update",2,"float");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Model,0))){
     SWIG_fail_ptr("Model_update",1,SWIGTYPE_p_vapor__Model);
   }
   
-  arg2 = (double)lua_tonumber(L, 2);
+  arg2 = (float)lua_tonumber(L, 2);
   (arg1)->update(arg2);
   
   return SWIG_arg;
@@ -10790,6 +10816,7 @@ delete arg1;
 }
 static swig_lua_method swig_vapor_Model_methods[] = {
     {"getMesh", _wrap_Model_getMesh}, 
+    {"setMesh", _wrap_Model_setMesh}, 
     {"setAnimation", _wrap_Model_setAnimation}, 
     {"setAnimationFade", _wrap_Model_setAnimationFade}, 
     {"setAttachment", _wrap_Model_setAttachment}, 
@@ -11428,17 +11455,17 @@ fail:
 static int _wrap_Camera_update(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Camera *arg1 = (vapor::Camera *) 0 ;
-  double arg2 ;
+  float arg2 ;
   
   SWIG_check_num_args("update",2,2)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("update",1,"vapor::Camera *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("update",2,"double");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("update",2,"float");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Camera,0))){
     SWIG_fail_ptr("Camera_update",1,SWIGTYPE_p_vapor__Camera);
   }
   
-  arg2 = (double)lua_tonumber(L, 2);
+  arg2 = (float)lua_tonumber(L, 2);
   (arg1)->update(arg2);
   
   return SWIG_arg;
@@ -11695,17 +11722,17 @@ fail:
 static int _wrap_Geometry_update(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Geometry *arg1 = (vapor::Geometry *) 0 ;
-  double arg2 ;
+  float arg2 ;
   
   SWIG_check_num_args("update",2,2)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("update",1,"vapor::Geometry *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("update",2,"double");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("update",2,"float");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Geometry,0))){
     SWIG_fail_ptr("Geometry_update",1,SWIGTYPE_p_vapor__Geometry);
   }
   
-  arg2 = (double)lua_tonumber(L, 2);
+  arg2 = (float)lua_tonumber(L, 2);
   (arg1)->update(arg2);
   
   return SWIG_arg;
@@ -12329,17 +12356,17 @@ fail:
 static int _wrap_Light_update(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Light *arg1 = (vapor::Light *) 0 ;
-  double arg2 ;
+  float arg2 ;
   
   SWIG_check_num_args("update",2,2)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("update",1,"vapor::Light *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("update",2,"double");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("update",2,"float");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Light,0))){
     SWIG_fail_ptr("Light_update",1,SWIGTYPE_p_vapor__Light);
   }
   
-  arg2 = (double)lua_tonumber(L, 2);
+  arg2 = (float)lua_tonumber(L, 2);
   (arg1)->update(arg2);
   
   return SWIG_arg;
@@ -12436,17 +12463,17 @@ fail:
 static int _wrap_Controller_update(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Controller *arg1 = (vapor::Controller *) 0 ;
-  double arg2 ;
+  float arg2 ;
   
   SWIG_check_num_args("update",2,2)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("update",1,"vapor::Controller *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("update",2,"double");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("update",2,"float");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Controller,0))){
     SWIG_fail_ptr("Controller_update",1,SWIGTYPE_p_vapor__Controller);
   }
   
-  arg2 = (double)lua_tonumber(L, 2);
+  arg2 = (float)lua_tonumber(L, 2);
   (arg1)->update(arg2);
   
   return SWIG_arg;
@@ -12462,17 +12489,17 @@ fail:
 static int _wrap_Controller__update(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Controller *arg1 = (vapor::Controller *) 0 ;
-  double arg2 ;
+  float arg2 ;
   
   SWIG_check_num_args("_update",2,2)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("_update",1,"vapor::Controller *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("_update",2,"double");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("_update",2,"float");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Controller,0))){
     SWIG_fail_ptr("Controller__update",1,SWIGTYPE_p_vapor__Controller);
   }
   
-  arg2 = (double)lua_tonumber(L, 2);
+  arg2 = (float)lua_tonumber(L, 2);
   (arg1)->_update(arg2);
   
   return SWIG_arg;
@@ -12523,17 +12550,17 @@ fail:
 static int _wrap_CharacterController__update(lua_State* L) {
   int SWIG_arg = 0;
   vapor::CharacterController *arg1 = (vapor::CharacterController *) 0 ;
-  double arg2 ;
+  float arg2 ;
   
   SWIG_check_num_args("_update",2,2)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("_update",1,"vapor::CharacterController *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("_update",2,"double");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("_update",2,"float");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__CharacterController,0))){
     SWIG_fail_ptr("CharacterController__update",1,SWIGTYPE_p_vapor__CharacterController);
   }
   
-  arg2 = (double)lua_tonumber(L, 2);
+  arg2 = (float)lua_tonumber(L, 2);
   (arg1)->_update(arg2);
   
   return SWIG_arg;
@@ -13160,20 +13187,47 @@ fail:
 }
 
 
+static int _wrap_Entity_getShared(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::Entity *arg1 = (vapor::Entity *) 0 ;
+  SwigValueWrapper< std::shared_ptr< vapor::Entity > > result;
+  
+  SWIG_check_num_args("getShared",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getShared",1,"vapor::Entity *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Entity,0))){
+    SWIG_fail_ptr("Entity_getShared",1,SWIGTYPE_p_vapor__Entity);
+  }
+  
+  result = (arg1)->getShared();
+  {
+    vapor::EntityPtr * resultptr = new vapor::EntityPtr((const vapor::EntityPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_std__shared_ptrT_vapor__Entity_t,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_Entity_update(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Entity *arg1 = (vapor::Entity *) 0 ;
-  double arg2 ;
+  float arg2 ;
   
   SWIG_check_num_args("update",2,2)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("update",1,"vapor::Entity *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("update",2,"double");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("update",2,"float");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Entity,0))){
     SWIG_fail_ptr("Entity_update",1,SWIGTYPE_p_vapor__Entity);
   }
   
-  arg2 = (double)lua_tonumber(L, 2);
+  arg2 = (float)lua_tonumber(L, 2);
   (arg1)->update(arg2);
   
   return SWIG_arg;
@@ -13361,6 +13415,7 @@ static swig_lua_method swig_vapor_Entity_methods[] = {
     {"getTransform", _wrap_Entity_getTransform}, 
     {"getComponents", _wrap_Entity_getComponents}, 
     {"getGeometry", _wrap_Entity_getGeometry}, 
+    {"getShared", _wrap_Entity_getShared}, 
     {"update", _wrap_Entity_update}, 
     {"fixUp", _wrap_Entity_fixUp}, 
     {"sendEvents", _wrap_Entity_sendEvents}, 
@@ -13560,17 +13615,17 @@ fail:
 static int _wrap_Group_update(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Group *arg1 = (vapor::Group *) 0 ;
-  double arg2 ;
+  float arg2 ;
   
   SWIG_check_num_args("update",2,2)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("update",1,"vapor::Group *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("update",2,"double");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("update",2,"float");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Group,0))){
     SWIG_fail_ptr("Group_update",1,SWIGTYPE_p_vapor__Group);
   }
   
-  arg2 = (double)lua_tonumber(L, 2);
+  arg2 = (float)lua_tonumber(L, 2);
   (arg1)->update(arg2);
   
   return SWIG_arg;
@@ -14298,17 +14353,17 @@ fail:
 static int _wrap_Scene_update(lua_State* L) {
   int SWIG_arg = 0;
   vapor::Scene *arg1 = (vapor::Scene *) 0 ;
-  double arg2 ;
+  float arg2 ;
   
   SWIG_check_num_args("update",2,2)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("update",1,"vapor::Scene *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("update",2,"double");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("update",2,"float");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Scene,0))){
     SWIG_fail_ptr("Scene_update",1,SWIGTYPE_p_vapor__Scene);
   }
   
-  arg2 = (double)lua_tonumber(L, 2);
+  arg2 = (float)lua_tonumber(L, 2);
   (arg1)->update(arg2);
   
   return SWIG_arg;
@@ -15231,7 +15286,6 @@ static swig_type_info _swigt__p_std__vectorT_vapor__Vector3TT_float_t_t = {"_p_s
 static swig_type_info _swigt__p_std__weak_ptrT_vapor__Camera_t = {"_p_std__weak_ptrT_vapor__Camera_t", "std::weak_ptr< vapor::Camera > *|vapor::CameraWeakPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__weak_ptrT_vapor__CharacterController_t = {"_p_std__weak_ptrT_vapor__CharacterController_t", "std::weak_ptr< vapor::CharacterController > *|vapor::CharacterControllerWeakPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__weak_ptrT_vapor__Component_t = {"_p_std__weak_ptrT_vapor__Component_t", "vapor::ComponentWeakPtr *|std::weak_ptr< vapor::Component > *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_std__weak_ptrT_vapor__Controller_t = {"_p_std__weak_ptrT_vapor__Controller_t", "std::weak_ptr< vapor::Controller > *|vapor::ControllerWeakPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__weak_ptrT_vapor__Entity_t = {"_p_std__weak_ptrT_vapor__Entity_t", "vapor::EntityWeakPtr *|std::weak_ptr< vapor::Entity > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__weak_ptrT_vapor__Geometry_t = {"_p_std__weak_ptrT_vapor__Geometry_t", "std::weak_ptr< vapor::Geometry > *|vapor::GeometryWeakPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__weak_ptrT_vapor__Scene_t = {"_p_std__weak_ptrT_vapor__Scene_t", "std::weak_ptr< vapor::Scene > *|vapor::SceneWeakPtr *", 0, 0, (void*)0, 0};
@@ -15288,12 +15342,9 @@ static swig_type_info _swigt__p_vapor__Scene = {"_p_vapor__Scene", "vapor::Scene
 static swig_type_info _swigt__p_vapor__Transform = {"_p_vapor__Transform", "vapor::Transform *", 0, 0, (void*)&_wrap_class_vapor_Transform, 0};
 static swig_type_info _swigt__p_vapor__Vector2TT_float_t = {"_p_vapor__Vector2TT_float_t", "vapor::Vector2 *|vapor::Vector2T< float > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_vapor__Vector2TT_int_t = {"_p_vapor__Vector2TT_int_t", "vapor::Vector2i *|vapor::Vector2T< int > *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_vapor__Vector3TT_double_t = {"_p_vapor__Vector3TT_double_t", "vapor::Vector3d *|vapor::Vector3T< double > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_vapor__Vector3TT_float_t = {"_p_vapor__Vector3TT_float_t", "vapor::Vector3T< float > *|vapor::Vector3 *", 0, 0, (void*)&_wrap_class_vapor_Vector3T_Sl_float_Sg_, 0};
 static swig_type_info _swigt__p_vapor__Vector3TT_int_t = {"_p_vapor__Vector3TT_int_t", "vapor::Vector3i *|vapor::Vector3T< int > *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_vapor__Vector4TT_double_t = {"_p_vapor__Vector4TT_double_t", "vapor::Vector4T< double > *|vapor::Vector4d *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_vapor__Vector4TT_float_t = {"_p_vapor__Vector4TT_float_t", "vapor::Vector4T< float > *|vapor::Vector4 *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_vapor__Vector4TT_int_t = {"_p_vapor__Vector4TT_int_t", "vapor::Vector4i *|vapor::Vector4T< int > *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_Event0T_t,
@@ -15329,7 +15380,6 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_std__weak_ptrT_vapor__Camera_t,
   &_swigt__p_std__weak_ptrT_vapor__CharacterController_t,
   &_swigt__p_std__weak_ptrT_vapor__Component_t,
-  &_swigt__p_std__weak_ptrT_vapor__Controller_t,
   &_swigt__p_std__weak_ptrT_vapor__Entity_t,
   &_swigt__p_std__weak_ptrT_vapor__Geometry_t,
   &_swigt__p_std__weak_ptrT_vapor__Scene_t,
@@ -15386,12 +15436,9 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_vapor__Transform,
   &_swigt__p_vapor__Vector2TT_float_t,
   &_swigt__p_vapor__Vector2TT_int_t,
-  &_swigt__p_vapor__Vector3TT_double_t,
   &_swigt__p_vapor__Vector3TT_float_t,
   &_swigt__p_vapor__Vector3TT_int_t,
-  &_swigt__p_vapor__Vector4TT_double_t,
   &_swigt__p_vapor__Vector4TT_float_t,
-  &_swigt__p_vapor__Vector4TT_int_t,
 };
 
 static swig_cast_info _swigc__p_Event0T_t[] = {  {&_swigt__p_Event0T_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -15427,7 +15474,6 @@ static swig_cast_info _swigc__p_std__vectorT_vapor__Vector3TT_float_t_t[] = {  {
 static swig_cast_info _swigc__p_std__weak_ptrT_vapor__Camera_t[] = {  {&_swigt__p_std__weak_ptrT_vapor__Camera_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__weak_ptrT_vapor__CharacterController_t[] = {  {&_swigt__p_std__weak_ptrT_vapor__CharacterController_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__weak_ptrT_vapor__Component_t[] = {  {&_swigt__p_std__weak_ptrT_vapor__Component_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_std__weak_ptrT_vapor__Controller_t[] = {  {&_swigt__p_std__weak_ptrT_vapor__Controller_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__weak_ptrT_vapor__Entity_t[] = {  {&_swigt__p_std__weak_ptrT_vapor__Entity_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__weak_ptrT_vapor__Geometry_t[] = {  {&_swigt__p_std__weak_ptrT_vapor__Geometry_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__weak_ptrT_vapor__Scene_t[] = {  {&_swigt__p_std__weak_ptrT_vapor__Scene_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -15484,12 +15530,9 @@ static swig_cast_info _swigc__p_vapor__Scene[] = {  {&_swigt__p_vapor__Scene, 0,
 static swig_cast_info _swigc__p_vapor__Transform[] = {  {&_swigt__p_vapor__Transform, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__Vector2TT_float_t[] = {  {&_swigt__p_vapor__Vector2TT_float_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__Vector2TT_int_t[] = {  {&_swigt__p_vapor__Vector2TT_int_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_vapor__Vector3TT_double_t[] = {  {&_swigt__p_vapor__Vector3TT_double_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__Vector3TT_float_t[] = {  {&_swigt__p_vapor__Vector3TT_float_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__Vector3TT_int_t[] = {  {&_swigt__p_vapor__Vector3TT_int_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_vapor__Vector4TT_double_t[] = {  {&_swigt__p_vapor__Vector4TT_double_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__Vector4TT_float_t[] = {  {&_swigt__p_vapor__Vector4TT_float_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_vapor__Vector4TT_int_t[] = {  {&_swigt__p_vapor__Vector4TT_int_t, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_Event0T_t,
@@ -15525,7 +15568,6 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_std__weak_ptrT_vapor__Camera_t,
   _swigc__p_std__weak_ptrT_vapor__CharacterController_t,
   _swigc__p_std__weak_ptrT_vapor__Component_t,
-  _swigc__p_std__weak_ptrT_vapor__Controller_t,
   _swigc__p_std__weak_ptrT_vapor__Entity_t,
   _swigc__p_std__weak_ptrT_vapor__Geometry_t,
   _swigc__p_std__weak_ptrT_vapor__Scene_t,
@@ -15582,12 +15624,9 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_vapor__Transform,
   _swigc__p_vapor__Vector2TT_float_t,
   _swigc__p_vapor__Vector2TT_int_t,
-  _swigc__p_vapor__Vector3TT_double_t,
   _swigc__p_vapor__Vector3TT_float_t,
   _swigc__p_vapor__Vector3TT_int_t,
-  _swigc__p_vapor__Vector4TT_double_t,
   _swigc__p_vapor__Vector4TT_float_t,
-  _swigc__p_vapor__Vector4TT_int_t,
 };
 
 
