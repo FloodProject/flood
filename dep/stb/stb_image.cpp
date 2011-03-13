@@ -386,7 +386,7 @@ extern void stbi_install_YCbCr_to_RGB(stbi_YCbCr_to_RGB_run func);
   #endif
 #endif
 
-
+#if 0
 // implementation:
 typedef unsigned char uint8;
 typedef unsigned short uint16;
@@ -397,6 +397,7 @@ typedef unsigned int   uint;
 
 // should produce compiler error if size is wrong
 typedef unsigned char validate_uint32[sizeof(uint32)==4];
+#endif
 
 #if defined(STBI_NO_STDIO) && !defined(STBI_NO_WRITE)
 #define STBI_NO_WRITE
