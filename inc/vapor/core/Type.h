@@ -35,7 +35,7 @@ namespace MetaType
  * (introspection) and serialization.
  */
 
-class CORE_API Type
+class CORE_API VAPOR_PURE Type
 {
 	DECLARE_UNCOPYABLE(Type)
 
@@ -77,7 +77,7 @@ public:
 	MetaType::Enum type;
 
 	// Name of the type.
-	const std::string name;
+	const String name;
 
 	// Parent of the type.
 	const Type* parent;
@@ -90,8 +90,8 @@ public:
 
 protected:
 
-	Type(MetaType::Enum type, const std::string& name, int size);
-	Type(MetaType::Enum type, const std::string& name, const Type& parent, int size);
+	Type(MetaType::Enum type, const String& name, int size);
+	Type(MetaType::Enum type, const String& name, const Type& parent, int size);
 
 	// Performs initialization.
 	void init();

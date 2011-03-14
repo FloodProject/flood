@@ -6,8 +6,8 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "vapor/input/Joystick.h"
+#include "Engine/API.h"
+#include "Input/Joystick.h"
 
 namespace vapor {
 
@@ -83,7 +83,7 @@ void Joystick::joyButtonReleased(const JoyButtonEvent& jbe)
 
 //-----------------------------------//
 
-JoyMoveEvent::JoyMoveEvent(uint id, JoystickAxis::Enum axis, float pos)
+JoyMoveEvent::JoyMoveEvent(uint32 id, JoystickAxis::Enum axis, float pos)
 	: JoystickEvent(JoystickEventType::JoystickMove)
 	, JoystickId(id)
 	, Axis(axis)
@@ -92,8 +92,7 @@ JoyMoveEvent::JoyMoveEvent(uint id, JoystickAxis::Enum axis, float pos)
 
 //-----------------------------------//
 
-JoyButtonEvent::JoyButtonEvent(unsigned int JoystickId, unsigned int Button, 
-		JoystickEventType::Enum eventType)
+JoyButtonEvent::JoyButtonEvent(uint32 JoystickId, uint32 Button, JoystickEventType::Enum eventType)
 	: JoystickEvent(eventType)
 	, JoystickId(JoystickId)
 	, Button(Button)

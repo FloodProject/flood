@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "math/Helpers.h"
-#include "math/EulerAngles.h"
+#include "Math/Helpers.h"
+#include "Math/EulerAngles.h"
 #include <cmath>
 
 namespace vapor {
@@ -50,9 +50,9 @@ public:
 	{
 		Quaternion qx, qy, qz;
 		
-		qx.setToRotateAboutX(Math::degreeToRadian(angles.x));
-		qy.setToRotateAboutY(Math::degreeToRadian(angles.y));
-		qz.setToRotateAboutZ(Math::degreeToRadian(angles.z));
+		qx.setToRotateAboutX(MathDegreeToRadian(angles.x));
+		qy.setToRotateAboutY(MathDegreeToRadian(angles.y));
+		qz.setToRotateAboutZ(MathDegreeToRadian(angles.z));
 		
 		*this = qx*qy*qz;
 	}
@@ -261,14 +261,11 @@ public:
 	// valid value.  The value returned is in range 0...pi, the same as the
 	// standard C acos() function
 
-	float safeAcos(float x) {
-
+	float safeAcos(float x)
+	{
 		// Check limit conditions
-		if (x <= -1.0f)
-			return Math::PI;
-		
-		else if (x >= 1.0f)
-			return 0.0f;
+		if (x <= -1.0f) return PI;
+		else if (x >= 1.0f) return 0.0f;
 
 		// Value is in the domain - use standard C function
 		return acosf(x);

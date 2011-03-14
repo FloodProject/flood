@@ -29,7 +29,7 @@ class PluginManager
 {
 public:
 
-	PluginManager( EditorFrame* frame );
+	PluginManager();
 	~PluginManager();
 
 	// Gets a plugin from its name.
@@ -48,13 +48,16 @@ public:
 	bool isPluginEnabled( Plugin* plugin ) const;
 
 	// Scans for plugins.
-	//void scanPlugins();
+	void scanPlugins();
 
 	// Gets all the registered plugins.
 	GETTER(Plugins, std::vector<Plugin*>, plugins)
 
 	// Gets all the registered tools.
 	GETTER(Tools, const PluginToolsMap&, tools)
+
+	// Prevents dead-code elimination.
+	void referencePlugins();
 
 	// Plugin events callback.
 	Event1<Plugin*> onPluginEnableEvent;
@@ -64,9 +67,6 @@ protected:
 	
 	// Processes tools from a plugin into tools map.
 	void processTools( Plugin* plugin, bool enable );
-
-	// Editor frame.
-	EditorFrame* editor;
 
 	// Maps identifiers to tools.
 	PluginToolsMap tools;

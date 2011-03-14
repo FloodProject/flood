@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "RenderWindow.h"
 #include "EditorInputManager.h"
 
@@ -44,7 +44,7 @@ bool RenderWindow::createContext()
 	
 	if(!context)
 	{
-		Log::error("Error creating wxGLCanvas context");
+		LogError("Error creating wxGLCanvas context");
 		return false;
 	}
 
@@ -80,7 +80,7 @@ void RenderWindow::makeCurrent()
 
 //-----------------------------------//
 
-Vector2i RenderWindow::getCursorPosition() const
+Vector2 RenderWindow::getCursorPosition() const
 {
 	const wxMouseState& mouseState = wxGetMouseState();
 	
@@ -88,7 +88,7 @@ Vector2i RenderWindow::getCursorPosition() const
 	int y = mouseState.GetY();
 	canvas->ScreenToClient( &x, &y );
 	
-	return Vector2i(x, y);
+	return Vector2(x, y);
 }
 
 //-----------------------------------//
@@ -133,8 +133,8 @@ void RenderWindow::setCursorCapture( bool captureMouse )
 
 void RenderWindow::processResize(const wxSize& size)
 {
-	settings.setWidth( size.GetX() );
-	settings.setHeight( size.GetY() );
+	settings.width = size.GetX();
+	settings.height = size.GetY();
 
 	handleWindowResize();
 }

@@ -8,6 +8,7 @@
 
 #include "Resources/API.h"
 #include "Resources/Image.h"
+#include "Log.h"
 
 #ifdef VAPOR_IMAGE_LODEPNG
 	#include "lodepng.h"
@@ -105,7 +106,7 @@ void Image::setColor( const Color& color )
 
 void Image::log() const
 {
-	Log::info( "Image has pixel format '%s' and size %dx%d", 
+	LogInfo( "Image has pixel format '%s' and size %dx%d", 
 		 PixelFormat::getStaticType().getName(format).c_str(), width, height );
 }
 
@@ -167,7 +168,7 @@ bool ImageWriter::convertPNG( const ImagePtr& image )
 
 	if( encoder.hasError() )
 	{
-		Log::error("Could not encode image to PNG");
+		LogError("Could not encode image to PNG");
 		return false;
 	}
 

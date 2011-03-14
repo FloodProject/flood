@@ -6,13 +6,13 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "vapor/paging/PageManager.h"
-#include "vapor/paging/Page.h"
+#include "Engine/API.h"
+#include "paging/PageManager.h"
+#include "paging/Page.h"
 
-#include "vapor/scene/Entity.h"
-#include "vapor/scene/Transform.h"
-#include "vapor/scene/Camera.h"
+#include "Scene/Entity.h"
+#include "Scene/Transform.h"
+#include "Scene/Camera.h"
 
 namespace vapor {
 
@@ -35,7 +35,7 @@ PageManager::PageManager( uint pageSize, CameraWeakPtr weakCamera )
 
 PageManager::~PageManager()
 {
-	for( uint i = 0; i < pages.size(); i++ )
+	for( size_t i = 0; i < pages.size(); i++ )
 	{
 		Page* const page = pages[i];
 		delete page;
@@ -56,7 +56,7 @@ void PageManager::update( float delta )
 	const TransformPtr& transform = entity->getTransform();
 
 	Vector3 pos = transform->getPosition();
-	Vector2i newPage = convertWorldToPage(pos);
+	Vector2 newPage = convertWorldToPage(pos);
 
 	if( page != newPage )
 	{
@@ -67,9 +67,9 @@ void PageManager::update( float delta )
 	
 		onPageSwitch(event);
 
-		if(!loaded[page.x][page.y])
+		if(!loaded[(int)page.x][(int)page.y])
 		{
-			loaded[page.x][page.y] = true;
+			loaded[(int)page.x][(int)page.y] = true;
 
 			onPageLoading(event);
 		}
@@ -78,12 +78,12 @@ void PageManager::update( float delta )
 
 //-----------------------------------//
 
-Vector2i PageManager::convertWorldToPage(const Vector3& pos)
+Vector2 PageManager::convertWorldToPage(const Vector3& pos)
 {
 	int x = floor(pos.x / pageSize); 
 	int y = floor(pos.z / pageSize);
 
-	return Vector2i(x, y);
+	return Vector2(x, y);
 }
 
 //-----------------------------------//

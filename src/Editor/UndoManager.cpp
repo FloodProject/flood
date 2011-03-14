@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "UndoManager.h"
 #include "UndoOperation.h"
 #include "Editor.h"
@@ -30,7 +30,7 @@ void UndoManager::registerOperation( UndoOperation* operation )
 {
 	undoOperations.push_back( operation );
 
-	Log::debug("Registered undo/redo event: %s", operation->description.c_str() );
+	LogDebug("Registered undo/redo event: %s", operation->description.c_str() );
 
 	// Remove all the existing redo operations.
 	for( uint i = 0; i < redoOperations.size(); i++ )

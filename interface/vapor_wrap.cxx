@@ -8,8 +8,8 @@
  * interface file instead. 
  * ----------------------------------------------------------------------------- */
 
-#include "vapor/PCH.h"
-#include "vapor/Headers.h"
+#include "Engine/API.h"
+#include "Headers.h"
 using namespace vapor;
 
 
@@ -1516,95 +1516,94 @@ SWIG_Lua_dostring(lua_State *L, const char* str) {
 #define SWIGTYPE_p_Event1T_std__shared_ptrT_vapor__Entity_t_const_R_t swig_types[2]
 #define SWIGTYPE_p_SkeletonPtr swig_types[3]
 #define SWIGTYPE_p_Type swig_types[4]
-#define SWIGTYPE_p_a_3__vapor__Vector3TT_float_t swig_types[5]
-#define SWIGTYPE_p_float swig_types[6]
-#define SWIGTYPE_p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t swig_types[7]
-#define SWIGTYPE_p_std__pairT_Class_const_p_std__shared_ptrT_vapor__Component_t_t swig_types[8]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Camera_t swig_types[9]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__CharacterController_t swig_types[10]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Component_t swig_types[11]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Controller_t swig_types[12]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Entity_t swig_types[13]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Geometry_t swig_types[14]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Group_t swig_types[15]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Light_t swig_types[16]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Model_t swig_types[17]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Scene_t swig_types[18]
-#define SWIGTYPE_p_std__shared_ptrT_vapor__Transform_t swig_types[19]
-#define SWIGTYPE_p_std__string swig_types[20]
-#define SWIGTYPE_p_std__vectorT_float_t swig_types[21]
-#define SWIGTYPE_p_std__vectorT_std__shared_ptrT_vapor__Entity_t_t swig_types[22]
-#define SWIGTYPE_p_std__vectorT_std__shared_ptrT_vapor__Geometry_t_t swig_types[23]
-#define SWIGTYPE_p_std__vectorT_unsigned_short_t swig_types[24]
-#define SWIGTYPE_p_std__vectorT_vapor__MeshGroup_t swig_types[25]
-#define SWIGTYPE_p_std__vectorT_vapor__RayQueryResult_t swig_types[26]
-#define SWIGTYPE_p_std__vectorT_vapor__RefPtrT_vapor__Animation_t_t swig_types[27]
-#define SWIGTYPE_p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t swig_types[28]
-#define SWIGTYPE_p_std__vectorT_vapor__Vector3TT_float_t_t swig_types[29]
-#define SWIGTYPE_p_std__weak_ptrT_vapor__Camera_t swig_types[30]
-#define SWIGTYPE_p_std__weak_ptrT_vapor__CharacterController_t swig_types[31]
-#define SWIGTYPE_p_std__weak_ptrT_vapor__Component_t swig_types[32]
-#define SWIGTYPE_p_std__weak_ptrT_vapor__Entity_t swig_types[33]
-#define SWIGTYPE_p_std__weak_ptrT_vapor__Geometry_t swig_types[34]
-#define SWIGTYPE_p_std__weak_ptrT_vapor__Scene_t swig_types[35]
-#define SWIGTYPE_p_unsigned_char swig_types[36]
-#define SWIGTYPE_p_unsigned_int swig_types[37]
-#define SWIGTYPE_p_unsigned_long swig_types[38]
-#define SWIGTYPE_p_unsigned_short swig_types[39]
-#define SWIGTYPE_p_vapor__BoundingBox swig_types[40]
-#define SWIGTYPE_p_vapor__Camera swig_types[41]
-#define SWIGTYPE_p_vapor__CharacterController swig_types[42]
-#define SWIGTYPE_p_vapor__Color swig_types[43]
-#define SWIGTYPE_p_vapor__Component swig_types[44]
-#define SWIGTYPE_p_vapor__Controller swig_types[45]
-#define SWIGTYPE_p_vapor__Entity swig_types[46]
-#define SWIGTYPE_p_vapor__EulerAngles swig_types[47]
-#define SWIGTYPE_p_vapor__Frustum swig_types[48]
-#define SWIGTYPE_p_vapor__Geometry swig_types[49]
-#define SWIGTYPE_p_vapor__Group swig_types[50]
-#define SWIGTYPE_p_vapor__InputEvent swig_types[51]
-#define SWIGTYPE_p_vapor__KeyEvent swig_types[52]
-#define SWIGTYPE_p_vapor__KeyboardEventType swig_types[53]
-#define SWIGTYPE_p_vapor__Keys swig_types[54]
-#define SWIGTYPE_p_vapor__Light swig_types[55]
-#define SWIGTYPE_p_vapor__LightType swig_types[56]
-#define SWIGTYPE_p_vapor__Matrix4x3 swig_types[57]
-#define SWIGTYPE_p_vapor__Mesh swig_types[58]
-#define SWIGTYPE_p_vapor__MeshGroup swig_types[59]
-#define SWIGTYPE_p_vapor__MeshMaterial swig_types[60]
-#define SWIGTYPE_p_vapor__Model swig_types[61]
-#define SWIGTYPE_p_vapor__MouseButton swig_types[62]
-#define SWIGTYPE_p_vapor__MouseButtonEvent swig_types[63]
-#define SWIGTYPE_p_vapor__MouseDragEvent swig_types[64]
-#define SWIGTYPE_p_vapor__MouseEvent swig_types[65]
-#define SWIGTYPE_p_vapor__MouseEventType swig_types[66]
-#define SWIGTYPE_p_vapor__MouseInfo swig_types[67]
-#define SWIGTYPE_p_vapor__MouseMoveEvent swig_types[68]
-#define SWIGTYPE_p_vapor__MouseWheelEvent swig_types[69]
-#define SWIGTYPE_p_vapor__Quaternion swig_types[70]
-#define SWIGTYPE_p_vapor__Ray swig_types[71]
-#define SWIGTYPE_p_vapor__RayQueryResult swig_types[72]
-#define SWIGTYPE_p_vapor__RayTriangleQueryResult swig_types[73]
-#define SWIGTYPE_p_vapor__RefPtrT_vapor__Animation_t swig_types[74]
-#define SWIGTYPE_p_vapor__RefPtrT_vapor__Attachment_t swig_types[75]
-#define SWIGTYPE_p_vapor__RefPtrT_vapor__Bone_t swig_types[76]
-#define SWIGTYPE_p_vapor__RefPtrT_vapor__Mesh_t swig_types[77]
-#define SWIGTYPE_p_vapor__RefPtrT_vapor__Renderable_t swig_types[78]
-#define SWIGTYPE_p_vapor__RefPtrT_vapor__Resource_t swig_types[79]
-#define SWIGTYPE_p_vapor__ReferenceCounted swig_types[80]
-#define SWIGTYPE_p_vapor__RenderBlock swig_types[81]
-#define SWIGTYPE_p_vapor__RenderQueue swig_types[82]
-#define SWIGTYPE_p_vapor__RenderView swig_types[83]
-#define SWIGTYPE_p_vapor__Resource swig_types[84]
-#define SWIGTYPE_p_vapor__Scene swig_types[85]
-#define SWIGTYPE_p_vapor__Transform swig_types[86]
-#define SWIGTYPE_p_vapor__Vector2TT_float_t swig_types[87]
-#define SWIGTYPE_p_vapor__Vector2TT_int_t swig_types[88]
-#define SWIGTYPE_p_vapor__Vector3TT_float_t swig_types[89]
-#define SWIGTYPE_p_vapor__Vector3TT_int_t swig_types[90]
-#define SWIGTYPE_p_vapor__Vector4TT_float_t swig_types[91]
-static swig_type_info *swig_types[93];
-static swig_module_info swig_module = {swig_types, 92, 0, 0, 0, 0};
+#define SWIGTYPE_p_a_3__vapor__Vector3 swig_types[5]
+#define SWIGTYPE_p_char swig_types[6]
+#define SWIGTYPE_p_float swig_types[7]
+#define SWIGTYPE_p_long swig_types[8]
+#define SWIGTYPE_p_short swig_types[9]
+#define SWIGTYPE_p_signed_char swig_types[10]
+#define SWIGTYPE_p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t swig_types[11]
+#define SWIGTYPE_p_std__pairT_Class_const_p_std__shared_ptrT_vapor__Component_t_t swig_types[12]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Camera_t swig_types[13]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__CharacterController_t swig_types[14]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Component_t swig_types[15]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Controller_t swig_types[16]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Entity_t swig_types[17]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Geometry_t swig_types[18]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Group_t swig_types[19]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Light_t swig_types[20]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Model_t swig_types[21]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Scene_t swig_types[22]
+#define SWIGTYPE_p_std__shared_ptrT_vapor__Transform_t swig_types[23]
+#define SWIGTYPE_p_std__string swig_types[24]
+#define SWIGTYPE_p_std__vectorT_float_t swig_types[25]
+#define SWIGTYPE_p_std__vectorT_std__shared_ptrT_vapor__Entity_t_t swig_types[26]
+#define SWIGTYPE_p_std__vectorT_std__shared_ptrT_vapor__Geometry_t_t swig_types[27]
+#define SWIGTYPE_p_std__vectorT_unsigned_short_t swig_types[28]
+#define SWIGTYPE_p_std__vectorT_vapor__MeshGroup_t swig_types[29]
+#define SWIGTYPE_p_std__vectorT_vapor__RayQueryResult_t swig_types[30]
+#define SWIGTYPE_p_std__vectorT_vapor__RefPtrT_vapor__Animation_t_t swig_types[31]
+#define SWIGTYPE_p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t swig_types[32]
+#define SWIGTYPE_p_std__vectorT_vapor__Vector3_t swig_types[33]
+#define SWIGTYPE_p_std__weak_ptrT_vapor__Camera_t swig_types[34]
+#define SWIGTYPE_p_std__weak_ptrT_vapor__CharacterController_t swig_types[35]
+#define SWIGTYPE_p_std__weak_ptrT_vapor__Component_t swig_types[36]
+#define SWIGTYPE_p_std__weak_ptrT_vapor__Entity_t swig_types[37]
+#define SWIGTYPE_p_std__weak_ptrT_vapor__Geometry_t swig_types[38]
+#define SWIGTYPE_p_std__weak_ptrT_vapor__Scene_t swig_types[39]
+#define SWIGTYPE_p_unsigned_char swig_types[40]
+#define SWIGTYPE_p_unsigned_long swig_types[41]
+#define SWIGTYPE_p_unsigned_short swig_types[42]
+#define SWIGTYPE_p_vapor__BoundingBox swig_types[43]
+#define SWIGTYPE_p_vapor__Camera swig_types[44]
+#define SWIGTYPE_p_vapor__CharacterController swig_types[45]
+#define SWIGTYPE_p_vapor__Color swig_types[46]
+#define SWIGTYPE_p_vapor__Component swig_types[47]
+#define SWIGTYPE_p_vapor__Controller swig_types[48]
+#define SWIGTYPE_p_vapor__Entity swig_types[49]
+#define SWIGTYPE_p_vapor__EulerAngles swig_types[50]
+#define SWIGTYPE_p_vapor__Frustum swig_types[51]
+#define SWIGTYPE_p_vapor__Geometry swig_types[52]
+#define SWIGTYPE_p_vapor__Group swig_types[53]
+#define SWIGTYPE_p_vapor__InputEvent swig_types[54]
+#define SWIGTYPE_p_vapor__KeyEvent swig_types[55]
+#define SWIGTYPE_p_vapor__KeyboardEventType swig_types[56]
+#define SWIGTYPE_p_vapor__Keys swig_types[57]
+#define SWIGTYPE_p_vapor__Light swig_types[58]
+#define SWIGTYPE_p_vapor__LightType swig_types[59]
+#define SWIGTYPE_p_vapor__Matrix4x3 swig_types[60]
+#define SWIGTYPE_p_vapor__Mesh swig_types[61]
+#define SWIGTYPE_p_vapor__MeshGroup swig_types[62]
+#define SWIGTYPE_p_vapor__MeshMaterial swig_types[63]
+#define SWIGTYPE_p_vapor__Model swig_types[64]
+#define SWIGTYPE_p_vapor__MouseButton swig_types[65]
+#define SWIGTYPE_p_vapor__MouseButtonEvent swig_types[66]
+#define SWIGTYPE_p_vapor__MouseDragEvent swig_types[67]
+#define SWIGTYPE_p_vapor__MouseEvent swig_types[68]
+#define SWIGTYPE_p_vapor__MouseEventType swig_types[69]
+#define SWIGTYPE_p_vapor__MouseInfo swig_types[70]
+#define SWIGTYPE_p_vapor__MouseMoveEvent swig_types[71]
+#define SWIGTYPE_p_vapor__MouseWheelEvent swig_types[72]
+#define SWIGTYPE_p_vapor__Quaternion swig_types[73]
+#define SWIGTYPE_p_vapor__Ray swig_types[74]
+#define SWIGTYPE_p_vapor__RayQueryResult swig_types[75]
+#define SWIGTYPE_p_vapor__RayTriangleQueryResult swig_types[76]
+#define SWIGTYPE_p_vapor__RefPtrT_vapor__Animation_t swig_types[77]
+#define SWIGTYPE_p_vapor__RefPtrT_vapor__Attachment_t swig_types[78]
+#define SWIGTYPE_p_vapor__RefPtrT_vapor__Bone_t swig_types[79]
+#define SWIGTYPE_p_vapor__RefPtrT_vapor__Mesh_t swig_types[80]
+#define SWIGTYPE_p_vapor__RefPtrT_vapor__Renderable_t swig_types[81]
+#define SWIGTYPE_p_vapor__RefPtrT_vapor__Resource_t swig_types[82]
+#define SWIGTYPE_p_vapor__ReferenceCounted swig_types[83]
+#define SWIGTYPE_p_vapor__RenderBlock swig_types[84]
+#define SWIGTYPE_p_vapor__RenderQueue swig_types[85]
+#define SWIGTYPE_p_vapor__RenderView swig_types[86]
+#define SWIGTYPE_p_vapor__Resource swig_types[87]
+#define SWIGTYPE_p_vapor__Scene swig_types[88]
+#define SWIGTYPE_p_vapor__Transform swig_types[89]
+#define SWIGTYPE_p_vapor__Vector3 swig_types[90]
+static swig_type_info *swig_types[92];
+static swig_module_info swig_module = {swig_types, 91, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1621,11 +1620,14 @@ namespace swig {
 typedef struct{} LANGUAGE_OBJ;
 }
 
-SWIGINTERN char const *vapor_Vector3T_Sl_float_Sg____str__(vapor::Vector3T< float > *self){
-		static char temp[256];
-		sprintf(temp,"[%g, %g, %g]", self->x, self->y, self->z);
-		return &temp[0];
-	}
+
+SWIGINTERN int SWIG_lua_isnilstring(lua_State *L, int idx) {
+  int ret = lua_isstring(L, idx);
+  if (!ret)
+   ret = lua_isnil(L, idx);
+  return ret;
+}
+
 SWIGINTERN char const *vapor_Color___str__(vapor::Color *self){
 		static char temp[256];
 		sprintf(temp,"[%g, %g, %g, %g]", self->r, self->g, self->b, self->a);
@@ -1644,447 +1646,15 @@ SWIGINTERN char const *vapor_Quaternion___str__(vapor::Quaternion *self){
 #ifdef __cplusplus
 extern "C" {
 #endif
-static int _wrap_new_Vector3__SWIG_0(lua_State* L) {
+static int _wrap_LogDebug(lua_State* L) {
   int SWIG_arg = 0;
-  vapor::Vector3T< float > *result = 0 ;
-  
-  SWIG_check_num_args("vapor::Vector3T<(float)>",0,0)
-  result = (vapor::Vector3T< float > *)new vapor::Vector3T< float >();
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Vector3TT_float_t,1); SWIG_arg++; 
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_new_Vector3__SWIG_1(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Vector3T< float > *arg1 = 0 ;
-  vapor::Vector3T< float > *result = 0 ;
-  
-  SWIG_check_num_args("vapor::Vector3T<(float)>",1,1)
-  if(!lua_isuserdata(L,1)) SWIG_fail_arg("vapor::Vector3T<(float)>",1,"vapor::Vector3T< float > const &");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("new_Vector3",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  result = (vapor::Vector3T< float > *)new vapor::Vector3T< float >((vapor::Vector3T< float > const &)*arg1);
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Vector3TT_float_t,1); SWIG_arg++; 
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_new_Vector3__SWIG_2(lua_State* L) {
-  int SWIG_arg = 0;
-  float arg1 ;
-  vapor::Vector3T< float > *result = 0 ;
-  
-  SWIG_check_num_args("vapor::Vector3T<(float)>",1,1)
-  if(!lua_isnumber(L,1)) SWIG_fail_arg("vapor::Vector3T<(float)>",1,"float const");
-  arg1 = (float const)lua_tonumber(L, 1);
-  result = (vapor::Vector3T< float > *)new vapor::Vector3T< float >(arg1);
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Vector3TT_float_t,1); SWIG_arg++; 
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_new_Vector3__SWIG_3(lua_State* L) {
-  int SWIG_arg = 0;
-  float arg1 ;
-  float arg2 ;
-  float arg3 ;
-  vapor::Vector3T< float > *result = 0 ;
-  
-  SWIG_check_num_args("vapor::Vector3T<(float)>",3,3)
-  if(!lua_isnumber(L,1)) SWIG_fail_arg("vapor::Vector3T<(float)>",1,"float const");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("vapor::Vector3T<(float)>",2,"float const");
-  if(!lua_isnumber(L,3)) SWIG_fail_arg("vapor::Vector3T<(float)>",3,"float const");
-  arg1 = (float const)lua_tonumber(L, 1);
-  arg2 = (float const)lua_tonumber(L, 2);
-  arg3 = (float const)lua_tonumber(L, 3);
-  result = (vapor::Vector3T< float > *)new vapor::Vector3T< float >(arg1,arg2,arg3);
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Vector3TT_float_t,1); SWIG_arg++; 
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_new_Vector3(lua_State* L) {
-  int argc;
-  int argv[4]={
-    1,2,3,4
-  };
-  
-  argc = lua_gettop(L);
-  if (argc == 0) {
-    return _wrap_new_Vector3__SWIG_0(L);
-  }
-  if (argc == 1) {
-    int _v;
-    {
-      void *ptr;
-      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_vapor__Vector3TT_float_t, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      return _wrap_new_Vector3__SWIG_1(L);
-    }
-  }
-  if (argc == 1) {
-    int _v;
-    {
-      _v = lua_isnumber(L,argv[0]);
-    }
-    if (_v) {
-      return _wrap_new_Vector3__SWIG_2(L);
-    }
-  }
-  if (argc == 3) {
-    int _v;
-    {
-      _v = lua_isnumber(L,argv[0]);
-    }
-    if (_v) {
-      {
-        _v = lua_isnumber(L,argv[1]);
-      }
-      if (_v) {
-        {
-          _v = lua_isnumber(L,argv[2]);
-        }
-        if (_v) {
-          return _wrap_new_Vector3__SWIG_3(L);
-        }
-      }
-    }
-  }
-  
-  lua_pushstring(L,"Wrong arguments for overloaded function 'new_Vector3'\n"
-    "  Possible C/C++ prototypes are:\n"
-    "    vapor::Vector3T< float >()\n"
-    "    vapor::Vector3T< float >(vapor::Vector3T< float > const &)\n"
-    "    vapor::Vector3T< float >(float const)\n"
-    "    vapor::Vector3T< float >(float const,float const,float const)\n");
-  lua_error(L);return 0;
-}
-
-
-static int _wrap_Vector3___eq(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Vector3T< float > *arg1 = (vapor::Vector3T< float > *) 0 ;
-  vapor::Vector3T< float > *arg2 = 0 ;
-  bool result;
-  
-  SWIG_check_num_args("operator ==",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator ==",1,"vapor::Vector3T< float > const *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("operator ==",2,"vapor::Vector3T< float > const &");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3___eq",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3___eq",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  result = (bool)((vapor::Vector3T< float > const *)arg1)->operator ==((vapor::Vector3T< float > const &)*arg2);
-  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Vector3___unm(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Vector3T< float > *arg1 = (vapor::Vector3T< float > *) 0 ;
-  vapor::Vector3T< float > result;
-  
-  SWIG_check_num_args("operator -",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator -",1,"vapor::Vector3T< float > const *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3___unm",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  result = ((vapor::Vector3T< float > const *)arg1)->operator -();
-  {
-    vapor::Vector3T< float > * resultptr = new vapor::Vector3T< float >((const vapor::Vector3T< float > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__Vector3TT_float_t,1); SWIG_arg++;
-  }
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Vector3___add(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Vector3T< float > *arg1 = (vapor::Vector3T< float > *) 0 ;
-  vapor::Vector3T< float > *arg2 = 0 ;
-  vapor::Vector3T< float > result;
-  
-  SWIG_check_num_args("operator +",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator +",1,"vapor::Vector3T< float > const *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("operator +",2,"vapor::Vector3T< float > const &");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3___add",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3___add",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  result = ((vapor::Vector3T< float > const *)arg1)->operator +((vapor::Vector3T< float > const &)*arg2);
-  {
-    vapor::Vector3T< float > * resultptr = new vapor::Vector3T< float >((const vapor::Vector3T< float > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__Vector3TT_float_t,1); SWIG_arg++;
-  }
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Vector3___sub(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Vector3T< float > *arg1 = (vapor::Vector3T< float > *) 0 ;
-  vapor::Vector3T< float > *arg2 = 0 ;
-  vapor::Vector3T< float > result;
-  
-  SWIG_check_num_args("operator -",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator -",1,"vapor::Vector3T< float > const *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("operator -",2,"vapor::Vector3T< float > const &");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3___sub",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3___sub",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  result = ((vapor::Vector3T< float > const *)arg1)->operator -((vapor::Vector3T< float > const &)*arg2);
-  {
-    vapor::Vector3T< float > * resultptr = new vapor::Vector3T< float >((const vapor::Vector3T< float > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__Vector3TT_float_t,1); SWIG_arg++;
-  }
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Vector3___mul__SWIG_0(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Vector3T< float > *arg1 = (vapor::Vector3T< float > *) 0 ;
-  float arg2 ;
-  vapor::Vector3T< float > result;
-  
-  SWIG_check_num_args("operator *",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator *",1,"vapor::Vector3T< float > const *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("operator *",2,"float");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3___mul",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  arg2 = (float)lua_tonumber(L, 2);
-  result = ((vapor::Vector3T< float > const *)arg1)->operator *(arg2);
-  {
-    vapor::Vector3T< float > * resultptr = new vapor::Vector3T< float >((const vapor::Vector3T< float > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__Vector3TT_float_t,1); SWIG_arg++;
-  }
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Vector3___mul__SWIG_1(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Vector3T< float > *arg1 = (vapor::Vector3T< float > *) 0 ;
-  vapor::Vector3T< float > *arg2 = 0 ;
-  vapor::Vector3T< float > result;
-  
-  SWIG_check_num_args("operator *",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator *",1,"vapor::Vector3T< float > const *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("operator *",2,"vapor::Vector3T< float > const &");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3___mul",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3___mul",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  result = ((vapor::Vector3T< float > const *)arg1)->operator *((vapor::Vector3T< float > const &)*arg2);
-  {
-    vapor::Vector3T< float > * resultptr = new vapor::Vector3T< float >((const vapor::Vector3T< float > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__Vector3TT_float_t,1); SWIG_arg++;
-  }
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Vector3___mul(lua_State* L) {
-  int argc;
-  int argv[3]={
-    1,2,3
-  };
-  
-  argc = lua_gettop(L);
-  if (argc == 2) {
-    int _v;
-    {
-      void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_vapor__Vector3TT_float_t, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      {
-        void *ptr;
-        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_vapor__Vector3TT_float_t, 0)) {
-          _v = 0;
-        } else {
-          _v = 1;
-        }
-      }
-      if (_v) {
-        return _wrap_Vector3___mul__SWIG_1(L);
-      }
-    }
-  }
-  if (argc == 2) {
-    int _v;
-    {
-      void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_vapor__Vector3TT_float_t, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      {
-        _v = lua_isnumber(L,argv[1]);
-      }
-      if (_v) {
-        return _wrap_Vector3___mul__SWIG_0(L);
-      }
-    }
-  }
-  
-  lua_pushstring(L,"Wrong arguments for overloaded function 'Vector3___mul'\n"
-    "  Possible C/C++ prototypes are:\n"
-    "    operator *(vapor::Vector3T< float > const *,float)\n"
-    "    operator *(vapor::Vector3T< float > const *,vapor::Vector3T< float > const &)\n");
-  lua_error(L);return 0;
-}
-
-
-static int _wrap_Vector3___div(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Vector3T< float > *arg1 = (vapor::Vector3T< float > *) 0 ;
-  float arg2 ;
-  vapor::Vector3T< float > result;
-  
-  SWIG_check_num_args("operator /",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator /",1,"vapor::Vector3T< float > const *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("operator /",2,"float");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3___div",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  arg2 = (float)lua_tonumber(L, 2);
-  result = ((vapor::Vector3T< float > const *)arg1)->operator /(arg2);
-  {
-    vapor::Vector3T< float > * resultptr = new vapor::Vector3T< float >((const vapor::Vector3T< float > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__Vector3TT_float_t,1); SWIG_arg++;
-  }
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Vector3_zero(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Vector3T< float > *arg1 = (vapor::Vector3T< float > *) 0 ;
-  
-  SWIG_check_num_args("zero",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("zero",1,"vapor::Vector3T< float > *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3_zero",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  (arg1)->zero();
+  char *arg1 = (char *) 0 ;
+  void *arg2 = 0 ;
+  
+  SWIG_check_num_args("vapor::LogDebug",1,1)
+  if(!SWIG_lua_isnilstring(L,1)) SWIG_fail_arg("vapor::LogDebug",1,"char const *");
+  arg1 = (char *)lua_tostring(L, 1);
+  vapor::LogDebug((char const *)arg1,arg2);
   
   return SWIG_arg;
   
@@ -2096,331 +1666,15 @@ fail:
 }
 
 
-static int _wrap_Vector3_length(lua_State* L) {
+static int _wrap_LogInfo(lua_State* L) {
   int SWIG_arg = 0;
-  vapor::Vector3T< float > *arg1 = (vapor::Vector3T< float > *) 0 ;
-  float result;
-  
-  SWIG_check_num_args("length",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("length",1,"vapor::Vector3T< float > const *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3_length",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  result = (float)((vapor::Vector3T< float > const *)arg1)->length();
-  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Vector3_lengthSquared(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Vector3T< float > *arg1 = (vapor::Vector3T< float > *) 0 ;
-  float result;
-  
-  SWIG_check_num_args("lengthSquared",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("lengthSquared",1,"vapor::Vector3T< float > const *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3_lengthSquared",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  result = (float)((vapor::Vector3T< float > const *)arg1)->lengthSquared();
-  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Vector3_project(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Vector3T< float > *arg1 = (vapor::Vector3T< float > *) 0 ;
-  vapor::Vector3T< float > *arg2 = 0 ;
-  vapor::Vector3T< float > result;
-  
-  SWIG_check_num_args("project",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("project",1,"vapor::Vector3T< float > const *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("project",2,"vapor::Vector3T< float > const &");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3_project",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3_project",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  result = ((vapor::Vector3T< float > const *)arg1)->project((vapor::Vector3T< float > const &)*arg2);
-  {
-    vapor::Vector3T< float > * resultptr = new vapor::Vector3T< float >((const vapor::Vector3T< float > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__Vector3TT_float_t,1); SWIG_arg++;
-  }
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Vector3_lerp(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Vector3T< float > *arg1 = (vapor::Vector3T< float > *) 0 ;
-  vapor::Vector3T< float > *arg2 = 0 ;
-  float arg3 ;
-  vapor::Vector3T< float > result;
-  
-  SWIG_check_num_args("lerp",3,3)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("lerp",1,"vapor::Vector3T< float > const *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("lerp",2,"vapor::Vector3T< float > const &");
-  if(!lua_isnumber(L,3)) SWIG_fail_arg("lerp",3,"float");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3_lerp",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3_lerp",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  arg3 = (float)lua_tonumber(L, 3);
-  result = ((vapor::Vector3T< float > const *)arg1)->lerp((vapor::Vector3T< float > const &)*arg2,arg3);
-  {
-    vapor::Vector3T< float > * resultptr = new vapor::Vector3T< float >((const vapor::Vector3T< float > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__Vector3TT_float_t,1); SWIG_arg++;
-  }
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Vector3_serp(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Vector3T< float > *arg1 = (vapor::Vector3T< float > *) 0 ;
-  vapor::Vector3T< float > *arg2 = 0 ;
-  float arg3 ;
-  vapor::Vector3T< float > result;
-  
-  SWIG_check_num_args("serp",3,3)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("serp",1,"vapor::Vector3T< float > const *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("serp",2,"vapor::Vector3T< float > const &");
-  if(!lua_isnumber(L,3)) SWIG_fail_arg("serp",3,"float");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3_serp",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3_serp",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  arg3 = (float)lua_tonumber(L, 3);
-  result = ((vapor::Vector3T< float > const *)arg1)->serp((vapor::Vector3T< float > const &)*arg2,arg3);
-  {
-    vapor::Vector3T< float > * resultptr = new vapor::Vector3T< float >((const vapor::Vector3T< float > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__Vector3TT_float_t,1); SWIG_arg++;
-  }
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Vector3_normalize(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Vector3T< float > *arg1 = (vapor::Vector3T< float > *) 0 ;
-  vapor::Vector3T< float > result;
-  
-  SWIG_check_num_args("normalize",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("normalize",1,"vapor::Vector3T< float > *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3_normalize",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  result = (arg1)->normalize();
-  {
-    vapor::Vector3T< float > * resultptr = new vapor::Vector3T< float >((const vapor::Vector3T< float > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__Vector3TT_float_t,1); SWIG_arg++;
-  }
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Vector3_dot(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Vector3T< float > *arg1 = (vapor::Vector3T< float > *) 0 ;
-  vapor::Vector3T< float > *arg2 = 0 ;
-  float result;
-  
-  SWIG_check_num_args("dot",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("dot",1,"vapor::Vector3T< float > const *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("dot",2,"vapor::Vector3T< float > const &");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3_dot",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3_dot",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  result = (float)((vapor::Vector3T< float > const *)arg1)->dot((vapor::Vector3T< float > const &)*arg2);
-  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Vector3_cross(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Vector3T< float > *arg1 = (vapor::Vector3T< float > *) 0 ;
-  vapor::Vector3T< float > *arg2 = 0 ;
-  vapor::Vector3T< float > result;
-  
-  SWIG_check_num_args("cross",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("cross",1,"vapor::Vector3T< float > const *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("cross",2,"vapor::Vector3T< float > const &");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3_cross",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3_cross",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  result = ((vapor::Vector3T< float > const *)arg1)->cross((vapor::Vector3T< float > const &)*arg2);
-  {
-    vapor::Vector3T< float > * resultptr = new vapor::Vector3T< float >((const vapor::Vector3T< float > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__Vector3TT_float_t,1); SWIG_arg++;
-  }
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Vector3_distance(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Vector3T< float > *arg1 = (vapor::Vector3T< float > *) 0 ;
-  vapor::Vector3T< float > *arg2 = 0 ;
-  float result;
-  
-  SWIG_check_num_args("distance",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("distance",1,"vapor::Vector3T< float > const *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("distance",2,"vapor::Vector3T< float > const &");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3_distance",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3_distance",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  result = (float)((vapor::Vector3T< float > const *)arg1)->distance((vapor::Vector3T< float > const &)*arg2);
-  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Vector3___lt(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Vector3T< float > *arg1 = (vapor::Vector3T< float > *) 0 ;
-  vapor::Vector3T< float > *arg2 = 0 ;
-  bool result;
-  
-  SWIG_check_num_args("operator <",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator <",1,"vapor::Vector3T< float > const *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("operator <",2,"vapor::Vector3T< float > const &");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3___lt",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3___lt",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  result = (bool)((vapor::Vector3T< float > const *)arg1)->operator <((vapor::Vector3T< float > const &)*arg2);
-  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Vector3_x_set(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Vector3T< float > *arg1 = (vapor::Vector3T< float > *) 0 ;
-  float arg2 ;
-  
-  SWIG_check_num_args("x",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("x",1,"vapor::Vector3T< float > *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("x",2,"float");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3_x_set",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  arg2 = (float)lua_tonumber(L, 2);
-  if (arg1) (arg1)->x = arg2;
+  char *arg1 = (char *) 0 ;
+  void *arg2 = 0 ;
+  
+  SWIG_check_num_args("vapor::LogInfo",1,1)
+  if(!SWIG_lua_isnilstring(L,1)) SWIG_fail_arg("vapor::LogInfo",1,"char const *");
+  arg1 = (char *)lua_tostring(L, 1);
+  vapor::LogInfo((char const *)arg1,arg2);
   
   return SWIG_arg;
   
@@ -2432,45 +1686,15 @@ fail:
 }
 
 
-static int _wrap_Vector3_x_get(lua_State* L) {
+static int _wrap_LogWarn(lua_State* L) {
   int SWIG_arg = 0;
-  vapor::Vector3T< float > *arg1 = (vapor::Vector3T< float > *) 0 ;
-  float result;
+  char *arg1 = (char *) 0 ;
+  void *arg2 = 0 ;
   
-  SWIG_check_num_args("x",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("x",1,"vapor::Vector3T< float > *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3_x_get",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  result = (float) ((arg1)->x);
-  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Vector3_y_set(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Vector3T< float > *arg1 = (vapor::Vector3T< float > *) 0 ;
-  float arg2 ;
-  
-  SWIG_check_num_args("y",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("y",1,"vapor::Vector3T< float > *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("y",2,"float");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3_y_set",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  arg2 = (float)lua_tonumber(L, 2);
-  if (arg1) (arg1)->y = arg2;
+  SWIG_check_num_args("vapor::LogWarn",1,1)
+  if(!SWIG_lua_isnilstring(L,1)) SWIG_fail_arg("vapor::LogWarn",1,"char const *");
+  arg1 = (char *)lua_tostring(L, 1);
+  vapor::LogWarn((char const *)arg1,arg2);
   
   return SWIG_arg;
   
@@ -2482,45 +1706,15 @@ fail:
 }
 
 
-static int _wrap_Vector3_y_get(lua_State* L) {
+static int _wrap_LogError(lua_State* L) {
   int SWIG_arg = 0;
-  vapor::Vector3T< float > *arg1 = (vapor::Vector3T< float > *) 0 ;
-  float result;
+  char *arg1 = (char *) 0 ;
+  void *arg2 = 0 ;
   
-  SWIG_check_num_args("y",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("y",1,"vapor::Vector3T< float > *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3_y_get",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  result = (float) ((arg1)->y);
-  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Vector3_z_set(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Vector3T< float > *arg1 = (vapor::Vector3T< float > *) 0 ;
-  float arg2 ;
-  
-  SWIG_check_num_args("z",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("z",1,"vapor::Vector3T< float > *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("z",2,"float");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3_z_set",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  arg2 = (float)lua_tonumber(L, 2);
-  if (arg1) (arg1)->z = arg2;
+  SWIG_check_num_args("vapor::LogError",1,1)
+  if(!SWIG_lua_isnilstring(L,1)) SWIG_fail_arg("vapor::LogError",1,"char const *");
+  arg1 = (char *)lua_tostring(L, 1);
+  vapor::LogError((char const *)arg1,arg2);
   
   return SWIG_arg;
   
@@ -2531,89 +1725,6 @@ fail:
   return SWIG_arg;
 }
 
-
-static int _wrap_Vector3_z_get(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Vector3T< float > *arg1 = (vapor::Vector3T< float > *) 0 ;
-  float result;
-  
-  SWIG_check_num_args("z",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("z",1,"vapor::Vector3T< float > *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3_z_get",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  result = (float) ((arg1)->z);
-  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Vector3___tostring(lua_State* L) {
-  int SWIG_arg = 0;
-  vapor::Vector3T< float > *arg1 = (vapor::Vector3T< float > *) 0 ;
-  char *result = 0 ;
-  
-  SWIG_check_num_args("__str__",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("__str__",1,"vapor::Vector3T< float > *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Vector3___tostring",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
-  }
-  
-  result = (char *)vapor_Vector3T_Sl_float_Sg____str__(arg1);
-  lua_pushstring(L,(const char *)result); SWIG_arg++;
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static void swig_delete_Vector3(void *obj) {
-vapor::Vector3T< float > *arg1 = (vapor::Vector3T< float > *) obj;
-delete arg1;
-}
-static swig_lua_method swig_vapor_Vector3T_Sl_float_Sg__methods[] = {
-    {"__eq", _wrap_Vector3___eq}, 
-    {"__unm", _wrap_Vector3___unm}, 
-    {"__add", _wrap_Vector3___add}, 
-    {"__sub", _wrap_Vector3___sub}, 
-    {"__mul", _wrap_Vector3___mul}, 
-    {"__div", _wrap_Vector3___div}, 
-    {"zero", _wrap_Vector3_zero}, 
-    {"length", _wrap_Vector3_length}, 
-    {"lengthSquared", _wrap_Vector3_lengthSquared}, 
-    {"project", _wrap_Vector3_project}, 
-    {"lerp", _wrap_Vector3_lerp}, 
-    {"serp", _wrap_Vector3_serp}, 
-    {"normalize", _wrap_Vector3_normalize}, 
-    {"dot", _wrap_Vector3_dot}, 
-    {"cross", _wrap_Vector3_cross}, 
-    {"distance", _wrap_Vector3_distance}, 
-    {"__lt", _wrap_Vector3___lt}, 
-    {"__tostring", _wrap_Vector3___tostring}, 
-    {0,0}
-};
-static swig_lua_attribute swig_vapor_Vector3T_Sl_float_Sg__attributes[] = {
-    { "x", _wrap_Vector3_x_get, _wrap_Vector3_x_set},
-    { "y", _wrap_Vector3_y_get, _wrap_Vector3_y_set},
-    { "z", _wrap_Vector3_z_get, _wrap_Vector3_z_set},
-    {0,0,0}
-};
-static swig_lua_class *swig_vapor_Vector3T_Sl_float_Sg__bases[] = {0};
-static const char *swig_vapor_Vector3T_Sl_float_Sg__base_names[] = {0};
-static swig_lua_class _wrap_class_vapor_Vector3T_Sl_float_Sg_ = { "Vector3", &SWIGTYPE_p_vapor__Vector3TT_float_t,_wrap_new_Vector3, swig_delete_Vector3, swig_vapor_Vector3T_Sl_float_Sg__methods, swig_vapor_Vector3T_Sl_float_Sg__attributes, swig_vapor_Vector3T_Sl_float_Sg__bases, swig_vapor_Vector3T_Sl_float_Sg__base_names };
 
 static int _wrap_new_Color__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
@@ -4380,8 +3491,8 @@ static int _wrap_Quaternion_setToRotateAboutAxis(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Quaternion_setToRotateAboutAxis",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3,0))){
+    SWIG_fail_ptr("Quaternion_setToRotateAboutAxis",2,SWIGTYPE_p_vapor__Vector3);
   }
   
   arg3 = (float)lua_tonumber(L, 3);
@@ -4463,7 +3574,7 @@ static int _wrap_Quaternion_getRotationAxis(lua_State* L) {
   result = ((vapor::Quaternion const *)arg1)->getRotationAxis();
   {
     vapor::Vector3 * resultptr = new vapor::Vector3((const vapor::Vector3 &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__Vector3TT_float_t,1); SWIG_arg++;
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__Vector3,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -4873,13 +3984,13 @@ static int _wrap_new_Ray__SWIG_1(lua_State* L) {
   if(!lua_isuserdata(L,1)) SWIG_fail_arg("vapor::Ray",1,"vapor::Vector3 const &");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("vapor::Ray",2,"vapor::Vector3 const &");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("new_Ray",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3,0))){
+    SWIG_fail_ptr("new_Ray",1,SWIGTYPE_p_vapor__Vector3);
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("new_Ray",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3,0))){
+    SWIG_fail_ptr("new_Ray",2,SWIGTYPE_p_vapor__Vector3);
   }
   
   result = (vapor::Ray *)new vapor::Ray((vapor::Vector3 const &)*arg1,(vapor::Vector3 const &)*arg2);
@@ -4946,7 +4057,7 @@ static int _wrap_new_Ray(lua_State* L) {
     int _v;
     {
       void *ptr;
-      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_vapor__Vector3TT_float_t, 0)) {
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_vapor__Vector3, 0)) {
         _v = 0;
       } else {
         _v = 1;
@@ -4955,7 +4066,7 @@ static int _wrap_new_Ray(lua_State* L) {
     if (_v) {
       {
         void *ptr;
-        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_vapor__Vector3TT_float_t, 0)) {
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_vapor__Vector3, 0)) {
           _v = 0;
         } else {
           _v = 1;
@@ -4994,7 +4105,7 @@ static int _wrap_Ray_getPoint(lua_State* L) {
   result = ((vapor::Ray const *)arg1)->getPoint(arg2);
   {
     vapor::Vector3 * resultptr = new vapor::Vector3((const vapor::Vector3 &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__Vector3TT_float_t,1); SWIG_arg++;
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__Vector3,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -5027,8 +4138,8 @@ static int _wrap_Ray_intersects(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_a_3__vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Ray_intersects",2,SWIGTYPE_p_a_3__vapor__Vector3TT_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_a_3__vapor__Vector3,0))){
+    SWIG_fail_ptr("Ray_intersects",2,SWIGTYPE_p_a_3__vapor__Vector3);
   }
   
   
@@ -5072,8 +4183,8 @@ static int _wrap_Ray_origin_set(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Ray_origin_set",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3,0))){
+    SWIG_fail_ptr("Ray_origin_set",2,SWIGTYPE_p_vapor__Vector3);
   }
   
   if (arg1) (arg1)->origin = *arg2;
@@ -5101,7 +4212,7 @@ static int _wrap_Ray_origin_get(lua_State* L) {
   }
   
   result = (vapor::Vector3 *)& ((arg1)->origin);
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Vector3TT_float_t,0); SWIG_arg++; 
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Vector3,0); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -5126,8 +4237,8 @@ static int _wrap_Ray_direction_set(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Ray_direction_set",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3,0))){
+    SWIG_fail_ptr("Ray_direction_set",2,SWIGTYPE_p_vapor__Vector3);
   }
   
   if (arg1) (arg1)->direction = *arg2;
@@ -5155,7 +4266,7 @@ static int _wrap_Ray_direction_get(lua_State* L) {
   }
   
   result = (vapor::Vector3 *)& ((arg1)->direction);
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Vector3TT_float_t,0); SWIG_arg++; 
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Vector3,0); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -5290,14 +4401,14 @@ static int _wrap_Matrix4x3___mul__SWIG_0(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Matrix4x3___mul",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3,0))){
+    SWIG_fail_ptr("Matrix4x3___mul",2,SWIGTYPE_p_vapor__Vector3);
   }
   
   result = ((vapor::Matrix4x3 const *)arg1)->operator *((vapor::Vector3 const &)*arg2);
   {
     vapor::Vector3 * resultptr = new vapor::Vector3((const vapor::Vector3 &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__Vector3TT_float_t,1); SWIG_arg++;
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__Vector3,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -5363,7 +4474,7 @@ static int _wrap_Matrix4x3___mul(lua_State* L) {
     if (_v) {
       {
         void *ptr;
-        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_vapor__Vector3TT_float_t, 0)) {
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_vapor__Vector3, 0)) {
           _v = 0;
         } else {
           _v = 1;
@@ -5452,11 +4563,11 @@ static int _wrap_Matrix4x3_createTranslation(lua_State* L) {
   SWIG_check_num_args("vapor::Matrix4x3::createTranslation",1,1)
   if(!lua_isuserdata(L,1)) SWIG_fail_arg("vapor::Matrix4x3::createTranslation",1,"vapor::Vector3 const &");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Matrix4x3_createTranslation",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3,0))){
+    SWIG_fail_ptr("Matrix4x3_createTranslation",1,SWIGTYPE_p_vapor__Vector3);
   }
   
-  result = vapor::Matrix4x3::createTranslation((vapor::Vector3T< float > const &)*arg1);
+  result = vapor::Matrix4x3::createTranslation((vapor::Vector3 const &)*arg1);
   {
     vapor::Matrix4x3 * resultptr = new vapor::Matrix4x3((const vapor::Matrix4x3 &) result);
     SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__Matrix4x3,1); SWIG_arg++;
@@ -5506,11 +4617,11 @@ static int _wrap_Matrix4x3_createScale(lua_State* L) {
   SWIG_check_num_args("vapor::Matrix4x3::createScale",1,1)
   if(!lua_isuserdata(L,1)) SWIG_fail_arg("vapor::Matrix4x3::createScale",1,"vapor::Vector3 const &");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Matrix4x3_createScale",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3,0))){
+    SWIG_fail_ptr("Matrix4x3_createScale",1,SWIGTYPE_p_vapor__Vector3);
   }
   
-  result = vapor::Matrix4x3::createScale((vapor::Vector3T< float > const &)*arg1);
+  result = vapor::Matrix4x3::createScale((vapor::Vector3 const &)*arg1);
   {
     vapor::Matrix4x3 * resultptr = new vapor::Matrix4x3((const vapor::Matrix4x3 &) result);
     SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__Matrix4x3,1); SWIG_arg++;
@@ -6295,13 +5406,13 @@ static int _wrap_new_BoundingBox__SWIG_1(lua_State* L) {
   if(!lua_isuserdata(L,1)) SWIG_fail_arg("vapor::BoundingBox",1,"vapor::Vector3 const &");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("vapor::BoundingBox",2,"vapor::Vector3 const &");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("new_BoundingBox",1,SWIGTYPE_p_vapor__Vector3TT_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__Vector3,0))){
+    SWIG_fail_ptr("new_BoundingBox",1,SWIGTYPE_p_vapor__Vector3);
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("new_BoundingBox",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3,0))){
+    SWIG_fail_ptr("new_BoundingBox",2,SWIGTYPE_p_vapor__Vector3);
   }
   
   result = (vapor::BoundingBox *)new vapor::BoundingBox((vapor::Vector3 const &)*arg1,(vapor::Vector3 const &)*arg2);
@@ -6368,7 +5479,7 @@ static int _wrap_new_BoundingBox(lua_State* L) {
     int _v;
     {
       void *ptr;
-      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_vapor__Vector3TT_float_t, 0)) {
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_vapor__Vector3, 0)) {
         _v = 0;
       } else {
         _v = 1;
@@ -6377,7 +5488,7 @@ static int _wrap_new_BoundingBox(lua_State* L) {
     if (_v) {
       {
         void *ptr;
-        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_vapor__Vector3TT_float_t, 0)) {
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_vapor__Vector3, 0)) {
           _v = 0;
         } else {
           _v = 1;
@@ -6412,8 +5523,8 @@ static int _wrap_BoundingBox_add__SWIG_0(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("BoundingBox_add",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3,0))){
+    SWIG_fail_ptr("BoundingBox_add",2,SWIGTYPE_p_vapor__Vector3);
   }
   
   (arg1)->add((vapor::Vector3 const &)*arg2);
@@ -6478,7 +5589,7 @@ static int _wrap_BoundingBox_add(lua_State* L) {
     if (_v) {
       {
         void *ptr;
-        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_vapor__Vector3TT_float_t, 0)) {
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_vapor__Vector3, 0)) {
           _v = 0;
         } else {
           _v = 1;
@@ -6607,7 +5718,7 @@ static int _wrap_BoundingBox_getCenter(lua_State* L) {
   result = ((vapor::BoundingBox const *)arg1)->getCenter();
   {
     vapor::Vector3 * resultptr = new vapor::Vector3((const vapor::Vector3 &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__Vector3TT_float_t,1); SWIG_arg++;
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__Vector3,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -6637,7 +5748,7 @@ static int _wrap_BoundingBox_getCorner(lua_State* L) {
   result = ((vapor::BoundingBox const *)arg1)->getCorner(arg2);
   {
     vapor::Vector3 * resultptr = new vapor::Vector3((const vapor::Vector3 &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__Vector3TT_float_t,1); SWIG_arg++;
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__Vector3,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -6735,8 +5846,8 @@ static int _wrap_BoundingBox_min_set(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("BoundingBox_min_set",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3,0))){
+    SWIG_fail_ptr("BoundingBox_min_set",2,SWIGTYPE_p_vapor__Vector3);
   }
   
   if (arg1) (arg1)->min = *arg2;
@@ -6764,7 +5875,7 @@ static int _wrap_BoundingBox_min_get(lua_State* L) {
   }
   
   result = (vapor::Vector3 *)& ((arg1)->min);
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Vector3TT_float_t,0); SWIG_arg++; 
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Vector3,0); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -6789,8 +5900,8 @@ static int _wrap_BoundingBox_max_set(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("BoundingBox_max_set",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3,0))){
+    SWIG_fail_ptr("BoundingBox_max_set",2,SWIGTYPE_p_vapor__Vector3);
   }
   
   if (arg1) (arg1)->max = *arg2;
@@ -6818,7 +5929,7 @@ static int _wrap_BoundingBox_max_get(lua_State* L) {
   }
   
   result = (vapor::Vector3 *)& ((arg1)->max);
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Vector3TT_float_t,0); SWIG_arg++; 
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Vector3,0); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -7042,11 +6153,11 @@ static swig_lua_class _wrap_class_vapor_MeshMaterial = { "MeshMaterial", &SWIGTY
 static int _wrap_MeshGroup_indices_set(lua_State* L) {
   int SWIG_arg = 0;
   vapor::MeshGroup *arg1 = (vapor::MeshGroup *) 0 ;
-  std::vector< ushort > *arg2 = (std::vector< ushort > *) 0 ;
+  std::vector< uint16 > *arg2 = (std::vector< uint16 > *) 0 ;
   
   SWIG_check_num_args("indices",2,2)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("indices",1,"vapor::MeshGroup *");
-  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("indices",2,"std::vector< ushort > *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("indices",2,"std::vector< uint16 > *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__MeshGroup,0))){
     SWIG_fail_ptr("MeshGroup_indices_set",1,SWIGTYPE_p_vapor__MeshGroup);
@@ -7072,7 +6183,7 @@ fail:
 static int _wrap_MeshGroup_indices_get(lua_State* L) {
   int SWIG_arg = 0;
   vapor::MeshGroup *arg1 = (vapor::MeshGroup *) 0 ;
-  std::vector< ushort > *result = 0 ;
+  std::vector< uint16 > *result = 0 ;
   
   SWIG_check_num_args("indices",1,1)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("indices",1,"vapor::MeshGroup *");
@@ -7081,7 +6192,7 @@ static int _wrap_MeshGroup_indices_get(lua_State* L) {
     SWIG_fail_ptr("MeshGroup_indices_get",1,SWIGTYPE_p_vapor__MeshGroup);
   }
   
-  result = (std::vector< ushort > *)& ((arg1)->indices);
+  result = (std::vector< uint16 > *)& ((arg1)->indices);
   SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__vectorT_unsigned_short_t,0); SWIG_arg++; 
   return SWIG_arg;
   
@@ -7787,8 +6898,8 @@ static int _wrap_Mesh_position_set(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_std__vectorT_vapor__Vector3TT_float_t_t,0))){
-    SWIG_fail_ptr("Mesh_position_set",2,SWIGTYPE_p_std__vectorT_vapor__Vector3TT_float_t_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_std__vectorT_vapor__Vector3_t,0))){
+    SWIG_fail_ptr("Mesh_position_set",2,SWIGTYPE_p_std__vectorT_vapor__Vector3_t);
   }
   
   if (arg1) (arg1)->position = *arg2;
@@ -7816,7 +6927,7 @@ static int _wrap_Mesh_position_get(lua_State* L) {
   }
   
   result = (std::vector< vapor::Vector3 > *)& ((arg1)->position);
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__vectorT_vapor__Vector3TT_float_t_t,0); SWIG_arg++; 
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__vectorT_vapor__Vector3_t,0); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -7841,8 +6952,8 @@ static int _wrap_Mesh_normals_set(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_std__vectorT_vapor__Vector3TT_float_t_t,0))){
-    SWIG_fail_ptr("Mesh_normals_set",2,SWIGTYPE_p_std__vectorT_vapor__Vector3TT_float_t_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_std__vectorT_vapor__Vector3_t,0))){
+    SWIG_fail_ptr("Mesh_normals_set",2,SWIGTYPE_p_std__vectorT_vapor__Vector3_t);
   }
   
   if (arg1) (arg1)->normals = *arg2;
@@ -7870,7 +6981,7 @@ static int _wrap_Mesh_normals_get(lua_State* L) {
   }
   
   result = (std::vector< vapor::Vector3 > *)& ((arg1)->normals);
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__vectorT_vapor__Vector3TT_float_t_t,0); SWIG_arg++; 
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__vectorT_vapor__Vector3_t,0); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -7895,8 +7006,8 @@ static int _wrap_Mesh_texCoords_set(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_std__vectorT_vapor__Vector3TT_float_t_t,0))){
-    SWIG_fail_ptr("Mesh_texCoords_set",2,SWIGTYPE_p_std__vectorT_vapor__Vector3TT_float_t_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_std__vectorT_vapor__Vector3_t,0))){
+    SWIG_fail_ptr("Mesh_texCoords_set",2,SWIGTYPE_p_std__vectorT_vapor__Vector3_t);
   }
   
   if (arg1) (arg1)->texCoords = *arg2;
@@ -7924,7 +7035,7 @@ static int _wrap_Mesh_texCoords_get(lua_State* L) {
   }
   
   result = (std::vector< vapor::Vector3 > *)& ((arg1)->texCoords);
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__vectorT_vapor__Vector3TT_float_t_t,0); SWIG_arg++; 
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__vectorT_vapor__Vector3_t,0); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -9802,7 +8913,7 @@ static int _wrap_Transform_getPosition(lua_State* L) {
   }
   
   result = (vapor::Vector3 *) &((vapor::Transform const *)arg1)->getPosition();
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Vector3TT_float_t,0); SWIG_arg++; 
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Vector3,0); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -9827,8 +8938,8 @@ static int _wrap_Transform_setPosition(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Transform_setPosition",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3,0))){
+    SWIG_fail_ptr("Transform_setPosition",2,SWIGTYPE_p_vapor__Vector3);
   }
   
   (arg1)->setPosition((vapor::Vector3 const &)*arg2);
@@ -9856,7 +8967,7 @@ static int _wrap_Transform_getScale(lua_State* L) {
   }
   
   result = (vapor::Vector3 *) &((vapor::Transform const *)arg1)->getScale();
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Vector3TT_float_t,0); SWIG_arg++; 
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Vector3,0); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -9881,8 +8992,8 @@ static int _wrap_Transform_setScale(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Transform_setScale",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3,0))){
+    SWIG_fail_ptr("Transform_setScale",2,SWIGTYPE_p_vapor__Vector3);
   }
   
   (arg1)->setScale((vapor::Vector3 const &)*arg2);
@@ -9995,13 +9106,13 @@ static int _wrap_Transform_lookAt(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Transform_lookAt",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3,0))){
+    SWIG_fail_ptr("Transform_lookAt",2,SWIGTYPE_p_vapor__Vector3);
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Transform_lookAt",3,SWIGTYPE_p_vapor__Vector3TT_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_vapor__Vector3,0))){
+    SWIG_fail_ptr("Transform_lookAt",3,SWIGTYPE_p_vapor__Vector3);
   }
   
   result = (arg1)->lookAt((vapor::Vector3 const &)*arg2,(vapor::Vector3 const &)*arg3);
@@ -10115,7 +9226,7 @@ static int _wrap_Transform_getWorldPosition(lua_State* L) {
   result = ((vapor::Transform const *)arg1)->getWorldPosition();
   {
     vapor::Vector3 * resultptr = new vapor::Vector3((const vapor::Vector3 &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__Vector3TT_float_t,1); SWIG_arg++;
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_vapor__Vector3,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -11085,7 +10196,7 @@ static int _wrap_Camera_getLookAtVector(lua_State* L) {
   }
   
   result = (vapor::Vector3 *) &((vapor::Camera const *)arg1)->getLookAtVector();
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Vector3TT_float_t,0); SWIG_arg++; 
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Vector3,0); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -11287,8 +10398,8 @@ static int _wrap_Camera_getRay__SWIG_0(lua_State* L) {
   arg2 = (float)lua_tonumber(L, 2);
   arg3 = (float)lua_tonumber(L, 3);
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,4,(void**)&arg4,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("Camera_getRay",4,SWIGTYPE_p_vapor__Vector3TT_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,4,(void**)&arg4,SWIGTYPE_p_vapor__Vector3,0))){
+    SWIG_fail_ptr("Camera_getRay",4,SWIGTYPE_p_vapor__Vector3);
   }
   
   result = ((vapor::Camera const *)arg1)->getRay(arg2,arg3,arg4);
@@ -11391,7 +10502,7 @@ static int _wrap_Camera_getRay(lua_State* L) {
         if (_v) {
           {
             void *ptr;
-            if (SWIG_isptrtype(L,argv[3])==0 || SWIG_ConvertPtr(L,argv[3], (void **) &ptr, SWIGTYPE_p_vapor__Vector3TT_float_t, 0)) {
+            if (SWIG_isptrtype(L,argv[3])==0 || SWIG_ConvertPtr(L,argv[3], (void **) &ptr, SWIGTYPE_p_vapor__Vector3, 0)) {
               _v = 0;
             } else {
               _v = 1;
@@ -14086,8 +13197,8 @@ static int _wrap_RayTriangleQueryResult_intersection_set(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("RayTriangleQueryResult_intersection_set",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3,0))){
+    SWIG_fail_ptr("RayTriangleQueryResult_intersection_set",2,SWIGTYPE_p_vapor__Vector3);
   }
   
   if (arg1) (arg1)->intersection = *arg2;
@@ -14115,7 +13226,7 @@ static int _wrap_RayTriangleQueryResult_intersection_get(lua_State* L) {
   }
   
   result = (vapor::Vector3 *)& ((arg1)->intersection);
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Vector3TT_float_t,0); SWIG_arg++; 
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Vector3,0); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -14140,8 +13251,8 @@ static int _wrap_RayTriangleQueryResult_intersectionUV_set(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("RayTriangleQueryResult_intersectionUV_set",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3,0))){
+    SWIG_fail_ptr("RayTriangleQueryResult_intersectionUV_set",2,SWIGTYPE_p_vapor__Vector3);
   }
   
   if (arg1) (arg1)->intersectionUV = *arg2;
@@ -14169,7 +13280,7 @@ static int _wrap_RayTriangleQueryResult_intersectionUV_get(lua_State* L) {
   }
   
   result = (vapor::Vector3 *)& ((arg1)->intersectionUV);
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Vector3TT_float_t,0); SWIG_arg++; 
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Vector3,0); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -14194,8 +13305,8 @@ static int _wrap_RayTriangleQueryResult_trianglePosition_set(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("RayTriangleQueryResult_trianglePosition_set",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3,0))){
+    SWIG_fail_ptr("RayTriangleQueryResult_trianglePosition_set",2,SWIGTYPE_p_vapor__Vector3);
   }
   
   {
@@ -14227,7 +13338,7 @@ static int _wrap_RayTriangleQueryResult_trianglePosition_get(lua_State* L) {
   }
   
   result = (vapor::Vector3 *)(vapor::Vector3 *) ((arg1)->trianglePosition);
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Vector3TT_float_t,0); SWIG_arg++; 
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Vector3,0); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -14252,8 +13363,8 @@ static int _wrap_RayTriangleQueryResult_triangleUV_set(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3TT_float_t,0))){
-    SWIG_fail_ptr("RayTriangleQueryResult_triangleUV_set",2,SWIGTYPE_p_vapor__Vector3TT_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3,0))){
+    SWIG_fail_ptr("RayTriangleQueryResult_triangleUV_set",2,SWIGTYPE_p_vapor__Vector3);
   }
   
   {
@@ -14285,7 +13396,7 @@ static int _wrap_RayTriangleQueryResult_triangleUV_get(lua_State* L) {
   }
   
   result = (vapor::Vector3 *)(vapor::Vector3 *) ((arg1)->triangleUV);
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Vector3TT_float_t,0); SWIG_arg++; 
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Vector3,0); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -15031,6 +14142,10 @@ static swig_lua_class _wrap_class_vapor_Scene = { "Scene", &SWIGTYPE_p_vapor__Sc
 #endif
 
 static const struct luaL_reg swig_commands[] = {
+    { "LogDebug", _wrap_LogDebug},
+    { "LogInfo", _wrap_LogInfo},
+    { "LogWarn", _wrap_LogWarn},
+    { "LogError", _wrap_LogError},
     { "Matrix4x3_lerp", _wrap_Matrix4x3_lerp},
     { "Matrix4x3_createTranslation", _wrap_Matrix4x3_createTranslation},
     { "Matrix4x3_createRotation", _wrap_Matrix4x3_createRotation},
@@ -15258,8 +14373,12 @@ static swig_type_info _swigt__p_Event1T_std__shared_ptrT_vapor__Component_t_cons
 static swig_type_info _swigt__p_Event1T_std__shared_ptrT_vapor__Entity_t_const_R_t = {"_p_Event1T_std__shared_ptrT_vapor__Entity_t_const_R_t", "Event1< std::shared_ptr< vapor::Entity > const & > *|Event1< vapor::EntityPtr const & > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_SkeletonPtr = {"_p_SkeletonPtr", "SkeletonPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Type = {"_p_Type", "Type *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_a_3__vapor__Vector3TT_float_t = {"_p_a_3__vapor__Vector3TT_float_t", "vapor::Vector3T< float > (*)[3]|vapor::Vector3 (*)[3]", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_a_3__vapor__Vector3 = {"_p_a_3__vapor__Vector3", "vapor::Vector3 (*)[3]", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_char = {"_p_char", "char *|int8 *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_float = {"_p_float", "float *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_long = {"_p_long", "int32 *|sint32 *|vapor::Atomic *|long *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_short = {"_p_short", "sint16 *|int16 *|short *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_signed_char = {"_p_signed_char", "signed char *|sint8 *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t = {"_p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t", "vapor::ComponentMap *|std::map< Class const *,std::shared_ptr< vapor::Component > > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__pairT_Class_const_p_std__shared_ptrT_vapor__Component_t_t = {"_p_std__pairT_Class_const_p_std__shared_ptrT_vapor__Component_t_t", "std::pair< Class const *,std::shared_ptr< vapor::Component > > *|vapor::ComponentMapPair *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__shared_ptrT_vapor__Camera_t = {"_p_std__shared_ptrT_vapor__Camera_t", "std::shared_ptr< vapor::Camera > *|vapor::CameraPtr *", 0, 0, (void*)0, 0};
@@ -15277,22 +14396,21 @@ static swig_type_info _swigt__p_std__string = {"_p_std__string", "vapor::Path *|
 static swig_type_info _swigt__p_std__vectorT_float_t = {"_p_std__vectorT_float_t", "std::vector< float > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__vectorT_std__shared_ptrT_vapor__Entity_t_t = {"_p_std__vectorT_std__shared_ptrT_vapor__Entity_t_t", "std::vector< std::shared_ptr< vapor::Entity > > *|std::vector< vapor::EntityPtr > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__vectorT_std__shared_ptrT_vapor__Geometry_t_t = {"_p_std__vectorT_std__shared_ptrT_vapor__Geometry_t_t", "std::vector< std::shared_ptr< vapor::Geometry > > *|std::vector< vapor::GeometryPtr > *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_std__vectorT_unsigned_short_t = {"_p_std__vectorT_unsigned_short_t", "std::vector< unsigned short > *|std::vector< ushort > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__vectorT_unsigned_short_t = {"_p_std__vectorT_unsigned_short_t", "std::vector< unsigned short > *|std::vector< uint16 > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__vectorT_vapor__MeshGroup_t = {"_p_std__vectorT_vapor__MeshGroup_t", "std::vector< vapor::MeshGroup > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__vectorT_vapor__RayQueryResult_t = {"_p_std__vectorT_vapor__RayQueryResult_t", "std::vector< vapor::RayQueryResult > *|vapor::RayQueryList *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__vectorT_vapor__RefPtrT_vapor__Animation_t_t = {"_p_std__vectorT_vapor__RefPtrT_vapor__Animation_t_t", "std::vector< vapor::RefPtr< vapor::Animation > > *|std::vector< vapor::AnimationPtr > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t = {"_p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t", "std::vector< vapor::RefPtr< vapor::Renderable > > *|vapor::RenderableVector *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_std__vectorT_vapor__Vector3TT_float_t_t = {"_p_std__vectorT_vapor__Vector3TT_float_t_t", "std::vector< vapor::Vector3T< float > > *|std::vector< vapor::Vector3 > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__vectorT_vapor__Vector3_t = {"_p_std__vectorT_vapor__Vector3_t", "std::vector< vapor::Vector3 > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__weak_ptrT_vapor__Camera_t = {"_p_std__weak_ptrT_vapor__Camera_t", "std::weak_ptr< vapor::Camera > *|vapor::CameraWeakPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__weak_ptrT_vapor__CharacterController_t = {"_p_std__weak_ptrT_vapor__CharacterController_t", "std::weak_ptr< vapor::CharacterController > *|vapor::CharacterControllerWeakPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__weak_ptrT_vapor__Component_t = {"_p_std__weak_ptrT_vapor__Component_t", "vapor::ComponentWeakPtr *|std::weak_ptr< vapor::Component > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__weak_ptrT_vapor__Entity_t = {"_p_std__weak_ptrT_vapor__Entity_t", "vapor::EntityWeakPtr *|std::weak_ptr< vapor::Entity > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__weak_ptrT_vapor__Geometry_t = {"_p_std__weak_ptrT_vapor__Geometry_t", "std::weak_ptr< vapor::Geometry > *|vapor::GeometryWeakPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__weak_ptrT_vapor__Scene_t = {"_p_std__weak_ptrT_vapor__Scene_t", "std::weak_ptr< vapor::Scene > *|vapor::SceneWeakPtr *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_unsigned_char = {"_p_unsigned_char", "unsigned char *|byte *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_unsigned_int = {"_p_unsigned_int", "unsigned int *|uint *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_unsigned_long = {"_p_unsigned_long", "ulong *|unsigned long *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_unsigned_short = {"_p_unsigned_short", "unsigned short *|ushort *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_unsigned_char = {"_p_unsigned_char", "unsigned char *|uint8 *|byte *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_unsigned_long = {"_p_unsigned_long", "uint32 *|uint *|unsigned long *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_unsigned_short = {"_p_unsigned_short", "uint16 *|unsigned short *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_vapor__BoundingBox = {"_p_vapor__BoundingBox", "vapor::BoundingBox *", 0, 0, (void*)&_wrap_class_vapor_BoundingBox, 0};
 static swig_type_info _swigt__p_vapor__Camera = {"_p_vapor__Camera", "vapor::Camera *", 0, 0, (void*)&_wrap_class_vapor_Camera, 0};
 static swig_type_info _swigt__p_vapor__CharacterController = {"_p_vapor__CharacterController", "vapor::CharacterController *", 0, 0, (void*)&_wrap_class_vapor_CharacterController, 0};
@@ -15340,11 +14458,7 @@ static swig_type_info _swigt__p_vapor__RenderView = {"_p_vapor__RenderView", "va
 static swig_type_info _swigt__p_vapor__Resource = {"_p_vapor__Resource", "vapor::Resource *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_vapor__Scene = {"_p_vapor__Scene", "vapor::Scene *", 0, 0, (void*)&_wrap_class_vapor_Scene, 0};
 static swig_type_info _swigt__p_vapor__Transform = {"_p_vapor__Transform", "vapor::Transform *", 0, 0, (void*)&_wrap_class_vapor_Transform, 0};
-static swig_type_info _swigt__p_vapor__Vector2TT_float_t = {"_p_vapor__Vector2TT_float_t", "vapor::Vector2 *|vapor::Vector2T< float > *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_vapor__Vector2TT_int_t = {"_p_vapor__Vector2TT_int_t", "vapor::Vector2i *|vapor::Vector2T< int > *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_vapor__Vector3TT_float_t = {"_p_vapor__Vector3TT_float_t", "vapor::Vector3T< float > *|vapor::Vector3 *", 0, 0, (void*)&_wrap_class_vapor_Vector3T_Sl_float_Sg_, 0};
-static swig_type_info _swigt__p_vapor__Vector3TT_int_t = {"_p_vapor__Vector3TT_int_t", "vapor::Vector3i *|vapor::Vector3T< int > *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_vapor__Vector4TT_float_t = {"_p_vapor__Vector4TT_float_t", "vapor::Vector4T< float > *|vapor::Vector4 *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_vapor__Vector3 = {"_p_vapor__Vector3", "vapor::Vector3 *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_Event0T_t,
@@ -15352,8 +14466,12 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_Event1T_std__shared_ptrT_vapor__Entity_t_const_R_t,
   &_swigt__p_SkeletonPtr,
   &_swigt__p_Type,
-  &_swigt__p_a_3__vapor__Vector3TT_float_t,
+  &_swigt__p_a_3__vapor__Vector3,
+  &_swigt__p_char,
   &_swigt__p_float,
+  &_swigt__p_long,
+  &_swigt__p_short,
+  &_swigt__p_signed_char,
   &_swigt__p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t,
   &_swigt__p_std__pairT_Class_const_p_std__shared_ptrT_vapor__Component_t_t,
   &_swigt__p_std__shared_ptrT_vapor__Camera_t,
@@ -15376,7 +14494,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_std__vectorT_vapor__RayQueryResult_t,
   &_swigt__p_std__vectorT_vapor__RefPtrT_vapor__Animation_t_t,
   &_swigt__p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t,
-  &_swigt__p_std__vectorT_vapor__Vector3TT_float_t_t,
+  &_swigt__p_std__vectorT_vapor__Vector3_t,
   &_swigt__p_std__weak_ptrT_vapor__Camera_t,
   &_swigt__p_std__weak_ptrT_vapor__CharacterController_t,
   &_swigt__p_std__weak_ptrT_vapor__Component_t,
@@ -15384,7 +14502,6 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_std__weak_ptrT_vapor__Geometry_t,
   &_swigt__p_std__weak_ptrT_vapor__Scene_t,
   &_swigt__p_unsigned_char,
-  &_swigt__p_unsigned_int,
   &_swigt__p_unsigned_long,
   &_swigt__p_unsigned_short,
   &_swigt__p_vapor__BoundingBox,
@@ -15434,11 +14551,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_vapor__Resource,
   &_swigt__p_vapor__Scene,
   &_swigt__p_vapor__Transform,
-  &_swigt__p_vapor__Vector2TT_float_t,
-  &_swigt__p_vapor__Vector2TT_int_t,
-  &_swigt__p_vapor__Vector3TT_float_t,
-  &_swigt__p_vapor__Vector3TT_int_t,
-  &_swigt__p_vapor__Vector4TT_float_t,
+  &_swigt__p_vapor__Vector3,
 };
 
 static swig_cast_info _swigc__p_Event0T_t[] = {  {&_swigt__p_Event0T_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -15446,8 +14559,12 @@ static swig_cast_info _swigc__p_Event1T_std__shared_ptrT_vapor__Component_t_cons
 static swig_cast_info _swigc__p_Event1T_std__shared_ptrT_vapor__Entity_t_const_R_t[] = {  {&_swigt__p_Event1T_std__shared_ptrT_vapor__Entity_t_const_R_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_SkeletonPtr[] = {  {&_swigt__p_SkeletonPtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Type[] = {  {&_swigt__p_Type, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_a_3__vapor__Vector3TT_float_t[] = {  {&_swigt__p_a_3__vapor__Vector3TT_float_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_a_3__vapor__Vector3[] = {  {&_swigt__p_a_3__vapor__Vector3, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_float[] = {  {&_swigt__p_float, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_long[] = {  {&_swigt__p_long, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_short[] = {  {&_swigt__p_short, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_signed_char[] = {  {&_swigt__p_signed_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t[] = {  {&_swigt__p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__pairT_Class_const_p_std__shared_ptrT_vapor__Component_t_t[] = {  {&_swigt__p_std__pairT_Class_const_p_std__shared_ptrT_vapor__Component_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__shared_ptrT_vapor__Camera_t[] = {  {&_swigt__p_std__shared_ptrT_vapor__Camera_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -15470,7 +14587,7 @@ static swig_cast_info _swigc__p_std__vectorT_vapor__MeshGroup_t[] = {  {&_swigt_
 static swig_cast_info _swigc__p_std__vectorT_vapor__RayQueryResult_t[] = {  {&_swigt__p_std__vectorT_vapor__RayQueryResult_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__vectorT_vapor__RefPtrT_vapor__Animation_t_t[] = {  {&_swigt__p_std__vectorT_vapor__RefPtrT_vapor__Animation_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t[] = {  {&_swigt__p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_std__vectorT_vapor__Vector3TT_float_t_t[] = {  {&_swigt__p_std__vectorT_vapor__Vector3TT_float_t_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__vectorT_vapor__Vector3_t[] = {  {&_swigt__p_std__vectorT_vapor__Vector3_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__weak_ptrT_vapor__Camera_t[] = {  {&_swigt__p_std__weak_ptrT_vapor__Camera_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__weak_ptrT_vapor__CharacterController_t[] = {  {&_swigt__p_std__weak_ptrT_vapor__CharacterController_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__weak_ptrT_vapor__Component_t[] = {  {&_swigt__p_std__weak_ptrT_vapor__Component_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -15478,7 +14595,6 @@ static swig_cast_info _swigc__p_std__weak_ptrT_vapor__Entity_t[] = {  {&_swigt__
 static swig_cast_info _swigc__p_std__weak_ptrT_vapor__Geometry_t[] = {  {&_swigt__p_std__weak_ptrT_vapor__Geometry_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__weak_ptrT_vapor__Scene_t[] = {  {&_swigt__p_std__weak_ptrT_vapor__Scene_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_unsigned_char[] = {  {&_swigt__p_unsigned_char, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_unsigned_int[] = {  {&_swigt__p_unsigned_int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_unsigned_long[] = {  {&_swigt__p_unsigned_long, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_unsigned_short[] = {  {&_swigt__p_unsigned_short, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__BoundingBox[] = {  {&_swigt__p_vapor__BoundingBox, 0, 0, 0},{0, 0, 0, 0}};
@@ -15528,11 +14644,7 @@ static swig_cast_info _swigc__p_vapor__RenderView[] = {  {&_swigt__p_vapor__Rend
 static swig_cast_info _swigc__p_vapor__Resource[] = {  {&_swigt__p_vapor__Resource, 0, 0, 0},  {&_swigt__p_vapor__Mesh, _p_vapor__MeshTo_p_vapor__Resource, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__Scene[] = {  {&_swigt__p_vapor__Scene, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__Transform[] = {  {&_swigt__p_vapor__Transform, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_vapor__Vector2TT_float_t[] = {  {&_swigt__p_vapor__Vector2TT_float_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_vapor__Vector2TT_int_t[] = {  {&_swigt__p_vapor__Vector2TT_int_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_vapor__Vector3TT_float_t[] = {  {&_swigt__p_vapor__Vector3TT_float_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_vapor__Vector3TT_int_t[] = {  {&_swigt__p_vapor__Vector3TT_int_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_vapor__Vector4TT_float_t[] = {  {&_swigt__p_vapor__Vector4TT_float_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_vapor__Vector3[] = {  {&_swigt__p_vapor__Vector3, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_Event0T_t,
@@ -15540,8 +14652,12 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_Event1T_std__shared_ptrT_vapor__Entity_t_const_R_t,
   _swigc__p_SkeletonPtr,
   _swigc__p_Type,
-  _swigc__p_a_3__vapor__Vector3TT_float_t,
+  _swigc__p_a_3__vapor__Vector3,
+  _swigc__p_char,
   _swigc__p_float,
+  _swigc__p_long,
+  _swigc__p_short,
+  _swigc__p_signed_char,
   _swigc__p_std__mapT_Class_const_p_std__shared_ptrT_vapor__Component_t_t,
   _swigc__p_std__pairT_Class_const_p_std__shared_ptrT_vapor__Component_t_t,
   _swigc__p_std__shared_ptrT_vapor__Camera_t,
@@ -15564,7 +14680,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_std__vectorT_vapor__RayQueryResult_t,
   _swigc__p_std__vectorT_vapor__RefPtrT_vapor__Animation_t_t,
   _swigc__p_std__vectorT_vapor__RefPtrT_vapor__Renderable_t_t,
-  _swigc__p_std__vectorT_vapor__Vector3TT_float_t_t,
+  _swigc__p_std__vectorT_vapor__Vector3_t,
   _swigc__p_std__weak_ptrT_vapor__Camera_t,
   _swigc__p_std__weak_ptrT_vapor__CharacterController_t,
   _swigc__p_std__weak_ptrT_vapor__Component_t,
@@ -15572,7 +14688,6 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_std__weak_ptrT_vapor__Geometry_t,
   _swigc__p_std__weak_ptrT_vapor__Scene_t,
   _swigc__p_unsigned_char,
-  _swigc__p_unsigned_int,
   _swigc__p_unsigned_long,
   _swigc__p_unsigned_short,
   _swigc__p_vapor__BoundingBox,
@@ -15622,11 +14737,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_vapor__Resource,
   _swigc__p_vapor__Scene,
   _swigc__p_vapor__Transform,
-  _swigc__p_vapor__Vector2TT_float_t,
-  _swigc__p_vapor__Vector2TT_int_t,
-  _swigc__p_vapor__Vector3TT_float_t,
-  _swigc__p_vapor__Vector3TT_int_t,
-  _swigc__p_vapor__Vector4TT_float_t,
+  _swigc__p_vapor__Vector3,
 };
 
 

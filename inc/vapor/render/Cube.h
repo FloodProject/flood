@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "vapor/render/Renderable.h"
+#include "Render/Renderable.h"
 
 namespace vapor {
 

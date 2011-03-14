@@ -6,9 +6,9 @@
 *
 ************************************************************************/
 
-%import "vapor/math/Vector2.h"
-%import "vapor/math/Vector4.h"
-%include "vapor/math/Vector3.h"
+%import "Math/Vector.h"
+%import "Math/Vector.h"
+%include "Math/Vector.h"
 
 %template(Vector3)  vapor::Vector3T<float>;
 
@@ -25,7 +25,7 @@
 //-----------------------------------//
 
 %warnfilter(503,509) Color;
-%include "vapor/math/Color.h"
+%include "Math/Color.h"
 
 %extend vapor::Color
 {
@@ -39,7 +39,7 @@
 
 //-----------------------------------//
 
-%include "vapor/math/EulerAngles.h"
+%include "Math/EulerAngles.h"
 
 %extend vapor::EulerAngles
 {
@@ -53,7 +53,7 @@
 
 //-----------------------------------//
 
-%include "vapor/math/Quaternion.h"
+%include "Math/Quaternion.h"
 
 %extend vapor::Quaternion
 {
@@ -67,12 +67,12 @@
 
 //-----------------------------------//
 
-%include "vapor/math/Ray.h"
+%include "Math/Ray.h"
 
-%import "vapor/math/Matrix4x4.h"
-%include "vapor/math/Matrix4x3.h"
+%import "Math/Matrix4x4.h"
+%include "Math/Matrix4x3.h"
 
-%include "vapor/math/BoundingBox.h"
+%include "Math/BoundingBox.h"
 
-//%include "vapor/math/Plane.h"
-%import "vapor/math/Frustum.h"
+//%include "Math/Plane.h"
+%import "Math/Frustum.h"

@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 
 #ifdef VAPOR_SCRIPTING_LUA
 
@@ -137,7 +137,7 @@ bool State::invoke( const std::string& name, int numArguments )
 
 		if( lastError != msg )
 		{
-			Log::debug(msg);
+			LogDebug( msg.c_str() );
 			lastError = msg;
 		}
 

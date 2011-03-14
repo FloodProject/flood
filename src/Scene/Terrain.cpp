@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 #include "Terrain/Terrain.h"
 #include "Scene/Geometry.h"
 #include "Math/Helpers.h"
@@ -80,7 +80,7 @@ void Terrain::addCell( int x, int y, const ImagePtr& heightmap )
 {
 	if( !heightmap )
 	{
-		Log::warn("Cannot create terrain cell: Heightmap is invalid");
+		LogWarn("Cannot create terrain cell: Heightmap is invalid");
 		return;
 	}
 
@@ -96,7 +96,7 @@ void Terrain::addCell( int x, int y, const ImagePtr& heightmap )
 
 CellPtr Terrain::getCell( int x, int y )
 {
-	for( uint i = 0; i < terrainCells.size(); i++ )
+	for( size_t i = 0; i < terrainCells.size(); i++ )
 	{
 		const CellPtr& cell = terrainCells[i];
 
@@ -109,12 +109,12 @@ CellPtr Terrain::getCell( int x, int y )
 
 //-----------------------------------//
 
-Vector2i Terrain::getCoords( const Vector3& pos )
+Vector2 Terrain::getCoords( const Vector3& pos )
 {
 	float x = floor(pos.x / settings.CellSize); 
 	float y = floor(pos.z / settings.CellSize);
 
-	return Vector2i( int(x), int(y) );
+	return Vector2( int(x), int(y) );
 }
 
 //-----------------------------------//
@@ -127,7 +127,7 @@ CellPtr Terrain::createCell( int x, int y, std::vector<float>& heights )
 
 	terrainCells.push_back(cell);
 
-	std::string name = String::format("Cell (%d,%d)", x, y);
+	std::string name = StringFormat("Cell (%d,%d)", x, y);
 	
 	EntityPtr nodeCell( new Entity(name) );
 	nodeCell->addTransform();
@@ -169,7 +169,7 @@ void Terrain::convertHeightmap( const ImagePtr& heightmap, std::vector<float>& h
 
 	const std::vector<byte> data = heightmap->getBuffer();
 
-	for( uint i = 0; i < data.size(); i += 4 )
+	for( size_t i = 0; i < data.size(); i += 4 )
 	{
 		byte R = data[i];
 		byte G = data[i+1];
@@ -198,7 +198,7 @@ bool Terrain::validateHeightmap( const ImagePtr& heightmap )
 	// First condition: width and height should be the same.
 	if( width != height )
 	{
-		Log::warn( "Invalid heightmap (width != height)" );
+		LogWarn( "Invalid heightmap (width != height)" );
 		return false;
 	}
 
@@ -206,7 +206,7 @@ bool Terrain::validateHeightmap( const ImagePtr& heightmap )
 	// Check an embedded LUT with the valid dimensions.
 	
 	bool valid = false;
-	for( uint i = 0; i < VAPOR_ARRAY_SIZE(validDimensions); i++ )
+	for( size_t i = 0; i < VAPOR_ARRAY_SIZE(validDimensions); i++ )
 	{
 		if( width == validDimensions[i] ) 
 		{
@@ -217,7 +217,7 @@ bool Terrain::validateHeightmap( const ImagePtr& heightmap )
 
 	if( !valid )
 	{
-		Log::warn( "Invalid heightmap dimensions (should be 2^n+1)" );
+		LogWarn( "Invalid heightmap dimensions (should be 2^n+1)" );
 		return false;
 	}
 

@@ -110,7 +110,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\src\;$(SolutionDir)..\..\dep\lodepng\;$(SolutionDir)..\..\dep\picopng\;$(SolutionDir)..\..\dep\stb;$(SolutionDir)..\..\dep\ogg\include;$(SolutionDir)..\..\dep\vorbis\include</AdditionalIncludeDirectories>
-      <DisableSpecificWarnings>4231;4530</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4231;4530;4190</DisableSpecificWarnings>
       <ExceptionHandling>false</ExceptionHandling>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -133,7 +133,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\src\;$(SolutionDir)..\..\dep\lodepng\;$(SolutionDir)..\..\dep\picopng\;$(SolutionDir)..\..\dep\stb;$(SolutionDir)..\..\dep\ogg\include;$(SolutionDir)..\..\dep\vorbis\include</AdditionalIncludeDirectories>
-      <DisableSpecificWarnings>4321</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4231;4530;4190</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

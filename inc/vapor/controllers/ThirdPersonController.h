@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "vapor/controllers/CameraController.h"
-#include "vapor/math/Vector2.h"
-#include "vapor/math/EulerAngles.h"
+#include "controllers/CameraController.h"
+#include "Math/Vector.h"
+#include "Math/EulerAngles.h"
 
 namespace vapor {
 

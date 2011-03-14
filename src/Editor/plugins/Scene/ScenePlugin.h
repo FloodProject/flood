@@ -18,9 +18,11 @@ class ScenePage;
 
 class ScenePlugin : public Plugin
 {
+	REFLECT_DECLARE_CLASS()
+
 public:
  
-	ScenePlugin( EditorFrame* frame );
+	ScenePlugin();
 
 	// Gets metadata about this plugin.
 	virtual PluginMetadata getMetadata();

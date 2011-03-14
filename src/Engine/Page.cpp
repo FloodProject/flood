@@ -6,8 +6,8 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "vapor/paging/Page.h"
+#include "Engine/API.h"
+#include "paging/Page.h"
 
 namespace vapor {
 

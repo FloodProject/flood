@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "scene/Component.h"
-#include "math/Frustum.h"
+#include "Scene/Component.h"
+#include "Math/Frustum.h"
 
 namespace vapor {
 

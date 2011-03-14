@@ -6,23 +6,23 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 
 #ifdef VAPOR_PHYSICS_BULLET
 
 
-#include "vapor/physics/CharacterController.h"
-#include "vapor/physics/Shape.h"
-#include "vapor/physics/Convert.h"
-#include "vapor/physics/Physics.h"
-#include "vapor/physics/btKinematicController.h"
+#include "physics/CharacterController.h"
+#include "physics/Shape.h"
+#include "physics/Convert.h"
+#include "physics/Physics.h"
+#include "physics/btKinematicController.h"
 
-#include "vapor/math/Helpers.h"
-#include "vapor/scene/Entity.h"
+#include "Math/Helpers.h"
+#include "Scene/Entity.h"
 
-#include "vapor/Engine.h"
-#include "vapor/input/InputManager.h"
-#include "vapor/input/Keyboard.h"
+#include "Engine.h"
+#include "input/InputManager.h"
+#include "input/Keyboard.h"
 
 #include <BulletCollision/CollisionShapes/btConvexShape.h>
 #include <BulletCollision/CollisionDispatch/btGhostObject.h> 
@@ -180,7 +180,7 @@ void CharacterController::updateProperties()
 	controller->setFallSpeed( fallSpeed );
 	controller->setJumpSpeed( jumpSpeed );
 	controller->setMaxJumpHeight( maxJumpHeight );
-	controller->setMaxSlope( Math::degreeToRadian(maxSlope) );
+	controller->setMaxSlope( MathDegreeToRadian(maxSlope) );
 }
 
 //-----------------------------------//

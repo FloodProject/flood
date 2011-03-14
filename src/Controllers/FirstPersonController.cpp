@@ -6,17 +6,17 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 #include "Event.h"
-#include "vapor/controllers/FirstPersonController.h"
-#include "vapor/Engine.h"
-#include "vapor/math/Helpers.h"
-#include "vapor/scene/Entity.h"
-#include "vapor/scene/Camera.h"
-#include "vapor/render/Device.h"
-#include "vapor/input/InputManager.h"
-#include "vapor/input/Keyboard.h"
-#include "vapor/input/Mouse.h"
+#include "controllers/FirstPersonController.h"
+#include "Engine.h"
+#include "Math/Helpers.h"
+#include "Scene/Entity.h"
+#include "Scene/Camera.h"
+#include "Render/Device.h"
+#include "input/InputManager.h"
+#include "input/Keyboard.h"
+#include "input/Mouse.h"
 
 namespace vapor {
 
@@ -86,7 +86,7 @@ void FirstPersonController::checkControls( float delta )
 	bool viewChanged = false;
 	
 	// Check mouse movement.
-	if( mouseDistance != Vector2i::Zero )
+	if( mouseDistance != Vector2::Zero )
 	{
 		Vector3 rotate( mouseDistance.y, -mouseDistance.x, 0 );
 		rotate *= delta * lookSensivity;
@@ -95,7 +95,7 @@ void FirstPersonController::checkControls( float delta )
 
 		// Restrict X-axis movement by some deegres.
 		float& xang = rotation.x;
-		Math::clamp( xang, -DEFAULT_LIMIT_XAXIS, DEFAULT_LIMIT_XAXIS );
+		MathClamp( xang, -DEFAULT_LIMIT_XAXIS, DEFAULT_LIMIT_XAXIS );
 
 		mouseDistance.zero();
 		viewChanged = true;
@@ -245,7 +245,7 @@ void FirstPersonController::onMouseMove( const MouseMoveEvent& moveEvent )
 	if( window->isCursorVisible() )
 		return;
 		
-	Vector2i currentPosition( moveEvent.x, moveEvent.y );
+	Vector2 currentPosition( moveEvent.x, moveEvent.y );
 	mouseDistance += currentPosition - lastPosition;
 
 	centerCursor();

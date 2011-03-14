@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "ResourcesBrowser.h"
 #include "Viewframe.h"
 #include "EditorIcons.h"
@@ -103,7 +103,7 @@ void ResourcesBrowser::OnListBeginDrag(wxListEvent& event)
 
 	Vector3 dropPoint;
 
-	Vector2i coords = editor->getDropCoords();
+	Vector2 coords = editor->getDropCoords();
 	RenderView* view = editor->getMainViewframe()->getView();
 	Ray ray = view->getCamera()->getRay(coords.x, coords.y);
 

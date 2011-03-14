@@ -6,9 +6,9 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "scene/Geometry.h"
-#include "scene/Entity.h"
+#include "Engine/API.h"
+#include "Scene/Geometry.h"
+#include "Scene/Entity.h"
 
 namespace vapor {
 
@@ -54,7 +54,7 @@ void Geometry::appendRenderables( RenderQueue& queue, TransformPtr transform )
 	
 	const Matrix4x3& absoluteTransform = transform->getAbsoluteTransform();
 
-	for( uint i = 0; i < renderables.size(); i++ )
+	for( size_t i = 0; i < renderables.size(); i++ )
 	{
 		const RenderablePtr& rend = renderables[i];
 		
@@ -73,7 +73,7 @@ void Geometry::updateBounds()
 	bounds.reset();
 
 	// Update the bounding box to accomodate new geometry.
-	for( uint i = 0; i < renderables.size(); i++ )
+	for( size_t i = 0; i < renderables.size(); i++ )
 	{
 		const RenderablePtr& rend = renderables[i];
 		const VertexBufferPtr& vb = rend->getVertexBuffer();

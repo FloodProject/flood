@@ -9,9 +9,9 @@
 #pragma once
 
 #include "ReferenceCount.h"
-#include "math/BoundingBox.h"
-#include "math/Frustum.h"
-#include "render/Renderable.h"
+#include "Math/BoundingBox.h"
+#include "Math/Frustum.h"
+#include "Render/Renderable.h"
 
 FWD_DECL_SHARED(Entity)
 FWD_DECL_INTRUSIVE(Renderable)

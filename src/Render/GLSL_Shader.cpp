@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 
 #ifdef VAPOR_SHADER_GLSL
 
@@ -41,8 +41,7 @@ GLSL_Shader::~GLSL_Shader()
 
 bool GLSL_Shader::create()
 {
-	if( created )
-		return true;
+	if( created ) return true;
 
 	id = glCreateShader( getGLShaderType(shaderType) );
 
@@ -60,8 +59,7 @@ bool GLSL_Shader::create()
 
 bool GLSL_Shader::compile()
 {
-	if( !create() )
-		return false;
+	if( !create() ) return false;
 
 	if( !upload() )
 	{
@@ -135,7 +133,7 @@ void GLSL_Shader::getCompileLog()
 
 //-----------------------------------//
 
-GLenum GLSL_Shader::getGLShaderType( ShaderType::Enum type )
+uint32 GLSL_Shader::getGLShaderType( ShaderType::Enum type )
 {
 	switch( type )
 	{

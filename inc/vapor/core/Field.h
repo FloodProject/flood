@@ -83,7 +83,7 @@ public:
 	const Type& type;
 
 	// Name of the field in the class.
-	std::string name;
+	String name;
 
 	// Qualifiers of the field.
 	byte qualifiers;

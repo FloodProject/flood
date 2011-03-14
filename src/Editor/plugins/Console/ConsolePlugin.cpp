@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "ConsolePlugin.h"
 #include "ConsoleTextCtrl.h"
 
@@ -17,8 +17,13 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-ConsolePlugin::ConsolePlugin( EditorFrame* frame )
-	: Plugin(frame)
+REFLECT_CHILD_CLASS(ConsolePlugin, Plugin)
+REFLECT_END()
+
+//-----------------------------------//
+
+ConsolePlugin::ConsolePlugin()
+	: Plugin()
 { }
 
 //-----------------------------------//

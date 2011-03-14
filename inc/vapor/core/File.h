@@ -9,12 +9,13 @@
 #pragma once
 
 #include "FileStream.h"
+#include "Utilities.h"
 
-//#ifdef VAPOR_VFS_PHYSFS
+#ifdef VAPOR_VFS_PHYSFS
 
 struct PHYSFS_File;
 
-namespace vapor {
+BEGIN_NAMESPACE_EXTERN
 
 //-----------------------------------//
 
@@ -28,89 +29,46 @@ namespace vapor {
  * data in the same machine, and it will be saved in each user's directory.
  */
 
-class CORE_API File
+struct MemoryAllocator;
+
+struct File
 {
-	DECLARE_UNCOPYABLE(File)
+	DECLARE_UNCOPYABLE(File);
 
-public:
+	File();
+	File(const Path& path, StreamMode::Enum mode);
 
-	// Opens a new file given a path (defaults for reading access).
-	File(const std::string& path, StreamMode::Enum = StreamMode::Read);
-	
-	// Closes the file.
-	~File();
-
-	// Closes the file.
-	bool close();
-
-	// Returns the contents of the file.
-	bool read(std::vector<byte>& data, long size = -1) const;
-
-	// Reads up to size bytes into the buffer.
-	long read(void* buffer, long size) const;
-
-	// Read lines (assumes a text file).
-	std::vector<std::string> readLines() const;
-
-	// Write buffer into file.
-	long write(const std::vector<byte>& buffer, long size = -1);
-
-	// Write text into file.
-	long write(const std::string& text);
-
-	// Seek to a new position within the file. 
-	// The next read or write will occur at that place.
-	bool seek(long pos);
-
-	// Determine current position within the file.
-	long tell() const;
-
-	// Gets the file size.
-	long getSize() const;
-
-	// Gets the name of the file.
-	const std::string getName() const;
-
-	// Gets the extension of the file (if there is one).
-	const std::string getExtension() const;
-
-	// Gets the virtual path of the file.
-	const std::string getPath() const;
-
-	// Gets the real path of the file.
-	const std::string getRealPath() const;
-
-	// Checks if this file exists.
-	bool exists() const;
-	
-	// Checks if the file in path exists.
-	static bool exists(const std::string& path);
-	
-private:
-
-	// Opens the file if it exists.
-	bool open();
-
-	// Logs an error.
-	void log(const std::string& err) const;
-
-	bool validate(StreamMode::Enum mode) const;
-
-	// PhysFS handle to the file.
-	PHYSFS_File* file;
-
-	// Allowed access mode to the file.
-	StreamMode::Enum mode;
-	
-	// Virtual path to the file.
-	std::string path;
-
-	// Is the file already closed?
-	bool closed;
+	Path Path;
+	bool IsClosed;
+	PHYSFS_File* Handle;
+	StreamMode::Enum Mode;
 };
 
+CORE_API File*  FileCreate(MemoryAllocator* mem, const Path& path, StreamMode::Enum mode);
+CORE_API void   FileDestroy(File* file, MemoryAllocator* mem);
+
+CORE_API bool   FileOpen(File* file);
+CORE_API bool   FileClose(File* file);
+
+CORE_API bool   FileRead(File* file, std::vector<uint8>& data);
+CORE_API bool   FileReadLines(File* file, std::vector<String>& lines);
+CORE_API bool   FileReadBuffer(File* file, void* buffer, sint32 size);
+
+CORE_API sint64 FileWrite(File* file, const std::vector<byte>& buffer);
+CORE_API sint64 FileWriteString(const String& string);
+
+CORE_API sint64 FileTell(File* file);
+CORE_API bool   FileSeek(File* file, sint64 position);
+
+CORE_API sint64 FileGetSize(File* file);
+CORE_API Path   FileGetFullPath(File* file);
+CORE_API bool   FileExists(const Path& path);
+
+CORE_API void	FileEnumerateFiles(const String& path, std::vector<String>&);
+CORE_API void	FileEnumerateDirs(const String& path, std::vector<String>&);
+	
 //-----------------------------------//
 
-} // end namespace
+END_NAMESPACE_EXTERN
 
-//#endif
+#endif

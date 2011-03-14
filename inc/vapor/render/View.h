@@ -8,11 +8,11 @@
 
 #pragma once
 
-#include "math/Color.h"
-#include "math/Vector2.h"
-#include "math/Matrix4x3.h"
-#include "math/Matrix4x4.h"
-#include "render/Target.h"
+#include "Math/Color.h"
+#include "Math/Vector.h"
+#include "Math/Matrix4x3.h"
+#include "Math/Matrix4x4.h"
+#include "Render/Target.h"
 
 FWD_DECL_SHARED(Entity)
 FWD_DECL_SHARED(Camera)
@@ -48,10 +48,10 @@ public:
 	ACESSOR(RenderTarget, RenderTarget*, target)
 
 	// Gets the origin of the view.
-	GETTER(Origin, Vector2i, Vector2i::Zero)
+	GETTER(Origin, Vector2, Vector2::Zero)
 
 	// Gets the size of the view.
-	GETTER(Size, Vector2i, target->getSettings().getSize())
+	GETTER(Size, Vector2, target->getSettings().getSize())
 
 	// Gets/sets the clear color of the view.
 	ACESSOR(ClearColor, const Color&, clearColor)

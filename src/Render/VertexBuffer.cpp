@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 
 #ifdef VAPOR_RENDERER_OPENGL
 
@@ -165,7 +165,7 @@ bool VertexBuffer::isValid() const
 	// Check that we have a valid buffer.
 	if( !glIsBuffer(id) )
 	{
-		Log::warn( "Vertex buffer is not valid" );
+		LogWarn( "Vertex buffer is not valid" );
 		return false;
 	}
 
@@ -257,7 +257,7 @@ bool VertexBuffer::build()
 	// Check that all vertex attributes elements are the same size.
 	//if( !checkSize() )
 	//{
-	//	Log::warn( "Vertex buffers elements have different sizes" );
+	//	LogWarn( "Vertex buffers elements have different sizes" );
 	//	return false;
 	//}
 

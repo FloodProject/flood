@@ -21,9 +21,11 @@ class ResourcesBrowser;
 
 class ResourcesPlugin : public Plugin
 {
+	REFLECT_DECLARE_CLASS()
+
 public:
 
-	ResourcesPlugin( EditorFrame* frame );
+	ResourcesPlugin();
 	~ResourcesPlugin();
 
 	// Gets metadata about this plugin.

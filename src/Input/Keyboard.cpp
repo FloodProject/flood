@@ -6,8 +6,8 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "vapor/input/Keyboard.h"
+#include "Engine/API.h"
+#include "input/Keyboard.h"
 
 #pragma TODO("Fix the size of the key states")
 

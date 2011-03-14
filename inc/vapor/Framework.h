@@ -8,11 +8,12 @@
 
 #pragma once
 
-#include <vapor/PCH.h>
-#include <vapor/Engine.h>
-#include <vapor/input/Mouse.h>
-#include <vapor/input/Keyboard.h>
-#include <vapor/render/FrameStatistics.h>
+#include "Engine/API.h"
+#include "Input/Mouse.h"
+#include "Input/Keyboard.h"
+#include "Render/FrameStatistics.h"
+#include "Timer.h"
+#include "Engine.h"
 
 namespace vapor {
 

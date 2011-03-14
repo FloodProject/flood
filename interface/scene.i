@@ -11,16 +11,16 @@
 //%shared_ptr(vapor::Geometry)
 //%shared_ptr(vapor::Light)
 
-%include "vapor/scene/Component.h"
-%include "vapor/scene/Transform.h"
-%include "vapor/scene/Model.h"
-%include "vapor/scene/Camera.h"
-%include "vapor/scene/Geometry.h"
-%include "vapor/scene/Light.h"
-%include "vapor/controllers/Controller.h"
-%include "vapor/physics/CharacterController.h"
+%include "Scene/Component.h"
+%include "Scene/Transform.h"
+%include "Scene/Model.h"
+%include "Scene/Camera.h"
+%include "Scene/Geometry.h"
+%include "Scene/Light.h"
+%include "controllers/Controller.h"
+%include "physics/CharacterController.h"
 
 %warnfilter(401) Entity;
-%include "vapor/scene/Entity.h"
-%include "vapor/scene/Group.h"
-%include "vapor/scene/Scene.h"
+%include "Scene/Entity.h"
+%include "Scene/Group.h"
+%include "Scene/Scene.h"

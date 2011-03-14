@@ -19,11 +19,12 @@
 %define VAPOR_API
 %enddef
 
-%import "vapor/CompileOptions.h"
-%import "vapor/Language.h"
-%import "vapor/Utilities.h"
-%import "vapor/Singleton.h"
-%import "vapor/ReferenceCount.h"
+%import "CompileOptions.h"
+%import "Platform.h"
+%import "Utilities.h"
+%import "Core/API.h"
+%import "Core/Concurrency.h"
+%import "ReferenceCount.h"
 
 %define DECLARE_CLASS_()
 %enddef

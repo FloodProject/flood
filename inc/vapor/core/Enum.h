@@ -14,8 +14,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-typedef std::map<std::string, int> EnumValuesMap;
-typedef std::pair<const std::string, int> EnumValuesPair;
+typedef std::map<String, int> EnumValuesMap;
+typedef std::pair<const String, int> EnumValuesPair;
 
 /**
  * Represents an enum in the type system.
@@ -25,16 +25,16 @@ class CORE_API Enum : public Type
 {
 public:
 
-	Enum(const std::string& name, int size);
+	Enum(const String& name, int size);
 
 	// Adds a new enumeration to this enum.
-	void addValue( const std::string& name, int value );
+	void addValue( const String& name, int value );
 
 	// Gets the name of this enum value.
-	const std::string& getName(int value) const;
+	const String& getName(int value) const;
 
 	// Gets the value of this enum name.
-	const int getValue(const std::string& name) const;
+	const int getValue(const String& name) const;
 
 	// Gets the values of this enum.
 	const EnumValuesMap& getValues() const;

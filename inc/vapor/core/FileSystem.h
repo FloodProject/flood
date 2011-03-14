@@ -35,21 +35,21 @@ class CORE_API FileSystem : public Subsystem
 public:
 
 	// Constructs a new instance of the virtual filesystem.
-	FileSystem( const std::string& app, const char* argv0 = nullptr );
+	FileSystem( const String& app, const char* argv0 = nullptr );
 	virtual ~FileSystem();
 
 	// Enumerate files in a virtual mount point.
-	std::vector<std::string> enumerateFiles(const std::string& path);
+	std::vector<String> enumerateFiles(const String& path);
 
 	// Mount an archive into the virtual filesystem point.
-	bool mount(const std::string& path, const std::string& mount = "",
+	bool mount(const String& path, const String& mount = "",
 		bool append = true);
 
 	// Mounts all the default resource locations.
-	void mountDefaultLocations();
+	void mountDefaultLocations(const String& baseFolder);
 
 	// Gets all the mount points in the FileSystem.
-	GETTER(MountPoints, const std::vector< std::string >&, mountPoints)
+	GETTER(MountPoints, const std::vector< String >&, mountPoints)
 
 	// Gets a reference to the notification watcher.
 	GETTER(FileWatcher, FileWatcher*, fileWatcher)
@@ -60,19 +60,19 @@ public:
 protected:
 
 	// Sets up some sensible default mount points.
-	void setDefaultConfig(const std::string& app);
+	void setDefaultConfig(const String& app);
 
 	// Logs the version and supported archive types.
 	void log();
 
 	// Logs the FileSystem-related errors.
-	void logError( const std::string& );
+	void logError( const String& );
 
 	// Watch notifications for file events.
 	FileWatcher* fileWatcher;
 
 	// Holds the mounted archives/directories in the filesystem.
-	std::vector<std::string> mountPoints;
+	std::vector<String> mountPoints;
 };
 
 //-----------------------------------//

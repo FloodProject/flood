@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "math/Ray.h"
-#include "math/Helpers.h"
+#include "Math/Ray.h"
+#include "Math/Helpers.h"
 
 namespace vapor {
 
@@ -106,7 +106,7 @@ bool Ray::intersects( const Vector3 (&tri)[3], float& t, float& u, float& v ) co
 	/* if determinant is near zero, ray lies in plane of triangle */
 	float det = edge1.dot(pvec);
 
-	if (det > Limits::FloatEpsilon)
+	if (det > LimitsFloatEpsilon)
 	{
 		/* calculate distance from vert0 to ray origin */
 		Vector3 tvec = origin-v1;
@@ -126,7 +126,7 @@ bool Ray::intersects( const Vector3 (&tri)[3], float& t, float& u, float& v ) co
 		if (v < 0.0 || (u + v) > det)
 			return false;
 	}
-	else if(det < -Limits::FloatEpsilon)
+	else if(det < -LimitsFloatEpsilon)
 	{
 		/* calculate distance from vert0 to ray origin */
 		Vector3 tvec = origin-v1;

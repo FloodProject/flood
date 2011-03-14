@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "UndoPlugin.h"
 #include "UndoManager.h"
 #include "Editor.h"
@@ -17,9 +17,13 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-UndoPlugin::UndoPlugin( EditorFrame* frame )
-	: Plugin(frame)
-	, undoManager(nullptr)
+REFLECT_CHILD_CLASS(UndoPlugin, Plugin)
+REFLECT_END()
+
+//-----------------------------------//
+
+UndoPlugin::UndoPlugin()
+	: undoManager(nullptr)
 { }
 
 //-----------------------------------//

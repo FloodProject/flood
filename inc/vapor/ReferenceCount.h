@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "Atomic.h"
-#include "Log.h"
+#include "Core/Concurrency.h"
 #include <functional>
+#include <cassert>
 
 namespace vapor {
 
@@ -18,45 +18,33 @@ namespace vapor {
 
 /**
  * Inherit from this class to be able to use reference counting semantics.
- * Currently this is implemented using intrusive_ptr from boost which are
- * faster but have less features than shared_ptr (no weak references).
+ * Currently this is implemented using intrusive_ptr semantics.
  */
 
 class CORE_API ReferenceCounted
 {
 public:
 
-	inline void addReference()
-	{
-		references.inc();
-	}
-
-	inline bool releaseReference()
-	{
-		return references.dec() == 0;
-	}
-
-	uint getReferenceCount() const
-	{
-		return references.get();
-	}
+	int32 getReferenceCount() const { return AtomicRead(&references); }
+	inline void addReference() { AtomicIncrement(&references); }
+	inline bool releaseReference() { return AtomicDecrement(&references) == 0; }
 
 protected:
 	
-	ReferenceCounted() : references(0) 
-	{ }
+	ReferenceCounted() : references(0) {}
 
-private:
-
-	mutable Atomic references;
+#ifdef SWIG
+	mutable volatile Atomic references;
+#else
+	mutable volatile VAPOR_ALIGN_BEGIN(32) Atomic references VAPOR_ALIGN_END(32);
+#endif
 };
 
 template<typename T> class RefPtr
 {
 public:
 
-    RefPtr(): px(nullptr)
-    { }
+    RefPtr(): px(nullptr) { }
 
     RefPtr(T* p, bool add_ref = true) : px(p)
     {

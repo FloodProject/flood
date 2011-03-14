@@ -6,10 +6,10 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 #include "MeshBuilder.h"
 #include "Render/Renderable.h"
-#include "Math/Vector2.h"
+#include "Math/Vector.h"
 #include "Math/Helpers.h"
 #include "Utilities.h"
 
@@ -57,7 +57,7 @@ void MeshBuilder::buildGeometry()
 	// Construct the mesh groups.
 	const std::vector<MeshGroup>& groups = mesh->groups;
 
-	for( uint i = 0; i < groups.size(); i++ )
+	for( size_t i = 0; i < groups.size(); i++ )
 	{
 		const MeshGroup& group = groups[i];
 
@@ -90,7 +90,7 @@ MaterialPtr MeshBuilder::buildMaterial(const MeshGroup& group)
 	{
 		material->setProgram("VertexLit");
 
-		std::string path = PathUtils::normalize(matMesh.texture);
+		std::string path = PathNormalize(matMesh.texture);
 		material->setTexture( 0, path );
 	}
 

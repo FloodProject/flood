@@ -59,7 +59,15 @@ private:
 	RenderBuffer* bufferFBO;
 };
 
+#include "Core/Memory.h"
+#include "Core/Concurrency.h"
+
 //-----------------------------------//
 
-#define VAPOR_EXAMPLE_NAME Example
-#include <vapor/Main.h>
+int main(int argc, const char** argv)
+{
+	Example example;
+	example.run();
+
+	return EXIT_SUCCESS;
+}

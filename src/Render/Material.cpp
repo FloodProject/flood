@@ -6,13 +6,13 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "vapor/render/Material.h"
-#include "vapor/render/Device.h"
-#include "vapor/render/TextureManager.h"
-#include "vapor/render/ProgramManager.h"
-#include "vapor/Engine.h"
-#include "vapor/Utilities.h"
+#include "Engine/API.h"
+#include "Render/Material.h"
+#include "Render/Device.h"
+#include "Render/TextureManager.h"
+#include "Render/ProgramManager.h"
+#include "Engine.h"
+#include "Utilities.h"
 
 namespace vapor {
 
@@ -51,7 +51,7 @@ Material::Material( const Material& rhs )
 
 Material::~Material()
 {
-	Log::debug("Removing material '%s'", name.c_str());
+	LogDebug("Removing material '%s'", name.c_str());
 }
 
 //-----------------------------------//
@@ -157,7 +157,7 @@ void Material::bindTextures(bool bindUniforms)
 		
 		if( !program ) continue;
 		
-		std::string uniform = "vp_Texture" + String::fromNumber(index);
+		std::string uniform = "vp_Texture" + StringFromNumber(index);
 		program->setUniform( uniform, index );
 	}
 }

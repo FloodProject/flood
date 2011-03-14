@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "Plugin.h"
 #include "Editor.h"
 #include "Engine.h"
@@ -15,9 +15,13 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-Plugin::Plugin( EditorFrame* frame )
-	: editor( frame )
-	, pluginEnabled(false)
+REFLECT_ABSTRACT_CLASS(Plugin)
+REFLECT_END()
+
+//-----------------------------------//
+
+Plugin::Plugin()
+	: enabled(false)
 { }
 
 //-----------------------------------//
@@ -43,8 +47,7 @@ void Plugin::doPluginDisable()
 
 void Plugin::addTool( wxAuiToolBarItem* tool, bool addToMenu )
 {
-	//if( tool->IsSeparator() )
-		//return;
+	//if( tool->IsSeparator() ) return;
 
 	tools.push_back( tool );
 
@@ -95,8 +98,7 @@ bool Plugin::isPluginTool(int toolId) const
 
 void Plugin::removePage( wxWindow* page )
 {
-	if( !page )
-		return;
+	if( !page ) return;
 
 	wxAuiNotebook* notebookCtrl = editor->getNotebook();
 
@@ -118,7 +120,7 @@ void Plugin::removePage( wxWindow* page )
 
 bool Plugin::isPluginEnabled() const
 {
-	return pluginEnabled;
+	return enabled;
 }
 
 //-----------------------------------//

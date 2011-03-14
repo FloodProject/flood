@@ -27,7 +27,7 @@ class BitmapFont : public Font
 public:
 
 	// Gets the size information of a glyph.
-	virtual const Vector2i getGlyphSize() const;
+	virtual const Vector2 getGlyphSize() const;
 
 	// Gets/sets the font image.
 	ACESSOR(Image, const ImagePtr&, image)

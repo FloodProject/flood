@@ -7,6 +7,6 @@
 ************************************************************************/
 
 %import "Resources/API.h"
-%import "vapor/resources/Resource.h"
-//%include "vapor/resources/Image.h"
-%include "vapor/resources/Mesh.h"
+%import "Resources/Resource.h"
+//%include "Resources/Image.h"
+%include "Resources/Mesh.h"

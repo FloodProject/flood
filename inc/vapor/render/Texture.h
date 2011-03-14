@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "vapor/render/Target.h"
-#include "vapor/resources/Image.h"
+#include "Render/Target.h"
+#include "Resources/Image.h"
 
 namespace vapor {
 

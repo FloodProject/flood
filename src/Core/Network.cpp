@@ -39,7 +39,7 @@ bool Network::init( int numThreads )
 	int major, minor, patch;
 	zmq_version (&major, &minor, &patch);
 
-	Log::info( 
+	LogInfo( 
 		"Initialized ZeroMQ %d.%d.%d with %d I/O thread(s)",
 		major, minor, patch, numThreads );
 
@@ -48,7 +48,7 @@ bool Network::init( int numThreads )
 
 //-----------------------------------//
 
-bool Network::createServerSocket(const std::string& uri)
+bool Network::createServerSocket(const String& uri)
 {
 	assert( socket != nullptr );
 
@@ -61,14 +61,14 @@ bool Network::createServerSocket(const std::string& uri)
 		return false;
 	}
 
-	Log::info("Created a server socket at '%s'", uri.c_str());
+	LogInfo("Created a server socket at '%s'", uri.c_str());
 	
 	return true;
 }
 
 //-----------------------------------//
 
-bool Network::createClientSocket(const std::string& uri)
+bool Network::createClientSocket(const String& uri)
 {
 	assert( socket != nullptr );
 	
@@ -81,7 +81,7 @@ bool Network::createClientSocket(const std::string& uri)
 		return false;
 	}
 
-	Log::info("Created a client socket at '%s'", uri.c_str());
+	LogInfo("Created a client socket at '%s'", uri.c_str());
 
 	return true;
 }
@@ -126,7 +126,7 @@ void Network::waitMessages()
 		
 		if( ret != 0 )
 		{
-			Log::info("Handle multi-part messages");
+			LogInfo("Handle multi-part messages");
 		}
 
 		messages.push(message);
@@ -148,7 +148,7 @@ void Network::dispatchMessages()
 		
 		if( it == messageHandlers.end() )
 		{
-			Log::warn("No message handler for type: %d", type);
+			LogWarn("No message handler for type: %d", type);
 			continue;
 		}
 
@@ -176,7 +176,7 @@ void Network::sendMessage( const MessagePtr& message )
 void Network::error(const char* str)
 {
 	int err = zmq_errno();
-	Log::error("%s: %s", str, zmq_strerror(err));
+	LogError("%s: %s", str, zmq_strerror(err));
 }
 
 //-----------------------------------//

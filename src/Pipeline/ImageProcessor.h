@@ -72,6 +72,7 @@ class PIPELINE_API ImageProcessor : public ResourceProcessor
 public:
 
 	ImageProcessor();
+	~ImageProcessor();
 
 	// Processes the given resource.
 	bool Process(const ResourcePtr& resource);

@@ -7,16 +7,16 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "math/Matrix4x4.h"
-#include "math/Matrix4x3.h"
-#include "math/Helpers.h"
+#include "Math/Matrix4x4.h"
+#include "Math/Matrix4x3.h"
+#include "Math/Helpers.h"
 #include "Log.h"
 
 namespace vapor {
 
-const CORE_API Matrix4x4 Matrix4x4::Identity;
-
 //-----------------------------------//
+
+const CORE_API Matrix4x4 Matrix4x4::Identity;
 
 Matrix4x4::Matrix4x4()
 {
@@ -245,7 +245,7 @@ Matrix4x4 Matrix4x4::createPerspectiveProjection( float FOV, float aspectRatio, 
 
 	Matrix4x4 proj;
 
-	float h = 1.0f / tanf( Math::degreeToRadian(FOV) * 0.5f );
+	float h = 1.0f / tanf( MathDegreeToRadian(FOV) * 0.5f );
 	float neg_depth = (nearPlane - farPlane);
 	
 	proj.m11 = h / aspectRatio;

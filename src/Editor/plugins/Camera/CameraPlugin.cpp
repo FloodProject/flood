@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "CameraPlugin.h"
 #include "CameraControls.h"
 #include "Editor.h"
@@ -20,8 +20,13 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-CameraPlugin::CameraPlugin( EditorFrame* frame )
-	: Plugin(frame)
+REFLECT_CHILD_CLASS(CameraPlugin, Plugin)
+REFLECT_END()
+
+//-----------------------------------//
+
+CameraPlugin::CameraPlugin()
+	: Plugin()
 	, cameraControls(nullptr)
 { }
 

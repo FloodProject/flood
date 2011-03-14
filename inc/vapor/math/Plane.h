@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "math/Vector3.h"
-#include "math/Ray.h"
+#include "Math/Vector.h"
+#include "Math/Ray.h"
 
 namespace vapor {
 

@@ -15,10 +15,10 @@ namespace vapor {
 
 //-----------------------------------//
 
-const Vector2i BitmapFont::getGlyphSize() const
+const Vector2 BitmapFont::getGlyphSize() const
 {
 	// TODO: ...
-	return Vector2i(16, 16);
+	return Vector2(16, 16);
 }
 
 //-----------------------------------//

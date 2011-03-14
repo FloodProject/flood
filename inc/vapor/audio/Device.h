@@ -11,7 +11,7 @@
 #ifdef VAPOR_AUDIO_OPENAL
 
 #include "Resources/Sound.h"
-#include "Math/Vector3.h"
+#include "Math/Vector.h"
 #include "Audio/AL.h"
 
 FWD_DECL_SHARED(AudioBuffer)

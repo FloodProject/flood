@@ -7,8 +7,8 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "vapor/input/InputMap.h"
+#include "Engine/API.h"
+#include "input/InputMap.h"
 
 namespace vapor {
 

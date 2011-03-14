@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "render/Renderable.h"
-#include "scene/Transform.h"
-#include "scene/Light.h"
+#include "Render/Renderable.h"
+#include "Scene/Transform.h"
+#include "Scene/Light.h"
 #include "Event.h"
 
 namespace vapor {

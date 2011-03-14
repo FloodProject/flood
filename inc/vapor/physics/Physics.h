@@ -10,8 +10,8 @@
 
 #ifdef VAPOR_PHYSICS_BULLET
 
-#include "vapor/Subsystem.h"
-#include "vapor/math/Vector3.h"
+#include "Subsystem.h"
+#include "Math/Vector.h"
 
 class btCollisionConfiguration;
 class btBroadphaseInterface;

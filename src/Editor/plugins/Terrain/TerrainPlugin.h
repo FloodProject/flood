@@ -36,9 +36,11 @@ class TerrainOperation;
 
 class TerrainPlugin : public wxEvtHandler, public Plugin
 {
+	REFLECT_DECLARE_CLASS()
+
 public:
 
-	TerrainPlugin( EditorFrame* frame );
+	TerrainPlugin();
 
 	// Gets metadata about this plugin.
 	virtual PluginMetadata getMetadata();
@@ -101,7 +103,7 @@ protected:
 	TerrainOperation* terrainOperation;
 
 	// Current cell cordinates.
-	Vector2i coords;
+	Vector2 coords;
 	
 	// Callback used when editing the terrain by holding the mouse button.
 	wxTimer timer;

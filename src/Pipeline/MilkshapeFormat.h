@@ -54,33 +54,33 @@ struct VAPOR_ALIGN_BEGIN(1) ms3d_header_t
 
 struct VAPOR_ALIGN_BEGIN(1) ms3d_vertex_t
 {
-	byte	flags;
+	uint8	flags;
 	Vector3	position;
 	char	boneIndex;
-	byte	referenceCount;
+	uint8	referenceCount;
 } VAPOR_ALIGN_END(1);
 
 //-----------------------------------//
 
 struct VAPOR_ALIGN_BEGIN(1) ms3d_triangle_t
 {
-	ushort	flags;
-	ushort	vertexIndices[3];
+	uint16	flags;
+	uint16	vertexIndices[3];
 	Vector3	vertexNormals[3];
 	float	s[3];
 	float	t[3];
-	byte	smoothingGroup;
-	byte	groupIndex;
+	uint8	smoothingGroup;
+	uint8	groupIndex;
 } VAPOR_ALIGN_END(1);
 
 //-----------------------------------//
 
 struct VAPOR_ALIGN_BEGIN(1) ms3d_group_t
 {
-	byte flags;
+	uint8 flags;
 	char name[32];
-	ushort numGroupTriangles;
-	std::vector<ushort> triangleIndices;
+	uint16 numGroupTriangles;
+	std::vector<uint16> triangleIndices;
 	char materialIndex;
 	char comment[32];
 } VAPOR_ALIGN_END(1);
@@ -96,7 +96,7 @@ struct VAPOR_ALIGN_BEGIN(1) ms3d_material_t
 	Color			emissive;
 	float			shininess;
     float			transparency;
-	byte			mode;
+	uint8			mode;
 	char			texture[MAX_TEXTURE_FILENAME_SIZE];
     char			alphamap[MAX_TEXTURE_FILENAME_SIZE];
 } VAPOR_ALIGN_END(1);
@@ -121,10 +121,10 @@ struct VAPOR_ALIGN_BEGIN(1) ms3d_tangent_t
 
 struct VAPOR_ALIGN_BEGIN(1) ms3d_joint_t
 {
-	byte flags;
+	uint8 flags;
 	char name[32];
 	char parentName[32];
-	int indexParent;
+	int32 indexParent;
 
 	EulerAngles rotation;
 	Vector3 position;

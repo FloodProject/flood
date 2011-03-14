@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "math/EulerAngles.h"
+#include "Math/EulerAngles.h"
 
 namespace vapor {
 

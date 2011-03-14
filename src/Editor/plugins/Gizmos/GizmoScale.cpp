@@ -6,9 +6,9 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "GizmoScale.h"
-#include "render/Cube.h"
+#include "Render/Cube.h"
 
 namespace vapor { namespace editor {
 

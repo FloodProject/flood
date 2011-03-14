@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 #include "Scene/Scene.h"
 #include "Scene/Transform.h"
 #include "Scene/Tags.h"
@@ -48,7 +48,7 @@ static bool doRayGroupQuery( const Group* group, const Culler& culler, RayQueryL
 	const std::vector<EntityPtr>& entities = group->getEntities();
 
 	// Do some ray casting to find a collision.
-	for( uint i = 0; i < entities.size(); i++ )
+	for( size_t i = 0; i < entities.size(); i++ )
 	{
 		const EntityPtr& entity = entities[i];
 		const Type& type = entity->getType();
@@ -136,7 +136,7 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res )
 	RayQueryList list;
 	doRayBoxQuery( ray, list );
 
-	for( uint i = 0; i < list.size(); i++ )
+	for( size_t i = 0; i < list.size(); i++ )
 	{
 		const RayQueryResult& query = list[i];
 	
@@ -167,7 +167,7 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res,
 	transRay.direction = (absolute * ray.direction).normalize();
 
 	// Down to triangle picking.	
-	for( uint i = 0; i < geoms.size(); i++ )
+	for( size_t i = 0; i < geoms.size(); i++ )
 	{		
 		const GeometryPtr& geo = geoms[i];
 	
@@ -218,11 +218,11 @@ bool Scene::doRayRendQuery( const Ray& ray, const RenderablePtr& rend, RayTriang
 	const std::vector<Vector3>& texCoords = vb->getAttribute(VertexAttribute::TexCoord0);
 	const std::vector<Vector3>& vertices = vb->getAttribute(VertexAttribute::Position);
 				
-	uint size = ib ? ib->getSize() : vertices.size();
+	size_t size = ib ? ib->getSize() : vertices.size();
 	
 	int indexSizeBytes = ib->indexSize / 8;
 	
-	for( uint i = 0; i < size; i += 3 )
+	for( size_t i = 0; i < size; i += 3 )
 	{
 		int index = ib ? *(short int*) &ib->data[indexSizeBytes * i] : i;
 

@@ -6,9 +6,9 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "render/Buffer.h"
-#include "render/GL.h"
+#include "Engine/API.h"
+#include "Render/Buffer.h"
+#include "Render/GL.h"
 
 namespace vapor {
 		
@@ -18,7 +18,7 @@ Buffer::Buffer()
 	: usage(BufferUsage::Static)
 	, access(BufferAccess::Read)
 {
-	glGenBuffers( 1, &id );
+	glGenBuffers( 1, (GLuint*) &id );
 
 	if( glHasError("Error generating a new buffer") )
 		return;
@@ -30,7 +30,7 @@ Buffer::Buffer(BufferUsage::Enum usage, BufferAccess::Enum access)
 	: usage(usage)
 	, access(access)
 {
-	glGenBuffers( 1, &id );
+	glGenBuffers( 1, (GLuint*) &id );
 
 	if( glHasError("Error generating a new buffer") )
 		return;
@@ -40,7 +40,7 @@ Buffer::Buffer(BufferUsage::Enum usage, BufferAccess::Enum access)
 
 Buffer::~Buffer()
 {
-	glDeleteBuffers( 1, &id );
+	glDeleteBuffers( 1, (GLuint*) &id );
 
 	if( glHasError("Error deleting buffer") )
 		return;

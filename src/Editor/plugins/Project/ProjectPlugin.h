@@ -31,9 +31,11 @@ class SceneDocument;
 
 class ProjectPlugin : public Plugin
 {
+	REFLECT_DECLARE_CLASS()
+
 public:
 
-	ProjectPlugin( EditorFrame* frame );
+	ProjectPlugin();
 
 	// Gets metadata about this plugin.
 	virtual PluginMetadata getMetadata();

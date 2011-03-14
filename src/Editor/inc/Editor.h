@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Math/Vector2.h"
+#include "Math/Vector.h"
 FWD_DECL(Engine)
 
 namespace vapor { namespace editor {
@@ -69,18 +69,16 @@ public:
 	GETTER(Engine, Engine*, engine)
 
 	// Gets/sets the drag and drop coords.
-	ACESSOR(DropCoords, Vector2i, dropCoords)
+	ACESSOR(DropCoords, Vector2, dropCoords)
 
 protected:
 
 	// Creates the main UI layout.
 	void createUI();
-	void createLastUI();
+	void createToolbar();	
 	void createMenus();
-	void createToolbar();
-	void createNotebook();
+	void createLastUI();
 	void createEngine();
-	void createServices();
 	void createPlugins();
 
     // wxWidgets main events.
@@ -107,22 +105,22 @@ protected:
 	void switchPlayMode(bool switchToPlay);
 #endif
 
+public:
+
 	Engine* engine;
 
 	// Plugins.
 	PluginManager* pluginManager;
-	PluginManagerFrame* pluginManagerFrame;
+	PluginManagerFrame* pluginManagerFrame;	
 	Events* eventManager;
 	
 	// Drag and drop coordinates.
-	Vector2i dropCoords;
+	Vector2 dropCoords;
 
 	// UI widgets.
 	wxAuiManager* paneCtrl;
 	wxAuiToolBar* toolbarCtrl;
 	wxAuiNotebook* notebookCtrl;
-
-public:
 
 	// Gets a document from a page.
 	Document* getDocumentFromPage(int selection);

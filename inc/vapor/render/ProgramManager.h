@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "render/Program.h"
+#include "Render/Program.h"
 
 FWD_DECL_INTRUSIVE(Text)
 

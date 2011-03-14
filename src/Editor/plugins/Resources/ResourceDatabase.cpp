@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "ResourceDatabase.h"
 #include "Settings.h"
 #include "Utilities.h"
@@ -49,14 +49,14 @@ bool ResourceDatabase::loadCache()
 
 	if( !wxFileName::DirExists(CacheFolder) )
 	{
-		Log::info("Creating cache directory: '%s'", CacheFolder.c_str());
+		LogInfo("Creating cache directory: '%s'", CacheFolder.c_str());
 		wxFileName::Mkdir(CacheFolder);
 		return false;
 	}
 
 	if( !File::exists(path) )
 	{
-		Log::warn("Could not find thumbnails cache file '%s'", path.c_str());
+		LogWarn("Could not find thumbnails cache file '%s'", path.c_str());
 		return false;
 	}
 
@@ -64,7 +64,7 @@ bool ResourceDatabase::loadCache()
 
 	if( !file.open() )
 	{
-		Log::warn("Could not open thumbnails cache file '%s'", path.c_str());
+		LogWarn("Could not open thumbnails cache file '%s'", path.c_str());
 		return false;
 	}
 
@@ -108,7 +108,7 @@ bool ResourceDatabase::loadCache()
 		resourcesCache[metadata.hash] = metadata;
 	}
 
-	Log::info("Loaded thumbnails cache from '%s' with %u entries", path.c_str(), i);
+	LogInfo("Loaded thumbnails cache from '%s' with %u entries", path.c_str(), i);
 
 	return true;
 #endif
@@ -145,7 +145,7 @@ bool ResourceDatabase::saveCache()
 	}
 
 	file.write( root.toStyledString() );
-	Log::info("Wrote thumbnails cache to '%s' with %u entries", path.c_str(), i);
+	LogInfo("Wrote thumbnails cache to '%s' with %u entries", path.c_str(), i);
 
 	return true;
 #endif
@@ -170,26 +170,26 @@ void ResourceDatabase::scanFiles()
 {
 	ResourceManager* rm = GetResourceManager();
 
-	std::vector<std::string> files;	
-	std::vector<std::string> found = System::enumerateFiles("media/meshes");
+	std::vector<std::string> found;	
+	FileEnumerateFiles("media/meshes", found);
 	
-	for( uint i = 0; i < found.size(); i++ )
+	std::vector<std::string> files;	
+	for( size_t i = 0; i < found.size(); i++ )
 	{
 		const std::string& path = found[i];
 
-		std::string ext = PathUtils::getExtension(path);
+		std::string ext = PathGetFileExtension(path);
 		ResourceLoader* loader = rm->findLoader(ext);
 
-		if( !loader )
-			continue;
+		if( !loader ) continue;
+		if( loader->getResourceGroup() != ResourceGroup::Meshes ) continue;
 
-		if( loader->getResourceGroup() != ResourceGroup::Meshes )
-			continue;
-
-		File file(path);
+		File file(path, StreamMode::Read);
 		
 		std::vector<byte> data;
-		file.read(data);
+		FileRead(&file, data);
+
+		FileClose(&file);
 
 		uint hash = Hash::Murmur2( data, 0xBEEF );
 		
@@ -266,7 +266,7 @@ void ResourceDatabase::generateThumbnails(const std::vector<std::string>& files)
 		ImageWriter writer;
 		writer.save( thumb, CacheFolder + metadata.thumbnail );
 
-		Log::info("Generated thumbnail for resource '%s'", resPath.c_str());
+		LogInfo("Generated thumbnail for resource '%s'", resPath.c_str());
 	}
 }
 #endif

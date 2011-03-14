@@ -6,9 +6,9 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "render/Target.h"
-#include "render/View.h"
+#include "Engine/API.h"
+#include "Render/Target.h"
+#include "Render/View.h"
 
 namespace vapor {
 
@@ -21,7 +21,7 @@ RenderTarget::RenderTarget()
 
 RenderTarget::~RenderTarget()
 {
-	for( uint i = 0; i < views.size(); i++ )
+	for( size_t i = 0; i < views.size(); i++ )
 	{
 		const RenderView* view = views[i];
 		delete view;
@@ -41,9 +41,9 @@ RenderView* RenderTarget::createView()
 
 //-----------------------------------//
 
-Vector2i Settings::getSize() const
+Vector2 Settings::getSize() const
 {
-	return Vector2i(width, height);
+	return Vector2(width, height);
 }
 
 //-----------------------------------//

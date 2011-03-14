@@ -90,9 +90,6 @@ public:
 	// Gets/sets the path that identifies this resource.
 	ACESSOR(Path, const std::string&, path)
 
-	// Returns the base part of the path.
-	std::string getBasePath() const;
-	
 	// Gets/sets the resource loading status.
 	ACESSOR(Status, ResourceStatus::Enum, status)
 

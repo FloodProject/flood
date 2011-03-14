@@ -9,7 +9,7 @@
 #include "Resources/API.h"
 #include "Resources/Animation.h"
 #include "Resources/Bone.h"
-#include "math/Helpers.h"
+#include "Math/Helpers.h"
 
 namespace vapor {
 
@@ -39,7 +39,7 @@ float Animation::getTotalTime() const
 	if( keyFrames.empty() )
 		return 0;
 
-	float min = Limits::FloatMaximum;
+	float min = LimitsFloatMaximum;
 	float max = 0;
 
 	for( uint i = 0; i < keyFramesVector.size(); i++ )
@@ -50,7 +50,7 @@ float Animation::getTotalTime() const
 		max = std::max(max, keyFrame.time);
 	}
 
-	if( min == Limits::FloatMaximum )
+	if( min == LimitsFloatMaximum )
 		return 0;
 
 	return max - min;

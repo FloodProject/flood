@@ -7,8 +7,9 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "math/Quaternion.h"
+#include "Math/Quaternion.h"
 #include "Log.h"
+#include <cassert>
 
 namespace vapor {
 
@@ -101,7 +102,7 @@ EulerAngles Quaternion::getEulerAngles() const
 	if (fabs(sp) > 0.9999f)
 	{
 		// Looking straight up or down
-		pitch = (Math::PI / 2.0f) * sp;
+		pitch = (PI / 2.0f) * sp;
 
 		// Compute heading, slam bank to zero
 		heading = atan2(-x*z - w*y, 0.5f - y*y - z*z);
@@ -118,9 +119,9 @@ EulerAngles Quaternion::getEulerAngles() const
 	}
 
 	return EulerAngles(
-		Math::radianToDegree(pitch),
-		Math::radianToDegree(heading),
-		Math::radianToDegree(bank));
+		MathRadianToDegree(pitch),
+		MathRadianToDegree(heading),
+		MathRadianToDegree(bank));
 }
 
 //-----------------------------------//

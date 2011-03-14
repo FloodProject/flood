@@ -82,13 +82,11 @@ void ObjectWalker::processClass(ObjectData object, bool parent)
 		processClass(parent, true);
 	}
 
-	FieldsMap::const_iterator it;
-	const FieldsMap& fields = type.getFields();
+	std::vector<Field*>::const_iterator it;
 
-	for( it = fields.begin(); it != fields.end(); it++ )
+	for( it = type.fields.begin(); it != type.fields.end(); it++ )
 	{
-		const Field& field = *(it->second);
-		processField(object, field);
+		processField(object, **it);
 	}
 
 	v.processClassEnd(type, parent);
@@ -103,7 +101,7 @@ void ObjectWalker::processEnum(ObjectData object)
 	v.processEnumBegin(metaenum);
 
 	int value = *(int*) object.instance;
-	const std::string& name = metaenum.getName(value);
+	const String& name = metaenum.getName(value);
 	
 	v.processEnumElement(value, name);
 
@@ -225,7 +223,7 @@ void ObjectWalker::processPrimitive(const ObjectData& object)
 	//-----------------------------------//
 	else if( type.isString() )
 	{
-		std::string* val = (std::string*) object.instance;
+		String* val = (String*) object.instance;
 		v.processString(type, *val);
 	}
 	//-----------------------------------//

@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "math/Vector3.h"
-#include "math/EulerAngles.h"
-#include "math/Quaternion.h"
+#include "Math/Vector.h"
+#include "Math/EulerAngles.h"
+#include "Math/Quaternion.h"
 
 namespace vapor {
 

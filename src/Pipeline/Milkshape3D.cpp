@@ -11,9 +11,10 @@
 #include "Pipeline/API.h"
 #include "Pipeline/Milkshape3D.h"
 #include "Resources/Skeleton.h"
-#include "Math/Vector2.h"
+#include "Math/Vector.h"
 #include "Math/Helpers.h"
 #include "Utilities.h"
+#include "Log.h"
 
 namespace vapor {
 
@@ -111,7 +112,7 @@ int Milkshape3D::findJoint(const char* name)
 	{
 		const ms3d_joint_t& joint = joints[i];
 
-		if( String::compareInsensitive(joint.name, name) == 0 )
+		if( StringCompareInsensitive(joint.name, name) == 0 )
 			return i;
 	}
 
@@ -151,18 +152,18 @@ void Milkshape3D::setupJointRotations()
 		ms3d_joint_t& joint = joints[i];
 
 		joint.rotation = EulerAngles(
-			Math::radianToDegree(joint.rotation.x),
-			Math::radianToDegree(joint.rotation.y),
-			Math::radianToDegree(joint.rotation.z) );
+			MathRadianToDegree(joint.rotation.x),
+			MathRadianToDegree(joint.rotation.y),
+			MathRadianToDegree(joint.rotation.z) );
 
 		for( uint j = 0; j < joint.rotationKeys.size(); j++ )
 		{
 			ms3d_keyframe_t& keyframe = joint.rotationKeys[j];
 
 			keyframe.parameter = Vector3(
-				Math::radianToDegree(keyframe.parameter.x),
-				Math::radianToDegree(keyframe.parameter.y),
-				Math::radianToDegree(keyframe.parameter.z) );
+				MathRadianToDegree(keyframe.parameter.x),
+				MathRadianToDegree(keyframe.parameter.y),
+				MathRadianToDegree(keyframe.parameter.z) );
 		}
 	}
 }
@@ -191,7 +192,8 @@ void Milkshape3D::buildAnimationMetadata()
 		if( c == 13 ) c = '\n';
 	}
 
-	std::vector<std::string> lines = String::split(mainComment, '\n');
+	std::vector<std::string> lines;
+	StringSplit(mainComment, '\n', lines);
     
 	for( uint i = 0; i < lines.size(); i++ )
 	{
@@ -296,7 +298,7 @@ void Milkshape3D::buildKeyFrames( const ms3d_joint_t& joint,
 
 float Milkshape3D::getAnimationStart(const AnimationMetadata& data)
 {
-	float minTime = Limits::FloatMaximum;
+	float minTime = LimitsFloatMaximum;
 
 	for( uint i = 0; i < joints.size(); i++ )
 	{
@@ -353,12 +355,12 @@ void Milkshape3D::buildGeometry()
 		// Let's process all the triangles of this group.
 		for( uint j = 0; j < numIndices; j++ )
 		{
-			const ushort& triIndex = group.triangleIndices[j];
+			const uint16& triIndex = group.triangleIndices[j];
 			const ms3d_triangle_t& t = *triangles[triIndex];
 
 			for( uint e = 0; e < 3; e++ )
 			{
-				const ushort& vertexIndex = t.vertexIndices[e];
+				const uint16& vertexIndex = t.vertexIndices[e];
 				const ms3d_vertex_t& vertex = *vertices[vertexIndex];
 		
 				Vector3 normal( t.vertexNormals[e] );
@@ -393,7 +395,7 @@ MeshMaterial Milkshape3D::buildMaterial(const ms3d_group_t& group)
 
 	if( strlen(mt.texture) > 0 )
 	{
-		std::string path = PathUtils::normalize(mt.texture);
+		const std::string& path = PathNormalize(mt.texture);
 		material.texture = path;
 	}
 
@@ -451,7 +453,7 @@ bool Milkshape3D::readHeader()
 
 void Milkshape3D::readVertices()
 {
-	ushort& numVertices = FILEBUF_INDEX(ushort);
+	uint16& numVertices = FILEBUF_INDEX(uint16);
 	vertices.resize(numVertices);
 
 	for (int i = 0; i < numVertices; i++)
@@ -464,7 +466,7 @@ void Milkshape3D::readVertices()
 
 void Milkshape3D::readTriangles()
 {
-	ushort& numTriangles = FILEBUF_INDEX(ushort);
+	uint16& numTriangles = FILEBUF_INDEX(uint16);
 	triangles.resize(numTriangles);
 	
 	for (int i = 0; i < numTriangles; i++)
@@ -477,25 +479,24 @@ void Milkshape3D::readTriangles()
 
 void Milkshape3D::readGroups()
 {
-	ushort& numGroups = FILEBUF_INDEX(ushort);
+	uint16& numGroups = FILEBUF_INDEX(uint16);
 	groups.resize(numGroups);
 	
 	for (int i = 0; i < numGroups; i++)
 	{
-		MEMCPY_SKIP_INDEX(groups[i].flags, sizeof(byte));
+		MEMCPY_SKIP_INDEX(groups[i].flags, sizeof(uint8));
 		MEMCPY_SKIP_INDEX(groups[i].name, sizeof(char)*32);
 
-		ushort numGroupTriangles;
-		MEMCPY_SKIP_INDEX(numGroupTriangles, sizeof(ushort));
+		uint16 numGroupTriangles;
+		MEMCPY_SKIP_INDEX(numGroupTriangles, sizeof(uint16));
 		groups[i].triangleIndices.resize(numGroupTriangles);
 
 		if (numGroupTriangles > 0)
 		{
-			MEMCPY_SKIP_INDEX(groups[i].triangleIndices[0],
-				sizeof(ushort)*numGroupTriangles);
+			MEMCPY_SKIP_INDEX(groups[i].triangleIndices[0], sizeof(uint16)*numGroupTriangles);
 		}
 
-		MEMCPY_SKIP_INDEX(groups[i].materialIndex, sizeof(byte));
+		MEMCPY_SKIP_INDEX(groups[i].materialIndex, sizeof(uint8));
 	}
 }
 
@@ -503,7 +504,7 @@ void Milkshape3D::readGroups()
 
 void Milkshape3D::readMaterials()
 {
-	ushort& numMaterials = FILEBUF_INDEX(ushort);
+	uint16& numMaterials = FILEBUF_INDEX(uint16);
 	materials.resize(numMaterials);
 	
 	for (int i = 0; i < numMaterials; i++)
@@ -538,10 +539,10 @@ void Milkshape3D::readAnimation()
 
 void Milkshape3D::readJoints()
 {
-	ushort& numJoints = FILEBUF_INDEX(ushort);
+	uint16& numJoints = FILEBUF_INDEX(uint16);
 	joints.resize(numJoints);
 	
-	for (uint i = 0; i < numJoints; i++)
+	for (uint32 i = 0; i < numJoints; i++)
 	{
 		MEMCPY_SKIP_INDEX(joints[i].flags, sizeof(byte));
 		MEMCPY_SKIP_INDEX(joints[i].name, sizeof(char)*32);
@@ -550,10 +551,10 @@ void Milkshape3D::readJoints()
 		MEMCPY_SKIP_INDEX(joints[i].position, sizeof(Vector3));
 		joints[i].indexParent = -1;
 
-		ushort& numKeyFramesRot = FILEBUF_INDEX(ushort);
+		uint16& numKeyFramesRot = FILEBUF_INDEX(uint16);
 		joints[i].rotationKeys.resize(numKeyFramesRot);
 
-		ushort& numKeyFramesPos = FILEBUF_INDEX(ushort);
+		uint16& numKeyFramesPos = FILEBUF_INDEX(uint16);
 		joints[i].positionKeys.resize(numKeyFramesPos);
 
 		// the frame time is in seconds, so multiply it by the animation fps,
@@ -584,7 +585,7 @@ void Milkshape3D::readComments()
 	
 	if( subVersion != 1 )
 	{
-		Log::warn( "Unknown subversion comment chunk: '%d'", subVersion );
+		LogWarn( "Unknown subversion comment chunk: '%d'", subVersion );
 		return;
 	}
 

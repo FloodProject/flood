@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "math/Vector2.h"
+#include "Math/Vector.h"
 #include "Event.h"
 
 FWD_DECL_SHARED(Camera)
@@ -23,7 +23,7 @@ class VAPOR_API Settings
 {
 public:
 
-	Settings( const ushort width = 640, const ushort height = 480 )
+	Settings( const uint16 width = 640, const uint16 height = 480 )
 		: width(width)
 		, height(height)
 	{ }
@@ -33,18 +33,10 @@ public:
 		, height(s.height)
 	{ }
 
-	// Gets/sets the width of the target.
-	ACESSOR(Width, const ushort, width)
-
-	// Gets/sets the height of the target.
-	ACESSOR(Height, const ushort, height)
-
 	// Gets the size of the target.
-	Vector2i getSize() const;
+	Vector2 getSize() const;
 
-public:
-
-	ushort width, height;
+	uint16 width, height;
 };
 
 //-----------------------------------//

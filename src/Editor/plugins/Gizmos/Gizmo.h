@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "vapor/scene/Geometry.h"
-#include "vapor/scene/Camera.h"
+#include "Scene/Geometry.h"
+#include "Scene/Camera.h"
 
 namespace vapor { namespace editor {
 

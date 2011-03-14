@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "ConsoleTextCtrl.h"
 #include "Editor.h"
 
@@ -81,7 +81,7 @@ void ConsoleTextCtrl::InitControl()
 	// any other order didn't seem to work... might be a wx bug.
 
 	AppendTextColor( wxString::Format(
-		"Welcome to " VAPOR_EDITOR_NAME " Console [%s]\n\n", VAPOR_ENGINE_VERSION ),
+		"Welcome to " VAPOR_EDITOR_NAME "\n\n"),
 		*wxWHITE ); 
 
 	AppendTextColor( ">", EVAL_COLOR );

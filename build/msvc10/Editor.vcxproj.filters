@@ -4,9 +4,6 @@
     <Filter Include="Window">
       <UniqueIdentifier>{c07c46bb-4b66-4945-88e1-57c20f965aa0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="PCH">
-      <UniqueIdentifier>{edb363aa-e59f-4af7-b806-21fdfee0e748}</UniqueIdentifier>
-    </Filter>
     <Filter Include="View">
       <UniqueIdentifier>{b10d95ea-b7da-427a-a845-146ea3f41837}</UniqueIdentifier>
     </Filter>
@@ -79,6 +76,12 @@
     <Filter Include="Document">
       <UniqueIdentifier>{d2b870a6-4ddf-4dd6-8200-2207914cd5fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Plugins\Mono">
+      <UniqueIdentifier>{6bdd6e58-2b51-41a6-a576-e6ae521dbc22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{edb363aa-e59f-4af7-b806-21fdfee0e748}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Editor\RenderControl.cpp">
@@ -86,9 +89,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Editor\RenderWindow.cpp">
       <Filter>Window</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Editor\PCH.cpp">
-      <Filter>PCH</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Editor\Viewframe.cpp">
       <Filter>View</Filter>
@@ -240,6 +240,13 @@
       <Filter>Plugins\Scene</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Editor\EditorCameraController.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Mono\MonoPlugin.cpp">
+      <Filter>Plugins\Mono</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\Plugins.cpp">
+      <Filter>Plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\API.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Editor\inc\RenderControl.h">
@@ -247,9 +254,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\inc\RenderWindow.h">
       <Filter>Window</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Editor\PCH.h">
-      <Filter>PCH</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\inc\Viewframe.h">
       <Filter>View</Filter>
@@ -368,10 +372,10 @@
       <Filter>Plugins\Selection</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\inc\ImageUtils.h">
-      <Filter>PCH</Filter>
+      <Filter>Resources</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\inc\EditorIcons.h">
-      <Filter>PCH</Filter>
+      <Filter>Resources</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\inc\ResourceDrop.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Terrain\TerrainOperation.h">
@@ -399,10 +403,14 @@
       <Filter>Plugins\Scene</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\inc\EditorCameraController.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Mono\MonoPlugin.h">
+      <Filter>Plugins\Mono</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\API.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\src\Editor\res\Editor.rc">
-      <Filter>PCH</Filter>
+      <Filter>Resources</Filter>
     </ResourceCompile>
   </ItemGroup>
 </Project>

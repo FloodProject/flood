@@ -11,6 +11,8 @@
 #include "Stream.h"
 #include "Core/File.h"
 
+#ifdef VAPOR_VFS_PHYSFS
+
 namespace vapor {
 
 //-----------------------------------//
@@ -51,3 +53,5 @@ protected:
 //-----------------------------------//
 
 } // end namespace
+
+#endif

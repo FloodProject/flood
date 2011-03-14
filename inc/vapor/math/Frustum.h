@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Math/Vector2.h"
+#include "Math/Vector.h"
 #include "Math/Matrix4x4.h"
 #include "Math/Plane.h"
 #include "Math/BoundingBox.h"
@@ -50,7 +50,7 @@ public:
     Frustum( const Frustum& rhs );
 
 	// Updates the projection matrix.
-	void updateProjection( const Vector2i& size );
+	void updateProjection( const Vector2& size );
 
 	// Updates the frustum planes.
 	void updatePlanes( const Matrix4x3& matView );

@@ -6,15 +6,15 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 
 #ifdef VAPOR_PHYSICS_BULLET
 
-#include "vapor/physics/MeshShape.h"
-#include "vapor/physics/Convert.h"
-#include "vapor/scene/Entity.h"
-#include "vapor/scene/Transform.h"
-#include "vapor/scene/Geometry.h"
+#include "physics/MeshShape.h"
+#include "physics/Convert.h"
+#include "Scene/Entity.h"
+#include "Scene/Transform.h"
+#include "Scene/Geometry.h"
 
 #include <BulletCollision/CollisionShapes/btTriangleMesh.h>
 #include <BulletCollision/CollisionShapes/btTriangleIndexVertexArray.h>
@@ -87,7 +87,7 @@ btTriangleMesh* MeshShape::convertMesh()
 
 	const std::vector<GeometryPtr>& geometries = entity->getGeometry();
 
-	for( uint i = 0; i < geometries.size(); i++ )
+	for( size_t i = 0; i < geometries.size(); i++ )
 	{
 		const GeometryPtr& geometry = geometries[i];
 		const RenderableVector& rends = geometry->getRenderables();
@@ -106,7 +106,7 @@ btTriangleMesh* MeshShape::convertMesh()
 
 			if( !ib )
 			{		
-				for( uint i = 0; i < pos.size(); i += 3 )
+				for( size_t i = 0; i < pos.size(); i += 3 )
 				{
 					btVector3 vertex0 = Convert::toBullet(pos[i]);
 					btVector3 vertex1 = Convert::toBullet(pos[i+1]);
@@ -119,7 +119,7 @@ btTriangleMesh* MeshShape::convertMesh()
 			{
 				const std::vector<ushort>& ind = ib->getIndices16();
 
-				for( uint i = 0; i < ind.size(); i += 3 )
+				for( size_t i = 0; i < ind.size(); i += 3 )
 				{
 					btVector3 vertex0 = Convert::toBullet(pos[ind[i]]);
 					btVector3 vertex1 = Convert::toBullet(pos[ind[i+1]]);

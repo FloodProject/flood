@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "PropertyPage.h"
 #include "PropertyOperation.h"
 #include "Editor.h"
@@ -31,7 +31,7 @@ static wxString convertToReadable(wxString str)
 	format.Append(wxUniChar(toupper(str[0])));
 
 	// Add spaces between words.
-	for( uint i = 1; i < str.Len(); i++ )
+	for( size_t i = 1; i < str.Len(); i++ )
 	{
 		format.Append(str[i]);
 
@@ -90,10 +90,10 @@ static ResourcePtr askResource()
 		return nullptr;
 
 	std::string path( fd.GetPath() );
-	path = PathUtils::normalize(path);
+	path = PathNormalize(path);
 	
-	ResourceManager* rm = GetEditor().getEngine()->getResourceManager();
-	return rm->loadResource( PathUtils::getFile(path) );
+	ResourceManager* res = GetResourceManager();
+	return res->loadResource( PathGetFile(path) );
 }
 
 //-----------------------------------//
@@ -120,7 +120,7 @@ public:
 		//if( &resourceType != data->type )
 		//	return false;
 
-		SetValueInEvent( PathUtils::getFile( resource->getPath() ) );
+		SetValueInEvent( PathGetFile( resource->getPath() ) );
 
 		return true;
 	}
@@ -173,7 +173,7 @@ void PropertyPage::onIdle(wxIdleEvent& event)
 	if( !updateMemoryWatches() )
 		return;
 
-	Log::debug("Memory watches detected changes");
+	LogDebug("Memory watches detected changes");
 }
 
 //-----------------------------------//
@@ -277,7 +277,7 @@ void PropertyPage::appendObjectFields(const Class& type, void* object, bool newC
 		appendObjectFields(parent, object, false);
 	}
 	
-	const std::vector<Field*>& fields = type.getFieldsVector();
+	const std::vector<Field*>& fields = type.fields;
 	
 	for( uint i = 0; i < fields.size(); i++ )
 	{
@@ -430,7 +430,7 @@ wxPGProperty* PropertyPage::createPrimitiveProperty(const Field& field, void* ob
 	//-----------------------------------//
 	else
 	{
-		Log::debug( "Unknown property type: '%s'", type.name.c_str() );
+		LogDebug( "Unknown property type: '%s'", type.name.c_str() );
 	}
 
 	return prop;
@@ -460,7 +460,7 @@ wxAny PropertyPage::getFieldValue(const Field* field, void* object)
 		std::string name;
 		ResourcePtr res = field->get<ResourcePtr>(object);
 		if(res) name = res->getPath();
-		value = PathUtils::getFile(name);
+		value = PathGetFile(name);
 	}
 	else if( field->type.isEnum() )
 		value = field->get<int>(object);

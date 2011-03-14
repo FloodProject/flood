@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "wxImageComboBox.h"
 #include "Core/File.h"
 
@@ -38,15 +38,17 @@ void wxImageComboBox::addImage( const ImagePtr& image )
 
 wxBitmap* wxImageComboBox::convertToBitmap( const ImagePtr& image ) const
 {
-	if( !image )
-		return nullptr;
+	if( !image ) return nullptr;
 
 	//assert( image->getPixelFormat() == PixelFormat::R8G8B8 );
 	
 	//byte* buf = const_cast<byte*>(&image->getBuffer()[0]);
 
-	File file( image->getPath() );
-	wxImage img( file.getRealPath() );
+	File file( image->getPath(), StreamMode::Read );
+	
+	wxImage img( FileGetFullPath(&file) );
+	
+	FileClose(&file);
 
 	//wxImage img( image->getWidth(), image->getHeight(), buf, true /* don't free data */);
 

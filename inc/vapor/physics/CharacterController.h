@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "vapor/controllers/Controller.h"
+#include "controllers/Controller.h"
 
 class btKinematicController;
 class btPairCachingGhostObject;

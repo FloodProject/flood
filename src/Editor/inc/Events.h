@@ -39,6 +39,8 @@ public:
 	Events( EditorFrame* editor );
 	virtual ~Events();
 
+	void disconnectPluginListeners();
+
 	// Add/remove a plugin as an event listener.
 	void addEventListener( Plugin* plugin );
 	void removeEventListener( Plugin* plugin );

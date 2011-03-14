@@ -130,8 +130,8 @@ Matrix4x3 Matrix4x3::createScale( const Vector3& v )
 
 Matrix4x3 Matrix4x3::rotateX( float ang )
 {
-	const float cos = std::cos( Math::degreeToRadian(ang) );
-	const float sin = std::sin( Math::degreeToRadian(ang) );
+	const float cos = std::cos( MathDegreeToRadian(ang) );
+	const float sin = std::sin( MathDegreeToRadian(ang) );
 
 	Matrix4x3 newRotation;
 
@@ -150,8 +150,8 @@ Matrix4x3 Matrix4x3::rotateX( float ang )
 
 Matrix4x3 Matrix4x3::rotateY( float ang )
 {
-	const float cos = std::cos( Math::degreeToRadian(ang) );
-	const float sin = std::sin( Math::degreeToRadian(ang) );
+	const float cos = std::cos( MathDegreeToRadian(ang) );
+	const float sin = std::sin( MathDegreeToRadian(ang) );
 
 	Matrix4x3 newRotation;
 
@@ -170,8 +170,8 @@ Matrix4x3 Matrix4x3::rotateY( float ang )
 
 Matrix4x3 Matrix4x3::rotateZ( float ang )
 {
-	const float cos = std::cos( Math::degreeToRadian(ang) );
-	const float sin = std::sin( Math::degreeToRadian(ang) );
+	const float cos = std::cos( MathDegreeToRadian(ang) );
+	const float sin = std::sin( MathDegreeToRadian(ang) );
 
 	Matrix4x3 newRotation;
 

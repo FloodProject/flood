@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include "scene/Transform.h"
-#include "math/BoundingBox.h"
-#include "render/Renderable.h"
-#include "render/RenderQueue.h"
+#include "Scene/Transform.h"
+#include "Math/BoundingBox.h"
+#include "Render/Renderable.h"
+#include "Render/RenderQueue.h"
 
 namespace vapor {
 

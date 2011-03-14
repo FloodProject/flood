@@ -8,6 +8,7 @@
 
 #include "Resources/API.h"
 #include "Resources/GLSL_Text.h"
+#include "Log.h"
 
 namespace vapor {
 
@@ -29,7 +30,7 @@ void GLSL_Text::parse()
 
 	if( v == std::string::npos )
 	{
-		Log::warn( "No vertex shader found in '%s'", path.c_str() );
+		LogWarn( "No vertex shader found in '%s'", path.c_str() );
 		vertex.clear();
 	}
 	else
@@ -39,7 +40,7 @@ void GLSL_Text::parse()
 
 	if( p == std::string::npos )
 	{
-		Log::warn( "No fragment shader found in '%s'", path.c_str() );
+		LogWarn( "No fragment shader found in '%s'", path.c_str() );
 		pixel.clear();
 	}
 	else

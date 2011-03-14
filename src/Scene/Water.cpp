@@ -6,8 +6,8 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "vapor/scene/Water.h"
+#include "Engine/API.h"
+#include "Scene/Water.h"
 
 namespace vapor {
 

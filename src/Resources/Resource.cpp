@@ -60,12 +60,4 @@ bool Resource::isLoaded() const
 
 //-----------------------------------//
 
-std::string Resource::getBasePath() const
-{
-	assert( !path.empty() );
-	return PathUtils::getBase(path);
-}
-
-//-----------------------------------//
-
 } // end namespace

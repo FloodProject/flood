@@ -28,7 +28,7 @@ END_CLASS()
 IL_Image_Loader::IL_Image_Loader()
 {
 	ilInit();
-	Log::info("Initialized DevIL");
+	LogInfo("Initialized DevIL");
 
 #ifndef IL_NO_PNG
 	extensions.push_back("png");
@@ -104,7 +104,7 @@ bool IL_Image_Loader::decode(const Stream& stream, Resource* res)
 		pf = PixelFormat::R8G8B8A8;
 		break;
 	default:
-		Log::error( "Implement support for more pixel formats" );
+		LogError( "Implement support for more pixel formats" );
 		return false;
 	}
 
@@ -142,8 +142,8 @@ bool IL_Image_Loader::checkErrors()
 	if(err == IL_NO_ERROR)
 		return false;
 
-	Log::error("Error loading image via DevIL");
-	//Log::error("Error loading image: '%s', iluErrorString(err));
+	LogError("Error loading image via DevIL");
+	//LogError("Error loading image: '%s', iluErrorString(err));
 
 	return true;
 }

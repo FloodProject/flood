@@ -21,7 +21,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-FileSystem::FileSystem(const std::string& app, const char* argv0 )
+FileSystem::FileSystem(const String& app, const char* argv0 )
 	: fileWatcher(nullptr)
 {
 	if( !PHYSFS_init(argv0) ) 
@@ -46,7 +46,7 @@ FileSystem::~FileSystem()
 {
 	for( uint i = 0; i < mountPoints.size(); i++ )
 	{
-		const std::string& point = mountPoints[i];
+		const String& point = mountPoints[i];
 		PHYSFS_removeFromSearchPath( point.c_str() );
 	}
 	
@@ -58,7 +58,7 @@ FileSystem::~FileSystem()
 
 //-----------------------------------//
 
-void FileSystem::setDefaultConfig(const std::string& app)
+void FileSystem::setDefaultConfig(const String& app)
 {
 	int err = PHYSFS_setSaneConfig("vapor", app.c_str(), nullptr, 0, 0);
 
@@ -68,16 +68,16 @@ void FileSystem::setDefaultConfig(const std::string& app)
 		return;
 	}
 
-	Log::info( "Mounted '%s' in mount point '/'", PHYSFS_getBaseDir() );
+	LogInfo( "Mounted '%s' in mount point '/'", PHYSFS_getBaseDir() );
 }
 
 //-----------------------------------//
 
-std::vector<std::string> FileSystem::enumerateFiles(const std::string& path)
+std::vector<String> FileSystem::enumerateFiles(const String& path)
 {
 	char **rc = PHYSFS_enumerateFiles( path.c_str() );
 	
-	std::vector<std::string> files;
+	std::vector<String> files;
 	
 	for (char** i = rc; *i != nullptr; i++)
 		files.push_back(*i);	
@@ -89,7 +89,7 @@ std::vector<std::string> FileSystem::enumerateFiles(const std::string& path)
 
 //-----------------------------------//
 
-bool FileSystem::mount(const std::string& path, const std::string& mount, bool append )
+bool FileSystem::mount(const String& path, const String& mount, bool append )
 {
 	int err = PHYSFS_mount( path.c_str(), mount.c_str(), append ? 1 : 0 );
 
@@ -99,7 +99,7 @@ bool FileSystem::mount(const std::string& path, const std::string& mount, bool a
 		return false;
 	}
 
-	Log::info( "Mounted '%s' in mount point '%s'",
+	LogInfo( "Mounted '%s' in mount point '%s'",
 		path.c_str(), mount.empty() ? "/" : mount.c_str() );
 
 	if( fileWatcher )
@@ -110,21 +110,18 @@ bool FileSystem::mount(const std::string& path, const std::string& mount, bool a
 
 //-----------------------------------//
 
-void FileSystem::mountDefaultLocations()
+void FileSystem::mountDefaultLocations(const String& base)
 {
-	// Default filesystem mount points.
-	const std::string media( "media" );
-
 	mount(".");
 
-	if ( !mount(media) )
-		return;
+	if ( !mount(base) ) return;
 
-	std::vector<std::string> dirs = System::enumerateDirs(media);
+	std::vector<String> dirs;
+	FileEnumerateDirs(base, dirs);
 
-	for( uint i = 0; i < dirs.size(); i++ )
+	for( size_t i = 0; i < dirs.size(); i++ )
 	{
-		const std::string& dir = dirs[i];
+		const String& dir = dirs[i];
 		mount(dir);
 	}
 }
@@ -139,9 +136,9 @@ void FileSystem::update( float )
 
 //-----------------------------------/
 
-void FileSystem::logError( const std::string& msg )
+void FileSystem::logError( const String& msg )
 {
-	Log::error( "%s: %s", msg.c_str(), PHYSFS_getLastError() );
+	LogError( "%s: %s", msg.c_str(), PHYSFS_getLastError() );
 }
 
 //-----------------------------------//
@@ -151,7 +148,7 @@ void FileSystem::log()
 	PHYSFS_Version version;
 	PHYSFS_getLinkedVersion(&version);
 
-	Log::info( "Initialized PhysFS version %d.%d.%d", 
+	LogInfo( "Initialized PhysFS version %d.%d.%d", 
 		version.major, version.minor, version.patch );
 
 	const PHYSFS_ArchiveInfo **i;
@@ -162,11 +159,11 @@ void FileSystem::log()
 	for (i = PHYSFS_supportedArchiveTypes(); *i != nullptr; i++)
 		ss << "'" << (*i)->extension << "', ";
 
-	Log::info( "User write folder: %s", PHYSFS_getWriteDir() );
+	LogInfo( "User write folder: %s", PHYSFS_getWriteDir() );
 	
-	std::string s = ss.str();
+	String s = ss.str();
 	s = s.substr( 0, s.find_last_of(',') );
-	Log::info( "%s", s.c_str() );
+	LogInfo( "%s", s.c_str() );
 }
 
 //-----------------------------------//

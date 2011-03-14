@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "GizmoTranslate.h"
 
 namespace vapor { namespace editor {
@@ -163,7 +163,7 @@ void GizmoTranslate::generateColors( std::vector<Vector3>& colors, const Color& 
 void GizmoTranslate::generateSolidCone( float base, float height, uint slices,
 							   std::vector<Vector3>& pos )
 {
-	float r = 2*Math::PI / slices;
+	float r = 2*PI / slices;
 	
 	for( uint i = 0; i < slices; i++ )
 	{

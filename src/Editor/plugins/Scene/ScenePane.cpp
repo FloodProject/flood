@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "ScenePane.h"
 #include "Editor.h"
 #include "EditorIcons.h"
@@ -285,7 +285,7 @@ void ScenePage::onButtonEntityAdd(wxCommandEvent&)
 	Document* document = GetEditor().getDocument();
 	if( !document ) return;
 	
-	std::string name("Entity"+String::fromNumber(nodeCounter++));
+	std::string name("Entity"+StringFromNumber(nodeCounter++));
 	
 	EntityPtr entity( new Entity(name) );
 	entity->addTransform();
@@ -484,7 +484,7 @@ void ScenePage::onAttachmentMenuSelected(wxCommandEvent& event)
 	const SkeletonPtr& skeleton = mesh->getSkeleton();
 	BonePtr bone = skeleton->getBones()[ind];
 
-	std::string name = "Attachment"+String::fromNumber(nodeCounter++);
+	std::string name = "Attachment"+StringFromNumber(nodeCounter++);
 	
 	EntityPtr node( new Entity(name) );
 	node->addTransform();
@@ -620,7 +620,7 @@ void ScenePage::onMenuSelected( wxCommandEvent& event )
 	//-----------------------------------//
 	else if( id == ID_MenuSceneEntityTerrain )
 	{
-		std::string name("Terrain"+String::fromNumber(nodeCounter++));
+		std::string name("Terrain"+StringFromNumber(nodeCounter++));
 		
 		TerrainPtr terrain( new Terrain(name) );
 		scene->add( terrain );

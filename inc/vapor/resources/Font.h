@@ -10,7 +10,7 @@
 
 #include "Resources/Resource.h"
 #include "Resources/Image.h"
-#include "math/Vector2.h"
+#include "Math/Vector.h"
 
 namespace vapor {
 
@@ -24,11 +24,11 @@ namespace vapor {
 
 struct Glyph
 {
-	ushort x;
-	ushort y;
+	uint16 x;
+	uint16 y;
 
-	ushort width;
-	ushort height;
+	uint16 width;
+	uint16 height;
 };
 
 //-----------------------------------//
@@ -58,7 +58,7 @@ public:
 	virtual const std::vector<Glyph>& getGlyphs() const = 0;
 
 	// Gets the size information of a glyph.
-	virtual const Vector2i getGlyphSize() const = 0;
+	virtual const Vector2 getGlyphSize() const = 0;
 
 	// Gets/sets the font name.
 	ACESSOR(Name, const std::string&, name)

@@ -6,13 +6,14 @@
 *
 ************************************************************************/
 
-#include <vapor/PCH.h>
-#include <vapor/Framework.h>
-#include <vapor/render/Device.h>
-#include <vapor/Core/FileSystem.h>
-#include <vapor/input/InputManager.h>
-#include <vapor/resources/ResourceManager.h>
-#include <vapor/Utilities.h>
+#include "Engine/API.h"
+#include "Framework.h"
+#include "Core/FileSystem.h"
+#include "Timer.h"
+#include "Utilities.h"
+#include "Render/Device.h"
+#include "Input/InputManager.h"
+#include "Resources/ResourceManager.h"
 
 namespace vapor {
 
@@ -20,7 +21,7 @@ namespace vapor {
 
 Framework::Framework(const std::string& app, const char** argv)
 {
-	Log::info( "Engine framework getting into action" );
+	LogInfo( "Engine framework getting into action" );
 	Engine::create(app, argv);
 }
 
@@ -41,7 +42,7 @@ void Framework::init()
 
 	// Register default media locations.
 	FileSystem* fs = getFileSystem();
-	fs->mountDefaultLocations();
+	fs->mountDefaultLocations("Assets");
 
 	// Register input callbacks.
 	registerCallbacks();
@@ -72,20 +73,22 @@ void Framework::mainLoop()
 	RenderDevice* renderDevice = getRenderDevice();
 	Window* window = renderDevice->getWindow();
 
-	const ushort numUpdatesSecond = 25;
+	const uint16 numUpdatesSecond = 25;
 	const float maxUpdateTime = 1.0f / numUpdatesSecond;
 
 	Timer updateTimer;
-	float nextTick = updateTimer.reset();
+	TimerReset(&updateTimer);
+
+	float nextTick = TimerGetCurrentTimeMs();
 
 	while( true )
 	{
-		frameTimer.reset();
+		TimerReset(&frameTimer);
 		
 		if( !window->pumpEvents() )
 			break;
 
-		while( updateTimer.getCurrentTime() > nextTick )
+		while( TimerGetCurrentTimeMs() > nextTick )
 		{
 			update( maxUpdateTime );
 
@@ -105,17 +108,17 @@ void Framework::mainLoop()
 		updateFrameTimes();
 	}
 
-	System::sleep(0);
+	TimerSleep(0);
 }
 
 //-----------------------------------//
 
 void Framework::updateFrameTimes()
 {
-	frameStats.lastFrameTime = frameTimer.getElapsedTime();
+	frameStats.lastFrameTime = TimerGetElapsed(&frameTimer);
 
 	if(frameStats.lastFrameTime > 0.1)
-		Log::debug("HOTSPOT! %lf", frameStats.lastFrameTime);
+		LogDebug("HOTSPOT! %lf", frameStats.lastFrameTime);
 
 	frameStats.frameStep();
 }

@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "scene/Geometry.h"
-#include "math/Vector3.h"
-#include "math/Color.h"
+#include "Scene/Geometry.h"
+#include "Math/Vector.h"
+#include "Math/Color.h"
 
 namespace vapor {
 

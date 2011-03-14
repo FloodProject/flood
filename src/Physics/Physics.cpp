@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 
 #ifdef VAPOR_PHYSICS_BULLET
 
@@ -14,7 +14,7 @@
 #include "physics/Body.h"
 #include "physics/Convert.h"
 #include "physics/DebugDraw.h"
-#include "render/Device.h"
+#include "Render/Device.h"
 #include "Engine.h"
 
 #include <btBulletDynamicsCommon.h>

@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "render/Texture.h"
-#include "resources/Image.h"
+#include "Render/Texture.h"
+#include "Resources/Image.h"
 
 namespace vapor {
 

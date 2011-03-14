@@ -6,12 +6,12 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 
 #ifdef VAPOR_PHYSICS_BULLET
 
-#include "vapor/physics/Shape.h"
-#include "vapor/physics/Body.h"
+#include "physics/Shape.h"
+#include "physics/Body.h"
 
 namespace vapor {
 

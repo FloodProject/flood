@@ -6,26 +6,27 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "PluginManager.h"
 #include "Plugin.h"
 #include "Editor.h"
+#include "Reflection.h"
 
 namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-PluginManager::PluginManager(EditorFrame* frame)
-	: editor(frame)
-{ }
+PluginManager::PluginManager() { }
 
 //-----------------------------------//
 
 PluginManager::~PluginManager()
 {
-	for( uint i = 0; i < plugins.size(); i++ )
+	for( size_t i = 0; i < plugins.size(); i++ )
 	{
-		const Plugin* plugin = plugins[i];
+		Plugin* plugin = plugins[i];
+		if(plugin->enabled) disablePlugin(plugin);
+
 		delete plugin;
 	}
 }
@@ -34,12 +35,12 @@ PluginManager::~PluginManager()
 
 Plugin* PluginManager::getPlugin(const std::string& name)
 {
-	for(uint i = 0; i < plugins.size(); i++)
+	for( size_t i = 0; i < plugins.size(); i++ )
 	{
 		Plugin* plugin = plugins[i];
+		const PluginMetadata& metadata = plugin->getMetadata();
 
-		if(plugin->getMetadata().name == name)
-			return plugin;
+		if(metadata.name == name) return plugin;
 	}
 
 	return nullptr;
@@ -47,11 +48,32 @@ Plugin* PluginManager::getPlugin(const std::string& name)
 
 //-----------------------------------//
 
+void PluginManager::scanPlugins()
+{
+	Class& type = Plugin::getStaticType();
+
+	for( size_t i = 0; i < type.childs.size(); i++ )
+	{
+		Class* child = type.childs[i];
+		if( !child ) continue;
+
+		Plugin* plugin = (Plugin*) child->createInstance();
+		if(!plugin) continue;
+
+		registerPlugin(plugin);
+		
+		const PluginMetadata& metadata = plugin->getMetadata();
+		if(metadata.startEnabled) enablePlugin(plugin);
+	}
+}
+
+//-----------------------------------//
+
 void PluginManager::registerPlugin( Plugin* plugin )
 {
-	if( !plugin )
-		return;
+	if( !plugin ) return;
 
+	plugin->editor = &GetEditor();
 	plugins.push_back(plugin);
 }
 
@@ -59,13 +81,12 @@ void PluginManager::registerPlugin( Plugin* plugin )
 
 void PluginManager::enablePlugin( Plugin* plugin )
 {
-	if( !plugin )
-		return;
+	if( !plugin ) return;
 	
 	PluginMetadata metadata = plugin->getMetadata();
-	Log::info( "Enabling plugin: %s", metadata.name.c_str() );
+	LogInfo( "Enabling plugin: %s", metadata.name.c_str() );
 
-	plugin->pluginEnabled = true;
+	plugin->enabled = true;
 	plugin->onPluginEnable();
 
 	processTools( plugin, true );
@@ -77,15 +98,14 @@ void PluginManager::enablePlugin( Plugin* plugin )
 
 void PluginManager::disablePlugin( Plugin* plugin )
 {
-	if( !plugin )
-		return;
+	if( !plugin ) return;
 
 	PluginMetadata metadata = plugin->getMetadata();
-	Log::info( "Disabling plugin: %s", metadata.name.c_str() );
+	LogInfo( "Disabling plugin: %s", metadata.name.c_str() );
 
 	processTools( plugin, false );
 
-	plugin->pluginEnabled = false;
+	plugin->enabled = false;
 	plugin->doPluginDisable();
 
 	onPluginDisableEvent(plugin);
@@ -95,7 +115,7 @@ void PluginManager::disablePlugin( Plugin* plugin )
 
 void PluginManager::processTools( Plugin* plugin, bool enable )
 {
-	for( uint i = 0; i < plugin->tools.size(); i++ )
+	for( size_t i = 0; i < plugin->tools.size(); i++ )
 	{
 		wxAuiToolBarItem* tool = plugin->tools[i];
 	
@@ -103,6 +123,8 @@ void PluginManager::processTools( Plugin* plugin, bool enable )
 			//continue;
 
 		int id = tool->GetId();
+
+		if( id == -1 ) continue;
 
 		PluginToolsMap::iterator it = tools.find(id);
 	

@@ -6,14 +6,14 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "scene/Camera.h"
-#include "scene/Scene.h"
-#include "scene/Geometry.h"
-#include "scene/Tags.h"
-#include "render/Device.h"
-#include "render/View.h"
-#include "render/DebugGeometry.h"
+#include "Engine/API.h"
+#include "Scene/Camera.h"
+#include "Scene/Scene.h"
+#include "Scene/Geometry.h"
+#include "Scene/Tags.h"
+#include "Render/Device.h"
+#include "Render/View.h"
+#include "Render/DebugGeometry.h"
 #include "Engine.h"
 
 namespace vapor {
@@ -165,7 +165,7 @@ void Camera::cull( RenderBlock& block, const EntityPtr& entity )
 		const std::vector<EntityPtr>& entities = group->getEntities();
 
 		// Cull the children entities recursively.
-		for( uint i = 0; i < entities.size(); i++ )
+		for( size_t i = 0; i < entities.size(); i++ )
 		{
 			const EntityPtr& child = entities[i];			
 			cull( block, child );
@@ -194,7 +194,7 @@ void Camera::cull( RenderBlock& block, const EntityPtr& entity )
 
 	const std::vector<GeometryPtr>& geoms = entity->getGeometry();
 
-	for( uint i = 0; i < geoms.size(); i++ )
+	for( size_t i = 0; i < geoms.size(); i++ )
 	{
 		const GeometryPtr& geometry = geoms[i];
 		geometry->appendRenderables( block.renderables, transform );
@@ -245,7 +245,7 @@ void Camera::cull( RenderBlock& block, const EntityPtr& entity )
 Ray Camera::getRay( float screenX, float screenY, Vector3* outFar ) const
 {
 	assert( activeView != nullptr );
-	Vector2i size = activeView->getSize();
+	Vector2 size = activeView->getSize();
 
 	Vector3 nearPoint(screenX, size.y - screenY, 0);
 	Vector3 farPoint (screenX, size.y - screenY, 1);

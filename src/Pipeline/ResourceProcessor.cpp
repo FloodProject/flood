@@ -14,6 +14,8 @@
 #include "Pipeline/ImageProcessor.h"
 #include "Pipeline/MeshProcessor.h"
 
+#include "Log.h"
+
 namespace vapor {
 
 //-----------------------------------//
@@ -21,47 +23,62 @@ namespace vapor {
 BEGIN_CLASS_ABSTRACT(ResourceProcessor)
 END_CLASS()
 
-//-----------------------------------//
+std::vector<ResourceProcessor*> resourceProcessors;
 
-ResourceProcessorMap ResourceProcessor::resourceProcessors;
-void referenceProcessors();
+static void ReferenceProcessors();
 
 //-----------------------------------//
 
 ResourceProcessor::ResourceProcessor()
 {
-	referenceProcessors();
+	ReferenceProcessors();
 }
 
 //-----------------------------------//
 
-void ResourceProcessor::registerProcessors()
+ResourceProcessor::~ResourceProcessor()
+{
+}
+
+//-----------------------------------//
+
+void Pipeline::Init()
 {
 	Class& type = ResourceProcessor::getStaticType();
 	
-	for( uint i = 0; i < type.childs.size(); i++ )
+	for( size_t i = 0; i < type.childs.size(); i++ )
 	{
-		const Class* child = type.childs[i];
+		const Class* klass = type.childs[i];
 		
-		ResourceProcessor* processor = (ResourceProcessor*) child->createInstance();
-		resourceProcessors[child] = processor;
+		ResourceProcessor* processor = (ResourceProcessor*) klass->createInstance();
+		resourceProcessors.push_back(processor);
+
+		LogInfo("Registering asset handler: %s", klass->name.c_str());
 	}
 }
 
 //-----------------------------------//
 
-ResourceProcessor* ResourceProcessor::findProcessor(const Class& type)
+void Pipeline::Cleanup()
 {
-	ResourceProcessorMap::iterator it;
-
-	for( it = resourceProcessors.begin(); it != resourceProcessors.end(); it++ )
+	for( size_t i = 0; i < resourceProcessors.size(); i++ )
 	{
-		ResourceProcessor* processor = it->second;
-		
+		ResourceProcessor* processor = resourceProcessors[i];
+		delete processor;
+	}
+
+	resourceProcessors.clear();
+}
+
+//-----------------------------------//
+
+ResourceProcessor* Pipeline::FindProcessor(const Class& type)
+{
+	for( size_t i = 0; i < resourceProcessors.size(); i++ )
+	{
+		ResourceProcessor* processor = resourceProcessors[i];
 		bool isProcessor = type.inherits( processor->GetResourceType() );
-		
-		if( isProcessor )
-			return processor;
+		if( isProcessor ) return processor;
 	}
 
 	return nullptr;
@@ -71,7 +88,7 @@ ResourceProcessor* ResourceProcessor::findProcessor(const Class& type)
 
 #define REF(name) name##::getStaticType();
 
-void ResourceProcessor::referenceProcessors()
+static void ReferenceProcessors()
 {
 	REF(MeshProcessor);
 	REF(ImageProcessor);

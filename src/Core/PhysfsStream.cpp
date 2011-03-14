@@ -9,12 +9,14 @@
 #include "Core/API.h"
 #include "Core/PhysfsStream.h"
 
+#ifdef VAPOR_VFS_PHYSFS
+
 namespace vapor {
 
 //-----------------------------------//
 
 PhysfsStream::PhysfsStream(File& file)
-	: Stream(StreamMode::Read, file.getPath())
+	: Stream(StreamMode::Read, file.Path)
 	, file(file)
 { }
 
@@ -22,7 +24,7 @@ PhysfsStream::PhysfsStream(File& file)
 
 bool PhysfsStream::open()
 {
-	//file.open();
+	FileOpen(&file);
 	return true;
 }
 
@@ -30,30 +32,32 @@ bool PhysfsStream::open()
 
 void PhysfsStream::close()
 {
-	file.close();
+	FileClose(&file);
 }
 
 //-----------------------------------//
 
 long PhysfsStream::read(void* buffer, long size) const
 {
-	return file.read(buffer, size);
+	return FileReadBuffer(&file, buffer, size);
 }
 
 //-----------------------------------//
 
 void PhysfsStream::read(std::vector<byte>& data) const
 {
-	file.read(data);
+	FileRead(&file, data);
 }
 
 //-----------------------------------//
 
-long PhysfsStream::write(const std::vector<byte>& buffer)
+long PhysfsStream::write(const std::vector<byte>& data)
 {
-	return file.write(buffer);
+	return FileWrite(&file, data);
 }
 
 //-----------------------------------//
 
 } // end namespace
+
+#endif

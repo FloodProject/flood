@@ -9,11 +9,18 @@
 #include "Core/API.h"
 #include "Timer.h"
 #include "Log.h"
+#include "Core/Memory.h"
 
 #ifdef VAPOR_PLATFORM_WINDOWS
 	#define WIN32_LEAN_AND_MEAN
 	#define NOMINMAX
 	#include <Windows.h>	
+#elif VAPOR_PLATFORM_MACOSX
+	#pragma TODO("OSX: Use Mach timers: http://developer.apple.com/library/mac/#qa/qa2004/qa1398.html")
+#else
+	#include <sys/time.h>
+	#define tv_time_ms(t) ((t.tv_sec * 1000000.0) + t.tv_usec)
+	#pragma TODO("Linux: http://linux.die.net/man/3/clock_gettime")
 #endif
 
 namespace vapor {
@@ -21,53 +28,78 @@ namespace vapor {
 //-----------------------------------//
 
 #ifdef VAPOR_PLATFORM_WINDOWS
-	Ticks Timer::ticksPerSecond = 0;
-#endif
 
-bool Timer::checked = false;
-bool Timer::highResolutionSupport = false;
+static bool CheckHighResolution();
 
-//-----------------------------------//
+static int64 ticksPerSecond;
+static bool highResolutionSupport = CheckHighResolution();
 
-Timer::Timer()
-#ifdef VAPOR_PLATFORM_WINDOWS
-	: currentTime(0)
-	, lastTime(0)
-#endif
+static bool CheckHighResolution()
 {
-	if( !checked && !checkHighResolutionTimers() )
-		Log::error( "High-resolution timers are not supported" );
-
-	reset();
+	LARGE_INTEGER* frequency = (LARGE_INTEGER*) &ticksPerSecond;
+	return QueryPerformanceFrequency(frequency) != 0;
 }
 
+static int64 GetTime()
+{
+	LARGE_INTEGER time;
+	QueryPerformanceCounter(&time);
+	return time.QuadPart;
+}
+
+#elif VAPOR_PLATFORM_LINUX
+
+static timeval GetTime()
+{
+	timeval time;
+	gettimeofday(&time, nullptr);
+	return time;
+}
+
+#endif
+
 //-----------------------------------//
 
-#define tv_time_ms(t) ((t.tv_sec * 1000000.0) + t.tv_usec)
-
-float Timer::getCurrentTime()
+float TimerGetCurrentTimeMs()
 {
-	storeTime(currentTime);
-
-#ifdef VAPOR_PLATFORM_WINDOWS	
-	return (float) currentTime / (float) ticksPerSecond;
+#ifdef VAPOR_PLATFORM_WINDOWS
+	int64 time = GetTime();
+	return float(time) / float(ticksPerSecond);
 #else
-	return tv_time_ms(currentTime);
+	timeval time = GetTime();
+	return tv_time_ms(time);
 #endif
 }
 
-#pragma TODO("OSX: Use Mach timers: http://developer.apple.com/library/mac/#qa/qa2004/qa1398.html")
-// Linux: http://linux.die.net/man/3/clock_gettime
+//-----------------------------------//
+
+Timer* TimerCreate(MemoryAllocator* mem)
+{
+	return Allocate<Timer>(mem);
+}
 
 //-----------------------------------//
 
-float Timer::getElapsedTime()
+void TimerDestroy(Timer* timer, MemoryAllocator* mem)
 {
-	getCurrentTime();	
+	Deallocate(mem, timer);
+}
+
+//-----------------------------------//
+
+void TimerReset(Timer* timer)
+{
+	timer->time = GetTime();
+}
+
+//-----------------------------------//
+
+float TimerGetElapsed(Timer* timer)
+{
+	int64 diff = GetTime() - timer->time;
 
 #ifdef VAPOR_PLATFORM_WINDOWS
-	Ticks diff = currentTime - lastTime;
-	return (float) diff / (float) ticksPerSecond;
+	return float(diff) / float(ticksPerSecond);
 #else
 	return tv_time_ms(currentTime) - tv_time_ms(lastTime.tv_sec);
 #endif
@@ -75,43 +107,15 @@ float Timer::getElapsedTime()
 
 //-----------------------------------//
 
-float Timer::reset()
+void TimerSleep( int64 time )
 {
-	storeTime(lastTime);
-
 #ifdef VAPOR_PLATFORM_WINDOWS
-	return (float) lastTime / (float) ticksPerSecond;
+	::Sleep( static_cast<DWORD>(time) );
 #else
-	return tv_time_ms(lastTime);
+	timespec param;
+	param.tv_nsec = time*1000000000.0;
+	nanosleep(&param, NULL);
 #endif
-}
-
-//-----------------------------------//
-
-void Timer::storeTime( Ticks& var )
-{
-#ifdef VAPOR_PLATFORM_WINDOWS
-	LARGE_INTEGER* time = (LARGE_INTEGER*) &var;
-	QueryPerformanceCounter( time );
-#else
-	gettimeofday(&var, NULL);
-#endif
-}
-
-//-----------------------------------//
-
-bool Timer::checkHighResolutionTimers()
-{
-	checked = true;
-
-#ifdef VAPOR_PLATFORM_WINDOWS
-	LARGE_INTEGER* freq = (LARGE_INTEGER*) &ticksPerSecond;
-	
-	if( !QueryPerformanceFrequency(freq) )
-		return false;
-#endif
-
-	return true;
 }
 
 //-----------------------------------//

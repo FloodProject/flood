@@ -11,6 +11,7 @@
 #ifdef VAPOR_IMAGE_STB
 
 #include "Resources/STB_Image_Loader.h"
+#include "Log.h"
 
 #define STBI_HEADER_FILE_ONLY
 #include "stb_image.cpp"
@@ -57,7 +58,7 @@ bool STB_Image_Loader::decode(const Stream& file, Resource* res)
 	{
 	case 0:
 	case 1:
-		Log::error( "Implement support for more pixel formats" );
+		LogError( "Implement support for more pixel formats" );
 		return false;
 	case 3:
 		pf = PixelFormat::R8G8B8;

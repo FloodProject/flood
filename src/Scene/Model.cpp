@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 #include "Scene/Model.h"
 #include "Scene/Transform.h"
 #include "Scene/Entity.h"
@@ -67,7 +67,7 @@ void Model::init()
 
 void Model::setMesh(const MeshPtr& mesh)
 {
-	for( uint i = 0; i < renderables.size(); i++ )
+	for( size_t i = 0; i < renderables.size(); i++ )
 	{
 		const RenderablePtr& rend = renderables[i];
 		rend->onPreRender.Disconnect(this, &Model::onRender);
@@ -120,7 +120,7 @@ void Model::build()
 		builder.build(mesh);
 	}
 
-	for( uint i = 0; i < renderables.size(); i++ )
+	for( size_t i = 0; i < renderables.size(); i++ )
 	{
 		const RenderablePtr& rend = renderables[i];
 		const MaterialPtr& material = rend->getMaterial();
@@ -146,7 +146,7 @@ void Model::build()
 
 void Model::updateAnimations(float delta)
 {
-	for( uint i = 0; i < animations.size(); i++ )
+	for( size_t i = 0; i < animations.size(); i++ )
 	{
 		AnimationState& state = animations[i];
 
@@ -175,7 +175,7 @@ void Model::updateAnimationTime(AnimationState& state, float delta)
 	float& animationTime = state.animationTime;
 	float totalTime = animation->getTotalTime();
 
-	if( Math::floatEqual(animationTime, totalTime) )
+	if( MathFloatCompare(animationTime, totalTime) )
 	{
 		animationTime = 0;
 			
@@ -225,7 +225,7 @@ void Model::updateFinalAnimationBones()
 	if( animations.empty() )
 		return;
 
-	for( uint i = 0; i < bones.size(); i++ )
+	for( size_t i = 0; i < bones.size(); i++ )
 	{
 		if( animations.size() >= 2 )
 		{
@@ -244,7 +244,7 @@ void Model::updateFinalAnimationBones()
 
 void Model::updateAttachments()
 {
-	for( uint i = 0; i < attachments.size(); i++ )
+	for( size_t i = 0; i < attachments.size(); i++ )
 	{
 		const AttachmentPtr& attachment = attachments[i];
 		const EntityPtr& node = attachment->node;
@@ -339,7 +339,7 @@ void Model::onRender()
 
 void Model::setupSkinning()
 {
-	for(uint i = 0; i <renderables.size(); i++)
+	for(size_t i = 0; i <renderables.size(); i++)
 	{
 		const RenderablePtr& rend = renderables[i];
 		const VertexBufferPtr& vb = rend->getVertexBuffer();
@@ -363,7 +363,7 @@ void Model::setupShaderSkinning()
 {
 	const std::vector<RenderablePtr>& rends = getRenderables();
 
-	for( uint i = 0; i < rends.size(); i++ )
+	for( size_t i = 0; i < rends.size(); i++ )
 	{
 		const RenderablePtr& rend = rends[i];
 		const MaterialPtr& material = rend->getMaterial();
@@ -372,7 +372,7 @@ void Model::setupShaderSkinning()
 		std::vector<Matrix4x4> matrices;
 		matrices.reserve( bones.size() );
 
-		for( uint i = 0; i < bones.size(); i++ )
+		for( size_t i = 0; i < bones.size(); i++ )
 		{
 			const Matrix4x3& bone = bones[i];
 			matrices.push_back( Matrix4x4(bone) );
@@ -423,7 +423,7 @@ void Model::updateDebugRenderable() const
 	const SkeletonPtr& skel = mesh->getSkeleton();
 
 	uint numBones = skel->bones.size();
-	for( uint i = 0; i < numBones; i++ )
+	for( size_t i = 0; i < numBones; i++ )
 	{
 		BonePtr& bone = skel->bones[i];
 

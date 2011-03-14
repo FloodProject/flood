@@ -15,7 +15,7 @@
 #include "Render/Renderable.h"
 #include "Render/RenderQueue.h"
 #include "Math/Color.h"
-#include "Math/Vector2.h"
+#include "Math/Vector.h"
 #include "Math/Matrix4x3.h"
 #include "Reflection.h"
 
@@ -111,7 +111,7 @@ public:
 
 	// Gets the framebuffer color in the given pixel location.
 	// Note that point (0,0) is located in the top left corner.
-	Color getPixel(ushort x, ushort y) const;
+	Color getPixel(uint16 x, uint16 y) const;
 
 	// Gets/sets the main rendering window.
 	ACESSOR(Window, Window*, window)

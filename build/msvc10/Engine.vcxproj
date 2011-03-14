@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|Win32">
-      <Configuration>Debug</Configuration>
+    <ProjectConfiguration Include="Debug DLL|Win32">
+      <Configuration>Debug DLL</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="DLL Debug|Win32">
-      <Configuration>DLL Debug</Configuration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
@@ -20,10 +20,6 @@
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL Debug|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
@@ -34,11 +30,13 @@
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v100</PlatformToolset>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v100</PlatformToolset>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DLL Debug|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -46,21 +44,50 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)..\..\lib\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">$(SolutionDir)..\..\lib\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)..\..\obj\Engine\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">$(SolutionDir)..\..\obj\Engine\$(Configuration)\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)..\..\lib\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)..\..\obj\$(Configuration)\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='DLL Debug|Win32'">$(SolutionDir)..\..\lib\$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='DLL Debug|Win32'">$(SolutionDir)..\..\obj\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\src;$(SolutionDir)..\..\dep\picopng\;$(SolutionDir)..\..\dep\stb\;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\glew\include;$(SolutionDir)..\..\dep\freetype\include;$(SolutionDir)..\..\dep\openal\include;$(SolutionDir)..\..\dep\ogg\include;$(SolutionDir)..\..\dep\physfs\include;$(SolutionDir)..\..\dep\vorbis\include;$(SolutionDir)..\..\dep\jsoncpp\include;$(SolutionDir)..\..\dep\SFML\include;$(SolutionDir)..\..\dep\lua\include;$(SolutionDir)..\..\dep\swig\include;$(SolutionDir)..\..\dep\bullet\include;$(SolutionDir)..\..\dep\zeromq\include;$(SolutionDir)..\..\dep\devil\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\src;$(SolutionDir)..\..\dep\picopng\;$(SolutionDir)..\..\dep\stb\;$(SolutionDir)..\..\dep\glew\include;$(SolutionDir)..\..\dep\freetype\include;$(SolutionDir)..\..\dep\openal\include;$(SolutionDir)..\..\dep\ogg\include;$(SolutionDir)..\..\dep\physfs\include;$(SolutionDir)..\..\dep\vorbis\include;$(SolutionDir)..\..\dep\jsoncpp\include;$(SolutionDir)..\..\dep\SFML\include;$(SolutionDir)..\..\dep\lua\include;$(SolutionDir)..\..\dep\swig\include;$(SolutionDir)..\..\dep\bullet\include;$(SolutionDir)..\..\dep\zeromq\include;$(SolutionDir)..\..\dep\devil\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;___DEBUG;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Engine/API.h</PrecompiledHeaderFile>
+      <ProgramDataBaseFileName>$(TargetDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4503; 4510;4610; 4100;4190;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\dep\vld\lib;$(SolutionDir)..\..\dep\glew\lib;$(SolutionDir)..\..\dep\libogg-1.1.3\lib;$(SolutionDir)..\..\dep\libvorbis-1.2.0\lib;$(SolutionDir)..\..\dep\freetype\objs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ForceSymbolReferences>
+      </ForceSymbolReferences>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\src;$(SolutionDir)..\..\dep\picopng\;$(SolutionDir)..\..\dep\stb\;$(SolutionDir)..\..\dep\glew\include;$(SolutionDir)..\..\dep\freetype\include;$(SolutionDir)..\..\dep\openal\include;$(SolutionDir)..\..\dep\ogg\include;$(SolutionDir)..\..\dep\physfs\include;$(SolutionDir)..\..\dep\vorbis\include;$(SolutionDir)..\..\dep\jsoncpp\include;$(SolutionDir)..\..\dep\SFML\include;$(SolutionDir)..\..\dep\lua\include;$(SolutionDir)..\..\dep\swig\include;$(SolutionDir)..\..\dep\bullet\include;$(SolutionDir)..\..\dep\zeromq\include;$(SolutionDir)..\..\dep\devil\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;___DEBUG;ENGINE_API_DLL;ENGINE_API_DLL_EXPORT;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <ExceptionHandling>false</ExceptionHandling>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -86,7 +113,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\dep\boost\;$(SolutionDir)..\..\dep\picopng\;$(SolutionDir)..\..\dep\stb\;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\glew\include;$(SolutionDir)..\..\dep\freetype\include;$(SolutionDir)..\..\dep\openal\include;$(SolutionDir)..\..\dep\ogg\include;$(SolutionDir)..\..\dep\physfs\include;$(SolutionDir)..\..\dep\vorbis\include;$(SolutionDir)..\..\dep\jsoncpp\include;$(SolutionDir)..\..\dep\SFML\include;$(SolutionDir)..\..\dep\fd_delegate\include;$(SolutionDir)..\..\dep\lua\include;$(SolutionDir)..\..\dep\swig\include;$(SolutionDir)..\..\dep\bullet\include;$(SolutionDir)..\..\dep\zeromq\include;$(SolutionDir)..\..\dep\devil\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\src;$(SolutionDir)..\..\dep\picopng\;$(SolutionDir)..\..\dep\stb\;$(SolutionDir)..\..\dep\glew\include;$(SolutionDir)..\..\dep\freetype\include;$(SolutionDir)..\..\dep\openal\include;$(SolutionDir)..\..\dep\ogg\include;$(SolutionDir)..\..\dep\physfs\include;$(SolutionDir)..\..\dep\vorbis\include;$(SolutionDir)..\..\dep\jsoncpp\include;$(SolutionDir)..\..\dep\SFML\include;$(SolutionDir)..\..\dep\lua\include;$(SolutionDir)..\..\dep\swig\include;$(SolutionDir)..\..\dep\bullet\include;$(SolutionDir)..\..\dep\zeromq\include;$(SolutionDir)..\..\dep\devil\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;VAPOR_EXPORT;D_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <ExceptionHandling>false</ExceptionHandling>
@@ -107,32 +134,6 @@
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\dep\glew\lib;$(SolutionDir)..\..\dep\libogg-1.1.3\lib;$(SolutionDir)..\..\dep\libvorbis-1.2.0\lib;$(SolutionDir)..\..\dep\freetype\objs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DLL Debug|Win32'">
-    <ClCompile>
-      <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\dep\boost\;$(SolutionDir)..\..\dep\picopng\;$(SolutionDir)..\..\dep\stb\;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\glew\include;$(SolutionDir)..\..\dep\freetype\include;$(SolutionDir)..\..\dep\openal\include;$(SolutionDir)..\..\dep\ogg\include;$(SolutionDir)..\..\dep\physfs\include;$(SolutionDir)..\..\dep\vorbis\include;$(SolutionDir)..\..\dep\jsoncpp\include;$(SolutionDir)..\..\dep\SFML\include;$(SolutionDir)..\..\dep\fd_delegate\include;$(SolutionDir)..\..\dep\lua\include;$(SolutionDir)..\..\dep\swig\include;$(SolutionDir)..\..\dep\bullet\include;$(SolutionDir)..\..\dep\zeromq\include;$(SolutionDir)..\..\dep\devil\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;___DEBUG;WIN32;_WINDOWS;VAPOR_API_DLL;VAPOR_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MinimalRebuild>true</MinimalRebuild>
-      <ExceptionHandling>false</ExceptionHandling>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <DisableLanguageExtensions>false</DisableLanguageExtensions>
-      <RuntimeTypeInfo>false</RuntimeTypeInfo>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>vapor/PCH.h</PrecompiledHeaderFile>
-      <ProgramDataBaseFileName>$(TargetDir)$(TargetName).pdb</ProgramDataBaseFileName>
-      <WarningLevel>Level4</WarningLevel>
-      <TreatWarningAsError>false</TreatWarningAsError>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <DisableSpecificWarnings>4503; 4251; 4275;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-    </ClCompile>
-    <Link>
-      <AdditionalDependencies>zlib.lib;jsoncpp_vc9_d.lib;libboost_thread-vc90-mt-1_43.lib;libboost_date_time-vc90-mt-1_43.lib;physfs.lib;sfml-system-s-d.lib;sfml-window-s-d.lib;opengl32.lib;glew32s.lib;OpenAL32.lib;vorbisfile_static.lib;ogg_static.lib;vorbis_static.lib;lua.lib;LinearMath.lib;BulletCollision.lib;BulletDynamics.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration);$(SolutionDir)..\..\dep\boost\lib;$(SolutionDir)..\..\dep\vld\lib;$(SolutionDir)..\..\dep\jsoncpp\lib;$(SolutionDir)..\..\dep\physfs\lib\release;$(SolutionDir)..\..\dep\bullet\lib;$(SolutionDir)..\..\dep\zlib\lib;$(SolutionDir)..\..\dep\glew\lib;$(SolutionDir)..\..\dep\vorbis\lib;$(SolutionDir)..\..\dep\ogg\lib;$(SolutionDir)..\..\dep\openal\libs\Win32;$(SolutionDir)..\..\dep\sfml\lib\vc2008;$(SolutionDir)..\..\dep\luabind\lib;$(SolutionDir)..\..\dep\lua\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
-    </Link>
-  </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Audio\AudioBuffer.cpp" />
     <ClCompile Include="..\..\src\Audio\AudioContext.cpp" />
@@ -143,12 +144,15 @@
     <ClCompile Include="..\..\src\Controllers\FirstPersonController.cpp" />
     <ClCompile Include="..\..\src\Controllers\ScriptController.cpp">
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <ClCompile Include="..\..\src\Controllers\ThirdPersonController.cpp" />
+    <ClCompile Include="..\..\src\Core\Subsystem.cpp" />
     <ClCompile Include="..\..\src\Engine\PCH.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DLL Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Engine/API.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\Cube.cpp" />
     <ClCompile Include="..\..\src\Engine\Sphere.cpp" />
@@ -160,6 +164,7 @@
     <ClCompile Include="..\..\src\Engine\FrameStatistics.cpp" />
     <ClCompile Include="..\..\src\Engine\Engine.cpp">
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <ClCompile Include="..\..\src\Framework\Framework.cpp" />
     <ClCompile Include="..\..\src\Engine\Atlas.cpp" />
@@ -169,8 +174,8 @@
     <ClCompile Include="..\..\src\Engine\ScriptManager.cpp" />
     <ClCompile Include="..\..\src\Engine\State.cpp" />
     <ClCompile Include="..\..\interface\vapor_wrap.cxx">
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='DLL Debug|Win32'">4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4996; 4127;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">4996; 4127;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\Page.cpp" />
     <ClCompile Include="..\..\src\Engine\PageManager.cpp" />
@@ -232,7 +237,6 @@
     <ClCompile Include="..\..\src\Scene\Water.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\inc\vapor\PCH.h" />
     <ClInclude Include="..\..\inc\vapor\render\Device.h" />
     <ClInclude Include="..\..\inc\vapor\render\GL.h" />
     <ClInclude Include="..\..\inc\vapor\render\Material.h" />
@@ -300,6 +304,7 @@
     <ClInclude Include="..\..\inc\vapor\audio\Device.h" />
     <ClInclude Include="..\..\inc\vapor\script\ScriptManager.h" />
     <ClInclude Include="..\..\inc\vapor\script\State.h" />
+    <ClInclude Include="..\..\inc\vapor\Subsystem.h" />
     <ClInclude Include="..\..\inc\vapor\terrain\Brush.h" />
     <ClInclude Include="..\..\inc\vapor\terrain\Cell.h" />
     <ClInclude Include="..\..\inc\vapor\terrain\Terrain.h" />
@@ -323,7 +328,6 @@
     <ClInclude Include="..\..\inc\vapor\controllers\ThirdPersonController.h" />
     <ClInclude Include="..\..\inc\vapor\physics\CharacterController.h" />
     <ClInclude Include="..\..\inc\vapor\controllers\ScriptController.h" />
-    <ClInclude Include="..\..\inc\vapor\CompileOptions.h" />
     <ClInclude Include="..\..\inc\vapor\Headers.h" />
   </ItemGroup>
   <ItemGroup>

@@ -12,9 +12,9 @@
 
 #include "Serialization.h"
 #include "Stream.h"
+#include <stack>
 
-#include <json/json.h>
-namespace Json { class Value; }
+struct json_t;
 
 namespace vapor {
 
@@ -47,7 +47,7 @@ public:
 	// Processes an enum type.
 	virtual void processEnumBegin( const Enum& enuhm );
 	virtual void processEnumEnd( const Enum& enuhm );
-	virtual void processEnumElement(int value, const std::string& name);
+	virtual void processEnumElement(int value, const String& name);
 
 	// Processes an array type.
 	virtual void processArrayBegin(const Type& type, int size);
@@ -57,14 +57,14 @@ public:
 
 	// Processes a primitive type.
 	virtual void processBool( const Primitive&, bool );
-	virtual void processInt( const Primitive&, int );
-	virtual void processUInt( const Primitive&, uint );
+	virtual void processInt( const Primitive&, int32 );
+	virtual void processUInt( const Primitive&, uint32 );
 	virtual void processFloat( const Primitive&, float );
-	virtual void processString( const Primitive&, const std::string& );
+	virtual void processString( const Primitive&, const String& );
 	virtual void processVector3( const Primitive&, const Vector3& );
 	virtual void processQuaternion( const Primitive&, const Quaternion& );
 	virtual void processColor( const Primitive&, const Color& );
-	virtual void processBitfield( const Primitive&, const uint& );
+	virtual void processBitfield( const Primitive&, const uint32& );
 
 protected:
 
@@ -72,10 +72,10 @@ protected:
 	Stream& stream;
 
 	// Root JSON value.
-	Json::Value rootValue;
+	json_t* rootValue;
 
 	// Stack of JSON values.
-	std::stack<Json::Value*> values;
+	std::stack<json_t*> values;
 };
 
 //-----------------------------------//
@@ -93,13 +93,13 @@ public:
 
 protected:
 
-	Object* processObject(const Json::Value& value);
-	void processFields(Object* object, const Json::Value& value);
-	void processField(Object* object, Field& field, const Json::Value& value);
-	void processEnum(Object* object, Field& field, const Json::Value& value);
-	void processPrimitive(void* address, Field& field, const Json::Value& value);	
-	void processArray(Object* object, Field& field, const Json::Value& value);	
-	void processArrayElement(void* element, Field& field, const Json::Value& value);
+	Object* processObject(json_t* value);
+	void processFields(Object* object, json_t* value);
+	void processField(Object* object, Field& field, json_t* value);
+	void processEnum(Object* object, Field& field, json_t* value);
+	void processPrimitive(void* address, Field& field, json_t* value);	
+	void processArray(Object* object, Field& field, json_t* value);	
+	void processArrayElement(void* element, Field& field, json_t* value);
 	byte* processArrayPointer(Object* address, Field& field, int size);
 
 	Stream& stream;

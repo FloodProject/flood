@@ -6,8 +6,8 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "vapor/input/Mouse.h"
+#include "Engine/API.h"
+#include "input/Mouse.h"
 
 namespace vapor {
 
@@ -94,7 +94,7 @@ bool Mouse::isButtonPressed( MouseButton::Enum button ) const
 			return mouseInfo.aux2Button;
 	}
 
-	Log::warn( "Could not map enum: Invalid mouse button" );
+	LogWarn( "Could not map enum: Invalid mouse button" );
 	return MouseButton::Left;
 }
 	

@@ -28,7 +28,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-const std::string Actions::getString( Actions::Enum action )
+const String Actions::getString( Actions::Enum action )
 {
 	switch(action)
 	{

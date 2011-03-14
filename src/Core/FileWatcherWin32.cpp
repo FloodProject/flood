@@ -198,7 +198,7 @@ FileWatcherWin32::~FileWatcherWin32()
 
 //-----------------------------------//
 
-WatchID FileWatcherWin32::addWatch(const std::string& directory)
+WatchID FileWatcherWin32::addWatch(const String& directory)
 {
 	WatchID watchid = ++mLastWatchID;
 
@@ -208,7 +208,7 @@ WatchID FileWatcherWin32::addWatch(const std::string& directory)
 	
 	if(!watch)
 	{
-		Log::warn( "Could not watch directory %s", directory.c_str() );
+		LogWarn( "Could not watch directory %s", directory.c_str() );
 		return 0;
 	}
 
@@ -225,7 +225,7 @@ WatchID FileWatcherWin32::addWatch(const std::string& directory)
 
 //-----------------------------------//
 
-void FileWatcherWin32::removeWatch(const std::string& directory)
+void FileWatcherWin32::removeWatch(const String& directory)
 {
 	WatchMap::iterator iter = mWatches.begin();
 	WatchMap::iterator end = mWatches.end();
@@ -263,7 +263,7 @@ void FileWatcherWin32::update()
 
 //-----------------------------------//
 
-void FileWatcherWin32::handleAction(WatchStruct* watch, const std::wstring& filename, ulong action)
+void FileWatcherWin32::handleAction(WatchStruct* watch, const std::wstring& filename, uint32 action)
 {
 	Actions::Enum fwAction;
 
@@ -289,7 +289,7 @@ void FileWatcherWin32::handleAction(WatchStruct* watch, const std::wstring& file
 
 	// Convert wide string to regular string.
 	// TODO: handle Unicode properly.
-	const std::string& file = String::fromWideString(filename);
+	const String& file = StringFromWideString(filename);
 
 	FileWatchEvent we( fwAction, watch->mWatchid, watch->mDirName, file);
 	onFileWatchEvent( we );

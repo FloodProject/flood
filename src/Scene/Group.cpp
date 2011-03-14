@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 #include "Scene/Group.h"
 #include <algorithm>
 
@@ -47,7 +47,7 @@ void Group::add( const EntityPtr& entity )
 
 EntityPtr Group::findEntity( const std::string& name ) const
 {
-	for( uint i = 0; i < entities.size(); i++ )
+	for( size_t i = 0; i < entities.size(); i++ )
 	{
 		const EntityPtr& entity = entities[i];
 		
@@ -80,7 +80,7 @@ bool Group::remove( const EntityPtr& entity )
 
 void Group::update( float delta )
 {
-	for( uint i = 0; i < entities.size(); i++ )
+	for( size_t i = 0; i < entities.size(); i++ )
 	{
 		const EntityPtr& entity = entities[i];
 		entity->update( delta );

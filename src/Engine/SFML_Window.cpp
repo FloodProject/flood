@@ -6,8 +6,8 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "render/SFML_Window.h"
+#include "Engine/API.h"
+#include "Render/SFML_Window.h"
 
 #ifdef VAPOR_WINDOWING_SFML
 
@@ -22,7 +22,7 @@ SFML_Window::SFML_Window(const WindowSettings& settings)
 {
 	if( !open() )
 	{
-		Log::error( "Could not create SFML render window" );
+		LogError( "Could not create SFML render window" );
 	}
 }
 
@@ -54,7 +54,7 @@ bool SFML_Window::open()
 		
 		if( !videoMode.IsValid() )
 		{
-			Log::error( "Video mode not supportted." );
+			LogError( "Video mode not supportted." );
 			return false;
 		}
 		
@@ -179,7 +179,7 @@ void SFML_Window::setTitle(const std::string& title)
 	settings.title = title;
 	createWindow();
 	
-	Log::info( "Changing window title to '%s'", title.c_str() );
+	LogInfo( "Changing window title to '%s'", title.c_str() );
 }
 
 //-----------------------------------//
@@ -206,12 +206,12 @@ void SFML_Window::setCursorPosition( int x, int y )
 
 //-----------------------------------//
 
-Vector2i SFML_Window::getCursorPosition() const
+Vector2 SFML_Window::getCursorPosition() const
 {
 	int x = window.GetInput().GetMouseX();
 	int y = window.GetInput().GetMouseY();
 
-	return Vector2i(x, y);
+	return Vector2(x, y);
 }
 
 //-----------------------------------//

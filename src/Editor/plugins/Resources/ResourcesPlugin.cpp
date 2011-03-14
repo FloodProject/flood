@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "ResourcesPlugin.h"
 #include "ResourcesPane.h"
 #include "ResourcesBrowser.h"
@@ -18,8 +18,13 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-ResourcesPlugin::ResourcesPlugin( EditorFrame* frame )
-	: Plugin(frame)
+REFLECT_CHILD_CLASS(ResourcesPlugin, Plugin)
+REFLECT_END()
+
+//-----------------------------------//
+
+ResourcesPlugin::ResourcesPlugin()
+	: Plugin()
 	, resourcesPage(nullptr)
 	, resourcesBrowser(nullptr)
 { }
@@ -79,8 +84,8 @@ void ResourcesPlugin::onPluginEnable()
 	resourcesBrowser = new ResourcesBrowser(editor, editor);
 #endif
 
-	ResourceProcessor::referenceProcessors();
-	ResourceProcessor::registerProcessors();
+	//Pipeline::ReferenceProcessors();
+	Pipeline::Init();
 }
 
 //-----------------------------------//
@@ -95,6 +100,8 @@ void ResourcesPlugin::onPluginDisable()
 
 	delete resourcesPage;
 	resourcesPage = nullptr;
+
+	Pipeline::Cleanup();
 }
 
 //-----------------------------------//

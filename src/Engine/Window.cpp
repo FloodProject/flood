@@ -6,15 +6,15 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "render/Window.h"
+#include "Engine/API.h"
+#include "Render/Window.h"
 #include "input/Keyboard.h"
 #include "Engine.h"
 
 #if defined(VAPOR_WINDOWING_WIN32)
-	#include <render/Win32_Window.h>
+	#include <Render/Win32_Window.h>
 #elif defined(VAPOR_WINDOWING_SFML)
-	#include <render/SFML_Window.h>
+	#include <Render/SFML_Window.h>
 #else
 	//#error "OpenGL renderer needs a windowing implementation"
 #endif
@@ -23,7 +23,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-WindowSettings::WindowSettings( const ushort width, const ushort height, 
+WindowSettings::WindowSettings( const uint16 width, const uint16 height, 
 	const std::string& title, const bool fullscreen )
 	: Settings( width, height )
 	, title(title)
@@ -40,14 +40,14 @@ WindowSettings::WindowSettings( const ushort width, const ushort height,
 Window::Window(const WindowSettings& settings)
 	: settings(settings)
 {
-	Log::info( "Creating %swindow (size: %dx%d, title: '%s', bits-per-pixel: %d)",
+	LogInfo( "Creating %swindow (size: %dx%d, title: '%s', bits-per-pixel: %d)",
 		settings.fullScreen ? "fullscreen " : "",
 		settings.width, settings.height,
 		settings.title.c_str(), settings.bitsPerPixel );
 
 	if( settings.handle )
 	{
-		Log::info( "External window handle found" );
+		LogInfo( "External window handle found" );
 	}
 }
 
@@ -55,7 +55,7 @@ Window::Window(const WindowSettings& settings)
 
 void Window::handleWindowResize()
 {
-	Log::info("Resizing window to size %dx%d", settings.width, settings.height );
+	LogInfo("Resizing window to size %dx%d", settings.width, settings.height );
 	onTargetResize( getSettings() );
 }
 
@@ -87,7 +87,7 @@ void Window::handleWindowFocus( bool focusLost )
 
 //-----------------------------------//
 
-void Window::setCursorPosition( const Vector2i& pos )
+void Window::setCursorPosition( const Vector2& pos )
 {
 	setCursorPosition( pos.x, pos.y );
 }

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "math/Vector3.h"
+#include "Math/Vector.h"
 
 namespace vapor {
 

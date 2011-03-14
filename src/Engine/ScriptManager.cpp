@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 
 #ifdef VAPOR_SCRIPTING_LUA
 
@@ -33,7 +33,7 @@ ScriptManager::ScriptManager()
 	// Check for proper initialization of the Lua state.
 	if( !state->getLuaState() )
 	{
-		Log::error( "Error initializing %s", LUA_RELEASE );
+		LogError( "Error initializing %s", LUA_RELEASE );
 		return;
 	}
 
@@ -41,7 +41,7 @@ ScriptManager::ScriptManager()
 	luaL_openlibs( state->getLuaState() );
 	luaopen_vapor( state->getLuaState() );
 
-	Log::info( "Initialized %s", LUA_RELEASE );
+	LogInfo( "Initialized %s", LUA_RELEASE );
 }
 
 //-----------------------------------//
@@ -51,7 +51,7 @@ ScriptManager::~ScriptManager()
 	ResourceManager* rm = GetEngine()->getResourceManager();
 	rm->onResourceReloaded.Disconnect( this, &ScriptManager::onReload );
 
-	Log::info("Cleaning up the Lua state");
+	LogInfo("Cleaning up the Lua state");
 	delete state;
 }
 
@@ -101,7 +101,7 @@ void ScriptManager::onReload( const ResourceEvent& evt )
 	if( evt.resource->getResourceGroup() != ResourceGroup::Scripts )
 		return;
 	
-	Log::debug( "Reloading script '%s'", evt.resource->getPath().c_str() );
+	LogDebug( "Reloading script '%s'", evt.resource->getPath().c_str() );
 	
 	const ScriptPtr& script = RefCast<Script>( evt.resource );
 

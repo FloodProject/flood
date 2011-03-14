@@ -12,34 +12,40 @@
 
 #include "Core/File.h"
 #include "Core/PhysfsStream.h"
+#include "Core/Memory.h"
+
+#include "Log.h"
 #include "Utilities.h"
+
 
 namespace vapor {
 
 //-----------------------------------//
 
-void ResourceTask::run()
+void ResourceTaskRun(Task* task)
 {
-	const std::string& path = resource->getPath();
+	ResourceLoadOptions* options = (ResourceLoadOptions*) task->Userdata;
+	Resource* resource = options->resource;
+	const Path& path = resource->getPath();
 	
-	File file(path);
+	File file(path, StreamMode::Read);
 	PhysfsStream stream(file);
 
 	ResourceManager* res = GetResourceManager();
-	ResourceLoader* loader = res->findLoader( file.getExtension() );
+	ResourceLoader* loader = res->findLoader( PathGetFileExtension(path) );
 
 	bool decoded = loader->decode(stream, resource);
 		
 	if( !decoded )
 	{
 		resource->setStatus( ResourceStatus::Error );
-		Log::warn("Error decoding resource '%s'", path.c_str());
+		LogWarn("Error decoding resource '%s'", path.c_str());
 		return;
 	}
 
 	resource->setStatus( ResourceStatus::Loaded );
 
-	if( options.sendLoadEvent )
+	if( options->sendLoadEvent )
 	{
 		ResourceEvent event;
 		event.resource = resource;
@@ -47,10 +53,12 @@ void ResourceTask::run()
 		res->resourceTaskEvents.push(event);
 	}
 
-	res->numResourcesQueuedLoad.dec();
-	THREAD( res->resourceFinishLoad.notify_one(); )
+	AtomicDecrement(&res->numResourcesQueuedLoad);
+	ConditionWakeOne(&res->resourceFinishLoad);
 
-	Log::info("Loaded resource '%s'", path.c_str());
+	LogInfo("Loaded resource '%s'", path.c_str());
+
+	Deallocate( AllocatorGetDefault(), options );
 }
 
 //-----------------------------------//

@@ -6,8 +6,8 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "vapor/scene/Grid.h"
+#include "Engine/API.h"
+#include "Scene/Grid.h"
 
 namespace vapor {
 

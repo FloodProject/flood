@@ -10,8 +10,8 @@
 
 #ifdef VAPOR_WINDOWING_SFML
 
-#include "vapor/render/Window.h"
-#include "vapor/input/SFML_InputManager.h"
+#include "Render/Window.h"
+#include "input/SFML_InputManager.h"
 #include <SFML/Window.hpp>
 
 namespace vapor {
@@ -48,7 +48,7 @@ public:
 	virtual bool isCursorVisible() const;
 
 	// Gets the cursor position on screen.
-	virtual Vector2i getCursorPosition() const;
+	virtual Vector2 getCursorPosition() const;
 
 	// Sets the cursor position on screen.
 	virtual void setCursorPosition( int x, int y );

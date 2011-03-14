@@ -18,9 +18,11 @@ class PropertyPage;
 
 class PropertyPlugin : public Plugin
 {
+	REFLECT_DECLARE_CLASS()
+
 public:
 
-	PropertyPlugin( EditorFrame* frame );
+	PropertyPlugin();
 
 	// Gets metadata about this plugin.
 	virtual PluginMetadata getMetadata();

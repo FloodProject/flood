@@ -6,12 +6,12 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "render/DebugGeometry.h"
-#include "render/Renderable.h"
-#include "scene/Geometry.h"
-#include "scene/Entity.h"
-#include "scene/Tags.h"
+#include "Engine/API.h"
+#include "Render/DebugGeometry.h"
+#include "Render/Renderable.h"
+#include "Scene/Geometry.h"
+#include "Scene/Entity.h"
+#include "Scene/Tags.h"
 
 namespace vapor {
 

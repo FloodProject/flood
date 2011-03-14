@@ -9,7 +9,7 @@
 * Acknowledgements:	Based on wxPython FourWaySplitter.py by Andrea Gavana
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "wxFourWaySplitter.h"
 
 #include "wx/renderer.h"

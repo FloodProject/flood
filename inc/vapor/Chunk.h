@@ -34,8 +34,8 @@ struct CORE_API Chunk
 	byte* data;
 
 	// Makes an identifier.
-	static uint makeId(const std::string& id);
-	static uint makeHashId(const std::string& id);
+	static uint makeId(const String& id);
+	static uint makeHashId(const String& id);
 };
 
 //-----------------------------------//

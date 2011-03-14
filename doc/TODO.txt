@@ -62,6 +62,8 @@ Options:
 ENGINE:
 -------
 
+http://www.talula.demon.co.uk/hlsl_fragments/hlsl_fragments.html
+
 Merge mouse events
 Fix mesh collide loop overflows
 Serialization of group nodes
@@ -132,8 +134,6 @@ Window:
 
 Platform:
 
-	We need a crash handler!!! :)
-	Cross-platform Clipboard access
 	Multithreaded timing and timing leaps (check SFML tracker / OGRE code for more info.)
 		
 Rendering:
@@ -154,38 +154,10 @@ Engine Modularization/Simplification Work
 	Implement ResourceLoaders as (static) plugins	
 	Rename Timer into Stopwatch
 
-http://www.introgamedev.com/general_memory.html
-http://xania.org/200512/crt-heap-fragmentation-in-windows
-http://blog.pavlov.net/2007/11/11/windows-low-fragmentation-heap/
-http://msdn.microsoft.com/en-us/library/aa366750%28VS.85%29.aspx
-http://www.gamasutra.com/view/feature/2971/play_by_play_effective_memory_.php
-
 
 Check skinning limit in shader
 
-GLint location = glGetUniformLocation(mProgramID, name);
-if (location == -1)
-   return NULL;
 
-// now find it in the list of uniforms to get type and size
-GLint numUniforms = 0;
-glGetProgramiv( mProgramID, GL_ACTIVE_UNIFORMS, &numUniforms );
-
-GLint uniformMaxLength = 0;
-glGetProgramiv( mProgramID, GL_ACTIVE_UNIFORM_MAX_LENGTH,  &uniformMaxLength );
-
-GLint count = -1;
-GLenum type = 0;
-GLchar* uniformName = new GLchar[uniformMaxLength];
-
-for( GLint i = 0; i < numUniforms; ++i )
-{
-   GLsizei length;
-   glGetActiveUniform(    mProgramID, i, uniformMaxLength, &length,  &count, &type, uniformName);                     if ( strcmp(uniformName, name) == 0 )
-	   break;
-}
-
-delete [] uniformName;
 
 
 

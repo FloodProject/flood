@@ -33,11 +33,6 @@ public:
 	// Compiles the shader.
 	virtual bool compile();
 
-	// Gets the OpenGL shader id.
-	GETTER(Id, uint, id)
-
-private:
-
 	// Uploads the shader to OpenGL.
 	bool upload();
 
@@ -45,10 +40,10 @@ private:
 	void getCompileLog();
 
 	// Returns the OpenGL shader type.
-	uint getGLShaderType( ShaderType::Enum type );
+	uint32 getGLShaderType( ShaderType::Enum type );
 
 	// Internal OpenGL shader id.
-	uint id;
+	uint32 id;
 
 	// Was this shader already created?
 	bool created;

@@ -9,19 +9,26 @@
 #include "Core/API.h"
 #include "Utilities.h"
 
-#include <dirent.h>
 #include <sstream>
 #include <algorithm>
 #include <cassert>
 
 #ifdef VAPOR_PLATFORM_WINDOWS
+
+	#define WIN32_LEAN_AND_MEAN
+	#define NOMINMAX
+	#include <Windows.h>
+
     #include <direct.h>
     #define my_getcwd _getcwd
 	#define my_stricmp _stricmp
+
 #else
-    #include <unistd.h>
+
+	#include <unistd.h>
     #define my_getcwd getcwd
 	#define my_stricmp stricmp
+
 #endif
 
 namespace vapor {
@@ -56,108 +63,7 @@ long System::swapEndian(long i)
 
 //-----------------------------------//
 
-void System::sleep( float time )
-{
-#ifdef VAPOR_PLATFORM_WINDOWS
-	::Sleep( static_cast<DWORD>(time) );
-#else
-	timespec param;
-	param.tv_nsec = time*1000000000.0;
-	nanosleep(&param, NULL);
-#endif
-}
-
-//-----------------------------------//
-
-void System::messageDialog(const std::string& msg)
-{
-#ifdef VAPOR_PLATFORM_WINDOWS
-	UINT style = MB_OK;
-
-	//switch(level)
-	//{
-	//case LogLevel::Info:	
-	//	style |= MB_ICONINFORMATION; 
-	//	break;
-	//case LogLevel::Warning:	
-	//	style |= MB_ICONWARNING; 
-	//	break;
-	//case LogLevel::Error:	
-	//	style |= MB_ICONERROR; 
-	//	break;
-	//}
-
-	MessageBoxA(nullptr, msg.c_str(), nullptr, style);
-#else
-
-#endif
-}
-
-//-----------------------------------//
-
-static void enumerateFilesHelper(std::vector<std::string>& files, std::string path, bool dirs)
-{
-	DIR *dir;
-	struct dirent *ent;
-
-	// Open directory stream.
-	dir = opendir( path.c_str() );
-    
-	if( !dir ) return;
-
-	// Get all the files and directories within directory.
-	while((ent = readdir(dir)) != nullptr)
-	{
-		std::string name(ent->d_name);
-		std::string newPath = path + "/" + name;
-
-		switch(ent->d_type) {
-		case DT_REG:
-		{
-			if(!dirs)
-				files.push_back(newPath);
-			break;
-		}
-		case DT_DIR:
-		{
-			if(!name.empty() && name[0] == '.')
-				continue;
-
-			if(dirs)
-				files.push_back(newPath);
-
-			enumerateFilesHelper(files, newPath, dirs);
-
-			break;
-		} }
-	}
-
-	closedir(dir);
-}
-
-//-----------------------------------//
-
-std::vector<std::string> System::enumerateFiles(const std::string& path)
-{
-	std::vector<std::string> files;
-	enumerateFilesHelper(files, path, false);
-
-	return files;
-}
-
-//-----------------------------------//
-
-std::vector<std::string> System::enumerateDirs(const std::string& path)
-{
-	std::vector<std::string> dirs;
-	enumerateFilesHelper(dirs, path, true);
-
-	return dirs;
-}
-
-//-----------------------------------//
-
-int String::compareInsensitive(const std::string& s1, const std::string& s2)
+int StringCompareInsensitive(const String& s1, const String& s2)
 {
 #ifdef VAPOR_PLATFORM_WINDOWS
 	return my_stricmp(s1.c_str(), s2.c_str());
@@ -168,19 +74,19 @@ int String::compareInsensitive(const std::string& s1, const std::string& s2)
 
 //-----------------------------------//
 
-std::string String::fromFloat( float n, byte precision )
+String StringFromFloat( float n, byte precision )
 {
-	return String::format("%#.*f", precision, n );
+	return StringFormat("%#.*f", precision, n );
 }
 
 //-----------------------------------//
 
 #ifdef VAPOR_PLATFORM_WINDOWS
 
-std::string String::fromWideString(const std::wstring &wstr)
+String StringFromWideString(const std::wstring &wstr)
 {
     // Convert a Unicode string to an ASCII string
-    std::string strTo;
+    String strTo;
     char *szTo = new char[wstr.length() + 1];
     szTo[wstr.size()] = '\0';
     WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), -1, szTo,
@@ -196,7 +102,7 @@ std::string String::fromWideString(const std::wstring &wstr)
 
 #ifdef VAPOR_PLATFORM_WINDOWS
 
-std::wstring String::toWideString(const std::string &str)
+std::wstring StringToWideString(const String &str)
 {
     // Convert an ASCII string to a Unicode String
     std::wstring wstrTo;
@@ -213,21 +119,21 @@ std::wstring String::toWideString(const std::string &str)
 
 //-----------------------------------//
 
-std::string String::format(const char* str, ...)
+String StringFormat(const char* str, ...)
 {
 	va_list args;
 	va_start(args, str);
 
-	std::string fmt = format(str, args);
+	String formatted = StringFormatArgs(str, args);
 
 	va_end(args);
 
-	return fmt;
+	return formatted;
 }
 
 //-----------------------------------//
 
-std::string String::format(const char* str, va_list args)
+String StringFormatArgs(const char* str, va_list args)
 {
 	const int BUF_MAX_SIZE = 16384;
 	char buf[BUF_MAX_SIZE];
@@ -241,38 +147,25 @@ std::string String::format(const char* str, va_list args)
 	assert( n >= 0 ); // check for output error
 	assert( n < BUF_MAX_SIZE ); // check for truncation
 
-	return std::string(buf);
+	return String(buf);
 }
 
 //-----------------------------------//
 
-std::vector<std::string>& String::split(const std::string& s, char delim, 
-								std::vector<std::string>& elems)
+void StringSplit(const String& s, char delim, std::vector<String>& elems)
 {
     std::stringstream ss(s);
-    std::string item;
+    String item;
     
 	while(std::getline(ss, item, delim)) 
-	{
         elems.push_back(item);
-    }
-    
-	return elems;
 }
 
 //-----------------------------------//
 
-std::vector<std::string> String::split(const std::string &s, char delim)
+String StringToLowerCase(const String& str)
 {
-    std::vector<std::string> elems;
-	return String::split(s, delim, elems);
-}
-
-//-----------------------------------//
-
-std::string String::toLowerCase(const std::string& str)
-{
-	std::string data(str);
+	String data(str);
 	std::transform(data.begin(), data.end(), data.begin(), ::tolower);
 	
 	return data;
@@ -280,9 +173,9 @@ std::string String::toLowerCase(const std::string& str)
 
 //-----------------------------------//
 
-std::string String::toUpperCase(const std::string& str)
+String StringToUpperCase(const String& str)
 {
-	std::string data(str);
+	String data(str);
 	std::transform(data.begin(), data.end(), data.begin(), ::toupper);
 	
 	return data;
@@ -290,15 +183,15 @@ std::string String::toUpperCase(const std::string& str)
 
 //-----------------------------------//
 
-void String::replace(std::string& source, const std::string& from, const std::string& to)
+void StringReplace(String& source, const String& from, const String& to)
 {
-	std::string::size_type pos = 0;
+	String::size_type pos = 0;
 
 	while(true)
 	{
 		pos = source.find(from, pos);
 		
-		if( pos == std::string::npos )
+		if( pos == String::npos )
 			return;
 		
 		source.replace( pos++, from.size(), to );
@@ -307,13 +200,14 @@ void String::replace(std::string& source, const std::string& from, const std::st
 
 //-----------------------------------//
 
-Path PathUtils::getBase(const Path& path)
+Path PathGetFileBase(const Path& path)
 {
-	// Check if it has a file extension.
-	size_t ch = path.find_last_of(".");
+	Path filePath = PathGetFile(path);
 
-	if( ch == std::string::npos ) 
-		return "";
+	// Check if it has a file extension.
+	size_t ch = filePath.find_last_of(".");
+
+	if( ch == String::npos ) return "";
 
 	// Return the file extension.
 	return path.substr( 0, ch );
@@ -321,12 +215,12 @@ Path PathUtils::getBase(const Path& path)
 
 //-----------------------------------//
 
-Path PathUtils::getExtension(const Path& path)
+Path PathGetFileExtension(const Path& path)
 {
 	// Check if it has a file extension.
 	size_t ch = path.find_last_of(".");
 
-	if( ch == std::string::npos ) 
+	if( ch == String::npos ) 
 		return "";
 
 	// Return the file extension.
@@ -335,26 +229,12 @@ Path PathUtils::getExtension(const Path& path)
 
 //-----------------------------------//
 
-Path PathUtils::getFile(const Path& path)
+Path PathGetBase(const Path& path)
 {
 	// Check if it has a file extension.
 	size_t ch = path.find_last_of("/");
 
-	if( ch == std::string::npos ) 
-		return path;
-
-	// Return the file extension.
-	return path.substr( ++ch );
-}
-
-//-----------------------------------//
-
-Path PathUtils::getBasePath(const Path& path)
-{
-	// Check if it has a file extension.
-	size_t ch = path.find_last_of("/");
-
-	if( ch == std::string::npos ) 
+	if( ch == String::npos ) 
 		return path;
 
 	// Return the file extension.
@@ -363,30 +243,44 @@ Path PathUtils::getBasePath(const Path& path)
 
 //-----------------------------------//
 
-Path PathUtils::normalize(const Path& path)
+Path PathGetFile(const Path& path)
+{
+	// Check if it has a file extension.
+	size_t ch = path.find_last_of("/");
+
+	if( ch == String::npos ) 
+		return path;
+
+	// Return the file extension.
+	return path.substr( ++ch );
+}
+
+//-----------------------------------//
+
+Path PathNormalize(const Path& path)
 {
 	Path norm = path;
 
-	String::replace(norm, "\\", "/");
-	String::replace(norm, "//", "/");
-	String::replace(norm, "../", "");
-	String::replace(norm, "./", "");
+	StringReplace(norm, "\\", "/");
+	StringReplace(norm, "//", "/");
+	StringReplace(norm, "../", "");
+	StringReplace(norm, "./", "");
 
 	return norm;
 }
 
 //-----------------------------------//
 
-Path PathUtils::getCurrentDir()
+Path PathGetCurrentDir()
 {
 	char buf[256];
 	my_getcwd(buf, VAPOR_ARRAY_SIZE(buf));
-	return std::string(buf);
+	return String(buf);
 }
 
 //-----------------------------------//
 
-Path PathUtils::getPathSeparator()
+Path PathGetSeparator()
 {
 #ifdef VAPOR_PLATFORM_WINDOWS
 	return "\\";

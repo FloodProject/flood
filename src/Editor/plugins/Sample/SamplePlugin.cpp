@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "SamplePlugin.h"
 #include "Editor.h"
 
@@ -14,8 +14,12 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-SamplePlugin::SamplePlugin( EditorFrame* frame )
-	: Plugin(frame)
+REFLECT_ABSTRACT_CLASS(SamplePlugin)
+REFLECT_END()
+
+//-----------------------------------//
+
+SamplePlugin::SamplePlugin()
 { }
 
 //-----------------------------------//
@@ -38,7 +42,7 @@ void SamplePlugin::onPluginEnable()
 {
 	PluginMetadata metadata = getMetadata();
 
-	Log::debug( "Plugin '%s': Hello", metadata.name.c_str() );
+	LogDebug( "Plugin '%s': Hello", metadata.name.c_str() );
 }
 
 //-----------------------------------//
@@ -47,7 +51,7 @@ void SamplePlugin::onPluginDisable()
 {
 	PluginMetadata metadata = getMetadata();
 
-	Log::debug( "Plugin '%s': Bye", metadata.name.c_str() );
+	LogDebug( "Plugin '%s': Bye", metadata.name.c_str() );
 }
 
 //-----------------------------------//

@@ -10,6 +10,8 @@
 
 #include "Stream.h"
 
+#ifdef VAPOR_NETWORKING_CURL
+
 typedef void CURL;
 
 namespace vapor {
@@ -26,7 +28,7 @@ class CORE_API WebStream : public Stream
 
 public:
 
-	WebStream(const std::string& url, StreamMode::Enum mode = StreamMode::Read);
+	WebStream(const String& url, StreamMode::Enum mode = StreamMode::Read);
 	//virtual ~WebStream();
 
 	// Opens the HTTP request.
@@ -55,3 +57,5 @@ protected:
 //-----------------------------------//
 
 } // end namespace
+
+#endif

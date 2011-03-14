@@ -52,7 +52,7 @@ Frustum::Frustum( const Frustum& rhs )
 
 //-----------------------------------//
 
-void Frustum::updateProjection( const Vector2i& size )
+void Frustum::updateProjection( const Vector2& size )
 {
 	if( projection == Projection::Perspective )
 	{

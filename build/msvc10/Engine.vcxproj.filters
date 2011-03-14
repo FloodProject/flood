@@ -211,6 +211,9 @@
     <Filter Include="Controllers">
       <UniqueIdentifier>{bc1a1ddb-1bf0-4377-8f7e-0f74420d2a85}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Subsystem">
+      <UniqueIdentifier>{e55c350d-3789-4808-996c-837604d5ab65}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Engine\PCH.cpp">
@@ -468,11 +471,11 @@
     <ClCompile Include="..\..\src\Controllers\ScriptController.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Core\Subsystem.cpp">
+      <Filter>Subsystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\inc\vapor\PCH.h">
-      <Filter>PCH</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\vapor\render\Device.h">
       <Filter>Render</Filter>
     </ClInclude>
@@ -719,7 +722,6 @@
     <ClInclude Include="..\..\inc\vapor\physics\CharacterController.h">
       <Filter>Physics\Character</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\CompileOptions.h" />
     <ClInclude Include="..\..\inc\vapor\Headers.h" />
     <ClInclude Include="..\..\inc\vapor\scene\Entity.h">
       <Filter>Scene</Filter>
@@ -741,6 +743,9 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\controllers\ScriptController.h">
       <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\Subsystem.h">
+      <Filter>Subsystem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

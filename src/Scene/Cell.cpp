@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 #include "Terrain/Cell.h"
 #include "Terrain/Terrain.h"
 #include "Scene/Entity.h"
@@ -67,7 +67,7 @@ void Cell::setHeights( const std::vector<float>& heights )
 
 void Cell::rebuildGeometry()
 {
-	Log::info( "Rebuilding geometry of cell (%hd, %hd)", x, y );
+	LogInfo( "Rebuilding geometry of cell (%hd, %hd)", x, y );
 
 	rebuildVertices();
 	rebuildIndices();
@@ -95,7 +95,7 @@ void Cell::rebuildVertices()
 	float tileSize = float(sizeCell / numTiles);
 	uint numExpectedVertices = (numTiles+1)*(numTiles+1);
 
-	for( uint i = 0; i < numExpectedVertices; i++ )
+	for( size_t i = 0; i < numExpectedVertices; i++ )
 	{
 		uint row = i % (numTiles+1);
 		uint col = i / (numTiles+1);
@@ -122,25 +122,25 @@ void Cell::rebuildVertices()
 void Cell::rebuildIndices()
 {
 	// Index data.
-	std::vector<ushort> indices;
+	std::vector<uint16> indices;
 
 	const int numTiles = settings->NumberTiles;
 	
-	for( short col = 0; col < numTiles; col++ )
+	for( size_t col = 0; col < numTiles; col++ )
 	{
-		for( short row = 0; row < numTiles; row++ )
+		for( size_t row = 0; row < numTiles; row++ )
 		{
 			int i = col * (numTiles + 1) + row;
 
 			// First triangle
-			indices.push_back( ushort(i) );
-			indices.push_back( ushort(i+(numTiles+1)) );
-			indices.push_back( ushort(i+1) );
+			indices.push_back( uint16(i) );
+			indices.push_back( uint16(i+(numTiles+1)) );
+			indices.push_back( uint16(i+1) );
 
 			// Second triangle
-			indices.push_back( ushort(i+1) );
-			indices.push_back( ushort(i+(numTiles+1)) ) ;
-			indices.push_back( ushort(i+(numTiles+2)) );
+			indices.push_back( uint16(i+1) );
+			indices.push_back( uint16(i+(numTiles+1)) ) ;
+			indices.push_back( uint16(i+(numTiles+2)) );
 		}
 	}
 
@@ -177,9 +177,9 @@ void Cell::rebuildFaceNormals()
 
 	faceNormals.clear();
 
-	Log::info( "Rebuilding face normals of cell (%hd, %hd)", x, y );
+	LogInfo( "Rebuilding face normals of cell (%hd, %hd)", x, y );
 
-	for( uint i = 0; i < ind.size(); i += 3 )
+	for( size_t i = 0; i < ind.size(); i += 3 )
 	{
 		Vector3 v1 = vs[ind[i]];
 		Vector3 v2 = vs[ind[i+1]];
@@ -254,12 +254,12 @@ void Cell::rebuildAveragedNormals()
 	// Averaged per-vertex normals.
 	std::vector<Vector3> normals;
 
-	Log::info( "Rebuilding average per-vertex normals of cell (%hd, %hd)", x, y );
+	LogInfo( "Rebuilding average per-vertex normals of cell (%hd, %hd)", x, y );
 
 	std::vector<uint> ns;
 	ns.resize(6);
 
-	for(uint i = 0; i < vs.size(); i++)
+	for(size_t i = 0; i < vs.size(); i++)
 	{
 		byte n = getNeighborFaces(i, ns);
 

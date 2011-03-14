@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "scene/Group.h"
-#include "resources/Image.h"
+#include "Scene/Group.h"
+#include "Resources/Image.h"
 #include "terrain/Cell.h"
 #include "terrain/Brush.h"
 
@@ -96,7 +96,7 @@ public:
 	GETTER(Cells, const std::vector<CellPtr>&, terrainCells)
 
 	// Gets a cell from its world space coords.
-	Vector2i getCoords( const Vector3& point );
+	Vector2 getCoords( const Vector3& point );
 
 	// Converts the heightmap to a vector of heights.
 	void convertHeightmap( const ImagePtr& heightmap, std::vector<float>& heights );

@@ -38,7 +38,7 @@ ResourceDropTarget::ResourceDropTarget(EditorFrame* frame)
 
 wxDragResult ResourceDropTarget::OnData(wxCoord x, wxCoord y, wxDragResult def)
 {
-	Vector2i coords(x, y);
+	Vector2 coords(x, y);
 	frame->setDropCoords(coords);
 
 	return def;

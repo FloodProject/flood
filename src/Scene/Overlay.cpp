@@ -6,10 +6,10 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 #include "gui/Overlay.h"
-#include "scene/Entity.h"
-#include "scene/Transform.h"
+#include "Scene/Entity.h"
+#include "Scene/Transform.h"
 
 namespace vapor {
 
@@ -66,9 +66,9 @@ void Overlay::rebuildGeometry()
 	std::vector<Vector3> pos;
 
 	pos.push_back( Vector3::Zero );
-	pos.push_back( Vector2i(0, size.y) );
+	pos.push_back( Vector2(0, size.y) );
 	pos.push_back( size );
-	pos.push_back( Vector2i(size.x, 0) );
+	pos.push_back( Vector2(size.x, 0) );
 
 	Color color = backgroundColor;
 	color.a = opacity;
@@ -100,9 +100,9 @@ void Overlay::rebuildBorderGeometry()
 	std::vector<Vector3> pos;
 
 	pos.push_back( Vector3::Zero );
-	pos.push_back( Vector2i(0, size.y) );
+	pos.push_back( Vector2(0, size.y) );
 	pos.push_back( size );
-	pos.push_back( Vector2i(size.x, 0) );
+	pos.push_back( Vector2(size.x, 0) );
 
 	const Color& color = borderColor;
 

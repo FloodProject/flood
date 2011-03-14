@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "GizmoOperation.h"
 #include "GizmoPlugin.h"
 

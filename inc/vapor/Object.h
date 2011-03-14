@@ -18,7 +18,7 @@ namespace vapor {
  * Objects are the root class for types using the reflection services.
  */
 
-class CORE_API Object
+class CORE_API VAPOR_PURE Object
 {
 public:
 

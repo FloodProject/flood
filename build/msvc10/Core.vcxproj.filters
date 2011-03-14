@@ -40,9 +40,6 @@
     <Filter Include="Reflection">
       <UniqueIdentifier>{19bf65b6-9a34-43e9-9cdb-26982891fb57}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Platform">
-      <UniqueIdentifier>{efb52232-5b3b-4b1a-a86c-6000c3cf1d38}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Utilities">
       <UniqueIdentifier>{2ec0074e-3373-4dd7-90b4-150b5c9b3b81}</UniqueIdentifier>
     </Filter>
@@ -88,30 +85,6 @@
     <Filter Include="Concurrency">
       <UniqueIdentifier>{86c014cf-6d87-4960-96e7-c53c16829a95}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Concurrency\Atomic">
-      <UniqueIdentifier>{1160a7f4-0102-41bd-b8a8-39113c5c71d6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Concurrency\Threads">
-      <UniqueIdentifier>{30068cce-1667-4243-81ea-714920be889e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Patterns">
-      <UniqueIdentifier>{0d5d15a9-1e90-4a41-bf1f-fa642a7a5878}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Patterns\Singleton">
-      <UniqueIdentifier>{de770f13-350e-48a6-8b90-ad1f52007465}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Patterns\Subsystem">
-      <UniqueIdentifier>{98dd3a0f-13de-4f5f-9f75-4a7eb9bd6621}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Patterns\Pointers">
-      <UniqueIdentifier>{e5eb86c7-4197-4458-b4e6-583690b8a259}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Concurrency\Queue">
-      <UniqueIdentifier>{fc2cf6b3-8890-4e2c-8f80-d1ec4fe2a731}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Concurrency\Tasks">
-      <UniqueIdentifier>{4239ba56-422a-4325-beef-914261d54f18}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Debug">
       <UniqueIdentifier>{6db6eed6-57b4-4ad7-9a8a-0e679e2a3e19}</UniqueIdentifier>
     </Filter>
@@ -153,9 +126,6 @@
     <ClCompile Include="..\..\src\Core\math\Math.cpp">
       <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Core\math\Vector3.cpp">
-      <Filter>Math\Vector</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Core\math\Matrix4x3.cpp">
       <Filter>Math\Matrix</Filter>
     </ClCompile>
@@ -195,15 +165,6 @@
     <ClCompile Include="..\..\src\Core\Utilities.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Core\tasks\Task.cpp">
-      <Filter>Concurrency\Tasks</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\tasks\TaskManager.cpp">
-      <Filter>Concurrency\Tasks</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Server\Downloader.cpp">
-      <Filter>Network</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Core\Core.cpp" />
     <ClCompile Include="..\..\src\Core\Stream.cpp">
       <Filter>Streams</Filter>
@@ -229,15 +190,6 @@
     <ClCompile Include="..\..\src\Core\reflection\Type.cpp">
       <Filter>Reflection\Type</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Core\Delegate.cpp">
-      <Filter>Events</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\Event.cpp">
-      <Filter>Events</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\Atomic.cpp">
-      <Filter>Concurrency\Atomic</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Core\FileStream.cpp">
       <Filter>Streams\File</Filter>
     </ClCompile>
@@ -249,15 +201,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Core\Log.cpp">
       <Filter>Logs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\ReferenceCount.cpp">
-      <Filter>Patterns\Pointers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\Thread.cpp">
-      <Filter>Concurrency\Threads</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\Subsystem.cpp">
-      <Filter>Patterns\Subsystem</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\io\Serialization.cpp">
       <Filter>Serialization</Filter>
@@ -276,9 +219,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Core\DynamicLibrary.cpp">
       <Filter>Libraries</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\ConcurrentQueue.cpp">
-      <Filter>Concurrency\Queue</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\FileSystem.cpp">
       <Filter>Filesystem</Filter>
@@ -301,20 +241,20 @@
     <ClCompile Include="..\..\src\Core\Memory.cpp">
       <Filter>Memory</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Win32\Concurrency-Win32.cpp">
+      <Filter>Concurrency</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Math\Vector.cpp">
+      <Filter>Math\Vector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\ReferenceCount.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\Concurrency.cpp">
+      <Filter>Concurrency</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\inc\vapor\math\Math.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\math\Vector2.h">
-      <Filter>Math\Vector</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\math\Vector3.h">
-      <Filter>Math\Vector</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\math\Vector4.h">
-      <Filter>Math\Vector</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\vapor\math\Matrix4x3.h">
       <Filter>Math\Matrix</Filter>
     </ClInclude>
@@ -351,12 +291,6 @@
     <ClInclude Include="..\..\inc\vapor\math\Hash.h">
       <Filter>Math\Hash</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\Language.h">
-      <Filter>Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\Platform.h">
-      <Filter>Platform</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\vapor\Utilities.h">
       <Filter>Utilities</Filter>
     </ClInclude>
@@ -369,17 +303,8 @@
     <ClInclude Include="..\..\inc\vapor\Profiler.h">
       <Filter>Profiler</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\Task.h">
-      <Filter>Concurrency\Tasks</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\TaskManager.h">
-      <Filter>Concurrency\Tasks</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\vapor\Timer.h">
       <Filter>Timer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\net\Downloader.h">
-      <Filter>Network</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\net\Network.h">
       <Filter>Network</Filter>
@@ -420,26 +345,11 @@
     <ClInclude Include="..\..\inc\vapor\Event.h">
       <Filter>Events</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\Atomic.h">
-      <Filter>Concurrency\Atomic</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\vapor\FileStream.h">
       <Filter>Streams\File</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\WebStream.h">
       <Filter>Streams\Web</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\ReferenceCount.h">
-      <Filter>Patterns\Pointers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\Thread.h">
-      <Filter>Concurrency\Threads</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\Singleton.h">
-      <Filter>Patterns\Singleton</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\Subsystem.h">
-      <Filter>Patterns\Subsystem</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\Registry.h">
       <Filter>Reflection</Filter>
@@ -459,16 +369,12 @@
     <ClInclude Include="..\..\inc\vapor\Object.h">
       <Filter>Reflection</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\ConcurrentQueue.h">
-      <Filter>Concurrency\Queue</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\vapor\StackWalker.h">
       <Filter>Debug</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\core\Helpers.h">
       <Filter>Reflection</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Core\API.h" />
     <ClInclude Include="..\..\inc\vapor\core\File.h">
       <Filter>Filesystem</Filter>
     </ClInclude>
@@ -485,6 +391,25 @@
       <Filter>Filesystem\Watcher</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\Memory.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\Concurrency.h">
+      <Filter>Concurrency</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\API.h" />
+    <ClInclude Include="..\..\inc\vapor\math\Helpers.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\Platform.h" />
+    <ClInclude Include="..\..\inc\Math\Vector.h">
+      <Filter>Math\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\String.h" />
+    <ClInclude Include="..\..\inc\vapor\CompileOptions.h" />
+    <ClInclude Include="..\..\inc\vapor\ConcurrentQueue.h">
+      <Filter>Concurrency</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\ReferenceCount.h">
       <Filter>Memory</Filter>
     </ClInclude>
   </ItemGroup>

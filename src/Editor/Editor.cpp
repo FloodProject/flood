@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "Editor.h"
 #include "Utilities.h"
 #include "EditorIcons.h"
@@ -19,21 +19,6 @@
 #include "Events.h"
 #include "EditorTags.h"
 #include "Core/FileSystem.h"
-
-// Editor plugins
-#include "plugins/Project/ProjectPlugin.h"
-#include "plugins/UndoRedo/UndoPlugin.h"
-#include "plugins/Scene/ScenePlugin.h"
-#include "plugins/Log/LogPlugin.h"
-#include "plugins/Console/ConsolePlugin.h"
-#include "plugins/Resources/ResourcesPlugin.h"
-#include "plugins/Property/PropertyPlugin.h"
-#include "plugins/Selection/SelectionPlugin.h"
-#include "plugins/Gizmos/GizmoPlugin.h"
-#include "plugins/Terrain/TerrainPlugin.h"
-#include "plugins/Camera/CameraPlugin.h"
-#include "plugins/Sample/SamplePlugin.h"
-
 #include <wx/debugrpt.h>
 
 wxIMPLEMENT_WXWIN_MAIN_CONSOLE
@@ -97,7 +82,6 @@ EditorFrame::EditorFrame(const wxString& title)
 
 	createUI();
 	createEngine();
-	createServices();
 	createPlugins();
 	createToolbar();
 	createLastUI();
@@ -112,46 +96,43 @@ EditorFrame::EditorFrame(const wxString& title)
 
 EditorFrame::~EditorFrame()
 {
+	paneCtrl->DetachPane(notebookCtrl);
+	notebookCtrl->Destroy();
+
+	for( size_t i = 0; i < documents.size(); i++ )
+	{
+		Document* document = documents[i];
+		delete document;
+	}
+
+	currentDocument = nullptr;
+
+	eventManager->disconnectPluginListeners();
+
+	delete pluginManager;
+ 	delete eventManager;
+
 	paneCtrl->UnInit();
 	delete paneCtrl;
-
- 	delete eventManager;
-	delete pluginManager;
 
 	delete engine;
 }
 
 //-----------------------------------//
 
-#define PLUGIN(name)								\
-	plugin = new name##Plugin(this);				\
-	pluginManager->registerPlugin( plugin );		\
-	pluginManager->enablePlugin( plugin );			\
-
 void EditorFrame::createPlugins()
 {
-	Plugin* plugin = nullptr;
-
-	PLUGIN(Project);
-	PLUGIN(Undo);
-	PLUGIN(Scene);
-	PLUGIN(Property);
-	PLUGIN(Selection);
-	//PLUGIN(Gizmo);
-	//PLUGIN(Terrain);
-	//PLUGIN(Camera);
-	PLUGIN(Console);
-	PLUGIN(Log);
-	PLUGIN(Resources);
-	PLUGIN(Sample);
+	pluginManager = new PluginManager();
+	//pluginManager->referencePlugins();
 
 	pluginManagerFrame = new PluginManagerFrame(this, pluginManager);
+	eventManager = new Events(this);
+
+	pluginManager->scanPlugins();
 
 	wxBitmap icon = wxMEMORY_BITMAP(cog);
-	
 	wxAuiPaneInfo pane;
 	pane.Caption("Plugins").Right().Dock().Icon(icon).Hide();
-
 	getAUI()->AddPane(pluginManagerFrame, pane);
 }
 
@@ -167,15 +148,7 @@ void EditorFrame::createEngine()
 
 	// Mount the editor default media directories.
 	FileSystem* fs = engine->getFileSystem();
-	fs->mountDefaultLocations();
-}
-
-//-----------------------------------//
-
-void EditorFrame::createServices()
-{
-	pluginManager = new PluginManager(this);
-	eventManager = new Events(this);
+	fs->mountDefaultLocations("Assets");
 }
 
 //-----------------------------------//

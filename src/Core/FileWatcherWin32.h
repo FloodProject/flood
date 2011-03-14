@@ -55,10 +55,10 @@ public:
 
 	/// Add a directory watch
 	/// @exception FileNotFoundException Thrown when the requested directory does not exist
-	WatchID addWatch(const std::string& directory);
+	WatchID addWatch(const String& directory);
 
 	/// Remove a directory watch. This is a brute force lazy search O(nlogn).
-	void removeWatch(const std::string& directory);
+	void removeWatch(const String& directory);
 
 	/// Remove a directory watch. This is a map lookup O(logn).
 	void removeWatch(WatchID watchid);
@@ -67,7 +67,7 @@ public:
 	void update();
 
 	/// Handles the action
-	void handleAction(WatchStruct* watch, const std::wstring& filename, ulong action);
+	void handleAction(WatchStruct* watch, const std::wstring& filename, uint32 action);
 
 private:
 

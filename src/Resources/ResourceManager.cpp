@@ -10,10 +10,12 @@
 #include "Resources/ResourceManager.h"
 #include "Resources/ResourceLoader.h"
 
+#include "Core/Memory.h"
+#include "Core/Concurrency.h"
 #include "Core/FileSystem.h"
 #include "Core/PhysfsStream.h"
 
-#include "TaskManager.h"
+#include "Log.h"
 #include "Utilities.h"
 
 namespace vapor {
@@ -34,11 +36,14 @@ ResourceLoadOptions::ResourceLoadOptions()
 //-----------------------------------//
 
 ResourceManager::ResourceManager()
-	: taskManager(nullptr)
+	: taskPool(nullptr)
 	, numResourcesQueuedLoad(0)
 	, asynchronousLoading(true)
 {
 	resourcesInstance = this;
+	
+	MutexInit(&resourceFinishLoadMutex);
+	ConditionInit(&resourceFinishLoad);
 }
 
 //-----------------------------------//
@@ -89,7 +94,7 @@ ResourceManager::~ResourceManager()
 
 ResourcePtr ResourceManager::getResource(const std::string& path)
 {
-	Path name = PathUtils::getFile(path);
+	Path name = PathGetFile(path);
 
 	if( resources.find(name) == resources.end() )
 		return nullptr;
@@ -123,7 +128,7 @@ ResourcePtr ResourceManager::loadResource(ResourceLoadOptions options)
 	if( !validateResource(options.name) )
 		return nullptr;
 
-	File file(options.name);
+	File file(options.name, StreamMode::Read);
 	resource = prepareResource(file);
 	
 	if( !resource )
@@ -132,7 +137,9 @@ ResourcePtr ResourceManager::loadResource(ResourceLoadOptions options)
 	decodeResource(resource, options);
 
 	// Register the decoded resource in the map.
-	resources[file.getName()] = resource;
+
+	Path base = PathGetFile(file.Path);
+	resources[base] = resource;
 
 	return resource;
 }
@@ -141,7 +148,7 @@ ResourcePtr ResourceManager::loadResource(ResourceLoadOptions options)
 
 void ResourceManager::findResource(ResourceLoadOptions& options)
 {
-	const Path& fileExt = PathUtils::getExtension(options.name);
+	const Path& fileExt = PathGetFileExtension(options.name);
 	Path& path = options.name;
 
 	if( !fileExt.empty() )
@@ -156,9 +163,9 @@ void ResourceManager::findResource(ResourceLoadOptions& options)
 		if( loader->getResourceGroup() != options.group )
 			continue;
 
-		Path newPath = String::format("%s.%s", path.c_str(), ext.c_str());
+		Path newPath = StringFormat("%s.%s", path.c_str(), ext.c_str());
 
-		if( File::exists(newPath) )
+		if( FileExists(newPath) )
 		{
 			path = newPath;
 			break;
@@ -173,23 +180,23 @@ bool ResourceManager::validateResource( const std::string& path )
 	if( path.empty() )
 		return false;
 	
-	if( !File::exists(path) )
+	if( !FileExists(path) )
 	{
-		Log::warn( "Resource '%s' was not found", path.c_str() );
+		LogWarn( "Resource '%s' was not found", path.c_str() );
 		return false;
 	}
-
-	const Path& extension = PathUtils::getExtension(path);
+	
+	const Path& extension = PathGetFileExtension(path);
 	
 	if( extension.empty() )
 	{
-		Log::warn( "Resource '%s' has an invalid extension", path.c_str() );
+		LogWarn( "Resource '%s' has an invalid extension", path.c_str() );
 		return false;
 	}
 
 	if( !findLoader(extension) )
 	{
-		Log::warn("No resource loader found for resource '%s'", path.c_str());
+		LogWarn("No resource loader found for resource '%s'", path.c_str());
 		return false;
 	}
 
@@ -201,11 +208,12 @@ bool ResourceManager::validateResource( const std::string& path )
 ResourcePtr ResourceManager::prepareResource(const File& file)
 {
 	// Get the available resource loader and prepare the resource.
-	ResourceLoader* loader = findLoader(file.getExtension());
+
+	ResourceLoader* loader = findLoader( PathGetFileExtension(file.Path) );
 
 	if( !loader )
 	{
-		Log::warn("No resource loader found for resource '%s'", file.getPath().c_str());
+		LogWarn("No resource loader found for resource '%s'", file.Path.c_str());
 		return nullptr;
 	}
 
@@ -213,7 +221,7 @@ ResourcePtr ResourceManager::prepareResource(const File& file)
 
 	ResourcePtr res( loader->prepare(stream) );
 	res->setStatus( ResourceStatus::Loading );
-	res->setPath( file.getPath() );
+	res->setPath( file.Path );
 
 	// Send callback notifications.
 	ResourceEvent event;
@@ -228,20 +236,24 @@ ResourcePtr ResourceManager::prepareResource(const File& file)
 
 void ResourceManager::decodeResource( ResourcePtr resource, ResourceLoadOptions& options )
 {
-	RefPtr<ResourceTask> task = new ResourceTask();
+	Task* task = TaskCreate( AllocatorGetDefault() );
+	
+	ResourceLoadOptions* taskOptions = Allocate<ResourceLoadOptions>( AllocatorGetDefault() );
+	*taskOptions = options;
+	taskOptions->resource = resource.get();
 
-	task->resource = resource.get();
-	task->options = options;
+	task->Callback.Bind(ResourceTaskRun);
+	task->Userdata = taskOptions;
 
-	numResourcesQueuedLoad.inc();
+	AtomicIncrement(&numResourcesQueuedLoad);;
 
-	if( taskManager && options.asynchronousLoading )
+	if( taskPool && options.asynchronousLoading )
 	{
-		taskManager->addTask( task );
+		TaskPoolAdd(taskPool, task);
 		return;
 	}
 
-	task->run();
+	TaskRun(task);
 	sendPendingEvents();
 }
 
@@ -333,14 +345,14 @@ void ResourceManager::removeResource(const std::string& path)
 
 	resources.erase(it);
 
-	Log::info("Unloaded resource: %s", path.c_str());
+	LogInfo("Unloaded resource: %s", path.c_str());
 }
 
 //-----------------------------------//
 
 void ResourceManager::registerLoader(ResourceLoader* const loader)
 {
-	Log::info( "Registering resource loader '%s'", loader->getName().c_str() );
+	LogInfo( "Registering resource loader '%s'", loader->getName().c_str() );
 
 	const std::vector<std::string>& extensions = loader->getExtensions();
 	
@@ -350,7 +362,7 @@ void ResourceManager::registerLoader(ResourceLoader* const loader)
 
 		if(resourceLoaders.find(extension) != resourceLoaders.end())
 		{
-			Log::debug("Extension '%s' already has a resource loader", extension.c_str());
+			LogDebug("Extension '%s' already has a resource loader", extension.c_str());
 			continue;
 		}
 
@@ -408,12 +420,12 @@ void ResourceManager::handleWatchResource(const FileWatchEvent& evt)
 	{
 		#pragma TODO("Add rename support in live updating")
 
-		Log::debug( "Resource was renamed - handle this" );
+		LogDebug( "Resource was renamed - handle this" );
 		return;
 	}
 
 	// Register the decoded resource in the map.
-	Log::info("Reloading resource '%s'", file.c_str());
+	LogInfo("Reloading resource '%s'", file.c_str());
 
 	ResourceLoadOptions options;
 	options.sendLoadEvent = false;

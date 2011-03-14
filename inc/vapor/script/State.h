@@ -12,7 +12,7 @@
 
 struct lua_State;
 
-#include "vapor/script/Script.h"
+#include "script/Script.h"
 
 namespace vapor {
 

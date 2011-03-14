@@ -18,9 +18,11 @@ class ConsoleTextCtrl;
 
 class ConsolePlugin : public Plugin
 {
+	REFLECT_DECLARE_CLASS()
+
 public:
 
-	ConsolePlugin( EditorFrame* frame );
+	ConsolePlugin();
 
 	// Gets metadata about this plugin.
 	virtual PluginMetadata getMetadata();

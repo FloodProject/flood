@@ -6,11 +6,11 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "scene/Projector.h"
-#include "scene/Transform.h"
-#include "scene/Entity.h"
-#include "render/DebugGeometry.h"
+#include "Engine/API.h"
+#include "Scene/Projector.h"
+#include "Scene/Transform.h"
+#include "Scene/Entity.h"
+#include "Render/DebugGeometry.h"
 
 namespace vapor {
 
@@ -31,7 +31,7 @@ void Projector::update(float)
 {
 	const TransformPtr& transform = getEntity()->getTransform();
 
-	frustum.updateProjection(Vector2i::Zero);
+	frustum.updateProjection(Vector2::Zero);
 	frustum.updateCorners(transform->getAbsoluteTransform());
 
 	updateDebugRenderable();

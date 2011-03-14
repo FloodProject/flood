@@ -6,13 +6,13 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 
 #ifdef VAPOR_PHYSICS_BULLET
 
-#include "vapor/physics/DebugDraw.h"
-#include "vapor/physics/Convert.h"
-#include "vapor/render/Renderable.h"
+#include "physics/DebugDraw.h"
+#include "physics/Convert.h"
+#include "Render/Renderable.h"
 
 namespace vapor {
 
@@ -69,7 +69,7 @@ void BulletDebugDrawer::drawContactPoint(const btVector3 &PointOnB,
 
 void BulletDebugDrawer::reportErrorWarning (const char *warningString)
 {
-	Log::error( warningString );
+	LogError( warningString );
 }
 
 //-----------------------------------//

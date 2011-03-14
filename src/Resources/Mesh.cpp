@@ -10,7 +10,7 @@
 #include "Resources/Mesh.h"
 #include "Resources/Skeleton.h"
 #include "Resources/Animation.h"
-#include "Math/Vector3.h"
+#include "Math/Vector.h"
 #include "Utilities.h"
 
 namespace vapor {
@@ -50,7 +50,7 @@ AnimationPtr Mesh::findAnimation( const std::string& name )
 	{
 		 const AnimationPtr& animation = animations[i];
 
-		if( String::compareInsensitive(animation->getName(), name) == 0 )
+		if( StringCompareInsensitive(animation->getName(), name) == 0 )
 			return animation;
 	}
 
@@ -66,7 +66,7 @@ void Mesh::buildBounds()
 	for( uint i = 0; i < groups.size(); i++ )
 	{
 		MeshGroup& group = groups[i];
-		const std::vector<ushort>& indices = group.indices;
+		const std::vector<uint16>& indices = group.indices;
 		
 		// Update the bounding box to accomodate new geometry.
 		for( uint j = 0; j < indices.size(); j++ )

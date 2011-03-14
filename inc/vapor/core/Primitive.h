@@ -45,7 +45,7 @@ class CORE_API Primitive : public Type
 {
 public:
 
-	Primitive(PrimitiveType::Enum, const std::string& name, int size);
+	Primitive(PrimitiveType::Enum, const String& name, int size);
 
 	// Gets if this type represents a bool.
 	bool isBool() const;

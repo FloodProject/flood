@@ -18,9 +18,11 @@ class UndoManager;
 
 class UndoPlugin : public Plugin
 {
+	REFLECT_DECLARE_CLASS()
+
 public:
 
-	UndoPlugin( EditorFrame* frame );
+	UndoPlugin();
 
 	// Gets metadata about this plugin.
 	virtual PluginMetadata getMetadata();

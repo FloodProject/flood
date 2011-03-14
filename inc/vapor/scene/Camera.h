@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "scene/Component.h"
-#include "math/Frustum.h"
-#include "math/Matrix4x3.h"
+#include "Scene/Component.h"
+#include "Math/Frustum.h"
+#include "Math/Matrix4x3.h"
 
 FWD_DECL_SHARED(Transform)
 FWD_DECL_SHARED(Scene)

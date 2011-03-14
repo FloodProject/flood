@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "ScenePlugin.h"
 #include "ScenePane.h"
 #include "Editor.h"
@@ -18,8 +18,13 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-ScenePlugin::ScenePlugin( EditorFrame* frame )
-	: Plugin(frame)
+REFLECT_CHILD_CLASS(ScenePlugin, Plugin)
+REFLECT_END()
+
+//-----------------------------------//
+
+ScenePlugin::ScenePlugin()
+	: Plugin()
 	, scenePage(nullptr)
 { }
 

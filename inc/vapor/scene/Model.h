@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "scene/Geometry.h"
-#include "resources/Mesh.h"
+#include "Scene/Geometry.h"
+#include "Resources/Mesh.h"
 
 //FWD_DECL_INTRUSIVE(Mesh)
 FWD_DECL_INTRUSIVE(Bone)

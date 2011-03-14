@@ -8,11 +8,13 @@
 
 #include "Core/API.h"
 #include "Core/File.h"
+#include "Core/Memory.h"
 
 #ifdef VAPOR_VFS_PHYSFS
 
 #include "Log.h"
 #include "Utilities.h"
+#include <dirent.h>
 
 #include <physfs.h>
 
@@ -20,127 +22,137 @@ namespace vapor {
 
 //-----------------------------------//
 
-File::File(const std::string& tempPath, StreamMode::Enum mode)
-	: mode(mode)
-	, file(nullptr)
-	, closed(false)
-{
-	path = PathUtils::normalize(tempPath);
-	path = PathUtils::getFile(path);
+File::File()
+	: Handle(nullptr)
+	, IsClosed(false)
+{ }
 
-	if( !open() )
-		return;
+//-----------------------------------//
+
+File::File(const String& path, StreamMode::Enum mode)
+	: Handle(nullptr)
+	, Path(path)
+	, Mode(mode)
+	, IsClosed(false)
+{
+	FileOpen(this);
 }
 
 //-----------------------------------//
 
-File::~File() 
+File* FileCreate(MemoryAllocator* mem, const Path& path, StreamMode::Enum mode)
 {
-	close();
+	File* file = Allocate<File>(mem);
+
+	file->Handle = nullptr;
+	file->Mode = mode;
+	file->IsClosed = false;
+
+	Path newPath = PathNormalize(path);
+	newPath = PathGetFile(newPath);
+	file->Path = newPath;
+
+	FileOpen(file);
+
+	return file;
 }
 
 //-----------------------------------//
 
-bool File::open()
+void FileDestroy(File* file, MemoryAllocator* mem)
 {
-	switch( mode )
-	{
-	case StreamMode::Read:
-		file = PHYSFS_openRead( getPath().c_str() );
-		break;
-	case StreamMode::Write:
-		file = PHYSFS_openWrite( getPath().c_str() );
-		break;
-	case StreamMode::Append:
-		file = PHYSFS_openAppend( getPath().c_str() );
-		break;
-	default:
-		assert( false );
-	}
-
-	if( !file )
-	{
-		log("Could not open file");
-		return false;
-	}
-
-	return true;
+	Deallocate(mem, file);
 }
 
 //-----------------------------------//
 
-bool File::close()
+static void FileLog(File* file, const String& err)
+{
+	LogError( "%s '%s': %s", err.c_str(), file->Path.c_str(), PHYSFS_getLastError() );
+}
+
+//-----------------------------------//
+
+bool FileOpen(File* file)
 {
 	if( !file ) return false;
-	if( closed ) return true;
+	
+	assert( file->Handle == 0 );
+	const char* path = file->Path.c_str();
 
-	// Close the file and check for errors.
-	int err = PHYSFS_close( file );
+	switch(file->Mode)
+	{
+	case StreamMode::Read:
+		file->Handle = PHYSFS_openRead(path);
+		break;
+	case StreamMode::Write:
+		file->Handle = PHYSFS_openWrite(path);
+		break;
+	case StreamMode::Append:
+		file->Handle = PHYSFS_openAppend(path);
+		break;
+	}
 
-	if( !err ) 
+	if( !file->Handle )
+	{
+		FileLog(file, "Could not open file");
 		return false;
-
-	file = nullptr;
-	closed = true;
+	}
 
 	return true;
 }
 
 //-----------------------------------//
 
-void File::log(const std::string& err) const
+bool  FileClose(File* file)
 {
-	Log::error( "%s '%s': %s", err.c_str(),
-		getPath().c_str(), PHYSFS_getLastError() );
-}
-
-//-----------------------------------//
-
-long File::getSize() const
-{
-	if( !file )
-		return -1;
-
-	PHYSFS_sint64 sz = PHYSFS_fileLength( file );
-
-	return (long) sz;
-}
-
-//-----------------------------------//
-
-bool File::validate(StreamMode::Enum check) const
-{
-	if( mode == check )
-		return true;
-
-	Log::error( "Access mode violation in file '%s'", getName().c_str() );
-	return false;
-}
-
-//-----------------------------------//
-
-bool File::read(std::vector<byte>& data, long size) const
-{
-	if( !(validate(StreamMode::Read) || validate(StreamMode::Append)) )
-		return false;
-
-	if( !file || PHYSFS_eof(file) ) 
-		return false;
-
-	if( size == -1 )
-		size = getSize() ;
-	else if ( tell()+size > getSize() )
-		size = getSize() - tell();
-
-	if( size == 0 )
-		return false;
+	if( !file ) return false;
+	if( file->IsClosed ) return true;
 	
-	data.resize(size); 
-	PHYSFS_sint64 bytesRead = PHYSFS_read(file, &data[0], 1, size);
+	if( !PHYSFS_close(file->Handle) )
+		return false;
 
-	if(bytesRead < 0)
+	file->Handle = nullptr;
+	file->IsClosed = true;
+
+	return true;
+}
+
+//-----------------------------------//
+
+sint64 FileGetSize(File* file)
+{
+	if( !file ) return 0;
+
+	PHYSFS_sint64 size = PHYSFS_fileLength(file->Handle);
+	return size;
+}
+
+//-----------------------------------//
+
+static void FileValidate(File* file, StreamMode::Enum mode)
+{
+	assert( file->Mode == mode );
+}
+
+//-----------------------------------//
+
+bool FileReadBuffer(File* file, void* data, sint32 size)
+{
+	if( !file ) return false;
+
+#if 0
+	if( !FileValidate(file, StreamMode::Read) ) return false;
+	if( !FileValidate(file, StreamMode::Append) ) return false;
+#endif
+
+	if( PHYSFS_eof(file->Handle) ) return false; 
+
+	sint64 read = PHYSFS_read(file->Handle, data, 1, size);
+
+	if(read < 0)
 	{
-		log("Could not read from file");
+		FileLog(file, "Could not read from file");
 		return false;	
 	}
 
@@ -149,158 +161,167 @@ bool File::read(std::vector<byte>& data, long size) const
 
 //-----------------------------------//
 
-long File::read(void* buffer, long size) const
+bool FileRead(File* file, std::vector<uint8>& data)
 {
-	if( !(validate(StreamMode::Read) || validate(StreamMode::Append)) )
-		return -1;
+	if( !file ) return false;
 
-	if( !file || PHYSFS_eof(file) ) 
-		return 0;
+	sint32 size = sint32(FileGetSize(file) - FileTell(file));
+	if( size == 0 ) return false;
 
-	if( tell()+size > getSize() )
-		size = getSize() - tell();
+	data.resize(size); 
 
-	if( size == 0 )
-		return 0;
-	
-	PHYSFS_sint64 bytesRead = PHYSFS_read (file, buffer, 1, size); 
-
-	if(bytesRead < 0)
-	{
-		log("Could not read from file");
-		return -1;	
-	}
-
-	return (long) bytesRead;
+	return FileReadBuffer(file, &data[0], data.size());
 }
 
 //-----------------------------------//
 
-std::vector<std::string> File::readLines() const
+bool FileReadLines(File* file, std::vector<String>& lines)
 {
+	if( !file ) return false;
+
 	std::vector<byte> data;
-	read( data );
+	FileRead(file, data);
 
-	std::string str( data.begin(), data.end() );
-	std::vector<std::string> lines = String::split(str, '\n');
+	String text( data.begin(), data.end() );
+	StringSplit(text, '\n', lines);
 	
-	// Trim excess fat that can be left over.
-	for( uint i = 0; i < lines.size(); i++ )
+	// Remove extra newlines.
+	for( size_t i = 0; i < lines.size(); i++ )
 	{
-		std::string& str = lines[i];
-		if( str[str.size()-1] == '\r' )
-			str.erase( str.size()-1 );
+		String& line = lines[i];
+		size_t end = line.size() - 1;
+		if( line[end] == '\r' ) line.erase(end);
+	}
+
+	return true;
+}
+
+//-----------------------------------//
+
+sint64 FileWrite(File* file, const std::vector<byte>& data)
+{
+	if( !file ) return 0;
+
+#if 0
+	if( !FileValidate(file, StreamMode::Write) ) return 0;
+#endif
+
+	sint64 written = PHYSFS_write(file->Handle, &data[0], 1, data.size());
+	
+	if(written < 0)
+	{
+		FileLog(file, "Could not write to file");
+		return 0;
+	}
+
+	return written;
+}
+
+//-----------------------------------//
+
+sint64 FileWriteString(File* file, const String& text)
+{
+	std::vector<uint8> data( text.begin(), text.end() );
+	return FileWrite(file, data);
+}
+
+//-----------------------------------//
+
+bool FileSeek(File* file, sint64 pos)
+{
+	if( !file ) return false;
+	
+	if(pos < 0 || pos >= FileGetSize(file))
+	{
+		FileLog(file, "Seek to out of bounds position");
+		return false;
 	}
 	
-	return lines;
-}
-
-//-----------------------------------//
-
-long File::write(const std::vector<byte>& buffer, long size)
-{
-	if( !validate(StreamMode::Write) )
-		return -1;
-
-	if( (size < 0) || ((ulong) size > buffer.size()) )
-		size = buffer.size();
-
-	PHYSFS_sint64 bytesWritten = PHYSFS_write(file, &buffer[0], 1, size);
-	
-	if(bytesWritten < 0)
-		log("Could not write to file");
-
-	return (long) bytesWritten;
-}
-
-//-----------------------------------//
-
-long File::write(const std::string& text)
-{
-	std::vector<byte> data( text.begin(), text.end() );
-	return write( data );
-}
-
-//-----------------------------------//
-
-bool File::seek(long pos)
-{
-	if(!file)
-		return false;
-	
-	if(pos < 0 || pos >= getSize())
+	if( !PHYSFS_seek(file->Handle, pos) )
 	{
-		log("Attempt to access a position out of bounds");
+		FileLog(file, "Failure to seek");
 		return false;
 	}
-	
-	int err = PHYSFS_seek(file, pos);
-	
-	if(!err)
-		log("Failure to seek");
 
-	return err != 0;
+	return true;
 }
 
 //-----------------------------------//
 
-long File::tell() const
+sint64 FileTell(File* file)
 {
-	if(!file) return -1;
+	if( !file ) return 0;
 
-	PHYSFS_sint64 pos = PHYSFS_tell(file);
-	
-	return static_cast<long>( pos );
+	PHYSFS_sint64 position = PHYSFS_tell(file->Handle);
+	return position;
 }
 
 //-----------------------------------//
 
-bool File::exists() const
+Path FileGetFullPath(File* file)
 {
-	return file && exists( getPath() );
+	Path fullPath( PHYSFS_getRealDir(file->Path.c_str()) );
+	fullPath.append( PathGetSeparator() );
+	fullPath.append( file->Path );
+
+	return PathNormalize(fullPath);
 }
 
 //-----------------------------------//
 
-bool File::exists(const std::string& path)
+bool FileExists(const Path& path)
 {
 	return PHYSFS_exists(path.c_str()) != 0;
 }
 
 //-----------------------------------//
 
-const Path File::getPath() const
+static void EnumerateHelper(std::vector<String>& files, const String& path, bool dirs)
 {
-	return path;
+	DIR *dir;
+	struct dirent *ent;
+
+	// Open directory stream.
+	dir = opendir( path.c_str() );
+    
+	if( !dir ) return;
+
+	// Get all the files and directories within directory.
+	while((ent = readdir(dir)) != nullptr)
+	{
+		String name = ent->d_name;
+		String newPath = path + "/" + name;
+
+		switch(ent->d_type) {
+		case DT_REG:
+		{
+			if(!dirs) files.push_back(newPath);
+			break;
+		}
+		case DT_DIR:
+		{
+			if(!name.empty() && name[0] == '.') continue;
+			if(dirs) files.push_back(newPath);
+			EnumerateHelper(files, newPath, dirs);
+			break;
+		} }
+	}
+
+	closedir(dir);
 }
 
 //-----------------------------------//
 
-const Path File::getRealPath() const
+void FileEnumerateFiles(const String& path, std::vector<String>& files)
 {
-	// Gets the full file path.
-	const char* realPath = PHYSFS_getRealDir( getPath().c_str() );
-	
-	Path fullPath( realPath );
-	fullPath.append( "/" );
-	fullPath.append( getPath() );
-
-	return PathUtils::normalize(fullPath);
+	EnumerateHelper(files, path, false);
 }
 
 //-----------------------------------//
 
-const Path File::getName() const
+void FileEnumerateDirs(const String& path, std::vector<String>& dirs)
 {
-	return String::split( path, '/' ).back();
-}
-
-//-----------------------------------//
-
-const Path File::getExtension() const
-{
-	Path name = getName();
-	return PathUtils::getExtension(name);
+	EnumerateHelper(dirs, path, true);
 }
 
 //-----------------------------------//

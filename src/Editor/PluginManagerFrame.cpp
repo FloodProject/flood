@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "PluginManagerFrame.h"
 #include "PluginManager.h"
 #include "Plugin.h"

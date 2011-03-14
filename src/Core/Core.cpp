@@ -10,5 +10,5 @@
 // This file is only used to create the PCH
 //---------------------------------------------------------------------//
 
-//#define INSTANTIATE_TEMPLATES
+#define INSTANTIATE_TEMPLATES
 #include "Core/API.h"

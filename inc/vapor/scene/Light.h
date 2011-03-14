@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "vapor/scene/Component.h"
-#include "vapor/math/Color.h"
+#include "Scene/Component.h"
+#include "Math/Color.h"
 
 namespace vapor {
 

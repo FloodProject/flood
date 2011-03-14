@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "render/VertexBuffer.h"
-#include "render/IndexBuffer.h"
-#include "render/Material.h"
+#include "Render/VertexBuffer.h"
+#include "Render/IndexBuffer.h"
+#include "Render/Material.h"
 #include "Event.h"
 
 FWD_DECL_INTRUSIVE(Material)

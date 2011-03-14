@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "Events.h"
 #include "Editor.h"
 #include "Plugin.h"
@@ -21,7 +21,6 @@ Events::Events( EditorFrame* editor )
 	, currentPlugin(nullptr)
 	, toolId(0)
 {
-	assert( editor != nullptr );
 	pluginManager = editor->getPluginManager();
 
 	pluginManager->onPluginEnableEvent.Connect(this, &Events::onPluginEnableEvent);
@@ -46,9 +45,6 @@ Events::~Events()
 	if(toolbarCtrl) toolbarCtrl->PopEventHandler();
 	//editor->PopEventHandler();
 
-	pluginManager->onPluginEnableEvent.Disconnect(this, &Events::onPluginEnableEvent);
-	pluginManager->onPluginDisableEvent.Disconnect(this, &Events::onPluginDisableEvent);
-
 	Engine* engine = editor->getEngine();
 	InputManager* input = engine->getInputManager();
 
@@ -60,6 +56,14 @@ Events::~Events()
 	mouse->onMouseButtonRelease.Disconnect(this, &Events::onMouseRelease);
 	mouse->onMouseEnter.Disconnect(this, &Events::onMouseEnter);
 	mouse->onMouseExit.Disconnect(this, &Events::onMouseLeave);
+}
+
+//-----------------------------------//
+
+void Events::disconnectPluginListeners()
+{
+	pluginManager->onPluginEnableEvent.Disconnect(this, &Events::onPluginEnableEvent);
+	pluginManager->onPluginDisableEvent.Disconnect(this, &Events::onPluginDisableEvent);
 }
 
 //-----------------------------------//

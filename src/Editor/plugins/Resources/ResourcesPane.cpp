@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "ResourcesPane.h"
 #include "EditorIcons.h"
 #include "Editor.h"
@@ -204,13 +204,15 @@ enum
 
 static bool isUnderVersionControl(const ResourcePtr& res)
 {
-	File file( res->getPath() );
+	File file( res->getPath(), StreamMode::Read );
 
-	const std::string& fullPath = PathUtils::getCurrentDir()
-		+ PathUtils::getPathSeparator()
-		+ PathUtils::getBasePath(file.getRealPath())
-		+ PathUtils::getPathSeparator()
+	const std::string& fullPath = PathGetCurrentDir()
+		+ PathGetSeparator()
+		+ PathGetBase( FileGetFullPath(&file) )
+		+ PathGetSeparator()
 		+ ".svn";
+
+	FileClose(&file);
 
 	return wxFileName::DirExists(fullPath);
 }
@@ -247,7 +249,7 @@ void ResourcesPage::onTreeItemMenu(wxTreeEvent& event)
 	{
 		wxMenuItemList& menus = menuVCS->GetMenuItems();
 
-		for(uint i = 0; i < menus.size(); i++ )
+		for(size_t i = 0; i < menus.size(); i++ )
 		{
 			wxMenuItem* menuItem = menus[i];
 			menuItem->Enable(false);
@@ -260,11 +262,13 @@ void ResourcesPage::onTreeItemMenu(wxTreeEvent& event)
 
 static std::string getResourceFullPath(const ResourcePtr& res)
 {
-	File file( res->getPath() );
+	File file( res->getPath(), StreamMode::Read );
 
-	const std::string& fullPath = PathUtils::getCurrentDir()
-		+ PathUtils::getPathSeparator()
-		+ file.getRealPath();
+	const std::string& fullPath = PathGetCurrentDir()
+		+ PathGetSeparator()
+		+ FileGetFullPath(&file);
+
+	FileClose(&file);
 
 	return fullPath;
 }

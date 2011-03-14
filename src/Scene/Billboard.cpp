@@ -6,10 +6,10 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "vapor/scene/Billboard.h"
-#include "vapor/render/Material.h"
-#include "vapor/scene/Entity.h"
+#include "Engine/API.h"
+#include "Scene/Billboard.h"
+#include "Render/Material.h"
+#include "Scene/Entity.h"
 
 namespace vapor {
 

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "render/RenderBuffer.h"
+#include "Render/RenderBuffer.h"
 
 namespace vapor {
 
@@ -53,8 +53,8 @@ protected:
 	void setBufferState();
 	bool checkSize();
 
-	uint id;
-	std::vector< uint > renderBuffers;
+	uint32 id;
+	std::vector< uint32 > renderBuffers;
 	std::vector< TexturePtr > textureBuffers;
 
 	bool bound;

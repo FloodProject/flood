@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "math/Noise.h"
-#include "math/Helpers.h"
+#include "Math/Noise.h"
+#include "Math/Helpers.h"
 #include "Log.h"
 
 namespace vapor {
@@ -73,10 +73,10 @@ float Noise::interpolateNoise(float x, float y)
 	float v3 = nextFloat(wholePartX, wholePartY + 1);
 	float v4 = nextFloat(wholePartX + 1, wholePartY + 1);
 
-	float i1 = Interpolate::cubic(v1, v2, fractionPartX);
-	float i2 = Interpolate::cubic(v3, v4, fractionPartX);
+	float i1 = InterpolateCubic(v1, v2, fractionPartX);
+	float i2 = InterpolateCubic(v3, v4, fractionPartX);
 
-	return Interpolate::cubic(i1, i2, fractionPartY);
+	return InterpolateCubic(i1, i2, fractionPartY);
 }
 
 //-----------------------------------//

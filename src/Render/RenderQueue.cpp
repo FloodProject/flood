@@ -6,8 +6,8 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "vapor/render/RenderQueue.h"
+#include "Engine/API.h"
+#include "Render/RenderQueue.h"
 
 namespace vapor {
 

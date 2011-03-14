@@ -25,8 +25,8 @@ public:																			\
 #define SUBCLASS_CLASS(name)													\
 	class _##name : public Class {												\
 	public:																		\
-		_##name(const std::string& n, int sz) : Class(n, sz) {}					\
-		_##name(const std::string& n, const Type& p, int sz)					\
+		_##name(const String& n, int sz) : Class(n, sz) {}					\
+		_##name(const String& n, const Type& p, int sz)					\
 			: Class(n, p, sz) {}												\
 		virtual void* createInstance(void* address) const {						\
 			if(address)	return new(address) name();								\

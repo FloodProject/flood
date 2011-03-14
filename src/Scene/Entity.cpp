@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
 #include "Scene/Geometry.h"
@@ -55,7 +55,7 @@ bool Entity::addComponent( const ComponentPtr& component )
 
 	if( componentsMap.find(type) != componentsMap.end() )
 	{
-		Log::warn( "Component '%s' already exists in '%s'", type->name.c_str(), name.c_str() );
+		LogWarn( "Component '%s' already exists in '%s'", type->name.c_str(), name.c_str() );
 		return false;
 	}
 
@@ -168,7 +168,7 @@ void Entity::update( float delta )
 	// Update all geometry bounding boxes first.
 	const std::vector<GeometryPtr>& geoms = getGeometry();
 
-	for( uint i = 0; i < geoms.size(); i++ )
+	for( size_t i = 0; i < geoms.size(); i++ )
 	{
 		const GeometryPtr& geom = geoms[i];
 		geom->update( delta );
@@ -197,7 +197,7 @@ void Entity::update( float delta )
 
 void Entity::fixUp()
 {
-	for(uint i = 0; i < components.size(); i++ )
+	for(size_t i = 0; i < components.size(); i++ )
 	{
 		const ComponentPtr& component = components[i];
 		

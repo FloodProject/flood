@@ -10,6 +10,8 @@
 #include "WebStream.h"
 #include "Log.h"
 
+#ifdef VAPOR_NETWORKING_CURL
+
 #define CURL_STATICLIB
 #include <curl/curl.h>
 
@@ -21,7 +23,7 @@ static size_t writeHTTP(void* ptr, size_t size, size_t nmemb, void* userdata);
 
 //-----------------------------------//
 
-WebStream::WebStream(const std::string& url, StreamMode::Enum mode)
+WebStream::WebStream(const String& url, StreamMode::Enum mode)
 	: Stream(StreamMode::Read, url)
 { }
 
@@ -63,8 +65,8 @@ void WebStream::read(std::vector<byte>& data) const
 	curl_easy_setopt(request, CURLOPT_WRITEDATA, &data);
 	curl_easy_perform(request);
 
-	std::string response( data.begin(), data.end() );
-	Log::info("%s", response.c_str());
+	String response( data.begin(), data.end() );
+	LogInfo("%s", response.c_str());
 }
 
 //-----------------------------------//
@@ -92,3 +94,5 @@ static size_t writeHTTP(void* ptr, size_t size, size_t nmemb, void* userdata)
 //-----------------------------------//
 
 } // end namespace
+
+#endif

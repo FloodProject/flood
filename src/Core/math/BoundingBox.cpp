@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "math/BoundingBox.h"
-#include "math/Helpers.h"
+#include "Math/BoundingBox.h"
+#include "Math/Helpers.h"
 #include "Log.h"
 
 namespace vapor {
@@ -46,16 +46,16 @@ void BoundingBox::setZero()
 
 bool BoundingBox::isInfinite() const
 {
-	return min == Limits::FloatMaximum
-		&& max == Limits::FloatMinimum;
+	return min == LimitsFloatMaximum
+		&& max == LimitsFloatMinimum;
 }
 
 //-----------------------------------//
 
 void BoundingBox::reset()
 {
-	min = Limits::FloatMaximum;
-	max = Limits::FloatMinimum;
+	min = LimitsFloatMaximum;
+	max = LimitsFloatMinimum;
 }
 
 //-----------------------------------//

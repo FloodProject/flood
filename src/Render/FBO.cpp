@@ -6,10 +6,10 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "render/FBO.h"
-#include "render/GL.h"
-#include "resources/Image.h"
+#include "Engine/API.h"
+#include "Render/FBO.h"
+#include "Render/GL.h"
+#include "Resources/Image.h"
 
 namespace vapor {
 
@@ -21,7 +21,7 @@ FBO::FBO(const Settings& settings)
 	, valid(false)
 	, colorAttach(false)
 {
-	glGenFramebuffersEXT(1, &id);
+	glGenFramebuffersEXT(1, (GLuint*) &id);
 	glHasError( "Could not create framebuffer object" );
 }
 
@@ -29,13 +29,13 @@ FBO::FBO(const Settings& settings)
 
 FBO::~FBO()
 {
-	glDeleteFramebuffersEXT(1, &id);
+	glDeleteFramebuffersEXT(1, (GLuint*) &id);
 
-	for( uint i = 0; i < renderBuffers.size(); i++ )
+	for( size_t i = 0; i < renderBuffers.size(); i++ )
 	{
-		uint buffer = renderBuffers[i];
+		uint32 buffer = renderBuffers[i];
 
-		glDeleteRenderbuffersEXT(1, &buffer);
+		glDeleteRenderbuffersEXT(1, (GLuint*) &buffer);
 		glHasError( "Could not delete renderbuffer object" );
 	}
 }
@@ -79,7 +79,7 @@ bool FBO::check()
 
 	if( status != GL_FRAMEBUFFER_COMPLETE_EXT )
 	{
-		Log::warn("FBO error: %s", glErrorString(status) );
+		LogWarn("FBO error: %s", glErrorString(status) );
 		return false;
 	}
 
@@ -191,10 +191,7 @@ void FBO::createRenderBuffer( int bufferComponents )
 
 void FBO::createRenderBufferStorage(int buffer, int type, int attachment)
 {
-	uint width = settings.getWidth();
-	uint height = settings.getHeight();
-
-	glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, type, width, height);
+	glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, type, settings.width, settings.height);
 	glHasError( "Could not create renderbuffer object storage" );
 
 	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, attachment, GL_RENDERBUFFER_EXT, buffer);
@@ -205,15 +202,12 @@ void FBO::createRenderBufferStorage(int buffer, int type, int attachment)
 
 bool FBO::checkSize()
 {
-	uint width = settings.getWidth();
-	uint height = settings.getHeight();
-
 	// Check if the FBO respect the maximum size defined by OpenGL.
-	uint max = GL_MAX_RENDERBUFFER_SIZE_EXT;
+	uint32 max = GL_MAX_RENDERBUFFER_SIZE_EXT;
 
-	if(width > max || height > max)
+	if(settings.width > max || settings.height > max)
 	{
-		Log::warn( "Invalid FBO dimensions (OpenGL max: %d,%d)", max, max );
+		LogWarn( "Invalid FBO dimensions (OpenGL max: %d,%d)", max, max );
 		return false;
 	}
 

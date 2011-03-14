@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "SceneDocument.h"
 #include "RenderControl.h"
 #include "Editor.h"
@@ -35,7 +35,8 @@ SceneDocument::SceneDocument()
 //-----------------------------------//
 
 SceneDocument::~SceneDocument()
-{ }
+{
+}
 
 //-----------------------------------//
 
@@ -157,7 +158,7 @@ EntityPtr SceneDocument::createCamera()
 	frustum.farPlane = 10000;
 
 	// Generate a new unique name.
-	std::string name( "EditorCamera"+String::fromNumber(i++) );
+	std::string name( "EditorCamera"+StringFromNumber(i++) );
 
 	EntityPtr entityCamera( new Entity(name) );
 	entityCamera->addTransform();

@@ -18,9 +18,11 @@ class HierarchyPane;
 
 class HierarchyPlugin : public Plugin
 {
+	REFLECT_DECLARE_CLASS()
+
 public:
 
-	HierarchyPlugin( EditorFrame* frame );
+	HierarchyPlugin();
 
 	// Gets metadata about this plugin.
 	virtual PluginMetadata getMetadata();

@@ -6,18 +6,18 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "vapor/controllers/ThirdPersonController.h"
+#include "Engine/API.h"
+#include "controllers/ThirdPersonController.h"
 
-#include "vapor/Engine.h"
-#include "vapor/math/Helpers.h"
-#include "vapor/scene/Entity.h"
-#include "vapor/scene/Camera.h"
-#include "vapor/scene/Scene.h"
-#include "vapor/render/Device.h"
-#include "vapor/input/InputManager.h"
-#include "vapor/input/Keyboard.h"
-#include "vapor/input/Mouse.h"
+#include "Engine.h"
+#include "Math/Helpers.h"
+#include "Scene/Entity.h"
+#include "Scene/Camera.h"
+#include "Scene/Scene.h"
+#include "Render/Device.h"
+#include "input/InputManager.h"
+#include "input/Keyboard.h"
+#include "input/Mouse.h"
 
 namespace vapor {
 

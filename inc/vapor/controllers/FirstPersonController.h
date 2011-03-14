@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "vapor/controllers/CameraController.h"
-#include "vapor/math/Vector2.h"
-#include "vapor/math/EulerAngles.h"
+#include "controllers/CameraController.h"
+#include "Math/Vector.h"
+#include "Math/EulerAngles.h"
 
 namespace vapor {
 
@@ -70,9 +70,9 @@ protected:
 	bool clampMovementX;
 
 	// Mouse movement.
-	Vector2i oldMousePosition;
-	Vector2i lastPosition;
-	Vector2i mouseDistance;
+	Vector2 oldMousePosition;
+	Vector2 lastPosition;
+	Vector2 mouseDistance;
 	int mouseWheel;
 
 	// Focus state.

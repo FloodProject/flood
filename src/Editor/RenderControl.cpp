@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "RenderControl.h"
 #include "RenderWindow.h"
 #include "EditorInputManager.h"
@@ -47,7 +47,7 @@ RenderControl::RenderControl( wxWindow* parent, wxWindowID id,
 	, frameUpdateTimer(this, UPDATE_TIMER)
 	, frameRenderTimer(this, RENDER_TIMER)
 {
-	Log::info("Creating a new wxWidgets control");
+	LogInfo("Creating a new wxWidgets control");
 
 	// Create a new engine window.
 	const wxSize& sz = GetSize();

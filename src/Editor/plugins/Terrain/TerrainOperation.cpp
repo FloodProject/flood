@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "TerrainOperation.h"
 
 namespace vapor { namespace editor {

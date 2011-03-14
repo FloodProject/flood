@@ -16,13 +16,13 @@ namespace vapor { namespace editor {
 
 class LogFrame;
 
-//-----------------------------------//
-
 class LogPlugin : public Plugin
 {
+	REFLECT_DECLARE_CLASS()
+
 public:
 
-	LogPlugin( EditorFrame* frame );
+	LogPlugin();
 
 	// Gets metadata about this plugin.
 	virtual PluginMetadata getMetadata();

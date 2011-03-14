@@ -79,6 +79,8 @@
 
 #ifdef VAPOR_PLATFORM_WINDOWS
 
+#ifdef ENABLE_STACK_WALKER
+
 #include <windows.h>
 #include <tchar.h>
 #include <stdio.h>
@@ -1353,5 +1355,7 @@ void StackWalker::OnOutput(LPCSTR buffer)
 //-----------------------------------//
 
 } // end namespace 
+
+#endif
 
 #endif

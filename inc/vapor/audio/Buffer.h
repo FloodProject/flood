@@ -10,8 +10,8 @@
 
 #ifdef VAPOR_AUDIO_OPENAL
 
-#include "resources/Sound.h"
-#include "audio/Source.h"
+#include "Resources/Sound.h"
+#include "Audio/Source.h"
 
 namespace vapor {
 

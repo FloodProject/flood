@@ -10,8 +10,8 @@
 
 #ifdef VAPOR_PHYSICS_BULLET
 
-#include "vapor/math/Vector3.h"
-#include "vapor/math/BoundingBox.h"
+#include "Math/Vector.h"
+#include "Math/BoundingBox.h"
 
 #include <LinearMath/btVector3.h>
 #include <LinearMath/btTransform.h>

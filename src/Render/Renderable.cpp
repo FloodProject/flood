@@ -6,9 +6,9 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "render/Renderable.h"
-#include "render/GL.h"
+#include "Engine/API.h"
+#include "Render/Renderable.h"
+#include "Render/GL.h"
 
 namespace vapor {
 

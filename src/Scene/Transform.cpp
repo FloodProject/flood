@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 #include "Scene/Transform.h"
 #include "Scene/Geometry.h"
 #include "Scene/Entity.h"
@@ -215,7 +215,7 @@ void Transform::updateBoundingVolume()
 
 	const std::vector<GeometryPtr>& geoms = entity->getGeometry();
 	
-	for( uint i = 0; i < geoms.size(); i++ )
+	for( size_t i = 0; i < geoms.size(); i++ )
 	{
 		const GeometryPtr& geometry = geoms[i];
 		bounds.add( geometry->getBoundingVolume() );

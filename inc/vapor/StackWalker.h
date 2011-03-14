@@ -40,6 +40,8 @@
 
 #ifdef VAPOR_PLATFORM_WINDOWS
 
+#ifdef ENABLE_STACK_WALKER
+
 #include <windows.h>
 
 // special defines for VC5/6 (if no actual PSDK is installed):
@@ -267,15 +269,16 @@ public:
 
 	void Log()
 	{
-		Logger* logger = GetLogger();
-		logger->error( output.c_str() );
+		LogError( output.c_str() );
 	}
 
-	std::string output;
+	String output;
 };
 
 //-----------------------------------//
 
 } // end namespace 
+
+#endif
 
 #endif

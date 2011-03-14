@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 #include "Input/InputManager.h"
 #include "Input/Device.h"
 #include "Input/Keyboard.h"
@@ -24,7 +24,7 @@ InputManager::InputManager()
 
 InputManager::~InputManager()
 {
-	for( uint i = 0; i < devices.size(); i++ )
+	for( size_t i = 0; i < devices.size(); i++ )
 	{
 		InputDevice* device = devices[i];
 		delete device;
@@ -37,13 +37,13 @@ void InputManager::addDevice( InputDevice* device )
 {
 	if( !device )
 	{
-		Log::warn( "Tried to add an invalid input device" );
+		LogWarn( "Tried to add an invalid input device" );
 		return;
 	}
 	
 	devices.push_back( device );
 
-	Log::info( "Registered a new input device: '%s'", 
+	LogInfo( "Registered a new input device: '%s'", 
 		InputDeviceType::getString( device->getType() ).c_str() );
 }
 
@@ -51,7 +51,7 @@ void InputManager::addDevice( InputDevice* device )
 
 Keyboard* InputManager::getKeyboard() const
 {
-	for( uint i = 0; i < devices.size(); i++ )
+	for( size_t i = 0; i < devices.size(); i++ )
 	{
 		InputDevice* device = devices[i];
 		if( device->getType() == InputDeviceType::Keyboard )
@@ -65,7 +65,7 @@ Keyboard* InputManager::getKeyboard() const
 
 Mouse* InputManager::getMouse() const
 {
-	for( uint i = 0; i < devices.size(); i++ )
+	for( size_t i = 0; i < devices.size(); i++ )
 	{
 		InputDevice* device = devices[i];
 		if( device->getType() == InputDeviceType::Mouse )
@@ -79,7 +79,7 @@ Mouse* InputManager::getMouse() const
 
 void InputManager::processEvent( const InputEvent& event )
 {
-	for( uint i = 0; i < devices.size(); i++ )
+	for( size_t i = 0; i < devices.size(); i++ )
 	{
 		InputDevice* device = devices[i];
 		device->processEvent( event );

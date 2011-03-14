@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 
 #ifdef VAPOR_SHADER_GLSL
 
@@ -15,7 +15,6 @@
 #include "Render/GL.h"
 #include "Utilities.h"
 #include "ReferenceCount.h"
-#include <algorithm>
 
 namespace vapor {
 
@@ -25,8 +24,6 @@ GLSL_Program::GLSL_Program( const GLSL_TextPtr& text )
 	: text(text)
 	, linkError(false)
 {
-	assert( text != nullptr );
-	
 	create();
 	createShaders();
 	updateShadersText();
@@ -37,12 +34,12 @@ GLSL_Program::GLSL_Program( const GLSL_TextPtr& text )
 GLSL_Program::~GLSL_Program()
 {
 	// Detach shaders.
-	for( uint i = 0; i < shaders.size(); i++ )
+	for( size_t i = 0; i < shaders.size(); i++ )
 	{
 		const GLSL_ShaderPtr& shader = shaders[i];
 	
 		if( attached[shader] )
-			glDetachShader( id, shader->getId() );
+			glDetachShader( id, shader->id );
 
 		if( glHasError("Could not detach shader object") )
 			continue;
@@ -58,7 +55,7 @@ GLSL_Program::~GLSL_Program()
 
 bool GLSL_Program::create()
 {
-	id = glCreateProgram( );
+	id = glCreateProgram();
 
 	if( glHasError( "Could not create a new program object" ) )
 		return false;
@@ -70,16 +67,11 @@ bool GLSL_Program::create()
 
 void GLSL_Program::addShader( const GLSL_ShaderPtr& shader )
 {
-	ShaderVector::iterator it = std::find(shaders.begin(), shaders.end(), shader);
-
-	if( it == shaders.end() )
-	{
-		shaders.push_back( shader );
-	}
+	shaders.push_back( shader );
 
 	if( !attached[shader] )
 	{
-		glAttachShader( id, shader->getId() );
+		glAttachShader( id, shader->id );
 
 		if( glHasError("Could not attach shader") )
 			return;
@@ -119,7 +111,7 @@ void GLSL_Program::updateShadersText()
 	assert( fragment != nullptr );
 	fragment->setText( text->getFragmentSource() );
 
-	for( uint i = 0; i < shaders.size(); i++ )
+	for( size_t i = 0; i < shaders.size(); i++ )
 	{
 		const ShaderPtr& shader = shaders[i];
 		shader->forceRecompile();
@@ -134,27 +126,25 @@ void GLSL_Program::updateShadersText()
 bool GLSL_Program::attachShaders()
 {
 	// Make sure all shaders are compiled.
-	for( uint i = 0; i < shaders.size(); i++ )
+	for( size_t i = 0; i < shaders.size(); i++ )
 	{
 		const GLSL_ShaderPtr& shader = shaders[i];
 
-		if( shader->isCompiled() )
-			 continue;
+		if( shader->isCompiled() ) continue;
 		
+		Path base = PathGetBase(text->getPath());
+
 		if( !shader->compile() )
 		{
-			Log::error( "Error compiling shader '%s': %s",
-				text->getBasePath().c_str(), shader->getLog().c_str() );
+			LogError( "Error compiling shader '%s': %s", base.c_str(), shader->getLog().c_str() );
 
 			linkError = true;
 			linked = false;
 
 			return false;
 		}
-		else
-		{
-			Log::info( "Compiled shader '%s' with no errors", text->getBasePath().c_str() );
-		}
+		
+		LogInfo( "Compiled shader '%s' with no errors", base.c_str() );
 	}
 
 	return true;
@@ -165,20 +155,16 @@ bool GLSL_Program::attachShaders()
 bool GLSL_Program::link()
 {
 	// If the program is already linked, return.
-	if( isLinked() ) 
-		return true;
+	if( isLinked() ) return true;
 
 	// If we already tried to link and were not succesful, 
 	// don't try to link again until the program is updated.
-	if( linkError ) 
-		return false;
+	if( linkError ) return false;
 
 	// No shaders, don't try to link.
-	if( shaders.empty() ) 
-		return false;
+	if( shaders.empty() ) return false;
 
-	if( !attachShaders() )
-		return false;
+	if( !attachShaders() ) return false;
 
 	bindDefaultAttributes();
 
@@ -199,7 +185,7 @@ bool GLSL_Program::link()
 
 	if( status != GL_TRUE )
 	{
-		Log::warn( "Could not link program object '%d': %s", id, log.c_str() );
+		LogWarn( "Could not link program object '%d': %s", id, log.c_str() );
 		linked = false;
 		linkError = true;
 		return false;
@@ -226,7 +212,7 @@ bool GLSL_Program::validate()
 	{
 		getLogText();
 
-		Log::warn( "Could not validate program object '%d': %s", id, log.c_str() );
+		LogWarn( "Could not validate program object '%d': %s", id, log.c_str() );
 		return false;
 	}
 
@@ -237,8 +223,6 @@ bool GLSL_Program::validate()
 
 void GLSL_Program::bind()
 {
-	if( !isLinked() ) return;
-
 	glUseProgram( id );
 
 	if( glHasError("Could not bind program object") )
@@ -259,25 +243,19 @@ void GLSL_Program::unbind()
 
 void GLSL_Program::getLogText()
 {
-	// Get linking log size.
-	GLint size;
-	glGetProgramiv( id, GL_INFO_LOG_LENGTH, &size );
+	GLint length;
+	glGetProgramiv( id, GL_INFO_LOG_LENGTH, &length );
 
-	if( size == 0 )
+	if( length == 0 )
 	{
-		log = "(no message)";
+		log.clear();
 		return;
 	}
 
-	// TODO: move directly to string...
+	log.resize(length);
 
-	GLchar* info = new char[size];
-	GLsizei length;
-
-	glGetProgramInfoLog( id, size, &length, info );
-
-	log.assign( info );
-	delete[] info;
+	GLsizei temp;
+	glGetProgramInfoLog( id, log.size(), &temp, &log[0] );
 }
 
 //-----------------------------------//
@@ -308,13 +286,7 @@ void GLSL_Program::setAttribute( const std::string& name, VertexAttribute::Enum 
 void GLSL_Program::setUniform( const std::string& slot, int data )
 {
 	GLint loc = glGetUniformLocation( id, slot.c_str() );
-
-	if( loc == -1 )
-	{
-		// Log::warn( "Could not locate uniform location in program object '%d'", id );
-		return;
-	}
-
+	if( loc == -1 ) return;
 	glUniform1i( loc, data );
 }
 
@@ -323,13 +295,7 @@ void GLSL_Program::setUniform( const std::string& slot, int data )
 void GLSL_Program::setUniform( const std::string& slot, float data )
 {
 	GLint loc = glGetUniformLocation( id, slot.c_str() );
-
-	if( loc == -1 )
-	{
-		// Log::warn( "Could not locate uniform location in program object '%d'", id );
-		return;
-	}
-
+	if( loc == -1 ) return;
 	glUniform1f( loc, data );
 }
 
@@ -338,15 +304,8 @@ void GLSL_Program::setUniform( const std::string& slot, float data )
 void GLSL_Program::setUniform( const std::string& slot, const std::vector<Vector3>& vec )
 {
 	assert( sizeof(vec[0]) == 3*sizeof(float) );
-
 	GLint loc = glGetUniformLocation( id, slot.c_str() );
-
-	if( loc == -1 )
-	{
-		// Log::warn( "Could not locate uniform location in program object '%d'", id );
-		return;
-	}
-
+	if( loc == -1 ) return;
 	glUniform3fv( loc, vec.size(), reinterpret_cast<const float*>(&vec[0]) );
 }
 
@@ -357,13 +316,7 @@ void GLSL_Program::setUniform( const std::string& slot, const std::vector<Color>
 	assert( sizeof(vec[0]) == 4*sizeof(float) );
 
 	GLint loc = glGetUniformLocation( id, slot.c_str() );
-
-	if( loc == -1 )
-	{
-		//// Log::warn( "Could not locate uniform location in program object '%d'", id );
-		return;
-	}
-
+	if( loc == -1 ) return;
 	glUniform4fv( loc, vec.size(), reinterpret_cast<const float*>(&vec[0]) );
 }
 
@@ -372,13 +325,7 @@ void GLSL_Program::setUniform( const std::string& slot, const std::vector<Color>
 void GLSL_Program::setUniform( const std::string& slot, const Vector3& vec )
 {
 	GLint loc = glGetUniformLocation( id, slot.c_str() );
-
-	if( loc == -1 )
-	{
-		//// Log::warn( "Could not locate uniform location in program object '%d'", id );
-		return;
-	}
-
+	if( loc == -1 ) return;
 	glUniform3f( loc, vec.x, vec.y, vec.z );
 }
 
@@ -392,27 +339,12 @@ void GLSL_Program::setUniform( const std::string& slot, const EulerAngles& ang )
 
 //-----------------------------------//
 
-#define TRANSPOSE_MATRIX false
-
 void GLSL_Program::setUniform( const std::string& slot, const Matrix4x3& matrix )
 {
 	GLint loc = glGetUniformLocation( id, slot.c_str() );
-
-	if( loc == -1 )
-	{
-		//// Log::warn( "Could not locate uniform location in program object '%d'", id );
-		return;
-	}
-
-	//if(glUniformMatrix4x3fv)
-	//{
-	//	glUniformMatrix4x3fv( loc, 1, false, &matrix.m11 );
-	//}
-	//else
-	{
-		Matrix4x4 mat( matrix );
-		glUniformMatrix4fv( loc, 1, TRANSPOSE_MATRIX, &mat.m11 );
-	}
+	if( loc == -1 ) return;
+	Matrix4x4 mat( matrix );
+	glUniformMatrix4fv( loc, 1, false, &mat.m11 );
 }
 
 //-----------------------------------//
@@ -420,32 +352,18 @@ void GLSL_Program::setUniform( const std::string& slot, const Matrix4x3& matrix 
 void GLSL_Program::setUniform( const std::string& slot, const Matrix4x4& matrix )
 {
 	GLint loc = glGetUniformLocation( id, slot.c_str() );
-
-	if( loc == -1 )
-	{
-		//// Log::warn( "Could not locate uniform location in program object '%d'", id );
-		return;
-	}
-
-	glUniformMatrix4fv( loc, 1, TRANSPOSE_MATRIX, &matrix.m11 );
+	if( loc == -1 ) return;
+	glUniformMatrix4fv( loc, 1, false, &matrix.m11 );
 }
 
 //-----------------------------------//
 
 void GLSL_Program::setUniform( const std::string& slot, const std::vector<Matrix4x4>& vec )
 {
-	if( vec.empty() )
-		return;
-
+	if( vec.empty() ) return;
 	GLint loc = glGetUniformLocation( id, slot.c_str() );
-
-	if( loc == -1 )
-	{
-		// Log::warn( "Could not locate uniform location in program object '%d'", id );
-		return;
-	}
-
-	glUniformMatrix4fv( loc, vec.size(), TRANSPOSE_MATRIX, &(vec[0].m11) );
+	if( loc == -1 ) return;
+	glUniformMatrix4fv( loc, vec.size(), false, &(vec[0].m11) );
 }
 
 //-----------------------------------//

@@ -9,8 +9,8 @@
 %module vapor
 
 %begin %{
-#include "vapor/PCH.h"
-#include "vapor/Headers.h"
+#include "Engine/API.h"
+#include "Headers.h"
 using namespace vapor;
 %}
 
@@ -18,10 +18,10 @@ using namespace vapor;
 
 namespace vapor
 {
-	VAPOR_API void Log::debug(const std::string& msg);
-	VAPOR_API void Log::info(const std::string& subsystem, const char* msg, ...);
-	VAPOR_API void Log::warn(const std::string& subsystem, const char* msg, ...);
-	VAPOR_API void Log::error(const std::string& subsystem, const char* msg, ...);
+	VAPOR_API void LogDebug(const char* msg, ...);
+	VAPOR_API void LogInfo(const char* msg, ...);
+	VAPOR_API void LogWarn(const char* msg, ...);
+	VAPOR_API void LogError(const char* msg, ...);
 }
 
 %include "math.i"
@@ -30,4 +30,4 @@ namespace vapor
 %include "render.i"
 %include "scene.i"
 
-//%include "vapor/Engine.h"
+//%include "Engine.h"

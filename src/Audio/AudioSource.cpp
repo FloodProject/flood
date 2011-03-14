@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 
 #ifdef VAPOR_AUDIO_OPENAL
 
@@ -37,7 +37,7 @@ AudioSource::AudioSource(AudioContext* context, const SoundPtr& sound)
 
 	if(device->checkError())
 	{
-		Log::warn("Could not generate a new audio source: %s", device->getError());
+		LogWarn("Could not generate a new audio source: %s", device->getError());
 		return;
 	}
 
@@ -57,7 +57,7 @@ AudioSource::~AudioSource()
 
 	if( device->checkError() )
 	{
-		Log::warn("Could not unset buffer from audio source: %s", device->getError());
+		LogWarn("Could not unset buffer from audio source: %s", device->getError());
 		return;
 	}
 
@@ -66,7 +66,7 @@ AudioSource::~AudioSource()
 
 	if( device->checkError() )
 	{
-		Log::warn("Could not delete audio source: %s", device->getError());
+		LogWarn("Could not delete audio source: %s", device->getError());
 		return;
 	}
 }
@@ -102,7 +102,7 @@ void AudioSource::play( const int count )
 
 	if(device->checkError())
 	{
-		Log::warn("Could not play audio source: %s", device->getError());
+		LogWarn("Could not play audio source: %s", device->getError());
 	}
 }
 
@@ -116,7 +116,7 @@ void AudioSource::stop()
 
 	if(device->checkError())
 	{
-		Log::warn("Could not stop audio source: %s", device->getError());
+		LogWarn("Could not stop audio source: %s", device->getError());
 	}
 }
 
@@ -130,7 +130,7 @@ void AudioSource::pause()
 
 	if(device->checkError())
 	{
-		Log::warn( "Could not pause audio source: %s", device->getError());
+		LogWarn( "Could not pause audio source: %s", device->getError());
 	}
 }
 
@@ -173,7 +173,7 @@ void AudioSource::queue()
 
 	if(device->checkError())
 	{
-		Log::warn( "Could not queue buffer in audio source: %s", device->getError());
+		LogWarn( "Could not queue buffer in audio source: %s", device->getError());
 	}
 }
 
@@ -188,7 +188,7 @@ void AudioSource::clear()
 
 	//if(device->checkError())
 	//{
-	//	Log::warn( "Could not queue buffer in audio source: %s",
+	//	LogWarn( "Could not queue buffer in audio source: %s",
 	//		device->getError());
 	//}
 }
@@ -252,7 +252,7 @@ void AudioSource::setPosition( const Vector3& pos )
 
 	if(device->checkError())
 	{
-		Log::warn( "Could not set position in audio source: %s", device->getError());
+		LogWarn( "Could not set position in audio source: %s", device->getError());
 		return;
 	}
 }

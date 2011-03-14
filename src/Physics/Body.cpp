@@ -6,20 +6,20 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 #include "Event.h"
 
 #ifdef VAPOR_PHYSICS_BULLET
 
-#include "vapor/physics/Body.h"
-#include "vapor/physics/Shape.h"
-#include "vapor/physics/Physics.h"
-#include "vapor/physics/Convert.h"
+#include "physics/Body.h"
+#include "physics/Shape.h"
+#include "physics/Physics.h"
+#include "physics/Convert.h"
 
-#include "vapor/scene/Entity.h"
-#include "vapor/scene/Transform.h"
+#include "Scene/Entity.h"
+#include "Scene/Transform.h"
 
-#include "vapor/Engine.h"
+#include "Engine.h"
 
 #include <BulletDynamics/Dynamics/btRigidBody.h>
 #include "MotionState.h"

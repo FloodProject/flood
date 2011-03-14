@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Plugin.h"
-#include "Math/Vector2.h"
+#include "Math/Vector.h"
 
 namespace vapor { namespace editor {
 
@@ -20,9 +20,11 @@ class SelectionOperation;
 
 class SelectionPlugin : public Plugin
 {
+	REFLECT_DECLARE_CLASS()
+
 public:
 
-	SelectionPlugin( EditorFrame* frame );
+	SelectionPlugin();
 
 	// Gets metadata about this plugin.
 	virtual PluginMetadata getMetadata();
@@ -74,7 +76,7 @@ protected:
 	SelectionManager* selections;
 	wxAuiToolBarItem* buttonSelect;
 
-	Vector2i dragOrigin;
+	Vector2 dragOrigin;
 	EntityPtr dragRectangle;
 };
 

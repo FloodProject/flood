@@ -22,12 +22,12 @@ class CORE_API Profiler
 {
 public:
 
-	Profiler(const std::string& name);
+	Profiler(const String& name);
 	~Profiler();
 
 protected:
 
-	std::string name;
+	String name;
 	Timer timer;
 };
 

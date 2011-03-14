@@ -21,6 +21,8 @@ namespace vapor { namespace editor {
 
 struct PluginMetadata
 {
+	PluginMetadata() : startEnabled(true) {}
+
 	// Name of this plugin.
 	std::string name;
 
@@ -32,6 +34,9 @@ struct PluginMetadata
 
 	// Version of this plugin.
 	std::string version;
+
+	// Enabled by default.
+	bool startEnabled;
 };
 
 //-----------------------------------//
@@ -50,11 +55,13 @@ class PluginManager;
 
 class Plugin
 {
+	DECLARE_CLASS_()
+
 	friend class PluginManager;
 
 public:
 
-	Plugin( EditorFrame* frame );
+	Plugin();
 	virtual ~Plugin();
 
 	// Gets if plugin is enabled.
@@ -120,15 +127,15 @@ protected:
 	// Removes a page from the main notebook.
 	void removePage( wxWindow* page );
 
-	// Access to the editor instance.
-	EditorFrame* editor;
-
 	// Is plugin enabled?
-	bool pluginEnabled;
+	bool enabled;
 
 	// Keeps track of all the registered tools.
 	typedef std::vector<wxAuiToolBarItem*> Tools;
 	Tools tools;
+
+	// Editor frame.
+	EditorFrame* editor;
 };
 
 //-----------------------------------//

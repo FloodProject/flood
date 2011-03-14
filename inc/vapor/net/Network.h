@@ -29,10 +29,10 @@ public:
 	void sendMessage( const MessagePtr& message );
 
 	// Creates a new server socket.
-	bool createServerSocket( const std::string& uri );
+	bool createServerSocket( const String& uri );
 
 	// Creates a new client socket.
-	bool createClientSocket( const std::string& uri );
+	bool createClientSocket( const String& uri );
 
 	// Shutdowns the server.
 	void shutdown();

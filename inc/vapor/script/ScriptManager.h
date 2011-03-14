@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "vapor/Subsystem.h"
-#include "vapor/script/State.h"
-#include "vapor/resources/ResourceManager.h"
+#include "Subsystem.h"
+#include "script/State.h"
+#include "Resources/ResourceManager.h"
 
 #ifdef VAPOR_SCRIPTING_LUA
 

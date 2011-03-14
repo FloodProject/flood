@@ -6,9 +6,9 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
+#include "Core/Memory.h"
 #include "Core/FileSystem.h"
-#include "TaskManager.h"
 
 #include "Engine.h"
 #include "Render/Device.h"
@@ -34,6 +34,7 @@ Engine::Engine()
 	: log(nullptr)
 	, stream(nullptr)
 	, fileSystem(nullptr)
+	, taskPool(nullptr)
 	, resourceManager(nullptr)
 	, renderDevice(nullptr)
 	, inputManager(nullptr)
@@ -50,24 +51,24 @@ Engine::~Engine()
 {
 	scene.reset();
 
-	for( uint i = 0; i < subsystems.size(); i++ )
+	for( size_t i = 0; i < subsystems.size(); i++ )
 	{
 		Subsystem* system = subsystems[i];
 		delete system;
 	}
 	
 	delete inputManager;
-	delete taskManager;
-	//delete audioDevice;
 	delete physicsManager;
 	delete scriptManager;
 	delete renderDevice;
 	delete resourceManager;
 	delete fileSystem;
-	delete log;
+	delete audioDevice;
 
-	if(engineInstance == this)
-		engineInstance = nullptr;
+	TaskPoolDestroy( taskPool, AllocatorGetDefault() );
+	
+	delete stream;	
+	LogDestroy(log, AllocatorGetDefault());
 }
 
 //-----------------------------------//
@@ -82,7 +83,7 @@ void Engine::create(const std::string& app, const char** argv)
 
 void Engine::addSubsystem( Subsystem* const subsystem )
 {
-	Log::info( "Registering new engine subsystem" );
+	LogInfo( "Registering new engine subsystem" );
 	
 	subsystems.push_back( subsystem );
 }
@@ -94,18 +95,18 @@ void Engine::init( bool createWindow )
 	// Sets up the main logger.
 	setupLogger();
 
-	Log::info( "Starting vapor3D version '%s'", VAPOR_ENGINE_VERSION );
+	LogInfo( "Starting vapor3D" );
 
 	// Creates the file system.
 	fileSystem = new FileSystem( app, argv ? argv[0] : nullptr );
 
 	// Creates the task system.
-	taskManager = new TaskManager();
+	taskPool = TaskPoolCreate( AllocatorGetDefault(), 2 );
 
 	// Creates the resource manager.
 	resourceManager = new ResourceManager();
 	resourceManager->setFileWatcher( fileSystem->getFileWatcher() );
-	resourceManager->setTaskManager( taskManager );
+	resourceManager->setTaskPool( taskPool );
 	
 	// Registers default resource loaders.
 	resourceManager->setupResourceLoaders();
@@ -150,8 +151,8 @@ void Engine::setupLogger()
 
 	stream = new FileStream("Log.html"/*name*/, StreamMode::Write);
 	
-	log = new Logger();
-	log->add( new LogSinkHTML(*stream) );
+	log = LogCreate( AllocatorGetDefault() );
+	//log->add( new LogSinkHTML(*stream) );
 }
 
 //-----------------------------------//
@@ -187,7 +188,7 @@ void Engine::setupInput()
 
 void Engine::update( float delta )
 {
-	for( uint i = 0; i < subsystems.size(); i++ )
+	for( size_t i = 0; i < subsystems.size(); i++ )
 	{
 		Subsystem* system = subsystems[i];
 		system->update( delta );

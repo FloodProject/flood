@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 #include "ReferenceCount.h"
 
 FWD_DECL_SHARED(Scene)
@@ -17,8 +17,9 @@ namespace vapor {
 
 //-----------------------------------//
 
+struct TaskPool;
+
 class Subsystem;
-class TaskManager;
 class FileSystem;
 class ResourceManager;
 class RenderDevice;
@@ -27,6 +28,7 @@ class PhysicsManager;
 class PageManager;
 class InputManager;
 class ScriptManager;
+class FileStream;
 
 //-----------------------------------//
 
@@ -75,7 +77,7 @@ public:
 	GETTER(AudioDevice, AudioDevice*, audioDevice)
 
 	// Gets the device.
-	GETTER(TaskManager, TaskManager*, taskManager)
+	GETTER(TaskPool, TaskPool*, taskPool)
 
 	// Gets the scripting state.
 	GETTER(ScriptManager, ScriptManager*, scriptManager)
@@ -87,7 +89,7 @@ public:
 	ACESSOR(PhysicsManager, PhysicsManager*, physicsManager)
 
 	// Gets the main engine logger.
-	GETTER(Logger, Logger*, log)
+	GETTER(Logger, Log*, log)
 
 	// Gets the virtual filesystem.
 	GETTER(FileSystem, FileSystem*, fileSystem)
@@ -104,10 +106,10 @@ protected:
 	std::vector< Subsystem* > subsystems;
 
 	// Manages background tasks.
-	TaskManager* taskManager;
+	TaskPool* taskPool;
 
 	// Default logger.
-	Logger* log;
+	Log* log;
 
 	// Log stream.
 	FileStream* stream;

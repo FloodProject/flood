@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "PropertyOperation.h"
 #include "Editor.h"
 
@@ -36,7 +36,7 @@ void PropertyOperation::setFieldValue(const wxAny& value)
 	assert( field != nullptr );
 
 	const Type& field_type = field->type;
-	Log::debug("Changed property value: %s", field->name.c_str() );
+	LogDebug("Changed property value: %s", field->name.c_str() );
 
 	bool isResource = field_type.inherits<Resource>();
 

@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "TerrainPlugin.h"
 #include "TerrainPage.h"
 #include "TerrainOperation.h"
@@ -28,14 +28,19 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
+REFLECT_CHILD_CLASS(TerrainPlugin, Plugin)
+REFLECT_END()
+
+//-----------------------------------//
+
 BEGIN_EVENT_TABLE(TerrainPlugin, wxEvtHandler)
 	EVT_TIMER(wxID_ANY, TerrainPlugin::onTimer)
 END_EVENT_TABLE()
 
 //-----------------------------------//
 
-TerrainPlugin::TerrainPlugin( EditorFrame* frame )
-	: Plugin(frame)
+TerrainPlugin::TerrainPlugin()
+	: Plugin()
 	, terrainPage(nullptr)
 	, terrainOperation(nullptr)
 	, timer(this)

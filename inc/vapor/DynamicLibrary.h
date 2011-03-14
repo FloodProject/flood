@@ -34,18 +34,18 @@ class CORE_API DynamicLibrary
 
 public:
 
-	DynamicLibrary( const std::string& name );
+	DynamicLibrary( const String& name );
 	~DynamicLibrary();
 
 	// Gets a pointer to the given symbol.
-	void* getSymbol( const std::string& symbol );
+	void* getSymbol( const String& symbol );
 
 private:
 
 	// Loads the dynamic library.
 	bool load();
 	
-	std::string _name;
+	String _name;
 	DynLibHandle _handle;
 };
 

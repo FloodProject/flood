@@ -6,12 +6,12 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 #include "gui/Label.h"
-#include "resources/Font.h"
-#include "render/Material.h"
-#include "scene/Geometry.h"
-#include "resources/ResourceManager.h"
+#include "Resources/Font.h"
+#include "Render/Material.h"
+#include "Scene/Geometry.h"
+#include "Resources/ResourceManager.h"
 #include "Engine.h"
 #include "Utilities.h"
 
@@ -47,7 +47,7 @@ Label::Label( const std::string& text, const std::string& path )
 {
 	static int i = 0;
 
-	material = new Material("FontMaterial" + String::fromNumber(i++), "Tex");
+	material = new Material("FontMaterial" + StringFromNumber(i++), "Tex");
 	
 	ResourceManager* res = GetResourceManager();
 	font = res->loadResource<Font>(path);
@@ -126,17 +126,17 @@ void Label::rebuildGeometry()
 	// Calculate the tex coords
 	std::vector<Vector3> texcoords;
 
-	ushort x_pos = 0;
-	ushort y_pos = 0;
+	uint16 x_pos = 0;
+	uint16 y_pos = 0;
 
 	const std::vector<Glyph>& glyphs = font->getGlyphs();
 
 	const float width = font->getImage()->getWidth();
 	const float height = font->getImage()->getHeight();
 
-	ushort mid_offset = font->getGlyphSize().x /2;
+	uint16 mid_offset = font->getGlyphSize().x /2;
 
-	for( uint i = 0; i < text.size(); i++ )
+	for( size_t i = 0; i < text.size(); i++ )
 	{
 		unsigned char c = text[i];
 

@@ -6,14 +6,14 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "LogFrame.h"
 #include "Editor.h"
 
 namespace vapor { namespace editor {
 
 //-----------------------------------//
-
+#if 0
 class LogSinkFrame : public LogSink
 {
 public:
@@ -33,7 +33,7 @@ public:
 	
 	wxListCtrl* listCtrl;
 };
-
+#endif
 //-----------------------------------//
 
 LogFrame::LogFrame( wxWindow* parent )
@@ -48,8 +48,8 @@ LogFrame::LogFrame( wxWindow* parent )
 	message.SetWidth(1000);
 	InsertColumn(1, message);
 
-	Logger* log = GetEditor().getEngine()->getLogger();
-	log->add( new LogSinkFrame(this) );
+	Log* log = GetEngine()->getLogger();
+	//LogAddHandler(new LogSinkFrame(this));
 }
 
 //-----------------------------------//

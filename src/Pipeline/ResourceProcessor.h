@@ -25,12 +25,14 @@ typedef std::map< const Class*, ResourceProcessor* > ResourceProcessorMap;
  * Resource processors handle the pre-processing of resource data.
  */
 
-class PIPELINE_API ResourceProcessor : public Object
+class PIPELINE_API VAPOR_PURE ResourceProcessor : public Object
 {
 	DECLARE_UNCOPYABLE(ResourceProcessor)
 	REFLECT_DECLARE_CLASS()
 
 public:
+
+	virtual ~ResourceProcessor();
 
 	// Processes the given resource.
 	virtual bool Process(const ResourcePtr& resource) = 0;
@@ -38,22 +40,27 @@ public:
 	// Gets the processed resource type.
 	virtual const Class& GetResourceType() = 0;
 
-	// Registers the default resource processors.
-	static void registerProcessors();
-
-	// References the default resource processors.
-	static void referenceProcessors();
-
-	// Finds a resource processor for a given resource type.
-	static ResourceProcessor* findProcessor(const Class& type);
-
-	// Maps the resource processors to the resource types.
-	static ResourceProcessorMap resourceProcessors;
-
 protected:
 	
 	ResourceProcessor();
 };
+
+namespace Pipeline
+{
+
+// Initializes the default resource processors.
+void Init();
+
+// Cleans the resource processors.
+void Cleanup();
+
+// Finds a resource processor for a given resource type.
+ResourceProcessor* FindProcessor(const Class& type);
+
+}
+
+// Maps the resource processors to the resource types.
+extern std::vector<ResourceProcessor*> resourceProcessors;
 
 //-----------------------------------//
 

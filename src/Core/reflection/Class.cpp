@@ -7,19 +7,20 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "core/Class.h"
+#include "Core/Class.h"
+#include <algorithm>
 
 namespace vapor {
 
 //-----------------------------------//
 
-Class::Class(const std::string& name, int size)
+Class::Class(const String& name, int size)
 	: Type(MetaType::Class, name, size)
 { }
 
 //-----------------------------------//
 
-Class::Class(const std::string& name, const Type& parent, int size)
+Class::Class(const String& name, const Type& parent, int size)
 	: Type(MetaType::Class, name, parent, size)
 { }
 
@@ -27,36 +28,22 @@ Class::Class(const std::string& name, const Type& parent, int size)
 
 void Class::addField(Field& field)
 {
-	fields[field.name] = &field;
-	fieldsVector.push_back(&field);
+	fields.push_back(&field);
 }
 
 //-----------------------------------//
 
-const FieldsMap& Class::getFields() const
+Field* Class::getField(const String& name) const
 {
-	return fields;
-}
-
-//-----------------------------------//
-
-const std::vector<Field*>& Class::getFieldsVector() const
-{
-	return fieldsVector;
-}
-
-//-----------------------------------//
-
-Field* Class::getField(const std::string& name) const
-{
-	FieldsMap::const_iterator it = fields.find(name);
-
-	if( it != fields.end() )
-		return it->second;
-
-	if( !parent ) return nullptr;
-
+	for(size_t i = 0; i < fields.size(); i++)
+	{
+		Field* field = fields[i];
+		if(field->name == name) return field;
+	}
+	
 	Class* parent = (Class*) Type::parent;
+
+	if(!parent) return nullptr;
 	return parent->getField(name);
 }
 

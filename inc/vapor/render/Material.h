@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "render/Program.h"
-#include "render/Texture.h"
+#include "Render/Program.h"
+#include "Render/Texture.h"
 #include "Resources/Shader.h"
 
 #define GL_ZERO 0

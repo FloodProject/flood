@@ -8,13 +8,15 @@
 
 #pragma once
 
-#include "Thread.h"
 #include <deque>
 #include <algorithm>
 
 namespace vapor {
 
 //-----------------------------------//
+
+struct Mutex;
+struct Condition;
 
 /**
  * Concurrent queue that is safe to use even with multiple producers
@@ -28,30 +30,42 @@ class CORE_API ConcurrentQueue
 {
 public:
 
+	ConcurrentQueue()
+	{
+		mutex = MutexCreate(AllocatorGetDefault());
+		cond = ConditionCreate(AllocatorGetDefault());
+	}
+
+	~ConcurrentQueue()
+	{
+		MutexDestroy(mutex, AllocatorGetDefault());
+		ConditionDestroy(cond, AllocatorGetDefault());
+	}
+
 	void push(const T& value)
 	{
-		THREAD(boost::mutex::scoped_lock lock(mutex));
-		
+		MutexLock(mutex);
 		queue.push_back(value);
-		THREAD(lock.unlock();)
-
-		THREAD(cond_var.notify_one();)
+		MutexUnlock(mutex);
+		ConditionWakeOne(cond);
 	}
 
 	//-----------------------------------//
 
 	bool empty() const
 	{
-		THREAD(boost::mutex::scoped_lock lock(mutex));
+		MutexLock(mutex);
+		bool empty = queue.empty();
+		MutexUnlock(mutex);
 		
-		return queue.empty();
+		return empty;
 	}
 
 	//-----------------------------------//
 
 	bool try_pop(T& popped_value)
 	{
-		THREAD(boost::mutex::scoped_lock lock(mutex));
+		MutexLock(mutex);
 	    
 		if( queue.empty() )
 			return false;
@@ -59,6 +73,8 @@ public:
 		popped_value = queue.front();
 		queue.pop_front();
 		
+		MutexUnlock(mutex);
+
 		return true;
 	}
 
@@ -66,28 +82,30 @@ public:
 
 	void wait_and_pop(T& popped_value)
 	{
-		THREAD(boost::mutex::scoped_lock lock(mutex));
+		MutexLock(mutex);
 	    
 		while( queue.empty() )
-			THREAD(cond_var.wait(lock);)
+			ConditionWait(cond, mutex);
 	    
 		popped_value = queue.front();
 		queue.pop_front();
+
+		MutexUnlock(mutex);
 	}
 
 	//-----------------------------------//
 
 	bool find(const T& value)
 	{
-		THREAD(boost::mutex::scoped_lock lock(mutex));
+		MutexLock(mutex);
 
 		typename std::deque<T>::const_iterator it;
 		it = std::find(queue.begin(), queue.end(), value);
-		
-		if( it != queue.end() )
-			return true;
+		bool found = it != queue.end();
 
-		return false;
+		MutexUnlock(mutex);
+
+		return found;
 	}
 
 	//-----------------------------------//
@@ -96,8 +114,8 @@ protected:
 
 	std::deque<T> queue;
 
-	THREAD(mutable boost::mutex mutex);
-	THREAD(boost::condition_variable cond_var);
+	Mutex* mutex;
+	Condition* cond;
 };
 
 //-----------------------------------//

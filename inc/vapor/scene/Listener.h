@@ -10,8 +10,8 @@
 
 #ifdef VAPOR_AUDIO_OPENAL
 
-#include "scene/Component.h"
-#include "audio/Context.h"
+#include "Scene/Component.h"
+#include "Audio/Context.h"
 
 namespace vapor {
 

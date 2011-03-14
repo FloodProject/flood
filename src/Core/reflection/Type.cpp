@@ -14,7 +14,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-Type::Type(MetaType::Enum type, const std::string& name, int size)
+Type::Type(MetaType::Enum type, const String& name, int size)
 	: type(type)
 	, name(name)
 	, parent(nullptr)
@@ -25,7 +25,7 @@ Type::Type(MetaType::Enum type, const std::string& name, int size)
 
 //-----------------------------------//
 
-Type::Type(MetaType::Enum type, const std::string& name, const Type& _parent, int size)
+Type::Type(MetaType::Enum type, const String& name, const Type& _parent, int size)
 	: type(type)
 	, name(name)
 	, parent(&_parent)
@@ -116,7 +116,7 @@ void Registry::registerType(const Type* type)
 
 //-----------------------------------//
 
-const Type* Registry::getType(const std::string& type)
+const Type* Registry::getType(const String& type)
 {
 	if( types.find(type) == types.end() )
 		return nullptr;

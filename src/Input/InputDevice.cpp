@@ -6,8 +6,8 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "vapor/input/Device.h"
+#include "Engine/API.h"
+#include "input/Device.h"
 
 namespace vapor {
 

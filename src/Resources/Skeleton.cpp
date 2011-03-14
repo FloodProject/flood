@@ -37,7 +37,7 @@ BonePtr Skeleton::findBone( const std::string& name )
 	{
 		const BonePtr& bone = bones[i];
 
-		if( String::compareInsensitive(bone->name, name) == 0 )
+		if( StringCompareInsensitive(bone->name, name) == 0 )
 			return bone;
 	}
 

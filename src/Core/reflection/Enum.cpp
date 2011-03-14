@@ -14,13 +14,13 @@ namespace vapor {
 
 //-----------------------------------//
 
-Enum::Enum(const std::string& name, int size)
+Enum::Enum(const String& name, int size)
 	: Type(MetaType::Enumeration, name, size)
 { }
 
 //-----------------------------------//
 
-void Enum::addValue( const std::string& name, int value )
+void Enum::addValue( const String& name, int value )
 {
 	EnumValuesMap::iterator it = values.find(name);
 	
@@ -30,7 +30,7 @@ void Enum::addValue( const std::string& name, int value )
 
 //-----------------------------------//
 
-const std::string& Enum::getName(int value) const
+const String& Enum::getName(int value) const
 {
 	EnumValuesMap::iterator it;
 	
@@ -40,13 +40,13 @@ const std::string& Enum::getName(int value) const
 			return it->first;
 	}
 
-	static std::string empty;
+	static String empty;
 	return empty;
 }
 
 //-----------------------------------//
 
-const int Enum::getValue(const std::string& name) const
+const int Enum::getValue(const String& name) const
 {
 	if(values.find(name) == values.end())
 		return -1;

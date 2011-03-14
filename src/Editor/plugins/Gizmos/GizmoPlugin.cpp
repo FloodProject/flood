@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "GizmoPlugin.h"
 #include "GizmoOperation.h"
 #include "GizmoTranslate.h"
@@ -28,8 +28,13 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-GizmoPlugin::GizmoPlugin( EditorFrame* frame )
-	: Plugin(frame)
+REFLECT_CHILD_CLASS(GizmoPlugin, Plugin)
+REFLECT_END()
+
+//-----------------------------------//
+
+GizmoPlugin::GizmoPlugin()
+	: Plugin()
 	, editorScene(frame->getEditorScene())
 	, op(nullptr)
 {
@@ -183,7 +188,7 @@ Plane GizmoPlugin::getGizmoPickPlane()
 	RenderView* renderView = viewframe->getView();
 	const CameraPtr& camera = renderView->getCamera();
 	
-	Vector2i viewCenter = renderView->getSize() / 2.0f;
+	Vector2 viewCenter = renderView->getSize() / 2.0f;
 	Ray ray = camera->getRay(viewCenter.x, viewCenter.y);
 	
 	float lengthX = planeX.project(ray.direction).lengthSquared();
@@ -394,7 +399,7 @@ bool GizmoPlugin::pickImageTest( const MouseMoveEvent& moveEvent,
 								 GizmoAxis::Enum& axis )
 {
 	RenderView* view = viewframe->getView();
-	Vector2i size = view->getSize();
+	Vector2 size = view->getSize();
 
 	// We need to flip the Y-axis due to a mismatch between the 
 	// OpenGL and wxWidgets coordinate-system origin conventions.

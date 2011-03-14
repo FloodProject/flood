@@ -7,13 +7,14 @@
 ************************************************************************/
 
 #pragma once
+#include <map>
 
 namespace vapor {
 
 //-----------------------------------//
 
 class Type;
-typedef CORE_API std::map<std::string, const Type*> TypeRegistryMap;
+typedef CORE_API std::map<String, const Type*> TypeRegistryMap;
 
 /**
  * Stores a globally acessible mapping of type names and their instances.
@@ -26,7 +27,7 @@ class CORE_API Registry
 public:
 
 	// Gets a type given a name.
-	const Type* getType(const std::string& type);
+	const Type* getType(const String& type);
 
 	// Registers a new type.
 	void registerType(const Type* type);

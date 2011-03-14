@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 
 #ifdef VAPOR_AUDIO_OPENAL
 
@@ -27,7 +27,7 @@ AudioBuffer::AudioBuffer( AudioDevice* device, const SoundPtr& sound )
 	// Check if the buffer was successfuly created.
 	if(device->checkError()) 
 	{
-		Log::warn( "Error creating a sound buffer: %s", device->getError());
+		LogWarn( "Error creating a sound buffer: %s", device->getError());
 		return;
 	}
 
@@ -65,7 +65,7 @@ void AudioBuffer::upload()
 	
 	if(device->checkError())
 	{
-		Log::warn("Error uploading sound to buffer: %s", device->getError());
+		LogWarn("Error uploading sound to buffer: %s", device->getError());
 		return;
 	}
 }

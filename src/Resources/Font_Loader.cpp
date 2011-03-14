@@ -11,8 +11,11 @@
 #ifdef VAPOR_FONT_BITMAP
 
 #include "Core/File.h"
-#include "Math/Helpers.h"
+#include "Core/Memory.h"
+
+#include "Log.h"
 #include "Utilities.h"
+#include "Math/Helpers.h"
 
 #include "Resources/Font_Loader.h"
 #include "Resources/ResourceManager.h"
@@ -53,14 +56,14 @@ bool Font_Loader::decode(const Stream& stream, Resource* res)
 	if( !image )
 		return false;
 
-	File glyphsStream( glyphsFilename );
-	glyphsStream.read(data);
+	File* fileGlyphs = FileCreate(AllocatorGetDefault(), glyphsFilename, StreamMode::Read);
+	FileRead(fileGlyphs, data);
 
 	parseGlyphs();
 
 	font = static_cast<BitmapFont*>( res );
 	font->setName( fontNameSizeInfo[0] );
-	font->setSize( String::toNumber<int>(fontNameSizeInfo[1]) );
+	font->setSize( StringToNumber<int>(fontNameSizeInfo[1]) );
 	font->setImage( image );
 	font->setGlyphs( glyphs );
 
@@ -71,16 +74,18 @@ bool Font_Loader::decode(const Stream& stream, Resource* res)
 
 void Font_Loader::parseGlyphs()
 {
-	ushort glyph_width = String::toNumber<ushort>( glyphSizeInfo[0] );
-	ushort glyph_height = String::toNumber<ushort>( glyphSizeInfo[1] );
+	uint16 glyph_width = StringToNumber<uint16>( glyphSizeInfo[0] );
+	uint16 glyph_height = StringToNumber<uint16>( glyphSizeInfo[1] );
 
-	const uint image_width = image->getWidth();
+	uint32 image_width = image->getWidth();
 	//ushort image_height = image->getHeight();
 
 	glyphs.clear();
 
-	ushort x = 0; ushort y = 0;
-	for( uint i = 0; i < data.size(); i+=2 )
+	uint16 x = 0;
+	uint16 y = 0;
+	
+	for( size_t i = 0; i < data.size(); i+=2 )
 	{
 		Glyph glyph;
 		
@@ -113,39 +118,39 @@ bool Font_Loader::validateFont()
 	// Validate file length.
 	if( lines.size() != 4 )
 	{
-		Log::warn( "Font description has invalid size" );
+		LogWarn( "Font description has invalid size" );
 		return false;
 	}
 		
-	fontNameSizeInfo = String::split(lines[0], ' ');
+	StringSplit(lines[0], ' ', fontNameSizeInfo);
 
 	if( fontNameSizeInfo.size() != 2 )
 	{
-		Log::warn( "Font description file format is invalid (font name and size)" );
+		LogWarn( "Font description file format is invalid (font name and size)" );
 		return false;
 	}
 
 	imageFilename = lines[1];
 
-	if( !File::exists(imageFilename) )
+	if( !FileExists(imageFilename) )
 	{
-		Log::warn( "Could not find the font image '%s'", imageFilename.c_str() );
+		LogWarn( "Could not find the font image '%s'", imageFilename.c_str() );
 		return false;
 	}
 
 	glyphsFilename = lines[2];
 
-	if( !File::exists(glyphsFilename) )
+	if( !FileExists(glyphsFilename) )
 	{
-		Log::warn( "Could not find the glyphs definition file '%s'", glyphsFilename.c_str() );
+		LogWarn( "Could not find the glyphs definition file '%s'", glyphsFilename.c_str() );
 		return false;
 	}
 
-	glyphSizeInfo = String::split(lines[3], ' ');
+	StringSplit(lines[3], ' ', glyphSizeInfo);
 
 	if( glyphSizeInfo.size() != 2 )
 	{
-		Log::warn( "Font description file format is invalid (glyph size)" );
+		LogWarn( "Font description file format is invalid (glyph size)" );
 		return false;
 	}
 

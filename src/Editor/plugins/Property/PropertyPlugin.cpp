@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "PropertyPlugin.h"
 #include "PropertyPage.h"
 #include "Editor.h"
@@ -19,8 +19,13 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-PropertyPlugin::PropertyPlugin( EditorFrame* frame )
-	: Plugin(frame)
+REFLECT_CHILD_CLASS(PropertyPlugin, Plugin)
+REFLECT_END()
+
+//-----------------------------------//
+
+PropertyPlugin::PropertyPlugin()
+	: Plugin()
 	, propertyPage(nullptr)
 { }
 
@@ -122,15 +127,14 @@ void PropertyPlugin::onResourceSelect( const ResourcePtr& resource )
 	ResourceManager* rm = GetResourceManager();
 
 	const std::string& path = resource->getPath();
-	const std::string& ext = PathUtils::getExtension(path);
+	const std::string& ext = PathGetFileExtension(path);
 
 	ResourceLoader* loader = rm->findLoader(ext);
 	if( !loader ) return;
 
 	propertyPage->showProperties(loader, false);
 
-	ResourceProcessor* processor =
-		ResourceProcessor::findProcessor( resource->getType() );
+	ResourceProcessor* processor = Pipeline::FindProcessor( resource->getType() );
 
 	if( !processor ) return;
 

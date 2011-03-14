@@ -12,7 +12,7 @@
 #include "Resources/Animation.h"
 #include "Resources/Skeleton.h"
 #include "Math/BoundingBox.h"
-#include "Math/Vector3.h"
+#include "Math/Vector.h"
 
 FWD_DECL_INTRUSIVE(Animation)
 
@@ -29,7 +29,7 @@ struct MeshMaterial
 
 struct MeshGroup
 {
-	std::vector<ushort> indices;
+	std::vector<uint16> indices;
 	MeshMaterial material;
 };
 

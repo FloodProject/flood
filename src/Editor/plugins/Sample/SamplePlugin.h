@@ -16,9 +16,11 @@ namespace vapor { namespace editor {
 
 class SamplePlugin : public Plugin
 {
+	REFLECT_DECLARE_CLASS()
+
 public:
 
-	SamplePlugin( EditorFrame* frame );
+	SamplePlugin();
 
 	// Gets metadata about this plugin.
 	virtual PluginMetadata getMetadata();

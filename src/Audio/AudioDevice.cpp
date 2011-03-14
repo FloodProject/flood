@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 
 #ifdef VAPOR_AUDIO_OPENAL
 
@@ -37,11 +37,11 @@ AudioDevice::AudioDevice()
 
 	if( !device || checkError() )
 	{
-		Log::warn("Could not create OpenAL device: %s", getError());
+		LogWarn("Could not create OpenAL device: %s", getError());
 		return;
 	}
 
-	Log::info("Creating OpenAL main context");
+	LogInfo("Creating OpenAL main context");
 
 	// Create a main context.
 	mainContext = new AudioContext(this);
@@ -50,15 +50,15 @@ AudioDevice::AudioDevice()
 	
 	if( !version || checkError() )
 	{
-		Log::warn("Could not get OpenAL version");
+		LogWarn("Could not get OpenAL version");
 		return;
 	}
 	
-	Log::info("Using OpenAL version %s", version);
+	LogInfo("Using OpenAL version %s", version);
 
 	if( checkError() )
 	{
-		Log::warn("Error initializing OpenAL: %s", getError());
+		LogWarn("Error initializing OpenAL: %s", getError());
 		return;
 	}
 }
@@ -70,10 +70,11 @@ AudioDevice::~AudioDevice()
 	if(!device) return;
 
 	#pragma TODO("Check that all contexts/buffers are closed on exit")
-	
+	delete mainContext;
+
 	if(!alcCloseDevice(device)) 
 	{
-		Log::warn("Error closing OpenAL device: %s", getError());
+		LogWarn("Error closing OpenAL device: %s", getError());
 		return;
 	}
 }
@@ -88,7 +89,7 @@ const std::string AudioDevice::getVersion()
 	alcGetIntegerv(nullptr, ALC_MAJOR_VERSION, 1, &major);
     alcGetIntegerv(nullptr, ALC_MINOR_VERSION, 1, &minor);
     
-	return String::format("%d.%d", major, minor);
+	return StringFormat("%d.%d", major, minor);
 }
 
 //-----------------------------------//
@@ -99,7 +100,7 @@ void AudioDevice::setVolume(float volume)
 
 	if(checkError()) 
 	{
-		Log::warn("Error changing listener volume: %s", getError());
+		LogWarn("Error changing listener volume: %s", getError());
 		return;
 	}
 }

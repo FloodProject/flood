@@ -6,12 +6,12 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "scene/Particles.h"
-#include "scene/Transform.h"
-#include "scene/Entity.h"
-#include "render/DebugGeometry.h"
-#include "render/GL.h"
+#include "Engine/API.h"
+#include "Scene/Particles.h"
+#include "Scene/Transform.h"
+#include "Scene/Entity.h"
+#include "Render/DebugGeometry.h"
+#include "Render/GL.h"
 
 namespace vapor {
 
@@ -88,16 +88,16 @@ void Particles::setImage(const ImagePtr& image)
 
 void Particles::resetParticle(Particle& particle)
 {
-	particle.position.x = Math::random(0.0f, 1.0f);
-	particle.position.y = Math::random(0.0f, 1.0f);
-	particle.position.z = Math::random(0.0f, 1.0f);
+	particle.position.x = MathFloatRandom(0.0f, 1.0f);
+	particle.position.y = MathFloatRandom(0.0f, 1.0f);
+	particle.position.z = MathFloatRandom(0.0f, 1.0f);
 		
-	particle.velocity.x = Math::random(minVelocity.x, maxVelocity.x);
-	particle.velocity.y = Math::random(minVelocity.y, maxVelocity.y);
-	particle.velocity.z = Math::random(minVelocity.z, maxVelocity.z);
+	particle.velocity.x = MathFloatRandom(minVelocity.x, maxVelocity.x);
+	particle.velocity.y = MathFloatRandom(minVelocity.y, maxVelocity.y);
+	particle.velocity.z = MathFloatRandom(minVelocity.z, maxVelocity.z);
 
 	particle.color = Color::White;
-	particle.life = Math::random(minLife, maxLife);
+	particle.life = MathFloatRandom(minLife, maxLife);
 	particle.alive = false;
 }
 
@@ -105,7 +105,7 @@ void Particles::resetParticle(Particle& particle)
 
 void Particles::spawnParticles(int numSpawn)
 {
-	for(uint i = 0; i < numParticles && numSpawn; i++)
+	for(size_t i = 0; i < numParticles && numSpawn; i++)
 	{
 		Particle& particle = particles[i];
 
@@ -135,7 +135,7 @@ void Particles::update(float delta)
 	colors.reserve( numParticles );
 
 	// Update the particles.
-	for(uint i = 0; i < numParticles; i++)
+	for(size_t i = 0; i < numParticles; i++)
 	{
 		Particle& particle = particles[i];
 

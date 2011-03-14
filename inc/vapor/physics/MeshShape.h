@@ -10,7 +10,7 @@
 
 #ifdef VAPOR_PHYSICS_BULLET
 
-#include "vapor/physics/Shape.h"
+#include "physics/Shape.h"
 
 FWD_DECL_SHARED(Geometry)
 

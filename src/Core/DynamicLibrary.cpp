@@ -29,7 +29,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-DynamicLibrary::DynamicLibrary(const std::string& name) 
+DynamicLibrary::DynamicLibrary(const String& name) 
   : _handle(nullptr)
   , _name(name)
 {
@@ -61,7 +61,7 @@ bool DynamicLibrary::load()
 
 //-----------------------------------//
 
-void* DynamicLibrary::getSymbol(const std::string& symbol)
+void* DynamicLibrary::getSymbol(const String& symbol)
 {
 	return (void*) DYNLIB_GETSYM(_handle, symbol.c_str()); 
 }

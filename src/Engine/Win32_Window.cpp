@@ -6,8 +6,8 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "render/Win32_Window.h"
+#include "Engine/API.h"
+#include "Render/Win32_Window.h"
 
 #ifdef VAPOR_WINDOWING_WIN32
 
@@ -29,7 +29,7 @@ Win32Window::Win32Window(const WindowSettings& settings)
 
 	if ( !registerClass() || !createWindow() ) 
 	{
-		Log::error("Could not open a Win32 window");
+		LogError("Could not open a Win32 window");
 		return;
 	}
 }
@@ -41,7 +41,7 @@ Win32Window::~Win32Window()
 	// Unregister class
 	if( !UnregisterClass(className, NULL) )
 	{
-		Log::error( "UnregisterClass() failed: %s", getErrorMessage().c_str() );
+		LogError( "UnregisterClass() failed: %s", getErrorMessage().c_str() );
 		return;
 	}
 
@@ -73,7 +73,7 @@ bool Win32Window::registerClass()
 
 	if( !RegisterClass(&wc) )
 	{
-		Log::error( "RegisterClass() failed: %s", getErrorMessage().c_str() );
+		LogError( "RegisterClass() failed: %s", getErrorMessage().c_str() );
 		return false;
 	}
 
@@ -98,7 +98,7 @@ bool Win32Window::createWindow()
 	// AdjustWindowRectEx corrects the size of the client area of the window
 	if (!AdjustWindowRectEx( &windowRect, style, false, exStyle ))
 	{
-		Log::error( "AdjustWindowRectEx() failed: %s", getErrorMessage().c_str() );
+		LogError( "AdjustWindowRectEx() failed: %s", getErrorMessage().c_str() );
 		return false;
 	}
 
@@ -110,7 +110,7 @@ bool Win32Window::createWindow()
 
 	if (!hWnd) 
 	{
-		Log::error( "CreateWindowEx() failed: %s", getErrorMessage().c_str() );
+		LogError( "CreateWindowEx() failed: %s", getErrorMessage().c_str() );
 		return false;
 	}
 
@@ -133,7 +133,7 @@ bool Win32Window::createContext()
 
 	if( !hDC )
 	{
-		Log::error( "GetDC() failed: %s", getErrorMessage().c_str() );
+		LogError( "GetDC() failed: %s", getErrorMessage().c_str() );
 		return false;
 	}
 
@@ -152,13 +152,13 @@ bool Win32Window::createContext()
 
 	if ( !pf ) 
 	{
-		Log::error( "ChoosePixelFormat() failed: %s", getErrorMessage().c_str() );
+		LogError( "ChoosePixelFormat() failed: %s", getErrorMessage().c_str() );
 		return false;
 	}
 
 	if ( !SetPixelFormat( hDC, pf, &pfd ) ) 
 	{
-		Log::error( "SetPixelFormat() failed: %s", getErrorMessage().c_str() );
+		LogError( "SetPixelFormat() failed: %s", getErrorMessage().c_str() );
 		return false;
 	} 
 
@@ -166,14 +166,14 @@ bool Win32Window::createContext()
 
 	//if ( pfd.dwFlags & PFD_NEED_PALETTE || pfd.dwFlags & PFD_NEED_SYSTEM_PALETTE )
 	//{
-	//	Log::error( "Requested format requires a palette");
+	//	LogError( "Requested format requires a palette");
 	//}
 
 	hRC = wglCreateContext( hDC );
 
 	if( !hRC )
 	{
-		Log::error( "wglCreateContext() failed: %s", getErrorMessage().c_str() );
+		LogError( "wglCreateContext() failed: %s", getErrorMessage().c_str() );
 		return false;
 	}
 
@@ -240,7 +240,7 @@ bool Win32Window::setTitle(const std::wstring& title)
 	// If the function succeeds, the return value is nonzero.
 	if( !SetWindowText(hWnd, title.c_str()) )
 	{
-		Log::error( "SetWindowText() failed: %s", getErrorMessage().c_str() );
+		LogError( "SetWindowText() failed: %s", getErrorMessage().c_str() );
 		return false;
 	}
 
@@ -270,7 +270,7 @@ void Win32Window::makeCurrent()
 
 	if( !wglMakeCurrent(hDC, hRC) ) 
 	{
-		Log::error( "wglMakeCurrent() failed: %s", getErrorMessage().c_str() );
+		LogError( "wglMakeCurrent() failed: %s", getErrorMessage().c_str() );
 		return;
 	}
 }

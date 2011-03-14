@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "vapor/Subsystem.h"
-#include "vapor/math/Vector2.h"
-#include "vapor/math/Vector3.h"
+#include "Subsystem.h"
+#include "Math/Vector.h"
+#include "Math/Vector.h"
 #include "Event.h"
 
 FWD_DECL_SHARED(Camera)
@@ -27,7 +27,7 @@ class Page;
 struct PageEvent
 {
 	Page* page;
-	Vector2i pos;
+	Vector2 pos;
 };
 
 //-----------------------------------//
@@ -62,10 +62,10 @@ public:
 protected:
 
 	// Current page.
-	Vector2i page;
+	Vector2 page;
 
 	// Converts world coords to page location.
-	Vector2i convertWorldToPage(const Vector3& pos);
+	Vector2 convertWorldToPage(const Vector3& pos);
 
 	// Holds the size of pages.
 	uint pageSize;

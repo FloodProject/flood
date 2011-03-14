@@ -6,9 +6,9 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "vapor/gui/Console.h"
-#include "vapor/render/Quad.h"
+#include "Engine/API.h"
+#include "gui/Console.h"
+#include "Render/Quad.h"
 
 namespace vapor {
 

@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "CameraControls.h"
 #include "Utilities.h"
 #include "Viewframe.h"

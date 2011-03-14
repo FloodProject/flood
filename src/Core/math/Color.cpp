@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "math/Color.h"
-#include "math/Helpers.h"
+#include "Math/Color.h"
+#include "Math/Helpers.h"
 
 namespace vapor {
 

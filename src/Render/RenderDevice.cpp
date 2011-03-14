@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 
 #ifdef VAPOR_RENDERER_OPENGL
 
@@ -51,7 +51,7 @@ RenderDevice::RenderDevice()
 
 RenderDevice::~RenderDevice()
 {
-	Log::info("Closing OpenGL rendering device");
+	LogInfo("Closing OpenGL rendering device");
 
 	#pragma TODO("Confirm that all OpenGL resources were reclaimed on exit")	
 
@@ -67,9 +67,9 @@ void RenderDevice::init()
 {
 	if( initDone ) return;
 
-	Log::info( "Creating OpenGL rendering device" );
+	LogInfo( "Creating OpenGL rendering device" );
 
-	if( !window ) Log::error( "No current OpenGL context found, stuff may fail" );
+	if( !window ) LogError( "No current OpenGL context found, stuff may fail" );
 	
 	checkExtensions();
 
@@ -79,7 +79,7 @@ void RenderDevice::init()
 
 	if( adapter->supportsShaders )
 	{
-		Log::info( "Shaders support detected. Switching to forward shaders pipeline" );
+		LogInfo( "Shaders support detected. Switching to forward shaders pipeline" );
 		pipeline = RenderPipeline::ShaderForward;
 	}
 
@@ -104,11 +104,11 @@ void RenderDevice::checkExtensions()
 	if( err != GLEW_OK )
 	{
 		const GLubyte* str = glewGetErrorString(err);
-		Log::error( "Failed to initialize GLEW: %s", str );
+		LogError( "Failed to initialize GLEW: %s", str );
 		return;
 	}
 
-	Log::info( "Using GLEW version %s", glewGetString(GLEW_VERSION) );
+	LogInfo( "Using GLEW version %s", glewGetString(GLEW_VERSION) );
 }
 
 //-----------------------------------//
@@ -127,7 +127,7 @@ void RenderDevice::render( RenderBlock& queue )
 	std::sort( queue.renderables.begin(), queue.renderables.end(), &RenderStateSorter );
 
 	// Render all the renderables in the queue.
-	for( uint i = 0; i < queue.renderables.size(); i++ )
+	for( size_t i = 0; i < queue.renderables.size(); i++ )
 	{
 		const RenderState& state = queue.renderables[i];
 		render(state, queue.lights);
@@ -153,7 +153,7 @@ void RenderDevice::render( const RenderState& state, const LightQueue& lights )
 		setupRenderForward(state, lights);
 		return;
 	default:
-		Log::error("Unknown render pipeline");
+		LogError("Unknown render pipeline");
 		return;
 	}
 }
@@ -231,7 +231,7 @@ bool RenderDevice::setupRenderFixedMatrix( const RenderState& state )
 
 bool RenderDevice::setupRenderFixedOverlay( const RenderState& state )
 {
-	Vector2i size = activeTarget->getSettings().getSize();
+	Vector2 size = activeTarget->getSettings().getSize();
 	
 	Matrix4x4 projection =
 		Matrix4x4::createOrthographicProjection(0, size.x/*-1*/, size.y/*-1*/, 0, 0, 100);
@@ -387,7 +387,7 @@ bool RenderDevice::setupRenderStateShadow( LightQueue& lights )
 	if( lights.empty() ) 
 		return true;
 
-	for( uint i = 0; i < lights.size(); i++ )
+	for( size_t i = 0; i < lights.size(); i++ )
 	{
 		LightState& state = lights[i];
 		const LightPtr& light = state.light;
@@ -409,7 +409,7 @@ bool RenderDevice::setupRenderStateLight( const RenderState& state, const LightQ
 	const MaterialPtr& material = rend->getMaterial();
 	const ProgramPtr& program = material->getProgram();
 
-	for( uint i = 0; i < lights.size(); i++ )
+	for( size_t i = 0; i < lights.size(); i++ )
 	{
 		const LightState& lightState = lights[i];
 		const LightPtr& light = lightState.light;
@@ -441,7 +441,7 @@ bool RenderDevice::setupRenderStateLight( const RenderState& state, const LightQ
 
 bool RenderDevice::setupRenderStateOverlay( const RenderState& state )
 {
-	Vector2i size = activeTarget->getSettings().getSize();
+	Vector2 size = activeTarget->getSettings().getSize();
 	Matrix4x4 projection = Matrix4x4::createOrthographicProjection(0, size.x, size.y, 0, 0, 100);
 
 	const ProgramPtr& program = state.renderable->getMaterial()->getProgram();
@@ -520,7 +520,7 @@ void RenderDevice::undoRenderStateMaterial( const MaterialPtr& mat )
 
 //-----------------------------------//
 
-Color RenderDevice::getPixel(ushort x, ushort y) const
+Color RenderDevice::getPixel(uint16 x, uint16 y) const
 {
 	Color pick;
 	
@@ -549,8 +549,8 @@ void RenderDevice::setView( RenderView* view )
 
 	setClearColor( view->getClearColor() );
 
-	Vector2i origin = activeView->getOrigin();
-	Vector2i size = activeView->getSize();
+	Vector2 origin = activeView->getOrigin();
+	Vector2 size = activeView->getSize();
 
 	glViewport( origin.x, origin.y, size.x, size.y );
 }

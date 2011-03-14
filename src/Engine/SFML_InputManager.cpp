@@ -6,11 +6,11 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 
 #ifdef VAPOR_INPUT_SFML
 
-#include "vapor/input/SFML_InputManager.h"
+#include "input/SFML_InputManager.h"
 
 namespace vapor {
 
@@ -221,7 +221,7 @@ MouseButton::Enum SFML_InputManager::convertMouseButtonEnum(
 			return MouseButton::Mouse5;
 
 		default:
-			Log::warn( "Could not map SFML mouse button: Invalid button" );
+			LogWarn( "Could not map SFML mouse button: Invalid button" );
 			return MouseButton::Mouse5;
 	}
 }
@@ -255,7 +255,7 @@ JoystickAxis::Enum SFML_InputManager::convertJoystickAxisEnum(
 			return JoystickAxis::AxisPOV;
 
 		default:
-			Log::warn( "Could not map SFML joystick axis: Invalid axis" );
+			LogWarn( "Could not map SFML joystick axis: Invalid axis" );
 			return JoystickAxis::AxisPOV;
 	}
 }
@@ -481,7 +481,7 @@ Keys::Enum SFML_InputManager::convertKeyEnum(sf::Key::Code keycode)
 			return Keys::Pause;
 
 		default:
-			Log::warn( "Could not map SFML keycode: Invalid keycode" );
+			LogWarn( "Could not map SFML keycode: Invalid keycode" );
 			return Keys::Escape;
 	}
 }

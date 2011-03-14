@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "HierarchyPlugin.h"
 #include "HierarchyPane.h"
 #include "Editor.h"
@@ -17,9 +17,13 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-HierarchyPlugin::HierarchyPlugin( EditorFrame* frame )
-	: Plugin(frame)
-	, hierarchyPane(nullptr)
+REFLECT_CHILD_CLASS(HierarchyPlugin, Plugin)
+REFLECT_END()
+
+//-----------------------------------//
+
+HierarchyPlugin::HierarchyPlugin()
+	: hierarchyPane(nullptr)
 { }
 
 //-----------------------------------//
@@ -32,6 +36,7 @@ PluginMetadata HierarchyPlugin::getMetadata()
 	metadata.description = "Displays hierarchy information";
 	metadata.author = "triton";
 	metadata.version = "1.0";
+	metadata.startEnabled = false;
 
 	return metadata;
 }

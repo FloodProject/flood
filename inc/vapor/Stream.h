@@ -34,7 +34,7 @@ namespace StreamMode
  * remove servers.
  */
 
-class CORE_API Stream
+class CORE_API VAPOR_PURE Stream
 {
 	DECLARE_UNCOPYABLE(Stream)
 
@@ -58,29 +58,29 @@ public:
 	virtual void read(std::vector<byte>& data) const = 0;
 
 	// Reads the entire stream as a string.
-	virtual void read(std::string& text) const;
+	virtual void read(String& text) const;
 
 	// Reads the stream as text lines.
-	std::vector<std::string> readLines() const;
+	std::vector<String> readLines() const;
 
 	// Writes a buffer into the stream.
 	virtual long write(const std::vector<byte>& buffer) = 0;
 
 	// Writes a string into the stream.
-	virtual long write(const std::string& text);
+	virtual long write(const String& text);
 
 	// Gets the path of the stream.
-	GETTER(Path, const std::string&, path)
+	GETTER(Path, const String&, path)
 
 protected:
 
-	Stream(StreamMode::Enum mode, const std::string& path);
+	Stream(StreamMode::Enum mode, const String& path);
 
 	// Access mode of the stream.
 	StreamMode::Enum mode;
 
 	// Path of the stream.
-	std::string	path;
+	String	path;
 };
 
 //-----------------------------------//

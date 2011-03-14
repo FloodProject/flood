@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "math/Plane.h"
-#include "math/Helpers.h"
+#include "Math/Plane.h"
+#include "Math/Helpers.h"
 #include "Log.h"
 
 namespace vapor {
@@ -78,7 +78,7 @@ bool Plane::intersects( const Ray& ray, float& distance ) const
 	float angle = ray.direction.dot(normal);
 
 	// If they are perpendicular, then they will never intersect.
-	if( Math::floatEqual(angle, 0) )
+	if( MathFloatCompare(angle, 0) )
 		return false;
 
 	float delta = offset - ray.origin.dot(normal);

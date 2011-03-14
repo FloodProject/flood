@@ -6,15 +6,15 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 
 #ifdef VAPOR_AUDIO_OPENAL
 
-#include "scene/Listener.h"
-#include "scene/Transform.h"
-#include "scene/Camera.h"
-#include "scene/Entity.h"
-#include "audio/Device.h"
+#include "Scene/Listener.h"
+#include "Scene/Transform.h"
+#include "Scene/Camera.h"
+#include "Scene/Entity.h"
+#include "Audio/Device.h"
 #include "Engine.h"
 
 namespace vapor {

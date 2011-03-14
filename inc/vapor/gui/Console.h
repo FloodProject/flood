@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include "vapor/resources/Font.h"
-#include "vapor/render/Material.h"
-#include "vapor/scene/Geometry.h"
-#include "vapor/gui/Overlay.h"
+#include "Resources/Font.h"
+#include "Render/Material.h"
+#include "Scene/Geometry.h"
+#include "gui/Overlay.h"
 
 namespace vapor {
 

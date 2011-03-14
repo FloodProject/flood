@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "vapor/math/Vector3.h"
-#include "vapor/math/Quaternion.h"
+#include "Math/Vector.h"
+#include "Math/Quaternion.h"
 
 FWD_DECL_INTRUSIVE(Bone)
 

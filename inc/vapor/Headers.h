@@ -6,166 +6,165 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 
 //---------------------------------------------------------------------//
 // Audio-related Includes
 //---------------------------------------------------------------------//
 
-#include <vapor/audio/Device.h>
-#include <vapor/audio/Buffer.h>
-#include <vapor/audio/Context.h>
-#include <vapor/audio/Source.h>
+#include <Audio/Device.h>
+#include <Audio/Buffer.h>
+#include <Audio/Context.h>
+#include <Audio/Source.h>
 
 //---------------------------------------------------------------------//
 // Math-related Includes
 //---------------------------------------------------------------------//
 
-#include <vapor/math/Vector2.h>
-#include <vapor/math/Vector3.h>
-#include <vapor/math/Color.h>
-#include <vapor/math/Quaternion.h>
-#include <vapor/math/Ray.h>
-#include <vapor/math/BoundingBox.h>
-#include <vapor/math/BoundingSphere.h>
-#include <vapor/math/Noise.h>
-#include <vapor/math/Hash.h>
-#include <vapor/math/Helpers.h>
+#include <Math/Vector.h>
+#include <Math/Vector.h>
+#include <Math/Color.h>
+#include <Math/Quaternion.h>
+#include <Math/Ray.h>
+#include <Math/BoundingBox.h>
+#include <Math/BoundingSphere.h>
+#include <Math/Noise.h>
+#include <Math/Hash.h>
+#include <Math/Helpers.h>
 
 //---------------------------------------------------------------------//
 // Resource-related Includes
 //---------------------------------------------------------------------//
 
-#include "vapor/resources/Resource.h"
-#include "vapor/resources/ResourceManager.h"
-#include "vapor/resources/ResourceLoader.h"
-#include <vapor/resources/Image.h>
-#include <vapor/resources/Mesh.h>
-#include <vapor/resources/Sound.h>
-#include <vapor/resources/Font.h>
+#include "Resources/Resource.h"
+#include "Resources/ResourceManager.h"
+#include "Resources/ResourceLoader.h"
+#include <Resources/Image.h>
+#include <Resources/Mesh.h>
+#include <Resources/Sound.h>
+#include <Resources/Font.h>
 
 //---------------------------------------------------------------------//
 // Scene-related Includes
 //---------------------------------------------------------------------//
 
-#include <vapor/scene/Group.h>
-#include <vapor/scene/Scene.h>
-#include <vapor/scene/Camera.h>
-#include <vapor/scene/Source.h>
-#include <vapor/scene/Listener.h>
-#include <vapor/scene/Geometry.h>
-#include <vapor/scene/Model.h>
-#include <vapor/scene/Grid.h>
-#include <vapor/scene/Light.h>
-#include <vapor/scene/Skydome.h>
-#include <vapor/scene/Water.h>
-#include <vapor/scene/Billboard.h>
-#include <vapor/scene/Projector.h>
-#include <vapor/scene/Particles.h>
-#include <vapor/scene/Tags.h>
+#include <Scene/Group.h>
+#include <Scene/Scene.h>
+#include <Scene/Camera.h>
+#include <Scene/Source.h>
+#include <Scene/Listener.h>
+#include <Scene/Geometry.h>
+#include <Scene/Model.h>
+#include <Scene/Grid.h>
+#include <Scene/Light.h>
+#include <Scene/Skydome.h>
+#include <Scene/Water.h>
+#include <Scene/Billboard.h>
+#include <Scene/Projector.h>
+#include <Scene/Particles.h>
+#include <Scene/Tags.h>
 
 //---------------------------------------------------------------------//
 // Render-related Includes
 //---------------------------------------------------------------------//
 
-#include <vapor/render/Device.h>
-#include <vapor/render/View.h>
-#include <vapor/render/Target.h>
-#include <vapor/render/VertexBuffer.h>
-#include <vapor/render/Texture.h>
-#include <vapor/render/Program.h>
-#include <vapor/render/Renderable.h>
-#include <vapor/Resources/Shader.h>
-#include <vapor/render/Quad.h>
-#include <vapor/render/TextureManager.h>
-#include <vapor/render/ProgramManager.h>
-#include <vapor/render/FBO.h>
-#include <vapor/render/FrameStatistics.h>
-#include <vapor/render/DebugGeometry.h>
+#include <Render/Device.h>
+#include <Render/View.h>
+#include <Render/Target.h>
+#include <Render/VertexBuffer.h>
+#include <Render/Texture.h>
+#include <Render/Program.h>
+#include <Render/Renderable.h>
+#include <Resources/Shader.h>
+#include <Render/Quad.h>
+#include <Render/TextureManager.h>
+#include <Render/ProgramManager.h>
+#include <Render/FBO.h>
+#include <Render/FrameStatistics.h>
+#include <Render/DebugGeometry.h>
 
 //---------------------------------------------------------------------//
 // Animation-related Includes
 //---------------------------------------------------------------------//
 
-#include <vapor/resources/Animation.h>
-#include <vapor/resources/Skeleton.h>
-#include <vapor/resources/Bone.h>
-#include <vapor/resources/Attachment.h>
+#include <Resources/Animation.h>
+#include <Resources/Skeleton.h>
+#include <Resources/Bone.h>
+#include <Resources/Attachment.h>
 
 //---------------------------------------------------------------------//
 // Controller-related Includes
 //---------------------------------------------------------------------//
 
-#include <vapor/controllers/FirstPersonController.h>
-#include <vapor/controllers/ThirdPersonController.h>
-#include <vapor/controllers/ScriptController.h>
+#include <controllers/FirstPersonController.h>
+#include <controllers/ThirdPersonController.h>
+#include <controllers/ScriptController.h>
 
 //---------------------------------------------------------------------//
 // Input-related Includes
 //---------------------------------------------------------------------//
 
-#include <vapor/input/InputManager.h>
-#include <vapor/input/InputMap.h>
-#include <vapor/input/Keyboard.h>
-#include <vapor/input/Mouse.h>
+#include <input/InputManager.h>
+#include <input/InputMap.h>
+#include <input/Keyboard.h>
+#include <input/Mouse.h>
 
 //---------------------------------------------------------------------//
 // VFS-related Includes
 //---------------------------------------------------------------------//
 
-#include <vapor/Core/FileSystem.h>
-#include <vapor/Core/FileWatcher.h>
-#include <vapor/Core/File.h>
+#include <Core/FileSystem.h>
+#include <Core/FileWatcher.h>
+#include <Core/File.h>
 
 //---------------------------------------------------------------------//
 // GUI-related Includes
 //---------------------------------------------------------------------//
 
-#include <vapor/gui/Overlay.h>
-#include <vapor/gui/Label.h>
-#include <vapor/gui/Window.h>
-#include <vapor/gui/Console.h>
+#include <gui/Overlay.h>
+#include <gui/Label.h>
+#include <gui/Window.h>
+#include <gui/Console.h>
 
 //---------------------------------------------------------------------//
 // Scripting-related Includes
 //---------------------------------------------------------------------//
 
-#include <vapor/script/ScriptManager.h>
-#include <vapor/script/State.h>
-#include <vapor/script/Script.h>
+#include <script/ScriptManager.h>
+#include <script/State.h>
+#include <script/Script.h>
 
 //---------------------------------------------------------------------//
 // Physics-related Includes
 //---------------------------------------------------------------------//
 
-#include <vapor/physics/Physics.h>
-#include <vapor/physics/Body.h>
-#include <vapor/physics/BoxShape.h>
-#include <vapor/physics/CapsuleShape.h>
-#include <vapor/physics/MeshShape.h>
-#include <vapor/physics/CharacterController.h>
+#include <physics/Physics.h>
+#include <physics/Body.h>
+#include <physics/BoxShape.h>
+#include <physics/CapsuleShape.h>
+#include <physics/MeshShape.h>
+#include <physics/CharacterController.h>
 
 //---------------------------------------------------------------------//
 // Terrain-related Includes
 //---------------------------------------------------------------------//
 
-#include <vapor/terrain/Terrain.h>
-#include <vapor/terrain/Cell.h>
+#include <terrain/Terrain.h>
+#include <terrain/Cell.h>
 
 //---------------------------------------------------------------------//
 // Paging-related Includes
 //---------------------------------------------------------------------//
 
-#include <vapor/paging/PageManager.h>
-#include <vapor/paging/Page.h>
+#include <paging/PageManager.h>
+#include <paging/Page.h>
 
 //---------------------------------------------------------------------//
 // General Includes
 //---------------------------------------------------------------------//
 
-#include <vapor/Engine.h>
-#include <vapor/Log.h>
-#include <vapor/Profiler.h>
-#include <vapor/TaskManager.h>
-#include <vapor/Serialization.h>
-#include <vapor/Event.h>
+#include <Engine.h>
+#include <Log.h>
+#include <Profiler.h>
+#include <Serialization.h>
+#include <Event.h>

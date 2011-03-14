@@ -10,9 +10,12 @@
 
 #include "Pipeline/API.h"
 #include "Pipeline/ImageProcessor.h"
+#include "Log.h"
 
+#if 0
 #include <nvtt/nvtt.h>
 using namespace nvtt;
+#endif
 
 namespace vapor {
 
@@ -58,9 +61,13 @@ ImageProcessor::ImageProcessor()
 {
 	static bool once = false;
 	if( !once )
-		Log::info("Using NVIDIA Texture Tools %u", nvtt::version());
+		//LogInfo("Using NVIDIA Texture Tools %u", nvtt::version());
 	once = true;
 }
+
+//-----------------------------------//
+
+ImageProcessor::~ImageProcessor() { }
 
 //-----------------------------------//
 
@@ -77,6 +84,7 @@ bool ImageProcessor::Process(const ResourcePtr& resource)
 
 	const ImagePtr& image = RefCast<Image>(resource);
 
+#if 0
 	InputOptions input;
 	input.setMipmapGeneration(generateMipmaps);
 	input.setMipmapFilter((nvtt::MipmapFilter) mipmapFilter);
@@ -94,7 +102,7 @@ bool ImageProcessor::Process(const ResourcePtr& resource)
 	
 	if( !compressor.process(input, compression, output) )
 		return false;
-
+#endif
 	return true;
 }
 

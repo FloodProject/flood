@@ -6,11 +6,11 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "vapor/render/Texture.h"
-#include "vapor/render/Adapter.h"
-#include "vapor/render/Device.h"
-#include "vapor/render/GL.h"
+#include "Engine/API.h"
+#include "Render/Texture.h"
+#include "Render/Adapter.h"
+#include "Render/Device.h"
+#include "Render/GL.h"
 
 namespace vapor {
 
@@ -39,12 +39,12 @@ Texture::Texture( const Settings& settings, PixelFormat::Enum format )
 
 Texture::~Texture()
 {
-	glDeleteTextures( 1, &id );
+	glDeleteTextures( 1, (GLuint*) &id );
 	
 	if( glHasError("Could not delete texture object") )
 		return;
 
-	Log::debug("Deleting texture from OpenGL");
+	LogDebug("Deleting texture from OpenGL");
 }
 
 //-----------------------------------//
@@ -67,7 +67,7 @@ void Texture::init()
 
 bool Texture::generate()
 {
-	glGenTextures( 1, &id );
+	glGenTextures( 1, (GLuint*) &id );
 
 	if( glHasError("Could not generate a new texture object") )
 		return false;
@@ -84,7 +84,7 @@ bool Texture::check()
 	
 	if(width > max || height > max)
 	{
-		Log::warn( "Texture size is not supported (max: %dx%d)", max, max );		
+		LogWarn( "Texture size is not supported (max: %dx%d)", max, max );		
 		return false;
 	}
 

@@ -6,8 +6,8 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "render/Cube.h"
+#include "Engine/API.h"
+#include "Render/Cube.h"
 
 namespace vapor {
 

@@ -7,112 +7,83 @@
 ************************************************************************/
 
 #include "Core/API.h"
+
+#ifdef VAPOR_SERIALIZATION_JSON
+
 #include "io/JsonSerializer.h"
+#include "Core/Memory.h"
 #include "Utilities.h"
 #include "ReferenceCount.h"
 #include "Log.h"
-
-#ifdef VAPOR_SERIALIZATION_JSON
+#include <jansson.h>
 
 namespace vapor {
 
 //-----------------------------------//
 
-static Vector3 convertValueToVector3( const Json::Value& value )
+static Vector3 convertValueToVector3( json_t* value )
 {
-	Vector3 vec(
-		float(value[0u].asDouble()),
-		float(value[1u].asDouble()),
-		float(value[2u].asDouble()) );
-
-	return vec;
-}
-
-//-----------------------------------//
-
-static Color convertValueToColor( const Json::Value& value )
-{
-	Color color(
-		float(value[0u].asDouble()),
-		float(value[1u].asDouble()),
-		float(value[2u].asDouble()),
-		float(value[3u].asDouble()) );
-
-	return color;
-}
-
-//-----------------------------------//
-
-static Quaternion convertValueToQuaternion( const Json::Value& value )
-{
-	Quaternion quat(
-		float(value[0u].asDouble()),
-		float(value[1u].asDouble()),
-		float(value[2u].asDouble()),
-		float(value[3u].asDouble()) );
-
-	return quat;
-}
-
-//-----------------------------------//
-
-static EulerAngles convertValueToEulerAngles( const Json::Value& value )
-{
-	EulerAngles ang(
-		float(value[0u].asDouble()),
-		float(value[1u].asDouble()),
-		float(value[2u].asDouble()));
-
-	return ang;
-}
-
-//-----------------------------------//
-
-static Json::Value convertVector3( const Vector3& vec )
-{
-	Json::Value v;
-	
-	v.append(vec.x);
-	v.append(vec.y);
-	v.append(vec.z);
-	
+	Vector3 v;
+	json_unpack(value, "[g,g,g]", &v.x, &v.y, &v.z);
 	return v;
 }
 
 //-----------------------------------//
 
-static Json::Value convertColor( const Color& color )
+static Color convertValueToColor( json_t* value )
 {
-	Json::Value v;
-	
-	v.append(color.r);
-	v.append(color.g);
-	v.append(color.b);
-	v.append(color.a);
-	
-	return v;
+	Color c;
+	json_unpack(value, "[g,g,g,g]", &c.r, &c.g, &c.b, &c.a);
+	return c;
 }
 
 //-----------------------------------//
 
-static Json::Value convertQuaternion( const Quaternion& quat )
+static Quaternion convertValueToQuaternion( json_t* value )
 {
-	Json::Value v;
-	
-	v.append(quat.x);
-	v.append(quat.y);
-	v.append(quat.z);
-	v.append(quat.w);
-	
-	return v;
+	Quaternion q;
+	json_unpack(value, "[g,g,g,g]", &q.x, &q.y, &q.z, &q.w);
+	return q;
 }
 
 //-----------------------------------//
+
+static EulerAngles convertValueToEulerAngles( json_t* value )
+{
+
+	EulerAngles a;
+	json_unpack(value, "[g,g,g]", &a.x, &a.y, &a.z);
+	return a;
+}
+
+//-----------------------------------//
+
+static json_t* convertVector3( const Vector3& vec )
+{
+	return json_pack("[g,g,g]", vec.x, vec.y, vec.z);
+}
+
+//-----------------------------------//
+
+static json_t* convertColor( const Color& c )
+{
+	return json_pack("[g,g,g,g]", c.r, c.g, c.b, c.a);
+}
+
+//-----------------------------------//
+
+static json_t* convertQuaternion( const Quaternion& q )
+{
+	return json_pack("[g,g,g,g]", q.x, q.y, q.z, q.w);
+}
+
+//-----------------------------------//
+
 
 JsonSerializer::JsonSerializer(Stream& stream)
 	: stream(stream)
 {
-	values.push(&rootValue);
+	values.push(rootValue);
 }
 
 //-----------------------------------//
@@ -129,7 +100,7 @@ void JsonSerializer::processEnd(const ObjectData& data)
 
 	LocaleSwitch locale;
 
-	std::string text = rootValue.toStyledString();
+	String text = json_dumps(rootValue, 0);
 	stream.write(text);
 	stream.close();
 }
@@ -138,20 +109,17 @@ void JsonSerializer::processEnd(const ObjectData& data)
 
 void JsonSerializer::processClassBegin(const Class& type, bool parent)
 {
-	if(parent)
-		return;
-
-	Json::Value& top = *values.top();
-	values.push( &top[type.name] );
+	if(parent) return;
+	json_t* klass = json_object();
+	json_object_set_new(values.top(), type.name.c_str(), klass);
+	values.push( klass );
 }
 
 //-----------------------------------//
 
 void JsonSerializer::processClassEnd(const Class& type, bool parent)
 {
-	if(parent)
-		return;
-	
+	if(parent) return;
 	values.pop();
 }
 
@@ -159,8 +127,13 @@ void JsonSerializer::processClassEnd(const Class& type, bool parent)
 
 void JsonSerializer::processFieldBegin( const Field& field )
 {
-	Json::Value& top = *values.top();
+#if 0
+	json_t* klass = json_object();
+	json_object_set_new(values.top(), type.name.c_str(), klass);
+
+	json_t& top = *values.top();
 	values.push( &top[field.name] );
+#endif
 }
 
 //-----------------------------------//
@@ -188,8 +161,10 @@ void JsonSerializer::processArrayEnd(const Type& type)
 
 void JsonSerializer::processArrayElementBegin(int i)
 {
-	Json::Value& top = *values.top();
+#if 0
+	json_t& top = *values.top();
 	values.push( &top[(uint)i] );
+#endif
 }
 
 //-----------------------------------//
@@ -215,82 +190,102 @@ void JsonSerializer::processEnumEnd( const Enum& enuhm )
 
 //-----------------------------------//
 	
-void JsonSerializer::processEnumElement(int value, const std::string& name)
+void JsonSerializer::processEnumElement(int value, const String& name)
 {
-	Json::Value& top = *values.top();
+#if 0
+	json_t& top = *values.top();
 	top = name;
+#endif
 }
 
 //-----------------------------------//
 
 void JsonSerializer::processBool( const Primitive& prim, bool value )
 {
-	Json::Value& top = *values.top();
+#if 0
+	json_t& top = *values.top();
 	top = value;
+#endif
 }
 
 //-----------------------------------//
 
-void JsonSerializer::processInt( const Primitive& prim, int value )
+void JsonSerializer::processInt( const Primitive& prim, int32 value )
 {
-	Json::Value& top = *values.top();
-	top = value;
+#if 0
+	json_t& top = *values.top();
+	top = (json_t::Int) value;
+#endif
 }
 
 //-----------------------------------//
 
-void JsonSerializer::processUInt( const Primitive& prim, uint value )
+void JsonSerializer::processUInt( const Primitive& prim, uint32 value )
 {
-	Json::Value& top = *values.top();
-	top = value;
+#if 0
+	json_t& top = *values.top();
+	top = (json_t::UInt) value;
+#endif
 }
 
 //-----------------------------------//
 
 void JsonSerializer::processFloat( const Primitive& prim, float value )
 {
-	Json::Value& top = *values.top();
+#if 0
+	json_t& top = *values.top();
 	top = value;
+#endif
 }
 
 //-----------------------------------//
 
-void JsonSerializer::processString( const Primitive& prim, const std::string& value )
+void JsonSerializer::processString( const Primitive& prim, const String& value )
 {
-	Json::Value& top = *values.top();
+#if 0
+	json_t& top = *values.top();
 	top = value;
+#endif
 }
 
 //-----------------------------------//
 
 void JsonSerializer::processVector3( const Primitive& prim, const Vector3& value )
 {
-	Json::Value& top = *values.top();
+#if 0
+	json_t& top = *values.top();
 	top = convertVector3(value);
+#endif
 }
 
 //-----------------------------------//
 
 void JsonSerializer::processQuaternion( const Primitive& prim, const Quaternion& value )
 {
-	Json::Value& top = *values.top();
+#if 0
+	json_t& top = *values.top();
 	top = convertQuaternion(value);
+#endif
 }
 
 //-----------------------------------//
 
 void JsonSerializer::processColor( const Primitive& prim, const Color& value )
 {
-	Json::Value& top = *values.top();
+#if 0
+	json_t& top = *values.top();
 	top = convertColor(value);
+#endif
 }
 
 //-----------------------------------//
 
-void JsonSerializer::processBitfield( const Primitive& prim, const uint& value )
+void JsonSerializer::processBitfield( const Primitive& prim, const uint32& value )
 {
-	Json::Value& top = *values.top();
-	top = value;
+#if 0
+	json_t& top = *values.top();
+	top = (json_t::UInt) value;
+#endif
 }
 
 //----------------------------------------------------------------------//
@@ -302,42 +297,48 @@ JsonDeserializer::JsonDeserializer(Stream& stream)
 
 //-----------------------------------//
 
+static void* JsonAllocate(size_t size)
+{ MemoryAllocator* mem = AllocatorGetDefault(); return mem->allocate(size); }
+
+static void JsonDeallocate(void* p)
+{ MemoryAllocator* mem = AllocatorGetDefault(); return mem->deallocate(p); }
+
 Object* JsonDeserializer::deserialize()
 {
-	std::string text;
+	String text;
 	stream.read(text);
 	stream.close();
 
-	Json::Value rootValue;
-	bool success = false;
+	json_set_alloc_funcs(JsonAllocate, JsonDeallocate);
+
+	json_t* rootValue;
 
 	{
 		LocaleSwitch locale;
-
-		Json::Reader jsonReader;
-		success = jsonReader.parse(text, rootValue, false);
+		rootValue = json_loads(text.c_str(), 0, nullptr);
 	}
 
-	if( !success )
-		return nullptr;
-
+	if( !rootValue ) return nullptr;
 	return processObject(rootValue);
 }
 
 //-----------------------------------//
 
-Object* JsonDeserializer::processObject(const Json::Value& value)
+Object* JsonDeserializer::processObject(json_t* value)
 {
 	Object* object = nullptr;
 
-	if( !value.isObject() )
+	if( !json_is_object(value) )
 		return nullptr;
 
-	Json::Value::Members& members = value.getMemberNames();
-
-	for( uint i = 0; i < members.size(); i++ )
+	void* iter = json_object_iter(value);
+	
+	while(iter)
 	{
-		const std::string& name = members[i];
+		const char* key = json_object_iter_key(iter);
+		json_t* field = json_object_iter_value(iter);
+
+		const String& name = key;
 
 		const Class* klass = (Class*) registry.getType(name);
 		if( !klass ) continue;
@@ -346,10 +347,10 @@ Object* JsonDeserializer::processObject(const Json::Value& value)
 		
 		if( !object ) continue;
 
-		const Json::Value& fieldsValue = value[name];
-		processFields(object, fieldsValue);
-
+		processFields(object, field);
 		object->fixUp();
+
+		iter = json_object_iter_next(value, iter);
 	}
 
 	return object;
@@ -357,33 +358,38 @@ Object* JsonDeserializer::processObject(const Json::Value& value)
 
 //-----------------------------------//
 
-void JsonDeserializer::processFields(Object* object, const Json::Value& value)
+void JsonDeserializer::processFields(Object* object, json_t* value)
 {
 	if( !object ) return;
 
 	const Class& type = (Class&) object->getType();
 
-	Json::Value::Members& members = value.getMemberNames();
 
-	for( uint i = 0; i < members.size(); i++ )
+	void* iter = json_object_iter(value);
+	
+	while(iter)
 	{
-		const std::string& name = members[i];
+		const char* key = json_object_iter_key(iter);
+		json_t* fieldval = json_object_iter_value(iter);
+
+		const String& name = key;
 
 		Field* field = type.getField(name);
+		
 		if( !field ) continue;
+		if( json_is_null(fieldval) ) continue;
 
-		const Json::Value& fieldValue = value[name];
-		if( fieldValue.isNull() ) continue;
-
-		processField(object, *field, fieldValue);
+		processField(object, *field, fieldval);
+		
+		iter = json_object_iter_next(value, iter);
 	}
 }
 
 //-----------------------------------//
 
-void JsonDeserializer::processField(Object* object, Field& field, const Json::Value& value)
+void JsonDeserializer::processField(Object* object, Field& field, json_t* value)
 {
-	if( field.isArray() && value.isArray() )
+	if( field.isArray() && json_is_array(value) )
 		processArray(object, field, value);
 	else if( field.type.isClass() )
 		processObject(value);
@@ -397,9 +403,9 @@ void JsonDeserializer::processField(Object* object, Field& field, const Json::Va
 
 //-----------------------------------//
 
-void JsonDeserializer::processEnum(Object* object, Field& field, const Json::Value& value)
+void JsonDeserializer::processEnum(Object* object, Field& field, json_t* value)
 {
-	std::string name = value.asString();
+	String name = json_string_value(value);
 	const Enum& type = (Enum&) field.type;
 	uint enumValue = type.getValue(name);
 	field.set<uint>(object, enumValue);
@@ -407,17 +413,20 @@ void JsonDeserializer::processEnum(Object* object, Field& field, const Json::Val
 
 //-----------------------------------//
 
-void JsonDeserializer::processArray(Object* object, Field& field, const Json::Value& value)
+void JsonDeserializer::processArray(Object* object, Field& field, json_t* value)
 {
+	assert( json_is_array(value) );
+	size_t arrsize = json_array_size(value);
+
 	void* address =  (byte*) object + field.offset;
-	byte* begin = processArrayPointer((Object*)address, field, value.size());
+	byte* begin = processArrayPointer((Object*)address, field, arrsize);
 
 	int size = field.size;
 	if( field.isPointer() )	size = field.pointerSize;
 
-	for(uint i = 0; i < value.size(); i++ )
+	for(size_t i = 0; i < arrsize; i++ )
 	{
-		const Json::Value& arrayValue = value[i];
+		json_t* arrayValue = json_array_get(value, i);
 		
 		void* element = begin + i * size;
 		processArrayElement(element, field, arrayValue);
@@ -426,7 +435,7 @@ void JsonDeserializer::processArray(Object* object, Field& field, const Json::Va
 
 //-----------------------------------//
 
-void JsonDeserializer::processArrayElement(void* element, Field& field, const Json::Value& value)
+void JsonDeserializer::processArrayElement(void* element, Field& field, json_t* value)
 {
 	if( field.type.isPrimitive() )
 	{
@@ -491,59 +500,63 @@ byte* JsonDeserializer::processArrayPointer(Object* address, Field& field, int s
 
 #define setValue(T, val) *(T*)address = val;
 
-void JsonDeserializer::processPrimitive(void* address, Field& field, const Json::Value& value)
+void JsonDeserializer::processPrimitive(void* address, Field& field, json_t* value)
 {
 	const Primitive& type = (const Primitive&) field.type;
 	
 	if( !field.isArray() )
 		address = (byte*) address + field.offset;
 	
-	if( type.isBool() )
+	switch(type.type)
 	{
-		bool val = value.asBool();
+	case PrimitiveType::Bool:
+	{
+		assert( json_is_boolean(value) );
+		bool val = json_integer_value(value) != 0;
 		setValue(bool, val);
 	}
 	//-----------------------------------//
-	else if( type.isInteger() )
+	case PrimitiveType::Integer:
 	{
-		int val = value.asInt();
-		setValue(int, val);
+		int32 val = (int32) json_integer_value(value);
+		setValue(int32, val);
 	}
 	//-----------------------------------//
-	else if( type.isFloat() )
+	case PrimitiveType::Float:
 	{
-		float val = (float) value.asDouble();
+		float val = (float) json_real_value(value);
 		setValue(float, val);
 	}
 	//-----------------------------------//
-	else if( type.isString() )
+	case PrimitiveType::String:
 	{
-		std::string val = value.asString();
-		setValue(std::string, val);
+		String val = json_string_value(value);
+		setValue(String, val);
 	}
 	//-----------------------------------//
-	else if( type.isColor() )
+	case PrimitiveType::Color:
 	{
 		Color val = convertValueToColor(value);
 		setValue(Color, val);
 	}
 	//-----------------------------------//
-	else if( type.isVector3() )
+	case PrimitiveType::Vector3:
 	{
 		Vector3 val = convertValueToVector3(value);
 		setValue(Vector3, val);
 	}
 	//-----------------------------------//
-	else if( type.isQuaternion() )
+	case PrimitiveType::Quaternion:
 	{
 		Quaternion val = convertValueToQuaternion(value);
 		setValue(Quaternion, val);
 	}
 	//-----------------------------------//
-	else if( type.isBitfield() )
+	case PrimitiveType::Bitfield:
 	{
-		uint val = value.asUInt();
-		setValue(uint, val);
+		uint32 val = json_integer_value(value);
+		setValue(uint32, val);
+	}
 	}
 }
 

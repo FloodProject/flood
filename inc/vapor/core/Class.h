@@ -11,13 +11,13 @@
 #include "Core/Type.h"
 #include "Core/Field.h"
 #include "Event.h"
+#include <vector>
 
 namespace vapor {
 
 //-----------------------------------//
 
-typedef std::map<std::string, Field*> FieldsMap;
-typedef std::pair<const std::string, Field*> FieldsPair;
+typedef std::pair<const String, Field*> FieldsPair;
 
 /**
  * This class provides types with a fast RTTI (Runtime Type Information)
@@ -29,17 +29,11 @@ class CORE_API Class : public Type
 {
 public:
 
-	Class(const std::string& name, int size);
-	Class(const std::string& name, const Type& parent, int size);
+	Class(const String& name, int size);
+	Class(const String& name, const Type& parent, int size);
 
 	// Gets the field with the given name.
-	Field* getField(const std::string& name) const;
-
-	// Gets the fields of the class.
-	const FieldsMap& getFields() const;
-
-	// Gets the fields of the class.
-	const std::vector<Field*>& getFieldsVector() const;
+	Field* getField(const String& name) const;
 
 	// Adds a field to the class.
 	void addField(Field& field);
@@ -52,11 +46,8 @@ public:
 
 public:
 
-	// Keeps track of type fields.
-	FieldsMap fields;
-
 	// Keeps track of the type fields (in insertion order).
-	std::vector<Field*> fieldsVector;
+	std::vector<Field*> fields;
 
 	// Keeps track of the childs of the class.
 	std::vector<Class*> childs;

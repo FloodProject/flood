@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "LogPlugin.h"
 #include "LogFrame.h"
 
@@ -17,8 +17,12 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-LogPlugin::LogPlugin( EditorFrame* frame )
-	: Plugin(frame)
+REFLECT_CHILD_CLASS(LogPlugin, Plugin)
+REFLECT_END()
+
+//-----------------------------------//
+
+LogPlugin::LogPlugin()
 { }
 
 //-----------------------------------//

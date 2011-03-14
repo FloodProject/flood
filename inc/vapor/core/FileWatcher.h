@@ -36,7 +36,7 @@ namespace vapor {
 //-----------------------------------//
 
 // Type for a watch id
-typedef ulong WatchID;
+typedef uint32 WatchID;
 
 //-----------------------------------//
 
@@ -63,7 +63,7 @@ namespace Actions
 		Renamed,
 	};
 
-	const std::string getString( Actions::Enum a );
+	const String getString( Actions::Enum a );
 }
 
 //-----------------------------------//
@@ -82,7 +82,7 @@ class CORE_API FileWatchEvent
 public:
 
 	FileWatchEvent( Actions::Enum action, WatchID id,
-		const std::string& dir, const std::string& file )
+		const String& dir, const String& file )
 		: action(action)
 		, watchid(id)
 		, dir(dir)
@@ -91,8 +91,8 @@ public:
 
 	Actions::Enum action;
 	WatchID watchid;
-	const std::string& dir;
-	const std::string& filename;
+	const String& dir;
+	const String& filename;
 };
 
 //-----------------------------------//
@@ -112,10 +112,10 @@ public:
 	virtual ~FileWatcher() {}
 
 	// Add a directory watch
-	virtual WatchID addWatch(const std::string& directory) = 0;
+	virtual WatchID addWatch(const String& directory) = 0;
 
 	// Remove a directory watch. This is a brute force search O(nlogn).
-	virtual void removeWatch(const std::string& directory) = 0;
+	virtual void removeWatch(const String& directory) = 0;
 
 	// Remove a directory watch. This is a map lookup O(logn).
 	virtual void removeWatch(WatchID watchid) = 0;

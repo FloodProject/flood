@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "vapor/gui/Overlay.h"
+#include "gui/Overlay.h"
 
 FWD_DECL_INTRUSIVE(Font)
 FWD_DECL_INTRUSIVE(Material)

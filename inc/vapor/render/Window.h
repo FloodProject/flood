@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "math/Vector2.h"
-#include "render/Target.h"
+#include "Math/Vector.h"
+#include "Render/Target.h"
 #include "input/InputManager.h"
 
 namespace vapor {
@@ -22,15 +22,15 @@ class VAPOR_API WindowSettings : public Settings
 {
 public:
 
-	WindowSettings( const ushort width = 640, const ushort height = 480,
+	WindowSettings( const uint16 width = 640, const uint16 height = 480,
 		const std::string& title = "Untitled", const bool fullscreen = false );
 
 	std::string title;
 	bool fullScreen;
-	ushort bitsPerPixel;
-	ushort depthBits;
-	ushort stencilBits;
-	ushort antialiasLevel;
+	uint16 bitsPerPixel;
+	uint16 depthBits;
+	uint16 stencilBits;
+	uint16 antialiasLevel;
 	WindowHandle* handle;
 };
 
@@ -75,11 +75,11 @@ public:
 	virtual void setCursorCapture( bool state ) {}
 
 	// Gets the cursor position on screen.
-	virtual Vector2i getCursorPosition() const { return Vector2i::Zero; }
+	virtual Vector2 getCursorPosition() const { return Vector2::Zero; }
 
 	// Sets the cursor position on screen.
 	virtual void setCursorPosition( int x, int y ) {}
-	void setCursorPosition( const Vector2i& pos );
+	void setCursorPosition( const Vector2& pos );
 
 	// Gets the input manager.
 	virtual InputManager* getInputManager() { return nullptr; }

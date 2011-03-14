@@ -8,169 +8,52 @@
 
 #pragma once
 
-#include "FileStream.h"
-#include "Timer.h"
-#include "Thread.h"
+#include "Core/Concurrency.h"
 
-namespace vapor {
+BEGIN_NAMESPACE_EXTERN
 
 //-----------------------------------//
 
-/**
- * Severity level of the log message.
- */
+struct Timer;
+struct Mutex;
+struct MemoryAllocator;
 
-namespace LogLevel 
+namespace LogLevel
 {
-	enum Enum
-	{
-		Info,
-		Warning,
-		Error,
-		Debug,
-		Assert
-	};
-
-	std::string toString( LogLevel::Enum );
+	enum Enum { Info, Warn, Error, Debug, Assert };
 };
-
-//-----------------------------------//
 
 struct LogEntry
 {
-	// Time of the message.
 	float time;
-
-	// Formatted message.
-	std::string message;
-
-	// Level of the message.
+	String message;
 	LogLevel::Enum level;
 };
 
-//-----------------------------------//
+typedef void (*LogFunction)(LogEntry*);
 
-class LogSink
+struct Log
 {
-	DECLARE_UNCOPYABLE(LogSink)
-
-public:
-
-	LogSink() {}
-	virtual ~LogSink() {}
-
-	// Writes a log entry into the sink.
-	virtual void process(LogEntry& entry) = 0;
+	Timer* Timer;
+	Mutex* Mutex;
+	std::vector<LogFunction> Handlers;
 };
 
-//-----------------------------------//
+CORE_API Log* LogCreate(MemoryAllocator*);
+CORE_API void LogDestroy(Log*, MemoryAllocator*);
+CORE_API void LogAddHandler(Log*, LogFunction);
+CORE_API void LogRemoveHandler(LogFunction);
+CORE_API void LogWrite(Log*, LogLevel::Enum level, const char* msg, va_list args);
 
-/**
- * Logging class used to log relevant information to a stream.
- */
+CORE_API Log* LogGetDefault();
+CORE_API void LogSetDefault(Log*);
 
-class CORE_API Logger
-{
-public:
-	
-	Logger();
-	~Logger();
-	
-	// Logs an information message.
-	void info(const char* msg, ...);
-
-	// Logs a warning message.
-	void warn(const char* msg, ...);
-
-	// Logs an error message.
-	void error(const char* msg, ...);
-
-	// Writes a message of the given level.
-	void write(LogLevel::Enum level, const char* msg, va_list args);
-
-	// Adds a new sink to the logger.
-	void add( LogSink* sink );
-
-protected:
-
-	// Keeps track of elapsed time.
-	Timer timer;
-
-	// Keeps track of last message.
-	std::string last;
-
-	// Mutex lock to synchronize access.
-	THREAD(boost::mutex mutex;)
-
-	// Log sinks.
-	std::vector<LogSink*> sinks;
-};
-
-// Gets the main log instance.
-Logger* GetLogger();
+CORE_API void LogInfo(const char* msg, ...);
+CORE_API void LogWarn(const char* msg, ...);
+CORE_API void LogError(const char* msg, ...);
+CORE_API void LogDebug(const char* msg, ...);
+CORE_API void LogAssert(const char* msg, ...);
 
 //-----------------------------------//
 
-/**
- * Convenience logging functions.
- */
-
-namespace Log
-{
-	// Logs an assert message to the global logger.
-	CORE_API void _assert(const char* msg, ...);
-
-	// Logs a debug message to the global logger.
-	CORE_API void debug(const std::string& msg);
-
-	// Logs a debug message to the global logger.
-	CORE_API void debug(const char* msg, ...);
-	
-	// Logs an info message to the global logger.
-	CORE_API void info(const char* msg, ...);
-	
-	// Logs a warning message to the global logger.
-	CORE_API void warn(const char* msg, ...);
-	
-	// Logs an error message to the global logger.
-	CORE_API void error(const char* msg, ...);
-}
-
-#ifdef assert
-	#undef assert
-#endif
-
-#define assert(expr)     \
-	(void)( (!!(expr)) || \
-	(Log::_assert("%s (%s:%d)", #expr, __FUNCTION__, __LINE__), 0) )
-
-//-----------------------------------//
-
-class LogSinkConsole : public LogSink
-{
-public:
-
-	void process(LogEntry& entry);
-};
-
-//-----------------------------------//
-
-class LogSinkHTML : public LogSink
-{
-public:
-
-	LogSinkHTML(FileStream& stream);
-	~LogSinkHTML();
-
-	void process(LogEntry& entry);
-
-protected:
-
-	Stream& stream;
-	FILE* fp;
-	bool even;
-};
-
-//-----------------------------------//
-
-} // end namespace
+END_NAMESPACE_EXTERN

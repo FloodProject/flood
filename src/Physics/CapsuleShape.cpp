@@ -6,17 +6,17 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 #include "Event.h"
 
 #ifdef VAPOR_PHYSICS_BULLET
 
-#include "vapor/physics/CapsuleShape.h"
-#include "vapor/physics/Convert.h"
-#include "vapor/physics/Body.h"
+#include "physics/CapsuleShape.h"
+#include "physics/Convert.h"
+#include "physics/Body.h"
 
-#include "vapor/scene/Entity.h"
-#include "vapor/scene/Transform.h"
+#include "Scene/Entity.h"
+#include "Scene/Transform.h"
 
 #include <BulletCollision/CollisionShapes/btCapsuleShape.h>
 

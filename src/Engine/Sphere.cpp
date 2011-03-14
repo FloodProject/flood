@@ -6,11 +6,11 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "vapor/render/Sphere.h"
-#include "vapor/math/EulerAngles.h"
-#include "vapor/math/Helpers.h"
-#include "vapor/math/BoundingBox.h"
+#include "Engine/API.h"
+#include "Render/Sphere.h"
+#include "Math/EulerAngles.h"
+#include "Math/Helpers.h"
+#include "Math/BoundingBox.h"
 
 namespace vapor {
 
@@ -83,7 +83,7 @@ Sphere::Sphere( bool fullSphere, byte numSubDiv, float dim )
 	// Build Texture Coordinates.
 	BoundingBox box;
 	
-	for( uint i = 0; i < position.size(); i++ )
+	for( size_t i = 0; i < position.size(); i++ )
 	{
 		const Vector3& v = position[i];
 		box.add(v);
@@ -93,7 +93,7 @@ Sphere::Sphere( bool fullSphere, byte numSubDiv, float dim )
 
 	std::vector<Vector3> texCoords;
 
-	for( uint i = 0; i < position.size(); i++ )
+	for( size_t i = 0; i < position.size(); i++ )
 	{
 		const Vector3& vert = position[i];
 		Vector3 d = vert-center;
@@ -106,8 +106,8 @@ Sphere::Sphere( bool fullSphere, byte numSubDiv, float dim )
 
 		//float u = delta / Math::PI;
 		//float v = phi / 2*Math::PI;
-		float u = asinf(d.x) / Math::PI + 0.5f;
-		float v = asinf(d.y) / Math::PI + 0.5f;
+		float u = std::asin(d.x) / PI + 0.5f;
+		float v = std::asin(d.y) / PI + 0.5f;
 
 		texCoords.push_back( Vector2(u, v) );
 	}
@@ -150,7 +150,7 @@ void Sphere::buildGeometry( bool fullSphere, byte numSubDiv,
 	// Rotate the vertices, else the sphere is not properly aligned.
 	Matrix4x3 rot = Matrix4x3::createRotation( EulerAngles(-60, 0, 0) );
 
-	for( uint i = 0; i < VAPOR_ARRAY_SIZE(IcoDomeIndices); i++ )
+	for( size_t i = 0; i < VAPOR_ARRAY_SIZE(IcoDomeIndices); i++ )
 	{
 		const byte* p = IcoDomeIndices[i];
 	
@@ -165,7 +165,7 @@ void Sphere::buildGeometry( bool fullSphere, byte numSubDiv,
 	if( fullSphere )
 	{
 		// These indices are the bottom of the sphere.
-		for( uint i = 0; i < VAPOR_ARRAY_SIZE(IcoSphereIndices); i++ )
+		for( size_t i = 0; i < VAPOR_ARRAY_SIZE(IcoSphereIndices); i++ )
 		{
 			const byte* p = IcoSphereIndices[i];
 			Vector3 v1( IcoVertices[p[0]][0], IcoVertices[p[0]][2], IcoVertices[p[0]][1] );
@@ -177,7 +177,7 @@ void Sphere::buildGeometry( bool fullSphere, byte numSubDiv,
 	}
 
 	// Scale all the vertices.
-	for( uint i = 0; i < pos.size(); i++ )
+	for( size_t i = 0; i < pos.size(); i++ )
 	{
 		Vector3& vec = pos[i];	
 		vec *= dim;

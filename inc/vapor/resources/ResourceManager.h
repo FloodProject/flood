@@ -12,17 +12,16 @@
 #include "ConcurrentQueue.h"
 #include "ReferenceCount.h"
 #include "Resources/Resource.h"
-#include "Task.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-class File;
+struct File;
 class FileWatcher;
 class FileWatchEvent;
 
-class TaskManager;
+struct TaskPool;
 class ResourceTask;
 class ResourceLoader;
 
@@ -48,6 +47,7 @@ struct ResourceLoadOptions
 	ResourceGroup::Enum group;
 	bool asynchronousLoading;
 	bool sendLoadEvent;
+	Resource* resource;
 };
 
 //-----------------------------------//
@@ -68,9 +68,11 @@ typedef std::map< std::string, ResourceLoader* > ResourceLoaderMap;
  * which should prove to be less error-prone in case of a corrupt resource.
  */
 
-class RESOURCE_API ResourceManager : public Subsystem
+
+
+class RESOURCE_API ResourceManager
 {
-	friend class ResourceTask;
+	friend void ResourceTaskRun(Task* task);
 
 public:
 
@@ -120,7 +122,7 @@ public:
 	ACESSOR(AsynchronousLoading, bool, asynchronousLoading)
 
 	// Sets the task manager.
-	SETTER(TaskManager, TaskManager*, taskManager) 
+	SETTER(TaskPool, TaskPool*, taskPool) 
 
 	// Sets the file watcher.
 	void setFileWatcher(FileWatcher* watcher);
@@ -180,18 +182,18 @@ protected:
 	// When tasks finish, they queue an event.
 	ConcurrentQueue<ResourceEvent> resourceTaskEvents;
 
-	// Number of resources queued for loading.
-	Atomic numResourcesQueuedLoad;
-
 	// Keeps track if asynchronous loading is enabled.
 	bool asynchronousLoading;
 
-	//Mutex resourceFinishLoadMutex;
-	//Mutex resourceFinishLoad;
+	Mutex resourceFinishLoadMutex;
+	Condition resourceFinishLoad;
 
 	// Manages all background loading tasks.
-	TaskManager* taskManager;
+	TaskPool* taskPool;
 	FileWatcher* fileWatcher;
+
+	// Number of resources queued for loading.
+	VAPOR_ALIGN_BEGIN(32) Atomic VAPOR_ALIGN_END(32) numResourcesQueuedLoad;
 };
 
 //-----------------------------------//

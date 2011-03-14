@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "EditorCameraController.h"
 #include "Input/InputManager.h"
 #include "Input/Mouse.h"
@@ -113,7 +113,7 @@ void EditorCameraController::updateMouseMovement(float delta)
 	// Restrict X-axis movement.
 	float& xang = accumulatedRotation.x;
 	float DEFAULT_LIMIT_XAXIS = 89.0f;
-	Math::clamp( xang, -DEFAULT_LIMIT_XAXIS, DEFAULT_LIMIT_XAXIS );
+	MathClamp( xang, -DEFAULT_LIMIT_XAXIS, DEFAULT_LIMIT_XAXIS );
 
 	moveVector += Vector3::UnitZ * mouseWheel * 100;
 
@@ -162,7 +162,7 @@ void EditorCameraController::onMouseDrag( const MouseDragEvent& event )
 	if( !enabled ) return;
 	if( !event.info->rightButton ) return;
 	
-	Vector2i deltaPosition( event.dx, event.dy );
+	Vector2 deltaPosition( event.dx, event.dy );
 	mouseDistance += deltaPosition;
 }
 

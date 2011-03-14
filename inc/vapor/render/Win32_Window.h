@@ -10,7 +10,7 @@
 
 #ifdef VAPOR_WINDOWING_WIN32
 
-#include "vapor/render/Window.h"
+#include "Render/Window.h"
 
 #ifdef VAPOR_PLATFORM_WINDOWS
 	#define WIN32_LEAN_AND_MEAN

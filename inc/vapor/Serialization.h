@@ -11,7 +11,7 @@
 #include "Reflection.h"
 #include "Object.h"
 
-#include "Math/Vector3.h"
+#include "Math/Vector.h"
 #include "Math/Quaternion.h"
 #include "Math/EulerAngles.h"
 #include "Math/Color.h"
@@ -47,7 +47,7 @@ public:
 	// Processes an enum type.
 	virtual void processEnumBegin( const Enum& enuhm )  {}
 	virtual void processEnumEnd( const Enum& enuhm )  {}
-	virtual void processEnumElement(int value, const std::string& name)  {}
+	virtual void processEnumElement(int value, const String& name)  {}
 
 	// Processes an array type.
 	virtual void processArrayBegin(const Type& type, int size)  {}
@@ -57,14 +57,14 @@ public:
 
 	// Processes a primitive type.
 	virtual void processBool( const Primitive&, bool )  {}
-	virtual void processInt( const Primitive&, int )  {}
-	virtual void processUInt( const Primitive&, uint )  {}
+	virtual void processInt( const Primitive&, int32 )  {}
+	virtual void processUInt( const Primitive&, uint32 )  {}
 	virtual void processFloat( const Primitive&, float )  {}
-	virtual void processString( const Primitive&, const std::string& )  {}
+	virtual void processString( const Primitive&, const String& )  {}
 	virtual void processVector3( const Primitive&, const Vector3& )  {}
 	virtual void processQuaternion( const Primitive&, const Quaternion& )  {}
 	virtual void processColor( const Primitive&, const Color& )  {}
-	virtual void processBitfield( const Primitive&, const uint& )  {}
+	virtual void processBitfield( const Primitive&, const uint32& )  {}
 };
 
 //-----------------------------------//

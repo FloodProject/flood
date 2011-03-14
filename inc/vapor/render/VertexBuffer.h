@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Math/Vector3.h"
+#include "Math/Vector.h"
 #include "Math/Color.h"
 #include "Render/Buffer.h"
 

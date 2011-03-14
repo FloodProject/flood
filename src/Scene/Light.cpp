@@ -6,9 +6,9 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "vapor/scene/Light.h"
-#include "vapor/render/Sphere.h"
+#include "Engine/API.h"
+#include "Scene/Light.h"
+#include "Render/Sphere.h"
 
 namespace vapor {
 

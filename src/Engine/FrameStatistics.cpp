@@ -6,8 +6,8 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "vapor/render/FrameStatistics.h"
+#include "Engine/API.h"
+#include "Render/FrameStatistics.h"
 
 namespace vapor {
 

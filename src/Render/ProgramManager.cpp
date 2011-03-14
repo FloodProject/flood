@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 #include "Render/ProgramManager.h"
 #include "Render/GLSL_Program.h"
 #include "Resources/GLSL_Text.h"
@@ -62,7 +62,7 @@ bool ProgramManager::registerProgram( const std::string& name, const ProgramPtr&
 	
 	if( programs.find(name) != programs.end() )
 	{
-		Log::warn( "Shader '%s' already registered", name.c_str() );
+		LogWarn( "Shader '%s' already registered", name.c_str() );
 		return false;
 	}
 
@@ -89,7 +89,9 @@ void ProgramManager::onLoad( const ResourceEvent& event )
 	
 	const TextPtr& text = RefCast<Text>( event.resource );
 	const ProgramPtr& program = createProgram(text);
-	registerProgram( text->getBasePath(), program );
+
+	Path base = PathGetFileBase( text->getPath() );
+	registerProgram( base, program );
 }
 
 //-----------------------------------//
@@ -100,13 +102,13 @@ void ProgramManager::onReload( const ResourceEvent& event )
 		return;
 
 	const TextPtr& text = RefCast<Text>( event.resource );
-	const std::string& base = text->getBasePath();
+	Path base = PathGetFileBase( text->getPath() );
 
 	ProgramPtr program = programs[base];
 
 	if(program)
 	{
-		Log::debug( "Reloading shader '%s'", event.resource->getPath().c_str() );
+		LogDebug( "Reloading shader '%s'", event.resource->getPath().c_str() );
 		program->updateShadersText();
 	}
 }

@@ -59,7 +59,7 @@ public:
 	virtual void setCursorCapture( bool state );
 
 	// Gets the cursor position on screen.
-	virtual Vector2i getCursorPosition() const;
+	virtual Vector2 getCursorPosition() const;
 
 	// Sets the cursor position on screen.
 	virtual void setCursorPosition( int x, int y );

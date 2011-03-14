@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "vapor/scene/Geometry.h"
-#include "vapor/math/Vector2.h"
+#include "Scene/Geometry.h"
+#include "Math/Vector.h"
 
 namespace vapor {
 
@@ -93,10 +93,10 @@ public:
 	ACESSOR(Anchor, Anchor::Enum, anchor)
 
 	// Gets/sets the position.
-	ACESSOR(Position, const Vector2i&, position)
+	ACESSOR(Position, const Vector2&, position)
 
 	// Gets/sets the size.
-	ACESSOR(Size, const Vector2i&, size)
+	ACESSOR(Size, const Vector2&, size)
 
 	// Gets/sets the background color.
 	ACESSOR(BackgroundColor, Color, backgroundColor)
@@ -134,10 +134,10 @@ protected:
 	Anchor::Enum anchor;
 
 	// Overlay position.
-	Vector2i position;
+	Vector2 position;
 
 	// Overlay size.
-	Vector2i size;
+	Vector2 size;
 
 	// Background color.
 	Color backgroundColor;

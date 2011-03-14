@@ -8,7 +8,7 @@
 
 #include "Core/API.h"
 #include "Core/Primitive.h"
-#include "Math/Vector3.h"
+#include "Math/Vector.h"
 #include "Math/Color.h"
 #include "Math/Quaternion.h"
 
@@ -22,7 +22,7 @@ const Primitive Primitive::_bool(PrimitiveType::Bool, "bool", sizeof(bool));
 const Primitive Primitive::_int(PrimitiveType::Integer, "int", sizeof(int));
 const Primitive Primitive::_uint(PrimitiveType::UnsignedInteger, "uint", sizeof(uint));
 const Primitive Primitive::_float(PrimitiveType::Float, "float", sizeof(float));
-const Primitive Primitive::_string(PrimitiveType::String, "string", sizeof(std::string));
+const Primitive Primitive::_string(PrimitiveType::String, "string", sizeof(String));
 const Primitive Primitive::_Vector3(PrimitiveType::Vector3, "Vector3", sizeof(Vector3));
 const Primitive Primitive::_Color(PrimitiveType::Color, "Color", sizeof(Color));
 const Primitive Primitive::_Quaternion(PrimitiveType::Quaternion, "Quaternion", sizeof(Quaternion));
@@ -30,7 +30,7 @@ const Primitive Primitive::_Bitfield(PrimitiveType::Bitfield, "Bitfield", sizeof
 
 //-----------------------------------//
 
-Primitive::Primitive(PrimitiveType::Enum primitive, const std::string& name, int size)
+Primitive::Primitive(PrimitiveType::Enum primitive, const String& name, int size)
 	: Type(MetaType::Primitive, name, size)
 	, primitive(primitive)
 { }

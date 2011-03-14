@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "Viewframe.h"
 #include "RenderWindow.h"
 #include "RenderControl.h"
@@ -95,7 +95,7 @@ void Viewframe::flagRedraw()
 		return;
 
 	control->flagRedraw();
-	//Log::debug("Force redraw of view");
+	//LogDebug("Force redraw of view");
 }
 
 //-----------------------------------//

@@ -14,7 +14,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-Profiler::Profiler(const std::string& name)
+Profiler::Profiler(const String& name)
 	: name(name)
 { }
 
@@ -22,10 +22,10 @@ Profiler::Profiler(const std::string& name)
 
 Profiler::~Profiler()
 {
-	float time = timer.getElapsedTime();
+	float time = TimerGetElapsed(&timer);
 	float ms = time * 1000;
 
-	Log::debug( "%s: took %lu ms (%.5lf)", name.c_str(), (ulong) ms, ms );
+	LogDebug( "%s: took %lu ms (%.5lf)", name.c_str(), (uint32) ms, ms );
 }
 
 //-----------------------------------//

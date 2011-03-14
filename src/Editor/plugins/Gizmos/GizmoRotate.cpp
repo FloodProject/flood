@@ -6,9 +6,9 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "GizmoRotate.h"
-#include "render/Cube.h"
+#include "Render/Cube.h"
 
 namespace vapor { namespace editor {
 
@@ -123,8 +123,8 @@ void GizmoRotate::highlightAxis( GizmoAxis::Enum axis, bool highlight )
 
 void GizmoRotate::generateCircle(std::vector<Vector3>& pos, int slices)
 {
-	float phi = Math::PI / 2.0f;
-	float delta = (Math::PI * 2.0f) / (float) slices;
+	float phi = PI / 2.0f;
+	float delta = (PI * 2.0f) / (float) slices;
 
 	for( int i = 0; i <= slices; i++ )
 	{

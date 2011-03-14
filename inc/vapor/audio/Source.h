@@ -10,10 +10,10 @@
 
 #ifdef VAPOR_AUDIO_OPENAL
 
-#include "audio/Device.h"
-#include "audio/Context.h"
-#include "resources/Sound.h"
-#include "math/Vector3.h"
+#include "Audio/Device.h"
+#include "Audio/Context.h"
+#include "Resources/Sound.h"
+#include "Math/Vector.h"
 
 FWD_DECL_SHARED(AudioBuffer)
 

@@ -9,132 +9,50 @@
 #pragma once
 
 //---------------------------------------------------------------------//
-// Engine information
+// Core APIs
 //---------------------------------------------------------------------//
 
-#define VAPOR_ENGINE_VERSION "SVN"
+#define		VAPOR_MEMORY_TR1_VENDOR
+#define		VAPOR_MEMORY_SHARED_PTR
+#define		VAPOR_MEMORY_INTRUSIVE_PTR
+#define		VAPOR_MEMORY_LEAK_DETECTOR
+//#define	VAPOR_THREADING
+//#define	VAPOR_DYNAMIC_LIBRARY
+//#define	VAPOR_NETWORKING_ZMQ
+//#define	VAPOR_NETWORKING_CURL
+#define		VAPOR_VFS_PHYSFS
+#define		VAPOR_VFS_FILEWATCHER
+#define		VAPOR_SERIALIZATION_JSON
+#define		VAPOR_SERIALIZATION_BINARY
 
 //---------------------------------------------------------------------//
-// API building information
+// Engine APIs
 //---------------------------------------------------------------------//
-
-// Enable this when building target is a DLL
-//#define VAPOR_API_DLL
 
 // Enables visual styled controls on Windows
-//#define VAPOR_USE_COMMON_CONTROLS
+//#define	VAPOR_USE_COMMON_CONTROLS
+
+//#define	VAPOR_WINDOWING_SFML
+//#define	VAPOR_WINDOWING_WIN32
+//#define	VAPOR_INPUT_SFML
+
+#define		VAPOR_RENDERER_OPENGL
+//#define	VAPOR_RENDERER_DIRECTX
+#define		VAPOR_SHADER_GLSL
+
+#define		VAPOR_AUDIO_OPENAL
+#define		VAPOR_PHYSICS_BULLET
 
 //---------------------------------------------------------------------//
-// Memory stuff
-//---------------------------------------------------------------------//
- 
-#define VAPOR_MEMORY_TR1_VENDOR
-//#define VAPOR_MEMORY_TR1_BOOST
-
-#define VAPOR_MEMORY_SHARED_PTR
-#define VAPOR_MEMORY_INTRUSIVE_PTR
-
-//#define VAPOR_MEMORY_LEAK_DETECTOR
-
-//---------------------------------------------------------------------//
-// Threading stuff
+// Resource APIs
 //---------------------------------------------------------------------//
 
-//#define VAPOR_THREADING
-	//#define VAPOR_THREADING_BOOST
-	//#define VAPOR_THREADING_STD
-
-//---------------------------------------------------------------------//
-// VFS providers
-//---------------------------------------------------------------------//
-
-#define VAPOR_VFS_PHYSFS
-#define VAPOR_VFS_FILEWATCHER
-
-//---------------------------------------------------------------------//
-// Serialization providers
-//---------------------------------------------------------------------//
-
-#define VAPOR_SERIALIZATION_JSON
-#define VAPOR_SERIALIZATION_BINARY
-
-//---------------------------------------------------------------------//
-// Windowing APIs
-//---------------------------------------------------------------------//
-
-//#define VAPOR_WINDOWING_SFML
-//#define VAPOR_WINDOWING_WIN32
-
-//---------------------------------------------------------------------//
-// Graphics APIs
-//---------------------------------------------------------------------//
-
-#define VAPOR_RENDERER_OPENGL
-//#define VAPOR_RENDERER_DIRECTX
-//#define VAPOR_RENDERER_SOFTWARE
-//#define VAPOR_RENDERER_NULL
-
-#define VAPOR_SHADER_GLSL
-
-//---------------------------------------------------------------------//
-// Audio APIs
-//---------------------------------------------------------------------//
-
-#define VAPOR_AUDIO_OPENAL
-
-//---------------------------------------------------------------------//
-// Input APIs
-//---------------------------------------------------------------------//
-
-//#define VAPOR_INPUT_SFML
-
-//---------------------------------------------------------------------//
-// Audio codecs
-//---------------------------------------------------------------------//
-
-#define VAPOR_AUDIO_OGG
-
-//---------------------------------------------------------------------//
-// Image codecs
-//---------------------------------------------------------------------//
-
-//#define VAPOR_IMAGE_DEVIL
-//#define VAPOR_IMAGE_PICOPNG
-#define VAPOR_IMAGE_STB
-
-//---------------------------------------------------------------------//
-// Mesh formats
-//---------------------------------------------------------------------//
-
-#define VAPOR_MESH_MILKSHAPE3D
-
-//---------------------------------------------------------------------//
-// Font providers
-//---------------------------------------------------------------------//
-
-//#define VAPOR_FONT_FREETYPE2
-#define VAPOR_FONT_BITMAP
-
-//---------------------------------------------------------------------//
-// Scripting languages
-//---------------------------------------------------------------------//
-
-#define VAPOR_SCRIPTING_LUA
-
-//---------------------------------------------------------------------//
-// Physics APIs
-//---------------------------------------------------------------------//
-
-#define VAPOR_PHYSICS_BULLET
-
-//---------------------------------------------------------------------//
-// Support dynamic libraries
-//---------------------------------------------------------------------//
-
-//#define VAPOR_DYNAMIC_LIBRARY
-
-//---------------------------------------------------------------------//
-// Networking APIs
-//---------------------------------------------------------------------//
-
-//#define VAPOR_NETWORKING_ZMQ
+#define		VAPOR_AUDIO_OGG
+//#define	VAPOR_IMAGE_DEVIL
+//#define	VAPOR_IMAGE_PICOPNG
+#define		VAPOR_IMAGE_STB
+#define		VAPOR_MESH_MILKSHAPE3D
+//#define	VAPOR_FONT_FREETYPE2
+#define		VAPOR_FONT_BITMAP
+#define		VAPOR_SCRIPTING_LUA
+#define		VAPOR_SCRIPTING_MONO

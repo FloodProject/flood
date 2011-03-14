@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 
 #ifdef VAPOR_AUDIO_OPENAL
 
@@ -25,7 +25,7 @@ AudioContext::AudioContext(AudioDevice* device)
 {
 	if(!device)
 	{
-		Log::warn("Invalid audio device.");
+		LogWarn("Invalid audio device.");
 		return;
 	}
 
@@ -62,7 +62,7 @@ ALCcontext* AudioContext::createContext()
 
 	if(checkError())
 	{
-		Log::warn("Error creating OpenAL context", getError());
+		LogWarn("Error creating OpenAL context", getError());
 		return nullptr;
 	}
 
@@ -78,7 +78,7 @@ void AudioContext::setVolume(float volume)
 
 	if(checkError())
 	{
-		Log::warn("Could not set new volume: %s", getError());
+		LogWarn("Could not set new volume: %s", getError());
 		return;
 	}
 }
@@ -92,7 +92,7 @@ void AudioContext::setPosition(const Vector3& position)
 
 	if(checkError())
 	{
-		Log::warn( "Could not set listener position: %s", getError());
+		LogWarn( "Could not set listener position: %s", getError());
 		return;
 	}
 }
@@ -107,7 +107,7 @@ void AudioContext::setOrientation(const Vector3& rotation)
 
 	if(checkError())
 	{
-		Log::warn( "Could not set listener orientation: %s", getError());
+		LogWarn( "Could not set listener orientation: %s", getError());
 		return;
 	}
 }
@@ -120,7 +120,7 @@ void AudioContext::makeCurrent()
 
 	if(ret != ALC_TRUE)
 	{
-		Log::warn("Could not make OpenAL context current");
+		LogWarn("Could not make OpenAL context current");
 		return;
 	}
 }

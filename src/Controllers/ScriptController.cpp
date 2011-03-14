@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 
 #ifdef VAPOR_SCRIPTING_LUA
 
@@ -15,9 +15,9 @@
 
 #include "script/Script.h"
 #include "script/ScriptManager.h"
-#include "resources/ResourceManager.h"
+#include "Resources/ResourceManager.h"
 
-#include "scene/Entity.h"
+#include "Scene/Entity.h"
 #include "Engine.h"
 
 #include "input/InputManager.h"

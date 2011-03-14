@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "SelectionPlugin.h"
 #include "SelectionManager.h"
 
@@ -22,6 +22,11 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
+REFLECT_CHILD_CLASS(SelectionPlugin, Plugin)
+REFLECT_END()
+
+//-----------------------------------//
+
 namespace SelectionTool
 {
 	enum Enum
@@ -32,8 +37,8 @@ namespace SelectionTool
 
 //-----------------------------------//
 
-SelectionPlugin::SelectionPlugin( EditorFrame* frame )
-	: Plugin(frame)
+SelectionPlugin::SelectionPlugin()
+	: Plugin()
 	, selections(nullptr)
 	, buttonSelect(nullptr)
 	, dragRectangle(nullptr)
@@ -119,7 +124,7 @@ void SelectionPlugin::onMouseButtonPress( const MouseButtonEvent& event )
 	if( event.button != MouseButton::Left )
 		return;
 
-	dragOrigin = Vector2i(event.x, event.y );
+	dragOrigin = Vector2(event.x, event.y );
 
 	Document* document = editor->getDocument();
 	if( !document ) return;
@@ -216,13 +221,13 @@ void SelectionPlugin::createRectangle()
 
 void SelectionPlugin::updateRectangle( const MouseDragEvent& event )
 {
-	Vector2i dragPoint = Vector2i(event.x, event.y);
+	Vector2 dragPoint = Vector2(event.x, event.y);
 	
-	Vector2i dragMin;
+	Vector2 dragMin;
 	dragMin.x = std::min(dragOrigin.x, dragPoint.x);
 	dragMin.y = std::min(dragOrigin.y, dragPoint.y);
 
-	Vector2i dragMax;
+	Vector2 dragMax;
 	dragMax.x = std::max(dragOrigin.x, dragPoint.x);
 	dragMax.y = std::max(dragOrigin.y, dragPoint.y);
 
@@ -266,8 +271,8 @@ SelectionOperation* SelectionPlugin::processDragSelection(const MouseButtonEvent
 	const CameraPtr& camera = view->getCamera();
 
 	OverlayPtr overlay = dragRectangle->getComponent<Overlay>();
-	const Vector2i& pos = overlay->getPosition();
-	const Vector2i& size = overlay->getSize();
+	const Vector2& pos = overlay->getPosition();
+	const Vector2& size = overlay->getSize();
 
 	Frustum pickVolume = camera->getVolume(pos.x, pos.x+size.x, pos.y, pos.y+size.y);
 
@@ -358,7 +363,7 @@ bool SelectionPlugin::getPickEntity(int x, int y, EntityPtr& entity)
 	if( !scene->doRayBoxQuery(pickRay, list) )
 		return false;
 
-	float minDistance = Limits::FloatMaximum;
+	float minDistance = LimitsFloatMaximum;
 
 	bool found = false;
 

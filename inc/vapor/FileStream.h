@@ -24,7 +24,7 @@ class CORE_API FileStream : public Stream
 
 public:
 
-	FileStream(const std::string& path, StreamMode::Enum mode = StreamMode::Read);
+	FileStream(const String& path, StreamMode::Enum mode = StreamMode::Read);
 	virtual ~FileStream();
 
 	// Opens the file.
@@ -55,7 +55,7 @@ public:
 	bool exists() const;
 	
 	// Checks if the file in path exists.
-	static bool exists(const std::string& path);
+	static bool exists(const String& path);
 
 	// Gets the internal pointer of the file.
 	FILE* getFilePointer();

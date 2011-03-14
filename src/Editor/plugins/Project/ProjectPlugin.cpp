@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "ProjectPlugin.h"
 #include "Editor.h"
 #include "Events.h"
@@ -19,8 +19,13 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-ProjectPlugin::ProjectPlugin( EditorFrame* frame )
-	: Plugin(frame)
+REFLECT_CHILD_CLASS(ProjectPlugin, Plugin)
+REFLECT_END()
+
+//-----------------------------------//
+
+ProjectPlugin::ProjectPlugin()
+	: Plugin()
 { }
 
 //-----------------------------------//

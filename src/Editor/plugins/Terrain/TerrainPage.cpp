@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "TerrainPage.h"
 #include "Utilities.h"
 #include "Resources\ResourceManager.h"
@@ -28,8 +28,10 @@ TerrainPage::TerrainPage( wxWindow* parent, wxWindowID id,
 
 void TerrainPage::createBrushes()
 {
-	std::string brushesPath = "Media/Brushes/";
-	std::vector<std::string> files = System::enumerateFiles(brushesPath);
+	String brushesPath = "Media/Brushes/";
+	
+	std::vector<String> files;
+	FileEnumerateFiles(brushesPath, files);
 
 	ResourceManager* rm = GetResourceManager();
 

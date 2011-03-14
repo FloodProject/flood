@@ -6,8 +6,8 @@
 *
 ************************************************************************/
 
-%import "vapor/input/Device.h"
+%import "input/Device.h"
 
-%include "vapor/input/KeyboardEvents.h"
-%include "vapor/input/MouseEvents.h"
+%include "input/KeyboardEvents.h"
+%include "input/MouseEvents.h"
 

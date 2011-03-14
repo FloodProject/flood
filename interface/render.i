@@ -20,12 +20,12 @@ namespace vapor
 	typedef std::shared_ptr<Transform> TransformPtr;
 }
 
-//%include "vapor/render/Texture.h"
-//%include "vapor/render/Buffer.h"
-//%include "vapor/render/VertexBuffer.h"
-//%include "vapor/render/IndexBuffer.h"
-//%include "vapor/Resources/Shader.h"
-//%include "vapor/render/Program.h"
-//%include "vapor/render/Material.h"
-//%include "vapor/render/Renderable.h"
-//%include "vapor/render/RenderQueue.h"
+//%include "Render/Texture.h"
+//%include "Render/Buffer.h"
+//%include "Render/VertexBuffer.h"
+//%include "Render/IndexBuffer.h"
+//%include "Resources/Shader.h"
+//%include "Render/Program.h"
+//%include "Render/Material.h"
+//%include "Render/Renderable.h"
+//%include "Render/RenderQueue.h"

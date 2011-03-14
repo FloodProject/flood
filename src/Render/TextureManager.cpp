@@ -6,10 +6,10 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
-#include "render/TextureManager.h"
-#include "resources/ResourceManager.h"
-#include "render/GL.h"
+#include "Engine/API.h"
+#include "Render/TextureManager.h"
+#include "Resources/ResourceManager.h"
+#include "Render/GL.h"
 
 namespace vapor {
 
@@ -86,7 +86,7 @@ TexturePtr TextureManager::getTexture( const ImagePtr& image )
 	// Image not found.
 	if( !img ) 
 	{
-		//Log::warn( "Reverting to fallback texture" );
+		//LogWarn( "Reverting to fallback texture" );
 		return TexturePtr( new Texture( Settings(TEX_SIZE, TEX_SIZE) ) );
 	}
 
@@ -141,7 +141,7 @@ void TextureManager::onUnloaded( const ResourceEvent& evt )
 	if( textures.find(image.get()) == textures.end() )
 		return;
 
-	Log::debug( "Removing texture '%s'", evt.resource->getPath().c_str() );
+	LogDebug( "Removing texture '%s'", evt.resource->getPath().c_str() );
 
 	removeTexture(image.get());
 }
@@ -159,7 +159,7 @@ void TextureManager::onReloaded( const ResourceEvent& evt )
 	if( textures.find(image.get()) == textures.end() )
 		return;
 
-	Log::debug( "Reloading texture '%s'", evt.resource->getPath().c_str() );
+	LogDebug( "Reloading texture '%s'", evt.resource->getPath().c_str() );
 
 	TexturePtr tex = textures[image.get()];
 	tex->setImage(image.get());

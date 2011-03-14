@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 
 #ifdef VAPOR_RENDERER_OPENGL
 
@@ -26,7 +26,7 @@ bool glHasError( const std::string& msg )
 
 	while(((error = glGetError()) != GL_NO_ERROR) && (numMaxErrors-- > 0) )
 	{
-		Log::warn( ("OpenGL: " + msg).c_str() );
+		LogWarn( ("OpenGL: " + msg).c_str() );
 		occured = true;
 	}
 

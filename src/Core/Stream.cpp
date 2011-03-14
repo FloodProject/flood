@@ -14,7 +14,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-Stream::Stream(StreamMode::Enum mode, const std::string& path)
+Stream::Stream(StreamMode::Enum mode, const String& path)
   : mode(mode)
   , path(path)
 { }
@@ -40,7 +40,7 @@ int Stream::tell()
 
 //-----------------------------------//
 
-void Stream::read(std::string& text) const
+void Stream::read(String& text) const
 {
 	std::vector<byte> data;
 	read(data);
@@ -50,17 +50,18 @@ void Stream::read(std::string& text) const
 
 //-----------------------------------//
 
-std::vector<std::string> Stream::readLines() const
+std::vector<String> Stream::readLines() const
 {
-	std::string str;
+	String str;
 	read(str);
 
-	std::vector<std::string> lines = String::split(str, '\n');
+	std::vector<String> lines;
+	StringSplit(str, '\n', lines);
 	
 	// Trim extra line endings that might be left.
-	for( uint i = 0; i < lines.size(); i++ )
+	for( size_t i = 0; i < lines.size(); i++ )
 	{
-		std::string& str = lines[i];
+		String& str = lines[i];
 		
 		if( str[str.size()-1] == '\r' )
 			str.erase( str.size()-1 );
@@ -71,7 +72,7 @@ std::vector<std::string> Stream::readLines() const
 
 //-----------------------------------//
 
-long Stream::write(const std::string& string)
+long Stream::write(const String& string)
 {
 	std::vector<byte> data( string.begin(), string.end() );
 	return write(data);  

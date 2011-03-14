@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "vapor/PCH.h"
+#include "Engine/API.h"
 
 #ifdef VAPOR_RENDERER_OPENGL
 
@@ -48,21 +48,21 @@ void Adapter::parseInfo()
 	// get the name of the card
 	tmp = (const char*) glGetString(GL_RENDERER);
 	if(tmp == nullptr) {
-		Log::warn("Could not get GL renderer information");
+		LogWarn("Could not get GL renderer information");
 	} else {
 		name = tmp;
 	}
 	
 	tmp = (const char*) glGetString(GL_VENDOR);
 	if(tmp == nullptr) {
-		Log::warn("Could not get GL vendor information");
+		LogWarn("Could not get GL vendor information");
 	} else {
 		vendor = tmp;
 	}
 
 	tmp = (const char*) glGetString(GL_VERSION);
 	if(tmp == nullptr) {
-		Log::warn("Could not get GL version information");
+		LogWarn("Could not get GL version information");
 	} 
 	else {
 		gl = tmp;
@@ -79,7 +79,7 @@ void Adapter::parseInfo()
 	{
 		tmp = (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION);
 		if(tmp == nullptr) {
-			Log::warn("Could not get GLSL version information");
+			LogWarn("Could not get GLSL version information");
 		} else {
 			glsl = tmp;
 			ch = glsl.find_first_of("-");
@@ -95,18 +95,18 @@ void Adapter::log() const
 	if( name.empty() )
 		return;
 
-	Log::info( "Graphics adapter: %s", name.c_str() );
+	LogInfo( "Graphics adapter: %s", name.c_str() );
 
-	Log::info( "%s%s%s", 
+	LogInfo( "%s%s%s", 
 		!gl.empty() ? ("OpenGL " + gl).c_str() : "",
 		!glsl.empty() ? (" / GLSL " + glsl).c_str() : "",
 		!driver.empty() ? (" / driver: " + driver).c_str() : "" );
 
 	if( !supportsVertexBuffers )
-		Log::error("Your graphics adapter does not support Vertex Buffer Objects");
+		LogError("Your graphics adapter does not support Vertex Buffer Objects");
 
-	Log::info( "Max texture size: %dx%d", maxTextureSize, maxTextureSize );
-	Log::info( "Max vertex attributes: %d", maxAttribs );
+	LogInfo( "Max texture size: %dx%d", maxTextureSize, maxTextureSize );
+	LogInfo( "Max vertex attributes: %d", maxAttribs );
 }
 
 //-----------------------------------//

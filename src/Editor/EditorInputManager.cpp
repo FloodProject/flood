@@ -1,4 +1,4 @@
-/************************************************************************
+ /************************************************************************
 *
 * vapor3D Editor © (2008-2010)
 *
@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "EditorInputManager.h"
 
 namespace vapor { namespace editor {
@@ -290,7 +290,7 @@ Keys::Enum EditorInputManager::convertKeyEnum( int keyCode )
 		return Keys::Pause;
 
 	default:
-		Log::warn( "Could not map wxWidgets keycode: Invalid keycode" );
+		LogWarn( "Could not map wxWidgets keycode: Invalid keycode" );
 		return Keys::Escape;
 	}	
 }

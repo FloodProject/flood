@@ -8,7 +8,7 @@
 
 #include "Core/API.h"
 #include "FileStream.h"
-#include "Log.h"
+#include <cassert>
 
 #ifdef VAPOR_PLATFORM_WINDOWS
 	#include <io.h>
@@ -25,7 +25,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-FileStream::FileStream(const std::string& path, StreamMode::Enum mode)
+FileStream::FileStream(const String& path, StreamMode::Enum mode)
   : Stream(mode, path)
   , fp(nullptr)
 { }
@@ -56,8 +56,7 @@ bool FileStream::open()
 	fp = fopen(path.c_str(), mode_);
 #endif
 
-	if ( !fp ) 
-		return false;
+	if ( !fp ) return false;
 
 	return true;
 }
@@ -66,8 +65,7 @@ bool FileStream::open()
 
 void FileStream::close()
 {
-	if(!fp)
-		return;
+	if(!fp) return;
 	
 	fclose(fp);
 	fp = nullptr;
@@ -77,8 +75,7 @@ void FileStream::close()
 
 int FileStream::tell()
 {
-	if(!fp)
-		return -1;
+	if(!fp) return -1;
 	
 	return ftell(fp);
 }
@@ -109,8 +106,7 @@ long FileStream::write(const std::vector<byte>& buf)
 	assert( mode == StreamMode::Write || mode == StreamMode::Append );
 	assert( !buf.empty() );
 
-	if( !fp || buf.empty() )
-		return -1;
+	if( !fp || buf.empty() ) return -1;
 
 	return fwrite(&buf.front(), buf.size(), 1, fp);  
 }
@@ -124,7 +120,7 @@ bool FileStream::exists() const
 
 //-----------------------------------//
 
-bool FileStream::exists(const std::string& path)
+bool FileStream::exists(const String& path)
 {
 	return access(path.c_str(), F_OK) == 0;
 }

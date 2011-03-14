@@ -6,7 +6,7 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
+#include "Editor/API.h"
 #include "SelectionManager.h"
 #include "Editor.h"
 #include "UndoManager.h"

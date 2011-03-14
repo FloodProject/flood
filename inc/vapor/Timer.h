@@ -8,21 +8,11 @@
 
 #pragma once
 
-#ifndef VAPOR_PLATFORM_WINDOWS
-	#include <sys/time.h>
-#endif
-
-namespace vapor {
+BEGIN_NAMESPACE_EXTERN
 
 //-----------------------------------//
 
-#ifdef VAPOR_PLATFORM_WINDOWS
-	typedef int64 Ticks;
-#else
-	typedef timeval Ticks;
-#endif
-
-//-----------------------------------//
+struct MemoryAllocator;
 
 /**
  * Represents a timer that can be used to measure time precisely.
@@ -31,47 +21,15 @@ namespace vapor {
  * most high-precision timer available.
  */
 
-class CORE_API Timer
-{
-	DECLARE_UNCOPYABLE(Timer)
+CORE_API float TimerGetCurrentTimeMs();
 
-public:
+struct Timer { int64 time; };
 
-	Timer();
-
-	// Resets the timer.
-	float reset();
-
-	// Gets the time since the last reset.
-	float getElapsedTime();
-
-	// Gets the current time.
-	float getCurrentTime();
-	
-private:
-
-	// Checks if high-resolution timers are available.
-	bool checkHighResolutionTimers();
-
-	// Stores the current time in the variable.
-	void storeTime( Ticks& var );
-
-	// Holds the current time (used for calculating the diff).
-	Ticks currentTime;
-
-	// Holds the time when the last reset happened.
-	Ticks lastTime;
-
-	// Holds the ticks per second (timer resolution).
-	static Ticks ticksPerSecond;
-
-	// Holds if we have checked for high resolution timers.
-	static bool checked;
-
-	// Holds if high resolution timers are supported.
-	static bool highResolutionSupport;
-};
-
+CORE_API Timer* TimerCreate(MemoryAllocator*);
+CORE_API void   TimerDestroy(Timer*, MemoryAllocator*);
+CORE_API void   TimerReset(Timer*);
+CORE_API float  TimerGetElapsed(Timer*);
+CORE_API void   TimerSleep( int64 time );
 //-----------------------------------//
 
-} // end namespace
+END_NAMESPACE_EXTERN

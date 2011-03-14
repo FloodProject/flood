@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include "vapor/scene/Component.h"
-#include "vapor/scene/Transform.h"
-#include "vapor/scene/Camera.h"
-#include "vapor/render/Renderable.h"
+#include "Scene/Component.h"
+#include "Scene/Transform.h"
+#include "Scene/Camera.h"
+#include "Render/Renderable.h"
 
 namespace vapor {
 

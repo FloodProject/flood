@@ -36,6 +36,8 @@ typedef std::pair<const EntityPtr, EntityPtr> GizmoMapPair;
 
 class GizmoPlugin : public Plugin
 {
+	REFLECT_DECLARE_CLASS()
+
 public:
 
 	GizmoPlugin( EditorFrame* );

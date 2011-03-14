@@ -10,7 +10,7 @@
 
 #ifdef VAPOR_PHYSICS_BULLET
 
-#include "vapor/scene/Component.h"
+#include "Scene/Component.h"
 
 class btCollisionShape;
 
