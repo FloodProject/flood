@@ -62,7 +62,7 @@ void ConsolePlugin::onPluginEnable()
 	console->SetSize(400, 200);
 
 	wxAuiPaneInfo pane;
-	pane.Caption("Console").Bottom().Dock().MaximizeButton()/*.Float()*/.Hide().Icon(iconConsole).Resizable();
+	pane.Name("Console").Caption("Console").Bottom().Dock().MaximizeButton()/*.Float()*/.Hide().Icon(iconConsole).Resizable();
 	
 	editor->getAUI()->AddPane(console, pane);
 	editor->getAUI()->Update();

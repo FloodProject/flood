@@ -37,7 +37,7 @@ typedef void (*SetterFunctionPtr)(void*, void*);
  * Represents a field in a class.
  */
 
-class CORE_API Field
+class API_CORE Field
 {
 	DECLARE_UNCOPYABLE(Field)
 	friend class Class;

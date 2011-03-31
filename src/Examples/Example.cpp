@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Example.h"
-#include "Utilities.h"
+#include "Core/Utilities.h"
 #include "io/JsonSerializer.h"
 
 //-----------------------------------//
@@ -190,7 +190,7 @@ void Example::onKeyPressed( const KeyEvent& event )
 {
 	if( event.keyCode == Keys::Space )
 	{
-		LogDebug( "time: %lf", frameTimer.getElapsedTime() );
+		//LogDebug( "time: %lf", TimerGetElapsed(&frameTimer);
 	}
 	else if( event.keyCode == Keys::F )
 	{

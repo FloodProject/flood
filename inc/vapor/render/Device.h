@@ -17,7 +17,7 @@
 #include "Math/Color.h"
 #include "Math/Vector.h"
 #include "Math/Matrix4x3.h"
-#include "Reflection.h"
+#include "Core/Reflection.h"
 
 namespace vapor {
 

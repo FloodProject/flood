@@ -15,7 +15,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-struct CORE_API PlaneIntersection
+struct API_CORE PlaneIntersection
 {
     enum Enum
     {
@@ -27,7 +27,7 @@ struct CORE_API PlaneIntersection
 
 //-----------------------------------//
 
-class CORE_API Plane
+class API_CORE Plane
 {
 public:
 

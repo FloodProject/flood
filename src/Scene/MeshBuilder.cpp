@@ -11,7 +11,7 @@
 #include "Render/Renderable.h"
 #include "Math/Vector.h"
 #include "Math/Helpers.h"
-#include "Utilities.h"
+#include "Core/Utilities.h"
 
 namespace vapor {
 

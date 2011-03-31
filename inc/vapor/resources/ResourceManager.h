@@ -9,15 +9,15 @@
 #pragma once
 
 #include "Subsystem.h"
-#include "ConcurrentQueue.h"
-#include "ReferenceCount.h"
+#include "Core/ConcurrentQueue.h"
+#include "Core/ReferenceCount.h"
 #include "Resources/Resource.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-struct File;
+struct Stream;
 class FileWatcher;
 class FileWatchEvent;
 
@@ -156,7 +156,7 @@ protected:
 	void findResource( ResourceLoadOptions& options );
 
 	// Returns a new resource ready to be processed by a loader.
-	ResourcePtr prepareResource( const File& file );
+	ResourcePtr prepareResource( Stream* stream );
 
 	// Processes the resource with the right resource loader.
 	void decodeResource( ResourcePtr res, ResourceLoadOptions& options );

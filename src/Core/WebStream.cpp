@@ -8,7 +8,7 @@
 
 #include "Core/API.h"
 #include "WebStream.h"
-#include "Log.h"
+#include "Core/Log.h"
 
 #ifdef VAPOR_NETWORKING_CURL
 

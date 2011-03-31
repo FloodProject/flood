@@ -9,19 +9,21 @@
 #include "Engine/API.h"
 
 //---------------------------------------------------------------------//
-// Audio-related Includes
+// Core Includes
 //---------------------------------------------------------------------//
 
-#include <Audio/Device.h>
-#include <Audio/Buffer.h>
-#include <Audio/Context.h>
-#include <Audio/Source.h>
+#include <Core/Log.h>
+#include "Core/Memory.h"
+#include <Core/Archive.h>
+#include <Core/Event.h>
+#include <Core/Serialization.h>
+#include <Core/FileSystem.h>
+#include <Core/FileWatcher.h>
 
 //---------------------------------------------------------------------//
 // Math-related Includes
 //---------------------------------------------------------------------//
 
-#include <Math/Vector.h>
 #include <Math/Vector.h>
 #include <Math/Color.h>
 #include <Math/Quaternion.h>
@@ -31,6 +33,15 @@
 #include <Math/Noise.h>
 #include <Math/Hash.h>
 #include <Math/Helpers.h>
+
+//---------------------------------------------------------------------//
+// Audio-related Includes
+//---------------------------------------------------------------------//
+
+#include <Audio/Device.h>
+#include <Audio/Buffer.h>
+#include <Audio/Context.h>
+#include <Audio/Source.h>
 
 //---------------------------------------------------------------------//
 // Resource-related Includes
@@ -104,18 +115,10 @@
 // Input-related Includes
 //---------------------------------------------------------------------//
 
-#include <input/InputManager.h>
-#include <input/InputMap.h>
-#include <input/Keyboard.h>
-#include <input/Mouse.h>
-
-//---------------------------------------------------------------------//
-// VFS-related Includes
-//---------------------------------------------------------------------//
-
-#include <Core/FileSystem.h>
-#include <Core/FileWatcher.h>
-#include <Core/File.h>
+#include <Input/InputManager.h>
+#include <Input/InputMap.h>
+#include <Input/Keyboard.h>
+#include <Input/Mouse.h>
 
 //---------------------------------------------------------------------//
 // GUI-related Includes
@@ -161,10 +164,6 @@
 
 //---------------------------------------------------------------------//
 // General Includes
-//---------------------------------------------------------------------//
+//-----------------------------------------------3----------------------//
 
 #include <Engine.h>
-#include <Log.h>
-#include <Profiler.h>
-#include <Serialization.h>
-#include <Event.h>

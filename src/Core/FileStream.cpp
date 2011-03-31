@@ -7,8 +7,9 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "FileStream.h"
-#include <cassert>
+#include "Core/Stream.h"
+#include "Core/Memory.h"
+#include "Core/Log.h"
 
 #ifdef VAPOR_PLATFORM_WINDOWS
 	#include <io.h>
@@ -17,152 +18,180 @@
 	#include <unistd.h>
 #endif
 
-#ifdef VAPOR_COMPILER_MSVC
-	#define access _access
-#endif
-
 namespace vapor {
 
 //-----------------------------------//
 
-FileStream::FileStream(const String& path, StreamMode::Enum mode)
-  : Stream(mode, path)
-  , fp(nullptr)
-{ }
+struct FileStream : Stream
+{
+	FILE* fp;
+};
+
+static bool  FileOpen(Stream*);
+static bool  FileClose(Stream*);
+static int64 FileRead(Stream*, void*, int64);
+static int64 FileWrite(Stream*, void*, int64);
+static int64 FileTell(Stream*);
+static bool  FileSeek(Stream*, int64, int8);
+static int64 FileGetSize(Stream*);
+
+static StreamFuncs gs_FileFuncs = 
+{
+	FileOpen,
+	FileClose,
+	FileRead,
+	FileWrite,
+	FileTell,
+	FileSeek,
+	FileGetSize
+};
 
 //-----------------------------------//
 
-FileStream::~FileStream() 
+Stream* StreamCreateFromFile(MemoryAllocator* mem, const Path& path, StreamMode::Enum mode)
 {
-	close();
+	FileStream* fs = Allocate<FileStream>(mem);
+	if( !fs ) return nullptr;
+	
+	fs->fp = nullptr;
+	fs->path = path;
+	fs->mode = mode;
+	fs->fn = &gs_FileFuncs;
+
+	if( !FileOpen(fs) )
+	{
+		LogWarn("Error opening file: %s", PathGetFile(path).c_str());
+		Deallocate(mem, fs);
+		return nullptr;
+	}
+
+	return fs;
 }
 
 //-----------------------------------//
 
-bool FileStream::open()
+static bool FileOpen(Stream* stream)
 {
-	const char* mode_ = nullptr;
+	FileStream* fs = (FileStream*) stream;
+	const char* mode = nullptr;
 
-	if( mode == StreamMode::Read )
-		mode_ = "rb";
-	else if( mode == StreamMode::Write )
-		mode_ = "w+b";
-	else if( mode == StreamMode::Append )
-		mode_ = "a+b";
+	switch(fs->mode)
+	{
+	case StreamMode::Read:   mode = "rb"; break;
+	case StreamMode::Write:  mode = "w+b"; break;
+	case StreamMode::Append: mode = "a+b"; break;
+	}
 
 #ifdef VAPOR_COMPILER_MSVC
-	fopen_s(&fp, path.c_str(), mode_);
+	fopen_s(&fs->fp, fs->path.c_str(), mode);
 #else
-	fp = fopen(path.c_str(), mode_);
+	fs->fp = fopen(fs->path.c_str(), mode);
 #endif
 
-	if ( !fp ) return false;
-
-	return true;
+	return fs->fp != nullptr;
 }
 
 //-----------------------------------//
 
-void FileStream::close()
+static bool FileClose(Stream* stream)
 {
-	if(!fp) return;
+	FileStream* fs = (FileStream*) stream;
+	return fclose(fs->fp) == 0;
+}
+
+//-----------------------------------//
+
+static int64 FileRead(Stream* stream, void* buffer, int64 size)
+{
+	FileStream* fs = (FileStream*) stream;
+	return fread(buffer, 1, size_t(size), fs->fp);
+}
+
+//-----------------------------------//
+
+static int64 FileWrite(Stream* stream, void* buffer, int64 size)
+{
+	FileStream* fs = (FileStream*) stream;
+
+	assert( fs->mode == StreamMode::Write || fs->mode == StreamMode::Append );
+	assert( buffer && size >= 0 );
+
+	return fwrite(buffer, size_t(size), 1, fs->fp);
+}
+
+//-----------------------------------//
+
+static int64 FileTell(Stream* stream)
+{
+	FileStream* fs = (FileStream*) stream;
+
+#ifdef VAPOR_COMPILER_MSVC
+	return _ftelli64(fs->fp);
+#else
+	return ftell(fs->fp);
+#endif
+}
+
+//-----------------------------------//
+
+static bool FileSeek(Stream* stream, int64 offset, int8 mode)
+{
+	FileStream* fs = (FileStream*) stream;
+
+	int origin = 0;
+
+	switch(mode)
+	{
+	case StreamSeekMode::Absolute: origin = SEEK_SET; break;
+	case StreamSeekMode::Relative: origin = SEEK_CUR; break;
+	case StreamSeekMode::RelativeEnd: origin = SEEK_END; break;
+	}
+
+#ifdef VAPOR_COMPILER_MSVC
+	return _fseeki64(fs->fp, offset, origin) == 0;
+#else
+	return fseek(fs->fp, (long) offset, origin) == 0;
+#endif
+}
+
+//-----------------------------------//
+
+static int64 FileGetSize(Stream* stream)
+{
+	FileStream* fs = (FileStream*) stream;
+
+#ifdef VAPOR_COMPILER_MSVC
+	return _filelengthi64( _fileno(fs->fp) );
+#else
+	// Hold the current file position.
+	int64 curr = FileTell(fs);
 	
-	fclose(fp);
-	fp = nullptr;
-}
-
-//-----------------------------------//
-
-int FileStream::tell()
-{
-	if(!fp) return -1;
+	// Seek to the end of the file and get position.
+	FileSeek(fs, 0, StreamSeekMode::Absolute);
 	
-	return ftell(fp);
+	int64 size = FileTell(fs);
+	
+	// Seek again to the previously current position.
+	FileSeek(fs, curr, StreamSeekMode::Absolute);
+
+	return size;
+#endif
 }
 
 //-----------------------------------//
 
-long FileStream::read(void* buffer, long size) const
+static void FileSetBuffering( bool state )
 {
-	return fread(buffer, 1, size, fp);
-}
-
-//-----------------------------------//
-
-void FileStream::read(std::vector<byte>& data) const
-{
-	long size = getSize();
-
-	data.resize(size);
-
-	if(size > 0)
-		read(&data.front(), size);
-}
-
-//-----------------------------------//
-
-long FileStream::write(const std::vector<byte>& buf)
-{
-	assert( mode == StreamMode::Write || mode == StreamMode::Append );
-	assert( !buf.empty() );
-
-	if( !fp || buf.empty() ) return -1;
-
-	return fwrite(&buf.front(), buf.size(), 1, fp);  
-}
-
-//-----------------------------------//
-
-bool FileStream::exists() const
-{
-	return access(path.c_str(), F_OK) == 0;
-}
-
-//-----------------------------------//
-
-bool FileStream::exists(const String& path)
-{
-	return access(path.c_str(), F_OK) == 0;
-}
-
-//-----------------------------------//
-
-void FileStream::setBuffering( bool state )
-{
+#if 0
 	int mode = _IOFBF;
 	
 	if( !state )
 		mode = _IONBF;
 	
 	setvbuf(fp, nullptr, mode, 0);
-}
-
-//-----------------------------------//
-
-long FileStream::getSize() const
-{
-	// Hold the current file position.
-	long curr = ftell(fp);
-	
-	// Seek to the end of the file and get position.
-	fseek(fp, 0, SEEK_END);
-	long size = ftell(fp);
-	
-	// Seek again to the previously current position.
-	fseek(fp, curr, SEEK_SET);
-
-	return size;
-}
-
-//-----------------------------------//
-
-FILE* FileStream::getFilePointer()
-{
-	return fp;
+#endif
 }
 
 //-----------------------------------//
 
 } // end namespace
-
-#undef access

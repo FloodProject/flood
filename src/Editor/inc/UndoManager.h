@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Event.h"
-#include "ReferenceCount.h"
+#include "Core/ReferenceCount.h"
 #include <deque>
 
 namespace vapor { namespace editor {

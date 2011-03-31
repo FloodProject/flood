@@ -35,7 +35,7 @@ namespace MetaType
  * (introspection) and serialization.
  */
 
-class CORE_API VAPOR_PURE Type
+class API_CORE VAPOR_PURE Type
 {
 	DECLARE_UNCOPYABLE(Type)
 

@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Timer.h"
-#include "Log.h"
+#include "Core/Timer.h"
+#include "Core/Log.h"
 #include "Core/Memory.h"
 
 #ifdef VAPOR_PLATFORM_WINDOWS
@@ -75,7 +75,10 @@ float TimerGetCurrentTimeMs()
 
 Timer* TimerCreate(MemoryAllocator* mem)
 {
-	return Allocate<Timer>(mem);
+	Timer* timer = Allocate<Timer>(mem);
+	TimerReset(timer);
+
+	return timer;
 }
 
 //-----------------------------------//

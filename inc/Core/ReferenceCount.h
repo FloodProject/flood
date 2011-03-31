@@ -21,7 +21,7 @@ namespace vapor {
  * Currently this is implemented using intrusive_ptr semantics.
  */
 
-class CORE_API ReferenceCounted
+class API_CORE ReferenceCounted
 {
 public:
 

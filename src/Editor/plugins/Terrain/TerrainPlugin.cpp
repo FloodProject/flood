@@ -10,7 +10,7 @@
 #include "TerrainPlugin.h"
 #include "TerrainPage.h"
 #include "TerrainOperation.h"
-#include "Utilities.h"
+#include "Core/Utilities.h"
 #include "Editor.h"
 #include "EditorIcons.h"
 #include "Viewframe.h"

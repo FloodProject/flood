@@ -11,7 +11,7 @@
 #ifdef VAPOR_IMAGE_STB
 
 #include "Resources/STB_Image_Loader.h"
-#include "Log.h"
+#include "Core/Log.h"
 
 #define STBI_HEADER_FILE_ONLY
 #include "stb_image.cpp"
@@ -35,13 +35,12 @@ STB_Image_Loader::STB_Image_Loader()
 
 //-----------------------------------//
 
-bool STB_Image_Loader::decode(const Stream& file, Resource* res)
+bool STB_Image_Loader::decode(const Stream& stream, Resource* res)
 {
-	std::vector<byte> data;
-	file.read(data);
+	std::vector<uint8> data;
+	StreamRead((Stream*) &stream, data);
 
-	if( data.empty() ) 
-		return false;
+	if( data.empty() ) return false;
 
 	int width, height, comp;
 	
@@ -49,32 +48,30 @@ bool STB_Image_Loader::decode(const Stream& file, Resource* res)
 		&data[0], data.size(), &width, &height,
 		&comp, 0 /* 0=auto-detect, 3=RGB, 4=RGBA */ );
 
-	if( !pixelData )
-		return false;
+	if( !pixelData ) return false;
 
 	// Build our image with the pixel data returned by stb_image.
 	PixelFormat::Enum pf = PixelFormat::Unknown;
+	
 	switch( comp )
 	{
 	case 0:
-	case 1:
-		LogError( "Implement support for more pixel formats" );
-		return false;
-	case 3:
-		pf = PixelFormat::R8G8B8;
-		break;
-	case 4:
-		pf = PixelFormat::R8G8B8A8;
-		break;
+	case 1: break;
+	case 3: pf = PixelFormat::R8G8B8; break;
+	case 4: pf = PixelFormat::R8G8B8A8; break;
 	}
 
 	if( pf == PixelFormat::Unknown )
+	{
+		LogError( "Implement support for more pixel formats" );
 		return false;
+	}
 	
 	std::vector<byte> buffer;
-	int sz = width*height*comp; 
-	buffer.resize(sz);
-	memcpy(&buffer[0], pixelData, sz);
+	uint32 size = width*height*comp; 
+	buffer.resize(size);
+	
+	memcpy(&buffer[0], pixelData, size);
 	free(pixelData);
 
 	Image* image = static_cast<Image*>( res );

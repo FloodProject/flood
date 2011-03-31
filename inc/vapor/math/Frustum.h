@@ -13,7 +13,7 @@
 #include "Math/Plane.h"
 #include "Math/BoundingBox.h"
 
-#include "Object.h"
+#include "Core/Object.h"
 
 namespace vapor {
 
@@ -40,7 +40,7 @@ struct Projection
  * Frustum is a shape similiar to a pyramid with the top truncated.
  */
 
-class CORE_API Frustum : public Object
+class API_CORE Frustum : public Object
 {
 	DECLARE_CLASS_()
 

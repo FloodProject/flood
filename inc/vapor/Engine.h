@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Engine/API.h"
-#include "ReferenceCount.h"
+#include "Core/ReferenceCount.h"
 
 FWD_DECL_SHARED(Scene)
 
@@ -17,6 +17,7 @@ namespace vapor {
 
 //-----------------------------------//
 
+struct Stream;
 struct TaskPool;
 
 class Subsystem;
@@ -28,7 +29,6 @@ class PhysicsManager;
 class PageManager;
 class InputManager;
 class ScriptManager;
-class FileStream;
 
 //-----------------------------------//
 
@@ -112,7 +112,7 @@ protected:
 	Log* log;
 
 	// Log stream.
-	FileStream* stream;
+	Stream* stream;
 
 	// Scene root node.
 	ScenePtr scene;

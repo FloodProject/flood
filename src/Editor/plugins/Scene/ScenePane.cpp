@@ -11,7 +11,7 @@
 #include "Editor.h"
 #include "EditorIcons.h"
 #include "Events.h"
-#include "Utilities.h"
+#include "Core/Utilities.h"
 #include "EditorTags.h"
 #include "UndoManager.h"
 
@@ -46,6 +46,7 @@ ScenePage::ScenePage( wxWindow* parent, wxWindowID id )
 
 ScenePage::~ScenePage()
 {
+	treeCtrl->Destroy();
 	cleanScene();
 }
 

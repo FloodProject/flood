@@ -8,7 +8,7 @@
 
 #include "Editor/API.h"
 #include "TerrainPage.h"
-#include "Utilities.h"
+#include "Core/Utilities.h"
 #include "Resources\ResourceManager.h"
 #include <iterator>
 

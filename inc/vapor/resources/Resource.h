@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "Object.h"
-#include "Reflection.h"
-#include "ReferenceCount.h"
+#include "Core/Object.h"
+#include "Core/Reflection.h"
+#include "Core/ReferenceCount.h"
 
 namespace vapor {
 

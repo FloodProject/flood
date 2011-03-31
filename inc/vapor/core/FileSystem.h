@@ -11,7 +11,7 @@
 //#ifdef VAPOR_VFS_PHYSFS
 
 #include "Subsystem.h"
-#include "Core/File.h"
+#include "Core/Stream.h"
 #include "Core/FileWatcher.h"
 
 namespace vapor {
@@ -30,7 +30,7 @@ namespace vapor {
  * to the search path while mounting it in the virtual filesystem.
  */
 
-class CORE_API FileSystem : public Subsystem
+class API_CORE FileSystem : public Subsystem
 {
 public:
 

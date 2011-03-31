@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "DynamicLibrary.h"
+#include "Core/DynamicLibrary.h"
 
 #ifdef VAPOR_DYNAMIC_LIBRARY
 

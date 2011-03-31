@@ -159,7 +159,6 @@
     <ClCompile Include="..\..\src\Engine\Quad.cpp" />
     <ClCompile Include="..\..\src\Engine\DebugGeometry.cpp" />
     <ClCompile Include="..\..\src\Engine\Window.cpp" />
-    <ClCompile Include="..\..\src\Engine\Win32_Window.cpp" />
     <ClCompile Include="..\..\src\Engine\SFML_Window.cpp" />
     <ClCompile Include="..\..\src\Engine\FrameStatistics.cpp" />
     <ClCompile Include="..\..\src\Engine\Engine.cpp">
@@ -235,6 +234,7 @@
     <ClCompile Include="..\..\src\Scene\Terrain.cpp" />
     <ClCompile Include="..\..\src\Scene\Transform.cpp" />
     <ClCompile Include="..\..\src\Scene\Water.cpp" />
+    <ClCompile Include="..\..\src\Win32\WindowWin32.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\vapor\render\Device.h" />

@@ -39,6 +39,8 @@
 #elif defined(__GNUG__)
 	// GCC
 	#define VAPOR_COMPILER_GCC
+#elif defined(__clang__)
+	#define VAPOR_COMPILER_CLANG
 #else
 	#warn Unknown compiler
 #endif
@@ -56,7 +58,7 @@
 #endif
 
 //---------------------------------------------------------------------//
-// Alignment control
+// Compiler-specific functionality
 //---------------------------------------------------------------------//
 
 #if defined(VAPOR_COMPILER_MSVC)
@@ -64,11 +66,13 @@
 	#define VAPOR_ALIGN_END(size)
 	#define VAPOR_INLINE __forceinline
 	#define VAPOR_PURE __declspec(novtable)
-#elif defined(VAPOR_COMPILER_GCC)
+	#define VAPOR_OVERRIDE override
+#elif defined(VAPOR_COMPILER_GCC) || defined(VAPOR_COMPILER_CLANG)
 	#define VAPOR_ALIGN_BEGIN(size)
 	#define VAPOR_ALIGN_END(size) __attribute__((aligned(size)))
 	#define VAPOR_INLINE __attribute__((always_inline))
 	#define VAPOR_PURE
+	#define VAPOR_OVERRIDE __attribute__((override))
 #endif
 
 //---------------------------------------------------------------------//

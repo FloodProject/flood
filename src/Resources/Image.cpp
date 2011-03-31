@@ -8,7 +8,7 @@
 
 #include "Resources/API.h"
 #include "Resources/Image.h"
-#include "Log.h"
+#include "Core/Log.h"
 
 #ifdef VAPOR_IMAGE_LODEPNG
 	#include "lodepng.h"

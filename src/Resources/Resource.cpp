@@ -9,7 +9,7 @@
 #include "Resources/API.h"
 #include "Resources/Resource.h"
 #include "Resources/ResourceLoader.h"
-#include "Utilities.h"
+#include "Core/Utilities.h"
 
 namespace vapor {
 

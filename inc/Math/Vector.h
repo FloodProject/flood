@@ -52,10 +52,10 @@ struct Vector3
 	Vector3 &operator /= (float s) { assert(s != 0); *this *= 1.0f / s; return *this; }
 
 #ifndef SWIG
-	static CORE_API const Vector3 Zero;
-	static CORE_API const Vector3 UnitX;
-    static CORE_API const Vector3 UnitY;
-    static CORE_API const Vector3 UnitZ;
+	static API_CORE const Vector3 Zero;
+	static API_CORE const Vector3 UnitX;
+    static API_CORE const Vector3 UnitY;
+    static API_CORE const Vector3 UnitZ;
 #endif
 
 	// Zeroes the vector.
@@ -150,11 +150,11 @@ struct Vector4
 	void zero() { x = y = z = w = 0.0f; }
 
 #ifndef SWIG
-	static CORE_API const Vector4 Zero;
-	static CORE_API const Vector4 UnitX;
-	static CORE_API const Vector4 UnitY;
-	static CORE_API const Vector4 UnitZ;
-	static CORE_API const Vector4 UnitW;
+	static API_CORE const Vector4 Zero;
+	static API_CORE const Vector4 UnitX;
+	static API_CORE const Vector4 UnitY;
+	static API_CORE const Vector4 UnitZ;
+	static API_CORE const Vector4 UnitW;
 #endif
 };
 
@@ -200,9 +200,9 @@ struct Vector2
 	void zero() { x = y = 0; }
 
 #ifndef SWIG
-	static CORE_API const Vector2 Zero;
-	static CORE_API const Vector2 UnitX;
-	static CORE_API const Vector2 UnitY;
+	static API_CORE const Vector2 Zero;
+	static API_CORE const Vector2 UnitX;
+	static API_CORE const Vector2 UnitY;
 #endif
 };
 

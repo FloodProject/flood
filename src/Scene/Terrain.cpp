@@ -10,7 +10,7 @@
 #include "Terrain/Terrain.h"
 #include "Scene/Geometry.h"
 #include "Math/Helpers.h"
-#include "Utilities.h"
+#include "Core/Utilities.h"
 
 namespace vapor {
 

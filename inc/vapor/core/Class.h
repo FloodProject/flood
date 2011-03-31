@@ -25,7 +25,7 @@ typedef std::pair<const String, Field*> FieldsPair;
  * Main use is for serialization and property introspection.
  */
 
-class CORE_API Class : public Type
+class API_CORE Class : public Type
 {
 public:
 

@@ -10,10 +10,12 @@
 
 #ifdef VAPOR_VFS_PHYSFS
 
-#include "Log.h"
-#include "Utilities.h"
+#include "Core/Log.h"
+#include "Core/Archive.h"
+#include "Core/Utilities.h"
 #include "Core/FileSystem.h"
-#include "FileWatcherWin32.h"
+#include "../Win32/FileWatcherWin32.h"
+
 #include <physfs.h>
 #include <sstream>
 
@@ -117,7 +119,7 @@ void FileSystem::mountDefaultLocations(const String& base)
 	if ( !mount(base) ) return;
 
 	std::vector<String> dirs;
-	FileEnumerateDirs(base, dirs);
+	FileEnumerateDirectories(base, dirs);
 
 	for( size_t i = 0; i < dirs.size(); i++ )
 	{

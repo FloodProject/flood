@@ -8,11 +8,9 @@
 
 #pragma once
 
-BEGIN_NAMESPACE_EXTERN
+NAMESPACE_EXTERN_BEGIN
 
 //-----------------------------------//
-
-struct MemoryAllocator;
 
 /**
  * Represents a timer that can be used to measure time precisely.
@@ -21,15 +19,16 @@ struct MemoryAllocator;
  * most high-precision timer available.
  */
 
-CORE_API float TimerGetCurrentTimeMs();
+API_CORE float TimerGetCurrentTimeMs();
 
 struct Timer { int64 time; };
 
-CORE_API Timer* TimerCreate(MemoryAllocator*);
-CORE_API void   TimerDestroy(Timer*, MemoryAllocator*);
-CORE_API void   TimerReset(Timer*);
-CORE_API float  TimerGetElapsed(Timer*);
-CORE_API void   TimerSleep( int64 time );
+API_CORE Timer* TimerCreate(MemoryAllocator*);
+API_CORE void   TimerDestroy(Timer*, MemoryAllocator*);
+API_CORE void   TimerReset(Timer*);
+API_CORE float  TimerGetElapsed(Timer*);
+API_CORE void   TimerSleep( int64 time );
+
 //-----------------------------------//
 
-END_NAMESPACE_EXTERN
+NAMESPACE_EXTERN_END

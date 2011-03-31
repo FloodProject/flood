@@ -14,7 +14,7 @@
 #include "Pipeline/ImageProcessor.h"
 #include "Pipeline/MeshProcessor.h"
 
-#include "Log.h"
+#include "Core/Log.h"
 
 namespace vapor {
 

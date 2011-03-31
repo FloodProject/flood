@@ -18,11 +18,9 @@
 	#include <Windows.h>
 #endif
 
-BEGIN_NAMESPACE_EXTERN
+NAMESPACE_EXTERN_BEGIN
 
 //-----------------------------------//
-
-struct MemoryAllocator;
 
 /**
  * A thread is the entity within a process that can be scheduled for
@@ -46,14 +44,14 @@ struct Thread
 	void* Userdata;
 };
 
-CORE_API Thread* ThreadCreate(MemoryAllocator*);
-CORE_API void    ThreadDestroy(Thread*, MemoryAllocator*);
-CORE_API bool    ThreadStart(Thread*, ThreadFunction, void*);
-CORE_API bool    ThreadJoin(Thread*);
-CORE_API bool    ThreadResume(Thread*);
-CORE_API bool    ThreadStop(Thread*);
-CORE_API bool    ThreadSetPriority(Thread*, ThreadPriority::Enum);
-CORE_API void    ThreadSetName(Thread*, const String& name);
+API_CORE Thread* ThreadCreate(MemoryAllocator*);
+API_CORE void    ThreadDestroy(Thread*, MemoryAllocator*);
+API_CORE bool    ThreadStart(Thread*, ThreadFunction, void*);
+API_CORE bool    ThreadJoin(Thread*);
+API_CORE bool    ThreadResume(Thread*);
+API_CORE bool    ThreadStop(Thread*);
+API_CORE bool    ThreadSetPriority(Thread*, ThreadPriority::Enum);
+API_CORE void    ThreadSetName(Thread*, const String& name);
 
 //-----------------------------------//
 
@@ -71,11 +69,11 @@ struct Mutex
 #endif
 };
 
-CORE_API Mutex* MutexCreate(MemoryAllocator*);
-CORE_API void   MutexDestroy(Mutex*, MemoryAllocator*);
-CORE_API void   MutexInit(Mutex*);
-CORE_API void   MutexLock(Mutex*);
-CORE_API void   MutexUnlock(Mutex*);
+API_CORE Mutex* MutexCreate(MemoryAllocator*);
+API_CORE void   MutexDestroy(Mutex*, MemoryAllocator*);
+API_CORE void   MutexInit(Mutex*);
+API_CORE void   MutexLock(Mutex*);
+API_CORE void   MutexUnlock(Mutex*);
 
 //-----------------------------------//
 
@@ -87,12 +85,12 @@ struct Condition
 #endif
 };
 
-CORE_API Condition* ConditionCreate(MemoryAllocator*);
-CORE_API void       ConditionDestroy(Condition*, MemoryAllocator*);
-CORE_API void       ConditionInit(Condition*);
-CORE_API void       ConditionWait(Condition*, Mutex*);
-CORE_API void       ConditionWakeOne(Condition*);
-CORE_API void       ConditionWakeAll(Condition*);
+API_CORE Condition* ConditionCreate(MemoryAllocator*);
+API_CORE void       ConditionDestroy(Condition*, MemoryAllocator*);
+API_CORE void       ConditionInit(Condition*);
+API_CORE void       ConditionWait(Condition*, Mutex*);
+API_CORE void       ConditionWakeOne(Condition*);
+API_CORE void       ConditionWakeAll(Condition*);
 
 //-----------------------------------//
 
@@ -104,11 +102,11 @@ CORE_API void       ConditionWakeAll(Condition*);
 
 typedef int32 Atomic;
 
-CORE_API int32 AtomicRead(volatile Atomic* atomic);
-CORE_API int32 AtomicWrite(volatile Atomic* atomic, int32 value);
-CORE_API int32 AtomicAdd(volatile Atomic* atomic, int32 value);
-CORE_API int32 AtomicIncrement(volatile Atomic* atomic);
-CORE_API int32 AtomicDecrement(volatile Atomic* atomic);
+API_CORE int32 AtomicRead(volatile Atomic* atomic);
+API_CORE int32 AtomicWrite(volatile Atomic* atomic, int32 value);
+API_CORE int32 AtomicAdd(volatile Atomic* atomic, int32 value);
+API_CORE int32 AtomicIncrement(volatile Atomic* atomic);
+API_CORE int32 AtomicDecrement(volatile Atomic* atomic);
 
 //-----------------------------------//
 
@@ -124,9 +122,9 @@ struct Task
 	void* Userdata;
 };
 
-CORE_API Task* TaskCreate(MemoryAllocator*);
-CORE_API void  TaskDestroy(Task*, MemoryAllocator*);
-CORE_API void  TaskRun(Task*);
+API_CORE Task* TaskCreate(MemoryAllocator*);
+API_CORE void  TaskDestroy(Task*, MemoryAllocator*);
+API_CORE void  TaskRun(Task*);
 
 struct TaskEvent
 {
@@ -145,11 +143,11 @@ struct TaskPool
 	bool IsStopping;
 };
 
-CORE_API TaskPool*  TaskPoolCreate(MemoryAllocator*, int8 Size);
-CORE_API void       TaskPoolDestroy(TaskPool*, MemoryAllocator*);
-CORE_API void       TaskPoolAdd(TaskPool*, Task*);
-CORE_API void       TaskPoolUpdate(TaskPool*);
+API_CORE TaskPool*  TaskPoolCreate(MemoryAllocator*, int8 Size);
+API_CORE void       TaskPoolDestroy(TaskPool*, MemoryAllocator*);
+API_CORE void       TaskPoolAdd(TaskPool*, Task*);
+API_CORE void       TaskPoolUpdate(TaskPool*);
 
 //-----------------------------------//
 
-END_NAMESPACE_EXTERN
+NAMESPACE_EXTERN_END

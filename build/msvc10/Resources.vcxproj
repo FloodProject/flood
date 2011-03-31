@@ -124,6 +124,8 @@
     </Link>
     <Lib>
       <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>pngd.lib;ogg_static_d.lib;vorbis_static_d.lib;vorbisfile_static_d.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\dep\ogg\lib\;$(SolutionDir)..\..\dep\vorbis\lib\;$(SolutionDir)..\..\dep\png\lib\;$(SolutionDir)..\..\dep\devil\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

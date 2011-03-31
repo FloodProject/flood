@@ -21,6 +21,7 @@ class LogFrame : public wxListCtrl
 public:
 
 	LogFrame( wxWindow* parent );
+	void Process(LogEntry* entry);
 };
 
 //-----------------------------------//

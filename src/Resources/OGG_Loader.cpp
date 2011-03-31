@@ -11,7 +11,7 @@
 #ifdef VAPOR_AUDIO_OGG
 
 #include "Resources/OGG_Loader.h"
-#include "Utilities.h"
+#include "Core/Utilities.h"
 
 namespace vapor {
 
@@ -20,35 +20,34 @@ namespace vapor {
 BEGIN_CLASS_PARENT(OGG_Loader, ResourceLoader)
 END_CLASS()
 
-
 //-----------------------------------//
 
-size_t read_func(void *ptr, size_t size, size_t nmemb, void *datasource)
+static size_t read_func(void *ptr, size_t size, size_t nmemb, void *datasource)
 {
 	Stream* stream = (Stream*) datasource;
-	return stream->read(ptr, size*nmemb);
+	return stream->read(stream, ptr, size*nmemb);
 }
 
 //-----------------------------------//
 
-int seek_func(void* /*datasource*/, ogg_int64_t /*offset*/, int /*whence*/)
+static int seek_func(void* /*datasource*/, ogg_int64_t /*offset*/, int /*whence*/)
 {
 	return 0;
 }
 
 //-----------------------------------//
 
-int close_func(void* /*datasource*/)
+static int close_func(void* /*datasource*/)
 {
 	return 0;
 }
 
 //-----------------------------------//
 
-long tell_func(void *datasource)
+static long tell_func(void *datasource)
 {
 	Stream* stream = (Stream*) datasource;
-	return stream->tell();
+	return stream->tell(stream);
 }
 
 //-----------------------------------//

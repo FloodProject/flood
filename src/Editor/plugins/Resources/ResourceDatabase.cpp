@@ -9,7 +9,7 @@
 #include "Editor/API.h"
 #include "ResourceDatabase.h"
 #include "Settings.h"
-#include "Utilities.h"
+#include "Core/Utilities.h"
 #include "io/JsonSerializer.h"
 
 namespace vapor { namespace editor {
@@ -183,7 +183,7 @@ void ResourceDatabase::scanFiles()
 
 		if( !loader ) continue;
 		if( loader->getResourceGroup() != ResourceGroup::Meshes ) continue;
-
+#if 0
 		File file(path, StreamMode::Read);
 		
 		std::vector<byte> data;
@@ -197,6 +197,7 @@ void ResourceDatabase::scanFiles()
 			continue;
 
 		files.push_back(path);
+#endif
 	}
 
 #if 0

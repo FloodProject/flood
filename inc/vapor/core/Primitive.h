@@ -41,7 +41,7 @@ namespace PrimitiveType
  * primitive C++ language types, like booleans, integers and strings.
  */
 
-class CORE_API Primitive : public Type
+class API_CORE Primitive : public Type
 {
 public:
 

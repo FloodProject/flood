@@ -67,7 +67,7 @@ Engine::~Engine()
 
 	TaskPoolDestroy( taskPool, AllocatorGetDefault() );
 	
-	delete stream;	
+	StreamDestroy(stream, AllocatorGetDefault());
 	LogDestroy(log, AllocatorGetDefault());
 }
 
@@ -149,7 +149,7 @@ void Engine::setupLogger()
 //		name, VAPOR_ARRAY_SIZE(name),
 //		"%Y_%m_%d-%H_%M_%S.html", timeinfo);
 
-	stream = new FileStream("Log.html"/*name*/, StreamMode::Write);
+	stream = StreamCreateFromFile( AllocatorGetDefault(), "Log.html", StreamMode::Write);
 	
 	log = LogCreate( AllocatorGetDefault() );
 	//log->add( new LogSinkHTML(*stream) );

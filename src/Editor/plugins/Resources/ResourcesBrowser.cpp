@@ -13,7 +13,7 @@
 #include "UndoManager.h"
 #include "Settings.h"
 #include "Editor.h"
-#include "Utilities.h"
+#include "Core/Utilities.h"
 #include "../Scene/ScenePane.h"
 
 #ifdef ALL_PLUGINS

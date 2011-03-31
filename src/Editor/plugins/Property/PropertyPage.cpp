@@ -13,7 +13,7 @@
 #include "EditorIcons.h"
 #include "EditorTags.h"
 #include "UndoManager.h"
-#include "Utilities.h"
+#include "Core/Utilities.h"
 #include "Document.h"
 
 namespace vapor { namespace editor {

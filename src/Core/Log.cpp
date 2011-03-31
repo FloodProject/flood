@@ -7,11 +7,11 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Log.h"
+#include "Core/Log.h"
 #include "Core/Memory.h"
 #include "Core/Concurrency.h"
-#include "Timer.h"
-#include "Utilities.h"
+#include "Core/Timer.h"
+#include "Core/Utilities.h"
 
 #ifdef VAPOR_PLATFORM_WINDOWS
 	#define WIN32_LEAN_AND_MEAN
@@ -50,7 +50,6 @@ Log* LogCreate(MemoryAllocator* mem)
 	
 	log->Timer = TimerCreate(mem);
 	log->Mutex = MutexCreate(mem);
-	log->Handlers.clear();
 
 	LogAddHandler(log, LogConsoleHandler);
 	
@@ -63,6 +62,7 @@ Log* LogCreate(MemoryAllocator* mem)
 
 void LogDestroy(Log* log, MemoryAllocator* mem)
 {
+	if( !log ) return;
 	if( gs_Log == log ) LogSetDefault(nullptr);
 	
 	TimerDestroy(log->Timer, mem);
@@ -75,7 +75,12 @@ void LogDestroy(Log* log, MemoryAllocator* mem)
 
 void LogAddHandler(Log* log, LogFunction fn)
 {
-	log->Handlers.push_back(fn);
+	log->Handlers.Connect(fn);
+}
+
+void LogRemoveHandler(Log* log, LogFunction fn)
+{
+	log->Handlers.Disconnect(fn);
 }
 
 //-----------------------------------//
@@ -91,11 +96,15 @@ void LogWrite(Log* log, LogLevel::Enum level, const char* msg, va_list args)
 
 	MutexLock(log->Mutex);
 
+#if 0
 	for( size_t i = 0; i < log->Handlers.size(); i++ )
 	{
 		const LogFunction& fn = log->Handlers[i];
 		fn(&entry);
 	}
+#endif
+
+	log->Handlers(&entry);
 
 	MutexUnlock(log->Mutex);
 }
@@ -108,8 +117,8 @@ void LogWrite(Log* log, LogLevel::Enum level, const char* msg, va_list args)
 	va_list args;                                           \
 	va_start(args, msg);                                    \
 	                                                        \
-	Log* log = LogGetDefault();                       \
-	if(log) LogWrite(log, LogLevel::Level, msg, args);   \
+	Log* log = LogGetDefault();                             \
+	if(log) LogWrite(log, LogLevel::Level, msg, args);      \
 	                                                        \
 	va_end(args);                                           \
 }                                                           \

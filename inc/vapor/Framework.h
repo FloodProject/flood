@@ -12,7 +12,7 @@
 #include "Input/Mouse.h"
 #include "Input/Keyboard.h"
 #include "Render/FrameStatistics.h"
-#include "Timer.h"
+#include "Core/Timer.h"
 #include "Engine.h"
 
 namespace vapor {

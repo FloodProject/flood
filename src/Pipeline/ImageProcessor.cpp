@@ -10,7 +10,7 @@
 
 #include "Pipeline/API.h"
 #include "Pipeline/ImageProcessor.h"
-#include "Log.h"
+#include "Core/Log.h"
 
 #if 0
 #include <nvtt/nvtt.h>

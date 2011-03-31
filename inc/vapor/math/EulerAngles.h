@@ -19,7 +19,7 @@ namespace vapor {
  * transformed into and back in a rotation matrix and quaternions.
  */
 
-class CORE_API EulerAngles
+class API_CORE EulerAngles
 {
 public:
 

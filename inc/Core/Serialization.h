@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "Reflection.h"
-#include "Object.h"
+#include "Core/Reflection.h"
+#include "Core/Object.h"
 
 #include "Math/Vector.h"
 #include "Math/Quaternion.h"
@@ -20,7 +20,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-struct CORE_API ObjectData
+struct API_CORE ObjectData
 {
 	void* instance;
 	Type* type;
@@ -28,7 +28,7 @@ struct CORE_API ObjectData
 
 //-----------------------------------//
 
-class CORE_API ReflectionVisitor
+class API_CORE ReflectionVisitor
 {
 public:
 
@@ -69,7 +69,7 @@ public:
 
 //-----------------------------------//
 
-class CORE_API ObjectWalker
+class API_CORE ObjectWalker
 {
 	DECLARE_UNCOPYABLE(ObjectWalker)
 

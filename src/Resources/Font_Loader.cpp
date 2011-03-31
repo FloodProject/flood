@@ -10,11 +10,11 @@
 
 #ifdef VAPOR_FONT_BITMAP
 
-#include "Core/File.h"
+#include "Core/Log.h"
 #include "Core/Memory.h"
-
-#include "Log.h"
-#include "Utilities.h"
+#include "Core/Stream.h"
+#include "Core/Archive.h"
+#include "Core/Utilities.h"
 #include "Math/Helpers.h"
 
 #include "Resources/Font_Loader.h"
@@ -39,7 +39,7 @@ Font_Loader::Font_Loader()
 
 bool Font_Loader::decode(const Stream& stream, Resource* res)
 {
-	lines = stream.readLines();
+	StreamReadLines((Stream*) &stream, lines);
 
 	if( !validateFont() )
 		return false;
@@ -56,8 +56,11 @@ bool Font_Loader::decode(const Stream& stream, Resource* res)
 	if( !image )
 		return false;
 
-	File* fileGlyphs = FileCreate(AllocatorGetDefault(), glyphsFilename, StreamMode::Read);
-	FileRead(fileGlyphs, data);
+	Stream* streamGlyphs = StreamCreateFromFile(
+		AllocatorGetDefault(), glyphsFilename, StreamMode::Read);
+	
+	StreamRead(streamGlyphs, data);
+	StreamDestroy(streamGlyphs, AllocatorGetDefault());
 
 	parseGlyphs();
 

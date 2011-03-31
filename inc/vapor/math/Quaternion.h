@@ -20,7 +20,7 @@ namespace vapor {
  * Represents a 3-dimensional vector class template.
  */
 
-class CORE_API Quaternion
+class API_CORE Quaternion
 {
 public:
 

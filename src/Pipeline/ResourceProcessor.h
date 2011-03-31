@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "ReferenceCount.h"
+#include "Core/ReferenceCount.h"
 #include "Core/Class.h"
-#include "Object.h"
+#include "Core/Object.h"
 
 FWD_DECL_INTRUSIVE(Resource)
 

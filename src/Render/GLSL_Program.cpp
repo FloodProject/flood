@@ -13,8 +13,8 @@
 #include "Render/GLSL_Program.h"
 #include "Resources/GLSL_Text.h"
 #include "Render/GL.h"
-#include "Utilities.h"
-#include "ReferenceCount.h"
+#include "Core/Utilities.h"
+#include "Core/ReferenceCount.h"
 
 namespace vapor {
 

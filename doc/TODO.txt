@@ -4,7 +4,11 @@ WIP (work-in-progress)
 EDITOR:
 -------
 
-Abstraction on resource handlers
+Archives
+ResourceHandle (Reference Counting?)
+
+
+
 
 Fix terrain painting
 Add bounding box calculation for animated meshes
@@ -163,3 +167,6 @@ Check skinning limit in shader
 
 linear_depth = (2.0 * znear) / (zfar + znear - exp_depth * (zfar - znear));
 float kDepth = 1.0 - ( gl_FragCoord.z / gl_FragCoord.w ) / ( v_farPlane - v_nearPlane );
+
+
+Inspiration for design http://www.youtube.com/watch?v=W2rJ0zOWojM&feature=player_embedded#at=173

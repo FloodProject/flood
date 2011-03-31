@@ -11,7 +11,7 @@
 #include "Math/Vector.h"
 #include "Math/EulerAngles.h"
 #include "Math/Matrix4x3.h"
-#include "ReferenceCount.h"
+#include "Core/ReferenceCount.h"
 
 FWD_DECL_INTRUSIVE(Bone)
 FWD_DECL_INTRUSIVE(Animation)

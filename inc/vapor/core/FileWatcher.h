@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "Event.h"
+#include "Core/Event.h"
 
 namespace vapor {
 
@@ -75,7 +75,7 @@ namespace Actions
  * live updating, so when an asset changes it will be reloaded.
  */
 
-class CORE_API FileWatchEvent
+class API_CORE FileWatchEvent
 {
 	DECLARE_UNCOPYABLE(FileWatchEvent)
 
@@ -102,7 +102,7 @@ public:
  * to notify the parent program of the changes.
  */
 
-class CORE_API FileWatcher
+class API_CORE FileWatcher
 {
 	DECLARE_UNCOPYABLE(FileWatcher)
 

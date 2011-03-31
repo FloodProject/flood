@@ -12,9 +12,9 @@
 
 #include "io/JsonSerializer.h"
 #include "Core/Memory.h"
-#include "Utilities.h"
-#include "ReferenceCount.h"
-#include "Log.h"
+#include "Core/Utilities.h"
+#include "Core/ReferenceCount.h"
+#include "Core/Log.h"
 #include <jansson.h>
 
 namespace vapor {
@@ -101,8 +101,8 @@ void JsonSerializer::processEnd(const ObjectData& data)
 	LocaleSwitch locale;
 
 	String text = json_dumps(rootValue, 0);
-	stream.write(text);
-	stream.close();
+	StreamWriteString(&stream, text);
+	StreamClose(&stream);
 }
 
 //-----------------------------------//
@@ -298,16 +298,22 @@ JsonDeserializer::JsonDeserializer(Stream& stream)
 //-----------------------------------//
 
 static void* JsonAllocate(size_t size)
-{ MemoryAllocator* mem = AllocatorGetDefault(); return mem->allocate(size); }
+{
+	MemoryAllocator* mem = AllocatorGetDefault();
+	return mem->allocate(mem, 0);
+}
 
 static void JsonDeallocate(void* p)
-{ MemoryAllocator* mem = AllocatorGetDefault(); return mem->deallocate(p); }
+{
+	MemoryAllocator* mem = AllocatorGetDefault();
+	return mem->deallocate(mem, p, 0);
+}
 
 Object* JsonDeserializer::deserialize()
 {
 	String text;
-	stream.read(text);
-	stream.close();
+	StreamReadString(&stream, text);
+	StreamClose(&stream);
 
 	json_set_alloc_funcs(JsonAllocate, JsonDeallocate);
 

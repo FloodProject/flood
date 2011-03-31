@@ -62,16 +62,16 @@
       <ProgramDataBaseFileName>$(TargetDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <DisableSpecificWarnings>4510;4610;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4510;4610;4100;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\dep\wx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Core.lib;jansson_d.lib;physfsd.lib;zlibd.lib;Resources.lib;pngd.lib;devild.lib;ogg_static_d.lib;vorbis_static_d.lib;vorbisfile_static_d.lib;Engine.lib;opengl32.lib;glewd.lib;OpenAL32.lib;luad.lib;bulletd.lib;Pipeline.lib;wxmsw29ud_core.lib;wxbase29ud.lib;ws2_32.lib;Mono_d.lib;libgc.lib;eglib.lib;Psapi.lib;Version.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Core.lib;Resources.lib;Engine.lib;opengl32.lib;glewd.lib;OpenAL32.lib;luad.lib;bulletd.lib;Pipeline.lib;wxmsw29ud_core.lib;wxbase29ud.lib;ws2_32.lib;Mono_d.lib;libgc.lib;eglib.lib;Psapi.lib;Version.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)-$(Configuration).exe</OutputFile>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration);$(SolutionDir)..\..\dep\vld\lib\;$(SolutionDir)..\..\dep\jansson\lib\;$(SolutionDir)..\..\dep\physfs\lib\vc10;$(SolutionDir)..\..\dep\bullet\lib\vc10;$(SolutionDir)..\..\dep\zlib\lib\vc10;$(SolutionDir)..\..\dep\glew\lib\vc10;$(SolutionDir)..\..\dep\ogg\lib\;$(SolutionDir)..\..\dep\vorbis\lib\;$(SolutionDir)..\..\dep\openal\lib\Win32;$(SolutionDir)..\..\dep\sfml\lib\vc10;$(SolutionDir)..\..\dep\lua\lib\vc10;$(SolutionDir)..\..\dep\zeromq\lib\vc10;$(SolutionDir)..\..\dep\wx\lib\vc_lib\vc10;$(SolutionDir)..\..\dep\png\lib\vc10;$(SolutionDir)..\..\dep\devil\lib\vc10;$(SolutionDir)..\..\dep\curl\lib\vc10;$(SolutionDir)..\..\dep\nvtt\lib\;$(SolutionDir)..\..\dep\mono\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration);$(SolutionDir)..\..\dep\bullet\lib\vc10;$(SolutionDir)..\..\dep\glew\lib\vc10;$(SolutionDir)..\..\dep\openal\lib\Win32;$(SolutionDir)..\..\dep\lua\lib\vc10;$(SolutionDir)..\..\dep\wx\lib\vc_lib\vc10;$(SolutionDir)..\..\dep\nvtt\lib\;$(SolutionDir)..\..\dep\mono\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>wxpngd.lib;libcmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -102,6 +102,7 @@
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalOptions>-Zm140 </AdditionalOptions>
+      <DisableSpecificWarnings>4510;4610;4100;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\dep\wx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

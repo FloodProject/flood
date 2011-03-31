@@ -10,7 +10,6 @@
 
 #include "Editor/API.h"
 #include "wxImageComboBox.h"
-#include "Core/File.h"
 
 namespace vapor { namespace editor {
 
@@ -40,32 +39,33 @@ wxBitmap* wxImageComboBox::convertToBitmap( const ImagePtr& image ) const
 {
 	if( !image ) return nullptr;
 
-	//assert( image->getPixelFormat() == PixelFormat::R8G8B8 );
+#if 0
+	assert( image->getPixelFormat() == PixelFormat::R8G8B8 );
 	
-	//byte* buf = const_cast<byte*>(&image->getBuffer()[0]);
+	byte* buf = const_cast<byte*>(&image->getBuffer()[0]);
 
 	File file( image->getPath(), StreamMode::Read );
-	
 	wxImage img( FileGetFullPath(&file) );
-	
 	FileClose(&file);
 
-	//wxImage img( image->getWidth(), image->getHeight(), buf, true /* don't free data */);
+	wxImage img( image->getWidth(), image->getHeight(), buf, true /* don't free data */);
 
-	//const wxSize& size = GetSize();
-	//if( img.GetWidth() > size.GetWidth() || img.GetHeight() > size.GetHeight() )
-	//{
-	//	img.Rescale( size.GetWidth(), size.GetHeight() );
-	//}
+	const wxSize& size = GetSize();
+	if( img.GetWidth() > size.GetWidth() || img.GetHeight() > size.GetHeight() )
+	{
+		img.Rescale( size.GetWidth(), size.GetHeight() );
+	}
 
-	//if( !img.HasAlpha() )
-	//{
-	//	img.SetMaskColour( 255, 255, 255 );
-	//	img.InitAlpha();
-	//}
+	if( !img.HasAlpha() )
+	{
+		img.SetMaskColour( 255, 255, 255 );
+		img.InitAlpha();
+	}
 
 	wxBitmap* bmp = new wxBitmap( img );
 	return bmp;
+#endif
+	return nullptr;
 }
 
 //-----------------------------------//

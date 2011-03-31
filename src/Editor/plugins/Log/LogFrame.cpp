@@ -13,28 +13,6 @@
 namespace vapor { namespace editor {
 
 //-----------------------------------//
-#if 0
-class LogSinkFrame : public LogSink
-{
-public:
-
-	LogSinkFrame( wxListCtrl* listCtrl ) 
-		: listCtrl(listCtrl)
-	{}
-	
-	void process(LogEntry& entry)
-	{
-		int id = listCtrl->InsertItem(listCtrl->GetItemCount(), wxEmptyString);
-		std::string level = LogLevel::toString( entry.level );
-
-		listCtrl->SetItem(id, 0, level);
-		listCtrl->SetItem(id, 1, entry.message);
-	}
-	
-	wxListCtrl* listCtrl;
-};
-#endif
-//-----------------------------------//
 
 LogFrame::LogFrame( wxWindow* parent )
 	: wxListCtrl( parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_HRULES | wxLC_REPORT)
@@ -49,7 +27,18 @@ LogFrame::LogFrame( wxWindow* parent )
 	InsertColumn(1, message);
 
 	Log* log = GetEngine()->getLogger();
-	//LogAddHandler(new LogSinkFrame(this));
+	log->Handlers.Connect( this, &LogFrame::Process );
+}
+
+//-----------------------------------//
+
+void LogFrame::Process(LogEntry* entry)
+{
+	int id = InsertItem(GetItemCount(), wxEmptyString);
+	//String level = LogLevel::toString( entry.level );
+
+	SetItem(id, 0, wxEmptyString);
+	SetItem(id, 1, entry->message);
 }
 
 //-----------------------------------//

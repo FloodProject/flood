@@ -20,7 +20,7 @@
 #include "Render/View.h"
 #include "Scene/Camera.h"
 #include "Scene/Entity.h"
-#include "Utilities.h"
+#include "Core/Utilities.h"
 #include <algorithm>
 
 namespace vapor {

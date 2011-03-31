@@ -12,7 +12,7 @@
 
 #include "Audio/Device.h"
 #include "Audio/Buffer.h"
-#include "Utilities.h"
+#include "Core/Utilities.h"
 
 namespace vapor {
 

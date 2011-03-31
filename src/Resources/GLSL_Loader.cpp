@@ -37,10 +37,10 @@ Resource* GLSL_Loader::prepare(const Stream& stream)
 
 //-----------------------------------//
 
-bool GLSL_Loader::decode(const Stream& file, Resource* res)
+bool GLSL_Loader::decode(const Stream& stream, Resource* res)
 {
 	std::string text;
-	file.read(text);
+	StreamReadString((Stream*) &stream, text);
 
 	GLSL_Text* shader = static_cast<GLSL_Text*>(res);
 	shader->setText( text );

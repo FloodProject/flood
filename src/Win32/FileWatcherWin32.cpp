@@ -23,16 +23,14 @@
 
 #include "Core/API.h"
 #include "FileWatcherWin32.h"
-#include "Utilities.h"
-#include "Log.h"
+#include "Core/Utilities.h"
+#include "Core/Log.h"
 
 #ifdef VAPOR_PLATFORM_WINDOWS
 
-#ifdef VAPOR_PLATFORM_WINDOWS
-	#define WIN32_LEAN_AND_MEAN
-	#define NOMINMAX
-	#include <Windows.h>	
-#endif
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
+#include <Windows.h>	
 
 namespace vapor {
 
@@ -122,24 +120,23 @@ bool RefreshWatch(WatchStruct* pWatch, bool _clear)
 /// Stops monitoring a directory.
 void DestroyWatch(WatchStruct* pWatch)
 {
-	if (pWatch)
+	if(!pWatch) return;
+
+	pWatch->mStopNow = TRUE;
+
+	CancelIo(pWatch->mDirHandle);
+
+	RefreshWatch(pWatch, true);
+
+	if (!HasOverlappedIoCompleted(&pWatch->mOverlapped))
 	{
-		pWatch->mStopNow = TRUE;
-
-		CancelIo(pWatch->mDirHandle);
-
-		RefreshWatch(pWatch, true);
-
-		if (!HasOverlappedIoCompleted(&pWatch->mOverlapped))
-		{
-			SleepEx(5, TRUE);
-		}
-
-		CloseHandle(pWatch->mOverlapped.hEvent);
-		CloseHandle(pWatch->mDirHandle);
-		delete pWatch->mDirName;
-		HeapFree(GetProcessHeap(), 0, pWatch);
+		SleepEx(5, TRUE);
 	}
+
+	CloseHandle(pWatch->mOverlapped.hEvent);
+	CloseHandle(pWatch->mDirHandle);
+	delete pWatch->mDirName;
+	HeapFree(GetProcessHeap(), 0, pWatch);
 }
 
 //-----------------------------------//

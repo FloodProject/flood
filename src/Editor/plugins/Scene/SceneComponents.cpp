@@ -8,7 +8,7 @@
 
 #include "Editor/API.h"
 #include "ScenePane.h"
-#include "Utilities.h"
+#include "Core/Utilities.h"
 #include "Events.h"
 #include "Editor.h"
 #include "EditorIcons.h"

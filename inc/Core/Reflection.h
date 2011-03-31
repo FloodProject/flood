@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vapor3D Engine Â© (2008-2011)
+* vapor3D Engine © (2008-2010)
 *
 *	<http://www.vapor3d.org>
 *
@@ -8,29 +8,12 @@
 
 #pragma once
 
-BEGIN_NAMESPACE_EXTERN
+//---------------------------------------------------------------------//
+// Reflection system
+//---------------------------------------------------------------------//
 
-//-----------------------------------//
-
-void GetReflectDatabase();
-
-enum ReflectType
-{
-	ARRAY,
-	MAP,
-	ENUM,
-	CLASS,
-};
-
-struct ReflectClass
-{
-	
-};
-
-void ReflectAddType();
-void ReflectGetDatabase();
-void ReflectCreatePrimitive();
-
-//-----------------------------------//
-
-END_NAMESPACE_EXTERN
+#include "core/Type.h"
+#include "core/Class.h"
+#include "core/Enum.h"
+#include "core/Primitive.h"
+#include "core/Helpers.h"

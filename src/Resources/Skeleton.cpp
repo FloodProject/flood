@@ -8,7 +8,7 @@
 
 #include "Resources/API.h"
 #include "Resources/Skeleton.h"
-#include "Utilities.h"
+#include "Core/Utilities.h"
 
 namespace vapor {
 

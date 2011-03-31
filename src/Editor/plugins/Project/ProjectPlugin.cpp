@@ -114,14 +114,15 @@ void ProjectPlugin::onOpenButtonClick(wxCommandEvent& event)
 	if( fc.ShowModal() != wxID_OK )
 		return;
 
-	std::string path = (std::string) fc.GetPath();
-	FileStream stream(path, StreamMode::Read );
+	Path path = (String) fc.GetPath();
+	Stream* stream = StreamCreateFromFile( AllocatorGetDefault(), path, StreamMode::Read );
 	
-	if( !stream.open() )
-		return;
+	if( !stream ) return;
 
-	JsonDeserializer json( stream );
+	JsonDeserializer json( *stream );
 	Object* object = json.deserialize();
+
+	StreamDestroy(stream, AllocatorGetDefault());
 
 	if( !object )
 	{
@@ -159,12 +160,7 @@ bool ProjectPlugin::askSaveChanges()
      if( answer == wxID_YES && !saveScene() )
 		return false;
 
-	if(answer != wxID_CANCEL )
-		return true;
-	else
-		return false;
-
-	return false;
+	return (answer != wxID_CANCEL);
 }
 
 //-----------------------------------//
@@ -181,15 +177,17 @@ bool ProjectPlugin::saveScene()
 	Engine* engine = editor->getEngine();
 	ScenePtr scene = engine->getSceneManager();
 	
-	std::string path = (std::string) fc.GetPath();
-	FileStream stream( path, StreamMode::Write );
+	Path path = (String) fc.GetPath();
+	Stream* stream = StreamCreateFromFile( AllocatorGetDefault(), path, StreamMode::Write );
 	
-	if( !stream.open() ) return false;
+	if( !stream ) return false;
 
-	JsonSerializer json( stream );
+	JsonSerializer json( *stream );
 	
 	ObjectWalker walker(json);
 	walker.process(scene.get());
+
+	StreamDestroy(stream, AllocatorGetDefault());
 
 	return true;
 }

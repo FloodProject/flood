@@ -8,7 +8,7 @@
 
 #include "Core/API.h"
 #include "Profiler.h"
-#include "Log.h"
+#include "Core/Log.h"
 
 namespace vapor {
 

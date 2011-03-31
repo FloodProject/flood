@@ -234,9 +234,6 @@
     <ClCompile Include="..\..\src\Engine\Window.cpp">
       <Filter>Window</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Win32_Window.cpp">
-      <Filter>Window\Win32</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Engine\SFML_Window.cpp">
       <Filter>Window\SFML</Filter>
     </ClCompile>
@@ -473,6 +470,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Core\Subsystem.cpp">
       <Filter>Subsystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Win32\WindowWin32.cpp">
+      <Filter>Window\Win32</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

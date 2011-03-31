@@ -11,7 +11,7 @@
 #include "EditorIcons.h"
 #include "Editor.h"
 #include "Events.h"
-#include "Utilities.h"
+#include "Core/Utilities.h"
 
 namespace vapor { namespace editor {
 
@@ -204,7 +204,9 @@ enum
 
 static bool isUnderVersionControl(const ResourcePtr& res)
 {
-	File file( res->getPath(), StreamMode::Read );
+#if 0
+	Stream* stream = StreamCreateFromFile( AllocatorGetDefault(), res->getPath() );
+	/*, StreamMode::Read );*/
 
 	const std::string& fullPath = PathGetCurrentDir()
 		+ PathGetSeparator()
@@ -215,6 +217,9 @@ static bool isUnderVersionControl(const ResourcePtr& res)
 	FileClose(&file);
 
 	return wxFileName::DirExists(fullPath);
+#endif
+
+	return false;
 }
 
 
@@ -262,6 +267,7 @@ void ResourcesPage::onTreeItemMenu(wxTreeEvent& event)
 
 static std::string getResourceFullPath(const ResourcePtr& res)
 {
+#if 0
 	File file( res->getPath(), StreamMode::Read );
 
 	const std::string& fullPath = PathGetCurrentDir()
@@ -271,6 +277,8 @@ static std::string getResourceFullPath(const ResourcePtr& res)
 	FileClose(&file);
 
 	return fullPath;
+#endif
+	return "";
 }
 
 static wxString getTortoiseBaseCommand(const ResourcePtr& res, const std::string& operation)

@@ -11,7 +11,7 @@
 #include "Render/GLSL_Program.h"
 #include "Resources/GLSL_Text.h"
 #include "Resources/ResourceManager.h"
-#include "Utilities.h"
+#include "Core/Utilities.h"
 
 namespace vapor {
 

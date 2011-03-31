@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Utilities.h"
+#include "Core/Utilities.h"
 
 #include <sstream>
 #include <algorithm>
@@ -163,6 +163,17 @@ void StringSplit(const String& s, char delim, std::vector<String>& elems)
 
 //-----------------------------------//
 
+String StringTrim(const String& s, const char* trim)
+{
+	String::size_type first = s.find_first_not_of(trim);
+	
+	if( first == String::npos ) return "";
+
+	return s.substr(first, s.find_last_not_of(trim) - first + 1);
+}
+
+//-----------------------------------//
+
 String StringToLowerCase(const String& str)
 {
 	String data(str);
@@ -238,7 +249,7 @@ Path PathGetBase(const Path& path)
 		return path;
 
 	// Return the file extension.
-	return path.substr( 0, ch );
+	return path.substr( 0, ++ch );
 }
 
 //-----------------------------------//

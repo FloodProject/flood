@@ -10,13 +10,11 @@
 #include "Resources/ResourceManager.h"
 #include "Resources/ResourceLoader.h"
 
-#include "Core/File.h"
-#include "Core/PhysfsStream.h"
+#include "Core/Log.h"
 #include "Core/Memory.h"
-
-#include "Log.h"
-#include "Utilities.h"
-
+#include "Core/Stream.h"
+#include "Core/Archive.h"
+#include "Core/Utilities.h"
 
 namespace vapor {
 
@@ -28,13 +26,12 @@ void ResourceTaskRun(Task* task)
 	Resource* resource = options->resource;
 	const Path& path = resource->getPath();
 	
-	File file(path, StreamMode::Read);
-	PhysfsStream stream(file);
+	Stream* stream = StreamCreateFromPhysfs( AllocatorGetDefault(), path, StreamMode::Read );
 
 	ResourceManager* res = GetResourceManager();
 	ResourceLoader* loader = res->findLoader( PathGetFileExtension(path) );
 
-	bool decoded = loader->decode(stream, resource);
+	bool decoded = loader->decode(*stream, resource);
 		
 	if( !decoded )
 	{
@@ -59,6 +56,7 @@ void ResourceTaskRun(Task* task)
 	LogInfo("Loaded resource '%s'", path.c_str());
 
 	Deallocate( AllocatorGetDefault(), options );
+	StreamDestroy(stream, AllocatorGetDefault());
 }
 
 //-----------------------------------//

@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "Object.h"
-#include "ReferenceCount.h"
+#include "Core/Object.h"
+#include "Core/ReferenceCount.h"
 
 FWD_DECL_INTRUSIVE(Renderable)
 FWD_DECL_SHARED(Camera)

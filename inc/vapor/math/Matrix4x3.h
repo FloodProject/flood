@@ -22,7 +22,7 @@ namespace vapor {
  * shearing, etc.
  */
 
-class CORE_API Matrix4x3 
+class API_CORE Matrix4x3 
 {
 public:
 

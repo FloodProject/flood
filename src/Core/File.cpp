@@ -12,8 +12,8 @@
 
 #ifdef VAPOR_VFS_PHYSFS
 
-#include "Log.h"
-#include "Utilities.h"
+#include "Core/Log.h"
+#include "Core/Utilities.h"
 #include <dirent.h>
 
 #include <physfs.h>

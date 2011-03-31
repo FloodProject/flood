@@ -10,7 +10,7 @@
 #include "PluginManager.h"
 #include "Plugin.h"
 #include "Editor.h"
-#include "Reflection.h"
+#include "Core/Reflection.h"
 
 namespace vapor { namespace editor {
 

@@ -14,7 +14,7 @@ namespace vapor {
 //-----------------------------------//
 
 class Type;
-typedef CORE_API std::map<String, const Type*> TypeRegistryMap;
+typedef API_CORE std::map<String, const Type*> TypeRegistryMap;
 
 /**
  * Stores a globally acessible mapping of type names and their instances.
@@ -22,7 +22,7 @@ typedef CORE_API std::map<String, const Type*> TypeRegistryMap;
  * by its name. Things like serialization need this information.
  */
 
-class CORE_API Registry
+class API_CORE Registry
 {
 public:
 

@@ -13,7 +13,7 @@
 #include "Scene/Geometry.h"
 #include "Resources/ResourceManager.h"
 #include "Engine.h"
-#include "Utilities.h"
+#include "Core/Utilities.h"
 
 namespace vapor {
 

@@ -18,7 +18,7 @@ namespace vapor {
  * Ray class.
  */
 
-class CORE_API Ray
+class API_CORE Ray
 {
 public:
 

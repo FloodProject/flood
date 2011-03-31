@@ -20,7 +20,7 @@ namespace vapor {
  * Axis-aligned Bounding Box.
  */
 
-class CORE_API BoundingBox
+class API_CORE BoundingBox
 {
 public:
 

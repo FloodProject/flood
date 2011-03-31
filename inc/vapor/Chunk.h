@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Stream.h"
+#include "Core/Stream.h"
 
 namespace vapor {
 
@@ -19,14 +19,14 @@ namespace vapor {
  * (see: FourCC) for easy identification of each chunks purpose.
  */
 
-struct CORE_API ChunkMetadata
+struct API_CORE ChunkMetadata
 {
 	byte critical : 1;
 	byte version  : 2;
 	byte type     : 5;
 };
 
-struct CORE_API Chunk
+struct API_CORE Chunk
 {
 	ChunkMetadata metadata;
 	uint id;

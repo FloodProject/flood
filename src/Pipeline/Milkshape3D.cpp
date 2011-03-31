@@ -13,8 +13,8 @@
 #include "Resources/Skeleton.h"
 #include "Math/Vector.h"
 #include "Math/Helpers.h"
-#include "Utilities.h"
-#include "Log.h"
+#include "Core/Utilities.h"
+#include "Core/Log.h"
 
 namespace vapor {
 
@@ -28,7 +28,7 @@ Milkshape3D::Milkshape3D()
 
 bool Milkshape3D::load(const Stream& stream)
 {
-	stream.read(filebuf);
+	StreamRead((Stream*) &stream, filebuf);
 
 	if( filebuf.empty() ) 
 		return false;

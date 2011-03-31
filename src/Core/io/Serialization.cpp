@@ -7,10 +7,10 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Serialization.h"
-#include "Reflection.h"
-#include "Log.h"
-#include "ReferenceCount.h"
+#include "Core/Serialization.h"
+#include "Core/Reflection.h"
+#include "Core/Log.h"
+#include "Core/ReferenceCount.h"
 
 namespace vapor {
 

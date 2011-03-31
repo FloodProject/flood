@@ -26,7 +26,7 @@ struct Condition;
  */
 
 template<typename T>
-class CORE_API ConcurrentQueue
+class API_CORE ConcurrentQueue
 {
 public:
 

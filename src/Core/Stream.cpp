@@ -7,53 +7,66 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Stream.h"
-#include "Utilities.h"
+#include "Core/Stream.h"
+#include "Core/Log.h"
+#include "Core/Memory.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-Stream::Stream(StreamMode::Enum mode, const String& path)
-  : mode(mode)
-  , path(path)
-{ }
-
-//-----------------------------------//
-
-Stream::~Stream() 
+Stream* StreamCreateFromURI(MemoryAllocator*, const Path&)
 {
-	close();
+	assert("TODO: Creating URIs from schemes");
+	return nullptr;
 }
 
 //-----------------------------------//
 
-void Stream::close()
-{}
-
-//-----------------------------------//
-
-int Stream::tell()
+bool StreamClose(Stream* stream)
 {
-	return -1;
+	if(!stream) return false;
+	return stream->fn->close(stream);
 }
 
 //-----------------------------------//
 
-void Stream::read(String& text) const
+void StreamDestroy(Stream* stream, MemoryAllocator* mem)
 {
-	std::vector<byte> data;
-	read(data);
+	if( !StreamClose(stream) )
+	{
+		LogDebug("Error closing stream: %s", stream->path.c_str());
+	}
 
+	Deallocate(mem, stream);
+}
+
+//-----------------------------------//
+
+int64 StreamRead(Stream* stream, std::vector<uint8>& data)
+{
+	if( !stream ) return 0;
+	
+	data.resize( (size_t) StreamGetSize(stream) );
+	return stream->fn->read(stream, &data[0], data.size());
+}
+
+//-----------------------------------//
+
+int64 StreamReadString(Stream* stream, String& text)
+{
+	std::vector<uint8> data;
+	int64 size = StreamRead(stream, data);
 	text.assign( data.begin(), data.end() );
+	return size;
 }
 
 //-----------------------------------//
 
-std::vector<String> Stream::readLines() const
+int64 StreamReadLines(Stream* stream, std::vector<String>&)
 {
 	String str;
-	read(str);
+	int64 size = StreamReadString(stream, str);
 
 	std::vector<String> lines;
 	StringSplit(str, '\n', lines);
@@ -66,16 +79,44 @@ std::vector<String> Stream::readLines() const
 		if( str[str.size()-1] == '\r' )
 			str.erase( str.size()-1 );
 	}
-	
-	return lines;
+
+	return size;
 }
 
 //-----------------------------------//
 
-long Stream::write(const String& string)
+int64 StreamWrite(Stream* stream, const std::vector<uint8>& data)
 {
-	std::vector<byte> data( string.begin(), string.end() );
-	return write(data);  
+	return stream->fn->write(stream, (void*) &data[0], data.size());
+}
+
+//-----------------------------------//
+
+int64 StreamWriteString(Stream* stream, const String& string)
+{
+	std::vector<uint8> data( string.begin(), string.end() );
+	return stream->fn->write(stream, &data[0], data.size());
+}
+
+//-----------------------------------//
+
+int64 StreamGetPosition(Stream* stream)
+{
+	return stream->fn->tell(stream);
+}
+
+//-----------------------------------//
+
+int64 StreamSetPosition(Stream* stream, int64 offset, StreamSeekMode::Enum mode)
+{
+	return stream->fn->seek(stream, offset, (int8) mode);
+}
+
+//-----------------------------------//
+
+int64 StreamGetSize(Stream* stream)
+{
+	return stream->fn->size(stream);
 }
 
 //-----------------------------------//

@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Serialization.h"
+#include "Core/Serialization.h"
 
 #ifdef VAPOR_SERIALIZATION_BINARY
 
@@ -15,7 +15,7 @@ namespace vapor {
 
 //-----------------------------------//
 	
-class CORE_API BinarySerializer : public ReflectionVisitor
+class API_CORE BinarySerializer : public ReflectionVisitor
 {
 	DECLARE_UNCOPYABLE(BinarySerializer)
 

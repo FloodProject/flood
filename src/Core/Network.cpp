@@ -12,7 +12,7 @@
 
 #include "net/Network.h"
 #include "net/Message.h"
-#include "Log.h"
+#include "Core/Log.h"
 #include <zmq.h>
 
 namespace vapor {

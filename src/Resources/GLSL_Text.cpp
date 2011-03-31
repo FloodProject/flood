@@ -8,7 +8,7 @@
 
 #include "Resources/API.h"
 #include "Resources/GLSL_Text.h"
-#include "Log.h"
+#include "Core/Log.h"
 
 namespace vapor {
 

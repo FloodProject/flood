@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Stream.h"
+#include "Core/Stream.h"
 
 #ifdef VAPOR_NETWORKING_CURL
 
@@ -22,7 +22,7 @@ namespace vapor {
  * Wraps an HTTP request in an I/O stream.
  */
 
-class CORE_API WebStream : public Stream
+class API_CORE WebStream : public Stream
 {
 	DECLARE_UNCOPYABLE(WebStream)
 

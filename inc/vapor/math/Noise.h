@@ -16,7 +16,7 @@ namespace vapor {
  * Generates coherent value noise (smooth pseudorandom noise).
  */
 
-class CORE_API Noise
+class API_CORE Noise
 {
 public:
 

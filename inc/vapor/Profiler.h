@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Timer.h"
+#include "Core/Timer.h"
 
 namespace vapor {
 
@@ -18,7 +18,7 @@ namespace vapor {
  * Simple utility profiler class.
  */
 
-class CORE_API Profiler
+class API_CORE Profiler
 {
 public:
 

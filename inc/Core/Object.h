@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Reflection.h"
+#include "Core/Reflection.h"
 
 namespace vapor {
 
@@ -18,7 +18,7 @@ namespace vapor {
  * Objects are the root class for types using the reflection services.
  */
 
-class CORE_API VAPOR_PURE Object
+class API_CORE VAPOR_PURE Object
 {
 public:
 

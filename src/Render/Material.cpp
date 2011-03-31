@@ -12,7 +12,7 @@
 #include "Render/TextureManager.h"
 #include "Render/ProgramManager.h"
 #include "Engine.h"
-#include "Utilities.h"
+#include "Core/Utilities.h"
 
 namespace vapor {
 

@@ -10,13 +10,13 @@
 #include "Math/Matrix4x4.h"
 #include "Math/Matrix4x3.h"
 #include "Math/Helpers.h"
-#include "Log.h"
+#include "Core/Log.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-const CORE_API Matrix4x4 Matrix4x4::Identity;
+const API_CORE Matrix4x4 Matrix4x4::Identity;
 
 Matrix4x4::Matrix4x4()
 {

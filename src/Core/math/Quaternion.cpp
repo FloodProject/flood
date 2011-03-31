@@ -8,7 +8,7 @@
 
 #include "Core/API.h"
 #include "Math/Quaternion.h"
-#include "Log.h"
+#include "Core/Log.h"
 #include <cassert>
 
 namespace vapor {

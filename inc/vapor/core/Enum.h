@@ -21,7 +21,7 @@ typedef std::pair<const String, int> EnumValuesPair;
  * Represents an enum in the type system.
  */
 
-class CORE_API Enum : public Type
+class API_CORE Enum : public Type
 {
 public:
 

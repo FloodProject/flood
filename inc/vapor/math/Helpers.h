@@ -8,7 +8,7 @@
 
 #include "Math/Vector.h"
 
-BEGIN_NAMESPACE_EXTERN
+NAMESPACE_EXTERN_BEGIN
 
 //-----------------------------------//
 
@@ -17,20 +17,20 @@ const float LimitsFloatMaximum =  std::numeric_limits<float>::max();
 const float LimitsFloatEpsilon =  std::numeric_limits<float>::epsilon();
 const float PI = 3.141592654f;
 
-CORE_API bool  MathFloatCompare(float a, float b);
-CORE_API float MathFloatRandom( float min, float max );
-CORE_API float MathLogBase( float base, float value );
+API_CORE bool  MathFloatCompare(float a, float b);
+API_CORE float MathFloatRandom( float min, float max );
+API_CORE float MathLogBase( float base, float value );
 
-CORE_API float MathDegreeToRadian( float degree );
-CORE_API float MathRadianToDegree( float radian );
+API_CORE float MathDegreeToRadian( float degree );
+API_CORE float MathRadianToDegree( float radian );
 
-CORE_API float InterpolateLinear(float a, float b, float t);
-CORE_API float InterpolateCosine(float a, float b, float t);
-CORE_API float InterpolateCubic(float a, float b, float t);
+API_CORE float InterpolateLinear(float a, float b, float t);
+API_CORE float InterpolateCosine(float a, float b, float t);
+API_CORE float InterpolateCubic(float a, float b, float t);
 
 //-----------------------------------//
 
-END_NAMESPACE_EXTERN
+NAMESPACE_EXTERN_END
 
 // Clamps a variable to the given range.
 template< typename T > bool MathClamp( T& var, T min = 0, T max = 1 )

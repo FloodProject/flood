@@ -10,13 +10,13 @@
 #include "Resources/ResourceManager.h"
 #include "Resources/ResourceLoader.h"
 
+#include "Core/Log.h"
 #include "Core/Memory.h"
 #include "Core/Concurrency.h"
+#include "Core/Stream.h"
+#include "Core/Archive.h"
 #include "Core/FileSystem.h"
-#include "Core/PhysfsStream.h"
-
-#include "Log.h"
-#include "Utilities.h"
+#include "Core/Utilities.h"
 
 namespace vapor {
 
@@ -128,17 +128,19 @@ ResourcePtr ResourceManager::loadResource(ResourceLoadOptions options)
 	if( !validateResource(options.name) )
 		return nullptr;
 
-	File file(options.name, StreamMode::Read);
-	resource = prepareResource(file);
+	Stream* stream = StreamCreateFromPhysfs( AllocatorGetDefault(), options.name, StreamMode::Read);
+	resource = prepareResource(stream);
 	
 	if( !resource )
 		return nullptr;
+
+	StreamDestroy(stream, AllocatorGetDefault());
 
 	decodeResource(resource, options);
 
 	// Register the decoded resource in the map.
 
-	Path base = PathGetFile(file.Path);
+	Path base = PathGetFile(options.name);
 	resources[base] = resource;
 
 	return resource;
@@ -169,7 +171,7 @@ void ResourceManager::findResource(ResourceLoadOptions& options)
 		{
 			path = newPath;
 			break;
-		}
+		} 
 	}
 }
 
@@ -205,23 +207,22 @@ bool ResourceManager::validateResource( const std::string& path )
 
 //-----------------------------------//
 
-ResourcePtr ResourceManager::prepareResource(const File& file)
+ResourcePtr ResourceManager::prepareResource(Stream* stream)
 {
-	// Get the available resource loader and prepare the resource.
+	const Path& path = stream->path;
 
-	ResourceLoader* loader = findLoader( PathGetFileExtension(file.Path) );
+	// Get the available resource loader and prepare the resource.
+	ResourceLoader* loader = findLoader( PathGetFileExtension(path) );
 
 	if( !loader )
 	{
-		LogWarn("No resource loader found for resource '%s'", file.Path.c_str());
+		LogWarn("No resource loader found for resource '%s'", path.c_str());
 		return nullptr;
 	}
 
-	PhysfsStream stream(const_cast<File&>(file));
-
-	ResourcePtr res( loader->prepare(stream) );
+	ResourcePtr res( loader->prepare(*stream) );
 	res->setStatus( ResourceStatus::Loading );
-	res->setPath( file.Path );
+	res->setPath( path );
 
 	// Send callback notifications.
 	ResourceEvent event;

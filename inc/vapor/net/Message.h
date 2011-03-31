@@ -10,7 +10,7 @@
 
 #ifdef VAPOR_NETWORKING_ZMQ
 
-#include "ReferenceCount.h"
+#include "Core/ReferenceCount.h"
 #include "Messages.h"
 #include <zmq.h>
 

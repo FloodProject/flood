@@ -10,8 +10,8 @@
 
 #ifdef VAPOR_SERIALIZATION_JSON
 
-#include "Serialization.h"
-#include "Stream.h"
+#include "Core/Serialization.h"
+#include "Core/Stream.h"
 #include <stack>
 
 struct json_t;
@@ -24,7 +24,7 @@ namespace vapor {
  * Serializer implementation using JSON.
  */
 
-class CORE_API JsonSerializer : public ReflectionVisitor
+class API_CORE JsonSerializer : public ReflectionVisitor
 {
 	DECLARE_UNCOPYABLE(JsonSerializer)
 
@@ -80,7 +80,7 @@ protected:
 
 //-----------------------------------//
 
-class CORE_API JsonDeserializer
+class API_CORE JsonDeserializer
 {
 	DECLARE_UNCOPYABLE(JsonDeserializer)
 

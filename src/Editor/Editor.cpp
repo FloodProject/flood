@@ -8,7 +8,7 @@
 
 #include "Editor/API.h"
 #include "Editor.h"
-#include "Utilities.h"
+#include "Core/Utilities.h"
 #include "EditorIcons.h"
 #include "RenderControl.h"
 #include "PluginManager.h"

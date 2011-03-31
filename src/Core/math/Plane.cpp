@@ -9,7 +9,7 @@
 #include "Core/API.h"
 #include "Math/Plane.h"
 #include "Math/Helpers.h"
-#include "Log.h"
+#include "Core/Log.h"
 
 namespace vapor {
 

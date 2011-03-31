@@ -11,7 +11,7 @@
 #include "Resources/Skeleton.h"
 #include "Resources/Animation.h"
 #include "Math/Vector.h"
-#include "Utilities.h"
+#include "Core/Utilities.h"
 
 namespace vapor {
 

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Stream.h"
+#include "Core/Stream.h"
 #include "Resources/Resource.h"
 
 namespace vapor {

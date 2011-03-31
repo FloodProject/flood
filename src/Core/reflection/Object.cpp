@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Object.h"
+#include "Core/Object.h"
 
 namespace vapor {
 

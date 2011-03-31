@@ -97,29 +97,23 @@
     <Filter Include="Serialization\JSON">
       <UniqueIdentifier>{6de8a758-dc9d-4af8-aa3f-b1459f834ee6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Filesystem">
-      <UniqueIdentifier>{90db7c90-f20e-4c6b-8bb6-35edaa19de88}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Filesystem\Watcher">
-      <UniqueIdentifier>{946baa8f-8d96-40b9-a4bf-e6edfac7dca9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Streams">
       <UniqueIdentifier>{4ba939fd-b107-4e66-a533-1d4544e3ca60}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Streams\File">
-      <UniqueIdentifier>{a43b1a03-12a9-4af2-9420-ea918510e202}</UniqueIdentifier>
     </Filter>
     <Filter Include="Streams\Web">
       <UniqueIdentifier>{00995d4d-9f14-4038-8b88-242280d3dec4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Streams\Physfs">
-      <UniqueIdentifier>{4b95ea0e-9dba-4253-90ad-e95e695160d2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Streams\Memory">
-      <UniqueIdentifier>{dad22447-8e41-4e42-ba29-c3e33f8187ac}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Memory">
       <UniqueIdentifier>{2f67dd86-71a5-4791-905f-cabd91cc370f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archive">
+      <UniqueIdentifier>{062b640e-7ae1-4953-8fa9-ec7288b05c8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Streams\File">
+      <UniqueIdentifier>{90db7c90-f20e-4c6b-8bb6-35edaa19de88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Streams\File\Watcher">
+      <UniqueIdentifier>{946baa8f-8d96-40b9-a4bf-e6edfac7dca9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -190,14 +184,8 @@
     <ClCompile Include="..\..\src\Core\reflection\Type.cpp">
       <Filter>Reflection\Type</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Core\FileStream.cpp">
-      <Filter>Streams\File</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Core\WebStream.cpp">
       <Filter>Streams\Web</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\PhysfsStream.cpp">
-      <Filter>Streams\Physfs</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\Log.cpp">
       <Filter>Logs</Filter>
@@ -221,16 +209,10 @@
       <Filter>Libraries</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\FileSystem.cpp">
-      <Filter>Filesystem</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\File.cpp">
-      <Filter>Filesystem</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\FileWatcherWin32.cpp">
-      <Filter>Filesystem\Watcher</Filter>
+      <Filter>Streams\File</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\FileWatcher.cpp">
-      <Filter>Filesystem\Watcher</Filter>
+      <Filter>Streams\File\Watcher</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\Profiler.cpp">
       <Filter>Profiler</Filter>
@@ -241,9 +223,6 @@
     <ClCompile Include="..\..\src\Core\Memory.cpp">
       <Filter>Memory</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Win32\Concurrency-Win32.cpp">
-      <Filter>Concurrency</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Math\Vector.cpp">
       <Filter>Math\Vector</Filter>
     </ClCompile>
@@ -252,6 +231,24 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Core\Concurrency.cpp">
       <Filter>Concurrency</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\Archive.cpp">
+      <Filter>Archive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Win32\FileWatcherWin32.cpp">
+      <Filter>Streams\File\Watcher</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Win32\ConcurrencyWin32.cpp">
+      <Filter>Concurrency</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\PhysfsStream.cpp">
+      <Filter>Streams</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\FileStream.cpp">
+      <Filter>Streams\File</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\ArchiveZip.cpp">
+      <Filter>Archive</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -294,17 +291,8 @@
     <ClInclude Include="..\..\inc\vapor\Utilities.h">
       <Filter>Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\DynamicLibrary.h">
-      <Filter>Libraries</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\Log.h">
-      <Filter>Logs</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\vapor\Profiler.h">
       <Filter>Profiler</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\Timer.h">
-      <Filter>Timer</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\net\Network.h">
       <Filter>Network</Filter>
@@ -317,9 +305,6 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\net\Messages.h">
       <Filter>Network\Messages</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\Stream.h">
-      <Filter>Streams</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\core\Class.h">
       <Filter>Reflection\Class</Filter>
@@ -335,18 +320,6 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\core\Type.h">
       <Filter>Reflection\Type</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\Reflection.h">
-      <Filter>Reflection</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\Delegate.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\Event.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\FileStream.h">
-      <Filter>Streams\File</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\WebStream.h">
       <Filter>Streams\Web</Filter>
@@ -366,29 +339,17 @@
     <ClInclude Include="..\..\inc\vapor\Chunk.h">
       <Filter>Serialization\Binary</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\Object.h">
-      <Filter>Reflection</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\vapor\StackWalker.h">
       <Filter>Debug</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\core\Helpers.h">
       <Filter>Reflection</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\core\File.h">
-      <Filter>Filesystem</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\vapor\core\FileSystem.h">
-      <Filter>Filesystem</Filter>
+      <Filter>Streams\File</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\core\FileWatcher.h">
-      <Filter>Filesystem\Watcher</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\core\PhysfsStream.h">
-      <Filter>Streams\Physfs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Core\FileWatcherWin32.h">
-      <Filter>Filesystem\Watcher</Filter>
+      <Filter>Streams\File\Watcher</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\Memory.h">
       <Filter>Memory</Filter>
@@ -400,17 +361,53 @@
     <ClInclude Include="..\..\inc\vapor\math\Helpers.h">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\Platform.h" />
     <ClInclude Include="..\..\inc\Math\Vector.h">
       <Filter>Math\Vector</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\String.h" />
-    <ClInclude Include="..\..\inc\vapor\CompileOptions.h" />
-    <ClInclude Include="..\..\inc\vapor\ConcurrentQueue.h">
-      <Filter>Concurrency</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\vapor\ReferenceCount.h">
       <Filter>Memory</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\inc\Core\Archive.h">
+      <Filter>Archive</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\CompileOptions.h" />
+    <ClInclude Include="..\..\src\Win32\FileWatcherWin32.h">
+      <Filter>Streams\File\Watcher</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\Stream.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\Platform.h" />
+    <ClInclude Include="..\..\inc\Core\Pointers.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\Event.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\Delegate.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\DynamicLibrary.h">
+      <Filter>Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\ConcurrentQueue.h">
+      <Filter>Concurrency</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\Reflection.h">
+      <Filter>Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\Object.h">
+      <Filter>Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\Log.h">
+      <Filter>Logs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\Timer.h">
+      <Filter>Timer</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\dep\luajit\src\vapor.lua" />
   </ItemGroup>
 </Project>
