@@ -46,7 +46,7 @@ static StreamFuncs gs_FileFuncs =
 
 //-----------------------------------//
 
-Stream* StreamCreateFromPhysfs(MemoryAllocator* mem, const Path& path, StreamMode::Enum mode)
+Stream* StreamCreateFromPhysfs(Allocator* mem, const Path& path, StreamMode::Enum mode)
 {
 	PhysfsStream* pfs = Allocate<PhysfsStream>(mem);
 	

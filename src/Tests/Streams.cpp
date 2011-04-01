@@ -18,17 +18,16 @@ using namespace vapor;
 void TestFile(CuTest *tc)
 {
 	// File not found
-	Stream* file = StreamCreateFromFile( AllocatorGetDefault(), "Test.h", StreamMode::Read );
-	CuAssertPtrEquals(tc, nullptr, file);
+	Stream* not_found = StreamCreateFromFile( AllocatorGetHeap(), "Test.h", StreamMode::Read );
+	CuAssertPtrEquals(tc, nullptr, not_found);
 
 	// File opening
-	file = StreamCreateFromFile( AllocatorGetDefault(), "file.txt", StreamMode::Read );
-	scoped_ptr<Stream> p_file( file );
+	StreamPtr file( pStreamCreateFromFile(AllocatorGetHeap(), "file.txt", StreamMode::Read) );
 	CuAssertPtrNotNull(tc, file);
 
 	// File size.
 	int64 size = StreamGetSize(file);
-	CuAssertIntEquals(tc, 6, size);
+	CuAssertIntEquals(tc, 6, (int) size);
 
 	// File read
 	String text;
@@ -40,7 +39,7 @@ void TestFile(CuTest *tc)
 
 	// File tell
 	int64 offset = StreamGetPosition(file);
-	CuAssertIntEquals(tc, 3, offset);
+	CuAssertIntEquals(tc, 3, (int) offset);
 
 	// File read
 	StreamReadString(file, text);

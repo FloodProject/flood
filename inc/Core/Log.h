@@ -17,7 +17,7 @@ NAMESPACE_EXTERN_BEGIN
 
 struct Timer;
 struct Mutex;
-struct MemoryAllocator;
+struct Allocator;
 
 namespace LogLevel
 {
@@ -40,8 +40,8 @@ struct Log
 	Event1<LogEntry*> Handlers;
 };
 
-API_CORE Log* LogCreate(MemoryAllocator*);
-API_CORE void LogDestroy(Log*, MemoryAllocator*);
+API_CORE Log* LogCreate(Allocator*);
+API_CORE void LogDestroy(Log*, Allocator*);
 API_CORE void LogAddHandler(Log*, LogFunction);
 API_CORE void LogRemoveHandler(Log* log, LogFunction);
 API_CORE void LogWrite(Log*, LogLevel::Enum level, const char* msg, va_list args);

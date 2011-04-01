@@ -128,13 +128,13 @@ ResourcePtr ResourceManager::loadResource(ResourceLoadOptions options)
 	if( !validateResource(options.name) )
 		return nullptr;
 
-	Stream* stream = StreamCreateFromPhysfs( AllocatorGetDefault(), options.name, StreamMode::Read);
+	Stream* stream = StreamCreateFromPhysfs( AllocatorGetHeap(), options.name, StreamMode::Read);
 	resource = prepareResource(stream);
 	
 	if( !resource )
 		return nullptr;
 
-	StreamDestroy(stream, AllocatorGetDefault());
+	StreamDestroy(stream, AllocatorGetHeap());
 
 	decodeResource(resource, options);
 
@@ -237,9 +237,9 @@ ResourcePtr ResourceManager::prepareResource(Stream* stream)
 
 void ResourceManager::decodeResource( ResourcePtr resource, ResourceLoadOptions& options )
 {
-	Task* task = TaskCreate( AllocatorGetDefault() );
+	Task* task = TaskCreate( AllocatorGetHeap() );
 	
-	ResourceLoadOptions* taskOptions = Allocate<ResourceLoadOptions>( AllocatorGetDefault() );
+	ResourceLoadOptions* taskOptions = Allocate<ResourceLoadOptions>( AllocatorGetHeap() );
 	*taskOptions = options;
 	taskOptions->resource = resource.get();
 

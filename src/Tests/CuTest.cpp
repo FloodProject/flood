@@ -131,9 +131,9 @@ CuTest* CuTestNew(const char* name, TestFunction function)
 
 void CuTestDelete(CuTest *t)
 {
-        if (!t) return;
-        free(t->name);
-        free(t);
+    if (!t) return;
+    free(t->name);
+    free(t);
 }
 
 void CuTestRun(CuTest* tc)
@@ -156,7 +156,9 @@ static void CuFailInternal(CuTest* tc, const char* file, int line, CuString* str
 	CuStringInsert(string, buf, 0);
 
 	tc->failed = 1;
-	tc->message = string->buffer;
+	tc->message = _strdup(string->buffer);
+	free(string->buffer);
+
 	if (tc->jumpBuf != 0) longjmp(*(tc->jumpBuf), 0);
 }
 
@@ -242,7 +244,7 @@ void CuSuiteInit(CuSuite* testSuite)
 {
 	testSuite->count = 0;
 	testSuite->failCount = 0;
-        memset(testSuite->list, 0, sizeof(testSuite->list));
+	memset(testSuite->list, 0, sizeof(testSuite->list));
 }
 
 CuSuite* CuSuiteNew(void)
@@ -254,16 +256,12 @@ CuSuite* CuSuiteNew(void)
 
 void CuSuiteDelete(CuSuite *testSuite)
 {
-        unsigned int n;
-        for (n=0; n < MAX_TEST_CASES; n++)
-        {
-                if (testSuite->list[n])
-                {
-                        CuTestDelete(testSuite->list[n]);
-                }
-        }
-        free(testSuite);
-
+    for(int n=0; n < MAX_TEST_CASES; n++)
+    {
+		if(!testSuite->list[n]) continue;
+		CuTestDelete(testSuite->list[n]);
+    }
+    free(testSuite);
 }
 
 void CuSuiteAdd(CuSuite* testSuite, CuTest *testCase)
@@ -275,8 +273,7 @@ void CuSuiteAdd(CuSuite* testSuite, CuTest *testCase)
 
 void CuSuiteAddSuite(CuSuite* testSuite, CuSuite* testSuite2)
 {
-	int i;
-	for (i = 0 ; i < testSuite2->count ; ++i)
+	for(int i = 0 ; i < testSuite2->count ; ++i)
 	{
 		CuTest* testCase = testSuite2->list[i];
 		CuSuiteAdd(testSuite, testCase);
@@ -287,7 +284,7 @@ void CuSuiteAddSuite(CuSuite* testSuite, CuSuite* testSuite2)
 
 void CuSuiteFreeAll()
 {
-	for(unsigned int i = 0 ; i < suites.size(); ++i)
+	for(size_t i = 0 ; i < suites.size(); ++i)
 	{
 		CuSuite* suite = suites[i];
 		free(suite);
@@ -298,8 +295,7 @@ void CuSuiteFreeAll()
 
 void CuSuiteRun(CuSuite* testSuite)
 {
-	int i;
-	for (i = 0 ; i < testSuite->count ; ++i)
+	for(int i = 0 ; i < testSuite->count ; ++i)
 	{
 		CuTest* testCase = testSuite->list[i];
 		CuTestRun(testCase);
@@ -309,18 +305,17 @@ void CuSuiteRun(CuSuite* testSuite)
 
 void CuSuiteSummary(CuSuite* testSuite, CuString* summary)
 {
-	int i;
-	for (i = 0 ; i < testSuite->count ; ++i)
+	CuStringAppend(summary, "\nTests Summary: ");
+	for(int i = 0 ; i < testSuite->count ; ++i)
 	{
 		CuTest* testCase = testSuite->list[i];
 		CuStringAppend(summary, testCase->failed ? "F" : ".");
 	}
-	CuStringAppend(summary, "\n\n");
+	CuStringAppend(summary, "\n");
 }
 
 void CuSuiteDetails(CuSuite* testSuite, CuString* details)
 {
-	int i;
 	int failCount = 0;
 
 	if (testSuite->failCount == 0)
@@ -336,7 +331,7 @@ void CuSuiteDetails(CuSuite* testSuite, CuString* details)
 		else
 			CuStringAppendFormat(details, "There were %d failures:\n", testSuite->failCount);
 
-		for (i = 0 ; i < testSuite->count ; ++i)
+		for(int i = 0 ; i < testSuite->count ; ++i)
 		{
 			CuTest* testCase = testSuite->list[i];
 			if (testCase->failed)
@@ -344,6 +339,7 @@ void CuSuiteDetails(CuSuite* testSuite, CuString* details)
 				failCount++;
 				CuStringAppendFormat(details, "%d) %s: %s\n",
 					failCount, testCase->name, testCase->message);
+				free((void*) testCase->message);
 			}
 		}
 		CuStringAppend(details, "\n!!!FAILURES!!!\n");
@@ -352,4 +348,6 @@ void CuSuiteDetails(CuSuite* testSuite, CuString* details)
 		CuStringAppendFormat(details, "Passes: %d ", testSuite->count - testSuite->failCount);
 		CuStringAppendFormat(details, "Fails: %d\n",  testSuite->failCount);
 	}
+
+	CuStringAppend(details, "\n");
 }

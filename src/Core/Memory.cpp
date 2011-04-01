@@ -30,28 +30,28 @@ NAMESPACE_EXTERN_BEGIN
 // Since all memory allocations must go through an allocator, we need
 // to create a default allocator to make the first allocations.
 
-static MemoryAllocator* GetDefaultHeapAllocator();
-static MemoryAllocator* GetDefaultStackAllocator();
+static Allocator* GetDefaultHeapAllocator();
+static Allocator* GetDefaultStackAllocator();
 
-static MemoryAllocator* gs_defaultAllocator = GetDefaultHeapAllocator();
-static MemoryAllocator* gs_defaultStackAllocator = GetDefaultStackAllocator();
+Allocator* AllocatorGlobalHeap = GetDefaultHeapAllocator();
+Allocator* AllocatorGlobalStack = GetDefaultStackAllocator();
 
-MemoryAllocator* AllocatorGetDefault() { return gs_defaultAllocator; }
-MemoryAllocator* AllocatorGetStack() { return gs_defaultStackAllocator; }
+Allocator* AllocatorGetHeap() { return AllocatorGlobalHeap; }
+Allocator* AllocatorGetStack() { return AllocatorGlobalStack; }
 
 static std::map<const char*, int64> gs_memoryGroups; 
 
 //-----------------------------------//
 
 #ifdef ALLOCATOR_TRACKING
-static void AllocatorTrackGroup(MemoryAllocator* mem, int32 size)
+static void AllocatorTrackGroup(Allocator* mem, int32 size)
 {
 	if(!mem || !mem->group) return;
 	gs_memoryGroups[mem->group] += size; 
 }
 #endif
 
-static void* HeapAllocate(MemoryAllocator* mem, int32 size)
+static void* HeapAllocate(Allocator* mem, int32 size)
 {
 #ifdef ALLOCATOR_TRACKING
 	AllocatorTrackGroup(mem, size);
@@ -64,7 +64,7 @@ static void* HeapAllocate(MemoryAllocator* mem, int32 size)
 #endif
 }
 
-static void HeapDellocate(MemoryAllocator* mem, void* p, int32 size)
+static void HeapDellocate(Allocator* mem, void* p, int32 size)
 {
 #ifdef ALLOCATOR_TRACKING
 	AllocatorTrackGroup(mem, -size);
@@ -77,17 +77,17 @@ static void HeapDellocate(MemoryAllocator* mem, void* p, int32 size)
 #endif
 }
 
-MemoryAllocator* AllocatorCreateHeap( MemoryAllocator* mem )
+Allocator* AllocatorCreateHeap( Allocator* mem )
 {
-	MemoryAllocator* heap = Allocate<MemoryAllocator>(mem);
+	Allocator* heap = Allocate<Allocator>(mem);
 	heap->allocate = HeapAllocate;
 	heap->deallocate = HeapDellocate;
 	return heap;
 }
 
-static MemoryAllocator* GetDefaultHeapAllocator()
+static Allocator* GetDefaultHeapAllocator()
 {
-	static MemoryAllocator heap;
+	static Allocator heap;
 	heap.allocate = HeapAllocate;
 	heap.deallocate = HeapDellocate;
 	heap.group = ALLOCATOR_DEFAULT_GROUP;
@@ -96,7 +96,7 @@ static MemoryAllocator* GetDefaultHeapAllocator()
 
 //-----------------------------------//
 
-static void* StackAllocate(MemoryAllocator* mem, int32 size)
+static void* StackAllocate(Allocator* mem, int32 size)
 {
 #ifdef ALLOCATOR_TRACKING
 	AllocatorTrackGroup(mem, size);
@@ -109,7 +109,7 @@ static void* StackAllocate(MemoryAllocator* mem, int32 size)
 #endif
 }
 
-static void StackDellocate(MemoryAllocator* mem, void* p, int32 size)
+static void StackDellocate(Allocator* mem, void* p, int32 size)
 {
 #ifdef ALLOCATOR_TRACKING
 	AllocatorTrackGroup(mem, -size);
@@ -118,9 +118,9 @@ static void StackDellocate(MemoryAllocator* mem, void* p, int32 size)
 	// memory is automatically freed by the stack
 }
 
-static MemoryAllocator* GetDefaultStackAllocator()
+static Allocator* GetDefaultStackAllocator()
 {
-	static MemoryAllocator stack;
+	static Allocator stack;
 	stack.allocate = StackAllocate;
 	stack.deallocate = StackDellocate;
 	stack.group = ALLOCATOR_DEFAULT_GROUP;
@@ -129,21 +129,21 @@ static MemoryAllocator* GetDefaultStackAllocator()
 
 //-----------------------------------//
 
-MemoryAllocator* AllocatorCreatePage( MemoryAllocator* mem )
+Allocator* AllocatorCreatePage( Allocator* mem )
 {
 	return nullptr;
 }
 
 //-----------------------------------//
 
-MemoryAllocator* AllocatorCreatePool( MemoryAllocator* mem )
+Allocator* AllocatorCreatePool( Allocator* mem )
 {
 	return nullptr;
 }
 
 //-----------------------------------//
 
-MemoryAllocator* AllocatorCreateTemporary( MemoryAllocator* mem )
+Allocator* AllocatorCreateTemporary( Allocator* mem )
 {
 	return nullptr;
 }

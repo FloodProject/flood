@@ -1,56 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Math">
-      <UniqueIdentifier>{68ca7f4c-a740-4ea0-b37c-ac4cdbc6bc89}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Math\Vector">
-      <UniqueIdentifier>{2fdc1b0a-3581-4aa2-b506-b03506882426}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Math\Matrix">
-      <UniqueIdentifier>{d097046b-2f14-4153-bb09-137d9bcc9629}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Math\Frustum">
-      <UniqueIdentifier>{943f5aef-9a9b-4b87-b301-4a2d5e1c085c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Math\Color">
-      <UniqueIdentifier>{4a557c92-883e-4879-ab4d-07cfe4bf78eb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Math\Plane">
-      <UniqueIdentifier>{44265d51-538a-41fc-b081-ba8f4e448c5d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Math\Angles">
-      <UniqueIdentifier>{5350711b-915d-42f5-b7c0-2f9651ff0981}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Math\Ray">
-      <UniqueIdentifier>{e3758151-7df7-4fd8-ab8a-c126be192c3c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Math\Quaternion">
-      <UniqueIdentifier>{34c1eeeb-a825-439c-a3ae-9d7226121e34}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Math\Bounding Volumes">
-      <UniqueIdentifier>{64632e50-5b81-4b69-8914-25a4afcc7c82}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Math\Noise">
-      <UniqueIdentifier>{a5a4b2c0-4933-435f-b0aa-5f4107752e1a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Math\Hash">
-      <UniqueIdentifier>{7301984a-92fe-44d1-8c93-9c70cc679179}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Reflection">
-      <UniqueIdentifier>{19bf65b6-9a34-43e9-9cdb-26982891fb57}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Utilities">
       <UniqueIdentifier>{2ec0074e-3373-4dd7-90b4-150b5c9b3b81}</UniqueIdentifier>
     </Filter>
     <Filter Include="Libraries">
       <UniqueIdentifier>{be569ec3-8535-47ac-a4ef-ed9e7da88040}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Logs">
-      <UniqueIdentifier>{6feb2fad-a0a3-4952-b879-a78cfca47da1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Profiler">
-      <UniqueIdentifier>{129ceb6c-25f7-4ca9-987b-15cc0f780686}</UniqueIdentifier>
     </Filter>
     <Filter Include="Timer">
       <UniqueIdentifier>{8c332f64-f7fe-4d28-9f4f-051e6e7fec46}</UniqueIdentifier>
@@ -64,38 +19,8 @@
     <Filter Include="Network\Messages\Handlers">
       <UniqueIdentifier>{bba9d7d7-847f-49d2-9a88-6430517263e7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Reflection\Class">
-      <UniqueIdentifier>{589adffd-2d13-4fdb-a6c9-3238321b45a0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Reflection\Enum">
-      <UniqueIdentifier>{69727d44-4120-46df-b9ea-f6d0a281f934}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Reflection\Field">
-      <UniqueIdentifier>{11faf90e-3cc9-4cda-a793-ab3427a39c36}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Reflection\Primitive">
-      <UniqueIdentifier>{ef48bbb0-31ac-45e2-8f11-0b8a3b9f37f9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Reflection\Type">
-      <UniqueIdentifier>{826d8247-bd83-446a-8e8d-a0f390155db2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Events">
       <UniqueIdentifier>{baf2d738-9110-4b41-9b57-4ebc27eb2117}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Concurrency">
-      <UniqueIdentifier>{86c014cf-6d87-4960-96e7-c53c16829a95}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Debug">
-      <UniqueIdentifier>{6db6eed6-57b4-4ad7-9a8a-0e679e2a3e19}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Serialization">
-      <UniqueIdentifier>{088c40f7-8525-4913-b739-988ae37e3186}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Serialization\Binary">
-      <UniqueIdentifier>{4b3b4aef-1a85-40a9-8833-d6e352019dac}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Serialization\JSON">
-      <UniqueIdentifier>{6de8a758-dc9d-4af8-aa3f-b1459f834ee6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Streams">
       <UniqueIdentifier>{4ba939fd-b107-4e66-a533-1d4544e3ca60}</UniqueIdentifier>
@@ -112,13 +37,143 @@
     <Filter Include="Streams\File">
       <UniqueIdentifier>{90db7c90-f20e-4c6b-8bb6-35edaa19de88}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Concurrency">
+      <UniqueIdentifier>{68882d00-4fc2-4055-8314-01008e88bc7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Debug">
+      <UniqueIdentifier>{51827456-9ed1-4b9e-a3d9-2775ec1ebff0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logs">
+      <UniqueIdentifier>{5c07909e-cc4e-485b-90c4-4e39739f7b8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{f2a3e88e-7930-43d5-bacf-b833e121ca55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Vector">
+      <UniqueIdentifier>{6125eb2b-eb00-4d53-91c4-a4ec151ed3e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Matrix">
+      <UniqueIdentifier>{935d36c3-480a-4450-8938-9601e96a35d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Frustum">
+      <UniqueIdentifier>{ba75dc33-1304-4521-a78b-83da50cd5769}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Color">
+      <UniqueIdentifier>{f39fe68b-ffbb-4ef7-bd5b-6258da6b7e8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Plane">
+      <UniqueIdentifier>{9c292a35-646e-4760-8312-72d3d8e1e57e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Angles">
+      <UniqueIdentifier>{7d06f55c-43b7-4862-b422-7a07ce69830d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Ray">
+      <UniqueIdentifier>{d44d8fc1-5cd5-4146-8202-f132faef93fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Quaternion">
+      <UniqueIdentifier>{ce242b20-51c5-40e5-8a8c-23c67e1ae5e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Bounding Volumes">
+      <UniqueIdentifier>{54a0e346-4b0d-4663-92ce-1380b8d8c126}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Noise">
+      <UniqueIdentifier>{32dfb459-4196-4d14-9ef5-c60a1e91cb5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Hash">
+      <UniqueIdentifier>{84e58d97-acd7-495f-9bac-3fcc87f1af03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Profiler">
+      <UniqueIdentifier>{e65ce8ad-271f-4107-a73d-5c98b30a57ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Reflection">
+      <UniqueIdentifier>{f2af19a1-44b1-4e1e-8be8-b142dc78957c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Reflection\Class">
+      <UniqueIdentifier>{008ead4c-cd37-47dd-95a4-d684b734173f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Reflection\Enum">
+      <UniqueIdentifier>{201f8f76-ba8f-459c-a527-3370b1ba80dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Reflection\Field">
+      <UniqueIdentifier>{272bae43-e2c3-48dd-ba58-738e8e76d838}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Reflection\Primitive">
+      <UniqueIdentifier>{76ad333b-7966-4b38-a3ea-24dd1f8318f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Reflection\Type">
+      <UniqueIdentifier>{144de0a7-250d-406a-8792-61ec0af20148}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serialization">
+      <UniqueIdentifier>{6ee0c685-3ebd-4934-8067-0b95bd854e7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serialization\Binary">
+      <UniqueIdentifier>{6292df5a-41a6-4c87-b402-df4b15b3f53a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serialization\JSON">
+      <UniqueIdentifier>{4649363a-29cf-4c56-bbf2-d299e3e362b2}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Streams\File\Watcher">
-      <UniqueIdentifier>{946baa8f-8d96-40b9-a4bf-e6edfac7dca9}</UniqueIdentifier>
+      <UniqueIdentifier>{63ffccc4-ff22-49bd-9741-b97d2c8e5d60}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\Core\Utilities.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\Core.cpp" />
+    <ClCompile Include="..\..\src\Core\Stream.cpp">
+      <Filter>Streams</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\Network.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\Message.cpp">
+      <Filter>Network\Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\WebStream.cpp">
+      <Filter>Streams\Web</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\DynamicLibrary.cpp">
+      <Filter>Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\FileSystem.cpp">
+      <Filter>Streams\File</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\Timer.cpp">
+      <Filter>Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\Memory.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\Archive.cpp">
+      <Filter>Archive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\PhysfsStream.cpp">
+      <Filter>Streams</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\FileStream.cpp">
+      <Filter>Streams\File</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\ArchiveZip.cpp">
+      <Filter>Archive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\Concurrency.cpp">
+      <Filter>Concurrency</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Win32\ConcurrencyWin32.cpp">
+      <Filter>Concurrency</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\StackWalker.cpp">
+      <Filter>Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\Log.cpp">
+      <Filter>Logs</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\Core\math\Math.cpp">
       <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Math\Vector.cpp">
+      <Filter>Math\Vector</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\math\Matrix4x3.cpp">
       <Filter>Math\Matrix</Filter>
@@ -156,18 +211,11 @@
     <ClCompile Include="..\..\src\Core\math\Hash.cpp">
       <Filter>Math\Hash</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Core\Utilities.cpp">
-      <Filter>Utilities</Filter>
+    <ClCompile Include="..\..\src\Core\Profiler.cpp">
+      <Filter>Profiler</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Core\Core.cpp" />
-    <ClCompile Include="..\..\src\Core\Stream.cpp">
-      <Filter>Streams</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\Network.cpp">
-      <Filter>Network</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\Message.cpp">
-      <Filter>Network\Messages</Filter>
+    <ClCompile Include="..\..\src\Core\reflection\Object.cpp">
+      <Filter>Reflection</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\reflection\Class.cpp">
       <Filter>Reflection\Class</Filter>
@@ -184,74 +232,93 @@
     <ClCompile Include="..\..\src\Core\reflection\Type.cpp">
       <Filter>Reflection\Type</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Core\WebStream.cpp">
-      <Filter>Streams\Web</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\Log.cpp">
-      <Filter>Logs</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Core\io\Serialization.cpp">
       <Filter>Serialization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\io\JsonSerializer.cpp">
-      <Filter>Serialization\JSON</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\io\BinarySerializer.cpp">
       <Filter>Serialization\Binary</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Core\reflection\Object.cpp">
-      <Filter>Reflection</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\StackWalker.cpp">
-      <Filter>Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\DynamicLibrary.cpp">
-      <Filter>Libraries</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\FileSystem.cpp">
-      <Filter>Streams\File</Filter>
+    <ClCompile Include="..\..\src\Core\io\JsonSerializer.cpp">
+      <Filter>Serialization\JSON</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\FileWatcher.cpp">
       <Filter>Streams\File\Watcher</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Core\Profiler.cpp">
-      <Filter>Profiler</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\Timer.cpp">
-      <Filter>Timer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\Memory.cpp">
-      <Filter>Memory</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Math\Vector.cpp">
-      <Filter>Math\Vector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\ReferenceCount.cpp">
-      <Filter>Memory</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\Concurrency.cpp">
-      <Filter>Concurrency</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\Archive.cpp">
-      <Filter>Archive</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Win32\FileWatcherWin32.cpp">
       <Filter>Streams\File\Watcher</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Win32\ConcurrencyWin32.cpp">
-      <Filter>Concurrency</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\PhysfsStream.cpp">
-      <Filter>Streams</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\FileStream.cpp">
-      <Filter>Streams\File</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\ArchiveZip.cpp">
-      <Filter>Archive</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\inc\vapor\net\Network.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\net\Message.h">
+      <Filter>Network\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\net\MessageHandler.h">
+      <Filter>Network\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\net\Messages.h">
+      <Filter>Network\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\WebStream.h">
+      <Filter>Streams\Web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\core\FileSystem.h">
+      <Filter>Streams\File</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\Memory.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\API.h" />
+    <ClInclude Include="..\..\inc\Core\String.h" />
+    <ClInclude Include="..\..\inc\vapor\ReferenceCount.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\Archive.h">
+      <Filter>Archive</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\CompileOptions.h" />
+    <ClInclude Include="..\..\inc\Core\Stream.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\Platform.h" />
+    <ClInclude Include="..\..\inc\Core\Pointers.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\Event.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\Delegate.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\DynamicLibrary.h">
+      <Filter>Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\Timer.h">
+      <Filter>Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\Utilities.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\Concurrency.h">
+      <Filter>Concurrency</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\ConcurrentQueue.h">
+      <Filter>Concurrency</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\StackWalker.h">
+      <Filter>Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\Log.h">
+      <Filter>Logs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\math\Helpers.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Math\Vector.h">
+      <Filter>Math\Vector</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\inc\vapor\math\Matrix4x3.h">
       <Filter>Math\Matrix</Filter>
     </ClInclude>
@@ -288,32 +355,29 @@
     <ClInclude Include="..\..\inc\vapor\math\Hash.h">
       <Filter>Math\Hash</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\Utilities.h">
-      <Filter>Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\vapor\Profiler.h">
       <Filter>Profiler</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\net\Network.h">
-      <Filter>Network</Filter>
+    <ClInclude Include="..\..\inc\Core\Object.h">
+      <Filter>Reflection</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\net\Message.h">
-      <Filter>Network\Messages</Filter>
+    <ClInclude Include="..\..\inc\Core\Reflection.h">
+      <Filter>Reflection</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\net\MessageHandler.h">
-      <Filter>Network\Messages</Filter>
+    <ClInclude Include="..\..\inc\vapor\core\Helpers.h">
+      <Filter>Reflection</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\net\Messages.h">
-      <Filter>Network\Messages</Filter>
+    <ClInclude Include="..\..\inc\vapor\Registry.h">
+      <Filter>Reflection</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\core\Class.h">
       <Filter>Reflection\Class</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\core\Field.h">
-      <Filter>Reflection\Field</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\vapor\core\Enum.h">
       <Filter>Reflection\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\core\Field.h">
+      <Filter>Reflection\Field</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\core\Primitive.h">
       <Filter>Reflection\Primitive</Filter>
@@ -321,90 +385,23 @@
     <ClInclude Include="..\..\inc\vapor\core\Type.h">
       <Filter>Reflection\Type</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\WebStream.h">
-      <Filter>Streams\Web</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\Registry.h">
-      <Filter>Reflection</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\vapor\Serialization.h">
       <Filter>Serialization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\io\JsonSerializer.h">
-      <Filter>Serialization\JSON</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\io\BinarySerializer.h">
-      <Filter>Serialization\Binary</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\Chunk.h">
       <Filter>Serialization\Binary</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\StackWalker.h">
-      <Filter>Debug</Filter>
+    <ClInclude Include="..\..\inc\vapor\io\BinarySerializer.h">
+      <Filter>Serialization\Binary</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\core\Helpers.h">
-      <Filter>Reflection</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\core\FileSystem.h">
-      <Filter>Streams\File</Filter>
+    <ClInclude Include="..\..\inc\vapor\io\JsonSerializer.h">
+      <Filter>Serialization\JSON</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\core\FileWatcher.h">
       <Filter>Streams\File\Watcher</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\Core\Memory.h">
-      <Filter>Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\Core\Concurrency.h">
-      <Filter>Concurrency</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\Core\API.h" />
-    <ClInclude Include="..\..\inc\vapor\math\Helpers.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\Math\Vector.h">
-      <Filter>Math\Vector</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\Core\String.h" />
-    <ClInclude Include="..\..\inc\vapor\ReferenceCount.h">
-      <Filter>Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\Core\Archive.h">
-      <Filter>Archive</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\CompileOptions.h" />
     <ClInclude Include="..\..\src\Win32\FileWatcherWin32.h">
       <Filter>Streams\File\Watcher</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\Core\Stream.h">
-      <Filter>Streams</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\Core\Platform.h" />
-    <ClInclude Include="..\..\inc\Core\Pointers.h">
-      <Filter>Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\Core\Event.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\Core\Delegate.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\Core\DynamicLibrary.h">
-      <Filter>Libraries</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\Core\ConcurrentQueue.h">
-      <Filter>Concurrency</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\Core\Reflection.h">
-      <Filter>Reflection</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\Core\Object.h">
-      <Filter>Reflection</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\Core\Log.h">
-      <Filter>Logs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\Core\Timer.h">
-      <Filter>Timer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -24,12 +24,12 @@ static void Run(void* data)
 
 void TestThreads(CuTest *tc)
 {
-	Thread* thread = ThreadCreate( AllocatorGetDefault() );
+	Thread* thread = ThreadCreate( AllocatorGetHeap() );
 
 	int data = 42;
 	ThreadStart(thread, Run, &data);
 	ThreadJoin(thread);
-	ThreadDestroy(thread, AllocatorGetDefault() );
+	ThreadDestroy(thread, AllocatorGetHeap() );
 
 	CuAssertIntEquals(tc, 42, value);
 }
@@ -50,10 +50,10 @@ void TestCondition(CuTest *tc)
 {
 	value = 20;
 
-	Thread* thread = ThreadCreate( AllocatorGetDefault() );
+	Thread* thread = ThreadCreate( AllocatorGetHeap() );
 
-	cond = ConditionCreate( AllocatorGetDefault() );
-	mutex = MutexCreate( AllocatorGetDefault() );
+	cond = ConditionCreate( AllocatorGetHeap() );
+	mutex = MutexCreate( AllocatorGetHeap() );
 	
 	ThreadStart(thread, Run2, nullptr);
 	CuAssertIntEquals(tc, 20, value);
@@ -66,9 +66,9 @@ void TestCondition(CuTest *tc)
 	ThreadJoin(thread);
 	CuAssertIntEquals(tc, 30, value);
 
-	MutexDestroy( mutex, AllocatorGetDefault() );
-	ConditionDestroy( cond, AllocatorGetDefault() );
-	ThreadDestroy( thread, AllocatorGetDefault() );
+	MutexDestroy( mutex, AllocatorGetHeap() );
+	ConditionDestroy( cond, AllocatorGetHeap() );
+	ThreadDestroy( thread, AllocatorGetHeap() );
 }
 
 void TestAtomics(CuTest *tc)

@@ -70,7 +70,7 @@ int main(int argc, const char** argv)
 	Example example;
 	//example.run();
 
-	Archive* archive = ArchiveCreateFromZip( AllocatorGetDefault(), "Teste.zip" );
+	Archive* archive = ArchiveCreateFromZip( AllocatorGetHeap(), "Teste.zip" );
 	
 	std::vector<Path> files;
 	//ArchiveEnumerateFiles(archive, files);
@@ -78,7 +78,7 @@ int main(int argc, const char** argv)
 	for(size_t i = 0; i < files.size(); i++)
 		printf("ZIP file entry: %s\n", files[i].c_str());
 
-	ArchiveDestroy(archive, AllocatorGetDefault());
+	ArchiveDestroy(archive, AllocatorGetHeap());
 
 	return EXIT_SUCCESS;
 }

@@ -44,8 +44,8 @@ struct Thread
 	void* Userdata;
 };
 
-API_CORE Thread* ThreadCreate(MemoryAllocator*);
-API_CORE void    ThreadDestroy(Thread*, MemoryAllocator*);
+API_CORE Thread* ThreadCreate(Allocator*);
+API_CORE void    ThreadDestroy(Thread*, Allocator*);
 API_CORE bool    ThreadStart(Thread*, ThreadFunction, void*);
 API_CORE bool    ThreadJoin(Thread*);
 API_CORE bool    ThreadResume(Thread*);
@@ -69,8 +69,8 @@ struct Mutex
 #endif
 };
 
-API_CORE Mutex* MutexCreate(MemoryAllocator*);
-API_CORE void   MutexDestroy(Mutex*, MemoryAllocator*);
+API_CORE Mutex* MutexCreate(Allocator*);
+API_CORE void   MutexDestroy(Mutex*, Allocator*);
 API_CORE void   MutexInit(Mutex*);
 API_CORE void   MutexLock(Mutex*);
 API_CORE void   MutexUnlock(Mutex*);
@@ -85,8 +85,8 @@ struct Condition
 #endif
 };
 
-API_CORE Condition* ConditionCreate(MemoryAllocator*);
-API_CORE void       ConditionDestroy(Condition*, MemoryAllocator*);
+API_CORE Condition* ConditionCreate(Allocator*);
+API_CORE void       ConditionDestroy(Condition*, Allocator*);
 API_CORE void       ConditionInit(Condition*);
 API_CORE void       ConditionWait(Condition*, Mutex*);
 API_CORE void       ConditionWakeOne(Condition*);
@@ -122,8 +122,8 @@ struct Task
 	void* Userdata;
 };
 
-API_CORE Task* TaskCreate(MemoryAllocator*);
-API_CORE void  TaskDestroy(Task*, MemoryAllocator*);
+API_CORE Task* TaskCreate(Allocator*);
+API_CORE void  TaskDestroy(Task*, Allocator*);
 API_CORE void  TaskRun(Task*);
 
 struct TaskEvent
@@ -143,8 +143,8 @@ struct TaskPool
 	bool IsStopping;
 };
 
-API_CORE TaskPool*  TaskPoolCreate(MemoryAllocator*, int8 Size);
-API_CORE void       TaskPoolDestroy(TaskPool*, MemoryAllocator*);
+API_CORE TaskPool*  TaskPoolCreate(Allocator*, int8 Size);
+API_CORE void       TaskPoolDestroy(TaskPool*, Allocator*);
 API_CORE void       TaskPoolAdd(TaskPool*, Task*);
 API_CORE void       TaskPoolUpdate(TaskPool*);
 

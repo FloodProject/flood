@@ -18,7 +18,7 @@ using namespace vapor;
 
 void TestArchive(CuTest *tc)
 {
-	Archive* archive = ArchiveCreateFromZip( AllocatorGetDefault(), "teste.zip" );
+	ArchivePtr archive( pArchiveCreateFromZip(AllocatorGlobalHeap, "teste.zip") );
 	
 	std::vector<Path> files;
 	ArchiveEnumerateFiles(archive, files);
@@ -31,10 +31,10 @@ void TestArchive(CuTest *tc)
 
 	std::vector<Path> dirs;
 	ArchiveEnumerateDirectories(archive, dirs);
+	
 	CuAssertIntEquals( tc, 3, dirs.size() );
 	CuAssertTrue(tc, ArchiveExistsDirectory(archive, "files") );
-
-	ArchiveDestroy( archive, AllocatorGetDefault() );
+	CuAssertTrue(tc, !ArchiveExistsDirectory(archive, "dunno") );
 }
 
 CuSuite* GetSuiteArchives()

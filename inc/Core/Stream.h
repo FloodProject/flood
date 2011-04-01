@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "Core/Pointers.h"
+
 NAMESPACE_EXTERN_BEGIN
 
 //-----------------------------------//
@@ -72,11 +74,11 @@ struct Stream
  * or zip: would be valid schemes for an HTTP or ZIP stream.
  */
 
-API_CORE Stream*  StreamCreateFromURI(MemoryAllocator*, const Path&, StreamMode::Enum);
-API_CORE Stream*  StreamCreateFromFile(MemoryAllocator*, const Path&, StreamMode::Enum);
-API_CORE Stream*  StreamCreateFromPhysfs(MemoryAllocator*, const Path&, StreamMode::Enum);
+API_CORE Stream*  StreamCreateFromURI(Allocator*, const Path&, StreamMode::Enum);
+API_CORE Stream*  StreamCreateFromFile(Allocator*, const Path&, StreamMode::Enum);
+API_CORE Stream*  StreamCreateFromPhysfs(Allocator*, const Path&, StreamMode::Enum);
 
-API_CORE void   StreamDestroy(Stream*, MemoryAllocator*);
+API_CORE void   StreamDestroy(Stream*, Allocator*);
 API_CORE bool   StreamClose(Stream*);
 
 API_CORE int64  StreamRead(Stream*, std::vector<uint8>& data);
@@ -91,6 +93,11 @@ API_CORE int64  StreamSetPosition(Stream*, int64, StreamSeekMode::Enum);
 
 API_CORE int64  StreamGetSize(Stream*);
 
+// Pointer helpers.
+typedef scoped_ptr<Stream, StreamDestroy> StreamPtr;
+#define pStreamCreateFromURI(alloc, ...) CreateScopedPtr(StreamCreateFromURI, alloc, __VA_ARGS__)
+#define pStreamCreateFromFile(alloc, ...) CreateScopedPtr(StreamCreateFromFile, alloc, __VA_ARGS__)
+#define pStreamCreateFromPhysfs(alloc, ...) CreateScopedPtr(StreamCreateFromPhysfs, alloc, __VA_ARGS__)
 //-----------------------------------//
 
 NAMESPACE_EXTERN_END

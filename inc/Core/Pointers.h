@@ -15,51 +15,27 @@ NAMESPACE_BEGIN
 
 //-----------------------------------//
 
-// Debug hooks
+// scoped_ptr mimics a built-in pointer except that it guarantees deletion
+// of the object pointed to, either on destruction of the scoped_ptr or via
+// an explicit reset(). scoped_ptr is based on Boost's scoped_ptr but extends
+// it with custom deallocators.
 
-#if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
-
-void sp_scalar_constructor_hook(void * p);
-void sp_scalar_destructor_hook(void * p);
-
-#endif
-
-//  scoped_ptr mimics a built-in pointer except that it guarantees deletion
-//  of the object pointed to, either on destruction of the scoped_ptr or via
-//  an explicit reset(). scoped_ptr is a simple solution for simple needs;
-//  use shared_ptr or std::auto_ptr if your needs are more complex.
-
-template<class T> class scoped_ptr // noncopyable
+template<typename T, void (*Destroy)(T*, Allocator*)>
+class scoped_ptr // noncopyable
 {
-private:
-
-    T * px;
-
-    scoped_ptr(scoped_ptr const &);
-    scoped_ptr & operator=(scoped_ptr const &);
-
-    typedef scoped_ptr<T> this_type;
-
-    void operator==( scoped_ptr const& ) const;
-    void operator!=( scoped_ptr const& ) const;
+    typedef scoped_ptr<T, Destroy> this_type;
 
 public:
 
     typedef T element_type;
 
-    explicit scoped_ptr( T * p = 0 ): px( p ) // never throws
-    {
-#if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
-        boost::sp_scalar_constructor_hook( px );
-#endif
-    }
+    explicit scoped_ptr( T* p, Allocator* alloc )
+		: px(p), mem(alloc)
+    { }
 
     ~scoped_ptr() // never throws
     {
-#if defined(BOOST_SP_ENABLE_DEBUG_HOOKS)
-        boost::sp_scalar_destructor_hook( px );
-#endif
-        delete px;
+		Destroy(px, mem);
     }
 
     void reset(T * p = 0) // never throws
@@ -85,21 +61,36 @@ public:
         return px;
     }
     
-    typedef T * this_type::*unspecified_bool_type;
-
-    operator unspecified_bool_type() const // never throws
+    operator bool() const // never throws
     {
-        return px == 0? 0: &this_type::px;
+        return px != nullptr;
     }
 
-    void swap(scoped_ptr & b) // never throws
+	operator T*() const
+	{
+		return px;
+	}
+
+	void swap(scoped_ptr & b) // never throws
     {
         T * tmp = b.px;
         b.px = px;
         px = tmp;
     }
+
+private:
+
+    T* px;
+	Allocator* mem;
+
+    scoped_ptr(scoped_ptr const &);
+    scoped_ptr & operator=(scoped_ptr const &);
+
+    void operator==( scoped_ptr const& ) const;
+    void operator!=( scoped_ptr const& ) const;
 };
 
+#if 0
 template<class T> inline void swap(scoped_ptr<T> & a, scoped_ptr<T> & b) // never throws
 {
     a.swap(b);
@@ -111,6 +102,10 @@ template<class T> inline T * get_pointer(scoped_ptr<T> const & p)
 {
     return p.get();
 }
+#endif
+
+#define CreateScopedPtr(create_fn, alloc, ...)                  \
+	create_fn(alloc, __VA_ARGS__), alloc
 
 //-----------------------------------//
 

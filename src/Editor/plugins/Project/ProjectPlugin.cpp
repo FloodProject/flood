@@ -115,14 +115,14 @@ void ProjectPlugin::onOpenButtonClick(wxCommandEvent& event)
 		return;
 
 	Path path = (String) fc.GetPath();
-	Stream* stream = StreamCreateFromFile( AllocatorGetDefault(), path, StreamMode::Read );
+	Stream* stream = StreamCreateFromFile( AllocatorGetHeap(), path, StreamMode::Read );
 	
 	if( !stream ) return;
 
 	JsonDeserializer json( *stream );
 	Object* object = json.deserialize();
 
-	StreamDestroy(stream, AllocatorGetDefault());
+	StreamDestroy(stream, AllocatorGetHeap());
 
 	if( !object )
 	{
@@ -178,7 +178,7 @@ bool ProjectPlugin::saveScene()
 	ScenePtr scene = engine->getSceneManager();
 	
 	Path path = (String) fc.GetPath();
-	Stream* stream = StreamCreateFromFile( AllocatorGetDefault(), path, StreamMode::Write );
+	Stream* stream = StreamCreateFromFile( AllocatorGetHeap(), path, StreamMode::Write );
 	
 	if( !stream ) return false;
 
@@ -187,7 +187,7 @@ bool ProjectPlugin::saveScene()
 	ObjectWalker walker(json);
 	walker.process(scene.get());
 
-	StreamDestroy(stream, AllocatorGetDefault());
+	StreamDestroy(stream, AllocatorGetHeap());
 
 	return true;
 }

@@ -9,6 +9,7 @@
 #pragma once
 
 #include "Core/API.h"
+#include "Core/Pointers.h"
 
 NAMESPACE_EXTERN_BEGIN
 
@@ -50,13 +51,13 @@ struct Archive
 };
 
 // Creates a new archive from a ZIP.
-API_CORE Archive* ArchiveCreateFromZip(MemoryAllocator*, const Path&);
+API_CORE Archive* ArchiveCreateFromZip(Allocator*, const Path&);
 
 // Creates a new archive from a directory.
-API_CORE Archive* ArchiveCreateFromDirectory(MemoryAllocator*, const Path&);
+API_CORE Archive* ArchiveCreateFromDirectory(Allocator*, const Path&);
 
 // Destroys the archive and deallocates its memory.
-API_CORE void ArchiveDestroy(Archive*, MemoryAllocator*);
+API_CORE void ArchiveDestroy(Archive*, Allocator*);
 
 // Opens the archive.
 API_CORE bool ArchiveOpen(Archive*, const Path&);
@@ -76,6 +77,11 @@ API_CORE void ArchiveEnumerateDirectories(Archive*, std::vector<Path>&);
 API_CORE bool FileExists(const Path&);
 API_CORE void FileEnumerateFiles(const Path&, std::vector<Path>&);
 API_CORE void FileEnumerateDirectories(const Path&, std::vector<Path>&);
+
+// Pointer helpers.
+typedef scoped_ptr<Archive, ArchiveDestroy> ArchivePtr;
+#define pArchiveCreateFromZip(alloc, ...) CreateScopedPtr(ArchiveCreateFromZip, alloc, __VA_ARGS__)
+#define pArchiveCreateFromDirectory(alloc, ...) CreateScopedPtr(ArchiveCreateFromDirectory, alloc, __VA_ARGS__)
 
 //-----------------------------------//
 

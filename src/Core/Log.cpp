@@ -44,7 +44,7 @@ static void LogConsoleHandler(LogEntry* entry)
 
 //-----------------------------------//
 
-Log* LogCreate(MemoryAllocator* mem)
+Log* LogCreate(Allocator* mem)
 {
 	Log* log = Allocate<Log>(mem);
 	
@@ -60,7 +60,7 @@ Log* LogCreate(MemoryAllocator* mem)
 
 //-----------------------------------//
 
-void LogDestroy(Log* log, MemoryAllocator* mem)
+void LogDestroy(Log* log, Allocator* mem)
 {
 	if( !log ) return;
 	if( gs_Log == log ) LogSetDefault(nullptr);

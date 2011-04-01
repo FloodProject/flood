@@ -205,7 +205,7 @@ enum
 static bool isUnderVersionControl(const ResourcePtr& res)
 {
 #if 0
-	Stream* stream = StreamCreateFromFile( AllocatorGetDefault(), res->getPath() );
+	Stream* stream = StreamCreateFromFile( AllocatorGetHeap(), res->getPath() );
 	/*, StreamMode::Read );*/
 
 	const std::string& fullPath = PathGetCurrentDir()

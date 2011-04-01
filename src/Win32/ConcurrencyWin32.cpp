@@ -17,7 +17,7 @@
 #include <Windows.h>
 #include <process.h>
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -212,6 +212,6 @@ int32 AtomicDecrement(volatile Atomic* atomic) { return ::InterlockedDecrement(a
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END
 
 #endif

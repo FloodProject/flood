@@ -57,10 +57,10 @@ bool Font_Loader::decode(const Stream& stream, Resource* res)
 		return false;
 
 	Stream* streamGlyphs = StreamCreateFromFile(
-		AllocatorGetDefault(), glyphsFilename, StreamMode::Read);
+		AllocatorGetHeap(), glyphsFilename, StreamMode::Read);
 	
 	StreamRead(streamGlyphs, data);
-	StreamDestroy(streamGlyphs, AllocatorGetDefault());
+	StreamDestroy(streamGlyphs, AllocatorGetHeap());
 
 	parseGlyphs();
 

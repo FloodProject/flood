@@ -40,7 +40,7 @@ static ArchiveFuncs gs_ZipArchiveFuncs =
 
 //-----------------------------------//
 
-Archive* ArchiveCreateFromZip(MemoryAllocator* mem, const Path& path)
+Archive* ArchiveCreateFromZip(Allocator* mem, const Path& path)
 {
 	Archive* archive = Allocate<Archive>(mem);
 	
@@ -50,7 +50,7 @@ Archive* ArchiveCreateFromZip(MemoryAllocator* mem, const Path& path)
 
 	if( !ArchiveOpen(archive, path) )
 	{
-		LogWarn("Error opening archive: %s", path.c_str());
+		//LogWarn("Error opening archive: %s", path.c_str());
 		Deallocate(mem, archive);
 		return nullptr;
 	}

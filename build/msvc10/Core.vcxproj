@@ -9,6 +9,10 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Release DLL|Win32">
+      <Configuration>Release DLL</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
@@ -34,6 +38,11 @@
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v100</PlatformToolset>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release DLL|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v100</PlatformToolset>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
@@ -46,13 +55,18 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release DLL|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)..\..\lib\$(Configuration)\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">$(SolutionDir)..\..\lib\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release DLL|Win32'">$(SolutionDir)..\..\lib\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)..\..\obj\$(ProjectName)\$(Configuration)\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">$(SolutionDir)..\..\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release DLL|Win32'">$(SolutionDir)..\..\obj\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)..\..\lib\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)..\..\obj\$(ProjectName)\$(Configuration)\</IntDir>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IncludePath);C:\Program Files\Visual Leak Detector\include;</IncludePath>
@@ -98,7 +112,32 @@
       <ProgramDataBaseFileName>$(TargetDir)$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>jansson_d.lib;physfsd.lib;zziplib_d.lib;zlibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>jansson_d.lib;zziplib_d.lib;zlibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\dep\zlib\lib\vc10;$(SolutionDir)..\..\dep\curl\lib\;$(SolutionDir)..\..\dep\jansson\lib\;$(SolutionDir)..\..\dep\zziplib\lib\;$(SolutionDir)..\..\dep\physfs\lib\vc10</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release DLL|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\dep\jansson\include;$(SolutionDir)..\..\dep\curl\include;$(SolutionDir)..\..\dep\misc\include;$(SolutionDir)..\..\dep\zziplib\include;$(SolutionDir)..\..\dep\physfs\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>API_CORE_DLL;API_CORE_DLL_EXPORT;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Core/API.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4231;4530;4190;4251</DisableSpecificWarnings>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <ExceptionHandling>false</ExceptionHandling>
+      <ProgramDataBaseFileName>$(TargetDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <OmitFramePointers>true</OmitFramePointers>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>jansson_d.lib;zziplib_d.lib;zlibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\dep\zlib\lib\vc10;$(SolutionDir)..\..\dep\curl\lib\;$(SolutionDir)..\..\dep\jansson\lib\;$(SolutionDir)..\..\dep\zziplib\lib\;$(SolutionDir)..\..\dep\physfs\lib\vc10</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -128,6 +167,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\Core\Archive.cpp">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">_CRT_SECURE_NO_WARNINGS;_DEBUG;___DEBUG;API_CORE_DLL;API_CORE_DLL_EXPORT;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release DLL|Win32'">_CRT_SECURE_NO_WARNINGS;_DEBUG;___DEBUG;API_CORE_DLL;API_CORE_DLL_EXPORT;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_CRT_SECURE_NO_WARNINGS;_DEBUG;___DEBUG;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">_CRT_SECURE_NO_WARNINGS;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
@@ -141,30 +181,26 @@
     <ClCompile Include="..\..\src\Core\io\JsonSerializer.cpp" />
     <ClCompile Include="..\..\src\Core\io\Serialization.cpp" />
     <ClCompile Include="..\..\src\Core\Log.cpp" />
+    <ClCompile Include="..\..\src\Core\math\BoundingBox.cpp" />
+    <ClCompile Include="..\..\src\Core\math\BoundingSphere.cpp" />
+    <ClCompile Include="..\..\src\Core\math\Color.cpp" />
+    <ClCompile Include="..\..\src\Core\math\EulerAngles.cpp" />
+    <ClCompile Include="..\..\src\Core\math\Frustum.cpp" />
+    <ClCompile Include="..\..\src\Core\math\Hash.cpp" />
     <ClCompile Include="..\..\src\Core\math\Math.cpp" />
     <ClCompile Include="..\..\src\Core\math\Matrix4x3.cpp" />
     <ClCompile Include="..\..\src\Core\math\Matrix4x4.cpp" />
-    <ClCompile Include="..\..\src\Core\math\Frustum.cpp" />
-    <ClCompile Include="..\..\src\Core\math\Color.cpp" />
-    <ClCompile Include="..\..\src\Core\math\Plane.cpp" />
-    <ClCompile Include="..\..\src\Core\math\EulerAngles.cpp" />
-    <ClCompile Include="..\..\src\Core\math\Ray.cpp" />
-    <ClCompile Include="..\..\src\Core\math\Quaternion.cpp" />
-    <ClCompile Include="..\..\src\Core\math\BoundingBox.cpp" />
-    <ClCompile Include="..\..\src\Core\math\BoundingSphere.cpp" />
     <ClCompile Include="..\..\src\Core\math\Noise.cpp" />
-    <ClCompile Include="..\..\src\Core\math\Hash.cpp" />
+    <ClCompile Include="..\..\src\Core\math\Plane.cpp" />
+    <ClCompile Include="..\..\src\Core\math\Quaternion.cpp" />
+    <ClCompile Include="..\..\src\Core\math\Ray.cpp" />
     <ClCompile Include="..\..\src\Core\Memory.cpp" />
     <ClCompile Include="..\..\src\Core\Message.cpp" />
     <ClCompile Include="..\..\src\Core\Network.cpp" />
     <ClCompile Include="..\..\src\Core\PhysfsStream.cpp" />
     <ClCompile Include="..\..\src\Core\Profiler.cpp" />
-    <ClCompile Include="..\..\src\Core\ReferenceCount.cpp" />
     <ClCompile Include="..\..\src\Core\reflection\Class.cpp" />
-    <ClCompile Include="..\..\src\Core\reflection\Enum.cpp">
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4800;4244;4715;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">4800;4244;4715;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-    </ClCompile>
+    <ClCompile Include="..\..\src\Core\reflection\Enum.cpp" />
     <ClCompile Include="..\..\src\Core\reflection\Field.cpp" />
     <ClCompile Include="..\..\src\Core\reflection\Object.cpp" />
     <ClCompile Include="..\..\src\Core\reflection\Primitive.cpp" />
@@ -174,14 +210,16 @@
     <ClCompile Include="..\..\src\Core\Timer.cpp" />
     <ClCompile Include="..\..\src\Core\Utilities.cpp" />
     <ClCompile Include="..\..\src\Core\WebStream.cpp" />
-    <ClCompile Include="..\..\src\Math\Vector.cpp" />
     <ClCompile Include="..\..\src\Core\Core.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DLL|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Core/API.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">Core/API.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release DLL|Win32'">Core/API.h</PrecompiledHeaderFile>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\..\src\Math\Vector.cpp" />
     <ClCompile Include="..\..\src\Win32\ConcurrencyWin32.cpp" />
     <ClCompile Include="..\..\src\Win32\FileWatcherWin32.cpp" />
   </ItemGroup>
@@ -203,38 +241,38 @@
     <ClInclude Include="..\..\inc\Core\Stream.h" />
     <ClInclude Include="..\..\inc\Core\String.h" />
     <ClInclude Include="..\..\inc\Core\Timer.h" />
+    <ClInclude Include="..\..\inc\Core\Utilities.h" />
     <ClInclude Include="..\..\inc\Math\Vector.h" />
     <ClInclude Include="..\..\inc\vapor\Chunk.h" />
-    <ClInclude Include="..\..\inc\vapor\core\FileSystem.h" />
-    <ClInclude Include="..\..\inc\vapor\core\FileWatcher.h" />
-    <ClInclude Include="..\..\inc\vapor\core\Helpers.h" />
-    <ClInclude Include="..\..\inc\vapor\io\BinarySerializer.h" />
-    <ClInclude Include="..\..\inc\vapor\io\JsonSerializer.h" />
-    <ClInclude Include="..\..\inc\vapor\math\Helpers.h" />
-    <ClInclude Include="..\..\inc\vapor\math\Matrix4x3.h" />
-    <ClInclude Include="..\..\inc\vapor\math\Matrix4x4.h" />
-    <ClInclude Include="..\..\inc\vapor\math\Frustum.h" />
-    <ClInclude Include="..\..\inc\vapor\math\Color.h" />
-    <ClInclude Include="..\..\inc\vapor\math\Plane.h" />
-    <ClInclude Include="..\..\inc\vapor\math\EulerAngles.h" />
-    <ClInclude Include="..\..\inc\vapor\math\Ray.h" />
-    <ClInclude Include="..\..\inc\vapor\math\Quaternion.h" />
-    <ClInclude Include="..\..\inc\vapor\math\BoundingBox.h" />
-    <ClInclude Include="..\..\inc\vapor\math\BoundingSphere.h" />
-    <ClInclude Include="..\..\inc\vapor\math\Noise.h" />
-    <ClInclude Include="..\..\inc\vapor\math\Hash.h" />
     <ClInclude Include="..\..\inc\vapor\core\Class.h" />
     <ClInclude Include="..\..\inc\vapor\core\Enum.h" />
     <ClInclude Include="..\..\inc\vapor\core\Field.h" />
+    <ClInclude Include="..\..\inc\vapor\core\FileSystem.h" />
+    <ClInclude Include="..\..\inc\vapor\core\FileWatcher.h" />
+    <ClInclude Include="..\..\inc\vapor\core\Helpers.h" />
     <ClInclude Include="..\..\inc\vapor\core\Primitive.h" />
     <ClInclude Include="..\..\inc\vapor\core\Type.h" />
+    <ClInclude Include="..\..\inc\vapor\io\BinarySerializer.h" />
+    <ClInclude Include="..\..\inc\vapor\io\JsonSerializer.h" />
+    <ClInclude Include="..\..\inc\vapor\math\BoundingBox.h" />
+    <ClInclude Include="..\..\inc\vapor\math\BoundingSphere.h" />
+    <ClInclude Include="..\..\inc\vapor\math\Color.h" />
+    <ClInclude Include="..\..\inc\vapor\math\EulerAngles.h" />
+    <ClInclude Include="..\..\inc\vapor\math\Frustum.h" />
+    <ClInclude Include="..\..\inc\vapor\math\Hash.h" />
+    <ClInclude Include="..\..\inc\vapor\math\Helpers.h" />
+    <ClInclude Include="..\..\inc\vapor\math\Matrix4x3.h" />
+    <ClInclude Include="..\..\inc\vapor\math\Matrix4x4.h" />
+    <ClInclude Include="..\..\inc\vapor\math\Noise.h" />
+    <ClInclude Include="..\..\inc\vapor\math\Plane.h" />
+    <ClInclude Include="..\..\inc\vapor\math\Quaternion.h" />
+    <ClInclude Include="..\..\inc\vapor\math\Ray.h" />
+    <ClInclude Include="..\..\inc\vapor\Profiler.h" />
     <ClInclude Include="..\..\inc\vapor\ReferenceCount.h" />
     <ClInclude Include="..\..\inc\vapor\Registry.h" />
     <ClInclude Include="..\..\inc\vapor\Serialization.h" />
     <ClInclude Include="..\..\inc\vapor\StackWalker.h" />
-    <ClInclude Include="..\..\inc\vapor\Utilities.h" />
     <ClInclude Include="..\..\inc\vapor\WebStream.h" />
-    <ClInclude Include="..\..\inc\vapor\Profiler.h" />
     <ClInclude Include="..\..\inc\vapor\net\Network.h" />
     <ClInclude Include="..\..\inc\vapor\net\Message.h" />
     <ClInclude Include="..\..\inc\vapor\net\MessageHandler.h" />

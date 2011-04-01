@@ -32,14 +32,14 @@ public:
 
 	ConcurrentQueue()
 	{
-		mutex = MutexCreate(AllocatorGetDefault());
-		cond = ConditionCreate(AllocatorGetDefault());
+		mutex = MutexCreate(AllocatorGetHeap());
+		cond = ConditionCreate(AllocatorGetHeap());
 	}
 
 	~ConcurrentQueue()
 	{
-		MutexDestroy(mutex, AllocatorGetDefault());
-		ConditionDestroy(cond, AllocatorGetDefault());
+		MutexDestroy(mutex, AllocatorGetHeap());
+		ConditionDestroy(cond, AllocatorGetHeap());
 	}
 
 	void push(const T& value)

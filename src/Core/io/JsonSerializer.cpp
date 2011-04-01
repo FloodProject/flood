@@ -299,13 +299,13 @@ JsonDeserializer::JsonDeserializer(Stream& stream)
 
 static void* JsonAllocate(size_t size)
 {
-	MemoryAllocator* mem = AllocatorGetDefault();
+	Allocator* mem = AllocatorGetHeap();
 	return mem->allocate(mem, 0);
 }
 
 static void JsonDeallocate(void* p)
 {
-	MemoryAllocator* mem = AllocatorGetDefault();
+	Allocator* mem = AllocatorGetHeap();
 	return mem->deallocate(mem, p, 0);
 }
 

@@ -26,7 +26,7 @@ void ResourceTaskRun(Task* task)
 	Resource* resource = options->resource;
 	const Path& path = resource->getPath();
 	
-	Stream* stream = StreamCreateFromPhysfs( AllocatorGetDefault(), path, StreamMode::Read );
+	Stream* stream = StreamCreateFromPhysfs( AllocatorGetHeap(), path, StreamMode::Read );
 
 	ResourceManager* res = GetResourceManager();
 	ResourceLoader* loader = res->findLoader( PathGetFileExtension(path) );
@@ -55,8 +55,8 @@ void ResourceTaskRun(Task* task)
 
 	LogInfo("Loaded resource '%s'", path.c_str());
 
-	Deallocate( AllocatorGetDefault(), options );
-	StreamDestroy(stream, AllocatorGetDefault());
+	Deallocate( AllocatorGetHeap(), options );
+	StreamDestroy(stream, AllocatorGetHeap());
 }
 
 //-----------------------------------//

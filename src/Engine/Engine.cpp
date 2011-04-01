@@ -65,10 +65,10 @@ Engine::~Engine()
 	delete fileSystem;
 	delete audioDevice;
 
-	TaskPoolDestroy( taskPool, AllocatorGetDefault() );
+	TaskPoolDestroy( taskPool, AllocatorGetHeap() );
 	
-	StreamDestroy(stream, AllocatorGetDefault());
-	LogDestroy(log, AllocatorGetDefault());
+	StreamDestroy(stream, AllocatorGetHeap());
+	LogDestroy(log, AllocatorGetHeap());
 }
 
 //-----------------------------------//
@@ -101,7 +101,7 @@ void Engine::init( bool createWindow )
 	fileSystem = new FileSystem( app, argv ? argv[0] : nullptr );
 
 	// Creates the task system.
-	taskPool = TaskPoolCreate( AllocatorGetDefault(), 2 );
+	taskPool = TaskPoolCreate( AllocatorGetHeap(), 2 );
 
 	// Creates the resource manager.
 	resourceManager = new ResourceManager();
@@ -149,9 +149,9 @@ void Engine::setupLogger()
 //		name, VAPOR_ARRAY_SIZE(name),
 //		"%Y_%m_%d-%H_%M_%S.html", timeinfo);
 
-	stream = StreamCreateFromFile( AllocatorGetDefault(), "Log.html", StreamMode::Write);
+	stream = StreamCreateFromFile( AllocatorGetHeap(), "Log.html", StreamMode::Write);
 	
-	log = LogCreate( AllocatorGetDefault() );
+	log = LogCreate( AllocatorGetHeap() );
 	//log->add( new LogSinkHTML(*stream) );
 }
 

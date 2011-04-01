@@ -32,7 +32,7 @@ bool ArchiveOpen(Archive* archive, const String& path)
 
 //-----------------------------------//
 
-void ArchiveDestroy(Archive* archive, MemoryAllocator* mem)
+void ArchiveDestroy(Archive* archive, Allocator* mem)
 {
 	if( !archive ) return;
 	archive->fn->close(archive);

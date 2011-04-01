@@ -15,7 +15,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-Stream* StreamCreateFromURI(MemoryAllocator*, const Path&)
+Stream* StreamCreateFromURI(Allocator*, const Path&)
 {
 	assert("TODO: Creating URIs from schemes");
 	return nullptr;
@@ -31,11 +31,12 @@ bool StreamClose(Stream* stream)
 
 //-----------------------------------//
 
-void StreamDestroy(Stream* stream, MemoryAllocator* mem)
+void StreamDestroy(Stream* stream, Allocator* mem)
 {
 	if( !StreamClose(stream) )
 	{
-		LogDebug("Error closing stream: %s", stream->path.c_str());
+		//LogDebug("Error closing stream: %s", stream->path.c_str());
+		return;
 	}
 
 	Deallocate(mem, stream);

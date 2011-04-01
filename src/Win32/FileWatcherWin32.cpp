@@ -205,7 +205,7 @@ WatchID FileWatcherWin32::addWatch(const String& directory)
 	
 	if(!watch)
 	{
-		LogWarn( "Could not watch directory %s", directory.c_str() );
+		//LogWarn( "Could not watch directory %s", directory.c_str() );
 		return 0;
 	}
 

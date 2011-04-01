@@ -14,30 +14,33 @@ NAMESPACE_EXTERN_BEGIN
 
 //-----------------------------------//
 
-typedef void* (*MemoryAllocateFunction)(MemoryAllocator*, int32);
-typedef void (*MemoryFreeFunction)(MemoryAllocator*, void*, int32);
+typedef void* (*MemoryAllocateFunction)(Allocator*, int32);
+typedef void (*MemoryFreeFunction)(Allocator*, void*, int32);
 
-struct MemoryAllocator
+struct Allocator
 {
 	MemoryAllocateFunction allocate;
 	MemoryFreeFunction deallocate;
 	const char* group;
 };
 
-API_CORE MemoryAllocator* AllocatorGetDefault();
-API_CORE MemoryAllocator* AllocatorGetStack();
+extern Allocator* AllocatorGlobalHeap;
+extern Allocator* AllocatorGlobalStack;
 
-API_CORE MemoryAllocator* AllocatorCreateHeap( MemoryAllocator* );
-API_CORE MemoryAllocator* AllocatorCreateStack( MemoryAllocator* );
-API_CORE MemoryAllocator* AllocatorCreatePage( MemoryAllocator* );
-API_CORE MemoryAllocator* AllocatorCreatePool( MemoryAllocator* );
-API_CORE MemoryAllocator* AllocatorCreateTemporary( MemoryAllocator* );
+API_CORE Allocator* AllocatorGetHeap();
+API_CORE Allocator* AllocatorGetStack();
+
+API_CORE Allocator* AllocatorCreateHeap( Allocator* );
+API_CORE Allocator* AllocatorCreateStack( Allocator* );
+API_CORE Allocator* AllocatorCreatePage( Allocator* );
+API_CORE Allocator* AllocatorCreatePool( Allocator* );
+API_CORE Allocator* AllocatorCreateTemporary( Allocator* );
 
 EXTERN_END
 
 //-----------------------------------//
 
-template<typename T> T* Allocate(MemoryAllocator* mem)
+template<typename T> T* Allocate(Allocator* mem)
 {
 	// Allocates memory for the object.
 	T* object = (T*) mem->allocate( mem, sizeof(T) );
@@ -48,7 +51,7 @@ template<typename T> T* Allocate(MemoryAllocator* mem)
 	return object;
 }
 
-template<typename T> void Deallocate(MemoryAllocator* mem, T* object)
+template<typename T> void Deallocate(Allocator* mem, T* object)
 {
 	// Calls the object destructor.
 	if(object) object->~T();
