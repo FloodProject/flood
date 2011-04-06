@@ -15,9 +15,9 @@ namespace vapor {
 
 //-----------------------------------//
 
-Thread* ThreadCreate(Allocator* mem)
+Thread* ThreadCreate(Allocator* alloc)
 {
-	Thread* thread = Allocate<Thread>(mem);
+	Thread* thread = Allocate<Thread>(alloc);
 
 	if( !thread ) return nullptr;
 
@@ -32,17 +32,17 @@ Thread* ThreadCreate(Allocator* mem)
 
 //-----------------------------------//
 
-void ThreadDestroy(Thread* thread, Allocator* mem)
+void ThreadDestroy(Thread* thread, Allocator* alloc)
 {
-	ThreadStop(thread);
-	Deallocate(mem, thread);
+	ThreadPause(thread);
+	Deallocate(alloc, thread);
 }
 
 //-----------------------------------//
 
-Mutex* MutexCreate(Allocator* mem)
+Mutex* MutexCreate(Allocator* alloc)
 {
-	Mutex* mutex = Allocate<Mutex>(mem);
+	Mutex* mutex = Allocate<Mutex>(alloc);
 	MutexInit(mutex);
 
 	return mutex;
@@ -50,16 +50,16 @@ Mutex* MutexCreate(Allocator* mem)
 
 //-----------------------------------//
 
-void MutexDestroy(Mutex* mutex, Allocator* mem)
+void MutexDestroy(Mutex* mutex, Allocator* alloc)
 {
-	Deallocate(mem, mutex);
+	Deallocate(alloc, mutex);
 }
 
 //-----------------------------------//
 
-Condition* ConditionCreate(Allocator* mem)
+Condition* ConditionCreate(Allocator* alloc)
 {
-	Condition* cond = Allocate<Condition>(mem);
+	Condition* cond = Allocate<Condition>(alloc);
 	ConditionInit(cond);
 
 	return cond;
@@ -67,24 +67,24 @@ Condition* ConditionCreate(Allocator* mem)
 
 //-----------------------------------//
 
-void ConditionDestroy(Condition* cond, Allocator* mem)
+void ConditionDestroy(Condition* cond, Allocator* alloc)
 {
-	Deallocate(mem, cond);
+	Deallocate(alloc, cond);
 }
 
 //-----------------------------------//
 
-Task* TaskCreate(Allocator* mem)
+Task* TaskCreate(Allocator* alloc)
 {
-	Task* task = Allocate<Task>(mem);
+	Task* task = Allocate<Task>(alloc);
 	return task;
 }
 
 //-----------------------------------//
 
-void TaskDestroy(Task* task, Allocator* mem)
+void TaskDestroy(Task* task, Allocator* alloc)
 {
-	Deallocate(mem, task);
+	Deallocate(alloc, task);
 }
 
 //-----------------------------------//
@@ -101,9 +101,9 @@ void TaskRun(Task* task)
 static void TaskPoolRun(void*);
 typedef std::vector<Thread*> ThreadQueue;
 
-TaskPool* TaskPoolCreate(Allocator* mem, int8 Size)
+TaskPool* TaskPoolCreate(Allocator* alloc, int8 Size)
 {
-	TaskPool* pool = Allocate<TaskPool>(mem);
+	TaskPool* pool = Allocate<TaskPool>(alloc);
 	
 	pool->IsStopping = false;
 
@@ -112,7 +112,7 @@ TaskPool* TaskPoolCreate(Allocator* mem, int8 Size)
 
 	for( size_t i = 0; i < (uint8) Size; i++ )
 	{
-		Thread* thread = ThreadCreate(mem);
+		Thread* thread = ThreadCreate(alloc);
 		threads.push_back(thread);
 		
 		ThreadStart(thread, TaskPoolRun, pool);
@@ -126,7 +126,7 @@ TaskPool* TaskPoolCreate(Allocator* mem, int8 Size)
 
 //-----------------------------------//
 
-void TaskPoolDestroy(TaskPool* pool, Allocator* mem)
+void TaskPoolDestroy(TaskPool* pool, Allocator* alloc)
 {
 	if( !pool ) return;
 	
@@ -137,10 +137,10 @@ void TaskPoolDestroy(TaskPool* pool, Allocator* mem)
 	for( size_t i = 0; i < threads.size(); i++ )
 	{
 		Thread* thread = threads[i];
-		ThreadDestroy(thread, mem);
+		ThreadDestroy(thread, alloc);
 	}
 
-	Deallocate<TaskPool>(mem, pool);
+	Deallocate<TaskPool>(alloc, pool);
 }
 
 //-----------------------------------//

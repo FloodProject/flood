@@ -73,9 +73,9 @@ float TimerGetCurrentTimeMs()
 
 //-----------------------------------//
 
-Timer* TimerCreate(Allocator* mem)
+Timer* TimerCreate(Allocator* alloc)
 {
-	Timer* timer = Allocate<Timer>(mem);
+	Timer* timer = Allocate<Timer>(alloc);
 	TimerReset(timer);
 
 	return timer;
@@ -83,9 +83,9 @@ Timer* TimerCreate(Allocator* mem)
 
 //-----------------------------------//
 
-void TimerDestroy(Timer* timer, Allocator* mem)
+void TimerDestroy(Timer* timer, Allocator* alloc)
 {
-	Deallocate(mem, timer);
+	Deallocate(alloc, timer);
 }
 
 //-----------------------------------//

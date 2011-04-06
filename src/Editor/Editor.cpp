@@ -148,7 +148,7 @@ void EditorFrame::createEngine()
 
 	// Mount the editor default media directories.
 	FileSystem* fs = engine->getFileSystem();
-	fs->mountDefaultLocations("Assets");
+	//fs->mountDefaultLocations("Assets");
 }
 
 //-----------------------------------//

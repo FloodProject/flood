@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Core/Concurrency.h"
-#include "Event.h"
+#include "Core/Event.h"
 
 NAMESPACE_EXTERN_BEGIN
 
@@ -44,7 +44,7 @@ API_CORE Log* LogCreate(Allocator*);
 API_CORE void LogDestroy(Log*, Allocator*);
 API_CORE void LogAddHandler(Log*, LogFunction);
 API_CORE void LogRemoveHandler(Log* log, LogFunction);
-API_CORE void LogWrite(Log*, LogLevel::Enum level, const char* msg, va_list args);
+API_CORE void LogWrite(Log*, LogEntry* entry);
 
 API_CORE Log* LogGetDefault();
 API_CORE void LogSetDefault(Log*);

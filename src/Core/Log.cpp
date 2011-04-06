@@ -19,7 +19,7 @@
 	#include <Windows.h>	
 #endif
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -44,12 +44,12 @@ static void LogConsoleHandler(LogEntry* entry)
 
 //-----------------------------------//
 
-Log* LogCreate(Allocator* mem)
+Log* LogCreate(Allocator* alloc)
 {
-	Log* log = Allocate<Log>(mem);
+	Log* log = Allocate<Log>(alloc);
 	
-	log->Timer = TimerCreate(mem);
-	log->Mutex = MutexCreate(mem);
+	log->Timer = TimerCreate(alloc);
+	log->Mutex = MutexCreate(alloc);
 
 	LogAddHandler(log, LogConsoleHandler);
 	
@@ -60,15 +60,15 @@ Log* LogCreate(Allocator* mem)
 
 //-----------------------------------//
 
-void LogDestroy(Log* log, Allocator* mem)
+void LogDestroy(Log* log, Allocator* alloc)
 {
 	if( !log ) return;
 	if( gs_Log == log ) LogSetDefault(nullptr);
 	
-	TimerDestroy(log->Timer, mem);
-	MutexDestroy(log->Mutex, mem);
+	TimerDestroy(log->Timer, alloc);
+	MutexDestroy(log->Mutex, alloc);
 
-	Deallocate<Log>(mem, log);
+	Deallocate<Log>(alloc, log);
 }
 
 //-----------------------------------//
@@ -85,28 +85,22 @@ void LogRemoveHandler(Log* log, LogFunction fn)
 
 //-----------------------------------//
 
-void LogWrite(Log* log, LogLevel::Enum level, const char* msg, va_list args)
+void LogWrite(Log* log, LogEntry* entry)
+{
+	MutexLock(log->Mutex);
+	log->Handlers(entry);
+	MutexUnlock(log->Mutex);
+}
+
+//-----------------------------------//
+
+static void LogFormat(LogEntry& entry, Log* log, LogLevel::Enum level, const char* msg, va_list args)
 {
 	String format = StringFormatArgs(msg, args);
 	
-	LogEntry entry;
 	entry.time = TimerGetElapsed(log->Timer);
 	entry.message = format;
 	entry.level = level;
-
-	MutexLock(log->Mutex);
-
-#if 0
-	for( size_t i = 0; i < log->Handlers.size(); i++ )
-	{
-		const LogFunction& fn = log->Handlers[i];
-		fn(&entry);
-	}
-#endif
-
-	log->Handlers(&entry);
-
-	MutexUnlock(log->Mutex);
 }
 
 //-----------------------------------//
@@ -114,13 +108,17 @@ void LogWrite(Log* log, LogLevel::Enum level, const char* msg, va_list args)
 #define DEFINE_LOG_HELPER(Level)                            \
 	void Log##Level(const char* msg, ...)                   \
 	{                                                       \
-	va_list args;                                           \
-	va_start(args, msg);                                    \
+		va_list args;                                       \
+		va_start(args, msg);                                \
 	                                                        \
-	Log* log = LogGetDefault();                             \
-	if(log) LogWrite(log, LogLevel::Level, msg, args);      \
+		Log* log = LogGetDefault();                         \
+		if(!log) return;                                    \
+		                                                    \
+		LogEntry entry;                                     \
+		LogFormat(entry, log, LogLevel::Level, msg, args);  \
+		LogWrite(log, &entry);                              \
 	                                                        \
-	va_end(args);                                           \
+		va_end(args);                                       \
 }                                                           \
 
 DEFINE_LOG_HELPER(Info)
@@ -131,4 +129,4 @@ DEFINE_LOG_HELPER(Assert)
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

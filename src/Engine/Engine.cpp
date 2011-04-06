@@ -98,14 +98,14 @@ void Engine::init( bool createWindow )
 	LogInfo( "Starting vapor3D" );
 
 	// Creates the file system.
-	fileSystem = new FileSystem( app, argv ? argv[0] : nullptr );
+	//fileSystem = new FileSystem( app, argv ? argv[0] : nullptr );
 
 	// Creates the task system.
 	taskPool = TaskPoolCreate( AllocatorGetHeap(), 2 );
 
 	// Creates the resource manager.
 	resourceManager = new ResourceManager();
-	resourceManager->setFileWatcher( fileSystem->getFileWatcher() );
+	//resourceManager->setFileWatcher( fileSystem->getFileWatcher() );
 	resourceManager->setTaskPool( taskPool );
 	
 	// Registers default resource loaders.
@@ -194,7 +194,7 @@ void Engine::update( float delta )
 		system->update( delta );
 	}
 
-	fileSystem->update( delta );
+	if(fileSystem) fileSystem->update( delta );
 	resourceManager->update( delta );
 	scene->update( delta );
 

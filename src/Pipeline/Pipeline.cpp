@@ -19,6 +19,8 @@ using namespace vapor;
 
 ResourceManager* resources;
 
+//-----------------------------------//
+
 void showResourceLoaders()
 {
 	printf("\nKnown resource loaders:\n\n");
@@ -31,6 +33,8 @@ void showResourceLoaders()
 		printf("\t%s\n", child.name.c_str());
 	} 
 }
+
+//-----------------------------------//
 
 void showResourceProcessors()
 {
@@ -45,6 +49,8 @@ void showResourceProcessors()
 	}
 }
 
+//-----------------------------------//
+
 int main(int argc, char* argv[])
 {
 	printf("Syntax: Pipeline.exe -in res.foo -out res.bar\n");
@@ -56,5 +62,7 @@ int main(int argc, char* argv[])
 
 	return 0;
 }
+
+//-----------------------------------//
 
 #endif

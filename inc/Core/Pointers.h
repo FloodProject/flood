@@ -30,12 +30,12 @@ public:
     typedef T element_type;
 
     explicit scoped_ptr( T* p, Allocator* alloc )
-		: px(p), mem(alloc)
+		: px(p), alloc(alloc)
     { }
 
     ~scoped_ptr() // never throws
     {
-		Destroy(px, mem);
+		Destroy(px, alloc);
     }
 
     void reset(T * p = 0) // never throws
@@ -81,7 +81,7 @@ public:
 private:
 
     T* px;
-	Allocator* mem;
+	Allocator* alloc;
 
     scoped_ptr(scoped_ptr const &);
     scoped_ptr & operator=(scoped_ptr const &);

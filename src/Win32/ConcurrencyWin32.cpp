@@ -74,10 +74,26 @@ bool ThreadStart(Thread* thread, ThreadFunction function, void* data)
 
 //-----------------------------------//
 
+bool ThreadStop(Thread* thread)
+{
+	if( !thread ) return false;
+	return ::SuspendThread((HANDLE) thread->Handle) != -1;
+}
+
+//-----------------------------------//
+
 bool ThreadJoin(Thread* thread)
 {
 	if( !thread ) return false;
 	return ::WaitForSingleObject(thread->Handle, INFINITE) != WAIT_FAILED;
+}
+
+//-----------------------------------//
+
+bool ThreadPause(Thread* thread)
+{
+	if( !thread ) return false;
+	return ::SuspendThread((HANDLE) thread->Handle) != -1;
 }
 
 //-----------------------------------//
@@ -90,23 +106,15 @@ bool ThreadResume(Thread* thread)
 
 //-----------------------------------//
 
-bool ThreadStop(Thread* thread)
-{
-	if( !thread ) return false;
-	return ::SuspendThread((HANDLE) thread->Handle) != -1;
-}
-
-//-----------------------------------//
-
 static void SetThreadName( DWORD dwThreadID, LPCSTR szThreadName )
 {
-   typedef struct tagTHREADNAME_INFO
+   struct THREADNAME_INFO
    {
       DWORD dwType;		// must be 0x1000
       LPCSTR szName;	// pointer to name (in user addr space)
       DWORD dwThreadID;	// thread ID (-1 = caller thread)
       DWORD dwFlags;	// reserved for future use, must be zero
-   } THREADNAME_INFO;
+   };
 
    THREADNAME_INFO info;
    info.dwType = 0x1000;
@@ -114,15 +122,12 @@ static void SetThreadName( DWORD dwThreadID, LPCSTR szThreadName )
    info.dwThreadID = dwThreadID;
    info.dwFlags = 0;
 
-   __try
+   __try 
    {
       RaiseException( 0x406D1388, 0,
-                      sizeof(info)/sizeof(DWORD),
-                      (DWORD*)&info );
+		  sizeof(info)/sizeof(DWORD), (DWORD*)&info );
    }
-   __except(EXCEPTION_CONTINUE_EXECUTION)
-   {
-   }
+   __except(EXCEPTION_CONTINUE_EXECUTION) { }
 }
 
 //-----------------------------------//

@@ -26,7 +26,11 @@ void ResourceTaskRun(Task* task)
 	Resource* resource = options->resource;
 	const Path& path = resource->getPath();
 	
-	Stream* stream = StreamCreateFromPhysfs( AllocatorGetHeap(), path, StreamMode::Read );
+#ifdef VAPOR_VFS_PHYSFS
+	Stream* stream = StreamCreateFromPhysfs( AllocatorGetHeap(), options->name, StreamMode::Read);
+#else
+	Stream* stream = StreamCreateFromFile( AllocatorGetHeap(), options->name, StreamMode::Read);
+#endif
 
 	ResourceManager* res = GetResourceManager();
 	ResourceLoader* loader = res->findLoader( PathGetFileExtension(path) );

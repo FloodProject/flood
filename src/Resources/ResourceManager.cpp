@@ -37,6 +37,7 @@ ResourceLoadOptions::ResourceLoadOptions()
 
 ResourceManager::ResourceManager()
 	: taskPool(nullptr)
+	, fileWatcher(nullptr)
 	, numResourcesQueuedLoad(0)
 	, asynchronousLoading(true)
 {
@@ -128,7 +129,12 @@ ResourcePtr ResourceManager::loadResource(ResourceLoadOptions options)
 	if( !validateResource(options.name) )
 		return nullptr;
 
+#ifdef VAPOR_VFS_PHYSFS
 	Stream* stream = StreamCreateFromPhysfs( AllocatorGetHeap(), options.name, StreamMode::Read);
+#else
+	Stream* stream = StreamCreateFromFile( AllocatorGetHeap(), options.name, StreamMode::Read);
+#endif
+
 	resource = prepareResource(stream);
 	
 	if( !resource )

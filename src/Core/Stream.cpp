@@ -25,13 +25,13 @@ Stream* StreamCreateFromURI(Allocator*, const Path&)
 
 bool StreamClose(Stream* stream)
 {
-	if(!stream) return false;
+	if(!stream || !stream->fn->close ) return false;
 	return stream->fn->close(stream);
 }
 
 //-----------------------------------//
 
-void StreamDestroy(Stream* stream, Allocator* mem)
+void StreamDestroy(Stream* stream, Allocator* alloc)
 {
 	if( !StreamClose(stream) )
 	{
@@ -39,7 +39,7 @@ void StreamDestroy(Stream* stream, Allocator* mem)
 		return;
 	}
 
-	Deallocate(mem, stream);
+	Deallocate(alloc, stream);
 }
 
 //-----------------------------------//
@@ -48,8 +48,18 @@ int64 StreamRead(Stream* stream, std::vector<uint8>& data)
 {
 	if( !stream ) return 0;
 	
-	data.resize( (size_t) StreamGetSize(stream) );
-	return stream->fn->read(stream, &data[0], data.size());
+	int64 length = StreamGetSize(stream);
+	data.resize( (size_t) length );
+
+	return StreamReadBuffer(stream, &data[0], data.size());
+}
+
+//-----------------------------------//
+
+int64 StreamReadBuffer(Stream* stream, void* buffer, int64 size)
+{
+	if( !stream || !stream->fn->read ) return 0;
+	return stream->fn->read(stream, buffer, size);
 }
 
 //-----------------------------------//
@@ -88,6 +98,7 @@ int64 StreamReadLines(Stream* stream, std::vector<String>&)
 
 int64 StreamWrite(Stream* stream, const std::vector<uint8>& data)
 {
+	if( !stream || !stream->fn->write ) return -1;
 	return stream->fn->write(stream, (void*) &data[0], data.size());
 }
 
@@ -96,13 +107,14 @@ int64 StreamWrite(Stream* stream, const std::vector<uint8>& data)
 int64 StreamWriteString(Stream* stream, const String& string)
 {
 	std::vector<uint8> data( string.begin(), string.end() );
-	return stream->fn->write(stream, &data[0], data.size());
+	return StreamWrite(stream, data);
 }
 
 //-----------------------------------//
 
 int64 StreamGetPosition(Stream* stream)
 {
+	if( !stream->fn->tell ) return -1;
 	return stream->fn->tell(stream);
 }
 
@@ -110,6 +122,7 @@ int64 StreamGetPosition(Stream* stream)
 
 int64 StreamSetPosition(Stream* stream, int64 offset, StreamSeekMode::Enum mode)
 {
+	if( !stream->fn->seek ) return -1;
 	return stream->fn->seek(stream, offset, (int8) mode);
 }
 
@@ -117,6 +130,7 @@ int64 StreamSetPosition(Stream* stream, int64 offset, StreamSeekMode::Enum mode)
 
 int64 StreamGetSize(Stream* stream)
 {
+	if( !stream->fn->size ) return -1;
 	return stream->fn->size(stream);
 }
 

@@ -48,9 +48,9 @@ static StreamFuncs gs_FileFuncs =
 
 //-----------------------------------//
 
-Stream* StreamCreateFromFile(Allocator* mem, const Path& path, StreamMode::Enum mode)
+Stream* StreamCreateFromFile(Allocator* alloc, const Path& path, StreamMode::Enum mode)
 {
-	FileStream* fs = Allocate<FileStream>(mem);
+	FileStream* fs = Allocate<FileStream>(alloc);
 	if( !fs ) return nullptr;
 	
 	fs->fp = nullptr;
@@ -61,7 +61,7 @@ Stream* StreamCreateFromFile(Allocator* mem, const Path& path, StreamMode::Enum 
 	if( !FileOpen(fs) )
 	{
 		//LogWarn("Error opening file: %s", PathGetFile(path).c_str());
-		Deallocate(mem, fs);
+		Deallocate(alloc, fs);
 		return nullptr;
 	}
 

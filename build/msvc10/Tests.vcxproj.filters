@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Cu">
+      <UniqueIdentifier>{0209896e-1971-4928-b31a-88a6bf8666df}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\Tests\Path.cpp" />
+    <ClCompile Include="..\..\src\Tests\AllTests.c" />
+    <ClCompile Include="..\..\src\Tests\Concurrency.cpp" />
+    <ClCompile Include="..\..\src\Tests\CuTest.cpp">
+      <Filter>Cu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Tests\Streams.cpp" />
+    <ClCompile Include="..\..\src\Tests\Archives.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\Tests\CuTest.h">
+      <Filter>Cu</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

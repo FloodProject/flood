@@ -82,6 +82,7 @@ API_CORE void   StreamDestroy(Stream*, Allocator*);
 API_CORE bool   StreamClose(Stream*);
 
 API_CORE int64  StreamRead(Stream*, std::vector<uint8>& data);
+API_CORE int64  StreamReadBuffer(Stream*, void* buffer, int64 size);
 API_CORE int64  StreamReadString(Stream*, String&);
 API_CORE int64  StreamReadLines(Stream*, std::vector<String>&);
 
@@ -98,6 +99,7 @@ typedef scoped_ptr<Stream, StreamDestroy> StreamPtr;
 #define pStreamCreateFromURI(alloc, ...) CreateScopedPtr(StreamCreateFromURI, alloc, __VA_ARGS__)
 #define pStreamCreateFromFile(alloc, ...) CreateScopedPtr(StreamCreateFromFile, alloc, __VA_ARGS__)
 #define pStreamCreateFromPhysfs(alloc, ...) CreateScopedPtr(StreamCreateFromPhysfs, alloc, __VA_ARGS__)
+
 //-----------------------------------//
 
 NAMESPACE_EXTERN_END

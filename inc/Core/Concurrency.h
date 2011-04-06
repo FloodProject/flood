@@ -9,8 +9,9 @@
 #pragma once
 
 #include "Core/API.h"
-#include "Event.h"
-#include "ConcurrentQueue.h"
+#include "Core/Event.h"
+#include "Core/Pointers.h"
+#include "Core/ConcurrentQueue.h"
 
 #ifdef VAPOR_PLATFORM_WINDOWS
 	#define WIN32_LEAN_AND_MEAN
@@ -48,10 +49,13 @@ API_CORE Thread* ThreadCreate(Allocator*);
 API_CORE void    ThreadDestroy(Thread*, Allocator*);
 API_CORE bool    ThreadStart(Thread*, ThreadFunction, void*);
 API_CORE bool    ThreadJoin(Thread*);
+API_CORE bool    ThreadPause(Thread*);
 API_CORE bool    ThreadResume(Thread*);
-API_CORE bool    ThreadStop(Thread*);
 API_CORE bool    ThreadSetPriority(Thread*, ThreadPriority::Enum);
 API_CORE void    ThreadSetName(Thread*, const String& name);
+
+typedef scoped_ptr<Thread, ThreadDestroy> ThreadPtr;
+#define pThreadCreate(alloc, ...) CreateScopedPtr(ThreadCreate, alloc, __VA_ARGS__)
 
 //-----------------------------------//
 
@@ -75,6 +79,9 @@ API_CORE void   MutexInit(Mutex*);
 API_CORE void   MutexLock(Mutex*);
 API_CORE void   MutexUnlock(Mutex*);
 
+typedef scoped_ptr<Mutex, MutexDestroy> MutexPtr;
+#define pMutexCreate(alloc, ...) CreateScopedPtr(MutexCreate, alloc, __VA_ARGS__)
+
 //-----------------------------------//
 
 struct Condition
@@ -91,6 +98,9 @@ API_CORE void       ConditionInit(Condition*);
 API_CORE void       ConditionWait(Condition*, Mutex*);
 API_CORE void       ConditionWakeOne(Condition*);
 API_CORE void       ConditionWakeAll(Condition*);
+
+typedef scoped_ptr<Condition, ConditionDestroy> ConditionPtr;
+#define pConditionCreate(alloc, ...) CreateScopedPtr(ConditionCreate, alloc, __VA_ARGS__)
 
 //-----------------------------------//
 
@@ -126,6 +136,9 @@ API_CORE Task* TaskCreate(Allocator*);
 API_CORE void  TaskDestroy(Task*, Allocator*);
 API_CORE void  TaskRun(Task*);
 
+typedef scoped_ptr<Task, TaskDestroy> TaskPtr;
+#define pTaskCreate(alloc, ...) CreateScopedPtr(TaskCreate, alloc, __VA_ARGS__)
+
 struct TaskEvent
 {
 	enum Enum { Added, Started, Finished };
@@ -147,6 +160,9 @@ API_CORE TaskPool*  TaskPoolCreate(Allocator*, int8 Size);
 API_CORE void       TaskPoolDestroy(TaskPool*, Allocator*);
 API_CORE void       TaskPoolAdd(TaskPool*, Task*);
 API_CORE void       TaskPoolUpdate(TaskPool*);
+
+typedef scoped_ptr<TaskPool, TaskPoolDestroy> TaskPoolPtr;
+#define pTaskPoolCreate(alloc, ...) CreateScopedPtr(TaskPoolCreate, alloc, __VA_ARGS__)
 
 //-----------------------------------//
 

@@ -1,14 +1,19 @@
-#include <assert.h>
-#include <setjmp.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
+#include <cassert>
+#include <csetjmp>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
+#include <cmath>
 #include <vector>
 
+#include "Core/Memory.h"
 #include "CuTest.h"
 
+using namespace vapor;
+
 static std::vector<CuSuite*> suites;
+
+Allocator* AllocatorTests = nullptr;
 
 /*-------------------------------------------------------------------------*
  * CuStr
@@ -16,7 +21,7 @@ static std::vector<CuSuite*> suites;
 
 char* CuStrAlloc(int size)
 {
-	char* newStr = (char*) malloc( sizeof(char) * (size) );
+	char* newStr = (char*) AllocatorTests->allocate(AllocatorTests, size);
 	return newStr;
 }
 
@@ -36,31 +41,36 @@ void CuStringInit(CuString* str)
 {
 	str->length = 0;
 	str->size = STRING_MAX;
-	str->buffer = (char*) malloc(sizeof(char) * str->size);
+	str->buffer = CuStrAlloc(str->size);
 	str->buffer[0] = '\0';
 }
 
 CuString* CuStringNew(void)
 {
-	CuString* str = (CuString*) malloc(sizeof(CuString));
+	CuString* str = Allocate<CuString>(AllocatorTests);
 	str->length = 0;
 	str->size = STRING_MAX;
-	str->buffer = (char*) malloc(sizeof(char) * str->size);
+	str->buffer = CuStrAlloc(str->size);
 	str->buffer[0] = '\0';
 	return str;
 }
 
 void CuStringDelete(CuString *str)
 {
-        if (!str) return;
-        free(str->buffer);
-        free(str);
+    if (!str) return;
+	Deallocate(AllocatorTests, str->buffer);
+	Deallocate(AllocatorTests, str);
 }
 
 void CuStringResize(CuString* str, int newSize)
 {
-	str->buffer = (char*) realloc(str->buffer, sizeof(char) * newSize);
+	char* oldbuffer = str->buffer;
+	
+	str->buffer = (char*) AllocatorTests->allocate(AllocatorTests, newSize);
 	str->size = newSize;
+	
+	strcpy(str->buffer, oldbuffer);
+	Deallocate(AllocatorTests, oldbuffer);
 }
 
 void CuStringAppend(CuString* str, const char* text)
@@ -124,7 +134,7 @@ void CuTestInit(CuTest* t, const char* name, TestFunction function)
 
 CuTest* CuTestNew(const char* name, TestFunction function)
 {
-	CuTest* tc = CU_ALLOC(CuTest);
+	CuTest* tc = Allocate<CuTest>(AllocatorTests);
 	CuTestInit(tc, name, function);
 	return tc;
 }
@@ -132,8 +142,8 @@ CuTest* CuTestNew(const char* name, TestFunction function)
 void CuTestDelete(CuTest *t)
 {
     if (!t) return;
-    free(t->name);
-    free(t);
+	Deallocate(AllocatorTests, t->name);
+	Deallocate(AllocatorTests, t);
 }
 
 void CuTestRun(CuTest* tc)
@@ -157,7 +167,7 @@ static void CuFailInternal(CuTest* tc, const char* file, int line, CuString* str
 
 	tc->failed = 1;
 	tc->message = _strdup(string->buffer);
-	free(string->buffer);
+	Deallocate(AllocatorTests, string->buffer);
 
 	if (tc->jumpBuf != 0) longjmp(*(tc->jumpBuf), 0);
 }
@@ -249,7 +259,7 @@ void CuSuiteInit(CuSuite* testSuite)
 
 CuSuite* CuSuiteNew(void)
 {
-	CuSuite* testSuite = CU_ALLOC(CuSuite);
+	CuSuite* testSuite = Allocate<CuSuite>(AllocatorTests);
 	CuSuiteInit(testSuite);
 	return testSuite;
 }
@@ -261,7 +271,7 @@ void CuSuiteDelete(CuSuite *testSuite)
 		if(!testSuite->list[n]) continue;
 		CuTestDelete(testSuite->list[n]);
     }
-    free(testSuite);
+	Deallocate<CuSuite>(AllocatorTests, testSuite);
 }
 
 void CuSuiteAdd(CuSuite* testSuite, CuTest *testCase)
@@ -287,7 +297,7 @@ void CuSuiteFreeAll()
 	for(size_t i = 0 ; i < suites.size(); ++i)
 	{
 		CuSuite* suite = suites[i];
-		free(suite);
+		Deallocate(AllocatorTests, suite);
 	}
 
 	suites.clear();
@@ -339,7 +349,8 @@ void CuSuiteDetails(CuSuite* testSuite, CuString* details)
 				failCount++;
 				CuStringAppendFormat(details, "%d) %s: %s\n",
 					failCount, testCase->name, testCase->message);
-				free((void*) testCase->message);
+				/*Deallocate(AllocatorTests, (char*) testCase->message);*/
+				free((char*) testCase->message); // TODO: remove strdup, and hook allocator
 			}
 		}
 		CuStringAppend(details, "\n!!!FAILURES!!!\n");
@@ -350,4 +361,19 @@ void CuSuiteDetails(CuSuite* testSuite, CuString* details)
 	}
 
 	CuStringAppend(details, "\n");
+}
+
+
+/*-------------------------------------------------------------------------*
+ * Cu
+ *-------------------------------------------------------------------------*/
+
+void CuInit()
+{
+	AllocatorTests = AllocatorCreateHeap( AllocatorGetHeap(), "Tests" );
+}
+
+void CuCleanup()
+{
+	AllocatorDestroy(AllocatorTests, AllocatorGetHeap());
 }

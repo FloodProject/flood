@@ -8,6 +8,7 @@
 
 #include <cstdio>
 #include "CuTest.h"
+#include "Core/Memory.h"
 
 #ifdef WIN32
 	#define WIN32_LEAN_AND_MEAN
@@ -16,6 +17,10 @@
 #endif
 
 #define array_sizeof(n) (sizeof(n) / sizeof(n[0]))
+
+using namespace vapor;
+
+//-----------------------------------//
 
 typedef CuSuite* (*SuiteFunction)();
 
@@ -32,6 +37,8 @@ static const SuiteFunction suites[] =
 	GetSuiteArchives
 };
 
+//-----------------------------------//
+
 void RunAllTests(void)
 {
 	CuSuite* suite = CuSuiteNew();
@@ -44,7 +51,7 @@ void RunAllTests(void)
 	
 	CuSuiteRun(suite);
 
-	CuString *output = CuStringNew();
+	CuString* output = CuStringNew();
 	CuSuiteSummary(suite, output);
 	CuSuiteDetails(suite, output);
 
@@ -60,8 +67,15 @@ void RunAllTests(void)
 	CuSuiteFreeAll();
 }
 
+//-----------------------------------//
+
 int main(void)
 {
+	CuInit();
 	RunAllTests();
+	CuCleanup();
+
+	AllocatorDumpInfo();
+
 	return 0;
 }

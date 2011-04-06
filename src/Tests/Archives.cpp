@@ -11,23 +11,67 @@
 #include "Core/API.h"
 #include "Core/Archive.h"
 #include "Core/Stream.h"
-#include "Core/Memory.h"
-#include "Core/Pointers.h"
 
 using namespace vapor;
 
-void TestArchive(CuTest *tc)
+//-----------------------------------//
+
+void TestArchiveDir(CuTest *tc)
 {
-	ArchivePtr archive( pArchiveCreateFromZip(AllocatorGlobalHeap, "teste.zip") );
-	
+	ArchivePtr archive( pArchiveCreateFromDirectory(AllocatorGetHeap(), "teste") );
+	CuAssertPtrNotNull(tc, archive);
+
 	std::vector<Path> files;
 	ArchiveEnumerateFiles(archive, files);
 	CuAssertIntEquals( tc, 4, files.size() );
+
+	CuAssertTrue(tc, ArchiveExistsFile(archive, "foo.txt") );
+	CuAssertTrue(tc, ArchiveExistsFile(archive, "bar.txt") );
+	CuAssertTrue(tc, ArchiveExistsFile(archive, "foo/bar.txt") );
+	CuAssertTrue(tc, !ArchiveExistsFile(archive, "spam.txt") );
+
+	Stream* stream = ArchiveOpenFile(archive, "foo.txt", AllocatorGetHeap());
+	CuAssertPtrNotNull(tc, stream);
+
+	String text;
+	StreamReadString(stream, text);
+	StreamDestroy(stream, AllocatorGetHeap());
+	CuAssertStrEquals(tc, "foobar", text.c_str());
+
+	std::vector<Path> dirs;
+	ArchiveEnumerateDirectories(archive, dirs);
+	
+	CuAssertIntEquals( tc, 3, dirs.size() );
+	CuAssertTrue(tc, ArchiveExistsDirectory(archive, "foo") );
+	CuAssertTrue(tc, ArchiveExistsDirectory(archive, "foo/bar") );
+	CuAssertTrue(tc, !ArchiveExistsDirectory(archive, "foo/spam") );
+}
+
+//-----------------------------------//
+
+void TestArchiveZip(CuTest *tc)
+{
+	ArchivePtr archive( pArchiveCreateFromZip(AllocatorGetHeap(), "teste.zip") );
+	CuAssertPtrNotNull(tc, archive);
+
+	std::vector<Path> files;
+	ArchiveEnumerateFiles(archive, files);
+	CuAssertIntEquals( tc, 5, files.size() );
 
 	CuAssertTrue(tc, ArchiveExistsFile(archive, "LeaksReport.txt") );
 	CuAssertTrue(tc, ArchiveExistsFile(archive, "Log.html") );
 	CuAssertTrue(tc, ArchiveExistsFile(archive, "foo.txt") );
 	CuAssertTrue(tc, ArchiveExistsFile(archive, "bar.txt") );
+	CuAssertTrue(tc, ArchiveExistsFile(archive, "files/foo.txt") );
+	CuAssertTrue(tc, !ArchiveExistsFile(archive, "files/spam.txt") );
+
+	Stream* stream = ArchiveOpenFile(archive, "file.txt", AllocatorGetHeap());
+	CuAssertPtrNotNull(tc, stream);
+
+	String text;
+	StreamReadString(stream, text);
+	StreamDestroy(stream, AllocatorGetHeap());
+	CuAssertStrEquals(tc, "foobar", text.c_str());
 
 	std::vector<Path> dirs;
 	ArchiveEnumerateDirectories(archive, dirs);
@@ -37,9 +81,12 @@ void TestArchive(CuTest *tc)
 	CuAssertTrue(tc, !ArchiveExistsDirectory(archive, "dunno") );
 }
 
+//-----------------------------------//
+
 CuSuite* GetSuiteArchives()
 {
     CuSuite* suite = CuSuiteNew();
-    SUITE_ADD_TEST(suite, TestArchive);
+	SUITE_ADD_TEST(suite, TestArchiveDir);
+    SUITE_ADD_TEST(suite, TestArchiveZip);
     return suite;
 }

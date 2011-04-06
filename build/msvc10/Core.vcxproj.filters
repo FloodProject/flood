@@ -34,9 +34,6 @@
     <Filter Include="Archive">
       <UniqueIdentifier>{062b640e-7ae1-4953-8fa9-ec7288b05c8c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Streams\File">
-      <UniqueIdentifier>{90db7c90-f20e-4c6b-8bb6-35edaa19de88}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Concurrency">
       <UniqueIdentifier>{68882d00-4fc2-4055-8314-01008e88bc7b}</UniqueIdentifier>
     </Filter>
@@ -82,9 +79,6 @@
     <Filter Include="Math\Hash">
       <UniqueIdentifier>{84e58d97-acd7-495f-9bac-3fcc87f1af03}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Profiler">
-      <UniqueIdentifier>{e65ce8ad-271f-4107-a73d-5c98b30a57ca}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Reflection">
       <UniqueIdentifier>{f2af19a1-44b1-4e1e-8be8-b142dc78957c}</UniqueIdentifier>
     </Filter>
@@ -112,7 +106,16 @@
     <Filter Include="Serialization\JSON">
       <UniqueIdentifier>{4649363a-29cf-4c56-bbf2-d299e3e362b2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Streams\File\Watcher">
+    <Filter Include="Telemetry">
+      <UniqueIdentifier>{96d34aba-f389-45a5-9d92-687ede9c398a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Telemetry\Profiler">
+      <UniqueIdentifier>{e65ce8ad-271f-4107-a73d-5c98b30a57ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File">
+      <UniqueIdentifier>{90db7c90-f20e-4c6b-8bb6-35edaa19de88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File\Watcher">
       <UniqueIdentifier>{63ffccc4-ff22-49bd-9741-b97d2c8e5d60}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -137,7 +140,7 @@
       <Filter>Libraries</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\FileSystem.cpp">
-      <Filter>Streams\File</Filter>
+      <Filter>File</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\Timer.cpp">
       <Filter>Timer</Filter>
@@ -152,7 +155,7 @@
       <Filter>Streams</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\FileStream.cpp">
-      <Filter>Streams\File</Filter>
+      <Filter>File</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\ArchiveZip.cpp">
       <Filter>Archive</Filter>
@@ -212,7 +215,7 @@
       <Filter>Math\Hash</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\Profiler.cpp">
-      <Filter>Profiler</Filter>
+      <Filter>Telemetry\Profiler</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\reflection\Object.cpp">
       <Filter>Reflection</Filter>
@@ -242,10 +245,16 @@
       <Filter>Serialization\JSON</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\FileWatcher.cpp">
-      <Filter>Streams\File\Watcher</Filter>
+      <Filter>File\Watcher</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Win32\FileWatcherWin32.cpp">
-      <Filter>Streams\File\Watcher</Filter>
+      <Filter>File\Watcher</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\Telemetry.cpp">
+      <Filter>Telemetry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\ArchiveDirectory.cpp">
+      <Filter>Archive</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -265,7 +274,7 @@
       <Filter>Streams\Web</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\core\FileSystem.h">
-      <Filter>Streams\File</Filter>
+      <Filter>File</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\Memory.h">
       <Filter>Memory</Filter>
@@ -356,7 +365,7 @@
       <Filter>Math\Hash</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\Profiler.h">
-      <Filter>Profiler</Filter>
+      <Filter>Telemetry\Profiler</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\Object.h">
       <Filter>Reflection</Filter>
@@ -398,10 +407,13 @@
       <Filter>Serialization\JSON</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\core\FileWatcher.h">
-      <Filter>Streams\File\Watcher</Filter>
+      <Filter>File\Watcher</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Win32\FileWatcherWin32.h">
-      <Filter>Streams\File\Watcher</Filter>
+      <Filter>File\Watcher</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\Telemetry.h">
+      <Filter>Telemetry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

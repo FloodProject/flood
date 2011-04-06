@@ -1,17 +1,16 @@
-#ifndef CU_TEST_H
-#define CU_TEST_H
+#pragma once
 
-#include <setjmp.h>
-#include <stdarg.h>
+#include <csetjmp>
+#include <cstdarg>
 
-#define CUTEST_VERSION  "CuTest 1.5"
+#define CUTEST_VERSION  "CuTest (triton) 1.5"
+
+//-----------------------------------//
 
 /* CuString */
 
 char* CuStrAlloc(int size);
 char* CuStrCopy(const char* old);
-
-#define CU_ALLOC(TYPE)		((TYPE*) malloc(sizeof(TYPE)))
 
 #define HUGE_STRING_LEN	8192
 #define STRING_MAX		256
@@ -33,6 +32,8 @@ void CuStringAppendFormat(CuString* str, const char* format, ...);
 void CuStringInsert(CuString* str, const char* text, int pos);
 void CuStringResize(CuString* str, int newSize);
 void CuStringDelete(CuString* str);
+
+//-----------------------------------//
 
 /* CuTest */
 
@@ -90,6 +91,8 @@ void CuAssertPtrEquals_LineMsg(CuTest* tc,
 #define CuAssertPtrNotNull(tc,p)        CuAssert_Line((tc),__FILE__,__LINE__,"null pointer unexpected",(p != NULL))
 #define CuAssertPtrNotNullMsg(tc,msg,p) CuAssert_Line((tc),__FILE__,__LINE__,(msg),(p != NULL))
 
+//-----------------------------------//
+
 /* CuSuite */
 
 #define MAX_TEST_CASES	1024
@@ -104,7 +107,6 @@ typedef struct
 
 } CuSuite;
 
-
 void CuSuiteInit(CuSuite* testSuite);
 CuSuite* CuSuiteNew(void);
 void CuSuiteDelete(CuSuite *testSuite);
@@ -116,4 +118,9 @@ void CuSuiteDetails(CuSuite* testSuite, CuString* details);
 
 void CuSuiteFreeAll();
 
-#endif /* CU_TEST_H */
+//-----------------------------------//
+
+void CuInit();
+void CuCleanup();
+
+//-----------------------------------//

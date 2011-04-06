@@ -8,10 +8,10 @@
 
 #include "Core/API.h"
 #include "Core/Memory.h"
+#include "Core/Log.h"
 
-//#define ALLOCATOR_NO_MEMORY
-#define ALLOCATOR_DEFAULT_GROUP "General";
 #define ALLOCATOR_TRACKING
+#define ALLOCATOR_DEFAULT_GROUP "General";
 
 #ifdef VAPOR_PLATFORM_WINDOWS
 	#define WIN32_LEAN_AND_MEAN
@@ -27,61 +27,104 @@ NAMESPACE_EXTERN_BEGIN
 
 //-----------------------------------//
 
-// Since all memory allocations must go through an allocator, we need
-// to create a default allocator to make the first allocations.
+// Since all memory allocations must go through an allocator,
+// there needs to be a default allocator to allocate memory.
 
 static Allocator* GetDefaultHeapAllocator();
 static Allocator* GetDefaultStackAllocator();
 
-Allocator* AllocatorGlobalHeap = GetDefaultHeapAllocator();
-Allocator* AllocatorGlobalStack = GetDefaultStackAllocator();
+Allocator* AllocatorGetHeap() { return GetDefaultHeapAllocator(); }
+Allocator* AllocatorGetStack() { return GetDefaultStackAllocator(); }
 
-Allocator* AllocatorGetHeap() { return AllocatorGlobalHeap; }
-Allocator* AllocatorGetStack() { return AllocatorGlobalStack; }
+struct AllocationGroup
+{
+	AllocationGroup() : freed(0), total(0) { }
 
-static std::map<const char*, int64> gs_memoryGroups; 
+	int64 freed;
+	int64 total;
+};
+
+typedef std::map<const char*, AllocationGroup> MemoryGroupMap;
+
+static MemoryGroupMap& GetMemoryGroupMap()
+{
+	static MemoryGroupMap memoryGroups;
+	return memoryGroups;
+}
+
+static bool AllocatorSimulateLowMemory = false;
 
 //-----------------------------------//
 
-#ifdef ALLOCATOR_TRACKING
-static void AllocatorTrackGroup(Allocator* mem, int32 size)
+static void AllocatorTrackGroup(AllocationMetadata* metadata, bool alloc)
 {
-	if(!mem || !mem->group) return;
-	gs_memoryGroups[mem->group] += size; 
-}
-#endif
+	if(!metadata) return;
 
-static void* HeapAllocate(Allocator* mem, int32 size)
-{
-#ifdef ALLOCATOR_TRACKING
-	AllocatorTrackGroup(mem, size);
-#endif
-
-#ifdef ALLOCATOR_NO_MEMORY
-	return nullptr;
-#else
-	return malloc(size);
-#endif
+	MemoryGroupMap& memoryGroups = GetMemoryGroupMap();
+	memoryGroups[metadata->group].total += alloc ? metadata->size : 0;
+	memoryGroups[metadata->group].freed += alloc ? 0 : metadata->size;
 }
 
-static void HeapDellocate(Allocator* mem, void* p, int32 size)
+void AllocatorDumpInfo()
 {
-#ifdef ALLOCATOR_TRACKING
-	AllocatorTrackGroup(mem, -size);
-#endif
+	MemoryGroupMap& memoryGroups = GetMemoryGroupMap();
+	if(memoryGroups.empty()) return;
 
-#ifdef ALLOCATOR_NO_MEMORY
-	return;
-#else
-	free(p);
-#endif
+	OutputDebugStringA("-----------------------------------------------------\n");
+	OutputDebugStringA("Memory stats\n");
+	OutputDebugStringA("-----------------------------------------------------\n");
+
+	MemoryGroupMap::iterator it;
+	for(it = memoryGroups.begin(); it != memoryGroups.end(); it++)
+	{
+		AllocationGroup& group = it->second;
+
+		String format = StringFormat("%s\t| free: %I64d bytes, total: %I64d bytes\n",
+			it->first, group.freed, group.total );
+
+		OutputDebugStringA( format.c_str() );
+	}
+
+	OutputDebugStringA("\n");
 }
 
-Allocator* AllocatorCreateHeap( Allocator* mem )
+//-----------------------------------//
+
+static void* HeapAllocate(Allocator* alloc, int32 size)
 {
-	Allocator* heap = Allocate<Allocator>(mem);
+	if(AllocatorSimulateLowMemory) return nullptr;
+
+	void* ptr = malloc(size + sizeof(AllocationMetadata));
+	
+	AllocationMetadata* metadata = (AllocationMetadata*) ptr;
+	metadata->size = size;
+	metadata->group = alloc->group;
+
+#ifdef ALLOCATOR_TRACKING
+	AllocatorTrackGroup(metadata, true);
+#endif
+
+	return (char*) ptr + sizeof(AllocationMetadata);
+}
+
+static void HeapDellocate(Allocator* alloc, void* p)
+{
+#ifdef ALLOCATOR_TRACKING
+	void* base = (char*) p - sizeof(AllocationMetadata);
+	AllocatorTrackGroup((AllocationMetadata*) base, false);
+#endif
+
+	free(base);
+}
+
+Allocator* AllocatorCreateHeap( Allocator* alloc, const char* group )
+{
+	Allocator* heap = Allocate<Allocator>(alloc);
+
 	heap->allocate = HeapAllocate;
 	heap->deallocate = HeapDellocate;
+	heap->group = group;
+
 	return heap;
 }
 
@@ -96,23 +139,21 @@ static Allocator* GetDefaultHeapAllocator()
 
 //-----------------------------------//
 
-static void* StackAllocate(Allocator* mem, int32 size)
+static void* StackAllocate(Allocator* alloc, int32 size)
 {
+	if(AllocatorSimulateLowMemory) return nullptr;
+
 #ifdef ALLOCATOR_TRACKING
-	AllocatorTrackGroup(mem, size);
+	//AllocatorTrackGroup(alloc, size);
 #endif
 
-#ifdef ALLOCATOR_NO_MEMORY
-	return nullptr;
-#else
 	return alloca(size);
-#endif
 }
 
-static void StackDellocate(Allocator* mem, void* p, int32 size)
+static void StackDellocate(Allocator* alloc, void* p)
 {
 #ifdef ALLOCATOR_TRACKING
-	AllocatorTrackGroup(mem, -size);
+	//AllocatorTrackGroup(alloc, 0);
 #endif
 
 	// memory is automatically freed by the stack
@@ -129,23 +170,30 @@ static Allocator* GetDefaultStackAllocator()
 
 //-----------------------------------//
 
-Allocator* AllocatorCreatePage( Allocator* mem )
+Allocator* AllocatorCreatePage( Allocator* alloc )
 {
 	return nullptr;
 }
 
 //-----------------------------------//
 
-Allocator* AllocatorCreatePool( Allocator* mem )
+Allocator* AllocatorCreatePool( Allocator* alloc )
 {
 	return nullptr;
 }
 
 //-----------------------------------//
 
-Allocator* AllocatorCreateTemporary( Allocator* mem )
+Allocator* AllocatorCreateTemporary( Allocator* alloc )
 {
 	return nullptr;
+}
+
+//-----------------------------------//
+
+void AllocatorDestroy( Allocator* object, Allocator* allocator )
+{
+	Deallocate<Allocator>(allocator, object);
 }
 
 //-----------------------------------//

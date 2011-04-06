@@ -8,29 +8,137 @@
 
 #include "Core/API.h"
 #include "Core/Archive.h"
+#include "Core/Stream.h"
 #include "Core/Memory.h"
 #include "Core/Log.h"
 
 #include <zzip/zzip.h>
 
+#ifdef VAPOR_ARCHIVE_ZIP
+
 NAMESPACE_BEGIN
 
 //-----------------------------------//
 
-#ifdef VAPOR_ARCHIVE_ZIP
+struct ZipStream : Stream
+{
+	ZZIP_DIR* dir;
+	ZZIP_FILE* handle;
+};
 
-static bool ZipArchiveOpen(Archive*, const String&);
-static void ZipArchiveClose(Archive*);
-static void ZipArchiveEnumerateFiles(Archive*, std::vector<Path>&);
-static void ZipArchiveEnumerateDirectories(Archive*, std::vector<Path>&);
-static bool ZipArchiveExistsFile(Archive*, const Path&);
-static bool ZipArchiveExistsDir(Archive*, const Path&);
-static bool ZipArchiveMonitor(Archive*); 
+static bool  ZipStreamOpen(Stream*);
+static bool  ZipStreamClose(Stream*);
+static int64 ZipStreamRead(Stream*, void*, int64);
+static int64 ZipStreamTell(Stream*);
+static bool  ZipStreamSeek(Stream*, int64, int8);
+static int64 ZipStreamGetSize(Stream*);
+
+static StreamFuncs gs_ZipStreamFuncs = 
+{
+	ZipStreamOpen,
+	ZipStreamClose,
+	ZipStreamRead,
+	nullptr /*ZipStreamWrite*/,
+	ZipStreamTell,
+	ZipStreamSeek,
+	ZipStreamGetSize
+};
+
+//-----------------------------------//
+
+static bool ZipStreamOpen(Stream* stream)
+{
+	if( !stream ) return false;
+
+	ZipStream* zip = (ZipStream*) stream;
+	zip->handle = zzip_file_open(zip->dir, zip->path.c_str(), ZZIP_ONLYZIP);
+
+	return zip->handle != nullptr;
+}
+
+//-----------------------------------//
+
+static bool ZipStreamClose(Stream* stream)
+{
+	if( !stream ) return false;
+
+	ZipStream* zip = (ZipStream*) stream;
+	int ret = zzip_file_close(zip->handle);
+
+	return ret == ZZIP_NO_ERROR;
+}
+
+//-----------------------------------//
+
+static int64 ZipStreamRead(Stream* stream, void* buf, int64 len)
+{
+	if( !stream ) return false;
+
+	ZipStream* zip = (ZipStream*) stream;
+	return zzip_file_read(zip->handle, buf, (zzip_size_t) len);
+}
+
+//-----------------------------------//
+
+static int64 ZipStreamTell(Stream* stream)
+{
+	if( !stream ) return false;
+
+	ZipStream* zip = (ZipStream*) stream;
+	return zzip_tell(zip->handle);
+}
+
+//-----------------------------------//
+
+static bool ZipStreamSeek(Stream* stream, int64 offset, int8 mode)
+{
+	if( !stream ) return false;
+
+	ZipStream* zip = (ZipStream*) stream;
+
+	int origin = 0;
+
+	switch(mode)
+	{
+	case StreamSeekMode::Absolute: origin = SEEK_SET; break;
+	case StreamSeekMode::Relative: origin = SEEK_CUR; break;
+	case StreamSeekMode::RelativeEnd: origin = SEEK_END; break;
+	}
+
+	return zzip_seek(zip->handle, (zzip_off_t) offset, origin) > 0;
+}
+
+//-----------------------------------//
+
+static int64 ZipStreamGetSize(Stream* stream)
+{
+	if( !stream ) return false;
+	
+	ZipStream* zip = (ZipStream*) stream;
+
+	ZZIP_STAT zs;
+	int ret = zzip_file_stat(zip->handle, &zs);
+	assert( ret != -1 );
+	
+	return zs.st_size;
+}
+
+//-----------------------------------//
+
+static bool    ZipArchiveOpen(Archive*, const String&);
+static bool    ZipArchiveClose(Archive*);
+static Stream* ZipArchiveOpenFile(Archive*, const Path&, Allocator*);
+static void    ZipArchiveEnumerateFiles(Archive*, std::vector<Path>&);
+static void    ZipArchiveEnumerateDirectories(Archive*, std::vector<Path>&);
+static bool    ZipArchiveExistsFile(Archive*, const Path&);
+static bool    ZipArchiveExistsDir(Archive*, const Path&);
+static bool    ZipArchiveMonitor(Archive*); 
 
 static ArchiveFuncs gs_ZipArchiveFuncs =
 {
 	ZipArchiveOpen,
 	ZipArchiveClose,
+	ZipArchiveOpenFile,
 	ZipArchiveExistsFile,
 	ZipArchiveExistsDir,
 	ZipArchiveEnumerateFiles,
@@ -40,9 +148,9 @@ static ArchiveFuncs gs_ZipArchiveFuncs =
 
 //-----------------------------------//
 
-Archive* ArchiveCreateFromZip(Allocator* mem, const Path& path)
+Archive* ArchiveCreateFromZip(Allocator* alloc, const Path& path)
 {
-	Archive* archive = Allocate<Archive>(mem);
+	Archive* archive = Allocate<Archive>(alloc);
 	
 	archive->Handle = nullptr;
 	archive->Scheme = "zip";
@@ -51,7 +159,7 @@ Archive* ArchiveCreateFromZip(Allocator* mem, const Path& path)
 	if( !ArchiveOpen(archive, path) )
 	{
 		//LogWarn("Error opening archive: %s", path.c_str());
-		Deallocate(mem, archive);
+		Deallocate(alloc, archive);
 		return nullptr;
 	}
 
@@ -68,6 +176,40 @@ static bool ZipArchiveOpen(Archive* archive, const String& path)
 	archive->Handle = zip;
 	
 	return zip != nullptr;
+}
+
+//-----------------------------------//
+
+static bool ZipArchiveClose(Archive* archive)
+{
+	ZZIP_DIR* zip = (ZZIP_DIR*) archive->Handle;
+	assert( zip != nullptr );
+
+	int ret = zzip_dir_close(zip);
+	return ret == ZZIP_NO_ERROR ;
+}
+
+//-----------------------------------//
+
+static Stream* ZipArchiveOpenFile(Archive* archive, const Path& path, Allocator* alloc)
+{
+	if( !archive ) return nullptr;
+
+	ZipStream* stream = Allocate<ZipStream>(alloc);
+	stream->dir = (ZZIP_DIR*) archive->Handle;
+	stream->handle = nullptr;
+	stream->path = path;
+	stream->mode = StreamMode::Read; // only read-only for zips for now.
+	stream->fn = &gs_ZipStreamFuncs;
+
+	if( !ZipStreamOpen(stream) )
+	{
+		//LogWarn("Error opening zip file: %s", path.c_str());
+		Deallocate(alloc, stream);
+		return nullptr;
+	}
+
+	return stream;
 }
 
 //-----------------------------------//
@@ -142,17 +284,6 @@ static bool ZipArchiveMonitor(Archive*)
 
 //-----------------------------------//
 
-void ZipArchiveClose(Archive* archive)
-{
-	ZZIP_DIR* zip = (ZZIP_DIR*) archive->Handle;
-	assert( zip != nullptr );
-
-	int ret = zzip_dir_close(zip);
-	assert( ret == ZZIP_NO_ERROR );
-}
+NAMESPACE_END
 
 #endif
-
-//-----------------------------------//
-
-NAMESPACE_END

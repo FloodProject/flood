@@ -16,9 +16,11 @@ NAMESPACE_EXTERN_BEGIN
 //-----------------------------------//
 
 struct Archive;
+struct Stream;
 
 typedef bool (*ArchiveOpenFunction)(Archive*, const Path&);
-typedef void (*ArchiveCloseFunction)(Archive*);
+typedef bool (*ArchiveCloseFunction)(Archive*);
+typedef Stream* (*ArchiveOpenFileFunction)(Archive*, const Path&, Allocator*);
 typedef bool (*ArchiveExistsFileFunction)(Archive*, const Path&);
 typedef bool (*ArchiveExistsDirFunction)(Archive*, const Path&);
 typedef void (*ArchiveEnumerateFilesFunction)(Archive*, std::vector<Path>&);
@@ -29,6 +31,7 @@ struct ArchiveFuncs
 {
 	ArchiveOpenFunction            open;
 	ArchiveCloseFunction           close;
+	ArchiveOpenFileFunction        open_file;
 	ArchiveExistsFileFunction      exists_file;
 	ArchiveExistsDirFunction       exists_dir;
 	ArchiveEnumerateFilesFunction  enumerate_files;
@@ -63,7 +66,7 @@ API_CORE void ArchiveDestroy(Archive*, Allocator*);
 API_CORE bool ArchiveOpen(Archive*, const Path&);
 
 // Opens a file from the archive.
-//API_CORE void ArchiveOpenFile(Archive*, const String&);
+API_CORE Stream* ArchiveOpenFile(Archive*, const Path&, Allocator*);
 
 // Tests if the given file/directory exists in the archive.
 API_CORE bool ArchiveExistsFile(Archive*, const Path&);

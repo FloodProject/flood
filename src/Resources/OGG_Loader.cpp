@@ -22,10 +22,10 @@ END_CLASS()
 
 //-----------------------------------//
 
-static size_t read_func(void *ptr, size_t size, size_t nmemb, void *datasource)
+static size_t read_func(void* ptr, size_t size, size_t nmemb, void* datasource)
 {
 	Stream* stream = (Stream*) datasource;
-	return stream->read(stream, ptr, size*nmemb);
+	return StreamReadBuffer(stream, ptr, size*nmemb);
 }
 
 //-----------------------------------//
@@ -44,10 +44,10 @@ static int close_func(void* /*datasource*/)
 
 //-----------------------------------//
 
-static long tell_func(void *datasource)
+static long tell_func(void* datasource)
 {
 	Stream* stream = (Stream*) datasource;
-	return stream->tell(stream);
+	return StreamGetPosition(stream);
 }
 
 //-----------------------------------//
