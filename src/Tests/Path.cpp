@@ -16,7 +16,7 @@ using namespace vapor;
 //API_CORE String StringFromWideString(const WideString& ws);
 //API_CORE WideString StringToWideString(const String& s);
 
-void TestString(CuTest *tc)
+void TestString(CuTest* tc)
 {
 	int ret = StringCompareInsensitive("Test Compare CASES", "test compare cases"); 
 	CuAssertIntEquals(tc, ret, 0);
@@ -48,7 +48,7 @@ void TestString(CuTest *tc)
 	CuAssertStrEquals(tc, "Trim", str.c_str());
 }
 
-void TestPath(CuTest *tc)
+void TestPath(CuTest* tc)
 {
 	Path path = PathGetFileBase("File.cpp"); 
 	CuAssertCppStrEquals(tc, path, Path("File"));

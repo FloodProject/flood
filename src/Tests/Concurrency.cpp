@@ -22,7 +22,7 @@ static void Run(void* data)
 	value = *num;
 }
 
-void TestThreads(CuTest *tc)
+void TestThreads(CuTest* tc)
 {
 	ThreadPtr thread( pThreadCreate(AllocatorGetHeap()) );
 
@@ -45,7 +45,7 @@ static void Run2(void* data)
 	value = 30;
 }
 
-void TestCondition(CuTest *tc)
+void TestCondition(CuTest* tc)
 {
 	value = 20;
 
@@ -70,7 +70,7 @@ void TestCondition(CuTest *tc)
 	ConditionDestroy( cond, AllocatorGetHeap() );
 }
 
-void TestAtomics(CuTest *tc)
+void TestAtomics(CuTest* tc)
 {	
 	Atomic atomic = 17;
 	CuAssertIntEquals(tc, 17, atomic);

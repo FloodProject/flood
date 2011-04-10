@@ -172,11 +172,11 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">_CRT_SECURE_NO_WARNINGS;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\ArchiveDirectory.cpp" />
+    <ClCompile Include="..\..\src\Core\ArchiveVirtual.cpp" />
     <ClCompile Include="..\..\src\Core\ArchiveZip.cpp" />
     <ClCompile Include="..\..\src\Core\Concurrency.cpp" />
     <ClCompile Include="..\..\src\Core\DynamicLibrary.cpp" />
     <ClCompile Include="..\..\src\Core\FileStream.cpp" />
-    <ClCompile Include="..\..\src\Core\FileSystem.cpp" />
     <ClCompile Include="..\..\src\Core\FileWatcher.cpp" />
     <ClCompile Include="..\..\src\Core\io\BinarySerializer.cpp" />
     <ClCompile Include="..\..\src\Core\io\JsonSerializer.cpp" />
@@ -250,7 +250,6 @@
     <ClInclude Include="..\..\inc\vapor\core\Class.h" />
     <ClInclude Include="..\..\inc\vapor\core\Enum.h" />
     <ClInclude Include="..\..\inc\vapor\core\Field.h" />
-    <ClInclude Include="..\..\inc\vapor\core\FileSystem.h" />
     <ClInclude Include="..\..\inc\vapor\core\FileWatcher.h" />
     <ClInclude Include="..\..\inc\vapor\core\Helpers.h" />
     <ClInclude Include="..\..\inc\vapor\core\Primitive.h" />

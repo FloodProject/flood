@@ -18,40 +18,11 @@ NAMESPACE_EXTERN_BEGIN
 struct Archive;
 struct Stream;
 
-typedef bool (*ArchiveOpenFunction)(Archive*, const Path&);
-typedef bool (*ArchiveCloseFunction)(Archive*);
-typedef Stream* (*ArchiveOpenFileFunction)(Archive*, const Path&, Allocator*);
-typedef bool (*ArchiveExistsFileFunction)(Archive*, const Path&);
-typedef bool (*ArchiveExistsDirFunction)(Archive*, const Path&);
-typedef void (*ArchiveEnumerateFilesFunction)(Archive*, std::vector<Path>&);
-typedef void (*ArchiveEnumerateDirsFunction)(Archive*, std::vector<Path>&);
-typedef bool (*ArchiveMonitorFunction)(Archive*);
+// Creates a new virtual archive.
+API_CORE Archive* ArchiveCreateVirtual(Allocator*);
 
-struct ArchiveFuncs
-{
-	ArchiveOpenFunction            open;
-	ArchiveCloseFunction           close;
-	ArchiveOpenFileFunction        open_file;
-	ArchiveExistsFileFunction      exists_file;
-	ArchiveExistsDirFunction       exists_dir;
-	ArchiveEnumerateFilesFunction  enumerate_files;
-	ArchiveEnumerateDirsFunction   enumerate_dirs;
-	ArchiveMonitorFunction         monitor;
-};
-	 
-/**
- * Archives are a structured collection of files. The most common archive
- * implementations are ZIP archive files and OS filesystem directories.
- */
-
-struct Archive
-{
-	String Path;
-	String Scheme;
-	void* Handle;
-	
-	ArchiveFuncs* fn;
-};
+// Mounts an archive in the virtual archive.
+API_CORE bool ArchiveMount(Archive*, Archive*, const String& mountPath); 
 
 // Creates a new archive from a ZIP.
 API_CORE Archive* ArchiveCreateFromZip(Allocator*, const Path&);
@@ -85,6 +56,46 @@ API_CORE void FileEnumerateDirectories(const Path&, std::vector<Path>&);
 typedef scoped_ptr<Archive, ArchiveDestroy> ArchivePtr;
 #define pArchiveCreateFromZip(alloc, ...) CreateScopedPtr(ArchiveCreateFromZip, alloc, __VA_ARGS__)
 #define pArchiveCreateFromDirectory(alloc, ...) CreateScopedPtr(ArchiveCreateFromDirectory, alloc, __VA_ARGS__)
+#define pArchiveCreateVirtual(alloc, ...) CreateScopedPtr(ArchiveCreateVirtual, alloc, __VA_ARGS__)
+
+/**
+ * Archives are a structured collection of files. The most common archive
+ * implementations are ZIP archive files and OS filesystem directories.
+ */
+
+struct ArchiveFuncs;
+
+struct Archive
+{
+	virtual ~Archive() {}
+
+	String Path;
+	String Scheme;
+	void* Handle;
+	
+	ArchiveFuncs* fn;
+};
+
+typedef bool (*ArchiveOpenFunction)(Archive*, const Path&);
+typedef bool (*ArchiveCloseFunction)(Archive*);
+typedef Stream* (*ArchiveOpenFileFunction)(Archive*, const Path&, Allocator*);
+typedef bool (*ArchiveExistsFileFunction)(Archive*, const Path&);
+typedef bool (*ArchiveExistsDirFunction)(Archive*, const Path&);
+typedef void (*ArchiveEnumerateFilesFunction)(Archive*, std::vector<Path>&);
+typedef void (*ArchiveEnumerateDirsFunction)(Archive*, std::vector<Path>&);
+typedef bool (*ArchiveMonitorFunction)(Archive*);
+
+struct ArchiveFuncs
+{
+	ArchiveOpenFunction            open;
+	ArchiveCloseFunction           close;
+	ArchiveOpenFileFunction        open_file;
+	ArchiveExistsFileFunction      exists_file;
+	ArchiveExistsDirFunction       exists_dir;
+	ArchiveEnumerateFilesFunction  enumerate_files;
+	ArchiveEnumerateDirsFunction   enumerate_dirs;
+	ArchiveMonitorFunction         monitor;
+};
 
 //-----------------------------------//
 

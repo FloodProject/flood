@@ -68,8 +68,6 @@ typedef std::map< std::string, ResourceLoader* > ResourceLoaderMap;
  * which should prove to be less error-prone in case of a corrupt resource.
  */
 
-
-
 class RESOURCE_API ResourceManager
 {
 	friend void ResourceTaskRun(Task* task);

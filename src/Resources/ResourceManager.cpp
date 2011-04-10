@@ -132,6 +132,7 @@ ResourcePtr ResourceManager::loadResource(ResourceLoadOptions options)
 #ifdef VAPOR_VFS_PHYSFS
 	Stream* stream = StreamCreateFromPhysfs( AllocatorGetHeap(), options.name, StreamMode::Read);
 #else
+
 	Stream* stream = StreamCreateFromFile( AllocatorGetHeap(), options.name, StreamMode::Read);
 #endif
 

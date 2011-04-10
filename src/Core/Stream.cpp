@@ -11,7 +11,7 @@
 #include "Core/Log.h"
 #include "Core/Memory.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -136,4 +136,4 @@ int64 StreamGetSize(Stream* stream)
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

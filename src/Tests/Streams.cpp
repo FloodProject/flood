@@ -15,7 +15,7 @@
 
 using namespace vapor;
 
-void TestFile(CuTest *tc)
+void TestFile(CuTest* tc)
 {
 	// File not found
 	Stream* not_found = StreamCreateFromFile( AllocatorGetHeap(), "Test.h", StreamMode::Read );

@@ -112,10 +112,7 @@
     <Filter Include="Telemetry\Profiler">
       <UniqueIdentifier>{e65ce8ad-271f-4107-a73d-5c98b30a57ca}</UniqueIdentifier>
     </Filter>
-    <Filter Include="File">
-      <UniqueIdentifier>{90db7c90-f20e-4c6b-8bb6-35edaa19de88}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="File\Watcher">
+    <Filter Include="Watcher">
       <UniqueIdentifier>{63ffccc4-ff22-49bd-9741-b97d2c8e5d60}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -139,9 +136,6 @@
     <ClCompile Include="..\..\src\Core\DynamicLibrary.cpp">
       <Filter>Libraries</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Core\FileSystem.cpp">
-      <Filter>File</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Core\Timer.cpp">
       <Filter>Timer</Filter>
     </ClCompile>
@@ -153,9 +147,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Core\PhysfsStream.cpp">
       <Filter>Streams</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\FileStream.cpp">
-      <Filter>File</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\ArchiveZip.cpp">
       <Filter>Archive</Filter>
@@ -245,16 +236,22 @@
       <Filter>Serialization\JSON</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\FileWatcher.cpp">
-      <Filter>File\Watcher</Filter>
+      <Filter>Watcher</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Win32\FileWatcherWin32.cpp">
-      <Filter>File\Watcher</Filter>
+      <Filter>Watcher</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\Telemetry.cpp">
       <Filter>Telemetry</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\ArchiveDirectory.cpp">
       <Filter>Archive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\ArchiveVirtual.cpp">
+      <Filter>Archive</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\FileStream.cpp">
+      <Filter>Streams</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -272,9 +269,6 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\WebStream.h">
       <Filter>Streams\Web</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\core\FileSystem.h">
-      <Filter>File</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\Memory.h">
       <Filter>Memory</Filter>
@@ -407,10 +401,10 @@
       <Filter>Serialization\JSON</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\core\FileWatcher.h">
-      <Filter>File\Watcher</Filter>
+      <Filter>Watcher</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Win32\FileWatcherWin32.h">
-      <Filter>File\Watcher</Filter>
+      <Filter>Watcher</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\Telemetry.h">
       <Filter>Telemetry</Filter>
