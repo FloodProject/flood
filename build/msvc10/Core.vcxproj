@@ -90,7 +90,7 @@
       <ProgramDataBaseFileName>$(TargetDir)$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\dep\physfs\lib\vc10;$(SolutionDir)..\..\dep\jansson\lib\;$(SolutionDir)..\..\dep\zziplib\lib\;$(SolutionDir)..\..\dep\zlib\lib\vc10</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\dep\jansson\lib\;$(SolutionDir)..\..\dep\zziplib\lib\;$(SolutionDir)..\..\dep\zlib\lib\vc10</AdditionalLibraryDirectories>
       <AdditionalDependencies>jansson_d.lib;zziplib_d.lib;zlibd.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>

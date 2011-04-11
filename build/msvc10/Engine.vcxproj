@@ -74,7 +74,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\src;$(SolutionDir)..\..\dep\picopng\;$(SolutionDir)..\..\dep\stb\;$(SolutionDir)..\..\dep\glew\include;$(SolutionDir)..\..\dep\freetype\include;$(SolutionDir)..\..\dep\openal\include;$(SolutionDir)..\..\dep\ogg\include;$(SolutionDir)..\..\dep\physfs\include;$(SolutionDir)..\..\dep\vorbis\include;$(SolutionDir)..\..\dep\jsoncpp\include;$(SolutionDir)..\..\dep\SFML\include;$(SolutionDir)..\..\dep\lua\include;$(SolutionDir)..\..\dep\swig\include;$(SolutionDir)..\..\dep\bullet\include;$(SolutionDir)..\..\dep\zeromq\include;$(SolutionDir)..\..\dep\devil\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\src;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\glew\include;$(SolutionDir)..\..\dep\freetype\include;$(SolutionDir)..\..\dep\openal\include;$(SolutionDir)..\..\dep\SFML\include;$(SolutionDir)..\..\dep\lua\include;$(SolutionDir)..\..\dep\swig\include;$(SolutionDir)..\..\dep\bullet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;___DEBUG;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <ExceptionHandling>false</ExceptionHandling>

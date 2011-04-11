@@ -64,7 +64,7 @@
     <ClCompile>
       <AdditionalOptions>-Zm140 </AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\src;$(SolutionDir)..\..\src\Editor\inc;$(SolutionDir)..\..\dep\jsoncpp\include;$(SolutionDir)..\..\dep\lua\include;$(SolutionDir)..\..\dep\openal\include;$(SolutionDir)..\..\dep\glew\include;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\zeromq\include;$(SolutionDir)..\..\dep\wx\include;$(SolutionDir)..\..\dep\wx\include\msvc;$(SolutionDir)..\..\dep\curl\include;C:\Users\triton\Development\mono-2.10.1.tar\mono-2.10.1\mono-2.10.1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\src;$(SolutionDir)..\..\src\Editor\inc;$(SolutionDir)..\..\dep\lua\include;$(SolutionDir)..\..\dep\openal\include;$(SolutionDir)..\..\dep\glew\include;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\wx\include;$(SolutionDir)..\..\dep\wx\include\msvc;$(SolutionDir)..\..\dep\curl\include;C:\Users\triton\Development\mono-2.10.1.tar\mono-2.10.1\mono-2.10.1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;__WXMSW__;_UNICODE;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <ExceptionHandling>Sync</ExceptionHandling>

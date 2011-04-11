@@ -132,10 +132,22 @@ static void SetThreadName( DWORD dwThreadID, LPCSTR szThreadName )
 
 //-----------------------------------//
 
+typedef DWORD (WINAPI *GetThreadIdFn)(HANDLE);
+
 void ThreadSetName( Thread* thread, const String& name )
 {
 	if( !thread ) return;
-	SetThreadName( ::GetThreadId(thread->Handle), name.c_str() ); 
+
+	HMODULE module = GetModuleHandleA("Kernel32.dll");
+	if( module == NULL ) return;
+
+	// GetThreadId only exists on Vista or later versions, test if it exists
+	// at runtime or the program will not run due to dynamic linking errors.
+
+	GetThreadIdFn getId = (GetThreadIdFn) GetProcAddress(module, "GetThreadId");
+	if( getId == NULL ) return;
+
+	SetThreadName( getId(thread->Handle), name.c_str() ); 
 }
 
 //-----------------------------------//
