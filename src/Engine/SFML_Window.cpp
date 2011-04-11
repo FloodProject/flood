@@ -125,47 +125,47 @@ bool SFML_Window::pumpEvents()
 	{
 		switch( event.Type )
 		{
-			case sf::Event::Closed:
-				handleWindowClose();
-				return false;
+		case sf::Event::Closed:
+			handleWindowClose();
+			return false;
 			
-			case sf::Event::Resized:
-				processResize( event );
-				break;
+		case sf::Event::Resized:
+			processResize( event );
+			break;
 			
-			case sf::Event::LostFocus:
-				handleWindowFocus( true );
-				break;	
+		case sf::Event::LostFocus:
+			handleWindowFocus( true );
+			break;	
 			
-			case sf::Event::GainedFocus:
-				handleWindowFocus( false );
-				break;	
+		case sf::Event::GainedFocus:
+			handleWindowFocus( false );
+			break;	
 			
-			case sf::Event::TextEntered:
+		case sf::Event::TextEntered:
 			
-			case sf::Event::KeyPressed:
-			case sf::Event::KeyReleased:
+		case sf::Event::KeyPressed:
+		case sf::Event::KeyReleased:
 			
-			case sf::Event::MouseButtonPressed:
-			case sf::Event::MouseButtonReleased:
+		case sf::Event::MouseButtonPressed:
+		case sf::Event::MouseButtonReleased:
 
-			case sf::Event::MouseEntered:
-			case sf::Event::MouseLeft:
-			case sf::Event::MouseWheelMoved:
+		case sf::Event::MouseEntered:
+		case sf::Event::MouseLeft:
+		case sf::Event::MouseWheelMoved:
 			
-			case sf::Event::JoyButtonPressed:
-			case sf::Event::JoyButtonReleased:
-			case sf::Event::JoyMoved:
-			{
-				inputManager.processSFMLEvent( event );
-				break;
-			}
+		case sf::Event::JoyButtonPressed:
+		case sf::Event::JoyButtonReleased:
+		case sf::Event::JoyMoved:
+		{
+			inputManager.processSFMLEvent( event );
+			break;
+		}
 
-			case sf::Event::MouseMoved:
-			{
-				inputManager.processSFMLEvent( event );
-				break;
-			}
+		case sf::Event::MouseMoved:
+		{
+			inputManager.processSFMLEvent( event );
+			break;
+		}
 		}
 	}
 
@@ -218,8 +218,8 @@ Vector2 SFML_Window::getCursorPosition() const
 
 void SFML_Window::processResize(sf::Event event)
 {
-	settings.setHeight( (ushort) event.Size.Height );
-	settings.setWidth( (ushort) event.Size.Width );
+	settings.height = (uint16) event.Size.Height;
+	settings.width = (uint16) event.Size.Width;
 
 	handleWindowResize();
 }

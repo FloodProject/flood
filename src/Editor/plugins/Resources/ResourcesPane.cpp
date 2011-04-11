@@ -118,7 +118,7 @@ wxTreeItemId ResourcesPage::addResource(const ResourcePtr& res)
 	if( it != resourceIds.end() ) return nullptr;
 
 	ResourceGroup::Enum group = res->getResourceGroup();
-	const std::string& resPath = res->getPath();
+	const Path& resPath = res->getPath();
 	
 	wxTreeItemId id = AppendItem(resGroupIds[group], resPath, 0 );
 	resourceIds[res.get()] = id;
@@ -143,7 +143,7 @@ void ResourcesPage::onResourceRemoved( const ResourceEvent& event )
 	ResourceIdsMap::iterator it = resourceIds.find( res.get() );
 	assert( it != resourceIds.end() );
 
-	wxTreeItemId id = (*it).second;
+	wxTreeItemId id = it->second;
 	assert( id.IsOk() );
 
 	Delete(id);
@@ -165,7 +165,7 @@ ResourcePtr ResourcesPage::getResourceFromTreeId( wxTreeItemId id )
 	if( !id )
 		return nullptr;
 
-	return GetResourceManager()->getResource( (std::string) GetItemText(id) );
+	return GetResourceManager()->getResource( (String) GetItemText(id) );
 }
 
 //-----------------------------------//
@@ -208,7 +208,7 @@ static bool isUnderVersionControl(const ResourcePtr& res)
 	Stream* stream = StreamCreateFromFile( AllocatorGetHeap(), res->getPath() );
 	/*, StreamMode::Read );*/
 
-	const std::string& fullPath = PathGetCurrentDir()
+	const String& fullPath = PathGetCurrentDir()
 		+ PathGetSeparator()
 		+ PathGetBase( FileGetFullPath(&file) )
 		+ PathGetSeparator()
@@ -265,23 +265,18 @@ void ResourcesPage::onTreeItemMenu(wxTreeEvent& event)
 	PopupMenu(&menu, clientpt);
 }
 
-static std::string getResourceFullPath(const ResourcePtr& res)
+static String getResourceFullPath(const ResourcePtr& res)
 {
-#if 0
-	File file( res->getPath(), StreamMode::Read );
+	const String& path = res->getPath();
 
-	const std::string& fullPath = PathGetCurrentDir()
+	const String& fullPath = PathGetCurrentDir()
 		+ PathGetSeparator()
-		+ FileGetFullPath(&file);
-
-	FileClose(&file);
+		+ path;
 
 	return fullPath;
-#endif
-	return "";
 }
 
-static wxString getTortoiseBaseCommand(const ResourcePtr& res, const std::string& operation)
+static wxString getTortoiseBaseCommand(const ResourcePtr& res, const String& operation)
 {
 	wxString command("TortoiseProc.exe");
 	command.Append(" /command:");
@@ -308,7 +303,7 @@ void ResourcesPage::onCommandMenuSelected( wxCommandEvent& event )
 	int id = event.GetId();
 
 	const ResourcePtr& res = getResourceFromTreeId( menuItemId );
-	const std::string& fullPath = getResourceFullPath(res);
+	const String& fullPath = getResourceFullPath(res);
 
 	switch(id)
 	{
@@ -334,7 +329,7 @@ void ResourcesPage::onCommandMenuSelected( wxCommandEvent& event )
 		if( !ShellExecuteExA(&info) )
 			return;
 #endif
-		wxString command = wxString("explorer.exe ") + fullPath;
+		wxString command = wxString("explorer.exe /select,") + fullPath;
 		executeCommand(command);
 		break;
 	}

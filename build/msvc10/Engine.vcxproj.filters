@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="PCH">
-      <UniqueIdentifier>{cd7f7e05-8097-4990-a35a-748798467eb1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Render">
       <UniqueIdentifier>{e77f2066-f8ca-4489-a72d-c21a42699900}</UniqueIdentifier>
     </Filter>
@@ -84,12 +81,6 @@
     </Filter>
     <Filter Include="Scene\Projector">
       <UniqueIdentifier>{690ffdfd-7b71-45d4-a2c5-520a8c8d1f9c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine">
-      <UniqueIdentifier>{bcc11d8b-8cea-42e1-ac11-916508d293a2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Framework">
-      <UniqueIdentifier>{61cee6f9-a647-4fcf-947d-1ce2c2a33cc6}</UniqueIdentifier>
     </Filter>
     <Filter Include="GUI">
       <UniqueIdentifier>{dd790635-b156-4510-8a1b-1ff2e320ca69}</UniqueIdentifier>
@@ -214,11 +205,11 @@
     <Filter Include="Subsystem">
       <UniqueIdentifier>{e55c350d-3789-4808-996c-837604d5ab65}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework">
+      <UniqueIdentifier>{61cee6f9-a647-4fcf-947d-1ce2c2a33cc6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\Engine\PCH.cpp">
-      <Filter>PCH</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Engine\Cube.cpp">
       <Filter>Render\Primitives\Cube</Filter>
     </ClCompile>
@@ -240,11 +231,8 @@
     <ClCompile Include="..\..\src\Engine\FrameStatistics.cpp">
       <Filter>Render\Target</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Engine.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Framework\Framework.cpp">
-      <Filter>Engine\Framework</Filter>
+      <Filter>Framework</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\Atlas.cpp">
       <Filter>GUI</Filter>
@@ -474,6 +462,7 @@
     <ClCompile Include="..\..\src\Win32\WindowWin32.cpp">
       <Filter>Window\Win32</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Engine\Engine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\vapor\render\Device.h">
@@ -596,14 +585,8 @@
     <ClInclude Include="..\..\inc\vapor\scene\Projector.h">
       <Filter>Scene\Projector</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\Engine.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\vapor\Framework.h">
-      <Filter>Engine\Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\Main.h">
-      <Filter>Engine\Framework</Filter>
+      <Filter>Framework</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\gui\Atlas.h">
       <Filter>GUI</Filter>
@@ -747,6 +730,8 @@
     <ClInclude Include="..\..\inc\vapor\Subsystem.h">
       <Filter>Subsystem</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\inc\Engine\API.h" />
+    <ClInclude Include="..\..\inc\vapor\Engine.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\doc\TODO.txt">

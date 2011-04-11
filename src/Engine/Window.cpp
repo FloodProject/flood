@@ -11,14 +11,6 @@
 #include "input/Keyboard.h"
 #include "Engine.h"
 
-#if defined(VAPOR_WINDOWING_WIN32)
-	#include <Render/Win32_Window.h>
-#elif defined(VAPOR_WINDOWING_SFML)
-	#include <Render/SFML_Window.h>
-#else
-	//#error "OpenGL renderer needs a windowing implementation"
-#endif
-
 namespace vapor {
 
 //-----------------------------------//
@@ -90,23 +82,6 @@ void Window::handleWindowFocus( bool focusLost )
 void Window::setCursorPosition( const Vector2& pos )
 {
 	setCursorPosition( pos.x, pos.y );
-}
-
-//-----------------------------------//
-
-Window* Window::createWindow( const WindowSettings& settings )
-{
-	Window* window = nullptr;
-
-	#if defined(VAPOR_WINDOWING_WIN32)
-		window = new Win32Window(settings);
-	#elif defined(VAPOR_WINDOWING_SFML)
-		window = new SFML_Window(settings);
-	#else
-		//#error "Could not find a window implementation"
-	#endif
-
-	return window;
 }
 
 //-----------------------------------//

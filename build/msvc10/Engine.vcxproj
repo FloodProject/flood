@@ -189,13 +189,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Controllers\ThirdPersonController.cpp" />
     <ClCompile Include="..\..\src\Core\Subsystem.cpp" />
-    <ClCompile Include="..\..\src\Engine\PCH.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DLL|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Engine/API.h</PrecompiledHeaderFile>
-    </ClCompile>
     <ClCompile Include="..\..\src\Engine\Cube.cpp" />
     <ClCompile Include="..\..\src\Engine\Sphere.cpp" />
     <ClCompile Include="..\..\src\Engine\Quad.cpp" />
@@ -207,6 +200,7 @@
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release DLL|Win32'">4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\src\Framework\Framework.cpp" />
     <ClCompile Include="..\..\src\Engine\Atlas.cpp" />
@@ -281,6 +275,7 @@
     <ClCompile Include="..\..\src\Win32\WindowWin32.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\inc\Engine\API.h" />
     <ClInclude Include="..\..\inc\vapor\render\Device.h" />
     <ClInclude Include="..\..\inc\vapor\render\GL.h" />
     <ClInclude Include="..\..\inc\vapor\render\Material.h" />
@@ -327,7 +322,6 @@
     <ClInclude Include="..\..\inc\vapor\scene\Projector.h" />
     <ClInclude Include="..\..\inc\vapor\Engine.h" />
     <ClInclude Include="..\..\inc\vapor\Framework.h" />
-    <ClInclude Include="..\..\inc\vapor\Main.h" />
     <ClInclude Include="..\..\inc\vapor\gui\Atlas.h" />
     <ClInclude Include="..\..\inc\vapor\gui\Label.h" />
     <ClInclude Include="..\..\inc\vapor\gui\Overlay.h" />

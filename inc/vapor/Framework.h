@@ -61,6 +61,9 @@ protected:
 
 protected:
 
+	// Creates a new rendering window.
+	void createWindow();
+
 	// Register input devices callbacks.
 	void registerCallbacks();
 

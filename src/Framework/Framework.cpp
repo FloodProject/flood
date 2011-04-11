@@ -8,11 +8,18 @@
 
 #include "Engine/API.h"
 #include "Framework.h"
+#include "Core/Archive.h"
 #include "Core/Timer.h"
 #include "Core/Utilities.h"
 #include "Render/Device.h"
 #include "Input/InputManager.h"
 #include "Resources/ResourceManager.h"
+
+#if defined(VAPOR_WINDOWING_WIN32)
+	#include <Render/Win32_Window.h>
+#elif defined(VAPOR_WINDOWING_SFML)
+	#include <Render/SFML_Window.h>
+#endif
 
 namespace vapor {
 
@@ -39,9 +46,14 @@ void Framework::init()
 	// Init the engine.
 	Engine::init(true);
 
-	// Register default media locations.
-	// FileSystem* fs = getFileSystem();
-	//fs->mountDefaultLocations("Assets");
+	// Creates the window.
+	createWindow();
+
+	// Mount the default assets path.
+	ResourceManager* res = getResourceManager();
+	Archive* archive = ArchiveCreateVirtual( GetResourcesAllocator() );
+	ArchiveMountDirectories(archive, "Assets", GetResourcesAllocator());
+	res->setArchive(archive);
 
 	// Register input callbacks.
 	registerCallbacks();
@@ -58,6 +70,33 @@ void Framework::init()
 	// Wait until all resources are loaded.
 	ResourceManager* rm = getResourceManager();
 	rm->loadQueuedResources();
+}
+
+//-----------------------------------//
+
+void Framework::createWindow()
+{
+	WindowSettings settings;
+
+	Window* window = nullptr;
+
+	#if defined(VAPOR_WINDOWING_WIN32)
+		window = new Win32Window(settings);
+	#elif defined(VAPOR_WINDOWING_SFML)
+		window = new SFML_Window(settings);
+	#else
+		#error "Could not find a window implementation"
+	#endif
+
+	assert( window != nullptr );
+
+	RenderDevice* device = getRenderDevice();
+
+	device->setWindow( window );
+	device->setRenderTarget( window );
+
+	// Initializes the render device with new window context.
+	device->init();
 }
 
 //-----------------------------------//
@@ -127,6 +166,8 @@ void Framework::updateFrameTimes()
 void Framework::registerCallbacks()
 {
 	InputManager* input = getInputManager();
+
+	if( !input ) return;
 
 	Keyboard* keyboard = input->getKeyboard();
 	keyboard->onKeyPress.Connect( this, &Framework::onKeyPressed );

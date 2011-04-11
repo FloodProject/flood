@@ -22,7 +22,10 @@ struct Stream;
 API_CORE Archive* ArchiveCreateVirtual(Allocator*);
 
 // Mounts an archive in the virtual archive.
-API_CORE bool ArchiveMount(Archive*, Archive*, const String& mountPath); 
+API_CORE bool ArchiveMount(Archive*, Archive*, const String& mountPath);
+
+// Mounts a directory and its direct hierarchy.
+API_CORE void ArchiveMountDirectories(Archive*, const String& dirPath, Allocator*);
 
 // Creates a new archive from a ZIP.
 API_CORE Archive* ArchiveCreateFromZip(Allocator*, const Path&);

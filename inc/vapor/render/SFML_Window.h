@@ -78,7 +78,7 @@ private:
 	sf::Window window;
 	sf::WindowSettings windowSettings;
 	sf::VideoMode videoMode;
-	ulong flags;
+	uint32 flags;
 	
 	// Holds the current state of the cursor.
 	bool cursorState;

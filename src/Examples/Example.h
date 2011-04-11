@@ -58,27 +58,3 @@ private:
 	TexturePtr textureFBO;
 	RenderBuffer* bufferFBO;
 };
-
-#include "Core/Memory.h"
-#include "Core/Concurrency.h"
-#include "Core/Archive.h"
-
-//-----------------------------------//
-
-int main(int argc, const char** argv)
-{
-	Example example;
-	//example.run();
-
-	Archive* archive = ArchiveCreateFromZip( AllocatorGetHeap(), "Teste.zip" );
-	
-	std::vector<Path> files;
-	//ArchiveEnumerateFiles(archive, files);
-
-	for(size_t i = 0; i < files.size(); i++)
-		printf("ZIP file entry: %s\n", files[i].c_str());
-
-	ArchiveDestroy(archive, AllocatorGetHeap());
-
-	return EXIT_SUCCESS;
-}

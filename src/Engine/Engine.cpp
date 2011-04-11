@@ -159,15 +159,6 @@ void Engine::setupDevices( bool createWindow )
 {
 	renderDevice = new RenderDevice();
 
-	if( createWindow )
-	{
-		// Creates a new render window.
-		renderDevice->createWindow();
-
-		// Initializes the render device with new window context.
-		renderDevice->init();
-	}
-
 #ifdef VAPOR_AUDIO_OPENAL
 	// Creates the audio device.
 	audioDevice = new AudioDevice();

@@ -16,10 +16,22 @@
 #include "Resources/API.h"
 
 //---------------------------------------------------------------------//
-// Compile-time options
+// Engine APIs
 //---------------------------------------------------------------------//
 
-#include "CompileOptions.h"
+// Enables visual styled controls on Windows
+//#define	VAPOR_USE_COMMON_CONTROLS
+
+//#define	VAPOR_WINDOWING_SFML
+#define	VAPOR_WINDOWING_WIN32
+//#define	VAPOR_INPUT_SFML
+
+#define		VAPOR_RENDERER_OPENGL
+//#define	VAPOR_RENDERER_DIRECTX
+#define		VAPOR_SHADER_GLSL
+
+#define		VAPOR_AUDIO_OPENAL
+#define		VAPOR_PHYSICS_BULLET
 
 //---------------------------------------------------------------------//
 // API Exports

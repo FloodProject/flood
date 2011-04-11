@@ -10,6 +10,14 @@
 #include "Core/Utilities.h"
 #include "io/JsonSerializer.h"
 
+int main()
+{
+	Example example;
+	example.run();
+
+	return EXIT_SUCCESS;
+}
+
 //-----------------------------------//
 
 Example::Example(const char** argv)

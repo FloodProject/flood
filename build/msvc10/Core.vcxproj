@@ -225,7 +225,6 @@
     <ClCompile Include="..\..\src\Win32\FileWatcherWin32.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\inc\CompileOptions.h" />
     <ClInclude Include="..\..\inc\Core\API.h" />
     <ClInclude Include="..\..\inc\Core\Archive.h" />
     <ClInclude Include="..\..\inc\Core\Concurrency.h" />

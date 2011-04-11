@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "CompileOptions.h"
-
 #ifdef VAPOR_IMAGE_DEVIL
 
 #include "Resources/ResourceLoader.h"

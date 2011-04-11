@@ -135,25 +135,6 @@ void EditorFrame::createPlugins()
 	getAUI()->AddPane(pluginManagerFrame, pane);
 }
 
-//-----------------------------------//
-
-static void ArchiveMountDefault(Archive* archive, const String& dirPath)
-{
-	Archive* dir = ArchiveCreateFromDirectory(GetResourcesAllocator(), dirPath);
-	
-	ArchiveMount(archive, dir, "");
-	
-	std::vector<String> dirs;
-	ArchiveEnumerateDirectories(dir, dirs);
-
-	for(size_t i = 0; i < dirs.size(); i++)
-	{
-		const String& path = dirPath + PathGetSeparator() + dirs[i];
-		Archive* ndir = ArchiveCreateFromDirectory(GetResourcesAllocator(), path);
-		ArchiveMount(archive, ndir, "");
-	}
-}
-
 void EditorFrame::createEngine()
 {
 	engine = new Engine;
@@ -164,10 +145,8 @@ void EditorFrame::createEngine()
 
 	// Mount the default assets path.
 	ResourceManager* res = engine->getResourceManager();
-
 	Archive* archive = ArchiveCreateVirtual( GetResourcesAllocator() );
-	ArchiveMountDefault(archive, "Assets");
-
+	ArchiveMountDirectories(archive, "Assets", GetResourcesAllocator());
 	res->setArchive(archive);
 }
 

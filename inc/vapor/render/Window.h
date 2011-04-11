@@ -10,7 +10,7 @@
 
 #include "Math/Vector.h"
 #include "Render/Target.h"
-#include "input/InputManager.h"
+#include "Input/InputManager.h"
 
 namespace vapor {
 
@@ -92,9 +92,6 @@ public:
 
 	// Event fired when the window focus changes.
 	Event1<bool> onWindowFocusChange;
-
-	// Create a new render window.
-	static Window* createWindow( const WindowSettings& = WindowSettings() );
 
 protected:
 

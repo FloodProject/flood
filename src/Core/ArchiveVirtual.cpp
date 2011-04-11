@@ -77,6 +77,25 @@ bool ArchiveMount(Archive* archive, Archive* mount, const String& mountPath)
 
 //-----------------------------------//
 
+void ArchiveMountDirectories(Archive* archive, const String& dirPath, Allocator* alloc)
+{
+	Archive* dir = ArchiveCreateFromDirectory(alloc, dirPath);
+	
+	ArchiveMount(archive, dir, "");
+	
+	std::vector<String> dirs;
+	ArchiveEnumerateDirectories(dir, dirs);
+
+	for(size_t i = 0; i < dirs.size(); i++)
+	{
+		const String& path = dirPath + PathGetSeparator() + dirs[i];
+		Archive* ndir = ArchiveCreateFromDirectory(alloc, path);
+		ArchiveMount(archive, ndir, "");
+	}
+}
+
+//-----------------------------------//
+
 static bool VirtualArchiveOpen(Archive* archive, const String& path)
 {
 	return (archive != nullptr);

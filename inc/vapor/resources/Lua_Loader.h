@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "CompileOptions.h"
-
 #ifdef VAPOR_SCRIPTING_LUA
 
 #include "Resources/ResourceLoader.h"

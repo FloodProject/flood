@@ -96,7 +96,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Core.lib;Engine.lib;Resources.lib;opengl32.lib;glewd.lib;luad.lib;bulletd.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Core.lib;Resources.lib;Engine.lib;opengl32.lib;glewd.lib;luad.lib;bulletd.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)-$(Configuration).exe</OutputFile>
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration);$(SolutionDir)..\..\dep\vld\lib\vc10;$(SolutionDir)..\..\dep\jsoncpp\lib\vc10;$(SolutionDir)..\..\dep\physfs\lib\vc10;$(SolutionDir)..\..\dep\bullet\lib\vc10;$(SolutionDir)..\..\dep\zlib\lib\vc10;$(SolutionDir)..\..\dep\glew\lib\vc10;$(SolutionDir)..\..\dep\vorbis\lib\;$(SolutionDir)..\..\dep\ogg\lib\;$(SolutionDir)..\..\dep\openal\lib\Win32;$(SolutionDir)..\..\dep\sfml\lib\vc10;$(SolutionDir)..\..\dep\lua\lib\vc10;$(SolutionDir)..\..\dep\zeromq\lib\vc10;$(SolutionDir)..\..\dep\wx\lib\vc_lib\vc10;$(SolutionDir)..\..\dep\png\lib\vc10;$(SolutionDir)..\..\dep\devil\lib\vc10;$(SolutionDir)..\..\dep\curl\lib\vc10;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libcmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>

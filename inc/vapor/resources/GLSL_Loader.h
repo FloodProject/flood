@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "CompileOptions.h"
-
 #ifdef VAPOR_SHADER_GLSL
 
 #include "Resources/ResourceLoader.h"

@@ -278,7 +278,6 @@
     <ClInclude Include="..\..\inc\Core\Archive.h">
       <Filter>Archive</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\CompileOptions.h" />
     <ClInclude Include="..\..\inc\Core\Stream.h">
       <Filter>Streams</Filter>
     </ClInclude>

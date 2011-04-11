@@ -588,19 +588,6 @@ RenderBuffer* RenderDevice::createRenderBuffer( const Settings& settings )
 
 //-----------------------------------//
 
-Window* RenderDevice::createWindow( const WindowSettings& settings )
-{
-	Window* window = Window::createWindow( settings );
-	assert( window != nullptr );
-
-	setWindow( window );
-	setRenderTarget( window );
-
-	return window;
-}
-
-//-----------------------------------//
-
 bool RenderDevice::isFixedPipeline() const
 {
 	return pipeline == RenderPipeline::Fixed;

@@ -99,9 +99,6 @@ public:
 	// Creates a new render buffer (offscreen render target).
 	RenderBuffer* createRenderBuffer( const Settings& );
 
-	// Creates a new rendering window.
-	Window* createWindow( const WindowSettings& = WindowSettings() );
-
 	// Gets the main render window.
 	GETTER(RenderWindow, Window*, window)
 
