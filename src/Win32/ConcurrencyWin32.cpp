@@ -144,10 +144,10 @@ void ThreadSetName( Thread* thread, const String& name )
 	// GetThreadId only exists on Vista or later versions, test if it exists
 	// at runtime or the program will not run due to dynamic linking errors.
 
-	GetThreadIdFn getId = (GetThreadIdFn) GetProcAddress(module, "GetThreadId");
-	if( getId == NULL ) return;
+	GetThreadIdFn pGetThreadId = (GetThreadIdFn) GetProcAddress(module, "GetThreadId");
+	if( pGetThreadId == NULL ) return;
 
-	SetThreadName( getId(thread->Handle), name.c_str() ); 
+	SetThreadName( pGetThreadId(thread->Handle), name.c_str() ); 
 }
 
 //-----------------------------------//
@@ -182,11 +182,37 @@ void MutexUnlock(Mutex* mutex)
 
 //-----------------------------------//
 
+typedef VOID (WINAPI *InitializeConditionVariableFn)(PCONDITION_VARIABLE);
+typedef BOOL (WINAPI *SleepConditionVariableCSFn)(PCONDITION_VARIABLE, PCRITICAL_SECTION, DWORD);
+typedef VOID (WINAPI *WakeConditionVariableFn)(PCONDITION_VARIABLE);
+typedef VOID (WINAPI *WakeAllConditionVariableFn)(PCONDITION_VARIABLE);
+
+InitializeConditionVariableFn pInitializeConditionVariable = nullptr;
+SleepConditionVariableCSFn pSleepConditionVariableCS = nullptr;
+WakeConditionVariableFn pWakeConditionVariable = nullptr;
+WakeAllConditionVariableFn pWakeAllConditionVariable = nullptr;
+
+static bool IntializeConditionVars()
+{
+	HMODULE module = GetModuleHandleA("Kernel32.dll");
+	if( module == NULL ) return true;
+
+	pInitializeConditionVariable = (InitializeConditionVariableFn) GetProcAddress(module, "InitializeConditionVariable");
+	pSleepConditionVariableCS = (SleepConditionVariableCSFn) GetProcAddress(module, "SleepConditionVariableCS");
+	pWakeConditionVariable = (WakeConditionVariableFn) GetProcAddress(module, "WakeConditionVariable");
+	pWakeAllConditionVariable = (WakeAllConditionVariableFn) GetProcAddress(module, "WakeAllConditionVariable");
+
+	return true;
+}
+
+static bool initCondVars = IntializeConditionVars();
+
+
 void ConditionInit(Condition* cond)
 {
 	if( !cond ) return;
 	CONDITION_VARIABLE* cvar = (CONDITION_VARIABLE*) &cond->Handle;
-	::InitializeConditionVariable(cvar);
+	if(pInitializeConditionVariable) pInitializeConditionVariable(cvar);
 }
 
 //-----------------------------------//
@@ -197,8 +223,13 @@ void ConditionWait(Condition* cond, Mutex* mutex)
 	CONDITION_VARIABLE* cvar = (CONDITION_VARIABLE*) &cond->Handle;
 	LPCRITICAL_SECTION cs = (LPCRITICAL_SECTION) &mutex->Handle;
 
-	BOOL ret = ::SleepConditionVariableCS(cvar, cs, INFINITE);
-	assert( ret != FALSE );
+	BOOL ret = FALSE;
+	
+	if(pSleepConditionVariableCS) 
+	{
+		ret = pSleepConditionVariableCS(cvar, cs, INFINITE);
+		assert( ret != FALSE );
+	}
 }
 
 //-----------------------------------//
@@ -207,7 +238,7 @@ void ConditionWakeOne(Condition* cond)
 {
 	if( !cond ) return;
 	CONDITION_VARIABLE* cvar = (CONDITION_VARIABLE*) &cond->Handle;
-	::WakeConditionVariable(cvar);
+	if(pWakeConditionVariable) pWakeConditionVariable(cvar);
 }
 
 //-----------------------------------//
@@ -216,7 +247,7 @@ void ConditionWakeAll(Condition* cond)
 {
 	if( !cond ) return;
 	CONDITION_VARIABLE* cvar = (CONDITION_VARIABLE*) &cond->Handle;
-	::WakeAllConditionVariable(cvar);
+	if(pWakeAllConditionVariable) pWakeAllConditionVariable(cvar);
 }
 
 //-----------------------------------//
