@@ -53,6 +53,12 @@ void TestPath(CuTest* tc)
 	Path path = PathGetFileBase("File.cpp"); 
 	CuAssertCppStrEquals(tc, path, Path("File"));
 
+	path = PathGetFileBase("Long/Path/To/File.cpp");
+	CuAssertCppStrEquals(tc, Path("File"), path);
+
+	path = PathGetFileExtension("Long/Path/To/File.cpp"); 
+	CuAssertCppStrEquals(tc, path, Path("cpp"));
+
 	path = PathGetFileExtension("File.cpp"); 
 	CuAssertCppStrEquals(tc, path, Path("cpp"));
 
@@ -66,6 +72,9 @@ void TestPath(CuTest* tc)
 	CuAssertCppStrEquals(tc, path, Path("/"));
 
 	path = PathGetFile("Long/Path/To/File"); 
+	CuAssertCppStrEquals(tc, path, Path("File"));
+
+	path = PathGetFile("\\Long\\Path\\To\\File"); 
 	CuAssertCppStrEquals(tc, path, Path("File"));
 
 	path = PathGetFile("/Absolute/Path/To/File"); 

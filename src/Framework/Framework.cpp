@@ -8,7 +8,6 @@
 
 #include "Engine/API.h"
 #include "Framework.h"
-#include "Core/FileSystem.h"
 #include "Core/Timer.h"
 #include "Core/Utilities.h"
 #include "Render/Device.h"
@@ -41,8 +40,8 @@ void Framework::init()
 	Engine::init(true);
 
 	// Register default media locations.
-	FileSystem* fs = getFileSystem();
-	fs->mountDefaultLocations("Assets");
+	// FileSystem* fs = getFileSystem();
+	//fs->mountDefaultLocations("Assets");
 
 	// Register input callbacks.
 	registerCallbacks();
@@ -108,7 +107,7 @@ void Framework::mainLoop()
 		updateFrameTimes();
 	}
 
-	TimerSleep(0);
+	SystemSleep(0);
 }
 
 //-----------------------------------//

@@ -11,6 +11,8 @@
 #include "Editor.h"
 #include "Core/Utilities.h"
 
+#ifdef PLUGIN_MONO
+
 #include <mono/metadata/mono-config.h>
 #include <mono/mini/jit.h>
 #include <mono/metadata/assembly.h>
@@ -105,3 +107,5 @@ void MonoPlugin::onPluginDisable()
 //-----------------------------------//
 
 } } // end namespaces
+
+#endif

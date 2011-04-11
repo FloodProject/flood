@@ -18,6 +18,8 @@ namespace vapor {
 //-----------------------------------//
 
 struct Stream;
+struct Archive;
+
 class FileWatcher;
 class FileWatchEvent;
 
@@ -43,11 +45,12 @@ struct ResourceLoadOptions
 {
 	ResourceLoadOptions();
 
-	std::string name;
+	String name;
 	ResourceGroup::Enum group;
 	bool asynchronousLoading;
 	bool sendLoadEvent;
 	Resource* resource;
+	Stream* stream;
 };
 
 //-----------------------------------//
@@ -120,7 +123,10 @@ public:
 	ACESSOR(AsynchronousLoading, bool, asynchronousLoading)
 
 	// Sets the task manager.
-	SETTER(TaskPool, TaskPool*, taskPool) 
+	SETTER(TaskPool, TaskPool*, taskPool)
+
+	// Sets the task manager.
+	SETTER(Archive, Archive*, archive) 
 
 	// Sets the file watcher.
 	void setFileWatcher(FileWatcher* watcher);
@@ -183,12 +189,11 @@ protected:
 	// Keeps track if asynchronous loading is enabled.
 	bool asynchronousLoading;
 
-	Mutex resourceFinishLoadMutex;
-	Condition resourceFinishLoad;
+	Condition* resourceFinishLoad;
+	Mutex* resourceFinishLoadMutex;
 
-	// Manages all background loading tasks.
 	TaskPool* taskPool;
-	FileWatcher* fileWatcher;
+	Archive* archive;
 
 	// Number of resources queued for loading.
 	VAPOR_ALIGN_BEGIN(32) Atomic VAPOR_ALIGN_END(32) numResourcesQueuedLoad;

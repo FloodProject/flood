@@ -6,6 +6,10 @@
 *
 ************************************************************************/
 
+#ifdef API_CORE_DLL
+#define INSTANTIATE_TEMPLATES
+#endif
+
 #include "Resources/API.h"
 #include "Resources/ResourceManager.h"
 #include "Resources/ResourceLoader.h"
@@ -15,15 +19,17 @@
 #include "Core/Concurrency.h"
 #include "Core/Stream.h"
 #include "Core/Archive.h"
-#include "Core/FileSystem.h"
 #include "Core/Utilities.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
 static ResourceManager* resourcesInstance;
 ResourceManager* GetResourceManager() { return resourcesInstance; }
+
+static Allocator* resourcesAllocator;
+Allocator* GetResourcesAllocator() { return resourcesAllocator; }
 
 //-----------------------------------//
 
@@ -31,30 +37,24 @@ ResourceLoadOptions::ResourceLoadOptions()
 	: group(ResourceGroup::General)
 	, asynchronousLoading(true)
 	, sendLoadEvent(true)
+	, stream(nullptr)
 { }
 
 //-----------------------------------//
 
 ResourceManager::ResourceManager()
 	: taskPool(nullptr)
-	, fileWatcher(nullptr)
+	, archive(nullptr)
 	, numResourcesQueuedLoad(0)
 	, asynchronousLoading(true)
 {
 	resourcesInstance = this;
-	
-	MutexInit(&resourceFinishLoadMutex);
-	ConditionInit(&resourceFinishLoad);
-}
 
-//-----------------------------------//
- 
-void ResourceManager::setFileWatcher(FileWatcher* watcher)
-{
-	if( !watcher ) return;
-	
-	fileWatcher = watcher;
-	fileWatcher->onFileWatchEvent.Connect(this, &ResourceManager::handleWatchResource);
+	if( !resourcesAllocator )
+		resourcesAllocator = AllocatorCreateHeap( AllocatorGetHeap(), "Resources" );
+
+	resourceFinishLoadMutex = MutexCreate( GetResourcesAllocator() );
+	resourceFinishLoad = ConditionCreate( GetResourcesAllocator() );
 }
 
 //-----------------------------------//
@@ -69,11 +69,9 @@ ResourceManager::~ResourceManager()
 	for( it = resourceLoaders.begin(); it != resourceLoaders.end(); it++ )
 	{
 		ResourceLoader* loader = it->second;
+		if( !loader ) continue;
 
-		if( !loader )
-			continue;
-
-		std::vector<std::string>& extensions = loader->extensions;
+		std::vector<String>& extensions = loader->extensions;
 
 		if( extensions.size() == 1 )
 			delete loader;
@@ -81,19 +79,16 @@ ResourceManager::~ResourceManager()
 			extensions.erase( std::find(extensions.begin(), extensions.end(), it->first) );
 	}
 
-	if( fileWatcher )
-		fileWatcher->onFileWatchEvent.Disconnect(this, &ResourceManager::handleWatchResource);
+	ArchiveDestroy(archive, GetResourcesAllocator());
 
-	// Check that all resources will be deleted.
-	//foreach( const ResourceMapPair& p, resources )
-	//{
-	//	assert( p.second->getReferenceCount() == 1 );
-	//}
+	ConditionDestroy(resourceFinishLoad, GetResourcesAllocator());
+	MutexDestroy(resourceFinishLoadMutex, GetResourcesAllocator());
+	AllocatorDestroy(GetResourcesAllocator(), AllocatorGetHeap());
 }
 
 //-----------------------------------//
 
-ResourcePtr ResourceManager::getResource(const std::string& path)
+ResourcePtr ResourceManager::getResource(const String& path)
 {
 	Path name = PathGetFile(path);
 
@@ -105,7 +100,7 @@ ResourcePtr ResourceManager::getResource(const std::string& path)
 
 //-----------------------------------//
 
-ResourcePtr ResourceManager::loadResource(const std::string& name)
+ResourcePtr ResourceManager::loadResource(const String& name)
 {
 	ResourceLoadOptions options;
 	options.name = name;
@@ -129,19 +124,17 @@ ResourcePtr ResourceManager::loadResource(ResourceLoadOptions options)
 	if( !validateResource(options.name) )
 		return nullptr;
 
-#ifdef VAPOR_VFS_PHYSFS
-	Stream* stream = StreamCreateFromPhysfs( AllocatorGetHeap(), options.name, StreamMode::Read);
-#else
-
-	Stream* stream = StreamCreateFromFile( AllocatorGetHeap(), options.name, StreamMode::Read);
-#endif
-
-	resource = prepareResource(stream);
-	
-	if( !resource )
+	if( !archive )
 		return nullptr;
 
-	StreamDestroy(stream, AllocatorGetHeap());
+	Stream* stream = ArchiveOpenFile(archive, options.name, GetResourcesAllocator());
+	options.stream = stream;
+
+	if( !stream )
+		return nullptr;
+
+	resource = prepareResource(stream);
+	if( !resource ) return nullptr;
 
 	decodeResource(resource, options);
 
@@ -166,7 +159,7 @@ void ResourceManager::findResource(ResourceLoadOptions& options)
 	ResourceLoaderMap::const_iterator it;
 	for(it = resourceLoaders.begin(); it != resourceLoaders.end(); it++)
 	{
-		const std::string& ext = it->first;
+		const String& ext = it->first;
 		ResourceLoader* loader = it->second;
 
 		if( loader->getResourceGroup() != options.group )
@@ -174,9 +167,9 @@ void ResourceManager::findResource(ResourceLoadOptions& options)
 
 		Path newPath = StringFormat("%s.%s", path.c_str(), ext.c_str());
 
-		if( FileExists(newPath) )
+		if( ArchiveExistsFile(archive, newPath) )
 		{
-			path = newPath;
+			path = PathNormalize(newPath);
 			break;
 		} 
 	}
@@ -184,16 +177,16 @@ void ResourceManager::findResource(ResourceLoadOptions& options)
 
 //-----------------------------------//
 
-bool ResourceManager::validateResource( const std::string& path )
+bool ResourceManager::validateResource( const String& path )
 {
 	if( path.empty() )
 		return false;
 	
-	if( !FileExists(path) )
-	{
-		LogWarn( "Resource '%s' was not found", path.c_str() );
-		return false;
-	}
+	//if( !FileExists(path) )
+	//{
+	//	LogWarn( "Resource '%s' was not found", path.c_str() );
+	//	return false;
+	//}
 	
 	const Path& extension = PathGetFileExtension(path);
 	
@@ -216,7 +209,7 @@ bool ResourceManager::validateResource( const std::string& path )
 
 ResourcePtr ResourceManager::prepareResource(Stream* stream)
 {
-	const Path& path = stream->path;
+	const Path& path = PathGetFile(stream->path);
 
 	// Get the available resource loader and prepare the resource.
 	ResourceLoader* loader = findLoader( PathGetFileExtension(path) );
@@ -244,9 +237,8 @@ ResourcePtr ResourceManager::prepareResource(Stream* stream)
 
 void ResourceManager::decodeResource( ResourcePtr resource, ResourceLoadOptions& options )
 {
-	Task* task = TaskCreate( AllocatorGetHeap() );
-	
-	ResourceLoadOptions* taskOptions = Allocate<ResourceLoadOptions>( AllocatorGetHeap() );
+	Task* task = TaskCreate( GetResourcesAllocator() );
+	ResourceLoadOptions* taskOptions = Allocate<ResourceLoadOptions>( GetResourcesAllocator() );
 	*taskOptions = options;
 	taskOptions->resource = resource.get();
 
@@ -269,19 +261,19 @@ void ResourceManager::decodeResource( ResourcePtr resource, ResourceLoadOptions&
 
 void ResourceManager::loadQueuedResources()
 {
-#ifdef VAPOR_THREADING
-	MutexLock lock(resourceFinishLoadMutex);
+	MutexLock(resourceFinishLoadMutex);
 
-	while( numResourcesQueuedLoad.get() > 0 )
+	while( AtomicRead(&numResourcesQueuedLoad) > 0 )
 	{
 		#pragma TODO("Use timed_wait and notify the observers of progress")
 
-		THREAD( resourceFinishLoad.wait(lock); )
-		System::sleep( 0.01f );
+		ConditionWait(resourceFinishLoad, resourceFinishLoadMutex);
+		// System::sleep( 0.01f );
 	}
 
-	assert( numResourcesQueuedLoad.get() == 0 );
-#endif
+	MutexUnlock(resourceFinishLoadMutex);
+
+	assert( AtomicRead(&numResourcesQueuedLoad) == 0 );
 }
 
 //-----------------------------------//
@@ -309,7 +301,7 @@ void ResourceManager::sendPendingEvents()
 
 void ResourceManager::removeUnusedResources()
 {
-	std::vector<std::string> resourcesToRemove;
+	std::vector<String> resourcesToRemove;
 
 	// Search for unused resources.
 	ResourceMap::const_iterator it;
@@ -321,9 +313,9 @@ void ResourceManager::removeUnusedResources()
 			resourcesToRemove.push_back(it->first);
 	}
 
-	for( uint i = 0; i < resourcesToRemove.size(); i++ )
+	for( size_t i = 0; i < resourcesToRemove.size(); i++ )
 	{
-		const std::string& resource = resourcesToRemove[i];
+		const String& resource = resourcesToRemove[i];
 		removeResource(resource);
 	}
 }
@@ -332,13 +324,13 @@ void ResourceManager::removeUnusedResources()
 
 void ResourceManager::removeResource(const ResourcePtr& resource)
 {
-	const std::string& path = resource->getPath();
+	const String& path = resource->getPath();
 	removeResource(path);
 }
 
 //-----------------------------------//
 
-void ResourceManager::removeResource(const std::string& path)
+void ResourceManager::removeResource(const String& path)
 {
 	ResourceMap::iterator it = resources.find(path);
 	
@@ -362,11 +354,11 @@ void ResourceManager::registerLoader(ResourceLoader* const loader)
 {
 	LogInfo( "Registering resource loader '%s'", loader->getName().c_str() );
 
-	const std::vector<std::string>& extensions = loader->getExtensions();
+	const std::vector<String>& extensions = loader->getExtensions();
 	
 	for( uint i = 0; i < extensions.size(); i++ )
 	{
-		const std::string& extension = extensions[i];
+		const String& extension = extensions[i];
 
 		if(resourceLoaders.find(extension) != resourceLoaders.end())
 		{
@@ -383,7 +375,7 @@ void ResourceManager::registerLoader(ResourceLoader* const loader)
 
 //-----------------------------------//
 
-ResourceLoader* ResourceManager::findLoader(const std::string& ext)
+ResourceLoader* ResourceManager::findLoader(const String& ext)
 {
 	// Check if we have a resource loader for this extension.
 	if( resourceLoaders.find(ext) == resourceLoaders.end() )
@@ -415,8 +407,9 @@ void ResourceManager::setupResourceLoaders()
 
 void ResourceManager::handleWatchResource(const FileWatchEvent& evt)
 {
+	/*
 	// Check if the filename maps to a known resource.
-	const std::string& file = evt.filename;
+	const String& file = evt.filename;
 
 	if( resources.find(file) == resources.end() )
 		return; // Resource is not known.
@@ -444,8 +437,9 @@ void ResourceManager::handleWatchResource(const FileWatchEvent& evt)
 	event.resource = res;
 	
 	onResourceReloaded(event);
+	*/
 }
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

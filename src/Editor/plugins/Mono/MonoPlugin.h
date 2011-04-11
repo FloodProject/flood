@@ -10,6 +10,8 @@
 
 #include "Plugin.h"
 
+#ifdef PLUGIN_MONO
+
 #include <mono/metadata/metadata.h>
 
 namespace vapor { namespace editor {
@@ -40,3 +42,5 @@ public:
 //-----------------------------------//
 
 } } // end namespaces
+
+#endif

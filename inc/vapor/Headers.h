@@ -17,7 +17,6 @@
 #include <Core/Archive.h>
 #include <Core/Event.h>
 #include <Core/Serialization.h>
-#include <Core/FileSystem.h>
 #include <Core/FileWatcher.h>
 
 //---------------------------------------------------------------------//

@@ -44,7 +44,11 @@ void PluginManager::referencePlugins()
 	PLUGIN(Console);
 	PLUGIN(Log);
 	PLUGIN(Resources);
+
+#ifdef PLUGIN_MONO
 	PLUGIN(Mono);
+#endif
+
 	PLUGIN(Sample);
 }
 

@@ -145,9 +145,6 @@
     <ClCompile Include="..\..\src\Core\Archive.cpp">
       <Filter>Archive</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Core\PhysfsStream.cpp">
-      <Filter>Streams</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Core\ArchiveZip.cpp">
       <Filter>Archive</Filter>
     </ClCompile>
@@ -226,15 +223,6 @@
     <ClCompile Include="..\..\src\Core\reflection\Type.cpp">
       <Filter>Reflection\Type</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Core\io\Serialization.cpp">
-      <Filter>Serialization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\io\BinarySerializer.cpp">
-      <Filter>Serialization\Binary</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\io\JsonSerializer.cpp">
-      <Filter>Serialization\JSON</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Core\FileWatcher.cpp">
       <Filter>Watcher</Filter>
     </ClCompile>
@@ -252,6 +240,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Core\FileStream.cpp">
       <Filter>Streams</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\Serialization.cpp">
+      <Filter>Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\BinarySerializer.cpp">
+      <Filter>Serialization\Binary</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\JsonSerializer.cpp">
+      <Filter>Serialization\JSON</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -16,7 +16,7 @@
 #include "Core/Archive.h"
 #include "Core/Utilities.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -25,13 +25,9 @@ void ResourceTaskRun(Task* task)
 	ResourceLoadOptions* options = (ResourceLoadOptions*) task->Userdata;
 	Resource* resource = options->resource;
 	const Path& path = resource->getPath();
-	
-#ifdef VAPOR_VFS_PHYSFS
-	Stream* stream = StreamCreateFromPhysfs( AllocatorGetHeap(), options->name, StreamMode::Read);
-#else
-	Stream* stream = StreamCreateFromFile( AllocatorGetHeap(), options->name, StreamMode::Read);
-#endif
 
+	Stream* stream = options->stream;
+	
 	ResourceManager* res = GetResourceManager();
 	ResourceLoader* loader = res->findLoader( PathGetFileExtension(path) );
 
@@ -55,14 +51,14 @@ void ResourceTaskRun(Task* task)
 	}
 
 	AtomicDecrement(&res->numResourcesQueuedLoad);
-	ConditionWakeOne(&res->resourceFinishLoad);
+	ConditionWakeOne(res->resourceFinishLoad);
 
 	LogInfo("Loaded resource '%s'", path.c_str());
 
-	Deallocate( AllocatorGetHeap(), options );
-	StreamDestroy(stream, AllocatorGetHeap());
+	Deallocate(GetResourcesAllocator(), options);
+	StreamDestroy(stream, GetResourcesAllocator());
 }
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

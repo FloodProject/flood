@@ -86,7 +86,19 @@ static bool VirtualArchiveOpen(Archive* archive, const String& path)
 
 static bool VirtualArchiveClose(Archive* archive)
 {
-	return (archive != nullptr);
+	if( !archive ) return false;
+
+	ArchiveVirtual* varchive = (ArchiveVirtual*) archive;
+	
+	for(size_t i = 0; i < varchive->mounts.size(); i++)
+	{
+		Archive* marchive = varchive->mounts[i];
+		ArchiveDestroy(marchive, AllocatorGetHeap() );
+	}
+
+	varchive->mounts.clear();
+
+	return true;
 }
 
 //-----------------------------------//

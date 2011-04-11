@@ -38,7 +38,7 @@ namespace vapor {
 // Check for mode details about endianness-related tricks and issues:
 // http://www.gamedev.net/reference/articles/article2091.asp
 
-bool System::isLittleEndian()
+bool SystemIsLittleEndian()
 {
 	byte endianTest[2] = { 1, 0 };
 	short x;
@@ -49,16 +49,29 @@ bool System::isLittleEndian()
 
 //-----------------------------------//
 
-long System::swapEndian(long i)
+int32 SystemSwapEndian(int32 i)
 {
-	unsigned char b1, b2, b3, b4;
+	uint8 b1, b2, b3, b4;
 
 	b1 = i & 255;
 	b2 = ( i>>8 )  & 255;
 	b3 = ( i>>16 ) & 255;
 	b4 = ( i>>24 ) & 255;
 
-	return ((int)b1 << 24) + ((int)b2 << 16) + ((int)b3 << 8) + b4;
+	return ((int32)b1 << 24) + ((int32)b2 << 16) + ((int32)b3 << 8) + b4;
+}
+
+//-----------------------------------//
+
+void SystemSleep( int64 time )
+{
+#ifdef VAPOR_PLATFORM_WINDOWS
+	::Sleep( static_cast<DWORD>(time) );
+#else
+	timespec param;
+	param.tv_nsec = time*1000000000.0;
+	nanosleep(&param, NULL);
+#endif
 }
 
 //-----------------------------------//
@@ -221,7 +234,7 @@ Path PathGetFileBase(const Path& path)
 	if( ch == String::npos ) return "";
 
 	// Return the file extension.
-	return path.substr( 0, ch );
+	return filePath.substr( 0, ch );
 }
 
 //-----------------------------------//
@@ -242,10 +255,12 @@ Path PathGetFileExtension(const Path& path)
 
 Path PathGetBase(const Path& path)
 {
-	// Check if it has a file extension.
 	size_t ch = path.find_last_of("/");
 
-	if( ch == String::npos ) 
+	if( ch == String::npos )
+		ch = path.find_last_of("\\");
+
+	if( ch == String::npos )
 		return path;
 
 	// Return the file extension.
@@ -256,10 +271,12 @@ Path PathGetBase(const Path& path)
 
 Path PathGetFile(const Path& path)
 {
-	// Check if it has a file extension.
 	size_t ch = path.find_last_of("/");
 
-	if( ch == String::npos ) 
+	if( ch == String::npos )
+		ch = path.find_last_of("\\");
+
+	if( ch == String::npos )
 		return path;
 
 	// Return the file extension.

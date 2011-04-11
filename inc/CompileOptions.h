@@ -44,17 +44,3 @@
 
 #define		VAPOR_AUDIO_OPENAL
 #define		VAPOR_PHYSICS_BULLET
-
-//---------------------------------------------------------------------//
-// Resource APIs
-//---------------------------------------------------------------------//
-
-#define		VAPOR_AUDIO_OGG
-//#define	VAPOR_IMAGE_DEVIL
-//#define	VAPOR_IMAGE_PICOPNG
-#define		VAPOR_IMAGE_STB
-#define		VAPOR_MESH_MILKSHAPE3D
-//#define	VAPOR_FONT_FREETYPE2
-#define		VAPOR_FONT_BITMAP
-#define		VAPOR_SCRIPTING_LUA
-#define		VAPOR_SCRIPTING_MONO

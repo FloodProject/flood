@@ -12,38 +12,38 @@
 
 #include "Resources/PNG_Loader.h"
 
-int decodePNG(std::vector<byte>& out_image_32bit, ulong& image_width, 
-			  ulong& image_height, const byte* in_png, ulong in_size);
+int decodePNG(std::vector<byte>& out_image_32bit, uint32& image_width, 
+			  uint32& image_height, const byte* in_png, uint32 in_size);
 
 namespace vapor {
 
 //-----------------------------------//
 
 BEGIN_CLASS_PARENT(PNG_Pico_Loader, ResourceLoader)
-	FIELD_PRIMITIVE(bool, flipY_Axis)
+	FIELD_PRIMITIVE(bool, flipAxisY)
 END_CLASS()
 
 //-----------------------------------//
 
 PNG_Pico_Loader::PNG_Pico_Loader()
-	: flipY_Axis(false)
+	: flipAxisY(false)
 {
 	extensions.push_back("png");
 }
 
 //-----------------------------------//
 
-bool PNG_Pico_Loader::decode(const Stream& file, Resource* res)
+bool PNG_Pico_Loader::decode(const Stream& stream, Resource* res)
 {
-	std::vector<byte> filebuf = file.read();
+	std::vector<byte> data;
+	StreamRead((Stream*) &stream, data);
 
-	if( filebuf.empty() )
-		return false;
+	if( data.empty() ) return false;
 
-	ulong width, height;
+	uint32 width, height;
 	std::vector<byte> buffer;
 	
-	decodePNG(buffer, width, height, &filebuf[0], filebuf.size());
+	decodePNG(buffer, width, height, &data[0], data.size());
 
 	//flip( buffer, width, height );
 
@@ -61,7 +61,7 @@ bool PNG_Pico_Loader::decode(const Stream& file, Resource* res)
 
 //-----------------------------------//
 
-void PNG_Pico_Loader::flip( std::vector<byte>& buffer, ulong width, ulong height )
+void PNG_Pico_Loader::flip( std::vector<byte>& buffer, uint32 width, uint32 height )
 {
 	// Flip Y in place.
 	for( uint y = 0; y < height/2; y++ )

@@ -46,11 +46,11 @@ public:
 
 protected:
 
-	bool flipY_Axis;
+	bool flipAxisY;
 
 	// Flip the Y part of the texture. OpenGL expects the origin at 
 	// bottom-left while the PNG gets decoded as origin being top-left.
-	void flip( std::vector<byte>& buffer, ulong width, ulong height );
+	void flip( std::vector<byte>& buffer, uint32 width, uint32 height );
 };
 
 //-----------------------------------//

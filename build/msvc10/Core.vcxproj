@@ -91,7 +91,7 @@
     </ClCompile>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\dep\physfs\lib\vc10;$(SolutionDir)..\..\dep\jansson\lib\;$(SolutionDir)..\..\dep\zziplib\lib\;$(SolutionDir)..\..\dep\zlib\lib\vc10</AdditionalLibraryDirectories>
-      <AdditionalDependencies>jansson_d.lib;physfsd.lib;zziplib_d.lib;zlibd.lib</AdditionalDependencies>
+      <AdditionalDependencies>jansson_d.lib;zziplib_d.lib;zlibd.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">
@@ -174,13 +174,12 @@
     <ClCompile Include="..\..\src\Core\ArchiveDirectory.cpp" />
     <ClCompile Include="..\..\src\Core\ArchiveVirtual.cpp" />
     <ClCompile Include="..\..\src\Core\ArchiveZip.cpp" />
+    <ClCompile Include="..\..\src\Core\BinarySerializer.cpp" />
     <ClCompile Include="..\..\src\Core\Concurrency.cpp" />
     <ClCompile Include="..\..\src\Core\DynamicLibrary.cpp" />
     <ClCompile Include="..\..\src\Core\FileStream.cpp" />
     <ClCompile Include="..\..\src\Core\FileWatcher.cpp" />
-    <ClCompile Include="..\..\src\Core\io\BinarySerializer.cpp" />
-    <ClCompile Include="..\..\src\Core\io\JsonSerializer.cpp" />
-    <ClCompile Include="..\..\src\Core\io\Serialization.cpp" />
+    <ClCompile Include="..\..\src\Core\JsonSerializer.cpp" />
     <ClCompile Include="..\..\src\Core\Log.cpp" />
     <ClCompile Include="..\..\src\Core\math\BoundingBox.cpp" />
     <ClCompile Include="..\..\src\Core\math\BoundingSphere.cpp" />
@@ -198,7 +197,6 @@
     <ClCompile Include="..\..\src\Core\Memory.cpp" />
     <ClCompile Include="..\..\src\Core\Message.cpp" />
     <ClCompile Include="..\..\src\Core\Network.cpp" />
-    <ClCompile Include="..\..\src\Core\PhysfsStream.cpp" />
     <ClCompile Include="..\..\src\Core\Profiler.cpp" />
     <ClCompile Include="..\..\src\Core\reflection\Class.cpp" />
     <ClCompile Include="..\..\src\Core\reflection\Enum.cpp" />
@@ -206,6 +204,7 @@
     <ClCompile Include="..\..\src\Core\reflection\Object.cpp" />
     <ClCompile Include="..\..\src\Core\reflection\Primitive.cpp" />
     <ClCompile Include="..\..\src\Core\reflection\Type.cpp" />
+    <ClCompile Include="..\..\src\Core\Serialization.cpp" />
     <ClCompile Include="..\..\src\Core\StackWalker.cpp" />
     <ClCompile Include="..\..\src\Core\Stream.cpp" />
     <ClCompile Include="..\..\src\Core\Telemetry.cpp" />

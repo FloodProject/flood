@@ -85,10 +85,10 @@ void TestArchiveZip(CuTest* tc)
 
 void TestArchiveVirtual(CuTest* tc)
 {
-	ArchivePtr archive_zip( pArchiveCreateFromZip(AllocatorGetHeap(), "teste.zip") );
+	Archive* archive_zip = ArchiveCreateFromZip(AllocatorGetHeap(), "teste.zip");
 	CuAssertPtrNotNull(tc, archive_zip);
 
-	ArchivePtr archive_dir( pArchiveCreateFromDirectory(AllocatorGetHeap(), "teste") );
+	Archive* archive_dir = ArchiveCreateFromDirectory(AllocatorGetHeap(), "teste");
 	CuAssertPtrNotNull(tc, archive_dir);
 
 	ArchivePtr archive( pArchiveCreateVirtual(AllocatorGetHeap()) );

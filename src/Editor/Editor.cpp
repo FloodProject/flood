@@ -18,7 +18,6 @@
 #include "EditorInputManager.h"
 #include "Events.h"
 #include "EditorTags.h"
-#include "Core/FileSystem.h"
 #include <wx/debugrpt.h>
 
 wxIMPLEMENT_WXWIN_MAIN_CONSOLE
@@ -138,6 +137,23 @@ void EditorFrame::createPlugins()
 
 //-----------------------------------//
 
+static void ArchiveMountDefault(Archive* archive, const String& dirPath)
+{
+	Archive* dir = ArchiveCreateFromDirectory(GetResourcesAllocator(), dirPath);
+	
+	ArchiveMount(archive, dir, "");
+	
+	std::vector<String> dirs;
+	ArchiveEnumerateDirectories(dir, dirs);
+
+	for(size_t i = 0; i < dirs.size(); i++)
+	{
+		const String& path = dirPath + PathGetSeparator() + dirs[i];
+		Archive* ndir = ArchiveCreateFromDirectory(GetResourcesAllocator(), path);
+		ArchiveMount(archive, ndir, "");
+	}
+}
+
 void EditorFrame::createEngine()
 {
 	engine = new Engine;
@@ -146,9 +162,13 @@ void EditorFrame::createEngine()
 	
 	engine->setupInput();
 
-	// Mount the editor default media directories.
-	FileSystem* fs = engine->getFileSystem();
-	//fs->mountDefaultLocations("Assets");
+	// Mount the default assets path.
+	ResourceManager* res = engine->getResourceManager();
+
+	Archive* archive = ArchiveCreateVirtual( GetResourcesAllocator() );
+	ArchiveMountDefault(archive, "Assets");
+
+	res->setArchive(archive);
 }
 
 //-----------------------------------//
@@ -165,8 +185,9 @@ void EditorFrame::createUI()
 	notebookCtrl->Bind(wxEVT_COMMAND_AUINOTEBOOK_PAGE_CHANGED, &EditorFrame::onNotebookPageChanged, this);
 	notebookCtrl->Bind(wxEVT_COMMAND_AUINOTEBOOK_PAGE_CLOSE, &EditorFrame::onNotebookPageClose, this);
 	
-	wxAuiPaneInfo pane; pane.CenterPane();
-	paneCtrl->AddPane(notebookCtrl, pane );
+	wxAuiPaneInfo pane;
+	pane.CenterPane();
+	paneCtrl->AddPane(notebookCtrl, pane);
 
 	// Create menus
 	createMenus();

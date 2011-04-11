@@ -74,4 +74,8 @@ extern template class std::basic_string<char>;
 // Forward declarations
 //---------------------------------------------------------------------//
 
-namespace vapor { struct Allocator; }
+NAMESPACE_BEGIN
+
+struct Allocator;
+
+NAMESPACE_END

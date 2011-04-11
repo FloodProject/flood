@@ -195,7 +195,6 @@
     <ClInclude Include="..\..\inc\vapor\resources\Resource.h" />
     <ClInclude Include="..\..\inc\vapor\resources\ResourceLoader.h" />
     <ClInclude Include="..\..\inc\vapor\resources\ResourceManager.h" />
-    <ClInclude Include="..\..\src\Resources\API.h" />
     <ClInclude Include="..\..\inc\vapor\resources\Animation.h">
       <Filter>Animation</Filter>
     </ClInclude>
@@ -220,5 +219,6 @@
     <ClInclude Include="..\..\inc\vapor\resources\Shader.h">
       <Filter>Shaders</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\inc\Resources\API.h" />
   </ItemGroup>
 </Project>

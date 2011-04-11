@@ -27,7 +27,6 @@ API_CORE Timer* TimerCreate(Allocator*);
 API_CORE void   TimerDestroy(Timer*, Allocator*);
 API_CORE void   TimerReset(Timer*);
 API_CORE float  TimerGetElapsed(Timer*);
-API_CORE void   TimerSleep( int64 time );
 
 //-----------------------------------//
 

@@ -8,7 +8,6 @@
 
 #include "Engine/API.h"
 #include "Core/Memory.h"
-#include "Core/FileSystem.h"
 
 #include "Engine.h"
 #include "Render/Device.h"
@@ -62,7 +61,6 @@ Engine::~Engine()
 	delete scriptManager;
 	delete renderDevice;
 	delete resourceManager;
-	delete fileSystem;
 	delete audioDevice;
 
 	TaskPoolDestroy( taskPool, AllocatorGetHeap() );
@@ -194,7 +192,6 @@ void Engine::update( float delta )
 		system->update( delta );
 	}
 
-	if(fileSystem) fileSystem->update( delta );
 	resourceManager->update( delta );
 	scene->update( delta );
 

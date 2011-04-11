@@ -110,17 +110,4 @@ float TimerGetElapsed(Timer* timer)
 
 //-----------------------------------//
 
-void TimerSleep( int64 time )
-{
-#ifdef VAPOR_PLATFORM_WINDOWS
-	::Sleep( static_cast<DWORD>(time) );
-#else
-	timespec param;
-	param.tv_nsec = time*1000000000.0;
-	nanosleep(&param, NULL);
-#endif
-}
-
-//-----------------------------------//
-
 } // end namespace

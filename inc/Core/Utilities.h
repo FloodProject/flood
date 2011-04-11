@@ -10,20 +10,20 @@
 
 #include <sstream>
 
-namespace vapor {
+NAMESPACE_EXTERN_BEGIN
 
 //---------------------------------------------------------------------//
 // System Information
 //---------------------------------------------------------------------//
 
-namespace System
-{
-	// Returns if the system is little-endian.
-	bool isLittleEndian();
+// Returns if the system is little-endian.
+API_CORE bool SystemIsLittleEndian();
 
-	// Swaps the endianness of a long.
-	long swapEndian(long i);
-}
+// Swaps the endianness of a long.
+API_CORE int32 SystemSwapEndian(int32 i);
+
+// Sleeps the current thread for the specified time.
+API_CORE void SystemSleep( int64 time );
 
 //---------------------------------------------------------------------//
 // Locales
@@ -43,4 +43,4 @@ private:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_EXTERN_END

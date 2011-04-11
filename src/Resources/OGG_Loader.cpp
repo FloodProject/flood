@@ -75,8 +75,7 @@ bool OGG_Loader::decode(const Stream& stream, Resource* res)
 	vorbis_info* pInfo = ov_info(&oggFile, -1);
 	
 	// If the OGG could not be opened, return a null resource.
-	if(!pInfo)
-		return false;
+	if(!pInfo) return false;
 
 	// Decode the sound into a buffer now.
 	std::vector<byte> buffer;
@@ -108,7 +107,7 @@ void OGG_Loader::decodeOgg( OggVorbis_File* oggFile, std::vector<byte>& buffer )
 
 		// Read up to a buffer's worth of decoded sound data.
 		bytes = ov_read(oggFile, (char*) array, BUFFER_SIZE, 
-			System::isLittleEndian() ? 0 : 1, // 0 for Little-Endian, 1 for Big-Endian
+			SystemIsLittleEndian() ? 0 : 1, // 0 for Little-Endian, 1 for Big-Endian
 			2, // 1 for 8-bit samples, or 2 or 16-bit samples
 			1, // 0 for unsigned, 1 for signed
 			&bitStream);
