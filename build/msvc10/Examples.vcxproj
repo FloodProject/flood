@@ -91,6 +91,7 @@
       <ProgramDataBaseFileName>$(TargetDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableSpecificWarnings>4190</DisableSpecificWarnings>
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -126,6 +127,7 @@
       <ProgramDataBaseFileName>$(TargetDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableSpecificWarnings>4190</DisableSpecificWarnings>
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -161,6 +163,7 @@
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <CallingConvention>Cdecl</CallingConvention>
+      <DisableSpecificWarnings>4190</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <AdditionalDependencies>vaporEngine.lib;opengl32.lib;glew32s.lib;OpenAL32.lib;vorbisfile_static.lib;ogg_static.lib;vorbis_static.lib;physfs.lib;jsoncpp_vc9.lib;sfml-system-s.lib;sfml-window-s.lib;lua5.1-release.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -195,6 +198,7 @@
       <ProgramDataBaseFileName>$(TargetDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableSpecificWarnings>4190</DisableSpecificWarnings>
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

@@ -74,12 +74,8 @@ public:
 	// Gets if this type represents a bitfield.
 	bool isBitfield() const;
 
-protected:
-
 	// Primitive type of the type.
 	PrimitiveType::Enum primitive;
-
-public:
 
 	// Static primitive types.
 	static const Primitive _bool;

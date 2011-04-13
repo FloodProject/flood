@@ -38,7 +38,10 @@ static void LogConsoleHandler(LogEntry* entry)
 
 #ifdef VAPOR_COMPILER_MSVC
 	if(entry->level == LogLevel::Debug)
-		OutputDebugStringA( entry->message.c_str() );
+	{
+		String debug = entry->message + "\n";
+		OutputDebugStringA( debug.c_str() );
+	}
 #endif
 }
 
@@ -77,6 +80,8 @@ void LogAddHandler(Log* log, LogFunction fn)
 {
 	log->Handlers.Connect(fn);
 }
+
+//-----------------------------------//
 
 void LogRemoveHandler(Log* log, LogFunction fn)
 {

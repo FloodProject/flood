@@ -21,7 +21,7 @@ Allocator* AllocatorTests = nullptr;
 
 char* CuStrAlloc(int size)
 {
-	char* newStr = (char*) AllocatorTests->allocate(AllocatorTests, size);
+	char* newStr = (char*) AllocatorTests->allocate(AllocatorTests, size, 0);
 	return newStr;
 }
 
@@ -66,7 +66,7 @@ void CuStringResize(CuString* str, int newSize)
 {
 	char* oldbuffer = str->buffer;
 	
-	str->buffer = (char*) AllocatorTests->allocate(AllocatorTests, newSize);
+	str->buffer = (char*) AllocatorTests->allocate(AllocatorTests, newSize, 0);
 	str->size = newSize;
 	
 	strcpy(str->buffer, oldbuffer);

@@ -62,12 +62,14 @@
 //---------------------------------------------------------------------//
 
 #if defined(VAPOR_COMPILER_MSVC)
+	#define alignof _alignof
 	#define VAPOR_ALIGN_BEGIN(size) __declspec(align(size))
 	#define VAPOR_ALIGN_END(size)
 	#define VAPOR_INLINE __forceinline
 	#define VAPOR_PURE __declspec(novtable)
 	#define VAPOR_OVERRIDE override
 #elif defined(VAPOR_COMPILER_GCC) || defined(VAPOR_COMPILER_CLANG)
+	#define alignof __alignof__ 
 	#define VAPOR_ALIGN_BEGIN(size)
 	#define VAPOR_ALIGN_END(size) __attribute__((aligned(size)))
 	#define VAPOR_INLINE __attribute__((always_inline))

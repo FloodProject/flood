@@ -12,7 +12,7 @@
 #include <functional>
 #include <cassert>
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -84,7 +84,7 @@ public:
         rhs.px = 0;
     }
 
-    RefPtr & operator=(RefPtr && rhs)
+    RefPtr& operator=(RefPtr && rhs)
     {
         RefPtr( static_cast< RefPtr && >( rhs ) ).swap(*this);
         return *this;
@@ -196,7 +196,7 @@ template<class T, class U> RefPtr<T> RefCast(const RefPtr<U>& p)
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END
 
 #define TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( type ) \
 	typedef RefPtr<type> type##Ptr;

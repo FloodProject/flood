@@ -19,6 +19,7 @@
     <ClCompile Include="..\..\src\Tests\Archives.cpp" />
     <ClCompile Include="..\..\src\Tests\Concurrency.cpp" />
     <ClCompile Include="..\..\src\Tests\CuTest.cpp" />
+    <ClCompile Include="..\..\src\Tests\Handle.cpp" />
     <ClCompile Include="..\..\src\Tests\Path.cpp" />
     <ClCompile Include="..\..\src\Tests\Streams.cpp" />
   </ItemGroup>

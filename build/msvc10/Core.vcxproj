@@ -179,6 +179,7 @@
     <ClCompile Include="..\..\src\Core\DynamicLibrary.cpp" />
     <ClCompile Include="..\..\src\Core\FileStream.cpp" />
     <ClCompile Include="..\..\src\Core\FileWatcher.cpp" />
+    <ClCompile Include="..\..\src\Core\Handle.cpp" />
     <ClCompile Include="..\..\src\Core\JsonSerializer.cpp" />
     <ClCompile Include="..\..\src\Core\Log.cpp" />
     <ClCompile Include="..\..\src\Core\math\BoundingBox.cpp" />
@@ -232,11 +233,13 @@
     <ClInclude Include="..\..\inc\Core\Delegate.h" />
     <ClInclude Include="..\..\inc\Core\DynamicLibrary.h" />
     <ClInclude Include="..\..\inc\Core\Event.h" />
+    <ClInclude Include="..\..\inc\Core\Handle.h" />
     <ClInclude Include="..\..\inc\Core\Log.h" />
     <ClInclude Include="..\..\inc\Core\Memory.h" />
     <ClInclude Include="..\..\inc\Core\Object.h" />
     <ClInclude Include="..\..\inc\Core\Platform.h" />
     <ClInclude Include="..\..\inc\Core\Pointers.h" />
+    <ClInclude Include="..\..\inc\Core\ReferenceCount.h" />
     <ClInclude Include="..\..\inc\Core\Reflection.h" />
     <ClInclude Include="..\..\inc\Core\Stream.h" />
     <ClInclude Include="..\..\inc\Core\String.h" />
@@ -268,7 +271,6 @@
     <ClInclude Include="..\..\inc\vapor\math\Quaternion.h" />
     <ClInclude Include="..\..\inc\vapor\math\Ray.h" />
     <ClInclude Include="..\..\inc\vapor\Profiler.h" />
-    <ClInclude Include="..\..\inc\vapor\ReferenceCount.h" />
     <ClInclude Include="..\..\inc\vapor\Registry.h" />
     <ClInclude Include="..\..\inc\vapor\Serialization.h" />
     <ClInclude Include="..\..\inc\vapor\StackWalker.h" />

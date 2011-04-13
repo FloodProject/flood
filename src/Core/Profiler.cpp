@@ -16,7 +16,9 @@ namespace vapor {
 
 Profiler::Profiler(const String& name)
 	: name(name)
-{ }
+{
+	TimerReset(&timer);
+}
 
 //-----------------------------------//
 

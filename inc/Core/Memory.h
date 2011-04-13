@@ -14,8 +14,22 @@ NAMESPACE_EXTERN_BEGIN
 
 //-----------------------------------//
 
-typedef void* (*MemoryAllocateFunction)(Allocator*, int32);
-typedef void (*MemoryFreeFunction)(Allocator*, void*);
+struct Allocator;
+
+API_CORE Allocator* AllocatorGetHeap();
+API_CORE Allocator* AllocatorGetStack();
+
+API_CORE Allocator* AllocatorCreateHeap( Allocator*, const char* group );
+API_CORE Allocator* AllocatorCreateStack( Allocator* );
+API_CORE Allocator* AllocatorCreatePool( Allocator*, int32 size );
+API_CORE Allocator* AllocatorCreatePage( Allocator* );
+API_CORE Allocator* AllocatorCreateTemporary( Allocator* );
+
+API_CORE void AllocatorDestroy( Allocator* allocatee, Allocator* allocator );
+API_CORE void AllocatorDumpInfo();
+
+typedef void* (*MemoryAllocateFunction)(Allocator*, int32 size, int32 align);
+typedef void  (*MemoryFreeFunction)(Allocator*, void* object);
 
 struct Allocator
 {
@@ -24,26 +38,10 @@ struct Allocator
 	const char* group;
 };
 
-struct AllocationMetadata
+struct PoolAllocator : Allocator
 {
-	AllocationMetadata() : size(0), group(nullptr) { }
-
-	int32 size;
-	const char* group;
+	uint8* current;
 };
-
-
-API_CORE Allocator* AllocatorGetHeap();
-API_CORE Allocator* AllocatorGetStack();
-
-API_CORE Allocator* AllocatorCreateHeap( Allocator*, const char* );
-API_CORE Allocator* AllocatorCreateStack( Allocator* );
-API_CORE Allocator* AllocatorCreatePage( Allocator* );
-API_CORE Allocator* AllocatorCreatePool( Allocator* );
-API_CORE Allocator* AllocatorCreateTemporary( Allocator* );
-API_CORE void AllocatorDestroy( Allocator* allocatee, Allocator* allocator );
-
-API_CORE void AllocatorDumpInfo();
 
 EXTERN_END
 
@@ -52,7 +50,7 @@ EXTERN_END
 template<typename T> T* Allocate(Allocator* alloc)
 {
 	// Allocates memory for the object.
-	T* object = (T*) alloc->allocate( alloc, sizeof(T) );
+	T* object = (T*) alloc->allocate( alloc, sizeof(T), alignof(T) );
 
 	// Calls the object contructor using placement new.
 	new (object) T;

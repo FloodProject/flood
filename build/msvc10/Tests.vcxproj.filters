@@ -14,6 +14,7 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Tests\Streams.cpp" />
     <ClCompile Include="..\..\src\Tests\Archives.cpp" />
+    <ClCompile Include="..\..\src\Tests\Handle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Tests\CuTest.h">

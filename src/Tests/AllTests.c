@@ -28,13 +28,15 @@ CuSuite* GetSuitePath();
 CuSuite* GetSuiteConcurrency();
 CuSuite* GetSuiteStreams();
 CuSuite* GetSuiteArchives();
+CuSuite* GetSuiteHandle();
 
 static const SuiteFunction suites[] =
 {
 	GetSuitePath,
 	GetSuiteConcurrency,
 	GetSuiteStreams,
-	GetSuiteArchives
+	GetSuiteArchives,
+	GetSuiteHandle
 };
 
 //-----------------------------------//

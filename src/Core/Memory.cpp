@@ -36,12 +36,24 @@ static Allocator* GetDefaultStackAllocator();
 Allocator* AllocatorGetHeap() { return GetDefaultHeapAllocator(); }
 Allocator* AllocatorGetStack() { return GetDefaultStackAllocator(); }
 
+static bool AllocatorSimulateLowMemory = false;
+
+//-----------------------------------//
+
 struct AllocationGroup
 {
 	AllocationGroup() : freed(0), total(0) { }
 
 	int64 freed;
 	int64 total;
+};
+
+struct AllocationMetadata
+{
+	AllocationMetadata() : size(0), group(nullptr) { }
+
+	int32 size;
+	const char* group;
 };
 
 typedef std::map<const char*, AllocationGroup> MemoryGroupMap;
@@ -52,10 +64,6 @@ static MemoryGroupMap& GetMemoryGroupMap()
 	return memoryGroups;
 }
 
-static bool AllocatorSimulateLowMemory = false;
-
-//-----------------------------------//
-
 static void AllocatorTrackGroup(AllocationMetadata* metadata, bool alloc)
 {
 	if(!metadata) return;
@@ -64,6 +72,8 @@ static void AllocatorTrackGroup(AllocationMetadata* metadata, bool alloc)
 	memoryGroups[metadata->group].total += alloc ? metadata->size : 0;
 	memoryGroups[metadata->group].freed += alloc ? 0 : metadata->size;
 }
+
+//-----------------------------------//
 
 void AllocatorDumpInfo()
 {
@@ -77,10 +87,12 @@ void AllocatorDumpInfo()
 	MemoryGroupMap::iterator it;
 	for(it = memoryGroups.begin(); it != memoryGroups.end(); it++)
 	{
+		const char* id = it->first;
 		AllocationGroup& group = it->second;
-
-		String format = StringFormat("%s\t| free: %I64d bytes, total: %I64d bytes\n",
-			it->first, group.freed, group.total );
+		
+		String format = StringFormat(
+			"%s\t| free: %I64d bytes, total: %I64d bytes\n",
+			id, group.freed, group.total );
 
 		OutputDebugStringA( format.c_str() );
 	}
@@ -90,11 +102,24 @@ void AllocatorDumpInfo()
 
 //-----------------------------------//
 
-static void* HeapAllocate(Allocator* alloc, int32 size)
+void AllocatorDestroy( Allocator* object, Allocator* allocator )
+{
+	Deallocate<Allocator>(allocator, object);
+}
+
+//-----------------------------------//
+
+static void* HeapAllocate(Allocator* alloc, int32 size, int32 align)
 {
 	if(AllocatorSimulateLowMemory) return nullptr;
-
-	void* ptr = malloc(size + sizeof(AllocationMetadata));
+	
+	int32 total_size = size + sizeof(AllocationMetadata);
+	void* ptr = nullptr;
+	
+	//if(align == 0)
+		ptr = malloc(total_size);
+	//else
+	//	ptr = _aligned_malloc(total_size, align);
 	
 	AllocationMetadata* metadata = (AllocationMetadata*) ptr;
 	metadata->size = size;
@@ -114,6 +139,7 @@ static void HeapDellocate(Allocator* alloc, void* p)
 	AllocatorTrackGroup((AllocationMetadata*) base, false);
 #endif
 
+	// _aligned_free
 	free(base);
 }
 
@@ -139,7 +165,7 @@ static Allocator* GetDefaultHeapAllocator()
 
 //-----------------------------------//
 
-static void* StackAllocate(Allocator* alloc, int32 size)
+static void* StackAllocate(Allocator* alloc, int32 size, int32 align)
 {
 	if(AllocatorSimulateLowMemory) return nullptr;
 
@@ -156,7 +182,7 @@ static void StackDellocate(Allocator* alloc, void* p)
 	//AllocatorTrackGroup(alloc, 0);
 #endif
 
-	// memory is automatically freed by the stack
+	// Stack memory is automatically freed.
 }
 
 static Allocator* GetDefaultStackAllocator()
@@ -170,14 +196,38 @@ static Allocator* GetDefaultStackAllocator()
 
 //-----------------------------------//
 
-Allocator* AllocatorCreatePage( Allocator* alloc )
+static void* PoolAllocate(Allocator* alloc, int32 size, int32 align)
 {
-	return nullptr;
+	if(AllocatorSimulateLowMemory) return nullptr;
+
+	PoolAllocator* pool = (PoolAllocator*) alloc;
+
+	void* p = pool->current; 
+	pool->current += size;
+
+	return p;
+}
+
+static void PoolDellocate(Allocator* alloc, void* p)
+{
+}
+
+Allocator* AllocatorCreatePool( Allocator* alloc,  int32 size )
+{
+	int32 total = sizeof(PoolAllocator) + size;
+	
+	PoolAllocator* pool = (PoolAllocator*) alloc->allocate(alloc, total, alignof(PoolAllocator));
+
+	pool->current = (uint8*) pool + sizeof(PoolAllocator);  
+	pool->allocate = PoolAllocate;
+	pool->deallocate = PoolDellocate;
+
+	return pool;
 }
 
 //-----------------------------------//
 
-Allocator* AllocatorCreatePool( Allocator* alloc )
+Allocator* AllocatorCreatePage( Allocator* alloc )
 {
 	return nullptr;
 }
@@ -187,13 +237,6 @@ Allocator* AllocatorCreatePool( Allocator* alloc )
 Allocator* AllocatorCreateTemporary( Allocator* alloc )
 {
 	return nullptr;
-}
-
-//-----------------------------------//
-
-void AllocatorDestroy( Allocator* object, Allocator* allocator )
-{
-	Deallocate<Allocator>(allocator, object);
 }
 
 //-----------------------------------//

@@ -250,6 +250,9 @@
     <ClCompile Include="..\..\src\Core\JsonSerializer.cpp">
       <Filter>Serialization\JSON</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Core\Handle.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\vapor\net\Network.h">
@@ -272,9 +275,6 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\API.h" />
     <ClInclude Include="..\..\inc\Core\String.h" />
-    <ClInclude Include="..\..\inc\vapor\ReferenceCount.h">
-      <Filter>Memory</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\Core\Archive.h">
       <Filter>Archive</Filter>
     </ClInclude>
@@ -404,6 +404,12 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\Telemetry.h">
       <Filter>Telemetry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\Handle.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\ReferenceCount.h">
+      <Filter>Memory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

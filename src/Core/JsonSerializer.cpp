@@ -300,7 +300,7 @@ JsonDeserializer::JsonDeserializer(Stream& stream)
 static void* JsonAllocate(size_t size)
 {
 	Allocator* alloc = AllocatorGetHeap();
-	return alloc->allocate(alloc, 0);
+	return alloc->allocate(alloc, 0, 0);
 }
 
 static void JsonDeallocate(void* p)
@@ -513,7 +513,7 @@ void JsonDeserializer::processPrimitive(void* address, Field& field, json_t* val
 	if( !field.isArray() )
 		address = (byte*) address + field.offset;
 	
-	switch(type.type)
+	switch(type.primitive)
 	{
 	case PrimitiveType::Bool:
 	{
