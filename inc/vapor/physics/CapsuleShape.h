@@ -10,7 +10,7 @@
 
 #ifdef VAPOR_PHYSICS_BULLET
 
-#include "physics/Shape.h"
+#include "Physics/Shape.h"
 
 class btCapsuleShape;
 
@@ -18,9 +18,11 @@ namespace vapor {
 
 //-----------------------------------//
 
+REFLECT_DECLARE_CLASS(CapsuleShape)
+
 class VAPOR_API CapsuleShape : public Shape
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(CapsuleShape)
 
 public:
 

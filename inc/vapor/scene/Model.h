@@ -20,6 +20,18 @@ namespace vapor {
 
 //-----------------------------------//
 
+REFLECT_DECLARE_ENUM(SkinningMode)
+
+struct SkinningMode
+{
+	enum Enum
+	{
+		Native,
+		CPU,
+		GPU
+	};
+};
+
 struct AnimationState;
 
 /**
@@ -29,33 +41,47 @@ struct AnimationState;
  * for it to be fully loaded.
  */
 
+REFLECT_DECLARE_CLASS(Model)
+
 class VAPOR_API Model : public Geometry
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(Model)
 
 public:
 
 	Model();
-	Model( const MeshPtr& mesh );
+	Model( const MeshHandle& mesh );
 
 	// Gets the mesh associated with the model.
-	GETTER(Mesh, const MeshPtr&, mesh)
+	GETTER(Mesh, const MeshHandle&, meshHandle)
+
+	// Gets the skinning mode of the mesh.
+	GETTER(SkinningMode, SkinningMode::Enum, skinningMode)
+	
+	// Gets the skinning mode of the mesh.
+	void setSkinningMode( SkinningMode::Enum );
 
 	// Sets the mesh.
-	void setMesh(const MeshPtr& mesh);
+	void setMesh(const MeshHandle& mesh);
 
 	// Sets the current animation.
 	void setAnimation(const AnimationPtr& animation);
 
 	// Sets the current animation.
-	void setAnimation(const std::string& name);
+	void setAnimation(const String& name);
 
 	// Sets and fades the animation.
-	void setAnimationFade(const std::string& name, float fade = 1.0f);
+	void setAnimationFade(const String& name, float fade = 1.0f);
 
 	// Attaches an entity to the model.
-	void setAttachment(const std::string& bone, const EntityPtr& entity);
+	void setAttachment(const String& bone, const EntityPtr& entity);
 
+	// Returns if the mesh is skinned on the GPU.
+	bool isHardwareSkinned();
+
+	// Performs CPU skinning of the mesh.
+	void doSkinning(std::vector<Vector3>& newPositions);
+	
 	// Updates the model.
 	void update( float delta );
   
@@ -94,14 +120,20 @@ protected:
 	// Pre-render callback.
 	void onRender();
 
-	// Sets up CPU skinning.
-	void setupSkinning();
+	// Prepares a mesh for skinning.
+	void prepareSkinning();
 
 	// Sets up shader skinning.
 	void setupShaderSkinning();
 
+	// Rebuilds the model with the mesh positions.
+	void rebuildPositions();
+
 	// Mesh that the model renders.
-	MeshPtr mesh;
+	MeshHandle meshHandle;
+
+	// Pointer to the mesh.
+	Mesh* mesh;
 
 	// Has the model been built.
 	bool modelBuilt;
@@ -117,6 +149,9 @@ protected:
 
 	// Controls animation speed.
 	float animationSpeed;
+
+	// Forces skinning to be done via CPU.
+	SkinningMode::Enum skinningMode;
 
 	// Animation states.
 	std::vector<AnimationState> animations;

@@ -61,7 +61,7 @@ public:
 		const AnimationMetadata& data, KeyFramesVector& frames );
 
 	// Sets the mesh.
-	SETTER(Mesh, const MeshPtr&, mesh)
+	SETTER(Mesh, Mesh*, mesh)
 
 protected:
 
@@ -106,7 +106,7 @@ protected:
 	std::vector<ms3d_group_t> groups;
 	std::vector<ms3d_material_t*> materials;
 	std::vector<ms3d_joint_t> joints;
-	std::string mainComment;
+	String mainComment;
 
 	// Animation metadata.
 	std::vector<AnimationMetadata> metadata;
@@ -118,10 +118,10 @@ protected:
 	int totalFrames;
 
 	// Mesh.
-	MeshPtr mesh;
+	Mesh* mesh;
 };
 
-TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Milkshape3D );
+TYPEDEF_RESOURCE_HANDLE_FROM_TYPE( Milkshape3D );
 
 //-----------------------------------//
 

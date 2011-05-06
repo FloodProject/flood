@@ -17,13 +17,13 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_ENUM(EmitterType)
+REFLECT_ENUM(EmitterType)
 	ENUM(Box)
 	ENUM(Sphere)
 	ENUM(Mesh)
-END_ENUM()
+REFLECT_ENUM_END()
 
-BEGIN_CLASS_PARENT(Particles, Geometry)
+REFLECT_CHILD_CLASS(Particles, Geometry)
 	FIELD_ENUM(EmitterType, emitter)
 	FIELD_PRIMITIVE(float, spawnRate)
 	FIELD_PRIMITIVE(float, fadeRate)
@@ -35,8 +35,8 @@ BEGIN_CLASS_PARENT(Particles, Geometry)
 	FIELD_PRIMITIVE(float, minScale)
 	FIELD_PRIMITIVE(float, maxScale)
 	FIELD_PRIMITIVE(Vector3, attenuation)
-	FIELD_CLASS_PTR_SETTER(Image, ImagePtr, image, RefPointer, Image)
-END_CLASS()
+	FIELD_CLASS_PTR_SETTER(Image, ImageHandle, image, Handle, Image)
+REFLECT_CLASS_END()
 
 const int MAX_PARTICLES = 512;
 
@@ -54,34 +54,15 @@ Particles::Particles()
 	, minVelocity(0, 0, 0)
 	, maxVelocity(0, 1, 0)
 	, attenuation(1, 0, 0)
-	, image(nullptr)
 	, numParticles(0)
-{
-	vb = new VertexBuffer();
-	
-	material = new Material("ParticlesMaterial");
-	material->setDepthWrite(false);
-	material->setBlending(BlendSource::SourceAlpha, BlendDestination::One);
-
-	RenderablePtr renderable = new Renderable(PolygonType::Points);
-	renderable->setVertexBuffer(vb);
-	renderable->setMaterial(material);
-	renderable->setRenderLayer(RenderLayer::Transparency);
-
-	renderable->onPreRender.Connect( this, &Particles::onPreRender );
-	renderable->onPostRender.Connect( this, &Particles::onPostRender ); 
-	
-	addRenderable(renderable);
-
-	particles.resize(MAX_PARTICLES);
-}
+{ }
 
 //-----------------------------------//
 
-void Particles::setImage(const ImagePtr& image)
+void Particles::setImage(const ImageHandle& image)
 {
-	this->image = image;
-	material->setTexture(0, image);
+	Material* pMaterial = material.Resolve();
+	pMaterial->setTexture(0, image);
 }
 
 //-----------------------------------//
@@ -109,8 +90,7 @@ void Particles::spawnParticles(int numSpawn)
 	{
 		Particle& particle = particles[i];
 
-		if( particle.alive )
-			continue;
+		if( particle.alive ) continue;
 
 		resetParticle(particle);
 		particle.alive = true;
@@ -121,8 +101,35 @@ void Particles::spawnParticles(int numSpawn)
 
 //-----------------------------------//
 
+void Particles::createGeometry()
+{
+	vb = Allocate(VertexBuffer, AllocatorGetHeap());
+	
+	material = MaterialCreate(AllocatorGetHeap(), "ParticlesMaterial");
+
+	Material* pMaterial = material.Resolve();
+	pMaterial->setDepthWrite(false);
+	pMaterial->setBlending(BlendSource::SourceAlpha, BlendDestination::One);
+
+	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Points);
+	renderable->setVertexBuffer(vb);
+	renderable->setMaterial(material);
+	renderable->setRenderLayer(RenderLayer::Transparency);
+
+	renderable->onPreRender.Connect( this, &Particles::onPreRender );
+	renderable->onPostRender.Connect( this, &Particles::onPostRender ); 
+	
+	addRenderable(renderable);
+
+	particles.resize(MAX_PARTICLES);
+}
+
+//-----------------------------------//
+
 void Particles::update(float delta)
 {
+	if( renderables.empty() ) createGeometry();
+
 	numParticles = particles.size();
 
 	int numSpawn = ceil(spawnRate * delta);
@@ -173,7 +180,7 @@ void Particles::onPreRender()
 	glPointParameterf( GL_POINT_SIZE_MIN, minScale );
 	glPointParameterf( GL_POINT_SIZE_MAX, maxScale );
 	glPointParameterf( GL_POINT_FADE_THRESHOLD_SIZE, fadeRate );
-	glTexEnvi( GL_POINT_SPRITE, GL_COORD_REPLACE, true );
+	//glTexEnvi( GL_POINT_SPRITE, GL_COORD_REPLACE, true );
 }
 
 //-----------------------------------//

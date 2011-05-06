@@ -8,14 +8,14 @@
 
 #include "Core/API.h"
 
-#ifdef VAPOR_NETWORKING_ZMQ
+#ifdef ENABLE_NETWORKING_ZMQ
 
 #include "net/Network.h"
 #include "net/Message.h"
 #include "Core/Log.h"
 #include <zmq.h>
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -181,6 +181,6 @@ void Network::error(const char* str)
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END
 
 #endif

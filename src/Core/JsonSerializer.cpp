@@ -8,16 +8,17 @@
 
 #include "Core/API.h"
 
-#ifdef VAPOR_SERIALIZATION_JSON
+#ifdef ENABLE_SERIALIZATION_JSON
 
 #include "io/JsonSerializer.h"
+#include "Core/Serialization.h"
 #include "Core/Memory.h"
 #include "Core/Utilities.h"
 #include "Core/ReferenceCount.h"
-#include "Core/Log.h"
+
 #include <jansson.h>
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -79,8 +80,7 @@ static json_t* convertQuaternion( const Quaternion& q )
 
 //-----------------------------------//
 
-
-JsonSerializer::JsonSerializer(Stream& stream)
+JsonSerializer::JsonSerializer(Stream* stream)
 	: stream(stream)
 {
 	values.push(rootValue);
@@ -101,8 +101,8 @@ void JsonSerializer::processEnd(const ObjectData& data)
 	LocaleSwitch locale;
 
 	String text = json_dumps(rootValue, 0);
-	StreamWriteString(&stream, text);
-	StreamClose(&stream);
+	StreamWriteString(stream, text);
+	StreamClose(stream);
 }
 
 //-----------------------------------//
@@ -110,8 +110,10 @@ void JsonSerializer::processEnd(const ObjectData& data)
 void JsonSerializer::processClassBegin(const Class& type, bool parent)
 {
 	if(parent) return;
+	
 	json_t* klass = json_object();
-	json_object_set_new(values.top(), type.name.c_str(), klass);
+	json_object_set_new(values.top(), type.name, klass);
+	
 	values.push( klass );
 }
 
@@ -290,9 +292,8 @@ void JsonSerializer::processBitfield( const Primitive& prim, const uint32& value
 
 //----------------------------------------------------------------------//
 
-JsonDeserializer::JsonDeserializer(Stream& stream)
+JsonDeserializer::JsonDeserializer(Stream* stream)
 	: stream(stream)
-	, registry(Type::GetRegistry())
 { }
 
 //-----------------------------------//
@@ -312,8 +313,8 @@ static void JsonDeallocate(void* p)
 Object* JsonDeserializer::deserialize()
 {
 	String text;
-	StreamReadString(&stream, text);
-	StreamClose(&stream);
+	StreamReadString(stream, text);
+	StreamClose(stream);
 
 	json_set_alloc_funcs(JsonAllocate, JsonDeallocate);
 
@@ -344,12 +345,10 @@ Object* JsonDeserializer::processObject(json_t* value)
 		const char* key = json_object_iter_key(iter);
 		json_t* field = json_object_iter_value(iter);
 
-		const String& name = key;
-
-		const Class* klass = (Class*) registry.getType(name);
+		Class* klass = (Class*) ReflectionFindType(key);
 		if( !klass ) continue;
 
-		object = (Object*) klass->createInstance();
+		object = (Object*) ClassCreateInstance(klass, AllocatorGetHeap() );
 		
 		if( !object ) continue;
 
@@ -368,8 +367,7 @@ void JsonDeserializer::processFields(Object* object, json_t* value)
 {
 	if( !object ) return;
 
-	const Class& type = (Class&) object->getType();
-
+	Class* klass = nullptr; // = (Class&) object->getType();
 
 	void* iter = json_object_iter(value);
 	
@@ -378,9 +376,7 @@ void JsonDeserializer::processFields(Object* object, json_t* value)
 		const char* key = json_object_iter_key(iter);
 		json_t* fieldval = json_object_iter_value(iter);
 
-		const String& name = key;
-
-		Field* field = type.getField(name);
+		Field* field = ClassGetField(klass, key);
 		
 		if( !field ) continue;
 		if( json_is_null(fieldval) ) continue;
@@ -395,26 +391,32 @@ void JsonDeserializer::processFields(Object* object, json_t* value)
 
 void JsonDeserializer::processField(Object* object, Field& field, json_t* value)
 {
-	if( field.isArray() && json_is_array(value) )
+	if( FieldIsArray(&field) && json_is_array(value) )
 		processArray(object, field, value);
-	else if( field.type.isClass() )
+	
+	switch(field.type->type)
+	{
+	case Type::Composite:
 		processObject(value);
-	else if( field.type.isPrimitive() )
+		break;
+	case Type::Primitive:
 		processPrimitive(object, field, value);
-	else if( field.type.isEnum() )
+		break;
+	case Type::Enumeration:
 		processEnum(object, field, value);
-	else
-		assert(0);
+		break;
+	};
 }
 
 //-----------------------------------//
 
 void JsonDeserializer::processEnum(Object* object, Field& field, json_t* value)
 {
-	String name = json_string_value(value);
-	const Enum& type = (Enum&) field.type;
-	uint enumValue = type.getValue(name);
-	field.set<uint>(object, enumValue);
+	const char* name = json_string_value(value);
+	Enum* enume = (Enum*) field.type;
+	
+	int32 enumValue = EnumGetValue(enume, name);
+	FieldSet<int32>(&field, object, enumValue);
 }
 
 //-----------------------------------//
@@ -428,7 +430,7 @@ void JsonDeserializer::processArray(Object* object, Field& field, json_t* value)
 	byte* begin = processArrayPointer((Object*)address, field, arrsize);
 
 	int size = field.size;
-	if( field.isPointer() )	size = field.pointerSize;
+	if( FieldIsRawPointer(&field) )	size = field.pointer_size;
 
 	for(size_t i = 0; i < arrsize; i++ )
 	{
@@ -443,19 +445,19 @@ void JsonDeserializer::processArray(Object* object, Field& field, json_t* value)
 
 void JsonDeserializer::processArrayElement(void* element, Field& field, json_t* value)
 {
-	if( field.type.isPrimitive() )
+	if( ReflectionIsPrimitive(field.type) )
 	{
 		processPrimitive(element, field, value);
 	}
-	else if( field.type.isClass() )
+	else if( ReflectionIsComposite(field.type) )
 	{
 		Object* object = processObject(value);
 
-		if( field.qualifiers & Qualifier::SharedPointer )
+		if( field.qualifiers & FieldQualifier::SharedPointer )
 		{
 			((std::shared_ptr<Object>*) element)->reset(object);
 		}
-		else if( field.qualifiers & Qualifier::RefPointer )
+		else if( field.qualifiers & FieldQualifier::RefPointer )
 		{
 			ReferenceCounted* ref = (ReferenceCounted*) object;
 			((RefPtr<ReferenceCounted>*) element)->reset(ref);
@@ -463,7 +465,7 @@ void JsonDeserializer::processArrayElement(void* element, Field& field, json_t* 
 		else
 		{
 			int size = field.size;
-			if( field.isPointer() )	size = field.pointerSize;
+			if( FieldIsRawPointer(&field) )	size = field.pointer_size;
 			
 			#pragma TODO("Placement new the objects in their memory")
 			memcpy(element, object, size);
@@ -476,7 +478,7 @@ void JsonDeserializer::processArrayElement(void* element, Field& field, json_t* 
 
 byte* JsonDeserializer::processArrayPointer(Object* address, Field& field, int size)
 {
-	if( field.qualifiers & Qualifier::SharedPointer )
+	if( field.qualifiers & FieldQualifier::SharedPointer )
 	{
 		typedef std::vector<std::shared_ptr<Object>> ObjectSharedPtrArray;
 		ObjectSharedPtrArray* array = (ObjectSharedPtrArray*) address;
@@ -484,7 +486,7 @@ byte* JsonDeserializer::processArrayPointer(Object* address, Field& field, int s
 
 		return (byte*) &array->front();
 	}
-	else if( field.qualifiers & Qualifier::RefPointer )
+	else if( field.qualifiers & FieldQualifier::RefPointer )
 	{
 		typedef std::vector<RefPtr<ReferenceCounted>> ObjectRefPtrArray;
 		ObjectRefPtrArray* array = (ObjectRefPtrArray*) address;
@@ -510,55 +512,55 @@ void JsonDeserializer::processPrimitive(void* address, Field& field, json_t* val
 {
 	const Primitive& type = (const Primitive&) field.type;
 	
-	if( !field.isArray() )
+	if( !FieldIsArray(&field) )
 		address = (byte*) address + field.offset;
 	
-	switch(type.primitive)
+	switch(type.type)
 	{
-	case PrimitiveType::Bool:
+	case Primitive::Bool:
 	{
 		assert( json_is_boolean(value) );
 		bool val = json_integer_value(value) != 0;
 		setValue(bool, val);
 	}
 	//-----------------------------------//
-	case PrimitiveType::Integer:
+	case Primitive::Int32:
 	{
 		int32 val = (int32) json_integer_value(value);
 		setValue(int32, val);
 	}
 	//-----------------------------------//
-	case PrimitiveType::Float:
+	case Primitive::Float:
 	{
 		float val = (float) json_real_value(value);
 		setValue(float, val);
 	}
 	//-----------------------------------//
-	case PrimitiveType::String:
+	case Primitive::String:
 	{
 		String val = json_string_value(value);
 		setValue(String, val);
 	}
 	//-----------------------------------//
-	case PrimitiveType::Color:
+	case Primitive::Color:
 	{
 		Color val = convertValueToColor(value);
 		setValue(Color, val);
 	}
 	//-----------------------------------//
-	case PrimitiveType::Vector3:
+	case Primitive::Vector3:
 	{
 		Vector3 val = convertValueToVector3(value);
 		setValue(Vector3, val);
 	}
 	//-----------------------------------//
-	case PrimitiveType::Quaternion:
+	case Primitive::Quaternion:
 	{
 		Quaternion val = convertValueToQuaternion(value);
 		setValue(Quaternion, val);
 	}
 	//-----------------------------------//
-	case PrimitiveType::Bitfield:
+	case Primitive::Bitfield:
 	{
 		uint32 val = json_integer_value(value);
 		setValue(uint32, val);
@@ -568,6 +570,6 @@ void JsonDeserializer::processPrimitive(void* address, Field& field, json_t* val
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END
 
 #endif

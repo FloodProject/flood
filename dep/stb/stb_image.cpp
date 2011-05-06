@@ -1,6 +1,6 @@
 #include "Resources/API.h"
 
-#ifdef VAPOR_IMAGE_STB
+#ifdef ENABLE_IMAGE_STB
 
 // Configuration
 #define STBI_NO_STDIO

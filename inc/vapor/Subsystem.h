@@ -18,7 +18,7 @@ namespace vapor {
  * implement the main services provided by the engine.
  */
 
-class API_CORE VAPOR_PURE Subsystem
+class API_CORE NO_VTABLE Subsystem
 {
 	DECLARE_UNCOPYABLE(Subsystem)
 

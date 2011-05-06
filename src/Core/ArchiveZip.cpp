@@ -14,7 +14,7 @@
 
 #include <zzip/zzip.h>
 
-#ifdef VAPOR_ARCHIVE_ZIP
+#ifdef ENABLE_ARCHIVE_ZIP
 
 NAMESPACE_BEGIN
 
@@ -150,16 +150,16 @@ static ArchiveFuncs gs_ZipArchiveFuncs =
 
 Archive* ArchiveCreateFromZip(Allocator* alloc, const Path& path)
 {
-	Archive* archive = Allocate<Archive>(alloc);
+	Archive* archive = Allocate(Archive, alloc);
 	
-	archive->Handle = nullptr;
-	archive->Scheme = "zip";
+	archive->handle = nullptr;
+	archive->scheme = "zip";
 	archive->fn = &gs_ZipArchiveFuncs;
 
 	if( !ArchiveOpen(archive, path) )
 	{
 		//LogWarn("Error opening archive: %s", path.c_str());
-		Deallocate(alloc, archive);
+		Deallocate( archive);
 		return nullptr;
 	}
 
@@ -173,7 +173,7 @@ static bool ZipArchiveOpen(Archive* archive, const String& path)
 	if( !archive ) return false;
 	
 	ZZIP_DIR* zip = zzip_dir_open(path.c_str(), nullptr);
-	archive->Handle = zip;
+	archive->handle = zip;
 	
 	return zip != nullptr;
 }
@@ -182,7 +182,7 @@ static bool ZipArchiveOpen(Archive* archive, const String& path)
 
 static bool ZipArchiveClose(Archive* archive)
 {
-	ZZIP_DIR* zip = (ZZIP_DIR*) archive->Handle;
+	ZZIP_DIR* zip = (ZZIP_DIR*) archive->handle;
 	assert( zip != nullptr );
 
 	int ret = zzip_dir_close(zip);
@@ -195,8 +195,8 @@ static Stream* ZipArchiveOpenFile(Archive* archive, const Path& path, Allocator*
 {
 	if( !archive ) return nullptr;
 
-	ZipStream* stream = Allocate<ZipStream>(alloc);
-	stream->dir = (ZZIP_DIR*) archive->Handle;
+	ZipStream* stream = Allocate(ZipStream, alloc);
+	stream->dir = (ZZIP_DIR*) archive->handle;
 	stream->handle = nullptr;
 	stream->path = path;
 	stream->mode = StreamMode::Read; // only read-only for zips for now.
@@ -205,7 +205,7 @@ static Stream* ZipArchiveOpenFile(Archive* archive, const Path& path, Allocator*
 	if( !ZipStreamOpen(stream) )
 	{
 		//LogWarn("Error opening zip file: %s", path.c_str());
-		Deallocate(alloc, stream);
+		Deallocate( stream);
 		return nullptr;
 	}
 
@@ -216,9 +216,9 @@ static Stream* ZipArchiveOpenFile(Archive* archive, const Path& path, Allocator*
 
 static void ZipArchiveEnumerate(Archive* archive, std::vector<Path>& paths, bool dir)
 {
-	if( !archive || !archive->Handle ) return;
+	if( !archive || !archive->handle ) return;
 
-	ZZIP_DIR* zip = (ZZIP_DIR*) archive->Handle;
+	ZZIP_DIR* zip = (ZZIP_DIR*) archive->handle;
 	ZZIP_DIRENT entry;
 
 	zzip_rewinddir(zip);
@@ -251,7 +251,7 @@ static void ZipArchiveEnumerateDirectories(Archive* archive, std::vector<Path>& 
 
 static bool ZipArchiveExistsFile(Archive* archive, const Path& path)
 {
-	ZZIP_DIR* zip = (ZZIP_DIR*) archive->Handle;
+	ZZIP_DIR* zip = (ZZIP_DIR*) archive->handle;
 
 	ZZIP_STAT zstat;
 	int res = zzip_dir_stat(zip, path.c_str(), &zstat, ZZIP_CASEINSENSITIVE | ZZIP_IGNOREPATH);

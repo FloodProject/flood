@@ -17,10 +17,12 @@ namespace vapor {
 
 //-----------------------------------//
 
+REFLECT_DECLARE_CLASS(Listener)
+
 class VAPOR_API Listener : public Component
 {
 	DECLARE_UNCOPYABLE(Listener)
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(Listener)
 
 public:
 

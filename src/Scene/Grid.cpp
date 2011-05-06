@@ -13,8 +13,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(Grid, Geometry)
-END_CLASS()
+REFLECT_CHILD_CLASS(Grid, Geometry)
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
@@ -30,22 +30,14 @@ Grid::Grid()
   , divX(32)
   , divZ(32)
   , strongMainLines(true)
-{
-	MaterialPtr material( new Material("Grid") );
-	
-	RenderablePtr rend( new Renderable(PolygonType::Lines) );
-	rend->setVertexBuffer( buildGeometry() );
-	rend->setMaterial( material );
-
-	addRenderable( rend );
-}
+{ }
 
 //-----------------------------------//
 
 VertexBufferPtr Grid::buildGeometry()
 {
 	// Create a new VBO and upload triangle data
-	VertexBufferPtr vb( new VertexBuffer() );
+	VertexBufferPtr vb( Allocate(VertexBuffer, AllocatorGetHeap()) );
 
 	// Vertex position data
 	std::vector< Vector3 > vertex;
@@ -108,6 +100,24 @@ VertexBufferPtr Grid::buildGeometry()
 	vb->set( VertexAttribute::Color, colors );
 
 	return vb;
+}
+
+//-----------------------------------//
+
+void Grid::update( float update )
+{
+	if( !renderables.empty() ) return;
+
+	MaterialHandle materialHandle = MaterialCreate(AllocatorGetHeap(), "Grid");
+
+	Material* material = materialHandle.Resolve();
+	//material->setDepthTest(false);
+
+	RenderablePtr rend = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Lines);
+	rend->setVertexBuffer( buildGeometry() );
+	rend->setMaterial( materialHandle );
+
+	addRenderable( rend );
 }
 
 //-----------------------------------//

@@ -14,6 +14,7 @@
 
 FWD_DECL_SHARED(Scene)
 FWD_DECL_SHARED(Entity)
+FWD_DECL_INTRUSIVE(Resource)
 
 namespace vapor { namespace editor {
 
@@ -24,16 +25,16 @@ struct PluginMetadata
 	PluginMetadata() : startEnabled(true) {}
 
 	// Name of this plugin.
-	std::string name;
+	String name;
 
 	// Description of this plugin.
-	std::string description;
+	String description;
 
 	// Author of this plugin.
-	std::string author;
+	String author;
 
 	// Version of this plugin.
-	std::string version;
+	String version;
 
 	// Enabled by default.
 	bool startEnabled;
@@ -53,9 +54,11 @@ class PluginManager;
  * the editor to execute actions in the different events/callbacks.
  */
 
-class Plugin
+REFLECT_DECLARE_CLASS(Plugin)
+
+class Plugin : public Object
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(Plugin)
 
 	friend class PluginManager;
 

@@ -14,8 +14,8 @@
 #include "Math/Vector.h"
 #include "Audio/AL.h"
 
-FWD_DECL_SHARED(AudioBuffer)
-FWD_DECL_SHARED(AudioContext)
+FWD_DECL_INTRUSIVE(AudioBuffer)
+FWD_DECL_INTRUSIVE(AudioContext)
 
 namespace vapor {
 
@@ -25,7 +25,7 @@ namespace vapor {
  * Audio device to play sound data using OpenAL as backend.
  */
 
-typedef std::map<SoundPtr, AudioBufferPtr> SoundBufferMap;
+typedef std::map<Sound*, AudioBufferPtr> SoundBufferMap;
 
 class VAPOR_API AudioDevice
 {
@@ -49,10 +49,10 @@ public:
 protected:
 
 	// Gets the AL format matching the sound.
-	int getFormat(const SoundPtr& sound);
+	int getFormat(Sound* sound);
 	
 	// Prepares a buffer for AL usage.
-	AudioBufferPtr prepareBuffer(const SoundPtr& sound);
+	AudioBufferPtr prepareBuffer(Sound* sound);
 	
 	// Return the last error as a char array.
 	const char* getError();
@@ -61,7 +61,7 @@ protected:
 	bool checkError();
 	
 	// Gets a string with the version of OpenAL.
-	const std::string getVersion();
+	const String getVersion();
 
 	// Audio device.
 	ALCdevice* device;

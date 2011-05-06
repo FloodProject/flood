@@ -27,13 +27,16 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_ENUM(RenderPipeline)
+REFLECT_ENUM(RenderPipeline)
 	ENUM(Fixed)
 	ENUM(ShaderForward)
 	ENUM(ShaderDeferred)
-END_ENUM()
+REFLECT_ENUM_END()
 
 //-----------------------------------//
+
+static RenderDevice* gs_RenderDevice = nullptr;
+RenderDevice* GetRenderDevice() { return gs_RenderDevice; }
 
 RenderDevice::RenderDevice()
 	: adapter(nullptr)
@@ -45,7 +48,9 @@ RenderDevice::RenderDevice()
 	, shadowDepthBuffer(nullptr)
 	, pipeline(RenderPipeline::Fixed)
 	, initDone(false)
-{ }
+{
+	gs_RenderDevice = this;
+}
 
 //-----------------------------------//
 
@@ -55,10 +60,10 @@ RenderDevice::~RenderDevice()
 
 	#pragma TODO("Confirm that all OpenGL resources were reclaimed on exit")	
 
-	delete textureManager;
-	delete programManager;
-	delete adapter;
-	delete window;
+	Deallocate(textureManager);
+	Deallocate(programManager);
+	Deallocate(adapter);
+	window = nullptr;
 }
 
 //-----------------------------------//
@@ -73,9 +78,12 @@ void RenderDevice::init()
 	
 	checkExtensions();
 
-	adapter = new Adapter();
-	textureManager = new TextureManager();
-	programManager = new ProgramManager();
+	adapter = Allocate(Adapter, AllocatorGetHeap());
+	checkCapabilities(adapter);
+	showCapabilities(adapter);
+
+	textureManager = Allocate(TextureManager, AllocatorGetHeap());
+	programManager = Allocate(ProgramManager, AllocatorGetHeap());
 
 	if( adapter->supportsShaders )
 	{
@@ -83,14 +91,91 @@ void RenderDevice::init()
 		pipeline = RenderPipeline::ShaderForward;
 	}
 
+	resetState();
+
+	initDone = true;
+}
+
+//-----------------------------------//
+
+void RenderDevice::resetState()
+{
 	setClearColor( Color::White );
 
 	glEnable( GL_CULL_FACE );
 	glCullFace( GL_BACK );
+
 	glEnable( GL_DEPTH_TEST );
 	glDisable( GL_BLEND );
 
-	initDone = true;
+	if(adapter->supportsFixedPipeline)
+	{
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+	}
+
+	if(adapter->supportsVertexBuffers)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	}
+
+	if(adapter->supportsShaders)
+	{
+		glUseProgram(0);
+	}
+
+	for(uint32 i = 0; i < adapter->maxTextureUnits; i++)
+	{
+		glActiveTexture( GL_TEXTURE0+i );
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+}
+
+//-----------------------------------//
+
+void RenderDevice::checkCapabilities(Adapter* adapter)
+{
+	adapter->supportsShaders = !! GLEW_ARB_shading_language_100;
+	adapter->supportsVertexBuffers = !! GLEW_ARB_vertex_buffer_object;
+	adapter->supportsAnisotropic = !! GLEW_EXT_texture_filter_anisotropic;
+	
+	glGetIntegerv( GL_MAX_TEXTURE_SIZE, (GLint*) &adapter->maxTextureSize );
+	glGetIntegerv( GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, (GLint*) &adapter->maxTextureUnits );
+	glGetIntegerv( GL_MAX_VERTEX_ATTRIBS, (GLint*) &adapter->maxAttribs );
+
+	// get the name of the card
+	adapter->name = (const char*) glGetString(GL_RENDERER);
+	adapter->vendor = (const char*) glGetString(GL_VENDOR);
+	adapter->version = (const char*) glGetString(GL_VERSION);
+
+	if(adapter->supportsShaders)
+		adapter->shading = (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION);
+
+	adapter->supportsFixedPipeline = true;
+}
+
+//-----------------------------------//
+
+void RenderDevice::showCapabilities(Adapter* card) 
+{
+	if( card->name.empty() ) return;
+
+	LogInfo( "Graphics adapter: %s", card->name.c_str() );
+
+	LogInfo( "%s%s%s", 
+		!card->version.empty() ? ("OpenGL " + card->version).c_str() : "",
+		!card->shading.empty() ? (" / GLSL " + card->shading).c_str() : "",
+		!card->driver.empty() ? (" / driver: " + card->driver).c_str() : "" );
+
+	LogInfo("Support vertex buffers: ", card->supportsVertexBuffers ? "yes" : "no" );
+
+	LogInfo( "Max texture size: %dx%d", card->maxTextureSize, card->maxTextureSize );
+	LogInfo( "Max texture units: %d", card->maxTextureUnits );
+	LogInfo( "Max vertex attributes: %d", card->maxAttribs );
 }
 
 //-----------------------------------//
@@ -141,7 +226,7 @@ void RenderDevice::render( const RenderState& state, const LightQueue& lights )
 	const RenderablePtr& renderable = state.renderable;
 	if( !renderable ) return;
 
-	const MaterialPtr& material = renderable->getMaterial();
+	const MaterialHandle& material = renderable->getMaterial();
 	if( !material ) return;
 
 	switch(pipeline)
@@ -165,13 +250,11 @@ void RenderDevice::setupRenderFixed(const RenderState& state, const LightQueue& 
 	const RenderablePtr& renderable = state.renderable;
 	renderable->bind();
 
-	const MaterialPtr& material = renderable->getMaterial();
-	material->bindTextures(false);
-
 	const VertexBufferPtr& vb = renderable->getVertexBuffer();
 	vb->bindPointers();
-
-	setupRenderStateMaterial(material);
+	
+	Material* material = renderable->getMaterial().Resolve();
+	setupRenderStateMaterial(material, false);
 
 	RenderLayer::Enum stage = renderable->getRenderLayer();
 
@@ -198,7 +281,6 @@ void RenderDevice::setupRenderFixed(const RenderState& state, const LightQueue& 
 	glPopMatrix();
 
 	undoRenderStateMaterial(material);
-	material->unbindTextures();
 
 	vb->unbindPointers();	
 	renderable->unbind();
@@ -231,10 +313,9 @@ bool RenderDevice::setupRenderFixedMatrix( const RenderState& state )
 
 bool RenderDevice::setupRenderFixedOverlay( const RenderState& state )
 {
-	Vector2 size = activeTarget->getSettings().getSize();
+	Vector2i size = activeTarget->getSettings().getSize();
 	
-	Matrix4x4 projection =
-		Matrix4x4::createOrthographicProjection(0, size.x/*-1*/, size.y/*-1*/, 0, 0, 100);
+	Matrix4x4 projection = Matrix4x4::createOrthographic(0, size.x/*-1*/, size.y/*-1*/, 0, 0, 100);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadMatrixf(&projection.m11);
@@ -256,20 +337,16 @@ void RenderDevice::setupRenderForward(const RenderState& state, const LightQueue
 	const VertexBufferPtr& vb = renderable->getVertexBuffer();
 	vb->bindGenericPointers();
 
-	const MaterialPtr& material = renderable->getMaterial();
-	const ProgramPtr& program = material->getProgram();
-
-	if( !program )
-		return;
-
-	if( !program->isLinked() )
-		program->link();
+	Material* material = renderable->getMaterial().Resolve();
 	
+	const String& name = material->getProgram();
+	const ProgramPtr& program = programManager->getProgram(name);
+	if( !program ) return;
+
+	if( !program->isLinked() ) program->link();
 	program->bind();
 
-	material->bindTextures(true);
-
-	setupRenderStateMaterial(material);
+	setupRenderStateMaterial(material, true);
 
 	RenderLayer::Enum stage = renderable->getRenderLayer();
 
@@ -293,7 +370,6 @@ void RenderDevice::setupRenderForward(const RenderState& state, const LightQueue
 	
 	renderable->unbind();
 	program->unbind();
-	material->unbindTextures();
 	vb->unbindGenericPointers();
 }
 
@@ -314,14 +390,56 @@ bool RenderDevice::setupRenderStateMatrix( const RenderState& state )
 	const Matrix4x4& matProjection = frustum.matProjection;
 
 	const RenderablePtr& rend = state.renderable;
-	const MaterialPtr& material = rend->getMaterial();
-	const ProgramPtr& program = material->getProgram();
+	Material* material = rend->getMaterial().Resolve();
+
+	const String& name = material->getProgram();
+	const ProgramPtr& program = programManager->getProgram(name);
 
 	program->setUniform( "vp_ModelMatrix", matModel );
 	program->setUniform( "vp_ViewMatrix", matView );
 	program->setUniform( "vp_ProjectionMatrix", matProjection );
 
 	return true;
+}
+
+//-----------------------------------//
+
+void RenderDevice::bindTextures(Material* material, bool bindUniforms)
+{
+	TextureUnitMap& units = material->textureUnits;
+
+	const ProgramPtr& program = programManager->getProgram(material->getProgram());
+
+	TextureUnitMap::const_iterator it;
+	for( it = units.begin(); it != units.end(); it++ )
+	{
+		int32 index = it->first;
+		const ImageHandle& image = it->second;
+
+		const TexturePtr& texture = textureManager->getTexture(image.Resolve());
+		texture->bind(index);
+
+		if( !bindUniforms ) continue;
+		if( !program ) continue;
+
+		String uniform = "vp_Texture" + StringFromNumber(index);
+		program->setUniform( uniform, index );
+	}
+}
+
+//-----------------------------------//
+
+void RenderDevice::unbindTextures(Material* material)
+{
+	TextureUnitMap& units = material->textureUnits;
+
+	TextureUnitMap::const_iterator it;
+	for( it = units.begin(); it != units.end(); it++ )
+	{
+		const ImageHandle& handle = it->second;
+		const TexturePtr& tex = textureManager->getTexture(handle.Resolve());
+		tex->unbind( it->first );
+	}
 }
 
 //-----------------------------------//
@@ -406,8 +524,8 @@ bool RenderDevice::setupRenderStateShadow( LightQueue& lights )
 bool RenderDevice::setupRenderStateLight( const RenderState& state, const LightQueue& lights )
 {
 	const RenderablePtr& rend = state.renderable;
-	const MaterialPtr& material = rend->getMaterial();
-	const ProgramPtr& program = material->getProgram();
+	Material* material = rend->getMaterial().Resolve();
+	const ProgramPtr& program = programManager->getProgram(material->getProgram());
 
 	for( size_t i = 0; i < lights.size(); i++ )
 	{
@@ -441,10 +559,11 @@ bool RenderDevice::setupRenderStateLight( const RenderState& state, const LightQ
 
 bool RenderDevice::setupRenderStateOverlay( const RenderState& state )
 {
-	Vector2 size = activeTarget->getSettings().getSize();
-	Matrix4x4 projection = Matrix4x4::createOrthographicProjection(0, size.x, size.y, 0, 0, 100);
+	Vector2i size = activeTarget->getSettings().getSize();
+	Matrix4x4 projection = Matrix4x4::createOrthographic(0, size.x, size.y, 0, 0, 100);
 
-	const ProgramPtr& program = state.renderable->getMaterial()->getProgram();
+	const String& name = state.renderable->getMaterial().Resolve()->getProgram();
+	const ProgramPtr& program = programManager->getProgram(name);
 
 	program->setUniform( "vp_ProjectionMatrix", projection );
 	program->setUniform( "vp_ModelMatrix", state.modelMatrix );
@@ -456,8 +575,10 @@ bool RenderDevice::setupRenderStateOverlay( const RenderState& state )
 
 //-----------------------------------//
 
-void RenderDevice::setupRenderStateMaterial( const MaterialPtr& mat )
+void RenderDevice::setupRenderStateMaterial( Material* mat, bool bindUniforms )
 {
+	bindTextures(mat, bindUniforms);
+
 	if( mat->lineSmooth )
 	{
 		glEnable( GL_LINE_SMOOTH );
@@ -491,7 +612,7 @@ void RenderDevice::setupRenderStateMaterial( const MaterialPtr& mat )
 
 //-----------------------------------//
 
-void RenderDevice::undoRenderStateMaterial( const MaterialPtr& mat )
+void RenderDevice::undoRenderStateMaterial( Material* mat )
 {
 	if( mat->depthCompare != DepthCompare::Less )
 		glDepthFunc( DepthCompare::Less );
@@ -516,6 +637,8 @@ void RenderDevice::undoRenderStateMaterial( const MaterialPtr& mat )
 
 	if( mat->lineWidth != Material::DefaultLineWidth ) 
 		glLineWidth( Material::DefaultLineWidth );
+
+	unbindTextures(mat);
 }
 
 //-----------------------------------//
@@ -549,8 +672,8 @@ void RenderDevice::setView( RenderView* view )
 
 	setClearColor( view->getClearColor() );
 
-	Vector2 origin = activeView->getOrigin();
-	Vector2 size = activeView->getSize();
+	Vector2i origin = activeView->getOrigin();
+	Vector2i size = activeView->getSize();
 
 	glViewport( origin.x, origin.y, size.x, size.y );
 }

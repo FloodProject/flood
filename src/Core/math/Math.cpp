@@ -7,7 +7,7 @@
 #include "Core/API.h"
 #include "Math/Helpers.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -68,4 +68,4 @@ float MathRadianToDegree( float radian ) { return radian * 180.0f / PI; }
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

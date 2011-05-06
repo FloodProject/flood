@@ -24,7 +24,7 @@
 #include "Core/API.h"
 #include "Core/FileWatcher.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -47,4 +47,4 @@ const String Actions::getString( Actions::Enum action )
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

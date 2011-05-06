@@ -20,7 +20,7 @@ NAMESPACE_BEGIN
 // an explicit reset(). scoped_ptr is based on Boost's scoped_ptr but extends
 // it with custom deallocators.
 
-template<typename T, void (*Destroy)(T*, Allocator*)>
+template<typename T, void (*Destroy)(T*)>
 class scoped_ptr // noncopyable
 {
     typedef scoped_ptr<T, Destroy> this_type;
@@ -29,13 +29,12 @@ public:
 
     typedef T element_type;
 
-    explicit scoped_ptr( T* p, Allocator* alloc )
-		: px(p), alloc(alloc)
+    explicit scoped_ptr( T* p ) : px(p)
     { }
 
     ~scoped_ptr() // never throws
     {
-		Destroy(px, alloc);
+		Destroy(px);
     }
 
     void reset(T * p = 0) // never throws
@@ -81,7 +80,6 @@ public:
 private:
 
     T* px;
-	Allocator* alloc;
 
     scoped_ptr(scoped_ptr const &);
     scoped_ptr & operator=(scoped_ptr const &);
@@ -104,8 +102,7 @@ template<class T> inline T * get_pointer(scoped_ptr<T> const & p)
 }
 #endif
 
-#define CreateScopedPtr(create_fn, alloc, ...)                  \
-	create_fn(alloc, __VA_ARGS__), alloc
+#define CreateScopedPtr(Create, Alloc, ...) Create(Alloc, __VA_ARGS__)
 
 //-----------------------------------//
 

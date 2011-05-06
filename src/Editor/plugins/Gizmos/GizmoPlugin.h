@@ -34,9 +34,11 @@ namespace GizmoTool
 typedef std::map<EntityPtr, EntityPtr> GizmoMap;
 typedef std::pair<const EntityPtr, EntityPtr> GizmoMapPair;
 
+REFLECT_DECLARE_CLASS(GizmoPlugin)
+
 class GizmoPlugin : public Plugin
 {
-	REFLECT_DECLARE_CLASS()
+	REFLECT_DECLARE_OBJECT(GizmoPlugin)
 
 public:
 

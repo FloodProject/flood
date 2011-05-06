@@ -66,6 +66,35 @@ EditorFrame& GetEditor() { return *editorInstance; }
 
 //-----------------------------------//
 
+void TestObjects()
+{
+	ReflectionTypeMap& types = ReflectionGetTypeMap();
+
+	for( auto it = types.begin(); it != types.end(); it++ )
+	{
+		Type* type = it->second;
+		if( !ReflectionIsComposite(type) ) continue;
+
+		Class* klass = (Class*) type;
+		
+		if( !ClassInherits(klass, ReflectionGetType(Object)) )
+			continue;
+
+		if( ClassIsAbstract(klass) ) continue;
+
+		LogDebug("%s: ", klass->name);
+
+		Object* object = (Object*) ClassCreateInstance(klass, AllocatorGetHeap());
+
+		Class* runtimeClass = object->getType();
+		
+		if( klass != runtimeClass ) LogDebug("err");
+		else LogDebug("ok");
+
+		Deallocate(object);
+	}
+}
+
 EditorFrame::EditorFrame(const wxString& title)
 	: wxFrame(nullptr, wxID_ANY, title)
 	, engine(nullptr)
@@ -85,10 +114,14 @@ EditorFrame::EditorFrame(const wxString& title)
 	createToolbar();
 	createLastUI();
 
+	//TestObjects();
+
 #if 0
 	wxCommandEvent event;
 	onNewButtonClick(event);
 #endif
+
+	AllocatorDumpInfo();
 }
 
 //-----------------------------------//
@@ -122,7 +155,7 @@ EditorFrame::~EditorFrame()
 void EditorFrame::createPlugins()
 {
 	pluginManager = new PluginManager();
-	//pluginManager->referencePlugins();
+	pluginManager->referencePlugins();
 
 	pluginManagerFrame = new PluginManagerFrame(this, pluginManager);
 	eventManager = new Events(this);
@@ -134,6 +167,8 @@ void EditorFrame::createPlugins()
 	pane.Caption("Plugins").Right().Dock().Icon(icon).Hide();
 	getAUI()->AddPane(pluginManagerFrame, pane);
 }
+
+//-----------------------------------//
 
 void EditorFrame::createEngine()
 {
@@ -227,7 +262,7 @@ Document* EditorFrame::getDocumentFromPage(int selection)
 
 	wxWindow* window = notebookCtrl->GetPage(selection);
 
-	for(uint i = 0; i < documents.size(); i++)
+	for( size_t i = 0; i < documents.size(); i++ )
 	{
 		Document* document = documents[i];
 		
@@ -391,7 +426,7 @@ CameraPtr EditorFrame::getPlayerCamera() const
 	
 	const std::vector<EntityPtr> entities = scene->getEntities();
 	
-	for( uint i = 0; i < entities.size(); i++ )
+	for( size_t i = 0; i < entities.size(); i++ )
 	{
 		const EntityPtr& node = entities[i];
 		camera = node->getComponent<Camera>();

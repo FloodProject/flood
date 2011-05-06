@@ -72,13 +72,13 @@ void Milkshape3D::buildSkeleton()
 	setupJointRotations();
 	setupJointMatrices();
 
-	mesh->skeleton = new Skeleton();
+	mesh->skeleton = Allocate(Skeleton, AllocatorGetHeap());
 	
-	for( uint i = 0; i < joints.size(); i++ )
+	for( size_t i = 0; i < joints.size(); i++ )
 	{
 		ms3d_joint_t& joint = joints[i];
 		
-		BonePtr bone = new Bone();
+		BonePtr bone = Allocate(Bone, AllocatorGetHeap());
 
 		bone->name = joint.name;
 		bone->index = i;
@@ -97,7 +97,7 @@ void Milkshape3D::buildSkeleton()
 void Milkshape3D::setupJointsHierarchy()
 {
 
-	for( uint i = 0; i < joints.size(); i++ )
+	for( size_t i = 0; i < joints.size(); i++ )
 	{
 		ms3d_joint_t& joint = joints[i];
 		joint.indexParent = findJoint(joint.parentName);
@@ -108,7 +108,7 @@ void Milkshape3D::setupJointsHierarchy()
 
 int Milkshape3D::findJoint(const char* name)
 {
-	for( uint i = 0; i < joints.size(); i++ )
+	for( size_t i = 0; i < joints.size(); i++ )
 	{
 		const ms3d_joint_t& joint = joints[i];
 
@@ -123,7 +123,7 @@ int Milkshape3D::findJoint(const char* name)
 
 void Milkshape3D::setupJointMatrices()
 {
-	for( uint i = 0; i < joints.size(); i++ )
+	for( size_t i = 0; i < joints.size(); i++ )
 	{
 		ms3d_joint_t& joint = joints[i];
 
@@ -147,7 +147,7 @@ void Milkshape3D::setupJointMatrices()
 
 void Milkshape3D::setupJointRotations()
 {
-	for( uint i = 0; i < joints.size(); i++ )
+	for( size_t i = 0; i < joints.size(); i++ )
 	{
 		ms3d_joint_t& joint = joints[i];
 
@@ -184,7 +184,7 @@ void Milkshape3D::buildAnimationMetadata()
 		return;
 	}
 
-	for( uint i = 0; i < mainComment.size(); i++ )
+	for( size_t i = 0; i < mainComment.size(); i++ )
 	{
 		char& c = mainComment[i];
 
@@ -192,12 +192,12 @@ void Milkshape3D::buildAnimationMetadata()
 		if( c == 13 ) c = '\n';
 	}
 
-	std::vector<std::string> lines;
+	std::vector<String> lines;
 	StringSplit(mainComment, '\n', lines);
     
-	for( uint i = 0; i < lines.size(); i++ )
+	for( size_t i = 0; i < lines.size(); i++ )
 	{
-		const std::string& line = lines[i];
+		const String& line = lines[i];
 
 		if( line.size() < 2 )
 			continue;
@@ -246,7 +246,7 @@ void Milkshape3D::buildAnimations()
 
 AnimationPtr Milkshape3D::buildAnimation(AnimationMetadata& data)
 {
-	AnimationPtr animation = new Animation();
+	AnimationPtr animation = Allocate(Animation, AllocatorGetHeap());
 	animation->setName(data.name);
 
 	for( uint i = 0; i < joints.size(); i++ )
@@ -395,7 +395,7 @@ MeshMaterial Milkshape3D::buildMaterial(const ms3d_group_t& group)
 
 	if( strlen(mt.texture) > 0 )
 	{
-		const std::string& path = PathNormalize(mt.texture);
+		const String& path = PathNormalize(mt.texture);
 		material.texture = path;
 	}
 

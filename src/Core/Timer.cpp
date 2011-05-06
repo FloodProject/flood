@@ -11,11 +11,11 @@
 #include "Core/Log.h"
 #include "Core/Memory.h"
 
-#ifdef VAPOR_PLATFORM_WINDOWS
+#ifdef PLATFORM_WINDOWS
 	#define WIN32_LEAN_AND_MEAN
 	#define NOMINMAX
 	#include <Windows.h>	
-#elif VAPOR_PLATFORM_MACOSX
+#elif PLATFORM_MACOSX
 	#pragma TODO("OSX: Use Mach timers: http://developer.apple.com/library/mac/#qa/qa2004/qa1398.html")
 #else
 	#include <sys/time.h>
@@ -23,11 +23,11 @@
 	#pragma TODO("Linux: http://linux.die.net/man/3/clock_gettime")
 #endif
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
-#ifdef VAPOR_PLATFORM_WINDOWS
+#ifdef PLATFORM_WINDOWS
 
 static bool CheckHighResolution();
 
@@ -47,7 +47,7 @@ static int64 GetTime()
 	return time.QuadPart;
 }
 
-#elif VAPOR_PLATFORM_LINUX
+#elif PLATFORM_LINUX
 
 static timeval GetTime()
 {
@@ -62,7 +62,7 @@ static timeval GetTime()
 
 float TimerGetCurrentTimeMs()
 {
-#ifdef VAPOR_PLATFORM_WINDOWS
+#ifdef PLATFORM_WINDOWS
 	int64 time = GetTime();
 	return float(time) / float(ticksPerSecond);
 #else
@@ -75,7 +75,7 @@ float TimerGetCurrentTimeMs()
 
 Timer* TimerCreate(Allocator* alloc)
 {
-	Timer* timer = Allocate<Timer>(alloc);
+	Timer* timer = Allocate(Timer, alloc);
 	TimerReset(timer);
 
 	return timer;
@@ -83,9 +83,9 @@ Timer* TimerCreate(Allocator* alloc)
 
 //-----------------------------------//
 
-void TimerDestroy(Timer* timer, Allocator* alloc)
+void TimerDestroy(Timer* timer)
 {
-	Deallocate(alloc, timer);
+	Deallocate(timer);
 }
 
 //-----------------------------------//
@@ -101,7 +101,7 @@ float TimerGetElapsed(Timer* timer)
 {
 	int64 diff = GetTime() - timer->time;
 
-#ifdef VAPOR_PLATFORM_WINDOWS
+#ifdef PLATFORM_WINDOWS
 	return float(diff) / float(ticksPerSecond);
 #else
 	return tv_time_ms(currentTime) - tv_time_ms(lastTime.tv_sec);
@@ -110,4 +110,4 @@ float TimerGetElapsed(Timer* timer)
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

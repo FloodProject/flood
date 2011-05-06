@@ -7,8 +7,8 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Event.h"
-#include "controllers/FirstPersonController.h"
+#include "Core/Event.h"
+#include "Controllers/FirstPersonController.h"
 #include "Engine.h"
 #include "Math/Helpers.h"
 #include "Scene/Entity.h"
@@ -22,14 +22,12 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(FirstPersonController, CameraController)
-END_CLASS()
+REFLECT_CHILD_CLASS(FirstPersonController, CameraController)
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
 static const float DEFAULT_LIMIT_XAXIS = 89.0f;
-
-//-----------------------------------//
 
 FirstPersonController::FirstPersonController()
 	: clampMovementX( true )
@@ -47,7 +45,8 @@ FirstPersonController::FirstPersonController()
 
 FirstPersonController::~FirstPersonController()
 {
-	window->onWindowFocusChange.Disconnect( this, &FirstPersonController::onWindowFocusChange );
+	#pragma TODO(Reconnect window focus event)
+	//window->onWindowFocusChange.Disconnect( this, &FirstPersonController::onWindowFocusChange );
 
 	if(!inputManager)
 		return;
@@ -76,8 +75,7 @@ void FirstPersonController::_update( float delta )
 
 void FirstPersonController::checkControls( float delta )
 {
-	if(!inputManager)
-		return;
+	if(!inputManager) return;
 
 	const TransformPtr& transform = getEntity()->getTransform();
 	Vector3 position = transform->getPosition();
@@ -86,7 +84,7 @@ void FirstPersonController::checkControls( float delta )
 	bool viewChanged = false;
 	
 	// Check mouse movement.
-	if( mouseDistance != Vector2::Zero )
+	if( mouseDistance != Vector2i(0, 0) )
 	{
 		Vector3 rotate( mouseDistance.y, -mouseDistance.x, 0 );
 		rotate *= delta * lookSensivity;
@@ -164,10 +162,8 @@ void FirstPersonController::checkControls( float delta )
 
 void FirstPersonController::registerCallbacks()
 {
-	if(!window || !inputManager)
-		return;
-
-	window->onWindowFocusChange.Connect( this, &FirstPersonController::onWindowFocusChange );
+	if( window )
+		window->onWindowFocusChange.Connect( this, &FirstPersonController::onWindowFocusChange );
 
 	Keyboard* const keyboard = inputManager->getKeyboard();
 	assert( keyboard != nullptr );
@@ -185,8 +181,7 @@ void FirstPersonController::registerCallbacks()
 
 void FirstPersonController::onKeyPressed( const KeyEvent& keyEvent )
 {
-	if( !enabled )
-		return;
+	if( !enabled ) return;
 
 	switch( keyEvent.keyCode )
 	{
@@ -244,8 +239,8 @@ void FirstPersonController::onMouseMove( const MouseMoveEvent& moveEvent )
 
 	if( window->isCursorVisible() )
 		return;
-		
-	Vector2 currentPosition( moveEvent.x, moveEvent.y );
+
+	Vector2i currentPosition( moveEvent.x, moveEvent.y );
 	mouseDistance += currentPosition - lastPosition;
 
 	centerCursor();

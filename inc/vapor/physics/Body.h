@@ -22,11 +22,11 @@ namespace vapor {
 
 class BodyMotionState;
 
-//-----------------------------------//
+REFLECT_DECLARE_CLASS(Body)
 
 class VAPOR_API Body : public Component
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(Body)
 
 public:
 

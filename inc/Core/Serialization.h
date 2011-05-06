@@ -16,7 +16,7 @@
 #include "Math/EulerAngles.h"
 #include "Math/Color.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -113,4 +113,4 @@ protected:
 
 //-----------------------------------//
 
-} // end namespace 
+NAMESPACE_END

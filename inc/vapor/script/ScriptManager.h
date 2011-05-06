@@ -12,14 +12,14 @@
 #include "script/State.h"
 #include "Resources/ResourceManager.h"
 
-#ifdef VAPOR_SCRIPTING_LUA
+#ifdef ENABLE_SCRIPTING_LUA
 
 namespace vapor {
 
 //-----------------------------------//
 
-typedef std::map<State*, ScriptPtr> ScriptsMap;
-typedef std::pair<const State*, ScriptPtr> ScriptsMapPair;
+typedef std::map<State*, Script*> ScriptsMap;
+typedef std::pair<const State*, Script> ScriptsMapPair;
 
 //-----------------------------------//
 
@@ -35,7 +35,7 @@ public:
 	~ScriptManager();
 
 	// Creates a new script instance.
-	State* createScriptInstance(const ScriptPtr& script);
+	State* createScriptInstance(Script* script);
 
 	// Gets the Lua state.
 	GETTER(State, State*, state)

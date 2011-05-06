@@ -32,10 +32,10 @@ public:
 	void setupImages();
 
 	// Generate thumbnails.
-	void generateThumbnails(const std::vector<std::string>& files);
+	void generateThumbnails(const std::vector<String>& files);
 
 	// Generate thumbnail.
-	ImagePtr generateThumbnail(const MeshPtr& mesh);
+	ImagePtr generateThumbnail(Mesh* mesh);
 
 protected:
 

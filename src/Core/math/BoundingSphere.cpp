@@ -10,7 +10,7 @@
 #include "Math/BoundingSphere.h"
 #include "Core/Log.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -71,4 +71,4 @@ bool BoundingSphere::intersects( const Vector3& pt ) const
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

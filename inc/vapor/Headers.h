@@ -140,12 +140,12 @@
 // Physics-related Includes
 //---------------------------------------------------------------------//
 
-#include <physics/Physics.h>
-#include <physics/Body.h>
-#include <physics/BoxShape.h>
-#include <physics/CapsuleShape.h>
-#include <physics/MeshShape.h>
-#include <physics/CharacterController.h>
+#include <Physics/Physics.h>
+#include <Physics/Body.h>
+#include <Physics/BoxShape.h>
+#include <Physics/CapsuleShape.h>
+#include <Physics/MeshShape.h>
+#include <Physics/CharacterController.h>
 
 //---------------------------------------------------------------------//
 // Terrain-related Includes

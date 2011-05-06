@@ -47,7 +47,7 @@ RenderControl::RenderControl( wxWindow* parent, wxWindowID id,
 	, frameUpdateTimer(this, UPDATE_TIMER)
 	, frameRenderTimer(this, RENDER_TIMER)
 {
-	LogInfo("Creating a new wxWidgets control");
+	LogInfo("Creating a new wxWidgets render control");
 
 	// Create a new engine window.
 	const wxSize& sz = GetSize();
@@ -58,6 +58,13 @@ RenderControl::RenderControl( wxWindow* parent, wxWindowID id,
 
 	// Setup input in the engine.
 	inputManager = window->inputManager;
+}
+
+//-----------------------------------//
+
+RenderControl::~RenderControl()
+{
+	delete window;
 }
 
 //-----------------------------------//

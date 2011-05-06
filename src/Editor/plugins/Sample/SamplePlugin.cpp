@@ -15,7 +15,7 @@ namespace vapor { namespace editor {
 //-----------------------------------//
 
 REFLECT_ABSTRACT_CLASS(SamplePlugin)
-REFLECT_END()
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 

@@ -127,30 +127,6 @@
     <Filter Include="Terrain">
       <UniqueIdentifier>{ea77f83f-e5ab-4721-85bc-f542d1fd6790}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Physics">
-      <UniqueIdentifier>{58499454-18c4-4ee5-8b4f-8af145018068}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Physics\Shapes">
-      <UniqueIdentifier>{7ddc94af-03bf-4124-8b7d-05678432f4f7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Physics\Shapes\Box">
-      <UniqueIdentifier>{84e66aef-0e53-4a2e-bac9-124018aee811}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Physics\Shapes\Capsule">
-      <UniqueIdentifier>{fb894a8f-838b-4829-9750-d3eaa41fe4fe}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Physics\Shapes\Mesh">
-      <UniqueIdentifier>{a897a904-639f-46f3-a1e5-b92530c51780}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Physics\Dynamics">
-      <UniqueIdentifier>{e3a37b25-57a4-4962-90f9-1b97f4c8af11}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Physics\Debug">
-      <UniqueIdentifier>{f60903af-9239-442c-a5b2-f882e56026b7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Physics\Controller">
-      <UniqueIdentifier>{48f7100a-3da6-457f-b57c-000e6b130d22}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Paging">
       <UniqueIdentifier>{0bad40b1-3622-4812-b531-bd3dfc159758}</UniqueIdentifier>
     </Filter>
@@ -181,9 +157,6 @@
     <Filter Include="Scene\Particles">
       <UniqueIdentifier>{1fec75a6-f36b-4570-8399-2d734a372104}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Render\Material">
-      <UniqueIdentifier>{a999175a-ca4f-4a8f-b303-1301cb9445bc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scene\Animation">
       <UniqueIdentifier>{06d212d9-7f06-4d29-877b-f0411630af15}</UniqueIdentifier>
     </Filter>
@@ -196,9 +169,6 @@
     <Filter Include="Scene\Camera\Controllers\Third Person">
       <UniqueIdentifier>{72fd431a-6f92-456b-8242-bca90fedb714}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Physics\Character">
-      <UniqueIdentifier>{86e0a566-d603-4458-ac03-2a1c5d15fa44}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Controllers">
       <UniqueIdentifier>{bc1a1ddb-1bf0-4377-8f7e-0f74420d2a85}</UniqueIdentifier>
     </Filter>
@@ -207,6 +177,33 @@
     </Filter>
     <Filter Include="Framework">
       <UniqueIdentifier>{61cee6f9-a647-4fcf-947d-1ce2c2a33cc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics">
+      <UniqueIdentifier>{58499454-18c4-4ee5-8b4f-8af145018068}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Shapes">
+      <UniqueIdentifier>{7ddc94af-03bf-4124-8b7d-05678432f4f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Shapes\Box">
+      <UniqueIdentifier>{84e66aef-0e53-4a2e-bac9-124018aee811}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Shapes\Capsule">
+      <UniqueIdentifier>{fb894a8f-838b-4829-9750-d3eaa41fe4fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Shapes\Mesh">
+      <UniqueIdentifier>{a897a904-639f-46f3-a1e5-b92530c51780}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Dynamics">
+      <UniqueIdentifier>{e3a37b25-57a4-4962-90f9-1b97f4c8af11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Debug">
+      <UniqueIdentifier>{f60903af-9239-442c-a5b2-f882e56026b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Controller">
+      <UniqueIdentifier>{48f7100a-3da6-457f-b57c-000e6b130d22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Character">
+      <UniqueIdentifier>{86e0a566-d603-4458-ac03-2a1c5d15fa44}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -345,12 +342,6 @@
     <ClCompile Include="..\..\src\Render\Buffer.cpp">
       <Filter>Render\Buffers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Render\Material.cpp">
-      <Filter>Render\Material</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Render\Renderable.cpp">
-      <Filter>Render\Primitives</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Render\GLSL_Program.cpp">
       <Filter>Render\Shaders</Filter>
     </ClCompile>
@@ -463,6 +454,9 @@
       <Filter>Window\Win32</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\Engine.cpp" />
+    <ClCompile Include="..\..\src\Render\Renderable.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\vapor\render\Device.h">
@@ -488,9 +482,6 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\render\VertexBuffer.h">
       <Filter>Render\Buffers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\Renderable.h">
-      <Filter>Render\Primitives</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\render\Cube.h">
       <Filter>Render\Primitives\Cube</Filter>
@@ -715,9 +706,6 @@
     <ClInclude Include="..\..\inc\vapor\scene\Particles.h">
       <Filter>Scene\Particles</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\Material.h">
-      <Filter>Render\Material</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\vapor\controllers\CameraController.h">
       <Filter>Scene\Camera\Controllers</Filter>
     </ClInclude>
@@ -732,6 +720,9 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\Engine\API.h" />
     <ClInclude Include="..\..\inc\vapor\Engine.h" />
+    <ClInclude Include="..\..\inc\vapor\render\Renderable.h">
+      <Filter>Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\doc\TODO.txt">

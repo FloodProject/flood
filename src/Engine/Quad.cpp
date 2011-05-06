@@ -25,7 +25,7 @@ Quad::Quad( float width, float height )
 VertexBufferPtr Quad::getQuadBuffer( float width, float height )
 {
 	// Create a new VBO and upload triangle data
-	VertexBufferPtr vb( new VertexBuffer() );
+	VertexBufferPtr vb( Allocate(VertexBuffer, AllocatorGetHeap()) );
 
 	// Vertex position data
 	std::vector< Vector3 > vertex;

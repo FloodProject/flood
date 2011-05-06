@@ -13,8 +13,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(Water, Geometry)
-END_CLASS()
+REFLECT_CHILD_CLASS(Water, Geometry)
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
@@ -23,7 +23,7 @@ Water::Water()
 
 //-----------------------------------//
 
-Water::Water( MaterialPtr material )
+Water::Water( MaterialHandle material )
 {
 	quad = new Quad(100, 100);
 	quad->setRenderLayer(RenderLayer::Transparency);

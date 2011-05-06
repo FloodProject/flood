@@ -11,6 +11,8 @@
 #include "UndoOperation.h"
 #include "PropertyPage.h"
 
+#ifdef ENABLE_PLUGIN_PROPERTY
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//
@@ -36,3 +38,5 @@ public:
 //-----------------------------------//
 
 } } // end namespaces
+
+#endif

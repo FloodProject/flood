@@ -16,8 +16,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-typedef std::map<std::string, ProgramPtr> ProgramsMap;
-typedef std::pair<const std::string&, ProgramPtr> ProgramsPair;
+typedef std::map<String, ProgramPtr> ProgramsMap;
+typedef std::pair<const String&, ProgramPtr> ProgramsPair;
 
 class ResourceManager;
 struct ResourceEvent;
@@ -37,13 +37,13 @@ public:
 	~ProgramManager();
 
 	// Gets a program given a name identifier.
-	ProgramPtr getProgram( const std::string& program );
+	ProgramPtr getProgram( const String& program );
 
 	// Registers a new program in the manager.
-	bool registerProgram( const std::string& name, const ProgramPtr& program );
+	bool registerProgram( const String& name, const ProgramPtr& program );
 
 	// Creates a program given their shader text.
-	ProgramPtr createProgram( const TextPtr& );
+	ProgramPtr createProgram( Text* );
 
 protected:
 

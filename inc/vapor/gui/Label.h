@@ -8,11 +8,10 @@
 
 #pragma once
 
-#include "gui/Overlay.h"
+#include "GUI/Overlay.h"
 
-FWD_DECL_INTRUSIVE(Font)
-FWD_DECL_INTRUSIVE(Material)
-FWD_DECL_SHARED(Geometry)
+#include "Resources/Font.h"
+#include "Resources/Material.h"
 
 namespace vapor {
 
@@ -28,21 +27,23 @@ namespace vapor {
  * changes the resolution.
  */
 
+REFLECT_DECLARE_CLASS(Label)
+
 class VAPOR_API Label : public Overlay
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(Label)
 
 public:
 
 	Label();
-	Label( const std::string& text, FontPtr font, MaterialPtr mat );
-	Label( const std::string& text, const std::string& font );
+	Label( const String& text, const FontHandle&, const MaterialHandle& );
+	Label( const String& text, const String& font );
 
 	// Gets the current text of this label.
-	GETTER(Text, const std::string&, text)
+	GETTER(Text, const String&, text)
 
 	// Sets the current text of this label.
-	void setText( const std::string& text );
+	void setText( const String& text );
 
 	// Updates the geometry to match the new text if needed.
 	virtual void update( float delta );
@@ -59,10 +60,10 @@ protected:
 	void setupState();
 
 	// Contains the text of the label.
-	std::string text;
+	String text;
 	
 	// Holds the font texture we are gonna use for rendering the glyphs.
-	FontPtr font;
+	FontHandle font;
 	
 	// Used to track if a label needs updating.
 	bool isDirty;

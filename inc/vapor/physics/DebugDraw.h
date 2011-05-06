@@ -11,6 +11,7 @@
 #ifdef VAPOR_PHYSICS_BULLET
 
 #include "Core/ReferenceCount.h"
+#include "Resources/Material.h"
 
 FWD_DECL_INTRUSIVE(VertexBuffer)
 FWD_DECL_INTRUSIVE(Material)
@@ -61,7 +62,7 @@ public:
 protected:
 	
 	VertexBufferPtr vb;
-	MaterialPtr material;
+	MaterialHandle material;
 	RenderablePtr renderable;
 };
 

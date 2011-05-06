@@ -13,22 +13,22 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_ENUM(ShaderType)
+REFLECT_ENUM(ShaderType)
 	ENUM(Vertex)
 	ENUM(Fragment)
 	ENUM(Geometry)
-END_ENUM()
+REFLECT_ENUM_END()
 
-BEGIN_CLASS_PARENT_ABSTRACT(Shader, Resource)
-	FIELD_ENUM(ShaderType, shaderType)
-END_CLASS()
+REFLECT_ABSTRACT_CHILD_CLASS(Shader, Resource)
+	FIELD_ENUM(ShaderType, type)
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
 Shader::Shader()
 	: compiled(false)
 	, compileErrors(false)
-	, shaderType( ShaderType::Vertex )
+	, type( ShaderType::Vertex )
 { }
 
 //-----------------------------------//

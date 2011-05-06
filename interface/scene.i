@@ -13,12 +13,12 @@
 
 %include "Scene/Component.h"
 %include "Scene/Transform.h"
+%include "Scene/Geometry.h"
 %include "Scene/Model.h"
 %include "Scene/Camera.h"
-%include "Scene/Geometry.h"
 %include "Scene/Light.h"
-%include "controllers/Controller.h"
-%include "physics/CharacterController.h"
+%include "Controllers/Controller.h"
+%include "Physics/CharacterController.h"
 
 %warnfilter(401) Entity;
 %include "Scene/Entity.h"

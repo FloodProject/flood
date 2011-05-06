@@ -10,8 +10,8 @@
 
 #ifdef VAPOR_PHYSICS_BULLET
 
-#include "physics/Convert.h"
-#include "physics/MeshShape.h"
+#include "Physics/Convert.h"
+#include "Physics/MeshShape.h"
 
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
@@ -74,7 +74,7 @@ static Vector3 getOffset(Entity* entity)
 {
 	ShapePtr shape = entity->getComponentFromFamily<Shape>();
 
-	if( shape->getType().is<MeshShape>() )
+	if( ReflectionIsEqual(shape->getType(), ReflectionGetType(MeshShape)) )
 		return Vector3::Zero;
 
 	const TransformPtr& transform = entity->getTransform();

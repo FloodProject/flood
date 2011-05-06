@@ -12,7 +12,7 @@
 #include "net/MessageHandler.h"
 #include "ConcurrentQueue.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -66,4 +66,4 @@ protected:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

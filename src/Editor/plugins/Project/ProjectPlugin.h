@@ -16,9 +16,11 @@ namespace vapor { namespace editor {
 
 class ResourceDatabase;
 
+REFLECT_DECLARE_CLASS(Project)
+
 class Project : public Object
 {
-	REFLECT_DECLARE_CLASS()
+	REFLECT_DECLARE_OBJECT(Project)
 
 public:
 	
@@ -29,9 +31,11 @@ public:
 
 class SceneDocument;
 
+REFLECT_DECLARE_CLASS(ProjectPlugin)
+
 class ProjectPlugin : public Plugin
 {
-	REFLECT_DECLARE_CLASS()
+	REFLECT_DECLARE_OBJECT(ProjectPlugin)
 
 public:
 

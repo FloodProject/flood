@@ -16,8 +16,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(Terrain, Group) 
-END_CLASS()
+REFLECT_CHILD_CLASS(Terrain, Group) 
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
@@ -206,7 +206,7 @@ bool Terrain::validateHeightmap( const ImagePtr& heightmap )
 	// Check an embedded LUT with the valid dimensions.
 	
 	bool valid = false;
-	for( size_t i = 0; i < VAPOR_ARRAY_SIZE(validDimensions); i++ )
+	for( size_t i = 0; i < ARRAY_SIZE(validDimensions); i++ )
 	{
 		if( width == validDimensions[i] ) 
 		{

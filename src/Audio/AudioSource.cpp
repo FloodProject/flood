@@ -13,19 +13,19 @@
 #include "Audio/Source.h"
 #include "Audio/Buffer.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
-BEGIN_ENUM(RolloffMode)
+REFLECT_ENUM(RolloffMode)
 	ENUM(Logarithmic)
 	ENUM(Linear)
 	ENUM(Exponential)
-END_ENUM()
+REFLECT_ENUM_END()
 
 //-----------------------------------//
 
-AudioSource::AudioSource(AudioContext* context, const SoundPtr& sound)
+AudioSource::AudioSource(AudioContext* context, const SoundHandle& handle)
 	: context(context)
 	, device(context->device)
 	, id(0)
@@ -41,7 +41,9 @@ AudioSource::AudioSource(AudioContext* context, const SoundPtr& sound)
 		return;
 	}
 
+	Sound* sound = handle.Resolve();
 	buffer = device->prepareBuffer(sound);
+	
 	setPosition( Vector3::Zero );
 }
 
@@ -259,6 +261,6 @@ void AudioSource::setPosition( const Vector3& pos )
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END
 
 #endif

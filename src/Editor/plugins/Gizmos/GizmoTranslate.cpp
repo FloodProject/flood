@@ -28,7 +28,7 @@ void GizmoTranslate::buildGeometry()
 {
 	lines = generateLines();
 	
-	RenderablePtr renderable = new Renderable(PolygonType::Lines);
+	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Lines);
 	renderable->setVertexBuffer(lines);
 	renderable->setMaterial(material);
 
@@ -36,7 +36,7 @@ void GizmoTranslate::buildGeometry()
 
 	cones = generateCones();
 	
-	renderable = new Renderable(PolygonType::Triangles);
+	renderable = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Triangles);
 	renderable->setVertexBuffer(cones);
 	renderable->setMaterial(material);
 	renderable->setRenderLayer(RenderLayer::PostTransparency);
@@ -96,7 +96,7 @@ static const byte SLICES = 10;
 VertexBufferPtr GizmoTranslate::generateCones()
 {
 
-	VertexBufferPtr vb( new VertexBuffer() );
+	VertexBufferPtr vb = Allocate(VertexBuffer, AllocatorGetHeap());
 
 	// Unit cone vertex data
 	std::vector< Vector3 > cone;

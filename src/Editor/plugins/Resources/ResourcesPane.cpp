@@ -56,8 +56,8 @@ void ResourcesPage::initControl()
 	rootId = AddRoot( "Resources", resGroupIcons[RG(General)] );
 	//resGroupIds[RG(General)] = AppendItem(rootId, "General", resGroupIcons[RG(General)]);
 
-	const Enum& enuhm = ResourceGroup::getStaticType();
-	const EnumValuesMap& values = enuhm.getValues();
+	Enum* enuhm = ReflectionGetType(ResourceGroup);
+	const EnumValuesMap& values = enuhm->values;
 	
 	EnumValuesMap::const_iterator it;
 	for( it = values.begin(); it != values.end(); it++ )
@@ -102,18 +102,19 @@ void ResourcesPage::updateTree()
 	ResourceMap::const_iterator it;
 	for( it = resources.begin(); it != resources.end(); it++ )
 	{
-		const ResourcePtr& res = it->second;
+		const ResourceHandle& res = it->second;
 		addResource(res);
 	}
 }
 
 //-----------------------------------//
 
-wxTreeItemId ResourcesPage::addResource(const ResourcePtr& res)
+wxTreeItemId ResourcesPage::addResource(const ResourceHandle& handle)
 {
+	Resource* res = handle.Resolve();
 	if( !res ) return nullptr;
 
-	ResourceIdsMap::iterator it = resourceIds.find( res.get() );
+	ResourceIdsMap::iterator it = resourceIds.find(res);
 	
 	if( it != resourceIds.end() ) return nullptr;
 
@@ -121,7 +122,7 @@ wxTreeItemId ResourcesPage::addResource(const ResourcePtr& res)
 	const Path& resPath = res->getPath();
 	
 	wxTreeItemId id = AppendItem(resGroupIds[group], resPath, 0 );
-	resourceIds[res.get()] = id;
+	resourceIds[res] = id;
 
 	return id;
 }
@@ -130,17 +131,18 @@ wxTreeItemId ResourcesPage::addResource(const ResourcePtr& res)
 
 void ResourcesPage::onResourcePrepared( const ResourceEvent& event )
 {
-	const ResourcePtr& res = event.resource;
-	addResource(res);
+	const ResourceHandle& handle = event.handle;
+	addResource(handle);
 }
 
 //-----------------------------------//
 
 void ResourcesPage::onResourceRemoved( const ResourceEvent& event )
 {
-	const ResourcePtr& res = event.resource;
+	const ResourceHandle& handle = event.handle;
+	Resource* res = handle.Resolve();
 
-	ResourceIdsMap::iterator it = resourceIds.find( res.get() );
+	ResourceIdsMap::iterator it = resourceIds.find(res);
 	assert( it != resourceIds.end() );
 
 	wxTreeItemId id = it->second;
@@ -160,10 +162,9 @@ void ResourcesPage::onResourceReloaded( const ResourceEvent& event )
 
 //-----------------------------------//
 
-ResourcePtr ResourcesPage::getResourceFromTreeId( wxTreeItemId id )
+ResourceHandle ResourcesPage::getResourceFromTreeId( wxTreeItemId id )
 {
-	if( !id )
-		return nullptr;
+	if( !id ) return ResourceHandle();
 
 	return GetResourceManager()->getResource( (String) GetItemText(id) );
 }
@@ -175,16 +176,16 @@ void ResourcesPage::onItemChanged( wxTreeEvent& event )
 	wxTreeItemId oldId = event.GetOldItem();
 	wxTreeItemId newId = event.GetItem();
 
-	const ResourcePtr& oldResource = getResourceFromTreeId( oldId );
-	const ResourcePtr& newResource = getResourceFromTreeId( newId );
+	const ResourceHandle& oldResource = getResourceFromTreeId( oldId );
+	const ResourceHandle& newResource = getResourceFromTreeId( newId );
 
 	Events* events = GetEditor().getEventManager();
 
 	if( oldResource )
-		events->onResourceUnselect(oldResource);
+		events->onResourceUnselect(ResourcePtr(oldResource.Resolve()));
 
 	if( newResource )
-		events->onResourceSelect(newResource);
+		events->onResourceSelect(ResourcePtr(newResource.Resolve()));
 }
 
 //-----------------------------------//
@@ -227,7 +228,7 @@ void ResourcesPage::onTreeItemMenu(wxTreeEvent& event)
 {
 	menuItemId = event.GetItem();
 	
-	const ResourcePtr& res = getResourceFromTreeId( menuItemId );
+	const ResourceHandle& res = getResourceFromTreeId( menuItemId );
 
 	if( !res )
 		return;
@@ -250,7 +251,7 @@ void ResourcesPage::onTreeItemMenu(wxTreeEvent& event)
 	menuVCS->Append( ID_ResourceMenu_VCS_ShowLog, "Show &log" );
 	menu.AppendSubMenu(menuVCS, "Version Control");
 
-	if( !isUnderVersionControl(res) )
+	if( !isUnderVersionControl(res.Resolve()) )
 	{
 		wxMenuItemList& menus = menuVCS->GetMenuItems();
 
@@ -302,7 +303,9 @@ void ResourcesPage::onCommandMenuSelected( wxCommandEvent& event )
 {
 	int id = event.GetId();
 
-	const ResourcePtr& res = getResourceFromTreeId( menuItemId );
+	const ResourceHandle& handle = getResourceFromTreeId( menuItemId );
+	Resource* res = handle.Resolve();
+
 	const String& fullPath = getResourceFullPath(res);
 
 	switch(id)

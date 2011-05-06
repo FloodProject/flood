@@ -9,7 +9,7 @@
 #include "Core/API.h"
 #include "Math/EulerAngles.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -75,4 +75,4 @@ void EulerAngles::identity()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

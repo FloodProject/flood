@@ -18,8 +18,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(Cell, Geometry)
-END_CLASS()
+REFLECT_CHILD_CLASS(Cell, Geometry)
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
@@ -27,7 +27,7 @@ Cell::Cell() { }
 
 //-----------------------------------//
 
-Cell::Cell( int x, int y )
+Cell::Cell( int32 x, int32 y )
 	: x(x), y(y)
 { }
 
@@ -37,13 +37,16 @@ void Cell::setSettings( const TerrainSettings& settings )
 {
 	this->settings = &settings;
 
-	int size = settings.TextureSize;
-	image = new Image(size, size, PixelFormat::R8G8B8A8);
-	image->setColor( Color::LightGrey );
+	int32 size = settings.TextureSize;
+	
+	image = ImageCreate(AllocatorGetHeap(), size, size, PixelFormat::R8G8B8A8);
+	image.Resolve()->setColor( Color::LightGrey );
 
+#if 0
 	// Make a copy of the default cell material.
-	material = new Material(*settings.Material);
+	material = MaterialCreate(AllocatorGetHeap(), *settings.Material);
 	material->setTexture(0, image);
+#endif
 }
 
 //-----------------------------------//
@@ -52,9 +55,9 @@ void Cell::setHeights( const std::vector<float>& heights )
 {
 	this->heights = heights;
 
-	rend = new Renderable( PolygonType::Triangles );
-	rend->setVertexBuffer( new VertexBuffer() );
-	rend->setIndexBuffer( new IndexBuffer() );
+	rend = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Triangles);
+	rend->setVertexBuffer( Allocate(VertexBuffer, AllocatorGetHeap()) );
+	rend->setIndexBuffer( Allocate(IndexBuffer, AllocatorGetHeap()) );
 	rend->setMaterial(material);
 
 	addRenderable(rend);

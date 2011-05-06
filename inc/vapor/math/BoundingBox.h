@@ -12,7 +12,7 @@
 #include "Math/Matrix4x3.h"
 #include "Math/Ray.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -63,4 +63,4 @@ public:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

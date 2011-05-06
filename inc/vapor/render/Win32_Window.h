@@ -12,7 +12,7 @@
 
 #include "Render/Window.h"
 
-#ifdef VAPOR_PLATFORM_WINDOWS
+#ifdef PLATFORM_WINDOWS
 	#define WIN32_LEAN_AND_MEAN
 	#define NOMINMAX
 	#include <Windows.h>	

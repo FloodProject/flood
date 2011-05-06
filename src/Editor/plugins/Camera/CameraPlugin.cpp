@@ -21,7 +21,7 @@ namespace vapor { namespace editor {
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(CameraPlugin, Plugin)
-REFLECT_END()
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 

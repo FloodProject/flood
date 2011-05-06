@@ -239,7 +239,6 @@
     <ClCompile Include="..\..\src\Render\GLSL_Program.cpp" />
     <ClCompile Include="..\..\src\Render\GLSL_Shader.cpp" />
     <ClCompile Include="..\..\src\Render\IndexBuffer.cpp" />
-    <ClCompile Include="..\..\src\Render\Material.cpp" />
     <ClCompile Include="..\..\src\Render\Program.cpp" />
     <ClCompile Include="..\..\src\Render\ProgramManager.cpp" />
     <ClCompile Include="..\..\src\Render\Renderable.cpp" />
@@ -278,7 +277,6 @@
     <ClInclude Include="..\..\inc\Engine\API.h" />
     <ClInclude Include="..\..\inc\vapor\render\Device.h" />
     <ClInclude Include="..\..\inc\vapor\render\GL.h" />
-    <ClInclude Include="..\..\inc\vapor\render\Material.h" />
     <ClInclude Include="..\..\inc\vapor\render\RenderQueue.h" />
     <ClInclude Include="..\..\inc\vapor\render\Adapter.h" />
     <ClInclude Include="..\..\inc\vapor\render\Buffer.h" />

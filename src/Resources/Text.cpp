@@ -13,8 +13,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(Text, Resource)
-END_CLASS()
+REFLECT_CHILD_CLASS(Text, Resource)
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 

@@ -8,7 +8,9 @@
 
 #pragma once
 
-#ifdef VAPOR_SERIALIZATION_JSON
+#include "Core/API.h"
+
+#ifdef ENABLE_SERIALIZATION_JSON
 
 #include "Core/Serialization.h"
 #include "Core/Stream.h"
@@ -16,7 +18,7 @@
 
 struct json_t;
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -30,7 +32,7 @@ class API_CORE JsonSerializer : public ReflectionVisitor
 
 public:
 
-	JsonSerializer(Stream& stream);
+	JsonSerializer(Stream* stream);
 
 	// Processes an object.
 	virtual void processBegin(const ObjectData& data);
@@ -69,7 +71,7 @@ public:
 protected:
 
 	// Stream.
-	Stream& stream;
+	Stream* stream;
 
 	// Root JSON value.
 	json_t* rootValue;
@@ -86,7 +88,7 @@ class API_CORE JsonDeserializer
 
 public:
 
-	JsonDeserializer(Stream& stream);
+	JsonDeserializer(Stream* stream);
 
 	// Deserializes the stream into an object.
 	Object* deserialize();
@@ -102,12 +104,11 @@ protected:
 	void processArrayElement(void* element, Field& field, json_t* value);
 	byte* processArrayPointer(Object* address, Field& field, int size);
 
-	Stream& stream;
-	Registry& registry;
+	Stream* stream;
 };
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END
 
 #endif

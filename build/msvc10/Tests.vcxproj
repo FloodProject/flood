@@ -21,6 +21,7 @@
     <ClCompile Include="..\..\src\Tests\CuTest.cpp" />
     <ClCompile Include="..\..\src\Tests\Handle.cpp" />
     <ClCompile Include="..\..\src\Tests\Path.cpp" />
+    <ClCompile Include="..\..\src\Tests\Reflection.cpp" />
     <ClCompile Include="..\..\src\Tests\Streams.cpp" />
   </ItemGroup>
   <ItemGroup>

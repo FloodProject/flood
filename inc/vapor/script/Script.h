@@ -18,25 +18,25 @@ namespace vapor {
  * Script that can be executed by a script state.
  */
 
+REFLECT_DECLARE_CLASS(Script)
+
 class RESOURCE_API Script : public Resource
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(Script)
 
 public:
 
 	// Gets the source code of the script.
-	ACESSOR(Source, const std::string&, text)
+	ACESSOR(Source, const String&, text)
 
 	// Gets the associated resource group.
 	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Scripts)
 
-protected:
-
 	// Source code of the script.
-	std::string text;
+	String text;
 };
 
-TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Script );
+TYPEDEF_RESOURCE_HANDLE_FROM_TYPE( Script );
 
 //-----------------------------------//
 

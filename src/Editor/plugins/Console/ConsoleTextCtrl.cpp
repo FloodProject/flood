@@ -24,7 +24,7 @@ static ConsoleTextCtrl* console = nullptr;
 
 //-----------------------------------//
 
-#ifdef VAPOR_SCRIPTING_LUA
+#ifdef ENABLE_SCRIPTING_LUA
 
 int luaPrintStub(lua_State* L)
 {
@@ -50,7 +50,7 @@ ConsoleTextCtrl::ConsoleTextCtrl( wxWindow* parent, wxWindowID id,
 	if( !engine->getScriptManager() )
 		return;
 
-#ifdef VAPOR_SCRIPTING_LUA
+#ifdef ENABLE_SCRIPTING_LUA
 	luaState = engine->getScriptManager()->getState();
 	lua_register( luaState->getLuaState() , "print", luaPrintStub );
 #endif
@@ -90,7 +90,7 @@ void ConsoleTextCtrl::InitControl()
 
 //-----------------------------------//
 
-#ifdef VAPOR_SCRIPTING_LUA
+#ifdef ENABLE_SCRIPTING_LUA
 
 int ConsoleTextCtrl::luaPrint(lua_State* L)
 {
@@ -214,7 +214,7 @@ void ConsoleTextCtrl::OnEnter(/*wxCommandEvent& event*/)
 
 	std::string text( GetRange( XYToPosition( 2, y ), GetLastPosition() ).c_str() );
 
-#ifdef VAPOR_SCRIPTING_LUA
+#ifdef ENABLE_SCRIPTING_LUA
 	if( !luaState->execute( text.c_str() ) )
 	{
 		AppendText( "\n" );

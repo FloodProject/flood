@@ -28,10 +28,12 @@ TYPEDEF_SHARED_POINTER_FROM_TYPE( Entity )
  * A component will also be able to register methods for scripting.
  */
 
+REFLECT_DECLARE_CLASS(Component)
+
 class VAPOR_API Component : public Object
 {
-	DECLARE_CLASS_()
 	DECLARE_UNCOPYABLE(Component)
+	REFLECT_DECLARE_OBJECT(Component)
 
 public:
 
@@ -68,7 +70,7 @@ public:
 	// Gets/sets if the debug renderable inherits the transform.
 	ACESSOR(DebugInheritsTransform, bool, debugInheritsTransform)
 
-protected:
+public:
 
 	// Entity that owns this component.
 	Entity* entity;

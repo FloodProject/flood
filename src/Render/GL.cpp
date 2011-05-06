@@ -18,7 +18,7 @@ namespace vapor {
 
 bool glHasError( const std::string& msg )
 {
-#ifdef VAPOR_DEBUG
+#ifdef DEBUG_BUILD
 	bool occured = false;
 	uint numMaxErrors = 5;
 
@@ -38,7 +38,7 @@ bool glHasError( const std::string& msg )
 
 //-----------------------------------//
 
-#ifdef VAPOR_DEBUG
+#ifdef DEBUG_BUILD
 
 struct TokenString
 {

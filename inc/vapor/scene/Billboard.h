@@ -30,7 +30,7 @@ namespace vapor {
 
 struct BillboardType
 {
-	DECLARE_ENUM()
+	REFLECT_DECLARE_ENUM(BillboardType)
 
 	enum Enum
 	{
@@ -46,9 +46,11 @@ struct BillboardType
  * Billboards always face the direction of the camera.
  */
 
+REFLECT_DECLARE_CLASS(Billboard)
+
 class VAPOR_API Billboard : public Component
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(Billboard)
 
 public:
 

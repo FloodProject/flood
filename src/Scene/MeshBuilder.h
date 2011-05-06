@@ -12,17 +12,19 @@
 #include "Resources/Mesh.h"
 #include "Resources/Animation.h"
 #include "Resources/Skeleton.h"
+#include "Resources/Material.h"
 
-FWD_DECL_INTRUSIVE(Material)
 FWD_DECL_INTRUSIVE(Renderable)
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
 /**
  * Builds the mesh into a ready to render format.
  */
+
+typedef std::map<Mesh*, std::vector<RenderablePtr>> MeshRenderablesMap;
 
 class MeshBuilder
 {
@@ -31,7 +33,7 @@ public:
 	MeshBuilder();
 
 	// Builds the mesh.
-	bool build(const MeshPtr& mesh);
+	bool build(const MeshHandle& mesh);
 
 	// Builds the mesh geometry data.
 	void buildGeometry();
@@ -39,16 +41,16 @@ public:
 	// Builds the mesh skeleton data.
 	void buildSkeleton();
 
-	static std::map<MeshPtr, std::vector<RenderablePtr> > meshRenderables;
+	static MeshRenderablesMap meshRenderables;
 
 protected:
 
-	MeshPtr mesh;
+	Mesh* mesh;
 
 	// Builds the material for a group.
-	MaterialPtr buildMaterial( const MeshGroup& group );
+	MaterialHandle buildMaterial( const MeshGroup& group );
 };
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

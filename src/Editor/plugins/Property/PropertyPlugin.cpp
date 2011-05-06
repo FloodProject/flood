@@ -12,15 +12,18 @@
 #include "Editor.h"
 #include "Events.h"
 #include "EditorIcons.h"
+#include "Core/Reflection.h"
 #include "Core/Utilities.h"
 #include "Pipeline/ResourceProcessor.h"
+
+#ifdef ENABLE_PLUGIN_PROPERTY
 
 namespace vapor { namespace editor {
 
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(PropertyPlugin, Plugin)
-REFLECT_END()
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
@@ -82,7 +85,7 @@ void PropertyPlugin::onPluginDisable()
 
 void PropertyPlugin::onEntitySelect( const EntityPtr& entity )
 {
-	if( entity->getType().inherits<Group>() )
+	if( ClassInherits(entity->getType(), ReflectionGetType(Group)) )
 		return;
 
 	propertyPage->reset();
@@ -178,3 +181,5 @@ void PropertyPlugin::onSceneLoad( const ScenePtr& scene )
 //-----------------------------------//
 
 } } // end namespaces
+
+#endif

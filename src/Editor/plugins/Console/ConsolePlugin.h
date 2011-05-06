@@ -16,9 +16,11 @@ namespace vapor { namespace editor {
 
 class ConsoleTextCtrl;
 
+REFLECT_DECLARE_CLASS(ConsolePlugin)
+
 class ConsolePlugin : public Plugin
 {
-	REFLECT_DECLARE_CLASS()
+	REFLECT_DECLARE_OBJECT(ConsolePlugin)
 
 public:
 

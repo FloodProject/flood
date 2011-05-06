@@ -19,7 +19,7 @@ namespace vapor { namespace editor {
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(ScenePlugin, Plugin)
-REFLECT_END()
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 

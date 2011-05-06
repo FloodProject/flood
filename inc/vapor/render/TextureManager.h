@@ -36,16 +36,16 @@ public:
 	~TextureManager();
 
 	// Gets a texture given a name identifier.
-	TexturePtr getTexture( const std::string& tex );
+	TexturePtr getTexture( const String& name );
 
 	// Gets a texture given an image.
-	TexturePtr getTexture( const ImagePtr& img );
+	TexturePtr getTexture( Image* );
 
 	// Removes the texture backed by the image.
-	void removeTexture(const ImagePtr& image);
+	void removeTexture( Image* );
 
 	// Gets the memory usage of the textures loaded (in kbytes).
-	uint getMemoryUsage();
+	uint32 getMemoryUsage();
 
 	// Updates the texture manager.
 	virtual void update( float delta );
@@ -53,13 +53,13 @@ public:
 protected:
 
 	// Populates a texture when the image is loaded.
-	void onLoaded( const ResourceEvent& evt );
+	void onLoaded( const ResourceEvent& event );
 
 	// Removes a texture when the image file is unloaded.
-	void onUnloaded( const ResourceEvent& evt );
+	void onUnloaded( const ResourceEvent& event );
 
 	// Reloads a texture when the image file changes.
-	void onReloaded( const ResourceEvent& evt );
+	void onReloaded( const ResourceEvent& event );
 
 	// Switches the image of the texture backed by the first image.
 	void switchImage( const ImagePtr&, const ImagePtr& );
@@ -68,8 +68,6 @@ protected:
 	typedef std::map< Image*, TexturePtr > TextureMap;
 	typedef std::pair< Image*, TexturePtr > TextureMapPair;
 	TextureMap textures;
-	
-	ResourceManager* rm;
 };
 
 //-----------------------------------//

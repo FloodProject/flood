@@ -9,7 +9,7 @@
 #include "Resources/API.h"
 #include "Resources/BitmapFont.h"
 
-#ifdef VAPOR_FONT_BITMAP
+#ifdef ENABLE_FONT_BITMAP
 
 namespace vapor {
 

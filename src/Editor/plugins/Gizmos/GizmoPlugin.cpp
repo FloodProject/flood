@@ -29,7 +29,7 @@ namespace vapor { namespace editor {
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(GizmoPlugin, Plugin)
-REFLECT_END()
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 

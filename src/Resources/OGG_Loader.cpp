@@ -8,7 +8,7 @@
 
 #include "Resources/API.h"
 
-#ifdef VAPOR_AUDIO_OGG
+#ifdef ENABLE_AUDIO_OGG
 
 #include "Resources/OGG_Loader.h"
 #include "Core/Utilities.h"
@@ -17,8 +17,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(OGG_Loader, ResourceLoader)
-END_CLASS()
+REFLECT_CHILD_CLASS(OGG_Loader, ResourceLoader)
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 

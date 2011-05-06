@@ -140,7 +140,7 @@ void SelectionOperation::redo()
 
 void SelectionOperation::selectAll()
 {
-	for(uint i = 0; i < selections.size(); i++ )
+	for(size_t i = 0; i < selections.size(); i++ )
 	{
 		const SelectionData& data = selections[i];
 		const EntityPtr& entity = data.entity;
@@ -156,7 +156,7 @@ void SelectionOperation::selectAll()
 
 void SelectionOperation::unselectAll()
 {
-	for(uint i = 0; i < selections.size(); i++ )
+	for(size_t i = 0; i < selections.size(); i++ )
 	{
 		const SelectionData& data = selections[i];
 		const EntityPtr& entity = data.entity;
@@ -172,7 +172,7 @@ void SelectionOperation::unselectAll()
 
 void SelectionOperation::selectPrevious()
 {
-	for(uint i = 0; i < previous.size(); i++ )
+	for(size_t i = 0; i < previous.size(); i++ )
 	{
 		const SelectionData& data = previous[i];
 		const EntityPtr& entity = data.entity;
@@ -188,7 +188,7 @@ void SelectionOperation::selectPrevious()
 
 void SelectionOperation::unselectPrevious()
 {
-	for(uint i = 0; i < previous.size(); i++ )
+	for(size_t i = 0; i < previous.size(); i++ )
 	{
 		const SelectionData& data = previous[i];
 		const EntityPtr& entity = data.entity;
@@ -214,7 +214,7 @@ void SelectionOperation::addEntity(const EntityPtr& entity)
 
 bool SelectionOperation::isSelection(const EntityPtr& entity)
 {
-	for(uint i = 0; i < selections.size(); i++)
+	for(size_t i = 0; i < selections.size(); i++)
 	{
 		SelectionData& data = selections[i];
 		
@@ -229,13 +229,10 @@ bool SelectionOperation::isSelection(const EntityPtr& entity)
 
 void SelectionOperation::setBoundingBoxVisible(const EntityPtr& entity, bool state)
 {
-	if( !entity )
-		return;
+	if( !entity ) return;
 
 	const TransformPtr& transform = entity->getTransform();
-
-	if( !transform )
-		return;
+	if( !transform ) return;
 
 	transform->setDebugRenderableVisible( state );
 }

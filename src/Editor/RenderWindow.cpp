@@ -36,8 +36,7 @@ RenderWindow::~RenderWindow()
 
 bool RenderWindow::createContext()
 {
-	if(!canvas)
-		return false;
+	if(!canvas)return false;
 
     // create OpenGL context
     context = new wxGLContext(canvas);
@@ -80,7 +79,7 @@ void RenderWindow::makeCurrent()
 
 //-----------------------------------//
 
-Vector2 RenderWindow::getCursorPosition() const
+Vector2i RenderWindow::getCursorPosition() const
 {
 	const wxMouseState& mouseState = wxGetMouseState();
 	
@@ -88,7 +87,7 @@ Vector2 RenderWindow::getCursorPosition() const
 	int y = mouseState.GetY();
 	canvas->ScreenToClient( &x, &y );
 	
-	return Vector2(x, y);
+	return Vector2i(x, y);
 }
 
 //-----------------------------------//

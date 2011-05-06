@@ -34,7 +34,7 @@ public:
 	{ }
 
 	// Gets the size of the target.
-	Vector2 getSize() const;
+	Vector2i getSize() const;
 
 	uint16 width, height;
 };

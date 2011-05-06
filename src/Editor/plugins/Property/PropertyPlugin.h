@@ -10,15 +10,19 @@
 
 #include "Plugin.h"
 
+#ifdef ENABLE_PLUGIN_PROPERTY
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//
 
 class PropertyPage;
 
+REFLECT_DECLARE_CLASS(PropertyPlugin)
+
 class PropertyPlugin : public Plugin
 {
-	REFLECT_DECLARE_CLASS()
+	REFLECT_DECLARE_OBJECT(PropertyPlugin)
 
 public:
 
@@ -68,3 +72,5 @@ protected:
 //-----------------------------------//
 
 } } // end namespaces
+
+#endif

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#ifdef VAPOR_SCRIPTING_LUA
+#ifdef ENABLE_SCRIPTING_LUA
 
 struct lua_State;
 
@@ -19,8 +19,6 @@ namespace vapor {
 //-----------------------------------//
 
 class Engine;
-
-//-----------------------------------//
 
 /**
  * Scripting context that can be used to execute scripts. 
@@ -43,22 +41,22 @@ public:
 	GETTER(LuaState, lua_State*, luaState)
 
 	// Loads a script resource.
-	bool load( const ScriptPtr& script );
+	bool load( Script* script );
 
 	// Executes a piece of source code.
-	bool execute( const std::string& source );
+	bool execute( const String& source );
 
 	// Executes a script resource.
-	bool execute( const ScriptPtr& script );
+	bool execute( Script* script );
 
 	// Invokes a function in the state.
-	bool invoke( const std::string& name, int numArguments = 0 );
+	bool invoke( const String& name, uint8 numArguments );
 
 	// Handles the Lua error states.
 	void handleError();
 
 	// Gets the last error.
-	GETTER(LastError, const std::string&, lastError)
+	GETTER(LastError, const String&, lastError)
 
 protected:
 
@@ -66,7 +64,7 @@ protected:
 	lua_State* luaState;
 
 	// Last error.
-	std::string lastError;
+	String lastError;
 };
 
 //-----------------------------------//

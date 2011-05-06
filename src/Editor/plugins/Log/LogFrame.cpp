@@ -27,7 +27,7 @@ LogFrame::LogFrame( wxWindow* parent )
 	InsertColumn(1, message);
 
 	Log* log = GetEngine()->getLogger();
-	log->Handlers.Connect( this, &LogFrame::Process );
+	log->handlers.Connect( this, &LogFrame::Process );
 }
 
 //-----------------------------------//

@@ -13,7 +13,7 @@
 #include "Math/Ray.h"
 #include "Math/BoundingBox.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -50,4 +50,4 @@ public:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

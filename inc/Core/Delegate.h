@@ -160,7 +160,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 namespace detail {	// we'll hide the implementation details in a nested namespace.
 

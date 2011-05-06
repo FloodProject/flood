@@ -16,14 +16,15 @@
 #include "Core/Utilities.h"
 #include "Document.h"
 
+#ifdef ENABLE_PLUGIN_PROPERTY
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//
 
 static wxString convertToReadable(wxString str)
 {
-	if( str.IsEmpty() )
-		return wxEmptyString;
+	if( str.IsEmpty() ) return wxEmptyString;
 
 	str.Replace("_", " ");
 
@@ -49,7 +50,7 @@ static wxString convertToReadable(wxString str)
 
 struct TagName
 {
-	long id;
+	int32 id;
 	const char* name;
 };
 
@@ -67,11 +68,11 @@ static wxPGChoices getTagChoices()
 {
 	wxPGChoices choices;
 
-	for( uint i = 0; i < VAPOR_ARRAY_SIZE(TagNames); i++ )
+	for( size_t i = 0; i < ARRAY_SIZE(TagNames); i++ )
 	{
 		const TagName& tag = TagNames[i];
 			
-		wxString name( std::string(tag.name) );
+		wxString name( String(tag.name) );
 		choices.Add( convertToReadable(name), tag.id );
 	}
 
@@ -80,16 +81,28 @@ static wxPGChoices getTagChoices()
 
 //-----------------------------------//
 
-static ResourcePtr askResource()
+bool ReflectionIsResourceHandle(const Field* field)
+{
+	Type* type = field->type;
+
+	bool isClass = ReflectionIsComposite(type);
+	bool isResource = isClass && ClassInherits((Class*) type, ReflectionGetType(Resource));
+	
+	return isResource && FieldIsHandle(field);
+}
+
+//-----------------------------------//
+
+static ResourceHandle askResource()
 {
 	wxFileDialog fd( &GetEditor(), wxFileSelectorPromptStr,
 			wxEmptyString, wxEmptyString, "Resource files | *.*",
 			wxFD_DEFAULT_STYLE | wxFD_FILE_MUST_EXIST );
 
 	if( fd.ShowModal() != wxID_OK )
-		return nullptr;
+		return ResourceHandle(HandleInvalid);
 
-	std::string path( fd.GetPath() );
+	String path( fd.GetPath() );
 	path = PathNormalize(path);
 	
 	ResourceManager* res = GetResourceManager();
@@ -102,13 +115,13 @@ class ResourceProperty : public wxLongStringProperty
 {
 public:
 
-	ResourceProperty(const std::string& name)
+	ResourceProperty(const String& name)
 		: wxLongStringProperty(name, wxPG_LABEL)
 	{}
 
 	virtual bool OnButtonClick( wxPropertyGrid* propGrid, wxString& value )
 	{
-		ResourcePtr resource = askResource();
+		ResourceHandle resource = askResource();
 
 		if( !resource )
 			return false;
@@ -120,7 +133,7 @@ public:
 		//if( &resourceType != data->type )
 		//	return false;
 
-		SetValueInEvent( PathGetFile( resource->getPath() ) );
+		SetValueInEvent( PathGetFile( resource.Resolve()->getPath() ) );
 
 		return true;
 	}
@@ -129,8 +142,7 @@ public:
 //-----------------------------------//
 
 PropertyPage::PropertyPage( wxWindow* parent )
-	: wxPropertyGrid(parent, wxID_ANY, wxDefaultPosition,
-		wxDefaultSize, wxPG_DEFAULT_STYLE | wxPG_SPLITTER_AUTO_CENTER)
+	: wxPropertyGrid(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxPG_DEFAULT_STYLE | wxPG_SPLITTER_AUTO_CENTER)
 	, currentObject(nullptr)
 {
 	// Events bindings.
@@ -162,7 +174,7 @@ void PropertyPage::reset()
 
 void PropertyPage::resetObject(const Object* object)
 {
-	if(currentObject != object )
+	if( currentObject != object )
 		reset();
 }
 
@@ -190,9 +202,7 @@ void PropertyPage::onPropertyChanged(wxPropertyGridEvent& event)
 {
 	wxPGProperty* prop = event.GetProperty();
 	
-	if(	!prop->GetClientObject() )
-		prop = prop->GetParent();
-
+	if(	!prop->GetClientObject() ) prop = prop->GetParent();
 	PropertyData* data = (PropertyData*) prop->GetClientObject();
 
 	PropertyOperation* propOperation = new PropertyOperation();
@@ -212,13 +222,19 @@ void PropertyPage::onPropertyChanged(wxPropertyGridEvent& event)
 
 //-----------------------------------//
 
-void PropertyPage::showProperties( const Object* object, bool resetObject )
+void PropertyPage::showProperties( Object* object, bool resetObject )
 {
 	if( resetObject ) reset();
 	currentObject = object;
 
-	ObjectWalker walker(*this);
-	walker.process(object);
+	//ObjectWalker walker(*this);
+	//walker.process(object);
+
+	ObjectData data;
+	data.instance = object;
+	data.type = object->getType();
+
+	processBegin(data);
 }
 
 //-----------------------------------//
@@ -235,13 +251,13 @@ void PropertyPage::showEntityProperties( const EntityPtr& entity )
 	currentObject = entity.get();
 
     // Entity properties.
-	appendObjectFields( entity->getType(), entity.get() );
+	appendObjectFields( *entity->getType(), entity.get() );
 
 	// Transform properties.
 	TransformPtr transform = entity->getTransform();
 
 	if( transform )
-		appendObjectFields( transform->getType(), transform.get() );
+		appendObjectFields( *ReflectionGetType(Transform), transform.get() );
     
     // Other components properties.
 	const ComponentMap& components = entity->getComponents();
@@ -249,20 +265,20 @@ void PropertyPage::showEntityProperties( const EntityPtr& entity )
 	ComponentMap::const_iterator it;
 	for( it = components.begin(); it != components.end(); it++ )
 	{
-		const Class& type = *(it->first);
+		Class* type = it->first;
 		const ComponentPtr& component = it->second;
 
-		if( type.is<Transform>() )
+		if( ReflectionIsEqual(type, ReflectionGetType(Transform)) )
 			continue;
 
-		appendObjectFields( type, component.get() );
+		appendObjectFields( *type, component.get() );
 	}
 }
 
 
 //-----------------------------------//
 
-void PropertyPage::appendObjectFields(const Class& type, void* object, bool newCategory)
+void PropertyPage::appendObjectFields(Class& type, void* object, bool newCategory)
 {
 	if( newCategory )
 	{
@@ -273,20 +289,17 @@ void PropertyPage::appendObjectFields(const Class& type, void* object, bool newC
 
 	if( type.parent )
 	{
-		const Class& parent = (Class&) *type.parent;
+		Class& parent = (Class&) *type.parent;
 		appendObjectFields(parent, object, false);
 	}
 	
 	const std::vector<Field*>& fields = type.fields;
 	
-	for( uint i = 0; i < fields.size(); i++ )
+	for( size_t i = 0; i < fields.size(); i++ )
 	{
 		const Field& field = *fields[i];
 
-		bool isCompound = field.type.isClass() || field.type.isStruct();
-		bool isResource = field.type.inherits<Resource>();
-
-		if( isCompound && !isResource )
+		if( ReflectionIsComposite(field.type) && !ReflectionIsResourceHandle(&field) )
 		{
 			void* addr = (byte*) object + field.offset;
 			appendObjectFields((Class&) field.type, addr, false);
@@ -312,18 +325,18 @@ void PropertyPage::appendObjectFields(const Class& type, void* object, bool newC
 
 //-----------------------------------//
 
-wxPGProperty* PropertyPage::createProperty(const Class& type, const Field& field, void* object)
+wxPGProperty* PropertyPage::createProperty(Class& type, const Field& field, void* object)
 {
 	wxPGProperty* prop = nullptr;
 
-	bool isResource = field.type.inherits<Resource>();
-
-	if( field.isPointer() && isResource )
+	if( ReflectionIsResourceHandle(&field) )
 		prop = createResourceProperty(field, object);
-	else if( field.type.isPrimitive() )
+	else if( ReflectionIsPrimitive(field.type) )
 		prop = createPrimitiveProperty(field, object);
-	else if( field.type.isEnum() )
+	else if( ReflectionIsEnum(field.type) )
 		prop = createEnumProperty(field, object);
+
+	assert( prop != nullptr );
 
 	PropertyData* data = new PropertyData();
 	data->type = &type;
@@ -335,7 +348,7 @@ wxPGProperty* PropertyPage::createProperty(const Class& type, const Field& field
 	wxString name = convertToReadable( field.name );
 	prop->SetLabel( name );
 
-	if( field.isReadOnly() ) prop->Enable(false);
+	if( FieldHasQualifier(&field, FieldQualifier::ReadOnly) ) prop->Enable(false);
 
 	return prop;
 }
@@ -352,8 +365,8 @@ wxPGProperty* PropertyPage::createResourceProperty(const Field& field, void* obj
 
 wxPGProperty* PropertyPage::createEnumProperty(const Field& field, void* object)
 {
-	const Enum& type = (const Enum&) field.type;
-	const EnumValuesMap& values = type.getValues();
+	Enum* type = (Enum*) field.type;
+	const EnumValuesMap& values = type->values;
 	
 	wxPGChoices choices;
 	
@@ -379,59 +392,69 @@ wxFloatProperty* PropertyPage::createFloatProperty(const char* name, float value
 wxPGProperty* PropertyPage::createPrimitiveProperty(const Field& field, void* object)
 {
 	wxPGProperty* prop = nullptr;
-	const Primitive& type = (const Primitive&) field.type;
+	Primitive* primitive = (Primitive*) field.type;
 
-	if( type.isBool() )
+	switch(primitive->type)
+	{
+	case Primitive::Bool:
 	{
 		prop = new wxBoolProperty( wxEmptyString, wxPG_LABEL );
+		break;
 	}
 	//-----------------------------------//
-	else if( type.isInteger() )
+	case Primitive::Int32:
 	{
 		prop = new wxIntProperty( wxEmptyString, wxPG_LABEL );
+		break;
 	}
 	//-----------------------------------//
-	else if( type.isFloat() )
+	case Primitive::Float:
 	{
 		prop = createFloatProperty( (const char*) wxEmptyString, 0 );
+		break;
 	}
 	//-----------------------------------//
-	else if( type.isString() )
+	case Primitive::String:
 	{
 		prop = new wxStringProperty( wxEmptyString, wxPG_LABEL );
+		break;
 	}
 	//-----------------------------------//
-	else if( type.isColor() )
+	case Primitive::Color:
 	{
 		prop = new wxColourProperty( wxEmptyString, wxPG_LABEL );
+		break;
 	}
 	//-----------------------------------//
-	else if( type.isVector3() )
+	case Primitive::Vector3:
 	{
 		prop = new wxStringProperty( wxEmptyString, wxPG_LABEL, "<composed>" );
 		prop->AppendChild( createFloatProperty("X", 0) );
 		prop->AppendChild( createFloatProperty("Y", 0) );
 		prop->AppendChild( createFloatProperty("Z", 0) );
+		break;
 	}
 	//-----------------------------------//
-	else if( type.isQuaternion() )
+	case Primitive::Quaternion:
 	{
 		prop = new wxStringProperty( wxEmptyString, wxPG_LABEL, "<composed>" );
 		prop->AppendChild( createFloatProperty("X", 0) );
 		prop->AppendChild( createFloatProperty("Y", 0) );
 		prop->AppendChild( createFloatProperty("Z", 0) );
+		break;
 	}
 	//-----------------------------------//
-	else if( type.isBitfield() )
+	case Primitive::Bitfield:
 	{
 		wxPGChoices choices = getTagChoices();
 		prop = new wxFlagsProperty( wxEmptyString, wxPG_LABEL, choices );
+		break;
 	}
 	//-----------------------------------//
-	else
+	default:
 	{
-		LogDebug( "Unknown property type: '%s'", type.name.c_str() );
-	}
+		LogDebug( "Unknown property type: '%s'", primitive->name );
+	} }
 
 	return prop;
 }
@@ -453,19 +476,35 @@ wxAny PropertyPage::getFieldValue(const Field* field, void* object)
 {
 	wxAny value;
 
-	bool isResource = field->type.inherits<Resource>();
-
-	if( field->isPointer() && isResource )
+	if( ReflectionIsResourceHandle(field) )
 	{
-		std::string name;
-		ResourcePtr res = field->get<ResourcePtr>(object);
-		if(res) name = res->getPath();
-		value = PathGetFile(name);
+		ResourceHandle handle = FieldGet<ResourceHandle>(field, object);
+		Resource* resource = handle.Resolve();
+		
+		if(resource)
+		{
+			String name = resource->getPath();
+			value = PathGetFile(name);
+		}
+		else
+		{
+			value = String();
+		}
+
+		return value;
 	}
-	else if( field->type.isEnum() )
-		value = field->get<int>(object);
-	else if( field->type.isPrimitive() )
+
+	switch(field->type->type)
+	{
+	case Type::Enumeration:
+		value = FieldGet<int32>(field, object);
+		break;
+	case Type::Primitive:
 		value = getFieldPrimitiveValue(field, object);
+		break;
+	default:
+		assert(0);
+	}
 
 	return value;
 }
@@ -476,24 +515,37 @@ wxAny PropertyPage::getFieldPrimitiveValue(const Field* field, void* object)
 {
 	wxAny value;
 
-	const Primitive& type = (const Primitive&) field->type;
+	const Primitive& type = (const Primitive&) *field->type;
 
-	if( type.isBool() )
-		value = field->get<bool>(object);
-	else if( type.isInteger() )
-		value = field->get<int>(object);
-	else if( type.isFloat() )
-		value = field->get<float>(object);
-	else if( type.isString() )
-		value = field->get<std::string>(object);
-	else if( type.isColor() )
-		value = field->get<Color>(object);
-	else if( type.isVector3() )
-		value = field->get<Vector3>(object);
-	else if( type.isQuaternion() )
-		value = field->get<Quaternion>(object);
-	else if( type.isBitfield() )
-		value = field->get<int>(object);
+	switch(type.type)
+	{
+	case Primitive::Bool:
+		value = FieldGet<bool>(field, object);
+		break;
+	case Primitive::Int32:
+		value = FieldGet<int32>(field, object);
+		break;
+	case Primitive::Float:
+		value = FieldGet<float>(field, object);
+		break;
+	case Primitive::String:
+		value = FieldGet<String>(field, object);
+		break;
+	case Primitive::Color:
+		value = FieldGet<Color>(field, object);
+		break;
+	case Primitive::Vector3:
+		value = FieldGet<Vector3>(field, object);
+		break;
+	case Primitive::Quaternion:
+		value = FieldGet<Quaternion>(field, object);
+		break;
+	case Primitive::Bitfield:
+		value = FieldGet<int32>(field, object);
+		break;
+	default:
+		assert(0);
+	}
 
 	return value;
 }
@@ -515,22 +567,18 @@ void PropertyPage::setFieldValue(const Field* field, void* object, const wxAny& 
 
 void PropertyPage::setPropertyValue(wxPGProperty* prop, const wxAny& value)
 {
-	if(	!prop->GetClientObject() )
-		prop = prop->GetParent();
-
+	if(	!prop->GetClientObject() ) prop = prop->GetParent();
+	
 	PropertyData* data = (PropertyData*) prop->GetClientObject();
 	
-	const Type& type = data->field->type;
-	bool isResource = type.inherits<Resource>();
-	
-	if( data->field->isPointer() && isResource )
+	if( ReflectionIsResourceHandle(data->field) )
 	{
-		std::string res = value.As<std::string>();
+		String res = value.As<String>();
 		prop->SetValue(res);
 	}
-	else if( type.isEnum() )
+	else if( ReflectionIsEnum(data->field->type) )
 	{
-		int val = value.As<int>();
+		int32 val = value.As<int32>();
 		prop->SetValue(val);
 	}
 	else
@@ -543,64 +591,77 @@ void PropertyPage::setPropertyValue(wxPGProperty* prop, const wxAny& value)
 
 void PropertyPage::setPropertyPrimitiveValue(wxPGProperty* prop, const wxAny& value)
 {
-	if(	!prop->GetClientObject() )
-		prop = prop->GetParent();
+	if(	!prop->GetClientObject() ) prop = prop->GetParent();
 
 	PropertyData* data = (PropertyData*) prop->GetClientObject();
+	const Primitive& type = (Primitive&) *data->field->type;
 
-	const Primitive& type = (Primitive&) data->field->type;
-
-	if( type.isBool() )
+	switch(type.type)
 	{
+	case Primitive::Bool:
+	{
+
 		bool val = value.As<bool>();
 		prop->SetValue(val);
+		break;
 	}
 	//-----------------------------------//
-	else if( type.isInteger() )
+	case Primitive::Int32:
 	{
 		int val = value.As<int>();
 		prop->SetValue(val);
+		break;
 	}
 	//-----------------------------------//
-	else if( type.isFloat() )
+	case Primitive::Float:
 	{
 		float val = value.As<float>();
 		prop->SetValue(val);
+		break;
 	}
 	//-----------------------------------//
-	else if( type.isString() )
+	case Primitive::String:
 	{
-		std::string val = value.As<std::string>();
+		String val = value.As<String>();
 		prop->SetValue(val);
+		break;
 	}
 	//-----------------------------------//
-	else if( type.isColor() )
+	case Primitive::Color:
 	{
 		Color val = value.As<Color>();
 		prop->SetValue( wxAny(convertColor(val)) );
+		break;
 	}
 	//-----------------------------------//
-	else if( type.isVector3() )
+	case Primitive::Vector3:
 	{
 		Vector3 vec = value.As<Vector3>();
 		prop->GetPropertyByName("X")->SetValue(vec.x);
 		prop->GetPropertyByName("Y")->SetValue(vec.y);
 		prop->GetPropertyByName("Z")->SetValue(vec.z);
+		break;
 	}
 	//-----------------------------------//
-	else if( type.isQuaternion() )
+	case Primitive::Quaternion:
 	{
 		const Quaternion& quat = value.As<Quaternion>();
 		EulerAngles vec = quat.getEulerAngles();
 		prop->GetPropertyByName("X")->SetValue(vec.x);
 		prop->GetPropertyByName("Y")->SetValue(vec.y);
 		prop->GetPropertyByName("Z")->SetValue(vec.z);
+		break;
 	}
 	//-----------------------------------//
-	else if( type.isBitfield() )
+	case Primitive::Bitfield:
 	{
-		int bits = value.As<int>();
+		int32 bits = value.As<int32>();
 		prop->SetValue(bits);
+		break;
+	}
+	default:
+		assert(0 && "Unknown primitive type");
+		return;
 	}
 }
 
@@ -608,23 +669,20 @@ void PropertyPage::setPropertyPrimitiveValue(wxPGProperty* prop, const wxAny& va
 
 wxAny PropertyPage::getPropertyValue(wxPGProperty* prop)
 {
-	if(	!prop->GetClientObject() )
-		prop = prop->GetParent();
+	if(	!prop->GetClientObject() ) prop = prop->GetParent();
 
 	PropertyData* data = (PropertyData*) prop->GetClientObject();
+	Type* type = data->field->type;
 
-	const Type& type = data->field->type;
-	bool isResource = type.inherits<Resource>();
-	
-	if( data->field->isPointer() && isResource )
+	if( ReflectionIsResourceHandle(data->field) )
 	{
-		return (std::string) prop->GetValue(); 
+		return (String) prop->GetValue(); 
 	}
-	else if( type.isEnum() )
+	else if( ReflectionIsEnum(type) )
 	{
-		return prop->GetValue().GetAny().As<int>();
+		return prop->GetValue().GetAny().As<int32>();
 	}
-	else if( type.isPrimitive() )
+	else if( ReflectionIsPrimitive(type) )
 	{
 		return getPropertyPrimitiveValue(prop, data);
 	}
@@ -647,42 +705,48 @@ static Color convertColorFromWx( wxColour& colour )
 
 wxAny PropertyPage::getPropertyPrimitiveValue(wxPGProperty* prop, PropertyData* data)
 {
-	const Primitive& type = (const Primitive&) data->field->type;
+	const Primitive& type = (const Primitive&) *data->field->type;
 
-	bool isVector = type.isVector3();
-	bool isQuaternion = type.isQuaternion();
-		
-	if( type.isBool() )
+	switch(type.type)
+	{
+	case Primitive::Bool:
 	{
 		bool val = prop->GetValue().GetAny().As<bool>();
 		return val;
+		break;
 	}
-	else if( type.isInteger() )
+	case Primitive::Int32:
 	{
-		int val = prop->GetValue().GetAny().As<int>();
+		int32 val = prop->GetValue().GetAny().As<int32>();
 		return val;
+		break;
 	}
-	else if( type.isFloat() )
+	case Primitive::Float:
 	{
 		float val = prop->GetValue().GetAny().As<float>();
 		return val;
+		break;
 	}
-	else if( type.isString() )
+	case Primitive::String:
 	{
-		std::string val = prop->GetValue();
-		return val;
+		wxString val = prop->GetValue().GetAny().As<wxString>();
+		return String(val.c_str());
+		break;
 	}
-	else if( type.isColor() )
+	case Primitive::Color:
 	{
-		wxColour val = prop->GetValue();
+		wxColour val = prop->GetValue().GetAny().As<wxColour>();
 		return convertColorFromWx(val);
+		break;
 	}
-	else if( type.isBitfield() )
+	case Primitive::Bitfield:
 	{
-		int bits = prop->GetValue().GetAny().As<int>();
+		int32 bits = prop->GetValue().GetAny().As<int32>();
 		return bits;
+		break;
 	}
-	else if( isVector || isQuaternion )
+	case Primitive::Quaternion:
+	case Primitive::Vector3:
 	{
 		wxPGProperty* X = prop->GetPropertyByName("X");
 		wxPGProperty* Y = prop->GetPropertyByName("Y");
@@ -694,10 +758,15 @@ wxAny PropertyPage::getPropertyPrimitiveValue(wxPGProperty* prop, PropertyData* 
 
 		Vector3 vec( x.As<float>(), y.As<float>(), z.As<float>() );
 			
-		if(isVector)
+		if(type.type == Primitive::Vector3)
 			return wxAny(vec);
 		else
 			return wxAny( Quaternion((EulerAngles&) vec) );
+		
+		break;
+	}
+	default:
+		assert(0);
 	}
 
 	return prop->GetValue();
@@ -706,3 +775,5 @@ wxAny PropertyPage::getPropertyPrimitiveValue(wxPGProperty* prop, PropertyData* 
 //-----------------------------------//
 
 } } // end namespaces
+
+#endif

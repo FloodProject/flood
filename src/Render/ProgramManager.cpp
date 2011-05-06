@@ -33,7 +33,7 @@ ProgramManager::~ProgramManager()
 
 //-----------------------------------//
 
-ProgramPtr ProgramManager::getProgram( const std::string& name )
+ProgramPtr ProgramManager::getProgram( const String& name )
 {
 	if( programs.find(name) != programs.end() )
 		return programs[name];
@@ -44,7 +44,7 @@ ProgramPtr ProgramManager::getProgram( const std::string& name )
 	ResourceLoadOptions options;
 	options.name = name;
 	options.group = ResourceGroup::Shaders;
-	options.asynchronousLoading = false;
+	options.asynchronousLoad = false;
 
 	if( !res->loadResource(options) )
 		return nullptr;
@@ -56,7 +56,7 @@ ProgramPtr ProgramManager::getProgram( const std::string& name )
 
 //-----------------------------------//
 
-bool ProgramManager::registerProgram( const std::string& name, const ProgramPtr& program )
+bool ProgramManager::registerProgram( const String& name, const ProgramPtr& program )
 {
 	assert( program != nullptr );
 	
@@ -72,10 +72,10 @@ bool ProgramManager::registerProgram( const std::string& name, const ProgramPtr&
 
 //-----------------------------------//
 
-ProgramPtr ProgramManager::createProgram(const TextPtr& text)
+ProgramPtr ProgramManager::createProgram(Text* text)
 {
-	const GLSL_TextPtr& gtext = RefCast<GLSL_Text>(text);
-	GLSL_ProgramPtr program = new GLSL_Program(gtext);
+	GLSL_Text* gtext = (GLSL_Text*) text;
+	GLSL_ProgramPtr program = Allocate(GLSL_Program, AllocatorGetHeap(), gtext);
 	
 	return program;
 }
@@ -84,10 +84,12 @@ ProgramPtr ProgramManager::createProgram(const TextPtr& text)
 
 void ProgramManager::onLoad( const ResourceEvent& event )
 {
-	if( event.resource->getResourceGroup() != ResourceGroup::Shaders )
+	const TextHandle& handleText = HandleCast<Text>( event.handle );
+	Text* text = handleText.Resolve();
+
+	if( text->getResourceGroup() != ResourceGroup::Shaders )
 		return;
-	
-	const TextPtr& text = RefCast<Text>( event.resource );
+
 	const ProgramPtr& program = createProgram(text);
 
 	Path base = PathGetFileBase( text->getPath() );
@@ -98,17 +100,20 @@ void ProgramManager::onLoad( const ResourceEvent& event )
 
 void ProgramManager::onReload( const ResourceEvent& event )
 {
-	if( event.resource->getResourceGroup() != ResourceGroup::Shaders )
+	const TextHandle& handleText = HandleCast<Text>( event.handle );
+	
+	Text* text = handleText.Resolve();
+	if( !text ) return;
+
+	if( text->getResourceGroup() != ResourceGroup::Shaders )
 		return;
 
-	const TextPtr& text = RefCast<Text>( event.resource );
 	Path base = PathGetFileBase( text->getPath() );
-
 	ProgramPtr program = programs[base];
 
 	if(program)
 	{
-		LogDebug( "Reloading shader '%s'", event.resource->getPath().c_str() );
+		LogDebug( "Reloading shader '%s'", text->getPath().c_str() );
 		program->updateShadersText();
 	}
 }

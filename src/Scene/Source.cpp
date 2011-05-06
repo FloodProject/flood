@@ -18,18 +18,18 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_ENUM(SourceState)
+REFLECT_ENUM(SourceState)
 	ENUM(Play)
 	ENUM(Pause)
 	ENUM(Stop)
-END_ENUM()
+REFLECT_ENUM_END()
 
-BEGIN_ENUM(SourceMode)
+REFLECT_ENUM(SourceMode)
 	ENUM(Static)
 	ENUM(Streaming)
-END_ENUM()
+REFLECT_ENUM_END()
 
-BEGIN_CLASS_PARENT(Source, Component)
+REFLECT_CHILD_CLASS(Source, Component)
 	FIELD_ENUM_SETTER(SourceState, state, State)
 	FIELD_ENUM_SETTER(SourceMode, mode, Mode)
 	FIELD_PRIMITIVE_SETTER(bool, loop, Loop)
@@ -39,8 +39,8 @@ BEGIN_CLASS_PARENT(Source, Component)
 	FIELD_PRIMITIVE_SETTER(float, maxDistance, MaxDistance)
 	FIELD_ENUM_SETTER(RolloffMode, rolloffMode, RolloffMode)
 	FIELD_PRIMITIVE_SETTER(float, rolloff, Rolloff)
-	FIELD_CLASS_PTR_SETTER(Sound, SoundPtr, sound, RefPointer, Sound)
-END_CLASS()
+	FIELD_CLASS_PTR_SETTER(Sound, SoundHandle, sound, Handle, Sound)
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
@@ -54,7 +54,7 @@ Source::Source()
 	, rolloffMode(RolloffMode::Logarithmic)
 	, rolloff(1.0f)
 	, loop(false)
-	, sound(nullptr)
+	, sound(HandleInvalid)
 	, audioSource(nullptr)
 { }
 
@@ -149,7 +149,7 @@ void Source::setMode( SourceMode::Enum mode )
 
 //-----------------------------------//
 
-void Source::setSound( const SoundPtr& sound )
+void Source::setSound( const SoundHandle& sound )
 {
 	this->sound = sound;
 

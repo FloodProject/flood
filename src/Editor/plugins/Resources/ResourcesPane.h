@@ -33,13 +33,13 @@ public:
 	~ResourcesPage();
 
 	// Gets the resource associated with the tree item.
-	ResourcePtr getResourceFromTreeId( wxTreeItemId id );
+	ResourceHandle getResourceFromTreeId( wxTreeItemId id );
 
 	// Synchronizes the tree with the resources.
 	void updateTree();
 
 	// Adds a new resource to the tree.
-	wxTreeItemId addResource(const ResourcePtr& res);
+	wxTreeItemId addResource(const ResourceHandle& res);
 
 protected:
 

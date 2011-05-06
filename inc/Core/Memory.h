@@ -25,7 +25,10 @@ API_CORE Allocator* AllocatorCreatePool( Allocator*, int32 size );
 API_CORE Allocator* AllocatorCreatePage( Allocator* );
 API_CORE Allocator* AllocatorCreateTemporary( Allocator* );
 
-API_CORE void AllocatorDestroy( Allocator* allocatee, Allocator* allocator );
+API_CORE void* AllocatorAllocate( Allocator*, int32 size, int32 align );
+API_CORE void  AllocatorDeallocate( void* );
+
+API_CORE void AllocatorDestroy( Allocator* );
 API_CORE void AllocatorDumpInfo();
 
 typedef void* (*MemoryAllocateFunction)(Allocator*, int32 size, int32 align);
@@ -47,24 +50,28 @@ EXTERN_END
 
 //-----------------------------------//
 
-template<typename T> T* Allocate(Allocator* alloc)
+#ifdef COMPILER_MSVC
+#pragma warning(disable : 4345)
+#endif
+
+// Calls the object contructor using placement new.
+#define Construct(Type, Object, ...) ::new (Object) Type(__VA_ARGS__)
+
+template<typename T> T* AllocateObject(Allocator* alloc)
 {
-	// Allocates memory for the object.
-	T* object = (T*) alloc->allocate( alloc, sizeof(T), alignof(T) );
-
-	// Calls the object contructor using placement new.
-	new (object) T;
-
+	T* object = (T*) AllocatorAllocate(alloc, sizeof(T), alignof(T));
 	return object;
 }
 
-template<typename T> void Deallocate(Allocator* alloc, T* object)
+// Allocates memory for the object.
+#define Allocate(Type, Alloc, ...) Construct(Type, AllocateObject<Type>(Alloc), __VA_ARGS__)
+
+template<typename T> void Deallocate(T* object)
 {
 	// Calls the object destructor.
 	if(object) object->~T();
 
-	// Deallocates the memory.
-	alloc->deallocate( alloc, object );
+	AllocatorDeallocate(object);
 }
 
 //-----------------------------------//

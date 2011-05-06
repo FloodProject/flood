@@ -15,6 +15,11 @@
 
 #define VAPOR_EDITOR_NAME "vapor3D"
 
+//#define ENABLE_PLUGIN_MONO
+//#define ENABLE_PLUGIN_TERRAIN
+//#define ENABLE_PLUGIN_GIZMO
+#define ENABLE_PLUGIN_PROPERTY
+
 //---------------------------------------------------------------------//
 // wxWidgets headers
 //---------------------------------------------------------------------//

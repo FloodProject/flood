@@ -13,9 +13,9 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT_ABSTRACT(Controller, Component)
+REFLECT_ABSTRACT_CHILD_CLASS(Controller, Component)
 	FIELD_PRIMITIVE(bool, enabled)
-END_CLASS()
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 

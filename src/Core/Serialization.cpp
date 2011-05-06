@@ -7,12 +7,15 @@
 ************************************************************************/
 
 #include "Core/API.h"
+
+#ifdef ENABLE_SERIALIZATION
+
 #include "Core/Serialization.h"
 #include "Core/Reflection.h"
 #include "Core/Log.h"
 #include "Core/ReferenceCount.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -178,7 +181,7 @@ void ObjectWalker::processArray(ObjectData object, const Field& field)
 
 	v.processArrayBegin(field.type, numElems);
 		
-	for(uint i = 0; i < numElems; i++)
+	for(size_t i = 0; i < numElems; i++)
 	{
 		void* address = (&array.front() + i * size);
 
@@ -255,4 +258,6 @@ void ObjectWalker::processPrimitive(const ObjectData& object)
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END
+
+#endif

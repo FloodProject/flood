@@ -12,7 +12,7 @@
 #include "Math/EulerAngles.h"
 #include "Math/Quaternion.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -84,4 +84,4 @@ public:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

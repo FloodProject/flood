@@ -54,58 +54,57 @@ public:
 	virtual bool isLinked() const;
 
 	// Gets the linking log.
-	GETTER(Log, const std::string&, log)
+	GETTER(Log, const String&, log)
 
 	// Validates that the program contains valid shaders.
 	bool validateShaders() const;
 
 	// Gets the different types of shaders.
-	GETTER(VertexShader, const ShaderPtr&, vertex)
-	GETTER(FragmentShader, const ShaderPtr&, fragment)
+	GETTER(VertexShader, const RefPtr<Shader>&, vertex)
+	GETTER(FragmentShader, const RefPtr<Shader>&, fragment)
 	//GETTER(GeometryShader, const ShaderPtr&, geometry)
 
 	// Adds a named parameter to the program.
-	virtual void setAttribute( const std::string& slot, VertexAttribute::Enum attr ) = 0;
+	virtual void setAttribute( const String& slot, VertexAttribute::Enum attr ) = 0;
 
 	// Adds a named int uniform to the program.
-	virtual void setUniform( const std::string& slot, int value ) = 0;
+	virtual void setUniform( const String& slot, int value ) = 0;
 
 	// Adds a named float uniform to the program.
-	virtual void setUniform( const std::string& slot, float value ) = 0;
+	virtual void setUniform( const String& slot, float value ) = 0;
 
 	// Adds a named float array uniform to the program.
-	//virtual void setUniform( const std::string& slot, const std::vector<float>& vec ) = 0;
+	//virtual void setUniform( const String& slot, const std::vector<float>& vec ) = 0;
 
 	// Adds a named Vector3 array uniform to the program.
-	virtual void setUniform( const std::string& slot, const std::vector<Vector3>& vec ) = 0;
+	virtual void setUniform( const String& slot, const std::vector<Vector3>& vec ) = 0;
 
 	// Adds a named color array uniform to the program.
-	virtual void setUniform( const std::string& slot, const std::vector<Color>& vec ) = 0;
+	virtual void setUniform( const String& slot, const std::vector<Color>& vec ) = 0;
 
 	// Adds a named vector uniform to the program.
-	virtual void setUniform( const std::string& slot, const Vector3& vec ) = 0;
+	virtual void setUniform( const String& slot, const Vector3& vec ) = 0;
 
 	// Adds a named angles vector uniform to the program.
-	virtual void setUniform( const std::string& slot, const EulerAngles& vec ) = 0;
+	virtual void setUniform( const String& slot, const EulerAngles& vec ) = 0;
 
 	// Adds a named matrix uniform to the program.
-	virtual void setUniform( const std::string& slot, const Matrix4x3& mat ) = 0;
+	virtual void setUniform( const String& slot, const Matrix4x3& mat ) = 0;
 
 	// Adds a named 4x4 matrix uniform to the program.
-	virtual void setUniform( const std::string& slot, const Matrix4x4& mat ) = 0;
+	virtual void setUniform( const String& slot, const Matrix4x4& mat ) = 0;
 
 	// Adds a named 4x4 matrix vector uniform to the program.
-	virtual void setUniform( const std::string& slot, const std::vector<Matrix4x4>& vec ) = 0;
+	virtual void setUniform( const String& slot, const std::vector<Matrix4x4>& vec ) = 0;
 
 protected:
 
 	Program();
 
-	ShaderPtr vertex;
-	ShaderPtr fragment;
-	//ShaderPtr geometry;
+	RefPtr<Shader> vertex;
+	RefPtr<Shader> fragment;
 
-	std::string log;
+	String log;
 	bool linked;
 };
 

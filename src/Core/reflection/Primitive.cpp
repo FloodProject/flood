@@ -6,6 +6,8 @@
 *
 ************************************************************************/
 
+#if 0
+
 #include "Core/API.h"
 #include "Core/Primitive.h"
 #include "Math/Vector.h"
@@ -101,3 +103,5 @@ bool Primitive::isBitfield() const
 //-----------------------------------//
 
 } // end namespace
+
+#endif

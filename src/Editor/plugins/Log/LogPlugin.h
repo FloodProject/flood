@@ -16,9 +16,11 @@ namespace vapor { namespace editor {
 
 class LogFrame;
 
+REFLECT_DECLARE_CLASS(LogPlugin)
+
 class LogPlugin : public Plugin
 {
-	REFLECT_DECLARE_CLASS()
+	REFLECT_DECLARE_OBJECT(LogPlugin)
 
 public:
 

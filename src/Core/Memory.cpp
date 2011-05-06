@@ -13,17 +13,17 @@
 #define ALLOCATOR_TRACKING
 #define ALLOCATOR_DEFAULT_GROUP "General";
 
-#ifdef VAPOR_PLATFORM_WINDOWS
+#ifdef PLATFORM_WINDOWS
 	#define WIN32_LEAN_AND_MEAN
 	#define NOMINMAX
 	#include <Windows.h>
 
-	#if defined(VAPOR_MEMORY_LEAK_DETECTOR) && defined(VAPOR_DEBUG)
+	#if defined(ENABLE_MEMORY_LEAK_DETECTOR) && defined(DEBUG_BUILD)
 		#include <vld.h>
 	#endif
 #endif
 
-NAMESPACE_EXTERN_BEGIN
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -50,13 +50,17 @@ struct AllocationGroup
 
 struct AllocationMetadata
 {
-	AllocationMetadata() : size(0), group(nullptr) { }
+	AllocationMetadata()
+		: size(0), group(nullptr), allocator(nullptr)
+	{ }
 
 	int32 size;
 	const char* group;
+
+	Allocator* allocator;
 };
 
-typedef std::map<const char*, AllocationGroup> MemoryGroupMap;
+typedef std::map<const char*, AllocationGroup, RawStringCompare> MemoryGroupMap;
 
 static MemoryGroupMap& GetMemoryGroupMap()
 {
@@ -102,9 +106,28 @@ void AllocatorDumpInfo()
 
 //-----------------------------------//
 
-void AllocatorDestroy( Allocator* object, Allocator* allocator )
+void AllocatorDestroy( Allocator* object )
 {
-	Deallocate<Allocator>(allocator, object);
+	Deallocate<Allocator>(object);
+}
+
+//-----------------------------------//
+
+void* AllocatorAllocate( Allocator* alloc, int32 size, int32 align )
+{
+	return alloc->allocate( alloc, size, align );
+}
+
+API_CORE void AllocatorDeallocate( void* object )
+{
+	if( !object ) return;
+
+	char* addr = (char*) object - sizeof(AllocationMetadata);
+	AllocationMetadata* metadata = (AllocationMetadata*) addr;
+	Allocator* alloc = metadata->allocator;
+
+	// Deallocates the memory.
+	alloc->deallocate( alloc, object );
 }
 
 //-----------------------------------//
@@ -124,6 +147,7 @@ static void* HeapAllocate(Allocator* alloc, int32 size, int32 align)
 	AllocationMetadata* metadata = (AllocationMetadata*) ptr;
 	metadata->size = size;
 	metadata->group = alloc->group;
+	metadata->allocator = alloc;
 
 #ifdef ALLOCATOR_TRACKING
 	AllocatorTrackGroup(metadata, true);
@@ -145,7 +169,7 @@ static void HeapDellocate(Allocator* alloc, void* p)
 
 Allocator* AllocatorCreateHeap( Allocator* alloc, const char* group )
 {
-	Allocator* heap = Allocate<Allocator>(alloc);
+	Allocator* heap = Allocate(Allocator, alloc);
 
 	heap->allocate = HeapAllocate;
 	heap->deallocate = HeapDellocate;
@@ -241,4 +265,20 @@ Allocator* AllocatorCreateTemporary( Allocator* alloc )
 
 //-----------------------------------//
 
-NAMESPACE_EXTERN_END
+NAMESPACE_END
+
+//-----------------------------------//
+
+// Global new / delete operator overrides.
+//using namespace vapor;
+//
+//void* operator new (size_t size)
+//{
+//	Allocator* alloc = AllocatorGetHeap();
+//	return alloc->allocate(alloc, size, 0);
+//}
+//
+//void operator delete (void *p)
+//{
+//	AllocatorDeallocate(p);
+//}

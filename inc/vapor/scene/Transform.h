@@ -23,11 +23,13 @@ namespace vapor {
  * and keep track of their bounding volumes aswell.
  */
 
+REFLECT_DECLARE_CLASS(Transform)
+
 class VAPOR_API Transform : public Component
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(Transform)
 	DECLARE_UNCOPYABLE(Transform)
-
+	
 public:
 
 	Transform();

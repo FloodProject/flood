@@ -19,14 +19,12 @@
 // API Exports
 //---------------------------------------------------------------------//
 
-#if defined(PIPELINE_API_DLL) && defined(PIPELINE_API_DLL_EXPORT)
-	#ifdef VAPOR_PLATFORM_WINDOWS
-		#define PIPELINE_API __declspec( dllexport )
-	#else
-		#define PIPELINE_API __attribute__ ((visibility("default")))
-	#endif
-#elif defined(PIPELINE_API_DLL) && defined(VAPOR_PLATFORM_WINDOWS)
-	#define PIPELINE_API __declspec( dllimport )
+#if defined(API_PIPELINE_DLL) && defined(API_PIPELINE_DLL_EXPORT)
+	#define API_PIPELINE API_EXPORT
+#elif defined(API_PIPELINE_DLL)
+	#define API_PIPELINE API_IMPORT
 #else
-	#define PIPELINE_API
+	#define API_PIPELINE
 #endif
+
+#define PIPELINE_API API_PIPELINE

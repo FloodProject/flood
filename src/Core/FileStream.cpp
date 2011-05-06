@@ -11,14 +11,14 @@
 #include "Core/Memory.h"
 #include "Core/Log.h"
 
-#ifdef VAPOR_PLATFORM_WINDOWS
+#ifdef PLATFORM_WINDOWS
 	#include <io.h>
 	#define F_OK 0
 #else
 	#include <unistd.h>
 #endif
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -50,7 +50,7 @@ static StreamFuncs gs_FileFuncs =
 
 Stream* StreamCreateFromFile(Allocator* alloc, const Path& path, StreamMode::Enum mode)
 {
-	FileStream* fs = Allocate<FileStream>(alloc);
+	FileStream* fs = Allocate(FileStream, alloc);
 	if( !fs ) return nullptr;
 	
 	fs->fp = nullptr;
@@ -61,7 +61,7 @@ Stream* StreamCreateFromFile(Allocator* alloc, const Path& path, StreamMode::Enu
 	if( !FileOpen(fs) )
 	{
 		//LogWarn("Error opening file: %s", PathGetFile(path).c_str());
-		Deallocate(alloc, fs);
+		Deallocate(fs);
 		return nullptr;
 	}
 
@@ -82,7 +82,7 @@ static bool FileOpen(Stream* stream)
 	case StreamMode::Append: mode = "a+b"; break;
 	}
 
-#ifdef VAPOR_COMPILER_MSVC
+#ifdef COMPILER_MSVC
 	fopen_s(&fs->fp, fs->path.c_str(), mode);
 #else
 	fs->fp = fopen(fs->path.c_str(), mode);
@@ -125,7 +125,7 @@ static int64 FileTell(Stream* stream)
 {
 	FileStream* fs = (FileStream*) stream;
 
-#ifdef VAPOR_COMPILER_MSVC
+#ifdef COMPILER_MSVC
 	return _ftelli64(fs->fp);
 #else
 	return ftell(fs->fp);
@@ -147,7 +147,7 @@ static bool FileSeek(Stream* stream, int64 offset, int8 mode)
 	case StreamSeekMode::RelativeEnd: origin = SEEK_END; break;
 	}
 
-#ifdef VAPOR_COMPILER_MSVC
+#ifdef COMPILER_MSVC
 	return _fseeki64(fs->fp, offset, origin) == 0;
 #else
 	return fseek(fs->fp, (long) offset, origin) == 0;
@@ -160,7 +160,7 @@ static int64 FileGetSize(Stream* stream)
 {
 	FileStream* fs = (FileStream*) stream;
 
-#ifdef VAPOR_COMPILER_MSVC
+#ifdef COMPILER_MSVC
 	return _filelengthi64( _fileno(fs->fp) );
 #else
 	// Hold the current file position.
@@ -194,4 +194,4 @@ static void FileSetBuffering( bool state )
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

@@ -17,13 +17,13 @@ namespace vapor { namespace editor {
 //-----------------------------------//
 
 REFLECT_CLASS(ResourceMetadata)
-	FIELD_PRIMITIVE(uint, hash)
+	FIELD_PRIMITIVE(uint32, hash)
 	FIELD_PRIMITIVE(string, path)
-REFLECT_END()
+REFLECT_CLASS_END()
 
-REFLECT_CLASS(ResourceDatabase)
+REFLECT_CHILD_CLASS(ResourceDatabase, Object)
 	FIELD_VECTOR(ResourceMetadata, resources)
-REFLECT_END()
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 

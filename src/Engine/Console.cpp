@@ -14,8 +14,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(Console, Overlay)
-END_CLASS()
+REFLECT_CHILD_CLASS(Console, Overlay)
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 

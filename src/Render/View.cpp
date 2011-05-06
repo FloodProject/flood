@@ -52,7 +52,7 @@ Vector3 RenderView::unprojectPoint( const Vector3& screen, const Camera* camera 
 	const Matrix4x4& proj = camera->getFrustum().matProjection;
 	Matrix4x4 inverseVP = (view4 * proj).inverse();
 
-	Vector2 size = getSize();
+	Vector2 size( getSize().x, getSize().y );
 
     // Map x and y from window coordinates, map to range -1 to 1.
 
@@ -72,7 +72,7 @@ Vector3 RenderView::unprojectPoint( const Vector3& screen, const Camera* camera 
 
 float RenderView::getAspectRatio() const
 {
-	const Vector2 size = getSize();
+	const Vector2i size = getSize();
 
 	if( size.y == 0 )
 		return 0;

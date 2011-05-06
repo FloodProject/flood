@@ -27,8 +27,8 @@ struct ComponentEntry
 	const int icon_length;
 };
 
-#define TYPE(t) &t::getStaticType()
-#define BMP(s) s, sizeof(s)
+#define TYPE(T) ReflectionGetType(T)
+#define BMP(T) T, sizeof(T)
 
 static ComponentEntry components[] =
 {
@@ -51,7 +51,7 @@ static ComponentEntry components[] =
 	{ "Controllers", nullptr, nullptr, 0 },
 	{ nullptr, TYPE(FirstPersonController), BMP(camera) },
 	{ nullptr, TYPE(ThirdPersonController), BMP(camera) },
-#ifdef VAPOR_SCRIPTING_LUA
+#ifdef ENABLE_SCRIPTING_LUA
 	{ "Scripting", nullptr, nullptr, 0 },
 	{ nullptr, TYPE(ScriptController),		BMP(shape_flip_horizontal) },
 #endif
@@ -77,7 +77,7 @@ void ScenePage::initIcons()
 	imageList = new wxImageList(16, 16, false, 16);
 	imageList->Add(wxMEMORY_BITMAP(package));
 
-	for( uint i = 0; i < VAPOR_ARRAY_SIZE(components); i++ )
+	for( uint i = 0; i < ARRAY_SIZE(components); i++ )
 	{
 		const ComponentEntry& c = components[i];
 		const Type* type = c.type;
@@ -119,7 +119,7 @@ void ScenePage::populateEntityItemMenu(wxMenu& menu, const EntityPtr& node)
 
 	wxMenu* subMenu = &menu;
 
-	for( uint i = 0; i < VAPOR_ARRAY_SIZE(components); i++ )
+	for( uint i = 0; i < ARRAY_SIZE(components); i++ )
 	{
 		ComponentEntry& c = components[i];
 		const Type* type = c.type;

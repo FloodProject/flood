@@ -77,7 +77,7 @@
 #include "Core/API.h"
 #include "StackWalker.h"
 
-#ifdef VAPOR_PLATFORM_WINDOWS
+#ifdef PLATFORM_WINDOWS
 
 #ifdef ENABLE_STACK_WALKER
 
@@ -253,7 +253,7 @@ static void MyStrCpy(char* szDest, size_t nMaxDestSize, const char* szSrc)
 // Normally it should be enough to use 'CONTEXT_FULL' (better would be 'CONTEXT_ALL')
 #define USED_CONTEXT_FLAGS CONTEXT_FULL
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -1354,7 +1354,7 @@ void StackWalker::OnOutput(LPCSTR buffer)
 
 //-----------------------------------//
 
-} // end namespace 
+NAMESPACE_END
 
 #endif
 

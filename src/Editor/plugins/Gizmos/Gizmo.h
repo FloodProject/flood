@@ -10,6 +10,7 @@
 
 #include "Scene/Geometry.h"
 #include "Scene/Camera.h"
+#include "Resources/Material.h"
 
 namespace vapor { namespace editor {
 
@@ -38,9 +39,11 @@ namespace GizmoAxis
  * Rotate gizmos have a set of circles in different orientations.
  */
 
+REFLECT_DECLARE_CLASS(Gizmo)
+
 class Gizmo : public Geometry
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(Gizmo)
 
 public:
 
@@ -89,7 +92,7 @@ protected:
 	void generateLinesColors(std::vector<Vector3>& colors);
 
 	EntityPtr nodeObject;
-	MaterialPtr material;
+	MaterialHandle material;
 	CameraWeakPtr weakCamera;
 	GizmoAxis::Enum selectedAxis;
 

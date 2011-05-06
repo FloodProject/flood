@@ -26,13 +26,13 @@
 #include "Core/Utilities.h"
 #include "Core/Log.h"
 
-#ifdef VAPOR_PLATFORM_WINDOWS
+#ifdef PLATFORM_WINDOWS
 
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
 #include <Windows.h>	
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -294,6 +294,6 @@ void FileWatcherWin32::handleAction(WatchStruct* watch, const std::wstring& file
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END
 
 #endif

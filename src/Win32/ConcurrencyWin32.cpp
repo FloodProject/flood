@@ -10,7 +10,7 @@
 #include "Core/Concurrency.h"
 #include "Core/Memory.h"
 
-#ifdef VAPOR_PLATFORM_WINDOWS
+#ifdef PLATFORM_WINDOWS
 
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
@@ -21,7 +21,7 @@ NAMESPACE_BEGIN
 
 //-----------------------------------//
 
-bool ThreadSetPriority(Thread* thread, ThreadPriority::Enum priority)
+bool ThreadSetPriority(Thread* thread, ThreadPriority priority)
 {
 	thread->Priority = priority;
 
@@ -187,10 +187,10 @@ typedef BOOL (WINAPI *SleepConditionVariableCSFn)(PCONDITION_VARIABLE, PCRITICAL
 typedef VOID (WINAPI *WakeConditionVariableFn)(PCONDITION_VARIABLE);
 typedef VOID (WINAPI *WakeAllConditionVariableFn)(PCONDITION_VARIABLE);
 
-InitializeConditionVariableFn pInitializeConditionVariable = nullptr;
-SleepConditionVariableCSFn pSleepConditionVariableCS = nullptr;
-WakeConditionVariableFn pWakeConditionVariable = nullptr;
-WakeAllConditionVariableFn pWakeAllConditionVariable = nullptr;
+static InitializeConditionVariableFn pInitializeConditionVariable = nullptr;
+static SleepConditionVariableCSFn pSleepConditionVariableCS = nullptr;
+static WakeConditionVariableFn pWakeConditionVariable = nullptr;
+static WakeAllConditionVariableFn pWakeAllConditionVariable = nullptr;
 
 static bool IntializeConditionVars()
 {

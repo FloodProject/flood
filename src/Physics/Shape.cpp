@@ -10,15 +10,15 @@
 
 #ifdef VAPOR_PHYSICS_BULLET
 
-#include "physics/Shape.h"
-#include "physics/Body.h"
+#include "Physics/Shape.h"
+#include "Physics/Body.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT_ABSTRACT(Shape, Component)
-END_CLASS()
+REFLECT_ABSTRACT_CHILD_CLASS(Shape, Component)
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 

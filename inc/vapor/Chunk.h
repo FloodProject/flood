@@ -10,7 +10,7 @@
 
 #include "Core/Stream.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -40,4 +40,4 @@ struct API_CORE Chunk
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

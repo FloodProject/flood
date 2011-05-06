@@ -8,13 +8,13 @@
 
 #pragma once
 
-#ifdef VAPOR_NETWORKING_ZMQ
+#ifdef ENABLE_NETWORKING_ZMQ
 
 #include "Core/ReferenceCount.h"
 #include "Messages.h"
 #include <zmq.h>
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -57,6 +57,6 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(Message)
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END
 
 #endif

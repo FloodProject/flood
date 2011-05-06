@@ -8,7 +8,7 @@
 
 #pragma once
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -21,4 +21,4 @@ namespace Hash
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

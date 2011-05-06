@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "gui/Overlay.h"
+#include "GUI/Overlay.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
 
@@ -15,8 +15,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(Overlay, Geometry)
-END_CLASS()
+REFLECT_CHILD_CLASS(Overlay, Geometry)
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
@@ -35,21 +35,23 @@ Overlay::Overlay()
 
 void Overlay::createGeometry()
 {
-	material = new Material("OverlayMaterial");
+	material = MaterialCreate( AllocatorGetHeap(), "OverlayMaterial");
 
-	renderable = new Renderable( PolygonType::Quads );
-	renderable->setVertexBuffer( new VertexBuffer() );
+	renderable = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Quads);
+	renderable->setVertexBuffer( Allocate(VertexBuffer, AllocatorGetHeap()) );
 	renderable->setMaterial(material);
 	renderable->setRenderLayer(RenderLayer::Overlays);
 
 	addRenderable( renderable );
 
-	MaterialPtr borderMaterial = new Material("OverlayBorderMaterial");
+	MaterialHandle borderHandle = MaterialCreate( AllocatorGetHeap(), "OverlayBorderMaterial");
+	
+	Material* borderMaterial = borderHandle.Resolve();
 	borderMaterial->setDepthTest(false);
 
-	borderRenderable = new Renderable( PolygonType::LineLoop );
-	borderRenderable->setVertexBuffer( new VertexBuffer() );
-	borderRenderable->setMaterial( borderMaterial  );
+	borderRenderable = Allocate(Renderable, AllocatorGetHeap(), PolygonType::LineLoop);
+	borderRenderable->setVertexBuffer( Allocate(VertexBuffer, AllocatorGetHeap()) );
+	borderRenderable->setMaterial( borderHandle );
 	borderRenderable->setRenderLayer(RenderLayer::Overlays);
 	borderRenderable->setRenderPriority(10);
 
@@ -152,10 +154,12 @@ void Overlay::setOpacity( float opacity )
 {
 	this->opacity = opacity;
 
-	MaterialPtr material = getRenderables()[0]->getMaterial();
+	if( renderables.empty() ) return;
 
-	if(!material)
-		return;
+	MaterialHandle materialHandle = renderables[0]->getMaterial();
+
+	Material* material = materialHandle.Resolve();
+	if( !material ) return;
 
 	material->setBlending(BlendSource::SourceAlpha, BlendDestination::InverseSourceAlpha);
 

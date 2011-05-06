@@ -24,7 +24,7 @@ namespace vapor { namespace editor {
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(MonoPlugin, Plugin)
-REFLECT_END()
+REFLECT_CLASS_END()
 
 static MonoString* callback()
 {

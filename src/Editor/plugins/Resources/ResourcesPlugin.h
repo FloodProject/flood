@@ -19,9 +19,11 @@ class ResourcesBrowser;
 
 //-----------------------------------//
 
+REFLECT_DECLARE_CLASS(ResourcesPlugin)
+
 class ResourcesPlugin : public Plugin
 {
-	REFLECT_DECLARE_CLASS()
+	REFLECT_DECLARE_OBJECT(ResourcesPlugin)
 
 public:
 

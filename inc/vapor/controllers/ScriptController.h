@@ -9,8 +9,8 @@
 #pragma once
 
 #include "Controllers/Controller.h"
+#include "Script/Script.h"
 
-FWD_DECL_INTRUSIVE(Script)
 struct swig_module_info;
 
 namespace vapor {
@@ -25,9 +25,11 @@ struct MouseButtonEvent;
  * Script that can be executed by a script state.
  */
 
+REFLECT_DECLARE_CLASS(ScriptController)
+
 class VAPOR_API ScriptController : public Controller
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(ScriptController)
 
 public:
 
@@ -46,11 +48,10 @@ protected:
 	void bindEntity(Entity* entity);
 
 	// Binds a type into this instance.
-	void bindType(swig_module_info* module, const char* name,
-		const char* type, void* object);
+	void bindType(swig_module_info* module, const char* name, const char* type, void* object);
 
 	// Gets the script by its name.
-	ScriptPtr getScript();
+	ScriptHandle getScript();
 
 	// Input callback functions.
 	virtual void onKeyPress( const KeyEvent& );
@@ -59,7 +60,7 @@ protected:
 	virtual void onMouseButtonReleased( const MouseButtonEvent& );
 
 	// Source code of the script.
-	ScriptPtr script;
+	ScriptHandle script;
 
 	// Scripting state.
 	State* state;

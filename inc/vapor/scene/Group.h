@@ -21,14 +21,16 @@ namespace vapor {
  * child node transformations.
  */
 
-class VAPOR_API Group : public Entity
+REFLECT_DECLARE_CLASS(Group)
+
+class API_ENGINE Group : public Entity
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(Group)
 
 public:
 
 	Group();
-	Group( const std::string& name );
+	Group( const String& name );
 
 	// Adds an entity to the group.
 	void add( const EntityPtr& entity );
@@ -37,7 +39,7 @@ public:
 	bool remove( const EntityPtr& entity );
 
 	// Finds an entity in the group via its name.
-	EntityPtr findEntity( const std::string& name ) const;
+	EntityPtr findEntity( const String& name ) const;
 
 	// Gets the entities of the group.
 	GETTER(Entities, const std::vector<EntityPtr>&, entities)

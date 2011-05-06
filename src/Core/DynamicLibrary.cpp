@@ -9,15 +9,15 @@
 #include "Core/API.h"
 #include "Core/DynamicLibrary.h"
 
-#ifdef VAPOR_DYNAMIC_LIBRARY
+#ifdef ENABLE_DYNAMIC_LIBRARY
 
-#ifdef VAPOR_PLATFORM_WINDOWS
+#ifdef PLATFORM_WINDOWS
 	#define WIN32_LEAN_AND_MEAN
 	#define NOMINMAX
 	#include <Windows.h>	
 #endif
 
-#ifdef VAPOR_PLATFORM_WINDOWS
+#ifdef PLATFORM_WINDOWS
 	#define DYNLIB_LOAD(lib)		LoadLibraryExA(lib, nullptr, LOAD_WITH_ALTERED_SEARCH_PATH)
 	#define DYNLIB_GETSYM(lib, sym)	GetProcAddress((HINSTANCE) lib, sym)
 	#define DYNLIB_UNLOAD(lib)		FreeLibrary((HINSTANCE) lib)
@@ -25,7 +25,7 @@
 	#error "Support for dynamic libraries not found"
 #endif
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -68,6 +68,6 @@ void* DynamicLibrary::getSymbol(const String& symbol)
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END
 
 #endif

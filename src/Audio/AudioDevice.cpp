@@ -14,7 +14,7 @@
 #include "Audio/Buffer.h"
 #include "Core/Utilities.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -107,12 +107,12 @@ void AudioDevice::setVolume(float volume)
 
 //-----------------------------------//
 
-ALint AudioDevice::getFormat(const SoundPtr& sound)
+ALint AudioDevice::getFormat(Sound* sound)
 {
 	if( !sound ) return AL_INVALID;
 
-	int channels = sound->getChannels();
-	int size = sound->getSize();
+	int32 channels = sound->getChannels();
+	int32 size = sound->getSize();
 
 	if(channels == 1 && size == 8) return AL_FORMAT_MONO8;
 	else if(channels == 1 && size == 16) return AL_FORMAT_MONO16;
@@ -124,13 +124,13 @@ ALint AudioDevice::getFormat(const SoundPtr& sound)
 
 //-----------------------------------//
 
-AudioBufferPtr AudioDevice::prepareBuffer(const SoundPtr& sound)
+AudioBufferPtr AudioDevice::prepareBuffer(Sound* sound)
 {
 	// Check if buffer with same resource already exists
 	if( soundBuffers.find(sound) != soundBuffers.end() ) 
 		return soundBuffers[sound];
 
-	AudioBufferPtr buffer( new AudioBuffer(this, sound) );
+	AudioBufferPtr buffer = Allocate(AudioBuffer, AllocatorGetHeap(), this, sound);
 	soundBuffers[sound] = buffer;
 
 	return buffer;
@@ -160,6 +160,6 @@ const ALchar* AudioDevice::getError()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END
 
 #endif

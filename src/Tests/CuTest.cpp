@@ -47,7 +47,7 @@ void CuStringInit(CuString* str)
 
 CuString* CuStringNew(void)
 {
-	CuString* str = Allocate<CuString>(AllocatorTests);
+	CuString* str = Allocate(CuString, AllocatorTests);
 	str->length = 0;
 	str->size = STRING_MAX;
 	str->buffer = CuStrAlloc(str->size);
@@ -58,8 +58,8 @@ CuString* CuStringNew(void)
 void CuStringDelete(CuString *str)
 {
     if (!str) return;
-	Deallocate(AllocatorTests, str->buffer);
-	Deallocate(AllocatorTests, str);
+	Deallocate(str->buffer);
+	Deallocate(str);
 }
 
 void CuStringResize(CuString* str, int newSize)
@@ -70,7 +70,7 @@ void CuStringResize(CuString* str, int newSize)
 	str->size = newSize;
 	
 	strcpy(str->buffer, oldbuffer);
-	Deallocate(AllocatorTests, oldbuffer);
+	Deallocate(oldbuffer);
 }
 
 void CuStringAppend(CuString* str, const char* text)
@@ -134,7 +134,7 @@ void CuTestInit(CuTest* t, const char* name, TestFunction function)
 
 CuTest* CuTestNew(const char* name, TestFunction function)
 {
-	CuTest* tc = Allocate<CuTest>(AllocatorTests);
+	CuTest* tc = Allocate(CuTest, AllocatorTests);
 	CuTestInit(tc, name, function);
 	return tc;
 }
@@ -142,8 +142,8 @@ CuTest* CuTestNew(const char* name, TestFunction function)
 void CuTestDelete(CuTest *t)
 {
     if (!t) return;
-	Deallocate(AllocatorTests, t->name);
-	Deallocate(AllocatorTests, t);
+	Deallocate(t->name);
+	Deallocate(t);
 }
 
 void CuTestRun(CuTest* tc)
@@ -167,7 +167,7 @@ static void CuFailInternal(CuTest* tc, const char* file, int line, CuString* str
 
 	tc->failed = 1;
 	tc->message = _strdup(string->buffer);
-	Deallocate(AllocatorTests, string->buffer);
+	Deallocate(string->buffer);
 
 	if (tc->jumpBuf != 0) longjmp(*(tc->jumpBuf), 0);
 }
@@ -259,7 +259,7 @@ void CuSuiteInit(CuSuite* testSuite)
 
 CuSuite* CuSuiteNew(void)
 {
-	CuSuite* testSuite = Allocate<CuSuite>(AllocatorTests);
+	CuSuite* testSuite = Allocate(CuSuite, AllocatorTests);
 	CuSuiteInit(testSuite);
 	return testSuite;
 }
@@ -271,7 +271,7 @@ void CuSuiteDelete(CuSuite *testSuite)
 		if(!testSuite->list[n]) continue;
 		CuTestDelete(testSuite->list[n]);
     }
-	Deallocate<CuSuite>(AllocatorTests, testSuite);
+	Deallocate<CuSuite>(testSuite);
 }
 
 void CuSuiteAdd(CuSuite* testSuite, CuTest *testCase)
@@ -297,7 +297,7 @@ void CuSuiteFreeAll()
 	for(size_t i = 0 ; i < suites.size(); ++i)
 	{
 		CuSuite* suite = suites[i];
-		Deallocate(AllocatorTests, suite);
+		Deallocate(suite);
 	}
 
 	suites.clear();
@@ -375,5 +375,5 @@ void CuInit()
 
 void CuCleanup()
 {
-	AllocatorDestroy(AllocatorTests, AllocatorGetHeap());
+	AllocatorDestroy(AllocatorTests);
 }

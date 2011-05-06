@@ -11,13 +11,13 @@
 #include "Core/Memory.h"
 #include "Core/Log.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
 Thread* ThreadCreate(Allocator* alloc)
 {
-	Thread* thread = Allocate<Thread>(alloc);
+	Thread* thread = Allocate(Thread, alloc);
 
 	if( !thread ) return nullptr;
 
@@ -32,17 +32,17 @@ Thread* ThreadCreate(Allocator* alloc)
 
 //-----------------------------------//
 
-void ThreadDestroy(Thread* thread, Allocator* alloc)
+void ThreadDestroy(Thread* thread)
 {
 	ThreadPause(thread);
-	Deallocate(alloc, thread);
+	Deallocate(thread);
 }
 
 //-----------------------------------//
 
 Mutex* MutexCreate(Allocator* alloc)
 {
-	Mutex* mutex = Allocate<Mutex>(alloc);
+	Mutex* mutex = Allocate(Mutex, alloc);
 	MutexInit(mutex);
 
 	return mutex;
@@ -50,16 +50,16 @@ Mutex* MutexCreate(Allocator* alloc)
 
 //-----------------------------------//
 
-void MutexDestroy(Mutex* mutex, Allocator* alloc)
+void MutexDestroy(Mutex* mutex)
 {
-	Deallocate(alloc, mutex);
+	Deallocate( mutex);
 }
 
 //-----------------------------------//
 
 Condition* ConditionCreate(Allocator* alloc)
 {
-	Condition* cond = Allocate<Condition>(alloc);
+	Condition* cond = Allocate(Condition, alloc);
 	ConditionInit(cond);
 
 	return cond;
@@ -67,24 +67,29 @@ Condition* ConditionCreate(Allocator* alloc)
 
 //-----------------------------------//
 
-void ConditionDestroy(Condition* cond, Allocator* alloc)
+void ConditionDestroy(Condition* cond)
 {
-	Deallocate(alloc, cond);
+	Deallocate( cond);
 }
 
 //-----------------------------------//
 
 Task* TaskCreate(Allocator* alloc)
 {
-	Task* task = Allocate<Task>(alloc);
+	Task* task = Allocate(Task, alloc);
+	
+	task->Group = 0;
+	task->Priority = 0;
+	task->Userdata = nullptr;
+	
 	return task;
 }
 
 //-----------------------------------//
 
-void TaskDestroy(Task* task, Allocator* alloc)
+void TaskDestroy(Task* task)
 {
-	Deallocate(alloc, task);
+	Deallocate(task);
 }
 
 //-----------------------------------//
@@ -93,7 +98,7 @@ void TaskRun(Task* task)
 {
 	if( !task ) return;
 	task->Callback(task);
-	TaskDestroy(task, AllocatorGetHeap());
+	TaskDestroy(task);
 }
 
 //-----------------------------------//
@@ -103,7 +108,7 @@ typedef std::vector<Thread*> ThreadQueue;
 
 TaskPool* TaskPoolCreate(Allocator* alloc, int8 Size)
 {
-	TaskPool* pool = Allocate<TaskPool>(alloc);
+	TaskPool* pool = Allocate(TaskPool, alloc);
 	
 	pool->IsStopping = false;
 
@@ -119,14 +124,14 @@ TaskPool* TaskPoolCreate(Allocator* alloc, int8 Size)
 		ThreadSetName(thread, "Task Pool");
 	}
 
-	//LogDebug("Task pool created with %d threads", threads.size());
+	LogDebug("Task pool created with %d threads", threads.size());
 
 	return pool;
 }
 
 //-----------------------------------//
 
-void TaskPoolDestroy(TaskPool* pool, Allocator* alloc)
+void TaskPoolDestroy(TaskPool* pool)
 {
 	if( !pool ) return;
 	
@@ -137,19 +142,19 @@ void TaskPoolDestroy(TaskPool* pool, Allocator* alloc)
 	for( size_t i = 0; i < threads.size(); i++ )
 	{
 		Thread* thread = threads[i];
-		ThreadDestroy(thread, alloc);
+		ThreadDestroy(thread);
 	}
 
-	Deallocate<TaskPool>(alloc, pool);
+	Deallocate<TaskPool>(pool);
 }
 
 //-----------------------------------//
 
-static void TaskPoolPushEvent( TaskPool* pool, Task* task, TaskEvent::Enum which)
+static void TaskPoolPushEvent( TaskPool* pool, Task* task, TaskState state)
 {
 	TaskEvent event;
 	event.task = task;
-	event.event = which;
+	event.state = state;
 
 	pool->Events.push( event);
 }
@@ -161,11 +166,13 @@ void TaskPoolAdd(TaskPool* pool, Task* task)
 	assert( task && "Invalid task" );
 	assert( !pool->Tasks.find(task) && "Task is already in the queue" );
 
+	LogDebug("Added task to pool");
+
 	pool->Tasks.push(task);
 
 	TaskEvent event;
 	event.task = task;
-	event.event = TaskEvent::Added;
+	event.state = TaskState::Added;
 
 	pool->OnTaskEvent(event);
 }
@@ -193,14 +200,15 @@ static void TaskPoolRun(void* userdata)
 
 		if( !task ) continue;
 
-		TaskPoolPushEvent( pool, task, TaskEvent::Started );
+		TaskPoolPushEvent( pool, task, TaskState::Started );
 		TaskRun(task);
-		TaskPoolPushEvent( pool, task, TaskEvent::Finished );
+		LogDebug("After task run!");
+		TaskPoolPushEvent( pool, task, TaskState::Finished );
 
-		TaskDestroy(task, AllocatorGetHeap());
+		LogDebug("THIS SHOULD PRINT");
 	}
 }
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

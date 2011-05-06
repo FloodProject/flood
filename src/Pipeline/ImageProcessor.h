@@ -18,8 +18,6 @@ namespace vapor {
 
 struct PIPELINE_API MipmapFilter
 {
-	DECLARE_ENUM()
-
 	enum Enum
 	{
 		Box = nvtt::MipmapFilter_Box,
@@ -28,12 +26,12 @@ struct PIPELINE_API MipmapFilter
 	};
 };
 
+REFLECT_DECLARE_ENUM(MipmapFilter)
+
 //-----------------------------------//
 
 struct PIPELINE_API CompressionQuality
 {
-	DECLARE_ENUM()
-
 	enum Enum
 	{
 		Fastest,
@@ -43,12 +41,12 @@ struct PIPELINE_API CompressionQuality
 	};
 };
 
+REFLECT_DECLARE_ENUM(CompressionQuality)
+
 //-----------------------------------//
 
 struct PIPELINE_API CompressionFormat
 {
-	DECLARE_ENUM()
-
 	enum Enum
 	{
 		RGB,
@@ -61,13 +59,17 @@ struct PIPELINE_API CompressionFormat
 	};
 };
 
+REFLECT_DECLARE_ENUM(CompressionFormat)
+
 /**
  * Resource processors handle the processing of resource data.
  */
 
+REFLECT_DECLARE_CLASS(ImageProcessor)
+
 class PIPELINE_API ImageProcessor : public ResourceProcessor
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(ImageProcessor)
 
 public:
 
@@ -78,9 +80,7 @@ public:
 	bool Process(const ResourcePtr& resource);
 
 	// Gets the processed resource type.
-	const Class& GetResourceType() { return Image::getStaticType(); }
-
-protected:
+	Class* GetResourceType() { return ImageGetType(); }
 
 	CompressionFormat::Enum format;
 	CompressionQuality::Enum quality;

@@ -12,31 +12,29 @@ NAMESPACE_EXTERN_BEGIN
 
 //-----------------------------------//
 
-enum TelemetryEventType
+struct TelemetryEventType
 {
-	TE_FRAME_BEGIN,
-	TE_FRAME_END,
-
-	TE_PROCESS_CONTEXT_SWITCH,
-
-	TE_THREAD_SWITCH,
-	TE_THREAD_SWITCH_IDLE,
-
-	TE_TASK_BEGIN,
-	TE_TASK_END,
-	
-	TE_MEMORY_ALLOC,
-	TE_MEMORY_FREE,
-	
-	TE_LOG_INFO,
-	TE_LOG_WARN,
-	TE_LOG_ERROR,
-	TE_LOG_DEBUG,
+	enum Enum
+	{
+		FrameBegin,
+		FrameEnd,
+		ProcessContextSwitch,
+		ThreadSwitch,
+		ThreadSwitchIdle,
+		TaskBegin,
+		TaskEnd,
+		MemoryAlloc,
+		MemoryFree,
+		LogInfo,
+		LogWarn,
+		LogError,
+		LogDebug
+	};
 };
 
 struct TelemetryEvent
 {
-	TelemetryEventType event;
+	TelemetryEventType::Enum event;
 	int64 time;
 };
 

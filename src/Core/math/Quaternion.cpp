@@ -11,7 +11,7 @@
 #include "Core/Log.h"
 #include <cassert>
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -126,4 +126,4 @@ EulerAngles Quaternion::getEulerAngles() const
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

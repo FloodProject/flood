@@ -8,14 +8,19 @@
 
 #include "Resources/API.h"
 #include "Resources/Resource.h"
-#include "Resources/ResourceLoader.h"
-#include "Core/Utilities.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
-BEGIN_ENUM(ResourceGroup)
+REFLECT_ENUM(ResourceStatus)
+	ENUM(Error)
+	ENUM(Unloaded)
+	ENUM(Loading)
+	ENUM(Loaded)
+REFLECT_ENUM_END()
+
+REFLECT_ENUM(ResourceGroup)
 	ENUM(General)
 	ENUM(Images)
 	ENUM(Meshes)
@@ -24,19 +29,12 @@ BEGIN_ENUM(ResourceGroup)
 	ENUM(Audio)
 	ENUM(Scripts)
 	ENUM(Scenes)
-END_ENUM()
+REFLECT_ENUM_END()
 
-BEGIN_ENUM(ResourceStatus)
-	ENUM(Error)
-	ENUM(Unloaded)
-	ENUM(Loading)
-	ENUM(Loaded)
-END_ENUM()
-
-BEGIN_CLASS_ABSTRACT(Resource)
+REFLECT_ABSTRACT_CHILD_CLASS(Resource, Object)
 	FIELD_PRIMITIVE(string, path) FIELD_READONLY(path)
 	FIELD_ENUM(ResourceStatus, status) FIELD_READONLY(status)
-END_CLASS()
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
@@ -46,18 +44,11 @@ Resource::Resource()
 
 //-----------------------------------//
 
-bool Resource::reload()
-{
-	return true;
-}
-
-//-----------------------------------//
-
 bool Resource::isLoaded() const
 {
-	return getStatus() == ResourceStatus::Loaded;
+	return status == ResourceStatus::Loaded;
 }
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

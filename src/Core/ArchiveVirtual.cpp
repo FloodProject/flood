@@ -12,7 +12,7 @@
 #include "Core/Memory.h"
 #include "Core/Log.h"
 
-#ifdef VAPOR_ARCHIVE_VIRTUAL
+#ifdef ENABLE_ARCHIVE_VIRTUAL
 
 NAMESPACE_BEGIN
 
@@ -54,10 +54,10 @@ struct ArchiveVirtual : public Archive
 
 Archive* ArchiveCreateVirtual(Allocator* alloc)
 {
-	Archive* archive = Allocate<ArchiveVirtual>(alloc);
+	Archive* archive = Allocate(ArchiveVirtual, alloc);
 	
-	archive->Handle = nullptr;
-	archive->Scheme = "vfs";
+	archive->handle = nullptr;
+	archive->scheme = "vfs";
 	archive->fn = &gs_VirtualArchiveFuncs;
 
 	return archive;
@@ -112,7 +112,7 @@ static bool VirtualArchiveClose(Archive* archive)
 	for(size_t i = 0; i < varchive->mounts.size(); i++)
 	{
 		Archive* marchive = varchive->mounts[i];
-		ArchiveDestroy(marchive, AllocatorGetHeap() );
+		ArchiveDestroy(marchive);
 	}
 
 	varchive->mounts.clear();

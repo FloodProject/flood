@@ -7,20 +7,20 @@
 ************************************************************************/
 
 #include <BulletCollision/CollisionShapes/btCollisionShape.h>
-#include "vapor/physics/MeshShape.h"
+#include "Physics/MeshShape.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-static Vector3 getOffset(Entity* node)
+static Vector3 getOffset(Entity* entity)
 {
-	ShapePtr shape = node->getComponentFromFamily<Shape>();
+	ShapePtr shape = entity->getComponentFromFamily<Shape>();
 
-	if( shape->getType().is<MeshShape>() )
+	if( ReflectionIsEqual(shape->getType(), ReflectionGetType(MeshShape)) )
 		return Vector3::Zero;
 
-	const TransformPtr& transform = node->getTransform();
+	const TransformPtr& transform = entity->getTransform();
 	const BoundingBox& box = transform->getWorldBoundingVolume();
 
 	return box.max - box.getCenter();

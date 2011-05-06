@@ -20,8 +20,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_ABSTRACT(ResourceProcessor)
-END_CLASS()
+REFLECT_ABSTRACT_CHILD_CLASS(ResourceProcessor, Object)
+REFLECT_CLASS_END()
 
 std::vector<ResourceProcessor*> resourceProcessors;
 
@@ -44,16 +44,16 @@ ResourceProcessor::~ResourceProcessor()
 
 void Pipeline::Init()
 {
-	Class& type = ResourceProcessor::getStaticType();
+	Class* klass = ResourceProcessorGetType();
 	
-	for( size_t i = 0; i < type.childs.size(); i++ )
+	for( size_t i = 0; i < klass->childs.size(); i++ )
 	{
-		const Class* klass = type.childs[i];
+		Class* child = klass->childs[i];
 		
-		ResourceProcessor* processor = (ResourceProcessor*) klass->createInstance();
+		ResourceProcessor* processor = (ResourceProcessor*) ClassCreateInstance(child, AllocatorGetHeap());
 		resourceProcessors.push_back(processor);
 
-		LogInfo("Registering asset handler: %s", klass->name.c_str());
+		LogInfo("Registering asset handler: %s", child->name);
 	}
 }
 
@@ -64,7 +64,7 @@ void Pipeline::Cleanup()
 	for( size_t i = 0; i < resourceProcessors.size(); i++ )
 	{
 		ResourceProcessor* processor = resourceProcessors[i];
-		delete processor;
+		Deallocate(processor);
 	}
 
 	resourceProcessors.clear();
@@ -72,12 +72,13 @@ void Pipeline::Cleanup()
 
 //-----------------------------------//
 
-ResourceProcessor* Pipeline::FindProcessor(const Class& type)
+ResourceProcessor* Pipeline::FindProcessor(Class* type)
 {
 	for( size_t i = 0; i < resourceProcessors.size(); i++ )
 	{
 		ResourceProcessor* processor = resourceProcessors[i];
-		bool isProcessor = type.inherits( processor->GetResourceType() );
+		
+		bool isProcessor = ClassInherits(type, processor->GetResourceType());
 		if( isProcessor ) return processor;
 	}
 
@@ -86,7 +87,7 @@ ResourceProcessor* Pipeline::FindProcessor(const Class& type)
 
 //-----------------------------------//
 
-#define REF(name) name##::getStaticType();
+#define REF(name) name##GetType();
 
 static void ReferenceProcessors()
 {

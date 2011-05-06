@@ -31,7 +31,7 @@ BonePtr Skeleton::getBone( uint index )
 
 //-----------------------------------//
 
-BonePtr Skeleton::findBone( const std::string& name )
+BonePtr Skeleton::findBone( const String& name )
 {
 	for( uint i = 0; i < bones.size(); i++ )
 	{

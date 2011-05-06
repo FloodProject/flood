@@ -78,7 +78,7 @@ API_CORE Stream*  StreamCreateFromURI(Allocator*, const Path&, StreamMode::Enum)
 API_CORE Stream*  StreamCreateFromFile(Allocator*, const Path&, StreamMode::Enum);
 API_CORE Stream*  StreamCreateFromPhysfs(Allocator*, const Path&, StreamMode::Enum);
 
-API_CORE void   StreamDestroy(Stream*, Allocator*);
+API_CORE void   StreamDestroy(Stream*);
 API_CORE bool   StreamClose(Stream*);
 
 API_CORE int64  StreamRead(Stream*, std::vector<uint8>& data);

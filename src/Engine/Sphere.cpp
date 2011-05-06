@@ -145,12 +145,12 @@ void Sphere::subdivide(const Vector3& v1, const Vector3& v2,
 void Sphere::buildGeometry( bool fullSphere, byte numSubDiv, 
 							VertexData& pos, float dim)
 {
-	vb = new VertexBuffer();
+	vb = Allocate(VertexBuffer, AllocatorGetHeap());
 
 	// Rotate the vertices, else the sphere is not properly aligned.
 	Matrix4x3 rot = Matrix4x3::createRotation( EulerAngles(-60, 0, 0) );
 
-	for( size_t i = 0; i < VAPOR_ARRAY_SIZE(IcoDomeIndices); i++ )
+	for( size_t i = 0; i < ARRAY_SIZE(IcoDomeIndices); i++ )
 	{
 		const byte* p = IcoDomeIndices[i];
 	
@@ -165,7 +165,7 @@ void Sphere::buildGeometry( bool fullSphere, byte numSubDiv,
 	if( fullSphere )
 	{
 		// These indices are the bottom of the sphere.
-		for( size_t i = 0; i < VAPOR_ARRAY_SIZE(IcoSphereIndices); i++ )
+		for( size_t i = 0; i < ARRAY_SIZE(IcoSphereIndices); i++ )
 		{
 			const byte* p = IcoSphereIndices[i];
 			Vector3 v1( IcoVertices[p[0]][0], IcoVertices[p[0]][2], IcoVertices[p[0]][1] );

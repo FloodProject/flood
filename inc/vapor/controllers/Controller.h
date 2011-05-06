@@ -14,9 +14,11 @@ namespace vapor {
 
 //-----------------------------------//
 
+REFLECT_DECLARE_CLASS(Controller)
+
 class VAPOR_API Controller : public Component
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(Controller)
 
 public:
 

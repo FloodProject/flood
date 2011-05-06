@@ -8,21 +8,20 @@
 
 #include "Engine/API.h"
 
-#ifdef VAPOR_SCRIPTING_LUA
+#ifdef ENABLE_SCRIPTING_LUA
 
-#include "controllers/ScriptController.h"
-#include "physics/CharacterController.h"
+#include "Controllers/ScriptController.h"
+#include "Physics/CharacterController.h"
 
-#include "script/Script.h"
-#include "script/ScriptManager.h"
+#include "Script/Script.h"
+#include "Script/ScriptManager.h"
 #include "Resources/ResourceManager.h"
 
 #include "Scene/Entity.h"
-#include "Engine.h"
 
-#include "input/InputManager.h"
-#include "input/Keyboard.h"
-#include "input/Mouse.h"
+#include "Input/InputManager.h"
+#include "Input/Keyboard.h"
+#include "Input/Mouse.h"
 
 #include "Headers.h"
 
@@ -33,9 +32,9 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(ScriptController, Controller)
-	FIELD_CLASS_PTR(Script, ScriptPtr, script, RefPointer)
-END_CLASS()
+REFLECT_CHILD_CLASS(ScriptController, Controller)
+	FIELD_CLASS_PTR(Script, ScriptHandle, script, Handle)
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
@@ -79,7 +78,7 @@ void ScriptController::_update( float delta )
 	}
 
 	if( state )
-		state->invoke("onUpdate");
+		state->invoke("onUpdate", 0);
 }
 
 //-----------------------------------//
@@ -89,8 +88,7 @@ void ScriptController::createState()
 	Engine* engine = GetEngine();	
 	ScriptManager* scripts = engine->getScriptManager();
 
-	assert( script != nullptr );
-	state = scripts->createScriptInstance(script);
+	state = scripts->createScriptInstance(script.Resolve());
 }
 
 //-----------------------------------//

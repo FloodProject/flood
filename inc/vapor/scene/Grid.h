@@ -18,13 +18,17 @@ namespace vapor {
  * Simple grid component. Can be used for editor applications.
  */
 
+REFLECT_DECLARE_CLASS(Grid)
+
 class VAPOR_API Grid : public Geometry
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(Grid)
 
 public:
 
 	Grid();
+
+	virtual void update( float update );
 
 protected:
 
@@ -35,7 +39,7 @@ protected:
 	float sizeX, sizeZ;
 
 	// Grid divisions in the X and Z axis.
-	int divX, divZ;
+	int32 divX, divZ;
 
 	// Makes the main lines more visible. 
 	bool strongMainLines;

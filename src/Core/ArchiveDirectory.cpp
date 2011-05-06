@@ -12,7 +12,7 @@
 #include "Core/Memory.h"
 #include "Core/Log.h"
 
-#ifdef VAPOR_PLATFORM_WINDOWS
+#ifdef PLATFORM_WINDOWS
 	#include <io.h>
 	#define F_OK 0
 #else
@@ -25,7 +25,7 @@ NAMESPACE_BEGIN
 
 //-----------------------------------//
 
-#ifdef VAPOR_ARCHIVE_DIR
+#ifdef ENABLE_ARCHIVE_DIR
 
 static bool    DirArchiveOpen(Archive*, const String&);
 static bool    DirArchiveClose(Archive*);
@@ -52,17 +52,17 @@ static ArchiveFuncs gs_DirArchiveFuncs =
 
 Archive* ArchiveCreateFromDirectory(Allocator* alloc, const Path& path)
 {
-	Archive* archive = Allocate<Archive>(alloc);
+	Archive* archive = Allocate(Archive, alloc);
 	
-	archive->Path = path;
-	archive->Handle = nullptr;
-	archive->Scheme = "fs";
+	archive->path = path;
+	archive->handle = nullptr;
+	archive->scheme = "fs";
 	archive->fn = &gs_DirArchiveFuncs;
 
 	if( !ArchiveOpen(archive, path) )
 	{
 		//LogWarn("Error opening archive: %s", path.c_str());
-		Deallocate(alloc, archive);
+		Deallocate( archive);
 		return nullptr;
 	}
 
@@ -90,7 +90,7 @@ static bool DirArchiveClose(Archive* archive)
 static Stream* DirArchiveOpenFile(Archive* archive, const Path& file, Allocator* alloc)
 {
 	if( !archive ) return nullptr;
-	Path path = StringFormat("%s%s%s", archive->Path.c_str(), PathGetSeparator().c_str(), file.c_str());
+	Path path = StringFormat("%s%s%s", archive->path.c_str(), PathGetSeparator().c_str(), file.c_str());
 	Stream* stream = StreamCreateFromFile(alloc, path, StreamMode::Read);
 	return stream;
 }
@@ -102,7 +102,7 @@ static void DirArchiveEnumerate(std::vector<String>&, Path, Path, bool);
 static void DirArchiveEnumerateFiles(Archive* archive, std::vector<Path>& paths)
 {
 	if( !archive ) return;
-	DirArchiveEnumerate(paths, archive->Path, "", false);
+	DirArchiveEnumerate(paths, archive->path, "", false);
 }
 
 //-----------------------------------//
@@ -110,7 +110,7 @@ static void DirArchiveEnumerateFiles(Archive* archive, std::vector<Path>& paths)
 static void DirArchiveEnumerateDirectories(Archive* archive, std::vector<Path>& paths)
 {
 	if( !archive ) return;
-	DirArchiveEnumerate(paths, archive->Path, "", true);
+	DirArchiveEnumerate(paths, archive->path, "", true);
 }
 
 //-----------------------------------//
@@ -118,7 +118,7 @@ static void DirArchiveEnumerateDirectories(Archive* archive, std::vector<Path>& 
 static bool DirArchiveExistsFile(Archive* archive, const Path& file)
 {
 	if( !archive ) return false;
-	const Path& filePath = archive->Path + PathGetSeparator() + file;
+	const Path& filePath = archive->path + PathGetSeparator() + file;
 	return FileExists(filePath);
 }
 
@@ -207,7 +207,7 @@ void FileEnumerateDirectories(const Path& path, std::vector<Path>& dirs)
 
 bool FileExists(const Path& path)
 {
-#ifdef VAPOR_COMPILER_MSVC
+#ifdef COMPILER_MSVC
 	return _access(path.c_str(), F_OK) == 0;
 #else
 	return access(path.c_str(), F_OK) == 0;

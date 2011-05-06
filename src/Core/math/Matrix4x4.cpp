@@ -12,7 +12,7 @@
 #include "Math/Helpers.h"
 #include "Core/Log.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -237,7 +237,7 @@ Matrix4x4 Matrix4x4::inverse() const
 
 //-----------------------------------//
 
-Matrix4x4 Matrix4x4::createPerspectiveProjection( float FOV, float aspectRatio, float nearPlane, float farPlane ) 
+Matrix4x4 Matrix4x4::createPerspective( float FOV, float aspectRatio, float nearPlane, float farPlane ) 
 {
 	assert( nearPlane > 0 );
 	assert( farPlane  > 0 );
@@ -273,7 +273,7 @@ Matrix4x4 Matrix4x4::createPerspectiveProjection( float FOV, float aspectRatio, 
 
 //-----------------------------------//
 
-Matrix4x4 Matrix4x4::createOrthographicProjection( float left, float right,
+Matrix4x4 Matrix4x4::createOrthographic( float left, float right,
 		float bottom, float top, float nearPlane, float farPlane)
 {
 	Matrix4x4 proj;
@@ -303,4 +303,4 @@ Matrix4x4 Matrix4x4::createOrthographicProjection( float left, float right,
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

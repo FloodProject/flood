@@ -6,6 +6,8 @@
 *
 ************************************************************************/
 
+#pragma once
+
 #include "Core/ReferenceCount.h"
 
 NAMESPACE_EXTERN_BEGIN
@@ -27,7 +29,7 @@ struct HandleManager
 };
 
 HandleManager*     HandleCreateManager( Allocator* );
-void               HandleDestroyManager( HandleManager*, Allocator* );
+void               HandleDestroyManager( HandleManager* );
 API_CORE HandleId  HandleCreate(HandleManager*, void*);
 API_CORE void      HandleDestroy(HandleManager*, HandleId id);	
 API_CORE void*     HandleFind(HandleManager*, HandleId id);
@@ -40,14 +42,16 @@ typedef scoped_ptr<HandleManager, HandleDestroyManager> HandleManagerPtr;
 
 EXTERN_END
 
-#ifdef VAPOR_COMPILER_MSVC
+#ifdef COMPILER_MSVC
 #pragma warning(disable: 4550)
 #endif
 
-template<typename T, HandleResolveFn RFn, HandleDestroyFn DFn = nullptr>
+template<typename T, HandleResolveFn RFn, HandleDestroyFn DFn>
 class Handle
 {
 public:
+
+	Handle() : id(HandleInvalid) { }
 
     Handle(HandleId id, bool add_ref = true) : id(id)
     {
@@ -55,7 +59,7 @@ public:
 			return;
 		
 		T* px = Resolve();
-		if(px) px->addReference();
+		if(px) ReferenceAdd(px);
     }
 
     Handle(Handle const & rhs): id(rhs.id)
@@ -64,7 +68,7 @@ public:
 			return;
 		
 		T* px = Resolve();
-		if(px) px->addReference();
+		if(px) ReferenceAdd(px);
     }
 
     ~Handle()
@@ -73,14 +77,38 @@ public:
 			return;
 		
 		T* px = Resolve();
-		if(px) px->releaseReference();
+		
+		if(px && ReferenceRelease(px) && DFn)
+			DFn(id);
     }
 
     Handle& operator=(const Handle& rhs)
     {
-        rhs.id = id
+        id = rhs.id;
+
+		T* px = Resolve();
+		if(px) ReferenceAdd(px);
+
         return *this;
     }
+
+#ifdef COMPILER_MSVC_2010
+    Handle(Handle && rhs): id(rhs.id)
+    {
+        rhs.id = HandleInvalid;
+    }
+
+    Handle& operator=(Handle && rhs)
+    {
+		if(this != &rhs)
+		{
+			id = rhs.id;
+			rhs.id = HandleInvalid;
+		}
+
+        return *this;
+    }
+#endif
 
 	void Destroy( Allocator* alloc )
 	{
@@ -89,7 +117,7 @@ public:
 		if(px)
 		{
 			if(DFn) DFn(id);
-			Deallocate<T>(alloc, px);
+			Deallocate<T>(px);
 		}
 		
 		id = HandleInvalid;
@@ -108,6 +136,12 @@ public:
 
     HandleId id;
 };
+
+template<typename T, typename U, HandleResolveFn RFn, HandleDestroyFn DFn>
+Handle<T, RFn, DFn> HandleCast(const Handle<U, RFn, DFn>& hn)
+{
+    return Handle<T, RFn, DFn>(hn.id);
+}
 
 //-----------------------------------//
 

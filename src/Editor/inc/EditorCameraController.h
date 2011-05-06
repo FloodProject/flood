@@ -17,9 +17,11 @@ namespace vapor {
 
 //-----------------------------------//
 
+REFLECT_DECLARE_CLASS(EditorCameraController)
+
 class VAPOR_API EditorCameraController : public CameraController
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(EditorCameraController)
 
 public:
 
@@ -42,8 +44,8 @@ protected:
 	void onMouseWheel( const MouseWheelEvent& event );
 
 	int mouseWheel;
-	Vector2 mouseDistance;
-	Vector2 mousePosition;
+	Vector2i mouseDistance;
+	Vector2i mousePosition;
 
 	Vector3 relativePosition;
 	EulerAngles accumulatedRotation;

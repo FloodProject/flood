@@ -8,10 +8,14 @@
 
 #pragma once
 
+#include "Core/Event.h"
+#include "Math/Matrix4x4.h"
 #include "Render/Renderable.h"
+#include "Render/Texture.h"
 #include "Scene/Transform.h"
 #include "Scene/Light.h"
-#include "Event.h"
+
+FWD_DECL_INTRUSIVE(Texture)
 
 namespace vapor {
 

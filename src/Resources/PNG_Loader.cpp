@@ -8,7 +8,7 @@
 
 #include "Resources/API.h"
 
-#ifdef VAPOR_IMAGE_PICOPNG
+#ifdef ENABLE_IMAGE_PICOPNG
 
 #include "Resources/PNG_Loader.h"
 
@@ -19,9 +19,9 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(PNG_Pico_Loader, ResourceLoader)
+REFLECT_CHILD_CLASS(PNG_Pico_Loader, ResourceLoader)
 	FIELD_PRIMITIVE(bool, flipAxisY)
-END_CLASS()
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 

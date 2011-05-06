@@ -14,7 +14,7 @@
 #include "Delegate.h"
 #include <set>
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 template< class Param0 = void >
 class Event0

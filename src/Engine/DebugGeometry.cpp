@@ -36,17 +36,19 @@ RenderablePtr buildBoundingRenderable( const BoundingBox& box )
 	const int numColors = 6*4; // Faces*Vertices
 	std::vector<Vector3> colors( numColors, Color::White );
 
-	VertexBufferPtr vb( new VertexBuffer() );
+	VertexBufferPtr vb = Allocate(VertexBuffer, AllocatorGetHeap());
 	vb->set( VertexAttribute::Position, pos );
 	vb->set( VertexAttribute::Color, colors );
 
-	MaterialPtr mat( new Material("BoundingBoxDebug") );
+	MaterialHandle materialHandle = MaterialCreate(AllocatorGetHeap(), "BoundingBoxDebug");
+	Material* mat = materialHandle.Resolve();
+	
 	mat->setDepthCompare( DepthCompare::LessOrEqual );
 	mat->setBackfaceCulling( false );
 
-	RenderablePtr renderable = new Renderable(PolygonType::Quads);
+	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Quads);
 	renderable->setVertexBuffer(vb);
-	renderable->setMaterial(mat);
+	renderable->setMaterial(materialHandle);
 	renderable->setPolygonMode( PolygonMode::Wireframe );
 
 	return renderable;
@@ -62,19 +64,20 @@ EntityPtr buildRay( const Ray& pickRay, const Vector3& outFar )
 
 	std::vector<Vector3> colors( 2, Color::Red );
 
-	VertexBufferPtr vb( new VertexBuffer() );
+	VertexBufferPtr vb = Allocate(VertexBuffer, AllocatorGetHeap());
 	vb->set( VertexAttribute::Position, vertex );
 	vb->set( VertexAttribute::Color, colors );
 
-	MaterialPtr mat = new Material("RayDebug");
+	MaterialHandle material = MaterialCreate(AllocatorGetHeap(), "RayDebug");
 
-	RenderablePtr renderable = new Renderable(PolygonType::Lines);
+	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Lines);
 	renderable->setVertexBuffer(vb);
-	renderable->setMaterial(mat);
+	renderable->setMaterial(material);
 	
-	GeometryPtr geometry( new Geometry(renderable) );
+	GeometryPtr geometry( Allocate(Geometry, AllocatorGetHeap(), renderable) );
 	
-	EntityPtr line( new Entity("Line") );
+	EntityPtr line( EntityCreate(AllocatorGetHeap()) );
+	line->setName("Line");
 	line->setTag( Tags::NonPickable, true );
 	line->addTransform();
 	line->addComponent( geometry );
@@ -89,15 +92,15 @@ RenderablePtr buildFrustum( const Frustum& box )
 	const int numColors = 6*4; // Faces*Vertices
 	std::vector<Vector3> colors( numColors, Color::White );
 
-	VertexBufferPtr vb = new VertexBuffer();
+	VertexBufferPtr vb = Allocate(VertexBuffer, AllocatorGetHeap());
 	vb->set( VertexAttribute::Color, colors );
 
-	MaterialPtr mat( new Material("FrustumDebug") );
-	mat->setBackfaceCulling( false );
+	MaterialHandle material = MaterialCreate(AllocatorGetHeap(), "FrustumDebug");
+	material.Resolve()->setBackfaceCulling( false );
 
-	RenderablePtr renderable = new Renderable(PolygonType::Quads);
+	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Quads);
 	renderable->setVertexBuffer(vb);
-	renderable->setMaterial(mat);
+	renderable->setMaterial(material);
 	renderable->setPolygonMode( PolygonMode::Wireframe );
 
 	updateDebugFrustum(renderable, box);

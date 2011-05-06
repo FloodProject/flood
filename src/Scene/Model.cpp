@@ -16,19 +16,27 @@
 #include "Resources/Bone.h"
 #include "Resources/Attachment.h"
 #include "Render/Device.h"
+#include "Render/Program.h"
+#include "Render/ProgramManager.h"
 #include "Math/Helpers.h"
 #include "MeshBuilder.h"
-#include "Engine.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(Model, Geometry)
+REFLECT_ENUM(SkinningMode)
+	ENUM(Native)
+	ENUM(CPU)
+	ENUM(GPU)
+REFLECT_ENUM_END()
+
+REFLECT_CHILD_CLASS(Model, Geometry)
 	FIELD_PRIMITIVE(float, animationSpeed)
-	FIELD_PRIMITIVE(bool, animationEnabled);
-	FIELD_CLASS_PTR_SETTER(Mesh, MeshPtr, mesh, RefPointer, Mesh)
-END_CLASS()
+	FIELD_PRIMITIVE(bool, animationEnabled)
+	FIELD_ENUM_SETTER(SkinningMode, skinningMode, SkinningMode)
+	FIELD_CLASS_PTR_SETTER(Mesh, MeshHandle, meshHandle, Handle, Mesh)
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
@@ -39,8 +47,8 @@ Model::Model()
 
 //-----------------------------------//
 
-Model::Model( const MeshPtr& mesh )
-	: mesh(mesh)
+Model::Model( const MeshHandle& mesh )
+	: meshHandle(mesh)
 {
 	init();
 }
@@ -51,6 +59,8 @@ void Model::init()
 {
 	modelBuilt = false;
 	debugRenderable = nullptr;
+	skinningMode = SkinningMode::Native;
+	mesh = nullptr;
 
 	animationEnabled = true;
 	animationFadeTime = 0;
@@ -65,7 +75,7 @@ void Model::init()
 
 //-----------------------------------//
 
-void Model::setMesh(const MeshPtr& mesh)
+void Model::setMesh(const MeshHandle& mesh)
 {
 	for( size_t i = 0; i < renderables.size(); i++ )
 	{
@@ -74,13 +84,37 @@ void Model::setMesh(const MeshPtr& mesh)
 	}
 
 	init();
-	this->mesh = mesh;
+	meshHandle = mesh;
+}
+
+//-----------------------------------//
+
+void Model::setSkinningMode( SkinningMode::Enum mode )
+{
+	skinningMode = mode;
+
+	if( !mesh->isAnimated() ) return;
+	
+	bool isCPU = skinningMode == SkinningMode::CPU;
+	String shader = isCPU ? "VertexLit" : "VertexLitSkinned";
+	
+	for( size_t i = 0; i < renderables.size(); i++ )
+	{
+		const RenderablePtr& rend = renderables[i];
+	
+		Material* material = rend->getMaterial().Resolve();
+		material->setProgram(shader);
+	}
+
+	if( !isCPU ) rebuildPositions();
 }
 
 //-----------------------------------//
 
 void Model::update( float delta )
 {
+	mesh = meshHandle.Resolve();
+
 	if( !mesh || !mesh->isLoaded() )
 		return;
 
@@ -108,6 +142,31 @@ void Model::update( float delta )
 
 //-----------------------------------//
 
+void Model::prepareSkinning()
+{
+	if( !mesh->isAnimated() ) return;
+
+	size_t numBones = mesh->getSkeleton()->getBones().size();
+	bones.resize( numBones );
+}
+
+//-----------------------------------//
+
+void Model::rebuildPositions()
+{
+	if( renderables.empty() ) return;
+
+	const RenderablePtr& rend = renderables[0];
+	const VertexBufferPtr& vb = rend->getVertexBuffer();
+
+	const std::vector<Vector3>& meshPositions = mesh->position;
+	vb->set( VertexAttribute::Position, meshPositions );
+	
+	vb->forceRebuild();
+}
+
+//-----------------------------------//
+
 void Model::build()
 {
 	if( modelBuilt ) return;
@@ -117,14 +176,16 @@ void Model::build()
 	if( renderables.empty() )
 	{
 		MeshBuilder builder;
-		builder.build(mesh);
+		builder.build(meshHandle);
 	}
 
 	for( size_t i = 0; i < renderables.size(); i++ )
 	{
 		const RenderablePtr& rend = renderables[i];
-		const MaterialPtr& material = rend->getMaterial();
+		const MaterialHandle& handle = rend->getMaterial();
 
+		Material* material = handle.Resolve();
+		
 		if( material && material->isBlendingEnabled() )
 			rend->setRenderLayer(RenderLayer::Transparency);
 
@@ -133,11 +194,7 @@ void Model::build()
 		addRenderable( rend );
 	}
 
-	if( mesh->isAnimated() )
-	{
-		int numBones = mesh->getSkeleton()->getBones().size();
-		bones.resize( numBones );	
-	}
+	prepareSkinning();
 
 	modelBuilt = true;
 }
@@ -278,7 +335,7 @@ void Model::setAnimation(const AnimationPtr& animation)
 	state.animation = animation;
 	state.animationTime = 0;
 
-	int numBones = mesh->getSkeleton()->getBones().size();
+	size_t numBones = mesh->getSkeleton()->getBones().size();
 	state.bonesMatrix.resize(numBones);
 
 	if( animations.empty() )
@@ -293,8 +350,7 @@ void Model::setAnimation(const AnimationPtr& animation)
 
 void Model::setAnimation(const std::string& name)
 {
-	if(!mesh)
-		return;
+	if( !mesh ) return;
 
 	AnimationPtr animation = mesh->findAnimation(name);
 	setAnimation(animation);
@@ -321,39 +377,52 @@ void Model::setAnimationFade(const std::string& name, float fadeTime)
 
 //-----------------------------------//
 
+bool Model::isHardwareSkinned()
+{
+	RenderPipeline::Enum pipeline = GetRenderDevice()->getPipeline();
+	
+	bool isFixed = pipeline == RenderPipeline::Fixed;
+	bool isCPU = skinningMode == SkinningMode::CPU;
+
+	return !(isFixed || isCPU);
+}
+
+//-----------------------------------//
+
 void Model::onRender()
 {
 	if( !mesh || !mesh->isLoaded() || !mesh->isAnimated() )
 		return;
 
-	RenderDevice* device = GetEngine()->getRenderDevice();
-	RenderPipeline::Enum pipeline = device->getPipeline();
+	if( !isHardwareSkinned() )
+	{
+		if( renderables.empty() ) return;
 
-	if( pipeline == RenderPipeline::Fixed )
-		setupSkinning();
+		const RenderablePtr& rend = renderables[0];
+		const VertexBufferPtr& vb = rend->getVertexBuffer();
+
+		std::vector<Vector3>& skinnedPositions = vb->getVertices();
+		doSkinning(skinnedPositions);
+		
+		vb->forceRebuild();
+	}
 	else
+	{
 		setupShaderSkinning();
+	}
 }
 
 //-----------------------------------//
 
-void Model::setupSkinning()
+void Model::doSkinning(std::vector<Vector3>& skinnedPositions)
 {
-	for(size_t i = 0; i <renderables.size(); i++)
+	const std::vector<Vector3>& meshPositions = mesh->position;
+	skinnedPositions.resize( meshPositions.size() );
+
+	for(size_t j = 0; j < meshPositions.size(); j++)
 	{
-		const RenderablePtr& rend = renderables[i];
-		const VertexBufferPtr& vb = rend->getVertexBuffer();
-
-		std::vector<Vector3>& skinnedPositions = vb->getVertices();
-		const std::vector<Vector3>& meshPositions = mesh->position;
-
-		for(uint j = 0; j < meshPositions.size(); j++)
-		{
-			int boneIndex = (int) mesh->boneIndices[j];
-			skinnedPositions[j] = bones[boneIndex]*meshPositions[j];
-		}
-
-		vb->forceRebuild();
+		int32 boneIndex = (int32) mesh->boneIndices[j];
+		skinnedPositions[j] = bones[boneIndex]*meshPositions[j];
 	}
 }
 
@@ -366,8 +435,13 @@ void Model::setupShaderSkinning()
 	for( size_t i = 0; i < rends.size(); i++ )
 	{
 		const RenderablePtr& rend = rends[i];
-		const MaterialPtr& material = rend->getMaterial();
-		const ProgramPtr& program = material->getProgram();
+		const MaterialHandle& handle = rend->getMaterial();
+
+		Material* material = handle.Resolve();
+		if( !material ) return;
+
+		const String& name = material->getProgram();
+		ProgramPtr program = GetRenderDevice()->getProgramManager()->getProgram(name);
 
 		std::vector<Matrix4x4> matrices;
 		matrices.reserve( bones.size() );
@@ -452,14 +526,16 @@ RenderablePtr Model::createDebugRenderable() const
 {
 	assert( !debugRenderable );
 
-	MaterialPtr mat = new Material("SkeletonDebug");
-	mat->setDepthTest(false);
+	MaterialHandle handleMaterial = MaterialCreate(AllocatorGetHeap(), "SkeletonDebug");
 
-	VertexBufferPtr vb = new VertexBuffer();
+	Material* material = handleMaterial.Resolve();
+	material->setDepthTest(false);
+
+	VertexBufferPtr vb = Allocate(VertexBuffer, AllocatorGetHeap());
 	
-	RenderablePtr renderable = new Renderable(PolygonType::Lines);
+	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Lines);
 	renderable->setVertexBuffer(vb);
-	renderable->setMaterial(mat);
+	renderable->setMaterial(handleMaterial);
 
 	return renderable;
 }

@@ -52,8 +52,7 @@ void Viewframe::switchToDefaultCamera()
 {
 	const CameraPtr& camera = mainCamera.lock();
 
-	if( !camera )
-		return;
+	if( !camera ) return;
 
 	EntityPtr nodeCamera = camera->getEntity()->getShared();
 	ControllerPtr controller = nodeCamera->getComponentFromFamily<Controller>();

@@ -16,9 +16,11 @@ namespace vapor { namespace editor {
 
 class UndoManager;
 
+REFLECT_DECLARE_CLASS(UndoPlugin)
+
 class UndoPlugin : public Plugin
 {
-	REFLECT_DECLARE_CLASS()
+	REFLECT_DECLARE_OBJECT(UndoPlugin)
 
 public:
 

@@ -10,14 +10,15 @@
 
 #ifdef VAPOR_RENDERER_OPENGL
 
+#include "Core/Reflection.h"
+#include "Math/Color.h"
+#include "Math/Vector.h"
+#include "Math/Matrix4x3.h"
+
 #include "Render/Window.h"
 #include "Render/Target.h"
 #include "Render/Renderable.h"
 #include "Render/RenderQueue.h"
-#include "Math/Color.h"
-#include "Math/Vector.h"
-#include "Math/Matrix4x3.h"
-#include "Core/Reflection.h"
 
 namespace vapor {
 
@@ -29,10 +30,10 @@ namespace vapor {
  * hardware) or user preference (fixed function is faster on some machines).
  */
 
+REFLECT_DECLARE_ENUM(RenderPipeline)
+
 struct RenderPipeline
 {
-	DECLARE_ENUM()
-
 	enum Enum
 	{
 		Fixed,
@@ -44,12 +45,12 @@ struct RenderPipeline
 //-----------------------------------//
 
 class Camera;
-class Adapter;
 class RenderBuffer;
 class BufferManager;
 class ResourceManager;
 class ProgramManager;
 class TextureManager;
+struct Adapter;
 
 typedef std::map<LightPtr, TexturePtr> ShadowTextureMap;
 
@@ -80,6 +81,9 @@ public:
 
 	// Initializes the rendering system (needs an OpenGL context).
 	void init();
+
+	// Resets the device to the initial state.
+	void resetState();
 
 	// Renders a renderable.
 	void render( const RenderState& state, const LightQueue& lights );
@@ -139,6 +143,12 @@ public:
 
 protected:
 
+	// Logs the GPU capabilities.
+	void showCapabilities(Adapter*);
+
+	// Gets and parses the OpenGL information.
+	void checkCapabilities(Adapter*);
+
 	// Checks that all needed OpenGL extensions are available.
 	void checkExtensions();
 
@@ -158,8 +168,11 @@ protected:
 	bool setupRenderStateOverlay( const RenderState& );
 
 	// Common render state management.
-	void setupRenderStateMaterial( const MaterialPtr& );
-	void undoRenderStateMaterial( const MaterialPtr& );
+	void setupRenderStateMaterial( Material*, bool bindUniforms );
+	void undoRenderStateMaterial( Material* );
+
+	void unbindTextures(Material* material);
+	void bindTextures(Material* material, bool bindUniforms);
 
 	// Rendering pipeline.
 	RenderPipeline::Enum pipeline;
@@ -192,6 +205,8 @@ protected:
 
 	void updateLightDepth( LightState& state );
 };
+
+API_ENGINE RenderDevice* GetRenderDevice();
 
 //-----------------------------------//
 

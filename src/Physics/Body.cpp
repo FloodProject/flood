@@ -7,14 +7,14 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Event.h"
+#include "Core/Event.h"
 
 #ifdef VAPOR_PHYSICS_BULLET
 
-#include "physics/Body.h"
-#include "physics/Shape.h"
-#include "physics/Physics.h"
-#include "physics/Convert.h"
+#include "Physics/Body.h"
+#include "Physics/Shape.h"
+#include "Physics/Physics.h"
+#include "Physics/Convert.h"
 
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
@@ -28,11 +28,11 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(Body, Component)
+REFLECT_CHILD_CLASS(Body, Component)
 	FIELD_PRIMITIVE(float, mass)
 	FIELD_PRIMITIVE(float, friction)
 	FIELD_PRIMITIVE(float, restitution)
-END_CLASS()
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 

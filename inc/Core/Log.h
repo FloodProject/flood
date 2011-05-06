@@ -19,31 +19,31 @@ struct Timer;
 struct Mutex;
 struct Allocator;
 
-namespace LogLevel
+enum_class LogLevel
 {
-	enum Enum { Info, Warn, Error, Debug, Assert };
+	Info, Warn, Error, Debug, Assert
 };
 
 struct LogEntry
 {
 	float time;
 	String message;
-	LogLevel::Enum level;
+	LogLevel level;
 };
 
 typedef void (*LogFunction)(LogEntry*);
 
 struct Log
 {
-	Timer* Timer;
-	Mutex* Mutex;
-	Event1<LogEntry*> Handlers;
+	Timer* timer;
+	Mutex* mutex;
+	Event1<LogEntry*> handlers;
 };
 
 API_CORE Log* LogCreate(Allocator*);
-API_CORE void LogDestroy(Log*, Allocator*);
+API_CORE void LogDestroy(Log*);
 API_CORE void LogAddHandler(Log*, LogFunction);
-API_CORE void LogRemoveHandler(Log* log, LogFunction);
+API_CORE void LogRemoveHandler(Log*, LogFunction);
 API_CORE void LogWrite(Log*, LogEntry* entry);
 
 API_CORE Log* LogGetDefault();

@@ -15,14 +15,14 @@
 
 FWD_DECL_INTRUSIVE(Sound)
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
+REFLECT_DECLARE_ENUM(SourceState)
+
 struct SourceState
 {
-	DECLARE_ENUM()
-
 	enum Enum
 	{
 		Play,
@@ -33,10 +33,10 @@ struct SourceState
 
 //-----------------------------------//
 
+REFLECT_DECLARE_ENUM(SourceMode)
+
 struct SourceMode
 {
-	DECLARE_ENUM()
-
 	enum Enum
 	{
 		Static,
@@ -53,10 +53,12 @@ class AudioSource;
  * as the sound source location.
  */
 
+REFLECT_DECLARE_CLASS(Source)
+
 class VAPOR_API Source : public Component 
 {
+	REFLECT_DECLARE_OBJECT(Source)
 	DECLARE_UNCOPYABLE(Source)
-	DECLARE_CLASS_()
 
 public:
 
@@ -91,12 +93,12 @@ public:
 	void setLoop( bool state );
 
 	// Sets the sound of the source.
-	void setSound( const SoundPtr& sound );
+	void setSound( const SoundHandle& sound );
 
 	// Updates the component.
 	virtual void update( float delta );
 
-protected:
+public:
 
 	// State of the source.
 	SourceState::Enum state;
@@ -126,7 +128,7 @@ protected:
 	float rolloff;
 
 	// Sound resource.
-	SoundPtr sound;
+	SoundHandle sound;
 
 	// Audio source.
 	AudioSource* audioSource;

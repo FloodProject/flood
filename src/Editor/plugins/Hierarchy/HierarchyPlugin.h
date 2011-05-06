@@ -16,9 +16,11 @@ namespace vapor { namespace editor {
 
 class HierarchyPane;
 
+REFLECT_DECLARE_CLASS(HierarchyPlugin)
+
 class HierarchyPlugin : public Plugin
 {
-	REFLECT_DECLARE_CLASS()
+	REFLECT_DECLARE_OBJECT(HierarchyPlugin)
 
 public:
 

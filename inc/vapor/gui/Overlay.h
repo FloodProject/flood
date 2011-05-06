@@ -78,9 +78,11 @@ namespace Anchor
  * these different positioning modes, please check out the docs above.
  */
 
+REFLECT_DECLARE_CLASS(Overlay)
+
 class VAPOR_API Overlay : public Geometry
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(Overlay)
 
 public:
 
@@ -158,7 +160,7 @@ protected:
 	RenderablePtr borderRenderable;
 
 	// Overlay material.
-	MaterialPtr material;
+	MaterialHandle material;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Overlay );

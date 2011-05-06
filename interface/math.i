@@ -6,13 +6,10 @@
 *
 ************************************************************************/
 
-%import "Math/Vector.h"
-%import "Math/Vector.h"
+//%import "Math/Vector.h"
 %include "Math/Vector.h"
 
-%template(Vector3)  vapor::Vector3T<float>;
-
-%extend vapor::Vector3T<float>
+%extend vapor::Vector3
 {
 	const char* __str__() 
 	{

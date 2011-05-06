@@ -7,6 +7,9 @@
 ************************************************************************/
 
 #include "Editor/API.h"
+
+#ifdef PLUGIN_TERRAIN
+
 #include "TerrainPlugin.h"
 #include "TerrainPage.h"
 #include "TerrainOperation.h"
@@ -22,14 +25,12 @@
 #include "Input/Mouse.h"
 #include "Engine.h"
 
-#ifdef ALL_PLUGINS
-
 namespace vapor { namespace editor {
 
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(TerrainPlugin, Plugin)
-REFLECT_END()
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 

@@ -23,11 +23,11 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(ThirdPersonController, CameraController)
+REFLECT_CHILD_CLASS(ThirdPersonController, CameraController)
 	FIELD_PRIMITIVE(Vector3, distance)
 	FIELD_PRIMITIVE(Vector3, rotation)
 	FIELD_PRIMITIVE(string, followEntityName)
-END_CLASS()
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 

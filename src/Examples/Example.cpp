@@ -7,13 +7,39 @@
 ************************************************************************/
 
 #include "Example.h"
-#include "Core/Utilities.h"
-#include "io/JsonSerializer.h"
+#include "Profiler.h"
 
 int main()
 {
-	Example example;
-	example.run();
+	Log* log = LogCreate( AllocatorGetHeap() );
+	LogSetDefault(log);
+
+	Scene* scene = Allocate(Scene,  AllocatorGetHeap() );
+
+	PoolAllocator* pool = (PoolAllocator*) AllocatorCreatePool( AllocatorGetHeap(), sizeof(Entity)*10050 );
+
+	{
+		PROFILE_STR("Entity creation");
+	
+		for(int i = 0; i < 10000; i++)
+		{
+			EntityPtr entity = EntityPtr( Allocate(Entity, pool) );
+			//entity->addTransform();
+			scene->add(entity);
+		}
+	}
+
+	{
+		PROFILE_STR("Entity update");
+		scene->update(0);
+	}
+
+	//Deallocate<Scene>( AllocatorGetHeap(), scene );
+
+	LogDestroy(log, AllocatorGetHeap() );
+	AllocatorDestroy( pool, AllocatorGetHeap() );
+	//Example example;
+	//example.run();
 
 	return EXIT_SUCCESS;
 }
@@ -143,10 +169,12 @@ void Example::onSetupScene()
 	scene->add( nodeTerrain );
 #endif
 
+#if 0
 	EntityPtr sky( new Entity("Sky") );
 	sky->addTransform();	
 	sky->addComponent( SkydomePtr( new Skydome() ) );
 	scene->add( sky );
+#endif
 
 	window = getRenderDevice()->getRenderWindow();
 	window->makeCurrent();

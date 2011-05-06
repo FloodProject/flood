@@ -10,6 +10,8 @@
 #include "PropertyPage.h"
 #include "Math/Hash.h"
 
+#ifdef ENABLE_PLUGIN_PROPERTY
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//
@@ -70,8 +72,7 @@ bool PropertyPage::updateMemoryWatches()
 		MemoryWatch watch = memoryWatches[field];
 		bool watchChanged = updateMemoryWatch(field, watch.object);
 
-		if( !watchChanged )
-			continue;
+		if( !watchChanged ) continue;
 		
 		wxAny value = getFieldValue(field, watch.object);
 		setPropertyValue(watch.property, value);
@@ -85,3 +86,5 @@ bool PropertyPage::updateMemoryWatches()
 //-----------------------------------//
 
 } } // end namespaces
+
+#endif

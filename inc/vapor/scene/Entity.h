@@ -8,9 +8,9 @@
 
 #pragma once
 
+#include "Scene/Component.h"
 #include "Core/Object.h"
-#include "Event.h"
-#include "Component.h"
+#include "Core/Event.h"
 
 FWD_DECL_SHARED(Entity)
 FWD_DECL_SHARED_WEAK(Entity)
@@ -18,12 +18,12 @@ FWD_DECL_SHARED_WEAK(Entity)
 FWD_DECL_SHARED(Transform)
 FWD_DECL_SHARED(Geometry)
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
-typedef std::map< const Class*, ComponentPtr > ComponentMap;
-typedef std::pair< const Class*, ComponentPtr > ComponentMapPair;
+typedef std::map<Class*, ComponentPtr> ComponentMap;
+typedef std::pair<Class*, ComponentPtr> ComponentMapPair;
 
 /**
  * An entity represents a game object, a container of game components.
@@ -33,21 +33,23 @@ typedef std::pair< const Class*, ComponentPtr > ComponentMapPair;
  * by default to give it a placement in the world scene.
  */
 
+REFLECT_DECLARE_CLASS(Entity)
+
 class VAPOR_API Entity : public Object
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(Entity);
 	DECLARE_UNCOPYABLE(Entity)
 
 public:
 
 	Entity();
-	Entity( const std::string& name );
+	Entity( const String& name );
 	
 	// Gets the name of the entity.
-	GETTER(Name, const std::string&, name);
+	GETTER(Name, const String&, name);
 	
 	// Sets the name of the entity.
-	void setName(const std::string& name);
+	void setName(const String& name);
 
 	// Gets if the entity is visible.
 	bool isVisible() const;
@@ -62,10 +64,10 @@ public:
 	SETTER(Parent, Entity*, parent)
 
 	// Gets the tag of the entity.
-	bool getTag( int index );
+	bool getTag( int32 index );
 
 	// Sets the tag of the entity.
-	void setTag( int index, bool state );
+	void setTag( int32 index, bool state );
 
 	// Adds a component to this entity.
 	bool addComponent( const ComponentPtr& component );
@@ -74,13 +76,13 @@ public:
 	bool removeComponent( const ComponentPtr& component );
 
 	// Gets a component of the given type name.
-	ComponentPtr getComponent(const std::string& type) const;
+	ComponentPtr getComponent(const char* name) const;
 
 	// Gets a component of the given type.
-	ComponentPtr getComponent(const Type& type) const;
+	ComponentPtr getComponent(Class* klass) const;
 
 	// Gets a component of the given type.
-	ComponentPtr getComponentFromFamily(const Type& type) const;
+	ComponentPtr getComponentFromFamily(Class* klass) const;
 
 	// Gets a component from this entity.
 	template <typename T>
@@ -126,16 +128,16 @@ public:
 	// Events gets called when a component is removed.
 	Event1<const ComponentPtr&> onComponentRemoved;
 
-protected:
+public:
 
 	// Name of the entity.
-	std::string name;
+	String name;
 
 	// Visibility of the entity.
 	bool visible;
 
 	// Tags of the entity.
-	int tags;
+	uint32 tags;
 
 	// Components of the entity.
 	std::vector<ComponentPtr> components;
@@ -147,6 +149,12 @@ protected:
 	Entity* parent;
 };
 
+EXTERN_BEGIN
+
+API_ENGINE Entity* EntityCreate( Allocator* );
+
+EXTERN_END
+
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

@@ -10,8 +10,8 @@
 
 #ifdef VAPOR_PHYSICS_BULLET
 
-#include "physics/DebugDraw.h"
-#include "physics/Convert.h"
+#include "Physics/DebugDraw.h"
+#include "Physics/Convert.h"
 #include "Render/Renderable.h"
 
 namespace vapor {
@@ -20,13 +20,13 @@ namespace vapor {
 
 BulletDebugDrawer::BulletDebugDrawer()
 {
-	vb = new VertexBuffer(BufferUsage::Dynamic, BufferAccess::Write);
+	vb = Allocate(VertexBuffer, AllocatorGetHeap(), BufferUsage::Dynamic, BufferAccess::Write);
 	clearBuffer();
 
-	material = new Material("DebugDrawer");
-	material->setDepthCompare(DepthCompare::LessOrEqual);
+	material = MaterialCreate(AllocatorGetHeap(), "DebugDrawer");
+	material.Resolve()->setDepthCompare(DepthCompare::LessOrEqual);
 
-	renderable = new Renderable(PolygonType::Lines);
+	renderable = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Lines);
 	renderable->setVertexBuffer(vb);
 	renderable->setMaterial(material);
 }

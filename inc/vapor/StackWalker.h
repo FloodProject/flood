@@ -38,7 +38,7 @@
 
 #include "Core/Log.h"
 
-#ifdef VAPOR_PLATFORM_WINDOWS
+#ifdef PLATFORM_WINDOWS
 
 #ifdef ENABLE_STACK_WALKER
 
@@ -54,7 +54,7 @@ typedef unsigned long SIZE_T, *PSIZE_T;
 #endif
 #endif  // _MSC_VER < 1300
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -277,7 +277,7 @@ public:
 
 //-----------------------------------//
 
-} // end namespace 
+NAMESPACE_END
 
 #endif
 

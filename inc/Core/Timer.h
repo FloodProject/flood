@@ -24,7 +24,7 @@ API_CORE float TimerGetCurrentTimeMs();
 struct Timer { int64 time; };
 
 API_CORE Timer* TimerCreate(Allocator*);
-API_CORE void   TimerDestroy(Timer*, Allocator*);
+API_CORE void   TimerDestroy(Timer*);
 API_CORE void   TimerReset(Timer*);
 API_CORE float  TimerGetElapsed(Timer*);
 

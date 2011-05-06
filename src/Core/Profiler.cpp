@@ -10,7 +10,7 @@
 #include "Profiler.h"
 #include "Core/Log.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -32,4 +32,4 @@ Profiler::~Profiler()
 
 //-----------------------------------//
 
-} // end namespace 
+NAMESPACE_END

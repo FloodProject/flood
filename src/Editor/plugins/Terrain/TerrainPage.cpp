@@ -7,6 +7,9 @@
 ************************************************************************/
 
 #include "Editor/API.h"
+
+#ifdef PLUGIN_TERRAIN
+
 #include "TerrainPage.h"
 #include "Core/Utilities.h"
 #include "Resources\ResourceManager.h"
@@ -35,16 +38,14 @@ void TerrainPage::createBrushes()
 
 	ResourceManager* rm = GetResourceManager();
 
-	for( uint i = 0; i < files.size(); i++ )
+	for( size_t i = 0; i < files.size(); i++ )
 	{
-		const std::string& file = files[i];
-
-		ImagePtr image = rm->loadResource<Image>(file);
+		const String& file = files[i];
 		
-		if( !image )
-			continue;
+		ImageHandle image = rm->loadResource<Image>(file);
+		if( !image ) continue;
 
-		m_choiceBrush->addImage( image );
+		//m_choiceBrush->addImage( image );
 	}
 }
 
@@ -192,3 +193,5 @@ ImagePtr TerrainPage::getPaintImage()
 //-----------------------------------//
 
 } } // end namespaces
+
+#endif

@@ -7,18 +7,19 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Core/Memory.h"
-
 #include "Engine.h"
+
+#include "Core/Memory.h"
+#include "Resources/ResourceManager.h"
+#include "Resources/ResourceLoader.h"
+#include "Render/Texture.h"
 #include "Render/Device.h"
 #include "Input/InputManager.h"
 #include "Audio/Device.h"
 #include "Script/ScriptManager.h"
 #include "Scene/Scene.h"
 #include "Paging/PageManager.h"
-#include "Resources/ResourceManager.h"
 #include "Physics/Physics.h"
-#include "Resources/ResourceLoader.h"
 
 #include <ctime>
 
@@ -63,10 +64,9 @@ Engine::~Engine()
 	delete resourceManager;
 	delete audioDevice;
 
-	TaskPoolDestroy( taskPool, AllocatorGetHeap() );
-	
-	StreamDestroy(stream, AllocatorGetHeap());
-	LogDestroy(log, AllocatorGetHeap());
+	TaskPoolDestroy(taskPool);
+	StreamDestroy(stream);
+	LogDestroy(log);
 }
 
 //-----------------------------------//
@@ -115,7 +115,7 @@ void Engine::init( bool createWindow )
 	// Creates the initial scene.
 	scene.reset( new Scene() );
 
-#ifdef VAPOR_SCRIPTING_LUA
+#ifdef ENABLE_SCRIPTING_LUA
 	// Creates the scripting manager.
 	scriptManager = new ScriptManager();
 #endif
@@ -135,7 +135,7 @@ void Engine::setupLogger()
 //
 //	struct tm* timeinfo;
 //
-//#ifdef VAPOR_PLATFORM_WINDOWS
+//#ifdef PLATFORM_WINDOWS
 //	localtime_s( timeinfo, &rawtime );
 //#else
 //	timeinfo = localtime( &rawtime );
@@ -144,7 +144,7 @@ void Engine::setupLogger()
 //	char name[64];
 //	
 //	strftime(
-//		name, VAPOR_ARRAY_SIZE(name),
+//		name, ARRAY_SIZE(name),
 //		"%Y_%m_%d-%H_%M_%S.html", timeinfo);
 
 	stream = StreamCreateFromFile( AllocatorGetHeap(), "Log.html", StreamMode::Write);
@@ -186,7 +186,7 @@ void Engine::update( float delta )
 	resourceManager->update( delta );
 	scene->update( delta );
 
-#ifdef VAPOR_SCRIPTING_LUA
+#ifdef ENABLE_SCRIPTING_LUA
 	scriptManager->update( delta );
 #endif
 

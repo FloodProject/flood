@@ -31,7 +31,7 @@ bool StreamClose(Stream* stream)
 
 //-----------------------------------//
 
-void StreamDestroy(Stream* stream, Allocator* alloc)
+void StreamDestroy(Stream* stream)
 {
 	if( !StreamClose(stream) )
 	{
@@ -39,7 +39,7 @@ void StreamDestroy(Stream* stream, Allocator* alloc)
 		return;
 	}
 
-	Deallocate(alloc, stream);
+	Deallocate(stream);
 }
 
 //-----------------------------------//

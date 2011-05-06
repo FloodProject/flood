@@ -16,7 +16,8 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-PluginManager::PluginManager() { }
+PluginManager::PluginManager()
+{ }
 
 //-----------------------------------//
 
@@ -27,7 +28,7 @@ PluginManager::~PluginManager()
 		Plugin* plugin = plugins[i];
 		if(plugin->enabled) disablePlugin(plugin);
 
-		delete plugin;
+		Deallocate(plugin);
 	}
 }
 
@@ -50,14 +51,14 @@ Plugin* PluginManager::getPlugin(const std::string& name)
 
 void PluginManager::scanPlugins()
 {
-	Class& type = Plugin::getStaticType();
+	Class* klass = ReflectionGetType(Plugin);
 
-	for( size_t i = 0; i < type.childs.size(); i++ )
+	for( size_t i = 0; i < klass->childs.size(); i++ )
 	{
-		Class* child = type.childs[i];
+		Class* child = klass->childs[i];
 		if( !child ) continue;
 
-		Plugin* plugin = (Plugin*) child->createInstance();
+		Plugin* plugin = (Plugin*) ClassCreateInstance(child, AllocatorGetHeap());
 		if(!plugin) continue;
 
 		registerPlugin(plugin);

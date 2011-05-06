@@ -10,8 +10,8 @@
 
 #include "Render/VertexBuffer.h"
 #include "Render/IndexBuffer.h"
-#include "Render/Material.h"
-#include "Event.h"
+#include "Resources/Material.h"
+#include "Core/Event.h"
 
 FWD_DECL_INTRUSIVE(Material)
 
@@ -121,7 +121,7 @@ public:
 	ACESSOR(RenderLayer, RenderLayer::Enum, stage)
    
     // Gets/sets the render priority.
-	ACESSOR(RenderPriority, int, priority)
+	ACESSOR(RenderPriority, int32, priority)
     
     // Gets/sets the vertex buffer.
 	ACESSOR(VertexBuffer, VertexBufferPtr, vb)
@@ -130,7 +130,7 @@ public:
 	ACESSOR(IndexBuffer, IndexBufferPtr, ib)
 
     // Gets/sets the material.
-    ACESSOR(Material, MaterialPtr, material)
+    ACESSOR(Material, MaterialHandle, material)
 
     // Gets/sets the render mode.
 	ACESSOR(PolygonMode, PolygonMode::Enum, mode)
@@ -150,7 +150,7 @@ protected:
 	RenderLayer::Enum stage;
 
 	// Rendering priority.
-	int priority;
+	int32 priority;
 
     // Primitive type.
     PolygonType::Enum type;
@@ -165,7 +165,7 @@ protected:
     IndexBufferPtr ib;
     
 	// Material of this renderable.
-	MaterialPtr material;
+	MaterialHandle material;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Renderable );

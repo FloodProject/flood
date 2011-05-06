@@ -15,9 +15,11 @@ namespace vapor {
 
 //-----------------------------------//
 
+REFLECT_DECLARE_CLASS(Projector)
+
 class VAPOR_API Projector : public Component
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(Projector)
 
 public:
 

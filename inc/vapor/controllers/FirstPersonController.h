@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "controllers/CameraController.h"
+#include "Controllers/CameraController.h"
 #include "Math/Vector.h"
 #include "Math/EulerAngles.h"
 
@@ -31,9 +31,11 @@ struct MouseWheelEvent;
  * A simple First-Person style camera controller.
  */
 
+REFLECT_DECLARE_CLASS(FirstPersonController)
+
 class VAPOR_API FirstPersonController : public CameraController
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(FirstPersonController)
 
 public:
 
@@ -70,9 +72,9 @@ protected:
 	bool clampMovementX;
 
 	// Mouse movement.
-	Vector2 oldMousePosition;
-	Vector2 lastPosition;
-	Vector2 mouseDistance;
+	Vector2i oldMousePosition;
+	Vector2i lastPosition;
+	Vector2i mouseDistance;
 	int mouseWheel;
 
 	// Focus state.

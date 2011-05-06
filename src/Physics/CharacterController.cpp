@@ -10,19 +10,18 @@
 
 #ifdef VAPOR_PHYSICS_BULLET
 
-
-#include "physics/CharacterController.h"
-#include "physics/Shape.h"
-#include "physics/Convert.h"
-#include "physics/Physics.h"
-#include "physics/btKinematicController.h"
+#include "Physics/CharacterController.h"
+#include "Physics/Shape.h"
+#include "Physics/Convert.h"
+#include "Physics/Physics.h"
+#include "Physics/btKinematicController.h"
 
 #include "Math/Helpers.h"
 #include "Scene/Entity.h"
 
 #include "Engine.h"
-#include "input/InputManager.h"
-#include "input/Keyboard.h"
+#include "Input/InputManager.h"
+#include "Input/Keyboard.h"
 
 #include <BulletCollision/CollisionShapes/btConvexShape.h>
 #include <BulletCollision/CollisionDispatch/btGhostObject.h> 
@@ -32,14 +31,14 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(CharacterController, Controller)
+REFLECT_CHILD_CLASS(CharacterController, Controller)
 	FIELD_PRIMITIVE(float, stepHeight)
 	FIELD_PRIMITIVE(float, walkVelocity)
 	FIELD_PRIMITIVE(float, fallSpeed)
 	FIELD_PRIMITIVE(float, jumpSpeed)
 	FIELD_PRIMITIVE(float, maxJumpHeight)
 	FIELD_PRIMITIVE(float, maxSlope)
-END_CLASS()
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 

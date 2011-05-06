@@ -17,19 +17,20 @@ namespace vapor {
 
 //-----------------------------------//
 
-std::map<MeshPtr, std::vector<RenderablePtr> > MeshBuilder::meshRenderables;
+MeshRenderablesMap MeshBuilder::meshRenderables;
 
 MeshBuilder::MeshBuilder()
 { }
 
 //-----------------------------------//
 
-bool MeshBuilder::build(const MeshPtr& mesh)
+bool MeshBuilder::build(const MeshHandle& handle)
 {
-	if( mesh->isBuilt() )
-		return true;
+	mesh = handle.Resolve();
+	
+	if( !mesh ) return false;
 
-	this->mesh = mesh;
+	if( mesh->isBuilt() ) return true;
 
 	mesh->buildBounds();
 	mesh->setupInitialVertices();	
@@ -45,7 +46,7 @@ bool MeshBuilder::build(const MeshPtr& mesh)
 void MeshBuilder::buildGeometry()
 {
 	// Vertex buffer.
-	VertexBufferPtr vb = new VertexBuffer();
+	VertexBufferPtr vb = Allocate(VertexBuffer, AllocatorGetHeap());
 
 	vb->set( VertexAttribute::Position, mesh->position );
 	vb->set( VertexAttribute::Normal, mesh->normals );
@@ -62,16 +63,17 @@ void MeshBuilder::buildGeometry()
 		const MeshGroup& group = groups[i];
 
 		// Gets a material for the group.
-		MaterialPtr mat = buildMaterial(group);
+		MaterialHandle material = buildMaterial(group);
 
-		IndexBufferPtr ib = new IndexBuffer();
+		IndexBufferPtr ib = Allocate(IndexBuffer, AllocatorGetHeap());
 		SetIndexBufferData(ib, group.indices);
 
-		RenderablePtr renderable = new Renderable();
+		RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap());
 		renderable->setPrimitiveType( PolygonType::Triangles );
 		renderable->setVertexBuffer(vb);
 		renderable->setIndexBuffer(ib);
-		renderable->setMaterial(mat);
+		renderable->setMaterial(material);
+
 		meshRenderables[mesh].push_back(renderable);
 
 		#pragma TODO("Use index buffers when building mesh geometry")
@@ -80,17 +82,18 @@ void MeshBuilder::buildGeometry()
 
 //-----------------------------------//
 	
-MaterialPtr MeshBuilder::buildMaterial(const MeshGroup& group)
+MaterialHandle MeshBuilder::buildMaterial(const MeshGroup& group)
 {
 	const MeshMaterial& matMesh = group.material;
 
-	MaterialPtr material = new Material(matMesh.name);
+	MaterialHandle handle = MaterialCreate(AllocatorGetHeap(), matMesh.name);
+	Material* material = handle.Resolve();
 
 	if( !matMesh.texture.empty() )
 	{
 		material->setProgram("VertexLit");
 
-		std::string path = PathNormalize(matMesh.texture);
+		String path = PathNormalize(matMesh.texture);
 		material->setTexture( 0, path );
 	}
 
@@ -104,7 +107,7 @@ MaterialPtr MeshBuilder::buildMaterial(const MeshGroup& group)
 	if( mesh->isAnimated() )
 		material->setProgram("VertexLitSkinned");
 
-	return material;
+	return handle;
 }
 
 //-----------------------------------//

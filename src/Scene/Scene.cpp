@@ -11,14 +11,15 @@
 #include "Scene/Transform.h"
 #include "Scene/Tags.h"
 #include "Scene/Geometry.h"
-#include <algorithm>
+#include "Scene/Model.h"
+#include "Render/Device.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(Scene, Group)
-END_CLASS()
+REFLECT_CHILD_CLASS(Scene, Group)
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
@@ -51,9 +52,9 @@ static bool doRayGroupQuery( const Group* group, const Culler& culler, RayQueryL
 	for( size_t i = 0; i < entities.size(); i++ )
 	{
 		const EntityPtr& entity = entities[i];
-		const Type& type = entity->getType();
+		Class* klass = entity->getType();
 
-		if( type.is<Group>() || type.inherits<Group>() )
+		if( ClassInherits(klass, ReflectionGetType(Group)) )
 		{
 			const Group* group = (const Group*) entity.get();
 
@@ -149,82 +150,16 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res )
 
 //-----------------------------------//
 
-bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res,
-							    const EntityPtr& node )
-{
-	const std::vector<GeometryPtr>& geoms = node->getGeometry();
-
-	const TransformPtr& transform = node->getTransform();
-	Matrix4x3 absolute = transform->getAbsoluteTransform().inverse();
-
-	Ray transRay;
-	transRay.origin = absolute * ray.origin;
-
-	absolute.tx = 0;
-	absolute.ty = 0;
-	absolute.tz = 0;
-
-	transRay.direction = (absolute * ray.direction).normalize();
-
-	// Down to triangle picking.	
-	for( size_t i = 0; i < geoms.size(); i++ )
-	{		
-		const GeometryPtr& geo = geoms[i];
-	
-		if( !geo )
-			continue;
-
-		// Let's do a rough bounding volume level intersection test on each
-		// individual geometry of the node. This helps cut the number of 
-		// collisions tests in nodes with lots of geometry components.
-
-		const BoundingBox& bound = geo->getWorldBoundingVolume();
-
-		float distance;
-		
-		if( !bound.intersects(ray, distance) )
-			continue;
-
-		const std::vector<RenderablePtr>& rends = geo->getRenderables();
-
-		for( uint j = 0; j < rends.size(); j++ )
-		{
-			const RenderablePtr& rend = rends[j];
-
-			if( doRayRendQuery(transRay, rend, res) )
-			{
-				res.entity = node;
-				res.geometry = geo;
-				return true;
-			}
-		}
-	}
-
-	return false;
-}
-
-//-----------------------------------//
-
-bool Scene::doRayRendQuery( const Ray& ray, const RenderablePtr& rend, RayTriangleQueryResult& res )
-{
-	if( !rend ) return false;
-	if( rend->getPrimitiveType() != PolygonType::Triangles ) return false;
-
-	const VertexBufferPtr& vb = rend->getVertexBuffer();
-	const IndexBufferPtr& ib = rend->getIndexBuffer();
-	
-	if( !vb ) return false;
-
-	const std::vector<Vector3>& texCoords = vb->getAttribute(VertexAttribute::TexCoord0);
-	const std::vector<Vector3>& vertices = vb->getAttribute(VertexAttribute::Position);
-				
+bool doRayGeometryQuery( const Ray& ray, const IndexBufferPtr& ib,
+	const std::vector<Vector3>& vertices, const std::vector<Vector3>& texCoords,
+	RayTriangleQueryResult& res )
+{				
 	size_t size = ib ? ib->getSize() : vertices.size();
-	
-	int indexSizeBytes = ib->indexSize / 8;
+	int32 indexSizeBytes = ib->indexSize / 8;
 	
 	for( size_t i = 0; i < size; i += 3 )
 	{
-		int index = ib ? *(short int*) &ib->data[indexSizeBytes * i] : i;
+		int16 index = ib ? *(int16*) &ib->data[indexSizeBytes * i] : i;
 
 		const Vector3 (&tri)[3] = (const Vector3 (&)[3]) vertices[index];		
 		float t, o, n;
@@ -248,9 +183,94 @@ bool Scene::doRayRendQuery( const Ray& ray, const RenderablePtr& rend, RayTriang
 		res.intersectionUV.y = n;
 		res.intersection = ray.getPoint(t);
 		res.distance = t;
-		res.renderable = rend;
 
 		return true;
+	}
+
+	return false;
+}
+
+//-----------------------------------//
+
+static bool needsSkinning(const GeometryPtr& geo, std::vector<Vector3>& skinnedPositions)
+{
+	bool isModel = ClassInherits(geo->getType(), ReflectionGetType(Model));
+	if( !isModel ) return false;
+
+	ModelPtr model = std::static_pointer_cast<Model>(geo);
+	
+	Mesh* mesh = model->getMesh().Resolve();
+	if( !mesh || !mesh->isAnimated() ) return false;
+
+	bool isHardwareSkinned = model->isHardwareSkinned();
+	if( isHardwareSkinned ) model->doSkinning(skinnedPositions);
+
+	return isHardwareSkinned;
+}
+
+//-----------------------------------//
+
+bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, const EntityPtr& node )
+{
+	const std::vector<GeometryPtr>& geoms = node->getGeometry();
+
+	const TransformPtr& transform = node->getTransform();
+	Matrix4x3 absolute = transform->getAbsoluteTransform().inverse();
+
+	Ray transRay;
+	transRay.origin = absolute * ray.origin;
+
+	absolute.tx = 0;
+	absolute.ty = 0;
+	absolute.tz = 0;
+
+	transRay.direction = (absolute * ray.direction).normalize();
+
+	// Down to triangle picking.	
+	for( size_t i = 0; i < geoms.size(); i++ )
+	{		
+		const GeometryPtr& geo = geoms[i];
+		if( !geo ) continue;
+
+		// Let's do a rough bounding volume level intersection test on each
+		// individual geometry of the node. This helps cut the number of 
+		// collisions tests in nodes with lots of geometry components.
+
+		const BoundingBox& bound = geo->getWorldBoundingVolume();
+
+		float distance;
+		
+		if( !bound.intersects(ray, distance) )
+			continue;
+
+		const std::vector<RenderablePtr>& rends = geo->getRenderables();
+
+		std::vector<Vector3> skinnedPositions;
+		bool doSkinning = needsSkinning(geo, skinnedPositions);
+
+		for( size_t j = 0; j < rends.size(); j++ )
+		{
+			const RenderablePtr& rend = rends[j];
+	
+			if( rend->getPrimitiveType() != PolygonType::Triangles )
+				continue;
+
+			const VertexBufferPtr& vb = rend->getVertexBuffer();
+			const IndexBufferPtr& ib = rend->getIndexBuffer();
+
+			if( !vb ) return false;
+
+			const std::vector<Vector3>& vertices = vb->getAttribute(VertexAttribute::Position);
+			const std::vector<Vector3>& texCoords = vb->getAttribute(VertexAttribute::TexCoord0);
+
+			if( doRayGeometryQuery(transRay, ib, doSkinning ? skinnedPositions : vertices, texCoords, res) )
+			{
+				res.entity = node;
+				res.geometry = geo;
+				res.renderable = rend;
+				return true;
+			}
+		}
 	}
 
 	return false;

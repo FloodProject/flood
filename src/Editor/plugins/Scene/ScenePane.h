@@ -10,8 +10,6 @@
 
 #include "UndoOperation.h"
 
-FWD_DECL(Type)
-
 FWD_DECL_SHARED(Entity)
 FWD_DECL_SHARED_WEAK(Entity)
 
@@ -152,7 +150,8 @@ protected:
 	wxMenu* createMenuAttachment(const MeshPtr& node);
 	int firstAnimationId;
 	int firstAttachmentId;
-	MeshPtr mesh;
+	MeshHandle meshHandle;
+	Mesh* mesh;
 	ModelPtr model;
 
 	// Scene-monitoring callbacks.

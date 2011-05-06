@@ -8,7 +8,7 @@
 
 #include "Pipeline/API.h"
 
-#ifdef VAPOR_MESH_MILKSHAPE3D
+#ifdef ENABLE_MESH_MILKSHAPE3D
 
 #include "Pipeline/MilkshapeLoader.h"
 #include "Pipeline/Milkshape3D.h"
@@ -18,8 +18,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(MilkshapeLoader, ResourceLoader)
-END_CLASS()
+REFLECT_CHILD_CLASS(MilkshapeLoader, ResourceLoader)
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 

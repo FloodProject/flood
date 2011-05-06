@@ -11,7 +11,7 @@
 #include "Math/Helpers.h"
 #include "Core/Log.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -105,4 +105,4 @@ void Plane::normalize()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

@@ -13,11 +13,11 @@
 //---------------------------------------------------------------------//
 
 #if defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(WIN64)
-	#define VAPOR_PLATFORM_WINDOWS
+	#define PLATFORM_WINDOWS
 #elif defined(__APPLE__) || defined(MACOSX)
-	#define VAPOR_PLATFORM_MACOSX
+	#define PLATFORM_MACOSX
 #elif defined(__LINUX) || defined(__LINUX__) || defined(LINUX)
-	#define VAPOR_PLATFORM_LINUX
+	#define PLATFORM_LINUX
 #else
 	#warn Unknown platform
 #endif
@@ -26,21 +26,21 @@
 // Compiler detection
 //---------------------------------------------------------------------//
 
-#ifdef _MSC_VER // Microsoft Visual C++ Compiler
+#ifdef _MSC_VER
 	#if _MSC_VER == 1600
-		#define VAPOR_COMPILER_MSVC_2010 0x1600
-		#define VAPOR_COMPILER_MSVC	VAPOR_COMPILER_MSVC_2010
+		#define COMPILER_MSVC_2010 0x1600
+		#define COMPILER_MSVC	COMPILER_MSVC_2010
+		#define COMPILER_SUPPORTS_CPP0X
 	#elif _MSC_VER == 1500
-		#define VAPOR_COMPILER_MSVC_2008 0x1500
-		#define VAPOR_COMPILER_MSVC	VAPOR_COMPILER_MSVC_2008
+		#define COMPILER_MSVC_2008 0x1500
+		#define COMPILER_MSVC	COMPILER_MSVC_2008
 	#else
 		#error "Unknown Visual C++ compiler version"
 	#endif
 #elif defined(__GNUG__)
-	// GCC
-	#define VAPOR_COMPILER_GCC
+	#define COMPILER_GCC
 #elif defined(__clang__)
-	#define VAPOR_COMPILER_CLANG
+	#define COMPILER_CLANG
 #else
 	#warn Unknown compiler
 #endif
@@ -50,31 +50,44 @@
 //---------------------------------------------------------------------//
 
 #if defined( DEBUG ) || defined( _DEBUG ) || defined( ___DEBUG )
-	#define VAPOR_DEBUG
-#elif !defined( VAPOR_DEBUG ) && !defined( NDEBUG )
-	#define NDEBUG
-#elif defined( VAPOR_DEBUG ) && defined( NDEBUG )
-	#error Conflicting debug options
+	#define DEBUG_BUILD
+#else
+	#define RELEASE_BUILD
 #endif
 
 //---------------------------------------------------------------------//
 // Compiler-specific functionality
 //---------------------------------------------------------------------//
 
-#if defined(VAPOR_COMPILER_MSVC)
+#if defined(COMPILER_MSVC)
 	#define alignof _alignof
-	#define VAPOR_ALIGN_BEGIN(size) __declspec(align(size))
-	#define VAPOR_ALIGN_END(size)
-	#define VAPOR_INLINE __forceinline
-	#define VAPOR_PURE __declspec(novtable)
-	#define VAPOR_OVERRIDE override
-#elif defined(VAPOR_COMPILER_GCC) || defined(VAPOR_COMPILER_CLANG)
+	#define ALIGN_BEGIN(size) __declspec(align(size))
+	#define ALIGN_END(size)
+	#define INLINE __forceinline
+	#define NO_VTABLE __declspec(novtable)
+	#define OVERRIDE override
+	#pragma warning(disable: 4481) // override warning
+#elif defined(COMPILER_GCC) || defined(COMPILER_CLANG)
 	#define alignof __alignof__ 
-	#define VAPOR_ALIGN_BEGIN(size)
-	#define VAPOR_ALIGN_END(size) __attribute__((aligned(size)))
-	#define VAPOR_INLINE __attribute__((always_inline))
-	#define VAPOR_PURE
-	#define VAPOR_OVERRIDE __attribute__((override))
+	#define ALIGN_BEGIN(size)
+	#define ALIGN_END(size) __attribute__((aligned(size)))
+	#define INLINE __attribute__((always_inline))
+	#define NO_VTABLE
+	#define OVERRIDE //__attribute__((override))
+#endif
+
+#if defined(PLATFORM_WINDOWS) && defined(COMPILER_MSVC)
+	#define API_EXPORT __declspec(dllexport)
+	#define API_IMPORT __declspec(dllimport)
+	#define API_HIDDEN
+#elif defined(PLATFORM_WINDOWS)
+	#define API_EXPORT __attribute__ ((dllimport))
+	#define API_IMPORT __attribute__ ((dllexport))
+	#define API_HIDDEN
+#else
+	#define API_EXPORT __attribute__ ((visibility("default")))
+	#define API_IMPORT __attribute__ ((visibility("default")))
+	#define API_HIDDEN __attribute__ ((visibility("hidden")))
 #endif
 
 //---------------------------------------------------------------------//
@@ -97,11 +110,11 @@ typedef unsigned long	uint32;
 typedef uint8 byte;
 typedef uint32 uint;
 
-#if defined(VAPOR_COMPILER_MSVC)
+#if defined(COMPILER_MSVC)
 	typedef __int64 int64;
 	typedef signed   __int64 sint64;
 	typedef unsigned __int64 uint64;
-#elif defined(VAPOR_COMPILER_GCC)
+#elif defined(COMPILER_GCC)
 	typedef long long int64;
 	typedef unsigned long long uint64;
 #endif
@@ -113,11 +126,17 @@ static_assert(sizeof(int32) == 4, "");
 static_assert(sizeof(int64) == 8, "");
 #endif
 
+#if defined(COMPILER_MSVC)
+	#define enum_class enum
+#elif defined(COMPILER_GCC)
+	#define enum_class enum class
+#endif
+
 //---------------------------------------------------------------------//
 // nullptr replacement
 //---------------------------------------------------------------------//
 
-#if !defined(VAPOR_COMPILER_MSVC) || (VAPOR_COMPILER_MSVC != VAPOR_COMPILER_MSVC_2010)
+#if !defined(COMPILER_MSVC) || (COMPILER_MSVC != COMPILER_MSVC_2010)
 	#define nullptr NULL
 #endif
 
@@ -135,7 +154,7 @@ static_assert(sizeof(int64) == 8, "");
 // Array and Conversion Helpers
 //---------------------------------------------------------------------//
 
-#define VAPOR_ARRAY_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))
+#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))
 
 //---------------------------------------------------------------------//
 // Types and Data structures
@@ -149,7 +168,7 @@ static_assert(sizeof(int64) == 8, "");
 // Forward-declaration Helpers
 //---------------------------------------------------------------------//
 
-#define FWD_DECL(T) namespace vapor { class T; }				\
+#define FWD_DECL(T) NAMESPACE_BEGIN class T; NAMESPACE_END		\
 
 #define TYPEDEF_SHARED_POINTER_FROM_TYPE( class )				\
 	typedef std::shared_ptr< class > class##Ptr;
@@ -158,16 +177,16 @@ static_assert(sizeof(int64) == 8, "");
 		typedef std::weak_ptr< class > class##WeakPtr;
 
 #define FWD_DECL_SHARED(T)										\
-	namespace vapor {											\
+	NAMESPACE_BEGIN												\
 		class T;												\
 		TYPEDEF_SHARED_POINTER_FROM_TYPE( T );					\
-	} // end namespace
+	NAMESPACE_END
 
 #define FWD_DECL_SHARED_WEAK(T)									\
-	namespace vapor {											\
+	NAMESPACE_BEGIN												\
 		class T;												\
 		TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( T );				\
-	} // end namespace
+	NAMESPACE_END
 
 //---------------------------------------------------------------------//
 // Acessors

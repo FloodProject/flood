@@ -7,6 +7,9 @@
 ************************************************************************/
 
 #include "Editor/API.h"
+
+#ifdef PLUGIN_TERRAIN
+
 #include "TerrainOperation.h"
 
 namespace vapor { namespace editor {
@@ -329,3 +332,5 @@ void TerrainOperation::applyPaintTool()
 //-----------------------------------//
 
 } } // end namespaces
+
+#endif

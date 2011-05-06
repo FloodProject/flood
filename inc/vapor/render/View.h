@@ -48,10 +48,10 @@ public:
 	ACESSOR(RenderTarget, RenderTarget*, target)
 
 	// Gets the origin of the view.
-	GETTER(Origin, Vector2, Vector2::Zero)
+	GETTER(Origin, Vector2i, Vector2i(0,0)/*::Zero*/)
 
 	// Gets the size of the view.
-	GETTER(Size, Vector2, target->getSettings().getSize())
+	GETTER(Size, Vector2i, target->getSettings().getSize())
 
 	// Gets/sets the clear color of the view.
 	ACESSOR(ClearColor, const Color&, clearColor)

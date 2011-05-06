@@ -10,8 +10,8 @@
 
 #ifdef VAPOR_PHYSICS_BULLET
 
-#include "physics/MeshShape.h"
-#include "physics/Convert.h"
+#include "Physics/MeshShape.h"
+#include "Physics/Convert.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
 #include "Scene/Geometry.h"
@@ -25,8 +25,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(MeshShape, Shape)
-END_CLASS()
+REFLECT_CHILD_CLASS(MeshShape, Shape)
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
@@ -39,7 +39,7 @@ MeshShape::MeshShape()
 MeshShape::~MeshShape()
 {
 	removeBody();
-	delete meshShape;
+	Deallocate(meshShape);
 }
 
 //-----------------------------------//
@@ -83,7 +83,7 @@ MeshShape::~MeshShape()
 btTriangleMesh* MeshShape::convertMesh()
 {
 #if 0
-	btTriangleMesh* mesh = new btTriangleMesh(false);
+	btTriangleMesh* mesh = Allocate(btTriangleMesh, AllocatorGetHeap(), false);
 
 	const std::vector<GeometryPtr>& geometries = entity->getGeometry();
 
@@ -139,10 +139,9 @@ btTriangleMesh* MeshShape::convertMesh()
 
 void MeshShape::update( float delta )
 {
-	if( meshShape )
-		return;	
+	if( meshShape ) return;	
 
-	meshShape = new btBvhTriangleMeshShape( convertMesh(), true );
+	meshShape = Allocate(btBvhTriangleMeshShape, AllocatorGetHeap(), convertMesh(), true);
 	//meshShape->updateBound();
 	
 	const TransformPtr& transform = getEntity()->getTransform();

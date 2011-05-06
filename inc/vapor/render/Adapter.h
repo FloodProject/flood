@@ -22,50 +22,22 @@ namespace vapor {
  * we need different classes for different render devices. Hopefully not. :)
  */
 
-class VAPOR_API Adapter
+struct API_ENGINE Adapter
 {
-public:
+	String name;
+	String vendor;
+	String driver;
+	String shading;
+	String version;
 
-	Adapter();
-
-	// Gets the version of the rendering API.
-	GETTER(Version, const std::string&, gl)
-
-	// Gets driver information.
-	GETTER(Driver, const std::string&, driver)
-	
-	// Gets the graphics adapter vendor.
-	GETTER(Vendor, const std::string&, vendor)
-	
-	// Gets the graphics adapter name.
-	GETTER(Name, const std::string&, name)
-
-	// Gets the GLSL version information.
-	GETTER(Shading, const std::string&, glsl)
-
-	// Gets the maximum texture size.
-	GETTER(MaxTextureSize, int, maxTextureSize)
-
-	// Logs adapter version information.
-	void log() const;
-
-	std::string name;
-	std::string vendor;
-	std::string driver;
-	std::string glsl;
-	std::string gl;
-
-	int maxTextureSize;
-	int maxAttribs;
+	int32 maxTextureSize;
+	int32 maxTextureUnits;
+	int32 maxAttribs;
 	
 	bool supportsVertexBuffers;
 	bool supportsShaders;
 	bool supportsAnisotropic;
-
-protected:
-
-	// Gets and parses the OpenGL information.
-	void parseInfo();
+	bool supportsFixedPipeline;
 };
 
 //-----------------------------------//

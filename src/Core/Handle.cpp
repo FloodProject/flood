@@ -15,17 +15,17 @@ NAMESPACE_EXTERN_BEGIN
 
 HandleManager* HandleCreateManager( Allocator* alloc )
 {
-	HandleManager* man = Allocate<HandleManager>(alloc);
+	HandleManager* man = Allocate(HandleManager, alloc);
 	man->nextHandle = 0;
 	return man;
 }
 
 //-----------------------------------//
 
-void HandleDestroyManager( HandleManager* man, Allocator* alloc )
+void HandleDestroyManager( HandleManager* man )
 {
-	assert( man->handles.size() == 0 );
-	Deallocate<HandleManager>(alloc, man);
+	// assert( man->handles.size() == 0 );
+	Deallocate<HandleManager>(man);
 }
 
 //-----------------------------------//

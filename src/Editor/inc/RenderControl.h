@@ -42,6 +42,8 @@ public:
 					const wxString&	name = "vaporGLCanvas",
 					const wxPalette& palette = wxNullPalette );
 
+	~RenderControl();
+
 	// Flag this control to be redrawn.
 	void flagRedraw();
 

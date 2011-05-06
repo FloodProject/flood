@@ -14,7 +14,7 @@
 #include "Math/Ray.h"
 #include "Math/Frustum.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -48,9 +48,11 @@ struct RayTriangleQueryResult : public RayQueryResult
  * before performing frustum culling or before rendering the entity.
  */
 
+REFLECT_DECLARE_CLASS(Scene)
+
 class VAPOR_API Scene : public Group
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(Scene);
 
 public:
 
@@ -69,9 +71,6 @@ public:
 	// Checks for collision via ray-triangle tests.
 	bool doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res );
 	bool doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, const EntityPtr& );
-
-	// // Checks for collision via ray-renderable tests.
-	bool doRayRendQuery( const Ray&, const RenderablePtr&, RayTriangleQueryResult& );
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Scene );
@@ -79,4 +78,4 @@ TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( Scene );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

@@ -9,14 +9,14 @@
 #include "Core/API.h"
 #include "io/BinarySerializer.h"
 
-#ifdef VAPOR_SERIALIZATION_BINARY
+#ifdef ENABLE_SERIALIZATION_BINARY
 
-namespace vapor {
-
-//-----------------------------------//
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
-} // end namespace
+//-----------------------------------//
+
+NAMESPACE_END
 
 #endif

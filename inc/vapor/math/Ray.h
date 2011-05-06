@@ -10,7 +10,7 @@
 
 #include "Math/Vector.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -43,4 +43,4 @@ public:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

@@ -13,10 +13,10 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT_ABSTRACT(CameraController, Controller)
+REFLECT_ABSTRACT_CHILD_CLASS(CameraController, Controller)
 	FIELD_PRIMITIVE(float, lookSensivity)
 	FIELD_PRIMITIVE(float, moveSensivity)
-END_CLASS()
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 

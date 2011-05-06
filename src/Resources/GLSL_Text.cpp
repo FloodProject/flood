@@ -14,13 +14,13 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(GLSL_Text, Text)
-END_CLASS()
+REFLECT_CHILD_CLASS(GLSL_Text, Text)
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
-static const std::string VertexBlock("[vertex]");
-static const std::string FragmentBlock("[fragment]");
+static const String VertexBlock("[vertex]");
+static const String FragmentBlock("[fragment]");
 
 void GLSL_Text::parse()
 {
@@ -28,7 +28,7 @@ void GLSL_Text::parse()
 	size_t v = text.find(VertexBlock);
 	size_t p = text.find(FragmentBlock);
 
-	if( v == std::string::npos )
+	if( v == String::npos )
 	{
 		LogWarn( "No vertex shader found in '%s'", path.c_str() );
 		vertex.clear();
@@ -38,14 +38,14 @@ void GLSL_Text::parse()
 		vertex = text.substr(v+VertexBlock.size(), p-v-FragmentBlock.size());
 	}
 
-	if( p == std::string::npos )
+	if( p == String::npos )
 	{
 		LogWarn( "No fragment shader found in '%s'", path.c_str() );
 		pixel.clear();
 	}
 	else
 	{
-		pixel = text.substr(p+FragmentBlock.size(), std::string::npos);
+		pixel = text.substr(p+FragmentBlock.size(), String::npos);
 	}
 }
 

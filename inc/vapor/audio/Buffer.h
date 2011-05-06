@@ -12,6 +12,7 @@
 
 #include "Resources/Sound.h"
 #include "Audio/Source.h"
+#include "Core/ReferenceCount.h"
 
 namespace vapor {
 
@@ -29,15 +30,14 @@ class AudioContext;
  * not delete the audio data if it's potentially needed in the future.
  */
 
-class VAPOR_API AudioBuffer
+class VAPOR_API AudioBuffer : public ReferenceCounted
 {
 	DECLARE_UNCOPYABLE(AudioBuffer)
-
 	friend class AudioSource;
 
 public:
 	
-	AudioBuffer( AudioDevice* device, const SoundPtr& sound );
+	AudioBuffer( AudioDevice* device, Sound* sound );
 	~AudioBuffer();
   
 protected:
@@ -52,13 +52,13 @@ protected:
 	AudioDevice* device;
 	
 	// Holds a pointer to the audio data buffer.
-	SoundPtr resource;
+	Sound* sound;
 
 	// Holds the source id from OpenAL.
 	ALuint id;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( AudioBuffer );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( AudioBuffer );
 
 //-----------------------------------//
 

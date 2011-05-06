@@ -16,19 +16,25 @@
 %define API_CORE
 %enddef
 
+%define API_ENGINE
+%enddef
+
 %define VAPOR_API
 %enddef
 
-%import "CompileOptions.h"
-%import "Platform.h"
-%import "Core/Utilities.h"
 %import "Core/API.h"
+%import "Core/Platform.h"
+%import "Core/Utilities.h"
 %import "Core/Concurrency.h"
 %import "Core/ReferenceCount.h"
 
-%define DECLARE_CLASS_()
+%define REFLECT_DECLARE_CLASS(arg)
 %enddef
 
-%define DECLARE_ENUM()
+%define REFLECT_DECLARE_ENUM(arg)
 %enddef
+
+%define REFLECT_DECLARE_OBJECT(arg)
+%enddef
+
 

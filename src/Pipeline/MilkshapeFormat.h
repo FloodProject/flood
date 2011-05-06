@@ -40,29 +40,29 @@ enum TransparencyMode
 
 //-----------------------------------//
 
-#ifdef VAPOR_COMPILER_MSVC
+#ifdef COMPILER_MSVC
 	#pragma pack( push, 1 )
 #endif
 
-struct VAPOR_ALIGN_BEGIN(1) ms3d_header_t
+struct ALIGN_BEGIN(1) ms3d_header_t
 {
 	char    id[10];
 	long    version;
-} VAPOR_ALIGN_END(1);
+} ALIGN_END(1);
 
 //-----------------------------------//
 
-struct VAPOR_ALIGN_BEGIN(1) ms3d_vertex_t
+struct ALIGN_BEGIN(1) ms3d_vertex_t
 {
 	uint8	flags;
 	Vector3	position;
 	char	boneIndex;
 	uint8	referenceCount;
-} VAPOR_ALIGN_END(1);
+} ALIGN_END(1);
 
 //-----------------------------------//
 
-struct VAPOR_ALIGN_BEGIN(1) ms3d_triangle_t
+struct ALIGN_BEGIN(1) ms3d_triangle_t
 {
 	uint16	flags;
 	uint16	vertexIndices[3];
@@ -71,11 +71,11 @@ struct VAPOR_ALIGN_BEGIN(1) ms3d_triangle_t
 	float	t[3];
 	uint8	smoothingGroup;
 	uint8	groupIndex;
-} VAPOR_ALIGN_END(1);
+} ALIGN_END(1);
 
 //-----------------------------------//
 
-struct VAPOR_ALIGN_BEGIN(1) ms3d_group_t
+struct ALIGN_BEGIN(1) ms3d_group_t
 {
 	uint8 flags;
 	char name[32];
@@ -83,11 +83,11 @@ struct VAPOR_ALIGN_BEGIN(1) ms3d_group_t
 	std::vector<uint16> triangleIndices;
 	char materialIndex;
 	char comment[32];
-} VAPOR_ALIGN_END(1);
+} ALIGN_END(1);
 
 //-----------------------------------//
 
-struct VAPOR_ALIGN_BEGIN(1) ms3d_material_t
+struct ALIGN_BEGIN(1) ms3d_material_t
 {
 	char			name[32];
 	Color			ambient;
@@ -99,27 +99,27 @@ struct VAPOR_ALIGN_BEGIN(1) ms3d_material_t
 	uint8			mode;
 	char			texture[MAX_TEXTURE_FILENAME_SIZE];
     char			alphamap[MAX_TEXTURE_FILENAME_SIZE];
-} VAPOR_ALIGN_END(1);
+} ALIGN_END(1);
 
 //-----------------------------------//
 
-struct VAPOR_ALIGN_BEGIN(1) ms3d_keyframe_t
+struct ALIGN_BEGIN(1) ms3d_keyframe_t
 {
 	float time;
 	Vector3 parameter;
-} VAPOR_ALIGN_END(1);
+} ALIGN_END(1);
 
 //-----------------------------------//
 
-struct VAPOR_ALIGN_BEGIN(1) ms3d_tangent_t
+struct ALIGN_BEGIN(1) ms3d_tangent_t
 {
 	Vector3 tangentIn;
 	Vector3 tangentOut;
-} VAPOR_ALIGN_END(1);
+} ALIGN_END(1);
 
 //-----------------------------------//
 
-struct VAPOR_ALIGN_BEGIN(1) ms3d_joint_t
+struct ALIGN_BEGIN(1) ms3d_joint_t
 {
 	uint8 flags;
 	char name[32];
@@ -138,9 +138,9 @@ struct VAPOR_ALIGN_BEGIN(1) ms3d_joint_t
 
 	//std::vector<char> comment;
 	//float color[3];
-} VAPOR_ALIGN_END(1);
+} ALIGN_END(1);
 
-#ifdef VAPOR_COMPILER_MSVC
+#ifdef COMPILER_MSVC
 	#pragma pack( pop )
 #endif
 

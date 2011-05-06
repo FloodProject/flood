@@ -12,24 +12,7 @@
 
 namespace vapor {
 
-//-----------------------------------//
 
-Class::Class(const String& name, int size)
-	: Type(MetaType::Class, name, size)
-{ }
-
-//-----------------------------------//
-
-Class::Class(const String& name, const Type& parent, int size)
-	: Type(MetaType::Class, name, parent, size)
-{ }
-
-//-----------------------------------//
-
-void Class::addField(Field& field)
-{
-	fields.push_back(&field);
-}
 
 //-----------------------------------//
 
@@ -45,20 +28,6 @@ Field* Class::getField(const String& name) const
 
 	if(!parent) return nullptr;
 	return parent->getField(name);
-}
-
-//-----------------------------------//
-
-void Class::addChild(Class& type)
-{
-	childs.push_back(&type);
-}
-
-//-----------------------------------//
-
-void* Class::createInstance(void* address) const
-{
-	return nullptr;
 }
 
 //-----------------------------------//

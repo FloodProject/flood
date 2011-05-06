@@ -9,9 +9,9 @@
 #include "Core/API.h"
 #include "net/Message.h"
 
-#ifdef VAPOR_NETWORKING_ZMQ
+#ifdef ENABLE_NETWORKING_ZMQ
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -57,6 +57,6 @@ void Message::initData(const std::vector<byte>& buf)
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END
 
 #endif

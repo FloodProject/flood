@@ -8,7 +8,7 @@
 
 #include "Resources/API.h"
 
-#ifdef VAPOR_IMAGE_DEVIL
+#ifdef ENABLE_IMAGE_DEVIL
 
 #include "Resources/IL_Image_Loader.h"
 
@@ -20,8 +20,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(IL_Image_Loader, ResourceLoader)
-END_CLASS()
+REFLECT_CHILD_CLASS(IL_Image_Loader, ResourceLoader)
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 

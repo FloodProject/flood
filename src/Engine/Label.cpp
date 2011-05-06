@@ -7,23 +7,20 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "gui/Label.h"
-#include "Resources/Font.h"
-#include "Render/Material.h"
-#include "Scene/Geometry.h"
-#include "Resources/ResourceManager.h"
-#include "Engine.h"
+#include "GUI/Label.h"
 #include "Core/Utilities.h"
+#include "Resources/ResourceManager.h"
+#include "Scene/Geometry.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(Label, Overlay)
+REFLECT_CHILD_CLASS(Label, Overlay)
 	FIELD_PRIMITIVE(string, text)
 	FIELD_PRIMITIVE(bool, isDirty)
-	FIELD_CLASS_PTR(Font, FontPtr, font, RefPointer) 
-END_CLASS()
+	FIELD_CLASS_PTR(Font, FontHandle, font, Handle) 
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
@@ -32,7 +29,7 @@ Label::Label()
 
 //-----------------------------------//
 
-Label::Label( const std::string& text, FontPtr font, MaterialPtr material )
+Label::Label( const String& text, const FontHandle& font, const MaterialHandle& material )
 	: text(text)
 	, font(font)
 {
@@ -42,12 +39,12 @@ Label::Label( const std::string& text, FontPtr font, MaterialPtr material )
 
 //-----------------------------------//
 
-Label::Label( const std::string& text, const std::string& path )
+Label::Label( const String& text, const String& path )
 	: text(text)
 {
 	static int i = 0;
 
-	material = new Material("FontMaterial" + StringFromNumber(i++), "Tex");
+	// material = new Material("FontMaterial" + StringFromNumber(i++), "Tex");
 	
 	ResourceManager* res = GetResourceManager();
 	font = res->loadResource<Font>(path);
@@ -65,7 +62,7 @@ void Label::init()
 
 //-----------------------------------//
 
-void Label::setText( const std::string& newText )
+void Label::setText( const String& newText )
 {
 	text = newText;
 	isDirty = true;
@@ -78,14 +75,16 @@ void Label::setupState()
 	if( setupDone )
 		return;
 
-	assert( font );
-	assert( font->isLoaded() );
-	assert( font->getImage() );
+	Font* pFont = font.Resolve();
 
-	MaterialPtr material( renderable->getMaterial() );
+	assert( pFont->isLoaded() );
+	assert( pFont->getImage() );
+
+	MaterialHandle handleMaterial = renderable->getMaterial();
+	Material* material = handleMaterial.Resolve();
 
 	// Setup the material to have the texture font and enable blending
-	material->setTexture( 0, font->getImage() );
+	material->setTexture( 0, pFont->getImage() );
 	material->setBlending( BlendSource::SourceAlpha, BlendDestination::One );
 	material->setProgram( "Tex" );
 
@@ -96,11 +95,10 @@ void Label::setupState()
 
 void Label::update( float delta )
 {
-	if( !font )
-		return;
+	Font* pFont = font.Resolve();
 
-	if( !font->isLoaded() )
-		return;
+	if( !pFont ) return;
+	if( !pFont->isLoaded() ) return;
 
 	setupState();
 
@@ -129,12 +127,17 @@ void Label::rebuildGeometry()
 	uint16 x_pos = 0;
 	uint16 y_pos = 0;
 
-	const std::vector<Glyph>& glyphs = font->getGlyphs();
+	Font* pFont = font.Resolve();
+	if( !pFont ) return;
 
-	const float width = font->getImage()->getWidth();
-	const float height = font->getImage()->getHeight();
+	const std::vector<Glyph>& glyphs = pFont->getGlyphs();
 
-	uint16 mid_offset = font->getGlyphSize().x /2;
+	Image* image = pFont->getImage().Resolve();
+
+	const float width = image->getWidth();
+	const float height = image->getHeight();
+
+	uint16 mid_offset = pFont->getGlyphSize().x /2;
 
 	for( size_t i = 0; i < text.size(); i++ )
 	{
@@ -144,7 +147,7 @@ void Label::rebuildGeometry()
 		if( c == '\n' )
 		{
 			x_pos = 0;
-			y_pos -= font->getGlyphSize().y;
+			y_pos -= pFont->getGlyphSize().y;
 		}
 
 		// We need each glyph information to calculate positions and size.

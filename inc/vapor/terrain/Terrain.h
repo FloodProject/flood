@@ -70,9 +70,11 @@ struct CellRequest
  * for any integer value n.
  */
 
+REFLECT_DECLARE_CLASS(Terrain)
+
 class VAPOR_API Terrain : public Group
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(Terrain)
 
 public:
 

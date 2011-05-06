@@ -10,6 +10,8 @@
 #include "PropertyOperation.h"
 #include "Editor.h"
 
+#ifdef ENABLE_PLUGIN_PROPERTY
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//
@@ -32,88 +34,110 @@ void PropertyOperation::redo()
 
 void PropertyOperation::setFieldValue(const wxAny& value)
 {
-	assert( type && type->isClass() );
+	assert( type != nullptr );
 	assert( field != nullptr );
 
-	const Type& field_type = field->type;
-	LogDebug("Changed property value: %s", field->name.c_str() );
+	LogDebug("Changed property value: %s", field->type->name);
 
-	bool isResource = field_type.inherits<Resource>();
+	bool isClass = ReflectionIsComposite(field->type);
+	bool isResource = isClass && ClassInherits((Class*) field->type, ReflectionGetType(Resource));
 
-	if( field->isPointer() && isResource )
+	if( FieldIsPointer(field) && isResource )
 	{
 		std::string val = value.As<std::string>();
 
-		ResourceManager* rm = GetEditor().getEngine()->getResourceManager();
-		ResourcePtr resource = rm->loadResource(val);
+		ResourceManager* rm = GetResourceManager();
+		ResourceHandle resource = rm->loadResource(val);
 
-		if( !resource )
-			return;
+		if( !resource ) return;
 
-		field->set<ResourcePtr>(object, resource);
+		FieldSet<ResourceHandle>(field, object, resource);
+
+		return;
 	}
-	else if( field_type.isEnum() )
-	{
-		int val = value.As<int>();
-		field->set<int>(object, val);
-	}
-	else if( field_type.isPrimitive() )
-	{
-		const Primitive& prim_type = (const Primitive&) field_type;
 
-		if( prim_type.isBool() )
+	switch(field->type->type)
+	{
+	case Type::Enumeration:
+	{
+		int32 val = value.As<int32>();
+		FieldSet<int32>(field, object, val);
+		break;
+	}
+	case Type::Primitive:
+	{
+		Primitive* primitive = (Primitive*) field->type;
+
+		switch(primitive->type)
+		{
+		case Primitive::Bool:
 		{
 			bool val = value.As<bool>();
-			field->set<bool>(object, val);
+			FieldSet<bool>(field, object, val);
+			break;
 		}
 		//-----------------------------------//
-		else if( prim_type.isInteger() )
+		case Primitive::Int32:
 		{
-			int val = value.As<int>();
-			field->set<int>(object, val);
+			int32 val = value.As<int32>();
+			FieldSet<int32>(field, object, val);
+			break;
 		}
 		//-----------------------------------//
-		else if( prim_type.isFloat() )
+		case Primitive::Float:
 		{
 			float val = value.As<float>();
-			field->set<float>(object, val);
+			FieldSet<float>(field, object, val);
+			break;
 		}
 		//-----------------------------------//
-		else if( prim_type.isString() )
+		case Primitive::String:
 		{
 			std::string val = value.As<std::string>();
-			field->set<std::string>(object, val);
+			FieldSet<std::string>(field, object, val);
+			break;
 		}
 		//-----------------------------------//
-		else if( prim_type.isColor() )
+		case Primitive::Color:
 		{
 			Color val = value.As<Color>();
-			field->set<Color>(object, val);
+			FieldSet<Color>(field, object, val);
+			break;
 		}
 		//-----------------------------------//
-		else if( prim_type.isVector3() )
+		case Primitive::Vector3:
 		{
 			Vector3 val = value.As<Vector3>();
-			field->set<Vector3>(object, val);
+			FieldSet<Vector3>(field, object, val);
+			break;
 		}
 		//-----------------------------------//
-		else if( prim_type.isQuaternion() )
+		case Primitive::Quaternion:
 		{
 			Quaternion val = value.As<Quaternion>();
-			field->set<Quaternion>(object, val);
+			FieldSet<Quaternion>(field, object, val);
+			break;
 		}
 		//-----------------------------------//
-		else if( prim_type.isBitfield() )
+		case Primitive::Bitfield:
 		{
-			int val = value.As<int>();
-			field->set<int>(object, val);
+			int32 val = value.As<int32>();
+			FieldSet<int32>(field, object, val);
+			break;
 		}
 		//-----------------------------------//
-		else assert( false );
+		default:
+			assert( false );
+		}
+		break;
 	}
-	else assert( false );
+	default:
+		assert( false );
+	}
 }
 
 //-----------------------------------//
 
 } } // end namespaces
+
+#endif

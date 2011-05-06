@@ -14,9 +14,11 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
+REFLECT_DECLARE_CLASS(SamplePlugin)
+
 class SamplePlugin : public Plugin
 {
-	REFLECT_DECLARE_CLASS()
+	REFLECT_DECLARE_OBJECT(SamplePlugin)
 
 public:
 

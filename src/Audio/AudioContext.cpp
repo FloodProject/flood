@@ -129,7 +129,7 @@ void AudioContext::makeCurrent()
 
 const char* AudioContext::getError()
 {
-#ifdef VAPOR_DEBUG
+#ifdef DEBUG_BUILD
 	switch (error)
 	{
 	case ALC_NO_ERROR: return "No error";
@@ -149,7 +149,7 @@ const char* AudioContext::getError()
 
 bool AudioContext::checkError()
 {
-#ifdef VAPOR_DEBUG
+#ifdef DEBUG_BUILD
 	error = alcGetError(device->device);
 	return (error != AL_NO_ERROR);
 #else

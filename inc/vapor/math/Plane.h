@@ -11,7 +11,7 @@
 #include "Math/Vector.h"
 #include "Math/Ray.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -72,4 +72,4 @@ public:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

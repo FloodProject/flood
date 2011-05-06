@@ -23,10 +23,13 @@ NAMESPACE_BEGIN
 void ResourceTaskRun(Task* task)
 {
 	ResourceLoadOptions* options = (ResourceLoadOptions*) task->Userdata;
-	Resource* resource = options->resource;
+
+	ResourceHandle handle = options->handle;
+	Stream* stream = options->stream;
+
+	Resource* resource = handle.Resolve();
 	const Path& path = resource->getPath();
 
-	Stream* stream = options->stream;
 	
 	ResourceManager* res = GetResourceManager();
 	ResourceLoader* loader = res->findLoader( PathGetFileExtension(path) );
@@ -45,8 +48,7 @@ void ResourceTaskRun(Task* task)
 	if( options->sendLoadEvent )
 	{
 		ResourceEvent event;
-		event.resource = resource;
-
+		event.handle = handle;
 		res->resourceTaskEvents.push(event);
 	}
 
@@ -55,8 +57,8 @@ void ResourceTaskRun(Task* task)
 
 	LogInfo("Loaded resource '%s'", path.c_str());
 
-	Deallocate(GetResourcesAllocator(), options);
-	StreamDestroy(stream, GetResourcesAllocator());
+	Deallocate(options);
+	StreamDestroy(stream);
 }
 
 //-----------------------------------//

@@ -13,8 +13,8 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT_ABSTRACT(Gizmo, Geometry)
-END_CLASS()
+REFLECT_ABSTRACT_CHILD_CLASS(Gizmo, Geometry)
+REFLECT_CLASS_END()
 
 const Color& Gizmo::X = Color::Red;
 const Color& Gizmo::Y = Color::Green;
@@ -30,8 +30,8 @@ Gizmo::Gizmo( const EntityPtr& node, const CameraWeakPtr& camera )
 	assert( node != nullptr );
 
 	// Disable the depth testing so the gizmo can be seen behind objects.
-	material = new Material("GizmoMaterial");
-	material->setDepthTest( false );
+	material = MaterialCreate(AllocatorGetHeap(), "GizmoMaterial");
+	material.Resolve()->setDepthTest( false );
 }
 
 //-----------------------------------//
@@ -167,7 +167,7 @@ VertexBufferPtr Gizmo::generateLines()
 	static const float OriginOffset = 0.01f;
 
 	// Create a new VBO and upload triangle data
-	VertexBufferPtr vb( new VertexBuffer() );
+	VertexBufferPtr vb = Allocate(VertexBuffer, AllocatorGetHeap());
 
 	// Vertex position data
 	std::vector< Vector3 > pos;

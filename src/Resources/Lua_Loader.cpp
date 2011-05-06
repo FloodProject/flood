@@ -8,7 +8,7 @@
 
 #include "Resources/API.h"
 
-#ifdef VAPOR_SCRIPTING_LUA
+#ifdef ENABLE_SCRIPTING_LUA
 
 #include "Resources/Lua_Loader.h"
 
@@ -16,8 +16,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(Lua_Loader, ResourceLoader)
-END_CLASS()
+REFLECT_CHILD_CLASS(Lua_Loader, ResourceLoader)
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
@@ -30,7 +30,7 @@ Lua_Loader::Lua_Loader()
 
 bool Lua_Loader::decode(const Stream& stream, Resource* res)
 {
-	std::string text;
+	String text;
 	StreamReadString((Stream*) &stream, text);
 
 	Script* script = static_cast<Script*>( res );

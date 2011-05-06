@@ -46,17 +46,8 @@ public:
 	
 	~Texture();
 
-	// Binds the texture object.
-	void bind( int unit = 0 ) const;
-
-	// Unbinds the texture object.
-	void unbind( int unit = 0 ) const;
-
-	// Reads the texture as an image.
-	ImagePtr readImage() const;
-
 	// Gets the associated identifier.
-	GETTER(Id, uint, id)
+	GETTER(Id, uint32, id)
 
 	// Gets the associated pixel format.
 	GETTER(PixelFormat, PixelFormat::Enum, format)
@@ -66,6 +57,15 @@ public:
 
 	// Sets the associated image.
 	void setImage( Image* image );
+
+	// Reads the texture as an image.
+	ImagePtr readImage() const;
+
+	// Binds the texture object.
+	void bind( int unit = 0 ) const;
+
+	// Unbinds the texture object.
+	void unbind( int unit = 0 ) const;
 
 protected:
 
@@ -92,12 +92,12 @@ protected:
 	int convertInternalFormat( PixelFormat::Enum ) const;
 	int convertFilterFormat( TextureFiltering::Enum ) const;
 
-	uint id;
-	uint target;
+	uint32 id;
+	uint32 target;
 	bool uploaded;
 	
-	uint width;
-	uint height;
+	uint32 width;
+	uint32 height;
 	PixelFormat::Enum format;
 
 	TextureFiltering::Enum minFilter;

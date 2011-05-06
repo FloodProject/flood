@@ -23,7 +23,7 @@ namespace vapor { namespace editor {
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(SelectionPlugin, Plugin)
-REFLECT_END()
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
@@ -243,9 +243,7 @@ void SelectionPlugin::updateRectangle( const MouseDragEvent& event )
 SelectionOperation* SelectionPlugin::createDeselection()
 {
 	SelectionOperation* selected = selections->getSelection();
-
-	if( !selected )
-		return nullptr;
+	if( !selected ) return nullptr;
 
 	// If there is a current selection, and the user pressed the mouse,
 	// then we need to unselect everything that is currently selected.
@@ -253,7 +251,12 @@ SelectionOperation* SelectionPlugin::createDeselection()
 	SelectionOperation* selection = selections->createOperation();
 	selection->description = "Deselection";
 	selection->mode = SelectionMode::None;
-	selection->previous = selected->selections;
+	
+	// In the case of an undone deselection, the selection is in the previous selections.
+	if( selected->selections.empty() )
+		selection->previous = selected->previous;
+	else
+		selection->previous = selected->selections;
 
 	return selection;
 }

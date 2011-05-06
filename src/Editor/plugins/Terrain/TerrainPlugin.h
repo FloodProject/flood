@@ -8,6 +8,8 @@
 
 #pragma once
 
+#ifdef PLUGIN_TERRAIN
+
 #include "Plugin.h"
 #include "UndoOperation.h"
 #include "Scene/Scene.h"
@@ -125,3 +127,5 @@ private:
 //-----------------------------------//
 
 } } // end namespaces
+
+#endif

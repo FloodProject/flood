@@ -6,9 +6,7 @@
 *
 ************************************************************************/
 
-//---------------------------------------------------------------------//
-// This file is only used to create the PCH
-//---------------------------------------------------------------------//
+// This file used to create the precompiled headers
 
 #define INSTANTIATE_TEMPLATES
 #include "Core/API.h"

@@ -13,7 +13,7 @@
 #include "Core/Timer.h"
 #include "Core/Utilities.h"
 
-#ifdef VAPOR_PLATFORM_WINDOWS
+#ifdef PLATFORM_WINDOWS
 	#define WIN32_LEAN_AND_MEAN
 	#define NOMINMAX
 	#include <Windows.h>	
@@ -36,7 +36,7 @@ static void LogConsoleHandler(LogEntry* entry)
 {
 	puts( entry->message.c_str() );
 
-#ifdef VAPOR_COMPILER_MSVC
+#ifdef COMPILER_MSVC
 	if(entry->level == LogLevel::Debug)
 	{
 		String debug = entry->message + "\n";
@@ -49,10 +49,10 @@ static void LogConsoleHandler(LogEntry* entry)
 
 Log* LogCreate(Allocator* alloc)
 {
-	Log* log = Allocate<Log>(alloc);
+	Log* log = Allocate(Log, alloc);
 	
-	log->Timer = TimerCreate(alloc);
-	log->Mutex = MutexCreate(alloc);
+	log->timer = TimerCreate(alloc);
+	log->mutex = MutexCreate(alloc);
 
 	LogAddHandler(log, LogConsoleHandler);
 	
@@ -63,47 +63,47 @@ Log* LogCreate(Allocator* alloc)
 
 //-----------------------------------//
 
-void LogDestroy(Log* log, Allocator* alloc)
+void LogDestroy(Log* log)
 {
 	if( !log ) return;
 	if( gs_Log == log ) LogSetDefault(nullptr);
 	
-	TimerDestroy(log->Timer, alloc);
-	MutexDestroy(log->Mutex, alloc);
+	TimerDestroy(log->timer);
+	MutexDestroy(log->mutex);
 
-	Deallocate<Log>(alloc, log);
+	Deallocate<Log>(log);
 }
 
 //-----------------------------------//
 
 void LogAddHandler(Log* log, LogFunction fn)
 {
-	log->Handlers.Connect(fn);
+	log->handlers.Connect(fn);
 }
 
 //-----------------------------------//
 
 void LogRemoveHandler(Log* log, LogFunction fn)
 {
-	log->Handlers.Disconnect(fn);
+	log->handlers.Disconnect(fn);
 }
 
 //-----------------------------------//
 
 void LogWrite(Log* log, LogEntry* entry)
 {
-	MutexLock(log->Mutex);
-	log->Handlers(entry);
-	MutexUnlock(log->Mutex);
+	MutexLock(log->mutex);
+	log->handlers(entry);
+	MutexUnlock(log->mutex);
 }
 
 //-----------------------------------//
 
-static void LogFormat(LogEntry& entry, Log* log, LogLevel::Enum level, const char* msg, va_list args)
+static void LogFormat(LogEntry& entry, Log* log, LogLevel level, const char* msg, va_list args)
 {
 	String format = StringFormatArgs(msg, args);
 	
-	entry.time = TimerGetElapsed(log->Timer);
+	entry.time = TimerGetElapsed(log->timer);
 	entry.message = format;
 	entry.level = level;
 }

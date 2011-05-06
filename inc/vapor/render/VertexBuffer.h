@@ -53,9 +53,9 @@ struct Attribute
 	  , data(rhs.data)
 	{}
 
-	int components;
-	int size;
-	int type;
+	int32 components;
+	int32 size;
+	int32 type;
 	std::vector<byte> data;
 };
 
@@ -154,6 +154,8 @@ private:
 	// Tracks if the buffer has been built.
 	bool built;
 };
+
+//API_ENGINE VertexBuffer* VertexBufferCreate();
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( VertexBuffer );
 

@@ -8,7 +8,7 @@
 
 #include "Resources/API.h"
 
-#ifdef VAPOR_FONT_BITMAP
+#ifdef ENABLE_FONT_BITMAP
 
 #include "Core/Log.h"
 #include "Core/Memory.h"
@@ -24,8 +24,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(Font_Loader, ResourceLoader)
-END_CLASS()
+REFLECT_CHILD_CLASS(Font_Loader, ResourceLoader)
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
@@ -37,7 +37,7 @@ Font_Loader::Font_Loader()
 
 //-----------------------------------//
 
-bool Font_Loader::decode(const Stream& stream, Resource* res)
+bool Font_Loader::decode(const Stream& stream, Resource* resource)
 {
 	StreamReadLines((Stream*) &stream, lines);
 
@@ -45,13 +45,13 @@ bool Font_Loader::decode(const Stream& stream, Resource* res)
 		return false;
 
 	// TODO: ugly.
-	ResourceManager* rm = GetResourceManager();
+	ResourceManager* res = GetResourceManager();
 	
 	ResourceLoadOptions options;
 	options.name = imageFilename;
-	options.asynchronousLoading = false;
+	options.asynchronousLoad = false;
 
-	image = RefCast<Image>( rm->loadResource(options) );
+	image = HandleCast<Image>(res->loadResource(options));
 
 	if( !image )
 		return false;
@@ -60,11 +60,11 @@ bool Font_Loader::decode(const Stream& stream, Resource* res)
 		AllocatorGetHeap(), glyphsFilename, StreamMode::Read);
 	
 	StreamRead(streamGlyphs, data);
-	StreamDestroy(streamGlyphs, AllocatorGetHeap());
+	StreamDestroy(streamGlyphs);
 
 	parseGlyphs();
 
-	font = static_cast<BitmapFont*>( res );
+	font = static_cast<BitmapFont*>( resource );
 	font->setName( fontNameSizeInfo[0] );
 	font->setSize( StringToNumber<int>(fontNameSizeInfo[1]) );
 	font->setImage( image );
@@ -80,7 +80,9 @@ void Font_Loader::parseGlyphs()
 	uint16 glyph_width = StringToNumber<uint16>( glyphSizeInfo[0] );
 	uint16 glyph_height = StringToNumber<uint16>( glyphSizeInfo[1] );
 
-	uint32 image_width = image->getWidth();
+	Image* pImage = image.Resolve();
+
+	uint32 image_width = pImage->getWidth();
 	//ushort image_height = image->getHeight();
 
 	glyphs.clear();

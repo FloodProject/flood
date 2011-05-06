@@ -8,22 +8,22 @@
 
 #include "Engine/API.h"
 #include "Scene/Billboard.h"
-#include "Render/Material.h"
+#include "Resources/Material.h"
 #include "Scene/Entity.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_ENUM(BillboardType)
+REFLECT_ENUM(BillboardType)
 	ENUM(ScreenAligned)
 	ENUM(WorldAligned)
 	ENUM(AxisAligned)
-END_ENUM()
+REFLECT_ENUM_END()
 
-BEGIN_CLASS_PARENT(Billboard, Component)
+REFLECT_CHILD_CLASS(Billboard, Component)
 	FIELD_ENUM(BillboardType, billboardType)
-END_CLASS()
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
@@ -83,7 +83,7 @@ void Billboard::onPreRender( const Camera& camera )
 
 RenderablePtr Billboard::createDebugRenderable() const
 {
-	VertexBufferPtr vb = new VertexBuffer();
+	VertexBufferPtr vb = Allocate(VertexBuffer, AllocatorGetHeap());
 	
 	std::vector<Vector3> pos;
 	std::vector<Vector3> colors;
@@ -108,11 +108,11 @@ RenderablePtr Billboard::createDebugRenderable() const
 	vb->set( VertexAttribute::Position, pos );
 	vb->set( VertexAttribute::Color, colors );
 	
-	MaterialPtr mat( new Material("BillboardDebug") );
+	MaterialHandle material = MaterialCreate(AllocatorGetHeap(), "BillboardDebug");
 
-	RenderablePtr rend = new Renderable(PolygonType::Lines);
+	RenderablePtr rend = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Lines);
 	rend->setVertexBuffer( vb );
-	rend->setMaterial( mat );
+	rend->setMaterial( material );
 
 	return rend;
 }

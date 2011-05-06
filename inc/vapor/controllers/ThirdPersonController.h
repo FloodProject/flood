@@ -20,9 +20,11 @@ namespace vapor {
  * A simple camera controller that follows a node.
  */
 
+REFLECT_DECLARE_CLASS(ThirdPersonController)
+
 class VAPOR_API ThirdPersonController : public CameraController
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(ThirdPersonController)
 
 public:
 

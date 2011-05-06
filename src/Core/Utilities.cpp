@@ -13,7 +13,7 @@
 #include <algorithm>
 #include <cassert>
 
-#ifdef VAPOR_PLATFORM_WINDOWS
+#ifdef PLATFORM_WINDOWS
 
 	#define WIN32_LEAN_AND_MEAN
 	#define NOMINMAX
@@ -31,7 +31,7 @@
 
 #endif
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -65,7 +65,7 @@ int32 SystemSwapEndian(int32 i)
 
 void SystemSleep( int64 time )
 {
-#ifdef VAPOR_PLATFORM_WINDOWS
+#ifdef PLATFORM_WINDOWS
 	::Sleep( static_cast<DWORD>(time) );
 #else
 	timespec param;
@@ -78,7 +78,7 @@ void SystemSleep( int64 time )
 
 int StringCompareInsensitive(const String& s1, const String& s2)
 {
-#ifdef VAPOR_PLATFORM_WINDOWS
+#ifdef PLATFORM_WINDOWS
 	return my_stricmp(s1.c_str(), s2.c_str());
 #else
 	return strcasecmp(s1.c_str(), s2.c_str());
@@ -94,7 +94,7 @@ String StringFromFloat( float n, byte precision )
 
 //-----------------------------------//
 
-#ifdef VAPOR_PLATFORM_WINDOWS
+#ifdef PLATFORM_WINDOWS
 
 String StringFromWideString(const std::wstring &wstr)
 {
@@ -113,7 +113,7 @@ String StringFromWideString(const std::wstring &wstr)
 
 //-----------------------------------//
 
-#ifdef VAPOR_PLATFORM_WINDOWS
+#ifdef PLATFORM_WINDOWS
 
 std::wstring StringToWideString(const String &str)
 {
@@ -151,7 +151,7 @@ String StringFormatArgs(const char* str, va_list args)
 	const int BUF_MAX_SIZE = 16384;
 	char buf[BUF_MAX_SIZE];
 
-	#ifdef VAPOR_COMPILER_MSVC
+	#ifdef COMPILER_MSVC
 		int n = vsnprintf_s( buf, BUF_MAX_SIZE, _TRUNCATE, str, args );
 	#else
 		int n = vsnprintf( buf, BUF_MAX_SIZE, str, args );
@@ -302,7 +302,7 @@ Path PathNormalize(const Path& path)
 Path PathGetCurrentDir()
 {
 	char buf[256];
-	my_getcwd(buf, VAPOR_ARRAY_SIZE(buf));
+	my_getcwd(buf, ARRAY_SIZE(buf));
 	return String(buf);
 }
 
@@ -310,7 +310,7 @@ Path PathGetCurrentDir()
 
 Path PathGetSeparator()
 {
-#ifdef VAPOR_PLATFORM_WINDOWS
+#ifdef PLATFORM_WINDOWS
 	return "\\";
 #else
 	return "/";
@@ -319,4 +319,4 @@ Path PathGetSeparator()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

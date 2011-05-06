@@ -16,9 +16,11 @@ namespace vapor { namespace editor {
 
 class ScenePage;
 
+REFLECT_DECLARE_CLASS(ScenePlugin)
+
 class ScenePlugin : public Plugin
 {
-	REFLECT_DECLARE_CLASS()
+	REFLECT_DECLARE_OBJECT(ScenePlugin)
 
 public:
  

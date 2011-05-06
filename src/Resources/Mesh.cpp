@@ -10,15 +10,15 @@
 #include "Resources/Mesh.h"
 #include "Resources/Skeleton.h"
 #include "Resources/Animation.h"
-#include "Math/Vector.h"
 #include "Core/Utilities.h"
+#include "Math/Vector.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT_ABSTRACT(Mesh, Resource)
-END_CLASS()
+REFLECT_CHILD_CLASS(Mesh, Resource)
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
@@ -44,7 +44,7 @@ bool Mesh::isAnimated() const
 
 //-----------------------------------//
 
-AnimationPtr Mesh::findAnimation( const std::string& name )
+AnimationPtr Mesh::findAnimation( const String& name )
 {
 	for( uint i = 0; i < animations.size(); i++ )
 	{
@@ -63,15 +63,14 @@ void Mesh::buildBounds()
 {
 	boundingVolume.reset();
 
-	for( uint i = 0; i < groups.size(); i++ )
+	for( size_t i = 0; i < groups.size(); i++ )
 	{
 		MeshGroup& group = groups[i];
 		const std::vector<uint16>& indices = group.indices;
 		
 		// Update the bounding box to accomodate new geometry.
-		for( uint j = 0; j < indices.size(); j++ )
+		for( size_t j = 0; j < indices.size(); j++ )
 		{
-
 			const Vector3& v = position[indices[j]];
 			boundingVolume.add(v);
 		}
@@ -91,9 +90,9 @@ void Mesh::setupInitialVertices()
 	if( !skeleton )
 		return;
 
-	for( uint i = 0; i < position.size(); i++ )
+	for( size_t i = 0; i < position.size(); i++ )
 	{
-		int boneIndex = (int) boneIndices[i];
+		int32 boneIndex = (int32) boneIndices[i];
 
 		if( boneIndex == -1 )
 			continue;

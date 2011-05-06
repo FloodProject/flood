@@ -99,6 +99,14 @@ T StringToNumber(const vapor::String& s)
 	return num;
 }
 
+struct RawStringCompare
+{
+	bool operator()(char const* a, char const* b)
+	{
+		return std::strcmp(a, b) < 0;
+	}
+};
+
 //-----------------------------------//
 
 NAMESPACE_END

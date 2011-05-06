@@ -11,7 +11,7 @@
 #include "Math/Helpers.h"
 #include "Core/Log.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -92,4 +92,4 @@ float Noise::nextFloat(int x, int y)
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

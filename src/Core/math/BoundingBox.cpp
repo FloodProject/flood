@@ -11,7 +11,7 @@
 #include "Math/Helpers.h"
 #include "Core/Log.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -248,4 +248,4 @@ bool BoundingBox::intersects( const Ray& ray, float& distance ) const
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

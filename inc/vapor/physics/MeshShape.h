@@ -10,7 +10,7 @@
 
 #ifdef VAPOR_PHYSICS_BULLET
 
-#include "physics/Shape.h"
+#include "Physics/Shape.h"
 
 FWD_DECL_SHARED(Geometry)
 
@@ -23,9 +23,11 @@ namespace vapor {
 
 //-----------------------------------//
 
+REFLECT_DECLARE_CLASS(MeshShape)
+
 class VAPOR_API MeshShape : public Shape
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(MeshShape)
 
 public:
 

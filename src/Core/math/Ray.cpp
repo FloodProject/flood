@@ -10,7 +10,7 @@
 #include "Math/Ray.h"
 #include "Math/Helpers.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -162,4 +162,4 @@ bool Ray::intersects( const Vector3 (&tri)[3], float& t, float& u, float& v ) co
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

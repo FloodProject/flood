@@ -7,6 +7,8 @@
 ************************************************************************/
 
 #pragma once
+
+#ifdef PLUGIN_TERRAIN
  
 #include "wxSliderCtrl.h"
 #include "wxImageComboBox.h"
@@ -73,3 +75,5 @@ protected:
 //-----------------------------------//
 
 } } // end namespaces
+
+#endif

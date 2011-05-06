@@ -13,7 +13,7 @@
 #include "Core/Pointers.h"
 #include "Core/ConcurrentQueue.h"
 
-#ifdef VAPOR_PLATFORM_WINDOWS
+#ifdef PLATFORM_WINDOWS
 	#define WIN32_LEAN_AND_MEAN
 	#define NOMINMAX
 	#include <Windows.h>
@@ -29,9 +29,9 @@ NAMESPACE_EXTERN_BEGIN
  * and system resources.
  */
 
-struct ThreadPriority
+enum_class ThreadPriority
 {
-	enum Enum { Low = -1, Normal, High };
+	Low = -1, Normal, High
 };
 
 typedef void (*ThreadFunction)(void*);
@@ -40,18 +40,18 @@ struct Thread
 {
 	void* Handle;
 	volatile bool IsRunning;
-	ThreadPriority::Enum Priority;
+	ThreadPriority Priority;
 	ThreadFunction Function;
 	void* Userdata;
 };
 
 API_CORE Thread* ThreadCreate(Allocator*);
-API_CORE void    ThreadDestroy(Thread*, Allocator*);
+API_CORE void    ThreadDestroy(Thread*);
 API_CORE bool    ThreadStart(Thread*, ThreadFunction, void*);
 API_CORE bool    ThreadJoin(Thread*);
 API_CORE bool    ThreadPause(Thread*);
 API_CORE bool    ThreadResume(Thread*);
-API_CORE bool    ThreadSetPriority(Thread*, ThreadPriority::Enum);
+API_CORE bool    ThreadSetPriority(Thread*, ThreadPriority);
 API_CORE void    ThreadSetName(Thread*, const String& name);
 
 typedef scoped_ptr<Thread, ThreadDestroy> ThreadPtr;
@@ -67,14 +67,14 @@ typedef scoped_ptr<Thread, ThreadDestroy> ThreadPtr;
 
 struct Mutex
 {
-#ifdef VAPOR_PLATFORM_WINDOWS
+#ifdef PLATFORM_WINDOWS
 	CRITICAL_SECTION Handle;
 #else
 #endif
 };
 
 API_CORE Mutex* MutexCreate(Allocator*);
-API_CORE void   MutexDestroy(Mutex*, Allocator*);
+API_CORE void   MutexDestroy(Mutex*);
 API_CORE void   MutexInit(Mutex*);
 API_CORE void   MutexLock(Mutex*);
 API_CORE void   MutexUnlock(Mutex*);
@@ -86,14 +86,14 @@ typedef scoped_ptr<Mutex, MutexDestroy> MutexPtr;
 
 struct Condition
 {
-#ifdef VAPOR_PLATFORM_WINDOWS
+#ifdef PLATFORM_WINDOWS
 	CONDITION_VARIABLE Handle;
 #else
 #endif
 };
 
 API_CORE Condition* ConditionCreate(Allocator*);
-API_CORE void       ConditionDestroy(Condition*, Allocator*);
+API_CORE void       ConditionDestroy(Condition*);
 API_CORE void       ConditionInit(Condition*);
 API_CORE void       ConditionWait(Condition*, Mutex*);
 API_CORE void       ConditionWakeOne(Condition*);
@@ -133,18 +133,18 @@ struct Task
 };
 
 API_CORE Task* TaskCreate(Allocator*);
-API_CORE void  TaskDestroy(Task*, Allocator*);
+API_CORE void  TaskDestroy(Task*);
 API_CORE void  TaskRun(Task*);
 
 typedef scoped_ptr<Task, TaskDestroy> TaskPtr;
 #define pTaskCreate(alloc, ...) CreateScopedPtr(TaskCreate, alloc, __VA_ARGS__)
 
+enum TaskState { Added, Started, Finished };
+
 struct TaskEvent
 {
-	enum Enum { Added, Started, Finished };
-	
 	Task* task;
-	TaskEvent::Enum event;
+	TaskState state;
 };
 
 struct TaskPool
@@ -157,7 +157,7 @@ struct TaskPool
 };
 
 API_CORE TaskPool*  TaskPoolCreate(Allocator*, int8 Size);
-API_CORE void       TaskPoolDestroy(TaskPool*, Allocator*);
+API_CORE void       TaskPoolDestroy(TaskPool*);
 API_CORE void       TaskPoolAdd(TaskPool*, Task*);
 API_CORE void       TaskPoolUpdate(TaskPool*);
 

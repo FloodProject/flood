@@ -11,7 +11,7 @@
 #include <deque>
 #include <algorithm>
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -38,8 +38,8 @@ public:
 
 	~ConcurrentQueue()
 	{
-		MutexDestroy(mutex, AllocatorGetHeap());
-		ConditionDestroy(cond, AllocatorGetHeap());
+		MutexDestroy(mutex);
+		ConditionDestroy(cond);
 	}
 
 	void push(const T& value)
@@ -120,4 +120,4 @@ protected:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

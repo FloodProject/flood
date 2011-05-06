@@ -18,9 +18,11 @@ namespace vapor { namespace editor {
 class SelectionManager;
 class SelectionOperation;
 
+REFLECT_DECLARE_CLASS(SelectionPlugin)
+
 class SelectionPlugin : public Plugin
 {
-	REFLECT_DECLARE_CLASS()
+	REFLECT_DECLARE_OBJECT(SelectionPlugin)
 
 public:
 

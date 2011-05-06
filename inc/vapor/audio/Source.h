@@ -15,16 +15,16 @@
 #include "Resources/Sound.h"
 #include "Math/Vector.h"
 
-FWD_DECL_SHARED(AudioBuffer)
+FWD_DECL_INTRUSIVE(AudioBuffer)
 
 namespace vapor {
 
 //-----------------------------------//
 
+REFLECT_DECLARE_ENUM(RolloffMode)
+
 struct VAPOR_API RolloffMode
 {
-	DECLARE_ENUM()
-
 	enum Enum
 	{
 		Logarithmic = AL_INVERSE_DISTANCE_CLAMPED,
@@ -50,7 +50,7 @@ class VAPOR_API AudioSource
 
 public:
 
-	AudioSource( AudioContext* context, const SoundPtr& sound );
+	AudioSource( AudioContext* context, const SoundHandle& sound );
 	~AudioSource();
 
 	// Plays the sound buffer resuming if paused.

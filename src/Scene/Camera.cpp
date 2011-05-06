@@ -20,10 +20,10 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(Camera, Component)
+REFLECT_CHILD_CLASS(Camera, Component)
 	FIELD_CLASS(Frustum, frustum)
 	FIELD_PRIMITIVE(bool, frustumCulling)
-END_CLASS()
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
@@ -75,7 +75,10 @@ void Camera::updateFrustum()
 
 	// Update frustum matrices.
 	frustum.aspectRatio = activeView->getAspectRatio();
-	frustum.updateProjection( activeView->getSize() );
+
+	Vector2i viewSize = activeView->getSize();
+
+	frustum.updateProjection( Vector2(viewSize.x, viewSize.y) );
 	frustum.updatePlanes( viewMatrix );
 
 	updateDebugRenderable();
@@ -157,9 +160,9 @@ void Camera::render( RenderBlock& block, bool clearView )
 void Camera::cull( RenderBlock& block, const EntityPtr& entity )
 {
 	// Try to see if this is a Group-derived node.
-	const Type& type = entity->getType();
+	Class* klass = entity->getType();
 	
-	if( type.inherits<Group>() || type.is<Group>() )
+	if( ClassInherits(klass, ReflectionGetType(Group)) )
 	{
 		GroupPtr group = std::static_pointer_cast<Group>(entity);
 		const std::vector<EntityPtr>& entities = group->getEntities();
@@ -245,7 +248,7 @@ void Camera::cull( RenderBlock& block, const EntityPtr& entity )
 Ray Camera::getRay( float screenX, float screenY, Vector3* outFar ) const
 {
 	assert( activeView != nullptr );
-	Vector2 size = activeView->getSize();
+	Vector2i size = activeView->getSize();
 
 	Vector3 nearPoint(screenX, size.y - screenY, 0);
 	Vector3 farPoint (screenX, size.y - screenY, 1);

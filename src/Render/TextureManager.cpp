@@ -16,20 +16,21 @@ namespace vapor {
 //-----------------------------------//
 
 TextureManager::TextureManager()
-	: rm( GetResourceManager() )
-{	
-	rm->onResourceLoaded.Connect( this, &TextureManager::onLoaded );
-	rm->onResourceRemoved.Connect( this, &TextureManager::onUnloaded );
-	rm->onResourceReloaded.Connect( this, &TextureManager::onReloaded );
+{
+	ResourceManager* res = GetResourceManager();
+	res->onResourceLoaded.Connect( this, &TextureManager::onLoaded );
+	res->onResourceRemoved.Connect( this, &TextureManager::onUnloaded );
+	res->onResourceReloaded.Connect( this, &TextureManager::onReloaded );
 }
 
 //-----------------------------------//
 
 TextureManager::~TextureManager()
 {
-	rm->onResourceLoaded.Disconnect( this, &TextureManager::onLoaded );
-	rm->onResourceRemoved.Disconnect( this, &TextureManager::onUnloaded );
-	rm->onResourceReloaded.Disconnect( this, &TextureManager::onReloaded );
+	ResourceManager* res = GetResourceManager();
+	res->onResourceLoaded.Disconnect( this, &TextureManager::onLoaded );
+	res->onResourceRemoved.Disconnect( this, &TextureManager::onUnloaded );
+	res->onResourceReloaded.Disconnect( this, &TextureManager::onReloaded );
 
 	#pragma TODO("Make sure all textures are released on exit")
 	TextureMap::const_iterator it;
@@ -57,9 +58,9 @@ void TextureManager::update( float delta )
 
 //-----------------------------------//
 
-void TextureManager::removeTexture(const ImagePtr& image)
+void TextureManager::removeTexture(Image* image)
 {
-	TextureMap::iterator it = textures.find(image.get());
+	TextureMap::iterator it = textures.find(image);
 	
 	if( it == textures.end() )
 		return;
@@ -69,100 +70,101 @@ void TextureManager::removeTexture(const ImagePtr& image)
 
 //-----------------------------------//
 
-const byte TEX_SIZE = 64;
+const uint8 TEX_SIZE = 64;
 
-TexturePtr TextureManager::getTexture( const std::string& name )
+TexturePtr TextureManager::getTexture( const String& name )
 {
-	ImagePtr img = rm->loadResource<Image>(name);
-	return getTexture(img);
+	ResourceManager* res = GetResourceManager();
+	ImageHandle handle = res->loadResource<Image>(name);
+	return getTexture(handle.Resolve());
 }
 
 //-----------------------------------//
 
-TexturePtr TextureManager::getTexture( const ImagePtr& image )
+TexturePtr TextureManager::getTexture( Image* image )
 {
-	Image* img = image.get();
-
 	// Image not found.
-	if( !img ) 
+	if( !image ) 
 	{
 		//LogWarn( "Reverting to fallback texture" );
 		return TexturePtr( new Texture( Settings(TEX_SIZE, TEX_SIZE) ) );
 	}
 
 	// Image already has texture.
-	else if( textures.find(img) != textures.end() )
+	else if( textures.find(image) != textures.end() )
 	{
-		return textures[img];
+		return textures[image];
 	}
 
 	// Image not loaded yet.
-	else if( !img->isLoaded() ) 
+	else if( !image->isLoaded() ) 
 	{
 		TexturePtr tex( new Texture( Settings(TEX_SIZE, TEX_SIZE) ) );
-		textures[img] = tex;
+		textures[image] = tex;
 		return tex;
 	}
 
 	// Create a new texture from image.
 	else
 	{
-		TexturePtr tex( new Texture(img) );
-		textures[img] = tex;
+		TexturePtr tex( new Texture(image) );
+		textures[image] = tex;
 		return tex;
 	}
 }
 
 //-----------------------------------//
 
-void TextureManager::onLoaded( const ResourceEvent& evt )
+void TextureManager::onLoaded( const ResourceEvent& event )
 {
-	if( evt.resource->getResourceGroup() != ResourceGroup::Images )
-		return;
-	
-	const ImagePtr& image = RefCast<Image>(evt.resource);
+	ImageHandle handleImage = HandleCast<Image>(event.handle);	
+	Image* image = handleImage.Resolve();
 
-	if( textures.find(image.get()) == textures.end() )
+	if( image->getResourceGroup() != ResourceGroup::Images )
 		return;
 
-	TexturePtr texture = textures[image.get()];
-	texture->setImage(image.get());
+	if( textures.find(image) == textures.end() )
+		return;
+
+	TexturePtr texture = textures[image];
+	texture->setImage(image);
 }
 
 //-----------------------------------//
 
-void TextureManager::onUnloaded( const ResourceEvent& evt )
+void TextureManager::onUnloaded( const ResourceEvent& event )
 {
-	if( evt.resource->getResourceGroup() != ResourceGroup::Images )
+	ImageHandle handleImage = HandleCast<Image>(event.handle);	
+	Image* image = handleImage.Resolve();
+
+	if( image->getResourceGroup() != ResourceGroup::Images )
 		return;
 
-	const ImagePtr& image = RefCast<Image>(evt.resource);
-
-	if( textures.find(image.get()) == textures.end() )
+	if( textures.find(image) == textures.end() )
 		return;
 
-	LogDebug( "Removing texture '%s'", evt.resource->getPath().c_str() );
+	LogDebug( "Removing texture '%s'", image->getPath().c_str() );
 
-	removeTexture(image.get());
+	removeTexture(image);
 }
 
 //-----------------------------------//
 
-void TextureManager::onReloaded( const ResourceEvent& evt )
+void TextureManager::onReloaded( const ResourceEvent& event )
 {
-	if( evt.resource->getResourceGroup() != ResourceGroup::Images )
+	ImageHandle handleImage = HandleCast<Image>(event.handle);	
+	Image* image = handleImage.Resolve();
+
+	if( image->getResourceGroup() != ResourceGroup::Images )
 		return;
 
-	const ImagePtr& image = RefCast<Image>(evt.resource);
-	//const ImagePtr& newImage = RESOURCE_SMART_PTR_CAST<Image>( evt.newResource );
-
-	if( textures.find(image.get()) == textures.end() )
+	if( textures.find(image) == textures.end() )
 		return;
 
-	LogDebug( "Reloading texture '%s'", evt.resource->getPath().c_str() );
+	LogDebug( "Reloading texture '%s'", image->getPath().c_str() );
 
-	TexturePtr tex = textures[image.get()];
-	tex->setImage(image.get());
+	TexturePtr tex = textures[image];
+	tex->setImage(image);
 
 	//switchImage( currImage, newImage );
 }

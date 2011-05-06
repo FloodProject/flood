@@ -4053,7 +4053,7 @@ void LodePNG_Encoder_copy(LodePNG_Encoder* dest, const LodePNG_Encoder* source)
 
 #ifdef LODEPNG_COMPILE_DISK
 
-#ifdef VAPOR_COMPILER_MSVC
+#ifdef COMPILER_MSVC
 #pragma warning(disable : 4996)
 #endif
 

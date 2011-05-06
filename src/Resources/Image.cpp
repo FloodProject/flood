@@ -18,7 +18,7 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_ENUM(PixelFormat)
+REFLECT_ENUM(PixelFormat)
 	ENUM(R8G8B8A8)
 	ENUM(R8G8B8)
 	ENUM(Depth)
@@ -28,11 +28,21 @@ BEGIN_ENUM(PixelFormat)
 	ENUM(DXT5)
 	ENUM(DXT5nm)
 	ENUM(Unknown)
-END_ENUM()
+REFLECT_ENUM_END()
 
-BEGIN_CLASS_PARENT(Image, Resource)
+REFLECT_CHILD_CLASS(Image, Resource)
 	FIELD_ENUM(PixelFormat, format) FIELD_READONLY(format)
-END_CLASS()
+REFLECT_CLASS_END()
+
+//-----------------------------------//
+
+ImageHandle ImageCreate(Allocator* alloc, uint32 width, uint32 height, PixelFormat::Enum format)
+{
+	Image* image = Allocate(Image, alloc);
+	image->create(width, height, format);
+
+	return HandleCast<Image>( ResourceHandleCreate(image) );
+}
 
 //-----------------------------------//
 
@@ -44,24 +54,32 @@ Image::Image()
 
 //-----------------------------------//
 
-Image::Image(int width, int height, PixelFormat::Enum format)
-	: width(width)
-	, height(height)
-	, format(format)
+Image::Image(uint32 _width, uint32 _height, PixelFormat::Enum _format)
+	: width(0)
+	, height(0)
+	, format(PixelFormat::Unknown)
 {
-	uint size = width*height;
+	create(_width, _height, _format);
+}
+
+//-----------------------------------//
+
+void Image::create(uint32 _width, uint32 _height, PixelFormat::Enum _format)
+{
+	this->width  = _width;
+	this->height = _height;
+	this->format = _format;
+
+	uint32 size = width*height;
 
 	switch(format)
 	{
 	case PixelFormat::R8G8B8A8:
-		size = size*4;
-		break;
+		size = size*4; break;
 	case PixelFormat::R8G8B8:
-		size = size*3;
-		break;
+		size = size*3; break;
 	case PixelFormat::Depth:
-		size = size;
-		break;
+		size = size; break;
 	}
 
 	buffer.resize(size);
@@ -93,7 +111,7 @@ void Image::setColor( const Color& color )
 	if( format != PixelFormat::R8G8B8A8 )
 		return;
 
-	for( uint i = 0; i < buffer.size(); i += 4 )
+	for( size_t i = 0; i < buffer.size(); i += 4 )
 	{
 		buffer[i+0] = byte(color.r * 255);
 		buffer[i+1] = byte(color.g * 255);
@@ -106,13 +124,13 @@ void Image::setColor( const Color& color )
 
 void Image::log() const
 {
-	LogInfo( "Image has pixel format '%s' and size %dx%d", 
-		 PixelFormat::getStaticType().getName(format).c_str(), width, height );
+	const char* desc = EnumGetValueName(PixelFormatGetType(), format);
+	LogInfo( "Image has pixel format '%s' and size %dx%d", desc, width, height );
 }
 
 //-----------------------------------//
 
-void ImageWriter::save( const ImagePtr& image, const std::string& filename )
+void ImageWriter::save( Image* image, const String& filename )
 {
 #ifdef VAPOR_IMAGE_WRITER	
 	// TODO: sleep until the image is not loadeds
@@ -135,7 +153,7 @@ void ImageWriter::save( const ImagePtr& image, const std::string& filename )
 
 //-----------------------------------//
 
-bool ImageWriter::convertPNG( const ImagePtr& image )
+bool ImageWriter::convertPNG( Image* image )
 {
 #ifdef VAPOR_IMAGE_WRITER
 	LodePNG::Encoder encoder;

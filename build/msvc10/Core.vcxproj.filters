@@ -82,21 +82,6 @@
     <Filter Include="Reflection">
       <UniqueIdentifier>{f2af19a1-44b1-4e1e-8be8-b142dc78957c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Reflection\Class">
-      <UniqueIdentifier>{008ead4c-cd37-47dd-95a4-d684b734173f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Reflection\Enum">
-      <UniqueIdentifier>{201f8f76-ba8f-459c-a527-3370b1ba80dd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Reflection\Field">
-      <UniqueIdentifier>{272bae43-e2c3-48dd-ba58-738e8e76d838}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Reflection\Primitive">
-      <UniqueIdentifier>{76ad333b-7966-4b38-a3ea-24dd1f8318f1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Reflection\Type">
-      <UniqueIdentifier>{144de0a7-250d-406a-8792-61ec0af20148}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Serialization">
       <UniqueIdentifier>{6ee0c685-3ebd-4934-8067-0b95bd854e7f}</UniqueIdentifier>
     </Filter>
@@ -112,8 +97,14 @@
     <Filter Include="Telemetry\Profiler">
       <UniqueIdentifier>{e65ce8ad-271f-4107-a73d-5c98b30a57ca}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Watcher">
+    <Filter Include="Archive\Watcher">
       <UniqueIdentifier>{63ffccc4-ff22-49bd-9741-b97d2c8e5d60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Web">
+      <UniqueIdentifier>{6796715b-e90e-4229-98da-6c63782d5502}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Web\HTTP">
+      <UniqueIdentifier>{5a39ca3f-0a9f-4f92-a33a-02053ff97752}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -205,29 +196,11 @@
     <ClCompile Include="..\..\src\Core\Profiler.cpp">
       <Filter>Telemetry\Profiler</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Core\reflection\Object.cpp">
-      <Filter>Reflection</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\reflection\Class.cpp">
-      <Filter>Reflection\Class</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\reflection\Enum.cpp">
-      <Filter>Reflection\Enum</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\reflection\Field.cpp">
-      <Filter>Reflection\Field</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\reflection\Primitive.cpp">
-      <Filter>Reflection\Primitive</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\reflection\Type.cpp">
-      <Filter>Reflection\Type</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Core\FileWatcher.cpp">
-      <Filter>Watcher</Filter>
+      <Filter>Archive\Watcher</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Win32\FileWatcherWin32.cpp">
-      <Filter>Watcher</Filter>
+      <Filter>Archive\Watcher</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\Telemetry.cpp">
       <Filter>Telemetry</Filter>
@@ -252,6 +225,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Core\Handle.cpp">
       <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\Reflection.cpp">
+      <Filter>Reflection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dep\mongoose\mongoose.cpp">
+      <Filter>Web\HTTP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\WebServer.cpp">
+      <Filter>Web</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -357,35 +339,8 @@
     <ClInclude Include="..\..\inc\vapor\Profiler.h">
       <Filter>Telemetry\Profiler</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\Core\Object.h">
-      <Filter>Reflection</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\Core\Reflection.h">
       <Filter>Reflection</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\core\Helpers.h">
-      <Filter>Reflection</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\Registry.h">
-      <Filter>Reflection</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\core\Class.h">
-      <Filter>Reflection\Class</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\core\Enum.h">
-      <Filter>Reflection\Enum</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\core\Field.h">
-      <Filter>Reflection\Field</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\core\Primitive.h">
-      <Filter>Reflection\Primitive</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\core\Type.h">
-      <Filter>Reflection\Type</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\Serialization.h">
-      <Filter>Serialization</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\Chunk.h">
       <Filter>Serialization\Binary</Filter>
@@ -396,11 +351,8 @@
     <ClInclude Include="..\..\inc\vapor\io\JsonSerializer.h">
       <Filter>Serialization\JSON</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\core\FileWatcher.h">
-      <Filter>Watcher</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\Win32\FileWatcherWin32.h">
-      <Filter>Watcher</Filter>
+      <Filter>Archive\Watcher</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\Telemetry.h">
       <Filter>Telemetry</Filter>
@@ -411,8 +363,20 @@
     <ClInclude Include="..\..\inc\Core\ReferenceCount.h">
       <Filter>Memory</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\dep\luajit\src\vapor.lua" />
+    <ClInclude Include="..\..\inc\Core\Helpers.h">
+      <Filter>Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\Serialization.h">
+      <Filter>Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\Object.h">
+      <Filter>Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\mongoose\mongoose.h">
+      <Filter>Web\HTTP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\WebServer.h">
+      <Filter>Web</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

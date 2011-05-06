@@ -16,8 +16,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(EditorCameraController, CameraController)
-END_CLASS()
+REFLECT_CHILD_CLASS(EditorCameraController, CameraController)
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
@@ -162,7 +162,7 @@ void EditorCameraController::onMouseDrag( const MouseDragEvent& event )
 	if( !enabled ) return;
 	if( !event.info->rightButton ) return;
 	
-	Vector2 deltaPosition( event.dx, event.dy );
+	Vector2i deltaPosition( event.dx, event.dy );
 	mouseDistance += deltaPosition;
 }
 

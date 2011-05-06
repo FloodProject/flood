@@ -62,14 +62,14 @@ bool Type::isPrimitive() const
 
 bool Type::isStruct() const
 {
-	return type == MetaType::Structure;
+	return type == MetaType::Composite;
 }
 
 //-----------------------------------//
 
 bool Type::isClass() const
 {
-	return type == MetaType::Class;
+	return type == MetaType::Composite;
 }
 
 //-----------------------------------//

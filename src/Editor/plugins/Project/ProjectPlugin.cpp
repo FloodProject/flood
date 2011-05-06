@@ -20,7 +20,10 @@ namespace vapor { namespace editor {
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(ProjectPlugin, Plugin)
-REFLECT_END()
+REFLECT_CLASS_END()
+
+REFLECT_CHILD_CLASS(Project, Object)
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
@@ -107,6 +110,7 @@ void ProjectPlugin::onOpenButtonClick(wxCommandEvent& event)
 	if( !askSaveChanges() )
 		return;
 
+#if 0
 	// Ask for file name to open.
 	wxFileDialog fc( editor, wxFileSelectorPromptStr, wxEmptyString,
 		wxEmptyString, fileDialogDescription, wxFC_OPEN );
@@ -122,7 +126,7 @@ void ProjectPlugin::onOpenButtonClick(wxCommandEvent& event)
 	JsonDeserializer json( *stream );
 	Object* object = json.deserialize();
 
-	StreamDestroy(stream, AllocatorGetHeap());
+	StreamDestroy(stream);
 
 	if( !object )
 	{
@@ -136,6 +140,8 @@ void ProjectPlugin::onOpenButtonClick(wxCommandEvent& event)
 #if 0
 	ScenePtr newScene( (Scene*) object );
 	switchScene(newScene);
+#endif
+
 #endif
 }
 
@@ -174,6 +180,7 @@ bool ProjectPlugin::saveScene()
 	if( fc.ShowModal() != wxID_OK )
 		return false;
 
+#if 0
 	Engine* engine = editor->getEngine();
 	ScenePtr scene = engine->getSceneManager();
 	
@@ -187,7 +194,8 @@ bool ProjectPlugin::saveScene()
 	ObjectWalker walker(json);
 	walker.process(scene.get());
 
-	StreamDestroy(stream, AllocatorGetHeap());
+	StreamDestroy(stream);
+#endif
 
 	return true;
 }

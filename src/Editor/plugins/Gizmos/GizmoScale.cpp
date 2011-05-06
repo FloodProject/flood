@@ -24,7 +24,7 @@ void GizmoScale::buildGeometry()
 {
 	lines = generateLines();
 
-	RenderablePtr renderable = new Renderable(PolygonType::Lines);
+	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Lines);
 	renderable->setVertexBuffer(lines);
 	renderable->setMaterial(material);
 
@@ -32,7 +32,7 @@ void GizmoScale::buildGeometry()
 
 	cubes = generateCubes();
 
-	renderable = new Renderable(PolygonType::Quads);
+	renderable = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Quads);
 	renderable->setVertexBuffer(cubes);
 	renderable->setMaterial(material);
 	renderable->setRenderLayer(RenderLayer::PostTransparency);
@@ -88,7 +88,7 @@ VertexBufferPtr GizmoScale::generateCubes()
 	generateColors(colors, Z);
 
 	// Vertex buffer setup
-	VertexBufferPtr vb = new VertexBuffer();
+	VertexBufferPtr vb = Allocate(VertexBuffer, AllocatorGetHeap());
 	vb->set( VertexAttribute::Position, pos );
 	vb->set( VertexAttribute::Color, colors );
 

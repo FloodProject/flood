@@ -8,29 +8,55 @@
 
 #pragma once
 
-#include "Core/Reflection.h"
-
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
+
+struct Class;
 
 /**
  * Objects are the root class for types using the reflection services.
  */
 
-class API_CORE VAPOR_PURE Object
+REFLECT_DECLARE_CLASS(Object)
+
+struct NO_VTABLE Object
 {
 public:
 
-	Object();
-
 	// Gets the type of the object.
-	virtual const Class& getType() const = 0;
+	API_CORE virtual Class* getType() const { return nullptr; }
 
 	// Serialization fix-up phase.
-	virtual void fixUp();
+	API_CORE virtual void fixUp() {}
+
+	// Field change notifications.
+	API_CORE virtual void onFieldChanged(const Field& field) { }
+
+	// Returns if this type is the same as the given type.
+	template<typename T> bool is()
+	{
+		return ReflectionIsEqual(getType(), T::getStaticType());
+	}
+
+	// Returns if this type inherits from the given type.
+	template<typename T> bool inherits()
+	{
+		return ClassInherits(getType(), T::getStaticType());
+	}
+
+protected:
+
+	Object() {}
 };
+
+#define REFLECT_DECLARE_OBJECT(className)                                            \
+	public:                                                                          \
+	virtual Class* getType() const OVERRIDE { return ReflectionGetType(className); } \
+	static Class* getStaticType() { return ReflectionGetType(className); }           \
+	REFLECT_DECLARE_CLASS_FRIEND(className)
+
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#ifdef VAPOR_MESH_MILKSHAPE3D
+#ifdef ENABLE_MESH_MILKSHAPE3D
 
 #include "Resources/ResourceLoader.h"
 #include "Resources/Mesh.h"
@@ -21,9 +21,11 @@ namespace vapor {
  * Loads a given Milkshape3D mesh format.
  */
 
+REFLECT_DECLARE_CLASS(MilkshapeLoader)
+
 class MilkshapeLoader : public ResourceLoader
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(MilkshapeLoader)
 
 public:
 
@@ -36,7 +38,7 @@ public:
 	virtual bool decode(const Stream& stream, Resource* res);
 
 	// Gets the name of this codec.
-	GETTER(Name, const std::string, "MS3D")
+	GETTER(Name, const String, "MS3D")
 
 	// Overrides this to return the right resource group.
 	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Meshes)

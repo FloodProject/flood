@@ -8,7 +8,7 @@
 
 #include "Resources/API.h"
 
-#ifdef VAPOR_SHADER_GLSL
+#ifdef ENABLE_SHADER_GLSL
 
 #include "Resources/GLSL_Loader.h"
 #include "Resources/GLSL_Text.h"
@@ -17,8 +17,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(GLSL_Loader, ResourceLoader)
-END_CLASS()
+REFLECT_CHILD_CLASS(GLSL_Loader, ResourceLoader)
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
@@ -31,7 +31,7 @@ GLSL_Loader::GLSL_Loader()
 
 Resource* GLSL_Loader::prepare(const Stream& stream)
 {
-	GLSL_Text* shader = new GLSL_Text;
+	GLSL_Text* shader = Allocate(GLSL_Text, GetResourcesAllocator());
 	return shader;
 }
 
@@ -39,7 +39,7 @@ Resource* GLSL_Loader::prepare(const Stream& stream)
 
 bool GLSL_Loader::decode(const Stream& stream, Resource* res)
 {
-	std::string text;
+	String text;
 	StreamReadString((Stream*) &stream, text);
 
 	GLSL_Text* shader = static_cast<GLSL_Text*>(res);

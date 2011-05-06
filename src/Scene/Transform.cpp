@@ -17,11 +17,11 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(Transform, Component)
+REFLECT_CHILD_CLASS(Transform, Component)
 	FIELD_PRIMITIVE(Vector3, position)
 	FIELD_PRIMITIVE(Quaternion, rotation)
 	FIELD_PRIMITIVE(Vector3, scale)
-END_CLASS()
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 

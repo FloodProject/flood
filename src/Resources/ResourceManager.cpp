@@ -25,18 +25,37 @@ NAMESPACE_BEGIN
 
 //-----------------------------------//
 
-static ResourceManager* resourcesInstance;
-ResourceManager* GetResourceManager() { return resourcesInstance; }
+static Allocator* g_ResourcesAllocator;
+static ResourceManager* g_ResourcesManager;
+static HandleManager* g_ResourceHandleManager = nullptr;
 
-static Allocator* resourcesAllocator;
-Allocator* GetResourcesAllocator() { return resourcesAllocator; }
+ResourceManager* GetResourceManager() { return g_ResourcesManager; }
+Allocator* GetResourcesAllocator() { return g_ResourcesAllocator; }
+
+void* ResourceHandleFind(HandleId id)
+{
+	return HandleFind(g_ResourceHandleManager, id);
+}
+
+ResourceHandle ResourceHandleCreate(Resource* p)
+{
+	return HandleCreate(g_ResourceHandleManager, p);
+}
+
+void ResourceHandleDestroy(HandleId id)
+{
+	Resource* resource = (Resource*) ResourceHandleFind(id);
+	Deallocate(resource);
+	HandleDestroy(g_ResourceHandleManager, id);
+}
 
 //-----------------------------------//
 
 ResourceLoadOptions::ResourceLoadOptions()
 	: group(ResourceGroup::General)
-	, asynchronousLoading(true)
+	, asynchronousLoad(true)
 	, sendLoadEvent(true)
+	, handle(HandleInvalid)
 	, stream(nullptr)
 { }
 
@@ -45,13 +64,17 @@ ResourceLoadOptions::ResourceLoadOptions()
 ResourceManager::ResourceManager()
 	: taskPool(nullptr)
 	, archive(nullptr)
+	, handleManager(nullptr)
 	, numResourcesQueuedLoad(0)
 	, asynchronousLoading(true)
 {
-	resourcesInstance = this;
+	if( !g_ResourcesAllocator ) 
+		g_ResourcesAllocator = AllocatorCreateHeap( AllocatorGetHeap(), "Resources" );
 
-	if( !resourcesAllocator )
-		resourcesAllocator = AllocatorCreateHeap( AllocatorGetHeap(), "Resources" );
+	handleManager = HandleCreateManager( GetResourcesAllocator() );
+
+	if( !g_ResourcesManager ) g_ResourcesManager = this;
+	if( !g_ResourceHandleManager ) g_ResourceHandleManager = handleManager;
 
 	resourceFinishLoadMutex = MutexCreate( GetResourcesAllocator() );
 	resourceFinishLoad = ConditionCreate( GetResourcesAllocator() );
@@ -64,8 +87,24 @@ ResourceManager::~ResourceManager()
 	loadQueuedResources();
 	assert( resourceTaskEvents.empty() );
 
-	// Delete resource loaders.
+	destroyLoaders();
+
+	resources.clear();
+
+	ArchiveDestroy(archive);
+	HandleDestroyManager(handleManager);
+
+	ConditionDestroy(resourceFinishLoad);
+	MutexDestroy(resourceFinishLoadMutex);
+	AllocatorDestroy(GetResourcesAllocator());
+}
+
+//-----------------------------------//
+
+void ResourceManager::destroyLoaders()
+{
 	ResourceLoaderMap::const_iterator it;
+	
 	for( it = resourceLoaders.begin(); it != resourceLoaders.end(); it++ )
 	{
 		ResourceLoader* loader = it->second;
@@ -74,76 +113,74 @@ ResourceManager::~ResourceManager()
 		std::vector<String>& extensions = loader->extensions;
 
 		if( extensions.size() == 1 )
-			delete loader;
+			Deallocate(loader);
 		else
 			extensions.erase( std::find(extensions.begin(), extensions.end(), it->first) );
 	}
-
-	ArchiveDestroy(archive, GetResourcesAllocator());
-
-	ConditionDestroy(resourceFinishLoad, GetResourcesAllocator());
-	MutexDestroy(resourceFinishLoadMutex, GetResourcesAllocator());
-	AllocatorDestroy(GetResourcesAllocator(), AllocatorGetHeap());
 }
 
 //-----------------------------------//
 
-ResourcePtr ResourceManager::getResource(const String& path)
+ResourceHandle ResourceManager::getResource(const String& path)
 {
 	Path name = PathGetFile(path);
 
 	if( resources.find(name) == resources.end() )
-		return nullptr;
+		return ResourceHandle(HandleInvalid);
 
 	return resources[name];
 }
 
 //-----------------------------------//
 
-ResourcePtr ResourceManager::loadResource(const String& name)
+ResourceHandle ResourceManager::loadResource(const String& name)
 {
 	ResourceLoadOptions options;
 	options.name = name;
-	options.asynchronousLoading = asynchronousLoading;
+	options.asynchronousLoad = asynchronousLoading;
 	
 	return loadResource(options);
 }
 
 //-----------------------------------//
 
-ResourcePtr ResourceManager::loadResource(ResourceLoadOptions options)
+ResourceHandle ResourceManager::loadResource(ResourceLoadOptions options)
 {
+	if( !archive )
+		return ResourceHandle(HandleInvalid);
+
 	findResource(options);
 
 	// Check if the resource is already loaded.
-	ResourcePtr resource = getResource(options.name);
+	ResourceHandle handle = getResource(options.name);
 	
-	if( resource )
-		return resource;
+	if( handle )
+		return handle;
 
 	if( !validateResource(options.name) )
-		return nullptr;
-
-	if( !archive )
-		return nullptr;
+		return ResourceHandle(HandleInvalid);
 
 	Stream* stream = ArchiveOpenFile(archive, options.name, GetResourcesAllocator());
-	options.stream = stream;
 
 	if( !stream )
-		return nullptr;
+		return ResourceHandle(HandleInvalid);
 
-	resource = prepareResource(stream);
-	if( !resource ) return nullptr;
+	handle = prepareResource(stream);
+	
+	if( !handle )
+		return ResourceHandle(HandleInvalid);
 
-	decodeResource(resource, options);
+	options.stream = stream;
+	options.handle = handle;
+
+	decodeResource(options);
 
 	// Register the decoded resource in the map.
 
 	Path base = PathGetFile(options.name);
-	resources[base] = resource;
+	resources[base] = handle;
 
-	return resource;
+	return handle;
 }
 
 //-----------------------------------//
@@ -179,14 +216,7 @@ void ResourceManager::findResource(ResourceLoadOptions& options)
 
 bool ResourceManager::validateResource( const String& path )
 {
-	if( path.empty() )
-		return false;
-	
-	//if( !FileExists(path) )
-	//{
-	//	LogWarn( "Resource '%s' was not found", path.c_str() );
-	//	return false;
-	//}
+	if( path.empty() ) return false;
 	
 	const Path& extension = PathGetFileExtension(path);
 	
@@ -207,7 +237,7 @@ bool ResourceManager::validateResource( const String& path )
 
 //-----------------------------------//
 
-ResourcePtr ResourceManager::prepareResource(Stream* stream)
+ResourceHandle ResourceManager::prepareResource(Stream* stream)
 {
 	const Path& path = PathGetFile(stream->path);
 
@@ -217,41 +247,45 @@ ResourcePtr ResourceManager::prepareResource(Stream* stream)
 	if( !loader )
 	{
 		LogWarn("No resource loader found for resource '%s'", path.c_str());
-		return nullptr;
+		return ResourceHandle(HandleInvalid);
 	}
 
-	ResourcePtr res( loader->prepare(*stream) );
-	res->setStatus( ResourceStatus::Loading );
-	res->setPath( path );
+	Resource* resource = loader->prepare(*stream);
+	resource->setStatus( ResourceStatus::Loading );
+	resource->setPath( path );
+
+	ResourceHandle handle = HandleCreate(handleManager, resource);
 
 	// Send callback notifications.
 	ResourceEvent event;
-	event.resource = res;
-		
+	event.handle = handle;
+
 	onResourcePrepared(event);
 
-	return res;
+	return handle;
 }
 
 //-----------------------------------//
 
-void ResourceManager::decodeResource( ResourcePtr resource, ResourceLoadOptions& options )
+void ResourceManager::decodeResource( ResourceLoadOptions& options )
 {
 	Task* task = TaskCreate( GetResourcesAllocator() );
-	ResourceLoadOptions* taskOptions = Allocate<ResourceLoadOptions>( GetResourcesAllocator() );
+	
+	ResourceLoadOptions* taskOptions = Allocate(ResourceLoadOptions,  GetResourcesAllocator());
 	*taskOptions = options;
-	taskOptions->resource = resource.get();
 
 	task->Callback.Bind(ResourceTaskRun);
 	task->Userdata = taskOptions;
 
 	AtomicIncrement(&numResourcesQueuedLoad);;
 
-	if( taskPool && options.asynchronousLoading )
+#ifdef ENABLE_THREADED_LOADING
+	if( taskPool && options.asynchronousLoad )
 	{
 		TaskPoolAdd(taskPool, task);
 		return;
 	}
+#endif
 
 	TaskRun(task);
 	sendPendingEvents();
@@ -268,7 +302,7 @@ void ResourceManager::loadQueuedResources()
 		#pragma TODO("Use timed_wait and notify the observers of progress")
 
 		ConditionWait(resourceFinishLoad, resourceFinishLoadMutex);
-		// System::sleep( 0.01f );
+		//SystemSleep( 0.01f );
 	}
 
 	MutexUnlock(resourceFinishLoadMutex);
@@ -307,10 +341,12 @@ void ResourceManager::removeUnusedResources()
 	ResourceMap::const_iterator it;
 	for( it = resources.begin(); it != resources.end(); it++ )
 	{
+#if 0
 		const ResourcePtr& resource = it->second;
 
 		if( resource->getReferenceCount() == 1 )
 			resourcesToRemove.push_back(it->first);
+#endif
 	}
 
 	for( size_t i = 0; i < resourcesToRemove.size(); i++ )
@@ -322,9 +358,13 @@ void ResourceManager::removeUnusedResources()
 
 //-----------------------------------//
 
-void ResourceManager::removeResource(const ResourcePtr& resource)
+void ResourceManager::removeResource(const ResourceHandle& handle)
 {
+	if( !handle ) return;
+
+	Resource* resource = handle.Resolve();
 	const String& path = resource->getPath();
+
 	removeResource(path);
 }
 
@@ -336,14 +376,15 @@ void ResourceManager::removeResource(const String& path)
 	
 	if( it == resources.end() )
 		return;
-
+#if 0
 	// Send callback notifications.
 	ResourceEvent event;
-	event.resource = (*it).second;
+	event.resource = it->second;
 		
 	onResourceRemoved( event );
 
 	resources.erase(it);
+#endif
 
 	LogInfo("Unloaded resource: %s", path.c_str());
 }
@@ -389,13 +430,13 @@ ResourceLoader* ResourceManager::findLoader(const String& ext)
 
 void ResourceManager::setupResourceLoaders()
 {
-	Class& type = ResourceLoader::getStaticType();
+	Class* klass = ResourceLoaderGetType();
 	
-	for( uint i = 0; i < type.childs.size(); i++ )
+	for( size_t i = 0; i < klass->childs.size(); i++ )
 	{
-		Class& child = *type.childs[i];
+		Class* child = klass->childs[i];
 	
-		ResourceLoader* loader = (ResourceLoader*) child.createInstance();
+		ResourceLoader* loader = (ResourceLoader*) ClassCreateInstance(child, GetResourcesAllocator());
 		registerLoader( loader );
 	}
 

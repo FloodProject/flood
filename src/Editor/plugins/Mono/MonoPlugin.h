@@ -10,7 +10,7 @@
 
 #include "Plugin.h"
 
-#ifdef PLUGIN_MONO
+#ifdef ENABLE_PLUGIN_MONO
 
 #include <mono/metadata/metadata.h>
 
@@ -18,9 +18,11 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
+REFLECT_DECLARE_CLASS(MonoPlugin)
+
 class MonoPlugin : public Plugin
 {
-	REFLECT_DECLARE_CLASS()
+	REFLECT_DECLARE_OBJECT(MonoPlugin)
 
 public:
 

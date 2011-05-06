@@ -14,8 +14,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(Geometry, Component)
-END_CLASS()
+REFLECT_CHILD_CLASS(Geometry, Component)
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 

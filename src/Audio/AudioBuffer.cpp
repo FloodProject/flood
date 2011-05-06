@@ -13,13 +13,13 @@
 #include "Audio/Buffer.h"
 #include "Audio/Device.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
-AudioBuffer::AudioBuffer( AudioDevice* device, const SoundPtr& sound )
+AudioBuffer::AudioBuffer( AudioDevice* device, Sound* sound )
 	: device(device)
-	, resource(sound)
+	, sound(sound)
 	, id(0)
 {
 	alGenBuffers(1, &id);
@@ -52,11 +52,11 @@ AudioBuffer::~AudioBuffer()
 
 void AudioBuffer::upload()
 {
-	const std::vector<byte>& buffer = resource->getBuffer();
+	const std::vector<byte>& buffer = sound->getBuffer();
 	ALsizei size = (ALsizei) buffer.size();
 	
-	int frequency = resource->getFrequency();
-	int format = device->getFormat(resource);
+	int frequency = sound->getFrequency();
+	int format = device->getFormat(sound);
 
 	if( buffer.empty() ) return;
 
@@ -72,6 +72,6 @@ void AudioBuffer::upload()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END
 
 #endif

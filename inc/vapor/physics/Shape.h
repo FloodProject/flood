@@ -24,9 +24,11 @@ TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE(Body)
 
 //-----------------------------------//
 
+REFLECT_DECLARE_CLASS(Shape)
+
 class VAPOR_API Shape : public Component
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(Shape)
 
 public:
 

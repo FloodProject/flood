@@ -35,7 +35,7 @@ void TestArchiveDir(CuTest* tc)
 
 	String text;
 	StreamReadString(stream, text);
-	StreamDestroy(stream, AllocatorGetHeap());
+	StreamDestroy(stream);
 	CuAssertStrEquals(tc, "foobar", text.c_str());
 
 	std::vector<Path> dirs;
@@ -70,7 +70,7 @@ void TestArchiveZip(CuTest* tc)
 
 	String text;
 	StreamReadString(stream, text);
-	StreamDestroy(stream, AllocatorGetHeap());
+	StreamDestroy(stream);
 	CuAssertStrEquals(tc, "foobar", text.c_str());
 
 	std::vector<Path> dirs;
@@ -113,7 +113,7 @@ void TestArchiveVirtual(CuTest* tc)
 
 	String text;
 	StreamReadString(stream, text);
-	StreamDestroy(stream, AllocatorGetHeap());
+	StreamDestroy(stream);
 	CuAssertStrEquals(tc, "foobar", text.c_str());
 
 	std::vector<Path> dirs;

@@ -10,7 +10,7 @@
 
 #include "Core/Timer.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -38,4 +38,4 @@ protected:
 
 //-----------------------------------//
 
-} // end namespace 
+NAMESPACE_END

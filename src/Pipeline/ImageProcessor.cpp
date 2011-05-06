@@ -21,20 +21,20 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_ENUM(MipmapFilter)
+REFLECT_ENUM(MipmapFilter)
 	ENUM(Box)
 	ENUM(Triangle)
 	ENUM(Kaizer)
-END_ENUM()
+REFLECT_ENUM_END()
 
-BEGIN_ENUM(CompressionQuality)
+REFLECT_ENUM(CompressionQuality)
 	ENUM(Fastest)
 	ENUM(Normal)
 	ENUM(Production)
 	ENUM(Highest)
-END_ENUM()
+REFLECT_ENUM_END()
 
-BEGIN_ENUM(CompressionFormat)
+REFLECT_ENUM(CompressionFormat)
 	ENUM(RGB)
 	ENUM(RGBA)
 	ENUM(DXT1)
@@ -42,14 +42,14 @@ BEGIN_ENUM(CompressionFormat)
 	ENUM(DXT3)
 	ENUM(DXT5)
 	ENUM(DXT5nm)
-END_ENUM()
+REFLECT_ENUM_END()
 
-BEGIN_CLASS_PARENT(ImageProcessor, ResourceProcessor)
+REFLECT_CHILD_CLASS(ImageProcessor, ResourceProcessor)
 	FIELD_ENUM(CompressionFormat, format)
 	FIELD_ENUM(CompressionQuality, quality)
 	FIELD_PRIMITIVE(bool, generateMipmaps)
 	FIELD_ENUM(MipmapFilter, mipmapFilter)
-END_CLASS()
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 

@@ -29,11 +29,11 @@
 
 #pragma once
 
-#ifdef VAPOR_PLATFORM_WINDOWS
+#ifdef PLATFORM_WINDOWS
 
 #include "Core/FileWatcher.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -80,6 +80,6 @@ private:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END
 
 #endif

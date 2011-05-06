@@ -8,7 +8,7 @@
 
 #include "Engine/API.h"
 
-#ifdef VAPOR_SCRIPTING_LUA
+#ifdef ENABLE_SCRIPTING_LUA
 
 #include "Script/State.h"
 #include <lua.hpp>
@@ -72,16 +72,13 @@ State::~State()
 
 //-----------------------------------//
 
-bool State::load( const ScriptPtr& script )
+bool State::load(Script* script)
 {
-	if( !script )
-		return false;
+	if( !script ) return false;
 
-	int status = luaL_dostring( luaState,
-		script->getSource().c_str() );
-
-	if( status == 0 )
-		return true;
+	int status = luaL_dostring( luaState, script->getSource().c_str() );
+	
+	if( status == 0 ) return true;
 
 	handleError();
 	return false;
@@ -89,14 +86,14 @@ bool State::load( const ScriptPtr& script )
 
 //-----------------------------------//
 
-bool State::execute( const ScriptPtr& script )
+bool State::execute( Script* script )
 {
 	return execute( script->getSource() );
 }
 
 //-----------------------------------//
 
-bool State::execute( const std::string& source )
+bool State::execute( const String& source )
 {
 	// Send the source code to Lua.
 	int status = luaL_dostring( luaState, source.c_str() );
@@ -113,7 +110,7 @@ bool State::execute( const std::string& source )
 
 //-----------------------------------//
 
-bool State::invoke( const std::string& name, int numArguments )
+bool State::invoke( const String& name, uint8 numArguments )
 {
 	// Get the function from the global table.
 	lua_getglobal(luaState, name.c_str());

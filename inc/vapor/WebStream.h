@@ -10,11 +10,11 @@
 
 #include "Core/Stream.h"
 
-#ifdef VAPOR_NETWORKING_CURL
+#ifdef ENABLE_NETWORKING_CURL
 
 typedef void CURL;
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -56,6 +56,6 @@ protected:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END
 
 #endif

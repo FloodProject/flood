@@ -29,14 +29,18 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-#define PLUGIN(name) name##Plugin::getStaticType();
+#define PLUGIN(name) ReflectionGetType(name##Plugin);
 
 void PluginManager::referencePlugins()
 {
 	PLUGIN(Project);
 	PLUGIN(Undo);
 	PLUGIN(Scene);
+
+#ifdef ENABLE_PLUGIN_PROPERTY
 	PLUGIN(Property);
+#endif
+
 	PLUGIN(Selection);
 	//PLUGIN(Gizmo);
 	//PLUGIN(Terrain);
@@ -45,7 +49,7 @@ void PluginManager::referencePlugins()
 	PLUGIN(Log);
 	PLUGIN(Resources);
 
-#ifdef PLUGIN_MONO
+#ifdef ENABLE_PLUGIN_MONO
 	PLUGIN(Mono);
 #endif
 

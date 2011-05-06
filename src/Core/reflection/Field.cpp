@@ -45,6 +45,14 @@ bool Field::isArray() const
 
 //-----------------------------------//
 
+bool Field::isHandle() const
+{
+	return (qualifiers & Qualifier::Handle) != 0;
+}
+
+
+//-----------------------------------//
+
 bool Field::isPointer() const
 {
 	return (qualifiers & Qualifier::RawPointer)

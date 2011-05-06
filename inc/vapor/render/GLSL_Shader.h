@@ -18,9 +18,11 @@ namespace vapor {
  * GLSL Shader.
  */
 
+REFLECT_DECLARE_CLASS(GLSL_Shader)
+
 class VAPOR_API GLSL_Shader : public Shader
 {
-	REFLECT_DECLARE_CLASS()
+	REFLECT_DECLARE_OBJECT(GLSL_Shader)
 
 public:
 

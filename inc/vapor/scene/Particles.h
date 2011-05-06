@@ -39,7 +39,7 @@ struct Particle
 
 struct EmitterType
 {
-	DECLARE_ENUM()
+	REFLECT_DECLARE_ENUM(EmitterType)
 
 	enum Enum
 	{
@@ -51,9 +51,11 @@ struct EmitterType
 
 //-----------------------------------//
 
+REFLECT_DECLARE_CLASS(Particles)
+
 class VAPOR_API Particles : public Geometry
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(Particles)
 
 public:
 
@@ -63,7 +65,7 @@ public:
 	void update( float delta );
 
 	// Sets the image of the particles.
-	void setImage(const ImagePtr& image);
+	void setImage(const ImageHandle& image);
 
 	// Updates the debug renderable.
 	void updateDebugRenderable() const;
@@ -72,6 +74,9 @@ public:
 	RenderablePtr createDebugRenderable() const;
 
 protected:
+
+	// Creates the geometry.
+	void createGeometry();
 
 	// Spawns new particles.
 	void spawnParticles(int numSpawn);
@@ -122,10 +127,10 @@ protected:
 	VertexBufferPtr vb;
 
 	// Material.
-	MaterialPtr material;
+	MaterialHandle material;
 
 	// Image.
-	ImagePtr image;
+	ImageHandle image;
 
 	// Particles.
 	std::vector<Particle> particles;

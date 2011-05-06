@@ -66,8 +66,8 @@ void TestCondition(CuTest* tc)
 	ThreadJoin(thread);
 	CuAssertIntEquals(tc, 30, value);
 
-	MutexDestroy( mutex, AllocatorGetHeap() );
-	ConditionDestroy( cond, AllocatorGetHeap() );
+	MutexDestroy(mutex);
+	ConditionDestroy(cond);
 }
 
 void TestAtomics(CuTest* tc)

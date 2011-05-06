@@ -41,9 +41,9 @@ RenderView* RenderTarget::createView()
 
 //-----------------------------------//
 
-Vector2 Settings::getSize() const
+Vector2i Settings::getSize() const
 {
-	return Vector2(width, height);
+	return Vector2i(width, height);
 }
 
 //-----------------------------------//

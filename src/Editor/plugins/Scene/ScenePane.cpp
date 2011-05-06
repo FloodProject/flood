@@ -140,7 +140,7 @@ void ScenePage::setScene(const ScenePtr& scene)
 
 void ScenePage::addGroup( wxTreeItemId id, const EntityPtr& entity, bool createGroup )
 {
-	if( !entity->getType().inherits<Group>() )
+	if( !ClassInherits(entity->getType(), ReflectionGetType(Group)) )
 	{
 		addEntity(id, entity);
 		return;
@@ -197,9 +197,9 @@ wxTreeItemId ScenePage::addEntity( wxTreeItemId id, const EntityPtr& entity )
 void ScenePage::addComponent( wxTreeItemId id, ComponentPtr component )
 {
 	assert( component != nullptr );
-	const Type& type = component->getType();
+	Class* klass = component->getType();
 
-	wxTreeItemId compId = treeCtrl->AppendItem( id, type.name, icons[&type] );
+	wxTreeItemId compId = treeCtrl->AppendItem( id, klass->name, icons[klass] );
 
 	EntityItemData* data = new EntityItemData();
 	data->component = component;
@@ -379,7 +379,7 @@ wxMenu* ScenePage::createMenuAnimation(const MeshPtr& mesh)
 	wxMenuItem* item = nullptr;
 
 	const std::vector<AnimationPtr>& anims = mesh->getAnimations();
-	for( uint i = 0; i < anims.size(); i++ )
+	for( size_t i = 0; i < anims.size(); i++ )
 	{
 		const AnimationPtr& animation = anims[i];
 		const std::string& name = animation->getName();
@@ -416,7 +416,7 @@ wxMenu* ScenePage::createMenuAttachment(const MeshPtr& mesh)
 	wxMenuItem* item = nullptr;
 
 	const std::vector<BonePtr>& bones = mesh->getSkeleton()->getBones();
-	for( uint i = 0; i < bones.size(); i++ )
+	for( size_t i = 0; i < bones.size(); i++ )
 	{
 		const BonePtr& bone = bones[i];
 		item = menuAttachment->Append( wxNewId(), bone->name );
@@ -441,13 +441,15 @@ void ScenePage::populateComponentItemMenu(wxMenu& menu, const ComponentPtr& comp
 	if( !component )
 		return;
 
-	const Type& type = component->getType();
-	menu.SetTitle( type.name );
+	Class* klass = component->getType();
+	menu.SetTitle( klass->name );
 
-	if(type.is<Model>())
+	if(ReflectionIsEqual(klass, ReflectionGetType(Model)))
 	{
 		model = std::static_pointer_cast<Model>(component);
-		mesh = model->getMesh();
+		meshHandle = model->getMesh();
+
+		mesh = meshHandle.Resolve();
 
 		if( !mesh->isAnimated() )
 			return;
@@ -458,7 +460,7 @@ void ScenePage::populateComponentItemMenu(wxMenu& menu, const ComponentPtr& comp
 		wxMenu* menuAttachment = createMenuAttachment(mesh);
 		menu.AppendSubMenu(menuAttachment, "Attachment");
 	}
-	else if(type.is<Transform>())
+	else if(ReflectionIsEqual(klass, ReflectionGetType(Transform)))
 	{
 		//wxMenuItem* item = new wxMenuItem("");
 	}
@@ -485,11 +487,13 @@ void ScenePage::onAttachmentMenuSelected(wxCommandEvent& event)
 	const SkeletonPtr& skeleton = mesh->getSkeleton();
 	BonePtr bone = skeleton->getBones()[ind];
 
-	std::string name = "Attachment"+StringFromNumber(nodeCounter++);
+	String name = "Attachment"+StringFromNumber(nodeCounter++);
 	
-	EntityPtr node( new Entity(name) );
+	EntityPtr node( Allocate(Entity, AllocatorGetHeap(), name) );
 	node->addTransform();
-	node->addComponent( ModelPtr( new Model(mesh) ) );
+
+	ModelPtr model( Allocate(Model, AllocatorGetHeap(), meshHandle) );
+	node->addComponent(model);
 	
 	ScenePtr scene = weakScene.lock();
 	scene->add( node );
@@ -648,18 +652,18 @@ void ScenePage::onComponentAdd(wxCommandEvent& event )
 	if( id == wxID_NONE )
 		return;
 
-	const std::string name = currentMenu->GetLabelText(id); 
-	const Type* type = Type::GetRegistry().getType(name);
+	const String name = currentMenu->GetLabelText(id); 
+	Type* type = ReflectionFindType( name.c_str() );
 	
-	if( !type )
-		return;
+	if( !type ) return;
 
 	ComponentPtr component;
 
-	Class& classType = (Class&) *type;
-	component.reset( (Component*) classType.createInstance() );
+	Class* klass = (Class*) type;
+	Component* pComp = (Component*) ClassCreateInstance(klass, AllocatorGetHeap());
+	component.reset(pComp);
 
-	if( type->is<Skydome>() )
+	if( ReflectionIsEqual(klass, ReflectionGetType(Skydome)) )
 	{
 		entity->setTag(Tags::NonPickable, true);
 		entity->setTag(Tags::NonCulled, true);

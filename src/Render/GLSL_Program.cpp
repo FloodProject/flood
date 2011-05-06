@@ -8,7 +8,7 @@
 
 #include "Engine/API.h"
 
-#ifdef VAPOR_SHADER_GLSL
+#ifdef ENABLE_SHADER_GLSL
 
 #include "Render/GLSL_Program.h"
 #include "Resources/GLSL_Text.h"
@@ -87,11 +87,11 @@ void GLSL_Program::createShaders()
 	if( !text )
 		return;
 
-	vertex = new GLSL_Shader();
+	vertex = Allocate(GLSL_Shader, AllocatorGetHeap());
 	vertex->setShaderType( ShaderType::Vertex );
 	vertex->create();
 	
-	fragment = new GLSL_Shader();
+	fragment = Allocate(GLSL_Shader, AllocatorGetHeap());
 	fragment->setShaderType( ShaderType::Fragment );
 	fragment->create();
 

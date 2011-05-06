@@ -8,7 +8,7 @@
 
 #include "Resources/API.h"
 
-#ifdef VAPOR_IMAGE_STB
+#ifdef ENABLE_IMAGE_STB
 
 #include "Resources/STB_Image_Loader.h"
 #include "Core/Log.h"
@@ -20,8 +20,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(STB_Image_Loader, ResourceLoader)
-END_CLASS()
+REFLECT_CHILD_CLASS(STB_Image_Loader, ResourceLoader)
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 

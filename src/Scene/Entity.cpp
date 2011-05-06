@@ -7,24 +7,31 @@
 ************************************************************************/
 
 #include "Engine/API.h"
+
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
 #include "Scene/Geometry.h"
 #include "Scene/Group.h"
 #include "Scene/Tags.h"
-#include "Registry.h"
 #include <algorithm>
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
-BEGIN_CLASS(Entity)
+REFLECT_ABSTRACT_CHILD_CLASS(Entity, Object)
 	FIELD_PRIMITIVE(string, name)
 	FIELD_PRIMITIVE(bool, visible)
-	FIELD_VECTOR_PTR(Component, ComponentPtr, components, SharedPointer)
-	FIELD_PRIMITIVE_CUSTOM(int, tags, Bitfield)
-END_CLASS()
+	//FIELD_VECTOR_PTR(Component, ComponentPtr, components, SharedPointer)
+	//FIELD_PRIMITIVE_CUSTOM(int, tags, Bitfield)
+REFLECT_CLASS_END()
+
+//-----------------------------------//
+
+Entity* EntityCreate(Allocator* alloc)
+{
+	return Allocate(Entity, alloc);
+}
 
 //-----------------------------------//
 
@@ -37,7 +44,7 @@ Entity::Entity()
 //-----------------------------------//
 
 
-Entity::Entity( const std::string& name )
+Entity::Entity( const String& name )
 	: name(name)
 	, visible(true)
 	, tags(0)
@@ -48,14 +55,13 @@ Entity::Entity( const std::string& name )
 
 bool Entity::addComponent( const ComponentPtr& component )
 {
-	if( !component )
-		return false;
+	if( !component ) return false;
 
-	const Class* type = &component->getType();
+	Class* type = component->getType();
 
 	if( componentsMap.find(type) != componentsMap.end() )
 	{
-		LogWarn( "Component '%s' already exists in '%s'", type->name.c_str(), name.c_str() );
+		LogWarn( "Component '%s' already exists in '%s'", type->name, name.c_str() );
 		return false;
 	}
 
@@ -74,10 +80,9 @@ bool Entity::addComponent( const ComponentPtr& component )
 
 bool Entity::removeComponent( const ComponentPtr& component )
 {
-	if( !component )
-		return false;
+	if( !component ) return false;
 	
-	const Class* type = &component->getType();
+	Class* type = component->getType();
 
 	ComponentMap::iterator it = componentsMap.find(type);
 	
@@ -94,27 +99,21 @@ bool Entity::removeComponent( const ComponentPtr& component )
 
 //-----------------------------------//
 
-ComponentPtr Entity::getComponent(const std::string& name) const
+ComponentPtr Entity::getComponent(const char* name) const
 {
-	Registry& registry = Type::GetRegistry();
-	const Type* type = registry.getType(name);
+	Type* type = ReflectionFindType(name);
 
-	if( !type )
+	if( !ReflectionIsComposite(type) )
 		return nullptr;
 
-	return getComponent(*type);
+	return getComponent((Class*) type);
 }
 
 //-----------------------------------//
 
-ComponentPtr Entity::getComponent(const Type& type) const
+ComponentPtr Entity::getComponent(Class* klass) const
 {
-	if( !type.isClass() )
-		return nullptr;
-
-	const Class& klass = (Class&) type;
-
-	ComponentMap::const_iterator it = componentsMap.find(&klass);
+	ComponentMap::const_iterator it = componentsMap.find(klass);
 		
 	if( it == componentsMap.end() )
 		return nullptr;
@@ -124,16 +123,16 @@ ComponentPtr Entity::getComponent(const Type& type) const
 
 //-----------------------------------//
 
-ComponentPtr Entity::getComponentFromFamily(const Type& type) const
+ComponentPtr Entity::getComponentFromFamily(Class* klass) const
 {
 	ComponentMap::const_iterator it;
 	
 	for( it = componentsMap.begin(); it != componentsMap.end(); it++ )
 	{
 		const ComponentPtr& component = it->second;
-		const Type& componentType = component->getType();
+		Class* componentClass = component->getType();
 
-		if( componentType.inherits(type) )
+		if( ClassInherits(componentClass, klass) )
 			return component;
 	}
 
@@ -151,7 +150,7 @@ std::vector<GeometryPtr> Entity::getGeometry() const
 	{
 		const ComponentPtr& component = it->second;
 
-		if( !component->getType().inherits<Geometry>() )
+		if( !ClassInherits(component->getType(), ReflectionGetType(Geometry)) )
 			continue;
 
 		const GeometryPtr& geo = std::static_pointer_cast<Geometry>(component);
@@ -176,9 +175,7 @@ void Entity::update( float delta )
 
 	// Update the transform component.
 	const TransformPtr& transform = getTransform();
-	
-	if( transform )
-		transform->update( delta );
+	if( transform ) transform->update( delta );
 
 	// Update the other componentsMap.
 	ComponentMap::const_iterator it;
@@ -201,8 +198,10 @@ void Entity::fixUp()
 	{
 		const ComponentPtr& component = components[i];
 		
-		component->setEntity( this );
-		componentsMap[&component->getType()] = component;
+		component->setEntity(this);
+		
+		Class* type = component->getType();
+		componentsMap[type] = component;
 	}
 }
 
@@ -210,12 +209,11 @@ void Entity::fixUp()
 
 void Entity::sendEvents()
 {
-	if( !parent )
-		return;
+	if( !parent ) return;
 
-	const Class& type =  parent->getType();
+	Class* type =  parent->getType();
 
-	if( !type.is<Group>() && !type.inherits<Group>() )
+	if( !ClassInherits(type, ReflectionGetType(Group)) )
 		return;
 
 	Group* group = (Group*) parent;
@@ -246,7 +244,7 @@ Entity* Entity::getParent() const
 
 //-----------------------------------//
 
-void Entity::setName( const std::string& name )
+void Entity::setName( const String& name )
 {
 	this->name = name;
 	sendEvents();
@@ -261,14 +259,14 @@ bool Entity::isVisible() const
 
 //-----------------------------------//
 
-bool Entity::getTag(int index)
+bool Entity::getTag(int32 index)
 {
 	return (tags & index) ? true : false;
 }
 
 //-----------------------------------//
 
-void Entity::setTag(int index, bool state)
+void Entity::setTag(int32 index, bool state)
 {
 	if(state)
 		tags |= index;
@@ -286,9 +284,8 @@ EntityPtr Entity::getShared()
 	};
 
 	return std::shared_ptr<Entity>(this, no_op_deleter());
-	//return shared_from_this();
 }
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

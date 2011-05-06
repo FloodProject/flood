@@ -142,67 +142,13 @@
       <Filter>Meshes\Milkshape</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Resources\ResourceTask.cpp" />
+    <ClCompile Include="..\..\src\Resources\Material.cpp">
+      <Filter>Material</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\inc\vapor\resources\Mesh.h">
-      <Filter>Meshes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\Font.h">
-      <Filter>Fonts</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\Font_Loader.h">
-      <Filter>Fonts</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\BitmapFont.h">
-      <Filter>Fonts\Bitmap</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\TTF.h">
-      <Filter>Fonts\TrueType</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\Image.h">
-      <Filter>Images</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\PNG_Loader.h">
-      <Filter>Images\PNG</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\STB_Image_Loader.h">
-      <Filter>Images\STB</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\IL_Image_Loader.h">
-      <Filter>Images\DevIL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\GLSL_Loader.h">
-      <Filter>Shaders\GLSL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\GLSL_Text.h">
-      <Filter>Shaders\GLSL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\Sound.h">
-      <Filter>Sounds</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\OGG_Loader.h">
-      <Filter>Sounds\OGG</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\vapor\script\Script.h">
       <Filter>Scripts</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\Lua_Loader.h">
-      <Filter>Scripts\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\Text.h">
-      <Filter>Text</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\Resource.h" />
-    <ClInclude Include="..\..\inc\vapor\resources\ResourceLoader.h" />
-    <ClInclude Include="..\..\inc\vapor\resources\ResourceManager.h" />
-    <ClInclude Include="..\..\inc\vapor\resources\Animation.h">
-      <Filter>Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\Attachment.h">
-      <Filter>Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\Bone.h">
-      <Filter>Animation</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Pipeline\Milkshape3D.h">
       <Filter>Meshes\Milkshape</Filter>
@@ -213,12 +159,69 @@
     <ClInclude Include="..\..\src\Pipeline\MilkshapeLoader.h">
       <Filter>Meshes\Milkshape</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\Material.h">
+    <ClInclude Include="..\..\inc\Resources\API.h" />
+    <ClInclude Include="..\..\inc\Resources\Resource.h" />
+    <ClInclude Include="..\..\inc\Resources\ResourceLoader.h" />
+    <ClInclude Include="..\..\inc\Resources\ResourceManager.h" />
+    <ClInclude Include="..\..\inc\Resources\Animation.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Resources\Attachment.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Resources\Bone.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Resources\Font.h">
+      <Filter>Fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Resources\Font_Loader.h">
+      <Filter>Fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Resources\BitmapFont.h">
+      <Filter>Fonts\Bitmap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Resources\Image.h">
+      <Filter>Images</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Resources\Lua_Loader.h">
+      <Filter>Scripts\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Resources\Mesh.h">
+      <Filter>Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Resources\Material.h">
       <Filter>Material</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\resources\Shader.h">
+    <ClInclude Include="..\..\inc\Resources\Sound.h">
+      <Filter>Sounds</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Resources\TTF.h">
+      <Filter>Fonts\TrueType</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Resources\OGG_Loader.h">
+      <Filter>Sounds\OGG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Resources\Shader.h">
       <Filter>Shaders</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\Resources\API.h" />
+    <ClInclude Include="..\..\inc\Resources\Text.h">
+      <Filter>Text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Resources\GLSL_Text.h">
+      <Filter>Shaders\GLSL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Resources\GLSL_Loader.h">
+      <Filter>Shaders\GLSL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Resources\IL_Image_Loader.h">
+      <Filter>Images\DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Resources\STB_Image_Loader.h">
+      <Filter>Images\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Resources\PNG_Loader.h">
+      <Filter>Images\PNG</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

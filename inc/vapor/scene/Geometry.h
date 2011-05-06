@@ -26,9 +26,11 @@ typedef std::vector<RenderablePtr> RenderableVector;
  * rendering device for rendering.
  */
 
+REFLECT_DECLARE_CLASS(Geometry)
+
 class VAPOR_API Geometry : public Component
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(Geometry)
 
 public:
 

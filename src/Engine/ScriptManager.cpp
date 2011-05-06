@@ -8,10 +8,10 @@
 
 #include "Engine/API.h"
 
-#ifdef VAPOR_SCRIPTING_LUA
+#ifdef ENABLE_SCRIPTING_LUA
 
-#include "script/ScriptManager.h"
-#include "Engine.h"
+#include "Script/ScriptManager.h"
+#include "Resources/ResourceManager.h"
 
 #include <lua.hpp>
 
@@ -24,11 +24,11 @@ namespace vapor {
 ScriptManager::ScriptManager()
 	: state(nullptr)
 {
-	ResourceManager* rm = GetEngine()->getResourceManager();
+	ResourceManager* rm = GetResourceManager();
 	rm->onResourceReloaded.Connect( this, &ScriptManager::onReload );
 
 	// Create a new Lua VM instance.
-	state = new State( luaL_newstate() );
+	state = Allocate(State, AllocatorGetHeap(), luaL_newstate());
 
 	// Check for proper initialization of the Lua state.
 	if( !state->getLuaState() )
@@ -48,23 +48,22 @@ ScriptManager::ScriptManager()
 
 ScriptManager::~ScriptManager()
 {
-	ResourceManager* rm = GetEngine()->getResourceManager();
+	ResourceManager* rm = GetResourceManager();
 	rm->onResourceReloaded.Disconnect( this, &ScriptManager::onReload );
 
 	LogInfo("Cleaning up the Lua state");
-	delete state;
+	Deallocate(state);
 }
 
 //-----------------------------------//
 
-State* ScriptManager::createScriptInstance(const ScriptPtr& script)
+State* ScriptManager::createScriptInstance(Script* script)
 {
-	if( !script )
-		return nullptr;
+	if( !script ) return nullptr;
 
 	// Create a new thread state sharing the main state.
 	lua_State* thread = lua_newthread( state->getLuaState() );
-	State* newState = new State(thread);
+	State* newState = Allocate(State, AllocatorGetHeap(), thread);
 
 	lua_State* L = thread;
 
@@ -96,14 +95,15 @@ State* ScriptManager::createScriptInstance(const ScriptPtr& script)
 
 //-----------------------------------//
 
-void ScriptManager::onReload( const ResourceEvent& evt )
+void ScriptManager::onReload( const ResourceEvent& event )
 {
-	if( evt.resource->getResourceGroup() != ResourceGroup::Scripts )
+	const ScriptHandle& handle = HandleCast<Script>(event.handle);
+	Script* script = handle.Resolve();
+
+	if( script->getResourceGroup() != ResourceGroup::Scripts )
 		return;
 	
-	LogDebug( "Reloading script '%s'", evt.resource->getPath().c_str() );
-	
-	const ScriptPtr& script = RefCast<Script>( evt.resource );
+	LogDebug( "Reloading script '%s'", script->getPath().c_str() );
 
 	ScriptsMap::const_iterator it;
 	for( it = scripts.begin(); it != scripts.end(); it++ )

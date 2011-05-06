@@ -75,7 +75,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\dep\jansson\include;$(SolutionDir)..\..\dep\curl\include;$(SolutionDir)..\..\dep\misc\include;$(SolutionDir)..\..\dep\zziplib\include;$(SolutionDir)..\..\dep\physfs\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\dep\mongoose;$(SolutionDir)..\..\dep\jansson\include;$(SolutionDir)..\..\dep\curl\include;$(SolutionDir)..\..\dep\misc\include;$(SolutionDir)..\..\dep\zziplib\include;$(SolutionDir)..\..\dep\physfs\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;___DEBUG;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -91,7 +91,7 @@
     </ClCompile>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\dep\jansson\lib\;$(SolutionDir)..\..\dep\zziplib\lib\;$(SolutionDir)..\..\dep\zlib\lib\vc10</AdditionalLibraryDirectories>
-      <AdditionalDependencies>jansson_d.lib;zziplib_d.lib;zlibd.lib</AdditionalDependencies>
+      <AdditionalDependencies>jansson_d.lib;zziplib_d.lib;zlibd.lib;</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">
@@ -165,6 +165,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\dep\mongoose\mongoose.cpp" />
     <ClCompile Include="..\..\src\Core\Archive.cpp">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">_CRT_SECURE_NO_WARNINGS;_DEBUG;___DEBUG;API_CORE_DLL;API_CORE_DLL_EXPORT;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release DLL|Win32'">_CRT_SECURE_NO_WARNINGS;_DEBUG;___DEBUG;API_CORE_DLL;API_CORE_DLL_EXPORT;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -199,18 +200,14 @@
     <ClCompile Include="..\..\src\Core\Message.cpp" />
     <ClCompile Include="..\..\src\Core\Network.cpp" />
     <ClCompile Include="..\..\src\Core\Profiler.cpp" />
-    <ClCompile Include="..\..\src\Core\reflection\Class.cpp" />
-    <ClCompile Include="..\..\src\Core\reflection\Enum.cpp" />
-    <ClCompile Include="..\..\src\Core\reflection\Field.cpp" />
-    <ClCompile Include="..\..\src\Core\reflection\Object.cpp" />
-    <ClCompile Include="..\..\src\Core\reflection\Primitive.cpp" />
-    <ClCompile Include="..\..\src\Core\reflection\Type.cpp" />
+    <ClCompile Include="..\..\src\Core\Reflection.cpp" />
     <ClCompile Include="..\..\src\Core\Serialization.cpp" />
     <ClCompile Include="..\..\src\Core\StackWalker.cpp" />
     <ClCompile Include="..\..\src\Core\Stream.cpp" />
     <ClCompile Include="..\..\src\Core\Telemetry.cpp" />
     <ClCompile Include="..\..\src\Core\Timer.cpp" />
     <ClCompile Include="..\..\src\Core\Utilities.cpp" />
+    <ClCompile Include="..\..\src\Core\WebServer.cpp" />
     <ClCompile Include="..\..\src\Core\WebStream.cpp" />
     <ClCompile Include="..\..\src\Core\Core.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -226,6 +223,7 @@
     <ClCompile Include="..\..\src\Win32\FileWatcherWin32.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\dep\mongoose\mongoose.h" />
     <ClInclude Include="..\..\inc\Core\API.h" />
     <ClInclude Include="..\..\inc\Core\Archive.h" />
     <ClInclude Include="..\..\inc\Core\Concurrency.h" />
@@ -234,6 +232,7 @@
     <ClInclude Include="..\..\inc\Core\DynamicLibrary.h" />
     <ClInclude Include="..\..\inc\Core\Event.h" />
     <ClInclude Include="..\..\inc\Core\Handle.h" />
+    <ClInclude Include="..\..\inc\Core\Helpers.h" />
     <ClInclude Include="..\..\inc\Core\Log.h" />
     <ClInclude Include="..\..\inc\Core\Memory.h" />
     <ClInclude Include="..\..\inc\Core\Object.h" />
@@ -241,20 +240,15 @@
     <ClInclude Include="..\..\inc\Core\Pointers.h" />
     <ClInclude Include="..\..\inc\Core\ReferenceCount.h" />
     <ClInclude Include="..\..\inc\Core\Reflection.h" />
+    <ClInclude Include="..\..\inc\Core\Serialization.h" />
     <ClInclude Include="..\..\inc\Core\Stream.h" />
     <ClInclude Include="..\..\inc\Core\String.h" />
     <ClInclude Include="..\..\inc\Core\Telemetry.h" />
     <ClInclude Include="..\..\inc\Core\Timer.h" />
     <ClInclude Include="..\..\inc\Core\Utilities.h" />
+    <ClInclude Include="..\..\inc\Core\WebServer.h" />
     <ClInclude Include="..\..\inc\Math\Vector.h" />
     <ClInclude Include="..\..\inc\vapor\Chunk.h" />
-    <ClInclude Include="..\..\inc\vapor\core\Class.h" />
-    <ClInclude Include="..\..\inc\vapor\core\Enum.h" />
-    <ClInclude Include="..\..\inc\vapor\core\Field.h" />
-    <ClInclude Include="..\..\inc\vapor\core\FileWatcher.h" />
-    <ClInclude Include="..\..\inc\vapor\core\Helpers.h" />
-    <ClInclude Include="..\..\inc\vapor\core\Primitive.h" />
-    <ClInclude Include="..\..\inc\vapor\core\Type.h" />
     <ClInclude Include="..\..\inc\vapor\io\BinarySerializer.h" />
     <ClInclude Include="..\..\inc\vapor\io\JsonSerializer.h" />
     <ClInclude Include="..\..\inc\vapor\math\BoundingBox.h" />
@@ -271,8 +265,6 @@
     <ClInclude Include="..\..\inc\vapor\math\Quaternion.h" />
     <ClInclude Include="..\..\inc\vapor\math\Ray.h" />
     <ClInclude Include="..\..\inc\vapor\Profiler.h" />
-    <ClInclude Include="..\..\inc\vapor\Registry.h" />
-    <ClInclude Include="..\..\inc\vapor\Serialization.h" />
     <ClInclude Include="..\..\inc\vapor\StackWalker.h" />
     <ClInclude Include="..\..\inc\vapor\WebStream.h" />
     <ClInclude Include="..\..\inc\vapor\net\Network.h" />
@@ -280,9 +272,6 @@
     <ClInclude Include="..\..\inc\vapor\net\MessageHandler.h" />
     <ClInclude Include="..\..\inc\vapor\net\Messages.h" />
     <ClInclude Include="..\..\src\Win32\FileWatcherWin32.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\dep\luajit\src\vapor.lua" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -10,7 +10,7 @@
 #include "Math/Color.h"
 #include "Math/Helpers.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -86,4 +86,4 @@ const API_CORE Color Color::Yellow(1.0f, 1.0f, 0.0f);
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

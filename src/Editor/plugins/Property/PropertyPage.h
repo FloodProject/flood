@@ -8,6 +8,8 @@
 
 #pragma once
 
+#ifdef ENABLE_PLUGIN_PROPERTY
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//
@@ -30,7 +32,7 @@ struct MemoryWatch
 
 	byte* rangeBegin;
 	byte* rangeEnd;
-	uint hash;
+	uint32 hash;
 };
 
 //-----------------------------------//
@@ -48,10 +50,13 @@ public:
 	PropertyPage( wxWindow* parent );
 
 	// Populates properties on the grid.
-	void showProperties( const Object* object, bool reset = true );
+	void showProperties( Object* object, bool reset = true );
 
 	// Populates properties on the grid.
 	void showEntityProperties( const EntityPtr& entity );
+
+	// Appends the type fields to the property grid.
+	void appendObjectFields(Class&, void* object, bool newCategory = true);
 
 	// Gets the value of a field.
 	wxAny getFieldValue(const Field* field, void* object);
@@ -59,8 +64,11 @@ public:
 	// Sets the value of a field.
 	void setFieldValue(const Field* field, void* object, const wxAny& value);
 
-	// Updates the memory watches.
-	bool updateMemoryWatches();
+	// Resets the properties page.
+	void reset();
+
+	// Resets the properties page if the object is current.
+	void resetObject(const Object* object);
 
 	// Creates a memory watch.
 	void createMemoryWatch(const Field* field, void* object, MemoryWatch& watch);
@@ -68,14 +76,8 @@ public:
 	// Updates a memory watch.
 	bool updateMemoryWatch(const Field* field, void* object);
 
-	// Resets the properties page.
-	void reset();
-
-	// Resets the properties page if the object is current.
-	void resetObject(const Object* object);
-
-	// Appends the type fields to the property grid.
-	void appendObjectFields(const Class&, void* object, bool newCategory = true);
+	// Updates the memory watches.
+	bool updateMemoryWatches();
 
 protected:
 
@@ -98,7 +100,7 @@ protected:
 	wxAny getFieldPrimitiveValue(const Field* field, void* object);
 
 	// Creates a property for a field.
-	wxPGProperty* createProperty(const Class& type, const Field& field, void* object);
+	wxPGProperty* createProperty(Class& type, const Field& field, void* object);
 
 	// Creates a new property for a primitive type.
 	wxPGProperty* createPrimitiveProperty(const Field& field, void* object);
@@ -128,7 +130,7 @@ protected:
 	wxAny propertyValue;
 
 	// Current object.
-	const Object* currentObject;
+	Object* currentObject;
 
 	// Memory watches.
 	typedef std::map<const Field*, MemoryWatch> MemoryWatchesMap;
@@ -138,3 +140,5 @@ protected:
 //-----------------------------------//
 
 } } // end namespaces
+
+#endif

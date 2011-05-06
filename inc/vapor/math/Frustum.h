@@ -8,14 +8,13 @@
 
 #pragma once
 
+#include "Core/Reflection.h"
 #include "Math/Vector.h"
 #include "Math/Matrix4x4.h"
 #include "Math/Plane.h"
 #include "Math/BoundingBox.h"
 
-#include "Core/Object.h"
-
-namespace vapor {
+NAMESPACE_EXTERN_BEGIN
 
 //-----------------------------------//
 
@@ -23,16 +22,13 @@ namespace vapor {
  * Projection types.
  */
 
-struct Projection 
+enum_class Projection
 {
-    enum Enum
-    {
-        Orthographic,
-        Perspective
-    };
-
-	DECLARE_ENUM()
+	Orthographic,
+	Perspective  
 };
+
+API_CORE REFLECT_DECLARE_ENUM(Projection);
 
 //-----------------------------------//
 
@@ -40,12 +36,8 @@ struct Projection
  * Frustum is a shape similiar to a pyramid with the top truncated.
  */
 
-class API_CORE Frustum : public Object
+struct API_CORE Frustum // : public Object
 {
-	DECLARE_CLASS_()
-
-public:
-
     Frustum();
     Frustum( const Frustum& rhs );
 
@@ -64,7 +56,7 @@ public:
 public:
 
 	// Projection type.
-	Projection::Enum projection;
+	Projection projection;
 	
 	// Projection matrix.
 	Matrix4x4 matProjection;
@@ -89,6 +81,8 @@ public:
 	Vector3 corners[8];
 };
 
+API_CORE REFLECT_DECLARE_CLASS(Frustum)
+
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_EXTERN_END

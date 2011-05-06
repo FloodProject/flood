@@ -7,29 +7,30 @@
 ************************************************************************/
 
 #include "Core/API.h"
+#include "Core/Memory.h"
 #include "Math/Frustum.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
-BEGIN_ENUM(Projection)
+REFLECT_ENUM(Projection)
 	ENUM(Orthographic)
 	ENUM(Perspective)
-END_ENUM()
+REFLECT_ENUM_END()
 
-BEGIN_CLASS(Frustum)
+REFLECT_CLASS(Frustum)
 	FIELD_ENUM(Projection, projection)
 	FIELD_PRIMITIVE(float, fieldOfView)
 	FIELD_PRIMITIVE(float, nearPlane)
 	FIELD_PRIMITIVE(float, farPlane)
 	FIELD_PRIMITIVE(float, aspectRatio)
-END_CLASS()
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
 Frustum::Frustum()
-	: projection( Projection::Perspective )
+	: projection(Projection::Perspective)
 	, fieldOfView(60)
 	, nearPlane(1)
 	, farPlane(100)
@@ -46,7 +47,7 @@ Frustum::Frustum( const Frustum& rhs )
 	, farPlane( rhs.farPlane )
 	, aspectRatio( rhs.aspectRatio )
 {
-	for(uint i = 0; i < VAPOR_ARRAY_SIZE(rhs.planes); i++ )
+	for(size_t i = 0; i < ARRAY_SIZE(rhs.planes); i++ )
 		planes[i] = rhs.planes[i];
 }
 
@@ -54,15 +55,14 @@ Frustum::Frustum( const Frustum& rhs )
 
 void Frustum::updateProjection( const Vector2& size )
 {
-	if( projection == Projection::Perspective )
+	switch(projection)
 	{
-		matProjection = Matrix4x4::createPerspectiveProjection(
-			fieldOfView, aspectRatio, nearPlane, farPlane );
-	}
-	else
-	{
-		matProjection = Matrix4x4::createOrthographicProjection(
-			0, (float) size.x, 0, (float) size.y, nearPlane, farPlane );
+	case Projection::Perspective:
+		matProjection = Matrix4x4::createPerspective( fieldOfView, aspectRatio, nearPlane, farPlane );
+		break;
+	case Projection::Orthographic:
+		matProjection = Matrix4x4::createOrthographic( 0, size.x, 0, size.y, nearPlane, farPlane );
+		break;
 	}
 }
 
@@ -140,11 +140,11 @@ void Frustum::updateCorners( const Matrix4x3& matView )
 		Vector3(-1, -1, -1), Vector3(1, -1, -1)
 	};
 
-	for( uint i = 0; i < VAPOR_ARRAY_SIZE(cornerPoints); i++ )
+	for(size_t i = 0; i < ARRAY_SIZE(cornerPoints); i++)
 	{
 		const Vector3& corner = cornerPoints[i];
 
-		Vector4 c = matInvClip * Vector4(corner, 1);
+		Vector4 c = matInvClip * Vector4(corner, 1.0);
 		corners[i++] = Vector3(c.x / c.w, c.y / c.w, c.z / c.w);
 	}
 }
@@ -155,7 +155,7 @@ bool Frustum::intersects( const BoundingBox& box ) const
 {
 	// Loop through each side of the frustum and test if the box lies outside any of them.
 	
-	for(uint i = 0; i < VAPOR_ARRAY_SIZE(planes); i++)
+	for(size_t i = 0; i < ARRAY_SIZE(planes); i++)
 	{
 		const Plane& plane = planes[i];
 
@@ -176,4 +176,4 @@ bool Frustum::intersects( const BoundingBox& box ) const
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

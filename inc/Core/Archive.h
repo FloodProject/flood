@@ -15,8 +15,9 @@ NAMESPACE_EXTERN_BEGIN
 
 //-----------------------------------//
 
-struct Archive;
 struct Stream;
+struct Archive;
+struct ArchiveFuncs;
 
 // Creates a new virtual archive.
 API_CORE Archive* ArchiveCreateVirtual(Allocator*);
@@ -34,7 +35,7 @@ API_CORE Archive* ArchiveCreateFromZip(Allocator*, const Path&);
 API_CORE Archive* ArchiveCreateFromDirectory(Allocator*, const Path&);
 
 // Destroys the archive and deallocates its memory.
-API_CORE void ArchiveDestroy(Archive*, Allocator*);
+API_CORE void ArchiveDestroy(Archive*);
 
 // Opens the archive.
 API_CORE bool ArchiveOpen(Archive*, const Path&);
@@ -66,15 +67,13 @@ typedef scoped_ptr<Archive, ArchiveDestroy> ArchivePtr;
  * implementations are ZIP archive files and OS filesystem directories.
  */
 
-struct ArchiveFuncs;
-
 struct Archive
 {
 	virtual ~Archive() {}
 
-	String Path;
-	String Scheme;
-	void* Handle;
+	String path;
+	String scheme;
+	void*  handle;
 	
 	ArchiveFuncs* fn;
 };

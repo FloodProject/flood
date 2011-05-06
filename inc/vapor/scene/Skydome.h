@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "Resources/Image.h"
 #include "Scene/Geometry.h"
 #include "Render/Sphere.h"
 
@@ -21,29 +22,28 @@ namespace vapor {
  * simulates a dynamic sky, with moving clouds.
  */
 
+REFLECT_DECLARE_CLASS(Skydome)
+
 class VAPOR_API Skydome : public Geometry
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(Skydome)
 
 public:
 
 	Skydome();
-	virtual ~Skydome();
 
-	// SKY
+	// Sets the base sky color.
+	void setSkyColorBase( const Color& );
 
-	// Sets the sky to a fixed color.
-	void setSkyColor( const Color& color );
+	// Sets the extra sky color.
+	void setSkyColorExtra( const Color& );
 
-	// Sets the sky to a linear color gradient.
-	void setSkyLinearGradient( const Color& c1, const Color& c2 );
-
-	// CLOUDS
+	// Sets if sky colors are a linear gradient.
+	void setSkyLinearGradient( bool useLinearGradient );
 
 	// Enables or disables the clouds layer.
-	ACESSOR( CloudsVisible, bool, showClouds );
-
-	// CELESTIAL BODIES (Sun, Moon, Stars)
+	GETTER( CloudsVisible, bool, showClouds );
+	void setCloudsVisible( bool showClouds );
 
 	// Sets the sun node.
 	void setSunEntity( const EntityPtr& sun );
@@ -57,10 +57,7 @@ public:
 protected:
 
 	// Gets the sky color at the vertice at a given time of day.
-	Color getSkyVertexColor( const Vector3& vertex );
-
-	// Scales the Y vertex value into a [0,1] range.
-	float scale( float number );
+	Color getSkyVertexColor( const Vector3&, float minY, float maxY );
 
 	// Generates the dome geometry.
 	void generateDome();
@@ -68,14 +65,11 @@ protected:
 	// Generates the sky bodies.
 	void generateBodies();
 
-	// Updates clouds.
-	void updateClouds();
+	// Generates the sky colors.
+	void generateColors();
 
-	// Transforms noise into clouds.
-	float cloudsExpCurve(float v);
-
-	// Field change callback.
-	void onFieldChanged(const Field& field);
+	// Generates the clouds.
+	void generateClouds();
 
 	// Keeps track of the current virtual game time.
 	float currentTime;
@@ -83,16 +77,21 @@ protected:
 	// Dome geometry that will be rendered as the sky.
 	SpherePtr dome;
 	
-	// Sky color gradient.
-	Color skyColorTop;
-	Color skyColorBottom;
-	float yMin, yMax;
+	// Sky colors.
+	Color skyBaseColor;
+	Color skyExtraColor;
+
+	// Generate linear gradient.
+	bool useLinearGradient;
 
 	// Keeps track if sky follows the camera.
 	bool followCamera;
 
 	// Show clouds.
 	bool showClouds;
+
+	// Keeps track if the geometry needs to be regenerated.
+	bool needsRegeneration;
 
 	// Clouds cover.
 	float cloudsCover;
@@ -101,9 +100,10 @@ protected:
 	float cloudsSharpness;
 
 	// Image of the clouds.
-	ImagePtr clouds;
+	ImageHandle clouds;
 
-	int cloudsNoiseSeed;
+	// Noise seed.
+	int32 cloudsNoiseSeed;
 
 	// Unprocessed clouds noise.
 	std::vector<float> cloudsNoise;

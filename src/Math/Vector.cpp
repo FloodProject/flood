@@ -9,7 +9,7 @@
 #include "Core/API.h"
 #include "Math/Vector.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -34,4 +34,4 @@ const API_CORE Vector4 Vector4::UnitW( 0, 0, 0, 1 );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

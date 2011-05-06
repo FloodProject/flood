@@ -21,11 +21,11 @@ bool ArchiveOpen(Archive* archive, const String& path)
 
 //-----------------------------------//
 
-void ArchiveDestroy(Archive* archive, Allocator* alloc)
+void ArchiveDestroy(Archive* archive)
 {
 	if( !archive ) return;
 	archive->fn->close(archive);
-	Deallocate(alloc, archive);
+	Deallocate(archive);
 }
 
 //-----------------------------------//

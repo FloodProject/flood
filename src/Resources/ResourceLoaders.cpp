@@ -23,45 +23,45 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_ABSTRACT(ResourceLoader)
+REFLECT_ABSTRACT_CHILD_CLASS(ResourceLoader, Object)
 	//FIELD_VECTOR(string, extensions) FIELD_READONLY(extensions)
-END_CLASS()
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
-#define REF(name) name::getStaticType();
+#define REF(name) name##GetType();
 
 void ResourceManager::referenceLoaders()
 {
-#ifdef VAPOR_IMAGE_PICOPNG
+#ifdef ENABLE_IMAGE_PICOPNG
 	REF(PNG_Pico_Loader)
 #endif
 
-#ifdef VAPOR_IMAGE_DEVIL
+#ifdef ENABLE_IMAGE_DEVIL
 	REF(IL_Image_Loader)
 #endif
 
-#ifdef VAPOR_IMAGE_STB
+#ifdef ENABLE_IMAGE_STB
 	REF(STB_Image_Loader)
 #endif
 
-#ifdef VAPOR_AUDIO_OGG
+#ifdef ENABLE_AUDIO_OGG
 	REF(OGG_Loader)
 #endif
 
-#ifdef VAPOR_SHADER_GLSL
+#ifdef ENABLE_SHADER_GLSL
 	REF(GLSL_Loader)
 #endif
 
-#ifdef VAPOR_SCRIPTING_LUA
+#ifdef ENABLE_SCRIPTING_LUA
 	REF(Lua_Loader)
 #endif
 
-#ifdef VAPOR_FONT_BITMAP
+#ifdef ENABLE_FONT_BITMAP
 	REF(Font_Loader)
 #endif
 
-#ifdef VAPOR_MESH_MILKSHAPE3D
+#ifdef ENABLE_MESH_MILKSHAPE3D
 	REF(MilkshapeLoader)
 #endif
 }

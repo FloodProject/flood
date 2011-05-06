@@ -21,9 +21,11 @@ namespace vapor {
  * Resource processors handle the processing of resource data.
  */
 
+REFLECT_DECLARE_CLASS(MeshProcessor)
+
 class PIPELINE_API MeshProcessor : public ResourceProcessor
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(MeshProcessor)
 
 public:
 
@@ -33,7 +35,7 @@ public:
 	bool Process(const ResourcePtr& resource);
 
 	// Gets the processed resource type.
-	const Class& GetResourceType() { return Mesh::getStaticType(); }
+	Class* GetResourceType() { return MeshGetType(); }
 
 private:
 };

@@ -1,0 +1,50 @@
+/************************************************************************
+*
+* vapor3D Engine © (2008-2010)
+*
+*	<http://www.vapor3d.org>
+*
+************************************************************************/
+
+#pragma once
+
+#ifdef ENABLE_SHADER_GLSL
+
+#include "Resources/ResourceLoader.h"
+
+namespace vapor {
+
+//-----------------------------------//
+
+/**
+ * Loads GLSL shaders as text files.
+ */
+
+REFLECT_DECLARE_CLASS(GLSL_Loader)
+
+class GLSL_Loader : public ResourceLoader
+{
+	REFLECT_DECLARE_OBJECT(GLSL_Loader)
+
+public:
+
+	GLSL_Loader();
+
+	// Creates the resource with no data.
+	virtual Resource* prepare(const Stream& stream);
+
+	// Parses a GLSL text shader to a buffer.
+	virtual bool decode(const Stream& file, Resource* res);
+
+	// Gets the name of this codec.
+	GETTER(Name, const String, "GLSL")
+
+	// Overrides this to return the right resource group.
+	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Shaders)
+};
+
+//-----------------------------------//
+
+} // end namespace
+
+#endif

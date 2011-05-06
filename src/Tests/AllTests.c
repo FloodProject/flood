@@ -29,6 +29,7 @@ CuSuite* GetSuiteConcurrency();
 CuSuite* GetSuiteStreams();
 CuSuite* GetSuiteArchives();
 CuSuite* GetSuiteHandle();
+CuSuite* GetSuiteReflection();
 
 static const SuiteFunction suites[] =
 {
@@ -36,7 +37,8 @@ static const SuiteFunction suites[] =
 	GetSuiteConcurrency,
 	GetSuiteStreams,
 	GetSuiteArchives,
-	GetSuiteHandle
+	GetSuiteHandle,
+	GetSuiteReflection
 };
 
 //-----------------------------------//
@@ -45,7 +47,7 @@ void RunAllTests(void)
 {
 	CuSuite* suite = CuSuiteNew();
 	
-	for(int i = 0; i < array_sizeof(suites); i++)
+	for(size_t i = 0; i < array_sizeof(suites); i++)
 	{
 		SuiteFunction fn = suites[i];
 		CuSuiteAddSuite(suite, fn());

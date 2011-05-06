@@ -11,7 +11,7 @@
 #include "Math/Helpers.h"
 #include <cmath>
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -284,4 +284,4 @@ Matrix4x3 Matrix4x3::inverse() const
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

@@ -10,10 +10,10 @@
 
 #ifdef VAPOR_PHYSICS_BULLET
 
-#include "physics/Physics.h"
-#include "physics/Body.h"
-#include "physics/Convert.h"
-#include "physics/DebugDraw.h"
+#include "Physics/Physics.h"
+#include "Physics/Body.h"
+#include "Physics/Convert.h"
+#include "Physics/DebugDraw.h"
 #include "Render/Device.h"
 #include "Engine.h"
 

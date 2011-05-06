@@ -12,29 +12,31 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
+REFLECT_DECLARE_CLASS(ResourceMetadata)
+
 struct ResourceMetadata
 {
-	REFLECT_DECLARE_CLASS()
-
 	// Hash of the resource.
-	uint hash;
+	uint32 hash;
 
 	// Path of the resource.
-	std::string path;
+	String path;
 
 	// Thumbnail of the resource.
-	std::string thumbnail;
+	String thumbnail;
 };
 
 typedef std::vector<ResourceMetadata> ResourcesCache;
-typedef std::map<uint, ResourceMetadata> ResourcesCacheMap;
-typedef std::pair<uint, ResourceMetadata> ResourcesCacheMapPair;
+typedef std::map<uint32, ResourceMetadata> ResourcesCacheMap;
+typedef std::pair<uint32, ResourceMetadata> ResourcesCacheMapPair;
 
 //-----------------------------------//
 
+REFLECT_DECLARE_CLASS(ResourceDatabase)
+
 class ResourceDatabase : public Object
 {
-	REFLECT_DECLARE_CLASS()
+	REFLECT_DECLARE_OBJECT(ResourceDatabase)
 
 public:
 
@@ -51,7 +53,7 @@ public:
 	void scanFiles();
 
 	// Serialization fix-up.
-	virtual void fixUp();
+	virtual void fixUp() OVERRIDE;
 
 	// Caches all the resources metadata.
 	ResourcesCache resources;

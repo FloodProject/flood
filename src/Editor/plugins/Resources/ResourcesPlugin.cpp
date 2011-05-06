@@ -19,7 +19,7 @@ namespace vapor { namespace editor {
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(ResourcesPlugin, Plugin)
-REFLECT_END()
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
@@ -33,8 +33,8 @@ ResourcesPlugin::ResourcesPlugin()
 
 ResourcesPlugin::~ResourcesPlugin()
 {
-	delete resourcesPage;
-	delete resourcesBrowser;
+	Deallocate(resourcesPage);
+	Deallocate(resourcesBrowser);
 }
 
 //-----------------------------------//
@@ -55,7 +55,7 @@ PluginMetadata ResourcesPlugin::getMetadata()
 
 void ResourcesPlugin::onPluginEnable()
 {
-	resourcesPage = new ResourcesPage(editor);
+	resourcesPage = Allocate(ResourcesPage, AllocatorGetHeap(), editor);
 	resourcesPage->SetSize(300, 200);
 
 	wxBitmap iconPackage = wxMEMORY_BITMAP(package);
@@ -95,10 +95,10 @@ void ResourcesPlugin::onPluginDisable()
 	editor->getAUI()->DetachPane(resourcesPage);
 	editor->getAUI()->Update();
 
-	delete resourcesBrowser;
+	Deallocate(resourcesBrowser);
 	resourcesBrowser = nullptr;
 
-	delete resourcesPage;
+	Deallocate(resourcesPage);
 	resourcesPage = nullptr;
 
 	Pipeline::Cleanup();

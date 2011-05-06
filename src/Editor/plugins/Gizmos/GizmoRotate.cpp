@@ -26,7 +26,7 @@ void GizmoRotate::buildGeometry()
 
 	lines = generateCircles();
 
-	RenderablePtr renderable = new Renderable(PolygonType::Lines);
+	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Lines);
 	renderable->setVertexBuffer(lines);
 	renderable->setMaterial(material);
 	renderable->setRenderLayer(RenderLayer::PostTransparency);
@@ -40,7 +40,7 @@ void GizmoRotate::buildGeometry()
 static void TransformVertices(std::vector<Vector3>& pos,
 					   std::vector<Vector3>& vs, Matrix4x3& transform)
 {
-	for( uint i = 0; i < vs.size(); i++ )
+	for( size_t i = 0; i < vs.size(); i++ )
 	{
 		const Vector3& v = vs[i];
 		pos.push_back( transform*v );
@@ -92,7 +92,7 @@ VertexBufferPtr GizmoRotate::generateCircles()
 	}
 
 	// Vertex buffer setup
-	VertexBufferPtr vb = new VertexBuffer();
+	VertexBufferPtr vb = Allocate(VertexBuffer, AllocatorGetHeap());
 
 	assert( pos.size() == colors.size() );
 

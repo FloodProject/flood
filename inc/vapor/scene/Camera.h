@@ -30,10 +30,12 @@ struct RenderBlock;
  * speed up the rendering by cutting nodes that are outside the view range.
  */
 
+REFLECT_DECLARE_CLASS(Camera)
+
 class VAPOR_API Camera : public Component
 {
+	REFLECT_DECLARE_OBJECT(Camera)
 	DECLARE_UNCOPYABLE(Camera)
-	DECLARE_CLASS_()
 	
 public:
 

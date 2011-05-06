@@ -23,15 +23,17 @@ struct TerrainSettings;
  * integer coordinates.
  */
 
+REFLECT_DECLARE_CLASS(Cell)
+
 class VAPOR_API Cell : public Geometry
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(Cell)
 
 public:
 
 	Cell();
 
-	Cell( int x, int y );
+	Cell( int32 x, int32 y );
 
 	// Sets the terrain settings of this terrain cell.
 	void setSettings( const TerrainSettings& settings );
@@ -52,10 +54,10 @@ public:
 	byte getNeighborFaces( uint index, std::vector<uint>& n );
 
 	// Gets the X coordinate of the cell.
-	GETTER(X, int, x)
+	GETTER(X, int32, x)
 
 	// Gets the Y coordinate of the cell.
-	GETTER(Y, int, y)
+	GETTER(Y, int32, y)
 
 protected:
 
@@ -72,7 +74,8 @@ protected:
 	void rebuildAveragedNormals();
 
 	// Coordinates of this cell of terrain.
-	int x, y;
+	int32 x;
+	int32 y;
 
 	// Terrain settings.
 	const TerrainSettings* settings;
@@ -84,10 +87,10 @@ protected:
 	std::vector<Vector3> faceNormals;
 
 	// Cell image.
-	ImagePtr image;
+	ImageHandle image;
 
 	// Cell material.
-	MaterialPtr material;
+	MaterialHandle material;
 
 	// Renderable of the cell.
 	RenderablePtr rend;

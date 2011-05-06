@@ -9,36 +9,38 @@
 #pragma once
 
 #include "Core/Concurrency.h"
-#include <functional>
-#include <cassert>
 
-NAMESPACE_BEGIN
+NAMESPACE_EXTERN_BEGIN
 
 //-----------------------------------//
 
-/**
- * Inherit from this class to be able to use reference counting semantics.
- * Currently this is implemented using intrusive_ptr semantics.
- */
-
-class API_CORE ReferenceCounted
-{
-public:
-
-	int32 getReferenceCount() const { return AtomicRead(&references); }
-	inline void addReference() { AtomicIncrement(&references); }
-	inline bool releaseReference() { return AtomicDecrement(&references) == 0; }
-
-protected:
-	
+struct API_CORE ReferenceCounted
+{	
 	ReferenceCounted() : references(0) {}
-
-#ifdef SWIG
-	mutable volatile Atomic references;
-#else
-	mutable volatile VAPOR_ALIGN_BEGIN(32) Atomic references VAPOR_ALIGN_END(32);
-#endif
+	ReferenceCounted(const ReferenceCounted&) : references(0) {}
+	ReferenceCounted& operator=(const ReferenceCounted&) { return *this; }
+	
+	volatile Atomic references;
 };
+
+API_CORE inline int32 ReferenceGetCount(ReferenceCounted* ref)
+{
+	return AtomicRead(&ref->references);
+}
+
+API_CORE inline void ReferenceAdd(ReferenceCounted* ref)
+{
+	AtomicIncrement(&ref->references);
+}
+
+API_CORE inline bool ReferenceRelease(ReferenceCounted* ref)
+{
+	return AtomicDecrement(&ref->references) == 0;
+}
+
+//-----------------------------------//
+
+EXTERN_END
 
 template<typename T> class RefPtr
 {
@@ -48,27 +50,24 @@ public:
 
     RefPtr(T* p, bool add_ref = true) : px(p)
     {
-        if( px != nullptr && add_ref )
-			px->addReference();
+        if( px != nullptr && add_ref ) ReferenceAdd(px);
     }
 
 	template<typename U>
     RefPtr( RefPtr<U> const & rhs ) : px( rhs.get() )
     {
-        if( px != nullptr )
-			px->addReference();
+        if( px != nullptr ) ReferenceAdd(px);
     }
 
     RefPtr(RefPtr const & rhs): px(rhs.px)
     {
-        if( px != nullptr )
-			px->addReference();
+        if( px != nullptr ) ReferenceAdd(px);
     }
 
     ~RefPtr()
     {
-        if( px != nullptr && px->releaseReference() )
-			delete px;
+        if( px != nullptr && ReferenceRelease(px) )
+			Deallocate<T>(px);
     }
 
     template<typename U>
@@ -78,15 +77,15 @@ public:
         return *this;
     }
 
-#ifdef VAPOR_COMPILER_MSVC_2010
-    RefPtr(RefPtr && rhs): px( rhs.px )
+#ifdef COMPILER_MSVC_2010
+    RefPtr(RefPtr&& rhs): px(rhs.px)
     {
-        rhs.px = 0;
+        rhs.px = nullptr;
     }
 
-    RefPtr& operator=(RefPtr && rhs)
+    RefPtr& operator=(RefPtr&& rhs)
     {
-        RefPtr( static_cast< RefPtr && >( rhs ) ).swap(*this);
+        RefPtr(static_cast<RefPtr&&>(rhs)).swap(*this);
         return *this;
     }
 #endif
@@ -144,7 +143,7 @@ public:
         rhs.px = tmp;
     }
 
-private:
+public:
 
     T* px;
 };
@@ -202,7 +201,13 @@ NAMESPACE_END
 	typedef RefPtr<type> type##Ptr;
 
 #define FWD_DECL_INTRUSIVE(T)						\
-	namespace vapor {								\
+	NAMESPACE_BEGIN									\
 		class T;									\
 		TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( T );	\
-	} // end namespace
+	NAMESPACE_END
+
+#define FWD_DECL_HANDLE(T)							\
+	NAMESPACE_BEGIN									\
+		class T;									\
+		typedef Handle<T> T##Handle;                \
+	NAMESPACE_END

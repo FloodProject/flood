@@ -14,13 +14,13 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_ENUM(LightType)
+REFLECT_ENUM(LightType)
 	ENUM(Directional)
 	ENUM(Point)
 	ENUM(Spot)
-END_ENUM()
+REFLECT_ENUM_END()
 
-BEGIN_CLASS_PARENT(Light, Component)
+REFLECT_CHILD_CLASS(Light, Component)
 	FIELD_ENUM(LightType, lightType)
 	FIELD_PRIMITIVE(Color, diffuseColor)
 	FIELD_PRIMITIVE(Color, specularColor)
@@ -29,7 +29,7 @@ BEGIN_CLASS_PARENT(Light, Component)
 	FIELD_PRIMITIVE(float, cutoffRadius)
 	FIELD_PRIMITIVE(bool, isLightOn)
 	FIELD_PRIMITIVE(bool, castsShadows)
-END_CLASS()
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
@@ -50,11 +50,13 @@ void Light::update( float delta )
 
 RenderablePtr Light::createDebugRenderable() const
 {
-	MaterialPtr matLight = new Material("LightMaterial");
-	matLight->setDepthTest(false);
+	MaterialHandle materialHandle = MaterialCreate(AllocatorGetHeap(), "LightMaterial");
+
+	Material* material = materialHandle.Resolve();
+	material->setDepthTest(false);
 
 	SpherePtr sphere = new Sphere();
-	sphere->setMaterial(matLight);
+	sphere->setMaterial(materialHandle);
 
 	return sphere;
 }

@@ -8,6 +8,8 @@
 
 #pragma once
 
+#ifdef PLUGIN_TERRAIN
+
 #include "Plugin.h"
 #include "UndoOperation.h"
 #include "TerrainPlugin.h"
@@ -64,3 +66,5 @@ public:
 //-----------------------------------//
 
 } } // end namespaces
+
+#endif

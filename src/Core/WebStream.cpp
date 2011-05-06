@@ -10,12 +10,12 @@
 #include "WebStream.h"
 #include "Core/Log.h"
 
-#ifdef VAPOR_NETWORKING_CURL
+#ifdef ENABLE_NETWORKING_CURL
 
 #define CURL_STATICLIB
 #include <curl/curl.h>
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -93,6 +93,6 @@ static size_t writeHTTP(void* ptr, size_t size, size_t nmemb, void* userdata)
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END
 
 #endif

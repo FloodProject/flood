@@ -8,9 +8,7 @@
 
 #pragma once
 
-#include <cassert>
-
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -208,6 +206,45 @@ struct Vector2
 
 //-----------------------------------//
 
-} // end namespace
+struct Vector2i
+{
+	int32 x, y;
+
+	// Constructors.
+	Vector2i() : x(0), y(0) { }
+	Vector2i(int32 x, int32 y) : x(x), y(y) { }
+	Vector2i (const Vector2i& v) : x(v.x), y(v.y) { }
+
+	// Assignment
+	Vector2i& operator = (const Vector2i& v) { x = v.x; y = v.y; return *this; }
+
+	// Relational.
+	bool operator == (const Vector2i& v) const { return (x == v.x) && (y == v.y); }
+    bool operator != (const Vector2i& v) const { return (x != v.x) || (y != v.y); }
+	bool operator < ( const Vector2i& rhs ) const { return (x < rhs.x) && (y < rhs.y); }
+	bool operator > ( const Vector2i& rhs ) const { return (x > rhs.x) && (y > rhs.y); }
+
+	// Addition.
+	Vector2i operator + (const Vector2i& v) const { return Vector2i(x+v.x, y+v.y); }	
+	Vector2i& operator += (const Vector2i& v) { x += v.x; y += v.y; return *this; }
+	
+	// Subtraction.
+	Vector2i operator - () const { return Vector2i(-x, -y); }	
+	Vector2i operator - (const Vector2i& v) const { return Vector2i(x-v.x, y-v.y); }
+	Vector2i& operator -= (const Vector2i& v) { x -= v.x; y -= v.y; return *this; }
+
+	// Multiplication.
+	Vector2i operator * (int32 s) const { return Vector2i(x*s, y*s); }
+	
+	// Division.
+	Vector2i operator / (int s) const { return Vector2i(x/s, y/s); }
+
+	// Zeroes the vector.
+	void zero() { x = y = 0; }
+};
+
+//-----------------------------------//
+
+NAMESPACE_END
 
 

@@ -1,6 +1,6 @@
 #include "Resources/API.h"
 
-#ifdef VAPOR_IMAGE_PICOPNG
+#ifdef ENABLE_IMAGE_PICOPNG
 
 int decodePNG(std::vector<unsigned char>& out_image_32bit, unsigned long& image_width, unsigned long& image_height, const unsigned char* in_png, unsigned long in_size)
 {

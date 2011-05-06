@@ -9,9 +9,9 @@
 #pragma once
 
 #include "Resources/Font.h"
-#include "Render/Material.h"
+#include "Resources/Material.h"
 #include "Scene/Geometry.h"
-#include "gui/Overlay.h"
+#include "GUI/Overlay.h"
 
 namespace vapor {
 
@@ -26,9 +26,11 @@ namespace vapor {
  * to its environment.
  */
 
+REFLECT_DECLARE_CLASS(Console)
+
 class VAPOR_API Console : public Overlay
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(Console)
 
 public:
 
@@ -45,8 +47,6 @@ protected:
 	// Used to track if the geometry needs updating.
 	bool isDirty;
 };
-
-//-----------------------------------//
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Console );
 

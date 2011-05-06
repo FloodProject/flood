@@ -19,14 +19,14 @@ namespace vapor {
  * Water plane.
  */
 
+REFLECT_DECLARE_CLASS(Water)
+
 class VAPOR_API Water : public Geometry
 {
-	DECLARE_CLASS_()
-
 public:
 
 	Water();
-	Water( MaterialPtr material );
+	Water( MaterialHandle material );
 
 protected:
 

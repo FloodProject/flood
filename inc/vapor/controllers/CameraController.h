@@ -18,9 +18,11 @@ namespace vapor {
  * A simple camera controller.
  */
 
+REFLECT_DECLARE_CLASS(CameraController)
+
 class VAPOR_API CameraController : public Controller
 {
-	DECLARE_CLASS_()
+	REFLECT_DECLARE_OBJECT(CameraController)
 
 public:
 

@@ -75,11 +75,11 @@ public:
 	virtual void setCursorCapture( bool state ) {}
 
 	// Gets the cursor position on screen.
-	virtual Vector2 getCursorPosition() const { return Vector2::Zero; }
+	virtual Vector2i getCursorPosition() const { return Vector2i(0,0);/*::Zero;*/ }
 
 	// Sets the cursor position on screen.
 	virtual void setCursorPosition( int x, int y ) {}
-	void setCursorPosition( const Vector2& pos );
+	void setCursorPosition( const Vector2i& pos );
 
 	// Gets the input manager.
 	virtual InputManager* getInputManager() { return nullptr; }

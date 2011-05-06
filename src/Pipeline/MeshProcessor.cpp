@@ -15,8 +15,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(MeshProcessor, ResourceProcessor)
-END_CLASS()
+REFLECT_CHILD_CLASS(MeshProcessor, ResourceProcessor)
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 

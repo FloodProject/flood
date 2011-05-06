@@ -11,9 +11,9 @@
 
 #ifdef VAPOR_PHYSICS_BULLET
 
-#include "physics/CapsuleShape.h"
-#include "physics/Convert.h"
-#include "physics/Body.h"
+#include "Physics/CapsuleShape.h"
+#include "Physics/Convert.h"
+#include "Physics/Body.h"
 
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
@@ -24,10 +24,10 @@ namespace vapor {
 
 //-----------------------------------//
 
-BEGIN_CLASS_PARENT(CapsuleShape, Shape)
+REFLECT_CHILD_CLASS(CapsuleShape, Shape)
 	FIELD_PRIMITIVE(float, height)
 	FIELD_PRIMITIVE(float, radius)
-END_CLASS()
+REFLECT_CLASS_END()
 
 //-----------------------------------//
 
