@@ -47,19 +47,16 @@ RenderableVector Geometry::getRenderables()
 
 //-----------------------------------//
  
-void Geometry::appendRenderables( RenderQueue& queue, TransformPtr transform )
+void Geometry::appendRenderables( RenderQueue& queue, const TransformPtr& transform )
 {
-	if( !transform )
-		return;
-	
 	const Matrix4x3& absoluteTransform = transform->getAbsoluteTransform();
 
 	for( size_t i = 0; i < renderables.size(); i++ )
 	{
-		const RenderablePtr& rend = renderables[i];
-		
-		RenderState state;
-		state.renderable = rend;
+		const RenderablePtr& renderable = renderables[i];
+		if( !renderable ) continue;
+
+		RenderState state( renderable );
 		state.modelMatrix = absoluteTransform;
 
 		queue.push_back(state);
@@ -82,7 +79,7 @@ void Geometry::updateBounds()
 
 		const std::vector<Vector3>& verts = vb->getVertices();
 		
-		for( uint j = 0; j < verts.size(); j++ )
+		for( size_t j = 0; j < verts.size(); j++ )
 		{
 			const Vector3& vertex = verts[j];
 			bounds.add(vertex);

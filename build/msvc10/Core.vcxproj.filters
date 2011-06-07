@@ -345,12 +345,6 @@
     <ClInclude Include="..\..\inc\vapor\Chunk.h">
       <Filter>Serialization\Binary</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\io\BinarySerializer.h">
-      <Filter>Serialization\Binary</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\io\JsonSerializer.h">
-      <Filter>Serialization\JSON</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\Win32\FileWatcherWin32.h">
       <Filter>Archive\Watcher</Filter>
     </ClInclude>
@@ -377,6 +371,9 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\WebServer.h">
       <Filter>Web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\FileWatcher.h">
+      <Filter>Archive\Watcher</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

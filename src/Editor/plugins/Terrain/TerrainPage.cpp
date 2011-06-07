@@ -8,12 +8,11 @@
 
 #include "Editor/API.h"
 
-#ifdef PLUGIN_TERRAIN
+#ifdef ENABLE_PLUGIN_TERRAIN
 
 #include "TerrainPage.h"
 #include "Core/Utilities.h"
-#include "Resources\ResourceManager.h"
-#include <iterator>
+#include "Resources/ResourceManager.h"
 
 namespace vapor { namespace editor {
 
@@ -21,7 +20,7 @@ namespace vapor { namespace editor {
 
 TerrainPage::TerrainPage( wxWindow* parent, wxWindowID id,
 						 const wxPoint& pos, const wxSize& size, long style ) 
-	: wxPanel( parent, id, pos, size, style )
+	: wxScrolledWindow( parent, id, pos, size, style )
 {	
 	createUI();
 	createBrushes();
@@ -31,7 +30,7 @@ TerrainPage::TerrainPage( wxWindow* parent, wxWindowID id,
 
 void TerrainPage::createBrushes()
 {
-	String brushesPath = "Media/Brushes/";
+	String brushesPath = "Assets/Brushes/";
 	
 	std::vector<String> files;
 	FileEnumerateFiles(brushesPath, files);
@@ -45,24 +44,30 @@ void TerrainPage::createBrushes()
 		ImageHandle image = rm->loadResource<Image>(file);
 		if( !image ) continue;
 
-		//m_choiceBrush->addImage( image );
+		m_choiceBrush->Append( PathGetFile(file), *ConvertImageToBitmap(image) );
 	}
+
+	if( m_choiceBrush->GetCount() > 0 ) m_choiceBrush->Select(0);
 }
 
 //-----------------------------------//
 
 void TerrainPage::createUI()
 {
+	//scrolledWindow = new wxScrolledWindow(this);
+
 	m_cbTerrainTool = new wxChoicebook( this, wxID_ANY, 
 		wxDefaultPosition, wxDefaultSize, wxCHB_DEFAULT );
 
 	wxBoxSizer* bSizer1 = new wxBoxSizer( wxVERTICAL );
+	//bSizer1->Add( scrolledWindow, 1, wxEXPAND|wxALL, 5 );
 	bSizer1->Add( m_cbTerrainTool, 1, wxEXPAND|wxALL, 5 );
 	
 	createBrush();
 	//createCell();
 
-	SetSizer( bSizer1 );
+	//scrolledWindow->SetSizer( bSizer1 );
+	SetSizerAndFit( bSizer1 );
 }
 
 //-----------------------------------//
@@ -75,19 +80,21 @@ void TerrainPage::createBrush()
 	//	wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 
 	wxFlexGridSizer* fgSizer2 = new wxFlexGridSizer( 2 );
-	fgSizer2->SetFlexibleDirection( wxBOTH );
-	fgSizer2->AddGrowableCol( 1 );
+	//fgSizer2->SetFlexibleDirection( wxVERTICAL );
+	//fgSizer2->AddGrowableCol( 1 );
 	
 	wxStaticText* m_staticText2 = new wxStaticText( m_panelBrush, wxID_ANY, "Brush:" );
 	fgSizer2->Add( m_staticText2, 0, wxALL, 5 );
 	
-	m_choiceBrush = new wxImageComboBox( m_panelBrush, wxID_ANY );
+	m_choiceBrush = new wxBitmapComboBox( m_panelBrush, wxID_ANY );
 	fgSizer2->Add( m_choiceBrush, 0, wxEXPAND|wxTOP|wxBOTTOM|wxLEFT, 5 );
 	
+	m_choiceBrush->Bind( wxEVT_COMMAND_COMBOBOX_SELECTED, &TerrainPage::onTextureSelected, this );
+
 	wxStaticText* m_staticText31 = new wxStaticText( m_panelBrush, wxID_ANY, "Size:" );
 	fgSizer2->Add( m_staticText31, 0, wxALL, 5 );
 	
-	m_sliderSize = new wxSliderCtrl( m_panelBrush, wxID_ANY, 50, 0, 100 );
+	m_sliderSize = new wxSliderCtrl( m_panelBrush, wxID_ANY, BRUSH_INITIAL_SIZE, 0, 200 );
 	fgSizer2->Add( m_sliderSize, 0, wxEXPAND|wxTOP|wxBOTTOM, 5 );
 	
 	wxStaticText* m_staticText3 = new wxStaticText( m_panelBrush, wxID_ANY,	"Strength:" );
@@ -102,11 +109,8 @@ void TerrainPage::createBrush()
 	m_textureChoice = new wxComboBox( m_panelBrush, wxID_ANY );
 	fgSizer2->Add( m_textureChoice, 0, wxEXPAND|wxTOP|wxBOTTOM|wxLEFT, 5 );
 
-	m_textureChoice->Bind( wxEVT_COMMAND_COMBOBOX_DROPDOWN,
-		&TerrainPage::onComboBoxDropdown, this );
-
-	m_textureChoice->Bind( wxEVT_COMMAND_COMBOBOX_SELECTED,
-		&TerrainPage::onComboBoxSelected, this );
+	m_textureChoice->Bind( wxEVT_COMMAND_COMBOBOX_DROPDOWN, &TerrainPage::onTextureDropdown, this );
+	m_textureChoice->Bind( wxEVT_COMMAND_COMBOBOX_SELECTED, &TerrainPage::onTextureSelected, this );
 
 	wxStaticText* m_staticText5 = new wxStaticText( m_panelBrush, wxID_ANY, "Tile:" );
 	fgSizer2->Add( m_staticText5, 0, wxALL, 5 );
@@ -125,31 +129,44 @@ void TerrainPage::createBrush()
 
 	fgSizer2->Add( tileSizer, 0, wxEXPAND|wxTOP|wxBOTTOM, 5 );
 
-	m_panelBrush->SetSizer( fgSizer2 );
-	m_panelBrush->Layout();
-
 	m_cbTerrainTool->AddPage( m_panelBrush, "Brush Settings", true );
+	m_panelBrush->SetSizerAndFit( fgSizer2 );
+	//m_panelBrush->Layout();
 }
 
 //-----------------------------------//
 
 void TerrainPage::createCell()
 {
-	m_panelCell = new wxPanel( m_cbTerrainTool, wxID_ANY, 
-		wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-
+	m_panelCell = new wxPanel( m_cbTerrainTool, wxID_ANY );
 	m_cbTerrainTool->AddPage( m_panelCell, "Cell Settings", true );
 }
 
 //-----------------------------------//
 
-void TerrainPage::onComboBoxSelected(wxCommandEvent& event)
+void TerrainPage::onBrushSelected(wxCommandEvent& event)
 {
+	String brush = event.GetString();
+	brushHandle = GetResourceManager()->loadResource<Image>(brush);
 }
 
 //-----------------------------------//
 
-void TerrainPage::onComboBoxDropdown(wxCommandEvent& event)
+void TerrainPage::onBrushDropdown(wxCommandEvent& event)
+{
+
+}
+
+//-----------------------------------//
+
+void TerrainPage::onTextureSelected(wxCommandEvent& event)
+{
+
+}
+
+//-----------------------------------//
+
+void TerrainPage::onTextureDropdown(wxCommandEvent& event)
 {
 	m_textureChoice->Clear();
 
@@ -159,7 +176,12 @@ void TerrainPage::onComboBoxDropdown(wxCommandEvent& event)
 	ResourceMap::const_iterator it;
 	for( it = resources.begin(); it != resources.end(); it++ )
 	{
-		if( it->second->getResourceGroup() != ResourceGroup::Images )
+		const ResourceHandle& handle = it->second;
+		
+		Resource* resource = handle.Resolve();
+		if( ! resource ) continue;
+		
+		if( resource->getResourceGroup() != ResourceGroup::Images )
 			continue;
 
 		m_textureChoice->Append(it->first);
@@ -182,12 +204,22 @@ int	TerrainPage::getBrushSize()
 
 //-----------------------------------//
 
+ImageHandle TerrainPage::getBrushImage()
+{
+	std::string path = m_choiceBrush->GetValue();
+
+	ResourceManager* rm = GetResourceManager();
+	return rm->loadResource<Image>(path);
+}
+
+//-----------------------------------//
+
 ImagePtr TerrainPage::getPaintImage()
 {
 	std::string path = m_textureChoice->GetValue();
 
 	ResourceManager* rm = GetResourceManager();
-	return rm->loadResource<Image>(path);
+	return rm->loadResource<Image>(path).Resolve();
 }
 
 //-----------------------------------//

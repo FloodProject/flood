@@ -12,23 +12,34 @@
 #include "Core/Memory.h"
 #include "Core/Reflection.h"
 #include "Core/Object.h"
-
-using namespace vapor;
-
-namespace {
-
-//-----------------------------------//
-
-enum_class E
-{
-	F1 = 0, F2, F3, Max
-};
+#include "Core/Serialization.h"
+#include "ReflectionTypes.h"
 
 REFLECT_ENUM(E)
 	ENUM(F1)
 	ENUM(F2)
 	ENUM(F3)
 REFLECT_ENUM_END()
+
+REFLECT_CHILD_CLASS(A, Object)
+	FIELD_PRIMITIVE(int32, foo)
+	FIELD_ENUM(E, foos)
+REFLECT_CLASS_END()
+
+REFLECT_CHILD_CLASS(B, A)
+	FIELD_PRIMITIVE(uint32, bar)
+	FIELD_PRIMITIVE(Vector3, vec)
+	FIELD_PRIMITIVE(Quaternion, quat)
+	FIELD_PRIMITIVE(Color, color)
+	FIELD_PRIMITIVE(string, str)
+REFLECT_CLASS_END()
+
+REFLECT_CLASS(C)
+	FIELD_CLASS_PTR(A, A*, anA, RawPointer)
+	FIELD_VECTOR_PTR(A, A*, arrayA, RawPointer)
+REFLECT_CLASS_END()
+
+//-----------------------------------//
 
 void TestEnum(CuTest* tc)
 {
@@ -46,19 +57,6 @@ void TestEnum(CuTest* tc)
 }
 
 //-----------------------------------//
-
-struct A : public Object
-{
-	A() : foo(20), foos(E::F1) { }
-
-	int32 foo;
-	E foos;
-};
-
-REFLECT_CLASS(A)
-	FIELD_PRIMITIVE(int32, foo)
-	FIELD_ENUM(E, foos)
-REFLECT_CLASS_END()
 
 void TestClassA(CuTest* tc)
 {
@@ -93,13 +91,6 @@ void TestClassA(CuTest* tc)
 
 //-----------------------------------//
 
-struct B : public A
-{
-};
-
-REFLECT_CHILD_CLASS(B, A)
-REFLECT_CLASS_END()
-
 void TestClassB(CuTest* tc)
 {
 	Class* klassB = ReflectionGetType(B);
@@ -130,14 +121,52 @@ void TestObjects(CuTest* tc)
 
 		Object* object = (Object*) ClassCreateInstance(klass, AllocatorGetHeap());
 
-		Class* runtimeClass = object->getType();
+		Class* runtimeClass = ClassGetType(object);
 		CuAssertPtrEquals(tc, klass, runtimeClass);
 
 		Deallocate(object);
 	}
 }
 
-NAMESPACE_END
+//-----------------------------------//
+
+static uint8 ident = 0;
+#define indentSpaces() for(auto i = 0; i < ident; i++) { printf(" "); }
+
+static void WalkComposite(ReflectionContext* c, ReflectionWalkType::Enum wt)
+{
+	if(wt == ReflectionWalkType::End)
+	{
+		ident--;
+		return;
+	}
+
+	printf("%s\n", c->composite->name);
+	ident++;
+}
+
+static void walkCompositeField(ReflectionContext* c, ReflectionWalkType::Enum wt)
+{
+	if(wt != ReflectionWalkType::Begin) return;
+
+	indentSpaces();
+	printf("%s %s\n", c->field->type->name, c->field->name);
+}
+
+void TestWalker(CuTest* tc)
+{
+	ReflectionContext context;
+	context.walkComposite = WalkComposite;
+	context.walkCompositeField = walkCompositeField;
+	context.walkEnum = nullptr;
+	context.walkPrimitive = nullptr;
+
+	A instanceA;
+	B instanceB;
+	
+	ReflectionWalk(&instanceA, &context);
+	ReflectionWalk(&instanceB, &context);
+}
 
 //-----------------------------------//
 
@@ -147,5 +176,6 @@ CuSuite* GetSuiteReflection()
     SUITE_ADD_TEST(suite, TestClassA);
 	SUITE_ADD_TEST(suite, TestClassB);
 	SUITE_ADD_TEST(suite, TestObjects);
+	//SUITE_ADD_TEST(suite, TestWalker);
     return suite;
 }

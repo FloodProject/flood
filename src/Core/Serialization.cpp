@@ -11,249 +11,320 @@
 #ifdef ENABLE_SERIALIZATION
 
 #include "Core/Serialization.h"
-#include "Core/Reflection.h"
-#include "Core/Log.h"
 #include "Core/ReferenceCount.h"
+#include "Core/Reflection.h"
+#include "Core/Object.h"
+#include "Core/Log.h"
+#include "Core/Stream.h"
+
+#include "Math/Vector.h"
+#include "Math/Quaternion.h"
+#include "Math/EulerAngles.h"
+#include "Math/Color.h"
 
 NAMESPACE_BEGIN
 
 //-----------------------------------//
 
-ObjectWalker::ObjectWalker(ReflectionVisitor& visitor)
-	: v(visitor)
+Serializer::Serializer()
+	: alloc(nullptr)
+	, stream(nullptr)
+	, object(nullptr)
+	, load(nullptr)
+	, save(nullptr)
 { }
 
 //-----------------------------------//
 
-void ObjectWalker::process(const Object* object)
+Serializer::~Serializer()
+{ }
+
+//-----------------------------------//
+
+void SerializerDestroy(Serializer* serializer)
 {
-	const Class& type = (Class&) object->getType();
-
-	ObjectData data;
-	data.type = (Type*) &type;
-	data.instance = (void*) object;
-
-	processObject(data);
+	Deallocate(serializer);
 }
 
 //-----------------------------------//
 
-void ObjectWalker::processObject(ObjectData object)
+Object* SerializerLoad(Serializer* serializer)
 {
-	v.processBegin(object);
-	processType(object);
-	v.processEnd(object);
+	if( !serializer->load ) return nullptr;
+	if( !serializer->stream ) return nullptr;
+
+	serializer->load(serializer);
+	StreamClose(serializer->stream);
+
+	return serializer->object;
 }
 
 //-----------------------------------//
 
-void ObjectWalker::processType(ObjectData object)
+void SerializerSave(Serializer* serializer)
 {
-	if( !object.instance )
-		return;
-
-	const Type& type = *object.type;
-
-	if( type.isClass() || type.isStruct() )
-	{
-		processClass(object);		
-	}
-	else if( type.isPrimitive() )
-	{
-		processPrimitive(object);
-	}
-	else if( type.isEnum() )
-	{
-		processEnum(object);
-	}
-	else assert( false );
-}
-
-//-----------------------------------//
-
-void ObjectWalker::processClass(ObjectData object, bool parent)
-{
-	Class& type = (Class&) *object.type;
-	v.processClassBegin(type, parent);
-
-	if( type.parent )
-	{
-		ObjectData parent;
-		parent.instance = object.instance;
-		parent.type = (Type*) type.parent;
-		
-		processClass(parent, true);
-	}
-
-	std::vector<Field*>::const_iterator it;
-
-	for( it = type.fields.begin(); it != type.fields.end(); it++ )
-	{
-		processField(object, **it);
-	}
-
-	v.processClassEnd(type, parent);
-}
-
-//-----------------------------------//
-
-void ObjectWalker::processEnum(ObjectData object)
-{
-	const Enum& metaenum = (Enum&) *object.type;
+	if( !serializer->save ) return;
+	if( !serializer->stream ) return;
 	
-	v.processEnumBegin(metaenum);
-
-	int value = *(int*) object.instance;
-	const String& name = metaenum.getName(value);
-	
-	v.processEnumElement(value, name);
-
-	v.processEnumEnd(metaenum);
+	serializer->save(serializer);
+	StreamClose(serializer->stream);
 }
 
 //-----------------------------------//
 
-void ObjectWalker::processField(ObjectData object, const Field& field)
+static void ReflectionWalkPrimitive(ReflectionContext* context)
 {
-	if( !object.instance ) return;
+	if( !context->walkPrimitive ) return;
+
+	Primitive* type = context->primitive;
+	void* address = context->address;
+	ValueContext& vc = context->valueContext;
 	
-	const Type& type = field.type;
-
-	object.instance = (byte*) object.instance + field.offset;
-	object.type = (Type*) &type;
-
-	v.processFieldBegin(field);
-
-	if( field.qualifiers & Qualifier::Array )
+	switch(type->type)
 	{
-		processArray(object, field);
+	case Primitive::Bool:
+		vc.b = (bool*) address;
+		break;
+	case Primitive::Int32:
+		vc.i32 = (int32*) address;
+		break;
+	case Primitive::Uint32:
+		vc.u32 = (uint32*) address;
+		break;
+	case Primitive::Float:
+		vc.f = (float*) address;
+		break;
+	case Primitive::String:
+		vc.s = (String*) address;
+		break;
+	case Primitive::Color:
+		vc.c = (Color*) address;
+		break;
+	case Primitive::Vector3:
+		vc.v = (Vector3*) address;
+		break;
+	case Primitive::Quaternion:
+		vc.q = (Quaternion*) address;
+		break;
+	case Primitive::Bitfield:
+		vc.bf = (int32*) address;
+		break;
+	default:
+		assert( false );
 	}
+
+	context->walkPrimitive(context, ReflectionWalkType::Element);
+}
+
+//-----------------------------------//
+
+static void ReflectionWalkEnum(ReflectionContext* context)
+{
+	if( !context->walkEnum ) return;
+
+	ValueContext& vc = context->valueContext;
+	vc.i32 = (int32*) ClassGetFieldAddress(context->object, context->field);
+
+	context->walkEnum(context, ReflectionWalkType::Element);
+}
+
+//-----------------------------------//
+
+static uint16 GetArrayElementSize(const Field* field)
+{
+	if( FieldIsPointer(field) )
+		return field->pointer_size;
 	else
-	{
-		if( field.isPointer() )
-			processPointer(object, field);
-
-		processType(object);
-	}
-
-	v.processFieldEnd(field);
+		return field->size;
 }
 
 //-----------------------------------//
 
-void ObjectWalker::processPointer(ObjectData& object, const Field& field)
-{
-	void* address = object.instance;
+static void ReflectionWalkType(ReflectionContext* context, Type* type);
 
-	if( field.qualifiers & Qualifier::SharedPointer )
+static void ReflectionWalkPointer(ReflectionContext* context)
+{
+	void* address = nullptr;
+	const Field* field = context->field;
+
+	if(FieldIsSharedPointer(field))
 	{
 		std::shared_ptr<Object>* shared = (std::shared_ptr<Object>*) address;
 		address = shared->get();
 	}
-	else if( field.qualifiers & Qualifier::RefPointer )
+	else if(FieldIsRefPointer(field))
 	{
 		RefPtr<Object>* ref = (RefPtr<Object>*) address;
 		address = ref->get();
 	}
+	else if(FieldIsRawPointer(field))
+	{
+		address = context->elementAddress;
+	}
 
-	object.instance = address;
-
-	if( !address ) return;
-
-	const Object* elemObject = (Object*) address;
-	object.type = (Type*) &elemObject->getType();
+	assert( address != nullptr );
+	context->elementAddress = address;
 }
 
 //-----------------------------------//
 
-void ObjectWalker::processArray(ObjectData object, const Field& field)
+static void ReflectionWalkArray(ReflectionContext* context)
 {
-	std::vector<byte>& array = * (std::vector<byte>*) object.instance;
+	const Field* field = context->field;
+	std::vector<byte>& array = *(std::vector<byte>*) context->address;
 
-	int size = 0;
+	uint16 elementSize = GetArrayElementSize(context->field);
+	uint32 numElems = array.size() / elementSize;
 
-	if( field.isPointer() )
-		size = field.pointerSize;
-	else
-		size = field.size;
-
-	uint numElems = array.size() / size;
-
-	v.processArrayBegin(field.type, numElems);
+	context->walkArray(context, ReflectionWalkType::Begin);
 		
 	for(size_t i = 0; i < numElems; i++)
 	{
-		void* address = (&array.front() + i * size);
+		void* address = (&array.front() + i * elementSize);
+		
+		context->elementAddress = address;
+		if(FieldIsPointer(field)) ReflectionWalkPointer(context);
 
-		ObjectData elem;
-		elem.instance = address;
-		elem.type = object.type;
+		Object* object = context->object;
+		Type* type = context->type;
 
-		if( field.isPointer() )
-			processPointer(elem, field);
+		context->object = *(Object**) context->elementAddress;
+		context->type = ClassGetType(context->object);
 
-		v.processArrayElementBegin(i);
-		processType(elem);
-		v.processArrayElementEnd(i);
+		context->walkArray(context, ReflectionWalkType::ElementBegin);
+		ReflectionWalkType(context, context->type);
+		context->walkArray(context, ReflectionWalkType::ElementEnd);
+
+		context->object = object;
+		context->type = type;
 	}
 
-	v.processArrayEnd(field.type);
+	context->walkArray(context, ReflectionWalkType::End);
 }
 
 //-----------------------------------//
 
-void ObjectWalker::processPrimitive(const ObjectData& object)
+static void ReflectionWalkCompositeField(ReflectionContext* context)
 {
-	const Primitive& type = (const Primitive&) *object.type;
+	Field* field = context->field;
+	void* address = ClassGetFieldAddress(context->object, field);
+	
+	context->address = address;
+	context->elementAddress = address;
+	context->type = field->type;
 
-	if( type.isBool() )
+	context->walkCompositeField(context, ReflectionWalkType::Begin);
+
+	if( FieldIsArray(field) )
 	{
-		bool* val = (bool*) object.instance;
-		v.processBool(type, *val);
+		ReflectionWalkArray(context);
 	}
-	//-----------------------------------//
-	else if( type.isInteger() )
+	else if( FieldIsPointer(field) )
 	{
-		int* val = (int*) object.instance;
-		v.processInt(type, *val);
+		ReflectionWalkPointer(context);
+
+		Object* newObject = *(Object**) context->elementAddress;
+		if( !newObject ) return;
+
+		Object* object = context->object;
+		Type* type = context->type;
+
+		context->type = ClassGetType(object);
+		context->object = newObject;
+
+		ReflectionWalkType(context, field->type);
+
+		context->type = type;
+		context->object = object;
 	}
-	//-----------------------------------//
-	else if( type.isFloat() )
+	else
 	{
-		float* val = (float*) object.instance;
-		v.processFloat(type, *val);
+		ReflectionWalkType(context, field->type);
 	}
-	//-----------------------------------//
-	else if( type.isString() )
+
+	context->walkCompositeField(context, ReflectionWalkType::End);
+}
+
+//-----------------------------------//
+
+static void ReflectionWalkComposite(ReflectionContext* context)
+{
+	bool isTopComposite = context->composite == context->klass;
+
+	if( isTopComposite )
+		context->walkComposite(context, ReflectionWalkType::Begin);
+
+	if( ClassHasParent(context->composite) )
 	{
-		String* val = (String*) object.instance;
-		v.processString(type, *val);
+		Class* current = context->composite;
+		context->composite = ClassGetParent(current);
+		
+		ReflectionWalkComposite(context);
+		
+		context->composite = current;
 	}
-	//-----------------------------------//
-	else if( type.isColor() )
+
+	const std::vector<Field*>& fields = context->composite->fields;
+
+	Field* field = context->field; 
+
+	for( size_t i = 0; i < fields.size(); i++ )
 	{
-		Color* val = (Color*) object.instance;
-		v.processColor(type, *val);
+		context->field = fields[i];
+		ReflectionWalkCompositeField(context);
 	}
-	//-----------------------------------//
-	else if( type.isVector3() )
+
+	context->field = field;
+
+	if( isTopComposite )
+		context->walkComposite(context, ReflectionWalkType::End);
+}
+
+//-----------------------------------//
+
+static void ReflectionWalkType(ReflectionContext* context, Type* type)
+{
+	switch(type->type)
 	{
-		Vector3* vec = (Vector3*) object.instance;
-		v.processVector3(type, *vec);
-	}
-	//-----------------------------------//
-	else if( type.isQuaternion() )
+	case Type::Composite:
 	{
-		Quaternion* quat = (Quaternion*) object.instance;
-		v.processQuaternion(type, *quat);
+		Class* klass = context->klass;
+		Class* composite = context->composite;
+
+		context->klass = (Class*) type;
+		context->composite = context->klass;
+
+		ReflectionWalkComposite(context);
+
+		context->klass = klass;
+		context->composite = composite;
+		break;
 	}
-	//-----------------------------------//
-	else if( type.isBitfield() )
-	{
-		uint* bits = (uint*) object.instance;
-		v.processBitfield(type, *bits);
+	case Type::Primitive:
+		context->primitive = (Primitive*) type;
+		ReflectionWalkPrimitive(context);
+		break;
+	case Type::Enumeration:
+		context->enume = (Enum*) type;
+		ReflectionWalkEnum(context);
+		break;
 	}
-	else assert( false );
+}
+
+//-----------------------------------//
+
+void ReflectionWalk(Object* object, ReflectionContext* context)
+{
+	if( !context ) return;
+
+	Class* klass = ClassGetType(object);
+	if( !klass ) return;
+
+	context->object = object;
+	context->klass = klass;
+	context->composite = klass;
+	
+	ReflectionWalkType(context, klass);
 }
 
 //-----------------------------------//

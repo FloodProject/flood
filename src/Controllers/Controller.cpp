@@ -29,10 +29,16 @@ Controller::~Controller()
 
 //-----------------------------------//
 
+void Controller::setEnabled(bool enabled)
+{
+	this->enabled = enabled;
+}
+
+//-----------------------------------//
+
 void Controller::update( float time )
 {
-	if( !enabled )
-		return;
+	if( !enabled ) return;
 
 	_update(time);
 }

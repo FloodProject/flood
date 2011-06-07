@@ -13,7 +13,7 @@
 #include "UndoManager.h"
 #include "EditorIcons.h"
 #include "../Scene/SceneDocument.h"
-#include "io/JsonSerializer.h"
+#include "Core/Serialization.h"
 
 namespace vapor { namespace editor {
 
@@ -103,6 +103,41 @@ void ProjectPlugin::onNewButtonClick(wxCommandEvent& event)
 
 //-----------------------------------//
 
+static Object* LoadObjectFromFile(const Path& file)
+{
+	Serializer* json = SerializerCreateJSON( AllocatorGetHeap() );
+	json->alloc = AllocatorGetHeap();
+
+	Stream* stream = StreamCreateFromFile(AllocatorGetHeap(), file.c_str(), StreamMode::Read);	
+	json->stream = stream;
+
+	Object* object = SerializerLoad(json);
+
+	SerializerDestroy(json);
+	StreamDestroy(stream);
+
+	return object;
+}
+
+//-----------------------------------//
+
+static void SaveObjectToFile(const Path& file, Object* object)
+{
+	Serializer* json = SerializerCreateJSON( AllocatorGetHeap() );
+	json->alloc = AllocatorGetHeap();
+
+	Stream* stream = StreamCreateFromFile(AllocatorGetHeap(), file.c_str(), StreamMode::Write);	
+	json->stream = stream;
+	json->object = object;
+	
+	SerializerSave(json);
+
+	SerializerDestroy(json);
+	StreamDestroy(stream);
+}
+
+//-----------------------------------//
+
 static const std::string fileDialogDescription( "Scene files (*.scene)|*.scene" );
 
 void ProjectPlugin::onOpenButtonClick(wxCommandEvent& event)
@@ -110,7 +145,6 @@ void ProjectPlugin::onOpenButtonClick(wxCommandEvent& event)
 	if( !askSaveChanges() )
 		return;
 
-#if 0
 	// Ask for file name to open.
 	wxFileDialog fc( editor, wxFileSelectorPromptStr, wxEmptyString,
 		wxEmptyString, fileDialogDescription, wxFC_OPEN );
@@ -119,30 +153,19 @@ void ProjectPlugin::onOpenButtonClick(wxCommandEvent& event)
 		return;
 
 	Path path = (String) fc.GetPath();
-	Stream* stream = StreamCreateFromFile( AllocatorGetHeap(), path, StreamMode::Read );
-	
-	if( !stream ) return;
-
-	JsonDeserializer json( *stream );
-	Object* object = json.deserialize();
-
-	StreamDestroy(stream);
+	Scene* object = (Scene*) LoadObjectFromFile(path);
 
 	if( !object )
 	{
-		wxMessageDialog message(editor,
-			"Could not load scene.", "Load", wxOK | wxICON_EXCLAMATION);
+		wxMessageDialog message(editor, "Could not load scene.", "Load", wxOK | wxICON_EXCLAMATION);
 		message.ShowModal();
-
 		return;
 	}
 
-#if 0
-	ScenePtr newScene( (Scene*) object );
-	switchScene(newScene);
-#endif
+	SceneDocument* document = (SceneDocument*) editor->getDocument();
+	document->scene = ScenePtr(object);
 
-#endif
+	switchScene(document);
 }
 
 //-----------------------------------//
@@ -180,22 +203,11 @@ bool ProjectPlugin::saveScene()
 	if( fc.ShowModal() != wxID_OK )
 		return false;
 
-#if 0
 	Engine* engine = editor->getEngine();
 	ScenePtr scene = engine->getSceneManager();
 	
 	Path path = (String) fc.GetPath();
-	Stream* stream = StreamCreateFromFile( AllocatorGetHeap(), path, StreamMode::Write );
-	
-	if( !stream ) return false;
-
-	JsonSerializer json( *stream );
-	
-	ObjectWalker walker(json);
-	walker.process(scene.get());
-
-	StreamDestroy(stream);
-#endif
+	SaveObjectToFile(path, scene.get());
 
 	return true;
 }

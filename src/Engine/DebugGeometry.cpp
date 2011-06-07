@@ -95,12 +95,13 @@ RenderablePtr buildFrustum( const Frustum& box )
 	VertexBufferPtr vb = Allocate(VertexBuffer, AllocatorGetHeap());
 	vb->set( VertexAttribute::Color, colors );
 
-	MaterialHandle material = MaterialCreate(AllocatorGetHeap(), "FrustumDebug");
-	material.Resolve()->setBackfaceCulling( false );
+	MaterialHandle materialHandle = MaterialCreate(AllocatorGetHeap(), "FrustumDebug");
+	Material* material = materialHandle.Resolve();
+	material->setBackfaceCulling( false );
 
 	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Quads);
 	renderable->setVertexBuffer(vb);
-	renderable->setMaterial(material);
+	renderable->setMaterial(materialHandle);
 	renderable->setPolygonMode( PolygonMode::Wireframe );
 
 	updateDebugFrustum(renderable, box);
@@ -118,12 +119,12 @@ RenderablePtr buildFrustum( const Frustum& box )
 void updateDebugFrustum( const RenderablePtr& rend, const Frustum& box )
 {
 	std::vector<Vector3> pos;
-	ADD_BOX_FRUSTUM( 0, 2, 3, 1 ) // Front
-	ADD_BOX_FRUSTUM( 0, 1, 5, 4 ) // Bottom
+	ADD_BOX_FRUSTUM( 0, 1, 3, 2 ) // Front
+	ADD_BOX_FRUSTUM( 0, 1, 5, 4 ) // Top
 	ADD_BOX_FRUSTUM( 4, 5, 7, 6 ) // Back
-	ADD_BOX_FRUSTUM( 2, 6, 7, 3 ) // Top
-	ADD_BOX_FRUSTUM( 0, 4, 6, 2 ) // Left
-	ADD_BOX_FRUSTUM( 1, 3, 7, 5 ) // Right
+	ADD_BOX_FRUSTUM( 2, 3, 7, 6 ) // Bottom
+	ADD_BOX_FRUSTUM( 0, 2, 6, 4 ) // Left
+	ADD_BOX_FRUSTUM( 5, 1, 3, 7 ) // Right
 
 	VertexBufferPtr vb = rend->getVertexBuffer();
 	vb->set( VertexAttribute::Position, pos );

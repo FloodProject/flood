@@ -27,7 +27,7 @@ class VAPOR_API CameraController : public Controller
 public:
 
 	// Updates this component.
-	virtual void _update( float delta ) = 0;
+	virtual void _update( float delta ) OVERRIDE = 0;
 
 	// Gets/sets the look sensivity of the camera.
 	ACESSOR(LookSensivity, float, lookSensivity);

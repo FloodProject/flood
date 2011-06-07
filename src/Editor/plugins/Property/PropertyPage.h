@@ -43,7 +43,7 @@ struct MemoryWatch
  * types and allow easy editing of the fields.
  */
 
-class PropertyPage : public wxPropertyGrid, public ReflectionVisitor
+class PropertyPage : public wxPropertyGrid
 {
 public:
 
@@ -80,9 +80,6 @@ public:
 	bool updateMemoryWatches();
 
 protected:
-
-	// Visitor methods.
-	void processBegin(const ObjectData& data);
 
 	// Gets the value of a property.
 	wxAny getPropertyValue(wxPGProperty* property);

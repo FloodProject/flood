@@ -13,6 +13,12 @@ namespace vapor {
 
 //-----------------------------------//
 
+RenderState::RenderState( const RenderablePtr& rend )
+	: renderable( rend.get() )
+	, material( rend->getMaterial().Resolve() )
+	, priority( rend->getRenderPriority() )
+{ }
+
 //-----------------------------------//
 
 } // end namespace

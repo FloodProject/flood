@@ -10,7 +10,6 @@
 #include "ResourceDatabase.h"
 #include "Settings.h"
 #include "Core/Utilities.h"
-#include "io/JsonSerializer.h"
 
 namespace vapor { namespace editor {
 

@@ -98,6 +98,9 @@ protected:
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Cell );
 
+typedef Cell TerrainCell;
+typedef CellPtr TerrainCellPtr;
+
 //-----------------------------------//
 
 } // end namespace

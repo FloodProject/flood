@@ -533,25 +533,20 @@ void ScenePage::onItemMenu(wxTreeEvent& event)
 void ScenePage::onMenuSelected( wxCommandEvent& event )
 {
 	int id = event.GetId();
-
-	if( id == wxID_NONE )
-		return;
+	if( id == wxID_NONE ) return;
 
 	ScenePtr scene = weakScene.lock();
 	const EntityPtr& node = getEntityFromTreeId( menuItemId );
 
 	if( id == ID_MenuSceneEntityVisible )
 	{
-		if( !node )
-			return;
-
+		if( !node ) return;
 		node->setVisible( !node->isVisible() );
 	}
 	//-----------------------------------//
 	else if( id == ID_MenuSceneEntityDuplicate )
 	{
-		if( !node )
-			return;
+		if( !node ) return;
 
 		#pragma TODO(Add object cloning)
 
@@ -577,21 +572,20 @@ void ScenePage::onMenuSelected( wxCommandEvent& event )
 	//-----------------------------------//
 	else if( id == ID_MenuSceneEntityWireframe )
 	{
-		if( !node )
-			return;
+		if( !node ) return;
 
 		PolygonMode::Enum mode = event.IsChecked()
 			? PolygonMode::Wireframe : PolygonMode::Solid;
 
 		const std::vector<GeometryPtr>& geometries = node->getGeometry();
 
-		for( uint i = 0; i < geometries.size(); i++ )
+		for( size_t i = 0; i < geometries.size(); i++ )
 		{
 			const GeometryPtr& geo = geometries[i];
 
 			const std::vector<RenderablePtr>& rends = geo->getRenderables();
 			
-			for( uint j = 0; j < rends.size(); j++ )
+			for( size_t j = 0; j < rends.size(); j++ )
 			{
 				const RenderablePtr& rend = rends[i];
 				rend->setPolygonMode( mode );
@@ -705,10 +699,10 @@ void ScenePage::onLabelEditEnd( wxTreeEvent& event )
 		return;
 	}
 
-	const EntityPtr& node = getEntityFromTreeId( item );
-	assert( node != nullptr );
+	const EntityPtr& entity = getEntityFromTreeId( item );
+	assert( entity != nullptr );
 
-	node->setName( std::string( label.c_str() ) );
+	entity->setName( std::string( label.c_str() ) );
 }
 
 //-----------------------------------//

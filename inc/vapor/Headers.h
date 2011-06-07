@@ -70,7 +70,7 @@
 #include <Scene/Skydome.h>
 #include <Scene/Water.h>
 #include <Scene/Billboard.h>
-#include <Scene/Projector.h>
+//#include <Scene/Projector.h>
 #include <Scene/Particles.h>
 #include <Scene/Tags.h>
 

@@ -24,7 +24,8 @@ REFLECT_CLASS(Frustum)
 	FIELD_PRIMITIVE(float, fieldOfView)
 	FIELD_PRIMITIVE(float, nearPlane)
 	FIELD_PRIMITIVE(float, farPlane)
-	FIELD_PRIMITIVE(float, aspectRatio)
+	FIELD_PRIMITIVE(float, aspectRatio) //FIELD_READONLY(aspectRatio)
+	FIELD_PRIMITIVE(Vector3, orthoSize)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
@@ -32,9 +33,10 @@ REFLECT_CLASS_END()
 Frustum::Frustum()
 	: projection(Projection::Perspective)
 	, fieldOfView(60)
-	, nearPlane(1)
+	, nearPlane(10)
 	, farPlane(100)
 	, aspectRatio(1)
+	, orthoSize(50, 50, 0)
 { }
 
 //-----------------------------------//
@@ -53,7 +55,7 @@ Frustum::Frustum( const Frustum& rhs )
 
 //-----------------------------------//
 
-void Frustum::updateProjection( const Vector2& size )
+void Frustum::updateProjection()
 {
 	switch(projection)
 	{
@@ -61,7 +63,7 @@ void Frustum::updateProjection( const Vector2& size )
 		matProjection = Matrix4x4::createPerspective( fieldOfView, aspectRatio, nearPlane, farPlane );
 		break;
 	case Projection::Orthographic:
-		matProjection = Matrix4x4::createOrthographic( 0, size.x, 0, size.y, nearPlane, farPlane );
+		matProjection = Matrix4x4::createOrthographic( 0, orthoSize.x, 0, orthoSize.y, nearPlane, farPlane );
 		break;
 	}
 }
@@ -123,29 +125,29 @@ void Frustum::updatePlanes( const Matrix4x3& matView )
 
 //-----------------------------------//
 
+static const Vector3 cornerPoints[] =
+{
+	Vector3(-1,  1,  1), Vector3(1,  1,  1),
+	Vector3(-1, -1,  1), Vector3(1, -1,  1),
+	Vector3(-1,  1, -1), Vector3(1,  1, -1),
+	Vector3(-1, -1, -1), Vector3(1, -1, -1)
+};
+
 void Frustum::updateCorners( const Matrix4x3& matView )
 {
-	Matrix4x4 matClip = Matrix4x4(matView) * matProjection;
+	Matrix4x4 matClip = /*Matrix4x4(matView) **/ matProjection;
 	Matrix4x4 matInvClip = matClip.inverse();
 
 	// The following are the corner points of the frustum (which becomes
 	// a unit cube) in clip space. Check the diagram for more information:
 	// http://www.songho.ca/opengl/files/gl_projectionmatrix01.png
 
-	Vector3 cornerPoints[] =
-	{
-		Vector3(-1,  1,  1), Vector3(1,  1,  1),
-		Vector3(-1, -1,  1), Vector3(1, -1,  1),
-		Vector3(-1,  1, -1), Vector3(1,  1, -1),
-		Vector3(-1, -1, -1), Vector3(1, -1, -1)
-	};
-
 	for(size_t i = 0; i < ARRAY_SIZE(cornerPoints); i++)
 	{
 		const Vector3& corner = cornerPoints[i];
 
 		Vector4 c = matInvClip * Vector4(corner, 1.0);
-		corners[i++] = Vector3(c.x / c.w, c.y / c.w, c.z / c.w);
+		corners[i] = Vector3(c.x / c.w, c.y / c.w, c.z / c.w);
 	}
 }
 

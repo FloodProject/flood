@@ -33,27 +33,27 @@ namespace vapor { namespace editor {
 
 void PluginManager::referencePlugins()
 {
-	PLUGIN(Project);
-	PLUGIN(Undo);
-	PLUGIN(Scene);
-
-#ifdef ENABLE_PLUGIN_PROPERTY
-	PLUGIN(Property);
-#endif
-
-	PLUGIN(Selection);
-	//PLUGIN(Gizmo);
-	//PLUGIN(Terrain);
-	//PLUGIN(Camera);
-	PLUGIN(Console);
-	PLUGIN(Log);
-	PLUGIN(Resources);
-
-#ifdef ENABLE_PLUGIN_MONO
-	PLUGIN(Mono);
-#endif
-
-	PLUGIN(Sample);
+//	PLUGIN(Project);
+//	PLUGIN(Undo);
+//	PLUGIN(Scene);
+//
+//#ifdef ENABLE_PLUGIN_PROPERTY
+//	PLUGIN(Property);
+//#endif
+//
+//	PLUGIN(Selection);
+//	//PLUGIN(Gizmo);
+//	//PLUGIN(Terrain);
+//	//PLUGIN(Camera);
+//	PLUGIN(Console);
+//	PLUGIN(Log);
+//	PLUGIN(Resources);
+//
+//#ifdef ENABLE_PLUGIN_MONO
+//	PLUGIN(Mono);
+//#endif
+//
+//	PLUGIN(Sample);
 }
 
 //-----------------------------------//

@@ -75,7 +75,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\dep\mongoose;$(SolutionDir)..\..\dep\jansson\include;$(SolutionDir)..\..\dep\curl\include;$(SolutionDir)..\..\dep\misc\include;$(SolutionDir)..\..\dep\zziplib\include;$(SolutionDir)..\..\dep\physfs\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\dep\mongoose;$(SolutionDir)..\..\dep\jansson\include;$(SolutionDir)..\..\dep\curl\include;$(SolutionDir)..\..\dep\misc\include;$(SolutionDir)..\..\dep\zziplib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;___DEBUG;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -97,7 +97,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\dep\jansson\include;$(SolutionDir)..\..\dep\curl\include;$(SolutionDir)..\..\dep\misc\include;$(SolutionDir)..\..\dep\zziplib\include;$(SolutionDir)..\..\dep\physfs\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\dep\mongoose;$(SolutionDir)..\..\dep\jansson\include;$(SolutionDir)..\..\dep\curl\include;$(SolutionDir)..\..\dep\misc\include;$(SolutionDir)..\..\dep\zziplib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;___DEBUG;API_CORE_DLL;API_CORE_DLL_EXPORT;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -112,7 +112,7 @@
       <ProgramDataBaseFileName>$(TargetDir)$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>jansson_d.lib;zziplib_d.lib;zlibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>jansson_d.lib;zziplib_d.lib;zlibd.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\dep\zlib\lib\vc10;$(SolutionDir)..\..\dep\curl\lib\;$(SolutionDir)..\..\dep\jansson\lib\;$(SolutionDir)..\..\dep\zziplib\lib\;$(SolutionDir)..\..\dep\physfs\lib\vc10</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -231,6 +231,7 @@
     <ClInclude Include="..\..\inc\Core\Delegate.h" />
     <ClInclude Include="..\..\inc\Core\DynamicLibrary.h" />
     <ClInclude Include="..\..\inc\Core\Event.h" />
+    <ClInclude Include="..\..\inc\Core\FileWatcher.h" />
     <ClInclude Include="..\..\inc\Core\Handle.h" />
     <ClInclude Include="..\..\inc\Core\Helpers.h" />
     <ClInclude Include="..\..\inc\Core\Log.h" />
@@ -249,8 +250,6 @@
     <ClInclude Include="..\..\inc\Core\WebServer.h" />
     <ClInclude Include="..\..\inc\Math\Vector.h" />
     <ClInclude Include="..\..\inc\vapor\Chunk.h" />
-    <ClInclude Include="..\..\inc\vapor\io\BinarySerializer.h" />
-    <ClInclude Include="..\..\inc\vapor\io\JsonSerializer.h" />
     <ClInclude Include="..\..\inc\vapor\math\BoundingBox.h" />
     <ClInclude Include="..\..\inc\vapor\math\BoundingSphere.h" />
     <ClInclude Include="..\..\inc\vapor\math\Color.h" />

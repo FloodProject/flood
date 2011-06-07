@@ -8,7 +8,7 @@
 
 #pragma once
 
-#ifdef PLUGIN_TERRAIN
+#ifdef ENABLE_PLUGIN_TERRAIN
 
 #include "Plugin.h"
 #include "UndoOperation.h"
@@ -36,9 +36,11 @@ namespace TerrainTool
 class TerrainPage;
 class TerrainOperation;
 
-class TerrainPlugin : public wxEvtHandler, public Plugin
+REFLECT_DECLARE_CLASS(TerrainPlugin)
+
+class TerrainPlugin : public Plugin
 {
-	REFLECT_DECLARE_CLASS()
+	REFLECT_DECLARE_OBJECT(TerrainPlugin)
 
 public:
 
@@ -61,8 +63,9 @@ public:
 	virtual void onEntityUnselect( const EntityPtr& );
 
 	// Mouse callbacks.
-	virtual void onMouseDrag( const MouseDragEvent& mde );
-	virtual void onMouseButtonPress( const MouseButtonEvent& mbe );
+	virtual void onMouseMove( const MouseMoveEvent& );
+	virtual void onMouseDrag( const MouseDragEvent& );
+	virtual void onMouseButtonPress( const MouseButtonEvent& );
 	virtual void onMouseButtonRelease( const MouseButtonEvent& );
 	virtual void onMouseLeave();
 
@@ -78,10 +81,19 @@ protected:
 	void onRebuildNormals( wxCommandEvent& event );
 
 	// Ray picks the terrain and returns the cell coords.
-	bool pickCell( const MouseButtonEvent& mbe );
+	bool pickCell( int x, int y );
 
 	// Ray picks the terrain and returns the intersection point.
-	bool pickTerrain( const MouseButtonEvent& mb, RayTriangleQueryResult& res );
+	bool pickTerrain( int x, int y, RayTriangleQueryResult& res );
+
+	// Projects a brush unto the terrain.
+	void projectBrush(const Vector3& pos, const TerrainCellPtr& cell );
+
+	// Updates the brush projection unto the terrain.
+	void updateBrushProjection( int x, int y );
+
+	// Creates a new projector to project the brush.
+	EntityPtr createProjector(const GeometryPtr& cell);
 
 	// Handles the right-click context menu creation.
 	void createContextMenu( const MouseButtonEvent& mbe );
@@ -105,10 +117,13 @@ protected:
 	TerrainOperation* terrainOperation;
 
 	// Current cell cordinates.
-	Vector2 coords;
+	Vector2i coords;
 	
 	// Callback used when editing the terrain by holding the mouse button.
 	wxTimer timer;
+
+	// Holds the current projector.
+	EntityPtr entityProjector;
 
 	// Current tool.
 	TerrainTool::Enum tool;
@@ -117,11 +132,7 @@ protected:
 	wxAuiToolBarItem* buttonRaise;
 	wxAuiToolBarItem* buttonPaint;
 	
-	int iconTerrain;
-
-private:
-
-    DECLARE_EVENT_TABLE()
+	int32 iconTerrain;
 };
 
 //-----------------------------------//

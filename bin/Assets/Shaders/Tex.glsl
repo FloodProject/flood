@@ -12,7 +12,7 @@ varying vec2 vp_TexCoord;
 void main()
 {
 	vp_TexCoord = vp_TexCoord0.st;
-	gl_Position = vp_ProjectionMatrix * vp_ModelMatrix * vp_ViewMatrix * vec4(vp_Vertex, 1.0);
+	gl_Position = vp_ProjectionMatrix * vp_ViewMatrix * vp_ModelMatrix * vec4(vp_Vertex, 1.0);
 } 
 
 [fragment]

@@ -10,6 +10,7 @@
 
 #ifdef VAPOR_RENDERER_OPENGL
 
+#include "Core/Utilities.h"
 #include "Render/Device.h"
 #include "Render/GL.h"
 #include "Render/FBO.h"
@@ -18,10 +19,11 @@
 #include "Render/ProgramManager.h"
 #include "Render/Window.h"
 #include "Render/View.h"
-#include "Scene/Camera.h"
+
 #include "Scene/Entity.h"
-#include "Core/Utilities.h"
-#include <algorithm>
+#include "Scene/Transform.h"
+#include "Scene/Camera.h"
+#include "Scene/Light.h"
 
 namespace vapor {
 
@@ -128,7 +130,7 @@ void RenderDevice::resetState()
 		glUseProgram(0);
 	}
 
-	for(uint32 i = 0; i < adapter->maxTextureUnits; i++)
+	for(int32 i = 0; i < adapter->maxTextureUnits; i++)
 	{
 		glActiveTexture( GL_TEXTURE0+i );
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -200,8 +202,12 @@ void RenderDevice::checkExtensions()
 
 static bool RenderStateSorter(const RenderState& lhs, const RenderState& rhs)
 {
-	return lhs.renderable->getRenderLayer() 
-		< rhs.renderable->getRenderLayer();
+	int rA = lhs.renderable->getRenderLayer();
+	int rB = rhs.renderable->getRenderLayer();
+	int pA = lhs.priority;
+	int pB = rhs.priority;
+
+	return (rA == rB) ? (pA < pB) : (rA < rB);
 }
 
 void RenderDevice::render( RenderBlock& queue ) 
@@ -223,11 +229,13 @@ void RenderDevice::render( RenderBlock& queue )
 
 void RenderDevice::render( const RenderState& state, const LightQueue& lights )
 {
+#ifdef DEBUG_BUILD
 	const RenderablePtr& renderable = state.renderable;
 	if( !renderable ) return;
 
-	const MaterialHandle& material = renderable->getMaterial();
+	const Material* material = state.material;
 	if( !material ) return;
+#endif
 
 	switch(pipeline)
 	{
@@ -253,7 +261,7 @@ void RenderDevice::setupRenderFixed(const RenderState& state, const LightQueue& 
 	const VertexBufferPtr& vb = renderable->getVertexBuffer();
 	vb->bindPointers();
 	
-	Material* material = renderable->getMaterial().Resolve();
+	Material* material = state.material;
 	setupRenderStateMaterial(material, false);
 
 	RenderLayer::Enum stage = renderable->getRenderLayer();
@@ -276,8 +284,10 @@ void RenderDevice::setupRenderFixed(const RenderState& state, const LightQueue& 
 	const Matrix4x4& model = state.modelMatrix;
 	glMultMatrixf(&model.m11);
 
+	renderable->onPreRender(state);
 	renderable->render(this);
-	
+	renderable->onPostRender(state);
+
 	glPopMatrix();
 
 	undoRenderStateMaterial(material);
@@ -291,9 +301,7 @@ void RenderDevice::setupRenderFixed(const RenderState& state, const LightQueue& 
 bool RenderDevice::setupRenderFixedMatrix( const RenderState& state )
 {
 	CameraPtr camera = activeView->getCamera();
-
-	if( !camera )
-		return false;
+	if( !camera ) return false;
 
 	const Frustum& frustum = camera->getFrustum();
 
@@ -337,13 +345,17 @@ void RenderDevice::setupRenderForward(const RenderState& state, const LightQueue
 	const VertexBufferPtr& vb = renderable->getVertexBuffer();
 	vb->bindGenericPointers();
 
-	Material* material = renderable->getMaterial().Resolve();
+	Material* material = state.material;
 	
 	const String& name = material->getProgram();
 	const ProgramPtr& program = programManager->getProgram(name);
 	if( !program ) return;
 
-	if( !program->isLinked() ) program->link();
+	if( !program->isLinked() )
+	{
+		program->link();
+	}
+
 	program->bind();
 
 	setupRenderStateMaterial(material, true);
@@ -364,7 +376,13 @@ void RenderDevice::setupRenderForward(const RenderState& state, const LightQueue
 			return;
 	}
 
+	if( !renderable->onPreRender.empty() )
+		renderable->onPreRender(state);
+	
 	renderable->render(this);
+	
+	if( !renderable->onPostRender.empty() )
+		renderable->onPostRender(state);
 	
 	undoRenderStateMaterial(material);
 	
@@ -389,9 +407,7 @@ bool RenderDevice::setupRenderStateMatrix( const RenderState& state )
 	const Matrix4x3& matView = camera->getViewMatrix();
 	const Matrix4x4& matProjection = frustum.matProjection;
 
-	const RenderablePtr& rend = state.renderable;
-	Material* material = rend->getMaterial().Resolve();
-
+	Material* material = state.material;
 	const String& name = material->getProgram();
 	const ProgramPtr& program = programManager->getProgram(name);
 
@@ -508,7 +524,7 @@ bool RenderDevice::setupRenderStateShadow( LightQueue& lights )
 	for( size_t i = 0; i < lights.size(); i++ )
 	{
 		LightState& state = lights[i];
-		const LightPtr& light = state.light;
+		const Light* light = state.light;
 
 		if( !light->getCastsShadows() )
 			continue;
@@ -523,14 +539,13 @@ bool RenderDevice::setupRenderStateShadow( LightQueue& lights )
 
 bool RenderDevice::setupRenderStateLight( const RenderState& state, const LightQueue& lights )
 {
-	const RenderablePtr& rend = state.renderable;
-	Material* material = rend->getMaterial().Resolve();
+	Material* material = state.material;
 	const ProgramPtr& program = programManager->getProgram(material->getProgram());
 
 	for( size_t i = 0; i < lights.size(); i++ )
 	{
 		const LightState& lightState = lights[i];
-		const LightPtr& light = lightState.light;
+		const Light* light = lightState.light;
 
 		//TexturePtr shadowDepthTexture;
 		//shadowDepthTexture = shadowTextures[light];
@@ -542,8 +557,7 @@ bool RenderDevice::setupRenderStateLight( const RenderState& state, const LightQ
 		colors.push_back( light->getEmissiveColor() );
 		colors.push_back( light->getAmbientColor() );
 
-		const TransformPtr& transform = lightState.transform;
-		assert( transform != nullptr );
+		const Transform* transform = lightState.transform;
 
 		// TODO: fix the lighting stuff
 		program->setUniform( "vp_LightColors", colors );

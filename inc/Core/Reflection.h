@@ -120,20 +120,29 @@ struct API_CORE Class : public Type
 	std::vector<Class*> childs;
 };
 
+// Returns the parent of the class.
+#define ClassGetParent(klass) (klass->parent)
+
+// Returns if this class has a parent.
+#define ClassHasParent(klass) (ClassGetParent(klass) != nullptr)
+
 // Returns if this type inherits from the given type.
-API_CORE bool ClassInherits(Class* klass, Class* test);
+API_CORE bool ClassInherits(const Class* klass, const Class* test);
 
 // Returns the type from the given class instance at runtime.
-API_CORE Class* ClassGetType(Object*);
+API_CORE Class* ClassGetType(const Object*);
 
 // Returns if the class is abstract.
-API_CORE bool ClassIsAbstract(Class*);
+API_CORE bool ClassIsAbstract(const Class*);
 
 // Gets the field with the given name.
-API_CORE Field* ClassGetField(Class*, const char* name);
+API_CORE Field* ClassGetField(const Class*, const char* name);
+
+// Gets the field with the given name.
+API_CORE void* ClassGetFieldAddress(const void*, const Field*);
 
 // Creates a new instance of the class.
-API_CORE void* ClassCreateInstance(Class*, Allocator*);
+API_CORE void* ClassCreateInstance(const Class*, Allocator*);
 
 //-----------------------------------//
 
@@ -219,46 +228,24 @@ struct API_CORE Primitive : public Type
 
 //-----------------------------------//
 
-struct ReflectionContext;
-typedef void (*ReflectionWalkFunc)(ReflectionContext*);
-
-struct API_CORE ReflectionContext
-{
-	bool beginSequence;
-	bool parentComposite;
-
-	Class* klass;
-	Field* field;
-	Enum*  enume;
-
-	ReflectionWalkFunc walkComposite;
-	ReflectionWalkFunc walkCompositeField;
-	ReflectionWalkFunc walkArray;
-	ReflectionWalkFunc walkArrayElement;
-	ReflectionWalkFunc walkEnum;
-	ReflectionWalkFunc walkMap;
-};
-
-//-----------------------------------//
-
 EXTERN_END
 
 // Gets the value of the field in the object.
 template<typename T>
 const T& FieldGet( const Field* field, void* object )
 {
-	T* addr = (T*) ((char*)object + field->offset);
+	T* addr = (T*) ClassGetFieldAddress(object, field);
 	return *addr;
 }
 
 // Sets the value of the field in the object.
 template<typename T>
-void FieldSet( Field* field, void* instance, const T& value )
+void FieldSet( Field* field, void* object, const T& value )
 {
-	T* addr = (T*) ((char*)instance + field->offset);
+	T* addr = (T*) ClassGetFieldAddress(object, field);
 	FieldSetterFunction setter = field->setter_fn;
 	
-	if(setter) setter(instance, (void*) &value);
+	if(setter) setter(object, (void*) &value);
 	else *addr = value;
 }
 

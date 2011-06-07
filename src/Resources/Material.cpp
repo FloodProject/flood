@@ -127,4 +127,11 @@ void Material::setTexture( uint32 unit, const ImageHandle& handle )
 
 //-----------------------------------//
 
+ImageHandle Material::getTexture( uint32 unit )
+{
+	return textureUnits[unit];
+}
+
+//-----------------------------------//
+
 NAMESPACE_END

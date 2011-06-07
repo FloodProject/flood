@@ -70,8 +70,6 @@ void Renderable::render( RenderDevice* device )
 {
 	#pragma TODO("Move polygon modes to the renderer")
 
-	onPreRender();
-
 	if( mode == PolygonMode::Wireframe )
 		glPolygonMode( GL_FRONT_AND_BACK, PolygonMode::Wireframe );
 
@@ -93,8 +91,6 @@ void Renderable::render( RenderDevice* device )
    
 	if( mode == PolygonMode::Wireframe )
 		glPolygonMode( GL_FRONT_AND_BACK, PolygonMode::Solid );
-
-	onPostRender();
 }
 
 //-----------------------------------//

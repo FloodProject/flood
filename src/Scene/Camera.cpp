@@ -14,7 +14,6 @@
 #include "Render/Device.h"
 #include "Render/View.h"
 #include "Render/DebugGeometry.h"
-#include "Engine.h"
 
 namespace vapor {
 
@@ -31,9 +30,7 @@ Camera::Camera()
 	: activeView(nullptr)
 	, frustumCulling(false)
 	, lookAtVector(Vector3::UnitZ)
-{
-	renderDevice = GetEngine()->getRenderDevice();
-}
+{ }
 
 //-----------------------------------//
 
@@ -70,15 +67,15 @@ void Camera::updateViewTransform()
 
 void Camera::updateFrustum()
 {
-	if( !activeView )
-		return;
+	if( !activeView ) return;
 
 	// Update frustum matrices.
 	frustum.aspectRatio = activeView->getAspectRatio();
 
 	Vector2i viewSize = activeView->getSize();
 
-	frustum.updateProjection( Vector2(viewSize.x, viewSize.y) );
+	frustum.orthoSize = Vector2(viewSize.x, viewSize.y);
+	frustum.updateProjection();
 	frustum.updatePlanes( viewMatrix );
 
 	updateDebugRenderable();
@@ -102,7 +99,7 @@ void Camera::update( float )
 {
 	if( !activeView )
 	{
-		RenderView* view = renderDevice->getActiveView();
+		RenderView* view = GetRenderDevice()->getActiveView();
 		setView(view);
 	}
 
@@ -144,9 +141,10 @@ void Camera::render( const ScenePtr& scene )
 
 void Camera::render( RenderBlock& block, bool clearView )
 {
-	if( !activeView )
-		return;
+	if( !activeView ) return;
 	
+	RenderDevice* renderDevice = GetRenderDevice();
+
 	renderDevice->setView( activeView );
 
 	if( clearView )
@@ -203,17 +201,20 @@ void Camera::cull( RenderBlock& block, const EntityPtr& entity )
 		geometry->appendRenderables( block.renderables, transform );
 	}
 
+#if 0
 	const LightPtr& light = entity->getComponent<Light>();
 	
 	if( light ) 
 	{
 		LightState ls;
-		ls.light = light;
-		ls.transform = transform;
+		ls.light = light.get();
+		ls.transform = transform.get();
 	
 		block.lights.push_back( ls );
 	}
+#endif
 
+#ifdef DEBUG_BUILD
 	const ComponentMap& components = entity->getComponents();
 
 	ComponentMap::const_iterator it;
@@ -227,19 +228,17 @@ void Camera::cull( RenderBlock& block, const EntityPtr& entity )
 			continue;
 
 		const RenderablePtr& renderable = component->getDebugRenderable();
-		
-		if( !renderable )
-			continue;
+		if( !renderable ) continue;
 
 		renderable->setRenderLayer(RenderLayer::PostTransparency);
 
-		RenderState renderState;
-		renderState.renderable = renderable;
+		RenderState renderState(renderable);
 
 		if( component->getDebugInheritsTransform() )
 			renderState.modelMatrix = transform->getAbsoluteTransform();
 
 		block.renderables.push_back( renderState );
+#endif
 	}
 }
 

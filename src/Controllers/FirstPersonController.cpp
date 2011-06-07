@@ -12,6 +12,7 @@
 #include "Engine.h"
 #include "Math/Helpers.h"
 #include "Scene/Entity.h"
+#include "Scene/Transform.h"
 #include "Scene/Camera.h"
 #include "Render/Device.h"
 #include "input/InputManager.h"
@@ -33,10 +34,8 @@ FirstPersonController::FirstPersonController()
 	: clampMovementX( true )
 	, mouseWheel(0)
 {
-	Engine* engine = GetEngine();
-
-	window = engine->getRenderDevice()->getWindow();
-	inputManager = engine->getInputManager();
+	window = GetRenderDevice()->getWindow();
+	inputManager = GetEngine()->getInputManager();
 
 	registerCallbacks();
 }
@@ -48,14 +47,10 @@ FirstPersonController::~FirstPersonController()
 	#pragma TODO(Reconnect window focus event)
 	//window->onWindowFocusChange.Disconnect( this, &FirstPersonController::onWindowFocusChange );
 
-	if(!inputManager)
-		return;
+	if(!inputManager) return;
 
 	Keyboard* const keyboard = inputManager->getKeyboard();
-	assert( keyboard != nullptr );
-
 	Mouse* const mouse = inputManager->getMouse();
-	assert( mouse != nullptr );
 	
 	keyboard->onKeyPress.Disconnect( this, &FirstPersonController::onKeyPressed );
 	mouse->onMouseMove.Disconnect( this, &FirstPersonController::onMouseMove );
@@ -65,10 +60,27 @@ FirstPersonController::~FirstPersonController()
 
 //-----------------------------------//
 
+void FirstPersonController::setEnabled(bool enabled)
+{
+	CameraController::setEnabled(enabled);
+	
+	if(enabled)
+	{
+		oldMousePosition = window->getCursorPosition();
+		centerCursor();
+	}
+	else
+	{
+		window->setCursorPosition(oldMousePosition);
+		relativePosition.zero();
+	}
+}
+
+//-----------------------------------//
+
 void FirstPersonController::_update( float delta )
 {
-	if( hasFocus )
-		checkControls( delta );
+	if( hasFocus ) checkControls( delta );
 }
 
 //-----------------------------------//
@@ -166,10 +178,7 @@ void FirstPersonController::registerCallbacks()
 		window->onWindowFocusChange.Connect( this, &FirstPersonController::onWindowFocusChange );
 
 	Keyboard* const keyboard = inputManager->getKeyboard();
-	assert( keyboard != nullptr );
-
 	Mouse* const mouse = inputManager->getMouse();
-	assert( mouse != nullptr );
 	
 	keyboard->onKeyPress.Connect( this, &FirstPersonController::onKeyPressed );
 	mouse->onMouseMove.Connect( this, &FirstPersonController::onMouseMove );
@@ -183,13 +192,11 @@ void FirstPersonController::onKeyPressed( const KeyEvent& keyEvent )
 {
 	if( !enabled ) return;
 
+#if 0
 	switch( keyEvent.keyCode )
 	{
-
 	case Keys::LControl:
 	{
-		assert( window != nullptr );
-
 		if( window->isCursorVisible() )
 		{
 			oldMousePosition = window->getCursorPosition();
@@ -204,29 +211,26 @@ void FirstPersonController::onKeyPressed( const KeyEvent& keyEvent )
 
 		break;
 	}
-
 	case Keys::N:
 	{
 		setMoveSensivity( moveSensivity - 5.0f );
 		break;
 	}
-
 	case Keys::M:
 	{
 		setMoveSensivity( moveSensivity + 5.0f );
 		break;
 	}
-
 	} // end switch
+#endif
 }
 
 //-----------------------------------//
 
 void FirstPersonController::onMouseWheel( const MouseWheelEvent& event )
 {
-	if( !enabled )
-		return;
-
+	if( !enabled ) return;
+	
 	mouseWheel += event.delta;
 }
 
@@ -234,12 +238,8 @@ void FirstPersonController::onMouseWheel( const MouseWheelEvent& event )
 
 void FirstPersonController::onMouseMove( const MouseMoveEvent& moveEvent )
 {
-	if( !enabled )
-		return;
-
-	if( window->isCursorVisible() )
-		return;
-
+	if( !enabled ) return;
+	
 	Vector2i currentPosition( moveEvent.x, moveEvent.y );
 	mouseDistance += currentPosition - lastPosition;
 
@@ -250,8 +250,7 @@ void FirstPersonController::onMouseMove( const MouseMoveEvent& moveEvent )
 
 void FirstPersonController::onMouseDrag( const MouseDragEvent& event )
 {
-	if( !enabled )
-		return;
+	if( !enabled ) return;
 
 	MouseMoveEvent me;
 	me.x = event.x;
@@ -272,12 +271,11 @@ void FirstPersonController::centerCursor( )
 
 void FirstPersonController::onWindowFocusChange( bool focusLost )
 {
-	if( !enabled )
-		return;
+	if( !enabled ) return;
 	
 	hasFocus = !focusLost;
 
-	if( hasFocus && !window->isCursorVisible() )
+	if( hasFocus /*&& !window->isCursorVisible()*/ )
 		centerCursor();
 }
 

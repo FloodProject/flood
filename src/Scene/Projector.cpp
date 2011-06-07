@@ -11,19 +11,40 @@
 #include "Scene/Transform.h"
 #include "Scene/Entity.h"
 #include "Render/DebugGeometry.h"
+#include "Render/Device.h"
+#include "Render/Program.h"
+#include "Render/ProgramManager.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-REFLECT_CHILD_CLASS(Projector, Component)
+REFLECT_CHILD_CLASS(Projector, Geometry)
 	FIELD_CLASS(Frustum, frustum)
+	FIELD_CLASS_PTR(Material, MaterialHandle, material, Handle)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
 
 Projector::Projector()
-{ }
+{
+
+}
+
+//-----------------------------------//
+
+Projector::~Projector()
+{
+	if( !geometry ) return;
+
+	const RenderableVector& renderables = geometry->getRenderables();
+	
+	for( size_t i = 0; i < renderables.size(); i++ )
+	{
+		const RenderablePtr& renderable = renderables[i];
+		renderable->onPreRender.clear();
+	}
+}
 
 //-----------------------------------//
 
@@ -31,10 +52,50 @@ void Projector::update(float)
 {
 	const TransformPtr& transform = getEntity()->getTransform();
 
-	frustum.updateProjection(Vector2::Zero);
+	frustum.updateProjection();
 	frustum.updateCorners(transform->getAbsoluteTransform());
 
 	updateDebugRenderable();
+}
+
+//-----------------------------------//
+ 
+void Projector::appendRenderables( RenderQueue& queue, const TransformPtr& transform )
+{
+	if( !geometry ) return;
+
+	const Matrix4x3& absoluteTransform = geometry->getEntity()
+		->getTransform()->getAbsoluteTransform();
+	
+	const RenderableVector& renderables = geometry->getRenderables();
+	for( size_t i = 0; i < renderables.size(); i++ )
+	{
+		const RenderablePtr& renderable = renderables[i];
+		if( !renderable ) continue;
+
+		renderable->onPreRender.Bind(this, &Projector::onRender);
+
+		RenderState state( renderable );
+		state.material = material.Resolve();
+		state.modelMatrix = absoluteTransform;
+		state.priority = renderable->getRenderPriority()+1;
+
+		queue.push_back(state);
+	}
+}
+
+//-----------------------------------//
+
+void Projector::onRender( const RenderState& state )
+{
+	String shader = state.material->getProgram();
+	ProgramPtr program = GetRenderDevice()->getProgramManager()->getProgram(shader);
+
+	const TransformPtr& transform = getEntity()->getTransform();
+	const Matrix4x4& absoluteTransform = transform->getAbsoluteTransform();
+
+	program->setUniform("vp_TextureProjection", frustum.matProjection);
+	program->setUniform("vp_TextureView", absoluteTransform.inverse());
 }
 
 //-----------------------------------//
@@ -53,7 +114,7 @@ RenderablePtr Projector::createDebugRenderable() const
 {
 	assert( !debugRenderable );
 
-	debugInheritsTransform = false;
+	debugInheritsTransform = true;
 	return buildFrustum( frustum );
 }
 

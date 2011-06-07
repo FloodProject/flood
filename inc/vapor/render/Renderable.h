@@ -8,10 +8,10 @@
 
 #pragma once
 
+#include "Core/Delegate.h"
+#include "Resources/Material.h"
 #include "Render/VertexBuffer.h"
 #include "Render/IndexBuffer.h"
-#include "Resources/Material.h"
-#include "Core/Event.h"
 
 FWD_DECL_INTRUSIVE(Material)
 
@@ -34,6 +34,8 @@ namespace vapor {
 
 //-----------------------------------//
 
+struct RenderState;
+	
 /**
  * Type of primitive of the renderable.
  */
@@ -139,10 +141,10 @@ public:
 	ACESSOR(PrimitiveType, PolygonType::Enum, type)
 
 	// Pre-render callback.
-	Event0<> onPreRender;
+	Delegate1<const RenderState&> onPreRender;
 
 	// Post-render callback.
-	Event0<> onPostRender;
+	Delegate1<const RenderState&> onPostRender;
 
 protected:
 

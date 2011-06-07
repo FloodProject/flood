@@ -8,6 +8,8 @@
 
 #pragma once
 
+#ifdef ENABLE_HTTP_SERVER
+
 #include "Core/Event.h"
 
 struct mg_context;
@@ -35,3 +37,5 @@ API_CORE void WebServerCallback( String uri, WebCallback callback );
 //-----------------------------------//
 
 NAMESPACE_EXTERN_END
+
+#endif

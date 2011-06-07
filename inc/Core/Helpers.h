@@ -151,6 +151,7 @@ NAMESPACE_BEGIN
 	FieldSetQualifier(&fieldName, FieldQualifier::Array);				\
 	FieldSetQualifier(&fieldName, FieldQualifier::pointerQual);			\
 	fieldName.pointer_size = sizeof(pointerType);						\
+	fieldName.type = ReflectionGetType(fieldType);                      \
 	FIELD_COMMON(fieldType, fieldName, __VA_ARGS__)						\
 
 #define FIELD_PRIMITIVE(fieldType, fieldName, ...)                      \

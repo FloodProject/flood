@@ -98,7 +98,7 @@ public:
 	GETTER(Cells, const std::vector<CellPtr>&, terrainCells)
 
 	// Gets a cell from its world space coords.
-	Vector2 getCoords( const Vector3& point );
+	Vector2i getCoords( const Vector3& point );
 
 	// Converts the heightmap to a vector of heights.
 	void convertHeightmap( const ImagePtr& heightmap, std::vector<float>& heights );

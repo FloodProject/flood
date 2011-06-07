@@ -24,7 +24,7 @@ public:
 	virtual ~Document();
 
 	// Gets the name of the document.
-	GETTER(Name, const std::string&, name)
+	GETTER(Name, const String&, name)
 
 	// Gets the undo manager of the document.
 	GETTER(UndoManager, UndoManager*, undoManager)
@@ -36,6 +36,8 @@ public:
 	virtual wxWindow* getWindow() = 0;
 
 	// Load and saving of documents.
+	// void saveDocument();
+	// void loadDocument();
 
 	// Document selection callbacks.
 	virtual void onDocumentSelect() {}
@@ -46,7 +48,7 @@ protected:
 	// Handles undo/redo events.
 	void onUndoRedoEvent();
 
-	std::string name;
+	String name;
 	bool unsavedChanges;
 	UndoManager* undoManager;
 };

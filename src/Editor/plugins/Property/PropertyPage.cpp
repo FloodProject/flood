@@ -227,21 +227,9 @@ void PropertyPage::showProperties( Object* object, bool resetObject )
 	if( resetObject ) reset();
 	currentObject = object;
 
-	//ObjectWalker walker(*this);
-	//walker.process(object);
+	Class* klass = ClassGetType(object);
 
-	ObjectData data;
-	data.instance = object;
-	data.type = object->getType();
-
-	processBegin(data);
-}
-
-//-----------------------------------//
-
-void PropertyPage::processBegin(const ObjectData& data)
-{
-	appendObjectFields(* (Class*) data.type, data.instance);
+	appendObjectFields(*klass, object);
 }
 
 //-----------------------------------//
@@ -275,7 +263,6 @@ void PropertyPage::showEntityProperties( const EntityPtr& entity )
 	}
 }
 
-
 //-----------------------------------//
 
 void PropertyPage::appendObjectFields(Class& type, void* object, bool newCategory)
@@ -302,7 +289,7 @@ void PropertyPage::appendObjectFields(Class& type, void* object, bool newCategor
 		if( ReflectionIsComposite(field.type) && !ReflectionIsResourceHandle(&field) )
 		{
 			void* addr = (byte*) object + field.offset;
-			appendObjectFields((Class&) field.type, addr, false);
+			appendObjectFields((Class&) *field.type, addr, false);
 			continue;
 		}
 

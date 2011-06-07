@@ -13,7 +13,6 @@
 #include "ResourceDrop.h"
 #include "Core/Utilities.h"
 #include "Events.h"
-#include "EditorCameraController.h"
 
 namespace vapor { namespace editor {
 
@@ -24,6 +23,12 @@ SceneDocument::SceneDocument()
 {
 	createView();
 	createScene();
+
+	RenderControl* control = viewFrame->getControl();
+	control->Bind(wxEVT_RIGHT_UP, &SceneDocument::OnMouseRightUp, this); 
+	control->Bind(wxEVT_RIGHT_DOWN, &SceneDocument::OnMouseRightDown, this);
+
+	//eventManager->onSceneLoad(scene);
 
 	ResourceManager* res = GetResourceManager();
 	res->loadQueuedResources();
@@ -36,6 +41,26 @@ SceneDocument::SceneDocument()
 
 SceneDocument::~SceneDocument()
 {
+}
+
+//-----------------------------------//
+
+void SceneDocument::OnMouseRightUp(wxMouseEvent& event)
+{
+	cameraController->setEnabled(false);
+	getRenderWindow()->setCursorVisiblePriority(true, 100);
+
+	event.Skip();
+}
+
+//-----------------------------------//
+
+void SceneDocument::OnMouseRightDown(wxMouseEvent& event)
+{
+	cameraController->setEnabled(true);
+	getRenderWindow()->setCursorVisiblePriority(false, 100);
+
+	//event.Skip();
 }
 
 //-----------------------------------//
@@ -133,8 +158,6 @@ void SceneDocument::createScene()
 	CameraPtr camera = nodeCamera->getComponent<Camera>();
 	viewFrame->setMainCamera(camera);
 	viewFrame->switchToDefaultCamera();
-
-	//eventManager->onSceneLoad(scene);
 }
 
 //-----------------------------------//
@@ -142,23 +165,19 @@ void SceneDocument::createScene()
 EntityPtr SceneDocument::createCamera()
 {
 	// So each camera will have unique names.
-	static byte i = 0;
+	static uint8 i = 0;
 
 	// Create a new first-person camera for our view.
 	// By default it will be in perspective projection.
 	CameraPtr camera( new Camera() );
-
-#if 0
-	ComponentPtr cameraController( new EditorCameraController() );
-#else
-	ComponentPtr cameraController( new FirstPersonController() );
-#endif
+	cameraController.reset( new FirstPersonController() );
+	cameraController->setEnabled(false);
 
 	Frustum& frustum = camera->getFrustum();
 	frustum.farPlane = 10000;
 
 	// Generate a new unique name.
-	std::string name( "EditorCamera"+StringFromNumber(i++) );
+	String name( "EditorCamera"+StringFromNumber(i++) );
 
 	EntityPtr entityCamera( new Entity(name) );
 	entityCamera->addTransform();
@@ -209,6 +228,12 @@ void SceneDocument::onUpdate( float delta )
 	if(editorScene)
 		editorScene->update( delta );
 	//eventManager->onSceneUpdate();
+
+	if(getRenderWindow()->isCursorVisible() && cameraController->getEnabled())
+	{
+		LogDebug("Camera failsafe, this should not happen");
+		cameraController->setEnabled(false);
+	}
 }
 
 //-----------------------------------//

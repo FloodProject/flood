@@ -239,7 +239,6 @@
     <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneDocument.cpp">
       <Filter>Plugins\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Editor\EditorCameraController.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Mono\MonoPlugin.cpp">
       <Filter>Plugins\Mono</Filter>
     </ClCompile>
@@ -402,7 +401,6 @@
     <ClInclude Include="..\..\src\Editor\plugins\Scene\SceneDocument.h">
       <Filter>Plugins\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Editor\inc\EditorCameraController.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Mono\MonoPlugin.h">
       <Filter>Plugins\Mono</Filter>
     </ClInclude>

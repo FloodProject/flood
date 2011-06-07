@@ -22,10 +22,12 @@
     <ClCompile Include="..\..\src\Tests\Handle.cpp" />
     <ClCompile Include="..\..\src\Tests\Path.cpp" />
     <ClCompile Include="..\..\src\Tests\Reflection.cpp" />
+    <ClCompile Include="..\..\src\Tests\Serialization.cpp" />
     <ClCompile Include="..\..\src\Tests\Streams.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Tests\CuTest.h" />
+    <ClInclude Include="..\..\src\Tests\ReflectionTypes.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E8D33DA1-C583-4849-B5FE-BDD2483B8AF9}</ProjectGuid>
@@ -82,7 +84,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4190</DisableSpecificWarnings>
       <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>

@@ -300,7 +300,7 @@ SelectionOperation* SelectionPlugin::processDragSelection(const MouseButtonEvent
 	if( selected )
 		selection->previous = selected->selections;
 
-	for(uint i = 0; i < list.size(); i++ )
+	for( size_t i = 0; i < list.size(); i++ )
 	{
 		selection->addEntity( list[i].entity );
 	}
@@ -356,7 +356,7 @@ bool SelectionPlugin::getPickEntity(int x, int y, EntityPtr& entity)
 
 #if 0 // Enable this to draw debugging lines
 	const EntityPtr& line = buildRay( pickRay, outFar );
-	editor->getEditorScene()->add( line );
+	sceneDocument->editorScene->add( line );
 #endif
 
 	// Perform ray casting to find the entities.
@@ -370,7 +370,7 @@ bool SelectionPlugin::getPickEntity(int x, int y, EntityPtr& entity)
 
 	bool found = false;
 
-	for( uint i = 0; i < list.size(); i++ )
+	for( size_t i = 0; i < list.size(); i++ )
 	{
 		const RayQueryResult& query = list[i];
 		

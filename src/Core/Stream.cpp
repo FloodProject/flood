@@ -33,12 +33,15 @@ bool StreamClose(Stream* stream)
 
 void StreamDestroy(Stream* stream)
 {
+#if 0
 	if( !StreamClose(stream) )
 	{
-		//LogDebug("Error closing stream: %s", stream->path.c_str());
+		LogDebug("Error closing stream: %s", stream->path.c_str());
 		return;
 	}
+#endif
 
+	StreamClose(stream);
 	Deallocate(stream);
 }
 
@@ -51,7 +54,9 @@ int64 StreamRead(Stream* stream, std::vector<uint8>& data)
 	int64 length = StreamGetSize(stream);
 	data.resize( (size_t) length );
 
-	return StreamReadBuffer(stream, &data[0], data.size());
+	if( data.empty() ) return 0;
+
+	return StreamReadBuffer(stream, &data.front(), data.size());
 }
 
 //-----------------------------------//

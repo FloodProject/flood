@@ -116,8 +116,8 @@ void Particles::createGeometry()
 	renderable->setMaterial(material);
 	renderable->setRenderLayer(RenderLayer::Transparency);
 
-	renderable->onPreRender.Connect( this, &Particles::onPreRender );
-	renderable->onPostRender.Connect( this, &Particles::onPostRender ); 
+	renderable->onPreRender.Bind( this, &Particles::onPreRender );
+	renderable->onPostRender.Bind( this, &Particles::onPostRender ); 
 	
 	addRenderable(renderable);
 
@@ -171,7 +171,7 @@ void Particles::update(float delta)
 
 //-----------------------------------//
 
-void Particles::onPreRender()
+void Particles::onPreRender(const RenderState&)
 {
 	glEnable(GL_POINT_SPRITE);
 	
@@ -185,7 +185,7 @@ void Particles::onPreRender()
 
 //-----------------------------------//
 
-void Particles::onPostRender()
+void Particles::onPostRender(const RenderState&)
 {
 	glDisable(GL_POINT_SPRITE);
 }

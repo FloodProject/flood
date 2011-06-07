@@ -17,7 +17,7 @@ namespace vapor { namespace editor {
 
 wxImageComboBox::wxImageComboBox( wxWindow* parent, wxWindowID id )
 	: wxOwnerDrawnComboBox( parent, id, wxEmptyString, wxDefaultPosition, 
-	wxSize(-1, 128), 0, nullptr, wxCC_STD_BUTTON/*|wxCB_READONLY*/ )
+	wxSize(-1, -1), 0, nullptr, wxCC_STD_BUTTON/*|wxCB_READONLY*/ )
 {
 	SetCustomPaintWidth( 150 );
 	GetTextCtrl()->Disable();
@@ -25,59 +25,65 @@ wxImageComboBox::wxImageComboBox( wxWindow* parent, wxWindowID id )
 
 //-----------------------------------//
 
-void wxImageComboBox::addImage( const ImagePtr& image )
+void wxImageComboBox::addImage( const ImageHandle& handle )
 {
-	assert( image != nullptr );
-
+	Image* image = handle.Resolve();
 	Append( image->getPath() );
-	images.push_back(image);
+	images.push_back(handle);
 }
 
 //-----------------------------------//
 
-wxBitmap* wxImageComboBox::convertToBitmap( const ImagePtr& image ) const
+wxBitmap* ConvertImageToBitmap( const ImageHandle& handle )
 {
+	Image* image = handle.Resolve();
 	if( !image ) return nullptr;
 
-#if 0
-	assert( image->getPixelFormat() == PixelFormat::R8G8B8 );
+	PixelFormat::Enum pf = image->getPixelFormat();
 	
-	byte* buf = const_cast<byte*>(&image->getBuffer()[0]);
+	if( pf != PixelFormat::R8G8B8A8 )
+	{
+		LogDebug("Invalid brush format: %s", EnumGetValueName(ReflectionGetType(PixelFormat), pf));
+		return nullptr;
+	}
 
-	File file( image->getPath(), StreamMode::Read );
-	wxImage img( FileGetFullPath(&file) );
-	FileClose(&file);
+	//wxBitmap* bmp = new wxBitmap;
+	//bmp->Create(&image->getBuffer(), wxBITMAP_TYPE_ANY, image->getWidth(), image->getHeight(), 4);
 
-	wxImage img( image->getWidth(), image->getHeight(), buf, true /* don't free data */);
+	String fullPath = "Assets/Brushes/" + image->getPath();
+	Stream* stream = StreamCreateFromFile(AllocatorGetHeap(), fullPath, StreamMode::Read);
+	if( !stream ) return nullptr;
+	
+	std::vector<byte> data;
+	StreamRead(stream, data);
 
+	wxMemoryInputStream mem(&data[0], data.size());
+	wxImage img(mem);
+	img.Rescale(32, 32);
+
+	StreamDestroy(stream);
+
+#if 0
 	const wxSize& size = GetSize();
 	if( img.GetWidth() > size.GetWidth() || img.GetHeight() > size.GetHeight() )
 	{
 		img.Rescale( size.GetWidth(), size.GetHeight() );
 	}
-
-	if( !img.HasAlpha() )
-	{
-		img.SetMaskColour( 255, 255, 255 );
-		img.InitAlpha();
-	}
-
-	wxBitmap* bmp = new wxBitmap( img );
-	return bmp;
 #endif
-	return nullptr;
+
+	wxBitmap* bmp = new wxBitmap(img);
+	return bmp;
 }
 
 //-----------------------------------//
 
-void wxImageComboBox::OnDrawBackground (wxDC &dc, const wxRect &rect,
-										int item, int flags) const
+void wxImageComboBox::OnDrawBackground (wxDC &dc, const wxRect &rect, int item, int flags) const
 {
 	if ( item == wxNOT_FOUND )
 		return;
 
-	const ImagePtr& image = images[item];
-	wxBitmap* bmp = convertToBitmap( image );
+	const ImageHandle& image = images[item];
+	wxBitmap* bmp = ConvertImageToBitmap( image );
 
 	dc.DrawBitmap( *bmp, rect.GetTopLeft() );
 	
@@ -89,14 +95,13 @@ void wxImageComboBox::OnDrawBackground (wxDC &dc, const wxRect &rect,
 
 //-----------------------------------//
 
-void wxImageComboBox::OnDrawItem (wxDC &dc, const wxRect &rect,
-								  int item, int flags) const
+void wxImageComboBox::OnDrawItem (wxDC &dc, const wxRect &rect, int item, int flags) const
 {
 	if ( item == wxNOT_FOUND )
 		return;
 
-	const ImagePtr& image = images[item];
-	wxBitmap* bmp = convertToBitmap( image );
+	const ImageHandle& image = images[item];
+	wxBitmap* bmp = ConvertImageToBitmap( image );
 
 	dc.DrawBitmap( *bmp, rect.GetTopLeft() );
 
@@ -107,7 +112,7 @@ void wxImageComboBox::OnDrawItem (wxDC &dc, const wxRect &rect,
 
 wxCoord	wxImageComboBox::OnMeasureItem (size_t item) const
 {
-	const ImagePtr& image = images[item];
+	Image* image = images[item].Resolve();
 	return image->getHeight();
 }
 
@@ -115,7 +120,7 @@ wxCoord	wxImageComboBox::OnMeasureItem (size_t item) const
 
 wxCoord	wxImageComboBox::OnMeasureItemWidth (size_t item) const
 {
-	const ImagePtr& image = images[item];
+	Image* image = images[item].Resolve();
 	return image->getWidth();
 }
 

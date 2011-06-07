@@ -20,6 +20,11 @@
 #include "EditorTags.h"
 #include <wx/debugrpt.h>
 
+#include "plugins/Scene/SceneDocument.h"
+#include "plugins/Project/ProjectPlugin.h"
+
+#define CREATE_PROJECT_ON_STARTUP
+
 wxIMPLEMENT_WXWIN_MAIN_CONSOLE
 
 namespace vapor { namespace editor {
@@ -116,9 +121,10 @@ EditorFrame::EditorFrame(const wxString& title)
 
 	//TestObjects();
 
-#if 0
+#ifdef CREATE_PROJECT_ON_STARTUP
 	wxCommandEvent event;
-	onNewButtonClick(event);
+	ProjectPlugin* project = (ProjectPlugin*) pluginManager->getPlugin("Project");
+	project->onNewButtonClick(event);
 #endif
 
 	AllocatorDumpInfo();
@@ -243,7 +249,6 @@ void EditorFrame::createToolbar()
 	getAUI()->AddPane(toolbarCtrl, wxAuiPaneInfo().ToolbarPane().Caption("Toolbar").Top());
 }
 
-
 //-----------------------------------//
 
 void EditorFrame::redrawView()
@@ -352,14 +357,14 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 	//-----------------------------------//
 	case Toolbar_ToogleGrid:
 	{
-#if 0
-		const EntityPtr& grid = editorScene->findEntity("Grid");
+		SceneDocument* scene = (SceneDocument*) getDocument();
+		
+		const EntityPtr& grid = scene->editorScene->findEntity("Grid");
 		
 		if( grid )
 			grid->setVisible( !grid->isVisible() );
 		
 		redrawView();
-#endif	
 		break;
 	}
 	//-----------------------------------//

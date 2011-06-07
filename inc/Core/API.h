@@ -23,10 +23,11 @@
 //#define	ENABLE_NETWORKING_ZMQ
 //#define	ENABLE_NETWORKING_CURL
 //#define	ENABLE_VFS_FILEWATCHER
+#define		ENABLE_SERIALIZATION
 #define		ENABLE_SERIALIZATION_JSON
 //#define	ENABLE_SERIALIZATION_BINARY
 #define		ENABLE_STACK_WALKER
-#define		ENABLE_HTTP_SERVER
+//#define		ENABLE_HTTP_SERVER
 
 //---------------------------------------------------------------------//
 // Platform headers

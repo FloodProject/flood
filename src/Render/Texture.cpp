@@ -131,8 +131,10 @@ void Texture::configure()
 	glTexParameteri( target, GL_TEXTURE_MIN_FILTER, convertFilterFormat(minFilter) );
 	glTexParameteri( target, GL_TEXTURE_MAG_FILTER, convertFilterFormat(maxFilter) );
 
-	glTexParameterf(target, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameterf(target, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameterf(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameterf(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+	//glTexParameter(GL_TEXTURE_BORDER_COLOR);
 
 	// Three next lines are necessary if we want to use the convenient shadow2DProj function in the shader.
 	// Otherwise we have to rely on texture2DProj

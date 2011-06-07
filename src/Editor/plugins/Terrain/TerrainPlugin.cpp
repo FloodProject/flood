@@ -8,12 +8,13 @@
 
 #include "Editor/API.h"
 
-#ifdef PLUGIN_TERRAIN
+#ifdef ENABLE_PLUGIN_TERRAIN
 
 #include "TerrainPlugin.h"
 #include "TerrainPage.h"
 #include "TerrainOperation.h"
 #include "Core/Utilities.h"
+#include "Profiler.h"
 #include "Editor.h"
 #include "EditorIcons.h"
 #include "Viewframe.h"
@@ -23,7 +24,10 @@
 #include "Input/InputManager.h"
 #include "Input/Keyboard.h"
 #include "Input/Mouse.h"
+#include "Scene/Projector.h"
 #include "Engine.h"
+
+#include "../Scene/SceneDocument.h"
 
 namespace vapor { namespace editor {
 
@@ -34,9 +38,9 @@ REFLECT_CLASS_END()
 
 //-----------------------------------//
 
-BEGIN_EVENT_TABLE(TerrainPlugin, wxEvtHandler)
-	EVT_TIMER(wxID_ANY, TerrainPlugin::onTimer)
-END_EVENT_TABLE()
+//BEGIN_EVENT_TABLE(TerrainPlugin, wxEvtHandler)
+//	EVT_TIMER(wxID_ANY, TerrainPlugin::onTimer)
+//END_EVENT_TABLE()
 
 //-----------------------------------//
 
@@ -44,8 +48,9 @@ TerrainPlugin::TerrainPlugin()
 	: Plugin()
 	, terrainPage(nullptr)
 	, terrainOperation(nullptr)
-	, timer(this)
-{ }
+{
+	timer.Bind(wxEVT_TIMER, &TerrainPlugin::onTimer, this);
+}
 
 //-----------------------------------//
 
@@ -84,7 +89,7 @@ void TerrainPlugin::onPluginEnable()
 	wxBitmap icon = wxMEMORY_BITMAP(world);
 	
 	wxAuiPaneInfo pane;	
-	pane.Caption("Terrains").Left().Dock().Hide().Icon(icon);
+	pane.Caption("Terrains").Left().Dock().Icon(icon);
 	pane.BestSize(200, -1);
 
 	editor->getAUI()->AddPane(terrainPage, pane);
@@ -107,6 +112,9 @@ void TerrainPlugin::onToolSelect( int id )
 		pane.Show();
 		editor->getAUI()->Update();
 	}
+
+	ProgramManager* programs = GetRenderDevice()->getProgramManager();
+	programs->getProgram("ProjectiveTexturing", true);
 }
 
 //-----------------------------------//
@@ -131,7 +139,7 @@ void TerrainPlugin::onPluginDisable()
 
 void TerrainPlugin::onEntitySelect( const EntityPtr& node )
 {
-	if( !node->getType().is<Terrain>() )
+	if( !ClassInherits(node->getType(), ReflectionGetType(Terrain)) )
 		return;
 
 	terrain = std::static_pointer_cast<Terrain>(node);
@@ -185,9 +193,6 @@ void TerrainPlugin::onMouseButtonRelease( const MouseButtonEvent& )
 
 void TerrainPlugin::onMouseDrag( const MouseDragEvent& mde )
 {
-	//if( !mde.info.leftButton )
-	//	return;
-
 	MouseButtonEvent mbe( MouseEventType::MousePress );
 	mbe.x = mde.x;
 	mbe.y = mde.y;
@@ -196,8 +201,11 @@ void TerrainPlugin::onMouseDrag( const MouseDragEvent& mde )
 	// We need to handle the case where the user clicks but doesn't move
 	// the mouse anymore. As we don't receive further events in this case,
 	// we check if the mouse is still pressed.
+	
+	if( mde.info->leftButton ) setupOperation(mbe);
 
-	setupOperation(mbe);
+	updateBrushProjection(mbe.x, mbe.y);
+
 }
 
 //-----------------------------------//
@@ -207,24 +215,126 @@ void TerrainPlugin::onMouseLeave()
 	// We use this event to check if the user leaves the window while
 	// dragging in the middle of a terrain operation. If that isn't
 	// the case, then we've got nothing to do here.
-	if( !terrainOperation )
-		return;
+	
+	if( !terrainOperation ) return;
 
 	registerUndoOperation();
 }
 
 //-----------------------------------//
 
-bool TerrainPlugin::pickCell( const MouseButtonEvent& mbe )
+void TerrainPlugin::onMouseMove( const MouseMoveEvent& mb )
 {
-	if( !terrain )
-		return false;
+	updateBrushProjection(mb.x, mb.y);
+}
 
-	RenderView* view = viewframe->getView();
-	const CameraPtr& camera = view->getCamera(); 
+//-----------------------------------//
+
+void TerrainPlugin::updateBrushProjection( int x, int y )
+{
+	Viewframe* viewframe = (Viewframe*) GetEditor().getDocument()->getWindow();
+	RenderWindow* window = viewframe->getControl()->getRenderWindow();
+
+	RayTriangleQueryResult res;
+	bool picked = pickTerrain(x, y, res);
+	
+	if( !picked && !entityProjector )
+		return;
+
+	if( !picked )
+	{
+		SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
+		document->editorScene->remove(entityProjector);
+		entityProjector.reset();
+		window->setCursorVisiblePriority(true, 10);
+	}
+	else
+	{
+		const TerrainCellPtr& cell = std::static_pointer_cast<TerrainCell>(res.geometry);
+		projectBrush(res.intersection, cell);
+
+		// Hide the cursor while projecting the brush.
+		window->setCursorVisiblePriority(false, 10);
+	}
+}
+
+//-----------------------------------//
+
+void TerrainPlugin::projectBrush(const Vector3& pos, const TerrainCellPtr& cell)
+{
+	ImageHandle brushHandle = terrainPage->getBrushImage();
+	
+	Image* brushImage = brushHandle.Resolve();
+	if( !brushImage ) return;
+
+	if( !entityProjector )
+	{
+		entityProjector = createProjector(cell);
+		
+		SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
+		document->editorScene->add(entityProjector);
+	}
+
+	const ProjectorPtr& projector = entityProjector->getComponent<Projector>();
+
+	float relativeSize = terrainPage->getBrushSize() / float(BRUSH_INITIAL_SIZE);
+	Vector3 brushImageSize( brushImage->getWidth(), brushImage->getHeight(), 0 );
+	projector->frustum.orthoSize = brushImageSize * relativeSize;
+
+	// Update the position of the projector.
+	const TransformPtr& transform = entityProjector->getTransform();
+	Vector3 frustumSize = projector->frustum.orthoSize / 2;
+	Vector3 newPos = pos - Vector3(frustumSize.x, 0, frustumSize.y);
+	transform->setPosition(newPos);
+
+	//LogDebug("New projector position: %f, %f, %f", newPos.x, newPos.y, newPos.z);
+
+	Material* material = projector->material.Resolve();
+	material->setTexture(0, brushHandle);
+}
+
+//-----------------------------------//
+
+EntityPtr TerrainPlugin::createProjector(const GeometryPtr& cell)
+{
+	MaterialHandle materialHandle = MaterialCreate(AllocatorGetHeap(), "ProjectMaterial");
+		
+	Material* material = materialHandle.Resolve();
+	material->setProgram("ProjectiveTexturing");
+	material->setBlending(BlendSource::SourceAlpha, BlendDestination::InverseSourceAlpha);
+	material->setDepthCompare(DepthCompare::LessOrEqual);
+
+	EntityPtr entity( new Entity() /*EntityCreate(AllocatorGetHeap()) */);
+	entity->setName("Projector");
+	entity->addTransform();
+	
+	ProjectorPtr projector( new Projector() );
+	projector->material = materialHandle;
+	projector->geometry = cell;
+	//projector->setDebugRenderableVisible(true);	
+	projector->frustum.projection = Projection::Orthographic;	
+	entity->addComponent(projector);
+
+	Quaternion quat;
+	quat.setToRotateAboutX(MathDegreeToRadian(90.0f));
+		
+	const TransformPtr& transform = entity->getTransform();		
+	transform->setRotation(quat);
+
+	return entity;
+}
+
+//-----------------------------------//
+
+bool TerrainPlugin::pickCell( int x, int y )
+{
+	if( !terrain ) return false;
+
+	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
+	const CameraPtr& camera = document->viewFrame->getView()->getCamera(); 
 	
 	// Get a ray given the screen location clicked.
-	const Ray& pickRay = camera->getRay( mbe.x, mbe.y );
+	const Ray& pickRay = camera->getRay(x, y);
 
 	Plane ground( Vector3::UnitY, 0 );
 	
@@ -263,10 +373,9 @@ void TerrainPlugin::onRebuildNormals( wxCommandEvent& event )
 
 void TerrainPlugin::createOperation( const RayTriangleQueryResult& res )
 {
-	if( terrainOperation )
-		return;
+	if( terrainOperation ) return;
 
-	InputManager* input = engine->getInputManager();
+	InputManager* input = GetEditor().getEngine()->getInputManager();
 
 	// If the left Shift is held down, then lower.
 	Keyboard* keyboard = input->getKeyboard();
@@ -275,6 +384,7 @@ void TerrainPlugin::createOperation( const RayTriangleQueryResult& res )
 	terrainOperation = new TerrainOperation( tool, res );
 	terrainOperation->terrain = terrain;
 
+	terrainOperation->brush = terrainPage->getBrushImage().Resolve();
 	terrainOperation->brushSize = terrainPage->getBrushSize();
 	terrainOperation->brushStrength = terrainPage->getBrushStrength();
 	terrainOperation->paintImage = terrainPage->getPaintImage();
@@ -288,8 +398,7 @@ void TerrainPlugin::createOperation( const RayTriangleQueryResult& res )
 
 void TerrainPlugin::registerUndoOperation()
 {
-	if( !terrainOperation )
-		return;
+	if( !terrainOperation ) return;
 
 	timer.Stop();
 
@@ -310,7 +419,7 @@ void TerrainPlugin::setupOperation( const MouseButtonEvent& mb )
 
 	RayTriangleQueryResult res;
 
-	if( !pickTerrain(mb, res) )
+	if( !pickTerrain(mb.x, mb.y, res) )
 		return;
 
 	EntityPtr parent = res.entity->getParent()->getShared();
@@ -329,15 +438,15 @@ void TerrainPlugin::setupOperation( const MouseButtonEvent& mb )
 
 //-----------------------------------//
 
-bool TerrainPlugin::pickTerrain( const MouseButtonEvent& mb, RayTriangleQueryResult& res )
+bool TerrainPlugin::pickTerrain( int x, int y, RayTriangleQueryResult& res )
 {
-	const ScenePtr& scene = engine->getSceneManager();
+	const ScenePtr& scene = GetEngine()->getSceneManager();
 
-	RenderView* view = viewframe->getView();
-	const CameraPtr& camera = view->getCamera(); 
+	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
+	const CameraPtr& camera = document->viewFrame->getView()->getCamera(); 
 	
 	// Get a ray given the screen location clicked.
-	const Ray& pickRay = camera->getRay( mb.x, mb.y );
+	const Ray& pickRay = camera->getRay(x, y);
 
 	RayQueryResult query;
 	
@@ -349,7 +458,7 @@ bool TerrainPlugin::pickTerrain( const MouseButtonEvent& mb, RayTriangleQueryRes
 	if( !entity ) 
 		return false;
 
-	if( !entity->getParent()->getType().is<Terrain>() )
+	if( !entity->getComponentFromFamily<Cell>() )
 		return false;
 
 	if( !scene->doRayTriangleQuery(pickRay, res, entity) )
@@ -365,11 +474,11 @@ void TerrainPlugin::createContextMenu( const MouseButtonEvent& mbe )
 	std::string menuTitle( "Terrain Operations" );
 	wxMenu menu( menuTitle );
 
-	if( pickCell(mbe) )
+	if( pickCell(mbe.x, mbe.y) )
 	{
 		CellPtr cell = terrain->getCell(coords.x, coords.y);
 
-		std::string newTitle = String::format( "%s (Cell %hd,%hd)",
+		String newTitle = StringFormat( "%s (Cell %hd,%hd)",
 			menuTitle.c_str(), coords.x, coords.y );
 
 		menu.SetTitle( newTitle );

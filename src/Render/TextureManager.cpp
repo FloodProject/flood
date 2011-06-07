@@ -87,7 +87,8 @@ TexturePtr TextureManager::getTexture( Image* image )
 	if( !image ) 
 	{
 		//LogWarn( "Reverting to fallback texture" );
-		return TexturePtr( new Texture( Settings(TEX_SIZE, TEX_SIZE) ) );
+		TexturePtr texture = Allocate(Texture, AllocatorGetHeap(), Settings(TEX_SIZE, TEX_SIZE));
+		return texture;
 	}
 
 	// Image already has texture.
@@ -99,17 +100,17 @@ TexturePtr TextureManager::getTexture( Image* image )
 	// Image not loaded yet.
 	else if( !image->isLoaded() ) 
 	{
-		TexturePtr tex( new Texture( Settings(TEX_SIZE, TEX_SIZE) ) );
-		textures[image] = tex;
-		return tex;
+		TexturePtr texture = Allocate(Texture, AllocatorGetHeap(), Settings(TEX_SIZE, TEX_SIZE));
+		textures[image] = texture;
+		return texture;
 	}
 
 	// Create a new texture from image.
 	else
 	{
-		TexturePtr tex( new Texture(image) );
-		textures[image] = tex;
-		return tex;
+		TexturePtr texture = Allocate(Texture, AllocatorGetHeap(), image);
+		textures[image] = texture;
+		return texture;
 	}
 }
 

@@ -42,7 +42,7 @@ class GizmoPlugin : public Plugin
 
 public:
 
-	GizmoPlugin( EditorFrame* );
+	GizmoPlugin();
 
 	// Gets metadata about this plugin.
 	virtual PluginMetadata getMetadata();
@@ -70,6 +70,9 @@ public:
 	void onToolUnselect( int id );
 
 protected:
+
+	// Gets the selections manager.
+	SelectionManager* getSelections();
 
 	// Checks if the passed tool the current one.
 	bool isTool(GizmoTool::Enum mode);
@@ -113,16 +116,11 @@ protected:
 	// Current gizmo pick point.
 	Vector3 firstPickPoint;
 
-	// Editor scene.
-	ScenePtr editorScene;
-
 	// Toolbar buttons.
 	wxAuiToolBarItem* buttonCamera;
 	wxAuiToolBarItem* buttonTranslate;
 	wxAuiToolBarItem* buttonRotate;
 	wxAuiToolBarItem* buttonScale;
-
-	SelectionManager* selections;
 };
 
 //-----------------------------------//

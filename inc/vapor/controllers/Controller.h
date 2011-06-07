@@ -25,7 +25,8 @@ public:
 	virtual ~Controller();
 
 	// Gets/sets if the controller is enabled.
-	ACESSOR(Enabled, bool, enabled)
+	GETTER(Enabled, bool, enabled)
+	virtual void setEnabled(bool enabled);
 
 	// Updates the controller.
 	virtual void update( float delta );

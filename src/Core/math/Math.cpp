@@ -63,8 +63,17 @@ float MathLogBase( float base, float value )
 
 //-----------------------------------//
 
-float MathDegreeToRadian( float degree ) { return degree * PI / 180.0f; }
-float MathRadianToDegree( float radian ) { return radian * 180.0f / PI; }
+float MathDegreeToRadian( float degree )
+{
+	return degree * PI / 180.0f;
+}
+
+//-----------------------------------//
+
+float MathRadianToDegree( float radian )
+{
+	return radian * 180.0f / PI;
+}
 
 //-----------------------------------//
 

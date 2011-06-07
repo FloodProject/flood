@@ -45,6 +45,8 @@ public:
 		return ClassInherits(getType(), T::getStaticType());
 	}
 
+	virtual ~Object() {}
+
 protected:
 
 	Object() {}
@@ -55,7 +57,6 @@ protected:
 	virtual Class* getType() const OVERRIDE { return ReflectionGetType(className); } \
 	static Class* getStaticType() { return ReflectionGetType(className); }           \
 	REFLECT_DECLARE_CLASS_FRIEND(className)
-
 
 //-----------------------------------//
 

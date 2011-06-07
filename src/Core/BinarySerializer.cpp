@@ -7,13 +7,18 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "io/BinarySerializer.h"
 
 #ifdef ENABLE_SERIALIZATION_BINARY
 
 NAMESPACE_BEGIN
 
 //-----------------------------------//
+
+Serializer* SerializerCreateBinary(Allocator* alloc)
+{
+	return nullptr;
+}
+
 
 //-----------------------------------//
 

@@ -57,8 +57,12 @@ Terrain::Terrain( const std::string& name, const TerrainSettings& settings )
 
 void Terrain::init()
 {
-	settings.Material = new Material("Terrain");
-	settings.Material->setProgram("VertexLit");
+	MaterialHandle handle = MaterialCreate(AllocatorGetHeap(), "Terrain");
+
+	Material* material = handle.Resolve();
+	material->setProgram("VertexLit");
+
+	settings.Material = material;
 }
 
 //-----------------------------------//
@@ -109,12 +113,12 @@ CellPtr Terrain::getCell( int x, int y )
 
 //-----------------------------------//
 
-Vector2 Terrain::getCoords( const Vector3& pos )
+Vector2i Terrain::getCoords( const Vector3& pos )
 {
 	float x = floor(pos.x / settings.CellSize); 
 	float y = floor(pos.z / settings.CellSize);
 
-	return Vector2( int(x), int(y) );
+	return Vector2i( int(x), int(y) );
 }
 
 //-----------------------------------//
@@ -127,7 +131,7 @@ CellPtr Terrain::createCell( int x, int y, std::vector<float>& heights )
 
 	terrainCells.push_back(cell);
 
-	std::string name = StringFormat("Cell (%d,%d)", x, y);
+	String name = StringFormat("Cell (%d,%d)", x, y);
 	
 	EntityPtr nodeCell( new Entity(name) );
 	nodeCell->addTransform();

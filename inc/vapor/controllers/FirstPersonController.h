@@ -42,8 +42,11 @@ public:
 	FirstPersonController();
 	~FirstPersonController();
 
+	// Sets if the controller is enabled.
+	virtual void setEnabled(bool enabled) OVERRIDE;
+
 	// Updates this component.
-	virtual void _update( float delta );
+	virtual void _update( float delta ) OVERRIDE;
 
 protected:
 

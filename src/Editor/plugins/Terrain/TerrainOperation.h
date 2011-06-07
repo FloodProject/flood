@@ -8,7 +8,7 @@
 
 #pragma once
 
-#ifdef PLUGIN_TERRAIN
+#ifdef ENABLE_PLUGIN_TERRAIN
 
 #include "Plugin.h"
 #include "UndoOperation.h"
@@ -48,6 +48,7 @@ public:
 	int brushSize;
 	int brushStrength;
 	ImagePtr paintImage;
+	ImagePtr brush;
 	
 	// Tile settings.
 	bool tileLock;

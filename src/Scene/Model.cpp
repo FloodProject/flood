@@ -80,7 +80,7 @@ void Model::setMesh(const MeshHandle& mesh)
 	for( size_t i = 0; i < renderables.size(); i++ )
 	{
 		const RenderablePtr& rend = renderables[i];
-		rend->onPreRender.Disconnect(this, &Model::onRender);
+		rend->onPreRender.Bind(this, &Model::onRender);
 	}
 
 	init();
@@ -189,7 +189,7 @@ void Model::build()
 		if( material && material->isBlendingEnabled() )
 			rend->setRenderLayer(RenderLayer::Transparency);
 
-		rend->onPreRender.Connect(this, &Model::onRender);
+		rend->onPreRender.Bind(this, &Model::onRender);
 		
 		addRenderable( rend );
 	}
@@ -389,7 +389,7 @@ bool Model::isHardwareSkinned()
 
 //-----------------------------------//
 
-void Model::onRender()
+void Model::onRender(const RenderState&)
 {
 	if( !mesh || !mesh->isLoaded() || !mesh->isAnimated() )
 		return;

@@ -7,6 +7,9 @@
 ************************************************************************/
 
 #include "Core/API.h"
+
+#ifdef ENABLE_HTTP_SERVER
+
 #include "Core/WebServer.h"
 #include "Core/Memory.h"
 
@@ -21,6 +24,8 @@ static void* MongooseCallback(mg_event event, mg_connection* conn, const mg_requ
 	return 0;
 };
 
+//-----------------------------------//
+
 WebContext* WebServerCreate( Allocator* alloc )
 {
 	WebContext* context = Allocate(WebContext, alloc);
@@ -28,6 +33,8 @@ WebContext* WebServerCreate( Allocator* alloc )
 
 	return context;
 }
+
+//-----------------------------------//
 
 bool WebServerStart( WebContext* context, const char* port )
 {
@@ -47,6 +54,8 @@ bool WebServerStart( WebContext* context, const char* port )
 	return false;
 }
 
+//-----------------------------------//
+
 void WebServerCallback( String uri, WebCallback callback )
 {
 }
@@ -54,3 +63,5 @@ void WebServerCallback( String uri, WebCallback callback )
 //-----------------------------------//
 
 NAMESPACE_EXTERN_END
+
+#endif

@@ -76,8 +76,10 @@ static bool doRayGroupQuery( const Group* group, const Culler& culler, RayQueryL
 				
 			float distance = -1;
 
-			if((culler.ray && box.intersects(*culler.ray, distance)) ||
-			   (culler.frustum && culler.frustum->intersects(box)))
+			bool intersectsBox = culler.ray && box.intersects(*culler.ray, distance);
+			bool intersectsFrustum = culler.frustum && culler.frustum->intersects(box);
+			
+			if(intersectsBox || intersectsFrustum)
 			{
 				RayQueryResult res;
 				res.entity = entity;
@@ -150,40 +152,73 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res )
 
 //-----------------------------------//
 
-bool doRayGeometryQuery( const Ray& ray, const IndexBufferPtr& ib,
+static void buildResult( RayTriangleQueryResult& res, const Ray& ray,
+	const Vector3(&pos)[3], const Vector3(&tex)[3], float u, float v, float t)
+{
+	res.trianglePosition[0] = pos[0];
+	res.trianglePosition[1] = pos[1];
+	res.trianglePosition[1] = pos[2];
+
+	res.triangleUV[0] = tex[0];
+	res.triangleUV[1] = tex[1];
+	res.triangleUV[2] = tex[2];
+
+	res.intersectionUV.x = u;
+	res.intersectionUV.y = v;
+	res.intersection = ray.getPoint(t);
+	res.distance = t;
+}
+
+//-----------------------------------//
+
+#define index(i) (*(uint16*) &ib->data[indexSizeBytes * (i)])
+
+static bool doRayQueryIndexed( const Ray& ray, const IndexBufferPtr& ib,
 	const std::vector<Vector3>& vertices, const std::vector<Vector3>& texCoords,
 	RayTriangleQueryResult& res )
 {				
-	size_t size = ib ? ib->getSize() : vertices.size();
+	size_t size = ib->getSize();
 	int32 indexSizeBytes = ib->indexSize / 8;
 	
 	for( size_t i = 0; i < size; i += 3 )
 	{
-		int16 index = ib ? *(int16*) &ib->data[indexSizeBytes * i] : i;
+		Vector3 tri[3];
+		tri[0] = vertices[index(i+0)];
+		tri[1] = vertices[index(i+1)];
+		tri[2] = vertices[index(i+2)];
 
-		const Vector3 (&tri)[3] = (const Vector3 (&)[3]) vertices[index];		
 		float t, o, n;
-		
 		if( !ray.intersects(tri,t,o,n) )
 			continue;
 
-		// Ray intersected, build results.
+		Vector3 tex[3];
+		tex[0] = texCoords[index(i+0)];
+		tex[1] = texCoords[index(i+1)];
+		tex[2] = texCoords[index(i+2)];
 
-		res.trianglePosition[0] = tri[0];
-		res.trianglePosition[1] = tri[1];
-		res.trianglePosition[2] = tri[2];
+		buildResult(res, ray, tri, tex, o, n, t);
+		return true;
+	}
 
-		const Vector3 (&uv)[3] = (const Vector3 (&)[3]) texCoords[index];
+	return false;
+}
 
-		res.triangleUV[0] = uv[0];
-		res.triangleUV[1] = uv[1];
-		res.triangleUV[2] = uv[2];
+//-----------------------------------//
 
-		res.intersectionUV.x = o;
-		res.intersectionUV.y = n;
-		res.intersection = ray.getPoint(t);
-		res.distance = t;
+static bool doRayQuery( const Ray& ray,	const std::vector<Vector3>& vertices,
+	const std::vector<Vector3>& texCoords, RayTriangleQueryResult& res )
+{				
+	for( size_t i = 0; i < vertices.size(); i += 3 )
+	{
+		const Vector3 (&tri)[3] = (const Vector3 (&)[3]) vertices[i];		
 
+		float t, o, n;
+		if( !ray.intersects(tri,t,o,n) )
+			continue;
+
+		const Vector3 (&tex)[3] = (const Vector3 (&)[3]) texCoords[i];
+
+		buildResult(res, ray, tri, tex, o, n, t);
 		return true;
 	}
 
@@ -210,11 +245,9 @@ static bool needsSkinning(const GeometryPtr& geo, std::vector<Vector3>& skinnedP
 
 //-----------------------------------//
 
-bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, const EntityPtr& node )
+static Ray TransformRay(const Ray& ray, const EntityPtr& entity)
 {
-	const std::vector<GeometryPtr>& geoms = node->getGeometry();
-
-	const TransformPtr& transform = node->getTransform();
+	const TransformPtr& transform = entity->getTransform();
 	Matrix4x3 absolute = transform->getAbsoluteTransform().inverse();
 
 	Ray transRay;
@@ -226,7 +259,16 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, con
 
 	transRay.direction = (absolute * ray.direction).normalize();
 
-	// Down to triangle picking.	
+	return transRay;
+}
+
+//-----------------------------------//
+
+bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, const EntityPtr& entity )
+{
+	Ray transRay = TransformRay(ray, entity);
+	const std::vector<GeometryPtr>& geoms = entity->getGeometry();
+	
 	for( size_t i = 0; i < geoms.size(); i++ )
 	{		
 		const GeometryPtr& geo = geoms[i];
@@ -261,11 +303,21 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, con
 			if( !vb ) return false;
 
 			const std::vector<Vector3>& vertices = vb->getAttribute(VertexAttribute::Position);
+			const std::vector<Vector3>& finalVertices = doSkinning ? skinnedPositions : vertices;
 			const std::vector<Vector3>& texCoords = vb->getAttribute(VertexAttribute::TexCoord0);
+			
+			bool isIndexed = ib != nullptr;
 
-			if( doRayGeometryQuery(transRay, ib, doSkinning ? skinnedPositions : vertices, texCoords, res) )
+			bool hit = false;
+
+			if( !isIndexed )
+				hit = doRayQuery(transRay, finalVertices, texCoords, res);
+			else
+				hit = doRayQueryIndexed(transRay, ib, finalVertices, texCoords, res);
+
+			if(hit)
 			{
-				res.entity = node;
+				res.entity = entity;
 				res.geometry = geo;
 				res.renderable = rend;
 				return true;

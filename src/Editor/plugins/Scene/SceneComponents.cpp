@@ -14,6 +14,7 @@
 #include "EditorIcons.h"
 #include "Viewframe.h"
 #include "UndoManager.h"
+#include "Scene/Projector.h"
 
 namespace vapor { namespace editor {
 

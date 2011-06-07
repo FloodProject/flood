@@ -110,9 +110,6 @@ protected:
 
 	// Last view active the camera.
 	RenderView* activeView;
-
-	// Rendering device.
-	RenderDevice* renderDevice;
 };
 
 TYPEDEF_SHARED_POINTER_FROM_TYPE( Camera );

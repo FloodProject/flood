@@ -15,6 +15,8 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
+wxBitmap* ConvertImageToBitmap( const ImageHandle& image );
+
 /**
  * Implements a media browser. At the moment it only lets the user
  * select a texture from a possibly very big list, but it can be 
@@ -37,12 +39,11 @@ public:
 	virtual wxCoord	OnMeasureItem (size_t item) const;
 	virtual wxCoord	OnMeasureItemWidth (size_t item) const;
 
-	void addImage( const ImagePtr& image );
+	void addImage( const ImageHandle& image );
 
 protected:
 
-	wxBitmap* convertToBitmap( const ImagePtr& image ) const;
-	std::vector<ImagePtr> images;
+	std::vector<ImageHandle> images;
 };
 
 //-----------------------------------//

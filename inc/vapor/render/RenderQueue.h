@@ -8,18 +8,19 @@
 
 #pragma once
 
-#include "Core/Event.h"
+#include "Math/Matrix4x3.h"
 #include "Math/Matrix4x4.h"
 #include "Render/Renderable.h"
-#include "Render/Texture.h"
-#include "Scene/Transform.h"
-#include "Scene/Light.h"
-
-FWD_DECL_INTRUSIVE(Texture)
 
 namespace vapor {
 
 //-----------------------------------//
+
+class Material;
+class Renderable;
+class Texture;
+class Transform;
+class Light;
 
 /**
  * This contains all the rendering state information that is needed by
@@ -29,19 +30,21 @@ namespace vapor {
  * rendered to the render target that is currently active on the device.
  */
 
-typedef Event0<> RenderDelegate;
-
 struct RenderState
 {
-	RenderState() { }
+	RenderState( const RenderablePtr& rend );
 	
 	RenderState( const RenderState& rhs )
 		: renderable( rhs.renderable )
 		, modelMatrix( rhs.modelMatrix )
+		, material( rhs.material )
+		, priority( rhs.priority )
 	{ }
 
-	RenderablePtr renderable;
+	Renderable* renderable;
+	Material* material;
 	Matrix4x3 modelMatrix;
+	int32 priority;
 };
 
 //-----------------------------------//
@@ -52,9 +55,9 @@ struct RenderState
 
 struct LightState
 {
-	LightPtr light;
-	TransformPtr transform;
-	TexturePtr depth;
+	Light* light;
+	Transform* transform;
+	Texture* depth;
 	Matrix4x4 projection;
 };
 

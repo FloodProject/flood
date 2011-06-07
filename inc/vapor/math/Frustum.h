@@ -42,7 +42,7 @@ struct API_CORE Frustum // : public Object
     Frustum( const Frustum& rhs );
 
 	// Updates the projection matrix.
-	void updateProjection( const Vector2& size );
+	void updateProjection();
 
 	// Updates the frustum planes.
 	void updatePlanes( const Matrix4x3& matView );
@@ -72,6 +72,9 @@ public:
 
 	// Aspect ratio of the frustum.
 	float aspectRatio;
+
+	// Ortographic view size.
+	Vector3 orthoSize;
 
     // Stores the planes that make up the frustum.
     // Order: Left, Right, Top, Bottom, Near, Far.

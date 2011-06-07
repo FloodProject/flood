@@ -21,8 +21,9 @@
 
 #include "../Selection/SelectionPlugin.h"
 #include "../Selection/SelectionManager.h"
+#include "../Scene/SceneDocument.h"
 
-#ifdef ALL_PLUGINS
+#ifdef ENABLE_PLUGIN_GIZMO
 
 namespace vapor { namespace editor {
 
@@ -34,18 +35,8 @@ REFLECT_CLASS_END()
 //-----------------------------------//
 
 GizmoPlugin::GizmoPlugin()
-	: Plugin()
-	, editorScene(frame->getEditorScene())
-	, op(nullptr)
-{
-	PluginManager* plugins = editor->getPluginManager();
-	
-	SelectionPlugin* sp = (SelectionPlugin*) plugins->getPlugin("Selection");
-	assert( sp != nullptr );
-
-	selections = sp->getSelectionManager();
-	assert( selections != nullptr );
-}
+	: op(nullptr)
+{ }
 
 //-----------------------------------//
 
@@ -59,6 +50,18 @@ PluginMetadata GizmoPlugin::getMetadata()
 	metadata.version = "1.0";
 
 	return metadata;
+}
+
+//-----------------------------------//
+
+SelectionManager* GizmoPlugin::getSelections()
+{
+	PluginManager* plugins = editor->getPluginManager();
+	
+	SelectionPlugin* sp = (SelectionPlugin*) plugins->getPlugin("Selection");
+	assert( sp != nullptr );
+
+	return sp->getSelectionManager();
 }
 
 //-----------------------------------//
@@ -104,7 +107,7 @@ void GizmoPlugin::onToolSelect( int id )
 {
 	tool = (GizmoTool::Enum) id;
 
-	SelectionOperation* selection = selections->getSelection();
+	SelectionOperation* selection = getSelections()->getSelection();
 
 	if( !selection )
 		return;
@@ -126,7 +129,7 @@ void GizmoPlugin::onToolUnselect( int id )
 	if(id >= GizmoTool::Camera && id <= GizmoTool::Scale)
 		return;
 
-	SelectionOperation* sel = selections->getSelection();
+	SelectionOperation* sel = getSelections()->getSelection();
 	
 	if( !sel || sel->mode == SelectionMode::None )
 		return;
@@ -185,10 +188,11 @@ Plane GizmoPlugin::getGizmoPickPlane()
 	Plane planeY( Vector3::UnitY, gizmoPosition.y );
 	Plane planeZ( Vector3::UnitZ, gizmoPosition.z );
 
-	RenderView* renderView = viewframe->getView();
-	const CameraPtr& camera = renderView->getCamera();
+	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
+	RenderView* renderView = document->viewFrame->getView();
+	const CameraPtr& camera = renderView->getCamera(); 
 	
-	Vector2 viewCenter = renderView->getSize() / 2.0f;
+	Vector2i viewCenter = renderView->getSize() / 2.0f;
 	Ray ray = camera->getRay(viewCenter.x, viewCenter.y);
 	
 	float lengthX = planeX.project(ray.direction).lengthSquared();
@@ -207,13 +211,14 @@ Plane GizmoPlugin::getGizmoPickPlane()
 
 bool GizmoPlugin::getGizmoPickPoint(int x, int y, Vector3& pickPoint)
 {
-	RenderView* renderView = viewframe->getView();
-	const CameraPtr& camera = renderView->getCamera();	
+	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
+	const CameraPtr& camera = document->viewFrame->getView()->getCamera(); 	
 
 	Plane pickPlane = getGizmoPickPlane();	
 	Ray ray = camera->getRay(x, y);
 	
 	float distance;
+	
 	if( !pickPlane.intersects(ray, distance) )
 		return false;
 
@@ -269,8 +274,7 @@ void GizmoPlugin::onMouseDrag( const MouseDragEvent& dragEvent )
 	if( !gizmo || !gizmo->isAnyAxisSelected() )
 		return;
 
-	if( !op )
-		return;
+	if( !op ) return;
 	
 	Vector3 pickPoint;
 	
@@ -322,15 +326,15 @@ void GizmoPlugin::onMouseButtonPress( const MouseButtonEvent& mbe )
 
 void GizmoPlugin::onMouseButtonRelease( const MouseButtonEvent& mbe )
 {
-	if( !op )
-		return;
+	if( !op ) return;
 
-	UndoManager* undoManager = editor->getUndoManager();
+	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
+	UndoManager* undoManager = document->getUndoManager();
+
 	undoManager->registerOperation( op );
 	op = nullptr;
 	
-	if(gizmo)
-		gizmo->deselectAxis();
+	if(gizmo) gizmo->deselectAxis();
 }
 
 //-----------------------------------//
@@ -340,7 +344,8 @@ void GizmoPlugin::createGizmo( const EntityPtr& entity )
 	assert( entity != nullptr );
 	assert( gizmos.find(entity) == gizmos.end() );
 
-	RenderView* view = viewframe->getView();
+	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
+	RenderView* view = document->viewFrame->getView();
 	const CameraPtr& camera = view->getCamera();
 
 	Gizmo* newGizmo = nullptr;
@@ -364,7 +369,7 @@ void GizmoPlugin::createGizmo( const EntityPtr& entity )
 	EntityPtr entityGizmo( new Entity("Gizmo") );
 	entityGizmo->addTransform();
 	entityGizmo->addComponent(gizmo);
-	editorScene->add(entityGizmo);
+	document->editorScene->add(entityGizmo);
 
 	gizmo->updatePositionScale();
 	
@@ -388,7 +393,9 @@ void GizmoPlugin::removeGizmo( const EntityPtr& entity )
 	const EntityPtr& entityGizmo = gizmos[entity];
 	
 	// Remove the gizmo.
-	editorScene->remove(entityGizmo);
+	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
+	document->editorScene->remove(entityGizmo);
+	
 	gizmos.erase(it);
 	gizmo.reset();
 }
@@ -398,15 +405,16 @@ void GizmoPlugin::removeGizmo( const EntityPtr& entity )
 bool GizmoPlugin::pickImageTest( const MouseMoveEvent& moveEvent,
 								 GizmoAxis::Enum& axis )
 {
-	RenderView* view = viewframe->getView();
-	Vector2 size = view->getSize();
+	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
+	RenderView* view = document->viewFrame->getView();
+	Vector2i size = view->getSize();
 
 	// We need to flip the Y-axis due to a mismatch between the 
 	// OpenGL and wxWidgets coordinate-system origin conventions.
 	int mouseX = moveEvent.x;
 	int mouseY = size.y - moveEvent.y;
 
-	RenderDevice* device = engine->getRenderDevice();
+	RenderDevice* device = GetRenderDevice();
 	Color pick = device->getPixel(mouseX, mouseY);
 
 	axis = gizmo->getAxis(pick);
@@ -417,8 +425,8 @@ bool GizmoPlugin::pickImageTest( const MouseMoveEvent& moveEvent,
 
 bool GizmoPlugin::pickBoundingTest( const MouseMoveEvent& me )
 {
-	RenderView* view = viewframe->getView();
-	const CameraPtr& camera = view->getCamera();
+	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
+	const CameraPtr& camera = document->viewFrame->getView()->getCamera();
 
 	// Get a ray given the screen location clicked.
 	Vector3 outFar;
@@ -427,7 +435,7 @@ bool GizmoPlugin::pickBoundingTest( const MouseMoveEvent& me )
 	// Perform ray casting to find the entities.
 	RayQueryResult res;
 	
-	if( !editorScene->doRayBoxQuery(pickRay, res) )
+	if( !document->editorScene->doRayBoxQuery(pickRay, res) )
 		return false;
 
 	// Find out if we picked a gizmo...

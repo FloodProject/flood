@@ -64,6 +64,12 @@ public:
 	// Sets the cursor position on screen.
 	virtual void setCursorPosition( int x, int y );
 
+	// Sets the cursor visible if the priority matches.
+	void setCursorVisiblePriority(bool state, int32 priority);
+
+	// Gets the cursor priority.
+	GETTER(CursorPriority, int32, cursorPriority)
+
 private:
 
 	// Processes a window resize.
@@ -81,8 +87,11 @@ private:
 	// wxWidgets Input Manager.
 	EditorInputManager* inputManager;
 
-	// Mouse visiblity.
-	bool mouseVisible;
+	// Cursor visiblity.
+	bool cursorVisible;
+
+	// Cursor priority.
+	int32 cursorPriority;
 };
 
 //-----------------------------------//

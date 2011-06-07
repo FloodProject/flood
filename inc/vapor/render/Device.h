@@ -24,6 +24,9 @@ namespace vapor {
 
 //-----------------------------------//
 
+class Light;
+class Texture;
+
 /**
  * There are a couple rendering pipelines. You can choose each one depending
  * on the hardware functionality (shaders don't exist on some old or mobile
@@ -52,7 +55,7 @@ class ProgramManager;
 class TextureManager;
 struct Adapter;
 
-typedef std::map<LightPtr, TexturePtr> ShadowTextureMap;
+typedef std::map<Light*, Texture*> ShadowTextureMap;
 
 /**
  * Represents the rendering device we are using. At startup the application

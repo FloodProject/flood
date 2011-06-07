@@ -30,6 +30,7 @@ CuSuite* GetSuiteStreams();
 CuSuite* GetSuiteArchives();
 CuSuite* GetSuiteHandle();
 CuSuite* GetSuiteReflection();
+CuSuite* GetSuiteSerialization();
 
 static const SuiteFunction suites[] =
 {
@@ -38,7 +39,8 @@ static const SuiteFunction suites[] =
 	GetSuiteStreams,
 	GetSuiteArchives,
 	GetSuiteHandle,
-	GetSuiteReflection
+	GetSuiteReflection,
+	GetSuiteSerialization
 };
 
 //-----------------------------------//

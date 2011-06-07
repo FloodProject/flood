@@ -26,6 +26,7 @@ public:
 
 	// Gets the document window.
 	virtual wxWindow* getWindow();
+	RenderWindow* getRenderWindow() { return viewFrame->getControl()->getRenderWindow(); }
 
 	// Document selection callbacks.
 	virtual void onDocumentSelect();
@@ -35,10 +36,12 @@ public:
 	void onUpdate( float delta );
 	void onRender();
 
-	RenderWindow* getRenderWindow() { return viewFrame->getControl()->getRenderWindow(); }
-
+	void OnMouseRightUp(wxMouseEvent& event);
+	void OnMouseRightDown(wxMouseEvent& event);
+	
 	ScenePtr scene;
 	ScenePtr editorScene;
+	FirstPersonControllerPtr cameraController;
 	Viewframe* viewFrame;
 
 protected:

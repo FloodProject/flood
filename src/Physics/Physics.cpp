@@ -15,7 +15,6 @@
 #include "Physics/Convert.h"
 #include "Physics/DebugDraw.h"
 #include "Render/Device.h"
-#include "Engine.h"
 
 #include <btBulletDynamicsCommon.h>
 #include <BulletCollision/CollisionDispatch/btGhostObject.h> 
@@ -82,11 +81,9 @@ void PhysicsManager::drawDebugWorld()
 	debugDrawer->clearBuffer();
 	world->debugDrawWorld();
 
-	RenderDevice* renderDevice = GetEngine()->getRenderDevice();
+	RenderDevice* renderDevice = GetRenderDevice();
 
-	RenderState state;
-	state.renderable = debugDrawer->getRenderable();
-
+	RenderState state( debugDrawer->getRenderable() );
 	renderDevice->render( state, LightQueue() );
 }
 

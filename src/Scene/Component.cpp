@@ -23,6 +23,7 @@ REFLECT_CLASS_END()
 Component::Component()
 	: debugVisible(false)
 	, debugInheritsTransform(true)
+	, entity(nullptr)
 { }
 
 //-----------------------------------//

@@ -37,7 +37,7 @@ public:
 	~ProgramManager();
 
 	// Gets a program given a name identifier.
-	ProgramPtr getProgram( const String& program );
+	ProgramPtr getProgram( const String& program, bool precompile = false );
 
 	// Registers a new program in the manager.
 	bool registerProgram( const String& name, const ProgramPtr& program );

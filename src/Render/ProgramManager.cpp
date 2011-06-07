@@ -33,7 +33,7 @@ ProgramManager::~ProgramManager()
 
 //-----------------------------------//
 
-ProgramPtr ProgramManager::getProgram( const String& name )
+ProgramPtr ProgramManager::getProgram( const String& name, bool precompile )
 {
 	if( programs.find(name) != programs.end() )
 		return programs[name];
@@ -49,7 +49,12 @@ ProgramPtr ProgramManager::getProgram( const String& name )
 	if( !res->loadResource(options) )
 		return nullptr;
 
-	return programs[name];
+	const ProgramPtr& program = programs[name];
+	
+	if( precompile && program )
+		program->link();
+
+	return program;
 }
 
 #pragma TODO("Get GLSL fallback programs working")
@@ -58,8 +63,6 @@ ProgramPtr ProgramManager::getProgram( const String& name )
 
 bool ProgramManager::registerProgram( const String& name, const ProgramPtr& program )
 {
-	assert( program != nullptr );
-	
 	if( programs.find(name) != programs.end() )
 	{
 		LogWarn( "Shader '%s' already registered", name.c_str() );

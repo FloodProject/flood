@@ -42,11 +42,11 @@ void Cell::setSettings( const TerrainSettings& settings )
 	image = ImageCreate(AllocatorGetHeap(), size, size, PixelFormat::R8G8B8A8);
 	image.Resolve()->setColor( Color::LightGrey );
 
-#if 0
 	// Make a copy of the default cell material.
-	material = MaterialCreate(AllocatorGetHeap(), *settings.Material);
-	material->setTexture(0, image);
-#endif
+	Material* mat = Allocate(Material, AllocatorGetHeap(), *settings.Material);
+	mat->setTexture(0, image);
+
+	material = HandleCast<Material>( ResourceHandleCreate(mat) );
 }
 
 //-----------------------------------//
@@ -127,7 +127,7 @@ void Cell::rebuildIndices()
 	// Index data.
 	std::vector<uint16> indices;
 
-	const int numTiles = settings->NumberTiles;
+	const uint32 numTiles = settings->NumberTiles;
 	
 	for( size_t col = 0; col < numTiles; col++ )
 	{
@@ -162,6 +162,17 @@ void Cell::rebuildNormals()
 
 //-----------------------------------//
 
+static Vector3 CalculateTriangleNormal( const Vector3& v1, const Vector3& v2, const Vector3& v3 )
+{
+	Vector3 vec1 = v2 - v1;
+	Vector3 vec2 = v3 - v1;
+	Vector3 normal = vec1.cross(vec2);
+
+	return normal.normalize();
+}
+
+#define index(i) (*(uint16*) &ib->data[indexSizeBytes * (i)])
+
 void Cell::rebuildFaceNormals()
 {
 	if( heights.empty() ) return;
@@ -169,32 +180,28 @@ void Cell::rebuildFaceNormals()
 	const VertexBufferPtr& vb = rend->getVertexBuffer();
 	const IndexBufferPtr& ib = rend->getIndexBuffer();
 
-#pragma TODO(Finish index buffer work)
-
-#if 0
 	const std::vector<Vector3>& vs = vb->getVertices();
 	assert( !vs.empty() );
 
-	const std::vector<ushort>& ind = ib->getIndices16();
-	assert( !ind.empty() );
-
+	size_t indexSize = ib->getSize();
+	int32 indexSizeBytes = ib->indexSize / 8;
+	
 	faceNormals.clear();
 
 	LogInfo( "Rebuilding face normals of cell (%hd, %hd)", x, y );
 
-	for( size_t i = 0; i < ind.size(); i += 3 )
+	for( size_t i = 0; i < indexSize; i += 3 )
 	{
-		Vector3 v1 = vs[ind[i]];
-		Vector3 v2 = vs[ind[i+1]];
-		Vector3 v3 = vs[ind[i+2]];
+		Vector3 v1 = vs[index(i+0)];
+		Vector3 v2 = vs[index(i+1)];
+		Vector3 v3 = vs[index(i+2)];
 
-		Vector3 normal = calculateTriangleNormal(v1, v2, v3);
+		Vector3 normal = CalculateTriangleNormal(v1, v2, v3);
 		faceNormals.push_back( normal );
 	}
 
 	const uint numTiles = settings->NumberTiles;
 	assert( faceNormals.size() == numTiles*numTiles*2 );
-#endif
 }
 
 //-----------------------------------//
@@ -245,14 +252,10 @@ void Cell::rebuildAveragedNormals()
 		return;
 
 	const VertexBufferPtr& vb = rend->getVertexBuffer();
-	const IndexBufferPtr& ib = rend->getIndexBuffer();
+	//const IndexBufferPtr& ib = rend->getIndexBuffer();
 
 	const std::vector<Vector3>& vs = vb->getVertices();
 	assert( !vs.empty() );
-
-#if 0
-	const std::vector<ushort>& ind = ib->getIndices16();
-	assert( !ind.empty() );
 
 	// Averaged per-vertex normals.
 	std::vector<Vector3> normals;
@@ -278,7 +281,6 @@ void Cell::rebuildAveragedNormals()
 
 	assert( normals.size() == vs.size() );
 	vb->set( VertexAttribute::Normal, normals );
-#endif
 }
 
 //-----------------------------------//

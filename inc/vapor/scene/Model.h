@@ -43,7 +43,7 @@ struct AnimationState;
 
 REFLECT_DECLARE_CLASS(Model)
 
-class VAPOR_API Model : public Geometry
+class API_ENGINE Model : public Geometry
 {
 	REFLECT_DECLARE_OBJECT(Model)
 
@@ -118,7 +118,7 @@ protected:
 	virtual RenderablePtr createDebugRenderable() const;
 
 	// Pre-render callback.
-	void onRender();
+	void onRender(const RenderState& state);
 
 	// Prepares a mesh for skinning.
 	void prepareSkinning();

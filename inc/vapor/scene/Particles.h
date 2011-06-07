@@ -85,10 +85,10 @@ protected:
 	void resetParticle(Particle& particle);
 
 	// Pre-render callback.
-	void onPreRender();
+	void onPreRender(const RenderState&);
 
 	// Post-render callback.
-	void onPostRender();
+	void onPostRender(const RenderState&);
 
 	// Emitter type.
 	EmitterType::Enum emitter;

@@ -8,108 +8,120 @@
 
 #pragma once
 
-#include "Core/Reflection.h"
-#include "Core/Object.h"
-
-#include "Math/Vector.h"
-#include "Math/Quaternion.h"
-#include "Math/EulerAngles.h"
-#include "Math/Color.h"
-
 NAMESPACE_BEGIN
 
 //-----------------------------------//
 
-struct API_CORE ObjectData
+struct Vector3;
+class Color;
+class Quaternion;
+
+union API_CORE ValueContext
 {
-	void* instance;
+	bool* b;
+	int32* i32;
+	uint32* u32;
+	float* f;
+	int32* bf;
+	String* s;
+	Vector3* v;
+	Color* c;
+	Quaternion* q;
+	const char* cs;
+};
+
+struct ReflectionWalkType
+{
+	enum Enum
+	{
+		Begin,
+		End,
+		Element,
+		ElementBegin,
+		ElementEnd,
+	};
+};
+
+struct Object;
+struct ReflectionContext;
+
+// Walks the object calling the given reflection context.
+void ReflectionWalk(Object*, ReflectionContext*);
+
+// Walking functions
+typedef void (*ReflectionWalkFunc)(ReflectionContext*, ReflectionWalkType::Enum);
+typedef void (*ReflectionWalkCompositeFunc)(ReflectionContext*, ReflectionWalkType::Enum);
+
+struct Type;
+struct Enum;
+struct Class;
+struct Field;
+struct Primitive;
+
+struct API_CORE ReflectionContext
+{
+	ReflectionContext() {}
+
+	void* userData;
+
+	Object* object;
+	Class* klass;
+
 	Type* type;
-};
-
-//-----------------------------------//
-
-class API_CORE ReflectionVisitor
-{
-public:
-
-	// Processes a type.
-	virtual void processBegin(const ObjectData& data)  {}
-	virtual void processEnd(const ObjectData& data)  {}
-
-	// Processes a class type.
-	virtual void processClassBegin(const Class& type, bool parent)  {}
-	virtual void processClassEnd(const Class& type, bool parent)  {}
+	Enum*  enume;
+	Class* composite;
+	Primitive* primitive;	
 	
-	// Processes class fields.
-	virtual void processFieldBegin(const Field& field)  {}
-	virtual void processFieldEnd(const Field& field)  {}
+	ValueContext valueContext;
 
-	// Processes an enum type.
-	virtual void processEnumBegin( const Enum& enuhm )  {}
-	virtual void processEnumEnd( const Enum& enuhm )  {}
-	virtual void processEnumElement(int value, const String& name)  {}
+	Field* field;
+	void* address;
+	void* elementAddress;
 
-	// Processes an array type.
-	virtual void processArrayBegin(const Type& type, int size)  {}
-	virtual void processArrayEnd(const Type& type)  {}
-	virtual void processArrayElementBegin(int i)  {}
-	virtual void processArrayElementEnd(int i)  {}
-
-	// Processes a primitive type.
-	virtual void processBool( const Primitive&, bool )  {}
-	virtual void processInt( const Primitive&, int32 )  {}
-	virtual void processUInt( const Primitive&, uint32 )  {}
-	virtual void processFloat( const Primitive&, float )  {}
-	virtual void processString( const Primitive&, const String& )  {}
-	virtual void processVector3( const Primitive&, const Vector3& )  {}
-	virtual void processQuaternion( const Primitive&, const Quaternion& )  {}
-	virtual void processColor( const Primitive&, const Color& )  {}
-	virtual void processBitfield( const Primitive&, const uint32& )  {}
+	ReflectionWalkCompositeFunc walkComposite;
+	ReflectionWalkFunc walkCompositeField;
+	ReflectionWalkFunc walkPrimitive;
+	ReflectionWalkFunc walkEnum;
+	ReflectionWalkFunc walkArray;
 };
 
 //-----------------------------------//
 
-class API_CORE ObjectWalker
+struct Stream;
+struct Serializer;
+
+typedef void (*SerializerLoadFunc)(Serializer*);
+typedef void (*SerializerSaveFunc)(Serializer*);
+
+struct API_CORE Serializer
 {
-	DECLARE_UNCOPYABLE(ObjectWalker)
+	Serializer();
+	virtual ~Serializer();
 
-public:
+	Allocator* alloc;
 
-	ObjectWalker(ReflectionVisitor& visitor);
+	Stream* stream;
+	Object* object;
 
-	// Processes an object.
-	void process(const Object* object);
+	ReflectionContext serializeContext;
+	ReflectionContext deserializeContext;
 
-protected:
-
-	// Processes an object.
-	void processObject(ObjectData object);
-
-	// Processes a type.
-	void processType(ObjectData object);
-
-	// Processes a class.
-	void processClass(ObjectData object, bool parent = false);
-
-	// Processes an enum.
-	void processEnum(ObjectData object);
-
-	// Processes a field of the object.
-	void processField(ObjectData object, const Field& field);
-
-	// Processes an array of the object.
-	void processArray(ObjectData object, const Field& field);
-
-	// Processes a primitive field of the object.
-	void processPrimitive(const ObjectData& object);
-
-	// Processes a pointer type.
-	void processPointer(ObjectData& object, const Field& field);
-
-protected:
-
-	ReflectionVisitor& v;
+	SerializerLoadFunc load;
+	SerializerSaveFunc save;
 };
+
+// Creates a new JSON serializer.
+Serializer* SerializerCreateJSON(Allocator*);
+
+// Creates a new binary serializer.
+Serializer* SerializerCreateBinary(Allocator*);
+
+// Destroys the serializer.
+void SerializerDestroy(Serializer*);
+
+// Loads an object from a stream.
+Object* SerializerLoad(Serializer*);
+void SerializerSave(Serializer*);
 
 //-----------------------------------//
 

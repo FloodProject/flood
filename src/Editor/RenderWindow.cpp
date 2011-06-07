@@ -18,7 +18,8 @@ RenderWindow::RenderWindow(const WindowSettings& settings, wxGLCanvas* const can
 	: Window(settings)
 	, canvas(canvas)
 	, context(nullptr)
-	, mouseVisible(true)
+	, cursorVisible(true)
+	, cursorPriority(0)
 {
 	createContext();
 	inputManager = new EditorInputManager(GetEngine()->getInputManager());
@@ -101,19 +102,32 @@ void RenderWindow::setCursorPosition( int x, int y )
 
 bool RenderWindow::isCursorVisible() const
 {
-	return mouseVisible;
+	return cursorVisible;
 }
 
 //-----------------------------------//
 
-void RenderWindow::setCursorVisible(bool mouseVisible)
+void RenderWindow::setCursorVisible(bool state)
 {
-	this->mouseVisible = mouseVisible;
+	cursorVisible = state;
 
-	if( !mouseVisible )
+	if( !cursorVisible )
 		canvas->SetCursor( wxCursor(wxCURSOR_BLANK) );
 	else
 		canvas->SetCursor( wxNullCursor );
+}
+
+//-----------------------------------//
+
+void RenderWindow::setCursorVisiblePriority(bool state, int32 priority)
+{
+	if(cursorPriority > priority)
+		return;
+
+	setCursorVisible(state);
+	
+	if( !state )
+		cursorPriority = 0;
 }
 
 //-----------------------------------//

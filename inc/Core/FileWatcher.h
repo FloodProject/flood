@@ -38,8 +38,6 @@ namespace vapor {
 // Type for a watch id
 typedef uint32 WatchID;
 
-//-----------------------------------//
-
 /** 
  * Actions to listen for. Rename will send two events, one for
  * the deletion of the old file, and one for the creation of the

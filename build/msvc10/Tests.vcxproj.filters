@@ -16,10 +16,12 @@
     <ClCompile Include="..\..\src\Tests\Archives.cpp" />
     <ClCompile Include="..\..\src\Tests\Handle.cpp" />
     <ClCompile Include="..\..\src\Tests\Reflection.cpp" />
+    <ClCompile Include="..\..\src\Tests\Serialization.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Tests\CuTest.h">
       <Filter>Cu</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\Tests\ReflectionTypes.h" />
   </ItemGroup>
 </Project>

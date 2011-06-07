@@ -53,7 +53,16 @@ void ReflectionRegisterType(Type* type)
 	if( !type ) return;
 
 	const char* name = type->name;
-	ReflectionGetTypeMap()[name] = type;
+
+	ReflectionTypeMap& map = ReflectionGetTypeMap();
+
+	if( map.find(name) != map.end() )
+	{
+		assert(0 && "Type already exists in the registry");
+		return;
+	}
+
+	map[name] = type;
 
 	if( !ReflectionIsComposite(type) )
 		return;
@@ -127,7 +136,7 @@ const char* EnumGetValueName(Enum* enumeration, int32 value)
 
 //-----------------------------------//
 
-Class* ClassGetType(Object* object)
+Class* ClassGetType(const Object* object)
 {
 	if( !object ) return nullptr;
 	return object->getType();
@@ -135,9 +144,9 @@ Class* ClassGetType(Object* object)
 
 //-----------------------------------//
 
-Field* ClassGetField(Class* klass, const char* name)
+Field* ClassGetField(const Class* klass, const char* name)
 {
-	std::vector<Field*>& fields = klass->fields;
+	const std::vector<Field*>& fields = klass->fields;
 	
 	for(size_t i = 0; i < fields.size(); i++)
 	{
@@ -153,7 +162,16 @@ Field* ClassGetField(Class* klass, const char* name)
 
 //-----------------------------------//
 
-bool ClassInherits(Class* klass, Class* test)
+void* ClassGetFieldAddress(const void* object, const Field* field)
+{
+	if( !object || !field ) return nullptr;
+	
+	return (uint8*) object + field->offset;
+}
+
+//-----------------------------------//
+
+bool ClassInherits(const Class* klass, const Class* test)
 {
 	bool equals = ReflectionIsEqual(klass, test);
 
@@ -165,7 +183,7 @@ bool ClassInherits(Class* klass, Class* test)
 
 //-----------------------------------//
 
-void* ClassCreateInstance(Class* klass, Allocator* alloc)
+void* ClassCreateInstance(const Class* klass, Allocator* alloc)
 {
 	if( !klass ) return nullptr;
 	
@@ -175,7 +193,7 @@ void* ClassCreateInstance(Class* klass, Allocator* alloc)
 
 //-----------------------------------//
 
-bool ClassIsAbstract(Class* klass)
+bool ClassIsAbstract(const Class* klass)
 {
 	if( !klass ) return false;
 	

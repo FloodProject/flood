@@ -8,7 +8,7 @@
 
 #include "Editor/API.h"
 
-#ifdef PLUGIN_TERRAIN
+#ifdef ENABLE_PLUGIN_TERRAIN
 
 #include "TerrainOperation.h"
 
@@ -95,7 +95,7 @@ void TerrainOperation::updateNormals()
 	std::vector<CellPtr> cells;
 	getCellsInRange(bs, cells);
 
-	for( uint i = 0; i < cells.size(); i++ )
+	for( size_t i = 0; i < cells.size(); i++ )
 	{
 		const CellPtr& cell = cells[i];
 		cell->rebuildNormals();
@@ -115,7 +115,7 @@ void TerrainOperation::loadSaveHeights( std::vector<float>& heights, bool save )
 		#pragma TODO("There is no need to save the unmodified heights of the terrain")
 		const std::vector<Vector3>& vertices = vb->getVertices();
 
-		for( uint i = 0; i < vertices.size(); i++ )
+		for( size_t i = 0; i < vertices.size(); i++ )
 		{
 			const Vector3& v = vertices[i];
 			heights.push_back( v.y );
@@ -125,7 +125,7 @@ void TerrainOperation::loadSaveHeights( std::vector<float>& heights, bool save )
 	{
 		std::vector<Vector3>& vertices = vb->getVertices();
 
-		for( uint i = 0; i < vertices.size(); i++ )
+		for( size_t i = 0; i < vertices.size(); i++ )
 			vertices[i].y = heights[i];
 
 		vb->forceRebuild();
@@ -137,9 +137,8 @@ void TerrainOperation::loadSaveHeights( std::vector<float>& heights, bool save )
 void TerrainOperation::loadSaveImage( std::vector<byte>& state, bool save )
 {	
 	RenderablePtr rend = rayQuery.renderable;
-	MaterialPtr material = rend->getMaterial();
-	const TexturePtr& texture = material->getTexture(0);
-	const Image* image = texture->getImage();
+	MaterialPtr material = rend->getMaterial().Resolve();
+	Image* texture = material->getTexture(0).Resolve();
 
 	if( save )
 	{
@@ -170,16 +169,17 @@ void TerrainOperation::getCellsInRange(const BoundingSphere& bs, std::vector<Cel
 
 	const std::vector<EntityPtr>& entities = terrain->getEntities();
 
-	for( uint i = 0; i < entities.size(); i++ )
+	for( size_t i = 0; i < entities.size(); i++ )
 	{
-		const EntityPtr& node = entities[i];
-		const TransformPtr& transform = node->getTransform();
-		const BoundingBox& box = transform->getBoundingVolume();
-
-		if( !bs.intersects( BoundingSphere(box) ) )
+		const EntityPtr& entity = entities[i];
+		const TransformPtr& transform = entity->getTransform();
+		const BoundingBox& box = transform->getWorldBoundingVolume();
+		BoundingSphere cellSphere(box);
+		
+		if( !bs.intersects(cellSphere) )
 			continue;
 
-		const CellPtr& cell = node->getComponent<Cell>();
+		const CellPtr& cell = entity->getComponent<Cell>();
 		cells.push_back(cell);
 		
 		//GeometryPtr geometry = node->getComponent<Geometry>();
@@ -205,7 +205,7 @@ void TerrainOperation::applyRaiseTool()
 	std::vector<CellPtr> cells;
 	getCellsInRange(bs, cells);
 
-	for( uint i = 0; i < cells.size(); i++ )
+	for( size_t i = 0; i < cells.size(); i++ )
 	{
 		const CellPtr& cell = cells[i];
 		applyRaiseCell(bs, cell);
@@ -223,7 +223,7 @@ void TerrainOperation::applyRaiseCell(const BoundingSphere& bs, const CellPtr& c
 	const VertexBufferPtr& vb = rend->getVertexBuffer();
 	std::vector<Vector3>& vertices = vb->getVertices();
 	
-	for( uint i = 0; i < vertices.size(); i++ )
+	for( size_t i = 0; i < vertices.size(); i++ )
 	{
 		Vector3& v = vertices[i];
 		
@@ -245,27 +245,42 @@ void TerrainOperation::applyRaiseCell(const BoundingSphere& bs, const CellPtr& c
 
 //-----------------------------------//
 
-static void blitToImage(const Image* dest, int destX, int destY,
-						const Image* source, int limitX, int limitY)
+static const uint8 AlphaFull = 255;
+#define MixAlpha(D, S, A) uint8((D*(1.0f-A) + (S*A)))
+
+static void BlitToImage(Image* brush, Image* source, Image* dest,
+						int destX, int destY, int limitX, int limitY)
 {
 	std::vector<byte>& destBuffer = const_cast<std::vector<byte>&>(dest->getBuffer());
 	std::vector<byte>& sourceBuffer = const_cast<std::vector<byte>&>(source->getBuffer());
 
-	int sourceY = limitY;
+	uint32 sourceY = limitY;
 
-	for( int y = destY; y < dest->getHeight() && sourceY < source->getHeight(); ++y )
+	for( uint32 y = destY; y < dest->getHeight() && sourceY < source->getHeight(); ++y )
 	{
-		int sourceX = limitX;
+		uint32 sourceX = limitX;
 
-		for( int x = destX; x < dest->getWidth() && sourceX < source->getWidth(); ++x )
+		for( uint32 x = destX; x < dest->getWidth() && sourceX < source->getWidth(); ++x )
 		{
-			uint destPos = (y*dest->getWidth()*4)+(x*4);
-			uint sourcePos = (sourceY*source->getWidth()*4)+(sourceX*4);
+			uint32 destPos = (y*dest->getWidth()*4)+(x*4);
+			uint32 sourcePos = (sourceY*source->getWidth()*4)+(sourceX*4);
+
+			uint8& dR = destBuffer[destPos+0];
+			uint8& dG = destBuffer[destPos+1];
+			uint8& dB = destBuffer[destPos+2];
+			uint8& dA = destBuffer[destPos+3];
+
+			const uint8& sR = sourceBuffer[sourcePos+0];
+			const uint8& sG = sourceBuffer[sourcePos+1];
+			const uint8& sB = sourceBuffer[sourcePos+2];
+			const uint8& sA = sourceBuffer[sourcePos+3];
+
+			float floatA = sA / AlphaFull;
 		
-			destBuffer[destPos+0] = sourceBuffer[sourcePos+0];
-			destBuffer[destPos+1] = sourceBuffer[sourcePos+1];
-			destBuffer[destPos+2] = sourceBuffer[sourcePos+2];
-			destBuffer[destPos+3] = sourceBuffer[sourcePos+3];
+			dR = MixAlpha(dR, sR, floatA);
+			dG = MixAlpha(dG, sG, floatA);
+			dB = MixAlpha(dB, sB, floatA);
+			dA = sA;
 
 			++sourceX;
 		}
@@ -276,22 +291,33 @@ static void blitToImage(const Image* dest, int destX, int destY,
 
 //-----------------------------------//
 
+#define WrapFloat(f, n) std::fmod(f, n)
+
+#define WrapVector3(v, n) \
+	v.x = WrapFloat(v.x, n); \
+	v.y = WrapFloat(v.y, n); \
+	v.z = WrapFloat(v.z, n);
+
 void TerrainOperation::applyPaintTool()
 {
-	if( !paintImage )
-		return;
+	if( !paintImage ) return;
 
 	const RenderablePtr& rend = rayQuery.renderable;
 
-	const Vector3 (&uv)[3] = rayQuery.triangleUV;
+	//const Vector3 (&uv)[3] = rayQuery.triangleUV;
+	Vector3 uv[3];
+	
+	uv[0] = rayQuery.triangleUV[0]; WrapVector3(uv[0], 1);
+	uv[1] = rayQuery.triangleUV[1]; WrapVector3(uv[1], 1);
+	uv[2] = rayQuery.triangleUV[2]; WrapVector3(uv[2], 1);
+	
 	const Vector3& intUV = rayQuery.intersectionUV;
 
-	float ut = uv[0].x + intUV.x*(uv[1].x-uv[0].x) + intUV.y*(uv[2].x-uv[0].x) + 1;
+	float ut = uv[0].x + intUV.x*(uv[1].x-uv[0].x) + intUV.y*(uv[2].x-uv[0].x);
 	float vt = uv[0].y + intUV.x*(uv[1].y-uv[0].y) + intUV.y*(uv[2].y-uv[0].y);
 
-	const MaterialPtr& material = rend->getMaterial();
-	const TexturePtr& texture = material->getTexture(0);
-	Image* image = (Image*) texture->getImage();
+	const MaterialPtr& material = rend->getMaterial().Resolve();
+	Image* image = material->getTexture(0).Resolve();
 
 	int x = ut * image->getWidth();
 	int y = vt * image->getHeight();
@@ -325,7 +351,9 @@ void TerrainOperation::applyPaintTool()
 		y = 0;
 	}
 
-	blitToImage(image, x, y, paintImage.get(), offsetX, offsetY);
+	BlitToImage(brush.get(), image, paintImage.get(), x, y, offsetX, offsetY);
+
+	TexturePtr texture = GetRenderDevice()->getTextureManager()->getTexture(image);
 	texture->setImage(image);
 }
 
