@@ -174,6 +174,10 @@ NAMESPACE_BEGIN
 #define FIELD_READONLY(fieldName)                                       \
 	FieldSetQualifier(&fieldName, FieldQualifier::ReadOnly);
 
+#define FIELD_ALIAS(fieldName, aliasName)                               \
+	fieldName.aliases.push_back(aliasName);
+
+
 //-----------------------------------//
 
 NAMESPACE_END

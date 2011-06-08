@@ -16,6 +16,7 @@ namespace vapor {
 
 REFLECT_CHILD_CLASS(Group, Entity)
 	FIELD_VECTOR_PTR(Entity, EntityPtr, entities, SharedPointer)
+	FIELD_ALIAS(entities, "nodes")
 REFLECT_CLASS_END()
 
 //-----------------------------------//

@@ -152,6 +152,12 @@ Field* ClassGetField(const Class* klass, const char* name)
 	{
 		Field* field = fields[i];
 		if(strcmp(field->name, name) == 0) return field;
+
+		for(size_t u = 0; u < field->aliases.size(); u++)
+		{
+			const char* alias = field->aliases[u];
+			if(strcmp(alias, name) == 0) return field;
+		}
 	}
 
 	Class* parent = klass->parent;

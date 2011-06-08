@@ -208,11 +208,16 @@ static void ReflectionWalkArray(ReflectionContext* context)
 static void ReflectionWalkCompositeField(ReflectionContext* context)
 {
 	Field* field = context->field;
-	void* address = ClassGetFieldAddress(context->object, field);
 	
-	context->address = address;
+	void* address = context->address;
+	void* elementAddress = context->elementAddress;
+	Type* type = context->type;
+	Object* object = context->object;
+
+	context->address = ClassGetFieldAddress(context->object, field);
 	context->elementAddress = address;
 	context->type = field->type;
+	context->object = (Object*) context->address;
 
 	context->walkCompositeField(context, ReflectionWalkType::Begin);
 
@@ -230,7 +235,7 @@ static void ReflectionWalkCompositeField(ReflectionContext* context)
 		Object* object = context->object;
 		Type* type = context->type;
 
-		context->type = ClassGetType(object);
+		context->type = ClassGetType(newObject);
 		context->object = newObject;
 
 		ReflectionWalkType(context, field->type);
@@ -244,6 +249,11 @@ static void ReflectionWalkCompositeField(ReflectionContext* context)
 	}
 
 	context->walkCompositeField(context, ReflectionWalkType::End);
+
+	context->address = address;
+	context->elementAddress = elementAddress;
+	context->type = type;
+	context->object = object;
 }
 
 //-----------------------------------//

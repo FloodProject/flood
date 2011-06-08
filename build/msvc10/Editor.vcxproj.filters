@@ -82,6 +82,9 @@
     <Filter Include="Resources">
       <UniqueIdentifier>{edb363aa-e59f-4af7-b806-21fdfee0e748}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Preferences">
+      <UniqueIdentifier>{0deba968-b689-4ca7-9dcb-12211d532a63}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Editor\RenderControl.cpp">

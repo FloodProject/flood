@@ -172,6 +172,7 @@ struct API_CORE Field
 	uint16 size;
 	uint16 pointer_size;
 	FieldSetterFunction setter_fn;
+	std::vector<const char*> aliases;
 };
 
 // Returns if the field has the given qualifier.

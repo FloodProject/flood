@@ -568,7 +568,9 @@ static Object* DeserializeComposite( ReflectionContext* context, json_t* value )
 	context->object = newObject;
 
 	DeserializeFields(context, iterValue);
-	newObject->fixUp();
+
+	if( ClassInherits(newClass, ReflectionGetType(Object)) )
+		newObject->fixUp();
 
 	context->object = object;
 	context->composite = composite;
