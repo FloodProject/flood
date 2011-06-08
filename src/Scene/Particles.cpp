@@ -117,7 +117,7 @@ void Particles::createGeometry()
 	renderable->setRenderLayer(RenderLayer::Transparency);
 
 	renderable->onPreRender.Bind( this, &Particles::onPreRender );
-	renderable->onPostRender.Bind( this, &Particles::onPostRender ); 
+	renderable->onPostRender.Bind( this, &Particles::onPostRender );
 	
 	addRenderable(renderable);
 
@@ -128,7 +128,8 @@ void Particles::createGeometry()
 
 void Particles::update(float delta)
 {
-	if( renderables.empty() ) createGeometry();
+	if( renderables.empty() )
+		createGeometry();
 
 	numParticles = particles.size();
 

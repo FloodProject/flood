@@ -132,12 +132,15 @@ CellPtr Terrain::createCell( int x, int y, std::vector<float>& heights )
 	terrainCells.push_back(cell);
 
 	String name = StringFormat("Cell (%d,%d)", x, y);
-	
-	EntityPtr nodeCell( new Entity(name) );
-	nodeCell->addTransform();
-	nodeCell->addComponent(cell);
 
-	add( nodeCell );
+	Entity* entity = EntityCreate(AllocatorGetHeap());
+	entity->setName(name);
+
+	EntityPtr entityCell(entity);
+	entityCell->addTransform();
+	entityCell->addComponent(cell);
+
+	add( entityCell );
 
 	return cell;
 }

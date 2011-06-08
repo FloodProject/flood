@@ -144,7 +144,7 @@ static void ReflectionWalkType(ReflectionContext* context, Type* type);
 
 static void ReflectionWalkPointer(ReflectionContext* context)
 {
-	void* address = nullptr;
+	void* address = context->elementAddress;
 	const Field* field = context->field;
 
 	if(FieldIsSharedPointer(field))
@@ -160,6 +160,7 @@ static void ReflectionWalkPointer(ReflectionContext* context)
 	else if(FieldIsRawPointer(field))
 	{
 		address = context->elementAddress;
+		address = *(Object**) address;
 	}
 
 	assert( address != nullptr );
@@ -188,7 +189,7 @@ static void ReflectionWalkArray(ReflectionContext* context)
 		Object* object = context->object;
 		Type* type = context->type;
 
-		context->object = *(Object**) context->elementAddress;
+		context->object = (Object*) context->elementAddress;
 		context->type = ClassGetType(context->object);
 
 		context->walkArray(context, ReflectionWalkType::ElementBegin);

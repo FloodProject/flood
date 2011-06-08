@@ -17,10 +17,10 @@ namespace vapor { namespace editor {
 
 UndoManager::~UndoManager()
 {
-	for( uint i = 0; i < undoOperations.size(); i++ )
+	for( size_t i = 0; i < undoOperations.size(); i++ )
 		delete undoOperations[i];
 
-	for( uint i = 0; i < redoOperations.size(); i++ )
+	for( size_t i = 0; i < redoOperations.size(); i++ )
 		delete redoOperations[i];
 }
 
@@ -33,7 +33,7 @@ void UndoManager::registerOperation( UndoOperation* operation )
 	LogDebug("Registered undo/redo event: %s", operation->description.c_str() );
 
 	// Remove all the existing redo operations.
-	for( uint i = 0; i < redoOperations.size(); i++ )
+	for( size_t i = 0; i < redoOperations.size(); i++ )
 		delete redoOperations[i];
 
 	redoOperations.clear();

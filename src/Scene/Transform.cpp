@@ -13,7 +13,7 @@
 #include "Render/DebugGeometry.h"
 #include "Math/Helpers.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -22,6 +22,13 @@ REFLECT_CHILD_CLASS(Transform, Component)
 	FIELD_PRIMITIVE(Quaternion, rotation)
 	FIELD_PRIMITIVE(Vector3, scale)
 REFLECT_CLASS_END()
+
+//-----------------------------------//
+
+Transform* TransformCreate(Allocator* alloc)
+{
+	return Allocate(Transform, alloc);
+}
 
 //-----------------------------------//
 
@@ -258,4 +265,4 @@ BoundingBox Transform::getWorldBoundingVolume() const
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

@@ -77,7 +77,7 @@ public:
 protected:
 
 	// Switches the scene.
-	void switchScene(const SceneDocument* document);
+	void switchScene(SceneDocument* document);
 
 	// Asks to save unsaved changes.
 	bool askSaveChanges();

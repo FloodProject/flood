@@ -19,11 +19,11 @@ NAMESPACE_BEGIN
 
 //-----------------------------------//
 
-REFLECT_ABSTRACT_CHILD_CLASS(Entity, Object)
+REFLECT_CHILD_CLASS(Entity, Object)
 	FIELD_PRIMITIVE(string, name)
 	FIELD_PRIMITIVE(bool, visible)
-	//FIELD_VECTOR_PTR(Component, ComponentPtr, components, SharedPointer)
-	//FIELD_PRIMITIVE_CUSTOM(int, tags, Bitfield)
+	//FIELD_PRIMITIVE_CUSTOM(int32, tags, Bitfield)
+	FIELD_VECTOR_PTR(Component, ComponentPtr, components, SharedPointer)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
@@ -224,7 +224,7 @@ void Entity::sendEvents()
 
 bool Entity::addTransform()
 {
-	TransformPtr transform( new Transform() );
+	TransformPtr transform( TransformCreate(AllocatorGetHeap()) );
 	return addComponent(transform);
 }
 

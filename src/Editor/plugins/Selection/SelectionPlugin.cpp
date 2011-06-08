@@ -207,7 +207,7 @@ void SelectionPlugin::createRectangle()
 	overlay->setBorderColor( Color::White );
 	overlay->setBackgroundColor( Color::White );
 
-	dragRectangle.reset( new Entity() );
+	dragRectangle.reset( EntityCreate( AllocatorGetHeap() ) );
 	dragRectangle->addTransform();
 	dragRectangle->addComponent(overlay);
 

@@ -25,7 +25,7 @@ Group::Group()
 
 //-----------------------------------//
 
-Group::Group( const std::string& name )
+Group::Group( const String& name )
 	: Entity(name)
 { }
 
@@ -86,6 +86,17 @@ void Group::update( float delta )
 	{
 		const EntityPtr& entity = entities[i];
 		entity->update( delta );
+	}
+}
+
+//-----------------------------------//
+
+void Group::fixUp()
+{
+	for( size_t i = 0; i < entities.size(); i++ )
+	{
+		const EntityPtr& entity = entities[i];
+		entity->setParent(this);
 	}
 }
 

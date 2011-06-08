@@ -144,7 +144,8 @@ void SceneDocument::createScene()
 	editorScene.reset( new Scene() );
 	
 	// Create a nice grid for the editor.
-	EntityPtr nodeGrid( new Entity("Grid") );
+	EntityPtr nodeGrid( EntityCreate(AllocatorGetHeap()) );
+	nodeGrid->setName("Grid");
 	nodeGrid->addTransform();
 	nodeGrid->addComponent( GridPtr( new Grid() ) );
 	nodeGrid->setTag( Tags::NonPickable, true );
@@ -179,7 +180,8 @@ EntityPtr SceneDocument::createCamera()
 	// Generate a new unique name.
 	String name( "EditorCamera"+StringFromNumber(i++) );
 
-	EntityPtr entityCamera( new Entity(name) );
+	EntityPtr entityCamera( EntityCreate(AllocatorGetHeap()) );
+	entityCamera->setName(name);
 	entityCamera->addTransform();
 	entityCamera->addComponent( camera );
 	entityCamera->addComponent( cameraController );

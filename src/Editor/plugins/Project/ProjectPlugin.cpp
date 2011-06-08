@@ -236,17 +236,17 @@ void ProjectPlugin::onSaveButtonUpdateUI(wxUpdateUIEvent& event)
 
 //-----------------------------------//
 
-void ProjectPlugin::switchScene(const SceneDocument* document)
+void ProjectPlugin::switchScene(SceneDocument* document)
 {
 	if( !document ) return;
-
+	
 	UndoManager* undo = document->getUndoManager();
 	undo->clearOperations();
+	document->unsavedChanges = false;
 
 	const ScenePtr& scene = document->scene;
-
 	Engine* engine = editor->getEngine();
-	engine->setSceneManager( scene);
+	engine->setSceneManager(scene);
 
 #ifdef VAPOR_PHYSICS_BULLET
 	delete engine->getPhysicsManager();

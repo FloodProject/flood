@@ -72,3 +72,7 @@
 //---------------------------------------------------------------------//
 
 #include "Core/Log.h"
+
+#define DECLARE_FRIENDS(Type) \
+	friend API_ENGINE Type* Type##Create(Allocator* alloc); \
+	friend API_ENGINE void* Type##CreateFactory(Allocator* alloc);

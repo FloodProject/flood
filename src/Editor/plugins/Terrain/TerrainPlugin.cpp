@@ -304,7 +304,7 @@ EntityPtr TerrainPlugin::createProjector(const GeometryPtr& cell)
 	material->setBlending(BlendSource::SourceAlpha, BlendDestination::InverseSourceAlpha);
 	material->setDepthCompare(DepthCompare::LessOrEqual);
 
-	EntityPtr entity( new Entity() /*EntityCreate(AllocatorGetHeap()) */);
+	EntityPtr entity( EntityCreate( AllocatorGetHeap() ) );
 	entity->setName("Projector");
 	entity->addTransform();
 	

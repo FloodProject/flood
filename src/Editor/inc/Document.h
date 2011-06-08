@@ -43,8 +43,6 @@ public:
 	virtual void onDocumentSelect() {}
 	virtual void onDocumentUnselect() {}
 
-protected:
-
 	// Handles undo/redo events.
 	void onUndoRedoEvent();
 

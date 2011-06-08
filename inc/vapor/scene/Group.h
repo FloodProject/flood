@@ -47,6 +47,9 @@ public:
 	// Updates the group.
 	virtual void update( float delta );
 
+	// Fix-up serialization.
+	virtual void fixUp() OVERRIDE;
+
 	// Event gets called when an entity is added.
 	Event1<const EntityPtr&> onEntityAdded;
 

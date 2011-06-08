@@ -16,6 +16,7 @@
 #include "Core/Utilities.h"
 #include "Core/ReferenceCount.h"
 #include "Core/Stream.h"
+#include "Core/Log.h"
 
 #include "Math/Vector.h"
 #include "Math/Quaternion.h"
@@ -296,17 +297,12 @@ static void DeserializeEnum( ReflectionContext* context, json_t* value )
 
 static void DeserializePrimitive( ReflectionContext* context, json_t* value )
 {
-	//if( !FieldIsArray(&field) )
-	//	address = (byte*) address + field.offset;
-
-	//void* address = ClassGetFieldAddress(context->object, context->field);
-	
 	switch(context->primitive->type)
 	{
 	case Primitive::Bool:
 	{
 		assert( json_is_boolean(value) );
-		bool val = json_integer_value(value) != 0;
+		bool val = json_typeof(value) == JSON_TRUE;
 		setValue(bool, val);
 		break;
 	}
@@ -369,7 +365,7 @@ typedef std::vector<std::shared_ptr<Object>> ObjectSharedPtrArray;
 typedef std::vector<RefPtr<ReferenceCounted>> ObjectRefPtrArray;
 typedef std::vector<Object*> ObjectRawPtrArray;
 
-static void* ResizeArray( ReflectionContext* context, void*address, uint32 size )
+static void* ResizeArray( ReflectionContext* context, void* address, uint32 size )
 {
 	const Field* field = context->field;
 
@@ -459,7 +455,9 @@ static uint16 GetArrayElementSize(const Field* field)
 static void DeserializeArray( ReflectionContext* context, json_t* value )
 {
 	assert( json_is_array(value) );
+	
 	size_t size = json_array_size(value);
+	if( size == 0 ) return;
 
 	const Field* field = context->field;
 	uint16 elementSize = GetArrayElementSize(field);
@@ -525,7 +523,12 @@ static void DeserializeFields( ReflectionContext* context, json_t* value )
 		Field* field = context->field;
 
 		Field* newField = ClassGetField(composite, key);
-		if( !field ) continue;
+		
+		if( !newField )
+		{
+			LogDebug("Unknown field '%s' of class '%s'", key, composite->name);
+			continue;
+		}
 		
 		if( json_is_null(val) ) continue;
 
@@ -647,11 +650,6 @@ Serializer* SerializerCreateJSON(Allocator* alloc)
 	sCtx.walkEnum = SerializeEnum;
 
 	ReflectionContext& dCtx = serializer->deserializeContext;
-	sCtx.userData = serializer;
-	//sCtx.walkComposite = DeserializeComposite;
-	//sCtx.walkCompositeField = DeserializeField;
-	//sCtx.walkPrimitive = DeserializePrimitive;
-	//sCtx.walkEnum = DeserializeEnum;
 	dCtx.userData = serializer;
 
 	return serializer;

@@ -366,7 +366,8 @@ void GizmoPlugin::createGizmo( const EntityPtr& entity )
 	gizmo->buildGeometry();
 
 	// Add the gizmo to the scene.
-	EntityPtr entityGizmo( new Entity("Gizmo") );
+	EntityPtr entityGizmo( EntityCreate(AllocatorGetHeap()) );
+	entityGizmo->setName("Gizmo");
 	entityGizmo->addTransform();
 	entityGizmo->addComponent(gizmo);
 	document->editorScene->add(entityGizmo);

@@ -13,7 +13,16 @@
 #include "Math/BoundingBox.h"
 #include "Scene/Component.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
+
+//-----------------------------------//
+
+EXTERN_BEGIN
+
+class Transform;
+API_ENGINE Transform* TransformCreate( Allocator* );
+
+EXTERN_END
 
 //-----------------------------------//
 
@@ -25,14 +34,15 @@ namespace vapor {
 
 REFLECT_DECLARE_CLASS(Transform)
 
-class VAPOR_API Transform : public Component
+class API_ENGINE Transform : public Component
 {
 	REFLECT_DECLARE_OBJECT(Transform)
 	DECLARE_UNCOPYABLE(Transform)
-	
-public:
+	DECLARE_FRIENDS(Transform)
 
 	Transform();
+
+public:
 
 	// Resets all the transformations.
 	void reset();
@@ -128,4 +138,4 @@ TYPEDEF_SHARED_POINTER_FROM_TYPE( Transform );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

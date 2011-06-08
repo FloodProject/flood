@@ -288,7 +288,8 @@ void ScenePage::onButtonEntityAdd(wxCommandEvent&)
 	
 	std::string name("Entity"+StringFromNumber(nodeCounter++));
 	
-	EntityPtr entity( new Entity(name) );
+	EntityPtr entity( EntityCreate( AllocatorGetHeap() ) );
+	entity->setName(name);
 	entity->addTransform();
 	
 	EntityOperation* nodeOperation;
@@ -489,16 +490,17 @@ void ScenePage::onAttachmentMenuSelected(wxCommandEvent& event)
 
 	String name = "Attachment"+StringFromNumber(nodeCounter++);
 	
-	EntityPtr node( Allocate(Entity, AllocatorGetHeap(), name) );
-	node->addTransform();
+	EntityPtr entity( EntityCreate( AllocatorGetHeap() ) );
+	entity->setName(name);
+	entity->addTransform();
 
 	ModelPtr model( Allocate(Model, AllocatorGetHeap(), meshHandle) );
-	node->addComponent(model);
+	entity->addComponent(model);
 	
 	ScenePtr scene = weakScene.lock();
-	scene->add( node );
+	scene->add( entity );
 
-	model->setAttachment( bone->name, node );
+	model->setAttachment( bone->name, entity );
 }
 
 //-----------------------------------//

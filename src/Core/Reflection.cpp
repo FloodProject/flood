@@ -186,6 +186,8 @@ bool ClassInherits(const Class* klass, const Class* test)
 void* ClassCreateInstance(const Class* klass, Allocator* alloc)
 {
 	if( !klass ) return nullptr;
+
+	assert( !ClassIsAbstract(klass) );
 	
 	void* object = klass->create_fn(alloc);
 	return object;

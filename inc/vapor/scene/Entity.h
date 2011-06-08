@@ -22,6 +22,15 @@ NAMESPACE_BEGIN
 
 //-----------------------------------//
 
+EXTERN_BEGIN
+
+class Entity;
+API_ENGINE Entity* EntityCreate( Allocator* );
+
+EXTERN_END
+
+//-----------------------------------//
+
 typedef std::map<Class*, ComponentPtr> ComponentMap;
 typedef std::pair<Class*, ComponentPtr> ComponentMapPair;
 
@@ -35,15 +44,16 @@ typedef std::pair<Class*, ComponentPtr> ComponentMapPair;
 
 REFLECT_DECLARE_CLASS(Entity)
 
-class VAPOR_API Entity : public Object
+class API_ENGINE Entity : public Object
 {
 	REFLECT_DECLARE_OBJECT(Entity);
 	DECLARE_UNCOPYABLE(Entity)
-
-public:
+	DECLARE_FRIENDS(Entity)
 
 	Entity();
 	Entity( const String& name );
+
+public:
 	
 	// Gets the name of the entity.
 	GETTER(Name, const String&, name);
@@ -148,12 +158,6 @@ public:
 	// Parent entity.
 	Entity* parent;
 };
-
-EXTERN_BEGIN
-
-API_ENGINE Entity* EntityCreate( Allocator* );
-
-EXTERN_END
 
 //-----------------------------------//
 
