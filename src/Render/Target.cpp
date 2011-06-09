@@ -23,8 +23,8 @@ RenderTarget::~RenderTarget()
 {
 	for( size_t i = 0; i < views.size(); i++ )
 	{
-		const RenderView* view = views[i];
-		delete view;
+		RenderView* view = views[i];
+		Deallocate(view);
 	}
 }
 
@@ -32,7 +32,7 @@ RenderTarget::~RenderTarget()
 
 RenderView* RenderTarget::createView()
 {
-	RenderView* view = new RenderView();
+	RenderView* view = Allocate(RenderView, AllocatorGetHeap());
 	view->setRenderTarget(this);
 
 	views.push_back( view );

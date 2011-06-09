@@ -9,7 +9,6 @@
 #include "Engine/API.h"
 #include "Core/Event.h"
 #include "Controllers/FirstPersonController.h"
-#include "Engine.h"
 #include "Math/Helpers.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
@@ -35,7 +34,7 @@ FirstPersonController::FirstPersonController()
 	, mouseWheel(0)
 {
 	window = GetRenderDevice()->getWindow();
-	inputManager = GetEngine()->getInputManager();
+	inputManager = GetInputManager();
 
 	registerCallbacks();
 }

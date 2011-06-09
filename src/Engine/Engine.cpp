@@ -27,8 +27,8 @@ namespace vapor {
 
 //-----------------------------------//
 
-static Engine* engineInstance;
-Engine* GetEngine() { return engineInstance; }
+static Engine* gs_engineInstance;
+Engine* GetEngine() { return gs_engineInstance; }
 
 Engine::Engine()
 	: log(nullptr)
@@ -42,14 +42,14 @@ Engine::Engine()
 	, physicsManager(nullptr)
 	, scriptManager(nullptr)
 {
-	engineInstance = this;
+	gs_engineInstance = this;
 }
 
 //-----------------------------------//
 
 Engine::~Engine()
 {
-	scene.reset();
+	scene = nullptr;
 
 	for( size_t i = 0; i < subsystems.size(); i++ )
 	{
@@ -71,10 +71,9 @@ Engine::~Engine()
 
 //-----------------------------------//
 
-void Engine::create(const std::string& app, const char** argv)
+void Engine::create(const String& app)
 {
 	this->app = app;
-	this->argv = argv;
 }
 
 //-----------------------------------//
@@ -113,7 +112,7 @@ void Engine::init( bool createWindow )
 	setupDevices( createWindow );
 
 	// Creates the initial scene.
-	scene.reset( new Scene() );
+	scene = new Scene();
 
 #ifdef ENABLE_SCRIPTING_LUA
 	// Creates the scripting manager.
@@ -128,29 +127,36 @@ void Engine::init( bool createWindow )
 
 //-----------------------------------//
 
+void Engine::setScene(const ScenePtr& scene)
+{
+	this->scene = scene;
+}
+
+//-----------------------------------//
+
 void Engine::setupLogger()
 {
-//	time_t rawtime;
-//	time( &rawtime );
-//
-//	struct tm* timeinfo;
-//
-//#ifdef PLATFORM_WINDOWS
-//	localtime_s( timeinfo, &rawtime );
-//#else
-//	timeinfo = localtime( &rawtime );
-//#endif
-//
-//	char name[64];
-//	
-//	strftime(
-//		name, ARRAY_SIZE(name),
-//		"%Y_%m_%d-%H_%M_%S.html", timeinfo);
+#if 0
+	time_t rawtime;
+	time( &rawtime );
+
+	struct tm* timeinfo;
+
+#ifdef PLATFORM_WINDOWS
+	localtime_s( timeinfo, &rawtime );
+#else
+	timeinfo = localtime( &rawtime );
+#endif
+
+	char name[64];
+	const char* fmt = "%Y_%m_%d-%H_%M_%S.html";
+	strftime(name, ARRAY_SIZE(name), fmt, timeinfo);
+#endif
 
 	stream = StreamCreateFromFile( AllocatorGetHeap(), "Log.html", StreamMode::Write);
 	
 	log = LogCreate( AllocatorGetHeap() );
-	//log->add( new LogSinkHTML(*stream) );
+	//LogAddHandler();
 }
 
 //-----------------------------------//

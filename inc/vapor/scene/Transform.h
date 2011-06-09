@@ -134,7 +134,7 @@ protected:
 	bool externalTransform;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Transform );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(Transform);
 
 //-----------------------------------//
 

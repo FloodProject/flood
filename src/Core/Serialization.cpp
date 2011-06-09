@@ -142,7 +142,7 @@ static uint16 GetArrayElementSize(const Field* field)
 
 static void ReflectionWalkType(ReflectionContext* context, Type* type);
 
-static void ReflectionWalkPointer(ReflectionContext* context)
+static bool ReflectionWalkPointer(ReflectionContext* context)
 {
 	void* address = context->elementAddress;
 	const Field* field = context->field;
@@ -162,9 +162,15 @@ static void ReflectionWalkPointer(ReflectionContext* context)
 		address = context->elementAddress;
 		address = *(Object**) address;
 	}
+	else if(FieldIsHandle(field))
+	{
+		return false;
+	}
 
 	assert( address != nullptr );
 	context->elementAddress = address;
+
+	return true;
 }
 
 //-----------------------------------//
@@ -184,7 +190,9 @@ static void ReflectionWalkArray(ReflectionContext* context)
 		void* address = (&array.front() + i * elementSize);
 		
 		context->elementAddress = address;
-		if(FieldIsPointer(field)) ReflectionWalkPointer(context);
+		
+		if(FieldIsPointer(field) && !ReflectionWalkPointer(context))
+			continue;
 
 		Object* object = context->object;
 		Type* type = context->type;
@@ -217,7 +225,9 @@ static void ReflectionWalkCompositeField(ReflectionContext* context)
 	context->address = ClassGetFieldAddress(context->object, field);
 	context->elementAddress = address;
 	context->type = field->type;
-	context->object = (Object*) context->address;
+
+	if( ReflectionIsComposite(field->type) )
+		context->object = (Object*) context->address;
 
 	context->walkCompositeField(context, ReflectionWalkType::Begin);
 
@@ -227,7 +237,8 @@ static void ReflectionWalkCompositeField(ReflectionContext* context)
 	}
 	else if( FieldIsPointer(field) )
 	{
-		ReflectionWalkPointer(context);
+		if( !ReflectionWalkPointer(context) )
+			return;
 
 		Object* newObject = *(Object**) context->elementAddress;
 		if( !newObject ) return;

@@ -56,9 +56,11 @@ struct AllocationMetadata
 
 	int32 size;
 	const char* group;
-
 	Allocator* allocator;
+	int32 pattern;
 };
+
+const int32 MEMORY_PATTERN = 0xDEADF69F;
 
 typedef std::map<const char*, AllocationGroup, RawStringCompare> MemoryGroupMap;
 
@@ -94,9 +96,8 @@ void AllocatorDumpInfo()
 		const char* id = it->first;
 		AllocationGroup& group = it->second;
 		
-		String format = StringFormat(
-			"%s\t| free: %I64d bytes, total: %I64d bytes\n",
-			id, group.freed, group.total );
+		const char* fs = "%s\t| free: %I64d bytes, total: %I64d bytes\n";
+		String format = StringFormat(fs, id, group.freed, group.total );
 
 		OutputDebugStringA( format.c_str() );
 	}
@@ -118,13 +119,21 @@ void* AllocatorAllocate( Allocator* alloc, int32 size, int32 align )
 	return alloc->allocate( alloc, size, align );
 }
 
-API_CORE void AllocatorDeallocate( void* object )
+//-----------------------------------//
+
+void AllocatorDeallocate( const void* object )
 {
 	if( !object ) return;
 
 	char* addr = (char*) object - sizeof(AllocationMetadata);
 	AllocationMetadata* metadata = (AllocationMetadata*) addr;
 	Allocator* alloc = metadata->allocator;
+
+	if(metadata->pattern != MEMORY_PATTERN)
+	{
+		free((void*)object);
+		return;
+	}
 
 	// Deallocates the memory.
 	alloc->deallocate( alloc, object );
@@ -137,26 +146,31 @@ static void* HeapAllocate(Allocator* alloc, int32 size, int32 align)
 	if(AllocatorSimulateLowMemory) return nullptr;
 	
 	int32 total_size = size + sizeof(AllocationMetadata);
-	void* ptr = nullptr;
+	void* instance = nullptr;
 	
-	//if(align == 0)
-		ptr = malloc(total_size);
-	//else
-	//	ptr = _aligned_malloc(total_size, align);
-	
-	AllocationMetadata* metadata = (AllocationMetadata*) ptr;
+#if 0
+	if(align == 0)
+		instance = malloc(total_size);
+	else
+		instance = _aligned_malloc(total_size, align);
+#endif
+
+	instance = malloc(total_size);
+
+	AllocationMetadata* metadata = (AllocationMetadata*) instance;
 	metadata->size = size;
 	metadata->group = alloc->group;
 	metadata->allocator = alloc;
+	metadata->pattern = MEMORY_PATTERN;
 
 #ifdef ALLOCATOR_TRACKING
 	AllocatorTrackGroup(metadata, true);
 #endif
 
-	return (char*) ptr + sizeof(AllocationMetadata);
+	return (char*) instance + sizeof(AllocationMetadata);
 }
 
-static void HeapDellocate(Allocator* alloc, void* p)
+static void HeapDellocate(Allocator* alloc, const void* p)
 {
 #ifdef ALLOCATOR_TRACKING
 	void* base = (char*) p - sizeof(AllocationMetadata);
@@ -166,6 +180,8 @@ static void HeapDellocate(Allocator* alloc, void* p)
 	// _aligned_free
 	free(base);
 }
+
+//-----------------------------------//
 
 Allocator* AllocatorCreateHeap( Allocator* alloc, const char* group )
 {
@@ -177,6 +193,8 @@ Allocator* AllocatorCreateHeap( Allocator* alloc, const char* group )
 
 	return heap;
 }
+
+//-----------------------------------//
 
 static Allocator* GetDefaultHeapAllocator()
 {
@@ -200,7 +218,9 @@ static void* StackAllocate(Allocator* alloc, int32 size, int32 align)
 	return alloca(size);
 }
 
-static void StackDellocate(Allocator* alloc, void* p)
+//-----------------------------------//
+
+static void StackDellocate(Allocator* alloc, const void* p)
 {
 #ifdef ALLOCATOR_TRACKING
 	//AllocatorTrackGroup(alloc, 0);
@@ -208,6 +228,8 @@ static void StackDellocate(Allocator* alloc, void* p)
 
 	// Stack memory is automatically freed.
 }
+
+//-----------------------------------//
 
 static Allocator* GetDefaultStackAllocator()
 {
@@ -232,9 +254,13 @@ static void* PoolAllocate(Allocator* alloc, int32 size, int32 align)
 	return p;
 }
 
-static void PoolDellocate(Allocator* alloc, void* p)
+//-----------------------------------//
+
+static void PoolDellocate(Allocator* alloc, const void* p)
 {
 }
+
+//-----------------------------------//
 
 Allocator* AllocatorCreatePool( Allocator* alloc,  int32 size )
 {

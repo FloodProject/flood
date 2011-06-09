@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "Core/ReferenceCount.h"
+
 NAMESPACE_BEGIN
 
 //-----------------------------------//
@@ -20,10 +22,8 @@ struct Class;
 
 REFLECT_DECLARE_CLASS(Object)
 
-struct NO_VTABLE Object
+struct NO_VTABLE Object : public ReferenceCounted
 {
-public:
-
 	// Gets the type of the object.
 	API_CORE virtual Class* getType() const { return nullptr; }
 

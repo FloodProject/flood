@@ -134,7 +134,7 @@ public:
 	AudioSource* audioSource;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Source );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Source );
 
 //-----------------------------------//
 

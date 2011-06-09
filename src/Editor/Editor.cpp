@@ -35,8 +35,6 @@ wxIMPLEMENT_APP_NO_MAIN(EditorApp);
 
 bool EditorApp::OnInit()
 {
-	//wxHandleFatalExceptions();
-
     if( !wxApp::OnInit() ) return false;
 
 	wxImage::AddHandler( new wxPNGHandler() );
@@ -44,7 +42,6 @@ bool EditorApp::OnInit()
     EditorFrame* frame = new EditorFrame(VAPOR_EDITOR_NAME);
 	frame->SetSize(800, 500);
     frame->Show(true);
-	
 	SetTopWindow(frame);
 
     return true;
@@ -71,35 +68,6 @@ EditorFrame& GetEditor() { return *editorInstance; }
 
 //-----------------------------------//
 
-void TestObjects()
-{
-	ReflectionTypeMap& types = ReflectionGetTypeMap();
-
-	for( auto it = types.begin(); it != types.end(); it++ )
-	{
-		Type* type = it->second;
-		if( !ReflectionIsComposite(type) ) continue;
-
-		Class* klass = (Class*) type;
-		
-		if( !ClassInherits(klass, ReflectionGetType(Object)) )
-			continue;
-
-		if( ClassIsAbstract(klass) ) continue;
-
-		LogDebug("%s: ", klass->name);
-
-		Object* object = (Object*) ClassCreateInstance(klass, AllocatorGetHeap());
-
-		Class* runtimeClass = object->getType();
-		
-		if( klass != runtimeClass ) LogDebug("err");
-		else LogDebug("ok");
-
-		Deallocate(object);
-	}
-}
-
 EditorFrame::EditorFrame(const wxString& title)
 	: wxFrame(nullptr, wxID_ANY, title)
 	, engine(nullptr)
@@ -118,8 +86,6 @@ EditorFrame::EditorFrame(const wxString& title)
 	createPlugins();
 	createToolbar();
 	createLastUI();
-
-	//TestObjects();
 
 #ifdef CREATE_PROJECT_ON_STARTUP
 	wxCommandEvent event;
@@ -169,8 +135,10 @@ void EditorFrame::createPlugins()
 	pluginManager->scanPlugins();
 
 	wxBitmap icon = wxMEMORY_BITMAP(cog);
+	const char* name = "Plugins";
+
 	wxAuiPaneInfo pane;
-	pane.Caption("Plugins").Right().Dock().Icon(icon).Hide();
+	pane.Name(name).Caption(name).Right().Dock().Icon(icon).Hide();
 	getAUI()->AddPane(pluginManagerFrame, pane);
 }
 
@@ -181,7 +149,6 @@ void EditorFrame::createEngine()
 	engine = new Engine;
 	engine->create(VAPOR_EDITOR_NAME);
 	engine->init(false);
-	
 	engine->setupInput();
 
 	// Mount the default assets path.
@@ -196,8 +163,8 @@ void EditorFrame::createEngine()
 void EditorFrame::createUI()
 {
     SetIcon( wxIcon("editor") );
-
-	paneCtrl = new wxAuiManager;
+	
+	paneCtrl = new wxAuiManager();
 	paneCtrl->SetManagedWindow(this);
 
 	// Create notebook
@@ -206,15 +173,17 @@ void EditorFrame::createUI()
 	notebookCtrl->Bind(wxEVT_COMMAND_AUINOTEBOOK_PAGE_CLOSE, &EditorFrame::onNotebookPageClose, this);
 	
 	wxAuiPaneInfo pane;
-	pane.CenterPane();
+	pane.CenterPane().PaneBorder(false);
 	paneCtrl->AddPane(notebookCtrl, pane);
 
 	// Create menus
 	createMenus();
 
 	// Create toolbar
-	int style = wxAUI_TB_DEFAULT_STYLE | wxAUI_TB_OVERFLOW;
+	int style = wxAUI_TB_DEFAULT_STYLE /*| wxAUI_TB_OVERFLOW*/;
 	toolbarCtrl = new wxAuiToolBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, style);
+	toolbarCtrl->SetGripperVisible(false);
+	toolbarCtrl->GetArtProvider()->SetElementSize(wxAUI_TBART_GRIPPER_SIZE, 0);
 	toolbarCtrl->Bind(wxEVT_COMMAND_MENU_SELECTED, &EditorFrame::OnToolbarButtonClick, this);
 }
 
@@ -224,29 +193,21 @@ void EditorFrame::createToolbar()
 {
 	if(!toolbarCtrl) return;
 
-	toolbarCtrl->AddTool( Toolbar_ToogleGrid, "Grid", 
-		wxMEMORY_BITMAP(grid_icon), "Show/hide the editor grid", wxITEM_CHECK );
-
-	toolbarCtrl->AddTool( Toolbar_TooglePhysicsDebug, "Physics", 
-		wxMEMORY_BITMAP(grid_icon), "Show/hide the physics debug", wxITEM_CHECK );
-
+	toolbarCtrl->AddTool( Toolbar_ToogleGrid, "Grid", wxMEMORY_BITMAP(grid_icon), "Show/hide the editor grid", wxITEM_CHECK );
+	toolbarCtrl->AddTool( Toolbar_TooglePhysicsDebug, "Physics", wxMEMORY_BITMAP(grid_icon), "Show/hide the physics debug", wxITEM_CHECK );
 	toolbarCtrl->ToggleTool( Toolbar_ToogleGrid, true );
-
-	toolbarCtrl->AddTool( Toolbar_TooglePlay, "Play", wxMEMORY_BITMAP(resultset_next), 
-		"Enable/disable Play mode", wxITEM_CHECK );
-
+	toolbarCtrl->AddTool( Toolbar_TooglePlay, "Play", wxMEMORY_BITMAP(resultset_next), "Enable/disable Play mode", wxITEM_CHECK );
+	
 	toolbarCtrl->AddSeparator();
 
-	toolbarCtrl->AddTool( Toolbar_ToogleViewport, "Toogles maximize view", 
-		wxMEMORY_BITMAP(application_split), "Toogles maximize view" );
+	toolbarCtrl->AddTool( Toolbar_ToogleViewport, "Toogles maximize view", wxMEMORY_BITMAP(application_split), "Toogles maximize view" );
+	toolbarCtrl->AddTool( Toolbar_ToogleSidebar, "Shows/hides the sidebar", wxMEMORY_BITMAP(application_side_tree_right), "Shows/hides the sidebar" );
+	toolbarCtrl->AddTool( Toolbar_TooglePlugin, "Shows/hides the plugin manager", wxMEMORY_BITMAP(cog), "Shows/hides the plugin manager" );
 
-	toolbarCtrl->AddTool( Toolbar_ToogleSidebar, "Shows/hides the sidebar", 
-		wxMEMORY_BITMAP(application_side_tree_right), "Shows/hides the sidebar" );
-
-	toolbarCtrl->AddTool( Toolbar_TooglePlugin, "Shows/hides the plugin manager", 
-		wxMEMORY_BITMAP(cog), "Shows/hides the plugin manager" );
-
-	getAUI()->AddPane(toolbarCtrl, wxAuiPaneInfo().ToolbarPane().Caption("Toolbar").Top());
+	wxAuiPaneInfo toolPane;
+	const char* name = "Toolbar";
+	toolPane.ToolbarPane().Name(name).Caption(name).Top().PaneBorder(false);
+	paneCtrl->AddPane(toolbarCtrl, toolPane);
 }
 
 //-----------------------------------//
@@ -305,15 +266,13 @@ void EditorFrame::onNotebookPageChanged(wxAuiNotebookEvent& event)
 void EditorFrame::onNotebookPageClose(wxAuiNotebookEvent& event)
 {
 	Document* document = getDocumentFromPage( event.GetSelection() );
-
-	std::vector<Document*>::iterator it =
-		std::find(documents.begin(), documents.end(), document);
-
+	
+	auto it = std::find(documents.begin(), documents.end(), document);
+	
 	if( it != documents.end() )
 	{
 		document->onDocumentUnselect();
 		eventManager->onDocumentUnselect(*document);
-
 		documents.erase(it);
 	}
 

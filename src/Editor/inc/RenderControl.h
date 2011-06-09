@@ -83,6 +83,7 @@ protected:
 	void OnKeyUp(wxKeyEvent& event);
 	void OnMouseEvent(wxMouseEvent& event);
 	void OnMouseCaptureLost(wxMouseCaptureLostEvent& event);
+	void OnEnterWindow(wxMouseEvent& event);
 
 	// Timer responsible for update ticks.
 	wxTimer frameUpdateTimer;

@@ -14,11 +14,18 @@ NAMESPACE_EXTERN_BEGIN
 
 //-----------------------------------//
 
+struct ReferenceCounted;
+inline void ReferenceAdd(ReferenceCounted* ref);
+inline bool ReferenceRelease(ReferenceCounted* ref);
+
 struct API_CORE ReferenceCounted
 {	
 	ReferenceCounted() : references(0) {}
 	ReferenceCounted(const ReferenceCounted&) : references(0) {}
 	ReferenceCounted& operator=(const ReferenceCounted&) { return *this; }
+	
+	inline void addReference() { ReferenceAdd(this); }
+	inline bool releaseReference() { return ReferenceRelease(this); }
 	
 	volatile Atomic references;
 };
@@ -50,23 +57,23 @@ public:
 
     RefPtr(T* p, bool add_ref = true) : px(p)
     {
-        if( px != nullptr && add_ref ) ReferenceAdd(px);
+        if( px != nullptr && add_ref ) px->addReference();
     }
 
 	template<typename U>
     RefPtr( RefPtr<U> const & rhs ) : px( rhs.get() )
     {
-        if( px != nullptr ) ReferenceAdd(px);
+        if( px != nullptr ) px->addReference();
     }
 
     RefPtr(RefPtr const & rhs): px(rhs.px)
     {
-        if( px != nullptr ) ReferenceAdd(px);
+        if( px != nullptr ) px->addReference();
     }
 
     ~RefPtr()
     {
-        if( px != nullptr && ReferenceRelease(px) )
+        if( px != nullptr && px->releaseReference() )
 			Deallocate<T>(px);
     }
 

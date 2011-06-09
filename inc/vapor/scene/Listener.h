@@ -47,7 +47,7 @@ protected:
 	float volume;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Listener );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Listener );
 
 //-----------------------------------//
 

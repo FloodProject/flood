@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "gui/Atlas.h"
+#include "GUI/Atlas.h"
 
 namespace vapor {
 

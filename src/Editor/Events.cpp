@@ -56,6 +56,11 @@ Events::~Events()
 	mouse->onMouseButtonRelease.Disconnect(this, &Events::onMouseRelease);
 	mouse->onMouseEnter.Disconnect(this, &Events::onMouseEnter);
 	mouse->onMouseExit.Disconnect(this, &Events::onMouseLeave);
+
+	// Unsubscribe from all keyboard events.
+	Keyboard* const kbd = input->getKeyboard();
+	kbd->onKeyPress.Disconnect(this, &Events::onKeyPress);
+	kbd->onKeyRelease.Disconnect(this, &Events::onKeyRelease);
 }
 
 //-----------------------------------//
@@ -277,6 +282,20 @@ void Events::onMouseLeave()
 
 //-----------------------------------//
 
+void Events::onKeyPress( const KeyEvent& event )
+{
+	CALL_PLUGIN(onKeyPress, event);
+}
+
+//-----------------------------------//
+
+void Events::onKeyRelease( const KeyEvent& event )
+{
+	CALL_PLUGIN(onKeyRelease, event);
+}
+
+//-----------------------------------//
+
 void Events::onSceneLoad( const ScenePtr& scene )
 {
 	CALL_PLUGIN_CHECK(onSceneLoad, scene);
@@ -296,15 +315,17 @@ void Events::registerInputCallbacks()
 	Engine* engine = editor->getEngine();
 	InputManager* input = engine->getInputManager();
 
-	// Register all the mouse events.
 	Mouse* const mouse = input->getMouse();
-
 	mouse->onMouseMove.Connect(this, &Events::onMouseMove);
 	mouse->onMouseDrag.Connect(this, &Events::onMouseDrag);
 	mouse->onMouseButtonPress.Connect(this, &Events::onMousePress);
 	mouse->onMouseButtonRelease.Connect(this, &Events::onMouseRelease);
 	mouse->onMouseEnter.Connect(this, &Events::onMouseEnter);
 	mouse->onMouseExit.Connect(this, &Events::onMouseLeave);
+
+	Keyboard* const kbd = input->getKeyboard();
+	kbd->onKeyPress.Connect(this, &Events::onKeyPress);
+	kbd->onKeyRelease.Connect(this, &Events::onKeyRelease);
 }
 
 //-----------------------------------//

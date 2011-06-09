@@ -59,10 +59,8 @@ void ResourcesPlugin::onPluginEnable()
 	resourcesPage->SetSize(300, 200);
 
 	wxBitmap iconPackage = wxMEMORY_BITMAP(package);
-
 	wxAuiPaneInfo pane;
-	pane.Caption("Resources").Left().Dock().Icon(iconPackage);
-
+	pane.Caption("Resources").Left().Dock().Icon(iconPackage).PaneBorder(false);
 	editor->getAUI()->AddPane(resourcesPage, pane);
 	editor->getAUI()->Update();
 

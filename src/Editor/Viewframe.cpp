@@ -17,25 +17,10 @@ namespace vapor { namespace editor {
 
 Viewframe::Viewframe( wxWindow* parent, wxWindowID id,
 					 const wxPoint& pos, const wxSize& size, long style ) 
-	: wxPanel(parent, id, pos, size, style)
+	: wxPanel(parent, id, pos, size, style | wxBORDER_NONE)
 {
-	int attribList[] =
-	{
-		WX_GL_RGBA,
-		WX_GL_DOUBLEBUFFER,
-		WX_GL_DEPTH_SIZE, 16,
-		//WX_GL_SAMPLE_BUFFERS, 1,
-		//WX_GL_SAMPLES, 4,
-		0
-	};
-
-	control = new RenderControl(this, wxID_ANY, attribList);
-
 	mainSizer = new wxBoxSizer( wxVERTICAL );
-	mainSizer->Add( control, 1, wxEXPAND );
-	
-	SetSizerAndFit( mainSizer );
-	Layout();
+	SetSizer( mainSizer );
 }
 
 //-----------------------------------//
@@ -48,12 +33,32 @@ Viewframe::~Viewframe()
 
 //-----------------------------------//
 
+RenderControl* Viewframe::createControl()
+{
+	int attribList[] =
+	{
+		WX_GL_RGBA,
+		WX_GL_DOUBLEBUFFER,
+		WX_GL_DEPTH_SIZE, 16,
+		//WX_GL_SAMPLE_BUFFERS, 1,
+		//WX_GL_SAMPLES, 4,
+		0
+	};
+
+	control = new RenderControl(this, wxID_ANY, attribList);
+	mainSizer->Add( control, 1, wxEXPAND );
+
+	return control;
+}
+
+//-----------------------------------//
+
 void Viewframe::switchToDefaultCamera()
 {
-	const CameraPtr& camera = mainCamera.lock();
+	const CameraPtr& camera = mainCamera;
 	if( !camera ) return;
 
-	EntityPtr nodeCamera = camera->getEntity()->getShared();
+	EntityPtr nodeCamera = camera->getEntity();
 
 #if 0
 	ControllerPtr controller = nodeCamera->getComponentFromFamily<Controller>();

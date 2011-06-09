@@ -109,7 +109,7 @@ void PropertyPlugin::onEntityUnselect( const EntityPtr& entity )
 
 void PropertyPlugin::onComponentSelect( const ComponentPtr& component )
 {
-	const EntityPtr& entity = component->getEntity()->getShared();
+	const EntityPtr& entity = component->getEntity();
 	onEntitySelect(entity);
 }
 
@@ -117,7 +117,7 @@ void PropertyPlugin::onComponentSelect( const ComponentPtr& component )
 
 void PropertyPlugin::onComponentUnselect( const ComponentPtr& component )
 {
-	const EntityPtr& entity = component->getEntity()->getShared();
+	const EntityPtr& entity = component->getEntity();
 	onEntityUnselect(entity);
 }
 
@@ -155,7 +155,7 @@ void PropertyPlugin::onResourceUnselect( const ResourcePtr& resource )
 
 void PropertyPlugin::onComponentChanged(const ComponentPtr& component)
 {
-	const EntityPtr& entity = component->getEntity()->getShared();
+	const EntityPtr& entity = component->getEntity();
 	updateProperties(entity);
 }
 

@@ -162,7 +162,8 @@ void Camera::cull( RenderBlock& block, const EntityPtr& entity )
 	
 	if( ClassInherits(klass, ReflectionGetType(Group)) )
 	{
-		GroupPtr group = std::static_pointer_cast<Group>(entity);
+		const GroupPtr& group = RefCast<Group>(entity);
+
 		const std::vector<EntityPtr>& entities = group->getEntities();
 
 		// Cull the children entities recursively.

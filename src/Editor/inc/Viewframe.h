@@ -8,7 +8,6 @@
 
 #pragma once
 
-FWD_DECL_SHARED_WEAK(Camera)
 FWD_DECL(RenderView)
 
 namespace vapor { namespace editor {
@@ -41,6 +40,9 @@ public:
 	// Sets the main camera of the viewframe.
 	SETTER(MainCamera, const CameraPtr&, mainCamera)
 
+	// Creates and adds a control to the viewframe.
+	RenderControl* createControl();
+
 	// Creates and adds a new view to the viewframe.
 	RenderView* createView();
 
@@ -55,8 +57,6 @@ public:
 
 	// Gets the sizer of this panel.
 	GETTER(Sizer, wxSizer*, mainSizer)
-
-protected:
 
 	// Gets called when camera changes in the view.
 	void onCameraChanged(const CameraPtr& camera);

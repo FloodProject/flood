@@ -10,8 +10,6 @@
 
 #include "UndoOperation.h"
 
-FWD_DECL_SHARED(Entity)
-
 namespace vapor { namespace editor {
 
 //-----------------------------------//

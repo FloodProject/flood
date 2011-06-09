@@ -6,11 +6,6 @@
 *
 ************************************************************************/
 
-//%shared_ptr(vapor::Component)
-//%shared_ptr(vapor::Transform)
-//%shared_ptr(vapor::Geometry)
-//%shared_ptr(vapor::Light)
-
 %include "Scene/Component.h"
 %include "Scene/Transform.h"
 %include "Scene/Geometry.h"

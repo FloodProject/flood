@@ -96,7 +96,7 @@ protected:
 	RenderablePtr rend;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Cell );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Cell );
 
 typedef Cell TerrainCell;
 typedef CellPtr TerrainCellPtr;

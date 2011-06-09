@@ -12,11 +12,9 @@
 #include "Core/Object.h"
 #include "Core/Event.h"
 
-FWD_DECL_SHARED(Entity)
-FWD_DECL_SHARED_WEAK(Entity)
-
-FWD_DECL_SHARED(Transform)
-FWD_DECL_SHARED(Geometry)
+FWD_DECL_INTRUSIVE(Entity)
+FWD_DECL_INTRUSIVE(Transform)
+FWD_DECL_INTRUSIVE(Geometry)
 
 NAMESPACE_BEGIN
 
@@ -24,7 +22,6 @@ NAMESPACE_BEGIN
 
 EXTERN_BEGIN
 
-class Entity;
 API_ENGINE Entity* EntityCreate( Allocator* );
 
 EXTERN_END
@@ -96,16 +93,16 @@ public:
 
 	// Gets a component from this entity.
 	template <typename T>
-	std::shared_ptr<T> getComponent() const
+	RefPtr<T> getComponent() const
 	{
-		return std::static_pointer_cast<T>( getComponent(T::getStaticType()) );
+		return RefCast<T>( getComponent(T::getStaticType()) );
 	}
 
 	// Gets the first found component inheriting the given type.
 	template<typename T>
-	std::shared_ptr<T> getComponentFromFamily()
+	RefPtr<T> getComponentFromFamily()
 	{
-		return std::static_pointer_cast<T>( getComponentFromFamily(T::getStaticType()) );
+		return RefCast<T>( getComponentFromFamily(T::getStaticType()) );
 	}
 
 	// Adds a transform component to this entity.
@@ -120,14 +117,11 @@ public:
 	// Gets the geometries components in the entity.
 	std::vector<GeometryPtr> getGeometry() const;
 
-	// Gets the shared pointer from this entity.
-	EntityPtr getShared();
-
 	// Updates all the components of the entity.
 	virtual void update( float delta );
 
 	// Fix-up serialization.
-	virtual void fixUp();
+	virtual void fixUp() OVERRIDE;
 
 	// Sends event notifications.
 	void sendEvents();

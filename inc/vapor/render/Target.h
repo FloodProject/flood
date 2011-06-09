@@ -8,18 +8,16 @@
 
 #pragma once
 
+#include "Core/Event.h"
 #include "Math/Vector.h"
-#include "Event.h"
 
-FWD_DECL_SHARED(Camera)
-
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
 class RenderView;
 
-class VAPOR_API Settings
+class API_ENGINE Settings
 {
 public:
 
@@ -45,10 +43,10 @@ public:
  * Render targets are surfaces where the rendered images can be stored
  * and/or displayed. The most common use is windows, but there are also
  * FBOs, which are basically offscreen buffers where you can render to.
- * Each render target mantains a list of viewports 
+ * Each render target mantains a list of viewports.
  */
 
-class VAPOR_API RenderTarget
+class API_ENGINE RenderTarget
 {
 	DECLARE_UNCOPYABLE(RenderTarget)
 
@@ -82,4 +80,4 @@ protected:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

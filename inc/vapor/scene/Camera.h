@@ -12,8 +12,8 @@
 #include "Math/Frustum.h"
 #include "Math/Matrix4x3.h"
 
-FWD_DECL_SHARED(Transform)
-FWD_DECL_SHARED(Scene)
+FWD_DECL_INTRUSIVE(Transform)
+FWD_DECL_INTRUSIVE(Scene)
 
 namespace vapor {
 
@@ -32,7 +32,7 @@ struct RenderBlock;
 
 REFLECT_DECLARE_CLASS(Camera)
 
-class VAPOR_API Camera : public Component
+class API_SCENE Camera : public Component
 {
 	REFLECT_DECLARE_OBJECT(Camera)
 	DECLARE_UNCOPYABLE(Camera)
@@ -112,8 +112,7 @@ protected:
 	RenderView* activeView;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Camera );
-TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( Camera );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Camera );
 
 //-----------------------------------//
 

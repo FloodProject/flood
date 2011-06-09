@@ -13,7 +13,7 @@
 #include "Math/Frustum.h"
 #include "Render/Renderable.h"
 
-FWD_DECL_SHARED(Entity)
+FWD_DECL_INTRUSIVE(Entity)
 FWD_DECL_INTRUSIVE(Renderable)
 
 namespace vapor {

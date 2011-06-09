@@ -50,8 +50,7 @@ protected:
 	btCapsuleShape* capsuleShape;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( CapsuleShape );
-TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( CapsuleShape );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( CapsuleShape );
 
 //-----------------------------------//
 

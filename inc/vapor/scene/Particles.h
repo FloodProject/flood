@@ -139,7 +139,7 @@ protected:
 	uint numParticles;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Particles );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Particles );
 
 //-----------------------------------//
 

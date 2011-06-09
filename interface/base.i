@@ -10,13 +10,13 @@
 %include <std_vector.i>
 %include <std_map.i>
 
-//#define SWIG_SHARED_PTR_NAMESPACE std
-//%include <std_shared_ptr.i>
-
 %define API_CORE
 %enddef
 
 %define API_ENGINE
+%enddef
+
+%define API_SCENE
 %enddef
 
 %define VAPOR_API
@@ -37,4 +37,12 @@
 %define REFLECT_DECLARE_OBJECT(arg)
 %enddef
 
+%define DECLARE_FRIENDS(arg)
+%enddef
+
+%define OVERRIDE
+%enddef
+
+%define (arg)
+%enddef
 

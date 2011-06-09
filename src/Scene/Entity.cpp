@@ -23,7 +23,7 @@ REFLECT_CHILD_CLASS(Entity, Object)
 	FIELD_PRIMITIVE(string, name)
 	FIELD_PRIMITIVE(bool, visible)
 	//FIELD_PRIMITIVE_CUSTOM(int32, tags, Bitfield)
-	FIELD_VECTOR_PTR(Component, ComponentPtr, components, SharedPointer)
+	FIELD_VECTOR_PTR(Component, ComponentPtr, components, RefPointer)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
@@ -153,7 +153,7 @@ std::vector<GeometryPtr> Entity::getGeometry() const
 		if( !ClassInherits(component->getType(), ReflectionGetType(Geometry)) )
 			continue;
 
-		const GeometryPtr& geo = std::static_pointer_cast<Geometry>(component);
+		const GeometryPtr& geo = RefCast<Geometry>(component);
 		geoms.push_back(geo);
 	}
 
@@ -272,18 +272,6 @@ void Entity::setTag(int32 index, bool state)
 		tags |= index;
 	else
 		tags &= ~index;
-}
-
-//-----------------------------------//
-
-EntityPtr Entity::getShared()
-{
-	struct no_op_deleter
-	{
-		void operator()(void*) { }
-	};
-
-	return std::shared_ptr<Entity>(this, no_op_deleter());
 }
 
 //-----------------------------------//

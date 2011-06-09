@@ -26,13 +26,13 @@ API_CORE Allocator* AllocatorCreatePage( Allocator* );
 API_CORE Allocator* AllocatorCreateTemporary( Allocator* );
 
 API_CORE void* AllocatorAllocate( Allocator*, int32 size, int32 align );
-API_CORE void  AllocatorDeallocate( void* );
+API_CORE void  AllocatorDeallocate( const void* );
 
 API_CORE void AllocatorDestroy( Allocator* );
 API_CORE void AllocatorDumpInfo();
 
 typedef void* (*MemoryAllocateFunction)(Allocator*, int32 size, int32 align);
-typedef void  (*MemoryFreeFunction)(Allocator*, void* object);
+typedef void  (*MemoryFreeFunction)(Allocator*, const void* object);
 
 struct Allocator
 {
@@ -66,7 +66,7 @@ template<typename T> T* AllocateObject(Allocator* alloc)
 // Allocates memory for the object.
 #define Allocate(Type, Alloc, ...) Construct(Type, AllocateObject<Type>(Alloc), __VA_ARGS__)
 
-template<typename T> void Deallocate(T* object)
+template<typename T> void Deallocate(const T* object)
 {
 	// Calls the object destructor.
 	if(object) object->~T();

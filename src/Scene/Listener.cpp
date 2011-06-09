@@ -15,6 +15,8 @@
 #include "Scene/Camera.h"
 #include "Scene/Entity.h"
 #include "Audio/Device.h"
+
+#include "Scene/Scene.h"
 #include "Engine.h"
 
 namespace vapor {

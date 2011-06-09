@@ -25,6 +25,9 @@ class Joystick;
  * Manages a set of input devices.
  */
 
+class InputManager;
+API_ENGINE InputManager* GetInputManager();
+
 class VAPOR_API InputManager
 {
 	DECLARE_UNCOPYABLE(InputManager)

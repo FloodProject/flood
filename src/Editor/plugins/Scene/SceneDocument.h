@@ -26,7 +26,8 @@ public:
 
 	// Gets the document window.
 	virtual wxWindow* getWindow();
-	RenderWindow* getRenderWindow() { return viewFrame->getControl()->getRenderWindow(); }
+	RenderControl* getRenderControl() { return viewFrame->getControl(); }
+	RenderWindow* getRenderWindow() { return getRenderControl()->getRenderWindow(); }
 
 	// Document selection callbacks.
 	virtual void onDocumentSelect();
@@ -43,6 +44,7 @@ public:
 	ScenePtr editorScene;
 	FirstPersonControllerPtr cameraController;
 	Viewframe* viewFrame;
+	wxAuiToolBar* toolbar;
 
 protected:
 

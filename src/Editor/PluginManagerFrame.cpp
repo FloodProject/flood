@@ -31,7 +31,7 @@ void PluginManagerFrame::InitControl()
 	const std::vector<Plugin*>& plugs = plugins->getPlugins();
 
 	// Populate the list with the plugins.
-	for( uint i = 0; i < plugs.size(); i++ )
+	for( size_t i = 0; i < plugs.size(); i++ )
 	{
 		Plugin* plugin = plugs[i];
 		PluginMetadata metadata = plugin->getMetadata();

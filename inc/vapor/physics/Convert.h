@@ -16,7 +16,7 @@
 #include <LinearMath/btVector3.h>
 #include <LinearMath/btTransform.h>
 
-FWD_DECL_SHARED(Transform)
+FWD_DECL_INTRUSIVE(Transform)
 
 namespace vapor {
 

@@ -48,7 +48,7 @@ protected:
 	bool isDirty;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Console );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Console );
 
 //-----------------------------------//
 

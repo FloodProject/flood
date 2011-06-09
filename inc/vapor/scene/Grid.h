@@ -45,7 +45,7 @@ protected:
 	bool strongMainLines;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Grid );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Grid );
 
 //-----------------------------------//
 

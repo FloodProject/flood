@@ -13,12 +13,9 @@
 #include "Math/Matrix4x3.h"
 #include "Math/Matrix4x4.h"
 #include "Render/Target.h"
+#include "Scene/Camera.h"
 
-FWD_DECL_SHARED(Entity)
-FWD_DECL_SHARED(Camera)
-FWD_DECL_SHARED_WEAK(Camera)
-
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -29,7 +26,7 @@ class RenderTarget;
  * It has an associated camera that will render into the view.
  */
 
-class VAPOR_API RenderView
+class API_ENGINE RenderView
 {
 	DECLARE_UNCOPYABLE(RenderView)
 
@@ -39,7 +36,7 @@ public:
 	RenderView( const CameraPtr& );
 
 	// Gets the camera of the view.
-	GETTER(Camera, CameraPtr, weakCamera.lock())
+	GETTER(Camera, CameraPtr, weakCamera)
 
 	// Sets the camera of the view.
 	void setCamera( const CameraPtr& camera );
@@ -80,7 +77,7 @@ public:
 protected:
 
 	// Camera that will render into this view.
-	CameraWeakPtr weakCamera;
+	CameraPtr weakCamera;
 
 	// Render target.
 	RenderTarget* target;
@@ -94,4 +91,4 @@ protected:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

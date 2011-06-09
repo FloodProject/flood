@@ -32,7 +32,7 @@
 #define		ENABLE_SHADER_GLSL
 
 #define		VAPOR_AUDIO_OPENAL
-#define		VAPOR_PHYSICS_BULLET
+//#define		VAPOR_PHYSICS_BULLET
 
 //---------------------------------------------------------------------//
 // API Exports
@@ -45,6 +45,8 @@
 #else
 	#define API_ENGINE
 #endif
+
+#define API_SCENE API_ENGINE
 
 #define VAPOR_API API_ENGINE
 

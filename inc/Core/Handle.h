@@ -59,7 +59,7 @@ public:
 			return;
 		
 		T* px = Resolve();
-		if(px) ReferenceAdd(px);
+		if(px) px->addReference();
     }
 
     Handle(Handle const & rhs): id(rhs.id)
@@ -68,7 +68,7 @@ public:
 			return;
 		
 		T* px = Resolve();
-		if(px) ReferenceAdd(px);
+		if(px) px->addReference();
     }
 
     ~Handle()
@@ -78,7 +78,7 @@ public:
 		
 		T* px = Resolve();
 		
-		if(px && ReferenceRelease(px) && DFn)
+		if(px && px->releaseReference() && DFn)
 			DFn(id);
     }
 
@@ -87,7 +87,7 @@ public:
         id = rhs.id;
 
 		T* px = Resolve();
-		if(px) ReferenceAdd(px);
+		if(px) px->addReference();
 
         return *this;
     }

@@ -102,7 +102,7 @@ protected:
 	bool castsShadows;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Light );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Light );
 
 //-----------------------------------//
 

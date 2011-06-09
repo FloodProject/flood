@@ -230,9 +230,11 @@ static bool doRayQuery( const Ray& ray,	const std::vector<Vector3>& vertices,
 static bool needsSkinning(const GeometryPtr& geo, std::vector<Vector3>& skinnedPositions)
 {
 	bool isModel = ClassInherits(geo->getType(), ReflectionGetType(Model));
-	if( !isModel ) return false;
+	
+	if( !isModel )
+		return false;
 
-	ModelPtr model = std::static_pointer_cast<Model>(geo);
+	ModelPtr model = RefCast<Model>(geo);
 	
 	Mesh* mesh = model->getMesh().Resolve();
 	if( !mesh || !mesh->isAnimated() ) return false;
@@ -245,7 +247,7 @@ static bool needsSkinning(const GeometryPtr& geo, std::vector<Vector3>& skinnedP
 
 //-----------------------------------//
 
-static Ray TransformRay(const Ray& ray, const EntityPtr& entity)
+static Ray doTransformRay(const Ray& ray, const EntityPtr& entity)
 {
 	const TransformPtr& transform = entity->getTransform();
 	Matrix4x3 absolute = transform->getAbsoluteTransform().inverse();
@@ -266,7 +268,7 @@ static Ray TransformRay(const Ray& ray, const EntityPtr& entity)
 
 bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, const EntityPtr& entity )
 {
-	Ray transRay = TransformRay(ray, entity);
+	Ray transRay = doTransformRay(ray, entity);
 	const std::vector<GeometryPtr>& geoms = entity->getGeometry();
 	
 	for( size_t i = 0; i < geoms.size(); i++ )

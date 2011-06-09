@@ -163,7 +163,7 @@ protected:
 	MaterialHandle material;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Overlay );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Overlay );
 
 //-----------------------------------//
 

@@ -19,8 +19,7 @@ namespace vapor {
 //-----------------------------------//
 
 class Body;
-TYPEDEF_SHARED_POINTER_FROM_TYPE(Body)
-TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE(Body)
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(Body)
 
 //-----------------------------------//
 
@@ -49,8 +48,7 @@ protected:
 	BodyWeakPtr weakBody;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Shape );
-TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( Shape );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Shape );
 
 //-----------------------------------//
 

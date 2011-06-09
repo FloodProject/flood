@@ -34,7 +34,7 @@ Plugin::~Plugin()
 void Plugin::doPluginDisable()
 {
 	Engine* engine = editor->getEngine();
-	const ScenePtr& scene = engine->getSceneManager();
+	const ScenePtr& scene = engine->getScene();
 
 	if(scene)
 		onSceneUnload(scene);

@@ -56,3 +56,10 @@
 //---------------------------------------------------------------------//
 
 #include "ImageUtils.h"
+
+NAMESPACE_BEGIN
+typedef CameraPtr CameraWeakPtr;
+typedef ScenePtr SceneWeakPtr;
+typedef ComponentPtr ComponentWeakPtr;
+typedef EntityPtr EntityWeakPtr;
+NAMESPACE_END

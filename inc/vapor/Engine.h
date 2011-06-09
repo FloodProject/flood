@@ -11,9 +11,9 @@
 #include "Engine/API.h"
 #include "Core/ReferenceCount.h"
 
-FWD_DECL_SHARED(Scene)
+FWD_DECL_INTRUSIVE(Scene)
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -40,7 +40,7 @@ class ScriptManager;
  * a class like this one that instantiates everything and sets it all up.
  */
 
-class VAPOR_API Engine
+class API_ENGINE Engine
 {
 public:
 	
@@ -53,7 +53,7 @@ public:
 	// If autoInit is true, then the method will make sure everything 
 	// is properly set up when you instantiate the object, else you will
 	// have to call the init methods manually.
-	void create(const std::string& app, const char** argv = nullptr);
+	void create(const String& app);
 
 	// Adds a subsystem to be managed by the engine.
 	void addSubsystem( Subsystem* const subsystem );
@@ -68,7 +68,8 @@ public:
 	void setupInput();
 
 	// Gets/sets the scene.
-	ACESSOR(SceneManager, ScenePtr, scene)
+	GETTER(Scene, ScenePtr, scene)
+	void setScene(const ScenePtr& scene);
 
 	// Gets the device.
 	GETTER(RenderDevice, RenderDevice*, renderDevice)
@@ -139,10 +140,7 @@ protected:
 	ScriptManager* scriptManager;
 
 	// Application name.
-	std::string app;
-	
-	// Arguments.
-	const char** argv;
+	String app;
 };
 
 // Gets the engine instance.
@@ -150,4 +148,4 @@ Engine* GetEngine();
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

@@ -12,14 +12,12 @@
 #include "Core/ReferenceCount.h"
 
 FWD_DECL_INTRUSIVE(Renderable)
-FWD_DECL_SHARED(Camera)
+FWD_DECL_INTRUSIVE(Camera)
+FWD_DECL_INTRUSIVE(Entity)
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
-
-class Entity;
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Entity )
 
 /**
  * Represents a component, a specific piece of functionality that can be
@@ -30,7 +28,7 @@ TYPEDEF_SHARED_POINTER_FROM_TYPE( Entity )
 
 REFLECT_DECLARE_CLASS(Component)
 
-class VAPOR_API Component : public Object
+class API_ENGINE Component : public Object
 {
 	DECLARE_UNCOPYABLE(Component)
 	REFLECT_DECLARE_OBJECT(Component)
@@ -85,9 +83,8 @@ public:
 	mutable RenderablePtr debugRenderable;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Component )
-TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( Component )
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Component )
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

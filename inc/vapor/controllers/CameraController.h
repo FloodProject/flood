@@ -44,7 +44,7 @@ protected:
 	float moveSensivity;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( CameraController );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( CameraController );
 
 //-----------------------------------//
 

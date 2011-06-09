@@ -73,8 +73,7 @@ public:
 	bool doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, const EntityPtr& );
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Scene );
-TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( Scene );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Scene );
 
 //-----------------------------------//
 

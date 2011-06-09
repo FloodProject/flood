@@ -41,7 +41,7 @@ protected:
 	VertexBufferPtr lines;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( GizmoRotate );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( GizmoRotate );
 
 //-----------------------------------//
 

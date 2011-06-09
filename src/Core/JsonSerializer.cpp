@@ -426,8 +426,8 @@ static void DeserializeArrayElement( ReflectionContext* context, json_t* value, 
 		}
 		else if( FieldIsRefPointer(field) )
 		{
-			ReferenceCounted* ref = (ReferenceCounted*) object;
-			RefPtr<ReferenceCounted>* ref_obj = (RefPtr<ReferenceCounted>*) address;
+			Object* ref = (Object*) object;
+			RefPtr<Object>* ref_obj = (RefPtr<Object>*) address;
 			ref_obj->reset(ref);
 		}
 		else

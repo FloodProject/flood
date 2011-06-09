@@ -42,6 +42,7 @@ SelectionPlugin::SelectionPlugin()
 	, selections(nullptr)
 	, buttonSelect(nullptr)
 	, dragRectangle(nullptr)
+	, additiveMode(false)
 { }
 
 //-----------------------------------//
@@ -54,6 +55,7 @@ PluginMetadata SelectionPlugin::getMetadata()
 	metadata.description = "Provides selection services";
 	metadata.author = "triton";
 	metadata.version = "1.0";
+	metadata.priority = 15;
 
 	return metadata;
 }
@@ -119,6 +121,48 @@ void SelectionPlugin::onEntityRemoved(const EntityPtr& entity)
 
 //-----------------------------------//
 
+void SelectionPlugin::onKeyPress(const KeyEvent& event)
+{
+	Events* events = editor->getEventManager();
+	
+	bool isSelection = events->getCurrentTool() == (int) SelectionTool::Select;
+	if( !isSelection ) return;
+
+	SceneDocument* sceneDocument = (SceneDocument*) editor->getDocument();
+	RenderControl* control = sceneDocument->getRenderControl();
+
+	if( event.ctrlPressed )
+	{
+		control->SetCursor( wxCursor("WXCURSOR_ARROW_PLUS") );
+		additiveMode = true;
+	}
+}
+
+//-----------------------------------//
+
+void SelectionPlugin::onKeyRelease(const KeyEvent& event)
+{
+	Events* events = editor->getEventManager();
+	
+	bool isSelection = events->getCurrentTool() == (int) SelectionTool::Select;
+	if( !isSelection ) return;
+
+	SceneDocument* sceneDocument = (SceneDocument*) editor->getDocument();
+	RenderControl* control = sceneDocument->getRenderControl();
+
+	if( !event.ctrlPressed )
+	{
+		// http://trac.wxwidgets.org/ticket/12961
+		#pragma TODO("Change back to wxNullCursor once wxWidgets bug has been fixed")
+		
+		control->SetCursor( *wxSTANDARD_CURSOR );
+		control->Update();
+		additiveMode = false;
+	}
+}
+
+//-----------------------------------//
+
 void SelectionPlugin::onMouseButtonPress( const MouseButtonEvent& event )
 {
 	if( event.button != MouseButton::Left )
@@ -141,12 +185,8 @@ void SelectionPlugin::onMouseButtonRelease( const MouseButtonEvent& event )
 	if( event.button != MouseButton::Left )
 		return;
 
-	Document* document = editor->getDocument();
-	if( !document ) return;
-	SceneDocument* sceneDocument = (SceneDocument*) document;
-	
-	RenderWindow* window = sceneDocument->getRenderWindow();
-	window->setCursorCapture(false);
+	SceneDocument* sceneDocument = (SceneDocument*) editor->getDocument();
+	sceneDocument->getRenderWindow()->setCursorCapture(false);
 
 	editor->redrawView();
 
@@ -157,8 +197,7 @@ void SelectionPlugin::onMouseButtonRelease( const MouseButtonEvent& event )
 	else
 		selection = processSelection(event);
 
-	if( !selection )
-		return;
+	if( !selection ) return;
 
 	SelectionOperation* selected = selections->getSelection();
 
@@ -173,7 +212,7 @@ void SelectionPlugin::onMouseButtonRelease( const MouseButtonEvent& event )
 	if( selected )
 		selected->unselectAll();
 
-	UndoManager* undoManager = document->getUndoManager();
+	UndoManager* undoManager = sceneDocument->getUndoManager();
 	undoManager->registerOperation(selection);
 
 	selection->redo();
@@ -265,10 +304,7 @@ SelectionOperation* SelectionPlugin::createDeselection()
 
 SelectionOperation* SelectionPlugin::processDragSelection(const MouseButtonEvent& event)
 {
-	Document* document = editor->getDocument();
-	if( !document ) return nullptr;
-	SceneDocument* sceneDocument = (SceneDocument*) document;
-
+	SceneDocument* sceneDocument = (SceneDocument*) editor->getDocument();
 	const ScenePtr& scene = sceneDocument->scene;
 	RenderView* view = sceneDocument->viewFrame->getView();
 	const CameraPtr& camera = view->getCamera();
@@ -294,10 +330,18 @@ SelectionOperation* SelectionPlugin::processDragSelection(const MouseButtonEvent
 		return selection;
 	}
 
-	selection = selections->createOperation();
-	selection->description = "Drag Selection";
+	// If we are in additive mode, don't create a new selection.
+	if( selected && additiveMode )
+		selection = selected;
 
-	if( selected )
+	// If there is no current selection, create a new one.
+	if( !selection )
+	{
+		selection = selections->createOperation();
+		selection->description = "Drag Selection";
+	}
+
+	if( selected && !additiveMode )
 		selection->previous = selected->selections;
 
 	for( size_t i = 0; i < list.size(); i++ )

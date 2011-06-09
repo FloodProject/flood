@@ -12,6 +12,7 @@
 #include "Core/Timer.h"
 #include "Core/Utilities.h"
 #include "Render/Device.h"
+#include "Scene/Scene.h"
 #include "Input/InputManager.h"
 #include "Resources/ResourceManager.h"
 
@@ -28,7 +29,7 @@ namespace vapor {
 Framework::Framework(const std::string& app, const char** argv)
 {
 	LogInfo( "Engine framework getting into action" );
-	Engine::create(app, argv);
+	Engine::create(app);
 }
 
 //-----------------------------------//

@@ -167,7 +167,7 @@ void EditorFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 void EditorFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
 	wxDialog* about = new wxDialog(this, wxID_ANY, "About " VAPOR_EDITOR_NAME,
-		wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxFRAME_TOOL_WINDOW);
+		wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE);
 
 	wxBoxSizer* bSizer1 = new wxBoxSizer( wxVERTICAL );
 	wxBoxSizer* bSizer2 = new wxBoxSizer( wxVERTICAL );

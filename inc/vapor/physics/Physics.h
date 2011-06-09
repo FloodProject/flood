@@ -19,7 +19,7 @@ class btCollisionDispatcher;
 class btSequentialImpulseConstraintSolver;
 class btDiscreteDynamicsWorld;
 
-FWD_DECL_SHARED(Body)
+FWD_DECL_INTRUSIVE(Body)
 
 namespace vapor {
 

@@ -17,8 +17,15 @@ namespace vapor {
 
 //-----------------------------------//
 
+static InputManager* gs_InputManager = nullptr;
+InputManager* GetInputManager() { return gs_InputManager; }
+
+//-----------------------------------//
+
 InputManager::InputManager()
-{}
+{
+	gs_InputManager = this;
+}
 
 //-----------------------------------//
 

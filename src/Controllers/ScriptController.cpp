@@ -113,7 +113,10 @@ void ScriptController::bindEntity(Entity* entity)
 	BIND_COMPONENT("light", Light)
 	BIND_COMPONENT("model", Model)
 	BIND_COMPONENT("camera", Camera)
+
+#ifdef VAPOR_PHYSICS_BULLET
 	BIND_COMPONENT("characterController", CharacterController)
+#endif
 }
 
 //-----------------------------------//

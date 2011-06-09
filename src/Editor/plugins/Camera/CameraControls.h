@@ -10,8 +10,6 @@
 
 #include "CameraPlugin.h"
 
-FWD_DECL_SHARED(Camera)
-
 namespace vapor { namespace editor {
 
 //-----------------------------------//

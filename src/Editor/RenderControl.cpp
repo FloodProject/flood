@@ -32,6 +32,7 @@ BEGIN_EVENT_TABLE(RenderControl, wxGLCanvas)
 	EVT_KEY_UP(RenderControl::OnKeyUp)
 	EVT_MOUSE_EVENTS(RenderControl::OnMouseEvent)
 	EVT_MOUSE_CAPTURE_LOST(RenderControl::OnMouseCaptureLost)
+	EVT_ENTER_WINDOW(RenderControl::OnEnterWindow)
 END_EVENT_TABLE()
 
 const float MAX_RATE_UPDATE = 1.0f / 25;
@@ -171,10 +172,25 @@ void RenderControl::OnKeyUp(wxKeyEvent& event)
 
 void RenderControl::OnMouseEvent(wxMouseEvent& event)
 {
-	if( event.ButtonDown(wxMOUSE_BTN_LEFT) && !HasFocus() )
-		SetFocus();
+	//static int i = 0;
+	//LogDebug("Mouse event %d", i++);
+
+	//if( event.IsButton() || event.ButtonDown() )
+	//{
+	//	LogDebug("Setting focus");
+	//	SetFocus();
+	//}
 
 	inputManager->processMouseEvent( event );
+
+	event.Skip();
+}
+
+//-----------------------------------//
+
+void RenderControl::OnEnterWindow(wxMouseEvent& event)
+{
+
 }
 
 //-----------------------------------//

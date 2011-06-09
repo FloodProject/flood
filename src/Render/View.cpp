@@ -9,6 +9,7 @@
 #include "Engine/API.h"
 #include "Render/View.h"
 #include "Render/Target.h"
+#include "Scene/Scene.h"
 #include "Scene/Camera.h"
 #include "Engine.h"
 
@@ -36,7 +37,7 @@ void RenderView::handleRenderTargetResize()
 	//size = target->getSettings().getSize();
 	#pragma TODO("Views need to be updated when render targets change")
 	
-	const CameraPtr& camera = weakCamera.lock();
+	const CameraPtr& camera = weakCamera;
 
 	if( !camera )
 		return;
@@ -99,14 +100,12 @@ bool RenderView::operator < (RenderView& v)
 
 void RenderView::update()
 {
-	CameraPtr camera = weakCamera.lock();
-
-	if( !camera )
-		return;
+	const CameraPtr& camera = weakCamera;
+	if( !camera ) return;
 
 	camera->setView( this );
 
-	const ScenePtr& scene = GetEngine()->getSceneManager();
+	const ScenePtr& scene = GetEngine()->getScene();
 	camera->render(scene);
 }
 

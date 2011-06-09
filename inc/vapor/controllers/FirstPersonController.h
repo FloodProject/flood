@@ -87,7 +87,7 @@ protected:
 	InputManager* inputManager;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( FirstPersonController );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( FirstPersonController );
 
 //-----------------------------------//
 

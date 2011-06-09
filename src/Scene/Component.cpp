@@ -10,7 +10,7 @@
 #include "Scene/Component.h"
 #include "Render/Renderable.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -23,6 +23,7 @@ REFLECT_CLASS_END()
 Component::Component()
 	: debugVisible(false)
 	, debugInheritsTransform(true)
+	, debugRenderable(nullptr)
 	, entity(nullptr)
 { }
 
@@ -83,4 +84,4 @@ RenderablePtr Component::createDebugRenderable() const
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

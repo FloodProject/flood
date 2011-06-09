@@ -13,6 +13,7 @@
 #include "ResourceDrop.h"
 #include "Core/Utilities.h"
 #include "Events.h"
+#include "EditorIcons.h"
 
 namespace vapor { namespace editor {
 
@@ -20,6 +21,7 @@ namespace vapor { namespace editor {
 
 SceneDocument::SceneDocument()
 	: viewFrame(nullptr)
+	, toolbar(nullptr)
 {
 	createView();
 	createScene();
@@ -119,18 +121,18 @@ void SceneDocument::createView()
 {
 	viewFrame = new Viewframe( &GetEditor() );
 
-#if 0
-	viewSplitter->SetWindow( 0, viewFrame );
-	viewSplitter->SetExpanded( viewFrame );
-#endif
+	toolbar = new wxAuiToolBar(viewFrame, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxAUI_TB_DEFAULT_STYLE);
+	toolbar->AddTool(wxID_ANY, wxMEMORY_BITMAP(page_empty), wxMEMORY_BITMAP(page_empty));
+	toolbar->Realize();	
+	viewFrame->mainSizer->Add(toolbar, wxSizerFlags().Expand().Top());
 
-	setupRenderWindow();
-
-	RenderControl* control = viewFrame->getControl();
+	RenderControl* control = viewFrame->createControl();
 	control->onRender.Connect( this, &SceneDocument::onRender );
 	control->onUpdate.Connect( this, &SceneDocument::onUpdate );
 	control->SetDropTarget( new ResourceDropTarget( &GetEditor() ) );
 	control->SetFocus();
+
+	setupRenderWindow();
 
 	RenderView* view = viewFrame->createView();
 	view->setClearColor( Color(0.0f, 0.10f, 0.25f) );
@@ -186,9 +188,11 @@ EntityPtr SceneDocument::createCamera()
 	entityCamera->addComponent( camera );
 	entityCamera->addComponent( cameraController );
 
+#if 0
 #ifdef VAPOR_AUDIO_OPENAL
 	ComponentPtr listener( new Listener() );
 	entityCamera->addComponent( listener );
+#endif
 #endif
 
 	return entityCamera;

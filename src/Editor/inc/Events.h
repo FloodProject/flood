@@ -14,8 +14,6 @@
 #include "Input/Keyboard.h"
 #include "Document.h"
 
-FWD_DECL_SHARED(Entity)
-FWD_DECL_SHARED(Component)
 FWD_DECL_INTRUSIVE(Resource)
 
 namespace vapor { namespace editor {

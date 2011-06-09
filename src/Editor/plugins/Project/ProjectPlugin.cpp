@@ -41,6 +41,7 @@ PluginMetadata ProjectPlugin::getMetadata()
 	metadata.description = "Provides project management functionality";
 	metadata.author = "triton";
 	metadata.version = "1.0";
+	metadata.priority = 10;
 
 	return metadata;
 }
@@ -204,7 +205,7 @@ bool ProjectPlugin::saveScene()
 		return false;
 
 	Engine* engine = editor->getEngine();
-	ScenePtr scene = engine->getSceneManager();
+	ScenePtr scene = engine->getScene();
 	
 	Path path = (String) fc.GetPath();
 	SaveObjectToFile(path, scene.get());
@@ -246,7 +247,7 @@ void ProjectPlugin::switchScene(SceneDocument* document)
 
 	const ScenePtr& scene = document->scene;
 	Engine* engine = editor->getEngine();
-	engine->setSceneManager(scene);
+	engine->setScene(scene);
 
 #ifdef VAPOR_PHYSICS_BULLET
 	delete engine->getPhysicsManager();

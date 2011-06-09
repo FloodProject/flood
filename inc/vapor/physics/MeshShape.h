@@ -12,7 +12,7 @@
 
 #include "Physics/Shape.h"
 
-FWD_DECL_SHARED(Geometry)
+FWD_DECL_INTRUSIVE(Geometry)
 
 class btBvhTriangleMeshShape;
 class btTriangleIndexVertexArray;
@@ -49,8 +49,7 @@ protected:
 	btBvhTriangleMeshShape* meshShape;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( MeshShape );
-TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( MeshShape );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( MeshShape );
 
 //-----------------------------------//
 

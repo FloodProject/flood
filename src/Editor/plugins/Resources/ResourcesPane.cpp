@@ -17,8 +17,7 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-ResourcesPage::ResourcesPage( wxWindow* parent, wxWindowID id,
-										const wxPoint& pos, const wxSize& size )
+ResourcesPage::ResourcesPage( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size )
 	: wxTreeCtrl(parent, id, pos, size, wxTR_DEFAULT_STYLE | wxTR_HIDE_ROOT)
 {
 	ResourceManager* res = GetResourceManager();
@@ -73,14 +72,11 @@ void ResourcesPage::initControl()
 
 //-----------------------------------//
 
-#define CREATE_RESOURCE_ICON( T, I )							\
-	resGroupIcons[RG(T)] = imageList->Add(wxMEMORY_BITMAP(I));	
+#define CREATE_RESOURCE_ICON( T, I ) resGroupIcons[RG(T)] = imageList->Add(wxMEMORY_BITMAP(I));	
 
 void ResourcesPage::initIcons()
 {
-	// create a new list of all the icons
 	imageList = new wxImageList(16, 16, false, 8);
-
 	imageList->Add(wxMEMORY_BITMAP(bullet_blue));
 	CREATE_RESOURCE_ICON( General, package )
 	CREATE_RESOURCE_ICON( Images, image )
@@ -89,7 +85,6 @@ void ResourcesPage::initIcons()
 	CREATE_RESOURCE_ICON( Shaders, palette )
 	CREATE_RESOURCE_ICON( Audio, music )
 	CREATE_RESOURCE_ICON( Scripts, page_code )
-
 	AssignImageList(imageList);
 }
 
@@ -99,8 +94,7 @@ void ResourcesPage::updateTree()
 {
 	const ResourceMap& resources = GetResourceManager()->getResources();
 	
-	ResourceMap::const_iterator it;
-	for( it = resources.begin(); it != resources.end(); it++ )
+	for( auto it = resources.begin(); it != resources.end(); it++ )
 	{
 		const ResourceHandle& res = it->second;
 		addResource(res);
@@ -114,9 +108,8 @@ wxTreeItemId ResourcesPage::addResource(const ResourceHandle& handle)
 	Resource* res = handle.Resolve();
 	if( !res ) return nullptr;
 
-	ResourceIdsMap::iterator it = resourceIds.find(res);
-	
-	if( it != resourceIds.end() ) return nullptr;
+	if( resourceIds.find(res) != resourceIds.end() )
+		return nullptr;
 
 	ResourceGroup::Enum group = res->getResourceGroup();
 	const Path& resPath = res->getPath();

@@ -29,18 +29,14 @@
 
 #include "../Scene/SceneDocument.h"
 
+#define TERRAIN_PANE_NAME "Terrains"
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(TerrainPlugin, Plugin)
 REFLECT_CLASS_END()
-
-//-----------------------------------//
-
-//BEGIN_EVENT_TABLE(TerrainPlugin, wxEvtHandler)
-//	EVT_TIMER(wxID_ANY, TerrainPlugin::onTimer)
-//END_EVENT_TABLE()
 
 //-----------------------------------//
 
@@ -62,6 +58,7 @@ PluginMetadata TerrainPlugin::getMetadata()
 	metadata.description = "Provides terrain editing tools.";
 	metadata.author = "triton";
 	metadata.version = "1.0";
+	metadata.priority = 25;
 
 	return metadata;
 }
@@ -88,8 +85,8 @@ void TerrainPlugin::onPluginEnable()
 
 	wxBitmap icon = wxMEMORY_BITMAP(world);
 	
-	wxAuiPaneInfo pane;	
-	pane.Caption("Terrains").Left().Dock().Icon(icon);
+	wxAuiPaneInfo pane;
+	pane.Name(TERRAIN_PANE_NAME).Caption(TERRAIN_PANE_NAME).Hide().Left().Float().Icon(icon);
 	pane.BestSize(200, -1);
 
 	editor->getAUI()->AddPane(terrainPage, pane);
@@ -105,7 +102,7 @@ void TerrainPlugin::onToolSelect( int id )
 
 	tool = (TerrainTool::Enum) id;
 
-	wxAuiPaneInfo& pane = editor->getAUI()->GetPane("Terrains");
+	wxAuiPaneInfo& pane = editor->getAUI()->GetPane(TERRAIN_PANE_NAME);
 	
 	if( !pane.IsShown() )
 	{
@@ -137,12 +134,12 @@ void TerrainPlugin::onPluginDisable()
 
 //-----------------------------------//
 
-void TerrainPlugin::onEntitySelect( const EntityPtr& node )
+void TerrainPlugin::onEntitySelect( const EntityPtr& entity )
 {
-	if( !ClassInherits(node->getType(), ReflectionGetType(Terrain)) )
+	if( !ClassInherits(entity->getType(), ReflectionGetType(Terrain)) )
 		return;
 
-	terrain = std::static_pointer_cast<Terrain>(node);
+	terrain = RefCast<Terrain>(entity);
 }
 
 //-----------------------------------//
@@ -250,7 +247,7 @@ void TerrainPlugin::updateBrushProjection( int x, int y )
 	}
 	else
 	{
-		const TerrainCellPtr& cell = std::static_pointer_cast<TerrainCell>(res.geometry);
+		const TerrainCellPtr& cell = RefCast<TerrainCell>(res.geometry);
 		projectBrush(res.intersection, cell);
 
 		// Hide the cursor while projecting the brush.
@@ -422,8 +419,8 @@ void TerrainPlugin::setupOperation( const MouseButtonEvent& mb )
 	if( !pickTerrain(mb.x, mb.y, res) )
 		return;
 
-	EntityPtr parent = res.entity->getParent()->getShared();
-	terrain = std::static_pointer_cast<Terrain>(parent);
+	EntityPtr parent = res.entity->getParent();
+	terrain = RefCast<Terrain>(parent);
 
 	if( !terrainOperation )
 		createOperation(res);
@@ -440,7 +437,7 @@ void TerrainPlugin::setupOperation( const MouseButtonEvent& mb )
 
 bool TerrainPlugin::pickTerrain( int x, int y, RayTriangleQueryResult& res )
 {
-	const ScenePtr& scene = GetEngine()->getSceneManager();
+	const ScenePtr& scene = GetEngine()->getScene();
 
 	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
 	const CameraPtr& camera = document->viewFrame->getView()->getCamera(); 

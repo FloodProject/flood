@@ -17,7 +17,7 @@ namespace vapor { namespace editor {
 
 void EntityOperation::redo()
 {
-	ScenePtr scene = weakScene.lock();
+	ScenePtr scene = weakScene;
 	
 	if(!scene) return;
 	
@@ -31,7 +31,7 @@ void EntityOperation::redo()
 
 void EntityOperation::undo()
 {
-	ScenePtr scene = weakScene.lock();
+	ScenePtr scene = weakScene;
 	
 	if(!scene) return;
 	

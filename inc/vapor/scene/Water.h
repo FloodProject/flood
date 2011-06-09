@@ -34,7 +34,7 @@ protected:
 	QuadPtr quad;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Water );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Water );
 
 //-----------------------------------//
 

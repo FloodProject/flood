@@ -10,16 +10,10 @@
 
 #include "UndoOperation.h"
 
-FWD_DECL_SHARED(Entity)
-FWD_DECL_SHARED_WEAK(Entity)
-
-FWD_DECL_SHARED(Scene)
-FWD_DECL_SHARED_WEAK(Scene)
-
-FWD_DECL_SHARED(Component)
-FWD_DECL_SHARED_WEAK(Component)
-
-FWD_DECL_SHARED(Model)
+FWD_DECL_INTRUSIVE(Entity)
+FWD_DECL_INTRUSIVE(Component)
+FWD_DECL_INTRUSIVE(Scene)
+FWD_DECL_INTRUSIVE(Model)
 FWD_DECL_INTRUSIVE(Mesh)
 
 namespace vapor { namespace editor {

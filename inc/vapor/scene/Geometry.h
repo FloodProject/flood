@@ -13,7 +13,7 @@
 #include "Render/Renderable.h"
 #include "Render/RenderQueue.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -76,9 +76,8 @@ protected:
 	bool isDirty;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Geometry );
-TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( Geometry );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Geometry );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

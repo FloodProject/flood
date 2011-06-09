@@ -48,7 +48,7 @@ protected:
 	VertexBufferPtr cones;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( GizmoTranslate );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( GizmoTranslate );
 
 //-----------------------------------//
 

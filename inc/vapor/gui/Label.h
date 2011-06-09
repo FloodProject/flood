@@ -71,7 +71,7 @@ protected:
 	bool setupDone;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Label );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Label );
 
 //-----------------------------------//
 

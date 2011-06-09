@@ -49,9 +49,19 @@ Plugin* PluginManager::getPlugin(const std::string& name)
 
 //-----------------------------------//
 
+static bool SortPluginsCallback(Plugin* a, Plugin* b)
+{
+	int pa = a->getMetadata().priority;
+	int pb = b->getMetadata().priority;
+
+	return pa < pb;
+}
+
 void PluginManager::scanPlugins()
 {
 	Class* klass = ReflectionGetType(Plugin);
+
+	std::vector<Plugin*> plugins;
 
 	for( size_t i = 0; i < klass->childs.size(); i++ )
 	{
@@ -61,8 +71,16 @@ void PluginManager::scanPlugins()
 		Plugin* plugin = (Plugin*) ClassCreateInstance(child, AllocatorGetHeap());
 		if(!plugin) continue;
 
+		plugins.push_back(plugin);
+	}
+
+	// Sort the plugins by priority.
+	std::sort(plugins.begin(), plugins.end(), SortPluginsCallback);
+
+	for( size_t i = 0; i < plugins.size(); i++ )
+	{
+		Plugin* plugin = plugins[i];
 		registerPlugin(plugin);
-		
 		const PluginMetadata& metadata = plugin->getMetadata();
 		if(metadata.startEnabled) enablePlugin(plugin);
 	}

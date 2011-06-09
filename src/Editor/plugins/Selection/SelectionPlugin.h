@@ -29,28 +29,32 @@ public:
 	SelectionPlugin();
 
 	// Gets metadata about this plugin.
-	virtual PluginMetadata getMetadata();
+	virtual PluginMetadata getMetadata() OVERRIDE;
 
 	// Plugin enable callback.
-	virtual void onPluginEnable();
+	virtual void onPluginEnable() OVERRIDE;
 
 	// Plugin disable callback.
-	virtual void onPluginDisable();
+	virtual void onPluginDisable() OVERRIDE;
 
 	// Scene load callback.
-	void onSceneLoad( const ScenePtr& scene );
+	void onSceneLoad( const ScenePtr& scene ) OVERRIDE;
+
+	// Mouse button press callback.
+	virtual void onMouseButtonPress( const MouseButtonEvent& ) OVERRIDE;
+
+	// Mouse button release callback.
+	virtual void onMouseButtonRelease( const MouseButtonEvent& ) OVERRIDE;
+
+	// Mouse drag callback.
+	virtual void onMouseDrag( const MouseDragEvent& ) OVERRIDE;
+
+	// Key callback.
+	virtual void onKeyPress(const KeyEvent&) OVERRIDE;
+	virtual void onKeyRelease(const KeyEvent&) OVERRIDE;
 
 	// Scene entity removed callback.
 	void onEntityRemoved(const EntityPtr& entity);
-
-	// Mouse button press callback.
-	virtual void onMouseButtonPress( const MouseButtonEvent& );
-
-	// Mouse button release callback.
-	virtual void onMouseButtonRelease( const MouseButtonEvent& );
-
-	// Mouse drag callback.
-	virtual void onMouseDrag( const MouseDragEvent& );
 
 	// Gets the entity picked by the ray.
 	bool getPickEntity(int x, int y, EntityPtr& entity);
@@ -80,6 +84,9 @@ protected:
 
 	Vector2 dragOrigin;
 	EntityPtr dragRectangle;
+
+	// Holds if we are in additive mode.
+	bool additiveMode;
 };
 
 //-----------------------------------//

@@ -163,7 +163,7 @@ protected:
 	std::vector<Matrix4x3> bones;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Model );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Model );
 
 //-----------------------------------//
 

@@ -41,7 +41,7 @@ protected:
 	VertexBufferPtr cubes;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( GizmoScale );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( GizmoScale );
 
 //-----------------------------------//
 

@@ -76,7 +76,7 @@ REFLECT_DECLARE_ENUM(ResourceGroup)
 
 REFLECT_DECLARE_CLASS(Resource)
 
-class RESOURCE_API Resource : public Object, public ReferenceCounted
+class RESOURCE_API Resource : public Object
 {
 	DECLARE_UNCOPYABLE(Resource)
 	REFLECT_DECLARE_OBJECT(Resource)

@@ -7,12 +7,14 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "paging/PageManager.h"
-#include "paging/Page.h"
+#include "Paging/PageManager.h"
+#include "Paging/Page.h"
 
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
 #include "Scene/Camera.h"
+
+#if 0
 
 namespace vapor {
 
@@ -89,3 +91,5 @@ Vector2 PageManager::convertWorldToPage(const Vector3& pos)
 //-----------------------------------//
 
 } // end namespace
+
+#endif

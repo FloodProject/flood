@@ -48,6 +48,7 @@ PluginMetadata GizmoPlugin::getMetadata()
 	metadata.description = "Provides translate, rotate and scale tools";
 	metadata.author = "triton";
 	metadata.version = "1.0";
+	metadata.priority = 20;
 
 	return metadata;
 }

@@ -8,8 +8,7 @@
 
 #include "Engine/API.h"
 #include "Render/Window.h"
-#include "input/Keyboard.h"
-#include "Engine.h"
+#include "Input/Keyboard.h"
 
 namespace vapor {
 
@@ -68,7 +67,7 @@ void Window::handleWindowFocus( bool focusLost )
 		// loses focus. This could lead to problems when the user
 		// unfocus the main control. In that case the key events
 		// might not be properly handled by the input implementation.
-		Keyboard* keyboard = GetEngine()->getInputManager()->getKeyboard();
+		Keyboard* keyboard = GetInputManager()->getKeyboard();
 
 		if(keyboard)
 			keyboard->resetKeys();

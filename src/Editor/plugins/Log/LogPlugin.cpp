@@ -61,9 +61,10 @@ void LogPlugin::onPluginEnable()
 	log->SetSize(500, 300);
 	
 	wxBitmap icon = wxMEMORY_BITMAP(page_white_text);
+	const char* name = "Log";
 
 	wxAuiPaneInfo pane;
-	pane.Name("Log").Caption("Log").Bottom().Dock().Hide().Icon(icon);
+	pane.Name(name).Caption(name).Bottom().Float().Hide().Icon(icon);
 
 	editor->getAUI()->AddPane(log, pane);
 	editor->getAUI()->Update();

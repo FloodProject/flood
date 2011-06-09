@@ -13,8 +13,9 @@
 #include "Math/Vector.h"
 #include "Event.h"
 
-FWD_DECL_SHARED(Camera)
-FWD_DECL_SHARED_WEAK(Camera)
+#if 0
+
+FWD_DECL_INTRUSIVE(Camera)
 
 namespace vapor {
 
@@ -22,18 +23,14 @@ namespace vapor {
 
 class Page;
 
-//-----------------------------------//
-
 struct PageEvent
 {
 	Page* page;
 	Vector2 pos;
 };
 
-//-----------------------------------//
-
 /**
- * This class is responsible for handling all the pages
+ * This class is responsible for handling all the pages.
  */
 
 class VAPOR_API PageManager : public Subsystem
@@ -80,3 +77,5 @@ protected:
 //-----------------------------------//
 
 } // end namespace
+
+#endif

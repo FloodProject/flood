@@ -12,8 +12,8 @@
 #include "Input/KeyboardEvents.h"
 #include "Document.h"
 
-FWD_DECL_SHARED(Scene)
-FWD_DECL_SHARED(Entity)
+FWD_DECL_INTRUSIVE(Scene)
+FWD_DECL_INTRUSIVE(Entity)
 FWD_DECL_INTRUSIVE(Resource)
 
 namespace vapor { namespace editor {
@@ -22,7 +22,7 @@ namespace vapor { namespace editor {
 
 struct PluginMetadata
 {
-	PluginMetadata() : startEnabled(true) {}
+	PluginMetadata() : startEnabled(true), priority(1000) {}
 
 	// Name of this plugin.
 	String name;
@@ -38,6 +38,9 @@ struct PluginMetadata
 
 	// Enabled by default.
 	bool startEnabled;
+
+	// Startup priority.
+	int priority;
 };
 
 //-----------------------------------//
@@ -110,8 +113,9 @@ public:
 	virtual void onMouseEnter() {}
 	virtual void onMouseLeave() {}
 	
-	// Key press callback.
-	virtual void onKeyPress() {}
+	// Key callback.
+	virtual void onKeyPress(const KeyEvent&) {}
+	virtual void onKeyRelease(const KeyEvent&) {}
 
 protected:
 

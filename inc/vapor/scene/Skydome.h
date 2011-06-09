@@ -8,11 +8,13 @@
 
 #pragma once
 
-#include "Resources/Image.h"
 #include "Scene/Geometry.h"
 #include "Render/Sphere.h"
+#include "Resources/Image.h"
 
-namespace vapor {
+FWD_DECL_INTRUSIVE(Entity)
+
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -24,7 +26,7 @@ namespace vapor {
 
 REFLECT_DECLARE_CLASS(Skydome)
 
-class VAPOR_API Skydome : public Geometry
+class API_SCENE Skydome : public Geometry
 {
 	REFLECT_DECLARE_OBJECT(Skydome)
 
@@ -112,7 +114,7 @@ protected:
 	TransformPtr sun;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Skydome );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Skydome );
 
 //-----------------------------------//
 

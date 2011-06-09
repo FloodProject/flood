@@ -47,8 +47,8 @@ void Gizmo::updatePositionScale()
 	Vector3 centerObject = boxObject.getCenter();
 
 	// Get the editor camera and its transform.
-	CameraPtr camera = weakCamera.lock();
-	const EntityPtr& nodeCamera = camera->getEntity()->getShared();
+	CameraPtr camera = weakCamera;
+	const EntityPtr& nodeCamera = camera->getEntity();
 	const TransformPtr& transCamera = nodeCamera->getTransform();
 
 	// Get the distance between the two points.
@@ -57,7 +57,7 @@ void Gizmo::updatePositionScale()
 	float distance = posCamera.distance(posGizmo);
 
 	// Get the gizmo node and its transform.
-	const EntityPtr& nodeGizmo = getEntity()->getShared();
+	const EntityPtr& nodeGizmo = getEntity();
 	const TransformPtr& transGizmo = nodeGizmo->getTransform();
 
 	// Scale the gizmo relative to the distance.

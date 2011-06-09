@@ -42,7 +42,7 @@ protected:
 	bool enabled;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Controller )
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Controller )
 
 //-----------------------------------//
 

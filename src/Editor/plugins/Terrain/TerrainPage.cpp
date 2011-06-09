@@ -44,7 +44,9 @@ void TerrainPage::createBrushes()
 		ImageHandle image = rm->loadResource<Image>(file);
 		if( !image ) continue;
 
-		m_choiceBrush->Append( PathGetFile(file), *ConvertImageToBitmap(image) );
+		wxBitmap* bmp = ConvertImageToBitmap(image);
+		m_choiceBrush->Append( PathGetFile(file), *bmp);
+		delete bmp;
 	}
 
 	if( m_choiceBrush->GetCount() > 0 ) m_choiceBrush->Select(0);

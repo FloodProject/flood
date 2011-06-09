@@ -65,7 +65,7 @@ protected:
 	std::vector<EntityPtr> entities;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Group );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Group );
 
 //-----------------------------------//
 

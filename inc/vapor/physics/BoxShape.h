@@ -41,8 +41,7 @@ protected:
 	btBoxShape* boxShape;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( BoxShape );
-TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( BoxShape );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( BoxShape );
 
 //-----------------------------------//
 

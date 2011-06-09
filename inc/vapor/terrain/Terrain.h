@@ -10,8 +10,8 @@
 
 #include "Scene/Group.h"
 #include "Resources/Image.h"
-#include "terrain/Cell.h"
-#include "terrain/Brush.h"
+#include "Terrain/Cell.h"
+#include "Terrain/Brush.h"
 
 namespace vapor {
 
@@ -130,7 +130,7 @@ protected:
 	TerrainSettings settings;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Terrain );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Terrain );
 
 //-----------------------------------//
 

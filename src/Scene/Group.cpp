@@ -15,7 +15,7 @@ namespace vapor {
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(Group, Entity)
-	FIELD_VECTOR_PTR(Entity, EntityPtr, entities, SharedPointer)
+	FIELD_VECTOR_PTR(Entity, EntityPtr, entities, RefPointer)
 	FIELD_ALIAS(entities, "nodes")
 REFLECT_CLASS_END()
 
@@ -34,9 +34,6 @@ Group::Group( const String& name )
 
 void Group::add( const EntityPtr& entity )
 {
-	// Beware that you have to assign a new Group-derived object
-	// to a shared_ptr, else shared_from_this will return bad_weak_ptr.
-
 	if( !entity ) return;
 
 	entity->setParent( this );

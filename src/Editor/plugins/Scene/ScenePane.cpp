@@ -54,7 +54,7 @@ ScenePage::~ScenePage()
 
 void ScenePage::cleanScene()
 {
-	ScenePtr scene = weakScene.lock();
+	ScenePtr scene = weakScene;
 
 	if( !scene )
 		return;
@@ -62,7 +62,7 @@ void ScenePage::cleanScene()
 	scene->onEntityAdded.Disconnect( this, &ScenePage::onEntityAdded );
 	scene->onEntityRemoved.Disconnect( this, &ScenePage::onEntityRemoved );
 
-	weakScene.reset();
+	weakScene = nullptr;
 }
 
 //-----------------------------------//
@@ -73,9 +73,9 @@ void ScenePage::initTree()
 
 	treeCtrl = new wxTreeCtrl(this, wxID_ANY, wxDefaultPosition,
 		wxDefaultSize, wxTR_DEFAULT_STYLE | wxTR_EDIT_LABELS |
-		wxTR_NO_BUTTONS | wxTR_SINGLE | wxTR_HIDE_ROOT /*| wxBORDER_NONE*/);
+		wxTR_NO_BUTTONS | wxTR_SINGLE | wxTR_HIDE_ROOT /*| wxBORDER_NONE*/ );
 
-	sizer->Add( treeCtrl, 1, wxEXPAND, 0 );
+	sizer->Add( treeCtrl, wxSizerFlags().Expand().Proportion(1) );
 
 	treeCtrl->Bind(wxEVT_COMMAND_TREE_ITEM_MENU, &ScenePage::onItemMenu, this);
 	treeCtrl->Bind(wxEVT_COMMAND_TREE_SEL_CHANGED, &ScenePage::onItemChanged, this);
@@ -146,7 +146,7 @@ void ScenePage::addGroup( wxTreeItemId id, const EntityPtr& entity, bool createG
 		return;
 	}
 	
-	GroupPtr group = std::static_pointer_cast<Group>(entity);
+	GroupPtr group = RefCast<Group>(entity);
 
 	group->onEntityAdded.Connect( this, &ScenePage::onEntityAdded );
 	group->onEntityRemoved.Connect( this, &ScenePage::onEntityRemoved );
@@ -215,7 +215,7 @@ ComponentPtr ScenePage::getComponentFromTreeId( wxTreeItemId id )
 		return ComponentPtr();
 
 	EntityItemData* data = (EntityItemData*) treeCtrl->GetItemData(id);
-	return data->component.lock();
+	return data->component;
 }
 
 //-----------------------------------//
@@ -229,7 +229,7 @@ EntityPtr ScenePage::getEntityFromTreeId( wxTreeItemId id )
 	Entity* entity = data->entity;
 	
 	if( entity )
-		return entity->getShared();
+		return entity;
 	else
 		return EntityPtr();
 }
@@ -336,7 +336,7 @@ void ScenePage::onButtonEntityDelete(wxCommandEvent&)
 
 void ScenePage::onButtonEntityDeleteUpdate(wxUpdateUIEvent& event)
 {
-	ScenePtr scene = weakScene.lock();
+	ScenePtr scene = weakScene;
 
 	if( !scene )
 		return;
@@ -352,8 +352,8 @@ void ScenePage::onEntityAdded( const EntityPtr& entity )
 	if( entity->getTag(EditorTags::EditorOnly) )
 		return;
 	
-	wxTreeItemId id = getTreeIdFromEntity(entity->getParent()->getShared());
-	addGroup( id, entity->getShared() );
+	wxTreeItemId id = getTreeIdFromEntity(entity->getParent());
+	addGroup( id, entity );
 }
 
 //-----------------------------------//
@@ -447,7 +447,7 @@ void ScenePage::populateComponentItemMenu(wxMenu& menu, const ComponentPtr& comp
 
 	if(ReflectionIsEqual(klass, ReflectionGetType(Model)))
 	{
-		model = std::static_pointer_cast<Model>(component);
+		model = RefCast<Model>(component);
 		meshHandle = model->getMesh();
 
 		mesh = meshHandle.Resolve();
@@ -497,7 +497,7 @@ void ScenePage::onAttachmentMenuSelected(wxCommandEvent& event)
 	ModelPtr model( Allocate(Model, AllocatorGetHeap(), meshHandle) );
 	entity->addComponent(model);
 	
-	ScenePtr scene = weakScene.lock();
+	ScenePtr scene = weakScene;
 	scene->add( entity );
 
 	model->setAttachment( bone->name, entity );
@@ -537,7 +537,7 @@ void ScenePage::onMenuSelected( wxCommandEvent& event )
 	int id = event.GetId();
 	if( id == wxID_NONE ) return;
 
-	ScenePtr scene = weakScene.lock();
+	ScenePtr scene = weakScene;
 	const EntityPtr& node = getEntityFromTreeId( menuItemId );
 
 	if( id == ID_MenuSceneEntityVisible )

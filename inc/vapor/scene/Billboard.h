@@ -72,7 +72,7 @@ protected:
 	BillboardType::Enum billboardType;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( Billboard );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Billboard );
 
 //-----------------------------------//
 

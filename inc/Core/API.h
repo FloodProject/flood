@@ -12,8 +12,8 @@
 // Core APIs
 //---------------------------------------------------------------------//
 
-#define		ENABLE_MEMORY_TR1_VENDOR
-#define		ENABLE_MEMORY_SHARED_PTR
+//#define		ENABLE_MEMORY_TR1_VENDOR
+//#define		ENABLE_MEMORY_SHARED_PTR
 #define		ENABLE_MEMORY_INTRUSIVE_PTR
 #define		ENABLE_MEMORY_LEAK_DETECTOR
 //#define	ENABLE_DYNAMIC_LIBRARY

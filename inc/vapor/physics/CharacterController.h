@@ -10,6 +10,8 @@
 
 #include "controllers/Controller.h"
 
+#ifdef VAPOR_PHYSICS_BULLET
+
 class btKinematicController;
 class btPairCachingGhostObject;
 
@@ -73,9 +75,10 @@ protected:
 	btPairCachingGhostObject* ghostObject;
 };
 
-TYPEDEF_SHARED_POINTER_FROM_TYPE( CharacterController );
-TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( CharacterController );
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( CharacterController );
 
 //-----------------------------------//
 
 } // end namespace
+
+#endif

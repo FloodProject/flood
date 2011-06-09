@@ -97,14 +97,6 @@ protected:
 	void OnSettingsRender(wxCommandEvent& event);
 	void OnSettingsRenderUpdate(wxUpdateUIEvent& event);
 
-#if 0
-	// Gets the player camera.
-	CameraPtr getPlayerCamera() const;
-
-	// Switches the editor to play mode.
-	void switchPlayMode(bool switchToPlay);
-#endif
-
 public:
 
 	Engine* engine;

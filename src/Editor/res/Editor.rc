@@ -8,5 +8,7 @@
 
 editor ICON "editor.ico"
 
+WXCURSOR_ARROW_PLUS CURSOR "aero_arrow_plus.cur"
+
 #define wxUSE_NO_MANIFEST 1  
 #include <wx/msw/wx.rc>

@@ -170,6 +170,8 @@ static_assert(sizeof(int64) == 8, "");
 
 #define FWD_DECL(T) NAMESPACE_BEGIN class T; NAMESPACE_END		\
 
+#ifdef ENABLE_MEMORY_SHARED_PTR
+
 #define TYPEDEF_SHARED_POINTER_FROM_TYPE( class )				\
 	typedef std::shared_ptr< class > class##Ptr;
 
@@ -187,6 +189,8 @@ static_assert(sizeof(int64) == 8, "");
 		class T;												\
 		TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( T );				\
 	NAMESPACE_END
+
+#endif
 
 //---------------------------------------------------------------------//
 // Acessors

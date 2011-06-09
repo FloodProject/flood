@@ -14,10 +14,10 @@ namespace vapor
 	namespace RenderLayer { enum Enum; }
 
 	class Light;
-	typedef std::shared_ptr<Light> LightPtr;
+	typedef RefPtr<Light> LightPtr;
 
 	class Transform;
-	typedef std::shared_ptr<Transform> TransformPtr;
+	typedef RefPtr<Transform> TransformPtr;
 }
 
 //%include "Render/Texture.h"
