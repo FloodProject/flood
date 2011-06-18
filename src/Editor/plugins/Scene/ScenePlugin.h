@@ -27,22 +27,19 @@ public:
 	ScenePlugin();
 
 	// Gets metadata about this plugin.
-	virtual PluginMetadata getMetadata();
+	virtual PluginMetadata getMetadata() OVERRIDE;
 
-	// Plugin enable callback.
-	virtual void onPluginEnable();
+	// Plugin callbacks.
+	virtual void onPluginEnable() OVERRIDE;
+	virtual void onPluginDisable() OVERRIDE;
 
-	// Plugin disable callback.
-	virtual void onPluginDisable();
+	// Entity callbacks.
+	virtual void onEntitySelect( const EntityPtr& ) OVERRIDE;
+	virtual void onEntityUnselect( const EntityPtr& ) OVERRIDE;
 
-	// Entity selection callback.
-	virtual void onEntitySelect( const EntityPtr& );
-	
-	// Entity unselection callback.
-	virtual void onEntityUnselect( const EntityPtr& );
-
-	// Scene load callback.
-	virtual void onSceneLoad( const ScenePtr& scene );
+	// Scene callbacks.
+	virtual void onSceneLoad( const ScenePtr& scene ) OVERRIDE;
+	virtual void onSceneUnload( const ScenePtr& scene ) OVERRIDE;
 
 	ScenePage* scenePage;
 	int iconScene;

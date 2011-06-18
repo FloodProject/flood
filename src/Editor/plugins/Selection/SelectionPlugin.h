@@ -11,6 +11,8 @@
 #include "Plugin.h"
 #include "Math/Vector.h"
 
+#define PLUGIN_SELECTION "Selection"
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//
@@ -31,11 +33,18 @@ public:
 	// Gets metadata about this plugin.
 	virtual PluginMetadata getMetadata() OVERRIDE;
 
+	// Plugin tool selection callback.
+	virtual void onToolSelect( int id ) OVERRIDE;
+
 	// Plugin enable callback.
 	virtual void onPluginEnable() OVERRIDE;
 
 	// Plugin disable callback.
 	virtual void onPluginDisable() OVERRIDE;
+
+	// Document creation callback.
+	virtual void onDocumentCreate( Document& document ) OVERRIDE;
+	//virtual void onDocumentDestroy( Document& document ) {}
 
 	// Scene load callback.
 	void onSceneLoad( const ScenePtr& scene ) OVERRIDE;
@@ -62,7 +71,7 @@ public:
 	// Gets the selection manager.
 	SelectionManager* getSelectionManager() const;
 
-protected:
+public:
 
 	// Creates the drag selection rectangle.
 	void createRectangle();

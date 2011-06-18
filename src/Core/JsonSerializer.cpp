@@ -430,6 +430,10 @@ static void DeserializeArrayElement( ReflectionContext* context, json_t* value, 
 			RefPtr<Object>* ref_obj = (RefPtr<Object>*) address;
 			ref_obj->reset(ref);
 		}
+		else if( FieldIsHandle(field) )
+		{
+			assert(0 && "Not implemented");
+		}
 		else
 		{
 			assert(0 && "Not implemented");
@@ -479,19 +483,61 @@ static void DeserializeArray( ReflectionContext* context, json_t* value )
 
 static void DeserializeField( ReflectionContext* context, json_t* value )
 {
-	if( FieldIsArray(context->field) && json_is_array(value) )
+	Field* field = context->field;
+
+	if( FieldIsArray(field) && json_is_array(value) )
 	{
 		DeserializeArray(context, value);
 		return;
 	}
 	
-	switch(context->field->type->type)
+	switch(field->type->type)
 	{
 	case Type::Composite:
 	{
 		Class* composite = context->composite;
-		context->composite = (Class*) context->field->type;
-		DeserializeComposite(context, value);
+		context->composite = (Class*) field->type;
+		
+		Object* object = nullptr;
+		void* address = nullptr;
+
+		if( FieldIsHandle(field) )
+		{
+			if( !json_is_object(value) )
+			{
+				LogDebug("Can't deserialize handle '%s'", field->name);
+				return;
+			}
+
+			void* iter = json_object_iter(value);
+			void* iter2 = json_object_iter( json_object_iter_value(iter) );
+			json_t* val = json_object_iter_value(iter2);
+			const char* s = json_string_value(val);
+
+			ReflectionHandleContext hc;
+			ReflectionFindHandleContext((Class*) field->type, hc);
+			
+			HandleId id = hc.deserialize(s);
+			if(id == HandleInvalid) return;
+
+			address = ClassGetFieldAddress(context->object, field);
+			
+			typedef Handle<Object, 0, 0> ObjectHandle;
+			ObjectHandle* hnd_obj = (ObjectHandle*) address;
+			hnd_obj->id = id;
+			
+			ReferenceAdd((Object*)HandleFind(hc.handles, id));
+		}
+		else if( FieldIsPointer(field) )
+		{
+			LogDebug("Deserialization of pointer field not implemented '%s'", field->name);
+		}
+		else
+		{
+			object = DeserializeComposite(context, value);
+		}
+
+		address = ClassGetFieldAddress(object, field);
 		context->composite = composite;
 		break;
 	}
@@ -549,7 +595,12 @@ static Object* DeserializeComposite( ReflectionContext* context, json_t* value )
 
 	if( !json_is_object(value) ) return 0;
 
-	assert( json_object_size(value) == 1 );
+	if( json_object_size(value) != 1 )
+	{
+		LogDebug("Invalid field '%s' from class '%s'", context->field->name, context->composite->name);
+		return nullptr;
+	}
+
 	void* iter = json_object_iter(value);
 	const char* key = json_object_iter_key(iter);
 	json_t* iterValue = json_object_iter_value(iter);
@@ -594,7 +645,12 @@ static void SerializeLoad( Serializer* serializer )
 	LocaleSwitch locale;
 	
 	rootValue = json_loads(text.c_str(), 0, nullptr);
-	if( !rootValue ) return;
+	
+	if( !rootValue )
+	{
+		LogError("Could not parse JSON text of '%s'", json->stream->path.c_str());
+		return;
+	}
 
 	json->rootValue = rootValue;
 	

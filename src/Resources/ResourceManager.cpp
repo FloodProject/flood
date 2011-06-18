@@ -20,6 +20,7 @@
 #include "Core/Stream.h"
 #include "Core/Archive.h"
 #include "Core/Utilities.h"
+#include "Core/Serialization.h"
 
 NAMESPACE_BEGIN
 
@@ -45,8 +46,15 @@ ResourceHandle ResourceHandleCreate(Resource* p)
 void ResourceHandleDestroy(HandleId id)
 {
 	Resource* resource = (Resource*) ResourceHandleFind(id);
+	//g_ResourcesManager->removeResource(resource);
+
 	Deallocate(resource);
 	HandleDestroy(g_ResourceHandleManager, id);
+}
+
+static HandleId ResourceFind(const char* s)
+{
+	return g_ResourcesManager->loadResource(s).id;
 }
 
 //-----------------------------------//
@@ -75,6 +83,12 @@ ResourceManager::ResourceManager()
 
 	if( !g_ResourcesManager ) g_ResourcesManager = this;
 	if( !g_ResourceHandleManager ) g_ResourceHandleManager = handleManager;
+
+	ReflectionHandleContext context;
+	context.type = ReflectionGetType(Resource);
+	context.handles = g_ResourceHandleManager;
+	context.deserialize = ResourceFind;
+	ReflectionSetHandleContext(context);
 
 	resourceFinishLoadMutex = MutexCreate( GetResourcesAllocator() );
 	resourceFinishLoad = ConditionCreate( GetResourcesAllocator() );
@@ -358,13 +372,11 @@ void ResourceManager::removeUnusedResources()
 
 //-----------------------------------//
 
-void ResourceManager::removeResource(const ResourceHandle& handle)
+void ResourceManager::removeResource(Resource* resource)
 {
-	if( !handle ) return;
+	if( !resource ) return;
 
-	Resource* resource = handle.Resolve();
 	const String& path = resource->getPath();
-
 	removeResource(path);
 }
 
@@ -376,17 +388,15 @@ void ResourceManager::removeResource(const String& path)
 	
 	if( it == resources.end() )
 		return;
-#if 0
+	
 	// Send callback notifications.
 	ResourceEvent event;
-	event.resource = it->second;
+	event.handle = it->second;
 		
 	onResourceRemoved( event );
 
-	resources.erase(it);
-#endif
-
 	LogInfo("Unloaded resource: %s", path.c_str());
+	resources.erase(it);
 }
 
 //-----------------------------------//

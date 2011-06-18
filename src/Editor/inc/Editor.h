@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <wx/keybinder.h>
 #include "Math/Vector.h"
 FWD_DECL(Engine)
 
@@ -17,10 +18,10 @@ namespace vapor { namespace editor {
 
 class Plugin;
 class PluginManager;
-class PluginManagerFrame;
-class EditorInputManager;
+
 class Events;
 class Document;
+class EditorInputManager;
 
 //-----------------------------------//
 
@@ -28,14 +29,16 @@ class EditorApp : public wxApp
 {
 public:
 
-    virtual bool OnInit();
-	virtual void OnFatalException();
+    virtual bool OnInit() OVERRIDE;
+	virtual void OnFatalException() OVERRIDE;
 };
 
 //-----------------------------------//
 
 class EditorFrame : public wxFrame
 {
+	wxADD_KEYBINDER_SUPPORT();
+
 public:
 
     EditorFrame(const wxString& title);
@@ -86,6 +89,7 @@ protected:
     void OnQuit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
 	void OnAboutWx(wxCommandEvent& event);
+	void OnPreferences(wxCommandEvent& event);
 	void OnToolbarButtonClick(wxCommandEvent& event);
 	void onNotebookPageChanged(wxAuiNotebookEvent& event);
 	void onNotebookPageClose(wxAuiNotebookEvent& event);
@@ -100,32 +104,32 @@ protected:
 public:
 
 	Engine* engine;
-
-	// Plugins.
 	PluginManager* pluginManager;
-	PluginManagerFrame* pluginManagerFrame;	
 	Events* eventManager;
 	
 	// Drag and drop coordinates.
 	Vector2 dropCoords;
 
-	// UI widgets.
-	wxAuiManager* paneCtrl;
-	wxAuiToolBar* toolbarCtrl;
-	wxAuiNotebook* notebookCtrl;
+	Document* currentDocument;
+	std::vector<Document*> documents;
 
 	// Gets a document from a page.
 	Document* getDocumentFromPage(int selection);
 
-	Document* currentDocument;
-	std::vector<Document*> documents;
+	// Docking widgets.
+	wxAuiManager* paneCtrl;
+	wxAuiToolBar* toolbarCtrl;
+	wxAuiNotebook* notebookCtrl;
 
+	// Menu widgets.
 	wxMenu* menuFile;
 	wxMenu* menuEdit;
 	wxMenu* menuTools;
 	wxMenu* menuPanels;
 	wxMenu* menuSettings;
 	wxMenu* menuHelp;
+
+	wxKeyProfileArray keyProfiles;
 };
 
 // Gets the editor instance.

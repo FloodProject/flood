@@ -12,7 +12,6 @@
 #include "Input/InputManager.h"
 #include "Input/Mouse.h" 
 #include "Input/Keyboard.h"
-#include "Document.h"
 
 FWD_DECL_INTRUSIVE(Resource)
 
@@ -20,21 +19,24 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
+class EditorFrame;
+class Document;
+
 class Plugin;
 class PluginManager;
-class EditorFrame;
+struct PluginTool;
 
 /**
  * Plugins can subscribe to these events and get notified when things
- * happen in the editor. For example, the Select tool needs to know
- * when a node is selected to show its bounding box.
+ * happen in the editor. For example, the select tool needs to know
+ * when an entity is selected to show its bounding box.
  */
 
 class Events : public wxEvtHandler
 {
 public:
 
-	Events( EditorFrame* editor );
+	Events();
 	virtual ~Events();
 
 	void disconnectPluginListeners();
@@ -42,6 +44,10 @@ public:
 	// Add/remove a plugin as an event listener.
 	void addEventListener( Plugin* plugin );
 	void removeEventListener( Plugin* plugin );
+
+	// Document creation event.
+	void onDocumentCreate( Document& document );
+	void onDocumentDestroy( Document& document );
 
 	// Document selection event.
 	void onDocumentSelect( Document& document );
@@ -82,6 +88,9 @@ public:
 	// Gets/sets the current plugin.
 	ACESSOR(CurrentPlugin, Plugin*, currentPlugin)
 
+	// Switches the current plugin.
+	void setTool(Plugin* plugin, PluginTool* tool);
+
 protected:
 
 	// Handles plugin events.
@@ -95,16 +104,10 @@ protected:
 	void registerInputCallbacks();
 
 	// Pre-handling of events from the toolbar.
-	virtual bool TryBefore( wxEvent& event );
+	virtual bool TryBefore( wxEvent& event ) OVERRIDE;
 
 	// Current tool id.
 	int toolId;
-
-	// Keeps the main editor instance.
-	EditorFrame* editor;
-
-	// Keeps the plugin manager instance.
-	PluginManager* pluginManager;
 
 	// Current active plugin.
 	Plugin* currentPlugin;

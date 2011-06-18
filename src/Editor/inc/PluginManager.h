@@ -15,10 +15,6 @@ namespace vapor { namespace editor {
 class Plugin;
 class EditorFrame;
 
-typedef std::map<int, Plugin*> PluginToolsMap;
-
-//-----------------------------------//
-
 /**
  * Responsible for managing all the plugins aswell as implementing
  * their lifecycle. Plugins should be registered with the manager
@@ -33,7 +29,10 @@ public:
 	~PluginManager();
 
 	// Gets a plugin from its name.
-	Plugin* getPlugin(const std::string& name);
+	Plugin* getPlugin(const String& name);
+
+	// Gets a plugin from its type.
+	Plugin* getPluginFromClass(const Class* klass);
 
 	// Registers a new plugin.
 	void registerPlugin( Plugin* plugin );
@@ -53,12 +52,6 @@ public:
 	// Gets all the registered plugins.
 	GETTER(Plugins, std::vector<Plugin*>, plugins)
 
-	// Gets all the registered tools.
-	GETTER(Tools, const PluginToolsMap&, tools)
-
-	// Prevents dead-code elimination.
-	void referencePlugins();
-
 	// Plugin events callback.
 	Event1<Plugin*> onPluginEnableEvent;
 	Event1<Plugin*> onPluginDisableEvent;
@@ -68,12 +61,16 @@ protected:
 	// Processes tools from a plugin into tools map.
 	void processTools( Plugin* plugin, bool enable );
 
-	// Maps identifiers to tools.
-	PluginToolsMap tools;
-
 	// Keeps the known tools.
 	std::vector<Plugin*> plugins;
 };
+
+template<typename T>
+T* GetPlugin()
+{
+	PluginManager* pm = GetEditor().getPluginManager();
+	return (T*) pm->getPluginFromClass(T::getStaticType());
+}
 
 //-----------------------------------//
 

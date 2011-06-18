@@ -44,7 +44,7 @@ PluginMetadata ResourcesPlugin::getMetadata()
 	PluginMetadata metadata;
 	
 	metadata.name = "Resources";
-	metadata.description = "Provides resource handling features";
+	metadata.description = "Provides resource handling features.";
 	metadata.author = "triton";
 	metadata.version = "1.0";
 
@@ -60,26 +60,22 @@ void ResourcesPlugin::onPluginEnable()
 
 	wxBitmap iconPackage = wxMEMORY_BITMAP(package);
 	wxAuiPaneInfo pane;
-	pane.Caption("Resources").Left().Dock().Icon(iconPackage).PaneBorder(false);
+	pane.Caption("Resources").Left().Dock().Icon(iconPackage).PaneBorder(true);
 	editor->getAUI()->AddPane(resourcesPage, pane);
 	editor->getAUI()->Update();
 
-#if 0
+#ifdef ENABLE_RESOURCE_BROWSER
 	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
 
 	if(toolbarCtrl)
 	{
 		resourcesBrowserButton = toolbarCtrl->AddTool( wxID_ANY, "Resources Browser", iconPackage );
 		addTool( resourcesBrowserButton );
-		
-		toolbarCtrl->EnableTool(resourcesBrowserButton->GetId(), false);
-		
-		toolbarCtrl->Bind( wxEVT_COMMAND_TOOL_CLICKED,
-			&ResourcesPlugin::onBrowserButtonClick,
-			this, resourcesBrowserButton->GetId() );
+		int id = resourcesBrowserButton->GetId();
+		toolbarCtrl->Bind(wxEVT_COMMAND_TOOL_CLICKED, &ResourcesPlugin::onBrowserButtonClick, this, id);
 	}
 
-	resourcesBrowser = new ResourcesBrowser(editor, editor);
+	resourcesBrowser = new ResourcesBrowser(editor);
 #endif
 
 	//Pipeline::ReferenceProcessors();
@@ -106,18 +102,16 @@ void ResourcesPlugin::onPluginDisable()
 
 void ResourcesPlugin::onBrowserButtonClick(wxCommandEvent& event)
 {
-#if 0
 	static bool scanned = false;
 
 	if(!scanned)
 	{
-		resourcesBrowser->scanFiles();
-		resourcesBrowser->setupImages();
+		//resourcesBrowser->scanFiles();
+		//resourcesBrowser->setupImages();
 		scanned = true;
 	}
 
 	resourcesBrowser->Show();
-#endif
 }
 
 //-----------------------------------//

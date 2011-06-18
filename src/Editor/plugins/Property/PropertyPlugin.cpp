@@ -39,7 +39,7 @@ PluginMetadata PropertyPlugin::getMetadata()
 	PluginMetadata metadata;
 	
 	metadata.name = "Property";
-	metadata.description = "Provides a page with object properties";
+	metadata.description = "Provides a page with object properties.";
 	metadata.author = "triton";
 	metadata.version = "1.0";
 

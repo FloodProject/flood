@@ -15,6 +15,7 @@ namespace vapor { namespace editor {
 //-----------------------------------//
 
 class UndoManager;
+struct PluginTool;
 
 class Document
 {
@@ -22,6 +23,12 @@ public:
 
 	Document();
 	virtual ~Document();
+
+	// Opens the document.
+	virtual void Open() {}
+
+	// Saves the document.
+	virtual void Save() {}
 
 	// Gets the name of the document.
 	GETTER(Name, const String&, name)
@@ -35,9 +42,11 @@ public:
 	// Gets the document notebook window.
 	virtual wxWindow* getWindow() = 0;
 
-	// Load and saving of documents.
-	// void saveDocument();
-	// void loadDocument();
+	// Creates a context toolbar.
+	virtual wxAuiToolBar* createContextToolbar() = 0;
+
+	// Tool selection callbacks.
+	virtual void onToolSelect(PluginTool* tool) {}
 
 	// Document selection callbacks.
 	virtual void onDocumentSelect() {}

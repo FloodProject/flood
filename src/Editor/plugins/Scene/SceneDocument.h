@@ -26,8 +26,16 @@ public:
 
 	// Gets the document window.
 	virtual wxWindow* getWindow();
+	
+	Viewframe* getViewframe() { return viewFrame;; }
 	RenderControl* getRenderControl() { return viewFrame->getControl(); }
 	RenderWindow* getRenderWindow() { return getRenderControl()->getRenderWindow(); }
+	
+	// Creates a context toolbar.
+	virtual wxAuiToolBar* createContextToolbar() OVERRIDE;
+
+	// Tool selection callbacks.
+	virtual void onToolSelect(PluginTool* tool) OVERRIDE;
 
 	// Document selection callbacks.
 	virtual void onDocumentSelect();
@@ -39,10 +47,12 @@ public:
 
 	void OnMouseRightUp(wxMouseEvent& event);
 	void OnMouseRightDown(wxMouseEvent& event);
-	
+	void OnMouseEvent(wxMouseEvent& event);
+
 	ScenePtr scene;
 	ScenePtr editorScene;
 	FirstPersonControllerPtr cameraController;
+	
 	Viewframe* viewFrame;
 	wxAuiToolBar* toolbar;
 

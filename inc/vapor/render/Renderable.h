@@ -97,10 +97,9 @@ namespace RenderLayer
 class RenderDevice;
 
 /**
- * Represents a renderable object, that is, the only rendering object
- * the rendering device knows and cares about. A renderable object has
- * at least one vertex buffer and one index buffer, and a primitive 
- * type associated with them.
+ * Represents a renderable object, that contains the details the
+ * rendering device needs to render the object. At the least, it
+ * should have a material and a vertex buffer.
  */
 
 class VAPOR_API Renderable : public ReferenceCounted
@@ -169,6 +168,8 @@ protected:
 	// Material of this renderable.
 	MaterialHandle material;
 };
+
+API_ENGINE Renderable* RenderableCreate(Allocator*);
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Renderable );
 

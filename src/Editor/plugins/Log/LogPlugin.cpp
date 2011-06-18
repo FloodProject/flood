@@ -32,7 +32,7 @@ PluginMetadata LogPlugin::getMetadata()
 	PluginMetadata metadata;
 	
 	metadata.name = "Log";
-	metadata.description = "Shows the main log stream";
+	metadata.description = "Provides a view of the logs.";
 	metadata.author = "triton";
 	metadata.version = "1.0";
 

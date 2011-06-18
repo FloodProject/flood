@@ -48,6 +48,23 @@ struct PluginMetadata
 class EditorFrame;
 class PluginManager;
 
+struct PluginTool
+{
+	PluginTool() : toolbar(nullptr), item(nullptr) {}
+
+	// Sets the toolbar.
+	void setToolbar(wxAuiToolBar*);
+
+	// Context-specific toolbar.
+	wxAuiToolBar* toolbar;
+	
+	// Item that triggers the toolbar.
+	wxAuiToolBarItem* item;
+};
+
+typedef std::vector<PluginTool> PluginTools;
+
+
 /**
  * A 3D editor needs to provide different kind of tools to the user,
  * so to be flexible and allow extensibility each tool behaviours and
@@ -71,10 +88,13 @@ public:
 	virtual ~Plugin();
 
 	// Gets if plugin is enabled.
-	bool isPluginEnabled() const;
+	bool isEnabled() const;
 
 	// Gets metadata about this plugin.
 	virtual PluginMetadata getMetadata() = 0;
+
+	// Finds if there is a mode with given id.
+	PluginTool* findTool( wxAuiToolBarItem* tool );
 
 	// Plugin enable callback.
 	virtual void onPluginEnable() = 0;
@@ -83,6 +103,10 @@ public:
 	// Plugin tool selection callback.
 	virtual void onToolSelect( int id ) {}
 	virtual void onToolUnselect( int id ) {}
+
+	// Document creation callback.
+	virtual void onDocumentCreate( Document& document ) {}
+	virtual void onDocumentDestroy( Document& document ) {}
 
 	// Document selection callback.
 	virtual void onDocumentSelect( Document& ) {}
@@ -121,15 +145,16 @@ protected:
 
 	// Helper method to disable plugins.
 	void doPluginDisable();
-
+	
 	// Registers a new tool in the plugin.
+	void addTool( const PluginTool& tool, bool addToMenu = false );
 	void addTool( wxAuiToolBarItem* tool, bool addToMenu = false );
 
 	// Removes all the registered tools.
 	void removeTools();
 
 	// Returns if the tool is from the plugin.
-	bool isPluginTool(int id) const;
+	bool hasTool(int id) const;
 
 	// Removes a page from the main notebook.
 	void removePage( wxWindow* page );
@@ -138,8 +163,7 @@ protected:
 	bool enabled;
 
 	// Keeps track of all the registered tools.
-	typedef std::vector<wxAuiToolBarItem*> Tools;
-	Tools tools;
+	PluginTools tools;
 
 	// Editor frame.
 	EditorFrame* editor;

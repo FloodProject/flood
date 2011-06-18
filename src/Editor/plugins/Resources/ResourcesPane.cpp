@@ -13,6 +13,13 @@
 #include "Events.h"
 #include "Core/Utilities.h"
 
+#ifdef PLATFORM_WINDOWS
+#define STRICT_TYPED_ITEMIDS
+#include <shellapi.h>
+#include <shlobj.h>
+#include <wx/dynlib.h>
+#endif
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//
@@ -82,9 +89,10 @@ void ResourcesPage::initIcons()
 	CREATE_RESOURCE_ICON( Images, image )
 	CREATE_RESOURCE_ICON( Meshes, shape_flip_horizontal )
 	CREATE_RESOURCE_ICON( Fonts, font )
-	CREATE_RESOURCE_ICON( Shaders, palette )
+	CREATE_RESOURCE_ICON( Shaders, script_palette )
 	CREATE_RESOURCE_ICON( Audio, music )
 	CREATE_RESOURCE_ICON( Scripts, page_code )
+	CREATE_RESOURCE_ICON( Materials, palette )
 	AssignImageList(imageList);
 }
 
@@ -195,6 +203,56 @@ enum
 	ID_ResourceMenu_VCS_Commit,
 	ID_ResourceMenu_VCS_ShowLog,
 };
+
+
+#ifdef PLATFORM_WINDOWS
+
+// The SHOpenFolderAndSelectItems API is exposed by shell32 version 6.
+typedef HRESULT (WINAPI *SHOpenFolderAndSelectItemsFn)(
+	PCIDLIST_ABSOLUTE pidl_Folder,
+	UINT cidl,
+	PCUITEMID_CHILD_ARRAY pidls,
+	DWORD flags);
+
+static SHOpenFolderAndSelectItemsFn InitializeShellOpen()
+{
+	wxDynamicLibrary dynlib("shell32");
+	void* sym = dynlib.GetSymbolAorW("SHOpenFolderAndSelectItems");
+	return (SHOpenFolderAndSelectItemsFn) sym;
+}
+
+static SHOpenFolderAndSelectItemsFn ShellOpenFolderSelectItems = InitializeShellOpen();
+#if 0
+static void ShowItemInFolder(const Path& fullPath)
+{
+	if( !ShellOpenFolderSelectItems )
+	{
+		ShellExecuteA(NULL, "open", fullPath.c_str(), NULL, NULL, SW_SHOW);
+		return;
+	}
+
+	IShellFolder* desktop;
+	HRESULT hr = SHGetDesktopFolder(&desktop);
+	if( hr != S_OK ) return;
+
+	ITEMIDLIST> dir_item;
+	hr = desktop->ParseDisplayName(NULL, NULL,
+                                 const_cast<wchar_t *>(dir.value().c_str()),
+                                 NULL, &dir_item, NULL);
+
+	desktop->Release();
+
+	IDLIST_ABSOLUTE abs;
+
+	if( ShellOpenFolderSelectItems() != S_OK )
+	{
+		LogError("Could not open and select the items in the shell");
+		return;
+	}
+}
+#endif
+
+#endif
 
 static bool isUnderVersionControl(const ResourcePtr& res)
 {

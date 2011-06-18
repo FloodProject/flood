@@ -35,7 +35,7 @@ REFLECT_CHILD_CLASS(Model, Geometry)
 	FIELD_PRIMITIVE(float, animationSpeed)
 	FIELD_PRIMITIVE(bool, animationEnabled)
 	FIELD_ENUM_SETTER(SkinningMode, skinningMode, SkinningMode)
-	FIELD_CLASS_PTR_SETTER(Mesh, MeshHandle, meshHandle, Handle, Mesh)
+	FIELD_CLASS_PTR_SETTER(Mesh, MeshHandle, meshHandle, Handle, Mesh) FIELD_ALIAS(meshHandle, "mesh")
 REFLECT_CLASS_END()
 
 //-----------------------------------//
@@ -57,6 +57,7 @@ Model::Model( const MeshHandle& mesh )
 
 void Model::init()
 {
+	updateSkin = false;
 	modelBuilt = false;
 	debugRenderable = nullptr;
 	skinningMode = SkinningMode::Native;
@@ -92,7 +93,13 @@ void Model::setMesh(const MeshHandle& mesh)
 void Model::setSkinningMode( SkinningMode::Enum mode )
 {
 	skinningMode = mode;
+	updateSkin = true;
+}
 
+//-----------------------------------//
+
+void Model::updateSkinning()
+{
 	if( !mesh->isAnimated() ) return;
 	
 	bool isCPU = skinningMode == SkinningMode::CPU;
@@ -119,6 +126,12 @@ void Model::update( float delta )
 		return;
 
 	if( !modelBuilt ) build();
+
+	if(updateSkin)
+	{
+		updateSkinning();
+		updateSkin = false;
+	}
 
 	if( mesh->isAnimated() )
 	{

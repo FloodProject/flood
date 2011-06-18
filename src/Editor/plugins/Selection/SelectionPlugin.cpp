@@ -51,8 +51,8 @@ PluginMetadata SelectionPlugin::getMetadata()
 {
 	PluginMetadata metadata;
 	
-	metadata.name = "Selection";
-	metadata.description = "Provides selection services";
+	metadata.name = PLUGIN_SELECTION;
+	metadata.description = "Provides selection services.";
 	metadata.author = "triton";
 	metadata.version = "1.0";
 	metadata.priority = 15;
@@ -72,18 +72,46 @@ void SelectionPlugin::onPluginEnable()
 
 		wxBitmap iconSelect = wxMEMORY_BITMAP(cursor);
 		buttonSelect = toolbar->AddTool( SelectionTool::Select, "Select",
-			iconSelect, "Selects the Entity Selection tool", wxITEM_RADIO );
+			iconSelect, "Selects the selection tool", wxITEM_RADIO );
 		addTool(buttonSelect, true);
 	}
 
-	#pragma TODO("Initialize plugins events properly")
-	
 	Events* events = editor->getEventManager();
-	events->setCurrentPlugin(this);
-	events->setCurrentTool((int) SelectionTool::Select);
 	events->addEventListener(this);
 
-	selections = new SelectionManager;
+	selections = new SelectionManager();
+}
+
+//-----------------------------------//
+
+void SelectionPlugin::onDocumentCreate( Document& document )
+{
+	wxAuiToolBar* tb = document.createContextToolbar();
+	tb->SetMargins(0, 0, 0, 0);
+	//tb->SetSize(wxSize(-1, 20));
+	
+#if 0	
+	tb->AddLabel(wxID_ANY, "Selection");
+	tb->AddTool(wxID_ANY, wxMEMORY_BITMAP(page_code), wxMEMORY_BITMAP(page_code));
+#endif
+
+	wxButton* button = new wxButton(tb, wxID_ANY, "Group", wxDefaultPosition, wxSize(-1, 20), wxBU_EXACTFIT);
+	tb->AddControl(button);
+
+#if 0	
+	wxComboBox* comboBox = new wxComboBox(tb, wxID_ANY);
+	comboBox->SetSize(-1, 16);
+	comboBox->Append("Object");
+	comboBox->Append("Vertex");
+	comboBox->Append("Face");
+	tb->AddControl(comboBox, "Mode");
+#endif
+
+	PluginTool* selectTool = findTool(buttonSelect);
+	selectTool->setToolbar(tb);
+
+	Events* events = GetEditor().getEventManager();
+	events->setTool(this, selectTool);
 }
 
 //-----------------------------------//
@@ -92,6 +120,14 @@ void SelectionPlugin::onPluginDisable()
 {
 	delete selections;
 	selections = nullptr;
+}
+
+//-----------------------------------//
+
+void SelectionPlugin::onToolSelect( int id )
+{
+	SceneDocument* document = (SceneDocument*) editor->getDocument();
+	Viewframe* viewframe = document->getViewframe();
 }
 
 //-----------------------------------//
@@ -133,7 +169,7 @@ void SelectionPlugin::onKeyPress(const KeyEvent& event)
 
 	if( event.ctrlPressed )
 	{
-		control->SetCursor( wxCursor("WXCURSOR_ARROW_PLUS") );
+		control->SetCursor( wxCursor("cursorArrowPlus") );
 		additiveMode = true;
 	}
 }
@@ -144,13 +180,10 @@ void SelectionPlugin::onKeyRelease(const KeyEvent& event)
 {
 	Events* events = editor->getEventManager();
 	
-	bool isSelection = events->getCurrentTool() == (int) SelectionTool::Select;
-	if( !isSelection ) return;
-
 	SceneDocument* sceneDocument = (SceneDocument*) editor->getDocument();
 	RenderControl* control = sceneDocument->getRenderControl();
 
-	if( !event.ctrlPressed )
+	if( !event.ctrlPressed && additiveMode )
 	{
 		// http://trac.wxwidgets.org/ticket/12961
 		#pragma TODO("Change back to wxNullCursor once wxWidgets bug has been fixed")

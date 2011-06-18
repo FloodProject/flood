@@ -85,6 +85,9 @@
     <Filter Include="Preferences">
       <UniqueIdentifier>{0deba968-b689-4ca7-9dcb-12211d532a63}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Widgets\Keybinder">
+      <UniqueIdentifier>{cbe3cb4c-c565-4f91-833e-4ee9d907bb1b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Editor\RenderControl.cpp">
@@ -100,9 +103,6 @@
       <Filter>Plugins</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Editor\PluginManager.cpp">
-      <Filter>Plugins</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Editor\PluginManagerFrame.cpp">
       <Filter>Plugins</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Editor\plugins\Gizmos\Gizmo.cpp">
@@ -177,9 +177,6 @@
     <ClCompile Include="..\..\src\Editor\plugins\Property\PropertyPlugin.cpp">
       <Filter>Plugins\Property</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Editor\widgets\wxFourWaySplitter.cpp">
-      <Filter>Widgets</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Editor\widgets\wxImageComboBox.cpp">
       <Filter>Widgets</Filter>
     </ClCompile>
@@ -239,16 +236,28 @@
     <ClCompile Include="..\..\src\Editor\Document.cpp">
       <Filter>Document</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneDocument.cpp">
-      <Filter>Plugins\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Editor\plugins\Mono\MonoPlugin.cpp">
       <Filter>Plugins\Mono</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Editor\Plugins.cpp">
-      <Filter>Plugins</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Editor\API.cpp" />
+    <ClCompile Include="..\..\src\Editor\Preferences.cpp">
+      <Filter>Preferences</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\gen\PreferencesGenerated.cpp">
+      <Filter>Preferences</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\widgets\keybinder.cpp">
+      <Filter>Widgets\Keybinder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\widgets\menuutils.cpp">
+      <Filter>Widgets\Keybinder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\widgets\wxFourWaySplitter.cpp">
+      <Filter>Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneDocument.cpp">
+      <Filter>Document</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Editor\inc\RenderControl.h">
@@ -264,9 +273,6 @@
       <Filter>Plugins</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\inc\PluginManager.h">
-      <Filter>Plugins</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Editor\inc\PluginManagerFrame.h">
       <Filter>Plugins</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\plugins\Gizmos\Gizmo.h">
@@ -341,9 +347,6 @@
     <ClInclude Include="..\..\src\Editor\plugins\Property\PropertyPlugin.h">
       <Filter>Plugins\Property</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Editor\inc\wxFourWaySplitter.h">
-      <Filter>Widgets</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\Editor\inc\wxImageComboBox.h">
       <Filter>Widgets</Filter>
     </ClInclude>
@@ -401,13 +404,31 @@
     <ClInclude Include="..\..\src\Editor\inc\Document.h">
       <Filter>Document</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Editor\plugins\Scene\SceneDocument.h">
-      <Filter>Plugins\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\Editor\plugins\Mono\MonoPlugin.h">
       <Filter>Plugins\Mono</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\API.h" />
+    <ClInclude Include="..\..\src\Editor\inc\Preferences.h">
+      <Filter>Preferences</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\gen\PreferencesGenerated.h">
+      <Filter>Preferences</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\keybinder\include\wx\keybinderdef.h">
+      <Filter>Widgets\Keybinder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\keybinder\include\wx\menuutils.h">
+      <Filter>Widgets\Keybinder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\keybinder\include\wx\keybinder.h">
+      <Filter>Widgets\Keybinder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\inc\wxFourWaySplitter.h">
+      <Filter>Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Scene\SceneDocument.h">
+      <Filter>Document</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\src\Editor\res\Editor.rc">

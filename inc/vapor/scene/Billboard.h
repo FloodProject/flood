@@ -13,7 +13,7 @@
 #include "Scene/Camera.h"
 #include "Render/Renderable.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -24,11 +24,11 @@ namespace vapor {
  * arbitrary axis to face the camera, thus they are useful for clouds
  * and other distant objects. Axis aligned billboards can rotate only
  * with respect to a given axis. These are most useful to represent
- * trees. You don't want trees to rotate to face the camera when you
- * fly over them, since that would break the illusion.
+ * cylindrical-symetric objects like trees since you don't want them to
+ * to rotate to face the camera when you fly over them.
  */
 
-struct BillboardType
+struct API_SCENE BillboardType
 {
 	REFLECT_DECLARE_ENUM(BillboardType)
 
@@ -48,7 +48,7 @@ struct BillboardType
 
 REFLECT_DECLARE_CLASS(Billboard)
 
-class VAPOR_API Billboard : public Component
+class API_SCENE Billboard : public Component
 {
 	REFLECT_DECLARE_OBJECT(Billboard)
 
@@ -58,13 +58,13 @@ public:
 	Billboard( BillboardType::Enum type );
 
 	// Updates the component.
-	void update( float delta );
+	void update( float delta ) OVERRIDE;
 
 	// Called just before the camera renders this component.
-	void onPreRender( const Camera& camera );
+	void onPreRender( const Camera& camera ) OVERRIDE;
 
 	// Creates the debug renderable of the component.
-	RenderablePtr createDebugRenderable() const;
+	RenderablePtr createDebugRenderable() const OVERRIDE;
   
 protected:
 
@@ -76,4 +76,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Billboard );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

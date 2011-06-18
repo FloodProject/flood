@@ -54,17 +54,17 @@ VertexBufferPtr GizmoScale::generateCubes()
 {
 	static const byte SLICES = 10;
 
-	VertexBufferPtr cube = Cube::buildGeometry(0.05f, 1);
+	VertexBufferPtr vb = Allocate(VertexBuffer, AllocatorGetHeap());
+	BuildCube(vb.get(), 0.05f, 1.0f);
 	
-	std::vector<Vector3>& cubePosition =
-		cube->getAttribute(VertexAttribute::Position);
+	std::vector<Vector3>& cubePosition = vb->getAttribute(VertexAttribute::Position);
 
 	// Vertex data
 	std::vector< Vector3 > pos;
 	std::vector< Vector3 > colors;
 
 	// X axis
-	for( uint i = 0; i < cubePosition.size(); i++ )
+	for( size_t i = 0; i < cubePosition.size(); i++ )
 	{
 		const Vector3& v = cubePosition[i];
 		pos.push_back( v + (Vector3::UnitX / 2.0f) );
@@ -72,7 +72,7 @@ VertexBufferPtr GizmoScale::generateCubes()
 	generateColors(colors, X);
 
 	// Y axis
-	for( uint i = 0; i < cubePosition.size(); i++ )
+	for( size_t i = 0; i < cubePosition.size(); i++ )
 	{
 		const Vector3& v = cubePosition[i];
 		pos.push_back( v + (Vector3::UnitY / 2.0f) );
@@ -80,7 +80,7 @@ VertexBufferPtr GizmoScale::generateCubes()
 	generateColors(colors, Y);
 	
 	// Z axis
-	for( uint i = 0; i < cubePosition.size(); i++ )
+	for( size_t i = 0; i < cubePosition.size(); i++ )
 	{
 		const Vector3& v = cubePosition[i];
 		pos.push_back( v + (Vector3::UnitZ / 2.0f) );
@@ -88,7 +88,6 @@ VertexBufferPtr GizmoScale::generateCubes()
 	generateColors(colors, Z);
 
 	// Vertex buffer setup
-	VertexBufferPtr vb = Allocate(VertexBuffer, AllocatorGetHeap());
 	vb->set( VertexAttribute::Position, pos );
 	vb->set( VertexAttribute::Color, colors );
 

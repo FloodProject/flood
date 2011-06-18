@@ -37,7 +37,7 @@ RenderWindow::~RenderWindow()
 
 bool RenderWindow::createContext()
 {
-	if(!canvas)return false;
+	if( !canvas ) return false;
 
     // create OpenGL context
     context = new wxGLContext(canvas);

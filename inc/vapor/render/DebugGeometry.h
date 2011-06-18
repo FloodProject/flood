@@ -16,50 +16,22 @@
 FWD_DECL_INTRUSIVE(Entity)
 FWD_DECL_INTRUSIVE(Renderable)
 
-namespace vapor {
-
-//-----------------------------------//
-
-//class VAPOR_API DebugRenderable : public Renderable
-//{
-//public:
-//
-//	DebugRenderable();
-//
-//	// Gets if the debug renderable is visible.
-//	virtual bool isVisible() const;
-//	
-//	// Sets the debug renderable as visible.
-//	virtual void setVisible( bool visible );
-//
-//	// Gets/sets if the debug renderable inherits the transform.
-//	ACESSOR(InheritsTransform, bool, inheritsTransform)
-//
-//protected:
-//
-//	// Is the debug representation visible.
-//	bool visible;
-//
-//	// Does the debug inherit the transform.
-//	bool inheritsTransform;
-//};
-//
-//TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( DebugRenderable );
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
 // Builds debug geometry of a bounding box.
-RenderablePtr VAPOR_API buildBoundingRenderable( const BoundingBox& box );
+RenderablePtr API_ENGINE buildBoundingRenderable( const BoundingBox& box );
 
 // Builds debug geometry of a ray.
-EntityPtr VAPOR_API buildRay( const Ray& pickRay, const Vector3& outFar );
+EntityPtr API_ENGINE buildRay( const Ray& pickRay, const Vector3& outFar );
 
 // Builds debug geometry of a frustum.
-RenderablePtr VAPOR_API buildFrustum( const Frustum& box );
+RenderablePtr API_ENGINE buildFrustum( const Frustum& box );
 
 // Updates the debug geometry of a frustum.
-void VAPOR_API updateDebugFrustum( const RenderablePtr& rend, const Frustum& box );
+void API_ENGINE updateDebugFrustum( const RenderablePtr& rend, const Frustum& box );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

@@ -65,8 +65,8 @@
     <ClCompile>
       <AdditionalOptions>-Zm140 </AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\src;$(SolutionDir)..\..\src\Editor\inc;$(SolutionDir)..\..\dep\lua\include;$(SolutionDir)..\..\dep\openal\include;$(SolutionDir)..\..\dep\glew\include;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\wx\include;$(SolutionDir)..\..\dep\wx\include\msvc;$(SolutionDir)..\..\dep\curl\include;C:\Users\triton\Development\mono-2.10.1.tar\mono-2.10.1\mono-2.10.1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;__WXMSW__;WXUSINGDLL;WXMONOLITHIC;_UNICODE;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\src;$(SolutionDir)..\..\src\Editor\inc;$(SolutionDir)..\..\src\Editor\;$(SolutionDir)..\..\dep\lua\include;$(SolutionDir)..\..\dep\openal\include;$(SolutionDir)..\..\dep\glew\include;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\wx\include;$(SolutionDir)..\..\dep\wx\include\msvc;$(SolutionDir)..\..\dep\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;__WXMSW__;_UNICODE;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <ExceptionHandling>Sync</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -85,9 +85,9 @@
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\dep\wx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Core.lib;Resources.lib;Engine.lib;opengl32.lib;glewd.lib;OpenAL32.lib;luad.lib;bulletd.lib;Pipeline.lib;wxmsw29ud.lib;wxmsw29ud_gl.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Core.lib;Resources.lib;Engine.lib;opengl32.lib;glewd.lib;OpenAL32.lib;luad.lib;bulletd.lib;Pipeline.lib;wxbase29ud.lib;wxmsw29ud_core.lib;wxmsw29ud_aui.lib;wxmsw29ud_gl.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration);$(SolutionDir)..\..\dep\bullet\lib\vc10;$(SolutionDir)..\..\dep\glew\lib\vc10;$(SolutionDir)..\..\dep\openal\lib\Win32;$(SolutionDir)..\..\dep\lua\lib\vc10;$(SolutionDir)..\..\dep\wx\lib\vc_dll\;$(SolutionDir)..\..\dep\nvtt\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration);$(SolutionDir)..\..\dep\bullet\lib\vc10;$(SolutionDir)..\..\dep\glew\lib\vc10;$(SolutionDir)..\..\dep\openal\lib\Win32;$(SolutionDir)..\..\dep\lua\lib\vc10;$(SolutionDir)..\..\dep\wx\lib\vc_lib\;$(SolutionDir)..\..\dep\nvtt\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>wxpngd.lib;libcmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -186,8 +186,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DLL|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\src\Editor\Document.cpp" />
+    <ClCompile Include="..\..\src\Editor\gen\PreferencesGenerated.cpp" />
     <ClCompile Include="..\..\src\Editor\Menus.cpp" />
-    <ClCompile Include="..\..\src\Editor\Plugins.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Hierarchy\HierarchyPane.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Hierarchy\HierarchyPlugin.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Log\LogFrame.cpp" />
@@ -203,12 +203,12 @@
     <ClCompile Include="..\..\src\Editor\plugins\Selection\SelectionManager.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Selection\SelectionPlugin.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Terrain\TerrainOperation.cpp" />
+    <ClCompile Include="..\..\src\Editor\Preferences.cpp" />
     <ClCompile Include="..\..\src\Editor\RenderControl.cpp" />
     <ClCompile Include="..\..\src\Editor\RenderWindow.cpp" />
     <ClCompile Include="..\..\src\Editor\Viewframe.cpp" />
     <ClCompile Include="..\..\src\Editor\Plugin.cpp" />
     <ClCompile Include="..\..\src\Editor\PluginManager.cpp" />
-    <ClCompile Include="..\..\src\Editor\PluginManagerFrame.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Gizmos\Gizmo.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Gizmos\GizmoOperation.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Gizmos\GizmoPlugin.cpp" />
@@ -233,6 +233,10 @@
     <ClCompile Include="..\..\src\Editor\plugins\Property\PropertyOperation.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Property\PropertyPage.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Property\PropertyPlugin.cpp" />
+    <ClCompile Include="..\..\src\Editor\widgets\keybinder.cpp">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4018;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\widgets\menuutils.cpp" />
     <ClCompile Include="..\..\src\Editor\widgets\wxFourWaySplitter.cpp" />
     <ClCompile Include="..\..\src\Editor\widgets\wxImageComboBox.cpp" />
     <ClCompile Include="..\..\src\Editor\widgets\wxSliderCtrl.cpp" />
@@ -243,14 +247,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Editor\API.h" />
+    <ClInclude Include="..\..\src\Editor\gen\PreferencesGenerated.h" />
     <ClInclude Include="..\..\src\Editor\inc\Document.h" />
+    <ClInclude Include="..\..\src\Editor\inc\Preferences.h" />
     <ClInclude Include="..\..\src\Editor\inc\RenderControl.h" />
     <ClInclude Include="..\..\src\Editor\inc\RenderWindow.h" />
     <ClInclude Include="..\..\src\Editor\inc\ResourceDrop.h" />
     <ClInclude Include="..\..\src\Editor\inc\Viewframe.h" />
     <ClInclude Include="..\..\src\Editor\inc\Plugin.h" />
     <ClInclude Include="..\..\src\Editor\inc\PluginManager.h" />
-    <ClInclude Include="..\..\src\Editor\inc\PluginManagerFrame.h" />
+    <ClInclude Include="..\..\src\Editor\keybinder\include\wx\keybinder.h" />
+    <ClInclude Include="..\..\src\Editor\keybinder\include\wx\keybinderdef.h" />
+    <ClInclude Include="..\..\src\Editor\keybinder\include\wx\menuutils.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Gizmos\Gizmo.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Gizmos\GizmoOperation.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Gizmos\GizmoPlugin.h" />

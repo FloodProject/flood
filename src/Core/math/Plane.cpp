@@ -92,6 +92,9 @@ bool Plane::intersects( const Ray& ray, float& distance ) const
 void Plane::normalize()
 {
 	float magnitude = normal.length();
+
+	if(!(magnitude > 0.0f))
+		return;
 	assert( magnitude > 0.0f );
 
 	// Normalize the normal.

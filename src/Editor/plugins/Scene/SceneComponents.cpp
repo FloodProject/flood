@@ -15,6 +15,7 @@
 #include "Viewframe.h"
 #include "UndoManager.h"
 #include "Scene/Projector.h"
+#include "Render/Cube.h"
 
 namespace vapor { namespace editor {
 
@@ -37,13 +38,16 @@ static ComponentEntry components[] =
 	{ nullptr, TYPE(Transform),			BMP(chart_line) },
 	{ nullptr, TYPE(Camera),			BMP(camera) },
 	{ nullptr, TYPE(Light),				BMP(lightbulb_off) },
+	{ nullptr, TYPE(Billboard),			BMP(shape_flip_horizontal) },
+	{ nullptr, TYPE(Particles),			BMP(chart_pie) },
+	{ "Primitives", nullptr, nullptr, 0 },
+	{ nullptr, TYPE(Cube),				BMP(cube) },
 	{ "Nature", nullptr, nullptr, 0 },
 	{ nullptr, TYPE(Skydome),			BMP(weather_clouds) },
 	//{ nullptr, TYPE(Water),				BMP(weather_clouds) },
 	{ "GUI", nullptr, nullptr, 0 },
 	{ nullptr, TYPE(Label),				BMP(text_align_left) },
-	{ "Particles", nullptr, nullptr, 0 },
-	{ nullptr, TYPE(Particles),			BMP(chart_pie) },
+	//{ "Particles", nullptr, nullptr, 0 },
 #ifdef VAPOR_AUDIO_OPENAL	
 	{ "Audio", nullptr, nullptr, 0 },
 	{ nullptr, TYPE(Source),			BMP(sound) },
@@ -66,7 +70,6 @@ static ComponentEntry components[] =
 #endif
 	{ "Extra", nullptr, nullptr, 0 },
 	{ nullptr, TYPE(Grid),				BMP(grid_icon_white_bg) },
-	{ nullptr, TYPE(Billboard),			BMP(shape_flip_horizontal) },
 	{ nullptr, TYPE(Projector),			BMP(lightbulb_off) },
 };
 

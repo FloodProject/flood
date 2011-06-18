@@ -12,7 +12,6 @@
 #include "EditorIcons.h"
 #include "RenderControl.h"
 #include "PluginManager.h"
-#include "PluginManagerFrame.h"
 #include "UndoManager.h"
 #include "Viewframe.h"
 #include "EditorInputManager.h"
@@ -41,9 +40,10 @@ bool EditorApp::OnInit()
 
     EditorFrame* frame = new EditorFrame(VAPOR_EDITOR_NAME);
 	frame->SetSize(800, 500);
-    frame->Show(true);
-	SetTopWindow(frame);
 
+	SetTopWindow(frame);
+    frame->Show(true);
+	
     return true;
 }
 
@@ -76,7 +76,6 @@ EditorFrame::EditorFrame(const wxString& title)
 	, notebookCtrl(nullptr)
 	, eventManager(nullptr)
 	, pluginManager(nullptr)
-	, pluginManagerFrame(nullptr)
 	, currentDocument(nullptr)
 {
 	editorInstance = this;
@@ -86,6 +85,15 @@ EditorFrame::EditorFrame(const wxString& title)
 	createPlugins();
 	createToolbar();
 	createLastUI();
+
+	wxKeyProfile* mainProfile = new wxKeyProfile();
+	mainProfile->SetName("Main");
+	mainProfile->AttachRecursively(this);
+	mainProfile->ImportMenuBarCmd( GetMenuBar() );
+	mainProfile->Enable();
+
+	keyProfiles.Add(mainProfile);
+	keyProfiles.SetSelProfile(0);
 
 #ifdef CREATE_PROJECT_ON_STARTUP
 	wxCommandEvent event;
@@ -114,7 +122,10 @@ EditorFrame::~EditorFrame()
 	eventManager->disconnectPluginListeners();
 
 	delete pluginManager;
+	pluginManager = nullptr;
+
  	delete eventManager;
+	eventManager = nullptr;
 
 	paneCtrl->UnInit();
 	delete paneCtrl;
@@ -127,19 +138,8 @@ EditorFrame::~EditorFrame()
 void EditorFrame::createPlugins()
 {
 	pluginManager = new PluginManager();
-	pluginManager->referencePlugins();
-
-	pluginManagerFrame = new PluginManagerFrame(this, pluginManager);
-	eventManager = new Events(this);
-
+	eventManager = new Events();
 	pluginManager->scanPlugins();
-
-	wxBitmap icon = wxMEMORY_BITMAP(cog);
-	const char* name = "Plugins";
-
-	wxAuiPaneInfo pane;
-	pane.Name(name).Caption(name).Right().Dock().Icon(icon).Hide();
-	getAUI()->AddPane(pluginManagerFrame, pane);
 }
 
 //-----------------------------------//
@@ -162,7 +162,7 @@ void EditorFrame::createEngine()
 
 void EditorFrame::createUI()
 {
-    SetIcon( wxIcon("editor") );
+    SetIcon( wxIcon("iconEditor") );
 	
 	paneCtrl = new wxAuiManager();
 	paneCtrl->SetManagedWindow(this);
@@ -194,7 +194,7 @@ void EditorFrame::createToolbar()
 	if(!toolbarCtrl) return;
 
 	toolbarCtrl->AddTool( Toolbar_ToogleGrid, "Grid", wxMEMORY_BITMAP(grid_icon), "Show/hide the editor grid", wxITEM_CHECK );
-	toolbarCtrl->AddTool( Toolbar_TooglePhysicsDebug, "Physics", wxMEMORY_BITMAP(grid_icon), "Show/hide the physics debug", wxITEM_CHECK );
+	//toolbarCtrl->AddTool( Toolbar_TooglePhysicsDebug, "Physics", wxMEMORY_BITMAP(grid_icon), "Show/hide the physics debug", wxITEM_CHECK );
 	toolbarCtrl->ToggleTool( Toolbar_ToogleGrid, true );
 	toolbarCtrl->AddTool( Toolbar_TooglePlay, "Play", wxMEMORY_BITMAP(resultset_next), "Enable/disable Play mode", wxITEM_CHECK );
 	
@@ -202,7 +202,6 @@ void EditorFrame::createToolbar()
 
 	toolbarCtrl->AddTool( Toolbar_ToogleViewport, "Toogles maximize view", wxMEMORY_BITMAP(application_split), "Toogles maximize view" );
 	toolbarCtrl->AddTool( Toolbar_ToogleSidebar, "Shows/hides the sidebar", wxMEMORY_BITMAP(application_side_tree_right), "Shows/hides the sidebar" );
-	toolbarCtrl->AddTool( Toolbar_TooglePlugin, "Shows/hides the plugin manager", wxMEMORY_BITMAP(cog), "Shows/hides the plugin manager" );
 
 	wxAuiPaneInfo toolPane;
 	const char* name = "Toolbar";
@@ -304,15 +303,6 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 
 	switch(id) 
 	{
-	//-----------------------------------//
-	case Toolbar_TooglePlugin:
-	{
-		wxAuiPaneInfo& pane = getAUI()->GetPane(pluginManagerFrame);
-		pane.Show( !pane.IsShown() );
-		getAUI()->Update();
-
-		break;
-	}
 	//-----------------------------------//
 	case Toolbar_ToogleGrid:
 	{

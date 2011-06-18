@@ -15,28 +15,28 @@
 #include "Editor.h"
 #include "Core/Utilities.h"
 #include "../Scene/ScenePane.h"
+#include "../Scene/SceneDocument.h"
 
-#ifdef ALL_PLUGINS
+#ifdef ENABLE_RESOURCE_BROWSER
 
 namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-ResourcesBrowser::ResourcesBrowser( EditorFrame* editor, wxWindow* parent,
-					wxWindowID id, const wxPoint& pos, const wxSize& size )
-	: wxFrame(parent, id, "Resources Browser", pos, wxSize(600, 450))
-	, editor(editor)
+ResourcesBrowser::ResourcesBrowser( wxWindow* parent, wxWindowID id,
+								const wxPoint& pos, const wxSize& size )
+	: wxFrame(parent, id, "Resources Browser", pos, wxSize(500, 350),
+	wxDEFAULT_FRAME_STYLE | wxFRAME_TOOL_WINDOW | wxFRAME_FLOAT_ON_PARENT | wxBORDER_NONE)
 	, listIndex(0)
 {
 	setupUI();
-	//setupRender();
 }
 
 //-----------------------------------//
 
 void ResourcesBrowser::setupRender()
 {
-	RenderDevice* device = GetEditor().getEngine()->getRenderDevice();
+	RenderDevice* device = GetRenderDevice();
 
 	Settings settings(ThumbSize, ThumbSize);
 	renderBuffer = device->createRenderBuffer(settings);
@@ -103,16 +103,19 @@ void ResourcesBrowser::OnListBeginDrag(wxListEvent& event)
 
 	Vector3 dropPoint;
 
-	Vector2 coords = editor->getDropCoords();
-	RenderView* view = editor->getMainViewframe()->getView();
+	Vector2 coords = GetEditor().getDropCoords();
+
+	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
+	RenderView* view = document->getViewframe()->view;
+
 	Ray ray = view->getCamera()->getRay(coords.x, coords.y);
 
-	ScenePtr scene = editor->getEngine()->getSceneManager();
+	ScenePtr scene = document->scene;
 	RayTriangleQueryResult res;
 
 	if( scene->doRayTriangleQuery(ray, res) )
 	{
-		dropPoint = res.intersection;
+		dropPoint = res.intersectionWorld;
 	}
 	else
 	{
@@ -127,13 +130,13 @@ void ResourcesBrowser::OnListBeginDrag(wxListEvent& event)
 
 	std::string name = event.GetText();
 
-	ResourceManager* rm = editor->getEngine()->getResourceManager();
-	MeshPtr mesh = rm->loadResource<Mesh>(name);
+	ResourceManager* rm = GetResourceManager();
+	MeshHandle mesh = rm->loadResource<Mesh>(name);
 
 	if( !mesh )
 		return;
 
-	EntityPtr entity( new Entity( PathUtils::getFile(name) ) );
+	EntityPtr entity( new Entity( PathGetFile(name) ) );
 	entity->addTransform();
 	entity->getTransform()->setPosition(dropPoint);
 	entity->addComponent( ModelPtr( new Model(mesh) ) );
@@ -142,7 +145,7 @@ void ResourcesBrowser::OnListBeginDrag(wxListEvent& event)
 	nodeOperation->entity = entity;
 	nodeOperation->weakScene = scene;
 
-	UndoManager* undoManager = editor->getUndoManager();
+	UndoManager* undoManager = document->getUndoManager();
 	undoManager->registerOperation(nodeOperation);
 
 	nodeOperation->redo();
@@ -187,8 +190,6 @@ void ResourcesBrowser::OnClose(wxCloseEvent& event)
 
 void ResourcesBrowser::setupUI()
 {
-	SetWindowStyle(wxDEFAULT_FRAME_STYLE | wxFRAME_TOOL_WINDOW | wxFRAME_FLOAT_ON_PARENT | wxBORDER_NONE );
-
 	wxBoxSizer* bSizer1;
 	bSizer1 = new wxBoxSizer( wxVERTICAL );
 	

@@ -45,7 +45,7 @@ PluginMetadata GizmoPlugin::getMetadata()
 	PluginMetadata metadata;
 	
 	metadata.name = "Gizmos";
-	metadata.description = "Provides translate, rotate and scale tools";
+	metadata.description = "Provides translate, rotate and scale tools.";
 	metadata.author = "triton";
 	metadata.version = "1.0";
 	metadata.priority = 20;
@@ -58,10 +58,7 @@ PluginMetadata GizmoPlugin::getMetadata()
 SelectionManager* GizmoPlugin::getSelections()
 {
 	PluginManager* plugins = editor->getPluginManager();
-	
-	SelectionPlugin* sp = (SelectionPlugin*) plugins->getPlugin("Selection");
-	assert( sp != nullptr );
-
+	SelectionPlugin* sp = (SelectionPlugin*) plugins->getPlugin(PLUGIN_SELECTION);
 	return sp->getSelectionManager();
 }
 
@@ -116,7 +113,7 @@ void GizmoPlugin::onToolSelect( int id )
 	if( selection->mode == SelectionMode::None )
 		return;
 	
-	for( uint i = 0; i < selection->selections.size(); i++ )
+	for( size_t i = 0; i < selection->selections.size(); i++ )
 	{	
 		onEntityUnselect( selection->selections[i].entity );
 		onEntitySelect( selection->selections[i].entity );
@@ -135,21 +132,23 @@ void GizmoPlugin::onToolUnselect( int id )
 	if( !sel || sel->mode == SelectionMode::None )
 		return;
 
-	for( uint i = 0; i < sel->selections.size(); i++ )
+	for( size_t i = 0; i < sel->selections.size(); i++ )
 	{
 		onEntityUnselect( sel->selections[i].entity );
 	}
 
-	//std::vector<EntityPtr> entities;
+#if 0
+	std::vector<EntityPtr> entities;
 
-	//GizmoMap::const_iterator it;
-	//for( it = gizmos.begin(); it != gizmos.end(); it++ )
-	//	entities.push_back( it->first );	
-	//
-	//for( uint i = 0; i < entities.size(); i++ )	
-	//	removeGizmo( entities[i] );
+	GizmoMap::const_iterator it;
+	for( it = gizmos.begin(); it != gizmos.end(); it++ )
+		entities.push_back( it->first );	
+	
+	for( size_t i = 0; i < entities.size(); i++ )	
+		removeGizmo( entities[i] );
 
-	//assert( gizmos.empty() );
+	assert( gizmos.empty() );
+#endif
 }
 
 //-----------------------------------//

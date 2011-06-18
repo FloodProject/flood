@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "Render/Renderable.h"
+#include "Scene/Geometry.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -18,17 +18,30 @@ namespace vapor {
  * Generates a cube.
  */
 
-class VAPOR_API Cube : public Renderable
+REFLECT_DECLARE_CLASS(Cube)
+
+class API_SCENE Cube : public Geometry
 {
+	REFLECT_DECLARE_OBJECT(Cube)
+
 public:
 
-	Cube( float width = 1.0f, float height = 1.0f );
+	Cube();
+	Cube( float width, float height );
 
-	static VertexBufferPtr buildGeometry( float width, float height );
+	// Creates the cube.
+	void create();
+
+private:
+
+	float width;
+	float height;
 };
+
+void BuildCube( VertexBuffer* vb, float width, float height );
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Cube );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

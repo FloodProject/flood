@@ -33,7 +33,7 @@ PluginMetadata ConsolePlugin::getMetadata()
 	PluginMetadata metadata;
 	
 	metadata.name = "Console";
-	metadata.description = "Provides an interactive scripting console";
+	metadata.description = "Provides an interactive scripting console.";
 	metadata.author = "triton";
 	metadata.version = "1.0";
 

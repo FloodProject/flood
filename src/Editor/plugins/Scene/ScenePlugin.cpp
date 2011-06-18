@@ -35,7 +35,7 @@ PluginMetadata ScenePlugin::getMetadata()
 	PluginMetadata metadata;
 	
 	metadata.name = "Scene";
-	metadata.description = "Provides a page with the scene contents";
+	metadata.description = "Provides a page with the scene contents.";
 	metadata.author = "triton";
 	metadata.version = "1.0";
 
@@ -108,6 +108,14 @@ void ScenePlugin::onEntityUnselect( const EntityPtr& entity )
 void ScenePlugin::onSceneLoad( const ScenePtr& scene )
 {
 	scenePage->setScene(scene);
+}
+
+//-----------------------------------//
+
+void ScenePlugin::onSceneUnload( const ScenePtr& scene )
+{
+	LogDebug("Scene unloaded, removing items from scene tree");
+	scenePage->getTreeCtrl()->DeleteAllItems();
 }
 
 //-----------------------------------//

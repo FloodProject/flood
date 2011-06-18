@@ -110,6 +110,7 @@ void Particles::createGeometry()
 	Material* pMaterial = material.Resolve();
 	pMaterial->setDepthWrite(false);
 	pMaterial->setBlending(BlendSource::SourceAlpha, BlendDestination::One);
+	pMaterial->setProgram("Tex");
 
 	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Points);
 	renderable->setVertexBuffer(vb);

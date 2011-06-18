@@ -33,7 +33,7 @@ PluginMetadata HierarchyPlugin::getMetadata()
 	PluginMetadata metadata;
 	
 	metadata.name = "Hierarchy";
-	metadata.description = "Displays hierarchy information";
+	metadata.description = "Displays hierarchy information.";
 	metadata.author = "triton";
 	metadata.version = "1.0";
 	metadata.startEnabled = false;

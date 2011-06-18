@@ -16,6 +16,13 @@ NAMESPACE_BEGIN
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(Material, Resource)
+	FIELD_PRIMITIVE(string, name)
+	FIELD_PRIMITIVE(string, program)
+	FIELD_PRIMITIVE(bool, cullBackfaces)
+	FIELD_PRIMITIVE(bool, alphaTest)
+	FIELD_PRIMITIVE(bool, lineSmooth)
+	FIELD_PRIMITIVE(float, lineWidth)
+	FIELD_PRIMITIVE(float, _isBlendingEnabled)
 REFLECT_CLASS_END()
 
 //-----------------------------------//

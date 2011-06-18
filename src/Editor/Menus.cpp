@@ -9,6 +9,7 @@
 #include "Editor/API.h"
 #include "Editor.h"
 #include "EditorIcons.h"
+#include "Preferences.h"
 
 namespace vapor { namespace editor {
 
@@ -21,6 +22,8 @@ void EditorFrame::createMenus()
 	//-----------------------------------//
 
     menuEdit = new wxMenu;
+	wxMenuItem* editPreferences = menuEdit->Append(wxID_ANY, "&Preferences...");
+	Bind(wxEVT_COMMAND_MENU_SELECTED, &EditorFrame::OnPreferences, this, editPreferences->GetId());
 
 	//-----------------------------------//
 
@@ -92,7 +95,7 @@ void EditorFrame::OnMenuOpenEvent(wxMenuEvent& event)
 
 	wxAuiPaneInfoArray& panes = aui->GetAllPanes();
 
-	for( uint i = 0; i < panes.size(); i++ )
+	for( size_t i = 0; i < panes.size(); i++ )
 	{
 		wxAuiPaneInfo& pane = panes[i];
 		
@@ -164,45 +167,60 @@ void EditorFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 
 //-----------------------------------//
 
+void EditorFrame::OnPreferences(wxCommandEvent& event)
+{
+	Preferences* pref = new Preferences(this);
+	
+	if( pref->ShowModal() == wxID_OK )
+	{
+		// Save settings
+	}
+}
+
+//-----------------------------------//
+
+static const char* s_aboutText =
+	"This software is © 2009-2011 João Matos and the rest of the team.\n\n"
+	VAPOR_EDITOR_NAME " uses some free software packages: wxWidgets (wxWidgets.org),"
+	" Lua (lua.org),\nBullet (bulletphysics.com), zlib (zlib.org)"
+	" and the list goes on.\n\nCheck the documentation provided with the software"
+	" for more details.";
+
+const char* s_siteText = "http://www.vapor3d.org";
+
 void EditorFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
-	wxDialog* about = new wxDialog(this, wxID_ANY, "About " VAPOR_EDITOR_NAME,
-		wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE);
+	wxDialog* about = new wxDialog(this, wxID_ANY, "About " VAPOR_EDITOR_NAME);
 
 	wxBoxSizer* bSizer1 = new wxBoxSizer( wxVERTICAL );
 	wxBoxSizer* bSizer2 = new wxBoxSizer( wxVERTICAL );
 
 	wxPanel* m_panel1 = new wxPanel( about );
-
 	wxBitmap aboutIcon = wxMEMORY_BITMAP(::about);
 	wxStaticBitmap* m_bitmap1 = new wxStaticBitmap( m_panel1, wxID_ANY, aboutIcon);
 	bSizer2->Add( m_bitmap1, 0, wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 0 );
 
-	wxString aboutText(
-		"This software is © 2009-2011 João Matos and the rest of the team.\n\n"
-		VAPOR_EDITOR_NAME " uses some free software packages: wxWidgets (wxWidgets.org),"
-		" Lua (lua.org),\nBullet (bulletphysics.com), zlib (zlib.org)"
-		" and the list goes on.\n\nCheck the documentation provided with the software"
-		" for more details.");
-
+	wxString aboutText(s_aboutText);
 	wxStaticText* m_staticText2 = new wxStaticText( m_panel1, wxID_ANY, aboutText );
 	m_staticText2->Wrap( -1 );
 	bSizer2->Add( m_staticText2, 0, wxEXPAND|wxTOP|wxBOTTOM, 5 );
 	
 	wxBoxSizer* bSizer3 = new wxBoxSizer( wxHORIZONTAL );
-	
 	wxStaticLine* m_staticline1 = new wxStaticLine( m_panel1, wxID_ANY );
 	bSizer3->Add( m_staticline1, 1, wxALL|wxALIGN_CENTER_VERTICAL, 10 );
 	
-	wxHyperlinkCtrl* m_hyperlink1 = new wxHyperlinkCtrl( m_panel1, wxID_ANY,
-		"vapor3D (http://www.vapor3d.org)", "http://www.vapor3d.org" );
+	wxHyperlinkCtrl* m_hyperlink1 = new wxHyperlinkCtrl( m_panel1, wxID_ANY, s_siteText, s_siteText );
 	bSizer3->Add( m_hyperlink1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	wxStaticLine* m_staticline2 = new wxStaticLine( m_panel1, wxID_ANY );
 	bSizer3->Add( m_staticline2, 1, wxALL|wxALIGN_CENTER_VERTICAL, 10 );
-	
 	bSizer2->Add( bSizer3, 1, wxEXPAND, 5 );
 	
+	wxStdDialogButtonSizer* btnSizer = new wxStdDialogButtonSizer();
+	wxButton* buttonOK = new wxButton( m_panel1, wxID_OK );
+	btnSizer->AddButton( buttonOK );
+	bSizer2->Add(btnSizer);
+
 	m_panel1->SetSizer( bSizer2 );
 	m_panel1->Layout();
 

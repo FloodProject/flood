@@ -32,7 +32,6 @@ BEGIN_EVENT_TABLE(RenderControl, wxGLCanvas)
 	EVT_KEY_UP(RenderControl::OnKeyUp)
 	EVT_MOUSE_EVENTS(RenderControl::OnMouseEvent)
 	EVT_MOUSE_CAPTURE_LOST(RenderControl::OnMouseCaptureLost)
-	EVT_ENTER_WINDOW(RenderControl::OnEnterWindow)
 END_EVENT_TABLE()
 
 const float MAX_RATE_UPDATE = 1.0f / 25;
@@ -43,10 +42,11 @@ const float MAX_RATE_RENDER = 1.0f / 60;
 RenderControl::RenderControl( wxWindow* parent, wxWindowID id,
 	const int* attribList, const wxPoint& pos, const wxSize& size,
 	long style,	const wxString&	name, const wxPalette& )
-	: wxGLCanvas(parent, id, attribList, pos, size, style, name)
+	: wxGLCanvas(parent, id, attribList, pos, size, style | wxFULL_REPAINT_ON_RESIZE, name)
 	, needsRedraw(false)
 	, frameUpdateTimer(this, UPDATE_TIMER)
 	, frameRenderTimer(this, RENDER_TIMER)
+	, input(nullptr)
 {
 	LogInfo("Creating a new wxWidgets render control");
 
@@ -58,7 +58,7 @@ RenderControl::RenderControl( wxWindow* parent, wxWindowID id,
 	window = new RenderWindow(settings, this);
 
 	// Setup input in the engine.
-	inputManager = window->inputManager;
+	input = window->inputManager;
 }
 
 //-----------------------------------//
@@ -119,7 +119,7 @@ void RenderControl::OnPaint(wxPaintEvent& WXUNUSED(event))
 	// draws twice so really try to find a better solution later.
 
 	#pragma TODO("Redraw only the invalidated regions of windows")
-	Refresh();
+	//Refresh();
 
 	// From the PaintEvent docs: "the application must always create
 	// a wxPaintDC object, even if you do not use it."
@@ -158,39 +158,21 @@ void RenderControl::OnFocusKill(wxFocusEvent& event)
 
 void RenderControl::OnKeyDown(wxKeyEvent& event)
 {
-	inputManager->processKeyEvent( event, true );
+	input->processKeyEvent( event, true );
 }
 
 //-----------------------------------//
 
 void RenderControl::OnKeyUp(wxKeyEvent& event)
 {
-	inputManager->processKeyEvent( event, false );
+	input->processKeyEvent( event, false );
 }
 
 //-----------------------------------//
 
 void RenderControl::OnMouseEvent(wxMouseEvent& event)
 {
-	//static int i = 0;
-	//LogDebug("Mouse event %d", i++);
-
-	//if( event.IsButton() || event.ButtonDown() )
-	//{
-	//	LogDebug("Setting focus");
-	//	SetFocus();
-	//}
-
-	inputManager->processMouseEvent( event );
-
-	event.Skip();
-}
-
-//-----------------------------------//
-
-void RenderControl::OnEnterWindow(wxMouseEvent& event)
-{
-
+	input->processMouseEvent( event );
 }
 
 //-----------------------------------//

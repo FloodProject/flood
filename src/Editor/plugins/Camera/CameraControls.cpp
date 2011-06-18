@@ -115,12 +115,6 @@ void CameraControls::updateCameraSelection()
 {
 	cameras.clear();
 
-	//cameras["Free"] = nullptr;
-	//cameras["Top"] = nullptr;
-	//cameras["Down"] = nullptr;
-	//cameras["Left"] = nullptr;
-	//cameras["Right"] = nullptr;
-
 	choiceView->Clear();
 
 	Engine* engine = GetEditor().getEngine();

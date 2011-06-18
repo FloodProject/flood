@@ -4,6 +4,7 @@ WIP (work-in-progress)
 EDITOR:
 -------
 
+Fix terrain projection
 Rework gizmo code
 Fix terrain painting
 Add tool options bar

@@ -1593,20 +1593,19 @@ SWIG_Lua_dostring(lua_State *L, const char* str) {
 #define SWIGTYPE_p_vapor__RefPtrT_vapor__Renderable_t swig_types[79]
 #define SWIGTYPE_p_vapor__RefPtrT_vapor__Scene_t swig_types[80]
 #define SWIGTYPE_p_vapor__RefPtrT_vapor__Transform_t swig_types[81]
-#define SWIGTYPE_p_vapor__ReferenceCounted swig_types[82]
-#define SWIGTYPE_p_vapor__RenderBlock swig_types[83]
-#define SWIGTYPE_p_vapor__RenderQueue swig_types[84]
-#define SWIGTYPE_p_vapor__RenderView swig_types[85]
-#define SWIGTYPE_p_vapor__Resource swig_types[86]
-#define SWIGTYPE_p_vapor__Scene swig_types[87]
-#define SWIGTYPE_p_vapor__SkinningMode swig_types[88]
-#define SWIGTYPE_p_vapor__Transform swig_types[89]
-#define SWIGTYPE_p_vapor__Vector2 swig_types[90]
-#define SWIGTYPE_p_vapor__Vector2i swig_types[91]
-#define SWIGTYPE_p_vapor__Vector3 swig_types[92]
-#define SWIGTYPE_p_vapor__Vector4 swig_types[93]
-static swig_type_info *swig_types[95];
-static swig_module_info swig_module = {swig_types, 94, 0, 0, 0, 0};
+#define SWIGTYPE_p_vapor__RenderBlock swig_types[82]
+#define SWIGTYPE_p_vapor__RenderQueue swig_types[83]
+#define SWIGTYPE_p_vapor__RenderView swig_types[84]
+#define SWIGTYPE_p_vapor__Resource swig_types[85]
+#define SWIGTYPE_p_vapor__Scene swig_types[86]
+#define SWIGTYPE_p_vapor__SkinningMode swig_types[87]
+#define SWIGTYPE_p_vapor__Transform swig_types[88]
+#define SWIGTYPE_p_vapor__Vector2 swig_types[89]
+#define SWIGTYPE_p_vapor__Vector2i swig_types[90]
+#define SWIGTYPE_p_vapor__Vector3 swig_types[91]
+#define SWIGTYPE_p_vapor__Vector4 swig_types[92]
+static swig_type_info *swig_types[94];
+static swig_module_info swig_module = {swig_types, 93, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -16608,25 +16607,25 @@ fail:
 }
 
 
-static int _wrap_RayTriangleQueryResult_intersection_set(lua_State* L) {
+static int _wrap_RayTriangleQueryResult_intersectionLocal_set(lua_State* L) {
   int SWIG_arg = 0;
   vapor::RayTriangleQueryResult *arg1 = (vapor::RayTriangleQueryResult *) 0 ;
   vapor::Vector3 *arg2 = (vapor::Vector3 *) 0 ;
   
-  SWIG_check_num_args("intersection",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersection",1,"vapor::RayTriangleQueryResult *");
-  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("intersection",2,"vapor::Vector3 *");
+  SWIG_check_num_args("intersectionLocal",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersectionLocal",1,"vapor::RayTriangleQueryResult *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("intersectionLocal",2,"vapor::Vector3 *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__RayTriangleQueryResult,0))){
-    SWIG_fail_ptr("RayTriangleQueryResult_intersection_set",1,SWIGTYPE_p_vapor__RayTriangleQueryResult);
+    SWIG_fail_ptr("RayTriangleQueryResult_intersectionLocal_set",1,SWIGTYPE_p_vapor__RayTriangleQueryResult);
   }
   
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3,0))){
-    SWIG_fail_ptr("RayTriangleQueryResult_intersection_set",2,SWIGTYPE_p_vapor__Vector3);
+    SWIG_fail_ptr("RayTriangleQueryResult_intersectionLocal_set",2,SWIGTYPE_p_vapor__Vector3);
   }
   
-  if (arg1) (arg1)->intersection = *arg2;
+  if (arg1) (arg1)->intersectionLocal = *arg2;
   
   return SWIG_arg;
   
@@ -16638,19 +16637,73 @@ fail:
 }
 
 
-static int _wrap_RayTriangleQueryResult_intersection_get(lua_State* L) {
+static int _wrap_RayTriangleQueryResult_intersectionLocal_get(lua_State* L) {
   int SWIG_arg = 0;
   vapor::RayTriangleQueryResult *arg1 = (vapor::RayTriangleQueryResult *) 0 ;
   vapor::Vector3 *result = 0 ;
   
-  SWIG_check_num_args("intersection",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersection",1,"vapor::RayTriangleQueryResult *");
+  SWIG_check_num_args("intersectionLocal",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersectionLocal",1,"vapor::RayTriangleQueryResult *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__RayTriangleQueryResult,0))){
-    SWIG_fail_ptr("RayTriangleQueryResult_intersection_get",1,SWIGTYPE_p_vapor__RayTriangleQueryResult);
+    SWIG_fail_ptr("RayTriangleQueryResult_intersectionLocal_get",1,SWIGTYPE_p_vapor__RayTriangleQueryResult);
   }
   
-  result = (vapor::Vector3 *)& ((arg1)->intersection);
+  result = (vapor::Vector3 *)& ((arg1)->intersectionLocal);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Vector3,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_RayTriangleQueryResult_intersectionWorld_set(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::RayTriangleQueryResult *arg1 = (vapor::RayTriangleQueryResult *) 0 ;
+  vapor::Vector3 *arg2 = (vapor::Vector3 *) 0 ;
+  
+  SWIG_check_num_args("intersectionWorld",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersectionWorld",1,"vapor::RayTriangleQueryResult *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("intersectionWorld",2,"vapor::Vector3 *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__RayTriangleQueryResult,0))){
+    SWIG_fail_ptr("RayTriangleQueryResult_intersectionWorld_set",1,SWIGTYPE_p_vapor__RayTriangleQueryResult);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_vapor__Vector3,0))){
+    SWIG_fail_ptr("RayTriangleQueryResult_intersectionWorld_set",2,SWIGTYPE_p_vapor__Vector3);
+  }
+  
+  if (arg1) (arg1)->intersectionWorld = *arg2;
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_RayTriangleQueryResult_intersectionWorld_get(lua_State* L) {
+  int SWIG_arg = 0;
+  vapor::RayTriangleQueryResult *arg1 = (vapor::RayTriangleQueryResult *) 0 ;
+  vapor::Vector3 *result = 0 ;
+  
+  SWIG_check_num_args("intersectionWorld",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersectionWorld",1,"vapor::RayTriangleQueryResult *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_vapor__RayTriangleQueryResult,0))){
+    SWIG_fail_ptr("RayTriangleQueryResult_intersectionWorld_get",1,SWIGTYPE_p_vapor__RayTriangleQueryResult);
+  }
+  
+  result = (vapor::Vector3 *)& ((arg1)->intersectionWorld);
   SWIG_NewPointerObj(L,result,SWIGTYPE_p_vapor__Vector3,0); SWIG_arg++; 
   return SWIG_arg;
   
@@ -16859,7 +16912,8 @@ static swig_lua_method swig_vapor_RayTriangleQueryResult_methods[] = {
 static swig_lua_attribute swig_vapor_RayTriangleQueryResult_attributes[] = {
     { "geometry", _wrap_RayTriangleQueryResult_geometry_get, _wrap_RayTriangleQueryResult_geometry_set},
     { "renderable", _wrap_RayTriangleQueryResult_renderable_get, _wrap_RayTriangleQueryResult_renderable_set},
-    { "intersection", _wrap_RayTriangleQueryResult_intersection_get, _wrap_RayTriangleQueryResult_intersection_set},
+    { "intersectionLocal", _wrap_RayTriangleQueryResult_intersectionLocal_get, _wrap_RayTriangleQueryResult_intersectionLocal_set},
+    { "intersectionWorld", _wrap_RayTriangleQueryResult_intersectionWorld_get, _wrap_RayTriangleQueryResult_intersectionWorld_set},
     { "intersectionUV", _wrap_RayTriangleQueryResult_intersectionUV_get, _wrap_RayTriangleQueryResult_intersectionUV_set},
     { "trianglePosition", _wrap_RayTriangleQueryResult_trianglePosition_get, _wrap_RayTriangleQueryResult_trianglePosition_set},
     { "triangleUV", _wrap_RayTriangleQueryResult_triangleUV_get, _wrap_RayTriangleQueryResult_triangleUV_set},
@@ -17680,42 +17734,6 @@ static swig_lua_const_info swig_constants[] = {
 
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
-static void *_p_vapor__ComponentTo_p_vapor__ReferenceCounted(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((vapor::ReferenceCounted *)  ((vapor::Component *) x));
-}
-static void *_p_vapor__ControllerTo_p_vapor__ReferenceCounted(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((vapor::ReferenceCounted *) (vapor::Component *) ((vapor::Controller *) x));
-}
-static void *_p_vapor__GroupTo_p_vapor__ReferenceCounted(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((vapor::ReferenceCounted *) (vapor::Entity *) ((vapor::Group *) x));
-}
-static void *_p_vapor__ResourceTo_p_vapor__ReferenceCounted(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((vapor::ReferenceCounted *)  ((vapor::Resource *) x));
-}
-static void *_p_vapor__MeshTo_p_vapor__ReferenceCounted(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((vapor::ReferenceCounted *) (vapor::Resource *) ((vapor::Mesh *) x));
-}
-static void *_p_vapor__ModelTo_p_vapor__ReferenceCounted(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((vapor::ReferenceCounted *) (vapor::Component *)(vapor::Geometry *) ((vapor::Model *) x));
-}
-static void *_p_vapor__SceneTo_p_vapor__ReferenceCounted(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((vapor::ReferenceCounted *) (vapor::Entity *)(vapor::Group *) ((vapor::Scene *) x));
-}
-static void *_p_vapor__LightTo_p_vapor__ReferenceCounted(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((vapor::ReferenceCounted *) (vapor::Component *) ((vapor::Light *) x));
-}
-static void *_p_vapor__EntityTo_p_vapor__ReferenceCounted(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((vapor::ReferenceCounted *)  ((vapor::Entity *) x));
-}
-static void *_p_vapor__GeometryTo_p_vapor__ReferenceCounted(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((vapor::ReferenceCounted *) (vapor::Component *) ((vapor::Geometry *) x));
-}
-static void *_p_vapor__TransformTo_p_vapor__ReferenceCounted(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((vapor::ReferenceCounted *) (vapor::Component *) ((vapor::Transform *) x));
-}
-static void *_p_vapor__CameraTo_p_vapor__ReferenceCounted(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((vapor::ReferenceCounted *) (vapor::Component *) ((vapor::Camera *) x));
-}
 static void *_p_vapor__GroupTo_p_vapor__Entity(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((vapor::Entity *)  ((vapor::Group *) x));
 }
@@ -17864,7 +17882,6 @@ static swig_type_info _swigt__p_vapor__RefPtrT_vapor__Model_t = {"_p_vapor__RefP
 static swig_type_info _swigt__p_vapor__RefPtrT_vapor__Renderable_t = {"_p_vapor__RefPtrT_vapor__Renderable_t", "vapor::RenderablePtr *|vapor::RefPtr< vapor::Renderable > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_vapor__RefPtrT_vapor__Scene_t = {"_p_vapor__RefPtrT_vapor__Scene_t", "vapor::RefPtr< vapor::Scene > *|vapor::ScenePtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_vapor__RefPtrT_vapor__Transform_t = {"_p_vapor__RefPtrT_vapor__Transform_t", "vapor::RefPtr< vapor::Transform > *|vapor::TransformPtr *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_vapor__ReferenceCounted = {"_p_vapor__ReferenceCounted", "vapor::ReferenceCounted *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_vapor__RenderBlock = {"_p_vapor__RenderBlock", "vapor::RenderBlock *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_vapor__RenderQueue = {"_p_vapor__RenderQueue", "vapor::RenderQueue *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_vapor__RenderView = {"_p_vapor__RenderView", "vapor::RenderView *", 0, 0, (void*)0, 0};
@@ -17960,7 +17977,6 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_vapor__RefPtrT_vapor__Renderable_t,
   &_swigt__p_vapor__RefPtrT_vapor__Scene_t,
   &_swigt__p_vapor__RefPtrT_vapor__Transform_t,
-  &_swigt__p_vapor__ReferenceCounted,
   &_swigt__p_vapor__RenderBlock,
   &_swigt__p_vapor__RenderQueue,
   &_swigt__p_vapor__RenderView,
@@ -18056,7 +18072,6 @@ static swig_cast_info _swigc__p_vapor__RefPtrT_vapor__Model_t[] = {  {&_swigt__p
 static swig_cast_info _swigc__p_vapor__RefPtrT_vapor__Renderable_t[] = {  {&_swigt__p_vapor__RefPtrT_vapor__Renderable_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__RefPtrT_vapor__Scene_t[] = {  {&_swigt__p_vapor__RefPtrT_vapor__Scene_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__RefPtrT_vapor__Transform_t[] = {  {&_swigt__p_vapor__RefPtrT_vapor__Transform_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_vapor__ReferenceCounted[] = {  {&_swigt__p_vapor__ReferenceCounted, 0, 0, 0},  {&_swigt__p_vapor__Component, _p_vapor__ComponentTo_p_vapor__ReferenceCounted, 0, 0},  {&_swigt__p_vapor__Controller, _p_vapor__ControllerTo_p_vapor__ReferenceCounted, 0, 0},  {&_swigt__p_vapor__Group, _p_vapor__GroupTo_p_vapor__ReferenceCounted, 0, 0},  {&_swigt__p_vapor__Resource, _p_vapor__ResourceTo_p_vapor__ReferenceCounted, 0, 0},  {&_swigt__p_vapor__Model, _p_vapor__ModelTo_p_vapor__ReferenceCounted, 0, 0},  {&_swigt__p_vapor__Scene, _p_vapor__SceneTo_p_vapor__ReferenceCounted, 0, 0},  {&_swigt__p_vapor__Light, _p_vapor__LightTo_p_vapor__ReferenceCounted, 0, 0},  {&_swigt__p_vapor__Geometry, _p_vapor__GeometryTo_p_vapor__ReferenceCounted, 0, 0},  {&_swigt__p_vapor__Mesh, _p_vapor__MeshTo_p_vapor__ReferenceCounted, 0, 0},  {&_swigt__p_vapor__Entity, _p_vapor__EntityTo_p_vapor__ReferenceCounted, 0, 0},  {&_swigt__p_vapor__Transform, _p_vapor__TransformTo_p_vapor__ReferenceCounted, 0, 0},  {&_swigt__p_vapor__Camera, _p_vapor__CameraTo_p_vapor__ReferenceCounted, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__RenderBlock[] = {  {&_swigt__p_vapor__RenderBlock, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__RenderQueue[] = {  {&_swigt__p_vapor__RenderQueue, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_vapor__RenderView[] = {  {&_swigt__p_vapor__RenderView, 0, 0, 0},{0, 0, 0, 0}};
@@ -18152,7 +18167,6 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_vapor__RefPtrT_vapor__Renderable_t,
   _swigc__p_vapor__RefPtrT_vapor__Scene_t,
   _swigc__p_vapor__RefPtrT_vapor__Transform_t,
-  _swigc__p_vapor__ReferenceCounted,
   _swigc__p_vapor__RenderBlock,
   _swigc__p_vapor__RenderQueue,
   _swigc__p_vapor__RenderView,

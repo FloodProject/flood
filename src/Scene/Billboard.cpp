@@ -47,26 +47,28 @@ void Billboard::update( float )
 
 void Billboard::onPreRender( const Camera& camera )
 {
-	//TransformPtr transform = getEntity()->getTransform();
-	//const Matrix4x3& view = camera.getViewMatrix();
+#if 0
+	TransformPtr transform = getEntity()->getTransform();
+	const Matrix4x3& view = camera.getViewMatrix();
 
-	//Vector3 right( view.m11, view.m12, view.m13 );
-	//right.normalize();
-	//
-	//Vector3 up( view.m21, view.m22, view.m23 );
-	//up.normalize();
+	Vector3 right( view.m11, view.m12, view.m13 );
+	right.normalize();
+	
+	Vector3 up( view.m21, view.m22, view.m23 );
+	up.normalize();
 
-	//Vector3 forward( view.m31, view.m32, view.m33 );
-	//forward.normalize();
+	Vector3 forward( view.m31, view.m32, view.m33 );
+	forward.normalize();
 
-	//Matrix4x3 lookAt = transform->lookAt( -forward, up );
-	//
-	//Vector3 position = transform->getPosition();
-	//lookAt.tx = position.x;
-	//lookAt.ty = position.y;
-	//lookAt.tz = position.z;
-	//
-	//transform->setAbsoluteTransform( lookAt );
+	Matrix4x3 lookAt = transform->lookAt( -forward, up );
+	
+	Vector3 position = transform->getPosition();
+	lookAt.tx = position.x;
+	lookAt.ty = position.y;
+	lookAt.tz = position.z;
+	
+	transform->setAbsoluteTransform( lookAt );
+#endif
 
 	const TransformPtr& transform = getEntity()->getTransform();
 	const TransformPtr& camTransform = camera.getEntity()->getTransform();

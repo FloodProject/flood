@@ -38,7 +38,7 @@ PluginMetadata ProjectPlugin::getMetadata()
 	PluginMetadata metadata;
 	
 	metadata.name = "Project";
-	metadata.description = "Provides project management functionality";
+	metadata.description = "Provides project management functionality.";
 	metadata.author = "triton";
 	metadata.version = "1.0";
 	metadata.priority = 10;
@@ -91,15 +91,27 @@ void ProjectPlugin::onPluginDisable()
 
 void ProjectPlugin::onNewButtonClick(wxCommandEvent& event)
 {
-#if 0
-	if( !askSaveChanges() )
+	Document* current = editor->getDocument();
+	
+#if 1
+	if(current)
+	{
+		wxMessageBox("Sorry, creating new documents is disabled",
+			wxMessageBoxCaptionStr, wxICON_ERROR | wxOK);
 		return;
+	}
 #endif
+
+	if( current && !askSaveChanges() )
+		return;
 
 	SceneDocument* document = new SceneDocument();
 	editor->addDocument(document);
 
 	switchScene(document);
+
+	Events* events = GetEditor().getEventManager();
+	events->onDocumentCreate(*document);
 }
 
 //-----------------------------------//

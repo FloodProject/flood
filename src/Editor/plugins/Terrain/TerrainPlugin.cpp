@@ -118,8 +118,7 @@ void TerrainPlugin::onToolSelect( int id )
 
 void TerrainPlugin::onToolUnselect( int id )
 {
-	if(isPluginTool(id))
-		return;
+	if( hasTool(id) ) return;
 
 	editor->getAUI()->GetPane("Terrains").Hide();
 	editor->getAUI()->Update();
@@ -248,7 +247,7 @@ void TerrainPlugin::updateBrushProjection( int x, int y )
 	else
 	{
 		const TerrainCellPtr& cell = RefCast<TerrainCell>(res.geometry);
-		projectBrush(res.intersection, cell);
+		projectBrush(res.intersectionWorld, cell);
 
 		// Hide the cursor while projecting the brush.
 		window->setCursorVisiblePriority(false, 10);

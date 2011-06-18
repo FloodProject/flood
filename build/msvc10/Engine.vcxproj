@@ -190,6 +190,8 @@
     <ClCompile Include="..\..\src\Controllers\ThirdPersonController.cpp" />
     <ClCompile Include="..\..\src\Core\Subsystem.cpp" />
     <ClCompile Include="..\..\src\Engine\Cube.cpp" />
+    <ClCompile Include="..\..\src\Engine\Page.cpp" />
+    <ClCompile Include="..\..\src\Engine\PageManager.cpp" />
     <ClCompile Include="..\..\src\Engine\Sphere.cpp" />
     <ClCompile Include="..\..\src\Engine\Quad.cpp" />
     <ClCompile Include="..\..\src\Engine\DebugGeometry.cpp" />
@@ -214,8 +216,6 @@
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">4996; 4127;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release DLL|Win32'">4996; 4127;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Page.cpp" />
-    <ClCompile Include="..\..\src\Engine\PageManager.cpp" />
     <ClCompile Include="..\..\src\Input\InputDevice.cpp" />
     <ClCompile Include="..\..\src\Input\InputManager.cpp" />
     <ClCompile Include="..\..\src\Input\InputMap.cpp" />
@@ -275,6 +275,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\Engine\API.h" />
+    <ClInclude Include="..\..\inc\vapor\paging\Page.h" />
+    <ClInclude Include="..\..\inc\vapor\paging\PageManager.h" />
     <ClInclude Include="..\..\inc\vapor\render\Device.h" />
     <ClInclude Include="..\..\inc\vapor\render\GL.h" />
     <ClInclude Include="..\..\inc\vapor\render\RenderQueue.h" />
@@ -356,8 +358,6 @@
     <ClInclude Include="..\..\inc\vapor\physics\btKinematicController.h" />
     <ClInclude Include="..\..\src\Scene\MeshBuilder.h" />
     <CustomBuildStep Include="..\..\inc\vapor\resources\PNG_Loader.h" />
-    <ClInclude Include="..\..\inc\vapor\paging\Page.h" />
-    <ClInclude Include="..\..\inc\vapor\paging\PageManager.h" />
     <ClInclude Include="..\..\inc\vapor\controllers\Controller.h" />
     <ClInclude Include="..\..\inc\vapor\controllers\CameraController.h" />
     <ClInclude Include="..\..\inc\vapor\controllers\FirstPersonController.h" />

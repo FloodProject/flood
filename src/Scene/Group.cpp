@@ -8,6 +8,7 @@
 
 #include "Engine/API.h"
 #include "Scene/Group.h"
+#include "Scene/Transform.h"
 #include <algorithm>
 
 namespace vapor {
@@ -83,7 +84,7 @@ void Group::update( float delta )
 	for( size_t i = 0; i < entities.size(); i++ )
 	{
 		const EntityPtr& entity = entities[i];
-		entity->update( delta );
+		if(entity) entity->update( delta );
 	}
 }
 
@@ -91,10 +92,28 @@ void Group::update( float delta )
 
 void Group::fixUp()
 {
+	std::vector<EntityPtr> invalid;
+
 	for( size_t i = 0; i < entities.size(); i++ )
 	{
 		const EntityPtr& entity = entities[i];
-		entity->setParent(this);
+		
+		if(!entity)
+		{
+			invalid.push_back(entity);
+			continue;
+		}
+
+		// Check if all entities have a transform
+		bool hasTransform = entity->getComponent<Transform>();
+		if( !hasTransform ) entity->addTransform();
+	}
+
+	// Remove invalid entities
+	for( size_t i = 0; i < invalid.size(); i++ )
+	{
+		auto it = std::find(entities.begin(), entities.end(), invalid[i]);
+		entities.erase(it);
 	}
 }
 

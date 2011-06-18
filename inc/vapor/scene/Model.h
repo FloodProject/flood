@@ -81,6 +81,9 @@ public:
 
 	// Performs CPU skinning of the mesh.
 	void doSkinning(std::vector<Vector3>& newPositions);
+
+	// Updates the skinning details of the model.
+	void updateSkinning();
 	
 	// Updates the model.
 	void update( float delta );
@@ -137,6 +140,9 @@ protected:
 
 	// Has the model been built.
 	bool modelBuilt;
+
+	// Holds if the model needs skin update.
+	bool updateSkin;
 
 	// Keeps track if we want to perform animation.
 	bool animationEnabled;

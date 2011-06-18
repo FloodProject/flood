@@ -33,32 +33,67 @@ Plugin::~Plugin()
 
 void Plugin::doPluginDisable()
 {
-	Engine* engine = editor->getEngine();
-	const ScenePtr& scene = engine->getScene();
-
-	if(scene)
-		onSceneUnload(scene);
-
 	onPluginDisable();
 	removeTools();
 }
 
 //-----------------------------------//
 
-void Plugin::addTool( wxAuiToolBarItem* tool, bool addToMenu )
+PluginTool* Plugin::findTool( wxAuiToolBarItem* tool )
+{
+	for( size_t i = 0; i < tools.size(); i++ )
+	{
+		PluginTool& p = tools[i];
+		if(p.item == tool) return &p;
+	}
+
+	return nullptr;
+}
+
+//-----------------------------------//
+
+void Plugin::addTool( const PluginTool& pluginTool, bool addToMenu )
 {
 	//if( tool->IsSeparator() ) return;
 
-	tools.push_back( tool );
+	tools.push_back( pluginTool );
 
-	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
-	toolbarCtrl->Realize();
+	wxAuiToolBar* toolbar = pluginTool.toolbar;
+	
+	if( toolbar )
+	{
+		toolbar->Hide();
+		toolbar->Realize();
+	}
 
 	if( addToMenu )
 	{
+		wxAuiToolBarItem* tool = pluginTool.item;
 		editor->menuTools->Append(tool->GetId(), tool->GetLabel());
+
+		wxAuiToolBar* toolbarCtrl = editor->getToolbar();
+		toolbarCtrl->Realize();
+
 		editor->getAUI()->Update();
 	}
+}
+
+//-----------------------------------//
+
+void Plugin::addTool( wxAuiToolBarItem* tool, bool addToMenu )
+{
+	PluginTool pt;
+	pt.item = tool;
+
+	addTool(pt);
+}
+
+//-----------------------------------//
+
+void PluginTool::setToolbar(wxAuiToolBar* tb)
+{
+	tb->Realize();
+	toolbar = tb;
 }
 
 //-----------------------------------//
@@ -68,27 +103,26 @@ void Plugin::removeTools()
 	// Clean up toolbar stuff.
 	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
 
-	for( uint i = 0; i < tools.size(); i++ )
+	for( size_t i = 0; i < tools.size(); i++ )
 	{
-		wxAuiToolBarItem* tool = tools[i];
-		
+		wxAuiToolBarItem* tool = tools[i].item;
 		int id = tool->GetId();
 		toolbarCtrl->DeleteTool(id);
 	}
+
+	toolbarCtrl->Realize();
 
 	tools.clear();
 }
 
 //-----------------------------------//
 
-bool Plugin::isPluginTool(int toolId) const
+bool Plugin::hasTool(int toolId) const
 {
-	for( uint i = 0; i < tools.size(); i++ )
+	for( size_t i = 0; i < tools.size(); i++ )
 	{
-		wxAuiToolBarItem* tool = tools[i];
-		
-		if( toolId == tool->GetId() )
-			return true;
+		wxAuiToolBarItem* tool = tools[i].item;
+		if( toolId == tool->GetId() ) return true;
 	}
 
 	return false;
@@ -118,7 +152,7 @@ void Plugin::removePage( wxWindow* page )
 
 //-----------------------------------//
 
-bool Plugin::isPluginEnabled() const
+bool Plugin::isEnabled() const
 {
 	return enabled;
 }

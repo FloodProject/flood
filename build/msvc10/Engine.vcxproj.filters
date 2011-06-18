@@ -10,24 +10,6 @@
     <Filter Include="Render\Buffers">
       <UniqueIdentifier>{6d979caa-492d-4488-bbb8-a71ebbc6c1e2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Render\Primitives">
-      <UniqueIdentifier>{e359baa4-1812-4696-a0ef-3c33833937cd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Render\Primitives\Cube">
-      <UniqueIdentifier>{794afaa5-a3fd-465d-92c4-4ec172c0378d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Render\Primitives\Sphere">
-      <UniqueIdentifier>{56016b1e-95e6-4851-9cbc-d857f55e2f11}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Render\Primitives\Quad">
-      <UniqueIdentifier>{7005024c-93f2-445b-a254-4f7eb1623855}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Render\Primitives\Cone">
-      <UniqueIdentifier>{50106e3b-6ce6-4d1a-b821-02f599449f1e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Render\Primitives\Debug">
-      <UniqueIdentifier>{0b6a713d-48e0-4486-8b2d-d142166fa1c3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Render\Target">
       <UniqueIdentifier>{4296de7c-264b-4eb2-89b3-9459d3be1866}</UniqueIdentifier>
     </Filter>
@@ -127,9 +109,6 @@
     <Filter Include="Terrain">
       <UniqueIdentifier>{ea77f83f-e5ab-4721-85bc-f542d1fd6790}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Paging">
-      <UniqueIdentifier>{0bad40b1-3622-4812-b531-bd3dfc159758}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Audio">
       <UniqueIdentifier>{b81a2bdf-ed7f-4c31-b32f-ef5508a868ff}</UniqueIdentifier>
     </Filter>
@@ -205,19 +184,37 @@
     <Filter Include="Physics\Character">
       <UniqueIdentifier>{86e0a566-d603-4458-ac03-2a1c5d15fa44}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Geometry">
+      <UniqueIdentifier>{ddc3b015-3b45-4bb2-8dcc-e5d6ad2f279d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Geometry\Cone">
+      <UniqueIdentifier>{50106e3b-6ce6-4d1a-b821-02f599449f1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Geometry\Sphere">
+      <UniqueIdentifier>{56016b1e-95e6-4851-9cbc-d857f55e2f11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Geometry\Cube">
+      <UniqueIdentifier>{794afaa5-a3fd-465d-92c4-4ec172c0378d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Geometry\Debug">
+      <UniqueIdentifier>{0b6a713d-48e0-4486-8b2d-d142166fa1c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Geometry\Quad">
+      <UniqueIdentifier>{7005024c-93f2-445b-a254-4f7eb1623855}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Paging">
+      <UniqueIdentifier>{262f6874-2b2d-4650-831a-89147d7e2944}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\Engine\Cube.cpp">
-      <Filter>Render\Primitives\Cube</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Engine\Sphere.cpp">
-      <Filter>Render\Primitives\Sphere</Filter>
+      <Filter>Geometry\Sphere</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\Quad.cpp">
-      <Filter>Render\Primitives\Quad</Filter>
+      <Filter>Geometry\Quad</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\DebugGeometry.cpp">
-      <Filter>Render\Primitives\Debug</Filter>
+      <Filter>Geometry\Debug</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\Window.cpp">
       <Filter>Window</Filter>
@@ -251,12 +248,6 @@
     </ClCompile>
     <ClCompile Include="..\..\interface\vapor_wrap.cxx">
       <Filter>Scripting\Bindings</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\Page.cpp">
-      <Filter>Paging</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\PageManager.cpp">
-      <Filter>Paging</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Audio\AudioBuffer.cpp">
       <Filter>Audio\Buffer</Filter>
@@ -457,6 +448,15 @@
     <ClCompile Include="..\..\src\Render\Renderable.cpp">
       <Filter>Render</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Engine\Page.cpp">
+      <Filter>Paging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Engine\PageManager.cpp">
+      <Filter>Paging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Engine\Cube.cpp">
+      <Filter>Geometry\Cube</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\vapor\render\Device.h">
@@ -483,17 +483,14 @@
     <ClInclude Include="..\..\inc\vapor\render\VertexBuffer.h">
       <Filter>Render\Buffers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\Cube.h">
-      <Filter>Render\Primitives\Cube</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\vapor\render\Sphere.h">
-      <Filter>Render\Primitives\Sphere</Filter>
+      <Filter>Geometry\Sphere</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\render\Quad.h">
-      <Filter>Render\Primitives\Quad</Filter>
+      <Filter>Geometry\Quad</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\render\DebugGeometry.h">
-      <Filter>Render\Primitives\Debug</Filter>
+      <Filter>Geometry\Debug</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\render\Window.h">
       <Filter>Window</Filter>
@@ -678,12 +675,6 @@
     <ClInclude Include="..\..\inc\vapor\physics\btKinematicController.h">
       <Filter>Physics\Controller</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\paging\Page.h">
-      <Filter>Paging</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\paging\PageManager.h">
-      <Filter>Paging</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\vapor\controllers\Controller.h">
       <Filter>Controllers</Filter>
     </ClInclude>
@@ -722,6 +713,15 @@
     <ClInclude Include="..\..\inc\vapor\Engine.h" />
     <ClInclude Include="..\..\inc\vapor\render\Renderable.h">
       <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\paging\Page.h">
+      <Filter>Paging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\paging\PageManager.h">
+      <Filter>Paging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\render\Cube.h">
+      <Filter>Geometry\Cube</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

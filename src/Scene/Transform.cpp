@@ -40,59 +40,59 @@ Transform::Transform()
 { }
 
 //-----------------------------------//
+#if 0
+void Transform::translate( const Vector3& offset )
+{
+	translate( offset.x, offset.y, offset.z );
+}
 
-//void Transform::translate( const Vector3& offset )
-//{
-//	translate( offset.x, offset.y, offset.z );
-//}
-//
-////-----------------------------------//
-//
-//void Transform::translate( float x, float y, float z )
-//{
-//	setChanged();
-//
-//	position.x += x;
-//	position.y += y;
-//	position.z += z;
-//}
-//
-////-----------------------------------//
-//
-//void Transform::scale( const Vector3& value )
-//{
-//	scale( value.x, value.y, value.z );
-//}
-//
-////-----------------------------------//
-//
-//void Transform::scale( float x, float y, float z )
-//{
-//	setChanged();
-//
-//	scaling.x *= x;
-//	scaling.y *= y;
-//	scaling.z *= z;
-//}
-//
-////-----------------------------------//
-//
-//void Transform::rotate( const Vector3& rot )
-//{
-//	rotate( rot.x, rot.y, rot.z );
-//}
-//
-////-----------------------------------//
-//
-//void Transform::rotate( float xang, float yang, float zang )
-//{
-//	setChanged();
-//
-//	rotation.x += xang;
-//	rotation.y += yang;
-//	rotation.z += zang;
-//}
+//-----------------------------------//
 
+void Transform::translate( float x, float y, float z )
+{
+	setChanged();
+
+	position.x += x;
+	position.y += y;
+	position.z += z;
+}
+
+//-----------------------------------//
+
+void Transform::scale( const Vector3& value )
+{
+	scale( value.x, value.y, value.z );
+}
+
+//-----------------------------------//
+
+void Transform::scale( float x, float y, float z )
+{
+	setChanged();
+
+	scaling.x *= x;
+	scaling.y *= y;
+	scaling.z *= z;
+}
+
+//-----------------------------------//
+
+void Transform::rotate( const Vector3& rot )
+{
+	rotate( rot.x, rot.y, rot.z );
+}
+
+//-----------------------------------//
+
+void Transform::rotate( float xang, float yang, float zang )
+{
+	setChanged();
+
+	rotation.x += xang;
+	rotation.y += yang;
+	rotation.z += zang;
+}
+#endif
 //-----------------------------------//
 
 void Transform::setPosition( const Vector3& position )
@@ -146,6 +146,7 @@ Matrix4x3 Transform::lookAt( const Vector3& lookAtVector, const Vector3& upVecto
 	Vector3 yaxis = zaxis.cross(xaxis);
 
 	Matrix4x3 mat;
+
 	mat.m11 = xaxis.x;
 	mat.m12 = yaxis.x;
 	mat.m13 = zaxis.x;

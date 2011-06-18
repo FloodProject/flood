@@ -29,11 +29,12 @@ REFLECT_ENUM(ResourceGroup)
 	ENUM(Audio)
 	ENUM(Scripts)
 	ENUM(Scenes)
+	ENUM(Materials)
 REFLECT_ENUM_END()
 
 REFLECT_ABSTRACT_CHILD_CLASS(Resource, Object)
 	FIELD_PRIMITIVE(string, path) FIELD_READONLY(path)
-	FIELD_ENUM(ResourceStatus, status) FIELD_READONLY(status)
+	FIELD_ENUM(ResourceStatus, status) FIELD_READONLY(status) FIELD_NO_SERIALIZE(status)
 REFLECT_CLASS_END()
 
 //-----------------------------------//

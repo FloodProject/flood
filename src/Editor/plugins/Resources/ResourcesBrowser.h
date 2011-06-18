@@ -23,8 +23,7 @@ class ResourcesBrowser : public wxFrame
 {
 public:
 
-	ResourcesBrowser( EditorFrame* editor,
-		wxWindow* parent, wxWindowID id = wxID_ANY,
+	ResourcesBrowser( wxWindow* parent, wxWindowID id = wxID_ANY,
 		const wxPoint& pos = wxDefaultPosition,
 		const wxSize& size = wxDefaultSize );
 
@@ -50,7 +49,6 @@ protected:
 	void OnListBeginDrag(wxListEvent& event);
 	void onConnectClicked(wxCommandEvent& event);
 
-	EditorFrame* editor;
 	wxImageList* images;
 	wxPanel* m_panel2;
 	wxListCtrl* m_listCtrl;

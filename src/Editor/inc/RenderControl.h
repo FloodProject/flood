@@ -57,13 +57,13 @@ public:
 	GETTER(RenderWindow, RenderWindow*, window)
 
 	// Gets the associated input manager.
-	GETTER(InputManager, EditorInputManager*, inputManager)
+	GETTER(InputManager, EditorInputManager*, input)
 
 	// Add your frame updating code here.
-	Event1<float> onUpdate;
+	Delegate1<float> onUpdate;
 
 	// Add your frame rendering code here.
-	Event0<> onRender;
+	Delegate0<> onRender;
 
 protected:
 
@@ -83,7 +83,6 @@ protected:
 	void OnKeyUp(wxKeyEvent& event);
 	void OnMouseEvent(wxMouseEvent& event);
 	void OnMouseCaptureLost(wxMouseCaptureLostEvent& event);
-	void OnEnterWindow(wxMouseEvent& event);
 
 	// Timer responsible for update ticks.
 	wxTimer frameUpdateTimer;
@@ -98,7 +97,7 @@ protected:
 	RenderWindow* window;
 
 	// Holds an instance of the input manager.
-	EditorInputManager* inputManager;
+	EditorInputManager* input;
 
 	// Tracks if the control needs to be redrawn.
 	bool needsRedraw;

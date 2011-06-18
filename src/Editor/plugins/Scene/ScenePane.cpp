@@ -14,6 +14,7 @@
 #include "Core/Utilities.h"
 #include "EditorTags.h"
 #include "UndoManager.h"
+#include "Document.h"
 
 #include "Scene/Tags.h"
 #include "Scene/Scene.h"
@@ -140,6 +141,8 @@ void ScenePage::setScene(const ScenePtr& scene)
 
 void ScenePage::addGroup( wxTreeItemId id, const EntityPtr& entity, bool createGroup )
 {
+	if( !entity ) return;
+
 	if( !ClassInherits(entity->getType(), ReflectionGetType(Group)) )
 	{
 		addEntity(id, entity);

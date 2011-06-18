@@ -160,6 +160,7 @@ struct FieldQualifier
 		SharedPointer	= 1 << 5,
 		RefPointer		= 1 << 6,
 		ReadOnly		= 1 << 7,
+		NoSerialize		= 1 << 8
 	};
 };
 
@@ -167,7 +168,7 @@ struct API_CORE Field
 {
 	Type* type;
 	const char* name;
-	uint8 qualifiers;
+	uint16 qualifiers;
 	uint16 offset;
 	uint16 size;
 	uint16 pointer_size;
@@ -189,7 +190,8 @@ API_CORE void FieldSetSetter(Field*, FieldSetterFunction = nullptr);
 #define FieldIsRawPointer(f)    FieldHasQualifier(f, FieldQualifier::RawPointer)
 #define FieldIsRefPointer(f)    FieldHasQualifier(f, FieldQualifier::RefPointer)
 #define FieldIsSharedPointer(f) FieldHasQualifier(f, FieldQualifier::SharedPointer)
-#define FieldIsReadOnly(f) FieldHasQualifier(f, FieldQualifier::ReadOnly)
+#define FieldIsReadOnly(f)      FieldHasQualifier(f, FieldQualifier::ReadOnly)
+#define FieldIsSerializable(f)  (!FieldHasQualifier(f, FieldQualifier::NoSerialize))
 #define FieldIsPointer(f)       (FieldIsRawPointer(f) || FieldIsRefPointer(f) || FieldIsSharedPointer(f) || FieldIsHandle(f))
 
 //-----------------------------------//

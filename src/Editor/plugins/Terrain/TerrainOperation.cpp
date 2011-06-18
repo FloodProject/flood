@@ -88,7 +88,7 @@ void TerrainOperation::updateNormals()
 	#pragma TODO("Generate terrain normals in the background")
 	//CellPtr cell = boost::static_pointer_cast<Cell>( renderable );
 
-	const Vector3& pick = rayQuery.intersection;
+	const Vector3& pick = rayQuery.intersectionWorld;
 
 	BoundingSphere bs( pick, brushSize );
 	
@@ -198,7 +198,7 @@ void TerrainOperation::getCellsInRange(const BoundingSphere& bs, std::vector<Cel
 void TerrainOperation::applyRaiseTool()
 {
 	RenderablePtr rend = rayQuery.renderable;
-	const Vector3& pick = rayQuery.intersection;
+	const Vector3& pick = rayQuery.intersectionWorld;
 
 	BoundingSphere bs( pick, brushSize );
 	

@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "Core/Handle.h"
+
 NAMESPACE_BEGIN
 
 //-----------------------------------//
@@ -42,11 +44,29 @@ struct ReflectionWalkType
 	};
 };
 
+struct Class;
 struct Object;
 struct ReflectionContext;
 
 // Walks the object calling the given reflection context.
-void ReflectionWalk(Object*, ReflectionContext*);
+API_CORE void ReflectionWalk(Object*, ReflectionContext*);
+
+/* Handles need to be resolved when they are walked via reflection.
+ * The client code is responsible for setting up the mapping functions
+ * that allow the reflection walking code to obtain handle details.
+ */
+
+typedef HandleId (*ReflectionDeserializeHandleFn)(const char*); 
+
+struct API_CORE ReflectionHandleContext
+{
+	Class* type;
+	HandleManager* handles;
+	ReflectionDeserializeHandleFn deserialize;
+};
+
+API_CORE void ReflectionSetHandleContext(ReflectionHandleContext context);
+API_CORE bool ReflectionFindHandleContext(Class* klass, ReflectionHandleContext& ctx);
 
 // Walking functions
 typedef void (*ReflectionWalkFunc)(ReflectionContext*, ReflectionWalkType::Enum);
@@ -111,17 +131,17 @@ struct API_CORE Serializer
 };
 
 // Creates a new JSON serializer.
-Serializer* SerializerCreateJSON(Allocator*);
+API_CORE Serializer* SerializerCreateJSON(Allocator*);
 
 // Creates a new binary serializer.
-Serializer* SerializerCreateBinary(Allocator*);
+API_CORE Serializer* SerializerCreateBinary(Allocator*);
 
 // Destroys the serializer.
-void SerializerDestroy(Serializer*);
+API_CORE void SerializerDestroy(Serializer*);
 
 // Loads an object from a stream.
-Object* SerializerLoad(Serializer*);
-void SerializerSave(Serializer*);
+API_CORE Object* SerializerLoad(Serializer*);
+API_CORE void SerializerSave(Serializer*);
 
 //-----------------------------------//
 

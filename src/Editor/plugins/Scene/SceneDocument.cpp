@@ -8,12 +8,15 @@
 
 #include "Editor/API.h"
 #include "SceneDocument.h"
-#include "RenderControl.h"
 #include "Editor.h"
+#include "Events.h"
+#include "RenderControl.h"
+#include "EditorIcons.h"
 #include "ResourceDrop.h"
 #include "Core/Utilities.h"
-#include "Events.h"
-#include "EditorIcons.h"
+#include "Plugin.h"
+#include "PluginManager.h"
+#include "../Selection/SelectionPlugin.h"
 
 namespace vapor { namespace editor {
 
@@ -29,20 +32,27 @@ SceneDocument::SceneDocument()
 	RenderControl* control = viewFrame->getControl();
 	control->Bind(wxEVT_RIGHT_UP, &SceneDocument::OnMouseRightUp, this); 
 	control->Bind(wxEVT_RIGHT_DOWN, &SceneDocument::OnMouseRightDown, this);
-
-	//eventManager->onSceneLoad(scene);
+	control->Bind(wxEVT_LEFT_DOWN, &SceneDocument::OnMouseEvent, this);
+	control->Bind(wxEVT_RIGHT_DOWN, &SceneDocument::OnMouseEvent, this);
+	control->Bind(wxEVT_MOUSEWHEEL, &SceneDocument::OnMouseEvent, this);
 
 	ResourceManager* res = GetResourceManager();
 	res->loadQueuedResources();
 
 	// Update at least once before rendering.
 	onUpdate(0);
+
+	//events->onSceneLoad(scene);
 }
 
 //-----------------------------------//
 
 SceneDocument::~SceneDocument()
 {
+	if(!scene) return;
+
+	Events* events = GetEditor().getEventManager();
+	events->onSceneUnload(scene);
 }
 
 //-----------------------------------//
@@ -96,9 +106,10 @@ void SceneDocument::onDocumentSelect()
 	RenderControl* control = viewFrame->getControl();
 	control->startFrameLoop();
 
-	GetEditor().getAUI()->GetPane("Hierarchy").Show();
-	GetEditor().getAUI()->GetPane("Properties").Show();
-	GetEditor().getAUI()->Update();
+	wxAuiManager* aui = GetEditor().getAUI();
+	aui->GetPane("Hierarchy").Show();
+	aui->GetPane("Properties").Show();
+	aui->Update();
 
 	GetEditor().getEventManager()->onSceneLoad(scene);
 }
@@ -110,9 +121,18 @@ void SceneDocument::onDocumentUnselect()
 	RenderControl* control = viewFrame->getControl();
 	control->stopFrameLoop();
 
-	GetEditor().getAUI()->GetPane("Hierarchy").Hide();
-	GetEditor().getAUI()->GetPane("Properties").Hide();
-	GetEditor().getAUI()->Update();
+	wxAuiManager* aui = GetEditor().getAUI();
+	aui->GetPane("Hierarchy").Hide();
+	aui->GetPane("Properties").Hide();
+	aui->Update();
+}
+
+//-----------------------------------//
+
+void SceneDocument::OnMouseEvent(wxMouseEvent& event)
+{
+	getRenderControl()->SetFocus();
+	event.Skip();
 }
 
 //-----------------------------------//
@@ -121,21 +141,46 @@ void SceneDocument::createView()
 {
 	viewFrame = new Viewframe( &GetEditor() );
 
-	toolbar = new wxAuiToolBar(viewFrame, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxAUI_TB_DEFAULT_STYLE);
-	toolbar->AddTool(wxID_ANY, wxMEMORY_BITMAP(page_empty), wxMEMORY_BITMAP(page_empty));
-	toolbar->Realize();	
-	viewFrame->mainSizer->Add(toolbar, wxSizerFlags().Expand().Top());
+	toolbar = createContextToolbar();
+	toolbar->Realize();
 
 	RenderControl* control = viewFrame->createControl();
-	control->onRender.Connect( this, &SceneDocument::onRender );
-	control->onUpdate.Connect( this, &SceneDocument::onUpdate );
+	control->onRender.Bind( this, &SceneDocument::onRender );
+	control->onUpdate.Bind( this, &SceneDocument::onUpdate );
 	control->SetDropTarget( new ResourceDropTarget( &GetEditor() ) );
 	control->SetFocus();
-
 	setupRenderWindow();
 
 	RenderView* view = viewFrame->createView();
+	#pragma TODO(Use configurable colors)
 	view->setClearColor( Color(0.0f, 0.10f, 0.25f) );
+
+	viewFrame->mainSizer->Add(toolbar, wxSizerFlags().Expand().Top());
+}
+
+//-----------------------------------//
+
+wxAuiToolBar* SceneDocument::createContextToolbar()
+{
+	wxAuiToolBar* tb = new wxAuiToolBar(viewFrame);
+	return tb;
+}
+
+//-----------------------------------//
+
+void SceneDocument::onToolSelect(PluginTool* mode)
+{
+	wxSizer* sizer = getViewframe()->mainSizer;
+	wxSizerItem* item = sizer->GetChildren().GetLast()->GetData();
+	
+	wxWindow* currentWindow = item->GetWindow();
+	currentWindow->Hide();
+
+	wxAuiToolBar* newToolbar = (mode->toolbar) ? mode->toolbar : toolbar;
+	newToolbar->Show();
+	
+	item->AssignWindow(newToolbar);
+	sizer->Layout();
 }
 
 //-----------------------------------//

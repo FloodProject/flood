@@ -13,7 +13,7 @@
 #include "Scene/Entity.h"
 #include "Scene/Tags.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -132,4 +132,4 @@ void updateDebugFrustum( const RenderablePtr& rend, const Frustum& box )
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

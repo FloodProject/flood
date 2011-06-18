@@ -15,7 +15,7 @@
 FWD_DECL_INTRUSIVE(Transform)
 FWD_DECL_INTRUSIVE(Scene)
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -116,4 +116,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Camera );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

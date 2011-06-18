@@ -17,8 +17,9 @@ NAMESPACE_EXTERN_BEGIN
 typedef uint32 HandleId;
 const HandleId HandleInvalid = 0;
 
-typedef void* (HandleResolveFn)(HandleId id);
-typedef void  (HandleDestroyFn)(HandleId id);
+typedef HandleId  (*HandleCreateFn)(void*);
+typedef void      (*HandleDestroyFn)(HandleId id);
+typedef void*     (*HandleResolveFn)(HandleId id);
 
 typedef std::map<HandleId, void*> HandleMap;
 

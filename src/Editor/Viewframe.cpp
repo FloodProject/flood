@@ -17,7 +17,7 @@ namespace vapor { namespace editor {
 
 Viewframe::Viewframe( wxWindow* parent, wxWindowID id,
 					 const wxPoint& pos, const wxSize& size, long style ) 
-	: wxPanel(parent, id, pos, size, style | wxBORDER_NONE)
+	: wxPanel(parent, id, pos, size, style | wxBORDER_NONE | wxFULL_REPAINT_ON_RESIZE)
 {
 	mainSizer = new wxBoxSizer( wxVERTICAL );
 	SetSizer( mainSizer );
@@ -58,10 +58,9 @@ void Viewframe::switchToDefaultCamera()
 	const CameraPtr& camera = mainCamera;
 	if( !camera ) return;
 
-	EntityPtr nodeCamera = camera->getEntity();
-
 #if 0
-	ControllerPtr controller = nodeCamera->getComponentFromFamily<Controller>();
+	EntityPtr entityCamera = camera->getEntity();
+	ControllerPtr controller = entityCamera->getComponentFromFamily<Controller>();
 	if( controller ) controller->setEnabled(true);
 #endif
 
@@ -95,9 +94,7 @@ void Viewframe::onCameraChanged(const CameraPtr& camera)
 
 void Viewframe::flagRedraw()
 {
-	if( !control )
-		return;
-
+	if( !control ) return;
 	control->flagRedraw();
 	//LogDebug("Force redraw of view");
 }

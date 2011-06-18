@@ -26,6 +26,35 @@ NAMESPACE_BEGIN
 
 //-----------------------------------//
 
+static std::map<Class*, ReflectionHandleContext> gs_ReflectionHandleMap;
+
+void ReflectionSetHandleContext(ReflectionHandleContext context)
+{
+	gs_ReflectionHandleMap[context.type] = context;
+}
+
+//-----------------------------------//
+
+bool ReflectionFindHandleContext(Class* klass, ReflectionHandleContext& ctx)
+{
+	auto it = gs_ReflectionHandleMap.find(klass);
+	
+	if( it != gs_ReflectionHandleMap.end() )
+	{
+		ctx = it->second;
+		return true;
+	}
+	else if( ClassHasParent(klass) )
+	{
+		Class* parent = ClassGetParent(klass);
+		return ReflectionFindHandleContext(parent, ctx);
+	}
+
+	return false;
+}
+
+//-----------------------------------//
+
 Serializer::Serializer()
 	: alloc(nullptr)
 	, stream(nullptr)
@@ -146,6 +175,7 @@ static bool ReflectionWalkPointer(ReflectionContext* context)
 {
 	void* address = context->elementAddress;
 	const Field* field = context->field;
+	bool resolve = true;
 
 	if(FieldIsSharedPointer(field))
 	{
@@ -164,11 +194,32 @@ static bool ReflectionWalkPointer(ReflectionContext* context)
 	}
 	else if(FieldIsHandle(field))
 	{
-		return false;
+		typedef Handle<Object, 0, 0> ObjectHandle;
+		ObjectHandle* handle = (ObjectHandle*) address;
+		HandleId id = handle->id;
+		
+		Class* type = (Class*) field->type;
+
+		ReflectionHandleContext hc;
+		if( !ReflectionFindHandleContext(type, hc) )
+		{
+			LogDebug("No handle context found for class '%s'", type->name);
+			return false;
+		}
+
+		address = HandleFind(hc.handles, id);
+		if( !address ) return false;
+
+		resolve = false;
 	}
 
 	assert( address != nullptr );
 	context->elementAddress = address;
+
+	if(resolve)
+		context->object = *(Object**) context->elementAddress;
+	else
+		context->object = (Object*) context->elementAddress;
 
 	return true;
 }
@@ -216,6 +267,9 @@ static void ReflectionWalkArray(ReflectionContext* context)
 static void ReflectionWalkCompositeField(ReflectionContext* context)
 {
 	Field* field = context->field;
+
+	if( !FieldIsSerializable(field) )
+		return;
 	
 	void* address = context->address;
 	void* elementAddress = context->elementAddress;
@@ -223,7 +277,7 @@ static void ReflectionWalkCompositeField(ReflectionContext* context)
 	Object* object = context->object;
 
 	context->address = ClassGetFieldAddress(context->object, field);
-	context->elementAddress = address;
+	context->elementAddress = context->address;
 	context->type = field->type;
 
 	if( ReflectionIsComposite(field->type) )
@@ -238,21 +292,18 @@ static void ReflectionWalkCompositeField(ReflectionContext* context)
 	else if( FieldIsPointer(field) )
 	{
 		if( !ReflectionWalkPointer(context) )
-			return;
+			goto exit;
 
-		Object* newObject = *(Object**) context->elementAddress;
-		if( !newObject ) return;
+		//Object* object = context->object;
+		//Type* type = context->type;
 
-		Object* object = context->object;
-		Type* type = context->type;
-
-		context->type = ClassGetType(newObject);
-		context->object = newObject;
+		context->type = ClassGetType(context->object);
+		//context->object = newObject;
 
 		ReflectionWalkType(context, field->type);
 
-		context->type = type;
-		context->object = object;
+		//context->type = type;
+		//context->object = object;
 	}
 	else
 	{
@@ -260,6 +311,8 @@ static void ReflectionWalkCompositeField(ReflectionContext* context)
 	}
 
 	context->walkCompositeField(context, ReflectionWalkType::End);
+
+exit:
 
 	context->address = address;
 	context->elementAddress = elementAddress;

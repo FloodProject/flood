@@ -14,14 +14,6 @@ namespace vapor { namespace editor {
 
 class EditorFrame;
 
-/**
- * This control is responsible for mantaining and updating a TreeCtrl
- * with all the contents of the scene tree in the passed instance of
- * the engine. The events of this control (right-click context menus)
- * will be used to change some settings of the scene tree, and also
- * properties of the associated scene nodes.
- */
-
 class ResourcesPage : public wxTreeCtrl 
 {
 public:

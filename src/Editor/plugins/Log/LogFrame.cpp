@@ -23,10 +23,10 @@ LogFrame::LogFrame( wxWindow* parent )
 
 	wxListItem message;
 	message.SetText("Message");
-	message.SetWidth(1000);
+	message.SetWidth(300);
 	InsertColumn(1, message);
 
-	Log* log = GetEngine()->getLogger();
+	Log* log = LogGetDefault();
 	log->handlers.Connect( this, &LogFrame::Process );
 }
 

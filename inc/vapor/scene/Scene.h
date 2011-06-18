@@ -32,8 +32,11 @@ struct RayTriangleQueryResult : public RayQueryResult
 {
 	GeometryPtr geometry;
 	RenderablePtr renderable;
-	Vector3 intersection;
+
+	Vector3 intersectionLocal;
+	Vector3 intersectionWorld;
 	Vector3 intersectionUV;
+
 	Vector3 trianglePosition[3];
 	Vector3 triangleUV[3];
 };
@@ -50,7 +53,7 @@ struct RayTriangleQueryResult : public RayQueryResult
 
 REFLECT_DECLARE_CLASS(Scene)
 
-class VAPOR_API Scene : public Group
+class API_SCENE Scene : public Group
 {
 	REFLECT_DECLARE_OBJECT(Scene);
 

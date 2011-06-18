@@ -23,10 +23,17 @@ PluginManager::PluginManager()
 
 PluginManager::~PluginManager()
 {
+	LogDebug("Destroying all registered plugins");
+
 	for( size_t i = 0; i < plugins.size(); i++ )
 	{
 		Plugin* plugin = plugins[i];
-		if(plugin->enabled) disablePlugin(plugin);
+		
+		if(plugin->enabled)
+		{
+			disablePlugin(plugin);
+			LogDebug("Disabled plugin '%s'", plugin->getMetadata().name.c_str());
+		}
 
 		Deallocate(plugin);
 	}
@@ -34,7 +41,7 @@ PluginManager::~PluginManager()
 
 //-----------------------------------//
 
-Plugin* PluginManager::getPlugin(const std::string& name)
+Plugin* PluginManager::getPlugin(const String& name)
 {
 	for( size_t i = 0; i < plugins.size(); i++ )
 	{
@@ -42,6 +49,21 @@ Plugin* PluginManager::getPlugin(const std::string& name)
 		const PluginMetadata& metadata = plugin->getMetadata();
 
 		if(metadata.name == name) return plugin;
+	}
+
+	return nullptr;
+}
+
+//-----------------------------------//
+
+Plugin* PluginManager::getPluginFromClass(const Class* klass)
+{
+	for( size_t i = 0; i < plugins.size(); i++ )
+	{
+		Plugin* plugin = plugins[i];
+		
+		if(ClassGetType(plugin) == klass)
+			return plugin;
 	}
 
 	return nullptr;
@@ -136,23 +158,8 @@ void PluginManager::processTools( Plugin* plugin, bool enable )
 {
 	for( size_t i = 0; i < plugin->tools.size(); i++ )
 	{
-		wxAuiToolBarItem* tool = plugin->tools[i];
-	
-		//if( tool->IsSeparator() )
-			//continue;
-
-		int id = tool->GetId();
-
-		if( id == -1 ) continue;
-
-		PluginToolsMap::iterator it = tools.find(id);
-	
-		if( enable )
-			// assert( it == tools.end() );
-			tools[id] = plugin;
-		else
-			// assert( it != tools.end() );
-			tools.erase(it);
+		wxAuiToolBarItem* tool = plugin->tools[i].item;
+		tool->SetUserData((long) plugin);
 	}
 }
 

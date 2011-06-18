@@ -95,7 +95,7 @@ public:
 	ResourceHandle loadResource(ResourceLoadOptions options);
 
 	// Removes a resource from the manager.
-	void removeResource(const ResourceHandle& res);
+	void removeResource(Resource* resource);
 
 	// Removes a resource from the manager.
 	void removeResource(const String& path);

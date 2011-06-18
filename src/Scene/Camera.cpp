@@ -15,7 +15,7 @@
 #include "Render/View.h"
 #include "Render/DebugGeometry.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -157,6 +157,10 @@ void Camera::render( RenderBlock& block, bool clearView )
 
 void Camera::cull( RenderBlock& block, const EntityPtr& entity )
 {
+#if 1
+	if(  !entity ) return;
+#endif
+
 	// Try to see if this is a Group-derived node.
 	Class* klass = entity->getType();
 	
@@ -343,4 +347,4 @@ RenderablePtr Camera::createDebugRenderable() const
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

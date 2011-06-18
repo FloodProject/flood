@@ -10,12 +10,21 @@
 #include "Render/Renderable.h"
 #include "Render/GL.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
+
+//-----------------------------------//
+
+Renderable* RenderableCreate( Allocator* alloc )
+{
+	Renderable* rend = Allocate(Renderable, alloc);
+	return rend;
+}
 
 //-----------------------------------//
 
 Renderable::Renderable()
-	: mode( PolygonMode::Solid )
+	: type( PolygonType::Triangles )
+	, mode( PolygonMode::Solid )
 	, stage( RenderLayer::Normal )
 	, priority(0)
 { }
@@ -95,4 +104,4 @@ void Renderable::render( RenderDevice* device )
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

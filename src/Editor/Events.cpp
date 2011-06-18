@@ -11,28 +11,25 @@
 #include "Editor.h"
 #include "Plugin.h"
 #include "PluginManager.h"
+#include "Document.h"
 
 namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-Events::Events( EditorFrame* editor )
-	: editor(editor)
-	, currentPlugin(nullptr)
+Events::Events()
+	: currentPlugin(nullptr)
 	, toolId(0)
 {
-	pluginManager = editor->getPluginManager();
+	PluginManager* pm = GetEditor().getPluginManager();
+	pm->onPluginEnableEvent.Connect(this, &Events::onPluginEnableEvent);
+	pm->onPluginDisableEvent.Connect(this, &Events::onPluginDisableEvent);
 
-	pluginManager->onPluginEnableEvent.Connect(this, &Events::onPluginEnableEvent);
-	pluginManager->onPluginDisableEvent.Connect(this, &Events::onPluginDisableEvent);
+	// Register a custom event handler so we listen to events that get
+	// routed through the toolbar. This way we can intercept tool switches.
 
-	// We will do some custom event handling so we get all events
-	// that get routed through the toolbar. This will let us find
-	// the current toolbar mode.
-
-	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
+	wxAuiToolBar* toolbarCtrl = GetEditor().getToolbar();
 	if(toolbarCtrl) toolbarCtrl->PushEventHandler(this);
-	//editor->PushEventHandler(this);
 
 	registerInputCallbacks();
 }
@@ -41,12 +38,10 @@ Events::Events( EditorFrame* editor )
 
 Events::~Events()
 {
-	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
+	wxAuiToolBar* toolbarCtrl = GetEditor().getToolbar();
 	if(toolbarCtrl) toolbarCtrl->PopEventHandler();
-	//editor->PopEventHandler();
 
-	Engine* engine = editor->getEngine();
-	InputManager* input = engine->getInputManager();
+	InputManager* input = GetInputManager();
 
 	// Unsubscribe from all mouse events.
 	Mouse* const mouse = input->getMouse();
@@ -67,8 +62,9 @@ Events::~Events()
 
 void Events::disconnectPluginListeners()
 {
-	pluginManager->onPluginEnableEvent.Disconnect(this, &Events::onPluginEnableEvent);
-	pluginManager->onPluginDisableEvent.Disconnect(this, &Events::onPluginDisableEvent);
+	PluginManager* pm = GetEditor().getPluginManager();
+	pm->onPluginEnableEvent.Disconnect(this, &Events::onPluginEnableEvent);
+	pm->onPluginDisableEvent.Disconnect(this, &Events::onPluginDisableEvent);
 }
 
 //-----------------------------------//
@@ -88,11 +84,8 @@ void Events::addEventListener( Plugin* plugin )
 
 void Events::removeEventListener( Plugin* plugin )
 {
-	std::vector<Plugin*>::iterator it = std::find(
-		eventListeners.begin(), eventListeners.end(), plugin);
-
+	auto it = std::find(eventListeners.begin(), eventListeners.end(), plugin);
 	assert( it != eventListeners.end() );
-
 	eventListeners.erase(it);
 }
 
@@ -106,15 +99,7 @@ bool Events::TryBefore(wxEvent& event)
 
 	int id = event.GetId();
 
-	//wxObject* object = event.GetEventObject();
-
-	//if( !object )
-	//	return false;
-
-	//if( !object->IsKindOf(&wxAuiToolBarItem::ms_classInfo) )
-	//	return false;
-
-	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
+	wxAuiToolBar* toolbarCtrl = GetEditor().getToolbar();
 	wxAuiToolBarItem* tool = toolbarCtrl->FindTool(id);
 
 	if( !tool ) return false;
@@ -122,31 +107,44 @@ bool Events::TryBefore(wxEvent& event)
 	if( tool->GetKind() != wxITEM_RADIO )
 		return false;
 
-	toolbarCtrl->ToggleTool(id, true);
-
-	const PluginToolsMap& tools = pluginManager->getTools();
-	PluginToolsMap::const_iterator it = tools.find(id);
+	Plugin* plugin = (Plugin*) tool->GetUserData();
 	
-	if( it == tools.end() )
+	if( !plugin )
 	{
-		toolId = 0;
-		currentPlugin = nullptr;
-	
+		LogDebug("Invalid tool user data");
 		return false;
 	}
-	
-	int newToolId = it->first;
 
-	if(newToolId != toolId)
-	{
-		toolId = newToolId;
+	PluginTool* mode = plugin->findTool(tool);
+	if( !mode ) return false;
 
-		currentPlugin->onToolUnselect( toolId );
-		currentPlugin = (*it).second;
-		currentPlugin->onToolSelect( toolId );
-	}
+	setTool(plugin, mode);
 	
 	return false;
+}
+
+//-----------------------------------//
+
+void Events::setTool(Plugin* plugin, PluginTool* tool)
+{
+	int id = tool->item->GetId();
+
+	if(currentPlugin)
+	{
+		currentPlugin->onToolUnselect(id);
+		currentPlugin = nullptr;
+	}
+
+	wxAuiToolBar* toolbarCtrl = GetEditor().getToolbar();
+	toolbarCtrl->ToggleTool(id, true);
+
+	setCurrentPlugin(plugin);
+	setCurrentTool(id);
+	
+	Document* document = GetEditor().getDocument();
+	document->onToolSelect(tool);
+	
+	currentPlugin->onToolSelect(id);
 }
 
 //-----------------------------------//
@@ -171,7 +169,7 @@ void Events::onPluginDisableEvent(Plugin* plugin)
 	if( currentPlugin )									\
 		currentPlugin->func(__VA_ARGS__);				\
 														\
-	for( uint i = 0; i < eventListeners.size(); i++ )	\
+	for( size_t i = 0; i < eventListeners.size(); i++ )	\
 	{													\
 		Plugin* plugin = eventListeners[i];				\
 		if(plugin == currentPlugin) continue;			\
@@ -181,6 +179,20 @@ void Events::onPluginDisableEvent(Plugin* plugin)
 #define CALL_PLUGIN_CHECK(func, arg)					\
 	if(!arg) return;									\
 	CALL_PLUGIN(func, arg)
+
+//-----------------------------------//
+
+void Events::onDocumentCreate( Document& document )
+{
+	CALL_PLUGIN(onDocumentCreate, document);
+}
+
+//-----------------------------------//
+
+void Events::onDocumentDestroy( Document& document )
+{
+	CALL_PLUGIN(onDocumentDestroy, document);
+}
 
 //-----------------------------------//
 
@@ -303,6 +315,13 @@ void Events::onSceneLoad( const ScenePtr& scene )
 
 //-----------------------------------//
 
+void Events::onSceneUnload( const ScenePtr& scene )
+{
+	CALL_PLUGIN_CHECK(onSceneUnload, scene);
+}
+
+//-----------------------------------//
+
 void Events::onSceneUpdate()
 {
 	CALL_PLUGIN(onSceneUpdate)
@@ -312,8 +331,7 @@ void Events::onSceneUpdate()
 
 void Events::registerInputCallbacks()
 {
-	Engine* engine = editor->getEngine();
-	InputManager* input = engine->getInputManager();
+	InputManager* input = GetInputManager();
 
 	Mouse* const mouse = input->getMouse();
 	mouse->onMouseMove.Connect(this, &Events::onMouseMove);

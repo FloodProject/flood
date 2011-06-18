@@ -52,6 +52,8 @@ static bool doRayGroupQuery( const Group* group, const Culler& culler, RayQueryL
 	for( size_t i = 0; i < entities.size(); i++ )
 	{
 		const EntityPtr& entity = entities[i];
+		if( !entity ) continue;
+
 		Class* klass = entity->getType();
 
 		if( ClassInherits(klass, ReflectionGetType(Group)) )
@@ -163,9 +165,12 @@ static void buildResult( RayTriangleQueryResult& res, const Ray& ray,
 	res.triangleUV[1] = tex[1];
 	res.triangleUV[2] = tex[2];
 
+	res.intersectionLocal = ray.getPoint(t);
+	res.intersectionWorld = 
+
 	res.intersectionUV.x = u;
 	res.intersectionUV.y = v;
-	res.intersection = ray.getPoint(t);
+
 	res.distance = t;
 }
 
@@ -271,6 +276,9 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, con
 	Ray transRay = doTransformRay(ray, entity);
 	const std::vector<GeometryPtr>& geoms = entity->getGeometry();
 	
+	const TransformPtr& transform = entity->getTransform();
+	Matrix4x3 absolute = transform->getAbsoluteTransform();
+
 	for( size_t i = 0; i < geoms.size(); i++ )
 	{		
 		const GeometryPtr& geo = geoms[i];
@@ -319,9 +327,11 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, con
 
 			if(hit)
 			{
+				res.intersectionWorld = absolute * res.intersectionLocal;
 				res.entity = entity;
 				res.geometry = geo;
 				res.renderable = rend;
+
 				return true;
 			}
 		}
