@@ -8,63 +8,61 @@
 
 #pragma once
 
+#include "gen\PreferencesGenerated.h"
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//
 
 class EditorFrame;
 
+typedef std::map< ResourceGroup::Enum, wxTreeItemId > ResourceGroupIdsMap;
+typedef std::map< ResourceGroup::Enum, int > ResourceGroupIconsMap;
+
 /**
  * A resources browser is a window where you can choose a resource from
  * the existing resouces of a given type.
  */
 
-class ResourcesBrowser : public wxFrame 
+class ResourcesBrowser : public gui::ResourcesBrowser
 {
 public:
 
-	ResourcesBrowser( wxWindow* parent, wxWindowID id = wxID_ANY,
-		const wxPoint& pos = wxDefaultPosition,
-		const wxSize& size = wxDefaultSize );
+	ResourcesBrowser( wxWindow* parent );
+
+	// Shows the resources from the given category.
+	void showCategory(ResourceGroup::Enum group);
 
 	// Sets up the images.
 	void setupImages();
 
-	// Generate thumbnails.
-	void generateThumbnails(const std::vector<String>& files);
-
-	// Generate thumbnail.
-	ImagePtr generateThumbnail(Mesh* mesh);
-
 protected:
+
+	// Sets up the resource groups.
+	void setupGroups();
+	void setupGroupIcons();
 
 	// Sets up the UI.
 	void setupUI();
 
-	// Sets up the render buffers.
-	void setupRender();
+	// Finds a resource group from a tree item id.
+	bool findResourceGroupFromTreeId( wxTreeItemId id, ResourceGroup::Enum& group );
 
 	// Event handlers.
 	void OnClose(wxCloseEvent& event);
 	void OnListBeginDrag(wxListEvent& event);
 	void onConnectClicked(wxCommandEvent& event);
+	void onResourceGroupChanged( wxTreeEvent& event ) OVERRIDE;
+	void onResourceListSelection( wxCommandEvent& event ) OVERRIDE;
 
-	wxImageList* images;
-	wxPanel* m_panel2;
-	wxListCtrl* m_listCtrl;
-	wxStaticText* m_staticText1;
-	wxSlider* m_slider1;
-	wxButton* m_button1;
+	wxImageList* m_resourceGroupsImages;
+	ResourceGroupIdsMap m_resourceGroupIds;
+	ResourceGroupIconsMap m_resourceGroupImagesMap;
+
+	wxTreeItemId m_rootId;
 	int listIndex;
 
-	ScenePtr scene;
-	EntityPtr entityCamera;
-	CameraPtr camera;
-	RenderView* renderView;
-
-	TexturePtr depthTexture;
-	TexturePtr colorTexture;
-	RenderBuffer* renderBuffer;
+	//ResourceThumbnailer thumbnailer;
 };
 
 //-----------------------------------//

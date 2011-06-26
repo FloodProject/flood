@@ -359,7 +359,10 @@ wxPGProperty* PropertyPage::createEnumProperty(const Field& field, void* object)
 	
 	EnumValuesMap::const_iterator it;
 	for( it = values.begin(); it != values.end(); it++ )
-		choices.Add( it->first, it->second );
+	{
+		wxString name = convertToReadable(it->first);
+		choices.Add(name, it->second);
+	}
 
 	wxPGProperty* prop = new wxEnumProperty(wxEmptyString, wxPG_LABEL, choices);
 	return prop;

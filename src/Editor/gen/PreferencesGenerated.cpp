@@ -160,8 +160,6 @@ Plugins::Plugins( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxS
 	bSizer61->Add( m_staticText11, 0, wxEXPAND|wxRIGHT|wxLEFT, 5 );
 	
 	m_textPluginDescription = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( -1,48 ), wxTE_MULTILINE|wxTE_NO_VSCROLL|wxTE_READONLY );
-	m_textPluginDescription->Enable( false );
-	
 	bSizer61->Add( m_textPluginDescription, 1, wxALL|wxEXPAND, 5 );
 	
 	bSizer18->Add( bSizer61, 0, wxEXPAND, 5 );
@@ -187,5 +185,101 @@ Plugins::~Plugins()
 	m_buttonPluginEnable->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Plugins::OnPluginEnable ), NULL, this );
 	m_buttonPluginCheckUpdates->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Plugins::OnPluginCheckUpdates ), NULL, this );
 	m_buttonPluginInstall->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Plugins::OnPluginInstall ), NULL, this );
+	
+}
+
+Resources::Resources( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+{
+	wxBoxSizer* bSizer22;
+	bSizer22 = new wxBoxSizer( wxVERTICAL );
+	
+	wxStaticBoxSizer* sbSizer1;
+	sbSizer1 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Thumbnails") ), wxVERTICAL );
+	
+	wxBoxSizer* bSizer23;
+	bSizer23 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_staticText8 = new wxStaticText( this, wxID_ANY, wxT("Cache Folder"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText8->Wrap( -1 );
+	bSizer23->Add( m_staticText8, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_dirPicker1 = new wxDirPickerCtrl( this, wxID_ANY, wxT("C:\\Users\\triton\\.netbeans-registration"), wxT("Select a folder"), wxDefaultPosition, wxDefaultSize, wxDIRP_DEFAULT_STYLE );
+	bSizer23->Add( m_dirPicker1, 1, wxALL, 5 );
+	
+	sbSizer1->Add( bSizer23, 0, wxEXPAND|wxALL, 5 );
+	
+	bSizer22->Add( sbSizer1, 1, wxEXPAND, 5 );
+	
+	this->SetSizer( bSizer22 );
+	this->Layout();
+}
+
+Resources::~Resources()
+{
+}
+
+ResourcesBrowser::ResourcesBrowser( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
+	wxBoxSizer* bSizer16;
+	bSizer16 = new wxBoxSizer( wxVERTICAL );
+	
+	m_splitter2 = new wxSplitterWindow( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_3D );
+	m_splitter2->Connect( wxEVT_IDLE, wxIdleEventHandler( ResourcesBrowser::m_splitter2OnIdle ), NULL, this );
+	
+	m_panel2 = new wxPanel( m_splitter2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer20;
+	bSizer20 = new wxBoxSizer( wxVERTICAL );
+	
+	m_resourceGroups = new wxTreeCtrl( m_panel2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTR_DEFAULT_STYLE|wxTR_HIDE_ROOT|wxTR_ROW_LINES );
+	bSizer20->Add( m_resourceGroups, 1, wxEXPAND|wxTOP|wxBOTTOM|wxLEFT, 5 );
+	
+	m_panel2->SetSizer( bSizer20 );
+	m_panel2->Layout();
+	bSizer20->Fit( m_panel2 );
+	m_panel3 = new wxPanel( m_splitter2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer18;
+	bSizer18 = new wxBoxSizer( wxVERTICAL );
+	
+	m_resourceList = new wxListBox( m_panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	bSizer18->Add( m_resourceList, 1, wxEXPAND|wxTOP|wxBOTTOM|wxRIGHT, 5 );
+	
+	wxBoxSizer* bSizer21;
+	bSizer21 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_searchCtrl = new wxSearchCtrl( m_panel3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	#ifndef __WXMAC__
+	m_searchCtrl->ShowSearchButton( true );
+	#endif
+	m_searchCtrl->ShowCancelButton( false );
+	bSizer21->Add( m_searchCtrl, 1, wxBOTTOM|wxRIGHT|wxEXPAND, 5 );
+	
+	m_detailSlider = new wxSlider( m_panel3, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxSize( 60,-1 ), wxSL_HORIZONTAL );
+	bSizer21->Add( m_detailSlider, 0, 0, 5 );
+	
+	bSizer18->Add( bSizer21, 0, wxEXPAND, 5 );
+	
+	m_panel3->SetSizer( bSizer18 );
+	m_panel3->Layout();
+	bSizer18->Fit( m_panel3 );
+	m_splitter2->SplitVertically( m_panel2, m_panel3, 121 );
+	bSizer16->Add( m_splitter2, 1, wxEXPAND, 5 );
+	
+	this->SetSizer( bSizer16 );
+	this->Layout();
+	
+	this->Centre( wxBOTH );
+	
+	// Connect Events
+	m_resourceGroups->Connect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( ResourcesBrowser::onResourceGroupChanged ), NULL, this );
+	m_resourceList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( ResourcesBrowser::onResourceListSelection ), NULL, this );
+}
+
+ResourcesBrowser::~ResourcesBrowser()
+{
+	// Disconnect Events
+	m_resourceGroups->Disconnect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( ResourcesBrowser::onResourceGroupChanged ), NULL, this );
+	m_resourceList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( ResourcesBrowser::onResourceListSelection ), NULL, this );
 	
 }

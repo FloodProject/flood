@@ -4,14 +4,10 @@ WIP (work-in-progress)
 EDITOR:
 -------
 
-Fix terrain projection
 Rework gizmo code
 Fix terrain painting
-Add tool options bar
-
 
 Add bounding box calculation for animated meshes
-Fix currentPlugin crasher bug
 Update cameras on the editor
 Adaptive grid in the editor
 To get proper behaviour under all circumstances, picking should be image-based.
@@ -51,14 +47,6 @@ Console:
 	readline type of library would be kind of nice
 	Write a line then go backwards and to the line again and color is white...
 	
-Options:
-
-	Add a preference pane with:
-		- Shortcuts
-		- Grid settings
-		- Colors
-	This can be handled with a Property system (like Firefox).
-
 ENGINE:
 -------
 

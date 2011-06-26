@@ -42,7 +42,7 @@ const float MAX_RATE_RENDER = 1.0f / 60;
 RenderControl::RenderControl( wxWindow* parent, wxWindowID id,
 	const int* attribList, const wxPoint& pos, const wxSize& size,
 	long style,	const wxString&	name, const wxPalette& )
-	: wxGLCanvas(parent, id, attribList, pos, size, style | wxFULL_REPAINT_ON_RESIZE, name)
+	: wxGLCanvas(parent, id, attribList, pos, size, style | wxFULL_REPAINT_ON_RESIZE & (~wxCLIP_CHILDREN), name)
 	, needsRedraw(false)
 	, frameUpdateTimer(this, UPDATE_TIMER)
 	, frameRenderTimer(this, RENDER_TIMER)
@@ -55,7 +55,7 @@ RenderControl::RenderControl( wxWindow* parent, wxWindowID id,
 	WindowSettings settings(sz.GetX(), sz.GetY());
 	
 	// Note: This will be deleted by the engine.
-	window = new RenderWindow(settings, this);
+	window = Allocate(RenderWindow, AllocatorGetHeap(), settings, this);
 
 	// Setup input in the engine.
 	input = window->inputManager;
@@ -65,7 +65,7 @@ RenderControl::RenderControl( wxWindow* parent, wxWindowID id,
 
 RenderControl::~RenderControl()
 {
-	delete window;
+	Deallocate(window);
 }
 
 //-----------------------------------//
@@ -95,8 +95,7 @@ void RenderControl::doUpdate(wxTimerEvent&)
 
 void RenderControl::doRender(wxTimerEvent&)
 {
-	//if( !needsRedraw )
-	//	return;
+	//if( !needsRedraw ) return;
 
 	Refresh();
 	needsRedraw = false;
@@ -118,8 +117,7 @@ void RenderControl::OnPaint(wxPaintEvent& WXUNUSED(event))
 	// to force a complete redraw. This is ugly because I suspect it
 	// draws twice so really try to find a better solution later.
 
-	#pragma TODO("Redraw only the invalidated regions of windows")
-	//Refresh();
+	Refresh();
 
 	// From the PaintEvent docs: "the application must always create
 	// a wxPaintDC object, even if you do not use it."
@@ -136,6 +134,7 @@ void RenderControl::OnPaint(wxPaintEvent& WXUNUSED(event))
 
 void RenderControl::OnSize(wxSizeEvent& event)
 {
+	onUpdate(0);
 	window->processResize( event.GetSize() );
 	flagRedraw();
 }

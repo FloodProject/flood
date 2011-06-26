@@ -22,6 +22,12 @@
 #include <wx/panel.h>
 #include <wx/listctrl.h>
 #include <wx/statline.h>
+#include <wx/filepicker.h>
+#include <wx/statbox.h>
+#include <wx/srchctrl.h>
+#include <wx/slider.h>
+#include <wx/splitter.h>
+#include <wx/frame.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -88,6 +94,59 @@ namespace vapor
 				
 				Plugins( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 400,450 ), long style = wxTAB_TRAVERSAL ); 
 				~Plugins();
+			
+		};
+		
+		///////////////////////////////////////////////////////////////////////////////
+		/// Class Resources
+		///////////////////////////////////////////////////////////////////////////////
+		class Resources : public wxPanel 
+		{
+			private:
+			
+			protected:
+				wxStaticText* m_staticText8;
+				wxDirPickerCtrl* m_dirPicker1;
+			
+			public:
+				
+				Resources( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 400,450 ), long style = wxTAB_TRAVERSAL ); 
+				~Resources();
+			
+		};
+		
+		///////////////////////////////////////////////////////////////////////////////
+		/// Class ResourcesBrowser
+		///////////////////////////////////////////////////////////////////////////////
+		class ResourcesBrowser : public wxFrame 
+		{
+			private:
+			
+			protected:
+				wxSplitterWindow* m_splitter2;
+				wxPanel* m_panel2;
+				wxTreeCtrl* m_resourceGroups;
+				wxPanel* m_panel3;
+				wxListBox* m_resourceList;
+				wxSearchCtrl* m_searchCtrl;
+				wxSlider* m_detailSlider;
+				
+				// Virtual event handlers, overide them in your derived class
+				virtual void onResourceGroupChanged( wxTreeEvent& event ) { event.Skip(); }
+				virtual void onResourceListSelection( wxCommandEvent& event ) { event.Skip(); }
+				
+			
+			public:
+				
+				ResourcesBrowser( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 581,370 ), long style = wxDEFAULT_FRAME_STYLE|wxFRAME_FLOAT_ON_PARENT|wxFRAME_TOOL_WINDOW|wxTAB_TRAVERSAL );
+				
+				~ResourcesBrowser();
+				
+				void m_splitter2OnIdle( wxIdleEvent& )
+				{
+					m_splitter2->SetSashPosition( 121 );
+					m_splitter2->Disconnect( wxEVT_IDLE, wxIdleEventHandler( ResourcesBrowser::m_splitter2OnIdle ), NULL, this );
+				}
 			
 		};
 		

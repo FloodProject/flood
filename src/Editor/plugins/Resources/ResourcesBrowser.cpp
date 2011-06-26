@@ -13,9 +13,15 @@
 #include "UndoManager.h"
 #include "Settings.h"
 #include "Editor.h"
+#include "Events.h"
 #include "Core/Utilities.h"
 #include "../Scene/ScenePane.h"
 #include "../Scene/SceneDocument.h"
+#include "PluginManager.h"
+#include "ResourcesPlugin.h"
+#include "ResourceDatabase.h"
+#include "../Property/PropertyPlugin.h"
+#include "../Property/PropertyPage.h"
 
 #ifdef ENABLE_RESOURCE_BROWSER
 
@@ -23,53 +29,155 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-ResourcesBrowser::ResourcesBrowser( wxWindow* parent, wxWindowID id,
-								const wxPoint& pos, const wxSize& size )
-	: wxFrame(parent, id, "Resources Browser", pos, wxSize(500, 350),
-	wxDEFAULT_FRAME_STYLE | wxFRAME_TOOL_WINDOW | wxFRAME_FLOAT_ON_PARENT | wxBORDER_NONE)
+ResourcesBrowser::ResourcesBrowser( wxWindow* parent )
+	: gui::ResourcesBrowser(parent, wxID_ANY, "Resources Browser")
 	, listIndex(0)
 {
 	setupUI();
+	setupGroupIcons();
+	setupGroups();
+
+	// Select the general tree item.
+	wxTreeItemId id = m_resourceGroupIds[ResourceGroup::General];
+	//m_resourceGroups->SelectItem(id);
 }
 
 //-----------------------------------//
 
-void ResourcesBrowser::setupRender()
+void ResourcesBrowser::setupUI()
 {
-	RenderDevice* device = GetRenderDevice();
+	CenterOnParent();
 
-	Settings settings(ThumbSize, ThumbSize);
-	renderBuffer = device->createRenderBuffer(settings);
-	renderBuffer->createRenderBuffer(RenderBufferType::Depth);
-	colorTexture = renderBuffer->createRenderTexture(RenderBufferType::Color);
-	
-	if( !renderBuffer->check() )
-		return;
-	
-	camera.reset( new Camera() );
-	Frustum& frustum = camera->getFrustum();
-	frustum.nearPlane = 0.1f;
+	Bind( wxEVT_CLOSE_WINDOW, &ResourcesBrowser::OnClose, this );
 
-	entityCamera.reset( new Entity() );
-	entityCamera->addTransform();
-	entityCamera->addComponent( camera );
+	m_searchCtrl->ShowCancelButton(true);
+	m_searchCtrl->ShowSearchButton(true);
 	
-	scene.reset( new Scene() );
-	scene->add( entityCamera );
-
-	renderView = new RenderView(camera);
-	renderView->setClearColor(Color::White);
-	renderView->setRenderTarget(renderBuffer);
+	wxIcon icon;
+	icon.CopyFromBitmap( wxMEMORY_BITMAP(package) );
+	SetIcon(icon);
 }
 
 //-----------------------------------//
-#if 0
+
+#define RG(T) ResourceGroup::##T
+#define RGI(T) m_resourceGroupImagesMap[RG(T)]
+
+void ResourcesBrowser::setupGroups()
+{
+	m_rootId = m_resourceGroups->AddRoot("Resources", RGI(General));
+	m_resourceGroupIds[RG(General)] = m_resourceGroups->AppendItem(m_rootId, "All", RGI(General));
+
+	Enum* enuhm = ReflectionGetType(ResourceGroup);
+	const EnumValuesMap& values = enuhm->values;
+	
+	for( auto it = values.begin(); it != values.end(); it++ )
+	{
+		ResourceGroup::Enum group = (ResourceGroup::Enum) it->second;
+		if(group == ResourceGroup::General) continue;
+
+		int image = m_resourceGroupImagesMap[group];
+		
+		wxTreeItemId id = m_resourceGroups->AppendItem(m_rootId, it->first, image);
+		m_resourceGroupIds[group] = id;
+	}
+}
+
+//-----------------------------------//
+
+#define CREATE_RESOURCE_ICON(T, I) \
+	m_resourceGroupImagesMap[RG(T)] = m_resourceGroupsImages->Add(wxMEMORY_BITMAP(I));	
+
+void ResourcesBrowser::setupGroupIcons()
+{
+	m_resourceGroupsImages = new wxImageList(16, 16, false, 8);
+	m_resourceGroupsImages->Add(wxMEMORY_BITMAP(bullet_blue));
+	CREATE_RESOURCE_ICON( General, package )
+	CREATE_RESOURCE_ICON( Images, image )
+	CREATE_RESOURCE_ICON( Meshes, shape_flip_horizontal )
+	CREATE_RESOURCE_ICON( Fonts, font )
+	CREATE_RESOURCE_ICON( Shaders, script_palette )
+	CREATE_RESOURCE_ICON( Audio, music )
+	CREATE_RESOURCE_ICON( Scripts, page_code )
+	CREATE_RESOURCE_ICON( Materials, palette )
+	m_resourceGroups->AssignImageList(m_resourceGroupsImages);
+}
+
+//-----------------------------------//
+
+bool ResourcesBrowser::findResourceGroupFromTreeId( wxTreeItemId id, ResourceGroup::Enum& group )
+{
+	for(auto it = m_resourceGroupIds.begin(); it != m_resourceGroupIds.end(); it++)
+	{
+		if(it->second != id) continue;
+		
+		group = it->first;
+		return true;
+	}
+
+	return false;
+}
+
+//-----------------------------------//
+
+void ResourcesBrowser::onResourceGroupChanged( wxTreeEvent& event )
+{
+	wxTreeItemId id = event.GetItem();
+	ResourceGroup::Enum group;
+	
+	if( !findResourceGroupFromTreeId(id, group) )
+		return;
+
+	showCategory(group);
+}
+
+//-----------------------------------//
+
+void ResourcesBrowser::showCategory(ResourceGroup::Enum group)
+{
+	listIndex = 0;
+	m_resourceList->Clear();
+
+	ResourcesPlugin* rp = GetPlugin<ResourcesPlugin>();
+	ResourceDatabase* db = rp->resourceDatabase;
+
+	ResourcesCacheMap& cache = db->resourcesCache;
+	
+	bool isGeneral = group == ResourceGroup::General;
+
+	for(auto it = cache.begin(); it != cache.end(); it++)
+	{
+		ResourceMetadata& metadata = it->second;
+		
+		if(!isGeneral && (metadata.group != group))
+			continue;
+
+		String name = PathGetFile(metadata.path);
+		m_resourceList->Append(name);
+	}
+}
+
+//-----------------------------------//
+
+void ResourcesBrowser::onResourceListSelection( wxCommandEvent& event )
+{
+	wxString selection = m_resourceList->GetString(event.GetInt());
+	String path = String(selection.c_str());
+
+	const ResourcePtr& res = GetResourceManager()->loadResource(path).Resolve();
+
+	Events* events = GetEditor().getEventManager();
+	events->onResourceSelect(res);
+}
+
+//-----------------------------------//
+
 void ResourcesBrowser::setupImages()
 {
+#if 0
 	int size = ThumbSize / 2;
 
-	ResourcesCache::iterator it;
-	for( it = resourcesCache.begin(); it != resourcesCache.end(); it++ )
+	for( auto it = resourcesCache.begin(); it != resourcesCache.end(); it++ )
 	{
 		ResourceMetadata& metadata = it->second;
 		
@@ -83,11 +191,12 @@ void ResourcesBrowser::setupImages()
 
 		metadata.index = images->Add( wxBitmap(image) );
 		
-		std::string base = PathUtils::getBase(metadata.thumbnail);
-		m_listCtrl->InsertItem(listIndex++, base, metadata.index);
+		String base = PathGetBase(metadata.thumbnail);
+		m_resourceList->Insert(listIndex++, base, metadata.index);
 	}
-}
 #endif
+}
+
 //-----------------------------------//
 
 void ResourcesBrowser::OnListBeginDrag(wxListEvent& event)
@@ -155,19 +264,21 @@ void ResourcesBrowser::OnListBeginDrag(wxListEvent& event)
 
 void ResourcesBrowser::onConnectClicked(wxCommandEvent& event)
 {
-	//if( network.createClientSocket("tcp://127.0.0.1:7654") )
-	//{
-	//	m_button1->SetLabel("Connected");
-	//	m_button1->Disable();
-	//}
+#if 0
+	if( network.createClientSocket("tcp://127.0.0.1:7654") )
+	{
+		m_button1->SetLabel("Connected");
+		m_button1->Disable();
+	}
 
-	//std::vector<byte> data;
-	//data.push_back( MessageType::ResourceIndexRequest );
+	std::vector<byte> data;
+	data.push_back( MessageType::ResourceIndexRequest );
 
-	//MessagePtr message = new Message(data);
-	////message->setMessageType( MessageType::ResourceIndexRequest );
+	MessagePtr message = new Message(data);
+	//message->setMessageType( MessageType::ResourceIndexRequest );
 
-	//network.sendMessage(message);
+	network.sendMessage(message);
+#endif
 }
 
 //-----------------------------------//
@@ -184,73 +295,6 @@ void ResourcesBrowser::OnClose(wxCloseEvent& event)
     }
 
     event.Skip();
-}
-
-//-----------------------------------//
-
-void ResourcesBrowser::setupUI()
-{
-	wxBoxSizer* bSizer1;
-	bSizer1 = new wxBoxSizer( wxVERTICAL );
-	
-	m_panel2 = new wxPanel( this, wxID_ANY );
-	wxBoxSizer* bSizer3;
-	bSizer3 = new wxBoxSizer( wxVERTICAL );
-	
-	m_listCtrl = new wxListCtrl( m_panel2, wxID_ANY,
-		wxDefaultPosition, wxDefaultSize, wxLC_ICON | wxLC_AUTOARRANGE ); 
-	bSizer3->Add( m_listCtrl, 1, wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer6;
-	bSizer6 = new wxBoxSizer( wxHORIZONTAL );
-	
-	wxBoxSizer* bSizer5;
-	bSizer5 = new wxBoxSizer( wxHORIZONTAL );
-	
-	m_staticText1 = new wxStaticText( m_panel2, wxID_ANY, "Detail" );
-	m_staticText1->Wrap( -1 );
-	bSizer5->Add( m_staticText1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	m_slider1 = new wxSlider( m_panel2, wxID_ANY, 50, 0, 100 );
-	bSizer5->Add( m_slider1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	bSizer6->Add( bSizer5, 1, wxALIGN_LEFT, 5 );
-	
-	wxBoxSizer* bSizer2;
-	bSizer2 = new wxBoxSizer( wxHORIZONTAL );
-	
-	m_button1 = new wxButton( m_panel2, wxID_ANY, "Connect to server" );
-	m_button1->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ResourcesBrowser::onConnectClicked, this );
-
-	bSizer2->Add( m_button1, 1, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-
-	bSizer6->Add( bSizer2, 0, wxALIGN_RIGHT, 5 );
-	
-	bSizer3->Add( bSizer6, 0, wxEXPAND, 5 );
-	
-	m_panel2->SetSizer( bSizer3 );
-	m_panel2->Layout();
-	bSizer3->Fit( m_panel2 );
-	bSizer1->Add( m_panel2, 1, wxEXPAND, 5 );
-	
-	SetSizer( bSizer1 );
-	Layout();
-	
-	Centre( wxBOTH );
-
-	Bind( wxEVT_CLOSE_WINDOW, &ResourcesBrowser::OnClose, this );
-
-	wxIcon icon;
-	icon.CopyFromBitmap( wxMEMORY_BITMAP(package) );
-	
-	SetIcon(icon);
-
-	int size = ThumbSize / 2;
-	images = new wxImageList(size, size);
-	m_listCtrl->AssignImageList(images, wxIMAGE_LIST_NORMAL);
-
-	m_listCtrl->Bind( wxEVT_COMMAND_LIST_BEGIN_DRAG,
-		&ResourcesBrowser::OnListBeginDrag, this );
 }
 
 //-----------------------------------//

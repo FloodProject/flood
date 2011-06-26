@@ -16,6 +16,8 @@ namespace vapor { namespace editor {
 
 class ResourcesPage;
 class ResourcesBrowser;
+class ResourceDatabase;
+class ResourceThumbnailer;
 
 //-----------------------------------//
 
@@ -31,18 +33,25 @@ public:
 	~ResourcesPlugin();
 
 	// Gets metadata about this plugin.
-	virtual PluginMetadata getMetadata();
+	PluginMetadata getMetadata() OVERRIDE;
 
 	// Plugin enable callback.
-	virtual void onPluginEnable();
+	void onPluginEnable() OVERRIDE;
 
 	// Plugin disable callback.
-	virtual void onPluginDisable();
+	void onPluginDisable() OVERRIDE;
+
+	// Loads the thumbnails cache.
+	bool loadCache();
+
+	// Saves the thumbnails cache.
+	bool saveCache();
 
 	// Handles button click.
 	void onBrowserButtonClick(wxCommandEvent& event);
 
-protected:
+	ResourceDatabase* resourceDatabase;
+	ResourceThumbnailer* resourceThumbnailer;
 
 	ResourcesPage* resourcesPage;
 	ResourcesBrowser* resourcesBrowser;

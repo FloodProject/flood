@@ -81,7 +81,7 @@ void ScenePage::initIcons()
 	imageList = new wxImageList(16, 16, false, 16);
 	imageList->Add(wxMEMORY_BITMAP(package));
 
-	for( uint i = 0; i < ARRAY_SIZE(components); i++ )
+	for( size_t i = 0; i < ARRAY_SIZE(components); i++ )
 	{
 		const ComponentEntry& c = components[i];
 		const Type* type = c.type;
@@ -123,7 +123,7 @@ void ScenePage::populateEntityItemMenu(wxMenu& menu, const EntityPtr& node)
 
 	wxMenu* subMenu = &menu;
 
-	for( uint i = 0; i < ARRAY_SIZE(components); i++ )
+	for( size_t i = 0; i < ARRAY_SIZE(components); i++ )
 	{
 		ComponentEntry& c = components[i];
 		const Type* type = c.type;

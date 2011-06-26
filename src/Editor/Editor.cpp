@@ -319,7 +319,7 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 	//-----------------------------------//
 	case Toolbar_TooglePhysicsDebug:
 	{
-#ifdef VAPOR_PHYSICS_BULLET
+#ifdef ENABLE_PHYSICS_BULLET
 		PhysicsManager* physics = engine->getPhysicsManager();
 		
 		if( physics )
@@ -354,12 +354,14 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 	//-----------------------------------//
 	case Toolbar_ToogleSidebar:
 	{
-		//if( !mainSplitter->GetWindow2() )
-		//	mainSplitter->SplitVertically(viewSplitter, notebookCtrl, -220);
-		//else
-		//	mainSplitter->Unsplit();
+#if 0
+		if( !mainSplitter->GetWindow2() )
+			mainSplitter->SplitVertically(viewSplitter, notebookCtrl, -220);
+		else
+			mainSplitter->Unsplit();
 
-		//break;
+		break;
+#endif
 	}
 	//-----------------------------------//
 	} // end switch

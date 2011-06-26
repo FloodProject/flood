@@ -8,10 +8,17 @@
 
 #pragma once
 
+#include "Core/String.h"
+
+NAMESPACE_BEGIN
+
 //---------------------------------------------------------------------//
 // Paths
 //---------------------------------------------------------------------//
 
-static const std::string CacheFolder( "Cache/" );
-static const std::string ThumbCache( "Thumbs.cache" );
+static const String MediaFolder( "Assets/" );
+static const String CacheFolder( "Cache/" );
+static const String ThumbCache( "Thumbs.cache" );
 static const int ThumbSize = 256;
+
+NAMESPACE_END

@@ -11,12 +11,11 @@
 #include "Scene/Geometry.h"
 #include "Resources/Mesh.h"
 
-//FWD_DECL_INTRUSIVE(Mesh)
 FWD_DECL_INTRUSIVE(Bone)
 FWD_DECL_INTRUSIVE(Animation)
 FWD_DECL_INTRUSIVE(Attachment)
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -43,7 +42,7 @@ struct AnimationState;
 
 REFLECT_DECLARE_CLASS(Model)
 
-class API_ENGINE Model : public Geometry
+class API_SCENE Model : public Geometry
 {
 	REFLECT_DECLARE_OBJECT(Model)
 
@@ -53,7 +52,7 @@ public:
 	Model( const MeshHandle& mesh );
 
 	// Gets the mesh associated with the model.
-	GETTER(Mesh, const MeshHandle&, meshHandle)
+	GETTER(Mesh, const MeshHandle&, mesh)
 
 	// Gets the skinning mode of the mesh.
 	GETTER(SkinningMode, SkinningMode::Enum, skinningMode)
@@ -133,10 +132,10 @@ protected:
 	void rebuildPositions();
 
 	// Mesh that the model renders.
-	MeshHandle meshHandle;
+	MeshHandle mesh;
 
 	// Pointer to the mesh.
-	Mesh* mesh;
+	Mesh* pmesh;
 
 	// Has the model been built.
 	bool modelBuilt;
@@ -173,4 +172,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Model );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

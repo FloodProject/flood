@@ -116,41 +116,6 @@ void ProjectPlugin::onNewButtonClick(wxCommandEvent& event)
 
 //-----------------------------------//
 
-static Object* LoadObjectFromFile(const Path& file)
-{
-	Serializer* json = SerializerCreateJSON( AllocatorGetHeap() );
-	json->alloc = AllocatorGetHeap();
-
-	Stream* stream = StreamCreateFromFile(AllocatorGetHeap(), file.c_str(), StreamMode::Read);	
-	json->stream = stream;
-
-	Object* object = SerializerLoad(json);
-
-	SerializerDestroy(json);
-	StreamDestroy(stream);
-
-	return object;
-}
-
-//-----------------------------------//
-
-static void SaveObjectToFile(const Path& file, Object* object)
-{
-	Serializer* json = SerializerCreateJSON( AllocatorGetHeap() );
-	json->alloc = AllocatorGetHeap();
-
-	Stream* stream = StreamCreateFromFile(AllocatorGetHeap(), file.c_str(), StreamMode::Write);	
-	json->stream = stream;
-	json->object = object;
-	
-	SerializerSave(json);
-
-	SerializerDestroy(json);
-	StreamDestroy(stream);
-}
-
-//-----------------------------------//
-
 static const std::string fileDialogDescription( "Scene files (*.scene)|*.scene" );
 
 void ProjectPlugin::onOpenButtonClick(wxCommandEvent& event)
@@ -166,7 +131,7 @@ void ProjectPlugin::onOpenButtonClick(wxCommandEvent& event)
 		return;
 
 	Path path = (String) fc.GetPath();
-	Scene* object = (Scene*) LoadObjectFromFile(path);
+	Scene* object = (Scene*) SerializerLoadObjectFromFile(path);
 
 	if( !object )
 	{
@@ -220,7 +185,9 @@ bool ProjectPlugin::saveScene()
 	ScenePtr scene = engine->getScene();
 	
 	Path path = (String) fc.GetPath();
-	SaveObjectToFile(path, scene.get());
+	
+	if( !SerializerSaveObjectToFile(path, scene.get()) )
+		return false;
 
 	return true;
 }

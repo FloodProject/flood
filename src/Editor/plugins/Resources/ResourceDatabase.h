@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <wx/msgqueue.h>
+
 namespace vapor { namespace editor {
 
 //-----------------------------------//
@@ -24,6 +26,9 @@ struct ResourceMetadata
 
 	// Thumbnail of the resource.
 	String thumbnail;
+
+	// Group of the resource.
+	ResourceGroup::Enum group;
 };
 
 typedef std::vector<ResourceMetadata> ResourcesCache;
@@ -43,14 +48,11 @@ public:
 	ResourceDatabase();
 	~ResourceDatabase();
 
-	// Loads the thumbnails cache.
-	bool loadCache();
-
-	// Saves the thumbnails cache.
-	bool saveCache();
-
 	// Scans for known resources.
 	void scanFiles();
+
+	// Indexes found resources.
+	void indexFiles();
 
 	// Serialization fix-up.
 	virtual void fixUp() OVERRIDE;
@@ -58,6 +60,9 @@ public:
 	// Caches all the resources metadata.
 	ResourcesCache resources;
 	ResourcesCacheMap resourcesCache;
+
+	wxMessageQueue<String> resourcesToIndex;
+	wxMessageQueue<String> resourcesToThumb;
 };
 
 //-----------------------------------//

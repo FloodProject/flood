@@ -141,8 +141,13 @@ API_CORE void SerializerDestroy(Serializer*);
 
 // Loads an object from a stream.
 API_CORE Object* SerializerLoad(Serializer*);
-API_CORE void SerializerSave(Serializer*);
+API_CORE bool SerializerSave(Serializer*);
+
+// Wrappers for file-based loading and saving.
+API_CORE Object* SerializerLoadObjectFromFile(const Path&);
+API_CORE bool SerializerSaveObjectToFile(const Path& file, Object* object);
 
 //-----------------------------------//
 
 NAMESPACE_END
+

@@ -77,30 +77,6 @@ void SerializerDestroy(Serializer* serializer)
 
 //-----------------------------------//
 
-Object* SerializerLoad(Serializer* serializer)
-{
-	if( !serializer->load ) return nullptr;
-	if( !serializer->stream ) return nullptr;
-
-	serializer->load(serializer);
-	StreamClose(serializer->stream);
-
-	return serializer->object;
-}
-
-//-----------------------------------//
-
-void SerializerSave(Serializer* serializer)
-{
-	if( !serializer->save ) return;
-	if( !serializer->stream ) return;
-	
-	serializer->save(serializer);
-	StreamClose(serializer->stream);
-}
-
-//-----------------------------------//
-
 static void ReflectionWalkPrimitive(ReflectionContext* context)
 {
 	if( !context->walkPrimitive ) return;
@@ -400,6 +376,72 @@ void ReflectionWalk(Object* object, ReflectionContext* context)
 	context->composite = klass;
 	
 	ReflectionWalkType(context, klass);
+}
+
+//-----------------------------------//
+
+Object* SerializerLoad(Serializer* serializer)
+{
+	if( !serializer->load ) return nullptr;
+	if( !serializer->stream ) return nullptr;
+
+	serializer->load(serializer);
+	StreamClose(serializer->stream);
+
+	return serializer->object;
+}
+
+//-----------------------------------//
+
+bool SerializerSave(Serializer* serializer)
+{
+	if( !serializer->save ) return false;
+	if( !serializer->stream ) return false;
+	
+	serializer->save(serializer);
+	StreamClose(serializer->stream);
+
+	return true;
+}
+
+//-----------------------------------//
+
+Object* SerializerLoadObjectFromFile(const Path& file)
+{
+	Serializer* json = SerializerCreateJSON( AllocatorGetHeap() );
+	json->alloc = AllocatorGetHeap();
+
+	Stream* stream = StreamCreateFromFile(AllocatorGetHeap(), file.c_str(), StreamMode::Read);	
+	json->stream = stream;
+
+	Object* object = SerializerLoad(json);
+
+	SerializerDestroy(json);
+	StreamDestroy(stream);
+
+	return object;
+}
+
+//-----------------------------------//
+
+bool SerializerSaveObjectToFile(const Path& file, Object* object)
+{
+	Serializer* json = SerializerCreateJSON( AllocatorGetHeap() );
+	json->alloc = AllocatorGetHeap();
+
+	Stream* stream = StreamCreateFromFile(AllocatorGetHeap(), file.c_str(), StreamMode::Write);
+	if( !stream ) return false;
+
+	json->stream = stream;
+	json->object = object;
+	
+	if( !SerializerSave(json) )
+		return false;
+
+	SerializerDestroy(json);
+	StreamDestroy(stream);
+
+	return true;
 }
 
 //-----------------------------------//

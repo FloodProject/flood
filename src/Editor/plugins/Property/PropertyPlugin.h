@@ -64,8 +64,6 @@ public:
 	// Updates the properties.
 	void updateProperties(const EntityPtr& entity);
 
-protected:
-
 	PropertyPage* propertyPage;
 };
 

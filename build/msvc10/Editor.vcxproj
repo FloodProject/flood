@@ -196,6 +196,7 @@
     <ClCompile Include="..\..\src\Editor\plugins\Property\PropertyWatch.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourceDatabase.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourcesPane.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourceThumbnailer.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneComponents.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneDocument.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneOperation.cpp" />
@@ -272,6 +273,7 @@
     <ClInclude Include="..\..\src\Editor\plugins\Mono\MonoPlugin.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourceDatabase.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourcesPane.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourceThumbnailer.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Scene\SceneDocument.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Scene\ScenePane.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Selection\SelectionManager.h" />

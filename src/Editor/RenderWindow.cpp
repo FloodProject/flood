@@ -22,7 +22,7 @@ RenderWindow::RenderWindow(const WindowSettings& settings, wxGLCanvas* const can
 	, cursorPriority(0)
 {
 	createContext();
-	inputManager = new EditorInputManager(GetEngine()->getInputManager());
+	inputManager = new EditorInputManager(GetInputManager());
 }
 
 //-----------------------------------//
