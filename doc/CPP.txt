@@ -40,7 +40,7 @@ Miscellaneous
 Subversion
 ----------
 
-	- vaporEngine is kept in a Subversion repository in Assembla
+	- vapor3D is kept in a Subversion repository in Assembla
 	- All commits should provide a sensible commit message
 	
 Libraries

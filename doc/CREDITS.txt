@@ -1,4 +1,4 @@
-vaporEngine Team
+vapor3D Team
 ================
 
 General:
@@ -50,7 +50,8 @@ Scene:
 			* Trigger
 			* Skydome
 			* Light
-			
+			* Projector
+
 	* Built-in scene serialization to JSON format
 
 Editor:
@@ -74,13 +75,11 @@ Libraries used:
 	* OpenGL
 	* OpenAL
 	* GLEW
-	* PhysFS
 	* FreeType
 	* PicoPNG
 	* Ogg
 	* Vorbis
 	* wxWidgets
-	* Boost
 	
 Tools used:
 
