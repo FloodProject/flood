@@ -63,7 +63,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalOptions>-Zm140 </AdditionalOptions>
+      <AdditionalOptions>-Zm140 /MP</AdditionalOptions>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\src;$(SolutionDir)..\..\src\Editor\inc;$(SolutionDir)..\..\src\Editor\;$(SolutionDir)..\..\dep\lua\include;$(SolutionDir)..\..\dep\openal\include;$(SolutionDir)..\..\dep\glew\include;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\wx\include;$(SolutionDir)..\..\dep\wx\include\msvc;$(SolutionDir)..\..\dep\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;__WXMSW__;_UNICODE;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -87,7 +87,7 @@
     <Link>
       <AdditionalDependencies>Core.lib;Resources.lib;Engine.lib;opengl32.lib;glewd.lib;OpenAL32.lib;luad.lib;bulletd.lib;Pipeline.lib;wxbase29ud.lib;wxmsw29ud_core.lib;wxmsw29ud_aui.lib;wxmsw29ud_gl.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration);$(SolutionDir)..\..\dep\bullet\lib\vc10;$(SolutionDir)..\..\dep\glew\lib\vc10;$(SolutionDir)..\..\dep\openal\lib\Win32;$(SolutionDir)..\..\dep\lua\lib\vc10;$(SolutionDir)..\..\dep\wx\lib\vc_lib\;$(SolutionDir)..\..\dep\nvtt\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration);$(SolutionDir)..\..\dep\bullet\lib\vc10;$(SolutionDir)..\..\dep\glew\lib\vc10;$(SolutionDir)..\..\dep\openal\lib\Win32;$(SolutionDir)..\..\dep\lua\lib\vc10;$(SolutionDir)..\..\dep\wx\lib\vc_lib\vc10;$(SolutionDir)..\..\dep\nvtt\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>wxpngd.lib;libcmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
