@@ -42,8 +42,9 @@ bool Preferences::createPages()
 	wxImageList* imageList = new wxImageList(16, 16, true);
 	imageList->Add(wxMEMORY_BITMAP(keyboard));
 	imageList->Add(wxMEMORY_BITMAP(plugin));
+	imageList->Add(wxMEMORY_BITMAP(package));
 	imageList->Add(wxMEMORY_BITMAP(table));
-	
+
 	wxBookCtrlBase* nb = GetBookCtrl();	
 	nb->AssignImageList(imageList);
 
@@ -70,6 +71,11 @@ bool Preferences::createPages()
     nb->AddPage(plugins, "Plugins");
 	plugins->InitDialog();
 	nb->SetPageImage(n++, 1);
+
+	resources = new gui::Resources(nb);
+    nb->AddPage(resources, "Resources");
+	resources->InitDialog();
+	nb->SetPageImage(n++, 2);
 
     LayoutDialog();
     return true;

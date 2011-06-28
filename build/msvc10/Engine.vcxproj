@@ -267,6 +267,7 @@
     <ClCompile Include="..\..\src\Scene\Particles.cpp" />
     <ClCompile Include="..\..\src\Scene\Projector.cpp" />
     <ClCompile Include="..\..\src\Scene\Scene.cpp" />
+    <ClCompile Include="..\..\src\Scene\SceneLoader.cpp" />
     <ClCompile Include="..\..\src\Scene\Skydome.cpp" />
     <ClCompile Include="..\..\src\Scene\Source.cpp" />
     <ClCompile Include="..\..\src\Scene\Terrain.cpp" />
@@ -276,6 +277,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\Engine\API.h" />
+    <ClInclude Include="..\..\inc\Scene\SceneLoader.h" />
     <ClInclude Include="..\..\inc\vapor\paging\Page.h" />
     <ClInclude Include="..\..\inc\vapor\paging\PageManager.h" />
     <ClInclude Include="..\..\inc\vapor\render\Device.h" />

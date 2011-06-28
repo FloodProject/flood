@@ -15,8 +15,8 @@
 #include "Resources/IL_Image_Loader.h"
 #include "Resources/OGG_Loader.h"
 #include "Resources/GLSL_Loader.h"
-#include "Resources/Lua_Loader.h"
-#include "Resources/Font_Loader.h"
+#include "Resources/LuaLoader.h"
+#include "Resources/FontLoader.h"
 #include "Pipeline/MilkshapeLoader.h"
 
 namespace vapor {

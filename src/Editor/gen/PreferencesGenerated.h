@@ -107,6 +107,21 @@ namespace vapor
 			protected:
 				wxStaticText* m_staticText8;
 				wxDirPickerCtrl* m_dirPicker1;
+				wxListCtrl* m_listPlugins;
+				wxButton* m_buttonPluginEnable;
+				wxButton* m_buttonPluginUninstall;
+				wxStaticLine* m_staticline1;
+				wxButton* m_buttonPluginCheckUpdates;
+				wxButton* m_buttonPluginInstall;
+				wxStaticText* m_staticText11;
+				wxTextCtrl* m_textPluginDescription;
+				
+				// Virtual event handlers, overide them in your derived class
+				virtual void OnPluginSelected( wxListEvent& event ) { event.Skip(); }
+				virtual void OnPluginEnable( wxCommandEvent& event ) { event.Skip(); }
+				virtual void OnPluginCheckUpdates( wxCommandEvent& event ) { event.Skip(); }
+				virtual void OnPluginInstall( wxCommandEvent& event ) { event.Skip(); }
+				
 			
 			public:
 				

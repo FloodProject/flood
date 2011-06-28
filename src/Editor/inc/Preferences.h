@@ -33,8 +33,10 @@ public:
 
 protected:
 
-	gui::Plugins* plugins;
 	gui::Bindings* bindings;
+	gui::Plugins* plugins;
+	gui::Resources* resources;
+
 	wxListCtrl* m_listPlugins;
 };
 

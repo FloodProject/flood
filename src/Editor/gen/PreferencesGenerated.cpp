@@ -208,14 +208,85 @@ Resources::Resources( wxWindow* parent, wxWindowID id, const wxPoint& pos, const
 	
 	sbSizer1->Add( bSizer23, 0, wxEXPAND|wxALL, 5 );
 	
-	bSizer22->Add( sbSizer1, 1, wxEXPAND, 5 );
+	bSizer22->Add( sbSizer1, 0, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizer2;
+	sbSizer2 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Resource Loaders") ), wxVERTICAL );
+	
+	wxBoxSizer* bSizer11;
+	bSizer11 = new wxBoxSizer( wxVERTICAL );
+	
+	m_listPlugins = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL );
+	bSizer11->Add( m_listPlugins, 1, wxALL|wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer19;
+	bSizer19 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_buttonPluginEnable = new wxButton( this, wxID_ANY, wxT("Disable"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_buttonPluginEnable->Enable( false );
+	
+	bSizer19->Add( m_buttonPluginEnable, 0, wxALL, 5 );
+	
+	m_buttonPluginUninstall = new wxButton( this, wxID_ANY, wxT("Uninstall"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_buttonPluginUninstall->Enable( false );
+	
+	bSizer19->Add( m_buttonPluginUninstall, 1, wxALL, 5 );
+	
+	m_staticline1 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
+	bSizer19->Add( m_staticline1, 0, wxEXPAND | wxALL, 5 );
+	
+	m_buttonPluginCheckUpdates = new wxButton( this, wxID_ANY, wxT("Check Updates"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer19->Add( m_buttonPluginCheckUpdates, 1, wxALL, 5 );
+	
+	m_buttonPluginInstall = new wxButton( this, wxID_ANY, wxT("Install..."), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer19->Add( m_buttonPluginInstall, 1, wxALL, 5 );
+	
+	bSizer11->Add( bSizer19, 0, wxEXPAND, 5 );
+	
+	sbSizer2->Add( bSizer11, 1, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer1;
+	bSizer1 = new wxBoxSizer( wxVERTICAL );
+	
+	wxBoxSizer* bSizer18;
+	bSizer18 = new wxBoxSizer( wxVERTICAL );
+	
+	wxBoxSizer* bSizer61;
+	bSizer61 = new wxBoxSizer( wxVERTICAL );
+	
+	m_staticText11 = new wxStaticText( this, wxID_ANY, wxT("Description:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText11->Wrap( -1 );
+	bSizer61->Add( m_staticText11, 0, wxEXPAND|wxRIGHT|wxLEFT, 5 );
+	
+	m_textPluginDescription = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( -1,48 ), wxTE_MULTILINE|wxTE_NO_VSCROLL|wxTE_READONLY );
+	bSizer61->Add( m_textPluginDescription, 1, wxALL|wxEXPAND, 5 );
+	
+	bSizer18->Add( bSizer61, 0, wxEXPAND, 5 );
+	
+	bSizer1->Add( bSizer18, 0, wxEXPAND, 5 );
+	
+	sbSizer2->Add( bSizer1, 0, wxEXPAND, 5 );
+	
+	bSizer22->Add( sbSizer2, 1, wxEXPAND, 5 );
 	
 	this->SetSizer( bSizer22 );
 	this->Layout();
+	
+	// Connect Events
+	m_listPlugins->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( Resources::OnPluginSelected ), NULL, this );
+	m_buttonPluginEnable->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Resources::OnPluginEnable ), NULL, this );
+	m_buttonPluginCheckUpdates->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Resources::OnPluginCheckUpdates ), NULL, this );
+	m_buttonPluginInstall->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Resources::OnPluginInstall ), NULL, this );
 }
 
 Resources::~Resources()
 {
+	// Disconnect Events
+	m_listPlugins->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( Resources::OnPluginSelected ), NULL, this );
+	m_buttonPluginEnable->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Resources::OnPluginEnable ), NULL, this );
+	m_buttonPluginCheckUpdates->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Resources::OnPluginCheckUpdates ), NULL, this );
+	m_buttonPluginInstall->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Resources::OnPluginInstall ), NULL, this );
+	
 }
 
 ResourcesBrowser::ResourcesBrowser( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )

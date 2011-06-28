@@ -457,6 +457,9 @@
     <ClCompile Include="..\..\src\Engine\Cube.cpp">
       <Filter>Geometry\Cube</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Scene\SceneLoader.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\vapor\render\Device.h">
@@ -722,6 +725,9 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\render\Cube.h">
       <Filter>Geometry\Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Scene\SceneLoader.h">
+      <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

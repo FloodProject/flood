@@ -8,37 +8,37 @@
 
 #pragma once
 
-#ifdef ENABLE_SCRIPTING_LUA
-
 #include "Resources/ResourceLoader.h"
-#include "Script/Script.h"
+#include "Scene/Scene.h"
 
-namespace vapor {
+#ifdef SCENE_LOADER
+
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
 /**
- * Loads Lua script files.
+ * Loads scene files.
  */
 
-REFLECT_DECLARE_CLASS(Lua_Loader)
+REFLECT_DECLARE_CLASS(SceneLoader)
 
-class Lua_Loader : public ResourceLoader
+class SceneLoader : public ResourceLoader
 {
-	REFLECT_DECLARE_OBJECT(Lua_Loader)
+	REFLECT_DECLARE_OBJECT(SceneLoader)
 
 public:
 
-	Lua_Loader();
+	SceneLoader();
 
 	// Creates the resource with no data.
-	RESOURCE_LOADER_PREPARE(Script)
+	RESOURCE_LOADER_PREPARE(Scene)
 
 	// Parses a Lua text script to a buffer.
 	virtual bool decode(const Stream& file, Resource* res);
 
 	// Gets the name of this codec.
-	GETTER(Name, const String, "LUA")
+	GETTER(Name, const String, "Scene")
 
 	// Overrides this to return the right resource group.
 	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Scripts)
@@ -46,6 +46,6 @@ public:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END
 
 #endif

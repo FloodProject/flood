@@ -17,7 +17,7 @@
 #include "Core/Utilities.h"
 #include "Math/Helpers.h"
 
-#include "Resources/Font_Loader.h"
+#include "Resources/FontLoader.h"
 #include "Resources/ResourceManager.h"
 
 namespace vapor {

@@ -91,6 +91,8 @@ void GizmoPlugin::onPluginEnable()
 			iconScale, "Selects the Scale tool", wxITEM_RADIO );
 		addTool(buttonScale, true);
 	}
+
+	isGizmoPicked = false;
 }
 
 //-----------------------------------//
@@ -231,11 +233,9 @@ bool GizmoPlugin::getGizmoPickPoint(int x, int y, Vector3& pickPoint)
 
 void GizmoPlugin::onMouseMove( const MouseMoveEvent& moveEvent )
 {
-	if( !gizmo )
-		return;
+	if( !gizmo ) return;
 
-	if( !(isTool(GizmoTool::Translate)
-		|| isTool(GizmoTool::Scale) || isTool(GizmoTool::Rotate)) )
+	if( isTool(GizmoTool::Camera) )
 		return;
 
 	// To check if the user picked a gizmo we use two hit test techniques.
@@ -275,7 +275,10 @@ void GizmoPlugin::onMouseDrag( const MouseDragEvent& dragEvent )
 		return;
 
 	if( !op ) return;
-	
+
+	if( !isGizmoPicked )
+		return;
+
 	Vector3 pickPoint;
 	
 	if( !getGizmoPickPoint(dragEvent.x, dragEvent.y, pickPoint) )
@@ -317,6 +320,7 @@ void GizmoPlugin::onMouseButtonPress( const MouseButtonEvent& mbe )
 	
 	if( gizmo && gizmo->isAnyAxisSelected() )
 	{
+		isGizmoPicked = true;
 		getGizmoPickPoint(mbe.x, mbe.y, firstPickPoint);
 		return;
 	}
@@ -326,6 +330,8 @@ void GizmoPlugin::onMouseButtonPress( const MouseButtonEvent& mbe )
 
 void GizmoPlugin::onMouseButtonRelease( const MouseButtonEvent& mbe )
 {
+	isGizmoPicked = false;
+
 	if( !op ) return;
 
 	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();

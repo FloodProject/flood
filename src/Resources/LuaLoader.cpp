@@ -10,9 +10,9 @@
 
 #ifdef ENABLE_SCRIPTING_LUA
 
-#include "Resources/Lua_Loader.h"
+#include "Resources/LuaLoader.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -41,6 +41,6 @@ bool Lua_Loader::decode(const Stream& stream, Resource* res)
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END
 
 #endif

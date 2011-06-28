@@ -45,36 +45,36 @@ public:
 	GizmoPlugin();
 
 	// Gets metadata about this plugin.
-	virtual PluginMetadata getMetadata();
+	virtual PluginMetadata getMetadata() OVERRIDE;
 	
 	// Plugin enable callback.
-	virtual void onPluginEnable();
+	virtual void onPluginEnable() OVERRIDE;
 
 	// Plugin disable callback.
 	virtual void onPluginDisable();
 
 	// Mouse events.
-	virtual void onMouseMove( const MouseMoveEvent& );
-	virtual void onMouseDrag( const MouseDragEvent& );
-	virtual void onMouseButtonPress( const MouseButtonEvent& );
-	virtual void onMouseButtonRelease( const MouseButtonEvent& );
+	virtual void onMouseMove( const MouseMoveEvent& ) OVERRIDE;
+	virtual void onMouseDrag( const MouseDragEvent& ) OVERRIDE;
+	virtual void onMouseButtonPress( const MouseButtonEvent& ) OVERRIDE;
+	virtual void onMouseButtonRelease( const MouseButtonEvent& ) OVERRIDE;
 
 	// Entity selection events.
-	virtual void onEntitySelect( const EntityPtr& );
-	virtual void onEntityUnselect( const EntityPtr& );
+	virtual void onEntitySelect( const EntityPtr& ) OVERRIDE;
+	virtual void onEntityUnselect( const EntityPtr& ) OVERRIDE;
 
 	// Tool selection callback.
-	virtual void onToolSelect( int id );
+	virtual void onToolSelect( int id ) OVERRIDE;
 
 	// Tool unselection callback.
-	void onToolUnselect( int id );
+	void onToolUnselect( int id ) OVERRIDE;
 
 protected:
 
 	// Gets the selections manager.
 	SelectionManager* getSelections();
 
-	// Checks if the passed tool the current one.
+	// Checks if the passed tool is the current one.
 	bool isTool(GizmoTool::Enum mode);
 
 	// Creates a new gizmo for the given node.
@@ -109,6 +109,9 @@ protected:
 
 	// Associates the object nodes to the gizmos nodes.
 	GizmoMap gizmos;
+
+	// Tracks if the gizmo is being picked.
+	bool isGizmoPicked;
 
 	// Current gizmo operation.
 	GizmoOperation* op;
