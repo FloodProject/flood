@@ -35,7 +35,7 @@ REFLECT_CHILD_CLASS(Model, Geometry)
 	FIELD_PRIMITIVE(float, animationSpeed)
 	FIELD_PRIMITIVE(bool, animationEnabled)
 	FIELD_ENUM_SETTER(SkinningMode, skinningMode, SkinningMode)
-	FIELD_CLASS_PTR_SETTER(Mesh, MeshHandle, pmesh, Handle, Mesh)
+	FIELD_CLASS_PTR_SETTER(Mesh, MeshHandle, mesh, Handle, Mesh)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
@@ -76,7 +76,7 @@ void Model::init()
 
 //-----------------------------------//
 
-void Model::setMesh(const MeshHandle& pmesh)
+void Model::setMesh(const MeshHandle& meshHandle)
 {
 	for( size_t i = 0; i < renderables.size(); i++ )
 	{
@@ -85,7 +85,7 @@ void Model::setMesh(const MeshHandle& pmesh)
 	}
 
 	init();
-	mesh = pmesh;
+	mesh = meshHandle;
 }
 
 //-----------------------------------//
@@ -206,6 +206,13 @@ void Model::build()
 		
 		addRenderable( rend );
 	}
+
+	// Updates the model bounding box.
+	updateBounds();
+	
+	// Re-compute the bounding box.
+	TransformPtr transform = getEntity()->getTransform();
+	transform->markBoundingVolumeDirty();
 
 	prepareSkinning();
 

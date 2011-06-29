@@ -31,15 +31,16 @@ namespace vapor { namespace editor {
 
 ResourcesBrowser::ResourcesBrowser( wxWindow* parent )
 	: gui::ResourcesBrowser(parent, wxID_ANY, "Resources Browser")
-	, listIndex(0)
+	, m_resourceImages(nullptr)
+	, m_resourceGroupsImages(nullptr)
+	, inSelectionMode(false)
 {
 	setupUI();
 	setupGroupIcons();
 	setupGroups();
 
 	// Select the general tree item.
-	wxTreeItemId id = m_resourceGroupIds[ResourceGroup::General];
-	//m_resourceGroups->SelectItem(id);
+	selectGroup(ResourceGroup::General);
 }
 
 //-----------------------------------//
@@ -47,15 +48,35 @@ ResourcesBrowser::ResourcesBrowser( wxWindow* parent )
 void ResourcesBrowser::setupUI()
 {
 	CenterOnParent();
-
-	Bind( wxEVT_CLOSE_WINDOW, &ResourcesBrowser::OnClose, this );
-
-	m_searchCtrl->ShowCancelButton(true);
-	m_searchCtrl->ShowSearchButton(true);
 	
 	wxIcon icon;
 	icon.CopyFromBitmap( wxMEMORY_BITMAP(package) );
 	SetIcon(icon);
+}
+
+//-----------------------------------//
+
+void ResourcesBrowser::enableSelection()
+{
+	inSelectionMode = true;
+	m_resourceGroups->Disable();
+}
+
+//-----------------------------------//
+
+void ResourcesBrowser::disableSelection()
+{
+	inSelectionMode = false;
+	m_resourceGroups->Enable();
+}
+
+//-----------------------------------//
+
+void ResourcesBrowser::onResourceListActivated( wxListEvent& event )
+{
+	if( !inSelectionMode ) return;
+	
+	EndModal( event.GetIndex() );
 }
 
 //-----------------------------------//
@@ -120,6 +141,14 @@ bool ResourcesBrowser::findResourceGroupFromTreeId( wxTreeItemId id, ResourceGro
 
 //-----------------------------------//
 
+void ResourcesBrowser::selectGroup(ResourceGroup::Enum group)
+{
+	wxTreeItemId id = m_resourceGroupIds[group];
+	m_resourceGroups->SelectItem(id);
+}
+
+//-----------------------------------//
+
 void ResourcesBrowser::onResourceGroupChanged( wxTreeEvent& event )
 {
 	wxTreeItemId id = event.GetItem();
@@ -128,22 +157,43 @@ void ResourcesBrowser::onResourceGroupChanged( wxTreeEvent& event )
 	if( !findResourceGroupFromTreeId(id, group) )
 		return;
 
-	showCategory(group);
+	showGroup(group);
 }
 
 //-----------------------------------//
 
-void ResourcesBrowser::showCategory(ResourceGroup::Enum group)
-{
-	listIndex = 0;
-	m_resourceList->Clear();
+#define LIST_STYLE wxLC_NO_HEADER | wxLC_SINGLE_SEL
 
+void ResourcesBrowser::showGroup(ResourceGroup::Enum group)
+{
 	ResourcesPlugin* rp = GetPlugin<ResourcesPlugin>();
 	ResourceDatabase* db = rp->resourceDatabase;
-
 	ResourcesCacheMap& cache = db->resourcesCache;
 	
 	bool isGeneral = group == ResourceGroup::General;
+
+	int imageSize = m_detailSlider->GetValue();
+	bool showImages = imageSize > 0;
+
+	m_resourceList->ClearAll();
+
+	m_resourceImages = new wxImageList(imageSize, imageSize);
+	m_resourceList->AssignImageList(m_resourceImages, wxIMAGE_LIST_NORMAL);
+
+	listIndex = 0;
+	m_resourceList->DeleteAllColumns();
+		
+	if( showImages )
+		m_resourceList->SetWindowStyle(wxLC_ICON | LIST_STYLE);
+	else
+		m_resourceList->SetWindowStyleFlag(wxLC_REPORT | LIST_STYLE);
+
+	wxListItem col; 
+	col.SetId(0); 
+	col.SetText("Resource"); 
+	col.SetWidth(300);
+		
+	m_resourceList->InsertColumn(0, col);
 
 	for(auto it = cache.begin(); it != cache.end(); it++)
 	{
@@ -153,48 +203,84 @@ void ResourcesBrowser::showCategory(ResourceGroup::Enum group)
 			continue;
 
 		String name = PathGetFile(metadata.path);
-		m_resourceList->Append(name);
+
+		if(!showImages)
+		{
+			m_resourceList->InsertItem(listIndex++, name);
+		}
+		else
+		{
+			int index = getImageIndex(metadata);
+			if( index < 0 ) return;
+			
+			long id = m_resourceList->InsertItem(listIndex++, name);
+			m_resourceList->SetItemImage(id, index);
+		}
 	}
 }
 
 //-----------------------------------//
 
-void ResourcesBrowser::onResourceListSelection( wxCommandEvent& event )
+int ResourcesBrowser::getImageIndex( const ResourceMetadata& metadata )
 {
-	wxString selection = m_resourceList->GetString(event.GetInt());
-	String path = String(selection.c_str());
+	int imageSize = m_detailSlider->GetValue();
 
+	String fullPath = CacheFolder + metadata.thumbnail;
+
+	if(metadata.group == ResourceGroup::Images)
+		fullPath = MediaFolder + metadata.path;
+
+	if( !wxFileName::FileExists(fullPath) )
+		return -1;
+
+	wxImage image;
+
+	if( !image.LoadFile(fullPath) )
+		return -1;
+
+	image.Rescale(imageSize, imageSize, wxIMAGE_QUALITY_NEAREST);
+
+	int index = m_resourceImages->Add( wxBitmap(image) );
+
+	return index;
+}
+
+//-----------------------------------//
+
+void ResourcesBrowser::onResourceListSelection( wxListEvent& event )
+{
+	int id = event.GetIndex();
+	wxString selection = m_resourceList->GetItemText(id);
+	
+	String path = String(selection.c_str());
 	const ResourcePtr& res = GetResourceManager()->loadResource(path).Resolve();
 
-	Events* events = GetEditor().getEventManager();
-	events->onResourceSelect(res);
+	if( !inSelectionMode )
+	{
+		Events* events = GetEditor().getEventManager();
+		events->onResourceSelect(res);
+	}
 }
 
 //-----------------------------------//
 
-void ResourcesBrowser::setupImages()
+void ResourcesBrowser::onResourceSliderScroll( wxScrollEvent& event )
 {
-#if 0
-	int size = ThumbSize / 2;
+	int value = event.GetInt();
+	int remainder = value % 32;
+	
+	value -= remainder;
+	m_detailSlider->SetValue(value);
 
-	for( auto it = resourcesCache.begin(); it != resourcesCache.end(); it++ )
-	{
-		ResourceMetadata& metadata = it->second;
-		
-		wxImage image;
-		
-		if( !image.LoadFile(CacheFolder + metadata.thumbnail) )
-			continue;
+	wxTreeItemId id = m_resourceGroups->GetSelection();
+	if( !id.IsOk() ) return;
 
-		image.Rescale(size, size);
-		image = image.Mirror(false);
+	ResourceGroup::Enum group;
 
-		metadata.index = images->Add( wxBitmap(image) );
-		
-		String base = PathGetBase(metadata.thumbnail);
-		m_resourceList->Insert(listIndex++, base, metadata.index);
-	}
-#endif
+	if( !findResourceGroupFromTreeId(id, group) )
+		return;
+
+	showGroup(group);
 }
 
 //-----------------------------------//
@@ -231,6 +317,7 @@ void ResourcesBrowser::OnListBeginDrag(wxListEvent& event)
 		Plane ground( Vector3::UnitY, 0 );
 		
 		float distance;
+		
 		if( !ground.intersects(ray, distance) )
 			return;
 			
@@ -242,8 +329,7 @@ void ResourcesBrowser::OnListBeginDrag(wxListEvent& event)
 	ResourceManager* rm = GetResourceManager();
 	MeshHandle mesh = rm->loadResource<Mesh>(name);
 
-	if( !mesh )
-		return;
+	if( !mesh ) return;
 
 	EntityPtr entity( new Entity( PathGetFile(name) ) );
 	entity->addTransform();
@@ -262,39 +348,19 @@ void ResourcesBrowser::OnListBeginDrag(wxListEvent& event)
 
 //-----------------------------------//
 
-void ResourcesBrowser::onConnectClicked(wxCommandEvent& event)
+void ResourcesBrowser::setFocusToSearch()
 {
-#if 0
-	if( network.createClientSocket("tcp://127.0.0.1:7654") )
-	{
-		m_button1->SetLabel("Connected");
-		m_button1->Disable();
-	}
-
-	std::vector<byte> data;
-	data.push_back( MessageType::ResourceIndexRequest );
-
-	MessagePtr message = new Message(data);
-	//message->setMessageType( MessageType::ResourceIndexRequest );
-
-	network.sendMessage(message);
-#endif
+	m_searchCtrl->SetFocus();
 }
 
 //-----------------------------------//
 
 void ResourcesBrowser::OnClose(wxCloseEvent& event)
 {
-    if ( event.CanVeto() )
-    {
-		// Hide the window instead of closing it.
-		Hide();
+    if ( !event.CanVeto() ) return;
 
-        event.Veto();
-        return;   
-    }
-
-    event.Skip();
+	Hide();
+    event.Veto();
 }
 
 //-----------------------------------//

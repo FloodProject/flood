@@ -11,6 +11,7 @@
 #ifdef ENABLE_SHADER_GLSL
 
 #include "Resources/ResourceLoader.h"
+#include "Resources/Shader.h"
 
 namespace vapor {
 
@@ -30,11 +31,14 @@ public:
 
 	GLSL_Loader();
 
+	// Gets the class of the resource.
+	RESOURCE_LOADER_CLASS(Shader)
+
 	// Creates the resource with no data.
-	virtual Resource* prepare(const Stream& stream);
+	virtual Resource* prepare(const Stream& stream) OVERRIDE;
 
 	// Parses a GLSL text shader to a buffer.
-	virtual bool decode(const Stream& file, Resource* res);
+	virtual bool decode(const Stream& file, Resource* res) OVERRIDE;
 
 	// Gets the name of this codec.
 	GETTER(Name, const String, "GLSL")

@@ -40,8 +40,11 @@ public:
 	// Creates the resource with no data.
 	RESOURCE_LOADER_PREPARE(Sound)
 
+	// Gets the class of the resource.
+	RESOURCE_LOADER_CLASS(Sound)
+
 	// Decode an OGG file to a buffer.
-	virtual bool decode(const Stream& file, Resource* res);
+	bool decode(const Stream& file, Resource* res) OVERRIDE;
 
 	// Gets the name of this codec.
 	GETTER(Name, const String, "OGG")

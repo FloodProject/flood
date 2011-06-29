@@ -19,7 +19,7 @@
 #include "Resources/FontLoader.h"
 #include "Pipeline/MilkshapeLoader.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -68,4 +68,4 @@ void ResourceManager::referenceLoaders()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

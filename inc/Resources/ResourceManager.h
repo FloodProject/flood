@@ -112,6 +112,9 @@ public:
 	// Finds the loader for the given extension.
 	ResourceLoader* findLoader(const String& extension);
 
+	// Finds the loader for the given type.
+	ResourceLoader* findLoaderByClass(const Class* klass);
+
 	// Sets up the default resource loaders.
 	void setupResourceLoaders();
 
@@ -133,8 +136,8 @@ public:
 	// Sets the task manager.
 	SETTER(TaskPool, TaskPool*, taskPool)
 
-	// Sets the task manager.
-	SETTER(Archive, Archive*, archive) 
+	// Sets the archive.
+	SETTER(Archive, Archive*, archive)
 
 	// Sets the file watcher.
 	void setFileWatcher(FileWatcher* watcher);

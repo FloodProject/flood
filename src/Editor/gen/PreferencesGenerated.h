@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Mar 22 2011)
+// C++ code generated with wxFormBuilder (version Sep  8 2010)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -24,10 +24,11 @@
 #include <wx/statline.h>
 #include <wx/filepicker.h>
 #include <wx/statbox.h>
+#include <wx/choice.h>
 #include <wx/srchctrl.h>
 #include <wx/slider.h>
 #include <wx/splitter.h>
-#include <wx/frame.h>
+#include <wx/dialog.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -60,7 +61,7 @@ namespace vapor
 			
 			public:
 				
-				Bindings( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 400,450 ), long style = wxTAB_TRAVERSAL ); 
+				Bindings( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 400,450 ), long style = wxTAB_TRAVERSAL );
 				~Bindings();
 			
 		};
@@ -92,7 +93,7 @@ namespace vapor
 			
 			public:
 				
-				Plugins( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 400,450 ), long style = wxTAB_TRAVERSAL ); 
+				Plugins( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 400,450 ), long style = wxTAB_TRAVERSAL );
 				~Plugins();
 			
 		};
@@ -107,33 +108,40 @@ namespace vapor
 			protected:
 				wxStaticText* m_staticText8;
 				wxDirPickerCtrl* m_dirPicker1;
-				wxListCtrl* m_listPlugins;
-				wxButton* m_buttonPluginEnable;
-				wxButton* m_buttonPluginUninstall;
-				wxStaticLine* m_staticline1;
-				wxButton* m_buttonPluginCheckUpdates;
-				wxButton* m_buttonPluginInstall;
-				wxStaticText* m_staticText11;
-				wxTextCtrl* m_textPluginDescription;
-				
-				// Virtual event handlers, overide them in your derived class
-				virtual void OnPluginSelected( wxListEvent& event ) { event.Skip(); }
-				virtual void OnPluginEnable( wxCommandEvent& event ) { event.Skip(); }
-				virtual void OnPluginCheckUpdates( wxCommandEvent& event ) { event.Skip(); }
-				virtual void OnPluginInstall( wxCommandEvent& event ) { event.Skip(); }
-				
 			
 			public:
 				
-				Resources( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 400,450 ), long style = wxTAB_TRAVERSAL ); 
+				Resources( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 400,450 ), long style = wxTAB_TRAVERSAL );
 				~Resources();
+			
+		};
+		
+		///////////////////////////////////////////////////////////////////////////////
+		/// Class Renderers
+		///////////////////////////////////////////////////////////////////////////////
+		class Renderers : public wxPanel 
+		{
+			private:
+			
+			protected:
+				wxStaticText* m_staticText8;
+				wxChoice* m_choice1;
+				wxStaticText* m_staticText10;
+				wxListCtrl* m_listCtrl2;
+				wxStaticText* m_staticText9;
+				wxListBox* m_listBox3;
+			
+			public:
+				
+				Renderers( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 400,450 ), long style = wxTAB_TRAVERSAL );
+				~Renderers();
 			
 		};
 		
 		///////////////////////////////////////////////////////////////////////////////
 		/// Class ResourcesBrowser
 		///////////////////////////////////////////////////////////////////////////////
-		class ResourcesBrowser : public wxFrame 
+		class ResourcesBrowser : public wxDialog 
 		{
 			private:
 			
@@ -142,19 +150,22 @@ namespace vapor
 				wxPanel* m_panel2;
 				wxTreeCtrl* m_resourceGroups;
 				wxPanel* m_panel3;
-				wxListBox* m_resourceList;
 				wxSearchCtrl* m_searchCtrl;
 				wxSlider* m_detailSlider;
+				wxListCtrl* m_resourceList;
 				
 				// Virtual event handlers, overide them in your derived class
+				virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
 				virtual void onResourceGroupChanged( wxTreeEvent& event ) { event.Skip(); }
-				virtual void onResourceListSelection( wxCommandEvent& event ) { event.Skip(); }
+				virtual void onResourceSliderScroll( wxScrollEvent& event ) { event.Skip(); }
+				virtual void OnListBeginDrag( wxListEvent& event ) { event.Skip(); }
+				virtual void onResourceListActivated( wxListEvent& event ) { event.Skip(); }
+				virtual void onResourceListSelection( wxListEvent& event ) { event.Skip(); }
 				
 			
 			public:
 				
-				ResourcesBrowser( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 581,370 ), long style = wxDEFAULT_FRAME_STYLE|wxFRAME_FLOAT_ON_PARENT|wxFRAME_TOOL_WINDOW|wxTAB_TRAVERSAL );
-				
+				ResourcesBrowser( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 580,370 ), long style = wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP );
 				~ResourcesBrowser();
 				
 				void m_splitter2OnIdle( wxIdleEvent& )

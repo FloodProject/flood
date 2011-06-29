@@ -34,8 +34,11 @@ public:
 	// Creates the resource with no data.
 	RESOURCE_LOADER_PREPARE(Script)
 
+	// Gets the class of the resource.
+	RESOURCE_LOADER_CLASS(Script)
+
 	// Parses a Lua text script to a buffer.
-	virtual bool decode(const Stream& file, Resource* res);
+	virtual bool decode(const Stream& file, Resource* res) OVERRIDE;
 
 	// Gets the name of this codec.
 	GETTER(Name, const String, "LUA")

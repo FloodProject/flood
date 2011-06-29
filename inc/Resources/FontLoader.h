@@ -58,8 +58,11 @@ public:
 	// Creates the resource with no data.
 	RESOURCE_LOADER_PREPARE(BitmapFont)
 
+	// Gets the class of the resource.
+	RESOURCE_LOADER_CLASS(Font)
+
 	// Decode a font definition.
-	virtual bool decode(const Stream& file, Resource* res);
+	virtual bool decode(const Stream& file, Resource* res) OVERRIDE;
 
 	// Gets the name of this codec.
 	GETTER(Name, const String, "FONTS")

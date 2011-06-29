@@ -13,8 +13,11 @@
 #include "EditorIcons.h"
 #include "EditorTags.h"
 #include "UndoManager.h"
+#include "PluginManager.h"
 #include "Core/Utilities.h"
 #include "Document.h"
+#include "../Resources/ResourcesPlugin.h"
+#include "../Resources/ResourcesBrowser.h"
 
 #ifdef ENABLE_PLUGIN_PROPERTY
 
@@ -48,6 +51,7 @@ static wxString convertToReadable(wxString str)
 
 //-----------------------------------//
 
+#if 0
 struct TagName
 {
 	int32 id;
@@ -78,6 +82,7 @@ static wxPGChoices getTagChoices()
 
 	return choices;
 }
+#endif
 
 //-----------------------------------//
 
@@ -93,6 +98,7 @@ bool ReflectionIsResourceHandle(const Field* field)
 
 //-----------------------------------//
 
+#if RESOURCE_ASK_FILESYSTEM
 static ResourceHandle askResource()
 {
 	wxFileDialog fd( &GetEditor(), wxFileSelectorPromptStr,
@@ -108,6 +114,25 @@ static ResourceHandle askResource()
 	ResourceManager* res = GetResourceManager();
 	return res->loadResource( PathGetFile(path) );
 }
+#else
+static ResourceHandle askResource( ResourceGroup::Enum group )
+{
+	ResourcesPlugin* rp = GetPlugin<ResourcesPlugin>();
+	ResourcesBrowser* rb = rp->resourcesBrowser;
+	
+	rb->Close();
+	rb->enableSelection();
+
+	rb->selectGroup(group);
+	int index = rb->ShowModal();
+	rb->disableSelection();
+	
+	wxString selection = rb->getListCtrl()->GetItemText(index);
+	String path = (String) selection.c_str();
+
+	return GetResourceManager()->loadResource(path);
+}
+#endif
 
 //-----------------------------------//
 
@@ -119,22 +144,18 @@ public:
 		: wxLongStringProperty(name, wxPG_LABEL)
 	{}
 
-	virtual bool OnButtonClick( wxPropertyGrid* propGrid, wxString& value )
+	virtual bool OnButtonClick( wxPropertyGrid* propGrid, wxString& value ) OVERRIDE
 	{
-		ResourceHandle resource = askResource();
+		PropertyData* data = (PropertyData*) GetClientObject();
+		Class* resourceClass = (Class*) data->field->type;
+		
+		ResourceLoader* resourceLoader = GetResourceManager()->findLoaderByClass(resourceClass);
+		if( !resourceLoader ) return false;
 
-		if( !resource )
-			return false;
-
-		//const Type& resourceType = resource->getType();
-
-		//PropertyData* data = (PropertyData*) GetClientObject();
-
-		//if( &resourceType != data->type )
-		//	return false;
+		ResourceHandle resource = askResource( resourceLoader->getResourceGroup() );
+		if( !resource ) return false;
 
 		SetValueInEvent( PathGetFile( resource.Resolve()->getPath() ) );
-
 		return true;
 	}
 };
@@ -436,8 +457,8 @@ wxPGProperty* PropertyPage::createPrimitiveProperty(const Field& field, void* ob
 	//-----------------------------------//
 	case Primitive::Bitfield:
 	{
-		wxPGChoices choices = getTagChoices();
-		prop = new wxFlagsProperty( wxEmptyString, wxPG_LABEL, choices );
+		//wxPGChoices choices = getTagChoices();
+		//prop = new wxFlagsProperty( wxEmptyString, wxPG_LABEL, choices );
 		break;
 	}
 	//-----------------------------------//

@@ -15,6 +15,7 @@ namespace vapor { namespace editor {
 //-----------------------------------//
 
 class EditorFrame;
+struct ResourceMetadata;
 
 typedef std::map< ResourceGroup::Enum, wxTreeItemId > ResourceGroupIdsMap;
 typedef std::map< ResourceGroup::Enum, int > ResourceGroupIconsMap;
@@ -31,38 +32,53 @@ public:
 	ResourcesBrowser( wxWindow* parent );
 
 	// Shows the resources from the given category.
-	void showCategory(ResourceGroup::Enum group);
+	void showGroup(ResourceGroup::Enum group);
 
-	// Sets up the images.
-	void setupImages();
+	// Selects the resources from the given group.
+	void selectGroup(ResourceGroup::Enum group);
+
+	// Sets the focus to the search control.
+	void setFocusToSearch();
+
+	// Sets up the browser for resource selection.
+	void enableSelection();
+	void disableSelection();
+
+	// Gets the resource list.
+	GETTER(ListCtrl, wxListCtrl*, m_resourceList)
 
 protected:
 
 	// Sets up the resource groups.
 	void setupGroups();
 	void setupGroupIcons();
-
+	
 	// Sets up the UI.
 	void setupUI();
 
 	// Finds a resource group from a tree item id.
 	bool findResourceGroupFromTreeId( wxTreeItemId id, ResourceGroup::Enum& group );
 
+	// Gets the image index for a given resource.
+	int getImageIndex( const ResourceMetadata& metadata );
+
 	// Event handlers.
-	void OnClose(wxCloseEvent& event);
-	void OnListBeginDrag(wxListEvent& event);
-	void onConnectClicked(wxCommandEvent& event);
+	void OnClose(wxCloseEvent& event) OVERRIDE;
+	void OnListBeginDrag(wxListEvent& event) OVERRIDE;
 	void onResourceGroupChanged( wxTreeEvent& event ) OVERRIDE;
-	void onResourceListSelection( wxCommandEvent& event ) OVERRIDE;
+	void onResourceListSelection( wxListEvent& event ) OVERRIDE;
+	void onResourceSliderScroll( wxScrollEvent& event ) OVERRIDE;
+	void onResourceListActivated( wxListEvent& event ) OVERRIDE;
 
 	wxImageList* m_resourceGroupsImages;
 	ResourceGroupIdsMap m_resourceGroupIds;
 	ResourceGroupIconsMap m_resourceGroupImagesMap;
 
+	wxImageList* m_resourceImages;
 	wxTreeItemId m_rootId;
 	int listIndex;
 
-	//ResourceThumbnailer thumbnailer;
+	bool inSelectionMode;
 };
 
 //-----------------------------------//

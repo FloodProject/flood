@@ -1,6 +1,17 @@
 WIP (work-in-progress)
 ======================
 
+The hierarchy and types of plugins need to be better defined, and use the same interface between them all.
+
+Types of plugins:
+
+  Tool
+  Renderer
+  Asset
+  Resource
+  Archive
+  Document
+
 EDITOR:
 -------
 

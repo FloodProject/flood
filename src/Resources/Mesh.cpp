@@ -13,7 +13,7 @@
 #include "Core/Utilities.h"
 #include "Math/Vector.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -46,7 +46,7 @@ bool Mesh::isAnimated() const
 
 AnimationPtr Mesh::findAnimation( const String& name )
 {
-	for( uint i = 0; i < animations.size(); i++ )
+	for( size_t i = 0; i < animations.size(); i++ )
 	{
 		 const AnimationPtr& animation = animations[i];
 
@@ -107,4 +107,4 @@ void Mesh::setupInitialVertices()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

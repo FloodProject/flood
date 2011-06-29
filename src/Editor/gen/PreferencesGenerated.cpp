@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Mar 22 2011)
+// C++ code generated with wxFormBuilder (version Sep  8 2010)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -208,88 +208,58 @@ Resources::Resources( wxWindow* parent, wxWindowID id, const wxPoint& pos, const
 	
 	sbSizer1->Add( bSizer23, 0, wxEXPAND|wxALL, 5 );
 	
-	bSizer22->Add( sbSizer1, 0, wxEXPAND, 5 );
-	
-	wxStaticBoxSizer* sbSizer2;
-	sbSizer2 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Resource Loaders") ), wxVERTICAL );
-	
-	wxBoxSizer* bSizer11;
-	bSizer11 = new wxBoxSizer( wxVERTICAL );
-	
-	m_listPlugins = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL );
-	bSizer11->Add( m_listPlugins, 1, wxALL|wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer19;
-	bSizer19 = new wxBoxSizer( wxHORIZONTAL );
-	
-	m_buttonPluginEnable = new wxButton( this, wxID_ANY, wxT("Disable"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_buttonPluginEnable->Enable( false );
-	
-	bSizer19->Add( m_buttonPluginEnable, 0, wxALL, 5 );
-	
-	m_buttonPluginUninstall = new wxButton( this, wxID_ANY, wxT("Uninstall"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_buttonPluginUninstall->Enable( false );
-	
-	bSizer19->Add( m_buttonPluginUninstall, 1, wxALL, 5 );
-	
-	m_staticline1 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
-	bSizer19->Add( m_staticline1, 0, wxEXPAND | wxALL, 5 );
-	
-	m_buttonPluginCheckUpdates = new wxButton( this, wxID_ANY, wxT("Check Updates"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer19->Add( m_buttonPluginCheckUpdates, 1, wxALL, 5 );
-	
-	m_buttonPluginInstall = new wxButton( this, wxID_ANY, wxT("Install..."), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer19->Add( m_buttonPluginInstall, 1, wxALL, 5 );
-	
-	bSizer11->Add( bSizer19, 0, wxEXPAND, 5 );
-	
-	sbSizer2->Add( bSizer11, 1, wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer1;
-	bSizer1 = new wxBoxSizer( wxVERTICAL );
-	
-	wxBoxSizer* bSizer18;
-	bSizer18 = new wxBoxSizer( wxVERTICAL );
-	
-	wxBoxSizer* bSizer61;
-	bSizer61 = new wxBoxSizer( wxVERTICAL );
-	
-	m_staticText11 = new wxStaticText( this, wxID_ANY, wxT("Description:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText11->Wrap( -1 );
-	bSizer61->Add( m_staticText11, 0, wxEXPAND|wxRIGHT|wxLEFT, 5 );
-	
-	m_textPluginDescription = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( -1,48 ), wxTE_MULTILINE|wxTE_NO_VSCROLL|wxTE_READONLY );
-	bSizer61->Add( m_textPluginDescription, 1, wxALL|wxEXPAND, 5 );
-	
-	bSizer18->Add( bSizer61, 0, wxEXPAND, 5 );
-	
-	bSizer1->Add( bSizer18, 0, wxEXPAND, 5 );
-	
-	sbSizer2->Add( bSizer1, 0, wxEXPAND, 5 );
-	
-	bSizer22->Add( sbSizer2, 1, wxEXPAND, 5 );
+	bSizer22->Add( sbSizer1, 1, wxEXPAND, 5 );
 	
 	this->SetSizer( bSizer22 );
 	this->Layout();
-	
-	// Connect Events
-	m_listPlugins->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( Resources::OnPluginSelected ), NULL, this );
-	m_buttonPluginEnable->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Resources::OnPluginEnable ), NULL, this );
-	m_buttonPluginCheckUpdates->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Resources::OnPluginCheckUpdates ), NULL, this );
-	m_buttonPluginInstall->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Resources::OnPluginInstall ), NULL, this );
 }
 
 Resources::~Resources()
 {
-	// Disconnect Events
-	m_listPlugins->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( Resources::OnPluginSelected ), NULL, this );
-	m_buttonPluginEnable->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Resources::OnPluginEnable ), NULL, this );
-	m_buttonPluginCheckUpdates->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Resources::OnPluginCheckUpdates ), NULL, this );
-	m_buttonPluginInstall->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Resources::OnPluginInstall ), NULL, this );
-	
 }
 
-ResourcesBrowser::ResourcesBrowser( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
+Renderers::Renderers( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+{
+	wxBoxSizer* bSizer19;
+	bSizer19 = new wxBoxSizer( wxVERTICAL );
+	
+	wxBoxSizer* bSizer20;
+	bSizer20 = new wxBoxSizer( wxVERTICAL );
+	
+	m_staticText8 = new wxStaticText( this, wxID_ANY, wxT("Default Renderer:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText8->Wrap( -1 );
+	bSizer20->Add( m_staticText8, 0, wxALL, 5 );
+	
+	wxArrayString m_choice1Choices;
+	m_choice1 = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choice1Choices, 0 );
+	m_choice1->SetSelection( 0 );
+	bSizer20->Add( m_choice1, 0, wxALL|wxEXPAND, 5 );
+	
+	m_staticText10 = new wxStaticText( this, wxID_ANY, wxT("Renderers:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText10->Wrap( -1 );
+	bSizer20->Add( m_staticText10, 0, wxALL, 5 );
+	
+	m_listCtrl2 = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_ICON );
+	bSizer20->Add( m_listCtrl2, 1, wxALL|wxEXPAND, 5 );
+	
+	m_staticText9 = new wxStaticText( this, wxID_ANY, wxT("Extensions:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText9->Wrap( -1 );
+	bSizer20->Add( m_staticText9, 0, wxALL, 5 );
+	
+	m_listBox3 = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxSize( -1,120 ), 0, NULL, 0 ); 
+	bSizer20->Add( m_listBox3, 0, wxALL|wxEXPAND, 5 );
+	
+	bSizer19->Add( bSizer20, 1, wxEXPAND, 5 );
+	
+	this->SetSizer( bSizer19 );
+	this->Layout();
+}
+
+Renderers::~Renderers()
+{
+}
+
+ResourcesBrowser::ResourcesBrowser( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	
@@ -313,9 +283,6 @@ ResourcesBrowser::ResourcesBrowser( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer18;
 	bSizer18 = new wxBoxSizer( wxVERTICAL );
 	
-	m_resourceList = new wxListBox( m_panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
-	bSizer18->Add( m_resourceList, 1, wxEXPAND|wxTOP|wxBOTTOM|wxRIGHT, 5 );
-	
 	wxBoxSizer* bSizer21;
 	bSizer21 = new wxBoxSizer( wxHORIZONTAL );
 	
@@ -326,10 +293,13 @@ ResourcesBrowser::ResourcesBrowser( wxWindow* parent, wxWindowID id, const wxStr
 	m_searchCtrl->ShowCancelButton( false );
 	bSizer21->Add( m_searchCtrl, 1, wxBOTTOM|wxRIGHT|wxEXPAND, 5 );
 	
-	m_detailSlider = new wxSlider( m_panel3, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxSize( 60,-1 ), wxSL_HORIZONTAL );
+	m_detailSlider = new wxSlider( m_panel3, wxID_ANY, 0, 0, 256, wxDefaultPosition, wxSize( 60,-1 ), wxSL_HORIZONTAL );
 	bSizer21->Add( m_detailSlider, 0, 0, 5 );
 	
-	bSizer18->Add( bSizer21, 0, wxEXPAND, 5 );
+	bSizer18->Add( bSizer21, 0, wxEXPAND|wxTOP, 5 );
+	
+	m_resourceList = new wxListCtrl( m_panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_ICON );
+	bSizer18->Add( m_resourceList, 1, wxEXPAND|wxTOP|wxBOTTOM|wxRIGHT, 5 );
 	
 	m_panel3->SetSizer( bSizer18 );
 	m_panel3->Layout();
@@ -343,14 +313,38 @@ ResourcesBrowser::ResourcesBrowser( wxWindow* parent, wxWindowID id, const wxStr
 	this->Centre( wxBOTH );
 	
 	// Connect Events
+	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( ResourcesBrowser::OnClose ) );
 	m_resourceGroups->Connect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( ResourcesBrowser::onResourceGroupChanged ), NULL, this );
-	m_resourceList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( ResourcesBrowser::onResourceListSelection ), NULL, this );
+	m_detailSlider->Connect( wxEVT_SCROLL_TOP, wxScrollEventHandler( ResourcesBrowser::onResourceSliderScroll ), NULL, this );
+	m_detailSlider->Connect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( ResourcesBrowser::onResourceSliderScroll ), NULL, this );
+	m_detailSlider->Connect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( ResourcesBrowser::onResourceSliderScroll ), NULL, this );
+	m_detailSlider->Connect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( ResourcesBrowser::onResourceSliderScroll ), NULL, this );
+	m_detailSlider->Connect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( ResourcesBrowser::onResourceSliderScroll ), NULL, this );
+	m_detailSlider->Connect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( ResourcesBrowser::onResourceSliderScroll ), NULL, this );
+	m_detailSlider->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( ResourcesBrowser::onResourceSliderScroll ), NULL, this );
+	m_detailSlider->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( ResourcesBrowser::onResourceSliderScroll ), NULL, this );
+	m_detailSlider->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( ResourcesBrowser::onResourceSliderScroll ), NULL, this );
+	m_resourceList->Connect( wxEVT_COMMAND_LIST_BEGIN_DRAG, wxListEventHandler( ResourcesBrowser::OnListBeginDrag ), NULL, this );
+	m_resourceList->Connect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( ResourcesBrowser::onResourceListActivated ), NULL, this );
+	m_resourceList->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( ResourcesBrowser::onResourceListSelection ), NULL, this );
 }
 
 ResourcesBrowser::~ResourcesBrowser()
 {
 	// Disconnect Events
+	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( ResourcesBrowser::OnClose ) );
 	m_resourceGroups->Disconnect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( ResourcesBrowser::onResourceGroupChanged ), NULL, this );
-	m_resourceList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( ResourcesBrowser::onResourceListSelection ), NULL, this );
+	m_detailSlider->Disconnect( wxEVT_SCROLL_TOP, wxScrollEventHandler( ResourcesBrowser::onResourceSliderScroll ), NULL, this );
+	m_detailSlider->Disconnect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( ResourcesBrowser::onResourceSliderScroll ), NULL, this );
+	m_detailSlider->Disconnect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( ResourcesBrowser::onResourceSliderScroll ), NULL, this );
+	m_detailSlider->Disconnect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( ResourcesBrowser::onResourceSliderScroll ), NULL, this );
+	m_detailSlider->Disconnect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( ResourcesBrowser::onResourceSliderScroll ), NULL, this );
+	m_detailSlider->Disconnect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( ResourcesBrowser::onResourceSliderScroll ), NULL, this );
+	m_detailSlider->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( ResourcesBrowser::onResourceSliderScroll ), NULL, this );
+	m_detailSlider->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( ResourcesBrowser::onResourceSliderScroll ), NULL, this );
+	m_detailSlider->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( ResourcesBrowser::onResourceSliderScroll ), NULL, this );
+	m_resourceList->Disconnect( wxEVT_COMMAND_LIST_BEGIN_DRAG, wxListEventHandler( ResourcesBrowser::OnListBeginDrag ), NULL, this );
+	m_resourceList->Disconnect( wxEVT_COMMAND_LIST_ITEM_ACTIVATED, wxListEventHandler( ResourcesBrowser::onResourceListActivated ), NULL, this );
+	m_resourceList->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( ResourcesBrowser::onResourceListSelection ), NULL, this );
 	
 }

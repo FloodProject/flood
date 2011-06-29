@@ -155,6 +155,7 @@ bool ResourcesPlugin::saveCache()
 void ResourcesPlugin::onBrowserButtonClick(wxCommandEvent& event)
 {
 	resourcesBrowser->Show( !resourcesBrowser->IsVisible() );
+	resourcesBrowser->setFocusToSearch();
 }
 
 //-----------------------------------//

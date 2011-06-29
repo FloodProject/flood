@@ -13,7 +13,7 @@
 #include "Core/ReferenceCount.h"
 #include "Core/Handle.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -120,6 +120,5 @@ ResourceHandle ResourceHandleCreate(Resource*);
 
 //-----------------------------------//
 
-} // end namespace
-
+NAMESPACE_END
 

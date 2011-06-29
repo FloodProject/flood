@@ -11,13 +11,15 @@
 #include "Core/Stream.h"
 #include "Resources/Resource.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
-#define RESOURCE_LOADER_PREPARE(T)									\
-	virtual Resource* prepare(const Stream&) { return Allocate(T, AllocatorGetHeap()); }
+#define RESOURCE_LOADER_PREPARE(T) \
+	Resource* prepare(const Stream&) OVERRIDE { return Allocate(T, AllocatorGetHeap()); }
 
+#define RESOURCE_LOADER_CLASS(T) \
+	Class* getResourceClass() const OVERRIDE { return ReflectionGetType(T); }
 /**
  * Resource loaders decode resource data into a proper resource.
  * This is an interface that should be implemented to provide the
@@ -44,18 +46,21 @@ public:
 	// Decodes a given file into a resource.
 	virtual bool decode(const Stream&, Resource* res) = 0;
 
-	// Gets the name of this resource loader.
+	// Gets the name of this loader.
 	virtual const String getName() const = 0;
+
+	// Gets the resource class of this loader.
+	virtual Class* getResourceClass() const = 0;
 
 	// Gets the resource group of this loader.
 	virtual ResourceGroup::Enum getResourceGroup() const = 0;
 
-	// Gets a list of recognized extensions by this loader.
+	// Gets a the recognized extensions of this loader.
 	GETTER(Extensions, const std::vector<String>&, extensions);
-
+	
 	std::vector<String> extensions;
 };
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

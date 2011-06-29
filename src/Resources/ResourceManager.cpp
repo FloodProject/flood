@@ -407,7 +407,7 @@ void ResourceManager::registerLoader(ResourceLoader* const loader)
 
 	const std::vector<String>& extensions = loader->getExtensions();
 	
-	for( uint i = 0; i < extensions.size(); i++ )
+	for( size_t i = 0; i < extensions.size(); i++ )
 	{
 		const String& extension = extensions[i];
 
@@ -434,6 +434,22 @@ ResourceLoader* ResourceManager::findLoader(const String& ext)
 
 	ResourceLoader* loader = resourceLoaders[ext];
 	return loader;
+}
+
+//-----------------------------------//
+
+ResourceLoader* ResourceManager::findLoaderByClass(const Class* klass)
+{
+	for( auto it = resourceLoaders.begin(); it != resourceLoaders.end(); it++)
+	{
+		ResourceLoader* loader = it->second;
+		Class* resourceClass = loader->getResourceClass();
+		
+		if(ClassInherits(resourceClass, klass))
+			return loader;
+	}
+
+	return nullptr;
 }
 
 //-----------------------------------//

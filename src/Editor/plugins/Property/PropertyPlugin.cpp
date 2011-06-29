@@ -129,8 +129,8 @@ void PropertyPlugin::onResourceSelect( const ResourcePtr& resource )
 
 	ResourceManager* rm = GetResourceManager();
 
-	const std::string& path = resource->getPath();
-	const std::string& ext = PathGetFileExtension(path);
+	const String& path = resource->getPath();
+	const String& ext = PathGetFileExtension(path);
 
 	ResourceLoader* loader = rm->findLoader(ext);
 	if( !loader ) return;
