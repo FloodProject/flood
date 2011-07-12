@@ -6,18 +6,18 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
-#include "Settings.h"
+#include "Server/API.h"
+#include "Server/Settings.h"
 
-namespace vapor {
+NAMESPACE_SERVER_BEGIN
 
 //-----------------------------------//
 
 int Settings::NumTasksProcess = 1;
 int Settings::NumThreadsWorkers = -1;
 int Settings::NumThreadsIO = 1;
-std::string Settings::URI = "tcp://*:5555";
+String Settings::URI = "tcp://*:5555";
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_SERVER_END

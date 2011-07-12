@@ -26,7 +26,7 @@ public:
 	static int NumThreadsIO;
 
 	// Server URI.
-	static std::string URI;
+	static String URI;
 };
 
 //-----------------------------------//

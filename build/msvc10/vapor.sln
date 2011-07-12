@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+# Visual C++ Express 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Core", "Core.vcxproj", "{4B97591E-C124-44CE-AA98-D8086FC9BFEC}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "Engine.vcxproj", "{998D7B99-03DC-954C-A2A1-B83E1F0E2772}"
@@ -29,6 +29,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tests", "Tests.vcxproj", "{
 	ProjectSection(ProjectDependencies) = postProject
 		{4B97591E-C124-44CE-AA98-D8086FC9BFEC} = {4B97591E-C124-44CE-AA98-D8086FC9BFEC}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Server", "Server.vcxproj", "{FB39ADCE-ACD0-4516-B14B-6C58A787F6A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -186,6 +188,26 @@ Global
 		{E8D33DA1-C583-4849-B5FE-BDD2483B8AF9}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{E8D33DA1-C583-4849-B5FE-BDD2483B8AF9}.Release|Win32.ActiveCfg = Release|Win32
 		{E8D33DA1-C583-4849-B5FE-BDD2483B8AF9}.Release|Win32.Build.0 = Release|Win32
+		{FB39ADCE-ACD0-4516-B14B-6C58A787F6A2}.Debug DLL|Any CPU.ActiveCfg = Debug|Win32
+		{FB39ADCE-ACD0-4516-B14B-6C58A787F6A2}.Debug DLL|Mixed Platforms.ActiveCfg = Debug|Win32
+		{FB39ADCE-ACD0-4516-B14B-6C58A787F6A2}.Debug DLL|Mixed Platforms.Build.0 = Debug|Win32
+		{FB39ADCE-ACD0-4516-B14B-6C58A787F6A2}.Debug DLL|Win32.ActiveCfg = Debug|Win32
+		{FB39ADCE-ACD0-4516-B14B-6C58A787F6A2}.Debug DLL|Win32.Build.0 = Debug|Win32
+		{FB39ADCE-ACD0-4516-B14B-6C58A787F6A2}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{FB39ADCE-ACD0-4516-B14B-6C58A787F6A2}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{FB39ADCE-ACD0-4516-B14B-6C58A787F6A2}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{FB39ADCE-ACD0-4516-B14B-6C58A787F6A2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FB39ADCE-ACD0-4516-B14B-6C58A787F6A2}.Debug|Win32.Build.0 = Debug|Win32
+		{FB39ADCE-ACD0-4516-B14B-6C58A787F6A2}.Release DLL|Any CPU.ActiveCfg = Release|Win32
+		{FB39ADCE-ACD0-4516-B14B-6C58A787F6A2}.Release DLL|Mixed Platforms.ActiveCfg = Release|Win32
+		{FB39ADCE-ACD0-4516-B14B-6C58A787F6A2}.Release DLL|Mixed Platforms.Build.0 = Release|Win32
+		{FB39ADCE-ACD0-4516-B14B-6C58A787F6A2}.Release DLL|Win32.ActiveCfg = Release|Win32
+		{FB39ADCE-ACD0-4516-B14B-6C58A787F6A2}.Release DLL|Win32.Build.0 = Release|Win32
+		{FB39ADCE-ACD0-4516-B14B-6C58A787F6A2}.Release|Any CPU.ActiveCfg = Release|Win32
+		{FB39ADCE-ACD0-4516-B14B-6C58A787F6A2}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{FB39ADCE-ACD0-4516-B14B-6C58A787F6A2}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{FB39ADCE-ACD0-4516-B14B-6C58A787F6A2}.Release|Win32.ActiveCfg = Release|Win32
+		{FB39ADCE-ACD0-4516-B14B-6C58A787F6A2}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

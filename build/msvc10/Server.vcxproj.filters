@@ -4,29 +4,21 @@
     <Filter Include="Resource">
       <UniqueIdentifier>{32fd57d8-8085-4cd4-bb20-c449c7fad871}</UniqueIdentifier>
     </Filter>
-    <Filter Include="PCH">
-      <UniqueIdentifier>{2bc3c6bd-0f40-4f45-af42-ecc3926d360a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Settings">
       <UniqueIdentifier>{df3c7ee9-5540-41e0-a0b4-896d9e30f81d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\Server\PCH.cpp">
-      <Filter>PCH</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Server\Settings.cpp">
       <Filter>Settings</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Server\Server.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\Server\inc\PCH.h">
-      <Filter>PCH</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Server\inc\Settings.h">
+    <ClInclude Include="..\..\inc\Server\API.h" />
+    <ClInclude Include="..\..\inc\Server\Server.h" />
+    <ClInclude Include="..\..\inc\Server\Settings.h">
       <Filter>Settings</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Server\inc\Server.h" />
   </ItemGroup>
 </Project>

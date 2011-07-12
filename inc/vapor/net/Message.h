@@ -8,11 +8,8 @@
 
 #pragma once
 
-#ifdef ENABLE_NETWORKING_ZMQ
-
 #include "Core/ReferenceCount.h"
 #include "Messages.h"
-#include <zmq.h>
 
 NAMESPACE_BEGIN
 
@@ -39,13 +36,10 @@ public:
 	SETTER(MessageType, MessageType::Enum, messageType)
 
 	// Gets the internal message.
-	zmq_msg_t* getBuffer() { return &message; }
+	void* getBuffer() { return nullptr; }
 
 protected:
-
-	// ZeroMQ message.
-	zmq_msg_t message;
-
+	
 	// Message type.
 	MessageType::Enum messageType;
 
@@ -58,5 +52,3 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(Message)
 //-----------------------------------//
 
 NAMESPACE_END
-
-#endif

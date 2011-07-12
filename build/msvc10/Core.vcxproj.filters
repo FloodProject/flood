@@ -16,9 +16,6 @@
     <Filter Include="Network\Messages">
       <UniqueIdentifier>{a220fe4b-9168-483c-8a36-f9f54da117c5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Network\Messages\Handlers">
-      <UniqueIdentifier>{bba9d7d7-847f-49d2-9a88-6430517263e7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Events">
       <UniqueIdentifier>{baf2d738-9110-4b41-9b57-4ebc27eb2117}</UniqueIdentifier>
     </Filter>

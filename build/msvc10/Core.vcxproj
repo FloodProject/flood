@@ -75,7 +75,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\mongoose;$(SolutionDir)..\..\dep\jansson\include;$(SolutionDir)..\..\dep\curl\include;$(SolutionDir)..\..\dep\misc\include;$(SolutionDir)..\..\dep\zziplib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\jansson\include;$(SolutionDir)..\..\dep\misc\include;$(SolutionDir)..\..\dep\zziplib\include;$(SolutionDir)..\..\dep\mongoose;$(SolutionDir)..\..\dep\curl\include;$(SolutionDir)..\..\dep\enet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;___DEBUG;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -90,8 +90,8 @@
       <ProgramDataBaseFileName>$(TargetDir)$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\dep\vld\lib\Win32;$(SolutionDir)..\..\dep\jansson\lib\;$(SolutionDir)..\..\dep\zziplib\lib\;$(SolutionDir)..\..\dep\zlib\lib\vc10</AdditionalLibraryDirectories>
-      <AdditionalDependencies>jansson_d.lib;zziplib_d.lib;zlibd.lib;vld.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\dep\vld\lib\Win32;$(SolutionDir)..\..\dep\jansson\lib\;$(SolutionDir)..\..\dep\zziplib\lib\;$(SolutionDir)..\..\dep\zlib\lib\vc10;$(SolutionDir)..\..\dep\enet\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>jansson_d.lib;zziplib_d.lib;zlibd.lib;enetd.lib;vld.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">

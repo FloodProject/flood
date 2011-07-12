@@ -8,12 +8,11 @@
 
 #pragma once
 
-#include "Log.h"
-#include "TaskManager.h"
-#include "net/Network.h"
-#include "net/Downloader.h"
+#include "Core/Log.h"
+#include "Core/Concurrency.h"
+#include "Net/Network.h"
 
-namespace vapor {
+NAMESPACE_SERVER_BEGIN
 
 //-----------------------------------//
 
@@ -38,23 +37,12 @@ public:
 
 protected:
 
-	Logger logger;
-	TaskManager tasks;
-	Network network;
+	TaskPool* tasks;
+	NetworkHost host;
 };
+
+API_SERVER Allocator* AllocatorGetServer();
 
 //-----------------------------------//
 
-} // end namespace
-
-using namespace vapor;
-
-int main()
-{
-	Server server;
-	
-	server.init();
-	server.run();
-
-	return 0;
-}
+NAMESPACE_SERVER_END

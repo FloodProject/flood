@@ -6,47 +6,27 @@
 *
 ************************************************************************/
 
-#include "PCH.h"
-#include "Server.h"
-#include "Settings.h"
-#include "Event.h"
-#include "Profiler.h"
-#include "Task.h"
+#include "Server/API.h"
+#include "Server/Server.h"
+#include "Server/Settings.h"
+#include "Core/Event.h"
+#include "Core/Concurrency.h"
 
-namespace vapor {
+NAMESPACE_SERVER_BEGIN
 
 //-----------------------------------//
 
-class ProcessMessagesTask : public Task
+Allocator* AllocatorGetServer()
 {
-public:
-
-	ProcessMessagesTask(Network& network)
-		: network(network)
-	{ }
-	
-	virtual void run()
-	{
-		while(true)
-		{
-			network.dispatchMessages();
-
-			if(finish)
-				return;
-		}
-	}
-
-	Network& network;
-};
+	static Allocator* alloc = AllocatorCreateHeap(AllocatorGetHeap(), "Server");
+	return alloc;
+}
 
 //-----------------------------------//
 
 Server::Server()
-	: tasks(Settings::NumThreadsWorkers)
+	: tasks(nullptr)
 {
-	FileStream fs("Log.html");
-	logger.add( new LogSinkHTML(fs) );
-
 }
 
 //-----------------------------------//
@@ -60,21 +40,11 @@ Server::~Server()
 
 bool Server::init()
 {
-	Downloader dwn;
-	dwn.init();
-	dwn.download("http://www.google.com");
-
-	// Create processing tasks.
-	for(int i = 0; i < Settings::NumTasksProcess; i++)
-	{
-		TaskPtr task = new ProcessMessagesTask(network);
-		tasks.addTask(task);
-	}
-
+#if 0
 	Log::info("Created %d processing task(s)", Settings::NumTasksProcess);
+#endif
 
-	network.init();
-	network.createServerSocket("tcp://127.0.0.1:7654");
+	host.createSocket("", 38092);
 
 	return true;
 }
@@ -83,31 +53,76 @@ bool Server::init()
 
 void Server::shutdown()
 {
-	//foreach(Thread*, tasks.getThreads() )
-	network.shutdown();
+
+}
+
+//-----------------------------------//
+
+static void ProcessMessagesThread(void* threadUserdata)
+{
+	NetworkHost* host = (NetworkHost*) threadUserdata;
+	
+	LogInfo("Networking thread will now start listening for messages...");
+
+	while(true)
+	{
+		host->dispatchMessages();
+	}
 }
 
 //-----------------------------------//
 
 void Server::run()
 {
-	//Thread thread( &Network::waitMessages, boost::ref(network) );
+	Thread* networkThread = ThreadCreate( AllocatorGetServer() );
+	ThreadStart(networkThread, ProcessMessagesThread, &host);
+	
+	if(!networkThread)
+	{
+		LogError("Error creating networking thread");
+		return;
+	}
+
+	LogInfo("Created networking thread");
+	 
+	String in;
 	
 	while(true)
 	{
-		std::string in;
-		std::getline(std::cin, in);
+		char buf[80];
+		fgets(buf, ARRAY_SIZE(buf), stdin);
+		in.assign(buf);
 
 		if(in == "quit")
 			break;
 	}
+
+	ThreadDestroy(networkThread);
 }
 
 //-----------------------------------//
 
 void Server::parseConfig()
-{ }
+{
+
+}
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_SERVER_END
+
+using namespace vapor;
+
+int main()
+{
+	Log* log = LogCreate( AllocatorGetServer() );
+
+	Server server;
+	
+	server.init();
+	server.run();
+
+	LogDestroy(log);
+
+	return 0;
+}
