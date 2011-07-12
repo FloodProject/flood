@@ -13,7 +13,7 @@
 #include "Math/Vector.h"
 #include "Audio/AL.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -27,7 +27,7 @@ class AudioDevice;
  * everything in a context.
  */
 
-class VAPOR_API AudioContext
+class API_AUDIO AudioContext
 {
 	DECLARE_UNCOPYABLE(AudioContext)
 

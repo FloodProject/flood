@@ -14,7 +14,7 @@
 #include "Audio/Source.h"
 #include "Core/ReferenceCount.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -30,7 +30,7 @@ class AudioContext;
  * not delete the audio data if it's potentially needed in the future.
  */
 
-class VAPOR_API AudioBuffer : public ReferenceCounted
+class API_AUDIO AudioBuffer : public ReferenceCounted
 {
 	DECLARE_UNCOPYABLE(AudioBuffer)
 	friend class AudioSource;

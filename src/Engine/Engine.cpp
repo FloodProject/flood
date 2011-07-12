@@ -136,27 +136,9 @@ void Engine::setScene(const ScenePtr& scene)
 
 void Engine::setupLogger()
 {
-#if 0
-	time_t rawtime;
-	time( &rawtime );
-
-	struct tm* timeinfo;
-
-#ifdef PLATFORM_WINDOWS
-	localtime_s( timeinfo, &rawtime );
-#else
-	timeinfo = localtime( &rawtime );
-#endif
-
-	char name[64];
-	const char* fmt = "%Y_%m_%d-%H_%M_%S.html";
-	strftime(name, ARRAY_SIZE(name), fmt, timeinfo);
-#endif
-
 	stream = StreamCreateFromFile( AllocatorGetHeap(), "Log.html", StreamMode::Write);
 	
 	log = LogCreate( AllocatorGetHeap() );
-	//LogAddHandler();
 }
 
 //-----------------------------------//
@@ -168,6 +150,8 @@ void Engine::setupDevices( bool createWindow )
 #ifdef VAPOR_AUDIO_OPENAL
 	// Creates the audio device.
 	audioDevice = new AudioDevice();
+	audioDevice->createDevice("");
+	audioDevice->createMainContext();
 #endif
 }
 

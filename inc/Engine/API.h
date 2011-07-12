@@ -47,6 +47,7 @@
 #endif
 
 #define API_SCENE API_ENGINE
+#define API_AUDIO API_ENGINE
 
 #define VAPOR_API API_ENGINE
 

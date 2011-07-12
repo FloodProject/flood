@@ -8,7 +8,7 @@
 
 #include "Engine/API.h"
 
-#ifdef VAPOR_AUDIO_OPENAL
+#ifdef NAMESPACE_BEGIN
 
 #include "Audio/Context.h"
 #include "Audio/Device.h"

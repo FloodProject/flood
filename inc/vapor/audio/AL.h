@@ -10,7 +10,7 @@
 
 #ifdef VAPOR_AUDIO_OPENAL
 
-#ifdef VAPOR_PLATFORM_MACOSX
+#ifdef PLATFORM_MACOSX
 	#include <OpenAL/al.h>
 	#include <OpenAL/alc.h>
 #else

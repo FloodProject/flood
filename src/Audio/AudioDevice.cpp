@@ -14,6 +14,8 @@
 #include "Audio/Buffer.h"
 #include "Core/Utilities.h"
 
+#include <alext.h>
+
 NAMESPACE_BEGIN
 
 //-----------------------------------//
@@ -31,36 +33,6 @@ AudioDevice::AudioDevice()
 	, mainContext(nullptr)
 {
 	if(!gs_audioDevice) gs_audioDevice = this;
-
-	// Select the "preferred device".
-	device = alcOpenDevice(nullptr);
-
-	if( !device || checkError() )
-	{
-		LogWarn("Could not create OpenAL device: %s", getError());
-		return;
-	}
-
-	LogInfo("Creating OpenAL main context");
-
-	// Create a main context.
-	mainContext = new AudioContext(this);
-
-	const ALchar* version = alGetString(AL_VERSION);
-	
-	if( !version || checkError() )
-	{
-		LogWarn("Could not get OpenAL version");
-		return;
-	}
-	
-	LogInfo("Using OpenAL version %s", version);
-
-	if( checkError() )
-	{
-		LogWarn("Error initializing OpenAL: %s", getError());
-		return;
-	}
 }
 
 //-----------------------------------//
@@ -77,6 +49,85 @@ AudioDevice::~AudioDevice()
 		LogWarn("Error closing OpenAL device: %s", getError());
 		return;
 	}
+}
+	
+//-----------------------------------//
+
+bool AudioDevice::getExtensions(std::vector<String>& extensions)
+{
+	const ALCchar* allExtensions = alcGetString(nullptr, ALC_EXTENSIONS);
+
+	if( !allExtensions )
+		return false;
+
+	StringSplit(allExtensions, ' ', extensions);
+
+	return true;
+}
+
+//-----------------------------------//
+
+bool AudioDevice::getDevices(std::vector<String>& devices)
+{
+	if (!alcIsExtensionPresent(nullptr, "ALC_ENUMERATE_ALL_EXT"))
+		return false;
+
+	const ALCchar* allDevices = alcGetString(nullptr, ALC_ALL_DEVICES_SPECIFIER);
+	StringSplit(allDevices, ' ', devices);
+
+	return true;
+}
+
+//-----------------------------------//
+
+bool AudioDevice::createDevice(const String& deviceName)
+{
+	if( device != nullptr )
+		return false;
+
+	const char* name = deviceName.empty() ? nullptr : deviceName.c_str();
+
+	// Select the "preferred device".
+	device = alcOpenDevice(name);
+
+	if( !device )
+	{
+		LogWarn("Could not create OpenAL device");
+		return false;
+	}
+
+	return true;
+}
+
+//-----------------------------------//
+
+bool AudioDevice::createMainContext()
+{
+	if( device == nullptr )
+		return false;
+
+	LogInfo("Creating OpenAL main context");
+
+	// Create a main context.
+	mainContext = new AudioContext(this);
+
+	const ALchar* version = alGetString(AL_VERSION);
+	
+	if( !version )
+	{
+		LogWarn("Could not get OpenAL version");
+		return false;
+	}
+	
+	LogInfo("Using OpenAL version %s", version);
+
+	if( checkError() )
+	{
+		LogWarn("Error initializing OpenAL: %s", getError());
+		return false;
+	}
+
+	return true;
 }
 
 //-----------------------------------//

@@ -17,7 +17,7 @@
 FWD_DECL_INTRUSIVE(AudioBuffer)
 FWD_DECL_INTRUSIVE(AudioContext)
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -27,7 +27,7 @@ namespace vapor {
 
 typedef std::map<Sound*, AudioBufferPtr> SoundBufferMap;
 
-class VAPOR_API AudioDevice
+class API_AUDIO AudioDevice
 {
 	DECLARE_UNCOPYABLE(AudioDevice)
 
@@ -39,6 +39,18 @@ public:
 
 	AudioDevice();
 	~AudioDevice();
+
+	// Gets a list of available devices.
+	bool getDevices(std::vector<String>& devices);
+
+	// Gets a list of available extensions.
+	bool getExtensions(std::vector<String>& extensions);
+
+	// Creates the internal AL device.
+	bool createDevice(const String& device);
+
+	// Creates the main context.
+	bool createMainContext();
 	
 	// Sets the global audio volume
 	void setVolume(float volume);
@@ -82,10 +94,11 @@ protected:
 	AudioContext* mainContext;
 };
 
-AudioDevice* GetAudioDevice();
+// Gets the main audio device.
+API_AUDIO AudioDevice* GetAudioDevice();
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END
 
 #endif

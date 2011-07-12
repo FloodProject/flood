@@ -17,13 +17,13 @@
 
 FWD_DECL_INTRUSIVE(AudioBuffer)
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
 REFLECT_DECLARE_ENUM(RolloffMode)
 
-struct VAPOR_API RolloffMode
+struct API_AUDIO RolloffMode
 {
 	enum Enum
 	{
@@ -44,7 +44,7 @@ class AudioContext;
  * buffer from the audio device.
  */
 
-class VAPOR_API AudioSource
+class API_AUDIO AudioSource
 {
 	DECLARE_UNCOPYABLE(AudioSource)
 
@@ -117,6 +117,6 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( AudioSource );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END
 
 #endif
