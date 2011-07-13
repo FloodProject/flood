@@ -24,6 +24,25 @@
 #define wxUSE_BINDERAPP
 
 //---------------------------------------------------------------------//
+// API Exports
+//---------------------------------------------------------------------//
+
+#if defined(API_EDITOR_DLL) && defined(API_EDITOR_DLL_EXPORT)
+	#define API_EDITOR API_EXPORT
+#elif defined(API_EDITOR_DLL)
+	#define API_EDITOR API_IMPORT
+#else
+	#define API_EDITOR
+#endif
+
+//---------------------------------------------------------------------//
+// API Namespaces
+//---------------------------------------------------------------------//
+
+#define NAMESPACE_EDITOR_BEGIN namespace vapor { namespace editor {
+#define NAMESPACE_EDITOR_END } }
+
+//---------------------------------------------------------------------//
 // wxWidgets headers
 //---------------------------------------------------------------------//
 

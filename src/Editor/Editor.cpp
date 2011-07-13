@@ -18,9 +18,12 @@
 #include "Events.h"
 #include "EditorTags.h"
 #include <wx/debugrpt.h>
+#include "Network/Network.h"
 
-#include "plugins/Scene/SceneDocument.h"
-#include "plugins/Project/ProjectPlugin.h"
+#include <Winsock2.h>
+
+#include "Plugins/Scene/SceneDocument.h"
+#include "Plugins/Project/ProjectPlugin.h"
 
 #define CREATE_PROJECT_ON_STARTUP
 
@@ -100,6 +103,17 @@ EditorFrame::EditorFrame(const wxString& title)
 	ProjectPlugin* project = (ProjectPlugin*) pluginManager->getPlugin("Project");
 	project->onNewButtonClick(event);
 #endif
+
+	client = Allocate(NetworkClient, AllocatorGetHeap());
+
+	String address("127.0.0.1");
+
+	if( !client->connect(address, 9999) )
+		LogError("Error connecting to server at '%s'", address.c_str());
+	else
+		LogInfo("Connected to server at '%s'", address.c_str());
+
+	client->checkEvents(5000);
 
 	AllocatorDumpInfo();
 }

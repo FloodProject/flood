@@ -7,31 +7,31 @@
 ************************************************************************/
 
 #include "Editor/API.h"
-#include "SamplePlugin.h"
+#include "NetworkingPlugin.h"
 #include "Editor.h"
 
 NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
-REFLECT_ABSTRACT_CLASS(SamplePlugin)
+REFLECT_ABSTRACT_CLASS(NetworkingPlugin)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
 
-SamplePlugin::SamplePlugin()
+NetworkingPlugin::NetworkingPlugin()
 {
 
 }
 
 //-----------------------------------//
 
-PluginMetadata SamplePlugin::getMetadata()
+PluginMetadata NetworkingPlugin::getMetadata()
 {
 	PluginMetadata metadata;
 	
-	metadata.name = "Sample";
-	metadata.description = "Logs a message at plugin enable and disable";
+	metadata.name = "Networking";
+	metadata.description = "Handles connecting to remote hosts.";
 	metadata.author = "triton";
 	metadata.version = "1.0";
 
@@ -40,16 +40,16 @@ PluginMetadata SamplePlugin::getMetadata()
 
 //-----------------------------------//
 
-void SamplePlugin::onPluginEnable()
+void NetworkingPlugin::onPluginEnable()
 {
 	PluginMetadata metadata = getMetadata();
 
-	LogDebug( "Plugin '%s': Hello", metadata.name.c_str() );
+	LogDebug( "Plugin '%s': Networking", metadata.name.c_str() );
 }
 
 //-----------------------------------//
 
-void SamplePlugin::onPluginDisable()
+void NetworkingPlugin::onPluginDisable()
 {
 	PluginMetadata metadata = getMetadata();
 

@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vapor3D Editor Â© (2008-2010)
+* vapor3D Editor © (2008-2010)
 *
 *	<http://www.vapor3d.org>
 *
@@ -14,15 +14,15 @@ NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
-REFLECT_DECLARE_CLASS(SamplePlugin)
+REFLECT_DECLARE_CLASS(NetworkingPlugin)
 
-class SamplePlugin : public Plugin
+class NetworkingPlugin : public Plugin
 {
-	REFLECT_DECLARE_OBJECT(SamplePlugin)
+	REFLECT_DECLARE_OBJECT(NetworkingPlugin)
 
 public:
 
-	SamplePlugin();
+	NetworkingPlugin();
 
 	// Gets metadata about this plugin.
 	virtual PluginMetadata getMetadata();

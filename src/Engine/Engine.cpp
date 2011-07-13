@@ -20,7 +20,7 @@
 #include "Scene/Scene.h"
 #include "Paging/PageManager.h"
 #include "Physics/Physics.h"
-#include "Net/Network.h"
+#include "Network/Network.h"
 
 #include <ctime>
 

@@ -10,7 +10,9 @@
 
 #include <wx/keybinder.h>
 #include "Math/Vector.h"
+
 FWD_DECL(Engine)
+FWD_DECL_INTRUSIVE(NetworkClient)
 
 namespace vapor { namespace editor {
 
@@ -130,6 +132,8 @@ public:
 	wxMenu* menuHelp;
 
 	wxKeyProfileArray keyProfiles;
+
+	NetworkClientPtr client;
 };
 
 // Gets the editor instance.
