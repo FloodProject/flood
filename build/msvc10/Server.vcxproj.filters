@@ -13,6 +13,7 @@
       <Filter>Settings</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Server\Server.cpp" />
+    <ClCompile Include="..\..\src\Server\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\Server\API.h" />

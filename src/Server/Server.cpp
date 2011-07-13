@@ -20,6 +20,11 @@ NAMESPACE_SERVER_BEGIN
 
 static Allocator* g_AllocatorServer = nullptr;
 
+void InitializeServerAllocator()
+{
+	g_AllocatorServer = AllocatorCreateHeap(AllocatorGetHeap(), "Server");
+}
+
 Allocator* AllocatorGetServer()
 {
 	return g_AllocatorServer;
@@ -124,23 +129,3 @@ void Server::handleClientDisconnect(const NetworkPeer& peer)
 //-----------------------------------//
 
 NAMESPACE_SERVER_END
-
-using namespace vapor;
-
-int main()
-{
-	g_AllocatorServer = AllocatorCreateHeap(AllocatorGetHeap(), "Server");
-	Log* log = LogCreate( AllocatorGetServer() );
-
-	Server server;
-	server.init();
-	server.run();
-	server.shutdown();
-
-	LogDestroy(log);
-	AllocatorDestroy( AllocatorGetServer() );
-
-	AllocatorDumpInfo();
-
-	return 0;
-}

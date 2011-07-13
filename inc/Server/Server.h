@@ -48,6 +48,7 @@ protected:
 	NetworkHost host;
 };
 
+API_SERVER void InitializeServerAllocator();
 API_SERVER Allocator* AllocatorGetServer();
 
 //-----------------------------------//

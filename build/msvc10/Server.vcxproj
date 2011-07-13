@@ -83,6 +83,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\Server\Main.cpp" />
     <ClCompile Include="..\..\src\Server\Settings.cpp" />
     <ClCompile Include="..\..\src\Server\Server.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
