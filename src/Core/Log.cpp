@@ -35,14 +35,6 @@ void LogSetDefault(Log* log) { gs_Log = log; }
 static void LogConsoleHandler(LogEntry* entry)
 {
 	puts( entry->message.c_str() );
-
-#ifdef COMPILER_MSVC
-	if(entry->level == LogLevel::Debug)
-	{
-		String debug = entry->message + "\n";
-		OutputDebugStringA( debug.c_str() );
-	}
-#endif
 }
 
 //-----------------------------------//
@@ -99,16 +91,22 @@ void LogWrite(Log* log, LogEntry* entry)
 
 //-----------------------------------//
 
-static void LogFormat(LogEntry& entry, Log* log, LogLevel level, const char* msg, va_list args)
+static void LogFormat(LogEntry* entry, /*Log* log,*/ LogLevel level, const char* msg, va_list args)
 {
 	String format = StringFormatArgs(msg, args);
 	
-	entry.time = TimerGetElapsed(log->timer);
-	entry.message = format;
-	entry.level = level;
+	//entry->time = TimerGetElapsed(log->timer);
+	entry->message = format;
+	entry->level = level;
 }
 
 //-----------------------------------//
+
+#ifdef COMPILER_MSVC
+	#define PrintDebug OutputDebugStringA
+#else
+	#define PrintDebug printf
+#endif
 
 #define DEFINE_LOG_HELPER(Level)                            \
 	void Log##Level(const char* msg, ...)                   \
@@ -116,14 +114,19 @@ static void LogFormat(LogEntry& entry, Log* log, LogLevel level, const char* msg
 		va_list args;                                       \
 		va_start(args, msg);                                \
 	                                                        \
-		Log* log = LogGetDefault();                         \
-		if(!log) return;                                    \
-		                                                    \
 		LogEntry entry;                                     \
-		LogFormat(entry, log, LogLevel::Level, msg, args);  \
-		LogWrite(log, &entry);                              \
-	                                                        \
+		LogFormat(&entry, LogLevel::Level, msg, args);      \
+		                                                    \
+		Log* log = LogGetDefault();                         \
+		if(log) LogWrite(log, &entry);                      \
+                                                            \
 		va_end(args);                                       \
+                                                            \
+		if(entry.level == LogLevel::Debug)                  \
+		{                                                   \
+			String debug = entry.message + "\n";            \
+			PrintDebug( debug.c_str() );                    \
+		}                                                   \
 }                                                           \
 
 DEFINE_LOG_HELPER(Info)

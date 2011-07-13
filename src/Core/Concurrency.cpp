@@ -115,7 +115,7 @@ TaskPool* TaskPoolCreate(Allocator* alloc, int8 Size)
 	ThreadQueue& threads = pool->Threads;
 	threads.reserve(Size);
 
-	for( size_t i = 0; i < (uint8) Size; i++ )
+	for( size_t i = 0; i < (size_t) Size; i++ )
 	{
 		Thread* thread = ThreadCreate(alloc);
 		threads.push_back(thread);
@@ -124,7 +124,7 @@ TaskPool* TaskPoolCreate(Allocator* alloc, int8 Size)
 		ThreadSetName(thread, "Task Pool");
 	}
 
-	LogDebug("Task pool created with %d threads", threads.size());
+	LogDebug("Created task pool with '%d' threads", threads.size());
 
 	return pool;
 }

@@ -86,9 +86,9 @@ void AllocatorDumpInfo()
 	MemoryGroupMap& memoryGroups = GetMemoryGroupMap();
 	if(memoryGroups.empty()) return;
 
-	OutputDebugStringA("-----------------------------------------------------\n");
-	OutputDebugStringA("Memory stats\n");
-	OutputDebugStringA("-----------------------------------------------------\n");
+	LogDebug("-----------------------------------------------------");
+	LogDebug("Memory stats");
+	LogDebug("-----------------------------------------------------");
 
 	MemoryGroupMap::iterator it;
 	for(it = memoryGroups.begin(); it != memoryGroups.end(); it++)
@@ -96,13 +96,13 @@ void AllocatorDumpInfo()
 		const char* id = it->first;
 		AllocationGroup& group = it->second;
 		
-		const char* fs = "%s\t| free: %I64d bytes, total: %I64d bytes\n";
+		const char* fs = "%s\t| total freed: %I64d bytes, total allocated: %I64d bytes";
 		String format = StringFormat(fs, id, group.freed, group.total );
 
-		OutputDebugStringA( format.c_str() );
+		LogDebug( format.c_str() );
 	}
 
-	OutputDebugStringA("\n");
+	LogDebug("");
 }
 
 //-----------------------------------//
