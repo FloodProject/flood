@@ -10,12 +10,6 @@
     <Filter Include="Timer">
       <UniqueIdentifier>{8c332f64-f7fe-4d28-9f4f-051e6e7fec46}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Network">
-      <UniqueIdentifier>{ad3128d5-000b-4150-87ec-8dd9521038b1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Network\Messages">
-      <UniqueIdentifier>{a220fe4b-9168-483c-8a36-f9f54da117c5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Events">
       <UniqueIdentifier>{baf2d738-9110-4b41-9b57-4ebc27eb2117}</UniqueIdentifier>
     </Filter>
@@ -97,10 +91,16 @@
     <Filter Include="Archive\Watcher">
       <UniqueIdentifier>{63ffccc4-ff22-49bd-9741-b97d2c8e5d60}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Web">
+    <Filter Include="Networking">
+      <UniqueIdentifier>{ad3128d5-000b-4150-87ec-8dd9521038b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Networking\Messages">
+      <UniqueIdentifier>{a220fe4b-9168-483c-8a36-f9f54da117c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Networking\Web">
       <UniqueIdentifier>{6796715b-e90e-4229-98da-6c63782d5502}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Web\HTTP">
+    <Filter Include="Networking\Web\HTTP">
       <UniqueIdentifier>{5a39ca3f-0a9f-4f92-a33a-02053ff97752}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -113,10 +113,10 @@
       <Filter>Streams</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\Network.cpp">
-      <Filter>Network</Filter>
+      <Filter>Networking</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\Message.cpp">
-      <Filter>Network\Messages</Filter>
+      <Filter>Networking\Messages</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\WebStream.cpp">
       <Filter>Streams\Web</Filter>
@@ -227,24 +227,24 @@
       <Filter>Reflection</Filter>
     </ClCompile>
     <ClCompile Include="..\..\dep\mongoose\mongoose.cpp">
-      <Filter>Web\HTTP</Filter>
+      <Filter>Networking\Web\HTTP</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\WebServer.cpp">
-      <Filter>Web</Filter>
+      <Filter>Networking\Web</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\vapor\net\Network.h">
-      <Filter>Network</Filter>
+      <Filter>Networking</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\net\Message.h">
-      <Filter>Network\Messages</Filter>
+      <Filter>Networking\Messages</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\net\MessageHandler.h">
-      <Filter>Network\Messages</Filter>
+      <Filter>Networking\Messages</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\net\Messages.h">
-      <Filter>Network\Messages</Filter>
+      <Filter>Networking\Messages</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\WebStream.h">
       <Filter>Streams\Web</Filter>
@@ -364,10 +364,10 @@
       <Filter>Reflection</Filter>
     </ClInclude>
     <ClInclude Include="..\..\dep\mongoose\mongoose.h">
-      <Filter>Web\HTTP</Filter>
+      <Filter>Networking\Web\HTTP</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\WebServer.h">
-      <Filter>Web</Filter>
+      <Filter>Networking\Web</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\FileWatcher.h">
       <Filter>Archive\Watcher</Filter>

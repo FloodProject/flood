@@ -20,10 +20,11 @@
 #include "Scene/Scene.h"
 #include "Paging/PageManager.h"
 #include "Physics/Physics.h"
+#include "Net/Network.h"
 
 #include <ctime>
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -123,6 +124,8 @@ void Engine::init( bool createWindow )
 	// Creates the physics manager.
 	physicsManager = new PhysicsManager();
 #endif
+
+	NetworkInitialize();
 }
 
 //-----------------------------------//
@@ -203,4 +206,4 @@ InputManager* Engine::getInputManager() const
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

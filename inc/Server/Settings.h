@@ -8,14 +8,12 @@
 
 #pragma once
 
-namespace vapor {
+NAMESPACE_SERVER_BEGIN
 
 //-----------------------------------//
 
-class Settings
+struct Settings
 {
-public:
-
 	// Number of processing tasks.
 	static int NumTasksProcess;
 
@@ -25,10 +23,13 @@ public:
 	// Number of I/O threads.
 	static int NumThreadsIO;
 
-	// Server URI.
-	static String URI;
+	// Host location.
+	static String HostLocation;
+
+	// Host port.
+	static int HostPort;
 };
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_SERVER_END

@@ -35,9 +35,16 @@ public:
 	// Parses the config;
 	void parseConfig();
 
+	// Handles client connections.
+	void handleClientConnect(const NetworkPeer& peer);
+
+	// Handles client disconnections.
+	void handleClientDisconnect(const NetworkPeer& peer);
+
 protected:
 
 	TaskPool* tasks;
+	Thread* networkThread;
 	NetworkHost host;
 };
 

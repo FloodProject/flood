@@ -16,7 +16,8 @@ NAMESPACE_SERVER_BEGIN
 int Settings::NumTasksProcess = 1;
 int Settings::NumThreadsWorkers = -1;
 int Settings::NumThreadsIO = 1;
-String Settings::URI = "tcp://*:5555";
+String Settings::HostLocation = "127.0.0.1";
+int Settings::HostPort = 9999;
 
 //-----------------------------------//
 

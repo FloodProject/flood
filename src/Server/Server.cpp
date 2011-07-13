@@ -12,20 +12,24 @@
 #include "Core/Event.h"
 #include "Core/Concurrency.h"
 
+#include <enet/enet.h>
+
 NAMESPACE_SERVER_BEGIN
 
 //-----------------------------------//
 
+static Allocator* g_AllocatorServer = nullptr;
+
 Allocator* AllocatorGetServer()
 {
-	static Allocator* alloc = AllocatorCreateHeap(AllocatorGetHeap(), "Server");
-	return alloc;
+	return g_AllocatorServer;
 }
 
 //-----------------------------------//
 
 Server::Server()
 	: tasks(nullptr)
+	, networkThread(nullptr)
 {
 }
 
@@ -33,18 +37,21 @@ Server::Server()
 
 Server::~Server()
 {
-	shutdown();
 }
 
 //-----------------------------------//
 
 bool Server::init()
 {
+	NetworkInitialize();
+
 #if 0
 	Log::info("Created %d processing task(s)", Settings::NumTasksProcess);
 #endif
 
-	host.createSocket("", 38092);
+	networkThread = ThreadCreate( AllocatorGetServer() );
+
+	host.createSocket("", Settings::HostPort);
 
 	return true;
 }
@@ -53,7 +60,9 @@ bool Server::init()
 
 void Server::shutdown()
 {
+	ThreadDestroy(networkThread);
 
+	NetworkDeinitialize();
 }
 
 //-----------------------------------//
@@ -66,6 +75,7 @@ static void ProcessMessagesThread(void* threadUserdata)
 
 	while(true)
 	{
+		host->waitMessages();
 		host->dispatchMessages();
 	}
 }
@@ -74,8 +84,8 @@ static void ProcessMessagesThread(void* threadUserdata)
 
 void Server::run()
 {
-	Thread* networkThread = ThreadCreate( AllocatorGetServer() );
 	ThreadStart(networkThread, ProcessMessagesThread, &host);
+	ThreadSetName(networkThread, "Network");
 	
 	if(!networkThread)
 	{
@@ -83,21 +93,12 @@ void Server::run()
 		return;
 	}
 
-	LogInfo("Created networking thread");
-	 
-	String in;
-	
 	while(true)
 	{
 		char buf[80];
-		fgets(buf, ARRAY_SIZE(buf), stdin);
-		in.assign(buf);
-
-		if(in == "quit")
-			break;
+		if(strcmp(gets(buf), "quit\n"))
+			return;
 	}
-
-	ThreadDestroy(networkThread);
 }
 
 //-----------------------------------//
@@ -109,20 +110,37 @@ void Server::parseConfig()
 
 //-----------------------------------//
 
+void Server::handleClientConnect(const NetworkPeer& networkPeer)
+{
+	LogInfo("Client connected: %s", networkPeer.getHostname().c_str());
+}
+
+//-----------------------------------//
+
+void Server::handleClientDisconnect(const NetworkPeer& peer)
+{
+}
+
+//-----------------------------------//
+
 NAMESPACE_SERVER_END
 
 using namespace vapor;
 
 int main()
 {
+	g_AllocatorServer = AllocatorCreateHeap(AllocatorGetHeap(), "Server");
 	Log* log = LogCreate( AllocatorGetServer() );
 
 	Server server;
-	
 	server.init();
 	server.run();
+	server.shutdown();
 
 	LogDestroy(log);
+	AllocatorDestroy( AllocatorGetServer() );
+
+	AllocatorDumpInfo();
 
 	return 0;
 }
