@@ -24,12 +24,12 @@ namespace vapor {
 
 //-----------------------------------//
 
-REFLECT_CHILD_CLASS(Font_Loader, ResourceLoader)
+REFLECT_CHILD_CLASS(FontLoader, ResourceLoader)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
 
-Font_Loader::Font_Loader()
+FontLoader::FontLoader()
 	: font(nullptr)
 {
 	extensions.push_back("font");
@@ -37,7 +37,7 @@ Font_Loader::Font_Loader()
 
 //-----------------------------------//
 
-bool Font_Loader::decode(const Stream& stream, Resource* resource)
+bool FontLoader::decode(const Stream& stream, Resource* resource)
 {
 	StreamReadLines((Stream*) &stream, lines);
 
@@ -75,7 +75,7 @@ bool Font_Loader::decode(const Stream& stream, Resource* resource)
 
 //-----------------------------------//
 
-void Font_Loader::parseGlyphs()
+void FontLoader::parseGlyphs()
 {
 	uint16 glyph_width = StringToNumber<uint16>( glyphSizeInfo[0] );
 	uint16 glyph_height = StringToNumber<uint16>( glyphSizeInfo[1] );
@@ -118,7 +118,7 @@ void Font_Loader::parseGlyphs()
 
 //-----------------------------------//
 
-bool Font_Loader::validateFont()
+bool FontLoader::validateFont()
 {
 	// Validate file length.
 	if( lines.size() != 4 )

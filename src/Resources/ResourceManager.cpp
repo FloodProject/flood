@@ -403,7 +403,8 @@ void ResourceManager::removeResource(const String& path)
 
 void ResourceManager::registerLoader(ResourceLoader* const loader)
 {
-	LogInfo( "Registering resource loader '%s'", loader->getName().c_str() );
+	Class* klass = ClassGetType(loader);
+	LogInfo( "Registering resource loader '%s'", klass->name );
 
 	const std::vector<String>& extensions = loader->getExtensions();
 	

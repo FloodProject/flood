@@ -58,7 +58,7 @@ void ResourceManager::referenceLoaders()
 #endif
 
 #ifdef ENABLE_FONT_BITMAP
-	REF(Font_Loader)
+	REF(FontLoader)
 #endif
 
 #ifdef ENABLE_MESH_MILKSHAPE3D

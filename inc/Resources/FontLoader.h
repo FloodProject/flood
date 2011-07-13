@@ -45,15 +45,15 @@ namespace vapor {
  *		}   
  */
 
-REFLECT_DECLARE_CLASS(Font_Loader)
+REFLECT_DECLARE_CLASS(FontLoader)
 
-class RESOURCE_API Font_Loader : public ResourceLoader
+class RESOURCE_API FontLoader : public ResourceLoader
 {
-	REFLECT_DECLARE_OBJECT(Font_Loader)
+	REFLECT_DECLARE_OBJECT(FontLoader)
 
 public:
 
-	Font_Loader();
+	FontLoader();
 
 	// Creates the resource with no data.
 	RESOURCE_LOADER_PREPARE(BitmapFont)
