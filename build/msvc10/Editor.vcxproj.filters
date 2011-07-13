@@ -40,9 +40,6 @@
     <Filter Include="Plugins\Project">
       <UniqueIdentifier>{c0811d18-cd27-4a70-bf51-1102524a8439}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Plugins\Camera">
-      <UniqueIdentifier>{b23243dd-5c32-4796-94eb-d71cdb3bd5ba}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Plugins\Scene">
       <UniqueIdentifier>{cb2b3438-87ba-440f-bb5f-0d115293944e}</UniqueIdentifier>
     </Filter>
@@ -93,6 +90,12 @@
     </Filter>
     <Filter Include="Plugins\Resources\Thumbnails">
       <UniqueIdentifier>{f3636649-78a5-4666-9772-9dcb2381975a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Camera">
+      <UniqueIdentifier>{b23243dd-5c32-4796-94eb-d71cdb3bd5ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Networking">
+      <UniqueIdentifier>{020ea8c4-8aa2-4525-99ed-6fa96f640666}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -267,6 +270,9 @@
     <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourceDatabase.cpp">
       <Filter>Plugins\Resources\Database</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Networking\NetworkingPlugin.cpp">
+      <Filter>Plugins\Networking</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Editor\inc\RenderControl.h">
@@ -440,6 +446,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourceDatabase.h">
       <Filter>Plugins\Resources\Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Networking\NetworkingPlugin.h">
+      <Filter>Plugins\Networking</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

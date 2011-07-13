@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "net/Message.h"
+#include "Network/Message.h"
 
 NAMESPACE_BEGIN
 

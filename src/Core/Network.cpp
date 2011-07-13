@@ -11,8 +11,8 @@
 #include "Core/Log.h"
 #include "Core/Memory.h"
 
-#include "Net/Network.h"
-#include "Net/Message.h"
+#include "Network/Network.h"
+#include "Network/Message.h"
 
 #include <enet/enet.h>
 

@@ -8,10 +8,11 @@
 
 #pragma once
 
-#include "Net/Message.h"
-#include "Net/MessageHandler.h"
 #include "Core/Concurrency.h"
 #include "Core/Event.h"
+
+#include "Network/Message.h"
+#include "Network/MessageHandler.h"
 
 struct _ENetHost;
 typedef _ENetHost ENetHost;
