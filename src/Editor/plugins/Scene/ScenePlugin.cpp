@@ -24,8 +24,7 @@ REFLECT_CLASS_END()
 //-----------------------------------//
 
 ScenePlugin::ScenePlugin()
-	: Plugin()
-	, scenePage(nullptr)
+	: scenePage(nullptr)
 { }
 
 //-----------------------------------//

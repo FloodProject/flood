@@ -52,7 +52,7 @@ Mutex* MutexCreate(Allocator* alloc)
 
 void MutexDestroy(Mutex* mutex)
 {
-	Deallocate( mutex);
+	Deallocate(mutex);
 }
 
 //-----------------------------------//

@@ -65,6 +65,8 @@ Engine::~Engine()
 	delete resourceManager;
 	delete audioDevice;
 
+	NetworkDeinitialize();
+
 	TaskPoolDestroy(taskPool);
 	StreamDestroy(stream);
 	LogDestroy(log);

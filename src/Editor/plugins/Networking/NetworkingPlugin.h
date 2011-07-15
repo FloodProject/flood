@@ -10,6 +10,8 @@
 
 #include "Plugin.h"
 
+FWD_DECL_INTRUSIVE(NetworkClient)
+
 NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
@@ -32,6 +34,11 @@ public:
 
 	// Plugin disable callback.
 	virtual void onPluginDisable();
+
+	// Connects to the remote host.
+	void connect();
+
+	NetworkClientPtr client;
 };
 
 //-----------------------------------//

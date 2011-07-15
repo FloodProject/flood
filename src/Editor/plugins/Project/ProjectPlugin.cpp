@@ -181,15 +181,12 @@ bool ProjectPlugin::saveScene()
 	if( fc.ShowModal() != wxID_OK )
 		return false;
 
-	Engine* engine = editor->getEngine();
-	ScenePtr scene = engine->getScene();
-	
 	Path path = (String) fc.GetPath();
 	
-	if( !SerializerSaveObjectToFile(path, scene.get()) )
-		return false;
+	SceneDocument* sceneDocument = (SceneDocument*) GetEditor().getDocument();	
+	ScenePtr scene = sceneDocument->scene;
 
-	return true;
+	return SerializerSaveObjectToFile(path, scene.get());
 }
 
 //-----------------------------------//
@@ -225,10 +222,9 @@ void ProjectPlugin::switchScene(SceneDocument* document)
 	document->unsavedChanges = false;
 
 	const ScenePtr& scene = document->scene;
-	Engine* engine = editor->getEngine();
-	engine->setScene(scene);
+	GetEngine()->setScene(scene);
 
-#ifdef VAPOR_PHYSICS_BULLET
+#ifdef ENABLE_PHYSICS_BULLET
 	delete engine->getPhysicsManager();
 	PhysicsManager* physics = new PhysicsManager();
 	physics->createWorld();

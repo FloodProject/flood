@@ -27,8 +27,7 @@ REFLECT_CLASS_END()
 //-----------------------------------//
 
 ResourcesPlugin::ResourcesPlugin()
-	: Plugin()
-	, resourcesPage(nullptr)
+	: resourcesPage(nullptr)
 	, resourcesBrowser(nullptr)
 	, resourceDatabase(nullptr)
 	, resourceThumbnailer(nullptr)
@@ -96,11 +95,17 @@ void ResourcesPlugin::onPluginEnable()
 
 void ResourcesPlugin::onPluginDisable()
 {
-	editor->getAUI()->DetachPane(resourcesPage);
-	editor->getAUI()->Update();
+	if(resourcesPage)
+	{
+		editor->getAUI()->DetachPane(resourcesPage);
+		editor->getAUI()->Update();
+	}
 
 	Deallocate(resourcesBrowser);
 	resourcesBrowser = nullptr;
+
+	Deallocate(resourceDatabase);
+	resourceDatabase = nullptr;
 
 	Deallocate(resourcesPage);
 	resourcesPage = nullptr;

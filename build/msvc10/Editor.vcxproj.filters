@@ -261,9 +261,6 @@
     <ClCompile Include="..\..\src\Editor\widgets\wxFourWaySplitter.cpp">
       <Filter>Widgets</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneDocument.cpp">
-      <Filter>Document</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourceThumbnailer.cpp">
       <Filter>Plugins\Resources\Thumbnails</Filter>
     </ClCompile>
@@ -272,6 +269,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Editor\plugins\Networking\NetworkingPlugin.cpp">
       <Filter>Plugins\Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneDocument.cpp">
+      <Filter>Plugins\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -438,9 +438,6 @@
     <ClInclude Include="..\..\src\Editor\inc\wxFourWaySplitter.h">
       <Filter>Widgets</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Editor\plugins\Scene\SceneDocument.h">
-      <Filter>Document</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourceThumbnailer.h">
       <Filter>Plugins\Resources\Thumbnails</Filter>
     </ClInclude>
@@ -449,6 +446,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\plugins\Networking\NetworkingPlugin.h">
       <Filter>Plugins\Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Scene\SceneDocument.h">
+      <Filter>Plugins\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

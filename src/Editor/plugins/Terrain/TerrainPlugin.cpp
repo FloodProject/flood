@@ -371,7 +371,7 @@ void TerrainPlugin::createOperation( const RayTriangleQueryResult& res )
 {
 	if( terrainOperation ) return;
 
-	InputManager* input = GetEditor().getEngine()->getInputManager();
+	InputManager* input = GetInputManager();
 
 	// If the left Shift is held down, then lower.
 	Keyboard* keyboard = input->getKeyboard();

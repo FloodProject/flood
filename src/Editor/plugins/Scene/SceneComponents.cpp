@@ -17,7 +17,7 @@
 #include "Scene/Projector.h"
 #include "Render/Cube.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -143,4 +143,4 @@ void ScenePage::populateEntityItemMenu(wxMenu& menu, const EntityPtr& node)
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

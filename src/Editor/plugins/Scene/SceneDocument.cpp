@@ -18,7 +18,7 @@
 #include "PluginManager.h"
 #include "../Selection/SelectionPlugin.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -42,17 +42,39 @@ SceneDocument::SceneDocument()
 	// Update at least once before rendering.
 	onUpdate(0);
 
-	//events->onSceneLoad(scene);
+	Events* events = GetEditor().getEventManager();
+	events->onSceneLoad(scene);
 }
 
 //-----------------------------------//
 
 SceneDocument::~SceneDocument()
 {
-	if(!scene) return;
+	LogDebug("Destroying SceneDocument");
 
+	resetScene();
+
+	RenderControl* control = viewFrame->getControl();
+	control->stopFrameLoop();
+	control->onRender.clear();
+	control->onUpdate.clear();
+
+	viewFrame->destroyControl();
+}
+
+//-----------------------------------//
+
+void SceneDocument::resetScene()
+{
 	Events* events = GetEditor().getEventManager();
 	events->onSceneUnload(scene);
+
+	assert( ReferenceGetCount(editorScene.get()) == 1 );
+	//assert( ReferenceGetCount(scene.get()) == 1 );
+
+	editorScene.reset();
+	scene.reset();
+	cameraController.reset();
 }
 
 //-----------------------------------//
@@ -86,15 +108,12 @@ wxWindow* SceneDocument::getWindow()
 
 void SceneDocument::setupRenderWindow()
 {
-	RenderDevice* renderDevice = GetEngine()->getRenderDevice();
+	Window* window = getRenderWindow();
 
-	RenderControl* control = viewFrame->getControl();
-	Window* window = (Window*) control->getRenderWindow();
-
-	renderDevice->setWindow( window );
-	renderDevice->setRenderTarget( window );
-
-	renderDevice->init();
+	RenderDevice* device = GetRenderDevice();
+	device->setWindow( window );
+	device->setRenderTarget( window );
+	device->init();
 }
 
 //-----------------------------------//
@@ -170,7 +189,7 @@ wxAuiToolBar* SceneDocument::createContextToolbar()
 
 void SceneDocument::onToolSelect(PluginTool* mode)
 {
-	wxSizer* sizer = getViewframe()->mainSizer;
+	wxSizer* sizer = viewFrame->mainSizer;
 	wxSizerItem* item = sizer->GetChildren().GetLast()->GetData();
 	
 	wxWindow* currentWindow = item->GetWindow();
@@ -233,11 +252,9 @@ EntityPtr SceneDocument::createCamera()
 	entityCamera->addComponent( camera );
 	entityCamera->addComponent( cameraController );
 
-#if 0
-#ifdef VAPOR_AUDIO_OPENAL
+#ifdef ENABLE_AUDIO_OPENAL
 	ComponentPtr listener( new Listener() );
 	entityCamera->addComponent( listener );
-#endif
 #endif
 
 	return entityCamera;
@@ -262,11 +279,9 @@ void SceneDocument::onRender()
 	camera->cull( block, editorScene );
 	camera->render(block);
 
-#if 0
-#ifdef VAPOR_PHYSICS_BULLET
+#ifdef ENABLE_PHYSICS_BULLET
 	PhysicsManager* physics = engine->getPhysicsManager();
 	physics->drawDebugWorld();
-#endif
 #endif
 }
 
@@ -289,4 +304,4 @@ void SceneDocument::onUpdate( float delta )
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

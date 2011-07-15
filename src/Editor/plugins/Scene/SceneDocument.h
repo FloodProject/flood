@@ -13,7 +13,7 @@
 #include "RenderWindow.h"
 #include "RenderControl.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -24,11 +24,19 @@ public:
 	SceneDocument();
 	virtual ~SceneDocument();
 
+	// Resets the scene.
+	void resetScene();
+
 	// Gets the document window.
 	virtual wxWindow* getWindow();
 	
-	Viewframe* getViewframe() { return viewFrame;; }
+	// Gets the view frame.
+	Viewframe* getViewframe() { return viewFrame; }
+
+	// Gets the render control.
 	RenderControl* getRenderControl() { return viewFrame->getControl(); }
+	
+	// Gets the render window.
 	RenderWindow* getRenderWindow() { return getRenderControl()->getRenderWindow(); }
 	
 	// Creates a context toolbar.
@@ -38,16 +46,8 @@ public:
 	virtual void onToolSelect(PluginTool* tool) OVERRIDE;
 
 	// Document selection callbacks.
-	virtual void onDocumentSelect();
-	virtual void onDocumentUnselect();
-
-	// View callbacks.
-	void onUpdate( float delta );
-	void onRender();
-
-	void OnMouseRightUp(wxMouseEvent& event);
-	void OnMouseRightDown(wxMouseEvent& event);
-	void OnMouseEvent(wxMouseEvent& event);
+	virtual void onDocumentSelect() OVERRIDE;
+	virtual void onDocumentUnselect() OVERRIDE;
 
 	ScenePtr scene;
 	ScenePtr editorScene;
@@ -58,6 +58,14 @@ public:
 
 protected:
 
+	// View callbacks.
+	void onUpdate( float delta );
+	void onRender();
+
+	void OnMouseRightUp(wxMouseEvent& event);
+	void OnMouseRightDown(wxMouseEvent& event);
+	void OnMouseEvent(wxMouseEvent& event);
+
 	void setupRenderWindow();
 	void createView();
 	void createScene();
@@ -66,4 +74,4 @@ protected:
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

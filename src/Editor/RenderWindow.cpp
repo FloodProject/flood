@@ -29,6 +29,8 @@ RenderWindow::RenderWindow(const WindowSettings& settings, wxGLCanvas* const can
 
 RenderWindow::~RenderWindow()
 {
+	LogDebug("Destroying RenderWindow");
+
 	delete context;
 	delete inputManager;
 }

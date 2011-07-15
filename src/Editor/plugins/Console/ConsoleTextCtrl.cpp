@@ -43,7 +43,7 @@ ConsoleTextCtrl::ConsoleTextCtrl( wxWindow* parent, wxWindowID id,
 		: wxTextCtrl( parent, id, name, pos, size, style )
 {
 	console = this;
-	engine = GetEditor().getEngine();
+	engine = GetEngine();
 
 	InitControl();
 

@@ -32,6 +32,13 @@ LogFrame::LogFrame( wxWindow* parent )
 
 //-----------------------------------//
 
+LogFrame::~LogFrame()
+{
+
+}
+
+//-----------------------------------//
+
 void LogFrame::Process(LogEntry* entry)
 {
 	int id = InsertItem(GetItemCount(), wxEmptyString);

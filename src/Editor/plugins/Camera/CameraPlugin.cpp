@@ -16,7 +16,7 @@
 
 #ifdef ALL_PLUGINS
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -107,8 +107,76 @@ void CameraPlugin::onEntityChange()
 	cameraControls->updateCameraSelection();
 }
 
+#if 0
 //-----------------------------------//
 
-} } // end namespaces
+CameraPtr CameraPlugin::getPlayerCamera() const
+{
+	ScenePtr scene = engine->getSceneManager();
+	CameraPtr camera;
+	
+	const std::vector<EntityPtr> entities = scene->getEntities();
+	
+	for( size_t i = 0; i < entities.size(); i++ )
+	{
+		const EntityPtr& node = entities[i];
+		camera = node->getComponent<Camera>();
+
+		if( camera )
+			break;
+	}
+
+	return camera;
+}
+
+//-----------------------------------//
+
+void CameraPlugin::switchPlayMode(bool switchToPlay)
+{
+#ifdef VAPOR_PHYSICS_BULLET
+	// Toogle the physics simulation state.
+	PhysicsManager* physics = engine->getPhysicsManager();
+	
+	if( physics )
+		physics->setSimulation( switchToPlay );
+#endif
+
+	CameraPtr camera = getPlayerCamera();
+	EntityPtr nodeCamera;
+	ControllerPtr controller;
+
+	if( camera )
+		nodeCamera = camera->getEntity()->getShared();
+
+	if( !nodeCamera )
+		return;
+
+	if( controller )
+		controller = nodeCamera->getComponentFromFamily<Controller>();
+
+	if( switchToPlay )
+	{
+		// Change the active camera.
+		RenderView* view = viewframe->getView();
+
+		if( controller )
+			controller->setEnabled(true);
+
+		if( camera )
+			view->setCamera(camera);
+	}
+	else
+	{
+		if( controller )
+			controller->setEnabled(false);
+
+		viewframe->switchToDefaultCamera();
+	}
+}
+#endif
+
+//-----------------------------------//
+
+NAMESPACE_EDITOR_END
 
 #endif

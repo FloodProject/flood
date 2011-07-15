@@ -65,6 +65,7 @@ RenderControl::RenderControl( wxWindow* parent, wxWindowID id,
 
 RenderControl::~RenderControl()
 {
+	LogDebug("Destroying RenderControl");
 	Deallocate(window);
 }
 
@@ -134,7 +135,7 @@ void RenderControl::OnPaint(wxPaintEvent& WXUNUSED(event))
 
 void RenderControl::OnSize(wxSizeEvent& event)
 {
-	onUpdate(0);
+	//onUpdate(0);
 	window->processResize( event.GetSize() );
 	flagRedraw();
 }

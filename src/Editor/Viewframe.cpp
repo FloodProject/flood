@@ -11,7 +11,7 @@
 #include "RenderWindow.h"
 #include "RenderControl.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -26,6 +26,13 @@ Viewframe::Viewframe( wxWindow* parent, wxWindowID id,
 //-----------------------------------//
 
 Viewframe::~Viewframe()
+{
+	LogDebug("Destroying Viewframe");
+}
+
+//-----------------------------------//
+
+void Viewframe::destroyControl()
 {
 	control->stopFrameLoop();
 	control->Destroy();
@@ -101,4 +108,4 @@ void Viewframe::flagRedraw()
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

@@ -12,9 +12,8 @@
 #include "Math/Vector.h"
 
 FWD_DECL(Engine)
-FWD_DECL_INTRUSIVE(NetworkClient)
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -37,9 +36,9 @@ public:
 
 //-----------------------------------//
 
-class EditorFrame : public wxFrame
+class API_EDITOR EditorFrame : public wxFrame
 {
-	wxADD_KEYBINDER_SUPPORT();
+	//wxADD_KEYBINDER_SUPPORT();
 
 public:
 
@@ -69,9 +68,6 @@ public:
 
 	// Gets the events manager instance.
 	GETTER(EventManager, Events*, eventManager)
-
-	// Gets the engine instance.	
-	GETTER(Engine, Engine*, engine)
 
 	// Gets/sets the drag and drop coords.
 	ACESSOR(DropCoords, Vector2, dropCoords)
@@ -132,13 +128,11 @@ public:
 	wxMenu* menuHelp;
 
 	wxKeyProfileArray keyProfiles;
-
-	NetworkClientPtr client;
 };
 
 // Gets the editor instance.
-EditorFrame& GetEditor();
+API_EDITOR EditorFrame& GetEditor();
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

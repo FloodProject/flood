@@ -43,6 +43,9 @@ public:
 	// Creates and adds a control to the viewframe.
 	RenderControl* createControl();
 
+	// Destroys the current control in the viewframe.
+	void destroyControl();
+
 	// Creates and adds a new view to the viewframe.
 	RenderView* createView();
 

@@ -11,7 +11,7 @@
 #include "Editor.h"
 #include "Engine.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -22,12 +22,17 @@ REFLECT_CLASS_END()
 
 Plugin::Plugin()
 	: enabled(false)
-{ }
+	, editor(nullptr)
+{
+
+}
 
 //-----------------------------------//
 
 Plugin::~Plugin()
-{ }
+{
+
+}
 
 //-----------------------------------//
 
@@ -159,4 +164,4 @@ bool Plugin::isEnabled() const
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

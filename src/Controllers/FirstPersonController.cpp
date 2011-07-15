@@ -14,11 +14,11 @@
 #include "Scene/Transform.h"
 #include "Scene/Camera.h"
 #include "Render/Device.h"
-#include "input/InputManager.h"
-#include "input/Keyboard.h"
-#include "input/Mouse.h"
+#include "Input/InputManager.h"
+#include "Input/Keyboard.h"
+#include "Input/Mouse.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -34,8 +34,6 @@ FirstPersonController::FirstPersonController()
 	, mouseWheel(0)
 {
 	window = GetRenderDevice()->getWindow();
-	inputManager = GetInputManager();
-
 	registerCallbacks();
 }
 
@@ -43,15 +41,12 @@ FirstPersonController::FirstPersonController()
 
 FirstPersonController::~FirstPersonController()
 {
-	#pragma TODO(Reconnect window focus event)
-	//window->onWindowFocusChange.Disconnect( this, &FirstPersonController::onWindowFocusChange );
+	window->onWindowFocusChange.Disconnect( this, &FirstPersonController::onWindowFocusChange );
 
-	if(!inputManager) return;
-
-	Keyboard* const keyboard = inputManager->getKeyboard();
-	Mouse* const mouse = inputManager->getMouse();
-	
+	Keyboard* keyboard = GetInputManager()->getKeyboard();
 	keyboard->onKeyPress.Disconnect( this, &FirstPersonController::onKeyPressed );
+	
+	Mouse* mouse = GetInputManager()->getMouse();
 	mouse->onMouseMove.Disconnect( this, &FirstPersonController::onMouseMove );
 	mouse->onMouseDrag.Disconnect( this, &FirstPersonController::onMouseDrag );
 	mouse->onMouseWheelMove.Disconnect( this, &FirstPersonController::onMouseWheel );
@@ -86,8 +81,6 @@ void FirstPersonController::_update( float delta )
 
 void FirstPersonController::checkControls( float delta )
 {
-	if(!inputManager) return;
-
 	const TransformPtr& transform = getEntity()->getTransform();
 	Vector3 position = transform->getPosition();
 	
@@ -118,7 +111,7 @@ void FirstPersonController::checkControls( float delta )
 	}
 
 	// Check keyboard movement.
-	Keyboard* keyboard = inputManager->getKeyboard();
+	Keyboard* keyboard = GetInputManager()->getKeyboard();
 	const std::vector< bool >& state = keyboard->getKeyState();
 
 	if( state[Keys::W] )
@@ -176,10 +169,10 @@ void FirstPersonController::registerCallbacks()
 	if( window )
 		window->onWindowFocusChange.Connect( this, &FirstPersonController::onWindowFocusChange );
 
-	Keyboard* const keyboard = inputManager->getKeyboard();
-	Mouse* const mouse = inputManager->getMouse();
-	
+	Keyboard* keyboard = GetInputManager()->getKeyboard();
 	keyboard->onKeyPress.Connect( this, &FirstPersonController::onKeyPressed );
+
+	Mouse* mouse = GetInputManager()->getMouse();
 	mouse->onMouseMove.Connect( this, &FirstPersonController::onMouseMove );
 	mouse->onMouseDrag.Connect( this, &FirstPersonController::onMouseDrag );
 	mouse->onMouseWheelMove.Connect( this, &FirstPersonController::onMouseWheel );
@@ -280,4 +273,4 @@ void FirstPersonController::onWindowFocusChange( bool focusLost )
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

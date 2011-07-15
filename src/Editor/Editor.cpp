@@ -18,9 +18,6 @@
 #include "Events.h"
 #include "EditorTags.h"
 #include <wx/debugrpt.h>
-#include "Network/Network.h"
-
-#include <Winsock2.h>
 
 #include "Plugins/Scene/SceneDocument.h"
 #include "Plugins/Project/ProjectPlugin.h"
@@ -29,7 +26,7 @@
 
 wxIMPLEMENT_WXWIN_MAIN_CONSOLE
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -91,7 +88,7 @@ EditorFrame::EditorFrame(const wxString& title)
 
 	wxKeyProfile* mainProfile = new wxKeyProfile();
 	mainProfile->SetName("Main");
-	mainProfile->AttachRecursively(this);
+	//mainProfile->AttachRecursively(this);
 	mainProfile->ImportMenuBarCmd( GetMenuBar() );
 	mainProfile->Enable();
 
@@ -104,17 +101,6 @@ EditorFrame::EditorFrame(const wxString& title)
 	project->onNewButtonClick(event);
 #endif
 
-	client = Allocate(NetworkClient, AllocatorGetHeap());
-
-	String address("127.0.0.1");
-
-	if( !client->connect(address, 9999) )
-		LogError("Error connecting to server at '%s'", address.c_str());
-	else
-		LogInfo("Connected to server at '%s'", address.c_str());
-
-	client->checkEvents(5000);
-
 	AllocatorDumpInfo();
 }
 
@@ -122,15 +108,13 @@ EditorFrame::EditorFrame(const wxString& title)
 
 EditorFrame::~EditorFrame()
 {
-	paneCtrl->DetachPane(notebookCtrl);
-	notebookCtrl->Destroy();
-
 	for( size_t i = 0; i < documents.size(); i++ )
 	{
 		Document* document = documents[i];
 		delete document;
 	}
 
+	documents.clear();
 	currentDocument = nullptr;
 
 	eventManager->disconnectPluginListeners();
@@ -140,6 +124,9 @@ EditorFrame::~EditorFrame()
 
  	delete eventManager;
 	eventManager = nullptr;
+
+	notebookCtrl->Destroy();
+	paneCtrl->DetachPane(notebookCtrl);
 
 	paneCtrl->UnInit();
 	delete paneCtrl;
@@ -383,73 +370,4 @@ void EditorFrame::OnToolbarButtonClick(wxCommandEvent& event)
 
 //-----------------------------------//
 
-} } // end namespaces
-
-
-#if 0
-//-----------------------------------//
-
-CameraPtr EditorFrame::getPlayerCamera() const
-{
-	ScenePtr scene = engine->getSceneManager();
-	CameraPtr camera;
-	
-	const std::vector<EntityPtr> entities = scene->getEntities();
-	
-	for( size_t i = 0; i < entities.size(); i++ )
-	{
-		const EntityPtr& node = entities[i];
-		camera = node->getComponent<Camera>();
-
-		if( camera )
-			break;
-	}
-
-	return camera;
-}
-
-//-----------------------------------//
-
-void EditorFrame::switchPlayMode(bool switchToPlay)
-{
-#ifdef VAPOR_PHYSICS_BULLET
-	// Toogle the physics simulation state.
-	PhysicsManager* physics = engine->getPhysicsManager();
-	
-	if( physics )
-		physics->setSimulation( switchToPlay );
-#endif
-
-	CameraPtr camera = getPlayerCamera();
-	EntityPtr nodeCamera;
-	ControllerPtr controller;
-
-	if( camera )
-		nodeCamera = camera->getEntity()->getShared();
-
-	if( !nodeCamera )
-		return;
-
-	if( controller )
-		controller = nodeCamera->getComponentFromFamily<Controller>();
-
-	if( switchToPlay )
-	{
-		// Change the active camera.
-		RenderView* view = viewframe->getView();
-
-		if( controller )
-			controller->setEnabled(true);
-
-		if( camera )
-			view->setCamera(camera);
-	}
-	else
-	{
-		if( controller )
-			controller->setEnabled(false);
-
-		viewframe->switchToDefaultCamera();
-	}
-}
-#endif
+NAMESPACE_EDITOR_END

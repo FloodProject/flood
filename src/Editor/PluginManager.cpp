@@ -12,29 +12,24 @@
 #include "Editor.h"
 #include "Core/Reflection.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
 PluginManager::PluginManager()
-{ }
+{
+
+}
 
 //-----------------------------------//
 
 PluginManager::~PluginManager()
 {
-	LogDebug("Destroying all registered plugins");
-
 	for( size_t i = 0; i < plugins.size(); i++ )
 	{
 		Plugin* plugin = plugins[i];
 		
-		if(plugin->enabled)
-		{
-			disablePlugin(plugin);
-			LogDebug("Disabled plugin '%s'", plugin->getMetadata().name.c_str());
-		}
-
+		disablePlugin(plugin);
 		Deallocate(plugin);
 	}
 }
@@ -103,8 +98,11 @@ void PluginManager::scanPlugins()
 	{
 		Plugin* plugin = plugins[i];
 		registerPlugin(plugin);
+		
 		const PluginMetadata& metadata = plugin->getMetadata();
-		if(metadata.startEnabled) enablePlugin(plugin);
+		
+		if(metadata.startEnabled)
+			enablePlugin(plugin);
 	}
 }
 
@@ -140,6 +138,7 @@ void PluginManager::enablePlugin( Plugin* plugin )
 void PluginManager::disablePlugin( Plugin* plugin )
 {
 	if( !plugin ) return;
+	if( !plugin->isEnabled() ) return;
 
 	PluginMetadata metadata = plugin->getMetadata();
 	LogInfo( "Disabling plugin: %s", metadata.name.c_str() );
@@ -165,4 +164,4 @@ void PluginManager::processTools( Plugin* plugin, bool enable )
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

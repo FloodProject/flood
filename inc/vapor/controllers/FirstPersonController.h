@@ -12,7 +12,7 @@
 #include "Math/Vector.h"
 #include "Math/EulerAngles.h"
 
-namespace vapor {
+NAMESPACE_BEGIN
 
 //-----------------------------------//
 
@@ -24,8 +24,6 @@ struct KeyEvent;
 struct MouseMoveEvent;
 struct MouseDragEvent;
 struct MouseWheelEvent;
-
-//-----------------------------------//
 
 /**
  * A simple First-Person style camera controller.
@@ -84,11 +82,10 @@ protected:
 	bool hasFocus;
 
 	Window* window;
-	InputManager* inputManager;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( FirstPersonController );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_END

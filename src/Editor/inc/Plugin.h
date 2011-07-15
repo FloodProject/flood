@@ -20,7 +20,7 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-struct PluginMetadata
+struct API_EDITOR PluginMetadata
 {
 	PluginMetadata() : startEnabled(true), priority(1000) {}
 
@@ -48,7 +48,7 @@ struct PluginMetadata
 class EditorFrame;
 class PluginManager;
 
-struct PluginTool
+struct API_EDITOR PluginTool
 {
 	PluginTool() : toolbar(nullptr), item(nullptr) {}
 
@@ -76,7 +76,7 @@ typedef std::vector<PluginTool> PluginTools;
 
 REFLECT_DECLARE_CLASS(Plugin)
 
-class Plugin : public Object
+class API_EDITOR Plugin : public Object
 {
 	REFLECT_DECLARE_OBJECT(Plugin)
 
@@ -171,4 +171,4 @@ protected:
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END
