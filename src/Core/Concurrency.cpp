@@ -124,7 +124,7 @@ TaskPool* TaskPoolCreate(Allocator* alloc, int8 Size)
 		ThreadSetName(thread, "Task Pool");
 	}
 
-	LogDebug("Created task pool with '%d' threads", threads.size());
+	LogInfo("Created task pool with '%d' threads", threads.size());
 
 	return pool;
 }

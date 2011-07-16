@@ -127,7 +127,6 @@ EditorFrame::~EditorFrame()
 
 	notebookCtrl->Destroy();
 	paneCtrl->DetachPane(notebookCtrl);
-
 	paneCtrl->UnInit();
 	delete paneCtrl;
 
@@ -140,7 +139,11 @@ void EditorFrame::createPlugins()
 {
 	pluginManager = new PluginManager();
 	eventManager = new Events();
-	pluginManager->scanPlugins();
+
+	std::vector<Plugin*> plugins;
+	pluginManager->scanPlugins(plugins);
+	pluginManager->sortPlugins(plugins);
+	pluginManager->registerPlugins(plugins);
 }
 
 //-----------------------------------//

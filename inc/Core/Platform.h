@@ -50,8 +50,10 @@
 //---------------------------------------------------------------------//
 
 #if defined( DEBUG ) || defined( _DEBUG ) || defined( ___DEBUG )
+	#define BUILD_DEBUG
 	#define DEBUG_BUILD
 #else
+	#define BUILD_RELEASE
 	#define RELEASE_BUILD
 #endif
 

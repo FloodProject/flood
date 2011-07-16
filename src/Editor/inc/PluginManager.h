@@ -47,7 +47,13 @@ public:
 	bool isPluginEnabled( Plugin* plugin ) const;
 
 	// Scans for plugins.
-	void scanPlugins();
+	void scanPlugins(std::vector<Plugin*>& plugins);
+
+	// Sorts the plugins by priority.
+	void sortPlugins(std::vector<Plugin*>& plugins);
+
+	// Registers plugins.
+	void registerPlugins(const std::vector<Plugin*>& plugins);
 
 	// Gets all the registered plugins.
 	GETTER(Plugins, std::vector<Plugin*>, plugins)

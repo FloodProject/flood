@@ -27,6 +27,14 @@ ProgramManager::ProgramManager()
 
 ProgramManager::~ProgramManager()
 {
+	ProgramsMap::iterator it;
+
+	for( it = programs.begin(); it != programs.end(); it++ )
+	{
+		const ProgramPtr& program = it->second;
+		assert( ReferenceGetCount( program.get() ) == 1 );
+	}
+
 	GetResourceManager()->onResourceLoaded.Disconnect( this, &ProgramManager::onLoad );
 	GetResourceManager()->onResourceReloaded.Disconnect( this, &ProgramManager::onReload );
 }

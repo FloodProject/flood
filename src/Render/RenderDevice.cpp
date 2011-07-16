@@ -62,6 +62,7 @@ RenderDevice::~RenderDevice()
 
 	#pragma TODO("Confirm that all OpenGL resources were reclaimed on exit")	
 
+	//Deallocate(bufferManager);
 	Deallocate(textureManager);
 	Deallocate(programManager);
 	Deallocate(adapter);

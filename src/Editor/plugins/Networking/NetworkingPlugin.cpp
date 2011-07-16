@@ -8,8 +8,8 @@
 
 #include "Editor/API.h"
 #include "NetworkingPlugin.h"
-#include "Editor.h"
 #include "Network/Network.h"
+#include "Editor.h"
 
 NAMESPACE_EDITOR_BEGIN
 

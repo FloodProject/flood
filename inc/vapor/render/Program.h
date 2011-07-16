@@ -38,7 +38,7 @@ public:
 	// Creates the shaders and adds them to the program.
 	virtual void createShaders() = 0;
 
-	// Updates the shader's text with the program text.
+	// Updates the shaders text with the program text.
 	virtual void updateShadersText() = 0;
 
 	// Links the program and returns if it was successful.
@@ -59,13 +59,17 @@ public:
 	// Validates that the program contains valid shaders.
 	bool validateShaders() const;
 
-	// Gets the different types of shaders.
+	// Gets the vertex shader in the program.
 	GETTER(VertexShader, const RefPtr<Shader>&, vertex)
+
+	// Gets the fragment shader in the program.
 	GETTER(FragmentShader, const RefPtr<Shader>&, fragment)
+	
+	// Gets the geometry shader in the program.
 	//GETTER(GeometryShader, const ShaderPtr&, geometry)
 
 	// Adds a named parameter to the program.
-	virtual void setAttribute( const String& slot, VertexAttribute::Enum attr ) = 0;
+	virtual void setAttribute( const String& slot, VertexAttribute::Enum attribute ) = 0;
 
 	// Adds a named int uniform to the program.
 	virtual void setUniform( const String& slot, int value ) = 0;

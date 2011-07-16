@@ -84,7 +84,7 @@ protected:
 	// Converts the buffer enums to the equivalent GL ones.
 	int getGLBufferType();
 
-	uint id;
+	uint32 id;
 	
 	BufferUsage::Enum usage;
 	BufferAccess::Enum access;

@@ -47,13 +47,11 @@ struct RenderPipeline
 
 //-----------------------------------//
 
-class Camera;
+struct Adapter;
 class RenderBuffer;
 class BufferManager;
-class ResourceManager;
 class ProgramManager;
 class TextureManager;
-struct Adapter;
 
 typedef std::map<Light*, Texture*> ShadowTextureMap;
 
@@ -180,7 +178,7 @@ protected:
 	// Rendering pipeline.
 	RenderPipeline::Enum pipeline;
 
-	// Manages all the shaders.
+	// Manages all the textures.
 	TextureManager* textureManager;
 
 	// Manages all the shaders.

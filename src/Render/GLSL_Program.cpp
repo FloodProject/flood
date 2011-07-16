@@ -273,7 +273,7 @@ void GLSL_Program::bindDefaultAttributes()
 
 //-----------------------------------//
 
-void GLSL_Program::setAttribute( const std::string& name, VertexAttribute::Enum attr )
+void GLSL_Program::setAttribute( const String& name, VertexAttribute::Enum attr )
 {
 	glBindAttribLocation( id, attr, name.c_str() );
 
@@ -283,7 +283,7 @@ void GLSL_Program::setAttribute( const std::string& name, VertexAttribute::Enum 
 
 //-----------------------------------//
 
-void GLSL_Program::setUniform( const std::string& slot, int data )
+void GLSL_Program::setUniform( const String& slot, int data )
 {
 	GLint loc = glGetUniformLocation( id, slot.c_str() );
 	if( loc == -1 ) return;
@@ -292,7 +292,7 @@ void GLSL_Program::setUniform( const std::string& slot, int data )
 
 //-----------------------------------//
 
-void GLSL_Program::setUniform( const std::string& slot, float data )
+void GLSL_Program::setUniform( const String& slot, float data )
 {
 	GLint loc = glGetUniformLocation( id, slot.c_str() );
 	if( loc == -1 ) return;
@@ -301,7 +301,7 @@ void GLSL_Program::setUniform( const std::string& slot, float data )
 
 //-----------------------------------//
 
-void GLSL_Program::setUniform( const std::string& slot, const std::vector<Vector3>& vec )
+void GLSL_Program::setUniform( const String& slot, const std::vector<Vector3>& vec )
 {
 	assert( sizeof(vec[0]) == 3*sizeof(float) );
 	GLint loc = glGetUniformLocation( id, slot.c_str() );
@@ -311,7 +311,7 @@ void GLSL_Program::setUniform( const std::string& slot, const std::vector<Vector
 
 //-----------------------------------//
 
-void GLSL_Program::setUniform( const std::string& slot, const std::vector<Color>& vec )
+void GLSL_Program::setUniform( const String& slot, const std::vector<Color>& vec )
 {
 	assert( sizeof(vec[0]) == 4*sizeof(float) );
 
@@ -322,7 +322,7 @@ void GLSL_Program::setUniform( const std::string& slot, const std::vector<Color>
 
 //-----------------------------------//
 
-void GLSL_Program::setUniform( const std::string& slot, const Vector3& vec )
+void GLSL_Program::setUniform( const String& slot, const Vector3& vec )
 {
 	GLint loc = glGetUniformLocation( id, slot.c_str() );
 	if( loc == -1 ) return;
@@ -331,7 +331,7 @@ void GLSL_Program::setUniform( const std::string& slot, const Vector3& vec )
 
 //-----------------------------------//
 
-void GLSL_Program::setUniform( const std::string& slot, const EulerAngles& ang )
+void GLSL_Program::setUniform( const String& slot, const EulerAngles& ang )
 {
 	Vector3 vec( ang.x, ang.y, ang.z );
 	setUniform(slot, vec);
@@ -339,7 +339,7 @@ void GLSL_Program::setUniform( const std::string& slot, const EulerAngles& ang )
 
 //-----------------------------------//
 
-void GLSL_Program::setUniform( const std::string& slot, const Matrix4x3& matrix )
+void GLSL_Program::setUniform( const String& slot, const Matrix4x3& matrix )
 {
 	GLint loc = glGetUniformLocation( id, slot.c_str() );
 	if( loc == -1 ) return;
@@ -349,7 +349,7 @@ void GLSL_Program::setUniform( const std::string& slot, const Matrix4x3& matrix 
 
 //-----------------------------------//
 
-void GLSL_Program::setUniform( const std::string& slot, const Matrix4x4& matrix )
+void GLSL_Program::setUniform( const String& slot, const Matrix4x4& matrix )
 {
 	GLint loc = glGetUniformLocation( id, slot.c_str() );
 	if( loc == -1 ) return;
@@ -358,7 +358,7 @@ void GLSL_Program::setUniform( const std::string& slot, const Matrix4x4& matrix 
 
 //-----------------------------------//
 
-void GLSL_Program::setUniform( const std::string& slot, const std::vector<Matrix4x4>& vec )
+void GLSL_Program::setUniform( const String& slot, const std::vector<Matrix4x4>& vec )
 {
 	if( vec.empty() ) return;
 	GLint loc = glGetUniformLocation( id, slot.c_str() );

@@ -28,7 +28,6 @@ PluginManager::~PluginManager()
 	for( size_t i = 0; i < plugins.size(); i++ )
 	{
 		Plugin* plugin = plugins[i];
-		
 		disablePlugin(plugin);
 		Deallocate(plugin);
 	}
@@ -42,7 +41,6 @@ Plugin* PluginManager::getPlugin(const String& name)
 	{
 		Plugin* plugin = plugins[i];
 		const PluginMetadata& metadata = plugin->getMetadata();
-
 		if(metadata.name == name) return plugin;
 	}
 
@@ -56,9 +54,7 @@ Plugin* PluginManager::getPluginFromClass(const Class* klass)
 	for( size_t i = 0; i < plugins.size(); i++ )
 	{
 		Plugin* plugin = plugins[i];
-		
-		if(ClassGetType(plugin) == klass)
-			return plugin;
+		if(ClassGetType(plugin) == klass) return plugin;
 	}
 
 	return nullptr;
@@ -68,17 +64,23 @@ Plugin* PluginManager::getPluginFromClass(const Class* klass)
 
 static bool SortPluginsCallback(Plugin* a, Plugin* b)
 {
-	int pa = a->getMetadata().priority;
-	int pb = b->getMetadata().priority;
+	int priorityA = a->getMetadata().priority;
+	int priorityB = b->getMetadata().priority;
 
-	return pa < pb;
+	return priorityA < priorityB;
 }
 
-void PluginManager::scanPlugins()
+void PluginManager::sortPlugins(std::vector<Plugin*>& plugins)
+{
+	// Sort the plugins by priority.
+	std::sort(plugins.begin(), plugins.end(), SortPluginsCallback);
+}
+
+//-----------------------------------//
+
+void PluginManager::scanPlugins(std::vector<Plugin*>& plugins)
 {
 	Class* klass = ReflectionGetType(Plugin);
-
-	std::vector<Plugin*> plugins;
 
 	for( size_t i = 0; i < klass->childs.size(); i++ )
 	{
@@ -90,10 +92,12 @@ void PluginManager::scanPlugins()
 
 		plugins.push_back(plugin);
 	}
+}
 
-	// Sort the plugins by priority.
-	std::sort(plugins.begin(), plugins.end(), SortPluginsCallback);
+//-----------------------------------//
 
+void PluginManager::registerPlugins(const std::vector<Plugin*>& plugins)
+{
 	for( size_t i = 0; i < plugins.size(); i++ )
 	{
 		Plugin* plugin = plugins[i];

@@ -191,23 +191,34 @@ AudioBufferPtr AudioDevice::prepareBuffer(Sound* sound)
 
 bool AudioDevice::checkError()
 {
+#ifdef BUILD_DEBUG
 	error = alGetError();
 	return (error != AL_NO_ERROR);
+#else
+	return false;
+#endif
 }
 
 //-----------------------------------//
 
+#ifdef BUILD_DEBUG
 const ALchar* AudioDevice::getError()
 {
 	switch(error)
 	{
-	case AL_NO_ERROR: return "No error";
-	case AL_INVALID_ENUM: return "Invalid enum";
-	case AL_INVALID_VALUE: return "Invalid value";
-	case AL_INVALID_NAME: return "Invalid name";
-	default: return "Unknown error";
+	case AL_NO_ERROR:
+		return "No error";
+	case AL_INVALID_ENUM:
+		return "Invalid enum";
+	case AL_INVALID_VALUE:
+		return "Invalid value";
+	case AL_INVALID_NAME:
+		return "Invalid name";
+	default:
+		return "Unknown error";
 	}
 }
+#endif
 
 //-----------------------------------//
 

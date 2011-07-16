@@ -282,6 +282,8 @@
     <ClInclude Include="..\..\inc\vapor\paging\PageManager.h" />
     <ClInclude Include="..\..\inc\vapor\render\Device.h" />
     <ClInclude Include="..\..\inc\vapor\render\GL.h" />
+    <ClInclude Include="..\..\inc\vapor\render\GLSL_Program.h" />
+    <ClInclude Include="..\..\inc\vapor\render\GLSL_Shader.h" />
     <ClInclude Include="..\..\inc\vapor\render\RenderQueue.h" />
     <ClInclude Include="..\..\inc\vapor\render\Adapter.h" />
     <ClInclude Include="..\..\inc\vapor\render\Buffer.h" />

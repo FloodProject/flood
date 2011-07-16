@@ -205,6 +205,9 @@
     <Filter Include="Paging">
       <UniqueIdentifier>{262f6874-2b2d-4650-831a-89147d7e2944}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render\Shaders\GLSL">
+      <UniqueIdentifier>{e6088325-bd14-41bf-ac99-74e1475590ab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Engine\Sphere.cpp">
@@ -333,16 +336,10 @@
     <ClCompile Include="..\..\src\Render\Buffer.cpp">
       <Filter>Render\Buffers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Render\GLSL_Program.cpp">
-      <Filter>Render\Shaders</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Render\Program.cpp">
       <Filter>Render\Shaders</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Render\ProgramManager.cpp">
-      <Filter>Render\Shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Render\GLSL_Shader.cpp">
       <Filter>Render\Shaders</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Render\Target.cpp">
@@ -459,6 +456,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Scene\SceneLoader.cpp">
       <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Render\GLSL_Shader.cpp">
+      <Filter>Render\Shaders\GLSL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Render\GLSL_Program.cpp">
+      <Filter>Render\Shaders\GLSL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -728,6 +731,12 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\Scene\SceneLoader.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\render\GLSL_Program.h">
+      <Filter>Render\Shaders\GLSL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\render\GLSL_Shader.h">
+      <Filter>Render\Shaders\GLSL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
