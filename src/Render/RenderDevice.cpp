@@ -146,7 +146,7 @@ void RenderDevice::checkCapabilities(Adapter* adapter)
 	adapter->supportsAnisotropic = !! GLEW_EXT_texture_filter_anisotropic;
 	
 	glGetIntegerv( GL_MAX_TEXTURE_SIZE, (GLint*) &adapter->maxTextureSize );
-	glGetIntegerv( GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, (GLint*) &adapter->maxTextureUnits );
+	glGetIntegerv( GL_MAX_TEXTURE_IMAGE_UNITS, (GLint*) &adapter->maxTextureUnits );
 	glGetIntegerv( GL_MAX_VERTEX_ATTRIBS, (GLint*) &adapter->maxAttribs );
 
 	// get the name of the card
