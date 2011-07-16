@@ -14,7 +14,7 @@
 #include "TerrainPage.h"
 #include "TerrainOperation.h"
 #include "Core/Utilities.h"
-#include "Profiler.h"
+#include "Core/Profiler.h"
 #include "Editor.h"
 #include "EditorIcons.h"
 #include "Viewframe.h"
@@ -25,7 +25,7 @@
 #include "Input/Keyboard.h"
 #include "Input/Mouse.h"
 #include "Scene/Projector.h"
-#include "Engine.h"
+#include "Engine/Engine.h"
 
 #include "../Scene/SceneDocument.h"
 

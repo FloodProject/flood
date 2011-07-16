@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "Subsystem.h"
-#include "script/State.h"
+#include "Engine/Subsystem.h"
+#include "Script/State.h"
 #include "Resources/ResourceManager.h"
 
 #ifdef ENABLE_SCRIPTING_LUA

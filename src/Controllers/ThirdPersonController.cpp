@@ -7,17 +7,17 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "controllers/ThirdPersonController.h"
+#include "Controllers/ThirdPersonController.h"
 
-#include "Engine.h"
+#include "Engine/Engine.h"
 #include "Math/Helpers.h"
 #include "Scene/Entity.h"
 #include "Scene/Camera.h"
 #include "Scene/Scene.h"
 #include "Render/Device.h"
-#include "input/InputManager.h"
-#include "input/Keyboard.h"
-#include "input/Mouse.h"
+#include "Input/InputManager.h"
+#include "Input/Keyboard.h"
+#include "Input/Mouse.h"
 
 namespace vapor {
 

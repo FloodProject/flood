@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "WebStream.h"
+#include "Core/WebStream.h"
 #include "Core/Log.h"
 
 #ifdef ENABLE_NETWORKING_CURL

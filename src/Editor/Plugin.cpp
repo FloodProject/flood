@@ -9,7 +9,7 @@
 #include "Editor/API.h"
 #include "Plugin.h"
 #include "Editor.h"
-#include "Engine.h"
+#include "Engine/Engine.h"
 
 NAMESPACE_EDITOR_BEGIN
 

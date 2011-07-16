@@ -11,7 +11,7 @@
 #include "Core/API.h"
 #include "Engine/API.h"
 #include "Pipeline/API.h"
-#include "Headers.h"
+#include "Engine/Headers.h"
 
 #define VAPOR_EDITOR_NAME "vapor3D"
 

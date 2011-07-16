@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Profiler.h"
+#include "Core/Profiler.h"
 #include "Core/Log.h"
 
 NAMESPACE_BEGIN

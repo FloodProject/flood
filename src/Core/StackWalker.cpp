@@ -75,7 +75,7 @@
  **********************************************************************/
 
 #include "Core/API.h"
-#include "StackWalker.h"
+#include "Core/StackWalker.h"
 
 #ifdef PLATFORM_WINDOWS
 

@@ -70,7 +70,7 @@
 #include <Scene/Skydome.h>
 #include <Scene/Water.h>
 #include <Scene/Billboard.h>
-//#include <Scene/Projector.h>
+#include <Scene/Projector.h>
 #include <Scene/Particles.h>
 #include <Scene/Tags.h>
 
@@ -106,9 +106,9 @@
 // Controller-related Includes
 //---------------------------------------------------------------------//
 
-#include <controllers/FirstPersonController.h>
-#include <controllers/ThirdPersonController.h>
-#include <controllers/ScriptController.h>
+#include <Controllers/FirstPersonController.h>
+#include <Controllers/ThirdPersonController.h>
+#include <Controllers/ScriptController.h>
 
 //---------------------------------------------------------------------//
 // Input-related Includes
@@ -123,18 +123,18 @@
 // GUI-related Includes
 //---------------------------------------------------------------------//
 
-#include <gui/Overlay.h>
-#include <gui/Label.h>
-#include <gui/Window.h>
-#include <gui/Console.h>
+#include <GUI/Overlay.h>
+#include <GUI/Label.h>
+#include <GUI/Window.h>
+#include <GUI/Console.h>
 
 //---------------------------------------------------------------------//
 // Scripting-related Includes
 //---------------------------------------------------------------------//
 
-#include <script/ScriptManager.h>
-#include <script/State.h>
-#include <script/Script.h>
+#include <Script/ScriptManager.h>
+#include <Script/State.h>
+#include <Script/Script.h>
 
 //---------------------------------------------------------------------//
 // Physics-related Includes
@@ -151,18 +151,18 @@
 // Terrain-related Includes
 //---------------------------------------------------------------------//
 
-#include <terrain/Terrain.h>
-#include <terrain/Cell.h>
+#include <Terrain/Terrain.h>
+#include <Terrain/Cell.h>
 
 //---------------------------------------------------------------------//
 // Paging-related Includes
 //---------------------------------------------------------------------//
 
-#include <paging/PageManager.h>
-#include <paging/Page.h>
+#include <Paging/PageManager.h>
+#include <Paging/Page.h>
 
 //---------------------------------------------------------------------//
 // General Includes
 //-----------------------------------------------3----------------------//
 
-#include <Engine.h>
+#include <Engine/Engine.h>

@@ -7,7 +7,7 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "Engine.h"
+#include "Engine/Engine.h"
 
 #include "Core/Memory.h"
 #include "Resources/ResourceManager.h"
