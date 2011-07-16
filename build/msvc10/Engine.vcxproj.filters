@@ -25,45 +25,6 @@
     <Filter Include="Documentation">
       <UniqueIdentifier>{51e7dc25-e096-4041-8631-96a3a3723664}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene">
-      <UniqueIdentifier>{26761c37-c1c3-4873-8a4d-a0dfc1e6f306}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Camera">
-      <UniqueIdentifier>{a421919b-e4db-4cf5-b5e9-1dd401fd8ec9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Transform">
-      <UniqueIdentifier>{5cd0ac7a-8830-4c83-86d0-82203632fe51}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Group">
-      <UniqueIdentifier>{fddedf98-24e0-4877-8565-7bcf283293ae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Geometry">
-      <UniqueIdentifier>{c76d12af-8c25-4ef3-8489-dec030b88271}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Grid">
-      <UniqueIdentifier>{588d6b2d-b557-4731-aa52-ff77363f12d7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Audio">
-      <UniqueIdentifier>{6294862a-5f7d-482d-afd4-28e322b58011}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Light">
-      <UniqueIdentifier>{7ff37e6e-8672-4065-982a-808b1fedfa8e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Sky">
-      <UniqueIdentifier>{7f47cd01-9147-4617-a92a-3a7ad057a43d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Billboard">
-      <UniqueIdentifier>{1fa55b5f-7733-498a-ac52-050ed91dd021}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Model">
-      <UniqueIdentifier>{ff16ef29-51e7-468e-94b8-d23ad666fa02}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Water">
-      <UniqueIdentifier>{bacb9477-0bdf-4d6e-9cb2-720c570481f9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Projector">
-      <UniqueIdentifier>{690ffdfd-7b71-45d4-a2c5-520a8c8d1f9c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GUI">
       <UniqueIdentifier>{dd790635-b156-4510-8a1b-1ff2e320ca69}</UniqueIdentifier>
     </Filter>
@@ -81,9 +42,6 @@
     </Filter>
     <Filter Include="Input">
       <UniqueIdentifier>{e9485066-866d-46c2-857e-071f2ebe5fb2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Input\SFML">
-      <UniqueIdentifier>{708f1fe0-79c8-4cf4-ae0d-d4f1800a644e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Input\Devices">
       <UniqueIdentifier>{d6d54832-ce0d-4804-a610-a65b2a7b845d}</UniqueIdentifier>
@@ -130,27 +88,6 @@
     <Filter Include="Window\Win32">
       <UniqueIdentifier>{66e151a3-bb6f-4c2c-8ee8-d86397ae8ce1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Window\SFML">
-      <UniqueIdentifier>{c7712ee9-ceb6-451c-88d9-2a8c57ad04d2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Particles">
-      <UniqueIdentifier>{1fec75a6-f36b-4570-8399-2d734a372104}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Animation">
-      <UniqueIdentifier>{06d212d9-7f06-4d29-877b-f0411630af15}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Camera\Controllers">
-      <UniqueIdentifier>{8ad46e0f-bc40-4a66-9e73-9b15352ffcc9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Camera\Controllers\First Person">
-      <UniqueIdentifier>{bafe60a2-215a-4256-84e5-770711932132}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Camera\Controllers\Third Person">
-      <UniqueIdentifier>{72fd431a-6f92-456b-8242-bca90fedb714}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Controllers">
-      <UniqueIdentifier>{bc1a1ddb-1bf0-4377-8f7e-0f74420d2a85}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Subsystem">
       <UniqueIdentifier>{e55c350d-3789-4808-996c-837604d5ab65}</UniqueIdentifier>
     </Filter>
@@ -177,9 +114,6 @@
     </Filter>
     <Filter Include="Physics\Debug">
       <UniqueIdentifier>{f60903af-9239-442c-a5b2-f882e56026b7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Physics\Controller">
-      <UniqueIdentifier>{48f7100a-3da6-457f-b57c-000e6b130d22}</UniqueIdentifier>
     </Filter>
     <Filter Include="Physics\Character">
       <UniqueIdentifier>{86e0a566-d603-4458-ac03-2a1c5d15fa44}</UniqueIdentifier>
@@ -208,6 +142,66 @@
     <Filter Include="Render\Shaders\GLSL">
       <UniqueIdentifier>{e6088325-bd14-41bf-ac99-74e1475590ab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Controllers">
+      <UniqueIdentifier>{bc1a1ddb-1bf0-4377-8f7e-0f74420d2a85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\Camera">
+      <UniqueIdentifier>{7570cf88-8019-4fef-9759-4fe29ade4958}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Controller">
+      <UniqueIdentifier>{13e7e3ac-111b-4e6a-86f2-4fa53e5cf6e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{26761c37-c1c3-4873-8a4d-a0dfc1e6f306}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Camera">
+      <UniqueIdentifier>{a421919b-e4db-4cf5-b5e9-1dd401fd8ec9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Transform">
+      <UniqueIdentifier>{5cd0ac7a-8830-4c83-86d0-82203632fe51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Group">
+      <UniqueIdentifier>{fddedf98-24e0-4877-8565-7bcf283293ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Geometry">
+      <UniqueIdentifier>{c76d12af-8c25-4ef3-8489-dec030b88271}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Grid">
+      <UniqueIdentifier>{588d6b2d-b557-4731-aa52-ff77363f12d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Audio">
+      <UniqueIdentifier>{6294862a-5f7d-482d-afd4-28e322b58011}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Light">
+      <UniqueIdentifier>{7ff37e6e-8672-4065-982a-808b1fedfa8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Sky">
+      <UniqueIdentifier>{7f47cd01-9147-4617-a92a-3a7ad057a43d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Billboard">
+      <UniqueIdentifier>{1fa55b5f-7733-498a-ac52-050ed91dd021}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Model">
+      <UniqueIdentifier>{ff16ef29-51e7-468e-94b8-d23ad666fa02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Water">
+      <UniqueIdentifier>{bacb9477-0bdf-4d6e-9cb2-720c570481f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Projector">
+      <UniqueIdentifier>{690ffdfd-7b71-45d4-a2c5-520a8c8d1f9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Particles">
+      <UniqueIdentifier>{1fec75a6-f36b-4570-8399-2d734a372104}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Animation">
+      <UniqueIdentifier>{06d212d9-7f06-4d29-877b-f0411630af15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render\Window">
+      <UniqueIdentifier>{8222bb8c-141b-47a8-a2d7-44e1f6b32ce5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window\SFML">
+      <UniqueIdentifier>{aff24fa7-7736-48ed-97c3-682b2f3ae50a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Engine\Sphere.cpp">
@@ -221,9 +215,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\Window.cpp">
       <Filter>Window</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\SFML_Window.cpp">
-      <Filter>Window\SFML</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\FrameStatistics.cpp">
       <Filter>Render\Target</Filter>
@@ -239,9 +230,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\Console.cpp">
       <Filter>GUI\Console</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Engine\SFML_InputManager.cpp">
-      <Filter>Input\SFML</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Engine\ScriptManager.cpp">
       <Filter>Scripting</Filter>
@@ -290,9 +278,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Physics\CharacterController.cpp">
       <Filter>Physics\Character</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Physics\btKinematicController.cpp">
-      <Filter>Physics\Controller</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Physics\DebugDraw.cpp">
       <Filter>Physics\Debug</Filter>
@@ -423,15 +408,6 @@
     <ClCompile Include="..\..\src\Controllers\Controller.cpp">
       <Filter>Controllers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Controllers\CameraController.cpp">
-      <Filter>Scene\Camera\Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Controllers\FirstPersonController.cpp">
-      <Filter>Scene\Camera\Controllers\First Person</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Controllers\ThirdPersonController.cpp">
-      <Filter>Scene\Camera\Controllers\Third Person</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Controllers\ScriptController.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
@@ -463,280 +439,286 @@
     <ClCompile Include="..\..\src\Render\GLSL_Program.cpp">
       <Filter>Render\Shaders\GLSL</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Controllers\CameraController.cpp">
+      <Filter>Controllers\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Controllers\FirstPersonController.cpp">
+      <Filter>Controllers\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Controllers\ThirdPersonController.cpp">
+      <Filter>Controllers\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Physics\btKinematicController.cpp">
+      <Filter>Physics\Controller</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\inc\vapor\render\Device.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\GL.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\RenderQueue.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\Adapter.h">
-      <Filter>Render\Adapter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\Buffer.h">
-      <Filter>Render\Buffers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\IndexBuffer.h">
-      <Filter>Render\Buffers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\RenderBuffer.h">
-      <Filter>Render\Buffers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\VertexBuffer.h">
-      <Filter>Render\Buffers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\Sphere.h">
-      <Filter>Geometry\Sphere</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\Quad.h">
-      <Filter>Geometry\Quad</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\DebugGeometry.h">
-      <Filter>Geometry\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\Window.h">
-      <Filter>Window</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\Win32_Window.h">
-      <Filter>Window\Win32</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\SFML_Window.h">
-      <Filter>Window\SFML</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\FBO.h">
-      <Filter>Render\Target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\FrameStatistics.h">
-      <Filter>Render\Target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\Target.h">
-      <Filter>Render\Target</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\Program.h">
-      <Filter>Render\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\ProgramManager.h">
-      <Filter>Render\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\Texture.h">
-      <Filter>Render\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\TextureManager.h">
-      <Filter>Render\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\View.h">
-      <Filter>Render\View</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\Doxygen.h">
-      <Filter>Documentation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\scene\Component.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\scene\Scene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\scene\Tags.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\scene\Camera.h">
-      <Filter>Scene\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\scene\Transform.h">
-      <Filter>Scene\Transform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\scene\Group.h">
-      <Filter>Scene\Group</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\scene\Geometry.h">
-      <Filter>Scene\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\scene\Grid.h">
-      <Filter>Scene\Grid</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\scene\Listener.h">
-      <Filter>Scene\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\scene\Light.h">
-      <Filter>Scene\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\scene\Skydome.h">
-      <Filter>Scene\Sky</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\scene\Billboard.h">
-      <Filter>Scene\Billboard</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\scene\Model.h">
-      <Filter>Scene\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\scene\Water.h">
-      <Filter>Scene\Water</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\scene\Projector.h">
-      <Filter>Scene\Projector</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\Framework.h">
-      <Filter>Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\gui\Atlas.h">
-      <Filter>GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\gui\Label.h">
-      <Filter>GUI\Label</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\gui\Overlay.h">
-      <Filter>GUI\Overlay</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\gui\Console.h">
-      <Filter>GUI\Console</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\gui\Window.h">
-      <Filter>GUI\Window</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\input\InputManager.h">
-      <Filter>Input</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\input\SFML_InputManager.h">
-      <Filter>Input\SFML</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\input\Device.h">
-      <Filter>Input\Devices</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\input\Joystick.h">
-      <Filter>Input\Devices\Joystick</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\input\Mouse.h">
-      <Filter>Input\Devices\Mouse</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\input\MouseEvents.h">
-      <Filter>Input\Devices\Mouse</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\input\Keyboard.h">
-      <Filter>Input\Devices\Keyboard</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\input\KeyboardEvents.h">
-      <Filter>Input\Devices\Keyboard</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\input\InputMap.h">
-      <Filter>Input\Map</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\audio\Buffer.h">
-      <Filter>Audio\Buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\audio\Context.h">
-      <Filter>Audio\Context</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\audio\Source.h">
-      <Filter>Audio\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\audio\Device.h">
-      <Filter>Audio\Device</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\script\ScriptManager.h">
-      <Filter>Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\script\State.h">
-      <Filter>Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\terrain\Brush.h">
-      <Filter>Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\terrain\Cell.h">
-      <Filter>Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\terrain\Terrain.h">
-      <Filter>Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\physics\Convert.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\physics\Physics.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\physics\Shape.h">
-      <Filter>Physics\Shapes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\physics\BoxShape.h">
-      <Filter>Physics\Shapes\Box</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\physics\CapsuleShape.h">
-      <Filter>Physics\Shapes\Capsule</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\physics\MeshShape.h">
-      <Filter>Physics\Shapes\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\physics\Body.h">
-      <Filter>Physics\Dynamics</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\Engine\physics\MotionState.h">
       <Filter>Physics\Dynamics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\physics\DebugDraw.h">
-      <Filter>Physics\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\physics\btKinematicController.h">
-      <Filter>Physics\Controller</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\controllers\Controller.h">
-      <Filter>Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\controllers\FirstPersonController.h">
-      <Filter>Scene\Camera\Controllers\First Person</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\controllers\ThirdPersonController.h">
-      <Filter>Scene\Camera\Controllers\Third Person</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\physics\CharacterController.h">
-      <Filter>Physics\Character</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\Headers.h" />
-    <ClInclude Include="..\..\inc\vapor\scene\Entity.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\scene\Source.h">
-      <Filter>Scene\Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\scene\Particles.h">
-      <Filter>Scene\Particles</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\controllers\CameraController.h">
-      <Filter>Scene\Camera\Controllers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Scene\MeshBuilder.h">
       <Filter>Scene\Model</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\controllers\ScriptController.h">
-      <Filter>Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\Subsystem.h">
-      <Filter>Subsystem</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\Engine\API.h" />
-    <ClInclude Include="..\..\inc\vapor\Engine.h" />
-    <ClInclude Include="..\..\inc\vapor\render\Renderable.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\paging\Page.h">
-      <Filter>Paging</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\paging\PageManager.h">
-      <Filter>Paging</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\Cube.h">
-      <Filter>Geometry\Cube</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\Scene\SceneLoader.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\GLSL_Program.h">
+    <ClInclude Include="..\..\inc\Render\Device.h" />
+    <ClInclude Include="..\..\inc\Doxygen.h" />
+    <ClInclude Include="..\..\inc\Engine\Engine.h" />
+    <ClInclude Include="..\..\inc\Framework.h" />
+    <ClInclude Include="..\..\inc\Engine\Headers.h" />
+    <ClInclude Include="..\..\inc\Render\RenderContext.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Render\Adapter.h">
+      <Filter>Render\Adapter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\GUI\Atlas.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Audio\Buffer.h">
+      <Filter>Audio\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Audio\Context.h">
+      <Filter>Audio\Context</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Audio\Device.h">
+      <Filter>Audio\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Audio\Source.h">
+      <Filter>Audio\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Scene\Billboard.h">
+      <Filter>Scene\Billboard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Physics\Body.h">
+      <Filter>Physics\Dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Physics\CapsuleShape.h">
+      <Filter>Physics\Shapes\Capsule</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Physics\BoxShape.h">
+      <Filter>Physics\Shapes\Box</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Physics\MeshShape.h">
+      <Filter>Physics\Shapes\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Terrain\Brush.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Terrain\Cell.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Scene\Entity.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Scene\Component.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Scene\Scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Controllers\Controller.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Scene\Light.h">
+      <Filter>Scene\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Scene\Camera.h">
+      <Filter>Scene\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Controllers\CameraController.h">
+      <Filter>Controllers\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Controllers\FirstPersonController.h">
+      <Filter>Controllers\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Physics\CharacterController.h">
+      <Filter>Physics\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Scene\Water.h">
+      <Filter>Scene\Water</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Scene\Transform.h">
+      <Filter>Scene\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Scene\Model.h">
+      <Filter>Scene\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Scene\Grid.h">
+      <Filter>Scene\Grid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Scene\Projector.h">
+      <Filter>Scene\Projector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Scene\Listener.h">
+      <Filter>Scene\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Scene\Skydome.h">
+      <Filter>Scene\Sky</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Scene\Source.h">
+      <Filter>Scene\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Scene\Geometry.h">
+      <Filter>Scene\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Scene\Particles.h">
+      <Filter>Scene\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Physics\btKinematicController.h">
+      <Filter>Physics\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Render\Buffer.h">
+      <Filter>Render\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Render\IndexBuffer.h">
+      <Filter>Render\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Render\RenderBuffer.h">
+      <Filter>Render\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Render\VertexBuffer.h">
+      <Filter>Render\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Scene\Group.h">
+      <Filter>Scene\Group</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Input\InputManager.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Script\ScriptManager.h">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Controllers\ScriptController.h">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Script\State.h">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Physics\Convert.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Physics\Physics.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Input\InputMap.h">
+      <Filter>Input\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Input\Device.h">
+      <Filter>Input\Devices</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Input\Joystick.h">
+      <Filter>Input\Devices\Joystick</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Input\KeyboardEvents.h">
+      <Filter>Input\Devices\Keyboard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Input\Keyboard.h">
+      <Filter>Input\Devices\Keyboard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Input\MouseEvents.h">
+      <Filter>Input\Devices\Mouse</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Input\Mouse.h">
+      <Filter>Input\Devices\Mouse</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Render\FBO.h">
+      <Filter>Render\Target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Render\Target.h">
+      <Filter>Render\Target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Render\ProgramManager.h">
+      <Filter>Render\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Render\Program.h">
+      <Filter>Render\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Render\GLSL_Program.h">
       <Filter>Render\Shaders\GLSL</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\render\GLSL_Shader.h">
+    <ClInclude Include="..\..\inc\Render\GLSL_Shader.h">
       <Filter>Render\Shaders\GLSL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Render\TextureManager.h">
+      <Filter>Render\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Render\Texture.h">
+      <Filter>Render\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\GUI\Label.h">
+      <Filter>GUI\Label</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\GUI\Console.h">
+      <Filter>GUI\Console</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\GUI\Overlay.h">
+      <Filter>GUI\Overlay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\GUI\Window.h">
+      <Filter>GUI\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Render\Cube.h">
+      <Filter>Geometry\Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Render\DebugGeometry.h">
+      <Filter>Geometry\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Render\Sphere.h">
+      <Filter>Geometry\Sphere</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Render\Quad.h">
+      <Filter>Geometry\Quad</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Paging\Page.h">
+      <Filter>Paging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Paging\PageManager.h">
+      <Filter>Paging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Render\Renderable.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Render\RenderQueue.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Engine\Subsystem.h">
+      <Filter>Subsystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Physics\DebugDraw.h">
+      <Filter>Physics\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Terrain\Terrain.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Controllers\ThirdPersonController.h">
+      <Filter>Controllers\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Physics\Shape.h">
+      <Filter>Physics\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Scene\Tags.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Render\FrameStatistics.h">
+      <Filter>Render\Target</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Render\GL.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Render\View.h">
+      <Filter>Render\View</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Render\Window.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Render\Win32_Window.h">
+      <Filter>Window\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Render\SFML_Window.h">
+      <Filter>Window\SFML</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

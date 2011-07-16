@@ -197,7 +197,6 @@
     <ClCompile Include="..\..\src\Engine\Quad.cpp" />
     <ClCompile Include="..\..\src\Engine\DebugGeometry.cpp" />
     <ClCompile Include="..\..\src\Engine\Window.cpp" />
-    <ClCompile Include="..\..\src\Engine\SFML_Window.cpp" />
     <ClCompile Include="..\..\src\Engine\FrameStatistics.cpp" />
     <ClCompile Include="..\..\src\Engine\Engine.cpp">
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -209,7 +208,6 @@
     <ClCompile Include="..\..\src\Engine\Atlas.cpp" />
     <ClCompile Include="..\..\src\Engine\Label.cpp" />
     <ClCompile Include="..\..\src\Engine\Console.cpp" />
-    <ClCompile Include="..\..\src\Engine\SFML_InputManager.cpp" />
     <ClCompile Include="..\..\src\Engine\ScriptManager.cpp" />
     <ClCompile Include="..\..\src\Engine\State.cpp" />
     <ClCompile Include="..\..\interface\vapor_wrap.cxx">
@@ -276,12 +274,19 @@
     <ClCompile Include="..\..\src\Win32\WindowWin32.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\inc\Audio\Buffer.h" />
+    <ClInclude Include="..\..\inc\Audio\Context.h" />
+    <ClInclude Include="..\..\inc\Audio\Device.h" />
+    <ClInclude Include="..\..\inc\Audio\Source.h" />
     <ClInclude Include="..\..\inc\Engine\API.h" />
+    <ClInclude Include="..\..\inc\Physics\btKinematicController.h" />
+    <ClInclude Include="..\..\inc\Render\GL.h" />
+    <ClInclude Include="..\..\inc\Render\RenderContext.h" />
+    <ClInclude Include="..\..\inc\Render\SFML_Window.h" />
     <ClInclude Include="..\..\inc\Scene\SceneLoader.h" />
     <ClInclude Include="..\..\inc\Paging\Page.h" />
     <ClInclude Include="..\..\inc\Paging\PageManager.h" />
     <ClInclude Include="..\..\inc\Render\Device.h" />
-    <ClInclude Include="..\..\inc\Render\GL.h" />
     <ClInclude Include="..\..\inc\Render\GLSL_Program.h" />
     <ClInclude Include="..\..\inc\Render\GLSL_Shader.h" />
     <ClInclude Include="..\..\inc\Render\RenderQueue.h" />
@@ -297,7 +302,6 @@
     <ClInclude Include="..\..\inc\Render\DebugGeometry.h" />
     <ClInclude Include="..\..\inc\Render\Window.h" />
     <ClInclude Include="..\..\inc\Render\Win32_Window.h" />
-    <ClInclude Include="..\..\inc\Render\SFML_Window.h" />
     <ClInclude Include="..\..\inc\Render\FBO.h" />
     <ClInclude Include="..\..\inc\Render\FrameStatistics.h" />
     <ClInclude Include="..\..\inc\Render\Target.h" />
@@ -334,7 +338,6 @@
     <ClInclude Include="..\..\inc\GUI\Console.h" />
     <ClInclude Include="..\..\inc\GUI\Window.h" />
     <ClInclude Include="..\..\inc\Input\InputManager.h" />
-    <ClInclude Include="..\..\inc\Input\SFML_InputManager.h" />
     <ClInclude Include="..\..\inc\Input\Device.h" />
     <ClInclude Include="..\..\inc\Input\Joystick.h" />
     <ClInclude Include="..\..\inc\Input\Mouse.h" />
@@ -342,10 +345,6 @@
     <ClInclude Include="..\..\inc\Input\Keyboard.h" />
     <ClInclude Include="..\..\inc\Input\KeyboardEvents.h" />
     <ClInclude Include="..\..\inc\Input\InputMap.h" />
-    <ClInclude Include="..\..\inc\Audio\Buffer.h" />
-    <ClInclude Include="..\..\inc\Audio\Context.h" />
-    <ClInclude Include="..\..\inc\Audio\Source.h" />
-    <ClInclude Include="..\..\inc\Audio\Device.h" />
     <ClInclude Include="..\..\inc\Script\ScriptManager.h" />
     <ClInclude Include="..\..\inc\Script\State.h" />
     <ClInclude Include="..\..\inc\Engine\Subsystem.h" />
@@ -361,7 +360,6 @@
     <ClInclude Include="..\..\inc\Physics\Body.h" />
     <ClInclude Include="..\..\src\Engine\physics\MotionState.h" />
     <ClInclude Include="..\..\inc\Physics\DebugDraw.h" />
-    <ClInclude Include="..\..\inc\Physics\btKinematicController.h" />
     <ClInclude Include="..\..\inc\Physics\CharacterController.h" />
     <ClInclude Include="..\..\inc\Controllers\Controller.h" />
     <ClInclude Include="..\..\inc\Controllers\CameraController.h" />
