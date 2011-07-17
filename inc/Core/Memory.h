@@ -19,31 +19,39 @@ struct Allocator;
 API_CORE Allocator* AllocatorGetHeap();
 API_CORE Allocator* AllocatorGetStack();
 
-API_CORE Allocator* AllocatorCreateHeap( Allocator*, const char* group );
+API_CORE Allocator* AllocatorCreateHeap( Allocator* );
 API_CORE Allocator* AllocatorCreateStack( Allocator* );
 API_CORE Allocator* AllocatorCreatePool( Allocator*, int32 size );
 API_CORE Allocator* AllocatorCreatePage( Allocator* );
-API_CORE Allocator* AllocatorCreateTemporary( Allocator* );
+API_CORE Allocator* AllocatorCreateBump( Allocator*, int32 size );
+
+API_CORE void AllocatorDestroy( Allocator* );
+API_CORE void AllocatorSetGroup( Allocator*, const char* group );
+API_CORE void AllocatorDumpInfo();
 
 API_CORE void* AllocatorAllocate( Allocator*, int32 size, int32 align );
 API_CORE void  AllocatorDeallocate( const void* );
 
-API_CORE void AllocatorDestroy( Allocator* );
-API_CORE void AllocatorDumpInfo();
-
 typedef void* (*MemoryAllocateFunction)(Allocator*, int32 size, int32 align);
 typedef void  (*MemoryFreeFunction)(Allocator*, const void* object);
 
-struct Allocator
+struct API_CORE Allocator
 {
 	MemoryAllocateFunction allocate;
 	MemoryFreeFunction deallocate;
 	const char* group;
 };
 
-struct PoolAllocator : Allocator
+struct PoolAllocator : public Allocator
 {
 	uint8* current;
+};
+
+struct BumpAllocator : public Allocator
+{
+	uint8* start;
+	uint8* current;
+	uint32 size;
 };
 
 EXTERN_END

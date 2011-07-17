@@ -50,8 +50,7 @@ struct AllocationGroup
 
 struct AllocationMetadata
 {
-	AllocationMetadata()
-		: size(0), group(nullptr), allocator(nullptr)
+	AllocationMetadata() : size(0), group(nullptr), allocator(nullptr)
 	{ }
 
 	int32 size;
@@ -79,19 +78,24 @@ static void AllocatorTrackGroup(AllocationMetadata* metadata, bool alloc)
 	memoryGroups[metadata->group].freed += alloc ? 0 : metadata->size;
 }
 
+void AllocatorSetGroup( Allocator* alloc, const char* group )
+{
+	alloc->group = group;
+}
+
 //-----------------------------------//
 
 void AllocatorDumpInfo()
 {
-	MemoryGroupMap& memoryGroups = GetMemoryGroupMap();
-	if(memoryGroups.empty()) return;
+	MemoryGroupMap& groups = GetMemoryGroupMap();
+	if( groups.empty() ) return;
 
 	LogDebug("-----------------------------------------------------");
 	LogDebug("Memory stats");
 	LogDebug("-----------------------------------------------------");
 
 	MemoryGroupMap::iterator it;
-	for(it = memoryGroups.begin(); it != memoryGroups.end(); it++)
+	for(it = groups.begin(); it != groups.end(); it++)
 	{
 		const char* id = it->first;
 		AllocationGroup& group = it->second;
@@ -101,8 +105,6 @@ void AllocatorDumpInfo()
 
 		LogDebug( format.c_str() );
 	}
-
-	LogDebug("");
 }
 
 //-----------------------------------//
@@ -148,7 +150,7 @@ static void* HeapAllocate(Allocator* alloc, int32 size, int32 align)
 	int32 total_size = size + sizeof(AllocationMetadata);
 	void* instance = nullptr;
 	
-#if 0
+#if ALIGNED_MALLOC
 	if(align == 0)
 		instance = malloc(total_size);
 	else
@@ -177,19 +179,21 @@ static void HeapDellocate(Allocator* alloc, const void* p)
 	AllocatorTrackGroup((AllocationMetadata*) base, false);
 #endif
 
-	// _aligned_free
+#if ALIGNED_MALLOC
+	_aligned_free(base);
+#endif
+
 	free(base);
 }
 
 //-----------------------------------//
 
-Allocator* AllocatorCreateHeap( Allocator* alloc, const char* group )
+Allocator* AllocatorCreateHeap( Allocator* alloc )
 {
 	Allocator* heap = Allocate(Allocator, alloc);
 
 	heap->allocate = HeapAllocate;
 	heap->deallocate = HeapDellocate;
-	heap->group = group;
 
 	return heap;
 }
@@ -256,21 +260,20 @@ static void* PoolAllocate(Allocator* alloc, int32 size, int32 align)
 
 //-----------------------------------//
 
-static void PoolDellocate(Allocator* alloc, const void* p)
+static void PoolDeallocate(Allocator* alloc, const void* p)
 {
 }
 
 //-----------------------------------//
 
-Allocator* AllocatorCreatePool( Allocator* alloc,  int32 size )
+Allocator* AllocatorCreatePool( Allocator* alloc, int32 size )
 {
-	int32 total = sizeof(PoolAllocator) + size;
-	
-	PoolAllocator* pool = (PoolAllocator*) alloc->allocate(alloc, total, alignof(PoolAllocator));
+	PoolAllocator* pool = (PoolAllocator*) alloc->allocate(alloc,
+		sizeof(PoolAllocator) + size, alignof(PoolAllocator));
 
 	pool->current = (uint8*) pool + sizeof(PoolAllocator);  
 	pool->allocate = PoolAllocate;
-	pool->deallocate = PoolDellocate;
+	pool->deallocate = PoolDeallocate;
 
 	return pool;
 }
@@ -284,27 +287,48 @@ Allocator* AllocatorCreatePage( Allocator* alloc )
 
 //-----------------------------------//
 
-Allocator* AllocatorCreateTemporary( Allocator* alloc )
+static void* BumpAllocate(Allocator* alloc, int32 size, int32 align)
 {
-	return nullptr;
+	if(AllocatorSimulateLowMemory) return nullptr;
+
+	BumpAllocator* bump = (BumpAllocator*) alloc;
+
+	void* current = bump->current;
+
+	uint8* end = bump->start + bump->size;
+	size_t left = end - bump->current;
+
+	if((size_t)size > left) // Not enough space to allocate.
+		return nullptr;
+
+	bump->current += size;
+	return current;
+}
+
+//-----------------------------------//
+
+static void BumpDeallocate(Allocator* alloc, const void* p)
+{
+	BumpAllocator* bump = (BumpAllocator*) alloc;
+	bump->current = bump->start;
+}
+
+//-----------------------------------//
+
+Allocator* AllocatorCreateBump( Allocator* alloc, int32 size )
+{
+	BumpAllocator* bump = (BumpAllocator*) alloc->allocate(
+		alloc, sizeof(BumpAllocator) + size, alignof(BumpAllocator));
+
+	bump->start = (uint8*) bump + sizeof(BumpAllocator);
+	bump->current = bump->start;
+	bump->size = size;
+	bump->allocate = BumpAllocate;
+	bump->deallocate = BumpDeallocate;
+
+	return bump;
 }
 
 //-----------------------------------//
 
 NAMESPACE_END
-
-//-----------------------------------//
-
-// Global new / delete operator overrides.
-//using namespace vapor;
-//
-//void* operator new (size_t size)
-//{
-//	Allocator* alloc = AllocatorGetHeap();
-//	return alloc->allocate(alloc, size, 0);
-//}
-//
-//void operator delete (void *p)
-//{
-//	AllocatorDeallocate(p);
-//}
