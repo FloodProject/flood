@@ -306,9 +306,6 @@
     <ClInclude Include="..\..\inc\vapor\math\Frustum.h">
       <Filter>Math\Frustum</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\math\Color.h">
-      <Filter>Math\Color</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\vapor\math\Plane.h">
       <Filter>Math\Plane</Filter>
     </ClInclude>
@@ -317,9 +314,6 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\math\Ray.h">
       <Filter>Math\Ray</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\math\Quaternion.h">
-      <Filter>Math\Quaternion</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\math\BoundingBox.h">
       <Filter>Math\Bounding Volumes</Filter>
@@ -371,6 +365,12 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\FileWatcher.h">
       <Filter>Archive\Watcher</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Math\Quaternion.h">
+      <Filter>Math\Quaternion</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Math\Color.h">
+      <Filter>Math\Color</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

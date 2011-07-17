@@ -46,7 +46,8 @@ RenderablePtr buildBoundingRenderable( const BoundingBox& box )
 	mat->setDepthCompare( DepthCompare::LessOrEqual );
 	mat->setBackfaceCulling( false );
 
-	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Quads);
+	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap());
+	renderable->setPrimitiveType(PolygonType::Quads);
 	renderable->setVertexBuffer(vb);
 	renderable->setMaterial(materialHandle);
 	renderable->setPolygonMode( PolygonMode::Wireframe );
@@ -70,11 +71,12 @@ EntityPtr buildRay( const Ray& pickRay, const Vector3& outFar )
 
 	MaterialHandle material = MaterialCreate(AllocatorGetHeap(), "RayDebug");
 
-	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Lines);
+	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap());
+	renderable->setPrimitiveType(PolygonType::Lines);
 	renderable->setVertexBuffer(vb);
 	renderable->setMaterial(material);
 	
-	GeometryPtr geometry( Allocate(Geometry, AllocatorGetHeap(), renderable) );
+	GeometryPtr geometry = Allocate(Geometry, AllocatorGetHeap(), renderable);
 	
 	EntityPtr line( EntityCreate(AllocatorGetHeap()) );
 	line->setName("Line");
@@ -99,7 +101,8 @@ RenderablePtr buildFrustum( const Frustum& box )
 	Material* material = materialHandle.Resolve();
 	material->setBackfaceCulling( false );
 
-	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Quads);
+	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap());
+	renderable->setPrimitiveType(PolygonType::Quads);
 	renderable->setVertexBuffer(vb);
 	renderable->setMaterial(materialHandle);
 	renderable->setPolygonMode( PolygonMode::Wireframe );

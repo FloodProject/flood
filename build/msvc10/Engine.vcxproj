@@ -233,6 +233,7 @@
     <ClCompile Include="..\..\src\Physics\Shape.cpp" />
     <ClCompile Include="..\..\src\Render\Adapter.cpp" />
     <ClCompile Include="..\..\src\Render\Buffer.cpp" />
+    <ClCompile Include="..\..\src\Render\BufferManager.cpp" />
     <ClCompile Include="..\..\src\Render\FBO.cpp" />
     <ClCompile Include="..\..\src\Render\GL.cpp" />
     <ClCompile Include="..\..\src\Render\GLSL_Program.cpp" />
@@ -242,11 +243,13 @@
     <ClCompile Include="..\..\src\Render\ProgramManager.cpp" />
     <ClCompile Include="..\..\src\Render\Renderable.cpp" />
     <ClCompile Include="..\..\src\Render\RenderBuffer.cpp" />
+    <ClCompile Include="..\..\src\Render\RenderContext.cpp" />
     <ClCompile Include="..\..\src\Render\RenderDevice.cpp" />
     <ClCompile Include="..\..\src\Render\RenderQueue.cpp" />
     <ClCompile Include="..\..\src\Render\Target.cpp" />
     <ClCompile Include="..\..\src\Render\Texture.cpp" />
     <ClCompile Include="..\..\src\Render\TextureManager.cpp" />
+    <ClCompile Include="..\..\src\Render\UniformBuffer.cpp" />
     <ClCompile Include="..\..\src\Render\VertexBuffer.cpp" />
     <ClCompile Include="..\..\src\Render\View.cpp" />
     <ClCompile Include="..\..\src\Scene\Billboard.cpp" />
@@ -280,9 +283,13 @@
     <ClInclude Include="..\..\inc\Audio\Source.h" />
     <ClInclude Include="..\..\inc\Engine\API.h" />
     <ClInclude Include="..\..\inc\Physics\btKinematicController.h" />
+    <ClInclude Include="..\..\inc\Render\BufferManager.h" />
     <ClInclude Include="..\..\inc\Render\GL.h" />
+    <ClInclude Include="..\..\inc\Render\Program.h" />
+    <ClInclude Include="..\..\inc\Render\Render.h" />
     <ClInclude Include="..\..\inc\Render\RenderContext.h" />
     <ClInclude Include="..\..\inc\Render\SFML_Window.h" />
+    <ClInclude Include="..\..\inc\Render\UniformBuffer.h" />
     <ClInclude Include="..\..\inc\Scene\SceneLoader.h" />
     <ClInclude Include="..\..\inc\Paging\Page.h" />
     <ClInclude Include="..\..\inc\Paging\PageManager.h" />
@@ -305,7 +312,6 @@
     <ClInclude Include="..\..\inc\Render\FBO.h" />
     <ClInclude Include="..\..\inc\Render\FrameStatistics.h" />
     <ClInclude Include="..\..\inc\Render\Target.h" />
-    <ClInclude Include="..\..\inc\Render\Program.h" />
     <ClInclude Include="..\..\inc\Render\ProgramManager.h" />
     <ClInclude Include="..\..\inc\Render\Texture.h" />
     <ClInclude Include="..\..\inc\Render\TextureManager.h" />

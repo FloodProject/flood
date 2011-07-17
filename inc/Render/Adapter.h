@@ -22,13 +22,15 @@ namespace vapor {
  * we need different classes for different render devices. Hopefully not. :)
  */
 
-struct API_ENGINE Adapter
+class API_ENGINE Adapter
 {
+public:
+
 	String name;
 	String vendor;
-	String driver;
-	String shading;
-	String version;
+	String driverName;
+	String driverVersion;
+	String shadingLanguageVersion;
 
 	int32 maxTextureSize;
 	int32 maxTextureUnits;

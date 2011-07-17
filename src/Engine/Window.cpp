@@ -8,14 +8,15 @@
 
 #include "Engine/API.h"
 #include "Render/Window.h"
+#include "Render/Device.h"
+#include "Render/RenderContext.h"
 #include "Input/Keyboard.h"
 
 namespace vapor {
 
 //-----------------------------------//
 
-WindowSettings::WindowSettings( const uint16 width, const uint16 height, 
-	const std::string& title, const bool fullscreen )
+WindowSettings::WindowSettings( uint16 width, uint16 height, const String& title, bool fullscreen )
 	: Settings( width, height )
 	, title(title)
 	, fullScreen(fullscreen)
@@ -31,15 +32,11 @@ WindowSettings::WindowSettings( const uint16 width, const uint16 height,
 Window::Window(const WindowSettings& settings)
 	: settings(settings)
 {
-	LogInfo( "Creating %swindow (size: %dx%d, title: '%s', bits-per-pixel: %d)",
-		settings.fullScreen ? "fullscreen " : "",
-		settings.width, settings.height,
-		settings.title.c_str(), settings.bitsPerPixel );
+	LogInfo( "Creating window (size: %dx%d, title: '%s')",
+		settings.width, settings.height, settings.title.c_str() );
 
-	if( settings.handle )
-	{
-		LogInfo( "External window handle found" );
-	}
+	context = Allocate(RenderContext, GetRenderAllocator());
+	context->mainTarget = this;
 }
 
 //-----------------------------------//
@@ -63,14 +60,12 @@ void Window::handleWindowFocus( bool focusLost )
 {
 	if( focusLost )
 	{
-		// Workaround for resetting the pressed keys when the window
-		// loses focus. This could lead to problems when the user
-		// unfocus the main control. In that case the key events
-		// might not be properly handled by the input implementation.
+		// Workaround for resetting the pressed keys when the window loses focus.
+		// This could lead to problems when the user unfocus the main control.
+		// In that case the key events might not be properly handled.
+		
 		Keyboard* keyboard = GetInputManager()->getKeyboard();
-
-		if(keyboard)
-			keyboard->resetKeys();
+		if(keyboard) keyboard->resetKeys();
 	}
 
 	onWindowFocusChange( focusLost );

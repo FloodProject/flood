@@ -15,7 +15,9 @@
 #include "Math/EulerAngles.h"
 #include "Math/Color.h"
 
-namespace vapor {
+FWD_DECL_INTRUSIVE( UniformBuffer )
+
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -26,7 +28,7 @@ namespace vapor {
  * engine parameters bound, like world matrices and lighting information.
  */
 
-class VAPOR_API Program : public ReferenceCounted
+class API_RENDER Program : public ReferenceCounted
 {
 public:
 
@@ -64,42 +66,12 @@ public:
 
 	// Gets the fragment shader in the program.
 	GETTER(FragmentShader, const RefPtr<Shader>&, fragment)
-	
-	// Gets the geometry shader in the program.
-	//GETTER(GeometryShader, const ShaderPtr&, geometry)
 
-	// Adds a named parameter to the program.
+	// Sets the attribute in the program.
 	virtual void setAttribute( const String& slot, VertexAttribute::Enum attribute ) = 0;
 
-	// Adds a named int uniform to the program.
-	virtual void setUniform( const String& slot, int value ) = 0;
-
-	// Adds a named float uniform to the program.
-	virtual void setUniform( const String& slot, float value ) = 0;
-
-	// Adds a named float array uniform to the program.
-	//virtual void setUniform( const String& slot, const std::vector<float>& vec ) = 0;
-
-	// Adds a named Vector3 array uniform to the program.
-	virtual void setUniform( const String& slot, const std::vector<Vector3>& vec ) = 0;
-
-	// Adds a named color array uniform to the program.
-	virtual void setUniform( const String& slot, const std::vector<Color>& vec ) = 0;
-
-	// Adds a named vector uniform to the program.
-	virtual void setUniform( const String& slot, const Vector3& vec ) = 0;
-
-	// Adds a named angles vector uniform to the program.
-	virtual void setUniform( const String& slot, const EulerAngles& vec ) = 0;
-
-	// Adds a named matrix uniform to the program.
-	virtual void setUniform( const String& slot, const Matrix4x3& mat ) = 0;
-
-	// Adds a named 4x4 matrix uniform to the program.
-	virtual void setUniform( const String& slot, const Matrix4x4& mat ) = 0;
-
-	// Adds a named 4x4 matrix vector uniform to the program.
-	virtual void setUniform( const String& slot, const std::vector<Matrix4x4>& vec ) = 0;
+	// Sets the uniforms in the program.
+	virtual void setUniforms( const UniformBufferPtr& ub ) = 0;
 
 protected:
 
@@ -116,4 +88,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Program );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

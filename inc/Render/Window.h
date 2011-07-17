@@ -12,20 +12,20 @@
 #include "Render/Target.h"
 #include "Input/InputManager.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
 typedef void WindowHandle;
 
-class VAPOR_API WindowSettings : public Settings
+class API_ENGINE WindowSettings : public Settings
 {
 public:
 
-	WindowSettings( const uint16 width = 640, const uint16 height = 480,
-		const std::string& title = "Untitled", const bool fullscreen = false );
+	WindowSettings( uint16 width = 640, uint16 height = 480,
+		const String& title = "Untitled", bool fullscreen = false );
 
-	std::string title;
+	String title;
 	bool fullScreen;
 	uint16 bitsPerPixel;
 	uint16 depthBits;
@@ -44,17 +44,17 @@ public:
  * be slighty different, so some methods might not make much sense. 
  */
 
-class VAPOR_API Window : public RenderTarget
+class API_ENGINE Window : public RenderTarget
 {
 public:
 
 	Window (const WindowSettings& settings);
 
 	// Updates the window content.
-	virtual void update() {}
+	virtual void update() OVERRIDE {}
 
 	// Sets this rendering target as the current.
-	virtual void makeCurrent() {}
+	virtual void makeCurrent() OVERRIDE {}
 
 	// Shows/hides the window.
 	virtual void show( bool hide = false ) {}
@@ -63,7 +63,7 @@ public:
 	virtual bool pumpEvents() { return true; }
 
 	// Sets the title of the window.
-	virtual void setTitle (const std::string& title) {}
+	virtual void setTitle (const String& title) {}
 
 	// Sets the visibility of the mouse cursor.
 	virtual void setCursorVisible( bool state ) {}
@@ -110,4 +110,4 @@ protected:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

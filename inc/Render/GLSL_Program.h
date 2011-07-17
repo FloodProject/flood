@@ -15,7 +15,7 @@
 
 FWD_DECL_INTRUSIVE(GLSL_Text)
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 		
@@ -23,7 +23,7 @@ namespace vapor {
  * GLSL Program.
  */
 
-class VAPOR_API GLSL_Program : public Program
+class API_RENDER GLSL_Program : public Program
 {
 public:
 
@@ -31,58 +31,31 @@ public:
 	virtual ~GLSL_Program();
 
 	// Creates the program.
-	virtual bool create();
+	virtual bool create() OVERRIDE;
 
 	// Links the program.
-	virtual bool link();
+	virtual bool link() OVERRIDE;
 
 	// Binds the program.
-	virtual void bind();
+	virtual void bind() OVERRIDE;
 
 	// Unbinds the program.
-	virtual void unbind();
+	virtual void unbind() OVERRIDE;
 
 	// Creates the shaders and adds them to the program.
-	virtual void createShaders();
+	virtual void createShaders() OVERRIDE;
 
 	// Updates the shader's text with the program text.
-	virtual void updateShadersText();
+	virtual void updateShadersText() OVERRIDE;
 
 	// Gets/sets the resource text that backs this shader.
 	ACESSOR(Text, const GLSL_TextPtr&, text)
 
 	// Adds a parameter to the shader.
-	virtual void setAttribute( const String& slot, VertexAttribute::Enum attr );
+	virtual void setAttribute( const String& slot, VertexAttribute::Enum attr ) OVERRIDE;
 
-	// Adds a uniform to the shader.
-	virtual void setUniform( const String& slot, int data );
-
-	// Adds a named float uniform to the program.
-	virtual void setUniform( const String& slot, float value );
-
-	// Adds a named float array uniform to the program.
-	//virtual void setUniform( const String& slot, const std::vector<float> vec ) = 0;
-
-	// Adds a named Vector3 array uniform to the program.
-	virtual void setUniform( const String& slot, const std::vector<Vector3>& vec );
-
-	// Adds a named color array uniform to the program.
-	virtual void setUniform( const String& slot, const std::vector<Color>& vec );
-
-	// Adds a named vector uniform to the program.
-	virtual void setUniform( const String& slot, const Vector3& vec );
-
-	// Adds a named angles vector uniform to the program.
-	virtual void setUniform( const String& slot, const EulerAngles& vec );
-
-	// Adds a named matrix uniform to the program.
-	virtual void setUniform( const String& slot, const Matrix4x3& );
-
-	// Adds a named 4x4 matrix uniform to the program.
-	virtual void setUniform( const String& slot, const Matrix4x4& );
-
-	// Adds a named 4x4 matrix vector uniform to the program.
-	virtual void setUniform( const String& slot, const std::vector<Matrix4x4>& vec );
+	// Sets the uniforms in the program.
+	virtual void setUniforms( const UniformBufferPtr& ub ) OVERRIDE;
 
 protected:
 
@@ -116,4 +89,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( GLSL_Program );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

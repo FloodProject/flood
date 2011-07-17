@@ -46,10 +46,18 @@
 	#define API_ENGINE
 #endif
 
+#define API_RENDER API_ENGINE
 #define API_SCENE API_ENGINE
 #define API_AUDIO API_ENGINE
 
 #define VAPOR_API API_ENGINE
+
+//---------------------------------------------------------------------//
+// API Namespaces
+//---------------------------------------------------------------------//
+
+#define NAMESPACE_ENGINE_BEGIN namespace vapor {
+#define NAMESPACE_ENGINE_END }
 
 //---------------------------------------------------------------------//
 // Pointer wrappers

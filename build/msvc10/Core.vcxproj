@@ -248,11 +248,12 @@
     <ClInclude Include="..\..\inc\Core\Timer.h" />
     <ClInclude Include="..\..\inc\Core\Utilities.h" />
     <ClInclude Include="..\..\inc\Core\WebServer.h" />
+    <ClInclude Include="..\..\inc\Math\Color.h" />
+    <ClInclude Include="..\..\inc\Math\Quaternion.h" />
     <ClInclude Include="..\..\inc\Math\Vector.h" />
     <ClInclude Include="..\..\inc\vapor\Chunk.h" />
     <ClInclude Include="..\..\inc\vapor\math\BoundingBox.h" />
     <ClInclude Include="..\..\inc\vapor\math\BoundingSphere.h" />
-    <ClInclude Include="..\..\inc\vapor\math\Color.h" />
     <ClInclude Include="..\..\inc\vapor\math\EulerAngles.h" />
     <ClInclude Include="..\..\inc\vapor\math\Frustum.h" />
     <ClInclude Include="..\..\inc\vapor\math\Hash.h" />
@@ -261,7 +262,6 @@
     <ClInclude Include="..\..\inc\vapor\math\Matrix4x4.h" />
     <ClInclude Include="..\..\inc\vapor\math\Noise.h" />
     <ClInclude Include="..\..\inc\vapor\math\Plane.h" />
-    <ClInclude Include="..\..\inc\vapor\math\Quaternion.h" />
     <ClInclude Include="..\..\inc\vapor\math\Ray.h" />
     <ClInclude Include="..\..\inc\vapor\Profiler.h" />
     <ClInclude Include="..\..\inc\vapor\StackWalker.h" />

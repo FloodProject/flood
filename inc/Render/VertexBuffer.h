@@ -12,7 +12,7 @@
 #include "Math/Color.h"
 #include "Render/Buffer.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -20,14 +20,13 @@ namespace vapor {
  * Attribute of a vertex element.
  */
 
-struct VertexAttribute
+struct API_RENDER VertexAttribute
 {
 	enum Enum
 	{
 		Position = 0,
 		Normal = 2,
 		Color = 3,
-		//SecondaryColor = 4,
 		BoneIndex = 4,
 		FogCoord = 5,
 		TexCoord0 = 6,
@@ -43,7 +42,7 @@ struct VertexAttribute
 
 //-----------------------------------//
 
-struct Attribute
+struct API_RENDER Attribute
 {
 	Attribute() {}
 
@@ -70,7 +69,7 @@ typedef std::pair<const VertexAttribute::Enum, Attribute> AttributeMapPair;
  * vertex you will have to duplicate that normal for each vertex for now.
  */
 
-class VAPOR_API VertexBuffer : public Buffer
+class API_RENDER VertexBuffer : public Buffer
 {
 public:
 
@@ -155,10 +154,10 @@ private:
 	bool built;
 };
 
-//API_ENGINE VertexBuffer* VertexBufferCreate();
+//API_RENDER VertexBuffer* VertexBufferCreate();
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( VertexBuffer );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

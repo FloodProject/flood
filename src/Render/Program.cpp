@@ -9,7 +9,7 @@
 #include "Engine/API.h"
 #include "Render/Program.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -43,4 +43,4 @@ bool Program::isLinked() const
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

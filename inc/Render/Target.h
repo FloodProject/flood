@@ -10,14 +10,15 @@
 
 #include "Core/Event.h"
 #include "Math/Vector.h"
+#include "Render/RenderContext.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
 class RenderView;
 
-class API_ENGINE Settings
+class API_RENDER Settings
 {
 public:
 
@@ -39,6 +40,8 @@ public:
 
 //-----------------------------------//
 
+class RenderContext;
+
 /**
  * Render targets are surfaces where the rendered images can be stored
  * and/or displayed. The most common use is windows, but there are also
@@ -46,7 +49,7 @@ public:
  * Each render target mantains a list of viewports.
  */
 
-class API_ENGINE RenderTarget
+class API_RENDER RenderTarget
 {
 	DECLARE_UNCOPYABLE(RenderTarget)
 
@@ -67,7 +70,10 @@ public:
 	// Gets the settings of this render target.
 	virtual const Settings& getSettings() const = 0;
 
-	// Gets the list of viewports associated with the render target.
+	// Gets the context associated with the target.
+	GETTER(Context, RenderContextPtr, context)
+
+	// Gets the list of views associated with the target.
 	GETTER(Views, const std::vector<RenderView*>&, views)
 
 	// Event fired when the target gets resized.
@@ -75,9 +81,10 @@ public:
 
 protected:
 
+	RenderContextPtr context;
 	std::vector<RenderView*> views;
 };
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_ENGINE_END

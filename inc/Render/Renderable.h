@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vaporEngine by triton (2008-2010)
+*  vapor3D Engine © (2008-2011)
 *
 *	<http://www.vapor3d.org>
 *
@@ -12,6 +12,7 @@
 #include "Resources/Material.h"
 #include "Render/VertexBuffer.h"
 #include "Render/IndexBuffer.h"
+#include "Render/UniformBuffer.h"
 
 FWD_DECL_INTRUSIVE(Material)
 
@@ -30,7 +31,7 @@ FWD_DECL_INTRUSIVE(Material)
 #define GL_LINE 0x1B01
 #define GL_FILL 0x1B02
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -102,12 +103,11 @@ class RenderDevice;
  * should have a material and a vertex buffer.
  */
 
-class VAPOR_API Renderable : public ReferenceCounted
+class API_RENDER Renderable : public ReferenceCounted
 {
 public:
 
 	Renderable();
-    Renderable( PolygonType::Enum );
     
 	// Binds the state needed to draw the renderable.
 	bool bind();
@@ -129,6 +129,9 @@ public:
    
     // Gets/sets the index buffer.
 	ACESSOR(IndexBuffer, IndexBufferPtr, ib)
+
+    // Gets/sets the index buffer.
+	ACESSOR(UniformBuffer, UniformBufferPtr, ub)
 
     // Gets/sets the material.
     ACESSOR(Material, MaterialHandle, material)
@@ -159,11 +162,14 @@ protected:
 	// Polygon mode.
 	PolygonMode::Enum mode;
 
-	// Vertex buffer with all the vertices.
+	// Vertex buffer with the vertex data.
     VertexBufferPtr vb;
 
-	// Index buffer with all the indices.
+	// Index buffer with the index data.
     IndexBufferPtr ib;
+
+	// Uniform buffer with shader constants.
+	UniformBufferPtr ub;
     
 	// Material of this renderable.
 	MaterialHandle material;
@@ -175,4 +181,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Renderable );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

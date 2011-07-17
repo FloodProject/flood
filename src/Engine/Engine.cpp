@@ -14,6 +14,7 @@
 #include "Resources/ResourceLoader.h"
 #include "Render/Texture.h"
 #include "Render/Device.h"
+#include "Render/Render.h"
 #include "Input/InputManager.h"
 #include "Audio/Device.h"
 #include "Script/ScriptManager.h"
@@ -22,9 +23,7 @@
 #include "Physics/Physics.h"
 #include "Network/Network.h"
 
-#include <ctime>
-
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -50,7 +49,7 @@ Engine::Engine()
 
 Engine::~Engine()
 {
-	scene = nullptr;
+	scene.reset();
 
 	for( size_t i = 0; i < subsystems.size(); i++ )
 	{
@@ -58,25 +57,20 @@ Engine::~Engine()
 		delete system;
 	}
 	
-	delete inputManager;
-	delete physicsManager;
-	delete scriptManager;
-	delete renderDevice;
-	delete resourceManager;
-	delete audioDevice;
+	Deallocate(inputManager);
+	Deallocate(physicsManager);
+	Deallocate(scriptManager);
+	Deallocate(renderDevice);
+	Deallocate(resourceManager);
+	Deallocate(audioDevice);
 
+	RenderDeinitialize();
+	ResourcesDeinitialize();
 	NetworkDeinitialize();
 
 	TaskPoolDestroy(taskPool);
 	StreamDestroy(stream);
 	LogDestroy(log);
-}
-
-//-----------------------------------//
-
-void Engine::create(const String& app)
-{
-	this->app = app;
 }
 
 //-----------------------------------//
@@ -103,6 +97,10 @@ void Engine::init( bool createWindow )
 	// Creates the task system.
 	taskPool = TaskPoolCreate( AllocatorGetHeap(), 2 );
 
+	NetworkInitialize();
+	ResourcesInitialize();
+	RenderInitialize();
+
 	// Creates the resource manager.
 	resourceManager = new ResourceManager();
 	//resourceManager->setFileWatcher( fileSystem->getFileWatcher() );
@@ -122,12 +120,10 @@ void Engine::init( bool createWindow )
 	scriptManager = new ScriptManager();
 #endif
 
-#ifdef VAPOR_PHYSICS_BULLET
+#ifdef ENABLE_PHYSICS_BULLET
 	// Creates the physics manager.
 	physicsManager = new PhysicsManager();
 #endif
-
-	NetworkInitialize();
 }
 
 //-----------------------------------//
@@ -142,7 +138,6 @@ void Engine::setScene(const ScenePtr& scene)
 void Engine::setupLogger()
 {
 	stream = StreamCreateFromFile( AllocatorGetHeap(), "Log.html", StreamMode::Write);
-	
 	log = LogCreate( AllocatorGetHeap() );
 }
 
@@ -208,4 +203,4 @@ InputManager* Engine::getInputManager() const
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_ENGINE_END

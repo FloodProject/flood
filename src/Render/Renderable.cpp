@@ -8,6 +8,7 @@
 
 #include "Engine/API.h"
 #include "Render/Renderable.h"
+#include "Render/Device.h"
 #include "Render/GL.h"
 
 NAMESPACE_BEGIN
@@ -27,16 +28,9 @@ Renderable::Renderable()
 	, mode( PolygonMode::Solid )
 	, stage( RenderLayer::Normal )
 	, priority(0)
-{ }
-
-//-----------------------------------//
-
-Renderable::Renderable( PolygonType::Enum type )
-	: type( type )
-	, mode( PolygonMode::Solid )
-	, stage( RenderLayer::Normal )
-	, priority(0)
-{ }
+{
+	ub = Allocate(UniformBuffer, GetRenderAllocator());
+}
 
 //-----------------------------------//
 

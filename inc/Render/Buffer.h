@@ -61,7 +61,7 @@ struct BufferAccess
  * depending on the usage and type flags that they are  created with. 
  */
 
-class VAPOR_API Buffer : public ReferenceCounted
+class API_RENDER Buffer : public ReferenceCounted
 {
 public:
 
@@ -89,6 +89,8 @@ protected:
 	BufferUsage::Enum usage;
 	BufferAccess::Enum access;
 };
+
+TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Buffer );
 
 //-----------------------------------//
 

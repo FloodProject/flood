@@ -13,6 +13,7 @@
 #include "Render/GLSL_Program.h"
 #include "Resources/GLSL_Text.h"
 #include "Render/GL.h"
+#include "Render/UniformBuffer.h"
 #include "Core/Utilities.h"
 #include "Core/ReferenceCount.h"
 
@@ -132,11 +133,12 @@ bool GLSL_Program::attachShaders()
 
 		if( shader->isCompiled() ) continue;
 		
-		Path base = PathGetBase(text->getPath());
+		Path base = PathGetFile(text->getPath());
 
 		if( !shader->compile() )
 		{
-			LogError( "Error compiling shader '%s': %s", base.c_str(), shader->getLog().c_str() );
+			LogError( "Error compiling shader '%s': %s",
+				base.c_str(), shader->getLog().c_str() );
 
 			linkError = true;
 			linked = false;
@@ -283,87 +285,48 @@ void GLSL_Program::setAttribute( const String& name, VertexAttribute::Enum attr 
 
 //-----------------------------------//
 
-void GLSL_Program::setUniform( const String& slot, int data )
+void GLSL_Program::setUniforms( const UniformBufferPtr& ub )
 {
-	GLint loc = glGetUniformLocation( id, slot.c_str() );
-	if( loc == -1 ) return;
-	glUniform1i( loc, data );
-}
+	UniformBufferElements::iterator it;
+	
+	for( it = ub->elements.begin(); it != ub->elements.end(); it++ )
+	{
+		UniformBufferElement& element = **it;
 
-//-----------------------------------//
+		GLint location = glGetUniformLocation( id, element.name );
+		GLint count = element.count;
 
-void GLSL_Program::setUniform( const String& slot, float data )
-{
-	GLint loc = glGetUniformLocation( id, slot.c_str() );
-	if( loc == -1 ) return;
-	glUniform1f( loc, data );
-}
+		if( location == -1 )
+			continue;
 
-//-----------------------------------//
-
-void GLSL_Program::setUniform( const String& slot, const std::vector<Vector3>& vec )
-{
-	assert( sizeof(vec[0]) == 3*sizeof(float) );
-	GLint loc = glGetUniformLocation( id, slot.c_str() );
-	if( loc == -1 ) return;
-	glUniform3fv( loc, vec.size(), reinterpret_cast<const float*>(&vec[0]) );
-}
-
-//-----------------------------------//
-
-void GLSL_Program::setUniform( const String& slot, const std::vector<Color>& vec )
-{
-	assert( sizeof(vec[0]) == 4*sizeof(float) );
-
-	GLint loc = glGetUniformLocation( id, slot.c_str() );
-	if( loc == -1 ) return;
-	glUniform4fv( loc, vec.size(), reinterpret_cast<const float*>(&vec[0]) );
-}
-
-//-----------------------------------//
-
-void GLSL_Program::setUniform( const String& slot, const Vector3& vec )
-{
-	GLint loc = glGetUniformLocation( id, slot.c_str() );
-	if( loc == -1 ) return;
-	glUniform3f( loc, vec.x, vec.y, vec.z );
-}
-
-//-----------------------------------//
-
-void GLSL_Program::setUniform( const String& slot, const EulerAngles& ang )
-{
-	Vector3 vec( ang.x, ang.y, ang.z );
-	setUniform(slot, vec);
-}
-
-//-----------------------------------//
-
-void GLSL_Program::setUniform( const String& slot, const Matrix4x3& matrix )
-{
-	GLint loc = glGetUniformLocation( id, slot.c_str() );
-	if( loc == -1 ) return;
-	Matrix4x4 mat( matrix );
-	glUniformMatrix4fv( loc, 1, false, &mat.m11 );
-}
-
-//-----------------------------------//
-
-void GLSL_Program::setUniform( const String& slot, const Matrix4x4& matrix )
-{
-	GLint loc = glGetUniformLocation( id, slot.c_str() );
-	if( loc == -1 ) return;
-	glUniformMatrix4fv( loc, 1, false, &matrix.m11 );
-}
-
-//-----------------------------------//
-
-void GLSL_Program::setUniform( const String& slot, const std::vector<Matrix4x4>& vec )
-{
-	if( vec.empty() ) return;
-	GLint loc = glGetUniformLocation( id, slot.c_str() );
-	if( loc == -1 ) return;
-	glUniformMatrix4fv( loc, vec.size(), false, &(vec[0].m11) );
+		switch(element.type)
+		{
+		case UniformDataType::Scalar_F:
+			glUniform1fv(location, count, (GLfloat*) &element.data);
+			break;
+		case UniformDataType::Scalar_I:
+			glUniform1iv(location, count, (GLint*) &element.data);
+			break;
+		case UniformDataType::Vector2_F:
+			glUniform2fv(location, count, (GLfloat*) &element.data);
+			break;
+		case UniformDataType::Vector3_F:
+			glUniform3fv(location, count, (GLfloat*) &element.data);
+			break;
+		case UniformDataType::Matrix3_F:
+			glUniformMatrix3fv(location, count, false, (GLfloat*) &element.data);
+			break;
+		case UniformDataType::Matrix4_F:
+			glUniformMatrix4fv(location, count, false, (GLfloat*) &element.data);
+			break;
+		case UniformDataType::Matrix4x3_F:
+			glUniformMatrix4x3fv(location, count, false, (GLfloat*) &element.data);
+			break;
+		default:
+			LogWarn("Uniform type is not supported");
+			continue;
+		}
+	}
 }
 
 //-----------------------------------//

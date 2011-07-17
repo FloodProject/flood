@@ -7,15 +7,18 @@
 ************************************************************************/
 
 #include "Engine/API.h"
+#include "Render/Device.h"
 #include "Render/Target.h"
 #include "Render/View.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
 RenderTarget::RenderTarget()
-{ }
+	: context(nullptr)
+{
+}
 
 //-----------------------------------//
 
@@ -32,9 +35,8 @@ RenderTarget::~RenderTarget()
 
 RenderView* RenderTarget::createView()
 {
-	RenderView* view = Allocate(RenderView, AllocatorGetHeap());
+	RenderView* view = Allocate(RenderView, GetRenderAllocator());
 	view->setRenderTarget(this);
-
 	views.push_back( view );
 	return view;
 }
@@ -48,4 +50,4 @@ Vector2i Settings::getSize() const
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

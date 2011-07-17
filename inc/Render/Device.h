@@ -15,12 +15,13 @@
 #include "Math/Vector.h"
 #include "Math/Matrix4x3.h"
 
+#include "Render/Render.h"
 #include "Render/Window.h"
 #include "Render/Target.h"
 #include "Render/Renderable.h"
 #include "Render/RenderQueue.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -47,11 +48,8 @@ struct RenderPipeline
 
 //-----------------------------------//
 
-struct Adapter;
 class RenderBuffer;
-class BufferManager;
-class ProgramManager;
-class TextureManager;
+class RenderContext;
 
 typedef std::map<Light*, Texture*> ShadowTextureMap;
 
@@ -71,7 +69,7 @@ typedef std::map<Light*, Texture*> ShadowTextureMap;
  * responsible for creating a new window if no window handle is passed to it.
  */
 
-class VAPOR_API RenderDevice
+class API_RENDER RenderDevice
 {
 	DECLARE_UNCOPYABLE(RenderDevice)
 
@@ -79,12 +77,6 @@ public:
 
 	RenderDevice();
 	~RenderDevice();
-
-	// Initializes the rendering system (needs an OpenGL context).
-	void init();
-
-	// Resets the device to the initial state.
-	void resetState();
 
 	// Renders a renderable.
 	void render( const RenderState& state, const LightQueue& lights );
@@ -104,34 +96,12 @@ public:
 	// Creates a new render buffer (offscreen render target).
 	RenderBuffer* createRenderBuffer( const Settings& );
 
-	// Gets the main render window.
-	GETTER(RenderWindow, Window*, window)
-
 	// Gets/sets the current active render target.
 	GETTER(RenderTarget, RenderTarget*, activeTarget)
 	void setRenderTarget(RenderTarget* target);
 
-	// Gets the framebuffer color in the given pixel location.
-	// Note that point (0,0) is located in the top left corner.
-	Color getPixel(uint16 x, uint16 y) const;
-
-	// Gets/sets the main rendering window.
-	ACESSOR(Window, Window*, window)
-
-	// Sets the current clear color.
-	void setClearColor(const Color& color);
-
 	// Gets the current rendering pipeline.
 	ACESSOR(Pipeline, RenderPipeline::Enum, pipeline)
-
-	// Gets rendering adapter information.
-	GETTER(Adapter, Adapter*, adapter)
-
-	// Gets the program manager.
-	GETTER(ProgramManager, ProgramManager*, programManager)
-
-	// Gets the texture manager.
-	GETTER(TextureManager, TextureManager*, textureManager)
 
 	// Gets the texture manager.
 	GETTER(ShadowTextures, ShadowTextureMap, shadowTextures)
@@ -143,15 +113,6 @@ public:
 	bool isFixedPipeline() const;
 
 protected:
-
-	// Logs the GPU capabilities.
-	void showCapabilities(Adapter*);
-
-	// Gets and parses the OpenGL information.
-	void checkCapabilities(Adapter*);
-
-	// Checks that all needed OpenGL extensions are available.
-	void checkExtensions();
 
 	// Fixed render state management.
 	void setupRenderFixed( const RenderState&, const LightQueue& );
@@ -169,48 +130,33 @@ protected:
 	bool setupRenderStateOverlay( const RenderState& );
 
 	// Common render state management.
-	void setupRenderStateMaterial( Material*, bool bindUniforms );
+	void setupRenderStateMaterial(const RenderState& state, bool bindUniforms );
 	void undoRenderStateMaterial( Material* );
 
 	void unbindTextures(Material* material);
-	void bindTextures(Material* material, bool bindUniforms);
+	void bindTextures(const RenderState& state, bool bindUniforms);
 
 	// Rendering pipeline.
 	RenderPipeline::Enum pipeline;
 
-	// Manages all the textures.
-	TextureManager* textureManager;
-
-	// Manages all the shaders.
-	ProgramManager* programManager;
-
 	// Active render target
 	RenderTarget* activeTarget;
 
-	// List of render targets
-	std::vector<RenderTarget*> renderTargets;
+	// Active render context.
+	RenderContext* activeContext;
 
 	// Active view.
 	RenderView* activeView;
 
-	// Adapter information
-	Adapter* adapter;
-
-	// Render window
-	Window* window;
-
-	bool initDone;
-
 	ShadowTextureMap shadowTextures;
 	RenderBuffer* shadowDepthBuffer;
-
 	void updateLightDepth( LightState& state );
 };
 
-API_ENGINE RenderDevice* GetRenderDevice();
+API_RENDER RenderDevice* GetRenderDevice();
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

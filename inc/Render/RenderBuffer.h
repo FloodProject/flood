@@ -11,7 +11,7 @@
 #include "Render/Target.h"
 #include "Render/Texture.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -44,7 +44,7 @@ namespace RenderBufferType
  * render into multiple buffers at the same time.
  */
 
-class VAPOR_API RenderBuffer : public RenderTarget
+class API_RENDER RenderBuffer : public RenderTarget
 {
 	DECLARE_UNCOPYABLE(RenderBuffer)
 
@@ -64,12 +64,10 @@ public:
 	virtual void update() = 0;
 
 	// Creates a new render buffer with the given components.
-	virtual void createRenderBuffer( int bufferComponents
-		= RenderBufferType::Color | RenderBufferType::Depth ) = 0;
+	virtual void createRenderBuffer( int bufferComponents ) = 0;
 
 	// Creates a render texture.
-	virtual TexturePtr createRenderTexture( 
-		RenderBufferType::Enum = RenderBufferType::Color ) = 0;
+	virtual TexturePtr createRenderTexture( RenderBufferType::Enum ) = 0;
 
 	// Attaches a render texture.
 	void attachRenderTexture(const TexturePtr& tex);
@@ -81,10 +79,10 @@ protected:
 
 	RenderBuffer(const Settings& settings);
 
-	// Holds the window settings
+	// Holds the target settings.
 	Settings settings;
 };
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
