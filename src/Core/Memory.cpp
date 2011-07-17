@@ -302,6 +302,10 @@ static void* BumpAllocate(Allocator* alloc, int32 size, int32 align)
 		return nullptr;
 
 	bump->current += size;
+
+	// Zero the memory.
+	memset(current, 0, size);
+
 	return current;
 }
 
