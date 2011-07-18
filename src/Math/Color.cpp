@@ -15,29 +15,34 @@ NAMESPACE_BEGIN
 //-----------------------------------//
 
 Color::Color(float r, float g, float b, float a)
-	: r(r)
-	, g(g)
-	, b(b)
-	, a(a)
-{ }
+{
+	this->r = r;
+	this->g = g;
+	this->b = b;
+	this->a = a;
+}
 
 //-----------------------------------//
 
+#define D255(P) (P/255.0f)
+
 Color::Color(int r, int g, int b, int a)
-	: r(r/255.0f)
-	, g(g/255.0f)
-	, b(b/255.0f)
-	, a(a/255.0f)
-{ }
+{
+	this->r = D255(r);
+	this->g = D255(g);
+	this->b = D255(b);
+	this->a = D255(a);
+}
 
 //-----------------------------------//
 
 Color::Color(const Color& c)
-	: r(c.r)
-	, b(c.b)
-	, g(c.g)
-	, a(c.a)
-{ }
+{
+	this->r = c.r;
+	this->g = c.g;
+	this->b = c.b;
+	this->a = c.a;
+}
 
 //-----------------------------------//
 
