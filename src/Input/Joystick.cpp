@@ -13,9 +13,16 @@ namespace vapor {
 
 //-----------------------------------//
 
+JoystickID::JoystickID(int id, int button)
+	: id(id)
+	, button(button)
+{ }
+
+//-----------------------------------//
+
 JoystickEvent::JoystickEvent( JoystickEventType::Enum eventType )
-	: InputEvent( InputDeviceType::Joystick ),
-	eventType( eventType )
+	: InputEvent( InputDeviceType::Joystick )
+	, eventType( eventType )
 { }
 
 //-----------------------------------//
@@ -36,27 +43,27 @@ void Joystick::processEvent( const InputEvent& event )
 	
 	switch( jevt.eventType )
 	{
-		case JoystickEventType::JoystickPress:
-		{
-			const JoyButtonEvent& jbe = 
-				static_cast< const JoyButtonEvent& > ( jevt );
-			joyButtonPressed( jbe );
-			break;
-		}
-		case JoystickEventType::JoystickRelease:
-		{
-			const JoyButtonEvent& jbe = 
-				static_cast< const JoyButtonEvent& > ( jevt );
-			joyButtonReleased( jbe );
-			break;
-		}
-		case JoystickEventType::JoystickMove:
-		{
-			const JoyMoveEvent& jm = 
-				static_cast< const JoyMoveEvent& > ( jevt );
-			joyMoved( jm );
-			break;
-		}
+	case JoystickEventType::JoystickPress:
+	{
+		const JoyButtonEvent& jbe = 
+			static_cast< const JoyButtonEvent& > ( jevt );
+		joyButtonPressed( jbe );
+		break;
+	}
+	case JoystickEventType::JoystickRelease:
+	{
+		const JoyButtonEvent& jbe = 
+			static_cast< const JoyButtonEvent& > ( jevt );
+		joyButtonReleased( jbe );
+		break;
+	}
+	case JoystickEventType::JoystickMove:
+	{
+		const JoyMoveEvent& jm = 
+			static_cast< const JoyMoveEvent& > ( jevt );
+		joyMoved( jm );
+		break;
+	}
 	}
 }
 	

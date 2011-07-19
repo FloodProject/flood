@@ -8,22 +8,29 @@
 
 #pragma once
 
-NAMESPACE_BEGIN
+#include "Server/Session.h"
+
+NAMESPACE_SERVER_BEGIN
 
 //-----------------------------------//
 
-namespace MessageType
+typedef std::vector<SessionPtr> Sessions;
+
+class SessionManager
 {
-	enum Enum
-	{
-		ResourceRequest = 0,
-		ResourceResponse,
-		ResourceIndexRequest,
-		ResourceLockRequest,
-		ResourceUnlockRequest
-	};
-}
+public:
+
+	SessionManager();
+	~SessionManager();
+
+	// Adds a new session to the manager.
+	void addSession(const SessionPtr& session);
+
+protected:
+
+	Sessions sessions;
+};
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_SERVER_END

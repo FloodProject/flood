@@ -13,12 +13,22 @@
 #include "Input/Mouse.h"
 #include "Input/Joystick.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
 static InputManager* gs_InputManager = nullptr;
 InputManager* GetInputManager() { return gs_InputManager; }
+
+void InputInitialize()
+{
+
+}
+
+void InputDeinitialize()
+{
+
+}
 
 //-----------------------------------//
 
@@ -34,7 +44,7 @@ InputManager::~InputManager()
 	for( size_t i = 0; i < devices.size(); i++ )
 	{
 		InputDevice* device = devices[i];
-		delete device;
+		Deallocate(device);
 	}
 }
 
@@ -62,7 +72,7 @@ Keyboard* InputManager::getKeyboard() const
 	{
 		InputDevice* device = devices[i];
 		if( device->getType() == InputDeviceType::Keyboard )
-			return static_cast< Keyboard* > ( device );
+			return static_cast<Keyboard*>( device );
 	}
 
 	return nullptr;
@@ -76,7 +86,7 @@ Mouse* InputManager::getMouse() const
 	{
 		InputDevice* device = devices[i];
 		if( device->getType() == InputDeviceType::Mouse )
-			return static_cast< Mouse* > ( device );
+			return static_cast<Mouse*>( device );
 	}
 
 	return nullptr;
@@ -103,5 +113,5 @@ void InputManager::createDefaultDevices()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 

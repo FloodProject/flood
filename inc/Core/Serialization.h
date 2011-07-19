@@ -14,9 +14,9 @@ NAMESPACE_BEGIN
 
 //-----------------------------------//
 
+struct Color;
 struct Vector3;
-class Color;
-class Quaternion;
+struct Quaternion;
 
 union API_CORE ValueContext
 {

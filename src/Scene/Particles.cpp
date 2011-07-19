@@ -112,7 +112,8 @@ void Particles::createGeometry()
 	pMaterial->setBlending(BlendSource::SourceAlpha, BlendDestination::One);
 	pMaterial->setProgram("Tex");
 
-	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Points);
+	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap());
+	renderable->setPrimitiveType(PolygonType::Points);
 	renderable->setVertexBuffer(vb);
 	renderable->setMaterial(material);
 	renderable->setRenderLayer(RenderLayer::Transparency);

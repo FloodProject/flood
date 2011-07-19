@@ -12,15 +12,18 @@ NAMESPACE_BEGIN
 
 //-----------------------------------//
 
-struct Vector3
+struct API_CORE Vector3P
 {
 	float x, y, z;
+};
 
+struct API_CORE Vector3 : public Vector3P
+{
 	// Constructors.
-	Vector3 () : x(0.0f), y(0.0f), z(0.0f) { }
-	Vector3 (const Vector3& v) : x(v.x), y(v.y), z(v.z) { }
-	Vector3 (float v) : x(v), y(v), z(v) { }
-	Vector3 (float a, float b, float c) : x(a), y(b), z(c) { }
+	Vector3 () { x = 0; y = 0; z = 0; }
+	Vector3 (const Vector3& v) { x = v.x; y = v.y; z = v.z; }
+	Vector3 (float v) { x = v; y = v; z = v; }
+	Vector3 (float a, float b, float c) { x = a; y = b; z = c; }
 
 	// Assignment.
 	Vector3 &operator = (const Vector3& v) { x = v.x; y = v.y; z = v.z; return *this; }

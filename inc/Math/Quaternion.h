@@ -17,34 +17,21 @@ NAMESPACE_BEGIN
 //-----------------------------------//
 
 /**
- * Represents a 3-dimensional vector class template.
+ * Represents a quaternion, useful for storing orientations.
  */
 
-class API_CORE Quaternion
+struct API_CORE QuaternionP
 {
-public:
+	float x, y, z, w;
+};
 
-	// Default empty constructor
-	Quaternion ()
-	{
-		identity();
-	}
-
-	//-----------------------------------//
-	
-	// Copy constructor
-	Quaternion (const Quaternion& q)
-		: x(q.x), y(q.y), z(q.z), w(q.w)
-	{ }
-
-	//-----------------------------------//
-
-	// Constructs a quaternion from 1 value
-	Quaternion (const float u)
-		: x(u), y(u), z(u), w(u)
-	{ }
-
-	//-----------------------------------//
+struct API_CORE Quaternion : public QuaternionP
+{
+	// Constructors.
+	Quaternion () { identity(); }
+	Quaternion (const Quaternion& q) { x = q.x; y = q.y; z = q.z; w = q.w; }
+	Quaternion (float u) { x = u; y = u; z = u; w = u; }
+	Quaternion (float a, float b, float c, float d) { x = a; y = b; z = c; w = d; }
 
 	Quaternion(const EulerAngles& angles)
 	{
@@ -57,15 +44,6 @@ public:
 		*this = qx*qy*qz;
 	}
 
-	//-----------------------------------//
-
-	// Constructs a quaternion from 4 values
-	Quaternion (const float a, const float b, const float c, const float d)
-		: x(a), y(b), z(c), w(d)
-	{ }
-
-	//-----------------------------------//
-	
 	// Assignment
 	Quaternion& operator = (const Quaternion& q)
 	{
@@ -73,23 +51,17 @@ public:
 		return *this;
 	}
 
-	//-----------------------------------//
-
 	// Equality
 	bool operator == (Quaternion& q) const
 	{
 		return (x == q.x) && (y == q.y) && (z == q.z) && (w == q.w); 
 	}
-
-	//-----------------------------------//
-
+	
 	// Inequality
     bool operator != (Quaternion& q) const
 	{
 		return (x != q.x) || (y != q.y) || (z != q.z) || (w != q.w);
 	}
-
-	//-----------------------------------//
 
 	// Set to identity.
 	void identity()
@@ -329,10 +301,6 @@ public:
 	Quaternion slerp(const Quaternion& q, float t);
 
 	static const Quaternion Identity;
-
-public:
-
-	float x, y, z, w;
 };
 
 //-----------------------------------//

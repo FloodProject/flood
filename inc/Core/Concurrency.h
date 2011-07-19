@@ -34,7 +34,8 @@ enum_class ThreadPriority
 	Low = -1, Normal, High
 };
 
-typedef void (*ThreadFunction)(void*);
+struct Thread;
+typedef void (*ThreadFunction)(Thread*, void*);
 
 struct Thread
 {

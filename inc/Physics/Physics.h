@@ -21,19 +21,17 @@ class btDiscreteDynamicsWorld;
 
 FWD_DECL_INTRUSIVE(Body)
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
 class BulletDebugDrawer;
 
-//-----------------------------------//
-
 /**
  * Global hub for physics simulations.
  */
 
-class VAPOR_API PhysicsManager : public Subsystem
+class API_ENGINE PhysicsManager : public Subsystem
 {
 public:
 
@@ -99,6 +97,16 @@ protected:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
+
+#else
+
+NAMESPACE_ENGINE_BEGIN
+
+class PhysicsManager
+{
+};
+
+NAMESPACE_ENGINE_END
 
 #endif

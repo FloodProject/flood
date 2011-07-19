@@ -165,6 +165,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\dep\FastLZ\fastlz.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsCpp</CompileAs>
+    </ClCompile>
     <ClCompile Include="..\..\dep\mongoose\mongoose.cpp" />
     <ClCompile Include="..\..\src\Core\Archive.cpp">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">_CRT_SECURE_NO_WARNINGS;_DEBUG;___DEBUG;API_CORE_DLL;API_CORE_DLL_EXPORT;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -183,19 +186,6 @@
     <ClCompile Include="..\..\src\Core\Handle.cpp" />
     <ClCompile Include="..\..\src\Core\JsonSerializer.cpp" />
     <ClCompile Include="..\..\src\Core\Log.cpp" />
-    <ClCompile Include="..\..\src\Core\math\BoundingBox.cpp" />
-    <ClCompile Include="..\..\src\Core\math\BoundingSphere.cpp" />
-    <ClCompile Include="..\..\src\Core\math\Color.cpp" />
-    <ClCompile Include="..\..\src\Core\math\EulerAngles.cpp" />
-    <ClCompile Include="..\..\src\Core\math\Frustum.cpp" />
-    <ClCompile Include="..\..\src\Core\math\Hash.cpp" />
-    <ClCompile Include="..\..\src\Core\math\Math.cpp" />
-    <ClCompile Include="..\..\src\Core\math\Matrix4x3.cpp" />
-    <ClCompile Include="..\..\src\Core\math\Matrix4x4.cpp" />
-    <ClCompile Include="..\..\src\Core\math\Noise.cpp" />
-    <ClCompile Include="..\..\src\Core\math\Plane.cpp" />
-    <ClCompile Include="..\..\src\Core\math\Quaternion.cpp" />
-    <ClCompile Include="..\..\src\Core\math\Ray.cpp" />
     <ClCompile Include="..\..\src\Core\Memory.cpp" />
     <ClCompile Include="..\..\src\Core\Message.cpp" />
     <ClCompile Include="..\..\src\Core\Network.cpp" />
@@ -218,11 +208,25 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release DLL|Win32'">Core/API.h</PrecompiledHeaderFile>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\..\src\Math\BoundingBox.cpp" />
+    <ClCompile Include="..\..\src\Math\BoundingSphere.cpp" />
+    <ClCompile Include="..\..\src\Math\Color.cpp" />
+    <ClCompile Include="..\..\src\Math\EulerAngles.cpp" />
+    <ClCompile Include="..\..\src\Math\Frustum.cpp" />
+    <ClCompile Include="..\..\src\Math\Hash.cpp" />
+    <ClCompile Include="..\..\src\Math\Math.cpp" />
+    <ClCompile Include="..\..\src\Math\Matrix4x3.cpp" />
+    <ClCompile Include="..\..\src\Math\Matrix4x4.cpp" />
+    <ClCompile Include="..\..\src\Math\Noise.cpp" />
+    <ClCompile Include="..\..\src\Math\Plane.cpp" />
+    <ClCompile Include="..\..\src\Math\Quaternion.cpp" />
+    <ClCompile Include="..\..\src\Math\Ray.cpp" />
     <ClCompile Include="..\..\src\Math\Vector.cpp" />
     <ClCompile Include="..\..\src\Win32\ConcurrencyWin32.cpp" />
     <ClCompile Include="..\..\src\Win32\FileWatcherWin32.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\dep\FastLZ\fastlz.h" />
     <ClInclude Include="..\..\dep\mongoose\mongoose.h" />
     <ClInclude Include="..\..\inc\Core\API.h" />
     <ClInclude Include="..\..\inc\Core\Archive.h" />
@@ -251,6 +255,8 @@
     <ClInclude Include="..\..\inc\Math\Color.h" />
     <ClInclude Include="..\..\inc\Math\Quaternion.h" />
     <ClInclude Include="..\..\inc\Math\Vector.h" />
+    <ClInclude Include="..\..\inc\Network\Message.h" />
+    <ClInclude Include="..\..\inc\Network\Network.h" />
     <ClInclude Include="..\..\inc\vapor\Chunk.h" />
     <ClInclude Include="..\..\inc\vapor\math\BoundingBox.h" />
     <ClInclude Include="..\..\inc\vapor\math\BoundingSphere.h" />
@@ -266,10 +272,6 @@
     <ClInclude Include="..\..\inc\vapor\Profiler.h" />
     <ClInclude Include="..\..\inc\vapor\StackWalker.h" />
     <ClInclude Include="..\..\inc\vapor\WebStream.h" />
-    <ClInclude Include="..\..\inc\vapor\net\Network.h" />
-    <ClInclude Include="..\..\inc\vapor\net\Message.h" />
-    <ClInclude Include="..\..\inc\vapor\net\MessageHandler.h" />
-    <ClInclude Include="..\..\inc\vapor\net\Messages.h" />
     <ClInclude Include="..\..\src\Win32\FileWatcherWin32.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

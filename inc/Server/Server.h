@@ -36,19 +36,21 @@ public:
 	void parseConfig();
 
 	// Handles client connections.
-	void handleClientConnect(const NetworkPeer& peer);
+	void handleClientConnect(const NetworkPeerPtr& peer);
 
 	// Handles client disconnections.
-	void handleClientDisconnect(const NetworkPeer& peer);
+	void handleClientDisconnect(const NetworkPeerPtr& peer);
 
 protected:
 
 	TaskPool* tasks;
 	Thread* networkThread;
-	NetworkHost host;
+	NetworkServer host;
 };
 
-API_SERVER void InitializeServerAllocator();
+API_SERVER void ServerInitialize();
+API_SERVER void ServerDeinitialize();
+
 API_SERVER Allocator* AllocatorGetServer();
 
 //-----------------------------------//

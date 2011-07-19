@@ -24,6 +24,8 @@
   THE SOFTWARE.
 */
 
+#include "Core/API.h"
+
 #if !defined(FASTLZ__COMPRESSOR) && !defined(FASTLZ_DECOMPRESSOR)
 
 /*

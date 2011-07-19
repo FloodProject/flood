@@ -112,7 +112,8 @@ RenderablePtr Billboard::createDebugRenderable() const
 	
 	MaterialHandle material = MaterialCreate(AllocatorGetHeap(), "BillboardDebug");
 
-	RenderablePtr rend = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Lines);
+	RenderablePtr rend = Allocate(Renderable, AllocatorGetHeap());
+	rend->setPrimitiveType(PolygonType::Lines);
 	rend->setVertexBuffer( vb );
 	rend->setMaterial( material );
 

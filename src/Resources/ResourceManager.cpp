@@ -26,21 +26,22 @@ NAMESPACE_BEGIN
 
 //-----------------------------------//
 
-static Allocator* g_ResourcesAllocator;
-static ResourceManager* g_ResourcesManager;
-static HandleManager* g_ResourceHandleManager = nullptr;
+static ResourceManager* gs_ResourcesManager = nullptr;;
+ResourceManager* GetResourceManager() { return gs_ResourcesManager; }
 
-ResourceManager* GetResourceManager() { return g_ResourcesManager; }
-Allocator* GetResourcesAllocator() { return g_ResourcesAllocator; }
+static Allocator* gs_ResourcesAllocator = nullptr;
+Allocator* GetResourcesAllocator() { return gs_ResourcesAllocator; }
+
+static HandleManager* gs_ResourceHandleManager = nullptr;
 
 void* ResourceHandleFind(HandleId id)
 {
-	return HandleFind(g_ResourceHandleManager, id);
+	return HandleFind(gs_ResourceHandleManager, id);
 }
 
 ResourceHandle ResourceHandleCreate(Resource* p)
 {
-	return HandleCreate(g_ResourceHandleManager, p);
+	return HandleCreate(gs_ResourceHandleManager, p);
 }
 
 void ResourceHandleDestroy(HandleId id)
@@ -49,12 +50,23 @@ void ResourceHandleDestroy(HandleId id)
 	//g_ResourcesManager->removeResource(resource);
 
 	Deallocate(resource);
-	HandleDestroy(g_ResourceHandleManager, id);
+	HandleDestroy(gs_ResourceHandleManager, id);
 }
 
 static HandleId ResourceFind(const char* s)
 {
-	return g_ResourcesManager->loadResource(s).id;
+	return gs_ResourcesManager->loadResource(s).id;
+}
+
+void ResourcesInitialize()
+{
+	gs_ResourcesAllocator = AllocatorCreateHeap( AllocatorGetHeap() );
+	AllocatorSetGroup(gs_ResourcesAllocator, "Resources");
+}
+
+void ResourcesDeinitialize()
+{
+	AllocatorDestroy(gs_ResourcesAllocator);
 }
 
 //-----------------------------------//
@@ -76,17 +88,14 @@ ResourceManager::ResourceManager()
 	, numResourcesQueuedLoad(0)
 	, asynchronousLoading(true)
 {
-	if( !g_ResourcesAllocator ) 
-		g_ResourcesAllocator = AllocatorCreateHeap( AllocatorGetHeap(), "Resources" );
-
 	handleManager = HandleCreateManager( GetResourcesAllocator() );
 
-	if( !g_ResourcesManager ) g_ResourcesManager = this;
-	if( !g_ResourceHandleManager ) g_ResourceHandleManager = handleManager;
+	if( !gs_ResourcesManager ) gs_ResourcesManager = this;
+	if( !gs_ResourceHandleManager ) gs_ResourceHandleManager = handleManager;
 
 	ReflectionHandleContext context;
 	context.type = ReflectionGetType(Resource);
-	context.handles = g_ResourceHandleManager;
+	context.handles = gs_ResourceHandleManager;
 	context.deserialize = ResourceFind;
 	ReflectionSetHandleContext(context);
 
@@ -110,7 +119,6 @@ ResourceManager::~ResourceManager()
 
 	ConditionDestroy(resourceFinishLoad);
 	MutexDestroy(resourceFinishLoadMutex);
-	AllocatorDestroy(GetResourcesAllocator());
 }
 
 //-----------------------------------//

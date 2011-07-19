@@ -20,14 +20,12 @@ NAMESPACE_BEGIN
 
 //-----------------------------------//
 
-static Allocator* enet_alloc = nullptr;
+static Allocator* gs_NetworkAllocator = nullptr;
 
 static void* ENET_CALLBACK enet_custom_malloc(size_t size)
 {
-	return AllocatorAllocate(enet_alloc, size, 0);
+	return AllocatorAllocate(gs_NetworkAllocator, size, 0);
 }
-
-//-----------------------------------//
 
 static void ENET_CALLBACK enet_custom_free(void * memory)
 {
@@ -38,19 +36,14 @@ static void ENET_CALLBACK enet_custom_free(void * memory)
 
 bool NetworkInitialize()
 {
-	static int initializedENet = false;
-	static ENetCallbacks enet_callbacks;
-	
-	if( initializedENet )
-		return true;
+	gs_NetworkAllocator = AllocatorCreateHeap(AllocatorGetHeap());
+	AllocatorSetGroup(gs_NetworkAllocator, "Network");
 
-	assert(enet_alloc == nullptr);
-	enet_alloc = AllocatorCreateHeap(AllocatorGetHeap(), "ENet");
+	ENetCallbacks callbacks;
+	callbacks.malloc = enet_custom_malloc;
+	callbacks.free = enet_custom_free;
 
-	enet_callbacks.malloc = enet_custom_malloc;
-	enet_callbacks.free = enet_custom_free;
-
-    int ret = enet_initialize_with_callbacks(ENET_VERSION, &enet_callbacks);
+	int ret = enet_initialize_with_callbacks(ENET_VERSION, &callbacks);
 
 	if(ret != 0)
 	{
@@ -61,8 +54,6 @@ bool NetworkInitialize()
 	LogInfo("Initialized ENet %d.%d.%d networking layer",
 		ENET_VERSION_MAJOR, ENET_VERSION_MINOR, ENET_VERSION_PATCH);
 
-	initializedENet = true;
-
 	return true;
 }
 
@@ -72,8 +63,8 @@ void NetworkDeinitialize()
 {
 	enet_deinitialize();
 	
-	AllocatorDestroy(enet_alloc);
-	enet_alloc = nullptr;
+	AllocatorDestroy(gs_NetworkAllocator);
+	gs_NetworkAllocator = nullptr;
 
 	LogInfo("Deinitialized ENet");
 }
@@ -82,28 +73,69 @@ void NetworkDeinitialize()
 
 #define ENET_BANDWIDTH_AUTO 0
 
-static bool CreateEnetSocket( const String& address, int port, ENetHost*& host, bool server )
+static ENetHost* CreateEnetSocket( ENetAddress* address )
 {
-	ENetAddress addr;
-	addr.host = ENET_HOST_ANY;
-	addr.port = port;
-
 	int numClients = 32;
 	int numChannels = 2;
 	int numBandwidthIn = ENET_BANDWIDTH_AUTO;
 	int numBandwidthOut = ENET_BANDWIDTH_AUTO;
 	
-	ENetAddress* enetAddress = server ? &addr : nullptr;
-
-	host = enet_host_create(enetAddress, numClients, numChannels, numBandwidthIn, numBandwidthOut);
+	ENetHost* host = enet_host_create(address,
+		numClients, numChannels, numBandwidthIn, numBandwidthOut);
 
 	if( !host )
 	{
 		LogError("Error creating ENet host");
-		return false;
+		return nullptr;
 	}
 
-	return true;
+	return host;
+}
+
+//-----------------------------------//
+
+NetworkPeer::NetworkPeer()
+	: peer(nullptr)
+{
+}
+
+//-----------------------------------//
+
+void NetworkPeer::queueMessage(const MessagePtr& message, uint8 channel)
+{
+	if( !message ) return;
+	message->prepare();
+	enet_peer_send(peer, channel, message->getPacket());
+}
+
+//-----------------------------------//
+
+String NetworkPeer::getHostName() const
+{
+	char name[256];
+	
+	if(enet_address_get_host(&peer->address, name, ARRAY_SIZE(name)) < 0)
+	{
+		LogError("Could not get hostname of network peer");
+		return "";
+	}
+
+	return String(name);
+}
+
+//-----------------------------------//
+
+String NetworkPeer::getHostIP() const
+{
+	char ip[64];
+	
+	if(enet_address_get_host_ip(&peer->address, ip, ARRAY_SIZE(ip)) < 0)
+	{
+		LogError("Could not get IP address of network peer");
+		return "";
+	}
+
+	return String(ip);
 }
 
 //-----------------------------------//
@@ -122,202 +154,164 @@ NetworkHost::~NetworkHost()
 
 //-----------------------------------//
 
-bool NetworkHost::createSocket( const String& address, int port )
-{
-	return CreateEnetSocket(address, port, host, true);
-}
-
-//-----------------------------------//
-
-void NetworkHost::waitMessages()
+void NetworkHost::processEvents(uint32 timeout)
 {
 	ENetEvent event;
-
-	// Wait up to 1000 milliseconds for an event.
-	while(enet_host_service(host, &event, 1000) > 0)
+	
+	while(enet_host_service(host, &event, timeout) > 0)
 	{
-		MessagePtr message = Allocate(Message, AllocatorGetHeap());
-		message->init();
-
-		switch (event.type)
+		switch(event.type)
 		{
 		case ENET_EVENT_TYPE_CONNECT:
-		{
-			ENetPeer* newPeer = event.peer;
-
-			char ip[64];
-			enet_address_get_host_ip(&newPeer->address, ip, ARRAY_SIZE(ip));
-
-			LogInfo("A new client connected from %s:%hu",  ip, newPeer->address.port);
-
-			NetworkPeerPtr networkPeer = Allocate(NetworkPeer, AllocatorGetHeap());
-			networkPeer->peer = event.peer;
-
-			// Store the network peer in ENet as user data.
-			event.peer->data = networkPeer.get();
-
-			peers.push_back(networkPeer);
-			
-			onClientConnected(networkPeer);
-			
+			handleConnectEvent(&event);
 			break;
-		}
-		case ENET_EVENT_TYPE_RECEIVE:
-		{
-			LogInfo("A packet of length %u containing %s was received from %s on channel %u",
-					event.packet->dataLength,
-					event.packet->data,
-					event.peer->data,
-					event.channelID);
-
-			//messages.push(message);
-
-			// Clean up the packet now that we're done using it.
-			enet_packet_destroy(event.packet);
-			
-			break;
-		}
 		case ENET_EVENT_TYPE_DISCONNECT:
-		{
-			ENetPeer* peer = event.peer;
-
-			char ip[64];
-			enet_address_get_host_ip(&peer->address, ip, ARRAY_SIZE(ip));
-
-			LogInfo("%s disconnected", ip);
-
-			NetworkPeer* networkPeer = (NetworkPeer*) event.peer->data;
-			//networkPeer->disconnect();
-
-			onClientDisconnected(networkPeer);
-
-			// Reset the peer's client information.
-			event.peer->data = nullptr;
-		} }
+			handleDisconnectEvent(&event);
+			break;
+		case ENET_EVENT_TYPE_RECEIVE:
+			handleReceiveEvent(&event);
+			break;
+		};
 	}
 }
 
 //-----------------------------------//
 
-void NetworkHost::dispatchMessages()
+void NetworkHost::handleConnectEvent(ENetEvent* event)
 {
-	MessagePtr msg;
+	ENetPeer* peer = event->peer;
+
+	NetworkPeerPtr networkPeer = Allocate(NetworkPeer, AllocatorGetHeap());
+	networkPeer->peer = peer;
+
+	// Store the network peer as user data.
+	peer->data = networkPeer.get();
+
+	onConnected(networkPeer);
+}
+
+//-----------------------------------//
+
+void NetworkHost::handleDisconnectEvent(ENetEvent* event)
+{
+	NetworkPeer* networkPeer = (NetworkPeer*) event->peer->data;
 	
-	while( messages.try_pop(msg) )
-	{
-		MessageType::Enum type = msg->getMessageType();
-		MessageHandlersMap::iterator it = messageHandlers.find(type);
-		
-		if( it == messageHandlers.end() )
-		{
-			LogWarn("No message handler for type: %d", type);
-			continue;
-		}
+	onDisconnected(networkPeer);
 
-		MessageHandler* handler = (*it).second;
-		assert(handler != nullptr);
-		
-		handler->handleMessage(msg);
-	}
+	// Reset the peer's userdata.
+	ENetPeer* peer = event->peer;
+	peer->data = nullptr;
 }
 
 //-----------------------------------//
 
-void NetworkHost::sendMessage( const MessagePtr& message )
+void NetworkHost::handleReceiveEvent(ENetEvent* event)
 {
-#if 0
-	int status = zmq_send(socket, message->getBuffer(), 0);
-
-	if( status != 0 )
-		error("Error sending message");
-#endif
-}
-
-//-----------------------------------//
-
-String NetworkPeer::getHostname() const
-{
-	char name[256];
+	NetworkPeer* peer = (NetworkPeer*) event->peer->data;
 	
-	if(enet_address_get_host(&peer->address, name, ARRAY_SIZE(name)) < 0)
-	{
-		LogError("Could not get hostname of network peer");
-		return "";
-	}
+	MessagePtr message = Allocate(Message, gs_NetworkAllocator);
+	message->setPacket(event->packet);
 
-	return String(name);
-}
-
-NetworkPeer::NetworkPeer()
-	: peer(nullptr)
-{
-
+	onMessage(message);
 }
 
 //-----------------------------------//
 
 NetworkClient::NetworkClient()
-	: client(nullptr)
 {
-
+	state = NetworkClientState::Initial;
 }
 
 //-----------------------------------//
 
 bool NetworkClient::connect( const String& address, int port )
 {
-	if( !CreateEnetSocket(address, port, client, false) )
+	state = NetworkClientState::Connecting;
+
+	host = CreateEnetSocket(nullptr);
+
+	if( !host )
 		return false;
 
 	ENetAddress addr;
+	addr.host = 0;
 	addr.port = port;
 
 	enet_address_set_host( &addr, address.c_str() );
 
-	ENetPeer* peer = enet_host_connect(client, &addr, 2, 0);
+	size_t channelCount = 2;
+	enet_uint32 data = 0;
 
-    // Wait up to 5 seconds for the connection attempt to succeed.
+	ENetPeer* newPeer = enet_host_connect(host, &addr, channelCount, data);
 
-	ENetEvent event;
-    
-	if(!(enet_host_service (client, &event, 5000) > 0))
-		return false;
-	
-	if(event.type == ENET_EVENT_TYPE_CONNECT)
-    {
-        LogInfo ("Connection to some.server.net:1234 succeeded.");
-    }
-    else
-    {
-        enet_peer_reset (peer);
-        LogError("Connection to some.server.net:1234 failed.");
-		return false;
-    }
+	peer = Allocate(NetworkPeer, gs_NetworkAllocator);
+	peer->peer = newPeer;
 
 	return true;
 }
 
 //-----------------------------------//
 
-void NetworkClient::checkEvents(uint32 timeout)
+void NetworkClient::onConnected(const NetworkPeerPtr& newPeer)
 {
-	ENetEvent event;
+	peer = newPeer;
+	state = NetworkClientState::Connected;
+	onClientConnected(peer);
+}
+
+//-----------------------------------//
+
+void NetworkClient::onDisconnected(const NetworkPeerPtr& peer)
+{
+	state = NetworkClientState::Disconnected;
+	onClientDisconnected(peer);
+}
+
+//-----------------------------------//
+
+void NetworkClient::onMessage(const MessagePtr& message)
+{
+	onServerMessage(0, message);
+}
+
+//-----------------------------------//
+
+bool NetworkServer::createSocket( const String& address, int port )
+{
+	ENetAddress addr;
+	addr.host = ENET_HOST_ANY;
+	addr.port = port;
+
+	host = CreateEnetSocket(&addr);
 	
-	while(enet_host_service(client, &event, timeout) > 0)
-	{
-		switch(event.type)
-		{
-		case ENET_EVENT_TYPE_CONNECT:
+	return (host != nullptr);
+}
 
-			break;
-		case ENET_EVENT_TYPE_DISCONNECT:
-			break;
-		case ENET_EVENT_TYPE_RECEIVE:
-			break;
-		};
+//-----------------------------------//
 
-		LogInfo("Received event from: %s", event.peer->address);
-	}
+void NetworkServer::onConnected(const NetworkPeerPtr& peer)
+{
+	peers.push_back(peer);
+	onClientConnected(peer);
+}
+
+//-----------------------------------//
+
+void NetworkServer::onDisconnected(const NetworkPeerPtr& peer)
+{
+	onClientDisconnected(peer);
+	
+	NetworkPeers::iterator it = std::find(peers.begin(), peers.end(), peer);
+	assert( it != peers.end() );
+	
+	peers.erase(it);
+}
+
+//-----------------------------------//
+
+void NetworkServer::onMessage(const MessagePtr& message)
+{
+	onClientMessage(0, message);
 }
 
 //-----------------------------------//

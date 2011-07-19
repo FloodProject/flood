@@ -8,9 +8,12 @@
 
 #pragma once
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
+
+void API_INPUT InputInitialize();
+void API_INPUT InputDeinitialize();
 
 class InputDevice;
 struct InputEvent;
@@ -19,16 +22,14 @@ class Keyboard;
 class Mouse;
 class Joystick;
 
-//-----------------------------------//
-
 /**
  * Manages a set of input devices.
  */
 
 class InputManager;
-API_ENGINE InputManager* GetInputManager();
+API_INPUT InputManager* GetInputManager();
 
-class VAPOR_API InputManager
+class API_INPUT InputManager
 {
 	DECLARE_UNCOPYABLE(InputManager)
 
@@ -63,4 +64,4 @@ protected:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

@@ -16,6 +16,7 @@
 #include "Viewframe.h"
 #include "EditorInputManager.h"
 #include "Events.h"
+#include "Settings.h"
 #include "EditorTags.h"
 #include <wx/debugrpt.h>
 
@@ -34,31 +35,31 @@ wxIMPLEMENT_APP_NO_MAIN(EditorApp);
 
 bool EditorApp::OnInit()
 {
-    if( !wxApp::OnInit() ) return false;
+	if( !wxApp::OnInit() ) return false;
 
 	wxImage::AddHandler( new wxPNGHandler() );
 
-    EditorFrame* frame = new EditorFrame(VAPOR_EDITOR_NAME);
+	EditorFrame* frame = new EditorFrame(VAPOR_EDITOR_NAME);
 	frame->SetSize(800, 500);
 
 	SetTopWindow(frame);
-    frame->Show(true);
+	frame->Show(true);
 	
-    return true;
+	return true;
 }
 
 //-----------------------------------//
 
 void EditorApp::OnFatalException()
 {
-    wxDebugReport report;
-    wxDebugReportPreviewStd preview;
+	wxDebugReport report;
+	wxDebugReportPreviewStd preview;
 
-    report.AddExceptionContext();
-    report.AddExceptionDump();
+	report.AddExceptionContext();
+	report.AddExceptionDump();
 
-    if ( preview.Show(report) )
-        report.Process();
+	if ( preview.Show(report) )
+		report.Process();
 }
 
 //-----------------------------------//
@@ -127,6 +128,7 @@ EditorFrame::~EditorFrame()
 
 	notebookCtrl->Destroy();
 	paneCtrl->DetachPane(notebookCtrl);
+	
 	paneCtrl->UnInit();
 	delete paneCtrl;
 
@@ -151,14 +153,13 @@ void EditorFrame::createPlugins()
 void EditorFrame::createEngine()
 {
 	engine = new Engine;
-	engine->create(VAPOR_EDITOR_NAME);
 	engine->init(false);
 	engine->setupInput();
 
 	// Mount the default assets path.
 	ResourceManager* res = engine->getResourceManager();
 	Archive* archive = ArchiveCreateVirtual( GetResourcesAllocator() );
-	ArchiveMountDirectories(archive, "Assets", GetResourcesAllocator());
+	ArchiveMountDirectories(archive, MediaFolder, GetResourcesAllocator());
 	res->setArchive(archive);
 }
 

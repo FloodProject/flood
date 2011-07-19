@@ -450,29 +450,25 @@ void Model::doSkinning(std::vector<Vector3>& skinnedPositions)
 
 void Model::setupShaderSkinning()
 {
+	// Setup matrices.
+	std::vector<Matrix4x4> matrices;
+	matrices.reserve( bones.size() );
+
+	for( size_t i = 0; i < bones.size(); i++ )
+	{
+		const Matrix4x3& bone = bones[i];
+		matrices.push_back( Matrix4x4(bone) );
+	}
+
+	// Send them to the uniform buffer.
 	const std::vector<RenderablePtr>& rends = getRenderables();
 
 	for( size_t i = 0; i < rends.size(); i++ )
 	{
 		const RenderablePtr& rend = rends[i];
-		const MaterialHandle& handle = rend->getMaterial();
-
-		Material* material = handle.Resolve();
-		if( !material ) return;
-
-		const String& name = material->getProgram();
-		ProgramPtr program = GetRenderDevice()->getProgramManager()->getProgram(name);
-
-		std::vector<Matrix4x4> matrices;
-		matrices.reserve( bones.size() );
-
-		for( size_t i = 0; i < bones.size(); i++ )
-		{
-			const Matrix4x3& bone = bones[i];
-			matrices.push_back( Matrix4x4(bone) );
-		}
 		
-		program->setUniform("vp_BonesMatrix", matrices);
+		const UniformBufferPtr& ub = rend->getUniformBuffer();
+		ub->setUniform("vp_BonesMatrix", matrices);
 	}
 }
 
@@ -553,7 +549,8 @@ RenderablePtr Model::createDebugRenderable() const
 
 	VertexBufferPtr vb = Allocate(VertexBuffer, AllocatorGetHeap());
 	
-	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Lines);
+	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap());
+	renderable->setPrimitiveType(PolygonType::Lines);
 	renderable->setVertexBuffer(vb);
 	renderable->setMaterial(handleMaterial);
 

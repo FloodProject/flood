@@ -59,6 +59,8 @@ struct AllocationMetadata
 	int32 pattern;
 };
 
+//-----------------------------------//
+
 const int32 MEMORY_PATTERN = 0xDEADF69F;
 
 typedef std::map<const char*, AllocationGroup, RawStringCompare> MemoryGroupMap;
@@ -77,6 +79,18 @@ static void AllocatorTrackGroup(AllocationMetadata* metadata, bool alloc)
 	memoryGroups[metadata->group].total += alloc ? metadata->size : 0;
 	memoryGroups[metadata->group].freed += alloc ? 0 : metadata->size;
 }
+
+//-----------------------------------//
+
+void AllocatorReset( Allocator* alloc )
+{
+	if(!alloc) return;
+	if(!alloc->reset) return;
+
+	alloc->reset(alloc);
+}
+
+//-----------------------------------//
 
 void AllocatorSetGroup( Allocator* alloc, const char* group )
 {
@@ -194,6 +208,8 @@ Allocator* AllocatorCreateHeap( Allocator* alloc )
 
 	heap->allocate = HeapAllocate;
 	heap->deallocate = HeapDellocate;
+	heap->reset = nullptr;
+	heap->group = nullptr;
 
 	return heap;
 }
@@ -205,7 +221,9 @@ static Allocator* GetDefaultHeapAllocator()
 	static Allocator heap;
 	heap.allocate = HeapAllocate;
 	heap.deallocate = HeapDellocate;
+	heap.reset = nullptr;
 	heap.group = ALLOCATOR_DEFAULT_GROUP;
+
 	return &heap;
 }
 
@@ -274,6 +292,8 @@ Allocator* AllocatorCreatePool( Allocator* alloc, int32 size )
 	pool->current = (uint8*) pool + sizeof(PoolAllocator);  
 	pool->allocate = PoolAllocate;
 	pool->deallocate = PoolDeallocate;
+	pool->reset = nullptr;
+	pool->group = nullptr;
 
 	return pool;
 }
@@ -313,6 +333,13 @@ static void* BumpAllocate(Allocator* alloc, int32 size, int32 align)
 
 static void BumpDeallocate(Allocator* alloc, const void* p)
 {
+	// Do nothing.
+}
+
+//-----------------------------------//
+
+static void BumpReset(Allocator* alloc)
+{
 	BumpAllocator* bump = (BumpAllocator*) alloc;
 	bump->current = bump->start;
 }
@@ -329,6 +356,8 @@ Allocator* AllocatorCreateBump( Allocator* alloc, int32 size )
 	bump->size = size;
 	bump->allocate = BumpAllocate;
 	bump->deallocate = BumpDeallocate;
+	bump->reset = BumpReset;
+	bump->group = nullptr;
 
 	return bump;
 }

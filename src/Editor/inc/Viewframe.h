@@ -17,7 +17,7 @@ namespace vapor { namespace editor {
 class RenderControl;
 
 /**
- * Viewframe displays a view.
+ * Viewframe displays a view of a camera.
  */
 
 class Viewframe : public wxPanel

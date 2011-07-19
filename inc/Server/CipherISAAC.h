@@ -12,8 +12,8 @@ NAMESPACE_SERVER_BEGIN
 
 //-----------------------------------//
 
-#define RANDSIZL   (8)
-#define RANDSIZ    (1<<RANDSIZL)
+#define RANDSIZL	(8)
+#define RANDSIZ		(1<<RANDSIZL)
 
 class CipherISAAC
 {

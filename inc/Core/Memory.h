@@ -26,6 +26,7 @@ API_CORE Allocator* AllocatorCreatePage( Allocator* );
 API_CORE Allocator* AllocatorCreateBump( Allocator*, int32 size );
 
 API_CORE void AllocatorDestroy( Allocator* );
+API_CORE void AllocatorReset( Allocator* );
 API_CORE void AllocatorSetGroup( Allocator*, const char* group );
 API_CORE void AllocatorDumpInfo();
 
@@ -34,11 +35,13 @@ API_CORE void  AllocatorDeallocate( const void* );
 
 typedef void* (*MemoryAllocateFunction)(Allocator*, int32 size, int32 align);
 typedef void  (*MemoryFreeFunction)(Allocator*, const void* object);
+typedef void  (*MemoryResetFunction)(Allocator*);
 
 struct API_CORE Allocator
 {
 	MemoryAllocateFunction allocate;
 	MemoryFreeFunction deallocate;
+	MemoryResetFunction reset;
 	const char* group;
 };
 

@@ -21,7 +21,7 @@ namespace vapor {
 
 REFLECT_DECLARE_CLASS(Water)
 
-class VAPOR_API Water : public Geometry
+class API_SCENE Water : public Geometry
 {
 public:
 

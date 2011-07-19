@@ -187,6 +187,13 @@ void Engine::update( float delta )
 
 //-----------------------------------//
 
+void Engine::stepFrame()
+{
+	AllocatorReset( GetFrameAllocator() );
+}
+
+//-----------------------------------//
+
 InputManager* Engine::getInputManager() const
 {
 #if 0

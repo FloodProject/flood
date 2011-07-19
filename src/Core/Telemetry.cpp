@@ -15,7 +15,13 @@ NAMESPACE_BEGIN
 
 //-----------------------------------//
 
-static Allocator* AllocatorTelemetry = AllocatorCreateHeap( AllocatorGetHeap(), "Telemetry" );
+static Allocator* gs_TelemetryAllocator = nullptr;
+
+void TelemetryInitialize()
+{
+	gs_TelemetryAllocator = AllocatorCreateHeap( AllocatorGetHeap() );
+	AllocatorSetGroup(gs_TelemetryAllocator, "Telemetry");
+}
 
 void TelemetryCreate()
 {

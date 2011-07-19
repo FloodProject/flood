@@ -17,7 +17,7 @@
 #include "Core/Utilities.h"
 #include "Core/ReferenceCount.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -291,7 +291,7 @@ void GLSL_Program::setUniforms( const UniformBufferPtr& ub )
 	
 	for( it = ub->elements.begin(); it != ub->elements.end(); it++ )
 	{
-		UniformBufferElement& element = **it;
+		UniformBufferElement& element = *it->second;
 
 		GLint location = glGetUniformLocation( id, element.name );
 		GLint count = element.count;
@@ -331,6 +331,5 @@ void GLSL_Program::setUniforms( const UniformBufferPtr& ub )
 
 //-----------------------------------//
 
-} // end namespace
-
+NAMESPACE_ENGINE_END
 #endif

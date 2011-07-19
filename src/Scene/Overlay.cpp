@@ -37,7 +37,8 @@ void Overlay::createGeometry()
 {
 	material = MaterialCreate( AllocatorGetHeap(), "OverlayMaterial");
 
-	renderable = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Quads);
+	renderable = Allocate(Renderable, AllocatorGetHeap());
+	renderable->setPrimitiveType(PolygonType::Quads);
 	renderable->setVertexBuffer( Allocate(VertexBuffer, AllocatorGetHeap()) );
 	renderable->setMaterial(material);
 	renderable->setRenderLayer(RenderLayer::Overlays);
@@ -49,7 +50,8 @@ void Overlay::createGeometry()
 	Material* borderMaterial = borderHandle.Resolve();
 	borderMaterial->setDepthTest(false);
 
-	borderRenderable = Allocate(Renderable, AllocatorGetHeap(), PolygonType::LineLoop);
+	borderRenderable = Allocate(Renderable, AllocatorGetHeap());
+	borderRenderable->setPrimitiveType(PolygonType::LineLoop);
 	borderRenderable->setVertexBuffer( Allocate(VertexBuffer, AllocatorGetHeap()) );
 	borderRenderable->setMaterial( borderHandle );
 	borderRenderable->setRenderLayer(RenderLayer::Overlays);

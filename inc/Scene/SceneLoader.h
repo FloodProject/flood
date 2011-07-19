@@ -11,11 +11,14 @@
 #include "Resources/ResourceLoader.h"
 #include "Scene/Scene.h"
 
-#ifdef SCENE_LOADER
-
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
+
+class SceneResource : public Resource
+{
+	virtual ResourceGroup::Enum getResourceGroup() const OVERRIDE { return ResourceGroup::Scenes; }
+};
 
 /**
  * Loads scene files.
@@ -32,7 +35,7 @@ public:
 	SceneLoader();
 
 	// Creates the resource with no data.
-	RESOURCE_LOADER_PREPARE(Scene)
+	RESOURCE_LOADER_PREPARE(SceneResource)
 
 	// Parses a Lua text script to a buffer.
 	virtual bool decode(const Stream& file, Resource* res);
@@ -46,6 +49,4 @@ public:
 
 //-----------------------------------//
 
-NAMESPACE_END
-
-#endif
+NAMESPACE_ENGINE_END

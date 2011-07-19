@@ -1,4 +1,3 @@
-
 /************************************************************************
 *
 * vapor3D Engine © (2008-2010)
@@ -8,26 +7,18 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "input/InputMap.h"
+#include "Input/InputMap.h"
 
-namespace vapor {
-
-//-----------------------------------//
-
-joyId::joyId(int id, int button)
-	:id(id), button(button)
-{
-
-}
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-InputMap::InputMap(const InputManager& manager)
+InputMap::InputMap(const InputManager& input)
 {
-	Keyboard* kbd = manager.getKeyboard();
-	Mouse* mouse = manager.getMouse();
-	
+	Keyboard* kbd = input.getKeyboard();
 	kbd->onKeyPress.Connect( this, &InputMap::onKeyPress );
+	
+	Mouse* mouse = input.getMouse();	
 	mouse->onMouseButtonPress.Connect( this, &InputMap::onMousePress );
 }
 
@@ -35,78 +26,31 @@ InputMap::InputMap(const InputManager& manager)
 
 InputMap::~InputMap()
 {
-
+	Keyboard* kbd = GetInputManager()->getKeyboard();
+	kbd->onKeyPress.Disconnect( this, &InputMap::onKeyPress );
+	
+	Mouse* mouse = GetInputManager()->getMouse();	
+	mouse->onMouseButtonPress.Disconnect( this, &InputMap::onMousePress );
 }
 
 //-----------------------------------//
 
-Event0<>* InputMap::registerAction(const std::string& action, Keys::Enum keycode)
+void InputMap::onKeyPress(const KeyEvent& event)
 {
-	keymap[keycode] = action;
-	//return &(inputMap[action]);
-	return nullptr;
 }
 
 //-----------------------------------//
 
-Event0<>* InputMap::registerAction(const std::string& action, MouseButton::Enum button)
+void InputMap::onMousePress(const MouseButtonEvent& event)
 {
-	mousemap[button] = action;
-	//return &(inputMap[action]);
-	return nullptr;
 }
 
 //-----------------------------------//
 
-Event0<>* InputMap::registerAction(const std::string& action, joyId joy)
+void InputMap::onJoyPress(const JoyButtonEvent& event)
 {
-	joystickmap[joy] = action;
-	//return &(inputMap[action]);
-	return nullptr;
 }
 
 //-----------------------------------//
 
-Event0<>* InputMap::getFunction(const std::string& action)
-{
-	//return &(inputMap[action]);
-	return nullptr;
-}
-
-//-----------------------------------//
-
-void InputMap::onKeyPress(const KeyEvent& ke)
-{
-	if(keymap.find(ke.keyCode) != keymap.end())
-	{
-		std::string action = keymap[ke.keyCode];
-		//inputMap[action]();
-	}
-}
-
-//-----------------------------------//
-
-void InputMap::onMousePress(const MouseButtonEvent& mbe)
-{
-	if(mousemap.find(mbe.button) != mousemap.end())
-	{
-		std::string action = mousemap[mbe.button];
-		//inputMap[action]();
-	}
-}
-
-//-----------------------------------//
-
-void InputMap::onJoyPress(const JoyButtonEvent& jbe)
-{
-	joyId joy((int)jbe.Button, (int)jbe.JoystickId); 
-	if(joystickmap.find(joy) != joystickmap.end())
-	{
-		std::string action = joystickmap[joy];
-		//inputMap[action]();
-	}
-}
-
-//-----------------------------------//
-
-} // end namespace
+NAMESPACE_ENGINE_END

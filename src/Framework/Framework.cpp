@@ -12,6 +12,7 @@
 #include "Core/Timer.h"
 #include "Core/Utilities.h"
 #include "Render/Device.h"
+#include "Render/RenderContext.h"
 #include "Scene/Scene.h"
 #include "Input/InputManager.h"
 #include "Resources/ResourceManager.h"
@@ -26,10 +27,9 @@ namespace vapor {
 
 //-----------------------------------//
 
-Framework::Framework(const std::string& app, const char** argv)
+Framework::Framework(const String& app)
 {
 	LogInfo( "Engine framework getting into action" );
-	Engine::create(app);
 }
 
 //-----------------------------------//
@@ -92,12 +92,10 @@ void Framework::createWindow()
 	assert( window != nullptr );
 
 	RenderDevice* device = getRenderDevice();
-
-	device->setWindow( window );
 	device->setRenderTarget( window );
 
 	// Initializes the render device with new window context.
-	device->init();
+	window->getContext()->init();
 }
 
 //-----------------------------------//
@@ -109,8 +107,8 @@ void Framework::createWindow()
 
 void Framework::mainLoop()
 {
-	RenderDevice* renderDevice = getRenderDevice();
-	Window* window = renderDevice->getWindow();
+	RenderDevice* renderDevice = GetRenderDevice();
+	Window* window = nullptr;
 
 	const uint16 numUpdatesSecond = 25;
 	const float maxUpdateTime = 1.0f / numUpdatesSecond;

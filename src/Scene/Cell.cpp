@@ -55,7 +55,8 @@ void Cell::setHeights( const std::vector<float>& heights )
 {
 	this->heights = heights;
 
-	rend = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Triangles);
+	rend = Allocate(Renderable, AllocatorGetHeap());
+	rend->setPrimitiveType(PolygonType::Triangles);
 	rend->setVertexBuffer( Allocate(VertexBuffer, AllocatorGetHeap()) );
 	rend->setIndexBuffer( Allocate(IndexBuffer, AllocatorGetHeap()) );
 	rend->setMaterial(material);

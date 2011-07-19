@@ -10,9 +10,17 @@
 
 #include "Input/Device.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
+
+struct JoystickID
+{
+	JoystickID(int, int);
+	
+	int id;
+	int button;
+};
 
 /**
  * Different types of joystick axis.
@@ -31,8 +39,6 @@ namespace JoystickAxis
 		AxisPOV,
 	};
 }
-
-//-----------------------------------//
 
 /**
  * Different types of joystick events.
@@ -126,4 +132,4 @@ private:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

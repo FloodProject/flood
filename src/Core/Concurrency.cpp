@@ -103,7 +103,7 @@ void TaskRun(Task* task)
 
 //-----------------------------------//
 
-static void TaskPoolRun(void*);
+static void TaskPoolRun(Thread*, void*);
 typedef std::vector<Thread*> ThreadQueue;
 
 TaskPool* TaskPoolCreate(Allocator* alloc, int8 Size)
@@ -189,7 +189,7 @@ void TaskPoolUpdate(TaskPool* pool)
 
 //-----------------------------------//
 
-static void TaskPoolRun(void* userdata)
+static void TaskPoolRun(Thread* thread, void* userdata)
 {
 	TaskPool* pool = (TaskPool*) userdata;
 

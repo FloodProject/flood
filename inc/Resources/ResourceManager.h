@@ -59,6 +59,9 @@ struct ResourceLoadOptions
 
 //-----------------------------------//
 
+API_RESOURCE void ResourcesInitialize();
+API_RESOURCE void ResourcesDeinitialize();
+
 typedef std::map< String, ResourceHandle > ResourceMap;
 typedef std::map< String, ResourceLoader* > ResourceLoaderMap;
 

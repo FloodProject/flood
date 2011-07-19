@@ -18,10 +18,14 @@ NAMESPACE_BEGIN
  * Representation of colors in RGBA format.
  */
 
-class API_CORE Color
+struct API_CORE ColorP
 {
-public:
+	float r, g, b, a;
+};
 
+struct API_CORE Color : public ColorP
+{
+	// Constructors
 	Color(float r = 0.0f, float g = 0.0f, float b = 0.0f, float a = 1.0f);
 	Color(int r, int g, int b, int a = 255);
 	Color(const Color& c);
@@ -48,10 +52,6 @@ public:
 	static const Color NavyBlue;
 	static const Color SkyBlue;
 	static const Color Yellow;
-
-public:
-
-	float r, g, b, a;
 };
 
 //-----------------------------------//

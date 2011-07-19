@@ -13,7 +13,7 @@
 
 FWD_DECL_INTRUSIVE(Scene)
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -49,11 +49,6 @@ public:
 
 	// Initialize the engine subsystems.
 	void init( bool createWindow = true );
-
-	// If autoInit is true, then the method will make sure everything 
-	// is properly set up when you instantiate the object, else you will
-	// have to call the init methods manually.
-	void create(const String& app);
 
 	// Adds a subsystem to be managed by the engine.
 	void addSubsystem( Subsystem* const subsystem );
@@ -101,6 +96,8 @@ public:
 	// Updates the main subsystems.
 	void update( float delta );
 
+	void stepFrame();
+
 protected:
 
 	// Subsystems.
@@ -138,14 +135,11 @@ protected:
 
 	// Scripting state.
 	ScriptManager* scriptManager;
-
-	// Application name.
-	String app;
 };
 
 // Gets the engine instance.
-Engine* GetEngine();
+API_ENGINE Engine* GetEngine();
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_ENGINE_END

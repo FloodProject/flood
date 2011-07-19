@@ -19,126 +19,135 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-static UniformBufferElement* CreateUniformElement(size_t size, const String& name)
+static char* AllocateName(const String& name)
 {
+	size_t nameSize = sizeof(char)*name.size();
+	char* newName = (char*) AllocatorAllocate(GetFrameAllocator(), nameSize+1, 0);
+	memcpy(newName, name.c_str(), nameSize);
+	newName[nameSize] = '\0';
+	return newName;
+}
+
+//-----------------------------------//
+
+UniformBufferElement* UniformBuffer::getElement(const String& name, size_t size)
+{
+	//UniformBufferElements::iterator it = elements.find( name.c_str() );
+	//if( it != elements.end() ) return it->second;
+
 	UniformBufferElement* element = (UniformBufferElement*)
-		AllocatorAllocate(GetFrameAllocator(),
-		sizeof(UniformBufferElement)+size, 0);
+		AllocatorAllocate(GetFrameAllocator(), sizeof(UniformBufferElement)+size, 0);
+
+	if( !element ) return nullptr;
 
 	element->name = nullptr;
 	element->type = (UniformDataType::Enum) 0;
 	element->count = 0;
+	element->name = AllocateName(name);
 
-	char* newName = (char*) AllocatorAllocate(
-		GetFrameAllocator(), sizeof(char)*name.size()+1, 0);
-
-	memcpy(newName, name.c_str(), name.size());
-	newName[name.size()] = '\0';
-
-	element->name = newName;
-
+	elements[name] = element;
 	return element;
-};
+}
 
 //-----------------------------------//
 
-void UniformBuffer::setUniform( const String& slot, int32 data )
+void UniformBuffer::setUniform( const String& name, int32 data )
 {
 	size_t size = sizeof(int32);
-	UniformBufferElement* element = CreateUniformElement(size, slot);
+	UniformBufferElement* element = getElement(name, size);
+	if( !element ) return;
 	element->type = UniformDataType::Scalar_I;
 	element->count = 1;
 	memcpy(&element->data, &data, size);
-	elements.push_back(element);
 }
 
 //-----------------------------------//
 
-void UniformBuffer::setUniform( const String& slot, float data )
+void UniformBuffer::setUniform( const String& name, float data )
 {
 	size_t size = sizeof(float);
-	UniformBufferElement* element = CreateUniformElement(size, slot);
+	UniformBufferElement* element = getElement(name, size);
+	if( !element ) return;
 	element->type = UniformDataType::Scalar_F;
 	element->count = 1;
 	memcpy(&element->data, &data, size);
-	elements.push_back(element);
 }
 
 //-----------------------------------//
 
-void UniformBuffer::setUniform( const String& slot, const std::vector<Vector3>& vec )
+void UniformBuffer::setUniform( const String& name, const std::vector<Vector3>& vec )
 {
 	size_t size = sizeof(Vector3)*vec.size();
-	UniformBufferElement* element = CreateUniformElement(size, slot);
+	UniformBufferElement* element = getElement(name, size);
+	if( !element ) return;
 	element->type = UniformDataType::Vector3_F;
 	element->count = vec.size();
 	memcpy(&element->data, &vec.front(), size);
-	elements.push_back(element);
 }
 
 //-----------------------------------//
 
-void UniformBuffer::setUniform( const String& slot, const std::vector<Color>& vec )
+void UniformBuffer::setUniform( const String& name, const std::vector<Color>& vec )
 {
 	assert(0 && "Not implemented yet");
 
 #if 0
 	size_t size = sizeof(Color)*vec.size();
-	UniformBufferElement* element = CreateUniformElement(size, slot);
+	UniformBufferElement* element = getElement(name, size);
+	if( !element ) return;
 	element->type = UniformDataType::Vector3_F;
 	element->count = vec.size();
 	memcpy(&element->data, &vec.front(), size);
-	elements.push_back(element);
 #endif
 }
 
 //-----------------------------------//
 
-void UniformBuffer::setUniform( const String& slot, const Vector3& vec )
+void UniformBuffer::setUniform( const String& name, const Vector3& vec )
 {
 	size_t size = sizeof(Vector3);
-	UniformBufferElement* element = CreateUniformElement(size, slot);
+	UniformBufferElement* element = getElement(name, size);
+	if( !element ) return;
 	element->type = UniformDataType::Vector3_F;
 	element->count = 1;
 	memcpy(&element->data, &vec.x, size);
-	elements.push_back(element);
 }
 
 //-----------------------------------//
 
-void UniformBuffer::setUniform( const String& slot, const Matrix4x3& matrix )
+void UniformBuffer::setUniform( const String& name, const Matrix4x3& matrix )
 {
 	Matrix4x4 m(matrix);
 	size_t size = sizeof(Matrix4x4);
-	UniformBufferElement* element = CreateUniformElement(size, slot);
+	UniformBufferElement* element = getElement(name, size);
+	if( !element ) return;
 	element->type = UniformDataType::Matrix4_F;
 	element->count = 1;
 	memcpy(&element->data, &m.m11, size);
-	elements.push_back(element);
 }
 
 //-----------------------------------//
 
-void UniformBuffer::setUniform( const String& slot, const Matrix4x4& matrix )
+void UniformBuffer::setUniform( const String& name, const Matrix4x4& matrix )
 {
 	size_t size = sizeof(Matrix4x4);
-	UniformBufferElement* element = CreateUniformElement(size, slot);
+	UniformBufferElement* element = getElement(name, size);
+	if( !element ) return;
 	element->type = UniformDataType::Matrix4_F;
 	element->count = 1;
 	memcpy(&element->data, &matrix.m11, size);
-	elements.push_back(element);
 }
 
 //-----------------------------------//
 
-void UniformBuffer::setUniform( const String& slot, const std::vector<Matrix4x4>& vec )
+void UniformBuffer::setUniform( const String& name, const std::vector<Matrix4x4>& vec )
 {
 	size_t size = sizeof(Matrix4x4)*vec.size();
-	UniformBufferElement* element = CreateUniformElement(size, slot);
+	UniformBufferElement* element = getElement(name, size);
+	if( !element ) return;
 	element->type = UniformDataType::Matrix4_F;
 	element->count = vec.size();
 	memcpy(&element->data, &vec.front(), size);
-	elements.push_back(element);
 }
 
 //-----------------------------------//

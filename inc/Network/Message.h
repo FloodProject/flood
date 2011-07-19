@@ -9,42 +9,65 @@
 #pragma once
 
 #include "Core/ReferenceCount.h"
-#include "Messages.h"
+
+struct _ENetPacket;
+typedef _ENetPacket ENetPacket;
 
 NAMESPACE_BEGIN
 
 //-----------------------------------//
+
+typedef uint32 MessageId;
+
+namespace MessageType
+{
+	enum Enum
+	{
+		Reliable,
+		Unreliable
+	};
+}
+
+typedef std::vector<byte> MessageData;
 
 class Message : public ReferenceCounted
 {
 public:
 
 	Message();
-	Message(const std::vector<byte>& data);
 	~Message();
 
-	// Inits the message with nothing.
-	void init();
+	// Accesses the message type.
+	ACESSOR(Type, MessageType::Enum, type)
 
-	// Inits the message with data.
-	void initData(const std::vector<byte>& data);
+	// Accesses the message id.
+	ACESSOR(Id, MessageId, id)
 
-	// Gets the message type.
-	GETTER(MessageType, MessageType::Enum, messageType)
+	// Accesses the message data.
+	ACESSOR(Data, const MessageData&, data)
 
-	// Sets the message type.
-	SETTER(MessageType, MessageType::Enum, messageType)
+	// Gets the internal packet.
+	ACESSOR(Packet, ENetPacket*, packet)
 
-	// Gets the internal message.
-	void* getBuffer() { return nullptr; }
+	// Prepares the message for sending.
+	void prepare();
 
 protected:
 	
+	// Creates a network packet.
+	void createPacket();
+
+	// Message id.
+	MessageId id;
+
 	// Message type.
-	MessageType::Enum messageType;
+	MessageType::Enum type;
 
 	// Message data.
-	std::vector<byte> data;
+	MessageData data;
+
+	// Network packet;
+	ENetPacket* packet;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(Message)

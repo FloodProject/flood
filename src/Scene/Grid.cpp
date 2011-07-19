@@ -113,7 +113,8 @@ void Grid::update( float update )
 	Material* material = materialHandle.Resolve();
 	//material->setDepthTest(false);
 
-	RenderablePtr rend = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Lines);
+	RenderablePtr rend = Allocate(Renderable, AllocatorGetHeap());
+	rend->setPrimitiveType(PolygonType::Lines);
 	rend->setVertexBuffer( buildGeometry() );
 	rend->setMaterial( materialHandle );
 

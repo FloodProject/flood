@@ -53,6 +53,7 @@
 #include <Resources/Mesh.h>
 #include <Resources/Sound.h>
 #include <Resources/Font.h>
+#include <Resources/Shader.h>
 
 //---------------------------------------------------------------------//
 // Scene-related Includes
@@ -81,17 +82,18 @@
 #include <Render/Device.h>
 #include <Render/View.h>
 #include <Render/Target.h>
-#include <Render/VertexBuffer.h>
+#include "Render/RenderContext.h"
+#include <Render/Buffer.h>
 #include <Render/Texture.h>
 #include <Render/Program.h>
+#include <Render/VertexBuffer.h>
 #include <Render/Renderable.h>
-#include <Resources/Shader.h>
-#include <Render/Quad.h>
 #include <Render/TextureManager.h>
 #include <Render/ProgramManager.h>
 #include <Render/FBO.h>
 #include <Render/FrameStatistics.h>
 #include <Render/DebugGeometry.h>
+#include <Render/Quad.h>
 
 //---------------------------------------------------------------------//
 // Animation-related Includes
@@ -163,6 +165,6 @@
 
 //---------------------------------------------------------------------//
 // General Includes
-//-----------------------------------------------3----------------------//
+//---------------------------------------------------------------------//
 
 #include <Engine/Engine.h>

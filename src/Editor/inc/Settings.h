@@ -21,4 +21,10 @@ static const String CacheFolder( "Cache/" );
 static const String ThumbCache( "Thumbs.cache" );
 static const int ThumbSize = 256;
 
+static const String HostAddress( "127.0.0.1" );
+static const int HostPort = 9999;
+
+// Scene document settings.
+static const Color SceneEditClearColor(0.0f, 0.10f, 0.25f);
+
 NAMESPACE_END

@@ -36,7 +36,7 @@ unsigned int WINAPI _ThreadMain(void* ptr)
 	Thread* thread = (Thread*) ptr;
 	
 	if(thread->Function)
-		thread->Function(thread->Userdata);
+		thread->Function(thread, thread->Userdata);
 
 	::CloseHandle((HANDLE) thread->Handle);
 	

@@ -53,7 +53,7 @@ struct API_RENDER UniformBufferElement
 
 //-----------------------------------//
 
-typedef std::vector<UniformBufferElement*> UniformBufferElements;
+typedef std::map<String, UniformBufferElement*> UniformBufferElements;
 
 /**
  * Represents a uniform buffer.
@@ -64,6 +64,9 @@ class API_RENDER UniformBuffer : public ReferenceCounted
 public:
 
 	UniformBufferElements elements;
+
+	// Gets the uniform if exists or creates a new one.
+	UniformBufferElement* getElement(const String& name, size_t size);
 
 	// Adds a uniform to the shader.
 	void setUniform( const String& slot, int32 data );

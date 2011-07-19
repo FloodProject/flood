@@ -88,14 +88,12 @@ void Projector::appendRenderables( RenderQueue& queue, const TransformPtr& trans
 
 void Projector::onRender( const RenderState& state )
 {
-	String shader = state.material->getProgram();
-	ProgramPtr program = GetRenderDevice()->getProgramManager()->getProgram(shader);
-
 	const TransformPtr& transform = getEntity()->getTransform();
 	const Matrix4x4& absoluteTransform = transform->getAbsoluteTransform();
 
-	program->setUniform("vp_TextureProjection", frustum.matProjection);
-	program->setUniform("vp_TextureView", absoluteTransform.inverse());
+	const UniformBufferPtr& ub = state.renderable->getUniformBuffer();
+	ub->setUniform("vp_TextureProjection", frustum.matProjection);
+	ub->setUniform("vp_TextureView", absoluteTransform.inverse());
 }
 
 //-----------------------------------//

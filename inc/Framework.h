@@ -31,7 +31,7 @@ class VAPOR_API Framework : public Engine
 {
 public:
 
-	Framework(const std::string& app, const char** argv);
+	Framework(const String& app);
 	virtual ~Framework() { }
 
 	// Kickstart the framework in action.

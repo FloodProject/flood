@@ -30,6 +30,7 @@ REFLECT_ENUM(ResourceGroup)
 	ENUM(Scripts)
 	ENUM(Scenes)
 	ENUM(Materials)
+	ENUM(Particles)
 REFLECT_ENUM_END()
 
 REFLECT_ABSTRACT_CHILD_CLASS(Resource, Object)

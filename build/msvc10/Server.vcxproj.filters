@@ -7,6 +7,18 @@
     <Filter Include="Settings">
       <UniqueIdentifier>{df3c7ee9-5540-41e0-a0b4-896d9e30f81d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Authentication">
+      <UniqueIdentifier>{57325666-99cd-4530-bf65-a389350e049c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Encryption">
+      <UniqueIdentifier>{d8695cf2-3146-4424-99a7-65eb7c51b5a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Session">
+      <UniqueIdentifier>{a5e5acd3-df89-4614-b19d-887acb034ab0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Cryptography">
+      <UniqueIdentifier>{1bc30378-2ba2-429b-b17f-a5b8e4d0eb6f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Server\Settings.cpp">
@@ -14,12 +26,30 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Server\Server.cpp" />
     <ClCompile Include="..\..\src\Server\Main.cpp" />
+    <ClCompile Include="..\..\src\Server\CipherISAAC.cpp">
+      <Filter>Cryptography</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Server\SessionManager.cpp">
+      <Filter>Session</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Server\Session.cpp">
+      <Filter>Session</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\Server\API.h" />
     <ClInclude Include="..\..\inc\Server\Server.h" />
     <ClInclude Include="..\..\inc\Server\Settings.h">
       <Filter>Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Server\Session.h">
+      <Filter>Session</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Server\CipherISAAC.h">
+      <Filter>Cryptography</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Server\SessionManager.h">
+      <Filter>Session</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

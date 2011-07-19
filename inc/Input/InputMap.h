@@ -8,61 +8,79 @@
 
 #pragma once
 
-#include "input/InputManager.h"
-#include "input/Keyboard.h"
-#include "input/Mouse.h"
-#include "input/Joystick.h"
+#include "Input/InputManager.h"
+#include "Input/Keyboard.h"
+#include "Input/Mouse.h"
+#include "Input/Joystick.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-struct joyId
+/**
+ * Input actions abstract an action triggered by an input binding.
+ * This allows the code that handles the action to be unaware of the
+ * specific combination that triggered the action, and provides
+ * support for remapping of actions by the users of the application.
+ */
+
+class API_INPUT InputAction
 {
-	joyId(int, int);
-	int id;
-	int button;
-	
+public:
+
+	// Adds a new binding for the action.
+	void addBinding();
+
+	// Name of the action.
+	String name;
 };
 
-//-----------------------------------//
+/**
+ * Input schemas provide grouping for input actions. This can be useful
+ * when you have distinct modes in your application, for example a 'Menu'
+ * schema, a 'Driving' schema aswell as a 'Flying' schema.
+ */
 
-struct Compare
+class API_INPUT InputSchema
 {
-	bool operator()(joyId lhs, joyId rhs) const
-	{
-		return lhs.id < rhs.id;
-	}
+public:
+
+	// Creates a new input action.
+	InputAction* createAction(const String& name);
+
+	// Name of the schema.
+	String name;
 };
 
-//-----------------------------------//
+/**
+ * Manages all the input schemas, bindings and keeps track of
+ * the current schema aswell as matching the input events to
+ * the specific input actions in the schemas.
+ */
 
-class VAPOR_API InputMap
+class API_INPUT InputMap
 {
 	DECLARE_UNCOPYABLE(InputMap);
 
 public:
 
-	InputMap( const InputManager& manager );
+	InputMap( const InputManager& input );
 	~InputMap();
 
-	Event0<>* registerAction(const std::string&, Keys::Enum);
-	Event0<>* registerAction(const std::string&, MouseButton::Enum);
-	Event0<>* registerAction(const std::string&, joyId);
-	Event0<>* getFunction(const std::string&);
-	
-	void onKeyPress(const KeyEvent& ke);
-	void onMousePress(const MouseButtonEvent& mbe);
-	void onJoyPress(const JoyButtonEvent& jbe);
+	// Creates a new input schema.
+	InputSchema* createSchema(const String& name);
 
-private:
+	// Sets the current input schema.
+	void setSchema(InputSchema* schema);
 
-	std::map< Keys::Enum, std::string > keymap;
-	std::map< MouseButton::Enum, std::string > mousemap;
-	std::map< joyId, std::string, Compare> joystickmap;
-	std::map< std::string, Event0<>* > inputMap; 
+protected:
+
+	// Input callbacks.
+	void onKeyPress(const KeyEvent& event);
+	void onMousePress(const MouseButtonEvent& event);
+	void onJoyPress(const JoyButtonEvent& event);
 };
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

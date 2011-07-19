@@ -56,7 +56,8 @@ struct RESOURCE_API ResourceGroup
 		Audio,
 		Scripts,
 		Scenes,
-		Materials
+		Materials,
+		Particles,
 	};
 };
 
