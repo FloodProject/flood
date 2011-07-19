@@ -103,6 +103,9 @@
     <Filter Include="Compression">
       <UniqueIdentifier>{7e67042d-0a93-4715-8bb5-aef7e0e6651c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Plugins">
+      <UniqueIdentifier>{bde74505-c487-4684-b6b8-623fbe435ad3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Core\Utilities.cpp">
@@ -234,6 +237,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Core\Message.cpp">
       <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\Plugin.cpp">
+      <Filter>Plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\PluginManager.cpp">
+      <Filter>Plugins</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -371,6 +380,12 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\Network\Message.h">
       <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\Plugin.h">
+      <Filter>Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\PluginManager.h">
+      <Filter>Plugins</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -12,8 +12,8 @@
 // Core APIs
 //---------------------------------------------------------------------//
 
-//#define		ENABLE_MEMORY_TR1_VENDOR
-//#define		ENABLE_MEMORY_SHARED_PTR
+//#define	ENABLE_MEMORY_TR1_VENDOR
+//#define	ENABLE_MEMORY_SHARED_PTR
 #define		ENABLE_MEMORY_INTRUSIVE_PTR
 #define		ENABLE_MEMORY_LEAK_DETECTOR
 //#define	ENABLE_DYNAMIC_LIBRARY
@@ -27,7 +27,7 @@
 #define		ENABLE_SERIALIZATION_JSON
 //#define	ENABLE_SERIALIZATION_BINARY
 #define		ENABLE_STACK_WALKER
-//#define		ENABLE_HTTP_SERVER
+//#define	ENABLE_HTTP_SERVER
 
 //---------------------------------------------------------------------//
 // Platform headers
@@ -47,8 +47,11 @@
 	#define API_CORE
 #endif
 
-#define NAMESPACE_BEGIN namespace vapor {
-#define NAMESPACE_END }
+#define NAMESPACE_CORE_BEGIN namespace vapor {
+#define NAMESPACE_CORE_END }
+
+#define NAMESPACE_BEGIN NAMESPACE_CORE_BEGIN
+#define NAMESPACE_END NAMESPACE_CORE_END
 
 #if defined(__cplusplus) || defined(SWIG)
 #define EXTERN_BEGIN extern "C" {

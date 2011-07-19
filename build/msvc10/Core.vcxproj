@@ -189,6 +189,8 @@
     <ClCompile Include="..\..\src\Core\Memory.cpp" />
     <ClCompile Include="..\..\src\Core\Message.cpp" />
     <ClCompile Include="..\..\src\Core\Network.cpp" />
+    <ClCompile Include="..\..\src\Core\Plugin.cpp" />
+    <ClCompile Include="..\..\src\Core\PluginManager.cpp" />
     <ClCompile Include="..\..\src\Core\Profiler.cpp" />
     <ClCompile Include="..\..\src\Core\Reflection.cpp" />
     <ClCompile Include="..\..\src\Core\Serialization.cpp" />
@@ -242,6 +244,8 @@
     <ClInclude Include="..\..\inc\Core\Memory.h" />
     <ClInclude Include="..\..\inc\Core\Object.h" />
     <ClInclude Include="..\..\inc\Core\Platform.h" />
+    <ClInclude Include="..\..\inc\Core\Plugin.h" />
+    <ClInclude Include="..\..\inc\Core\PluginManager.h" />
     <ClInclude Include="..\..\inc\Core\Pointers.h" />
     <ClInclude Include="..\..\inc\Core\ReferenceCount.h" />
     <ClInclude Include="..\..\inc\Core\Reflection.h" />
