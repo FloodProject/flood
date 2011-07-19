@@ -9,8 +9,11 @@
 #include "Server/API.h"
 #include "Server/Server.h"
 #include "Server/Settings.h"
+#include "Server/Session.h"
+
 #include "Core/Event.h"
 #include "Core/Concurrency.h"
+#include "Core/Utilities.h"
 
 #include <enet/enet.h>
 
@@ -18,16 +21,22 @@ NAMESPACE_SERVER_BEGIN
 
 //-----------------------------------//
 
-static Allocator* g_AllocatorServer = nullptr;
+static Allocator* gs_AllocatorServer = nullptr;
 
-void InitializeServerAllocator()
+void ServerInitialize()
 {
-	g_AllocatorServer = AllocatorCreateHeap(AllocatorGetHeap(), "Server");
+	gs_AllocatorServer = AllocatorCreateHeap(AllocatorGetHeap());
+	AllocatorSetGroup(gs_AllocatorServer, "Server");
+}
+
+void ServerDeinitialize()
+{
+	AllocatorDestroy(gs_AllocatorServer);
 }
 
 Allocator* AllocatorGetServer()
 {
-	return g_AllocatorServer;
+	return gs_AllocatorServer;
 }
 
 //-----------------------------------//
@@ -57,6 +66,8 @@ bool Server::init()
 	networkThread = ThreadCreate( AllocatorGetServer() );
 
 	host.createSocket("", Settings::HostPort);
+	host.onClientConnected.Connect(this, &Server::handleClientConnect);
+	host.onClientDisconnected.Connect(this, &Server::handleClientDisconnect);
 
 	return true;
 }
@@ -66,22 +77,20 @@ bool Server::init()
 void Server::shutdown()
 {
 	ThreadDestroy(networkThread);
-
 	NetworkDeinitialize();
 }
 
 //-----------------------------------//
 
-static void ProcessMessagesThread(void* threadUserdata)
+static void ProcessMessagesThread(Thread* thread, void* data)
 {
-	NetworkHost* host = (NetworkHost*) threadUserdata;
+	NetworkHost* host = (NetworkHost*) data;
 	
 	LogInfo("Networking thread will now start listening for messages...");
 
-	while(true)
+	while(thread->IsRunning)
 	{
-		host->waitMessages();
-		host->dispatchMessages();
+		host->processEvents(100);
 	}
 }
 
@@ -90,7 +99,7 @@ static void ProcessMessagesThread(void* threadUserdata)
 void Server::run()
 {
 	ThreadStart(networkThread, ProcessMessagesThread, &host);
-	ThreadSetName(networkThread, "Network");
+	ThreadSetName(networkThread, "Networking");
 	
 	if(!networkThread)
 	{
@@ -100,9 +109,7 @@ void Server::run()
 
 	while(true)
 	{
-		char buf[80];
-		if(strcmp(gets(buf), "quit\n"))
-			return;
+		SystemSleep(0);
 	}
 }
 
@@ -115,15 +122,19 @@ void Server::parseConfig()
 
 //-----------------------------------//
 
-void Server::handleClientConnect(const NetworkPeer& networkPeer)
+void Server::handleClientConnect(const NetworkPeerPtr& networkPeer)
 {
-	LogInfo("Client connected: %s", networkPeer.getHostname().c_str());
+	LogInfo("Client connected: %s", networkPeer->getHostName().c_str());
+
+	Session* session = Allocate(Session, AllocatorGetServer());
+	session->setPeer(networkPeer);
 }
 
 //-----------------------------------//
 
-void Server::handleClientDisconnect(const NetworkPeer& peer)
+void Server::handleClientDisconnect(const NetworkPeerPtr& networkPeer)
 {
+	LogInfo("Client disconnected: %s", networkPeer->getHostName().c_str());
 }
 
 //-----------------------------------//

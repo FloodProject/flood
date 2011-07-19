@@ -31,6 +31,7 @@ RenderWindow::~RenderWindow()
 {
 	LogDebug("Destroying RenderWindow");
 
+	LogDebug("Destroying OpenGL context");
 	delete context;
 	delete inputManager;
 }

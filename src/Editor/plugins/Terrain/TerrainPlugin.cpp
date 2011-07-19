@@ -110,8 +110,10 @@ void TerrainPlugin::onToolSelect( int id )
 		editor->getAUI()->Update();
 	}
 
+#if PROGRAM_BUFFER
 	ProgramManager* programs = GetRenderDevice()->getProgramManager();
 	programs->getProgram("ProjectiveTexturing", true);
+#endif
 }
 
 //-----------------------------------//
@@ -327,7 +329,7 @@ bool TerrainPlugin::pickCell( int x, int y )
 	if( !terrain ) return false;
 
 	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
-	const CameraPtr& camera = document->viewFrame->getView()->getCamera(); 
+	const CameraPtr& camera = document->viewframe->getView()->getCamera(); 
 	
 	// Get a ray given the screen location clicked.
 	const Ray& pickRay = camera->getRay(x, y);
@@ -439,7 +441,7 @@ bool TerrainPlugin::pickTerrain( int x, int y, RayTriangleQueryResult& res )
 	const ScenePtr& scene = GetEngine()->getScene();
 
 	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
-	const CameraPtr& camera = document->viewFrame->getView()->getCamera(); 
+	const CameraPtr& camera = document->viewframe->getView()->getCamera(); 
 	
 	// Get a ray given the screen location clicked.
 	const Ray& pickRay = camera->getRay(x, y);

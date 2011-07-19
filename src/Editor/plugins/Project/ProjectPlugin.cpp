@@ -93,7 +93,7 @@ void ProjectPlugin::onNewButtonClick(wxCommandEvent& event)
 {
 	Document* current = editor->getDocument();
 	
-#if 1
+#if 0
 	if(current)
 	{
 		wxMessageBox("Sorry, creating new documents is disabled",

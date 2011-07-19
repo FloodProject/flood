@@ -26,7 +26,8 @@ void GizmoRotate::buildGeometry()
 
 	lines = generateCircles();
 
-	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Lines);
+	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap());
+	renderable->setPrimitiveType(PolygonType::Lines);
 	renderable->setVertexBuffer(lines);
 	renderable->setMaterial(material);
 	renderable->setRenderLayer(RenderLayer::PostTransparency);

@@ -10,6 +10,7 @@
 #include "SceneDocument.h"
 #include "Editor.h"
 #include "Events.h"
+#include "Settings.h"
 #include "RenderControl.h"
 #include "EditorIcons.h"
 #include "ResourceDrop.h"
@@ -23,13 +24,13 @@ NAMESPACE_EDITOR_BEGIN
 //-----------------------------------//
 
 SceneDocument::SceneDocument()
-	: viewFrame(nullptr)
+	: viewframe(nullptr)
 	, toolbar(nullptr)
 {
 	createView();
 	createScene();
 
-	RenderControl* control = viewFrame->getControl();
+	RenderControl* control = viewframe->getControl();
 	control->Bind(wxEVT_RIGHT_UP, &SceneDocument::OnMouseRightUp, this); 
 	control->Bind(wxEVT_RIGHT_DOWN, &SceneDocument::OnMouseRightDown, this);
 	control->Bind(wxEVT_LEFT_DOWN, &SceneDocument::OnMouseEvent, this);
@@ -54,12 +55,12 @@ SceneDocument::~SceneDocument()
 
 	resetScene();
 
-	RenderControl* control = viewFrame->getControl();
+	RenderControl* control = viewframe->getControl();
 	control->stopFrameLoop();
 	control->onRender.clear();
 	control->onUpdate.clear();
 
-	viewFrame->destroyControl();
+	viewframe->destroyControl();
 }
 
 //-----------------------------------//
@@ -101,7 +102,7 @@ void SceneDocument::OnMouseRightDown(wxMouseEvent& event)
 
 wxWindow* SceneDocument::getWindow()
 {
-	return viewFrame;
+	return viewframe;
 }
 
 //-----------------------------------//
@@ -111,9 +112,8 @@ void SceneDocument::setupRenderWindow()
 	Window* window = getRenderWindow();
 
 	RenderDevice* device = GetRenderDevice();
-	device->setWindow( window );
 	device->setRenderTarget( window );
-	device->init();
+	window->getContext()->init();
 }
 
 //-----------------------------------//
@@ -122,7 +122,7 @@ void SceneDocument::onDocumentSelect()
 {
 	setupRenderWindow();
 
-	RenderControl* control = viewFrame->getControl();
+	RenderControl* control = viewframe->getControl();
 	control->startFrameLoop();
 
 	wxAuiManager* aui = GetEditor().getAUI();
@@ -137,8 +137,10 @@ void SceneDocument::onDocumentSelect()
 
 void SceneDocument::onDocumentUnselect()
 {
-	RenderControl* control = viewFrame->getControl();
+	RenderControl* control = viewframe->getControl();
 	control->stopFrameLoop();
+
+	#pragma TODO("Don't use hardcoded pane names")
 
 	wxAuiManager* aui = GetEditor().getAUI();
 	aui->GetPane("Hierarchy").Hide();
@@ -158,30 +160,29 @@ void SceneDocument::OnMouseEvent(wxMouseEvent& event)
 
 void SceneDocument::createView()
 {
-	viewFrame = new Viewframe( &GetEditor() );
+	viewframe = new Viewframe( &GetEditor() );
 
 	toolbar = createContextToolbar();
 	toolbar->Realize();
 
-	RenderControl* control = viewFrame->createControl();
+	RenderControl* control = viewframe->createControl();
 	control->onRender.Bind( this, &SceneDocument::onRender );
 	control->onUpdate.Bind( this, &SceneDocument::onUpdate );
 	control->SetDropTarget( new ResourceDropTarget( &GetEditor() ) );
 	control->SetFocus();
 	setupRenderWindow();
 
-	RenderView* view = viewFrame->createView();
-	#pragma TODO(Use configurable colors)
-	view->setClearColor( Color(0.0f, 0.10f, 0.25f) );
+	RenderView* view = viewframe->createView();
+	view->setClearColor(SceneEditClearColor);
 
-	viewFrame->mainSizer->Add(toolbar, wxSizerFlags().Expand().Top());
+	viewframe->mainSizer->Add(toolbar, wxSizerFlags().Expand().Top());
 }
 
 //-----------------------------------//
 
 wxAuiToolBar* SceneDocument::createContextToolbar()
 {
-	wxAuiToolBar* tb = new wxAuiToolBar(viewFrame);
+	wxAuiToolBar* tb = new wxAuiToolBar(viewframe);
 	return tb;
 }
 
@@ -189,7 +190,7 @@ wxAuiToolBar* SceneDocument::createContextToolbar()
 
 void SceneDocument::onToolSelect(PluginTool* mode)
 {
-	wxSizer* sizer = viewFrame->mainSizer;
+	wxSizer* sizer = viewframe->mainSizer;
 	wxSizerItem* item = sizer->GetChildren().GetLast()->GetData();
 	
 	wxWindow* currentWindow = item->GetWindow();
@@ -223,8 +224,8 @@ void SceneDocument::createScene()
 	editorScene->add( nodeCamera );
 
 	CameraPtr camera = nodeCamera->getComponent<Camera>();
-	viewFrame->setMainCamera(camera);
-	viewFrame->switchToDefaultCamera();
+	viewframe->setMainCamera(camera);
+	viewframe->switchToDefaultCamera();
 }
 
 //-----------------------------------//
@@ -264,10 +265,10 @@ EntityPtr SceneDocument::createCamera()
 
 void SceneDocument::onRender()
 {
-	RenderView* view = viewFrame->getView();
+	RenderView* view = viewframe->getView();
 
 	if( !view->getCamera() )
-		viewFrame->switchToDefaultCamera();
+		viewframe->switchToDefaultCamera();
 
 	const CameraPtr& camera = view->getCamera();
 	if( !camera ) return;
@@ -279,6 +280,8 @@ void SceneDocument::onRender()
 	camera->cull( block, editorScene );
 	camera->render(block);
 
+	GetEngine()->stepFrame();
+
 #ifdef ENABLE_PHYSICS_BULLET
 	PhysicsManager* physics = engine->getPhysicsManager();
 	physics->drawDebugWorld();
@@ -289,6 +292,8 @@ void SceneDocument::onRender()
 
 void SceneDocument::onUpdate( float delta )
 {
+	#pragma TODO("Engine specific updates should not be done per scene")
+
 	GetEngine()->update( delta );
 	
 	if(editorScene)

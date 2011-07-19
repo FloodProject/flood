@@ -79,8 +79,8 @@ void Viewframe::switchToDefaultCamera()
 RenderView* Viewframe::createView()
 {
 	Window* window = control->getRenderWindow();
-	view = window->createView();
 
+	view = window->createView();
 	view->onCameraChanged.Connect(this, &Viewframe::onCameraChanged);
 	
 	return view;

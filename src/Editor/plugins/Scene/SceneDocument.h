@@ -31,10 +31,10 @@ public:
 	virtual wxWindow* getWindow();
 	
 	// Gets the view frame.
-	Viewframe* getViewframe() { return viewFrame; }
+	Viewframe* getViewframe() { return viewframe; }
 
 	// Gets the render control.
-	RenderControl* getRenderControl() { return viewFrame->getControl(); }
+	RenderControl* getRenderControl() { return viewframe->getControl(); }
 	
 	// Gets the render window.
 	RenderWindow* getRenderWindow() { return getRenderControl()->getRenderWindow(); }
@@ -53,7 +53,7 @@ public:
 	ScenePtr editorScene;
 	FirstPersonControllerPtr cameraController;
 	
-	Viewframe* viewFrame;
+	Viewframe* viewframe;
 	wxAuiToolBar* toolbar;
 
 protected:

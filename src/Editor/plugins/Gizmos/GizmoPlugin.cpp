@@ -191,7 +191,7 @@ Plane GizmoPlugin::getGizmoPickPlane()
 	Plane planeZ( Vector3::UnitZ, gizmoPosition.z );
 
 	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
-	RenderView* renderView = document->viewFrame->getView();
+	RenderView* renderView = document->viewframe->getView();
 	const CameraPtr& camera = renderView->getCamera(); 
 	
 	Vector2i viewCenter = renderView->getSize() / 2.0f;
@@ -214,7 +214,7 @@ Plane GizmoPlugin::getGizmoPickPlane()
 bool GizmoPlugin::getGizmoPickPoint(int x, int y, Vector3& pickPoint)
 {
 	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
-	const CameraPtr& camera = document->viewFrame->getView()->getCamera(); 	
+	const CameraPtr& camera = document->viewframe->getView()->getCamera(); 	
 
 	Plane pickPlane = getGizmoPickPlane();	
 	Ray ray = camera->getRay(x, y);
@@ -351,7 +351,7 @@ void GizmoPlugin::createGizmo( const EntityPtr& entity )
 	assert( gizmos.find(entity) == gizmos.end() );
 
 	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
-	RenderView* view = document->viewFrame->getView();
+	RenderView* view = document->viewframe->getView();
 	const CameraPtr& camera = view->getCamera();
 
 	Gizmo* newGizmo = nullptr;
@@ -413,7 +413,7 @@ bool GizmoPlugin::pickImageTest( const MouseMoveEvent& moveEvent,
 								 GizmoAxis::Enum& axis )
 {
 	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
-	RenderView* view = document->viewFrame->getView();
+	RenderView* view = document->viewframe->getView();
 	Vector2i size = view->getSize();
 
 	// We need to flip the Y-axis due to a mismatch between the 
@@ -422,7 +422,7 @@ bool GizmoPlugin::pickImageTest( const MouseMoveEvent& moveEvent,
 	int mouseY = size.y - moveEvent.y;
 
 	RenderDevice* device = GetRenderDevice();
-	Color pick = device->getPixel(mouseX, mouseY);
+	Color pick = device->getRenderTarget()->getContext()->getPixel(mouseX, mouseY);
 
 	axis = gizmo->getAxis(pick);
 	return axis != GizmoAxis::None;
@@ -433,7 +433,7 @@ bool GizmoPlugin::pickImageTest( const MouseMoveEvent& moveEvent,
 bool GizmoPlugin::pickBoundingTest( const MouseMoveEvent& me )
 {
 	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
-	const CameraPtr& camera = document->viewFrame->getView()->getCamera();
+	const CameraPtr& camera = document->viewframe->getView()->getCamera();
 
 	// Get a ray given the screen location clicked.
 	Vector3 outFar;

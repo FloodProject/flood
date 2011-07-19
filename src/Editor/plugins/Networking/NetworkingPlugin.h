@@ -9,8 +9,10 @@
 #pragma once
 
 #include "Plugin.h"
+#include "Core/Concurrency.h"
 
 FWD_DECL_INTRUSIVE(NetworkClient)
+FWD_DECL_INTRUSIVE(NetworkPeer)
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -35,10 +37,14 @@ public:
 	// Plugin disable callback.
 	virtual void onPluginDisable();
 
-	// Connects to the remote host.
-	void connect();
+	// Handles client connections.
+	void handleClientConnect(const NetworkPeerPtr& peer);
+
+	// Handles client disconnections.
+	void handleClientDisconnect(const NetworkPeerPtr& peer);
 
 	NetworkClientPtr client;
+	Thread* networkThread;
 };
 
 //-----------------------------------//

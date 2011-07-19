@@ -339,7 +339,7 @@ SelectionOperation* SelectionPlugin::processDragSelection(const MouseButtonEvent
 {
 	SceneDocument* sceneDocument = (SceneDocument*) editor->getDocument();
 	const ScenePtr& scene = sceneDocument->scene;
-	RenderView* view = sceneDocument->viewFrame->getView();
+	RenderView* view = sceneDocument->viewframe->getView();
 	const CameraPtr& camera = view->getCamera();
 
 	OverlayPtr overlay = dragRectangle->getComponent<Overlay>();
@@ -423,7 +423,7 @@ bool SelectionPlugin::getPickEntity(int x, int y, EntityPtr& entity)
 	
 	sceneDocument->editorScene->remove(dragRectangle);
 
-	RenderView* view = sceneDocument->viewFrame->getView();
+	RenderView* view = sceneDocument->viewframe->getView();
 	const CameraPtr& camera = view->getCamera();
 	const ScenePtr& scene = sceneDocument->scene;
 

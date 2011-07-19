@@ -36,6 +36,7 @@ PluginMetadata UndoPlugin::getMetadata()
 	metadata.description = "Provides undo and redo functionality.";
 	metadata.author = "triton";
 	metadata.version = "1.0";
+	metadata.priority = 12;
 
 	return metadata;
 }

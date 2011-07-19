@@ -24,7 +24,8 @@ void GizmoScale::buildGeometry()
 {
 	lines = generateLines();
 
-	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Lines);
+	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap());
+	renderable->setPrimitiveType(PolygonType::Lines);
 	renderable->setVertexBuffer(lines);
 	renderable->setMaterial(material);
 
@@ -32,7 +33,8 @@ void GizmoScale::buildGeometry()
 
 	cubes = generateCubes();
 
-	renderable = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Quads);
+	renderable = Allocate(Renderable, AllocatorGetHeap());
+	renderable->setPrimitiveType(PolygonType::Quads);
 	renderable->setVertexBuffer(cubes);
 	renderable->setMaterial(material);
 	renderable->setRenderLayer(RenderLayer::PostTransparency);

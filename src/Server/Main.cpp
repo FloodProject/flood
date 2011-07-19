@@ -13,7 +13,7 @@ using namespace vapor;
 
 int main()
 {
-	InitializeServerAllocator();
+	ServerInitialize();
 	Log* log = LogCreate( AllocatorGetServer() );
 
 	Server server;
@@ -22,7 +22,7 @@ int main()
 	server.shutdown();
 
 	LogDestroy(log);
-	AllocatorDestroy( AllocatorGetServer() );
+	ServerDeinitialize();
 
 	AllocatorDumpInfo();
 

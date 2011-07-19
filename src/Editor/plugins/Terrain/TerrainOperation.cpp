@@ -353,8 +353,10 @@ void TerrainOperation::applyPaintTool()
 
 	BlitToImage(brush.get(), image, paintImage.get(), x, y, offsetX, offsetY);
 
+#if PROGRAM_BUFFER
 	TexturePtr texture = GetRenderDevice()->getTextureManager()->getTexture(image);
 	texture->setImage(image);
+#endif
 }
 
 //-----------------------------------//

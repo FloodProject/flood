@@ -13,6 +13,7 @@
 #include "TerrainPage.h"
 #include "Core/Utilities.h"
 #include "Resources/ResourceManager.h"
+#include "Settings.h"
 
 namespace vapor { namespace editor {
 
@@ -30,7 +31,7 @@ TerrainPage::TerrainPage( wxWindow* parent, wxWindowID id,
 
 void TerrainPage::createBrushes()
 {
-	String brushesPath = "Assets/Brushes/";
+	String brushesPath = MediaFolder + "Brushes/";
 	
 	std::vector<String> files;
 	FileEnumerateFiles(brushesPath, files);
@@ -45,6 +46,8 @@ void TerrainPage::createBrushes()
 		if( !image ) continue;
 
 		wxBitmap* bmp = ConvertImageToBitmap(image);
+		if( !bmp ) continue;
+
 		m_choiceBrush->Append( PathGetFile(file), *bmp);
 		delete bmp;
 	}

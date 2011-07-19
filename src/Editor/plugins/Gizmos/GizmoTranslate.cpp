@@ -28,7 +28,8 @@ void GizmoTranslate::buildGeometry()
 {
 	lines = generateLines();
 	
-	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Lines);
+	RenderablePtr renderable = Allocate(Renderable, AllocatorGetHeap());
+	renderable->setPrimitiveType(PolygonType::Lines);
 	renderable->setVertexBuffer(lines);
 	renderable->setMaterial(material);
 
@@ -36,7 +37,8 @@ void GizmoTranslate::buildGeometry()
 
 	cones = generateCones();
 	
-	renderable = Allocate(Renderable, AllocatorGetHeap(), PolygonType::Triangles);
+	renderable = Allocate(Renderable, AllocatorGetHeap());
+	renderable->setPrimitiveType(PolygonType::Triangles);
 	renderable->setVertexBuffer(cones);
 	renderable->setMaterial(material);
 	renderable->setRenderLayer(RenderLayer::PostTransparency);
