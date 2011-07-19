@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Plugin.h"
+#include "EditorPlugin.h"
 
 #ifdef ENABLE_PLUGIN_MONO
 
@@ -20,7 +20,7 @@ namespace vapor { namespace editor {
 
 REFLECT_DECLARE_CLASS(MonoPlugin)
 
-class MonoPlugin : public Plugin
+class MonoPlugin : public EditorPlugin
 {
 	REFLECT_DECLARE_OBJECT(MonoPlugin)
 

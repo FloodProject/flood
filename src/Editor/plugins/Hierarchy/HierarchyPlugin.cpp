@@ -17,7 +17,7 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-REFLECT_CHILD_CLASS(HierarchyPlugin, Plugin)
+REFLECT_CHILD_CLASS(HierarchyPlugin, EditorPlugin)
 REFLECT_CLASS_END()
 
 //-----------------------------------//

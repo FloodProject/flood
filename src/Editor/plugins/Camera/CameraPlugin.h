@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Plugin.h"
+#include "EditorPlugin.h"
 
 namespace vapor { namespace editor {
 
@@ -18,7 +18,7 @@ class CameraControls;
 
 REFLECT_DECLARE_CLASS(CameraPlugin)
 
-class CameraPlugin : public Plugin
+class CameraPlugin : public EditorPlugin
 {
 	REFLECT_DECLARE_OBJECT(CameraPlugin)
 

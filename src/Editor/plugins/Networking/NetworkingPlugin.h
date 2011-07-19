@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Plugin.h"
+#include "EditorPlugin.h"
 #include "Core/Concurrency.h"
 
 FWD_DECL_INTRUSIVE(NetworkClient)
@@ -20,7 +20,7 @@ NAMESPACE_EDITOR_BEGIN
 
 REFLECT_DECLARE_CLASS(NetworkingPlugin)
 
-class NetworkingPlugin : public Plugin
+class NetworkingPlugin : public EditorPlugin
 {
 	REFLECT_DECLARE_OBJECT(NetworkingPlugin)
 

@@ -49,7 +49,7 @@ public:
 	bool isPluginEnabled( Plugin* plugin ) const;
 
 	// Scans for plugins.
-	void scanPlugins(std::vector<Plugin*>& plugins);
+	void scanPlugins(Class* type, std::vector<Plugin*>& plugins);
 
 	// Sorts the plugins by priority.
 	void sortPlugins(std::vector<Plugin*>& plugins);
@@ -66,9 +66,6 @@ public:
 
 protected:
 	
-	// Processes tools from a plugin into tools map.
-	void processTools( Plugin* plugin, bool enable );
-
 	// Keeps the known tools.
 	std::vector<Plugin*> plugins;
 };

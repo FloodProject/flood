@@ -9,11 +9,11 @@
 #include "Editor/API.h"
 #include "Events.h"
 #include "Editor.h"
-#include "Plugin.h"
-#include "PluginManager.h"
+#include "EditorPlugin.h"
+#include "Core/PluginManager.h"
 #include "Document.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -69,10 +69,10 @@ void Events::disconnectPluginListeners()
 
 //-----------------------------------//
 
-void Events::addEventListener( Plugin* plugin )
+void Events::addEventListener( EditorPlugin* plugin )
 {
-	std::vector<Plugin*>::iterator it;
-	it = std::find(eventListeners.begin(), eventListeners.end(), plugin);
+	EventListeners::iterator it =
+		std::find(eventListeners.begin(), eventListeners.end(), plugin);
 	
 	if( it != eventListeners.end() )
 		return;
@@ -82,7 +82,7 @@ void Events::addEventListener( Plugin* plugin )
 
 //-----------------------------------//
 
-void Events::removeEventListener( Plugin* plugin )
+void Events::removeEventListener( EditorPlugin* plugin )
 {
 	auto it = std::find(eventListeners.begin(), eventListeners.end(), plugin);
 	assert( it != eventListeners.end() );
@@ -107,7 +107,7 @@ bool Events::TryBefore(wxEvent& event)
 	if( tool->GetKind() != wxITEM_RADIO )
 		return false;
 
-	Plugin* plugin = (Plugin*) tool->GetUserData();
+	EditorPlugin* plugin = (EditorPlugin*) tool->GetUserData();
 	
 	if( !plugin )
 	{
@@ -125,7 +125,7 @@ bool Events::TryBefore(wxEvent& event)
 
 //-----------------------------------//
 
-void Events::setTool(Plugin* plugin, PluginTool* tool)
+void Events::setTool(EditorPlugin* plugin, PluginTool* tool)
 {
 	int id = tool->item->GetId();
 
@@ -171,7 +171,7 @@ void Events::onPluginDisableEvent(Plugin* plugin)
 														\
 	for( size_t i = 0; i < eventListeners.size(); i++ )	\
 	{													\
-		Plugin* plugin = eventListeners[i];				\
+		EditorPlugin* plugin = eventListeners[i];		\
 		if(plugin == currentPlugin) continue;			\
 		plugin->func(__VA_ARGS__);						\
 	}
@@ -348,4 +348,4 @@ void Events::registerInputCallbacks()
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

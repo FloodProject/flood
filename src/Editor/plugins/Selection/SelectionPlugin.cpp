@@ -22,7 +22,7 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-REFLECT_CHILD_CLASS(SelectionPlugin, Plugin)
+REFLECT_CHILD_CLASS(SelectionPlugin, EditorPlugin)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
@@ -38,8 +38,7 @@ namespace SelectionTool
 //-----------------------------------//
 
 SelectionPlugin::SelectionPlugin()
-	: Plugin()
-	, selections(nullptr)
+	: selections(nullptr)
 	, buttonSelect(nullptr)
 	, dragRectangle(nullptr)
 	, additiveMode(false)

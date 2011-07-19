@@ -15,7 +15,7 @@ namespace vapor { namespace editor {
 //-----------------------------------//
 
 class UndoManager;
-struct PluginTool;
+class PluginTool;
 
 class Document
 {

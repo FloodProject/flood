@@ -17,7 +17,7 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-REFLECT_CHILD_CLASS(LogPlugin, Plugin)
+REFLECT_CHILD_CLASS(LogPlugin, EditorPlugin)
 REFLECT_CLASS_END()
 
 //-----------------------------------//

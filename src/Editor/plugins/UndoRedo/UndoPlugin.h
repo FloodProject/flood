@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Plugin.h"
+#include "EditorPlugin.h"
 
 namespace vapor { namespace editor {
 
@@ -18,7 +18,7 @@ class UndoManager;
 
 REFLECT_DECLARE_CLASS(UndoPlugin)
 
-class UndoPlugin : public Plugin
+class UndoPlugin : public EditorPlugin
 {
 	REFLECT_DECLARE_OBJECT(UndoPlugin)
 

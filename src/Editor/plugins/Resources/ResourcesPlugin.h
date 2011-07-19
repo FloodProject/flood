@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Plugin.h"
+#include "EditorPlugin.h"
 
 namespace vapor { namespace editor {
 
@@ -23,7 +23,7 @@ class ResourceThumbnailer;
 
 REFLECT_DECLARE_CLASS(ResourcesPlugin)
 
-class ResourcesPlugin : public Plugin
+class ResourcesPlugin : public EditorPlugin
 {
 	REFLECT_DECLARE_OBJECT(ResourcesPlugin)
 

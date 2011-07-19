@@ -17,7 +17,7 @@
 #include "Events.h"
 #include "UndoManager.h"
 #include "Viewframe.h"
-#include "PluginManager.h"
+#include "Core/PluginManager.h"
 
 #include "../Selection/SelectionPlugin.h"
 #include "../Selection/SelectionManager.h"
@@ -29,7 +29,7 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-REFLECT_CHILD_CLASS(GizmoPlugin, Plugin)
+REFLECT_CHILD_CLASS(GizmoPlugin, EditorPlugin)
 REFLECT_CLASS_END()
 
 //-----------------------------------//

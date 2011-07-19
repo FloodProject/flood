@@ -13,18 +13,18 @@
 #include "Editor.h"
 #include "EditorIcons.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
-REFLECT_CHILD_CLASS(ConsolePlugin, Plugin)
+REFLECT_CHILD_CLASS(ConsolePlugin, EditorPlugin)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
 
 ConsolePlugin::ConsolePlugin()
-	: Plugin()
-{ }
+{
+}
 
 //-----------------------------------//
 
@@ -91,4 +91,4 @@ void ConsolePlugin::onConsoleButtonClick(wxCommandEvent& event)
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

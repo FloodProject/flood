@@ -20,7 +20,7 @@ NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
-REFLECT_CHILD_CLASS(CameraPlugin, Plugin)
+REFLECT_CHILD_CLASS(CameraPlugin, EditorPlugin)
 REFLECT_CLASS_END()
 
 //-----------------------------------//

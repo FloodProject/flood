@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Plugin.h"
+#include "EditorPlugin.h"
 #include "Math/Vector.h"
 
 #define PLUGIN_SELECTION "Selection"
@@ -22,7 +22,7 @@ class SelectionOperation;
 
 REFLECT_DECLARE_CLASS(SelectionPlugin)
 
-class SelectionPlugin : public Plugin
+class SelectionPlugin : public EditorPlugin
 {
 	REFLECT_DECLARE_OBJECT(SelectionPlugin)
 

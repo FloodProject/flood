@@ -9,22 +9,21 @@
 
 #pragma once
 
+#include "EditorPlugin.h"
 #include "Input/InputManager.h"
 #include "Input/Mouse.h" 
 #include "Input/Keyboard.h"
 
 FWD_DECL_INTRUSIVE(Resource)
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
 class EditorFrame;
 class Document;
 
-class Plugin;
-class PluginManager;
-struct PluginTool;
+class PluginTool;
 
 /**
  * Plugins can subscribe to these events and get notified when things
@@ -32,7 +31,9 @@ struct PluginTool;
  * when an entity is selected to show its bounding box.
  */
 
-class Events : public wxEvtHandler
+typedef std::vector<EditorPlugin*> EventListeners;
+
+class API_EDITOR Events : public wxEvtHandler
 {
 public:
 
@@ -42,8 +43,8 @@ public:
 	void disconnectPluginListeners();
 
 	// Add/remove a plugin as an event listener.
-	void addEventListener( Plugin* plugin );
-	void removeEventListener( Plugin* plugin );
+	void addEventListener( EditorPlugin* plugin );
+	void removeEventListener( EditorPlugin* plugin );
 
 	// Document creation event.
 	void onDocumentCreate( Document& document );
@@ -86,10 +87,10 @@ public:
 	ACESSOR(CurrentTool, int, toolId)
 
 	// Gets/sets the current plugin.
-	ACESSOR(CurrentPlugin, Plugin*, currentPlugin)
+	ACESSOR(CurrentPlugin, EditorPlugin*, currentPlugin)
 
 	// Switches the current plugin.
-	void setTool(Plugin* plugin, PluginTool* tool);
+	void setTool(EditorPlugin* plugin, PluginTool* tool);
 
 protected:
 
@@ -110,12 +111,12 @@ protected:
 	int toolId;
 
 	// Current active plugin.
-	Plugin* currentPlugin;
+	EditorPlugin* currentPlugin;
 
 	// Global event listener plugins.
-	std::vector<Plugin*> eventListeners;
+	EventListeners eventListeners;
 };
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Plugin.h"
+#include "EditorPlugin.h"
 
 #ifdef ENABLE_PLUGIN_PROPERTY
 
@@ -20,7 +20,7 @@ class PropertyPage;
 
 REFLECT_DECLARE_CLASS(PropertyPlugin)
 
-class PropertyPlugin : public Plugin
+class PropertyPlugin : public EditorPlugin
 {
 	REFLECT_DECLARE_OBJECT(PropertyPlugin)
 

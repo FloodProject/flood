@@ -22,14 +22,13 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-REFLECT_CHILD_CLASS(PropertyPlugin, Plugin)
+REFLECT_CHILD_CLASS(PropertyPlugin, EditorPlugin)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
 
 PropertyPlugin::PropertyPlugin()
-	: Plugin()
-	, propertyPage(nullptr)
+	: propertyPage(nullptr)
 { }
 
 //-----------------------------------//

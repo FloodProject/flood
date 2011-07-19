@@ -9,7 +9,9 @@
 #pragma once
 
 #include <wx/keybinder.h>
+
 #include "Math/Vector.h"
+#include "Core/PluginManager.h"
 
 FWD_DECL(Engine)
 
@@ -17,24 +19,19 @@ NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
-class Plugin;
-class PluginManager;
-
-class Events;
-class Document;
-class EditorInputManager;
-
-//-----------------------------------//
-
 class EditorApp : public wxApp
 {
 public:
 
-    virtual bool OnInit() OVERRIDE;
+	virtual bool OnInit() OVERRIDE;
 	virtual void OnFatalException() OVERRIDE;
 };
 
 //-----------------------------------//
+
+class Events;
+class Document;
+class EditorInputManager;
 
 class API_EDITOR EditorFrame : public wxFrame
 {
@@ -42,7 +39,7 @@ class API_EDITOR EditorFrame : public wxFrame
 
 public:
 
-    EditorFrame(const wxString& title);
+	EditorFrame(const wxString& title);
 	virtual ~EditorFrame();
 	
 	// Refreshes the main view.
@@ -132,6 +129,13 @@ public:
 
 // Gets the editor instance.
 API_EDITOR EditorFrame& GetEditor();
+
+template<typename T>
+T* GetPlugin()
+{
+	PluginManager* pm = GetEditor().getPluginManager();
+	return (T*) pm->getPluginFromClass(T::getStaticType());
+}
 
 //-----------------------------------//
 

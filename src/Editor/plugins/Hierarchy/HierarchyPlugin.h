@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Plugin.h"
+#include "EditorPlugin.h"
 
 namespace vapor { namespace editor {
 
@@ -18,7 +18,7 @@ class HierarchyPane;
 
 REFLECT_DECLARE_CLASS(HierarchyPlugin)
 
-class HierarchyPlugin : public Plugin
+class HierarchyPlugin : public EditorPlugin
 {
 	REFLECT_DECLARE_OBJECT(HierarchyPlugin)
 

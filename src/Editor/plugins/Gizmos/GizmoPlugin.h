@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Plugin.h"
+#include "EditorPlugin.h"
 #include "Gizmo.h"
 
 namespace vapor { namespace editor {
@@ -36,7 +36,7 @@ typedef std::pair<const EntityPtr, EntityPtr> GizmoMapPair;
 
 REFLECT_DECLARE_CLASS(GizmoPlugin)
 
-class GizmoPlugin : public Plugin
+class GizmoPlugin : public EditorPlugin
 {
 	REFLECT_DECLARE_OBJECT(GizmoPlugin)
 

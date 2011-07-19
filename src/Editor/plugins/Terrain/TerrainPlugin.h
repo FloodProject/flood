@@ -10,7 +10,7 @@
 
 #ifdef ENABLE_PLUGIN_TERRAIN
 
-#include "Plugin.h"
+#include "EditorPlugin.h"
 #include "UndoOperation.h"
 #include "Scene/Scene.h"
 #include "Terrain/Terrain.h"
@@ -38,7 +38,7 @@ class TerrainOperation;
 
 REFLECT_DECLARE_CLASS(TerrainPlugin)
 
-class TerrainPlugin : public Plugin
+class TerrainPlugin : public EditorPlugin
 {
 	REFLECT_DECLARE_OBJECT(TerrainPlugin)
 

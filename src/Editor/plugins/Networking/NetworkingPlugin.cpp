@@ -17,7 +17,7 @@ NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
-REFLECT_CHILD_CLASS(NetworkingPlugin, Plugin)
+REFLECT_CHILD_CLASS(NetworkingPlugin, EditorPlugin)
 REFLECT_CLASS_END()
 
 //-----------------------------------//

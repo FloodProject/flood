@@ -13,7 +13,7 @@
 #include "EditorIcons.h"
 #include "EditorTags.h"
 #include "UndoManager.h"
-#include "PluginManager.h"
+#include "Core/PluginManager.h"
 #include "Core/Utilities.h"
 #include "Document.h"
 #include "../Resources/ResourcesPlugin.h"
@@ -21,7 +21,7 @@
 
 #ifdef ENABLE_PLUGIN_PROPERTY
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -785,6 +785,6 @@ wxAny PropertyPage::getPropertyPrimitiveValue(wxPGProperty* prop, PropertyData* 
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END
 
 #endif

@@ -186,6 +186,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DLL|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\src\Editor\Document.cpp" />
+    <ClCompile Include="..\..\src\Editor\EditorPlugin.cpp" />
     <ClCompile Include="..\..\src\Editor\gen\PreferencesGenerated.cpp" />
     <ClCompile Include="..\..\src\Editor\Menus.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Hierarchy\HierarchyPane.cpp" />
@@ -209,8 +210,6 @@
     <ClCompile Include="..\..\src\Editor\RenderControl.cpp" />
     <ClCompile Include="..\..\src\Editor\RenderWindow.cpp" />
     <ClCompile Include="..\..\src\Editor\Viewframe.cpp" />
-    <ClCompile Include="..\..\src\Editor\Plugin.cpp" />
-    <ClCompile Include="..\..\src\Editor\PluginManager.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Gizmos\Gizmo.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Gizmos\GizmoOperation.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Gizmos\GizmoPlugin.cpp" />
@@ -251,13 +250,12 @@
     <ClInclude Include="..\..\src\Editor\API.h" />
     <ClInclude Include="..\..\src\Editor\gen\PreferencesGenerated.h" />
     <ClInclude Include="..\..\src\Editor\inc\Document.h" />
+    <ClInclude Include="..\..\src\Editor\inc\EditorPlugin.h" />
     <ClInclude Include="..\..\src\Editor\inc\Preferences.h" />
     <ClInclude Include="..\..\src\Editor\inc\RenderControl.h" />
     <ClInclude Include="..\..\src\Editor\inc\RenderWindow.h" />
     <ClInclude Include="..\..\src\Editor\inc\ResourceDrop.h" />
     <ClInclude Include="..\..\src\Editor\inc\Viewframe.h" />
-    <ClInclude Include="..\..\src\Editor\inc\Plugin.h" />
-    <ClInclude Include="..\..\src\Editor\inc\PluginManager.h" />
     <ClInclude Include="..\..\src\Editor\keybinder\include\wx\keybinder.h" />
     <ClInclude Include="..\..\src\Editor\keybinder\include\wx\keybinderdef.h" />
     <ClInclude Include="..\..\src\Editor\keybinder\include\wx\menuutils.h" />

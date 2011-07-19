@@ -108,12 +108,6 @@
     <ClCompile Include="..\..\src\Editor\Viewframe.cpp">
       <Filter>View</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Editor\Plugin.cpp">
-      <Filter>Plugins</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Editor\PluginManager.cpp">
-      <Filter>Plugins</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Editor\plugins\Gizmos\Gizmo.cpp">
       <Filter>Plugins\Gizmos</Filter>
     </ClCompile>
@@ -273,6 +267,9 @@
     <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneDocument.cpp">
       <Filter>Plugins\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Editor\EditorPlugin.cpp">
+      <Filter>Plugins</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Editor\inc\RenderControl.h">
@@ -283,12 +280,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\inc\Viewframe.h">
       <Filter>View</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Editor\inc\Plugin.h">
-      <Filter>Plugins</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Editor\inc\PluginManager.h">
-      <Filter>Plugins</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\plugins\Gizmos\Gizmo.h">
       <Filter>Plugins\Gizmos</Filter>
@@ -449,6 +440,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\plugins\Scene\SceneDocument.h">
       <Filter>Plugins\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\inc\EditorPlugin.h">
+      <Filter>Plugins</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

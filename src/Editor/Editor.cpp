@@ -11,7 +11,7 @@
 #include "Core/Utilities.h"
 #include "EditorIcons.h"
 #include "RenderControl.h"
-#include "PluginManager.h"
+#include "Core/PluginManager.h"
 #include "UndoManager.h"
 #include "Viewframe.h"
 #include "EditorInputManager.h"
@@ -98,7 +98,7 @@ EditorFrame::EditorFrame(const wxString& title)
 
 #ifdef CREATE_PROJECT_ON_STARTUP
 	wxCommandEvent event;
-	ProjectPlugin* project = (ProjectPlugin*) pluginManager->getPlugin("Project");
+	ProjectPlugin* project = (ProjectPlugin*) GetPlugin<ProjectPlugin>();
 	project->onNewButtonClick(event);
 #endif
 
@@ -143,7 +143,7 @@ void EditorFrame::createPlugins()
 	eventManager = new Events();
 
 	std::vector<Plugin*> plugins;
-	pluginManager->scanPlugins(plugins);
+	pluginManager->scanPlugins(ReflectionGetType(EditorPlugin), plugins);
 	pluginManager->sortPlugins(plugins);
 	pluginManager->registerPlugins(plugins);
 }

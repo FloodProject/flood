@@ -17,7 +17,7 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-REFLECT_CHILD_CLASS(UndoPlugin, Plugin)
+REFLECT_CHILD_CLASS(UndoPlugin, EditorPlugin)
 REFLECT_CLASS_END()
 
 //-----------------------------------//

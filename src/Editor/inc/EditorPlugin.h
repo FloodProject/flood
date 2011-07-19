@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "Core/Plugin.h"
 #include "Input/MouseEvents.h"
 #include "Input/KeyboardEvents.h"
 #include "Document.h"
@@ -16,40 +17,16 @@ FWD_DECL_INTRUSIVE(Scene)
 FWD_DECL_INTRUSIVE(Entity)
 FWD_DECL_INTRUSIVE(Resource)
 
-namespace vapor { namespace editor {
-
-//-----------------------------------//
-
-struct API_EDITOR PluginMetadata
-{
-	PluginMetadata() : startEnabled(true), priority(1000) {}
-
-	// Name of this plugin.
-	String name;
-
-	// Description of this plugin.
-	String description;
-
-	// Author of this plugin.
-	String author;
-
-	// Version of this plugin.
-	String version;
-
-	// Enabled by default.
-	bool startEnabled;
-
-	// Startup priority.
-	int priority;
-};
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
 class EditorFrame;
-class PluginManager;
 
-struct API_EDITOR PluginTool
+class API_EDITOR PluginTool
 {
+public:
+
 	PluginTool() : toolbar(nullptr), item(nullptr) {}
 
 	// Sets the toolbar.
@@ -64,7 +41,6 @@ struct API_EDITOR PluginTool
 
 typedef std::vector<PluginTool> PluginTools;
 
-
 /**
  * A 3D editor needs to provide different kind of tools to the user,
  * so to be flexible and allow extensibility each tool behaviours and
@@ -74,33 +50,23 @@ typedef std::vector<PluginTool> PluginTools;
  * the editor to execute actions in the different events/callbacks.
  */
 
-REFLECT_DECLARE_CLASS(Plugin)
+REFLECT_DECLARE_CLASS(EditorPlugin)
 
-class API_EDITOR Plugin : public Object
+class API_EDITOR EditorPlugin : public Plugin
 {
-	REFLECT_DECLARE_OBJECT(Plugin)
+	REFLECT_DECLARE_OBJECT(EditorPlugin)
 
 	friend class PluginManager;
 
 public:
 
-	Plugin();
-	virtual ~Plugin();
-
-	// Gets if plugin is enabled.
-	bool isEnabled() const;
-
-	// Gets metadata about this plugin.
-	virtual PluginMetadata getMetadata() = 0;
+	EditorPlugin();
+	virtual ~EditorPlugin();
 
 	// Finds if there is a mode with given id.
 	PluginTool* findTool( wxAuiToolBarItem* tool );
 
-	// Plugin enable callback.
-	virtual void onPluginEnable() = 0;
-	virtual void onPluginDisable() = 0;
-
-	// Plugin tool selection callback.
+	// EditorPlugin tool selection callback.
 	virtual void onToolSelect( int id ) {}
 	virtual void onToolUnselect( int id ) {}
 
@@ -143,8 +109,8 @@ public:
 
 protected:
 
-	// Helper method to disable plugins.
-	void doPluginDisable();
+	// Disables plugins.
+	virtual void doPluginDisable() OVERRIDE;
 	
 	// Registers a new tool in the plugin.
 	void addTool( const PluginTool& tool, bool addToMenu = false );
@@ -158,9 +124,6 @@ protected:
 
 	// Removes a page from the main notebook.
 	void removePage( wxWindow* page );
-
-	// Is plugin enabled?
-	bool enabled;
 
 	// Keeps track of all the registered tools.
 	PluginTools tools;

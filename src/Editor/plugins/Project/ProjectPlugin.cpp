@@ -19,7 +19,7 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-REFLECT_CHILD_CLASS(ProjectPlugin, Plugin)
+REFLECT_CHILD_CLASS(ProjectPlugin, EditorPlugin)
 REFLECT_CLASS_END()
 
 REFLECT_CHILD_CLASS(Project, Object)
@@ -28,8 +28,8 @@ REFLECT_CLASS_END()
 //-----------------------------------//
 
 ProjectPlugin::ProjectPlugin()
-	: Plugin()
-{ }
+{
+}
 
 //-----------------------------------//
 
@@ -85,7 +85,8 @@ void ProjectPlugin::onPluginEnable()
 //-----------------------------------//
 
 void ProjectPlugin::onPluginDisable()
-{ }
+{
+}
 
 //-----------------------------------//
 

@@ -17,7 +17,7 @@
 #include "Core/Utilities.h"
 #include "../Scene/ScenePane.h"
 #include "../Scene/SceneDocument.h"
-#include "PluginManager.h"
+#include "Core/PluginManager.h"
 #include "ResourcesPlugin.h"
 #include "ResourceDatabase.h"
 #include "../Property/PropertyPlugin.h"

@@ -10,7 +10,7 @@
 
 #ifdef ENABLE_PLUGIN_TERRAIN
 
-#include "Plugin.h"
+#include "EditorPlugin.h"
 #include "UndoOperation.h"
 #include "TerrainPlugin.h"
 #include "Math/BoundingSphere.h"

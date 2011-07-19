@@ -72,7 +72,7 @@ public:
 protected:
 
 	// Helper method to disable plugins.
-	void doPluginDisable();
+	virtual void doPluginDisable();
 	
 	// Keeps track if plugin is enabled.
 	bool enabled;

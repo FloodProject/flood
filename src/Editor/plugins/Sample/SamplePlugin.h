@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Plugin.h"
+#include "EditorPlugin.h"
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -16,7 +16,7 @@ NAMESPACE_EDITOR_BEGIN
 
 REFLECT_DECLARE_CLASS(SamplePlugin)
 
-class SamplePlugin : public Plugin
+class SamplePlugin : public EditorPlugin
 {
 	REFLECT_DECLARE_OBJECT(SamplePlugin)
 

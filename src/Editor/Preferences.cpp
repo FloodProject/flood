@@ -10,8 +10,8 @@
 #include "Preferences.h"
 #include "ImageUtils.h"
 #include "EditorIcons.h"
-#include "PluginManager.h"
-#include "Plugin.h"
+#include "Core/PluginManager.h"
+#include "EditorPlugin.h"
 #include "Editor.h"
 #include <wx/keybinder.h>
 

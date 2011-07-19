@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Plugin.h"
+#include "EditorPlugin.h"
 
 namespace vapor { namespace editor {
 
@@ -18,7 +18,7 @@ class ConsoleTextCtrl;
 
 REFLECT_DECLARE_CLASS(ConsolePlugin)
 
-class ConsolePlugin : public Plugin
+class ConsolePlugin : public EditorPlugin
 {
 	REFLECT_DECLARE_OBJECT(ConsolePlugin)
 

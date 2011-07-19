@@ -21,7 +21,7 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-REFLECT_CHILD_CLASS(ResourcesPlugin, Plugin)
+REFLECT_CHILD_CLASS(ResourcesPlugin, EditorPlugin)
 REFLECT_CLASS_END()
 
 //-----------------------------------//

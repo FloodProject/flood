@@ -7,44 +7,41 @@
 ************************************************************************/
 
 #include "Editor/API.h"
-#include "Plugin.h"
+#include "EditorPlugin.h"
 #include "Editor.h"
-#include "Engine/Engine.h"
 
 NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
-REFLECT_ABSTRACT_CHILD_CLASS(Plugin, Object)
+REFLECT_ABSTRACT_CHILD_CLASS(EditorPlugin, Object)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
 
-Plugin::Plugin()
-	: enabled(false)
-	, editor(nullptr)
+EditorPlugin::EditorPlugin()
+	: editor(nullptr)
 {
-
+	editor = &GetEditor();
 }
 
 //-----------------------------------//
 
-Plugin::~Plugin()
+EditorPlugin::~EditorPlugin()
 {
-
 }
 
 //-----------------------------------//
 
-void Plugin::doPluginDisable()
+void EditorPlugin::doPluginDisable()
 {
-	onPluginDisable();
+	Plugin::doPluginDisable();
 	removeTools();
 }
 
 //-----------------------------------//
 
-PluginTool* Plugin::findTool( wxAuiToolBarItem* tool )
+PluginTool* EditorPlugin::findTool( wxAuiToolBarItem* tool )
 {
 	for( size_t i = 0; i < tools.size(); i++ )
 	{
@@ -57,7 +54,7 @@ PluginTool* Plugin::findTool( wxAuiToolBarItem* tool )
 
 //-----------------------------------//
 
-void Plugin::addTool( const PluginTool& pluginTool, bool addToMenu )
+void EditorPlugin::addTool( const PluginTool& pluginTool, bool addToMenu )
 {
 	//if( tool->IsSeparator() ) return;
 
@@ -85,7 +82,7 @@ void Plugin::addTool( const PluginTool& pluginTool, bool addToMenu )
 
 //-----------------------------------//
 
-void Plugin::addTool( wxAuiToolBarItem* tool, bool addToMenu )
+void EditorPlugin::addTool( wxAuiToolBarItem* tool, bool addToMenu )
 {
 	PluginTool pt;
 	pt.item = tool;
@@ -103,7 +100,7 @@ void PluginTool::setToolbar(wxAuiToolBar* tb)
 
 //-----------------------------------//
 
-void Plugin::removeTools()
+void EditorPlugin::removeTools()
 {
 	// Clean up toolbar stuff.
 	wxAuiToolBar* toolbarCtrl = editor->getToolbar();
@@ -122,7 +119,7 @@ void Plugin::removeTools()
 
 //-----------------------------------//
 
-bool Plugin::hasTool(int toolId) const
+bool EditorPlugin::hasTool(int toolId) const
 {
 	for( size_t i = 0; i < tools.size(); i++ )
 	{
@@ -135,7 +132,7 @@ bool Plugin::hasTool(int toolId) const
 
 //-----------------------------------//
 
-void Plugin::removePage( wxWindow* page )
+void EditorPlugin::removePage( wxWindow* page )
 {
 	if( !page ) return;
 
@@ -153,13 +150,6 @@ void Plugin::removePage( wxWindow* page )
 			break;
 		}
 	}
-}
-
-//-----------------------------------//
-
-bool Plugin::isEnabled() const
-{
-	return enabled;
 }
 
 //-----------------------------------//

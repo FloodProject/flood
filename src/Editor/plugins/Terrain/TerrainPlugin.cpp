@@ -35,14 +35,13 @@ namespace vapor { namespace editor {
 
 //-----------------------------------//
 
-REFLECT_CHILD_CLASS(TerrainPlugin, Plugin)
+REFLECT_CHILD_CLASS(TerrainPlugin, EditorPlugin)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
 
 TerrainPlugin::TerrainPlugin()
-	: Plugin()
-	, terrainPage(nullptr)
+	: terrainPage(nullptr)
 	, terrainOperation(nullptr)
 {
 	timer.Bind(wxEVT_TIMER, &TerrainPlugin::onTimer, this);

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Plugin.h"
+#include "EditorPlugin.h"
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -18,7 +18,7 @@ class ScenePage;
 
 REFLECT_DECLARE_CLASS(ScenePlugin)
 
-class ScenePlugin : public Plugin
+class ScenePlugin : public EditorPlugin
 {
 	REFLECT_DECLARE_OBJECT(ScenePlugin)
 

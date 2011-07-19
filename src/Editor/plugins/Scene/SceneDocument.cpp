@@ -15,8 +15,8 @@
 #include "EditorIcons.h"
 #include "ResourceDrop.h"
 #include "Core/Utilities.h"
-#include "Plugin.h"
-#include "PluginManager.h"
+#include "EditorPlugin.h"
+#include "Core/PluginManager.h"
 #include "../Selection/SelectionPlugin.h"
 
 NAMESPACE_EDITOR_BEGIN

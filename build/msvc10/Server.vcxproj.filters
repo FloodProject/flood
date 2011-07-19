@@ -1,23 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Resource">
-      <UniqueIdentifier>{32fd57d8-8085-4cd4-bb20-c449c7fad871}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Settings">
       <UniqueIdentifier>{df3c7ee9-5540-41e0-a0b4-896d9e30f81d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Authentication">
-      <UniqueIdentifier>{57325666-99cd-4530-bf65-a389350e049c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Encryption">
-      <UniqueIdentifier>{d8695cf2-3146-4424-99a7-65eb7c51b5a1}</UniqueIdentifier>
     </Filter>
     <Filter Include="Session">
       <UniqueIdentifier>{a5e5acd3-df89-4614-b19d-887acb034ab0}</UniqueIdentifier>
     </Filter>
     <Filter Include="Cryptography">
       <UniqueIdentifier>{1bc30378-2ba2-429b-b17f-a5b8e4d0eb6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins">
+      <UniqueIdentifier>{8a1f582b-969f-48ba-9f1d-13f6c56b9894}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Chat">
+      <UniqueIdentifier>{504a321c-80cb-4621-b7d9-0371b93e6ea8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugins\Resources">
+      <UniqueIdentifier>{e948697e-fbb4-4889-a20a-bafe6998139d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
