@@ -13,7 +13,7 @@
 #include "Audio/Source.h"
 #include "Audio/Buffer.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -261,6 +261,6 @@ void AudioSource::setPosition( const Vector3& pos )
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_ENGINE_END
 
 #endif

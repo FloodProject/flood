@@ -81,8 +81,8 @@ public:
 	virtual void setCursorPosition( int x, int y ) {}
 	void setCursorPosition( const Vector2i& pos );
 
-	// Gets the input manager.
-	virtual InputManager* getInputManager() { return nullptr; }
+	// Gets if the window has focus.
+	virtual bool hasFocus() { return false; }
 
 	// Gets the window settings.
 	GETTER(Settings, const Settings&, settings)
@@ -98,7 +98,7 @@ protected:
 	// Handles the resize event.
 	void handleWindowResize();
 
-	// Handles the resize event.
+	// Handles the close event.
 	void handleWindowClose();
 
 	// Handles the focus event.

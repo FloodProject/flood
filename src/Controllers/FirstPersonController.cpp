@@ -18,7 +18,7 @@
 #include "Input/Keyboard.h"
 #include "Input/Mouse.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -33,7 +33,6 @@ FirstPersonController::FirstPersonController()
 	: clampMovementX( true )
 	, mouseWheel(0)
 {
-	window = GetRenderDevice()->getWindow();
 	registerCallbacks();
 }
 
@@ -41,7 +40,7 @@ FirstPersonController::FirstPersonController()
 
 FirstPersonController::~FirstPersonController()
 {
-	window->onWindowFocusChange.Disconnect( this, &FirstPersonController::onWindowFocusChange );
+	//window->onWindowFocusChange.Disconnect( this, &FirstPersonController::onWindowFocusChange );
 
 	Keyboard* keyboard = GetInputManager()->getKeyboard();
 	keyboard->onKeyPress.Disconnect( this, &FirstPersonController::onKeyPressed );
@@ -58,6 +57,9 @@ void FirstPersonController::setEnabled(bool enabled)
 {
 	CameraController::setEnabled(enabled);
 	
+	Window* window = GetInputManager()->getWindow();
+	if( !window ) return;
+
 	if(enabled)
 	{
 		oldMousePosition = window->getCursorPosition();
@@ -74,7 +76,11 @@ void FirstPersonController::setEnabled(bool enabled)
 
 void FirstPersonController::_update( float delta )
 {
-	if( hasFocus ) checkControls( delta );
+	Window* window = GetInputManager()->getWindow();
+	if( !window ) return;
+
+	if( window->hasFocus() )
+		checkControls( delta );
 }
 
 //-----------------------------------//
@@ -166,9 +172,6 @@ void FirstPersonController::checkControls( float delta )
 
 void FirstPersonController::registerCallbacks()
 {
-	if( window )
-		window->onWindowFocusChange.Connect( this, &FirstPersonController::onWindowFocusChange );
-
 	Keyboard* keyboard = GetInputManager()->getKeyboard();
 	keyboard->onKeyPress.Connect( this, &FirstPersonController::onKeyPressed );
 
@@ -184,7 +187,9 @@ void FirstPersonController::onKeyPressed( const KeyEvent& keyEvent )
 {
 	if( !enabled ) return;
 
-#if 0
+	Window* window = GetInputManager()->getWindow();
+	if( !window ) return;
+
 	switch( keyEvent.keyCode )
 	{
 	case Keys::LControl:
@@ -214,7 +219,6 @@ void FirstPersonController::onKeyPressed( const KeyEvent& keyEvent )
 		break;
 	}
 	} // end switch
-#endif
 }
 
 //-----------------------------------//
@@ -253,24 +257,15 @@ void FirstPersonController::onMouseDrag( const MouseDragEvent& event )
 
 //-----------------------------------//
 
-void FirstPersonController::centerCursor( )
+void FirstPersonController::centerCursor()
 {
+	Window* window = GetInputManager()->getWindow();
+	if( !window ) return;
+
 	lastPosition = window->getSettings().getSize() / 2;
 	window->setCursorPosition( lastPosition );
 }
 
 //-----------------------------------//
 
-void FirstPersonController::onWindowFocusChange( bool focusLost )
-{
-	if( !enabled ) return;
-	
-	hasFocus = !focusLost;
-
-	if( hasFocus /*&& !window->isCursorVisible()*/ )
-		centerCursor();
-}
-
-//-----------------------------------//
-
-NAMESPACE_END
+NAMESPACE_ENGINE_END

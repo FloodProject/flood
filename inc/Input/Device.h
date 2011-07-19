@@ -8,9 +8,10 @@
 
 #pragma once
 
-#include "Event.h"
+#include "Core/Reflection.h"
+#include "Core/Event.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -18,7 +19,7 @@ namespace vapor {
  * Different types of input devices.
  */
 
-namespace InputDeviceType
+struct InputDeviceType
 {
 	enum Enum
 	{
@@ -26,9 +27,9 @@ namespace InputDeviceType
 		Mouse,
 		Joystick
 	};
+};
 
-	std::string getString( InputDeviceType::Enum );
-}
+REFLECT_DECLARE_ENUM(InputDeviceType)
 
 //-----------------------------------//
 
@@ -36,7 +37,7 @@ namespace InputDeviceType
  * Base struct for input events.
  */
 
-struct VAPOR_API InputEvent
+struct API_INPUT InputEvent
 {
 	DECLARE_UNCOPYABLE(InputEvent)
 
@@ -52,7 +53,7 @@ public:
  * Input device.
  */
 
-class VAPOR_API InputDevice
+class API_INPUT InputDevice
 {
 	DECLARE_UNCOPYABLE(InputDevice)
 
@@ -70,4 +71,4 @@ public:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

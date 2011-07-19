@@ -35,34 +35,37 @@ public:
 	virtual ~RenderWindow();
 
 	// Swaps the buffers (updates the display).
-	virtual void update();
+	void update() OVERRIDE;
 
 	// Shows/hides the window.
-	virtual void show( bool hide = false );
+	void show( bool hide = false ) OVERRIDE;
 
 	// Handle the window message events.
-	virtual bool pumpEvents();
+	bool pumpEvents() OVERRIDE;
 
 	// Makes this the current OpenGL context.
-	virtual void makeCurrent();
+	void makeCurrent() OVERRIDE;
+
+	// Gets if the window has focus.
+	bool hasFocus() OVERRIDE;
 
 	// Sets the title of the window.
-	virtual void setTitle(const std::string& title);
+	void setTitle(const std::string& title) OVERRIDE;
 
 	// Sets the cursor visibility.
-	virtual void setCursorVisible(bool state);
+	void setCursorVisible(bool state) OVERRIDE;
 
 	// Gets the cursor visibility.
-	virtual bool isCursorVisible() const;
+	bool isCursorVisible() const OVERRIDE;
 
 	// Sets the capture of the mouse.
-	virtual void setCursorCapture( bool state );
+	void setCursorCapture( bool state ) OVERRIDE;
 
 	// Gets the cursor position on screen.
-	virtual Vector2i getCursorPosition() const;
+	Vector2i getCursorPosition() const OVERRIDE;
 
 	// Sets the cursor position on screen.
-	virtual void setCursorPosition( int x, int y );
+	void setCursorPosition( int x, int y ) OVERRIDE;
 
 	// Sets the cursor visible if the priority matches.
 	void setCursorVisiblePriority(bool state, int32 priority);

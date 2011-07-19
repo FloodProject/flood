@@ -9,24 +9,15 @@
 #include "Engine/API.h"
 #include "input/Device.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-std::string InputDeviceType::getString( InputDeviceType::Enum type )
-{
-	switch(type)
-	{
-	case InputDeviceType::Keyboard:
-		return "Keyboard";
-	case InputDeviceType::Mouse:
-		return "Mouse";
-	case InputDeviceType::Joystick:
-		return "Joystick";
-	default:
-		assert( false && "This should not be reached" );
-	}
-}
+REFLECT_ENUM(InputDeviceType)
+	ENUM(Keyboard)
+	ENUM(Mouse)
+	ENUM(Joystick)
+REFLECT_ENUM_END()
 
 //-----------------------------------//
 
@@ -36,4 +27,4 @@ InputEvent::InputEvent( InputDeviceType::Enum type )
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

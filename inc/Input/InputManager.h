@@ -22,6 +22,8 @@ class Keyboard;
 class Mouse;
 class Joystick;
 
+class Window;
+
 /**
  * Manages a set of input devices.
  */
@@ -56,10 +58,19 @@ public:
 	// Creates the default input devices.
 	void createDefaultDevices();
 
-protected:
+	// Gets the current input window.
+	GETTER(Window, Window*, window)
 
-	// Holds all the input devices.
+	// Sets the current input window.
+	void setWindow(Window* window);
+
+protected:
+	
+// Holds all the input devices.
 	std::vector<InputDevice*> devices;
+
+	// Input window.
+	Window* window;
 };
 
 //-----------------------------------//

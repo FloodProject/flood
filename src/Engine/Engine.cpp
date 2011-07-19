@@ -64,6 +64,7 @@ Engine::~Engine()
 	Deallocate(resourceManager);
 	Deallocate(audioDevice);
 
+	InputDeinitialize();
 	RenderDeinitialize();
 	ResourcesDeinitialize();
 	NetworkDeinitialize();
@@ -99,6 +100,7 @@ void Engine::init( bool createWindow )
 
 	NetworkInitialize();
 	ResourcesInitialize();
+	InputInitialize();
 	RenderInitialize();
 
 	// Creates the resource manager.

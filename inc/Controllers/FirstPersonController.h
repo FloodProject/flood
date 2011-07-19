@@ -31,7 +31,7 @@ struct MouseWheelEvent;
 
 REFLECT_DECLARE_CLASS(FirstPersonController)
 
-class VAPOR_API FirstPersonController : public CameraController
+class API_SCENE FirstPersonController : public CameraController
 {
 	REFLECT_DECLARE_OBJECT(FirstPersonController)
 
@@ -63,7 +63,6 @@ protected:
 	void onMouseMove( const MouseMoveEvent& event );
 	void onMouseDrag( const MouseDragEvent& event );
 	void onMouseWheel( const MouseWheelEvent& event );
-	void onWindowFocusChange( bool focusLost );
 
 	// Relative movement position.
 	Vector3 relativePosition;
@@ -77,11 +76,6 @@ protected:
 	Vector2i lastPosition;
 	Vector2i mouseDistance;
 	int mouseWheel;
-
-	// Focus state.
-	bool hasFocus;
-
-	Window* window;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( FirstPersonController );

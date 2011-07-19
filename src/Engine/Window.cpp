@@ -12,7 +12,7 @@
 #include "Render/RenderContext.h"
 #include "Input/Keyboard.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -59,14 +59,9 @@ void Window::handleWindowClose()
 void Window::handleWindowFocus( bool focusLost )
 {
 	if( focusLost )
-	{
-		// Workaround for resetting the pressed keys when the window loses focus.
-		// This could lead to problems when the user unfocus the main control.
-		// In that case the key events might not be properly handled.
-		
-		Keyboard* keyboard = GetInputManager()->getKeyboard();
-		if(keyboard) keyboard->resetKeys();
-	}
+		GetInputManager()->setWindow(nullptr);
+	else
+		GetInputManager()->setWindow(this);
 
 	onWindowFocusChange( focusLost );
 }
@@ -80,4 +75,4 @@ void Window::setCursorPosition( const Vector2i& pos )
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

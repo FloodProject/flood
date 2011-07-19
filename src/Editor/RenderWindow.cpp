@@ -83,6 +83,13 @@ void RenderWindow::makeCurrent()
 
 //-----------------------------------//
 
+bool RenderWindow::hasFocus()
+{
+	return canvas->HasFocus();
+}
+
+//-----------------------------------//
+
 Vector2i RenderWindow::getCursorPosition() const
 {
 	const wxMouseState& mouseState = wxGetMouseState();

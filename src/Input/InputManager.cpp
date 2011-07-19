@@ -12,27 +12,32 @@
 #include "Input/Keyboard.h"
 #include "Input/Mouse.h"
 #include "Input/Joystick.h"
+#include "Render/Window.h"
 
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
+
+static Allocator* gs_InputAllocator = nullptr;
 
 static InputManager* gs_InputManager = nullptr;
 InputManager* GetInputManager() { return gs_InputManager; }
 
 void InputInitialize()
 {
-
+	gs_InputAllocator = AllocatorCreateHeap( AllocatorGetHeap() );
+	AllocatorSetGroup(gs_InputAllocator, "Input");
 }
 
 void InputDeinitialize()
 {
-
+	AllocatorDestroy(gs_InputAllocator);
 }
 
 //-----------------------------------//
 
 InputManager::InputManager()
+	: window(nullptr)
 {
 	gs_InputManager = this;
 }
@@ -60,8 +65,8 @@ void InputManager::addDevice( InputDevice* device )
 	
 	devices.push_back( device );
 
-	LogInfo( "Registered a new input device: '%s'", 
-		InputDeviceType::getString( device->getType() ).c_str() );
+	LogInfo( "Registered a new input device: '%s'",
+		EnumGetValueName(ReflectionGetType(InputDeviceType), device->getType()));
 }
 
 //-----------------------------------//
@@ -107,8 +112,21 @@ void InputManager::processEvent( const InputEvent& event )
 
 void InputManager::createDefaultDevices()
 {
-	addDevice( new Keyboard() );
-	addDevice( new Mouse() );
+	addDevice( Allocate(Keyboard, gs_InputAllocator) );
+	addDevice( Allocate(Mouse, gs_InputAllocator) );
+}
+
+//-----------------------------------//
+
+void InputManager::setWindow(Window* window)
+{
+	this->window = window;
+
+	if( window == nullptr )
+	{
+		Keyboard* keyboard = GetInputManager()->getKeyboard();
+		if(keyboard) keyboard->resetKeys();
+	}
 }
 
 //-----------------------------------//
