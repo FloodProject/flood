@@ -7,19 +7,24 @@
 ************************************************************************/
 
 #include "Server/API.h"
-#include "Server/Session.h"
+#include "Server/ServerPlugin.h"
 
 NAMESPACE_SERVER_BEGIN
 
 //-----------------------------------//
 
-Session::Session()
+REFLECT_ABSTRACT_CHILD_CLASS(ServerPlugin, MessagePlugin)
+REFLECT_CLASS_END()
+
+//-----------------------------------//
+
+ServerPlugin::ServerPlugin()
 {
 }
 
 //-----------------------------------//
 
-Session::~Session()
+ServerPlugin::~ServerPlugin()
 {
 }
 

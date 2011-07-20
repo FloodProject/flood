@@ -386,7 +386,7 @@ wxMenu* ScenePage::createMenuAnimation(const MeshPtr& mesh)
 	for( size_t i = 0; i < anims.size(); i++ )
 	{
 		const AnimationPtr& animation = anims[i];
-		const std::string& name = animation->getName();
+		const String& name = animation->getName();
 
 		if( name.empty() )
 			continue;
@@ -454,6 +454,8 @@ void ScenePage::populateComponentItemMenu(wxMenu& menu, const ComponentPtr& comp
 		meshHandle = model->getMesh();
 
 		mesh = meshHandle.Resolve();
+
+		if( !mesh ) return;
 
 		if( !mesh->isAnimated() )
 			return;

@@ -83,9 +83,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\Server\CipherISAAC.cpp" />
     <ClCompile Include="..\..\src\Server\Main.cpp" />
-    <ClCompile Include="..\..\src\Server\Session.cpp" />
+    <ClCompile Include="..\..\src\Server\Plugins\ChatPlugin.cpp" />
+    <ClCompile Include="..\..\src\Server\ServerPlugin.cpp" />
     <ClCompile Include="..\..\src\Server\SessionManager.cpp" />
     <ClCompile Include="..\..\src\Server\Settings.cpp" />
     <ClCompile Include="..\..\src\Server\Server.cpp">
@@ -95,9 +95,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\Server\API.h" />
-    <ClInclude Include="..\..\inc\Server\CipherISAAC.h" />
+    <ClInclude Include="..\..\inc\Server\Plugins\ChatPlugin.h" />
     <ClInclude Include="..\..\inc\Server\Server.h" />
-    <ClInclude Include="..\..\inc\Server\Session.h" />
+    <ClInclude Include="..\..\inc\Server\ServerPlugin.h" />
     <ClInclude Include="..\..\inc\Server\SessionManager.h" />
     <ClInclude Include="..\..\inc\Server\Settings.h" />
   </ItemGroup>

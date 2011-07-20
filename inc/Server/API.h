@@ -39,3 +39,13 @@
 
 #define NAMESPACE_SERVER_BEGIN namespace vapor {
 #define NAMESPACE_SERVER_END }
+
+//---------------------------------------------------------------------//
+// Memory allocators
+//---------------------------------------------------------------------//
+
+NAMESPACE_SERVER_BEGIN
+
+API_SERVER Allocator* AllocatorGetServer();
+
+NAMESPACE_SERVER_END

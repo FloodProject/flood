@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vapor3D Server © (2008-2010)
+* vapor3D Core © (2008-2010)
 *
 *	<http://www.vapor3d.org>
 *
@@ -9,10 +9,11 @@
 #pragma once
 
 #include "Core/ReferenceCount.h"
-#include "Network/Network.h"
-#include "Server/CipherISAAC.h"
+#include "Network/CipherISAAC.h"
 
-NAMESPACE_SERVER_BEGIN
+FWD_DECL_INTRUSIVE(NetworkPeer)
+
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -33,18 +34,27 @@ public:
 	Session();
 	~Session();
 
-	// Sets the peer associated with this session.
-	SETTER(Peer, const NetworkPeerPtr&, peer)
+	// Accesses the peer associated with this session.
+	ACESSOR(Peer, const NetworkPeerPtr&, peer)
+
+	// Handles session authentication.
+	void handleAuthentication();
+
+	// Handles session connection.
+	void handleConnection();
 
 protected:
 
 	SessionState::Enum state;
 	NetworkPeerPtr peer;
 	CipherISAAC cipher;
+
+	float lastConnection;
+	float lastCommunication;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(Session);
 
 //-----------------------------------//
 
-NAMESPACE_SERVER_END
+NAMESPACE_CORE_END

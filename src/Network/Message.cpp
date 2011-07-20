@@ -8,7 +8,8 @@
 
 #include "Core/API.h"
 #include "Network/Message.h"
-
+#include "Network/Session.h"
+#include "Network/Network.h"
 #include <enet/enet.h>
 
 NAMESPACE_BEGIN

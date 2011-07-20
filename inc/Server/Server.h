@@ -10,18 +10,24 @@
 
 #include "Core/Log.h"
 #include "Core/Concurrency.h"
+#include "Core/PluginManager.h"
 #include "Network/Network.h"
+#include "Network/MessageHandlers.h"
 
 NAMESPACE_SERVER_BEGIN
 
 //-----------------------------------//
+
+API_SERVER void ServerInitialize();
+API_SERVER void ServerDeinitialize();
+
+class SessionManager;
 
 class Server
 {
 public:
 
 	Server();
-	~Server();
 	
 	// Initializes the server.
 	bool init();
@@ -32,26 +38,32 @@ public:
 	// Runs the server.
 	void run();
 
-	// Parses the config;
-	void parseConfig();
+	// Initializes the plugins.
+	void initPlugins();
 
-	// Handles client connections.
-	void handleClientConnect(const NetworkPeerPtr& peer);
+	// Gets the plugin manager.
+	GETTER(PluginManager, PluginManager*, plugins)
 
-	// Handles client disconnections.
-	void handleClientDisconnect(const NetworkPeerPtr& peer);
+	// Handles plugins callbacks.
+	void handlePluginEnable(Plugin*);
+	void handlePluginDisable(Plugin*);
+
+	// Handles client callbacks.
+	void handleClientConnect(const NetworkPeerPtr&);
+	void handleClientDisconnect(const NetworkPeerPtr&);
+	void handleClientMessage(const NetworkPeerPtr&, const MessagePtr&);
 
 protected:
 
 	TaskPool* tasks;
+	PluginManager* plugins;
 	Thread* networkThread;
-	NetworkServer host;
+	NetworkServer* host;
+	SessionManager* sessions;
+	MessageHandlers* messageHandlers;
 };
 
-API_SERVER void ServerInitialize();
-API_SERVER void ServerDeinitialize();
-
-API_SERVER Allocator* AllocatorGetServer();
+API_SERVER Server* GetServer();
 
 //-----------------------------------//
 

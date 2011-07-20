@@ -13,7 +13,10 @@
 struct _ENetPacket;
 typedef _ENetPacket ENetPacket;
 
-NAMESPACE_BEGIN
+FWD_DECL_INTRUSIVE(Session)
+FWD_DECL_INTRUSIVE(Message)
+
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -74,4 +77,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(Message)
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

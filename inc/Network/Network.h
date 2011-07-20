@@ -8,10 +8,9 @@
 
 #pragma once
 
+#include "Core/ReferenceCount.h"
 #include "Core/Concurrency.h"
 #include "Core/Event.h"
-
-#include "Network/Message.h"
 
 struct _ENetHost;
 typedef _ENetHost ENetHost;
@@ -22,7 +21,9 @@ typedef _ENetPeer ENetPeer;
 struct _ENetEvent;
 typedef _ENetEvent ENetEvent;
 
-NAMESPACE_BEGIN
+FWD_DECL_INTRUSIVE(Message)
+
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -69,7 +70,7 @@ protected:
 	// High-level events.
 	virtual void onConnected(const NetworkPeerPtr&) {}
 	virtual void onDisconnected(const NetworkPeerPtr&) {}
-	virtual void onMessage(const MessagePtr&) {}
+	virtual void onMessage(const NetworkPeerPtr&, const MessagePtr&) {}
 
 	// Low-level events.
 	void handleConnectEvent(ENetEvent* event);
@@ -120,7 +121,7 @@ protected:
 
 	void onConnected(const NetworkPeerPtr&) OVERRIDE;
 	void onDisconnected(const NetworkPeerPtr&) OVERRIDE;
-	void onMessage(const MessagePtr&) OVERRIDE;
+	void onMessage(const NetworkPeerPtr&, const MessagePtr&) OVERRIDE;
 
 	NetworkPeerPtr peer;
 	NetworkClientState::Enum state;
@@ -146,7 +147,7 @@ protected:
 
 	void onConnected(const NetworkPeerPtr&) OVERRIDE;
 	void onDisconnected(const NetworkPeerPtr&) OVERRIDE;
-	void onMessage(const MessagePtr&) OVERRIDE;	
+	void onMessage(const NetworkPeerPtr&, const MessagePtr&) OVERRIDE;	
 
 	// Network peers.
 	NetworkPeers peers;
@@ -156,4 +157,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( NetworkServer )
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

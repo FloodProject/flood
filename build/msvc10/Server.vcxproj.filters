@@ -7,9 +7,6 @@
     <Filter Include="Session">
       <UniqueIdentifier>{a5e5acd3-df89-4614-b19d-887acb034ab0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Cryptography">
-      <UniqueIdentifier>{1bc30378-2ba2-429b-b17f-a5b8e4d0eb6f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Plugins">
       <UniqueIdentifier>{8a1f582b-969f-48ba-9f1d-13f6c56b9894}</UniqueIdentifier>
     </Filter>
@@ -26,14 +23,14 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Server\Server.cpp" />
     <ClCompile Include="..\..\src\Server\Main.cpp" />
-    <ClCompile Include="..\..\src\Server\CipherISAAC.cpp">
-      <Filter>Cryptography</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Server\SessionManager.cpp">
       <Filter>Session</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Server\Session.cpp">
-      <Filter>Session</Filter>
+    <ClCompile Include="..\..\src\Server\ServerPlugin.cpp">
+      <Filter>Plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Server\Plugins\ChatPlugin.cpp">
+      <Filter>Plugins\Chat</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -42,14 +39,14 @@
     <ClInclude Include="..\..\inc\Server\Settings.h">
       <Filter>Settings</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\Server\Session.h">
-      <Filter>Session</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\Server\CipherISAAC.h">
-      <Filter>Cryptography</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\Server\SessionManager.h">
       <Filter>Session</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Server\ServerPlugin.h">
+      <Filter>Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Server\Plugins\ChatPlugin.h">
+      <Filter>Plugins\Chat</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

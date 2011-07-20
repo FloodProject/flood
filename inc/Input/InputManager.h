@@ -66,7 +66,7 @@ public:
 
 protected:
 	
-// Holds all the input devices.
+	// Holds all the input devices.
 	std::vector<InputDevice*> devices;
 
 	// Input window.

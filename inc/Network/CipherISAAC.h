@@ -8,7 +8,7 @@
 
 #pragma once
 
-NAMESPACE_SERVER_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -42,4 +42,4 @@ public:
 
 //-----------------------------------//
 
-NAMESPACE_SERVER_END
+NAMESPACE_CORE_END

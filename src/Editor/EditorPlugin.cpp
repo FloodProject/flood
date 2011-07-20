@@ -14,7 +14,7 @@ NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
-REFLECT_ABSTRACT_CHILD_CLASS(EditorPlugin, Object)
+REFLECT_ABSTRACT_CHILD_CLASS(EditorPlugin, Plugin)
 REFLECT_CLASS_END()
 
 //-----------------------------------//

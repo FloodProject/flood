@@ -194,11 +194,11 @@ void NetworkHost::handleConnectEvent(ENetEvent* event)
 
 void NetworkHost::handleDisconnectEvent(ENetEvent* event)
 {
-	NetworkPeer* networkPeer = (NetworkPeer*) event->peer->data;
+	NetworkPeerPtr networkPeer = (NetworkPeer*) event->peer->data;
 	
 	onDisconnected(networkPeer);
 
-	// Reset the peer's userdata.
+	// Reset the peer userdata.
 	ENetPeer* peer = event->peer;
 	peer->data = nullptr;
 }
@@ -207,12 +207,12 @@ void NetworkHost::handleDisconnectEvent(ENetEvent* event)
 
 void NetworkHost::handleReceiveEvent(ENetEvent* event)
 {
-	NetworkPeer* peer = (NetworkPeer*) event->peer->data;
+	NetworkPeerPtr peer = (NetworkPeer*) event->peer->data;
 	
 	MessagePtr message = Allocate(Message, gs_NetworkAllocator);
 	message->setPacket(event->packet);
 
-	onMessage(message);
+	onMessage(peer, message);
 }
 
 //-----------------------------------//
@@ -269,9 +269,9 @@ void NetworkClient::onDisconnected(const NetworkPeerPtr& peer)
 
 //-----------------------------------//
 
-void NetworkClient::onMessage(const MessagePtr& message)
+void NetworkClient::onMessage(const NetworkPeerPtr& peer, const MessagePtr& message)
 {
-	onServerMessage(0, message);
+	onServerMessage(peer, message);
 }
 
 //-----------------------------------//
@@ -309,9 +309,9 @@ void NetworkServer::onDisconnected(const NetworkPeerPtr& peer)
 
 //-----------------------------------//
 
-void NetworkServer::onMessage(const MessagePtr& message)
+void NetworkServer::onMessage(const NetworkPeerPtr& peer, const MessagePtr& message)
 {
-	onClientMessage(0, message);
+	onClientMessage(peer, message);
 }
 
 //-----------------------------------//

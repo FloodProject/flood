@@ -4,16 +4,16 @@
 *
 *	<http://www.vapor3d.org>
 *
-* Based on 'readable.c: My random number generator, ISAAC.'
+* Based on 'rand.c: My random number generator, ISAAC.'
 * (c) Bob Jenkins, March 1996, Public Domain
 * You may use this code in any way you wish, and it is free.  No warrantee.
 *
 ************************************************************************/
 
-#include "Server/API.h"
-#include "Server/CipherISAAC.h"
+#include "Core/API.h"
+#include "Network/CipherISAAC.h"
 
-NAMESPACE_SERVER_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -130,4 +130,4 @@ void CipherISAAC::init(bool flag)
 
 //-----------------------------------//
 
-NAMESPACE_SERVER_END
+NAMESPACE_CORE_END

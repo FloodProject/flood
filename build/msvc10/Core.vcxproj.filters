@@ -106,6 +106,15 @@
     <Filter Include="Plugins">
       <UniqueIdentifier>{bde74505-c487-4684-b6b8-623fbe435ad3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Networking\Messages">
+      <UniqueIdentifier>{051dda2c-a0c8-418d-9b6b-3b7974a1fa69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Networking\Session">
+      <UniqueIdentifier>{e49f4307-715e-471b-899d-c8b5b45e27e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Networking\Cryptography">
+      <UniqueIdentifier>{0a6542e4-2935-4786-8460-f09cb52147c0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Core\Utilities.cpp">
@@ -114,9 +123,6 @@
     <ClCompile Include="..\..\src\Core\Core.cpp" />
     <ClCompile Include="..\..\src\Core\Stream.cpp">
       <Filter>Streams</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\Network.cpp">
-      <Filter>Networking</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\WebStream.cpp">
       <Filter>Streams\Web</Filter>
@@ -235,14 +241,29 @@
     <ClCompile Include="..\..\dep\FastLZ\fastlz.c">
       <Filter>Compression</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Core\Message.cpp">
-      <Filter>Networking</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Core\Plugin.cpp">
       <Filter>Plugins</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\PluginManager.cpp">
       <Filter>Plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Network\Network.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Network\Message.cpp">
+      <Filter>Networking\Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Network\MessageHandlers.cpp">
+      <Filter>Networking\Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Network\Session.cpp">
+      <Filter>Networking\Session</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Network\CipherISAAC.cpp">
+      <Filter>Networking\Cryptography</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Network\MessagePlugin.cpp">
+      <Filter>Networking\Messages</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -378,14 +399,26 @@
     <ClInclude Include="..\..\dep\FastLZ\fastlz.h">
       <Filter>Compression</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\Network\Message.h">
-      <Filter>Networking</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\Core\Plugin.h">
       <Filter>Plugins</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\PluginManager.h">
       <Filter>Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Network\MessageHandlers.h">
+      <Filter>Networking\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Network\Message.h">
+      <Filter>Networking\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Network\CipherISAAC.h">
+      <Filter>Networking\Cryptography</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Network\Session.h">
+      <Filter>Networking\Session</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Network\MessagePlugin.h">
+      <Filter>Networking\Messages</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

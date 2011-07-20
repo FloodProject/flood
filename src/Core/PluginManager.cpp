@@ -141,10 +141,10 @@ void PluginManager::disablePlugin( Plugin* plugin )
 	PluginMetadata metadata = plugin->getMetadata();
 	LogInfo( "Disabling plugin: %s", metadata.name.c_str() );
 
+	onPluginDisableEvent(plugin);
+
 	plugin->enabled = false;
 	plugin->doPluginDisable();
-
-	onPluginDisableEvent(plugin);
 }
 
 //-----------------------------------//

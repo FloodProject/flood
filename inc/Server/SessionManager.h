@@ -8,13 +8,14 @@
 
 #pragma once
 
-#include "Server/Session.h"
+#include "Core/Event.h"
+#include "Network/Session.h"
 
 NAMESPACE_SERVER_BEGIN
 
 //-----------------------------------//
 
-typedef std::vector<SessionPtr> Sessions;
+typedef std::map<NetworkPeerPtr, SessionPtr> SessionsMap;
 
 class SessionManager
 {
@@ -23,12 +24,24 @@ public:
 	SessionManager();
 	~SessionManager();
 
-	// Adds a new session to the manager.
+	// Adds a session to the manager.
 	void addSession(const SessionPtr& session);
+
+	// Removes a session from the manager.
+	void removeSession(const SessionPtr& session);
+
+	// Gets a session from a network peer.
+	SessionPtr getSession(const NetworkPeerPtr& peer);
+
+	// Sent when a session is added.
+	Event1<const SessionPtr&> onSessionAdded;
+
+	// Sent when a session is removed.
+	Event1<const SessionPtr&> onSessionRemoved;
 
 protected:
 
-	Sessions sessions;
+	SessionsMap sessions;
 };
 
 //-----------------------------------//

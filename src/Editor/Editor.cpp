@@ -64,8 +64,8 @@ void EditorApp::OnFatalException()
 
 //-----------------------------------//
 
-static EditorFrame* editorInstance;
-EditorFrame& GetEditor() { return *editorInstance; }
+static EditorFrame* gs_EditorInstance = nullptr;;
+EditorFrame& GetEditor() { return *gs_EditorInstance; }
 
 //-----------------------------------//
 
@@ -79,7 +79,7 @@ EditorFrame::EditorFrame(const wxString& title)
 	, pluginManager(nullptr)
 	, currentDocument(nullptr)
 {
-	editorInstance = this;
+	gs_EditorInstance = this;
 
 	createUI();
 	createEngine();
