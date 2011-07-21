@@ -6,11 +6,11 @@
 *
 ************************************************************************/
 
-#include "Server/API.h"
-#include "Server/SessionManager.h"
-#include "Network/Network.h"
+#include "Core/API.h"
+#include "Network/SessionManager.h"
+#include "Network/Peer.h"
 
-NAMESPACE_SERVER_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -29,7 +29,7 @@ SessionManager::~SessionManager()
 void SessionManager::addSession(const SessionPtr& session)
 {
 	if( !session ) return;
-	const NetworkPeerPtr& peer = session->getPeer();
+	const PeerPtr& peer = session->getPeer();
 	
 	sessions[peer] = session;
 
@@ -41,7 +41,7 @@ void SessionManager::addSession(const SessionPtr& session)
 void SessionManager::removeSession(const SessionPtr& session)
 {
 	if( !session ) return;
-	const NetworkPeerPtr& peer = session->getPeer();
+	const PeerPtr& peer = session->getPeer();
 
 	SessionsMap::iterator it = sessions.find(peer);
 	
@@ -55,7 +55,7 @@ void SessionManager::removeSession(const SessionPtr& session)
 
 //-----------------------------------//
 
-SessionPtr SessionManager::getSession(const NetworkPeerPtr& peer)
+SessionPtr SessionManager::getSession(const PeerPtr& peer)
 {
 	SessionsMap::iterator it = sessions.find(peer);
 
@@ -67,4 +67,4 @@ SessionPtr SessionManager::getSession(const NetworkPeerPtr& peer)
 
 //-----------------------------------//
 
-NAMESPACE_SERVER_END
+NAMESPACE_CORE_END

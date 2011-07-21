@@ -85,7 +85,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\dep\wx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Core.lib;Resources.lib;Engine.lib;opengl32.lib;glewd.lib;OpenAL32.lib;luad.lib;bulletd.lib;Pipeline.lib;wxbase29ud.lib;wxmsw29ud_core.lib;wxmsw29ud_aui.lib;wxmsw29ud_gl.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Core.lib;Resources.lib;Engine.lib;Protocol.lib;opengl32.lib;glewd.lib;OpenAL32.lib;luad.lib;bulletd.lib;Pipeline.lib;wxbase29ud.lib;wxmsw29ud_core.lib;wxmsw29ud_aui.lib;wxmsw29ud_gl.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration);$(SolutionDir)..\..\dep\bullet\lib\vc10;$(SolutionDir)..\..\dep\glew\lib\vc10;$(SolutionDir)..\..\dep\openal\lib\Win32;$(SolutionDir)..\..\dep\lua\lib\vc10;$(SolutionDir)..\..\dep\wx\lib\vc_lib\vc10;$(SolutionDir)..\..\dep\nvtt\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -181,6 +181,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\Client\ChatMessagesClient.cpp" />
     <ClCompile Include="..\..\src\Editor\API.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release DLL|Win32'">Create</PrecompiledHeader>

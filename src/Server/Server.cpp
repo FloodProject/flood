@@ -9,14 +9,16 @@
 #include "Server/API.h"
 #include "Server/Server.h"
 #include "Server/Settings.h"
-#include "Server/SessionManager.h"
 #include "Server/ServerPlugin.h"
 
 #include "Core/Event.h"
 #include "Core/Concurrency.h"
 #include "Core/Utilities.h"
 
-#include <enet/enet.h>
+#include "Network/Network.h"
+#include "Network/Host.h"
+#include "Network/Peer.h"
+#include "Network/Dispatcher.h"
 
 #include <iostream>
 
@@ -49,10 +51,8 @@ Server* GetServer() { return gs_ServerInstance; }
 
 Server::Server()
 	: tasks(nullptr)
-	, plugins(nullptr)
 	, networkThread(nullptr)
-	, host(nullptr)
-	, messageHandlers(nullptr)
+	, dispatcher(nullptr)
 {
 	gs_ServerInstance = this;
 }
@@ -67,17 +67,16 @@ bool Server::init()
 	Log::info("Created %d processing task(s)", Settings::NumTasksProcess);
 #endif
 
-	sessions = Allocate(SessionManager, AllocatorGetServer());
-	host = Allocate(NetworkServer, AllocatorGetServer());
-	messageHandlers = Allocate(MessageHandlers, AllocatorGetServer());
 	networkThread = ThreadCreate(AllocatorGetServer());
 	
-	initPlugins();
-
+	host = Allocate(HostServer, AllocatorGetServer());
 	host->createSocket("", Settings::HostPort);
 	host->onClientConnected.Connect(this, &Server::handleClientConnect);
 	host->onClientDisconnected.Connect(this, &Server::handleClientDisconnect);
-	host->onClientMessage.Connect(this, &Server::handleClientMessage);
+
+	dispatcher = Allocate(Dispatcher, AllocatorGetServer());
+	dispatcher->initServer(host);
+	dispatcher->initPlugins(ReflectionGetType(MessagePlugin));
 
 	return true;
 }
@@ -86,11 +85,8 @@ bool Server::init()
 
 void Server::shutdown()
 {
-	Deallocate(plugins);
-	Deallocate(sessions);
-	Deallocate(messageHandlers);
+	Deallocate(dispatcher);
 	Deallocate(host);
-	
 	ThreadDestroy(networkThread);
 	NetworkDeinitialize();
 }
@@ -99,7 +95,7 @@ void Server::shutdown()
 
 static void ProcessMessagesThread(Thread* thread, void* data)
 {
-	NetworkHost* host = (NetworkHost*) data;
+	Host* host = (Host*) data;
 	
 	LogInfo("Networking thread will now start listening for messages...");
 
@@ -136,63 +132,8 @@ void Server::run()
 
 //-----------------------------------//
 
-void Server::initPlugins()
+void Server::handleClientConnect(const PeerPtr& networkPeer)
 {
-	plugins = Allocate(PluginManager, AllocatorGetServer());
-	plugins->onPluginEnableEvent.Connect(this, &Server::handlePluginEnable);
-	plugins->onPluginDisableEvent.Connect(this, &Server::handlePluginDisable);
-
-	std::vector<Plugin*> found;
-	plugins->scanPlugins(ReflectionGetType(ServerPlugin), found);
-	plugins->sortPlugins(found);
-	plugins->registerPlugins(found);
-}
-
-//-----------------------------------//
-
-void Server::handlePluginEnable(Plugin* plugin)
-{
-	ServerPlugin* serverPlugin = (ServerPlugin*) plugin;
-
-	const MessagesTable& messagesTable = serverPlugin->getMessagesTable();
-	Enum* messagesEnum = serverPlugin->getMessagesEnum();
-
-	for(size_t i = 0; i < messagesTable.size(); i++ )
-	{
-		MessageHandler handler = messagesTable[i];
-		handler.plugin = serverPlugin;
-
-		messageHandlers->addHandler(handler);
-
-		const char* name = EnumGetValueName(messagesEnum, handler.id);
-		LogDebug("Registering message type: %s", name);
-	}
-}
-
-//-----------------------------------//
-
-void Server::handlePluginDisable(Plugin* plugin)
-{
-	ServerPlugin* serverPlugin = (ServerPlugin*) plugin;
-
-	const MessagesTable& messagesTable = serverPlugin->getMessagesTable();
-	Enum* messagesEnum = serverPlugin->getMessagesEnum();
-
-	for(size_t i = 0; i < messagesTable.size(); i++ )
-	{
-		const MessageHandler& handler = messagesTable[i];
-		messageHandlers->addHandler(handler);
-	}
-}
-
-//-----------------------------------//
-
-void Server::handleClientConnect(const NetworkPeerPtr& networkPeer)
-{
-	SessionPtr session = Allocate(Session, AllocatorGetServer());
-	session->setPeer(networkPeer);
-	sessions->addSession(session);
-
 	String hostname = networkPeer->getHostName().c_str();
 	String ip = networkPeer->getHostIP().c_str();
 
@@ -201,23 +142,12 @@ void Server::handleClientConnect(const NetworkPeerPtr& networkPeer)
 
 //-----------------------------------//
 
-void Server::handleClientDisconnect(const NetworkPeerPtr& networkPeer)
+void Server::handleClientDisconnect(const PeerPtr& networkPeer)
 {
-	const SessionPtr& session = sessions->getSession(networkPeer);
-	assert( session != nullptr );
-
-	sessions->removeSession(session);
-
-	LogInfo("Client disconnected: %s", networkPeer->getHostName().c_str());
+	String hostname = networkPeer->getHostName().c_str();
+	LogInfo("Client disconnected: %s", hostname.c_str());
 }
 
-//-----------------------------------//
-
-void Server::handleClientMessage(const NetworkPeerPtr& networkPeer, const MessagePtr& message)
-{
-	const SessionPtr& session = sessions->getSession(networkPeer);
-	assert( session != nullptr );
-}
 
 //-----------------------------------//
 

@@ -85,7 +85,12 @@ void PluginManager::scanPlugins(Class* klass, std::vector<Plugin*>& plugins)
 		Class* child = klass->childs[i];
 		if( !child ) continue;
 
-		Plugin* plugin = (Plugin*) ClassCreateInstance(child, AllocatorGetHeap());
+		scanPlugins(child, plugins);
+
+		if( ClassIsAbstract(child) )
+			continue;
+
+		Plugin* plugin = (Plugin*) ClassCreateInstance(child, AllocatorGetThis());
 		if(!plugin) continue;
 
 		plugins.push_back(plugin);

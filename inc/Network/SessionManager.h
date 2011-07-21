@@ -11,11 +11,11 @@
 #include "Core/Event.h"
 #include "Network/Session.h"
 
-NAMESPACE_SERVER_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-typedef std::map<NetworkPeerPtr, SessionPtr> SessionsMap;
+typedef std::map<PeerPtr, SessionPtr> SessionsMap;
 
 class SessionManager
 {
@@ -31,7 +31,7 @@ public:
 	void removeSession(const SessionPtr& session);
 
 	// Gets a session from a network peer.
-	SessionPtr getSession(const NetworkPeerPtr& peer);
+	SessionPtr getSession(const PeerPtr& peer);
 
 	// Sent when a session is added.
 	Event1<const SessionPtr&> onSessionAdded;
@@ -46,4 +46,4 @@ protected:
 
 //-----------------------------------//
 
-NAMESPACE_SERVER_END
+NAMESPACE_CORE_END

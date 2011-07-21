@@ -18,6 +18,8 @@ struct Allocator;
 
 API_CORE Allocator* AllocatorGetHeap();
 API_CORE Allocator* AllocatorGetStack();
+API_CORE Allocator* AllocatorGetObject(void*);
+#define AllocatorGetThis() (AllocatorGetObject(this))
 
 API_CORE Allocator* AllocatorCreateHeap( Allocator* );
 API_CORE Allocator* AllocatorCreateStack( Allocator* );
@@ -45,12 +47,12 @@ struct API_CORE Allocator
 	const char* group;
 };
 
-struct PoolAllocator : public Allocator
+struct API_CORE PoolAllocator : public Allocator
 {
 	uint8* current;
 };
 
-struct BumpAllocator : public Allocator
+struct API_CORE BumpAllocator : public Allocator
 {
 	uint8* start;
 	uint8* current;

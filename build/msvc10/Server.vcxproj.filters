@@ -4,49 +4,25 @@
     <Filter Include="Settings">
       <UniqueIdentifier>{df3c7ee9-5540-41e0-a0b4-896d9e30f81d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Session">
-      <UniqueIdentifier>{a5e5acd3-df89-4614-b19d-887acb034ab0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Plugins">
-      <UniqueIdentifier>{8a1f582b-969f-48ba-9f1d-13f6c56b9894}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Plugins\Chat">
-      <UniqueIdentifier>{504a321c-80cb-4621-b7d9-0371b93e6ea8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Plugins\Resources">
-      <UniqueIdentifier>{e948697e-fbb4-4889-a20a-bafe6998139d}</UniqueIdentifier>
+    <Filter Include="Protocol">
+      <UniqueIdentifier>{191e3c78-4b15-46b4-9bad-49ef15a54e17}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Server\Settings.cpp">
       <Filter>Settings</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Server\Server.cpp" />
     <ClCompile Include="..\..\src\Server\Main.cpp" />
-    <ClCompile Include="..\..\src\Server\SessionManager.cpp">
-      <Filter>Session</Filter>
+    <ClCompile Include="..\..\src\Server\Plugins\ChatMessagesServer.cpp">
+      <Filter>Protocol</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Server\ServerPlugin.cpp">
-      <Filter>Plugins</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Server\Plugins\ChatPlugin.cpp">
-      <Filter>Plugins\Chat</Filter>
-    </ClCompile>
+    <ClCompile Include="..\..\src\Server\Server.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\Server\API.h" />
     <ClInclude Include="..\..\inc\Server\Server.h" />
     <ClInclude Include="..\..\inc\Server\Settings.h">
       <Filter>Settings</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\Server\SessionManager.h">
-      <Filter>Session</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\Server\ServerPlugin.h">
-      <Filter>Plugins</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\Server\Plugins\ChatPlugin.h">
-      <Filter>Plugins\Chat</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

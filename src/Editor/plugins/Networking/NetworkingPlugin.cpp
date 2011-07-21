@@ -8,8 +8,10 @@
 
 #include "Editor/API.h"
 #include "NetworkingPlugin.h"
-#include "Network/Network.h"
+#include "Network/Host.h"
 #include "Network/Message.h"
+#include "Network/Dispatcher.h"
+#include "Network/MessagePlugin.h"
 #include "Editor.h"
 #include "Settings.h"
 
@@ -45,7 +47,7 @@ PluginMetadata NetworkingPlugin::getMetadata()
 
 static void ProcessMessagesThread(Thread* thread, void* userdata)
 {
-	NetworkClient* client = (NetworkClient*) userdata;
+	HostClient* client = (HostClient*) userdata;
 
 	String address(HostAddress);
 
@@ -53,15 +55,6 @@ static void ProcessMessagesThread(Thread* thread, void* userdata)
 
 	client->connect(address, HostPort);
 	client->processEvents(500);
-
-	MessageData data;
-	data.push_back(0x10);
-
-	MessagePtr message = Allocate(Message, AllocatorGetHeap());
-	message->setData(data);
-	message->prepare();
-
-	client->getPeer()->queueMessage(message, 0);
 
 	while(thread->IsRunning)
 	{
@@ -73,15 +66,16 @@ static void ProcessMessagesThread(Thread* thread, void* userdata)
 
 void NetworkingPlugin::onPluginEnable()
 {
-	client = nullptr;
-	networkThread = nullptr;
-
-	client = Allocate(NetworkClient, AllocatorGetHeap());
+	client = Allocate(HostClient, AllocatorGetThis());
 	client->onClientConnected.Connect(this, &NetworkingPlugin::handleClientConnect);
 	client->onClientDisconnected.Connect(this, &NetworkingPlugin::handleClientDisconnect);
 
-	networkThread = ThreadCreate( AllocatorGetHeap() );
-	ThreadStart(networkThread, ProcessMessagesThread, client.get());
+	dispatcher = Allocate(Dispatcher, AllocatorGetThis());
+	dispatcher->initClient(client);
+	dispatcher->initPlugins(ReflectionGetType(MessagePlugin));
+
+	networkThread = ThreadCreate( AllocatorGetThis() );
+	ThreadStart(networkThread, ProcessMessagesThread, client);
 	ThreadSetName(networkThread, "Networking");
 	
 	if(!networkThread)
@@ -100,23 +94,27 @@ void NetworkingPlugin::onPluginDisable()
 	networkThread->IsRunning = false;
 	ThreadJoin(networkThread);
 	ThreadDestroy(networkThread);
+	networkThread = nullptr;
 
-	client.reset();
+	Deallocate(client);
+	client = nullptr;
+
+	Deallocate(dispatcher);
+	dispatcher = nullptr;
 }
 
 //-----------------------------------//
 
-void NetworkingPlugin::handleClientConnect(const NetworkPeerPtr& networkPeer)
+void NetworkingPlugin::handleClientConnect(const PeerPtr& networkPeer)
 {
 	LogInfo("Connected to server at: %s", networkPeer->getHostIP().c_str());
 }
 
 //-----------------------------------//
 
-void NetworkingPlugin::handleClientDisconnect(const NetworkPeerPtr& peer)
+void NetworkingPlugin::handleClientDisconnect(const PeerPtr& peer)
 {
 }
-
 
 //-----------------------------------//
 

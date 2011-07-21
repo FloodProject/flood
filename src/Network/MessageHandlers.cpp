@@ -25,7 +25,7 @@ MessageHandlers::~MessageHandlers()
 
 //-----------------------------------//
 
-void MessageHandlers::addHandler(const MessageHandler& handler)
+void MessageHandlers::addHandler(const MessageMapping& handler)
 {
 	MessageId id = handler.id;
 	handlers[id] = handler;
@@ -33,7 +33,7 @@ void MessageHandlers::addHandler(const MessageHandler& handler)
 
 //-----------------------------------//
 
-void MessageHandlers::removeHandler(const MessageHandler& handler)
+void MessageHandlers::removeHandler(const MessageMapping& handler)
 {
 	MessageHandlersMap::iterator it = handlers.find(handler.id);
 
@@ -41,6 +41,18 @@ void MessageHandlers::removeHandler(const MessageHandler& handler)
 		return;
 
 	handlers.erase(it);
+}
+
+//-----------------------------------//
+
+MessageMapping* MessageHandlers::findHandler(MessageId id)
+{
+	MessageHandlersMap::iterator it = handlers.find(id);
+
+	if( it == handlers.end() )
+		return nullptr;
+
+	return &it->second;
 }
 
 //-----------------------------------//

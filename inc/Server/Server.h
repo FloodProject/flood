@@ -10,18 +10,21 @@
 
 #include "Core/Log.h"
 #include "Core/Concurrency.h"
-#include "Core/PluginManager.h"
-#include "Network/Network.h"
-#include "Network/MessageHandlers.h"
+#include "Core/ReferenceCount.h"
+
+FWD_DECL_INTRUSIVE(Peer)
+FWD_DECL_INTRUSIVE(Message)
 
 NAMESPACE_SERVER_BEGIN
 
 //-----------------------------------//
 
+class Plugin;
+class HostServer;
+class Dispatcher;
+
 API_SERVER void ServerInitialize();
 API_SERVER void ServerDeinitialize();
-
-class SessionManager;
 
 class Server
 {
@@ -38,29 +41,16 @@ public:
 	// Runs the server.
 	void run();
 
-	// Initializes the plugins.
-	void initPlugins();
-
-	// Gets the plugin manager.
-	GETTER(PluginManager, PluginManager*, plugins)
-
-	// Handles plugins callbacks.
-	void handlePluginEnable(Plugin*);
-	void handlePluginDisable(Plugin*);
-
 	// Handles client callbacks.
-	void handleClientConnect(const NetworkPeerPtr&);
-	void handleClientDisconnect(const NetworkPeerPtr&);
-	void handleClientMessage(const NetworkPeerPtr&, const MessagePtr&);
+	void handleClientConnect(const PeerPtr&);
+	void handleClientDisconnect(const PeerPtr&);
 
 protected:
 
 	TaskPool* tasks;
-	PluginManager* plugins;
+	HostServer* host;
+	Dispatcher* dispatcher;
 	Thread* networkThread;
-	NetworkServer* host;
-	SessionManager* sessions;
-	MessageHandlers* messageHandlers;
 };
 
 API_SERVER Server* GetServer();

@@ -17,14 +17,25 @@ NAMESPACE_CORE_BEGIN
 
 typedef void (MessagePlugin::*MessageHandlerMemFn)(const SessionPtr&, const MessagePtr&);
 
-struct MessageHandler
+struct MessageDirection
+{
+	enum Enum
+	{
+		ClientToServer,
+		ServerToClient,
+		ServerToServer,
+	};
+};
+
+struct MessageMapping
 {
 	MessageId id;
-	MessageHandlerMemFn fn;
+	MessageDirection::Enum direction;
+	MessageHandlerMemFn handler;
 	MessagePlugin* plugin;
 };
 
-typedef std::map<MessageId, MessageHandler> MessageHandlersMap;
+typedef std::map<MessageId, MessageMapping> MessageHandlersMap;
 
 class MessageHandlers
 {
@@ -34,10 +45,13 @@ public:
 	~MessageHandlers();
 
 	// Adds a message handler.
-	void addHandler(const MessageHandler&);
+	void addHandler(const MessageMapping&);
 
 	// Removes a message handler.
-	void removeHandler(const MessageHandler&);
+	void removeHandler(const MessageMapping&);
+
+	// Finds a message handler.
+	MessageMapping* findHandler(MessageId id);
 
 	// Gets the map with the message handlers.
 	GETTER(MessageHandlers, const MessageHandlersMap&, handlers)
@@ -45,6 +59,7 @@ public:
 protected:
 	
 	MessageHandlersMap handlers;
+	PluginManager* plugins;
 };
 
 //-----------------------------------//

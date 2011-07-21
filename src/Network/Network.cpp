@@ -12,11 +12,13 @@
 #include "Core/Memory.h"
 
 #include "Network/Network.h"
+#include "Network/Host.h"
+#include "Network/Peer.h"
 #include "Network/Message.h"
 
 #include <enet/enet.h>
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -94,14 +96,14 @@ static ENetHost* CreateEnetSocket( ENetAddress* address )
 
 //-----------------------------------//
 
-NetworkPeer::NetworkPeer()
+Peer::Peer()
 	: peer(nullptr)
 {
 }
 
 //-----------------------------------//
 
-void NetworkPeer::queueMessage(const MessagePtr& message, uint8 channel)
+void Peer::queueMessage(const MessagePtr& message, uint8 channel)
 {
 	if( !message ) return;
 	message->prepare();
@@ -110,7 +112,7 @@ void NetworkPeer::queueMessage(const MessagePtr& message, uint8 channel)
 
 //-----------------------------------//
 
-String NetworkPeer::getHostName() const
+String Peer::getHostName() const
 {
 	char name[256];
 	
@@ -125,7 +127,7 @@ String NetworkPeer::getHostName() const
 
 //-----------------------------------//
 
-String NetworkPeer::getHostIP() const
+String Peer::getHostIP() const
 {
 	char ip[64];
 	
@@ -140,21 +142,21 @@ String NetworkPeer::getHostIP() const
 
 //-----------------------------------//
 
-NetworkHost::NetworkHost()
+Host::Host()
 	: host(nullptr)
 {
 }
 
 //-----------------------------------//
 
-NetworkHost::~NetworkHost()
+Host::~Host()
 {
 	enet_host_destroy(host);
 }
 
 //-----------------------------------//
 
-void NetworkHost::processEvents(uint32 timeout)
+void Host::processEvents(uint32 timeout)
 {
 	ENetEvent event;
 	
@@ -177,11 +179,11 @@ void NetworkHost::processEvents(uint32 timeout)
 
 //-----------------------------------//
 
-void NetworkHost::handleConnectEvent(ENetEvent* event)
+void Host::handleConnectEvent(ENetEvent* event)
 {
 	ENetPeer* peer = event->peer;
 
-	NetworkPeerPtr networkPeer = Allocate(NetworkPeer, AllocatorGetHeap());
+	PeerPtr networkPeer = Allocate(Peer, AllocatorGetHeap());
 	networkPeer->peer = peer;
 
 	// Store the network peer as user data.
@@ -192,9 +194,9 @@ void NetworkHost::handleConnectEvent(ENetEvent* event)
 
 //-----------------------------------//
 
-void NetworkHost::handleDisconnectEvent(ENetEvent* event)
+void Host::handleDisconnectEvent(ENetEvent* event)
 {
-	NetworkPeerPtr networkPeer = (NetworkPeer*) event->peer->data;
+	PeerPtr networkPeer = (Peer*) event->peer->data;
 	
 	onDisconnected(networkPeer);
 
@@ -205,9 +207,9 @@ void NetworkHost::handleDisconnectEvent(ENetEvent* event)
 
 //-----------------------------------//
 
-void NetworkHost::handleReceiveEvent(ENetEvent* event)
+void Host::handleReceiveEvent(ENetEvent* event)
 {
-	NetworkPeerPtr peer = (NetworkPeer*) event->peer->data;
+	PeerPtr peer = (Peer*) event->peer->data;
 	
 	MessagePtr message = Allocate(Message, gs_NetworkAllocator);
 	message->setPacket(event->packet);
@@ -217,14 +219,14 @@ void NetworkHost::handleReceiveEvent(ENetEvent* event)
 
 //-----------------------------------//
 
-NetworkClient::NetworkClient()
+HostClient::HostClient()
 {
 	state = NetworkClientState::Initial;
 }
 
 //-----------------------------------//
 
-bool NetworkClient::connect( const String& address, int port )
+bool HostClient::connect( const String& address, int port )
 {
 	state = NetworkClientState::Connecting;
 
@@ -244,7 +246,7 @@ bool NetworkClient::connect( const String& address, int port )
 
 	ENetPeer* newPeer = enet_host_connect(host, &addr, channelCount, data);
 
-	peer = Allocate(NetworkPeer, gs_NetworkAllocator);
+	peer = Allocate(Peer, gs_NetworkAllocator);
 	peer->peer = newPeer;
 
 	return true;
@@ -252,7 +254,7 @@ bool NetworkClient::connect( const String& address, int port )
 
 //-----------------------------------//
 
-void NetworkClient::onConnected(const NetworkPeerPtr& newPeer)
+void HostClient::onConnected(const PeerPtr& newPeer)
 {
 	peer = newPeer;
 	state = NetworkClientState::Connected;
@@ -261,7 +263,7 @@ void NetworkClient::onConnected(const NetworkPeerPtr& newPeer)
 
 //-----------------------------------//
 
-void NetworkClient::onDisconnected(const NetworkPeerPtr& peer)
+void HostClient::onDisconnected(const PeerPtr& peer)
 {
 	state = NetworkClientState::Disconnected;
 	onClientDisconnected(peer);
@@ -269,14 +271,14 @@ void NetworkClient::onDisconnected(const NetworkPeerPtr& peer)
 
 //-----------------------------------//
 
-void NetworkClient::onMessage(const NetworkPeerPtr& peer, const MessagePtr& message)
+void HostClient::onMessage(const PeerPtr& peer, const MessagePtr& message)
 {
 	onServerMessage(peer, message);
 }
 
 //-----------------------------------//
 
-bool NetworkServer::createSocket( const String& address, int port )
+bool HostServer::createSocket( const String& address, int port )
 {
 	ENetAddress addr;
 	addr.host = ENET_HOST_ANY;
@@ -289,7 +291,7 @@ bool NetworkServer::createSocket( const String& address, int port )
 
 //-----------------------------------//
 
-void NetworkServer::onConnected(const NetworkPeerPtr& peer)
+void HostServer::onConnected(const PeerPtr& peer)
 {
 	peers.push_back(peer);
 	onClientConnected(peer);
@@ -297,7 +299,7 @@ void NetworkServer::onConnected(const NetworkPeerPtr& peer)
 
 //-----------------------------------//
 
-void NetworkServer::onDisconnected(const NetworkPeerPtr& peer)
+void HostServer::onDisconnected(const PeerPtr& peer)
 {
 	onClientDisconnected(peer);
 	
@@ -309,11 +311,11 @@ void NetworkServer::onDisconnected(const NetworkPeerPtr& peer)
 
 //-----------------------------------//
 
-void NetworkServer::onMessage(const NetworkPeerPtr& peer, const MessagePtr& message)
+void HostServer::onMessage(const PeerPtr& peer, const MessagePtr& message)
 {
 	onClientMessage(peer, message);
 }
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

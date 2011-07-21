@@ -16,8 +16,8 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-struct MessageHandler;
-typedef std::vector<MessageHandler> MessagesTable;
+struct MessageMapping;
+typedef std::vector<MessageMapping> MessagesTable;
 
 REFLECT_DECLARE_CLASS(MessagePlugin)
 
@@ -31,6 +31,10 @@ public:
 
 	MessagePlugin();
 	virtual ~MessagePlugin();
+
+	// Plugin callbacks.
+	void onPluginEnable() OVERRIDE;
+	void onPluginDisable() OVERRIDE;
 
 	// Gets the messages that this plugin handles.
 	virtual const MessagesTable& getMessagesTable() = 0;

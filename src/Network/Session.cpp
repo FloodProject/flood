@@ -8,7 +8,7 @@
 
 #include "Core/API.h"
 #include "Network/Session.h"
-#include "Network/Network.h"
+#include "Network/Peer.h"
 #include "Core/Timer.h"
 
 NAMESPACE_CORE_BEGIN

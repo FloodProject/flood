@@ -30,4 +30,16 @@ MessagePlugin::~MessagePlugin()
 
 //-----------------------------------//
 
+void MessagePlugin::onPluginEnable()
+{
+}
+
+//-----------------------------------//
+
+void MessagePlugin::onPluginDisable()
+{
+}
+
+//-----------------------------------//
+
 NAMESPACE_CORE_END

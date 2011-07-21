@@ -82,6 +82,22 @@ static void AllocatorTrackGroup(AllocationMetadata* metadata, bool alloc)
 
 //-----------------------------------//
 
+Allocator* AllocatorGetObject(void* object)
+{
+	if( !object )
+		return AllocatorGetHeap();
+
+	char* addr = (char*) object - sizeof(AllocationMetadata);
+	AllocationMetadata* metadata = (AllocationMetadata*) addr;
+
+	if(metadata->pattern != MEMORY_PATTERN)
+		return AllocatorGetHeap();
+
+	return metadata->allocator;
+}
+
+//-----------------------------------//
+
 void AllocatorReset( Allocator* alloc )
 {
 	if(!alloc) return;

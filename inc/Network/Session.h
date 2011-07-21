@@ -11,7 +11,7 @@
 #include "Core/ReferenceCount.h"
 #include "Network/CipherISAAC.h"
 
-FWD_DECL_INTRUSIVE(NetworkPeer)
+FWD_DECL_INTRUSIVE(Peer)
 
 NAMESPACE_CORE_BEGIN
 
@@ -35,7 +35,7 @@ public:
 	~Session();
 
 	// Accesses the peer associated with this session.
-	ACESSOR(Peer, const NetworkPeerPtr&, peer)
+	ACESSOR(Peer, const PeerPtr&, peer)
 
 	// Handles session authentication.
 	void handleAuthentication();
@@ -46,7 +46,7 @@ public:
 protected:
 
 	SessionState::Enum state;
-	NetworkPeerPtr peer;
+	PeerPtr peer;
 	CipherISAAC cipher;
 
 	float lastConnection;

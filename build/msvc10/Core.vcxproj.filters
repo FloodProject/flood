@@ -115,6 +115,12 @@
     <Filter Include="Networking\Cryptography">
       <UniqueIdentifier>{0a6542e4-2935-4786-8460-f09cb52147c0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Networking\Dispatcher">
+      <UniqueIdentifier>{ec0d2e3d-8be1-4f09-8197-238eafb3cc76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Networking\Hosts">
+      <UniqueIdentifier>{e79eb0bc-7a49-462f-90e6-f2f75df86c61}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Core\Utilities.cpp">
@@ -264,6 +270,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Network\MessagePlugin.cpp">
       <Filter>Networking\Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Network\Dispatcher.cpp">
+      <Filter>Networking\Dispatcher</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Network\SessionManager.cpp">
+      <Filter>Networking\Session</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -419,6 +431,18 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\Network\MessagePlugin.h">
       <Filter>Networking\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Network\Dispatcher.h">
+      <Filter>Networking\Dispatcher</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Network\Host.h">
+      <Filter>Networking\Hosts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Network\Peer.h">
+      <Filter>Networking\Hosts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Network\SessionManager.h">
+      <Filter>Networking\Session</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

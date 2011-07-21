@@ -11,8 +11,16 @@
 #include "EditorPlugin.h"
 #include "Core/Concurrency.h"
 
-FWD_DECL_INTRUSIVE(NetworkClient)
-FWD_DECL_INTRUSIVE(NetworkPeer)
+FWD_DECL_INTRUSIVE(HostClient)
+FWD_DECL_INTRUSIVE(Peer)
+FWD_DECL_INTRUSIVE(Message)
+
+NAMESPACE_CORE_BEGIN
+
+class HostClient;
+class Dispatcher;
+
+NAMESPACE_CORE_END
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -29,21 +37,18 @@ public:
 	NetworkingPlugin();
 
 	// Gets metadata about this plugin.
-	virtual PluginMetadata getMetadata();
+	virtual PluginMetadata getMetadata() OVERRIDE;
 
-	// Plugin enable callback.
-	virtual void onPluginEnable();
+	// Plugin callbacks.
+	void onPluginEnable() OVERRIDE;
+	void onPluginDisable() OVERRIDE;
 
-	// Plugin disable callback.
-	virtual void onPluginDisable();
+	// Handles client callbacks.
+	void handleClientConnect(const PeerPtr&);
+	void handleClientDisconnect(const PeerPtr&);
 
-	// Handles client connections.
-	void handleClientConnect(const NetworkPeerPtr& peer);
-
-	// Handles client disconnections.
-	void handleClientDisconnect(const NetworkPeerPtr& peer);
-
-	NetworkClientPtr client;
+	HostClient* client;
+	Dispatcher* dispatcher;
 	Thread* networkThread;
 };
 

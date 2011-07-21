@@ -223,11 +223,13 @@
     <ClCompile Include="..\..\src\Math\Ray.cpp" />
     <ClCompile Include="..\..\src\Math\Vector.cpp" />
     <ClCompile Include="..\..\src\Network\CipherISAAC.cpp" />
+    <ClCompile Include="..\..\src\Network\Dispatcher.cpp" />
     <ClCompile Include="..\..\src\Network\Message.cpp" />
     <ClCompile Include="..\..\src\Network\MessageHandlers.cpp" />
     <ClCompile Include="..\..\src\Network\MessagePlugin.cpp" />
     <ClCompile Include="..\..\src\Network\Network.cpp" />
     <ClCompile Include="..\..\src\Network\Session.cpp" />
+    <ClCompile Include="..\..\src\Network\SessionManager.cpp" />
     <ClCompile Include="..\..\src\Win32\ConcurrencyWin32.cpp" />
     <ClCompile Include="..\..\src\Win32\FileWatcherWin32.cpp" />
   </ItemGroup>
@@ -264,11 +266,15 @@
     <ClInclude Include="..\..\inc\Math\Quaternion.h" />
     <ClInclude Include="..\..\inc\Math\Vector.h" />
     <ClInclude Include="..\..\inc\Network\CipherISAAC.h" />
+    <ClInclude Include="..\..\inc\Network\Dispatcher.h" />
+    <ClInclude Include="..\..\inc\Network\Host.h" />
     <ClInclude Include="..\..\inc\Network\Message.h" />
     <ClInclude Include="..\..\inc\Network\MessageHandlers.h" />
     <ClInclude Include="..\..\inc\Network\MessagePlugin.h" />
     <ClInclude Include="..\..\inc\Network\Network.h" />
+    <ClInclude Include="..\..\inc\Network\Peer.h" />
     <ClInclude Include="..\..\inc\Network\Session.h" />
+    <ClInclude Include="..\..\inc\Network\SessionManager.h" />
     <ClInclude Include="..\..\inc\vapor\Chunk.h" />
     <ClInclude Include="..\..\inc\vapor\math\BoundingBox.h" />
     <ClInclude Include="..\..\inc\vapor\math\BoundingSphere.h" />
