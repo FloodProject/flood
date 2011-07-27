@@ -24,10 +24,10 @@ namespace vapor
 	VAPOR_API void LogError(const char* msg, ...);
 }
 
-%include "math.i"
-%include "resources.i"
-%include "input.i"
-%include "render.i"
-%include "scene.i"
+%include "Math.i"
+%include "Resources.i"
+%include "Input.i"
+%include "Render.i"
+%include "Scene.i"
 
 //%include "Engine.h"
