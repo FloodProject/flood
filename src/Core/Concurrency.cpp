@@ -119,8 +119,11 @@ TaskPool* TaskPoolCreate(Allocator* alloc, int8 Size)
 	{
 		Thread* thread = ThreadCreate(alloc);
 		threads.push_back(thread);
+
+		ThreadFunction taskFunction;
+		taskFunction.Bind(TaskPoolRun);
 		
-		ThreadStart(thread, TaskPoolRun, pool);
+		ThreadStart(thread, taskFunction, pool);
 		ThreadSetName(thread, "Task Pool");
 	}
 

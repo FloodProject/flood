@@ -10,7 +10,7 @@
 
 #include "Core/Handle.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -149,5 +149,5 @@ API_CORE bool SerializerSaveObjectToFile(const Path& file, Object* object);
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END
 

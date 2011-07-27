@@ -92,10 +92,10 @@
       <DisableSpecificWarnings>4503; 4510;4610; 4100;4190;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\dep\openal\lib\Win32;$(SolutionDir)..\..\dep\glew\lib;$(SolutionDir)..\..\dep\libogg-1.1.3\lib;$(SolutionDir)..\..\dep\libvorbis-1.2.0\lib;$(SolutionDir)..\..\dep\freetype\objs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\dep\openal\lib\Win32;$(SolutionDir)..\..\dep\glew\lib\vc10;$(SolutionDir)..\..\dep\lua\lib\vc10;$(SolutionDir)..\..\dep\libogg-1.1.3\lib;$(SolutionDir)..\..\dep\libvorbis-1.2.0\lib;$(SolutionDir)..\..\dep\freetype\objs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ForceSymbolReferences>
       </ForceSymbolReferences>
-      <AdditionalDependencies>OpenAL32d.lib</AdditionalDependencies>
+      <AdditionalDependencies>OpenAL32d.lib;opengl32.lib;glewd.lib;luad.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">
@@ -277,6 +277,7 @@
     <ClCompile Include="..\..\src\Win32\WindowWin32.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\inc\Audio\AL.h" />
     <ClInclude Include="..\..\inc\Audio\Buffer.h" />
     <ClInclude Include="..\..\inc\Audio\Context.h" />
     <ClInclude Include="..\..\inc\Audio\Device.h" />

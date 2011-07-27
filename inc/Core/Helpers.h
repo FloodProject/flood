@@ -8,7 +8,7 @@
 
 #pragma once
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -183,4 +183,4 @@ NAMESPACE_BEGIN
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

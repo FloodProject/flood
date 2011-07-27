@@ -94,10 +94,10 @@
     <Filter Include="Plugins\Camera">
       <UniqueIdentifier>{b23243dd-5c32-4796-94eb-d71cdb3bd5ba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Plugins\Networking">
+    <Filter Include="Plugins\Server">
       <UniqueIdentifier>{020ea8c4-8aa2-4525-99ed-6fa96f640666}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Plugins\Networking\Protocol">
+    <Filter Include="Plugins\Server\Protocol">
       <UniqueIdentifier>{a5a544f5-d39d-4b1d-88c3-3e91ee4aa618}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -264,9 +264,6 @@
     <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourceDatabase.cpp">
       <Filter>Plugins\Resources\Database</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Editor\plugins\Networking\NetworkingPlugin.cpp">
-      <Filter>Plugins\Networking</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneDocument.cpp">
       <Filter>Plugins\Scene</Filter>
     </ClCompile>
@@ -274,7 +271,13 @@
       <Filter>Plugins</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Client\ChatMessagesClient.cpp">
-      <Filter>Plugins\Networking\Protocol</Filter>
+      <Filter>Plugins\Server\Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Networking\ServerPane.cpp">
+      <Filter>Plugins\Server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Editor\plugins\Networking\ServerPlugin.cpp">
+      <Filter>Plugins\Server</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -441,14 +444,17 @@
     <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourceDatabase.h">
       <Filter>Plugins\Resources\Database</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Editor\plugins\Networking\NetworkingPlugin.h">
-      <Filter>Plugins\Networking</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\Editor\plugins\Scene\SceneDocument.h">
       <Filter>Plugins\Scene</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\inc\EditorPlugin.h">
       <Filter>Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Networking\ServerPane.h">
+      <Filter>Plugins\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Editor\plugins\Networking\ServerPlugin.h">
+      <Filter>Plugins\Server</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -366,9 +366,6 @@
     <ClInclude Include="..\..\inc\Core\Reflection.h">
       <Filter>Reflection</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\Chunk.h">
-      <Filter>Serialization\Binary</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\Win32\FileWatcherWin32.h">
       <Filter>Archive\Watcher</Filter>
     </ClInclude>

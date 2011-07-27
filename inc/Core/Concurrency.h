@@ -35,7 +35,7 @@ enum_class ThreadPriority
 };
 
 struct Thread;
-typedef void (*ThreadFunction)(Thread*, void*);
+typedef Delegate2<Thread*, void*> ThreadFunction;
 
 struct Thread
 {

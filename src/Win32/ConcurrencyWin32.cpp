@@ -85,6 +85,7 @@ bool ThreadStop(Thread* thread)
 bool ThreadJoin(Thread* thread)
 {
 	if( !thread ) return false;
+	thread->IsRunning = false;
 	return ::WaitForSingleObject(thread->Handle, INFINITE) != WAIT_FAILED;
 }
 

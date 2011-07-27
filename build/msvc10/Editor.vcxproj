@@ -85,7 +85,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\dep\wx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Core.lib;Resources.lib;Engine.lib;Protocol.lib;opengl32.lib;glewd.lib;OpenAL32.lib;luad.lib;bulletd.lib;Pipeline.lib;wxbase29ud.lib;wxmsw29ud_core.lib;wxmsw29ud_aui.lib;wxmsw29ud_gl.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Core.lib;Resources.lib;Engine.lib;Protocol.lib;Pipeline.lib;bulletd.lib;ws2_32.lib;wxbase29ud.lib;wxmsw29ud_core.lib;wxmsw29ud_aui.lib;wxmsw29ud_gl.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration);$(SolutionDir)..\..\dep\bullet\lib\vc10;$(SolutionDir)..\..\dep\glew\lib\vc10;$(SolutionDir)..\..\dep\openal\lib\Win32;$(SolutionDir)..\..\dep\lua\lib\vc10;$(SolutionDir)..\..\dep\wx\lib\vc_lib\vc10;$(SolutionDir)..\..\dep\nvtt\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -195,7 +195,8 @@
     <ClCompile Include="..\..\src\Editor\plugins\Log\LogFrame.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Log\LogPlugin.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Mono\MonoPlugin.cpp" />
-    <ClCompile Include="..\..\src\Editor\plugins\Networking\NetworkingPlugin.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Networking\ServerPane.cpp" />
+    <ClCompile Include="..\..\src\Editor\plugins\Networking\ServerPlugin.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Property\PropertyWatch.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourceDatabase.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourcesPane.cpp" />
@@ -271,7 +272,8 @@
     <ClInclude Include="..\..\src\Editor\plugins\Log\LogFrame.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Log\LogPlugin.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Mono\MonoPlugin.h" />
-    <ClInclude Include="..\..\src\Editor\plugins\Networking\NetworkingPlugin.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Networking\ServerPane.h" />
+    <ClInclude Include="..\..\src\Editor\plugins\Networking\ServerPlugin.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourceDatabase.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourcesPane.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourceThumbnailer.h" />

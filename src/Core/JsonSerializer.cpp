@@ -26,7 +26,7 @@
 #include <stack>
 #include <jansson.h>
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -280,8 +280,6 @@ static void SerializePrimitive( ReflectionContext* context, ReflectionWalkType::
 
 //-----------------------------------//
 
-static Object* DeserializeComposite( ReflectionContext* context, json_t* value );
-
 static void DeserializeEnum( ReflectionContext* context, json_t* value )
 {
 	const char* name = json_string_value(value);
@@ -392,6 +390,8 @@ static void* ResizeArray( ReflectionContext* context, void* address, uint32 size
 }
 
 //-----------------------------------//
+
+static Object* DeserializeComposite( ReflectionContext* context, json_t* value );
 
 static void DeserializeArrayElement( ReflectionContext* context, json_t* value, void* address )
 {
@@ -512,21 +512,21 @@ static void DeserializeField( ReflectionContext* context, json_t* value )
 			void* iter = json_object_iter(value);
 			void* iter2 = json_object_iter( json_object_iter_value(iter) );
 			json_t* val = json_object_iter_value(iter2);
-			const char* s = json_string_value(val);
+			const char* name = json_string_value(val);
 
-			ReflectionHandleContext hc;
-			ReflectionFindHandleContext((Class*) field->type, hc);
+			ReflectionHandleContext handleContext;
+			ReflectionFindHandleContext((Class*) field->type, handleContext);
 			
-			HandleId id = hc.deserialize(s);
+			HandleId id = handleContext.deserialize(name);
 			if(id == HandleInvalid) return;
 
 			address = ClassGetFieldAddress(context->object, field);
 			
 			typedef Handle<Object, 0, 0> ObjectHandle;
-			ObjectHandle* hnd_obj = (ObjectHandle*) address;
-			hnd_obj->id = id;
+			ObjectHandle* handleObject = (ObjectHandle*) address;
+			handleObject->id = id;
 			
-			ReferenceAdd((Object*)HandleFind(hc.handles, id));
+			ReferenceAdd((Object*)HandleFind(handleContext.handles, id));
 		}
 		else if( FieldIsPointer(field) )
 		{
@@ -552,7 +552,7 @@ static void DeserializeField( ReflectionContext* context, json_t* value )
 		context->enume = (Enum*) context->field->type;
 		DeserializeEnum(context, value);
 		break;
-	} };
+	} }
 }
 
 //-----------------------------------//
@@ -674,6 +674,7 @@ static void SerializeSave( Serializer* serializer )
 
 	// Always switch to the platform independent "C" locale when writing
 	// JSON, else the library will format the data erroneously.
+
 	LocaleSwitch locale;
 
 	size_t flags = JSON_INDENT(4) | JSON_PRESERVE_ORDER;
@@ -715,6 +716,6 @@ Serializer* SerializerCreateJSON(Allocator* alloc)
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END
 
 #endif

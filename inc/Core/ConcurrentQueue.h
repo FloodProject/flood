@@ -11,7 +11,7 @@
 #include <deque>
 #include <algorithm>
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -36,11 +36,15 @@ public:
 		cond = ConditionCreate(AllocatorGetHeap());
 	}
 
+	//-----------------------------------//
+
 	~ConcurrentQueue()
 	{
 		MutexDestroy(mutex);
 		ConditionDestroy(cond);
 	}
+
+	//-----------------------------------//
 
 	void push(const T& value)
 	{
@@ -83,10 +87,10 @@ public:
 	void wait_and_pop(T& popped_value)
 	{
 		MutexLock(mutex);
-	    
+	
 		while( queue.empty() )
 			ConditionWait(cond, mutex);
-	    
+	
 		popped_value = queue.front();
 		queue.pop_front();
 
@@ -120,4 +124,4 @@ protected:
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

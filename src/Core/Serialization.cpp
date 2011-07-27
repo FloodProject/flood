@@ -167,6 +167,8 @@ static bool ReflectionWalkPointer(ReflectionContext* context)
 	{
 		address = context->elementAddress;
 		address = *(Object**) address;
+		
+		resolve = false;
 	}
 	else if(FieldIsHandle(field))
 	{
@@ -252,7 +254,7 @@ static void ReflectionWalkCompositeField(ReflectionContext* context)
 	Type* type = context->type;
 	Object* object = context->object;
 
-	context->address = ClassGetFieldAddress(context->object, field);
+ 	context->address = ClassGetFieldAddress(context->object, field);
 	context->elementAddress = context->address;
 	context->type = field->type;
 

@@ -275,7 +275,6 @@
     <ClInclude Include="..\..\inc\Network\Peer.h" />
     <ClInclude Include="..\..\inc\Network\Session.h" />
     <ClInclude Include="..\..\inc\Network\SessionManager.h" />
-    <ClInclude Include="..\..\inc\vapor\Chunk.h" />
     <ClInclude Include="..\..\inc\vapor\math\BoundingBox.h" />
     <ClInclude Include="..\..\inc\vapor\math\BoundingSphere.h" />
     <ClInclude Include="..\..\inc\vapor\math\EulerAngles.h" />

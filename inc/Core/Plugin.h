@@ -65,7 +65,7 @@ public:
 	// Gets metadata about this plugin.
 	virtual PluginMetadata getMetadata() = 0;
 
-	// Plugin enable callback.
+	// Plugin callbacks.
 	virtual void onPluginEnable() = 0;
 	virtual void onPluginDisable() = 0;
 
