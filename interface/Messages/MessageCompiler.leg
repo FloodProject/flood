@@ -1,0 +1,92 @@
+%{
+
+#include <stdio.h>
+
+#define YY_PARSE(T) static T
+//#define YY_DEBUG
+
+enum BlockType
+{
+	BT_MESSAGE,
+	BT_ENUM,
+	BT_SERVICE
+};
+
+%}
+
+LINE	= BLOCK
+		| EMPTY { printf("got empty line\n"); }
+		;
+
+BLOCK	= b:BLOCK_MESSAGE { printf("got message decl\n"); }
+		#= b:BLOCK_ENUM { printf("got enum decl\n"); }
+		;
+
+# message StorageNode : Node {
+#  4: long capacity
+#  5: optional int weight = 1
+# }
+
+BLOCK_MESSAGE	= MESSAGE id:IDENTIFIER INHERITANCE?
+				BLOCK_OPEN BLOCK_FIELD* BLOCK_CLOSE { printf("got message block\n"); }
+				;
+
+BLOCK_FIELD		= FIELD BLOCK_FIELD { printf("got field block\n"); }
+				| FIELD
+				;
+
+FIELD 			= - NUMBER - COLON - TYPE - IDENTIFIER { printf("got field\n"); } # - EOL 
+
+TYPE 			= t:BOOL | t:STRING
+				| t:INT8 | t:UINT8
+				| t:INT16 | t:UINT16
+				| t:INT32 | t:UINT32
+				| t:INT64 | t:UINT64
+				| t:FLOAT | t:DOUBLE
+				;
+
+IDENTIFIER		= [a-zA-z_][a-zA-Z0-9_]* { printf("got id\n"); }
+DIGIT 			= [0-9]
+NUMBER			= DIGIT+ { printf("got number\n"); }
+
+KEYWORD			= IDENTIFIER
+
+ASSIGN			= - '='
+COLON			= - ':' { printf("got colon\n"); }
+BLOCK_OPEN		= - '{'
+BLOCK_CLOSE		= - '}'
+PAREN_OPEN		= - '('
+PAREN_CLOSE		= - ')'
+INHERITANCE		= COLON - IDENTIFIER - { printf("got inheritance\n"); }
+
+MESSAGE			= 'message' -- { printf("got message\n"); }
+STRUCT			= 'struct'	--
+ENUM			= 'enum'	--
+
+BOOL			= 'bool'	--
+STRING			= 'String' 	--
+INT8			= 'int8'	--
+UINT8			= 'uint8'	--
+INT16			= 'int16'	--
+UINT16			= 'uint16'	--
+INT32			= 'int32'	--
+UINT32			= 'uint32'	--
+INT64			= 'int64'	--
+UINT64			= 'uint64'	--
+FLOAT			= 'float'	--
+DOUBLE			= 'double'	--
+
+EOL				= '\n' | '\r\n' | '\r'
+SPACE			= [ \t]
+EMPTY			= SPACE* EOL
+
+-				= (SPACE | EOL)*
+--				= - #(&KEYWORD -)*
+
+%%
+
+int main()
+{
+	while (yyparse());
+	return 0;
+}
