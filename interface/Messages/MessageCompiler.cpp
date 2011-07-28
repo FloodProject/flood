@@ -7,17 +7,18 @@
 #define YYRULECOUNT 37
 
 
-#include <stdio.h>
+#include "MessageCompiler.h"
 
+//#define DEBUG
+
+#ifdef DEBUG
+	#define Log(T) puts((T))
+#else
+	#define Log(T)
+#endif
+
+#define YYSTYPE Block
 #define YY_PARSE(T) static T
-//#define YY_DEBUG
-
-enum BlockType
-{
-	BT_MESSAGE,
-	BT_ENUM,
-	BT_SERVICE
-};
 
 
 #ifndef YY_VARIABLE
@@ -95,7 +96,7 @@ YY_LOCAL(int) yyrefill(void)
   while (yybuflen - yypos < 512)
     {
       yybuflen *= 2;
-      yybuf= realloc(yybuf, yybuflen);
+      yybuf= (char*) realloc(yybuf, yybuflen);
     }
   YY_INPUT((yybuf + yypos), yyn, (yybuflen - yypos));
   if (!yyn) return 0;
@@ -160,7 +161,7 @@ YY_LOCAL(void) yyDo(yyaction action, int begin, int end)
   while (yythunkpos >= yythunkslen)
     {
       yythunkslen *= 2;
-      yythunks= realloc(yythunks, sizeof(yythunk) * yythunkslen);
+      yythunks= (yythunk*) realloc(yythunks, sizeof(yythunk) * yythunkslen);
     }
   yythunks[yythunkpos].begin=  begin;
   yythunks[yythunkpos].end=    end;
@@ -178,7 +179,7 @@ YY_LOCAL(int) yyText(int begin, int end)
       while (yytextlen < (yyleng - 1))
 	{
 	  yytextlen *= 2;
-	  yytext= realloc(yytext, yytextlen);
+	  yytext= (char*) realloc(yytext, yytextlen);
 	}
       memcpy(yytext, yybuf + begin, yyleng);
     }
@@ -243,16 +244,16 @@ YY_RULE(int) yy_PAREN_OPEN(); /* 31 */
 YY_RULE(int) yy_ASSIGN(); /* 30 */
 YY_RULE(int) yy_KEYWORD(); /* 29 */
 YY_RULE(int) yy_DIGIT(); /* 28 */
-YY_RULE(int) yy_DOUBLE(); /* 27 */
-YY_RULE(int) yy_FLOAT(); /* 26 */
-YY_RULE(int) yy_UINT64(); /* 25 */
-YY_RULE(int) yy_INT64(); /* 24 */
-YY_RULE(int) yy_UINT32(); /* 23 */
-YY_RULE(int) yy_INT32(); /* 22 */
-YY_RULE(int) yy_UINT16(); /* 21 */
-YY_RULE(int) yy_INT16(); /* 20 */
-YY_RULE(int) yy_UINT8(); /* 19 */
-YY_RULE(int) yy_INT8(); /* 18 */
+YY_RULE(int) yy_UINT64(); /* 27 */
+YY_RULE(int) yy_INT64(); /* 26 */
+YY_RULE(int) yy_UINT32(); /* 25 */
+YY_RULE(int) yy_INT32(); /* 24 */
+YY_RULE(int) yy_UINT16(); /* 23 */
+YY_RULE(int) yy_INT16(); /* 22 */
+YY_RULE(int) yy_UINT8(); /* 21 */
+YY_RULE(int) yy_INT8(); /* 20 */
+YY_RULE(int) yy_DOUBLE(); /* 19 */
+YY_RULE(int) yy_FLOAT(); /* 18 */
 YY_RULE(int) yy_STRING(); /* 17 */
 YY_RULE(int) yy_BOOL(); /* 16 */
 YY_RULE(int) yy_TYPE(); /* 15 */
@@ -271,59 +272,129 @@ YY_RULE(int) yy_EMPTY(); /* 3 */
 YY_RULE(int) yy_BLOCK(); /* 2 */
 YY_RULE(int) yy_LINE(); /* 1 */
 
+YY_ACTION(void) yy_1_DOUBLE(char *yytext, int yyleng)
+{
+  yyprintf((stderr, "do yy_1_DOUBLE\n"));
+   yy.type.assign(yytext); ;
+}
+YY_ACTION(void) yy_1_FLOAT(char *yytext, int yyleng)
+{
+  yyprintf((stderr, "do yy_1_FLOAT\n"));
+   yy.type.assign(yytext); ;
+}
+YY_ACTION(void) yy_1_UINT64(char *yytext, int yyleng)
+{
+  yyprintf((stderr, "do yy_1_UINT64\n"));
+   yy.type.assign(yytext); ;
+}
+YY_ACTION(void) yy_1_INT64(char *yytext, int yyleng)
+{
+  yyprintf((stderr, "do yy_1_INT64\n"));
+   yy.type.assign(yytext); ;
+}
+YY_ACTION(void) yy_1_UINT32(char *yytext, int yyleng)
+{
+  yyprintf((stderr, "do yy_1_UINT32\n"));
+   yy.type.assign(yytext); ;
+}
+YY_ACTION(void) yy_1_INT32(char *yytext, int yyleng)
+{
+  yyprintf((stderr, "do yy_1_INT32\n"));
+   yy.type.assign(yytext); ;
+}
+YY_ACTION(void) yy_1_UINT16(char *yytext, int yyleng)
+{
+  yyprintf((stderr, "do yy_1_UINT16\n"));
+   yy.type.assign(yytext); ;
+}
+YY_ACTION(void) yy_1_INT16(char *yytext, int yyleng)
+{
+  yyprintf((stderr, "do yy_1_INT16\n"));
+   yy.type.assign(yytext); ;
+}
+YY_ACTION(void) yy_1_UINT8(char *yytext, int yyleng)
+{
+  yyprintf((stderr, "do yy_1_UINT8\n"));
+   yy.type.assign(yytext); ;
+}
+YY_ACTION(void) yy_1_INT8(char *yytext, int yyleng)
+{
+  yyprintf((stderr, "do yy_1_INT8\n"));
+   yy.type.assign(yytext); ;
+}
+YY_ACTION(void) yy_1_STRING(char *yytext, int yyleng)
+{
+  yyprintf((stderr, "do yy_1_STRING\n"));
+   yy.type.assign(yytext); ;
+}
+YY_ACTION(void) yy_1_BOOL(char *yytext, int yyleng)
+{
+  yyprintf((stderr, "do yy_1_BOOL\n"));
+   yy.type.assign(yytext); ;
+}
 YY_ACTION(void) yy_1_MESSAGE(char *yytext, int yyleng)
 {
   yyprintf((stderr, "do yy_1_MESSAGE\n"));
-   printf("got message\n"); ;
+   message.inherits = false; ;
 }
 YY_ACTION(void) yy_1_INHERITANCE(char *yytext, int yyleng)
 {
+#define id yyval[-1]
   yyprintf((stderr, "do yy_1_INHERITANCE\n"));
-   printf("got inheritance\n"); ;
+  
+					Log("inheritance");
+					message.inherits = true;
+					message.parent.assign(yytext);
+				;
+#undef id
 }
 YY_ACTION(void) yy_1_COLON(char *yytext, int yyleng)
 {
   yyprintf((stderr, "do yy_1_COLON\n"));
-   printf("got colon\n"); ;
+   Log("colon"); ;
 }
 YY_ACTION(void) yy_1_NUMBER(char *yytext, int yyleng)
 {
   yyprintf((stderr, "do yy_1_NUMBER\n"));
-   printf("got number\n"); ;
+   Log("number"); ;
 }
 YY_ACTION(void) yy_1_IDENTIFIER(char *yytext, int yyleng)
 {
   yyprintf((stderr, "do yy_1_IDENTIFIER\n"));
-   printf("got id\n"); ;
+   yy.name.assign(yytext); Log("id"); ;
 }
 YY_ACTION(void) yy_1_FIELD(char *yytext, int yyleng)
 {
   yyprintf((stderr, "do yy_1_FIELD\n"));
-   printf("got field\n"); ;
+   Log("field"); ;
 }
 YY_ACTION(void) yy_1_BLOCK_FIELD(char *yytext, int yyleng)
 {
   yyprintf((stderr, "do yy_1_BLOCK_FIELD\n"));
-   printf("got field block\n"); ;
+   Log("field block"); ;
 }
 YY_ACTION(void) yy_1_BLOCK_MESSAGE(char *yytext, int yyleng)
 {
 #define id yyval[-1]
   yyprintf((stderr, "do yy_1_BLOCK_MESSAGE\n"));
-   printf("got message block\n"); ;
+  
+					Log("message block");
+					message.name.assign(id.name);
+					messages.push_back(message);
+				;
 #undef id
 }
 YY_ACTION(void) yy_1_BLOCK(char *yytext, int yyleng)
 {
 #define b yyval[-1]
   yyprintf((stderr, "do yy_1_BLOCK\n"));
-   printf("got message decl\n"); ;
+   Log("message decl"); ;
 #undef b
 }
 YY_ACTION(void) yy_1_LINE(char *yytext, int yyleng)
 {
   yyprintf((stderr, "do yy_1_LINE\n"));
-   printf("got empty line\n"); ;
+   Log("empty line"); ;
 }
 
 YY_RULE(int) yy_SPACE()
@@ -421,99 +492,99 @@ YY_RULE(int) yy_DIGIT()
   yyprintf((stderr, "  fail %s @ %s\n", "DIGIT", yybuf+yypos));
   return 0;
 }
-YY_RULE(int) yy_DOUBLE()
-{  int yypos0= yypos, yythunkpos0= yythunkpos;
-  yyprintf((stderr, "%s\n", "DOUBLE"));  if (!yymatchString("double")) goto l14;  if (!yy___()) goto l14;
-  yyprintf((stderr, "  ok   %s @ %s\n", "DOUBLE", yybuf+yypos));
-  return 1;
-  l14:;	  yypos= yypos0; yythunkpos= yythunkpos0;
-  yyprintf((stderr, "  fail %s @ %s\n", "DOUBLE", yybuf+yypos));
-  return 0;
-}
-YY_RULE(int) yy_FLOAT()
-{  int yypos0= yypos, yythunkpos0= yythunkpos;
-  yyprintf((stderr, "%s\n", "FLOAT"));  if (!yymatchString("float")) goto l15;  if (!yy___()) goto l15;
-  yyprintf((stderr, "  ok   %s @ %s\n", "FLOAT", yybuf+yypos));
-  return 1;
-  l15:;	  yypos= yypos0; yythunkpos= yythunkpos0;
-  yyprintf((stderr, "  fail %s @ %s\n", "FLOAT", yybuf+yypos));
-  return 0;
-}
 YY_RULE(int) yy_UINT64()
 {  int yypos0= yypos, yythunkpos0= yythunkpos;
-  yyprintf((stderr, "%s\n", "UINT64"));  if (!yymatchString("uint64")) goto l16;  if (!yy___()) goto l16;
+  yyprintf((stderr, "%s\n", "UINT64"));  if (!yymatchString("uint64")) goto l14;  if (!yy__()) goto l14;  yyDo(yy_1_UINT64, yybegin, yyend);
   yyprintf((stderr, "  ok   %s @ %s\n", "UINT64", yybuf+yypos));
   return 1;
-  l16:;	  yypos= yypos0; yythunkpos= yythunkpos0;
+  l14:;	  yypos= yypos0; yythunkpos= yythunkpos0;
   yyprintf((stderr, "  fail %s @ %s\n", "UINT64", yybuf+yypos));
   return 0;
 }
 YY_RULE(int) yy_INT64()
 {  int yypos0= yypos, yythunkpos0= yythunkpos;
-  yyprintf((stderr, "%s\n", "INT64"));  if (!yymatchString("int64")) goto l17;  if (!yy___()) goto l17;
+  yyprintf((stderr, "%s\n", "INT64"));  if (!yymatchString("int64")) goto l15;  if (!yy__()) goto l15;  yyDo(yy_1_INT64, yybegin, yyend);
   yyprintf((stderr, "  ok   %s @ %s\n", "INT64", yybuf+yypos));
   return 1;
-  l17:;	  yypos= yypos0; yythunkpos= yythunkpos0;
+  l15:;	  yypos= yypos0; yythunkpos= yythunkpos0;
   yyprintf((stderr, "  fail %s @ %s\n", "INT64", yybuf+yypos));
   return 0;
 }
 YY_RULE(int) yy_UINT32()
 {  int yypos0= yypos, yythunkpos0= yythunkpos;
-  yyprintf((stderr, "%s\n", "UINT32"));  if (!yymatchString("uint32")) goto l18;  if (!yy___()) goto l18;
+  yyprintf((stderr, "%s\n", "UINT32"));  if (!yymatchString("uint32")) goto l16;  if (!yy__()) goto l16;  yyDo(yy_1_UINT32, yybegin, yyend);
   yyprintf((stderr, "  ok   %s @ %s\n", "UINT32", yybuf+yypos));
   return 1;
-  l18:;	  yypos= yypos0; yythunkpos= yythunkpos0;
+  l16:;	  yypos= yypos0; yythunkpos= yythunkpos0;
   yyprintf((stderr, "  fail %s @ %s\n", "UINT32", yybuf+yypos));
   return 0;
 }
 YY_RULE(int) yy_INT32()
 {  int yypos0= yypos, yythunkpos0= yythunkpos;
-  yyprintf((stderr, "%s\n", "INT32"));  if (!yymatchString("int32")) goto l19;  if (!yy___()) goto l19;
+  yyprintf((stderr, "%s\n", "INT32"));  if (!yymatchString("int32")) goto l17;  if (!yy__()) goto l17;  yyDo(yy_1_INT32, yybegin, yyend);
   yyprintf((stderr, "  ok   %s @ %s\n", "INT32", yybuf+yypos));
   return 1;
-  l19:;	  yypos= yypos0; yythunkpos= yythunkpos0;
+  l17:;	  yypos= yypos0; yythunkpos= yythunkpos0;
   yyprintf((stderr, "  fail %s @ %s\n", "INT32", yybuf+yypos));
   return 0;
 }
 YY_RULE(int) yy_UINT16()
 {  int yypos0= yypos, yythunkpos0= yythunkpos;
-  yyprintf((stderr, "%s\n", "UINT16"));  if (!yymatchString("uint16")) goto l20;  if (!yy___()) goto l20;
+  yyprintf((stderr, "%s\n", "UINT16"));  if (!yymatchString("uint16")) goto l18;  if (!yy__()) goto l18;  yyDo(yy_1_UINT16, yybegin, yyend);
   yyprintf((stderr, "  ok   %s @ %s\n", "UINT16", yybuf+yypos));
   return 1;
-  l20:;	  yypos= yypos0; yythunkpos= yythunkpos0;
+  l18:;	  yypos= yypos0; yythunkpos= yythunkpos0;
   yyprintf((stderr, "  fail %s @ %s\n", "UINT16", yybuf+yypos));
   return 0;
 }
 YY_RULE(int) yy_INT16()
 {  int yypos0= yypos, yythunkpos0= yythunkpos;
-  yyprintf((stderr, "%s\n", "INT16"));  if (!yymatchString("int16")) goto l21;  if (!yy___()) goto l21;
+  yyprintf((stderr, "%s\n", "INT16"));  if (!yymatchString("int16")) goto l19;  if (!yy__()) goto l19;  yyDo(yy_1_INT16, yybegin, yyend);
   yyprintf((stderr, "  ok   %s @ %s\n", "INT16", yybuf+yypos));
   return 1;
-  l21:;	  yypos= yypos0; yythunkpos= yythunkpos0;
+  l19:;	  yypos= yypos0; yythunkpos= yythunkpos0;
   yyprintf((stderr, "  fail %s @ %s\n", "INT16", yybuf+yypos));
   return 0;
 }
 YY_RULE(int) yy_UINT8()
 {  int yypos0= yypos, yythunkpos0= yythunkpos;
-  yyprintf((stderr, "%s\n", "UINT8"));  if (!yymatchString("uint8")) goto l22;  if (!yy___()) goto l22;
+  yyprintf((stderr, "%s\n", "UINT8"));  if (!yymatchString("uint8")) goto l20;  if (!yy__()) goto l20;  yyDo(yy_1_UINT8, yybegin, yyend);
   yyprintf((stderr, "  ok   %s @ %s\n", "UINT8", yybuf+yypos));
   return 1;
-  l22:;	  yypos= yypos0; yythunkpos= yythunkpos0;
+  l20:;	  yypos= yypos0; yythunkpos= yythunkpos0;
   yyprintf((stderr, "  fail %s @ %s\n", "UINT8", yybuf+yypos));
   return 0;
 }
 YY_RULE(int) yy_INT8()
 {  int yypos0= yypos, yythunkpos0= yythunkpos;
-  yyprintf((stderr, "%s\n", "INT8"));  if (!yymatchString("int8")) goto l23;  if (!yy___()) goto l23;
+  yyprintf((stderr, "%s\n", "INT8"));  if (!yymatchString("int8")) goto l21;  if (!yy__()) goto l21;  yyDo(yy_1_INT8, yybegin, yyend);
   yyprintf((stderr, "  ok   %s @ %s\n", "INT8", yybuf+yypos));
   return 1;
-  l23:;	  yypos= yypos0; yythunkpos= yythunkpos0;
+  l21:;	  yypos= yypos0; yythunkpos= yythunkpos0;
   yyprintf((stderr, "  fail %s @ %s\n", "INT8", yybuf+yypos));
+  return 0;
+}
+YY_RULE(int) yy_DOUBLE()
+{  int yypos0= yypos, yythunkpos0= yythunkpos;
+  yyprintf((stderr, "%s\n", "DOUBLE"));  if (!yymatchString("double")) goto l22;  if (!yy__()) goto l22;  yyDo(yy_1_DOUBLE, yybegin, yyend);
+  yyprintf((stderr, "  ok   %s @ %s\n", "DOUBLE", yybuf+yypos));
+  return 1;
+  l22:;	  yypos= yypos0; yythunkpos= yythunkpos0;
+  yyprintf((stderr, "  fail %s @ %s\n", "DOUBLE", yybuf+yypos));
+  return 0;
+}
+YY_RULE(int) yy_FLOAT()
+{  int yypos0= yypos, yythunkpos0= yythunkpos;
+  yyprintf((stderr, "%s\n", "FLOAT"));  if (!yymatchString("float")) goto l23;  if (!yy__()) goto l23;  yyDo(yy_1_FLOAT, yybegin, yyend);
+  yyprintf((stderr, "  ok   %s @ %s\n", "FLOAT", yybuf+yypos));
+  return 1;
+  l23:;	  yypos= yypos0; yythunkpos= yythunkpos0;
+  yyprintf((stderr, "  fail %s @ %s\n", "FLOAT", yybuf+yypos));
   return 0;
 }
 YY_RULE(int) yy_STRING()
 {  int yypos0= yypos, yythunkpos0= yythunkpos;
-  yyprintf((stderr, "%s\n", "STRING"));  if (!yymatchString("String")) goto l24;  if (!yy___()) goto l24;
+  yyprintf((stderr, "%s\n", "STRING"));  if (!yymatchString("String")) goto l24;  if (!yy__()) goto l24;  yyDo(yy_1_STRING, yybegin, yyend);
   yyprintf((stderr, "  ok   %s @ %s\n", "STRING", yybuf+yypos));
   return 1;
   l24:;	  yypos= yypos0; yythunkpos= yythunkpos0;
@@ -522,7 +593,7 @@ YY_RULE(int) yy_STRING()
 }
 YY_RULE(int) yy_BOOL()
 {  int yypos0= yypos, yythunkpos0= yythunkpos;
-  yyprintf((stderr, "%s\n", "BOOL"));  if (!yymatchString("bool")) goto l25;  if (!yy___()) goto l25;
+  yyprintf((stderr, "%s\n", "BOOL"));  if (!yymatchString("bool")) goto l25;  if (!yy__()) goto l25;  yyDo(yy_1_BOOL, yybegin, yyend);
   yyprintf((stderr, "  ok   %s @ %s\n", "BOOL", yybuf+yypos));
   return 1;
   l25:;	  yypos= yypos0; yythunkpos= yythunkpos0;
@@ -534,16 +605,16 @@ YY_RULE(int) yy_TYPE()
   yyprintf((stderr, "%s\n", "TYPE"));
   {  int yypos27= yypos, yythunkpos27= yythunkpos;  if (!yy_BOOL()) goto l28;  yyDo(yySet, 0, 0);  goto l27;
   l28:;	  yypos= yypos27; yythunkpos= yythunkpos27;  if (!yy_STRING()) goto l29;  yyDo(yySet, 0, 0);  goto l27;
-  l29:;	  yypos= yypos27; yythunkpos= yythunkpos27;  if (!yy_INT8()) goto l30;  yyDo(yySet, 0, 0);  goto l27;
-  l30:;	  yypos= yypos27; yythunkpos= yythunkpos27;  if (!yy_UINT8()) goto l31;  yyDo(yySet, 0, 0);  goto l27;
-  l31:;	  yypos= yypos27; yythunkpos= yythunkpos27;  if (!yy_INT16()) goto l32;  yyDo(yySet, 0, 0);  goto l27;
-  l32:;	  yypos= yypos27; yythunkpos= yythunkpos27;  if (!yy_UINT16()) goto l33;  yyDo(yySet, 0, 0);  goto l27;
-  l33:;	  yypos= yypos27; yythunkpos= yythunkpos27;  if (!yy_INT32()) goto l34;  yyDo(yySet, 0, 0);  goto l27;
-  l34:;	  yypos= yypos27; yythunkpos= yythunkpos27;  if (!yy_UINT32()) goto l35;  yyDo(yySet, 0, 0);  goto l27;
-  l35:;	  yypos= yypos27; yythunkpos= yythunkpos27;  if (!yy_INT64()) goto l36;  yyDo(yySet, 0, 0);  goto l27;
-  l36:;	  yypos= yypos27; yythunkpos= yythunkpos27;  if (!yy_UINT64()) goto l37;  yyDo(yySet, 0, 0);  goto l27;
-  l37:;	  yypos= yypos27; yythunkpos= yythunkpos27;  if (!yy_FLOAT()) goto l38;  yyDo(yySet, 0, 0);  goto l27;
-  l38:;	  yypos= yypos27; yythunkpos= yythunkpos27;  if (!yy_DOUBLE()) goto l26;  yyDo(yySet, 0, 0);
+  l29:;	  yypos= yypos27; yythunkpos= yythunkpos27;  if (!yy_FLOAT()) goto l30;  yyDo(yySet, 0, 0);  goto l27;
+  l30:;	  yypos= yypos27; yythunkpos= yythunkpos27;  if (!yy_DOUBLE()) goto l31;  yyDo(yySet, 0, 0);  goto l27;
+  l31:;	  yypos= yypos27; yythunkpos= yythunkpos27;  if (!yy_INT8()) goto l32;  yyDo(yySet, 0, 0);  goto l27;
+  l32:;	  yypos= yypos27; yythunkpos= yythunkpos27;  if (!yy_UINT8()) goto l33;  yyDo(yySet, 0, 0);  goto l27;
+  l33:;	  yypos= yypos27; yythunkpos= yythunkpos27;  if (!yy_INT16()) goto l34;  yyDo(yySet, 0, 0);  goto l27;
+  l34:;	  yypos= yypos27; yythunkpos= yythunkpos27;  if (!yy_UINT16()) goto l35;  yyDo(yySet, 0, 0);  goto l27;
+  l35:;	  yypos= yypos27; yythunkpos= yythunkpos27;  if (!yy_INT32()) goto l36;  yyDo(yySet, 0, 0);  goto l27;
+  l36:;	  yypos= yypos27; yythunkpos= yythunkpos27;  if (!yy_UINT32()) goto l37;  yyDo(yySet, 0, 0);  goto l27;
+  l37:;	  yypos= yypos27; yythunkpos= yythunkpos27;  if (!yy_INT64()) goto l38;  yyDo(yySet, 0, 0);  goto l27;
+  l38:;	  yypos= yypos27; yythunkpos= yythunkpos27;  if (!yy_UINT64()) goto l26;  yyDo(yySet, 0, 0);
   }
   l27:;	
   yyprintf((stderr, "  ok   %s @ %s\n", "TYPE", yybuf+yypos));  yyDo(yyPop, 1, 0);
@@ -629,9 +700,9 @@ YY_RULE(int) yy_BLOCK_OPEN()
   return 0;
 }
 YY_RULE(int) yy_INHERITANCE()
-{  int yypos0= yypos, yythunkpos0= yythunkpos;
-  yyprintf((stderr, "%s\n", "INHERITANCE"));  if (!yy_COLON()) goto l54;  if (!yy__()) goto l54;  if (!yy_IDENTIFIER()) goto l54;  if (!yy__()) goto l54;  yyDo(yy_1_INHERITANCE, yybegin, yyend);
-  yyprintf((stderr, "  ok   %s @ %s\n", "INHERITANCE", yybuf+yypos));
+{  int yypos0= yypos, yythunkpos0= yythunkpos;  yyDo(yyPush, 1, 0);
+  yyprintf((stderr, "%s\n", "INHERITANCE"));  if (!yy_COLON()) goto l54;  if (!yy__()) goto l54;  if (!yy_IDENTIFIER()) goto l54;  yyDo(yySet, -1, 0);  if (!yy__()) goto l54;  yyDo(yy_1_INHERITANCE, yybegin, yyend);
+  yyprintf((stderr, "  ok   %s @ %s\n", "INHERITANCE", yybuf+yypos));  yyDo(yyPop, 1, 0);
   return 1;
   l54:;	  yypos= yypos0; yythunkpos= yythunkpos0;
   yyprintf((stderr, "  fail %s @ %s\n", "INHERITANCE", yybuf+yypos));
@@ -639,11 +710,11 @@ YY_RULE(int) yy_INHERITANCE()
 }
 YY_RULE(int) yy_IDENTIFIER()
 {  int yypos0= yypos, yythunkpos0= yythunkpos;
-  yyprintf((stderr, "%s\n", "IDENTIFIER"));  if (!yymatchClass((unsigned char *)"\000\000\000\000\000\000\000\000\376\377\377\377\377\377\377\007\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000")) goto l55;
+  yyprintf((stderr, "%s\n", "IDENTIFIER"));  yyText(yybegin, yyend);  if (!(YY_BEGIN)) goto l55;  if (!yymatchClass((unsigned char *)"\000\000\000\000\000\000\000\000\376\377\377\377\377\377\377\007\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000")) goto l55;
   l56:;	
   {  int yypos57= yypos, yythunkpos57= yythunkpos;  if (!yymatchClass((unsigned char *)"\000\000\000\000\000\000\377\003\376\377\377\207\376\377\377\007\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000")) goto l57;  goto l56;
   l57:;	  yypos= yypos57; yythunkpos= yythunkpos57;
-  }  yyDo(yy_1_IDENTIFIER, yybegin, yyend);
+  }  yyText(yybegin, yyend);  if (!(YY_END)) goto l55;  yyDo(yy_1_IDENTIFIER, yybegin, yyend);
   yyprintf((stderr, "  ok   %s @ %s\n", "IDENTIFIER", yybuf+yypos));
   return 1;
   l55:;	  yypos= yypos0; yythunkpos= yythunkpos0;
@@ -722,13 +793,13 @@ YY_PARSE(int) YYPARSEFROM(yyrule yystart)
   if (!yybuflen)
     {
       yybuflen= 1024;
-      yybuf= malloc(yybuflen);
+      yybuf= (char*) malloc(yybuflen);
       yytextlen= 1024;
-      yytext= malloc(yytextlen);
+      yytext= (char*) malloc(yytextlen);
       yythunkslen= 32;
-      yythunks= malloc(sizeof(yythunk) * yythunkslen);
+      yythunks= (yythunk*) malloc(sizeof(yythunk) * yythunkslen);
       yyvalslen= YY_STACKSIZE;
-      yyvals= malloc(sizeof(YYSTYPE) * yyvalslen);
+      yyvals= (YYSTYPE*) malloc(sizeof(YYSTYPE) * yyvalslen);
       yybegin= yyend= yypos= yylimit= yythunkpos= 0;
     }
   yybegin= yyend= yypos;
@@ -765,6 +836,13 @@ YY_PARSE(int) YYPARSE(void)
 int main()
 {
 	while (yyparse());
+	
+	for(auto it = messages.begin(); it != messages.end(); it++)
+	{
+		MessageBlock& message = *it;
+		printf("Message: %s inherits %s\n", message.name.c_str(), message.parent.c_str());
+	}	
+	
 	return 0;
 }
 

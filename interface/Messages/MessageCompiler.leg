@@ -1,92 +1,107 @@
 %{
 
-#include <stdio.h>
+#include "MessageCompiler.h"
 
+//#define DEBUG
+
+#ifdef DEBUG
+	#define Log(T) puts((T))
+#else
+	#define Log(T)
+#endif
+
+#define YYSTYPE Block
 #define YY_PARSE(T) static T
-//#define YY_DEBUG
-
-enum BlockType
-{
-	BT_MESSAGE,
-	BT_ENUM,
-	BT_SERVICE
-};
 
 %}
 
 LINE	= BLOCK
-		| EMPTY { printf("got empty line\n"); }
+		| EMPTY { Log("empty line"); }
 		;
 
-BLOCK	= b:BLOCK_MESSAGE { printf("got message decl\n"); }
-		#= b:BLOCK_ENUM { printf("got enum decl\n"); }
+BLOCK	= b:BLOCK_MESSAGE { Log("message decl"); }
+		#= b:BLOCK_ENUM { Log("enum decl"); }
 		;
 
 # message StorageNode : Node {
-#  4: long capacity
-#  5: optional int weight = 1
+#  1: long capacity
+#  2: optional int weight = 1
 # }
 
 BLOCK_MESSAGE	= MESSAGE id:IDENTIFIER INHERITANCE?
-				BLOCK_OPEN BLOCK_FIELD* BLOCK_CLOSE { printf("got message block\n"); }
+				BLOCK_OPEN BLOCK_FIELD* BLOCK_CLOSE
+				{
+					Log("message block");
+					message.name.assign(id.name);
+					messages.push_back(message);
+				}
 				;
 
-BLOCK_FIELD		= FIELD BLOCK_FIELD { printf("got field block\n"); }
+BLOCK_FIELD		= FIELD BLOCK_FIELD { Log("field block"); }
 				| FIELD
 				;
 
-FIELD 			= - NUMBER - COLON - TYPE - IDENTIFIER { printf("got field\n"); } # - EOL 
+FIELD 			= - NUMBER - COLON - TYPE - IDENTIFIER { Log("field"); } 
 
-TYPE 			= t:BOOL | t:STRING
-				| t:INT8 | t:UINT8
-				| t:INT16 | t:UINT16
-				| t:INT32 | t:UINT32
-				| t:INT64 | t:UINT64
-				| t:FLOAT | t:DOUBLE
+TYPE 			= t:BOOL  | t:STRING | t:FLOAT | t:DOUBLE
+				| t:INT8  | t:UINT8  | t:INT16 | t:UINT16
+				| t:INT32 | t:UINT32 | t:INT64 | t:UINT64
 				;
 
-IDENTIFIER		= [a-zA-z_][a-zA-Z0-9_]* { printf("got id\n"); }
+IDENTIFIER		= < [a-zA-z_][a-zA-Z0-9_]* > { $$.name.assign(yytext); Log("id"); }
 DIGIT 			= [0-9]
-NUMBER			= DIGIT+ { printf("got number\n"); }
+NUMBER			= DIGIT+ { Log("number"); }
 
 KEYWORD			= IDENTIFIER
 
 ASSIGN			= - '='
-COLON			= - ':' { printf("got colon\n"); }
+COLON			= - ':' { Log("colon"); }
 BLOCK_OPEN		= - '{'
 BLOCK_CLOSE		= - '}'
 PAREN_OPEN		= - '('
 PAREN_CLOSE		= - ')'
-INHERITANCE		= COLON - IDENTIFIER - { printf("got inheritance\n"); }
+INHERITANCE		= COLON - id:IDENTIFIER -
+				{
+					Log("inheritance");
+					message.inherits = true;
+					message.parent.assign(yytext);
+				}
 
-MESSAGE			= 'message' -- { printf("got message\n"); }
-STRUCT			= 'struct'	--
-ENUM			= 'enum'	--
+MESSAGE		= 'message' -- { message.inherits = false; }
+STRUCT		= 'struct'	-- 
+ENUM		= 'enum'	--
 
-BOOL			= 'bool'	--
-STRING			= 'String' 	--
-INT8			= 'int8'	--
-UINT8			= 'uint8'	--
-INT16			= 'int16'	--
-UINT16			= 'uint16'	--
-INT32			= 'int32'	--
-UINT32			= 'uint32'	--
-INT64			= 'int64'	--
-UINT64			= 'uint64'	--
-FLOAT			= 'float'	--
-DOUBLE			= 'double'	--
+BOOL		= 'bool'	- { $$.type.assign(yytext); }
+STRING		= 'String' 	- { $$.type.assign(yytext); }
+INT8		= 'int8'	- { $$.type.assign(yytext); }
+UINT8		= 'uint8'	- { $$.type.assign(yytext); }
+INT16		= 'int16'	- { $$.type.assign(yytext); }
+UINT16		= 'uint16'	- { $$.type.assign(yytext); }
+INT32		= 'int32'	- { $$.type.assign(yytext); }
+UINT32		= 'uint32'	- { $$.type.assign(yytext); }
+INT64		= 'int64'	- { $$.type.assign(yytext); }
+UINT64		= 'uint64'	- { $$.type.assign(yytext); }
+FLOAT		= 'float'	- { $$.type.assign(yytext); }
+DOUBLE		= 'double'	- { $$.type.assign(yytext); }
 
-EOL				= '\n' | '\r\n' | '\r'
-SPACE			= [ \t]
-EMPTY			= SPACE* EOL
+EOL			= '\n' | '\r\n' | '\r'
+SPACE		= [ \t]
+EMPTY		= SPACE* EOL
 
--				= (SPACE | EOL)*
---				= - #(&KEYWORD -)*
+-			= (SPACE | EOL)*
+--			= - #(&KEYWORD -)*
 
 %%
 
 int main()
 {
 	while (yyparse());
+	
+	for(auto it = messages.begin(); it != messages.end(); it++)
+	{
+		MessageBlock& message = *it;
+		printf("Message: %s inherits %s\n", message.name.c_str(), message.parent.c_str());
+	}	
+	
 	return 0;
 }
