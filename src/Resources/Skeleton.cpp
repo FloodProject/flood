@@ -10,7 +10,7 @@
 #include "Resources/Skeleton.h"
 #include "Core/Utilities.h"
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -46,4 +46,4 @@ BonePtr Skeleton::findBone( const String& name )
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END

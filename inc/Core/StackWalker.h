@@ -54,7 +54,7 @@ typedef unsigned long SIZE_T, *PSIZE_T;
 #endif
 #endif  // _MSC_VER < 1300
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -277,7 +277,7 @@ public:
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END
 
 #endif
 

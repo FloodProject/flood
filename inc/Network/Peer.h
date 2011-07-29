@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Core/ReferenceCount.h"
+#include "Core/References.h"
 
 struct _ENetPeer;
 typedef _ENetPeer ENetPeer;
@@ -25,6 +25,12 @@ class Peer : public ReferenceCounted
 public:
 
 	Peer();
+
+	// Asks for a normal disconnect.
+	void disconnect();
+
+	// Forces a disconnect.
+	void forceDisconnect();
 
 	// Gets the peer hostname.
 	String getHostName() const;

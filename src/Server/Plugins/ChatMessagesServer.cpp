@@ -8,6 +8,11 @@
 
 #include "Server/API.h"
 #include "Protocol/ChatMessages.h"
+#include "Protocol/UserMessages.h"
+#include "Protocol/Users.h"
+#include "Network/Message.h"
+#include "Network/Dispatcher.h"
+#include "Server/Server.h"
 
 NAMESPACE_SERVER_BEGIN
 
@@ -25,8 +30,15 @@ REFLECT_CLASS_END()
 
 void ChatMessagesServer::handleClientMessage(const SessionPtr& session, const MessagePtr& message)
 {
-	LogInfo("Received client message");
+	ChatMessage* chat = message->read<ChatMessage>();
+	String text( chat->text );
+
+	UserMessagePlugin* usersPlugin = GetPlugin<UserMessagePlugin>();
+	User* user = usersPlugin->users.getUserFromSession(session);
+	
+	LogInfo("%s says: %s", user->name.c_str(), text.c_str());
 }
+
 
 //-----------------------------------//
 

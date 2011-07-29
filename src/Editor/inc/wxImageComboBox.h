@@ -11,7 +11,7 @@
 #include <wx/odcombo.h>
 #include "Resources/Image.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -48,4 +48,4 @@ protected:
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

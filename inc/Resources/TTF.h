@@ -12,7 +12,7 @@
 
 #include "Resources/Font.h"
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -35,7 +35,7 @@ private:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END
 
 #endif
 

@@ -16,7 +16,7 @@
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -107,6 +107,6 @@ btTransform Convert::toBullet(const TransformPtr& transform)
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

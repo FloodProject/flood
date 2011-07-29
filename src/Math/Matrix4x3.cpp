@@ -11,7 +11,7 @@
 #include "Math/Helpers.h"
 #include <cmath>
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -284,4 +284,4 @@ Matrix4x3 Matrix4x3::inverse() const
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

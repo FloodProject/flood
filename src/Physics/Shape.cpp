@@ -13,7 +13,7 @@
 #include "Physics/Shape.h"
 #include "Physics/Body.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -37,6 +37,6 @@ void Shape::removeBody()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

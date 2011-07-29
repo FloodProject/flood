@@ -20,7 +20,7 @@ NAMESPACE_BEGIN
 
 REFLECT_DECLARE_CLASS(Sound)
 
-class RESOURCE_API Sound : public Resource
+class API_RESOURCE Sound : public Resource
 {
 	REFLECT_DECLARE_OBJECT(Sound)
 

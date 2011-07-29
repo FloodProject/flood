@@ -13,7 +13,7 @@
 #include "EditorIcons.h"
 #include "Events.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -79,4 +79,4 @@ void HierarchyPlugin::onPluginDisable()
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

@@ -20,7 +20,7 @@
 #include "Resources/FontLoader.h"
 #include "Resources/ResourceManager.h"
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -164,6 +164,6 @@ bool FontLoader::validateFont()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END
 
 #endif

@@ -13,7 +13,7 @@
 #include "Audio/Buffer.h"
 #include "Audio/Device.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -72,6 +72,6 @@ void AudioBuffer::upload()
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_ENGINE_END
 
 #endif

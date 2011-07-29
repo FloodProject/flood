@@ -19,13 +19,13 @@ class btTriangleIndexVertexArray;
 class btTriangleMesh;
 class btGImpactMeshShape;
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
 REFLECT_DECLARE_CLASS(MeshShape)
 
-class VAPOR_API MeshShape : public Shape
+class API_ENGINE MeshShape : public Shape
 {
 	REFLECT_DECLARE_OBJECT(MeshShape)
 
@@ -53,6 +53,6 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( MeshShape );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

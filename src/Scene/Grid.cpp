@@ -9,7 +9,7 @@
 #include "Engine/API.h"
 #include "Scene/Grid.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -123,4 +123,4 @@ void Grid::update( float update )
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

@@ -14,7 +14,7 @@
 #include "Math/Ray.h"
 #include "Math/Frustum.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -80,4 +80,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Scene );
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_ENGINE_END

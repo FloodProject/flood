@@ -11,7 +11,7 @@
 #include <wx/propdlg.h>
 #include "gen/PreferencesGenerated.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -33,13 +33,13 @@ public:
 
 protected:
 
-	gui::Bindings* bindings;
-	gui::Plugins* plugins;
-	gui::Resources* resources;
+	Bindings* bindings;
+	Plugins* plugins;
+	Resources* resources;
 
 	wxListCtrl* m_listPlugins;
 };
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

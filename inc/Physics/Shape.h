@@ -14,7 +14,7 @@
 
 class btCollisionShape;
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -25,7 +25,7 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(Body)
 
 REFLECT_DECLARE_CLASS(Shape)
 
-class VAPOR_API Shape : public Component
+class API_ENGINE Shape : public Component
 {
 	REFLECT_DECLARE_OBJECT(Shape)
 
@@ -52,6 +52,6 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Shape );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

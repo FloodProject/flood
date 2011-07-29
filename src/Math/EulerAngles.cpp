@@ -9,7 +9,7 @@
 #include "Core/API.h"
 #include "Math/EulerAngles.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -75,4 +75,4 @@ void EulerAngles::identity()
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

@@ -8,7 +8,7 @@
 
 #pragma once
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -46,4 +46,4 @@ wxDragResult ResourceDropTarget::OnData(wxCoord x, wxCoord y, wxDragResult def)
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

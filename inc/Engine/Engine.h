@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Engine/API.h"
-#include "Core/ReferenceCount.h"
+#include "Core/References.h"
 
 FWD_DECL_INTRUSIVE(Scene)
 

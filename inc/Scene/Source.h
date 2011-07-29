@@ -15,7 +15,7 @@
 
 FWD_DECL_INTRUSIVE(Sound)
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -55,7 +55,7 @@ class AudioSource;
 
 REFLECT_DECLARE_CLASS(Source)
 
-class VAPOR_API Source : public Component 
+class API_ENGINE Source : public Component 
 {
 	REFLECT_DECLARE_OBJECT(Source)
 	DECLARE_UNCOPYABLE(Source)
@@ -138,6 +138,6 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Source );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

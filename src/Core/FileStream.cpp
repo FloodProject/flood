@@ -18,7 +18,7 @@
 	#include <unistd.h>
 #endif
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -194,4 +194,4 @@ static void FileSetBuffering( bool state )
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

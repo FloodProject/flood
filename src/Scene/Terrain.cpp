@@ -12,7 +12,7 @@
 #include "Math/Helpers.h"
 #include "Core/Utilities.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -263,4 +263,4 @@ void Terrain::update( float delta )
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

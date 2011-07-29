@@ -25,7 +25,7 @@
 	#error "Support for dynamic libraries not found"
 #endif
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -68,6 +68,6 @@ void* DynamicLibrary::getSymbol(const String& symbol)
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END
 
 #endif

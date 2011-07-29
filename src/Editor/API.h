@@ -39,8 +39,8 @@
 // API Namespaces
 //---------------------------------------------------------------------//
 
-#define NAMESPACE_EDITOR_BEGIN namespace vapor { namespace editor {
-#define NAMESPACE_EDITOR_END } }
+#define NAMESPACE_EDITOR_BEGIN 
+#define NAMESPACE_EDITOR_END 
 
 //---------------------------------------------------------------------//
 // wxWidgets headers

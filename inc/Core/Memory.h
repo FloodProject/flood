@@ -89,4 +89,4 @@ template<typename T> void Deallocate(const T* object)
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

@@ -24,7 +24,7 @@
 #include "Resources/Mesh.h"
 #include "Terrain/Terrain.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -767,4 +767,4 @@ void ScenePage::onContextMenu( wxContextMenuEvent& event )
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

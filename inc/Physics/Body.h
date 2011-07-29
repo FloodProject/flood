@@ -16,7 +16,7 @@ class btRigidBody;
 class btMotionState;
 class btCollisionShape;
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -24,7 +24,7 @@ class BodyMotionState;
 
 REFLECT_DECLARE_CLASS(Body)
 
-class VAPOR_API Body : public Component
+class API_ENGINE Body : public Component
 {
 	REFLECT_DECLARE_OBJECT(Body)
 
@@ -85,6 +85,6 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Body );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

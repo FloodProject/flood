@@ -10,7 +10,7 @@
 
 #include "input/Device.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 struct MouseInfo;
 
@@ -72,7 +72,7 @@ struct MouseEventType
  * the public.
  */
 
-struct VAPOR_API MouseEvent : public InputEvent
+struct API_ENGINE MouseEvent : public InputEvent
 {
 	friend class Mouse;
 	
@@ -90,7 +90,7 @@ protected:
  * current mouse position on the screen in screen-coordinates.
  */
 
-struct VAPOR_API MouseMoveEvent : public MouseEvent
+struct API_ENGINE MouseMoveEvent : public MouseEvent
 {
 	MouseMoveEvent();
 
@@ -105,7 +105,7 @@ struct VAPOR_API MouseMoveEvent : public MouseEvent
  * to get more information about which mouse buttons are pressed.
  */
 
-struct VAPOR_API MouseDragEvent : public MouseEvent
+struct API_ENGINE MouseDragEvent : public MouseEvent
 {
 	MouseDragEvent();
 
@@ -126,7 +126,7 @@ struct VAPOR_API MouseDragEvent : public MouseEvent
  * mouse in the window at the time of the click.
  */
 
-struct VAPOR_API MouseButtonEvent : public MouseEvent
+struct API_ENGINE MouseButtonEvent : public MouseEvent
 {
 	MouseButtonEvent( MouseEventType::Enum eventType );
 
@@ -149,7 +149,7 @@ struct VAPOR_API MouseButtonEvent : public MouseEvent
  * the relative amount of the mouse wheel that was scrolled.
  */
 
-struct VAPOR_API MouseWheelEvent : public MouseEvent
+struct API_ENGINE MouseWheelEvent : public MouseEvent
 {
 	MouseWheelEvent();
 
@@ -158,4 +158,4 @@ struct VAPOR_API MouseWheelEvent : public MouseEvent
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

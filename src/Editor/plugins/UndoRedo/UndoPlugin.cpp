@@ -13,7 +13,7 @@
 #include "EditorIcons.h"
 #include "Events.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -159,4 +159,4 @@ void UndoPlugin::onRedoButtonClick(wxCommandEvent& event)
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

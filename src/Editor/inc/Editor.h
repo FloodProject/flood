@@ -23,8 +23,8 @@ class EditorApp : public wxApp
 {
 public:
 
-	virtual bool OnInit() OVERRIDE;
-	virtual void OnFatalException() OVERRIDE;
+	bool OnInit() OVERRIDE;
+	void OnFatalException() OVERRIDE;
 };
 
 //-----------------------------------//
@@ -122,6 +122,7 @@ public:
 	wxMenu* menuTools;
 	wxMenu* menuPanels;
 	wxMenu* menuSettings;
+	wxMenu* menuServer;
 	wxMenu* menuHelp;
 
 	wxKeyProfileArray keyProfiles;

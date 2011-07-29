@@ -11,7 +11,7 @@
 #include "Editor/API.h"
 #include "wxImageComboBox.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -126,4 +126,4 @@ wxCoord	wxImageComboBox::OnMeasureItemWidth (size_t item) const
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

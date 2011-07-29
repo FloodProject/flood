@@ -9,7 +9,7 @@
 #include "Engine/API.h"
 #include "Render/RenderQueue.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -21,4 +21,4 @@ RenderState::RenderState( const RenderablePtr& rend )
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

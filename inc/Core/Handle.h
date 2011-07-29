@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Core/ReferenceCount.h"
+#include "Core/References.h"
 
 NAMESPACE_EXTERN_BEGIN
 
@@ -146,4 +146,10 @@ Handle<T, RFn, DFn> HandleCast(const Handle<U, RFn, DFn>& hn)
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END
+
+#define FWD_DECL_HANDLE(T)							\
+	NAMESPACE_CORE_BEGIN							\
+		class T;									\
+		typedef Handle<T> T##Handle;                \
+	NAMESPACE_CORE_END

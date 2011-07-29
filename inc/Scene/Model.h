@@ -15,7 +15,7 @@ FWD_DECL_INTRUSIVE(Bone)
 FWD_DECL_INTRUSIVE(Animation)
 FWD_DECL_INTRUSIVE(Attachment)
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -172,4 +172,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Model );
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_ENGINE_END

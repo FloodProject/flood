@@ -24,7 +24,7 @@
 #include "Core/API.h"
 #include "Core/FileWatcher.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -47,4 +47,4 @@ const String Actions::getString( Actions::Enum action )
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

@@ -23,7 +23,7 @@
 	#pragma TODO("Linux: http://linux.die.net/man/3/clock_gettime")
 #endif
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -110,4 +110,4 @@ float TimerGetElapsed(Timer* timer)
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

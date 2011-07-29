@@ -16,7 +16,7 @@
 
 #if 0
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 bool loaded[100][100];
 
@@ -90,6 +90,6 @@ Vector2 PageManager::convertWorldToPage(const Vector3& pos)
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

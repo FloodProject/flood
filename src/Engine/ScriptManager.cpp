@@ -17,7 +17,7 @@
 
 extern "C" int luaopen_vapor(lua_State* L);
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -127,6 +127,6 @@ void ScriptManager::update(float delta)
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

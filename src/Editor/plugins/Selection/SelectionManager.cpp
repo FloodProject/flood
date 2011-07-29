@@ -15,7 +15,7 @@
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -239,4 +239,4 @@ void SelectionOperation::setBoundingBoxVisible(const EntityPtr& entity, bool sta
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

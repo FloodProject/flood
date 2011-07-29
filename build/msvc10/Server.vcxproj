@@ -85,6 +85,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\Server\Main.cpp" />
     <ClCompile Include="..\..\src\Server\Plugins\ChatMessagesServer.cpp" />
+    <ClCompile Include="..\..\src\Server\Plugins\UserMessagesServer.cpp" />
     <ClCompile Include="..\..\src\Server\Server.cpp" />
     <ClCompile Include="..\..\src\Server\Settings.cpp" />
   </ItemGroup>

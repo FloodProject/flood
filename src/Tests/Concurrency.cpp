@@ -12,11 +12,9 @@
 #include "Core/Concurrency.h"
 #include "Core/Memory.h"
 
-using namespace vapor;
-
 static int value = 20;
 
-static void Run(void* data)
+static void Run(Thread*, void* data)
 {
 	int* num = (int*) data;
 	value = *num;
@@ -26,8 +24,11 @@ void TestThreads(CuTest* tc)
 {
 	ThreadPtr thread( pThreadCreate(AllocatorGetHeap()) );
 
+	ThreadFunction fn;
+	fn.Bind(Run);
+
 	int data = 42;
-	ThreadStart(thread, Run, &data);
+	ThreadStart(thread, fn, &data);
 	ThreadJoin(thread);
 
 	CuAssertIntEquals(tc, 42, value);
@@ -36,7 +37,7 @@ void TestThreads(CuTest* tc)
 static Condition* cond;
 static Mutex* mutex;
 
-static void Run2(void* data)
+static void Run2(Thread*, void* data)
 {
 	MutexLock(mutex);
 	ConditionWait(cond, mutex);
@@ -54,7 +55,10 @@ void TestCondition(CuTest* tc)
 	cond = ConditionCreate( AllocatorGetHeap() );
 	mutex = MutexCreate( AllocatorGetHeap() );
 	
-	ThreadStart(thread, Run2, nullptr);
+	ThreadFunction fn;
+	fn.Bind(Run2);
+
+	ThreadStart(thread, fn, nullptr);
 	CuAssertIntEquals(tc, 20, value);
 	
 	// Prevents deadlock.

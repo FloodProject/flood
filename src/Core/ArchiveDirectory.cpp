@@ -21,7 +21,7 @@
 
 #include <dirent.h>
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -216,4 +216,4 @@ bool FileExists(const Path& path)
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

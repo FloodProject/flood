@@ -10,7 +10,7 @@
 
 #include "Core/Timer.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -38,4 +38,4 @@ protected:
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

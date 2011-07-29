@@ -77,7 +77,7 @@ EXTERN_END
 	
 // Converts a number to a string.
 template< typename T >
-vapor::String StringFromNumber(const T& t)
+NAMESPACE_CORE::String StringFromNumber(const T& t)
 {
 	std::ostringstream oss;
 		
@@ -89,7 +89,7 @@ vapor::String StringFromNumber(const T& t)
 
 // Converts a string to a number.
 template< typename T >
-T StringToNumber(const vapor::String& s)
+T StringToNumber(const NAMESPACE_CORE::String& s)
 {
 	std::stringstream ss(s);
 		
@@ -109,4 +109,4 @@ struct RawStringCompare
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

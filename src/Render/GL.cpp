@@ -12,7 +12,7 @@
 
 #include "Render/GL.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -82,6 +82,6 @@ const char* glErrorString(GLenum errorCode)
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

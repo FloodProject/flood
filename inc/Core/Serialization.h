@@ -130,11 +130,19 @@ struct API_CORE Serializer
 	SerializerSaveFunc save;
 };
 
+#ifdef ENABLE_SERIALIZATION_JSON
+
 // Creates a new JSON serializer.
 API_CORE Serializer* SerializerCreateJSON(Allocator*);
 
+#endif
+
+#ifdef ENABLE_SERIALIZATION_BINARY
+
 // Creates a new binary serializer.
 API_CORE Serializer* SerializerCreateBinary(Allocator*);
+
+#endif
 
 // Destroys the serializer.
 API_CORE void SerializerDestroy(Serializer*);

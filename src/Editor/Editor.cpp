@@ -87,6 +87,8 @@ EditorFrame::EditorFrame(const wxString& title)
 	createToolbar();
 	createLastUI();
 
+	Bind(wxEVT_IDLE, &EditorFrame::OnIdle, this);
+
 	wxKeyProfile* mainProfile = new wxKeyProfile();
 	mainProfile->SetName("Main");
 	//mainProfile->AttachRecursively(this);
@@ -298,6 +300,19 @@ void EditorFrame::addDocument(Document* document)
 	notebookCtrl->AddPage( window, document->getName() );
 
 	getAUI()->Update();
+}
+
+//-----------------------------------//
+
+void EditorFrame::OnIdle(wxIdleEvent& event)
+{
+	const std::vector<Plugin*> plugins = pluginManager->getPlugins();
+	
+	for( size_t i = 0; i < plugins.size(); i++ )
+	{
+		EditorPlugin* plugin = (EditorPlugin*) plugins[i];
+		plugin->onPluginUpdate();
+	}
 }
 
 //-----------------------------------//

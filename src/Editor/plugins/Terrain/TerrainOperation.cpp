@@ -12,7 +12,7 @@
 
 #include "TerrainOperation.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -361,6 +361,6 @@ void TerrainOperation::applyPaintTool()
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END
 
 #endif

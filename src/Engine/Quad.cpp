@@ -9,7 +9,7 @@
 #include "Engine/API.h"
 #include "Render/Quad.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -59,4 +59,4 @@ VertexBufferPtr Quad::getQuadBuffer( float width, float height )
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

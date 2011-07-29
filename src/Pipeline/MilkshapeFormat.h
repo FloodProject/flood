@@ -8,7 +8,7 @@
 
 #include "Math/Color.h"
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -146,4 +146,4 @@ struct ALIGN_BEGIN(1) ms3d_joint_t
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END

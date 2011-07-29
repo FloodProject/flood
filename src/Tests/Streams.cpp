@@ -13,7 +13,7 @@
 #include "Core/Memory.h"
 #include "Core/Pointers.h"
 
-using namespace vapor;
+//using namespace vapor;
 
 void TestFile(CuTest* tc)
 {

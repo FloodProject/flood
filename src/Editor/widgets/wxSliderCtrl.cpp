@@ -11,7 +11,7 @@
 #include "Editor/API.h"
 #include "wxSliderCtrl.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 ////////////////////////////////////////////////////////////
 // Event table
@@ -61,4 +61,4 @@ void wxSliderCtrl::onTextEnter(wxCommandEvent&)
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

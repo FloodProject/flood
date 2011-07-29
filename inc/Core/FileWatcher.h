@@ -31,7 +31,7 @@
 
 #include "Core/Event.h"
 
-namespace vapor {
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -127,4 +127,4 @@ public:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_CORE_END

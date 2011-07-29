@@ -10,7 +10,7 @@
 
 #include "EditorPlugin.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 class CameraControls;
 
@@ -51,4 +51,4 @@ protected:
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

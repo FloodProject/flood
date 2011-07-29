@@ -12,7 +12,7 @@
 #include "Math/Vector.h"
 #include "Math/Color.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -53,7 +53,7 @@ struct EmitterType
 
 REFLECT_DECLARE_CLASS(Particles)
 
-class VAPOR_API Particles : public Geometry
+class API_ENGINE Particles : public Geometry
 {
 	REFLECT_DECLARE_OBJECT(Particles)
 
@@ -143,4 +143,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Particles );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

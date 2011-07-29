@@ -26,6 +26,9 @@ NAMESPACE_CORE_BEGIN
 
 Dispatcher::Dispatcher()
 	: isServer(false)
+	, sessions(nullptr)
+	, handlers(nullptr)
+	, plugins(nullptr)
 {
 	sessions = Allocate(SessionManager, AllocatorGetThis());
 	handlers = Allocate(MessageHandlers, AllocatorGetThis());
@@ -37,9 +40,9 @@ void Dispatcher::initClient(HostClient* host)
 {
 	isServer = false;
 
-	//host->onConnected.Connect(this, &Dispatcher::handleConnect);
-	//host->onDisconnected.Connect(this, &Dispatcher::handleDisconnect);
-	//host->onMessage.Connect(this, &Dispatcher::handleMessage);
+	host->onClientConnected.Connect(this, &Dispatcher::handleConnect);
+	host->onClientDisconnected.Connect(this, &Dispatcher::handleDisconnect);
+	host->onServerMessage.Connect(this, &Dispatcher::handleMessage);
 }
 
 //-----------------------------------//
@@ -140,10 +143,28 @@ void Dispatcher::handleDisconnect(const PeerPtr& peer)
 
 //-----------------------------------//
 
+#define CALL_MEMBER_FN(object, ptrToMember)  ((object)->*(ptrToMember)) 
+
 void Dispatcher::handleMessage(const PeerPtr& peer, const MessagePtr& message)
 {
 	const SessionPtr& session = sessions->getSession(peer);
+	const MessageData& data = message->getData();
+	
+	if(data.size() < sizeof(MessageId))
+		return;
 
+	MessageId* id = message->read<MessageId>();
+
+	// Find message handler and forward message.
+	MessageMapping* mapping = handlers->findHandler(*id);
+	
+	if( !mapping )
+	{
+		LogError("No message handler was found");
+		return;
+	}
+
+	CALL_MEMBER_FN(mapping->plugin, mapping->handler)(session, message);
 }
 
 //-----------------------------------//

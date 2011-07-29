@@ -15,7 +15,7 @@
 #include "Render/GL.h"
 #include "Render/UniformBuffer.h"
 #include "Core/Utilities.h"
-#include "Core/ReferenceCount.h"
+#include "Core/References.h"
 
 NAMESPACE_ENGINE_BEGIN
 

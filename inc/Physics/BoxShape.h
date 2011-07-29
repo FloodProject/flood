@@ -14,13 +14,13 @@
 
 class btBoxShape;
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
 REFLECT_DECLARE_CLASS(BoxShape)
 
-class VAPOR_API BoxShape : public Shape
+class API_ENGINE BoxShape : public Shape
 {
 	REFLECT_DECLARE_OBJECT(BoxShape)
 
@@ -45,6 +45,6 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( BoxShape );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

@@ -13,7 +13,7 @@
 
 FWD_DECL_INTRUSIVE(Bone)
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -22,7 +22,7 @@ namespace vapor {
  * For example, you can attach a sword to the hand of a ninja.
  */
 
-class VAPOR_API Attachment : public ReferenceCounted
+class API_RESOURCE Attachment : public ReferenceCounted
 {
 public:
 
@@ -43,4 +43,4 @@ TYPEDEF_RESOURCE_HANDLE_FROM_TYPE( Attachment ) ;
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END

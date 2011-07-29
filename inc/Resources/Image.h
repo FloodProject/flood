@@ -11,7 +11,7 @@
 #include "Resources/Resource.h"
 #include "Math/Color.h"
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -54,7 +54,7 @@ struct PixelFormat
 
 REFLECT_DECLARE_CLASS(Image)
 
-class RESOURCE_API Image : public Resource
+class API_RESOURCE Image : public Resource
 {
 	REFLECT_DECLARE_OBJECT(Image)
 
@@ -111,7 +111,7 @@ TYPEDEF_RESOURCE_HANDLE_FROM_TYPE( Image );
 
 ImageHandle ImageCreate(Allocator*, uint32 width, uint32 height, PixelFormat::Enum);
 
-class RESOURCE_API ImageWriter
+class API_RESOURCE ImageWriter
 {
 public:
 
@@ -127,4 +127,4 @@ protected:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END

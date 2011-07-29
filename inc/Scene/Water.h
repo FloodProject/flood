@@ -11,7 +11,7 @@
 #include "Scene/Geometry.h"
 #include "Render/Quad.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -38,4 +38,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Water );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

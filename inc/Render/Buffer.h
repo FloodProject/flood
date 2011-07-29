@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "Core/ReferenceCount.h"
+#include "Core/References.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -94,4 +94,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Buffer );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

@@ -10,7 +10,7 @@
 #include "RenderWindow.h"
 #include "EditorInputManager.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -180,4 +180,4 @@ void RenderWindow::setTitle(const std::string& title)
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

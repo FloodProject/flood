@@ -17,7 +17,7 @@
 
 FWD_DECL_INTRUSIVE(AudioBuffer)
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -117,6 +117,6 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( AudioSource );
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_ENGINE_END
 
 #endif

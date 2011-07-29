@@ -11,7 +11,7 @@
 #include "Core/Log.h"
 #include "Core/Memory.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -141,4 +141,4 @@ int64 StreamGetSize(Stream* stream)
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

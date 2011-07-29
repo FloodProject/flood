@@ -11,7 +11,7 @@
 #include "Resources/Bone.h"
 #include "Math/Helpers.h"
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -138,4 +138,4 @@ Matrix4x3 Animation::getKeyFrameMatrix(const BonePtr& bone, float time)
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END

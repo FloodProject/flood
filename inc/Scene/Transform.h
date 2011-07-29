@@ -13,7 +13,7 @@
 #include "Math/BoundingBox.h"
 #include "Scene/Component.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -138,4 +138,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(Transform);
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_ENGINE_END

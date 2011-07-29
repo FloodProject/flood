@@ -9,6 +9,7 @@
 #include "Core/API.h"
 #include "Core/Memory.h"
 #include "Core/Log.h"
+#include "Core/References.h"
 
 #define ALLOCATOR_TRACKING
 #define ALLOCATOR_DEFAULT_GROUP "General";
@@ -23,7 +24,7 @@
 	#endif
 #endif
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -380,4 +381,21 @@ Allocator* AllocatorCreateBump( Allocator* alloc, int32 size )
 
 //-----------------------------------//
 
-NAMESPACE_END
+int32 ReferenceGetCount(ReferenceCounted* ref)
+{
+	return AtomicRead(&ref->references);
+}
+
+void ReferenceAdd(ReferenceCounted* ref)
+{
+	AtomicIncrement(&ref->references);
+}
+
+bool ReferenceRelease(ReferenceCounted* ref)
+{
+	return AtomicDecrement(&ref->references) == 0;
+}
+
+//-----------------------------------//
+
+NAMESPACE_CORE_END

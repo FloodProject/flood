@@ -14,7 +14,7 @@
 #include "Pipeline/Milkshape3D.h"
 #include "Resources/Skeleton.h"
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -45,6 +45,6 @@ bool MilkshapeLoader::decode(const Stream& stream, Resource* res)
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END
 
 #endif

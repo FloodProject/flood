@@ -29,7 +29,7 @@ NAMESPACE_BEGIN
 
 REFLECT_DECLARE_CLASS(ResourceLoader)
 
-class RESOURCE_API ResourceLoader : public Object
+class API_RESOURCE ResourceLoader : public Object
 {
 	DECLARE_UNCOPYABLE(ResourceLoader)
 	REFLECT_DECLARE_OBJECT(ResourceLoader)

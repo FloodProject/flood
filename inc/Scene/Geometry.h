@@ -13,7 +13,7 @@
 #include "Render/Renderable.h"
 #include "Render/RenderQueue.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -28,7 +28,7 @@ typedef std::vector<RenderablePtr> RenderableVector;
 
 REFLECT_DECLARE_CLASS(Geometry)
 
-class VAPOR_API Geometry : public Component
+class API_ENGINE Geometry : public Component
 {
 	REFLECT_DECLARE_OBJECT(Geometry)
 
@@ -80,4 +80,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Geometry );
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_ENGINE_END

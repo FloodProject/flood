@@ -10,7 +10,7 @@
 
 #include "Scene/Entity.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -69,4 +69,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Group );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

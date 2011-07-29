@@ -11,7 +11,7 @@
 #include "input/Device.h"
 #include "input/KeyboardEvents.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -19,7 +19,7 @@ namespace vapor {
  * Keyboard device.
  */
 
-class VAPOR_API Keyboard : public InputDevice
+class API_ENGINE Keyboard : public InputDevice
 {
 public:	
 
@@ -63,4 +63,4 @@ private:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

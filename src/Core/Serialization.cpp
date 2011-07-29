@@ -11,7 +11,7 @@
 #ifdef ENABLE_SERIALIZATION
 
 #include "Core/Serialization.h"
-#include "Core/ReferenceCount.h"
+#include "Core/References.h"
 #include "Core/Reflection.h"
 #include "Core/Object.h"
 #include "Core/Log.h"
@@ -22,7 +22,7 @@
 #include "Math/EulerAngles.h"
 #include "Math/Color.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -410,44 +410,50 @@ bool SerializerSave(Serializer* serializer)
 
 Object* SerializerLoadObjectFromFile(const Path& file)
 {
-	Serializer* json = SerializerCreateJSON( AllocatorGetHeap() );
-	json->alloc = AllocatorGetHeap();
+#ifdef ENABLE_SERIALIZATION_JSON
+	Serializer* serializer = SerializerCreateJSON( AllocatorGetHeap() );
+	serializer->alloc = AllocatorGetHeap();
 
 	Stream* stream = StreamCreateFromFile(AllocatorGetHeap(), file.c_str(), StreamMode::Read);	
-	json->stream = stream;
+	serializer->stream = stream;
 
-	Object* object = SerializerLoad(json);
+	Object* object = SerializerLoad(serializer);
 
-	SerializerDestroy(json);
+	SerializerDestroy(serializer);
 	StreamDestroy(stream);
 
 	return object;
+#else
+	return nullptr;
+#endif
 }
 
 //-----------------------------------//
 
 bool SerializerSaveObjectToFile(const Path& file, Object* object)
 {
-	Serializer* json = SerializerCreateJSON( AllocatorGetHeap() );
-	json->alloc = AllocatorGetHeap();
+#ifdef ENABLE_SERIALIZATION_JSON
+	Serializer* serializer = SerializerCreateJSON( AllocatorGetHeap() );
+	serializer->alloc = AllocatorGetHeap();
 
 	Stream* stream = StreamCreateFromFile(AllocatorGetHeap(), file.c_str(), StreamMode::Write);
 	if( !stream ) return false;
 
-	json->stream = stream;
-	json->object = object;
+	serializer->stream = stream;
+	serializer->object = object;
 	
-	if( !SerializerSave(json) )
+	if( !SerializerSave(serializer) )
 		return false;
 
-	SerializerDestroy(json);
+	SerializerDestroy(serializer);
 	StreamDestroy(stream);
+#endif
 
 	return true;
 }
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END
 
 #endif

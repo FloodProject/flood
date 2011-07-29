@@ -13,7 +13,7 @@
 #include "Resources/OGG_Loader.h"
 #include "Core/Utilities.h"
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -120,6 +120,6 @@ void OGG_Loader::decodeOgg( OggVorbis_File* oggFile, std::vector<byte>& buffer )
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END
 
 #endif

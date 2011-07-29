@@ -18,7 +18,7 @@
 
 #include <BulletCollision/CollisionShapes/btBoxShape.h>
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -67,6 +67,6 @@ btCollisionShape* const BoxShape::getBulletShape() const
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

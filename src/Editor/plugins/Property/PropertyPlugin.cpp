@@ -18,7 +18,7 @@
 
 #ifdef ENABLE_PLUGIN_PROPERTY
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -179,6 +179,6 @@ void PropertyPlugin::onSceneLoad( const ScenePtr& scene )
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END
 
 #endif

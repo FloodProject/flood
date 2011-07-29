@@ -11,7 +11,7 @@
 #include "Scene/Component.h"
 #include "Math/Color.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -46,7 +46,7 @@ struct LightType
 
 REFLECT_DECLARE_CLASS(Light)
 
-class VAPOR_API Light : public Component
+class API_ENGINE Light : public Component
 {
 	REFLECT_DECLARE_OBJECT(Light)
 
@@ -106,4 +106,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Light );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

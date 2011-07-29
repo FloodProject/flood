@@ -12,7 +12,7 @@
 #include "Math/Helpers.h"
 #include "Math/BoundingBox.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -186,4 +186,4 @@ void Sphere::buildGeometry( bool fullSphere, byte numSubDiv,
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

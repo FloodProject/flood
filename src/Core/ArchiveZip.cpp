@@ -16,7 +16,7 @@
 
 #ifdef ENABLE_ARCHIVE_ZIP
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -284,6 +284,6 @@ static bool ZipArchiveMonitor(Archive*)
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END
 
 #endif

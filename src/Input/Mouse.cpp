@@ -9,7 +9,7 @@
 #include "Engine/API.h"
 #include "input/Mouse.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -242,4 +242,4 @@ MouseWheelEvent::MouseWheelEvent()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

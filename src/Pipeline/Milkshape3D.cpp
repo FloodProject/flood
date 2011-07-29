@@ -16,7 +16,7 @@
 #include "Core/Utilities.h"
 #include "Core/Log.h"
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -665,4 +665,4 @@ void Milkshape3D::readComments()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END

@@ -12,7 +12,7 @@
 
 #ifdef ENABLE_PLUGIN_PROPERTY
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -138,6 +138,6 @@ void PropertyOperation::setFieldValue(const wxAny& value)
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END
 
 #endif

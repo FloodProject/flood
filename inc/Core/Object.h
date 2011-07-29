@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "Core/ReferenceCount.h"
+#include "Core/References.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -22,16 +22,16 @@ struct Class;
 
 REFLECT_DECLARE_CLASS(Object)
 
-struct NO_VTABLE Object : public ReferenceCounted
+struct API_CORE NO_VTABLE Object : public ReferenceCounted
 {
 	// Gets the type of the object.
-	API_CORE virtual Class* getType() const { return nullptr; }
+	virtual Class* getType() const { return nullptr; }
 
 	// Serialization fix-up phase.
-	API_CORE virtual void fixUp() {}
+	virtual void fixUp() {}
 
 	// Field change notifications.
-	API_CORE virtual void onFieldChanged(const Field& field) { }
+	virtual void onFieldChanged(const Field& field) { }
 
 	// Returns if this type is the same as the given type.
 	template<typename T> bool is()
@@ -60,4 +60,4 @@ protected:
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

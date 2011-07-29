@@ -176,6 +176,12 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\interface\Bindings\vapor_wrap.cxx">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">4503;4996;4127; 4510;4610; 4100;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4503;4996;4127; 4510;4610; 4100;4190;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release DLL|Win32'">4503;4996;4127; 4510;4610; 4100;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4503;4996;4127;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
     <ClCompile Include="..\..\src\Audio\AudioBuffer.cpp" />
     <ClCompile Include="..\..\src\Audio\AudioContext.cpp" />
     <ClCompile Include="..\..\src\Audio\AudioDevice.cpp" />
@@ -210,11 +216,6 @@
     <ClCompile Include="..\..\src\Engine\Console.cpp" />
     <ClCompile Include="..\..\src\Engine\ScriptManager.cpp" />
     <ClCompile Include="..\..\src\Engine\State.cpp" />
-    <ClCompile Include="..\..\interface\vapor_wrap.cxx">
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4996; 4127;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">4996; 4127;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release DLL|Win32'">4996; 4127;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-    </ClCompile>
     <ClCompile Include="..\..\src\Input\InputDevice.cpp" />
     <ClCompile Include="..\..\src\Input\InputManager.cpp" />
     <ClCompile Include="..\..\src\Input\InputMap.cpp" />
@@ -336,6 +337,7 @@
     <ClInclude Include="..\..\inc\Scene\Model.h" />
     <ClInclude Include="..\..\inc\Scene\Water.h" />
     <ClInclude Include="..\..\inc\Scene\Projector.h" />
+    <ClInclude Include="..\..\interface\Bindings\swigluarun.h" />
     <ClInclude Include="..\..\src\Scene\MeshBuilder.h" />
     <ClInclude Include="..\..\inc\Engine\Engine.h" />
     <ClInclude Include="..\..\inc\Framework.h" />
@@ -377,13 +379,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\doc\TODO.txt" />
-    <None Include="..\..\interface\base.i" />
-    <None Include="..\..\interface\input.i" />
-    <None Include="..\..\interface\math.i" />
-    <None Include="..\..\interface\render.i" />
-    <None Include="..\..\interface\resources.i" />
-    <None Include="..\..\interface\scene.i" />
-    <None Include="..\..\interface\vapor.i" />
+    <None Include="..\..\interface\Bindings\Core.i" />
+    <None Include="..\..\interface\Bindings\Engine.i" />
+    <None Include="..\..\interface\Bindings\Input.i" />
+    <None Include="..\..\interface\Bindings\Math.i" />
+    <None Include="..\..\interface\Bindings\Render.i" />
+    <None Include="..\..\interface\Bindings\Resources.i" />
+    <None Include="..\..\interface\Bindings\Scene.i" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -14,7 +14,7 @@
 #include "Audio/Source.h"
 #include "Resources/Sound.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -183,6 +183,6 @@ void Source::update( float delta )
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

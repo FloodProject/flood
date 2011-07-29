@@ -10,7 +10,7 @@
 #include "Math/Color.h"
 #include "Math/Helpers.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -91,4 +91,4 @@ const API_CORE Color Color::Yellow(1.0f, 1.0f, 0.0f);
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

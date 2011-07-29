@@ -9,7 +9,7 @@
 #include "Resources/API.h"
 #include "Resources/Shader.h"
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -54,4 +54,4 @@ bool Shader::gotCompileErrors() const
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END

@@ -14,7 +14,7 @@
 #include "Events.h"
 #include "Engine/Engine.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -119,4 +119,4 @@ void ScenePlugin::onSceneUnload( const ScenePtr& scene )
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

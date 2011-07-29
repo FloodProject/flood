@@ -18,8 +18,6 @@
 
 #define array_sizeof(n) (sizeof(n) / sizeof(n[0]))
 
-using namespace vapor;
-
 //-----------------------------------//
 
 typedef CuSuite* (*SuiteFunction)();

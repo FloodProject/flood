@@ -18,7 +18,7 @@
 	#include <Windows.h>	
 #endif
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -84,6 +84,6 @@ protected:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

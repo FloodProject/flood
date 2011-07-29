@@ -11,7 +11,7 @@
 #include "Math/Quaternion.h"
 #include "Math/Color.h"
 
-using namespace vapor;
+//using namespace vapor;
 
 //-----------------------------------//
 

@@ -14,7 +14,7 @@
 #include "Scene/Model.h"
 #include "Render/Device.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -349,4 +349,4 @@ void Scene::update( float delta )
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

@@ -11,7 +11,7 @@
 #include "Scene/Geometry.h"
 #include "Math/Vector.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -80,7 +80,7 @@ namespace Anchor
 
 REFLECT_DECLARE_CLASS(Overlay)
 
-class VAPOR_API Overlay : public Geometry
+class API_ENGINE Overlay : public Geometry
 {
 	REFLECT_DECLARE_OBJECT(Overlay)
 
@@ -167,4 +167,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Overlay );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

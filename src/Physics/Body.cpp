@@ -24,7 +24,7 @@
 #include <BulletDynamics/Dynamics/btRigidBody.h>
 #include "MotionState.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -202,6 +202,6 @@ void Body::onFieldChanged(const Field& field)
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

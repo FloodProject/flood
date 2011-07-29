@@ -8,7 +8,7 @@
 
 #pragma once
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -16,7 +16,7 @@ namespace vapor {
  * Pages define regions of space that can be streamed out.
  */
 
-class VAPOR_API Page
+class API_ENGINE Page
 {
 	DECLARE_UNCOPYABLE(Page)
 
@@ -31,4 +31,4 @@ protected:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

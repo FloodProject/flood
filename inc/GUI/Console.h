@@ -13,7 +13,7 @@
 #include "Scene/Geometry.h"
 #include "GUI/Overlay.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -28,7 +28,7 @@ namespace vapor {
 
 REFLECT_DECLARE_CLASS(Console)
 
-class VAPOR_API Console : public Overlay
+class API_ENGINE Console : public Overlay
 {
 	REFLECT_DECLARE_OBJECT(Console)
 
@@ -52,4 +52,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Console );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

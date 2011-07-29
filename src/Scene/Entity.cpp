@@ -15,7 +15,7 @@
 #include "Scene/Tags.h"
 #include <algorithm>
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -276,4 +276,4 @@ void Entity::setTag(int32 index, bool state)
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_ENGINE_END

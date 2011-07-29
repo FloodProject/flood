@@ -13,18 +13,28 @@ using namespace vapor;
 
 int main()
 {
+	int exitCode = EXIT_SUCCESS;
+
 	ServerInitialize();
 	Log* log = LogCreate( AllocatorGetServer() );
 
 	Server server;
-	server.init();
+
+	if( !server.init() )
+	{
+		exitCode = EXIT_FAILURE;
+		goto exit;
+	}
+
 	server.run();
 	server.shutdown();
+
+exit:
 
 	LogDestroy(log);
 	ServerDeinitialize();
 
 	AllocatorDumpInfo();
 
-	return 0;
+	return exitCode;
 }

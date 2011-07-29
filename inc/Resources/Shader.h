@@ -10,7 +10,7 @@
 
 #include "Resources/Text.h"
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -45,7 +45,7 @@ REFLECT_DECLARE_ENUM(ShaderType)
 
 REFLECT_DECLARE_CLASS(Shader)
 
-class RESOURCE_API Shader : public Resource
+class API_RESOURCE Shader : public Resource
 {
 	REFLECT_DECLARE_OBJECT(Shader)
 
@@ -101,4 +101,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Shader );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END

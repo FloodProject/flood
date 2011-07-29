@@ -16,7 +16,7 @@
 
 FWD_DECL_INTRUSIVE(Renderable)
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -53,4 +53,4 @@ protected:
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_ENGINE_END

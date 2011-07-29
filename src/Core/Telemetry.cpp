@@ -11,7 +11,7 @@
 #include "Core/Memory.h"
 #include "Core/Log.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -33,4 +33,4 @@ void TelemetryDestroy()
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

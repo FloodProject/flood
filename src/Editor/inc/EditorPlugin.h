@@ -66,7 +66,10 @@ public:
 	// Finds if there is a mode with given id.
 	PluginTool* findTool( wxAuiToolBarItem* tool );
 
-	// EditorPlugin tool selection callback.
+	// Plugin updates callback.
+	virtual void onPluginUpdate() {}
+
+	// Plugin tool selection callback.
 	virtual void onToolSelect( int id ) {}
 	virtual void onToolUnselect( int id ) {}
 

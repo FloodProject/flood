@@ -15,7 +15,7 @@
 #include "Render/View.h"
 #include "Render/DebugGeometry.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -347,4 +347,4 @@ RenderablePtr Camera::createDebugRenderable() const
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_ENGINE_END

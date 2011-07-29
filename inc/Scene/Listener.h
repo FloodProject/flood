@@ -13,13 +13,13 @@
 #include "Scene/Component.h"
 #include "Audio/Context.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
 REFLECT_DECLARE_CLASS(Listener)
 
-class VAPOR_API Listener : public Component
+class API_ENGINE Listener : public Component
 {
 	DECLARE_UNCOPYABLE(Listener)
 	REFLECT_DECLARE_OBJECT(Listener)
@@ -51,6 +51,6 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Listener );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

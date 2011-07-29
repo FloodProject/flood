@@ -10,7 +10,7 @@
 
 #ifdef VAPOR_RENDERER_OPENGL
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//	
 
@@ -44,6 +44,6 @@ public:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

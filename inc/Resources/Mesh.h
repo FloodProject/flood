@@ -16,7 +16,7 @@
 
 FWD_DECL_INTRUSIVE(Animation)
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -39,7 +39,7 @@ struct MeshGroup
 
 REFLECT_DECLARE_CLASS(Mesh)
 
-class RESOURCE_API Mesh : public Resource
+class API_RESOURCE Mesh : public Resource
 {
 	REFLECT_DECLARE_OBJECT(Mesh)
 
@@ -111,4 +111,4 @@ TYPEDEF_RESOURCE_HANDLE_FROM_TYPE( Mesh );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END

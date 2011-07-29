@@ -19,7 +19,7 @@
 
 #include <vorbis/vorbisfile.h>
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -29,7 +29,7 @@ namespace vapor {
 
 REFLECT_DECLARE_CLASS(OGG_Loader)
 
-class RESOURCE_API OGG_Loader : public ResourceLoader
+class API_RESOURCE OGG_Loader : public ResourceLoader
 {
 	REFLECT_DECLARE_OBJECT(OGG_Loader)
 
@@ -62,6 +62,6 @@ protected:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END
 
 #endif

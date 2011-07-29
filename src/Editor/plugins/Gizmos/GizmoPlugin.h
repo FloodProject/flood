@@ -11,7 +11,7 @@
 #include "EditorPlugin.h"
 #include "Gizmo.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -128,4 +128,4 @@ protected:
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

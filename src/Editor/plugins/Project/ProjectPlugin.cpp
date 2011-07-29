@@ -15,7 +15,7 @@
 #include "../Scene/SceneDocument.h"
 #include "Core/Serialization.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -240,4 +240,4 @@ void ProjectPlugin::switchScene(SceneDocument* document)
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

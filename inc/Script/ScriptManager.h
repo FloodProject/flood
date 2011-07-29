@@ -14,7 +14,7 @@
 
 #ifdef ENABLE_SCRIPTING_LUA
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -27,7 +27,7 @@ typedef std::pair<const State*, Script> ScriptsMapPair;
  * Manages all the script instances in the engine.
  */
 
-class VAPOR_API ScriptManager : public Subsystem
+class API_ENGINE ScriptManager : public Subsystem
 {
 public:
 
@@ -57,6 +57,6 @@ protected:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

@@ -14,7 +14,7 @@
 #include "input/SFML_InputManager.h"
 #include <SFML/Window.hpp>
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -86,6 +86,6 @@ private:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

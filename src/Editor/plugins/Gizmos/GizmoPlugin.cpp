@@ -25,7 +25,7 @@
 
 #ifdef ENABLE_PLUGIN_GIZMO
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -481,6 +481,6 @@ bool GizmoPlugin::isTool(GizmoTool::Enum mode)
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END
 
 #endif

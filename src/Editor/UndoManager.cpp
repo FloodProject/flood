@@ -11,7 +11,7 @@
 #include "UndoOperation.h"
 #include "Editor.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -97,4 +97,4 @@ void UndoManager::handleOperation(Operations& firstOperations,
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

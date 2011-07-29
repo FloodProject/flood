@@ -9,7 +9,7 @@
 #include "Core/API.h"
 #include "Math/Hash.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------------------------------------------------
 // MurmurHash2, by Austin Appleby
@@ -82,4 +82,4 @@ uint Hash::Murmur2( const std::vector<byte>& vec, uint seed )
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

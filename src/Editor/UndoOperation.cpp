@@ -9,7 +9,7 @@
 #include "Editor/API.h"
 #include "UndoOperation.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -23,4 +23,4 @@ UndoOperation::~UndoOperation()
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

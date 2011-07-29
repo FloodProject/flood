@@ -12,7 +12,7 @@
 #include "Render/Device.h"
 #include "Render/GL.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -284,4 +284,4 @@ GLint Texture::convertSourceFormat( PixelFormat::Enum format ) const
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

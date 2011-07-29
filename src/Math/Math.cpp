@@ -7,7 +7,7 @@
 #include "Core/API.h"
 #include "Math/Helpers.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -77,4 +77,4 @@ float MathRadianToDegree( float radian )
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

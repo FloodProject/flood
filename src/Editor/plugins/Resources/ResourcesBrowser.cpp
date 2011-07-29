@@ -25,12 +25,12 @@
 
 #ifdef ENABLE_RESOURCE_BROWSER
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
 ResourcesBrowser::ResourcesBrowser( wxWindow* parent )
-	: gui::ResourcesBrowser(parent, wxID_ANY, "Resources Browser")
+	: ResourcesFrame(parent, wxID_ANY, "Resources Browser")
 	, m_resourceImages(nullptr)
 	, m_resourceGroupsImages(nullptr)
 	, inSelectionMode(false)
@@ -357,14 +357,14 @@ void ResourcesBrowser::setFocusToSearch()
 
 void ResourcesBrowser::OnClose(wxCloseEvent& event)
 {
-    if ( !event.CanVeto() ) return;
+	if ( !event.CanVeto() ) return;
 
 	Hide();
-    event.Veto();
+	event.Veto();
 }
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END
 
 #endif

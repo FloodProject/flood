@@ -11,7 +11,7 @@
 
 #pragma TODO("Fix the size of the key states")
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -96,4 +96,4 @@ KeyEvent::KeyEvent(Keys::Enum keyCode,
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

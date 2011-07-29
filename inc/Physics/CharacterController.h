@@ -15,13 +15,13 @@
 class btKinematicController;
 class btPairCachingGhostObject;
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
 REFLECT_DECLARE_CLASS(CharacterController)
 
-class VAPOR_API CharacterController : public Controller
+class API_ENGINE CharacterController : public Controller
 {
 	REFLECT_DECLARE_OBJECT(CharacterController)
 
@@ -79,6 +79,6 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( CharacterController );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

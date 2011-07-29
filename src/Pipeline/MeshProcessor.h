@@ -13,7 +13,7 @@
 #include "Resources/Animation.h"
 #include "Resources/Skeleton.h"
 
-namespace vapor {
+NAMESPACE_PIPELINE_BEGIN
 
 //-----------------------------------//
 
@@ -42,4 +42,4 @@ private:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_PIPELINE_END

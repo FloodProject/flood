@@ -27,7 +27,7 @@
 #include <BulletCollision/CollisionDispatch/btGhostObject.h> 
 #include <BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h>
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -191,6 +191,6 @@ void CharacterController::onFieldChanged(const Field& field)
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

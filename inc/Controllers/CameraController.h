@@ -10,7 +10,7 @@
 
 #include "controllers/Controller.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -20,7 +20,7 @@ namespace vapor {
 
 REFLECT_DECLARE_CLASS(CameraController)
 
-class VAPOR_API CameraController : public Controller
+class API_ENGINE CameraController : public Controller
 {
 	REFLECT_DECLARE_OBJECT(CameraController)
 
@@ -48,4 +48,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( CameraController );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

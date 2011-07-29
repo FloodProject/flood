@@ -15,7 +15,7 @@
 #include "Resources/ResourceManager.h"
 #include "Settings.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -229,6 +229,6 @@ ImagePtr TerrainPage::getPaintImage()
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END
 
 #endif

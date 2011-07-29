@@ -253,7 +253,7 @@ static void MyStrCpy(char* szDest, size_t nMaxDestSize, const char* szSrc)
 // Normally it should be enough to use 'CONTEXT_FULL' (better would be 'CONTEXT_ALL')
 #define USED_CONTEXT_FLAGS CONTEXT_FULL
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -1354,7 +1354,7 @@ void StackWalker::OnOutput(LPCSTR buffer)
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END
 
 #endif
 

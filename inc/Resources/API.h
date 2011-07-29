@@ -27,7 +27,8 @@
 	#define API_RESOURCE
 #endif
 
-#define RESOURCE_API API_RESOURCE
+#define NAMESPACE_RESOURCES_BEGIN NAMESPACE_CORE_BEGIN
+#define NAMESPACE_RESOURCES_END NAMESPACE_CORE_END
 
 //---------------------------------------------------------------------//
 // Resource APIs

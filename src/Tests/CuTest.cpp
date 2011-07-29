@@ -9,11 +9,11 @@
 #include "Core/Memory.h"
 #include "CuTest.h"
 
-using namespace vapor;
+//using namespace vapor;
 
 static std::vector<CuSuite*> suites;
 
-Allocator* AllocatorTests = nullptr;
+Allocator* gs_AllocatorTests = nullptr;
 
 /*-------------------------------------------------------------------------*
  * CuStr
@@ -21,7 +21,7 @@ Allocator* AllocatorTests = nullptr;
 
 char* CuStrAlloc(int size)
 {
-	char* newStr = (char*) AllocatorTests->allocate(AllocatorTests, size, 0);
+	char* newStr = (char*) gs_AllocatorTests->allocate(gs_AllocatorTests, size, 0);
 	return newStr;
 }
 
@@ -47,7 +47,7 @@ void CuStringInit(CuString* str)
 
 CuString* CuStringNew(void)
 {
-	CuString* str = Allocate(CuString, AllocatorTests);
+	CuString* str = Allocate(CuString, gs_AllocatorTests);
 	str->length = 0;
 	str->size = STRING_MAX;
 	str->buffer = CuStrAlloc(str->size);
@@ -66,7 +66,7 @@ void CuStringResize(CuString* str, int newSize)
 {
 	char* oldbuffer = str->buffer;
 	
-	str->buffer = (char*) AllocatorTests->allocate(AllocatorTests, newSize, 0);
+	str->buffer = (char*) gs_AllocatorTests->allocate(gs_AllocatorTests, newSize, 0);
 	str->size = newSize;
 	
 	strcpy(str->buffer, oldbuffer);
@@ -134,7 +134,7 @@ void CuTestInit(CuTest* t, const char* name, TestFunction function)
 
 CuTest* CuTestNew(const char* name, TestFunction function)
 {
-	CuTest* tc = Allocate(CuTest, AllocatorTests);
+	CuTest* tc = Allocate(CuTest, gs_AllocatorTests);
 	CuTestInit(tc, name, function);
 	return tc;
 }
@@ -259,7 +259,7 @@ void CuSuiteInit(CuSuite* testSuite)
 
 CuSuite* CuSuiteNew(void)
 {
-	CuSuite* testSuite = Allocate(CuSuite, AllocatorTests);
+	CuSuite* testSuite = Allocate(CuSuite, gs_AllocatorTests);
 	CuSuiteInit(testSuite);
 	return testSuite;
 }
@@ -370,10 +370,11 @@ void CuSuiteDetails(CuSuite* testSuite, CuString* details)
 
 void CuInit()
 {
-	AllocatorTests = AllocatorCreateHeap( AllocatorGetHeap(), "Tests" );
+	gs_AllocatorTests = AllocatorCreateHeap( AllocatorGetHeap());
+	AllocatorSetGroup(gs_AllocatorTests, "Tests");
 }
 
 void CuCleanup()
 {
-	AllocatorDestroy(AllocatorTests);
+	AllocatorDestroy(gs_AllocatorTests);
 }

@@ -9,13 +9,13 @@
 #pragma once
 
 #include "Core/Object.h"
-#include "Core/ReferenceCount.h"
+#include "Core/References.h"
 
 FWD_DECL_INTRUSIVE(Renderable)
 FWD_DECL_INTRUSIVE(Camera)
 FWD_DECL_INTRUSIVE(Entity)
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -87,4 +87,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Component )
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_ENGINE_END

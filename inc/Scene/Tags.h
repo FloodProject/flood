@@ -8,7 +8,7 @@
 
 #pragma once
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -31,4 +31,4 @@ namespace Tags
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

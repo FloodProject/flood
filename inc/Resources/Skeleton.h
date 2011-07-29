@@ -10,7 +10,7 @@
 
 #include "Resources/Bone.h"
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -42,4 +42,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(Skeleton)
 
 //-----------------------------------//
 
-} // end	 namespace
+NAMESPACE_RESOURCES_END

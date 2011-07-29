@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Core/ReferenceCount.h"
+#include "Core/References.h"
 
 NAMESPACE_ENGINE_BEGIN
 

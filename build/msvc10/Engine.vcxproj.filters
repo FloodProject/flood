@@ -255,9 +255,6 @@
     <ClCompile Include="..\..\src\Engine\State.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\interface\vapor_wrap.cxx">
-      <Filter>Scripting\Bindings</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Audio\AudioBuffer.cpp">
       <Filter>Audio\Buffer</Filter>
     </ClCompile>
@@ -477,6 +474,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Render\UniformBuffer.cpp">
       <Filter>Render\Buffers\Uniform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\interface\Bindings\vapor_wrap.cxx">
+      <Filter>Scripting\Bindings</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -758,30 +758,36 @@
     <ClInclude Include="..\..\inc\Render\Render.h">
       <Filter>Render</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\inc\Audio\AL.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\interface\Bindings\swigluarun.h">
+      <Filter>Scripting\Bindings</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\doc\TODO.txt">
       <Filter>Documentation</Filter>
     </None>
-    <None Include="..\..\interface\base.i">
+    <None Include="..\..\interface\Bindings\Input.i">
       <Filter>Scripting\Bindings</Filter>
     </None>
-    <None Include="..\..\interface\input.i">
+    <None Include="..\..\interface\Bindings\Math.i">
       <Filter>Scripting\Bindings</Filter>
     </None>
-    <None Include="..\..\interface\math.i">
+    <None Include="..\..\interface\Bindings\Render.i">
       <Filter>Scripting\Bindings</Filter>
     </None>
-    <None Include="..\..\interface\render.i">
+    <None Include="..\..\interface\Bindings\Resources.i">
       <Filter>Scripting\Bindings</Filter>
     </None>
-    <None Include="..\..\interface\resources.i">
+    <None Include="..\..\interface\Bindings\Scene.i">
       <Filter>Scripting\Bindings</Filter>
     </None>
-    <None Include="..\..\interface\scene.i">
+    <None Include="..\..\interface\Bindings\Core.i">
       <Filter>Scripting\Bindings</Filter>
     </None>
-    <None Include="..\..\interface\vapor.i">
+    <None Include="..\..\interface\Bindings\Engine.i">
       <Filter>Scripting\Bindings</Filter>
     </None>
   </ItemGroup>

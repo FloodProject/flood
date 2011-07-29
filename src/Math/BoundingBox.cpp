@@ -11,7 +11,7 @@
 #include "Math/Helpers.h"
 #include "Core/Log.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -248,4 +248,4 @@ bool BoundingBox::intersects( const Ray& ray, float& distance ) const
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

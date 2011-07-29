@@ -17,7 +17,7 @@
 using namespace nvtt;
 #endif
 
-namespace vapor {
+NAMESPACE_PIPELINE_BEGIN
 
 //-----------------------------------//
 
@@ -122,4 +122,4 @@ bool ImageOutputHandler::writeData(const void * data, int size)
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_PIPELINE_END

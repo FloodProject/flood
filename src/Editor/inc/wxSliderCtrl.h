@@ -8,7 +8,7 @@
 
 #pragma once
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -40,4 +40,4 @@ private:
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

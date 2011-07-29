@@ -8,7 +8,7 @@
 
 #pragma once
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -16,7 +16,7 @@ namespace vapor {
  * Holds the timing statistics accumulated from rendering.
  */
 
-class VAPOR_API FrameStatistics
+class API_ENGINE FrameStatistics
 {
 public:
 
@@ -40,4 +40,4 @@ public:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

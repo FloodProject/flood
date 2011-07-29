@@ -10,7 +10,7 @@
 
 #include "input/Device.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//	
 
@@ -170,7 +170,7 @@ struct KeyboardEventType
  * it also needs to know if it's a key press or release event.
  */
 
-struct VAPOR_API KeyEvent : public InputEvent
+struct API_ENGINE KeyEvent : public InputEvent
 {
 	friend class Keyboard;
 	
@@ -188,4 +188,4 @@ private:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

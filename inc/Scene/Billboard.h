@@ -13,7 +13,7 @@
 #include "Scene/Camera.h"
 #include "Render/Renderable.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -76,4 +76,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Billboard );
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_ENGINE_END

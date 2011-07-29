@@ -15,7 +15,7 @@
 #include "Render/Program.h"
 #include "Render/ProgramManager.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -118,4 +118,4 @@ RenderablePtr Projector::createDebugRenderable() const
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

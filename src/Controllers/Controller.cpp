@@ -9,7 +9,7 @@
 #include "Engine/API.h"
 #include "Controllers/Controller.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -45,4 +45,4 @@ void Controller::update( float time )
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

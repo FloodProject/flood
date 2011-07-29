@@ -15,7 +15,7 @@
 #include "Render/Target.h"
 #include "Scene/Camera.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -91,4 +91,4 @@ protected:
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_ENGINE_END

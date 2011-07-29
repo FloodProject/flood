@@ -11,7 +11,7 @@
 #include "Pipeline/API.h"
 #include "Pipeline/MeshProcessor.h"
 
-namespace vapor {
+NAMESPACE_PIPELINE_BEGIN
 
 //-----------------------------------//
 
@@ -32,4 +32,4 @@ bool MeshProcessor::Process(const ResourcePtr& resource)
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_PIPELINE_END

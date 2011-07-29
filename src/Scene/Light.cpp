@@ -10,7 +10,7 @@
 #include "Scene/Light.h"
 #include "Render/Sphere.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -63,4 +63,4 @@ RenderablePtr Light::createDebugRenderable() const
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

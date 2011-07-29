@@ -14,7 +14,7 @@
 #include "Core/Reflection.h"
 #include "Core/Object.h"
 #include "Core/Utilities.h"
-#include "Core/ReferenceCount.h"
+#include "Core/References.h"
 #include "Core/Stream.h"
 #include "Core/Log.h"
 

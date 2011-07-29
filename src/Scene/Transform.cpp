@@ -13,7 +13,7 @@
 #include "Render/DebugGeometry.h"
 #include "Math/Helpers.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -266,4 +266,4 @@ BoundingBox Transform::getWorldBoundingVolume() const
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_ENGINE_END

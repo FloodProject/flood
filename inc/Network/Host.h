@@ -8,8 +8,9 @@
 
 #pragma once
 
-#include "Core/ReferenceCount.h"
+#include "Core/References.h"
 #include "Core/Concurrency.h"
+#include "Core/ConcurrentQueue.h"
 #include "Core/Event.h"
 #include "Network/Peer.h"
 
@@ -31,8 +32,17 @@ class Host : public ReferenceCounted
 {
 public:
 
+	// Destroys the current socket.
+	bool destroySocket();
+
+	// Broadcasts a message.
+	void broadcastMessage(const MessagePtr&, uint8 channel = 0);
+
 	// Checks the host for events.
 	void processEvents(uint32 timeout);
+
+	// Returns if the host has a networking context.
+	bool hasContext();
 
 protected:
 
@@ -57,17 +67,24 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Host )
 
 //-----------------------------------//
 
-namespace NetworkClientState
+namespace HostState
 {
 	enum Enum
 	{
-		Initial,
+		Disconnected,
 		Connecting,
 		Connected,
+		Authenticating,
+		Authenticated,
 		Disconnecting,
-		Disconnected
 	};
 }
+
+struct HostConnectionDetails
+{
+	String address;
+	uint16 port;
+};
 
 // Clients connect to hosts.
 class HostClient : public Host
@@ -77,13 +94,13 @@ public:
 	HostClient();
 	
 	// Connects the client to a remote host.
-	bool connect( const String& address, int port );
+	bool connect( const HostConnectionDetails& );
 
 	// Gets the network peer.
 	GETTER(Peer, const PeerPtr&, peer)
 
 	// Gets the client state.
-	GETTER(State, NetworkClientState::Enum, state)
+	ACESSOR(State, HostState::Enum, state)
 
 	Event1<const PeerPtr&> onClientConnected;
 	Event1<const PeerPtr&> onClientDisconnected; 
@@ -96,7 +113,7 @@ protected:
 	void onMessage(const PeerPtr&, const MessagePtr&) OVERRIDE;
 
 	PeerPtr peer;
-	NetworkClientState::Enum state;
+	HostState::Enum state;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( HostClient )
@@ -109,7 +126,7 @@ class HostServer : public Host
 public:
 
 	// Creates a new socket.
-	bool createSocket( const String& address, int port );
+	bool createSocket( const HostConnectionDetails& );
 
 	Event1<const PeerPtr&> onClientConnected;
 	Event1<const PeerPtr&> onClientDisconnected; 

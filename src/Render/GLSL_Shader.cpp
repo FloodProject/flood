@@ -13,7 +13,7 @@
 #include "Render/GLSL_Shader.h"
 #include "Render/GL.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -150,6 +150,6 @@ uint32 GLSL_Shader::getGLShaderType( ShaderType::Enum type )
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

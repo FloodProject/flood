@@ -11,7 +11,7 @@
 #include "Input/InputManager.h"
 #include "Input/Keyboard.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -45,4 +45,4 @@ private:
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

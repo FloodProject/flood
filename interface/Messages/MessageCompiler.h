@@ -1,29 +1,21 @@
 #include <cstdio>
-#include <string>
-#include <vector>
 
-enum BlockType
-{
-	BT_MESSAGE,
-	BT_ENUM,
-	BT_SERVICE
-};
+#define INSTANTIATE_TEMPLATES
+#include "Core/API.h"
+#include "Core/Reflection.h"
+
+using namespace vapor;
 
 struct MessageField
-{
-};
-
-struct EnumBlock
 {
 	
 };
 
 struct MessageBlock
 {
-	std::string name;
-	std::string parent;
-	bool inherits;
-	std::vector<MessageField> fields;
+	String name;
+	String parent;
+	std::vector<Field> fields;
 };
 
 struct ServiceBlock
@@ -33,10 +25,13 @@ struct ServiceBlock
 
 std::vector<MessageBlock> messages;
 
-MessageBlock message;
-
 struct Block
 {
-	std::string name;
-	std::string type;
+	String name;
+	MessageBlock message;
+	Primitive* primitive;
+	Field field;
+	FieldId fieldId;
+	Class klass;
+	ClassId classId;
 };

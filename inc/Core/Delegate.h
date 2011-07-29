@@ -160,7 +160,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 namespace detail {	// we'll hide the implementation details in a nested namespace.
 
@@ -1594,4 +1594,6 @@ Delegate4<Param1, Param2, Param3, Param4, FASTDLGT_RETTYPE> MakeDelegate(Y* x, R
  // clean up after ourselves...
 #undef FASTDLGT_RETTYPE
 
-} // namespace
+//-----------------------------------//
+
+NAMESPACE_CORE_END

@@ -10,7 +10,7 @@
 
 #include "Math/Vector.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -56,4 +56,4 @@ struct API_CORE Color : public ColorP
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

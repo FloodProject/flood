@@ -11,9 +11,9 @@
 #include "Math/Vector.h"
 #include "Math/EulerAngles.h"
 #include "Math/Matrix4x3.h"
-#include "Core/ReferenceCount.h"
+#include "Core/References.h"
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -54,4 +54,4 @@ typedef std::vector<BonePtr> BonesVector;
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END

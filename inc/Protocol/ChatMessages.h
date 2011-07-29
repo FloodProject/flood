@@ -9,6 +9,7 @@
 #pragma once
 
 #include "Protocol/API.h"
+#include "Protocol/UserMessages.h"
 #include "Network/MessagePlugin.h"
 
 NAMESPACE_PROTOCOL_BEGIN
@@ -19,6 +20,7 @@ NAMESPACE_PROTOCOL_BEGIN
 
 struct API_PROTOCOL ChatMessage
 {
+	uint16 length;
 	char text[CHAT_MAX_TEXT_SIZE];
 };
 

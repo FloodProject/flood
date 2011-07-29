@@ -12,7 +12,7 @@
 #include "Scene/Camera.h"
 #include "Resources/Material.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -106,4 +106,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Gizmo );
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

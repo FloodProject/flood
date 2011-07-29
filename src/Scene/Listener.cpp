@@ -19,7 +19,7 @@
 #include "Scene/Scene.h"
 #include "Engine/Engine.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -78,6 +78,6 @@ void Listener::update( float delta )
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

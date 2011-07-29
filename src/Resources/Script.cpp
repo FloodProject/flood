@@ -9,7 +9,7 @@
 #include "Resources/API.h"
 #include "Script/Script.h"
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -28,4 +28,4 @@ REFLECT_CLASS_END()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END

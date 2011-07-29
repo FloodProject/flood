@@ -11,7 +11,7 @@
 #include "Core/API.h"
 #include "Core/Memory.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -106,4 +106,4 @@ template<class T> inline T * get_pointer(scoped_ptr<T> const & p)
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

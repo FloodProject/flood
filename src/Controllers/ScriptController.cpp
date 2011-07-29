@@ -28,7 +28,7 @@
 #include <swigluarun.h>
 #include <lua.hpp>
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -210,6 +210,6 @@ void ScriptController::onMouseButtonReleased( const MouseButtonEvent& event )
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

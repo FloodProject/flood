@@ -16,7 +16,7 @@ FWD_DECL_INTRUSIVE(Entity)
 FWD_DECL_INTRUSIVE(Transform)
 FWD_DECL_INTRUSIVE(Geometry)
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -155,4 +155,4 @@ public:
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_ENGINE_END

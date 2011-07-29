@@ -170,7 +170,7 @@ static_assert(sizeof(int64) == 8, "");
 // Forward-declaration Helpers
 //---------------------------------------------------------------------//
 
-#define FWD_DECL(T) NAMESPACE_BEGIN class T; NAMESPACE_END		\
+#define FWD_DECL(T) NAMESPACE_CORE_BEGIN class T; NAMESPACE_CORE_END		\
 
 #ifdef ENABLE_MEMORY_SHARED_PTR
 
@@ -181,16 +181,16 @@ static_assert(sizeof(int64) == 8, "");
 		typedef std::weak_ptr< class > class##WeakPtr;
 
 #define FWD_DECL_SHARED(T)										\
-	NAMESPACE_BEGIN												\
+	NAMESPACE_CORE_BEGIN												\
 		class T;												\
 		TYPEDEF_SHARED_POINTER_FROM_TYPE( T );					\
-	NAMESPACE_END
+	NAMESPACE_CORE_END
 
 #define FWD_DECL_SHARED_WEAK(T)									\
-	NAMESPACE_BEGIN												\
+	NAMESPACE_CORE_BEGIN												\
 		class T;												\
 		TYPEDEF_SHARED_WEAK_POINTER_FROM_TYPE( T );				\
-	NAMESPACE_END
+	NAMESPACE_CORE_END
 
 #endif
 

@@ -12,7 +12,7 @@
 
 #ifdef ENABLE_FONT_BITMAP
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -43,7 +43,7 @@ private:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END
 
 #endif
 

@@ -16,7 +16,7 @@
 
 #include <alext.h>
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -222,6 +222,6 @@ const ALchar* AudioDevice::getError()
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_ENGINE_END
 
 #endif

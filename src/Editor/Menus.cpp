@@ -11,7 +11,7 @@
 #include "EditorIcons.h"
 #include "Preferences.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -52,12 +52,17 @@ void EditorFrame::createMenus()
 
 	//-----------------------------------//
 
+	menuServer = new wxMenu;
+
+	//-----------------------------------//
+
     wxMenuBar* menuBar = new wxMenuBar();
 	menuBar->Append(menuFile, "&File");
 	menuBar->Append(menuEdit, "&Edit");
 	menuBar->Append(menuSettings, "&Settings");
 	menuBar->Append(menuTools, "&Tools");
 	menuBar->Append(menuPanels, "&Panels");
+	menuBar->Append(menuServer, "&Server");
     menuBar->Append(menuHelp, "&Help");
 
     SetMenuBar(menuBar);
@@ -243,4 +248,4 @@ void EditorFrame::OnAboutWx(wxCommandEvent& WXUNUSED(event))
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

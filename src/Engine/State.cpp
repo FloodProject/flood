@@ -14,7 +14,7 @@
 #include <lua.hpp>
 #include <sstream>
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -158,6 +158,6 @@ void State::handleError()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

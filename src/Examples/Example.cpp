@@ -7,10 +7,11 @@
 ************************************************************************/
 
 #include "Example.h"
-#include "Profiler.h"
+#include "Core/Profiler.h"
 
 int main()
 {
+#if 0
 	Log* log = LogCreate( AllocatorGetHeap() );
 	LogSetDefault(log);
 
@@ -38,8 +39,10 @@ int main()
 
 	LogDestroy(log, AllocatorGetHeap() );
 	AllocatorDestroy( pool, AllocatorGetHeap() );
-	//Example example;
-	//example.run();
+#endif
+
+	Example example;
+	example.run();
 
 	return EXIT_SUCCESS;
 }
@@ -47,7 +50,7 @@ int main()
 //-----------------------------------//
 
 Example::Example(const char** argv)
-	: Framework("Example", argv)
+	: Framework("Example")
 { }
 
 //-----------------------------------//
@@ -65,6 +68,7 @@ void Example::onInit()
 
 //-----------------------------------//
 
+#if 0
 void Example::onPageLoading( const PageEvent& event )
 {
 	LogDebug("%d,%d", event.pos.x, event.pos.y );
@@ -73,6 +77,7 @@ void Example::onPageLoading( const PageEvent& event )
 	const ImagePtr& heightMap = rm->loadResource<Image>( "height4.png" );
 	nodeTerrain->addCell( event.pos.x, event.pos.y, heightMap );
 }
+#endif
 
 //-----------------------------------//
 
@@ -175,9 +180,6 @@ void Example::onSetupScene()
 	sky->addComponent( SkydomePtr( new Skydome() ) );
 	scene->add( sky );
 #endif
-
-	window = getRenderDevice()->getRenderWindow();
-	window->makeCurrent();
 
 	view = window->createView();
 	view->setCamera(camera);

@@ -12,7 +12,7 @@
 #include "Math/Vector.h"
 #include "Math/EulerAngles.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -22,7 +22,7 @@ namespace vapor {
 
 REFLECT_DECLARE_CLASS(ThirdPersonController)
 
-class VAPOR_API ThirdPersonController : public CameraController
+class API_ENGINE ThirdPersonController : public CameraController
 {
 	REFLECT_DECLARE_OBJECT(ThirdPersonController)
 
@@ -55,4 +55,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( ThirdPersonController );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

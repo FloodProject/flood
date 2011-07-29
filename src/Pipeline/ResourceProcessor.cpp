@@ -16,7 +16,7 @@
 
 #include "Core/Log.h"
 
-namespace vapor {
+NAMESPACE_PIPELINE_BEGIN
 
 //-----------------------------------//
 
@@ -97,4 +97,4 @@ static void ReferenceProcessors()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_PIPELINE_END

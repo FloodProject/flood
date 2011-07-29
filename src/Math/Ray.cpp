@@ -10,7 +10,7 @@
 #include "Math/Ray.h"
 #include "Math/Helpers.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -162,4 +162,4 @@ bool Ray::intersects( const Vector3 (&tri)[3], float& t, float& u, float& v ) co
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

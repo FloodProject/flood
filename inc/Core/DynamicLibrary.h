@@ -10,7 +10,7 @@
 
 #ifdef ENABLE_DYNAMIC_LIBRARY
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -51,6 +51,6 @@ private:
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END
 
 #endif

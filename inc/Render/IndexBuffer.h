@@ -10,11 +10,11 @@
 
 #include "Render/Buffer.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-class VAPOR_API IndexBuffer : public Buffer
+class API_ENGINE IndexBuffer : public Buffer
 {
 public:
 
@@ -55,4 +55,4 @@ void SetIndexBufferData(const IndexBufferPtr& ib, const std::vector<T>& data)
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

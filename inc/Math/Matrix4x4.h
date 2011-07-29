@@ -11,7 +11,7 @@
 #include "Math/Vector.h"
 #include "Math/Vector.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 class Matrix4x3;
 
@@ -74,4 +74,4 @@ public:
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

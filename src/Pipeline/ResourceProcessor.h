@@ -8,12 +8,12 @@
 
 #pragma once
 
-#include "Core/ReferenceCount.h"
+#include "Core/References.h"
 #include "Core/Object.h"
 
 FWD_DECL_INTRUSIVE(Resource)
 
-namespace vapor {
+NAMESPACE_PIPELINE_BEGIN
 
 //-----------------------------------//
 
@@ -64,4 +64,4 @@ extern std::vector<ResourceProcessor*> resourceProcessors;
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_PIPELINE_END

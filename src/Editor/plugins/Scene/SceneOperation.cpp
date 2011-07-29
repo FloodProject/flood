@@ -11,7 +11,7 @@
 #include "UndoManager.h"
 #include "Editor.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -57,4 +57,4 @@ EntityOperation* ScenePage::createEntityOperation(const EntityPtr& entity, const
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

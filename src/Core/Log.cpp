@@ -19,7 +19,7 @@
 	#include <Windows.h>	
 #endif
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -137,4 +137,4 @@ DEFINE_LOG_HELPER(Assert)
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

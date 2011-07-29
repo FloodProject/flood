@@ -11,7 +11,7 @@
 #include "Settings.h"
 #include "Core/Utilities.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -175,4 +175,4 @@ void ResourceDatabase::generateThumbnails(const std::vector<String>& files)
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

@@ -13,7 +13,7 @@
 #include "Resources/ResourceManager.h"
 #include "Core/Utilities.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -131,4 +131,4 @@ void ProgramManager::onReload( const ResourceEvent& event )
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

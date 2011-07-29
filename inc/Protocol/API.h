@@ -13,7 +13,8 @@
 //---------------------------------------------------------------------//
 
 #include "Core/API.h"
-#include "Core/ReferenceCount.h"
+#include "Core/References.h"
+#include "Network/Message.h"
 
 //---------------------------------------------------------------------//
 // API Exports
@@ -47,8 +48,6 @@ NAMESPACE_PROTOCOL_END
 //---------------------------------------------------------------------//
 // Forward declarations
 //---------------------------------------------------------------------//
-
-typedef uint32 MessageId;
 
 FWD_DECL_INTRUSIVE(Message)
 FWD_DECL_INTRUSIVE(Session)

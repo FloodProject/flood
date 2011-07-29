@@ -11,7 +11,7 @@
 #include "Render/Target.h"
 #include "Resources/Image.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -37,7 +37,7 @@ namespace TextureFiltering
  * You can also create textures that are not backed by an image.
  */
 
-class VAPOR_API Texture : public ReferenceCounted
+class API_ENGINE Texture : public ReferenceCounted
 {
 public:
 	
@@ -111,4 +111,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Texture );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

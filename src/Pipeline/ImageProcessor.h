@@ -12,7 +12,7 @@
 #include "Resources/Image.h"
 #include <nvtt/nvtt.h>
 
-namespace vapor {
+NAMESPACE_PIPELINE_BEGIN
 
 //-----------------------------------//
 
@@ -90,4 +90,4 @@ public:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_PIPELINE_END

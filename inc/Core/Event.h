@@ -14,7 +14,7 @@
 #include "Delegate.h"
 #include <set>
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 template< class Param0 = void >
 class Event0
@@ -320,4 +320,6 @@ public:
 	}
 };
 
-} // namespace
+//-----------------------------------//
+
+NAMESPACE_CORE_END

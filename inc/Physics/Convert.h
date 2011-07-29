@@ -18,7 +18,7 @@
 
 FWD_DECL_INTRUSIVE(Transform)
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -48,6 +48,6 @@ namespace Convert
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

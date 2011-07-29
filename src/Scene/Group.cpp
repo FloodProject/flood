@@ -11,7 +11,7 @@
 #include "Scene/Transform.h"
 #include <algorithm>
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -119,4 +119,4 @@ void Group::fixUp()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

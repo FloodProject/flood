@@ -12,8 +12,6 @@
 #include "Core/Archive.h"
 #include "Core/Stream.h"
 
-using namespace vapor;
-
 //-----------------------------------//
 
 void TestArchiveDir(CuTest* tc)

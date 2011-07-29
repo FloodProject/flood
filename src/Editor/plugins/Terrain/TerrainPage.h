@@ -16,7 +16,7 @@
 
 #define BRUSH_INITIAL_SIZE 100
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -84,6 +84,6 @@ protected:
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END
 
 #endif

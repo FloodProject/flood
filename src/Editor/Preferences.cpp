@@ -15,10 +15,7 @@
 #include "Editor.h"
 #include <wx/keybinder.h>
 
-using namespace vapor::gui;
-using namespace vapor::editor;
-
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -62,17 +59,17 @@ bool Preferences::createPages()
 	nb->SetPageImage(n++, 0);
 
 #if 0
-	bindings = new gui::Bindings(nb);
+	bindings = new Bindings(nb);
     nb->AddPage(bindings, "Key Bindings");
 	nb->SetPageImage(n++, 0);
 #endif
 
-	plugins = new gui::Plugins(nb);
+	plugins = new Plugins(nb);
     nb->AddPage(plugins, "Plugins");
 	plugins->InitDialog();
 	nb->SetPageImage(n++, 1);
 
-	resources = new gui::Resources(nb);
+	resources = new Resources(nb);
     nb->AddPage(resources, "Resources");
 	resources->InitDialog();
 	nb->SetPageImage(n++, 2);
@@ -80,10 +77,6 @@ bool Preferences::createPages()
     LayoutDialog();
     return true;
 }
-
-//-----------------------------------//
-
-} namespace gui {
 
 //-----------------------------------//
 
@@ -212,4 +205,4 @@ void Plugins::OnPluginInstall( wxCommandEvent& event )
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

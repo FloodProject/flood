@@ -9,7 +9,7 @@
 #include "Editor/API.h"
 #include "EditorInputManager.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -221,4 +221,4 @@ Keys::Enum EditorInputManager::convertKeyEnum( int keyCode )
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

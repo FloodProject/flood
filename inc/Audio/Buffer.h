@@ -12,9 +12,9 @@
 
 #include "Resources/Sound.h"
 #include "Audio/Source.h"
-#include "Core/ReferenceCount.h"
+#include "Core/References.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -62,6 +62,6 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( AudioBuffer );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

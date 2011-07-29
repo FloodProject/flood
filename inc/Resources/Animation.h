@@ -11,12 +11,12 @@
 #include "Math/Vector.h"
 #include "Math/EulerAngles.h"
 #include "Math/Matrix4x3.h"
-#include "Core/ReferenceCount.h"
+#include "Core/References.h"
 
 FWD_DECL_INTRUSIVE(Bone)
 FWD_DECL_INTRUSIVE(Animation)
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -109,4 +109,4 @@ struct AnimationMetadata
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END

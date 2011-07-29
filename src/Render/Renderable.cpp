@@ -11,7 +11,7 @@
 #include "Render/Device.h"
 #include "Render/GL.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -98,4 +98,4 @@ void Renderable::render( RenderDevice* device )
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_ENGINE_END

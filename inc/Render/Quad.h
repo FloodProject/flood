@@ -10,7 +10,7 @@
 
 #include "Render/Renderable.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -18,7 +18,7 @@ namespace vapor {
  * Vertex buffer with a quad.
  */
 
-class VAPOR_API Quad : public Renderable
+class API_ENGINE Quad : public Renderable
 {
 public:
 
@@ -33,4 +33,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Quad );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

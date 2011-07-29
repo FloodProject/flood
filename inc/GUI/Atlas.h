@@ -8,7 +8,7 @@
 
 #pragma once
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -81,7 +81,7 @@ struct Rect
  * http://www.gamedev.net/community/forums/topic.asp?topic_id=392413&#2599800
  */
 
-class VAPOR_API Atlas
+class API_ENGINE Atlas
 {
 public:
 
@@ -111,6 +111,6 @@ private:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 

@@ -11,7 +11,7 @@
 #include "Core/Log.h"
 #include <cassert>
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -126,4 +126,4 @@ EulerAngles Quaternion::getEulerAngles() const
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

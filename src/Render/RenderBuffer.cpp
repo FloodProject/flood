@@ -9,7 +9,7 @@
 #include "Engine/API.h"
 #include "Render/RenderBuffer.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -26,4 +26,4 @@ void RenderBuffer::makeCurrent()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

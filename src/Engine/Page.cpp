@@ -9,7 +9,7 @@
 #include "Engine/API.h"
 #include "paging/Page.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -18,4 +18,4 @@ Page::Page()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

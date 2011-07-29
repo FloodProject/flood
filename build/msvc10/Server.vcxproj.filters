@@ -17,6 +17,9 @@
       <Filter>Protocol</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Server\Server.cpp" />
+    <ClCompile Include="..\..\src\Server\Plugins\UserMessagesServer.cpp">
+      <Filter>Protocol</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\Server\API.h" />

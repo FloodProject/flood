@@ -10,7 +10,7 @@
 #include "Render/Buffer.h"
 #include "Render/GL.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 		
 //-----------------------------------//		
 
@@ -82,4 +82,4 @@ int Buffer::getGLBufferType()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

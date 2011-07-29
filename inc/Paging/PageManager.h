@@ -17,7 +17,7 @@
 
 FWD_DECL_INTRUSIVE(Camera)
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -33,7 +33,7 @@ struct PageEvent
  * This class is responsible for handling all the pages.
  */
 
-class VAPOR_API PageManager : public Subsystem
+class API_ENGINE PageManager : public Subsystem
 {
 public:
 
@@ -76,6 +76,6 @@ protected:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

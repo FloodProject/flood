@@ -15,7 +15,7 @@
 #include "Resources/BitmapFont.h"
 #include "Resources/TTF.h"
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -47,7 +47,7 @@ namespace vapor {
 
 REFLECT_DECLARE_CLASS(FontLoader)
 
-class RESOURCE_API FontLoader : public ResourceLoader
+class API_RESOURCE FontLoader : public ResourceLoader
 {
 	REFLECT_DECLARE_OBJECT(FontLoader)
 
@@ -93,6 +93,6 @@ protected:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END
 
 #endif

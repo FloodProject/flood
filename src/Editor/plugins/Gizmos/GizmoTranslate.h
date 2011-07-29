@@ -10,7 +10,7 @@
 
 #include "Gizmo.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -52,4 +52,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( GizmoTranslate );
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

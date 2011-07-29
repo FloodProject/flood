@@ -10,7 +10,7 @@
 #include "Scene/Component.h"
 #include "Render/Renderable.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -84,4 +84,4 @@ RenderablePtr Component::createDebugRenderable() const
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_ENGINE_END

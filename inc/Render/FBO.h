@@ -10,7 +10,7 @@
 
 #include "Render/RenderBuffer.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -18,7 +18,7 @@ namespace vapor {
  * FBOs are framebuffers object, an implementation of render buffers.
  */
 
-class VAPOR_API FBO : public RenderBuffer
+class API_ENGINE FBO : public RenderBuffer
 {
 public:
 
@@ -64,4 +64,4 @@ protected:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

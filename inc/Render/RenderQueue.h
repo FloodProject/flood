@@ -12,7 +12,7 @@
 #include "Math/Matrix4x4.h"
 #include "Render/Renderable.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -81,4 +81,4 @@ struct RenderBlock
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

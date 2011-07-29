@@ -11,7 +11,7 @@
 #include "Render/GL.h"
 #include "Resources/Image.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -221,4 +221,4 @@ void FBO::update()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

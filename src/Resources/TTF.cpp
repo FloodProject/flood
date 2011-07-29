@@ -11,7 +11,7 @@
 
 #ifdef ENABLE_FONT_FREETYPE2
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -28,6 +28,6 @@ TTF::~TTF()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END
 
 #endif

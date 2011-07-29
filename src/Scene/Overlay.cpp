@@ -11,7 +11,7 @@
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -170,4 +170,4 @@ void Overlay::setOpacity( float opacity )
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

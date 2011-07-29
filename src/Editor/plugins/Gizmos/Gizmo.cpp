@@ -9,7 +9,7 @@
 #include "Editor/API.h"
 #include "Gizmo.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -214,4 +214,4 @@ void Gizmo::generateLinesColors(std::vector<Vector3>& colors)
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

@@ -10,7 +10,7 @@
 #include "GizmoOperation.h"
 #include "GizmoPlugin.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -53,4 +53,4 @@ void GizmoOperation::process( bool undo )
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

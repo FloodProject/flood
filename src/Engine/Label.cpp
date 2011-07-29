@@ -12,7 +12,7 @@
 #include "Resources/ResourceManager.h"
 #include "Scene/Geometry.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -178,4 +178,4 @@ void Label::rebuildGeometry()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

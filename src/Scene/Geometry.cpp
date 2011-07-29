@@ -10,7 +10,7 @@
 #include "Scene/Geometry.h"
 #include "Scene/Entity.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -128,4 +128,4 @@ void Geometry::markDirty()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

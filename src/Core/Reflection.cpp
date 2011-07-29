@@ -10,7 +10,7 @@
 #include "Core/Reflection.h"
 #include "Core/Object.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -237,8 +237,14 @@ void FieldSetSetter(Field* field, FieldSetterFunction fn)
 #define PT(type) Primitive::PrimitiveType::type
 
 Primitive Primitive::s_bool(PT(Bool), "bool", sizeof(bool));
+Primitive Primitive::s_int8(PT(Int8), "int8", sizeof(int8));
+Primitive Primitive::s_uint8(PT(Uint8), "uint8", sizeof(uint8));
+Primitive Primitive::s_uint16(PT(Uint16), "uint16", sizeof(uint16));
+Primitive Primitive::s_int16(PT(Int16), "int16", sizeof(int16));
 Primitive Primitive::s_int32(PT(Int32), "int32", sizeof(int32));
 Primitive Primitive::s_uint32(PT(Uint32), "uint32", sizeof(uint32));
+Primitive Primitive::s_int64(PT(Int64), "int64", sizeof(int64));
+Primitive Primitive::s_uint64(PT(Uint64), "uint64", sizeof(uint64));
 Primitive Primitive::s_float(PT(Float), "float", sizeof(float));
 Primitive Primitive::s_string(PT(String), "string", sizeof(String));
 Primitive Primitive::s_Vector3(PT(Vector3), "Vector3", sizeof(Vector3));
@@ -248,4 +254,4 @@ Primitive Primitive::s_Bitfield(PT(Bitfield), "Bitfield", sizeof(uint32));
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

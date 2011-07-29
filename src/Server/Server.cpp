@@ -67,16 +67,26 @@ bool Server::init()
 	Log::info("Created %d processing task(s)", Settings::NumTasksProcess);
 #endif
 
-	networkThread = ThreadCreate(AllocatorGetServer());
-	
 	host = Allocate(HostServer, AllocatorGetServer());
-	host->createSocket("", Settings::HostPort);
+	
+	HostConnectionDetails details;
+	details.port = Settings::HostPort;
+
+	if( !host->createSocket(details) )
+	{
+		LogError("Could not create server socket");
+		shutdown();
+		return false;
+	}
+	
 	host->onClientConnected.Connect(this, &Server::handleClientConnect);
 	host->onClientDisconnected.Connect(this, &Server::handleClientDisconnect);
 
 	dispatcher = Allocate(Dispatcher, AllocatorGetServer());
 	dispatcher->initServer(host);
 	dispatcher->initPlugins(ReflectionGetType(MessagePlugin));
+
+	networkThread = ThreadCreate(AllocatorGetServer());
 
 	return true;
 }
@@ -148,6 +158,12 @@ void Server::handleClientDisconnect(const PeerPtr& networkPeer)
 	LogInfo("Client disconnected: %s", hostname.c_str());
 }
 
+//-----------------------------------//
+
+SessionManager* Server::getSessionManager()
+{
+	return dispatcher->getSessionManager();
+}
 
 //-----------------------------------//
 

@@ -13,7 +13,7 @@
 #include "Editor.h"
 #include "EditorIcons.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -91,4 +91,4 @@ void LogPlugin::onLogButtonClick(wxCommandEvent& event)
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

@@ -13,7 +13,7 @@
 #include "Resources/GLSL_Loader.h"
 #include "Resources/GLSL_Text.h"
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -51,6 +51,6 @@ bool GLSL_Loader::decode(const Stream& stream, Resource* res)
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END
 
 #endif

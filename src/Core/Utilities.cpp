@@ -31,7 +31,7 @@
 
 #endif
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -319,4 +319,4 @@ Path PathGetSeparator()
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

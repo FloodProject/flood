@@ -11,7 +11,7 @@
 #include "Core/ConcurrentQueue.h"
 #include "Resources/Resource.h"
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -78,7 +78,7 @@ typedef std::map< String, ResourceLoader* > ResourceLoaderMap;
  * which should prove to be less error-prone in case of a corrupt resource.
  */
 
-class RESOURCE_API ResourceManager
+class API_RESOURCE ResourceManager
 {
 	friend void ResourceTaskRun(Task* task);
 
@@ -218,4 +218,4 @@ protected:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END

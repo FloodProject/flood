@@ -16,7 +16,7 @@
 #include "IL/il.h"
 #include "IL/config.h"
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -150,6 +150,6 @@ bool IL_Image_Loader::checkErrors()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END
 
 #endif

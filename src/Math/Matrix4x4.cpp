@@ -12,7 +12,7 @@
 #include "Math/Helpers.h"
 #include "Core/Log.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -306,4 +306,4 @@ Matrix4x4 Matrix4x4::createOrthographic( float left, float right,
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

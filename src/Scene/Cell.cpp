@@ -14,7 +14,7 @@
 #include "Math/Helpers.h"
 #include "Math/Color.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -286,4 +286,4 @@ void Cell::rebuildAveragedNormals()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

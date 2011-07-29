@@ -10,7 +10,7 @@
 
 #ifdef VAPOR_PHYSICS_BULLET
 
-#include "Core/ReferenceCount.h"
+#include "Core/References.h"
 #include "Resources/Material.h"
 
 FWD_DECL_INTRUSIVE(VertexBuffer)
@@ -19,7 +19,7 @@ FWD_DECL_INTRUSIVE(Renderable)
 
 #include <LinearMath/btIDebugDraw.h>
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -68,6 +68,6 @@ protected:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

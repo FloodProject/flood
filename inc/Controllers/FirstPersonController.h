@@ -12,7 +12,7 @@
 #include "Math/Vector.h"
 #include "Math/EulerAngles.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -82,4 +82,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( FirstPersonController );
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_ENGINE_END

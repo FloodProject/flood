@@ -10,7 +10,7 @@
 
 #include "Scene/Geometry.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -25,7 +25,7 @@ struct TerrainSettings;
 
 REFLECT_DECLARE_CLASS(Cell)
 
-class VAPOR_API Cell : public Geometry
+class API_ENGINE Cell : public Geometry
 {
 	REFLECT_DECLARE_OBJECT(Cell)
 
@@ -103,4 +103,4 @@ typedef CellPtr TerrainCellPtr;
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

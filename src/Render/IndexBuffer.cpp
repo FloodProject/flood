@@ -13,7 +13,7 @@
 #include "Render/IndexBuffer.h"
 #include "Render/GL.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -81,6 +81,6 @@ int IndexBuffer::getSize() const
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

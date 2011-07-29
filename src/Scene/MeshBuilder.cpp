@@ -13,7 +13,7 @@
 #include "Math/Helpers.h"
 #include "Core/Utilities.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -112,4 +112,4 @@ MaterialHandle MeshBuilder::buildMaterial(const MeshGroup& group)
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

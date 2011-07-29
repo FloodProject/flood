@@ -15,7 +15,7 @@
 #include "Core/Timer.h"
 #include "Engine/Engine.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -27,7 +27,7 @@ namespace vapor {
  * run() method and everything should automagically work.
  */
 
-class VAPOR_API Framework : public Engine
+class API_ENGINE Framework : public Engine
 {
 public:
 
@@ -85,4 +85,4 @@ protected:
 
 //-----------------------------------//
 
-} // end namespace		
+NAMESPACE_ENGINE_END

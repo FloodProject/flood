@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Core/ReferenceCount.h"
+#include "Core/References.h"
 #include "Math/BoundingBox.h"
 #include "Math/Frustum.h"
 #include "Render/Renderable.h"
@@ -16,7 +16,7 @@
 FWD_DECL_INTRUSIVE(Entity)
 FWD_DECL_INTRUSIVE(Renderable)
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -34,4 +34,4 @@ void API_ENGINE updateDebugFrustum( const RenderablePtr& rend, const Frustum& bo
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_ENGINE_END

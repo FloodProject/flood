@@ -13,7 +13,7 @@
 #include "Resources/Animation.h"
 #include "Pipeline/MilkshapeFormat.h"
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -125,4 +125,4 @@ TYPEDEF_RESOURCE_HANDLE_FROM_TYPE( Milkshape3D );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END

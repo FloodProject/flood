@@ -10,7 +10,7 @@
 #include "Render/Cube.h"
 #include "Render/Renderable.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -122,4 +122,4 @@ void BuildCube( VertexBuffer* vb, float width, float height )
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_ENGINE_END

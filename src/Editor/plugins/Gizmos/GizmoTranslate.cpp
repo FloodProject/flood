@@ -9,7 +9,7 @@
 #include "Editor/API.h"
 #include "GizmoTranslate.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -186,4 +186,4 @@ void GizmoTranslate::generateSolidCone( float base, float height, uint slices,
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

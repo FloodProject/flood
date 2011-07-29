@@ -23,7 +23,7 @@
 	#include <Render/SFML_Window.h>
 #endif
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -178,4 +178,4 @@ void Framework::registerCallbacks()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

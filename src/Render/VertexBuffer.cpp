@@ -13,7 +13,7 @@
 #include "Render/VertexBuffer.h"
 #include "Render/GL.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -400,6 +400,6 @@ bool VertexBuffer::isBuilt() const
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

@@ -12,7 +12,7 @@
 #include "input/MouseEvents.h"
 #include "Event.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -20,7 +20,7 @@ namespace vapor {
  * Holds the mouse state.
  */
 
-struct VAPOR_API MouseInfo
+struct API_ENGINE MouseInfo
 {
 	MouseInfo();
 
@@ -39,7 +39,7 @@ struct VAPOR_API MouseInfo
 
 //-----------------------------------//
 
-class VAPOR_API Mouse : public InputDevice
+class API_ENGINE Mouse : public InputDevice
 {
 public:
 	  
@@ -108,4 +108,4 @@ private:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

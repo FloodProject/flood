@@ -11,7 +11,7 @@
 #include "Core/Memory.h"
 #include "Core/Log.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -214,4 +214,4 @@ static void TaskPoolRun(Thread* thread, void* userdata)
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

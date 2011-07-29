@@ -9,7 +9,7 @@
 #include "Resources/API.h"
 #include "Resources/Font.h"
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -24,4 +24,4 @@ Font::Font()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END

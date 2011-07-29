@@ -11,13 +11,13 @@
 #include "Scene/Geometry.h"
 #include "Math/Frustum.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
 REFLECT_DECLARE_CLASS(Projector)
 
-class VAPOR_API Projector : public Geometry
+class API_ENGINE Projector : public Geometry
 {
 	REFLECT_DECLARE_OBJECT(Projector)
 
@@ -58,4 +58,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Projector );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

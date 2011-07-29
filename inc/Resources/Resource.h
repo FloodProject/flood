@@ -10,7 +10,7 @@
 
 #include "Core/Object.h"
 #include "Core/Reflection.h"
-#include "Core/ReferenceCount.h"
+#include "Core/References.h"
 #include "Core/Handle.h"
 
 NAMESPACE_BEGIN
@@ -23,7 +23,7 @@ NAMESPACE_BEGIN
  * only be fully loaded when the resource status changes to loaded.
  */
 
-struct RESOURCE_API ResourceStatus
+struct API_RESOURCE ResourceStatus
 {
 	enum Enum
 	{
@@ -44,7 +44,7 @@ REFLECT_DECLARE_ENUM(ResourceStatus)
  * related resources together, and for managing the data.
  */
 
-struct RESOURCE_API ResourceGroup
+struct API_RESOURCE ResourceGroup
 {
 	enum Enum
 	{
@@ -77,7 +77,7 @@ REFLECT_DECLARE_ENUM(ResourceGroup)
 
 REFLECT_DECLARE_CLASS(Resource)
 
-class RESOURCE_API Resource : public Object
+class API_RESOURCE Resource : public Object
 {
 	DECLARE_UNCOPYABLE(Resource)
 	REFLECT_DECLARE_OBJECT(Resource)

@@ -18,10 +18,10 @@ using namespace vapor;
 
 namespace vapor
 {
-	VAPOR_API void LogDebug(const char* msg, ...);
-	VAPOR_API void LogInfo(const char* msg, ...);
-	VAPOR_API void LogWarn(const char* msg, ...);
-	VAPOR_API void LogError(const char* msg, ...);
+	API_ENGINE void LogDebug(const char* msg, ...);
+	API_ENGINE void LogInfo(const char* msg, ...);
+	API_ENGINE void LogWarn(const char* msg, ...);
+	API_ENGINE void LogError(const char* msg, ...);
 }
 
 %include "Math.i"

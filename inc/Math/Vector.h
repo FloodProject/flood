@@ -8,7 +8,7 @@
 
 #pragma once
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -53,10 +53,10 @@ struct API_CORE Vector3 : public Vector3P
 	Vector3 &operator /= (float s) { assert(s != 0); *this *= 1.0f / s; return *this; }
 
 #ifndef SWIG
-	static API_CORE const Vector3 Zero;
-	static API_CORE const Vector3 UnitX;
-    static API_CORE const Vector3 UnitY;
-    static API_CORE const Vector3 UnitZ;
+	static const Vector3 Zero;
+	static const Vector3 UnitX;
+    static const Vector3 UnitY;
+    static const Vector3 UnitZ;
 #endif
 
 	// Zeroes the vector.
@@ -248,6 +248,6 @@ struct Vector2i
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END
 
 

@@ -5,47 +5,88 @@
 //#define DEBUG
 
 #ifdef DEBUG
-	#define Log(T) puts((T))
+	#define Log(T, ...) printf(T##"\n", ##__VA_ARGS__)
 #else
-	#define Log(T)
+	#define Log(T, ...)
 #endif
 
 #define YYSTYPE Block
 #define YY_PARSE(T) static T
 
+#include "Core/API.h"
+#include "Core/Reflection.h"
+
 %}
 
 LINE	= BLOCK
+		| COMMENT
 		| EMPTY { Log("empty line"); }
+		| SPACE
 		;
 
-BLOCK	= b:BLOCK_MESSAGE { Log("message decl"); }
-		#= b:BLOCK_ENUM { Log("enum decl"); }
+COMMENT = '//' (!EOL .)* EOL	{ Log("line comment"); }
+		| '/*' (!'*/' .)* '*/'	{ Log("block comment"); }
 		;
 
-# message StorageNode : Node {
-#  1: long capacity
-#  2: optional int weight = 1
+BLOCK	= BLOCK_STRUCT	{ Log("struct decl"); }
+		| BLOCK_ENUM	{ Log("enum decl"); }
+		;
+
+# enum Foo {
+#  1: SIZE
+#  2: NAME
 # }
 
-BLOCK_MESSAGE	= MESSAGE id:IDENTIFIER INHERITANCE?
+BLOCK_ENUM		= e:ENUM id:IDENTIFIER
+				BLOCK_OPEN BLOCK_DECL_ENUM* BLOCK_CLOSE
+				{
+					Log("enum block");
+				}
+				;
+				
+BLOCK_DECL_ENUM	= DECL_ENUM BLOCK_DECL_ENUM { Log("enum decl block"); }
+				| DECL_ENUM
+				;
+				
+DECL_ENUM		= - n:NUMBER - COLON - i:IDENTIFIER
+				;
+
+# struct Foo : Bar {
+#  1: int32 size
+#  2: String name
+# }
+
+BLOCK_STRUCT	= s:STRUCT id:IDENTIFIER INHERITANCE?
 				BLOCK_OPEN BLOCK_FIELD* BLOCK_CLOSE
 				{
-					Log("message block");
-					message.name.assign(id.name);
-					messages.push_back(message);
+					Log("struct block");
+					s.message.name.assign(id.name);
+					messages.push_back(s.message);
 				}
 				;
 
 BLOCK_FIELD		= FIELD BLOCK_FIELD { Log("field block"); }
-				| FIELD
+				| f:FIELD { $$.message.fields.push_back(f.field); }
 				;
 
-FIELD 			= - NUMBER - COLON - TYPE - IDENTIFIER { Log("field"); } 
+FIELD 			= - n:NUMBER - COLON - t:TYPE - i:IDENTIFIER
+				{
+					Log("field");
+					$$.field.id = n.fieldId;
+					$$.field.name = strdup(i.name.c_str());
+					$$.field.type = t.primitive; 
+				} 
+				;
+				
+TYPE			= t:TYPES
+ 				{
+					Log("type '%s'", t.primitive->name)
+				}
+				;
 
-TYPE 			= t:BOOL  | t:STRING | t:FLOAT | t:DOUBLE
-				| t:INT8  | t:UINT8  | t:INT16 | t:UINT16
-				| t:INT32 | t:UINT32 | t:INT64 | t:UINT64
+TYPES 			= BOOL  | STRING | FLOAT
+				| INT8  | UINT8  | INT16 | UINT16
+				| INT32 | UINT32 | INT64 | UINT64
 				;
 
 IDENTIFIER		= < [a-zA-z_][a-zA-Z0-9_]* > { $$.name.assign(yytext); Log("id"); }
@@ -63,26 +104,25 @@ PAREN_CLOSE		= - ')'
 INHERITANCE		= COLON - id:IDENTIFIER -
 				{
 					Log("inheritance");
-					message.inherits = true;
-					message.parent.assign(yytext);
+					$$.message.parent.assign(yytext);
 				}
 
-MESSAGE		= 'message' -- { message.inherits = false; }
-STRUCT		= 'struct'	-- 
-ENUM		= 'enum'	--
+MESSAGE		= 'message' -- { Log("message") }
+STRUCT		= 'struct'	-- { Log("struct") }
+ENUM		= 'enum'	-- { Log("enum") }
 
-BOOL		= 'bool'	- { $$.type.assign(yytext); }
-STRING		= 'String' 	- { $$.type.assign(yytext); }
-INT8		= 'int8'	- { $$.type.assign(yytext); }
-UINT8		= 'uint8'	- { $$.type.assign(yytext); }
-INT16		= 'int16'	- { $$.type.assign(yytext); }
-UINT16		= 'uint16'	- { $$.type.assign(yytext); }
-INT32		= 'int32'	- { $$.type.assign(yytext); }
-UINT32		= 'uint32'	- { $$.type.assign(yytext); }
-INT64		= 'int64'	- { $$.type.assign(yytext); }
-UINT64		= 'uint64'	- { $$.type.assign(yytext); }
-FLOAT		= 'float'	- { $$.type.assign(yytext); }
-DOUBLE		= 'double'	- { $$.type.assign(yytext); }
+BOOL		= 'bool'	- { $$.primitive = &Primitive::s_bool;   }
+INT8		= 'int8'	- { $$.primitive = &Primitive::s_int8;   }
+UINT8		= 'uint8'	- { $$.primitive = &Primitive::s_uint8;  }
+INT16		= 'int16'	- { $$.primitive = &Primitive::s_int16;  }
+UINT16		= 'uint16'	- { $$.primitive = &Primitive::s_uint16; }
+INT32		= 'int32'	- { $$.primitive = &Primitive::s_int32;  }
+UINT32		= 'uint32'	- { $$.primitive = &Primitive::s_uint32; }
+INT64		= 'int64'	- { $$.primitive = &Primitive::s_int64;  }
+UINT64		= 'uint64'	- { $$.primitive = &Primitive::s_uint64; }
+FLOAT		= 'float'	- { $$.primitive = &Primitive::s_float;  }
+#DOUBLE		= 'double'	- { $$.primitive = &Primitive::s_double; }
+STRING		= 'String' 	- { $$.primitive = &Primitive::s_string; }
 
 EOL			= '\n' | '\r\n' | '\r'
 SPACE		= [ \t]
@@ -100,7 +140,11 @@ int main()
 	for(auto it = messages.begin(); it != messages.end(); it++)
 	{
 		MessageBlock& message = *it;
-		printf("Message: %s inherits %s\n", message.name.c_str(), message.parent.c_str());
+		printf("Message: %s", message.name.c_str());
+		if(message.parent.size() > 0)
+			printf(" inherits %s\n", message.parent.c_str());
+		else
+			printf("\n");
 	}	
 	
 	return 0;

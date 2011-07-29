@@ -13,7 +13,7 @@
 #include "Resources/ResourceLoader.h"
 #include "Resources/Image.h"
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -58,6 +58,6 @@ protected:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END
 
 #endif

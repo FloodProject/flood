@@ -9,7 +9,7 @@
 #include "Editor/API.h"
 #include "HierarchyPane.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -26,4 +26,4 @@ HierarchyPane::~HierarchyPane()
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

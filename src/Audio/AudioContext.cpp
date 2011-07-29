@@ -8,13 +8,13 @@
 
 #include "Engine/API.h"
 
-#ifdef NAMESPACE_BEGIN
+#ifdef NAMESPACE_ENGINE_BEGIN
 
 #include "Audio/Context.h"
 #include "Audio/Device.h"
 #include "Audio/AL.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -159,6 +159,6 @@ bool AudioContext::checkError()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

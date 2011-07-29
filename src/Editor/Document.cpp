@@ -10,7 +10,7 @@
 #include "Document.h"
 #include "UndoManager.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -39,4 +39,4 @@ void Document::onUndoRedoEvent()
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

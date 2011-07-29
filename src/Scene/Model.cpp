@@ -21,7 +21,7 @@
 #include "Math/Helpers.h"
 #include "MeshBuilder.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -559,4 +559,4 @@ RenderablePtr Model::createDebugRenderable() const
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_ENGINE_END

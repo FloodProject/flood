@@ -13,7 +13,7 @@
 
 struct swig_module_info;
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -27,7 +27,7 @@ struct MouseButtonEvent;
 
 REFLECT_DECLARE_CLASS(ScriptController)
 
-class VAPOR_API ScriptController : public Controller
+class API_ENGINE ScriptController : public Controller
 {
 	REFLECT_DECLARE_OBJECT(ScriptController)
 
@@ -70,4 +70,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Script );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

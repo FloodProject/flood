@@ -19,7 +19,7 @@
 
 MonoDomain* domain;
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -106,6 +106,6 @@ void MonoPlugin::onPluginDisable()
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END
 
 #endif

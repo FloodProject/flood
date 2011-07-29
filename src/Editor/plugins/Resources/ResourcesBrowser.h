@@ -10,7 +10,7 @@
 
 #include "gen\PreferencesGenerated.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -25,7 +25,7 @@ typedef std::map< ResourceGroup::Enum, int > ResourceGroupIconsMap;
  * the existing resouces of a given type.
  */
 
-class ResourcesBrowser : public gui::ResourcesBrowser
+class ResourcesBrowser : public ResourcesFrame
 {
 public:
 
@@ -83,4 +83,4 @@ protected:
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

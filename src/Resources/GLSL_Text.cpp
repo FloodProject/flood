@@ -10,7 +10,7 @@
 #include "Resources/GLSL_Text.h"
 #include "Core/Log.h"
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -51,4 +51,4 @@ void GLSL_Text::parse()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END

@@ -17,7 +17,7 @@
 #include <Windows.h>
 #include <process.h>
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -261,6 +261,6 @@ int32 AtomicDecrement(volatile Atomic* atomic) { return ::InterlockedDecrement(a
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END
 
 #endif

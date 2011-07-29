@@ -11,7 +11,7 @@
 #include "Math/Vector.h"
 #include "Math/Ray.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -72,4 +72,4 @@ public:
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

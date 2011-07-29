@@ -12,7 +12,7 @@
 
 #include "lua.hpp"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -242,4 +242,4 @@ void ConsoleTextCtrl::OnSetFocus(wxFocusEvent& event)
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

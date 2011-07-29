@@ -31,7 +31,7 @@
 
 #define TERRAIN_PANE_NAME "Terrains"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -521,6 +521,6 @@ void TerrainPlugin::createContextMenu( const MouseButtonEvent& mbe )
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END
 
 #endif

@@ -10,7 +10,7 @@
 
 #include "Resources/Text.h"
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -22,7 +22,7 @@ namespace vapor {
 
 REFLECT_DECLARE_CLASS(GLSL_Text)
 
-class RESOURCE_API GLSL_Text : public Text
+class API_RESOURCE GLSL_Text : public Text
 {
 	REFLECT_DECLARE_OBJECT(GLSL_Text)
 
@@ -50,6 +50,6 @@ TYPEDEF_RESOURCE_HANDLE_FROM_TYPE( GLSL_Text );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END
 
 //#endif

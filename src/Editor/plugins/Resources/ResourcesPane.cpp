@@ -20,7 +20,7 @@
 #include <wx/dynlib.h>
 #endif
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -410,4 +410,4 @@ void ResourcesPage::onCommandMenuSelected( wxCommandEvent& event )
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

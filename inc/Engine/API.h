@@ -51,14 +51,12 @@
 #define API_AUDIO API_ENGINE
 #define API_INPUT API_ENGINE
 
-#define VAPOR_API API_ENGINE
-
 //---------------------------------------------------------------------//
 // API Namespaces
 //---------------------------------------------------------------------//
 
-#define NAMESPACE_ENGINE_BEGIN namespace vapor {
-#define NAMESPACE_ENGINE_END }
+#define NAMESPACE_ENGINE_BEGIN NAMESPACE_CORE_BEGIN
+#define NAMESPACE_ENGINE_END NAMESPACE_CORE_END
 
 //---------------------------------------------------------------------//
 // Pointer wrappers

@@ -16,7 +16,7 @@
 
 #ifdef ALL_PLUGINS
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -328,6 +328,6 @@ void CameraControls::buildControls()
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END
 
 #endif

@@ -10,7 +10,7 @@
 
 #include "Resources/Shader.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -20,7 +20,7 @@ namespace vapor {
 
 REFLECT_DECLARE_CLASS(GLSL_Shader)
 
-class VAPOR_API GLSL_Shader : public Shader
+class API_ENGINE GLSL_Shader : public Shader
 {
 	REFLECT_DECLARE_OBJECT(GLSL_Shader)
 
@@ -55,4 +55,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( GLSL_Shader );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

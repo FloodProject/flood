@@ -13,7 +13,7 @@
 
 #define PLUGIN_SELECTION "Selection"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -100,4 +100,4 @@ public:
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

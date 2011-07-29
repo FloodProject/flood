@@ -8,20 +8,20 @@
 
 #pragma once
 
-#include <vapor/Framework.h>
-#include <vapor/Headers.h>
+#include "Framework.h"
+#include "Engine/Headers.h"
 
 using namespace vapor;
 
 //-----------------------------------//
 
-class Example : public vapor::Framework
+class Example : public Framework
 {
 public:
 
 	Example(const char** argv = nullptr);
 
-	void onPageLoading(const PageEvent& event);
+	//void onPageLoading(const PageEvent& event);
 
 protected:
 

@@ -10,7 +10,7 @@
 
 #include "Resources/Resource.h"
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -20,7 +20,7 @@ namespace vapor {
 
 REFLECT_DECLARE_CLASS(Script)
 
-class RESOURCE_API Script : public Resource
+class API_RESOURCE Script : public Resource
 {
 	REFLECT_DECLARE_OBJECT(Script)
 
@@ -40,4 +40,4 @@ TYPEDEF_RESOURCE_HANDLE_FROM_TYPE( Script );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END

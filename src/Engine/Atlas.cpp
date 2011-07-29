@@ -9,11 +9,11 @@
 #include "Engine/API.h"
 #include "GUI/Atlas.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

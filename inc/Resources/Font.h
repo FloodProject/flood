@@ -12,7 +12,7 @@
 #include "Resources/Image.h"
 #include "Math/Vector.h"
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -47,7 +47,7 @@ struct Glyph
 
 REFLECT_DECLARE_CLASS(Font)
 
-class RESOURCE_API Font : public Resource
+class API_RESOURCE Font : public Resource
 {
 	REFLECT_DECLARE_OBJECT(Font)
 
@@ -86,4 +86,4 @@ TYPEDEF_RESOURCE_HANDLE_FROM_TYPE( Font );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END

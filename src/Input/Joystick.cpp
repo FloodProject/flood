@@ -9,7 +9,7 @@
 #include "Engine/API.h"
 #include "Input/Joystick.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -107,4 +107,4 @@ JoyButtonEvent::JoyButtonEvent(uint32 JoystickId, uint32 Button, JoystickEventTy
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

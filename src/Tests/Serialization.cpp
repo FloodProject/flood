@@ -16,43 +16,6 @@
 #include "Core/Stream.h"
 #include "ReflectionTypes.h"
 
-using namespace vapor;
-
-//-----------------------------------//
-
-static Object* LoadObjectFromFile(const Path& file)
-{
-	Serializer* json = SerializerCreateJSON( AllocatorGetHeap() );
-	json->alloc = AllocatorGetHeap();
-
-	Stream* stream = StreamCreateFromFile(AllocatorGetHeap(), file.c_str(), StreamMode::Read);	
-	json->stream = stream;
-
-	Object* object = SerializerLoad(json);
-
-	SerializerDestroy(json);
-	StreamDestroy(stream);
-
-	return object;
-}
-
-//-----------------------------------//
-
-static void SaveObjectToFile(const Path& file, Object* object)
-{
-	Serializer* json = SerializerCreateJSON( AllocatorGetHeap() );
-	json->alloc = AllocatorGetHeap();
-
-	Stream* stream = StreamCreateFromFile(AllocatorGetHeap(), file.c_str(), StreamMode::Write);	
-	json->stream = stream;
-	json->object = object;
-	
-	SerializerSave(json);
-
-	SerializerDestroy(json);
-	StreamDestroy(stream);
-}
-
 //-----------------------------------//
 
 void TestSerializerJSON(CuTest* tc)
@@ -67,9 +30,9 @@ void TestSerializerJSON(CuTest* tc)
 
 	C instanceC;
 	instanceC.change();
-	SaveObjectToFile("TestC.json", &instanceC);
+	SerializerSaveObjectToFile("TestC.json", &instanceC);
 
-	C* loadC = (C*) LoadObjectFromFile("TestC.json");
+	C* loadC = (C*) SerializerLoadObjectFromFile("TestC.json");
 	Deallocate(loadC);
 }
 

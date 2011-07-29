@@ -14,7 +14,7 @@
 
 FWD_DECL_INTRUSIVE(Entity)
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -118,4 +118,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Skydome );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

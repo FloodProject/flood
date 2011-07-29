@@ -9,11 +9,11 @@
 #include "Resources/API.h"
 #include "Resources/Bone.h"
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END

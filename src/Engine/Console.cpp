@@ -10,7 +10,7 @@
 #include "gui/Console.h"
 #include "Render/Quad.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -44,4 +44,4 @@ void Console::update( float )
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

@@ -13,7 +13,7 @@
 #include "Math/Vector.h"
 #include "Audio/AL.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -73,7 +73,7 @@ protected:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 /** @} */
 

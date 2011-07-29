@@ -10,7 +10,7 @@
 
 #include "Scene/Geometry.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -20,7 +20,7 @@ namespace vapor {
 
 REFLECT_DECLARE_CLASS(Grid)
 
-class VAPOR_API Grid : public Geometry
+class API_ENGINE Grid : public Geometry
 {
 	REFLECT_DECLARE_OBJECT(Grid)
 
@@ -49,4 +49,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Grid );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

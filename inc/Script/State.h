@@ -14,7 +14,7 @@ struct lua_State;
 
 #include "script/Script.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -25,7 +25,7 @@ class Engine;
  * Currently this represents a Lua interpreter state. 
  */
 
-class VAPOR_API State
+class API_ENGINE State
 {
 	DECLARE_UNCOPYABLE(State)
 
@@ -69,6 +69,6 @@ protected:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

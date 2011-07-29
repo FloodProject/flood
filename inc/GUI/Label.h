@@ -13,7 +13,7 @@
 #include "Resources/Font.h"
 #include "Resources/Material.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -29,7 +29,7 @@ namespace vapor {
 
 REFLECT_DECLARE_CLASS(Label)
 
-class VAPOR_API Label : public Overlay
+class API_ENGINE Label : public Overlay
 {
 	REFLECT_DECLARE_OBJECT(Label)
 
@@ -75,4 +75,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Label );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

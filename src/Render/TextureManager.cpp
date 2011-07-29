@@ -11,7 +11,7 @@
 #include "Resources/ResourceManager.h"
 #include "Render/GL.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -196,4 +196,4 @@ uint TextureManager::getMemoryUsage()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

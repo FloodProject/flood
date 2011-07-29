@@ -97,6 +97,8 @@ struct Object;
 
 typedef void* (*ClassCreateFunction)(Allocator*);
 
+typedef uint16 ClassId;
+
 /**
  * This class provides types with a fast RTTI (Runtime Type Information)
  * system that will be used for fast dynamic type checking and reflection.
@@ -106,6 +108,9 @@ typedef void* (*ClassCreateFunction)(Allocator*);
 struct API_CORE Class : public Type
 {
 	Class() : parent(nullptr), create_fn(nullptr) { }
+
+	// Class id.
+	ClassId id;
 
 	// Parent of the type.
 	Class* parent;
@@ -164,10 +169,13 @@ struct FieldQualifier
 	};
 };
 
+typedef uint8 FieldId;
+
 struct API_CORE Field
 {
 	Type* type;
 	const char* name;
+	FieldId id;
 	uint16 qualifiers;
 	uint16 offset;
 	uint16 size;
@@ -201,8 +209,14 @@ struct API_CORE Primitive : public Type
 	enum_class PrimitiveType
 	{
 		Bool,
+		Int8,
+		Uint8,
+		Int16,
+		Uint16,
 		Int32,
 		Uint32,
+		Int64,
+		Uint64,
 		Float,
 		String,
 		Bitfield,
@@ -219,8 +233,14 @@ struct API_CORE Primitive : public Type
 	PrimitiveType type;
 
     static Primitive s_bool;
+    static Primitive s_int8;
+    static Primitive s_uint8;
+    static Primitive s_int16;
+    static Primitive s_uint16;
     static Primitive s_int32;
     static Primitive s_uint32;
+    static Primitive s_int64;
+    static Primitive s_uint64;
     static Primitive s_float;
     static Primitive s_string;
     static Primitive s_Vector3;
@@ -254,6 +274,6 @@ void FieldSet( Field* field, void* object, const T& value )
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END
 
 #include "Core/Helpers.h"

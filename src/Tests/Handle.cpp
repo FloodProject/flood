@@ -10,9 +10,7 @@
 
 #include "Core/API.h"
 #include "Core/Handle.h"
-#include "Core/ReferenceCount.h"
-
-using namespace vapor;
+#include "Core/References.h"
 
 namespace {
 

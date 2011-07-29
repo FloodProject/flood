@@ -14,7 +14,7 @@
 #include "Physics/Convert.h"
 #include "Render/Renderable.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -95,6 +95,6 @@ int	BulletDebugDrawer::getDebugMode() const
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

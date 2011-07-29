@@ -9,7 +9,7 @@
 #include "Engine/API.h"
 #include "Render/FrameStatistics.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -47,4 +47,4 @@ float FrameStatistics::getLastFPS() const
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

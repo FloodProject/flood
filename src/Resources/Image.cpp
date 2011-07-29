@@ -14,7 +14,7 @@
 	#include "lodepng.h"
 #endif
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -198,4 +198,4 @@ bool ImageWriter::convertPNG( Image* image )
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END

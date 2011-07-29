@@ -13,7 +13,7 @@
 #include "Terrain/Cell.h"
 #include "Terrain/Brush.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -72,7 +72,7 @@ struct CellRequest
 
 REFLECT_DECLARE_CLASS(Terrain)
 
-class VAPOR_API Terrain : public Group
+class API_ENGINE Terrain : public Group
 {
 	REFLECT_DECLARE_OBJECT(Terrain)
 
@@ -134,4 +134,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Terrain );
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

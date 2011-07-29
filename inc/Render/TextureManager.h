@@ -11,7 +11,7 @@
 #include "Render/Texture.h"
 #include "Resources/Image.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -28,7 +28,7 @@ struct ResourceEvent;
  * for default textures.
  */
 
-class VAPOR_API TextureManager
+class API_ENGINE TextureManager
 {
 public:
 
@@ -72,4 +72,4 @@ protected:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

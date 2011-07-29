@@ -20,7 +20,7 @@
 
 #include <BulletCollision/CollisionShapes/btCapsuleShape.h>
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -91,6 +91,6 @@ void CapsuleShape::onFieldChanged(const Field& field)
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

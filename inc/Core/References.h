@@ -15,8 +15,10 @@ NAMESPACE_EXTERN_BEGIN
 //-----------------------------------//
 
 struct ReferenceCounted;
-inline void ReferenceAdd(ReferenceCounted* ref);
-inline bool ReferenceRelease(ReferenceCounted* ref);
+
+API_CORE int32 ReferenceGetCount(ReferenceCounted*);
+API_CORE void ReferenceAdd(ReferenceCounted*);
+API_CORE bool ReferenceRelease(ReferenceCounted*);
 
 struct API_CORE ReferenceCounted
 {	
@@ -29,21 +31,6 @@ struct API_CORE ReferenceCounted
 	
 	volatile Atomic references;
 };
-
-API_CORE inline int32 ReferenceGetCount(ReferenceCounted* ref)
-{
-	return AtomicRead(&ref->references);
-}
-
-API_CORE inline void ReferenceAdd(ReferenceCounted* ref)
-{
-	AtomicIncrement(&ref->references);
-}
-
-API_CORE inline bool ReferenceRelease(ReferenceCounted* ref)
-{
-	return AtomicDecrement(&ref->references) == 0;
-}
 
 //-----------------------------------//
 
@@ -202,19 +189,13 @@ template<class T, class U> RefPtr<T> RefCast(const RefPtr<U>& p)
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END
 
 #define TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( type ) \
 	typedef RefPtr<type> type##Ptr;
 
 #define FWD_DECL_INTRUSIVE(T)						\
-	NAMESPACE_BEGIN									\
+	NAMESPACE_CORE_BEGIN							\
 		class T;									\
 		TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( T );	\
-	NAMESPACE_END
-
-#define FWD_DECL_HANDLE(T)							\
-	NAMESPACE_BEGIN									\
-		class T;									\
-		typedef Handle<T> T##Handle;                \
-	NAMESPACE_END
+	NAMESPACE_CORE_END

@@ -9,7 +9,7 @@
 #include "Engine/API.h"
 #include "controllers/CameraController.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -32,4 +32,4 @@ CameraController::CameraController()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

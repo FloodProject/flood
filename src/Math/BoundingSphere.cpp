@@ -10,7 +10,7 @@
 #include "Math/BoundingSphere.h"
 #include "Core/Log.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -71,4 +71,4 @@ bool BoundingSphere::intersects( const Vector3& pt ) const
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

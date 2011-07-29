@@ -85,9 +85,6 @@
     <Filter Include="Telemetry">
       <UniqueIdentifier>{96d34aba-f389-45a5-9d92-687ede9c398a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Telemetry\Profiler">
-      <UniqueIdentifier>{e65ce8ad-271f-4107-a73d-5c98b30a57ca}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Archive\Watcher">
       <UniqueIdentifier>{63ffccc4-ff22-49bd-9741-b97d2c8e5d60}</UniqueIdentifier>
     </Filter>
@@ -120,6 +117,9 @@
     </Filter>
     <Filter Include="Networking\Hosts">
       <UniqueIdentifier>{e79eb0bc-7a49-462f-90e6-f2f75df86c61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Profiler">
+      <UniqueIdentifier>{e65ce8ad-271f-4107-a73d-5c98b30a57ca}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -164,7 +164,7 @@
       <Filter>Math\Vector</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\Profiler.cpp">
-      <Filter>Telemetry\Profiler</Filter>
+      <Filter>Profiler</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\FileWatcher.cpp">
       <Filter>Archive\Watcher</Filter>
@@ -330,38 +330,8 @@
     <ClInclude Include="..\..\inc\Math\Vector.h">
       <Filter>Math\Vector</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\math\Matrix4x3.h">
-      <Filter>Math\Matrix</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\math\Matrix4x4.h">
-      <Filter>Math\Matrix</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\math\Frustum.h">
-      <Filter>Math\Frustum</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\math\Plane.h">
-      <Filter>Math\Plane</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\math\EulerAngles.h">
-      <Filter>Math\Angles</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\math\Ray.h">
-      <Filter>Math\Ray</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\math\BoundingBox.h">
-      <Filter>Math\Bounding Volumes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\math\BoundingSphere.h">
-      <Filter>Math\Bounding Volumes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\math\Noise.h">
-      <Filter>Math\Noise</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\math\Hash.h">
-      <Filter>Math\Hash</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\vapor\Profiler.h">
-      <Filter>Telemetry\Profiler</Filter>
+      <Filter>Profiler</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\Reflection.h">
       <Filter>Reflection</Filter>
@@ -373,9 +343,6 @@
       <Filter>Telemetry</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\Handle.h">
-      <Filter>Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\Core\ReferenceCount.h">
       <Filter>Memory</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\Helpers.h">
@@ -398,9 +365,6 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\Math\Quaternion.h">
       <Filter>Math\Quaternion</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\Math\Color.h">
-      <Filter>Math\Color</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Network\Network.h">
       <Filter>Networking</Filter>
@@ -440,6 +404,42 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\Network\SessionManager.h">
       <Filter>Networking\Session</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Math\Ray.h">
+      <Filter>Math\Ray</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Math\Plane.h">
+      <Filter>Math\Plane</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Math\Noise.h">
+      <Filter>Math\Noise</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Math\Matrix4x3.h">
+      <Filter>Math\Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Math\Matrix4x4.h">
+      <Filter>Math\Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Math\Color.h">
+      <Filter>Math\Color</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Math\Frustum.h">
+      <Filter>Math\Frustum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Math\Hash.h">
+      <Filter>Math\Hash</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Math\BoundingBox.h">
+      <Filter>Math\Bounding Volumes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Math\BoundingSphere.h">
+      <Filter>Math\Bounding Volumes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Math\EulerAngles.h">
+      <Filter>Math\Angles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\References.h">
+      <Filter>Memory</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

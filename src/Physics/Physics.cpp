@@ -20,7 +20,7 @@
 #include <BulletCollision/CollisionDispatch/btGhostObject.h> 
 //#include <BulletCollision/Gimpact/btGImpactCollisionAlgorithm.h> 
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -163,6 +163,6 @@ void PhysicsManager::removeRigidBody( const Body* body )
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END
 
 #endif

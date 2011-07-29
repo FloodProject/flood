@@ -24,7 +24,7 @@
 //#define	ENABLE_NETWORKING_CURL
 //#define	ENABLE_VFS_FILEWATCHER
 #define		ENABLE_SERIALIZATION
-#define		ENABLE_SERIALIZATION_JSON
+//#define		ENABLE_SERIALIZATION_JSON
 //#define	ENABLE_SERIALIZATION_BINARY
 #define		ENABLE_STACK_WALKER
 //#define	ENABLE_HTTP_SERVER
@@ -47,8 +47,9 @@
 	#define API_CORE
 #endif
 
-#define NAMESPACE_CORE_BEGIN namespace vapor {
-#define NAMESPACE_CORE_END }
+#define NAMESPACE_CORE
+#define NAMESPACE_CORE_BEGIN /*namespace NAMESPACE_CORE {*/
+#define NAMESPACE_CORE_END /*}*/
 
 #define NAMESPACE_BEGIN NAMESPACE_CORE_BEGIN
 #define NAMESPACE_END NAMESPACE_CORE_END
@@ -61,8 +62,8 @@
 #define EXTERN_END
 #endif
 
-#define NAMESPACE_EXTERN_BEGIN NAMESPACE_BEGIN EXTERN_BEGIN
-#define NAMESPACE_EXTERN_END EXTERN_END NAMESPACE_END
+#define NAMESPACE_EXTERN_BEGIN NAMESPACE_CORE_BEGIN EXTERN_BEGIN
+#define NAMESPACE_EXTERN_END EXTERN_END NAMESPACE_CORE_END
 
 //---------------------------------------------------------------------//
 // String
@@ -89,8 +90,8 @@ extern template class std::basic_string<char>;
 // Forward declarations
 //---------------------------------------------------------------------//
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 struct Allocator;
 
-NAMESPACE_END
+NAMESPACE_CORE_END

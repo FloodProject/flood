@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "Core/ReferenceCount.h"
+#include "Core/References.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -38,4 +38,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE(UndoOperation);
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

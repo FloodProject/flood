@@ -9,7 +9,7 @@
 #include "Engine/API.h"
 #include "Scene/Water.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -34,4 +34,4 @@ Water::Water( MaterialHandle material )
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

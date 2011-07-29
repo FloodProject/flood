@@ -9,7 +9,7 @@
 #include "Core/API.h"
 #include "Math/Vector.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -34,4 +34,4 @@ const API_CORE Vector4 Vector4::UnitW( 0, 0, 0, 1 );
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

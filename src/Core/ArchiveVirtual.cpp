@@ -14,7 +14,7 @@
 
 #ifdef ENABLE_ARCHIVE_VIRTUAL
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -215,6 +215,6 @@ static bool VirtualArchiveMonitor(Archive*)
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END
 
 #endif

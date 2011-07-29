@@ -9,7 +9,7 @@
 #include "Core/API.h"
 #include "Core/Archive.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -72,4 +72,4 @@ void ArchiveEnumerateDirectories(Archive* archive, std::vector<String>& dirs)
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

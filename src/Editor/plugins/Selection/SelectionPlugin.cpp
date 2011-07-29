@@ -18,7 +18,7 @@
 
 #include "../Scene/SceneDocument.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -474,4 +474,4 @@ SelectionManager* SelectionPlugin::getSelectionManager() const
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

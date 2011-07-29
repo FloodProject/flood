@@ -103,7 +103,7 @@ struct JoyButtonEvent: public JoystickEvent
 
 //-----------------------------------//
 
-class VAPOR_API Joystick : public InputDevice
+class API_ENGINE Joystick : public InputDevice
 {
 	// Processes an event (only if it's a joystick event).
 	virtual void processEvent( const InputEvent& event );

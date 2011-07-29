@@ -16,7 +16,7 @@
 #define STBI_HEADER_FILE_ONLY
 #include "stb_image.cpp"
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -85,6 +85,6 @@ bool STB_Image_Loader::decode(const Stream& stream, Resource* res)
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END
 
 #endif

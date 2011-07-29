@@ -12,7 +12,7 @@
 
 FWD_DECL_INTRUSIVE(Text)
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -27,7 +27,7 @@ struct ResourceEvent;
  * program will request the program for a given shader.
  */
 
-class VAPOR_API ProgramManager
+class API_ENGINE ProgramManager
 {
 	DECLARE_UNCOPYABLE(ProgramManager)
 
@@ -59,4 +59,4 @@ protected:
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

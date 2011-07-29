@@ -10,13 +10,13 @@
 
 #include "Scene/Component.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
 REFLECT_DECLARE_CLASS(Controller)
 
-class VAPOR_API Controller : public Component
+class API_ENGINE Controller : public Component
 {
 	REFLECT_DECLARE_OBJECT(Controller)
 
@@ -46,4 +46,4 @@ TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Controller )
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

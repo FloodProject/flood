@@ -19,14 +19,14 @@
 %define API_SCENE
 %enddef
 
-%define VAPOR_API
+%define API_ENGINE
 %enddef
 
 %import "Core/API.h"
 %import "Core/Platform.h"
 %import "Core/Utilities.h"
 %import "Core/Concurrency.h"
-%import "Core/ReferenceCount.h"
+%import "Core/References.h"
 
 %define REFLECT_DECLARE_CLASS(arg)
 %enddef

@@ -13,7 +13,7 @@
 #include "Scene/Entity.h"
 #include "Scene/Tags.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -135,4 +135,4 @@ void updateDebugFrustum( const RenderablePtr& rend, const Frustum& box )
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_ENGINE_END

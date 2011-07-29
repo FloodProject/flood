@@ -15,7 +15,7 @@
 #include "TerrainPlugin.h"
 #include "Math/BoundingSphere.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -66,6 +66,6 @@ public:
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END
 
 #endif

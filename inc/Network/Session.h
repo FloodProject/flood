@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Core/ReferenceCount.h"
+#include "Core/References.h"
 #include "Network/CipherISAAC.h"
 
 FWD_DECL_INTRUSIVE(Peer)

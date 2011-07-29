@@ -17,7 +17,7 @@
 FWD_DECL_INTRUSIVE(AudioBuffer)
 FWD_DECL_INTRUSIVE(AudioContext)
 
-NAMESPACE_BEGIN
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -99,6 +99,6 @@ API_AUDIO AudioDevice* GetAudioDevice();
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_ENGINE_END
 
 #endif

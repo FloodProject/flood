@@ -10,7 +10,7 @@
 #include "LogFrame.h"
 #include "Editor.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -50,4 +50,4 @@ void LogFrame::Process(LogEntry* entry)
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

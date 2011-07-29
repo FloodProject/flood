@@ -9,10 +9,10 @@
 #pragma once
 
 #include "Event.h"
-#include "Core/ReferenceCount.h"
+#include "Core/References.h"
 #include <deque>
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -67,4 +67,4 @@ protected:
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

@@ -10,7 +10,7 @@
 #include "GizmoRotate.h"
 #include "Render/Cube.h"
 
-namespace vapor { namespace editor {
+NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
@@ -158,4 +158,4 @@ void GizmoRotate::generateColors( std::vector<Vector3>& colors, const Color& c )
 
 //-----------------------------------//
 
-} } // end namespaces
+NAMESPACE_EDITOR_END

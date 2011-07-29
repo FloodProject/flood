@@ -13,7 +13,7 @@
 #include "Scene/Camera.h"
 #include "Engine/Engine.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -111,4 +111,4 @@ void RenderView::update()
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

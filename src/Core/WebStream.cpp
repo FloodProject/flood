@@ -15,7 +15,7 @@
 #define CURL_STATICLIB
 #include <curl/curl.h>
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -93,6 +93,6 @@ static size_t writeHTTP(void* ptr, size_t size, size_t nmemb, void* userdata)
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END
 
 #endif

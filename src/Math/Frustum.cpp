@@ -10,7 +10,7 @@
 #include "Core/Memory.h"
 #include "Math/Frustum.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
@@ -178,4 +178,4 @@ bool Frustum::intersects( const BoundingBox& box ) const
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_CORE_END

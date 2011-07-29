@@ -19,7 +19,7 @@
 #include "Input/Keyboard.h"
 #include "Input/Mouse.h"
 
-namespace vapor {
+NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
@@ -73,4 +73,4 @@ void ThirdPersonController::_update( float delta )
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_ENGINE_END

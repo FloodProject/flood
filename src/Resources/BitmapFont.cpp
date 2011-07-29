@@ -11,7 +11,7 @@
 
 #ifdef ENABLE_FONT_BITMAP
 
-namespace vapor {
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -23,6 +23,6 @@ const Vector2 BitmapFont::getGlyphSize() const
 
 //-----------------------------------//
 
-} // end namespace
+NAMESPACE_RESOURCES_END
 
 #endif
