@@ -119,6 +119,7 @@ static void LogFormat(LogEntry* entry, /*Log* log,*/ LogLevel level, const char*
 		                                                    \
 		Log* log = LogGetDefault();                         \
 		if(log) LogWrite(log, &entry);                      \
+		else puts(entry.message.c_str());                   \
                                                             \
 		va_end(args);                                       \
                                                             \

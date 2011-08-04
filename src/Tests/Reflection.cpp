@@ -22,21 +22,21 @@ REFLECT_ENUM(E)
 REFLECT_ENUM_END()
 
 REFLECT_CHILD_CLASS(A, Object)
-	FIELD_PRIMITIVE(int32, foo)
-	FIELD_ENUM(E, foos)
+	FIELD_PRIMITIVE(0, int32, foo)
+	FIELD_ENUM(1, E, foos)
 REFLECT_CLASS_END()
 
 REFLECT_CHILD_CLASS(B, A)
-	FIELD_PRIMITIVE(uint32, bar)
-	FIELD_PRIMITIVE(Vector3, vec)
-	FIELD_PRIMITIVE(Quaternion, quat)
-	FIELD_PRIMITIVE(Color, color)
-	FIELD_PRIMITIVE(string, str)
+	FIELD_PRIMITIVE(5, uint32, bar)
+	FIELD_PRIMITIVE(6, Vector3, vec)
+	FIELD_PRIMITIVE(7, Quaternion, quat)
+	FIELD_PRIMITIVE(8, Color, color)
+	FIELD_PRIMITIVE(9, string, str)
 REFLECT_CLASS_END()
 
 REFLECT_CLASS(C)
-	FIELD_CLASS_PTR(A, A*, anA, RawPointer)
-	FIELD_VECTOR_PTR(A, A*, arrayA, RawPointer)
+	FIELD_CLASS_PTR(11, A, A*, anA, RawPointer)
+	FIELD_VECTOR_PTR(12, A, A*, arrayA, RawPointer)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
@@ -72,7 +72,7 @@ void TestClassA(CuTest* tc)
 	CuAssertIntEquals(tc, 20, bar.foo);
 	CuAssertIntEquals(tc, 20, foo->foo);
 
-	Deallocate<A>(foo);
+	Deallocate(foo);
 
 	A* instanceA = (A*) ClassCreateInstance( klassA, AllocatorGetHeap() );
 
@@ -86,7 +86,7 @@ void TestClassA(CuTest* tc)
 	FieldSet<int32>(field, instanceA, 10);
 	CuAssertIntEquals(tc, 10, instanceA->foo);
 
-	Deallocate<A>(instanceA);
+	Deallocate(instanceA);
 }
 
 //-----------------------------------//
@@ -176,6 +176,6 @@ CuSuite* GetSuiteReflection()
     SUITE_ADD_TEST(suite, TestClassA);
 	SUITE_ADD_TEST(suite, TestClassB);
 	SUITE_ADD_TEST(suite, TestObjects);
-	//SUITE_ADD_TEST(suite, TestWalker);
+	SUITE_ADD_TEST(suite, TestWalker);
     return suite;
 }

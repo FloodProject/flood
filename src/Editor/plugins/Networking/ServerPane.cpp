@@ -10,6 +10,8 @@
 #include "ServerPane.h"
 #include "ServerPlugin.h"
 
+#ifdef ENABLE_RESOURCE_BROWSER
+
 #include "Viewframe.h"
 #include "EditorIcons.h"
 #include "UndoManager.h"
@@ -20,8 +22,6 @@
 #include "Network/Host.h"
 #include "Network/Message.h"
 #include "Protocol/ChatMessages.h"
-
-#ifdef ENABLE_RESOURCE_BROWSER
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -72,9 +72,7 @@ void ServerPane::onChatSendButtonClick(wxCommandEvent& event)
 	String text = m_textMessage->GetValue();
 
 	ChatMessage chat;
-	chat.length = text.size();
-	memcpy(chat.text, text.c_str(), text.size());
-	chat.text[text.size()] = '\0';
+	chat.text = text;
 
 	MessagePtr message = MessageCreate(ChatMessageIds::ClientMessage);
 	message->write(chat);

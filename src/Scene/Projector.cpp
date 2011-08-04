@@ -20,8 +20,8 @@ NAMESPACE_ENGINE_BEGIN
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(Projector, Geometry)
-	FIELD_CLASS(Frustum, frustum)
-	FIELD_CLASS_PTR(Material, MaterialHandle, material, Handle)
+	FIELD_CLASS(4, Frustum, frustum)
+	FIELD_CLASS_PTR(5, Material, MaterialHandle, material, Handle)
 REFLECT_CLASS_END()
 
 //-----------------------------------//

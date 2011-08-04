@@ -134,16 +134,12 @@ static_assert(sizeof(int64) == 8, "");
 	#define enum_class enum class
 #endif
 
-//---------------------------------------------------------------------//
-// nullptr replacement
-//---------------------------------------------------------------------//
-
-#if !defined(COMPILER_MSVC) || (COMPILER_MSVC != COMPILER_MSVC_2010)
+#if !defined(COMPILER_SUPPORTS_CPP0X)
 	#define nullptr NULL
 #endif
 
 //---------------------------------------------------------------------//
-// Helper macros to stringify parameters.
+// Helper macros
 //---------------------------------------------------------------------//
 
 #define STRINGIFY(x) #x
@@ -151,10 +147,6 @@ static_assert(sizeof(int64) == 8, "");
 
 #define __FILE__LINE__ __FILE__ "(" TOSTRING(__LINE__) ") : "
 #define TODO( x )  message( __FILE__LINE__" TODO :   " #x ) 
-
-//---------------------------------------------------------------------//
-// Array and Conversion Helpers
-//---------------------------------------------------------------------//
 
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))
 

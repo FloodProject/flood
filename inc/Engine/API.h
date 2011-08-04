@@ -31,7 +31,7 @@
 //#define	VAPOR_RENDERER_DIRECTX
 #define		ENABLE_SHADER_GLSL
 
-#define		VAPOR_AUDIO_OPENAL
+#define		ENABLE_AUDIO_OPENAL
 //#define		VAPOR_PHYSICS_BULLET
 
 //---------------------------------------------------------------------//

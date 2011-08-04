@@ -20,10 +20,10 @@ NAMESPACE_ENGINE_BEGIN
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(Entity, Object)
-	FIELD_PRIMITIVE(string, name)
-	FIELD_PRIMITIVE(bool, visible)
+	FIELD_PRIMITIVE(1, string, name)
+	FIELD_PRIMITIVE(2, bool, visible)
 	//FIELD_PRIMITIVE_CUSTOM(int32, tags, Bitfield)
-	FIELD_VECTOR_PTR(Component, ComponentPtr, components, RefPointer)
+	FIELD_VECTOR_PTR(3, Component, ComponentPtr, components, RefPointer)
 REFLECT_CLASS_END()
 
 //-----------------------------------//

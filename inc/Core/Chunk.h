@@ -21,21 +21,21 @@ NAMESPACE_BEGIN
 
 struct API_CORE ChunkMetadata
 {
-	byte critical : 1;
-	byte version  : 2;
-	byte type     : 5;
+	uint8 critical : 1;
+	uint8 version  : 2;
+	uint8 type     : 5;
 };
 
 struct API_CORE Chunk
 {
 	ChunkMetadata metadata;
-	uint id;
-	uint size;
+	uint32 id;
+	uint32 size;
 	byte* data;
 
 	// Makes an identifier.
-	static uint makeId(const String& id);
-	static uint makeHashId(const String& id);
+	static uint32 makeId(const String& id);
+	static uint32 makeHashId(const String& id);
 };
 
 //-----------------------------------//

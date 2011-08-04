@@ -22,7 +22,7 @@ REFLECT_ENUM(BillboardType)
 REFLECT_ENUM_END()
 
 REFLECT_CHILD_CLASS(Billboard, Component)
-	FIELD_ENUM(BillboardType, billboardType)
+	FIELD_ENUM(4, BillboardType, billboardType)
 REFLECT_CLASS_END()
 
 //-----------------------------------//

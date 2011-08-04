@@ -109,67 +109,68 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-#define FIELD_COMMON(fieldType, fieldName, ...)                         \
+#define FIELD_COMMON(fieldId, fieldType, fieldName, ...)                \
 	fieldName.size = sizeof(fieldType);                                 \
 	fieldName.offset = offsetof(This, fieldName);                       \
 	fieldName.name = TOSTRING(fieldName);                               \
+	fieldName.id = fieldId;                                             \
 	FieldSetSetter(&fieldName, __VA_ARGS__);                            \
-	klass.fields.push_back(&fieldName);
+	ClassAddField(&klass, &fieldName);
 
-#define FIELD_CLASS(fieldType, fieldName, ...)                          \
+#define FIELD_CLASS(fieldId, fieldType, fieldName, ...)                 \
 	static Field fieldName;                                             \
 	fieldName.type = fieldType##GetType();                              \
-	FIELD_COMMON(fieldType, fieldName)
+	FIELD_COMMON(fieldId, fieldType, fieldName)
 
-#define FIELD_CLASS_PTR(fieldType, pointerType, fieldName, pointerQual, ...)  \
+#define FIELD_CLASS_PTR(fieldId, fieldType, pointerType, fieldName, pointerQual, ...)  \
 	static Field fieldName;                                                   \
 	fieldName.type = fieldType##GetType();                                    \
 	FieldSetQualifier(&fieldName, FieldQualifier::pointerQual);               \
 	fieldName.pointer_size = sizeof(pointerType);                             \
-	FIELD_COMMON(pointerType, fieldName, __VA_ARGS__)
+	FIELD_COMMON(fieldId, pointerType, fieldName, __VA_ARGS__)
 
-#define FIELD_CLASS_PTR_SETTER(fieldType, pointerType, fieldName, pointerQual, setterName)	\
+#define FIELD_CLASS_PTR_SETTER(fieldId, fieldType, pointerType, fieldName, pointerQual, setterName)	\
 	FIELD_SETTER_CLASS(pointerType, fieldName, setterName)									\
-	FIELD_CLASS_PTR(fieldType, pointerType, fieldName, pointerQual, NFS(fieldName))
+	FIELD_CLASS_PTR(fieldId, fieldType, pointerType, fieldName, pointerQual, NFS(fieldName))
 
-#define FIELD_ENUM(fieldType, fieldName, ...)                           \
+#define FIELD_ENUM(fieldId, fieldType, fieldName, ...)                  \
 	static Field fieldName;                                             \
 	fieldName.type = fieldType##GetType();                              \
-	FIELD_COMMON(fieldType, fieldName, __VA_ARGS__)
+	FIELD_COMMON(fieldId, fieldType, fieldName, __VA_ARGS__)
 
-#define FIELD_ENUM_SETTER(fieldType, fieldName, setterName)				\
-	FIELD_SETTER_CLASS(fieldType::Enum, fieldName, setterName)			\
-	FIELD_ENUM(fieldType, fieldName, NFS(fieldName))
+#define FIELD_ENUM_SETTER(fieldId, fieldType, fieldName, setterName)    \
+	FIELD_SETTER_CLASS(fieldType::Enum, fieldName, setterName)          \
+	FIELD_ENUM(fieldId, fieldType, fieldName, NFS(fieldName))
 
-#define FIELD_VECTOR(fieldType, fieldName, ...)							\
+#define FIELD_VECTOR(fieldId, fieldType, fieldName, ...)                \
 	static Field fieldName;					                            \
-	FieldSetQualifier(&fieldName, FieldQualifier::Array);				\
-	FIELD_COMMON(fieldType, fieldName, __VA_ARGS__)
+	FieldSetQualifier(&fieldName, FieldQualifier::Array);               \
+	FIELD_COMMON(fieldId, fieldType, fieldName, __VA_ARGS__)
 
-#define FIELD_VECTOR_PTR(fieldType, pointerType, fieldName, pointerQual, ... )	\
+#define FIELD_VECTOR_PTR(fieldId, fieldType, pointerType, fieldName, pointerQual, ... )	\
 	static Field fieldName;                                             \
 	FieldSetQualifier(&fieldName, FieldQualifier::Array);				\
 	FieldSetQualifier(&fieldName, FieldQualifier::pointerQual);			\
 	fieldName.pointer_size = sizeof(pointerType);						\
 	fieldName.type = ReflectionGetType(fieldType);                      \
-	FIELD_COMMON(fieldType, fieldName, __VA_ARGS__)						\
+	FIELD_COMMON(fieldId, fieldType, fieldName, __VA_ARGS__)            \
 
-#define FIELD_PRIMITIVE(fieldType, fieldName, ...)                      \
+#define FIELD_PRIMITIVE(fieldId, fieldType, fieldName, ...)             \
 	static Field fieldName;                                             \
 	fieldName.type = &Primitive::s_##fieldType;                         \
-	FIELD_COMMON(fieldType, fieldName, __VA_ARGS__)
+	FIELD_COMMON(fieldId, fieldType, fieldName, __VA_ARGS__)
 
-#define FIELD_PRIMITIVE_SETTER(fieldType, fieldName, setterName)		\
-	FIELD_SETTER_CLASS(fieldType, fieldName, setterName)				\
-	FIELD_PRIMITIVE(fieldType, fieldName, NFS(fieldName))
+#define FIELD_PRIMITIVE_SETTER(fieldId, fieldType, fieldName, setterName) \
+	FIELD_SETTER_CLASS(fieldType, fieldName, setterName)                  \
+	FIELD_PRIMITIVE(fieldId, fieldType, fieldName, NFS(fieldName))
 
-#define FIELD_PRIMITIVE_CUSTOM(fieldType, fieldName, primType, ...)		\
-	static Field fieldName(Primitive::_##primType);						\
-	FIELD_COMMON(fieldType, fieldName, __VA_ARGS__)
+#define FIELD_PRIMITIVE_CUSTOM(fieldId, fieldType, fieldName, primType, ...) \
+	static Field fieldName(Primitive::_##primType);                          \
+	FIELD_COMMON(fieldId, fieldType, fieldName, __VA_ARGS__)
 
-#define FIELD_PRIMITIVE_SETTER_CUSTOM(fieldType, fieldName, primType, setterName)	\
-	FIELD_SETTER_CLASS(fieldType, fieldName, setterName)							\
-	FIELD_PRIMITIVE_CUSTOM(fieldType, fieldName, primType, NFS(fieldName))
+#define FIELD_PRIMITIVE_SETTER_CUSTOM(fieldId, fieldType, fieldName, primType, setterName) \
+	FIELD_SETTER_CLASS(fieldType, fieldName, setterName)                                   \
+	FIELD_PRIMITIVE_CUSTOM(fieldId, fieldType, fieldName, primType, NFS(fieldName))
 
 #define FIELD_READONLY(fieldName)                                       \
 	FieldSetQualifier(&fieldName, FieldQualifier::ReadOnly);

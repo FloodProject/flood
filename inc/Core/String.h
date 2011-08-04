@@ -8,14 +8,27 @@
 
 #pragma once
 
-#include <string>
+#ifdef ENABLE_STL_RDE
+	#include <rde_string.h>
+#else
+	#include <string>
+	#include <sstream>
+#endif
 
 NAMESPACE_EXTERN_BEGIN
 
 //-----------------------------------//
 
+#ifdef ENABLE_STL_RDE
+
+typedef rde::string String;
+
+#else
+
 typedef std::string String;
 typedef std::wstring WideString;
+
+#endif
 
 // Compares a string in a case insensitive way.
 API_CORE int StringCompareInsensitive(const String& s1, const String& s2);

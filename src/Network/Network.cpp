@@ -231,7 +231,7 @@ void Host::handleConnectEvent(ENetEvent* event)
 {
 	ENetPeer* peer = event->peer;
 
-	PeerPtr networkPeer = Allocate(Peer, AllocatorGetHeap());
+	PeerPtr networkPeer = Allocate(Peer, AllocatorGetThis());
 	networkPeer->peer = peer;
 
 	// Store the network peer as user data.

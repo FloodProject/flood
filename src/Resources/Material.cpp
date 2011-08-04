@@ -11,18 +11,18 @@
 #include "Resources/ResourceManager.h"
 #include "Core/Log.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(Material, Resource)
-	FIELD_PRIMITIVE(string, name)
-	FIELD_PRIMITIVE(string, program)
-	FIELD_PRIMITIVE(bool, cullBackfaces)
-	FIELD_PRIMITIVE(bool, alphaTest)
-	FIELD_PRIMITIVE(bool, lineSmooth)
-	FIELD_PRIMITIVE(float, lineWidth)
-	FIELD_PRIMITIVE(float, _isBlendingEnabled)
+	FIELD_PRIMITIVE(4, string, name)
+	FIELD_PRIMITIVE(5, string, program)
+	FIELD_PRIMITIVE(6, bool, cullBackfaces)
+	FIELD_PRIMITIVE(7, bool, alphaTest)
+	FIELD_PRIMITIVE(8, bool, lineSmooth)
+	FIELD_PRIMITIVE(9, float, lineWidth)
+	FIELD_PRIMITIVE(10, float, _isBlendingEnabled)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
@@ -141,4 +141,4 @@ ImageHandle Material::getTexture( uint32 unit )
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_RESOURCES_END

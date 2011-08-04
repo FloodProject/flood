@@ -8,7 +8,7 @@
 
 #pragma once
 
-#ifdef VAPOR_AUDIO_OPENAL
+#ifdef ENABLE_AUDIO_OPENAL
 
 #include "Resources/Sound.h"
 #include "Math/Vector.h"

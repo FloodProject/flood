@@ -207,8 +207,8 @@ void SceneDocument::onToolSelect(PluginTool* mode)
 
 void SceneDocument::createScene()
 {
-	scene.reset( new Scene() );
-	editorScene.reset( new Scene() );
+	scene = Allocate(Scene, AllocatorGetHeap());
+	editorScene = Allocate(Scene, AllocatorGetHeap());
 	
 	// Create a nice grid for the editor.
 	EntityPtr nodeGrid( EntityCreate(AllocatorGetHeap()) );
@@ -226,6 +226,13 @@ void SceneDocument::createScene()
 	CameraPtr camera = nodeCamera->getComponent<Camera>();
 	viewframe->setMainCamera(camera);
 	viewframe->switchToDefaultCamera();
+
+	for(size_t i = 0; i < 100; i++)
+	{
+		EntityPtr entity = EntityCreate(AllocatorGetHeap());
+		entity->addTransform();
+		scene->add(entity);
+	}
 }
 
 //-----------------------------------//

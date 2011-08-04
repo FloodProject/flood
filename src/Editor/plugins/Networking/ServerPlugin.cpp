@@ -193,12 +193,8 @@ void ServerPlugin::connect(const HostConnectionDetails& details)
 
 void ServerPlugin::auth()
 {
-	const String& name = pane->getUserName();
-
 	UserAuthMessage auth;
-	auth.nameLen = name.size();
-	strncpy(auth.name, name.c_str(), name.size());
-	auth.name[auth.nameLen] = '\0';
+	auth.name = pane->getUserName();
 
 	MessagePtr message = MessageCreate(UserMessageIds::UserAuth);
 	message->write(auth);

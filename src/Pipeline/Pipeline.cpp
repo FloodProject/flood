@@ -15,8 +15,6 @@
 #include "Resources/ResourceLoader.h"
 #include "Resources/ResourceManager.h"
 
-using namespace vapor;
-
 ResourceManager* resources;
 
 //-----------------------------------//
@@ -42,7 +40,7 @@ void showResourceProcessors()
 
 	Class& type = ResourceProcessor::getStaticType();
 	
-	for( uint i = 0; i < type.childs.size(); i++ )
+	for( size_t i = 0; i < type.childs.size(); i++ )
 	{
 		Class& child = *type.childs[i];
 		printf("\t%s\n", child.name.c_str());

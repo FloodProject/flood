@@ -48,7 +48,7 @@ static ComponentEntry components[] =
 	{ "GUI", nullptr, nullptr, 0 },
 	{ nullptr, TYPE(Label),				BMP(text_align_left) },
 	//{ "Particles", nullptr, nullptr, 0 },
-#ifdef VAPOR_AUDIO_OPENAL	
+#ifdef ENABLE_AUDIO_OPENAL	
 	{ "Audio", nullptr, nullptr, 0 },
 	{ nullptr, TYPE(Source),			BMP(sound) },
 	{ nullptr, TYPE(Listener),			BMP(status_online) },

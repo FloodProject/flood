@@ -16,12 +16,9 @@ NAMESPACE_PROTOCOL_BEGIN
 
 //-----------------------------------//
 
-#define CHAT_MAX_TEXT_SIZE 80
-
 struct API_PROTOCOL ChatMessage
 {
-	uint16 length;
-	char text[CHAT_MAX_TEXT_SIZE];
+	String text;
 };
 
 #define CHAT_INITIAL_ID 200

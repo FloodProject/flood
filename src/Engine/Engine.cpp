@@ -149,7 +149,7 @@ void Engine::setupDevices( bool createWindow )
 {
 	renderDevice = new RenderDevice();
 
-#ifdef VAPOR_AUDIO_OPENAL
+#ifdef ENABLE_AUDIO_OPENAL
 	// Creates the audio device.
 	audioDevice = new AudioDevice();
 	audioDevice->createDevice("");

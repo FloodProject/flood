@@ -11,8 +11,6 @@
 #include "Math/Quaternion.h"
 #include "Math/Color.h"
 
-//using namespace vapor;
-
 //-----------------------------------//
 
 REFLECT_DECLARE_ENUM(E)
@@ -53,6 +51,13 @@ struct B : public A
 		, str("serialized string")
 	{ }
 
+	void change()
+	{
+		bar += 2;
+		vec.z = 33;
+		str = "ole";
+	}
+
 	uint32 bar;
 	Vector3 vec;
 	Quaternion quat;
@@ -70,14 +75,8 @@ struct C : public Object
 {
 	REFLECT_DECLARE_OBJECT(C)
 
-	C() : /*B(),*/ anA(0)
+	C() : anA(0)
 	{
-		anA = Allocate(A, AllocatorGetHeap());
-		for(size_t i = 0; i < NUM_AS; i++)
-		{
-			A* a = Allocate(A, AllocatorGetHeap());
-			arrayA.push_back(a);
-		}
 	}
 
 	~C()
@@ -85,6 +84,17 @@ struct C : public Object
 		Deallocate(anA);
 		for(size_t i = 0; i < arrayA.size(); i++)
 			Deallocate(arrayA[i]);
+	}
+
+	void allocate()
+	{
+		anA = Allocate(A, AllocatorGetThis());
+		
+		for(size_t i = 0; i < NUM_AS; i++)
+		{
+			A* a = Allocate(A, AllocatorGetThis());
+			arrayA.push_back(a);
+		}
 	}
 
 	void change()

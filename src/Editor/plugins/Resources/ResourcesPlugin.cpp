@@ -132,7 +132,7 @@ bool ResourcesPlugin::loadCache()
 		return false;
 	}
 
-	resourceDatabase = (ResourceDatabase*) SerializerLoadObjectFromFile(path);
+	resourceDatabase = (ResourceDatabase*) SerializerLoadObjectFromFile(AllocatorGetThis(), path);
 
 	if(resourceDatabase)
 		LogInfo("Loaded thumbnails cache from '%s'", path.c_str());
@@ -148,7 +148,7 @@ bool ResourcesPlugin::saveCache()
 {
 	String path = CacheFolder + ThumbCache;
 	
-	if( !SerializerSaveObjectToFile(path, this) )
+	if( !SerializerSaveObjectToFile(AllocatorGetThis(), path, this) )
 		return false;
 	
 	LogInfo("Wrote thumbnails cache to '%s'", path.c_str());

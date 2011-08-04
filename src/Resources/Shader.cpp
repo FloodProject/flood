@@ -20,7 +20,7 @@ REFLECT_ENUM(ShaderType)
 REFLECT_ENUM_END()
 
 REFLECT_ABSTRACT_CHILD_CLASS(Shader, Resource)
-	FIELD_ENUM(ShaderType, type)
+	FIELD_ENUM(4, ShaderType, type)
 REFLECT_CLASS_END()
 
 //-----------------------------------//

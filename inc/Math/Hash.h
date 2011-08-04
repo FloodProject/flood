@@ -12,12 +12,10 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-namespace Hash
-{
-	// Hashes some data using the Murmur2 hash.
-	// http://sites.google.com/site/murmurhash/
-	uint Murmur2( const std::vector<byte>& data, uint seed );
-}
+// Hashes some data using the Murmur2 hash.
+// http://sites.google.com/site/murmurhash/
+
+API_CORE uint32 HashMurmur2( uint32 seed, uint8* buf, uint32 size );
 
 //-----------------------------------//
 

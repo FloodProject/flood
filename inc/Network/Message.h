@@ -77,8 +77,6 @@ public:
 		return pod;
 	}
 
-protected:
-
 	// Message id.
 	MessageId id;
 

@@ -20,12 +20,12 @@ REFLECT_ENUM(Projection)
 REFLECT_ENUM_END()
 
 REFLECT_CLASS(Frustum)
-	FIELD_ENUM(Projection, projection)
-	FIELD_PRIMITIVE(float, fieldOfView)
-	FIELD_PRIMITIVE(float, nearPlane)
-	FIELD_PRIMITIVE(float, farPlane)
-	FIELD_PRIMITIVE(float, aspectRatio) //FIELD_READONLY(aspectRatio)
-	FIELD_PRIMITIVE(Vector3, orthoSize)
+	FIELD_ENUM(0, Projection, projection)
+	FIELD_PRIMITIVE(1, float, fieldOfView)
+	FIELD_PRIMITIVE(2, float, nearPlane)
+	FIELD_PRIMITIVE(3, float, farPlane)
+	FIELD_PRIMITIVE(4, float, aspectRatio) //FIELD_READONLY(aspectRatio)
+	FIELD_PRIMITIVE(5, Vector3, orthoSize)
 REFLECT_CLASS_END()
 
 //-----------------------------------//

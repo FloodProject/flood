@@ -18,9 +18,9 @@ NAMESPACE_ENGINE_BEGIN
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(Transform, Component)
-	FIELD_PRIMITIVE(Vector3, position)
-	FIELD_PRIMITIVE(Quaternion, rotation)
-	FIELD_PRIMITIVE(Vector3, scale)
+	FIELD_PRIMITIVE(4, Vector3, position)
+	FIELD_PRIMITIVE(5, Quaternion, rotation)
+	FIELD_PRIMITIVE(6, Vector3, scale)
 REFLECT_CLASS_END()
 
 //-----------------------------------//

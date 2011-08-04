@@ -32,10 +32,10 @@ REFLECT_ENUM(SkinningMode)
 REFLECT_ENUM_END()
 
 REFLECT_CHILD_CLASS(Model, Geometry)
-	FIELD_PRIMITIVE(float, animationSpeed)
-	FIELD_PRIMITIVE(bool, animationEnabled)
-	FIELD_ENUM_SETTER(SkinningMode, skinningMode, SkinningMode)
-	FIELD_CLASS_PTR_SETTER(Mesh, MeshHandle, mesh, Handle, Mesh)
+	FIELD_PRIMITIVE(6, float, animationSpeed)
+	FIELD_PRIMITIVE(7, bool, animationEnabled)
+	FIELD_ENUM_SETTER(8, SkinningMode, skinningMode, SkinningMode)
+	FIELD_CLASS_PTR_SETTER(9, Mesh, MeshHandle, mesh, Handle, Mesh)
 REFLECT_CLASS_END()
 
 //-----------------------------------//

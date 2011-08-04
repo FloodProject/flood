@@ -10,7 +10,7 @@
 #include "Resources/Image.h"
 #include "Core/Log.h"
 
-#ifdef VAPOR_IMAGE_LODEPNG
+#ifdef ENABLE_IMAGE_LODEPNG
 	#include "lodepng.h"
 #endif
 
@@ -31,7 +31,7 @@ REFLECT_ENUM(PixelFormat)
 REFLECT_ENUM_END()
 
 REFLECT_CHILD_CLASS(Image, Resource)
-	FIELD_ENUM(PixelFormat, format) FIELD_READONLY(format)
+	FIELD_ENUM(4, PixelFormat, format) FIELD_READONLY(format)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
@@ -132,7 +132,7 @@ void Image::log() const
 
 void ImageWriter::save( Image* image, const String& filename )
 {
-#ifdef VAPOR_IMAGE_WRITER	
+#ifdef ENABLE_IMAGE_WRITER	
 	// TODO: sleep until the image is not loadeds
 	if( !image->isLoaded() )
 		return;
@@ -155,7 +155,7 @@ void ImageWriter::save( Image* image, const String& filename )
 
 bool ImageWriter::convertPNG( Image* image )
 {
-#ifdef VAPOR_IMAGE_WRITER
+#ifdef ENABLE_IMAGE_WRITER
 	LodePNG::Encoder encoder;
 	
 	LodePNG_InfoColor& png = encoder.getInfoPng().color;

@@ -16,12 +16,12 @@ NAMESPACE_EDITOR_BEGIN
 //-----------------------------------//
 
 REFLECT_CLASS(ResourceMetadata)
-	FIELD_PRIMITIVE(uint32, hash)
-	FIELD_PRIMITIVE(string, path)
+	FIELD_PRIMITIVE(0, uint32, hash)
+	FIELD_PRIMITIVE(1, string, path)
 REFLECT_CLASS_END()
 
 REFLECT_CHILD_CLASS(ResourceDatabase, Object)
-	FIELD_VECTOR(ResourceMetadata, resources)
+	FIELD_VECTOR(0, ResourceMetadata, resources)
 REFLECT_CLASS_END()
 
 //-----------------------------------//

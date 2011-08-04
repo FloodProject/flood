@@ -34,8 +34,8 @@ REFLECT_ENUM(ResourceGroup)
 REFLECT_ENUM_END()
 
 REFLECT_ABSTRACT_CHILD_CLASS(Resource, Object)
-	FIELD_PRIMITIVE(string, path) FIELD_READONLY(path)
-	FIELD_ENUM(ResourceStatus, status) FIELD_READONLY(status) FIELD_NO_SERIALIZE(status)
+	FIELD_PRIMITIVE(0, string, path) FIELD_READONLY(path)
+	FIELD_ENUM(1, ResourceStatus, status) FIELD_READONLY(status) FIELD_NO_SERIALIZE(status)
 REFLECT_CLASS_END()
 
 //-----------------------------------//

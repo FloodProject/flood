@@ -33,7 +33,7 @@ NAMESPACE_ENGINE_BEGIN
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(ScriptController, Controller)
-	FIELD_CLASS_PTR(Script, ScriptHandle, script, Handle)
+	FIELD_CLASS_PTR(7, Script, ScriptHandle, script, Handle)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
@@ -41,7 +41,7 @@ REFLECT_CLASS_END()
 ScriptController::ScriptController()
 	: state(nullptr)
 {
-	InputManager* im = GetEngine()->getInputManager();
+	InputManager* im = GetInputManager();
 	
 	Keyboard* keyboard = im->getKeyboard();
 	keyboard->onKeyPress.Connect( this, &ScriptController::onKeyPress );
@@ -56,7 +56,7 @@ ScriptController::ScriptController()
 
 ScriptController::~ScriptController()
 {
-	InputManager* im = GetEngine()->getInputManager();
+	InputManager* im = GetInputManager();
 	
 	Keyboard* keyboard = im->getKeyboard();
 	keyboard->onKeyPress.Disconnect( this, &ScriptController::onKeyPress );

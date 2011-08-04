@@ -17,9 +17,9 @@ NAMESPACE_ENGINE_BEGIN
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(Label, Overlay)
-	FIELD_PRIMITIVE(string, text)
-	FIELD_PRIMITIVE(bool, isDirty)
-	FIELD_CLASS_PTR(Font, FontHandle, font, Handle) 
+	FIELD_PRIMITIVE(4, string, text)
+	FIELD_PRIMITIVE(5, bool, isDirty)
+	FIELD_CLASS_PTR(6, Font, FontHandle, font, Handle) 
 REFLECT_CLASS_END()
 
 //-----------------------------------//

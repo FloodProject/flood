@@ -14,7 +14,7 @@ NAMESPACE_ENGINE_BEGIN
 //-----------------------------------//
 
 REFLECT_ABSTRACT_CHILD_CLASS(Controller, Component)
-	FIELD_PRIMITIVE(bool, enabled)
+	FIELD_PRIMITIVE(4, bool, enabled)
 REFLECT_CLASS_END()
 
 //-----------------------------------//

@@ -90,11 +90,23 @@ static void ReflectionWalkPrimitive(ReflectionContext* context)
 	case Primitive::Bool:
 		vc.b = (bool*) address;
 		break;
+	case Primitive::Int16:
+		vc.i16 = (int16*) address;
+		break;
+	case Primitive::Uint16:
+		vc.u16= (uint16*) address;
+		break;
 	case Primitive::Int32:
 		vc.i32 = (int32*) address;
 		break;
 	case Primitive::Uint32:
 		vc.u32 = (uint32*) address;
+		break;
+	case Primitive::Int64:
+		vc.i64 = (int64*) address;
+		break;
+	case Primitive::Uint64:
+		vc.u64 = (uint64*) address;
 		break;
 	case Primitive::Float:
 		vc.f = (float*) address;
@@ -210,13 +222,14 @@ static void ReflectionWalkArray(ReflectionContext* context)
 	std::vector<byte>& array = *(std::vector<byte>*) context->address;
 
 	uint16 elementSize = GetArrayElementSize(context->field);
-	uint32 numElems = array.size() / elementSize;
+	uint32 arraySize = array.size() / elementSize;
 
+	context->arraySize = arraySize;
 	context->walkArray(context, ReflectionWalkType::Begin);
 		
-	for(size_t i = 0; i < numElems; i++)
+	for(size_t i = 0; i < arraySize; i++)
 	{
-		void* address = (&array.front() + i * elementSize);
+		void* address = (&array[0] + i * elementSize);
 		
 		context->elementAddress = address;
 		
@@ -272,16 +285,14 @@ static void ReflectionWalkCompositeField(ReflectionContext* context)
 		if( !ReflectionWalkPointer(context) )
 			goto exit;
 
-		//Object* object = context->object;
-		//Type* type = context->type;
+		Object* object = context->object;
+		Type* type = context->type;
 
 		context->type = ClassGetType(context->object);
-		//context->object = newObject;
-
 		ReflectionWalkType(context, field->type);
 
-		//context->type = type;
-		//context->object = object;
+		context->type = type;
+		context->object = object;
 	}
 	else
 	{
@@ -387,20 +398,20 @@ Object* SerializerLoad(Serializer* serializer)
 	if( !serializer->load ) return nullptr;
 	if( !serializer->stream ) return nullptr;
 
-	serializer->load(serializer);
+	Object* object = serializer->load(serializer);
 	StreamClose(serializer->stream);
 
-	return serializer->object;
+	return object;
 }
 
 //-----------------------------------//
 
-bool SerializerSave(Serializer* serializer)
+bool SerializerSave(Serializer* serializer, Object* object)
 {
 	if( !serializer->save ) return false;
 	if( !serializer->stream ) return false;
 	
-	serializer->save(serializer);
+	serializer->save(serializer, object);
 	StreamClose(serializer->stream);
 
 	return true;
@@ -408,48 +419,76 @@ bool SerializerSave(Serializer* serializer)
 
 //-----------------------------------//
 
-Object* SerializerLoadObjectFromFile(const Path& file)
+Object* SerializerLoadObjectFromFile(Serializer* serializer, const Path& file)
 {
-#ifdef ENABLE_SERIALIZATION_JSON
-	Serializer* serializer = SerializerCreateJSON( AllocatorGetHeap() );
-	serializer->alloc = AllocatorGetHeap();
-
-	Stream* stream = StreamCreateFromFile(AllocatorGetHeap(), file.c_str(), StreamMode::Read);	
+	Stream* stream = StreamCreateFromFile(serializer->alloc, file.c_str(), StreamMode::Read);	
 	serializer->stream = stream;
 
 	Object* object = SerializerLoad(serializer);
-
-	SerializerDestroy(serializer);
 	StreamDestroy(stream);
 
 	return object;
-#else
-	return nullptr;
-#endif
 }
 
 //-----------------------------------//
 
-bool SerializerSaveObjectToFile(const Path& file, Object* object)
+bool SerializerSaveObjectToFile(Serializer* serializer, const Path& file, Object* object)
 {
-#ifdef ENABLE_SERIALIZATION_JSON
-	Serializer* serializer = SerializerCreateJSON( AllocatorGetHeap() );
-	serializer->alloc = AllocatorGetHeap();
-
-	Stream* stream = StreamCreateFromFile(AllocatorGetHeap(), file.c_str(), StreamMode::Write);
+	Stream* stream = StreamCreateFromFile(serializer->alloc, file.c_str(), StreamMode::Write);
 	if( !stream ) return false;
 
 	serializer->stream = stream;
 	serializer->object = object;
 	
-	if( !SerializerSave(serializer) )
+	if( !SerializerSave(serializer, object) )
 		return false;
 
-	SerializerDestroy(serializer);
 	StreamDestroy(stream);
-#endif
 
 	return true;
+}
+
+//-----------------------------------//
+
+typedef std::vector<RefPtr<ReferenceCounted>> ObjectRefPtrArray;
+typedef std::vector<Object*> ObjectRawPtrArray;
+
+void* ReflectionArrayResize( ReflectionContext* context, void* address, uint32 size )
+{
+	const Field* field = context->field;
+
+	if( FieldIsRawPointer(field) )
+	{
+		ObjectRawPtrArray* array = (ObjectRawPtrArray*) address;
+		array->resize(size);
+		return &array->front();
+	}
+	else if( FieldIsRefPointer(field) )
+	{
+		ObjectRefPtrArray* array = (ObjectRefPtrArray*) address;
+		array->resize(size);
+		return &array->front();
+	}
+#if 0
+	else if( FieldIsSharedPointer(field) )
+	{
+		ObjectSharedPtrArray* array = (ObjectSharedPtrArray*) address;
+		array->resize(size);
+		return &array->front();
+	}
+#endif
+
+	return nullptr;
+}
+
+//-----------------------------------//
+
+uint16 ReflectionArrayGetElementSize(const Field* field)
+{
+	if( FieldIsPointer(field) )
+		return field->pointer_size;
+	else
+		return field->size;
 }
 
 //-----------------------------------//

@@ -8,7 +8,7 @@
 
 #include "Engine/API.h"
 
-#ifdef VAPOR_AUDIO_OPENAL
+#ifdef ENABLE_AUDIO_OPENAL
 
 #include "Scene/Listener.h"
 #include "Scene/Transform.h"
@@ -24,7 +24,7 @@ NAMESPACE_ENGINE_BEGIN
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(Listener, Component)
-	FIELD_PRIMITIVE_SETTER(float, volume, Volume)
+	FIELD_PRIMITIVE_SETTER(4, float, volume, Volume)
 REFLECT_CLASS_END()
 
 //-----------------------------------//

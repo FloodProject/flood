@@ -10,9 +10,6 @@
     <Filter Include="Timer">
       <UniqueIdentifier>{8c332f64-f7fe-4d28-9f4f-051e6e7fec46}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Events">
-      <UniqueIdentifier>{baf2d738-9110-4b41-9b57-4ebc27eb2117}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Streams">
       <UniqueIdentifier>{4ba939fd-b107-4e66-a533-1d4544e3ca60}</UniqueIdentifier>
     </Filter>
@@ -85,9 +82,6 @@
     <Filter Include="Telemetry">
       <UniqueIdentifier>{96d34aba-f389-45a5-9d92-687ede9c398a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Archive\Watcher">
-      <UniqueIdentifier>{63ffccc4-ff22-49bd-9741-b97d2c8e5d60}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Networking">
       <UniqueIdentifier>{ad3128d5-000b-4150-87ec-8dd9521038b1}</UniqueIdentifier>
     </Filter>
@@ -109,9 +103,6 @@
     <Filter Include="Networking\Session">
       <UniqueIdentifier>{e49f4307-715e-471b-899d-c8b5b45e27e6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Networking\Cryptography">
-      <UniqueIdentifier>{0a6542e4-2935-4786-8460-f09cb52147c0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Networking\Dispatcher">
       <UniqueIdentifier>{ec0d2e3d-8be1-4f09-8197-238eafb3cc76}</UniqueIdentifier>
     </Filter>
@@ -120,6 +111,48 @@
     </Filter>
     <Filter Include="Profiler">
       <UniqueIdentifier>{e65ce8ad-271f-4107-a73d-5c98b30a57ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Cryptography">
+      <UniqueIdentifier>{0a6542e4-2935-4786-8460-f09cb52147c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Watcher">
+      <UniqueIdentifier>{63ffccc4-ff22-49bd-9741-b97d2c8e5d60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Containers">
+      <UniqueIdentifier>{5b7eb4e1-68bc-44b9-8812-cb28f79f1540}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Containers\Vector">
+      <UniqueIdentifier>{9d88e07d-d9b0-46e4-88e2-4b922620f8f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Containers\String">
+      <UniqueIdentifier>{18d973cd-deaf-4665-a691-fa71cb97e873}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Containers\Maps">
+      <UniqueIdentifier>{a995f6ff-46f8-4488-a686-ebeb8d58a19e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Containers\Sort">
+      <UniqueIdentifier>{e1411bf9-f6f6-4e7f-b61e-d4e030550199}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Containers\List">
+      <UniqueIdentifier>{4cba6e85-1fa5-4d39-9d11-8d727b2a18af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Containers\Misc">
+      <UniqueIdentifier>{5763b50f-600a-4fdd-bee6-6214c9fd6fc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Containers\Allocators">
+      <UniqueIdentifier>{16edda09-842f-4e6a-a2a0-ed1a236ce074}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Containers\Array">
+      <UniqueIdentifier>{4f6bcd86-3c30-4f82-bc51-f6159ddcc558}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events">
+      <UniqueIdentifier>{baf2d738-9110-4b41-9b57-4ebc27eb2117}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Streams\File">
+      <UniqueIdentifier>{4f6df0f7-e428-4515-b424-05a879b44685}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Streams\Memory">
+      <UniqueIdentifier>{d4373a1d-2bea-4eea-a164-b6126762c43a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -167,10 +200,10 @@
       <Filter>Profiler</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\FileWatcher.cpp">
-      <Filter>Archive\Watcher</Filter>
+      <Filter>Watcher</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Win32\FileWatcherWin32.cpp">
-      <Filter>Archive\Watcher</Filter>
+      <Filter>Watcher</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\Telemetry.cpp">
       <Filter>Telemetry</Filter>
@@ -180,9 +213,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Core\ArchiveVirtual.cpp">
       <Filter>Archive</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Core\FileStream.cpp">
-      <Filter>Streams</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\Serialization.cpp">
       <Filter>Serialization</Filter>
@@ -266,7 +296,7 @@
       <Filter>Networking\Session</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Network\CipherISAAC.cpp">
-      <Filter>Networking\Cryptography</Filter>
+      <Filter>Cryptography</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Network\MessagePlugin.cpp">
       <Filter>Networking\Messages</Filter>
@@ -277,11 +307,29 @@
     <ClCompile Include="..\..\src\Network\SessionManager.cpp">
       <Filter>Networking\Session</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\dep\rdestl\list.cpp">
+      <Filter>Containers\List</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dep\rdestl\slist.cpp">
+      <Filter>Containers\List</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dep\rdestl\intrusive_list.cpp">
+      <Filter>Containers\List</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dep\rdestl\intrusive_slist.cpp">
+      <Filter>Containers\List</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dep\rdestl\allocator.cpp">
+      <Filter>Containers\Allocators</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\FileStream.cpp">
+      <Filter>Streams\File</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Core\MemoryStream.cpp">
+      <Filter>Streams\Memory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\inc\vapor\WebStream.h">
-      <Filter>Streams\Web</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\Core\Memory.h">
       <Filter>Memory</Filter>
     </ClInclude>
@@ -330,14 +378,11 @@
     <ClInclude Include="..\..\inc\Math\Vector.h">
       <Filter>Math\Vector</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\Profiler.h">
-      <Filter>Profiler</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\Core\Reflection.h">
       <Filter>Reflection</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Win32\FileWatcherWin32.h">
-      <Filter>Archive\Watcher</Filter>
+      <Filter>Watcher</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\Telemetry.h">
       <Filter>Telemetry</Filter>
@@ -361,7 +406,7 @@
       <Filter>Networking\Web</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\FileWatcher.h">
-      <Filter>Archive\Watcher</Filter>
+      <Filter>Watcher</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Math\Quaternion.h">
       <Filter>Math\Quaternion</Filter>
@@ -385,7 +430,7 @@
       <Filter>Networking\Messages</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Network\CipherISAAC.h">
-      <Filter>Networking\Cryptography</Filter>
+      <Filter>Cryptography</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Network\Session.h">
       <Filter>Networking\Session</Filter>
@@ -440,6 +485,126 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\References.h">
       <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\Profiler.h">
+      <Filter>Profiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\algorithm.h">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\functional.h">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\int_to_type.h">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\iterator.h">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\pair.h">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\rdestl.h">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\rdestl_common.h">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\set.h">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\stack.h">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\type_traits.h">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\vector.h">
+      <Filter>Containers\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\sorted_vector.h">
+      <Filter>Containers\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\fixed_sorted_vector.h">
+      <Filter>Containers\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\fixed_vector.h">
+      <Filter>Containers\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\simple_string_storage.h">
+      <Filter>Containers\String</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\rde_string.h">
+      <Filter>Containers\String</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\basic_string.h">
+      <Filter>Containers\String</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\cow_string_storage.h">
+      <Filter>Containers\String</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\sstream.h">
+      <Filter>Containers\String</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\string_utils.h">
+      <Filter>Containers\String</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\fixed_substring.h">
+      <Filter>Containers\String</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\hash.h">
+      <Filter>Containers\Maps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\hash_map.h">
+      <Filter>Containers\Maps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\map.h">
+      <Filter>Containers\Maps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\rb_tree.h">
+      <Filter>Containers\Maps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\radix_sorter.h">
+      <Filter>Containers\Sort</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\sort.h">
+      <Filter>Containers\Sort</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\list.h">
+      <Filter>Containers\List</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\slist.h">
+      <Filter>Containers\List</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\fixed_list.h">
+      <Filter>Containers\List</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\intrusive_list.h">
+      <Filter>Containers\List</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\intrusive_slist.h">
+      <Filter>Containers\List</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\utility.h">
+      <Filter>Containers\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\allocator.h">
+      <Filter>Containers\Allocators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\buffer_allocator.h">
+      <Filter>Containers\Allocators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\alignment.h">
+      <Filter>Containers\Allocators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\stack_allocator.h">
+      <Filter>Containers\Allocators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dep\rdestl\fixed_array.h">
+      <Filter>Containers\Array</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\WebStream.h">
+      <Filter>Streams\Web</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

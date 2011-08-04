@@ -75,7 +75,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\dep\misc\include;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\mongoose;$(SolutionDir)..\..\dep\enet\include;$(SolutionDir)..\..\dep\jansson\include;$(SolutionDir)..\..\dep\curl\include;$(SolutionDir)..\..\dep\zziplib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\dep\rdestl;$(SolutionDir)..\..\dep\misc\include;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\mongoose;$(SolutionDir)..\..\dep\enet\include;$(SolutionDir)..\..\dep\jansson\include;$(SolutionDir)..\..\dep\curl\include;$(SolutionDir)..\..\dep\zziplib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;___DEBUG;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -97,7 +97,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\dep\misc\include;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\mongoose;$(SolutionDir)..\..\dep\enet\include;$(SolutionDir)..\..\dep\jansson\include;$(SolutionDir)..\..\dep\curl\include;$(SolutionDir)..\..\dep\zziplib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\dep\rdestl;$(SolutionDir)..\..\dep\misc\include;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\mongoose;$(SolutionDir)..\..\dep\enet\include;$(SolutionDir)..\..\dep\jansson\include;$(SolutionDir)..\..\dep\curl\include;$(SolutionDir)..\..\dep\zziplib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;___DEBUG;API_CORE_DLL;API_CORE_DLL_EXPORT;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -119,7 +119,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release DLL|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\dep\misc\include;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\mongoose;$(SolutionDir)..\..\dep\enet\include;$(SolutionDir)..\..\dep\jansson\include;$(SolutionDir)..\..\dep\curl\include;$(SolutionDir)..\..\dep\zziplib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\dep\rdestl;$(SolutionDir)..\..\dep\misc\include;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\mongoose;$(SolutionDir)..\..\dep\enet\include;$(SolutionDir)..\..\dep\jansson\include;$(SolutionDir)..\..\dep\curl\include;$(SolutionDir)..\..\dep\zziplib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>API_CORE_DLL;API_CORE_DLL_EXPORT;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -145,7 +145,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\dep\misc\include;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\mongoose;$(SolutionDir)..\..\dep\enet\include;$(SolutionDir)..\..\dep\jansson\include;$(SolutionDir)..\..\dep\curl\include;$(SolutionDir)..\..\dep\zziplib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc;$(SolutionDir)..\..\dep\rdestl;$(SolutionDir)..\..\dep\misc\include;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\mongoose;$(SolutionDir)..\..\dep\enet\include;$(SolutionDir)..\..\dep\jansson\include;$(SolutionDir)..\..\dep\curl\include;$(SolutionDir)..\..\dep\zziplib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -170,6 +170,11 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\dep\mongoose\mongoose.cpp" />
+    <ClCompile Include="..\..\dep\rdestl\allocator.cpp" />
+    <ClCompile Include="..\..\dep\rdestl\intrusive_list.cpp" />
+    <ClCompile Include="..\..\dep\rdestl\intrusive_slist.cpp" />
+    <ClCompile Include="..\..\dep\rdestl\list.cpp" />
+    <ClCompile Include="..\..\dep\rdestl\slist.cpp" />
     <ClCompile Include="..\..\src\Core\Archive.cpp">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">_CRT_SECURE_NO_WARNINGS;_DEBUG;___DEBUG;API_CORE_DLL;API_CORE_DLL_EXPORT;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release DLL|Win32'">_CRT_SECURE_NO_WARNINGS;_DEBUG;___DEBUG;API_CORE_DLL;API_CORE_DLL_EXPORT;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -190,6 +195,7 @@
     <ClCompile Include="..\..\src\Core\JsonSerializer.cpp" />
     <ClCompile Include="..\..\src\Core\Log.cpp" />
     <ClCompile Include="..\..\src\Core\Memory.cpp" />
+    <ClCompile Include="..\..\src\Core\MemoryStream.cpp" />
     <ClCompile Include="..\..\src\Core\Plugin.cpp" />
     <ClCompile Include="..\..\src\Core\PluginManager.cpp" />
     <ClCompile Include="..\..\src\Core\Profiler.cpp" />
@@ -239,6 +245,44 @@
   <ItemGroup>
     <ClInclude Include="..\..\dep\FastLZ\fastlz.h" />
     <ClInclude Include="..\..\dep\mongoose\mongoose.h" />
+    <ClInclude Include="..\..\dep\rdestl\algorithm.h" />
+    <ClInclude Include="..\..\dep\rdestl\alignment.h" />
+    <ClInclude Include="..\..\dep\rdestl\allocator.h" />
+    <ClInclude Include="..\..\dep\rdestl\basic_string.h" />
+    <ClInclude Include="..\..\dep\rdestl\buffer_allocator.h" />
+    <ClInclude Include="..\..\dep\rdestl\cow_string_storage.h" />
+    <ClInclude Include="..\..\dep\rdestl\fixed_array.h" />
+    <ClInclude Include="..\..\dep\rdestl\fixed_list.h" />
+    <ClInclude Include="..\..\dep\rdestl\fixed_sorted_vector.h" />
+    <ClInclude Include="..\..\dep\rdestl\fixed_substring.h" />
+    <ClInclude Include="..\..\dep\rdestl\fixed_vector.h" />
+    <ClInclude Include="..\..\dep\rdestl\functional.h" />
+    <ClInclude Include="..\..\dep\rdestl\hash.h" />
+    <ClInclude Include="..\..\dep\rdestl\hash_map.h" />
+    <ClInclude Include="..\..\dep\rdestl\intrusive_list.h" />
+    <ClInclude Include="..\..\dep\rdestl\intrusive_slist.h" />
+    <ClInclude Include="..\..\dep\rdestl\int_to_type.h" />
+    <ClInclude Include="..\..\dep\rdestl\iterator.h" />
+    <ClInclude Include="..\..\dep\rdestl\list.h" />
+    <ClInclude Include="..\..\dep\rdestl\map.h" />
+    <ClInclude Include="..\..\dep\rdestl\pair.h" />
+    <ClInclude Include="..\..\dep\rdestl\radix_sorter.h" />
+    <ClInclude Include="..\..\dep\rdestl\rb_tree.h" />
+    <ClInclude Include="..\..\dep\rdestl\rdestl.h" />
+    <ClInclude Include="..\..\dep\rdestl\rdestl_common.h" />
+    <ClInclude Include="..\..\dep\rdestl\rde_string.h" />
+    <ClInclude Include="..\..\dep\rdestl\set.h" />
+    <ClInclude Include="..\..\dep\rdestl\simple_string_storage.h" />
+    <ClInclude Include="..\..\dep\rdestl\slist.h" />
+    <ClInclude Include="..\..\dep\rdestl\sort.h" />
+    <ClInclude Include="..\..\dep\rdestl\sorted_vector.h" />
+    <ClInclude Include="..\..\dep\rdestl\sstream.h" />
+    <ClInclude Include="..\..\dep\rdestl\stack.h" />
+    <ClInclude Include="..\..\dep\rdestl\stack_allocator.h" />
+    <ClInclude Include="..\..\dep\rdestl\string_utils.h" />
+    <ClInclude Include="..\..\dep\rdestl\type_traits.h" />
+    <ClInclude Include="..\..\dep\rdestl\utility.h" />
+    <ClInclude Include="..\..\dep\rdestl\vector.h" />
     <ClInclude Include="..\..\inc\Core\API.h" />
     <ClInclude Include="..\..\inc\Core\Archive.h" />
     <ClInclude Include="..\..\inc\Core\Concurrency.h" />
@@ -256,6 +300,7 @@
     <ClInclude Include="..\..\inc\Core\Plugin.h" />
     <ClInclude Include="..\..\inc\Core\PluginManager.h" />
     <ClInclude Include="..\..\inc\Core\Pointers.h" />
+    <ClInclude Include="..\..\inc\Core\Profiler.h" />
     <ClInclude Include="..\..\inc\Core\References.h" />
     <ClInclude Include="..\..\inc\Core\Reflection.h" />
     <ClInclude Include="..\..\inc\Core\Serialization.h" />
@@ -265,6 +310,7 @@
     <ClInclude Include="..\..\inc\Core\Timer.h" />
     <ClInclude Include="..\..\inc\Core\Utilities.h" />
     <ClInclude Include="..\..\inc\Core\WebServer.h" />
+    <ClInclude Include="..\..\inc\Core\WebStream.h" />
     <ClInclude Include="..\..\inc\Math\BoundingBox.h" />
     <ClInclude Include="..\..\inc\Math\BoundingSphere.h" />
     <ClInclude Include="..\..\inc\Math\Color.h" />
@@ -289,9 +335,7 @@
     <ClInclude Include="..\..\inc\Network\Session.h" />
     <ClInclude Include="..\..\inc\Network\SessionManager.h" />
     <ClInclude Include="..\..\inc\vapor\math\Helpers.h" />
-    <ClInclude Include="..\..\inc\vapor\Profiler.h" />
     <ClInclude Include="..\..\inc\vapor\StackWalker.h" />
-    <ClInclude Include="..\..\inc\vapor\WebStream.h" />
     <ClInclude Include="..\..\src\Win32\FileWatcherWin32.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

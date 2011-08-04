@@ -7,15 +7,15 @@
 ************************************************************************/
 
 #include "Engine/API.h"
-#include "controllers/CameraController.h"
+#include "Controllers/CameraController.h"
 
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
 REFLECT_ABSTRACT_CHILD_CLASS(CameraController, Controller)
-	FIELD_PRIMITIVE(float, lookSensivity)
-	FIELD_PRIMITIVE(float, moveSensivity)
+	FIELD_PRIMITIVE(7, float, lookSensivity)
+	FIELD_PRIMITIVE(8, float, moveSensivity)
 REFLECT_CLASS_END()
 
 //-----------------------------------//

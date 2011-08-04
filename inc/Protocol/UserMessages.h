@@ -16,31 +16,34 @@ NAMESPACE_PROTOCOL_BEGIN
 
 //-----------------------------------//
 
-#define USER_MAX_NAME_SIZE 16+1
-
-struct API_PROTOCOL UserAuthMessage
+enum API_PROTOCOL UserAuthType
 {
-	uint16 nameLen;
-	char name[USER_MAX_NAME_SIZE];
+	None,
+	Password,
+	Certificate
 };
 
-struct API_PROTOCOL UserJoinMessage
+struct API_PROTOCOL UserAuthMessage : MessageDefinition
 {
-	UserId user;
-	uint16 nameLen;
-	char name[USER_MAX_NAME_SIZE];
+	String name;
+	UserAuthType type;
 };
 
-struct API_PROTOCOL UserLeaveMessage
+struct API_PROTOCOL UserJoinMessage : MessageDefinition
+{
+	UserId user;
+	String name;
+};
+
+struct API_PROTOCOL UserLeaveMessage : MessageDefinition
 {
 	UserId user;
 };
 
-struct API_PROTOCOL UserChangeNameMessage
+struct API_PROTOCOL UserChangeNameMessage : MessageDefinition
 {
 	UserId user;
-	uint16 nameLen;
-	char name[USER_MAX_NAME_SIZE];
+	String name;
 };
 
 #define USER_INITIAL_ID 600

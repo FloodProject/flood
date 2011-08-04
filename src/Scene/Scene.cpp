@@ -13,6 +13,7 @@
 #include "Scene/Geometry.h"
 #include "Scene/Model.h"
 #include "Render/Device.h"
+#include "Core/Profiler.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -24,7 +25,8 @@ REFLECT_CLASS_END()
 //-----------------------------------//
 
 Scene::Scene() : Group("Scene")
-{ }
+{
+}
 
 //-----------------------------------//
 
@@ -344,6 +346,8 @@ bool Scene::doRayTriangleQuery( const Ray& ray, RayTriangleQueryResult& res, con
 
 void Scene::update( float delta )
 {
+	//PROFILE_STR("Scene");
+
 	Group::update( delta );
 }
 

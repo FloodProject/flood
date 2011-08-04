@@ -92,12 +92,17 @@ API_CORE const char* EnumGetValueName(Enum*, int32 value);
 
 //-----------------------------------//
 
-struct Field;
 struct Object;
+struct Class;
+struct Field;
+
+typedef uint16 ClassId;
+typedef uint8 FieldId;
 
 typedef void* (*ClassCreateFunction)(Allocator*);
 
-typedef uint16 ClassId;
+typedef std::map<FieldId, Field*> ClassFieldIdMap;
+typedef std::map<ClassId, Class*> ClassIdMap;
 
 /**
  * This class provides types with a fast RTTI (Runtime Type Information)
@@ -121,6 +126,9 @@ struct API_CORE Class : public Type
 	// Keeps track of the type fields.
 	std::vector<Field*> fields;
 
+	// Keeps track of the type fields by id.
+	ClassFieldIdMap fieldIds;
+
 	// Keeps track of the childs of the class.
 	std::vector<Class*> childs;
 };
@@ -140,14 +148,23 @@ API_CORE Class* ClassGetType(const Object*);
 // Returns if the class is abstract.
 API_CORE bool ClassIsAbstract(const Class*);
 
+// Adds a new field to the given class.
+API_CORE void ClassAddField(Class*, Field* field);
+
 // Gets the field with the given name.
 API_CORE Field* ClassGetField(const Class*, const char* name);
+
+// Gets a field from a class hierarchy by its id.
+API_CORE Field* ClassGetFieldById(Class* klass, FieldId id);
 
 // Gets the field with the given name.
 API_CORE void* ClassGetFieldAddress(const void*, const Field*);
 
 // Creates a new instance of the class.
 API_CORE void* ClassCreateInstance(const Class*, Allocator*);
+
+// Gets the class id map.
+API_CORE ClassIdMap& ClassGetIdMap();
 
 //-----------------------------------//
 
@@ -168,8 +185,6 @@ struct FieldQualifier
 		NoSerialize		= 1 << 8
 	};
 };
-
-typedef uint8 FieldId;
 
 struct API_CORE Field
 {

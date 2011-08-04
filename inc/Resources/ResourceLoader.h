@@ -9,6 +9,7 @@
 #pragma once
 
 #include "Core/Stream.h"
+#include "Core/Plugin.h"
 #include "Resources/Resource.h"
 
 NAMESPACE_BEGIN
@@ -16,7 +17,7 @@ NAMESPACE_BEGIN
 //-----------------------------------//
 
 #define RESOURCE_LOADER_PREPARE(T) \
-	Resource* prepare(const Stream&) OVERRIDE { return Allocate(T, AllocatorGetHeap()); }
+	Resource* prepare(const Stream&) OVERRIDE { return Allocate(T, AllocatorGetThis()); }
 
 #define RESOURCE_LOADER_CLASS(T) \
 	Class* getResourceClass() const OVERRIDE { return ReflectionGetType(T); }
@@ -29,7 +30,7 @@ NAMESPACE_BEGIN
 
 REFLECT_DECLARE_CLASS(ResourceLoader)
 
-class API_RESOURCE ResourceLoader : public Object
+class API_RESOURCE ResourceLoader : public Plugin
 {
 	DECLARE_UNCOPYABLE(ResourceLoader)
 	REFLECT_DECLARE_OBJECT(ResourceLoader)
@@ -39,8 +40,14 @@ public:
 	ResourceLoader() {}
 	virtual ~ResourceLoader() {}
 
-	// Creates the resource with no data.
-	// Note: All I/O should be done in 'decode'.
+	// Gets metadata about this plugin.
+	PluginMetadata getMetadata() OVERRIDE { return PluginMetadata(); }
+
+	// Plugin callbacks.
+	void onPluginEnable() OVERRIDE {}
+	void onPluginDisable() OVERRIDE {}
+
+	// Creates the resource with no data (no I/O here).
 	virtual Resource* prepare(const Stream&) = 0;
 
 	// Decodes a given file into a resource.
@@ -55,9 +62,9 @@ public:
 	// Gets the resource group of this loader.
 	virtual ResourceGroup::Enum getResourceGroup() const = 0;
 
-	// Gets a the recognized extensions of this loader.
+	// Gets the recognized extensions of this loader.
 	GETTER(Extensions, const std::vector<String>&, extensions);
-	
+
 	std::vector<String> extensions;
 };
 

@@ -8,7 +8,7 @@
 
 #include "Engine/API.h"
 
-#ifdef VAPOR_AUDIO_OPENAL
+#ifdef ENABLE_AUDIO_OPENAL
 
 #include "Scene/Source.h"
 #include "Audio/Source.h"
@@ -30,16 +30,16 @@ REFLECT_ENUM(SourceMode)
 REFLECT_ENUM_END()
 
 REFLECT_CHILD_CLASS(Source, Component)
-	FIELD_ENUM_SETTER(SourceState, state, State)
-	FIELD_ENUM_SETTER(SourceMode, mode, Mode)
-	FIELD_PRIMITIVE_SETTER(bool, loop, Loop)
-	FIELD_PRIMITIVE_SETTER(float, volume, Volume)
-	FIELD_PRIMITIVE_SETTER(float, pitch, Pitch)
-	FIELD_PRIMITIVE_SETTER(float, minDistance, MinDistance)
-	FIELD_PRIMITIVE_SETTER(float, maxDistance, MaxDistance)
-	FIELD_ENUM_SETTER(RolloffMode, rolloffMode, RolloffMode)
-	FIELD_PRIMITIVE_SETTER(float, rolloff, Rolloff)
-	FIELD_CLASS_PTR_SETTER(Sound, SoundHandle, sound, Handle, Sound)
+	FIELD_ENUM_SETTER(4, SourceState, state, State)
+	FIELD_ENUM_SETTER(5, SourceMode, mode, Mode)
+	FIELD_PRIMITIVE_SETTER(6, bool, loop, Loop)
+	FIELD_PRIMITIVE_SETTER(7, float, volume, Volume)
+	FIELD_PRIMITIVE_SETTER(8, float, pitch, Pitch)
+	FIELD_PRIMITIVE_SETTER(9, float, minDistance, MinDistance)
+	FIELD_PRIMITIVE_SETTER(10, float, maxDistance, MaxDistance)
+	FIELD_ENUM_SETTER(11, RolloffMode, rolloffMode, RolloffMode)
+	FIELD_PRIMITIVE_SETTER(12, float, rolloff, Rolloff)
+	FIELD_CLASS_PTR_SETTER(13, Sound, SoundHandle, sound, Handle, Sound)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
@@ -62,7 +62,7 @@ Source::Source()
 
 Source::~Source()
 {
-	delete audioSource;
+	Deallocate(audioSource);
 }
 
 //-----------------------------------//

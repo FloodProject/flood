@@ -21,8 +21,12 @@ struct Quaternion;
 union API_CORE ValueContext
 {
 	bool* b;
-	int32* i32;
+	sint16* i16;
+	uint16* u16;
+	sint32* i32;
 	uint32* u32;
+	sint64* i64;
+	uint64* u64;
 	float* f;
 	int32* bf;
 	String* s;
@@ -51,7 +55,10 @@ struct ReflectionContext;
 // Walks the object calling the given reflection context.
 API_CORE void ReflectionWalk(Object*, ReflectionContext*);
 
-/* Handles need to be resolved when they are walked via reflection.
+//-----------------------------------//
+
+/**
+ * Handles need to be resolved when they are walked via reflection.
  * The client code is responsible for setting up the mapping functions
  * that allow the reflection walking code to obtain handle details.
  */
@@ -72,6 +79,8 @@ API_CORE bool ReflectionFindHandleContext(Class* klass, ReflectionHandleContext&
 typedef void (*ReflectionWalkFunc)(ReflectionContext*, ReflectionWalkType::Enum);
 typedef void (*ReflectionWalkCompositeFunc)(ReflectionContext*, ReflectionWalkType::Enum);
 
+//-----------------------------------//
+
 struct Type;
 struct Enum;
 struct Class;
@@ -83,7 +92,6 @@ struct API_CORE ReflectionContext
 	ReflectionContext() {}
 
 	void* userData;
-
 	Object* object;
 	Class* klass;
 
@@ -97,6 +105,7 @@ struct API_CORE ReflectionContext
 	Field* field;
 	void* address;
 	void* elementAddress;
+	uint32 arraySize;
 
 	ReflectionWalkCompositeFunc walkComposite;
 	ReflectionWalkFunc walkCompositeField;
@@ -110,8 +119,8 @@ struct API_CORE ReflectionContext
 struct Stream;
 struct Serializer;
 
-typedef void (*SerializerLoadFunc)(Serializer*);
-typedef void (*SerializerSaveFunc)(Serializer*);
+typedef Object* (*SerializerLoadFunction)(Serializer*);
+typedef bool    (*SerializerSaveFunction)(Serializer*, Object*);
 
 struct API_CORE Serializer
 {
@@ -119,15 +128,14 @@ struct API_CORE Serializer
 	virtual ~Serializer();
 
 	Allocator* alloc;
-
 	Stream* stream;
 	Object* object;
 
 	ReflectionContext serializeContext;
 	ReflectionContext deserializeContext;
 
-	SerializerLoadFunc load;
-	SerializerSaveFunc save;
+	SerializerLoadFunction load;
+	SerializerSaveFunction save;
 };
 
 #ifdef ENABLE_SERIALIZATION_JSON
@@ -149,11 +157,17 @@ API_CORE void SerializerDestroy(Serializer*);
 
 // Loads an object from a stream.
 API_CORE Object* SerializerLoad(Serializer*);
-API_CORE bool SerializerSave(Serializer*);
+API_CORE bool SerializerSave(Serializer*, Object* object);
 
 // Wrappers for file-based loading and saving.
-API_CORE Object* SerializerLoadObjectFromFile(const Path&);
-API_CORE bool SerializerSaveObjectToFile(const Path& file, Object* object);
+API_CORE Object* SerializerLoadObjectFromFile(Serializer*, const Path&);
+API_CORE bool SerializerSaveObjectToFile(Serializer*, const Path& file, Object* object);
+
+//-----------------------------------//
+
+// Array helpers
+void* ReflectionArrayResize( ReflectionContext*, void* address, uint32 size );
+uint16 ReflectionArrayGetElementSize(const Field* field);
 
 //-----------------------------------//
 

@@ -22,19 +22,20 @@ class API_CORE Profiler
 {
 public:
 
-	Profiler(const String& name);
+	Profiler(const char* category, const char* name);
 	~Profiler();
+
+	// Resets the profiler timer.
+	void reset();
 
 protected:
 
-	String name;
+	const char* category;
+	const char* name;
 	Timer timer;
 };
 
-//-----------------------------------//
-
-#define PROFILE Profiler p( __FUNCTION__ )
-#define PROFILE_STR(s) Profiler p( __FUNCTION__ " / " s )
+#define PROFILE_STR(s) Profiler p( s, __FUNCTION__ )
 
 //-----------------------------------//
 

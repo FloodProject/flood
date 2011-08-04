@@ -8,7 +8,7 @@
 
 #pragma once
 
-#ifdef VAPOR_AUDIO_OPENAL
+#ifdef ENABLE_AUDIO_OPENAL
 
 #include "Scene/Component.h"
 #include "Audio/Source.h"

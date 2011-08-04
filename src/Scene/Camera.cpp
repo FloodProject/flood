@@ -20,8 +20,8 @@ NAMESPACE_ENGINE_BEGIN
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(Camera, Component)
-	FIELD_CLASS(Frustum, frustum)
-	FIELD_PRIMITIVE(bool, frustumCulling)
+	FIELD_CLASS(4, Frustum, frustum)
+	FIELD_PRIMITIVE(5, bool, frustumCulling)
 REFLECT_CLASS_END()
 
 //-----------------------------------//

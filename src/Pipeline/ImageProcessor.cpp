@@ -45,10 +45,10 @@ REFLECT_ENUM(CompressionFormat)
 REFLECT_ENUM_END()
 
 REFLECT_CHILD_CLASS(ImageProcessor, ResourceProcessor)
-	FIELD_ENUM(CompressionFormat, format)
-	FIELD_ENUM(CompressionQuality, quality)
-	FIELD_PRIMITIVE(bool, generateMipmaps)
-	FIELD_ENUM(MipmapFilter, mipmapFilter)
+	FIELD_ENUM(0, CompressionFormat, format)
+	FIELD_ENUM(1, CompressionQuality, quality)
+	FIELD_PRIMITIVE(2, bool, generateMipmaps)
+	FIELD_ENUM(3, MipmapFilter, mipmapFilter)
 REFLECT_CLASS_END()
 
 //-----------------------------------//

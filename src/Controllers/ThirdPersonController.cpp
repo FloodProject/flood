@@ -24,15 +24,16 @@ NAMESPACE_ENGINE_BEGIN
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(ThirdPersonController, CameraController)
-	FIELD_PRIMITIVE(Vector3, distance)
-	FIELD_PRIMITIVE(Vector3, rotation)
-	FIELD_PRIMITIVE(string, followEntityName)
+	FIELD_PRIMITIVE(10, Vector3, distance)
+	FIELD_PRIMITIVE(11, Vector3, rotation)
+	FIELD_PRIMITIVE(12, string, followEntityName)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
 
 ThirdPersonController::ThirdPersonController()
-{ }
+{
+}
 
 //-----------------------------------//
 
@@ -57,18 +58,20 @@ void ThirdPersonController::_update( float delta )
 	transform->setPosition( followTransform->getPosition() + distance );
 	transform->setRotation( followTransform->getRotation() * Quaternion(rotation) );
 #endif
-//
-//	Vector3 thirdPersonReference = new Vector3(0, 200, -200);
-//	Matrix rotationMatrix = Matrix.CreateRotationY(avatarYaw);
-//
-//	// Create a vector pointing the direction the camera is facing.
-//	Vector3 transformedReference = Vector3.Transform(thirdPersonReference, rotationMatrix);
-//
-//	// Calculate the position the camera is looking from.
-//	Vector3 cameraPosition = transformedReference + avatarPosition;
-//
-//	view = Matrix.CreateLookAt(cameraPosition, avatarPosition, 
-//	    new Vector3(0.0f, 1.0f, 0.0f));
+
+#if 0
+	Vector3 thirdPersonReference = new Vector3(0, 200, -200);
+	Matrix rotationMatrix = Matrix.CreateRotationY(avatarYaw);
+
+	// Create a vector pointing the direction the camera is facing.
+	Vector3 transformedReference = Vector3.Transform(thirdPersonReference, rotationMatrix);
+
+	// Calculate the position the camera is looking from.
+	Vector3 cameraPosition = transformedReference + avatarPosition;
+
+	view = Matrix.CreateLookAt(cameraPosition, avatarPosition, 
+	    new Vector3(0.0f, 1.0f, 0.0f));
+#endif
 }
 
 //-----------------------------------//

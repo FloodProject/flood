@@ -13,6 +13,9 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
+REFLECT_CLASS(MessageDefinition)
+REFLECT_CLASS_END()
+
 REFLECT_ABSTRACT_CHILD_CLASS(MessagePlugin, Plugin)
 REFLECT_CLASS_END()
 

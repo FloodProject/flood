@@ -370,7 +370,7 @@ void CuSuiteDetails(CuSuite* testSuite, CuString* details)
 
 void CuInit()
 {
-	gs_AllocatorTests = AllocatorCreateHeap( AllocatorGetHeap());
+	gs_AllocatorTests = AllocatorCreateHeap(AllocatorGetHeap());
 	AllocatorSetGroup(gs_AllocatorTests, "Tests");
 }
 

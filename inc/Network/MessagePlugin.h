@@ -9,6 +9,7 @@
 #pragma once
 
 #include "Core/Plugin.h"
+#include "Network/Message.h"
 
 FWD_DECL_INTRUSIVE(Session)
 
@@ -42,6 +43,13 @@ public:
 	// Gets the enum with the messages that this plugin handles.
 	virtual Enum* getMessagesEnum() = 0;
 };
+
+struct API_CORE MessageDefinition
+{
+
+};
+
+REFLECT_DECLARE_CLASS(MessageDefinition)
 
 //-----------------------------------//
 

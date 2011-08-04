@@ -23,149 +23,167 @@
 #include "Math/EulerAngles.h"
 #include "Math/Color.h"
 
-#include <stack>
-
 NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-static Vector3 ConvertValueToVector3( msgpack_object* value )
-{
-	msgpack_object_array& array = value->via.array;
-	assert( array.size == 3 );
-
-	float* f = (float*) array.ptr;
-	
-	Vector3 v;
-	v.x = f[0];
-	v.y = f[1];
-	v.z = f[2];
-
-	return v;
-}
-
-//-----------------------------------//
-
-static Color ConvertValueToColor( msgpack_object* value )
-{
-	msgpack_object_array& array = value->via.array;
-	assert( array.size == 4 );
-
-	float* f = (float*) array.ptr;
-	
-	Color c;
-	c.r = f[0];
-	c.g = f[1];
-	c.b = f[2];
-	c.a = f[3];
-
-	return c;
-}
-
-//-----------------------------------//
-
-static Quaternion ConvertValueToQuaternion( msgpack_object* value )
-{
-	msgpack_object_array& array = value->via.array;
-	assert( array.size == 4 );
-
-	float* f = (float*) array.ptr;
-
-	Quaternion q;
-	q.x = f[0];
-	q.y = f[1];
-	q.z = f[2];
-	q.w = f[3];
-
-	return q;
-}
-
-//-----------------------------------//
-#if 0
-static EulerAngles ConvertValueToEulerAngles( msgpack_object* value )
-{
-
-	EulerAngles a;
-	json_unpack(value, "[g,g,g]", &a.x, &a.y, &a.z);
-	return a;
-}
-
-//-----------------------------------//
-
-static msgpack_object* ConvertVector3( const Vector3& vec )
-{
-	return json_pack("[f,f,f]", vec.x, vec.y, vec.z);
-}
-
-//-----------------------------------//
-
-static msgpack_object* ConvertColor( const Color& c )
-{
-	return json_pack("[f,f,f,f]", c.r, c.g, c.b, c.a);
-}
-
-//-----------------------------------//
-
-static msgpack_object* ConvertQuaternion( const Quaternion& q )
-{
-	return json_pack("[f,f,f,f]", q.x, q.y, q.z, q.w);
-}
-#endif
-//-----------------------------------//
-
 struct API_CORE SerializerBinary : public Serializer
 {
-	msgpack_object* rootValue;
-	
-	// Stack of values.
-	std::stack<msgpack_object*> values;
-	std::stack<msgpack_object*> arrays;
+	MemoryStream* ms;
+	uint8* buf;
+	uint16 arraySize;
 };
 
 //-----------------------------------//
-#if 0
+
+/**
+ * Wire format is inspired on Google Protocol Buffers.
+ * http://code.google.com/apis/protocolbuffers/docs/encoding.html
+ */
+
+#define StreamIndex(s) ((&s->data[0])+s->position)
+#define StreamAdvanceIndex(s, n) (s->position += n)
+
+static void EncodeVariableInteger(MemoryStream* ms, uint64 val)
+{
+	uint8 n = 0;
+	uint8* buf = StreamIndex(ms);
+
+	do
+	{
+		uint8 byte = val & 0x7f;
+		val >>= 7;
+		if(val) byte |= 0x80;
+		*buf++ = byte;
+		n++;
+	}
+	while(val);
+
+	StreamAdvanceIndex(ms, n);
+}
+
+static bool DecodeVariableInteger(MemoryStream* ms, uint64& val)
+{
+	uint8* buf = StreamIndex(ms);
+	uint8* p = buf;
+
+	uint32 low, high = 0;
+	uint32 b;
+	b = *(p++); low   = (b & 0x7f)      ; if(!(b & 0x80)) goto done;
+	b = *(p++); low  |= (b & 0x7f) <<  7; if(!(b & 0x80)) goto done;
+	b = *(p++); low  |= (b & 0x7f) << 14; if(!(b & 0x80)) goto done;
+	b = *(p++); low  |= (b & 0x7f) << 21; if(!(b & 0x80)) goto done;
+	b = *(p++); low  |= (b & 0x7f) << 28;
+				high  = (b & 0x7f) >>  4; if(!(b & 0x80)) goto done;
+	b = *(p++); high |= (b & 0x7f) <<  3; if(!(b & 0x80)) goto done;
+	b = *(p++); high |= (b & 0x7f) << 10; if(!(b & 0x80)) goto done;
+	b = *(p++); high |= (b & 0x7f) << 17; if(!(b & 0x80)) goto done;
+	b = *(p++); high |= (b & 0x7f) << 24; if(!(b & 0x80)) goto done;
+	b = *(p++); high |= (b & 0x7f) << 31; if(!(b & 0x80)) goto done;
+	return false;
+
+done:
+
+	StreamAdvanceIndex(ms, p-buf);
+	val = ((uint64) high << 32) | low;
+	return true;
+}
+
+//-----------------------------------//
+
+/**
+ * For signed numbers, we use an encoding called zig-zag encoding
+ * that maps signed numbers to unsigned numbers so they can be
+ * efficiently encoded using the normal variable-int encoder.
+ */
+
+static uint32 EncodeZigZag32(sint32 n)
+{
+	return (n << 1) ^ (n >> 31);
+}
+
+static sint32 DecodeZigZag32(uint32 n)
+{
+	return (n >> 1) ^ -(sint32)(n & 1);
+}
+
+static uint64 EncodeZigZag64(sint64 n)
+{
+	return (n << 1) ^ (n >> 63);
+}
+
+static sint64 DecodeZigZag64(uint64 n)
+{
+	return (n >> 1) ^ -(sint64)(n & 1);
+}
+
+//-----------------------------------//
+
+static void EncodeFixed32(MemoryStream* ms, uint32 val)
+{
+	uint8* buf = StreamIndex(ms);
+	buf[0] = val & 0xff;
+	buf[1] = (val >> 8) & 0xff;
+	buf[2] = (val >> 16) & 0xff;
+	buf[3] = (val >> 24);
+	StreamAdvanceIndex(ms, sizeof(uint32));
+}
+
+static uint32 DecodeFixed32(MemoryStream* ms)
+{
+	uint8* buf = StreamIndex(ms);
+	uint32* val = (uint32*) buf;
+	StreamAdvanceIndex(ms, sizeof(uint32));
+	return *val;
+}
+
+//-----------------------------------//
+
+static void EncodeString(MemoryStream* ms, const String& s)
+{
+	EncodeVariableInteger(ms, s.size());
+	StreamWriteString(ms, s);
+}
+
+static bool DecodeString(MemoryStream* ms, String& s)
+{
+	uint64 size;
+	
+	if( !DecodeVariableInteger(ms, size) )
+		return false;
+
+	s.resize((size_t)size);
+	memcpy(&s[0], StreamIndex(ms), size);
+
+	StreamAdvanceIndex(ms, size);
+
+	return true;
+}
+
+//-----------------------------------//
+
 static void SerializeArray(ReflectionContext* ctx, ReflectionWalkType::Enum wt)
 {
 	SerializerBinary* bin = (SerializerBinary*) ctx->userData;
 
 	if(wt == ReflectionWalkType::Begin)
 	{
-		msgpack_object* array = json_array();	
-		bin->values.push( array );
-	}
-	else if(wt == ReflectionWalkType::ElementEnd)
-	{
-		msgpack_object* element = bin->values.top();
-		bin->values.pop();
-		json_array_append_new(bin->values.top(), element);
+		EncodeVariableInteger(bin->ms, ctx->arraySize);
+		return;
 	}
 }
-#endif
+
 //-----------------------------------//
 
 static void SerializeComposite(ReflectionContext* ctx, ReflectionWalkType::Enum wt)
 {
 	SerializerBinary* bin = (SerializerBinary*) ctx->userData;
-	
+	Class* klass = ctx->klass;
+
 	if(wt == ReflectionWalkType::Begin)
 	{
-		msgpack_object* object = Allocate(msgpack_object, bin->alloc);
-		object->type = MSGPACK_OBJECT_MAP;
-		
-		bin->values.push( object );
-	}
-	else if(wt == ReflectionWalkType::End)
-	{
-		msgpack_object* object = bin->values.top();
-
-		//msgpack_object* object = json_object();
-		//json_object_set_new(klass, ctx->klass->name, bin->values.top());
-		
-		bin->values.pop();
-		//bin->values.push(klass);
-
-		Deallocate(object);
-
+		EncodeVariableInteger(bin->ms, klass->id);
+		return;
 	}
 }
 
@@ -174,32 +192,27 @@ static void SerializeComposite(ReflectionContext* ctx, ReflectionWalkType::Enum 
 static void SerializeField(ReflectionContext* ctx, ReflectionWalkType::Enum wt)
 {
 	SerializerBinary* bin = (SerializerBinary*) ctx->userData;
+	Field* field = ctx->field;
 
-	if(wt == ReflectionWalkType::End)
+	if(wt == ReflectionWalkType::Begin)
 	{
-		msgpack_object* field = bin->values.top();
-		bin->values.pop();
-		
+		EncodeVariableInteger(bin->ms, field->id);
 		return;
 	}
 }
 
 //-----------------------------------//
-#if 0
+
 static void SerializeEnum(ReflectionContext* ctx, ReflectionWalkType::Enum wt)
 {
 	SerializerBinary* bin = (SerializerBinary*) ctx->userData;
 	
 	ValueContext& vc = ctx->valueContext;
-	int32 value = *vc.i32;
+	int32& val = *vc.i32;
 	
-	const char* name = EnumGetValueName(ctx->enume, value);
-	assert( name != nullptr );
-
-	msgpack_object* str = json_string(name);
-	bin->values.push(str);
+	EncodeVariableInteger(bin->ms, EncodeZigZag32(val));
 }
-#endif
+
 //-----------------------------------//
 
 static void SerializePrimitive( ReflectionContext* context, ReflectionWalkType::Enum wt )
@@ -207,192 +220,232 @@ static void SerializePrimitive( ReflectionContext* context, ReflectionWalkType::
 	SerializerBinary* bin = (SerializerBinary*) context->userData;
 	ValueContext& vc = context->valueContext;
 
-	msgpack_object* value = Allocate(msgpack_object, bin->alloc);
-
 	switch(context->primitive->type)
 	{
 	case Primitive::Bool:
 	{
 		bool& b = *vc.b;
-		value->type = MSGPACK_OBJECT_BOOLEAN;
-		value->via.boolean = b;
+		EncodeVariableInteger(bin->ms, b);
+		break;
+	}
+	case Primitive::Int16:
+	{
+		sint16& i = *vc.i16;
+		EncodeVariableInteger(bin->ms, EncodeZigZag32(i));
+		break;
+	}
+	case Primitive::Uint16:
+	{
+		uint16& i = *vc.u16;
+		EncodeVariableInteger(bin->ms, i);
 		break;
 	}
 	case Primitive::Int32:
 	{
-		int32& i = *vc.i32;
-		value->type = MSGPACK_OBJECT_NEGATIVE_INTEGER;
-		value->via.i64 = i;
+		sint32& i = *vc.i32;
+		EncodeVariableInteger(bin->ms, EncodeZigZag32(i));
 		break;
 	}
 	case Primitive::Uint32:
 	{
 		uint32& i = *vc.u32;
-		value->type = MSGPACK_OBJECT_POSITIVE_INTEGER;
-		value->via.i64 = i;
+		EncodeVariableInteger(bin->ms, i);
+		break;
+	}
+	case Primitive::Int64:
+	{
+		sint64& i = *vc.i64;
+		EncodeVariableInteger(bin->ms, EncodeZigZag64(i));
+		break;
+	}
+	case Primitive::Uint64:
+	{
+		uint64& i = *vc.u64;
+		EncodeVariableInteger(bin->ms, i);
 		break;
 	}
 	case Primitive::Float:
 	{
 		float& f = *vc.f;
-		value->type = MSGPACK_OBJECT_DOUBLE;
-		value->via.dec = f;
+		EncodeFixed32(bin->ms, (uint32)f);
 		break;
 	}
 	case Primitive::String:
 	{
 		String& s = *vc.s;
-		//value->type = MSGPACK_OBJECT_
-		//value->via.dec = f;
+		EncodeString(bin->ms, s);
 		break;
 	}
 	case Primitive::Color:
 	{
 		Color& c = *vc.c;
-		//value = ConvertColor(c);
+		EncodeFixed32(bin->ms, (uint32) c.r);
+		EncodeFixed32(bin->ms, (uint32) c.g);
+		EncodeFixed32(bin->ms, (uint32) c.b);
+		EncodeFixed32(bin->ms, (uint32) c.a);
 		break;
 	}
 	case Primitive::Vector3:
 	{
 		Vector3& v = *vc.v;
-		//value = ConvertVector3(v);
+		EncodeFixed32(bin->ms, (uint32) v.x);
+		EncodeFixed32(bin->ms, (uint32) v.y);
+		EncodeFixed32(bin->ms, (uint32) v.z);
 		break;
 	}
 	case Primitive::Quaternion:
 	{
 		Quaternion& q = *vc.q;
-		//value = ConvertQuaternion(q);
+		EncodeFixed32(bin->ms, (uint32) q.x);
+		EncodeFixed32(bin->ms, (uint32) q.y);
+		EncodeFixed32(bin->ms, (uint32) q.z);
+		EncodeFixed32(bin->ms, (uint32) q.w);
 		break;
 	}
 	case Primitive::Bitfield:
 	{
 		int32& i = *vc.bf;
-		//value = json_integer(i);
+		EncodeFixed32(bin->ms, (uint32) i);
 		break;
 	}
 	default:
 		assert( false );
 	}
-
-	bin->values.push(value);
 }
-#if 0
+
 //-----------------------------------//
 
-static void DeserializeEnum( ReflectionContext* context, msgpack_object* value )
+static void DeserializeEnum( ReflectionContext* context )
 {
-	const char* name = json_string_value(value);
+	SerializerBinary* bin = (SerializerBinary*) context->userData;
 	Enum* enume = (Enum*) context->enume;
 
-	int32 enumValue = EnumGetValue(enume, name);
-	FieldSet<int32>(context->field, context->object, enumValue);
+	uint64 val;
+	if( !DecodeVariableInteger(bin->ms, val) )
+		return;
+	
+	sint32 i = DecodeZigZag32((uint32)val);
+	FieldSet(context->field, context->object, i);
 }
 
 //-----------------------------------//
 
-#define setValue(T, val) FieldSet<T>(context->field, context->object, val);
+#define SetFieldValue(T, val) FieldSet<T>(context->field, context->object, val);
 
-static void DeserializePrimitive( ReflectionContext* context, msgpack_object* value )
+static void DeserializePrimitive( ReflectionContext* context )
 {
+	SerializerBinary* bin = (SerializerBinary*) context->userData;
+	MemoryStream* ms = bin->ms;
+	uint64 i;
+
 	switch(context->primitive->type)
 	{
 	case Primitive::Bool:
 	{
-		assert( json_is_boolean(value) );
-		bool val = msgpack_objectypeof(value) == JSON_TRUE;
-		setValue(bool, val);
+		DecodeVariableInteger(ms, i);
+		bool val = i != 0;
+		SetFieldValue(bool, val);
+		break;
+	}
+	case Primitive::Int16:
+	{
+		DecodeVariableInteger(ms, i);
+		sint16 val = (sint16) DecodeZigZag32((uint32)i);
+		SetFieldValue(sint16, val);
+		break;
+	}
+	case Primitive::Uint16:
+	{
+		DecodeVariableInteger(ms, i);
+		uint16 val = (uint16) i;
+		SetFieldValue(uint16, val);
 		break;
 	}
 	case Primitive::Int32:
 	{
-		int32 val = (int32) json_integer_value(value);
-		setValue(int32, val);
+		DecodeVariableInteger(ms, i);
+		sint32 val = (sint32) DecodeZigZag32((uint32)i);
+		SetFieldValue(sint32, val);
 		break;
 	}
 	case Primitive::Uint32:
 	{
-		uint32 val = (uint32) json_integer_value(value);
-		setValue(uint32, val);
+		DecodeVariableInteger(ms, i);
+		uint32 val = (uint32) i;
+		SetFieldValue(uint32, val);
+		break;
+	}
+	case Primitive::Int64:
+	{
+		DecodeVariableInteger(ms, i);
+		sint64 val = (sint64) DecodeZigZag64(i);
+		SetFieldValue(sint64, val);
+		break;
+	}
+	case Primitive::Uint64:
+	{
+		DecodeVariableInteger(ms, i);
+		SetFieldValue(uint64, i);
 		break;
 	}
 	case Primitive::Float:
 	{
-		float val = (float) json_real_value(value);
-		setValue(float, val);
+		float val = (float) DecodeFixed32(ms);
+		SetFieldValue(float, val);
 		break;
 	}
 	case Primitive::String:
 	{
-		String val = json_string_value(value);
-		setValue(String, val);
+		String val;
+		DecodeString(ms, val);
+		SetFieldValue(String, val);
 		break;
 	}
 	case Primitive::Color:
 	{
-		Color val = ConvertValueToColor(value);
-		setValue(Color, val);
+		ColorP val;
+		val.r = DecodeFixed32(ms);
+		val.g = DecodeFixed32(ms);
+		val.b = DecodeFixed32(ms);
+		val.a = DecodeFixed32(ms);
+		SetFieldValue(ColorP, val);
 		break;
 	}
 	case Primitive::Vector3:
 	{
-		Vector3 val = ConvertValueToVector3(value);
-		setValue(Vector3, val);
+		Vector3P val;
+		val.x = DecodeFixed32(ms);
+		val.y = DecodeFixed32(ms);
+		val.z = DecodeFixed32(ms);
+		SetFieldValue(Vector3P, val);
 		break;
 	}
 	case Primitive::Quaternion:
 	{
-		Quaternion val = ConvertValueToQuaternion(value);
-		setValue(Quaternion, val);
+		QuaternionP val;
+		val.x = DecodeFixed32(ms);
+		val.y = DecodeFixed32(ms);
+		val.z = DecodeFixed32(ms);
+		val.w = DecodeFixed32(ms);
+		SetFieldValue(QuaternionP, val);
 		break;
 	}
 	case Primitive::Bitfield:
 	{
-		int32 val = json_integer_value(value);
-		setValue(int32, val);
+		int32 val = DecodeFixed32(ms);
+		SetFieldValue(int32, val);
 		break;
 	}
 	default:
 		assert(0 && "Unknown primitive type");
 	}
 }
-
+#if 0
 //-----------------------------------//
 
-typedef std::vector<std::shared_ptr<Object>> ObjectSharedPtrArray;
-typedef std::vector<RefPtr<ReferenceCounted>> ObjectRefPtrArray;
-typedef std::vector<Object*> ObjectRawPtrArray;
+static Object* DeserializeComposite( ReflectionContext* context );
 
-static void* ResizeArray( ReflectionContext* context, void* address, uint32 size )
-{
-	const Field* field = context->field;
-
-	if( FieldIsSharedPointer(field) )
-	{
-		ObjectSharedPtrArray* array = (ObjectSharedPtrArray*) address;
-		array->resize(size);
-		return &array->front();
-	}
-	else if( FieldIsRefPointer(field) )
-	{
-		ObjectRefPtrArray* array = (ObjectRefPtrArray*) address;
-		array->resize(size);
-		return &array->front();
-	}
-	else if( FieldIsRawPointer(field) )
-	{
-		ObjectRawPtrArray* array = (ObjectRawPtrArray*) address;
-		array->resize(size);
-		return &array->front();
-	}
-
-	return nullptr;
-}
-
-//-----------------------------------//
-
-static Object* DeserializeComposite( ReflectionContext* context, msgpack_object* value );
-
-static void DeserializeArrayElement( ReflectionContext* context, msgpack_object* value, void* address )
+static void DeserializeArrayElement( ReflectionContext* context, void* address )
 {
 	const Field* field = context->field;
 
@@ -413,44 +466,8 @@ static void DeserializeArrayElement( ReflectionContext* context, msgpack_object*
 		context->composite = (Class*) field->type;
 		Object* object = DeserializeComposite(context, value);
 		
-		if( FieldIsRawPointer(field) )
-		{
-			Object** objectptr = (Object**) address;
-			*objectptr = object;
-		}
-		else if( FieldIsSharedPointer(field) )
-		{
-			std::shared_ptr<Object>* shared_obj = (std::shared_ptr<Object>*) address;
-			shared_obj->reset(object);
-		}
-		else if( FieldIsRefPointer(field) )
-		{
-			Object* ref = (Object*) object;
-			RefPtr<Object>* ref_obj = (RefPtr<Object>*) address;
-			ref_obj->reset(ref);
-		}
-		else if( FieldIsHandle(field) )
-		{
-			assert(0 && "Not implemented");
-		}
-		else
-		{
-			assert(0 && "Not implemented");
-			//memcpy(element, object, size);
-		}
-
 		break;
 	} }
-}
-
-//-----------------------------------//
-
-static uint16 GetArrayElementSize(const Field* field)
-{
-	if( FieldIsPointer(field) )
-		return field->pointer_size;
-	else
-		return field->size;
 }
 
 //-----------------------------------//
@@ -477,16 +494,17 @@ static void DeserializeArray( ReflectionContext* context, msgpack_object* value 
 		DeserializeArrayElement(context, arrayValue, element);
 	}
 }
+#endif
 
 //-----------------------------------//
 
-static void DeserializeField( ReflectionContext* context, msgpack_object* value )
+static void DeserializeField( ReflectionContext* context )
 {
 	Field* field = context->field;
 
-	if( FieldIsArray(field) && json_is_array(value) )
+	if( FieldIsArray(field) )
 	{
-		DeserializeArray(context, value);
+		//DeserializeArray(context);
 		return;
 	}
 	
@@ -502,6 +520,7 @@ static void DeserializeField( ReflectionContext* context, msgpack_object* value 
 
 		if( FieldIsHandle(field) )
 		{
+#if 0
 			if( !json_is_object(value) )
 			{
 				LogDebug("Can't deserialize handle '%s'", field->name);
@@ -526,6 +545,7 @@ static void DeserializeField( ReflectionContext* context, msgpack_object* value 
 			handleObject->id = id;
 			
 			ReferenceAdd((Object*)HandleFind(handleContext.handles, id));
+#endif
 		}
 		else if( FieldIsPointer(field) )
 		{
@@ -533,7 +553,7 @@ static void DeserializeField( ReflectionContext* context, msgpack_object* value 
 		}
 		else
 		{
-			object = DeserializeComposite(context, value);
+			//object = DeserializeComposite(context);
 		}
 
 		address = ClassGetFieldAddress(object, field);
@@ -543,43 +563,41 @@ static void DeserializeField( ReflectionContext* context, msgpack_object* value 
 	case Type::Primitive:
 	{
 		context->primitive = (Primitive*) context->field->type;
-		DeserializePrimitive(context, value);
+		DeserializePrimitive(context);
 		break;
 	}
 	case Type::Enumeration:
 	{
 		context->enume = (Enum*) context->field->type;
-		DeserializeEnum(context, value);
+		DeserializeEnum(context);
 		break;
 	} }
 }
 
 //-----------------------------------//
 
-static void DeserializeFields( ReflectionContext* context, msgpack_object* value )
+static void DeserializeFields( ReflectionContext* context )
 {
-	void* iter = json_object_iter(value);
-	for(; iter; iter = json_object_iter_next(value, iter))
+	SerializerBinary* bin = (SerializerBinary*) context->userData;
+
+	uint64 val;
+	while( DecodeVariableInteger(bin->ms, val) )
 	{
-		const char* key = json_object_iter_key(iter);
-		msgpack_object* val = json_object_iter_value(iter);
+		FieldId id = (FieldId) val;
 
 		Class* composite = context->composite;
 		Field* field = context->field;
 
-		Field* newField = ClassGetField(composite, key);
+		Field* newField = ClassGetFieldById(composite, id);
 		
 		if( !newField )
 		{
-			LogDebug("Unknown field '%s' of class '%s'", key, composite->name);
+			LogDebug("Unknown field '%d' of class '%s'", id, composite->name);
 			continue;
 		}
 		
-		if( json_is_null(val) ) continue;
-
 		context->field = newField;
-	
-		DeserializeField(context, val);
+		DeserializeField(context);
 
 		context->field = field;
 		context->composite = composite;
@@ -588,25 +606,37 @@ static void DeserializeFields( ReflectionContext* context, msgpack_object* value
 
 //-----------------------------------//
 
-static Object* DeserializeComposite( ReflectionContext* context, msgpack_object* value )
+static Object* DeserializeComposite( ReflectionContext* context)
 {
 	SerializerBinary* bin = (SerializerBinary*) context->userData;
+	ClassIdMap& ids = ClassGetIdMap();
 
-	if( !json_is_object(value) ) return 0;
+	// Read the class id.
+	uint64 val;
+	
+	if( !DecodeVariableInteger(bin->ms, val) )
+		return nullptr;
 
-	if( json_object_size(value) != 1 )
+	ClassId id = (ClassId) val;
+	
+	// Find the class id.
+	ClassIdMap::iterator it = ids.find(id);
+
+	if( it == ids.end() )
 	{
-		LogDebug("Invalid field '%s' from class '%s'", context->field->name, context->composite->name);
+		LogDebug("Invalid class id");
 		return nullptr;
 	}
 
-	void* iter = json_object_iter(value);
-	const char* key = json_object_iter_key(iter);
-	msgpack_object* iterValue = json_object_iter_value(iter);
-
-	Class* newClass = (Class*) ReflectionFindType(key);
-	if( !newClass ) return 0;
-
+	Class* newClass = it->second;
+	
+	if( !newClass )
+	{
+		LogDebug("Invalid class");
+		return nullptr;
+	}
+	
+	// Instantiate a new class.
 	Object* newObject = (Object*) ClassCreateInstance(newClass, bin->alloc);
 
 	Class* klass = context->klass;
@@ -617,7 +647,7 @@ static Object* DeserializeComposite( ReflectionContext* context, msgpack_object*
 	context->composite = newClass;
 	context->object = newObject;
 
-	DeserializeFields(context, iterValue);
+	DeserializeFields(context);
 
 	if( ClassInherits(newClass, ReflectionGetType(Object)) )
 		newObject->fixUp();
@@ -628,60 +658,42 @@ static Object* DeserializeComposite( ReflectionContext* context, msgpack_object*
 
 	return newObject;
 }
-#endif
 
 //-----------------------------------//
 
-static void SerializeLoad( Serializer* serializer )
+static Object* SerializeLoad( Serializer* serializer )
 {
 	SerializerBinary* bin = (SerializerBinary*) serializer;
+	if( !bin->stream ) return nullptr;
 
-#if 0
-	String text;
-	StreamReadString(bin->stream, text);
-	StreamClose(bin->stream);
+	int64 size = StreamGetSize(bin->stream);
+	bin->ms = (MemoryStream*) StreamCreateFromMemory(bin->alloc, size);
+	StreamReadBuffer(bin->stream, &bin->ms->data[0], size);
 
-	msgpack_object* rootValue = nullptr;
-
-	LocaleSwitch locale;
-	
-	rootValue = json_loads(text.c_str(), 0, nullptr);
-	
-	if( !rootValue )
-	{
-		LogError("Could not parse JSON text of '%s'", bin->stream->path.c_str());
-		return;
-	}
-
-	bin->rootValue = rootValue;
-	
 	ReflectionContext* context = &serializer->deserializeContext;
-	Object* object = DeserializeComposite(context, rootValue);
-
-	json_decref(rootValue);
-	serializer->object = object;
-#endif
+	Object* object = DeserializeComposite(context);
+	
+	Deallocate(bin->ms);
+	return object;
 }
 
 //-----------------------------------//
 
-static void SerializeSave( Serializer* serializer )
+static bool SerializeSave( Serializer* serializer, Object* object )
 {
 	SerializerBinary* bin = (SerializerBinary*) serializer;
+	if( !bin->stream ) return false;
 
-	msgpack_sbuffer* sbuffer = msgpack_sbuffer_new();
-	msgpack_packer* packer = msgpack_packer_new(sbuffer, msgpack_sbuffer_write);
-
-	ReflectionWalk(bin->object, &bin->serializeContext);
-	assert( bin->values.size() == 1 );
+	Stream* buf = StreamCreateFromMemory(bin->alloc, 1024);
+	bin->ms = (MemoryStream*) buf;
 	
-	msgpack_object* rootValue = bin->values.top();
+	ReflectionWalk(object, &bin->serializeContext);
+	StreamWrite(bin->stream, &bin->ms->data[0], bin->ms->position);
 
-	bin->stream->fn->write(bin->stream, sbuffer->data, sbuffer->size);
+	StreamDestroy(buf);
 	StreamClose(bin->stream);
 
-	msgpack_sbuffer_free(sbuffer);
-	msgpack_packer_free(packer);
+	return true;
 }
 
 //-----------------------------------//
@@ -697,10 +709,8 @@ Serializer* SerializerCreateBinary(Allocator* alloc)
 	sCtx.walkComposite = SerializeComposite;
 	sCtx.walkCompositeField = SerializeField;
 	sCtx.walkPrimitive = SerializePrimitive;
-#if 0
-	sCtx.walkArray = SerializeArray;
 	sCtx.walkEnum = SerializeEnum;
-#endif
+	sCtx.walkArray = SerializeArray;
 
 	ReflectionContext& dCtx = serializer->deserializeContext;
 	dCtx.userData = serializer;

@@ -132,7 +132,7 @@ void ProjectPlugin::onOpenButtonClick(wxCommandEvent& event)
 		return;
 
 	Path path = (String) fc.GetPath();
-	Scene* object = (Scene*) SerializerLoadObjectFromFile(path);
+	Scene* object = (Scene*) SerializerLoadObjectFromFile(AllocatorGetThis(), path);
 
 	if( !object )
 	{
@@ -187,7 +187,7 @@ bool ProjectPlugin::saveScene()
 	SceneDocument* sceneDocument = (SceneDocument*) GetEditor().getDocument();	
 	ScenePtr scene = sceneDocument->scene;
 
-	return SerializerSaveObjectToFile(path, scene.get());
+	return SerializerSaveObjectToFile(AllocatorGetThis(), path, scene.get());
 }
 
 //-----------------------------------//

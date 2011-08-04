@@ -8,7 +8,7 @@
 
 #include "Engine/API.h"
 
-#ifdef VAPOR_AUDIO_OPENAL
+#ifdef ENABLE_AUDIO_OPENAL
 
 #include "Audio/Source.h"
 #include "Audio/Buffer.h"

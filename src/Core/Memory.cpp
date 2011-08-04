@@ -43,22 +43,31 @@ static bool AllocatorSimulateLowMemory = false;
 
 struct AllocationGroup
 {
-	AllocationGroup() : freed(0), total(0) { }
+	AllocationGroup();
 
 	int64 freed;
 	int64 total;
 };
 
+AllocationGroup::AllocationGroup()
+	: freed(0), total(0)
+{
+}
+
 struct AllocationMetadata
 {
-	AllocationMetadata() : size(0), group(nullptr), allocator(nullptr)
-	{ }
+	AllocationMetadata(); 
 
 	int32 size;
 	const char* group;
 	Allocator* allocator;
 	int32 pattern;
 };
+
+AllocationMetadata::AllocationMetadata()
+	: size(0), group(nullptr), allocator(nullptr)
+{
+}
 
 //-----------------------------------//
 

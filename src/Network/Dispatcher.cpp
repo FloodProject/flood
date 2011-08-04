@@ -12,6 +12,7 @@
 #include "Core/Log.h"
 #include "Core/Memory.h"
 #include "Core/PluginManager.h"
+#include "Core/Serialization.h"
 
 #include "Network/Host.h"
 #include "Network/Peer.h"
@@ -29,9 +30,11 @@ Dispatcher::Dispatcher()
 	, sessions(nullptr)
 	, handlers(nullptr)
 	, plugins(nullptr)
+	, serializer(nullptr)
 {
 	sessions = Allocate(SessionManager, AllocatorGetThis());
 	handlers = Allocate(MessageHandlers, AllocatorGetThis());
+	serializer = SerializerCreateJSON(AllocatorGetThis());
 }
 
 //-----------------------------------//
@@ -163,6 +166,8 @@ void Dispatcher::handleMessage(const PeerPtr& peer, const MessagePtr& message)
 		LogError("No message handler was found");
 		return;
 	}
+
+	uint8* p = data.front() + (uint8*) message->index;
 
 	CALL_MEMBER_FN(mapping->plugin, mapping->handler)(session, message);
 }

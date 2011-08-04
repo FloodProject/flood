@@ -11,6 +11,8 @@
 #include <deque>
 #include <algorithm>
 
+#include "Core/Memory.h"
+
 NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
@@ -32,8 +34,8 @@ public:
 
 	ConcurrentQueue()
 	{
-		mutex = MutexCreate(AllocatorGetHeap());
-		cond = ConditionCreate(AllocatorGetHeap());
+		mutex = MutexCreate(AllocatorGetThis());
+		cond = ConditionCreate(AllocatorGetThis());
 	}
 
 	//-----------------------------------//

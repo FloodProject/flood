@@ -9,7 +9,9 @@
 #include "Server/API.h"
 #include "Server/Server.h"
 
-using namespace vapor;
+#ifdef NAMESPACE_CORE_DEFINED
+using namespace NAMESPACE_CORE;
+#endif
 
 int main()
 {

@@ -16,7 +16,7 @@ NAMESPACE_ENGINE_BEGIN
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(Group, Entity)
-	FIELD_VECTOR_PTR(Entity, EntityPtr, entities, RefPointer)
+	FIELD_VECTOR_PTR(4, Entity, EntityPtr, entities, RefPointer)
 	FIELD_ALIAS(entities, "nodes")
 REFLECT_CLASS_END()
 

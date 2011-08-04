@@ -9,6 +9,8 @@
 #include "Core/API.h"
 #include "Core/Reflection.h"
 #include "Core/Object.h"
+#include "Core/Log.h"
+#include "Math/Hash.h"
 
 NAMESPACE_CORE_BEGIN
 
@@ -48,6 +50,33 @@ ReflectionTypeMap& ReflectionGetTypeMap()
 
 //-----------------------------------//
 
+static void RegisterClass(Class* klass)
+{
+	uint32 hash = HashMurmur2(0xBEEF, (uint8*) klass->name, strlen(klass->name));
+	klass->id = (ClassId) hash;
+
+	// Register as child class in the parent class.
+
+	Class* parent = klass->parent;
+	
+	if( parent )
+		parent->childs.push_back(klass);
+
+	// Register the class id in the map.
+
+	ClassIdMap& ids = ClassGetIdMap();
+
+	if( ids.find(klass->id) != ids.end() )
+	{
+		LogError("Class with the same id already exists: '%s'", klass->name);
+		return;
+	}
+
+	ids[klass->id] = klass;
+}
+
+//-----------------------------------//
+
 void ReflectionRegisterType(Type* type)
 {
 	if( !type ) return;
@@ -66,12 +95,9 @@ void ReflectionRegisterType(Type* type)
 
 	if( !ReflectionIsComposite(type) )
 		return;
-	
-	Class* klass = (Class*) type;
-	Class* parent = klass->parent;
 
-	if( !parent ) return;
-	parent->childs.push_back(klass);
+	Class* klass = (Class*) type;
+	RegisterClass(klass);
 }
 
 //-----------------------------------//
@@ -136,6 +162,34 @@ const char* EnumGetValueName(Enum* enumeration, int32 value)
 
 //-----------------------------------//
 
+void ClassAddField(Class* klass, Field* field)
+{
+	klass->fields.push_back(field);
+
+	if( ClassGetFieldById(klass, field->id) )
+	{
+#ifdef BUILD_DEBUG
+		assert( 0 && "Check your reflection IDs" );
+#endif
+
+		LogDebug("Duplicate id found for field '%s' in '%s'", field->name, klass->name);
+		return;
+	}
+
+	ClassFieldIdMap& fieldIds = klass->fieldIds;
+	fieldIds[field->id] = field;
+}
+
+//-----------------------------------//
+
+ClassIdMap& ClassGetIdMap()
+{
+	static ClassIdMap s_ClassIds;
+	return s_ClassIds;
+}
+
+//-----------------------------------//
+
 Class* ClassGetType(const Object* object)
 {
 	if( !object ) return nullptr;
@@ -164,6 +218,23 @@ Field* ClassGetField(const Class* klass, const char* name)
 	if(!parent) return nullptr;
 	
 	return ClassGetField(parent, name);
+}
+
+//-----------------------------------//
+
+Field* ClassGetFieldById(Class* klass, FieldId id)
+{
+	ClassFieldIdMap& fieldIds = klass->fieldIds;
+
+	ClassFieldIdMap::iterator it = fieldIds.find(id);
+
+	if( it != fieldIds.end() )
+		return it->second;
+
+	if( klass->parent )
+		return ClassGetFieldById(klass->parent, id);
+	else
+		return nullptr;
 }
 
 //-----------------------------------//

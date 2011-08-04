@@ -22,11 +22,6 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-struct FileStream : Stream
-{
-	FILE* fp;
-};
-
 static bool  FileOpen(Stream*);
 static bool  FileClose(Stream*);
 static int64 FileRead(Stream*, void*, int64);
@@ -96,7 +91,14 @@ static bool FileOpen(Stream* stream)
 static bool FileClose(Stream* stream)
 {
 	FileStream* fs = (FileStream*) stream;
-	return fclose(fs->fp) == 0;
+
+	if(fs->fp == nullptr)
+		return true;
+
+	int ret = fclose(fs->fp);
+	fs->fp = nullptr;
+
+	return ret == 0;
 }
 
 //-----------------------------------//

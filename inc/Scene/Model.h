@@ -25,9 +25,9 @@ struct SkinningMode
 {
 	enum Enum
 	{
-		Native,
-		CPU,
-		GPU
+		Native = 0,
+		CPU = 1,
+		GPU = 2
 	};
 };
 

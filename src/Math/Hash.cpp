@@ -25,25 +25,21 @@ NAMESPACE_CORE_BEGIN
 // 2. It will not produce the same results on little-endian and big-endian
 //    machines.
 
-uint Hash::Murmur2( const std::vector<byte>& vec, uint seed )
+uint32 HashMurmur2( uint32 seed, uint8* data, uint32 len )
 {
-	if( vec.empty() )
-		return 0;
+	if( !data || len == 0 ) return 0;
 
 	// 'm' and 'r' are mixing constants generated offline.
 	// They're not really 'magic', they just happen to work well.
 
 	const unsigned int m = 0x5bd1e995;
 	const int r = 24;
-	int len = vec.size();
 
 	// Initialize the hash to a 'random' value
 
 	unsigned int h = seed ^ len;
 
 	// Mix 4 bytes at a time into the hash
-
-	const unsigned char * data = &vec[0];
 
 	while(len >= 4)
 	{

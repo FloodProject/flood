@@ -16,8 +16,6 @@
 	#include <Windows.h>
 #endif
 
-#define array_sizeof(n) (sizeof(n) / sizeof(n[0]))
-
 //-----------------------------------//
 
 typedef CuSuite* (*SuiteFunction)();
@@ -47,7 +45,7 @@ void RunAllTests(void)
 {
 	CuSuite* suite = CuSuiteNew();
 	
-	for(size_t i = 0; i < array_sizeof(suites); i++)
+	for(size_t i = 0; i < ARRAY_SIZE(suites); i++)
 	{
 		SuiteFunction fn = suites[i];
 		CuSuiteAddSuite(suite, fn());

@@ -18,6 +18,7 @@ NAMESPACE_CORE_BEGIN
 //-----------------------------------//
 
 struct Class;
+struct Serializer;
 
 class Host;
 class HostClient;
@@ -71,6 +72,7 @@ protected:
 	Host* host;
 	bool isServer;
 
+	Serializer* serializer;
 	PluginManager* plugins;
 	SessionManager* sessions;
 	MessageHandlers* handlers;

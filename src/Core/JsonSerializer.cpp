@@ -23,7 +23,6 @@
 #include "Math/EulerAngles.h"
 #include "Math/Color.h"
 
-#include <stack>
 #include <jansson.h>
 
 NAMESPACE_CORE_BEGIN
@@ -76,37 +75,6 @@ static Quaternion ConvertValueToQuaternion( json_t* value )
 }
 
 //-----------------------------------//
-#if 0
-static EulerAngles ConvertValueToEulerAngles( json_t* value )
-{
-
-	EulerAngles a;
-	json_unpack(value, "[g,g,g]", &a.x, &a.y, &a.z);
-	return a;
-}
-#endif
-//-----------------------------------//
-
-static json_t* ConvertVector3( const Vector3& vec )
-{
-	return json_pack("[f,f,f]", vec.x, vec.y, vec.z);
-}
-
-//-----------------------------------//
-
-static json_t* ConvertColor( const Color& c )
-{
-	return json_pack("[f,f,f,f]", c.r, c.g, c.b, c.a);
-}
-
-//-----------------------------------//
-
-static json_t* ConvertQuaternion( const Quaternion& q )
-{
-	return json_pack("[f,f,f,f]", q.x, q.y, q.z, q.w);
-}
-
-//-----------------------------------//
 
 struct API_CORE SerializerJSON : public Serializer
 {
@@ -114,8 +82,8 @@ struct API_CORE SerializerJSON : public Serializer
 	json_t* rootValue;
 	
 	// Stack of JSON values.
-	std::stack<json_t*> values;
-	std::stack<json_t*> arrays;
+	std::vector<json_t*> values;
+	std::vector<json_t*> arrays;
 };
 
 static void* JsonAllocate(size_t size)
@@ -139,13 +107,13 @@ static void SerializeArray(ReflectionContext* ctx, ReflectionWalkType::Enum wt)
 	if(wt == ReflectionWalkType::Begin)
 	{
 		json_t* array = json_array();	
-		json->values.push( array );
+		json->values.push_back( array );
 	}
 	else if(wt == ReflectionWalkType::ElementEnd)
 	{
-		json_t* element = json->values.top();
-		json->values.pop();
-		json_array_append_new(json->values.top(), element);
+		json_t* element = json->values.back();
+		json->values.pop_back();
+		json_array_append_new(json->values.back(), element);
 	}
 }
 
@@ -162,15 +130,15 @@ static void SerializeComposite(ReflectionContext* ctx, ReflectionWalkType::Enum 
 	if(wt == ReflectionWalkType::Begin)
 	{
 		json_t* klass = json_object();
-		json->values.push( klass );
+		json->values.push_back( klass );
 	}
 	else if(wt == ReflectionWalkType::End)
 	{
 		json_t* klass = json_object();
-		json_object_set_new(klass, ctx->klass->name, json->values.top());
+		json_object_set_new(klass, ctx->klass->name, json->values.back());
 		
-		json->values.pop();
-		json->values.push(klass);
+		json->values.pop_back();
+		json->values.push_back(klass);
 	}
 }
 
@@ -182,9 +150,9 @@ static void SerializeField(ReflectionContext* ctx, ReflectionWalkType::Enum wt)
 
 	if(wt == ReflectionWalkType::End)
 	{
-		json_t* field = json->values.top();
-		json->values.pop();
-		json_object_set_new(json->values.top(), ctx->field->name, field);
+		json_t* field = json->values.back();
+		json->values.pop_back();
+		json_object_set_new(json->values.back(), ctx->field->name, field);
 		
 		return;
 	}
@@ -203,7 +171,7 @@ static void SerializeEnum(ReflectionContext* ctx, ReflectionWalkType::Enum wt)
 	assert( name != nullptr );
 
 	json_t* str = json_string(name);
-	json->values.push(str);
+	json->values.push_back(str);
 }
 
 //-----------------------------------//
@@ -250,19 +218,19 @@ static void SerializePrimitive( ReflectionContext* context, ReflectionWalkType::
 	case Primitive::Color:
 	{
 		Color& c = *vc.c;
-		value = ConvertColor(c);
+		value = json_pack("[f,f,f,f]", c.r, c.g, c.b, c.a);
 		break;
 	}
 	case Primitive::Vector3:
 	{
 		Vector3& v = *vc.v;
-		value = ConvertVector3(v);
+		value = json_pack("[f,f,f]", v.x, v.y, v.z);
 		break;
 	}
 	case Primitive::Quaternion:
 	{
 		Quaternion& q = *vc.q;
-		value = ConvertQuaternion(q);
+		value = json_pack("[f,f,f,f]", q.x, q.y, q.z, q.w);
 		break;
 	}
 	case Primitive::Bitfield:
@@ -275,7 +243,7 @@ static void SerializePrimitive( ReflectionContext* context, ReflectionWalkType::
 		assert( false );
 	}
 
-	json->values.push(value);
+	json->values.push_back(value);
 }
 
 //-----------------------------------//
@@ -283,15 +251,13 @@ static void SerializePrimitive( ReflectionContext* context, ReflectionWalkType::
 static void DeserializeEnum( ReflectionContext* context, json_t* value )
 {
 	const char* name = json_string_value(value);
-	Enum* enume = (Enum*) context->enume;
-
-	int32 enumValue = EnumGetValue(enume, name);
+	int32 enumValue = EnumGetValue(context->enume, name);
 	FieldSet<int32>(context->field, context->object, enumValue);
 }
 
 //-----------------------------------//
 
-#define setValue(T, val) FieldSet<T>(context->field, context->object, val);
+#define SetFieldValue(T, val) FieldSet<T>(context->field, context->object, val);
 
 static void DeserializePrimitive( ReflectionContext* context, json_t* value )
 {
@@ -301,55 +267,55 @@ static void DeserializePrimitive( ReflectionContext* context, json_t* value )
 	{
 		assert( json_is_boolean(value) );
 		bool val = json_typeof(value) == JSON_TRUE;
-		setValue(bool, val);
+		SetFieldValue(bool, val);
 		break;
 	}
 	case Primitive::Int32:
 	{
 		int32 val = (int32) json_integer_value(value);
-		setValue(int32, val);
+		SetFieldValue(int32, val);
 		break;
 	}
 	case Primitive::Uint32:
 	{
 		uint32 val = (uint32) json_integer_value(value);
-		setValue(uint32, val);
+		SetFieldValue(uint32, val);
 		break;
 	}
 	case Primitive::Float:
 	{
 		float val = (float) json_real_value(value);
-		setValue(float, val);
+		SetFieldValue(float, val);
 		break;
 	}
 	case Primitive::String:
 	{
 		String val = json_string_value(value);
-		setValue(String, val);
+		SetFieldValue(String, val);
 		break;
 	}
 	case Primitive::Color:
 	{
 		Color val = ConvertValueToColor(value);
-		setValue(Color, val);
+		SetFieldValue(Color, val);
 		break;
 	}
 	case Primitive::Vector3:
 	{
 		Vector3 val = ConvertValueToVector3(value);
-		setValue(Vector3, val);
+		SetFieldValue(Vector3, val);
 		break;
 	}
 	case Primitive::Quaternion:
 	{
 		Quaternion val = ConvertValueToQuaternion(value);
-		setValue(Quaternion, val);
+		SetFieldValue(Quaternion, val);
 		break;
 	}
 	case Primitive::Bitfield:
 	{
 		int32 val = json_integer_value(value);
-		setValue(int32, val);
+		SetFieldValue(int32, val);
 		break;
 	}
 	default:
@@ -359,39 +325,32 @@ static void DeserializePrimitive( ReflectionContext* context, json_t* value )
 
 //-----------------------------------//
 
-typedef std::vector<std::shared_ptr<Object>> ObjectSharedPtrArray;
-typedef std::vector<RefPtr<ReferenceCounted>> ObjectRefPtrArray;
-typedef std::vector<Object*> ObjectRawPtrArray;
+static Object* DeserializeComposite( ReflectionContext* context, json_t* value );
 
-static void* ResizeArray( ReflectionContext* context, void* address, uint32 size )
+template<typename T>
+static void PointerSetObject( const Field* field, void* address, T* object )
 {
-	const Field* field = context->field;
-
-	if( FieldIsSharedPointer(field) )
+	if( FieldIsRawPointer(field) )
 	{
-		ObjectSharedPtrArray* array = (ObjectSharedPtrArray*) address;
-		array->resize(size);
-		return &array->front();
+		T** raw = (T**) address;
+		*raw = object;
 	}
 	else if( FieldIsRefPointer(field) )
 	{
-		ObjectRefPtrArray* array = (ObjectRefPtrArray*) address;
-		array->resize(size);
-		return &array->front();
+		T* ref = (T*) object;
+		RefPtr<T>* ref_obj = (RefPtr<T>*) address;
+		ref_obj->reset(ref);
 	}
-	else if( FieldIsRawPointer(field) )
+	else if( FieldIsHandle(field) )
 	{
-		ObjectRawPtrArray* array = (ObjectRawPtrArray*) address;
-		array->resize(size);
-		return &array->front();
+		assert(0 && "Not implemented");
 	}
-
-	return nullptr;
+	else
+	{
+		assert(0 && "Not implemented");
+		//memcpy(element, object, size);
+	}
 }
-
-//-----------------------------------//
-
-static Object* DeserializeComposite( ReflectionContext* context, json_t* value );
 
 static void DeserializeArrayElement( ReflectionContext* context, json_t* value, void* address )
 {
@@ -413,45 +372,10 @@ static void DeserializeArrayElement( ReflectionContext* context, json_t* value, 
 	{
 		context->composite = (Class*) field->type;
 		Object* object = DeserializeComposite(context, value);
-		
-		if( FieldIsRawPointer(field) )
-		{
-			Object** objectptr = (Object**) address;
-			*objectptr = object;
-		}
-		else if( FieldIsSharedPointer(field) )
-		{
-			std::shared_ptr<Object>* shared_obj = (std::shared_ptr<Object>*) address;
-			shared_obj->reset(object);
-		}
-		else if( FieldIsRefPointer(field) )
-		{
-			Object* ref = (Object*) object;
-			RefPtr<Object>* ref_obj = (RefPtr<Object>*) address;
-			ref_obj->reset(ref);
-		}
-		else if( FieldIsHandle(field) )
-		{
-			assert(0 && "Not implemented");
-		}
-		else
-		{
-			assert(0 && "Not implemented");
-			//memcpy(element, object, size);
-		}
+		PointerSetObject(field, address, object);
 
 		break;
 	} }
-}
-
-//-----------------------------------//
-
-static uint16 GetArrayElementSize(const Field* field)
-{
-	if( FieldIsPointer(field) )
-		return field->pointer_size;
-	else
-		return field->size;
 }
 
 //-----------------------------------//
@@ -464,10 +388,10 @@ static void DeserializeArray( ReflectionContext* context, json_t* value )
 	if( size == 0 ) return;
 
 	const Field* field = context->field;
-	uint16 elementSize = GetArrayElementSize(field);
+	uint16 elementSize = ReflectionArrayGetElementSize(field);
 
 	void* address = ClassGetFieldAddress(context->object, field);
-	void* begin = ResizeArray(context, address, size);
+	void* begin = ReflectionArrayResize(context, address, size);
 
 	for( size_t i = 0; i < size; i++ )
 	{
@@ -632,15 +556,19 @@ static Object* DeserializeComposite( ReflectionContext* context, json_t* value )
 
 //-----------------------------------//
 
-static void SerializeLoad( Serializer* serializer )
+static Object* SerializeLoad( Serializer* serializer )
 {
 	SerializerJSON* json = (SerializerJSON*) serializer;
+	
+	json->rootValue = nullptr;
+	json->values.clear();
+	json->arrays.clear();
 
 	String text;
 	StreamReadString(json->stream, text);
 	StreamClose(json->stream);
 
-	json_t* rootValue = nullptr;
+	json_t* rootValue;
 
 	LocaleSwitch locale;
 	
@@ -649,28 +577,32 @@ static void SerializeLoad( Serializer* serializer )
 	if( !rootValue )
 	{
 		LogError("Could not parse JSON text of '%s'", json->stream->path.c_str());
-		return;
+		return nullptr;
 	}
 
 	json->rootValue = rootValue;
 	
 	ReflectionContext* context = &serializer->deserializeContext;
 	Object* object = DeserializeComposite(context, rootValue);
-
 	json_decref(rootValue);
-	serializer->object = object;
+
+	return object;
 }
 
 //-----------------------------------//
 
-static void SerializeSave( Serializer* serializer )
+static bool SerializeSave( Serializer* serializer, Object* object )
 {
 	SerializerJSON* json = (SerializerJSON*) serializer;
 
-	ReflectionWalk(json->object, &json->serializeContext);
+	json->rootValue = nullptr;
+	json->values.clear();
+	json->arrays.clear();
+
+	ReflectionWalk(object, &json->serializeContext);
 	assert( json->values.size() == 1 );
-	
-	json_t* rootValue = json->values.top();
+		
+	json_t* rootValue = json->values.back();
 
 	// Always switch to the platform independent "C" locale when writing
 	// JSON, else the library will format the data erroneously.
@@ -686,8 +618,10 @@ static void SerializeSave( Serializer* serializer )
 	
 	StreamClose(json->stream);
 
-	free(dump);
+	Deallocate(dump);
 	json_decref(rootValue);
+
+	return true;
 }
 
 //-----------------------------------//
@@ -697,6 +631,7 @@ Serializer* SerializerCreateJSON(Allocator* alloc)
 	//json_set_alloc_funcs(JsonAllocate, JsonDeallocate);
 
 	SerializerJSON* serializer = Allocate(SerializerJSON, alloc);
+	serializer->alloc = alloc;
 	serializer->load = SerializeLoad;
 	serializer->save = SerializeSave;
 

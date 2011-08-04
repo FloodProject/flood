@@ -14,8 +14,8 @@ NAMESPACE_RESOURCES_BEGIN
 //-----------------------------------//
 
 REFLECT_CHILD_CLASS(Sound, Resource)
-	FIELD_PRIMITIVE(int32, frequency) FIELD_READONLY(frequency)
-	FIELD_PRIMITIVE(int32, channels) FIELD_READONLY(channels)
+	FIELD_PRIMITIVE(4, int32, frequency) FIELD_READONLY(frequency)
+	FIELD_PRIMITIVE(5, int32, channels) FIELD_READONLY(channels)
 REFLECT_CLASS_END()
 
 //-----------------------------------//
