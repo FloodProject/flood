@@ -17,6 +17,7 @@
 #include "Core/References.h"
 #include "Core/Stream.h"
 #include "Core/Log.h"
+#include "SerializationHelpers.h"
 
 #include "Math/Vector.h"
 #include "Math/Quaternion.h"
@@ -326,31 +327,6 @@ static void DeserializePrimitive( ReflectionContext* context, json_t* value )
 //-----------------------------------//
 
 static Object* DeserializeComposite( ReflectionContext* context, json_t* value );
-
-template<typename T>
-static void PointerSetObject( const Field* field, void* address, T* object )
-{
-	if( FieldIsRawPointer(field) )
-	{
-		T** raw = (T**) address;
-		*raw = object;
-	}
-	else if( FieldIsRefPointer(field) )
-	{
-		T* ref = (T*) object;
-		RefPtr<T>* ref_obj = (RefPtr<T>*) address;
-		ref_obj->reset(ref);
-	}
-	else if( FieldIsHandle(field) )
-	{
-		assert(0 && "Not implemented");
-	}
-	else
-	{
-		assert(0 && "Not implemented");
-		//memcpy(element, object, size);
-	}
-}
 
 static void DeserializeArrayElement( ReflectionContext* context, json_t* value, void* address )
 {

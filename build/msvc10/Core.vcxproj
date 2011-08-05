@@ -336,6 +336,7 @@
     <ClInclude Include="..\..\inc\Network\SessionManager.h" />
     <ClInclude Include="..\..\inc\vapor\math\Helpers.h" />
     <ClInclude Include="..\..\inc\vapor\StackWalker.h" />
+    <ClInclude Include="..\..\src\Core\SerializationHelpers.h" />
     <ClInclude Include="..\..\src\Win32\FileWatcherWin32.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

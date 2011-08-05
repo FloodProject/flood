@@ -17,6 +17,7 @@
 #include "Core/References.h"
 #include "Core/Stream.h"
 #include "Core/Log.h"
+#include "SerializationHelpers.h"
 
 #include "Math/Vector.h"
 #include "Math/Quaternion.h"
@@ -88,6 +89,7 @@ done:
 	val = ((uint64) high << 32) | low;
 	return true;
 }
+
 
 //-----------------------------------//
 
@@ -169,6 +171,11 @@ static void SerializeArray(ReflectionContext* ctx, ReflectionWalkType::Enum wt)
 	if(wt == ReflectionWalkType::Begin)
 	{
 		EncodeVariableInteger(bin->ms, ctx->arraySize);
+		return;
+	}
+	else if(wt == ReflectionWalkType::End)
+	{
+		EncodeVariableInteger(bin->ms, FieldInvalid);
 		return;
 	}
 }
@@ -445,7 +452,7 @@ static void DeserializePrimitive( ReflectionContext* context )
 		assert(0 && "Unknown primitive type");
 	}
 }
-#if 0
+
 //-----------------------------------//
 
 static Object* DeserializeComposite( ReflectionContext* context );
@@ -469,37 +476,43 @@ static void DeserializeArrayElement( ReflectionContext* context, void* address )
 	case Type::Composite:
 	{
 		context->composite = (Class*) field->type;
-		Object* object = DeserializeComposite(context, value);
-		
+		Object* object = DeserializeComposite(context);
+		PointerSetObject(field, address, object);
 		break;
 	} }
 }
 
 //-----------------------------------//
 
-static void DeserializeArray( ReflectionContext* context, msgpack_object* value )
+static void DeserializeArray( ReflectionContext* context )
 {
-	assert( json_is_array(value) );
-	
-	size_t size = json_array_size(value);
-	if( size == 0 ) return;
-
+	SerializerBinary* bin = (SerializerBinary*) context->userData;
 	const Field* field = context->field;
-	uint16 elementSize = GetArrayElementSize(field);
+	
+	uint64 size;
+	DecodeVariableInteger(bin->ms, size);
 
+	uint16 elementSize = ReflectionArrayGetElementSize(field);
 	void* address = ClassGetFieldAddress(context->object, field);
-	void* begin = ResizeArray(context, address, size);
+	void* begin = ReflectionArrayResize(context, address, size);
 
-	for( size_t i = 0; i < size; i++ )
+	uint32 n = 0;
+	while( n < size )
 	{
-		msgpack_object* arrayValue = json_array_get(value, i);
-		
 		// Calculate the address of the next array element.
-		void* element = (byte*) begin + elementSize * i;
-		DeserializeArrayElement(context, arrayValue, element);
+		void* element = (byte*) begin + elementSize * n++;
+		DeserializeArrayElement(context, element);
+	}
+
+	uint64 end;
+	DecodeVariableInteger(bin->ms, end);
+	
+	if( end != FieldInvalid )
+	{
+		LogAssert("Expected end of array");
+		return;
 	}
 }
-#endif
 
 //-----------------------------------//
 
@@ -509,7 +522,7 @@ static void DeserializeField( ReflectionContext* context )
 
 	if( FieldIsArray(field) )
 	{
-		//DeserializeArray(context);
+		DeserializeArray(context);
 		return;
 	}
 	
@@ -519,49 +532,19 @@ static void DeserializeField( ReflectionContext* context )
 	{
 		Class* composite = context->composite;
 		context->composite = (Class*) field->type;
-		
-		Object* object = nullptr;
-		void* address = nullptr;
 
+		Object* object = DeserializeComposite(context);
+		void* address = ClassGetFieldAddress(context->object, field);
+		
 		if( FieldIsHandle(field) )
 		{
-#if 0
-			if( !json_is_object(value) )
-			{
-				LogDebug("Can't deserialize handle '%s'", field->name);
-				return;
-			}
-
-			void* iter = json_object_iter(value);
-			void* iter2 = json_object_iter( json_object_iter_value(iter) );
-			msgpack_object* val = json_object_iter_value(iter2);
-			const char* name = json_string_value(val);
-
-			ReflectionHandleContext handleContext;
-			ReflectionFindHandleContext((Class*) field->type, handleContext);
-			
-			HandleId id = handleContext.deserialize(name);
-			if(id == HandleInvalid) return;
-
-			address = ClassGetFieldAddress(context->object, field);
-			
-			typedef Handle<Object, 0, 0> ObjectHandle;
-			ObjectHandle* handleObject = (ObjectHandle*) address;
-			handleObject->id = id;
-			
-			ReferenceAdd((Object*)HandleFind(handleContext.handles, id));
-#endif
+			LogDebug("Deserialization of handles not implemented '%s'", field->name);
 		}
 		else if( FieldIsPointer(field) )
 		{
-			LogDebug("Deserialization of pointer field not implemented '%s'", field->name);
+			PointerSetObject(field, address, object);
 		}
-		else
-		{
-			//object = DeserializeComposite(context);
-		}
-
-		address = ClassGetFieldAddress(object, field);
+		
 		context->composite = composite;
 		break;
 	}
