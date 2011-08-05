@@ -606,7 +606,7 @@
     <ClInclude Include="..\..\inc\Core\WebStream.h">
       <Filter>Streams\Web</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Core\SerializationHelpers.h">
+    <ClInclude Include="..\..\inc\Core\SerializationHelpers.h">
       <Filter>Serialization</Filter>
     </ClInclude>
   </ItemGroup>

@@ -304,6 +304,7 @@
     <ClInclude Include="..\..\inc\Core\References.h" />
     <ClInclude Include="..\..\inc\Core\Reflection.h" />
     <ClInclude Include="..\..\inc\Core\Serialization.h" />
+    <ClInclude Include="..\..\inc\Core\SerializationHelpers.h" />
     <ClInclude Include="..\..\inc\Core\Stream.h" />
     <ClInclude Include="..\..\inc\Core\String.h" />
     <ClInclude Include="..\..\inc\Core\Telemetry.h" />
@@ -336,7 +337,6 @@
     <ClInclude Include="..\..\inc\Network\SessionManager.h" />
     <ClInclude Include="..\..\inc\vapor\math\Helpers.h" />
     <ClInclude Include="..\..\inc\vapor\StackWalker.h" />
-    <ClInclude Include="..\..\src\Core\SerializationHelpers.h" />
     <ClInclude Include="..\..\src\Win32\FileWatcherWin32.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

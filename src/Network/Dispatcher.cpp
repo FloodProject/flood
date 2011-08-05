@@ -7,19 +7,22 @@
 ************************************************************************/
 
 #include "Core/API.h"
-#include "Network/Dispatcher.h"
 
 #include "Core/Log.h"
 #include "Core/Memory.h"
 #include "Core/PluginManager.h"
 #include "Core/Serialization.h"
+#include "Core/Stream.h"
 
+#include "Network/Dispatcher.h"
 #include "Network/Host.h"
 #include "Network/Peer.h"
 #include "Network/Message.h"
 #include "Network/MessageHandlers.h"
 #include "Network/Session.h"
 #include "Network/SessionManager.h"
+
+#include <FastLZ\fastlz.h>
 
 NAMESPACE_CORE_BEGIN
 
@@ -34,7 +37,7 @@ Dispatcher::Dispatcher()
 {
 	sessions = Allocate(SessionManager, AllocatorGetThis());
 	handlers = Allocate(MessageHandlers, AllocatorGetThis());
-	serializer = SerializerCreateJSON(AllocatorGetThis());
+	serializer = SerializerCreateBinary(AllocatorGetThis());
 }
 
 //-----------------------------------//
@@ -42,7 +45,6 @@ Dispatcher::Dispatcher()
 void Dispatcher::initClient(HostClient* host)
 {
 	isServer = false;
-
 	host->onClientConnected.Connect(this, &Dispatcher::handleConnect);
 	host->onClientDisconnected.Connect(this, &Dispatcher::handleDisconnect);
 	host->onServerMessage.Connect(this, &Dispatcher::handleMessage);
@@ -53,7 +55,6 @@ void Dispatcher::initClient(HostClient* host)
 void Dispatcher::initServer(HostServer* host)
 {
 	isServer = true;
-
 	host->onClientConnected.Connect(this, &Dispatcher::handleConnect);
 	host->onClientDisconnected.Connect(this, &Dispatcher::handleDisconnect);
 	host->onClientMessage.Connect(this, &Dispatcher::handleMessage);
@@ -66,6 +67,7 @@ Dispatcher::~Dispatcher()
 	Deallocate(plugins);
 	Deallocate(sessions);
 	Deallocate(handlers);
+	Deallocate(serializer);
 }
 
 //-----------------------------------//
@@ -92,8 +94,7 @@ void Dispatcher::handlePluginEnable(Plugin* plugin)
 	Enum* messagesEnum = messagePlugin->getMessagesEnum();
 
 	MessageDirection::Enum direction = isServer ?
-		MessageDirection::ClientToServer :
-		MessageDirection::ServerToClient;
+		MessageDirection::ClientToServer : MessageDirection::ServerToClient;
 
 	for(size_t i = 0; i < messagesTable.size(); i++ )
 	{
@@ -151,23 +152,17 @@ void Dispatcher::handleDisconnect(const PeerPtr& peer)
 void Dispatcher::handleMessage(const PeerPtr& peer, const MessagePtr& message)
 {
 	const SessionPtr& session = sessions->getSession(peer);
-	const MessageData& data = message->getData();
-	
-	if(data.size() < sizeof(MessageId))
-		return;
 
-	MessageId* id = message->read<MessageId>();
+	//assert( GetBitFlag(flags, MessageFlags::Binary) );
 
 	// Find message handler and forward message.
-	MessageMapping* mapping = handlers->findHandler(*id);
+	MessageMapping* mapping = handlers->findHandler(id);
 	
 	if( !mapping )
 	{
 		LogError("No message handler was found");
 		return;
 	}
-
-	uint8* p = data.front() + (uint8*) message->index;
 
 	CALL_MEMBER_FN(mapping->plugin, mapping->handler)(session, message);
 }

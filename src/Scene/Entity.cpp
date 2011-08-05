@@ -261,17 +261,14 @@ bool Entity::isVisible() const
 
 bool Entity::getTag(int32 index)
 {
-	return (tags & index) ? true : false;
+	return GetBitFlag(tags, index);
 }
 
 //-----------------------------------//
 
 void Entity::setTag(int32 index, bool state)
 {
-	if(state)
-		tags |= index;
-	else
-		tags &= ~index;
+	SetBitFlag(tags, index, state);
 }
 
 //-----------------------------------//

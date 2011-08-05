@@ -260,7 +260,22 @@ void Host::handleReceiveEvent(ENetEvent* event)
 {
 	PeerPtr peer = (Peer*) event->peer->data;
 	
-	MessagePtr message = Allocate(Message, gs_NetworkAllocator);
+	MessagePtr message = MessageCreate(0);
+
+	size_t headerSize = sizeof(MessageId) + sizeof(MessageFlags::Enum);
+	
+	if(message->ms->data.size() < headerSize)
+		return;
+
+	MessageId id;
+	StreamReadBuffer(message->ms, &id, sizeof(MessageId));
+
+	MessageFlags::Enum flags;
+	StreamReadBuffer(message->ms, &flags, sizeof(MessageFlags::Enum));
+
+	message->id = id;
+	message->flags = flags;
+
 	message->setPacket(event->packet);
 
 	onMessage(peer, message);

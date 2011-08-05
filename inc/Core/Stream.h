@@ -120,7 +120,7 @@ struct API_CORE MemoryStream : Stream
 	uint64 position;
 };
 
-API_CORE Stream*  StreamCreateFromMemory(Allocator*, uint64 size);
+API_CORE MemoryStream*  StreamCreateFromMemory(Allocator*, uint64 size);
 
 //-----------------------------------//
 

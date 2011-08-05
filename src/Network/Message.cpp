@@ -7,28 +7,42 @@
 ************************************************************************/
 
 #include "Core/API.h"
+#include "Core/Stream.h"
+#include "Core/SerializationHelpers.h"
+
 #include "Network/Message.h"
 #include "Network/Session.h"
 #include "Network/Peer.h"
 #include "Network/Network.h"
+
 #include <enet/enet.h>
+#include <FastLZ/fastlz.h>
 
 NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-Message::Message()
-	: id(0)
-	, type(MessageType::Reliable)
+Message::Message(MessageId id)
+	: id(id)
+	, ms(nullptr)
 	, packet(nullptr)
-	, index(0)
+	, flags(0)
 {
+	ms = StreamCreateFromMemory(AllocatorGetThis(), 0);
+
+	SetBitFlag(flags, MessageFlags::Reliable, true);
+	SetBitFlag(flags, MessageFlags::Binary, true);
+	SetBitFlag(flags, MessageFlags::Compressed, true);
+
+	EncodeVariableInteger(ms, id);
+	StreamWrite(ms, &flags, sizeof(flags));
 }
 
 //-----------------------------------//
 
 Message::~Message()
 {
+	Deallocate(ms);
 }
 
 //-----------------------------------//
@@ -37,9 +51,9 @@ void Message::createPacket()
 {
 	void* data = nullptr;
 	size_t size = 0;
-	uint32 flags = /*ENET_PACKET_FLAG_NO_ALLOCATE*/0;
+	uint32 flags = 0;
 
-	if(type == MessageType::Reliable)
+	if(GetBitFlag(flags, MessageFlags::Reliable))
 		flags |= ENET_PACKET_FLAG_RELIABLE;
 
 	packet = enet_packet_create(nullptr, 0, flags);
@@ -47,31 +61,65 @@ void Message::createPacket()
 
 //-----------------------------------//
 
+static size_t GetCompressionBufferSize(size_t size)
+{
+	// From the FastLZ docs: "The output buffer must be at least 5%
+	// larger than the input buffer and can not be smaller than 66 bytes."
+
+	size_t bufSize = size + size_t(size * 0.05f);
+	if(bufSize < 66) bufSize = 128;
+
+	return bufSize;
+}
+
 void Message::prepare()
 {
-	enet_packet_resize(packet, index);
-	memcpy(packet->data, &data.front(), index);
-	
-	//packet->data = &data.front();
-	//packet->dataLength = index;
+	if( !packet ) createPacket();
+
+	size_t size = (size_t) ms->position;
+	enet_packet_resize(packet, size);
+
+	if( GetBitFlag(flags, MessageFlags::Compressed) )
+	{
+		size_t bufSize = GetCompressionBufferSize(size);
+		enet_packet_resize(packet, bufSize);
+
+		int32 length = fastlz_compress_level(0, &ms->data[0], size, packet->data);
+		packet->dataLength = length;
+	}
+	else
+	{
+		enet_packet_resize(packet, size);
+		memcpy(packet->data, &ms->data[0], size);
+	}
 }
 
 //-----------------------------------//
 
 void Message::setPacket(ENetPacket* packet)
 {
-	data.resize(packet->dataLength);
-	memcpy(&data.front(), packet->data, packet->dataLength);
+	if( GetBitFlag(flags, MessageFlags::Compressed) )
+	{
+		size_t bufSize = GetCompressionBufferSize(packet->dataLength);
+		StreamResize(ms, bufSize);
+
+		int32 length = fastlz_decompress(packet->data,
+			packet->dataLength, &ms->data[0], ms->data.size());
+
+		StreamResize(ms, length);
+	}
+	else
+	{
+		StreamResize(ms, packet->dataLength);
+		StreamWrite(ms, packet->data, packet->dataLength);
+	}
 }
 
 //-----------------------------------//
 
 MessagePtr MessageCreate(MessageId id)
 {
-	MessagePtr message = Allocate(Message, AllocatorGetNetwork());
-	message->createPacket();
-	message->write(id);
-
+	MessagePtr message = Allocate(Message, AllocatorGetNetwork(), id);
 	return message;
 }
 

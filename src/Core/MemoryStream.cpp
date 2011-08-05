@@ -38,7 +38,7 @@ static StreamFuncs gs_MemoryFuncs =
 
 //-----------------------------------//
 
-Stream* StreamCreateFromMemory(Allocator* alloc, uint64 size)
+MemoryStream* StreamCreateFromMemory(Allocator* alloc, uint64 size)
 {
 	MemoryStream* ms = Allocate(MemoryStream, alloc);
 	if( !ms ) return nullptr;

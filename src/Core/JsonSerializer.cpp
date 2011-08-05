@@ -17,7 +17,7 @@
 #include "Core/References.h"
 #include "Core/Stream.h"
 #include "Core/Log.h"
-#include "SerializationHelpers.h"
+#include "Core/SerializationHelpers.h"
 
 #include "Math/Vector.h"
 #include "Math/Quaternion.h"
@@ -349,7 +349,6 @@ static void DeserializeArrayElement( ReflectionContext* context, json_t* value, 
 		context->composite = (Class*) field->type;
 		Object* object = DeserializeComposite(context, value);
 		PointerSetObject(field, address, object);
-
 		break;
 	} }
 }
@@ -398,8 +397,8 @@ static void DeserializeField( ReflectionContext* context, json_t* value )
 		Class* composite = context->composite;
 		context->composite = (Class*) field->type;
 		
-		Object* object = nullptr;
-		void* address = nullptr;
+		Object* object = DeserializeComposite(context, value);
+		void* address = ClassGetFieldAddress(context->object, field);
 
 		if( FieldIsHandle(field) )
 		{
@@ -430,14 +429,9 @@ static void DeserializeField( ReflectionContext* context, json_t* value )
 		}
 		else if( FieldIsPointer(field) )
 		{
-			LogDebug("Deserialization of pointer field not implemented '%s'", field->name);
-		}
-		else
-		{
-			object = DeserializeComposite(context, value);
+			PointerSetObject(field, address, object);
 		}
 
-		address = ClassGetFieldAddress(object, field);
 		context->composite = composite;
 		break;
 	}

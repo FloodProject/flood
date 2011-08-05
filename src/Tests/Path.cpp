@@ -11,8 +11,6 @@
 #include "Core/API.h"
 #include "Core/String.h"
 
-//using namespace vapor;
-
 //API_CORE String StringFromWideString(const WideString& ws);
 //API_CORE WideString StringToWideString(const String& s);
 

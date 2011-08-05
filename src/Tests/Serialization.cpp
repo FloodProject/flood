@@ -33,6 +33,7 @@ void TestSerialization(CuTest* tc, SerializerCreateFunction SerializerCreate, co
 
 	B* loadB = (B*) SerializerLoadObjectFromFile(serializer, StringFormat("TestB.%s", ext));
 
+	CuAssertIntEquals(tc, instanceB.george, loadB->george);
 	CuAssertIntEquals(tc, instanceB.bar, loadB->bar);
 	CuAssertDblEquals(tc, instanceB.vec.z, loadB->vec.z, 0.01);
 	CuAssertCppStrEquals(tc, instanceB.str, loadB->str);
@@ -46,8 +47,14 @@ void TestSerialization(CuTest* tc, SerializerCreateFunction SerializerCreate, co
 	SerializerSaveObjectToFile(serializer, StringFormat("TestC.%s", ext), &instanceC);
 
 	C* loadC = (C*) SerializerLoadObjectFromFile(serializer, StringFormat("TestC.%s", ext));
-	Deallocate(loadC);
 
+	CuAssertIntEquals(tc, instanceC.anA->foo, loadC->anA->foo);
+	CuAssertIntEquals(tc, instanceC.arrayA.size(), loadC->arrayA.size());
+
+	for(size_t i = 0; i < instanceC.arrayA.size(); i++)
+		CuAssertIntEquals(tc, instanceC.arrayA[i]->foo, loadC->arrayA[i]->foo);
+
+	Deallocate(loadC);
 	Deallocate(serializer);
 }
 

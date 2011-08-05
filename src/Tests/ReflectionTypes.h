@@ -44,7 +44,8 @@ struct B : public A
 	REFLECT_DECLARE_OBJECT(B)
 
 	B()
-		: bar(5)
+		: george(false)
+		, bar(5)
 		, vec(1, 2, 3)
 		, quat(5, 6, 7, 1)
 		, color(1.1f, 1.2f, 1.3f, 1.4f)
@@ -53,11 +54,13 @@ struct B : public A
 
 	void change()
 	{
+		george = true;
 		bar += 2;
 		vec.z = 33;
 		str = "ole";
 	}
 
+	bool george;
 	uint32 bar;
 	Vector3 vec;
 	Quaternion quat;
@@ -99,6 +102,8 @@ struct C : public Object
 
 	void change()
 	{
+		anA->foo = 42;
+
 		for(size_t i = 0; i < NUM_AS; i++)
 		{
 			A* a = arrayA[i];

@@ -150,6 +150,9 @@ static_assert(sizeof(int64) == 8, "");
 
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))
 
+#define GetBitFlag(bf, i) ((bf & i) ? true : false)
+#define SetBitFlag(bf, i, state) (bf = (state) ? (bf | i) : (bf & ~i))
+
 //---------------------------------------------------------------------//
 // Types and Data structures
 //---------------------------------------------------------------------//
