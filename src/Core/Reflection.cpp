@@ -168,11 +168,13 @@ void ClassAddField(Class* klass, Field* field)
 
 	if( ClassGetFieldById(klass, field->id) )
 	{
-#ifdef BUILD_DEBUG
-		assert( 0 && "Check your reflection IDs" );
-#endif
+		LogAssert("Duplicate id found for field '%s' in '%s'", field->name, klass->name);
+		return;
+	}
 
-		LogDebug("Duplicate id found for field '%s' in '%s'", field->name, klass->name);
+	if( field->id == FieldInvalid )
+	{
+		LogAssert("Field id in '%s' is reserved", field->id);
 		return;
 	}
 

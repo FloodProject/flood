@@ -108,6 +108,20 @@ static void LogFormat(LogEntry* entry, /*Log* log,*/ LogLevel level, const char*
 	#define PrintDebug printf
 #endif
 
+#ifdef BUILD_DEBUG
+
+#define ASSERT_ON_LOG                                       \
+		else if(entry.level == LogLevel::Assert)            \
+		{                                                   \
+			assert(false);                                  \
+		}                                                   \
+
+#else
+
+#define ASSERT_ON_LOG
+
+#endif
+
 #define DEFINE_LOG_HELPER(Level)                            \
 	void Log##Level(const char* msg, ...)                   \
 	{                                                       \
@@ -128,6 +142,7 @@ static void LogFormat(LogEntry* entry, /*Log* log,*/ LogLevel level, const char*
 			String debug = entry.message + "\n";            \
 			PrintDebug( debug.c_str() );                    \
 		}                                                   \
+		ASSERT_ON_LOG                                       \
 }                                                           \
 
 DEFINE_LOG_HELPER(Info)

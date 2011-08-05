@@ -26,6 +26,8 @@
 
 #include "Core/API.h"
 
+EXTERN_BEGIN
+
 #if !defined(FASTLZ__COMPRESSOR) && !defined(FASTLZ_DECOMPRESSOR)
 
 /*
@@ -551,3 +553,5 @@ static FASTLZ_INLINE int FASTLZ_DECOMPRESSOR(const void* input, int length, void
 }
 
 #endif /* !defined(FASTLZ_COMPRESSOR) && !defined(FASTLZ_DECOMPRESSOR) */
+
+EXTERN_END

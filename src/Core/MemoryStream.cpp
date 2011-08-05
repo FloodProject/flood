@@ -96,13 +96,13 @@ static int64 MemoryRead(Stream* stream, void* buffer, int64 size)
 
 static int32 GetNextPower2(int32 v)
 {
-    v--;
-    v |= v >> 1;
-    v |= v >> 2;
-    v |= v >> 4;
-    v |= v >> 8;
-    v |= v >> 16;
-    v++;
+	v--;
+	v |= v >> 1;
+	v |= v >> 2;
+	v |= v >> 4;
+	v |= v >> 8;
+	v |= v >> 16;
+	v++;
 
 	return v;
 }

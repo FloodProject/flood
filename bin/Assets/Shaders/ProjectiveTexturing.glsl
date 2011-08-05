@@ -17,7 +17,6 @@ void main()
 {
 	gl_Position = vp_ProjectionMatrix * vp_ViewMatrix * vp_ModelMatrix * vec4(vp_Vertex, 1.0);
 	vp_ProjTexCoord = vp_TextureProjection * vp_TextureView * vp_ModelMatrix * vec4(vp_Vertex, 1.0);
-	
 }
 
 [fragment]

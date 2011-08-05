@@ -153,7 +153,7 @@ static bool DecodeString(MemoryStream* ms, String& s)
 		return false;
 
 	s.resize((size_t)size);
-	memcpy(&s[0], StreamIndex(ms), size);
+	memcpy(&s[0], StreamIndex(ms), (size_t)size);
 
 	StreamAdvanceIndex(ms, size);
 
@@ -183,6 +183,11 @@ static void SerializeComposite(ReflectionContext* ctx, ReflectionWalkType::Enum 
 	if(wt == ReflectionWalkType::Begin)
 	{
 		EncodeVariableInteger(bin->ms, klass->id);
+		return;
+	}
+	else if(wt == ReflectionWalkType::End)
+	{
+		EncodeVariableInteger(bin->ms, FieldInvalid);
 		return;
 	}
 }
@@ -404,29 +409,29 @@ static void DeserializePrimitive( ReflectionContext* context )
 	case Primitive::Color:
 	{
 		ColorP val;
-		val.r = DecodeFixed32(ms);
-		val.g = DecodeFixed32(ms);
-		val.b = DecodeFixed32(ms);
-		val.a = DecodeFixed32(ms);
+		val.r = (float) DecodeFixed32(ms);
+		val.g = (float) DecodeFixed32(ms);
+		val.b = (float) DecodeFixed32(ms);
+		val.a = (float) DecodeFixed32(ms);
 		SetFieldValue(ColorP, val);
 		break;
 	}
 	case Primitive::Vector3:
 	{
 		Vector3P val;
-		val.x = DecodeFixed32(ms);
-		val.y = DecodeFixed32(ms);
-		val.z = DecodeFixed32(ms);
+		val.x = (float) DecodeFixed32(ms);
+		val.y = (float) DecodeFixed32(ms);
+		val.z = (float) DecodeFixed32(ms);
 		SetFieldValue(Vector3P, val);
 		break;
 	}
 	case Primitive::Quaternion:
 	{
 		QuaternionP val;
-		val.x = DecodeFixed32(ms);
-		val.y = DecodeFixed32(ms);
-		val.z = DecodeFixed32(ms);
-		val.w = DecodeFixed32(ms);
+		val.x = (float) DecodeFixed32(ms);
+		val.y = (float) DecodeFixed32(ms);
+		val.z = (float) DecodeFixed32(ms);
+		val.w = (float) DecodeFixed32(ms);
 		SetFieldValue(QuaternionP, val);
 		break;
 	}
@@ -584,6 +589,9 @@ static void DeserializeFields( ReflectionContext* context )
 	while( DecodeVariableInteger(bin->ms, val) )
 	{
 		FieldId id = (FieldId) val;
+		
+		// This marks the end of the composite.
+		if(id == FieldInvalid) break;
 
 		Class* composite = context->composite;
 		Field* field = context->field;

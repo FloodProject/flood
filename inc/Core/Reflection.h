@@ -199,6 +199,8 @@ struct API_CORE Field
 	std::vector<const char*> aliases;
 };
 
+static FieldId FieldInvalid = 127;
+
 // Returns if the field has the given qualifier.
 API_CORE bool FieldHasQualifier(const Field*, FieldQualifier::Enum);
 

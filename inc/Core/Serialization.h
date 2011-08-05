@@ -138,19 +138,13 @@ struct API_CORE Serializer
 	SerializerSaveFunction save;
 };
 
-#ifdef ENABLE_SERIALIZATION_JSON
+//-----------------------------------//
 
 // Creates a new JSON serializer.
 API_CORE Serializer* SerializerCreateJSON(Allocator*);
 
-#endif
-
-#ifdef ENABLE_SERIALIZATION_BINARY
-
 // Creates a new binary serializer.
 API_CORE Serializer* SerializerCreateBinary(Allocator*);
-
-#endif
 
 // Destroys the serializer.
 API_CORE void SerializerDestroy(Serializer*);
@@ -162,8 +156,6 @@ API_CORE bool SerializerSave(Serializer*, Object* object);
 // Wrappers for file-based loading and saving.
 API_CORE Object* SerializerLoadObjectFromFile(Serializer*, const Path&);
 API_CORE bool SerializerSaveObjectToFile(Serializer*, const Path& file, Object* object);
-
-//-----------------------------------//
 
 // Array helpers
 void* ReflectionArrayResize( ReflectionContext*, void* address, uint32 size );

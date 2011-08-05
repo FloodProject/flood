@@ -20,7 +20,7 @@
 
 typedef Serializer* (*SerializerCreateFunction)(Allocator*);
 
-void TestSerialization(CuTest* tc, SerializerCreateFunction SerializerCreate)
+void TestSerialization(CuTest* tc, SerializerCreateFunction SerializerCreate, const char* ext)
 {
 	Allocator* alloc = AllocatorGetHeap();
 	Serializer* serializer = SerializerCreate(alloc);
@@ -29,9 +29,9 @@ void TestSerialization(CuTest* tc, SerializerCreateFunction SerializerCreate)
 	B instanceB;
 	instanceB.change();
 	
-	SerializerSaveObjectToFile(serializer, "TestB.json", &instanceB);
+	SerializerSaveObjectToFile(serializer, StringFormat("TestB.%s", ext), &instanceB);
 
-	B* loadB = (B*) SerializerLoadObjectFromFile(serializer, "TestB.json");
+	B* loadB = (B*) SerializerLoadObjectFromFile(serializer, StringFormat("TestB.%s", ext));
 
 	CuAssertIntEquals(tc, instanceB.bar, loadB->bar);
 	CuAssertDblEquals(tc, instanceB.vec.z, loadB->vec.z, 0.01);
@@ -43,9 +43,9 @@ void TestSerialization(CuTest* tc, SerializerCreateFunction SerializerCreate)
 	instanceC.allocate();
 	instanceC.change();
 
-	SerializerSaveObjectToFile(serializer, "TestC.json", &instanceC);
+	SerializerSaveObjectToFile(serializer, StringFormat("TestC.%s", ext), &instanceC);
 
-	C* loadC = (C*) SerializerLoadObjectFromFile(serializer, "TestC.json");
+	C* loadC = (C*) SerializerLoadObjectFromFile(serializer, StringFormat("TestC.%s", ext));
 	Deallocate(loadC);
 
 	Deallocate(serializer);
@@ -53,12 +53,12 @@ void TestSerialization(CuTest* tc, SerializerCreateFunction SerializerCreate)
 
 void TestSerializerJSON(CuTest* tc)
 {
-	TestSerialization(tc, SerializerCreateJSON);
+	TestSerialization(tc, SerializerCreateJSON, "json");
 }
 
 void TestSerializerBinary(CuTest* tc)
 {
-	TestSerialization(tc, SerializerCreateBinary);
+	TestSerialization(tc, SerializerCreateBinary, "bin");
 }
 
 //-----------------------------------//
@@ -67,6 +67,6 @@ CuSuite* GetSuiteSerialization()
 {
 	CuSuite* suite = CuSuiteNew();
 	SUITE_ADD_TEST(suite, TestSerializerJSON);
-	//SUITE_ADD_TEST(suite, TestSerializerBinary);
+	SUITE_ADD_TEST(suite, TestSerializerBinary);
 	return suite;
 }
