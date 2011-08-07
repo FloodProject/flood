@@ -24,6 +24,10 @@
 #include "Resources/Mesh.h"
 #include "Terrain/Terrain.h"
 
+#include "Plugins/Networking/ServerPlugin.h"
+#include "Protocol/ReplicaMessages.h"
+#include "Network/Host.h"
+
 NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
@@ -167,7 +171,7 @@ void ScenePage::addGroup( wxTreeItemId id, const EntityPtr& entity, bool createG
 
 	const std::vector<EntityPtr>& entities = group->getEntities();
 
-	for( uint i = 0; i < entities.size(); i++ )
+	for( size_t i = 0; i < entities.size(); i++ )
 	{
 		const EntityPtr& child = entities[i];
 		addGroup(groupId, child);
@@ -183,6 +187,7 @@ wxTreeItemId ScenePage::addEntity( wxTreeItemId id, const EntityPtr& entity )
 	const ComponentMap& components = entity->getComponents();
 
 	ComponentMap::const_iterator it;
+	
 	for( it = components.begin(); it != components.end(); it++ )
 		addComponent(nodeId, it->second);
 
@@ -225,8 +230,7 @@ ComponentPtr ScenePage::getComponentFromTreeId( wxTreeItemId id )
 
 EntityPtr ScenePage::getEntityFromTreeId( wxTreeItemId id )
 {
-	if( !id )
-		return EntityPtr();
+	if( !id ) return nullptr;
 
 	EntityItemData* data = (EntityItemData*) treeCtrl->GetItemData(id);
 	Entity* entity = data->entity;
@@ -234,7 +238,7 @@ EntityPtr ScenePage::getEntityFromTreeId( wxTreeItemId id )
 	if( entity )
 		return entity;
 	else
-		return EntityPtr();
+		return nullptr;
 }
 
 //-----------------------------------//
@@ -284,17 +288,11 @@ void ScenePage::onItemChanged(wxTreeEvent& event)
 
 //-----------------------------------//
 
-void ScenePage::onButtonEntityAdd(wxCommandEvent&)
+void ScenePage::addEntity(const EntityPtr& entity)
 {
 	Document* document = GetEditor().getDocument();
 	if( !document ) return;
-	
-	std::string name("Entity"+StringFromNumber(nodeCounter++));
-	
-	EntityPtr entity( EntityCreate( AllocatorGetHeap() ) );
-	entity->setName(name);
-	entity->addTransform();
-	
+
 	EntityOperation* nodeOperation;
 	nodeOperation = createEntityOperation(entity, "Entity added");
 	nodeOperation->added = true;
@@ -305,11 +303,35 @@ void ScenePage::onButtonEntityAdd(wxCommandEvent&)
 	undoManager->registerOperation(nodeOperation);
 
 	nodeOperation->redo();
-	
+
 	wxTreeItemId id = getTreeIdFromEntity(entity);
 	treeCtrl->Expand(id);
 	treeCtrl->SelectItem(id);
 	treeCtrl->EditLabel(id);
+}
+
+//-----------------------------------//
+
+void ScenePage::onButtonEntityAdd(wxCommandEvent&)
+{
+	String name("Entity"+StringFromNumber(nodeCounter++));
+
+	EntityPtr entity = EntityCreate( AllocatorGetHeap() );
+	entity->setName(name);
+	entity->addTransform();
+
+	ReplicaCreateInstanceMessage inst;
+	inst.localId = 23;
+	inst.classId = entity->getType()->id;
+	inst.instance = entity.get();
+
+	MessagePtr msg = MessageCreate( ReplicaMessageIds::ReplicaCreateInstance );
+	msg->write(&inst);
+
+	ServerPlugin* sp = GetPlugin<ServerPlugin>();
+	sp->host->broadcastMessage(msg);
+
+	//addEntity(entity);
 }
 
 //-----------------------------------//

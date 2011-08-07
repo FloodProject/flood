@@ -20,7 +20,7 @@ NAMESPACE_SERVER_BEGIN
 
 class ChatMessagesServer : ChatMessagePlugin
 {
-	void handleClientMessage(const SessionPtr&, const MessagePtr&) OVERRIDE;
+	void handleChatClient(const SessionPtr&, const ChatClientMessage&) OVERRIDE;
 };
 
 REFLECT_CHILD_CLASS(ChatMessagesServer, ChatMessagePlugin)
@@ -28,17 +28,13 @@ REFLECT_CLASS_END()
 
 //-----------------------------------//
 
-void ChatMessagesServer::handleClientMessage(const SessionPtr& session, const MessagePtr& message)
+void ChatMessagesServer::handleChatClient(const SessionPtr& session, const ChatClientMessage& chat)
 {
-	ChatMessage* chat = message->read<ChatMessage>();
-	String text( chat->text );
-
 	UserMessagePlugin* usersPlugin = GetPlugin<UserMessagePlugin>();
 	User* user = usersPlugin->users.getUserFromSession(session);
 	
-	LogInfo("%s says: %s", user->name.c_str(), text.c_str());
+	LogInfo("%s says: %s", user->name.c_str(), chat.text.c_str());
 }
-
 
 //-----------------------------------//
 

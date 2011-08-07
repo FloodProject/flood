@@ -16,8 +16,18 @@ NAMESPACE_PROTOCOL_BEGIN
 
 //-----------------------------------//
 
-struct API_PROTOCOL ChatMessage
+REFLECT_DECLARE_CLASS(ChatClientMessage)
+struct API_PROTOCOL ChatClientMessage : MessageDefinition
 {
+	REFLECT_DECLARE_OBJECT(ChatClientMessage)
+	String text;
+};
+
+REFLECT_DECLARE_CLASS(ChatServerMessage)
+struct API_PROTOCOL ChatServerMessage : MessageDefinition
+{
+	REFLECT_DECLARE_OBJECT(ChatServerMessage)
+	UserId user;
 	String text;
 };
 
@@ -29,9 +39,8 @@ struct API_PROTOCOL ChatMessageIds
 {
 	enum Enum : MessageId
 	{
-		ClientMessage = CHAT_INITIAL_ID + 0,
-		ServerMessage = CHAT_INITIAL_ID + 1,
-		ServerAnnouncement = CHAT_INITIAL_ID +2
+		ChatClient = CHAT_INITIAL_ID + 0,
+		ChatServer = CHAT_INITIAL_ID + 1,
 	};
 };
 
@@ -55,9 +64,8 @@ public:
 	Enum* getMessagesEnum() OVERRIDE;
 
 	// Message callbacks.
-	virtual void handleClientMessage(const SessionPtr&, const MessagePtr&) {}
-	virtual void handleServerMessage(const SessionPtr&, const MessagePtr&) {}
-	virtual void handleServerAnnouncement(const SessionPtr&, const MessagePtr&) {}
+	virtual void handleChatClient(const SessionPtr&, const ChatClientMessage&) {}
+	virtual void handleChatServer(const SessionPtr&, const ChatServerMessage&) {}
 };
 
 //-----------------------------------//

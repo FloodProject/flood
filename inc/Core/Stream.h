@@ -117,10 +117,15 @@ API_CORE Stream*  StreamCreateFromFile(Allocator*, const Path&, StreamMode::Enum
 struct API_CORE MemoryStream : Stream
 {
 	std::vector<uint8> data;
+	uint8* buf;
 	uint64 position;
+	bool useRawBuffer;
 };
 
-API_CORE MemoryStream*  StreamCreateFromMemory(Allocator*, uint64 size);
+API_CORE MemoryStream* StreamCreateFromMemory(Allocator*, uint64 size);
+API_CORE void StreamMemoryInit(MemoryStream*);
+API_CORE void StreamMemorySetRawBuffer(MemoryStream*, uint8* buffer);
+
 
 //-----------------------------------//
 

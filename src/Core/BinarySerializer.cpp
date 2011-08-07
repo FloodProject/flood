@@ -113,6 +113,18 @@ static void SerializePrimitive( ReflectionContext* context, ReflectionWalkType::
 		EncodeVariableInteger(bin->ms, b);
 		break;
 	}
+	case Primitive::Int8:
+	{
+		sint8& i = *vc.i8;
+		EncodeVariableInteger(bin->ms, EncodeZigZag32(i));
+		break;
+	}
+	case Primitive::Uint8:
+	{
+		uint8& i = *vc.u8;
+		EncodeVariableInteger(bin->ms, i);
+		break;
+	}
 	case Primitive::Int16:
 	{
 		sint16& i = *vc.i16;
@@ -230,6 +242,20 @@ static void DeserializePrimitive( ReflectionContext* context )
 		DecodeVariableInteger(ms, i);
 		bool val = i != 0;
 		SetFieldValue(bool, val);
+		break;
+	}
+	case Primitive::Int8:
+	{
+		DecodeVariableInteger(ms, i);
+		sint8 val = (sint8) DecodeZigZag32((uint32)i);
+		SetFieldValue(sint8, val);
+		break;
+	}
+	case Primitive::Uint8:
+	{
+		DecodeVariableInteger(ms, i);
+		uint8 val = (uint8) i;
+		SetFieldValue(uint8, val);
 		break;
 	}
 	case Primitive::Int16:
@@ -488,7 +514,7 @@ static Object* DeserializeComposite( ReflectionContext* context)
 
 	if( it == ids.end() )
 	{
-		LogDebug("Invalid class id");
+		LogDebug("Deserialize: Invalid class id");
 		return nullptr;
 	}
 
@@ -496,7 +522,7 @@ static Object* DeserializeComposite( ReflectionContext* context)
 	
 	if( !newClass )
 	{
-		LogDebug("Invalid class");
+		LogDebug("Deserialize: Could not create class instance");
 		return nullptr;
 	}
 	
@@ -548,7 +574,7 @@ static bool SerializeSave( Serializer* serializer, Object* object )
 	SerializerBinary* bin = (SerializerBinary*) serializer;
 	if( !bin->stream ) return false;
 
-	Stream* buf = StreamCreateFromMemory(bin->alloc, 1024);
+	Stream* buf = StreamCreateFromMemory(bin->alloc, 128);
 	bin->ms = (MemoryStream*) buf;
 	
 	ReflectionWalk(object, &bin->serializeContext);
@@ -567,6 +593,7 @@ Serializer* SerializerCreateBinary(Allocator* alloc)
 	SerializerBinary* serializer = Allocate(SerializerBinary, alloc);
 	serializer->load = SerializeLoad;
 	serializer->save = SerializeSave;
+	serializer->alloc = alloc;
 
 	ReflectionContext& sCtx = serializer->serializeContext;
 	sCtx.userData = serializer;

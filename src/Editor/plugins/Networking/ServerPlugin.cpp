@@ -195,9 +195,10 @@ void ServerPlugin::auth()
 {
 	UserAuthMessage auth;
 	auth.name = pane->getUserName();
+	auth.type = UserAuthType::None;
 
 	MessagePtr message = MessageCreate(UserMessageIds::UserAuth);
-	message->write(auth);
+	message->write(&auth);
 			
 	host->setState(HostState::Authenticating);
 	host->getPeer()->queueMessage(message, 0);

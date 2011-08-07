@@ -16,6 +16,8 @@ NAMESPACE_PROTOCOL_BEGIN
 
 //-----------------------------------//
 
+REFLECT_DECLARE_ENUM(UserAuthType)
+
 enum API_PROTOCOL UserAuthType
 {
 	None,
@@ -23,28 +25,48 @@ enum API_PROTOCOL UserAuthType
 	Certificate
 };
 
+REFLECT_DECLARE_CLASS(UserAuthMessage)
+
 struct API_PROTOCOL UserAuthMessage : MessageDefinition
 {
+	REFLECT_DECLARE_OBJECT(UserAuthMessage)
 	String name;
 	UserAuthType type;
 };
 
+//-----------------------------------//
+
+REFLECT_DECLARE_CLASS(UserJoinMessage)
+
 struct API_PROTOCOL UserJoinMessage : MessageDefinition
 {
+	REFLECT_DECLARE_OBJECT(UserJoinMessage)
 	UserId user;
 	String name;
 };
+
+//-----------------------------------//
+
+REFLECT_DECLARE_CLASS(UserLeaveMessage)
 
 struct API_PROTOCOL UserLeaveMessage : MessageDefinition
 {
+	REFLECT_DECLARE_OBJECT(UserLeaveMessage)
 	UserId user;
 };
 
+//-----------------------------------//
+
+REFLECT_DECLARE_CLASS(UserChangeNameMessage)
+
 struct API_PROTOCOL UserChangeNameMessage : MessageDefinition
 {
+	REFLECT_DECLARE_OBJECT(UserChangeNameMessage)
 	UserId user;
 	String name;
 };
+
+//-----------------------------------//
 
 #define USER_INITIAL_ID 600
 
@@ -54,18 +76,17 @@ struct API_PROTOCOL UserMessageIds
 {
 	enum Enum : MessageId
 	{
-		UserAuth = USER_INITIAL_ID + 4,
-		UserChangeName = USER_INITIAL_ID + 2,
-
-		UserJoin = USER_INITIAL_ID + 0,
-		UserLeave = USER_INITIAL_ID + 1,
-		UserNotifyName = USER_INITIAL_ID + 3,
+		UserAuth		= USER_INITIAL_ID + 0,
+		UserChangeName	= USER_INITIAL_ID + 1,
+		UserJoin		= USER_INITIAL_ID + 2,
+		UserLeave		= USER_INITIAL_ID + 3,
+		UserNotifyName	= USER_INITIAL_ID + 4,
 	};
 };
 
-REFLECT_DECLARE_CLASS(UserMessagePlugin)
-
 //-----------------------------------//
+
+REFLECT_DECLARE_CLASS(UserMessagePlugin)
 
 class API_PROTOCOL UserMessagePlugin : public MessagePlugin
 {
@@ -83,12 +104,11 @@ public:
 	Enum* getMessagesEnum() OVERRIDE;
 
 	// Message callbacks.
-	virtual void handleUserAuth(const SessionPtr&, const MessagePtr&) {}
-	virtual void handleUserChangeName(const SessionPtr&, const MessagePtr&) {}
-
-	virtual void handleUserJoin(const SessionPtr&, const MessagePtr&) {}
-	virtual void handleUserLeave(const SessionPtr&, const MessagePtr&) {}
-	virtual void handleUserNotifyName(const SessionPtr&, const MessagePtr&) {}
+	virtual void handleUserAuth(const SessionPtr&, const UserAuthMessage&) {}
+	virtual void handleUserChangeName(const SessionPtr&, const UserChangeNameMessage&) {}
+	virtual void handleUserJoin(const SessionPtr&, const UserJoinMessage&) {}
+	virtual void handleUserLeave(const SessionPtr&, const UserLeaveMessage&) {}
+	//virtual void handleUserNotifyName(const SessionPtr&, const UserNotifyNameMessage&) {}
 
 	Users users;
 };

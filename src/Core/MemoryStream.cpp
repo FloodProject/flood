@@ -43,8 +43,7 @@ MemoryStream* StreamCreateFromMemory(Allocator* alloc, uint64 size)
 	MemoryStream* ms = Allocate(MemoryStream, alloc);
 	if( !ms ) return nullptr;
 	
-	ms->position = 0;
-	ms->fn = &gs_MemoryFuncs;
+	StreamMemoryInit(ms);
 
 	if( !MemoryOpen(ms) )
 	{
@@ -55,6 +54,25 @@ MemoryStream* StreamCreateFromMemory(Allocator* alloc, uint64 size)
 	MemoryResize(ms, size);
 
 	return ms;
+}
+
+//-----------------------------------//
+
+void StreamMemoryInit(MemoryStream* ms)
+{
+	if( !ms ) return;
+	
+	ms->fn = &gs_MemoryFuncs;
+	ms->position = 0;
+	ms->useRawBuffer = false;
+}
+
+//-----------------------------------//
+
+void StreamMemorySetRawBuffer(MemoryStream* ms, uint8* buffer)
+{
+	ms->buf = buffer;
+	ms->useRawBuffer = true;
 }
 
 //-----------------------------------//
@@ -70,7 +88,6 @@ static bool MemoryOpen(Stream* stream)
 static bool MemoryClose(Stream* stream)
 {
 	MemoryStream* ms = (MemoryStream*) stream;
-	ms->data.clear();
 	return true;
 }
 
@@ -78,14 +95,16 @@ static bool MemoryClose(Stream* stream)
 
 static int64 MemoryRead(Stream* stream, void* buffer, int64 size)
 {
+	MemoryStream* ms = (MemoryStream*) stream;
 	if(size < 0) return -1;
 
-	MemoryStream* ms = (MemoryStream*) stream;
-	int64 left = MemoryGetSize(stream) - ms->position;
+	if( !ms->useRawBuffer )
+	{
+		int64 left = MemoryGetSize(stream) - ms->position;
+		if(size > left) size = left;
+	}
 
-	if(size > left) size = left;
-	
-	uint8* cur = &ms->data[0] + ms->position;
+	uint8* cur = ms->buf + ms->position;
 	memcpy(buffer, cur, (size_t) size);
 
 	ms->position += size;
@@ -116,13 +135,18 @@ static int64 MemoryWrite(Stream* stream, void* buffer, int64 size)
 	MemoryStream* ms = (MemoryStream*) stream;
 	uint64& position = ms->position;
 
-	int64 newSize = MemoryGetSize(stream) + size;
-	bool needsResize = newSize > ms->data.size();
+	if( !ms->useRawBuffer )
+	{
+		int64 newSize = MemoryGetSize(stream) + size;
+		bool needsResize = newSize > ms->data.size();
 	
-	if(needsResize)
-		MemoryResize(stream, GetNextPower2((int32)newSize));
+		if(needsResize)
+			MemoryResize(stream, GetNextPower2((int32)newSize));
 
-	uint8* cur = &ms->data[0] + position;
+		if( ms->data.empty() ) return 0;
+	}
+
+	uint8* cur = ms->buf + position;
 	memcpy(cur, buffer, (size_t) size);
 
 	position += size;
@@ -172,7 +196,10 @@ static int64 MemoryGetSize(Stream* stream)
 static void MemoryResize(Stream* stream, int64 size)
 {
 	MemoryStream* ms = (MemoryStream*) stream;
+	if( size <= 0 ) return;
+
 	ms->data.resize((size_t)size);
+	ms->buf = &ms->data[0];
 }
 
 //-----------------------------------//

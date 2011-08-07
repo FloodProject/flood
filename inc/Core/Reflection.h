@@ -166,6 +166,9 @@ API_CORE void* ClassCreateInstance(const Class*, Allocator*);
 // Gets the class id map.
 API_CORE ClassIdMap& ClassGetIdMap();
 
+// Gets the class by an id.
+API_CORE Class* ClassGetById(ClassId id);
+
 //-----------------------------------//
 
 typedef void (*FieldSetterFunction)(void* object, void* value);

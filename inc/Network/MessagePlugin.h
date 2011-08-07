@@ -44,12 +44,12 @@ public:
 	virtual Enum* getMessagesEnum() = 0;
 };
 
-struct API_CORE MessageDefinition
-{
-
-};
-
 REFLECT_DECLARE_CLASS(MessageDefinition)
+
+struct API_CORE MessageDefinition : public Object
+{
+	REFLECT_DECLARE_OBJECT(MessageDefinition)
+};
 
 //-----------------------------------//
 

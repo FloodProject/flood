@@ -15,7 +15,8 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-typedef void (MessagePlugin::*MessageHandlerMemFn)(const SessionPtr&, const MessagePtr&);
+typedef void (*MessageRefHandlerFn)(MessagePlugin*, const SessionPtr&, Object*);
+typedef void (MessagePlugin::*MessageRawHandlerMemFn)(const SessionPtr&, const MessagePtr&);
 
 struct MessageDirection
 {
@@ -31,7 +32,8 @@ struct MessageMapping
 {
 	MessageId id;
 	MessageDirection::Enum direction;
-	MessageHandlerMemFn handler;
+	MessageRefHandlerFn ref;
+	MessageRawHandlerMemFn raw;
 	MessagePlugin* plugin;
 };
 

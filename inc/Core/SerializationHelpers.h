@@ -7,6 +7,7 @@
 ************************************************************************/
 
 #include "Core/API.h"
+#include "Core/Log.h"
 
 #ifdef ENABLE_SERIALIZATION
 
@@ -48,30 +49,48 @@ static void PointerSetObject( const Field* field, void* address, T* object )
  * http://code.google.com/apis/protocolbuffers/docs/encoding.html
  */
 
-#define StreamIndex(s) ((&s->data[0])+s->position)
+#define StreamIndex(s) (s->buf+s->position)
+
+#ifdef BUILD_DEBUG
+
+static void StreamAdvanceIndex(MemoryStream* ms, uint64 n)
+{
+	ms->position += n;
+
+	// Do some debug bounds checking.
+	if(ms->position > ms->data.size())
+	{
+		LogAssert("Check the bounds of the buffer");
+	}
+}
+
+#else
+
 #define StreamAdvanceIndex(s, n) (s->position += n)
 
-static void EncodeVariableInteger(MemoryStream* ms, uint64 val)
-{
-	uint8 n = 0;
-	uint8* buf = StreamIndex(ms);
+#endif
 
+static void EncodeVariableIntegerBuffer(uint8* buf, uint64& advance, uint64 val)
+{
 	do
 	{
 		uint8 byte = val & 0x7f;
 		val >>= 7;
 		if(val) byte |= 0x80;
 		*buf++ = byte;
-		n++;
+		advance++;
 	}
 	while(val);
-
-	StreamAdvanceIndex(ms, n);
 }
 
-static bool DecodeVariableInteger(MemoryStream* ms, uint64& val)
+static void EncodeVariableInteger(MemoryStream* ms, uint64 val)
 {
 	uint8* buf = StreamIndex(ms);
+	EncodeVariableIntegerBuffer(buf, ms->position, val);
+}
+
+static bool DecodeVariableIntegerBuffer(uint8* buf, uint64& advance, uint64& val)
+{
 	uint8* p = buf;
 
 	uint32 low, high = 0;
@@ -91,11 +110,16 @@ static bool DecodeVariableInteger(MemoryStream* ms, uint64& val)
 
 done:
 
-	StreamAdvanceIndex(ms, p-buf);
+	advance += p-buf;
 	val = ((uint64) high << 32) | low;
 	return true;
 }
 
+static bool DecodeVariableInteger(MemoryStream* ms, uint64& val)
+{
+	uint8* buf = StreamIndex(ms);
+	return DecodeVariableIntegerBuffer(buf, ms->position, val);
+}
 
 //-----------------------------------//
 
@@ -164,7 +188,6 @@ static bool DecodeString(MemoryStream* ms, String& s)
 	memcpy(&s[0], StreamIndex(ms), (size_t)size);
 
 	StreamAdvanceIndex(ms, size);
-
 	return true;
 }
 

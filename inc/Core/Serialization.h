@@ -21,6 +21,8 @@ struct Quaternion;
 union API_CORE ValueContext
 {
 	bool* b;
+	sint8*  i8;
+	uint8*  u8;
 	sint16* i16;
 	uint16* u16;
 	sint32* i32;

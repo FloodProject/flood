@@ -132,7 +132,10 @@ void ProjectPlugin::onOpenButtonClick(wxCommandEvent& event)
 		return;
 
 	Path path = (String) fc.GetPath();
-	Scene* object = (Scene*) SerializerLoadObjectFromFile(AllocatorGetThis(), path);
+
+	Serializer* serializer = SerializerCreateJSON( AllocatorGetThis() );
+	Scene* object = (Scene*) SerializerLoadObjectFromFile(serializer, path);
+	Deallocate(serializer);
 
 	if( !object )
 	{
@@ -187,7 +190,11 @@ bool ProjectPlugin::saveScene()
 	SceneDocument* sceneDocument = (SceneDocument*) GetEditor().getDocument();	
 	ScenePtr scene = sceneDocument->scene;
 
-	return SerializerSaveObjectToFile(AllocatorGetThis(), path, scene.get());
+	Serializer* serializer = SerializerCreateJSON( AllocatorGetThis() );
+	bool res = SerializerSaveObjectToFile(serializer, path, scene.get());
+	Deallocate(serializer);
+
+	return res;
 }
 
 //-----------------------------------//

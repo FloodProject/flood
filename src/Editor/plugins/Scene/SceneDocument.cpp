@@ -214,7 +214,8 @@ void SceneDocument::createScene()
 	EntityPtr nodeGrid( EntityCreate(AllocatorGetHeap()) );
 	nodeGrid->setName("Grid");
 	nodeGrid->addTransform();
-	nodeGrid->addComponent( GridPtr( new Grid() ) );
+	GridPtr grid = Allocate(Grid, AllocatorGetThis());
+	nodeGrid->addComponent(grid);
 	nodeGrid->setTag( Tags::NonPickable, true );
 	editorScene->add( nodeGrid );
 
@@ -226,13 +227,6 @@ void SceneDocument::createScene()
 	CameraPtr camera = nodeCamera->getComponent<Camera>();
 	viewframe->setMainCamera(camera);
 	viewframe->switchToDefaultCamera();
-
-	for(size_t i = 0; i < 100; i++)
-	{
-		EntityPtr entity = EntityCreate(AllocatorGetHeap());
-		entity->addTransform();
-		scene->add(entity);
-	}
 }
 
 //-----------------------------------//
@@ -244,8 +238,8 @@ EntityPtr SceneDocument::createCamera()
 
 	// Create a new first-person camera for our view.
 	// By default it will be in perspective projection.
-	CameraPtr camera( new Camera() );
-	cameraController.reset( new FirstPersonController() );
+	CameraPtr camera = Allocate(Camera, AllocatorGetThis());
+	cameraController = Allocate(FirstPersonController, AllocatorGetThis());
 	cameraController->setEnabled(false);
 
 	Frustum& frustum = camera->getFrustum();
@@ -261,7 +255,7 @@ EntityPtr SceneDocument::createCamera()
 	entityCamera->addComponent( cameraController );
 
 #ifdef ENABLE_AUDIO_OPENAL
-	ComponentPtr listener( new Listener() );
+	ComponentPtr listener = Allocate(Listener, AllocatorGetThis());
 	entityCamera->addComponent( listener );
 #endif
 

@@ -90,7 +90,7 @@ void ResourceDatabase::indexFiles()
 		StreamRead(file, data);
 		StreamDestroy(file);
 
-		uint32 hash = Hash::Murmur2( data, 0xBEEF );
+		uint32 hash = HashMurmur2(0xBEEF, &data[0], data.size());
 		
 		if( resourcesCache.find(hash) != resourcesCache.end() )
 			continue;

@@ -153,10 +153,8 @@ void Dispatcher::handleMessage(const PeerPtr& peer, const MessagePtr& message)
 {
 	const SessionPtr& session = sessions->getSession(peer);
 
-	//assert( GetBitFlag(flags, MessageFlags::Binary) );
-
 	// Find message handler and forward message.
-	MessageMapping* mapping = handlers->findHandler(id);
+	MessageMapping* mapping = handlers->findHandler(message->id);
 	
 	if( !mapping )
 	{
@@ -164,7 +162,33 @@ void Dispatcher::handleMessage(const PeerPtr& peer, const MessagePtr& message)
 		return;
 	}
 
-	CALL_MEMBER_FN(mapping->plugin, mapping->handler)(session, message);
+	// Deserialize message if it's needed.
+	if( GetBitFlag(message->flags, MessageFlags::Binary) )
+	{
+		StreamSetPosition(message->ms, 0, StreamSeekMode::Absolute);
+		serializer->stream = message->ms;
+		
+		Object* object = SerializerLoad(serializer);
+		if( !object ) return;
+
+		if( !mapping->ref )
+		{
+			LogAssert("Handler was not found for reflected message");
+			return;
+		}
+
+		mapping->ref(mapping->plugin, session, object);
+	}
+	else
+	{
+		if( !mapping->raw )
+		{
+			LogAssert("Handler was not found for raw message");
+			return;
+		}
+
+		CALL_MEMBER_FN(mapping->plugin, mapping->raw)(session, message);
+	}
 }
 
 //-----------------------------------//

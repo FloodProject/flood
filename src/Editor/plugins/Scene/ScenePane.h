@@ -97,6 +97,9 @@ public:
 	// Did we send the last selection event.
 	bool sentLastSelectionEvent;
 
+	// Adds an entity to the scene.
+	void addEntity(const EntityPtr& entity);
+
 protected:
 
 	// Initializes the control.

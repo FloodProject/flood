@@ -28,14 +28,10 @@ Message::Message(MessageId id)
 	, packet(nullptr)
 	, flags(0)
 {
-	ms = StreamCreateFromMemory(AllocatorGetThis(), 0);
+	ms = StreamCreateFromMemory(AllocatorGetThis(), 512);
 
-	SetBitFlag(flags, MessageFlags::Reliable, true);
 	SetBitFlag(flags, MessageFlags::Binary, true);
-	SetBitFlag(flags, MessageFlags::Compressed, true);
-
-	EncodeVariableInteger(ms, id);
-	StreamWrite(ms, &flags, sizeof(flags));
+	//SetBitFlag(flags, MessageFlags::Compressed, true);
 }
 
 //-----------------------------------//
@@ -72,47 +68,88 @@ static size_t GetCompressionBufferSize(size_t size)
 	return bufSize;
 }
 
+//-----------------------------------//
+
 void Message::prepare()
 {
 	if( !packet ) createPacket();
 
-	size_t size = (size_t) ms->position;
-	enet_packet_resize(packet, size);
+	size_t totalSize = (size_t) ms->position;
 
+	size_t bufSize = GetCompressionBufferSize(totalSize);
+	enet_packet_resize(packet, bufSize);
+
+	MemoryStream pms;
+	StreamMemoryInit(&pms);
+	StreamMemorySetRawBuffer(&pms, packet->data);
+
+	EncodeVariableInteger(&pms, id);
+	StreamWrite(&pms, &flags, sizeof(flags));
+	
 	if( GetBitFlag(flags, MessageFlags::Compressed) )
 	{
-		size_t bufSize = GetCompressionBufferSize(size);
-		enet_packet_resize(packet, bufSize);
-
-		int32 length = fastlz_compress_level(0, &ms->data[0], size, packet->data);
-		packet->dataLength = length;
+		uint8* in = &ms->data[0];
+		uint8* out = pms.buf + pms.position;
+		int32 length = fastlz_compress_level(1, in, totalSize, out);
+		pms.position += length;
 	}
 	else
 	{
-		enet_packet_resize(packet, size);
-		memcpy(packet->data, &ms->data[0], size);
+		enet_packet_resize(packet, totalSize + pms.position);
+		StreamWrite(&pms, &ms->data[0], totalSize);
 	}
+
+	packet->dataLength = (size_t) pms.position;
 }
 
 //-----------------------------------//
 
 void Message::setPacket(ENetPacket* packet)
 {
+	MemoryStream pms;
+	StreamMemoryInit(&pms);
+	StreamMemorySetRawBuffer(&pms, packet->data);
+
+	uint64 id;
+
+	if( !DecodeVariableInteger(&pms, id) )
+		return;
+
+	this->id = (MessageId) id;
+	this->packet = packet;
+
+	StreamReadBuffer(&pms, &flags, sizeof(MessageFlags::Enum));
+
+	uint8* in = packet->data + pms.position;
+	size_t inSize = packet->dataLength - (size_t) pms.position;
+
 	if( GetBitFlag(flags, MessageFlags::Compressed) )
 	{
 		size_t bufSize = GetCompressionBufferSize(packet->dataLength);
 		StreamResize(ms, bufSize);
 
-		int32 length = fastlz_decompress(packet->data,
-			packet->dataLength, &ms->data[0], ms->data.size());
-
+		int32 length = fastlz_decompress(in, inSize, &ms->data[0], ms->data.size());
 		StreamResize(ms, length);
 	}
 	else
 	{
-		StreamResize(ms, packet->dataLength);
-		StreamWrite(ms, packet->data, packet->dataLength);
+		StreamResize(ms, inSize);
+		StreamWrite(ms, in, inSize);
 	}
+}
+
+//-----------------------------------//
+
+void Message::write(Object* object)
+{
+	SetBitFlag(flags, MessageFlags::Reliable, true);
+		
+	Serializer* serializer = SerializerCreateBinary(AllocatorGetThis());
+	serializer->stream = ms;
+
+	SerializerSave(serializer, object);
+	
+	Deallocate(serializer);
 }
 
 //-----------------------------------//

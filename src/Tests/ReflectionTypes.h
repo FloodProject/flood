@@ -116,3 +116,33 @@ struct C : public Object
 };
 
 //-----------------------------------//
+
+REFLECT_DECLARE_CLASS(D)
+
+struct D : public Object
+{
+	REFLECT_DECLARE_OBJECT(D)
+
+	D() : object(nullptr)
+	{
+	}
+
+	void allocate()
+	{
+		object = Allocate(A, AllocatorGetThis());
+		refA = Allocate(A, AllocatorGetThis());
+		vecA.push_back(refA);
+	}
+
+	~D()
+	{
+		vecA.clear();
+		Deallocate(object);
+	}
+
+	Object* object;
+	RefPtr<A> refA;
+	std::vector<RefPtr<A>> vecA;
+};
+
+//-----------------------------------//

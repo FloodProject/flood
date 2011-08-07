@@ -70,12 +70,12 @@ void ServerPane::onChatSendButtonClick(wxCommandEvent& event)
 	ServerPlugin* serverPlugin = GetPlugin<ServerPlugin>();
 
 	String text = m_textMessage->GetValue();
-
-	ChatMessage chat;
+	
+	ChatClientMessage chat;
 	chat.text = text;
 
-	MessagePtr message = MessageCreate(ChatMessageIds::ClientMessage);
-	message->write(chat);
+	MessagePtr message = MessageCreate(ChatMessageIds::ChatClient);
+	message->write(&chat);
 	
 	serverPlugin->host->getPeer()->queueMessage(message, 0);
 

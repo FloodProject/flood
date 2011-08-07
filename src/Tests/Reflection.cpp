@@ -35,9 +35,15 @@ REFLECT_CHILD_CLASS(B, A)
 	FIELD_PRIMITIVE(9, string, str)
 REFLECT_CLASS_END()
 
-REFLECT_CLASS(C)
+REFLECT_CHILD_CLASS(C, Object)
 	FIELD_CLASS_PTR(11, A, A*, anA, RawPointer)
 	FIELD_VECTOR_PTR(12, A, A*, arrayA, RawPointer)
+REFLECT_CLASS_END()
+
+REFLECT_CHILD_CLASS(D, Object)
+	FIELD_CLASS_PTR(5, Object, Object*, object, RawPointer)
+	FIELD_CLASS_PTR(6, A, RefPtr<A>, refA, RefPointer)
+	FIELD_VECTOR_PTR(7, A, RefPtr<A>, vecA, RefPointer)
 REFLECT_CLASS_END()
 
 //-----------------------------------//

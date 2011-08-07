@@ -90,6 +90,12 @@ static void ReflectionWalkPrimitive(ReflectionContext* context)
 	case Primitive::Bool:
 		vc.b = (bool*) address;
 		break;
+	case Primitive::Int8:
+		vc.i8 = (sint8*) address;
+		break;
+	case Primitive::Uint8:
+		vc.u8 = (uint8*) address;
+		break;
 	case Primitive::Int16:
 		vc.i16 = (int16*) address;
 		break;
@@ -163,7 +169,6 @@ static bool ReflectionWalkPointer(ReflectionContext* context)
 {
 	void* address = context->elementAddress;
 	const Field* field = context->field;
-	bool resolve = true;
 
 	if(FieldIsSharedPointer(field))
 	{
@@ -179,8 +184,6 @@ static bool ReflectionWalkPointer(ReflectionContext* context)
 	{
 		address = context->elementAddress;
 		address = *(Object**) address;
-		
-		resolve = false;
 	}
 	else if(FieldIsHandle(field))
 	{
@@ -199,17 +202,12 @@ static bool ReflectionWalkPointer(ReflectionContext* context)
 
 		address = HandleFind(hc.handles, id);
 		if( !address ) return false;
-
-		resolve = false;
 	}
 
 	assert( address != nullptr );
 	context->elementAddress = address;
 
-	if(resolve)
-		context->object = *(Object**) context->elementAddress;
-	else
-		context->object = (Object*) context->elementAddress;
+	context->object = (Object*) context->elementAddress;
 
 	return true;
 }
@@ -289,7 +287,7 @@ static void ReflectionWalkCompositeField(ReflectionContext* context)
 		Type* type = context->type;
 
 		context->type = ClassGetType(context->object);
-		ReflectionWalkType(context, field->type);
+		ReflectionWalkType(context, context->type);
 
 		context->type = type;
 		context->object = object;

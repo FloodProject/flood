@@ -15,8 +15,7 @@ NAMESPACE_EDITOR_BEGIN
 
 class ChatMessagesClient : ChatMessagePlugin
 {
-	void handleServerMessage(const SessionPtr&, const MessagePtr&) OVERRIDE;
-	void handleServerAnnouncement(const SessionPtr&, const MessagePtr&) OVERRIDE;
+	void handleChatServer(const SessionPtr&, const ChatServerMessage&) OVERRIDE;
 };
 
 REFLECT_CHILD_CLASS(ChatMessagesClient, ChatMessagePlugin)
@@ -24,16 +23,9 @@ REFLECT_CLASS_END()
 
 //-----------------------------------//
 
-void ChatMessagesClient::handleServerMessage(const SessionPtr& session, const MessagePtr& message)
+void ChatMessagesClient::handleChatServer(const SessionPtr& session, const ChatServerMessage& message)
 {
 	LogInfo("Received server message");
-}
-
-//-----------------------------------//
-
-void ChatMessagesClient::handleServerAnnouncement(const SessionPtr& session, const MessagePtr& message)
-{
-	LogInfo("Received server announcement");
 }
 
 //-----------------------------------//

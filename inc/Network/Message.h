@@ -10,6 +10,7 @@
 
 #include "Core/References.h"
 #include "Core/Stream.h"
+#include "Core/Serialization.h"
 
 struct _ENetPacket;
 typedef _ENetPacket ENetPacket;
@@ -40,6 +41,9 @@ public:
 
 	Message(MessageId id);
 	~Message();
+
+	// Writes an object to the message.
+	void write(Object* object);
 
 	// Creates a network packet.
 	void createPacket();
@@ -72,15 +76,15 @@ public:
 	ENetPacket* packet;
 
 	// Writes a POD type to the message.
-	template<typename T> void write(const T& pod)
+	template<typename T> void writeRaw(const T& pod)
 	{
-		data.resize(data.size() + sizeof(T));
+		ms->data.resize(ms->data.size() + sizeof(T));
 		memcpy(&ms->data[0] + ms->position, &pod, sizeof(T));
 		ms->position += sizeof(T);
 	}
 
 	// Reads a POD type from the message.
-	template<typename T> T* read()
+	template<typename T> T* readRaw()
 	{
 		T* pod = (T*)(&ms->data[0] + ms->position);
 		ms->position += sizeof(T);

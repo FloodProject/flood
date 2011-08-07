@@ -25,7 +25,7 @@ void PropertyPage::createMemoryWatch(const Field* field, void* object, MemoryWat
 	memory.resize(max - min);
 	
 	std::copy( min, max, memory.begin() );
-	uint hash = Hash::Murmur2(memory, 0xF00D);
+	uint hash = HashMurmur2(0xF00D, &memory[0], memory.size());
 
 	watch.rangeBegin = min;
 	watch.rangeEnd = max;

@@ -106,8 +106,7 @@ int64 StreamWrite(Stream* stream, uint8* buf, uint64 size)
 
 int64 StreamWriteString(Stream* stream, const String& string)
 {
-	std::vector<uint8> data( string.begin(), string.end() );
-	return StreamWrite(stream, &data[0], data.size());
+	return StreamWrite(stream, (uint8*) string.data(), string.size());
 }
 
 //-----------------------------------//

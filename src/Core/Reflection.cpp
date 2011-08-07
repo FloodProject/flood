@@ -192,6 +192,19 @@ ClassIdMap& ClassGetIdMap()
 
 //-----------------------------------//
 
+Class* ClassGetById(ClassId id)
+{
+	ClassIdMap& classIds = ClassGetIdMap();
+	ClassIdMap::iterator it = classIds.find(id);
+
+	if( it == classIds.end() )
+		return nullptr;
+
+	return it->second;
+}
+
+//-----------------------------------//
+
 Class* ClassGetType(const Object* object)
 {
 	if( !object ) return nullptr;

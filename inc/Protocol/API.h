@@ -51,3 +51,38 @@ NAMESPACE_PROTOCOL_END
 
 FWD_DECL_INTRUSIVE(Message)
 FWD_DECL_INTRUSIVE(Session)
+
+//---------------------------------------------------------------------//
+// Macro declarations
+//---------------------------------------------------------------------//
+
+#define PROTOCOL_PLUGIN_BEGIN(name) \
+	PluginMetadata name::getMetadata() { \
+	PluginMetadata metadata;
+
+#define METADATA_NAME(n) metadata.name = #n;
+#define METADATA_DESC(d) metadata.description = #d;
+#define METADATA_AUTHOR(a) metadata.author = #a;
+#define METADATA_VERSION(v) metadata.version = #v;
+#define METADATA_PRIORITY(p) metadata.priority = p;
+
+#define PROTOCOL_PLUGIN_END() return metadata; }
+
+#define PROTOCOL_MESSAGE_HANDLERS(name) \
+	static MessageMapping gs_##name##RawMessages[] = {
+
+#define PROTOCOL_MESSAGE_HANDLERS_END() };
+
+#define IMPLEMENT_HANDLER_REF(name, msg) \
+	static void Handle##msg(MessagePlugin* mp, \
+	const SessionPtr& session, Object* object) { \
+	name##MessagePlugin* smp = (name##MessagePlugin*) mp; \
+	msg##Message* message = (msg##Message*) object; \
+	smp->handle##msg(session, *message); }
+
+#define HANDLER_RAW(name, msg, dir, fn) \
+	{ name##MessageIds::msg, MessageDirection::dir, 0, \
+	(MessageRawHandlerMemFn) &name##MessagePlugin::fn },
+
+#define HANDLER_REF(name, msg, dir) \
+	{ name##MessageIds::msg, MessageDirection::dir, Handle##msg, 0 },
