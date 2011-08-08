@@ -28,8 +28,8 @@ REFLECT_CLASS_END()
 
 ResourceDatabase::ResourceDatabase()
 {
-	scanFiles();
-	indexFiles();
+	//scanFiles();
+	//indexFiles();
 }
 
 //-----------------------------------//

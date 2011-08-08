@@ -282,6 +282,9 @@
     <ClCompile Include="..\..\src\Client\ReplicaMessagesClient.cpp">
       <Filter>Plugins\Server\Protocol</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Client\UserMessagesClient.cpp">
+      <Filter>Plugins\Server\Protocol</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Editor\inc\RenderControl.h">

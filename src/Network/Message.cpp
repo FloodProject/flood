@@ -18,6 +18,8 @@
 #include <enet/enet.h>
 #include <FastLZ/fastlz.h>
 
+#define ENET_FREED (1 << 30)
+
 NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
@@ -39,6 +41,9 @@ Message::Message(MessageId id)
 Message::~Message()
 {
 	Deallocate(ms);
+
+	if(packet && !GetBitFlag(packet->flags, ENET_FREED))
+		enet_packet_destroy(packet);
 }
 
 //-----------------------------------//
@@ -50,7 +55,10 @@ void Message::createPacket()
 	uint32 flags = 0;
 
 	if(GetBitFlag(flags, MessageFlags::Reliable))
+	{
 		flags |= ENET_PACKET_FLAG_RELIABLE;
+		flags |= ENET_FREED;
+	}
 
 	packet = enet_packet_create(nullptr, 0, flags);
 }

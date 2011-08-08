@@ -20,6 +20,7 @@ NAMESPACE_EDITOR_BEGIN
 class ReplicaMessagesClient : ReplicaMessagePlugin
 {
 	void handleReplicaNewInstance(const SessionPtr&, const ReplicaNewInstanceMessage&) OVERRIDE;
+	void handleReplicaFullUpdate(const SessionPtr&, const ReplicaFullUpdateMessage&) OVERRIDE;
 };
 
 REFLECT_CHILD_CLASS(ReplicaMessagesClient, ReplicaMessagePlugin)
@@ -27,22 +28,40 @@ REFLECT_CLASS_END()
 
 //-----------------------------------//
 
-void ReplicaMessagesClient::handleReplicaNewInstance(const SessionPtr& session, const ReplicaNewInstanceMessage& msg)
+static void ProcessReplicaInstance(Object* instance)
 {
-	if( !msg.instance )
+	if( !instance )
 	{
-		LogDebug("ReplicaNewInstance: Expecting an object instance");
+		LogDebug("Expecting an object instance");
 		return;
 	}
 
-	Class* klass = ClassGetType(msg.instance);
+	Class* klass = ClassGetType(instance);
 
 	if( ClassInherits(klass, ReflectionGetType(Entity)) )
 	{
-		Entity* entity = (Entity*) msg.instance;
+		Entity* entity = (Entity*) instance;
 		
 		ScenePlugin* sp = (ScenePlugin*) GetPlugin<ScenePlugin>();
 		sp->scenePage->addEntity(entity);
+	}
+}
+
+//-----------------------------------//
+
+void ReplicaMessagesClient::handleReplicaNewInstance(const SessionPtr& session, const ReplicaNewInstanceMessage& msg)
+{
+	ProcessReplicaInstance(msg.instance);
+}
+
+//-----------------------------------//
+
+void ReplicaMessagesClient::handleReplicaFullUpdate(const SessionPtr&, const ReplicaFullUpdateMessage& msg)
+{
+	for(size_t i = 0; i < msg.objects.size(); i++)
+	{
+		const ReplicatedObject& obj = msg.objects[i];
+		ProcessReplicaInstance(obj.instance);
 	}
 }
 

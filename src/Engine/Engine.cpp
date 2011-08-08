@@ -92,9 +92,6 @@ void Engine::init( bool createWindow )
 
 	LogInfo( "Starting vapor3D" );
 
-	// Creates the file system.
-	//fileSystem = new FileSystem( app, argv ? argv[0] : nullptr );
-
 	// Creates the task system.
 	taskPool = TaskPoolCreate( AllocatorGetHeap(), 2 );
 
@@ -104,9 +101,9 @@ void Engine::init( bool createWindow )
 	RenderInitialize();
 
 	// Creates the resource manager.
-	resourceManager = new ResourceManager();
-	//resourceManager->setFileWatcher( fileSystem->getFileWatcher() );
+	resourceManager = Allocate(ResourceManager, AllocatorGetThis());
 	resourceManager->setTaskPool( taskPool );
+	//resourceManager->setFileWatcher( fileSystem->getFileWatcher() );
 	
 	// Registers default resource loaders.
 	resourceManager->setupResourceLoaders();
@@ -115,16 +112,16 @@ void Engine::init( bool createWindow )
 	setupDevices( createWindow );
 
 	// Creates the initial scene.
-	scene = new Scene();
+	scene = Allocate(Scene, AllocatorGetThis());
 
 #ifdef ENABLE_SCRIPTING_LUA
 	// Creates the scripting manager.
-	scriptManager = new ScriptManager();
+	scriptManager = Allocate(ScriptManager, AllocatorGetThis());
 #endif
 
 #ifdef ENABLE_PHYSICS_BULLET
 	// Creates the physics manager.
-	physicsManager = new PhysicsManager();
+	physicsManager = Allocate(PhysicsManager, AllocatorGetThis());
 #endif
 }
 

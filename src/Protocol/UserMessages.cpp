@@ -22,6 +22,7 @@ REFLECT_ENUM_END()
 
 REFLECT_ENUM(UserMessageIds)
 	ENUM(UserAuth)
+	ENUM(UserAuthStatus)
 	ENUM(UserChangeName)
 	ENUM(UserJoin)
 	ENUM(UserLeave)
@@ -31,6 +32,9 @@ REFLECT_ENUM_END()
 REFLECT_CHILD_CLASS(UserAuthMessage, MessageDefinition)
 	FIELD_PRIMITIVE(0, string, name)
 	FIELD_ENUM(1, UserAuthType, type)
+REFLECT_CLASS_END()
+
+REFLECT_CHILD_CLASS(UserAuthStatusMessage, MessageDefinition)
 REFLECT_CLASS_END()
 
 REFLECT_CHILD_CLASS(UserJoinMessage, MessageDefinition)
@@ -50,6 +54,7 @@ REFLECT_CLASS_END()
 //-----------------------------------//
 
 IMPLEMENT_HANDLER_REF(User, UserAuth)
+IMPLEMENT_HANDLER_REF(User, UserAuthStatus)
 IMPLEMENT_HANDLER_REF(User, UserChangeName)
 IMPLEMENT_HANDLER_REF(User, UserJoin)
 IMPLEMENT_HANDLER_REF(User, UserLeave)
@@ -57,6 +62,7 @@ IMPLEMENT_HANDLER_REF(User, UserLeave)
 
 PROTOCOL_MESSAGE_HANDLERS(User)
 	HANDLER_REF(User, UserAuth, ClientToServer)
+	HANDLER_REF(User, UserAuthStatus, ServerToClient)
 	HANDLER_REF(User, UserChangeName, ClientToServer)
 	HANDLER_REF(User, UserJoin, ServerToClient)
 	HANDLER_REF(User, UserLeave, ServerToClient)

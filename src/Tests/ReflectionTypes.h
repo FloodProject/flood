@@ -146,3 +146,29 @@ struct D : public Object
 };
 
 //-----------------------------------//
+
+REFLECT_DECLARE_CLASS(F)
+
+struct F : public Object
+{
+	REFLECT_DECLARE_OBJECT(F)
+
+	F()
+	{
+	}
+
+	void allocate()
+	{
+		vecA.resize(2);
+		vecA[0].foo = 83;
+		vecA[1].foo = 38;
+	}
+
+	~F()
+	{
+	}
+
+	std::vector<A> vecA;
+};
+
+//-----------------------------------//

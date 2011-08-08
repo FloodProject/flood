@@ -131,12 +131,17 @@ void Server::run()
 	while(true)
 	{
 		SystemSleep(0);
+		
+		while( dispatcher->processMessage() )
+			continue;
 
+#if 0
 		String input;
 		std::getline(std::cin, input);
 
 		if(StringCompareInsensitive(input, "Quit") == 0)
 			break;
+#endif
 	}
 }
 

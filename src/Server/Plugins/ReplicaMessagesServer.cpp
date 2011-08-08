@@ -13,6 +13,7 @@
 #include "Network/Message.h"
 #include "Network/Dispatcher.h"
 #include "Network/Host.h"
+#include "Network/Session.h"
 #include "Server/Server.h"
 #include "Core/Reflection.h"
 #include "Engine/API.h"
@@ -31,7 +32,9 @@ public:
 	ReplicaMessagesServer();
 	~ReplicaMessagesServer();
 
-	void handleReplicaCreateInstance(const SessionPtr&, const ReplicaCreateInstanceMessage&) OVERRIDE;
+	void handleReplicaCreate(const SessionPtr&, const ReplicaCreateMessage&) OVERRIDE;
+	void handleReplicaAskUpdate(const SessionPtr&, const ReplicaAskUpdateMessage&) OVERRIDE;
+
 	ReplicasMap replicas;
 	Scene* scene;
 };
@@ -51,7 +54,7 @@ ReplicaMessagesServer::~ReplicaMessagesServer()
 
 //-----------------------------------//
 
-void ReplicaMessagesServer::handleReplicaCreateInstance(const SessionPtr& session, const ReplicaCreateInstanceMessage& msg)
+void ReplicaMessagesServer::handleReplicaCreate(const SessionPtr& session, const ReplicaCreateMessage& msg)
 {
 	Object* instance = msg.instance;
 	Class* klass = ClassGetById(msg.classId);
@@ -63,7 +66,7 @@ void ReplicaMessagesServer::handleReplicaCreateInstance(const SessionPtr& sessio
 		instance = (Object*) ClassCreateInstance(klass, AllocatorGetServer());
 	}
 
-	LogDebug("ReplicaCreateInstance: '%s'", klass->name);
+	LogDebug("ReplicaCreate: '%s'", klass->name);
 
 	// Store the replicated object.
 	uint64 instanceId = nextInstance++;
@@ -84,6 +87,29 @@ void ReplicaMessagesServer::handleReplicaCreateInstance(const SessionPtr& sessio
 	}
 
 	GetServer()->getHost()->broadcastMessage(message);
+}
+
+//-----------------------------------//
+
+void ReplicaMessagesServer::handleReplicaAskUpdate(const SessionPtr& session, const ReplicaAskUpdateMessage&)
+{
+	ReplicaFullUpdateMessage full;
+
+	ReplicasMap::iterator it;
+	
+	for(it = replicas.begin(); it != replicas.end(); it++)
+	{
+		ReplicatedObject obj;
+		obj.instanceId = it->first;
+		obj.instance = it->second;
+
+		full.objects.push_back(obj);
+	}
+
+	MessagePtr message = MessageCreate(ReplicaMessageIds::ReplicaFullUpdate);
+	message->write(&full);
+
+	session->getPeer()->queueMessage(message, 0);
 }
 
 //-----------------------------------//

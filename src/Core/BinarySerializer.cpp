@@ -16,12 +16,10 @@
 #include "Core/Utilities.h"
 #include "Core/References.h"
 #include "Core/Stream.h"
-#include "Core/Log.h"
 #include "Core/SerializationHelpers.h"
 
 #include "Math/Vector.h"
 #include "Math/Quaternion.h"
-#include "Math/EulerAngles.h"
 #include "Math/Color.h"
 
 NAMESPACE_CORE_BEGIN
@@ -354,10 +352,11 @@ static void DeserializePrimitive( ReflectionContext* context )
 
 //-----------------------------------//
 
-static Object* DeserializeComposite( ReflectionContext* context );
+static Object* DeserializeComposite( ReflectionContext* context, Object* newObject );
 
 static void DeserializeArrayElement( ReflectionContext* context, void* address )
 {
+	SerializerBinary* bin = (SerializerBinary*) context->userData;
 	const Field* field = context->field;
 
 	switch(field->type->type)
@@ -375,8 +374,17 @@ static void DeserializeArrayElement( ReflectionContext* context, void* address )
 	case Type::Composite:
 	{
 		context->composite = (Class*) field->type;
-		Object* object = DeserializeComposite(context);
-		PointerSetObject(field, address, object);
+
+		if( !FieldIsPointer(field) )
+		{
+			Object* object = DeserializeComposite(context, (Object*) address);
+		}
+		else
+		{
+			Object* object = DeserializeComposite(context, 0);
+			PointerSetObject(field, address, object);
+		}
+
 		break;
 	} }
 }
@@ -390,6 +398,8 @@ static void DeserializeArray( ReflectionContext* context )
 	
 	uint64 size;
 	DecodeVariableInteger(bin->ms, size);
+
+	if(size == 0) return;
 
 	uint16 elementSize = ReflectionArrayGetElementSize(field);
 	void* address = ClassGetFieldAddress(context->object, field);
@@ -432,7 +442,7 @@ static void DeserializeField( ReflectionContext* context )
 		Class* composite = context->composite;
 		context->composite = (Class*) field->type;
 
-		Object* object = DeserializeComposite(context);
+		Object* object = DeserializeComposite(context, 0);
 		void* address = ClassGetFieldAddress(context->object, field);
 		
 		if( FieldIsHandle(field) )
@@ -496,7 +506,7 @@ static void DeserializeFields( ReflectionContext* context )
 
 //-----------------------------------//
 
-static Object* DeserializeComposite( ReflectionContext* context)
+static Object* DeserializeComposite( ReflectionContext* context, Object* newObject )
 {
 	SerializerBinary* bin = (SerializerBinary*) context->userData;
 	ClassIdMap& ids = ClassGetIdMap();
@@ -527,7 +537,8 @@ static Object* DeserializeComposite( ReflectionContext* context)
 	}
 	
 	// Instantiate a new class.
-	Object* newObject = (Object*) ClassCreateInstance(newClass, bin->alloc);
+	if( !newObject )
+		newObject = (Object*) ClassCreateInstance(newClass, bin->alloc);
 
 	Class* klass = context->klass;
 	Class* composite = context->composite;
@@ -561,7 +572,7 @@ static Object* SerializeLoad( Serializer* serializer )
 	StreamReadBuffer(bin->stream, &bin->ms->data[0], size);
 
 	ReflectionContext* context = &serializer->deserializeContext;
-	Object* object = DeserializeComposite(context);
+	Object* object = DeserializeComposite(context, 0);
 	
 	Deallocate(bin->ms);
 	return object;
@@ -594,7 +605,7 @@ Serializer* SerializerCreateBinary(Allocator* alloc)
 	serializer->load = SerializeLoad;
 	serializer->save = SerializeSave;
 	serializer->alloc = alloc;
-
+	
 	ReflectionContext& sCtx = serializer->serializeContext;
 	sCtx.userData = serializer;
 	sCtx.walkComposite = SerializeComposite;

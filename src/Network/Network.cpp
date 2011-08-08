@@ -119,6 +119,7 @@ void Peer::queueMessage(const MessagePtr& message, uint8 channel)
 
 void Peer::disconnect()
 {
+	//enet_peer_disconnect_now(peer, 0);
 	enet_peer_disconnect_later(peer, 0);
 }
 
@@ -260,11 +261,6 @@ void Host::handleReceiveEvent(ENetEvent* event)
 {
 	ENetPacket* packet = event->packet;
 	PeerPtr peer = (Peer*) event->peer->data;
-
-	size_t headerSize = sizeof(MessageId) + sizeof(MessageFlags::Enum);
-	
-	if(packet->dataLength < headerSize)
-		return;
 
 	MessagePtr message = MessageCreate(0);
 	message->setPacket(packet);

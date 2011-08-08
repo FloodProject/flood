@@ -89,23 +89,37 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-#define NAME_FIELD_SETTER(fieldName)                                    \
-	_set_##_##fieldName
-
 #define NFS(fieldName)                                                  \
-	&fieldName##Set::NAME_FIELD_SETTER(fieldName)
+	&fieldName##Set::Set##fieldName
 
-#define FIELD_SETTER(fieldType, fieldName, setterName)				    \
-	static void	NAME_FIELD_SETTER(fieldName) (void* vobj, void* vparam) \
-	{																	\
-		This* obj = (This*) vobj;										\
-		fieldType* param = (fieldType*) vparam;							\
-		if( obj && param ) obj->set##setterName(*param);				\
-	}																	\
+#define FIELD_SETTER(fieldType, fieldName, setterName)                  \
+	static void Set##fieldName (void* vobj, void* vparam) {             \
+		This* obj = (This*) vobj;                                       \
+		fieldType* param = (fieldType*) vparam;                         \
+		if( obj && param ) obj->set##setterName(*param);                \
+	}                                                                   \
 
 #define FIELD_SETTER_CLASS(fieldType, fieldName, setterName)            \
 	struct fieldName##Set {                                             \
-		FIELD_SETTER(fieldType, fieldName, setterName) };
+		FIELD_SETTER(fieldType, fieldName, setterName)                  \
+	};
+
+//-----------------------------------//
+
+#define NFR(fieldName)                                                  \
+	&fieldName##Resize::Resize##fieldName
+
+#define FIELD_RESIZER(fieldType, fieldName)                             \
+	static void* Resize##fieldName (void* obj, size_t size) {           \
+		std::vector<fieldType>* array = (std::vector<fieldType>*) obj;  \
+		array->resize(size);                                            \
+		return &array->front();                                         \
+	}
+
+#define FIELD_RESIZER_CLASS(fieldType, fieldName)                       \
+	struct fieldName##Resize {                                          \
+		FIELD_RESIZER(fieldType, fieldName)                             \
+	};
 
 //-----------------------------------//
 
@@ -130,7 +144,7 @@ NAMESPACE_CORE_BEGIN
 	FIELD_COMMON(fieldId, pointerType, fieldName, __VA_ARGS__)
 
 #define FIELD_CLASS_PTR_SETTER(fieldId, fieldType, pointerType, fieldName, pointerQual, setterName)	\
-	FIELD_SETTER_CLASS(pointerType, fieldName, setterName)									\
+	FIELD_SETTER_CLASS(pointerType, fieldName, setterName) \
 	FIELD_CLASS_PTR(fieldId, fieldType, pointerType, fieldName, pointerQual, NFS(fieldName))
 
 #define FIELD_ENUM(fieldId, fieldType, fieldName, ...)                  \
@@ -143,15 +157,18 @@ NAMESPACE_CORE_BEGIN
 	FIELD_ENUM(fieldId, fieldType, fieldName, NFS(fieldName))
 
 #define FIELD_VECTOR(fieldId, fieldType, fieldName, ...)                \
-	static Field fieldName;					                            \
+	static Field fieldName;                                             \
 	FieldSetQualifier(&fieldName, FieldQualifier::Array);               \
+	fieldName.type = ReflectionGetType(fieldType);                      \
+	FIELD_RESIZER_CLASS(fieldType, fieldName)                           \
+	fieldName.resize = NFR(fieldName);                                  \
 	FIELD_COMMON(fieldId, fieldType, fieldName, __VA_ARGS__)
 
-#define FIELD_VECTOR_PTR(fieldId, fieldType, pointerType, fieldName, pointerQual, ... )	\
+#define FIELD_VECTOR_PTR(fieldId, fieldType, pointerType, fieldName, pointerQual, ... ) \
 	static Field fieldName;                                             \
-	FieldSetQualifier(&fieldName, FieldQualifier::Array);				\
-	FieldSetQualifier(&fieldName, FieldQualifier::pointerQual);			\
-	fieldName.pointer_size = sizeof(pointerType);						\
+	FieldSetQualifier(&fieldName, FieldQualifier::Array);               \
+	FieldSetQualifier(&fieldName, FieldQualifier::pointerQual);         \
+	fieldName.pointer_size = sizeof(pointerType);                       \
 	fieldName.type = ReflectionGetType(fieldType);                      \
 	FIELD_COMMON(fieldId, fieldType, fieldName, __VA_ARGS__)            \
 

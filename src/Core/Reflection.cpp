@@ -315,7 +315,7 @@ void FieldSetQualifier(Field* field, FieldQualifier::Enum qual)
 void FieldSetSetter(Field* field, FieldSetterFunction fn)
 {
 	if( !field ) return;
-	field->setter_fn = fn;
+	field->setter = fn;
 }
 
 //-----------------------------------//

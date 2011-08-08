@@ -483,7 +483,7 @@ void ResourceManager::setupResourceLoaders()
 
 void ResourceManager::handleWatchResource(const FileWatchEvent& evt)
 {
-	/*
+#if 0
 	// Check if the filename maps to a known resource.
 	const String& file = evt.filename;
 
@@ -513,7 +513,7 @@ void ResourceManager::handleWatchResource(const FileWatchEvent& evt)
 	event.resource = res;
 	
 	onResourceReloaded(event);
-	*/
+#endif
 }
 
 //-----------------------------------//

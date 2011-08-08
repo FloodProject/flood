@@ -53,6 +53,7 @@ public:
 		MutexLock(mutex);
 		queue.push_back(value);
 		MutexUnlock(mutex);
+		
 		ConditionWakeOne(cond);
 	}
 
@@ -74,8 +75,11 @@ public:
 		MutexLock(mutex);
 	    
 		if( queue.empty() )
+		{
+			MutexUnlock(mutex);
 			return false;
-	    
+		}
+
 		popped_value = queue.front();
 		queue.pop_front();
 		

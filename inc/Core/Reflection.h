@@ -172,6 +172,7 @@ API_CORE Class* ClassGetById(ClassId id);
 //-----------------------------------//
 
 typedef void (*FieldSetterFunction)(void* object, void* value);
+typedef void* (*FieldResizeFunction)(void* object, size_t size);
 
 struct FieldQualifier
 {
@@ -198,7 +199,8 @@ struct API_CORE Field
 	uint16 offset;
 	uint16 size;
 	uint16 pointer_size;
-	FieldSetterFunction setter_fn;
+	FieldSetterFunction setter;
+	FieldResizeFunction resize;
 	std::vector<const char*> aliases;
 };
 
@@ -286,7 +288,7 @@ template<typename T>
 void FieldSet( Field* field, void* object, const T& value )
 {
 	T* addr = (T*) ClassGetFieldAddress(object, field);
-	FieldSetterFunction setter = field->setter_fn;
+	FieldSetterFunction setter = field->setter;
 	
 	if(setter) setter(object, (void*) &value);
 	else *addr = value;

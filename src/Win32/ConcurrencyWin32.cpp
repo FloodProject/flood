@@ -21,6 +21,31 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
+bool ThreadJoin(Thread* thread)
+{
+	if( !thread ) return false;
+	thread->IsRunning = false;
+	return ::WaitForSingleObject(thread->Handle, INFINITE) != WAIT_FAILED;
+}
+
+//-----------------------------------//
+
+bool ThreadPause(Thread* thread)
+{
+	if( !thread ) return false;
+	return ::SuspendThread((HANDLE) thread->Handle) != -1;
+}
+
+//-----------------------------------//
+
+bool ThreadResume(Thread* thread)
+{
+	if( !thread ) return false;
+	return ::ResumeThread((HANDLE) thread->Handle) != -1;
+}
+
+//-----------------------------------//
+
 bool ThreadSetPriority(Thread* thread, ThreadPriority priority)
 {
 	thread->Priority = priority;
@@ -70,39 +95,6 @@ bool ThreadStart(Thread* thread, ThreadFunction function, void* data)
 	}
 
 	return thread->Handle != 0;
-}
-
-//-----------------------------------//
-
-bool ThreadStop(Thread* thread)
-{
-	if( !thread ) return false;
-	return ::SuspendThread((HANDLE) thread->Handle) != -1;
-}
-
-//-----------------------------------//
-
-bool ThreadJoin(Thread* thread)
-{
-	if( !thread ) return false;
-	thread->IsRunning = false;
-	return ::WaitForSingleObject(thread->Handle, INFINITE) != WAIT_FAILED;
-}
-
-//-----------------------------------//
-
-bool ThreadPause(Thread* thread)
-{
-	if( !thread ) return false;
-	return ::SuspendThread((HANDLE) thread->Handle) != -1;
-}
-
-//-----------------------------------//
-
-bool ThreadResume(Thread* thread)
-{
-	if( !thread ) return false;
-	return ::ResumeThread((HANDLE) thread->Handle) != -1;
 }
 
 //-----------------------------------//
@@ -158,16 +150,23 @@ void ThreadSetName( Thread* thread, const String& name )
 
 API_CORE void MutexInit(Mutex* mutex)
 {
-	if( !mutex ) return;
 	LPCRITICAL_SECTION cs = (LPCRITICAL_SECTION) &mutex->Handle;
 	::InitializeCriticalSectionAndSpinCount(cs, CS_SPIN_COUNT | CS_CREATE_IMMEDIATELY_ON_WIN2000);
 }
 
 //-----------------------------------//
 
+void MutexDestroy(Mutex* mutex)
+{
+	LPCRITICAL_SECTION cs = (LPCRITICAL_SECTION) &mutex->Handle;
+	DeleteCriticalSection(cs);
+	Deallocate(mutex);
+}
+
+//-----------------------------------//
+
 void MutexLock(Mutex* mutex)
 {
-	if( !mutex ) return;
 	LPCRITICAL_SECTION cs = (LPCRITICAL_SECTION) &mutex->Handle;
 	::EnterCriticalSection(cs);
 }
@@ -176,7 +175,6 @@ void MutexLock(Mutex* mutex)
 
 void MutexUnlock(Mutex* mutex)
 {
-	if( !mutex ) return;
 	LPCRITICAL_SECTION cs = (LPCRITICAL_SECTION) &mutex->Handle;
 	::LeaveCriticalSection(cs);
 }

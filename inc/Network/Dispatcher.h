@@ -9,9 +9,11 @@
 #pragma once
 
 #include "Core/References.h"
+#include "Core/ConcurrentQueue.h"
 
 FWD_DECL_INTRUSIVE(Message)
 FWD_DECL_INTRUSIVE(Peer)
+FWD_DECL_INTRUSIVE(Session)
 
 NAMESPACE_CORE_BEGIN
 
@@ -29,6 +31,12 @@ class PluginManager;
 class MessageHandlers;
 class SessionManager;
 
+struct MessageRequest
+{
+	MessagePtr message;
+	SessionPtr session;
+};
+
 // Dispatches messages to the their handlers.
 class Dispatcher
 {
@@ -45,6 +53,9 @@ public:
 
 	// Initializes the plugins.
 	void initPlugins(Class*);
+
+	// Processes one message or returns false if there is none.
+	bool processMessage();
 
 	// Gets the host.
 	GETTER(Host, Host*, host)
@@ -76,6 +87,8 @@ protected:
 	PluginManager* plugins;
 	SessionManager* sessions;
 	MessageHandlers* handlers;
+
+	ConcurrentQueue<MessageRequest> messages;
 };
 
 //-----------------------------------//

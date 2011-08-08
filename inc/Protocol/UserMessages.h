@@ -34,6 +34,14 @@ struct API_PROTOCOL UserAuthMessage : MessageDefinition
 	UserAuthType type;
 };
 
+REFLECT_DECLARE_CLASS(UserAuthStatusMessage)
+
+struct API_PROTOCOL UserAuthStatusMessage : MessageDefinition
+{
+	REFLECT_DECLARE_OBJECT(UserAuthStatusMessage)
+};
+
+
 //-----------------------------------//
 
 REFLECT_DECLARE_CLASS(UserJoinMessage)
@@ -77,10 +85,11 @@ struct API_PROTOCOL UserMessageIds
 	enum Enum : MessageId
 	{
 		UserAuth		= USER_INITIAL_ID + 0,
-		UserChangeName	= USER_INITIAL_ID + 1,
-		UserJoin		= USER_INITIAL_ID + 2,
-		UserLeave		= USER_INITIAL_ID + 3,
-		UserNotifyName	= USER_INITIAL_ID + 4,
+		UserAuthStatus	= USER_INITIAL_ID + 1,
+		UserChangeName	= USER_INITIAL_ID + 2,
+		UserJoin		= USER_INITIAL_ID + 3,
+		UserLeave		= USER_INITIAL_ID + 4,
+		UserNotifyName	= USER_INITIAL_ID + 5,
 	};
 };
 
@@ -105,6 +114,7 @@ public:
 
 	// Message callbacks.
 	virtual void handleUserAuth(const SessionPtr&, const UserAuthMessage&) {}
+	virtual void handleUserAuthStatus(const SessionPtr&, const UserAuthStatusMessage&) {}
 	virtual void handleUserChangeName(const SessionPtr&, const UserChangeNameMessage&) {}
 	virtual void handleUserJoin(const SessionPtr&, const UserJoinMessage&) {}
 	virtual void handleUserLeave(const SessionPtr&, const UserLeaveMessage&) {}

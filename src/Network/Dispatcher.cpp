@@ -147,11 +147,30 @@ void Dispatcher::handleDisconnect(const PeerPtr& peer)
 
 //-----------------------------------//
 
-#define CALL_MEMBER_FN(object, ptrToMember)  ((object)->*(ptrToMember)) 
-
 void Dispatcher::handleMessage(const PeerPtr& peer, const MessagePtr& message)
 {
 	const SessionPtr& session = sessions->getSession(peer);
+
+	MessageRequest req;
+	req.message = message;
+	req.session = session;
+	
+	messages.push(req);
+}
+
+//-----------------------------------//
+
+#define CALL_MEMBER_FN(object, ptrToMember)  ((object)->*(ptrToMember)) 
+
+bool Dispatcher::processMessage()
+{
+	MessageRequest req;
+	
+	if( !messages.try_pop(req) )
+		return false;
+
+	const MessagePtr& message = req.message;
+	const SessionPtr& session = req.session;
 
 	// Find message handler and forward message.
 	MessageMapping* mapping = handlers->findHandler(message->id);
@@ -159,7 +178,7 @@ void Dispatcher::handleMessage(const PeerPtr& peer, const MessagePtr& message)
 	if( !mapping )
 	{
 		LogError("No message handler was found");
-		return;
+		return false;
 	}
 
 	// Deserialize message if it's needed.
@@ -169,26 +188,30 @@ void Dispatcher::handleMessage(const PeerPtr& peer, const MessagePtr& message)
 		serializer->stream = message->ms;
 		
 		Object* object = SerializerLoad(serializer);
-		if( !object ) return;
+		if( !object ) return false;
 
 		if( !mapping->ref )
 		{
 			LogAssert("Handler was not found for reflected message");
-			return;
+			return false;
 		}
 
 		mapping->ref(mapping->plugin, session, object);
+
+		Deallocate(object);
 	}
 	else
 	{
 		if( !mapping->raw )
 		{
 			LogAssert("Handler was not found for raw message");
-			return;
+			return false;
 		}
 
 		CALL_MEMBER_FN(mapping->plugin, mapping->raw)(session, message);
 	}
+
+	return true;
 }
 
 //-----------------------------------//

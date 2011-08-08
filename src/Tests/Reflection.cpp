@@ -46,6 +46,10 @@ REFLECT_CHILD_CLASS(D, Object)
 	FIELD_VECTOR_PTR(7, A, RefPtr<A>, vecA, RefPointer)
 REFLECT_CLASS_END()
 
+REFLECT_CHILD_CLASS(F, Object)
+	FIELD_VECTOR(7, A, vecA)
+REFLECT_CLASS_END()
+
 //-----------------------------------//
 
 void TestEnum(CuTest* tc)

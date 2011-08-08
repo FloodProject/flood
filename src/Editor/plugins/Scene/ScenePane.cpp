@@ -320,12 +320,12 @@ void ScenePage::onButtonEntityAdd(wxCommandEvent&)
 	entity->setName(name);
 	entity->addTransform();
 
-	ReplicaCreateInstanceMessage inst;
+	ReplicaCreateMessage inst;
 	inst.localId = 23;
 	inst.classId = entity->getType()->id;
 	inst.instance = entity.get();
 
-	MessagePtr msg = MessageCreate( ReplicaMessageIds::ReplicaCreateInstance );
+	MessagePtr msg = MessageCreate( ReplicaMessageIds::ReplicaCreate );
 	msg->write(&inst);
 
 	ServerPlugin* sp = GetPlugin<ServerPlugin>();
@@ -648,7 +648,7 @@ void ScenePage::onMenuSelected( wxCommandEvent& event )
 	//-----------------------------------//
 	else if( id == ID_MenuSceneEntityTerrain )
 	{
-		std::string name("Terrain"+StringFromNumber(nodeCounter++));
+		String name("Terrain"+StringFromNumber(nodeCounter++));
 		
 		TerrainPtr terrain( new Terrain(name) );
 		scene->add( terrain );

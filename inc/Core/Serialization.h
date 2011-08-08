@@ -159,7 +159,7 @@ API_CORE bool SerializerSave(Serializer*, Object* object);
 API_CORE Object* SerializerLoadObjectFromFile(Serializer*, const Path&);
 API_CORE bool SerializerSaveObjectToFile(Serializer*, const Path& file, Object* object);
 
-// Array helpers
+// Array helpers.
 void* ReflectionArrayResize( ReflectionContext*, void* address, uint32 size );
 uint16 ReflectionArrayGetElementSize(const Field* field);
 

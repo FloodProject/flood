@@ -39,11 +39,8 @@ static Mutex* mutex;
 
 static void Run2(Thread*, void* data)
 {
-	MutexLock(mutex);
-	ConditionWait(cond, mutex);
-	MutexUnlock(mutex);
-	
 	value = 30;
+	ConditionWakeOne(cond);
 }
 
 void TestCondition(CuTest* tc)
@@ -61,11 +58,15 @@ void TestCondition(CuTest* tc)
 	ThreadStart(thread, fn, nullptr);
 	CuAssertIntEquals(tc, 20, value);
 	
+	MutexLock(mutex);
+
 	// Prevents deadlock.
 	while(value == 20)
 	{
-		ConditionWakeAll(cond);
+		ConditionWait(cond, mutex);
 	}
+
+	MutexUnlock(mutex);
 
 	ThreadJoin(thread);
 	CuAssertIntEquals(tc, 30, value);

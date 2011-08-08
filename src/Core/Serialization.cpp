@@ -240,6 +240,12 @@ static void ReflectionWalkArray(ReflectionContext* context)
 		context->object = (Object*) context->elementAddress;
 		context->type = ClassGetType(context->object);
 
+		if( !context->type )
+		{
+			LogDebug("Could not get type out of object");
+			return;
+		}
+
 		context->walkArray(context, ReflectionWalkType::ElementBegin);
 		ReflectionWalkType(context, context->type);
 		context->walkArray(context, ReflectionWalkType::ElementEnd);
@@ -475,7 +481,12 @@ void* ReflectionArrayResize( ReflectionContext* context, void* address, uint32 s
 		return &array->front();
 	}
 #endif
-
+	else if( field->resize )
+	{
+		return field->resize(address, size);
+	}
+	
+	LogAssert("Unknown array type");
 	return nullptr;
 }
 

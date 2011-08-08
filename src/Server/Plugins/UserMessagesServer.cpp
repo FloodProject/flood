@@ -46,10 +46,15 @@ void UserMessagesServer::handleUserAuth(const SessionPtr& session, const UserAut
 	UserJoinMessage join;
 	join.user = user.id;
 
-	MessagePtr message = MessageCreate(UserMessageIds::UserJoin);
-	message->write(&join);
+	MessagePtr m_join = MessageCreate(UserMessageIds::UserJoin);
+	m_join->write(&join);
+	GetServer()->getHost()->broadcastMessage(m_join);
 
-	GetServer()->getHost()->broadcastMessage(message);
+	UserAuthStatusMessage status;
+
+	MessagePtr m_status = MessageCreate(UserMessageIds::UserAuthStatus);
+	m_status->write(&status);
+	session->getPeer()->queueMessage(m_status, 0);
 }
 
 //-----------------------------------//

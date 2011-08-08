@@ -15,7 +15,7 @@ NAMESPACE_PROTOCOL_BEGIN
 
 //-----------------------------------//
 
-REFLECT_CHILD_CLASS(ReplicaCreateInstanceMessage, MessageDefinition)
+REFLECT_CHILD_CLASS(ReplicaCreateMessage, MessageDefinition)
 	FIELD_PRIMITIVE(0, uint16, localId)
 	FIELD_PRIMITIVE(1, uint16, classId)
 	FIELD_CLASS_PTR(2, Object, Object*, instance, RawPointer)
@@ -26,17 +26,35 @@ REFLECT_CHILD_CLASS(ReplicaNewInstanceMessage, MessageDefinition)
 	FIELD_CLASS_PTR(2, Object, Object*, instance, RawPointer)
 REFLECT_CLASS_END()
 
+REFLECT_CHILD_CLASS(ReplicatedObject, Object)
+	FIELD_PRIMITIVE(0, uint64, instanceId)
+	FIELD_CLASS_PTR(2, Object, Object*, instance, RawPointer)
+REFLECT_CLASS_END()
+
+REFLECT_CHILD_CLASS(ReplicaFullUpdateMessage, MessageDefinition)
+	FIELD_VECTOR(5, ReplicatedObject, objects)
+REFLECT_CLASS_END()
+
+REFLECT_CHILD_CLASS(ReplicaAskUpdateMessage, MessageDefinition)
+REFLECT_CLASS_END()
+
 REFLECT_ENUM(ReplicaMessageIds)
-	ENUM(ReplicaCreateInstance)
+	ENUM(ReplicaCreate)
 	ENUM(ReplicaNewInstance)
+	ENUM(ReplicaFullUpdate)
+	ENUM(ReplicaAskUpdate)
 REFLECT_ENUM_END()
 
-IMPLEMENT_HANDLER_REF(Replica, ReplicaCreateInstance)
+IMPLEMENT_HANDLER_REF(Replica, ReplicaCreate)
 IMPLEMENT_HANDLER_REF(Replica, ReplicaNewInstance)
+IMPLEMENT_HANDLER_REF(Replica, ReplicaAskUpdate)
+IMPLEMENT_HANDLER_REF(Replica, ReplicaFullUpdate)
 
 PROTOCOL_MESSAGE_HANDLERS(Replica)
-	HANDLER_REF(Replica, ReplicaCreateInstance, ClientToServer)
+	HANDLER_REF(Replica, ReplicaCreate, ClientToServer)
 	HANDLER_REF(Replica, ReplicaNewInstance, ServerToClient)
+	HANDLER_REF(Replica, ReplicaAskUpdate, ClientToServer)
+	HANDLER_REF(Replica, ReplicaFullUpdate, ServerToClient)
 PROTOCOL_MESSAGE_HANDLERS_END()
 
 //-----------------------------------//

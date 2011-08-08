@@ -50,13 +50,6 @@ Mutex* MutexCreate(Allocator* alloc)
 
 //-----------------------------------//
 
-void MutexDestroy(Mutex* mutex)
-{
-	Deallocate(mutex);
-}
-
-//-----------------------------------//
-
 Condition* ConditionCreate(Allocator* alloc)
 {
 	Condition* cond = Allocate(Condition, alloc);

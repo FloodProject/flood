@@ -185,7 +185,7 @@ static bool DecodeString(MemoryStream* ms, String& s)
 		return false;
 
 	s.resize((size_t)size);
-	memcpy(&s[0], StreamIndex(ms), (size_t)size);
+	memcpy((void*) s.data(), StreamIndex(ms), (size_t)size);
 
 	StreamAdvanceIndex(ms, size);
 	return true;

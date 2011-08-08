@@ -26,6 +26,7 @@ void TestSerialization(CuTest* tc, SerializerCreateFunction SerializerCreate, co
 	Serializer* serializer = SerializerCreate(alloc);
 	serializer->alloc = alloc;
 
+#if 0
 	B instanceB;
 	instanceB.change();
 	
@@ -62,6 +63,16 @@ void TestSerialization(CuTest* tc, SerializerCreateFunction SerializerCreate, co
 	
 	D* loadD = (D*) SerializerLoadObjectFromFile(serializer, StringFormat("TestD.%s", ext));
 	Deallocate(loadD);
+#endif
+
+	F instanceF;
+	instanceF.allocate();
+	SerializerSaveObjectToFile(serializer, StringFormat("TestF.%s", ext), &instanceF);
+	
+	F* loadF = (F*) SerializerLoadObjectFromFile(serializer, StringFormat("TestF.%s", ext));
+	CuAssertIntEquals(tc, instanceF.vecA[0].foo, loadF->vecA[0].foo);
+	CuAssertIntEquals(tc, instanceF.vecA[1].foo, loadF->vecA[1].foo);
+	Deallocate(loadF);
 
 	Deallocate(serializer);
 }
@@ -81,7 +92,7 @@ void TestSerializerBinary(CuTest* tc)
 CuSuite* GetSuiteSerialization()
 {
 	CuSuite* suite = CuSuiteNew();
-	SUITE_ADD_TEST(suite, TestSerializerJSON);
+	//SUITE_ADD_TEST(suite, TestSerializerJSON);
 	SUITE_ADD_TEST(suite, TestSerializerBinary);
 	return suite;
 }

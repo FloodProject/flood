@@ -29,7 +29,6 @@ void ResourceTaskRun(Task* task)
 
 	Resource* resource = handle.Resolve();
 	const Path& path = resource->getPath();
-
 	
 	ResourceManager* res = GetResourceManager();
 	ResourceLoader* loader = res->findLoader( PathGetFileExtension(path) );

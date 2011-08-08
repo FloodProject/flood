@@ -39,7 +39,6 @@ ServerPlugin::ServerPlugin()
 	, pane(nullptr)
 	, isDisconnecting(false)
 {
-
 }
 
 //-----------------------------------//
@@ -84,6 +83,7 @@ void ServerPlugin::onPluginDisable()
 	PluginMetadata metadata = getMetadata();
 
 	disconnect();
+	deinitClient();
 
 	delete pane;
 }
@@ -96,6 +96,11 @@ void ServerPlugin::onPluginUpdate()
 	{
 		deinitClient();
 		isDisconnecting = false;
+	}
+	else
+	{
+		while( dispatcher && dispatcher->processMessage() )
+			continue;
 	}
 }
 
@@ -164,8 +169,6 @@ void ServerPlugin::processMessages(Thread* thread, void* userdata)
 		{
 		case HostState::Disconnected:
 			continue;
-			break;
-		case HostState::Connecting:
 			break;
 		case HostState::Connected:
 			auth();
