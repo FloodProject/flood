@@ -8,6 +8,8 @@
 
 #include "Core/API.h"
 #include "Core/Log.h"
+#include "Core/Serialization.h"
+#include "Core/Stream.h"
 
 #ifdef ENABLE_SERIALIZATION
 
@@ -16,6 +18,16 @@ NAMESPACE_CORE_BEGIN
 //-----------------------------------//
 
 struct Field;
+
+struct API_CORE SerializerBinary : public Serializer
+{
+	MemoryStream* ms;
+};
+
+// Deserializes a field from a stream.
+API_CORE void DeserializeFields( ReflectionContext* context );
+
+//-----------------------------------//
 
 template<typename T>
 static void PointerSetObject( const Field* field, void* address, T* object )
@@ -52,144 +64,25 @@ static void PointerSetObject( const Field* field, void* address, T* object )
 #define StreamIndex(s) (s->buf+s->position)
 
 #ifdef BUILD_DEBUG
-
-static void StreamAdvanceIndex(MemoryStream* ms, uint64 n)
-{
-	ms->position += n;
-
-	// Do some debug bounds checking.
-	if(ms->position > ms->data.size())
-	{
-		LogAssert("Check the bounds of the buffer");
-	}
-}
-
+void StreamAdvanceIndex(MemoryStream* ms, uint64 n);
 #else
-
 #define StreamAdvanceIndex(s, n) (s->position += n)
-
 #endif
 
-static void EncodeVariableIntegerBuffer(uint8* buf, uint64& advance, uint64 val)
-{
-	do
-	{
-		uint8 byte = val & 0x7f;
-		val >>= 7;
-		if(val) byte |= 0x80;
-		*buf++ = byte;
-		advance++;
-	}
-	while(val);
-}
-
-static void EncodeVariableInteger(MemoryStream* ms, uint64 val)
-{
-	uint8* buf = StreamIndex(ms);
-	EncodeVariableIntegerBuffer(buf, ms->position, val);
-}
-
-static bool DecodeVariableIntegerBuffer(uint8* buf, uint64& advance, uint64& val)
-{
-	uint8* p = buf;
-
-	uint32 low, high = 0;
-	uint32 b;
-	b = *(p++); low   = (b & 0x7f)      ; if(!(b & 0x80)) goto done;
-	b = *(p++); low  |= (b & 0x7f) <<  7; if(!(b & 0x80)) goto done;
-	b = *(p++); low  |= (b & 0x7f) << 14; if(!(b & 0x80)) goto done;
-	b = *(p++); low  |= (b & 0x7f) << 21; if(!(b & 0x80)) goto done;
-	b = *(p++); low  |= (b & 0x7f) << 28;
-				high  = (b & 0x7f) >>  4; if(!(b & 0x80)) goto done;
-	b = *(p++); high |= (b & 0x7f) <<  3; if(!(b & 0x80)) goto done;
-	b = *(p++); high |= (b & 0x7f) << 10; if(!(b & 0x80)) goto done;
-	b = *(p++); high |= (b & 0x7f) << 17; if(!(b & 0x80)) goto done;
-	b = *(p++); high |= (b & 0x7f) << 24; if(!(b & 0x80)) goto done;
-	b = *(p++); high |= (b & 0x7f) << 31; if(!(b & 0x80)) goto done;
-	return false;
-
-done:
-
-	advance += p-buf;
-	val = ((uint64) high << 32) | low;
-	return true;
-}
-
-static bool DecodeVariableInteger(MemoryStream* ms, uint64& val)
-{
-	uint8* buf = StreamIndex(ms);
-	return DecodeVariableIntegerBuffer(buf, ms->position, val);
-}
-
-//-----------------------------------//
-
-/**
- * For signed numbers, we use an encoding called zig-zag encoding
- * that maps signed numbers to unsigned numbers so they can be
- * efficiently encoded using the normal variable-int encoder.
- */
-
-static uint32 EncodeZigZag32(sint32 n)
-{
-	return (n << 1) ^ (n >> 31);
-}
-
-static sint32 DecodeZigZag32(uint32 n)
-{
-	return (n >> 1) ^ -(sint32)(n & 1);
-}
-
-static uint64 EncodeZigZag64(sint64 n)
-{
-	return (n << 1) ^ (n >> 63);
-}
-
-static sint64 DecodeZigZag64(uint64 n)
-{
-	return (n >> 1) ^ -(sint64)(n & 1);
-}
-
-//-----------------------------------//
-
-static void EncodeFixed32(MemoryStream* ms, uint32 val)
-{
-	uint8* buf = StreamIndex(ms);
-	buf[0] = val & 0xff;
-	buf[1] = (val >> 8) & 0xff;
-	buf[2] = (val >> 16) & 0xff;
-	buf[3] = (val >> 24);
-	StreamAdvanceIndex(ms, sizeof(uint32));
-}
-
-static uint32 DecodeFixed32(MemoryStream* ms)
-{
-	uint8* buf = StreamIndex(ms);
-	uint32* val = (uint32*) buf;
-	StreamAdvanceIndex(ms, sizeof(uint32));
-	return *val;
-}
-
-//-----------------------------------//
-
-static void EncodeString(MemoryStream* ms, const String& s)
-{
-	EncodeVariableInteger(ms, s.size());
-	StreamWriteString(ms, s);
-}
-
-static bool DecodeString(MemoryStream* ms, String& s)
-{
-	uint64 size;
-	
-	if( !DecodeVariableInteger(ms, size) )
-		return false;
-
-	s.resize((size_t)size);
-	memcpy((void*) s.data(), StreamIndex(ms), (size_t)size);
-
-	StreamAdvanceIndex(ms, size);
-	return true;
-}
+void EncodeVariableIntegerBuffer(uint8* buf, uint64& advance, uint64 val);
+void EncodeVariableInteger(MemoryStream* ms, uint64 val);
+bool DecodeVariableIntegerBuffer(uint8* buf, uint64& advance, uint64& val);
+bool DecodeVariableInteger(MemoryStream* ms, uint64& val);
+uint32 EncodeZigZag32(sint32 n);
+sint32 DecodeZigZag32(uint32 n);
+uint64 EncodeZigZag64(sint64 n);
+sint64 DecodeZigZag64(uint64 n);
+void EncodeFixed32(MemoryStream* ms, uint32 val);
+uint32 DecodeFixed32(MemoryStream* ms);
+void EncodeFloat(MemoryStream* ms, float val);
+float DecodeFloat(MemoryStream* ms);
+void EncodeString(MemoryStream* ms, const String& s);
+bool DecodeString(MemoryStream* ms, String& s);
 
 //-----------------------------------//
 

@@ -62,10 +62,6 @@ public:
 	// Sets up the input devices.
 	void setupInput();
 
-	// Gets/sets the scene.
-	GETTER(Scene, ScenePtr, scene)
-	void setScene(const ScenePtr& scene);
-
 	// Gets the device.
 	GETTER(RenderDevice, RenderDevice*, renderDevice)
 
@@ -101,7 +97,7 @@ public:
 protected:
 
 	// Subsystems.
-	std::vector< Subsystem* > subsystems;
+	std::vector<Subsystem*> subsystems;
 
 	// Manages background tasks.
 	TaskPool* taskPool;
@@ -111,9 +107,6 @@ protected:
 
 	// Log stream.
 	Stream* stream;
-
-	// Scene root node.
-	ScenePtr scene;
 
 	// Rendering device.
 	RenderDevice* renderDevice;

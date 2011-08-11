@@ -52,15 +52,11 @@ SceneDocument::SceneDocument()
 SceneDocument::~SceneDocument()
 {
 	LogDebug("Destroying SceneDocument");
-
 	resetScene();
 
-	RenderControl* control = viewframe->getControl();
-	control->stopFrameLoop();
-	control->onRender.clear();
-	control->onUpdate.clear();
-
+	viewframe->setMainCamera(nullptr);
 	viewframe->destroyControl();
+	viewframe->Destroy();
 }
 
 //-----------------------------------//
@@ -207,24 +203,29 @@ void SceneDocument::onToolSelect(PluginTool* mode)
 
 void SceneDocument::createScene()
 {
-	scene = Allocate(Scene, AllocatorGetHeap());
-	editorScene = Allocate(Scene, AllocatorGetHeap());
+	Allocator* alloc = AllocatorGetHeap();
+
+	scene = Allocate(Scene, alloc);
+	editorScene = Allocate(Scene, alloc);
 	
-	// Create a nice grid for the editor.
-	EntityPtr nodeGrid( EntityCreate(AllocatorGetHeap()) );
-	nodeGrid->setName("Grid");
-	nodeGrid->addTransform();
-	GridPtr grid = Allocate(Grid, AllocatorGetThis());
-	nodeGrid->addComponent(grid);
-	nodeGrid->setTag( Tags::NonPickable, true );
-	editorScene->add( nodeGrid );
+	// Create a grid entity.
+	EntityPtr entityGrid = EntityCreate(alloc);
+	entityGrid->setName("Grid");
+	entityGrid->addTransform();
 
+	GridPtr grid = Allocate(Grid, alloc);
+	entityGrid->addComponent(grid);
+	entityGrid->setTag( Tags::NonPickable, true );
+	
+	editorScene->add( entityGrid );
+
+	// Create the camera entity.
 	Vector3 initialPosition(0, 20, -65);
-	EntityPtr nodeCamera( createCamera() );
-	nodeCamera->getTransform()->setPosition(initialPosition);
-	editorScene->add( nodeCamera );
+	EntityPtr entityCamera = createCamera();
+	entityCamera->getTransform()->setPosition(initialPosition);
+	editorScene->add( entityCamera );
 
-	CameraPtr camera = nodeCamera->getComponent<Camera>();
+	CameraPtr camera = entityCamera->getComponent<Camera>();
 	viewframe->setMainCamera(camera);
 	viewframe->switchToDefaultCamera();
 }
@@ -233,13 +234,15 @@ void SceneDocument::createScene()
 
 EntityPtr SceneDocument::createCamera()
 {
+	Allocator* alloc = AllocatorGetHeap();
+
 	// So each camera will have unique names.
 	static uint8 i = 0;
 
 	// Create a new first-person camera for our view.
 	// By default it will be in perspective projection.
-	CameraPtr camera = Allocate(Camera, AllocatorGetThis());
-	cameraController = Allocate(FirstPersonController, AllocatorGetThis());
+	CameraPtr camera = Allocate(Camera, alloc);
+	cameraController = Allocate(FirstPersonController, alloc);
 	cameraController->setEnabled(false);
 
 	Frustum& frustum = camera->getFrustum();
@@ -248,14 +251,14 @@ EntityPtr SceneDocument::createCamera()
 	// Generate a new unique name.
 	String name( "EditorCamera"+StringFromNumber(i++) );
 
-	EntityPtr entityCamera( EntityCreate(AllocatorGetHeap()) );
+	EntityPtr entityCamera = EntityCreate(alloc);
 	entityCamera->setName(name);
 	entityCamera->addTransform();
 	entityCamera->addComponent( camera );
 	entityCamera->addComponent( cameraController );
 
 #ifdef ENABLE_AUDIO_OPENAL
-	ComponentPtr listener = Allocate(Listener, AllocatorGetThis());
+	ComponentPtr listener = Allocate(Listener, alloc);
 	entityCamera->addComponent( listener );
 #endif
 

@@ -26,6 +26,21 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
+static void WalkNull(ReflectionContext*, ReflectionWalkType::Enum)
+{
+}
+
+ReflectionContext::ReflectionContext()
+{
+	walkComposite = WalkNull;
+	walkCompositeField = WalkNull;
+	walkPrimitive = WalkNull;
+	walkEnum = WalkNull;
+	walkArray = WalkNull;
+}
+
+//-----------------------------------//
+
 static std::map<Class*, ReflectionHandleContext> gs_ReflectionHandleMap;
 
 void ReflectionSetHandleContext(ReflectionHandleContext context)
@@ -61,12 +76,14 @@ Serializer::Serializer()
 	, object(nullptr)
 	, load(nullptr)
 	, save(nullptr)
-{ }
+{
+}
 
 //-----------------------------------//
 
 Serializer::~Serializer()
-{ }
+{
+}
 
 //-----------------------------------//
 
@@ -153,16 +170,6 @@ static void ReflectionWalkEnum(ReflectionContext* context)
 
 //-----------------------------------//
 
-static uint16 GetArrayElementSize(const Field* field)
-{
-	if( FieldIsPointer(field) )
-		return field->pointer_size;
-	else
-		return field->size;
-}
-
-//-----------------------------------//
-
 static void ReflectionWalkType(ReflectionContext* context, Type* type);
 
 static bool ReflectionWalkPointer(ReflectionContext* context)
@@ -219,7 +226,7 @@ static void ReflectionWalkArray(ReflectionContext* context)
 	const Field* field = context->field;
 	std::vector<byte>& array = *(std::vector<byte>*) context->address;
 
-	uint16 elementSize = GetArrayElementSize(context->field);
+	uint16 elementSize = ReflectionArrayGetElementSize(context->field);
 	uint32 arraySize = array.size() / elementSize;
 
 	context->arraySize = arraySize;
@@ -259,9 +266,9 @@ static void ReflectionWalkArray(ReflectionContext* context)
 
 //-----------------------------------//
 
-static void ReflectionWalkCompositeField(ReflectionContext* context)
+void ReflectionWalkCompositeField(ReflectionContext* context)
 {
-	Field* field = context->field;
+	const Field* field = context->field;
 
 	if( !FieldIsSerializable(field) )
 		return;
@@ -334,7 +341,7 @@ static void ReflectionWalkComposite(ReflectionContext* context)
 
 	const std::vector<Field*>& fields = context->composite->fields;
 
-	Field* field = context->field; 
+	const Field* field = context->field; 
 
 	for( size_t i = 0; i < fields.size(); i++ )
 	{

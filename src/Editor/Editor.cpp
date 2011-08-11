@@ -114,6 +114,11 @@ EditorFrame::~EditorFrame()
 	for( size_t i = 0; i < documents.size(); i++ )
 	{
 		Document* document = documents[i];
+
+		wxWindow* window = document->getWindow();
+		size_t index = notebookCtrl->GetPageIndex(window);
+		notebookCtrl->RemovePage(index);
+
 		delete document;
 	}
 
@@ -154,7 +159,7 @@ void EditorFrame::createPlugins()
 
 void EditorFrame::createEngine()
 {
-	engine = new Engine;
+	engine = new Engine();
 	engine->init(false);
 	engine->setupInput();
 
@@ -293,12 +298,9 @@ void EditorFrame::onNotebookPageClose(wxAuiNotebookEvent& event)
 void EditorFrame::addDocument(Document* document)
 {
 	if( !document ) return;
-
 	documents.push_back(document);
 
-	wxWindow* window = document->getWindow();
-	notebookCtrl->AddPage( window, document->getName() );
-
+	getNotebook()->AddPage(document->getWindow(), document->getName());
 	getAUI()->Update();
 }
 

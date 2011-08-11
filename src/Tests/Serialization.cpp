@@ -11,6 +11,7 @@
 #include "Core/API.h"
 #include "Core/Memory.h"
 #include "Core/Serialization.h"
+#include "Core/SerializationHelpers.h"
 #include "Core/Reflection.h"
 #include "Core/Object.h"
 #include "Core/Stream.h"
@@ -24,9 +25,7 @@ void TestSerialization(CuTest* tc, SerializerCreateFunction SerializerCreate, co
 {
 	Allocator* alloc = AllocatorGetHeap();
 	Serializer* serializer = SerializerCreate(alloc);
-	serializer->alloc = alloc;
 
-#if 0
 	B instanceB;
 	instanceB.change();
 	
@@ -63,7 +62,6 @@ void TestSerialization(CuTest* tc, SerializerCreateFunction SerializerCreate, co
 	
 	D* loadD = (D*) SerializerLoadObjectFromFile(serializer, StringFormat("TestD.%s", ext));
 	Deallocate(loadD);
-#endif
 
 	F instanceF;
 	instanceF.allocate();
@@ -89,10 +87,47 @@ void TestSerializerBinary(CuTest* tc)
 
 //-----------------------------------//
 
+void TestSerializerBinaryField(CuTest* tc)
+{
+	Allocator* alloc = AllocatorGetHeap();
+	MemoryStream* ms = StreamCreateFromMemory(alloc, 16);
+
+	SerializerBinary* bin = (SerializerBinary*) SerializerCreateBinary(alloc);
+	bin->ms = ms;
+
+	A a;
+	a.foo = 33;
+	Class* classA = ClassGetType(&a);
+	
+	ReflectionContext& context = bin->serializeContext;
+	context.object = &a;
+	context.field = ClassGetField(classA, "foo");
+	CuAssertPtrNotNull(tc, context.field);
+
+	ReflectionWalkCompositeField(&context);
+	EncodeVariableInteger(bin->ms, FieldInvalid);
+
+	a.foo = 22;
+
+	ReflectionContext& dcontext = bin->deserializeContext;
+	dcontext.object = &a;
+	dcontext.composite = classA;
+
+	StreamSetPosition(ms, 0, StreamSeekMode::Absolute);
+	DeserializeFields(&dcontext);
+	CuAssertIntEquals(tc, 33, a.foo);
+
+	Deallocate(ms);
+	Deallocate(bin);
+}
+
+//-----------------------------------//
+
 CuSuite* GetSuiteSerialization()
 {
 	CuSuite* suite = CuSuiteNew();
 	//SUITE_ADD_TEST(suite, TestSerializerJSON);
 	SUITE_ADD_TEST(suite, TestSerializerBinary);
+	SUITE_ADD_TEST(suite, TestSerializerBinaryField);
 	return suite;
 }

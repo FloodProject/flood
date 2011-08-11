@@ -44,7 +44,7 @@ void PropertyOperation::setFieldValue(const wxAny& value)
 
 	if( FieldIsPointer(field) && isResource )
 	{
-		std::string val = value.As<std::string>();
+		String val = value.As<String>();
 
 		ResourceManager* rm = GetResourceManager();
 		ResourceHandle resource = rm->loadResource(val);

@@ -45,6 +45,7 @@ void UserMessagesServer::handleUserAuth(const SessionPtr& session, const UserAut
 	// Notify users that another user authenticated.
 	UserJoinMessage join;
 	join.user = user.id;
+	join.name = user.name;
 
 	MessagePtr m_join = MessageCreate(UserMessageIds::UserJoin);
 	m_join->write(&join);

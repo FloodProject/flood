@@ -16,14 +16,13 @@
 #include "Network/Session.h"
 #include "Server/Server.h"
 #include "Core/Reflection.h"
+#include "Core/SerializationHelpers.h"
 #include "Engine/API.h"
 #include "Scene/Scene.h"
 
 NAMESPACE_SERVER_BEGIN
 
 //-----------------------------------//
-
-typedef std::map<uint64, Object*> ReplicasMap;
 
 class ReplicaMessagesServer : ReplicaMessagePlugin
 {
@@ -34,8 +33,8 @@ public:
 
 	void handleReplicaCreate(const SessionPtr&, const ReplicaCreateMessage&) OVERRIDE;
 	void handleReplicaAskUpdate(const SessionPtr&, const ReplicaAskUpdateMessage&) OVERRIDE;
+	void handleReplicaFieldUpdate(const SessionPtr&, const MessagePtr&) OVERRIDE;
 
-	ReplicasMap replicas;
 	Scene* scene;
 };
 
@@ -69,12 +68,14 @@ void ReplicaMessagesServer::handleReplicaCreate(const SessionPtr& session, const
 	LogDebug("ReplicaCreate: '%s'", klass->name);
 
 	// Store the replicated object.
-	uint64 instanceId = nextInstance++;
-	replicas[instanceId] = instance;
+	registerObjects(instance);
 
 	// Send the instance back to all the clients.
+	InstanceId id = 0;
+	replicas.findInstance(instance, id);
+
 	ReplicaNewInstanceMessage inst;
-	inst.instanceId = instanceId;
+	inst.instanceId = id;
 	inst.instance = instance;
 
 	MessagePtr message = MessageCreate(ReplicaMessageIds::ReplicaNewInstance);
@@ -95,14 +96,11 @@ void ReplicaMessagesServer::handleReplicaAskUpdate(const SessionPtr& session, co
 {
 	ReplicaFullUpdateMessage full;
 
-	ReplicasMap::iterator it;
+	ReplicasIdMap::iterator it;
 	
-	for(it = replicas.begin(); it != replicas.end(); it++)
+	for(it = replicas.instancesIds.begin(); it != replicas.instancesIds.end(); ++it)
 	{
-		ReplicatedObject obj;
-		obj.instanceId = it->first;
-		obj.instance = it->second;
-
+		ReplicatedObject& obj = it->second;
 		full.objects.push_back(obj);
 	}
 
@@ -110,6 +108,18 @@ void ReplicaMessagesServer::handleReplicaAskUpdate(const SessionPtr& session, co
 	message->write(&full);
 
 	session->getPeer()->queueMessage(message, 0);
+}
+
+//-----------------------------------//
+
+void ReplicaMessagesServer::handleReplicaFieldUpdate(const SessionPtr& session, const MessagePtr& msg)
+{
+	processFieldUpdate(msg);
+
+	MessagePtr update = MessageCreate(ReplicaMessageIds::ReplicaFieldUpdate);
+	StreamWrite(update->ms, msg->ms->buf, msg->ms->position);
+
+	GetServer()->getHost()->broadcastMessage(update);
 }
 
 //-----------------------------------//

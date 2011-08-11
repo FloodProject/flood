@@ -11,7 +11,6 @@
 #include "Render/Target.h"
 #include "Scene/Scene.h"
 #include "Scene/Camera.h"
-#include "Engine/Engine.h"
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -98,14 +97,12 @@ bool RenderView::operator < (RenderView& v)
 
 //-----------------------------------//
 
-void RenderView::update()
+void RenderView::update(const ScenePtr& scene)
 {
 	const CameraPtr& camera = weakCamera;
 	if( !camera ) return;
 
-	camera->setView( this );
-
-	const ScenePtr& scene = GetEngine()->getScene();
+	camera->setView(this);
 	camera->render(scene);
 }
 

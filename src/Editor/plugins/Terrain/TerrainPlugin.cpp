@@ -437,9 +437,8 @@ void TerrainPlugin::setupOperation( const MouseButtonEvent& mb )
 
 bool TerrainPlugin::pickTerrain( int x, int y, RayTriangleQueryResult& res )
 {
-	const ScenePtr& scene = GetEngine()->getScene();
-
 	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
+	const ScenePtr& scene = document->scene;
 	const CameraPtr& camera = document->viewframe->getView()->getCamera(); 
 	
 	// Get a ray given the screen location clicked.

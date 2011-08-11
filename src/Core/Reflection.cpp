@@ -151,7 +151,7 @@ const char* EnumGetValueName(Enum* enumeration, int32 value)
 	
 	EnumValuesMap::iterator it = values.begin();
 	
-	for(; it != values.end(); it++)
+	for(; it != values.end(); ++it)
 	{
 		const char* name = it->first;
 		if( value == it->second ) return name;

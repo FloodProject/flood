@@ -24,6 +24,7 @@ struct MessageDirection
 	{
 		ClientToServer,
 		ServerToClient,
+		Both,
 		ServerToServer,
 	};
 };

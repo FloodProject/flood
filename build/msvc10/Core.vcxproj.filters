@@ -328,6 +328,9 @@
     <ClCompile Include="..\..\src\Core\MemoryStream.cpp">
       <Filter>Streams\Memory</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Core\ClassWatcher.cpp">
+      <Filter>Reflection</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\Core\Memory.h">
@@ -389,9 +392,6 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\Handle.h">
       <Filter>Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\Core\Helpers.h">
-      <Filter>Reflection</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\Serialization.h">
       <Filter>Serialization</Filter>
@@ -608,6 +608,12 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\SerializationHelpers.h">
       <Filter>Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\ReflectionHelpers.h">
+      <Filter>Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Core\ClassWatcher.h">
+      <Filter>Reflection</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

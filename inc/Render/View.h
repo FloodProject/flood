@@ -60,7 +60,7 @@ public:
 	float getAspectRatio() const;
 
 	// Updates the view.
-	void update();
+	void update(const ScenePtr& scene);
 
 	// Unprojects the point.
 	Vector3 unprojectPoint( const Vector3& pt, const Camera* camera ) const;

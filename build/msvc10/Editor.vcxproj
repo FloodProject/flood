@@ -199,7 +199,6 @@
     <ClCompile Include="..\..\src\Editor\plugins\Mono\MonoPlugin.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Networking\ServerPane.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Networking\ServerPlugin.cpp" />
-    <ClCompile Include="..\..\src\Editor\plugins\Property\PropertyWatch.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourceDatabase.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourcesPane.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourceThumbnailer.cpp" />

@@ -10,6 +10,8 @@
 
 #ifdef ENABLE_PLUGIN_PROPERTY
 
+#include "Core/ClassWatcher.h"
+
 NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
@@ -23,17 +25,8 @@ public:
 	const void* object;
 };
 
-//-----------------------------------//
-
-struct MemoryWatch
-{
-	wxPGProperty* property;
-	void* object;
-
-	byte* rangeBegin;
-	byte* rangeEnd;
-	uint32 hash;
-};
+struct ClassWatch;
+struct Class;
 
 //-----------------------------------//
 
@@ -56,7 +49,7 @@ public:
 	void showEntityProperties( const EntityPtr& entity );
 
 	// Appends the type fields to the property grid.
-	void appendObjectFields(Class&, void* object, bool newCategory = true);
+	void appendObjectFields(Class*, void* object, bool newCategory = true);
 
 	// Gets the value of a field.
 	wxAny getFieldValue(const Field* field, void* object);
@@ -70,14 +63,7 @@ public:
 	// Resets the properties page if the object is current.
 	void resetObject(const Object* object);
 
-	// Creates a memory watch.
-	void createMemoryWatch(const Field* field, void* object, MemoryWatch& watch);
-
-	// Updates a memory watch.
-	bool updateMemoryWatch(const Field* field, void* object);
-
-	// Updates the memory watches.
-	bool updateMemoryWatches();
+	Delegate1<const FieldWatchVector&> onClassFieldChanged;
 
 protected:
 
@@ -129,9 +115,8 @@ protected:
 	// Current object.
 	Object* currentObject;
 
-	// Memory watches.
-	typedef std::map<const Field*, MemoryWatch> MemoryWatchesMap;
-	MemoryWatchesMap memoryWatches;
+	// Current object watch.
+	ClassWatch watch;
 };
 
 //-----------------------------------//

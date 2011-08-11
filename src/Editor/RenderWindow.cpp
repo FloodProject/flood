@@ -9,6 +9,7 @@
 #include "Editor/API.h"
 #include "RenderWindow.h"
 #include "EditorInputManager.h"
+#include "Render/RenderContext.h"
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -17,7 +18,7 @@ NAMESPACE_EDITOR_BEGIN
 RenderWindow::RenderWindow(const WindowSettings& settings, wxGLCanvas* const canvas)
 	: Window(settings)
 	, canvas(canvas)
-	, context(nullptr)
+	, contextGL(nullptr)
 	, cursorVisible(true)
 	, cursorPriority(0)
 {
@@ -30,9 +31,14 @@ RenderWindow::RenderWindow(const WindowSettings& settings, wxGLCanvas* const can
 RenderWindow::~RenderWindow()
 {
 	LogDebug("Destroying RenderWindow");
+	removeViews();
 
-	LogDebug("Destroying OpenGL context");
-	delete context;
+	LogDebug("Destroying RenderContext");
+	Deallocate(context);
+
+	LogDebug("Destroying OpenGL Context");
+	delete contextGL;
+
 	delete inputManager;
 }
 
@@ -43,13 +49,16 @@ bool RenderWindow::createContext()
 	if( !canvas ) return false;
 
     // create OpenGL context
-    context = new wxGLContext(canvas);
+    contextGL = new wxGLContext(canvas);
 	
-	if(!context)
+	if( !contextGL )
 	{
 		LogError("Error creating wxGLCanvas context");
 		return false;
 	}
+
+	RenderContext* context = Allocate(RenderContext, GetRenderAllocator());
+	setContext(context);
 
 	return true;
 }
@@ -75,10 +84,10 @@ void RenderWindow::show( bool hide )
 
 void RenderWindow::makeCurrent()
 {
-	if(!context || !canvas) 
+	if( !contextGL || !canvas ) 
 		return;
 
-	context->SetCurrent(*canvas);
+	contextGL->SetCurrent(*canvas);
 }
 
 //-----------------------------------//

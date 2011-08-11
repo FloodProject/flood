@@ -16,7 +16,7 @@ NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
-bool glHasError( const std::string& msg )
+bool CheckLastErrorGL( const String& msg )
 {
 #ifdef DEBUG_BUILD
 	bool occured = false;

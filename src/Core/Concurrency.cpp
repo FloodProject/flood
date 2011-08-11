@@ -130,6 +130,8 @@ TaskPool* TaskPoolCreate(Allocator* alloc, int8 Size)
 void TaskPoolDestroy(TaskPool* pool)
 {
 	if( !pool ) return;
+
+	LogDebug("Destroying task pool");
 	
 	pool->IsStopping = true;
 
@@ -141,7 +143,7 @@ void TaskPoolDestroy(TaskPool* pool)
 		ThreadDestroy(thread);
 	}
 
-	Deallocate<TaskPool>(pool);
+	Deallocate(pool);
 }
 
 //-----------------------------------//
@@ -198,10 +200,7 @@ static void TaskPoolRun(Thread* thread, void* userdata)
 
 		TaskPoolPushEvent( pool, task, TaskState::Started );
 		TaskRun(task);
-		LogDebug("After task run!");
 		TaskPoolPushEvent( pool, task, TaskState::Finished );
-
-		LogDebug("THIS SHOULD PRINT");
 	}
 }
 

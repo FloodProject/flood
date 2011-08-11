@@ -41,7 +41,7 @@ Texture::~Texture()
 {
 	glDeleteTextures( 1, (GLuint*) &id );
 	
-	if( glHasError("Could not delete texture object") )
+	if( CheckLastErrorGL("Could not delete texture object") )
 		return;
 
 	LogDebug("Deleting texture from OpenGL");
@@ -69,7 +69,7 @@ bool Texture::generate()
 {
 	glGenTextures( 1, (GLuint*) &id );
 
-	if( glHasError("Could not generate a new texture object") )
+	if( CheckLastErrorGL("Could not generate a new texture object") )
 		return false;
 
 	return true;
@@ -111,7 +111,7 @@ bool Texture::upload()
 
 	#pragma TODO("Check that there is free memory in the GPU before uploading textures")
 
-	if( glHasError("Could not upload pixel data to texture object") )
+	if( CheckLastErrorGL("Could not upload pixel data to texture object") )
 	{
 		uploaded = false;
 		return false;
@@ -196,7 +196,7 @@ ImagePtr Texture::readImage() const
 	glGetTexImage( target, 0 /* base mipmap level */,
 		convertSourceFormat(format), GL_UNSIGNED_BYTE, &tmp[0] );
 	
-	if( glHasError("Could not read texture data") )
+	if( CheckLastErrorGL("Could not read texture data") )
 		return nullptr;
 
 	unbind();

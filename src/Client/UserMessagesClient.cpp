@@ -21,6 +21,8 @@ NAMESPACE_EDITOR_BEGIN
 class UserMessagesClient : UserMessagePlugin
 {
 	void handleUserAuthStatus(const SessionPtr&, const UserAuthStatusMessage&) OVERRIDE;
+	void handleUserJoin(const SessionPtr&, const UserJoinMessage&) OVERRIDE;
+	void handleUserLeave(const SessionPtr&, const UserLeaveMessage&) OVERRIDE;
 };
 
 REFLECT_CHILD_CLASS(UserMessagesClient, UserMessagePlugin)
@@ -37,6 +39,29 @@ void UserMessagesClient::handleUserAuthStatus(const SessionPtr& session, const U
 
 	ServerPlugin* serverPlugin = GetPlugin<ServerPlugin>();
 	serverPlugin->host->getPeer()->queueMessage(m_ask, 0);
+}
+
+//-----------------------------------//
+
+void UserMessagesClient::handleUserJoin(const SessionPtr& session, const UserJoinMessage& join)
+{
+	LogInfo("User '%s' joined network session", join.name.c_str());
+	
+	User user;
+	user.id = join.user;
+	user.name = join.name;
+	user.session = session;
+
+	users.addUser(user);
+}
+
+//-----------------------------------//
+
+void UserMessagesClient::handleUserLeave(const SessionPtr&, const UserLeaveMessage& leave)
+{
+	User* user = users.getUserFromId(leave.user);
+	LogInfo("User '%s' left network session", user->name.c_str());
+	users.removeUser(*user);
 }
 
 //-----------------------------------//

@@ -187,6 +187,7 @@
     <ClCompile Include="..\..\src\Core\BinarySerializer.cpp">
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4231;4530;4190;4251;4244</DisableSpecificWarnings>
     </ClCompile>
+    <ClCompile Include="..\..\src\Core\ClassWatcher.cpp" />
     <ClCompile Include="..\..\src\Core\Concurrency.cpp" />
     <ClCompile Include="..\..\src\Core\DynamicLibrary.cpp" />
     <ClCompile Include="..\..\src\Core\FileStream.cpp" />
@@ -285,6 +286,7 @@
     <ClInclude Include="..\..\dep\rdestl\vector.h" />
     <ClInclude Include="..\..\inc\Core\API.h" />
     <ClInclude Include="..\..\inc\Core\Archive.h" />
+    <ClInclude Include="..\..\inc\Core\ClassWatcher.h" />
     <ClInclude Include="..\..\inc\Core\Concurrency.h" />
     <ClInclude Include="..\..\inc\Core\ConcurrentQueue.h" />
     <ClInclude Include="..\..\inc\Core\Delegate.h" />
@@ -292,7 +294,6 @@
     <ClInclude Include="..\..\inc\Core\Event.h" />
     <ClInclude Include="..\..\inc\Core\FileWatcher.h" />
     <ClInclude Include="..\..\inc\Core\Handle.h" />
-    <ClInclude Include="..\..\inc\Core\Helpers.h" />
     <ClInclude Include="..\..\inc\Core\Log.h" />
     <ClInclude Include="..\..\inc\Core\Memory.h" />
     <ClInclude Include="..\..\inc\Core\Object.h" />
@@ -303,6 +304,7 @@
     <ClInclude Include="..\..\inc\Core\Profiler.h" />
     <ClInclude Include="..\..\inc\Core\References.h" />
     <ClInclude Include="..\..\inc\Core\Reflection.h" />
+    <ClInclude Include="..\..\inc\Core\ReflectionHelpers.h" />
     <ClInclude Include="..\..\inc\Core\Serialization.h" />
     <ClInclude Include="..\..\inc\Core\SerializationHelpers.h" />
     <ClInclude Include="..\..\inc\Core\Stream.h" />

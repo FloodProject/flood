@@ -57,6 +57,9 @@ struct ReflectionContext;
 // Walks the object calling the given reflection context.
 API_CORE void ReflectionWalk(Object*, ReflectionContext*);
 
+// Walks on an composite object composite field.
+API_CORE void ReflectionWalkCompositeField(ReflectionContext*);
+
 //-----------------------------------//
 
 /**
@@ -91,7 +94,7 @@ struct Primitive;
 
 struct API_CORE ReflectionContext
 {
-	ReflectionContext() {}
+	ReflectionContext();
 
 	void* userData;
 	Object* object;
@@ -104,7 +107,7 @@ struct API_CORE ReflectionContext
 	
 	ValueContext valueContext;
 
-	Field* field;
+	const Field* field;
 	void* address;
 	void* elementAddress;
 	uint32 arraySize;

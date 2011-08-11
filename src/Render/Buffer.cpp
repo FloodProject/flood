@@ -20,7 +20,7 @@ Buffer::Buffer()
 {
 	glGenBuffers( 1, (GLuint*) &id );
 
-	if( glHasError("Error generating a new buffer") )
+	if( CheckLastErrorGL("Error generating a new buffer") )
 		return;
 }
 
@@ -32,7 +32,7 @@ Buffer::Buffer(BufferUsage::Enum usage, BufferAccess::Enum access)
 {
 	glGenBuffers( 1, (GLuint*) &id );
 
-	if( glHasError("Error generating a new buffer") )
+	if( CheckLastErrorGL("Error generating a new buffer") )
 		return;
 }
 
@@ -42,7 +42,7 @@ Buffer::~Buffer()
 {
 	glDeleteBuffers( 1, (GLuint*) &id );
 
-	if( glHasError("Error deleting buffer") )
+	if( CheckLastErrorGL("Error deleting buffer") )
 		return;
 }
 

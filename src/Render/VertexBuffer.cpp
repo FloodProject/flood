@@ -35,7 +35,7 @@ VertexBuffer::~VertexBuffer()
 bool VertexBuffer::bind()
 {
 	glBindBuffer( GL_ARRAY_BUFFER, id );
-	return !glHasError("Error binding vertex buffer");
+	return !CheckLastErrorGL("Error binding vertex buffer");
 }
 
 //-----------------------------------//
@@ -43,7 +43,7 @@ bool VertexBuffer::bind()
 bool VertexBuffer::unbind()
 {
 	glBindBuffer( GL_ARRAY_BUFFER, 0 );
-	return !glHasError("Error unbinding vertex buffer");
+	return !CheckLastErrorGL("Error unbinding vertex buffer");
 }
 
 //-----------------------------------//
@@ -130,13 +130,13 @@ void VertexBuffer::bindGenericPointers()
 
 		glEnableVertexAttribArray(index);
 
-		if( glHasError("Error enabling vertex attribute array") )
+		if( CheckLastErrorGL("Error enabling vertex attribute array") )
 			return;
 
 		glVertexAttribPointer(index,
 			attr.components, attr.type, GL_FALSE, 0, (void*) offset );
 
-		if( glHasError("Error binding pointers to buffer") )
+		if( CheckLastErrorGL("Error binding pointers to buffer") )
 			return;
 
 		offset += attr.data.size();
@@ -264,7 +264,7 @@ bool VertexBuffer::build()
 	// Reserve space for all the vertex elements.
 	glBufferData( GL_ARRAY_BUFFER, getSize(), nullptr, getGLBufferType() );
 
-	if( glHasError("Could not allocate storage for buffer") )
+	if( CheckLastErrorGL("Could not allocate storage for buffer") )
 		return false;
 
 	int offset = 0;
@@ -279,7 +279,7 @@ bool VertexBuffer::build()
 
 		glBufferSubData( GL_ARRAY_BUFFER, offset, vec.size(), &vec[0] );
 
-		if( glHasError("Could not buffer the data") )
+		if( CheckLastErrorGL("Could not buffer the data") )
 			return false;
 
 		offset += vec.size();

@@ -329,7 +329,7 @@ void ScenePage::onButtonEntityAdd(wxCommandEvent&)
 	msg->write(&inst);
 
 	ServerPlugin* sp = GetPlugin<ServerPlugin>();
-	sp->host->broadcastMessage(msg);
+	sp->host->getPeer()->queueMessage(msg, 0);
 
 	//addEntity(entity);
 }
@@ -408,10 +408,9 @@ wxMenu* ScenePage::createMenuAnimation(const MeshPtr& mesh)
 	for( size_t i = 0; i < anims.size(); i++ )
 	{
 		const AnimationPtr& animation = anims[i];
+		
 		const String& name = animation->getName();
-
-		if( name.empty() )
-			continue;
+		if( name.empty() ) continue;
 
 		int id = wxNewId();
 		item = menuAnimation->Append(id, name);
@@ -627,23 +626,26 @@ void ScenePage::onMenuSelected( wxCommandEvent& event )
 		EntityOperation* nodeOperation;
 		nodeOperation = createEntityOperation(node, "Entity Delete");
 		nodeOperation->undo();
-		//std::string str = (std::string) treeCtrl->GetItemText(menuItemId);
 
-		//TypeRegistry& typeRegistry = TypeRegistry::getInstance();
-		//const Class* type = (Class*) typeRegistry.getType(str);
-		//assert( type != nullptr );
+#if 0
+		String str = (String) treeCtrl->GetItemText(menuItemId);
 
-		//if( !type->inherits<Component>() )
-		//	return;
+		TypeRegistry& typeRegistry = TypeRegistry::getInstance();
+		const Class* type = (Class*) typeRegistry.getType(str);
+		assert( type != nullptr );
 
-		//const ComponentMap& components = node->getComponents();
-		//ComponentMap::const_iterator it = components.find(type);
+		if( !type->inherits<Component>() )
+			return;
 
-		//if( it == components.end() )
-		//	return;
+		const ComponentMap& components = node->getComponents();
+		ComponentMap::const_iterator it = components.find(type);
 
-		//ComponentPtr component = it->second;
-		//node->removeComponent(component);
+		if( it == components.end() )
+			return;
+
+		ComponentPtr component = it->second;
+		node->removeComponent(component);
+#endif
 	}
 	//-----------------------------------//
 	else if( id == ID_MenuSceneEntityTerrain )

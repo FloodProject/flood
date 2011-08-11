@@ -23,8 +23,12 @@ NAMESPACE_CORE_BEGIN
 
 bool ThreadJoin(Thread* thread)
 {
-	if( !thread ) return false;
+	if( !thread || !thread->IsRunning )
+		return false;
+	
 	thread->IsRunning = false;
+	assert(thread->Handle);
+
 	return ::WaitForSingleObject(thread->Handle, INFINITE) != WAIT_FAILED;
 }
 
@@ -59,11 +63,10 @@ bool ThreadSetPriority(Thread* thread, ThreadPriority priority)
 unsigned int WINAPI _ThreadMain(void* ptr)
 {
 	Thread* thread = (Thread*) ptr;
-	
-	if(thread->Function)
-		thread->Function(thread, thread->Userdata);
+	thread->Function(thread, thread->Userdata);
 
-	::CloseHandle((HANDLE) thread->Handle);
+	// _endthread automatically closes the thread handle.
+	// ::CloseHandle((HANDLE) thread->Handle);
 	
 	thread->Handle = nullptr;
 	thread->IsRunning = false;
@@ -78,13 +81,15 @@ unsigned int WINAPI _ThreadMain(void* ptr)
 
 bool ThreadStart(Thread* thread, ThreadFunction function, void* data)
 {
-	if (!thread || thread->IsRunning) return false;
+	if (!thread || !function || thread->IsRunning)
+		return false;
 
 	thread->Function = function;
 	thread->Userdata = data;
-	
-	// Create the thread suspended, to ensure all our variables are set up and good to go.
-	thread->Handle = (void*) ::_beginthreadex(nullptr, 0, _ThreadMain, thread, CREATE_SUSPENDED, nullptr);
+
+	// Create the thread suspended.
+	uintptr_t hnd = ::_beginthreadex(nullptr, 0, _ThreadMain, thread, CREATE_SUSPENDED, nullptr);
+	thread->Handle = (void*) hnd;
 
 	// State is set up, resume the thread.
 	if( thread->Handle > 0 )
@@ -101,26 +106,25 @@ bool ThreadStart(Thread* thread, ThreadFunction function, void* data)
 
 static void SetThreadName( DWORD dwThreadID, LPCSTR szThreadName )
 {
-   struct THREADNAME_INFO
-   {
-      DWORD dwType;		// must be 0x1000
-      LPCSTR szName;	// pointer to name (in user addr space)
-      DWORD dwThreadID;	// thread ID (-1 = caller thread)
-      DWORD dwFlags;	// reserved for future use, must be zero
-   };
+	struct THREADNAME_INFO
+	{
+		DWORD dwType;
+		LPCSTR szName;
+		DWORD dwThreadID;
+		DWORD dwFlags;
+	};
 
-   THREADNAME_INFO info;
-   info.dwType = 0x1000;
-   info.szName = szThreadName;
-   info.dwThreadID = dwThreadID;
-   info.dwFlags = 0;
+	THREADNAME_INFO info;
+	info.dwType = 0x1000;
+	info.szName = szThreadName;
+	info.dwThreadID = dwThreadID;
+	info.dwFlags = 0;
 
-   __try 
-   {
-      RaiseException( 0x406D1388, 0,
-		  sizeof(info)/sizeof(DWORD), (DWORD*)&info );
-   }
-   __except(EXCEPTION_CONTINUE_EXECUTION) { }
+	__try 
+	{
+		RaiseException( 0x406D1388, 0, sizeof(info)/sizeof(DWORD), (DWORD*)&info );
+	}
+	__except(EXCEPTION_CONTINUE_EXECUTION) { }
 }
 
 //-----------------------------------//

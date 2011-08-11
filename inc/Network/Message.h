@@ -75,6 +75,9 @@ public:
 	// Network packet;
 	ENetPacket* packet;
 
+	// Keeps if packet needs to be freed.
+	bool freePacket;
+
 	// Writes a POD type to the message.
 	template<typename T> void writeRaw(const T& pod)
 	{

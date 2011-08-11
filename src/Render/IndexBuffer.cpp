@@ -36,7 +36,7 @@ bool IndexBuffer::bind()
 {
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, id );
 
-	if( glHasError( "Error binding index buffer" ) )
+	if( CheckLastErrorGL( "Error binding index buffer" ) )
 		return false;
 
 	return true;
@@ -48,7 +48,7 @@ bool IndexBuffer::unbind()
 {
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
 
-	if( glHasError( "Error unbinding index buffer" ) )
+	if( CheckLastErrorGL( "Error unbinding index buffer" ) )
 		return false;
 
 	return true;
@@ -65,7 +65,7 @@ bool IndexBuffer::build()
 	// Reserve space for all the buffer elements.
 	glBufferData( GL_ELEMENT_ARRAY_BUFFER, data.size(), &data[0], getGLBufferType() );
 
-	if( glHasError("Could not buffer data in index buffer") )
+	if( CheckLastErrorGL("Could not buffer data in index buffer") )
 		return false;
 
 	isBuilt = true;

@@ -9,7 +9,6 @@
 #include "Server/API.h"
 #include "Server/Server.h"
 #include "Server/Settings.h"
-#include "Server/ServerPlugin.h"
 
 #include "Core/Event.h"
 #include "Core/Concurrency.h"
@@ -19,6 +18,9 @@
 #include "Network/Host.h"
 #include "Network/Peer.h"
 #include "Network/Dispatcher.h"
+#include "Network/SessionManager.h"
+
+#include "Protocol/UserMessages.h"
 
 #include <iostream>
 
@@ -86,7 +88,9 @@ bool Server::init()
 	dispatcher->initServer(host);
 	dispatcher->initPlugins(ReflectionGetType(MessagePlugin));
 
+#ifdef NETWORK_THREAD
 	networkThread = ThreadCreate(AllocatorGetServer());
+#endif
 
 	return true;
 }
@@ -97,12 +101,14 @@ void Server::shutdown()
 {
 	Deallocate(dispatcher);
 	Deallocate(host);
+#ifdef NETWORK_THREAD
 	ThreadDestroy(networkThread);
+#endif
 	NetworkDeinitialize();
 }
 
 //-----------------------------------//
-
+#ifdef NETWORK_THREAD
 static void ProcessMessagesThread(Thread* thread, void* data)
 {
 	Host* host = (Host*) data;
@@ -114,11 +120,12 @@ static void ProcessMessagesThread(Thread* thread, void* data)
 		host->processEvents(100);
 	}
 }
-
+#endif
 //-----------------------------------//
 
 void Server::run()
 {
+#ifdef NETWORK_THREAD
 	ThreadStart(networkThread, ProcessMessagesThread, host);
 	ThreadSetName(networkThread, "Networking");
 
@@ -127,10 +134,13 @@ void Server::run()
 		LogError("Error creating networking thread");
 		return;
 	}
+#endif
 
 	while(true)
 	{
 		SystemSleep(0);
+
+		host->processEvents(10);
 		
 		while( dispatcher->processMessage() )
 			continue;
@@ -147,20 +157,39 @@ void Server::run()
 
 //-----------------------------------//
 
-void Server::handleClientConnect(const PeerPtr& networkPeer)
+void Server::handleClientConnect(const PeerPtr& peer)
 {
-	String hostname = networkPeer->getHostName().c_str();
-	String ip = networkPeer->getHostIP().c_str();
+	String hostname = peer->getHostName().c_str();
+	String ip = peer->getHostIP().c_str();
 
 	LogInfo("Client connected: %s (IP: %s)", hostname.c_str(), ip.c_str());
 }
 
 //-----------------------------------//
 
-void Server::handleClientDisconnect(const PeerPtr& networkPeer)
+void Server::handleClientDisconnect(const PeerPtr& peer)
 {
-	String hostname = networkPeer->getHostName().c_str();
+	String hostname = peer->getHostName().c_str();
 	LogInfo("Client disconnected: %s", hostname.c_str());
+
+	const SessionPtr& session = dispatcher->getSessionManager()->getSession(peer);
+
+	UserMessagePlugin* up = GetPlugin<UserMessagePlugin>();
+	User* user = up->users.getUserFromSession(session);
+	
+	if( !user )
+	{
+		LogDebug("Unauthenticated user disconnecting");
+		return;
+	}
+
+	UserLeaveMessage leave;
+	leave.user = user->id;
+
+	MessagePtr msg = MessageCreate(UserMessageIds::UserLeave);
+	msg->write(&leave);
+	
+	//host->broadcastMessage(msg);
 }
 
 //-----------------------------------//

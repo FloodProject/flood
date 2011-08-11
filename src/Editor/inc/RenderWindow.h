@@ -85,7 +85,7 @@ private:
 	wxGLCanvas* canvas;
 
 	// OpenGL context.
-	wxGLContext* context;
+	wxGLContext* contextGL;
 
 	// wxWidgets Input Manager.
 	EditorInputManager* inputManager;

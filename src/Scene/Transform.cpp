@@ -37,7 +37,8 @@ Transform::Transform()
 	, needsBoundsUpdate(true)
 	, externalTransform(false)
 	, scale(1.0f, 1.0f, 1.0f)
-{ }
+{
+}
 
 //-----------------------------------//
 #if 0

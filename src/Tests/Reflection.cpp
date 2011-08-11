@@ -13,6 +13,7 @@
 #include "Core/Reflection.h"
 #include "Core/Object.h"
 #include "Core/Serialization.h"
+#include "Core/ClassWatcher.h"
 #include "ReflectionTypes.h"
 
 REFLECT_ENUM(E)
@@ -87,9 +88,6 @@ void TestClassA(CuTest* tc)
 
 	A* instanceA = (A*) ClassCreateInstance( klassA, AllocatorGetHeap() );
 
-	//const Class& klassA2 = instanceA->getType();
-	//CuAssertPtrEquals(tc, &klassA, (Class*) &klassA2);
-
 	Field* field = ClassGetField(klassA, "foo");
 	CuAssertPtrNotNull(tc, field);
 	CuAssertTrue(tc, ReflectionIsPrimitive(field->type));
@@ -141,6 +139,32 @@ void TestObjects(CuTest* tc)
 
 //-----------------------------------//
 
+void TestClassWatcher(CuTest* tc)
+{
+	B instanceB;
+
+	ClassWatch* watch = ClassWatchCreate( AllocatorGetHeap() );
+	ClassWatchAddFields(watch, &instanceB);
+
+	FieldWatchVector watches;
+	ClassWatchUpdate(watch, watches);
+
+	CuAssertIntEquals(tc, 0, watches.size());
+
+	instanceB.change();
+
+	ClassWatchUpdate(watch, watches);
+	CuAssertIntEquals(tc, 4, watches.size());
+
+	watches.clear();
+	ClassWatchUpdate(watch, watches);
+	CuAssertIntEquals(tc, 0, watches.size());
+
+	Deallocate(watch);
+}
+
+//-----------------------------------//
+
 static uint8 ident = 0;
 #define indentSpaces() for(auto i = 0; i < ident; i++) { printf(" "); }
 
@@ -187,6 +211,7 @@ CuSuite* GetSuiteReflection()
     SUITE_ADD_TEST(suite, TestClassA);
 	SUITE_ADD_TEST(suite, TestClassB);
 	SUITE_ADD_TEST(suite, TestObjects);
+	SUITE_ADD_TEST(suite, TestClassWatcher);
 	//SUITE_ADD_TEST(suite, TestWalker);
     return suite;
 }

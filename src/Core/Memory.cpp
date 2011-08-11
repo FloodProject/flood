@@ -135,7 +135,7 @@ void AllocatorDumpInfo()
 	LogDebug("-----------------------------------------------------");
 
 	MemoryGroupMap::iterator it;
-	for(it = groups.begin(); it != groups.end(); it++)
+	for(it = groups.begin(); it != groups.end(); ++it)
 	{
 		const char* id = it->first;
 		AllocationGroup& group = it->second;

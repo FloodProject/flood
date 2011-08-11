@@ -18,8 +18,6 @@
 #include <enet/enet.h>
 #include <FastLZ/fastlz.h>
 
-#define ENET_FREED (1 << 30)
-
 NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
@@ -28,11 +26,11 @@ Message::Message(MessageId id)
 	: id(id)
 	, ms(nullptr)
 	, packet(nullptr)
+	, freePacket(false)
 	, flags(0)
 {
 	ms = StreamCreateFromMemory(AllocatorGetThis(), 512);
-
-	SetBitFlag(flags, MessageFlags::Binary, true);
+	SetBitFlag(flags, MessageFlags::Reliable, true);
 	//SetBitFlag(flags, MessageFlags::Compressed, true);
 }
 
@@ -42,8 +40,11 @@ Message::~Message()
 {
 	Deallocate(ms);
 
-	if(packet && !GetBitFlag(packet->flags, ENET_FREED))
+	if(freePacket)
+	{
 		enet_packet_destroy(packet);
+		packet = nullptr;
+	}
 }
 
 //-----------------------------------//
@@ -52,15 +53,14 @@ void Message::createPacket()
 {
 	void* data = nullptr;
 	size_t size = 0;
-	uint32 flags = 0;
+	uint32 pflags = 0;
 
 	if(GetBitFlag(flags, MessageFlags::Reliable))
 	{
-		flags |= ENET_PACKET_FLAG_RELIABLE;
-		flags |= ENET_FREED;
+		pflags |= ENET_PACKET_FLAG_RELIABLE;
 	}
 
-	packet = enet_packet_create(nullptr, 0, flags);
+	packet = enet_packet_create(nullptr, 0, pflags);
 }
 
 //-----------------------------------//
@@ -144,14 +144,16 @@ void Message::setPacket(ENetPacket* packet)
 		StreamResize(ms, inSize);
 		StreamWrite(ms, in, inSize);
 	}
+
+	freePacket = true;
 }
 
 //-----------------------------------//
 
 void Message::write(Object* object)
 {
-	SetBitFlag(flags, MessageFlags::Reliable, true);
-		
+	SetBitFlag(flags, MessageFlags::Binary, true);
+
 	Serializer* serializer = SerializerCreateBinary(AllocatorGetThis());
 	serializer->stream = ms;
 

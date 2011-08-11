@@ -42,13 +42,13 @@ GLSL_Program::~GLSL_Program()
 		if( attached[shader] )
 			glDetachShader( id, shader->id );
 
-		if( glHasError("Could not detach shader object") )
+		if( CheckLastErrorGL("Could not detach shader object") )
 			continue;
 	}
 
 	glDeleteProgram( id );
 
-	if( glHasError("Could not delete program object") )
+	if( CheckLastErrorGL("Could not delete program object") )
 		return;
 }
 
@@ -58,7 +58,7 @@ bool GLSL_Program::create()
 {
 	id = glCreateProgram();
 
-	if( glHasError( "Could not create a new program object" ) )
+	if( CheckLastErrorGL( "Could not create a new program object" ) )
 		return false;
 
 	return true;
@@ -74,7 +74,7 @@ void GLSL_Program::addShader( const GLSL_ShaderPtr& shader )
 	{
 		glAttachShader( id, shader->id );
 
-		if( glHasError("Could not attach shader") )
+		if( CheckLastErrorGL("Could not attach shader") )
 			return;
 
 		attached[shader] = true;
@@ -173,7 +173,7 @@ bool GLSL_Program::link()
 	glLinkProgram( id );
 
 	// Check that the linking was good
-	if( glHasError("Could not link program object") )
+	if( CheckLastErrorGL("Could not link program object") )
 	{
 		linked = false;
 		linkError = true;
@@ -227,7 +227,7 @@ void GLSL_Program::bind()
 {
 	glUseProgram( id );
 
-	if( glHasError("Could not bind program object") )
+	if( CheckLastErrorGL("Could not bind program object") )
 		return;
 }
 
@@ -237,7 +237,7 @@ void GLSL_Program::unbind()
 {
 	glUseProgram( 0 );
 
-	if( glHasError("Could not unbind program object") )
+	if( CheckLastErrorGL("Could not unbind program object") )
 		return;
 }
 
@@ -279,7 +279,7 @@ void GLSL_Program::setAttribute( const String& name, VertexAttribute::Enum attr 
 {
 	glBindAttribLocation( id, attr, name.c_str() );
 
-	if( glHasError("Could not bind attribute variable") )
+	if( CheckLastErrorGL("Could not bind attribute variable") )
 		return;
 }
 

@@ -26,15 +26,6 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-struct API_CORE SerializerBinary : public Serializer
-{
-	MemoryStream* ms;
-	uint8* buf;
-	uint16 arraySize;
-};
-
-//-----------------------------------//
-
 static void SerializeArray(ReflectionContext* ctx, ReflectionWalkType::Enum wt)
 {
 	SerializerBinary* bin = (SerializerBinary*) ctx->userData;
@@ -75,7 +66,7 @@ static void SerializeComposite(ReflectionContext* ctx, ReflectionWalkType::Enum 
 static void SerializeField(ReflectionContext* ctx, ReflectionWalkType::Enum wt)
 {
 	SerializerBinary* bin = (SerializerBinary*) ctx->userData;
-	Field* field = ctx->field;
+	const Field* field = ctx->field;
 
 	if(wt == ReflectionWalkType::Begin)
 	{
@@ -162,7 +153,7 @@ static void SerializePrimitive( ReflectionContext* context, ReflectionWalkType::
 	case Primitive::Float:
 	{
 		float& f = *vc.f;
-		EncodeFixed32(bin->ms, (uint32)f);
+		EncodeFloat(bin->ms, f);
 		break;
 	}
 	case Primitive::String:
@@ -174,27 +165,27 @@ static void SerializePrimitive( ReflectionContext* context, ReflectionWalkType::
 	case Primitive::Color:
 	{
 		Color& c = *vc.c;
-		EncodeFixed32(bin->ms, (uint32) c.r);
-		EncodeFixed32(bin->ms, (uint32) c.g);
-		EncodeFixed32(bin->ms, (uint32) c.b);
-		EncodeFixed32(bin->ms, (uint32) c.a);
+		EncodeFloat(bin->ms, c.r);
+		EncodeFloat(bin->ms, c.g);
+		EncodeFloat(bin->ms, c.b);
+		EncodeFloat(bin->ms, c.a);
 		break;
 	}
 	case Primitive::Vector3:
 	{
 		Vector3& v = *vc.v;
-		EncodeFixed32(bin->ms, (uint32) v.x);
-		EncodeFixed32(bin->ms, (uint32) v.y);
-		EncodeFixed32(bin->ms, (uint32) v.z);
+		EncodeFloat(bin->ms, v.x);
+		EncodeFloat(bin->ms, v.y);
+		EncodeFloat(bin->ms, v.z);
 		break;
 	}
 	case Primitive::Quaternion:
 	{
 		Quaternion& q = *vc.q;
-		EncodeFixed32(bin->ms, (uint32) q.x);
-		EncodeFixed32(bin->ms, (uint32) q.y);
-		EncodeFixed32(bin->ms, (uint32) q.z);
-		EncodeFixed32(bin->ms, (uint32) q.w);
+		EncodeFloat(bin->ms, q.x);
+		EncodeFloat(bin->ms, q.y);
+		EncodeFloat(bin->ms, q.z);
+		EncodeFloat(bin->ms, q.w);
 		break;
 	}
 	case Primitive::Bitfield:
@@ -299,7 +290,7 @@ static void DeserializePrimitive( ReflectionContext* context )
 	}
 	case Primitive::Float:
 	{
-		float val = (float) DecodeFixed32(ms);
+		float val = DecodeFloat(ms);
 		SetFieldValue(float, val);
 		break;
 	}
@@ -313,29 +304,29 @@ static void DeserializePrimitive( ReflectionContext* context )
 	case Primitive::Color:
 	{
 		ColorP val;
-		val.r = (float) DecodeFixed32(ms);
-		val.g = (float) DecodeFixed32(ms);
-		val.b = (float) DecodeFixed32(ms);
-		val.a = (float) DecodeFixed32(ms);
+		val.r = DecodeFloat(ms);
+		val.g = DecodeFloat(ms);
+		val.b = DecodeFloat(ms);
+		val.a = DecodeFloat(ms);
 		SetFieldValue(ColorP, val);
 		break;
 	}
 	case Primitive::Vector3:
 	{
 		Vector3P val;
-		val.x = (float) DecodeFixed32(ms);
-		val.y = (float) DecodeFixed32(ms);
-		val.z = (float) DecodeFixed32(ms);
+		val.x = DecodeFloat(ms);
+		val.y = DecodeFloat(ms);
+		val.z = DecodeFloat(ms);
 		SetFieldValue(Vector3P, val);
 		break;
 	}
 	case Primitive::Quaternion:
 	{
 		QuaternionP val;
-		val.x = (float) DecodeFixed32(ms);
-		val.y = (float) DecodeFixed32(ms);
-		val.z = (float) DecodeFixed32(ms);
-		val.w = (float) DecodeFixed32(ms);
+		val.x = DecodeFloat(ms);
+		val.y = DecodeFloat(ms);
+		val.z = DecodeFloat(ms);
+		val.w = DecodeFloat(ms);
 		SetFieldValue(QuaternionP, val);
 		break;
 	}
@@ -427,7 +418,7 @@ static void DeserializeArray( ReflectionContext* context )
 
 static void DeserializeField( ReflectionContext* context )
 {
-	Field* field = context->field;
+	const Field* field = context->field;
 
 	if( FieldIsArray(field) )
 	{
@@ -473,7 +464,7 @@ static void DeserializeField( ReflectionContext* context )
 
 //-----------------------------------//
 
-static void DeserializeFields( ReflectionContext* context )
+void DeserializeFields( ReflectionContext* context )
 {
 	SerializerBinary* bin = (SerializerBinary*) context->userData;
 
@@ -486,7 +477,7 @@ static void DeserializeFields( ReflectionContext* context )
 		if(id == FieldInvalid) break;
 
 		Class* composite = context->composite;
-		Field* field = context->field;
+		const Field* field = context->field;
 
 		Field* newField = ClassGetFieldById(composite, id);
 		
@@ -585,7 +576,7 @@ static bool SerializeSave( Serializer* serializer, Object* object )
 	SerializerBinary* bin = (SerializerBinary*) serializer;
 	if( !bin->stream ) return false;
 
-	Stream* buf = StreamCreateFromMemory(bin->alloc, 128);
+	Stream* buf = StreamCreateFromMemory(bin->alloc, 1024);
 	bin->ms = (MemoryStream*) buf;
 	
 	ReflectionWalk(object, &bin->serializeContext);
@@ -618,6 +609,161 @@ Serializer* SerializerCreateBinary(Allocator* alloc)
 	dCtx.userData = serializer;
 
 	return serializer;
+}
+
+//-----------------------------------//
+
+#ifdef BUILD_DEBUG
+
+void StreamAdvanceIndex(MemoryStream* ms, uint64 n)
+{
+	ms->position += n;
+
+	// Do some debug bounds checking.
+	if(ms->position > ms->data.size())
+	{
+		LogAssert("Check the bounds of the buffer");
+	}
+}
+
+#endif
+
+//-----------------------------------//
+
+void EncodeVariableIntegerBuffer(uint8* buf, uint64& advance, uint64 val)
+{
+	do
+	{
+		uint8 byte = val & 0x7f;
+		val >>= 7;
+		if(val) byte |= 0x80;
+		*buf++ = byte;
+		advance++;
+	}
+	while(val);
+}
+
+void EncodeVariableInteger(MemoryStream* ms, uint64 val)
+{
+	uint8* buf = StreamIndex(ms);
+	EncodeVariableIntegerBuffer(buf, ms->position, val);
+}
+
+bool DecodeVariableIntegerBuffer(uint8* buf, uint64& advance, uint64& val)
+{
+	uint8* p = buf;
+
+	uint32 low, high = 0;
+	uint32 b;
+	b = *(p++); low   = (b & 0x7f)      ; if(!(b & 0x80)) goto done;
+	b = *(p++); low  |= (b & 0x7f) <<  7; if(!(b & 0x80)) goto done;
+	b = *(p++); low  |= (b & 0x7f) << 14; if(!(b & 0x80)) goto done;
+	b = *(p++); low  |= (b & 0x7f) << 21; if(!(b & 0x80)) goto done;
+	b = *(p++); low  |= (b & 0x7f) << 28;
+				high  = (b & 0x7f) >>  4; if(!(b & 0x80)) goto done;
+	b = *(p++); high |= (b & 0x7f) <<  3; if(!(b & 0x80)) goto done;
+	b = *(p++); high |= (b & 0x7f) << 10; if(!(b & 0x80)) goto done;
+	b = *(p++); high |= (b & 0x7f) << 17; if(!(b & 0x80)) goto done;
+	b = *(p++); high |= (b & 0x7f) << 24; if(!(b & 0x80)) goto done;
+	b = *(p++); high |= (b & 0x7f) << 31; if(!(b & 0x80)) goto done;
+	return false;
+
+done:
+
+	advance += p-buf;
+	val = ((uint64) high << 32) | low;
+	return true;
+}
+
+bool DecodeVariableInteger(MemoryStream* ms, uint64& val)
+{
+	uint8* buf = StreamIndex(ms);
+	return DecodeVariableIntegerBuffer(buf, ms->position, val);
+}
+
+//-----------------------------------//
+
+/**
+ * For signed numbers, we use an encoding called zig-zag encoding
+ * that maps signed numbers to unsigned numbers so they can be
+ * efficiently encoded using the normal variable-int encoder.
+ */
+
+uint32 EncodeZigZag32(sint32 n)
+{
+	return (n << 1) ^ (n >> 31);
+}
+
+sint32 DecodeZigZag32(uint32 n)
+{
+	return (n >> 1) ^ -(sint32)(n & 1);
+}
+
+uint64 EncodeZigZag64(sint64 n)
+{
+	return (n << 1) ^ (n >> 63);
+}
+
+sint64 DecodeZigZag64(uint64 n)
+{
+	return (n >> 1) ^ -(sint64)(n & 1);
+}
+
+//-----------------------------------//
+
+void EncodeFixed32(MemoryStream* ms, uint32 val)
+{
+	uint8* buf = StreamIndex(ms);
+	buf[0] = val & 0xff;
+	buf[1] = (val >> 8) & 0xff;
+	buf[2] = (val >> 16) & 0xff;
+	buf[3] = (val >> 24);
+	StreamAdvanceIndex(ms, sizeof(uint32));
+}
+
+uint32 DecodeFixed32(MemoryStream* ms)
+{
+	uint8* buf = StreamIndex(ms);
+	uint32* val = (uint32*) buf;
+	StreamAdvanceIndex(ms, sizeof(uint32));
+	return *val;
+}
+
+//-----------------------------------//
+
+void EncodeFloat(MemoryStream* ms, float val)
+{
+	uint32* p = (uint32*) &val;
+	EncodeFixed32(ms, *p);
+}
+
+float DecodeFloat(MemoryStream* ms)
+{
+	uint32 val = DecodeFixed32(ms);
+	float* p = (float*) &val;
+	return *p;
+}
+
+//-----------------------------------//
+
+void EncodeString(MemoryStream* ms, const String& s)
+{
+	EncodeVariableInteger(ms, s.size());
+	StreamWriteString(ms, s);
+}
+
+bool DecodeString(MemoryStream* ms, String& s)
+{
+	uint64 size;
+	
+	if( !DecodeVariableInteger(ms, size) )
+		return false;
+
+	s.resize((size_t)size);
+	memcpy((void*) s.data(), StreamIndex(ms), (size_t)size);
+
+	StreamAdvanceIndex(ms, size);
+	return true;
 }
 
 //-----------------------------------//

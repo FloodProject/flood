@@ -100,7 +100,9 @@ void Dispatcher::handlePluginEnable(Plugin* plugin)
 	{
 		MessageMapping mapping = messagesTable[i];
 
-		if(mapping.direction != direction)
+		bool isBoth = mapping.direction == MessageDirection::Both;
+		
+		if(!(isBoth || mapping.direction == direction))
 			continue;
 
 		mapping.plugin = messagePlugin;
@@ -181,23 +183,24 @@ bool Dispatcher::processMessage()
 		return false;
 	}
 
+	StreamSetPosition(message->ms, 0, StreamSeekMode::Absolute);
+
 	// Deserialize message if it's needed.
 	if( GetBitFlag(message->flags, MessageFlags::Binary) )
 	{
-		StreamSetPosition(message->ms, 0, StreamSeekMode::Absolute);
-		serializer->stream = message->ms;
-		
-		Object* object = SerializerLoad(serializer);
-		if( !object ) return false;
-
 		if( !mapping->ref )
 		{
 			LogAssert("Handler was not found for reflected message");
 			return false;
 		}
 
-		mapping->ref(mapping->plugin, session, object);
+		serializer->stream = message->ms;
+		
+		Object* object = SerializerLoad(serializer);
+		if( !object ) return false;
 
+		mapping->ref(mapping->plugin, session, object);
+		
 		Deallocate(object);
 	}
 	else

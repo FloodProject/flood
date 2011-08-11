@@ -55,7 +55,7 @@ void ServerPane::onConnectButtonClick(wxCommandEvent& event)
 		details.address = m_textHost->GetValue();
 		details.port = port;
 
-		serverPlugin->initClient(details);
+		serverPlugin->connect(details);
 	}
 	else
 	{

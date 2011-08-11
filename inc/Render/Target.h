@@ -49,6 +49,8 @@ class RenderContext;
  * Each render target mantains a list of viewports.
  */
 
+typedef std::vector<RenderView*> RenderViewsVector;
+
 class API_RENDER RenderTarget
 {
 	DECLARE_UNCOPYABLE(RenderTarget)
@@ -61,6 +63,9 @@ public:
 	// Creates a new view and adds it to this target.
 	RenderView* createView();
 
+	// Removes all the views from the target.
+	void removeViews();
+
 	// Sets this rendering target as the current.
 	virtual void makeCurrent() = 0;
 
@@ -71,18 +76,21 @@ public:
 	virtual const Settings& getSettings() const = 0;
 
 	// Gets the context associated with the target.
-	GETTER(Context, RenderContextPtr, context)
+	GETTER(Context, RenderContext*, context)
+
+	// Sets the context associated with the target.
+	void setContext(RenderContext* context);
 
 	// Gets the list of views associated with the target.
-	GETTER(Views, const std::vector<RenderView*>&, views)
+	GETTER(Views, const RenderViewsVector&, views)
 
 	// Event fired when the target gets resized.
 	Event1<const Settings&> onTargetResize;
 
 protected:
 
-	RenderContextPtr context;
-	std::vector<RenderView*> views;
+	RenderContext* context;
+	RenderViewsVector views;
 };
 
 //-----------------------------------//

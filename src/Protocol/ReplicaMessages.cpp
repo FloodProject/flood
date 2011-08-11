@@ -9,6 +9,7 @@
 #include "Protocol/API.h"
 #include "Protocol/ReplicaMessages.h"
 #include "Network/MessageHandlers.h"
+#include "Core/SerializationHelpers.h"
 #include "Core/Object.h"
 
 NAMESPACE_PROTOCOL_BEGIN
@@ -38,11 +39,15 @@ REFLECT_CLASS_END()
 REFLECT_CHILD_CLASS(ReplicaAskUpdateMessage, MessageDefinition)
 REFLECT_CLASS_END()
 
+REFLECT_CHILD_CLASS(ReplicaFieldUpdateMessage, MessageDefinition)
+REFLECT_CLASS_END()
+
 REFLECT_ENUM(ReplicaMessageIds)
 	ENUM(ReplicaCreate)
 	ENUM(ReplicaNewInstance)
 	ENUM(ReplicaFullUpdate)
 	ENUM(ReplicaAskUpdate)
+	ENUM(ReplicaFieldUpdate)
 REFLECT_ENUM_END()
 
 IMPLEMENT_HANDLER_REF(Replica, ReplicaCreate)
@@ -55,6 +60,7 @@ PROTOCOL_MESSAGE_HANDLERS(Replica)
 	HANDLER_REF(Replica, ReplicaNewInstance, ServerToClient)
 	HANDLER_REF(Replica, ReplicaAskUpdate, ClientToServer)
 	HANDLER_REF(Replica, ReplicaFullUpdate, ServerToClient)
+	HANDLER_RAW(Replica, ReplicaFieldUpdate, Both)
 PROTOCOL_MESSAGE_HANDLERS_END()
 
 //-----------------------------------//
@@ -69,6 +75,104 @@ PROTOCOL_PLUGIN_BEGIN(ReplicaMessagePlugin)
 	METADATA_VERSION(1.0)
 	METADATA_PRIORITY(20)
 PROTOCOL_PLUGIN_END()
+
+//-----------------------------------//
+
+void ReplicaManager::addReplica(const ReplicatedObject& obj)
+{
+	instances[obj.instance] = obj.instanceId;
+	instancesIds[obj.instanceId] = obj;
+}
+
+//-----------------------------------//
+
+void ReplicaManager::removeReplica(const ReplicatedObject& obj)
+{
+	ReplicasMap::iterator it = instances.find(obj.instance);
+	if( it != instances.end() ) instances.erase(it);
+
+	ReplicasIdMap::iterator itIds = instancesIds.find(obj.instanceId);
+	if( itIds != instancesIds.end() ) instancesIds.erase(itIds);
+}
+
+//-----------------------------------//
+
+ReplicatedObject* ReplicaManager::findInstanceById(InstanceId id)
+{
+	ReplicasIdMap::iterator it = instancesIds.find(id);
+	
+	if( it == instancesIds.end() )
+		return nullptr;
+
+	return &it->second;
+}
+
+//-----------------------------------//
+
+bool ReplicaManager::findInstance(const Object* object, InstanceId& id)
+{
+	ReplicasMap::iterator it = instances.find(object);
+	
+	if( it == instances.end() )
+		return false;
+
+	id = it->second;
+	return true;
+}
+
+//-----------------------------------//
+
+static void WalkComposite(ReflectionContext* ctx, ReflectionWalkType::Enum wt)
+{
+	ReplicaMessagePlugin* mp = (ReplicaMessagePlugin*) ctx->userData;
+
+	if(wt == ReflectionWalkType::Begin)
+	{
+		ReplicatedObject rep;
+		rep.instance = ctx->object;
+		rep.instanceId = mp->nextInstance++;
+
+		mp->replicas.addReplica(rep);
+	}
+}
+
+void ReplicaMessagePlugin::registerObjects(const Object* object)
+{
+	ReflectionContext context;
+	context.userData = this;
+	context.walkComposite = WalkComposite;
+
+	ReflectionWalk((Object*) object, &context);
+}
+
+//-----------------------------------//
+
+void ReplicaMessagePlugin::processFieldUpdate(const MessagePtr& msg)
+{
+	Allocator* alloc = AllocatorGetThis();
+	SerializerBinary* bin = (SerializerBinary*) SerializerCreateBinary(alloc);
+	bin->ms = msg->ms;
+
+	ReflectionContext& dcontext = bin->deserializeContext;
+
+	InstanceId instanceId;
+	DecodeVariableInteger(msg->ms, instanceId);
+	
+	{
+		ReplicatedObject* obj = replicas.findInstanceById(instanceId);
+
+		if( !obj )
+		{
+			LogDebug("Instance id did not find replica object");
+			return;
+		}
+
+		dcontext.object = obj->instance;
+		dcontext.composite = ClassGetType(obj->instance);
+
+		DeserializeFields(&dcontext);
+	}
+}
 
 //-----------------------------------//
 

@@ -80,7 +80,7 @@ void Renderable::render( RenderDevice* device )
     {
         glDrawArrays( type, 0, vb->getNumVertices() );
 
- 		if( glHasError("Error drawing vertex buffer") )
+ 		if( CheckLastErrorGL("Error drawing vertex buffer") )
 			return;
     }
     else
@@ -88,7 +88,7 @@ void Renderable::render( RenderDevice* device )
         GLenum size = (ib->indexSize == 16) ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
         glDrawElements( type, ib->getSize(), size, 0 );
 
-		if( glHasError("Error drawing index buffer") )
+		if( CheckLastErrorGL("Error drawing index buffer") )
 			return;
     }
    

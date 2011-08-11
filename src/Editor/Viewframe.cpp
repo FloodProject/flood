@@ -15,8 +15,7 @@ NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
-Viewframe::Viewframe( wxWindow* parent, wxWindowID id,
-					 const wxPoint& pos, const wxSize& size, long style ) 
+Viewframe::Viewframe( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) 
 	: wxPanel(parent, id, pos, size, style | wxBORDER_NONE | wxFULL_REPAINT_ON_RESIZE)
 {
 	mainSizer = new wxBoxSizer( wxVERTICAL );
@@ -28,6 +27,7 @@ Viewframe::Viewframe( wxWindow* parent, wxWindowID id,
 Viewframe::~Viewframe()
 {
 	LogDebug("Destroying Viewframe");
+	//destroyControl();
 }
 
 //-----------------------------------//
@@ -35,6 +35,8 @@ Viewframe::~Viewframe()
 void Viewframe::destroyControl()
 {
 	control->stopFrameLoop();
+	control->onRender.clear();
+	control->onUpdate.clear();
 	control->Destroy();
 }
 

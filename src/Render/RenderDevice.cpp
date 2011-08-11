@@ -175,7 +175,7 @@ void RenderDevice::setupRenderFixed(const RenderState& state, const LightQueue& 
 
 	undoRenderStateMaterial(material);
 
-	vb->unbindPointers();	
+	vb->unbindPointers();
 	renderable->unbind();
 }
 
@@ -556,7 +556,7 @@ void RenderDevice::clearView()
 	#pragma TODO("Use a scissor test to clear only the view")
 
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-	glHasError("Could not clear the render target");
+	CheckLastErrorGL("Could not clear the render target");
 }
 
 //-----------------------------------//
@@ -569,7 +569,7 @@ void RenderDevice::setRenderTarget(RenderTarget* target)
 	activeTarget = target;
 	activeTarget->makeCurrent();
 
-	activeContext = activeTarget->getContext().get();
+	activeContext = activeTarget->getContext();
 }
 
 //-----------------------------------//

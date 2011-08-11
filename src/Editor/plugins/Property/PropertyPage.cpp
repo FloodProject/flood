@@ -25,7 +25,7 @@ NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
 
-static wxString convertToReadable(wxString str)
+static wxString GetReadableName(wxString str)
 {
 	if( str.IsEmpty() ) return wxEmptyString;
 
@@ -77,7 +77,7 @@ static wxPGChoices getTagChoices()
 		const TagName& tag = TagNames[i];
 			
 		wxString name( String(tag.name) );
-		choices.Add( convertToReadable(name), tag.id );
+		choices.Add( GetReadableName(name), tag.id );
 	}
 
 	return choices;
@@ -187,7 +187,7 @@ PropertyPage::PropertyPage( wxWindow* parent )
 void PropertyPage::reset()
 {
 	currentObject = nullptr;
-	memoryWatches.clear();
+	ClassWatchReset(&watch);
 	Clear();
 }
 
@@ -203,10 +203,23 @@ void PropertyPage::resetObject(const Object* object)
 
 void PropertyPage::onIdle(wxIdleEvent& event)
 {
-	if( !updateMemoryWatches() )
-		return;
+	FieldWatchVector watches;
+	ClassWatchUpdate(&watch, watches);
+	
+	if( watches.empty() ) return;
 
-	LogDebug("Memory watches detected changes");
+	for(size_t i = 0; i < watches.size(); i++)
+	{
+		FieldWatch* fw = watches[i];
+		
+		// Update value in the prop grid.
+		wxAny value = getFieldValue(fw->field, (void*) fw->object);
+
+		wxPGProperty* prop = (wxPGProperty*) fw->userdata;
+		setPropertyValue(prop, value);
+	}
+
+	onClassFieldChanged(watches);
 }
 
 //-----------------------------------//
@@ -246,11 +259,11 @@ void PropertyPage::onPropertyChanged(wxPropertyGridEvent& event)
 void PropertyPage::showProperties( Object* object, bool resetObject )
 {
 	if( resetObject ) reset();
+	
 	currentObject = object;
-
+	
 	Class* klass = ClassGetType(object);
-
-	appendObjectFields(*klass, object);
+	appendObjectFields(klass, object);
 }
 
 //-----------------------------------//
@@ -260,13 +273,13 @@ void PropertyPage::showEntityProperties( const EntityPtr& entity )
 	currentObject = entity.get();
 
     // Entity properties.
-	appendObjectFields( *entity->getType(), entity.get() );
+	appendObjectFields( entity->getType(), entity.get() );
 
 	// Transform properties.
 	TransformPtr transform = entity->getTransform();
 
 	if( transform )
-		appendObjectFields( *ReflectionGetType(Transform), transform.get() );
+		appendObjectFields( ReflectionGetType(Transform), transform.get() );
     
     // Other components properties.
 	const ComponentMap& components = entity->getComponents();
@@ -280,54 +293,55 @@ void PropertyPage::showEntityProperties( const EntityPtr& entity )
 		if( ReflectionIsEqual(type, ReflectionGetType(Transform)) )
 			continue;
 
-		appendObjectFields( *type, component.get() );
+		appendObjectFields( type, component.get() );
 	}
 }
 
 //-----------------------------------//
 
-void PropertyPage::appendObjectFields(Class& type, void* object, bool newCategory)
+void PropertyPage::appendObjectFields(Class* klass, void* object, bool newCategory)
 {
 	if( newCategory )
 	{
-		const wxString& typeName = convertToReadable(type.name);
+		const wxString& typeName = GetReadableName(klass->name);
 		wxPropertyCategory* category = new wxPropertyCategory(typeName);
 		Append(category);
 	}
 
-	if( type.parent )
+	if( klass->parent )
 	{
-		Class& parent = (Class&) *type.parent;
+		Class* parent = klass->parent;
 		appendObjectFields(parent, object, false);
 	}
 	
-	const std::vector<Field*>& fields = type.fields;
+	const std::vector<Field*>& fields = klass->fields;
 	
 	for( size_t i = 0; i < fields.size(); i++ )
 	{
-		const Field& field = *fields[i];
+		const Field* field = fields[i];
 
-		if( ReflectionIsComposite(field.type) && !ReflectionIsResourceHandle(&field) )
+		if( ReflectionIsComposite(field->type) && !ReflectionIsResourceHandle(field) )
 		{
-			void* addr = (byte*) object + field.offset;
-			appendObjectFields((Class&) *field.type, addr, false);
+			void* addr = ClassGetFieldAddress(object, field);
+			appendObjectFields((Class*) field->type, addr, false);
 			continue;
 		}
 
-		wxPGProperty* prop = createProperty(type, field, object);
+		wxPGProperty* prop = createProperty(*klass, *field, object);
 		if(!prop) continue;
 
 		Append(prop);
 		Collapse(prop);
 
-		wxAny value = getFieldValue(&field, object);
+		wxAny value = getFieldValue(field, object);
 		setPropertyValue(prop, value);
 
-		updateMemoryWatch(&field, object);
+		FieldWatch fw;
+		fw.object = (Object*) object;
+		fw.field = field;
+		fw.userdata = prop;
 
-		MemoryWatch& watch = memoryWatches[&field];
-		watch.property = prop;
-		watch.object = object;
+		ClassWatchAddField(&watch, fw);
 	}
 }
 
@@ -353,7 +367,7 @@ wxPGProperty* PropertyPage::createProperty(Class& type, const Field& field, void
 
 	prop->SetClientObject(data);
 
-	wxString name = convertToReadable( field.name );
+	wxString name = GetReadableName( field.name );
 	prop->SetLabel( name );
 
 	if( FieldHasQualifier(&field, FieldQualifier::ReadOnly) ) prop->Enable(false);
@@ -381,7 +395,7 @@ wxPGProperty* PropertyPage::createEnumProperty(const Field& field, void* object)
 	EnumValuesMap::const_iterator it;
 	for( it = values.begin(); it != values.end(); it++ )
 	{
-		wxString name = convertToReadable(it->first);
+		wxString name = GetReadableName(it->first);
 		choices.Add(name, it->second);
 	}
 
@@ -565,13 +579,11 @@ wxAny PropertyPage::getFieldPrimitiveValue(const Field* field, void* object)
 
 void PropertyPage::setFieldValue(const Field* field, void* object, const wxAny& value)
 {
-	if(memoryWatches.find(field) == memoryWatches.end())
-		return;
+	FieldWatch& fw = watch.fields[field];
+	wxPGProperty* prop = (wxPGProperty*) fw.userdata;
 
-	MemoryWatch& watch = memoryWatches[field];
-
-	setPropertyValue(watch.property, value);
-	updateMemoryWatch(field, object);
+	setPropertyValue(prop, value);
+	//ClassWatchUpdateField(&watch, field);
 }
 
 //-----------------------------------//

@@ -382,7 +382,7 @@ static void DeserializeArray( ReflectionContext* context, json_t* value )
 
 static void DeserializeField( ReflectionContext* context, json_t* value )
 {
-	Field* field = context->field;
+	const Field* field = context->field;
 
 	if( FieldIsArray(field) && json_is_array(value) )
 	{
@@ -460,7 +460,7 @@ static void DeserializeFields( ReflectionContext* context, json_t* value )
 		json_t* val = json_object_iter_value(iter);
 
 		Class* composite = context->composite;
-		Field* field = context->field;
+		const Field* field = context->field;
 
 		Field* newField = ClassGetField(composite, key);
 		
@@ -601,9 +601,9 @@ Serializer* SerializerCreateJSON(Allocator* alloc)
 	//json_set_alloc_funcs(JsonAllocate, JsonDeallocate);
 
 	SerializerJSON* serializer = Allocate(SerializerJSON, alloc);
-	serializer->alloc = alloc;
 	serializer->load = SerializeLoad;
 	serializer->save = SerializeSave;
+	serializer->alloc = alloc;
 
 	ReflectionContext& sCtx = serializer->serializeContext;
 	sCtx.userData = serializer;

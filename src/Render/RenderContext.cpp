@@ -185,7 +185,7 @@ Color RenderContext::getPixel(uint16 x, uint16 y) const
 	
 	glReadPixels(x, y, 1, 1, GL_RGBA, GL_FLOAT, &pick);
 
-	if( glHasError("Error reading pixels from framebuffer") )
+	if( CheckLastErrorGL("Error reading pixels from framebuffer") )
 		return Color::White;
 	
 	return pick;

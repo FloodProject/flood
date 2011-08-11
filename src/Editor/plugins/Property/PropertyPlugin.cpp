@@ -41,6 +41,7 @@ PluginMetadata PropertyPlugin::getMetadata()
 	metadata.description = "Provides a page with object properties.";
 	metadata.author = "triton";
 	metadata.version = "1.0";
+	metadata.priority = 300;
 
 	return metadata;
 }
@@ -72,7 +73,7 @@ void PropertyPlugin::onPluginDisable()
 	editor->getAUI()->DetachPane(propertyPage);
 	editor->getAUI()->Update();
 
-	delete propertyPage;
+	propertyPage->Destroy();
 	propertyPage = nullptr;
 
 	// Unsubscribe as an event listener.

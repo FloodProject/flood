@@ -51,6 +51,7 @@ PluginMetadata ServerPlugin::getMetadata()
 	metadata.description = "Handles connecting to remote hosts.";
 	metadata.author = "triton";
 	metadata.version = "1.0";
+	metadata.priority = 900;
 
 	return metadata;
 }
@@ -94,14 +95,23 @@ void ServerPlugin::onPluginUpdate()
 {
 	if(isDisconnecting)
 	{
-		deinitClient();
+		//deinitClient();
 		isDisconnecting = false;
 	}
-	else
+
+	if( !host ) return;
+	
+	HostState::Enum state = host->getState();
+
+	switch(state)
 	{
-		while( dispatcher && dispatcher->processMessage() )
-			continue;
+	case HostState::Connected:
+		auth();
+		break;
 	}
+
+	host->processEvents(1);
+	dispatcher->processMessage();
 }
 
 //-----------------------------------//
@@ -118,6 +128,7 @@ bool ServerPlugin::initClient(const HostConnectionDetails& details)
 
 	connect(details);
 
+#ifdef NETWORK_THREAD
 	networkThread = ThreadCreate( AllocatorGetThis() );
 
 	if(!networkThread)
@@ -131,6 +142,7 @@ bool ServerPlugin::initClient(const HostConnectionDetails& details)
 
 	ThreadStart(networkThread, processFunction, this);
 	ThreadSetName(networkThread, "Networking");
+#endif
 
 	return true;
 }
@@ -139,10 +151,12 @@ bool ServerPlugin::initClient(const HostConnectionDetails& details)
 
 void ServerPlugin::deinitClient()
 {
+#ifdef NETWORK_THREAD
 	networkThread->IsRunning = false;
 	ThreadJoin(networkThread);
 	ThreadDestroy(networkThread);
 	networkThread = nullptr;
+#endif
 
 	Deallocate(host);
 	host = nullptr;
@@ -152,7 +166,7 @@ void ServerPlugin::deinitClient()
 }
 
 //-----------------------------------//
-
+#ifdef NETWORK_THREAD
 void ServerPlugin::processMessages(Thread* thread, void* userdata)
 {
 	while(thread->IsRunning)
@@ -178,7 +192,7 @@ void ServerPlugin::processMessages(Thread* thread, void* userdata)
 		host->processEvents(100);
 	}
 }
-
+#endif
 //-----------------------------------//
 
 void ServerPlugin::connect(const HostConnectionDetails& details)
@@ -211,6 +225,8 @@ void ServerPlugin::auth()
 
 void ServerPlugin::disconnect()
 {
+	if( !host ) return;
+
 	const PeerPtr& peer = host->getPeer();
 	if( !peer ) return;
 	

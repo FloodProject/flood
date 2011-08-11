@@ -285,7 +285,7 @@ const T& FieldGet( const Field* field, void* object )
 
 // Sets the value of the field in the object.
 template<typename T>
-void FieldSet( Field* field, void* object, const T& value )
+void FieldSet( const Field* field, void* object, const T& value )
 {
 	T* addr = (T*) ClassGetFieldAddress(object, field);
 	FieldSetterFunction setter = field->setter;
@@ -298,4 +298,4 @@ void FieldSet( Field* field, void* object, const T& value )
 
 NAMESPACE_CORE_END
 
-#include "Core/Helpers.h"
+#include "Core/ReflectionHelpers.h"

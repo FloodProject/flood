@@ -18,7 +18,6 @@
 #include "Input/InputManager.h"
 #include "Audio/Device.h"
 #include "Script/ScriptManager.h"
-#include "Scene/Scene.h"
 #include "Paging/PageManager.h"
 #include "Physics/Physics.h"
 #include "Network/Network.h"
@@ -49,12 +48,10 @@ Engine::Engine()
 
 Engine::~Engine()
 {
-	scene.reset();
-
 	for( size_t i = 0; i < subsystems.size(); i++ )
 	{
 		Subsystem* system = subsystems[i];
-		delete system;
+		Deallocate(system);
 	}
 	
 	Deallocate(inputManager);
@@ -111,9 +108,6 @@ void Engine::init( bool createWindow )
 	// Creates the rendering and audio devices.
 	setupDevices( createWindow );
 
-	// Creates the initial scene.
-	scene = Allocate(Scene, AllocatorGetThis());
-
 #ifdef ENABLE_SCRIPTING_LUA
 	// Creates the scripting manager.
 	scriptManager = Allocate(ScriptManager, AllocatorGetThis());
@@ -123,13 +117,6 @@ void Engine::init( bool createWindow )
 	// Creates the physics manager.
 	physicsManager = Allocate(PhysicsManager, AllocatorGetThis());
 #endif
-}
-
-//-----------------------------------//
-
-void Engine::setScene(const ScenePtr& scene)
-{
-	this->scene = scene;
 }
 
 //-----------------------------------//
@@ -173,7 +160,6 @@ void Engine::update( float delta )
 	}
 
 	resourceManager->update( delta );
-	scene->update( delta );
 
 #ifdef ENABLE_SCRIPTING_LUA
 	scriptManager->update( delta );

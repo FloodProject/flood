@@ -9,6 +9,7 @@
 #pragma once
 
 #include "Core/References.h"
+#include "Core/Reflection.h"
 
 NAMESPACE_CORE_BEGIN
 

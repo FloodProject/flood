@@ -18,7 +18,7 @@ NAMESPACE_ENGINE_BEGIN
 //-----------------------------------//
 
 // Handles OpenGL error states.
-bool glHasError( const std::string& msg );
+bool CheckLastErrorGL( const String& msg );
 
 // Gets a string given an OpenGL error code.
 // Adapted from the Mesa GLU implementation.

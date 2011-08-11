@@ -32,11 +32,8 @@ WindowSettings::WindowSettings( uint16 width, uint16 height, const String& title
 Window::Window(const WindowSettings& settings)
 	: settings(settings)
 {
-	LogInfo( "Creating window (size: %dx%d, title: '%s')",
+	LogInfo( "Creating render window (size: %dx%d, title: '%s')",
 		settings.width, settings.height, settings.title.c_str() );
-
-	context = Allocate(RenderContext, GetRenderAllocator());
-	context->mainTarget = this;
 }
 
 //-----------------------------------//

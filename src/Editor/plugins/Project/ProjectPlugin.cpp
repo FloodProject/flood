@@ -230,7 +230,6 @@ void ProjectPlugin::switchScene(SceneDocument* document)
 	document->unsavedChanges = false;
 
 	const ScenePtr& scene = document->scene;
-	GetEngine()->setScene(scene);
 
 #ifdef ENABLE_PHYSICS_BULLET
 	delete engine->getPhysicsManager();

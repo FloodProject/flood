@@ -137,11 +137,14 @@ static int64 MemoryWrite(Stream* stream, void* buffer, int64 size)
 
 	if( !ms->useRawBuffer )
 	{
-		int64 newSize = MemoryGetSize(stream) + size;
+		int64 newSize = ms->position + size;
 		bool needsResize = newSize > ms->data.size();
 	
 		if(needsResize)
+			MemoryResize(stream, newSize);
+#if 0
 			MemoryResize(stream, GetNextPower2((int32)newSize));
+#endif
 
 		if( ms->data.empty() ) return 0;
 	}

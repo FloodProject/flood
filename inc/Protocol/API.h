@@ -80,9 +80,9 @@ FWD_DECL_INTRUSIVE(Session)
 	msg##Message* message = (msg##Message*) object; \
 	smp->handle##msg(session, *message); }
 
-#define HANDLER_RAW(name, msg, dir, fn) \
+#define HANDLER_RAW(name, msg, dir) \
 	{ name##MessageIds::msg, MessageDirection::dir, 0, \
-	(MessageRawHandlerMemFn) &name##MessagePlugin::fn },
+	(MessageRawHandlerMemFn) &name##MessagePlugin::handle##msg },
 
 #define HANDLER_REF(name, msg, dir) \
 	{ name##MessageIds::msg, MessageDirection::dir, Handle##msg, 0 },

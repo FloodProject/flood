@@ -33,7 +33,7 @@ GLSL_Shader::~GLSL_Shader()
 {
 	glDeleteShader(id);
 
-	if( glHasError("Could not delete shader object") )
+	if( CheckLastErrorGL("Could not delete shader object") )
 		return;
 }
 
@@ -45,7 +45,7 @@ bool GLSL_Shader::create()
 
 	id = glCreateShader( getGLShaderType(type) );
 
-	if( glHasError("Could not create a new shader object") )
+	if( CheckLastErrorGL("Could not create a new shader object") )
 	{
 		created = false;
 		return false;
@@ -69,7 +69,7 @@ bool GLSL_Shader::compile()
 
 	glCompileShader(id);
 
-	if( glHasError("Error compiling shader object") )
+	if( CheckLastErrorGL("Error compiling shader object") )
 	{
 		compiled = false;
 		return false;
@@ -100,7 +100,7 @@ bool GLSL_Shader::upload()
 	const char* str = text.c_str();
 	glShaderSource(id, 1, &str, nullptr);
 
-	if( glHasError("Error uploading shader text to object") )
+	if( CheckLastErrorGL("Error uploading shader text to object") )
 		return false;
 
 	return true;

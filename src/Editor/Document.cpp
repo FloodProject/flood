@@ -18,7 +18,7 @@ Document::Document()
 	: unsavedChanges(false)
 	, name("(untitled)")
 {
-	undoManager = new UndoManager();
+	undoManager = Allocate(UndoManager, AllocatorGetThis());
 	undoManager->onUndoRedoEvent.Connect(this, &Document::onUndoRedoEvent);
 }
 
@@ -27,7 +27,7 @@ Document::Document()
 Document::~Document()
 {
 	undoManager->onUndoRedoEvent.Disconnect(this, &Document::onUndoRedoEvent);
-	delete undoManager;
+	Deallocate(undoManager);
 }
 
 //-----------------------------------//

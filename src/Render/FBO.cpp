@@ -22,7 +22,7 @@ FBO::FBO(const Settings& settings)
 	, colorAttach(false)
 {
 	glGenFramebuffersEXT(1, (GLuint*) &id);
-	glHasError( "Could not create framebuffer object" );
+	CheckLastErrorGL( "Could not create framebuffer object" );
 }
 
 //-----------------------------------//
@@ -36,7 +36,7 @@ FBO::~FBO()
 		uint32 buffer = renderBuffers[i];
 
 		glDeleteRenderbuffersEXT(1, (GLuint*) &buffer);
-		glHasError( "Could not delete renderbuffer object" );
+		CheckLastErrorGL( "Could not delete renderbuffer object" );
 	}
 }
 
@@ -47,7 +47,7 @@ void FBO::bind()
 	if(bound) return;
 
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, id);
-	glHasError( "Could not bind framebuffer object" );
+	CheckLastErrorGL( "Could not bind framebuffer object" );
 
 	setBufferState();
 	bound = true;
@@ -58,7 +58,7 @@ void FBO::bind()
 void FBO::unbind()
 {
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-	glHasError( "Could not unbind framebuffer object" );
+	CheckLastErrorGL( "Could not unbind framebuffer object" );
 	
 	glDrawBuffer(GL_BACK);
 	glReadBuffer(GL_BACK);
@@ -142,7 +142,7 @@ void FBO::attachRenderTexture(const TexturePtr& tex)
 		attach = GL_DEPTH_ATTACHMENT_EXT;
 
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, attach, GL_TEXTURE_2D, tex->getId(), 0);
-	glHasError( "Could not attach texture into framebuffer object" );
+	CheckLastErrorGL( "Could not attach texture into framebuffer object" );
 	
 	textureBuffers.push_back( tex );
 
@@ -162,10 +162,10 @@ void FBO::createRenderBuffer( int bufferComponents )
 
 	GLuint renderBuffer;
 	glGenRenderbuffersEXT(1, &renderBuffer);
-	glHasError( "Could not generate renderbuffer object" );
+	CheckLastErrorGL( "Could not generate renderbuffer object" );
 
 	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, renderBuffer);
-	glHasError( "Could not bind renderbuffer object" );
+	CheckLastErrorGL( "Could not bind renderbuffer object" );
 
 	bind();
 
@@ -192,10 +192,10 @@ void FBO::createRenderBuffer( int bufferComponents )
 void FBO::createRenderBufferStorage(int buffer, int type, int attachment)
 {
 	glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, type, settings.width, settings.height);
-	glHasError( "Could not create renderbuffer object storage" );
+	CheckLastErrorGL( "Could not create renderbuffer object storage" );
 
 	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, attachment, GL_RENDERBUFFER_EXT, buffer);
-	glHasError( "Could not attach renderbuffer into framebuffer object" );
+	CheckLastErrorGL( "Could not attach renderbuffer into framebuffer object" );
 }
 
 //-----------------------------------//
