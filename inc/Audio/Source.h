@@ -10,18 +10,21 @@
 
 #ifdef ENABLE_AUDIO_OPENAL
 
-#include "Audio/Device.h"
-#include "Audio/Context.h"
 #include "Resources/Sound.h"
 #include "Math/Vector.h"
 
 FWD_DECL_INTRUSIVE(AudioBuffer)
+typedef unsigned int ALuint;
 
 NAMESPACE_ENGINE_BEGIN
 
 //-----------------------------------//
 
 REFLECT_DECLARE_ENUM(RolloffMode)
+
+#define AL_INVERSE_DISTANCE_CLAMPED               0xD002
+#define AL_LINEAR_DISTANCE_CLAMPED                0xD004
+#define AL_EXPONENT_DISTANCE_CLAMPED              0xD006
 
 struct API_AUDIO RolloffMode
 {
@@ -36,6 +39,7 @@ struct API_AUDIO RolloffMode
 //-----------------------------------//
 
 class AudioContext;
+class AudioDevice;
 
 /**
  * Wraps an OpenAL source in a class. A source in OpenAL is the object 

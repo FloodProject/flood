@@ -61,6 +61,9 @@
     <Filter Include="Material">
       <UniqueIdentifier>{cf227c30-bff1-4860-b0b8-d1dd5592bde5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Database">
+      <UniqueIdentifier>{b264de9b-cd23-4869-befc-6ec3bd8aef00}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\dep\picopng\lodepng.cpp">
@@ -145,6 +148,9 @@
     <ClCompile Include="..\..\src\Resources\LuaLoader.cpp">
       <Filter>Scripts\Lua</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Resources\ResourceDatabase.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\vapor\script\Script.h">
@@ -222,6 +228,9 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\Resources\LuaLoader.h">
       <Filter>Scripts\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\Resources\ResourceDatabase.h">
+      <Filter>Database</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -18,6 +18,8 @@ int Settings::NumThreadsWorkers = -1;
 int Settings::NumThreadsIO = 1;
 String Settings::HostLocation = "127.0.0.1";
 int Settings::HostPort = 9999;
+int Settings::ResourcesPort = 9998;
+Path Settings::ResourcesPath = "Assets";
 
 //-----------------------------------//
 

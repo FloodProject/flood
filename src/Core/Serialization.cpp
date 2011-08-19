@@ -198,12 +198,12 @@ static bool ReflectionWalkPointer(ReflectionContext* context)
 		ObjectHandle* handle = (ObjectHandle*) address;
 		HandleId id = handle->id;
 		
-		Class* type = (Class*) field->type;
+		Class* klass = (Class*) field->type;
 
 		ReflectionHandleContext hc;
-		if( !ReflectionFindHandleContext(type, hc) )
+		if( !ReflectionFindHandleContext(klass, hc) )
 		{
-			LogDebug("No handle context found for class '%s'", type->name);
+			LogDebug("No handle context found for class '%s'", klass->name);
 			return false;
 		}
 
@@ -211,9 +211,7 @@ static bool ReflectionWalkPointer(ReflectionContext* context)
 		if( !address ) return false;
 	}
 
-	assert( address != nullptr );
 	context->elementAddress = address;
-
 	context->object = (Object*) context->elementAddress;
 
 	return true;
@@ -245,9 +243,12 @@ static void ReflectionWalkArray(ReflectionContext* context)
 		Type* type = context->type;
 
 		context->object = (Object*) context->elementAddress;
-		context->type = ClassGetType(context->object);
+		context->type = field->type;
 
-		if( !context->type )
+		bool isObject = ClassInherits((Class*) context->type, ObjectGetType());
+		if( isObject ) context->type = ClassGetType(context->object);
+
+		if( isObject && !context->type )
 		{
 			LogDebug("Could not get type out of object");
 			return;
@@ -271,8 +272,11 @@ void ReflectionWalkCompositeField(ReflectionContext* context)
 	const Field* field = context->field;
 
 	if( !FieldIsSerializable(field) )
+	{
+		LogDebug("Ignoring field '%s'", field->name);
 		return;
-	
+	}
+
 	void* address = context->address;
 	void* elementAddress = context->elementAddress;
 	Type* type = context->type;
@@ -285,6 +289,9 @@ void ReflectionWalkCompositeField(ReflectionContext* context)
 	if( ReflectionIsComposite(field->type) )
 		context->object = (Object*) context->address;
 
+	if( FieldIsPointer(field) && !ReflectionWalkPointer(context) )
+		goto exit;
+
 	context->walkCompositeField(context, ReflectionWalkType::Begin);
 
 	if( FieldIsArray(field) )
@@ -293,9 +300,6 @@ void ReflectionWalkCompositeField(ReflectionContext* context)
 	}
 	else if( FieldIsPointer(field) )
 	{
-		if( !ReflectionWalkPointer(context) )
-			goto exit;
-
 		Object* object = context->object;
 		Type* type = context->type;
 

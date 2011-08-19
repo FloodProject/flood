@@ -28,6 +28,12 @@ struct Settings
 
 	// Host port.
 	static int HostPort;
+
+	// Resources port.
+	static int ResourcesPort;
+
+	// Resources path.
+	static Path ResourcesPath;
 };
 
 //-----------------------------------//

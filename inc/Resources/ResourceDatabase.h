@@ -1,6 +1,6 @@
 /************************************************************************
 *
-* vapor3D Editor © (2008-2010)
+* vapor3D Resources © (2008-2010)
 *
 *	<http://www.vapor3d.org>
 *
@@ -8,9 +8,10 @@
 
 #pragma once
 
-#include <wx/msgqueue.h>
+#include "Core/ConcurrentQueue.h"
+#include "Resources/Resource.h"
 
-NAMESPACE_EDITOR_BEGIN
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -37,6 +38,13 @@ typedef std::pair<uint32, ResourceMetadata> ResourcesCacheMapPair;
 
 //-----------------------------------//
 
+struct Archive;
+
+/**
+ * Keeps an indexed list of all the resources known.
+ * Indexing is done asynchronously using the task manager.
+ */
+
 REFLECT_DECLARE_CLASS(ResourceDatabase)
 
 class ResourceDatabase : public Object
@@ -46,13 +54,11 @@ class ResourceDatabase : public Object
 public:
 
 	ResourceDatabase();
+	ResourceDatabase(TaskPool*);
 	~ResourceDatabase();
 
 	// Scans for known resources.
-	void scanFiles();
-
-	// Indexes found resources.
-	void indexFiles();
+	void scanResources(Archive*);
 
 	// Serialization fix-up.
 	virtual void fixUp() OVERRIDE;
@@ -61,10 +67,18 @@ public:
 	ResourcesCache resources;
 	ResourcesCacheMap resourcesCache;
 
-	wxMessageQueue<String> resourcesToIndex;
-	wxMessageQueue<String> resourcesToThumb;
+	Event1<const ResourceMetadata&> onResourceIndexed;
+
+private:
+
+	// Indexes found resources.
+	void indexResources(Task*);
+
+	Archive* archive;
+	ConcurrentQueue<String> resourcesToIndex;
+	ConcurrentQueue<String> resourcesToThumb;
 };
 
 //-----------------------------------//
 
-NAMESPACE_EDITOR_END
+NAMESPACE_RESOURCES_END

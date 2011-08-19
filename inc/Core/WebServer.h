@@ -14,25 +14,37 @@
 
 struct mg_context;
 struct mg_connection;
+struct mg_request_info;
 
 NAMESPACE_EXTERN_BEGIN
 
 //-----------------------------------//
 
+struct WebRequest
+{
+	mg_connection* conn;
+	const mg_request_info* req;
+};
+
+struct WebContext;
+typedef Delegate2<WebContext*, WebRequest*> WebCallback;
+
+struct WebRoute
+{
+	String pattern;
+	WebCallback callback;
+};
+
 struct WebContext
 {
 	mg_context* mongoose;
+	std::vector<WebRoute> routes;
 };
-
-struct WebRequest
-{
-};
-
-typedef Delegate1<WebContext*, WebRequest*> WebCallback;
 
 API_CORE WebContext* WebServerCreate( Allocator* );
-API_CORE bool WebServerStart( WebContext*, const char* port );
-API_CORE void WebServerCallback( String uri, WebCallback callback );
+API_CORE bool WebServerStart( WebContext*, uint16 port );
+API_CORE void WebServerStop( WebContext* );
+API_CORE void WebServerAddRoute( WebContext*, WebRoute route );
 
 //-----------------------------------//
 

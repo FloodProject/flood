@@ -83,6 +83,10 @@ public:
 	void onSceneUnload( const ScenePtr& scene );
 	void onSceneUpdate();
 
+	// Server callbacks.
+	virtual void onServerConnect(const SessionPtr&);
+	virtual void onServerDisconnect(const SessionPtr&);
+
 	// Gets the current tool.
 	ACESSOR(CurrentTool, int, toolId)
 

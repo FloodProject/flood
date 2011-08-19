@@ -9,6 +9,8 @@
 #pragma once
 
 #include "EditorPlugin.h"
+#include "Protocol/ReplicaContext.h"
+#include "Core/ClassWatcher.h"
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -27,19 +29,23 @@ public:
 	ScenePlugin();
 
 	// Gets metadata about this plugin.
-	virtual PluginMetadata getMetadata() OVERRIDE;
+	PluginMetadata getMetadata() OVERRIDE;
 
 	// Plugin callbacks.
-	virtual void onPluginEnable() OVERRIDE;
-	virtual void onPluginDisable() OVERRIDE;
+	void onPluginEnable() OVERRIDE;
+	void onPluginDisable() OVERRIDE;
+	void onEntitySelect( const EntityPtr& ) OVERRIDE;
+	void onEntityUnselect( const EntityPtr& ) OVERRIDE;
+	void onSceneLoad( const ScenePtr& scene ) OVERRIDE;
+	void onSceneUnload( const ScenePtr& scene ) OVERRIDE;
+	//void onDocumentCreate(Document& document) OVERRIDE;
 
-	// Entity callbacks.
-	virtual void onEntitySelect( const EntityPtr& ) OVERRIDE;
-	virtual void onEntityUnselect( const EntityPtr& ) OVERRIDE;
-
-	// Scene callbacks.
-	virtual void onSceneLoad( const ScenePtr& scene ) OVERRIDE;
-	virtual void onSceneUnload( const ScenePtr& scene ) OVERRIDE;
+	void onServerConnect(const SessionPtr&) OVERRIDE;
+	void onSceneClassFieldUpdate(const FieldWatchVector&);
+	void onReplicaContextCreate(ReplicaContext*, ClassId, ReplicaLocalId);
+	void onReplicaObjectCreate(ReplicaContext*, ReplicaInstanceId, Object*);
+	void onReplicaAdded(const ReplicatedObject&);
+	ReplicaLocalId localId;
 
 	ScenePage* scenePage;
 	int iconScene;

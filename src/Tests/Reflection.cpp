@@ -49,6 +49,7 @@ REFLECT_CLASS_END()
 
 REFLECT_CHILD_CLASS(F, Object)
 	FIELD_VECTOR(7, A, vecA)
+	FIELD_CLASS(8, A, a)
 REFLECT_CLASS_END()
 
 //-----------------------------------//

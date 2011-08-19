@@ -47,12 +47,12 @@ EntityOperation* ScenePage::createEntityOperation(const EntityPtr& entity, const
 {
 	if( !entity ) return nullptr;
 
-	EntityOperation* nodeOperation = new EntityOperation();
-	nodeOperation->entity = entity;
-	nodeOperation->weakScene = weakScene;
-	nodeOperation->description = desc;
+	EntityOperation* entityOperation = new EntityOperation();
+	entityOperation->entity = entity;
+	entityOperation->weakScene = weakScene;
+	entityOperation->description = desc;
 
-	return nodeOperation;
+	return entityOperation;
 }
 
 //-----------------------------------//

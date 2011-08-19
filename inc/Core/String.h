@@ -8,27 +8,15 @@
 
 #pragma once
 
-#ifdef ENABLE_STL_RDE
-	#include <rde_string.h>
-#else
-	#include <string>
-	#include <sstream>
-#endif
+#include <string>
+#include <sstream>
 
 NAMESPACE_EXTERN_BEGIN
 
 //-----------------------------------//
 
-#ifdef ENABLE_STL_RDE
-
-typedef rde::string String;
-
-#else
-
 typedef std::string String;
 typedef std::wstring WideString;
-
-#endif
 
 // Compares a string in a case insensitive way.
 API_CORE int StringCompareInsensitive(const String& s1, const String& s2);
@@ -58,6 +46,10 @@ API_CORE String StringTrim(const String& s, const char* trim);
 
 // Converts a float to a string.
 API_CORE String StringFromFloat( float n, uint8 precision = 2 );
+
+// Pattern matches a string.
+API_CORE const char* StringMatch(const String& s, const String& pattern);
+API_CORE const char* RawStringMatch(const char* s, size_t len, const char* p);
 
 // Path utilities
 

@@ -10,7 +10,7 @@
 #include "ResourcesPlugin.h"
 #include "ResourcesPane.h"
 #include "ResourcesBrowser.h"
-#include "ResourceDatabase.h"
+#include "Resources/ResourceDatabase.h"
 #include "Settings.h"
 
 #include "Editor.h"

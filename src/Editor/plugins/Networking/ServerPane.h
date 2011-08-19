@@ -37,7 +37,8 @@ public:
 
 protected:
 
-	void setupUI();
+	// Event handlers.
+	void OnClose(wxCloseEvent& event);
 
 	// Widget callbacks.
 	void onConnectButtonClick(wxCommandEvent& event) OVERRIDE;

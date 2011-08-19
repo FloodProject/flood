@@ -12,6 +12,9 @@
 
 #include "Audio/Source.h"
 #include "Audio/Buffer.h"
+#include "Audio/Context.h"
+#include "Audio/Device.h"
+#include "Audio/AL.h"
 
 NAMESPACE_ENGINE_BEGIN
 

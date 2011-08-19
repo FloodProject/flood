@@ -18,21 +18,24 @@ NAMESPACE_CORE_BEGIN
 BoundingBox::BoundingBox()
 	: min(0)
 	, max(0)
-{ }
+{
+}
 
 //-----------------------------------//
 
 BoundingBox::BoundingBox( const Vector3& min, const Vector3& max )
 	: min( min )
 	, max( max )
-{ }
+{
+}
 
 //-----------------------------------//
 
 BoundingBox::BoundingBox( const BoundingBox& box )
 	: min( box.min )
 	, max( box.max )
-{ }
+{
+}
 
 //-----------------------------------//
 

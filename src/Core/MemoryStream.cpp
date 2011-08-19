@@ -71,7 +71,7 @@ void StreamMemoryInit(MemoryStream* ms)
 
 void StreamMemorySetRawBuffer(MemoryStream* ms, uint8* buffer)
 {
-	ms->buf = buffer;
+	ms->buffer = buffer;
 	ms->useRawBuffer = true;
 }
 
@@ -104,7 +104,7 @@ static int64 MemoryRead(Stream* stream, void* buffer, int64 size)
 		if(size > left) size = left;
 	}
 
-	uint8* cur = ms->buf + ms->position;
+	uint8* cur = ms->buffer + ms->position;
 	memcpy(buffer, cur, (size_t) size);
 
 	ms->position += size;
@@ -149,7 +149,7 @@ static int64 MemoryWrite(Stream* stream, void* buffer, int64 size)
 		if( ms->data.empty() ) return 0;
 	}
 
-	uint8* cur = ms->buf + position;
+	uint8* cur = ms->buffer + position;
 	memcpy(cur, buffer, (size_t) size);
 
 	position += size;
@@ -202,7 +202,7 @@ static void MemoryResize(Stream* stream, int64 size)
 	if( size <= 0 ) return;
 
 	ms->data.resize((size_t)size);
-	ms->buf = &ms->data[0];
+	ms->buffer = &ms->data[0];
 }
 
 //-----------------------------------//

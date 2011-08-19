@@ -61,8 +61,8 @@ Archive* ArchiveCreateFromDirectory(Allocator* alloc, const Path& path)
 
 	if( !ArchiveOpen(archive, path) )
 	{
-		//LogWarn("Error opening archive: %s", path.c_str());
-		Deallocate( archive);
+		LogDebug("Error opening archive: %s", path.c_str());
+		Deallocate(archive);
 		return nullptr;
 	}
 
@@ -90,8 +90,10 @@ static bool DirArchiveClose(Archive* archive)
 static Stream* DirArchiveOpenFile(Archive* archive, const Path& file, Allocator* alloc)
 {
 	if( !archive ) return nullptr;
-	Path path = StringFormat("%s%s%s", archive->path.c_str(), PathGetSeparator().c_str(), file.c_str());
-	Stream* stream = StreamCreateFromFile(alloc, path, StreamMode::Read);
+	
+	Path fullPath = ArchiveCombinePath(archive, file);
+	Stream* stream = StreamCreateFromFile(alloc, fullPath, StreamMode::Read);
+
 	return stream;
 }
 

@@ -11,7 +11,9 @@
 #ifdef ENABLE_AUDIO_OPENAL
 
 #include "Math/Vector.h"
-#include "Audio/AL.h"
+
+typedef struct ALCdevice_struct ALCdevice;
+typedef struct ALCcontext_struct ALCcontext;
 
 NAMESPACE_ENGINE_BEGIN
 
@@ -74,7 +76,5 @@ protected:
 //-----------------------------------//
 
 NAMESPACE_ENGINE_END
-
-/** @} */
 
 #endif

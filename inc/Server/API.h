@@ -13,8 +13,14 @@
 //---------------------------------------------------------------------//
 
 #include "Core/API.h"
-#include "Resources/API.h"
 #include "Core/Log.h"
+
+#include "Network/Host.h"
+#include "Network/Session.h"
+#include "Network/Message.h"
+#include "Network/Dispatcher.h"
+
+#include "Resources/API.h"
 
 //---------------------------------------------------------------------//
 // Server APIs

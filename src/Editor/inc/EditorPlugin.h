@@ -16,6 +16,7 @@
 FWD_DECL_INTRUSIVE(Scene)
 FWD_DECL_INTRUSIVE(Entity)
 FWD_DECL_INTRUSIVE(Resource)
+FWD_DECL_INTRUSIVE(Session)
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -109,6 +110,10 @@ public:
 	// Key callback.
 	virtual void onKeyPress(const KeyEvent&) {}
 	virtual void onKeyRelease(const KeyEvent&) {}
+
+	// Server callbacks.
+	virtual void onServerConnect(const SessionPtr&) {}
+	virtual void onServerDisconnect(const SessionPtr&) {}
 
 protected:
 

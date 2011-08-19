@@ -12,23 +12,22 @@
 // Core APIs
 //---------------------------------------------------------------------//
 
-//#define	ENABLE_STL_RDE
-//#define	ENABLE_MEMORY_TR1_VENDOR
-//#define	ENABLE_MEMORY_SHARED_PTR
-#define		ENABLE_MEMORY_INTRUSIVE_PTR
-#define		ENABLE_MEMORY_LEAK_DETECTOR
-//#define	ENABLE_DYNAMIC_LIBRARY
-#define		ENABLE_ARCHIVE_ZIP
-#define		ENABLE_ARCHIVE_DIR
-#define		ENABLE_ARCHIVE_VIRTUAL
-//#define	ENABLE_NETWORKING_ZMQ
-//#define	ENABLE_NETWORKING_CURL
-//#define	ENABLE_VFS_FILEWATCHER
-#define		ENABLE_SERIALIZATION
-#define		ENABLE_SERIALIZATION_JSON
-#define		ENABLE_SERIALIZATION_BINARY
-#define		ENABLE_STACK_WALKER
-//#define	ENABLE_HTTP_SERVER
+//#define   ENABLE_STL_RDE
+//#define   ENABLE_MEMORY_TR1_VENDOR
+//#define   ENABLE_MEMORY_SHARED_PTR
+#define     ENABLE_MEMORY_INTRUSIVE_PTR
+#define     ENABLE_MEMORY_LEAK_DETECTOR
+//#define   ENABLE_DYNAMIC_LIBRARY
+#define     ENABLE_ARCHIVE_ZIP
+#define     ENABLE_ARCHIVE_DIR
+#define     ENABLE_ARCHIVE_VIRTUAL
+#define     ENABLE_NETWORKING_CURL
+//#define   ENABLE_VFS_FILEWATCHER
+#define     ENABLE_SERIALIZATION
+#define     ENABLE_SERIALIZATION_JSON
+#define     ENABLE_SERIALIZATION_BINARY
+#define     ENABLE_STACK_WALKER
+#define     ENABLE_HTTP_SERVER
 
 //---------------------------------------------------------------------//
 // Platform headers
@@ -87,7 +86,10 @@
 #ifndef SWIG
 
 #ifdef COMPILER_MSVC
+// nonstandard extension used: 'identifier' before template explicit instantiation
 #pragma warning(disable : 4231)
+
+// nonstandard extension used: enum 'identifier' used in qualified name
 #pragma warning(disable : 4482)
 #endif
 

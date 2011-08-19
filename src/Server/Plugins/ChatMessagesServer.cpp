@@ -30,7 +30,7 @@ REFLECT_CLASS_END()
 
 void ChatMessagesServer::handleChatClient(const SessionPtr& session, const ChatClientMessage& chat)
 {
-	UserMessagePlugin* usersPlugin = GetPlugin<UserMessagePlugin>();
+	UserMessagePlugin* usersPlugin = GetMessagePlugin<UserMessagePlugin>();
 	User* user = usersPlugin->users.getUserFromSession(session);
 	
 	LogInfo("%s says: %s", user->name.c_str(), chat.text.c_str());

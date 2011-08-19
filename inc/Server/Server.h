@@ -24,6 +24,7 @@ class Plugin;
 class HostServer;
 class Dispatcher;
 class SessionManager;
+class Engine;
 
 API_SERVER void ServerInitialize();
 API_SERVER void ServerDeinitialize();
@@ -43,17 +44,20 @@ public:
 	// Runs the server.
 	void run();
 
-	// Handles client callbacks.
-	void handleClientConnect(const PeerPtr&);
-	void handleClientDisconnect(const PeerPtr&);
-
 	// Gets the session manager.
 	SessionManager* getSessionManager();
 
 	// Gets the host.
 	GETTER(Host, HostServer*, host)
 
-	TaskPool* tasks;
+	// Handles client callbacks.
+	void handleClientConnect(const PeerPtr&);
+	void handleClientDisconnect(const PeerPtr&);
+
+	TaskPool* taskPool;
+	PluginManager* plugins;
+	Engine* engine;
+
 	HostServer* host;
 	Dispatcher* dispatcher;
 	Thread* networkThread;
@@ -61,8 +65,13 @@ public:
 
 API_SERVER Server* GetServer();
 
-template<typename T>
-T* GetPlugin()
+template<typename T> T* GetPlugin()
+{
+	PluginManager* pm = GetServer()->plugins;
+	return (T*) pm->getPluginFromClass(T::getStaticType());
+}
+
+template<typename T> T* GetMessagePlugin()
 {
 	PluginManager* pm = GetServer()->dispatcher->getPluginManager();
 	return (T*) pm->getPluginFromClass(T::getStaticType());

@@ -354,12 +354,12 @@ static void DeserializeArrayElement( ReflectionContext* context, void* address )
 	{
 	case Type::Primitive:
 	{
-		assert(0 && "Not implemented");
+		LogAssert("Not implemented");
 		break;
 	}
 	case Type::Enumeration:
 	{
-		assert(0 && "Not implemented");
+		LogAssert("Not implemented");
 		break;
 	}
 	case Type::Composite:
@@ -433,8 +433,10 @@ static void DeserializeField( ReflectionContext* context )
 		Class* composite = context->composite;
 		context->composite = (Class*) field->type;
 
-		Object* object = DeserializeComposite(context, 0);
 		void* address = ClassGetFieldAddress(context->object, field);
+		Object* store = FieldIsPointer(field) ? 0 : (Object*) address;
+
+		Object* object = DeserializeComposite(context, store);
 		
 		if( FieldIsHandle(field) )
 		{

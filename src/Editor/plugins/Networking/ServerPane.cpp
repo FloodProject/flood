@@ -31,13 +31,7 @@ ServerPane::ServerPane( wxWindow* parent )
 	: ServerFrame(parent)
 	, connect(true)
 {
-	setupUI();
-}
-
-//-----------------------------------//
-
-void ServerPane::setupUI()
-{
+	Bind(wxEVT_CLOSE_WINDOW, &ServerPane::OnClose, this);
 }
 
 //-----------------------------------//
@@ -108,6 +102,16 @@ String ServerPane::getUserName()
 {
 	String name = m_textName->GetValue();
 	return name;
+}
+
+//-----------------------------------//
+
+void ServerPane::OnClose(wxCloseEvent& event)
+{
+	if ( !event.CanVeto() ) return;
+
+	Hide();
+	event.Veto();
 }
 
 //-----------------------------------//

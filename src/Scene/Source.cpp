@@ -13,6 +13,7 @@
 #include "Scene/Source.h"
 #include "Audio/Source.h"
 #include "Resources/Sound.h"
+#include "Audio/Device.h"
 
 NAMESPACE_ENGINE_BEGIN
 

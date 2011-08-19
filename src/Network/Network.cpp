@@ -279,7 +279,8 @@ HostClient::HostClient()
 
 bool HostClient::connect( const HostConnectionDetails& details )
 {
-	assert( state == HostState::Disconnected );
+	if( state != HostState::Disconnected )
+		return false;
 
 	state = HostState::Connecting;
 

@@ -10,15 +10,8 @@
 #include "Protocol/ReplicaMessages.h"
 #include "Protocol/UserMessages.h"
 #include "Protocol/Users.h"
-#include "Network/Message.h"
-#include "Network/Dispatcher.h"
-#include "Network/Host.h"
-#include "Network/Session.h"
 #include "Server/Server.h"
-#include "Core/Reflection.h"
 #include "Core/SerializationHelpers.h"
-#include "Engine/API.h"
-#include "Scene/Scene.h"
 
 NAMESPACE_SERVER_BEGIN
 
@@ -28,98 +21,115 @@ class ReplicaMessagesServer : ReplicaMessagePlugin
 {
 public:
 
-	ReplicaMessagesServer();
-	~ReplicaMessagesServer();
+	void handleReplicaContextCreate(const SessionPtr&, const ReplicaContextCreateMessage&) OVERRIDE;
+	void handleReplicaContextRequest(const SessionPtr&, const ReplicaContextRequestMessage&) OVERRIDE;
 
-	void handleReplicaCreate(const SessionPtr&, const ReplicaCreateMessage&) OVERRIDE;
-	void handleReplicaAskUpdate(const SessionPtr&, const ReplicaAskUpdateMessage&) OVERRIDE;
-	void handleReplicaFieldUpdate(const SessionPtr&, const MessagePtr&) OVERRIDE;
-
-	Scene* scene;
+	void handleReplicaObjectCreate(const SessionPtr&, const ReplicaObjectCreateMessage&) OVERRIDE;
+	void handleReplicaObjectUpdate(const SessionPtr&, const MessagePtr&) OVERRIDE;
 };
 
 REFLECT_CHILD_CLASS(ReplicaMessagesServer, ReplicaMessagePlugin)
 REFLECT_CLASS_END()
 
-ReplicaMessagesServer::ReplicaMessagesServer()
-{
-	scene = Allocate(Scene, AllocatorGetThis());
-}
+//-----------------------------------//
 
-ReplicaMessagesServer::~ReplicaMessagesServer()
+void ReplicaMessagesServer::handleReplicaContextCreate(const SessionPtr& session, const ReplicaContextCreateMessage& msg)
 {
-	Deallocate(scene);
+	LogDebug("ReplicaContextCreate: %s", "Creating a new context");
+
+	// Create a new replica context.
+	ReplicaContext* context = Allocate(ReplicaContext, AllocatorGetThis());
+	context->id = nextContextId++;
+	replicaContexts[context->id] = context;
+
+	onReplicaContextCreate(context, msg.classId, msg.localId);
+
+	// Broadcast the new created context.
+	ReplicaContextCreatedMessage created;
+	created.contextId = context->id;
+	created.localId = msg.localId;
+
+	MessagePtr m_created = MessageCreate(ReplicaMessageIds::ReplicaContextCreated);
+	m_created->write(&created);
+
+	GetServer()->getHost()->broadcastMessage(m_created);
 }
 
 //-----------------------------------//
 
-void ReplicaMessagesServer::handleReplicaCreate(const SessionPtr& session, const ReplicaCreateMessage& msg)
+void ReplicaMessagesServer::handleReplicaContextRequest(const SessionPtr& session, const ReplicaContextRequestMessage& ask)
 {
+	ReplicaContext* context = findContext(ask.contextId);
+
+	if( !context )
+	{
+		LogDebug("ReplicaContextRequest: Invalid replica context");
+		return;
+	}
+
+	context->sendObjects(session);
+}
+
+//-----------------------------------//
+
+void ReplicaMessagesServer::handleReplicaObjectCreate(const SessionPtr& session, const ReplicaObjectCreateMessage& msg)
+{
+	ReplicaContext* context = findContext(msg.contextId);
+
+	if( !context )
+	{
+		LogDebug("ReplicaObjectCreate: Invalid replica context");
+		return;
+	}
+
 	Object* instance = msg.instance;
 	Class* klass = ClassGetById(msg.classId);
 
-	// Create a new instance if the client did not provide one.
-	if( !instance )
+	if( !instance && !klass )
 	{
-		if( !klass ) return;
-		instance = (Object*) ClassCreateInstance(klass, AllocatorGetServer());
+		LogDebug("ReplicaObjectCreate: Invalid instance or class id");
+		return;
 	}
 
-	LogDebug("ReplicaCreate: '%s'", klass->name);
+	// Create a new instance if the client did not provide one.
+	if( !instance )
+		instance = (Object*) ClassCreateInstance(klass, AllocatorGetServer());
 
-	// Store the replicated object.
-	registerObjects(instance);
+	if( !klass )
+		klass = ClassGetType(instance);
+
+	// Register the replicated object instance.
+	LogDebug("ReplicaObjectCreate: Registering instance of '%s'", klass->name);
+	context->registerObjects(instance);
+
+	onReplicaObjectCreate(context, msg.parentId, instance);
 
 	// Send the instance back to all the clients.
-	InstanceId id = 0;
-	replicas.findInstance(instance, id);
+	ReplicaInstanceId id;
+	context->findInstance(instance, id);
 
-	ReplicaNewInstanceMessage inst;
+	ReplicaObjectCreatedMessage inst;
+	inst.contextId = context->id;
+	inst.parentId = msg.parentId;
+	inst.localId = msg.localId;
 	inst.instanceId = id;
 	inst.instance = instance;
 
-	MessagePtr message = MessageCreate(ReplicaMessageIds::ReplicaNewInstance);
-	message->write(&inst);
+	MessagePtr m_inst = MessageCreate(ReplicaMessageIds::ReplicaObjectCreated);
+	m_inst->write(&inst);
 
-	if( ClassInherits(klass, ReflectionGetType(Entity)) )
-	{
-		Entity* entity = (Entity*) instance;
-		scene->add(entity);
-	}
-
-	GetServer()->getHost()->broadcastMessage(message);
+	GetServer()->getHost()->broadcastMessage(m_inst);
 }
 
 //-----------------------------------//
 
-void ReplicaMessagesServer::handleReplicaAskUpdate(const SessionPtr& session, const ReplicaAskUpdateMessage&)
+void ReplicaMessagesServer::handleReplicaObjectUpdate(const SessionPtr& session, const MessagePtr& msg)
 {
-	ReplicaFullUpdateMessage full;
+	ReplicaMessagePlugin::handleReplicaObjectUpdate(session, msg);
 
-	ReplicasIdMap::iterator it;
-	
-	for(it = replicas.instancesIds.begin(); it != replicas.instancesIds.end(); ++it)
-	{
-		ReplicatedObject& obj = it->second;
-		full.objects.push_back(obj);
-	}
-
-	MessagePtr message = MessageCreate(ReplicaMessageIds::ReplicaFullUpdate);
-	message->write(&full);
-
-	session->getPeer()->queueMessage(message, 0);
-}
-
-//-----------------------------------//
-
-void ReplicaMessagesServer::handleReplicaFieldUpdate(const SessionPtr& session, const MessagePtr& msg)
-{
-	processFieldUpdate(msg);
-
-	MessagePtr update = MessageCreate(ReplicaMessageIds::ReplicaFieldUpdate);
-	StreamWrite(update->ms, msg->ms->buf, msg->ms->position);
-
-	GetServer()->getHost()->broadcastMessage(update);
+	MessagePtr m_update = MessageCreate(ReplicaMessageIds::ReplicaObjectUpdate);
+	StreamWrite(m_update->ms, msg->ms->buffer, msg->ms->position);
+	GetServer()->getHost()->broadcastMessage(m_update);
 }
 
 //-----------------------------------//

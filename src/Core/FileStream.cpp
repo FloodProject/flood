@@ -38,7 +38,8 @@ static StreamFuncs gs_FileFuncs =
 	FileWrite,
 	FileTell,
 	FileSeek,
-	FileGetSize
+	FileGetSize,
+	0/*FileResize*/
 };
 
 //-----------------------------------//

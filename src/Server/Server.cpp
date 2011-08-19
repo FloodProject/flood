@@ -9,10 +9,12 @@
 #include "Server/API.h"
 #include "Server/Server.h"
 #include "Server/Settings.h"
+#include "Server/ServerPlugin.h"
 
 #include "Core/Event.h"
 #include "Core/Concurrency.h"
 #include "Core/Utilities.h"
+#include "Core/Reflection.h"
 
 #include "Network/Network.h"
 #include "Network/Host.h"
@@ -21,6 +23,8 @@
 #include "Network/SessionManager.h"
 
 #include "Protocol/UserMessages.h"
+
+#include "Engine/Engine.h"
 
 #include <iostream>
 
@@ -52,9 +56,11 @@ Server* GetServer() { return gs_ServerInstance; }
 //-----------------------------------//
 
 Server::Server()
-	: tasks(nullptr)
+	: taskPool(nullptr)
+	, plugins(nullptr)
 	, networkThread(nullptr)
 	, dispatcher(nullptr)
+	, engine(nullptr)
 {
 	gs_ServerInstance = this;
 }
@@ -63,13 +69,14 @@ Server::Server()
 
 bool Server::init()
 {
+	Allocator* alloc = AllocatorGetServer();
+
+	taskPool = TaskPoolCreate(alloc, Settings::NumTasksProcess);
+
+	engine = Allocate(Engine, alloc);
 	NetworkInitialize();
-
-#if 0
-	Log::info("Created %d processing task(s)", Settings::NumTasksProcess);
-#endif
-
-	host = Allocate(HostServer, AllocatorGetServer());
+	
+	host = Allocate(HostServer, alloc);
 	
 	HostConnectionDetails details;
 	details.port = Settings::HostPort;
@@ -84,13 +91,19 @@ bool Server::init()
 	host->onClientConnected.Connect(this, &Server::handleClientConnect);
 	host->onClientDisconnected.Connect(this, &Server::handleClientDisconnect);
 
-	dispatcher = Allocate(Dispatcher, AllocatorGetServer());
+	dispatcher = Allocate(Dispatcher, alloc);
 	dispatcher->initServer(host);
 	dispatcher->initPlugins(ReflectionGetType(MessagePlugin));
 
 #ifdef NETWORK_THREAD
 	networkThread = ThreadCreate(AllocatorGetServer());
 #endif
+
+	std::vector<Plugin*> found;
+	plugins = Allocate(PluginManager, alloc);
+	plugins->scanPlugins(ReflectionGetType(ServerPlugin), found);
+	plugins->sortPlugins(found);
+	plugins->registerPlugins(found);
 
 	return true;
 }
@@ -104,7 +117,10 @@ void Server::shutdown()
 #ifdef NETWORK_THREAD
 	ThreadDestroy(networkThread);
 #endif
+	Deallocate(plugins);
+	Deallocate(engine);
 	NetworkDeinitialize();
+	Deallocate(taskPool);
 }
 
 //-----------------------------------//
@@ -174,7 +190,7 @@ void Server::handleClientDisconnect(const PeerPtr& peer)
 
 	const SessionPtr& session = dispatcher->getSessionManager()->getSession(peer);
 
-	UserMessagePlugin* up = GetPlugin<UserMessagePlugin>();
+	UserMessagePlugin* up = GetMessagePlugin<UserMessagePlugin>();
 	User* user = up->users.getUserFromSession(session);
 	
 	if( !user )

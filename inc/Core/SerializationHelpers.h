@@ -61,7 +61,7 @@ static void PointerSetObject( const Field* field, void* address, T* object )
  * http://code.google.com/apis/protocolbuffers/docs/encoding.html
  */
 
-#define StreamIndex(s) (s->buf+s->position)
+#define StreamIndex(s) (s->buffer+s->position)
 
 #ifdef BUILD_DEBUG
 void StreamAdvanceIndex(MemoryStream* ms, uint64 n);

@@ -19,7 +19,7 @@
 #include "../Scene/SceneDocument.h"
 #include "Core/PluginManager.h"
 #include "ResourcesPlugin.h"
-#include "ResourceDatabase.h"
+#include "Resources/ResourceDatabase.h"
 #include "../Property/PropertyPlugin.h"
 #include "../Property/PropertyPage.h"
 
@@ -336,14 +336,14 @@ void ResourcesBrowser::OnListBeginDrag(wxListEvent& event)
 	entity->getTransform()->setPosition(dropPoint);
 	entity->addComponent( ModelPtr( new Model(mesh) ) );
 
-	EntityOperation* nodeOperation = new EntityOperation();
-	nodeOperation->entity = entity;
-	nodeOperation->weakScene = scene;
+	EntityOperation* entityOperation = new EntityOperation();
+	entityOperation->entity = entity;
+	entityOperation->weakScene = scene;
 
 	UndoManager* undoManager = document->getUndoManager();
-	undoManager->registerOperation(nodeOperation);
+	undoManager->registerOperation(entityOperation);
 
-	nodeOperation->redo();
+	entityOperation->redo();
 }
 
 //-----------------------------------//

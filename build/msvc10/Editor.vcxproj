@@ -199,7 +199,6 @@
     <ClCompile Include="..\..\src\Editor\plugins\Mono\MonoPlugin.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Networking\ServerPane.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Networking\ServerPlugin.cpp" />
-    <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourceDatabase.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourcesPane.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourceThumbnailer.cpp" />
     <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneComponents.cpp" />
@@ -275,7 +274,6 @@
     <ClInclude Include="..\..\src\Editor\plugins\Mono\MonoPlugin.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Networking\ServerPane.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Networking\ServerPlugin.h" />
-    <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourceDatabase.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourcesPane.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourceThumbnailer.h" />
     <ClInclude Include="..\..\src\Editor\plugins\Scene\SceneDocument.h" />

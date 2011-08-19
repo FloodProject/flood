@@ -12,8 +12,8 @@
 
 #include "Audio/Device.h"
 #include "Audio/Buffer.h"
-#include "Core/Utilities.h"
-
+#include "Audio/Context.h"
+#include "Audio/AL.h"
 #include <alext.h>
 
 NAMESPACE_ENGINE_BEGIN

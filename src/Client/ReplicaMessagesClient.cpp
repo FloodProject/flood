@@ -10,11 +10,6 @@
 #include "Protocol/ReplicaMessages.h"
 #include "Core/ClassWatcher.h"
 #include "Core/SerializationHelpers.h"
-#include "Plugins/Scene/ScenePlugin.h"
-#include "Plugins/Scene/ScenePane.h"
-#include "Plugins/Scene/SceneDocument.h"
-#include "Plugins/Property/PropertyPlugin.h"
-#include "Plugins/Property/PropertyPage.h"
 #include "Plugins/Networking/ServerPlugin.h"
 #include "Network/Host.h"
 #include "Editor.h"
@@ -29,11 +24,13 @@ public:
 
 	ReplicaMessagesClient();
 
-	void sendObjectFieldUpdate(const FieldWatchVector& watches);
-	void processReplicaInstance(const ReplicatedObject& rep);
-	void handleReplicaNewInstance(const SessionPtr&, const ReplicaNewInstanceMessage&) OVERRIDE;
-	void handleReplicaFullUpdate(const SessionPtr&, const ReplicaFullUpdateMessage&) OVERRIDE;
-	void handleReplicaFieldUpdate(const SessionPtr&, const MessagePtr&) OVERRIDE;
+	void processReplicaInstance(ReplicaContextId contextId, const ReplicatedObject& rep);
+
+	void handleReplicaContextCreated(const SessionPtr&, const ReplicaContextCreatedMessage&) OVERRIDE;
+	void handleReplicaContextUpdate(const SessionPtr&, const ReplicaContextUpdateMessage&) OVERRIDE;
+
+	void handleReplicaObjectCreated(const SessionPtr&, const ReplicaObjectCreatedMessage&) OVERRIDE;
+	void handleReplicaObjectUpdate(const SessionPtr&, const MessagePtr&) OVERRIDE;
 };
 
 REFLECT_CHILD_CLASS(ReplicaMessagesClient, ReplicaMessagePlugin)
@@ -43,52 +40,37 @@ REFLECT_CLASS_END()
 
 ReplicaMessagesClient::ReplicaMessagesClient()
 {
-	PropertyPlugin* pp = GetPlugin<PropertyPlugin>();
-	pp->propertyPage->onClassFieldChanged.Bind(this, &ReplicaMessagesClient::sendObjectFieldUpdate);
+
 }
 
 //-----------------------------------//
 
-void ReplicaMessagesClient::sendObjectFieldUpdate(const FieldWatchVector& watches)
+void ReplicaMessagesClient::handleReplicaContextCreated(const SessionPtr&, const ReplicaContextCreatedMessage& msg)
 {
-	LogDebug("SendObjectFieldUpdate");
+	LogDebug("ReplicaContextCreated: Received new replica context");
 
-	// Encode fields and send update message.
-	MemoryStream* ms = StreamCreateFromMemory(AllocatorGetThis(), 512);
-	SerializerBinary* bin = (SerializerBinary*) SerializerCreateBinary(AllocatorGetThis());
-	bin->ms = ms;
+	ReplicaContext* context = Allocate(ReplicaContext, AllocatorGetThis());
+	context->id = msg.contextId;
 
-	ReflectionContext& context = bin->serializeContext;
+	replicaContexts[context->id] = context;
 
-	for(size_t i = 0; i < watches.size(); i++)
-	{
-		FieldWatch* fw = watches[i];
-		context.field = fw->field;
-		context.object = (Object*) fw->object;
-
-		InstanceId instanceId = 0;
-		if( !replicas.findInstance(fw->object, instanceId) )
-		{
-			LogDebug("Replicated instance of object not found");
-			continue;
-		}
-
-		EncodeVariableInteger(ms, instanceId);
-		ReflectionWalkCompositeField(&context);
-	}
-
-	// Finish field stream.
-	EncodeVariableInteger(bin->ms, FieldInvalid);
-
-	MessagePtr msg = MessageCreate(ReplicaMessageIds::ReplicaFieldUpdate);
-	StreamWrite(msg->ms, ms->buf, ms->position);
-
-	GetPlugin<ServerPlugin>()->host->broadcastMessage(msg);
+	onReplicaContextCreate(context, 0, msg.localId);
 }
 
 //-----------------------------------//
 
-void ReplicaMessagesClient::processReplicaInstance(const ReplicatedObject& rep)
+void ReplicaMessagesClient::handleReplicaContextUpdate(const SessionPtr&, const ReplicaContextUpdateMessage& msg)
+{
+	for(size_t i = 0; i < msg.objects.size(); i++)
+	{
+		const ReplicatedObject& obj = msg.objects[i];
+		processReplicaInstance(msg.contextId, obj);
+	}
+}
+
+//-----------------------------------//
+
+void ReplicaMessagesClient::processReplicaInstance(ReplicaContextId contextId, const ReplicatedObject& rep)
 {
 	if( !rep.instance )
 	{
@@ -96,52 +78,49 @@ void ReplicaMessagesClient::processReplicaInstance(const ReplicatedObject& rep)
 		return;
 	}
 
-	if( replicas.findInstanceById(rep.instanceId) )
+	ReplicaContext* context = findContext(contextId);
+
+	if( !context )
+	{
+		LogDebug("processReplicaInstance: Invalid replica context");
+		return;
+	}
+
+	if( context->findInstanceById(rep.instanceId) )
 	{
 		LogDebug("Ignoring duplicated object replica");
 		return;
 	}
 
-	registerObjects(rep.instance);
-
-	Class* klass = ClassGetType(rep.instance);
-
-	if( ClassInherits(klass, ReflectionGetType(Entity)) )
-	{
-		Entity* entity = (Entity*) rep.instance;
-		
-		ScenePlugin* sp = (ScenePlugin*) GetPlugin<ScenePlugin>();
-		sp->scenePage->addEntity(entity);
-	}
+	context->registerObjects(rep.instance);
 }
 
 //-----------------------------------//
 
-void ReplicaMessagesClient::handleReplicaNewInstance(const SessionPtr& session, const ReplicaNewInstanceMessage& msg)
+void ReplicaMessagesClient::handleReplicaObjectCreated(const SessionPtr& session, const ReplicaObjectCreatedMessage& msg)
 {
 	ReplicatedObject obj;
 	obj.instance = msg.instance;
 	obj.instanceId = msg.instanceId;
 
-	processReplicaInstance(obj);
-}
+	processReplicaInstance(msg.contextId, obj);
 
-//-----------------------------------//
+	ReplicaContext* context = findContext(msg.contextId);
 
-void ReplicaMessagesClient::handleReplicaFullUpdate(const SessionPtr&, const ReplicaFullUpdateMessage& msg)
-{
-	for(size_t i = 0; i < msg.objects.size(); i++)
+	if( !context )
 	{
-		const ReplicatedObject& obj = msg.objects[i];
-		processReplicaInstance(obj);
+		LogDebug("ReplicaObjectCreated: Invalid replica context");
+		return;
 	}
+
+	onReplicaObjectCreate(context, msg.parentId, msg.instance);
 }
 
 //-----------------------------------//
 
-void ReplicaMessagesClient::handleReplicaFieldUpdate(const SessionPtr& session, const MessagePtr& msg)
+void ReplicaMessagesClient::handleReplicaObjectUpdate(const SessionPtr& session, const MessagePtr& msg)
 {
-	processFieldUpdate(msg);
+	ReplicaMessagePlugin::handleReplicaObjectUpdate(session, msg);
 }
 
 //-----------------------------------//

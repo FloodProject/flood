@@ -97,7 +97,7 @@ void Message::prepare()
 	if( GetBitFlag(flags, MessageFlags::Compressed) )
 	{
 		uint8* in = &ms->data[0];
-		uint8* out = pms.buf + pms.position;
+		uint8* out = pms.buffer + pms.position;
 		int32 length = fastlz_compress_level(1, in, totalSize, out);
 		pms.position += length;
 	}

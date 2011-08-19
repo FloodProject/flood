@@ -322,6 +322,20 @@ void Events::onSceneUnload( const ScenePtr& scene )
 
 //-----------------------------------//
 
+void Events::onServerConnect( const SessionPtr& scene )
+{
+	CALL_PLUGIN_CHECK(onServerConnect, scene);
+}
+
+//-----------------------------------//
+
+void Events::onServerDisconnect( const SessionPtr& scene )
+{
+	CALL_PLUGIN_CHECK(onServerDisconnect, scene);
+}
+
+//-----------------------------------//
+
 void Events::onSceneUpdate()
 {
 	CALL_PLUGIN(onSceneUpdate)

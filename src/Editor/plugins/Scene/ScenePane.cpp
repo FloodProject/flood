@@ -26,7 +26,10 @@
 
 #include "Plugins/Networking/ServerPlugin.h"
 #include "Protocol/ReplicaMessages.h"
+#include "Protocol/ReplicaContext.h"
 #include "Network/Host.h"
+
+#include "SceneDocument.h"
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -40,7 +43,7 @@ ScenePage::ScenePage( wxWindow* parent, wxWindowID id )
 	, buttonEntityDelete(nullptr)
 	, currentMenu(nullptr)
 	, sentLastSelectionEvent(false)
-	, nodeCounter(0)
+	, entityCounter(0)
 {
 	initTree();
 	initButtons();
@@ -166,7 +169,7 @@ void ScenePage::addGroup( wxTreeItemId id, const EntityPtr& entity, bool createG
 	EntityItemData* data = new EntityItemData();
 	data->entity = entity.get();
 
-	nodeIds[entity.get()] = groupId;
+	entityIds[entity.get()] = groupId;
 	treeCtrl->SetItemData( groupId, data );
 
 	const std::vector<EntityPtr>& entities = group->getEntities();
@@ -195,7 +198,7 @@ wxTreeItemId ScenePage::addEntity( wxTreeItemId id, const EntityPtr& entity )
 	data->entity = entity.get();
 
 	treeCtrl->SetItemData( nodeId, data );
-	nodeIds[entity.get()] = nodeId;
+	entityIds[entity.get()] = nodeId;
 
 	return nodeId;
 }
@@ -204,9 +207,7 @@ wxTreeItemId ScenePage::addEntity( wxTreeItemId id, const EntityPtr& entity )
 
 void ScenePage::addComponent( wxTreeItemId id, ComponentPtr component )
 {
-	assert( component != nullptr );
 	Class* klass = component->getType();
-
 	wxTreeItemId compId = treeCtrl->AppendItem( id, klass->name, icons[klass] );
 
 	EntityItemData* data = new EntityItemData();
@@ -219,9 +220,7 @@ void ScenePage::addComponent( wxTreeItemId id, ComponentPtr component )
 
 ComponentPtr ScenePage::getComponentFromTreeId( wxTreeItemId id )
 {
-	if( !id )
-		return ComponentPtr();
-
+	if( !id ) return nullptr;
 	EntityItemData* data = (EntityItemData*) treeCtrl->GetItemData(id);
 	return data->component;
 }
@@ -245,12 +244,12 @@ EntityPtr ScenePage::getEntityFromTreeId( wxTreeItemId id )
 
 wxTreeItemId ScenePage::getTreeIdFromEntity(const EntityPtr& entity)  
 {
-	EntityIdsMap::iterator it = nodeIds.find(entity.get());
+	Entity* raw = entity.get();
 
-	if( it == nodeIds.end() )
-		return wxTreeItemId();
+	EntityIdsMap::iterator it = entityIds.find(raw);
+	if( it == entityIds.end() ) return nullptr;
 
-	return nodeIds[entity.get()];
+	return entityIds[raw];
 }
 
 //-----------------------------------//
@@ -293,16 +292,16 @@ void ScenePage::addEntity(const EntityPtr& entity)
 	Document* document = GetEditor().getDocument();
 	if( !document ) return;
 
-	EntityOperation* nodeOperation;
-	nodeOperation = createEntityOperation(entity, "Entity added");
-	nodeOperation->added = true;
+	EntityOperation* entityOperation;
+	entityOperation = createEntityOperation(entity, "Entity added");
+	entityOperation->added = true;
 
-	if( !nodeOperation ) return;
+	if( !entityOperation ) return;
 
 	UndoManager* undoManager = document->getUndoManager();
-	undoManager->registerOperation(nodeOperation);
+	undoManager->registerOperation(entityOperation);
 
-	nodeOperation->redo();
+	entityOperation->redo();
 
 	wxTreeItemId id = getTreeIdFromEntity(entity);
 	treeCtrl->Expand(id);
@@ -314,24 +313,29 @@ void ScenePage::addEntity(const EntityPtr& entity)
 
 void ScenePage::onButtonEntityAdd(wxCommandEvent&)
 {
-	String name("Entity"+StringFromNumber(nodeCounter++));
+	String name("Entity"+StringFromNumber(entityCounter++));
 
 	EntityPtr entity = EntityCreate( AllocatorGetHeap() );
 	entity->setName(name);
 	entity->addTransform();
 
-	ReplicaCreateMessage inst;
+#ifndef NO_NETWORK
+	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
+
+	ReplicaObjectCreateMessage inst;
+	inst.contextId = document->replicaContext->id;
 	inst.localId = 23;
 	inst.classId = entity->getType()->id;
 	inst.instance = entity.get();
 
-	MessagePtr msg = MessageCreate( ReplicaMessageIds::ReplicaCreate );
+	MessagePtr msg = MessageCreate( ReplicaMessageIds::ReplicaObjectCreate );
 	msg->write(&inst);
 
 	ServerPlugin* sp = GetPlugin<ServerPlugin>();
 	sp->host->getPeer()->queueMessage(msg, 0);
-
-	//addEntity(entity);
+#else
+	addEntity(entity);
+#endif
 }
 
 //-----------------------------------//
@@ -344,17 +348,28 @@ void ScenePage::onButtonEntityDelete(wxCommandEvent&)
 	if(!entity)
 		return;
 
-	EntityOperation* nodeOperation;
-	nodeOperation = createEntityOperation(entity, "Entity removed");
-	nodeOperation->added = false;
+	EntityOperation* entityOperation;
+	entityOperation = createEntityOperation(entity, "Entity removed");
+	entityOperation->added = false;
 
-	if( !nodeOperation )
+	if( !entityOperation )
 		return;
 
 	Events* events = GetEditor().getEventManager();
 	events->onEntityUnselect(entity);
 
-	nodeOperation->redo();
+	entityOperation->redo();
+
+#ifndef NO_NETWORK
+	ReplicaObjectDeleteMessage del;
+	del.instanceId = 0;
+
+	MessagePtr msg = MessageCreate( ReplicaMessageIds::ReplicaObjectDelete );
+	msg->write(&del);
+
+	ServerPlugin* sp = GetPlugin<ServerPlugin>();
+	sp->host->getPeer()->queueMessage(msg, 0);
+#endif
 }
 
 //-----------------------------------//
@@ -362,9 +377,7 @@ void ScenePage::onButtonEntityDelete(wxCommandEvent&)
 void ScenePage::onButtonEntityDeleteUpdate(wxUpdateUIEvent& event)
 {
 	ScenePtr scene = weakScene;
-
-	if( !scene )
-		return;
+	if( !scene ) return;
 
 	bool empty = scene->getEntities().empty();
 	event.Enable( !empty );
@@ -388,8 +401,8 @@ void ScenePage::onEntityRemoved( const EntityPtr& entity )
 	wxTreeItemId id = getTreeIdFromEntity(entity);
 	treeCtrl->Delete(id);
 	
-	assert( nodeIds[entity.get()] == id );
-	nodeIds.erase(entity.get());
+	assert( entityIds[entity.get()] == id );
+	entityIds.erase(entity.get());
 }
 
 //-----------------------------------//
@@ -514,7 +527,7 @@ void ScenePage::onAttachmentMenuSelected(wxCommandEvent& event)
 	const SkeletonPtr& skeleton = mesh->getSkeleton();
 	BonePtr bone = skeleton->getBones()[ind];
 
-	String name = "Attachment"+StringFromNumber(nodeCounter++);
+	String name = "Attachment"+StringFromNumber(entityCounter++);
 	
 	EntityPtr entity( EntityCreate( AllocatorGetHeap() ) );
 	entity->setName(name);
@@ -623,9 +636,9 @@ void ScenePage::onMenuSelected( wxCommandEvent& event )
 	//-----------------------------------//
 	else if( id == ID_MenuSceneEntityDelete )
 	{
-		EntityOperation* nodeOperation;
-		nodeOperation = createEntityOperation(node, "Entity Delete");
-		nodeOperation->undo();
+		EntityOperation* entityOperation;
+		entityOperation = createEntityOperation(node, "Entity Delete");
+		entityOperation->undo();
 
 #if 0
 		String str = (String) treeCtrl->GetItemText(menuItemId);
@@ -650,7 +663,7 @@ void ScenePage::onMenuSelected( wxCommandEvent& event )
 	//-----------------------------------//
 	else if( id == ID_MenuSceneEntityTerrain )
 	{
-		String name("Terrain"+StringFromNumber(nodeCounter++));
+		String name("Terrain"+StringFromNumber(entityCounter++));
 		
 		TerrainPtr terrain( new Terrain(name) );
 		scene->add( terrain );
@@ -670,32 +683,54 @@ void ScenePage::onMenuSelected( wxCommandEvent& event )
 
 void ScenePage::onComponentAdd(wxCommandEvent& event )
 {
-	const EntityPtr& entity = getEntityFromTreeId( menuItemId );
+	Entity* entity = getEntityFromTreeId( menuItemId ).get();
 	
 	int id = event.GetId();
-	
-	if( id == wxID_NONE )
-		return;
+	if( id == wxID_NONE ) return;
 
 	const String name = currentMenu->GetLabelText(id); 
 	Type* type = ReflectionFindType( name.c_str() );
 	
 	if( !type ) return;
 
-	ComponentPtr component;
-
 	Class* klass = (Class*) type;
-	Component* pComp = (Component*) ClassCreateInstance(klass, AllocatorGetHeap());
-	component.reset(pComp);
-
-	if( ReflectionIsEqual(klass, ReflectionGetType(Skydome)) )
+	Component* component = (Component*) ClassCreateInstance(klass, AllocatorGetHeap());
+	
+	if( !component )
 	{
-		entity->setTag(Tags::NonPickable, true);
-		entity->setTag(Tags::NonCulled, true);
+		LogAssert("Invalid component type");
+		return;
 	}
 
-	if( component && entity->addComponent(component) )
-		addComponent(menuItemId, component);
+#ifndef NO_NETWORK
+	SceneDocument* document = (SceneDocument*) GetEditor().getDocument();
+
+	ReplicaInstanceId instanceId;
+	if( !document->replicaContext->findInstance(entity, instanceId) )
+	{
+		LogDebug("Entity instance not found replica context");
+		return;
+	}
+
+	ReplicaObjectCreateMessage create;
+	create.contextId = document->replicaContext->id;
+	create.parentId = instanceId;
+	create.instance = component;
+
+	MessagePtr m_create = MessageCreate( ReplicaMessageIds::ReplicaObjectCreate );
+	m_create->write(&create);
+
+	ServerPlugin* sp = GetPlugin<ServerPlugin>();
+	sp->host->getPeer()->queueMessage(m_create, 0);
+#else
+	if( !entity->addComponent(component) )
+	{
+		LogDebug("Could not add component to entity");
+		return;
+	}
+	
+	addComponent(menuItemId, component);
+#endif
 }
 
 //-----------------------------------//

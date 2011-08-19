@@ -55,15 +55,13 @@ static void RegisterClass(Class* klass)
 	uint32 hash = HashMurmur2(0xBEEF, (uint8*) klass->name, strlen(klass->name));
 	klass->id = (ClassId) hash;
 
-	// Register as child class in the parent class.
+	//LogDebug("Registering class: '%s' with id '%u'", klass->name, klass->id);
 
+	// Register as child class in the parent class.
 	Class* parent = klass->parent;
-	
-	if( parent )
-		parent->childs.push_back(klass);
+	if( parent ) parent->childs.push_back(klass);
 
 	// Register the class id in the map.
-
 	ClassIdMap& ids = ClassGetIdMap();
 
 	if( ids.find(klass->id) != ids.end() )
@@ -81,13 +79,12 @@ void ReflectionRegisterType(Type* type)
 {
 	if( !type ) return;
 
-	const char* name = type->name;
-
 	ReflectionTypeMap& map = ReflectionGetTypeMap();
+	const char* name = type->name;
 
 	if( map.find(name) != map.end() )
 	{
-		assert(0 && "Type already exists in the registry");
+		LogAssert("Type '%s' already exists in the registry", name);
 		return;
 	}
 
@@ -279,7 +276,11 @@ void* ClassCreateInstance(const Class* klass, Allocator* alloc)
 {
 	if( !klass ) return nullptr;
 
-	assert( !ClassIsAbstract(klass) );
+	if( ClassIsAbstract(klass) )
+	{
+		LogAssert("Could not create instance of abstract class '%s'", klass->name);
+		return nullptr;
+	}
 	
 	void* object = klass->create_fn(alloc);
 	return object;

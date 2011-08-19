@@ -9,6 +9,7 @@
 #pragma once
 
 #include "Core/Reflection.h"
+#include "Core/Object.h"
 #include "Math/Vector.h"
 #include "Math/Matrix4x4.h"
 #include "Math/Plane.h"
@@ -36,10 +37,14 @@ API_CORE REFLECT_DECLARE_ENUM(Projection);
  * Frustum is a shape similiar to a pyramid with the top truncated.
  */
 
-struct API_CORE Frustum // : public Object
+REFLECT_DECLARE_CLASS(Frustum)
+
+struct API_CORE Frustum : public Object
 {
-    Frustum();
-    Frustum( const Frustum& rhs );
+	REFLECT_DECLARE_OBJECT(Frustum)
+
+	Frustum();
+	Frustum( const Frustum& rhs );
 
 	// Updates the projection matrix.
 	void updateProjection();
@@ -50,8 +55,8 @@ struct API_CORE Frustum // : public Object
 	// Updates the frustum corners.
 	void updateCorners( const Matrix4x3& matView );
 
-    // Checks if the box is inside the frustum.
-    bool intersects( const BoundingBox& box ) const;
+	// Checks if the box is inside the frustum.
+	bool intersects( const BoundingBox& box ) const;
 
 public:
 
@@ -76,15 +81,13 @@ public:
 	// Ortographic view size.
 	Vector3 orthoSize;
 
-    // Stores the planes that make up the frustum.
-    // Order: Left, Right, Top, Bottom, Near, Far.
-    Plane planes[6];
+	// Stores the planes that make up the frustum.
+	// Order: Left, Right, Top, Bottom, Near, Far.
+	Plane planes[6];
 
 	// Frustum corner points.
 	Vector3 corners[8];
 };
-
-API_CORE REFLECT_DECLARE_CLASS(Frustum)
 
 //-----------------------------------//
 

@@ -65,11 +65,13 @@ void TestSerialization(CuTest* tc, SerializerCreateFunction SerializerCreate, co
 
 	F instanceF;
 	instanceF.allocate();
+	instanceF.a.foo = 42;
 	SerializerSaveObjectToFile(serializer, StringFormat("TestF.%s", ext), &instanceF);
 	
 	F* loadF = (F*) SerializerLoadObjectFromFile(serializer, StringFormat("TestF.%s", ext));
 	CuAssertIntEquals(tc, instanceF.vecA[0].foo, loadF->vecA[0].foo);
 	CuAssertIntEquals(tc, instanceF.vecA[1].foo, loadF->vecA[1].foo);
+	CuAssertIntEquals(tc, instanceF.a.foo, loadF->a.foo);
 	Deallocate(loadF);
 
 	Deallocate(serializer);

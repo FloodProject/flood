@@ -16,8 +16,8 @@
 void TestFile(CuTest* tc)
 {
 	// File not found
-	Stream* not_found = StreamCreateFromFile( AllocatorGetHeap(), "Test.h", StreamMode::Read );
-	CuAssertPtrEquals(tc, nullptr, not_found);
+	Stream* notFound = StreamCreateFromFile( AllocatorGetHeap(), "Test.h", StreamMode::Read );
+	CuAssertPtrEquals(tc, nullptr, notFound);
 
 	// File opening
 	StreamPtr file( pStreamCreateFromFile(AllocatorGetHeap(), "file.txt", StreamMode::Read) );
@@ -55,9 +55,22 @@ void TestFile(CuTest* tc)
 	CuAssertStrEquals(tc, "spam", lines[2].c_str());
 }
 
+void TestWeb(CuTest* tc)
+{
+	Stream* ws = StreamCreateWeb(AllocatorGetHeap(), "http://www.google.com", StreamMode::Read);
+
+	String response;
+	StreamReadString(ws, response);
+
+	CuAssertTrue(tc, response.size() > 0);
+
+	StreamDestroy(ws);
+}
+
 CuSuite* GetSuiteStreams()
 {
     CuSuite* suite = CuSuiteNew();
     SUITE_ADD_TEST(suite, TestFile);
+	SUITE_ADD_TEST(suite, TestWeb);
     return suite;
 }

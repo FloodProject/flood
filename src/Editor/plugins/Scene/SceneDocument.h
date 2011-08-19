@@ -13,6 +13,8 @@
 #include "RenderWindow.h"
 #include "RenderControl.h"
 
+class ReplicaContext;
+
 NAMESPACE_EDITOR_BEGIN
 
 //-----------------------------------//
@@ -42,12 +44,12 @@ public:
 	// Creates a context toolbar.
 	virtual wxAuiToolBar* createContextToolbar() OVERRIDE;
 
-	// Tool selection callbacks.
+	// Document callbacks.
 	virtual void onToolSelect(PluginTool* tool) OVERRIDE;
-
-	// Document selection callbacks.
 	virtual void onDocumentSelect() OVERRIDE;
 	virtual void onDocumentUnselect() OVERRIDE;
+
+	ReplicaContext* replicaContext;
 
 	ScenePtr scene;
 	ScenePtr editorScene;

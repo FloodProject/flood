@@ -85,9 +85,6 @@
     <Filter Include="Widgets\Keybinder">
       <UniqueIdentifier>{cbe3cb4c-c565-4f91-833e-4ee9d907bb1b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Plugins\Resources\Database">
-      <UniqueIdentifier>{a18540f3-66c1-46b8-8825-8b986e4318e7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Plugins\Resources\Thumbnails">
       <UniqueIdentifier>{f3636649-78a5-4666-9772-9dcb2381975a}</UniqueIdentifier>
     </Filter>
@@ -257,9 +254,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourceThumbnailer.cpp">
       <Filter>Plugins\Resources\Thumbnails</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Editor\plugins\Resources\ResourceDatabase.cpp">
-      <Filter>Plugins\Resources\Database</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Editor\plugins\Scene\SceneDocument.cpp">
       <Filter>Plugins\Scene</Filter>
@@ -443,9 +437,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourceThumbnailer.h">
       <Filter>Plugins\Resources\Thumbnails</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Editor\plugins\Resources\ResourceDatabase.h">
-      <Filter>Plugins\Resources\Database</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Editor\plugins\Scene\SceneDocument.h">
       <Filter>Plugins\Scene</Filter>

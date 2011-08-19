@@ -44,7 +44,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\src\Server\inc;$(SolutionDir)..\..\inc\;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\dep\lua\include;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\enet\include;$(SolutionDir)..\..\dep\curl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\src\Server\inc;$(SolutionDir)..\..\inc\;$(SolutionDir)..\..\inc\vapor;$(SolutionDir)..\..\dep\lua\include;$(SolutionDir)..\..\dep\vld\include;$(SolutionDir)..\..\dep\enet\include;$(SolutionDir)..\..\dep\curl\include;$(SolutionDir)..\..\dep\mongoose;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -86,13 +86,18 @@
     <ClCompile Include="..\..\src\Server\Main.cpp" />
     <ClCompile Include="..\..\src\Server\Plugins\ChatMessagesServer.cpp" />
     <ClCompile Include="..\..\src\Server\Plugins\ReplicaMessagesServer.cpp" />
+    <ClCompile Include="..\..\src\Server\Plugins\ResourcesPlugin.cpp" />
+    <ClCompile Include="..\..\src\Server\Plugins\ScenePlugin.cpp" />
     <ClCompile Include="..\..\src\Server\Plugins\UserMessagesServer.cpp" />
     <ClCompile Include="..\..\src\Server\Server.cpp" />
+    <ClCompile Include="..\..\src\Server\ServerPlugin.cpp" />
     <ClCompile Include="..\..\src\Server\Settings.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\Server\API.h" />
+    <ClInclude Include="..\..\inc\Server\Plugins\ResourcesPlugin.h" />
     <ClInclude Include="..\..\inc\Server\Server.h" />
+    <ClInclude Include="..\..\inc\Server\ServerPlugin.h" />
     <ClInclude Include="..\..\inc\Server\Settings.h" />
   </ItemGroup>
   <ItemGroup>

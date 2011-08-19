@@ -100,6 +100,9 @@ public:
 	// Adds an entity to the scene.
 	void addEntity(const EntityPtr& entity);
 
+	// Adds a component to the tree item.
+	void addComponent( wxTreeItemId id, ComponentPtr component );
+
 protected:
 
 	// Initializes the control.
@@ -114,9 +117,6 @@ protected:
 
 	// Adds a node to the tree.
 	wxTreeItemId addEntity( wxTreeItemId id, const EntityPtr& node );
-
-	// Adds a component to the tree item.
-	void addComponent( wxTreeItemId id, ComponentPtr component );
 
 	// Creates a new node operation.
 	EntityOperation* createEntityOperation(const EntityPtr& node, const std::string& desc);
@@ -161,7 +161,7 @@ protected:
 	wxTreeItemId rootId;
 	wxTreeItemId menuItemId;
 	wxTreeItemId dragItemId;
-	EntityIdsMap nodeIds;
+	EntityIdsMap entityIds;
 
 	// Tree icons.
 	wxImageList* imageList;
@@ -179,7 +179,7 @@ protected:
 	SceneWeakPtr weakScene;
 
 	// Entity counter.
-	int nodeCounter;
+	int entityCounter;
 };
 
 //-----------------------------------//

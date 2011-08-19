@@ -25,12 +25,14 @@ Component::Component()
 	, debugInheritsTransform(true)
 	, debugRenderable(nullptr)
 	, entity(nullptr)
-{ }
+{
+}
 
 //-----------------------------------//
 
 Component::~Component()
-{ }
+{
+}
 
 //-----------------------------------//
 
@@ -49,7 +51,8 @@ void Component::setEntity( Entity* entity )
 //-----------------------------------//
 
 void Component::onPreRender( const Camera& camera )
-{ }
+{
+}
 
 //-----------------------------------//
 

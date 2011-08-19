@@ -10,18 +10,44 @@
 
 #ifdef ENABLE_HTTP_SERVER
 
+#include "Core/String.h"
 #include "Core/WebServer.h"
 #include "Core/Memory.h"
 
 #include "mongoose.h"
 
-NAMESPACE_EXTERN_BEGIN
+NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
 static void* MongooseCallback(mg_event event, mg_connection* conn, const mg_request_info* request_info)
 {
-	return 0;
+	if(event != MG_NEW_REQUEST) return 0;
+
+	WebContext* context = (WebContext*) request_info->user_data;
+
+	// Find route callback.
+	WebCallback callback = 0;
+
+	for(size_t i = 0; i < context->routes.size(); ++i)
+	{
+		WebRoute& route = context->routes[i];
+		
+		if( !StringMatch(request_info->uri, route.pattern) )
+			continue;
+
+		callback = route.callback;
+		break;
+	}
+
+	WebRequest req;
+	req.conn = conn;
+	req.req = request_info;
+
+	if( !callback ) return 0;
+	callback(context, &req);
+
+	return (void*) 1;
 };
 
 //-----------------------------------//
@@ -36,19 +62,21 @@ WebContext* WebServerCreate( Allocator* alloc )
 
 //-----------------------------------//
 
-bool WebServerStart( WebContext* context, const char* port )
+bool WebServerStart( WebContext* context, uint16 port )
 {
 	if( !context ) return false;
 
-	mg_callback_t callback = MongooseCallback;
+	static char buf[64];
+	sprintf_s(buf, ARRAY_SIZE(buf), "%hu", port);
 
 	const char *options[] =
 	{
-		"listening_ports", port,
-		"num_threads", "2",
+		"listening_ports", buf,
+		"num_threads", "10",
 		nullptr
 	};
 
+	mg_callback_t callback = MongooseCallback;
 	context->mongoose = mg_start(callback, context, options);
 
 	return false;
@@ -56,12 +84,20 @@ bool WebServerStart( WebContext* context, const char* port )
 
 //-----------------------------------//
 
-void WebServerCallback( String uri, WebCallback callback )
+void WebServerStop( WebContext* context )
 {
+	mg_stop(context->mongoose);
 }
 
 //-----------------------------------//
 
-NAMESPACE_EXTERN_END
+void WebServerAddRoute( WebContext* context, WebRoute route )
+{
+	context->routes.push_back(route);
+}
+
+//-----------------------------------//
+
+NAMESPACE_CORE_END
 
 #endif

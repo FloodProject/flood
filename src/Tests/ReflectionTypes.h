@@ -162,6 +162,7 @@ struct F : public Object
 		vecA.resize(2);
 		vecA[0].foo = 83;
 		vecA[1].foo = 38;
+		a.foo = 0;
 	}
 
 	~F()
@@ -169,6 +170,7 @@ struct F : public Object
 	}
 
 	std::vector<A> vecA;
+	A a;
 };
 
 //-----------------------------------//

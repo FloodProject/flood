@@ -16,8 +16,8 @@ FWD_DECL_INTRUSIVE(Message)
 
 NAMESPACE_CORE_BEGIN
 
-class HostClient;
 class Dispatcher;
+class HostClient;
 struct HostConnectionDetails;
 
 NAMESPACE_CORE_END
@@ -37,6 +37,9 @@ class ServerPlugin : public EditorPlugin
 public:
 
 	ServerPlugin();
+
+	GETTER(Host, HostClient*, host)
+	GETTER(Dispatcher, Dispatcher*, dispatcher)
 
 	// Gets metadata about this plugin.
 	PluginMetadata getMetadata() OVERRIDE;
@@ -66,8 +69,8 @@ public:
 	void processMessages(Thread* thread, void* userdata);
 
 	// Network callbacks.
-	void handleClientConnect(const PeerPtr&);
-	void handleClientDisconnect(const PeerPtr&);
+	void handleSessionAdded(const SessionPtr&);
+	void handleSessionRemoved(const SessionPtr&);
 
 	// Widget callbacks.
 	void onConnectClick(wxCommandEvent& event);
@@ -81,6 +84,13 @@ public:
 	
 	ServerPane* pane;
 };
+
+template<typename T> T* GetMessagePlugin()
+{
+	Dispatcher* dispatcher = GetPlugin<ServerPlugin>()->getDispatcher();
+	Plugin* plugin = dispatcher->getPluginManager()->getPluginFromClass(T::getStaticType());
+	return (T*) plugin;
+}
 
 //-----------------------------------//
 

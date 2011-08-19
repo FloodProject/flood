@@ -197,6 +197,7 @@
     <ClCompile Include="..\..\src\Core\Log.cpp" />
     <ClCompile Include="..\..\src\Core\Memory.cpp" />
     <ClCompile Include="..\..\src\Core\MemoryStream.cpp" />
+    <ClCompile Include="..\..\src\Core\Pattern.cpp" />
     <ClCompile Include="..\..\src\Core\Plugin.cpp" />
     <ClCompile Include="..\..\src\Core\PluginManager.cpp" />
     <ClCompile Include="..\..\src\Core\Profiler.cpp" />

@@ -32,9 +32,9 @@ REFLECT_CLASS_END()
 
 void UserMessagesClient::handleUserAuthStatus(const SessionPtr& session, const UserAuthStatusMessage&)
 {
-	ReplicaAskUpdateMessage ask;
+	ReplicaContextRequestMessage ask;
 	
-	MessagePtr m_ask = MessageCreate(ReplicaMessageIds::ReplicaAskUpdate);
+	MessagePtr m_ask = MessageCreate(ReplicaMessageIds::ReplicaContextRequest);
 	m_ask->write(&ask);
 
 	ServerPlugin* serverPlugin = GetPlugin<ServerPlugin>();

@@ -12,10 +12,13 @@
 
 #include "Resources/Sound.h"
 #include "Math/Vector.h"
-#include "Audio/AL.h"
 
 FWD_DECL_INTRUSIVE(AudioBuffer)
 FWD_DECL_INTRUSIVE(AudioContext)
+
+typedef struct ALCdevice_struct ALCdevice;
+typedef struct ALCcontext_struct ALCcontext;
+typedef int ALenum;
 
 NAMESPACE_ENGINE_BEGIN
 

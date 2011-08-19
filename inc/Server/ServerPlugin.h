@@ -1,32 +1,32 @@
 /************************************************************************
 *
-* vapor3D Server © (2008-2010)
+* vapor3D Editor © (2008-2010)
 *
 *	<http://www.vapor3d.org>
 *
 ************************************************************************/
 
-#include "Server/API.h"
-#include "Server/ServerPlugin.h"
+#pragma once
+
+#include "Core/Plugin.h"
 
 NAMESPACE_SERVER_BEGIN
 
 //-----------------------------------//
 
-REFLECT_ABSTRACT_CHILD_CLASS(ServerPlugin, Plugin)
-REFLECT_CLASS_END()
+REFLECT_DECLARE_CLASS(ServerPlugin)
 
-//-----------------------------------//
-
-ServerPlugin::ServerPlugin()
+class API_SERVER ServerPlugin : public Plugin
 {
-}
+	REFLECT_DECLARE_OBJECT(ServerPlugin)
 
-//-----------------------------------//
+	friend class PluginManager;
 
-ServerPlugin::~ServerPlugin()
-{
-}
+public:
+
+	ServerPlugin();
+	virtual ~ServerPlugin();
+};
 
 //-----------------------------------//
 

@@ -11,12 +11,14 @@
 #include "Network/Host.h"
 #include "Network/Message.h"
 #include "Network/Dispatcher.h"
+#include "Network/SessionManager.h"
 #include "Network/MessagePlugin.h"
 #include "Protocol/UserMessages.h"
 #include "Editor.h"
 #include "Settings.h"
 #include "ServerPane.h"
 #include "Core/Utilities.h"
+#include "Events.h"
 
 NAMESPACE_EDITOR_BEGIN
 
@@ -119,12 +121,14 @@ void ServerPlugin::onPluginUpdate()
 bool ServerPlugin::initClient(const HostConnectionDetails& details)
 {
 	host = Allocate(HostClient, AllocatorGetThis());
-	host->onClientConnected.Connect(this, &ServerPlugin::handleClientConnect);
-	host->onClientDisconnected.Connect(this, &ServerPlugin::handleClientDisconnect);
-
+	
 	dispatcher = Allocate(Dispatcher, AllocatorGetThis());
 	dispatcher->initClient(host);
 	dispatcher->initPlugins(ReflectionGetType(MessagePlugin));
+
+	SessionManager* sm = dispatcher->getSessionManager();
+	sm->onSessionAdded.Connect(this, &ServerPlugin::handleSessionAdded);
+	sm->onSessionRemoved.Connect(this, &ServerPlugin::handleSessionRemoved);
 
 	connect(details);
 
@@ -201,7 +205,7 @@ void ServerPlugin::connect(const HostConnectionDetails& details)
 
 	if( !host->connect(details) )
 	{
-		LogError("Error conecting to server...");
+		LogError("Error connecting to server...");
 		return;
 	}
 }
@@ -248,19 +252,23 @@ void ServerPlugin::onConnectClick(wxCommandEvent& event)
 
 //-----------------------------------//
 
-void ServerPlugin::handleClientConnect(const PeerPtr& peer)
+void ServerPlugin::handleSessionAdded(const SessionPtr& session)
 {
+	const PeerPtr& peer = session->getPeer();
 	LogInfo("Connected to server at: %s", peer->getHostIP().c_str());
 	pane->onClientConnect(peer);
+	GetEditor().getEventManager()->onServerConnect(session);
 }
 
 //-----------------------------------//
 
-void ServerPlugin::handleClientDisconnect(const PeerPtr& peer)
+void ServerPlugin::handleSessionRemoved(const SessionPtr& session)
 {
+	const PeerPtr& peer = session->getPeer();
 	LogInfo("Disconnected from server at: %s", peer->getHostIP().c_str());
 	pane->onClientDisconnect(peer);
 	isDisconnecting = true;
+	GetEditor().getEventManager()->onServerDisconnect(session);
 }
 
 //-----------------------------------//

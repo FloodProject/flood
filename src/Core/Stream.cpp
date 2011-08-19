@@ -33,6 +33,8 @@ bool StreamClose(Stream* stream)
 
 void StreamDestroy(Stream* stream)
 {
+	if( !stream ) return;
+
 	if( !StreamClose(stream) )
 	{
 		LogDebug("Error closing stream: %s", stream->path.c_str());
@@ -50,9 +52,7 @@ int64 StreamRead(Stream* stream, std::vector<uint8>& data)
 	int64 length = StreamGetSize(stream);
 	data.resize( (size_t) length );
 
-	if( data.empty() ) return 0;
-
-	return StreamReadBuffer(stream, &data.front(), data.size());
+	return StreamReadBuffer(stream, &data[0], data.size());
 }
 
 //-----------------------------------//
@@ -77,18 +77,17 @@ int64 StreamReadString(Stream* stream, String& text)
 
 int64 StreamReadLines(Stream* stream, std::vector<String>& lines)
 {
-	String str;
-	int64 size = StreamReadString(stream, str);
+	String text;
+	int64 size = StreamReadString(stream, text);
 
-	StringSplit(str, '\n', lines);
+	StringSplit(text, '\n', lines);
 	
-	// Trim extra line endings that might be left.
+	// Erase extra line endings.
 	for( size_t i = 0; i < lines.size(); i++ )
 	{
-		String& str = lines[i];
-		
-		if( str[str.size()-1] == '\r' )
-			str.erase( str.size()-1 );
+		String& line = lines[i];
+		size_t last = line.size() - 1;
+		if( line[last] == '\r' ) line.erase(last);
 	}
 
 	return size;

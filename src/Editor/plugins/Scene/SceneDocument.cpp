@@ -299,9 +299,9 @@ void SceneDocument::onUpdate( float delta )
 	#pragma TODO("Engine specific updates should not be done per scene")
 
 	GetEngine()->update( delta );
+	scene->update(delta);
+	editorScene->update( delta );
 	
-	if(editorScene)
-		editorScene->update( delta );
 	//eventManager->onSceneUpdate();
 
 	if(getRenderWindow()->isCursorVisible() && cameraController->getEnabled())

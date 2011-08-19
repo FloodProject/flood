@@ -39,6 +39,7 @@
     <ClCompile Include="..\..\src\Resources\OGG_Loader.cpp" />
     <ClCompile Include="..\..\src\Resources\PNG_Loader.cpp" />
     <ClCompile Include="..\..\src\Resources\Resource.cpp" />
+    <ClCompile Include="..\..\src\Resources\ResourceDatabase.cpp" />
     <ClCompile Include="..\..\src\Resources\ResourceLoaders.cpp" />
     <ClCompile Include="..\..\src\Resources\ResourceManager.cpp" />
     <ClCompile Include="..\..\src\Resources\ResourceSound.cpp" />
@@ -68,6 +69,7 @@
     <ClInclude Include="..\..\inc\Resources\OGG_Loader.h" />
     <ClInclude Include="..\..\inc\Resources\PNG_Loader.h" />
     <ClInclude Include="..\..\inc\Resources\Resource.h" />
+    <ClInclude Include="..\..\inc\Resources\ResourceDatabase.h" />
     <ClInclude Include="..\..\inc\Resources\ResourceLoader.h" />
     <ClInclude Include="..\..\inc\Resources\ResourceManager.h" />
     <ClInclude Include="..\..\inc\Resources\Shader.h" />

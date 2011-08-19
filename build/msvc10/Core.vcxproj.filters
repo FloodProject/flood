@@ -154,6 +154,9 @@
     <Filter Include="Streams\Memory">
       <UniqueIdentifier>{d4373a1d-2bea-4eea-a164-b6126762c43a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Patterns">
+      <UniqueIdentifier>{ab7994e7-348f-43c9-bc7f-9c87c3044d72}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Core\Utilities.cpp">
@@ -331,6 +334,9 @@
     <ClCompile Include="..\..\src\Core\ClassWatcher.cpp">
       <Filter>Reflection</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Core\Pattern.cpp">
+      <Filter>Patterns</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\Core\Memory.h">
@@ -369,14 +375,8 @@
     <ClInclude Include="..\..\inc\Core\ConcurrentQueue.h">
       <Filter>Concurrency</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\StackWalker.h">
-      <Filter>Debug</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\Core\Log.h">
       <Filter>Logs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\vapor\math\Helpers.h">
-      <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Math\Vector.h">
       <Filter>Math\Vector</Filter>
@@ -615,5 +615,7 @@
     <ClInclude Include="..\..\inc\Core\ClassWatcher.h">
       <Filter>Reflection</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\inc\vapor\math\Helpers.h" />
+    <ClInclude Include="..\..\inc\vapor\StackWalker.h" />
   </ItemGroup>
 </Project>

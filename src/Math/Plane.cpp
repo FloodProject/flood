@@ -16,12 +16,13 @@ NAMESPACE_CORE_BEGIN
 //-----------------------------------//
 
 Plane::Plane()
-{ }
+{
+}
 
 //-----------------------------------//
 
-Plane::Plane( const Vector3& _normal, const Vector3& point )
-	: normal(_normal)
+Plane::Plane( const Vector3& n, const Vector3& point )
+	: normal(n)
 {
 	normal.normalize();
 	offset = -normal.dot(point);
@@ -29,8 +30,8 @@ Plane::Plane( const Vector3& _normal, const Vector3& point )
 
 //-----------------------------------//
 
-Plane::Plane( const Vector3& _normal, float distance )
-	: normal(_normal)
+Plane::Plane( const Vector3& n, float distance )
+	: normal(n)
 	, offset(distance)
 {
 	normal.normalize();
@@ -93,8 +94,7 @@ void Plane::normalize()
 {
 	float magnitude = normal.length();
 
-	if(!(magnitude > 0.0f))
-		return;
+	if(!(magnitude > 0.0f)) return;
 	assert( magnitude > 0.0f );
 
 	// Normalize the normal.

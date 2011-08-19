@@ -14,21 +14,25 @@ NAMESPACE_CORE_BEGIN
 
 //-----------------------------------//
 
-Ray::Ray() {}
+Ray::Ray()
+{
+}
 
 //-----------------------------------//
 
 Ray::Ray( const Vector3& origin, const Vector3& direction ) 
 	: origin( origin )
 	, direction( direction )
-{ }
+{
+}
 
 //-----------------------------------//
 
 Ray::Ray( const Ray& ray )
 	: origin( ray.origin )
 	, direction( ray.direction )
-{ }
+{
+}
 
 //-----------------------------------//
 
@@ -39,7 +43,7 @@ Vector3 Ray::getPoint( float distance ) const
 
 //-----------------------------------//
 
-#if 0
+#ifdef RAY_AABB_ALTERNATIVE
 
 bool Ray::intersects( const Vector3 tri[3], float& t, float& u, float& v ) const 
 { 
@@ -78,11 +82,9 @@ bool Ray::intersects( const Vector3 tri[3], float& t, float& u, float& v ) const
     return true;
 }
 
-#endif
+#else
 
 //-----------------------------------//
-
-#if 1
 
 bool Ray::intersects( const Vector3 (&tri)[3], float& t, float& u, float& v ) const 
 { 

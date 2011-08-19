@@ -39,7 +39,8 @@ Entity::Entity()
 	: visible(true)
 	, tags(0)
 	, parent(nullptr)
-{ }
+{
+}
 
 //-----------------------------------//
 
@@ -49,7 +50,8 @@ Entity::Entity( const String& name )
 	, visible(true)
 	, tags(0)
 	, parent(nullptr)
-{ }
+{
+}
 
 //-----------------------------------//
 
@@ -66,7 +68,7 @@ bool Entity::addComponent( const ComponentPtr& component )
 	}
 
 	componentsMap[type] = component;
-	component->setEntity( this );
+	component->setEntity(this);
 
 	onComponentAdded(component);
 	sendEvents();
@@ -224,7 +226,7 @@ void Entity::sendEvents()
 
 bool Entity::addTransform()
 {
-	TransformPtr transform( TransformCreate(AllocatorGetHeap()) );
+	TransformPtr transform = TransformCreate( AllocatorGetThis() );
 	return addComponent(transform);
 }
 
@@ -261,14 +263,14 @@ bool Entity::isVisible() const
 
 bool Entity::getTag(int32 index)
 {
-	return GetBitFlag(tags, index);
+	return GetBitFlag(tags, (1 << index));
 }
 
 //-----------------------------------//
 
 void Entity::setTag(int32 index, bool state)
 {
-	SetBitFlag(tags, index, state);
+	SetBitFlag(tags, (1 << index), state);
 }
 
 //-----------------------------------//

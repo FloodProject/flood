@@ -51,6 +51,8 @@ API_CORE bool ArchiveExistsDirectory(Archive*, const Path&);
 API_CORE void ArchiveEnumerateFiles(Archive*, std::vector<Path>&);
 API_CORE void ArchiveEnumerateDirectories(Archive*, std::vector<Path>&);
 
+API_CORE Path ArchiveCombinePath(Archive*, const Path& filePath);
+
 // Filesystem helpers.
 API_CORE bool FileExists(const Path&);
 API_CORE void FileEnumerateFiles(const Path&, std::vector<Path>&);

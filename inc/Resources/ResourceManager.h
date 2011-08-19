@@ -17,11 +17,11 @@ NAMESPACE_RESOURCES_BEGIN
 
 struct Stream;
 struct Archive;
+struct TaskPool;
 
 class FileWatcher;
 class FileWatchEvent;
 
-struct TaskPool;
 class ResourceTask;
 class ResourceLoader;
 class ResourceManager;
@@ -48,13 +48,14 @@ struct ResourceLoadOptions
 	ResourceLoadOptions();
 
 	String name;
-	ResourceGroup::Enum group;
-
-	bool asynchronousLoad;
-	bool sendLoadEvent;
+	Stream* stream;
 
 	ResourceHandle handle;
-	Stream* stream;
+	ResourceGroup::Enum group;
+
+	bool sendLoadEvent;
+	bool asynchronousLoad;
+
 };
 
 //-----------------------------------//
