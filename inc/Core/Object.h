@@ -53,10 +53,14 @@ protected:
 	Object() {}
 };
 
-#define REFLECT_DECLARE_OBJECT(className)                                            \
-	public:                                                                          \
-	virtual Class* getType() const OVERRIDE { return ReflectionGetType(className); } \
-	static Class* getStaticType() { return ReflectionGetType(className); }           \
+#define REFLECT_DECLARE_STATIC_CLASS(className) \
+	public: \
+	static Class* getStaticType() { return ReflectionGetType(className); }
+
+#define REFLECT_DECLARE_OBJECT(className) \
+	public: \
+	Class* getType() const OVERRIDE { return ReflectionGetType(className); } \
+	REFLECT_DECLARE_STATIC_CLASS(className) \
 	REFLECT_DECLARE_CLASS_FRIEND(className)
 
 //-----------------------------------//

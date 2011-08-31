@@ -66,8 +66,11 @@ public:
 	virtual PluginMetadata getMetadata() = 0;
 
 	// Plugin callbacks.
-	virtual void onPluginEnable() = 0;
-	virtual void onPluginDisable() = 0;
+	virtual void onPluginEnable() {}
+	virtual void onPluginDisable() {}
+
+		// Sorts plugins by priority.
+	static void sortByPriority(std::vector<Plugin*>& plugins);
 
 protected:
 

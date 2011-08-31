@@ -53,4 +53,20 @@ bool Plugin::isEnabled() const
 
 //-----------------------------------//
 
+static bool SortPluginsCallback(Plugin* a, Plugin* b)
+{
+	int priorityA = a->getMetadata().priority;
+	int priorityB = b->getMetadata().priority;
+
+	return priorityA < priorityB;
+}
+
+void Plugin::sortByPriority(std::vector<Plugin*>& plugins)
+{
+	// Sort the plugins by priority.
+	std::sort(plugins.begin(), plugins.end(), SortPluginsCallback);
+}
+
+//-----------------------------------//
+
 NAMESPACE_CORE_END

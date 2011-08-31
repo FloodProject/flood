@@ -71,9 +71,9 @@ Task* TaskCreate(Allocator* alloc)
 {
 	Task* task = Allocate(Task, alloc);
 	
-	task->Group = 0;
-	task->Priority = 0;
-	task->Userdata = nullptr;
+	task->group = 0;
+	task->priority = 0;
+	task->userdata = nullptr;
 	
 	return task;
 }
@@ -90,7 +90,7 @@ void TaskDestroy(Task* task)
 void TaskRun(Task* task)
 {
 	if( !task ) return;
-	task->Callback(task);
+	task->callback(task);
 	TaskDestroy(task);
 }
 
@@ -147,7 +147,7 @@ void TaskPoolDestroy(TaskPool* pool)
 }
 
 //-----------------------------------//
-
+#ifdef ENABLE_TASK_EVENTS
 static void TaskPoolPushEvent( TaskPool* pool, Task* task, TaskState state)
 {
 	TaskEvent event;
@@ -156,23 +156,28 @@ static void TaskPoolPushEvent( TaskPool* pool, Task* task, TaskState state)
 
 	pool->Events.push( event);
 }
-
+#endif
 //-----------------------------------//
 
 void TaskPoolAdd(TaskPool* pool, Task* task)
 {
-	assert( task && "Invalid task" );
-	assert( !pool->Tasks.find(task) && "Task is already in the queue" );
+	if( !task ) return;
 
-	LogDebug("Added task to pool");
+	if( pool->Tasks.find(task) )
+	{
+		LogAssert("Task is already in the queue");
+		return;
+	}
 
 	pool->Tasks.push(task);
 
+#ifdef ENABLE_TASK_EVENTS
 	TaskEvent event;
 	event.task = task;
 	event.state = TaskState::Added;
 
 	pool->OnTaskEvent(event);
+#endif
 }
 
 //-----------------------------------//
@@ -198,9 +203,15 @@ static void TaskPoolRun(Thread* thread, void* userdata)
 
 		if( !task ) continue;
 
+#ifdef ENABLE_TASK_EVENTS
 		TaskPoolPushEvent( pool, task, TaskState::Started );
+#endif
+
 		TaskRun(task);
+		
+#ifdef ENABLE_TASK_EVENTS
 		TaskPoolPushEvent( pool, task, TaskState::Finished );
+#endif
 	}
 }
 

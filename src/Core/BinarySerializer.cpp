@@ -188,12 +188,6 @@ static void SerializePrimitive( ReflectionContext* context, ReflectionWalkType::
 		EncodeFloat(bin->ms, q.w);
 		break;
 	}
-	case Primitive::Bitfield:
-	{
-		int32& i = *vc.bf;
-		EncodeFixed32(bin->ms, (uint32) i);
-		break;
-	}
 	default:
 		assert( false );
 	}
@@ -328,12 +322,6 @@ static void DeserializePrimitive( ReflectionContext* context )
 		val.z = DecodeFloat(ms);
 		val.w = DecodeFloat(ms);
 		SetFieldValue(QuaternionP, val);
-		break;
-	}
-	case Primitive::Bitfield:
-	{
-		int32 val = DecodeFixed32(ms);
-		SetFieldValue(int32, val);
 		break;
 	}
 	default:

@@ -241,7 +241,6 @@ struct API_CORE Primitive : public Type
 		Uint64,
 		Float,
 		String,
-		Bitfield,
 		Color,
 		Vector3,
 		Quaternion,
@@ -292,6 +291,27 @@ void FieldSet( const Field* field, void* object, const T& value )
 	
 	if(setter) setter(object, (void*) &value);
 	else *addr = value;
+}
+
+// Recursively finds and creates instances of child classes.
+template<typename T>
+API_CORE void ClassCreateChilds(const Class* klass, Allocator* alloc, std::vector<T*>& instances)
+{
+	for( size_t i = 0; i < klass->childs.size(); i++ )
+	{
+		Class* child = klass->childs[i];
+		if( !child ) continue;
+
+		ClassCreateChilds(child, alloc, instances);
+
+		if( ClassIsAbstract(child) )
+			continue;
+
+		T* object = (T*) ClassCreateInstance(child, alloc);
+		if(!object) continue;
+
+		instances.push_back(object);
+	}
 }
 
 //-----------------------------------//

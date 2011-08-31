@@ -90,8 +90,8 @@
       <ProgramDataBaseFileName>$(TargetDir)$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\dep\vld\lib\Win32;$(SolutionDir)..\..\dep\jansson\lib\;$(SolutionDir)..\..\dep\zziplib\lib\;$(SolutionDir)..\..\dep\zlib\lib\vc10;$(SolutionDir)..\..\dep\enet\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>jansson_d.lib;zziplib_d.lib;zlibd.lib;enetd.lib;vld.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\dep\vld\lib\Win32;$(SolutionDir)..\..\dep\curl\lib;$(SolutionDir)..\..\dep\jansson\lib\;$(SolutionDir)..\..\dep\zziplib\lib\;$(SolutionDir)..\..\dep\zlib\lib\vc10;$(SolutionDir)..\..\dep\enet\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>jansson_d.lib;zziplib_d.lib;zlibd.lib;enetd.lib;vld.lib;libcurld.lib;ws2_32.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">
@@ -170,11 +170,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\dep\mongoose\mongoose.cpp" />
-    <ClCompile Include="..\..\dep\rdestl\allocator.cpp" />
-    <ClCompile Include="..\..\dep\rdestl\intrusive_list.cpp" />
-    <ClCompile Include="..\..\dep\rdestl\intrusive_slist.cpp" />
-    <ClCompile Include="..\..\dep\rdestl\list.cpp" />
-    <ClCompile Include="..\..\dep\rdestl\slist.cpp" />
     <ClCompile Include="..\..\src\Core\Archive.cpp">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">_CRT_SECURE_NO_WARNINGS;_DEBUG;___DEBUG;API_CORE_DLL;API_CORE_DLL_EXPORT;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release DLL|Win32'">_CRT_SECURE_NO_WARNINGS;_DEBUG;___DEBUG;API_CORE_DLL;API_CORE_DLL_EXPORT;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -236,8 +231,8 @@
     <ClCompile Include="..\..\src\Network\CipherISAAC.cpp" />
     <ClCompile Include="..\..\src\Network\Dispatcher.cpp" />
     <ClCompile Include="..\..\src\Network\Message.cpp" />
+    <ClCompile Include="..\..\src\Network\MessageHandler.cpp" />
     <ClCompile Include="..\..\src\Network\MessageHandlers.cpp" />
-    <ClCompile Include="..\..\src\Network\MessagePlugin.cpp" />
     <ClCompile Include="..\..\src\Network\Network.cpp" />
     <ClCompile Include="..\..\src\Network\Session.cpp" />
     <ClCompile Include="..\..\src\Network\SessionManager.cpp" />
@@ -247,44 +242,6 @@
   <ItemGroup>
     <ClInclude Include="..\..\dep\FastLZ\fastlz.h" />
     <ClInclude Include="..\..\dep\mongoose\mongoose.h" />
-    <ClInclude Include="..\..\dep\rdestl\algorithm.h" />
-    <ClInclude Include="..\..\dep\rdestl\alignment.h" />
-    <ClInclude Include="..\..\dep\rdestl\allocator.h" />
-    <ClInclude Include="..\..\dep\rdestl\basic_string.h" />
-    <ClInclude Include="..\..\dep\rdestl\buffer_allocator.h" />
-    <ClInclude Include="..\..\dep\rdestl\cow_string_storage.h" />
-    <ClInclude Include="..\..\dep\rdestl\fixed_array.h" />
-    <ClInclude Include="..\..\dep\rdestl\fixed_list.h" />
-    <ClInclude Include="..\..\dep\rdestl\fixed_sorted_vector.h" />
-    <ClInclude Include="..\..\dep\rdestl\fixed_substring.h" />
-    <ClInclude Include="..\..\dep\rdestl\fixed_vector.h" />
-    <ClInclude Include="..\..\dep\rdestl\functional.h" />
-    <ClInclude Include="..\..\dep\rdestl\hash.h" />
-    <ClInclude Include="..\..\dep\rdestl\hash_map.h" />
-    <ClInclude Include="..\..\dep\rdestl\intrusive_list.h" />
-    <ClInclude Include="..\..\dep\rdestl\intrusive_slist.h" />
-    <ClInclude Include="..\..\dep\rdestl\int_to_type.h" />
-    <ClInclude Include="..\..\dep\rdestl\iterator.h" />
-    <ClInclude Include="..\..\dep\rdestl\list.h" />
-    <ClInclude Include="..\..\dep\rdestl\map.h" />
-    <ClInclude Include="..\..\dep\rdestl\pair.h" />
-    <ClInclude Include="..\..\dep\rdestl\radix_sorter.h" />
-    <ClInclude Include="..\..\dep\rdestl\rb_tree.h" />
-    <ClInclude Include="..\..\dep\rdestl\rdestl.h" />
-    <ClInclude Include="..\..\dep\rdestl\rdestl_common.h" />
-    <ClInclude Include="..\..\dep\rdestl\rde_string.h" />
-    <ClInclude Include="..\..\dep\rdestl\set.h" />
-    <ClInclude Include="..\..\dep\rdestl\simple_string_storage.h" />
-    <ClInclude Include="..\..\dep\rdestl\slist.h" />
-    <ClInclude Include="..\..\dep\rdestl\sort.h" />
-    <ClInclude Include="..\..\dep\rdestl\sorted_vector.h" />
-    <ClInclude Include="..\..\dep\rdestl\sstream.h" />
-    <ClInclude Include="..\..\dep\rdestl\stack.h" />
-    <ClInclude Include="..\..\dep\rdestl\stack_allocator.h" />
-    <ClInclude Include="..\..\dep\rdestl\string_utils.h" />
-    <ClInclude Include="..\..\dep\rdestl\type_traits.h" />
-    <ClInclude Include="..\..\dep\rdestl\utility.h" />
-    <ClInclude Include="..\..\dep\rdestl\vector.h" />
     <ClInclude Include="..\..\inc\Core\API.h" />
     <ClInclude Include="..\..\inc\Core\Archive.h" />
     <ClInclude Include="..\..\inc\Core\ClassWatcher.h" />
@@ -332,8 +289,8 @@
     <ClInclude Include="..\..\inc\Network\Dispatcher.h" />
     <ClInclude Include="..\..\inc\Network\Host.h" />
     <ClInclude Include="..\..\inc\Network\Message.h" />
+    <ClInclude Include="..\..\inc\Network\MessageHandler.h" />
     <ClInclude Include="..\..\inc\Network\MessageHandlers.h" />
-    <ClInclude Include="..\..\inc\Network\MessagePlugin.h" />
     <ClInclude Include="..\..\inc\Network\Network.h" />
     <ClInclude Include="..\..\inc\Network\Peer.h" />
     <ClInclude Include="..\..\inc\Network\Session.h" />

@@ -62,43 +62,6 @@ Plugin* PluginManager::getPluginFromClass(const Class* klass)
 
 //-----------------------------------//
 
-static bool SortPluginsCallback(Plugin* a, Plugin* b)
-{
-	int priorityA = a->getMetadata().priority;
-	int priorityB = b->getMetadata().priority;
-
-	return priorityA < priorityB;
-}
-
-void PluginManager::sortPlugins(std::vector<Plugin*>& plugins)
-{
-	// Sort the plugins by priority.
-	std::sort(plugins.begin(), plugins.end(), SortPluginsCallback);
-}
-
-//-----------------------------------//
-
-void PluginManager::scanPlugins(Class* klass, std::vector<Plugin*>& plugins)
-{
-	for( size_t i = 0; i < klass->childs.size(); i++ )
-	{
-		Class* child = klass->childs[i];
-		if( !child ) continue;
-
-		scanPlugins(child, plugins);
-
-		if( ClassIsAbstract(child) )
-			continue;
-
-		Plugin* plugin = (Plugin*) ClassCreateInstance(child, AllocatorGetThis());
-		if(!plugin) continue;
-
-		plugins.push_back(plugin);
-	}
-}
-
-//-----------------------------------//
-
 void PluginManager::registerPlugins(const std::vector<Plugin*>& plugins)
 {
 	for( size_t i = 0; i < plugins.size(); i++ )
@@ -107,9 +70,7 @@ void PluginManager::registerPlugins(const std::vector<Plugin*>& plugins)
 		registerPlugin(plugin);
 		
 		const PluginMetadata& metadata = plugin->getMetadata();
-		
-		if(metadata.startEnabled)
-			enablePlugin(plugin);
+		if(metadata.startEnabled) enablePlugin(plugin);
 	}
 }
 

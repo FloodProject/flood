@@ -43,7 +43,7 @@ void TestHandle(CuTest* tc)
 
 	CuAssertIntEquals(tc, 0, AtomicRead(&HandleManagerA->nextHandle));
 
-	A* instance = Allocate(A,  AllocatorGetHeap() );
+	A* instance = Allocate(A,  AllocatorGetHeap());
 	
 	HandleA handle  = HandleCreate(HandleManagerA, instance);
 	HandleA handle2 = handle;
@@ -53,22 +53,36 @@ void TestHandle(CuTest* tc)
 
 #ifdef COMPILER_SUPPORTS_CPP0X
 	HandleB handleB2 = std::move(handleB);
-	CuAssertIntEquals(tc, HandleInvalid, handleB.id);
+	CuAssertIntEquals(tc, HandleInvalid, handleB.getId());
 	handleB = std::move(handleB2);
 #endif
 
 	CuAssertPtrEquals(tc, instance, instanceB);
 	
 	CuAssertIntEquals(tc, 1, AtomicRead(&HandleManagerA->nextHandle));
-	CuAssertIntEquals(tc, 1, handle.id);
+	CuAssertIntEquals(tc, 1, handle.getId());
 	CuAssertPtrEquals(tc, instance, handle.Resolve());
 	CuAssertIntEquals(tc, 3, ReferenceGetCount(instance));
 
 	// Explicit destroy of the handle.
-	handle.Destroy( AllocatorGetHeap() );
+	handle.Destroy();
 
 	CuAssertPtrEquals(tc, nullptr, handle.Resolve());
 	CuAssertPtrEquals(tc, nullptr, handle2.Resolve());
+
+	// Test explicit set of handle ids.
+	A* a3 = Allocate(A,  AllocatorGetHeap());
+	
+	HandleA handle3 = HandleCreate(HandleManagerA, a3);
+	HandleA handle4 = handle3;
+
+	CuAssertIntEquals(tc, 2, a3->references);
+	handle3.setId(HandleInvalid);
+	CuAssertIntEquals(tc, 1, a3->references);
+	handle4.setId(HandleInvalid);
+	
+	CuAssertPtrEquals(tc, nullptr, handle3.Resolve());
+
 	CuAssertIntEquals(tc, 0, HandleManagerA->handles.size());
 }
 

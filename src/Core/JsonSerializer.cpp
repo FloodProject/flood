@@ -63,16 +63,42 @@ static Color ConvertValueToColor( json_t* value )
 
 static Quaternion ConvertValueToQuaternion( json_t* value )
 {
-	double x, y, z, w;
-	json_unpack(value, "[f,f,f,f]", &x, &y, &z, &w);
+	// For compatibility with old serialized files, check if the rotation
+	// was encoded as euler angles, in which case it will have 3 elements.
 
-	Quaternion q;
-	q.x = float(x);
-	q.y = float(y);
-	q.z = float(z);
-	q.w = float(w);
+	size_t length = json_array_size(value);
 
-	return q;
+	if(length == 4)
+	{
+		double x, y, z, w;
+		json_unpack(value, "[f,f,f,f]", &x, &y, &z, &w);
+
+		Quaternion q;
+		q.x = float(x);
+		q.y = float(y);
+		q.z = float(z);
+		q.w = float(w);
+
+		return q;
+	}
+	else if(length == 3)
+	{
+		EulerAngles ang;
+
+		double x, y, z;
+		json_unpack(value, "[f,f,f]", &x, &y, &z);
+
+		ang.x = float(x);
+		ang.y = float(y);
+		ang.z = float(z);
+		
+		return Quaternion(ang);
+	}
+
+	LogDebug("Invalid JSON value size for quaternion");
+
+	Quaternion null;
+	return null;
 }
 
 //-----------------------------------//
@@ -234,12 +260,6 @@ static void SerializePrimitive( ReflectionContext* context, ReflectionWalkType::
 		value = json_pack("[f,f,f,f]", q.x, q.y, q.z, q.w);
 		break;
 	}
-	case Primitive::Bitfield:
-	{
-		int32& i = *vc.bf;
-		value = json_integer(i);
-		break;
-	}
 	default:
 		assert( false );
 	}
@@ -313,12 +333,6 @@ static void DeserializePrimitive( ReflectionContext* context, json_t* value )
 		SetFieldValue(Quaternion, val);
 		break;
 	}
-	case Primitive::Bitfield:
-	{
-		int32 val = json_integer_value(value);
-		SetFieldValue(int32, val);
-		break;
-	}
 	default:
 		assert(0 && "Unknown primitive type");
 	}
@@ -357,24 +371,58 @@ static void DeserializeArrayElement( ReflectionContext* context, json_t* value, 
 
 static void DeserializeArray( ReflectionContext* context, json_t* value )
 {
-	assert( json_is_array(value) );
+	// Some old serialized files don't properly encode the components of an entity
+	// as an array, so don't force the JSON value to be an array.
 	
-	size_t size = json_array_size(value);
-	if( size == 0 ) return;
+	/*assert( json_is_array(value) );*/
 
 	const Field* field = context->field;
 	uint16 elementSize = ReflectionArrayGetElementSize(field);
 
+	size_t size = 0;
+
+	bool isArray = json_is_array(value);
+
+	if( isArray )
+		size = json_array_size(value);
+	else
+		size = json_object_size(value);
+
+	if( size == 0 ) return;
+
 	void* address = ClassGetFieldAddress(context->object, field);
 	void* begin = ReflectionArrayResize(context, address, size);
 
-	for( size_t i = 0; i < size; i++ )
+	if( isArray )
 	{
-		json_t* arrayValue = json_array_get(value, i);
+		for( size_t i = 0; i < size; i++ )
+		{
+			json_t* arrayValue = json_array_get(value, i);
 		
-		// Calculate the address of the next array element.
-		void* element = (byte*) begin + elementSize * i;
-		DeserializeArrayElement(context, arrayValue, element);
+			// Calculate the address of the next array element.
+			void* element = (byte*) begin + elementSize * i;
+			DeserializeArrayElement(context, arrayValue, element);
+		}
+	}
+	else
+	{
+		size_t i = 0;
+		void* iter = json_object_iter(value);
+
+		for(; iter; iter = json_object_iter_next(value, iter))
+		{
+			const char* key = json_object_iter_key(iter);
+			json_t* val = json_object_iter_value(iter);
+
+			json_t* arrayValue = json_object();
+			json_object_set(arrayValue, key, val);
+
+			// Calculate the address of the next array element.
+			void* element = (byte*) begin + elementSize * i++;
+			DeserializeArrayElement(context, arrayValue, element);
+
+			json_decref(arrayValue);
+		}
 	}
 }
 
@@ -384,7 +432,7 @@ static void DeserializeField( ReflectionContext* context, json_t* value )
 {
 	const Field* field = context->field;
 
-	if( FieldIsArray(field) && json_is_array(value) )
+	if( FieldIsArray(field) )
 	{
 		DeserializeArray(context, value);
 		return;
@@ -397,9 +445,6 @@ static void DeserializeField( ReflectionContext* context, json_t* value )
 		Class* composite = context->composite;
 		context->composite = (Class*) field->type;
 		
-		Object* object = DeserializeComposite(context, value);
-		void* address = ClassGetFieldAddress(context->object, field);
-
 		if( FieldIsHandle(field) )
 		{
 			if( !json_is_object(value) )
@@ -419,16 +464,19 @@ static void DeserializeField( ReflectionContext* context, json_t* value )
 			HandleId id = handleContext.deserialize(name);
 			if(id == HandleInvalid) return;
 
-			address = ClassGetFieldAddress(context->object, field);
+			void* address = ClassGetFieldAddress(context->object, field);
 			
 			typedef Handle<Object, 0, 0> ObjectHandle;
 			ObjectHandle* handleObject = (ObjectHandle*) address;
-			handleObject->id = id;
+			handleObject->setId(id);
 			
-			ReferenceAdd((Object*)HandleFind(handleContext.handles, id));
+			ReferenceAdd( HandleFind(handleContext.handles, id) );
 		}
 		else if( FieldIsPointer(field) )
 		{
+			Object* object = DeserializeComposite(context, value);
+			void* address = ClassGetFieldAddress(context->object, field);
+
 			PointerSetObject(field, address, object);
 		}
 
@@ -489,20 +537,28 @@ static Object* DeserializeComposite( ReflectionContext* context, json_t* value )
 
 	if( !json_is_object(value) ) return 0;
 
-	if( json_object_size(value) != 1 )
-	{
-		LogDebug("Invalid field '%s' from class '%s'", context->field->name, context->composite->name);
-		return nullptr;
-	}
-
 	void* iter = json_object_iter(value);
 	const char* key = json_object_iter_key(iter);
 	json_t* iterValue = json_object_iter_value(iter);
 
-	Class* newClass = (Class*) ReflectionFindType(key);
-	if( !newClass ) return 0;
+	Class* newClass = (Class*) context->composite;
 
+	#pragma TODO("Remove this compatibility check")
+
+	// Use explicit class if object has one to handle polymorphism.
+	Class* testClass = (Class*) ReflectionFindType(key);
+	
+	if( testClass )
+	{
+		newClass = testClass;
+		value = iterValue;
+	}
+
+	if( !newClass || ClassIsAbstract(newClass) )
+		return 0;
+	
 	Object* newObject = (Object*) ClassCreateInstance(newClass, json->alloc);
+	if( !newObject ) return 0;
 
 	Class* klass = context->klass;
 	Class* composite = context->composite;
@@ -512,7 +568,7 @@ static Object* DeserializeComposite( ReflectionContext* context, json_t* value )
 	context->composite = newClass;
 	context->object = newObject;
 
-	DeserializeFields(context, iterValue);
+	DeserializeFields(context, value);
 
 	if( ClassInherits(newClass, ReflectionGetType(Object)) )
 		newObject->fixUp();

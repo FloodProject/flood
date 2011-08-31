@@ -82,32 +82,11 @@
     <Filter Include="Telemetry">
       <UniqueIdentifier>{96d34aba-f389-45a5-9d92-687ede9c398a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Networking">
-      <UniqueIdentifier>{ad3128d5-000b-4150-87ec-8dd9521038b1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Networking\Web">
-      <UniqueIdentifier>{6796715b-e90e-4229-98da-6c63782d5502}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Networking\Web\HTTP">
-      <UniqueIdentifier>{5a39ca3f-0a9f-4f92-a33a-02053ff97752}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Compression">
       <UniqueIdentifier>{7e67042d-0a93-4715-8bb5-aef7e0e6651c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Plugins">
       <UniqueIdentifier>{bde74505-c487-4684-b6b8-623fbe435ad3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Networking\Messages">
-      <UniqueIdentifier>{051dda2c-a0c8-418d-9b6b-3b7974a1fa69}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Networking\Session">
-      <UniqueIdentifier>{e49f4307-715e-471b-899d-c8b5b45e27e6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Networking\Dispatcher">
-      <UniqueIdentifier>{ec0d2e3d-8be1-4f09-8197-238eafb3cc76}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Networking\Hosts">
-      <UniqueIdentifier>{e79eb0bc-7a49-462f-90e6-f2f75df86c61}</UniqueIdentifier>
     </Filter>
     <Filter Include="Profiler">
       <UniqueIdentifier>{e65ce8ad-271f-4107-a73d-5c98b30a57ca}</UniqueIdentifier>
@@ -117,33 +96,6 @@
     </Filter>
     <Filter Include="Watcher">
       <UniqueIdentifier>{63ffccc4-ff22-49bd-9741-b97d2c8e5d60}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Containers">
-      <UniqueIdentifier>{5b7eb4e1-68bc-44b9-8812-cb28f79f1540}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Containers\Vector">
-      <UniqueIdentifier>{9d88e07d-d9b0-46e4-88e2-4b922620f8f3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Containers\String">
-      <UniqueIdentifier>{18d973cd-deaf-4665-a691-fa71cb97e873}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Containers\Maps">
-      <UniqueIdentifier>{a995f6ff-46f8-4488-a686-ebeb8d58a19e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Containers\Sort">
-      <UniqueIdentifier>{e1411bf9-f6f6-4e7f-b61e-d4e030550199}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Containers\List">
-      <UniqueIdentifier>{4cba6e85-1fa5-4d39-9d11-8d727b2a18af}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Containers\Misc">
-      <UniqueIdentifier>{5763b50f-600a-4fdd-bee6-6214c9fd6fc1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Containers\Allocators">
-      <UniqueIdentifier>{16edda09-842f-4e6a-a2a0-ed1a236ce074}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Containers\Array">
-      <UniqueIdentifier>{4f6bcd86-3c30-4f82-bc51-f6159ddcc558}</UniqueIdentifier>
     </Filter>
     <Filter Include="Events">
       <UniqueIdentifier>{baf2d738-9110-4b41-9b57-4ebc27eb2117}</UniqueIdentifier>
@@ -156,6 +108,27 @@
     </Filter>
     <Filter Include="Patterns">
       <UniqueIdentifier>{ab7994e7-348f-43c9-bc7f-9c87c3044d72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network">
+      <UniqueIdentifier>{ad3128d5-000b-4150-87ec-8dd9521038b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Web">
+      <UniqueIdentifier>{6796715b-e90e-4229-98da-6c63782d5502}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Web\HTTP">
+      <UniqueIdentifier>{5a39ca3f-0a9f-4f92-a33a-02053ff97752}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Messages">
+      <UniqueIdentifier>{051dda2c-a0c8-418d-9b6b-3b7974a1fa69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Session">
+      <UniqueIdentifier>{e49f4307-715e-471b-899d-c8b5b45e27e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Dispatcher">
+      <UniqueIdentifier>{ec0d2e3d-8be1-4f09-8197-238eafb3cc76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Hosts">
+      <UniqueIdentifier>{e79eb0bc-7a49-462f-90e6-f2f75df86c61}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -233,10 +206,10 @@
       <Filter>Reflection</Filter>
     </ClCompile>
     <ClCompile Include="..\..\dep\mongoose\mongoose.cpp">
-      <Filter>Networking\Web\HTTP</Filter>
+      <Filter>Network\Web\HTTP</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\WebServer.cpp">
-      <Filter>Networking\Web</Filter>
+      <Filter>Network\Web</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Math\Math.cpp">
       <Filter>Math</Filter>
@@ -287,43 +260,25 @@
       <Filter>Plugins</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Network\Network.cpp">
-      <Filter>Networking</Filter>
+      <Filter>Network</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Network\Message.cpp">
-      <Filter>Networking\Messages</Filter>
+      <Filter>Network\Messages</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Network\MessageHandlers.cpp">
-      <Filter>Networking\Messages</Filter>
+      <Filter>Network\Messages</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Network\Session.cpp">
-      <Filter>Networking\Session</Filter>
+      <Filter>Network\Session</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Network\CipherISAAC.cpp">
       <Filter>Cryptography</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Network\MessagePlugin.cpp">
-      <Filter>Networking\Messages</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Network\Dispatcher.cpp">
-      <Filter>Networking\Dispatcher</Filter>
+      <Filter>Network\Dispatcher</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Network\SessionManager.cpp">
-      <Filter>Networking\Session</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dep\rdestl\list.cpp">
-      <Filter>Containers\List</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dep\rdestl\slist.cpp">
-      <Filter>Containers\List</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dep\rdestl\intrusive_list.cpp">
-      <Filter>Containers\List</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dep\rdestl\intrusive_slist.cpp">
-      <Filter>Containers\List</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dep\rdestl\allocator.cpp">
-      <Filter>Containers\Allocators</Filter>
+      <Filter>Network\Session</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Core\FileStream.cpp">
       <Filter>Streams\File</Filter>
@@ -336,6 +291,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Core\Pattern.cpp">
       <Filter>Patterns</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Network\MessageHandler.cpp">
+      <Filter>Network\Messages</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -400,10 +358,10 @@
       <Filter>Reflection</Filter>
     </ClInclude>
     <ClInclude Include="..\..\dep\mongoose\mongoose.h">
-      <Filter>Networking\Web\HTTP</Filter>
+      <Filter>Network\Web\HTTP</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\WebServer.h">
-      <Filter>Networking\Web</Filter>
+      <Filter>Network\Web</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Core\FileWatcher.h">
       <Filter>Watcher</Filter>
@@ -412,7 +370,7 @@
       <Filter>Math\Quaternion</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Network\Network.h">
-      <Filter>Networking</Filter>
+      <Filter>Network</Filter>
     </ClInclude>
     <ClInclude Include="..\..\dep\FastLZ\fastlz.h">
       <Filter>Compression</Filter>
@@ -424,31 +382,28 @@
       <Filter>Plugins</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Network\MessageHandlers.h">
-      <Filter>Networking\Messages</Filter>
+      <Filter>Network\Messages</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Network\Message.h">
-      <Filter>Networking\Messages</Filter>
+      <Filter>Network\Messages</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Network\CipherISAAC.h">
       <Filter>Cryptography</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Network\Session.h">
-      <Filter>Networking\Session</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\Network\MessagePlugin.h">
-      <Filter>Networking\Messages</Filter>
+      <Filter>Network\Session</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Network\Dispatcher.h">
-      <Filter>Networking\Dispatcher</Filter>
+      <Filter>Network\Dispatcher</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Network\Host.h">
-      <Filter>Networking\Hosts</Filter>
+      <Filter>Network\Hosts</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Network\Peer.h">
-      <Filter>Networking\Hosts</Filter>
+      <Filter>Network\Hosts</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Network\SessionManager.h">
-      <Filter>Networking\Session</Filter>
+      <Filter>Network\Session</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\Math\Ray.h">
       <Filter>Math\Ray</Filter>
@@ -489,120 +444,6 @@
     <ClInclude Include="..\..\inc\Core\Profiler.h">
       <Filter>Profiler</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\algorithm.h">
-      <Filter>Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\functional.h">
-      <Filter>Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\int_to_type.h">
-      <Filter>Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\iterator.h">
-      <Filter>Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\pair.h">
-      <Filter>Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\rdestl.h">
-      <Filter>Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\rdestl_common.h">
-      <Filter>Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\set.h">
-      <Filter>Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\stack.h">
-      <Filter>Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\type_traits.h">
-      <Filter>Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\vector.h">
-      <Filter>Containers\Vector</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\sorted_vector.h">
-      <Filter>Containers\Vector</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\fixed_sorted_vector.h">
-      <Filter>Containers\Vector</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\fixed_vector.h">
-      <Filter>Containers\Vector</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\simple_string_storage.h">
-      <Filter>Containers\String</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\rde_string.h">
-      <Filter>Containers\String</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\basic_string.h">
-      <Filter>Containers\String</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\cow_string_storage.h">
-      <Filter>Containers\String</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\sstream.h">
-      <Filter>Containers\String</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\string_utils.h">
-      <Filter>Containers\String</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\fixed_substring.h">
-      <Filter>Containers\String</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\hash.h">
-      <Filter>Containers\Maps</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\hash_map.h">
-      <Filter>Containers\Maps</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\map.h">
-      <Filter>Containers\Maps</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\rb_tree.h">
-      <Filter>Containers\Maps</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\radix_sorter.h">
-      <Filter>Containers\Sort</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\sort.h">
-      <Filter>Containers\Sort</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\list.h">
-      <Filter>Containers\List</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\slist.h">
-      <Filter>Containers\List</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\fixed_list.h">
-      <Filter>Containers\List</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\intrusive_list.h">
-      <Filter>Containers\List</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\intrusive_slist.h">
-      <Filter>Containers\List</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\utility.h">
-      <Filter>Containers\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\allocator.h">
-      <Filter>Containers\Allocators</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\buffer_allocator.h">
-      <Filter>Containers\Allocators</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\alignment.h">
-      <Filter>Containers\Allocators</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\stack_allocator.h">
-      <Filter>Containers\Allocators</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\dep\rdestl\fixed_array.h">
-      <Filter>Containers\Array</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\Core\WebStream.h">
       <Filter>Streams\Web</Filter>
     </ClInclude>
@@ -617,5 +458,8 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\vapor\math\Helpers.h" />
     <ClInclude Include="..\..\inc\vapor\StackWalker.h" />
+    <ClInclude Include="..\..\inc\Network\MessageHandler.h">
+      <Filter>Network\Messages</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

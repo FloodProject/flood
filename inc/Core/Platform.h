@@ -61,6 +61,8 @@
 // Compiler-specific functionality
 //---------------------------------------------------------------------//
 
+#define MULTI_LINE_MACRO_BEGIN do {
+
 #if defined(COMPILER_MSVC)
 	#define alignof _alignof
 	#define ALIGN_BEGIN(size) __declspec(align(size))
@@ -69,6 +71,11 @@
 	#define NO_VTABLE __declspec(novtable)
 	#define OVERRIDE override
 	#pragma warning(disable: 4481) // override warning
+	#define MULTI_LINE_MACRO_END \
+		__pragma(warning(push)) \
+		__pragma(warning(disable:4127)) \
+		} while(0) \
+		__pragma(warning(pop))
 #elif defined(COMPILER_GCC) || defined(COMPILER_CLANG)
 	#define alignof __alignof__ 
 	#define ALIGN_BEGIN(size)
@@ -76,7 +83,10 @@
 	#define INLINE __attribute__((always_inline))
 	#define NO_VTABLE
 	#define OVERRIDE //__attribute__((override))
+	#define MULTI_LINE_MACRO_END } while(0)
 #endif
+
+
 
 #if defined(PLATFORM_WINDOWS) && defined(COMPILER_MSVC)
 	#define API_EXPORT __declspec(dllexport)
@@ -91,6 +101,8 @@
 	#define API_IMPORT __attribute__ ((visibility("default")))
 	#define API_HIDDEN __attribute__ ((visibility("hidden")))
 #endif
+
+
 
 //---------------------------------------------------------------------//
 // Basic types

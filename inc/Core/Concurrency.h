@@ -125,12 +125,15 @@ API_CORE int32 AtomicDecrement(volatile Atomic* atomic);
  * Tasks provide an high level interface to the concurrency concepts.
  */
 
+struct Task;
+typedef Delegate1<Task*> TaskFunction;
+
 struct Task
 {
-	int16 Group;
-	int16 Priority;
-	Delegate1<Task*> Callback;
-	void* Userdata;
+	int16 group;
+	int16 priority;
+	TaskFunction callback;
+	void* userdata;
 };
 
 API_CORE Task* TaskCreate(Allocator*);

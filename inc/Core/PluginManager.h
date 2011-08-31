@@ -20,7 +20,7 @@ class Plugin;
 /**
  * Responsible for managing all the plugins aswell as implementing
  * their lifecycle. Plugins should be registered with the manager
- * and enabled or disabled as needed dpathng runtime.
+ * and enabled or disabled as needed during runtime.
  */
 
 class PluginManager
@@ -47,12 +47,6 @@ public:
 
 	// Returns if plugin is enabled.
 	bool isPluginEnabled( Plugin* plugin ) const;
-
-	// Scans for plugins.
-	void scanPlugins(Class* type, std::vector<Plugin*>& plugins);
-
-	// Sorts the plugins by priority.
-	void sortPlugins(std::vector<Plugin*>& plugins);
 
 	// Registers plugins.
 	void registerPlugins(const std::vector<Plugin*>& plugins);

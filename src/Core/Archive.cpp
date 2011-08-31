@@ -75,7 +75,11 @@ void ArchiveEnumerateDirectories(Archive* archive, std::vector<String>& dirs)
 Path ArchiveCombinePath(Archive* archive, const Path& filePath)
 {
 	if( !archive ) return "";
-	return StringFormat("%s%s%s", archive->path.c_str(), PathGetSeparator().c_str(), filePath.c_str());
+	
+	const Path& sep = PathGetSeparator();
+	Path fullPath = StringFormat("%s%s%s", archive->path.c_str(), sep.c_str(), filePath.c_str());
+
+	return PathNormalize(fullPath);
 }
 
 

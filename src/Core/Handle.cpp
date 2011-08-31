@@ -8,6 +8,7 @@
 
 #include "Core/API.h"
 #include "Core/Handle.h"
+#include "Core/Log.h"
 
 NAMESPACE_EXTERN_BEGIN
 
@@ -24,13 +25,20 @@ HandleManager* HandleCreateManager( Allocator* alloc )
 
 void HandleDestroyManager( HandleManager* man )
 {
-	// assert( man->handles.size() == 0 );
-	Deallocate<HandleManager>(man);
+	if( !man ) return;
+
+	if( man->handles.size() > 0 )
+	{
+		LogAssert("Handle manager should not have any handles");
+		return;
+	}
+
+	Deallocate(man);
 }
 
 //-----------------------------------//
 
-HandleId HandleCreate(HandleManager* man, void* p)
+HandleId HandleCreate(HandleManager* man, ReferenceCounted* p)
 {
 	if( !man ) return HandleInvalid;
 	
@@ -65,7 +73,7 @@ void HandleGarbageCollect(HandleManager* man)
 
 //-----------------------------------//
 
-void* HandleFind(HandleManager* man, HandleId id)
+ReferenceCounted* HandleFind(HandleManager* man, HandleId id)
 {
 	HandleMap& handles = man->handles;
 	HandleMap::iterator it = handles.find(id);

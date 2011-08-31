@@ -293,6 +293,8 @@ Path PathNormalize(const Path& path)
 	StringReplace(norm, "//", "/");
 	StringReplace(norm, "../", "");
 	StringReplace(norm, "./", "");
+	StringReplace(norm, "/\\", "/");
+	StringReplace(norm, "\\/", "/");
 
 	return norm;
 }

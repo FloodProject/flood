@@ -182,7 +182,8 @@ NAMESPACE_CORE_BEGIN
 	FIELD_PRIMITIVE(fieldId, fieldType, fieldName, NFS(fieldName))
 
 #define FIELD_PRIMITIVE_CUSTOM(fieldId, fieldType, fieldName, primType, ...) \
-	static Field fieldName(Primitive::_##primType);                          \
+	static Field fieldName; \
+	fieldName.type = &Primitive::s_##fieldType; \
 	FIELD_COMMON(fieldId, fieldType, fieldName, __VA_ARGS__)
 
 #define FIELD_PRIMITIVE_SETTER_CUSTOM(fieldId, fieldType, fieldName, primType, setterName) \
@@ -196,7 +197,7 @@ NAMESPACE_CORE_BEGIN
 	FieldSetQualifier(&fieldName, FieldQualifier::NoSerialize);
 
 #define FIELD_ALIAS(fieldName, aliasName)                               \
-	fieldName.aliases.push_back(aliasName);
+	fieldName.aliases.push_back(#aliasName);
 
 
 //-----------------------------------//

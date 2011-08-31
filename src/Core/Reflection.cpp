@@ -337,7 +337,6 @@ Primitive Primitive::s_string(PT(String), "string", sizeof(String));
 Primitive Primitive::s_Vector3(PT(Vector3), "Vector3", sizeof(Vector3));
 Primitive Primitive::s_Color(PT(Color), "Color", sizeof(Color));
 Primitive Primitive::s_Quaternion(PT(Quaternion), "Quaternion", sizeof(Quaternion));
-Primitive Primitive::s_Bitfield(PT(Bitfield), "Bitfield", sizeof(uint32));
 
 //-----------------------------------//
 

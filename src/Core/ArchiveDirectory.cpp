@@ -155,7 +155,7 @@ static bool DirArchiveMonitor(Archive*)
 static void DirArchiveEnumerate(std::vector<String>& paths, Path dirPath, Path filePath, bool dirs)
 {
 	// Open directory stream.
-	DIR *dir = opendir( dirPath.c_str() );
+	DIR* dir = opendir( dirPath.c_str() );
    	if( !dir ) return;
 
 	dirent* entry = nullptr;

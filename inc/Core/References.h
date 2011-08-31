@@ -20,7 +20,7 @@ API_CORE int32 ReferenceGetCount(ReferenceCounted*);
 API_CORE void ReferenceAdd(ReferenceCounted*);
 API_CORE bool ReferenceRelease(ReferenceCounted*);
 
-struct API_CORE ReferenceCounted
+struct API_CORE NO_VTABLE ReferenceCounted
 {	
 	ReferenceCounted() : references(0) {}
 	ReferenceCounted(const ReferenceCounted&) : references(0) {}
@@ -28,7 +28,7 @@ struct API_CORE ReferenceCounted
 	
 	inline void addReference() { ReferenceAdd(this); }
 	inline bool releaseReference() { return ReferenceRelease(this); }
-	
+
 	volatile Atomic references;
 };
 
@@ -61,7 +61,7 @@ public:
     ~RefPtr()
     {
         if( px != nullptr && px->releaseReference() )
-			Deallocate<T>(px);
+			Deallocate(px);
     }
 
     template<typename U>

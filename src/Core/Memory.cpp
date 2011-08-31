@@ -10,6 +10,7 @@
 #include "Core/Memory.h"
 #include "Core/Log.h"
 #include "Core/References.h"
+#include "Core/Object.h"
 
 #define ALLOCATOR_TRACKING
 #define ALLOCATOR_DEFAULT_GROUP "General";
@@ -151,7 +152,7 @@ void AllocatorDumpInfo()
 
 void AllocatorDestroy( Allocator* object )
 {
-	Deallocate<Allocator>(object);
+	Deallocate(object);
 }
 
 //-----------------------------------//

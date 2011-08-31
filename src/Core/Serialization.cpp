@@ -146,9 +146,6 @@ static void ReflectionWalkPrimitive(ReflectionContext* context)
 	case Primitive::Quaternion:
 		vc.q = (Quaternion*) address;
 		break;
-	case Primitive::Bitfield:
-		vc.bf = (int32*) address;
-		break;
 	default:
 		assert( false );
 	}
@@ -196,7 +193,7 @@ static bool ReflectionWalkPointer(ReflectionContext* context)
 	{
 		typedef Handle<Object, 0, 0> ObjectHandle;
 		ObjectHandle* handle = (ObjectHandle*) address;
-		HandleId id = handle->id;
+		HandleId id = handle->getId();
 		
 		Class* klass = (Class*) field->type;
 

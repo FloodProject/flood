@@ -63,7 +63,7 @@ void LogDestroy(Log* log)
 	TimerDestroy(log->timer);
 	MutexDestroy(log->mutex);
 
-	Deallocate<Log>(log);
+	Deallocate(log);
 }
 
 //-----------------------------------//
