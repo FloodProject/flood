@@ -39,6 +39,9 @@ ResourceManager* GetResourceManager();
 
 struct ResourceEvent
 {
+	ResourceEvent() {}
+	ResourceEvent(const ResourceHandle& handle) : handle(handle) {}
+
 	ResourceHandle handle;
 	ResourceLoader* loader;
 };
@@ -122,7 +125,7 @@ public:
 	void setupResourceLoaders();
 
 	// Sends resource events to the subscribers.
-	void update( float );
+	void update();
 
 	// Gets the registered resources.
 	GETTER(Resources, const ResourceMap&, resources)
@@ -136,8 +139,8 @@ public:
 	// Gets the handle manager.
 	GETTER(HandleManager, HandleManager*, handleManager)
 
-	// Sets the task manager.
-	SETTER(TaskPool, TaskPool*, taskPool)
+	// Accesses the task manager.
+	ACESSOR(TaskPool, TaskPool*, taskPool)
 
 	// Sets the archive.
 	SETTER(Archive, Archive*, archive)

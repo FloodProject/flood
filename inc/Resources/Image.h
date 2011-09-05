@@ -111,14 +111,17 @@ TYPEDEF_RESOURCE_HANDLE_FROM_TYPE( Image );
 
 ImageHandle ImageCreate(Allocator*, uint32 width, uint32 height, PixelFormat::Enum);
 
+struct Stream;
+
 class API_RESOURCE ImageWriter
 {
 public:
 
-	// Saves the image contents to a file.
-	void save( Image* image, const String& filename );
+	// Saves the image contents to a stream.
+	void save( Image* image, Stream* stream );
 
-	bool convertPNG( Image* image );
+	// Converts the image to the output format.
+	bool convert( Image* image );
 
 protected:
 

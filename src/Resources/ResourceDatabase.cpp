@@ -8,14 +8,8 @@
 
 #include "Resources/API.h"
 #include "Resources/ResourceDatabase.h"
-#include "Resources/ResourceManager.h"
-#include "Resources/ResourceLoader.h"
-#include "Core/Archive.h"
-#include "Core/Utilities.h"
-#include "Core/Concurrency.h"
-#include "Core/Stream.h"
+#include "Resources/ResourceIndexer.h"
 #include "Core/Log.h"
-#include "Math/Hash.h"
 
 NAMESPACE_RESOURCES_BEGIN
 
@@ -33,17 +27,8 @@ REFLECT_CLASS_END()
 //-----------------------------------//
 
 ResourceDatabase::ResourceDatabase()
+	: indexer(nullptr)
 {
-}
-
-//-----------------------------------//
-
-ResourceDatabase::ResourceDatabase(TaskPool* taskPool)
-{
-	Task* index = TaskCreate( AllocatorGetThis() );
-	index->Callback.Bind(this, &ResourceDatabase::indexResources);
-	
-	TaskPoolAdd(taskPool, index);
 }
 
 //-----------------------------------//
@@ -65,80 +50,30 @@ void ResourceDatabase::fixUp()
 
 //-----------------------------------//
 
-void ResourceDatabase::scanResources(Archive* archive)
+void ResourceDatabase::addMetadata(const ResourceMetadata& metadata)
 {
-	this->archive = archive;
+	if(resourcesCache.find(metadata.hash) != resourcesCache.end())
+		return;
 
-	std::vector<String> found;	
-	ArchiveEnumerateFiles(archive, found);
-	
-	for( size_t i = 0; i < found.size(); i++ )
-	{
-		resourcesToIndex.push(found[i]);
-	}
+	resources.push_back(metadata);
+	resourcesCache[metadata.hash] = metadata;
 }
 
 //-----------------------------------//
 
-static bool GetResourceGroupFromPath(const Path& path, ResourceGroup::Enum& group)
+void ResourceDatabase::onResourceIndexed(const ResourceMetadata& metadata)
 {
-	String ext = PathGetFileExtension(path);
-	
-	ResourceManager* res = GetResourceManager();
-	ResourceLoader* loader = res->findLoader(ext);
-	if( !loader ) return false;
-
-	group = loader->getResourceGroup();
-
-	return true;
+	addMetadata(metadata);
 }
 
 //-----------------------------------//
 
-void ResourceDatabase::indexResources(Task* task)
+void ResourceDatabase::setIndexer(ResourceIndexer* indexer)
 {
-	while(true)
-	{
-		String path;
-		resourcesToIndex.wait_and_pop(path);
+	if( !indexer ) return;
 
-		ResourceGroup::Enum group;
-		
-		if( !GetResourceGroupFromPath(path, group) )
-		{
-			LogWarn("Resource loader for '%s' was not found", path.c_str());
-			continue;
-		}
-
-		LogDebug("Indexing file '%s'", path.c_str());
-
-		Stream* stream = ArchiveOpenFile(archive, path, AllocatorGetThis());
-		
-		if( !stream )
-		{
-			LogWarn("Could not read file '%s'", path.c_str());
-			continue;
-		}
-
-		std::vector<byte> data;
-		StreamRead(stream, data);
-		StreamDestroy(stream);
-
-		uint32 hash = HashMurmur2(0xBEEF, &data[0], data.size());
-		
-		if( resourcesCache.find(hash) != resourcesCache.end() )
-			continue;
-
-		ResourceMetadata metadata;
-		metadata.hash = hash;
-		metadata.path = path;
-		metadata.group = group;
-
-		resources.push_back(metadata);
-		resourcesCache[hash] = metadata;
-
-		onResourceIndexed(metadata);
-	}
+	this->indexer = indexer;
+	indexer->onResourceIndexed.Connect(this, &ResourceDatabase::onResourceIndexed);
 }
 
 //-----------------------------------//

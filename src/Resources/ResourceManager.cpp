@@ -22,7 +22,7 @@
 #include "Core/Utilities.h"
 #include "Core/Serialization.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -31,32 +31,6 @@ ResourceManager* GetResourceManager() { return gs_ResourcesManager; }
 
 static Allocator* gs_ResourcesAllocator = nullptr;
 Allocator* GetResourcesAllocator() { return gs_ResourcesAllocator; }
-
-static HandleManager* gs_ResourceHandleManager = nullptr;
-
-void* ResourceHandleFind(HandleId id)
-{
-	return HandleFind(gs_ResourceHandleManager, id);
-}
-
-ResourceHandle ResourceHandleCreate(Resource* p)
-{
-	return HandleCreate(gs_ResourceHandleManager, p);
-}
-
-void ResourceHandleDestroy(HandleId id)
-{
-	Resource* resource = (Resource*) ResourceHandleFind(id);
-	//g_ResourcesManager->removeResource(resource);
-
-	Deallocate(resource);
-	HandleDestroy(gs_ResourceHandleManager, id);
-}
-
-static HandleId ResourceFind(const char* s)
-{
-	return gs_ResourcesManager->loadResource(s).id;
-}
 
 void ResourcesInitialize()
 {
@@ -71,13 +45,45 @@ void ResourcesDeinitialize()
 
 //-----------------------------------//
 
+static HandleManager* gs_ResourceHandleManager = nullptr;
+
+ReferenceCounted* ResourceHandleFind(HandleId id)
+{
+	if( !gs_ResourceHandleManager ) return nullptr;
+
+	Resource* res = (Resource*) HandleFind(gs_ResourceHandleManager, id);
+	return res;
+}
+
+ResourceHandle ResourceHandleCreate(Resource* p)
+{
+	if( !gs_ResourceHandleManager ) return HandleInvalid;
+	return HandleCreate(gs_ResourceHandleManager, p);
+}
+
+void ResourceHandleDestroy(HandleId id)
+{
+	Resource* resource = (Resource*) ResourceHandleFind(id);
+	gs_ResourcesManager->removeResource(resource);
+	HandleDestroy(gs_ResourceHandleManager, id);
+}
+
+static HandleId ResourceFind(const char* s)
+{
+	if( !gs_ResourcesManager ) return HandleInvalid;
+	return gs_ResourcesManager->loadResource(s).getId();
+}
+
+//-----------------------------------//
+
 ResourceLoadOptions::ResourceLoadOptions()
 	: group(ResourceGroup::General)
 	, asynchronousLoad(true)
 	, sendLoadEvent(true)
 	, handle(HandleInvalid)
 	, stream(nullptr)
-{ }
+{
+}
 
 //-----------------------------------//
 
@@ -108,15 +114,26 @@ ResourceManager::ResourceManager()
 ResourceManager::~ResourceManager()
 {
 	loadQueuedResources();
+	//resourceTaskEvents.clear();
 	assert( resourceTaskEvents.empty() );
 
 	destroyLoaders();
 
-	resources.clear();
+	ResourceMap::iterator it = resources.begin();
+	for( ; it != resources.end(); ++it )
+	{
+		ResourceHandle& handle = it->second;
+		
+		Resource* res = handle.Resolve();
+		LogDebug("Resource %s (refs: %d)", res->getPath().c_str(), res->references);
+
+		handle.reset();
+	}
+
+	HandleDestroyManager(handleManager);
+	handleManager = nullptr;
 
 	ArchiveDestroy(archive);
-	HandleDestroyManager(handleManager);
-
 	ConditionDestroy(resourceFinishLoad);
 	MutexDestroy(resourceFinishLoadMutex);
 }
@@ -168,29 +185,27 @@ ResourceHandle ResourceManager::loadResource(const String& name)
 
 ResourceHandle ResourceManager::loadResource(ResourceLoadOptions options)
 {
-	if( !archive )
-		return ResourceHandle(HandleInvalid);
+	if( !archive ) return ResourceHandle(HandleInvalid);
 
 	findResource(options);
 
 	// Check if the resource is already loaded.
 	ResourceHandle handle = getResource(options.name);
-	
-	if( handle )
-		return handle;
+	if( handle ) return handle;
 
 	if( !validateResource(options.name) )
 		return ResourceHandle(HandleInvalid);
 
 	Stream* stream = ArchiveOpenFile(archive, options.name, GetResourcesAllocator());
-
+	
 	if( !stream )
+	{
+		LogWarn("Resource was not found: '%s'", options.name.c_str());
 		return ResourceHandle(HandleInvalid);
+	}
 
 	handle = prepareResource(stream);
-	
-	if( !handle )
-		return ResourceHandle(HandleInvalid);
+	if( !handle ) return ResourceHandle(HandleInvalid);
 
 	options.stream = stream;
 	options.handle = handle;
@@ -209,11 +224,10 @@ ResourceHandle ResourceManager::loadResource(ResourceLoadOptions options)
 
 void ResourceManager::findResource(ResourceLoadOptions& options)
 {
-	const Path& fileExt = PathGetFileExtension(options.name);
 	Path& path = options.name;
-
-	if( !fileExt.empty() )
-		return;
+	
+	const Path& ext = PathGetFileExtension(path);
+	if( !ext.empty() ) return;
 
 	ResourceLoaderMap::const_iterator it;
 	for(it = resourceLoaders.begin(); it != resourceLoaders.end(); it++)
@@ -279,9 +293,7 @@ ResourceHandle ResourceManager::prepareResource(Stream* stream)
 	ResourceHandle handle = HandleCreate(handleManager, resource);
 
 	// Send callback notifications.
-	ResourceEvent event;
-	event.handle = handle;
-
+	ResourceEvent event(handle);
 	onResourcePrepared(event);
 
 	return handle;
@@ -296,13 +308,13 @@ void ResourceManager::decodeResource( ResourceLoadOptions& options )
 	ResourceLoadOptions* taskOptions = Allocate(ResourceLoadOptions,  GetResourcesAllocator());
 	*taskOptions = options;
 
-	task->Callback.Bind(ResourceTaskRun);
-	task->Userdata = taskOptions;
+	task->callback.Bind(ResourceTaskRun);
+	task->userdata = taskOptions;
 
-	AtomicIncrement(&numResourcesQueuedLoad);;
+	AtomicIncrement(&numResourcesQueuedLoad);
 
 #ifdef ENABLE_THREADED_LOADING
-	if( taskPool && options.asynchronousLoad )
+	if( taskPool && asynchronousLoading && options.asynchronousLoad )
 	{
 		TaskPoolAdd(taskPool, task);
 		return;
@@ -324,7 +336,6 @@ void ResourceManager::loadQueuedResources()
 		#pragma TODO("Use timed_wait and notify the observers of progress")
 
 		ConditionWait(resourceFinishLoad, resourceFinishLoadMutex);
-		//SystemSleep( 0.01f );
 	}
 
 	MutexUnlock(resourceFinishLoadMutex);
@@ -334,7 +345,7 @@ void ResourceManager::loadQueuedResources()
 
 //-----------------------------------//
 
-void ResourceManager::update( float )
+void ResourceManager::update()
 {
 	sendPendingEvents();
 	removeUnusedResources();
@@ -344,7 +355,6 @@ void ResourceManager::update( float )
 
 void ResourceManager::sendPendingEvents()
 {
-	// Send resource events.
 	ResourceEvent event;
 
 	while( resourceTaskEvents.try_pop(event) )
@@ -363,12 +373,10 @@ void ResourceManager::removeUnusedResources()
 	ResourceMap::const_iterator it;
 	for( it = resources.begin(); it != resources.end(); it++ )
 	{
-#if 0
-		const ResourcePtr& resource = it->second;
+		const ResourceHandle& resource = it->second;
 
-		if( resource->getReferenceCount() == 1 )
+		if( resource.Resolve()->references == 1 )
 			resourcesToRemove.push_back(it->first);
-#endif
 	}
 
 	for( size_t i = 0; i < resourcesToRemove.size(); i++ )
@@ -398,9 +406,7 @@ void ResourceManager::removeResource(const String& path)
 		return;
 	
 	// Send callback notifications.
-	ResourceEvent event;
-	event.handle = it->second;
-		
+	ResourceEvent event(it->second);
 	onResourceRemoved( event );
 
 	LogInfo("Unloaded resource: %s", path.c_str());
@@ -518,4 +524,4 @@ void ResourceManager::handleWatchResource(const FileWatchEvent& evt)
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_RESOURCES_END

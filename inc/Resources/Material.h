@@ -32,7 +32,7 @@
 #define GL_GEQUAL   0x0206
 #define GL_ALWAYS   0x0207
 
-NAMESPACE_BEGIN
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
@@ -51,8 +51,6 @@ struct BlendSource
 		SourceAlphaSaturate     = GL_SRC_ALPHA_SATURATE
 	};
 };
-
-//-----------------------------------//
 
 struct BlendDestination
 {
@@ -86,7 +84,38 @@ struct DepthCompare
 	};
 };
 
-typedef std::map<int32, ImageHandle> TextureUnitMap;
+//-----------------------------------//
+
+struct TextureFilterMode
+{
+	enum Enum
+	{
+		Nearest,
+		Linear,
+	};
+};
+
+struct TextureWrapMode
+{
+	enum Enum
+	{
+		Repeat,
+		Clamp,
+		ClampToBorder
+	};
+};
+
+struct TextureUnit
+{
+	TextureUnit();
+
+	uint8 unit;
+	ImageHandle image;
+	TextureFilterMode::Enum filter;
+	TextureWrapMode::Enum wrap;
+};
+
+typedef std::map<uint8, TextureUnit> TextureUnitMap;
 
 //-----------------------------------//
 
@@ -98,13 +127,13 @@ class API_RESOURCE Material : public Resource
 
 public:
 
-	// Gets the associated resource group.
-	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Materials)
-
 	Material();
 	Material( const String& name, const String& program = "VertexColor" );
 	Material( const Material& rhs );
 	~Material();
+
+	// Gets the associated resource group.
+	GETTER(ResourceGroup, ResourceGroup::Enum, ResourceGroup::Materials)
 
 	// Gets the textual name of the material.
 	ACESSOR(Name, const String&, name);
@@ -120,6 +149,9 @@ public:
 
 	// Gets/sets the depth testing of the material.
 	ACESSOR(DepthCompare, DepthCompare::Enum, depthCompare)
+
+	// Gets/sets the depth range of the material.
+	ACESSOR(DepthRange, Vector2, depthRange)
 
 	// Gets/sets the alpha testing of the material.
 	ACESSOR(AlphaTest, bool, alphaTest)
@@ -146,13 +178,16 @@ public:
 	void setBlending( BlendSource::Enum, BlendDestination::Enum );
 
 	// Sets a texture to the material.
-	void setTexture( uint32 unit, const String& name );
+	void setTexture( uint8 unit, const String& name );
 
 	// Sets an image as texture to the material.
-	void setTexture( uint32 unit, const ImageHandle& image );
+	void setTexture( uint8 unit, const ImageHandle& image );
 
 	// Gets a texture of the material.
-	ImageHandle getTexture( uint32 unit );
+	ImageHandle getTexture( uint8 unit );
+
+	// Gets a texture unit of the material.
+	TextureUnit& getTextureUnit( uint8 unit );
 
 	// Texture units.
 	TextureUnitMap textureUnits;
@@ -175,6 +210,7 @@ public:
 	DepthCompare::Enum depthCompare;
 	bool depthTest;
 	bool depthWrite;
+	Vector2 depthRange;
 
 	// Alpha settings.
 	bool alphaTest;
@@ -198,4 +234,4 @@ MaterialHandle MaterialCreate(Allocator*, const String& name);
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_RESOURCES_END

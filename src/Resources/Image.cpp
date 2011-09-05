@@ -9,6 +9,10 @@
 #include "Resources/API.h"
 #include "Resources/Image.h"
 #include "Core/Log.h"
+#include "Core/Stream.h"
+
+#define ENABLE_IMAGE_WRITER
+#define ENABLE_IMAGE_LODEPNG
 
 #ifdef ENABLE_IMAGE_LODEPNG
 	#include "lodepng.h"
@@ -130,30 +134,28 @@ void Image::log() const
 
 //-----------------------------------//
 
-void ImageWriter::save( Image* image, const String& filename )
+void ImageWriter::save( Image* image, Stream* stream )
 {
-#ifdef ENABLE_IMAGE_WRITER	
-	// TODO: sleep until the image is not loadeds
-	if( !image->isLoaded() )
-		return;
+#ifdef ENABLE_IMAGE_WRITER
+	if( !stream ) return;
+
+	// TODO: sleep until the image is not loaded
+	if( !image->isLoaded() ) return;
 
 	if( image->isCompressed() )
 		output = image->getBuffer();
-	else if( !convertPNG(image) )
+	else if( !convert(image) )
 		return;
 
-	FileStream file(filename, StreamMode::Write);
-	
-	if( !file.open() )
-		return;
+	if( output.empty() ) return;
 
-	file.write(output);
+	StreamWrite(stream, output.data(), output.size());
 #endif
 }
 
 //-----------------------------------//
 
-bool ImageWriter::convertPNG( Image* image )
+bool ImageWriter::convert( Image* image )
 {
 #ifdef ENABLE_IMAGE_WRITER
 	LodePNG::Encoder encoder;
@@ -176,7 +178,8 @@ bool ImageWriter::convertPNG( Image* image )
 		raw.colorType = 6;
 		break;
 	default:
-		assert( 0 && "Pixel format is not supported" );
+		LogError("Pixel format is not supported");
+		return false;
 	}
 
 	raw.bitDepth = 8;

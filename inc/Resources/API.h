@@ -46,6 +46,8 @@
 #define     ENABLE_SCRIPTING_MONO
 #define     ENABLE_THREADED_LOADING
 
+#define     ENABLE_RESOURCE_INDEXER
+
 //---------------------------------------------------------------------//
 // Custom Allocators
 //---------------------------------------------------------------------//

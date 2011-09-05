@@ -45,6 +45,9 @@ public:
 
 	// Absolute bone matrix.
 	Matrix4x3 absoluteMatrix;
+
+	// Absolute inverse bone matrix.
+	Matrix4x3 absoluteInvMatrix;
 };
 
 TYPEDEF_INTRUSIVE_POINTER_FROM_TYPE( Bone );

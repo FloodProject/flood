@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "Core/ConcurrentQueue.h"
 #include "Resources/Resource.h"
 
 NAMESPACE_RESOURCES_BEGIN
@@ -22,11 +21,11 @@ struct ResourceMetadata
 	// Hash of the resource.
 	uint32 hash;
 
-	// Path of the resource.
-	String path;
+	// Path to the resource.
+	Path path;
 
-	// Thumbnail of the resource.
-	String thumbnail;
+	// Path to preview of the resource.
+	Path preview;
 
 	// Group of the resource.
 	ResourceGroup::Enum group;
@@ -38,11 +37,10 @@ typedef std::pair<uint32, ResourceMetadata> ResourcesCacheMapPair;
 
 //-----------------------------------//
 
-struct Archive;
+class ResourceIndexer;
 
 /**
- * Keeps an indexed list of all the resources known.
- * Indexing is done asynchronously using the task manager.
+ * Resource database is used to keep an indexed list of all the resources.
  */
 
 REFLECT_DECLARE_CLASS(ResourceDatabase)
@@ -54,11 +52,16 @@ class ResourceDatabase : public Object
 public:
 
 	ResourceDatabase();
-	ResourceDatabase(TaskPool*);
 	~ResourceDatabase();
+	
+	// Adds a new metadata entry to the database.
+	void addMetadata(const ResourceMetadata&);
 
-	// Scans for known resources.
-	void scanResources(Archive*);
+	// Sets the resource indexer.
+	void setIndexer(ResourceIndexer*);
+
+	// Gets called when a resource is indexed.
+	void onResourceIndexed(const ResourceMetadata&);
 
 	// Serialization fix-up.
 	virtual void fixUp() OVERRIDE;
@@ -66,17 +69,7 @@ public:
 	// Caches all the resources metadata.
 	ResourcesCache resources;
 	ResourcesCacheMap resourcesCache;
-
-	Event1<const ResourceMetadata&> onResourceIndexed;
-
-private:
-
-	// Indexes found resources.
-	void indexResources(Task*);
-
-	Archive* archive;
-	ConcurrentQueue<String> resourcesToIndex;
-	ConcurrentQueue<String> resourcesToThumb;
+	ResourceIndexer* indexer;
 };
 
 //-----------------------------------//

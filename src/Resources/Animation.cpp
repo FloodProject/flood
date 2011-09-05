@@ -25,7 +25,7 @@ void Animation::setKeyFrames(const BonePtr& bone, const KeyFramesVector& frames)
 {
 	keyFrames[bone] = frames;
 
-	for( uint i = 0; i < frames.size(); i++ )
+	for( size_t i = 0; i < frames.size(); i++ )
 	{	
 		const KeyFrame& frame = frames[i];
 		keyFramesVector.push_back(frame);
@@ -42,7 +42,7 @@ float Animation::getTotalTime() const
 	float min = LimitsFloatMaximum;
 	float max = 0;
 
-	for( uint i = 0; i < keyFramesVector.size(); i++ )
+	for( size_t i = 0; i < keyFramesVector.size(); i++ )
 	{
 		const KeyFrame& keyFrame = keyFramesVector[i];
 
@@ -79,7 +79,7 @@ Matrix4x3 Animation::getKeyFrameMatrix(const BonePtr& bone, float time)
 	
 	uint endIndex = 0;
 
-	for( uint i = 0; i < boneKeyFrames.size(); i++ )
+	for( size_t i = 0; i < boneKeyFrames.size(); i++ )
 	{
 		if( boneKeyFrames[i].time > time )
 		{

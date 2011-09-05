@@ -26,10 +26,10 @@ public:
 	void addBone( const BonePtr& bone );
 
 	// Gets a bone from the skeleton.
-	BonePtr getBone( uint index );
+	BonePtr getBone( size_t index );
 
 	// Finds a bone from the skeleton.
-	BonePtr findBone( const std::string& name );
+	BonePtr findBone( const String& name );
 
 	// Gets the bones of the skeleton.
 	GETTER(Bones, const BonesVector&, bones)

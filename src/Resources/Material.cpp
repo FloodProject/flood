@@ -77,7 +77,7 @@ Material::Material( const Material& rhs )
 
 Material::~Material()
 {
-	LogDebug("Removing material '%s'", name.c_str());
+	//LogDebug("Removing material '%s'", name.c_str());
 }
 
 //-----------------------------------//
@@ -86,6 +86,7 @@ void Material::init()
 {
 	alphaTest = false;
 	depthCompare = DepthCompare::Less;
+	depthRange = Vector2::UnitY;
 	depthTest = true;
 	depthWrite = true;
 	lineSmooth = false;
@@ -115,26 +116,46 @@ void Material::setBlending( BlendSource::Enum source, BlendDestination::Enum des
 
 //-----------------------------------//
 
-void Material::setTexture( uint32 unit, const String& name )
+TextureUnit::TextureUnit()
+	: unit(0)
+	, filter(TextureFilterMode::Linear)
+	, wrap(TextureWrapMode::Repeat)
+{
+}
+
+//-----------------------------------//
+
+void Material::setTexture( uint8 unit, const String& name )
 {
 	ResourceManager* res = GetResourceManager();
 	
 	ImageHandle handle = res->loadResource<Image>(name);
 	if( !handle ) return;
 
-	textureUnits[unit] = handle;
+	TextureUnit texUnit;
+	texUnit.image = handle;
+	texUnit.unit = unit;
+
+	textureUnits[unit] = texUnit;
 }
 
 //-----------------------------------//
 
-void Material::setTexture( uint32 unit, const ImageHandle& handle )
+void Material::setTexture( uint8 unit, const ImageHandle& handle )
 {
-	textureUnits[unit] = handle;
+	textureUnits[unit].image = handle;
 }
 
 //-----------------------------------//
 
-ImageHandle Material::getTexture( uint32 unit )
+ImageHandle Material::getTexture( uint8 unit )
+{
+	return textureUnits[unit].image;
+}
+
+//-----------------------------------//
+
+TextureUnit& Material::getTextureUnit( uint8 unit )
 {
 	return textureUnits[unit];
 }

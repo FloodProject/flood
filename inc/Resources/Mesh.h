@@ -46,6 +46,7 @@ class API_RESOURCE Mesh : public Resource
 public:
 
 	Mesh();
+	~Mesh();
 
 	// Gets if the mesh is built.
 	bool isBuilt() const;

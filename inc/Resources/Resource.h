@@ -109,7 +109,7 @@ protected:
 	Resource();
 };
 
-void* ResourceHandleFind(HandleId id);
+ReferenceCounted* ResourceHandleFind(HandleId id);
 void  ResourceHandleDestroy(HandleId id);
 
 #define TYPEDEF_RESOURCE_HANDLE_FROM_TYPE(T) \

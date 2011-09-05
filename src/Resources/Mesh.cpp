@@ -10,6 +10,7 @@
 #include "Resources/Mesh.h"
 #include "Resources/Skeleton.h"
 #include "Resources/Animation.h"
+#include "Core/Log.h"
 #include "Core/Utilities.h"
 #include "Math/Vector.h"
 
@@ -26,7 +27,15 @@ Mesh::Mesh()
 	: animated(false)
 	, bindPose(nullptr)
 	, built(false)
-{ }
+{
+}
+
+//-----------------------------------//
+
+Mesh::~Mesh()
+{
+	LogDebug("Destroying mesh: %s", path.c_str());
+}
 
 //-----------------------------------//
 
@@ -84,24 +93,18 @@ void Mesh::buildBounds()
 
 void Mesh::setupInitialVertices()
 {
-	if( !isAnimated() )
+	if( !isAnimated() || !skeleton )
 		return;
 
-	if( !skeleton )
-		return;
+	const BonesVector& bones = skeleton->getBones();
 
+	// Calculate the new vertices.
 	for( size_t i = 0; i < position.size(); i++ )
 	{
 		int32 boneIndex = (int32) boneIndices[i];
+		if( boneIndex == -1 ) continue;
 
-		if( boneIndex == -1 )
-			continue;
-		
-		const BonePtr& bone = skeleton->getBone(boneIndex);
-		Matrix4x3 invJoint = bone->absoluteMatrix.inverse();
-		
-		Vector3& vertex = position[i];			
-		vertex = invJoint*vertex;
+		position[i] = bones[boneIndex]->absoluteInvMatrix * position[i];
 	}
 }
 

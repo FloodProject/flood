@@ -16,15 +16,15 @@
 #include "Core/Archive.h"
 #include "Core/Utilities.h"
 
-NAMESPACE_BEGIN
+NAMESPACE_RESOURCES_BEGIN
 
 //-----------------------------------//
 
 void ResourceTaskRun(Task* task)
 {
-	ResourceLoadOptions* options = (ResourceLoadOptions*) task->Userdata;
+	ResourceLoadOptions* options = (ResourceLoadOptions*) task->userdata;
 
-	ResourceHandle handle = options->handle;
+	const ResourceHandle& handle = options->handle;
 	Stream* stream = options->stream;
 
 	Resource* resource = handle.Resolve();
@@ -46,8 +46,7 @@ void ResourceTaskRun(Task* task)
 
 	if( options->sendLoadEvent )
 	{
-		ResourceEvent event;
-		event.handle = handle;
+		ResourceEvent event(handle);
 		res->resourceTaskEvents.push(event);
 	}
 
@@ -62,4 +61,4 @@ void ResourceTaskRun(Task* task)
 
 //-----------------------------------//
 
-NAMESPACE_END
+NAMESPACE_RESOURCES_END
