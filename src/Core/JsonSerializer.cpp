@@ -546,17 +546,24 @@ static Object* DeserializeComposite( ReflectionContext* context, json_t* value )
 	#pragma TODO("Remove this compatibility check")
 
 	// Use explicit class if object has one to handle polymorphism.
-	Class* testClass = (Class*) ReflectionFindType(key);
+	Class* explicitClass = (Class*) ReflectionFindType(key);
 	
-	if( testClass )
+	// If there is no field class, require an explicit class.
+	if( !newClass && !explicitClass )
+		return 0;
+	
+	if( !newClass ) newClass = explicitClass;
+
+	// Test if the class is compatible with the field we are dealing with.
+	if( explicitClass && ClassInherits(explicitClass, newClass) )
 	{
-		newClass = testClass;
+		newClass = explicitClass;
 		value = iterValue;
 	}
 
 	if( !newClass || ClassIsAbstract(newClass) )
 		return 0;
-	
+
 	Object* newObject = (Object*) ClassCreateInstance(newClass, json->alloc);
 	if( !newObject ) return 0;
 

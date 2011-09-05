@@ -321,4 +321,17 @@ Path PathGetSeparator()
 
 //-----------------------------------//
 
+Path PathCombine(Path base, Path extra)
+{
+	StringTrim(base, "\\");
+	StringTrim(base, "/");
+
+	StringTrim(extra, "\\");
+	StringTrim(extra, "/");
+
+	return base + PathGetSeparator() + extra;
+}
+
+//-----------------------------------//
+
 NAMESPACE_CORE_END

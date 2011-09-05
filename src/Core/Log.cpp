@@ -111,7 +111,7 @@ static void LogFormat(LogEntry* entry, /*Log* log,*/ LogLevel level, const char*
 #ifdef BUILD_DEBUG
 
 #define ASSERT_ON_LOG                                       \
-		else if(entry.level == LogLevel::Assert)            \
+		if(entry.level == LogLevel::Assert)                 \
 		{                                                   \
 			assert(false);                                  \
 		}                                                   \

@@ -31,12 +31,22 @@ static void WalkNull(ReflectionContext*, ReflectionWalkType::Enum)
 }
 
 ReflectionContext::ReflectionContext()
+	: userData(nullptr)
+	, object(nullptr)
+	, klass(nullptr)
+	, type(nullptr)
+	, enume(nullptr)
+	, composite(nullptr)
+	, primitive(nullptr)
+	, field(nullptr)
+	, address(nullptr)
+	, elementAddress(nullptr)
+	, walkComposite(WalkNull)
+	, walkCompositeField(WalkNull)
+	, walkPrimitive(WalkNull)
+	, walkEnum(WalkNull)
+	, walkArray(WalkNull)
 {
-	walkComposite = WalkNull;
-	walkCompositeField = WalkNull;
-	walkPrimitive = WalkNull;
-	walkEnum = WalkNull;
-	walkArray = WalkNull;
 }
 
 //-----------------------------------//
@@ -204,7 +214,7 @@ static bool ReflectionWalkPointer(ReflectionContext* context)
 			return false;
 		}
 
-		address = HandleFind(hc.handles, id);
+		address = (Object*) HandleFind(hc.handles, id);
 		if( !address ) return false;
 	}
 

@@ -80,10 +80,6 @@ struct API_CORE ReflectionHandleContext
 API_CORE void ReflectionSetHandleContext(ReflectionHandleContext context);
 API_CORE bool ReflectionFindHandleContext(Class* klass, ReflectionHandleContext& ctx);
 
-// Walking functions
-typedef void (*ReflectionWalkFunc)(ReflectionContext*, ReflectionWalkType::Enum);
-typedef void (*ReflectionWalkCompositeFunc)(ReflectionContext*, ReflectionWalkType::Enum);
-
 //-----------------------------------//
 
 struct Type;
@@ -91,6 +87,10 @@ struct Enum;
 struct Class;
 struct Field;
 struct Primitive;
+
+// Walking functions
+typedef void (*ReflectionWalkFunc)(ReflectionContext*, ReflectionWalkType::Enum);
+typedef void (*ReflectionWalkCompositeFunc)(ReflectionContext*, ReflectionWalkType::Enum);
 
 struct API_CORE ReflectionContext
 {

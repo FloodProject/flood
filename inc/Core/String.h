@@ -76,6 +76,9 @@ API_CORE Path PathGetCurrentDir();
 // Gets the path separator.
 API_CORE Path PathGetSeparator();
 
+// Combines two path elements.
+API_CORE Path PathCombine(Path base, Path extra);
+
 //-----------------------------------//
 
 EXTERN_END

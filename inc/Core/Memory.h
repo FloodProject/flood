@@ -19,7 +19,7 @@ struct Allocator;
 API_CORE Allocator* AllocatorGetHeap();
 API_CORE Allocator* AllocatorGetStack();
 API_CORE Allocator* AllocatorGetObject(void*);
-#define AllocatorGetThis() (AllocatorGetObject(this))
+#define AllocatorGetThis() (AllocatorGetObject((void*)this))
 
 API_CORE Allocator* AllocatorCreateHeap( Allocator* );
 API_CORE Allocator* AllocatorCreateStack( Allocator* );

@@ -29,7 +29,7 @@ void HandleDestroyManager( HandleManager* man )
 
 	if( man->handles.size() > 0 )
 	{
-		LogAssert("Handle manager should not have any handles");
+		//LogAssert("Handle manager should not have any handles");
 		return;
 	}
 
@@ -38,14 +38,14 @@ void HandleDestroyManager( HandleManager* man )
 
 //-----------------------------------//
 
-HandleId HandleCreate(HandleManager* man, ReferenceCounted* p)
+HandleId HandleCreate(HandleManager* man, ReferenceCounted* ref)
 {
 	if( !man ) return HandleInvalid;
 	
 	HandleMap& handles = man->handles;
 	
 	HandleId id = AtomicIncrement(&man->nextHandle);
-	handles[id] = p;
+	handles[id] = ref;
 	
 	return id;
 }
