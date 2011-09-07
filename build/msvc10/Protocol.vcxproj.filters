@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="..\..\..\inc\Protocol\API.h" />
+    <ClInclude Include="..\..\..\inc\Protocol\ChatMessages.h">
+      <Filter>Chat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\inc\Protocol\UserMessages.h">
+      <Filter>Users</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\inc\Protocol\Users.h">
+      <Filter>Users</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\inc\Protocol\ReplicaMessages.h">
+      <Filter>Replica</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\inc\Protocol\ReplicaContext.h">
+      <Filter>Replica</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\inc\Protocol\ResourcesMessages.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Chat">
+      <UniqueIdentifier>{88d37057-9cd9-4016-a829-11db7f52caeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{e717a0b8-1519-467a-889b-86e075de7d67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Movement">
+      <UniqueIdentifier>{288abf6c-5aa4-4bd2-96b2-edb0cb296fd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Users">
+      <UniqueIdentifier>{c67f0e95-b52b-4ee6-bd83-2c8362185bcc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Updates">
+      <UniqueIdentifier>{d9b6fba2-d132-43f6-8053-29d92b322df3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Replica">
+      <UniqueIdentifier>{23abb3fc-2b28-4689-88b5-3695aa4c9e0e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\Protocol\ChatMessages.cpp">
+      <Filter>Chat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Protocol\Users.cpp">
+      <Filter>Users</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Protocol\UserMessages.cpp">
+      <Filter>Users</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Protocol\ReplicaMessages.cpp">
+      <Filter>Replica</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Protocol\ReplicaContext.cpp">
+      <Filter>Replica</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Protocol\ResourcesMessages.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\interface\Messages\Chat.messages" />
+  </ItemGroup>
+</Project>

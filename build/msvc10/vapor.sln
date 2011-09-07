@@ -38,10 +38,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Server", "Server.vcxproj", 
 		{7158F4AF-3E55-4DE4-B642-89D75FA06F97} = {7158F4AF-3E55-4DE4-B642-89D75FA06F97}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Protocol", "Protocol\Protocol.vcxproj", "{7158F4AF-3E55-4DE4-B642-89D75FA06F97}"
-	ProjectSection(ProjectDependencies) = postProject
-		{4B97591E-C124-44CE-AA98-D8086FC9BFEC} = {4B97591E-C124-44CE-AA98-D8086FC9BFEC}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Protocol", "Protocol.vcxproj", "{7158F4AF-3E55-4DE4-B642-89D75FA06F97}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -25,7 +25,7 @@ struct B : public A
 int test = 10;
 
 HandleManager* HandleManagerA;
-void* HandleFindA(HandleId id) { return HandleFind(HandleManagerA, id); }
+ReferenceCounted* HandleFindA(HandleId id) { return HandleFind(HandleManagerA, id); }
 void  HandleDestroyA(HandleId id) { HandleDestroy(HandleManagerA, id); }
 
 typedef Handle<A, HandleFindA, HandleDestroyA> HandleA;
